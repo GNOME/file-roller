@@ -410,7 +410,7 @@ activate_action_open (GtkAction *action,
 		"application/x-lzop",
 		"application/x-zoo",
 		"application/x-java-archive",
-		"application/x-jar"
+		"application/x-jar",
 		"application/x-cd-image"
 	};
 	GtkWidget     *file_sel;
@@ -1262,7 +1262,7 @@ activate_action_about (GtkAction *action,
 	static GtkWidget *about = NULL;
 	GdkPixbuf        *logo;
 	const char       *authors[] = {
-		"Paolo Bacchilega <paolo.bacch@tin.it>", NULL
+		"Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL
 	};
 	const char       *documenters [] = {
 		"Alexander Kirillov", 

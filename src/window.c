@@ -1236,6 +1236,7 @@ display_progress_dialog (gpointer data)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   window->stoppable);
+		gtk_window_present (GTK_WINDOW (window->app));
 		gtk_window_present (GTK_WINDOW (window->progress_dialog));
 	}
 

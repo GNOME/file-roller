@@ -1,6 +1,22 @@
+2004-06-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/actions.c (activate_action_open): added a comma before 
+	"application/x-cd-image". 
+
+	Fixes bug #144079 (iso is not listed as a archive in open dialog)
+
+2004-05-31  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	[ File Roller 2.7.0 released ] 
+
 2004-05-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c: 
+	* AUTHORS: 
+	* src/actions.c (activate_action_about): updated email address
+
+	* src/window.c (display_progress_dialog): call gtk_widget_present 
+        on the main window before displaying the progress dialog.
+
 	* src/fr-archive.c: 
 	* src/actions.c: 
 	* src/Makefile.am: 

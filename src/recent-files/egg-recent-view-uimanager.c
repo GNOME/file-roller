@@ -17,6 +17,7 @@
  *
  * Authors:
  *   James Willcox <jwillcox@cs.indiana.edu>
+ *   Paolo Bacchilega <paobac@cvs.gnome.org>
  */
 
 #ifdef HAVE_CONFIG_H
