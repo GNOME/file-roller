@@ -1,20 +1,22 @@
+# translation of file-roller.HEAD.az.po to Azerbaijani
 # translation of file-roller.HEAD.az.po to Azerbaijani Turkish
 # Copyright (C) 2003 Mətin Əmirov
 # This file is distributed under the same license as the file-roller package.
 # Mətin Əmirov <metin@karegen.com>, 2003, 2004.
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller.HEAD\n"
+"Project-Id-Version: file-roller.HEAD.az\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-07 03:21+0100\n"
-"PO-Revision-Date: 2004-02-22 19:43+0200\n"
+"POT-Creation-Date: 2004-08-16 11:10+0200\n"
+"PO-Revision-Date: 2004-08-17 22:26+0300\n"
 "Last-Translator: Mətin Əmirov <metin@karegen.com>\n"
-"Language-Team: Azerbaijani Turkish <translation-team-az@lists.sourceforge."
+"Language-Team: Azerbaijani <translation-team-az@lists.sourceforge.net>\n"
 "net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.3.1\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
 msgid "Create Archive..."
@@ -44,186 +46,366 @@ msgstr "Arxiv İdarəçisi"
 msgid "Create and modify an archive"
 msgstr "Arxiv yaradın və açın"
 
-#: src/dlg-add.c:118 src/dlg-add.c:125
+#: src/actions.c:97
+msgid "Automatic"
+msgstr "Avtomatik"
+
+#: src/actions.c:98
+msgid "Arj (.arj)"
+msgstr "Arj (.arj)"
+
+#: src/actions.c:99
+msgid "Ear (.ear)"
+msgstr "Ear (.ear)"
+
+#: src/actions.c:100
+msgid "Jar (.jar)"
+msgstr "Jar (.jar)"
+
+#: src/actions.c:101
+msgid "Lha (.lzh)"
+msgstr "Lha (.lzh)"
+
+#: src/actions.c:102
+msgid "Rar (.rar)"
+msgstr "Rar (.rar)"
+
+#: src/actions.c:103
+msgid "Tar uncompressed (.tar)"
+msgstr "Sıxışdırılmamış Tar (.tar)"
+
+#: src/actions.c:104
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "bzip ilə sıxışdırılmış tar (.tar.bz)"
+
+#: src/actions.c:105
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "bzip2 ilə sıxışdırılmış tar (.tar.bz2)"
+
+#: src/actions.c:106
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "gzip ilə sıxışdırılmış tar (.tar.gz)"
+
+#: src/actions.c:107
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "lzop ilə sıxışdırılmış tar (.tar.lzo)"
+
+#: src/actions.c:108
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "compress ilə sıxışdırılmış tar (.tar.Z)"
+
+#: src/actions.c:109
+msgid "War (.war)"
+msgstr "War (.war)"
+
+#: src/actions.c:110
+msgid "Zip (.zip)"
+msgstr "Zip (.zip)"
+
+#: src/actions.c:111
+msgid "Zoo (.zoo)"
+msgstr "Zoo (.zoo)"
+
+#: src/actions.c:176 src/actions.c:196 src/dlg-batch-add.c:101
+#: src/dlg-batch-add.c:127 src/dlg-batch-add.c:169 src/window.c:3786
+msgid "Could not create the archive"
+msgstr "Arxiv yaradıla bilmədi."
+
+#: src/actions.c:177 src/actions.c:501 src/dlg-batch-add.c:102
+msgid "You have to specify an archive name."
+msgstr "Bir arxiv adı verməlisiniz."
+
+#: src/actions.c:197 src/actions.c:521
+msgid "You don't have permission to create an archive in this folder"
+msgstr "Bu qovluda arxiv yaratmaq üçün səlahiyyətləriniz yoxdur"
+
+#: src/actions.c:227 src/actions.c:542 src/actions.c:725 src/actions.c:906
+msgid "The archive already exists.  Do you want to overwrite it?"
+msgstr "Arxiv onsuzda mövcuddur. Üstünə qeyd etmək istəyirsiniz?"
+
+#: src/actions.c:230 src/actions.c:545 src/actions.c:728 src/actions.c:909
+msgid "Overwrite"
+msgstr "Üstünə yaz"
+
+#: src/actions.c:247 src/actions.c:562
+msgid "Could not delete the old archive."
+msgstr "Köhnə arxiv silinə bilmədi."
+
+#: src/actions.c:293
+msgid "New"
+msgstr "Yeni"
+
+#: src/actions.c:305 src/actions.c:434 src/actions.c:621
+msgid "All archives"
+msgstr "Bütün arxivlər"
+
+#: src/actions.c:312 src/actions.c:441 src/actions.c:628
+msgid "All files"
+msgstr "Bütün fayllar"
+
+#: src/actions.c:322 src/actions.c:636
+msgid "Archive type:"
+msgstr "Arxiv növü:"
+
+#: src/actions.c:422 src/ui.h:114
+msgid "Open"
+msgstr "Aç"
+
+#: src/actions.c:500 src/actions.c:520
+msgid "Could not save the archive"
+msgstr "Arxiv qeyd edilə bilmədi"
+
+#: src/actions.c:609
+msgid "Save"
+msgstr "Qeyd Et"
+
+#: src/actions.c:751
+msgid "Could not copy the archive"
+msgstr "Arxiv köçürülə bilmədi"
+
+#: src/actions.c:771
+msgid "Could not move the archive"
+msgstr "Arxiv daşına bilmədi"
+
+#: src/actions.c:800
+msgid "Copy"
+msgstr "Köçür"
+
+#: src/actions.c:800
+msgid "Move"
+msgstr "Daşı"
+
+#: src/actions.c:805 src/ui.h:66
+msgid "_Copy"
+msgstr "_Köçür"
+
+#: src/actions.c:805
+msgid "_Move"
+msgstr "_Daşı"
+
+#: src/actions.c:876 src/window.c:4900
+msgid "Rename"
+msgstr "Yenidən Adlandır"
+
+#: src/actions.c:877
+msgid "New archive name (without extension)"
+msgstr "Yeni arxiv adı (uzantısız)"
+
+#: src/actions.c:881 src/window.c:4905
+msgid "_Rename"
+msgstr "Yeni_dən Adlandır"
+
+#: src/actions.c:982
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
+msgstr "Arxiv zibil qutusuna atıla bilməz. Onu birbaşa silmək istəyirsiniz?"
+
+#: src/actions.c:1219 src/window.c:4618
+msgid "Last Output"
+msgstr "Son Çıxış"
+
+#: src/actions.c:1239 src/dlg-extract.c:87
+msgid "Could not display help"
+msgstr "Yardım göstərilə bilmədi"
+
+#: src/actions.c:1272
+msgid "translator_credits"
+msgstr ""
+"Vasif İsmailoğlu <linuxaz@azerimail.net>\n"
+"Mətin Əmirov <metin@karegen.com>\n"
+"\n"
+"Tərcümə işləri üzrə yazışma siyahısı ünvanımız:\n"
+"<translation-team-az@lists.sourceforge.net>"
+
+#. Create the application.
+#: src/actions.c:1280 src/gtk-utils.c:390 src/main.c:102 src/window.c:843
+#: src/window.c:1274 src/window.c:3085
+msgid "File Roller"
+msgstr "File Roller"
+
+#: src/actions.c:1283
+msgid "An archive manager for GNOME."
+msgstr "GNOME üçün arxiv idarəçisi."
+
+#: src/dlg-add-files.c:92 src/dlg-add-files.c:99 src/dlg-add-folder.c:121
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "\"%s\" qovluğundan faylları oxumaq üçün səlahiyyətləriniz yoxdur."
 
-#: src/dlg-add.c:124 src/window.c:1930 src/window.c:1967
+#: src/dlg-add-files.c:98 src/dlg-add-folder.c:127 src/window.c:1952
+#: src/window.c:1990
 msgid "Could not add the files to the archive"
 msgstr "Fayllar arxivə əlavə edilə bilmədi"
 
-#: src/dlg-add.c:274 src/toolbar.h:56
-msgid "Add"
-msgstr "Əlavə Et"
+#: src/dlg-add-files.c:155
+msgid "Add Files"
+msgstr "Fayllar Əlavə Et"
 
-#: src/dlg-add.c:285
+#: src/dlg-add-files.c:167 src/dlg-add-folder.c:299
 msgid "_Add only if newer"
 msgstr "_Ancaq daha yeni isə əlavə et"
 
-#: src/dlg-add.c:286
+#: src/dlg-add-folder.c:287
+msgid "Add a Folder"
+msgstr "Qovluq Əlavə Et"
+
+#: src/dlg-add-folder.c:300
 msgid "_Include subfolders"
 msgstr "_Alt qovluqları daxil et"
 
-#: src/dlg-add.c:287
+#: src/dlg-add-folder.c:301
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Simvoli_k körpü olan qovluqları daxil etmə"
 
-#: src/dlg-add.c:290 src/dlg-add.c:295
+#: src/dlg-add-folder.c:304 src/dlg-add-folder.c:309
 msgid "example: *.o; *.bak"
 msgstr "nümunə: *.o; *.bak"
 
-#: src/dlg-add.c:291
+#: src/dlg-add-folder.c:305
 msgid "_Include files:"
 msgstr "Da_xil ediləcək fayllar:"
 
-#: src/dlg-add.c:296
+#: src/dlg-add-folder.c:310
 msgid "E_xclude files:"
 msgstr "Da_xil edilməyəcəklər:"
 
-#: src/dlg-add.c:299
+#: src/dlg-add-folder.c:313
 msgid "_Load Options"
 msgstr "Seçimləri _Yüklə"
 
-#: src/dlg-add.c:300
+#: src/dlg-add-folder.c:314
 msgid "Sa_ve Options"
 msgstr "Seçimləri _Qeyd Et"
 
-#: src/dlg-add.c:758
+#: src/dlg-add-folder.c:776
 msgid "Save Options"
 msgstr "Seçimləri Qeyd Et"
 
-#: src/dlg-add.c:759
+#: src/dlg-add-folder.c:777
 msgid "Options Name:"
 msgstr "Seçimlərin Adı:"
 
-#: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
-#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
-msgid "Could not create the archive"
-msgstr "Arxiv yaradıla bilmədi."
-
-#: src/dlg-batch-add.c:102 src/menu-callbacks.c:168 src/menu-callbacks.c:376
-msgid "You have to specify an archive name."
-msgstr "Bir arxiv adı verməlisiniz."
-
-#: src/dlg-batch-add.c:127 src/fr-archive.c:624 src/window.c:3646
-#: src/window.c:3796
+#: src/dlg-batch-add.c:128 src/fr-archive.c:631 src/window.c:3787
+#: src/window.c:3943
 msgid "Archive type not supported."
 msgstr "Arxiv növü dəstəklənmir."
 
-#: src/dlg-batch-add.c:146 src/dlg-extract.c:150 src/window.c:4026
+#: src/dlg-batch-add.c:148 src/dlg-extract.c:152 src/window.c:4185
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Hədəf qovluq mövcud deyil. Yaratmaq istəyirsiniz?"
 
-#: src/dlg-batch-add.c:149 src/dlg-extract.c:153 src/window.c:4029
+#: src/dlg-batch-add.c:151 src/dlg-extract.c:155 src/window.c:4188
 msgid "Create _Folder"
 msgstr "_Qovluq Yarat"
 
-#: src/dlg-batch-add.c:162 src/dlg-extract.c:169 src/window.c:4045
+#: src/dlg-batch-add.c:165 src/dlg-extract.c:172 src/window.c:4205
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Hədəf qovluq yaradıla bilmədi: %s."
 
-#: src/dlg-batch-add.c:185
+#: src/dlg-batch-add.c:189
 msgid "Archive not created"
 msgstr "Arxiv yaradılmadı"
 
-#: src/dlg-extract.c:87 src/menu-callbacks.c:1132
-msgid "Could not display help"
-msgstr "Yardım göstərilə bilmədi"
-
-#: src/dlg-extract.c:173 src/dlg-extract.c:192 src/dlg-extract.c:216
-#: src/window.c:4049 src/window.c:4068
+#: src/dlg-extract.c:176 src/dlg-extract.c:196 src/dlg-extract.c:221
+#: src/window.c:4209 src/window.c:4229
 msgid "Extraction not performed"
 msgstr "Açma əməliyyatı bacarılmadı"
 
-#: src/dlg-extract.c:211
+#: src/dlg-extract.c:216
 #, c-format
-msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr ""
-"Arxivi \"%s\" qovluğuna açmaq üçün düzgün yazma səlahiyyətləriniz yoxdur"
+msgid "You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "Arxivi \"%s\" qovluğuna açmaq üçün düzgün yazma səlahiyyətləriniz yoxdur"
 
-#: src/dlg-extract.c:370
+#: src/dlg-extract.c:380
 msgid "Files"
 msgstr "Fayllar"
 
-#: src/dlg-extract.c:378 src/dlg-extract.c:428 src/file_roller_prop.glade.h:1
+#: src/dlg-extract.c:388 src/dlg-extract.c:438
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:387 src/file_roller.glade.h:17
+#: src/dlg-extract.c:397 src/file_roller.glade.h:17
 msgid "_Files:"
 msgstr "_Fayllar:"
 
-#: src/dlg-extract.c:398 src/file_roller.glade.h:20
+#: src/dlg-extract.c:408 src/file_roller.glade.h:20
 msgid "example: *.txt; *.doc"
 msgstr "nümunə: *.txt; *.doc"
 
-#: src/dlg-extract.c:401 src/file_roller.glade.h:14
+#: src/dlg-extract.c:411 src/file_roller.glade.h:14
 msgid "_All files"
 msgstr "_Bütün fayllar"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:19
+#: src/dlg-extract.c:418 src/file_roller.glade.h:19
 msgid "_Selected files"
 msgstr "_Seçili fayllar:"
 
-#: src/dlg-extract.c:419
+#: src/dlg-extract.c:429
 msgid "Actions"
 msgstr "Gedişatlar"
 
-#: src/dlg-extract.c:435
+#: src/dlg-extract.c:445
 msgid "R_e-create folders"
 msgstr "Qovluqları y_enidən yarat"
 
-#: src/dlg-extract.c:439
+#: src/dlg-extract.c:449
 msgid "Over_write existing files"
 msgstr "Mövcud faylların _üstünə yaz"
 
-#: src/dlg-extract.c:443
+#: src/dlg-extract.c:453
 msgid "Do not e_xtract older files"
 msgstr "Köhnə faylları _açma"
 
-#: src/dlg-extract.c:449 src/file_roller.glade.h:18
+#: src/dlg-extract.c:459 src/file_roller.glade.h:18
 msgid "_Password:"
 msgstr "Ş_ifrə:"
 
-#: src/dlg-extract.c:457
+#: src/dlg-extract.c:467
 msgid "_Open destination folder after extraction"
 msgstr "Arxivi açdıqdan sonra hədəf qovluğu _aç"
 
-#: src/dlg-extract.c:484 src/toolbar.h:62
+#: src/dlg-extract.c:494 src/ui.h:94
 msgid "Extract"
 msgstr "Aç"
 
-#: src/dlg-prop.c:99
+#: src/dlg-prop.c:105
 msgid "Path:"
 msgstr "Cığır:"
 
-#: src/dlg-prop.c:112
+#: src/dlg-prop.c:118
 msgid "Name:"
 msgstr "Ad:"
 
-#: src/dlg-prop.c:119
+#: src/dlg-prop.c:125
 #, c-format
 msgid "%s Properties"
 msgstr "%s Xassələri"
 
-#: src/dlg-prop.c:128
-msgid "File size:"
-msgstr "Fayl böyüklüyü:"
-
-#: src/dlg-prop.c:139
-msgid "Number of files:"
-msgstr "Fayl ədədi:"
-
-#: src/dlg-prop.c:149
+#: src/dlg-prop.c:134
 msgid "Modified on:"
 msgstr "Təkmilləşdirmə tarixi:"
 
-#: src/dlg-prop.c:155
+#: src/dlg-prop.c:140 src/window.c:413
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
+
+#: src/dlg-prop.c:148
+msgid "Archive size:"
+msgstr "Arxiv böyüklüyü:"
+
+#: src/dlg-prop.c:159
+msgid "Content size:"
+msgstr "Məzmun böyüklüyü:"
+
+#: src/dlg-prop.c:178
+msgid "Compression ratio:"
+msgstr "Sıxışdırma səviyyəsi:"
+
+#: src/dlg-prop.c:193
+msgid "Number of files:"
+msgstr "Fayl ədədi:"
 
 #: src/file-data.c:28
 msgid "Unknown type"
@@ -233,7 +415,7 @@ msgstr "Namə'lum növ"
 msgid "Symbolic link"
 msgstr "Simvolik körpü"
 
-#: src/file-utils.c:537
+#: src/file-utils.c:558
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "Terminal tapıla bilmədi, işləməsə də xterm-dən istifadə ediləcək"
 
@@ -303,71 +485,31 @@ msgstr "_Proqram:"
 msgid "_Archive:"
 msgstr "_Arxiv:"
 
-#: src/file_roller_prop.glade.h:2
-msgid "Compression _level:"
-msgstr "Sıxışdırma _səviyyəsi:"
-
-#: src/file_roller_prop.glade.h:3
-msgid "Date _modified"
-msgstr "_Təkmilləşdirmə tarixi"
-
-#: src/file_roller_prop.glade.h:4
-msgid "File Roller Preferences"
-msgstr "Fayl Roller Seçimləri"
-
-#: src/file_roller_prop.glade.h:5
-msgid "Low"
-msgstr "Alçaq"
-
-#: src/file_roller_prop.glade.h:6
-msgid "Maximum (slow)"
-msgstr "Maksimal (yavaş)"
-
-#: src/file_roller_prop.glade.h:7
-msgid "Minimum (fast)"
-msgstr "Minimal (sürətli)"
-
-#: src/file_roller_prop.glade.h:8
-msgid "Normal"
-msgstr "Normal"
-
-#: src/file_roller_prop.glade.h:9
-msgid "_Location"
-msgstr "_Mövqe"
-
-#: src/file_roller_prop.glade.h:10
-msgid "_Size"
-msgstr "_Böyüklük"
-
-#: src/file_roller_prop.glade.h:11
-msgid "_Type"
-msgstr "_Növ"
-
-#: src/fr-archive.c:599
+#: src/fr-archive.c:606
 msgid "The file does not exist."
 msgstr "Fayl mövcud deyil."
 
-#: src/fr-command-tar.c:354
+#: src/fr-command-tar.c:396
 msgid "Adding file: "
 msgstr "Əlavə edilən fayl:"
 
-#: src/fr-command-tar.c:400
+#: src/fr-command-tar.c:442
 msgid "Removing file: "
 msgstr "Silinən fayl:"
 
-#: src/fr-command-tar.c:409 src/window.c:1366
+#: src/fr-command-tar.c:451 src/window.c:1376
 msgid "Deleting files from archive"
 msgstr "Fayllar arxivdən silinir"
 
-#: src/fr-command-tar.c:442
+#: src/fr-command-tar.c:484
 msgid "Extracting file: "
 msgstr "Açılan fayl:"
 
-#: src/fr-command-tar.c:487
+#: src/fr-command-tar.c:529
 msgid "Recompressing archive"
 msgstr "Arxiv yenidən sıxışdırılır"
 
-#: src/fr-command-tar.c:621
+#: src/fr-command-tar.c:663
 msgid "Decompressing archive"
 msgstr "Arxiv açılır"
 
@@ -379,15 +521,9 @@ msgstr "Ə_lavə Et"
 msgid "_Extract"
 msgstr "_Aç"
 
-#: src/fr-stock.c:46 src/menu.h:382
+#: src/fr-stock.c:46 src/ui.h:36 src/ui.h:170
 msgid "_View"
 msgstr "_Görünüş"
-
-#. Create the application.
-#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1173
-#: src/window.c:839 src/window.c:1265 src/window.c:2926
-msgid "File Roller"
-msgstr "File Roller"
 
 #. Button
 #: src/gtk-utils.c:421
@@ -418,8 +554,7 @@ msgstr "QOVLUQ"
 
 #: src/main.c:72
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr ""
-"Faylları açacaq cərgənin adını soruşaraq arxivədən aç et və proqramdan çıx"
+msgstr "Faylları açacaq cərgənin adını soruşaraq arxivədən aç et və proqramdan çıx"
 
 #: src/main.c:76
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -429,499 +564,378 @@ msgstr "'--add' və '--extract' əmrləri ilə istifadə ediləcək ön qurğulu
 msgid "Create destination folder without asking confirmation"
 msgstr "Təsdiqləmədən hədəf qovluğu yarat"
 
-#: src/menu-callbacks.c:88
-msgid "Automatic"
-msgstr "Avtomatik"
-
-#: src/menu-callbacks.c:89
-msgid "Arj (.arj)"
-msgstr "Arj (.arj)"
-
-#: src/menu-callbacks.c:90
-msgid "Ear (.ear)"
-msgstr "Ear (.ear)"
-
-#: src/menu-callbacks.c:91
-msgid "Jar (.jar)"
-msgstr "Jar (.jar)"
-
-#: src/menu-callbacks.c:92
-msgid "Lha (.lzh)"
-msgstr "Lha (.lzh)"
-
-#: src/menu-callbacks.c:93
-msgid "Rar (.rar)"
-msgstr "Rar (.rar)"
-
-#: src/menu-callbacks.c:94
-msgid "Tar uncompressed (.tar)"
-msgstr "Sıxışdırılmamış Tar (.tar)"
-
-#: src/menu-callbacks.c:95
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "bzip ilə sıxışdırılmış tar (.tar.bz)"
-
-#: src/menu-callbacks.c:96
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "bzip2 ilə sıxışdırılmış tar (.tar.bz2)"
-
-#: src/menu-callbacks.c:97
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "gzip ilə sıxışdırılmış tar (.tar.gz)"
-
-#: src/menu-callbacks.c:98
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "lzop ilə sıxışdırılmış tar (.tar.lzo)"
-
-#: src/menu-callbacks.c:99
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "compress ilə sıxışdırılmış tar (.tar.Z)"
-
-#: src/menu-callbacks.c:100
-msgid "War (.war)"
-msgstr "War (.war)"
-
-#: src/menu-callbacks.c:101
-msgid "Zip (.zip)"
-msgstr "Zip (.zip)"
-
-#: src/menu-callbacks.c:102
-msgid "Zoo (.zoo)"
-msgstr "Zoo (.zoo)"
-
-#: src/menu-callbacks.c:187 src/menu-callbacks.c:395
-msgid "You don't have permission to create an archive in this folder"
-msgstr "Bu qovluda arxiv yaratmaq üçün səlahiyyətləriniz yoxdur"
-
-#: src/menu-callbacks.c:216 src/menu-callbacks.c:415 src/menu-callbacks.c:708
-#: src/menu-callbacks.c:885
-msgid "The archive already exists.  Do you want to overwrite it?"
-msgstr "Arxiv onsuzda mövcuddur. Üstünə qeyd etmək istəyirsiniz?"
-
-#: src/menu-callbacks.c:219 src/menu-callbacks.c:418 src/menu-callbacks.c:711
-#: src/menu-callbacks.c:888
-msgid "Overwrite"
-msgstr "Üstünə yaz"
-
-#: src/menu-callbacks.c:235 src/menu-callbacks.c:434
-msgid "Could not delete the old archive."
-msgstr "Köhnə arxiv silinə bilmədi."
-
-#: src/menu-callbacks.c:279 src/toolbar.h:42
-msgid "New"
-msgstr "Yeni"
-
-#: src/menu-callbacks.c:290 src/menu-callbacks.c:490 src/menu-callbacks.c:612
-msgid "All archives"
-msgstr "Bütün arxivlər"
-
-#: src/menu-callbacks.c:297 src/menu-callbacks.c:497 src/menu-callbacks.c:619
-msgid "All files"
-msgstr "Bütün fayllar"
-
-#: src/menu-callbacks.c:307 src/menu-callbacks.c:505
-msgid "Archive type:"
-msgstr "Arxiv növü:"
-
-#: src/menu-callbacks.c:375 src/menu-callbacks.c:394
-msgid "Could not save the archive"
-msgstr "Arxiv qeyd edilə bilmədi"
-
-#: src/menu-callbacks.c:479
-msgid "Save"
-msgstr "Qeyd Et"
-
-#: src/menu-callbacks.c:601 src/menu.h:412 src/toolbar.h:48
-msgid "Open"
-msgstr "Aç"
-
-#: src/menu-callbacks.c:733
-msgid "Could not copy the archive"
-msgstr "Arxiv köçürülə bilmədi"
-
-#: src/menu-callbacks.c:752
-msgid "Could not move the archive"
-msgstr "Arxiv daşına bilmədi"
-
-#: src/menu-callbacks.c:780
-msgid "Copy"
-msgstr "Köçür"
-
-#: src/menu-callbacks.c:780
-msgid "Move"
-msgstr "Daşı"
-
-#: src/menu-callbacks.c:785
-msgid "_Copy"
-msgstr "_Köçür"
-
-#: src/menu-callbacks.c:785
-msgid "_Move"
-msgstr "_Daşı"
-
-#: src/menu-callbacks.c:855 src/window.c:4717
-msgid "Rename"
-msgstr "Yenidən Adlandır"
-
-#: src/menu-callbacks.c:856
-msgid "New archive name (without extension)"
-msgstr "Yeni arxiv adı (uzantısız)"
-
-#: src/menu-callbacks.c:860 src/window.c:4722
-msgid "_Rename"
-msgstr "Yeni_dən Adlandır"
-
-#: src/menu-callbacks.c:970
-msgid ""
-"The archive cannot be moved to the Trash. Do you want to delete it "
-"permanently?"
-msgstr "Arxiv zibil qutusuna atıla bilməz. Onu birbaşa silmək istəyirsiniz?"
-
-#: src/menu-callbacks.c:1165
-msgid "translator_credits"
-msgstr ""
-"Vasif İsmailoğlu <linuxaz@azerimail.net>\n"
-"Mətin Əmirov <metin@karegen.com>\n"
-"\n"
-"Tərcümə işləri üzrə yazışma siyahısı ünvanımız:\n"
-"<translation-team-az@lists.sourceforge.net>"
-
-#: src/menu-callbacks.c:1176
-msgid "An archive manager for GNOME."
-msgstr "GNOME üçün arxiv idarəçisi."
-
-#: src/menu-callbacks.c:1325 src/window.c:4454
-msgid "Last Output"
-msgstr "Son Çıxış"
-
-#: src/menu.h:65
-msgid "_New"
-msgstr "_Yeni"
-
-#: src/menu.h:66 src/toolbar.h:42
-msgid "Create a new archive"
-msgstr "Yeni arxiv yarat"
-
-#: src/menu.h:71
-msgid "Open R_ecent"
-msgstr "_Son Açılanlar"
-
-#: src/menu.h:80 src/menu.h:167 src/menu.h:450
-msgid "_Rename..."
-msgstr "_Yenidən Adlandır..."
-
-#: src/menu.h:80
-msgid "Rename current archive"
-msgstr "Hazırk arxivi yenidən adlandır"
-
-#: src/menu.h:86
-msgid "Cop_y..."
-msgstr "Köçü_r..."
-
-#: src/menu.h:86
-msgid "Copy current archive to another folder"
-msgstr "Hazırk arxivi başqa qovluğa köçür"
-
-#: src/menu.h:92
-msgid "_Move..."
-msgstr "_Daşı..."
-
-#: src/menu.h:92
-msgid "Move current archive to another folder"
-msgstr "Hazırkı arxivi başqa qovluğa daşı"
-
-#: src/menu.h:98
-msgid "Move to _Trash"
-msgstr "Zibil Qutusuna _Daşı"
-
-#: src/menu.h:98
-msgid "Move current archive to trash"
-msgstr "Hazırkı arxivi zibil qutusuna at"
-
-#: src/menu.h:104
-msgid "_Test Integrity"
-msgstr "_Arxiv Xətalarını Yoxla"
-
-#: src/menu.h:104
-msgid "Test whether the archive contains errors"
-msgstr "Arxivin xətalarını yoxla"
-
-#: src/menu.h:112
-msgid "_Properties"
-msgstr "_Xassələr"
-
-#: src/menu.h:112
-msgid "Show archive properties"
-msgstr "Arxivin xxassələrini göstər"
-
-#: src/menu.h:149 src/menu.h:432
-msgid "_Add..."
-msgstr "Ə_lavə Et..."
-
-#: src/menu.h:149 src/menu.h:432
-msgid "Add files and folders to the archive"
-msgstr "Faylları və qovluqları arxivə əlavə et"
-
-#: src/menu.h:155 src/menu.h:438
-msgid "_Extract..."
-msgstr "_Aç..."
-
-#: src/menu.h:155 src/menu.h:438 src/toolbar.h:62
-msgid "Extract files from the archive"
-msgstr "Faylları arxivdən aç"
-
-#: src/menu.h:167 src/menu.h:450
-msgid "Rename selection"
-msgstr "Seçkini yenidən adlandır"
-
-#: src/menu.h:173 src/menu.h:456
-msgid "_Delete..."
-msgstr "_Sil..."
-
-#: src/menu.h:173 src/menu.h:456
-msgid "Delete selection from the archive"
-msgstr "Seçkini arxivdən sil"
-
-#: src/menu.h:181 src/menu.h:464
-msgid "Select _All"
-msgstr "_Hamısını Seç"
-
-#: src/menu.h:181 src/menu.h:464
-msgid "Select all files"
-msgstr "Bütün faylları seç"
-
-#: src/menu.h:187 src/menu.h:470
-msgid "Dese_lect All"
-msgstr "S_eçkini Ləğv Et"
-
-#: src/menu.h:187 src/menu.h:470
-msgid "Deselect all files"
-msgstr "Heç bir faylı seçmə"
-
-#: src/menu.h:195
-msgid "Open Fi_les..."
-msgstr "Fay_lları Aç..."
-
-#: src/menu.h:195 src/menu.h:418
-msgid "Open selected files with an application"
-msgstr "Seçili faylları bir proqram tə'minatını ilə aç"
-
-#: src/menu.h:201 src/menu.h:424
-msgid "_View File"
-msgstr "_Faylı göstər"
-
-#: src/menu.h:201 src/menu.h:424
-msgid "View file with internal viewer"
-msgstr "Daxili nümaişçi ilə göstər"
-
-#: src/menu.h:209
-msgid "Pass_word..."
-msgstr "Şif_rə..."
-
-#: src/menu.h:220
-msgid "by _Name"
-msgstr "_Ada Görə"
-
-#: src/menu.h:220
-msgid "Sort file list by name"
-msgstr "Fayl siyahısını fayl adına görə sırala "
-
-#: src/menu.h:226
-msgid "by _Size"
-msgstr "_Böyüklüyə görə"
-
-#: src/menu.h:226
-msgid "Sort file list by file size"
-msgstr "Fayl siyahısını fayl böyüklüyünə görə sırala "
-
-#: src/menu.h:232
-msgid "by T_ype"
-msgstr "_Növə Görə"
-
-#: src/menu.h:232
-msgid "Sort file list by type"
-msgstr "Fayl siyahısını növə görə sırala"
-
-#: src/menu.h:238
-msgid "by _Date modified"
-msgstr "_Təkmilləşdirmə tarixinə görə"
-
-#: src/menu.h:238
-msgid "Sort file list by modification time"
-msgstr "Fayl siyahısını təkmilləşdirmə tarixinə görə sırala"
-
-#: src/menu.h:244
-msgid "by _Location"
-msgstr "_Mövqeyə görə"
-
-#: src/menu.h:244
-msgid "Sort file list by location"
-msgstr "Fayl siyahısını yerə görə sırala"
-
-#: src/menu.h:261
-msgid "View All _Files"
-msgstr "_Bütün Faylları Göstər"
-
-#: src/menu.h:267
-msgid "View as a F_older"
-msgstr "Q_ovluq olaraq göstər"
-
-#: src/menu.h:289
-msgid "_Reversed Order"
-msgstr "_Tərs Sıra"
-
-#: src/menu.h:289
-msgid "Reverse the list order"
-msgstr "Siyahı sırasını tərs çevir"
-
-#: src/menu.h:313
-msgid "_Toolbar"
-msgstr "_Vasitə Çubuğu"
-
-#: src/menu.h:313
-msgid "View the main toolbar"
-msgstr "Əsas ləvazimat çubuğunu göstər"
-
-#: src/menu.h:319
-msgid "Stat_usbar"
-msgstr "Vəziyyət ç_ubuğu"
-
-#: src/menu.h:319
-msgid "View the statusbar"
-msgstr "Vəziyyət çubuğunu göstər"
-
-#: src/menu.h:327
-msgid "_Stop"
-msgstr "_Dayan"
-
-#: src/menu.h:327 src/toolbar.h:76
-msgid "Stop current operation"
-msgstr "Hazırkı əməliyyatı dayandır"
-
-#: src/menu.h:333
-msgid "_Reload"
-msgstr "_Yenilə"
-
-#: src/menu.h:333
-msgid "Reload current archive"
-msgstr "Hazırki arxivi yenidən yüklə"
-
-#: src/menu.h:344
-msgid "_Arrange Files"
-msgstr "Faylları _Nizama Sal"
-
-#: src/menu.h:349
-msgid "_Last Output"
-msgstr "_Son Çıxış"
-
-#: src/menu.h:349
-msgid "View the output produced by the last executed command"
-msgstr "Son icra edilən əmrin çıxışını göstər"
-
-#: src/menu.h:362
-msgid "_Contents"
-msgstr "_Məzmun"
-
-#: src/menu.h:362
-msgid "Display the File Roller Manual"
-msgstr "Fİle Roller Yardımını Göstər"
-
-#: src/menu.h:368
-msgid "_About"
-msgstr "_Haqqında"
-
-#: src/menu.h:368
-msgid "Information about the program"
-msgstr "Proqram haqqında mə'lumat"
-
-#: src/menu.h:380
+#: src/ui.h:34
 msgid "_Archive"
 msgstr "_Arxiv"
 
-#: src/menu.h:381
+#: src/ui.h:35
 msgid "_Edit"
 msgstr "_Düzəlt"
 
-#: src/menu.h:412
-msgid "Open selected files with the standard application"
-msgstr "Seçili faylları standart proqramla aç"
+#: src/ui.h:37
+msgid "_Help"
+msgstr "_Yardım"
 
-#: src/menu.h:418
-msgid "Open With..."
-msgstr "Fərqli Aç..."
+#: src/ui.h:38
+msgid "_Arrange Files"
+msgstr "Faylları _Nizama Sal"
 
-#: src/toolbar.h:48
-msgid "Open archive"
-msgstr "Arxivi aç"
+#: src/ui.h:39
+msgid "Open R_ecent"
+msgstr "_Son Açılanlar"
 
-#: src/toolbar.h:56
+#: src/ui.h:42
+msgid "_About"
+msgstr "_Haqqında"
+
+#: src/ui.h:43
+msgid "Information about the program"
+msgstr "Proqram haqqında mə'lumat"
+
+#: src/ui.h:46
+msgid "_Add Files..."
+msgstr "Fayllar Ə_lavə Et..."
+
+#: src/ui.h:47 src/ui.h:51
 msgid "Add files to the archive"
 msgstr "Faylları arxivə əlavə et"
 
-#: src/toolbar.h:68
-msgid "View"
-msgstr "Göstər"
+#: src/ui.h:50
+msgid "Add"
+msgstr "Əlavə Et"
 
-#: src/toolbar.h:68
-msgid "View selected file"
+#: src/ui.h:54
+msgid "Add a _Folder..."
+msgstr "_Qovluq Əlavə Et..."
+
+#: src/ui.h:55
+msgid "Add a folder to the archive"
+msgstr "Arxivə qovluq əlavə et"
+
+#: src/ui.h:58
+msgid "_Close"
+msgstr "_Bağla"
+
+#: src/ui.h:59
+msgid "Close the current archive"
+msgstr "Hazırki arxivi bağla"
+
+#: src/ui.h:62
+msgid "_Contents"
+msgstr "_Məzmun"
+
+#: src/ui.h:63
+msgid "Display the File Roller Manual"
+msgstr "Fİle Roller Yardımını Göstər"
+
+#: src/ui.h:67
+msgid "Copy the selection"
+msgstr "Seçkini köçür"
+
+#: src/ui.h:70
+msgid "Cop_y..."
+msgstr "Köçü_r..."
+
+#: src/ui.h:71
+msgid "Copy current archive to another folder"
+msgstr "Hazırk arxivi başqa qovluğa köçür"
+
+#: src/ui.h:74
+msgid "Cu_t"
+msgstr "_Kəs"
+
+#: src/ui.h:75
+msgid "Cut the selection"
+msgstr "Seçkini kəs"
+
+#: src/ui.h:78
+msgid "_Delete..."
+msgstr "_Sil..."
+
+#: src/ui.h:79
+msgid "Delete the selection from the archive"
+msgstr "Seçkini arxivdən sil"
+
+#: src/ui.h:82
+msgid "Move to _Trash"
+msgstr "Zibil Qutusuna _Daşı"
+
+#: src/ui.h:83
+msgid "Move current archive to trash"
+msgstr "Hazırkı arxivi zibil qutusuna at"
+
+#: src/ui.h:86
+msgid "Dese_lect All"
+msgstr "S_eçkini Ləğv Et"
+
+#: src/ui.h:87
+msgid "Deselect all files"
+msgstr "Heç bir faylı seçmə"
+
+#: src/ui.h:90
+msgid "_Extract..."
+msgstr "_Aç..."
+
+#: src/ui.h:91 src/ui.h:95
+msgid "Extract files from the archive"
+msgstr "Faylları arxivdən aç"
+
+#: src/ui.h:98
+msgid "_Last Output"
+msgstr "_Son Çıxış"
+
+#: src/ui.h:99
+msgid "View the output produced by the last executed command"
+msgstr "Son icra edilən əmrin çıxışını göstər"
+
+#: src/ui.h:102
+msgid "_Move..."
+msgstr "_Daşı..."
+
+#: src/ui.h:103
+msgid "Move current archive to another folder"
+msgstr "Hazırkı arxivi başqa qovluğa daşı"
+
+#: src/ui.h:106
+msgid "_New"
+msgstr "_Yeni"
+
+#: src/ui.h:107
+msgid "Create a new archive"
+msgstr "Yeni arxiv yarat"
+
+#: src/ui.h:110
+msgid "_Open..."
+msgstr "_Aç..."
+
+#: src/ui.h:111 src/ui.h:115
+msgid "Open archive"
+msgstr "Arxivi aç"
+
+#: src/ui.h:118
+msgid "Open Fi_les..."
+msgstr "Fay_lları Aç..."
+
+#: src/ui.h:119
+msgid "Open selected files with an application"
+msgstr "Seçili faylları bir proqram tə'minatını ilə aç"
+
+#: src/ui.h:122
+msgid "Pass_word..."
+msgstr "Şif_rə..."
+
+#: src/ui.h:123
+msgid "Specify a password for this archive"
+msgstr "Bu arxiv üçün şifrə seç"
+
+#: src/ui.h:126 src/window.c:5012
+msgid "_Paste"
+msgstr "_Yapışdır"
+
+#: src/ui.h:127
+msgid "Paste the clipboard"
+msgstr "Ara yaddaşı yapışdır"
+
+#: src/ui.h:130
+msgid "_Properties"
+msgstr "_Xassələr"
+
+#: src/ui.h:131
+msgid "Show archive properties"
+msgstr "Arxivin xxassələrini göstər"
+
+#: src/ui.h:134
+msgid "_Quit"
+msgstr "Çı_x"
+
+#: src/ui.h:135
+msgid "Quit the application"
+msgstr "Proqramdan çıx"
+
+#: src/ui.h:138
+msgid "_Reload"
+msgstr "_Yenilə"
+
+#: src/ui.h:139
+msgid "Reload current archive"
+msgstr "Hazırki arxivi yenidən yüklə"
+
+#: src/ui.h:142 src/ui.h:146
+msgid "_Rename..."
+msgstr "_Yenidən Adlandır..."
+
+#: src/ui.h:143
+msgid "Rename the selection"
+msgstr "Seçkini yenidən adlandır"
+
+#: src/ui.h:147
+msgid "Rename current archive"
+msgstr "Hazırk arxivi yenidən adlandır"
+
+#: src/ui.h:150
+msgid "Save _As..."
+msgstr "_Fərqli Qeyd Et..."
+
+#: src/ui.h:151
+msgid "Save the current archive with a different name"
+msgstr "Hazırkı arxivi başqa adla qeyd et"
+
+#: src/ui.h:154
+msgid "Select _All"
+msgstr "_Hamısını Seç"
+
+#: src/ui.h:155
+msgid "Select all files"
+msgstr "Bütün faylları seç"
+
+#: src/ui.h:158
+msgid "_Stop"
+msgstr "_Dayan"
+
+#: src/ui.h:159
+msgid "Stop current operation"
+msgstr "Hazırkı əməliyyatı dayandır"
+
+#: src/ui.h:162
+msgid "_Test Integrity"
+msgstr "_Arxiv Xətalarını Yoxla"
+
+#: src/ui.h:163
+msgid "Test whether the archive contains errors"
+msgstr "Arxivin xətalarını yoxla"
+
+#: src/ui.h:166
+msgid "_View File"
+msgstr "_Faylı göstər"
+
+#: src/ui.h:167 src/ui.h:171
+msgid "View the selected file"
 msgstr "Seçili faylı göstər"
 
-#: src/toolbar.h:76
-msgid "Stop"
-msgstr "Dayan"
+#: src/ui.h:179
+msgid "_Toolbar"
+msgstr "_Vasitə Çubuğu"
 
-#: src/window.c:682
+#: src/ui.h:180
+msgid "View the main toolbar"
+msgstr "Əsas ləvazimat çubuğunu göstər"
+
+#: src/ui.h:184
+msgid "Stat_usbar"
+msgstr "Vəziyyət ç_ubuğu"
+
+#: src/ui.h:185
+msgid "View the statusbar"
+msgstr "Vəziyyət çubuğunu göstər"
+
+#: src/ui.h:189
+msgid "_Reversed Order"
+msgstr "_Tərs Sıra"
+
+#: src/ui.h:190
+msgid "Reverse the list order"
+msgstr "Siyahı sırasını tərs çevir"
+
+#: src/ui.h:199
+msgid "View All _Files"
+msgstr "_Bütün Faylları Göstər"
+
+#: src/ui.h:202
+msgid "View as a F_older"
+msgstr "Q_ovluq olaraq göstər"
+
+#: src/ui.h:210
+msgid "by _Name"
+msgstr "_Ada Görə"
+
+#: src/ui.h:211
+msgid "Sort file list by name"
+msgstr "Fayl siyahısını fayl adına görə sırala "
+
+#: src/ui.h:213
+msgid "by _Size"
+msgstr "_Böyüklüyə görə"
+
+#: src/ui.h:214
+msgid "Sort file list by file size"
+msgstr "Fayl siyahısını fayl böyüklüyünə görə sırala "
+
+#: src/ui.h:216
+msgid "by T_ype"
+msgstr "_Növə Görə"
+
+#: src/ui.h:217
+msgid "Sort file list by type"
+msgstr "Fayl siyahısını növə görə sırala"
+
+#: src/ui.h:219
+msgid "by _Date modified"
+msgstr "_Təkmilləşdirmə tarixinə görə"
+
+#: src/ui.h:220
+msgid "Sort file list by modification time"
+msgstr "Fayl siyahısını təkmilləşdirmə tarixinə görə sırala"
+
+#: src/ui.h:222
+msgid "by _Location"
+msgstr "_Mövqeyə görə"
+
+#: src/ui.h:223
+msgid "Sort file list by location"
+msgstr "Fayl siyahısını yerə görə sırala"
+
+#: src/window.c:686
 msgid "Folder"
 msgstr "Qovluq"
 
-#: src/window.c:847
+#: src/window.c:851
 msgid "[read only]"
 msgstr "[sırf oxunan]"
 
-#: src/window.c:942
+#: src/window.c:945
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
 msgstr[0] "%d fayl (%s)"
 msgstr[1] "%d fayl (%s)"
 
-#: src/window.c:947
+#: src/window.c:950
 #, c-format
 msgid "%d file selected (%s)"
 msgid_plural "%d files selected (%s)"
 msgstr[0] "%d fayl seçilidir (%s)"
 msgstr[1] "%d fayl seçilidir (%s)"
 
-#: src/window.c:1363
+#: src/window.c:1373
 msgid "Reading archive"
 msgstr "Arxiv oxunur"
 
-#: src/window.c:1369
+#: src/window.c:1379
 msgid "Adding files to archive"
 msgstr "Fayllar arxivə əlavə olunur"
 
-#: src/window.c:1372
+#: src/window.c:1382
 msgid "Extracting files from archive"
 msgstr "Arxivdən faylları aç"
 
-#: src/window.c:1375
+#: src/window.c:1385
 msgid "Testing archive"
 msgstr "Arxiv sınanır"
 
-#: src/window.c:1378
+#: src/window.c:1388
 msgid "Getting the file list"
 msgstr "Faylların siyahısı alınır"
 
-#: src/window.c:1384
+#: src/window.c:1395
 msgid "wait please..."
 msgstr "xahiş edirik gözləyin..."
 
-#: src/window.c:1441
+#: src/window.c:1472
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "\"%s\" qovluğu göstərilə bilmədi"
 
-#: src/window.c:1499
+#: src/window.c:1531
 msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
@@ -929,7 +943,7 @@ msgstr ""
 "Bu arxiv şifrə ilə qorunub.\n"
 "Xahiş edirik Düzəlt->Şifrə menyusundan şifrəni bildirin"
 
-#: src/window.c:1501
+#: src/window.c:1533
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
@@ -937,55 +951,51 @@ msgstr ""
 "Bildirilən şifrə səhvdir, xahiş edirik Düzəlt->Şifrə menyusundan yeni şifrə "
 "bildirin"
 
-#: src/window.c:1506
+#: src/window.c:1538
 msgid "Could not perform the operation"
 msgstr "Əməliyyat aparıla bilmədi"
 
-#: src/window.c:1521
-msgid "Operation stopped"
-msgstr "Əməliyyat dayandı"
-
-#: src/window.c:1542
+#: src/window.c:1563
 msgid "An error occurred while extracting files."
 msgstr "Fayllar arxivdən açılanda xəta yarandı."
 
-#: src/window.c:1546
+#: src/window.c:1567
 msgid "An error occurred while loading the archive."
 msgstr "Arxiv açılanda xəta yarandı."
 
-#: src/window.c:1550
+#: src/window.c:1571
 msgid "An error occurred while deleting files from the archive."
 msgstr "Fayllar arxivdən silinəndə xəta yarandı."
 
-#: src/window.c:1554
+#: src/window.c:1575
 msgid "An error occurred while adding files to the archive."
 msgstr "Faylları arxivə əlavə ediləndə xəta yarandı."
 
-#: src/window.c:1558
+#: src/window.c:1579
 msgid "An error occurred while testing archive."
 msgstr "Arxiv sınananda xəta yarandı."
 
-#: src/window.c:1567
+#: src/window.c:1588
 msgid "Command not found."
 msgstr "Əmr tapıla bilmədi."
 
-#: src/window.c:1570
+#: src/window.c:1591
 msgid "Command exited abnormally."
 msgstr "Əmr qeyri adi yolla sonlandı."
 
-#: src/window.c:1698
+#: src/window.c:1720
 msgid "Test Result"
 msgstr "Sınaq Nəticəsi"
 
-#: src/window.c:1931
+#: src/window.c:1953
 msgid "You don't have the right permissions."
 msgstr "Düzgün səlahiyyətləriniz yoxdur."
 
-#: src/window.c:1968
+#: src/window.c:1991
 msgid "You can't add an archive to itself."
 msgstr "Arxivi öz özünə əlavə edə bilməzsənəz."
 
-#: src/window.c:2145
+#: src/window.c:2175
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -993,78 +1003,83 @@ msgstr ""
 "Bu faylı hazırkı arxivə əlavə mi etmək yoxsa onu yeni bir arxiv olaraq mı "
 "açmaq istəyirsiniz?"
 
-#: src/window.c:2182
+#: src/window.c:2212
 msgid "Do you want to create a new archive with these files?"
 msgstr "Bu fayllarla yeni bir arxiv yaratmaq istəyirsiniz?"
 
-#: src/window.c:2185
+#: src/window.c:2215
 msgid "Create _Archive"
 msgstr "_Arxiv Yarat"
 
-#: src/window.c:2509
+#: src/window.c:2538
 msgid "Size"
 msgstr "Böyüklük"
 
-#: src/window.c:2510
+#: src/window.c:2539
 msgid "Type"
 msgstr "Növ"
 
-#: src/window.c:2511
+#: src/window.c:2540
 msgid "Date Modified"
 msgstr "Təkmilləşdirmə Tarixi"
 
-#: src/window.c:2512
+#: src/window.c:2541
 msgid "Location"
 msgstr "Mövqe"
 
-#: src/window.c:2519
+#: src/window.c:2548
 msgid "Name"
 msgstr "Ad"
 
-#: src/window.c:3084
+#: src/window.c:3005
+#, c-format
+msgid "Open '%s'"
+msgstr "'%s' Ünvanını Aç"
+
+#: src/window.c:3324
 msgid "Go to the previous visited location"
 msgstr "Ziyarət edilən əvvəlki mövqeyə get"
 
-#: src/window.c:3092
+#: src/window.c:3332
 msgid "Go to the next visited location"
 msgstr "Ziyarət edilən növbəti mövqeyə get"
 
-#: src/window.c:3100
+#: src/window.c:3340
 msgid "Go up one level"
 msgstr "Bir səviyyə üstə get"
 
-#: src/window.c:3108
+#: src/window.c:3348
 msgid "Go to the home location"
 msgstr "Ev mövqeyinə get"
 
 #. current location
-#: src/window.c:3127
+#: src/window.c:3367
 msgid "Location:"
 msgstr "Mövqe:"
 
-#: src/window.c:3734
+#: src/window.c:3878
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "\"%s\" açıla bilmədi"
 
-#: src/window.c:3789
+#: src/window.c:3936
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "\"%s\" arxivi qeyd edilə bilmədi"
 
-#: src/window.c:4649
+#: src/window.c:4832
 msgid "The new name is void."
 msgstr "Yeni ad boşdur."
 
-#: src/window.c:4649 src/window.c:4653 src/window.c:4662
+#: src/window.c:4832 src/window.c:4836 src/window.c:4845
 msgid "Please use a different name."
 msgstr "Xahiş edirik, başqa ad seçin."
 
-#: src/window.c:4653
+#: src/window.c:4836
 msgid "The new name is equal to the old one."
 msgstr "Yeni ad köhnəsi ilə eynidir."
 
-#: src/window.c:4662
+#: src/window.c:4845
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -1075,47 +1090,35 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/window.c:4718
+#: src/window.c:4901
 msgid "New folder name"
 msgstr "Yeni qovluq adı"
 
-#: src/window.c:4718
+#: src/window.c:4901
 msgid "New file name"
 msgstr "Yeni fayl adı"
 
-#: src/window.c:4739
+#: src/window.c:4922
 msgid "Could not rename the folder"
 msgstr "Qovluq yenidən adlandırıla bilmədi"
 
-#: src/window.c:4739
+#: src/window.c:4922
 msgid "Could not rename the file"
 msgstr "Fayl yenidən adlandırıla bilmədi"
 
-#: src/window.c:5367
+#: src/window.c:5007
+msgid "Paste Selection"
+msgstr "Seçkini Yapışdır"
+
+#: src/window.c:5008
+msgid "Destination folder"
+msgstr "Hədəf qovluq"
+
+#: src/window.c:5594
 msgid "Add files to an archive"
 msgstr "Faylları arxivə əlavə et"
 
-#: src/window.c:5392
+#: src/window.c:5621
 msgid "Extract archive"
 msgstr "Arxivi aç"
 
-#~ msgid "Zip Objects..."
-#~ msgstr "Faylları Ziplə..."
-
-#~ msgid "Zip Creator"
-#~ msgstr "Zip Yaradıcısı"
-
-#~ msgid "Could not zip objects"
-#~ msgstr "Fayllar ziplənə bilmədi"
-
-#~ msgid "Zip not performed"
-#~ msgstr "Zip tətbiq edilmədi"
-
-#~ msgid "Zipped on:"
-#~ msgstr "Ziplənmə tarixi:"
-
-#~ msgid "Zip Objects"
-#~ msgstr "Faylları Ziplə"
-
-#~ msgid "_Zip"
-#~ msgstr "_Zip"
