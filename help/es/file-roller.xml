@@ -1,0 +1,1456 @@
+<?xml version="1.0"?><!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+  <!ENTITY legal SYSTEM "legal.xml">
+  <!ENTITY appversion "2.2.5">
+  <!ENTITY manrevision "2.2.1">
+  <!ENTITY date "Agosto 2003">
+  <!ENTITY app "<application>File Roller</application>">
+  <!ENTITY ug "GNOME Desktop User Guide">
+  <!-- Information about the entities
+       The legal.xml file contains legal information, there is no need to edit the file. 
+       Use the appversion entity to specify the version of the application.
+       Use the manrevision entity to specify the revision number of this manual.
+       Use the date entity to specify the release date of this manual.
+       Use the app entity to specify the name of the application. -->
+]>
+<!-- 
+      (Do not remove this comment block.)
+  Maintained by the GNOME Documentation Project
+  http://developer.GNOME.org/projects/gdp
+  Template version: 2.0 beta
+  Template last modified Jan 30, 2002
+-->
+<!-- =============Document Header ============================= -->
+<article id="index" lang="es">
+<!-- please do not change the id; for translations, change lang to -->
+<!-- appropriate code -->
+  <articleinfo>
+    <title>Manual del &app; V&manrevision;</title>
+     <copyright>
+        <year>2003</year>
+        <holder>Sun Microsystems</holder> 
+    </copyright>
+    <copyright>
+      <year>2003</year>
+      <holder>Paolo Bacchilega</holder>
+    </copyright>
+    <copyright> 
+      <year>2002</year> 
+      <holder>Alexander Kirillov</holder> 
+    </copyright> 
+
+<!-- translators: uncomment this:
+
+  <copyright>
+   <year>2002</year>
+   <holder>ME-THE-TRANSLATOR (Latin translation)</holder>
+  </copyright>
+
+   -->
+<!-- An address can be added to the publisher information.  If a role is 
+     not specified, the publisher/author is the same for all versions of the 
+     document.  -->
+    <publisher> 
+      <publishername> Proyecto de documentaci&oacute;n de GNOME</publishername> 
+    </publisher> 
+
+   &legal; <!-- This file contains link to license for the
+   documentation (GNU FDL), and other legal stuff such as "NO
+   WARRANTY" statement. Please do not change any of this. -->
+
+    <authorgroup> 
+       <author> 
+         <firstname>Sun </firstname>
+         <surname>Equipo de documentaci&oacute;n de GNOME</surname>
+         <affiliation> 
+            <orgname>Sun Microsystems</orgname>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Paolo</firstname>
+        <surname>Bacchilega</surname>
+        <affiliation>
+          <orgname>Proyecto de documentaci&oacute;n de GNOME</orgname>
+        </affiliation>
+      </author>
+      <author> 
+	<firstname>Alexander</firstname> 
+	<surname>Kirillov</surname> 
+	<affiliation> 
+	  <orgname>Proyecto de documentaci&oacute;n de GNOME</orgname> 
+	  <address> <email>kirillov@math.sunysb.edu</email> </address>
+	</affiliation>
+      </author>
+    </authorgroup>
+
+<!-- According to GNU FDL, revision history is mandatory if you are -->
+<!-- modifying/reusing someone else's document.  If not, you can omit it. -->
+         <revhistory>
+<!-- Remember to remove the &manrevision; entity from the revision entries other   than the current revision. -->
+                <revision>
+                  <revnumber>Manual del &app; V&manrevision;</revnumber>
+                  <date>&date;</date>
+                  <revdescription>
+                         <para role="author">Equipo de documentaci&oacute;n de Sun GNOME</para>
+                         <para role="publisher">Proyecto de documentaci&oacute;n de GNOME</para>
+                  </revdescription>
+                </revision>
+                <revision>
+                  <revnumber>Manual del Gestor de contenedores V2.2</revnumber>
+                  <date>Junio 2003</date>
+                  <revdescription>
+                         <para role="author">Equipo de documentaci&oacute;n de Sun GNOME</para>
+                         <para role="publisher">Proyecto de documentaci&oacute;n de GNOME</para>
+                  </revdescription>
+                </revision>
+                <revision>
+                  <revnumber>Manual del Gestor de contenedores V2.1</revnumber>
+                  <date>Enero 2003</date>
+                  <revdescription>
+                         <para role="author">Paolo Bacchilega</para>
+                         <para role="publisher">Proyecto de documentaci&oacute;n de GNOME</para>
+                  </revdescription>
+                </revision>
+                <revision>
+                  <revnumber>Manual del Gestor de contenedores V2.0</revnumber>
+                  <date>Junio 2002</date>
+                  <revdescription>
+                         <para role="author">Alexander Kirillov</para>
+                         <para role="publisher">Proyecto de documentaci&oacute;n de GNOME</para>
+                  </revdescription>
+                </revision>
+         </revhistory>
+
+    <releaseinfo>Este manual describe la versi&oacute;n &appversion; del &app;.
+    </releaseinfo>
+    <legalnotice> 
+      <title>Comentarios</title>
+        <para>Para informar de un defecto o hacer alguna sugerencia sobre el aplique &app; o el presente manual, siga las instrucciones que aparecen en <ulink url="ghelp:gnome-feedback" type="help">GNOME Feedback Page</ulink>. 
+      </para>
+<!-- Translators may also add here feedback address for translations -->
+    </legalnotice>
+  </articleinfo>
+  <indexterm zone="index"> 
+    <primary>Gestor de contenedores</primary> 
+  </indexterm> 
+  <indexterm zone="index"> 
+    <primary>file-roller</primary> 
+  </indexterm>
+  <indexterm zone="index"> 
+    <primary>Archivar</primary> 
+  </indexterm>
+  <indexterm zone="file-roller-add-files"> 
+    <primary>Contenedores</primary> 
+    <secondary>Agregar archivos a</secondary>
+  </indexterm> 
+  <indexterm zone="file-roller-delete-files"> 
+    <primary>Contenedores</primary> 
+    <secondary>Suprimir archivos de</secondary>
+  </indexterm> 
+  <indexterm zone="file-roller-open"> 
+    <primary>Contenedores</primary> 
+    <secondary>Abrir</secondary>
+  </indexterm> 
+  <indexterm zone="file-roller-view"> 
+    <primary>Contenedores</primary> 
+    <secondary>Ver</secondary>
+  </indexterm> 
+  <indexterm zone="file-roller-extract"> 
+    <primary>Contenedores</primary> 
+    <secondary>Extraer</secondary>
+  </indexterm> 
+  <indexterm zone="file-roller-create"> 
+    <primary>Contenedores</primary> 
+    <secondary>Crear</secondary>
+  </indexterm> 
+
+<!-- ============= Document Body ============================= -->
+<!-- ============= Introduction ============================== -->
+<!-- Use the Introduction section to give a brief overview of what
+     the application is and what it does. -->
+<sect1 id="file-roller-intro"> 
+	 <title>Introducci&oacute;n</title>
+    <para>La aplicaci&oacute;n &app; se utiliza para crear, ver, modificar o desempaquetar un contenedor. &Eacute;ste es un archivo que contiene otros archivos. Un contenedor puede contener muchos archivos, carpetas y subcarpetas, generalmente comprimidos. 
+    </para>
+    <para>La aplicaci&oacute;n 
+      &app; ofrece &uacute;nicamente una interfaz gr&aacute;fica y usa comandos como <command>tar</command>, <command>gzip</command> y <command>bzip2</command> para las operaciones de archivado. 
+    </para>
+    <para>
+      Si tiene instaladas en su sistema las herramientas de l&iacute;nea de comandos apropiadas, el &app; admite los formatos de contenedor que se enumeran en la tabla siguiente.</para>
+      <informaltable frame="all">
+        <tgroup cols="2" colsep="1" rowsep="1">
+          <colspec colname="COLSPEC0" colwidth="50*"/>
+          <colspec colname="COLSPEC1" colwidth="50*"/>
+          <thead>
+            <row valign="top">
+              <entry colname="COLSPEC0">
+                <para>Formato</para></entry>
+              <entry colname="COLSPEC1" align="left">
+                <para>Extensi&oacute;n del nombre de archivo</para></entry>
+            </row>
+          </thead>
+          <tbody>
+            <row valign="top">
+              <entry><para>Contenedor Enterprise</para></entry>
+              <entry align="left"><para><filename>.ear</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor Java</para></entry>
+              <entry align="left"><para><filename>.jar</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor LHA</para></entry>
+              <entry align="left"><para><filename>.lzh</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor de Resource Adapter</para></entry>
+              <entry align="left"><para><filename>.rar</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor tar no comprimido</para></entry>
+              <entry align="left"><para><filename>.tar</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor tar comprimido con <command>bzip</command></para></entry>
+              <entry align="left"><para><filename>.tar.bz</filename> o <filename>.tbz</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor tar comprimido con <command>bzip2</command></para></entry>
+              <entry align="left"><para><filename>.tar.bz2</filename> o <filename>.tbz2</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor tar comprimido con <command>gzip</command></para></entry>
+              <entry align="left"><para><filename>.tar.gz</filename> o <filename>.tgz</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor tar comprimido con <command>lzop</command></para></entry>
+              <entry align="left"><para><filename>.tar.lzo</filename> o <filename>.tzo</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor tar comprimido con <command>compress</command></para></entry>
+              <entry align="left"><para><filename>.tar.Z</filename> o <filename>.taz</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor Web</para></entry>
+              <entry align="left"><para><filename>.war</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Contenedor PKZIP o Winzip</para></entry>
+              <entry align="left"><para><filename>.zip</filename></para></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    <para>El formato de contenedor m&aacute;s com&uacute;n en los sistemas UNIX y Linux es el contenedor tar comprimido con <command>gzip</command>.  </para>
+    <para>El formato de contenedor m&aacute;s com&uacute;n en los sistemas Microsoft Windows es el contenedor creado con <application>PKZIP</application> o <application>WinZip</application>.  </para>
+<sect2 id="file-roller-intro-nonarchive">
+    <title>Archivos comprimidos que no son contenedores</title>
+    <para>Un archivo comprimido no contenedor es el que se crea al utilizar <command>bzip</command>, <command>bzip2</command>, <command>gzip</command>, <command>lzop</command> o <command>compress</command> para comprimir un archivo que no es un contenedor. Por ejemplo, <filename>archivo.txt.gz</filename> se crea al utilizar <command>gzip</command> para comprimir <filename>archivo.txt</filename>.</para>
+    <para>Se puede utilizar la aplicaci&oacute;n &app; para abrir y extraer archivos comprimidos que no son contenedores.</para>
+    <para>No se puede utilizar, sin embargo, para crear o modificar un archivo comprimido que no sea contenedor.</para>
+</sect2>
+</sect1>
+
+<!-- ============= Getting Started =========================== -->
+<sect1 id="file-roller-get-start">
+<title>Procedimientos iniciales</title>
+           <para>En este apartado se ofrece informaci&oacute;n acerca de c&oacute;mo iniciar la aplicaci&oacute;n &app; y se describe su interfaz de usuario.
+           </para>
+
+<!-- ============= To Start File Roller ============================ -->
+         <sect2 id="file-roller-to-start">
+                <title>Para iniciar el &app;</title>
+                <para>Para iniciar el <application>&app;</application>, siga los siguientes pasos:</para>
+                <variablelist>
+                <varlistentry>
+                <term>Men&uacute;</term>
+                <listitem>
+                <para>Para obtener informaci&oacute;n sobre c&oacute;mo iniciar la aplicaci&oacute;n <application>&app;</application> desde un men&uacute;, consulte la &uacute;ltima versi&oacute;n de la &ug; correspondiente a su plataforma.</para>
+                </listitem>
+                </varlistentry>
+                <varlistentry>
+                <term>L&iacute;nea de comandos</term>
+                <listitem>
+                <para>Ejecute el comando siguiente: <command>file-roller</command></para>
+                </listitem>
+                </varlistentry>
+                </variablelist>
+        </sect2>
+
+         <sect2 id="file-roller-when-start">
+                <title>Al iniciar la aplicaci&oacute;n &app;</title>
+                <para>Cuando inicia el <application>&app;</application>, aparece la ventana siguiente.</para>
+
+                <figure id="file-roller-FIG-main-window">
+                  <title>Ventana del &app;</title>
+                  <screenshot>
+                         <mediaobject>
+                                <imageobject>
+                                  <imagedata fileref="figures/file-roller_main_window.png" format="PNG"/>
+                                         </imageobject>
+                                <textobject><phrase>Muestra la ventana principal del &app;.</phrase>
+                                </textobject>
+                        </mediaobject>
+                  </screenshot>
+                </figure>
+
+                <para>La ventana del <application>&app;</application> contiene los elementos siguientes: </para>
+                <variablelist>
+                  <varlistentry> <term>Barra de men&uacute;s</term>
+                         <listitem>
+                                <para>Los men&uacute;s que aparecen en la barra contienen todos los comandos necesarios para trabajar con contenedores en el <application>&app;</application>.</para>
+                         </listitem>
+                  </varlistentry>
+                  <varlistentry> <term>Barra de herramientas</term>
+                         <listitem>
+                                <para>La barra de herramientas contiene un subconjunto de los comandos a los que puede acceder desde la barra de men&uacute;s. El &app; muestra la barra de herramientas de forma predeterminada. Para ocultar la barra de herramientas, seleccione <menuchoice><guimenu>Ver</guimenu> <guimenuitem>Barra de herramientas</guimenuitem></menuchoice>. Para mostrar la barra de herramientas, seleccione de nuevo <menuchoice><guimenu>Ver</guimenu> <guimenuitem>Barra de herramientas</guimenuitem></menuchoice>. </para>
+                         </listitem>
+                  </varlistentry>
+                  <varlistentry> <term>Barra de carpetas</term>
+                         <listitem>
+                                <para>La barra de carpetas permite desplazarse dentro de las carpetas de un contenedor. El &app; s&oacute;lo muestra la barra de carpetas en la vista de carpetas. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-view-type-folder"/>.</para>
+                         </listitem>
+                  </varlistentry>
+                  <varlistentry> <term>&Aacute;rea de visualizaci&oacute;n</term>
+                         <listitem>
+                                <para>El &aacute;rea de visualizaci&oacute;n muestra el contenido del contenedor. </para>
+                         </listitem>
+                  </varlistentry>
+                  <varlistentry> <term>Barra de estado</term>
+                         <listitem>
+                                <para>La barra de estado muestra informaci&oacute;n sobre la actividad actual del <application>&app;</application> e informaci&oacute;n contextual sobre el contenido del archivo contenedor. El &app; muestra la barra de estado de forma predeterminada. Para ocultar la barra de estado, seleccione <menuchoice><guimenu>Ver</guimenu> <guimenuitem>Barra de estado</guimenuitem></menuchoice>. Para mostrar la barra de estado, seleccione de nuevo <menuchoice><guimenu>Ver</guimenu> <guimenuitem>Barra de estado</guimenuitem></menuchoice>. </para>
+                         </listitem>
+                  </varlistentry>
+                </variablelist>
+                <para>Cuando se pulsa con el bot&oacute;n derecho del rat&oacute;n en la ventana del <application>&app;</application>, la aplicaci&oacute;n muestra un men&uacute; emergente que emergente contiene los comandos contextuales de contenedor m&aacute;s habituales. </para>
+         </sect2>
+</sect1>
+
+
+
+<!-- ======= Working with archives ============= -->
+
+<sect1 id="file-roller-working">
+      <title>Trabajo con contenedores</title>
+      <para>
+        Si utiliza el &app; para trabajar con contenedores, los cambios se guardan en el disco de forma inmediata. Por ejemplo, si borra un archivo del contenedor, el &app; efect&uacute;a el borrado inmediatamente despu&eacute;s de hacer clic en <guibutton>Aceptar</guibutton>. Este comportamiento es distinto del de la mayor&iacute;a de aplicaciones, que &uacute;nicamente guardan los cambios al salir de la aplicaci&oacute;n o al seleccionar <guimenuitem>Guardar</guimenuitem> en el men&uacute;.</para>
+      <para>El &app; ofrece diversas formas de llevar a cabo las mismas acciones. Por ejemplo, se puede abrir un contenedor de las siguientes formas:
+                  <informaltable frame="all">
+                    <tgroup cols="2" colsep="1" rowsep="1">
+                      <colspec colname="COLSPEC0" colwidth="50*"/>
+                      <colspec colname="COLSPEC1" colwidth="50*"/>
+                      <thead>
+                        <row valign="top">
+                          <entry colname="COLSPEC0">
+                            <para>Componente de la IU</para></entry>
+                          <entry colname="COLSPEC1" align="left">
+                            <para>Acci&oacute;n</para></entry>
+                        </row>
+                      </thead>
+                      <tbody>
+                        <row valign="top">
+                          <entry><para>Barra de men&uacute;s</para></entry>
+                          <entry><para>Seleccione <menuchoice><guimenu>Contenedor </guimenu> <guimenuitem>Abrir</guimenuitem> </menuchoice>.</para>
+           <para>Si ha abierto el contenedor recientemente, seleccione <menuchoice><guimenu>Contenedor</guimenu> <guimenuitem>Abrir reciente</guimenuitem> </menuchoice>.</para>
+</entry>
+                        </row>
+                        <row valign="top">
+                          <entry><para>Ventana</para></entry>
+                          <entry><para>Arrastre un contenedor a la ventana del &app; desde otra aplicaci&oacute;n, como un administrador de archivos.</para></entry>
+                        </row>
+                        <row valign="top">
+                          <entry><para>Barra de herramientas</para></entry>
+                          <entry><para>Haga clic el bot&oacute;n <guibutton>Abrir</guibutton> de la barra de herramientas.</para></entry>
+                        </row>
+                        <row valign="top">
+                          <entry><para>Men&uacute; emergente de bot&oacute;n derecho</para></entry>
+                          <entry><para>Haga clic con el bot&oacute;n derecho en un contenedor y seleccione <guilabel>Abrir</guilabel> en el men&uacute; emergente.</para></entry>
+                        </row>
+                        <row valign="top">
+                          <entry><para>Teclas de acceso directo</para></entry>
+                          <entry><para>Pulse <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>.</para></entry>
+                        </row>
+                      </tbody>
+                    </tgroup>
+                  </informaltable>
+      </para>
+      <para>
+      Este manual contiene documentaci&oacute;n sobre las funciones de la barra de men&uacute;s.
+      </para>
+      <para>
+Puede utilizar el &app; para abrir un &uacute;nico contenedor o varios.
+      </para>
+
+<!-- ======= To open an archive ============= -->
+
+<sect2 id="file-roller-open">
+      <title>Para abrir un solo contenedor</title>
+      <para>
+	Para abrir un contenedor efect&uacute;e los pasos siguientes:
+        <orderedlist>
+          <listitem>
+           <para>Elija <menuchoice><guimenu>Contenedor</guimenu> <guimenuitem>Abrir</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Abrir contenedor</guilabel>.</para>
+          </listitem>
+          <listitem>
+           <para>Seleccione el contenedor que desee abrir.</para>
+          </listitem>
+          <listitem>
+           <para>Haga clic en <guibutton>Aceptar</guibutton>.</para>
+          </listitem>
+        </orderedlist>
+      </para>
+      <para>El &app; determina autom&aacute;ticamente el tipo de contenedor y muestra:
+        <itemizedlist>
+          <listitem>
+            <para>El nombre del contenedor en la barra de t&iacute;tulo de la ventana.</para>
+          </listitem>
+          <listitem>
+            <para>El contenido del contenedor en el &aacute;rea de visualizaci&oacute;n</para>
+          </listitem>
+          <listitem>
+            <para>El n&uacute;mero total de archivos en el contenedor y el tama&ntilde;o del contenedor una vez descomprimido, en la barra de estado</para>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para>
+	Si el tama&ntilde;o de un contenedor es muy grande o su sistema es lento, la operaci&oacute;n de abrir el contenedor puede tardar una cantidad significativa de tiempo. Para cancelar la operaci&oacute;n de abrir, pulse <keycap>Esc</keycap>. Otra posibilidad es seleccionar <menuchoice><guimenu>Ver</guimenu> <guimenuitem>Parar</guimenuitem> </menuchoice> o pulsar <guibutton>Parar</guibutton> en la barra de herramientas. 
+      </para>
+      <para>
+	Si intenta abrir un contenedor creado en un formato no reconocido por el &app;, la aplicaci&oacute;n mostrar&aacute; un mensaje de error. Consulte <xref linkend="file-roller-intro"/> para ver la lista de los formatos admitidos.      </para>
+      <para>
+	Para obtener informaci&oacute;n acerca de como abrir varios contenedores, consulte <xref linkend="file-roller-open-multiple"/>.
+      </para>
+  </sect2>
+
+  <sect2 id="file-roller-open-multiple">
+      <title>Para abrir varios contenedores</title>
+      <para>El &app; abre el contenedor especificado en la ventana actual. Si ya hay un contenedor abierto, el &app; lo cierra y a continuaci&oacute;n abre el segundo contenedor. 
+      </para>
+      <para>
+        Para abrir m&aacute;s de un contenedor al mismo tiempo, siga estos pasos:
+        <orderedlist>
+          <listitem>
+            <para>Abra el primer contenedor en la ventana actual.
+            </para>
+          </listitem>
+          <listitem>
+            <para>Seleccione <menuchoice><guimenu>Ventanas</guimenu> <guimenuitem>Nueva ventana</guimenuitem></menuchoice> para abrir una nueva ventana del &app;.
+            </para>
+          </listitem>
+          <listitem>
+            <para>Abra el segundo contenedor en la nueva ventana del &app;. El primer contenedor seguir&aacute; abierto en la primera ventana.
+            </para>
+          </listitem>
+          <listitem>
+            <para>Repita los pasos 2 y 3 para abrir todos los contenedores necesarios.
+            </para>
+          </listitem>
+        </orderedlist>
+      </para>
+  </sect2>
+
+  <!-- =========== Extracting Files From an Archive ==================== -->
+
+<sect2 id="file-roller-extract"> 
+    <title>Para extraer archivos de un contenedor</title>
+    <para>
+	Para extraer archivos del contenedor actualmente abierto, efect&uacute;e los pasos siguientes:
+        <orderedlist>
+        <listitem><para>
+        Seleccione los archivos que desee extraer.</para>
+        </listitem>
+        <listitem><para>
+        Seleccione <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Extraer a</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Extraer</guilabel>.</para>
+        </listitem>
+        <listitem><para>
+        Seleccione las opciones de extracci&oacute;n necesarias. Para obtener m&aacute;s informaci&oacute;n acerca de estas opciones, consulte <xref linkend="file-roller-extract-options"/>.</para>
+        </listitem>
+        <listitem><para>
+        Haga clic en <guibutton>Aceptar</guibutton>.</para>
+        </listitem>
+        </orderedlist>
+        </para>
+      <para>El &app; ofrece tambi&eacute;n formas de extraer archivos de un contenedor dentro de la ventana de una aplicaci&oacute;n de gesti&oacute;n de archivos, sin tener que abrir una ventana del &app; independiente. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-fmgr"/>.</para>
+    <para>
+      Para seleccionar todos los archivos del contenedor, seleccione <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Seleccionar todos</guimenuitem> </menuchoice>. </para>
+      <para>Para deseleccionar todos los archivos del contenedor, seleccione <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Deseleccionar todos</guimenuitem> </menuchoice>. 
+    </para>
+    <para>
+      La operaci&oacute;n Extraer extrae del contenedor una copia de los archivos especificados. Los archivos extra&iacute;dos tendr&aacute;n los mismos permisos y fechas de modificaci&oacute;n que los archivos originales agregados al contenedor.
+    </para>
+    <para>
+      La operaci&oacute;n Extraer no modifica el contenido del contenedor. Para obtener informaci&oacute;n sobre c&oacute;mo borrar archivos de un contenedor, consulte <xref linkend="file-roller-delete-files"/>. Para obtener informaci&oacute;n sobre c&oacute;mo borrar un contenedor, consulte <xref linkend="file-roller-delete-archive"/>. 
+    </para>
+</sect2>
+    
+<!-- ======= Closing the Archive ============= -->
+<sect2 id="file-roller-archive-close">
+  <title>Para cerrar un contenedor</title>
+  <para>Para cerrar el contenedor actual y la ventana de &app;, seleccione <menuchoice> <guimenu>Ventanas</guimenu> <guimenuitem>Cerrar ventana</guimenuitem></menuchoice>.
+  </para>
+  <para>Para cerrar el contenedor actual pero no la ventana del &app;, seleccione <menuchoice> <guimenu>Contenedor</guimenu> <guimenuitem>Cerrar</guimenuitem></menuchoice>.
+  </para>
+</sect2>
+</sect1>
+
+
+  <!-- =============  Creating Archives ============================= -->
+<sect1 id="file-roller-creating"> 
+    <title>Creaci&oacute;n de contenedores</title>
+    <para>
+      Aparte de abrir contenedores, el &app; permite tambi&eacute;n crear contenedores nuevos.</para>
+<sect2 id="file-roller-create"> 
+    <title>Para crear un contenedor</title>
+    <para>
+	Para crear un contenedor, efect&uacute;e los pasos siguientes:
+      <orderedlist>
+        <listitem>
+          <para>Elija <menuchoice><guimenu>Contenedor</guimenu> <guimenuitem>Nuevo</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Nuevo contenedor</guilabel>. 
+          </para>
+        </listitem>
+        <listitem>
+          <para>Especifique la ruta en la que el &app; debe guardar el contenedor nuevo. Elija una ruta en el cuadro o haga un doble clic en una entrada del panel <guilabel>Carpetas</guilabel> para desplazarse a la ruta correspondiente. Otra posibilidad es escribir la ruta en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Escriba el nombre del contenedor nuevo, con la extensi&oacute;n, en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>. 
+          </para>
+          <para>No seleccione el tipo de contenedor de forma expl&iacute;cita en la lista desplegable <guilabel>Tipo de contenedor</guilabel>. El &app; determina el tipo de contenedor a partir de la extensi&oacute;n del nombre de archivo. Por ejemplo, si escribe el nombre de archivo <filename>archive.tar.bz2</filename>, el &app; crea un contenedor tar comprimido con <application>bzip2</application>. Para obtener m&aacute;s informaci&oacute;n acerca de los formatos de contenedor admitidos por el &app;, consulte <xref linkend="file-roller-intro"/>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Haga clic en <guibutton>Aceptar</guibutton>. El &app; crea un contenedor vac&iacute;o, pero a&uacute;n no lo escribe en el disco. 
+          </para>
+        </listitem>
+        <listitem>
+          <para>Para agregar archivos al nuevo contenedor siga las indicaciones descritas en <xref linkend="file-roller-add-files"/>.  
+                <note>
+                  <para>El &app; s&oacute;lo escribe el contenedor nuevo en el disco cuando aqu&eacute;l tiene al menos un archivo. Si crea un contenedor nuevo y sale del &app; antes de agregar ning&uacute;n archivo al mismo, el &app; borra el contenedor.
+                  </para>
+                </note>
+          </para>
+        </listitem>
+      </orderedlist>
+    </para>
+    <para>El cuadro de di&aacute;logo <guilabel>Nuevo contenedor</guilabel> contiene tambi&eacute;n los siguientes botones para trabajar con el sistema de archivos:
+        <variablelist>
+          <varlistentry>
+            <term><guibutton>Nueva carpeta</guibutton></term>
+            <listitem><para>Crea una carpeta nueva en el directorio actual.</para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><guibutton>Borrar archivo</guibutton></term>
+            <listitem><para>Borra el archivo especificado en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>.</para></listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><guibutton>Renombrar archivo</guibutton></term>
+            <listitem><para>Renombra el archivo especificado en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>.</para></listitem>
+          </varlistentry>
+        </variablelist>
+        </para>
+</sect2>
+
+    <!-- ======= Adding files to an archive  ============= -->
+  <sect2 id="file-roller-add-files">
+    <title>Para agregar archivos a un contenedor</title>
+    <para>
+Para agregar archivos a un contenedor, efect&uacute;e los pasos siguientes:
+      <orderedlist>
+         <listitem>
+           <para>Decida d&oacute;nde desea agregar los archivos y abra la carpeta correspondiente del contenedor.</para>
+         </listitem>
+         <listitem>
+           <para>Elija <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Agregar archivos</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Agregar archivos y carpetas</guilabel>.</para>
+         </listitem>
+         <listitem>
+           <para>Seleccione los archivos que desee agregar o escriba el nombre de la carpeta en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>.</para>
+    <note>
+    <para>Si hace clic en el nombre de la carpeta en el panel <guilabel>Carpetas</guilabel>, el cuadro de texto <guilabel>Selecci&oacute;n</guilabel> no cambia. Deber&aacute; escribir el nombre de la carpeta de forma manual. Por ejemplo, para agregar la carpeta  <filename>/aaa/bbb/ccc</filename> a un contenedor, utilice el panel <guilabel>Carpetas</guilabel> para desplazarse a la carpeta <filename>/aaa/bbb</filename> y escriba <userinput>ccc</userinput> en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>. 
+    </para>
+    </note>
+         </listitem>
+         <listitem>
+           <para>Pulse <guibutton>Aceptar</guibutton>. El &app; agrega los archivos a la carpeta actualmente abierta del contenedor.
+          </para>
+         </listitem>
+      </orderedlist>
+    </para>
+    <para>El cuadro de di&aacute;logo <guilabel>Agregar archivos y carpetas</guilabel> ofrece tambi&eacute;n diversas opciones avanzadas. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-advanced-options"/>.</para>
+      <para>Tambi&eacute;n se pueden agregar archivos a un contenedor desde la ventana de un administrador de archivos, sin tener que abrir una ventana independiente del &app;. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-fmgr"/>.</para>
+    <para>La operaci&oacute;n Agregar agrega al contenedor una copia de los archivos especificados. El &app; no elimina los archivos originales; &eacute;stos permanecen sin cambios en el sistema de archivos. Las copias agregadas al contenedor tendr&aacute;n los mismos permisos y fechas de modificaci&oacute;n que los archivos originales. 
+    </para>
+<!-- ======= Adding files - Advanced Options  ============= -->
+    <sect3 id="file-roller-advanced-options">
+      <title>Opciones de agregar avanzadas</title>
+      <para>El cuadro de di&aacute;logo <guilabel>Agregar archivos y carpetas</guilabel> contiene tambi&eacute;n las opciones siguientes para seleccionar y agregar autom&aacute;ticamente los archivos que satisfagan criterios espec&iacute;ficos.
+      </para>
+      <variablelist>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term>Patrones de nombre de archivo</term>
+	  <listitem>
+            <para>Para agregar autom&aacute;ticamente todos los archivos cuyo nombre sigue un cierto patr&oacute;n, escriba &eacute;ste en el cuadro <guilabel>Selecci&oacute;n</guilabel>. El patr&oacute;n puede contener los s&iacute;mbolos de comod&iacute;n est&aacute;ndar como <keycap>*</keycap>, que representa cualquier cadena, y <keycap>?</keycap>, que representa cualquier s&iacute;mbolo. Es posible escribir varios patrones separados por punto y coma. El &app; agregar&aacute; todos los archivos que respondan al menos a uno de dichos patrones. En la tabla siguiente se muestran ejemplos del uso de patrones de nombre de archivo para seleccionar archivos.
+</para>
+                  <informaltable frame="all">
+                    <tgroup cols="2" colsep="1" rowsep="1">
+                      <colspec colname="COLSPEC0" colwidth="50*"/>
+                      <colspec colname="COLSPEC1" colwidth="50*"/>
+                      <thead>
+                        <row valign="top">
+                          <entry colname="COLSPEC0">
+                            <para>Patr&oacute;n</para></entry>
+                          <entry colname="COLSPEC1" align="left">
+                            <para>Archivos que coinciden</para></entry>
+                        </row>
+                      </thead>
+                      <tbody>
+                        <row valign="top">
+                          <entry><para><filename>*</filename></para></entry>
+                          <entry align="left"><para>Todos los archivos</para></entry>
+                        </row>
+                        <row valign="top">
+                          <entry><para><filename>*.tar*</filename></para></entry>
+                          <entry align="left"><para>Todos los archivos con extensi&oacute;n <filename>tar</filename>, incluidos aquellos en que dicha extensi&oacute;n vaya seguida por cualquier cantidad de s&iacute;mbolos, como <filename>nombre_archivo.tar.gz</filename></para></entry>
+                        </row>
+                        <row valign="top">
+                          <entry><para><filename>*.jpg; *.jpeg</filename></para></entry>
+                          <entry align="left"><para>Todos los archivos con la extensi&oacute;n <filename>jpg</filename> y todos los archivos con la extensi&oacute;n <filename>jpeg</filename>
+</para></entry>
+                        </row>
+                      </tbody>
+                    </tgroup>
+                  </informaltable>
+            <note>
+            <para>De forma predeterminada, los nombres de archivo en UNIX distinguen entre may&uacute;sculas y min&uacute;sculas. Seleccione la opci&oacute;n <guilabel>Ignorar may&uacute;sculas/min&uacute;sculas</guilabel> para anular este comportamiento predeterminado.
+            </para>
+            </note>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><guilabel>Agregar s&oacute;lo si no lo contiene</guilabel></term>
+	  <listitem>
+            <para>Seleccione esta opci&oacute;n para agregar al contenedor el archivo especificado &uacute;nicamente en el caso de que no lo contenga o de que la versi&oacute;n contenida en &eacute;l sea m&aacute;s antigua. El &app; utiliza la fecha de modificaci&oacute;n para determinar el archivo m&aacute;s reciente. Si la versi&oacute;n del archivo ubicada en el contenedor es la m&aacute;s reciente, el &app; no agrega el archivo especificado.
+            </para>
+	    <para>Si no se selecciona esta opci&oacute;n, el &app; agrega el archivo al contenedor sobrescribiendo el contenido anterior. 
+	    </para>
+	    <tip>
+	      <title>Consejo</title>
+	      <para>Si utiliza el &app; para crear copias de seguridad, la opci&oacute;n <guilabel>Agregar s&oacute;lo si no lo contiene</guilabel> resulta especialmente &uacute;til. Por ejemplo, el contenedor <filename>copia_seguridad.tar.gz</filename> contiene una copia de seguridad de su carpeta de inicio que tiene una semana de antig&uuml;edad. Para actualizar el contenedor de forma que contenga una copia actualizada de dicha carpeta, efect&uacute;e los pasos siguientes:
+                    <orderedlist>
+                      <listitem>
+                        <para>
+                          Abra el contenedor <filename>copia_seguridad.tar.gz</filename> en el &app;. 
+                        </para>
+                      </listitem>
+                      <listitem>
+                        <para>
+                          Elija <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Agregar archivos</guimenuitem> </menuchoice>para abrir el cuadro de di&aacute;logo <guilabel>Agregar archivos y carpetas</guilabel>.
+                        </para>
+                      </listitem>
+                      <listitem>
+                        <para>
+		          Seleccione su carpeta de inicio en el panel <guilabel>Carpetas</guilabel>. 
+                        </para>
+                      </listitem>
+                      <listitem>
+                        <para>
+                          Seleccione la opci&oacute;n <guilabel>Agregar s&oacute;lo si no lo contiene</guilabel>.
+                        </para>
+                      </listitem>
+                      <listitem>
+                        <para>
+                          Haga clic en <guibutton>Aceptar</guibutton>. 
+                        </para>
+                      </listitem>
+                    </orderedlist>
+El &app; agrega autom&aacute;ticamente al contenedor todos los archivos creados durante la ultima semana y actualiza aquellos modificados durante dicho per&iacute;odo. No obstante, el &app; no elimina del contenedor los archivos eliminados durante la semana pasada. La operaci&oacute;n de actualizaci&oacute;n del contenedor es mucho m&aacute;s r&aacute;pida que la de efectuar una copia de seguridad completa de la carpeta de inicio. 
+	    </para>
+	  </tip>
+	</listitem>
+      </varlistentry>
+       <!-- ============= -->	
+      <varlistentry>
+	<term><guilabel>Incluir subcarpetas</guilabel></term>
+	<listitem>
+          <para>Seleccione esta opci&oacute;n si desea agregar todos los archivos que se ajusten al patr&oacute;n de la carpeta actual y sus subcarpetas. 
+          </para>
+          <note>
+          <para>
+           Deben ajustarse al patr&oacute;n los nombres de los archivos, no los de las subcarpetas. 
+          </para>
+          </note>
+	  <para>Si no se selecciona la opci&oacute;n, el &app; agrega &uacute;nicamente los archivos coincidentes de la carpeta actual.
+	  </para>
+        </listitem>
+      </varlistentry>
+       <!-- ============= -->	
+     <varlistentry>
+	<term><guilabel>Excluir carpetas que sean enlaces simb&oacute;licos</guilabel></term>
+	  <listitem>
+            <para>Seleccione esta opci&oacute;n para omitir los archivos contenidos en carpetas que sean enlaces simb&oacute;licos. &Eacute;stos son punteros o accesos directos a otras carpetas. 
+            </para>
+	    <para>Si no se selecciona esta opci&oacute;n, el &app; agrega los archivos coincidentes de las carpetas que son enlaces simb&oacute;licos.
+	    </para>
+          </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Excluir otros sistemas de archivos</guilabel></term>
+	  <listitem>
+            <para>Seleccione esta opci&oacute;n si desea omitir los archivos de sistemas de archivos distintos del actual. Si se selecciona esta opci&oacute;n, el &app; no agrega archivos ubicados en soportes extra&iacute;bles como CD, disquetes o discos Zip. Tampoco agrega archivos de otros equipos de la red, como los ubicados en un sistema de archivos NFS.
+            </para>
+            <para>Si no se selecciona la opci&oacute;n, el &app; agrega los archivos coincidentes de otros sistemas de archivos.
+	    </para>
+          </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Excluir archivos de copia de seguridad</guilabel></term>
+	  <listitem>
+            <para>Seleccione esta opci&oacute;n para omitir archivos cuyos nombres acaben con el s&iacute;mbolo <keycap>&tilde;</keycap>; por ejemplo, <filename>archivo&tilde;</filename>. 
+            </para>
+	    <para>Si no se selecciona esta opci&oacute;n, el &app; agrega tambi&eacute;n los archivos cuyos nombres finalizan con el s&iacute;mbolo <keycap>&tilde;</keycap>.
+	    </para>
+          </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Excluir archivos ocultos</guilabel></term>
+	  <listitem>
+            <para>Seleccione esta opci&oacute;n si desea omitir los archivos cuyos nombres empiecen por <keycap>.</keycap>, por ejemplo, <filename>.archivo</filename>. 
+            </para>
+	    <para>Si no se selecciona esta opci&oacute;n, el &app; agrega tambi&eacute;n los archivos cuyos nombres empiezan con un punto <keycap>.</keycap>.
+	    </para>
+          </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Excluir archivos</guilabel></term>
+	  <listitem>
+            <para>Seleccione esta opci&oacute;n para omitir los archivos cuyos nombres coinciden con el patr&oacute;n especificado en el cuadro de texto <guilabel>Excluir archivos</guilabel>. Para obtener m&aacute;s informaci&oacute;n acerca de los patrones de nombres, consulte <link linkend="file-roller-advanced-options">Patrones de nombre de archivo</link>.
+            </para>
+          </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Ignorar may&uacute;sculas/min&uacute;sculas</guilabel></term>
+	  <listitem>
+            <para>Seleccione esta opci&oacute;n para agregar todos los archivos cuyos nombres coinciden con el patr&oacute;n especificado, con cualquier combinaci&oacute;n de may&uacute;sculas y min&uacute;sculas. 
+            </para>
+            <para>Por ejemplo, si escribe <filename>*.jpeg</filename> en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel> y selecciona la opci&oacute;n <guilabel>Ignorar may&uacute;sculas/min&uacute;sculas</guilabel>, el &app; agrega todos los archivos con las extensiones  <filename>jpeg</filename>, <filename>JPEG</filename> o <filename>JpeG</filename>. 
+            </para>
+            <para>Si escribe <filename>*.jpeg</filename> en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel> y no selecciona la opci&oacute;n <guilabel>Ignorar may&uacute;sculas/min&uacute;sculas</guilabel>, el &app; agrega todos los archivos cuya extensi&oacute;n en <filename>jpeg</filename>, pero no aquellos con extensiones <filename>JPEG</filename> o <filename>JpeG</filename>. 
+            </para>
+          </listitem>
+	</varlistentry>
+      </variablelist>
+    </sect3>
+  </sect2>
+</sect1>
+
+
+<!-- ======= Operations on Whole Archive ============= -->
+<sect1 id="file-roller-modify-archive">
+  <title>Modificaci&oacute;n de contenedores</title>
+  <para>
+    Las operaciones siguientes modifican todo el contenedor:
+  </para>
+  <itemizedlist>
+    <listitem><para><link linkend="file-roller-rename-archive">Renombrar</link> </para></listitem>
+    <listitem><para><link linkend="file-roller-copy-archive">Copiar</link> </para></listitem>
+    <listitem><para><link linkend="file-roller-move-archive">Mover</link> </para></listitem>
+    <listitem><para><link linkend="file-roller-delete-archive">Borrar</link> </para></listitem>
+  </itemizedlist>
+
+  <!-- ======= Renaming an Archive ============= -->
+  <sect2 id="file-roller-rename-archive"> 
+    <title>Para renombrar un contenedor</title>
+    <para>Para renombrar un contenedor, efect&uacute;e los pasos siguientes:
+    </para>
+    <orderedlist>
+      <listitem>
+        <para>Abra el contenedor que desee renombrar.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Elija <menuchoice><guimenu>Contenedor</guimenu> <guimenuitem>Renombrar</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Renombrar contenedor</guilabel>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Escriba el nuevo nombre del contenedor, sin extensi&oacute;n.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Haga clic en <guibutton>Renombrar</guibutton>. El &app; cambia el nombre del contenedor por el nuevo nombre indicado y deja la extensi&oacute;n de archivo original.
+        </para>
+      </listitem>
+    </orderedlist>
+  </sect2>
+
+  <!-- ======= Copying an Archive ============= -->
+  <sect2 id="file-roller-copy-archive"> 
+    <title>Para copiar un contenedor</title>
+    <para>Para copiar un contenedor, efect&uacute;e los pasos siguientes:
+    </para>
+    <orderedlist>
+      <listitem>
+        <para>Abra el contenedor que desee copiar.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Elija <menuchoice><guimenu>Contenedor</guimenu> <guimenuitem>Copiar</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Copiar contenedor</guilabel>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Especifique la ruta en la que el &app; debe guardar el archivo copiado. Elija una ruta en el cuadro o pulse dos veces en una entrada del panel <guilabel>Carpetas</guilabel> para desplazarse a la ruta correspondiente. Otra posibilidad es escribir la ruta en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Pulse <guibutton>Aceptar</guibutton>. El &app; copia el contenedor en la ubicaci&oacute;n especificada. Si &eacute;sta no existe, el &app; crea la ruta en primer lugar y a continuaci&oacute;n copia el contenedor en la ubicaci&oacute;n especificada.
+        </para>
+      </listitem>
+    </orderedlist>
+    <para>El cuadro de di&aacute;logo <guilabel>Copiar contenedor</guilabel> contiene tres botones m&aacute;s:<guibutton>Nueva carpeta</guibutton>, <guibutton>Borrar archivo</guibutton> y <guibutton>Renombrar archivo</guibutton>. Para obtener m&aacute;s informaci&oacute;n acerca de dichos botones, consulte <xref linkend="file-roller-create"/>.</para>
+
+  </sect2>
+
+  <!-- ======= Moving an Archive ============= -->
+  <sect2 id="file-roller-move-archive"> 
+    <title>Para mover un contenedor</title>
+    <para>Para mover un contenedor, efect&uacute;e los pasos siguientes:
+    </para>
+    <orderedlist>
+      <listitem>
+        <para>Abra el contenedor que desee mover.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Elija <menuchoice><guimenu>Contenedor</guimenu> <guimenuitem>Mover</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Mover contenedor</guilabel>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Especifique la nueva ruta del contenedor. Elija una ruta en el cuadro o pulse dos veces en una entrada del panel <guilabel>Carpetas</guilabel> para desplazarse a la ruta correspondiente. Otra posibilidad es escribir la ruta en el cuadro de texto <guilabel>Selecci&oacute;n</guilabel>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Pulse <guibutton>Aceptar</guibutton>. El &app; mueve el contenedor a la ubicaci&oacute;n especificada. Si &eacute;sta no existe, el &app; crea la ruta en primer lugar y a continuaci&oacute;n mueve el contenedor a la ubicaci&oacute;n especificada.
+        </para>
+      </listitem>
+    </orderedlist>
+    <para>El cuadro de di&aacute;logo <guilabel>Mover contenedor</guilabel> contiene tres botones m&aacute;s:<guibutton>Nueva carpeta</guibutton>, <guibutton>Borrar archivo</guibutton> y <guibutton>Renombrar archivo</guibutton>. Para obtener m&aacute;s informaci&oacute;n acerca de dichos botones, consulte <xref linkend="file-roller-create"/>.</para>
+  </sect2>
+
+  <!-- ======= Deleting an Archive ============= -->
+  <sect2 id="file-roller-delete-archive">
+    <title>Para borrar un contenedor</title>
+    <para>Para borrar un contenedor, efect&uacute;e los pasos siguientes:
+    </para>
+    <orderedlist>
+      <listitem>
+        <para>Abra el contenedor que desee borrar.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Elija <menuchoice><guimenu>Contenedor</guimenu> <guimenuitem>Borrar</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Borrar contenedor</guilabel>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Haga clic en <guibutton>Borrar</guibutton>. El &app; borra el contenedor.
+        </para>
+      </listitem>
+    </orderedlist>
+  </sect2>
+</sect1>
+
+<!-- ======= Operations on Archive Contents ============= -->
+<sect1 id="file-roller-modify-contents">
+  <title>Modificaci&oacute;n del contenido de un contenedor</title>
+  <para>
+    Para modificar el contenido de un contenedor se pueden emplear los m&eacute;todos siguientes:
+  </para>
+  <itemizedlist>
+    <listitem><para><link linkend="file-roller-add-files">Agregar archivos</link></para></listitem>
+    <listitem><para><link linkend="file-roller-encrypt-files">Cifrar archivos para incrementar la seguridad</link></para></listitem>
+    <listitem><para><link linkend="file-roller-delete-files">Borrar archivos</link></para></listitem>
+  </itemizedlist>
+<!-- ======= Encrypting files in an archive  ============= -->
+    <sect2 id="file-roller-encrypt-files">
+      <title>Para cifrar los archivos de un contenedor</title>
+    <para>A veces es conveniente, por seguridad, cifrar los archivos que se agregan a un contenedor. </para>
+      <para>Si el formato del contenedor admite la opci&oacute;n de cifrado, se puede especificar una contrase&ntilde;a para cifrar los archivos que se agregan al mismo. Actualmente, &uacute;nicamente los contenedores <filename>.zip</filename> admiten cifrado.</para>
+     <para>Para especificar una contrase&ntilde;a de cifrado de archivos, efect&uacute;e los pasos siguientes:</para>
+       <orderedlist>
+          <listitem><para>Elija <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Contrase&ntilde;a</guimenuitem></menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Contrase&ntilde;a</guilabel>.</para></listitem>
+<listitem><para>Escriba la contrase&ntilde;a en el cuadro de texto <guilabel>Contrase&ntilde;a</guilabel>.</para></listitem>
+<listitem><para>Pulse <guibutton>Aceptar</guibutton>.</para></listitem>
+       </orderedlist>
+      <para>El &app; utiliza la contrase&ntilde;a para cifrar los archivos que se agregan al contenedor actual y para descifrar los que se extraen de &eacute;ste. El &app; borra la contrase&ntilde;a en el momento de cerrar el contenedor.
+      </para>
+      <para>Para obtener informaci&oacute;n sobre c&oacute;mo comprobar si los archivos de un contenedor est&aacute;n cifrados, consulte <xref linkend="file-roller-extra-info"/>.
+      </para>
+      <note>
+      <para>El cifrado que ofrecen las utilidades de compresi&oacute;n es d&eacute;bil y poco seguro. Si la seguridad es un factor importante, utilice una herramienta de cifrado s&oacute;lida como <ulink url="http://www.gnupg.org" type="http">GNU Privacy Guard</ulink>.
+      </para>
+      </note>
+    </sect2>
+
+<!-- ======= Deleting files from an archive  ============= -->
+  <sect2 id="file-roller-delete-files"> 
+    <title>Para borrar archivos de un contenedor</title>
+    <para>Para borrar archivos del contenedor actualmente abierto, efect&uacute;e los pasos siguientes:
+      <orderedlist>
+        <listitem>
+          <para>Seleccione los archivos que desee borrar.</para>
+        </listitem>
+        <listitem>
+          <para>Elija <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Borrar</guimenuitem> </menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Borrar archivos</guilabel>.</para>
+        </listitem>
+        <listitem>
+          <para>Seleccione la opci&oacute;n de borrado pertinente.</para>
+        </listitem>
+        <listitem>
+          <para>Pulse <guibutton>Aceptar</guibutton>.
+          </para>
+        </listitem>
+      </orderedlist>
+    </para>
+    <para>El cuadro de di&aacute;logo <guilabel>Borrar archivos</guilabel> ofrece las siguientes opciones de borrado:
+      <itemizedlist>
+      <listitem>
+        <para>Borrar todos los archivos del contenedor actual abierto.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Borrar s&oacute;lo los archivos seleccionados.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Borrar todos los archivos del contenedor actual abierto que coincidan con el patr&oacute;n especificado. Para obtener m&aacute;s informaci&oacute;n acerca de los patrones de nombres, consulte <link linkend="file-roller-advanced-options">Patrones de nombre de archivo</link>. 
+        </para>
+        <note>
+        <para>No se puede utilizar esta opci&oacute;n para borrar una carpeta. No obstante, si todos los archivos de una carpeta coinciden con el patr&oacute;n especificado, el &app; borra tanto la carpeta como los archivos.
+        </para>
+        </note>
+      </listitem>
+      </itemizedlist>
+    </para>
+  </sect2>
+</sect1>
+
+
+<!-- ======= Viewing an archive ============= -->
+<sect1 id="file-roller-view">
+  <title>Visualizaci&oacute;n de contenedores</title>
+  <para>El &app; permite efectuar las siguientes operaciones de visualizaci&oacute;n:
+    <itemizedlist>
+      <listitem>
+        <para><xref linkend="file-roller-view-archive-properties"/>
+        </para>
+      </listitem>
+      <listitem>
+        <para><xref linkend="file-roller-view-archive-contents"/>
+        </para>
+      </listitem>
+      <listitem>
+        <para><xref linkend="file-roller-view-archive-file"/>
+        </para>
+      </listitem>
+    </itemizedlist>
+  </para>
+
+<!-- ======= Archive Properties ============= -->
+    <sect2 id="file-roller-view-archive-properties">
+      <title>Para ver las propiedades de un contenedor</title>
+      <para>Para ver las propiedades de un contenedor seleccione <menuchoice><guimenu>Contenedor</guimenu><guimenuitem>Propiedades</guimenuitem></menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Propiedades</guilabel>. El cuadro de di&aacute;logo <guilabel>Propiedades</guilabel> muestra la informaci&oacute;n siguiente acerca del contenedor:
+            <variablelist>
+	      <varlistentry>
+	        <term><guilabel>Nombre</guilabel></term>
+	        <listitem><para>El nombre del contenedor. 
+                </para></listitem>
+	      </varlistentry>
+	      <varlistentry>
+	        <term><guilabel>Ruta</guilabel></term>
+	        <listitem><para>La ubicaci&oacute;n del contenedor dentro del sistema de archivos. 
+                </para></listitem>
+	      </varlistentry>
+	      <varlistentry>
+	        <term><guilabel>Tama&ntilde;o de archivo</guilabel></term>
+	        <listitem><para>El tama&ntilde;o del contenido del contenedor una vez comprimido. Para averiguar el tama&ntilde;o del contenido del contenedor una vez descomprimido, f&iacute;jese en la barra de estado.
+                </para></listitem>
+	      </varlistentry>
+	      <varlistentry>
+	        <term><guilabel>N&uacute;mero de archivos</guilabel></term>
+	        <listitem><para>El n&uacute;mero de archivos en el contenedor. 
+                </para></listitem>
+	      </varlistentry>
+	      <varlistentry>
+	        <term><guilabel>Fecha y hora</guilabel></term>
+	        <listitem><para>La fecha y la hora de la &uacute;ltima modificaci&oacute;n del contenedor. 
+                </para></listitem>
+	      </varlistentry>
+            </variablelist>
+      </para>
+    </sect2>
+ 
+
+<!-- ======= Archive Contents ============= -->
+    <sect2 id="file-roller-view-archive-contents">
+      <title>Para ver el contenido de un contenedor</title>
+
+      <para>Para ver el contenido de un contenedor del &app;, utilice un visor compatible con Bonobo. El &app; muestra el contenido del contenedor en forma de lista de archivos, con las columnas siguientes:
+        <variablelist>
+	  <varlistentry>
+	    <term><guilabel>Nombre</guilabel></term>
+	    <listitem><para>El nombre de un archivo o carpeta del contenedor. 
+            </para></listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><guilabel>Tama&ntilde;o</guilabel></term>
+	    <listitem><para>El tama&ntilde;o del archivo una vez extra&iacute;do del contenedor. En el caso de una carpeta, el campo <guilabel>Tama&ntilde;o</guilabel> est&aacute; vac&iacute;o. Para obtener informaci&oacute;n acerca del tama&ntilde;o del archivo comprimido, consulte <xref linkend="file-roller-extra-info"/>.
+            </para></listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><guilabel>Tipo</guilabel></term>
+	    <listitem><para>El tipo del archivo. En el caso de una carpeta, el valor del campo <guilabel>Tipo</guilabel> es <literal>Folder</literal>.
+            </para></listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><guilabel>Fecha de modificaci&oacute;n</guilabel></term>
+	    <listitem><para>Fecha de la ultima modificaci&oacute;n del archivo. En el caso de una carpeta, el campo <guilabel>Fecha de modificaci&oacute;n</guilabel> est&aacute; vac&iacute;o.
+            </para></listitem>
+	  </varlistentry>
+	  <varlistentry>
+	    <term><guilabel>Ubicaci&oacute;n</guilabel></term>
+	    <listitem><para>Ruta al archivo dentro del contenedor. En el caso de una carpeta, el campo <guilabel>Ubicaci&oacute;n</guilabel> est&aacute; vac&iacute;o. 
+            </para></listitem>
+	  </varlistentry>
+        </variablelist>
+      </para>
+      <para>Si alg&uacute;n otro programa ha modificado el contenedor desde que &app; lo ha abierto, seleccione <menuchoice><guimenu>Ver</guimenu><guimenuitem>Recargar</guimenuitem></menuchoice> para volver a cargar del disco el contenido del contenedor.
+      </para>
+      <para>Para obtener informaci&oacute;n acerca de c&oacute;mo personalizar la presentaci&oacute;n del contenido del contenedor en el &app;, consulte <xref linkend="file-roller-archive-custom"/>.
+      </para>
+      <para>Para tareas m&aacute;s avanzadas, utilice una aplicaci&oacute;n instalada en su sistema. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-view-archive-file"/>.      </para>
+
+    </sect2>
+
+  <!-- =============  Viewing a File in an Archive ==================== -->
+  <sect2 id="file-roller-view-archive-file"> 
+    <title>Para ver un archivo de un contenedor</title>
+    <para>
+Para ver un archivo de un contenedor, efect&uacute;e los pasos siguientes:
+      <orderedlist>
+      <listitem><para>Seleccione el archivo.</para></listitem>
+      <listitem><para>Seleccione <menuchoice><guimenu>Contenedor</guimenu><guimenuitem>Ver archivo</guimenuitem></menuchoice>.</para></listitem>
+      </orderedlist>
+    </para>
+    <para>El &app; utiliza la informaci&oacute;n de la secci&oacute;n <guilabel>Tipos de archivo y programas</guilabel> de las preferencias de escritorio avanzadas para determinar autom&aacute;ticamente el visor o aplicaci&oacute;n apropiados para cada tipo de archivo y, a continuaci&oacute;n, ejecuta &eacute;stos. Para obtener m&aacute;s informaci&oacute;n acerca de las diferencias entre visores y aplicaciones, consulte <xref linkend="file-roller-viewers-applications"/>. Si el &app; no es capaz de determinar el visor o aplicaci&oacute;n apropiados, intentar&aacute; utilizar un visor de texto para mostrar el contenido del archivo.
+    </para>
+    <para>
+      Tambi&eacute;n se puede especificar un visor o aplicaci&oacute;n determinados para ver un archivo. Para abrir un archivo con una aplicaci&oacute;n externa seleccione <menuchoice><guimenu>Contenedor</guimenu><guimenuitem>Abrir archivos</guimenuitem></menuchoice>. El &app; abre el cuadro de di&aacute;logo <guilabel>Abrir archivos</guilabel>, que muestra todas las aplicaciones que permiten abrir archivos del tipo especificado. Para seleccionar una de ellas, haga clic en el nombre y, a continuaci&oacute;n, en <guibutton>Abrir</guibutton>. Otra posibilidad es escribir el nombre de la aplicaci&oacute;n en el cuadro de texto <guilabel>Aplicaci&oacute;n</guilabel> y, a continuaci&oacute;n, hace clic en <guibutton>Abrir</guibutton> para ejecutarla. 
+    </para>
+     <note>
+      <para>
+	No se puede utilizar el &app; para modificar un archivo. Si utiliza una aplicaci&oacute;n para abrir un archivo ubicado dentro de un contenedor del &app; y efect&uacute;a cambios en dicho archivo, el &app; <emphasis>no</emphasis> guarda los cambios en el contenedor, aunque se haya seleccionado la opci&oacute;n <guibutton>Guardar</guibutton> en la aplicaci&oacute;n. El &app; crea una copia temporal del archivo y, a continuaci&oacute;n, la pasa a la aplicaci&oacute;n de edici&oacute;n. Al cerrar dicha aplicaci&oacute;n, el &app; borra la copia temporal del archivo y los cambios se pierden.
+      </para>
+      <para>
+	Para editar un archivo ubicado en un contenedor del &app; y guardar los cambios en dicho contenedor:
+       <orderedlist>
+       <listitem><para><link linkend="file-roller-extract">Extraiga</link> el archivo a una ubicaci&oacute;n temporal. </para></listitem>
+       <listitem><para>Edite el archivo temporal creado en el paso 1 y guarde los cambios.</para></listitem>
+       <listitem><para><link linkend="file-roller-add-files">Agregue</link> de nuevo el archivo editado al contenedor; de esta forma se sobrescribir&aacute; la versi&oacute;n original del archivo. </para></listitem>
+       </orderedlist>
+      </para>
+    </note>
+     <sect3 id="file-roller-viewers-applications">
+      <title>Visores y aplicaciones</title>
+      <para>
+	Los visores no ejecutan ninguna aplicaci&oacute;n independiente para visualizar el contenido de un archivo. En vez de eso, muestran el contenido dentro de una ventana del administrador de archivos. Los visores se ejecutan con mucha mayor rapidez que las aplicaciones, pero sus funciones son muy limitadas.
+      </para>
+      <para>Los visores no forman parte de la aplicaci&oacute;n &app;. Los proporcionan otras aplicaciones de GNOME y utilizan una tecnolog&iacute;a especial denominada <application>bonobo</application>, que les permite trabajar dentro de una ventana del administrador de archivos. El n&uacute;mero de visores disponibles para el &app; depende de las aplicaciones compatibles con <application>bonobo</application> instaladas en el sistema. 
+      </para>
+    </sect3>
+  </sect2>
+</sect1>
+    
+<!-- ======= Customizing the Archive Display ============= -->
+<sect1 id="file-roller-archive-custom">
+  <title>Personalizaci&oacute;n de la presentaci&oacute;n del contenedor</title>
+  <para>Para personalizar la presentaci&oacute;n del contenido de los contenedores en el &app;, efect&uacute;e una de las acciones siguientes:
+  </para>
+  <itemizedlist>
+    <listitem>
+      <para>Cambie entre vista de carpetas y vista de archivos. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-view-type"/>.      </para>
+    </listitem>
+    <listitem>
+      <para>Especifique el orden de los archivos en la lista. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-view-sort"/>.      </para>
+    </listitem>
+    <listitem>
+      <para>Seleccione la columnas que desee mostrar en el &aacute;rea de visualizaci&oacute;n. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-prefs"/>.      </para>
+    </listitem>
+    <listitem>
+      <para>Muestre detalles adicionales acerca del contenido del contenedor. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-extra-info"/>.      </para>
+    </listitem>
+  </itemizedlist>
+  <para>El &app; actualiza la presentaci&oacute;n inmediatamente despu&eacute;s de efectuar alguno de los ajustes anteriores.
+  </para>
+
+  <sect2 id="file-roller-view-type">
+    <title>Para establecer el tipo de vista</title>
+    <para>Si el contenedor contiene carpetas, el contenido de &eacute;ste se puede mostrar tanto en <link linkend="file-roller-view-type-folder">vista de carpetas</link> como en <link linkend="file-roller-view-type-file">vista de archivos</link>. 
+    </para>
+
+    <sect3 id="file-roller-view-type-folder">
+      <title>Vista de carpetas</title>
+      <para>El &app;, de forma predeterminada, muestra el contenido del contenedor en vista de carpetas. Para seleccionar la vista de carpetas de forma expl&iacute;cita, seleccione <menuchoice><guimenu>Ver</guimenu><guimenuitem>Ver como carpeta</guimenuitem></menuchoice>.
+      </para>
+      <para>En la vista de carpetas, el &app; muestra las carpetas de forma similar a como aparecen en un administrador de archivos. Es decir,el &app; indica las carpetas en el &aacute;rea de visualizaci&oacute;n mediante un icono de carpeta y el nombre de la misma. Para ver el contenido de una carpeta, pulse dos veces en su nombre. 
+      </para>
+      <para>La barra de carpetas, que s&oacute;lo se muestra en el &app; en vista de carpetas, contiene los siguientes elementos:
+      </para>
+        <variablelist>
+           <varlistentry>
+             <term><guilabel>Ubicaci&oacute;n actual</guilabel></term>
+             <listitem>
+               <para>El campo <guilabel>Ubicaci&oacute;n actual</guilabel> muestra la ruta completa, dentro del contenedor, de la carpeta que se muestra actualmente.
+               </para>
+               <para>Para subir varios niveles en el &aacute;rbol de carpetas, haga clic en el cuadro de selecci&oacute;n <guilabel>Ubicaci&oacute;n actual</guilabel> para mostrar todos los niveles por encima del actual y seleccione la carpeta apropiada. El &app; muestra el contenido de la carpeta seleccionada.
+               </para>
+             </listitem>
+           </varlistentry>
+           <varlistentry>
+             <term><guibutton>Arriba</guibutton></term>
+             <listitem>
+               <para>Para subir un nivel dentro del &aacute;rbol de carpetas haga clic el bot&oacute;n <guibutton>Arriba</guibutton> de la barra de carpetas. 
+               </para>
+             </listitem>
+           </varlistentry>
+        </variablelist>
+    </sect3>
+
+    <sect3 id="file-roller-view-type-file">
+      <title>Vista de archivos</title>
+      <para>Para seleccionar la vista de archivos elija <menuchoice><guimenu>Ver</guimenu><guimenuitem>Ver como archivos</guimenuitem></menuchoice>.
+      </para>
+      <para>En la vista de archivos, el &app; muestra todos los archivos de un contenedor incluidos los contenidos en subcarpetas, en una &uacute;nica lista. 
+      </para>
+    </sect3>
+
+  </sect2>
+
+  <sect2 id="file-roller-view-sort">
+    <title>Para ordenar la lista de archivos</title>
+    <para>La lista de archivos puede ordenarse por nombre, tama&ntilde;o, tipo, fecha de modificaci&oacute;n o ubicaci&oacute;n. </para>
+    <para>Para especificar un orden de clasificaci&oacute;n, seleccione  <menuchoice><guimenu>Ver</guimenu><guisubmenu>Organizar archivos</guisubmenu></menuchoice> y elija el orden requerido. Otra posibilidad es hacer clic en el encabezado de la columna correspondiente. </para>
+    <para>Para invertir el orden de clasificaci&oacute;n vuelva a hacer clic en el encabezado de la columna o seleccione  <menuchoice><guimenu>Ver</guimenu><guisubmenu>Organizar archivos</guisubmenu><guisubmenu>Orden inverso</guisubmenu></menuchoice>.
+    </para>
+    <para>Por ejemplo, para ordenar la lista de archivos por fecha de modificaci&oacute;n, haga clic en el encabezado <guilabel>Fecha de modificaci&oacute;n</guilabel>. El &app; reorganiza la lista de archivos para que se muestren por fecha de modificaci&oacute;n, empezando por el m&aacute;s antiguo. Para mostrar primero los archivos m&aacute;s recientes, vuelva a hacer clic en el encabezado <guilabel>Fecha de modificaci&oacute;n</guilabel>.
+	  </para>
+    <para>El &app; efect&uacute;a siempre una clasificaci&oacute;n secundaria seg&uacute;n el nombre de archivo. En el ejemplo anterior,el &app; clasifica por nombre los archivos con la misma fecha de modificaci&oacute;n.
+    </para>
+  </sect2>
+
+  <sect2 id="file-roller-extra-info">
+    <title>Para mostrar detalles adicionales</title>
+      <para>Para comprobar si el contenedor contiene archivos cifrados, seleccione <menuchoice><guimenu>Editar</guimenu><guimenuitem>Comprobar contenedor</guimenuitem></menuchoice>:
+            <itemizedlist>
+              <listitem>
+                <para>Si el contenedor no contiene archivos cifrados, o si los contiene y ha indicado la contrase&ntilde;a correcta en el cuadro de texto <guilabel>Contrase&ntilde;a</guilabel>, el &app; abre el cuadro de di&aacute;logo <guilabel>&Uacute;ltima salida</guilabel> en el que muestra todos los archivos del contenedor, indicando para cada uno de ellos el estado <literal>OK</literal>.
+                </para>
+              </listitem>
+              <listitem>
+                <para>Si el contenedor contiene archivos cifrados y no se ha introducido la contrase&ntilde;a correcta en el cuadro de texto <guilabel>Contrase&ntilde;a</guilabel>, el &app; muestra un cuadro de di&aacute;logo de <guilabel>Error</guilabel>. Haga clic en <guibutton>Salida de l&iacute;nea de comandos</guibutton> para abrir el cuadro de di&aacute;logo <guilabel>&Uacute;ltima salida</guilabel>, en el que se enumeran todos los archivos del contenedor. El &app; indica para los archivos no cifrados el estado <literal>OK</literal> y para los no cifrados el estado <literal>incorrect password</literal>.
+                </para>
+              </listitem>
+            </itemizedlist>
+                     Para obtener m&aacute;s informaci&oacute;n acerca del cifrado, consulte <xref linkend="file-roller-encrypt-files"/>.
+      </para>
+      <para>Para abrir el cuadro de di&aacute;logo <guilabel>&Uacute;ltima salida</guilabel> sin comprobar el contenedor, seleccione <menuchoice><guimenu>Ver</guimenu><guimenuitem>&Uacute;ltima salida</guimenuitem></menuchoice>:
+            <itemizedlist>
+              <listitem>
+                <para>Si ha comprobado el contenedor en la sesi&oacute;n actual del &app;, el cuadro de di&aacute;logo <guilabel>&Uacute;ltima salida</guilabel> muestra los resultados de la &uacute;ltima prueba.
+                </para>
+              </listitem>
+              <listitem>
+                <para>Si no ha comprobado el contenedor archivo en la sesi&oacute;n actual del &app;, el cuadro de di&aacute;logo <guilabel>&Uacute;ltima salida</guilabel> muestra una lista de todos los archivos del mismo, pero no indica el estado de los mismos. En su lugar, el cuadro <guilabel>&Uacute;ltima salida</guilabel> muestra el tama&ntilde;o comprimido de cada archivo, el porcentaje de compresi&oacute;n y la fecha y hora en la que se el archivo se modific&oacute; por &uacute;ltima vez.
+                </para>
+              </listitem>
+            </itemizedlist>
+    </para>
+  </sect2>
+</sect1>
+
+<!-- ====== Using the File Manager Popup Menu to Manipulate an Archive ===== -->
+
+<sect1 id="file-roller-fmgr"> 
+    <title>Uso del administrador de archivos para trabajar con contenedores</title>
+    <para>
+	Se puede utilizar el administrador de archivos para efectuar las siguientes tareas con contenedores:</para>
+        <itemizedlist>
+        <listitem><para><xref linkend="file-roller-fmgr-add"/> </para>
+        </listitem>
+        <listitem><para><xref linkend="file-roller-fmgr-extract"/> </para>
+        </listitem>
+        </itemizedlist>
+
+<!-- ======= Adding files Using File Manager Menu  ============= -->
+    <sect2 id="file-roller-fmgr-add">
+      <title>Para agregar archivos a un contenedor mediante el administrador de archivos</title>
+           <para>A continuaci&oacute;n se indican diversas formas de utilizar el administrador de archivos para agregar archivos a un contenedor:
+           <itemizedlist>
+             <listitem><para>Arrastre los archivos a una ventana del &app; desde una ventana del administrador de archivos.</para>
+             </listitem>
+             <listitem><para>Utilice el men&uacute; emergente del administrador de archivos para agregar los archivos al contenedor.</para>
+             </listitem>
+          </itemizedlist>
+           </para>
+      <para>Para utilizar el men&uacute; emergente del administrador de archivos para agregar archivos a un contenedor, siga estos pasos:</para>
+      <orderedlist>
+        <listitem><para>Haga clic con el bot&oacute;n derecho en los archivos o carpetas en la ventana del administrador. </para>
+        </listitem>
+        <listitem><para>Seleccione <guimenuitem>Agregar a archivo</guimenuitem> en el men&uacute; emergente del administrador de archivos para mostrar una versi&oacute;n resumida del cuadro de di&aacute;logo del &app; <guilabel>Agregar archivos y carpetas</guilabel>. </para>
+        </listitem>
+        <listitem><para>Escriba el nombre del contenedor en el cuadro de texto <guilabel>Agregar a archivo</guilabel>. </para>
+                  <para>Tambi&eacute;n puede hacer clic en <guibutton>Examinar </guibutton> para mostrar el cuadro de di&aacute;logo <guilabel>Seleccione un archivo de sonido</guilabel>. Seleccione el contenedor y haga clic en <guibutton>Aceptar</guibutton>. </para>
+        </listitem>
+        <listitem><para>Seleccione la opci&oacute;n <guilabel>Agregar s&oacute;lo si no lo contiene</guilabel> para agregar al contenedor el archivo especificado &uacute;nicamente en el caso de que no lo contenga o de que la versi&oacute;n contenida en &eacute;l sea m&aacute;s antigua. Para obtener m&aacute;s informaci&oacute;n acerca de esta opci&oacute;n, consulte <xref linkend="file-roller-advanced-options"/>. </para>
+                 <note><para>Para seleccionar cualquier otra de las opciones avanzadas, deber&aacute; iniciar el &app; como se describe en <xref linkend="file-roller-to-start"/>.</para></note>
+        </listitem>
+        <listitem><para>Haga clic <guilabel>Agregar</guilabel> para agregar los archivos seleccionados a la carpeta ra&iacute;z del contenedor especificado.
+      </para>
+        </listitem>
+      </orderedlist>
+    </sect2>
+
+<!-- ======= Extracting files Using File Manager Menu  ============= -->
+  <sect2 id="file-roller-fmgr-extract">
+      <title>Para extraer archivos de un contenedor mediante el administrador de archivos</title>
+           <para>A continuaci&oacute;n se indican diversas formas de utilizar el administrador de archivos para extraer archivos de un contenedor:
+           <itemizedlist>
+             <listitem><para>Arrastre los archivos desde una ventana del &app; a una ventana del administrador de archivos.</para>
+             </listitem>
+             <listitem><para>Utilice el men&uacute; emergente del administrador de archivos para extraer los archivos del contenedor.</para>
+             </listitem>
+          </itemizedlist>
+           </para>
+      <para>Para utilizar el men&uacute; emergente del administrador de archivos para extraer archivos de un contenedor, siga estos pasos:</para>
+      <orderedlist>
+        <listitem><para>En una ventana del administrador de archivos, haga clic con el bot&oacute;n derecho en el contenedor. </para>
+        </listitem>
+        <listitem><para>Elija una de las siguientes opciones de extracci&oacute;n en el men&uacute; emergente del administrador de archivos:
+          <variablelist>
+            <varlistentry>
+              <term><guimenuitem>Extraer aqu&iacute;</guimenuitem></term>
+              <listitem><para>El &app; extrae todo el contenido del contenedor en el directorio en el que est&aacute; ubicado. </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><guimenuitem>Extraer en una subcarpeta</guimenuitem></term>
+              <listitem><para>El &app; extrae todo el contenido del contenedor en una subcarpeta del directorio en el que est&aacute; ubicado. El nombre de la subcarpeta es el propio nombre del contenedor, sin extensi&oacute;n. Si la subcarpeta existe, el &app; sobrescribe el contenido de &eacute;sta con el del contenedor. Si la subcarpeta no existe, &app; la crea y a continuaci&oacute;n extrae el contenido del contenedor. </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><guimenuitem>Extraer a</guimenuitem></term>
+              <listitem><para>El &app; muestra el cuadro de di&aacute;logo  <guilabel>Extraer</guilabel>. Para obtener m&aacute;s informaci&oacute;n acerca del cuadro de di&aacute;logo <guilabel>Extraer</guilabel>, consulte <xref linkend="file-roller-extract-options"/>. </para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+</para>
+        </listitem>
+      </orderedlist>
+      <note><para>Al seleccionar <guimenuitem>Extraer aqu&iacute;</guimenuitem> o <guimenuitem>Extraer en una subcarpeta</guimenuitem>, el &app; no extrae los archivos cifrados. Para especificar las opciones de extracci&oacute;n, elija <guimenuitem>Extraer a</guimenuitem> en el men&uacute; emergente del administrador de archivos o inicie el  &app; como se describe en <xref linkend="file-roller-to-start"/>.</para></note>
+    </sect2>
+
+</sect1>
+
+<!-- ======= Extract Options  ============= -->
+  <sect1 id="file-roller-extract-options">
+    <title>Opciones de extracci&oacute;n</title>
+      
+    <para>
+	El cuadro de di&aacute;logo <guilabel>Extraer</guilabel> ofrece las opciones siguientes:
+      </para>
+      <variablelist>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Carpeta de destino</guilabel></term>
+	  <listitem><para>
+	      El cuadro de di&aacute;logo <guilabel>Carpeta de destino</guilabel> especifica la carpeta en la que el &app; extrae los archivos especificados. Hay diversas formas de escribir el valor requerido en el cuadro de texto  <guilabel>Carpeta de destino</guilabel>:
+              <itemizedlist>
+                <listitem>
+                  <para>Haga clic en <guibutton>Examinar</guibutton> para seleccionar una carpeta.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>Seleccione una de las carpetas utilizadas recientemente en la lista emergente.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>Haga un doble clic en una de las carpetas de la lista <guilabel>Marcadores</guilabel>.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>Escriba la ruta de la carpeta directamente en el cuadro de texto <guilabel>Carpeta de destino</guilabel>.
+                  </para>
+                </listitem>
+              </itemizedlist>
+          </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Marcadores</guilabel></term>
+	  <listitem><para>
+	      Puede utilizar la lista <guilabel>Marcadores</guilabel> para guardar las rutas de las que extraiga archivos con frecuencia. </para>
+              <para>Para agregar una entrada a la lista <guilabel>Marcadores</guilabel>, escriba la ruta completa en el cuadro de texto <guilabel>Carpeta de destino</guilabel> y haga clic en <guibutton>Agregar a marcadores</guibutton>.</para>
+              <para>Para borrar una entrada de la lista <guilabel>Marcadores</guilabel>, seleccione la entrada requerida en la lista y haga clic en <guibutton>Borrar</guibutton>.  
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Archivos</guilabel></term>
+	  <listitem><para>
+             La secci&oacute;n <guilabel>Archivos</guilabel> ofrece las siguientes opciones de extracci&oacute;n:
+             <itemizedlist>
+               <listitem><para>Extraer todos los archivos del contenedor actual abierto.</para>
+               </listitem>
+               <listitem><para>Extraer s&oacute;lo los archivos seleccionados.</para>
+               </listitem>
+               <listitem><para>Extraer todos los archivos del contenedor actual abierto que coincidan con el patr&oacute;n. Para obtener m&aacute;s informaci&oacute;n acerca de los patrones de nombres, consulte <link linkend="file-roller-advanced-options">Patrones de nombre de archivo</link>. </para>
+               </listitem>
+             </itemizedlist>
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Volver a crear carpetas</guilabel></term>
+	  <listitem><para>
+	      Seleccione esta opci&oacute;n para reconstruir la estructura de carpetas al extraer los archivos especificados. </para>
+              <para>Por ejemplo, supongamos que se especifica <filename>/tmp</filename> en el cuadro de texto <guilabel>Carpeta de destino</guilabel> y se elige extraer todos los archivos. El contenedor contiene una subcarpeta denominada <filename>doc</filename>. 
+             <itemizedlist>
+               <listitem><para>
+              Si se selecciona la opci&oacute;n <guilabel>Volver a crear carpetas</guilabel>, el &app; extrae el contenido de la subcarpeta en <filename>/tmp/doc</filename>.
+              </para>
+               </listitem>
+               <listitem><para>
+              Si no se selecciona la opci&oacute;n <guilabel>Volver a crear carpetas</guilabel>, el &app; no crea subcarpetas, sino que extrae todos los archivos, incluidos los ubicados en subcarpetas, en <filename>/tmp</filename>.
+              </para>
+               </listitem>
+             </itemizedlist>
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Sobrescribir los archivos</guilabel> </term>
+	  <listitem><para>
+	      Seleccione esta opci&oacute;n para sobrescribir los archivos de la carpeta de destino cuyo nombre sea el mismo que el de los archivos especificados. </para>
+	    <para>
+              Si no selecciona esta opci&oacute;n, el &app; no extraer&aacute; el archivo especificado si la carpeta de destino contiene un archivo con el mismo nombre.</para>
+	  </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>No extraer archivos antiguos</guilabel> </term>
+	  <listitem><para>Esta opci&oacute;n s&oacute;lo es efectiva si tambi&eacute;n se ha seleccionado la opci&oacute;n <guilabel>Sobrescribir los archivos</guilabel>.
+	    </para>
+	    <para>
+              Seleccione la opci&oacute;n <guilabel>No extraer archivos antiguos</guilabel> para extraer el archivo especificado &uacute;nicamente si la carpeta de destino no contiene dicho archivo, o si contiene una versi&oacute;n anterior del mismo. La aplicaci&oacute;n &app; utiliza la fecha de modificaci&oacute;n para determinar el archivo m&aacute;s reciente. Si la versi&oacute;n del archivo ubicada en el contenedor es m&aacute;s antigua, el &app; no extraer&aacute; el archivo especificado en el destino.</para>
+	    <para>
+              Si no se selecciona la opci&oacute;n <guilabel>No extraer archivos antiguos</guilabel> estando seleccionada la opci&oacute;n <guilabel>Sobrescribir los archivos</guilabel>, el &app; extrae el archivo especificado del contenedor y sobrescribe el contenido de la carpeta de destino.
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Contrase&ntilde;a</guilabel></term>
+	  <listitem><para>Esta opci&oacute;n se activa &uacute;nicamente si el tipo de contenedor admite el cifrado. Actualmente, &uacute;nicamente los contenedores <filename>.zip</filename> admiten cifrado. </para>
+          <para>
+	     Si el contenedor contiene archivos cifrados, escriba la contrase&ntilde;a pertinente en el cuadro de texto <guilabel>Contrase&ntilde;a</guilabel> para descifrar los archivos especificados durante el proceso de extracci&oacute;n. La contrase&ntilde;a se especific&oacute; en el momento de crear el contenedor. Para obtener m&aacute;s informaci&oacute;n, consulte <xref linkend="file-roller-encrypt-files"/>.
+          </para>
+          <para>
+	     Tambi&eacute;n puede escribir dicha contrase&ntilde;a en el cuadro de di&aacute;logo <guilabel>Contrase&ntilde;a</guilabel>. Elija <menuchoice><guimenu>Editar</guimenu> <guimenuitem>Contrase&ntilde;a</guimenuitem></menuchoice> para abrir el cuadro de di&aacute;logo <guilabel>Contrase&ntilde;a</guilabel>. 
+	  </para>
+        </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Ver carpeta de destino tras la extracci&oacute;n</guilabel></term>
+	  <listitem><para>
+              Seleccione esta opci&oacute;n para mostrar el contenido de la carpeta de destino en una ventana del administrador de archivos una vez finalizada la extracci&oacute;n de los archivos especificados. </para>
+          <para>
+	     Esta es la &uacute;nica opci&oacute;n de extracci&oacute;n que se guarda al salir del &app;. 
+	  </para></listitem>
+	</varlistentry>
+      </variablelist>	
+</sect1>
+
+  <!-- ============= Customization ============================= -->
+<sect1 id="file-roller-prefs">
+      <title>Preferencias</title>
+      <para>Para configurar el &app; seleccione <menuchoice>
+<guimenu>Editar</guimenu>
+<guimenuitem>Preferencias</guimenuitem>
+</menuchoice>. El cuadro de di&aacute;logo <guilabel>Preferencias</guilabel> contiene las siguientes secciones:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para><xref linkend="file-roller-prefs-general"/>
+          </para>
+        </listitem>
+        <listitem>
+          <para><xref linkend="file-roller-prefs-columns"/>
+          </para>
+        </listitem>
+      </itemizedlist>
+
+  <!-- ============= Customization ============================= -->
+  <sect2 id="file-roller-prefs-general">
+    <title>General</title>
+    <para>La secci&oacute;n <guilabel>General</guilabel> ofrece las opciones siguientes:
+      <variablelist>
+        <varlistentry>
+          <term><guilabel>Nivel de compresi&oacute;n</guilabel></term>
+          <listitem><para>Regula la velocidad de compresi&oacute;n. A medida que la velocidad de compresi&oacute;n aumenta tambi&eacute;n lo hace el tama&ntilde;o del contenedor. De forma similar, a medida que la velocidad de compresi&oacute;n disminuye, tambi&eacute;n lo hace el tama&ntilde;o del contenedor. 
+          </para></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><guilabel>Archivos recientes</guilabel></term>
+          <listitem><para>Especifica el n&uacute;mero de contenedores a los que se ha accedido recientemente que se deben mostrar en el men&uacute; <guimenu>Abrir reciente</guimenu>. 
+          </para></listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </sect2>
+
+  <!-- ============= Customization ============================= -->
+  <sect2 id="file-roller-prefs-columns">
+    <title>Columnas visibles</title>
+    <para>La secci&oacute;n <guilabel>Columnas visibles</guilabel> especifica las columnas que se muestran en el &app; al visualizar el contenido de un contenedor:
+      <variablelist>
+        <varlistentry>
+          <term><guilabel>Tama&ntilde;o</guilabel></term>
+          <listitem><para>Seleccione esta opci&oacute;n para mostrar la columna <guilabel>Tama&ntilde;o</guilabel>.
+          </para></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><guilabel>Tipo</guilabel></term>
+          <listitem><para>Seleccione esta opci&oacute;n para mostrar la columna <guilabel>Tipo</guilabel>.
+          </para></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><guilabel>Fecha de modificaci&oacute;n</guilabel></term>
+          <listitem><para>Seleccione esta opci&oacute;n para mostrar la columna <guilabel>Fecha de modificaci&oacute;n</guilabel>.
+          </para></listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><guilabel>Ruta</guilabel></term>
+          <listitem><para>Seleccione esta opci&oacute;n para mostrar la columna <guilabel>Ruta</guilabel>.
+          </para></listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+    <para>De forma predeterminada, el &app; muestra todas las columnas. Para obtener m&aacute;s informaci&oacute;n acerca de las columnas, consulte <xref linkend="file-roller-view-archive-contents"/>.
+    </para>
+  </sect2>
+
+</sect1>
+
+</article>
