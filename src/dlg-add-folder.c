@@ -125,7 +125,7 @@ file_sel_response_cb (GtkWidget      *w,
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not add the files to the archive"),
-					     _("You don't have the right permissions to read files from folder \"%s\""),
+					     message,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
@@ -133,6 +133,7 @@ file_sel_response_cb (GtkWidget      *w,
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (utf8_path);
+		g_free (message);
 
 		g_free (current_folder);
 
