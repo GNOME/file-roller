@@ -373,7 +373,7 @@ prepare_app (poptContext pctx)
 		window = window_new ();
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir);
-		gtk_widget_show (window->app);
+		/*gtk_widget_show (window->app);*/
 		
 		while ((filename = poptGetArg (pctx)) != NULL) {
 			char *path;
@@ -403,7 +403,7 @@ prepare_app (poptContext pctx)
 		window = window_new ();
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir);
-		gtk_widget_show (window->app);
+		/*gtk_widget_show (window->app);*/
 		
 		while ((archive = poptGetArg (pctx)) != NULL) 
 			window_archive__open_extract (window, 

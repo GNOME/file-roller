@@ -1,7 +1,20 @@
+2004-07-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-command-tar.c (begin_tar_command): fixed 
+	bug #144041: [Solaris] gtar will not be in path
+
+	* src/window.c (open_progress_dialog): do no specify a parent 
+	window in batch mode.
+	(handle_errors): 
+	Do not display the "operation stopped" dialog (bug #144171).
+
+	* src/main.c (prepare_app): do not show the main window in batch 
+	mode.
+
 2004-07-05  Kaushal Kumar  <kaushal.kumar.wipro.com>
 
 	* src/dlg-add-folder.c (file_sel_response_cb): Fixed a leak and the 
-	display of the error message. Fixes bug #145440.
+	display of the error message.  Fixes bug #145440.
 
 2004-07-05  Paolo Bacchilega  <paobac@cvs.gnome.org>
 

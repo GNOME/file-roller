@@ -1263,9 +1263,16 @@ open_progress_dialog (FRWindow *window)
 		return;
 
 	if (window->progress_dialog == NULL) {
+		GtkWindow *parent;
+
+		if (window->batch_mode)
+			parent = NULL;
+		else
+			parent = GTK_WINDOW (window->app);
+
 		window->progress_dialog = gtk_dialog_new_with_buttons (
 						       _("File Roller"),
-						       NULL /*GTK_WINDOW (window->app)*/,
+						       parent,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
 						       GTK_STOCK_STOP, GTK_RESPONSE_OK,
 						       NULL);
@@ -1540,20 +1547,7 @@ handle_errors (FRWindow    *window,
 		gtk_widget_show (dialog);
 
 	} else if (error->type == FR_PROC_ERROR_STOPPED) {
-		GtkWidget *dialog;
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-						  0,
-						  GTK_STOCK_DIALOG_WARNING,
-						  _("Operation stopped"),
-						  NULL,
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-		g_signal_connect (dialog, 
-				  "response",
-				  G_CALLBACK (gtk_widget_destroy), 
-				  NULL);
-		gtk_widget_show (dialog);
+		/* Do nothing */
 
 	} else if (error->type != FR_PROC_ERROR_NONE) {
 		char      *msg = NULL;
@@ -5653,7 +5647,7 @@ window_batch_mode_start (FRWindow *window)
 	if (window->batch_action_list == NULL)
 		return;
 
-	gtk_widget_hide (window->app);
+	/*gtk_widget_hide (window->app);*/
 
 	window->batch_mode = TRUE;
 	window->batch_action = window->batch_action_list;
@@ -5690,16 +5684,21 @@ window_archive__open_extract (FRWindow   *window,
 				      FR_BATCH_ACTION_OPEN,
 				      g_strdup (filename),
 				      (GFreeFunc) g_free);
-	if (dest_dir != NULL) 
+	if (dest_dir != NULL) {
+		window->view_folder_after_extraction = TRUE;
+		g_free (window->folder_to_view);
+		window->folder_to_view = g_strdup (dest_dir);
+
 		window_batch_mode_add_action (window,
 					      FR_BATCH_ACTION_EXTRACT,
 					      g_strdup (dest_dir),
 					      (GFreeFunc) g_free);
-	else
+	} else
 		window_batch_mode_add_action (window,
 					      FR_BATCH_ACTION_EXTRACT_INTERACT,
 					      NULL,
 					      NULL);
+
 	window_batch_mode_add_action (window,
 				      FR_BATCH_ACTION_CLOSE,
 				      NULL,
