@@ -102,6 +102,7 @@ process_line (char     *line,
 	FRCommandRar  *rar_comm = FR_COMMAND_RAR (comm);
 	char         **fields;
 	const char    *name_field;
+	gboolean       encrypted;      /* unused */
 
 	g_return_if_fail (line != NULL);
 
@@ -124,8 +125,10 @@ process_line (char     *line,
 		rar_comm->fdata = fdata = file_data_new ();
 
 		/* read file name. */
-
-		name_field = get_last_field (line, 1);
+	  
+		encrypted = line[0] == '*' ? TRUE : FALSE;
+		
+		name_field = line + 1;
 
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
@@ -165,6 +168,29 @@ process_line (char     *line,
 
 
 static void
+add_password_arg (FRCommand	*comm,
+		  const char	*password,
+		  gboolean	disable_query)
+{
+	if (password != NULL && password[0] != '\0') {
+		char *arg, *e_password;
+		
+		e_password = escape_str (password, "\"");
+		g_assert (e_password != NULL);   /* since password is non-NULL */
+		
+		arg = g_strconcat ("-p\"", e_password, "\"", NULL);
+		
+		fr_process_add_arg (comm->process, arg);
+		
+		g_free (e_password);
+		g_free (arg);
+	} else if (disable_query) {
+		fr_process_add_arg (comm->process, "-p-");
+	}
+}
+
+
+static void
 fr_command_rar_list (FRCommand *comm)
 {
 	FR_COMMAND_RAR (comm)->list_started = FALSE;
@@ -180,6 +206,10 @@ fr_command_rar_list (FRCommand *comm)
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-c-");
 
+	/* Fixme: listing rar archives fails when headers and data
+	          are encrypted (-hp option) without a password. */
+	add_password_arg (comm, NULL, TRUE);
+	
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--"); 
 
@@ -220,6 +250,8 @@ fr_command_rar_add (FRCommand     *comm,
 		fr_process_add_arg (comm->process, "-m5"); break;
 	}
 
+	add_password_arg (comm, password, FALSE);
+	
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--"); 
 
@@ -281,6 +313,8 @@ fr_command_rar_extract (FRCommand  *comm,
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "-ep");
 	
+	add_password_arg (comm, password, TRUE);
+	
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--"); 
 
@@ -295,6 +329,27 @@ fr_command_rar_extract (FRCommand  *comm,
 		g_free (e_dest_dir);
 	}
 	
+	fr_process_end_command (comm->process);
+}
+
+
+static void
+fr_command_rar_test (FRCommand   *comm,
+		     const char  *password)
+{
+	if (fr_command_rar_have_rar ())
+		fr_process_begin_command (comm->process, "rar");
+	else
+		fr_process_begin_command (comm->process, "unrar");
+	
+	fr_process_add_arg (comm->process, "t");
+	
+	add_password_arg (comm, password, TRUE);
+	
+	/* stop switches scanning */
+	fr_process_add_arg (comm->process, "--");
+	
+	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 }
 
@@ -324,6 +379,7 @@ fr_command_rar_class_init (FRCommandRarClass *class)
 	afc->add          = fr_command_rar_add;
 	afc->delete       = fr_command_rar_delete;
 	afc->extract      = fr_command_rar_extract;
+	afc->test         = fr_command_rar_test;
 	afc->handle_error = fr_command_rar_handle_error;
 }
 
@@ -336,8 +392,8 @@ fr_command_rar_init (FRCommand *comm)
 	comm->propExtractCanAvoidOverwrite = TRUE;
 	comm->propExtractCanSkipOlder      = TRUE;
 	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
+	comm->propPassword                 = TRUE;
+	comm->propTest                     = TRUE;
 }
 
 
