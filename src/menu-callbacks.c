@@ -661,7 +661,7 @@ copy_or_move_archive_response_cb (GtkWidget    *w,
 				  int           response,
 				  CopyMoveData *data)
 {
-	FRWindow    *window = data->window;;
+	FRWindow    *window = data->window;
 	char        *folder;
 	char        *new_path;
 
