@@ -245,8 +245,7 @@ new_archive_cb (GtkWidget *widget,
 {
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
-	GtkWidget *frame;
-	GtkWidget *vbox;
+	GtkWidget *hbox;
 	GtkWidget *opt_menu;
 	GtkWidget *menu;
 	char      *dir;
@@ -259,20 +258,19 @@ new_archive_cb (GtkWidget *widget,
 
 	/**/
 
-	frame = gtk_frame_new (_("File type :"));
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), frame, TRUE, TRUE, 0);
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), hbox, TRUE, TRUE, 0);
 
-	vbox = gtk_vbox_new (FALSE, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	gtk_box_pack_start (GTK_BOX (hbox), 
+			    gtk_label_new (_("Archive type :")),
+			    FALSE, FALSE, 0);
 
 	opt_menu = gtk_option_menu_new ();
 	menu = build_file_type_menu (window);
         gtk_option_menu_set_menu (GTK_OPTION_MENU (opt_menu), menu);
 	gtk_widget_show (opt_menu);
-	gtk_box_pack_start (GTK_BOX (vbox), opt_menu, FALSE, FALSE, 5);
-
+	gtk_box_pack_start (GTK_BOX (hbox), opt_menu, FALSE, FALSE, 12);
+	
 	/**/
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);

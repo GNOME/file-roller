@@ -77,7 +77,8 @@ dlg_prop (GtkWidget *widget,
 	struct tm        *tm;
 	time_t            timer;
 	char              time_txt[50];
-	gchar            *utf8_name;
+	char             *utf8_name;
+	char             *title_txt;
 
         data = g_new (DialogData, 1);
 
@@ -114,6 +115,11 @@ dlg_prop (GtkWidget *widget,
 	s1 = file_name_from_path (window->archive_filename);
 	utf8_name = g_locale_to_utf8 (s1, -1, NULL, NULL, NULL);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
+
+	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);
+	gtk_window_set_title (GTK_WINDOW (data->dialog), title_txt);
+	g_free (title_txt);
+
 	g_free (utf8_name);
 
 	/**/

@@ -122,7 +122,7 @@ GnomeUIInfo file_menu[] = {
 	{ GNOME_APP_UI_ITEM,
 	  N_("_Properties"), N_("Show archive properties"),
 	  dlg_prop, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
+	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PROPERTIES,
 	  'i', GDK_CONTROL_MASK, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
