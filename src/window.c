@@ -135,7 +135,7 @@ _window_history_pop (FRWindow   *window)
 }
 
 
-#ifdef DEBUG
+#if 0
 static void
 _window_history_print (FRWindow   *window)
 {
@@ -995,6 +995,7 @@ _window_update_sensitivity (FRWindow *window)
 {
 	gboolean no_archive;
 	gboolean ro;
+	gboolean can_modify;
 	gboolean file_op;
 	gboolean running;
 	gboolean compr_file;
@@ -1009,6 +1010,7 @@ _window_update_sensitivity (FRWindow *window)
 	running           = window->activity_ref > 0;
 	no_archive        = (window->archive == NULL) || ! window->archive_present;
 	ro                = ! no_archive && window->archive->read_only;
+	can_modify        = (window->archive != NULL) && (window->archive->command != NULL) && window->archive->command->propCanModify;
 	file_op           = ! no_archive && ! window->archive_new  && ! running;
 	compr_file        = ! no_archive && window->archive->is_compressed_file;
 	n_selected        = _gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
@@ -1028,8 +1030,8 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->mitem_rename_archive, file_op && ! ro);
 	gtk_widget_set_sensitive (window->mitem_delete_archive, file_op && ! ro);
 	
-	gtk_widget_set_sensitive (window->mitem_add, ! no_archive && ! ro && ! running && ! compr_file);
-	gtk_widget_set_sensitive (window->mitem_delete, ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file);
+	gtk_widget_set_sensitive (window->mitem_add, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	gtk_widget_set_sensitive (window->mitem_delete, ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
 	gtk_widget_set_sensitive (window->mitem_extract, file_op);
 	gtk_widget_set_sensitive (window->mitem_test, ! no_archive && ! running && window->archive->command->propTest);
 	gtk_widget_set_sensitive (window->mitem_open, file_op && sel_not_null && ! dir_selected);
@@ -1045,26 +1047,31 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->mitem_password, ! no_archive && ! running && window->archive->command->propPassword);
 
 	gtk_widget_set_sensitive (window->mitem_select_all, ! no_archive);
-	gtk_widget_set_sensitive (window->mitem_unselect_all, ! no_archive);
+	/*	gtk_widget_set_sensitive (window->mitem_unselect_all, ! no_archive);*/
 
 	gtk_widget_set_sensitive (window->mitem_last_output, 
 				  ((window->archive != NULL)
 				   && (window->archive->process != NULL)
 				   && (window->archive->process->raw_output != NULL)));
 	
+	gtk_widget_set_sensitive (window->mitem_cut, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null);
+	gtk_widget_set_sensitive (window->mitem_copy, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null);
+	gtk_widget_set_sensitive (window->mitem_paste, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	gtk_widget_set_sensitive (window->mitem_rename, ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
+
 	/* toolbar */
 	
 	gtk_widget_set_sensitive (window->toolbar_new, ! running);
 	gtk_widget_set_sensitive (window->toolbar_open, ! running);
-	gtk_widget_set_sensitive (window->toolbar_add, ! no_archive && ! ro && ! running && ! compr_file);
+	gtk_widget_set_sensitive (window->toolbar_add, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	gtk_widget_set_sensitive (window->toolbar_extract, file_op);
 	gtk_widget_set_sensitive (window->toolbar_view, file_op && one_file_selected && ! dir_selected);
 	gtk_widget_set_sensitive (window->toolbar_stop, running && window->stoppable);
 	
 	/* popup menu */
 
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_ADD], ! no_archive && ! ro && ! running && ! compr_file);
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DELETE], ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file);
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_ADD], ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DELETE], ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_EXTRACT], file_op);
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_OPEN], file_op && sel_not_null && ! dir_selected);
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_VIEW], file_op && one_file_selected && ! dir_selected);
@@ -1105,7 +1112,7 @@ _window_update_current_location (FRWindow *window)
 	gtk_widget_set_sensitive (window->location_entry, window->archive_present);
 	gtk_widget_set_sensitive (window->location_label, window->archive_present);
 
-#ifdef DEBUG
+#if 0
 	_window_history_print (window);
 #endif
 }
@@ -3208,14 +3215,19 @@ window_new ()
 	window->mitem_add = edit_menu[EDIT_MENU_ADD].widget;
 	window->mitem_delete = edit_menu[EDIT_MENU_DELETE].widget;
 	window->mitem_extract = edit_menu[EDIT_MENU_EXTRACT].widget;
-	window->mitem_open = file_menu[FILE_MENU_OPEN].widget;
+	window->mitem_open = edit_menu[EDIT_MENU_OPEN].widget;
 	window->mitem_test = file_menu[FILE_MENU_TEST].widget;
-	window->mitem_view = file_menu[FILE_MENU_VIEW].widget;
+	window->mitem_view = edit_menu[EDIT_MENU_VIEW].widget;
 	window->mitem_stop = view_menu[VIEW_MENU_STOP].widget;
 	window->mitem_reload = view_menu[VIEW_MENU_RELOAD].widget;
 
+	window->mitem_cut = edit_menu[EDIT_MENU_CUT].widget;
+	window->mitem_copy = edit_menu[EDIT_MENU_COPY].widget;
+	window->mitem_paste = edit_menu[EDIT_MENU_PASTE].widget;
+	window->mitem_rename = edit_menu[EDIT_MENU_RENAME].widget;
+
 	window->mitem_select_all = edit_menu[EDIT_MENU_SELECT_ALL].widget;
-	window->mitem_unselect_all = edit_menu[EDIT_MENU_DESELECT_ALL].widget;
+	/*	window->mitem_unselect_all = edit_menu[EDIT_MENU_DESELECT_ALL].widget;*/
 
 	window->mitem_view_toolbar = view_menu[VIEW_MENU_TOOLBAR].widget;
 	window->mitem_view_statusbar = view_menu[VIEW_MENU_STATUSBAR].widget;
@@ -3298,6 +3310,7 @@ window_new ()
 						"application/x-lzop",
 						"application/x-zoo",
 						"application/x-stuffit",
+						"application/x-rpm",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, 5));
@@ -4125,6 +4138,7 @@ window_set_list_mode (FRWindow       *window,
 		_window_history_clear (window);
 		_window_history_add (window, "/");
 	}
+	preferences_set_list_mode (window->list_mode);
 	
 	window_update_file_list (window);
 	_window_update_current_location (window);

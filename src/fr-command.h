@@ -56,6 +56,7 @@ struct _FRCommand
 
 	/* properties the command support. */
 
+	uint propCanModify : 1;
 	uint propAddCanUpdate : 1;
 	uint propAddCanReplace : 1;
 	uint propExtractCanAvoidOverwrite : 1;

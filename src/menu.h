@@ -45,17 +45,14 @@ enum {
 	FILE_MENU_SEP1,
 	FILE_MENU_SAVE_AS_ARCHIVE,
 	FILE_MENU_SEP2,
-	FILE_MENU_OPEN,
-	FILE_MENU_VIEW,
-	FILE_MENU_SEP3,
 	FILE_MENU_RANAME_ARCHIVE,
 	FILE_MENU_COPY_ARCHIVE,
 	FILE_MENU_MOVE_ARCHIVE,
 	FILE_MENU_DELETE_ARCHIVE,
 	FILE_MENU_TEST,
-	FILE_MENU_SEP4,
+	FILE_MENU_SEP3,
 	FILE_MENU_ARCHIVE_PROP,
-	FILE_MENU_SEP5,
+	FILE_MENU_SEP4,
 	FILE_MENU_CLOSE_ARCHIVE,
 	FILE_MENU_EXIT,
 	FILE_MENU_LENGTH
@@ -77,20 +74,6 @@ GnomeUIInfo file_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	GNOMEUIINFO_MENU_SAVE_AS_ITEM (save_as_archive_cb, NULL),
-
-	GNOMEUIINFO_SEPARATOR,
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("Open Fi_les..."), N_("Open selected files with an application"), 
-	  open_with_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  0, 0, NULL },
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_View File"), N_("View file with internal viewer"), 
-	  view_or_open_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  'v', GDK_CONTROL_MASK, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
 
@@ -142,35 +125,45 @@ GnomeUIInfo file_menu[] = {
 };
 
 enum {
-	EDIT_MENU_EXTRACT = 0,
+	EDIT_MENU_ADD = 0,
+	EDIT_MENU_EXTRACT,
 	EDIT_MENU_SEP1,
-	EDIT_MENU_ADD,
+	EDIT_MENU_CUT,
+	EDIT_MENU_COPY,
+	EDIT_MENU_PASTE,
 	EDIT_MENU_RENAME,
 	EDIT_MENU_DELETE,
 	EDIT_MENU_SEP2,
 	EDIT_MENU_SELECT_ALL,
-	EDIT_MENU_DESELECT_ALL,
+	/*	EDIT_MENU_DESELECT_ALL,*/
 	EDIT_MENU_SEP3,
-	EDIT_MENU_PASSWORD,
+	EDIT_MENU_OPEN,
+	EDIT_MENU_VIEW,
 	EDIT_MENU_SEP4,
+	EDIT_MENU_PASSWORD,
+	EDIT_MENU_SEP5,
 	EDIT_MENU_PREFERENCES,
 	EDIT_MENU_LENGTH
 };
 
 GnomeUIInfo edit_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Extract..."), N_("Extract files from the archive"), 
-	  dlg_extract, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  'x', GDK_CONTROL_MASK, NULL },
-
-	GNOMEUIINFO_SEPARATOR,
-
-	{ GNOME_APP_UI_ITEM, 
 	  N_("Add..."), N_("Add files and folders to the archive"), 
 	  add_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ADD,
-	  'z', GDK_CONTROL_MASK, NULL },
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_Extract..."), N_("Extract files from the archive"), 
+	  dlg_extract, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
+	GNOMEUIINFO_SEPARATOR,
+
+	GNOMEUIINFO_MENU_CUT_ITEM (NULL, NULL),
+	GNOMEUIINFO_MENU_COPY_ITEM (NULL, NULL),
+	GNOMEUIINFO_MENU_PASTE_ITEM (NULL, NULL),
 
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_Rename..."), N_("Rename selection"), 
@@ -181,7 +174,7 @@ GnomeUIInfo edit_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_Delete..."), N_("Delete selection from the archive"), 
 	  dlg_delete, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REMOVE,
+	  GNOME_APP_PIXMAP_NONE, 0,
 	  'd', GDK_CONTROL_MASK, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
@@ -192,11 +185,27 @@ GnomeUIInfo edit_menu[] = {
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  'a', GDK_CONTROL_MASK, NULL },
 
+	/*
 	{ GNOME_APP_UI_ITEM, 
 	  N_("Dese_lect All"), N_("Deselect all files"), 
 	  deselect_all_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
-	  'a', GDK_SHIFT_MASK | GDK_CONTROL_MASK, NULL },
+	  0, 0, NULL },
+	*/
+
+	GNOMEUIINFO_SEPARATOR,
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Open Fi_les..."), N_("Open selected files with an application"), 
+	  open_with_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_View File"), N_("View file with internal viewer"), 
+	  view_or_open_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
 

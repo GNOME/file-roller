@@ -705,6 +705,7 @@ fr_command_tar_class_init (FRCommandTarClass *class)
 static void 
 fr_command_tar_init (FRCommand *comm)
 {
+	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = FALSE; 
 	comm->propExtractCanAvoidOverwrite = FALSE;

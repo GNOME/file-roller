@@ -209,6 +209,15 @@ fr_command_init (FRCommand *comm)
 	comm->e_filename = NULL;
 	comm->file_list = NULL;
 	comm->fake_load = FALSE;
+
+	comm->propCanModify = TRUE;
+	comm->propAddCanUpdate = FALSE;
+	comm->propAddCanReplace = FALSE;
+	comm->propExtractCanAvoidOverwrite = FALSE;
+	comm->propExtractCanSkipOlder = FALSE;
+	comm->propExtractCanJunkPaths = FALSE;
+	comm->propPassword = FALSE;
+	comm->propTest = FALSE;
 }
 
 

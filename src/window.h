@@ -140,8 +140,12 @@ typedef struct {
 	GtkWidget *      mitem_rename_archive;
 	GtkWidget *      mitem_delete_archive;
 
+	GtkWidget *      mitem_cut;
+	GtkWidget *      mitem_copy;
+	GtkWidget *      mitem_paste;
 	GtkWidget *      mitem_select_all;
 	GtkWidget *      mitem_unselect_all;
+	GtkWidget *      mitem_rename;
 
 	GtkWidget *      mitem_view_toolbar;
 	GtkWidget *      mitem_view_statusbar;

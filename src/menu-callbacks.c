@@ -60,7 +60,16 @@ new_archive (GtkWidget *file_sel,
 	     FRWindow  *window, 
 	     gchar     *path)
 {
-	window_archive_new (window, path);	
+	FRWindow *archive_window;
+
+	if (window->archive_present) {
+		archive_window = window_new ();
+		gtk_widget_show (archive_window->app);
+	} else
+		archive_window = window;
+
+	window_archive_new (archive_window, path);	
+
 	gtk_widget_destroy (file_sel);
 }
 
@@ -515,6 +524,8 @@ open_file_ok_cb (GtkWidget *w,
         if (path == NULL)
                 return;
 
+	g_print ("[-1]\n");
+
 	if (window_archive_open (window, path, GTK_WINDOW (file_sel)))
 		gtk_widget_destroy (file_sel);
 }
@@ -527,6 +538,8 @@ open_archive_cb (GtkWidget *widget,
 	GtkWidget *file_sel;
 	FRWindow  *window = data;
 	char      *dir;
+
+	g_print ("[-2]\n");
 
         file_sel = gtk_file_selection_new (_("Open"));
 
@@ -920,8 +933,7 @@ void
 quit_cb (GtkWidget *widget, 
 	 void      *data)
 {
-	while (window_list)
-                window_close ((FRWindow*) window_list->data);
+	window_close ((FRWindow*) data);
 }
 
 

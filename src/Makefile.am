@@ -77,6 +77,8 @@ file_roller_SOURCES = 			\
 	fr-command-lha.h		\
 	fr-command-rar.c		\
 	fr-command-rar.h		\
+	fr-command-rpm.c		\
+	fr-command-rpm.h		\
 	fr-command-tar.c		\
 	fr-command-tar.h		\
 	fr-command-unstuff.c		\

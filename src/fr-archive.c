@@ -35,6 +35,7 @@
 #include "fr-command-cfile.h"
 #include "fr-command-lha.h"
 #include "fr-command-rar.h"
+#include "fr-command-rpm.h"
 #include "fr-command-tar.h"
 #include "fr-command-unstuff.h"
 #include "fr-command-zip.h"
@@ -262,6 +263,9 @@ create_command_from_mime_type (FRArchive  *archive,
 	} else if (is_mime_type (mime_type, "application/x-stuffit")) {
 		archive->command = fr_command_unstuff_new (archive->process,
 							   filename);
+	} else if (is_mime_type (mime_type, "application/x-rpm")) {
+		archive->command = fr_command_rpm_new (archive->process,
+						       filename);
 	} else 
 		return FALSE;
 
@@ -396,10 +400,6 @@ create_command_from_filename (FRArchive  *archive,
 	} else if (file_extension_is (filename, ".arj")) {
 		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
-	} else if (file_extension_is (filename, ".bin")
-		   || file_extension_is (filename, ".sit")) {
-		archive->command = fr_command_unstuff_new (archive->process,
-							   filename);
 	} else if (loading) {
 		if (file_extension_is (filename, ".gz")
 		    || file_extension_is (filename, ".z")
@@ -415,6 +415,13 @@ create_command_from_filename (FRArchive  *archive,
 		} else if (file_extension_is (filename, ".lzo")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_LZOP);
 			archive->is_compressed_file = TRUE;
+		} else if (file_extension_is (filename, ".bin")
+			   || file_extension_is (filename, ".sit")) {
+			archive->command = fr_command_unstuff_new (archive->process,
+								   filename);
+		} else if (file_extension_is (filename, ".rpm")) {
+			archive->command = fr_command_rpm_new (archive->process,
+							       filename);
 		} else
 			return FALSE;
 	} else
@@ -1557,6 +1564,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 		".lzh",
 		".lzo",
 		".rar",
+		".rpm",
 		".sit",
 		".tar", 
 		".tar.bz", 

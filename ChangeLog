@@ -1,3 +1,17 @@
+2003-11-13  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-archive.c: 
+	* src/window.c: 
+	* src/fr-command-rpm.c: 
+	* src/fr-command-rpm.c: added RPM support. 
+
+2003-11-12  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/menu-callbacks.c (quit_cb): exit closes only the current window 
+	instead of closing all the windows.
+	(new_archive): create a new window if the current one already has an 
+	archive opened.
+
 2003-11-11  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu.h: remove a separator.
