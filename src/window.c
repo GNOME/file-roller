@@ -1842,6 +1842,11 @@ file_button_press_cb (GtkWidget      *widget,
         FRWindow         *window = data;
 	GtkTreeSelection *selection;
 
+	/* FIXME: uncomment after freeze 
+	if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->list_view))) 
+                return FALSE;
+	*/
+
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
 	if (selection == NULL)
 		return FALSE;
@@ -1887,7 +1892,7 @@ file_button_press_cb (GtkWidget      *widget,
 						     event->x, event->y,
 						     &path, NULL, NULL, NULL)) {
 			gtk_tree_selection_unselect_all (selection);
-		}
+		} 
 
 		if (window->path_clicked != NULL) {
 			gtk_tree_path_free (window->path_clicked);
@@ -1912,6 +1917,11 @@ file_button_release_cb (GtkWidget      *widget,
         FRWindow         *window = data;
 	GtkTreeSelection *selection;
 
+	/* FIXME: uncomment after freeze 
+	if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->list_view))) 
+                return FALSE;
+	*/
+
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
 	if (selection == NULL)
 		return FALSE;
@@ -1919,7 +1929,9 @@ file_button_release_cb (GtkWidget      *widget,
 	if (window->path_clicked == NULL)
 		return FALSE;
 	
-	if ((event->type == GDK_BUTTON_RELEASE) && (event->button == 1)) {
+	if ((event->type == GDK_BUTTON_RELEASE) 
+	    && (event->button == 1)
+	    && (window->path_clicked != NULL)) {
 		GtkTreePath *path = NULL;
 
 		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
