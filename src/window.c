@@ -3512,6 +3512,14 @@ window_new (void)
 	window->toolbar = toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
 
+	{
+		GtkAction *action;
+
+		action = gtk_ui_manager_get_action (ui, "/ToolBar/Extract_Toolbar");
+		g_object_set (action, "is_important", TRUE, NULL);
+		g_object_unref (action);
+	}
+
 	/* Add the recent menu tool item */
 	
 	window->recent_toolbar_menu = gtk_menu_new ();
@@ -3522,6 +3530,7 @@ window_new (void)
 	gtk_menu_tool_button_set_arrow_tooltip (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->tooltips,	_("Open a recently used archive"), NULL);
 	
 	window->open_action = gtk_action_new ("Toolbar_Open", _("Open"), _("Open archive"), GTK_STOCK_OPEN);
+	g_object_set (window->open_action, "is_important", TRUE, NULL);
 	g_signal_connect (window->open_action,
 			  "activate",
 			  G_CALLBACK (activate_action_open),
