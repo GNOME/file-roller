@@ -40,19 +40,20 @@
 
 
 typedef struct {
-	FRWindow  *window;
-	GtkWidget *dialog;
-	GtkWidget *include_subfold_checkbutton;
-	GtkWidget *add_if_newer_checkbutton;
-	GtkWidget *exclude_symlinks;
-	GtkWidget *include_files_checkbutton;
-	GtkWidget *include_files_entry;
-	GtkWidget *include_files_label;
-	GtkWidget *exclude_files_entry;
-	GtkWidget *exclude_files_label;
-	GtkWidget *load_button;
-	GtkWidget *save_button;
-	char      *last_options;
+	FRWindow    *window;
+	GtkTooltips *tooltips;
+	GtkWidget   *dialog;
+	GtkWidget   *include_subfold_checkbutton;
+	GtkWidget   *add_if_newer_checkbutton;
+	GtkWidget   *exclude_symlinks;
+	GtkWidget   *include_files_checkbutton;
+	GtkWidget   *include_files_entry;
+	GtkWidget   *include_files_label;
+	GtkWidget   *exclude_files_entry;
+	GtkWidget   *exclude_files_label;
+	GtkWidget   *load_button;
+	GtkWidget   *save_button;
+	char        *last_options;
 } DialogData;
 
 
@@ -60,6 +61,7 @@ static void
 open_file_destroy_cb (GtkWidget  *widget,
 		      DialogData *data)
 {
+	g_object_unref (data->tooltips);
 	g_free (data->last_options);
 	g_free (data);
 }
@@ -299,12 +301,15 @@ add_folder_cb (GtkWidget *widget,
 	GtkWidget   *main_box;
 	GtkWidget   *vbox, *hbox;
 	GtkWidget   *table;	
-	GtkTooltips *tooltips;
-	
-	tooltips = gtk_tooltips_new ();
- 
+
 	data = g_new0 (DialogData, 1);
+
 	data->window = callback_data;
+
+	data->tooltips = gtk_tooltips_new ();
+	g_object_ref (G_OBJECT (data->tooltips));
+	gtk_object_sink (GTK_OBJECT (data->tooltips));
+
 	data->dialog = file_sel = 
 		gtk_file_chooser_dialog_new (_("Add a Folder"),
 					     GTK_WINDOW (data->window->app),
@@ -323,12 +328,12 @@ add_folder_cb (GtkWidget *widget,
 	data->exclude_symlinks = gtk_check_button_new_with_mnemonic (_("Exclude folders that are symbolic lin_ks"));
 
 	data->include_files_entry = gtk_entry_new ();
-	gtk_tooltips_set_tip (tooltips, data->include_files_entry, _("example: *.o; *.bak"), NULL);
+	gtk_tooltips_set_tip (data->tooltips, data->include_files_entry, _("example: *.o; *.bak"), NULL);
 	data->include_files_label = gtk_label_new_with_mnemonic (_("_Include files:"));
 	gtk_misc_set_alignment (GTK_MISC (data->include_files_label), 0.0, 0.5);
 
 	data->exclude_files_entry = gtk_entry_new ();
-	gtk_tooltips_set_tip (tooltips, data->exclude_files_entry, _("example: *.o; *.bak"), NULL);
+	gtk_tooltips_set_tip (data->tooltips, data->exclude_files_entry, _("example: *.o; *.bak"), NULL);
 	data->exclude_files_label = gtk_label_new_with_mnemonic (_("E_xclude files:"));
 	gtk_misc_set_alignment (GTK_MISC (data->exclude_files_label), 0.0, 0.5);
 
@@ -449,15 +454,10 @@ add_folder_cb (GtkWidget *widget,
 			  "clicked",
 			  G_CALLBACK (save_options_cb), 
 			  data);
-	
-	g_object_set_data (G_OBJECT (file_sel), "tooltips", tooltips);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
 	gtk_widget_show (file_sel);
 }
-
-
-
 
 
 typedef struct {
@@ -739,9 +739,6 @@ load_options_cb (GtkWidget  *w,
 	gtk_window_set_modal (GTK_WINDOW (aod_data->dialog), TRUE);
 	gtk_widget_show (aod_data->dialog);
 }
-
-
-
 
 
 static void

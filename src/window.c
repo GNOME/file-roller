@@ -3134,7 +3134,6 @@ go_forward_cb (GtkWidget *widget,
 }
 
 
-
 FRWindow *
 window_new ()
 {
@@ -3405,6 +3404,8 @@ window_new ()
 	/* buttons. */
 
 	window->tooltips = gtk_tooltips_new ();
+	g_object_ref (G_OBJECT (window->tooltips));
+	gtk_object_sink (GTK_OBJECT (window->tooltips));
 
 	window->back_button = create_locationbar_button (GTK_STOCK_GO_BACK, TRUE);
 	gtk_tooltips_set_tip (window->tooltips, window->back_button, _("Go to the previous visited location"), NULL);
@@ -3805,7 +3806,7 @@ window_close (FRWindow *window)
 		window->recent_toolbar_menu = NULL;
 	}
 
-	gtk_object_destroy (GTK_OBJECT (window->tooltips));
+	g_object_unref (G_OBJECT (window->tooltips));
 
 	while (window->activity_ref > 0)
 		window_stop_activity_mode (window);
