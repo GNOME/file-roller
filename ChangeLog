@@ -1,5 +1,8 @@
 2004-09-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.c (update_file_list_idle): remove and restore the 
+	timeout handle each time.
+
 	* src/file-utils.c (shell_escape): remove = and - from the characters
 	to escape.
 

@@ -129,6 +129,9 @@ typedef struct {
 	gint             activity_ref;              /* when > 0 some activity
                                                      * is present. */
 
+	guint            update_timeout_handle;     /* update file list 
+						     * timeout handle. */
+
 	VisitDirHandle  *vd_handle;
 
 	FRConvertData    convert_data;

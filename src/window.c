@@ -666,6 +666,11 @@ update_file_list_idle (gpointer callback_data)
 	int         i;
 	int         n = FILES_TO_PROCESS_AT_ONCE;
 
+	if (window->update_timeout_handle != 0) {
+		g_source_remove (window->update_timeout_handle);
+		window->update_timeout_handle = 0;
+	}
+
 	if (data->file_list == NULL) {
 		update_data_free (data);
 		return FALSE;
@@ -740,14 +745,15 @@ update_file_list_idle (gpointer callback_data)
 	if (data->file_list == NULL) {
 		update_data_free (data);
 		return FALSE;
+
 	} else if (data->add_timeout) {
 		data->add_timeout = FALSE;
-		g_timeout_add (DISPLAY_TIMEOUT_INTERVAL_MSECS, 
-			       update_file_list_idle, 
-			       data);
+		window->update_timeout_handle = g_timeout_add (DISPLAY_TIMEOUT_INTERVAL_MSECS, 
+							       update_file_list_idle, 
+							       data);
 	}
 
-	return TRUE;
+	return FALSE;
 }
 
 
@@ -3213,6 +3219,8 @@ window_new ()
 	window->activity_ref = 0;
 	window->activity_timeout_handle = 0;
 	window->vd_handle = NULL;
+
+	window->update_timeout_handle = 0;
 
 	window->archive_present = FALSE;
 	window->archive_new = FALSE;
