@@ -1846,6 +1846,11 @@ file_button_press_cb (GtkWidget      *widget,
 	if (selection == NULL)
 		return FALSE;
 
+	if (window->path_clicked != NULL) {
+		gtk_tree_path_free (window->path_clicked);
+		window->path_clicked = NULL;
+	}
+
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
 		GtkTreePath *path;
 		GtkTreeIter  iter;
