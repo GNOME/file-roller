@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.0\n"
-"POT-Creation-Date: 2003-04-29 12:53+0200\n"
-"PO-Revision-Date: 2003-04-29 19:44+0200\n"
+"POT-Creation-Date: 2003-05-18 11:58+0200\n"
+"PO-Revision-Date: 2003-05-18 14:40+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,9 +46,9 @@ msgid "Archive Manager"
 msgstr "Správce archivů"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
-#: src/gtk-utils.c:266 src/main.c:101 src/menu-callbacks.c:941
-#: src/window.c:758 src/window.c:767 src/window.c:1152 src/window.c:2731
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:204
+#: src/gtk-utils.c:391 src/main.c:101 src/menu-callbacks.c:1008
+#: src/window.c:759 src/window.c:768 src/window.c:1153 src/window.c:2733
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -121,11 +121,11 @@ msgstr "Uložit nastavení"
 msgid "You have to specify an archive name."
 msgstr "Musíte určit název archivu."
 
-#: src/dlg-batch-add.c:115 src/dlg-extract.c:120 src/window.c:3700
+#: src/dlg-batch-add.c:115 src/dlg-extract.c:120 src/window.c:3704
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Cílový adresář neexistuje. Chcete jej vytvořit?"
 
-#: src/dlg-batch-add.c:117 src/dlg-extract.c:122 src/window.c:3702
+#: src/dlg-batch-add.c:117 src/dlg-extract.c:122 src/window.c:3706
 msgid "Create _Folder"
 msgstr "Vytvořit _adresář"
 
@@ -152,7 +152,7 @@ msgstr "Přidávané soubory: %d"
 msgid "Folders to add: %d"
 msgstr "Přidávané adresáře: %d"
 
-#: src/dlg-extract.c:142 src/window.c:3722
+#: src/dlg-extract.c:142 src/window.c:3726
 #, c-format
 msgid ""
 "Could not create the destination folder: %s.\n"
@@ -161,7 +161,7 @@ msgstr ""
 "Nemohu vytvořit cílový adresář: %s.\n"
 "Rozbalení neprovedeno."
 
-#: src/dlg-extract.c:157 src/window.c:3737
+#: src/dlg-extract.c:157 src/window.c:3741
 msgid "Extraction not performed."
 msgstr "Rozbalení neprovedeno."
 
@@ -171,7 +171,7 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Nemáte oprávnění potřebná pro rozbalení archivů v adresáři \"%s\""
 
-#: src/dlg-extract.c:397 src/dlg-preferences.c:127 src/menu-callbacks.c:904
+#: src/dlg-extract.c:397 src/dlg-preferences.c:127 src/menu-callbacks.c:971
 #, c-format
 msgid "Could not display help: %s"
 msgstr "Nemohu zobrazit nápovědu: %s"
@@ -273,7 +273,7 @@ msgstr "Odstranit soubory"
 msgid "Do not e_xtract older files"
 msgstr "Ne_rozbalovat starší soubory"
 
-#: src/file_roller.glade.h:10 src/window.c:2969
+#: src/file_roller.glade.h:10 src/window.c:2971
 msgid "Extract"
 msgstr "Rozbalit"
 
@@ -399,27 +399,27 @@ msgstr "_Velikost"
 msgid "_Type"
 msgstr "_Typ"
 
-#: src/fr-command-tar.c:273
+#: src/fr-command-tar.c:268
 msgid "Adding file: "
 msgstr "Přidávám soubor: "
 
-#: src/fr-command-tar.c:319
+#: src/fr-command-tar.c:314
 msgid "Removing file: "
 msgstr "Odstraňuji soubor: "
 
-#: src/fr-command-tar.c:328 src/window.c:1247
+#: src/fr-command-tar.c:323 src/window.c:1249
 msgid "Deleting files from archive"
 msgstr "Odstraňuji soubory z archivu"
 
-#: src/fr-command-tar.c:361
+#: src/fr-command-tar.c:356
 msgid "Extracting file: "
 msgstr "Rozbaluji soubor: "
 
-#: src/fr-command-tar.c:406
+#: src/fr-command-tar.c:401
 msgid "Recompressing archive"
 msgstr "Znovu komprimuji archiv"
 
-#: src/fr-command-tar.c:540
+#: src/fr-command-tar.c:535
 msgid "Decompressing archive"
 msgstr "Dekomprimuji archiv"
 
@@ -432,8 +432,12 @@ msgstr ""
 "Chyba GConf:\n"
 "  %s"
 
-#. Button
 #: src/gtk-utils.c:297
+msgid "gThumb"
+msgstr "gThumb"
+
+#. Button
+#: src/gtk-utils.c:422
 msgid "Command _Line Output"
 msgstr "Výstup příkazového _řádku"
 
@@ -469,133 +473,139 @@ msgstr "Implicitní složka pro příkazy '--add' a '--extract'"
 msgid "Create destination folder without asking confirmation"
 msgstr "Vytvořit cílovou složku bez dotazu na potvrzení"
 
-#: src/menu-callbacks.c:107
+#: src/menu-callbacks.c:108
 msgid "Automatic"
 msgstr "Automatická"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:109
+msgid "Arj (.arj)"
+msgstr "Arj (.arj)"
+
+#: src/menu-callbacks.c:110
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:111
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:112
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:113
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:114
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar nekomprimovaný (.tar)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:115
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar komprimovaný s bzip (.tar.bz)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:116
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar komprimovaný s bzip2 (.tar.bz2)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar komprimovaný s gzip (.tar.gz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:118
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar komprimovaný s lzop (.tar.lzo)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:119
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar komprimovaný s compress (.tar.Z)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:120
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:121
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:122
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:176 src/menu-callbacks.c:345
+#: src/menu-callbacks.c:178 src/menu-callbacks.c:347
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Nemáte oprávnění vytvářet v tomto adresáři archiv"
 
-#: src/menu-callbacks.c:202 src/menu-callbacks.c:363 src/menu-callbacks.c:573
-#: src/menu-callbacks.c:743
+#: src/menu-callbacks.c:204 src/menu-callbacks.c:365 src/menu-callbacks.c:576
+#: src/menu-callbacks.c:748
 msgid "Archive already exists.  Do you want to overwrite it?"
 msgstr "Archiv již existuje. Chcete jej přepsat?"
 
-#: src/menu-callbacks.c:204 src/menu-callbacks.c:365 src/menu-callbacks.c:575
-#: src/menu-callbacks.c:745
+#: src/menu-callbacks.c:206 src/menu-callbacks.c:367 src/menu-callbacks.c:578
+#: src/menu-callbacks.c:750
 msgid "Overwrite"
 msgstr "Přepsat"
 
-#: src/menu-callbacks.c:221 src/menu-callbacks.c:382
+#: src/menu-callbacks.c:223 src/menu-callbacks.c:384
 msgid "Could not delete old archive."
 msgstr "Nemohu odstranit starý archiv."
 
-#: src/menu-callbacks.c:262
+#: src/menu-callbacks.c:264
 msgid "New Archive"
 msgstr "Nový archiv"
 
-#: src/menu-callbacks.c:274 src/menu-callbacks.c:418
+#: src/menu-callbacks.c:276 src/menu-callbacks.c:420
 msgid "Archive type:"
 msgstr "Typ archivu:"
 
-#: src/menu-callbacks.c:406
+#: src/menu-callbacks.c:408
 msgid "Save Archive"
 msgstr "Uložit archiv"
 
-#: src/menu-callbacks.c:489
+#: src/menu-callbacks.c:491
 msgid "Open Archive"
 msgstr "Otevřít archiv"
 
-#: src/menu-callbacks.c:598
+#: src/menu-callbacks.c:601
 msgid "Could not copy archive"
 msgstr "Nemohu zkopírovat archiv"
 
-#: src/menu-callbacks.c:614
+#: src/menu-callbacks.c:617
 msgid "Could not move archive"
 msgstr "Nemohu přesunout archiv"
 
-#: src/menu-callbacks.c:636
+#: src/menu-callbacks.c:641
 msgid "Copy archive"
 msgstr "Zkopírovat archiv"
 
-#: src/menu-callbacks.c:636
+#: src/menu-callbacks.c:641
 msgid "Move archive"
 msgstr "Přesunout archiv"
 
-#: src/menu-callbacks.c:714
+#: src/menu-callbacks.c:719
 msgid "New archive name (without extension)"
 msgstr "Nové jméno archivu (bez přípony)"
 
-#: src/menu-callbacks.c:718 src/menu.h:108
+#: src/menu-callbacks.c:723 src/menu.h:108
 msgid "_Rename"
 msgstr "_Přejmenovat"
 
-#: src/menu-callbacks.c:782
-msgid "Archive will be deleted, are you sure?"
-msgstr "Archiv bude odstraněn, jste si jisti?"
+#: src/menu-callbacks.c:832
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
+msgstr "Archiv nemůže být přesunut do koše. Chcete jej natrvalo odstranit?"
 
-#: src/menu-callbacks.c:933
+#: src/menu-callbacks.c:1000
 msgid "translator_credits"
 msgstr "Miloslav Trmač <mitr@volny.cz>"
 
-#: src/menu-callbacks.c:944
+#: src/menu-callbacks.c:1011
 msgid "An archive manager for GNOME."
 msgstr "Správce archivů pro GNOME"
 
-#: src/menu-callbacks.c:1118 src/window.c:4020
+#: src/menu-callbacks.c:1185 src/window.c:4024
 msgid "Last Output"
 msgstr "Poslední výstup"
 
@@ -664,12 +674,12 @@ msgid "Move current archive to another folder"
 msgstr "Přesunout aktuální archiv do jiného adresáře"
 
 #: src/menu.h:126
-msgid "_Delete"
-msgstr "O_dstranit"
+msgid "Move To _Trash"
+msgstr "Přesunout do _koše"
 
 #: src/menu.h:126
-msgid "Delete current archive from disk"
-msgstr "Odstranit aktuální archiv z disku"
+msgid "Move current archive to trash"
+msgstr "Přesunout aktuální archiv do koše"
 
 #: src/menu.h:132
 msgid "_Test"
@@ -707,7 +717,7 @@ msgstr "Konec"
 msgid "Add _Files..."
 msgstr "Přidat _soubory..."
 
-#: src/menu.h:180 src/menu.h:468 src/window.c:2959
+#: src/menu.h:180 src/menu.h:468 src/window.c:2961
 msgid "Add files to the archive"
 msgstr "Přidat soubory do archivu"
 
@@ -723,7 +733,7 @@ msgstr "Odstranit z archivu vybrané soubory a složky"
 msgid "_Extract to..."
 msgstr "_Rozbalit do..."
 
-#: src/menu.h:192 src/menu.h:480 src/window.c:2970
+#: src/menu.h:192 src/menu.h:480 src/window.c:2972
 msgid "Extract files from the archive"
 msgstr "Rozbalit soubory z archivu"
 
@@ -923,103 +933,103 @@ msgstr "Otevřít archiv"
 msgid "Stop"
 msgstr "Zastavit"
 
-#: src/window.c:617
+#: src/window.c:618
 msgid "Folder"
 msgstr "Adresář"
 
-#: src/window.c:766
+#: src/window.c:767
 msgid "[read only]"
 msgstr "[jen pro čtení]"
 
-#: src/window.c:862
+#: src/window.c:863
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 soubor (%s)"
 
-#: src/window.c:865
+#: src/window.c:866
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d souborů (%s)"
 
-#: src/window.c:873
+#: src/window.c:874
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "vybrán 1 soubor (%s)"
 
-#: src/window.c:876
+#: src/window.c:877
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "vybráno %d souborů (%s)"
 
-#: src/window.c:1244
+#: src/window.c:1246
 msgid "Reading archive"
 msgstr "Čtu archiv"
 
-#: src/window.c:1250
+#: src/window.c:1252
 msgid "Adding files to archive"
 msgstr "Přidávám soubory do archivu"
 
-#: src/window.c:1253
+#: src/window.c:1255
 msgid "Extracting files from archive"
 msgstr "Rozbaluji soubory z archivu"
 
-#: src/window.c:1256
+#: src/window.c:1258
 msgid "Testing archive"
 msgstr "Testuji archiv"
 
-#: src/window.c:1259
+#: src/window.c:1261
 msgid "Getting the file list"
 msgstr "Získávám seznam souborů"
 
-#: src/window.c:1265
+#: src/window.c:1267
 msgid "wait please..."
 msgstr "čekejte prosím..."
 
-#: src/window.c:1376
+#: src/window.c:1378
 msgid "Operation stopped"
 msgstr "Operace zastavena"
 
-#: src/window.c:1394
+#: src/window.c:1396
 msgid "An error occurred while extracting files."
 msgstr "Při rozbalování souborů došlo k chybě."
 
-#: src/window.c:1398
+#: src/window.c:1400
 msgid "An error occurred while loading the archive."
 msgstr "Při načítání archivu došlo k chybě."
 
-#: src/window.c:1402
+#: src/window.c:1404
 msgid "An error occurred while deleting files from the archive."
 msgstr "Při odstraňování souborů z archivu došlo k chybě."
 
-#: src/window.c:1406
+#: src/window.c:1408
 msgid "An error occurred while adding files to the archive."
 msgstr "Při přidávání souborů do archivu došlo k chybě."
 
-#: src/window.c:1410
+#: src/window.c:1412
 msgid "An error occurred while testing archive."
 msgstr "Při testování archivu došlo k chybě."
 
-#: src/window.c:1419
+#: src/window.c:1421
 msgid "Command not found."
 msgstr "Příkaz nenalezen."
 
-#: src/window.c:1422
+#: src/window.c:1424
 msgid "Command exited abnormally."
 msgstr "Příkaz skončil neúspěšně."
 
-#: src/window.c:1557
+#: src/window.c:1559
 msgid "Test Result"
 msgstr "Výsledek testu"
 
-#: src/window.c:1777
+#: src/window.c:1779
 msgid "You don't have permissions to add files to this archive."
 msgstr "Nemáte oprávnění přidávat soubory do tohoto archivu."
 
-#: src/window.c:1808
+#: src/window.c:1810
 msgid "You can't add an archive to itself."
 msgstr "Nemůžete přidat archiv sám do sebe."
 
-#: src/window.c:1978
+#: src/window.c:1980
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1027,67 +1037,67 @@ msgstr ""
 "Chcete přidat tento soubor do aktuálního archivu nebo jej otevřít jako nový "
 "archiv?"
 
-#: src/window.c:2022
+#: src/window.c:2024
 msgid "Do you want to create a new archive with these files?"
 msgstr "Chcete vytvořit nový archiv s těmito soubory?"
 
-#: src/window.c:2024
+#: src/window.c:2026
 msgid "Create _Archive"
 msgstr "Vytvořit _archiv"
 
-#: src/window.c:2369
+#: src/window.c:2371
 msgid "Size"
 msgstr "Velikost"
 
-#: src/window.c:2370
+#: src/window.c:2372
 msgid "Type"
 msgstr "Typ"
 
-#: src/window.c:2371
+#: src/window.c:2373
 msgid "Date modified"
 msgstr "Datum změny"
 
-#: src/window.c:2372
+#: src/window.c:2374
 msgid "Location"
 msgstr "Umístění"
 
-#: src/window.c:2379
+#: src/window.c:2381
 msgid "Name"
 msgstr "Jméno"
 
-#: src/window.c:2899
+#: src/window.c:2901
 msgid "_Up"
 msgstr "_Nahoru"
 
 #. current location
-#: src/window.c:2921
+#: src/window.c:2923
 msgid "Location:"
 msgstr "Umístění"
 
-#: src/window.c:2958
+#: src/window.c:2960
 msgid "Add"
 msgstr "Přidat"
 
-#: src/window.c:2980
+#: src/window.c:2982
 msgid "View"
 msgstr "Zobrazit"
 
-#: src/window.c:2981
+#: src/window.c:2983
 msgid "View selected file"
 msgstr "Zobrazit vybraný soubor"
 
-#: src/window.c:3404 src/window.c:3517
+#: src/window.c:3408 src/window.c:3521
 msgid "Archive type not supported."
 msgstr "Typ archivu není podporován."
 
-#: src/window.c:3480
+#: src/window.c:3484
 msgid "Cannot load archive."
 msgstr "Nemohu načíst archiv."
 
-#: src/window.c:4549
+#: src/window.c:4553
 msgid "Add files to an archive"
 msgstr "Přidat soubory do archivu"
 
-#: src/window.c:4574
+#: src/window.c:4578
 msgid "Extract archive"
 msgstr "Rozbalit archiv"
