@@ -58,6 +58,7 @@
 #include "icons/pixbufs.h"
 
 
+#deinfe MAX_HISTORY_LEN 5
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
 #define FILES_TO_PROCESS_AT_ONCE 500
@@ -3304,28 +3305,8 @@ window_new ()
 
 	/**/
 
-	model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
-	egg_recent_model_set_filter_mime_types (model, 
-						"application/x-tar",
-						"application/x-compressed-tar",
-						"application/x-bzip-compressed-tar",
-						"application/x-lzop-compressed-tar",
-						"application/x-arj",
-						"application/zip",
-						"application/x-zip",
-						"application/x-lha",
-						"application/x-rar",
-						"application/x-rar-compressed",
-						"application/x-gzip",
-						"application/x-bzip",
-						"application/x-compress",
-						"application/x-lzop",
-						"application/x-zoo",
-						"application/x-stuffit",
-						"application/x-rpm",
-						NULL);
-        egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
-	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, 5));
+	model = egg_recent_model_new ("file-roller", EGG_RECENT_MODEL_SORT_MRU);
+	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
 
 	view = egg_recent_view_gtk_new (window->mitem_recents_menu, NULL);
 	window->recent_view = view;

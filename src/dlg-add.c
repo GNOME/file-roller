@@ -96,6 +96,21 @@ file_sel_response_cb (GtkWidget *w,
 		return;
 	}
 
+	{ /* FIXME */
+		GSList *selections;
+		GSList *iter;
+
+		selections = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (file_sel));
+		for (iter = selections; iter != NULL; iter = iter->next) {
+			g_print ("add %s\n", iter->data);
+		}
+
+		g_slist_foreach (selections, (GFunc) g_free, NULL);
+		g_slist_free (selections);
+	}
+
+	return;
+
 	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
 	window = data->window;
 
@@ -303,51 +318,6 @@ static void load_options_cb (GtkWidget *w, GtkWidget *data);
 static void save_options_cb (GtkWidget *w, GtkWidget *data);
 
 
-static GtkWidget *
-create_button (const char *stock_id, 
-               const char *text)
-{
-        GtkWidget    *button;
-        GtkWidget    *hbox;
-        GtkWidget    *image;
-        GtkWidget    *label;
-        GtkWidget    *align;
-	const char   *label_text;
-        gboolean      text_is_stock;
-        GtkStockItem  stock_item;
-
-        button = gtk_button_new ();
-
-        if (gtk_stock_lookup (text, &stock_item)) {
-                label_text = stock_item.label;
-                text_is_stock = TRUE;
-        } else {
-		label_text = text;
-		text_is_stock = FALSE;
-        }
-
-        if (text_is_stock)
-                image = gtk_image_new_from_stock (text, GTK_ICON_SIZE_BUTTON);
-        else
-                image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON);
-        label = gtk_label_new_with_mnemonic (label_text);
-        hbox = gtk_hbox_new (FALSE, 2);
-        align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-        gtk_label_set_mnemonic_widget (GTK_LABEL (label), GTK_WIDGET (button));
-
-        gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-        gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-        gtk_container_add (GTK_CONTAINER (button), align);
-        gtk_container_add (GTK_CONTAINER (align), hbox);
-
-        gtk_widget_show_all (button);
-
-        return button;
-}
-
-
 /* create the "add" dialog. */
 void
 add_cb (GtkWidget *widget, 
@@ -386,8 +356,8 @@ add_cb (GtkWidget *widget,
 	data->exclude_files_entry = gtk_entry_new ();
 	gtk_tooltips_set_tip (tooltips, data->exclude_files_entry, _("example: *.o; *.bak"), NULL);
 	data->ignore_case = gtk_check_button_new_with_mnemonic (_("Igno_re case"));
-	data->load_button = create_button (GTK_STOCK_OPEN, _("_Load Options"));
-        data->save_button = create_button (GTK_STOCK_SAVE, _("Sa_ve Options"));
+	data->load_button = gtk_button_new_with_label (_("_Load Options"));
+	data->save_button = gtk_button_new_with_label (_("Sa_ve Options"));
 
 	main_box = gtk_hbox_new (FALSE, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (main_box), 0);
