@@ -358,7 +358,7 @@ add_cb (GtkWidget *widget,
 	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_sel), TRUE);
 
 	data->add_if_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("_Add only if newer"));
-	data->include_subfold_checkbutton = gtk_check_button_new_with_mnemonic (_("_Include sub-folders"));
+	data->include_subfold_checkbutton = gtk_check_button_new_with_mnemonic (_("_Include subfolders"));
 	data->exclude_symlinks = gtk_check_button_new_with_mnemonic (_("Exclude folders that are symbolic lin_ks"));
 	data->exclude_other_fs = gtk_check_button_new_with_mnemonic (_("Exclude o_ther file systems"));
 	data->exclude_backup_files = gtk_check_button_new_with_mnemonic (_("Exclude _backup files (*~)"));
