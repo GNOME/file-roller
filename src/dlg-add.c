@@ -282,7 +282,7 @@ create_button (const char *stock_id,
         GtkWidget    *image;
         GtkWidget    *label;
         GtkWidget    *align;
-        char         *label_text;
+	const char   *label_text;
         gboolean      text_is_stock;
         GtkStockItem  stock_item;
 
@@ -292,8 +292,8 @@ create_button (const char *stock_id,
                 label_text = stock_item.label;
                 text_is_stock = TRUE;
         } else {
-                label_text = g_locale_to_utf8 (text, -1, NULL, NULL, NULL);
-                text_is_stock = FALSE;
+		label_text = text;
+		text_is_stock = FALSE;
         }
 
         if (text_is_stock)
@@ -303,9 +303,6 @@ create_button (const char *stock_id,
         label = gtk_label_new_with_mnemonic (label_text);
         hbox = gtk_hbox_new (FALSE, 2);
         align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-
-        if (! text_is_stock)
-                g_free (label_text);
 
 	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
         gtk_label_set_mnemonic_widget (GTK_LABEL (label), GTK_WIDGET (button));
