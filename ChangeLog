@@ -1,3 +1,20 @@
+2003-07-14  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (window_close): stop the activity timeout, should
+	fix bug #117171
+
+2003-07-13  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (window_view_last_output): make the dialog modal.
+
+	* src/menu.h: move "New Window" to the View menu, remove the
+	"Close Window" command and the Windows menu.
+
+2003-07-06  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (_window_update_title): remove "File Roller" from the 
+	title.
+
 2003-07-07  Nikos Charonitakis  <frolix68@yahoo.gr>
 
 	* po/el.po: updated Greek translation.

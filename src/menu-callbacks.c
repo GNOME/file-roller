@@ -284,6 +284,7 @@ new_archive_cb (GtkWidget *widget,
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
 	GtkWidget *hbox;
+	GtkWidget *vbox, *vbox2;
 	GtkWidget *opt_menu;
 	GtkWidget *menu;
 	char      *dir;
@@ -294,10 +295,16 @@ new_archive_cb (GtkWidget *widget,
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
 	g_free (dir);
 
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), vbox, TRUE, TRUE, 0);
+
+	vbox2 = gtk_vbox_new (FALSE, 6);
+	gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 6);
+
 	/**/
 
 	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), hbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox2), hbox, TRUE, TRUE, 0);
 
 	gtk_box_pack_start (GTK_BOX (hbox), 
 			    gtk_label_new (_("Archive type:")),
@@ -529,14 +536,16 @@ open_archive_cb (GtkWidget *widget,
 		 void      *data)
 {
 	GtkWidget *file_sel;
-	FRWindow *window = data;
-	gchar *dir;
+	FRWindow  *window = data;
+	char      *dir;
 
         file_sel = gtk_file_selection_new (_("Open Archive"));
 
 	dir = g_strconcat (window->open_default_dir, "/", NULL);
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
 	g_free (dir);
+
+	/**/
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
 	
@@ -555,7 +564,7 @@ open_archive_cb (GtkWidget *widget,
 			  G_CALLBACK (open_file_destroy_cb),
 			  file_sel);
 
-	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
+	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 	gtk_widget_show (file_sel);
 }
 

@@ -306,17 +306,18 @@ GnomeUIInfo arrange_menu[] = {
 };
 
 enum {
-	VIEW_MENU_TOOLBAR,
+	VIEW_MENU_TOOLBAR = 0,
 	VIEW_MENU_STATUSBAR,
 	VIEW_MENU_SEP1,
 	VIEW_MENU_STOP,
 	VIEW_MENU_RELOAD,
-	VIEW_MENU_SEP2,
-	VIEW_MENU_VIEW_LIST,
 	VIEW_MENU_SEP3,
-	VIEW_MENU_SORT_LIST,
+	VIEW_MENU_VIEW_LIST,
 	VIEW_MENU_SEP4,
-	VIEW_MENU_LAST_OUTPUT
+	VIEW_MENU_SORT_LIST,
+	VIEW_MENU_SEP5,
+	VIEW_MENU_LAST_OUTPUT,
+	VIEW_MENU_NEW_WINDOW
 };
 
 GnomeUIInfo view_menu[] = {
@@ -362,25 +363,12 @@ GnomeUIInfo view_menu[] = {
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
-	GNOMEUIINFO_END
-};
-
-
-/* Definition of the Windows menu */
-
-GnomeUIInfo windows_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
 	  N_("New _Window"), N_("Open a new window"), 
 	  new_window_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
-	  'w', GDK_SHIFT_MASK | GDK_CONTROL_MASK, NULL },
+	  0, 0, NULL },
 
-	{ GNOME_APP_UI_ITEM, 
-	  N_("Clo_se Window"), N_("Close this window"), 
-	  close_window_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  'w', GDK_CONTROL_MASK, NULL },
-	
 	GNOMEUIINFO_END
 };
 
@@ -410,7 +398,6 @@ GnomeUIInfo main_menu[] = {
 	GNOMEUIINFO_SUBTREE (N_("_Archive"), file_menu),
 	GNOMEUIINFO_SUBTREE (N_("_Edit"), edit_menu),
 	GNOMEUIINFO_SUBTREE (N_("_View"), view_menu),
-	GNOMEUIINFO_SUBTREE (N_("_Windows"), windows_menu),
 	GNOMEUIINFO_MENU_HELP_TREE (help_menu),
 	GNOMEUIINFO_END
 };

@@ -762,10 +762,9 @@ _window_update_title (FRWindow *window)
 		char *utf8_name;
 		
 		utf8_name = g_locale_to_utf8 (file_name_from_path (window->archive_filename), -1, NULL, NULL, NULL);
-		title = g_strdup_printf ("%s %s - %s",
+		title = g_strdup_printf ("%s %s",
 					 utf8_name,
-					 (window->archive->read_only) ? _("[read only]") : "",
-					 _("File Roller"));
+					 (window->archive->read_only) ? _("[read only]") : "");
 
 		gtk_window_set_title (GTK_WINDOW (window->app), title);
 		g_free (title);
@@ -3304,6 +3303,9 @@ window_close (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
+	while (window->activity_ref > 0)
+		window_stop_activity_mode (window);
+
 	if (window->progress_timeout != 0) {
 		g_source_remove (window->progress_timeout);
 		window->progress_timeout = 0;
@@ -4069,80 +4071,89 @@ window_view_last_output (FRWindow   *window,
 	GtkWidget     *vbox;
 	GtkWidget     *text_view;
 	GtkWidget     *scrolled;
-	GtkTextBuffer *text_buf;
+	GtkTextBuffer *text_buffer;
 	GtkTextIter    iter;
-	GList         *scan;
+	GList         *scan;	
 
 	if (title == NULL)
 		title = _("Last Output");
-
+	
 	dialog = gtk_dialog_new_with_buttons (title,
 					      GTK_WINDOW (window->app),
-					      GTK_DIALOG_DESTROY_WITH_PARENT, 
+					      GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 					      NULL);
+	
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-        gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-        gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
-        gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
-
+	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+	
 	gtk_widget_set_size_request (dialog, 500, 300);
-
+	
 	/* Add text */
-
+	
 	scrolled = gtk_scrolled_window_new (NULL, NULL);
-        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-                                        GTK_POLICY_AUTOMATIC, 
-                                        GTK_POLICY_AUTOMATIC);
-        gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled),
-                                             GTK_SHADOW_ETCHED_IN);
-
-	text_buf = gtk_text_buffer_new (NULL);
-	gtk_text_buffer_create_tag (text_buf, "monospace",
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
+					GTK_POLICY_AUTOMATIC, 
+					GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled),
+					     GTK_SHADOW_ETCHED_IN);
+	
+	text_buffer = gtk_text_buffer_new (NULL);		
+	gtk_text_buffer_create_tag (text_buffer, "monospace",
 				    "family", "monospace", NULL);
-	gtk_text_buffer_get_iter_at_offset (text_buf, &iter, 0);
+	
+	text_view = gtk_text_view_new_with_buffer (text_buffer);
+	g_object_unref (text_buffer);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
+	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (text_view), FALSE);
+	
+	/**/
+	
+	vbox = gtk_vbox_new (FALSE, 6);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
+	
+	gtk_container_add (GTK_CONTAINER (scrolled), text_view);
+	gtk_box_pack_start (GTK_BOX (vbox), scrolled,
+			    TRUE, TRUE, 0);
+	
+	gtk_widget_show_all (vbox);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			    vbox,
+			    TRUE, TRUE, 0);
+	
+	/* signals */
+	
+	g_signal_connect (G_OBJECT (dialog),
+			  "response", 
+			  G_CALLBACK (gtk_widget_destroy), 
+			  NULL);
+
+	/**/
+
+	gtk_text_buffer_get_iter_at_offset (text_buffer, &iter, 0);
 	scan = window->archive->process->raw_output;
 	for (; scan; scan = scan->next) {
-		char *line = scan->data;
-		char *utf8_line;
-		gsize bytes_written;
+		char        *line = scan->data;
+		char        *utf8_line;
+		gsize        bytes_written;
 
 		utf8_line = g_locale_to_utf8 (line, -1, NULL, &bytes_written, NULL);
-		gtk_text_buffer_insert_with_tags_by_name (text_buf,
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer,
 							  &iter,
 							  utf8_line,
 							  bytes_written,
 							  "monospace", NULL);
 		g_free (utf8_line);
-		gtk_text_buffer_insert (text_buf, &iter, "\n", 1);
+		gtk_text_buffer_insert (text_buffer, &iter, "\n", 1);
 	}
-	text_view = gtk_text_view_new_with_buffer (text_buf);
-	g_object_unref (text_buf);
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
-	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (text_view), FALSE);
+
 
 	/**/
 
-	vbox = gtk_vbox_new (FALSE, 6);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-
-	gtk_container_add (GTK_CONTAINER (scrolled), text_view);
-	gtk_box_pack_start (GTK_BOX (vbox), scrolled,
-			    TRUE, TRUE, 0);
-	
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-			    vbox,
-			    TRUE, TRUE, 0);
-
-	/* signals */
-
-	g_signal_connect (G_OBJECT (dialog),
-			  "response", 
-			  G_CALLBACK (gtk_widget_destroy), 
-			  NULL);
-	
-	gtk_widget_show_all (dialog);
+	gtk_window_present (GTK_WINDOW (dialog));
 }
 
 
