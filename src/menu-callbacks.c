@@ -828,8 +828,6 @@ copy_or_move_archive (FRWindow *window,
 					     copy ? _("_Copy"): _("_Move"),
 					     GTK_RESPONSE_OK,
 					     NULL);
-	gtk_file_chooser_set_folder_mode (GTK_FILE_CHOOSER (file_sel),
-					  TRUE);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
  
