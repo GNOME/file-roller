@@ -351,7 +351,19 @@ prepare_app (poptContext pctx)
 	} 
 
 	default_dir = get_path_from_url (default_url);
-	extract_to_path = get_path_from_url (extract_to);
+	
+	if (g_path_is_absolute (extract_to))
+		extract_to_path = get_path_from_url (extract_to);
+	else {
+		char *full_path;
+		char *current_dir = g_get_current_dir ();
+
+		full_path = g_build_filename (current_dir, extract_to, NULL);
+		g_free (current_dir);
+		extract_to_path = get_path_from_url (full_path);
+		g_free (full_path);
+	}
+
         add_to_path = get_path_from_url (add_to);
 
 	if ((add_to != NULL) || (add == 1)) { /* Add files to an archive */
