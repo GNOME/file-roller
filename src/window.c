@@ -852,7 +852,7 @@ _window_update_title (FRWindow *window)
 {
 	if (! window->archive_present)
 		gtk_window_set_title (GTK_WINDOW (window->app), 
-				      _("File Roller"));
+				      _("Archive Manager"));
 	else {
 		char     *title;
 		char     *utf8_name;
