@@ -56,15 +56,15 @@ struct _FRCommand
 
 	/* properties the command supports. */
 
-	uint propCanModify : 1;
-	uint propAddCanUpdate : 1;
-	uint propAddCanReplace : 1;
-	uint propExtractCanAvoidOverwrite : 1;
-	uint propExtractCanSkipOlder : 1;
-	uint propExtractCanJunkPaths : 1;
-	uint propPassword : 1;
-	uint propTest : 1;
-	uint propCanExtractAll : 1;
+	guint propCanModify : 1;
+	guint propAddCanUpdate : 1;
+	guint propAddCanReplace : 1;
+	guint propExtractCanAvoidOverwrite : 1;
+	guint propExtractCanSkipOlder : 1;
+	guint propExtractCanJunkPaths : 1;
+	guint propPassword : 1;
+	guint propTest : 1;
+	guint propCanExtractAll : 1;
 
 	/* used by the progress signal */
 
