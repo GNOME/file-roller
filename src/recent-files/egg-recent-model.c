@@ -36,7 +36,6 @@
 #include <gconf/gconf-client.h>
 #include "egg-recent-model.h"
 #include "egg-recent-item.h"
-#include "egg-recent-vfs-utils.h"
 
 #define EGG_RECENT_MODEL_FILE_PATH "/.recently-used"
 #define EGG_RECENT_MODEL_BUFFER_SIZE 8192
@@ -151,19 +150,6 @@ static GMarkupParser parser = {start_element_handler, end_element_handler,
 			NULL,
 			error_handler};
 
-#if 0
-static void
-print_elapsed (struct timeval before, struct timeval after, const gchar *label)
-{
-	gdouble elapsed;
-
-	elapsed = after.tv_sec - before.tv_sec
-                + (after.tv_usec - before.tv_usec) / 1000000.0;
-
-	g_print ("%s:  %f elapsed.\n", label, elapsed);
-}
-#endif
-
 static gboolean
 egg_recent_model_string_match (const GSList *list, const gchar *str)
 {
@@ -274,7 +260,7 @@ egg_recent_model_update_item (GList *items, EggRecentItem *upd_item)
 	while (tmp) {
 		EggRecentItem *item = tmp->data;
 
-		if (egg_recent_vfs_uris_match (egg_recent_item_peek_uri (item), uri)) {
+		if (gnome_vfs_uris_match (egg_recent_item_peek_uri (item), uri)) {
 			egg_recent_item_set_timestamp (item, (time_t) -1);
 
 			egg_recent_model_add_new_groups (item, upd_item);
@@ -572,7 +558,7 @@ egg_recent_model_filter (EggRecentModel *model,
 		    model->priv->scheme_filter_values != NULL) {
 			gchar *scheme;
 			
-			scheme = egg_recent_vfs_get_uri_scheme (uri);
+			scheme = gnome_vfs_get_uri_scheme (uri);
 
 			if (egg_recent_model_string_match
 				(model->priv->scheme_filter_values, scheme))
@@ -689,20 +675,18 @@ egg_recent_model_monitor_cb (GnomeVFSMonitorHandle *handle,
 static void
 egg_recent_model_monitor (EggRecentModel *model, gboolean should_monitor)
 {
-	GnomeVFSResult res;
-
 	if (should_monitor && model->priv->monitor == NULL) {
 
-		res = gnome_vfs_monitor_add (&model->priv->monitor,
+		gnome_vfs_monitor_add (&model->priv->monitor,
 					     model->priv->path,
 					     GNOME_VFS_MONITOR_FILE,
 					     egg_recent_model_monitor_cb,
 					     model);
 
-		if (res != GNOME_VFS_OK)
-			g_warning ("Unable to monitor XML document.  Notification "
-				   "of changes in recent documents list will not be"
-				   "available.");
+		/* if the above fails, don't worry about it.
+		 * local notifications will still happen
+		 */
+
 	} else if (!should_monitor && model->priv->monitor != NULL) {
 		gnome_vfs_monitor_cancel (model->priv->monitor);
 		model->priv->monitor = NULL;
@@ -791,7 +775,7 @@ egg_recent_model_write (EggRecentModel *model, FILE *file, GList *list)
 		item = (EggRecentItem *)list->data;
 
 
-		uri = egg_recent_item_get_uri (item);
+		uri = egg_recent_item_get_uri_utf8 (item);
 		escaped_uri = g_markup_escape_text (uri,
 						    strlen (uri));
 		g_free (uri);
@@ -873,6 +857,9 @@ egg_recent_model_open_file (EggRecentModel *model)
 	
 	file = fopen (model->priv->path, "r+");
 	if (file == NULL) {
+		/* be paranoid */
+		umask (077);
+
 		file = fopen (model->priv->path, "w+");
 
 		g_return_val_if_fail (file != NULL, NULL);
@@ -1224,19 +1211,25 @@ egg_recent_model_add_full (EggRecentModel * model, EggRecentItem *item)
 	GList *list = NULL;
 	gboolean ret = FALSE;
 	gboolean updated = FALSE;
+	char *uri;
 	time_t t;
-	gchar *uri;
 	
 	g_return_val_if_fail (model != NULL, FALSE);
 	g_return_val_if_fail (EGG_IS_RECENT_MODEL (model), FALSE);
+
+	uri = egg_recent_item_get_uri (item);
+	if (strncmp (uri, "recent-files://", strlen ("recent-files://")) == 0) {
+		g_free (uri);
+		return FALSE;
+	} else {
+		g_free (uri);
+	}
 
 	file = egg_recent_model_open_file (model);
 	g_return_val_if_fail (file != NULL, FALSE);
 
 	time (&t);
 	egg_recent_item_set_timestamp (item, t);
-
-	uri = egg_recent_item_get_uri (item);
 
 	if (egg_recent_model_lock_file (file)) {
 

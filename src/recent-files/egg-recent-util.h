@@ -14,7 +14,8 @@ gchar * egg_recent_util_get_unique_id (void);
 #ifndef USE_STABLE_LIBGNOMEUI
 GdkPixbuf * egg_recent_util_get_icon (GnomeIconTheme *theme,
 				      const gchar *uri,
-				      const gchar *mime_type);
+				      const gchar *mime_type,
+				      int size);
 #endif
 
 G_END_DECLS

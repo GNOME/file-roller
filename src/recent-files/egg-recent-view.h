@@ -5,13 +5,15 @@
 #include <gdk/gdk.h>
 #include <gtk/gtkwidget.h>
 #include "egg-recent-model.h"
+#include "egg-recent-item.h"
 
-#define GNOME_TYPE_RECENT_VIEW             (egg_recent_view_get_type ())
-#define EGG_RECENT_VIEW(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GNOME_TYPE_RECENT_VIEW, EggRecentView))
-#define EGG_RECENT_VIEW_CLASS(vtable)    (G_TYPE_CHECK_CLASS_CAST ((vtable), GNOME_TYPE_RECENT_VIEW, EggRecentViewClass))
-#define GNOME_IS_RECENT_VIEW(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GNOME_TYPE_RECENT_VIEW))
-#define GNOME_IS_RECENT_VIEW_CLASS(vtable) (G_TYPE_CHECK_CLASS_TYPE ((vtable), GNOME_TYPE_RECENT_VIEW))
-#define EGG_RECENT_VIEW_GET_CLASS(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GNOME_TYPE_RECENT_VIEW, EggRecentViewClass))
+#define EGG_TYPE_RECENT_VIEW             (egg_recent_view_get_type ())
+#define EGG_RECENT_VIEW(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_RECENT_VIEW, EggRecentView))
+#define EGG_RECENT_VIEW_CLASS(vtable)    (G_TYPE_CHECK_CLASS_CAST ((vtable), EGG_TYPE_RECENT_VIEW, EggRecentViewClass))
+#define EGG_IS_RECENT_VIEW(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EGG_TYPE_RECENT_VIEW))
+#define EGG_IS_RECENT_VIEW_CLASS(vtable) (G_TYPE_CHECK_CLASS_TYPE ((vtable), EGG_TYPE_RECENT_VIEW))
+#define EGG_RECENT_VIEW_GET_CLASS(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EGG_TYPE_RECENT_VIEW, EggRecentViewClass))
+
 
 typedef struct _EggRecentView       EggRecentView;
 typedef struct _EggRecentViewClass  EggRecentViewClass;

@@ -55,8 +55,12 @@ struct _EggRecentViewBonobo {
 #ifndef USE_STABLE_LIBGNOMEUI
 	GnomeIconTheme *theme;
 #endif
+	EggRecentViewBonoboTooltipFunc tooltip_func;
+	gpointer tooltip_func_data;
+
 	EggRecentModel *model;
 	GConfClient *client;
+	GtkIconSize icon_size;
 };
 
 
@@ -119,7 +123,7 @@ egg_recent_view_bonobo_menu_cb (BonoboUIComponent *uic, gpointer data, const cha
 	g_return_if_fail (md);
 	g_return_if_fail (md->item);
 	g_return_if_fail (md->view);
-	g_return_if_fail (GNOME_IS_RECENT_VIEW_BONOBO (md->view));
+	g_return_if_fail (EGG_IS_RECENT_VIEW_BONOBO (md->view));
 
 	item = md->item;
 	egg_recent_item_ref (item);
@@ -154,6 +158,7 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 	gchar *base_uri;
 	gchar *utf8_uri;
 	gchar *cmd;
+	gchar *xml_escaped_name;
 	EggRecentViewBonoboMenuData *md;
 	EggRecentModel *model;
 	GClosure *closure;
@@ -187,10 +192,24 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 		egg_recent_item_ref (md->item);
 
 		base_uri = g_path_get_basename (utf8_uri);
+		xml_escaped_name = g_markup_escape_text (base_uri,
+							 strlen (base_uri));
 	
-		escaped_name = egg_recent_util_escape_underlines (base_uri);
+		escaped_name = egg_recent_util_escape_underlines (xml_escaped_name);
+		g_free (xml_escaped_name);
 
-		tip =  g_strdup_printf (_("Open %s"), utf8_uri);
+		tip = NULL;
+		if (view->tooltip_func != NULL) {
+			gchar *tmp_tip;
+			tip = view->tooltip_func (item,
+						  view->tooltip_func_data);
+			tmp_tip = g_markup_escape_text (tip, strlen (tip));
+			g_free (tip);
+			tip = tmp_tip;
+		}
+
+		if (tip == NULL)
+			tip = g_strdup ("");
 
 		verb_name = g_strdup_printf ("%s-%d", view->uid, i);
 
@@ -202,8 +221,18 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 			mime_type = egg_recent_item_get_mime_type (item);
 			uri = egg_recent_item_get_uri (item);
 #ifndef USE_STABLE_LIBGNOMEUI
-			pixbuf = egg_recent_util_get_icon (view->theme,
-							   uri, mime_type);
+			{
+				int width, height;
+
+				gtk_icon_size_lookup_for_settings
+					(gtk_settings_get_default (),
+					 view->icon_size,
+					 &width, &height);
+				pixbuf = egg_recent_util_get_icon
+							(view->theme,
+							 uri, mime_type,
+							 height);
+			}
 #else
 			pixbuf = NULL;
 #endif
@@ -218,6 +247,7 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 				cmd = g_strdup_printf ("<cmd name=\"%s\" pixtype=\"pixbuf\" pixname=\"%s\"/>", verb_name, pixbuf_xml);
 
 				g_free (pixbuf_xml);
+				g_object_unref (pixbuf);
 			} else {
 				cmd = g_strdup_printf ("<cmd name=\"%s\"/> ",
 					       	       verb_name);
@@ -261,7 +291,7 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 		else
 		{
 			gchar *xml;
-
+			
 			xml = g_strdup_printf ("<menuitem name=\"%s\" "
 						"verb=\"%s\""
 						" _label=\"%s\"  _tip=\"%s\" "
@@ -282,6 +312,7 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 		g_free (utf8_uri);
 		g_free (base_uri);
 		g_free (cmd);
+
 	}
 
 
@@ -323,8 +354,10 @@ egg_recent_view_bonobo_set_model (EggRecentView *view_parent, EggRecentModel *mo
 	
 	view->model = model;
 	g_object_ref (view->model);
-	view->changed_cb_id = g_signal_connect (G_OBJECT (model), "changed",
-					G_CALLBACK (model_changed_cb), view);
+	view->changed_cb_id = g_signal_connect_object (G_OBJECT (model),
+						"changed",
+						G_CALLBACK (model_changed_cb),
+						view, 0);
 
 	egg_recent_model_changed (view->model);
 }
@@ -483,12 +516,24 @@ show_menus_changed_cb (GConfClient *client,
 
 }
 
+#ifndef USE_STABLE_LIBGNOMEUI
+static void
+theme_changed_cb (GnomeIconTheme *theme, EggRecentViewBonobo *view)
+{
+	if (view->model != NULL)
+		egg_recent_model_changed (view->model);
+}
+#endif
+
 static void
 egg_recent_view_bonobo_init (EggRecentViewBonobo *view)
 {
 	view->uid = egg_recent_util_get_unique_id ();
 #ifndef USE_STABLE_LIBGNOMEUI
 	view->theme = gnome_icon_theme_new ();
+	gnome_icon_theme_set_allow_svg (view->theme, TRUE);
+	g_signal_connect_object (view->theme, "changed",
+				 G_CALLBACK (theme_changed_cb), view, 0);
 #endif
 
 	view->client = gconf_client_get_default ();
@@ -504,6 +549,29 @@ egg_recent_view_bonobo_init (EggRecentViewBonobo *view)
 			"/desktop/gnome/interface/menus_have_icons",
 			(GConfClientNotifyFunc)show_menus_changed_cb,
 			view, NULL, NULL);
+
+	view->tooltip_func = NULL;
+	view->tooltip_func_data = NULL;
+
+	view->icon_size = GTK_ICON_SIZE_MENU;
+}
+
+void
+egg_recent_view_bonobo_set_icon_size (EggRecentViewBonobo *view,
+				      GtkIconSize icon_size)
+{
+	if (view->icon_size != icon_size) {
+		view->icon_size = icon_size;
+		egg_recent_model_changed (view->model);
+	} else {
+		view->icon_size = icon_size;
+	}
+}
+                                                                              
+GtkIconSize
+egg_recent_view_bonobo_get_icon_size (EggRecentViewBonobo *view)
+{
+	return view->icon_size;
 }
 
 void
@@ -558,6 +626,18 @@ egg_recent_view_bonobo_get_ui_path (EggRecentViewBonobo *view)
 	g_return_val_if_fail (view, NULL);
 
 	return g_strdup (view->path);
+}
+
+void
+egg_recent_view_bonobo_set_tooltip_func (EggRecentViewBonobo *view,
+					 EggRecentViewBonoboTooltipFunc func,
+					 gpointer user_data)
+{
+	view->tooltip_func = func;
+	view->tooltip_func_data = user_data;
+	
+	if (view->model)
+		egg_recent_model_changed (view->model);
 }
 
 /**
@@ -625,7 +705,7 @@ egg_recent_view_bonobo_get_type (void)
 							"EggRecentViewBonobo",
 							&egg_recent_view_bonobo_info, 0);
 		g_type_add_interface_static (egg_recent_view_bonobo_type,
-					     GNOME_TYPE_RECENT_VIEW,
+					     EGG_TYPE_RECENT_VIEW,
 					     &view_info);
 	}
 

@@ -1,3 +1,14 @@
+2003-01-22  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/Makefile.am (file_roller_LDADD): revert Thomas Vander Stichele 
+	commit, Thomas LIBOBJS is setted on systems that do not have the 
+	FNM_CASEFOLD constant defined (e.g. Solaris), if it does not build for
+	you use automake 1.7.2 and autoconf 2.57.
+
+2003-01-21  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/recent-files/*.[ch]: updated "recent files" stuff from libegg.
+
 2003-01-22  Thomas Vander Stichele <thomas at apestaart dot org>
 
         * src/Makefile.am: remove LIBOBJS, nothing sets it

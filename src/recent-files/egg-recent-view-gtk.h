@@ -9,7 +9,12 @@ G_BEGIN_DECLS
 
 #define EGG_RECENT_VIEW_GTK(obj)		G_TYPE_CHECK_INSTANCE_CAST (obj, egg_recent_view_gtk_get_type (), EggRecentViewGtk)
 #define EGG_RECENT_VIEW_GTK_CLASS(klass) 	G_TYPE_CHECK_CLASS_CAST (klass, egg_recent_view_gtk_get_type (), EggRecentViewGtkClass)
-#define GNOME_IS_RECENT_VIEW_GTK(obj)		G_TYPE_CHECK_INSTANCE_TYPE (obj, egg_recent_view_gtk_get_type ())
+#define EGG_IS_RECENT_VIEW_GTK(obj)		G_TYPE_CHECK_INSTANCE_TYPE (obj, egg_recent_view_gtk_get_type ())
+
+typedef void (*EggRecentViewGtkTooltipFunc) (GtkTooltips *tooltips,
+					     GtkWidget *menu,
+					     EggRecentItem *item,
+					     gpointer user_data);
 
 typedef struct _EggRecentViewGtk EggRecentViewGtk;
 
@@ -45,6 +50,14 @@ void egg_recent_view_gtk_show_icons          (EggRecentViewGtk *view,
 					      gboolean show);
 void egg_recent_view_gtk_show_numbers        (EggRecentViewGtk *view,
 					      gboolean show);
+
+void egg_recent_view_gtk_set_tooltip_func    (EggRecentViewGtk *view,
+					      EggRecentViewGtkTooltipFunc func,
+					      gpointer user_data);
+
+void egg_recent_view_gtk_set_icon_size       (EggRecentViewGtk *view,
+					      GtkIconSize icon_size);
+GtkIconSize egg_recent_view_gtk_get_icon_size (EggRecentViewGtk *view);
 
 G_END_DECLS
 
