@@ -134,12 +134,7 @@ int main (int argc, char **argv)
 static void 
 initialize_data ()
 {
-	char *icon_path = PIXMAPSDIR "/file-roller.png";
-
-	if (! path_is_file (icon_path))
-                g_warning ("Could not find %s", icon_path);
-	else
-		gnome_window_icon_set_default_from_file (icon_path);
+	gtk_window_set_default_icon_name ("file-roller");
 
 	eel_gconf_monitor_add ("/apps/file-roller");
 }
