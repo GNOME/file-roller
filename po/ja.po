@@ -1,1259 +1,1052 @@
 # file-roller ja.po.
-# Copyright (C) 2001-2002 Free Software Foundation, Inc.
-# Takeshi Aihana <aihana@gnome.gr.jp>, 2001-2002.
+# Copyright (C) 2001-2003 Free Software Foundation, Inc.
+# Takeshi Aihana <aihana@gnome.gr.jp>, 2001-2003.
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller 0.8\n"
-"POT-Creation-Date: 2002-08-24 11:44+0200\n"
-"PO-Revision-Date: 2002-03-10 13:05+0900\n"
+"Project-Id-Version: file-roller 2.1.4\n"
+"POT-Creation-Date: 2003-01-05 01:47+0900\n"
+"PO-Revision-Date: 2003-01-05 01:50+0900\n"
 "Last-Translator: Takeshi Aihana <aihana@gnome.gr.jp>\n"
 "Language-Team:  <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=euc-jp\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: component/File_Roller_Component.server.in.in.h:1
+msgid "Add To Archive..."
+msgstr "½ñ¸Ë¤ËÄÉ²Ã¤¹¤ë..."
+
+#: component/File_Roller_Component.server.in.in.h:2
+msgid "Extract Here"
+msgstr "¤³¤³¤ËÅ¸³«¤¹¤ë"
+
+#: component/File_Roller_Component.server.in.in.h:3
+msgid "Extract In A Sub-Folder"
+msgstr "¥µ¥Ö¡¦¥Õ¥©¥ë¥À¤ÎÃæ¤ÇÅ¸³«¤¹¤ë"
+
+#: component/File_Roller_Component.server.in.in.h:4
+msgid "Extract To..."
+msgstr "½ñ¸Ë¤ÎÅ¸³«..."
+
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "File Roller Component add operations"
+msgstr "File Roller ¥³¥ó¥İ¡¼¥Í¥ó¥ÈÄÉ²ÃÁàºî"
+
+#: component/File_Roller_Component.server.in.in.h:6
+msgid "File Roller Component extract operations"
+msgstr "File Roller ¥³¥ó¥İ¡¼¥Í¥ó¥ÈÅ¸³«Áàºî"
+
+#: component/File_Roller_Component.server.in.in.h:7
+msgid "File roller component"
+msgstr "File Roller ¥³¥ó¥İ¡¼¥Í¥ó¥È"
 
 #: file-roller.desktop.in.h:1
 msgid "Archive Manager"
-msgstr "GNOME å‘ã‘ã®æ›¸åº«ãƒãƒãƒ¼ã‚¸ãƒ£"
+msgstr "½ñ¸Ë¥Ş¥Í¡¼¥¸¥ã"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/main.c:101 src/misc.c:76 src/misc.c:153
-#: src/misc.c:256 src/window.c:730 src/window.c:739 src/window.c:2294
-#: src/window.c:4022
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
+#: src/gtk-utils.c:266 src/main.c:101 src/menu-callbacks.c:788
+#: src/window.c:704 src/window.c:713 src/window.c:2382 src/window.c:4084
 msgid "File Roller"
 msgstr "File Roller"
 
 #: file-roller.desktop.in.h:3
-#, fuzzy
 msgid "Handle compressed archives"
-msgstr "æœªåœ§ç¸®ã® Tar (.tar)"
+msgstr "°µ½Ì¤µ¤ì¤¿½ñ¸Ë¤ò´ÉÍı¤¹¤ë¥Ä¡¼¥ë¤Ç¤¹"
 
 #: src/dlg-add.c:118
-#, fuzzy, c-format
+#, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "ã“ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ä¸­ã«æ›¸åº«ã‚’ä½œæˆã™ã‚‹æ¨©é™ãŒã‚ã‚Šã¾ã›ã‚“"
+msgstr "¥Õ¥©¥ë¥À \"%s\" ¤«¤é¥Õ¥¡¥¤¥ë¤òÆÉ¤ß¹ş¤à¸¢¸Â¤¬¤¢¤ê¤Ş¤»¤ó¡£"
 
-#: src/dlg-add.c:341
-msgid "Add files"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã—ã¾ã™"
+#: src/dlg-add.c:338 src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "¥Õ¥¡¥¤¥ë¤È¥Õ¥©¥ë¥À¤ÎÄÉ²Ã"
+
+#: src/dlg-add.c:343
+msgid "_Add only if newer"
+msgstr "¿·¤·¤¤¾ì¹ç¤Ë¤Î¤ßÄÉ²Ã¤¹¤ë(_A)"
+
+#: src/dlg-add.c:344
+msgid "_Include sub-folders"
+msgstr "¥µ¥Ö¡¦¥Õ¥©¥ë¥À¤ò´Ş¤á¤ë(_I)"
+
+#: src/dlg-add.c:345
+msgid "Exclude folders that are symbolic lin_ks"
+msgstr "¥Õ¥©¥ë¥À¤¬¥·¥ó¥Ü¥ê¥Ã¥¯¡¦¥ê¥ó¥¯¤Î¾ì¹ç¤Ï½ü¤¯(_K)"
 
 #: src/dlg-add.c:346
-#, fuzzy
-msgid "_Add only if newer"
-msgstr "æ–°ã—ã„å ´åˆã®ã¿è¿½åŠ ã™ã‚‹"
+msgid "Exclude o_ther file systems"
+msgstr "Â¾¤Î¥Õ¥¡¥¤¥ë¥·¥¹¥Æ¥à¤Ï½ü¤¯(_T)"
 
 #: src/dlg-add.c:347
-#, fuzzy
-msgid "_Include sub-folders"
-msgstr "ã‚µãƒ–ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å«ã‚ã‚‹"
+msgid "Exclude _backup files (*~)"
+msgstr "¥Ğ¥Ã¥¯¥¢¥Ã¥×¥Õ¥¡¥¤¥ë (*~) ¤Ï½ü¤¯(_B)"
 
 #: src/dlg-add.c:348
-#, fuzzy
-msgid "Exclude folders that are symbolic lin_ks"
-msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒã‚·ãƒ³ãƒœãƒªãƒƒã‚¯ãƒªãƒ³ã‚¯ã®å ´åˆã¯é™¤ã"
+msgid "Exclude _hidden files (.*)"
+msgstr "±£¤·¥Õ¥¡¥¤¥ë (.*) ¤Ï½ü¤¯(_H)"
 
 #: src/dlg-add.c:349
-#, fuzzy
-msgid "Exclude o_ther file systems"
-msgstr "ä»–ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚·ã‚¹ãƒ†ãƒ ã¯é™¤ã"
-
-#: src/dlg-add.c:350
-#, fuzzy
-msgid "Exclude _backup files (*~)"
-msgstr "ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ« (*~) ã¯é™¤ã"
+msgid "E_xclude files:"
+msgstr "¥Õ¥¡¥¤¥ë¤ò¼Â¹Ô¤¹¤ë(_X):"
 
 #: src/dlg-add.c:351
-#, fuzzy
-msgid "Exclude _hidden files (.*)"
-msgstr "éš ã—ãƒ•ã‚¡ã‚¤ãƒ« (.*) ã¯é™¤ã"
+msgid "example: *.o; *.bak"
+msgstr "Îã: *.o; *.bak"
 
 #: src/dlg-add.c:352
-#, fuzzy
-msgid "E_xclude files:"
-msgstr "éš ã—ãƒ•ã‚¡ã‚¤ãƒ« (.*) ã¯é™¤ã"
+msgid "Igno_re case"
+msgstr "Âç¾®Ê¸»ú¤òÌµ»ë¤¹¤ë(_R)"
+
+#: src/dlg-add.c:353
+msgid "_Load Options"
+msgstr "ÆÉ¤ß¹ş¤ß¤Î¥ª¥×¥·¥ç¥ó(_L)"
 
 #: src/dlg-add.c:354
-#, fuzzy
-msgid "example: *.o; *.bak"
-msgstr "(ä¾‹: *.txt; *.doc)"
-
-#: src/dlg-add.c:355
-#, fuzzy
-msgid "Igno_re case"
-msgstr "å¤§å°æ–‡å­—ã‚’ç„¡è¦–ã™ã‚‹"
-
-#: src/dlg-add.c:356
-#, fuzzy
-msgid "_Load Options"
-msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
-
-#: src/dlg-add.c:357
-#, fuzzy
 msgid "Sa_ve Options"
-msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+msgstr "ÊİÂ¸¤Î¥ª¥×¥·¥ç¥ó(_V)"
 
-#: src/dlg-add.c:613
-#, fuzzy
-msgid "Load options"
-msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+#: src/dlg-add.c:609
+msgid "Load Options"
+msgstr "ÆÉ¤ß¹ş¤ß¤Î¥ª¥×¥·¥ç¥ó"
 
-#: src/dlg-add.c:761
-#, fuzzy
-msgid "Save options"
-msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+#: src/dlg-add.c:758
+msgid "Save Options"
+msgstr "ÊİÂ¸¤Î¥ª¥×¥·¥ç¥ó"
+
+#: src/dlg-batch-add.c:99 src/dlg-extract.c:120 src/window.c:3144
+msgid "Destination folder does not exist.  Do you want to create it?"
+msgstr "ÂĞ¾İÀè¤Î¥Õ¥©¥ë¥À¤¬¤¢¤ê¤Ş¤»¤ó¡£ºîÀ®¤·¤Æ¤âµ¹¤·¤¤¤Ç¤¹¤«¡©"
+
+#: src/dlg-batch-add.c:101 src/dlg-extract.c:122 src/window.c:3146
+msgid "Create _Folder"
+msgstr "¥Õ¥©¥ë¥À¤ÎºîÀ®(_F)"
+
+#: src/dlg-batch-add.c:121
+#, c-format
+msgid ""
+"Could not create the destination folder: %s.\n"
+"Addition not performed."
+msgstr ""
+"ÄÉ²ÃÀè¤Î¥Õ¥©¥ë¥À¤òÀ¸À®¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿: %s\n"
+"¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã¤òÃæ»ß¤·¤Ş¤·¤¿¡£"
+
+#: src/dlg-batch-add.c:138
+msgid "Addition not performed."
+msgstr "¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã¤òÃæ»ß¤·¤Ş¤·¤¿¡£"
 
 #. Set widgets data.
-#: src/dlg-batch-add.c:143
+#: src/dlg-batch-add.c:202
 #, c-format
 msgid "Adding %u files"
-msgstr "%u å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã—ã¾ã™"
+msgstr "%u ¸Ä¤Î¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤·¤Ş¤¹"
 
-#: src/dlg-extract.c:119 src/window.c:3133
-#, fuzzy
-msgid "Destination folder does not exist.  Do you want to create it ?"
-msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒã‚ã‚Šã¾ã›ã‚“ã€‚ä½œæˆã—ã¦ã‚‚å®œã—ã„ã§ã™ã‹ï¼Ÿ"
-
-#: src/dlg-extract.c:121 src/window.c:3135
-#, fuzzy
-msgid "Create _Folder"
-msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†ç”Ÿæˆã™ã‚‹"
-
-#: src/dlg-extract.c:141 src/window.c:3155
-#, fuzzy, c-format
+#: src/dlg-extract.c:142 src/window.c:3166
+#, c-format
 msgid ""
-"Could not create the destination folder : %s.\n"
+"Could not create the destination folder: %s.\n"
 "Extraction not performed."
-msgstr "æŒ‡å®šã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½œæˆã§ãã¾ã›ã‚“ã§ã—ãŸã€‚"
+msgstr ""
+"Å¸³«Àè¤Î¥Õ¥©¥ë¥À¤òÀ¸À®¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿: %s\n"
+"½ñ¸Ë¤ÎÅ¸³«¤òÃæ»ß¤·¤Ş¤·¤¿¡£"
 
-#: src/dlg-extract.c:156 src/window.c:3170
+#: src/dlg-extract.c:157 src/window.c:3181
 msgid "Extraction not performed."
-msgstr "è§£å‡ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚"
+msgstr "½ñ¸Ë¤ÎÅ¸³«¤òÃæ»ß¤·¤Ş¤·¤¿¡£"
 
-#: src/dlg-extract.c:175
-#, fuzzy, c-format
+#: src/dlg-extract.c:176
+#, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "ã“ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ä¸­ã«æ›¸åº«ã‚’ä½œæˆã™ã‚‹æ¨©é™ãŒã‚ã‚Šã¾ã›ã‚“"
+msgstr "¥Õ¥©¥ë¥À \"%s\" ¤ÎÃæ¤Ë½ñ¸Ë¤òÅ¸³«¤¹¤ë¸¢¸Â¤¬¤¢¤ê¤Ş¤»¤ó¡£"
 
-#: src/dlg-extract.c:396 src/dlg-preferences.c:130 src/menu-callbacks.c:752
-#, fuzzy, c-format
+#: src/dlg-extract.c:397 src/dlg-preferences.c:128 src/menu-callbacks.c:751
+#, c-format
 msgid "Could not display help: %s"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ« %s ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ"
+msgstr "¥Ø¥ë¥×¤òÉ½¼¨¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿: %s"
 
-#: src/dlg-extract.c:485
-#, fuzzy
-msgid "Favorites extraction folders"
-msgstr "ãŠæ°—ã«å…¥ã‚Šã®å±•é–‹å…ˆã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ã™"
+#: src/dlg-extract.c:474
+msgid "Actions"
+msgstr "Áàºî"
+
+#: src/dlg-extract.c:475
+msgid "Destination folder"
+msgstr "ÁàºîÀè¤Î¥Õ¥©¥ë¥À"
+
+#: src/dlg-extract.c:476
+msgid "Files"
+msgstr "¥Õ¥¡¥¤¥ë"
+
+#: src/dlg-extract.c:505
+msgid "Bookmarks"
+msgstr "¥Ö¥Ã¥¯¥Ş¡¼¥¯"
+
+#: src/dlg-preferences.c:186
+msgid "General"
+msgstr "Á´ÈÌ"
+
+#: src/dlg-preferences.c:191
+msgid "Visible columns"
+msgstr "É½¼¨¤¹¤ë¾ğÊó"
+
+#: src/dlg-prop.c:99
+msgid "Path:"
+msgstr "¥Ñ¥¹Ì¾:"
+
+#: src/dlg-prop.c:112
+msgid "Name:"
+msgstr "¥Õ¥¡¥¤¥ëÌ¾:"
+
+#: src/dlg-prop.c:119
+#, c-format
+msgid "%s Properties"
+msgstr "%s ¤Î¥×¥í¥Ñ¥Æ¥£"
+
+#: src/dlg-prop.c:128
+msgid "File size:"
+msgstr "¥Õ¥¡¥¤¥ë¡¦¥µ¥¤¥º:"
+
+#: src/dlg-prop.c:139
+msgid "Number of files:"
+msgstr "¥Õ¥¡¥¤¥ë¿ô:"
+
+#: src/dlg-prop.c:149
+msgid "Date and time:"
+msgstr "ÆüÉÕ¤È»ş¹ï:"
+
+#: src/dlg-prop.c:155
+msgid "%d %B %Y, %H:%M"
+msgstr "%Y-%m-%d %H:%M"
 
 #: src/file-data.c:28
 msgid "Unknown type"
-msgstr ""
+msgstr "ÉÔÌÀ¤Ê¼ïÎà"
 
 #: src/file-data.c:29
 msgid "Symbolic link"
-msgstr ""
+msgstr "¥·¥ó¥Ü¥ê¥Ã¥¯¡¦¥ê¥ó¥¯"
 
-#: src/file_roller.glade2.h:1 src/file_roller_prop.glade2.h:1
+#: src/file-utils.c:534
+msgid "Cannot find a terminal, using xterm, even if it may not work"
+msgstr ""
+"Å¬Åö¤ÊÃ¼Ëö¤¬¤ß¤Ä¤«¤é¤Ê¤¤¤Î¤Ç (Îã¤¨»ÈÍÑ¤Ç¤­¤Ê¤¯¤Æ¤â)¡¢xterm ¤ò»ÈÍÑ¤·¤Ş¤¹"
+
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
 msgid "    "
-msgstr ""
+msgstr "    "
 
-#: src/file_roller.glade2.h:2
+#: src/file_roller.glade.h:2
 msgid "*"
-msgstr ""
+msgstr "*"
 
-#: src/file_roller.glade2.h:3
-#, fuzzy
-msgid "A_dd to favorites"
-msgstr "ãŠæ°—ã«å…¥ã‚Šã«è¿½åŠ ã™ã‚‹"
+#: src/file_roller.glade.h:3
+msgid "A_dd to Bookmarks"
+msgstr "¥Ö¥Ã¥¯¥Ş¡¼¥¯¤ØÄÉ²Ã(_D)"
 
-#: src/file_roller.glade2.h:4
-#, fuzzy
+#: src/file_roller.glade.h:4
 msgid "A_vailable application:"
-msgstr "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³:"
+msgstr "ÍøÍÑ²ÄÇ½¤Ê¥¢¥×¥ê¥±¡¼¥·¥ç¥ó(_V):"
 
-#: src/file_roller.glade2.h:5
-#, fuzzy
-msgid "Add _to archive :"
-msgstr "è¿½åŠ ã™ã‚‹æ›¸åº« :"
+#: src/file_roller.glade.h:6
+msgid "Add _to archive:"
+msgstr "ÄÉ²Ã¤¹¤ë½ñ¸Ë(_T):"
 
-#: src/file_roller.glade2.h:6
-#, fuzzy
+#: src/file_roller.glade.h:7
 msgid "Add only if _newer"
-msgstr "æ–°ã—ã„å ´åˆã®ã¿è¿½åŠ ã™ã‚‹"
+msgstr "¿·¤·¤¤¾ì¹ç¤Î¤ßÄÉ²Ã¤¹¤ë(_N)"
 
-#: src/file_roller.glade2.h:7
-msgid "Date and Time:"
-msgstr "æ—¥ä»˜ã¨æ™‚åˆ»:"
+#: src/file_roller.glade.h:8 src/menu.h:464
+msgid "Delete Files"
+msgstr "¥Õ¥¡¥¤¥ë¤Îºï½ü"
 
-#: src/file_roller.glade2.h:8
-#, fuzzy
+#: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
-msgstr "å¤ã„ãƒ•ã‚¡ã‚¤ãƒ«ã¯å±•é–‹ã—ãªã„"
+msgstr "¸Å¤¤¥Õ¥¡¥¤¥ë¤ÏÅ¸³«¤·¤Ê¤¤(_X)"
 
-#: src/file_roller.glade2.h:9
+#: src/file_roller.glade.h:10 src/window.c:2603
+msgid "Extract"
+msgstr "Å¸³«"
+
+#: src/file_roller.glade.h:11
 msgid "Extract to"
-msgstr "å±•é–‹å…ˆ"
+msgstr "Å¸³«Àè"
 
-#: src/file_roller.glade2.h:10
-msgid "Extract to:"
-msgstr "å±•é–‹å…ˆ:"
-
-#: src/file_roller.glade2.h:11
-msgid "File Roller - Add"
-msgstr "File Roller - è¿½åŠ "
-
-#: src/file_roller.glade2.h:12
-#, fuzzy
-msgid "File Roller - Archive Informations"
-msgstr "æ›¸åº«ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£(_P)..."
-
-#: src/file_roller.glade2.h:13
-#, fuzzy
-msgid "File Roller - Delete Files"
-msgstr "File Roller - ãƒ•ã‚¡ã‚¤ãƒ«ã®é–²è¦§"
-
-#: src/file_roller.glade2.h:14
-#, fuzzy
-msgid "File Roller - Extract"
-msgstr "File Roller - è¿½åŠ "
-
-#: src/file_roller.glade2.h:15
-#, fuzzy
-msgid "File Roller - Open Files"
-msgstr "File Roller - ãƒ•ã‚¡ã‚¤ãƒ«ã®é–²è¦§"
-
-#: src/file_roller.glade2.h:16
-#, fuzzy
-msgid "File Roller - Password"
-msgstr "File Roller - è¿½åŠ "
-
-#: src/file_roller.glade2.h:17
-msgid "File Roller - View File"
-msgstr "File Roller - ãƒ•ã‚¡ã‚¤ãƒ«ã®é–²è¦§"
-
-#: src/file_roller.glade2.h:18
-#, fuzzy
-msgid "File Roller - Viewer"
-msgstr "File Roller - ãƒ•ã‚¡ã‚¤ãƒ«ã®é–²è¦§"
-
-#: src/file_roller.glade2.h:19
-msgid "File Size:"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º:"
-
-#: src/file_roller.glade2.h:20
-msgid "Files"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«"
-
-#: src/file_roller.glade2.h:21
-msgid "Name:"
-msgstr "åå‰:"
-
-#: src/file_roller.glade2.h:22
+#: src/file_roller.glade.h:12
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
 "archive is closed the password will be deleted."
 msgstr ""
+"Ãí°Õ: ¥Ñ¥¹¥ï¡¼¥É¤Ï¡¢¤³¤Î½ñ¸Ë¤ËÄÉ²Ã¤¹¤ë¥Õ¥¡¥¤¥ë¤ò°Å¹æ²½¤·¤¿¤ê¡¢¤³¤Î½ñ¸Ë¤«¤éÅ¸"
+"³«¤¹¤ë¥Õ¥¡¥¤¥ë¤ò°Å¹æ²½²ò½ü¤Ë»ÈÍÑ¤·¤Ş¤¹¡£½ñ¸Ë¤òÊÄ¤¸¤¿ºİ¤Ë¥Ñ¥¹¥ï¡¼¥É¤Ïºï½ü¤µ¤ì"
+"¤Ş¤¹¡£"
 
-#: src/file_roller.glade2.h:23
-msgid "Number of Files:"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®æ•°:"
+#: src/file_roller.glade.h:13
+msgid "Open Files"
+msgstr "¥Õ¥¡¥¤¥ë¤ò³«¤¯"
 
-#: src/file_roller.glade2.h:24
-#, fuzzy
+#: src/file_roller.glade.h:14
 msgid "Open with an _application"
-msgstr "ä»–ã®ã‚¢ãƒ—ãƒªã§é–‹ã..."
+msgstr "Â¾¤Î¥¢¥×¥ê¤Ç³«¤¯(_A)"
 
-#: src/file_roller.glade2.h:25
-#, fuzzy
-msgid "Other options"
-msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
-
-#: src/file_roller.glade2.h:26
-#, fuzzy
+#: src/file_roller.glade.h:15
 msgid "Over_write existing files"
-msgstr "æ—¢å­˜ã®ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¸Šæ›¸ãã™ã‚‹"
+msgstr "´ûÂ¸¤Î¥Õ¥¡¥¤¥ë¤Ë¾å½ñ¤­¤¹¤ë(_W)"
 
-#: src/file_roller.glade2.h:27
-msgid "Path:"
-msgstr "ãƒ‘ã‚¹å:"
+#: src/file_roller.glade.h:16
+msgid "Password"
+msgstr "¥Ñ¥¹¥ï¡¼¥É"
 
-#: src/file_roller.glade2.h:28
-#, fuzzy
+#: src/file_roller.glade.h:17
 msgid "R_ecent applications:"
-msgstr "æœ€è¿‘ä½¿ã£ãŸã‚¢ãƒ—ãƒª"
+msgstr "ºÇ¶á»È¤Ã¤¿¥¢¥×¥ê¥±¡¼¥·¥ç¥ó(_E):"
 
-#: src/file_roller.glade2.h:29
-#, fuzzy
+#: src/file_roller.glade.h:18
 msgid "R_ecreate folders"
-msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†ç”Ÿæˆã™ã‚‹"
+msgstr "¥Õ¥©¥ë¥À¤òºÆÅÙºîÀ®¤¹¤ë(_E)"
 
-#: src/file_roller.glade2.h:30
-#, fuzzy
+#: src/file_roller.glade.h:19
 msgid "Select archive"
-msgstr "æ›¸åº«ã®å‰Šé™¤(_D)"
+msgstr "½ñ¸Ë¤ÎÁªÂò"
 
-#: src/file_roller.glade2.h:31
-#, fuzzy
+#: src/file_roller.glade.h:20 src/menu.h:450
+msgid "View File"
+msgstr "¥Õ¥¡¥¤¥ë¤ÎÉ½¼¨"
+
+#: src/file_roller.glade.h:21
 msgid "View with internal _viewer"
-msgstr "å†…éƒ¨ãƒ“ãƒ¥ãƒ¯ãƒ¼ã§è¡¨ç¤º"
+msgstr "ÆâÉô¥Ó¥å¥ï¡¼¤ÇÉ½¼¨¤¹¤ë(_V)"
 
-#: src/file_roller.glade2.h:32
-#, fuzzy
-msgid "_All Files"
-msgstr "å…¨ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«"
+#: src/file_roller.glade.h:22
+msgid "_All files"
+msgstr "Á´¤Æ¤Î¥Õ¥¡¥¤¥ë(_A)"
 
-#: src/file_roller.glade2.h:33
-#, fuzzy
+#: src/file_roller.glade.h:23
 msgid "_Application:"
-msgstr "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³:"
+msgstr "¥¢¥×¥ê¥±¡¼¥·¥ç¥ó(_A):"
 
-#: src/file_roller.glade2.h:34
-#, fuzzy
+#: src/file_roller.glade.h:24
 msgid "_Files:"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«:"
+msgstr "¥Õ¥¡¥¤¥ë(_F):"
 
-#: src/file_roller.glade2.h:35
+#: src/file_roller.glade.h:25
 msgid "_Password:"
-msgstr ""
+msgstr "¥Ñ¥¹¥ï¡¼¥É(_P):"
 
-#: src/file_roller.glade2.h:36
-#, fuzzy
-msgid "_Selected Files"
-msgstr "æŒ‡å®šã—ãŸãƒ•ã‚¡ã‚¤ãƒ«"
+#: src/file_roller.glade.h:26
+msgid "_Selected files"
+msgstr "ÁªÂò¤·¤¿¥Õ¥¡¥¤¥ë(_S)"
 
-#: src/file_roller.glade2.h:37
+#: src/file_roller.glade.h:27
 msgid "_View destination folder after extraction"
-msgstr ""
+msgstr "Å¸³«¸å¤ËÅ¸³«Àè¤Î¥Õ¥©¥ë¥À¤òÉ½¼¨¤¹¤ë(_V)"
 
-#: src/file_roller.glade2.h:38
-#, fuzzy
+#: src/file_roller.glade.h:28
 msgid "example: *.txt; *.doc"
-msgstr "(ä¾‹: *.txt; *.doc)"
+msgstr "Îã: *.txt; *.doc"
 
-#: src/file_roller_prop.glade2.h:2
-msgid "Columns to Show"
-msgstr "è¡¨ç¤ºã™ã‚‹é …ç›®"
-
-#: src/file_roller_prop.glade2.h:3
+#: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
-msgstr ""
+msgstr "°µ½Ì¥ì¥Ù¥ë(_L):"
 
-#: src/file_roller_prop.glade2.h:4
-msgid "Fast"
-msgstr ""
+#: src/file_roller_prop.glade.h:3
+msgid "Date _modified"
+msgstr "ÊÑ¹¹Æü»ş(_M)"
 
-#: src/file_roller_prop.glade2.h:5
-#, fuzzy
-msgid "File Roller - Preferences"
-msgstr "File Roller - ãƒ•ã‚¡ã‚¤ãƒ«ã®é–²è¦§"
+#: src/file_roller_prop.glade.h:4
+msgid "File Roller Preferences"
+msgstr "File Roller ¤ÎÀßÄê"
 
-#: src/file_roller_prop.glade2.h:6
-#, fuzzy
-msgid "File _Name"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å"
+#: src/file_roller_prop.glade.h:5
+msgid "Low"
+msgstr "ÄãÂ®"
 
-#: src/file_roller_prop.glade2.h:7
-#, fuzzy
-msgid "File _Path"
-msgstr "ãƒ‘ã‚¹å"
+#: src/file_roller_prop.glade.h:6
+msgid "Maximum (slow)"
+msgstr "ºÇÂç¥µ¥¤¥º (ÄãÂ®)"
 
-#: src/file_roller_prop.glade2.h:8
-#, fuzzy
-msgid "File _Size"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º"
+#: src/file_roller_prop.glade.h:7
+msgid "Minimum (fast)"
+msgstr "ºÇ¾®¥µ¥¤¥º (¹âÂ®)"
 
-#: src/file_roller_prop.glade2.h:9
-#, fuzzy
-msgid "File _Type"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼"
-
-#: src/file_roller_prop.glade2.h:10
-msgid "General"
-msgstr "å…¨èˆ¬"
-
-#: src/file_roller_prop.glade2.h:11
-msgid "Maximum (slowest)"
-msgstr ""
-
-#: src/file_roller_prop.glade2.h:12
+#: src/file_roller_prop.glade.h:8
 msgid "Normal"
-msgstr ""
+msgstr "ÄÌ¾ï¥µ¥¤¥º"
 
-#: src/file_roller_prop.glade2.h:13
-msgid "Very fast"
-msgstr ""
+#: src/file_roller_prop.glade.h:9
+msgid "_Name"
+msgstr "Ì¾Á°(_N)"
 
-#: src/file_roller_prop.glade2.h:14
-#, fuzzy
-msgid "_Modification Time"
-msgstr "å¤‰æ›´æ—¥æ™‚"
+#: src/file_roller_prop.glade.h:10
+msgid "_Path"
+msgstr "¥Ñ¥¹Ì¾(_P)"
 
-#: src/file_roller_prop.glade2.h:15
-#, fuzzy
+#: src/file_roller_prop.glade.h:11
 msgid "_Recent archives:"
-msgstr "æ›¸åº«ã‚’é–‹ã"
+msgstr "ºÇ¶á³«¤¤¤¿½ñ¸Ë¤Î¿ô(_R):"
 
-#: src/file-utils.c:534
-msgid "Cannot find a terminal, using xterm, even if it may not work"
+#: src/file_roller_prop.glade.h:12
+msgid "_Size"
+msgstr "¥µ¥¤¥º(_S)"
+
+#: src/file_roller_prop.glade.h:13
+msgid "_Type"
+msgstr "¼ïÎà(_T)"
+
+#: src/gconf-utils.c:98
+#, c-format
+msgid ""
+"GConf error:\n"
+"  %s"
 msgstr ""
+"GConf ¥¨¥é¡¼:\n"
+"  %s"
+
+#. Button
+#: src/gtk-utils.c:297
+msgid "Command _Line Output"
+msgstr "¥³¥Ş¥ó¥É¥é¥¤¥ó¤Î½ĞÎÏ(_L)"
+
+#: src/main.c:59
+msgid "Add files to the specified archive and quit the program"
+msgstr "¥Õ¥¡¥¤¥ë¤ò»ØÄê¤µ¤ì¤¿½ñ¸Ë¤ËÄÉ²Ã¤·¤Æ¥×¥í¥°¥é¥à¤ò½ªÎ»¤¹¤ë"
 
 #: src/main.c:60
-msgid "Add files to the specified archive and quit the program"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã•ã‚ŒãŸæ›¸åº«ã«è¿½åŠ ã—ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã™ã‚‹"
-
-#: src/main.c:61
 msgid "ARCHIVE"
-msgstr "æ›¸åº«"
+msgstr "½ñ¸Ë"
 
-#: src/main.c:64
+#: src/main.c:63
 msgid "Add files asking the name of the archive and quit the program"
-msgstr "æŒ‡å®šã•ã‚ŒãŸæ›¸åº«åã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã—ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã™ã‚‹"
+msgstr "»ØÄê¤µ¤ì¤¿½ñ¸ËÌ¾¤Î¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤·¤Æ¥×¥í¥°¥é¥à¤ò½ªÎ»¤¹¤ë"
 
-#: src/main.c:68
-#, fuzzy
+#: src/main.c:67
 msgid "Extract archives to the specified folder and quit the program"
-msgstr "æ›¸åº«ã‚’æŒ‡å®šã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«å±•é–‹ã—ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã™ã‚‹"
+msgstr "½ñ¸Ë¤ò»ØÄê¤·¤¿¥Õ¥©¥ë¥À¤ËÅ¸³«¤·¤Æ¥×¥í¥°¥é¥à¤ò½ªÎ»¤¹¤ë"
 
-#: src/main.c:69 src/main.c:77
+#: src/main.c:68 src/main.c:76
 msgid "FOLDER"
-msgstr ""
+msgstr "FOLDER"
 
-#: src/main.c:72
-#, fuzzy
+#: src/main.c:71
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "æ›¸åº«ã‚’æŒ‡å®šã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«å±•é–‹ã—ã¦ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã™ã‚‹"
+msgstr "½ñ¸Ë¤òÅ¸³«¤¹¤ë¥Õ¥©¥ë¥À¤ò»ØÄê¤·¤Æ¥×¥í¥°¥é¥à¤ò½ªÎ»¤¹¤ë"
 
-#: src/main.c:76
+#: src/main.c:75
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
+msgstr "'--add' ¤È '--extract' ¥³¥Ş¥ó¥É¤Ç»ÈÍÑ¤¹¤ë¥Ç¥Õ¥©¥ë¥È¤Î¥Õ¥©¥ë¥À"
 
-#: src/main.c:80
+#: src/main.c:79
 msgid "Create destination folder without asking confirmation"
-msgstr ""
-
-#: src/menu-callbacks.c:106
-msgid "Automatic"
-msgstr "è‡ªå‹•"
+msgstr "Å¸³«Àè¤Î¥Ç¥£¥ì¥¯¥È¥ê¤òºîÀ®¤¹¤ë¤È¤­¤Ë³ÎÇ§¤·¤Ê¤¤"
 
 #: src/menu-callbacks.c:107
+msgid "Automatic"
+msgstr "¼«Æ°"
+
+#: src/menu-callbacks.c:108
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:109
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:110
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:111
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:111
-msgid "Tar uncompressed (.tar)"
-msgstr "æœªåœ§ç¸®ã® Tar (.tar)"
-
 #: src/menu-callbacks.c:112
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "bzip åœ§ç¸®ã® Tar (.tar.bz)"
+msgid "Tar uncompressed (.tar)"
+msgstr "Ì¤°µ½Ì¤Î Tar (.tar)"
 
 #: src/menu-callbacks.c:113
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "bzip2 åœ§ç¸®ã® Tar (.tar.bz2)"
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "bzip °µ½Ì¤Î Tar (.tar.bz)"
 
 #: src/menu-callbacks.c:114
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "gzip åœ§ç¸®ã® Tar (.tar.gz)"
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "bzip2 °µ½Ì¤Î Tar (.tar.bz2)"
 
 #: src/menu-callbacks.c:115
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "lzop åœ§ç¸®ã® Tar (.tar.lzo)"
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "gzip °µ½Ì¤Î Tar (.tar.gz)"
 
 #: src/menu-callbacks.c:116
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "compress åœ§ç¸®ã® Tar (.tar.Z)"
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "lzop °µ½Ì¤Î Tar (.tar.lzo)"
 
 #: src/menu-callbacks.c:117
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "compress °µ½Ì¤Î Tar (.tar.Z)"
+
+#: src/menu-callbacks.c:118
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:119
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:174
-#, fuzzy
+#: src/menu-callbacks.c:175
 msgid "You don't have permission to create an archive in this folder"
-msgstr "ã“ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ä¸­ã«æ›¸åº«ã‚’ä½œæˆã™ã‚‹æ¨©é™ãŒã‚ã‚Šã¾ã›ã‚“"
+msgstr "¤³¤Î¥Õ¥©¥ë¥À¤ÎÃæ¤Ë½ñ¸Ë¤òºîÀ®¤¹¤ë¸¢¸Â¤¬¤¢¤ê¤Ş¤»¤ó¡£"
 
-#: src/menu-callbacks.c:192 src/menu-callbacks.c:421 src/menu-callbacks.c:591
-msgid "Archive already exists.  Do you want to overwrite it ?"
-msgstr "æ›¸åº«ãŒæ—¢ã«å­˜åœ¨ã—ã¦ã„ã¾ã™ã€‚ä¸Šæ›¸ãã—ã¾ã™ã‹ï¼Ÿ"
+#: src/menu-callbacks.c:193 src/menu-callbacks.c:420 src/menu-callbacks.c:590
+msgid "Archive already exists.  Do you want to overwrite it?"
+msgstr "½ñ¸Ë¤¬´û¤ËÂ¸ºß¤·¤Æ¤¤¤Ş¤¹¡£¾å½ñ¤­¤·¤Æ¤âµ¹¤·¤¤¤Ç¤¹¤«¡©"
 
-#: src/menu-callbacks.c:194 src/menu-callbacks.c:423 src/menu-callbacks.c:593
+#: src/menu-callbacks.c:195 src/menu-callbacks.c:422 src/menu-callbacks.c:592
 msgid "Overwrite"
-msgstr ""
+msgstr "¾å½ñ¤­"
 
-#: src/menu-callbacks.c:211
-#, fuzzy
+#: src/menu-callbacks.c:212
 msgid "Could not delete old archive."
-msgstr "æ›¸åº«ã‚’ã‚³ãƒ”ãƒ¼ã§ãã¾ã›ã‚“ã§ã—ãŸ"
+msgstr "¸Å¤¤½ñ¸Ë¤òºï½ü¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£"
 
 #: src/menu-callbacks.c:253
 msgid "New Archive"
-msgstr "æ–°ã—ã„æ›¸åº«"
+msgstr "¿·¤·¤¤½ñ¸Ë"
 
-#.
-#: src/menu-callbacks.c:261
-msgid "File type :"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ :"
+#: src/menu-callbacks.c:265
+msgid "Archive type:"
+msgstr "½ñ¸Ë¤Î¼ïÎà:"
 
-#: src/menu-callbacks.c:337
+#: src/menu-callbacks.c:336
 msgid "Open Archive"
-msgstr "æ›¸åº«ã‚’é–‹ã"
+msgstr "½ñ¸Ë¤ò³«¤¯"
 
-#: src/menu-callbacks.c:446
+#: src/menu-callbacks.c:445
 msgid "Could not copy archive"
-msgstr "æ›¸åº«ã‚’ã‚³ãƒ”ãƒ¼ã§ãã¾ã›ã‚“ã§ã—ãŸ"
+msgstr "½ñ¸Ë¤ò¥³¥Ô¡¼¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿"
 
-#: src/menu-callbacks.c:462
+#: src/menu-callbacks.c:461
 msgid "Could not move archive"
-msgstr "æ›¸åº«ã‚’ç§»å‹•ã§ãã¾ã›ã‚“ã§ã—ãŸ"
+msgstr "½ñ¸Ë¤ò°ÜÆ°¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿"
 
-#: src/menu-callbacks.c:484
+#: src/menu-callbacks.c:483
 msgid "Copy archive"
-msgstr "æ›¸åº«ã®ã‚³ãƒ”ãƒ¼"
+msgstr "½ñ¸Ë¤Î¥³¥Ô¡¼"
 
-#: src/menu-callbacks.c:484
+#: src/menu-callbacks.c:483
 msgid "Move archive"
-msgstr "æ›¸åº«ã®ç§»å‹•"
+msgstr "½ñ¸Ë¤Î°ÜÆ°"
 
-#: src/menu-callbacks.c:562
+#: src/menu-callbacks.c:561
 msgid "New archive name (without extension)"
-msgstr "æ–°ã—ã„æ›¸åº«ã®åå‰ (æ‹¡å¼µå­ãªã—)"
+msgstr "¿·¤·¤¤½ñ¸Ë¤ÎÌ¾Á° (³ÈÄ¥»Ò¤Ï½ü¤¯)"
 
-#: src/menu-callbacks.c:566 src/menu.h:115
-#, fuzzy
+#: src/menu-callbacks.c:565 src/menu.h:97
 msgid "_Rename"
-msgstr "å‰Šé™¤"
+msgstr "½ñ¸ËÌ¾¤ÎÊÑ¹¹(_R)"
 
-#: src/menu-callbacks.c:630
-msgid "Archive will be deleted, are you sure ?"
-msgstr "æ›¸åº«ã‚’å‰Šé™¤ã—ã‚ˆã†ã¨ã—ã¦ã„ã¾ã™ã€‚æœ¬å½“ã«å®œã—ã„ã§ã™ã‹ï¼Ÿ"
+#: src/menu-callbacks.c:629
+msgid "Archive will be deleted, are you sure?"
+msgstr "½ñ¸Ë¤òºï½ü¤·¤è¤¦¤È¤·¤Æ¤¤¤Ş¤¹¡£ËÜÅö¤Ëµ¹¤·¤¤¤Ç¤¹¤«¡©"
 
-#: src/menu-callbacks.c:781
+#: src/menu-callbacks.c:780
 msgid "translator_credits"
-msgstr ""
+msgstr "ËİÌõ¼Ô¤Î¥¯¥ì¥¸¥Ã¥È"
 
-#: src/menu-callbacks.c:792
+#: src/menu-callbacks.c:791
 msgid "An archive manager for GNOME."
-msgstr "GNOME å‘ã‘ã®æ›¸åº«ç®¡ç†ãƒ„ãƒ¼ãƒ«ã§ã™ã€‚"
+msgstr "GNOME ¸ş¤±¤Î½ñ¸Ë´ÉÍı¥Ä¡¼¥ë¤Ç¤¹¡£"
 
 #: src/menu.h:67
-#, fuzzy
 msgid "_New"
-msgstr "æ–°è¦"
+msgstr "¿·µ¬(_N)"
 
 #: src/menu.h:67 src/toolbar.h:39
 msgid "Create a new archive"
-msgstr "æ–°ã—ã„æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆã—ã¾ã™"
+msgstr "¿·¤·¤¤½ñ¸Ë¥Õ¥¡¥¤¥ë¤òÀ¸À®¤·¤Ş¤¹"
 
 #: src/menu.h:73
-#, fuzzy
 msgid "_Open..."
-msgstr "ä»–ã®ã‚¢ãƒ—ãƒªã§é–‹ã..."
+msgstr "³«¤¯(_O)..."
 
 #: src/menu.h:73
 msgid "Open an existing archive"
-msgstr "æ—¢å­˜ã®æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã¾ã™"
+msgstr "´ûÂ¸¤Î½ñ¸Ë¥Õ¥¡¥¤¥ë¤ò³«¤­¤Ş¤¹"
 
 #: src/menu.h:78
 msgid "Open R_ecent"
-msgstr ""
+msgstr "ºÇ¶á³«¤¤¤¿¥Õ¥¡¥¤¥ë(_E)"
 
 #: src/menu.h:83
-#, fuzzy
 msgid "Open Fi_les..."
-msgstr "ã‚¢ãƒ—ãƒªã§é–‹ã(_O)..."
+msgstr "¥¢¥×¥ê¤Ç³«¤¯(_L)..."
 
 #: src/menu.h:83
 msgid "Open selected files with an application"
-msgstr "åˆ¥ã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§æŒ‡å®šã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã¾ã™"
+msgstr "ÁªÂò¤·¤¿¥Õ¥¡¥¤¥ë¤òÂ¾¤Î¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤Ç³«¤­¤Ş¤¹"
 
 #: src/menu.h:89
-#, fuzzy
 msgid "_View File"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®è¡¨ç¤º"
+msgstr "¥Õ¥¡¥¤¥ë¤ÎÉ½¼¨(_V)"
 
-#: src/menu.h:89 src/menu.h:449
+#: src/menu.h:89 src/menu.h:450
 msgid "View file with internal viewer"
-msgstr "å†…éƒ¨ãƒ“ãƒ¥ãƒ¯ãƒ¼ã§ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¡¨ç¤ºã—ã¾ã™"
+msgstr "ÁªÂò¤·¤¿¥Õ¥¡¥¤¥ë¤òÆâÉô¥Ó¥å¥ï¡¼¤ÇÉ½¼¨¤·¤Ş¤¹"
 
 #: src/menu.h:97
-msgid "_Move"
-msgstr ""
-
-#: src/menu.h:97
-#, fuzzy
-msgid "Move current archive to another folder"
-msgstr "ã“ã®æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™"
+msgid "Rename current archive"
+msgstr "¤³¤Î½ñ¸Ë¤Î¥Õ¥¡¥¤¥ëÌ¾¤òÊÑ¹¹¤·¤Ş¤¹"
 
 #: src/menu.h:103
 msgid "Cop_y"
-msgstr ""
+msgstr "¥³¥Ô¡¼(_Y)"
 
 #: src/menu.h:103
-#, fuzzy
 msgid "Copy current archive to another folder"
-msgstr "ã“ã®æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™"
-
-#: src/menu.h:109 src/menu.h:169
-#, fuzzy
-msgid "_Delete"
-msgstr "å‰Šé™¤"
+msgstr "¤³¤Î½ñ¸Ë¤òÂ¾¤Î¥Õ¥©¥ë¥À¤Ë¥³¥Ô¡¼¤·¤Ş¤¹"
 
 #: src/menu.h:109
-#, fuzzy
-msgid "Delete current archive from disk"
-msgstr "ã“ã®æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™"
+msgid "_Move"
+msgstr "°ÜÆ°(_M)"
+
+#: src/menu.h:109
+msgid "Move current archive to another folder"
+msgstr "¤³¤Î½ñ¸Ë¤òÂ¾¤Î¥Õ¥©¥ë¥À¤Ë°ÜÆ°¤·¤Ş¤¹"
+
+#: src/menu.h:115 src/menu.h:170
+msgid "_Delete"
+msgstr "ºï½ü(_D)"
 
 #: src/menu.h:115
-#, fuzzy
-msgid "Rename current archive"
-msgstr "ã“ã®æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™"
+msgid "Delete current archive from disk"
+msgstr "¤³¤Î½ñ¸Ë¤òºï½ü¤·¤Ş¤¹"
 
 #: src/menu.h:123
-#, fuzzy
-msgid "_Information"
-msgstr "æ›¸åº«ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£(_P)..."
+msgid "_Properties"
+msgstr "¥×¥í¥Ñ¥Æ¥£(_P)"
 
 #: src/menu.h:123
-#, fuzzy
-msgid "Show information about the archive"
-msgstr "File-roller ã«ã¤ã„ã¦ã®æƒ…å ±ã‚’è¡¨ç¤ºã—ã¾ã™"
+msgid "Show archive properties"
+msgstr "½ñ¸Ë¤Î¥×¥í¥Ñ¥Æ¥£¤òÉ½¼¨¤·¤Ş¤¹"
 
 #: src/menu.h:131
-#, fuzzy
 msgid "_Close"
-msgstr "é–‰ã˜ã‚‹"
+msgstr "ÊÄ¤¸¤ë(_C)"
 
 #: src/menu.h:131
 msgid "Close current archive"
-msgstr "ã“ã®æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™"
+msgstr "¤³¤Î½ñ¸Ë¥Õ¥¡¥¤¥ë¤òÊÄ¤¸¤Ş¤¹"
 
 #: src/menu.h:137
 msgid "E_xit"
-msgstr "çµ‚äº†(_X)"
+msgstr "½ªÎ»(_X)"
 
 #: src/menu.h:137
 msgid "Exit"
-msgstr "çµ‚äº†"
+msgstr "½ªÎ»"
 
-#: src/menu.h:163
-#, fuzzy
+#: src/menu.h:164
 msgid "Add _Files..."
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®è¿½åŠ (_A)..."
+msgstr "¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã(_F)..."
 
-#: src/menu.h:163 src/menu.h:457 src/window.c:2503
+#: src/menu.h:164 src/menu.h:458 src/window.c:2593
 msgid "Add files to the archive"
-msgstr "æ›¸åº«ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã—ã¾ã™"
+msgstr "½ñ¸Ë¤Ë¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤·¤Ş¤¹"
 
-#: src/menu.h:169
-#, fuzzy
+#: src/menu.h:170
 msgid "Delete selected files and folders from the archive"
-msgstr "æ›¸åº«ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã—ã¾ã™"
+msgstr "½ñ¸Ë¤«¤éÁªÂò¤·¤¿¥Õ¥¡¥¤¥ë¤È¥Õ¥©¥ë¥À¤òºï½ü¤·¤Ş¤¹"
 
-#: src/menu.h:175
+#: src/menu.h:176
 msgid "_Extract to..."
-msgstr "æ›¸åº«ã®å±•é–‹(_E)..."
+msgstr "½ñ¸Ë¤ÎÅ¸³«(_E)..."
 
-#: src/menu.h:175 src/menu.h:469 src/window.c:2528
+#: src/menu.h:176 src/menu.h:470 src/window.c:2604
 msgid "Extract files from the archive"
-msgstr "æ›¸åº«ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å±•é–‹ã—ã¾ã™"
+msgstr "½ñ¸Ë¤«¤é¥Õ¥¡¥¤¥ë¤òÅ¸³«¤·¤Ş¤¹"
 
-#: src/menu.h:189
-#, fuzzy
+#: src/menu.h:190
 msgid "_Test Archive"
-msgstr "æ›¸åº«ã®å‰Šé™¤(_D)"
+msgstr "½ñ¸Ë¤Î¥Æ¥¹¥È(_T)"
 
-#: src/menu.h:205
+#: src/menu.h:206
 msgid "Select _All"
-msgstr "å…¨ã¦é¸æŠ(_A)"
+msgstr "Á´¤ÆÁªÂò(_A)"
 
-#: src/menu.h:205
+#: src/menu.h:206
 msgid "Select all files"
-msgstr "å…¨ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ã¾ã™"
+msgstr "Á´¤Æ¤Î¥Õ¥¡¥¤¥ë¤òÁªÂò¤·¤Ş¤¹"
 
-#: src/menu.h:211
-#, fuzzy
+#: src/menu.h:212
 msgid "Dese_lect All"
-msgstr "å…¨ã¦é¸æŠ"
+msgstr "Á´¤ÆÁªÂò²ò½ü(_L)"
 
-#: src/menu.h:211
-#, fuzzy
+#: src/menu.h:212
 msgid "Deselect all files"
-msgstr "å…¨ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ã¾ã™"
+msgstr "Á´¤Æ¤Î¥Õ¥¡¥¤¥ë¤ÎÁªÂò¤ò²ò½ü¤·¤Ş¤¹"
 
-#: src/menu.h:219
+#: src/menu.h:220
 msgid "Pass_word..."
-msgstr ""
+msgstr "¥Ñ¥¹¥ï¡¼¥É(_W)..."
 
-#: src/menu.h:227
-#, fuzzy
+#: src/menu.h:228
 msgid "_Preferences"
-msgstr "è¨­å®š(_P)..."
+msgstr "ÀßÄê(_P)"
 
-#: src/menu.h:238
-#, fuzzy
+#: src/menu.h:239
 msgid "by _Name"
-msgstr "åå‰"
+msgstr "Ì¾Á°½ç(_N)"
 
-#: src/menu.h:238
+#: src/menu.h:239
 msgid "Sort file list by name"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’åå‰ã§ã‚½ãƒ¼ãƒˆã—ã¾ã™"
+msgstr "¥Õ¥¡¥¤¥ë°ìÍ÷¤òÌ¾Á°¤Ç¥½¡¼¥È¤·¤Ş¤¹"
 
-#: src/menu.h:244
-#, fuzzy
+#: src/menu.h:245
 msgid "by _Size"
-msgstr "ã‚µã‚¤ã‚º"
+msgstr "¥µ¥¤¥º½ç(_S)"
 
-#: src/menu.h:244
+#: src/menu.h:245
 msgid "Sort file list by file size"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’ã‚µã‚¤ã‚ºã§ã‚½ãƒ¼ãƒˆã—ã¾ã™"
+msgstr "¥Õ¥¡¥¤¥ë°ìÍ÷¤ò¥µ¥¤¥º¤Ç¥½¡¼¥È¤·¤Ş¤¹"
 
-#: src/menu.h:250
-#, fuzzy
+#: src/menu.h:251
 msgid "by T_ype"
-msgstr "ç¨®é¡"
+msgstr "³ÈÄ¥»Ò½ç(_Y)"
 
-#: src/menu.h:250
+#: src/menu.h:251
 msgid "Sort file list by type"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’æ‹¡å¼µå­ã§ã‚½ãƒ¼ãƒˆã—ã¾ã™"
+msgstr "¥Õ¥¡¥¤¥ë°ìÍ÷¤ò³ÈÄ¥»Ò¤Ç¥½¡¼¥È¤·¤Ş¤¹"
 
-#: src/menu.h:256
-#, fuzzy
+#: src/menu.h:257
 msgid "by _Time"
-msgstr "å¤‰æ›´æ™‚åˆ»é †(_T)"
+msgstr "ÊÑ¹¹»ş¹ï½ç(_T)"
 
-#: src/menu.h:256
+#: src/menu.h:257
 msgid "Sort file list by modification time"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’å¤‰æ›´æ™‚åˆ»ã§ã‚½ãƒ¼ãƒˆã—ã¾ã™"
+msgstr "¥Õ¥¡¥¤¥ë°ìÍ÷¤òÊÑ¹¹»ş¹ï¤Ç¥½¡¼¥È¤·¤Ş¤¹"
 
-#: src/menu.h:262
-#, fuzzy
+#: src/menu.h:263
 msgid "by _Path"
-msgstr "ãƒ‘ã‚¹å"
+msgstr "¥Ñ¥¹Ì¾½ç(_P)"
 
-#: src/menu.h:262
+#: src/menu.h:263
 msgid "Sort file list by path"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’ãƒ‘ã‚¹åã§ã‚½ãƒ¼ãƒˆã—ã¾ã™"
+msgstr "¥Õ¥¡¥¤¥ë°ìÍ÷¤ò¥Ñ¥¹Ì¾¤Ç¥½¡¼¥È¤·¤Ş¤¹"
 
-#: src/menu.h:279
-#, fuzzy
+#: src/menu.h:280
 msgid "View All _Files"
-msgstr "å…¨ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®è¡¨ç¤º(_F)"
+msgstr "Á´¥Õ¥¡¥¤¥ë¤Î°ìÍ÷É½¼¨(_F)"
 
-#: src/menu.h:285
-#, fuzzy
+#: src/menu.h:286
 msgid "View as a F_older"
-msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§è¡¨ç¤º(_D)"
+msgstr "¥Õ¥©¥ë¥À·Á¼°¤ÇÉ½¼¨(_O)"
 
-#: src/menu.h:307
+#: src/menu.h:308
 msgid "_Reversed Order"
-msgstr "ã‚½ãƒ¼ãƒˆã®åè»¢(_R)"
+msgstr "¥½¡¼¥È¤ÎÈ¿Å¾(_R)"
 
-#: src/menu.h:307
+#: src/menu.h:308
 msgid "Reverse the list order"
-msgstr "ä¸€è¦§ã®ã‚½ãƒ¼ãƒˆã‚’é€†é †ã«ã—ã¾ã™"
+msgstr "°ìÍ÷¤Î¥½¡¼¥È¤òµÕ½ç¤Ë¤·¤Ş¤¹"
 
-#: src/menu.h:331
+#: src/menu.h:332
 msgid "_Toolbar"
-msgstr ""
+msgstr "¥Ä¡¼¥ë¥Ğ¡¼(_T)"
 
-#: src/menu.h:331
+#: src/menu.h:332
 msgid "View the main toolbar"
-msgstr ""
+msgstr "¥á¥¤¥ó¡¦¥Ä¡¼¥ë¥Ğ¡¼¤òÉ½¼¨¤·¤Ş¤¹"
 
-#: src/menu.h:337
+#: src/menu.h:338
 msgid "Stat_usbar"
-msgstr ""
+msgstr "¥¹¥Æ¡¼¥¿¥¹¥Ğ¡¼(_U)"
 
-#: src/menu.h:337
+#: src/menu.h:338
 msgid "View the statusbar"
-msgstr ""
+msgstr "¥¹¥Æ¡¼¥¿¥¹¥Ğ¡¼¤òÉ½¼¨¤·¤Ş¤¹"
 
-#: src/menu.h:345
-#, fuzzy
+#: src/menu.h:346
 msgid "_Stop"
-msgstr "åœæ­¢"
+msgstr "Ää»ß(_S)"
 
-#: src/menu.h:345 src/toolbar.h:55
+#: src/menu.h:346 src/toolbar.h:55
 msgid "Stop current operation"
-msgstr "ç¾åœ¨å®Ÿè¡Œä¸­ã®å‡¦ç†ã‚’åœæ­¢ã—ã¾ã™"
+msgstr "¸½ºß¼Â¹ÔÃæ¤Î½èÍı¤òÄä»ß¤·¤Ş¤¹"
 
-#: src/menu.h:351
+#: src/menu.h:352
 msgid "_Reload"
-msgstr ""
+msgstr "ºÆÆÉ¹ş¤ß(_R)"
 
-#: src/menu.h:351
-#, fuzzy
+#: src/menu.h:352
 msgid "Reload current archive"
-msgstr "ã“ã®æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™"
+msgstr "¤³¤Î½ñ¸Ë¤òºÆÅÙÆÉ¤ß¹ş¤ß¤Ş¤¹"
 
-#: src/menu.h:362
-#, fuzzy
+#: src/menu.h:363
 msgid "_Arrange Files"
-msgstr "å¤‰æ›´æ™‚åˆ»é †(_T)"
+msgstr "¥Õ¥¡¥¤¥ë¤Î¥½¡¼¥È(_A)"
 
-#: src/menu.h:367
+#: src/menu.h:368
 msgid "_Last Output"
-msgstr ""
+msgstr "ºÇ½ª½ĞÎÏ(_L)"
 
-#: src/menu.h:380
+#: src/menu.h:381
 msgid "New _Window"
-msgstr "æ–°è¦ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦(_W)"
+msgstr "¿·µ¬¥¦¥£¥ó¥É¥¦(_W)"
 
-#: src/menu.h:380
+#: src/menu.h:381
 msgid "Open a new window"
-msgstr "æ–°ã—ã„ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‹ãã¾ã™"
+msgstr "¿·¤·¤¤¥¦¥£¥ó¥É¥¦¤ò³«¤­¤Ş¤¹"
 
-#: src/menu.h:386
+#: src/menu.h:387
 msgid "Clo_se Window"
-msgstr "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ã‚‹(_S)"
+msgstr "¥¦¥£¥ó¥É¥¦¤òÊÄ¤¸¤ë(_S)"
 
-#: src/menu.h:386
+#: src/menu.h:387
 msgid "Close this window"
-msgstr "ã“ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ã¾ã™"
+msgstr "¤³¤Î¥¦¥£¥ó¥É¥¦¤òÊÄ¤¸¤Ş¤¹"
 
-#: src/menu.h:399
-msgid "_Manual"
-msgstr ""
+#: src/menu.h:400
+msgid "_Contents"
+msgstr "ÆâÍÆ(_C)"
 
-#: src/menu.h:399
+#: src/menu.h:400
 msgid "Display the File Roller Manual"
-msgstr ""
+msgstr "File Roller ¤Î¥Ş¥Ë¥å¥¢¥ë¤òÉ½¼¨¤·¤Ş¤¹"
 
-#: src/menu.h:405
-#, fuzzy
+#: src/menu.h:406
 msgid "_About"
-msgstr "æƒ…å ±(_A)..."
+msgstr "¾ğÊó(_A)"
 
-#: src/menu.h:405
+#: src/menu.h:406
 msgid "Information about the program"
-msgstr "File-roller ã«ã¤ã„ã¦ã®æƒ…å ±ã‚’è¡¨ç¤ºã—ã¾ã™"
-
-#: src/menu.h:417
-#, fuzzy
-msgid "_File"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«:"
+msgstr "File Roller ¤Ë¤Ä¤¤¤Æ¤Î¾ğÊó¤òÉ½¼¨¤·¤Ş¤¹"
 
 #: src/menu.h:418
-#, fuzzy
-msgid "_Edit"
-msgstr "çµ‚äº†"
+msgid "_Archive"
+msgstr "½ñ¸Ë(_A)"
 
 #: src/menu.h:419
-#, fuzzy
-msgid "_View"
-msgstr "è¡¨ç¤º"
+msgid "_Edit"
+msgstr "ÊÔ½¸(_E)"
 
 #: src/menu.h:420
+msgid "_View"
+msgstr "É½¼¨(_V)"
+
+#: src/menu.h:421
 msgid "_Windows"
-msgstr "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦(_W)"
+msgstr "¥¦¥£¥ó¥É¥¦(_W)"
 
-#: src/menu.h:443
-#, fuzzy
+#: src/menu.h:444
 msgid "Open Files..."
-msgstr "ã‚¢ãƒ—ãƒªã§é–‹ã(_O)..."
+msgstr "¥¢¥×¥ê¤Ç³«¤¯..."
 
-#: src/menu.h:449
-msgid "View File"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®è¡¨ç¤º"
-
-#: src/menu.h:457
-#, fuzzy
+#: src/menu.h:458
 msgid "Add Files..."
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®è¿½åŠ (_A)..."
+msgstr "¥Õ¥¡¥¤¥ë¤ÎÄÉ²Ã..."
 
-#: src/menu.h:463
-#, fuzzy
-msgid "Delete Files"
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤(_D)..."
-
-#: src/menu.h:463
+#: src/menu.h:464
 msgid "Delete files from the archive"
-msgstr "æ›¸åº«ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã—ã¾ã™"
+msgstr "½ñ¸Ë¤«¤é¥Õ¥¡¥¤¥ë¤òºï½ü¤·¤Ş¤¹"
 
-#: src/menu.h:469
-#, fuzzy
+#: src/menu.h:470
 msgid "Extract to..."
-msgstr "æ›¸åº«ã®å±•é–‹(_E)..."
+msgstr "½ñ¸Ë¤ÎÅ¸³«..."
 
-#: src/menu.h:477
+#: src/menu.h:478
 msgid "Select All"
-msgstr "å…¨ã¦é¸æŠ"
+msgstr "Á´¤ÆÁªÂò"
 
-#. Button
-#: src/misc.c:281
-#, fuzzy
-msgid "Command _line output"
-msgstr "ã‚³ãƒãƒ³ãƒ‰ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚"
+#: src/recent-files/egg-recent-vfs-utils.c:90
+msgid " (invalid Unicode)"
+msgstr " (¤ª¤«¤·¤Ê Unicode)"
+
+#: src/recent-files/egg-recent-view-bonobo.c:193
+#, c-format
+msgid "Open %s"
+msgstr "%s ¤ò³«¤¯"
 
 #: src/toolbar.h:39
 msgid "New"
-msgstr "æ–°è¦"
+msgstr "¿·µ¬"
 
 #: src/toolbar.h:45
 msgid "Open"
-msgstr "é–‹ã"
+msgstr "³«¤¯"
 
 #: src/toolbar.h:45
 msgid "Open archive"
-msgstr "æ›¸åº«ã‚’é–‹ã"
+msgstr "½ñ¸Ë¤ò³«¤­¤Ş¤¹"
 
 #: src/toolbar.h:55
 msgid "Stop"
-msgstr "åœæ­¢"
+msgstr "Ää»ß"
 
-#: src/window.c:615
+#: src/window.c:568
 msgid "Folder"
-msgstr ""
+msgstr "¥Õ¥©¥ë¥À"
 
-#: src/window.c:738
+#: src/window.c:712
 msgid "[read only]"
-msgstr "[èª­ã¿è¾¼ã¿å°‚ç”¨]"
+msgstr "[ÆÉ¤ß¹ş¤ßÀìÍÑ]"
 
-#: src/window.c:832
+#: src/window.c:806
 #, c-format
 msgid "1 file (%s)"
-msgstr "1 å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ« (%s)"
+msgstr "1 ¸Ä¤Î¥Õ¥¡¥¤¥ë (¹ç·× %s)"
 
-#: src/window.c:835
+#: src/window.c:809
 #, c-format
 msgid "%d files (%s)"
-msgstr "%d å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ« (%s)"
+msgstr "%d ¸Ä¤Î¥Õ¥¡¥¤¥ë (¹ç·× %s)"
 
-#: src/window.c:843
+#: src/window.c:817
 #, c-format
 msgid "1 file selected (%s)"
-msgstr "1 å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒé¸æŠã•ã‚Œã¾ã—ãŸ (%s)"
+msgstr "1 ¸Ä¤Î¥Õ¥¡¥¤¥ë¤¬ÁªÂò¤µ¤ì¤Ş¤·¤¿ (%s)"
 
-#: src/window.c:846
+#: src/window.c:820
 #, c-format
 msgid "%d files selected (%s)"
-msgstr "%d å€‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒé¸æŠã•ã‚Œã¾ã—ãŸ (%s)"
+msgstr "%d ¸Ä¤Î¥Õ¥¡¥¤¥ë¤¬ÁªÂò¤µ¤ì¤Ş¤·¤¿ (%s)"
 
-#: src/window.c:1108
-#, fuzzy
+#: src/window.c:1109
 msgid "Reading archive"
-msgstr "æ›¸åº«ã‚’é–‹ã"
+msgstr "½ñ¸Ë¤ÎÆÉ¤ß¹ş¤ßÃæ"
 
-#: src/window.c:1111
-#, fuzzy
+#: src/window.c:1112
 msgid "Deleting files from archive"
-msgstr "æ›¸åº«ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã—ã¾ã™"
+msgstr "½ñ¸Ë¤«¤é¥Õ¥¡¥¤¥ë¤òºï½ü¤·¤Ş¤¹"
 
-#: src/window.c:1114
-#, fuzzy
+#: src/window.c:1115
 msgid "Adding files to archive"
-msgstr "æ›¸åº«ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã—ã¾ã™"
+msgstr "½ñ¸Ë¤Ë¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤·¤Ş¤¹"
 
-#: src/window.c:1117
-#, fuzzy
+#: src/window.c:1118
 msgid "Extracting files from archive"
-msgstr "æ›¸åº«ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å±•é–‹ã—ã¾ã™"
+msgstr "½ñ¸Ë¤«¤é¥Õ¥¡¥¤¥ë¤òÅ¸³«¤·¤Ş¤¹"
 
-#: src/window.c:1120
-#, fuzzy
+#: src/window.c:1121
 msgid "Testing archive"
-msgstr "æ›¸åº«ã®å‰Šé™¤(_D)"
+msgstr "½ñ¸Ë¤ò¥Æ¥¹¥È¤·¤Ş¤¹"
 
-#: src/window.c:1125
+#: src/window.c:1127
 msgid "wait please..."
-msgstr ""
+msgstr "¾¯¡¹¡¢¤ªÂÔ¤Á²¼¤µ¤¤..."
 
-#: src/window.c:1214
+#: src/window.c:1213
 msgid "Operation stopped"
-msgstr ""
+msgstr "Áàºî¤òÄä»ß¤·¤Ş¤·¤¿"
 
 #: src/window.c:1231
 msgid "An error occurred while extracting files."
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®å±•é–‹ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚"
+msgstr "¥Õ¥¡¥¤¥ë¤ÎÅ¸³«Ãæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£"
 
 #: src/window.c:1235
 msgid "An error occurred while loading the archive."
-msgstr "æ›¸åº«ã®èª­ã¿è¾¼ã¿ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚"
+msgstr "½ñ¸Ë¤ÎÆÉ¤ß¹ş¤ßÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£"
 
 #: src/window.c:1239
 msgid "An error occurred while deleting files from the archive."
-msgstr "æ›¸åº«ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚"
+msgstr "½ñ¸Ë¤«¤é¥Õ¥¡¥¤¥ë¤Îºï½üÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£"
 
 #: src/window.c:1243
 msgid "An error occurred while adding files to the archive."
-msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ›¸åº«ã¸è¿½åŠ ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚"
+msgstr "¥Õ¥¡¥¤¥ë¤ò½ñ¸Ë¤ØÄÉ²ÃÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£"
 
 #: src/window.c:1247
-#, fuzzy
 msgid "An error occurred while testing archive."
-msgstr "æ›¸åº«ã®èª­ã¿è¾¼ã¿ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚"
+msgstr "½ñ¸Ë¤Î¥Æ¥¹¥ÈÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿¡£"
 
 #: src/window.c:1253
 msgid "Command not found."
-msgstr "ã‚³ãƒãƒ³ãƒ‰ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚"
+msgstr "¥³¥Ş¥ó¥É¤¬¸«¤Ä¤«¤ê¤Ş¤»¤ó¡£"
 
 #: src/window.c:1256
 msgid "Command exited abnormally."
-msgstr "ã‚³ãƒãƒ³ãƒ‰ãŒç•°å¸¸çµ‚äº†ã—ã¾ã—ãŸã€‚"
+msgstr "¥³¥Ş¥ó¥É¤¬°Û¾ï½ªÎ»¤·¤Ş¤·¤¿¡£"
 
-#: src/window.c:1541
+#: src/window.c:1548
 msgid "You don't have permissions to add files to this archive."
-msgstr "ã“ã®æ›¸åº«ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹æ¨©é™ãŒã‚ã‚Šã¾ã›ã‚“ã€‚"
+msgstr "¤³¤Î½ñ¸Ë¤Ë¥Õ¥¡¥¤¥ë¤òÄÉ²Ã¤¹¤ë¸¢¸Â¤¬¤¢¤ê¤Ş¤»¤ó¡£"
 
-#: src/window.c:1563
+#: src/window.c:1570
 msgid "You can't add an archive to itself."
-msgstr "æ›¸åº«è‡ªèº«ã‚’è¿½åŠ ã™ã‚‹ã“ã¨ã¯å‡ºæ¥ã¾ã›ã‚“ã€‚"
+msgstr "½ñ¸Ë¼«¿È¤òÄÉ²Ã¤¹¤ë¤³¤È¤Ï½ĞÍè¤Ş¤»¤ó¡£"
 
-#: src/window.c:1723
+#: src/window.c:1730
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
-"archive ?"
-msgstr "ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç¾åœ¨ã®æ›¸åº«ã¾ãŸã¯æ–°è¦ã®æ›¸åº«ã«è¿½åŠ ã—ã¾ã™ã‹ï¼Ÿ"
+"archive?"
+msgstr "¤³¤Î¥Õ¥¡¥¤¥ë¤ò¸½ºß¤Î½ñ¸Ë¤Ş¤¿¤Ï¿·µ¬¤Î½ñ¸Ë¤ËÄÉ²Ã¤·¤Ş¤¹¤«¡©"
 
-#: src/window.c:1766
-msgid "Do you want to create a new archive with these files ?"
-msgstr "ã“ã‚Œã‚‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å«ã‚“ã æ–°ã—ã„æ›¸åº«ã‚’ä½œæˆã—ã¾ã™ã‹ï¼Ÿ"
+#: src/window.c:1773
+msgid "Do you want to create a new archive with these files?"
+msgstr "¤³¤ì¤é¤Î¥Õ¥¡¥¤¥ë¤ò´Ş¤ó¤À¿·¤·¤¤½ñ¸Ë¤òºîÀ®¤·¤Ş¤¹¤«¡©"
 
-#: src/window.c:1768
-#, fuzzy
+#: src/window.c:1775
 msgid "Create _Archive"
-msgstr "æ–°ã—ã„æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆã—ã¾ã™"
+msgstr "¿·¤·¤¤½ñ¸Ë¤ÎºîÀ®(_A)"
 
-#: src/window.c:2101
+#: src/window.c:2108
 msgid "Size"
-msgstr "ã‚µã‚¤ã‚º"
+msgstr "¥µ¥¤¥º"
 
-#: src/window.c:2102
+#: src/window.c:2109
 msgid "Type"
-msgstr "ç¨®é¡"
+msgstr "¼ïÎà"
 
-#: src/window.c:2103
-msgid "Modified"
-msgstr "å¤‰æ›´æ—¥æ™‚"
-
-#: src/window.c:2104
-msgid "Path"
-msgstr "ãƒ‘ã‚¹å"
+#: src/window.c:2110
+msgid "Date modified"
+msgstr "ÊÑ¹¹Æü»ş"
 
 #: src/window.c:2111
+msgid "Location"
+msgstr "¾ì½ê"
+
+#: src/window.c:2118
 msgid "Name"
-msgstr "åå‰"
-
-#: src/window.c:2448
-msgid "_Up"
-msgstr ""
-
-#. current location
-#: src/window.c:2470
-msgid "Current Location:"
-msgstr "ç¾åœ¨ã®ãƒ‘ã‚¹å:"
-
-#: src/window.c:2502
-msgid "Add"
-msgstr "è¿½åŠ "
-
-#: src/window.c:2527
-msgid "Extract"
-msgstr "å±•é–‹"
+msgstr "Ì¾Á°"
 
 #: src/window.c:2538
+msgid "_Up"
+msgstr "¾å¤Ø(_U)"
+
+#. current location
+#: src/window.c:2560
+msgid "Current Location:"
+msgstr "¸½ºß¤Î¥Ñ¥¹:"
+
+#: src/window.c:2592
+msgid "Add"
+msgstr "ÄÉ²Ã"
+
+#: src/window.c:2614
 msgid "View"
-msgstr "è¡¨ç¤º"
+msgstr "É½¼¨"
 
-#: src/window.c:2539
-#, fuzzy
+#: src/window.c:2615
 msgid "View selected file"
-msgstr "æŒ‡å®šã—ãŸãƒ•ã‚¡ã‚¤ãƒ«"
+msgstr "ÁªÂò¤·¤¿¥Õ¥¡¥¤¥ë¤òÉ½¼¨¤·¤Ş¤¹"
 
-#: src/window.c:2835
+#: src/window.c:3010
 msgid "File type not supported."
-msgstr "ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ãªã„ãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼"
+msgstr "¥µ¥İ¡¼¥È¤·¤Æ¤¤¤Ê¤¤¥Õ¥¡¥¤¥ë·Á¼°"
 
-#: src/window.c:2973
-#, fuzzy
-msgid "No archive"
-msgstr "æ›¸åº«ã®ã‚³ãƒ”ãƒ¼"
-
-#: src/window.c:3069
+#: src/window.c:3079
 msgid "Cannot load archive."
-msgstr "æ›¸åº«ã‚’èª­ã¿è¾¼ã‚ã¾ã›ã‚“ã€‚"
+msgstr "½ñ¸Ë¤òÆÉ¤ß¹ş¤á¤Ş¤»¤ó¡£"
 
-#: src/window.c:3436
-#, fuzzy
-msgid "File Roller - Last output"
-msgstr "File Roller - è¿½åŠ "
+#: src/window.c:3493
+msgid "Last Output"
+msgstr "ºÇ½ª½ĞÎÏ"
 
-#: src/window.c:3957
-#, fuzzy
+#: src/window.c:4019
 msgid "Add files to an archive"
-msgstr "æ›¸åº«ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã—ã¾ã™"
+msgstr "¥Õ¥¡¥¤¥ë¤ò½ñ¸Ë¤ËÄÉ²Ã¤·¤Ş¤¹"
 
-#: src/window.c:3982
-#, fuzzy
+#: src/window.c:4044
 msgid "Extract archive"
-msgstr "æ–°ã—ã„æ›¸åº«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆã—ã¾ã™"
+msgstr "½ñ¸Ë¤«¤é¥Õ¥¡¥¤¥ë¤òÅ¸³«¤·¤Ş¤¹"
 
-#~ msgid "Associated Applications"
-#~ msgstr "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®é–¢é€£ã¥ã‘"
-
-#, fuzzy
-#~ msgid "Encoded archive:"
-#~ msgstr "æ›¸åº«ã®ç§»å‹•"
-
-#, fuzzy
-#~ msgid "File Roller - Comment"
-#~ msgstr "File Roller - è¿½åŠ "
-
-#, fuzzy
-#~ msgid "File Roller - Encode"
-#~ msgstr "File Roller - è¿½åŠ "
-
-#~ msgid "Options :"
-#~ msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³ :"
-
-#, fuzzy
-#~ msgid "_Destination Folder:"
-#~ msgstr "ãŠæ°—ã«å…¥ã‚Šã®å±•é–‹å…ˆã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ã™"
-
-#, fuzzy
-#~ msgid "Max _history length:"
-#~ msgstr "å±¥æ­´ã®æœ€å¤§æ•°:"
-
-#~ msgid "New _Archive"
-#~ msgstr "æ–°ã—ã„æ›¸åº«(_A)"
-
-#~ msgid "_Open Archive..."
-#~ msgstr "æ›¸åº«ã‚’é–‹ã(_O)..."
-
-#~ msgid "_Move Archive"
-#~ msgstr "æ›¸åº«ã®ç§»å‹•(_M)"
-
-#~ msgid "Copy Arc_hive"
-#~ msgstr "æ›¸åº«ã®ã‚³ãƒ”ãƒ¼"
-
-#~ msgid "_Rename Archive"
-#~ msgstr "æ›¸åº«åã®å¤‰æ›´(_R)"
-
-#~ msgid "_Close Archive"
-#~ msgstr "æ›¸åº«ã‚’é–‰ã˜ã‚‹(_C)"
-
-#, fuzzy
-#~ msgid "_Stop Operation"
-#~ msgstr "å‡¦ç†ã®åœæ­¢(_S)"
-
-#, fuzzy
-#~ msgid "Arrange by _Name"
-#~ msgstr "åå‰é †(_N)"
-
-#, fuzzy
-#~ msgid "Arrange by _Size"
-#~ msgstr "ã‚µã‚¤ã‚ºé †(_S)"
-
-#, fuzzy
-#~ msgid "Arrange by _Type"
-#~ msgstr "æ‹¡å¼µå­é †(_T)"
-
-#, fuzzy
-#~ msgid "Arrange by _Path"
-#~ msgstr "ãƒ‘ã‚¹åé †(_P)"
-
-#~ msgid "_Actions"
-#~ msgstr "æ“ä½œ(_A)"
-
-#~ msgid "_Options"
-#~ msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³(_O)"
-
-#, fuzzy
-#~ msgid "Other Options"
-#~ msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
-
-#~ msgid "History"
-#~ msgstr "å±¥æ­´"
-
-#, fuzzy
-#~ msgid "Add current folder to favorites"
-#~ msgstr "ãŠæ°—ã«å…¥ã‚Šã«è¿½åŠ ã™ã‚‹"
-
-#, fuzzy
-#~ msgid "Remove selected folder from favorites"
-#~ msgstr "æ›¸åº«ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤ã—ã¾ã™"
-
-#~ msgid "_View file"
-#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®è¡¨ç¤º(_V)"
-
-#~ msgid "S_ort File List"
-#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã®ã‚½ãƒ¼ãƒˆ(_O)"
-
-#~ msgid "Could not open file %s"
-#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ« %s ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸ"
-
-#, fuzzy
-#~ msgid "Quit the program"
-#~ msgstr "File-roller ã«ã¤ã„ã¦ã®æƒ…å ±ã‚’è¡¨ç¤ºã—ã¾ã™"
-
-#, fuzzy
-#~ msgid "View _with"
-#~ msgstr "ãƒ“ãƒ¥ãƒ¯ãƒ¼:"
-
-#~ msgid "Make the default viewer"
-#~ msgstr "ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ“ãƒ¥ãƒ¯ãƒ¼ã«æŒ‡å®šã™ã‚‹"
-
-#~ msgid "Document Viewer"
-#~ msgstr "ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆãƒ»ãƒ“ãƒ¥ãƒ¯ãƒ¼"
-
-#~ msgid "Could not find file %s"
-#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ« %s ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ"
-
-#~ msgid "You must specify a file"
-#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã—ã¦ä¸‹ã•ã„"
-
-#~ msgid "System error: pipe."
-#~ msgstr "ã‚·ã‚¹ãƒ†ãƒ ã‚¨ãƒ©ãƒ¼: pipe"
-
-#~ msgid "System error: fork."
-#~ msgstr "ã‚·ã‚¹ãƒ†ãƒ ã‚¨ãƒ©ãƒ¼: fork"
-
-#, fuzzy
-#~ msgid "Cannot change to specified folder."
-#~ msgstr "æŒ‡å®šã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«ç§»å‹•ã§ãã¾ã›ã‚“ã€‚"
-
-#~ msgid "No further information on error."
-#~ msgstr "ã“ã‚Œä»¥ä¸Šè©³ç´°ãªã‚¨ãƒ©ãƒ¼æƒ…å ±ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚"
-
-#~ msgid "Delete"
-#~ msgstr "å‰Šé™¤"
-
-#~ msgid "Remove"
-#~ msgstr "å‰Šé™¤"
-
-#, fuzzy
-#~ msgid "_Delete..."
-#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤(_D)..."
-
-#~ msgid "DIRECTORY"
-#~ msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª"
-
-#~ msgid "Archive Properties"
-#~ msgstr "æ›¸åº«ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£"
-
-#~ msgid "Recreate directories"
-#~ msgstr "ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å†ç”Ÿæˆã™ã‚‹"
-
-#~ msgid "Properties"
-#~ msgstr "ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£"
-
-#~ msgid "Show archive properties"
-#~ msgstr "æ›¸åº«ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’è¡¨ç¤ºã—ã¾ã™"
