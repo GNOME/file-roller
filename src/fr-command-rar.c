@@ -42,6 +42,22 @@ static void fr_command_rar_finalize    (GObject           *object);
 static FRCommandClass *parent_class = NULL;
 
 
+static gboolean
+fr_command_rar_have_rar (void)
+{
+	char *path;
+	gboolean retval;
+	
+	retval = FALSE;
+	path = g_find_program_in_path ("rar");
+	if (path)
+		retval = TRUE;
+	g_free (path);
+	
+	return retval;
+}
+
+
 /* -- list -- */
 
 static time_t
@@ -158,7 +174,10 @@ fr_command_rar_list (FRCommand *comm)
 				      comm);
 
 	fr_process_clear (comm->process);
-	fr_process_begin_command (comm->process, "rar");
+	if (fr_command_rar_have_rar ())
+		fr_process_begin_command (comm->process, "rar");
+	else
+		fr_process_begin_command (comm->process, "unrar");
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-c-");
 
@@ -245,7 +264,11 @@ fr_command_rar_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_begin_command (comm->process, "rar");
+	if (fr_command_rar_have_rar ())
+		fr_process_begin_command (comm->process, "rar");
+	else
+		fr_process_begin_command (comm->process, "unrar");
+
 	fr_process_add_arg (comm->process, "x");
 
 	if (overwrite)
