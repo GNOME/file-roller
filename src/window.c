@@ -5479,13 +5479,6 @@ window_archive__open_add (FRWindow   *window,
 {
 	window->non_interactive = TRUE;
 
-	{
-		GList *scan;
-		for (scan = file_list; scan; scan = scan->next)
-			g_print ("--> %s\n", scan->data);
-	}
-
-
 	if (archive != NULL) {
 		OpenAndAddData *adata;
 
