@@ -41,20 +41,28 @@ typedef enum {
 GType    egg_recent_model_get_type     (void);
 
 /* constructors */
-EggRecentModel * egg_recent_model_new (const char *application,
-				       EggRecentModelSort sort);
+EggRecentModel * egg_recent_model_new (EggRecentModelSort sort);
+
+/* public methods */
+void     egg_recent_model_set_filter_mime_types (EggRecentModel *model,
+						   ...);
+
+void     egg_recent_model_set_filter_groups (EggRecentModel *model, ...);
+
+void     egg_recent_model_set_filter_uri_schemes (EggRecentModel *model,
+						   ...);
 
 void     egg_recent_model_set_sort (EggRecentModel *model,
-				    EggRecentModelSort sort);
+				      EggRecentModelSort sort);
 
 gboolean egg_recent_model_add_full (EggRecentModel *model,
-				    EggRecentItem *item);
+				      EggRecentItem *item);
 
-gboolean egg_recent_model_add	   (EggRecentModel *model,
-				    const gchar *uri);
+gboolean egg_recent_model_add	     (EggRecentModel *model,
+				      const gchar *uri);
 
 gboolean egg_recent_model_delete   (EggRecentModel *model,
-				    const gchar *uri);
+				      const gchar *uri);
 
 void egg_recent_model_clear        (EggRecentModel *model);
 

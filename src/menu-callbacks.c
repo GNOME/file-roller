@@ -486,18 +486,16 @@ save_as_archive_cb (GtkWidget *widget,
 	/**/
 
 	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);
-
 	gtk_box_pack_start (GTK_BOX (hbox), 
 			    gtk_label_new (_("Archive type:")),
 			    FALSE, FALSE, 0);
-
 	opt_menu = gtk_option_menu_new ();
 	menu = build_file_type_menu (window);
         gtk_option_menu_set_menu (GTK_OPTION_MENU (opt_menu), menu);
-	gtk_widget_show (opt_menu);
 	gtk_box_pack_start (GTK_BOX (hbox), opt_menu, FALSE, FALSE, 12);
-	
+	gtk_widget_show_all (hbox);
+
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);	
 	/**/
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);

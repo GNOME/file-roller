@@ -1,6 +1,8 @@
 #ifndef __EGG_RECENT_VIEW_H__
 #define __EGG_RECENT_VIEW_H__
 
+
+#include <gdk/gdk.h>
 #include <gtk/gtkwidget.h>
 #include "egg-recent-model.h"
 #include "egg-recent-item.h"
@@ -27,6 +29,9 @@ struct _EggRecentViewClass
 };
 
 GtkType	egg_recent_view_get_type		(void) G_GNUC_CONST;
+void	egg_recent_view_set_list		(EggRecentView *view,
+						 GSList *list);
+void	egg_recent_view_clear			(EggRecentView *view);
 EggRecentModel *egg_recent_view_get_model	(EggRecentView *view);
 void	egg_recent_view_set_model		(EggRecentView *view,
 						 EggRecentModel *model);

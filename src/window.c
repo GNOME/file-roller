@@ -3172,6 +3172,8 @@ window_new ()
 	window->history = NULL;
 	window->history_current = NULL;
 
+	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, (window->list_mode == WINDOW_LIST_MODE_FLAT));
+
 	window->mitem_new_archive = file_menu[FILE_MENU_NEW_ARCHIVE].widget;
 	window->mitem_open_archive = file_menu[FILE_MENU_OPEN_ARCHIVE].widget;
 	window->mitem_save_as_archive = file_menu[FILE_MENU_SAVE_AS_ARCHIVE].widget;
@@ -3268,7 +3270,25 @@ window_new ()
 
 	/**/
 
-	model = egg_recent_model_new ("file-roller", EGG_RECENT_MODEL_SORT_MRU);
+	model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
+	egg_recent_model_set_filter_mime_types (model, 
+						"application/x-tar",
+						"application/x-compressed-tar",
+						"application/x-bzip-compressed-tar",
+						"application/x-lzop-compressed-tar",
+						"application/x-arj",
+						"application/zip",
+						"application/x-zip",
+						"application/x-lha",
+						"application/x-rar",
+						"application/x-rar-compressed",
+						"application/x-gzip",
+						"application/x-bzip",
+						"application/x-compress",
+						"application/x-lzop",
+						"application/x-zoo",
+						NULL);
+        egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
 
 	view = egg_recent_view_gtk_new (window->mitem_recents_menu, NULL);
@@ -4187,7 +4207,9 @@ window_set_list_mode (FRWindow       *window,
 		_window_history_clear (window);
 		_window_history_add (window, "/");
 	}
+
 	preferences_set_list_mode (window->list_mode);
+	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, (window->list_mode == WINDOW_LIST_MODE_FLAT));
 	
 	window_update_file_list (window);
 	_window_update_current_location (window);

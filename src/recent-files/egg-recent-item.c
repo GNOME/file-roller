@@ -26,6 +26,8 @@
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include "egg-recent-item.h"
 
+
+
 EggRecentItem *
 egg_recent_item_new (void)
 {
@@ -33,10 +35,11 @@ egg_recent_item_new (void)
 
 	item = g_new (EggRecentItem, 1);
 
+	item->groups = NULL;
 	item->private = FALSE;
 	item->uri = NULL;
 	item->mime_type = NULL;
-	item->app = NULL;
+
 	item->refcount = 1;
 
 	return item;
@@ -45,9 +48,18 @@ egg_recent_item_new (void)
 static void
 egg_recent_item_free (EggRecentItem *item)
 {
-	g_free (item->uri);
-	g_free (item->mime_type);
-	g_free (item->app);
+	if (item->uri)
+		g_free (item->uri);
+
+	if (item->mime_type)
+		g_free (item->mime_type);
+
+	if (item->groups) {
+		g_list_foreach (item->groups, (GFunc)g_free, NULL);
+		g_list_free (item->groups);
+		item->groups = NULL;
+	}
+
 	g_free (item);
 }
 
@@ -93,6 +105,82 @@ egg_recent_item_new_from_uri (const gchar *uri)
 	return item;
 }
 
+/*
+static GList *
+egg_recent_item_copy_groups (const GList *list)
+{
+	GList *newlist = NULL;
+
+	while (list) {
+		gchar *group = (gchar *)list->data;
+
+		newlist = g_list_prepend (newlist, g_strdup (group));
+
+		list = list->next;
+	}
+
+	return newlist;
+}
+
+
+EggRecentItem *
+egg_recent_item_copy (const EggRecentItem *item)
+{
+	EggRecentItem *newitem;
+
+	newitem = egg_recent_item_new ();
+	newitem->uri = g_strdup (item->uri);
+	if (item->mime_type)
+		newitem->mime_type = g_strdup (item->mime_type);
+	newitem->timestamp = item->timestamp;
+	newitem->private = item->private;
+	newitem->groups = egg_recent_item_copy_groups (item->groups);
+
+	return newitem;
+}
+*/
+
+/*
+EggRecentItem *
+egg_recent_item_new_valist (const gchar *uri, va_list args)
+{
+	EggRecentItem *item;
+	EggRecentArg arg;
+	gchar *str1;
+	gchar *str2;
+	gboolean priv;
+
+	item = egg_recent_item_new ();
+
+	arg = va_arg (args, EggRecentArg);
+
+	while (arg != EGG_RECENT_ARG_NONE) {
+		switch (arg) {
+			case EGG_RECENT_ARG_MIME_TYPE:
+				str1 = va_arg (args, gchar*);
+
+				egg_recent_item_set_mime_type (item, str1);
+			break;
+			case EGG_RECENT_ARG_GROUP:
+				str1 = va_arg (args, gchar*);
+
+				egg_recent_item_add_group (item, str1);
+			break;
+			case EGG_RECENT_ARG_PRIVATE:
+				priv = va_arg (args, gboolean);
+
+				egg_recent_item_set_private (item, priv);
+			break;
+			default:
+			break;
+		}
+
+		arg = va_arg (args, EggRecentArg);
+	}
+
+	return item;
+}
+*/
 
 gboolean
 egg_recent_item_set_uri (EggRecentItem *item, const gchar *uri)
@@ -177,6 +265,61 @@ egg_recent_item_get_timestamp (const EggRecentItem *item)
 	return item->timestamp;
 }
 
+G_CONST_RETURN GList *
+egg_recent_item_get_groups (const EggRecentItem *item)
+{
+	return item->groups;
+}
+
+gboolean
+egg_recent_item_in_group (const EggRecentItem *item, const gchar *group_name)
+{
+	GList *tmp;
+
+	tmp = item->groups;
+	while (tmp != NULL) {
+		gchar *val = (gchar *)tmp->data;
+		
+		if (strcmp (group_name, val) == 0)
+			return TRUE;
+
+		tmp = tmp->next;
+	}
+	
+	return FALSE;
+}
+
+void
+egg_recent_item_add_group (EggRecentItem *item, const gchar *group_name)
+{
+	g_return_if_fail (group_name != NULL);
+
+	if (!egg_recent_item_in_group (item, group_name))
+		item->groups = g_list_append (item->groups, g_strdup (group_name));
+}
+
+void
+egg_recent_item_remove_group (EggRecentItem *item, const gchar *group_name)
+{
+	GList *tmp;
+
+	g_return_if_fail (group_name != NULL);
+
+	tmp = item->groups;
+	while (tmp != NULL) {
+		gchar *val = (gchar *)tmp->data;
+		
+		if (strcmp (group_name, val) == 0) {
+			item->groups = g_list_remove (item->groups,
+						      val);
+			g_free (val);
+			break;
+		}
+
+		tmp = tmp->next;
+	}
+}
+
 void
 egg_recent_item_set_private (EggRecentItem *item, gboolean priv)
 {
@@ -189,19 +332,6 @@ egg_recent_item_get_private (const EggRecentItem *item)
 	return item->private;
 }
 
-char *
-egg_recent_item_get_application (EggRecentItem *item)
-{
-	return g_strdup (item->app);
-}
-
-void
-egg_recent_item_set_application (EggRecentItem *item,
-				 const char *app)
-{
-	item->app = g_strdup (app);
-}
-     
 GType
 egg_recent_item_get_type (void)
 {

@@ -329,10 +329,6 @@ dlg_open_with (FRWindow *window,
                           G_CALLBACK (recent_activated_cb),
                           data);
 
-	g_signal_connect_swapped (G_OBJECT (cancel_button), 
-				  "clicked",
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (data->dialog));
 	g_signal_connect (G_OBJECT (ok_button), 
 			  "clicked",
 			  G_CALLBACK (open_cb),

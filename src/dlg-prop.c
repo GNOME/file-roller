@@ -170,7 +170,7 @@ dlg_prop (GtkWidget *widget,
 
 	/* Run dialog. */
 
-        gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
+	gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
 				      GTK_WINDOW (window->app));
         gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
 
