@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 1-102\n"
-"POT-Creation-Date: 2002-07-27 17:23+0200\n"
+"POT-Creation-Date: 2002-08-24 11:44+0200\n"
 "PO-Revision-Date: 2002-08-01 20:52+0200\n"
 "Last-Translator: Slawomir Mikula <zorba@silesianet.pl>\n"
 "Language-Team: Polish <gnomepl@pandora.info.bielsko.pl>\n"
@@ -19,8 +19,8 @@ msgstr "Manager Archiwum"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/main.c:101 src/misc.c:76 src/misc.c:153
-#: src/misc.c:256 src/window.c:734 src/window.c:741 src/window.c:2260
-#: src/window.c:3824
+#: src/misc.c:256 src/window.c:730 src/window.c:739 src/window.c:2294
+#: src/window.c:4022
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -28,77 +28,82 @@ msgstr "File Roller"
 msgid "Handle compressed archives"
 msgstr "Rêcznie kompresowane archiwa"
 
-#: src/dlg-add.c:311 src/window.c:2466
+#: src/dlg-add.c:118
+#, fuzzy, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "Nie masz zezwolenia na rozpakowanie archiwum do tego katalogu \"%s\""
+
+#: src/dlg-add.c:341
 msgid "Add files"
 msgstr "Dodaj pliki"
 
-#: src/dlg-add.c:316
+#: src/dlg-add.c:346
 msgid "_Add only if newer"
 msgstr "Dod_aj tylko je¶li nowsze"
 
-#: src/dlg-add.c:317
+#: src/dlg-add.c:347
 msgid "_Include sub-folders"
 msgstr "Zawieraj±c podkatalogi"
 
-#: src/dlg-add.c:318
+#: src/dlg-add.c:348
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Wyklucz katalogi które s± symbolicznymi lin_kami"
 
-#: src/dlg-add.c:319
+#: src/dlg-add.c:349
 msgid "Exclude o_ther file systems"
 msgstr "Wyklucz inne systemy plików"
 
-#: src/dlg-add.c:320
+#: src/dlg-add.c:350
 msgid "Exclude _backup files (*~)"
 msgstr "Wyklucz pliki archiwizacyjne (*~)"
 
-#: src/dlg-add.c:321
+#: src/dlg-add.c:351
 msgid "Exclude _hidden files (.*)"
 msgstr "Wyklucz ukryte pliki (.*)"
 
-#: src/dlg-add.c:322
+#: src/dlg-add.c:352
 msgid "E_xclude files:"
 msgstr "Wyklucz pliki:"
 
-#: src/dlg-add.c:324
+#: src/dlg-add.c:354
 msgid "example: *.o; *.bak"
 msgstr "przyk³ad: *.o; *.doc"
 
-#: src/dlg-add.c:325
+#: src/dlg-add.c:355
 msgid "Igno_re case"
 msgstr "Ignoruj du¿e/ma³e litery"
 
-#: src/dlg-add.c:326
+#: src/dlg-add.c:356
 msgid "_Load Options"
 msgstr "Wczytaj Opcje"
 
-#: src/dlg-add.c:327
+#: src/dlg-add.c:357
 msgid "Sa_ve Options"
 msgstr "Zapisz Opcje"
 
-#: src/dlg-add.c:583
+#: src/dlg-add.c:613
 msgid "Load options"
 msgstr "Wczytaj opcje"
 
-#: src/dlg-add.c:731
+#: src/dlg-add.c:761
 msgid "Save options"
 msgstr "Zapisz Opcje"
 
 #. Set widgets data.
-#: src/dlg-batch-add.c:147
+#: src/dlg-batch-add.c:143
 #, c-format
 msgid "Adding %u files"
 msgstr "Dodawanie %u plików"
 
-#: src/dlg-extract.c:115 src/window.c:3015
+#: src/dlg-extract.c:119 src/window.c:3133
 msgid "Destination folder does not exist.  Do you want to create it ?"
 msgstr "Docelowy katalog nie istnieje. Czy chcesz go utworzyæ ?"
 
-#: src/dlg-extract.c:117 src/window.c:3017
+#: src/dlg-extract.c:121 src/window.c:3135
 msgid "Create _Folder"
 msgstr "Utwórz katalog"
 
-#: src/dlg-extract.c:137 src/window.c:3037
+#: src/dlg-extract.c:141 src/window.c:3155
 #, c-format
 msgid ""
 "Could not create the destination folder : %s.\n"
@@ -107,242 +112,251 @@ msgstr ""
 "Nie mo¿na utworzyæ docelowego katalogu : %s.\n"
 "Operacja przerwana."
 
-#: src/dlg-extract.c:152 src/window.c:3052
+#: src/dlg-extract.c:156 src/window.c:3170
 msgid "Extraction not performed."
 msgstr "Rozpakowanie nie dozwolone"
 
-#: src/dlg-extract.c:168
-#, c-format
+#: src/dlg-extract.c:175
+#, fuzzy, c-format
 msgid ""
-"You don't have the right permissions to extract archive in the folder \"%s\""
+"You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Nie masz zezwolenia na rozpakowanie archiwum do tego katalogu \"%s\""
 
-#: src/dlg-extract.c:383 src/dlg-preferences.c:118 src/menu-callbacks.c:747
+#: src/dlg-extract.c:396 src/dlg-preferences.c:130 src/menu-callbacks.c:752
 #, c-format
 msgid "Could not display help: %s"
 msgstr "Nie mo¿na wy¶wietliæ pomocy: %s"
 
-#: src/dlg-extract.c:472
+#: src/dlg-extract.c:485
 msgid "Favorites extraction folders"
 msgstr "Preferowane katalogi przy rozpakowywaniu"
 
-#: src/dlg-open-with.c:388
-msgid "Associated Applications"
-msgstr "Skojarzone aplikacje"
+#: src/file-data.c:28
+msgid "Unknown type"
+msgstr "Nieznany typ"
 
-#: src/dlg-open-with.c:418
-msgid "Recent Applications"
-msgstr "Ostatnio u¿ywane aplikacje"
+#: src/file-data.c:29
+msgid "Symbolic link"
+msgstr ""
 
-#: src/file_roller.glade2.h:1
+#: src/file_roller.glade2.h:1 src/file_roller_prop.glade2.h:1
+msgid "    "
+msgstr ""
+
+#: src/file_roller.glade2.h:2
 msgid "*"
 msgstr "*"
 
-#: src/file_roller.glade2.h:2
+#: src/file_roller.glade2.h:3
 msgid "A_dd to favorites"
 msgstr "Dod_aj do preferowanych"
 
-#: src/file_roller.glade2.h:3
+#: src/file_roller.glade2.h:4
+#, fuzzy
+msgid "A_vailable application:"
+msgstr "_Aplikacje:"
+
+#: src/file_roller.glade2.h:5
 msgid "Add _to archive :"
 msgstr "Dodaj do archiwum :"
 
-#: src/file_roller.glade2.h:4
+#: src/file_roller.glade2.h:6
 msgid "Add only if _newer"
 msgstr "Dodaj je¶li _nowsze"
 
-#: src/file_roller.glade2.h:5
-msgid "Ba_se 64"
-msgstr "Ba_se 64"
-
-#: src/file_roller.glade2.h:6
+#: src/file_roller.glade2.h:7
 msgid "Date and Time:"
 msgstr "Data i Czas:"
 
-#: src/file_roller.glade2.h:7
+#: src/file_roller.glade2.h:8
 msgid "Do not e_xtract older files"
 msgstr "Nie rozpakuj starszych plików"
 
-#: src/file_roller.glade2.h:8
-msgid "Encode Type"
-msgstr "Typ kodowania"
-
 #: src/file_roller.glade2.h:9
-msgid "Encoded archive:"
-msgstr "Kodowanie archiwum:"
-
-#: src/file_roller.glade2.h:10
 msgid "Extract to"
 msgstr "Rozpakuj do"
 
-#: src/file_roller.glade2.h:11
+#: src/file_roller.glade2.h:10
 msgid "Extract to:"
 msgstr "Rozpakuj do:"
 
-#: src/file_roller.glade2.h:12
+#: src/file_roller.glade2.h:11
 msgid "File Roller - Add"
 msgstr "FIle Roller - Dodaj"
 
-#: src/file_roller.glade2.h:13
+#: src/file_roller.glade2.h:12
 msgid "File Roller - Archive Informations"
 msgstr "File Roller - Informacje o archiwum"
 
-#: src/file_roller.glade2.h:14
-msgid "File Roller - Comment"
-msgstr "FIle Roller - Komentarz"
-
-#: src/file_roller.glade2.h:15
+#: src/file_roller.glade2.h:13
 msgid "File Roller - Delete Files"
 msgstr "File Roller - Skasuj pliki"
 
-#: src/file_roller.glade2.h:16
-msgid "File Roller - Encode"
-msgstr "FIle Roller - Kodowanie"
-
-#: src/file_roller.glade2.h:17
+#: src/file_roller.glade2.h:14
 msgid "File Roller - Extract"
 msgstr "FIle Roller - Rozpakuj"
 
-#: src/file_roller.glade2.h:18
+#: src/file_roller.glade2.h:15
 msgid "File Roller - Open Files"
 msgstr "File Roller - Otwórz pliki"
 
-#: src/file_roller.glade2.h:19
+#: src/file_roller.glade2.h:16
 msgid "File Roller - Password"
 msgstr "FIle Roller - Has³o"
 
-#: src/file_roller.glade2.h:20
+#: src/file_roller.glade2.h:17
 msgid "File Roller - View File"
 msgstr "File Roller - Podgl±d pliku"
 
-#: src/file_roller.glade2.h:21
+#: src/file_roller.glade2.h:18
 msgid "File Roller - Viewer"
 msgstr "File Roller - Podgl±d"
 
-#: src/file_roller.glade2.h:22
+#: src/file_roller.glade2.h:19
 msgid "File Size:"
 msgstr "Wielko¶æ plików:"
 
-#: src/file_roller.glade2.h:23
+#: src/file_roller.glade2.h:20
 msgid "Files"
 msgstr "Pliki:"
 
-#: src/file_roller.glade2.h:24
+#: src/file_roller.glade2.h:21
 msgid "Name:"
 msgstr "Nazwa:"
 
-#: src/file_roller.glade2.h:25
+#: src/file_roller.glade2.h:22
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
 "archive is closed the password will be deleted."
 msgstr ""
-"Uwaga: has³o bêdzie u¿ywane do zakodowania i odkodowania plików, które dodasz "
-"do archiwum. Gdy archiwum zostanie zamkniête pole z has³em zostanie "
+"Uwaga: has³o bêdzie u¿ywane do zakodowania i odkodowania plików, które "
+"dodasz do archiwum. Gdy archiwum zostanie zamkniête pole z has³em zostanie "
 "wyczyszczone."
 
-#: src/file_roller.glade2.h:26
+#: src/file_roller.glade2.h:23
 msgid "Number of Files:"
 msgstr "Liczba plików:"
 
-#: src/file_roller.glade2.h:27
+#: src/file_roller.glade2.h:24
 msgid "Open with an _application"
 msgstr "Otwórz z _aplikacj±..."
 
-#: src/file_roller.glade2.h:28
-msgid "Options :"
-msgstr "Opcje :"
-
-#: src/file_roller.glade2.h:29 src/file_roller_prop.glade2.h:9
+#: src/file_roller.glade2.h:25
 msgid "Other options"
 msgstr "Inne opcje"
 
-#: src/file_roller.glade2.h:30
+#: src/file_roller.glade2.h:26
 msgid "Over_write existing files"
 msgstr "Nadpisz istniej±ce pliki"
 
-#: src/file_roller.glade2.h:31
+#: src/file_roller.glade2.h:27
 msgid "Path:"
 msgstr "¦cie¿ka:"
 
-#: src/file_roller.glade2.h:32
+#: src/file_roller.glade2.h:28
+#, fuzzy
+msgid "R_ecent applications:"
+msgstr "Ostatnio u¿ywane aplikacje"
+
+#: src/file_roller.glade2.h:29
 msgid "R_ecreate folders"
 msgstr "Odtwórz strukturê katalogów"
 
-#: src/file_roller.glade2.h:33
+#: src/file_roller.glade2.h:30
+#, fuzzy
+msgid "Select archive"
+msgstr "_Usuñ Archiwum"
+
+#: src/file_roller.glade2.h:31
 msgid "View with internal _viewer"
 msgstr "Podgl±d wewnêtrzn± przegl±dark±"
 
-#: src/file_roller.glade2.h:34
+#: src/file_roller.glade2.h:32
 msgid "_All Files"
 msgstr "Dod_aj Pliki"
 
-#: src/file_roller.glade2.h:35
+#: src/file_roller.glade2.h:33
 msgid "_Application:"
 msgstr "_Aplikacje:"
 
-#: src/file_roller.glade2.h:36
-msgid "_Destination Folder:"
-msgstr "Katalog _Docelowy:"
-
-#: src/file_roller.glade2.h:37
+#: src/file_roller.glade2.h:34
 msgid "_Files:"
 msgstr "Pliki:"
 
-#: src/file_roller.glade2.h:38
+#: src/file_roller.glade2.h:35
 msgid "_Password:"
 msgstr "Has³o"
 
-#: src/file_roller.glade2.h:39
+#: src/file_roller.glade2.h:36
 msgid "_Selected Files"
 msgstr "Wybrane pliki"
 
-#: src/file_roller.glade2.h:40
-msgid "_UU"
-msgstr "_UU"
-
-#: src/file_roller.glade2.h:41
+#: src/file_roller.glade2.h:37
 msgid "_View destination folder after extraction"
 msgstr "Podgl±d docelowego katalogu po rozpakowaniu"
 
-#: src/file_roller.glade2.h:42
+#: src/file_roller.glade2.h:38
 msgid "example: *.txt; *.doc"
 msgstr "przyk³ad: *.txt; *.doc"
 
-#: src/file_roller_prop.glade2.h:1
+#: src/file_roller_prop.glade2.h:2
 msgid "Columns to Show"
 msgstr "Wy¶wietlane kolumny"
 
-#: src/file_roller_prop.glade2.h:2
+#: src/file_roller_prop.glade2.h:3
+msgid "Compression _level:"
+msgstr ""
+
+#: src/file_roller_prop.glade2.h:4
+msgid "Fast"
+msgstr ""
+
+#: src/file_roller_prop.glade2.h:5
 msgid "File Roller - Preferences"
 msgstr "File Roller - Preferencje"
 
-#: src/file_roller_prop.glade2.h:3
+#: src/file_roller_prop.glade2.h:6
 msgid "File _Name"
 msgstr "_Nazwa pliku"
 
-#: src/file_roller_prop.glade2.h:4
+#: src/file_roller_prop.glade2.h:7
 msgid "File _Path"
 msgstr "¦cie¿ka _pliku"
 
-#: src/file_roller_prop.glade2.h:5
+#: src/file_roller_prop.glade2.h:8
 msgid "File _Size"
 msgstr "Rozmiar pliku"
 
-#: src/file_roller_prop.glade2.h:6
+#: src/file_roller_prop.glade2.h:9
 msgid "File _Type"
 msgstr "_Typ pliku"
 
-#: src/file_roller_prop.glade2.h:7
-msgid "Install Nautilus scripts"
-msgstr "Zainstaluj skrypty Nautilusa"
-
-#: src/file_roller_prop.glade2.h:8
-msgid "Max _history length:"
-msgstr "Max. d³ugo¶æ historii:"
-
 #: src/file_roller_prop.glade2.h:10
+msgid "General"
+msgstr "G³ówne"
+
+#: src/file_roller_prop.glade2.h:11
+msgid "Maximum (slowest)"
+msgstr ""
+
+#: src/file_roller_prop.glade2.h:12
+#, fuzzy
+msgid "Normal"
+msgstr "_Normalna wielko¶æ"
+
+#: src/file_roller_prop.glade2.h:13
+msgid "Very fast"
+msgstr ""
+
+#: src/file_roller_prop.glade2.h:14
 msgid "_Modification Time"
 msgstr "Czas modyfikacji"
+
+#: src/file_roller_prop.glade2.h:15
+#, fuzzy
+msgid "_Recent archives:"
+msgstr "Otwórz archiwum"
 
 #: src/file-utils.c:534
 msgid "Cannot find a terminal, using xterm, even if it may not work"
@@ -435,304 +449,404 @@ msgstr "War (.war)"
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:178
+#: src/menu-callbacks.c:174
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Nie masz zezwolenia na utworzenie archiwum w tym katalogu"
 
-#: src/menu-callbacks.c:196 src/menu-callbacks.c:425 src/menu-callbacks.c:595
+#: src/menu-callbacks.c:192 src/menu-callbacks.c:421 src/menu-callbacks.c:591
 msgid "Archive already exists.  Do you want to overwrite it ?"
 msgstr "Archiwum ju¿ istnieje. Czy chcesz je nadpisaæ ?"
 
-#: src/menu-callbacks.c:198 src/menu-callbacks.c:427 src/menu-callbacks.c:597
+#: src/menu-callbacks.c:194 src/menu-callbacks.c:423 src/menu-callbacks.c:593
 msgid "Overwrite"
 msgstr "Nadpisz"
 
-#: src/menu-callbacks.c:215
+#: src/menu-callbacks.c:211
 msgid "Could not delete old archive."
 msgstr "Nie mo¿na skopiowaæ archiwum."
 
-#: src/menu-callbacks.c:257
+#: src/menu-callbacks.c:253
 msgid "New Archive"
 msgstr "Nowe Archiwum"
 
 #.
-#: src/menu-callbacks.c:265
+#: src/menu-callbacks.c:261
 msgid "File type :"
 msgstr "Typ pliku : "
 
-#: src/menu-callbacks.c:341
+#: src/menu-callbacks.c:337
 msgid "Open Archive"
 msgstr "Otwórz archiwum"
 
-#: src/menu-callbacks.c:450
+#: src/menu-callbacks.c:446
 msgid "Could not copy archive"
 msgstr "Nie mo¿na skopiowaæ archiwum"
 
-#: src/menu-callbacks.c:466
+#: src/menu-callbacks.c:462
 msgid "Could not move archive"
 msgstr "Nie mo¿na przenie¶æ archiwum"
 
-#: src/menu-callbacks.c:488
+#: src/menu-callbacks.c:484
 msgid "Copy archive"
 msgstr "Kopiuj archiwum"
 
-#: src/menu-callbacks.c:488
+#: src/menu-callbacks.c:484
 msgid "Move archive"
 msgstr "Przenie¶ archiwum"
 
-#: src/menu-callbacks.c:566
+#: src/menu-callbacks.c:562
 msgid "New archive name (without extension)"
 msgstr "Nazwa nowego archiwum (bez rozszerzenia)"
 
-#: src/menu-callbacks.c:570
+#: src/menu-callbacks.c:566 src/menu.h:115
 msgid "_Rename"
 msgstr "Zmieñ nazwê"
 
-#: src/menu-callbacks.c:634
+#: src/menu-callbacks.c:630
 msgid "Archive will be deleted, are you sure ?"
 msgstr "Archiwum zostanie skasowane, jeste¶ pewien ?"
 
-#: src/menu-callbacks.c:785
+#: src/menu-callbacks.c:781
+msgid "translator_credits"
+msgstr ""
+
+#: src/menu-callbacks.c:792
 msgid "An archive manager for GNOME."
 msgstr "Manager Archiwum dla GNOME"
 
-#: src/menu.h:59
-msgid "New _Archive"
-msgstr "Nowe _Archiwum"
+#: src/menu.h:67
+#, fuzzy
+msgid "_New"
+msgstr "Nowy"
 
-#: src/menu.h:59 src/toolbar.h:40
+#: src/menu.h:67 src/toolbar.h:39
 msgid "Create a new archive"
 msgstr "Stwórz nowe archiwum"
 
-#: src/menu.h:65
-msgid "_Open Archive..."
-msgstr "_Otwórz Archiwum..."
+#: src/menu.h:73
+#, fuzzy
+msgid "_Open..."
+msgstr "Otwórz z..."
 
-#: src/menu.h:65
+#: src/menu.h:73
 msgid "Open an existing archive"
 msgstr "Otwórz istniej±ce archiwum"
 
-#: src/menu.h:73
-msgid "Archive _Information..."
-msgstr "_Informacje o archiwum"
+#: src/menu.h:78
+msgid "Open R_ecent"
+msgstr ""
 
-#: src/menu.h:73
-msgid "Show information about the archive"
-msgstr "Poka¿ informacje o archiwum"
-
-#: src/menu.h:81
-msgid "_Move Archive"
-msgstr "_Przenie¶ Archiwum"
-
-#: src/menu.h:87
-msgid "Copy Arc_hive"
-msgstr "Kopiuj Arc_hiwum"
-
-#: src/menu.h:93
-msgid "_Rename Archive"
-msgstr "_Zmieñ nazwê archiwum"
-
-#: src/menu.h:99
-msgid "_Delete Archive"
-msgstr "_Usuñ Archiwum"
-
-#: src/menu.h:107
-msgid "_Close Archive"
-msgstr "_Zamknij Archiwum"
-
-#: src/menu.h:107 src/toolbar.h:52
-msgid "Close current archive"
-msgstr "Zamknij obecne archiwum"
-
-#: src/menu.h:113
-msgid "E_xit"
-msgstr "Wyj¶ci_e"
-
-#: src/menu.h:113
-msgid "Exit"
-msgstr "Wyj¶cie"
-
-#: src/menu.h:142 src/menu.h:393
-msgid "Add _Files..."
-msgstr "Dodaj _pliki..."
-
-#: src/menu.h:142 src/menu.h:393
-msgid "Add files to the archive"
-msgstr "Dodaj pliki do archiwum"
-
-#: src/menu.h:148
-msgid "_Delete"
-msgstr "Kasuj"
-
-#: src/menu.h:148
-msgid "Delete selected files and folders from the archive"
-msgstr "Skasuj wybrane pliki i katalogi z archiwum"
-
-#: src/menu.h:154 src/menu.h:405
-msgid "_Extract to..."
-msgstr "_Rozpakuj do..."
-
-#: src/menu.h:154 src/menu.h:405
-msgid "Extract files from the archive"
-msgstr "Rozpakuj pliki z archiwum"
-
-#: src/menu.h:162
-msgid "Select _All"
-msgstr "Wybierz wsz_ystko"
-
-#: src/menu.h:162
-msgid "Select all files"
-msgstr "Wybierz wszystkie pliki"
-
-#: src/menu.h:170 src/menu.h:413
-msgid "_Open Files with..."
+#: src/menu.h:83
+#, fuzzy
+msgid "Open Fi_les..."
 msgstr "_Otwórz plik z ..."
 
-#: src/menu.h:170
+#: src/menu.h:83
 msgid "Open selected files with an application"
 msgstr "Otwórz wybrane pliki za pomoc± aplikacji"
 
-#: src/menu.h:176 src/menu.h:419
+#: src/menu.h:89
 msgid "_View File"
 msgstr "Podgl±d pliku"
 
-#: src/menu.h:176 src/menu.h:419
+#: src/menu.h:89 src/menu.h:449
 msgid "View file with internal viewer"
 msgstr "Podgl±d pliku wewnêtrzn± przegl±dark±"
 
-#: src/menu.h:184
-msgid "_Stop Operation"
-msgstr "_Przerwij operacjê"
+#: src/menu.h:97
+msgid "_Move"
+msgstr ""
 
-#: src/menu.h:184 src/toolbar.h:62
-msgid "Stop current operation"
-msgstr "Przerwij operacjê"
+#: src/menu.h:97
+#, fuzzy
+msgid "Move current archive to another folder"
+msgstr "Zamknij obecne archiwum"
 
-#: src/menu.h:200
+#: src/menu.h:103
+msgid "Cop_y"
+msgstr ""
+
+#: src/menu.h:103
+#, fuzzy
+msgid "Copy current archive to another folder"
+msgstr "Zamknij obecne archiwum"
+
+#: src/menu.h:109 src/menu.h:169
+msgid "_Delete"
+msgstr "Kasuj"
+
+#: src/menu.h:109
+#, fuzzy
+msgid "Delete current archive from disk"
+msgstr "Zamknij obecne archiwum"
+
+#: src/menu.h:115
+#, fuzzy
+msgid "Rename current archive"
+msgstr "Zamknij obecne archiwum"
+
+#: src/menu.h:123
+#, fuzzy
+msgid "_Information"
+msgstr "_Informacje o archiwum"
+
+#: src/menu.h:123
+msgid "Show information about the archive"
+msgstr "Poka¿ informacje o archiwum"
+
+#: src/menu.h:131
+#, fuzzy
+msgid "_Close"
+msgstr "Zamknij"
+
+#: src/menu.h:131
+msgid "Close current archive"
+msgstr "Zamknij obecne archiwum"
+
+#: src/menu.h:137
+msgid "E_xit"
+msgstr "Wyj¶ci_e"
+
+#: src/menu.h:137
+msgid "Exit"
+msgstr "Wyj¶cie"
+
+#: src/menu.h:163
+msgid "Add _Files..."
+msgstr "Dodaj _pliki..."
+
+#: src/menu.h:163 src/menu.h:457 src/window.c:2503
+msgid "Add files to the archive"
+msgstr "Dodaj pliki do archiwum"
+
+#: src/menu.h:169
+msgid "Delete selected files and folders from the archive"
+msgstr "Skasuj wybrane pliki i katalogi z archiwum"
+
+#: src/menu.h:175
+msgid "_Extract to..."
+msgstr "_Rozpakuj do..."
+
+#: src/menu.h:175 src/menu.h:469 src/window.c:2528
+msgid "Extract files from the archive"
+msgstr "Rozpakuj pliki z archiwum"
+
+#: src/menu.h:189
 msgid "_Test Archive"
 msgstr "_Testuj Archiwum"
 
-#: src/menu.h:214
-msgid "Vi_ew Last Output"
-msgstr "Podgl±d Wyj¶cia"
+#: src/menu.h:205
+msgid "Select _All"
+msgstr "Wybierz wsz_ystko"
 
-#: src/menu.h:225
-msgid "Arrange by _Name"
-msgstr "wg. _Nazwy"
+#: src/menu.h:205
+msgid "Select all files"
+msgstr "Wybierz wszystkie pliki"
 
-#: src/menu.h:225
-msgid "Sort file list by name"
-msgstr "Sortuj listê wg. nazwy"
+#: src/menu.h:211
+#, fuzzy
+msgid "Dese_lect All"
+msgstr "Wybierz wszystko"
 
-#: src/menu.h:231
-msgid "Arrange by _Size"
-msgstr "wg. _Rozmiaru"
+#: src/menu.h:211
+#, fuzzy
+msgid "Deselect all files"
+msgstr "Wybierz wszystkie pliki"
 
-#: src/menu.h:231
-msgid "Sort file list by file size"
-msgstr "Sortuj listê wg. wielko¶ci pliku"
-
-#: src/menu.h:237
-msgid "Arrange by _Type"
-msgstr "wg. _Typu"
-
-#: src/menu.h:237
-msgid "Sort file list by type"
-msgstr "Sortuj listê wg. typu pliku"
-
-#: src/menu.h:243
-msgid "Arrange by _Time"
-msgstr "wg. _Czasu"
-
-#: src/menu.h:243
-msgid "Sort file list by modification time"
-msgstr "Sortuj listê wg. czasu modyfikacji"
-
-#: src/menu.h:249
-msgid "Arrange by _Path"
-msgstr "wg. _¦cie¿ki"
-
-#: src/menu.h:249
-msgid "Sort file list by path"
-msgstr "Sortuj listê wg. ¶cie¿ki"
-
-#: src/menu.h:266
-msgid "View All _Files"
-msgstr "Przegl±daj _wszystkie pliki"
-
-#: src/menu.h:272
-msgid "View as a F_older"
-msgstr "_Przegl±daj katalogi"
-
-#: src/menu.h:295
-msgid "_Preferences"
-msgstr "_Preferencje"
-
-#: src/menu.h:301
+#: src/menu.h:219
 msgid "Pass_word..."
 msgstr "Has³o..."
 
-#: src/menu.h:317
+#: src/menu.h:227
+msgid "_Preferences"
+msgstr "_Preferencje"
+
+#: src/menu.h:238
+#, fuzzy
+msgid "by _Name"
+msgstr "Nazwa"
+
+#: src/menu.h:238
+msgid "Sort file list by name"
+msgstr "Sortuj listê wg. nazwy"
+
+#: src/menu.h:244
+#, fuzzy
+msgid "by _Size"
+msgstr "Wielko¶æ"
+
+#: src/menu.h:244
+msgid "Sort file list by file size"
+msgstr "Sortuj listê wg. wielko¶ci pliku"
+
+#: src/menu.h:250
+#, fuzzy
+msgid "by T_ype"
+msgstr "Typ"
+
+#: src/menu.h:250
+msgid "Sort file list by type"
+msgstr "Sortuj listê wg. typu pliku"
+
+#: src/menu.h:256
+#, fuzzy
+msgid "by _Time"
+msgstr "wg. _Czasu"
+
+#: src/menu.h:256
+msgid "Sort file list by modification time"
+msgstr "Sortuj listê wg. czasu modyfikacji"
+
+#: src/menu.h:262
+#, fuzzy
+msgid "by _Path"
+msgstr "Scie¿ka"
+
+#: src/menu.h:262
+msgid "Sort file list by path"
+msgstr "Sortuj listê wg. ¶cie¿ki"
+
+#: src/menu.h:279
+msgid "View All _Files"
+msgstr "Przegl±daj _wszystkie pliki"
+
+#: src/menu.h:285
+msgid "View as a F_older"
+msgstr "_Przegl±daj katalogi"
+
+#: src/menu.h:307
 msgid "_Reversed Order"
 msgstr "_Odwrócona kolejno¶æ"
 
-#: src/menu.h:317
+#: src/menu.h:307
 msgid "Reverse the list order"
 msgstr "Odwróæ uporz±dkowanie"
 
-#: src/menu.h:330
+#: src/menu.h:331
+msgid "_Toolbar"
+msgstr ""
+
+#: src/menu.h:331
+msgid "View the main toolbar"
+msgstr ""
+
+#: src/menu.h:337
+msgid "Stat_usbar"
+msgstr ""
+
+#: src/menu.h:337
+msgid "View the statusbar"
+msgstr ""
+
+#: src/menu.h:345
+#, fuzzy
+msgid "_Stop"
+msgstr "Stop"
+
+#: src/menu.h:345 src/toolbar.h:55
+msgid "Stop current operation"
+msgstr "Przerwij operacjê"
+
+#: src/menu.h:351
+msgid "_Reload"
+msgstr ""
+
+#: src/menu.h:351
+#, fuzzy
+msgid "Reload current archive"
+msgstr "Zamknij obecne archiwum"
+
+#: src/menu.h:362
+#, fuzzy
+msgid "_Arrange Files"
+msgstr "wg. _Czasu"
+
+#: src/menu.h:367
+#, fuzzy
+msgid "_Last Output"
+msgstr "Podgl±d Wyj¶cia"
+
+#: src/menu.h:380
 msgid "New _Window"
 msgstr "Nowe _Okno"
 
-#: src/menu.h:330
+#: src/menu.h:380
 msgid "Open a new window"
 msgstr "Otwórz nowe okno"
 
-#: src/menu.h:336
+#: src/menu.h:386
 msgid "Clo_se Window"
 msgstr "_Zamknij Okno"
 
-#: src/menu.h:336
+#: src/menu.h:386
 msgid "Close this window"
 msgstr "Zamknij okno"
 
-#: src/menu.h:349
+#: src/menu.h:399
 msgid "_Manual"
 msgstr "_Manual"
 
-#: src/menu.h:349
+#: src/menu.h:399
 msgid "Display the File Roller Manual"
 msgstr "Wy¶wietl File Roller Manual"
 
-#: src/menu.h:355
-msgid "_About..."
+#: src/menu.h:405
+#, fuzzy
+msgid "_About"
 msgstr "_Informacje o..."
 
-#: src/menu.h:355
+#: src/menu.h:405
 msgid "Information about the program"
 msgstr "Informacje o programie"
 
-#: src/menu.h:368
-msgid "_Actions"
-msgstr "_Zdarzenia"
+#: src/menu.h:417
+#, fuzzy
+msgid "_File"
+msgstr "Pliki:"
 
-#: src/menu.h:369
-msgid "_Options"
-msgstr "_Opcje"
+#: src/menu.h:418
+#, fuzzy
+msgid "_Edit"
+msgstr "Wyj¶cie"
 
-#: src/menu.h:370
+#: src/menu.h:419
+#, fuzzy
+msgid "_View"
+msgstr "Podgl±d"
+
+#: src/menu.h:420
 msgid "_Windows"
 msgstr "_Okno"
 
-#: src/menu.h:399
-msgid "_Delete Files"
+#: src/menu.h:443
+#, fuzzy
+msgid "Open Files..."
+msgstr "_Otwórz plik z ..."
+
+#: src/menu.h:449
+msgid "View File"
+msgstr "Podgl±d pliku"
+
+#: src/menu.h:457
+#, fuzzy
+msgid "Add Files..."
+msgstr "Dodaj _pliki..."
+
+#: src/menu.h:463
+#, fuzzy
+msgid "Delete Files"
 msgstr "_Skasuj pliki..."
 
-#: src/menu.h:399
+#: src/menu.h:463
 msgid "Delete files from the archive"
 msgstr "Skasuj pliki z archiwum"
 
-#: src/menu.h:427
+#: src/menu.h:469
+#, fuzzy
+msgid "Extract to..."
+msgstr "_Rozpakuj do..."
+
+#: src/menu.h:477
 msgid "Select All"
 msgstr "Wybierz wszystko"
 
@@ -741,123 +855,115 @@ msgstr "Wybierz wszystko"
 msgid "Command _line output"
 msgstr "Wyj¶cie _linii komend"
 
-#: src/toolbar.h:40
+#: src/toolbar.h:39
 msgid "New"
 msgstr "Nowy"
 
-#: src/toolbar.h:46
+#: src/toolbar.h:45
 msgid "Open"
 msgstr "Otwórz"
 
-#: src/toolbar.h:46
+#: src/toolbar.h:45
 msgid "Open archive"
 msgstr "Otwórz archiwum"
 
-#: src/toolbar.h:52
-msgid "Close"
-msgstr "Zamknij"
-
-#: src/toolbar.h:62
+#: src/toolbar.h:55
 msgid "Stop"
 msgstr "Stop"
 
-#: src/window.c:63
-msgid "Unknown type"
-msgstr "Nieznany typ"
-
-#: src/window.c:621
+#: src/window.c:615
 msgid "Folder"
 msgstr "Katalog"
 
-#: src/window.c:743
+#: src/window.c:738
 msgid "[read only]"
 msgstr "[do odczytu]"
 
-#: src/window.c:836
+#: src/window.c:832
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 plik (%s)"
 
-#: src/window.c:839
+#: src/window.c:835
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d plików (%s)"
 
-#: src/window.c:847
+#: src/window.c:843
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 plik wybrany (%s)"
 
-#: src/window.c:850
+#: src/window.c:846
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d wybranych plików (%s)"
 
-#: src/window.c:1111
+#: src/window.c:1108
 msgid "Reading archive"
 msgstr "Czytanie archiwum"
 
-#: src/window.c:1114
+#: src/window.c:1111
 msgid "Deleting files from archive"
 msgstr "Kasowanie plików z archiwum"
 
-#: src/window.c:1117
+#: src/window.c:1114
 msgid "Adding files to archive"
 msgstr "Dodawanie plików do archiwum"
 
-#: src/window.c:1120
+#: src/window.c:1117
 msgid "Extracting files from archive"
 msgstr "Rozpakowywanie plików z archiwum"
 
-#: src/window.c:1123
+#: src/window.c:1120
 msgid "Testing archive"
 msgstr "Testowanie Archiwum"
 
-#: src/window.c:1128
+#: src/window.c:1125
 msgid "wait please..."
 msgstr "proszê czekaj..."
 
-#: src/window.c:1217
+#: src/window.c:1214
 msgid "Operation stopped"
 msgstr "Operacja zatrzymana"
 
-#: src/window.c:1234
+#: src/window.c:1231
 msgid "An error occurred while extracting files."
 msgstr "Wystapi³ b³±d podczas rozpakowywania plików."
 
-#: src/window.c:1238
+#: src/window.c:1235
 msgid "An error occurred while loading the archive."
 msgstr "Wystapi³ b³±d podczas otwierania archiwum."
 
-#: src/window.c:1242
+#: src/window.c:1239
 msgid "An error occurred while deleting files from the archive."
 msgstr "Wystapi³ b³±d podczas usuwania plików z archiwum."
 
-#: src/window.c:1246
+#: src/window.c:1243
 msgid "An error occurred while adding files to the archive."
 msgstr "Wystapi³ b³±d podczas dodawania pliku do archiwum"
 
-#: src/window.c:1250
+#: src/window.c:1247
 msgid "An error occurred while testing archive."
 msgstr "Wystapi³ b³±d podczas testowania archiwum."
 
-#: src/window.c:1256
+#: src/window.c:1253
 msgid "Command not found."
 msgstr "Polecenie nie znalezione."
 
-#: src/window.c:1259
+#: src/window.c:1256
 msgid "Command exited abnormally."
 msgstr "Nieoczekiwane zakoñczenie polecenia."
 
-#: src/window.c:1538
+#: src/window.c:1541
 msgid "You don't have permissions to add files to this archive."
 msgstr "Nie masz zezwolenia aby dodaæ pliki do archiwum."
 
-#: src/window.c:1560
+#: src/window.c:1563
 msgid "You can't add an archive to itself."
 msgstr "Nie mo¿na dodaæ archiwum do niego samego."
 
-#: src/window.c:1716
+#: src/window.c:1723
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive ?"
@@ -865,78 +971,157 @@ msgstr ""
 "Czy chcesz dodaæ ten plik do bie¿±cego archiwum lub otworzyæ je jako nowe "
 "archiwum ?"
 
-#: src/window.c:1759
+#: src/window.c:1766
 msgid "Do you want to create a new archive with these files ?"
 msgstr "Czy chcesz utworzyæ nowe archiwum zawieraj±ce te pliki ?"
 
-#: src/window.c:1761
-msgid "Create Archive"
+#: src/window.c:1768
+#, fuzzy
+msgid "Create _Archive"
 msgstr "Stwórz archiwum"
 
-#: src/window.c:2078
+#: src/window.c:2101
 msgid "Size"
 msgstr "Wielko¶æ"
 
-#: src/window.c:2079
+#: src/window.c:2102
 msgid "Type"
 msgstr "Typ"
 
-#: src/window.c:2080
+#: src/window.c:2103
 msgid "Modified"
 msgstr "Zmodyfikowane"
 
-#: src/window.c:2081
+#: src/window.c:2104
 msgid "Path"
 msgstr "Scie¿ka"
 
-#: src/window.c:2088
+#: src/window.c:2111
 msgid "Name"
 msgstr "Nazwa"
 
-#: src/window.c:2414
+#: src/window.c:2448
 msgid "_Up"
 msgstr "W górê"
 
 #. current location
-#: src/window.c:2436
+#: src/window.c:2470
 msgid "Current Location:"
 msgstr "Obecna pozycja:"
 
-#: src/window.c:2465
+#: src/window.c:2502
 msgid "Add"
 msgstr "Dodaj"
 
-#: src/window.c:2476 src/window.c:2477
+#: src/window.c:2527
 msgid "Extract"
 msgstr "Rozpakuj"
 
-#: src/window.c:2487
+#: src/window.c:2538
 msgid "View"
 msgstr "Podgl±d"
 
-#: src/window.c:2488
-msgid "View File"
-msgstr "Podgl±d pliku"
+#: src/window.c:2539
+#, fuzzy
+msgid "View selected file"
+msgstr "Wybrane pliki"
 
-#: src/window.c:2784
+#: src/window.c:2835
 msgid "File type not supported."
 msgstr "Typ plików nie obs³ugiwany."
 
-#: src/window.c:2951
+#: src/window.c:2973
+#, fuzzy
+msgid "No archive"
+msgstr "Kopiuj archiwum"
+
+#: src/window.c:3069
 msgid "Cannot load archive."
 msgstr "Nie mo¿na wczytaæ archiwum"
 
-#: src/window.c:3319
+#: src/window.c:3436
 msgid "File Roller - Last output"
 msgstr "FIle Roller - Ostatnie "
 
-#: src/window.c:3783
+#: src/window.c:3957
 msgid "Add files to an archive"
 msgstr "Dodaj pliki do archiwum"
 
-#: src/window.c:3798
+#: src/window.c:3982
 msgid "Extract archive"
 msgstr "Rozpakuj archiwum"
+
+#~ msgid "Associated Applications"
+#~ msgstr "Skojarzone aplikacje"
+
+#~ msgid "Ba_se 64"
+#~ msgstr "Ba_se 64"
+
+#~ msgid "Encode Type"
+#~ msgstr "Typ kodowania"
+
+#~ msgid "Encoded archive:"
+#~ msgstr "Kodowanie archiwum:"
+
+#~ msgid "File Roller - Comment"
+#~ msgstr "FIle Roller - Komentarz"
+
+#~ msgid "File Roller - Encode"
+#~ msgstr "FIle Roller - Kodowanie"
+
+#~ msgid "Options :"
+#~ msgstr "Opcje :"
+
+#~ msgid "_Destination Folder:"
+#~ msgstr "Katalog _Docelowy:"
+
+#~ msgid "_UU"
+#~ msgstr "_UU"
+
+#~ msgid "Install Nautilus scripts"
+#~ msgstr "Zainstaluj skrypty Nautilusa"
+
+#~ msgid "Max _history length:"
+#~ msgstr "Max. d³ugo¶æ historii:"
+
+#~ msgid "New _Archive"
+#~ msgstr "Nowe _Archiwum"
+
+#~ msgid "_Open Archive..."
+#~ msgstr "_Otwórz Archiwum..."
+
+#~ msgid "_Move Archive"
+#~ msgstr "_Przenie¶ Archiwum"
+
+#~ msgid "Copy Arc_hive"
+#~ msgstr "Kopiuj Arc_hiwum"
+
+#~ msgid "_Rename Archive"
+#~ msgstr "_Zmieñ nazwê archiwum"
+
+#~ msgid "_Close Archive"
+#~ msgstr "_Zamknij Archiwum"
+
+#~ msgid "_Stop Operation"
+#~ msgstr "_Przerwij operacjê"
+
+#~ msgid "Arrange by _Name"
+#~ msgstr "wg. _Nazwy"
+
+#~ msgid "Arrange by _Size"
+#~ msgstr "wg. _Rozmiaru"
+
+#~ msgid "Arrange by _Type"
+#~ msgstr "wg. _Typu"
+
+#~ msgid "Arrange by _Path"
+#~ msgstr "wg. _¦cie¿ki"
+
+#~ msgid "_Actions"
+#~ msgstr "_Zdarzenia"
+
+#~ msgid "_Options"
+#~ msgstr "_Opcje"
 
 #, fuzzy
 #~ msgid "Other Options"
@@ -959,9 +1144,6 @@ msgstr "Rozpakuj archiwum"
 
 #~ msgid "Zoom _Out"
 #~ msgstr "P_omniejsz"
-
-#~ msgid "_Normal Size"
-#~ msgstr "_Normalna wielko¶æ"
 
 #~ msgid "Zoom to _Fit"
 #~ msgstr "Powiêksz do dopasowania"
@@ -1024,14 +1206,8 @@ msgstr "Rozpakuj archiwum"
 #~ msgid "Archive Properties"
 #~ msgstr "W³a¶ciwo¶ci Archiwum"
 
-#~ msgid "Open with..."
-#~ msgstr "Otwórz z..."
-
 #~ msgid "Recreate directories"
 #~ msgstr "Odtworzona struktura katalogów"
-
-#~ msgid "General"
-#~ msgstr "G³ówne"
 
 #~ msgid "Properties"
 #~ msgstr "W³a¶ciwo¶ci"

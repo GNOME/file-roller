@@ -33,6 +33,7 @@
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-utils.h"
 #include "window.h"
+#include "misc.h"
 
 
 typedef struct {
@@ -222,10 +223,10 @@ static void
 selection_entry_changed (GtkWidget  *widget, 
 			 DialogData *data)
 {
-	const char *path;
+	char *path;
 	gboolean    wildcard;
 
-	path = gtk_entry_get_text (GTK_ENTRY (GTK_FILE_SELECTION (data->dialog)->selection_entry));
+	path = _gtk_entry_get_locale_text (GTK_ENTRY (GTK_FILE_SELECTION (data->dialog)->selection_entry));
 
 	wildcard = (strchr (path, '*') != NULL) || (strchr (path, '?') != NULL);
 	gtk_widget_set_sensitive (data->include_subfold_checkbutton, wildcard);
@@ -237,6 +238,8 @@ selection_entry_changed (GtkWidget  *widget,
 	gtk_widget_set_sensitive (data->exclude_files_entry,  GTK_TOGGLE_BUTTON (data->exclude_files_checkbutton)->active && wildcard);
 	gtk_widget_set_sensitive (data->include_subfold_checkbutton, wildcard);
 	gtk_widget_set_sensitive (data->ignore_case, wildcard);
+
+	g_free (path);
 }
 
 

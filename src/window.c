@@ -621,10 +621,13 @@ update_file_list_idle (gpointer callback_data)
 			char       *s_size;
 			const char *s_time;
 			const char *desc;
+			char       *utf8_path;
 
 			s_size = gnome_vfs_format_file_size_for_display (fdata->size);
 			s_time = get_time_string (fdata->modified);
 			desc = file_data_get_type_description (fdata);
+
+			utf8_path = g_locale_to_utf8 (fdata->path, -1, 0, 0, 0);
 
 			gtk_list_store_set (window->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
@@ -633,8 +636,9 @@ update_file_list_idle (gpointer callback_data)
 					    COLUMN_TYPE, desc,
 					    COLUMN_SIZE, s_size,
 					    COLUMN_TIME, s_time,
-					    COLUMN_PATH, fdata->path,
+					    COLUMN_PATH, utf8_path,
 					    -1);
+			g_free (utf8_path);
 			g_free (s_size);
 		}
 		g_free (utf8_name);
@@ -1049,7 +1053,6 @@ window_push_message (FRWindow   *window,
 	if (window->batch_mode) {
 		GtkLabel *l = GTK_LABEL (window->batch_action_lbl);
 		gtk_label_set_text (l, msg);
-		g_print ("-> %s <-\n", msg);
 	}
 	gnome_appbar_push (GNOME_APPBAR (window->statusbar), msg);	
 }
@@ -1061,8 +1064,7 @@ window_pop_message (FRWindow *window)
 	gnome_appbar_pop (GNOME_APPBAR (window->statusbar));
 	if (window->batch_mode) {
 		GtkLabel *l = GTK_LABEL (window->batch_action_lbl);
-		gtk_label_set_text (l, "****");
-		g_print ("-> **** <-\n");
+		gtk_label_set_text (l, "");
 	}
 }
 

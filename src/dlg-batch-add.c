@@ -30,6 +30,7 @@
 #include "file-utils.h"
 #include "window.h"
 #include "typedefs.h"
+#include "misc.h"
 
 
 #define GLADE_FILE "file_roller.glade2"
@@ -147,7 +148,7 @@ dlg_batch_add_files (FRWindow *window,
 	g_free (markup);
 
 	path = g_strconcat (window->add_default_dir, "/", NULL);
-	gtk_entry_set_text (GTK_ENTRY (data->a_add_to_entry), path);
+	_gtk_entry_set_locale_text (GTK_ENTRY (data->a_add_to_entry), path);
 	g_free (path);
 	
 	/* Set the signals handlers. */

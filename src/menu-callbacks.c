@@ -125,14 +125,12 @@ static char *
 get_full_path (GtkWidget *file_sel)
 {
 	GtkWidget   *opt_menu;
-	gchar       *full_path;
-	const gchar *utf8_path;
-	gchar       *path;
+	char        *full_path;
+	const char  *path;
 	int          file_type_idx;
 
 	opt_menu = g_object_get_data (G_OBJECT (file_sel), "fr_opt_menu");
-	utf8_path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel));
-	path = g_locale_from_utf8 (utf8_path, -1, NULL, NULL, NULL);
+	path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel));
 
 	file_type_idx = opt_menu_get_active_idx (opt_menu);
 	if (file_type_idx > 0) 
@@ -141,8 +139,6 @@ get_full_path (GtkWidget *file_sel)
 					 NULL);
 	else
 		full_path = g_strdup (path);
-
-	g_free (path);
 
 	return full_path;
 }

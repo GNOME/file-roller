@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: File Roller 0.2\n"
-"POT-Creation-Date: 2002-07-31 11:22+0200\n"
+"POT-Creation-Date: 2002-08-24 11:44+0200\n"
 "PO-Revision-Date: 2002-02-28 19:04-0300\n"
 "Last-Translator: Marcus Brito <pazu@animegaiden.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -20,8 +20,8 @@ msgstr "Gerenciador de Pacotes"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/main.c:101 src/misc.c:76 src/misc.c:153
-#: src/misc.c:256 src/window.c:734 src/window.c:741 src/window.c:2260
-#: src/window.c:3824
+#: src/misc.c:256 src/window.c:730 src/window.c:739 src/window.c:2294
+#: src/window.c:4022
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -30,363 +30,371 @@ msgstr "File Roller"
 msgid "Handle compressed archives"
 msgstr "Tar descompactado (.tar)"
 
-#: src/dlg-add.c:311 src/window.c:2466
+#: src/dlg-add.c:118
+#, fuzzy, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "Você não permissão para criar um pacote neste diretório"
+
+#: src/dlg-add.c:341
 msgid "Add files"
 msgstr "Adicionar arquivos"
 
-#: src/dlg-add.c:316
+#: src/dlg-add.c:346
 #, fuzzy
 msgid "_Add only if newer"
 msgstr "Adicionar apenas os novos"
 
-#: src/dlg-add.c:317
+#: src/dlg-add.c:347
 #, fuzzy
 msgid "_Include sub-folders"
 msgstr "Incluir subdiretórios"
 
-#: src/dlg-add.c:318
+#: src/dlg-add.c:348
 #, fuzzy
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Excluir diretórios que são ligações simbólicas"
 
-#: src/dlg-add.c:319
+#: src/dlg-add.c:349
 #, fuzzy
 msgid "Exclude o_ther file systems"
 msgstr "Excluir outros sistemas de arquivos"
 
-#: src/dlg-add.c:320
+#: src/dlg-add.c:350
 #, fuzzy
 msgid "Exclude _backup files (*~)"
 msgstr "Excluir arquivos de backup (*~)"
 
-#: src/dlg-add.c:321
+#: src/dlg-add.c:351
 #, fuzzy
 msgid "Exclude _hidden files (.*)"
 msgstr "Excluir arquivos escondidos (.*)"
 
-#: src/dlg-add.c:322
+#: src/dlg-add.c:352
 #, fuzzy
 msgid "E_xclude files:"
 msgstr "Excluir arquivos escondidos (.*)"
 
-#: src/dlg-add.c:324
+#: src/dlg-add.c:354
 #, fuzzy
 msgid "example: *.o; *.bak"
 msgstr "(exemplo: *.txt; *.doc)"
 
-#: src/dlg-add.c:325
+#: src/dlg-add.c:355
 #, fuzzy
 msgid "Igno_re case"
 msgstr "Ignorar diferença de maiúsculas/minúsculas"
 
-#: src/dlg-add.c:326
+#: src/dlg-add.c:356
 #, fuzzy
 msgid "_Load Options"
 msgstr "Opções"
 
-#: src/dlg-add.c:327
+#: src/dlg-add.c:357
 #, fuzzy
 msgid "Sa_ve Options"
 msgstr "Opções"
 
-#: src/dlg-add.c:583
+#: src/dlg-add.c:613
 #, fuzzy
 msgid "Load options"
 msgstr "Opções"
 
-#: src/dlg-add.c:731
+#: src/dlg-add.c:761
 #, fuzzy
 msgid "Save options"
 msgstr "Opções"
 
 #. Set widgets data.
-#: src/dlg-batch-add.c:147
+#: src/dlg-batch-add.c:143
 #, c-format
 msgid "Adding %u files"
 msgstr "Adicionando %u arquivos"
 
-#: src/dlg-extract.c:115 src/window.c:3015
+#: src/dlg-extract.c:119 src/window.c:3133
 #, fuzzy
 msgid "Destination folder does not exist.  Do you want to create it ?"
 msgstr "O diretório não existe. Você deseja criá-lo?"
 
-#: src/dlg-extract.c:117 src/window.c:3017
+#: src/dlg-extract.c:121 src/window.c:3135
 #, fuzzy
 msgid "Create _Folder"
 msgstr "Recriar diretórios"
 
-#: src/dlg-extract.c:137 src/window.c:3037
+#: src/dlg-extract.c:141 src/window.c:3155
 #, fuzzy, c-format
 msgid ""
 "Could not create the destination folder : %s.\n"
 "Extraction not performed."
 msgstr "Não foi possível criar o diretório de destino."
 
-#: src/dlg-extract.c:152 src/window.c:3052
+#: src/dlg-extract.c:156 src/window.c:3170
 msgid "Extraction not performed."
 msgstr "Extração não realizada."
 
-#: src/dlg-extract.c:168
+#: src/dlg-extract.c:175
 #, fuzzy, c-format
 msgid ""
-"You don't have the right permissions to extract archive in the folder \"%s\""
+"You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Você não permissão para criar um pacote neste diretório"
 
-#: src/dlg-extract.c:383 src/dlg-preferences.c:118 src/menu-callbacks.c:747
+#: src/dlg-extract.c:396 src/dlg-preferences.c:130 src/menu-callbacks.c:752
 #, fuzzy, c-format
 msgid "Could not display help: %s"
 msgstr "Não foi possível encontrar o arquivo %s"
 
-#: src/dlg-extract.c:472
+#: src/dlg-extract.c:485
 #, fuzzy
 msgid "Favorites extraction folders"
 msgstr "Diretórios de Extração Favoritos"
 
-#: src/dlg-open-with.c:388
-msgid "Associated Applications"
-msgstr "Programas Associados"
+#: src/file-data.c:28
+msgid "Unknown type"
+msgstr ""
 
-#: src/dlg-open-with.c:418
-msgid "Recent Applications"
-msgstr "Programas Recentes"
+#: src/file-data.c:29
+msgid "Symbolic link"
+msgstr ""
 
-#: src/file_roller.glade2.h:1
-msgid "*"
+#: src/file_roller.glade2.h:1 src/file_roller_prop.glade2.h:1
+msgid "    "
 msgstr ""
 
 #: src/file_roller.glade2.h:2
+msgid "*"
+msgstr ""
+
+#: src/file_roller.glade2.h:3
 #, fuzzy
 msgid "A_dd to favorites"
 msgstr "Adicionar aos favoritos"
 
-#: src/file_roller.glade2.h:3
+#: src/file_roller.glade2.h:4
+#, fuzzy
+msgid "A_vailable application:"
+msgstr "Programa:"
+
+#: src/file_roller.glade2.h:5
 #, fuzzy
 msgid "Add _to archive :"
 msgstr "Adicionar ao pacote: "
 
-#: src/file_roller.glade2.h:4
+#: src/file_roller.glade2.h:6
 #, fuzzy
 msgid "Add only if _newer"
 msgstr "Adicionar apenas os novos"
 
-#: src/file_roller.glade2.h:5
-msgid "Ba_se 64"
-msgstr ""
-
-#: src/file_roller.glade2.h:6
+#: src/file_roller.glade2.h:7
 msgid "Date and Time:"
 msgstr "Data e Hora:"
 
-#: src/file_roller.glade2.h:7
+#: src/file_roller.glade2.h:8
 #, fuzzy
 msgid "Do not e_xtract older files"
 msgstr "Não extrair arquivos mais antigos"
 
-#: src/file_roller.glade2.h:8
-msgid "Encode Type"
-msgstr ""
-
 #: src/file_roller.glade2.h:9
-#, fuzzy
-msgid "Encoded archive:"
-msgstr "Mover Pacote"
-
-#: src/file_roller.glade2.h:10
 msgid "Extract to"
 msgstr "Extrair em"
 
-#: src/file_roller.glade2.h:11
+#: src/file_roller.glade2.h:10
 msgid "Extract to:"
 msgstr "Extrair em:"
 
-#: src/file_roller.glade2.h:12
+#: src/file_roller.glade2.h:11
 msgid "File Roller - Add"
 msgstr "File Roller - Adicionar"
 
-#: src/file_roller.glade2.h:13
+#: src/file_roller.glade2.h:12
 #, fuzzy
 msgid "File Roller - Archive Informations"
 msgstr "_Propriedades do Pacote..."
 
-#: src/file_roller.glade2.h:14
-#, fuzzy
-msgid "File Roller - Comment"
-msgstr "File Roller - Adicionar"
-
-#: src/file_roller.glade2.h:15
+#: src/file_roller.glade2.h:13
 #, fuzzy
 msgid "File Roller - Delete Files"
 msgstr "File Roller - Visualizar Arquivo"
 
-#: src/file_roller.glade2.h:16
-#, fuzzy
-msgid "File Roller - Encode"
-msgstr "File Roller - Adicionar"
-
-#: src/file_roller.glade2.h:17
+#: src/file_roller.glade2.h:14
 #, fuzzy
 msgid "File Roller - Extract"
 msgstr "File Roller - Adicionar"
 
-#: src/file_roller.glade2.h:18
+#: src/file_roller.glade2.h:15
 #, fuzzy
 msgid "File Roller - Open Files"
 msgstr "File Roller - Visualizar Arquivo"
 
-#: src/file_roller.glade2.h:19
+#: src/file_roller.glade2.h:16
 #, fuzzy
 msgid "File Roller - Password"
 msgstr "File Roller - Adicionar"
 
-#: src/file_roller.glade2.h:20
+#: src/file_roller.glade2.h:17
 msgid "File Roller - View File"
 msgstr "File Roller - Visualizar Arquivo"
 
-#: src/file_roller.glade2.h:21
+#: src/file_roller.glade2.h:18
 #, fuzzy
 msgid "File Roller - Viewer"
 msgstr "File Roller - Visualizar Arquivo"
 
-#: src/file_roller.glade2.h:22
+#: src/file_roller.glade2.h:19
 msgid "File Size:"
 msgstr "Tamanho do Arquivo:"
 
-#: src/file_roller.glade2.h:23
+#: src/file_roller.glade2.h:20
 msgid "Files"
 msgstr "Arquivos"
 
-#: src/file_roller.glade2.h:24
+#: src/file_roller.glade2.h:21
 msgid "Name:"
 msgstr "Nome:"
 
-#: src/file_roller.glade2.h:25
+#: src/file_roller.glade2.h:22
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
 "archive is closed the password will be deleted."
 msgstr ""
 
-#: src/file_roller.glade2.h:26
+#: src/file_roller.glade2.h:23
 msgid "Number of Files:"
 msgstr "Quantidade de Arquivos:"
 
-#: src/file_roller.glade2.h:27
+#: src/file_roller.glade2.h:24
 #, fuzzy
 msgid "Open with an _application"
 msgstr "Abrir com um programa..."
 
-#: src/file_roller.glade2.h:28
-msgid "Options :"
-msgstr "Opções: "
-
-#: src/file_roller.glade2.h:29 src/file_roller_prop.glade2.h:9
+#: src/file_roller.glade2.h:25
 #, fuzzy
 msgid "Other options"
 msgstr "Opções"
 
-#: src/file_roller.glade2.h:30
+#: src/file_roller.glade2.h:26
 #, fuzzy
 msgid "Over_write existing files"
 msgstr "Sobrescrever arquivos existentes"
 
-#: src/file_roller.glade2.h:31
+#: src/file_roller.glade2.h:27
 msgid "Path:"
 msgstr "Caminho:"
 
-#: src/file_roller.glade2.h:32
+#: src/file_roller.glade2.h:28
+#, fuzzy
+msgid "R_ecent applications:"
+msgstr "Programas Recentes"
+
+#: src/file_roller.glade2.h:29
 #, fuzzy
 msgid "R_ecreate folders"
 msgstr "Recriar diretórios"
 
-#: src/file_roller.glade2.h:33
+#: src/file_roller.glade2.h:30
+#, fuzzy
+msgid "Select archive"
+msgstr "_Remover Pacote"
+
+#: src/file_roller.glade2.h:31
 #, fuzzy
 msgid "View with internal _viewer"
 msgstr "Visualizar com o vizualizador interno"
 
-#: src/file_roller.glade2.h:34
+#: src/file_roller.glade2.h:32
 #, fuzzy
 msgid "_All Files"
 msgstr "Todos os Arquivos"
 
-#: src/file_roller.glade2.h:35
+#: src/file_roller.glade2.h:33
 #, fuzzy
 msgid "_Application:"
 msgstr "Programa:"
 
-#: src/file_roller.glade2.h:36
-#, fuzzy
-msgid "_Destination Folder:"
-msgstr "Diretórios de Extração Favoritos"
-
-#: src/file_roller.glade2.h:37
+#: src/file_roller.glade2.h:34
 #, fuzzy
 msgid "_Files:"
 msgstr "Arquivos:"
 
-#: src/file_roller.glade2.h:38
+#: src/file_roller.glade2.h:35
 msgid "_Password:"
 msgstr ""
 
-#: src/file_roller.glade2.h:39
+#: src/file_roller.glade2.h:36
 #, fuzzy
 msgid "_Selected Files"
 msgstr "Arquivos Selecionados"
 
-#: src/file_roller.glade2.h:40
-msgid "_UU"
-msgstr ""
-
-#: src/file_roller.glade2.h:41
+#: src/file_roller.glade2.h:37
 msgid "_View destination folder after extraction"
 msgstr ""
 
-#: src/file_roller.glade2.h:42
+#: src/file_roller.glade2.h:38
 #, fuzzy
 msgid "example: *.txt; *.doc"
 msgstr "(exemplo: *.txt; *.doc)"
 
-#: src/file_roller_prop.glade2.h:1
+#: src/file_roller_prop.glade2.h:2
 msgid "Columns to Show"
 msgstr "Exibir Colunas"
 
-#: src/file_roller_prop.glade2.h:2
+#: src/file_roller_prop.glade2.h:3
+msgid "Compression _level:"
+msgstr ""
+
+#: src/file_roller_prop.glade2.h:4
+msgid "Fast"
+msgstr ""
+
+#: src/file_roller_prop.glade2.h:5
 #, fuzzy
 msgid "File Roller - Preferences"
 msgstr "File Roller - Visualizar Arquivo"
 
-#: src/file_roller_prop.glade2.h:3
+#: src/file_roller_prop.glade2.h:6
 #, fuzzy
 msgid "File _Name"
 msgstr "Nome do Arquivo"
 
-#: src/file_roller_prop.glade2.h:4
+#: src/file_roller_prop.glade2.h:7
 #, fuzzy
 msgid "File _Path"
 msgstr "Caminho do Arquivo"
 
-#: src/file_roller_prop.glade2.h:5
+#: src/file_roller_prop.glade2.h:8
 #, fuzzy
 msgid "File _Size"
 msgstr "Tamanho do Arquivo"
 
-#: src/file_roller_prop.glade2.h:6
+#: src/file_roller_prop.glade2.h:9
 #, fuzzy
 msgid "File _Type"
 msgstr "Tipo do Arquivo"
 
-#: src/file_roller_prop.glade2.h:7
-msgid "Install Nautilus scripts"
+#: src/file_roller_prop.glade2.h:10
+msgid "General"
+msgstr "Geral"
+
+#: src/file_roller_prop.glade2.h:11
+msgid "Maximum (slowest)"
 msgstr ""
 
-#: src/file_roller_prop.glade2.h:8
-#, fuzzy
-msgid "Max _history length:"
-msgstr "Tamanho máximo do histórico:"
+#: src/file_roller_prop.glade2.h:12
+msgid "Normal"
+msgstr ""
 
-#: src/file_roller_prop.glade2.h:10
+#: src/file_roller_prop.glade2.h:13
+msgid "Very fast"
+msgstr ""
+
+#: src/file_roller_prop.glade2.h:14
 #, fuzzy
 msgid "_Modification Time"
 msgstr "Modificação"
+
+#: src/file_roller_prop.glade2.h:15
+#, fuzzy
+msgid "_Recent archives:"
+msgstr "Abrir pacote"
 
 #: src/file-utils.c:534
 msgid "Cannot find a terminal, using xterm, even if it may not work"
@@ -478,71 +486,71 @@ msgstr "Web Archive (.war)"
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:178
+#: src/menu-callbacks.c:174
 #, fuzzy
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Você não permissão para criar um pacote neste diretório"
 
-#: src/menu-callbacks.c:196 src/menu-callbacks.c:425 src/menu-callbacks.c:595
+#: src/menu-callbacks.c:192 src/menu-callbacks.c:421 src/menu-callbacks.c:591
 msgid "Archive already exists.  Do you want to overwrite it ?"
 msgstr "Pacote já existe. Você deseja sobrescrevê-lo?"
 
-#: src/menu-callbacks.c:198 src/menu-callbacks.c:427 src/menu-callbacks.c:597
+#: src/menu-callbacks.c:194 src/menu-callbacks.c:423 src/menu-callbacks.c:593
 msgid "Overwrite"
 msgstr ""
 
-#: src/menu-callbacks.c:215
+#: src/menu-callbacks.c:211
 #, fuzzy
 msgid "Could not delete old archive."
 msgstr "Não foi possível copiar o pacote"
 
-#: src/menu-callbacks.c:257
+#: src/menu-callbacks.c:253
 msgid "New Archive"
 msgstr "Novo Pacote"
 
 #.
-#: src/menu-callbacks.c:265
+#: src/menu-callbacks.c:261
 msgid "File type :"
 msgstr "Tipo de arquivo:"
 
-#: src/menu-callbacks.c:341
+#: src/menu-callbacks.c:337
 msgid "Open Archive"
 msgstr "Abrir Pacote"
 
-#: src/menu-callbacks.c:450
+#: src/menu-callbacks.c:446
 msgid "Could not copy archive"
 msgstr "Não foi possível copiar o pacote"
 
-#: src/menu-callbacks.c:466
+#: src/menu-callbacks.c:462
 msgid "Could not move archive"
 msgstr "Não foi possível mover o pacote"
 
-#: src/menu-callbacks.c:488
+#: src/menu-callbacks.c:484
 msgid "Copy archive"
 msgstr "Copiar Pacote"
 
-#: src/menu-callbacks.c:488
+#: src/menu-callbacks.c:484
 msgid "Move archive"
 msgstr "Mover Pacote"
 
-#: src/menu-callbacks.c:566
+#: src/menu-callbacks.c:562
 msgid "New archive name (without extension)"
 msgstr "Nome do novo pacote (sem extensão)"
 
-#: src/menu-callbacks.c:570
+#: src/menu-callbacks.c:566 src/menu.h:115
 #, fuzzy
 msgid "_Rename"
 msgstr "Remover"
 
-#: src/menu-callbacks.c:634
+#: src/menu-callbacks.c:630
 msgid "Archive will be deleted, are you sure ?"
 msgstr "Pacote será removido. Tem certeza?"
 
-#: src/menu-callbacks.c:776
+#: src/menu-callbacks.c:781
 msgid "translator_credits"
 msgstr ""
 
-#: src/menu-callbacks.c:787
+#: src/menu-callbacks.c:792
 msgid "An archive manager for GNOME."
 msgstr ""
 "Um gerenciador de pacotes para o GNOME.\n"
@@ -551,261 +559,347 @@ msgstr ""
 "br>\n"
 "Pela equipe da LDP-BR: http://ldp-br.conectiva.com.br"
 
-#: src/menu.h:59
-msgid "New _Archive"
-msgstr "Novo _Pacote"
+#: src/menu.h:67
+#, fuzzy
+msgid "_New"
+msgstr "Novo"
 
-#: src/menu.h:59 src/toolbar.h:40
+#: src/menu.h:67 src/toolbar.h:39
 msgid "Create a new archive"
 msgstr "Cria um novo pacote"
 
-#: src/menu.h:65
-msgid "_Open Archive..."
-msgstr "_Abrir Pacote..."
+#: src/menu.h:73
+#, fuzzy
+msgid "_Open..."
+msgstr "Abrir com..."
 
-#: src/menu.h:65
+#: src/menu.h:73
 msgid "Open an existing archive"
 msgstr "Abre um pacote existente"
 
-#: src/menu.h:73
+#: src/menu.h:78
+msgid "Open R_ecent"
+msgstr ""
+
+#: src/menu.h:83
 #, fuzzy
-msgid "Archive _Information..."
-msgstr "_Propriedades do Pacote..."
-
-#: src/menu.h:73
-#, fuzzy
-msgid "Show information about the archive"
-msgstr "Informações sobre o programa"
-
-#: src/menu.h:81
-msgid "_Move Archive"
-msgstr "_Mover Pacote"
-
-#: src/menu.h:87
-msgid "Copy Arc_hive"
-msgstr "_Copiar Pacote"
-
-#: src/menu.h:93
-msgid "_Rename Archive"
-msgstr "_Renomear Pacote"
-
-#: src/menu.h:99
-msgid "_Delete Archive"
-msgstr "_Remover Pacote"
-
-#: src/menu.h:107
-msgid "_Close Archive"
-msgstr "_Fechar Pacote"
-
-#: src/menu.h:107 src/toolbar.h:52
-msgid "Close current archive"
-msgstr "Fecha o pacote atual"
-
-#: src/menu.h:113
-msgid "E_xit"
-msgstr "Sai_r"
-
-#: src/menu.h:113
-msgid "Exit"
-msgstr "Sair"
-
-#: src/menu.h:142 src/menu.h:393
-#, fuzzy
-msgid "Add _Files..."
-msgstr "_Adicionar arquivos..."
-
-#: src/menu.h:142 src/menu.h:393
-msgid "Add files to the archive"
-msgstr "Adiciona arquivos ao pacote"
-
-#: src/menu.h:148
-#, fuzzy
-msgid "_Delete"
-msgstr "Apagar"
-
-#: src/menu.h:148
-#, fuzzy
-msgid "Delete selected files and folders from the archive"
-msgstr "Remove arquivos do pacote"
-
-#: src/menu.h:154 src/menu.h:405
-msgid "_Extract to..."
-msgstr "E_xtrair em..."
-
-#: src/menu.h:154 src/menu.h:405
-msgid "Extract files from the archive"
-msgstr "Extrair arquivos do pacote"
-
-#: src/menu.h:162
-msgid "Select _All"
-msgstr "Selecionar _Tudo"
-
-#: src/menu.h:162
-msgid "Select all files"
-msgstr "Seleciona todos os arquivos"
-
-#: src/menu.h:170 src/menu.h:413
-#, fuzzy
-msgid "_Open Files with..."
+msgid "Open Fi_les..."
 msgstr "_Abrir arquivos com..."
 
-#: src/menu.h:170
+#: src/menu.h:83
 msgid "Open selected files with an application"
 msgstr "Abrir arquivos selecionados com um programa"
 
-#: src/menu.h:176 src/menu.h:419
+#: src/menu.h:89
 #, fuzzy
 msgid "_View File"
 msgstr "Visualizar Arquivo"
 
-#: src/menu.h:176 src/menu.h:419
+#: src/menu.h:89 src/menu.h:449
 msgid "View file with internal viewer"
 msgstr "Visualiza o arquivo com o visualizador interno"
 
-#: src/menu.h:184
+#: src/menu.h:97
+msgid "_Move"
+msgstr ""
+
+#: src/menu.h:97
 #, fuzzy
-msgid "_Stop Operation"
-msgstr "_Interromper operação"
+msgid "Move current archive to another folder"
+msgstr "Fecha o pacote atual"
 
-#: src/menu.h:184 src/toolbar.h:62
-msgid "Stop current operation"
-msgstr "Interrompe a operação atual"
+#: src/menu.h:103
+msgid "Cop_y"
+msgstr ""
 
-#: src/menu.h:200
+#: src/menu.h:103
+#, fuzzy
+msgid "Copy current archive to another folder"
+msgstr "Fecha o pacote atual"
+
+#: src/menu.h:109 src/menu.h:169
+#, fuzzy
+msgid "_Delete"
+msgstr "Apagar"
+
+#: src/menu.h:109
+#, fuzzy
+msgid "Delete current archive from disk"
+msgstr "Fecha o pacote atual"
+
+#: src/menu.h:115
+#, fuzzy
+msgid "Rename current archive"
+msgstr "Fecha o pacote atual"
+
+#: src/menu.h:123
+#, fuzzy
+msgid "_Information"
+msgstr "_Propriedades do Pacote..."
+
+#: src/menu.h:123
+#, fuzzy
+msgid "Show information about the archive"
+msgstr "Informações sobre o programa"
+
+#: src/menu.h:131
+#, fuzzy
+msgid "_Close"
+msgstr "Fechar"
+
+#: src/menu.h:131
+msgid "Close current archive"
+msgstr "Fecha o pacote atual"
+
+#: src/menu.h:137
+msgid "E_xit"
+msgstr "Sai_r"
+
+#: src/menu.h:137
+msgid "Exit"
+msgstr "Sair"
+
+#: src/menu.h:163
+#, fuzzy
+msgid "Add _Files..."
+msgstr "_Adicionar arquivos..."
+
+#: src/menu.h:163 src/menu.h:457 src/window.c:2503
+msgid "Add files to the archive"
+msgstr "Adiciona arquivos ao pacote"
+
+#: src/menu.h:169
+#, fuzzy
+msgid "Delete selected files and folders from the archive"
+msgstr "Remove arquivos do pacote"
+
+#: src/menu.h:175
+msgid "_Extract to..."
+msgstr "E_xtrair em..."
+
+#: src/menu.h:175 src/menu.h:469 src/window.c:2528
+msgid "Extract files from the archive"
+msgstr "Extrair arquivos do pacote"
+
+#: src/menu.h:189
 #, fuzzy
 msgid "_Test Archive"
 msgstr "_Remover Pacote"
 
-#: src/menu.h:214
-msgid "Vi_ew Last Output"
+#: src/menu.h:205
+msgid "Select _All"
+msgstr "Selecionar _Tudo"
+
+#: src/menu.h:205
+msgid "Select all files"
+msgstr "Seleciona todos os arquivos"
+
+#: src/menu.h:211
+#, fuzzy
+msgid "Dese_lect All"
+msgstr "Selecionar Tudo"
+
+#: src/menu.h:211
+#, fuzzy
+msgid "Deselect all files"
+msgstr "Seleciona todos os arquivos"
+
+#: src/menu.h:219
+msgid "Pass_word..."
 msgstr ""
 
-#: src/menu.h:225
-#, fuzzy
-msgid "Arrange by _Name"
-msgstr "por _Nome"
-
-#: src/menu.h:225
-msgid "Sort file list by name"
-msgstr "Ordena a lista de arquivos por nome"
-
-#: src/menu.h:231
-#, fuzzy
-msgid "Arrange by _Size"
-msgstr "por Ta_manho"
-
-#: src/menu.h:231
-msgid "Sort file list by file size"
-msgstr "Ordena a lista de arquivos por tamanho do arquivo"
-
-#: src/menu.h:237
-#, fuzzy
-msgid "Arrange by _Type"
-msgstr "por _Tipo"
-
-#: src/menu.h:237
-msgid "Sort file list by type"
-msgstr "Ordena a lista de arquivos por tipo"
-
-#: src/menu.h:243
-#, fuzzy
-msgid "Arrange by _Time"
-msgstr "por _Data"
-
-#: src/menu.h:243
-msgid "Sort file list by modification time"
-msgstr "Ordena a lista de arquivos pela data de modificação"
-
-#: src/menu.h:249
-#, fuzzy
-msgid "Arrange by _Path"
-msgstr "por _Caminho"
-
-#: src/menu.h:249
-msgid "Sort file list by path"
-msgstr "Ordena a lista de arquivos pelo caminho"
-
-#: src/menu.h:266
-#, fuzzy
-msgid "View All _Files"
-msgstr "Visualizar todos os a_rquivos"
-
-#: src/menu.h:272
-#, fuzzy
-msgid "View as a F_older"
-msgstr "Visualizar como _diretório"
-
-#: src/menu.h:295
+#: src/menu.h:227
 #, fuzzy
 msgid "_Preferences"
 msgstr "_Preferências..."
 
-#: src/menu.h:301
-msgid "Pass_word..."
-msgstr ""
+#: src/menu.h:238
+#, fuzzy
+msgid "by _Name"
+msgstr "Nome"
 
-#: src/menu.h:317
+#: src/menu.h:238
+msgid "Sort file list by name"
+msgstr "Ordena a lista de arquivos por nome"
+
+#: src/menu.h:244
+#, fuzzy
+msgid "by _Size"
+msgstr "Tamanho"
+
+#: src/menu.h:244
+msgid "Sort file list by file size"
+msgstr "Ordena a lista de arquivos por tamanho do arquivo"
+
+#: src/menu.h:250
+#, fuzzy
+msgid "by T_ype"
+msgstr "Tipo"
+
+#: src/menu.h:250
+msgid "Sort file list by type"
+msgstr "Ordena a lista de arquivos por tipo"
+
+#: src/menu.h:256
+#, fuzzy
+msgid "by _Time"
+msgstr "por _Data"
+
+#: src/menu.h:256
+msgid "Sort file list by modification time"
+msgstr "Ordena a lista de arquivos pela data de modificação"
+
+#: src/menu.h:262
+#, fuzzy
+msgid "by _Path"
+msgstr "Caminho"
+
+#: src/menu.h:262
+msgid "Sort file list by path"
+msgstr "Ordena a lista de arquivos pelo caminho"
+
+#: src/menu.h:279
+#, fuzzy
+msgid "View All _Files"
+msgstr "Visualizar todos os a_rquivos"
+
+#: src/menu.h:285
+#, fuzzy
+msgid "View as a F_older"
+msgstr "Visualizar como _diretório"
+
+#: src/menu.h:307
 msgid "_Reversed Order"
 msgstr "Ordem _Inversa"
 
-#: src/menu.h:317
+#: src/menu.h:307
 msgid "Reverse the list order"
 msgstr "Inverte a ordem da lista de arquivos"
 
-#: src/menu.h:330
+#: src/menu.h:331
+msgid "_Toolbar"
+msgstr ""
+
+#: src/menu.h:331
+msgid "View the main toolbar"
+msgstr ""
+
+#: src/menu.h:337
+msgid "Stat_usbar"
+msgstr ""
+
+#: src/menu.h:337
+msgid "View the statusbar"
+msgstr ""
+
+#: src/menu.h:345
+#, fuzzy
+msgid "_Stop"
+msgstr "Parar"
+
+#: src/menu.h:345 src/toolbar.h:55
+msgid "Stop current operation"
+msgstr "Interrompe a operação atual"
+
+#: src/menu.h:351
+msgid "_Reload"
+msgstr ""
+
+#: src/menu.h:351
+#, fuzzy
+msgid "Reload current archive"
+msgstr "Fecha o pacote atual"
+
+#: src/menu.h:362
+#, fuzzy
+msgid "_Arrange Files"
+msgstr "por _Data"
+
+#: src/menu.h:367
+msgid "_Last Output"
+msgstr ""
+
+#: src/menu.h:380
 msgid "New _Window"
 msgstr "Nova _Janela"
 
-#: src/menu.h:330
+#: src/menu.h:380
 msgid "Open a new window"
 msgstr "Abre uma nova janela"
 
-#: src/menu.h:336
+#: src/menu.h:386
 msgid "Clo_se Window"
 msgstr "_Fechar Janela"
 
-#: src/menu.h:336
+#: src/menu.h:386
 msgid "Close this window"
 msgstr "Fecha esta janela"
 
-#: src/menu.h:349
+#: src/menu.h:399
 msgid "_Manual"
 msgstr ""
 
-#: src/menu.h:349
+#: src/menu.h:399
 msgid "Display the File Roller Manual"
 msgstr ""
 
-#: src/menu.h:355
-msgid "_About..."
+#: src/menu.h:405
+#, fuzzy
+msgid "_About"
 msgstr "_Sobre..."
 
-#: src/menu.h:355
+#: src/menu.h:405
 msgid "Information about the program"
 msgstr "Informações sobre o programa"
 
-#: src/menu.h:368
-msgid "_Actions"
-msgstr "_Ações"
+#: src/menu.h:417
+#, fuzzy
+msgid "_File"
+msgstr "Arquivos:"
 
-#: src/menu.h:369
-msgid "_Options"
-msgstr "_Opções"
+#: src/menu.h:418
+#, fuzzy
+msgid "_Edit"
+msgstr "Sair"
 
-#: src/menu.h:370
+#: src/menu.h:419
+#, fuzzy
+msgid "_View"
+msgstr "Visualizar"
+
+#: src/menu.h:420
 msgid "_Windows"
 msgstr "_Janelas"
 
-#: src/menu.h:399
+#: src/menu.h:443
 #, fuzzy
-msgid "_Delete Files"
+msgid "Open Files..."
+msgstr "_Abrir arquivos com..."
+
+#: src/menu.h:449
+msgid "View File"
+msgstr "Visualizar Arquivo"
+
+#: src/menu.h:457
+#, fuzzy
+msgid "Add Files..."
+msgstr "_Adicionar arquivos..."
+
+#: src/menu.h:463
+#, fuzzy
+msgid "Delete Files"
 msgstr "_Remover arquivos..."
 
-#: src/menu.h:399
+#: src/menu.h:463
 msgid "Delete files from the archive"
 msgstr "Remove arquivos do pacote"
 
-#: src/menu.h:427
+#: src/menu.h:469
+#, fuzzy
+msgid "Extract to..."
+msgstr "E_xtrair em..."
+
+#: src/menu.h:477
 msgid "Select All"
 msgstr "Selecionar Tudo"
 
@@ -815,129 +909,121 @@ msgstr "Selecionar Tudo"
 msgid "Command _line output"
 msgstr "Comando não encontrado."
 
-#: src/toolbar.h:40
+#: src/toolbar.h:39
 msgid "New"
 msgstr "Novo"
 
-#: src/toolbar.h:46
+#: src/toolbar.h:45
 msgid "Open"
 msgstr "Abrir"
 
-#: src/toolbar.h:46
+#: src/toolbar.h:45
 msgid "Open archive"
 msgstr "Abrir pacote"
 
-#: src/toolbar.h:52
-msgid "Close"
-msgstr "Fechar"
-
-#: src/toolbar.h:62
+#: src/toolbar.h:55
 msgid "Stop"
 msgstr "Parar"
 
-#: src/window.c:63
-msgid "Unknown type"
-msgstr ""
-
-#: src/window.c:621
+#: src/window.c:615
 msgid "Folder"
 msgstr ""
 
-#: src/window.c:743
+#: src/window.c:738
 msgid "[read only]"
 msgstr "[somente leitura]"
 
-#: src/window.c:836
+#: src/window.c:832
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 arquivo (%s)"
 
-#: src/window.c:839
+#: src/window.c:835
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d arquivos (%s)"
 
-#: src/window.c:847
+#: src/window.c:843
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 arquivo selecionado (%s)"
 
-#: src/window.c:850
+#: src/window.c:846
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d arquivos selecionados (%s)"
 
-#: src/window.c:1111
+#: src/window.c:1108
 #, fuzzy
 msgid "Reading archive"
 msgstr "Abrir pacote"
 
-#: src/window.c:1114
+#: src/window.c:1111
 #, fuzzy
 msgid "Deleting files from archive"
 msgstr "Remove arquivos do pacote"
 
-#: src/window.c:1117
+#: src/window.c:1114
 #, fuzzy
 msgid "Adding files to archive"
 msgstr "Adiciona arquivos ao pacote"
 
-#: src/window.c:1120
+#: src/window.c:1117
 #, fuzzy
 msgid "Extracting files from archive"
 msgstr "Extrair arquivos do pacote"
 
-#: src/window.c:1123
+#: src/window.c:1120
 #, fuzzy
 msgid "Testing archive"
 msgstr "_Remover Pacote"
 
-#: src/window.c:1128
+#: src/window.c:1125
 msgid "wait please..."
 msgstr ""
 
-#: src/window.c:1217
+#: src/window.c:1214
 msgid "Operation stopped"
 msgstr ""
 
-#: src/window.c:1234
+#: src/window.c:1231
 msgid "An error occurred while extracting files."
 msgstr "Ocorreu um erro ao extrair os arquivos."
 
-#: src/window.c:1238
+#: src/window.c:1235
 msgid "An error occurred while loading the archive."
 msgstr "Ocorreu um erro ao abrir o pacate."
 
-#: src/window.c:1242
+#: src/window.c:1239
 msgid "An error occurred while deleting files from the archive."
 msgstr "Ocorreu um erro ao remover arquivos do pacote."
 
-#: src/window.c:1246
+#: src/window.c:1243
 msgid "An error occurred while adding files to the archive."
 msgstr "Ocorreu um erro ao adicionar arquivos ao pacote."
 
-#: src/window.c:1250
+#: src/window.c:1247
 #, fuzzy
 msgid "An error occurred while testing archive."
 msgstr "Ocorreu um erro ao abrir o pacate."
 
-#: src/window.c:1256
+#: src/window.c:1253
 msgid "Command not found."
 msgstr "Comando não encontrado."
 
-#: src/window.c:1259
+#: src/window.c:1256
 msgid "Command exited abnormally."
 msgstr "Comando terminou anormalmente."
 
-#: src/window.c:1538
+#: src/window.c:1541
 msgid "You don't have permissions to add files to this archive."
 msgstr "Você não tem permissões para adicionar arquivos a este pacote"
 
-#: src/window.c:1560
+#: src/window.c:1563
 msgid "You can't add an archive to itself."
 msgstr "Você não pode adicionar um pacote a ele mesmo."
 
-#: src/window.c:1716
+#: src/window.c:1723
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive ?"
@@ -945,82 +1031,158 @@ msgstr ""
 "Você deseja adicionar este arquivo ao pacote atual ou abrí-lo como um novo "
 "pacote?"
 
-#: src/window.c:1759
+#: src/window.c:1766
 msgid "Do you want to create a new archive with these files ?"
 msgstr "Você deseja criar um novo pacote com estes arquivos?"
 
-#: src/window.c:1761
+#: src/window.c:1768
 #, fuzzy
-msgid "Create Archive"
+msgid "Create _Archive"
 msgstr "Cria um novo pacote"
 
-#: src/window.c:2078
+#: src/window.c:2101
 msgid "Size"
 msgstr "Tamanho"
 
-#: src/window.c:2079
+#: src/window.c:2102
 msgid "Type"
 msgstr "Tipo"
 
-#: src/window.c:2080
+#: src/window.c:2103
 msgid "Modified"
 msgstr "Modificação"
 
-#: src/window.c:2081
+#: src/window.c:2104
 msgid "Path"
 msgstr "Caminho"
 
-#: src/window.c:2088
+#: src/window.c:2111
 msgid "Name"
 msgstr "Nome"
 
-#: src/window.c:2414
+#: src/window.c:2448
 msgid "_Up"
 msgstr ""
 
 #. current location
-#: src/window.c:2436
+#: src/window.c:2470
 msgid "Current Location:"
 msgstr "Local Atual:"
 
-#: src/window.c:2465
+#: src/window.c:2502
 msgid "Add"
 msgstr "Adicionar"
 
-#: src/window.c:2476 src/window.c:2477
+#: src/window.c:2527
 msgid "Extract"
 msgstr "Extrair"
 
-#: src/window.c:2487
+#: src/window.c:2538
 msgid "View"
 msgstr "Visualizar"
 
-#: src/window.c:2488
-msgid "View File"
-msgstr "Visualizar Arquivo"
+#: src/window.c:2539
+#, fuzzy
+msgid "View selected file"
+msgstr "Arquivos Selecionados"
 
-#: src/window.c:2784
+#: src/window.c:2835
 msgid "File type not supported."
 msgstr "Tipo de arquivo não suportado."
 
-#: src/window.c:2951
+#: src/window.c:2973
+#, fuzzy
+msgid "No archive"
+msgstr "Copiar Pacote"
+
+#: src/window.c:3069
 msgid "Cannot load archive."
 msgstr "Não foi possível abrir o pacote."
 
-#: src/window.c:3319
+#: src/window.c:3436
 #, fuzzy
 msgid "File Roller - Last output"
 msgstr "File Roller - Adicionar"
 
-#: src/window.c:3783
+#: src/window.c:3957
 #, fuzzy
 msgid "Add files to an archive"
 msgstr "Adiciona arquivos ao pacote"
 
-#: src/window.c:3798
+#: src/window.c:3982
 #, fuzzy
 msgid "Extract archive"
 msgstr "Cria um novo pacote"
+
+#~ msgid "Associated Applications"
+#~ msgstr "Programas Associados"
+
+#, fuzzy
+#~ msgid "Encoded archive:"
+#~ msgstr "Mover Pacote"
+
+#, fuzzy
+#~ msgid "File Roller - Comment"
+#~ msgstr "File Roller - Adicionar"
+
+#, fuzzy
+#~ msgid "File Roller - Encode"
+#~ msgstr "File Roller - Adicionar"
+
+#~ msgid "Options :"
+#~ msgstr "Opções: "
+
+#, fuzzy
+#~ msgid "_Destination Folder:"
+#~ msgstr "Diretórios de Extração Favoritos"
+
+#, fuzzy
+#~ msgid "Max _history length:"
+#~ msgstr "Tamanho máximo do histórico:"
+
+#~ msgid "New _Archive"
+#~ msgstr "Novo _Pacote"
+
+#~ msgid "_Open Archive..."
+#~ msgstr "_Abrir Pacote..."
+
+#~ msgid "_Move Archive"
+#~ msgstr "_Mover Pacote"
+
+#~ msgid "Copy Arc_hive"
+#~ msgstr "_Copiar Pacote"
+
+#~ msgid "_Rename Archive"
+#~ msgstr "_Renomear Pacote"
+
+#~ msgid "_Close Archive"
+#~ msgstr "_Fechar Pacote"
+
+#, fuzzy
+#~ msgid "_Stop Operation"
+#~ msgstr "_Interromper operação"
+
+#, fuzzy
+#~ msgid "Arrange by _Name"
+#~ msgstr "por _Nome"
+
+#, fuzzy
+#~ msgid "Arrange by _Size"
+#~ msgstr "por Ta_manho"
+
+#, fuzzy
+#~ msgid "Arrange by _Type"
+#~ msgstr "por _Tipo"
+
+#, fuzzy
+#~ msgid "Arrange by _Path"
+#~ msgstr "por _Caminho"
+
+#~ msgid "_Actions"
+#~ msgstr "_Ações"
+
+#~ msgid "_Options"
+#~ msgstr "_Opções"
 
 #, fuzzy
 #~ msgid "Other Options"
@@ -1095,14 +1257,8 @@ msgstr "Cria um novo pacote"
 #~ msgid "Archive Properties"
 #~ msgstr "Propriedados do Pacote"
 
-#~ msgid "Open with..."
-#~ msgstr "Abrir com..."
-
 #~ msgid "Recreate directories"
 #~ msgstr "Recriar diretórios"
-
-#~ msgid "General"
-#~ msgstr "Geral"
 
 #~ msgid "Properties"
 #~ msgstr "Propriedades"

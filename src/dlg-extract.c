@@ -86,6 +86,7 @@ static void
 ok_clicked_cb (GtkWidget  *widget, 
 	       DialogData *data)
 {
+	char       *extract_to_dir_utf8;
 	char       *extract_to_dir;
 	gboolean    do_not_extract = FALSE;
 	gboolean    overwrite;
@@ -101,7 +102,9 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	/* collect extraction options. */
 
-	extract_to_dir = gnome_file_entry_get_full_path (GNOME_FILE_ENTRY (data->e_extract_to_fileentry), FALSE);
+	extract_to_dir_utf8 = gnome_file_entry_get_full_path (GNOME_FILE_ENTRY (data->e_extract_to_fileentry), FALSE);
+	extract_to_dir = g_locale_from_utf8 (extract_to_dir_utf8, -1, 0, 0, 0);
+	g_free (extract_to_dir_utf8);
 
 	/* check directory existence. */
 
@@ -192,9 +195,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_files_radiobutton));
 
 	if (GTK_WIDGET_SENSITIVE (data->e_password_entry)) {
-		const char *utf8_p;
-		utf8_p = gtk_entry_get_text (GTK_ENTRY (data->e_password_entry));
-		password = g_locale_from_utf8 (utf8_p, -1, NULL, NULL, NULL);
+		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->e_password_entry));
 		if ((password != NULL) && (password[0] == 0)) {
 			g_free (password);
 			password = NULL;
@@ -210,9 +211,10 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (selected_files) 
 		file_list = window_get_file_list_selection (window, TRUE, NULL);
 	else if (pattern_files) {
-		const char *pattern;
-		pattern = gtk_entry_get_text (GTK_ENTRY (data->e_files_entry));
+		char *pattern;
+		pattern = _gtk_entry_get_locale_text (GTK_ENTRY (data->e_files_entry));
 		file_list = window_get_file_list_pattern (window, pattern);
+		g_free (pattern);
 	}
 
 	/* close the dialog. */
@@ -258,7 +260,7 @@ path_entry_changed (GtkWidget  *widget,
 	gboolean    can_add;
 
 	path = gtk_entry_get_text (GTK_ENTRY (data->e_extract_to_entry));
-	can_add = strlen (path) > 0;
+	can_add = g_utf8_strlen (path, -1) > 0;
 	gtk_widget_set_sensitive (data->e_add_fav_button, can_add);
 }
 
@@ -280,11 +282,16 @@ update_bookmark_list (DialogData *data)
 	bookmarks_load_from_disk (bookmarks);
 
 	for (scan = bookmarks->list; scan; scan = scan->next) {
+		char *utf8_name;
+
 		gtk_list_store_append (GTK_LIST_STORE (data->fav_model),
 				       &iter);
+
+		utf8_name = g_locale_to_utf8 (scan->data, -1, 0, 0, 0);
 		gtk_list_store_set (GTK_LIST_STORE (data->fav_model), &iter,
-				    0, scan->data,
+				    0, utf8_name,
 				    -1);
+		g_free (utf8_name);
 	}
 
 	bookmarks_free (bookmarks);
@@ -297,24 +304,22 @@ add_fav_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
 	Bookmarks  *bookmarks;
-	const char *path;
-	char       *path2;
+	char       *path;
 
-	path = gtk_entry_get_text (GTK_ENTRY (data->e_extract_to_entry));
+	path = _gtk_entry_get_locale_text (GTK_ENTRY (data->e_extract_to_entry));
 	if (path == NULL) 
 		return;
 
-	path2= g_locale_from_utf8 (path, -1, NULL, NULL, NULL);
-	if ((path2[strlen (path2) - 1] == '/') && (strcmp (path2, "/") != 0))
-		path2[strlen (path2) - 1] = 0;
+	if ((path[strlen (path) - 1] == '/') && (strcmp (path, "/") != 0))
+		path[strlen (path) - 1] = 0;
 
 	bookmarks = bookmarks_new (RC_BOOKMARKS_FILE);
 	bookmarks_load_from_disk (bookmarks);
-	bookmarks_add (bookmarks, path2);
+	bookmarks_add (bookmarks, path);
 	bookmarks_write_to_disk (bookmarks);
 	bookmarks_free (bookmarks);
 
-	g_free (path2);
+	g_free (path);
 
 	update_bookmark_list (data);
 }
@@ -460,7 +465,7 @@ dlg_extract (GtkWidget *widget,
 		path = g_strconcat (window->extract_default_dir, "/", NULL);
 	else
 		path = g_strdup (window->extract_default_dir);
-	gtk_entry_set_text (GTK_ENTRY (data->e_extract_to_entry), path);
+	_gtk_entry_set_locale_text (GTK_ENTRY (data->e_extract_to_entry), path);
 	g_free (path);
 	
 	if (misc_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)

@@ -72,9 +72,10 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (selected_files) 
 		file_list = window_get_file_list_selection (window, TRUE, NULL);
 	else if (pattern_files) {
-		const gchar *pattern;
-		pattern = gtk_entry_get_text (GTK_ENTRY (data->d_files_entry));
+		char *pattern;
+		pattern = _gtk_entry_get_locale_text (GTK_ENTRY (data->d_files_entry));
 		file_list = window_get_file_list_pattern (window, pattern);
+		g_free (pattern);
 	}
 
 	/* close the dialog. */
