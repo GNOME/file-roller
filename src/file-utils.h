@@ -23,6 +23,7 @@
 #ifndef FILE_UTILS_H
 #define FILE_UTILS_H
 
+#include <sys/types.h>
 #include <time.h>
 #include <libgnomevfs/gnome-vfs-file-size.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
