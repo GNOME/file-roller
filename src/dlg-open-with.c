@@ -284,7 +284,7 @@ dlg_open_with (FRWindow *window,
 
 	data->dialog = glade_xml_get_widget (data->gui, "open_with_dialog");
 	data->o_app_tree_view = glade_xml_get_widget (data->gui, "o_app_list_tree_view");
-	data->o_recent_tree_view = glade_xml_get_widget (data->gui, "o_recent_ree_view");
+	data->o_recent_tree_view = glade_xml_get_widget (data->gui, "o_recent_tree_view");
 	data->o_app_entry = glade_xml_get_widget (data->gui, "o_app_entry");
 	data->o_del_button = glade_xml_get_widget (data->gui, "o_del_button");
 	ok_button = glade_xml_get_widget (data->gui, "o_ok_button");
@@ -385,7 +385,7 @@ dlg_open_with (FRWindow *window,
 	}
 
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Associated Applications"),
+	column = gtk_tree_view_column_new_with_attributes (NULL,
 							   renderer,
 							   "text", 0,
 							   NULL);
@@ -415,7 +415,7 @@ dlg_open_with (FRWindow *window,
 	}
 
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Recent Applications"),
+	column = gtk_tree_view_column_new_with_attributes (NULL,
 							   renderer,
 							   "text", 0,
 							   NULL);

@@ -2040,18 +2040,34 @@ key_press_cb (GtkWidget   *widget,
 	switch (event->keyval) {
 	case GDK_Escape:
 		stop_cb (NULL, window);
-		return TRUE;
+		break;
 
 	case GDK_Delete:
 		if (window->activity_ref == 0)
 			dlg_delete (NULL, window);
-		return TRUE;
+		break;
+
+	case GDK_F10:
+		if (event->state & GDK_SHIFT_MASK) {
+			GtkTreeSelection *selection;
+
+			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
+			if (selection == NULL)
+				return FALSE;
+
+			gtk_menu_popup (GTK_MENU (window->file_popup_menu),
+					NULL, NULL, NULL, 
+					window, 
+					3,
+					GDK_CURRENT_TIME);
+		}
+		return FALSE;
 
 	default:
-		break;
+		return FALSE;
 	}
 
-	return FALSE;
+	return TRUE;
 }
 
 

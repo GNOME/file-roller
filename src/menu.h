@@ -427,12 +427,12 @@ GnomeUIInfo main_menu[] = {
 /* popup menus. */
 
 enum {
+	FILE_POPUP_MENU_OPEN,
+	FILE_POPUP_MENU_VIEW,
+	FILE_POPUP_MENU_SEP1,
 	FILE_POPUP_MENU_ADD,
 	FILE_POPUP_MENU_DELETE,
 	FILE_POPUP_MENU_EXTRACT,
-	FILE_POPUP_MENU_SEP1,
-	FILE_POPUP_MENU_OPEN,
-	FILE_POPUP_MENU_VIEW,
 	FILE_POPUP_MENU_SEP2,
 	FILE_POPUP_MENU_SELECT_ALL,
 };
@@ -440,34 +440,34 @@ enum {
 
 GnomeUIInfo file_popup_menu_data[] = {
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Add _Files..."), N_("Add files to the archive"), 
-	  add_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ADD,
+	  N_("Open Files..."), " ", 
+	  open_with_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Delete Files"), N_("Delete files from the archive"), 
-	  dlg_delete, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REMOVE,
-	  0, 0, NULL },
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Extract to..."), N_("Extract files from the archive"), 
-	  dlg_extract, NULL, NULL,
+	  N_("View File"), N_("View file with internal viewer"), 
+	  view_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Open Files with..."), " ", 
-	  open_with_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
+	  N_("Add Files..."), N_("Add files to the archive"), 
+	  add_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ADD,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_View File"), N_("View file with internal viewer"), 
-	  view_cb, NULL, NULL,
+	  N_("Delete Files"), N_("Delete files from the archive"), 
+	  dlg_delete, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REMOVE,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Extract to..."), N_("Extract files from the archive"), 
+	  dlg_extract, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
