@@ -6,42 +6,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-05 14:25+0100\n"
+"POT-Creation-Date: 2004-03-07 03:21+0100\n"
 "PO-Revision-Date: 2004-02-22 19:43+0200\n"
 "Last-Translator: Mətin Əmirov <metin@karegen.com>\n"
-"Language-Team: Azerbaijani Turkish <translation-team-az@lists.sourceforge.net>\n"
+"Language-Team: Azerbaijani Turkish <translation-team-az@lists.sourceforge."
+"net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
+msgid "Create Archive..."
+msgstr "Arxiv Yarat..."
+
+#: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
 msgstr "Buraya Aç"
 
-#: component/File_Roller_Component.server.in.in.h:2
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr "Fayl Roller Tərkib hissəsi və əməliyyatlar"
 
-#: component/File_Roller_Component.server.in.in.h:3
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr "Fayl Roller Tərkib hissəsi açma əməliyyatları"
 
-#: component/File_Roller_Component.server.in.in.h:4
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "Fayl Roller Tərkib hissəsi"
 
-#: component/File_Roller_Component.server.in.in.h:5
-msgid "Zip Objects..."
-msgstr "Faylları Ziplə..."
-
 #: file-roller.desktop.in.h:1
-msgid "Create and modify zips and other archive types"
-msgstr "Zip və digər arxiv növlərini yaradın"
+msgid "Archive Manager"
+msgstr "Arxiv İdarəçisi"
 
 #: file-roller.desktop.in.h:2
-msgid "Zip Creator"
-msgstr "Zip Yaradıcısı"
+msgid "Create and modify an archive"
+msgstr "Arxiv yaradın və açın"
 
 #: src/dlg-add.c:118 src/dlg-add.c:125
 #, c-format
@@ -97,8 +98,9 @@ msgid "Options Name:"
 msgstr "Seçimlərin Adı:"
 
 #: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
-msgid "Could not zip objects"
-msgstr "Fayllar ziplənə bilmədi"
+#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
+msgid "Could not create the archive"
+msgstr "Arxiv yaradıla bilmədi."
 
 #: src/dlg-batch-add.c:102 src/menu-callbacks.c:168 src/menu-callbacks.c:376
 msgid "You have to specify an archive name."
@@ -123,8 +125,8 @@ msgid "Could not create the destination folder: %s."
 msgstr "Hədəf qovluq yaradıla bilmədi: %s."
 
 #: src/dlg-batch-add.c:185
-msgid "Zip not performed"
-msgstr "Zip tətbiq edilmədi"
+msgid "Archive not created"
+msgstr "Arxiv yaradılmadı"
 
 #: src/dlg-extract.c:87 src/menu-callbacks.c:1132
 msgid "Could not display help"
@@ -150,7 +152,7 @@ msgstr "Fayllar"
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:387 src/file_roller.glade.h:16
+#: src/dlg-extract.c:387 src/file_roller.glade.h:17
 msgid "_Files:"
 msgstr "_Fayllar:"
 
@@ -158,11 +160,11 @@ msgstr "_Fayllar:"
 msgid "example: *.txt; *.doc"
 msgstr "nümunə: *.txt; *.doc"
 
-#: src/dlg-extract.c:401 src/file_roller.glade.h:13
+#: src/dlg-extract.c:401 src/file_roller.glade.h:14
 msgid "_All files"
 msgstr "_Bütün fayllar"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:18
+#: src/dlg-extract.c:408 src/file_roller.glade.h:19
 msgid "_Selected files"
 msgstr "_Seçili fayllar:"
 
@@ -182,7 +184,7 @@ msgstr "Mövcud faylların _üstünə yaz"
 msgid "Do not e_xtract older files"
 msgstr "Köhnə faylları _açma"
 
-#: src/dlg-extract.c:449 src/file_roller.glade.h:17
+#: src/dlg-extract.c:449 src/file_roller.glade.h:18
 msgid "_Password:"
 msgstr "Ş_ifrə:"
 
@@ -216,8 +218,8 @@ msgid "Number of files:"
 msgstr "Fayl ədədi:"
 
 #: src/dlg-prop.c:149
-msgid "Zipped on:"
-msgstr "Ziplənmə tarixi:"
+msgid "Modified on:"
+msgstr "Təkmilləşdirmə tarixi:"
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
@@ -254,52 +256,52 @@ msgid "A_vailable application:"
 msgstr "Mö_vcud proqram:"
 
 #: src/file_roller.glade.h:4
+msgid "C_reate"
+msgstr "_Yarat"
+
+#: src/file_roller.glade.h:5
+msgid "Create Archive"
+msgstr "Arxiv Yarat"
+
+#: src/file_roller.glade.h:6
 msgid "Delete"
 msgstr "Sil"
 
-#: src/file_roller.glade.h:5
+#: src/file_roller.glade.h:7
 msgid "Load Options"
 msgstr "Seçimləri Yüklə"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:8
 msgid "Open Files"
 msgstr "Faylları Aç"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:9
 msgid "Open with an _application"
 msgstr "Proqr_amla aç"
 
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:10
 msgid "Password"
 msgstr "Şifrə"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:11
 msgid "R_ecent applications:"
 msgstr "_Son işlədilən proqramlar:"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:12
 msgid "View File"
 msgstr "Faylı Göstər"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:13
 msgid "View with internal _viewer"
 msgstr "Daxili _nümayişci ilə aç"
 
-#: src/file_roller.glade.h:12
-msgid "Zip Objects"
-msgstr "Faylları Ziplə"
-
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:15
 msgid "_Application:"
 msgstr "_Proqram:"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:16
 msgid "_Archive:"
 msgstr "_Arxiv:"
-
-#: src/file_roller.glade.h:19
-msgid "_Zip"
-msgstr "_Zip"
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -486,10 +488,6 @@ msgstr "Zip (.zip)"
 #: src/menu-callbacks.c:102
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
-
-#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
-msgid "Could not create the archive"
-msgstr "Arxiv yaradıla bilmədi."
 
 #: src/menu-callbacks.c:187 src/menu-callbacks.c:395
 msgid "You don't have permission to create an archive in this folder"
@@ -1100,3 +1098,24 @@ msgstr "Faylları arxivə əlavə et"
 #: src/window.c:5392
 msgid "Extract archive"
 msgstr "Arxivi aç"
+
+#~ msgid "Zip Objects..."
+#~ msgstr "Faylları Ziplə..."
+
+#~ msgid "Zip Creator"
+#~ msgstr "Zip Yaradıcısı"
+
+#~ msgid "Could not zip objects"
+#~ msgstr "Fayllar ziplənə bilmədi"
+
+#~ msgid "Zip not performed"
+#~ msgstr "Zip tətbiq edilmədi"
+
+#~ msgid "Zipped on:"
+#~ msgstr "Ziplənmə tarixi:"
+
+#~ msgid "Zip Objects"
+#~ msgstr "Faylları Ziplə"
+
+#~ msgid "_Zip"
+#~ msgstr "_Zip"
