@@ -1,24 +1,25 @@
 # translation of el.po to Greek
 # Greek fileroller configuration.
 # Copyright (C) 2001,2003 Free Software Foundation, Inc.
+# 
 # Kostas Papadimas <pkst@gmx.net> 2002,2003
 # kostas:249 messages, 05Jan2003, updated translation
 # kostas:25May2003, updated translation for Gnome 2.4xx
 # kostas: 06Jul2003, one more update
+# Nikos: 7jul2003, fixes for access keys 
 # Simos Xenitellis <simos@hellug.gr>, 2001.
 # Kostas Papadimas <pkst@gmx.net>, 2003
-#
+# Nikos Charonitakis <charosn@her.forthnet.gr>, 2003
 msgid ""
 msgstr ""
 "Project-Id-Version: el\n"
 "POT-Creation-Date: 2003-07-06 09:49+0300\n"
-"PO-Revision-Date: 2003-07-06 09:53+0300\n"
-"Last-Translator: Kostas Papadimas <pkst@gmx.net>\n"
+"PO-Revision-Date: 2003-07-07 16:23-0200\n"
+"Last-Translator: Nikos Charonitakis <charosn@her.forthnet.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
 msgid "Add to Archive..."
@@ -45,9 +46,14 @@ msgid "Archive Manager"
 msgstr "Διαχειριστής Συμπιεσμένων Αρχείων"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
-#: src/menu-callbacks.c:1067 src/window.c:759 src/window.c:768
-#: src/window.c:1153 src/window.c:2745
+#: file-roller.desktop.in.h:2
+#: src/gtk-utils.c:388
+#: src/main.c:101
+#: src/menu-callbacks.c:1067
+#: src/window.c:759
+#: src/window.c:768
+#: src/window.c:1153
+#: src/window.c:2745
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -55,12 +61,15 @@ msgstr "File Roller"
 msgid "Handle compressed archives"
 msgstr "Διαχειρίζεται συμπιεσμένα αρχεία"
 
-#: src/dlg-add.c:116 src/dlg-add.c:123
+#: src/dlg-add.c:116
+#: src/dlg-add.c:123
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Δεν έχετε τα απαραίτητα δικαιώματα ανάγνωσης αρχείων από τον φάκελο \"%s\""
 
-#: src/dlg-add.c:122 src/window.c:1784 src/window.c:1817
+#: src/dlg-add.c:122
+#: src/window.c:1784
+#: src/window.c:1817
 msgid "Could not add the files to the archive"
 msgstr "Αδυναμία προσθήκης αρχείων στο συμπιεσμένο αρχείο"
 
@@ -122,34 +131,48 @@ msgstr "Επιλογές Φόρτωσης"
 msgid "Save Options"
 msgstr "Επιλογές Αποθήκευσης"
 
-#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
-#: src/menu-callbacks.c:198 src/window.c:3420
+#: src/dlg-batch-add.c:99
+#: src/dlg-batch-add.c:125
+#: src/menu-callbacks.c:179
+#: src/menu-callbacks.c:198
+#: src/window.c:3420
 msgid "Could not create the archive"
 msgstr "Αδυναμία δημιουργίας συμπιεσμένου αρχείου"
 
-#: src/dlg-batch-add.c:100 src/menu-callbacks.c:180 src/menu-callbacks.c:368
+#: src/dlg-batch-add.c:100
+#: src/menu-callbacks.c:180
+#: src/menu-callbacks.c:368
 msgid "You have to specify an archive name."
 msgstr "Θα πρέπει να καθορίσετε ένα όνομα  συμπιεσμένου αρχείου."
 
-#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3421
+#: src/dlg-batch-add.c:126
+#: src/fr-archive.c:603
+#: src/window.c:3421
 #: src/window.c:3558
 msgid "Archive type not supported."
 msgstr "Ο τύπος αρχείου δεν υποστηρίζεται."
 
-#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3746
+#: src/dlg-batch-add.c:146
+#: src/dlg-extract.c:120
+#: src/window.c:3746
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Ο φάκελος προορισμού δεν υπάρχει.  Θέλετε να δημιουργηθεί?"
 
-#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3749
+#: src/dlg-batch-add.c:149
+#: src/dlg-extract.c:123
+#: src/window.c:3749
 msgid "Create _Folder"
 msgstr "Δημιουργία _Φακέλου"
 
-#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3765
+#: src/dlg-batch-add.c:164
+#: src/dlg-extract.c:139
+#: src/window.c:3765
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Αδυναμία δημιουργίας φακέλου προορισμού: %s"
 
-#: src/dlg-batch-add.c:168 src/dlg-batch-add.c:190
+#: src/dlg-batch-add.c:168
+#: src/dlg-batch-add.c:190
 msgid "Addition not performed"
 msgstr "Η προσθήκη δεν πραγματοποιήθηκε"
 
@@ -163,8 +186,11 @@ msgstr "Αρχεία για προσθήκη: %d"
 msgid "Folders to add: %d"
 msgstr "Φάκελοι για προσθήκη: %d"
 
-#: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
-#: src/window.c:3769 src/window.c:3788
+#: src/dlg-extract.c:143
+#: src/dlg-extract.c:162
+#: src/dlg-extract.c:186
+#: src/window.c:3769
+#: src/window.c:3788
 msgid "Extraction not performed"
 msgstr "Η αποσυμπίεση δεν πραγματοποιήθηκε"
 
@@ -173,7 +199,9 @@ msgstr "Η αποσυμπίεση δεν πραγματοποιήθηκε"
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Δεν έχετε τα σωστά δικαιώματα για την αποσυμπίεση αρχείων στον φάκελο \"%s\""
 
-#: src/dlg-extract.c:423 src/dlg-preferences.c:127 src/menu-callbacks.c:1026
+#: src/dlg-extract.c:423
+#: src/dlg-preferences.c:127
+#: src/menu-callbacks.c:1026
 msgid "Could not display help"
 msgstr "Αδυναμία προβολής βοήθειας"
 
@@ -240,11 +268,10 @@ msgstr "Συμβολικός σύνδεσμος"
 
 #: src/file-utils.c:535
 msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr ""
-"Αδυναμία εύρεσης τερματικού, χρήση του xterm, ακόμα και αν μπορεί να μην "
-"δουλέψει"
+msgstr "Αδυναμία εύρεσης τερματικού, χρήση του xterm, ακόμα και αν μπορεί να μην δουλέψει"
 
-#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
+#: src/file_roller.glade.h:1
+#: src/file_roller_prop.glade.h:1
 msgid "    "
 msgstr "    "
 
@@ -280,7 +307,8 @@ msgstr "Διαγραφή Αρχείων"
 msgid "Do not e_xtract older files"
 msgstr "Να μην απ_οσυμπιέζονται παλαιά αρχεία"
 
-#: src/file_roller.glade.h:10 src/window.c:2983
+#: src/file_roller.glade.h:10
+#: src/window.c:2983
 msgid "Extract"
 msgstr "Αποσυμπίεση"
 
@@ -289,15 +317,8 @@ msgid "Extract to"
 msgstr "Αποσυμπίεση σε"
 
 #: src/file_roller.glade.h:12
-msgid ""
-"Note: the password will be used to encrypt files you add to the current "
-"archive, and to decrypt files you extract from the current archive. When the "
-"archive is closed the password will be deleted."
-msgstr ""
-"Σημείωση: ο κωδικός θα χρησιμοποιηθεί για την κρυπτογράφηση των αρχείων που "
-"θα προσθέσετε στο τρέχον συμπιεσμένο αρχείο και θα αποκωδικοποιεί τα αρχεία "
-"που θα αποσυμπιέζετε από το τρέχον αρχείο, Οταν το συμπιεσμένο αρχείο "
-"κλείσει ο κωδικός θα διαγραφεί."
+msgid "Note: the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted."
+msgstr "Σημείωση: ο κωδικός θα χρησιμοποιηθεί για την κρυπτογράφηση των αρχείων που θα προσθέσετε στο τρέχον συμπιεσμένο αρχείο και θα αποκωδικοποιεί τα αρχεία που θα αποσυμπιέζετε από το τρέχον αρχείο, Οταν το συμπιεσμένο αρχείο κλείσει ο κωδικός θα διαγραφεί."
 
 #: src/file_roller.glade.h:13
 msgid "Open Files"
@@ -327,7 +348,8 @@ msgstr "Πρό_σφατες εφαρμογές:"
 msgid "Select Archive"
 msgstr "Επιλογή συμπιεσμένου αρχείου"
 
-#: src/file_roller.glade.h:20 src/menu.h:442
+#: src/file_roller.glade.h:20
+#: src/menu.h:442
 msgid "View File"
 msgstr "Προβολή Αρχείου"
 
@@ -420,7 +442,8 @@ msgstr "Προσθήκη αρχείου:"
 msgid "Removing file: "
 msgstr "Απομάκρυνση αρχείου:"
 
-#: src/fr-command-tar.c:274 src/window.c:1249
+#: src/fr-command-tar.c:274
+#: src/window.c:1249
 msgid "Deleting files from archive"
 msgstr "Διαγραφή αρχείων από το συμπιεσμένο αρχείο"
 
@@ -452,9 +475,7 @@ msgstr "Αποτέλεσμα γραμμής _εντολών"
 
 #: src/main.c:59
 msgid "Add files to the specified archive and quit the program"
-msgstr ""
-"Προσθήκη αρχείων στο καθορισμένο συμπιεσμένο αρχείο και έξοδος από το "
-"πρόγραμμα"
+msgstr "Προσθήκη αρχείων στο καθορισμένο συμπιεσμένο αρχείο και έξοδος από το πρόγραμμα"
 
 #: src/main.c:60
 msgid "ARCHIVE"
@@ -462,29 +483,24 @@ msgstr "ARCHIVE"
 
 #: src/main.c:63
 msgid "Add files asking the name of the archive and quit the program"
-msgstr ""
-"Προσθήκη αρχείων με ερώτηση για το όνομα του συμπιεσμένου αρχείου και έξοδος "
-"από το πρόγραμμα"
+msgstr "Προσθήκη αρχείων με ερώτηση για το όνομα του συμπιεσμένου αρχείου και έξοδος από το πρόγραμμα"
 
 #: src/main.c:67
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Αποσυμπίεση στον καθορισμένο φάκελο και έξοδος από το πρόγραμμα"
 
-#: src/main.c:68 src/main.c:76
+#: src/main.c:68
+#: src/main.c:76
 msgid "FOLDER"
 msgstr "ΦΑΚΕΛΟΣ"
 
 #: src/main.c:71
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr ""
-"Προσθηκη αρχείων με ερώτηση για τον φάκελο προορισμού και έξοδος από το "
-"πρόγραμμα"
+msgstr "Προσθηκη αρχείων με ερώτηση για τον φάκελο προορισμού και έξοδος από το πρόγραμμα"
 
 #: src/main.c:75
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
-"Εξ ορισμού φάκελος που θα χρησιμοποείται ηια τις εντολές  '--add' και '--"
-"extract' "
+msgstr "Εξ ορισμού φάκελος που θα χρησιμοποείται ηια τις εντολές  '--add' και '--extract' "
 
 #: src/main.c:79
 msgid "Create destination folder without asking confirmation"
@@ -550,24 +566,28 @@ msgstr "Zip (.zip)"
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:199 src/menu-callbacks.c:387
+#: src/menu-callbacks.c:199
+#: src/menu-callbacks.c:387
 msgid "You don't have permission to create an archive in this folder"
-msgstr ""
-"Δεν έχετε δικαίωμα να δημιουργήσετε ένα συμπιεσμένο αρχείο σε αυτόν τον "
-"φάκελο"
+msgstr "Δεν έχετε δικαίωμα να δημιουργήσετε ένα συμπιεσμένο αρχείο σε αυτόν τον φάκελο"
 
-#: src/menu-callbacks.c:228 src/menu-callbacks.c:407 src/menu-callbacks.c:624
+#: src/menu-callbacks.c:228
+#: src/menu-callbacks.c:407
+#: src/menu-callbacks.c:624
 #: src/menu-callbacks.c:802
 #, fuzzy
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Το συμπιεσμένο αρχείο υπάρχει ήδη.  Να αντικατασταθεί?"
 
-#: src/menu-callbacks.c:231 src/menu-callbacks.c:410 src/menu-callbacks.c:627
+#: src/menu-callbacks.c:231
+#: src/menu-callbacks.c:410
+#: src/menu-callbacks.c:627
 #: src/menu-callbacks.c:805
 msgid "Overwrite"
 msgstr "Αντικατάσταση"
 
-#: src/menu-callbacks.c:247 src/menu-callbacks.c:426
+#: src/menu-callbacks.c:247
+#: src/menu-callbacks.c:426
 #, fuzzy
 msgid "Could not delete the old archive."
 msgstr "Αδυναμία διαγραφής παλαιού συμπιεσμένου αρχείου."
@@ -576,11 +596,13 @@ msgstr "Αδυναμία διαγραφής παλαιού συμπιεσμέν�
 msgid "New Archive"
 msgstr "Νέο συμπιεσμένο αρχείο"
 
-#: src/menu-callbacks.c:303 src/menu-callbacks.c:465
+#: src/menu-callbacks.c:303
+#: src/menu-callbacks.c:465
 msgid "Archive type:"
 msgstr "Τύπος συμπιεσμένου αρχείου:"
 
-#: src/menu-callbacks.c:367 src/menu-callbacks.c:386
+#: src/menu-callbacks.c:367
+#: src/menu-callbacks.c:386
 #, fuzzy
 msgid "Could not save the archive"
 msgstr "Αδυναμία μετακίνησης συμπιεσμένου αρχείου"
@@ -627,12 +649,8 @@ msgid "_Rename"
 msgstr "_Μετονομασία"
 
 #: src/menu-callbacks.c:887
-msgid ""
-"The archive cannot be moved to the Trash. Do you want to delete it "
-"permanently?"
-msgstr ""
-"Το συμπιεσμένο αρχείο δεν μπορεί να μετακινηθει στα απορρίματα. Θέλετε να το "
-"διαγράψετε μόνιμα?"
+msgid "The archive cannot be moved to the Trash. Do you want to delete it permanently?"
+msgstr "Το συμπιεσμένο αρχείο δεν μπορεί να μετακινηθει στα απορρίματα. Θέλετε να το διαγράψετε μόνιμα?"
 
 #: src/menu-callbacks.c:1059
 msgid "translator_credits"
@@ -642,7 +660,8 @@ msgstr "Κώστας Παπαδήμας <pkst@gmx.net>"
 msgid "An archive manager for GNOME."
 msgstr "Ένας διαχειριστής συμπιεσμένων αρχείων του GNOME."
 
-#: src/menu-callbacks.c:1244 src/window.c:4077
+#: src/menu-callbacks.c:1244
+#: src/window.c:4077
 msgid "Last Output"
 msgstr "Τελευταίο Αποτέλεσμα"
 
@@ -650,7 +669,8 @@ msgstr "Τελευταίο Αποτέλεσμα"
 msgid "_New"
 msgstr "_Νέο"
 
-#: src/menu.h:70 src/toolbar.h:39
+#: src/menu.h:70
+#: src/toolbar.h:39
 msgid "Create a new archive"
 msgstr "Δημιουργία νέου συμπιεσμένου αρχείου"
 
@@ -670,7 +690,8 @@ msgstr "Άνοιγμα επιλεγμένων αρχείων με μια εφα�
 msgid "_View File"
 msgstr "_Προβολή Αρχείου"
 
-#: src/menu.h:90 src/menu.h:442
+#: src/menu.h:90
+#: src/menu.h:442
 msgid "View file with internal viewer"
 msgstr "Προβολή αρχείου με εσωτερικό πρόγραμμα προβολής"
 
@@ -725,11 +746,14 @@ msgstr "_Ιδιότητες"
 msgid "Show archive properties"
 msgstr "Προβολή ιδιοτήτων συμπιεσμένου αρχείου"
 
-#: src/menu.h:162 src/menu.h:450
+#: src/menu.h:162
+#: src/menu.h:450
 msgid "Add _Files..."
-msgstr "Προσθήκη_Αρχείων..."
+msgstr "Προσθήκη Αρ_χείων..."
 
-#: src/menu.h:162 src/menu.h:450 src/window.c:2973
+#: src/menu.h:162
+#: src/menu.h:450
+#: src/window.c:2973
 msgid "Add files to the archive"
 msgstr "Προσθήκη  αρχείων στο συμπιεσμένο αρχείο"
 
@@ -742,27 +766,34 @@ msgstr "_Διαγραφή Αρχείων"
 msgid "Delete selected files and folders from the archive"
 msgstr "Διαγραφή επιλεγμένων φακέλων και αρχείων από το συμπιεσμένο αρχείο"
 
-#: src/menu.h:174 src/menu.h:462
+#: src/menu.h:174
+#: src/menu.h:462
 msgid "_Extract to..."
 msgstr "_Αποσυμπίεση σε..."
 
-#: src/menu.h:174 src/menu.h:462 src/window.c:2984
+#: src/menu.h:174
+#: src/menu.h:462
+#: src/window.c:2984
 msgid "Extract files from the archive"
 msgstr "Αποσυμπίεση αρχείων από το συμπιεσμένο αρχείο"
 
-#: src/menu.h:198 src/menu.h:470
+#: src/menu.h:198
+#: src/menu.h:470
 msgid "Select _All"
 msgstr "Επιλογή _Όλων"
 
-#: src/menu.h:198 src/menu.h:470
+#: src/menu.h:198
+#: src/menu.h:470
 msgid "Select all files"
 msgstr "Επιλογή όλων των αρχείων"
 
-#: src/menu.h:204 src/menu.h:476
+#: src/menu.h:204
+#: src/menu.h:476
 msgid "Dese_lect All"
 msgstr "Αποεπι_λογή Όλων"
 
-#: src/menu.h:204 src/menu.h:476
+#: src/menu.h:204
+#: src/menu.h:476
 msgid "Deselect all files"
 msgstr "Αποεπιλογή όλων των αρχείων"
 
@@ -826,11 +857,11 @@ msgstr "Ταξινόμηση λίστας αρχείου κατά διαδρομ
 
 #: src/menu.h:272
 msgid "View All _Files"
-msgstr "Προβολή Όλων των Αρχείων"
+msgstr "Προβολή _Όλων των Αρχείων"
 
 #: src/menu.h:278
 msgid "View as a F_older"
-msgstr "Προβολή ως Φ_άκελος"
+msgstr "Προβολή ως _Φάκελος"
 
 #: src/menu.h:300
 msgid "_Reversed Order"
@@ -850,7 +881,7 @@ msgstr "Προβολή της κύριας εργαλειοθήκης"
 
 #: src/menu.h:330
 msgid "Stat_usbar"
-msgstr "Γραμμή κατάστασης"
+msgstr "_Γραμμή κατάστασης"
 
 #: src/menu.h:330
 msgid "View the statusbar"
@@ -860,7 +891,8 @@ msgstr "Προβολή της γραμμής κατάστασης"
 msgid "_Stop"
 msgstr "_Διακοπή"
 
-#: src/menu.h:338 src/toolbar.h:55
+#: src/menu.h:338
+#: src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Διακοπή τρέχουσας διεργασίας"
 
@@ -874,7 +906,7 @@ msgstr "Ανανέωση τρέχοντος συμπιεσμένου αρχεί�
 
 #: src/menu.h:355
 msgid "_Arrange Files"
-msgstr "_Τακτοποίηση Αρχείων"
+msgstr "Τα_κτοποίηση Αρχείων"
 
 #: src/menu.h:360
 msgid "_Last Output"
@@ -898,7 +930,7 @@ msgstr "Κλείσιμο του παράθυρου"
 
 #: src/menu.h:392
 msgid "_Contents"
-msgstr "_Περιεχόμενα"
+msgstr "Περιε_χόμενα"
 
 #: src/menu.h:392
 msgid "Display the File Roller Manual"
@@ -1059,12 +1091,8 @@ msgid "You can't add an archive to itself."
 msgstr "Δεν μπορείτε να προσθέσετε ένα συμπιεσμένο αρχείο στον εαυτό του."
 
 #: src/window.c:1990
-msgid ""
-"Do you want to add this file to the current archive or open it as a new "
-"archive?"
-msgstr ""
-"ΘΘέλετε να προσθέσετε αυτό το αρχείο στο τρέχον συμπιεσμένο αρχείο ή να το "
-"ανοίξετε ώς νέο συμπιεσμένο αρχείο?"
+msgid "Do you want to add this file to the current archive or open it as a new archive?"
+msgstr "ΘΘέλετε να προσθέσετε αυτό το αρχείο στο τρέχον συμπιεσμένο αρχείο ή να το ανοίξετε ώς νέο συμπιεσμένο αρχείο?"
 
 #: src/window.c:2035
 msgid "Do you want to create a new archive with these files?"
@@ -1134,138 +1162,4 @@ msgstr "Προσθήκη αρχείων σε ένα συμπιεσμένο αρ�
 #: src/window.c:4631
 msgid "Extract archive"
 msgstr "Αποσυμπίεση συμπιεσμένου αρχείου"
-
-#~ msgid "Extract Here"
-#~ msgstr "Αποσυμπίεση Εδώ"
-
-#~ msgid "Extract In A Sub-Folder"
-#~ msgstr "Αποσυμπίεση σε υποφάκελο"
-
-#~ msgid "Extract To..."
-#~ msgstr "Αποσυμπίεση Σε.."
-
-#~ msgid ""
-#~ "Could not create the destination folder: %s.\n"
-#~ "Extraction not performed."
-#~ msgstr ""
-#~ "Αδυναμία δημιουργίας φακέλου προορισμού: %s.\n"
-#~ "Η αποσυμπίεση δεν πραγματοποιήθηκε."
-
-#~ msgid "gThumb"
-#~ msgstr "gThumb"
-
-#~ msgid "_Open..."
-#~ msgstr "_Άνοιγμα..."
-
-#~ msgid "Open an existing archive"
-#~ msgstr "Άνοιγμα ενός υπάρχοντος συμπιεσμένου αρχείου"
-
-#~ msgid "Save _As..."
-#~ msgstr "Αποθήκευση _Ως..."
-
-#~ msgid "Save current archive in a different type or name"
-#~ msgstr ""
-#~ "Αποθήκευση τρέχοντος συμπιεσμένου αρχείου με διαφορετικό όνομα ή τύπο"
-
-#~ msgid "_Close"
-#~ msgstr "_Κλείσιμο"
-
-#~ msgid "Close current archive"
-#~ msgstr "Κλείσιμο τρέχοντος συμπιεσμένου αρχείου"
-
-#~ msgid "E_xit"
-#~ msgstr "Έ_ξοδος"
-
-#~ msgid "Exit"
-#~ msgstr "Έξοδος"
-
-#~ msgid "by _Time"
-#~ msgstr "κατά _'Ωρα"
-
-#~ msgid "by _Path"
-#~ msgstr "κατά _Διαδρομή"
-
-#~ msgid "You don't have permissions to add files to this archive."
-#~ msgstr ""
-#~ "Δεν έχετε δικαιώματα να προσθέσετε αρχεία σε αυτό το συμπιεσμένο αρχείο"
-
-#~ msgid "Cannot load archive."
-#~ msgstr "Αδυναμία φόρτωσης συμπιεσμένου αρχείου."
-
-#~ msgid "_Name"
-#~ msgstr "Ό_νομα"
-
-#~ msgid "Archive will be deleted, are you sure?"
-#~ msgstr "Το συμπιεσμένο αρχείο θα διαγραφεί, είστε σίγουροι?"
-
-#~ msgid "_Delete"
-#~ msgstr "_Διαγραφή"
-
-#~ msgid "Delete current archive from disk"
-#~ msgstr "Διαγραφή τρέχοντος συμπιεσμένου αρχείου από τον δίσκο"
-
-#~ msgid "_Test Archive"
-#~ msgstr "_Δοκιμή συμπιεσμένου αρχείου"
-
-#~ msgid "Select All"
-#~ msgstr "Επιλογή Όλων"
-
-#~ msgid " (invalid Unicode)"
-#~ msgstr " (μη έγκυρο Unicode)"
-
-#~ msgid "Open %s"
-#~ msgstr "Άνοιγμα %s"
-
-#~ msgid "Current Location:"
-#~ msgstr "Τρέχουσα Τοποθεσία:"
-
-#
-#~ msgid "Save options"
-#~ msgstr "Επιλογές αποθήκευσης"
-
-#~ msgid "Columns to Show"
-#~ msgstr "Στήλες  για προβολή"
-
-#~ msgid "Archive Properties"
-#~ msgstr "Ιδιότητες Συμπιεσμένου Αρχείου"
-
-#~ msgid "Extract to:"
-#~ msgstr "Αποσυμπίεση σε:"
-
-#
-#~ msgid "Other options"
-#~ msgstr "'Αλλες επιλογές"
-
-#~ msgid "Viewer"
-#~ msgstr "Πρόγραμμα προβολής"
-
-#~ msgid "Fast"
-#~ msgstr "Γρήγορο"
-
-#~ msgid "File _Name"
-#~ msgstr "Όνομα _Αρχείου"
-
-#~ msgid "File _Path"
-#~ msgstr "Διαδρομή _Αρχείου"
-
-#~ msgid "File _Size"
-#~ msgstr "Μέγεθος _Αρχείου"
-
-#~ msgid "File _Type"
-#~ msgstr "Τύπος _Αρχείου"
-
-#~ msgid "Very fast"
-#~ msgstr "Πολύ Γρήγορο"
-
-#~ msgid "_Modification Time"
-#~ msgstr "_.Ωρα τροποποιήσης"
-
-#~ msgid "_Manual"
-#~ msgstr "_Εγχειρίδιο"
-
-#~ msgid "_File"
-#~ msgstr "_Αρχείο"
-
-#~ msgid "File Roller - Last output"
-#~ msgstr "File Roller - Τελευταίο αποτέλεσμα"
 
