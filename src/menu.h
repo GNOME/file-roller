@@ -397,10 +397,10 @@ GnomeUIInfo windows_menu[] = {
 
 GnomeUIInfo help_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
-          N_("_Manual"), N_("Display the File Roller Manual"), 
+          N_("_Contents"), N_("Display the File Roller Manual"), 
           manual_cb, NULL, NULL,
           GNOME_APP_PIXMAP_STOCK, GTK_STOCK_HELP,
-          0, 0, NULL },
+	  GDK_F1, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_About"), N_("Information about the program"), 
