@@ -75,6 +75,7 @@
 #define ICON_TYPE_REGULAR   "gnome-fs-regular"
 #define ICON_GTK_SIZE GTK_ICON_SIZE_LARGE_TOOLBAR
 
+#define BAD_CHARS "/\\*"
 
 enum {
 	TARGET_STRING,
@@ -4897,16 +4898,9 @@ valid_name (const char  *new_name,
 		*reason = g_strdup_printf ("%s\n\n%s", _("The new name is equal to the old one."), _("Please use a different name."));
 		retval = FALSE;
 		
-	} else {
-		const char *bad_chars = "/\\*";
-		int i, l = strlen (bad_chars);
-
-		for (i = 0; i < l; i++) 
-			if (strchr (new_name, bad_chars[i]) != NULL) {
-				*reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_new_name, bad_chars, _("Please use a different name."));
-				retval = FALSE;
-				break;
-			}
+	} else if (strchrs (new_name, BAD_CHARS)) {
+		*reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_new_name, BAD_CHARS, _("Please use a different name."));
+		retval = FALSE;
 	}
 
 	g_free (utf8_new_name);

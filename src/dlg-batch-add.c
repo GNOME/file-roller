@@ -42,6 +42,7 @@
 #define UPDATE_DROPPED_FILES (FALSE)
 #define ARCHIVE_ICON_SIZE (48)
 #define DEFAULT_EXTENSION ".tar.gz"
+#define BAD_CHARS "/\\*"
 
 typedef struct {
 	FRWindow  *window;
@@ -90,7 +91,47 @@ add_clicked_cb (GtkWidget  *widget,
 	window->update_dropped_files = UPDATE_DROPPED_FILES;
 	archive_name = g_filename_from_utf8 (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)), -1, NULL, NULL, NULL);
 
-	/* check whether the user entered an archive name. */
+	/* check whether the user entered a valid archive name. */
+
+	if (archive_name == '\0') {
+		GtkWidget  *d;
+
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not create the archive"),
+					     _("You have to specify an archive name."),
+					     GTK_STOCK_OK, GTK_RESPONSE_OK,
+					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (archive_name);
+
+		return;
+		
+	} else if (strchrs(archive_name, BAD_CHARS)) {
+		GtkWidget  *d;
+		char       *utf8_name = g_filename_to_utf8 (archive_name, -1, NULL, NULL, NULL);
+		char       *reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_name, BAD_CHARS, _("Please use a different name."));
+
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not create the archive"),
+					     reason,
+					     GTK_STOCK_OK, GTK_RESPONSE_OK,
+					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (reason);
+		g_free (archive_name);
+
+		return;
+	}
+	
+	/**/
 
 	if (path_is_dir (archive_name)) {
 		GtkWidget  *d;
@@ -136,7 +177,8 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
-	/* check directory existence. */
+	/* Check directory existence. */
+
 	archive_dir = remove_level_from_path ((char*) data->file_list->data);
 	if (! path_is_dir (archive_dir)) {
 		GtkWidget *d;
@@ -433,9 +475,7 @@ dlg_batch_add_files (FRWindow *window,
 				    strlen (automatic_name));
 	g_free (automatic_name);
 
-        gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
-				      GTK_WINDOW (window->app));
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE); 
 
-	gtk_widget_show (data->dialog);
+	gtk_window_present (GTK_WINDOW (data->dialog));
 }

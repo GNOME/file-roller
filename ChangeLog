@@ -1,5 +1,13 @@
 2004-09-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/file_roller.glade: 
+	* src/dlg-batch-add.c (dlg_batch_add_files): make the WM give
+	focus to the 'create archive' dialog.
+	(add_clicked_cb): check whether to user entered a valid archive name.
+
+	Fixes bug #147137: nautilus context menu 'create archive' doesn't 
+	accept absolute paths.
+
 	* src/file-utils.h: 
 	* src/file-utils.c (escape_str_common): 
 	(strchrs): new functions
