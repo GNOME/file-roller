@@ -108,6 +108,11 @@ split_line_lha (char *line)
 		fields[i++] = g_strdup ("");
 		fields[i++] = g_strdup ("");
 		line += strlen ("[MS-DOS]");
+
+	} else if (strncmp (line, "[generic]", 9) == 0) {
+		fields[i++] = g_strdup ("");
+		fields[i++] = g_strdup ("");
+		line += strlen ("[generic]");
 	}
 
 	scan = eat_spaces (line);
@@ -131,6 +136,9 @@ get_last_field_lha (char *line)
 	int         n = 7;
 
 	if (strncmp (line, "[MS-DOS]", 8) == 0) 
+		n--;
+
+	if (strncmp (line, "[generic]", 9) == 0) 
 		n--;
 
 	field = eat_spaces (line);
