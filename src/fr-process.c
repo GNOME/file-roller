@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@
 enum {
 	START,
 	DONE,
+	STICKY_ONLY,
 	LAST_SIGNAL
 };
 
@@ -54,7 +55,7 @@ fr_command_info_new ()
 {
 	FRCommandInfo *c_info;
 
-	c_info = g_new (FRCommandInfo, 1);
+	c_info = g_new0 (FRCommandInfo, 1);
 	c_info->args = NULL;
 	c_info->dir = NULL;
 	c_info->sticky = FALSE;
@@ -136,6 +137,14 @@ fr_process_class_init (FRProcessClass *class)
 			      fr_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1,
 			      G_TYPE_POINTER);
+	fr_process_signals[STICKY_ONLY] =
+		g_signal_new ("sticky_only",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FRProcessClass, sticky_only),
+			      NULL, NULL,
+			      fr_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 
 	gobject_class->finalize = fr_process_finalize;
 
@@ -283,6 +292,36 @@ fr_process_add_arg (FRProcess  *fr_proc,
 
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
 	c_info->args = g_list_prepend (c_info->args, g_strdup (arg));
+}
+
+
+void
+fr_process_set_begin_func (FRProcess    *fr_proc, 
+			   ProcFunc      func,
+			   gpointer      func_data)
+{
+	FRCommandInfo *c_info;
+
+	g_return_if_fail (fr_proc != NULL);
+
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info->begin_func = func;
+	c_info->begin_data = func_data;
+}
+
+
+void
+fr_process_set_end_func (FRProcess    *fr_proc, 
+			 ProcFunc      func,
+			 gpointer      func_data)
+{
+	FRCommandInfo *c_info;
+
+	g_return_if_fail (fr_proc != NULL);
+
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info->end_func = func;
+	c_info->end_data = func_data;
 }
 
 
@@ -472,7 +511,8 @@ start_current_command (FRProcess *fr_proc)
 	command = g_string_new ("");
 	for (scan = arg_list; scan; scan = scan->next) {
 		g_string_append (command, scan->data);
-		g_string_append_c (command, ' ');
+		if (scan->next != NULL)
+			g_string_append_c (command, ' ');
 	}
 	
 	argv[i++] = command->str;
@@ -488,6 +528,9 @@ start_current_command (FRProcess *fr_proc)
 		g_print ("\n"); 
 	}
 #endif
+
+	if (c_info->begin_func != NULL)
+		(*c_info->begin_func) (c_info->begin_data);
 
 	if (! g_spawn_async_with_pipes (dir,
 					argv,
@@ -538,12 +581,34 @@ command_is_sticky (FRProcess *fr_proc,
 }
 
 
+static void
+allow_sticky_processes_only (FRProcess *fr_proc,
+			     gboolean   emit_signal) 
+{
+	if (! fr_proc->sticky_only) {
+		/* Remember the first error. */
+		fr_proc->first_error.type = fr_proc->error.type;
+		fr_proc->first_error.status = fr_proc->error.status;
+		g_clear_error (&fr_proc->first_error.gerror);
+		if (fr_proc->error.gerror != NULL)
+			fr_proc->first_error.gerror = g_error_copy (fr_proc->error.gerror);
+	}
+	
+	fr_proc->sticky_only = TRUE;
+	if (emit_signal)
+		g_signal_emit (G_OBJECT (fr_proc), 
+			       fr_process_signals[STICKY_ONLY],
+			       0);
+}
+
+
 static gint
 check_child (gpointer data)
 {
-	FRProcess *fr_proc = data;
-	pid_t      pid;
-	int        status;
+	FRProcess      *fr_proc = data;
+	FRCommandInfo  *c_info;
+	pid_t           pid;
+	int             status;
 
 	/* Remove check. */
 
@@ -591,20 +656,16 @@ check_child (gpointer data)
 	fr_proc->output_fd = 0;
 	fr_proc->error_fd = 0;
 
+	/**/
+
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_command);
+	if (c_info->end_func != NULL)
+		(*c_info->end_func) (c_info->end_data);
+
 	/* Execute next command. */
 
-	if (fr_proc->error.type != FR_PROC_ERROR_NONE) {
-		if (! fr_proc->sticky_only) {
-			/* Remember the first error. */
-			fr_proc->first_error.type = fr_proc->error.type;
-			fr_proc->first_error.status = fr_proc->error.status;
-			g_clear_error (&fr_proc->first_error.gerror);
-			if (fr_proc->error.gerror != NULL)
-				fr_proc->first_error.gerror = g_error_copy (fr_proc->error.gerror);
-		}
-
-		fr_proc->sticky_only = TRUE;
-	}
+	if (fr_proc->error.type != FR_PROC_ERROR_NONE) 
+		allow_sticky_processes_only (fr_proc, TRUE);
 
 	if (fr_proc->sticky_only) {
 		do {
@@ -619,6 +680,8 @@ check_child (gpointer data)
 		start_current_command (fr_proc);
 		return FALSE;
 	}
+
+	/* Done */
 
 	fr_proc->current_command = -1;
 
@@ -704,12 +767,16 @@ _fr_process_stop (FRProcess *fr_proc,
 
 	if (fr_proc->stopping)
 		return;
-	fr_proc->stopping = TRUE;
 
+	fr_proc->stopping = TRUE;
 	fr_proc->error.type = FR_PROC_ERROR_STOPPED;
 
-	if (fr_proc->term_on_stop) 
+	if (command_is_sticky (fr_proc, fr_proc->current_command)) 
+		allow_sticky_processes_only (fr_proc, emit_signal);
+
+	else if (fr_proc->term_on_stop) 
 		kill (fr_proc->command_pid, SIGTERM);
+
 	else {
 		if (fr_proc->log_timeout != 0) {
 			g_source_remove (fr_proc->log_timeout);

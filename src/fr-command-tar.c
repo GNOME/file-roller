@@ -20,6 +20,8 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -27,6 +29,7 @@
 #include <glib.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
+#include <gnome.h>
 
 #include "file-data.h"
 #include "file-utils.h"
@@ -176,7 +179,7 @@ process_line (char     *line,
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
-	else
+	else 
 		comm->file_list = g_list_prepend (comm->file_list, fdata);
 }
 
@@ -234,6 +237,44 @@ fr_command_tar_list (FRCommand *comm)
 
 
 static void
+process_line__generic (char     *line, 
+		       gpointer  data,
+		       char     *action_msg)
+{
+	FRCommand    *comm = FR_COMMAND (data);
+	char         *msg;
+	char         *filename;
+	double        fraction;
+
+	if (line == NULL)
+		return;
+
+	if (line[strlen (line) - 1] == '/') /* ignore directories */
+		return;
+
+	filename = _g_strdup_with_max_size (line, FILENAME_MAX_LENGTH);
+	msg = g_strconcat (action_msg, filename, NULL);
+	g_free (filename);
+
+	fr_command_message (comm, msg);
+	g_free (msg);
+
+	if (comm->n_files != 0) {
+		fraction = (double) comm->n_file++ / comm->n_files;
+		fr_command_progress (comm, fraction);
+	}
+}
+
+
+static void
+process_line__add (char     *line, 
+		   gpointer  data)
+{
+	process_line__generic (line, data, _("Adding file: "));
+}
+
+
+static void
 fr_command_tar_add (FRCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
@@ -244,11 +285,13 @@ fr_command_tar_add (FRCommand     *comm,
 	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	GList        *scan;
 
-	/* Add files. */
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+				      process_line__add,
+				      comm);
 
 	fr_process_begin_command (comm->process, "tar");
-
 	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_add_arg (comm->process, "-v");
 
 	if (base_dir != NULL) {
 		gchar *e_base_dir = shell_escape (base_dir);
@@ -270,16 +313,37 @@ fr_command_tar_add (FRCommand     *comm,
 
 
 static void
+process_line__delete (char     *line, 
+		      gpointer  data)
+{
+	process_line__generic (line, data, _("Removing file: "));
+}
+
+
+static void
+begin_func__delete (gpointer data)
+{
+	FRCommand *comm = data;
+	fr_command_progress (comm, -1.0);
+	fr_command_message (comm, _("Deleting files from archive"));
+}
+
+
+static void
 fr_command_tar_delete (FRCommand *comm,
 		       GList     *file_list)
 {
 	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	GList        *scan;
 
-	/* Delete files. */
+	fr_process_set_out_line_func (comm->process, 
+				      process_line__delete,
+				      comm);
 
 	fr_process_begin_command (comm->process, "tar");
+	fr_process_set_begin_func (comm->process, begin_func__delete, comm);
 	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "--delete");
 	fr_process_add_arg (comm->process, "-f");
 	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
@@ -287,6 +351,14 @@ fr_command_tar_delete (FRCommand *comm,
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
+}
+
+
+static void
+process_line__extract (char     *line, 
+		       gpointer  data)
+{
+	process_line__generic (line, data, _("Extracting file: "));
 }
 
 
@@ -301,10 +373,13 @@ fr_command_tar_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_begin_command (comm->process, "tar");
-	
-	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+				      process_line__extract,
+				      comm);
 
+	fr_process_begin_command (comm->process, "tar");
+	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-xf");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	add_compress_arg (comm);
@@ -324,6 +399,15 @@ fr_command_tar_extract (FRCommand  *comm,
 
 
 static void
+begin_func__recompress (gpointer data)
+{
+	FRCommand *comm = data;
+	fr_command_progress (comm, -1.0);
+	fr_command_message (comm, _("Recompressing archive"));
+}
+
+
+static void
 fr_command_tar_recompress (FRCommand     *comm,
 			   FRCompression  compression)
 {
@@ -337,6 +421,7 @@ fr_command_tar_recompress (FRCommand     *comm,
 	case FR_COMPRESS_PROGRAM_GZIP:
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
 		switch (compression) {
 		case FR_COMPRESSION_VERY_FAST:
 			fr_process_add_arg (comm->process, "-1"); break;
@@ -357,6 +442,7 @@ fr_command_tar_recompress (FRCommand     *comm,
 	case FR_COMPRESS_PROGRAM_BZIP:
 		fr_process_begin_command (comm->process, "bzip");
 		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
 		switch (compression) {
 		case FR_COMPRESSION_VERY_FAST:
 			fr_process_add_arg (comm->process, "-1"); break;
@@ -377,6 +463,7 @@ fr_command_tar_recompress (FRCommand     *comm,
 	case FR_COMPRESS_PROGRAM_BZIP2:
 		fr_process_begin_command (comm->process, "bzip2");
 		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
 		switch (compression) {
 		case FR_COMPRESSION_VERY_FAST:
 			fr_process_add_arg (comm->process, "-1"); break;
@@ -397,6 +484,7 @@ fr_command_tar_recompress (FRCommand     *comm,
 	case FR_COMPRESS_PROGRAM_COMPRESS: 
 		fr_process_begin_command (comm->process, "compress");
 		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 		fr_process_end_command (comm->process);
@@ -407,6 +495,7 @@ fr_command_tar_recompress (FRCommand     *comm,
 	case FR_COMPRESS_PROGRAM_LZOP:
 		fr_process_begin_command (comm->process, "lzop");
 		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
 		switch (compression) {
 		case FR_COMPRESSION_VERY_FAST:
 			fr_process_add_arg (comm->process, "-1"); break;
@@ -444,6 +533,15 @@ fr_command_tar_recompress (FRCommand     *comm,
 
 
 static void
+begin_func__uncompress (gpointer data)
+{
+	FRCommand *comm = data;
+	fr_command_progress (comm, -1.0);
+	fr_command_message (comm, _("Decompressing archive"));
+}
+
+
+static void
 fr_command_tar_uncompress (FRCommand *comm)
 {
 	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
@@ -466,6 +564,7 @@ fr_command_tar_uncompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_GZIP:
 		if (path_is_file (comm->filename)) {
 			fr_process_begin_command (comm->process, "gzip");
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
 			fr_process_add_arg (comm->process, comm->e_filename);
@@ -485,6 +584,7 @@ fr_command_tar_uncompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_BZIP:
 		if (path_is_file (comm->filename)) {
 			fr_process_begin_command (comm->process, "bzip");
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
 			fr_process_add_arg (comm->process, comm->e_filename);
@@ -504,6 +604,7 @@ fr_command_tar_uncompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_BZIP2:
 		if (path_is_file (comm->filename)) {
 			fr_process_begin_command (comm->process, "bzip2");
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
 			fr_process_add_arg (comm->process, comm->e_filename);
@@ -524,6 +625,7 @@ fr_command_tar_uncompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_COMPRESS: 
 		if (path_is_file (comm->filename)) {
 			fr_process_begin_command (comm->process, "uncompress");
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, comm->e_filename);
 			fr_process_end_command (comm->process);
@@ -541,6 +643,7 @@ fr_command_tar_uncompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_LZOP:
 		if (path_is_file (comm->filename)) {
 			fr_process_begin_command (comm->process, "lzop");
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-dfU");
 			fr_process_add_arg (comm->process, "--no-stdin");
 			fr_process_add_arg (comm->process, comm->e_filename);

@@ -46,6 +46,9 @@
 enum {
 	START,
 	DONE,
+	PROGRESS,
+	MESSAGE,
+	STOPPABLE,
 	LAST_SIGNAL
 };
 
@@ -111,10 +114,59 @@ fr_archive_class_init (FRArchiveClass *class)
 			      G_TYPE_NONE, 2,
 			      G_TYPE_INT,
 			      G_TYPE_POINTER);
+	fr_archive_signals[PROGRESS] =
+		g_signal_new ("progress",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FRArchiveClass, progress),
+			      NULL, NULL,
+			      fr_marshal_VOID__DOUBLE,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_DOUBLE);
+	fr_archive_signals[MESSAGE] =
+		g_signal_new ("message",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FRArchiveClass, message),
+			      NULL, NULL,
+			      fr_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_STRING);
+	fr_archive_signals[STOPPABLE] =
+                g_signal_new ("stoppable",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FRArchiveClass, stoppable),
+			      NULL, NULL,
+			      fr_marshal_VOID__BOOL,
+			      G_TYPE_NONE, 
+			      1, G_TYPE_BOOLEAN);
 	
 	gobject_class->finalize = fr_archive_finalize;
 	class->start = NULL;
 	class->done = NULL;
+	class->progress = NULL;
+	class->message = NULL;
+}
+
+
+static void
+set_stoppable (FRArchive *archive,
+	       gboolean   stoppable)
+{
+	g_signal_emit (G_OBJECT (archive), 
+		       fr_archive_signals[STOPPABLE],
+		       0,
+		       stoppable);
+}
+
+
+static gboolean
+archive_sticky_only_cb (FRProcess *process,
+			FRArchive *archive)
+{
+	set_stoppable (archive, FALSE);
+	return TRUE;
 }
 
 
@@ -123,9 +175,16 @@ fr_archive_init (FRArchive *archive)
 {
 	archive->filename = NULL;
 	archive->command = NULL;
-	archive->process = fr_process_new ();
 	archive->is_compressed_file = FALSE;
-	archive->fake_load = FALSE;
+
+	archive->fake_load_func = NULL;
+	archive->fake_load_data = NULL;
+
+	archive->process = fr_process_new ();
+	g_signal_connect (G_OBJECT (archive->process), 
+			  "sticky_only",
+			  G_CALLBACK (archive_sticky_only_cb),
+			  archive);
 }
 
 
@@ -380,6 +439,9 @@ action_performed (FRCommand   *command,
 	case FR_ACTION_TEST:
 		s_action = "Test";
 		break;
+	case FR_ACTION_GET_LIST:
+		s_action = "Get list";
+		break;
 	}
 	g_print ("%s [DONE]\n", s_action);
 #endif
@@ -389,6 +451,32 @@ action_performed (FRCommand   *command,
 		       0,
 		       action,
 		       error);
+}
+
+
+static gboolean
+archive_progress_cb (FRCommand  *command,
+		     double      fraction,
+		     FRArchive  *archive)
+{
+	g_signal_emit (G_OBJECT (archive), 
+		       fr_archive_signals[PROGRESS], 
+		       0,
+		       fraction);
+	return TRUE;
+}
+
+
+static gboolean
+archive_message_cb  (FRCommand  *command,
+		     const char *msg,
+		     FRArchive  *archive)		     
+{
+	g_signal_emit (G_OBJECT (archive), 
+		       fr_archive_signals[MESSAGE], 
+		       0,
+		       msg);
+	return TRUE;
 }
 
 
@@ -425,8 +513,36 @@ fr_archive_new_file (FRArchive  *archive,
 			  "done",
 			  G_CALLBACK (action_performed),
 			  archive);
+	g_signal_connect (G_OBJECT (archive->command), 
+			  "progress",
+			  G_CALLBACK (archive_progress_cb),
+			  archive);
+	g_signal_connect (G_OBJECT (archive->command), 
+			  "message",
+			  G_CALLBACK (archive_message_cb),
+			  archive);
 
 	return TRUE;
+}
+
+
+void
+fr_archive_set_fake_load_func (FRArchive    *archive,
+			       FakeLoadFunc  func,
+			       gpointer      data)
+{
+	archive->fake_load_func = func;
+	archive->fake_load_data = data;
+}
+
+
+gboolean
+fr_archive_fake_load (FRArchive *archive)
+{
+	if (archive->fake_load_func != NULL)
+		return (*archive->fake_load_func) (archive, archive->fake_load_data);
+	else
+		return FALSE;
 }
 
 
@@ -471,13 +587,21 @@ fr_archive_load (FRArchive  *archive,
 			  "start",
 			  G_CALLBACK (action_started),
 			  archive);
-
 	g_signal_connect (G_OBJECT (archive->command), 
 			  "done",
 			  G_CALLBACK (action_performed),
 			  archive);
+	g_signal_connect (G_OBJECT (archive->command), 
+			  "progress",
+			  G_CALLBACK (archive_progress_cb),
+			  archive);
+	g_signal_connect (G_OBJECT (archive->command), 
+			  "message",
+			  G_CALLBACK (archive_message_cb),
+			  archive);
 
-	archive->command->fake_load = archive->fake_load;
+	set_stoppable (archive, TRUE);
+	archive->command->fake_load = fr_archive_fake_load (archive);
 	fr_command_list (archive->command);
 
 	return TRUE;
@@ -490,7 +614,8 @@ fr_archive_reload (FRArchive *archive)
 	g_return_if_fail (archive != NULL);
 	g_return_if_fail (archive->filename != NULL);
 
-	archive->command->fake_load = archive->fake_load;
+	set_stoppable (archive, TRUE);
+	archive->command->fake_load = fr_archive_fake_load (archive);
 	fr_command_list (archive->command);
 }
 
@@ -507,6 +632,7 @@ fr_archive_rename (FRArchive  *archive,
 		 * because in this case the 'content' of the archive changes 
 		 * too. */
 		fr_archive_load (archive, filename);
+
 	else {
 		if (archive->filename != NULL)
 			g_free (archive->filename);
@@ -529,7 +655,6 @@ find_file_in_archive (FRArchive *archive,
 
 	for (scan = archive->command->file_list; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
-		
 		if (strcmp (path, fdata->original_path) == 0)
 			return fdata;
 	}
@@ -614,6 +739,8 @@ fr_archive_add (FRArchive   *archive,
 	if (archive->read_only)
 		return;
 
+	set_stoppable (archive, FALSE);
+
 	/* if the command cannot update,  get the list of files that are 
 	 * newer than the ones in the archive. */
 
@@ -628,6 +755,12 @@ fr_archive_add (FRArchive   *archive,
 #ifdef DEBUG
 		g_print ("nothing to update.\n");
 #endif
+
+		archive->process->error.type = FR_PROC_ERROR_NONE;
+		g_signal_emit_by_name (G_OBJECT (archive->process), 
+				       "done",
+				       FR_ACTION_ADD,
+				       &archive->process->error);
 		return;
 	}
 
@@ -647,7 +780,7 @@ fr_archive_add (FRArchive   *archive,
 		GList *del_list = NULL;
 
 		for (scan = new_file_list; scan != NULL; scan = scan->next) {
-			gchar *filename = scan->data;
+			char *filename = scan->data;
 			if (find_file_in_archive (archive, filename)) 
 				del_list = g_list_prepend (del_list, filename);
 		}
@@ -663,6 +796,7 @@ fr_archive_add (FRArchive   *archive,
 	/* add now. */
 
 	e_file_list = escape_file_list (new_file_list);
+	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
 
 	for (scan = e_file_list; scan != NULL; ) {
 		GList *prev = scan->prev;
@@ -695,7 +829,6 @@ fr_archive_add (FRArchive   *archive,
 		g_list_free (new_file_list);
 
 	fr_command_recompress (archive->command, compression);
-
 	fr_process_start (archive->process);
 }
 
@@ -790,6 +923,8 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 	if (archive->read_only)
 		return NULL;
 
+	set_stoppable (archive, TRUE);
+
 	aww_data = g_new0 (AddWithWildcardData, 1);
 	aww_data->archive = archive;
 	aww_data->base_dir = g_strdup (base_dir);
@@ -870,6 +1005,8 @@ fr_archive_add_directory (FRArchive     *archive,
 	if (archive->read_only)
 		return NULL;
 
+	set_stoppable (archive, TRUE);
+
 	ad_data = g_new0 (AddDirectoryData, 1);
 	ad_data->archive = archive;
 	ad_data->directory = g_strdup (directory);
@@ -904,6 +1041,7 @@ _archive_remove (FRArchive *archive,
 		file_list = archive->command->file_list;
 
 	e_file_list = escape_file_list (file_list);
+	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
 
 	for (scan = e_file_list; scan != NULL; ) {
 		GList *prev = scan->prev;
@@ -940,6 +1078,8 @@ fr_archive_remove (FRArchive     *archive,
 
 	if (archive->read_only)
 		return;
+
+	set_stoppable (archive, FALSE);
 
 	fr_process_clear (archive->process);
 	fr_command_uncompress (archive->command);
@@ -1036,6 +1176,8 @@ extract_in_chunks (FRCommand  *command,
 {
 	GList *scan;
 
+	fr_command_set_n_files (command, g_list_length (file_list));
+
 	if (file_list == NULL) {
 		fr_command_extract (command,
 				    file_list,
@@ -1094,6 +1236,8 @@ fr_archive_extract (FRArchive  *archive,
 	gboolean  move_to_dest_dir;
 
 	g_return_if_fail (archive != NULL);
+
+	set_stoppable (archive, TRUE);
 
 	/* if a command supports all the requested options use 
 	 * fr_command_extract directly. */
@@ -1255,7 +1399,10 @@ void
 fr_archive_test (FRArchive  *archive,
 		 const char *password)
 {
+	set_stoppable (archive, TRUE);
+
 	fr_process_clear (archive->process);
+	fr_command_set_n_files (archive->command, 0);
 	fr_command_test (archive->command, password);
 	fr_process_start (archive->process);
 }

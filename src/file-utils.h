@@ -28,6 +28,9 @@
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 
 
+#define FILENAME_MAX_LENGTH 30 /* FIXME: find out the best value */
+
+
 gboolean            path_is_file                 (const gchar *s);
 
 gboolean            path_is_dir                  (const gchar *s);
@@ -84,6 +87,8 @@ GnomeVFSFileSize    get_dest_free_space          (const char  *path);
 
 gboolean            rmdir_recursive              (const gchar *directory);
 
+char *              _g_strdup_with_max_size      (const char *s,
+						  int         max_size);
 
 #define get_home_relative_dir(x)        \
         g_strconcat (g_get_home_dir (), \

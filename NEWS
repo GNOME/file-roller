@@ -1,8 +1,27 @@
+version 2.3.1
+-------------
+	* Added ability to convert archives.
+	* Popup a progress dialog when a long operation is underway,
+          instead of using a progress bar in the status bar.
+        * Give more detailed information about the current operation (only
+          for tar archives at the moment).
+	* When creating new archives, if the user does not specify the
+          extension, use 'tgz' as default instead of giving an 'archive
+          type not supported' error.
+	* Associate File Roller to the zoo archive format.
+	* Use a text entry instead of the option menu for the location.
+	* Do not allow dangerous operations, that is operations that if stopped
+          can cause the lost of the archive, such as adding and
+          removing files, to be stopped.
+	* Allow to stop folders reading.
+	* Added ability to test zoo archives.
+	* Bugfixes.
+
 version 2.3.0
 -------------
 	* Added zoo archive support.
 	* Read folders asynchronously.
-	* Display a better error message when the user forget to specify 
+	* Display a better error message when the user forgets to specify 
           the archive name in the "add to archive" dialog.
 	* Handle tar archives with a ':' in the path.
 

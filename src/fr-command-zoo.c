@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2003 The Free Software Foundation, Inc.
+ *  Copyright (C) 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,14 +45,14 @@ static FRCommandClass *parent_class = NULL;
 /* -- list -- */
 
 static time_t
-mktime_from_zoo_string (gchar *mday_s,
-			gchar *month_s,
-			gchar *year_s,
-			gchar *time_s)
+mktime_from_zoo_string (char *mday_s,
+			char *month_s,
+			char *year_s,
+			char *time_s)
 {
-	struct tm   tm = {0, };
-	gchar **fields;
-	gint year;
+	struct tm  tm = {0, };
+	char **fields;
+	int year;
 
 	/* This will break in 2075 */
 	year = atoi (year_s);
@@ -106,26 +106,27 @@ mktime_from_zoo_string (gchar *mday_s,
 }
 
 
-static gchar *
-eat_spaces (gchar *line)
+static char *
+eat_spaces (char *line)
 {
 	while ((*line == ' ') && (*line != 0))
 		line++;
 	return line;
 }
 
-static gchar **
-split_zoo_line (gchar *line)
+
+static char **
+split_zoo_line (char *line)
 {
-	gchar **fields;
-	gchar *scan, *field_end;
-	gint i;
+	char **fields;
+	char *scan, *field_end;
+	int i;
 
 	if (line[0] == '-') {
 		return NULL;
 	}
 
-	fields = g_new0 (gchar *, 6);
+	fields = g_new0 (char *, 6);
 	fields[5] = NULL;
 
 	// Get Length
@@ -142,7 +143,7 @@ split_zoo_line (gchar *line)
 
 	// Get Day, Month, Year, Time
 	for (i = 1; i < 5; i++) {
-		if (i == 2 && g_ascii_strncasecmp(scan, "file", 4) == 0) {
+		if (i == 2 && g_ascii_strncasecmp (scan, "file", 4) == 0) {
 			g_strfreev(fields);
 			return NULL;
 		}
@@ -154,12 +155,13 @@ split_zoo_line (gchar *line)
 	return fields;
 }
 
-static gchar *
-get_last_field (gchar *line)
+
+static char *
+get_last_field (char *line)
 {
-	gint   i;
-	gchar *field;
-	gint   n = 6;
+	int   i;
+	char *field;
+	int   n = 6;
 
 	field = eat_spaces (line);
 	for (i = 0; i < n; i++) {
@@ -171,23 +173,21 @@ get_last_field (gchar *line)
 		field = eat_spaces (field);
 		field = strchr (field, ' ');
 		field = eat_spaces (field);
-	} else {
+	} else 
 		field = eat_spaces (field);
-	}
-	field = strchr (field, ' ');
-	field = eat_spaces (field);
 
 	return field;
 }
 
+
 static void
-process_zoo_line (gchar     *line, 
-	      gpointer  data)
+process_zoo_line (char     *line, 
+		  gpointer  data)
 {
 	FileData   *fdata;
 	FRCommand  *zoo_comm = FR_COMMAND (data);
-	gchar      **fields;
-	gchar       *name_field;
+	char      **fields;
+	char       *name_field;
 
 	g_return_if_fail (line != NULL);
 	if (line[0] == '-')
@@ -227,6 +227,7 @@ process_zoo_line (gchar     *line,
 		zoo_comm->file_list = g_list_prepend (zoo_comm->file_list, fdata);
 }
 
+
 static void
 fr_command_zoo_list (FRCommand *zoo_comm)
 {
@@ -236,7 +237,7 @@ fr_command_zoo_list (FRCommand *zoo_comm)
 
 	fr_process_clear (zoo_comm->process);
 	fr_process_begin_command (zoo_comm->process, "zoo");
-	fr_process_add_arg (zoo_comm->process, "la");
+	fr_process_add_arg (zoo_comm->process, "lq");
 	fr_process_add_arg (zoo_comm->process, zoo_comm->e_filename);
 	fr_process_end_command (zoo_comm->process);
 	fr_process_start (zoo_comm->process);
@@ -257,11 +258,10 @@ fr_command_zoo_add (FRCommand     *comm,
 
 	fr_process_begin_command (comm->process, "zoo");
 
-	if (base_dir != NULL)
-		fr_process_set_working_dir (comm->process, base_dir);
+	fr_process_set_working_dir (comm->process, base_dir);
 
 	if (update) 
-		fr_process_add_arg (comm->process, "aunP");
+		fr_process_add_arg (comm->process, "auP");
 	else
 		fr_process_add_arg (comm->process, "aP");
 
@@ -271,6 +271,7 @@ fr_command_zoo_add (FRCommand     *comm,
 		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
 }
+
 
 static void
 fr_command_zoo_delete (FRCommand *comm,
@@ -288,6 +289,7 @@ fr_command_zoo_delete (FRCommand *comm,
 		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
 }
+
 
 static void
 fr_command_zoo_extract (FRCommand  *comm,
@@ -318,6 +320,18 @@ fr_command_zoo_extract (FRCommand  *comm,
 	fr_process_end_command (comm->process);
 }
 
+
+static void
+fr_command_zoo_test (FRCommand   *comm,
+		     const char  *password)
+{
+	fr_process_begin_command (comm->process, "zoo");
+	fr_process_add_arg (comm->process, "-test");
+	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_end_command (comm->process);
+}
+
+
 static void 
 fr_command_zoo_class_init (FRCommandZooClass *class)
 {
@@ -333,6 +347,7 @@ fr_command_zoo_class_init (FRCommandZooClass *class)
 	afc->add          = fr_command_zoo_add;
 	afc->delete       = fr_command_zoo_delete;
 	afc->extract      = fr_command_zoo_extract;
+	afc->test         = fr_command_zoo_test;
 }
 
  
@@ -345,7 +360,7 @@ fr_command_zoo_init (FRCommand *comm)
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = FALSE;
 	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
+	comm->propTest                     = TRUE;
 }
 
 

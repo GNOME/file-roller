@@ -45,8 +45,8 @@ struct _FRCommandTar
 	/*<private>*/
 
 	FRCompressProgram compress_prog;
-	gchar *uncomp_filename;
-	gboolean name_modified;
+	char     *uncomp_filename;
+	gboolean  name_modified;
 };
 
 struct _FRCommandTarClass

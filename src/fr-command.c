@@ -33,6 +33,8 @@
 enum {
 	START,
         DONE,
+	PROGRESS,
+	MESSAGE,
         LAST_SIGNAL
 };
 
@@ -161,6 +163,24 @@ fr_command_class_init (FRCommandClass *class)
 			      G_TYPE_NONE, 2,
 			      G_TYPE_INT,
 			      G_TYPE_POINTER);
+	fr_command_signals[PROGRESS] =
+		g_signal_new ("progress",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FRCommandClass, progress),
+			      NULL, NULL,
+			      fr_marshal_VOID__DOUBLE,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_DOUBLE);
+	fr_command_signals[MESSAGE] =
+		g_signal_new ("message",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FRCommandClass, message),
+			      NULL, NULL,
+			      fr_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_STRING);
 
         gobject_class->finalize = fr_command_finalize;
 
@@ -177,6 +197,8 @@ fr_command_class_init (FRCommandClass *class)
 
 	class->start          = NULL;
 	class->done           = NULL;
+	class->progress       = NULL;
+	class->message        = NULL;
 }
 
 
@@ -314,6 +336,8 @@ fr_command_list (FRCommand *comm)
 {
 	g_return_if_fail (FR_IS_COMMAND (comm));
 
+	fr_command_progress (comm, -1.0);
+
 	if (comm->file_list != NULL) {
 		g_list_foreach (comm->file_list, (GFunc) file_data_free, NULL);
 		g_list_free (comm->file_list);
@@ -325,6 +349,16 @@ fr_command_list (FRCommand *comm)
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
 	if (comm->fake_load) {
+
+#ifdef DEBUG
+		g_print ("FAKE LOAD\n");
+#endif
+
+		g_signal_emit (G_OBJECT (comm), 
+			       fr_command_signals[START], 
+			       0,
+			       comm->action);
+
 		comm->process->error.type = FR_PROC_ERROR_NONE;
 		g_signal_emit (G_OBJECT (comm), 
 			       fr_command_signals[DONE], 
@@ -344,6 +378,8 @@ fr_command_add (FRCommand     *comm,
 		const char    *password,
 		FRCompression  compression)
 {
+	fr_command_progress (comm, -1.0);
+
 	comm->action = FR_ACTION_ADD;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
@@ -360,6 +396,8 @@ void
 fr_command_delete (FRCommand *comm,
 		   GList *file_list)
 {
+	fr_command_progress (comm, -1.0);
+
 	comm->action = FR_ACTION_DELETE;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
@@ -376,6 +414,8 @@ fr_command_extract (FRCommand  *comm,
 		    gboolean    junk_paths,
 		    const char *password)
 {
+	fr_command_progress (comm, -1.0);
+
 	comm->action = FR_ACTION_EXTRACT;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
@@ -393,6 +433,8 @@ void
 fr_command_test (FRCommand   *comm,
 		 const char  *password)
 {
+	fr_command_progress (comm, -1.0);
+
 	comm->action = FR_ACTION_TEST;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
@@ -403,6 +445,7 @@ fr_command_test (FRCommand   *comm,
 void
 fr_command_uncompress (FRCommand *comm)
 {
+	fr_command_progress (comm, -1.0);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->uncompress (comm);
 }
 
@@ -411,7 +454,42 @@ void
 fr_command_recompress (FRCommand     *comm,
 		       FRCompression  compression)
 {
+	fr_command_progress (comm, -1.0);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
+}
+
+
+/* fraction == -1 means : I don't known how much time the current operation will take, 
+ *                        the dialog will display this info pulsing the progress bar. 
+ * fraction in [0.0, 1.0] means the amount of work, in percentage, accomplished. */
+void
+fr_command_progress (FRCommand     *comm,
+		     double         fraction)
+{
+	g_signal_emit (G_OBJECT (comm), 
+		       fr_command_signals[PROGRESS], 
+		       0,
+		       fraction);
+}
+
+
+void
+fr_command_message (FRCommand     *comm,
+		    const char    *msg)
+{
+	g_signal_emit (G_OBJECT (comm), 
+		       fr_command_signals[MESSAGE], 
+		       0,
+		       msg);
+}
+
+
+void
+fr_command_set_n_files (FRCommand     *comm,
+			int            n_files)
+{
+	comm->n_files = n_files;
+	comm->n_file = 1;
 }
 
 

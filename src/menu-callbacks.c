@@ -1069,6 +1069,9 @@ stop_cb (GtkWidget *widget,
 {
 	FRWindow *window = data;
 
+	if (! window->stoppable)
+		return;
+
 	if (window->vd_handle != NULL) {
 		visit_dir_async_interrupt (window->vd_handle, 
 					   stop__step2, 

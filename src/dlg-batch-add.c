@@ -163,10 +163,12 @@ add_clicked_cb (GtkWidget  *widget,
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup (data->file_list);
-		window->add_dropped_files = TRUE;
+		window->add_after_creation = TRUE;
 		window_archive_new (window, archive_name);
 
 	} else {
+		window->add_after_opening = TRUE;
+
 		window_batch_mode_add_next_action (window,
 						   FR_BATCH_ACTION_ADD,
 						   path_list_dup (data->file_list),
@@ -186,7 +188,9 @@ dlg_batch_add_files (FRWindow *window,
         DialogData *data;
 	GtkWidget  *cancel_button;
 	GtkWidget  *add_button;
-	char       *label;
+	GList      *scan;
+	int         n_files = 0, n_folders = 0;
+	char       *label_files = NULL, *label_folders = NULL, *label;
 	char       *path;
 	char       *markup;
 
@@ -215,8 +219,26 @@ dlg_batch_add_files (FRWindow *window,
 
 	/* Set widgets data. */
 
-	label = g_strdup_printf (_("Adding %u files"), 
-				 g_list_length (file_list));
+	for (scan = file_list; scan; scan = scan->next) {
+		char *path = scan->data;
+		if (path_is_dir (path))
+			n_folders++;
+		else if (path_is_file (path))
+			n_files++;
+	}
+
+	if (n_files > 0) 
+		label_files = g_strdup_printf (_("Files to add: %d"), n_files);
+	if (n_folders > 0)
+		label_folders = g_strdup_printf (_("Folders to add: %d"), n_folders);
+	
+	label = g_strconcat ((label_folders ? label_folders : label_files),
+			     ((label_folders && label_files) ? "\n" : ""),
+			     ((label_folders && label_files) ? label_files : NULL),
+			     NULL);
+	g_free (label_files);
+	g_free (label_folders);
+
 	markup = g_strdup_printf ("<b>%s</b>", label);
 	g_free (label);
 	gtk_label_set_markup (GTK_LABEL (data->a_add_label), markup);
@@ -225,7 +247,7 @@ dlg_batch_add_files (FRWindow *window,
 	path = g_strconcat (window->add_default_dir, "/", NULL);
 	_gtk_entry_set_locale_text (GTK_ENTRY (data->a_add_to_entry), path);
 	g_free (path);
-	
+
 	/* Set the signals handlers. */
 
         g_signal_connect (G_OBJECT (data->dialog), 
@@ -242,6 +264,10 @@ dlg_batch_add_files (FRWindow *window,
 			  data);
 
 	/* Run dialog. */
+
+	gtk_widget_grab_focus (data->a_add_to_entry);
+	gtk_editable_set_position  (GTK_EDITABLE (data->a_add_to_entry), 
+				    strlen (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry))));
 
         gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
 				      GTK_WINDOW (window->app));

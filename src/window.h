@@ -71,7 +71,6 @@ typedef struct {
 	GtkListStore *   empty_store;
 	GtkWidget *      toolbar;
 	GtkWidget *      statusbar;
-	GtkWidget *      progress;
 
 	GtkWidget *      location_bar;
 	GtkWidget *      location_entry;
@@ -120,6 +119,8 @@ typedef struct {
 
 	FRConvertData    convert_data;
 
+	gboolean         stoppable;
+
 	/* Menu items. */
 
 	GtkWidget *      mitem_new_archive;
@@ -133,6 +134,9 @@ typedef struct {
 	GtkWidget *      mitem_copy_archive;
 	GtkWidget *      mitem_rename_archive;
 	GtkWidget *      mitem_delete_archive;
+
+	GtkWidget *      mitem_select_all;
+	GtkWidget *      mitem_unselect_all;
 
 	GtkWidget *      mitem_view_toolbar;
 	GtkWidget *      mitem_view_statusbar;
@@ -183,23 +187,28 @@ typedef struct {
 					 * too .*/
 
 	GList *  dropped_file_list;     /* the list of dropped files. */
-	gboolean add_dropped_files;     /* whether we must add dropped files
+	gboolean add_after_creation;    /* whether we must add dropped files
 					 * after creating an archive. */
+	gboolean add_after_opening;     /* whether we must add dropped files
+					 * after opening an archive. Used in 
+					 * batch mode to avoid unnecessary 
+					 * archive loading. */
+
 	gboolean adding_dropped_files;  /* whether we are adding dropped 
 					 * files. */
 	gboolean update_dropped_files;  /* the update flag of the add 
 					 * operation.  */
 
-	/* batch mode data */
+	/* progress dialog data */
 
-	GtkWidget *batch_win;         /* Window to show when in batch mode. */
-	GtkWidget *batch_action_lbl;      
-	GtkWidget *batch_message_lbl;
-	GtkWidget *batch_quit_button;
-	GtkWidget *batch_help_button;
-	GtkWidget *batch_image;
-       
-	GdkPixbuf *batch_icon;
+	GtkWidget *progress_dialog;
+	GtkWidget *pd_message;
+	GtkWidget *pd_progress_bar;
+	gboolean   progress_pulse;
+	guint      progress_timeout;  /* Timeout to display the progress dialog. */
+	guint      hide_progress_timeout;  /* Timeout to hide the progress dialog. */
+
+	/* batch mode data */
 
 	gboolean   batch_mode;          /* whether we are in a non interactive
 					 * mode. */

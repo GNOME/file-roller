@@ -52,6 +52,7 @@ enum {
 	FILE_MENU_COPY_ARCHIVE,
 	FILE_MENU_MOVE_ARCHIVE,
 	FILE_MENU_DELETE_ARCHIVE,
+	FILE_MENU_TEST,
 	FILE_MENU_SEP4,
 	FILE_MENU_ARCHIVE_PROP,
 	FILE_MENU_SEP5,
@@ -127,6 +128,12 @@ GnomeUIInfo file_menu[] = {
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_DELETE,
 	  0, 0, NULL },
 
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_Test"), N_("Test whether the archive contains errors"),
+	  test_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM,
@@ -157,7 +164,6 @@ enum {
 	EDIT_MENU_DELETE,
 	EDIT_MENU_EXTRACT,
 	/*EDIT_MENU_UUENCODE,*/
-	EDIT_MENU_TEST,
 	/*EDIT_MENU_COMMENT,*/
 	EDIT_MENU_SEP1,
 	EDIT_MENU_SELECT_ALL,
@@ -177,7 +183,7 @@ GnomeUIInfo edit_menu[] = {
 	  'z', GDK_CONTROL_MASK, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Delete"), N_("Delete selected files and folders from the archive"), 
+	  N_("_Delete Files"), N_("Delete selected files and folders from the archive"), 
 	  dlg_delete, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REMOVE,
 	  'd', GDK_CONTROL_MASK, NULL },
@@ -195,12 +201,6 @@ GnomeUIInfo edit_menu[] = {
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 	*/
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Test Archive"), " ",
-	  test_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  0, 0, NULL },
 
 	/* FIXME
 	{ GNOME_APP_UI_ITEM, 
@@ -235,7 +235,7 @@ GnomeUIInfo edit_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Preferences"), " ", 
+	  N_("_Preferences"), N_("Edit File Roller preferences"), 
 	  dlg_preferences, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PREFERENCES, 
 	  'p', GDK_CONTROL_MASK, NULL },
@@ -465,19 +465,19 @@ GnomeUIInfo file_popup_menu_data[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Add Files..."), N_("Add files to the archive"), 
+	  N_("Add _Files..."), N_("Add files to the archive"), 
 	  add_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ADD,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Delete Files"), N_("Delete files from the archive"), 
+	  N_("_Delete Files"), N_("Delete files from the archive"), 
 	  dlg_delete, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REMOVE,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Extract to..."), N_("Extract files from the archive"), 
+	  N_("_Extract to..."), N_("Extract files from the archive"), 
 	  dlg_extract, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -485,8 +485,14 @@ GnomeUIInfo file_popup_menu_data[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Select All"), " ", 
+	  N_("Select _All"), N_("Select all files"), 
 	  select_all_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Dese_lect All"), N_("Deselect all files"), 
+	  deselect_all_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 

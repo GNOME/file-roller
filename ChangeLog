@@ -1,3 +1,37 @@
+2003-04-06  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (window_fake_load): use a better logic to determine
+	when to use the fake load.
+
+	* src/dlg-batch-add.c (dlg_batch_add_files): display how many
+	folders and files the user is going to add.
+
+	* src/window.c (window_batch_mode_stop): 
+	* src/window.h: removed the batch window, simply use the normal
+	window now that we have the progress dialog.
+
+	* component/File_Roller_Component.server.in.in: added zoo archive
+
+	* src/fr-command-zoo.c (fr_command_zoo_list): use "lq" instead of "la"
+	(fr_command_zoo_add): use "auP" instead of "aunP"
+
+	* src/window.c:
+	* src/window.h: added a progress dialog.
+
+	* src/fr-process.h: 
+	* src/fr-process.c: added begin_func and end_func functions to be
+	called before and after a process execution. added sticky_only
+	signal.
+	(_fr_process_stop): do not stop the current command if it is
+	declared sticky.
+
+	* src/fr-archive.c:
+	* src/fr-archive.h: added some signals to give more info about the
+	current command.
+
+	* src/fr-command-zoo.c (fr_command_zoo_test): added test to zoo
+	archive.
+
 2003-03-30  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu-callbacks.c (new_file_ok_cb): use tgz as default extension.
