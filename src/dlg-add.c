@@ -131,17 +131,19 @@ open_file_ok_cb (GtkWidget *w,
 		if (files != NULL) {
 			gchar *first = files->data;
 			if (path_is_dir (first))
-				fr_archive_add_directory (data->window->archive, 
+				fr_archive_add_directory (window->archive, 
 							  file_name_from_path (first), 
 							  base_dir, 
 							  FALSE,
-							  data->window->password);
+							  window->password,
+							  window->compression);
 			else 
-				fr_archive_add (data->window->archive,
+				fr_archive_add (window->archive,
 						files,
 						base_dir,
 						update,
-						data->window->password);
+						window->password,
+						window->compression);
 		}
 		
 		g_list_free (files);
@@ -169,7 +171,7 @@ open_file_ok_cb (GtkWidget *w,
 		} else
 			exclude_files = NULL;
 
-		fr_archive_add_with_wildcard (data->window->archive,
+		fr_archive_add_with_wildcard (window->archive,
 					      file_name_from_path (path),
 					      exclude_files,
 					      base_dir,
@@ -180,7 +182,8 @@ open_file_ok_cb (GtkWidget *w,
 					      no_backup_files,
 					      no_dot_files,
 					      ignore_case,
-					      data->window->password);
+					      window->password,
+					      window->compression);
 	}
 
 	g_free (path);

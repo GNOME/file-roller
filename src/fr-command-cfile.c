@@ -83,11 +83,12 @@ fr_command_cfile_list (FRCommand *comm)
 
 
 static void
-fr_command_cfile_add (FRCommand   *comm,
-		      GList       *file_list,
-		      const char  *base_dir,
-		      gboolean     update,
-		      const char  *password)
+fr_command_cfile_add (FRCommand     *comm,
+		      GList         *file_list,
+		      const char    *base_dir,
+		      gboolean       update,
+		      const char    *password,
+		      FRCompression  compression)
 {
 	/* never called */
 }

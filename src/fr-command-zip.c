@@ -219,11 +219,12 @@ fr_command_zip_list (FRCommand *comm)
 
 
 static void
-fr_command_zip_add (FRCommand   *comm,
-		    GList       *file_list,
-		    const char  *base_dir,
-		    gboolean     update,
-		    const char  *password)
+fr_command_zip_add (FRCommand     *comm,
+		    GList         *file_list,
+		    const char    *base_dir,
+		    gboolean       update,
+		    const char    *password,
+		    FRCompression  compression)
 {
 	GList *scan;
 
@@ -241,6 +242,17 @@ fr_command_zip_add (FRCommand   *comm,
 	if (password != NULL) {
 		fr_process_add_arg (comm->process, "-P");
 		fr_process_add_arg (comm->process, password);
+	}
+
+	switch (compression) {
+	case FR_COMPRESSION_VERY_FAST:
+		fr_process_add_arg (comm->process, "-1"); break;
+	case FR_COMPRESSION_FAST:
+		fr_process_add_arg (comm->process, "-3"); break;
+	case FR_COMPRESSION_NORMAL:
+		fr_process_add_arg (comm->process, "-6"); break;
+	case FR_COMPRESSION_MAXIMUM:
+		fr_process_add_arg (comm->process, "-9"); break;
 	}
 
 	fr_process_add_arg (comm->process, comm->e_filename);

@@ -89,6 +89,8 @@ preferences_load ()
 
 	preferences.view_folder = get_bool_with_default (
 		"file-roller/Extract/View Folder", FALSE);
+	preferences.compression = get_int_with_default (
+		"file-roller/Add/Compression", FR_COMPRESSION_NORMAL);
 
 	preferences.editors_n = gnome_config_get_int (
 		"file-roller/Editors/editors=0");
@@ -148,6 +150,8 @@ preferences_save ()
 
 	gnome_config_set_bool ("file-roller/Extract/View Folder",
 			       preferences.view_folder);
+	gnome_config_set_int ("file-roller/Add/Compression",
+			      preferences.compression);
 	
 	gnome_config_set_int ("file-roller/Editors/editors", preferences.editors_n);
 	for (i = 0, scan = preferences.editors; scan; scan = scan->next) {

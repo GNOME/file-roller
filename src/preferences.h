@@ -61,6 +61,9 @@ typedef struct {
 	/* Extraction options */
 
 	gboolean          view_folder;
+
+	/* Add options */
+	FRCompression     compression;
 } Preferences;
 
 

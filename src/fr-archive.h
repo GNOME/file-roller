@@ -84,7 +84,8 @@ void         fr_archive_add                   (FRArchive   *archive,
 					       GList       *file_list,
 					       const char  *base_dir,
 					       gboolean     update,
-					       const char  *password);
+					       const char  *password,
+					       FRCompression  compression);
 
 void         fr_archive_add_with_wildcard     (FRArchive   *archive, 
 					       const char  *include_files,
@@ -97,16 +98,19 @@ void         fr_archive_add_with_wildcard     (FRArchive   *archive,
 					       gboolean     no_backup_files,
 					       gboolean     no_dot_files,
 					       gboolean     ignore_case,
-					       const char  *password);
+					       const char  *password,
+					       FRCompression  compression);
 
 void         fr_archive_add_directory         (FRArchive   *archive, 
 					       const char  *directory,
 					       const char  *base_dir,
 					       gboolean     update,
-					       const char  *password);
+					       const char  *password,
+					       FRCompression  compression);
 
 void         fr_archive_remove                (FRArchive   *archive,
-					       GList       *file_list);
+					       GList       *file_list,
+					       FRCompression  compression);
 
 void         fr_archive_extract               (FRArchive   *archive,
 					       GList       *file_list,

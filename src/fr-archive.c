@@ -512,7 +512,8 @@ fr_archive_add (FRArchive   *archive,
 		GList       *file_list, 
 		const char  *base_dir,
 		gboolean     update,
-		const char  *password)
+		const char  *password,
+		FRCompression  compression)
 {
 	GList    *new_file_list;
 	gboolean  free_new_file_list;
@@ -596,7 +597,8 @@ fr_archive_add (FRArchive   *archive,
 				chunk_list, 
 				base_dir, 
 				update,
-				password);
+				password,
+				compression);
 		prev->next = scan;
 	}
 
@@ -604,7 +606,7 @@ fr_archive_add (FRArchive   *archive,
 	if (free_new_file_list)
 		g_list_free (new_file_list);
 
-	fr_command_recompress (archive->command);
+	fr_command_recompress (archive->command, compression);
 
 	fr_process_start (archive->process);
 }
@@ -651,7 +653,8 @@ fr_archive_add_with_wildcard (FRArchive  *archive,
 			      gboolean    no_backup_files,
 			      gboolean    no_dot_files,
 			      gboolean    ignore_case,
-			      const char *password)
+			      const char *password,
+			      FRCompression compression)
 {
 	GList *file_list;
 
@@ -673,7 +676,8 @@ fr_archive_add_with_wildcard (FRArchive  *archive,
 			file_list,
 			base_dir,
 			update,
-			password);
+			password,
+			compression);
 	path_list_free (file_list);
 }
 
@@ -684,7 +688,8 @@ fr_archive_add_directory (FRArchive  *archive,
 			  const char *directory,
 			  const char *base_dir,
 			  gboolean    update,
-			  const char *password)
+			  const char *password,
+			  FRCompression compression)
 
 {
 	GList *file_list;
@@ -697,7 +702,8 @@ fr_archive_add_directory (FRArchive  *archive,
 			file_list,
 			base_dir,
 			update,
-			password);
+			password,
+			compression);
 	path_list_free (file_list);
 }
 
@@ -747,8 +753,9 @@ _archive_remove (FRArchive *archive,
 
 /* Note: all paths unescaped. */
 void
-fr_archive_remove (FRArchive *archive,
-		   GList     *file_list)
+fr_archive_remove (FRArchive     *archive,
+		   GList         *file_list,
+		   FRCompression  compression)
 {
 	g_return_if_fail (archive != NULL);
 
@@ -758,7 +765,7 @@ fr_archive_remove (FRArchive *archive,
 	fr_process_clear (archive->process);
 	fr_command_uncompress (archive->command);
 	_archive_remove (archive, file_list);
-	fr_command_recompress (archive->command);
+	fr_command_recompress (archive->command, compression);
 	fr_process_start (archive->process);
 }
 

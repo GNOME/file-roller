@@ -78,34 +78,36 @@ struct _FRCommandClass
 
 	/*<virtual functions>*/
 
-	void        (*list)           (FRCommand   *comm);
+	void        (*list)           (FRCommand     *comm);
 
-	void        (*add)            (FRCommand   *comm,
-				       GList       *file_list,
-				       const char  *base_dir,
-				       gboolean     update,
-				       const char  *password); 
+	void        (*add)            (FRCommand     *comm,
+				       GList         *file_list,
+				       const char    *base_dir,
+				       gboolean       update,
+				       const char    *password,
+				       FRCompression  compression); 
 
-	void        (*delete)         (FRCommand   *comm,
-				       GList       *file_list); 
+	void        (*delete)         (FRCommand     *comm,
+				       GList         *file_list); 
 
-	void        (*extract)        (FRCommand   *comm,
-				       GList       *file_list,
-				       const char  *dest_dir,
-				       gboolean     overwrite,
-				       gboolean     skip_older,
-				       gboolean     junk_paths,
-				       const char  *password);
+	void        (*extract)        (FRCommand     *comm,
+				       GList         *file_list,
+				       const char    *dest_dir,
+				       gboolean       overwrite,
+				       gboolean       skip_older,
+				       gboolean       junk_paths,
+				       const char    *password);
 
-	void        (*test)           (FRCommand   *comm,
-				       const char  *password);
+	void        (*test)           (FRCommand     *comm,
+				       const char    *password);
 
-	void        (*uncompress)     (FRCommand   *comm);
+	void        (*uncompress)     (FRCommand     *comm);
 
-	void        (*recompress)     (FRCommand   *comm);
+	void        (*recompress)     (FRCommand     *comm,
+				       FRCompression  compression);
 
-	void        (*handle_error)   (FRCommand   *comm,
-				       FRProcError *error);
+	void        (*handle_error)   (FRCommand     *comm,
+				       FRProcError   *error);
 
 
 	/*<signals>*/
@@ -120,42 +122,44 @@ struct _FRCommandClass
 
 GType          fr_command_get_type           (void);
 
-void           fr_command_construct          (FRCommand   *comm,
-					      FRProcess   *process,
-					      const char  *filename);
+void           fr_command_construct          (FRCommand     *comm,
+					      FRProcess     *process,
+					      const char    *filename);
 
-void           fr_command_set_filename       (FRCommand   *comm,
-					      const char  *filename);
+void           fr_command_set_filename       (FRCommand     *comm,
+					      const char    *filename);
 
-void           fr_command_list               (FRCommand   *comm);
+void           fr_command_list               (FRCommand     *comm);
 
-void           fr_command_add                (FRCommand   *comm,
-					      GList       *file_list,
-					      const char  *base_dir,
-					      gboolean     update,
-					      const char  *password); 
+void           fr_command_add                (FRCommand     *comm,
+					      GList         *file_list,
+					      const char    *base_dir,
+					      gboolean       update,
+					      const char    *password,
+					      FRCompression  compression); 
 
-void           fr_command_delete             (FRCommand   *comm,
-					      GList       *file_list); 
+void           fr_command_delete             (FRCommand     *comm,
+					      GList         *file_list); 
 
-void           fr_command_extract            (FRCommand   *comm,
-					      GList       *file_list,
-					      const char  *dest_dir,
-					      gboolean     overwrite,
-					      gboolean     skip_older,
-					      gboolean     junk_paths,
-					      const char  *password);
+void           fr_command_extract            (FRCommand     *comm,
+					      GList         *file_list,
+					      const char    *dest_dir,
+					      gboolean       overwrite,
+					      gboolean       skip_older,
+					      gboolean       junk_paths,
+					      const char    *password);
 
-void           fr_command_test               (FRCommand   *comm,
-					      const char  *password);
+void           fr_command_test               (FRCommand     *comm,
+					      const char    *password);
 
-void           fr_command_uncompress         (FRCommand   *comm);
+void           fr_command_uncompress         (FRCommand     *comm);
 
-void           fr_command_recompress         (FRCommand   *comm);
+void           fr_command_recompress         (FRCommand     *comm,
+					      FRCompression  compression);
 
 /* private functions */
 
-void           fr_command_handle_error       (FRCommand   *comm,
-					      FRProcError *error);
+void           fr_command_handle_error       (FRCommand     *comm,
+					      FRProcError   *error);
 
 #endif /* FR_COMMAND_H */

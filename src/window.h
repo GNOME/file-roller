@@ -96,6 +96,7 @@ typedef struct {
 	WindowListMode   list_mode;
 	char *           current_dir;
 	char *           password;
+	FRCompression    compression;
 
 	guint            activity_timeout_handle;   /* activity timeout 
 						     * handle. */

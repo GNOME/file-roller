@@ -1581,7 +1581,8 @@ drag_drop_add_file_list (FRWindow *window)
 					  file_name_from_path (path),
 					  base_dir,
 					  window->update_dropped_files,
-					  window->password);
+					  window->password,
+					  window->compression);
 		g_free (base_dir);
 		g_free (path);
 		return;
@@ -1624,7 +1625,8 @@ drag_drop_add_file_list (FRWindow *window)
 				only_names_list,
 				first_basedir,
 				window->update_dropped_files,
-				window->password);
+				window->password,
+				window->compression);
 
 		g_list_free (only_names_list);
 		g_free (first_basedir);
@@ -1650,11 +1652,12 @@ drag_drop_add_file_list (FRWindow *window)
 				singleton,
 				basedir,
 				window->update_dropped_files,
-				window->password);
+				window->password,
+				window->compression);
 		path_list_free (singleton);
 		g_free (basedir);
 	}
-	fr_command_recompress (archive->command);
+	fr_command_recompress (archive->command, window->compression);
 	fr_process_start (archive->process);
 }
 
@@ -2604,6 +2607,7 @@ window_new ()
 	window->batch_action = NULL;
 
 	window->password = NULL;
+	window->compression = preferences.compression;
 
 	/* update menu items */
 
@@ -2747,6 +2751,7 @@ window_close (FRWindow *window)
 	preferences.sort_method = window->sort_method;
 	preferences.sort_type = window->sort_type;
 	preferences.list_mode = window->list_mode;
+	preferences.compression = window->compression;
 
 	window_list = g_list_remove (window_list, window);
 	g_free (window);

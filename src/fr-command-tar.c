@@ -233,11 +233,12 @@ fr_command_tar_list (FRCommand *comm)
 
 
 static void
-fr_command_tar_add (FRCommand   *comm,
-		    GList       *file_list,
-		    const char  *base_dir,
-		    gboolean     update,
-		    const char  *password)
+fr_command_tar_add (FRCommand     *comm,
+		    GList         *file_list,
+		    const char    *base_dir,
+		    gboolean       update,
+		    const char    *password,
+		    FRCompression  compression)
 {
 	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	GList        *scan;
@@ -317,7 +318,8 @@ fr_command_tar_extract (FRCommand  *comm,
 
 
 static void
-fr_command_tar_recompress (FRCommand *comm)
+fr_command_tar_recompress (FRCommand     *comm,
+			   FRCompression  compression)
 {
 	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	gchar        *new_name = NULL;
@@ -329,6 +331,16 @@ fr_command_tar_recompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_GZIP:
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_set_sticky (comm->process, TRUE);
+		switch (compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			fr_process_add_arg (comm->process, "-1"); break;
+		case FR_COMPRESSION_FAST:
+			fr_process_add_arg (comm->process, "-3"); break;
+		case FR_COMPRESSION_NORMAL:
+			fr_process_add_arg (comm->process, "-6"); break;
+		case FR_COMPRESSION_MAXIMUM:
+			fr_process_add_arg (comm->process, "-9"); break;
+		}
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 		fr_process_end_command (comm->process);
@@ -339,6 +351,16 @@ fr_command_tar_recompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_BZIP:
 		fr_process_begin_command (comm->process, "bzip");
 		fr_process_set_sticky (comm->process, TRUE);
+		switch (compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			fr_process_add_arg (comm->process, "-1"); break;
+		case FR_COMPRESSION_FAST:
+			fr_process_add_arg (comm->process, "-3"); break;
+		case FR_COMPRESSION_NORMAL:
+			fr_process_add_arg (comm->process, "-6"); break;
+		case FR_COMPRESSION_MAXIMUM:
+			fr_process_add_arg (comm->process, "-9"); break;
+		}
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 		fr_process_end_command (comm->process);
@@ -349,6 +371,16 @@ fr_command_tar_recompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_BZIP2:
 		fr_process_begin_command (comm->process, "bzip2");
 		fr_process_set_sticky (comm->process, TRUE);
+		switch (compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			fr_process_add_arg (comm->process, "-1"); break;
+		case FR_COMPRESSION_FAST:
+			fr_process_add_arg (comm->process, "-3"); break;
+		case FR_COMPRESSION_NORMAL:
+			fr_process_add_arg (comm->process, "-6"); break;
+		case FR_COMPRESSION_MAXIMUM:
+			fr_process_add_arg (comm->process, "-9"); break;
+		}
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 		fr_process_end_command (comm->process);
@@ -369,6 +401,16 @@ fr_command_tar_recompress (FRCommand *comm)
 	case FR_COMPRESS_PROGRAM_LZOP:
 		fr_process_begin_command (comm->process, "lzop");
 		fr_process_set_sticky (comm->process, TRUE);
+		switch (compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			fr_process_add_arg (comm->process, "-1"); break;
+		case FR_COMPRESSION_FAST:
+			fr_process_add_arg (comm->process, "-3"); break;
+		case FR_COMPRESSION_NORMAL:
+			fr_process_add_arg (comm->process, "-6"); break;
+		case FR_COMPRESSION_MAXIMUM:
+			fr_process_add_arg (comm->process, "-9"); break;
+		}
 		fr_process_add_arg (comm->process, "-fU");
 		fr_process_add_arg (comm->process, "--no-stdin");
 		fr_process_add_arg (comm->process, c_tar->uncomp_filename);

@@ -51,7 +51,30 @@ typedef struct {
 	GtkWidget *show_hide_column[NUMBER_OF_COLUMNS]; /* checkbuttons */
 	GtkWidget *history_len_spinbutton;
 	GtkWidget *install_scripts;
+	GtkWidget *compression_optionmenu;
 } DialogData;
+
+
+static guint
+opt_menu_get_active_idx (GtkWidget *opt_menu)
+{
+        GtkWidget *item;
+        guint idx;
+        GList *scan;
+        GtkWidget *menu;
+
+        menu = gtk_option_menu_get_menu (GTK_OPTION_MENU (opt_menu));
+        item = gtk_menu_get_active (GTK_MENU (menu));
+
+        idx = 0;
+        scan = GTK_MENU_SHELL (menu)->children;
+        while (scan && (item != scan->data)) {
+                idx++;
+                scan = scan->next;
+        }
+
+        return idx;
+}
 
 
 /* called when the "apply" button is clicked. */
@@ -69,10 +92,11 @@ apply_cb (GtkWidget  *widget,
 
 	window_update_columns_visibility (data->window);
 
-	/* History options. */
+	/* Misc options. */
 
 	preferences.max_history_len = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (data->history_len_spinbutton));
 	window_update_history_list (data->window);
+	data->window->compression = opt_menu_get_active_idx (data->compression_optionmenu);
 }
 
 
@@ -164,6 +188,7 @@ dlg_preferences (GtkWidget *caller,
 
         data->history_len_spinbutton = glade_xml_get_widget (data->gui, "history_len_spinbutton");
 	data->install_scripts = glade_xml_get_widget (data->gui, "install_scripts_checkbutton");
+	data->compression_optionmenu = glade_xml_get_widget (data->gui, "compression_optionmenu");
 
         btn_close = glade_xml_get_widget (data->gui, "p_close_button");
 	help_button = glade_xml_get_widget (data->gui, "p_help_button");
@@ -179,6 +204,8 @@ dlg_preferences (GtkWidget *caller,
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->history_len_spinbutton),
 				   (gfloat) preferences.max_history_len);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->install_scripts), preferences.scripts_installed);
+
+	gtk_option_menu_set_history (GTK_OPTION_MENU (data->compression_optionmenu), window->compression);
 
 	/* Set the signals handlers. */
 

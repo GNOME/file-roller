@@ -223,11 +223,12 @@ fr_command_rar_list (FRCommand *comm)
 
 
 static void
-fr_command_rar_add (FRCommand   *comm,
-		    GList       *file_list,
-		    const char  *base_dir,
-		    gboolean     update,
-		    const char  *password)
+fr_command_rar_add (FRCommand     *comm,
+		    GList         *file_list,
+		    const char    *base_dir,
+		    gboolean       update,
+		    const char    *password,
+		    FRCompression  compression)
 {
 	GList *scan;
 
@@ -240,6 +241,17 @@ fr_command_rar_add (FRCommand   *comm,
 		fr_process_add_arg (comm->process, "u");
 	else
 		fr_process_add_arg (comm->process, "a");
+
+	switch (compression) {
+	case FR_COMPRESSION_VERY_FAST:
+		fr_process_add_arg (comm->process, "m1"); break;
+	case FR_COMPRESSION_FAST:
+		fr_process_add_arg (comm->process, "m2"); break;
+	case FR_COMPRESSION_NORMAL:
+		fr_process_add_arg (comm->process, "m3"); break;
+	case FR_COMPRESSION_MAXIMUM:
+		fr_process_add_arg (comm->process, "m5"); break;
+	}
 
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--"); 

@@ -79,11 +79,12 @@ base_fr_command_list (FRCommand *comm)
 
 
 static void
-base_fr_command_add (FRCommand   *comm,
-		     GList       *file_list,
-		     const char  *base_dir,
-		     gboolean     update,
-		     const char  *password)
+base_fr_command_add (FRCommand     *comm,
+		     GList         *file_list,
+		     const char    *base_dir,
+		     gboolean       update,
+		     const char    *password,
+		     FRCompression  compression)
 {
 }
 
@@ -121,7 +122,8 @@ base_fr_command_uncompress (FRCommand *comm)
 
 
 static void
-base_fr_command_recompress (FRCommand *comm)
+base_fr_command_recompress (FRCommand     *comm,
+			    FRCompression  compression)
 {
 }
 
@@ -325,11 +327,12 @@ fr_command_list (FRCommand *comm)
 
 
 void
-fr_command_add (FRCommand   *comm,
-		GList       *file_list,
-		const char  *base_dir,
-		gboolean     update,
-		const char  *password)
+fr_command_add (FRCommand     *comm,
+		GList         *file_list,
+		const char    *base_dir,
+		gboolean       update,
+		const char    *password,
+		FRCompression  compression)
 {
 	comm->action = FR_ACTION_ADD;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
@@ -338,7 +341,8 @@ fr_command_add (FRCommand   *comm,
 						     file_list,
 						     base_dir,
 						     update,
-						     password);
+						     password,
+						     compression);
 }
 
 
@@ -394,9 +398,10 @@ fr_command_uncompress (FRCommand *comm)
 
 
 void
-fr_command_recompress (FRCommand *comm)
+fr_command_recompress (FRCommand     *comm,
+		       FRCompression  compression)
 {
-	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm);
+	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
 }
 
 
