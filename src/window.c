@@ -1294,7 +1294,7 @@ open_progress_dialog (FRWindow *window)
 			parent = GTK_WINDOW (window->app);
 
 		window->progress_dialog = gtk_dialog_new_with_buttons (
-						       _("File Roller"),
+						       _("Archive Manager"),
 						       parent,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
 						       GTK_STOCK_STOP, GTK_RESPONSE_OK,
@@ -3277,7 +3277,7 @@ window_new (void)
 
 	/* Create the application. */
 
-	window->app = gnome_app_new ("main", _("File Roller"));
+	window->app = gnome_app_new ("main", _("Archive Manager"));
 	gnome_window_icon_set_from_default (GTK_WINDOW (window->app));
 
 	g_signal_connect (G_OBJECT (window->app), 

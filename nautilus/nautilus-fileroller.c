@@ -61,7 +61,9 @@ extract_to_callback (NautilusMenuItem *item,
 				default_dir,
 				path);
 
+#ifdef DEBUG
 	g_print ("EXEC: %s\n", cmd->str);
+#endif
 
 	g_spawn_command_line_async (cmd->str, NULL);
 

@@ -387,7 +387,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	if (gtk_stock_lookup (stock_id, &item))
 		title = item.label;
 	else
-		title = _("File Roller");
+		title = _("Archive Manager");
 
 	dialog = gtk_dialog_new_with_buttons (title, parent, flags, 
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
