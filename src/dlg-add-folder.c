@@ -158,10 +158,6 @@ file_sel_response_cb (GtkWidget    *widget,
 		if (utf8_only_spaces (exclude_files))
 			exclude_files = NULL;
 
-		/*
-		if (strcmp (folder, current_folder) == 0)
-			dest_dir = NULL;
-			else*/
 		dest_dir = g_build_path (G_DIR_SEPARATOR_S,
 					 window_get_current_location (window),
 					 file_name_from_path (folder),
