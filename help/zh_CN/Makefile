@@ -112,7 +112,7 @@ CATALOGS =  am.gmo ar.gmo az.gmo be.gmo bg.gmo bn.gmo ca.gmo cs.gmo cy.gmo da.gm
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2
+CFLAGS = -O2 -g -Wall -Wuninitialized
 CPP = gcc -E
 CPPFLAGS = 
 CXX = g++

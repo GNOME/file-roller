@@ -34,6 +34,7 @@
 #include "fr-command.h"
 #include "fr-command-arj.h"
 #include "fr-command-cfile.h"
+#include "fr-command-iso.h"
 #include "fr-command-lha.h"
 #include "fr-command-rar.h"
 #include "fr-command-rpm.h"
@@ -272,6 +273,9 @@ create_command_from_mime_type (FRArchive  *archive,
 	} else if (is_mime_type (mime_type, "application/x-rpm")) {
 		archive->command = fr_command_rpm_new (archive->process,
 						       filename);
+	} else if (is_mime_type (mime_type, "application/x-cd-image")) {
+		archive->command = fr_command_iso_new (archive->process,
+						       filename);
 	} else 
 		return FALSE;
 
@@ -427,6 +431,9 @@ create_command_from_filename (FRArchive  *archive,
 								   filename);
 		} else if (file_extension_is (filename, ".rpm")) {
 			archive->command = fr_command_rpm_new (archive->process,
+							       filename);
+		} else if (file_extension_is (filename, ".iso")) {
+			archive->command = fr_command_iso_new (archive->process,
 							       filename);
 		} else
 			return FALSE;
@@ -1673,6 +1680,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 		".bz2", 
 		".ear",
 		".gz", 
+		".iso",
 		".jar",
 		".lzh",
 		".lzo",

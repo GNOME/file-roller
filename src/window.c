@@ -3482,6 +3482,7 @@ window_new ()
 						"application/x-zoo",
 						"application/x-java-archive",
 						"application/x-jar",
+                                                "application/x-cd-image",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));

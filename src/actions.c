@@ -280,6 +280,7 @@ activate_action_new (GtkAction *action,
 		"application/x-compress",
 		"application/x-lzop",
 		"application/x-zoo",
+		"application/x-cd-image",
 	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
@@ -410,6 +411,7 @@ activate_action_open (GtkAction *action,
 		"application/x-zoo",
 		"application/x-java-archive",
 		"application/x-jar"
+		"application/x-cd-image"
 	};
 	GtkWidget     *file_sel;
 	FRWindow      *window = data;
@@ -594,6 +596,7 @@ activate_action_save_as (GtkAction *action,
 		"application/x-compress",
 		"application/x-lzop",
 		"application/x-zoo",
+		"application/x-cd-image",
 	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
