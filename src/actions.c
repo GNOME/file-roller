@@ -546,6 +546,31 @@ activate_action_new (GtkAction *action,
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
 
+	if (window->add_after_creation && (window->dropped_file_list != NULL)) {
+		char       *first_item = (char*) window->dropped_file_list->data;
+		char       *folder = remove_level_from_path (first_item);
+		const char *name = NULL;
+
+		if (window->dropped_file_list->next != NULL)
+			name = file_name_from_path (folder);
+		else
+			name = file_name_from_path (first_item);
+
+		if (folder != NULL) 
+			gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), folder);
+
+		if (name != NULL) {
+			char *ext, *name_ext;
+			ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, ".tgz");
+			name_ext = g_strconcat (name, ext, NULL);
+			gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), name_ext);
+			g_free (name_ext);
+			g_free (ext);
+		}
+
+		g_free (folder);
+	}
+
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
 	for (i = 0; save_mime_type[i] != NULL; i++)
