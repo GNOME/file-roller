@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller.HEAD\n"
+"Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-24 14:09+0100\n"
-"PO-Revision-Date: 2004-02-24 14:10+0100\n"
+"POT-Creation-Date: 2004-03-06 10:14+0100\n"
+"PO-Revision-Date: 2004-03-06 10:17+0100\n"
 "Last-Translator: Laurent Dhima <laurenti@alblinux.net>\n"
 "Language-Team: Albanian <gnome-albanian-perkthyesit@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -17,32 +17,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
+msgid "Create Archive..."
+msgstr "Krijo një Arkiv..."
+
+#: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
 msgstr "Hape këtu"
 
-#: component/File_Roller_Component.server.in.in.h:2
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr "Komponenti i operacioneve të shtimit"
 
-#: component/File_Roller_Component.server.in.in.h:3
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr "Komponenti i operacioneve të nxjerrjes"
 
-#: component/File_Roller_Component.server.in.in.h:4
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "Komponent i file roller"
 
-#: component/File_Roller_Component.server.in.in.h:5
-msgid "Zip Objects..."
-msgstr "Objektet zip..."
-
 #: file-roller.desktop.in.h:1
-msgid "Create and modify zips and other archive types"
-msgstr "Krijo dhe ndrysho arkivët zip apo të llojeve të tjerë"
+msgid "Archive Manager"
+msgstr "Organizuesi i Arkivit"
 
 #: file-roller.desktop.in.h:2
-msgid "Zip Creator"
-msgstr "Krijuesi Zip"
+msgid "Create and modify an archive"
+msgstr "Krijo dhe ndrysho një arkiv"
 
 #: src/dlg-add.c:118 src/dlg-add.c:125
 #, c-format
@@ -83,7 +83,7 @@ msgstr "Për_jashto files:"
 
 #: src/dlg-add.c:299
 msgid "_Load Options"
-msgstr "_Lexo opcionet"
+msgstr "_Ngarko opcionet"
 
 #: src/dlg-add.c:300
 msgid "Sa_ve Options"
@@ -98,10 +98,11 @@ msgid "Options Name:"
 msgstr "Emri i opcioneve:"
 
 #: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
-msgid "Could not zip objects"
-msgstr "I pamundur zip-imi i objekteve"
+#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
+msgid "Could not create the archive"
+msgstr "I pamundur krijimi i arkivit"
 
-#: src/dlg-batch-add.c:102 src/menu-callbacks.c:190 src/menu-callbacks.c:423
+#: src/dlg-batch-add.c:102 src/menu-callbacks.c:168 src/menu-callbacks.c:376
 msgid "You have to specify an archive name."
 msgstr "Duhet të specifikoni emrin e një arkivi."
 
@@ -124,10 +125,10 @@ msgid "Could not create the destination folder: %s."
 msgstr "I pamundur krijimi i kartelës së destinuar: %s."
 
 #: src/dlg-batch-add.c:185
-msgid "Zip not performed"
-msgstr "Zip-imi nuk u krye"
+msgid "Archive not created"
+msgstr "Arkivi nuk u krijua"
 
-#: src/dlg-extract.c:87 src/menu-callbacks.c:1177
+#: src/dlg-extract.c:87 src/menu-callbacks.c:1132
 msgid "Could not display help"
 msgstr "E pamundur shfaqja e ndihmës"
 
@@ -138,10 +139,8 @@ msgstr "Operacioni i nxjerrjes nuk u krye"
 
 #: src/dlg-extract.c:211
 #, c-format
-msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr ""
-"Nuk ke të drejta të mjaftueshme për të hapur arkivin tek kartela \"%s\" "
+msgid "You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "Nuk ke të drejta të mjaftueshme për të hapur arkivin tek kartela \"%s\" "
 
 #: src/dlg-extract.c:370
 msgid "Files"
@@ -151,7 +150,7 @@ msgstr "Files"
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:387 src/file_roller.glade.h:16
+#: src/dlg-extract.c:387 src/file_roller.glade.h:17
 msgid "_Files:"
 msgstr "_Files:"
 
@@ -159,11 +158,11 @@ msgstr "_Files:"
 msgid "example: *.txt; *.doc"
 msgstr "për shembull: *.txt; *.doc"
 
-#: src/dlg-extract.c:401 src/file_roller.glade.h:13
+#: src/dlg-extract.c:401 src/file_roller.glade.h:14
 msgid "_All files"
 msgstr "_Të gjithë files"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:18
+#: src/dlg-extract.c:408 src/file_roller.glade.h:19
 msgid "_Selected files"
 msgstr "Files e _zgjedhur"
 
@@ -183,7 +182,7 @@ msgstr "Mbi_shkruaj files ekzistues"
 msgid "Do not e_xtract older files"
 msgstr "Mos n_xirr files e vjetër"
 
-#: src/dlg-extract.c:449 src/file_roller.glade.h:17
+#: src/dlg-extract.c:449 src/file_roller.glade.h:18
 msgid "_Password:"
 msgstr "_Fjalëkalimi:"
 
@@ -217,8 +216,8 @@ msgid "Number of files:"
 msgstr "Files të përmbajtur:"
 
 #: src/dlg-prop.c:149
-msgid "Zipped on:"
-msgstr "Zip-uar në:"
+msgid "Modified on:"
+msgstr "Ndryshimi i fundit:"
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
@@ -257,52 +256,52 @@ msgid "A_vailable application:"
 msgstr "Progra_met në dispozicion: "
 
 #: src/file_roller.glade.h:4
+msgid "C_reate"
+msgstr "K_rijo"
+
+#: src/file_roller.glade.h:5
+msgid "Create Archive"
+msgstr "Krijo Arkiv"
+
+#: src/file_roller.glade.h:6
 msgid "Delete"
 msgstr "Elemino"
 
-#: src/file_roller.glade.h:5
+#: src/file_roller.glade.h:7
 msgid "Load Options"
 msgstr "Ngarko opcionet"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:8
 msgid "Open Files"
 msgstr "Hap files"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:9
 msgid "Open with an _application"
-msgstr "Hap me një _program"
+msgstr "Hape me një _program"
 
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:10
 msgid "Password"
 msgstr "Fjalëkalimi"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:11
 msgid "R_ecent applications:"
 msgstr "Program_et e fundit të përdorur:"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:12
 msgid "View File"
 msgstr "Shiko file"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:13
 msgid "View with internal _viewer"
 msgstr "Shiko me _shikuesin e brendshëm"
 
-#: src/file_roller.glade.h:12
-msgid "Zip Objects"
-msgstr "Objekte zip"
-
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:15
 msgid "_Application:"
 msgstr "_Programi:"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:16
 msgid "_Archive:"
 msgstr "_Arkivi:"
-
-#: src/file_roller.glade.h:19
-msgid "_Zip"
-msgstr "_Zip"
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -348,27 +347,27 @@ msgstr "_Tipi"
 msgid "The file does not exist."
 msgstr "File nuk ekziston."
 
-#: src/fr-command-tar.c:232
+#: src/fr-command-tar.c:354
 msgid "Adding file: "
 msgstr "Duke shtuar file: "
 
-#: src/fr-command-tar.c:278
+#: src/fr-command-tar.c:400
 msgid "Removing file: "
 msgstr "Duke hequr file: "
 
-#: src/fr-command-tar.c:287 src/window.c:1366
+#: src/fr-command-tar.c:409 src/window.c:1366
 msgid "Deleting files from archive"
 msgstr "Duke fshirë files nga arkivi"
 
-#: src/fr-command-tar.c:320
+#: src/fr-command-tar.c:442
 msgid "Extracting file: "
 msgstr "Duke nxjerrë file: "
 
-#: src/fr-command-tar.c:365
+#: src/fr-command-tar.c:487
 msgid "Recompressing archive"
 msgstr "Duke rikompresuar arkivin"
 
-#: src/fr-command-tar.c:499
+#: src/fr-command-tar.c:621
 msgid "Decompressing archive"
 msgstr "Duke dekompresuar arkivin"
 
@@ -385,7 +384,7 @@ msgid "_View"
 msgstr "_Shfaq"
 
 #. Create the application.
-#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1218
+#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1173
 #: src/window.c:839 src/window.c:1265 src/window.c:2926
 msgid "File Roller"
 msgstr "File Roller"
@@ -401,7 +400,7 @@ msgstr "Shto files tek arkivi i specifikuar dhe mbaro programin"
 
 #: src/main.c:61
 msgid "ARCHIVE"
-msgstr "ARKIV"
+msgstr "ARKIVI"
 
 #: src/main.c:64
 msgid "Add files asking the name of the archive and quit the program"
@@ -417,180 +416,173 @@ msgstr "KARTELA"
 
 #: src/main.c:72
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr ""
-"Dekompreso arkivët duke pyetur për emrin e kartelës dhe mbaro programin"
+msgstr "Dekompreso arkivët duke pyetur për emrin e kartelës dhe mbaro programin"
 
 #: src/main.c:76
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
-"Kartela e prezgjedhur për t'u përdorur për komandat '--add' dhe '--extract'"
+msgstr "Kartela e prezgjedhur për t'u përdorur për komandat '--add' dhe '--extract'"
 
 #: src/main.c:80
 msgid "Create destination folder without asking confirmation"
 msgstr "Krijo kartelën pa kërkuar konfermim"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:88
 msgid "Automatic"
 msgstr "Në menyrë automatike"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:89
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:90
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:91
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:92
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:93
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:94
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar jo i kompresuar (.tar)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:95
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar i kompresuar me bzip (.tar.bz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:96
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar i kompresuar me bzip2 (.tar.bz2)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:97
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar i kompresuar me gzip (.tar.gz)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:98
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar i kompresuar me lzop (.tar.lzo)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:99
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar i kompresuar me compress (.tar.Z)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:100
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:123
+#: src/menu-callbacks.c:101
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:124
+#: src/menu-callbacks.c:102
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:189 src/menu-callbacks.c:208 src/window.c:3645
-msgid "Could not create the archive"
-msgstr "I pamundur krijimi i arkivit"
-
-#: src/menu-callbacks.c:209 src/menu-callbacks.c:442
+#: src/menu-callbacks.c:187 src/menu-callbacks.c:395
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Nuk ke të drejtat e duhura për të krijuar një arkiv në këtë kartelë"
 
-#: src/menu-callbacks.c:238 src/menu-callbacks.c:462 src/menu-callbacks.c:752
-#: src/menu-callbacks.c:930
+#: src/menu-callbacks.c:216 src/menu-callbacks.c:415 src/menu-callbacks.c:708
+#: src/menu-callbacks.c:885
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Arkivi ekziston.  Dëshiron ta mbishkruash?"
 
-#: src/menu-callbacks.c:241 src/menu-callbacks.c:465 src/menu-callbacks.c:755
-#: src/menu-callbacks.c:933
+#: src/menu-callbacks.c:219 src/menu-callbacks.c:418 src/menu-callbacks.c:711
+#: src/menu-callbacks.c:888
 msgid "Overwrite"
 msgstr "Mbishkruaj"
 
-#: src/menu-callbacks.c:257 src/menu-callbacks.c:481
+#: src/menu-callbacks.c:235 src/menu-callbacks.c:434
 msgid "Could not delete the old archive."
 msgstr "E pamundur fshirja e arkivit të vjetër."
 
-#: src/menu-callbacks.c:320 src/toolbar.h:42
+#: src/menu-callbacks.c:279 src/toolbar.h:42
 msgid "New"
-msgstr "E re"
+msgstr "I ri"
 
-#: src/menu-callbacks.c:331 src/menu-callbacks.c:537 src/menu-callbacks.c:656
+#: src/menu-callbacks.c:290 src/menu-callbacks.c:490 src/menu-callbacks.c:612
 msgid "All archives"
 msgstr "Të gjithë arkivët"
 
-#: src/menu-callbacks.c:338 src/menu-callbacks.c:544 src/menu-callbacks.c:663
+#: src/menu-callbacks.c:297 src/menu-callbacks.c:497 src/menu-callbacks.c:619
 msgid "All files"
 msgstr "Të gjithë files"
 
-#: src/menu-callbacks.c:356 src/menu-callbacks.c:552
+#: src/menu-callbacks.c:307 src/menu-callbacks.c:505
 msgid "Archive type:"
-msgstr "Tipi i arkivit:"
+msgstr "Lloji i arkivit:"
 
-#: src/menu-callbacks.c:422 src/menu-callbacks.c:441
+#: src/menu-callbacks.c:375 src/menu-callbacks.c:394
 msgid "Could not save the archive"
 msgstr "E pamundur ruajtja e arkivit"
 
-#: src/menu-callbacks.c:526
+#: src/menu-callbacks.c:479
 msgid "Save"
 msgstr "Ruaj"
 
-#: src/menu-callbacks.c:645 src/menu.h:412 src/toolbar.h:48
+#: src/menu-callbacks.c:601 src/menu.h:412 src/toolbar.h:48
 msgid "Open"
 msgstr "Hap"
 
-#: src/menu-callbacks.c:777
+#: src/menu-callbacks.c:733
 msgid "Could not copy the archive"
 msgstr "I pamundur kopjimi i arkivit"
 
-#: src/menu-callbacks.c:796
+#: src/menu-callbacks.c:752
 msgid "Could not move the archive"
 msgstr "E pamundur lëvizja e arkivit"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Copy"
 msgstr "Kopjo"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Move"
 msgstr "Lëvize"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Copy"
 msgstr "_Kopjo"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Move"
 msgstr "_Lëvize"
 
-#: src/menu-callbacks.c:900 src/window.c:4717
+#: src/menu-callbacks.c:855 src/window.c:4717
 msgid "Rename"
 msgstr "Riemërto"
 
-#: src/menu-callbacks.c:901
+#: src/menu-callbacks.c:856
 msgid "New archive name (without extension)"
 msgstr "Emri i arkivit të ri (pa prapashtesë)"
 
-#: src/menu-callbacks.c:905 src/window.c:4722
+#: src/menu-callbacks.c:860 src/window.c:4722
 msgid "_Rename"
 msgstr "_Riemërto"
 
-#: src/menu-callbacks.c:1015
+#: src/menu-callbacks.c:970
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
-msgstr ""
-"Ky arkiv nuk mund të çohet në Kosh. Dëshironi t'a eleminoni përgjithmonë?"
+msgstr "Ky arkiv nuk mund të çohet në Kosh. Dëshironi t'a eleminoni përgjithmonë?"
 
-#: src/menu-callbacks.c:1210
+#: src/menu-callbacks.c:1165
 msgid "translator_credits"
 msgstr "Laurent Dhima <laurenti@alblinux.net>"
 
-#: src/menu-callbacks.c:1221
+#: src/menu-callbacks.c:1176
 msgid "An archive manager for GNOME."
 msgstr "Një organizues arkivësh për GNOME."
 
-#: src/menu-callbacks.c:1370 src/window.c:4454
+#: src/menu-callbacks.c:1325 src/window.c:4454
 msgid "Last Output"
 msgstr "Output i fundit"
 
@@ -764,7 +756,7 @@ msgstr "Shiko të Gjithë _Files"
 
 #: src/menu.h:267
 msgid "View as a F_older"
-msgstr "Shikoje si një kartelë"
+msgstr "Shikoje si një K_artelë"
 
 #: src/menu.h:289
 msgid "_Reversed Order"
@@ -796,7 +788,7 @@ msgstr "_Ndalo"
 
 #: src/menu.h:327 src/toolbar.h:76
 msgid "Stop current operation"
-msgstr "Ndalo operacionin"
+msgstr "Ndalo operacionin aktual"
 
 #: src/menu.h:333
 msgid "_Reload"
@@ -989,8 +981,7 @@ msgstr "Ju nuk mund të shtoni një arkiv në vetvete."
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
-msgstr ""
-"Dëshiron t'a shtosh këtë file tek ky arkiv apo t'a hapësh si një arkiv i ri? "
+msgstr "Dëshiron t'a shtosh këtë file tek ky arkiv apo t'a hapësh si një arkiv i ri? "
 
 #: src/window.c:2182
 msgid "Do you want to create a new archive with these files?"
@@ -1061,7 +1052,7 @@ msgstr "Ju lutem përdorni një emër tjetër."
 
 #: src/window.c:4653
 msgid "The new name is equal to the old one."
-msgstr "Emri i ri është njësoj me emrin e vjetër."
+msgstr "Emri i ri është njëlloj me emrin e vjetër."
 
 #: src/window.c:4662
 #, c-format
@@ -1097,3 +1088,4 @@ msgstr "Shto files në një arkiv"
 #: src/window.c:5392
 msgid "Extract archive"
 msgstr "Hap arkivin"
+
