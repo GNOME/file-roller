@@ -1,200 +1,199 @@
+# translation of file-roller.HEAD.po to Hebrew
 # translation of file-roller.HEAD.he.po to Hebrew
-# translation of file-roller.gnome-2-2.po to Hebrew
+# translation of file-roller.gnome-2-6.po to Hebrew
 # This file is distributed under the same license as the PACKAGE package.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# Gil 'Dolfin' Osher <dolfin@rpg.org.il>, 2003
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Gil 'Dolfin' Osher <dolfin@rpg.org.il>, 2003, 2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller.HEAD.he\n"
+"Project-Id-Version: file-roller.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-09 03:36+0200\n"
-"PO-Revision-Date: 2003-08-09 12:41+0300\n"
+"POT-Creation-Date: 2004-02-01 03:29+0100\n"
+"PO-Revision-Date: 2004-02-02 23:01+0200\n"
 "Last-Translator: Gil 'Dolfin' Osher <dolfin@rpg.org.il>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.1\n"
+"X-Generator: KBabel 1.0.2\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add to Archive..."
-msgstr "הוסף לארכיון..."
+msgid "Extract Here"
+msgstr "חלץ כאן"
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract to..."
-msgstr "חלץ ל..."
+msgid "File Roller Component add operations"
+msgstr "פעולות הוספה עם רכיב גלגלן הקבצים"
 
 #: component/File_Roller_Component.server.in.in.h:3
-msgid "File Roller Component add operations"
-msgstr "הוסף פעולות עם רכיב גלגלן הקבצים"
+msgid "File Roller Component extract operations"
+msgstr "פעולות חילוץ עם רכיב גלגלן הקבצים"
 
 #: component/File_Roller_Component.server.in.in.h:4
-msgid "File Roller Component extract operations"
-msgstr "חלץ פעולות עם רכיב גלגלן הקבצים"
-
-#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "רכיב גלגלן הקבצים"
 
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "Zip Objects..."
+msgstr "דחוס אובייקטים..."
+
 #: file-roller.desktop.in.h:1
-msgid "Archive Manager"
-msgstr "מנהל הארכיון"
+msgid "Create and modify zips and other archive types"
+msgstr "צור ועדכן קבצי zip וסוגים אחרים של ארכיונים"
 
-#. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
-#: src/menu-callbacks.c:1076 src/window.c:759 src/window.c:1157
-#: src/window.c:2749
-msgid "File Roller"
-msgstr "גלגלן הקבצים"
+#: file-roller.desktop.in.h:2
+msgid "Zip Creator"
+msgstr "יוצר zip"
 
-#: file-roller.desktop.in.h:3
-msgid "Handle compressed archives"
-msgstr "טפל בארכיונים מכווצים"
-
-#: src/dlg-add.c:116 src/dlg-add.c:123
+#: src/dlg-add.c:118 src/dlg-add.c:125
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "אין לך את ההרשאות הנכונות לקריאת קבצים מהתיקייה \"%s\""
 
-#: src/dlg-add.c:122 src/window.c:1788 src/window.c:1821
+#: src/dlg-add.c:124 src/window.c:1915 src/window.c:1948
 msgid "Could not add the files to the archive"
 msgstr "לא ניתן להוסיף את הקבצים לארכיון"
 
-#: src/dlg-add.c:355 src/file_roller.glade.h:5
-msgid "Add Files"
-msgstr "הוסף קבצים"
+#: src/dlg-add.c:274 src/toolbar.h:56
+msgid "Add"
+msgstr "הוסף"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:285
 msgid "_Add only if newer"
 msgstr "_הוסף רק אם חדש יותר"
 
-#: src/dlg-add.c:361
+#: src/dlg-add.c:286
 msgid "_Include subfolders"
 msgstr "_כלול תת-תיקיות"
 
-#: src/dlg-add.c:362
+#: src/dlg-add.c:287
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "שלול תיקיות שהן _קישורים סימליים"
 
-#: src/dlg-add.c:363
-msgid "Exclude o_ther file systems"
-msgstr "שלול מערכות קבצים א_חרות"
-
-#: src/dlg-add.c:364
-msgid "Exclude _backup files (*~)"
-msgstr "שלול קבצי _גיבוי (~*)"
-
-#: src/dlg-add.c:365
-msgid "Exclude _hidden files (.*)"
-msgstr "שלול קבצים _מוסתרים (.*)"
-
-#: src/dlg-add.c:366
-msgid "E_xclude files:"
-msgstr "ש_לול קבצים:"
-
-#: src/dlg-add.c:368
+#: src/dlg-add.c:290 src/dlg-add.c:295
 msgid "example: *.o; *.bak"
 msgstr "לדוגמה: *.o; *.bak"
 
-#: src/dlg-add.c:369
-msgid "Igno_re case"
-msgstr "הת_עלם מרשיות"
+#: src/dlg-add.c:291
+msgid "_Include files:"
+msgstr "כ_לול קבצים:"
 
-#: src/dlg-add.c:370
+#: src/dlg-add.c:296
+msgid "E_xclude files:"
+msgstr "_שלול קבצים:"
+
+#: src/dlg-add.c:299
 msgid "_Load Options"
 msgstr "_טען אפשרויות"
 
-#: src/dlg-add.c:371
+#: src/dlg-add.c:300
 msgid "Sa_ve Options"
 msgstr "ש_מור אפשרויות"
 
-#: src/dlg-add.c:626
-msgid "Load Options"
-msgstr "טען אפשרויות"
-
-#: src/dlg-add.c:775
+#: src/dlg-add.c:758
 msgid "Save Options"
 msgstr "שמור אפשרויות"
 
-#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
-#: src/menu-callbacks.c:198 src/window.c:3428
-msgid "Could not create the archive"
-msgstr "לא ניתן ליצור את הארכיון"
+#: src/dlg-add.c:759
+msgid "Options Name:"
+msgstr "שם האפשרויות:"
 
-#: src/dlg-batch-add.c:100 src/menu-callbacks.c:180 src/menu-callbacks.c:375
+#: src/dlg-batch-add.c:96 src/dlg-batch-add.c:121 src/dlg-batch-add.c:161
+msgid "Could not zip objects"
+msgstr "לא ניתן לדחוס את האובייקטים"
+
+#: src/dlg-batch-add.c:97 src/menu-callbacks.c:192 src/menu-callbacks.c:392
 msgid "You have to specify an archive name."
 msgstr "עליך לציין שם ארכיון."
 
-#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3429
-#: src/window.c:3566
+#: src/dlg-batch-add.c:122 src/fr-archive.c:623 src/window.c:3608
+#: src/window.c:3753
 msgid "Archive type not supported."
 msgstr "סוג הארכיון אינו נתמך."
 
-#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3754
+#: src/dlg-batch-add.c:141 src/dlg-extract.c:150 src/window.c:3983
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "תיקיית היעד איננה קיימת.  האם ברצונך ליצור אותה?"
 
-#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3757
+#: src/dlg-batch-add.c:144 src/dlg-extract.c:153 src/window.c:3986
 msgid "Create _Folder"
 msgstr "צור _תיקייה"
 
-#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3773
+#: src/dlg-batch-add.c:157 src/dlg-extract.c:169 src/window.c:4002
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "לא ניתן ליצור את תיקיית היעד: %s."
 
-#: src/dlg-batch-add.c:168 src/dlg-batch-add.c:190
-msgid "Addition not performed"
-msgstr "הוספה לא התבצעה."
+#: src/dlg-batch-add.c:180
+msgid "Zip not performed"
+msgstr "דחיסה לא התבצעה"
 
-#: src/dlg-batch-add.c:270
-#, c-format
-msgid "Files to add: %d"
-msgstr "קבצים להוספה: %d"
+#: src/dlg-extract.c:87 src/menu-callbacks.c:1123
+msgid "Could not display help"
+msgstr "לא ניתן להציג עזרה"
 
-#: src/dlg-batch-add.c:272
-#, c-format
-msgid "Folders to add: %d"
-msgstr "תיקיות להוספה: %d"
-
-#: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
-#: src/window.c:3777 src/window.c:3796
+#: src/dlg-extract.c:173 src/dlg-extract.c:192 src/dlg-extract.c:216
+#: src/window.c:4006 src/window.c:4025
 msgid "Extraction not performed"
 msgstr "חילוץ לא התבצע"
 
-#: src/dlg-extract.c:181
+#: src/dlg-extract.c:211
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "אין לך את ההרשאות המתאימות לחלץ ארכיונים לתיקייה \"%s\""
 
-#: src/dlg-extract.c:423 src/dlg-preferences.c:125 src/menu-callbacks.c:1035
-msgid "Could not display help"
-msgstr "לא ניתן להציג עזרה"
-
-#: src/dlg-extract.c:502
-msgid "Actions"
-msgstr "פעולות"
-
-#: src/dlg-extract.c:503
-msgid "Destination folder"
-msgstr "תיקיית יעד"
-
-#: src/dlg-extract.c:504
+#: src/dlg-extract.c:365
 msgid "Files"
 msgstr "קבצים"
 
-#: src/dlg-extract.c:533
-msgid "Bookmarks"
-msgstr "סימניות"
+#: src/dlg-extract.c:373 src/dlg-extract.c:423 src/file_roller_prop.glade.h:1
+msgid "    "
+msgstr "    "
 
-#: src/dlg-preferences.c:182
-msgid "General"
-msgstr "כללי"
+#: src/dlg-extract.c:382 src/file_roller.glade.h:16
+msgid "_Files:"
+msgstr "_קבצים:"
 
-#: src/dlg-preferences.c:187
-msgid "Visible columns"
-msgstr "עמודות נראות"
+#: src/dlg-extract.c:393 src/file_roller.glade.h:20
+msgid "example: *.txt; *.doc"
+msgstr "לדוגמה: *.txt; *.doc"
+
+#: src/dlg-extract.c:396 src/file_roller.glade.h:13
+msgid "_All files"
+msgstr "_כל הקבצים"
+
+#: src/dlg-extract.c:403 src/file_roller.glade.h:18
+msgid "_Selected files"
+msgstr "קבצים _נבחרים"
+
+#: src/dlg-extract.c:414
+msgid "Actions"
+msgstr "פעולות"
+
+#: src/dlg-extract.c:430
+msgid "R_e-create folders"
+msgstr "_צור מחדש תיקיות"
+
+#: src/dlg-extract.c:434
+msgid "Over_write existing files"
+msgstr "ה_חלף קבצים קיימים"
+
+#: src/dlg-extract.c:438
+msgid "Do not e_xtract older files"
+msgstr "אל תח_לץ קבצים ישנים יותר"
+
+#: src/dlg-extract.c:444 src/file_roller.glade.h:17
+msgid "_Password:"
+msgstr "_סיסמה:"
+
+#: src/dlg-extract.c:452
+msgid "_Open destination folder after extraction"
+msgstr "_פתח את תיקיית היעד לאחר החילוץ"
+
+#: src/dlg-extract.c:479 src/toolbar.h:62
+msgid "Extract"
+msgstr "חלץ"
 
 #: src/dlg-prop.c:99
 msgid "Path:"
@@ -218,8 +217,8 @@ msgid "Number of files:"
 msgstr "מספר הקבצים:"
 
 #: src/dlg-prop.c:149
-msgid "Date and time:"
-msgstr "תאריך ושעה:"
+msgid "Zipped on:"
+msgstr "נדחס ב:"
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
@@ -233,122 +232,74 @@ msgstr "סוג לא ידוע"
 msgid "Symbolic link"
 msgstr "קישור סמלי"
 
-#: src/file-utils.c:535
+#: src/file-utils.c:536
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "לא ניתן למצוא מסוף, משתמש ב xterm, למרות שייתכן והוא לא יעבוד"
 
-#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
-msgid "    "
-msgstr "    "
-
-#: src/file_roller.glade.h:2
+#: src/file_roller.glade.h:1
 msgid "*"
 msgstr "*"
 
-#: src/file_roller.glade.h:3
-msgid "A_dd to Bookmarks"
-msgstr "ה_וסף לסימניות"
+#: src/file_roller.glade.h:2
+msgid ""
+"<i><b>Note:</b> the password will be used to encrypt files you add to the "
+"current archive, and to decrypt files you extract from the current archive. "
+"When the archive is closed the password will be deleted.</i>"
+msgstr ""
+"<i><b>הערה:</b> הסיסמה תשמש להצפנת הקבצים שתצרף לארכיון הנוכחי, ולפענוח הקבצים "
+"שתחלץ מהארכיון הנוכחי. כאשר הארכיון ייסגר הסיסמה תמחק.</i>"
 
-#: src/file_roller.glade.h:4
+#: src/file_roller.glade.h:3
 msgid "A_vailable application:"
 msgstr "יישום _זמין:"
 
+#: src/file_roller.glade.h:4
+msgid "Delete"
+msgstr "מחק"
+
+#: src/file_roller.glade.h:5
+msgid "Load Options"
+msgstr "טען אפשרויות"
+
 #: src/file_roller.glade.h:6
-msgid "Add _to archive:"
-msgstr "הוסף _לארכיון:"
-
-#: src/file_roller.glade.h:7
-msgid "Add only if _newer"
-msgstr "הוסף רק אם _חדש יותר"
-
-#: src/file_roller.glade.h:8
-msgid "Delete Files"
-msgstr "מחק קבצים"
-
-#: src/file_roller.glade.h:9
-msgid "Do not e_xtract older files"
-msgstr "אל תח_לץ קבצים ישנים יותר"
-
-#: src/file_roller.glade.h:10 src/window.c:2987
-msgid "Extract"
-msgstr "חלץ"
-
-#: src/file_roller.glade.h:11
-msgid "Extract to"
-msgstr "חלץ ל"
-
-#: src/file_roller.glade.h:12
-msgid ""
-"Note: the password will be used to encrypt files you add to the current "
-"archive, and to decrypt files you extract from the current archive. When the "
-"archive is closed the password will be deleted."
-msgstr ""
-"הערה: הסיסמה תשמש להצפנת הקבצים שתצרף לארכיון הנוכחי, ולפענוח הקבצים כאשר "
-"תחלץ אותם מהארכיון הנוכחי. כאשר הארכיון ייסגר הסיסמה תמחק."
-
-#: src/file_roller.glade.h:13
 msgid "Open Files"
 msgstr "פתח קבצים"
 
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:7
 msgid "Open with an _application"
 msgstr "פתח באמצעות _יישום"
 
-#: src/file_roller.glade.h:15
-msgid "Over_write existing files"
-msgstr "ה_חלף קבצים קיימים"
-
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:8
 msgid "Password"
 msgstr "סיסמה"
 
-#: src/file_roller.glade.h:17
-msgid "R_e-create folders"
-msgstr "_צור מחדש תיקיות"
-
-#: src/file_roller.glade.h:18
+#: src/file_roller.glade.h:9
 msgid "R_ecent applications:"
 msgstr "יישומים א_חרונים:"
 
-#: src/file_roller.glade.h:19
-msgid "Select Archive"
-msgstr "בחר ארכיון"
-
-#: src/file_roller.glade.h:20 src/menu.h:429
+#: src/file_roller.glade.h:10
 msgid "View File"
 msgstr "הצג קובץ"
 
-#: src/file_roller.glade.h:21
+#: src/file_roller.glade.h:11
 msgid "View with internal _viewer"
 msgstr "הצג באמצעות _מציג פנימי"
 
-#: src/file_roller.glade.h:22
-msgid "_All files"
-msgstr "_כל הקבצים"
+#: src/file_roller.glade.h:12
+msgid "Zip Objects"
+msgstr "דחוס אובייקטים"
 
-#: src/file_roller.glade.h:23
+#: src/file_roller.glade.h:14
 msgid "_Application:"
 msgstr "_יישום:"
 
-#: src/file_roller.glade.h:24
-msgid "_Files:"
-msgstr "_קבצים:"
+#: src/file_roller.glade.h:15
+msgid "_Archive:"
+msgstr "_ארכיון:"
 
-#: src/file_roller.glade.h:25
-msgid "_Password:"
-msgstr "_סיסמה:"
-
-#: src/file_roller.glade.h:26
-msgid "_Selected files"
-msgstr "קבצים _נבחרים"
-
-#: src/file_roller.glade.h:27
-msgid "_View destination folder after extraction"
-msgstr "_הצג תיקיית יעד לאחר החילוץ"
-
-#: src/file_roller.glade.h:28
-msgid "example: *.txt; *.doc"
-msgstr "לדוגמה: *.txt; *.doc"
+#: src/file_roller.glade.h:19
+msgid "_Zip"
+msgstr "_דחוס"
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -390,213 +341,242 @@ msgstr "_גודל"
 msgid "_Type"
 msgstr "_סוג"
 
-#: src/fr-archive.c:578
+#: src/fr-archive.c:598
 msgid "The file does not exist."
 msgstr "הקובץ אינו קיים."
 
-#: src/fr-command-tar.c:219
+#: src/fr-command-tar.c:218
 msgid "Adding file: "
 msgstr "מוסיף קובץ: "
 
-#: src/fr-command-tar.c:265
+#: src/fr-command-tar.c:264
 msgid "Removing file: "
 msgstr "מסיר קובץ: "
 
-#: src/fr-command-tar.c:274 src/window.c:1253
+#: src/fr-command-tar.c:273 src/window.c:1351
 msgid "Deleting files from archive"
 msgstr "מוחק קבצים מהארכיון"
 
-#: src/fr-command-tar.c:307
+#: src/fr-command-tar.c:306
 msgid "Extracting file: "
 msgstr "מחלץ קובץ: "
 
-#: src/fr-command-tar.c:352
+#: src/fr-command-tar.c:351
 msgid "Recompressing archive"
 msgstr "מכווץ מחדש ארכיון"
 
-#: src/fr-command-tar.c:486
+#: src/fr-command-tar.c:485
 msgid "Decompressing archive"
 msgstr "מרחיב ארכיון"
 
-#: src/gconf-utils.c:98
-#, c-format
-msgid ""
-"GConf error:\n"
-"  %s"
-msgstr ""
-"שגיאת GConf:\n"
-"  %s"
+#: src/fr-stock.c:44
+msgid "_Add"
+msgstr "_הוסף"
+
+#: src/fr-stock.c:45
+msgid "_Extract"
+msgstr "_חלץ"
+
+#: src/fr-stock.c:46 src/menu.h:382
+msgid "_View"
+msgstr "_תצוגה"
+
+#. Create the application.
+#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1164
+#: src/window.c:838 src/window.c:1255 src/window.c:2889
+msgid "File Roller"
+msgstr "גלגלן הקבצים"
 
 #. Button
-#: src/gtk-utils.c:419
+#: src/gtk-utils.c:421
 msgid "Command _Line Output"
 msgstr "פלט _שורת הפקודה"
 
-#: src/main.c:59
+#: src/main.c:60
 msgid "Add files to the specified archive and quit the program"
 msgstr "הוסף קבצים לארכיון המצוין וסיים את התוכנית"
 
-#: src/main.c:60
+#: src/main.c:61
 msgid "ARCHIVE"
 msgstr "ארכיון"
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "הוסף קבצים עם ביקוש שם הארכיון וסיום התוכנית"
 
-#: src/main.c:67
+#: src/main.c:68
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "חלץ ארכיונים לתיקייה המצוינת וסיים את התוכנית"
 
-#: src/main.c:68 src/main.c:76
+#: src/main.c:69 src/main.c:77
 msgid "FOLDER"
 msgstr "תיקייה"
 
-#: src/main.c:71
+#: src/main.c:72
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "חלץ קבצים עם בקשת תיקיית היעד וסיים את התוכנית"
 
-#: src/main.c:75
+#: src/main.c:76
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "תיקייה ברירת מחדל לשימוש לפקודות '--add' ו '--extract'"
 
-#: src/main.c:79
+#: src/main.c:80
 msgid "Create destination folder without asking confirmation"
 msgstr "צור תיקיית יעד מבלי לבקש אישור"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:110
 msgid "Automatic"
 msgstr "אוטומטי"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:111
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:112
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:113
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:114
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:115
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:116
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar לא מכווץ (.tar)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar מכווץ באמצעות bzip (.tar.bz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:118
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar מכווץ באמצעות bzip2 (.tar.bz2)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:119
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar מכווץ באמצעות gzip (.tar.gz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:120
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar מכווץ באמצעות lzop (.tar.lzo)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:121
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar מכווץ באמצעות compress (.tar.Z)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:122
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:123
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:124
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:199 src/menu-callbacks.c:394
+#: src/menu-callbacks.c:191 src/menu-callbacks.c:210 src/window.c:3607
+msgid "Could not create the archive"
+msgstr "לא ניתן ליצור את הארכיון"
+
+#: src/menu-callbacks.c:211 src/menu-callbacks.c:411
 msgid "You don't have permission to create an archive in this folder"
 msgstr "אין לך הרשאות ליצור ארכיון בתיקייה זו"
 
-#: src/menu-callbacks.c:228 src/menu-callbacks.c:414 src/menu-callbacks.c:633
-#: src/menu-callbacks.c:811
+#: src/menu-callbacks.c:240 src/menu-callbacks.c:431 src/menu-callbacks.c:698
+#: src/menu-callbacks.c:876
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "הארכיון כבר קיים.  האם ברצונך להחליפו?"
 
-#: src/menu-callbacks.c:231 src/menu-callbacks.c:417 src/menu-callbacks.c:636
-#: src/menu-callbacks.c:814
+#: src/menu-callbacks.c:243 src/menu-callbacks.c:434 src/menu-callbacks.c:701
+#: src/menu-callbacks.c:879
 msgid "Overwrite"
 msgstr "החלף"
 
-#: src/menu-callbacks.c:247 src/menu-callbacks.c:433
+#: src/menu-callbacks.c:259 src/menu-callbacks.c:450
 msgid "Could not delete the old archive."
 msgstr "לא ניתן למחוק את הארכיון הישן."
 
-#: src/menu-callbacks.c:292
-msgid "New Archive"
-msgstr "ארכיון חדש"
+#: src/menu-callbacks.c:303 src/toolbar.h:42
+msgid "New"
+msgstr "חדש"
 
-#: src/menu-callbacks.c:310 src/menu-callbacks.c:472
+#: src/menu-callbacks.c:325 src/menu-callbacks.c:490
 msgid "Archive type:"
 msgstr "סוג הארכיון:"
 
-#: src/menu-callbacks.c:374 src/menu-callbacks.c:393
+#: src/menu-callbacks.c:391 src/menu-callbacks.c:410
 msgid "Could not save the archive"
 msgstr "לא ניתן לשמור את הארכיון"
 
-#: src/menu-callbacks.c:460
-msgid "Save Archive"
-msgstr "שמור ארכיון"
+#: src/menu-callbacks.c:476
+msgid "Save"
+msgstr "שמור"
 
-#: src/menu-callbacks.c:542
-msgid "Open Archive"
-msgstr "פתח ארכיון"
+#: src/menu-callbacks.c:581 src/menu.h:412 src/toolbar.h:48
+msgid "Open"
+msgstr "פתח"
 
-#: src/menu-callbacks.c:658
+#: src/menu-callbacks.c:592
+msgid "All archives"
+msgstr "כל הארכיונים"
+
+#: src/menu-callbacks.c:599
+msgid "All files"
+msgstr "כל הקבצים"
+
+#: src/menu-callbacks.c:723
 msgid "Could not copy the archive"
 msgstr "לא ניתן להעתיק את הארכיון"
 
-#: src/menu-callbacks.c:676
+#: src/menu-callbacks.c:742
 msgid "Could not move the archive"
 msgstr "לא ניתן להעביר את הארכיון"
 
-#: src/menu-callbacks.c:703
-msgid "Copy Archive"
-msgstr "העתק ארכיון"
+#: src/menu-callbacks.c:769
+msgid "Copy"
+msgstr "העתק"
 
-#: src/menu-callbacks.c:703
-msgid "Move Archive"
-msgstr "העבר ארכיון"
+#: src/menu-callbacks.c:769
+msgid "Move"
+msgstr "העבר"
 
-#: src/menu-callbacks.c:781
-msgid "Rename Archive"
-msgstr "שנה-שם ארכיון"
+#: src/menu-callbacks.c:774
+msgid "_Copy"
+msgstr "ה_עתק"
 
-#: src/menu-callbacks.c:782
+#: src/menu-callbacks.c:774
+msgid "_Move"
+msgstr "ה_עבר"
+
+#: src/menu-callbacks.c:846 src/window.c:4674
+msgid "Rename"
+msgstr "שנה שם"
+
+#: src/menu-callbacks.c:847
 msgid "New archive name (without extension)"
 msgstr "שם ארכיון חדש (ללא סיומת)"
 
-#: src/menu-callbacks.c:786
+#: src/menu-callbacks.c:851 src/window.c:4679
 msgid "_Rename"
 msgstr "_שנה שם"
 
-#: src/menu-callbacks.c:896
+#: src/menu-callbacks.c:961
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
 msgstr "הארכיון לא יכול להזרק לאשפה. האם ברצונך למחוק אותו לצמיתות?"
 
-#: src/menu-callbacks.c:1068
+#: src/menu-callbacks.c:1156
 msgid "translator_credits"
 msgstr ""
 "גיל אשר\n"
@@ -605,482 +585,638 @@ msgstr ""
 "פרויקט linBrew\n"
 "http://linbrew.sourceforge.net"
 
-#: src/menu-callbacks.c:1079
+#: src/menu-callbacks.c:1167
 msgid "An archive manager for GNOME."
 msgstr "מנהל ארכיונים ל GNOME"
 
-#: src/menu-callbacks.c:1253 src/window.c:4085
+#: src/menu-callbacks.c:1316 src/window.c:4411
 msgid "Last Output"
 msgstr "פלט אחרון"
 
-#: src/menu.h:69
+#: src/menu.h:65
 msgid "_New"
 msgstr "_חדש"
 
-#: src/menu.h:70 src/toolbar.h:39
+#: src/menu.h:66 src/toolbar.h:42
 msgid "Create a new archive"
 msgstr "צור ארכיון חדש"
 
-#: src/menu.h:75
+#: src/menu.h:71
 msgid "Open R_ecent"
 msgstr "נפתח לא_חרונה"
 
-#: src/menu.h:84
-msgid "Open Fi_les..."
-msgstr "פתח ק_בצים..."
-
-#: src/menu.h:84
-msgid "Open selected files with an application"
-msgstr "פתח קבצים נבחרים באמצעות יישום"
-
-#: src/menu.h:90
-msgid "_View File"
-msgstr "_הצג קובץ"
-
-#: src/menu.h:90 src/menu.h:429
-msgid "View file with internal viewer"
-msgstr "הצג קובץ באמצעות מציג פנימי"
-
-#: src/menu.h:98
+#: src/menu.h:80 src/menu.h:167 src/menu.h:450
 msgid "_Rename..."
 msgstr "_שנה שם..."
 
-#: src/menu.h:98
+#: src/menu.h:80
 msgid "Rename current archive"
 msgstr "שנה את שם הארכיון הנוכחי"
 
-#: src/menu.h:104
+#: src/menu.h:86
 msgid "Cop_y..."
 msgstr "ה_עתק..."
 
-#: src/menu.h:104
+#: src/menu.h:86
 msgid "Copy current archive to another folder"
 msgstr "העתק את הארכיון הנוכחי לתיקייה אחרת"
 
-#: src/menu.h:110
+#: src/menu.h:92
 msgid "_Move..."
 msgstr "ה_עבר..."
 
-#: src/menu.h:110
+#: src/menu.h:92
 msgid "Move current archive to another folder"
 msgstr "הזז את הארכיון הנוכחי לתיקייה אחרת"
 
-#: src/menu.h:116
+#: src/menu.h:98
 msgid "Move to _Trash"
 msgstr "זרוק ל_אשפה"
 
-#: src/menu.h:116
+#: src/menu.h:98
 msgid "Move current archive to trash"
 msgstr "זרוק את הארכיון הנוכחי לאשפה"
 
-#: src/menu.h:122
-msgid "_Test"
-msgstr "_בדיקה"
+#: src/menu.h:104
+msgid "_Test Integrity"
+msgstr "בדוק שלמות"
 
-#: src/menu.h:122
+#: src/menu.h:104
 msgid "Test whether the archive contains errors"
 msgstr "בדוק האם הארכיון מכיל שגיאות"
 
-#: src/menu.h:130
+#: src/menu.h:112
 msgid "_Properties"
 msgstr "_מאפיינים"
 
-#: src/menu.h:130
+#: src/menu.h:112
 msgid "Show archive properties"
 msgstr "הצג את מאפייני הארכיון"
 
-#: src/menu.h:162 src/menu.h:437
-msgid "Add _Files..."
-msgstr "הוסף _קבצים..."
+#: src/menu.h:149 src/menu.h:432
+msgid "_Add..."
+msgstr "הוסף..."
 
-#: src/menu.h:162 src/menu.h:437 src/window.c:2977
-msgid "Add files to the archive"
-msgstr "הוסף קבצים לארכיון"
+#: src/menu.h:149 src/menu.h:432
+msgid "Add files and folders to the archive"
+msgstr "הוסף קבצים ותיקיות לארכיון"
 
-#: src/menu.h:168
-msgid "_Delete Files..."
-msgstr "_מחק קבצים..."
+#: src/menu.h:155 src/menu.h:438
+msgid "_Extract..."
+msgstr "_חלץ..."
 
-#: src/menu.h:168
-msgid "Delete selected files and folders from the archive"
-msgstr "מחק את הקבצים והתיקיות הנבחרים מהארכיון"
-
-#: src/menu.h:174 src/menu.h:449
-msgid "_Extract to..."
-msgstr "_חלץ ל..."
-
-#: src/menu.h:174 src/menu.h:449 src/window.c:2988
+#: src/menu.h:155 src/menu.h:438 src/toolbar.h:62
 msgid "Extract files from the archive"
 msgstr "חלץ קבצים מהארכיון"
 
-#: src/menu.h:198 src/menu.h:457
+#: src/menu.h:167 src/menu.h:450
+msgid "Rename selection"
+msgstr "שנה-שם בחירה"
+
+#: src/menu.h:173 src/menu.h:456
+msgid "_Delete..."
+msgstr "_מחק..."
+
+#: src/menu.h:173 src/menu.h:456
+msgid "Delete selection from the archive"
+msgstr "מחק בחירה מהארכיון"
+
+#: src/menu.h:181 src/menu.h:464
 msgid "Select _All"
 msgstr "בחר ה_כל"
 
-#: src/menu.h:198 src/menu.h:457
+#: src/menu.h:181 src/menu.h:464
 msgid "Select all files"
 msgstr "בחר את כל הקבצים"
 
-#: src/menu.h:204 src/menu.h:463
+#: src/menu.h:187 src/menu.h:470
 msgid "Dese_lect All"
 msgstr "ב_טל בחירת הכל"
 
-#: src/menu.h:204 src/menu.h:463
+#: src/menu.h:187 src/menu.h:470
 msgid "Deselect all files"
 msgstr "בטל בחירת כל הקבצים"
 
-#: src/menu.h:212
+#: src/menu.h:195
+msgid "Open Fi_les..."
+msgstr "פתח ק_בצים..."
+
+#: src/menu.h:195 src/menu.h:418
+msgid "Open selected files with an application"
+msgstr "פתח קבצים נבחרים באמצעות יישום"
+
+#: src/menu.h:201 src/menu.h:424
+msgid "_View File"
+msgstr "_הצג קובץ"
+
+#: src/menu.h:201 src/menu.h:424
+msgid "View file with internal viewer"
+msgstr "הצג קובץ באמצעות מציג פנימי"
+
+#: src/menu.h:209
 msgid "Pass_word..."
 msgstr "_סיסמה..."
 
 #: src/menu.h:220
-msgid "_Preferences"
-msgstr "_העדפות"
-
-#: src/menu.h:220
-msgid "Edit File Roller preferences"
-msgstr "ערוך את העדפות גלגלן הקבצים"
-
-#: src/menu.h:231
 msgid "by _Name"
 msgstr "לפי _שם"
 
-#: src/menu.h:231
+#: src/menu.h:220
 msgid "Sort file list by name"
 msgstr "מיין את רשימת הקבצים לפי שם"
 
-#: src/menu.h:237
+#: src/menu.h:226
 msgid "by _Size"
 msgstr "לפי _גודל"
 
-#: src/menu.h:237
+#: src/menu.h:226
 msgid "Sort file list by file size"
 msgstr "מיין את רשימת הקבצים לפי גודל"
 
-#: src/menu.h:243
+#: src/menu.h:232
 msgid "by T_ype"
 msgstr "לפי _סוג"
 
-#: src/menu.h:243
+#: src/menu.h:232
 msgid "Sort file list by type"
 msgstr "מיין את רשימת הקבצים לפי סוג"
 
-#: src/menu.h:249
+#: src/menu.h:238
 msgid "by _Date modified"
 msgstr "לפי _תאריך שינוי"
 
-#: src/menu.h:249
+#: src/menu.h:238
 msgid "Sort file list by modification time"
 msgstr "מיין את רשימת הקבצים לפי זמן השינוי"
 
-#: src/menu.h:255
+#: src/menu.h:244
 msgid "by _Location"
 msgstr "לפי _מיקום"
 
-#: src/menu.h:255
+#: src/menu.h:244
 msgid "Sort file list by location"
 msgstr "מיין את רשימת הקבצים לפי מיקום"
 
-#: src/menu.h:272
+#: src/menu.h:261
 msgid "View All _Files"
 msgstr "הצג את כל ה_קבצים"
 
-#: src/menu.h:278
+#: src/menu.h:267
 msgid "View as a F_older"
 msgstr "הצג כת_יקייה"
 
-#: src/menu.h:300
+#: src/menu.h:289
 msgid "_Reversed Order"
 msgstr "ה_פוך סדר"
 
-#: src/menu.h:300
+#: src/menu.h:289
 msgid "Reverse the list order"
 msgstr "הפוך את סדר הרשימה"
 
-#: src/menu.h:325
+#: src/menu.h:313
 msgid "_Toolbar"
 msgstr "_סרגל כלים"
 
-#: src/menu.h:325
+#: src/menu.h:313
 msgid "View the main toolbar"
 msgstr "הצג את סרגל הכלים הראשי"
 
-#: src/menu.h:331
+#: src/menu.h:319
 msgid "Stat_usbar"
 msgstr "שורת _מצב"
 
-#: src/menu.h:331
+#: src/menu.h:319
 msgid "View the statusbar"
 msgstr "הצג את שורת המצב"
 
-#: src/menu.h:339
+#: src/menu.h:327
 msgid "_Stop"
 msgstr "_עצור"
 
-#: src/menu.h:339 src/toolbar.h:55
+#: src/menu.h:327 src/toolbar.h:76
 msgid "Stop current operation"
 msgstr "עצור את הפעולה הנוכחית"
 
-#: src/menu.h:345
+#: src/menu.h:333
 msgid "_Reload"
 msgstr "_טען מחדש"
 
-#: src/menu.h:345
+#: src/menu.h:333
 msgid "Reload current archive"
 msgstr "טען מחדש את הארכיון הנוכחי"
 
-#: src/menu.h:356
+#: src/menu.h:344
 msgid "_Arrange Files"
 msgstr "_סדר קבצים"
 
-#: src/menu.h:361
+#: src/menu.h:349
 msgid "_Last Output"
 msgstr "פלט _אחרון"
 
-#: src/menu.h:361
+#: src/menu.h:349
 msgid "View the output produced by the last executed command"
 msgstr "צפה בפלט שנוצר על-ידי הפקודה האחרונה שהופעלה"
 
-#: src/menu.h:367
-msgid "New _Window"
-msgstr "חלון _חדש"
-
-#: src/menu.h:367
-msgid "Open a new window"
-msgstr "פתח חלון חדש"
-
-#: src/menu.h:380
+#: src/menu.h:362
 msgid "_Contents"
 msgstr "_תכנים"
 
-#: src/menu.h:380
+#: src/menu.h:362
 msgid "Display the File Roller Manual"
 msgstr "הצג את מדריך גלגלן הקבצים"
 
-#: src/menu.h:386
+#: src/menu.h:368
 msgid "_About"
 msgstr "_אודות"
 
-#: src/menu.h:386
+#: src/menu.h:368
 msgid "Information about the program"
 msgstr "מידע אודות התוכנית"
 
-#: src/menu.h:398
+#: src/menu.h:380
 msgid "_Archive"
 msgstr "_ארכיון"
 
-#: src/menu.h:399
+#: src/menu.h:381
 msgid "_Edit"
 msgstr "_עריכה"
 
-#: src/menu.h:400
-msgid "_View"
-msgstr "_תצוגה"
+#: src/menu.h:412
+msgid "Open selected files with the standard application"
+msgstr "פתח קבצים נבחרים באמצעות היישום הסטנדרטי"
 
-#: src/menu.h:423
-msgid "Open Files..."
-msgstr "פתח קבצים..."
+#: src/menu.h:418
+msgid "Open With..."
+msgstr "פתח באמצעות..."
 
-#: src/menu.h:443
-msgid "_Delete Files"
-msgstr "_מחק קבצים"
-
-#: src/menu.h:443
-msgid "Delete files from the archive"
-msgstr "מחק קבצים מהארכיון"
-
-#: src/toolbar.h:39
-msgid "New"
-msgstr "חדש"
-
-#: src/toolbar.h:45
-msgid "Open"
-msgstr "פתח"
-
-#: src/toolbar.h:45
+#: src/toolbar.h:48
 msgid "Open archive"
 msgstr "פתח ארכיון"
 
-#: src/toolbar.h:55
+#: src/toolbar.h:56
+msgid "Add files to the archive"
+msgstr "הוסף קבצים לארכיון"
+
+#: src/toolbar.h:68
+msgid "View"
+msgstr "הצג"
+
+#: src/toolbar.h:68
+msgid "View selected file"
+msgstr "הצג קובץ נוכחי"
+
+#: src/toolbar.h:76
 msgid "Stop"
 msgstr "עצור"
 
-#: src/window.c:618
+#: src/window.c:681
 msgid "Folder"
 msgstr "תיקייה"
 
-#: src/window.c:767
+#: src/window.c:846
 msgid "[read only]"
 msgstr "[קריאה בלבד]"
 
-#: src/window.c:862
+#: src/window.c:941
 #, c-format
-msgid "1 file (%s)"
-msgstr "קובץ אחד (%s)"
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d קובץ (%s)"
+msgstr[1] "%d קבצים (%s)"
 
-#: src/window.c:865
+#: src/window.c:946
 #, c-format
-msgid "%d files (%s)"
-msgstr "%d קבצים (%s)"
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d קובץ נבחר (%s)"
+msgstr[1] "%d קבצים נבחרו (%s)"
 
-#: src/window.c:873
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "קובץ אחד נבחר (%s)"
-
-#: src/window.c:876
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d קבצים נבחרו (%s)"
-
-#: src/window.c:1250
+#: src/window.c:1348
 msgid "Reading archive"
 msgstr "קורא ארכיון"
 
-#: src/window.c:1256
+#: src/window.c:1354
 msgid "Adding files to archive"
 msgstr "מוסיף קבצים לארכיון"
 
-#: src/window.c:1259
+#: src/window.c:1357
 msgid "Extracting files from archive"
 msgstr "מחלץ קבצים מהארכיון"
 
-#: src/window.c:1262
+#: src/window.c:1360
 msgid "Testing archive"
 msgstr "בודק ארכיון"
 
-#: src/window.c:1265
+#: src/window.c:1363
 msgid "Getting the file list"
 msgstr "מקבל את רשימת הקבצים"
 
-#: src/window.c:1271
+#: src/window.c:1369
 msgid "wait please..."
 msgstr "אנא המתן..."
 
-#: src/window.c:1332
+#: src/window.c:1426
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "לא ניתן להציג את התיקייה \"%s\""
 
-#: src/window.c:1389
+#: src/window.c:1484
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+"הארכיון הזה מוגן על ידי סיסמה.\n"
+"הגדר סיסמה באמצעות הפקודה: ערוך->סיסמה"
+
+#: src/window.c:1486
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr "הסיסמה שמוגדרת שגויה, הגדר סיסמה חדשה באמצעות הפקודה: ערוך->סיסמה"
+
+#: src/window.c:1491
+msgid "Could not perform the operation"
+msgstr "לא ניתן ללבצע את הפעולה"
+
+#: src/window.c:1506
 msgid "Operation stopped"
 msgstr "הפעולה נעצרה"
 
-#: src/window.c:1410
+#: src/window.c:1527
 msgid "An error occurred while extracting files."
 msgstr "ארעה שגיאה בזמן חילוץ קבצים."
 
-#: src/window.c:1414
+#: src/window.c:1531
 msgid "An error occurred while loading the archive."
 msgstr "ארעה שגיאה בזמן טעינת הארכיון."
 
-#: src/window.c:1418
+#: src/window.c:1535
 msgid "An error occurred while deleting files from the archive."
 msgstr "ארעה שגיאה בזמן מחיקת קבצים מהארכיון."
 
-#: src/window.c:1422
+#: src/window.c:1539
 msgid "An error occurred while adding files to the archive."
 msgstr "ארעה שגיאה בזמן הוספת קבצים לארכיון."
 
-#: src/window.c:1426
+#: src/window.c:1543
 msgid "An error occurred while testing archive."
 msgstr "ארעה שגיאה בזמן בדיקת הארכיון."
 
-#: src/window.c:1435
+#: src/window.c:1552
 msgid "Command not found."
 msgstr "פקודה לא נמצאה."
 
-#: src/window.c:1438
+#: src/window.c:1555
 msgid "Command exited abnormally."
 msgstr "פקודה הסתיימה בצורה לא רגילה."
 
-#: src/window.c:1569
+#: src/window.c:1683
 msgid "Test Result"
 msgstr "תוצאות בדיקה"
 
-#: src/window.c:1789
+#: src/window.c:1916
 msgid "You don't have the right permissions."
 msgstr "אין לך את ההרשאות הנכונות."
 
-#: src/window.c:1822
+#: src/window.c:1949
 msgid "You can't add an archive to itself."
 msgstr "אינך יכול להוסיף ארכיון לעצמו."
 
-#: src/window.c:1994
+#: src/window.c:2128
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "האם ברצונך להוסיף קובץ זה לארכיון הנוכחי או לפתוח אותו כארכיון חדש?"
 
-#: src/window.c:2039
+#: src/window.c:2165
 msgid "Do you want to create a new archive with these files?"
 msgstr "האם ברצונך ליצור ארכיון חדש עם קבצים אלו?"
 
-#: src/window.c:2042
+#: src/window.c:2168
 msgid "Create _Archive"
 msgstr "צור _ארכיון"
 
-#: src/window.c:2387
+#: src/window.c:2492
 msgid "Size"
 msgstr "גודל"
 
-#: src/window.c:2388
+#: src/window.c:2493
 msgid "Type"
 msgstr "סוג"
 
-#: src/window.c:2389
+#: src/window.c:2494
 msgid "Date modified"
 msgstr "תאריך שינוי"
 
-#: src/window.c:2390
+#: src/window.c:2495
 msgid "Location"
 msgstr "מיקום"
 
-#: src/window.c:2397
+#: src/window.c:2502
 msgid "Name"
 msgstr "שם"
 
-#: src/window.c:2917
-msgid "_Up"
-msgstr "_מעלה"
+#: src/window.c:3047
+msgid "Go to the previous visited location"
+msgstr "עבור למקום האחרון בו ביקרת"
+
+#: src/window.c:3055
+msgid "Go to the next visited location"
+msgstr "עבור למקום הבא בו ביקרת"
+
+#: src/window.c:3063
+msgid "Go up one level"
+msgstr "עלה רמה אחת"
+
+#: src/window.c:3071
+msgid "Go to the home location"
+msgstr "עבור לספרית הבית"
 
 #. current location
-#: src/window.c:2939
+#: src/window.c:3090
 msgid "Location:"
 msgstr "מיקום:"
 
-#: src/window.c:2976
-msgid "Add"
-msgstr "הוסף"
-
-#: src/window.c:2998
-msgid "View"
-msgstr "הצג"
-
-#: src/window.c:2999
-msgid "View selected file"
-msgstr "הצג קובץ נוכחי"
-
-#: src/window.c:3508
+#: src/window.c:3695
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "לא ניתן לפתוח את \"%s\""
 
-#: src/window.c:3559
+#: src/window.c:3746
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "לא ניתן לשמור את הארכיון \"%s\""
 
-#: src/window.c:4623
+#: src/window.c:4606
+msgid "The new name is void."
+msgstr "השם החדש ריק"
+
+#: src/window.c:4606 src/window.c:4610 src/window.c:4619
+msgid "Please use a different name."
+msgstr "השתמש בשם אחר."
+
+#: src/window.c:4610
+msgid "The new name is equal to the old one."
+msgstr "השם החדש זהה לשם הקודם."
+
+#: src/window.c:4619
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+"השם \"%s\" לא תקני כי הוא כולל את התווים: %s\n"
+"\n"
+"%s"
+
+#: src/window.c:4675
+msgid "New folder name"
+msgstr "שם הספריה החדשה"
+
+#: src/window.c:4675
+msgid "New file name"
+msgstr "שם הקובץ החדש"
+
+#: src/window.c:4696
+msgid "Could not rename the folder"
+msgstr "לא ניתן לשנות את שם התיקייה"
+
+#: src/window.c:4696
+msgid "Could not rename the file"
+msgstr "לא ניתן לשנות את שם הקובץ"
+
+#: src/window.c:5324
 msgid "Add files to an archive"
 msgstr "הוסף קבצים לארכיון"
 
-#: src/window.c:4648
+#: src/window.c:5349
 msgid "Extract archive"
 msgstr "חלץ ארכיון"
 
-#~ msgid "Extract Here"
-#~ msgstr "חלץ כאן"
+#~ msgid "Add to Archive..."
+#~ msgstr "הוסף לארכיון..."
+
+#~ msgid "Extract to..."
+#~ msgstr "חלץ ל..."
+
+#~ msgid "Archive Manager"
+#~ msgstr "מנהל הארכיון"
+
+#~ msgid "Handle compressed archives"
+#~ msgstr "טפל בארכיונים מכווצים"
+
+#~ msgid "Add Files"
+#~ msgstr "הוסף קבצים"
+
+#~ msgid "Exclude o_ther file systems"
+#~ msgstr "שלול מערכות קבצים א_חרות"
+
+#~ msgid "Exclude _backup files (*~)"
+#~ msgstr "שלול קבצי _גיבוי (~*)"
+
+#~ msgid "Exclude _hidden files (.*)"
+#~ msgstr "שלול קבצים _מוסתרים (.*)"
+
+#~ msgid "Igno_re case"
+#~ msgstr "הת_עלם מרשיות"
+
+#~ msgid "Files to add: %d"
+#~ msgstr "קבצים להוספה: %d"
+
+#~ msgid "Folders to add: %d"
+#~ msgstr "תיקיות להוספה: %d"
+
+#~ msgid "Destination folder"
+#~ msgstr "תיקיית יעד"
+
+#~ msgid "Bookmarks"
+#~ msgstr "סימניות"
+
+#~ msgid "General"
+#~ msgstr "כללי"
+
+#~ msgid "Visible columns"
+#~ msgstr "עמודות נראות"
+
+#~ msgid "Date and time:"
+#~ msgstr "תאריך ושעה:"
+
+#~ msgid "A_dd to Bookmarks"
+#~ msgstr "ה_וסף לסימניות"
+
+#~ msgid "Add _to archive:"
+#~ msgstr "הוסף _לארכיון:"
+
+#~ msgid "Add only if _newer"
+#~ msgstr "הוסף רק אם _חדש יותר"
+
+#~ msgid "Delete Files"
+#~ msgstr "מחק קבצים"
+
+#~ msgid "Extract to"
+#~ msgstr "חלץ ל"
+
+#~ msgid "Select Archive"
+#~ msgstr "בחר ארכיון"
+
+#~ msgid ""
+#~ "GConf error:\n"
+#~ "  %s"
+#~ msgstr ""
+#~ "שגיאת GConf:\n"
+#~ "  %s"
+
+#~ msgid "New Archive"
+#~ msgstr "ארכיון חדש"
+
+#~ msgid "Save Archive"
+#~ msgstr "שמור ארכיון"
+
+#~ msgid "Open Archive"
+#~ msgstr "פתח ארכיון"
+
+#~ msgid "Copy Archive"
+#~ msgstr "העתק ארכיון"
+
+#~ msgid "Move Archive"
+#~ msgstr "העבר ארכיון"
+
+#~ msgid "_Test"
+#~ msgstr "_בדיקה"
+
+#~ msgid "Add _Files..."
+#~ msgstr "הוסף _קבצים..."
+
+#~ msgid "_Delete Files..."
+#~ msgstr "_מחק קבצים..."
+
+#~ msgid "Delete selected files and folders from the archive"
+#~ msgstr "מחק את הקבצים והתיקיות הנבחרים מהארכיון"
+
+#~ msgid "_Preferences"
+#~ msgstr "_העדפות"
+
+#~ msgid "Edit File Roller preferences"
+#~ msgstr "ערוך את העדפות גלגלן הקבצים"
+
+#~ msgid "New _Window"
+#~ msgstr "חלון _חדש"
+
+#~ msgid "Open a new window"
+#~ msgstr "פתח חלון חדש"
+
+#~ msgid "_Delete Files"
+#~ msgstr "_מחק קבצים"
+
+#~ msgid "1 file (%s)"
+#~ msgstr "קובץ אחד (%s)"
+
+#~ msgid "1 file selected (%s)"
+#~ msgstr "קובץ אחד נבחר (%s)"
+
+#~ msgid "_Up"
+#~ msgstr "_מעלה"
 
 #~ msgid "Extract in a Folder"
 #~ msgstr "חלץ בתיקייה"
@@ -1124,9 +1260,6 @@ msgstr "חלץ ארכיון"
 
 #~ msgid "Open an existing archive"
 #~ msgstr "פתח ארכיון קיים"
-
-#~ msgid "_Delete"
-#~ msgstr "_מחק"
 
 #~ msgid "Delete current archive from disk"
 #~ msgstr "מחק את הארכיון הנוכחי מהדיסק"
