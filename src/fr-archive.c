@@ -435,7 +435,8 @@ create_command_from_filename (FRArchive  *archive,
 		return TRUE;
 	} 
 	
-	if (file_extension_is (filename, ".lzh")) {
+	if (file_extension_is (filename, ".lzh")
+	    || file_extension_is (filename, ".lha")) {
 		archive->command = fr_command_lha_new (archive->process, 
 						       filename);
 		return TRUE;
