@@ -483,13 +483,12 @@ dlg_extract (GtkWidget *widget,
 	data->dialog = gtk_file_chooser_dialog_new (
 				    _("Extract"),
 				    GTK_WINDOW (data->window->app),
-				    GTK_FILE_CHOOSER_ACTION_SAVE,
+				    GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
 				    GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 				    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				    FR_STOCK_EXTRACT, GTK_RESPONSE_OK,
 				    NULL);
 	file_sel = GTK_FILE_CHOOSER (data->dialog);
-	gtk_file_chooser_set_folder_mode (file_sel, TRUE);
 	gtk_file_chooser_set_select_multiple (file_sel, FALSE);
 	gtk_file_chooser_set_local_only (file_sel, TRUE);
 
