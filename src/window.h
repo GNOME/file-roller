@@ -196,6 +196,8 @@ typedef struct {
 	gboolean   extract_interact_use_default_dir;
 
 	guint      cnxn_id[GCONF_NOTIFICATIONS];
+
+	gulong     theme_changed_handler_id;
 } FRWindow;
 
 
