@@ -1,1051 +1,812 @@
-# File_roller Greek Translation.
-# Copyright (C) 2002 Free Software Foundation Inc.
-# Kostas Papadimas <pkst@gmx.net> 2002.
-#Kostas : initial translation
-#Kostas : finished the translation,245 messages
+# Greek firestarter configuration.
+# Copyright (C) 2001 Free Software Foundation, Inc.
+# Simos Xenitellis <simos@hellug.gr>, 2001.
+# Kostas Papadimas <pkst@gmx.net> 2002
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2002-11-08 04:40+0100\n"
-"PO-Revision-Date: 2002-11-17 13:25+0200\n"
-"Last-Translator: Kostas Papadimas <pkst@gmx.net>\n"
-"Language-Team: Greek <nls@tux.hellug.gr>\n"
+"Project-Id-Version: firestarter x.y\n"
+"POT-Creation-Date: 2002-08-07 17:23+0300\n"
+"PO-Revision-Date: 2002-11-16 21:14+0200\n"
+"Last-Translator: Kostas Papadimas <kostas@localhost.localdomain>\n"
+"Language-Team:  <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: file-roller.desktop.in.h:1
-msgid "Archive Manager"
-msgstr "Διαχειριστής Συμπιεσμένων Αρχείων"
+#: src/firestarter.c:69
+msgid "Firewall stopped, network traffic is now flowing freely\n"
+msgstr "Ο firewall διακόπηκε, η κυκλοφορία στο δίκτυο γίνεται τώρα ελεύθερα\n"
 
-#. Create the application.
-#: file-roller.desktop.in.h:2
-#: src/gtk-utils.c:76
-#: src/gtk-utils.c:153
-#: src/gtk-utils.c:256
-#: src/main.c:101
-#: src/window.c:690
-#: src/window.c:699
-#: src/window.c:2360
-#: src/window.c:4052
-msgid "File Roller"
-msgstr "File Roller"
+#: src/firestarter.c:90
+msgid "Firewall script restarted\n"
+msgstr "Η δέσμη ενεργειών Firewall επανεκκινήθηκε\n"
 
-#: file-roller.desktop.in.h:3
-msgid "Handle compressed archives"
-msgstr "Διαχειρίζεατι συμπιεσμένα αρχεία"
+#: src/firestarter.c:120
+msgid "All traffic halted\n"
+msgstr "Διακόπηκε όλη η κυκλοφορία\n"
 
-#: src/dlg-add.c:118
-#, c-format
-msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Δεν έχετε τα απαραίτητα δικαιώματα ανάγνωσης αρχείων από τον φάκελο \"%s\""
+#: src/firestarter.c:182
+msgid "Firewall stopped"
+msgstr "Ο Firewall διακόπηκε"
 
-#: src/dlg-add.c:338
-msgid "Add files"
-msgstr "Προσθήκη αρχείων"
+#: src/firestarter.c:187
+msgid "Firewall running"
+msgstr "Ο Firewall εκτελείται"
 
-#: src/dlg-add.c:343
-msgid "_Add only if newer"
-msgstr "_Προσθήκη μόνο αν είναι νεώτερο"
+#: src/firestarter.c:192
+msgid "All traffic halted"
+msgstr "Διακόπηκε όλη η κυκλοφορία"
 
-#: src/dlg-add.c:344
-msgid "_Include sub-folders"
-msgstr "_Να περιλαμβάνονται οι υποφάκελοι"
+#: src/firestarter.c:214
+msgid "Startup without panel applet"
+msgstr "Εκκίνηση χωρίς εφαρμογίδιο ταμπλώ"
 
-#: src/dlg-add.c:345
-msgid "Exclude folders that are symbolic lin_ks"
-msgstr "Εξαίρεση φακέλων που είναι συμβολικοί δεσ_μοί"
+#: src/firestarter.c:215
+msgid "Start the firewall"
+msgstr "Έναρξη του firewall"
 
-#: src/dlg-add.c:346
-msgid "Exclude o_ther file systems"
-msgstr "Εξαίρεση ά_λλων συστημάτων αρχείων "
+#: src/firestarter.c:216
+msgid "Stop the firewall"
+msgstr "Διακοπή του firewall"
 
-#: src/dlg-add.c:347
-msgid "Exclude _backup files (*~)"
-msgstr "Εξαίρεση_αντιγράφων ασφαλείας (*~) "
+#: src/firestarter.c:217
+msgid "Halt all network traffic"
+msgstr "Διακοπή όλης της κυκλοφορίας στο δίκτυο"
 
-#: src/dlg-add.c:348
-msgid "Exclude _hidden files (.*)"
-msgstr "Εξαίρεση_κρυφών αρχείων (.*)"
-
-#: src/dlg-add.c:349
-msgid "E_xclude files:"
-msgstr "Ε_ξαίρεση αρχείων:"
-
-#: src/dlg-add.c:351
-msgid "example: *.o; *.bak"
-msgstr "παράδειγμα: *.o; *.bak"
-
-#: src/dlg-add.c:352
-msgid "Igno_re case"
-msgstr "Αγνόηση case"
-
-#: src/dlg-add.c:353
-msgid "_Load Options"
-msgstr "_Επιλογές Φόρτωσης"
-
-#: src/dlg-add.c:354
-msgid "Sa_ve Options"
-msgstr "Επιλογές Αποθή_κευσης"
-
-#: src/dlg-add.c:610
-msgid "Load options"
-msgstr "Επιλογές φόρτωσης"
-
-#: src/dlg-add.c:758
-msgid "Save options"
-msgstr "Επιλογές αποθήκευσης"
-
-#. Set widgets data.
-#: src/dlg-batch-add.c:142
-#, c-format
-msgid "Adding %u files"
-msgstr "Προσθήκη %u αρχείων"
-
-#: src/dlg-extract.c:120
-#: src/window.c:3117
-msgid "Destination folder does not exist.  Do you want to create it ?"
-msgstr "Ο φάκελος προορισμού δεν υπάρχει. Θέλετε να δημιουργηθεί?"
-
-#: src/dlg-extract.c:122
-#: src/window.c:3119
-msgid "Create _Folder"
-msgstr "Δημιουργία_Φακέλου"
-
-#: src/dlg-extract.c:142
-#: src/window.c:3139
-#, c-format
+#: src/druid.c:57
 msgid ""
-"Could not create the destination folder : %s.\n"
-"Extraction not performed."
+"Please select your Internet connected network device from the\n"
+"drop-down list of detected devices."
 msgstr ""
-"Αδυναμία δημιουργίας φακέλου προορισμού: %s.\n"
-"Η αποσυμπίεση δεν πραγματοποιήθηκε."
+"Επιλέξτε την συσκευή δικτύου που είναι συνδεδεμένη στο διαδίκτυο από την\n"
+"λίστα των συσκευών που έχουν εντοπισθεί."
 
-#: src/dlg-extract.c:157
-#: src/window.c:3154
-msgid "Extraction not performed."
-msgstr "Η αποσυμπίεση δεν πραγματοποιήθηκε"
+#
+#: src/druid.c:68
+msgid "Detected device(s):"
+msgstr "Συσκευές που εντοπίστηκαν:"
 
-#: src/dlg-extract.c:176
-#, c-format
-msgid "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "Δεν έχετε τα σωστά δικαιώματα για την αποσυμπίεση αρχείων στον φάκελο \"%s\""
+#: src/druid.c:73
+msgid "Select your network device from the dropdown list. Go with the default if unsure."
+msgstr "Επιλέξτε την συσκευή δικτύου από την λίστα. Επιλέξτε εξ ορισμού αν δεν είστε σίγουροι."
 
-#: src/dlg-extract.c:397
-#: src/dlg-preferences.c:128
-#: src/menu-callbacks.c:753
-#, c-format
-msgid "Could not display help: %s"
-msgstr "Αδυναμία προβολής βοήθειας: %s"
+#: src/druid.c:84
+msgid ""
+"If you use a modem the device name is likely to be ppp0. If you have a\n"
+"cable modem or a DSL connection, choose eth0."
+msgstr ""
+"Αν χρησιμοποιείε μόντεμ το όνομα της συσκευής μάλλον θα είναι  ppp0. Αν έχετε ένα\n"
+"καλωδικαό μόντεμ ή σύνδεση DSL επιλέξτε eth0."
 
-#: src/dlg-extract.c:486
-msgid "Favorites extraction folders"
-msgstr "Αγαπημένοι φάκελοι αποσυμπίεσης"
+#: src/druid.c:94
+msgid "Start the firewall on dial-out"
+msgstr "Έναρξη του firewall κατά την κλήση"
 
-#: src/dlg-prop.c:98
-msgid "Path:"
-msgstr "Διαδρομή:"
+#: src/druid.c:96
+msgid "Check this option and the firewall will start when you dial your Internet Service Provider."
+msgstr "Επιλέξτε αυτή την επιλογή και ο firewall θα ξεκινάει όταν καλείτε τον ISP σας."
 
-#: src/dlg-prop.c:111
-msgid "Name:"
-msgstr "Όνομα:"
+#: src/druid.c:105
+msgid "IP address is assigned via DHCP"
+msgstr "Η διεύθυνση IP ορίζεται μέσω DHCP"
 
-#: src/dlg-prop.c:122
-msgid "File Size:"
-msgstr "Μέγεθος Αρχείου:"
+#: src/druid.c:107
+msgid "Check this option if you need to connect to a DHCP server. Cable modem and DSL users should check this."
+msgstr "Επιλέξτε αυτό αν θέλετε να συνδέεστε με ένα εξυπηρετητή  DHCP. Χρήστες με καλωδιακό μόντεμ DSL και θα πρέπει να το επιλέξουν."
 
-#: src/dlg-prop.c:133
-msgid "Number of Files:"
-msgstr "Αριθμός Αρχείων:"
+#: src/druid.c:138
+msgid ""
+"Network Adress Translation (NAT) is a technique that allows all the machines\n"
+"on your network to share a single IP address and Internet connection."
+msgstr ""
+"Η Μετάφραση Διεύθυνσης Δικτύου είναι μιά τεχνική που επιτρέπει σε όλες τις μηχανές\n"
+"στο δίκτυο σας να μοιράζονται μια διεύθυνση  IP και μια σύνδεση Internet."
 
-#: src/dlg-prop.c:143
-msgid "Date and Time:"
-msgstr "Ημερομηνίας και Ώρα:"
+#: src/druid.c:147
+msgid "Disable Network Address Translation"
+msgstr "Απενεργοποίηση Μετάφρασης Διεύθυνσης Δικτύου"
 
-#: src/dlg-prop.c:149
-msgid "%d %B %Y, %H:%M"
-msgstr "%d %B %Y, %H:%M"
+#: src/druid.c:154
+msgid "Enable Network Address Translation"
+msgstr "Ενεργοποίηση Μετάφρασης Διεύθυνσης Δικτύου"
 
-#: src/file-data.c:28
-msgid "Unknown type"
-msgstr "Άγνωστο είδος"
+#
+#: src/druid.c:175
+msgid "Select your internal network interface:"
+msgstr "Επιλέξτε την εσωτερική επιφάνεια δικτύου"
 
-#: src/file-data.c:29
-msgid "Symbolic link"
-msgstr "Συμβολικός σύνδεσμος"
+#: src/druid.c:183
+msgid "This is the device that connects to your LAN. Go with the default if unsure."
+msgstr "Αυτή είναι η συσκευή που σας συνδέει στο LAN. Επιλέξτε το εξ ορισμού αν δεν είστε σίγουροι."
 
-#: src/file-utils.c:534
-msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr "Αδυναμία εύρεσης τερματικού, χρήση του xterm, ακόμα και αν μπορεί να μην δουλέψει"
+#: src/druid.c:192
+msgid "Autodetect internal network IP range"
+msgstr "Αυτόματος εντοπισμός εύρους  IP εσωτερικού δικτύου"
 
-#: src/file_roller.glade2.h:1
-#: src/file_roller_prop.glade2.h:1
-msgid "    "
-msgstr "    "
+#: src/druid.c:194
+msgid "Select this and the IP range of your LAN is autodetected."
+msgstr "Επιλέξτε αυτό και το εύρος IP του  LAN σας θα εντοπισθεί αυτόματα."
 
-#: src/file_roller.glade2.h:2
-msgid "*"
-msgstr "*"
+#: src/druid.c:201
+msgid "Specify internal network IP range manually (advanced users only)"
+msgstr "Καθορίστε χειροκίνητα το εύρος IP εσωτερικού δικτύου (μόνο για προχωρημένους χρήστες)"
 
-#: src/file_roller.glade2.h:3
-msgid "A_dd to favorites"
-msgstr "Π_ροσθήκη στα αγαπημένα"
+#: src/druid.c:203
+msgid "Select this only if the automatic detection fails."
+msgstr "Επιλέξτε αυτό μόνο όταν αποτύχει ο αυτόματος εντοπισμός."
 
-#: src/file_roller.glade2.h:4
-msgid "A_vailable application:"
-msgstr "Δ_ιαθέσιμη εφαρμογή:"
+#: src/druid.c:217
+msgid "Enter the internal network address range:"
+msgstr "Εισάγετε το εύρος διευθύνσεων εσωτερικού δικτύου:"
 
-#: src/file_roller.glade2.h:5
-msgid "Add _to archive :"
-msgstr "Προσθήκη_σε συμπιεσμένο αρχείο:"
+#: src/druid.c:233
+msgid ""
+"The network range is given in the form of <i>address/mask</i>. 192.168.0.0/24 is the most\n"
+"common IP range reserved for internal networks."
+msgstr ""
+"Το εύρος δικτύου δίνετε με την φόρμα <i>address/mask</i>. 192.168.0.0/24 είναι το πιό\n"
+"κοινό εύρος IP που χρησιμοποιείται από εσωτερικά δίκτυα."
 
-#: src/file_roller.glade2.h:6
-msgid "Add only if _newer"
-msgstr "Προσθήκη μόνο αν είναι_νεώτερο"
+#: src/druid.c:262
+msgid ""
+"Do you run server software on your machine and want other people to have access\n"
+"to the network services you provide?\n"
+"\n"
+"Services can easily be changed later on from the main interface."
+msgstr ""
+"Τρέχετε λογισμικό εξυπηρετητή στο μηχάνημα σας και θέλετε να έχουν πρόσβαση τρίτοι\n"
+"στις υπηρεσίες δικτύου που παρέχετε?\n"
+"\n"
+"Οι υπηρεσίες μπορούν ελυκολα να αλλαχθούν αργότερα από την κύρια επιφάνεια."
 
-#: src/file_roller.glade2.h:7
-msgid "Do not e_xtract older files"
-msgstr "Να μην αποσυμπιέζονατι παλαιά αρχεία"
+#: src/druid.c:271
+msgid "No, I do not run any public network services on my machine"
+msgstr "'Οχι, δεν τρέχω καμμιά δημόσια υπηρεσία δικτύου στο μηχάνημα μου"
 
-#: src/file_roller.glade2.h:8
-msgid "Extract to"
-msgstr "Αποσυμπίεση σε"
+#: src/druid.c:278
+msgid "Yes, I run the following services on my machine:"
+msgstr "Ναι, τρέχω τις ακόλουθες υπηρεσίες στο μηχάνημά μου:"
 
-#: src/file_roller.glade2.h:9
-msgid "Extract to:"
-msgstr "Αποσυμπίεση σε:"
+#: src/druid.c:392
+msgid ""
+"ICMP Packet Filtering can be useful to prevent some common\n"
+"Denial of Service (DoS) attacks on your network."
+msgstr ""
+"Το ICMP Packet Filtering μπορεί να είναι χρήσιμο για να εμποδίζει κάποιες\n"
+"κοινές επιθέσεις Άρνησης Υπηρεσίας (DoS) στο δίκτυο σας."
 
-#: src/file_roller.glade2.h:10
-msgid "File Roller - Add"
-msgstr "File Roller - Προσθήκη"
+#: src/druid.c:400
+msgid "Disable ICMP Filtering"
+msgstr "Απενεργοποίηση  ICMP Filtering"
 
-#: src/file_roller.glade2.h:11
-msgid "File Roller - Archive Informations"
-msgstr "File Roller - Πληροφορίες Συμπιεσμένου αρχείου"
+#: src/druid.c:407
+msgid "Enable ICMP Filtering related to the following packets:"
+msgstr "Ενεργοποίηση Φιλτραρίσματος ICMP σε σχέση με τα παρακάτω πακέτα:"
 
-#: src/file_roller.glade2.h:12
-msgid "File Roller - Delete Files"
-msgstr "File Roller - Διαγραφή αρχείων"
+#: src/druid.c:475
+msgid ""
+"Type of Service filtering allows you to re-prioritize network\n"
+"services to allow higher throughput rates for commonly used services."
+msgstr ""
+"Το Φιλτράρισμα Τύπου Υπηρεσίας (ToS) σας επιτρέπει να επαναπροσδιορίζετε\n"
+"τις προτεραιότητες των υπηρεσιών για να επιτρέπετε υψηλότερες αναλογίες για συχνά χρησιμοποιούμενες υπηρεσίες."
 
-#: src/file_roller.glade2.h:13
-msgid "File Roller - Extract"
-msgstr "File Roller - Αποσυμπίεση"
+#: src/druid.c:483
+msgid "Disable ToS Filtering"
+msgstr "Απενεργοποίηση ToS Filtering"
 
-#: src/file_roller.glade2.h:14
-msgid "File Roller - Open Files"
-msgstr "File Roller - Άνοιγμα Ρρχείων"
+#: src/druid.c:490
+msgid "Enable ToS Filtering related to the following packets:"
+msgstr "Ενεργοποίηση φιλτραρίσματος ToS σε σχέση με τα ακόλουθα πακέτα:"
 
-#: src/file_roller.glade2.h:15
-msgid "File Roller - Password"
-msgstr "File Roller - Κωδικός"
+#: src/druid.c:512
+msgid "Check this option to enable Type of Service flags for common client applications, such as WWW, FTP, SSH & E-Mail."
+msgstr "Επιλέξτε αυτό για να ενεργοποιήσετε Type of Service flags για κάποιες κοινές εφαρμογές πελάτη, όπως  WWW, FTP, SSH & E-Mail."
 
-#: src/file_roller.glade2.h:16
-msgid "File Roller - View File"
-msgstr "File Roller - Προβολή Αρχείου"
+#: src/druid.c:519
+msgid "Check this option to enable Type of Service flags for common server applications, such as SQUID, FTPd, SSHd, SMTP & POP Daemons."
+msgstr "Επιλέξτε αυτό για να ενεργοποιήσετε Type of Service flags για κάποιες κοινές εφαρμογές εξυπηρετητή, όπως SQUID, FTPd, SSHd, SMTP & POP Daemons."
 
-#: src/file_roller.glade2.h:17
-msgid "File Roller - Viewer"
-msgstr "File Roller - Πρόγραμμα προβολής"
+#: src/druid.c:526
+msgid "Selecting this option will automatically configure Type of Service for `Throughput' for both X and SSHd.You should select this ONLY if you need to run X over your link"
+msgstr "Επιλέγοντας αυτό θα γίνει αυτόματη ρύθμιση του Τύπου Υπηρεσίας για `Συνολικό όγκο έργου' για το  X και το SSHd. Θα πρέπει να το επιλέξετε ΜΟΝΟ αν χρειάζεστε να τρέχετε Χ."
 
-#: src/file_roller.glade2.h:18
-msgid "Files"
-msgstr "Αρχεία"
+#: src/druid.c:539
+msgid "Selecting this option will configure Type of Service flags for Maximum Throughput for the options you have selected."
+msgstr "Επιλέγοντας αυτό θα γίνει ρύθμιση του Type of Service flags για Μέγιστο Συνολικό Όγκο Έργου για τις επιλογές που επιλέξατε."
 
-#: src/file_roller.glade2.h:19
-msgid "Note: the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted."
-msgstr "Σημείωση: Ο κωδικός θα χρησιμοποιηθεί για την κρυπτογράφηση των αρχείων που προσθέτετε στο τρέχον συμπιεσμένο αρχείο. Οταν το συμπιεσμένο αρχείο κλείσει ο κωδικός θα διαγραφεί."
+#: src/druid.c:543
+msgid "Reliability"
+msgstr "Αξιοπιστία"
 
-#: src/file_roller.glade2.h:20
-msgid "Open with an _application"
-msgstr "Άνοιγμα με μια_εφαρμογή"
+#: src/druid.c:547
+msgid "Selecting this option will configure Type of Service flags for Maximum Reliability for the options you have selected."
+msgstr "Επιλέγοντας αυτό θα γίνει ρύθμιση του Type of Service flags για Μέγιστη Αξιοπιστία για τις επιλογές που επιλέξατε."
 
-#: src/file_roller.glade2.h:21
-msgid "Other options"
-msgstr "'Αλλες επιλογές"
+#
+#: src/druid.c:551
+msgid "Delay"
+msgstr "Καθυστέρηση"
 
-#: src/file_roller.glade2.h:22
-msgid "Over_write existing files"
-msgstr "Αντικα_τάσταση υπάρχοντων αρχείων"
+#: src/druid.c:555
+msgid "Selecting this option will configure Type of Service flags for Minimum Delay for the options you have selected."
+msgstr "Επιλέγοντας αυτό θα γίνει ρύθμιση του Type of Service flags για Ελάχιστη καθυστέρηση για τις επιλογές που επιλέξατε."
 
-#: src/file_roller.glade2.h:23
-msgid "R_ecent applications:"
-msgstr "Πρό_σφατες εφαρμογές:"
+#: src/druid.c:582
+msgid ""
+"This wizard will help you to set up a firewall\n"
+"for your Linux machine. You will be asked some\n"
+"questions about your network setup in order to\n"
+"customize the firewall for your system.\n"
+"\n"
+"Please press the forward button to continue.\n"
+"\n"
+"\n"
+msgstr ""
+"Αυτός ο μάγος θα σας βοηθήσει να ρυθμίσετε έναν firewall\n"
+"για το μηχάνημα σας  με Linux. θα σας γίνουν μερικές ερωτήσεις\n"
+"για την εγκατάσταση του δικτύου σας έτσι ώστε να προσαρμοστεί ο\n"
+"firewall για το σύστημα σας..\n"
+"\n"
+"Πιέστε το κουμπί μπροστά για να συνεχίσετε.\n"
+"\n"
 
-#: src/file_roller.glade2.h:24
-msgid "R_ecreate folders"
-msgstr "Α_ναδημιουργία φακέλων"
+#: src/druid.c:704
+msgid "Firewall Wizard"
+msgstr "Οδηγός firewall"
 
-#: src/file_roller.glade2.h:25
-msgid "Select archive"
-msgstr "Επιλογή συμπιεσμένου αρχείου"
+#. Welcome page
+#. page = create_page_with_text (
+#. _("Welcome to Firestarter"),
+#. _("This wizard will help you to set up a firewall for your\n"
+#. "Linux machine. You will be asked some questions about\n"
+#. "your network setup in order to tailor the firewall to\n"
+#. "your needs.\n\n"
+#. "Press the forward button to continue.\n\n\n"));
+#. g_ptr_array_add (druid->pages, page);
+#.
+#: src/druid.c:738
+msgid "Welcome to Firestarter"
+msgstr "Καλώς Ορίσατε στο Firestarter"
 
-#: src/file_roller.glade2.h:26
-msgid "View with internal _viewer"
-msgstr "Προβολή με εσωτερικό_πρόγραμμα προβολής"
+#
+#: src/druid.c:744
+msgid "Choose your external interface"
+msgstr "Επιλέξτε την εξωτερική επιφάνεια"
 
-#: src/file_roller.glade2.h:27
-msgid "_All Files"
-msgstr "_'Ολα τα Αρχεία"
+#: src/druid.c:750
+msgid "Internet connection sharing setup"
+msgstr "Καθορισμός κοινής χρήσης σύνδεσης Internet"
 
-#: src/file_roller.glade2.h:28
-msgid "_Application:"
-msgstr "_Εφαρμογή:"
+#: src/druid.c:760
+msgid "Network services setup"
+msgstr "Καθορισμός υπηρεσιών δικτύου"
 
-#: src/file_roller.glade2.h:29
-msgid "_Files:"
-msgstr "_Αρχεία:"
+#: src/druid.c:766
+msgid "Type of Service filtering setup"
+msgstr "Καθορισμός φιλτραρίσματος Τύπου Υπηρεσίας"
 
-#: src/file_roller.glade2.h:30
-msgid "_Password:"
-msgstr "_Κωδικός:"
+#: src/druid.c:772
+msgid "ICMP filtering Setup"
+msgstr "Ρύθμιση  ICMP Filtering"
 
-#: src/file_roller.glade2.h:31
-msgid "_Selected Files"
-msgstr "_Επιλεγμένα Αρχεία"
+#: src/druid.c:780
+msgid "Ready to start your firewall"
+msgstr "¨Όλα έτοιμα για την εκκίνηση του  firewall σας"
 
-#: src/file_roller.glade2.h:32
-msgid "_View destination folder after extraction"
-msgstr "_Προβολή φακέλου κατεύθυνσης μετά την αποσυμπίεση"
+#: src/druid.c:781
+msgid ""
+"The wizard is now ready to start your firewall.\n"
+"\n"
+"Press the save button to continue, or the back button\n"
+"to review your choices.\n"
+"\n"
+msgstr ""
+"Ο μάγος είναι τώρα έτοιμος να ξεκινήσει τον firewall σας.\n"
+"\n"
+"Πατήστε το κουμπί αποθήκευσης για να συνεχίσετε, η το κουμπί πίσω\n"
+"για να αναθεωρήσετε τις επιλογές σας.\n"
+"\n"
 
-#: src/file_roller.glade2.h:33
-msgid "example: *.txt; *.doc"
-msgstr "παράδειγμα: *.txt; *.doc"
+#
+#: src/preferences.c:97
+msgid "General options"
+msgstr "Γενικές επιλογές"
 
-#: src/file_roller_prop.glade2.h:2
-msgid "Columns to Show"
-msgstr "Στήλες  για προβολή"
+#
+#: src/preferences.c:105
+msgid "Start firewall on program startup"
+msgstr "Έναρξη του firewall κατά την εκκίνηση του προγράμματος"
 
-#: src/file_roller_prop.glade2.h:3
-msgid "Compression _level:"
-msgstr "Επίπεδο_Συμπίεσης:"
+#: src/preferences.c:107
+msgid "Check this and the firewall will be restarted each time the program starts. Enabled by default."
+msgstr "Επιλέξτε αυτό και ο firewall θα επανεκκινείται κάθε φορά που το πρόγραμμα ξεκινά. Ενεργοποιημένο εξ ορισμού."
 
-#: src/file_roller_prop.glade2.h:4
-msgid "Fast"
-msgstr "Γρήγορο"
+#: src/preferences.c:114
+msgid "Stop firewall on program exit"
+msgstr "Διακοπή firewall κατά την έξοδο από το πρόγραμμα"
 
-#: src/file_roller_prop.glade2.h:5
-msgid "File Roller - Preferences"
-msgstr "File Roller - Προτιμήσεις"
+#: src/preferences.c:116
+msgid "Check this and the firewall will be stopped when you exit Firestarter. Enabled by default."
+msgstr "Επιλέξτε αυτό και ο firewall θα σταματάει όταν τερματίζετε τον  Firestarter. Ενεργοποιημένο εξ ορισμού."
 
-#: src/file_roller_prop.glade2.h:6
-msgid "File _Name"
-msgstr "Όνομα_Αρχείου"
+#: src/preferences.c:122
+msgid "Always lookup hostname on hits"
+msgstr "Να γίνεται πάντα αναζήτηση hostname στις επισκέψεις"
 
-#: src/file_roller_prop.glade2.h:7
-msgid "File _Path"
-msgstr "Διαδρομή_Αρχείου"
+#: src/preferences.c:124
+msgid "Check this and instead of the IP number you will see a valid hostname in the Hits view. This option uses some network bandwith."
+msgstr "Επιλέξτε αυτό και αντί για τον αριθμό  IP θα βλέπετε ένα έγκυρο hostname στην προβολή Επισκέψεων. Αυτή η επιλογή χρησιμοποιεί κάποιο από το φόρτο δικτύου."
 
-#: src/file_roller_prop.glade2.h:8
-msgid "File _Size"
-msgstr "Μέγεθος_Αρχείου"
+#: src/preferences.c:158
+msgid "Hit filtering options"
+msgstr "Επιλογές φιλτραρίσματος επισκέψεων"
 
-#: src/file_roller_prop.glade2.h:9
-msgid "File _Type"
-msgstr "Τύπος_Αρχείου"
+#: src/preferences.c:166
+msgid "Filter out redundant hits"
+msgstr "Φιλτράρισμα πλεονάζοντων επισκέψεων"
 
-#: src/file_roller_prop.glade2.h:10
+#: src/preferences.c:168
+msgid "Check this and the hits list will not show identical hits that succeed each other."
+msgstr "Επιλέξτε αυτό και η λίστα επισκέψεων δεν θα εμφανίζει όμοιες επισκέψεις που διαδέχονται η μία την άλλη."
+
+#: src/preferences.c:175
+msgid "Filter out hits not meant for you"
+msgstr "Φιλτράρισμα για επισκέψεις που δεν ήταν για σας."
+
+#: src/preferences.c:177
+msgid "Check this and the hits list will not show hits that have a destination field other than your IP."
+msgstr "Επιλέξτε αυτό και η λίστα επισκέψεων δεν θα εμφανίζει τις επισκέψεις που έχουν διαφορετικό προορισμό από το IP σας."
+
+#
+#: src/preferences.c:206
+msgid "Wizard options"
+msgstr "Επιλογές Μάγου"
+
+#. showall = gtk_check_button_new_with_label (_("Show every page in wizard"));
+#. gtk_tooltips_set_tip (Firestarter.ttips, showall, _(
+#. "Check this and every wizard page will be available in the wizard"), "");
+#. gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (showall),
+#. gnome_config_get_bool ("/firestarter/Druid/showall=FALSE"));
+#. gtk_box_pack_start (GTK_BOX (vbox), showall, FALSE, FALSE, 0);
+#.
+#: src/preferences.c:221
+msgid "Enable Experimental Options"
+msgstr "Ενεργοποίηση Πειραματικών Επιλογών"
+
+#: src/preferences.c:223
+msgid "If you enable this, Firestarter can use some experimental patches for filtering.Do not enable this option until you have read the manual for the pre-requisties"
+msgstr "Αν ενεργοποιήσετε αυτό, ο  Firestarter θα χρησιμοποιεί κάποιες πειραματικές αλλαγές στα φίλτρα. Μην ενεργοποιήσετε αυτή την επιλογή μέχρι να διαβάσετε το εγχειρίδιο για τα προαπαιτούμενα."
+
+#: src/preferences.c:229
+msgid "Try to detect the location of system binaries"
+msgstr "Προσπάθεια εντοπισμού της τοποθεσίας των binaries συστήματος"
+
+#: src/preferences.c:231
+msgid "Check this and Firestarter will search for the location of some needed binaries. Do not check unless you're having problems."
+msgstr "Επιλέξτε αυτό και ο  Firestarter θα αναζητά την τοποθεσία για κάποια από τα απαιτούμενα binaries. Να μην το επιλέξετε εκτός και αν έχετε προβλήματα."
+
+#: src/preferences.c:237
+msgid "Preferred packet rejection method"
+msgstr "Προτιμώμενη μέθοδος απόρριψης πακέτων"
+
+#
+#: src/preferences.c:244
+msgid "Deny"
+msgstr "Άρνηση"
+
+#: src/preferences.c:246
+msgid "Checking this box will simply ignore the unauthorized packets."
+msgstr "Η επιλογή αυτού σημαίνει ότι απλά θα αγνοούνται μη εγκεκριμένα πακέτα."
+
+#
+#: src/preferences.c:252
+msgid "Reject"
+msgstr "Απόρριψη"
+
+#: src/preferences.c:254
+msgid "Checking this box will reject the unauthorized packets"
+msgstr "Η επιλογή αυτού σημαίνει ότι θα απορρίπτοντια τα  μη εγκεκριμένα πακέτα."
+
+#: src/preferences.c:259
+msgid "You must rerun the wizard for the changes to take effect"
+msgstr "Θα πρέπει να ξανατρέξετε τον μάγο για να πραγματοποιηθούν οι αλλαγές"
+
+#
+#: src/preferences.c:322
+msgid "Firestarter: Preferences"
+msgstr "Firestarter: Προτιμήσεις"
+
+#: src/preferences.c:334
 msgid "General"
 msgstr "Γενικά"
 
-#: src/file_roller_prop.glade2.h:11
-msgid "Maximum (slowest)"
-msgstr "Μέγιστο (πολύ αργό)"
+#: src/preferences.c:335
+msgid "Filters"
+msgstr "Φίλτρα"
 
-#: src/file_roller_prop.glade2.h:12
-msgid "Normal"
-msgstr "Κανονικό"
+#: src/preferences.c:336
+msgid "Advanced"
+msgstr "Για προχωρημένους"
 
-#: src/file_roller_prop.glade2.h:13
-msgid "Very fast"
-msgstr "Πολύ Γρήγορο"
+#: src/menus.c:34
+msgid "_Run firewall wizard"
+msgstr "_Εκτέλεση μάγου firewall "
 
-#: src/file_roller_prop.glade2.h:14
-msgid "_Modification Time"
-msgstr "_.Ωρα τροποποιήσης"
+#: src/menus.c:35
+msgid "Start _firewall"
+msgstr "Έναρξη_firewall"
 
-#: src/file_roller_prop.glade2.h:15
-msgid "_Recent archives:"
-msgstr "_Πρόσφατα συμπιεσμένα αρχεία:"
+#: src/menus.c:36
+msgid "_Stop firewall"
+msgstr "_Διακοπή firewall"
 
-#: src/gconf-utils.c:98
-#, c-format
+#: src/menus.c:37
+msgid "_Halt all network traffic"
+msgstr "_Διακοπή όλης της κυκλοφορίας στο δίκτυο"
+
+#: src/menus.c:45
+msgid "_Clear firewall hit list"
+msgstr "Εκκαθάριση λίστας επισκέψεων του firewall"
+
+#: src/menus.c:46
+msgid "R_eload entire firewall hit list"
+msgstr "Α_νανέωση ολόκληρης της λίστας επισκέψεων του firewall"
+
+#: src/menus.c:47
+msgid "_Save firewall hit list to file"
+msgstr "_Αποθήκευση λίστας επισκέψεων του firewall σε αρχείο"
+
+#: src/menus.c:52
+msgid "Online _Manual"
+msgstr "Online _Εγχειρίδιο"
+
+#: src/menus.c:53
+msgid "Firestarter _Homepage"
+msgstr "Αρχική σελίδα_Firestarter"
+
+#: src/menus.c:60
+msgid "_Firewall"
+msgstr "_Firewall"
+
+#: src/menus.c:61
+msgid "_Hit list"
+msgstr "_Λίστα επισκέψεων"
+
+#: src/menus.c:67
+msgid "Run firewall wizard"
+msgstr "Εκτέλεση μάγου firewall "
+
+#: src/menus.c:69
+msgid "Clear firewall hit list"
+msgstr "Εκκαθάριση λίστας επισκέψεων του firewall"
+
+#: src/menus.c:70
+msgid "Reload entire firewall hit list"
+msgstr "Ανανέωση ολόκληρης της λίστας επισκέψεων του firewall"
+
+#: src/menus.c:71
+msgid "Save firewall hit list to file"
+msgstr "Αποθήκευση λίστας επισκέψεων του firewall σε αρχείο"
+
+#: src/menus.c:73
+msgid "Restart firewall"
+msgstr "Επανεκκίνηση firewall"
+
+#: src/menus.c:74
+msgid "Stop firewall"
+msgstr "Διακοπή firewall"
+
+#: src/menus.c:83
+msgid "/Block host"
+msgstr "/Φραγή συστήματος"
+
+#: src/menus.c:84
+msgid "/Trust host"
+msgstr "/Έμπιστο σύστημα"
+
+#: src/menus.c:85
+msgid "/Open port"
+msgstr "/Άνοιγμα θύρας"
+
+#: src/menus.c:86
+msgid "/Open port for this host only"
+msgstr "/Άνοιγμα θύρας για αυτό το σύστημα μόνο"
+
+#: src/menus.c:87
+msgid "/Block and stop logging port"
+msgstr "/Φραγή και διακοπή καταγραφής θύρας"
+
+#: src/menus.c:88
+msgid "/Lookup hostname"
+msgstr "/Αναζήτηση ονόματος συστήματος"
+
+#: src/menus.c:90
+msgid "/View columns"
+msgstr "/Προβολή στηλών"
+
+#: src/menus.c:91
+#: src/menus.c:219
+msgid "/View columns/Time"
+msgstr "/Προβολή στηλών/¨Ωρας"
+
+#: src/menus.c:92
+#: src/menus.c:222
+msgid "/View columns/In"
+msgstr "/Προβολή στηλών/Εισόδου"
+
+#: src/menus.c:93
+#: src/menus.c:225
+msgid "/View columns/Out"
+msgstr "/Προβολή στηλών/Εξόδου"
+
+#: src/menus.c:94
+#: src/menus.c:228
+msgid "/View columns/Port"
+msgstr "/Προβολή στηλών/θύρας"
+
+#: src/menus.c:95
+#: src/menus.c:231
+msgid "/View columns/Source"
+msgstr "/Προβολή στηλών/Πηγής"
+
+#: src/menus.c:96
+#: src/menus.c:234
+msgid "/View columns/Destination"
+msgstr "/Προβολή στηλών/Προορισμού"
+
+#: src/menus.c:97
+#: src/menus.c:237
+msgid "/View columns/Length"
+msgstr "/Προβολή στηλών/Διάρκειας"
+
+#: src/menus.c:98
+#: src/menus.c:240
+msgid "/View columns/ToS"
+msgstr "/Προβολή στηλών/ToS"
+
+#: src/menus.c:99
+#: src/menus.c:243
+msgid "/View columns/Protocol"
+msgstr "/Προβολή στηλών/Πρωτοκόλλου"
+
+#: src/menus.c:100
+#: src/menus.c:246
+msgid "/View columns/Service"
+msgstr "/Προβολή στηλών/Υπηρεσίας"
+
+#: src/menus.c:108
+msgid "/Remove rule"
+msgstr "/Απομάκρυση κανόνα"
+
+#: src/menus.c:109
+msgid "/Edit rule"
+msgstr "/Επεξεργασία κανόνα"
+
+#: src/menus.c:110
+msgid "/New rule"
+msgstr "/Νέος κανόνας"
+
+#: src/gui.c:50
+msgid "An all-in-one Linux firewall utility for GNOME.\n"
+msgstr "Μια καθολική Linux εφαρμογή για firewall του GNOME.\n"
+
+#: src/gui.c:111
+msgid "Hits"
+msgstr "Επισκέψεις"
+
+#: src/gui.c:116
+msgid "Rules"
+msgstr "Κανόνες"
+
+#
+#: src/savelog.c:68
+msgid "Select file to save log to"
+msgstr "Επιλογή αρχείου για αποθήκευση καταγραφής"
+
+#: src/util.c:46
+msgid "You must be root to manipulate the firewall.\n"
+msgstr "Θα πρέπει να έχετε δικαιώματα διαχειριστή για να χειραγωγήσετε τον firewall.\n"
+
+#: src/util.c:51
+msgid "You must be root to manipulate the firewall."
+msgstr "Θα πρέπει να έχετε δικαιώματα διαχειριστή για να χειραγωγήσετε τον firewall."
+
+#: src/util.c:101
+msgid "Old version detected"
+msgstr "Εντοπίστηκε παλαιά έκδοση"
+
+#: src/util.c:105
 msgid ""
-"GConf error:\n"
-"  %s"
+"\n"
+"A firewall created by an older version of\n"
+"Firestarter has been detected.\n"
+"\n"
+"OK to remove old firewall (recommended)?\n"
 msgstr ""
-"GConf σφάλμα:\n"
-"  %s"
-
-#. Button
-#: src/gtk-utils.c:281
-msgid "Command _line output"
-msgstr "Αποτέλεσμα γραμμής_εντολών"
-
-#: src/main.c:60
-msgid "Add files to the specified archive and quit the program"
-msgstr "Προσθήκη αρχείων στο καθορισμένο συμπιεσμένο αρχείο και έξοδος από το πρόγραμμα"
-
-#: src/main.c:61
-msgid "ARCHIVE"
-msgstr "ARCHIVE"
-
-#: src/main.c:64
-msgid "Add files asking the name of the archive and quit the program"
-msgstr "Προσθήκη αρχείων με ερώτηση για το όνομα του συμπιεσμένου αρχείου και έξοδος από το πρόγραμμα"
-
-#: src/main.c:68
-msgid "Extract archives to the specified folder and quit the program"
-msgstr "Αποσυμπίεση στον καθορισμένο φάκελο και έξοδος από το πρόγραμμα"
-
-#: src/main.c:69
-#: src/main.c:77
-msgid "FOLDER"
-msgstr "ΦΑΚΕΛΟΣ"
-
-#: src/main.c:72
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr "Προσθηκη αρχείων με ερώτηση για τον φάκελο προορισμού και έξοδος από το πρόγραμμα"
-
-#: src/main.c:76
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "Εξ ορισμού φάκελος που θα χρησιμοποείται ηια τις εντολές  '--add' και '--extract' "
-
-#: src/main.c:80
-msgid "Create destination folder without asking confirmation"
-msgstr "Δημιουργία φακέλου προορισμού χωρίς ερώτηση επιβεβαίωσης"
-
-#: src/menu-callbacks.c:107
-msgid "Automatic"
-msgstr "Αυτόματη"
-
-#: src/menu-callbacks.c:108
-msgid "Ear (.ear)"
-msgstr "Ear (.ear)"
-
-#: src/menu-callbacks.c:109
-msgid "Jar (.jar)"
-msgstr "Jar (.jar)"
-
-#: src/menu-callbacks.c:110
-msgid "Lha (.lzh)"
-msgstr "Lha (.lzh)"
-
-#: src/menu-callbacks.c:111
-msgid "Rar (.rar)"
-msgstr "Rar (.rar)"
-
-#: src/menu-callbacks.c:112
-msgid "Tar uncompressed (.tar)"
-msgstr "Tar χωρίς συμπίεση (.tar)"
-
-#: src/menu-callbacks.c:113
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "Tar συμπιεσμένο με bzip (.tar.bz)"
-
-#: src/menu-callbacks.c:114
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "Ta συμπιεσμένο με bzip2 (.tar.bz2)"
-
-#: src/menu-callbacks.c:115
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "Tar συμπιεσμένο με gzip (.tar.gz)"
-
-#: src/menu-callbacks.c:116
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "Tar συμπιεσμένο με lzop (.tar.lzo)"
-
-#: src/menu-callbacks.c:117
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "Tar συμπιεσμένο με compress (.tar.Z)"
-
-#: src/menu-callbacks.c:118
-msgid "War (.war)"
-msgstr "War (.war)"
-
-#: src/menu-callbacks.c:119
-msgid "Zip (.zip)"
-msgstr "Zip (.zip)"
-
-#: src/menu-callbacks.c:175
-msgid "You don't have permission to create an archive in this folder"
-msgstr "Δεν έχετε δικαίωμα να δημιουργήσετε ένα συμπιεσμένο αρχείο σε αυτόν τον φάκελο"
-
-#: src/menu-callbacks.c:193
-#: src/menu-callbacks.c:422
-#: src/menu-callbacks.c:592
-msgid "Archive already exists.  Do you want to overwrite it ?"
-msgstr "Το συμπιεσμένο αρχείο υπάρχει ήδη. Να αντικατασταθεί?"
-
-#: src/menu-callbacks.c:195
-#: src/menu-callbacks.c:424
-#: src/menu-callbacks.c:594
-msgid "Overwrite"
-msgstr "Αντικατάσταση"
-
-#: src/menu-callbacks.c:212
-msgid "Could not delete old archive."
-msgstr "Αδυναμία διαγραφής παλαιού συμπιεσμένου αρχείου."
-
-#: src/menu-callbacks.c:254
-msgid "New Archive"
-msgstr "Νέο συμπιεσμένο αρχείο"
-
-#.
-#: src/menu-callbacks.c:262
-msgid "File type :"
-msgstr "Τύπος αρχείου"
-
-#: src/menu-callbacks.c:338
-msgid "Open Archive"
-msgstr "Άνοιγμα συμπιεσμένου αρχείου"
-
-#: src/menu-callbacks.c:447
-msgid "Could not copy archive"
-msgstr "Αδυναμία αντιγραφής συμπιεσμένου αρχείου"
-
-#: src/menu-callbacks.c:463
-msgid "Could not move archive"
-msgstr "Αδυναμία μετακίνησης συμπιεσμένου αρχείου"
-
-#: src/menu-callbacks.c:485
-msgid "Copy archive"
-msgstr "Αντιγραφή συμπιεσμένου αρχείου"
-
-#: src/menu-callbacks.c:485
-msgid "Move archive"
-msgstr "Μετακίνηση συμπιεσμένου αρχείου"
-
-#: src/menu-callbacks.c:563
-msgid "New archive name (without extension)"
-msgstr "Όνομα νέου συμπιεσμένοπυ αρχείου (χωρίς επέκταση)"
-
-#: src/menu-callbacks.c:567
-#: src/menu.h:115
-msgid "_Rename"
-msgstr "_Μετονομασία"
-
-#: src/menu-callbacks.c:631
-msgid "Archive will be deleted, are you sure ?"
-msgstr "Το συμπιεσμένο αρχείο θα διαγραφεί, είστε σίγουροι?"
-
-#: src/menu-callbacks.c:782
-msgid "translator_credits"
-msgstr "Κώστας Παπαδήμας <pkst@gmx.net>"
-
-#: src/menu-callbacks.c:793
-msgid "An archive manager for GNOME."
-msgstr "Ένας διαχειριστής συμπιεσμένων αρχείων του GNOME."
-
-#: src/menu.h:67
-msgid "_New"
-msgstr "_Νέο"
-
-#: src/menu.h:67
-#: src/toolbar.h:39
-msgid "Create a new archive"
-msgstr "Δημιουργία νέου συμπιεσμένου αρχείου"
-
-#: src/menu.h:73
-msgid "_Open..."
-msgstr "_Άνοιγμα..."
-
-#: src/menu.h:73
-msgid "Open an existing archive"
-msgstr "Άνοιγμα ενός υπάρχοντος συμπιεσμένου αρχείου"
-
-#: src/menu.h:78
-msgid "Open R_ecent"
-msgstr "Άνοιγμα Π_ρόσφατου"
-
-#: src/menu.h:83
-msgid "Open Fi_les..."
-msgstr "Άνοιγμα Αρ_χείων..."
-
-#: src/menu.h:83
-msgid "Open selected files with an application"
-msgstr "Άνοιγμα επιλεγμένων αρχείων με μια εφαρμογή"
-
-#: src/menu.h:89
-msgid "_View File"
-msgstr "_Προβολή Αρχείου"
-
-#: src/menu.h:89
-#: src/menu.h:450
-msgid "View file with internal viewer"
-msgstr "Προβολή αρχείου με εσωτερικό πρόγραμμα προβολής"
-
-#: src/menu.h:97
-msgid "_Move"
-msgstr "_Μετακίνηση"
-
-#: src/menu.h:97
-msgid "Move current archive to another folder"
-msgstr "Μετακίνηση τρέχοντος συμπιεσμένου αρχείου σε άλλο φάκελο"
-
-#: src/menu.h:103
-msgid "Cop_y"
-msgstr "Αντιγρα_φή"
-
-#: src/menu.h:103
-msgid "Copy current archive to another folder"
-msgstr "Αντιγραφή τρέχοντος συμπιεσμένου αρχείου σε άλλο φάκελο"
-
-#: src/menu.h:109
-#: src/menu.h:170
-msgid "_Delete"
-msgstr "_Διαγραφή"
-
-#: src/menu.h:109
-msgid "Delete current archive from disk"
-msgstr "Διαγραφή τρέχοντος συμπιεσμένου αρχείου από τον δίσκο"
-
-#: src/menu.h:115
-msgid "Rename current archive"
-msgstr "Μετονομασία τρέχοντος συμπιεσμένου αρχείου"
-
-#: src/menu.h:123
-msgid "_Information"
-msgstr "_Πληροφορίες"
-
-#: src/menu.h:123
-msgid "Show information about the archive"
-msgstr "Εμφάνιση πληροφοριών για το συμπιεσμένο αρχείο"
-
-#: src/menu.h:131
-msgid "_Close"
-msgstr "_Κλείσιμο"
-
-#: src/menu.h:131
-msgid "Close current archive"
-msgstr "Κλείσιμο τρέχοντος συμπιεσμένου αρχείου"
-
-#: src/menu.h:137
-msgid "E_xit"
-msgstr "Έ_ξοδος"
-
-#: src/menu.h:137
-msgid "Exit"
-msgstr "Έξοδος"
-
-#: src/menu.h:164
-msgid "Add _Files..."
-msgstr "Προσθήκη_Αρχείων..."
-
-#: src/menu.h:164
-#: src/menu.h:458
-#: src/window.c:2569
-msgid "Add files to the archive"
-msgstr "Προσθήκη  αρχείων στο συμπιεσμένο αρχείο"
-
-#: src/menu.h:170
-msgid "Delete selected files and folders from the archive"
-msgstr "Διαγραφή επιλεγμένων φακέλων και αρχείων από το συμπιεσμένο αρχείο"
-
-#: src/menu.h:176
-msgid "_Extract to..."
-msgstr "_Αποσυμπίεση σε..."
-
-#: src/menu.h:176
-#: src/menu.h:470
-#: src/window.c:2580
-msgid "Extract files from the archive"
-msgstr "Αποσυμπίεση αρχείων από το συμπιεσμένο αρχείο"
-
-#: src/menu.h:190
-msgid "_Test Archive"
-msgstr "_Δοκιμή συμπιεσμένου αρχείου"
-
-#: src/menu.h:206
-msgid "Select _All"
-msgstr "Επιλογή_Όλων"
-
-#: src/menu.h:206
-msgid "Select all files"
-msgstr "Επιλογή όλων των αρχείων"
-
-#: src/menu.h:212
-msgid "Dese_lect All"
-msgstr "Αποεπι_λογή Όλων"
-
-#: src/menu.h:212
-msgid "Deselect all files"
-msgstr "Αποεπιλογή όλων των αρχείων"
-
-#: src/menu.h:220
-msgid "Pass_word..."
-msgstr "Κωδι_κός..."
-
-#: src/menu.h:228
-msgid "_Preferences"
-msgstr "_Προτιμήσεις"
-
-#: src/menu.h:239
-msgid "by _Name"
-msgstr "κατά_Όνομα"
-
-#: src/menu.h:239
-msgid "Sort file list by name"
-msgstr "Ταξινόμηση λίστας αρχείου κατά όνομα"
-
-#: src/menu.h:245
-msgid "by _Size"
-msgstr "κατά_Μέγεθος"
-
-#: src/menu.h:245
-msgid "Sort file list by file size"
-msgstr "Ταξινόμηση λίστας αρχείου κατά μέγεθος αρχείου"
-
-#: src/menu.h:251
-msgid "by T_ype"
-msgstr "κατά Τ_ύπο"
-
-#: src/menu.h:251
-msgid "Sort file list by type"
-msgstr "Ταξινόμηση λίστας αρχείου κατά τύπο"
-
-#: src/menu.h:257
-msgid "by _Time"
-msgstr "κατά _'Ωρα"
-
-#: src/menu.h:257
-msgid "Sort file list by modification time"
-msgstr "Ταξινόμηση λίστας αρχείου κατά ώρα τροποποίησης"
-
-#: src/menu.h:263
-msgid "by _Path"
-msgstr "κατά_Διαδρομή"
-
-#: src/menu.h:263
-msgid "Sort file list by path"
-msgstr "Ταξινόμηση λίστας αρχείου κατά διαδρομή"
-
-#: src/menu.h:280
-msgid "View All _Files"
-msgstr "Προβολή Όλων των Αρχείων"
-
-#: src/menu.h:286
-msgid "View as a F_older"
-msgstr "Προβολή ως Φ_άκελος"
-
-#: src/menu.h:308
-msgid "_Reversed Order"
-msgstr "_Αντίστροφη Σειρά"
-
-#: src/menu.h:308
-msgid "Reverse the list order"
-msgstr "Αντιστροφή της σειράς της λίστας"
-
-#: src/menu.h:332
-msgid "_Toolbar"
-msgstr "_Εργαλειοθήκη"
-
-#: src/menu.h:332
-msgid "View the main toolbar"
-msgstr "Προβολή της κύριας εργαλειοθήκης"
-
-#: src/menu.h:338
-msgid "Stat_usbar"
-msgstr "Γραμμή κατάστασης"
-
-#: src/menu.h:338
-msgid "View the statusbar"
-msgstr "Προβολή της γραμμής κατάστασης"
-
-#: src/menu.h:346
-msgid "_Stop"
-msgstr "_Διακοπή"
-
-#: src/menu.h:346
-#: src/toolbar.h:55
-msgid "Stop current operation"
-msgstr "Διακοπή τρέχουσας διεργασίας"
-
-#: src/menu.h:352
-msgid "_Reload"
-msgstr "_Ανανέωση"
-
-#: src/menu.h:352
-msgid "Reload current archive"
-msgstr "Ανανέωση τρέχοντος συμπιεσμένου αρχείου"
-
-#: src/menu.h:363
-msgid "_Arrange Files"
-msgstr "_Τακτοποίηση Αρχείων"
-
-#: src/menu.h:368
-msgid "_Last Output"
-msgstr "_Τελευταίο Αποτέλεσμα"
-
-#: src/menu.h:381
-msgid "New _Window"
-msgstr "Νέο_Παράθυρο"
-
-#: src/menu.h:381
-msgid "Open a new window"
-msgstr "Άνοιγμα νέου παραθύρου"
-
-#: src/menu.h:387
-msgid "Clo_se Window"
-msgstr "Κλεί_σιμο Παραθύρου"
-
-#: src/menu.h:387
-msgid "Close this window"
-msgstr "Κλείσιμο του παράθυρου"
-
-#: src/menu.h:400
-msgid "_Manual"
-msgstr "_Εγχειρίδιο"
-
-#: src/menu.h:400
-msgid "Display the File Roller Manual"
-msgstr "Προβολή του Εγχειριδίου του File Roller"
-
-#: src/menu.h:406
-msgid "_About"
-msgstr "_Περί"
-
-#: src/menu.h:406
-msgid "Information about the program"
-msgstr "Πληροφορίες για το πρόγραμμα"
-
-#: src/menu.h:418
-msgid "_File"
-msgstr "_Αρχείο"
-
-#: src/menu.h:419
-msgid "_Edit"
-msgstr "_Επεξεργασία"
-
-#: src/menu.h:420
-msgid "_View"
-msgstr "_Προβολή"
-
-#: src/menu.h:421
-msgid "_Windows"
-msgstr "_Παράθυρα"
-
-#: src/menu.h:444
-msgid "Open Files..."
-msgstr "Άνοιγμα Αρχείων..."
-
-#: src/menu.h:450
-msgid "View File"
-msgstr "Προβολή Αρχείου"
-
-#: src/menu.h:458
-msgid "Add Files..."
-msgstr "Προσθήκη Αρχείων..."
-
-#: src/menu.h:464
-msgid "Delete Files"
-msgstr "Διαγραφή Αρχείων"
-
-#: src/menu.h:464
-msgid "Delete files from the archive"
-msgstr "Διαγραφή αρχείων από το συμπιεσμένο αρχείο"
-
-#: src/menu.h:470
-msgid "Extract to..."
-msgstr "Αποσυμπίεση σε..."
-
-#: src/menu.h:478
-msgid "Select All"
-msgstr "Επιλογή Όλων"
-
-#: src/recent-files/egg-recent-vfs-utils.c:90
-msgid " (invalid Unicode)"
-msgstr " (μη έγκυρο Unicode)"
-
-#: src/recent-files/egg-recent-view-bonobo.c:193
+"\n"
+"Εντοπίστηκε ένας firewall που έχει δημιουργηθεί\n"
+"από μια παλαιότερη έκδοση του Firestarter .\n"
+"\n"
+"Να απομακρυνθεί ο παλιός firewall (συνιστάται)?\n"
+
+#: src/logread.c:61
+msgid ""
+"Log file not found or access denied.\n"
+"Firewall log monitoring disabled.\n"
+"\n"
+"You can configure the path to the log file in the \"preferences\" section."
+msgstr ""
+"Το αρχείο καταγραφής δεν βρέθηκε ή δεν επιτράπηκε η πρόσβαση.\n"
+"Η παρακολούθηση καταγραφής απενεργοποιήθηκε.\n"
+"\n"
+"Μπορείτε να ρυθμίσετε την διαδρομή στο αρχείο καταγραφής στο τμήμα \"προτιμήσεις\""
+
+#: src/netfilter-script.c:995
 #, c-format
-msgid "Open %s"
-msgstr "Άνοιγμα %s"
+msgid "Firewall script saved as %s\n"
+msgstr "Η δέσμη ενεργειών Firewall  αποθηκεύτηκε ώς %s\n"
 
-#: src/toolbar.h:39
-msgid "New"
-msgstr "Νέο"
-
-#: src/toolbar.h:45
-msgid "Open"
-msgstr "Άνοιγμα"
-
-#: src/toolbar.h:45
-msgid "Open archive"
-msgstr "Άνοιγμα συμπιεσμένου αρχείου"
-
-#: src/toolbar.h:55
-msgid "Stop"
-msgstr "Διακοπή"
-
-#: src/window.c:567
-msgid "Folder"
-msgstr "Φάκελος"
-
-#: src/window.c:698
-msgid "[read only]"
-msgstr "[μόνο για ανάγνωση]"
-
-#: src/window.c:792
+#: src/ruleview.c:88
 #, c-format
-msgid "1 file (%s)"
-msgstr "1 αρχείο (%s)"
+msgid "%s (%s) is open to %s"
+msgstr "%s (%s) είναι ανοικτό σε %s"
 
-#: src/window.c:795
+#: src/ruleview.c:98
 #, c-format
-msgid "%d files (%s)"
-msgstr "%d αρχεία (%s)"
+msgid "From port %s to %s, port %s"
+msgstr "Από θύρα %s σε %s, θύρα %s"
 
-#: src/window.c:803
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "1 αρχείο επιλέχθηκε (%s)"
+#: src/ruleview.c:129
+msgid "Trusted Hosts"
+msgstr "Έμπιστα Συστήματα"
 
-#: src/window.c:806
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d αρχεία επιλέχθηκαν (%s)"
+#: src/ruleview.c:130
+msgid "Blocked Hosts"
+msgstr "Φραγμένα Συστήματα"
 
-#: src/window.c:1094
-msgid "Reading archive"
-msgstr "Ανάγνωση συμπιεσμένου αρχείου"
+#: src/ruleview.c:131
+msgid "Forwarded Ports"
+msgstr "Προωθημένες Θύρες"
 
-#: src/window.c:1097
-msgid "Deleting files from archive"
-msgstr "Διαγραφή αρχείων από το συμπιεσμένο αρχείο"
+#: src/ruleview.c:132
+msgid "Open Ports"
+msgstr "Ανοικτές Θύρες"
 
-#: src/window.c:1100
-msgid "Adding files to archive"
-msgstr "Προσθήκη αρχείων στο συμπιεσμένο αρχείο"
+#: src/ruleview.c:133
+msgid "Stealthed Ports"
+msgstr "Αόρατες θύρες"
 
-#: src/window.c:1103
-msgid "Extracting files from archive"
-msgstr "Αποσυμπίεση αρχείων από το συμπιεσμένο αρχείο"
+#: src/ruleview.c:134
+msgid "Blocked Ports"
+msgstr "Φραγμένες Θύρες"
 
-#: src/window.c:1106
-msgid "Testing archive"
-msgstr "Δοκιμή συμπιεσμένου αρχείου"
+#. Column for visible rule data
+#: src/ruleview.c:189
+msgid "Rule"
+msgstr "Κανόνας"
 
-#: src/window.c:1112
-msgid "wait please..."
-msgstr "παρακαλώ περιμένετε..."
+#. column for active toggle
+#: src/ruleview.c:194
+msgid "Active"
+msgstr "Ενεργό"
 
-#: src/window.c:1198
-msgid "Operation stopped"
-msgstr "Η λειτουργία διακόπηκε"
-
-#: src/window.c:1215
-msgid "An error occurred while extracting files."
-msgstr "Δημιουργήθηκε σφάλμα κατά την αποσυμπίεση αρχείων."
-
-#: src/window.c:1219
-msgid "An error occurred while loading the archive."
-msgstr "Δημιουργήθηκε σφάλμα κατά την φόρτωση του συμπιεσμένου αρχείου."
-
-#: src/window.c:1223
-msgid "An error occurred while deleting files from the archive."
-msgstr "Δημιουργήθηκε σφάλμα κατά την διαγραφή αρχείων από το συμπιεσμένο αρχείο."
-
-#: src/window.c:1227
-msgid "An error occurred while adding files to the archive."
-msgstr "Δημιουργήθηκε σφάλμα κατά την προσθήκη αρχείων στο συμπιεσμένο αρχείο."
-
-#: src/window.c:1231
-msgid "An error occurred while testing archive."
-msgstr "Δημιουργήθηκε σφάλμα κατά την δοκιμή του συμπιεσμένου αρχείου."
-
-#: src/window.c:1237
-msgid "Command not found."
-msgstr "Η εντολή δεν βρέθηκε"
-
-#: src/window.c:1240
-msgid "Command exited abnormally."
-msgstr "Η εντολή τερματίστηκε αφύσικα"
-
-#: src/window.c:1526
-msgid "You don't have permissions to add files to this archive."
-msgstr "Δεν έχετε δικαιώματα να προσθέσετε αρχεία σε αυτό το συμπιεσμένο αρχείο"
-
-#: src/window.c:1548
-msgid "You can't add an archive to itself."
-msgstr "Δεν μπορείτε να προσθέσετε ένα συμπιεσμένο αρχείο στον εαυτό του."
-
-#: src/window.c:1708
-msgid "Do you want to add this file to the current archive or open it as a new archive ?"
-msgstr "Θέλετε να προθέσετε αυτό το αρχείο στο τρέχον συμπιεσμένο αρχείο ή να το ανοίξετε ως νέο?"
-
-#: src/window.c:1751
-msgid "Do you want to create a new archive with these files ?"
-msgstr "Θέλετε να δημιουργήσετε ένα νέο συμπιεσμένο αρχείο με αυτά τα αρχεία?"
-
-#: src/window.c:1753
-msgid "Create _Archive"
-msgstr "Δημιουργία Συμπιεσμένου_ Αρχείου"
-
-#: src/window.c:2086
-msgid "Size"
-msgstr "Μέγεθος"
-
-#: src/window.c:2087
+#. Columns for rule reconstruction, not necessarily visible
+#: src/ruleview.c:201
 msgid "Type"
 msgstr "Τύπος"
 
-#: src/window.c:2088
-msgid "Modified"
-msgstr "Τροποποιήθηκε"
+#: src/ruleview.c:205
+msgid "Host"
+msgstr "Σύστημα"
 
-#: src/window.c:2089
-msgid "Path"
-msgstr "Διαδρομή"
+#
+#. column for port
+#: src/hitview.c:202
+#: src/ruleview.c:209
+msgid "Port"
+msgstr "Θύρα"
 
-#: src/window.c:2096
-msgid "Name"
-msgstr "Όνομα"
+#: src/ruleview.c:271
+msgid "Please specify a valid hostname or IP address."
+msgstr "Καθορίστε ένα έγκυρο όνομα συστήματος ή διεύθυνση  IP."
 
-#: src/window.c:2514
-msgid "_Up"
-msgstr "_Πάνω"
+#: src/ruleview.c:285
+msgid "Please specify a valid port number."
+msgstr "Καθορίστε ένα έγκυρο αριθμό θύρας."
 
-#. current location
-#: src/window.c:2536
-msgid "Current Location:"
-msgstr "Τρέχουσα Τοποθεσία:"
+#: src/ruleview.c:302
+msgid "Please specify a valid internal hostname or IP address."
+msgstr "Καθορίστε ένα έγκυρο όνομα εσωτερικού συστήματος ή διεύθυνση  IP."
 
-#: src/window.c:2568
-msgid "Add"
-msgstr "Προσθήκη"
+#: src/ruleview.c:312
+msgid "Please specify a valid port number for the internal host."
+msgstr "Καθορίστε ένα έγκυρο αριθμό θύρας για το εσωτερικό σύστημα."
 
-#: src/window.c:2579
-msgid "Extract"
-msgstr "Αποσυμπίεση"
+#: src/ruleview.c:364
+msgid "IP or hostname address"
+msgstr "IP ή διεύθυνση ονόματος συστήματος"
 
-#: src/window.c:2590
-msgid "View"
-msgstr "Προβολή"
+#: src/ruleview.c:384
+msgid ""
+"Specify a range as <i>address/mask</i>\n"
+"or by CIDR notation"
+msgstr ""
+"Καθορίστε ένα εύρος όπως <i>address/mask</i>\n"
+"ή από CIDR notation"
 
-#: src/window.c:2591
-msgid "View selected file"
-msgstr "Προβολή επιλεγμένου αρχείου"
+#: src/ruleview.c:395
+msgid "Port number"
+msgstr "Αριθμός θύρας"
 
-#: src/window.c:2984
-msgid "File type not supported."
-msgstr "Ο τύπος αρχείου δεν υποστηρίζεται"
+#: src/ruleview.c:414
+msgid "Specify a port range as <i>port:port</i>\n"
+msgstr "Καθορίστε ένα εύρος θύρας<i>port:port</i>\n"
 
-#: src/window.c:3052
-msgid "Cannot load archive."
-msgstr "Αδυναμία φόρτωσης συμπιεσμένου αρχείου"
+#: src/ruleview.c:424
+msgid "Forward from port"
+msgstr "Προώθηση από θύρα"
 
-#: src/window.c:3466
-msgid "File Roller - Last output"
-msgstr "File Roller - Τελευταίο αποτέλεσμα"
+#: src/ruleview.c:443
+msgid "This is the port on the firewall"
+msgstr "Αυτή είναι η θύρα στον firewall "
 
-#: src/window.c:3987
-msgid "Add files to an archive"
-msgstr "Προσθήκη αρχείων σε ένα συμπιεσμένο αρχείο"
+#: src/ruleview.c:449
+msgid "Forward to"
+msgstr "Προώθηση σε"
 
-#: src/window.c:4012
-msgid "Extract archive"
-msgstr "Αποσυμπίεση συμπιεσμένου αρχείου"
+#: src/ruleview.c:461
+msgid "Internal machine IP or hostname"
+msgstr "IP ή όνομα συστήματος εσωτερικής μηχανής"
+
+#: src/ruleview.c:476
+msgid "Internal machine port"
+msgstr "Εσωτερική θύρα μηχανής"
+
+#. column for time
+#: src/hitview.c:184
+msgid "Time"
+msgstr "Ώρα"
+
+#. column for in device
+#: src/hitview.c:190
+msgid "In"
+msgstr "Είσοδος"
+
+#. column for out device
+#: src/hitview.c:196
+msgid "Out"
+msgstr "'Εξοδος"
+
+#. column for source
+#: src/hitview.c:208
+msgid "Source"
+msgstr "Πηγή"
+
+#. column for destination
+#: src/hitview.c:214
+msgid "Destination"
+msgstr "Προορισμός"
+
+#. column for packet length
+#: src/hitview.c:220
+msgid "Length"
+msgstr "Διάρκεια"
+
+#. column for ToS
+#: src/hitview.c:226
+msgid "TOS"
+msgstr "TOS"
+
+#. column for protocol
+#: src/hitview.c:232
+msgid "Protocol"
+msgstr "Πρωτόκολλο"
+
+#. column for service
+#: src/hitview.c:238
+msgid "Service"
+msgstr "Υπηρεσία"
 
