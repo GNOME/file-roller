@@ -95,6 +95,7 @@ typedef struct {
 
 static FileTypeDescription write_type_desc[] = { 
 	{ N_("Automatic"),                             NULL},
+	{ N_("Ar (.ar)"),                              ".ar" },
 	{ N_("Arj (.arj)"),                            ".arj" },
 	{ N_("Ear (.ear)"),                            ".ear" },
 	{ N_("Jar (.jar)"),                            ".jar" },
@@ -265,22 +266,23 @@ activate_action_new (GtkAction *action,
 		     gpointer   data)
 {
 	static const char * save_mime_type[] = {
-		"application/x-tar",
-		"application/x-compressed-tar",
-		"application/x-bzip-compressed-tar",
+		"application/x-ar",
 		"application/x-arj",
-		"application/zip",
+		"application/x-bzip",
+		"application/x-bzip-compressed-tar",
+		"application/x-cd-image",
+		"application/x-compress",
+		"application/x-compressed-tar",
+		"application/x-gzip",
 		"application/x-java-archive",
 		"application/x-jar",
 		"application/x-lha",
+		"application/x-lzop",
 		"application/x-rar",
 		"application/x-rar-compressed",
-		"application/x-gzip",
-		"application/x-bzip",
-		"application/x-compress",
-		"application/x-lzop",
+		"application/x-tar",
 		"application/x-zoo",
-		"application/x-cd-image",
+		"application/zip"
 	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
@@ -392,26 +394,28 @@ activate_action_open (GtkAction *action,
 		      gpointer   data)
 {
 	static const char * open_mime_type[] = {
-		"application/x-tar",
-		"application/x-compressed-tar",
-		"application/x-bzip-compressed-tar",
-		"application/x-lzop-compressed-tar",
+		"application/x-ar",
 		"application/x-arj",
-		"application/zip",
-		"application/x-zip",
+		"application/x-bzip",
+		"application/x-bzip-compressed-tar",
+		"application/x-cd-image",
+		"application/x-compress",
+		"application/x-compressed-tar",
+		"application/x-deb",
+		"application/x-gzip",
+		"application/x-jar",
+		"application/x-java-archive",
 		"application/x-lha",
+		"application/x-lzop",
+		"application/x-lzop-compressed-tar",
 		"application/x-rar",
 		"application/x-rar-compressed",
 		"application/x-rpm",
 		"application/x-stuffit",
-		"application/x-gzip",
-		"application/x-bzip",
-		"application/x-compress",
-		"application/x-lzop",
+		"application/x-tar",
+		"application/x-zip",
 		"application/x-zoo",
-		"application/x-java-archive",
-		"application/x-jar",
-		"application/x-cd-image"
+		"application/zip"
 	};
 	GtkWidget     *file_sel;
 	FRWindow      *window = data;
@@ -581,22 +585,23 @@ activate_action_save_as (GtkAction *action,
 			 gpointer   data)
 {
 	static const char * save_mime_type[] = {
-		"application/x-tar",
-		"application/x-compressed-tar",
-		"application/x-bzip-compressed-tar",
+		"application/x-ar",
 		"application/x-arj",
-		"application/zip",
-		"application/x-java-archive",
-		"application/x-jar",
+		"application/x-bzip",
+		"application/x-bzip-compressed-tar",
+		"application/x-cd-image",
+		"application/x-compress",
+		"application/x-compressed-tar",
+		"application/x-gzip",
 		"application/x-lha",
+		"application/x-lzop",
+		"application/x-jar",
+		"application/x-java-archive",
 		"application/x-rar",
 		"application/x-rar-compressed",
-		"application/x-gzip",
-		"application/x-bzip",
-		"application/x-compress",
-		"application/x-lzop",
+		"application/x-tar",
 		"application/x-zoo",
-		"application/x-cd-image",
+		"application/zip",
 	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
@@ -1279,7 +1284,7 @@ activate_action_about (GtkAction *action,
 	logo = gdk_pixbuf_new_from_file (PIXMAPSDIR "/file-roller.png", NULL);
 	about = gnome_about_new (_("File Roller"), 
 				 VERSION,
-				 "Copyright \xc2\xa9 2001-2003 Free Software Foundation, Inc.",
+				 "Copyright \xc2\xa9 2001-2004 Free Software Foundation, Inc.",
 				 _("An archive manager for GNOME."),
 				 authors,
 				 documenters,

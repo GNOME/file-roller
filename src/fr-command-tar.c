@@ -85,118 +85,6 @@ mktime_from_string (char *date_s,
 }
 
 
-static gboolean
-_match_pattern (const char *line, 
-		const char *pattern)
-{
-	const char *l = line, *p = pattern;
-
-	for (; (*p != 0) && (*l != 0); p++, l++) {
-		if (*p != '%') {
-			if (*p != *l)
-				return FALSE;
-		} else {
-			p++;
-			switch (*p) {
-			case 'a':
-				break;
-			case 'n':
-				if (!isdigit (*l)) 
-					return FALSE;
-				break;
-			case 'c':
-				if (!isalpha (*l)) 
-					return FALSE;
-				break;
-			default:
-				return FALSE;
-			}
-		}
-	}
-	
-	return (*p == 0);
-}
-
-
-static int
-get_index_from_pattern (const char *line, 
-			const char *pattern)
-{
-	int         line_l, pattern_l;
-	const char *l;
-
-	line_l = strlen (line);
-	pattern_l = strlen (pattern);
-
-	if ((pattern_l == 0) || (line_l == 0))
-		return -1;
-
-	for (l = line; *l != 0; l++) 
-		if (_match_pattern (l, pattern))
-			return (l - line);
-	
-	return -1;
-}
-
-
-static char*
-get_next_field (const char *line,
-		int         start_from,
-		int         field_n)
-{
-	const char *f_start, *f_end;
-	
-	line = line + start_from;
-
-	f_start = line;
-	while ((*f_start == ' ') && (*f_start != *line))
-		f_start++;
-	f_end = f_start;
-
-	while ((field_n > 0) && (*f_end != 0)) {
-		if (*f_end == ' ') {
-			field_n--;
-			if (field_n != 0) {
-				while ((*f_end == ' ') && (*f_end != *line))
-					f_end++;
-				f_start = f_end;
-			}
-		} else
-			f_end++;
-	}
-	
-	return g_strndup (f_start, f_end - f_start);
-}
-
-
-static char*
-get_prev_field (const char *line,
-		int         start_from,
-		int         field_n)
-{
-	const char *f_start, *f_end;
-
-	f_start = line + start_from - 1;
-	while ((*f_start == ' ') && (*f_start != *line))
-		f_start--;
-	f_end = f_start;
-
-	while ((field_n > 0) && (*f_start != *line)) {
-		if (*f_start == ' ') {
-			field_n--;
-			if (field_n != 0) {
-				while ((*f_start == ' ') && (*f_start != *line))
-					f_start--;
-				f_end = f_start;
-			}
-		} else
-			f_start--;
-	}
-
-	return g_strndup (f_start + 1, f_end - f_start);
-}
-
-
 static char*
 tar_get_last_field (const char *line,
 		    int         start_from,
@@ -241,14 +129,14 @@ process_line (char     *line,
 
 	fdata = file_data_new ();
 
-	date_idx = get_index_from_pattern (line, "%n%n%n%n-%n%n-%n%n %n%n:%n%n");
+	date_idx = file_list__get_index_from_pattern (line, "%n%n%n%n-%n%n-%n%n %n%n:%n%n");
 
-	field_size = get_prev_field (line, date_idx, 1);
+	field_size = file_list__get_prev_field (line, date_idx, 1);
 	fdata->size = atol (field_size);
 	g_free (field_size);
 
-	field_date = get_next_field (line, date_idx, 1);
-	field_time = get_next_field (line, date_idx, 2);
+	field_date = file_list__get_next_field (line, date_idx, 1);
+	field_time = file_list__get_next_field (line, date_idx, 2);
 	fdata->modified = mktime_from_string (field_date, field_time);
 	g_free (field_date);
 	g_free (field_time);

@@ -115,5 +115,20 @@ char *              get_temp_work_dir            (void);
 
 char *              get_temp_work_dir_name       (void);
 
+/* misc functions used to parse a command output lines. */
+
+gboolean            file_list__match_pattern     (const char *line, 
+						  const char *pattern);
+
+int                 file_list__get_index_from_pattern (const char *line, 
+						       const char *pattern);
+
+char*               file_list__get_next_field    (const char *line,
+						  int         start_from,
+						  int         field_n);
+
+char*               file_list__get_prev_field    (const char *line,
+						  int         start_from,
+						  int         field_n);
 
 #endif /* FILE_UTILS_H */

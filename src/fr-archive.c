@@ -32,6 +32,7 @@
 #include "file-utils.h"
 #include "fr-archive.h"
 #include "fr-command.h"
+#include "fr-command-ar.h"
 #include "fr-command-arj.h"
 #include "fr-command-cfile.h"
 #include "fr-command-iso.h"
@@ -276,6 +277,10 @@ create_command_from_mime_type (FRArchive  *archive,
 	} else if (is_mime_type (mime_type, "application/x-cd-image")) {
 		archive->command = fr_command_iso_new (archive->process,
 						       filename);
+	} else if (is_mime_type (mime_type, "application/x-deb") ||
+		   is_mime_type (mime_type, "application/x-ar")) {
+		archive->command = fr_command_ar_new (archive->process, 
+						      filename);
 	} else 
 		return FALSE;
 
@@ -408,6 +413,10 @@ create_command_from_filename (FRArchive  *archive,
 		archive->command = fr_command_rar_new (archive->process, 
 						       filename);
 	} else if (file_extension_is (filename, ".arj")) {
+		archive->command = fr_command_arj_new (archive->process, 
+						       filename);
+	} else if (file_extension_is (filename, ".ar")
+		   || file_extension_is (filename, ".deb")) {
 		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
 	} else if (loading) {
@@ -995,25 +1004,17 @@ file_list_remove_from_pattern (GList      **list,
 	for (scan = *list; scan;) {
 		char *path = scan->data;
 		char *utf8_name;
-
+		
 		utf8_name = g_filename_to_utf8 (file_name_from_path (path), 
 						-1, NULL, NULL, NULL);
-
-		if (strcmp ("lt-gthumb", utf8_name) == 0)
-			g_print ("%s <--> %s\n", pattern, utf8_name);
 
 		if (match_patterns (patterns, utf8_name, FNM_CASEFOLD)) {
 			*list = g_list_remove_link (*list, scan);
 			g_free (scan->data);
 			g_list_free (scan);
 			scan = *list;
-			if (strcmp ("lt-gthumb", utf8_name) == 0)
-				g_print ("Y\n");
-		} else {
+		} else 
 			scan = scan->next;
-			if (strcmp ("lt-gthumb", utf8_name) == 0)
-				g_print ("N\n");
-		}
 
 		g_free (utf8_name);
 	}
@@ -1073,11 +1074,6 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 			      gboolean       update,
 			      gboolean       recursive,
 			      gboolean       follow_links,
-			      /*gboolean       same_fs,
-			      gboolean       no_backup_files,
-			      gboolean       no_dot_files,
-			      gboolean       ignore_case,
-			      */
 			      const char    *password,
 			      FRCompression  compression,
 			      DoneFunc       done_func,
@@ -1693,10 +1689,12 @@ G_CONST_RETURN char *
 fr_archive_utils__get_file_name_ext (const char *filename)
 {
 	static char * ext[] = {
+		".ar",
 		".arj",
 		".bin",
 		".bz", 
 		".bz2", 
+		".deb",
 		".ear",
 		".gz", 
 		".iso",

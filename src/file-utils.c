@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
 #include <unistd.h>
 #include <sys/param.h>
@@ -987,4 +988,119 @@ get_temp_work_dir_name (void)
 	} while (path_is_file (result) && (try++ < MAX_TRIES));
 
 	return result;
+}
+
+
+/* file list utils */
+
+
+gboolean
+file_list__match_pattern (const char *line, 
+			  const char *pattern)
+{
+	const char *l = line, *p = pattern;
+
+	for (; (*p != 0) && (*l != 0); p++, l++) {
+		if (*p != '%') {
+			if (*p != *l)
+				return FALSE;
+		} else {
+			p++;
+			switch (*p) {
+			case 'a':
+				break;
+			case 'n':
+				if (!isdigit (*l)) 
+					return FALSE;
+				break;
+			case 'c':
+				if (!isalpha (*l)) 
+					return FALSE;
+				break;
+			default:
+				return FALSE;
+			}
+		}
+	}
+	
+	return (*p == 0);
+}
+
+
+int
+file_list__get_index_from_pattern (const char *line, 
+				   const char *pattern)
+{
+	int         line_l, pattern_l;
+	const char *l;
+
+	line_l = strlen (line);
+	pattern_l = strlen (pattern);
+
+	if ((pattern_l == 0) || (line_l == 0))
+		return -1;
+
+	for (l = line; *l != 0; l++) 
+		if (file_list__match_pattern (l, pattern))
+			return (l - line);
+	
+	return -1;
+}
+
+
+char*
+file_list__get_next_field (const char *line,
+			   int         start_from,
+			   int         field_n)
+{
+	const char *f_start, *f_end;
+	
+	line = line + start_from;
+	
+	f_start = line;
+	while ((*f_start == ' ') && (*f_start != *line))
+		f_start++;
+	f_end = f_start;
+
+	while ((field_n > 0) && (*f_end != 0)) {
+		if (*f_end == ' ') {
+			field_n--;
+			if (field_n != 0) {
+				while ((*f_end == ' ') && (*f_end != *line))
+					f_end++;
+				f_start = f_end;
+			}
+		} else
+			f_end++;
+	}
+	
+	return g_strndup (f_start, f_end - f_start);
+}
+
+
+char*
+file_list__get_prev_field (const char *line,
+			   int         start_from,
+			   int         field_n)
+{
+	const char *f_start, *f_end;
+
+	f_start = line + start_from - 1;
+	while ((*f_start == ' ') && (*f_start != *line))
+		f_start--;
+	f_end = f_start;
+
+	while ((field_n > 0) && (*f_start != *line)) {
+		if (*f_start == ' ') {
+			field_n--;
+			if (field_n != 0) {
+				while ((*f_start == ' ') && (*f_start != *line))
+					f_start--;
+				f_end = f_start;
+			}
+		} else
+			f_start--;
+	}
+
+	return g_strndup (f_start + 1, f_end - f_start);
 }
