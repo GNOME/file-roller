@@ -1,3 +1,4 @@
+# translation of file-roller-it-2004-03-01.po to italiano
 # translation of file-roller-it.po to italiano
 # translation of file-roller.HEAD.po to italiano
 # translation of file-roller.HEAD.it.po to italiano
@@ -5,49 +6,48 @@
 # Copyright (C) 2001,2003, 2004 Free Software Foundation, Inc.
 # Paolo Bacchilega <paolo.bacch@tin.it>, 2001.
 # Roberto Rosselli Del Turco <rosselli@ling.unipi.it>, 2003, 2004.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller-it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-01 10:01+0100\n"
-"PO-Revision-Date: 2004-03-01 10:03+0100\n"
+"POT-Creation-Date: 2004-03-07 19:23+0100\n"
+"PO-Revision-Date: 2004-03-07 19:32+0100\n"
 "Last-Translator: Roberto Rosselli Del Turco <rosselli@ling.unipi.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.0.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
+msgid "Create Archive..."
+msgstr "Crea archivio..."
+
+#: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
 msgstr "Estrai qui"
 
-#: component/File_Roller_Component.server.in.in.h:2
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr "Componente di File Roller per operazioni di aggiunta"
 
-#: component/File_Roller_Component.server.in.in.h:3
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr "Componente di File Roller per operazioni di estrazione"
 
-#: component/File_Roller_Component.server.in.in.h:4
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "Componente di File Roller"
 
-#: component/File_Roller_Component.server.in.in.h:5
-msgid "Zip Objects..."
-msgstr "Comprimi oggetti con zip..."
-
 #: file-roller.desktop.in.h:1
-msgid "Create and modify zips and other archive types"
-msgstr "Crea e modifica archivi zip e di altro tipo"
+msgid "Archive Manager"
+msgstr "Gestore di archivi"
 
 #: file-roller.desktop.in.h:2
-msgid "Zip Creator"
-msgstr "Compressione con zip"
+msgid "Create and modify an archive"
+msgstr "Crea e modifica un archivio"
 
 #: src/dlg-add.c:118 src/dlg-add.c:125
 #, c-format
@@ -104,10 +104,11 @@ msgid "Options Name:"
 msgstr "Nome delle opzioni:"
 
 #: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
-msgid "Could not zip objects"
-msgstr "Impossibile comprimere con zip gli oggetti"
+#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
+msgid "Could not create the archive"
+msgstr "Impossibile creare l'archivio"
 
-#: src/dlg-batch-add.c:102 src/menu-callbacks.c:190 src/menu-callbacks.c:423
+#: src/dlg-batch-add.c:102 src/menu-callbacks.c:168 src/menu-callbacks.c:376
 msgid "You have to specify an archive name."
 msgstr "Si deve specificare un nome per l'archivio"
 
@@ -130,10 +131,10 @@ msgid "Could not create the destination folder: %s."
 msgstr "Impossibile creare la cartella di destinazione: %s."
 
 #: src/dlg-batch-add.c:185
-msgid "Zip not performed"
-msgstr "Compressione con zip non eseguita"
+msgid "Archive not created"
+msgstr "Archivio non creato"
 
-#: src/dlg-extract.c:87 src/menu-callbacks.c:1175
+#: src/dlg-extract.c:87 src/menu-callbacks.c:1132
 msgid "Could not display help"
 msgstr "Impossibile mostrare la guida"
 
@@ -158,7 +159,7 @@ msgstr "File"
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:387 src/file_roller.glade.h:16
+#: src/dlg-extract.c:387 src/file_roller.glade.h:17
 msgid "_Files:"
 msgstr "_File:"
 
@@ -166,11 +167,11 @@ msgstr "_File:"
 msgid "example: *.txt; *.doc"
 msgstr "esempio: *.txt; *.doc"
 
-#: src/dlg-extract.c:401 src/file_roller.glade.h:13
+#: src/dlg-extract.c:401 src/file_roller.glade.h:14
 msgid "_All files"
 msgstr "_Tutti i file"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:18
+#: src/dlg-extract.c:408 src/file_roller.glade.h:19
 msgid "_Selected files"
 msgstr "File _selezionati"
 
@@ -190,7 +191,7 @@ msgstr "Sovrascrivi fi_le esistenti"
 msgid "Do not e_xtract older files"
 msgstr "Non estrarre file più _vecchi"
 
-#: src/dlg-extract.c:449 src/file_roller.glade.h:17
+#: src/dlg-extract.c:449 src/file_roller.glade.h:18
 msgid "_Password:"
 msgstr "_Password:"
 
@@ -224,8 +225,8 @@ msgid "Number of files:"
 msgstr "Numero di file:"
 
 #: src/dlg-prop.c:149
-msgid "Zipped on:"
-msgstr "Compresso con zip su:"
+msgid "Modified on:"
+msgstr "Modificato il:"
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
@@ -264,52 +265,52 @@ msgid "A_vailable application:"
 msgstr "App_licazioni disponibili:"
 
 #: src/file_roller.glade.h:4
-msgid "Delete"
-msgstr "Cancella"
+msgid "C_reate"
+msgstr "C_rea"
 
 #: src/file_roller.glade.h:5
+msgid "Create Archive"
+msgstr "Crea archivio"
+
+#: src/file_roller.glade.h:6
+msgid "Delete"
+msgstr "Elimina"
+
+#: src/file_roller.glade.h:7
 msgid "Load Options"
 msgstr "Carica opzioni"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:8
 msgid "Open Files"
 msgstr "Apri file"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:9
 msgid "Open with an _application"
 msgstr "Apri con una _applicazione"
 
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:10
 msgid "Password"
 msgstr "Password"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:11
 msgid "R_ecent applications:"
 msgstr "Applicazioni _recenti:"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:12
 msgid "View File"
 msgstr "Visualizza il file"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:13
 msgid "View with internal _viewer"
 msgstr "Usa il _visualizzatore interno"
 
-#: src/file_roller.glade.h:12
-msgid "Zip Objects"
-msgstr "Comprime gli oggetti con zip"
-
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:15
 msgid "_Application:"
 msgstr "Applica_zione:"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:16
 msgid "_Archive:"
 msgstr "_Archivio:"
-
-#: src/file_roller.glade.h:19
-msgid "_Zip"
-msgstr "Comprimi con _zip"
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -355,27 +356,27 @@ msgstr "_Tipo"
 msgid "The file does not exist."
 msgstr "Il file non esiste"
 
-#: src/fr-command-tar.c:232
+#: src/fr-command-tar.c:354
 msgid "Adding file: "
 msgstr "Aggiunta del file: "
 
-#: src/fr-command-tar.c:278
+#: src/fr-command-tar.c:400
 msgid "Removing file: "
 msgstr "Rimozione del file: "
 
-#: src/fr-command-tar.c:287 src/window.c:1366
+#: src/fr-command-tar.c:409 src/window.c:1366
 msgid "Deleting files from archive"
 msgstr "Cancellazione dei file dall'archivio"
 
-#: src/fr-command-tar.c:320
+#: src/fr-command-tar.c:442
 msgid "Extracting file: "
 msgstr "Estrazione del file: "
 
-#: src/fr-command-tar.c:365
+#: src/fr-command-tar.c:487
 msgid "Recompressing archive"
 msgstr "Ricompressione dell'archivio in corso"
 
-#: src/fr-command-tar.c:499
+#: src/fr-command-tar.c:621
 msgid "Decompressing archive"
 msgstr "Decompressione dell'archivio in corso"
 
@@ -392,7 +393,7 @@ msgid "_View"
 msgstr "_Visualizza"
 
 #. Create the application.
-#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1216
+#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1173
 #: src/window.c:839 src/window.c:1265 src/window.c:2926
 msgid "File Roller"
 msgstr "File Roller"
@@ -436,155 +437,151 @@ msgstr "Cartella predefinita da usare per i comandi '--add' e '--extract'"
 msgid "Create destination folder without asking confirmation"
 msgstr "Crea la cartella di destinazione senza chiedere conferma"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:88
 msgid "Automatic"
 msgstr "Automatico"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:89
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:90
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:91
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:92
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:93
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:94
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar non compresso (.tar)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:95
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar compresso con bzip (.tar.bz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:96
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar compresso con bzip2 (.tar.bz2)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:97
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar compresso con gzip (.tar.gz)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:98
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar compresso con lzop (.tar.lzo)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:99
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar compresso con compress (.tar.Z)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:100
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:123
+#: src/menu-callbacks.c:101
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:124
+#: src/menu-callbacks.c:102
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:189 src/menu-callbacks.c:208 src/window.c:3645
-msgid "Could not create the archive"
-msgstr "Impossibile creare l'archivio"
-
-#: src/menu-callbacks.c:209 src/menu-callbacks.c:442
+#: src/menu-callbacks.c:187 src/menu-callbacks.c:395
 msgid "You don't have permission to create an archive in this folder"
 msgstr ""
 "Non si dispone dei permessi necessari per creare un archivio in questa "
 "cartella"
 
-#: src/menu-callbacks.c:238 src/menu-callbacks.c:462 src/menu-callbacks.c:752
-#: src/menu-callbacks.c:928
+#: src/menu-callbacks.c:216 src/menu-callbacks.c:415 src/menu-callbacks.c:708
+#: src/menu-callbacks.c:885
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "L'archivio esiste già. Si desidera sovrascriverlo?"
 
-#: src/menu-callbacks.c:241 src/menu-callbacks.c:465 src/menu-callbacks.c:755
-#: src/menu-callbacks.c:931
+#: src/menu-callbacks.c:219 src/menu-callbacks.c:418 src/menu-callbacks.c:711
+#: src/menu-callbacks.c:888
 msgid "Overwrite"
 msgstr "Sovrascrivi"
 
-#: src/menu-callbacks.c:257 src/menu-callbacks.c:481
+#: src/menu-callbacks.c:235 src/menu-callbacks.c:434
 msgid "Could not delete the old archive."
 msgstr "Impossibile cancellare il vecchio archivio."
 
-#: src/menu-callbacks.c:320 src/toolbar.h:42
+#: src/menu-callbacks.c:279 src/toolbar.h:42
 msgid "New"
 msgstr "Nuovo"
 
-#: src/menu-callbacks.c:331 src/menu-callbacks.c:537 src/menu-callbacks.c:656
+#: src/menu-callbacks.c:290 src/menu-callbacks.c:490 src/menu-callbacks.c:612
 msgid "All archives"
 msgstr "Tutti gli archivi"
 
-#: src/menu-callbacks.c:338 src/menu-callbacks.c:544 src/menu-callbacks.c:663
+#: src/menu-callbacks.c:297 src/menu-callbacks.c:497 src/menu-callbacks.c:619
 msgid "All files"
 msgstr "Tutti i file"
 
-#: src/menu-callbacks.c:356 src/menu-callbacks.c:552
+#: src/menu-callbacks.c:307 src/menu-callbacks.c:505
 msgid "Archive type:"
 msgstr "Tipo di archivio:"
 
-#: src/menu-callbacks.c:422 src/menu-callbacks.c:441
+#: src/menu-callbacks.c:375 src/menu-callbacks.c:394
 msgid "Could not save the archive"
 msgstr "Impossibile salvare l'archivio"
 
-#: src/menu-callbacks.c:526
+#: src/menu-callbacks.c:479
 msgid "Save"
 msgstr "Salva"
 
-#: src/menu-callbacks.c:645 src/menu.h:412 src/toolbar.h:48
+#: src/menu-callbacks.c:601 src/menu.h:412 src/toolbar.h:48
 msgid "Open"
 msgstr "Apri"
 
-#: src/menu-callbacks.c:777
+#: src/menu-callbacks.c:733
 msgid "Could not copy the archive"
 msgstr "Impossibile copiare l'archivio"
 
-#: src/menu-callbacks.c:796
+#: src/menu-callbacks.c:752
 msgid "Could not move the archive"
 msgstr "Impossibile spostare l'archivio"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Copy"
 msgstr "Copia"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Move"
 msgstr "Sposta"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Copy"
 msgstr "_Copia"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Move"
 msgstr "_Sposta"
 
-#: src/menu-callbacks.c:898 src/window.c:4717
+#: src/menu-callbacks.c:855 src/window.c:4717
 msgid "Rename"
 msgstr "Rinomina"
 
-#: src/menu-callbacks.c:899
+#: src/menu-callbacks.c:856
 msgid "New archive name (without extension)"
 msgstr "Nuovo nome dell'archivio (senza estensione)"
 
-#: src/menu-callbacks.c:903 src/window.c:4722
+#: src/menu-callbacks.c:860 src/window.c:4722
 msgid "_Rename"
 msgstr "_Rinomina"
 
-#: src/menu-callbacks.c:1013
+#: src/menu-callbacks.c:970
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
@@ -592,17 +589,17 @@ msgstr ""
 "L'archivio non può essere spostato nel Cestino. Si desidera cancellarlo in "
 "modo definitivo?"
 
-#: src/menu-callbacks.c:1208
+#: src/menu-callbacks.c:1165
 msgid "translator_credits"
 msgstr ""
 "Paolo Bacchilega <paolo.bacch@tin.it>\n"
 "Roberto Rosselli Del Turco <rosselli@ling.unipi.it>"
 
-#: src/menu-callbacks.c:1219
+#: src/menu-callbacks.c:1176
 msgid "An archive manager for GNOME."
 msgstr "Un gestore di archivi per GNOME."
 
-#: src/menu-callbacks.c:1368 src/window.c:4454
+#: src/menu-callbacks.c:1325 src/window.c:4454
 msgid "Last Output"
 msgstr "Ultimo output"
 
