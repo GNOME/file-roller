@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -241,7 +241,7 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	/* extract ! */
 
-	if (eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER)) {
+	if (eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE)) {
 		window->view_folder_after_extraction = TRUE;
 		g_free (window->folder_to_view);
 		window->folder_to_view = g_strdup (extract_to_dir);
@@ -547,7 +547,7 @@ dlg_extract (GtkWidget *widget,
 	} else 
 		gtk_widget_set_sensitive (data->e_password_hbox, FALSE);
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));
 
 	/* Set the signals handlers. */
 

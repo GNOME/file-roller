@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -114,7 +114,7 @@ preferences_get_sort_method ()
 	char *s_value;
 	int   i_value;
 
-	s_value = eel_gconf_get_string (PREF_LIST_SORT_METHOD);
+	s_value = eel_gconf_get_string (PREF_LIST_SORT_METHOD, "name");
 	i_value = get_enum_from_string (sort_method_table, s_value);
 	g_free (s_value);
 
@@ -138,7 +138,7 @@ preferences_get_sort_type ()
 	char *s_value;
 	int   i_value;
 
-	s_value = eel_gconf_get_string (PREF_LIST_SORT_TYPE);
+	s_value = eel_gconf_get_string (PREF_LIST_SORT_TYPE, "ascending");
 	i_value = get_enum_from_string (sort_type_table, s_value);
 	g_free (s_value);
 
@@ -162,7 +162,7 @@ preferences_get_list_mode ()
 	char *s_value;
 	int   i_value;
 
-	s_value = eel_gconf_get_string (PREF_LIST_MODE);
+	s_value = eel_gconf_get_string (PREF_LIST_MODE, "as_folder");
 	i_value = get_enum_from_string (list_mode_table, s_value);
 	g_free (s_value);
 
@@ -186,7 +186,7 @@ preferences_get_compression_level ()
 	char *s_value;
 	int   i_value;
 
-	s_value = eel_gconf_get_string (PREF_ADD_COMPRESSION_LEVEL);
+	s_value = eel_gconf_get_string (PREF_ADD_COMPRESSION_LEVEL, "normal");
 	i_value = get_enum_from_string (compression_level_table, s_value);
 	g_free (s_value);
 

@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -334,7 +334,7 @@ prepare_app (poptContext pctx)
 	ensure_dir_exists (path, 0700);
 	g_free (path);
 
-	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES))
+	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
                 migrate_to_new_directories ();
 
 	if (session_is_restored ()) {

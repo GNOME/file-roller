@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -190,10 +190,10 @@ dlg_preferences (GtkWidget *caller,
 
 	/**/
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE]), eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE]), eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME]), eel_gconf_get_boolean (PREF_LIST_SHOW_TIME));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_PATH]), eel_gconf_get_boolean (PREF_LIST_SHOW_PATH));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE]), eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE, TRUE));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE]), eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE, TRUE));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME]), eel_gconf_get_boolean (PREF_LIST_SHOW_TIME, TRUE));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_PATH]), eel_gconf_get_boolean (PREF_LIST_SHOW_PATH, TRUE));
 
 	gtk_option_menu_set_history (GTK_OPTION_MENU (data->compression_optionmenu), preferences_get_compression_level ());
 

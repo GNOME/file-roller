@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2002 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,6 +42,8 @@
    Authors: Ramiro Estrugo <ramiro@eazel.com>
 */
 
+/* Modified by Paolo Bacchilega <paolo.bacch@tin.it> for File Roller. */
+
 #ifndef GCONF_UTILS_H
 #define GCONF_UTILS_H
 
@@ -59,24 +61,44 @@ void         eel_global_client_free          (void);
 
 gboolean     eel_gconf_handle_error          (GError                **error);
 
+gboolean     eel_gconf_get_boolean           (const char             *key,
+					      gboolean                def_val);
+
 void         eel_gconf_set_boolean           (const char             *key,
-					      gboolean                boolean_value);
+					      gboolean                value);
 
-gboolean     eel_gconf_get_boolean           (const char             *key);
-
-int          eel_gconf_get_integer           (const char             *key);
+int          eel_gconf_get_integer           (const char             *key,
+					      int                     def_val);
 
 void         eel_gconf_set_integer           (const char             *key,
-					      int                     int_value);
+					      int                     value);
 
-char *       eel_gconf_get_string            (const char             *key);
+float        eel_gconf_get_float             (const char             *key,
+					      float                   def_val);
+
+void         eel_gconf_set_float             (const char             *key,
+					      float                   value);
+
+char *       eel_gconf_get_string            (const char             *key,
+					      const char             *def_val);
 
 void         eel_gconf_set_string            (const char             *key,
-					      const char             *string_value);
+					      const char             *value);
+
+char *       eel_gconf_get_locale_string     (const char             *key,
+					      const char             *def_val);
+
+void         eel_gconf_set_locale_string     (const char             *key,
+					      const char             *value);
 
 GSList *     eel_gconf_get_string_list       (const char             *key);
 
 void         eel_gconf_set_string_list       (const char             *key,
+					      const GSList           *string_list_value);
+
+GSList *     eel_gconf_get_locale_string_list(const char             *key);
+
+void         eel_gconf_set_locale_string_list(const char             *key,
 					      const GSList           *string_list_value);
 
 gboolean     eel_gconf_is_default            (const char             *key);

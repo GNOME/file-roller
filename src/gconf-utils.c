@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2002 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,6 +42,8 @@
    Authors: Ramiro Estrugo <ramiro@eazel.com>
 */
 
+/* Modified by Paolo Bacchilega <paolo.bacch@tin.it> for File Roller. */
+
 #include <config.h>
 #include <string.h>
 #include <gnome.h>
@@ -49,6 +51,7 @@
 #include <gconf/gconf.h>
 #include "gconf-utils.h"
 #include "gtk-utils.h"
+#include "fr-error.h"
 
 static GConfClient *global_gconf_client = NULL;
 
@@ -95,21 +98,24 @@ eel_gconf_handle_error (GError **error)
 	g_return_val_if_fail (error != NULL, FALSE);
 
 	if (*error != NULL) {
-		g_warning (_("GConf error:\n  %s"), (*error)->message);
+		g_warning ("GConf error:\n  %s", (*error)->message);
 		if (! shown_dialog) {
 			GtkWidget *d;
-
 			shown_dialog = TRUE;
-			
-			d = _gtk_error_dialog_new (NULL, 0, NULL,
-						   "GConf error:\n  %s\n"
+			d = _gtk_error_dialog_new (NULL, 
+						   GTK_DIALOG_DESTROY_WITH_PARENT,
+						   NULL,
+						   "GConf error: %s\n"
 						   "All further errors "
 						   "shown only on terminal",
-                                                   (*error)->message);
+						   (*error)->message);
+			g_signal_connect (d, "response",
+					  G_CALLBACK (gtk_widget_destroy), 
+					  NULL);
 
-			gtk_dialog_run (GTK_DIALOG (d));
-			gtk_widget_destroy (GTK_WIDGET (d));
+			gtk_widget_show (d);
 		}
+
 		g_error_free (*error);
 		*error = NULL;
 
@@ -117,6 +123,24 @@ eel_gconf_handle_error (GError **error)
 	}
 
 	return FALSE;
+}
+
+
+static gboolean
+check_type (const char      *key, 
+	    GConfValue      *val, 
+	    GConfValueType   t, 
+	    GError         **err)
+{
+	if (val->type != t) {
+		g_set_error (err,
+			     FR_ERROR,
+			     errno,
+			     "Type mismatch for key %s",
+			     key);
+		return FALSE;
+	} else
+		return TRUE;
 }
 
 
@@ -138,22 +162,30 @@ eel_gconf_set_boolean (const char *key,
 
 
 gboolean
-eel_gconf_get_boolean (const char *key)
+eel_gconf_get_boolean (const char *key,
+		       gboolean    def)
 {
-	gboolean result;
+	GError      *error = NULL;
+	gboolean     result = def;
 	GConfClient *client;
-	GError *error = NULL;
-	
-	g_return_val_if_fail (key != NULL, FALSE);
+	GConfValue  *val;
+
+	g_return_val_if_fail (key != NULL, def);
 	
 	client = eel_gconf_client_get_global ();
-	g_return_val_if_fail (client != NULL, FALSE);
+	g_return_val_if_fail (client != NULL, def);
 	
-	result = gconf_client_get_bool (client, key, &error);
-	
-	if (eel_gconf_handle_error (&error)) {
-		result = FALSE;
-	}
+	val = gconf_client_get (client, key, &error);
+
+	if (val != NULL) {
+		if (check_type (key, val, GCONF_VALUE_BOOL, &error))
+			result = gconf_value_get_bool (val);
+		else
+			eel_gconf_handle_error (&error);
+		gconf_value_free (val);
+
+	} else if (error != NULL)
+		eel_gconf_handle_error (&error);
 	
 	return result;
 }
@@ -161,10 +193,10 @@ eel_gconf_get_boolean (const char *key)
 
 void
 eel_gconf_set_integer (const char *key,
-		       int int_value)
+		       int         int_value)
 {
 	GConfClient *client;
-	GError *error = NULL;
+	GError      *error = NULL;
 
 	g_return_if_fail (key != NULL);
 
@@ -177,30 +209,85 @@ eel_gconf_set_integer (const char *key,
 
 
 int
-eel_gconf_get_integer (const char *key)
+eel_gconf_get_integer (const char *key,
+		       int         def)
 {
-	int result;
+	GError      *error = NULL;
+	int          result = def;
 	GConfClient *client;
-	GError *error = NULL;
-	
-	g_return_val_if_fail (key != NULL, 0);
+	GConfValue  *val;
+
+	g_return_val_if_fail (key != NULL, def);
 	
 	client = eel_gconf_client_get_global ();
-	g_return_val_if_fail (client != NULL, 0);
+	g_return_val_if_fail (client != NULL, def);
 	
-	result = gconf_client_get_int (client, key, &error);
+	val = gconf_client_get (client, key, &error);
 
-	if (eel_gconf_handle_error (&error)) {
-		result = 0;
-	}
+	if (val != NULL) {
+		if (check_type (key, val, GCONF_VALUE_INT, &error))
+			result = gconf_value_get_int (val);
+		else
+			eel_gconf_handle_error (&error);
+		gconf_value_free (val);
 
+	} else if (error != NULL)
+		eel_gconf_handle_error (&error);
+	
+	return result;
+}
+
+
+void
+eel_gconf_set_float (const char *key,
+		     float       float_value)
+{
+	GConfClient *client;
+	GError *error = NULL;
+
+	g_return_if_fail (key != NULL);
+
+	client = eel_gconf_client_get_global ();
+	g_return_if_fail (client != NULL);
+
+	gconf_client_set_float (client, key, float_value, &error);
+	eel_gconf_handle_error (&error);
+}
+
+
+float
+eel_gconf_get_float (const char *key,
+		     float       def)
+{
+	GError      *error = NULL;
+	float        result = def;
+	GConfClient *client;
+	GConfValue  *val;
+
+	g_return_val_if_fail (key != NULL, def);
+	
+	client = eel_gconf_client_get_global ();
+	g_return_val_if_fail (client != NULL, def);
+	
+	val = gconf_client_get (client, key, &error);
+
+	if (val != NULL) {
+		if (check_type (key, val, GCONF_VALUE_FLOAT, &error))
+			result = gconf_value_get_float (val);
+		else
+			eel_gconf_handle_error (&error);
+		gconf_value_free (val);
+
+	} else if (error != NULL)
+		eel_gconf_handle_error (&error);
+	
 	return result;
 }
 
 
 void
 eel_gconf_set_string (const char *key,
-			   const char *string_value)
+		      const char *string_value)
 {
 	GConfClient *client;
 	GError *error = NULL;
@@ -216,23 +303,68 @@ eel_gconf_set_string (const char *key,
 
 
 char *
-eel_gconf_get_string (const char *key)
+eel_gconf_get_string (const char *key,
+		      const char *def)
 {
-	char *result;
+	GError      *error = NULL;
+	char        *result;
 	GConfClient *client;
-	GError *error = NULL;
-	
-	g_return_val_if_fail (key != NULL, NULL);
-	
+	char        *val;
+
+	if (def != NULL)
+		result = g_strdup (def);
+	else
+		result = NULL;
+
+	g_return_val_if_fail (key != NULL, result);	
+
 	client = eel_gconf_client_get_global ();
-	g_return_val_if_fail (client != NULL, NULL);
+	g_return_val_if_fail (client != NULL, result);
 	
-	result = gconf_client_get_string (client, key, &error);
+	val = gconf_client_get_string (client, key, &error);
+
+	if (val != NULL) {
+		g_return_val_if_fail (error == NULL, result);
+		g_free (result);
+		result = g_strdup (val);
+
+	} else if (error != NULL)
+		eel_gconf_handle_error (&error);
 	
-	if (eel_gconf_handle_error (&error)) {
-		result = g_strdup ("");
+	return result;
+}
+
+
+void
+eel_gconf_set_locale_string (const char *key,
+			     const char *string_value)
+{
+	char *utf8;
+
+	utf8 = g_locale_to_utf8 (string_value, -1, 0, 0, 0);
+
+	if (utf8 != NULL) {
+		eel_gconf_set_string (key, utf8);
+		g_free (utf8);
 	}
-	
+}
+
+
+char *
+eel_gconf_get_locale_string (const char *key,
+			     const char *def)
+{
+	char *utf8;
+	char *result;
+
+	utf8 = eel_gconf_get_string (key, def);
+
+	if (utf8 == NULL)
+		return NULL;
+
+	result = g_locale_from_utf8 (utf8, -1, 0, 0, 0);
+	g_free (utf8);
+
 	return result;
 }
 
@@ -277,6 +409,50 @@ eel_gconf_get_string_list (const char *key)
 	}
 
 	return slist;
+}
+
+
+GSList *
+eel_gconf_get_locale_string_list (const char *key)
+{
+	GSList *utf8_slist, *slist, *scan;
+
+	utf8_slist = eel_gconf_get_string_list (key);
+
+	slist = NULL;
+	for (scan = utf8_slist; scan; scan = scan->next) {
+		char *utf8 = scan->data;
+		char *locale = g_locale_from_utf8 (utf8, -1, 0, 0, 0);
+		slist = g_slist_prepend (slist, locale);
+	}
+
+	g_slist_foreach (utf8_slist, (GFunc) g_free, NULL);
+	g_slist_free (utf8_slist);
+
+	return g_slist_reverse (slist);
+}
+
+
+void
+eel_gconf_set_locale_string_list (const char   *key,
+				  const GSList *string_list_value)
+{
+	GSList       *utf8_slist;
+	const GSList *scan;
+
+	utf8_slist = NULL;
+	for (scan = string_list_value; scan; scan = scan->next) {
+		char *locale = scan->data;
+		char *utf8 = g_locale_to_utf8 (locale, -1, 0, 0, 0);
+		utf8_slist = g_slist_prepend (utf8_slist, utf8);
+	}
+
+	utf8_slist = g_slist_reverse (utf8_slist);
+
+	eel_gconf_set_string_list (key, utf8_slist);
+
+	g_slist_foreach (utf8_slist, (GFunc) g_free, NULL);
+	g_slist_free (utf8_slist);
 }
 
 
@@ -494,6 +670,7 @@ simple_value_is_equal (const GConfValue *a,
 		break;
 	default:
 		g_assert_not_reached ();
+		break;
 	}
 	
 	return FALSE;
@@ -559,6 +736,7 @@ eel_gconf_value_is_equal (const GConfValue *a,
 	default:
 		/* FIXME: pair ? */
 		g_assert (0);
+		break;
 	}
 	
 	g_assert_not_reached ();

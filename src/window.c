@@ -451,7 +451,7 @@ get_icon (GtkWidget *widget,
 
 	if (fdata->is_dir)
 		icon_name = g_strdup (ICON_TYPE_DIRECTORY);
-	else if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS)) 
+	else if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS, TRUE)) 
 		icon_name = g_strdup (ICON_TYPE_REGULAR);
 	else
 		icon_name = gnome_icon_lookup (icon_theme,
@@ -2539,13 +2539,13 @@ window_show_cb (GtkWidget *widget,
 
 	_window_update_current_location (window);
 
-	view_foobar = eel_gconf_get_boolean (PREF_UI_TOOLBAR);
+	view_foobar = eel_gconf_get_boolean (PREF_UI_TOOLBAR, TRUE);
 	set_check_menu_item_state (window, 
 				   window->mitem_view_toolbar, 
 				   view_foobar);
 	window_set_toolbar_visibility (window, view_foobar);
 
-	view_foobar = eel_gconf_get_boolean (PREF_UI_STATUSBAR);
+	view_foobar = eel_gconf_get_boolean (PREF_UI_STATUSBAR, TRUE);
 	set_check_menu_item_state (window, 
 				   window->mitem_view_statusbar, 
 				   view_foobar);
@@ -2566,7 +2566,7 @@ pref_history_len_changed (GConfClient *client,
 {
 	FRWindow *window = user_data;
 	egg_recent_model_set_limit (window->recent_model, 
-				    eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
+				    eel_gconf_get_integer (PREF_UI_HISTORY_LEN, 5));
 }
 
 
@@ -2895,7 +2895,7 @@ window_new ()
 						     "LocationBar",
 						     (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL 
 						      | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE 
-						      | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
+						      | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
 						     BONOBO_DOCK_TOP,
 						     2, 1, 0);
 
@@ -3161,7 +3161,7 @@ window_new ()
 						"application/x-zoo",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
-	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
+	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, 5));
 
 	view = egg_recent_view_gtk_new (window->mitem_recents_menu, NULL);
 	window->recent_view = view;
@@ -4450,16 +4450,16 @@ window_update_columns_visibility (FRWindow *window)
 	GtkTreeViewColumn *column;
 
 	column = gtk_tree_view_get_column (tree_view, 1);
-	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE));
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE, TRUE));
 
 	column = gtk_tree_view_get_column (tree_view, 2);
-	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE));
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE, TRUE));
 
 	column = gtk_tree_view_get_column (tree_view, 3);
-	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_TIME));
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_TIME, TRUE));
 
 	column = gtk_tree_view_get_column (tree_view, 4);
-	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_PATH));
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_PATH, TRUE));
 }
 
 
