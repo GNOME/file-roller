@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.5.2">
+  <!ENTITY appversion "2.5.4">
   <!ENTITY manrevision "2.4">
   <!ENTITY date "February 2004">
   <!ENTITY app "<application>File Roller</application>">
@@ -183,7 +183,7 @@
       &app; provides only a graphical interface, and relies on command-line utilities such as <command>tar</command>, <command>gzip</command>, and <command>bzip2</command> for archive operations. 
     </para>
     <para>
-      If you have the appropriate command-line tools installed on your system, &app; supports the archive formats listed in the following table.</para> 
+      If you have the appropriate command-line tools installed on your system, &app; supports RPM and Stuff files, as well as the archive formats listed in the following table.</para> 
       <informaltable frame="all">
         <tgroup cols="2" colsep="1" rowsep="1">
           <colspec colname="COLSPEC0" colwidth="50*"/>
@@ -338,22 +338,68 @@
                   </varlistentry>
                 </variablelist>
                 <para>When you right-click in the <application>&app;</application> window, the application displays a popup menu. The popup menu contains the most common contextual archive commands. </para>
-      <para>Several &app; dialogs contain the following buttons, which act on files in the file system:
+
+         <sect3 id="file-roller-bookmarks">
+                <title>Bookmarks</title>
+      <para>Several &app; dialogs contain the following components, which enable you to bookmark frequently accessed folders:
       </para>
         <variablelist>
           <varlistentry>
+            <term>Bookmarks</term>
+            <listitem>
+              <para>Use this list box to open a bookmarked folder.</para>
+              <para>&app; provides the following default bookmarks:</para>
+              <informaltable frame="all">
+                <tgroup cols="2" colsep="1" rowsep="1">
+                  <colspec colname="COLSPEC0" colwidth="50*"/>
+                  <colspec colname="COLSPEC1" colwidth="50*"/>
+                  <thead>
+                    <row valign="top">
+                      <entry colname="COLSPEC0">
+                        <para>Bookmark</para></entry>
+                      <entry colname="COLSPEC1" align="left"> 
+                        <para>Location</para></entry>
+                    </row>
+                  </thead>
+                  <tbody>
+                    <row valign="top">               
+                      <entry><para><guilabel>Home</guilabel></para></entry>
+                      <entry><para><filename>$HOME</filename></para></entry>
+                    </row>
+                    <row valign="top">               
+                      <entry><para><guilabel>Desktop</guilabel></para></entry>
+                      <entry><para><filename>$HOME/Desktop</filename></para></entry>
+                    </row>
+                    <row valign="top">               
+                      <entry><para><guilabel>Filesystem</guilabel></para></entry>
+                      <entry><para><filename>/</filename></para></entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+              <note>
+                <para>$HOME is the home directory specified in the <filename>/etc/passwd</filename> file. &app; always uses this value, even if the user resets the value of $HOME after login.</para>
+              </note>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>Files and folders</term>
+            <listitem><para>Use this list box to open a subfolder within the bookmarked folder, or to select a file or folder.</para></listitem>
+          </varlistentry>
+          <varlistentry>
             <term><guibutton>Add</guibutton></term>
-            <listitem><para>Adds a new bookmark to the current directory.</para></listitem>
+            <listitem><para>Click on this button to add a new bookmark to the bookmarks list box.</para></listitem>
           </varlistentry>
           <varlistentry>
             <term><guibutton>Remove</guibutton></term>
-            <listitem><para>Removes the selected bookmark.</para></listitem>
+            <listitem><para>Click on this button to remove the selected bookmark from the bookmarks list box.</para></listitem>
           </varlistentry>
           <varlistentry>
             <term><guibutton>Up</guibutton></term>
-            <listitem><para>Navigates up one level in the folder tree.</para></listitem>
+            <listitem><para>Click on this button to navigate up one level in the folder tree.</para></listitem>
           </varlistentry>
         </variablelist>
+         </sect3>
          </sect2>
 </sect1>
 
@@ -479,7 +525,7 @@
         </itemizedlist>
       </para>
       <para>
-        To open another archive, choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. &app; opens each archive in a new window. 
+        To open another archive, choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. &app; opens each archive in a new window. To open another archive in the same window, you must first choose <menuchoice> <guimenu>Archive</guimenu> <guimenuitem>Close</guimenuitem> </menuchoice> to close the current archive, then choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice>.
       </para>
       <para>
 	If you try to open an archive that was created in a format that &app; does not recognize, the application displays an error message. See <xref linkend="file-roller-intro"/> for a list of supported formats.
@@ -509,13 +555,24 @@
         Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Extract</guimenuitem></menuchoice> to display the <guilabel>Extract</guilabel> dialog.</para>
         </listitem>
         <listitem><para>
-         Specify the path where &app; extracts the files. Double-click on an entry in the folders pane to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box, then press <keycap>Return</keycap>.</para>
+         Specify the path where &app; extracts the files. Double-click on an entry in the list box to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box, then press <keycap>Return</keycap>.</para>
         </listitem>
         <listitem><para>
         Select the required extract options. For more information about the extract options, see <xref linkend="file-roller-extract-options"/>.</para>
         </listitem>
         <listitem><para>
         Click <guibutton>Extract</guibutton>.</para>
+        <note>
+          <para>
+            If all of the files in the archive are protected by a password, and you have not specified the password, &app; displays an error dialog.
+          </para>
+          <para>
+            If some but not all of the files in the archive are protected by a password, and you have not specified the password, &app; does not display an error dialog. However, &app; extracts only the unprotected files to the new archive.
+          </para>
+          <para>
+            For more information about passwords, see <xref linkend="file-roller-encrypt-files"/>.
+          </para>
+        </note>
         </listitem>
         </orderedlist>
         </para>
@@ -554,7 +611,7 @@
           </para>
         </listitem>
         <listitem>
-          <para>Specify the path where &app; places the new archive. Double-click on an entry in the folders pane to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box.
+          <para>Specify the path where &app; places the new archive. Double-click on an entry in the list box to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box.
           </para>
         </listitem>
         <listitem>
@@ -590,14 +647,10 @@
            <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Add</guimenuitem></menuchoice> to display the <guilabel>Add</guilabel> dialog.</para> 
          </listitem>
          <listitem>
-           <para>Select the files that you want to add, or enter the folder name in the <guilabel>Filename</guilabel> text box.</para> 
-    <note>
-    <para>If you click on the folder name in the folders pane, the <guilabel>Filename</guilabel> text box remains unchanged. You must enter the folder name manually. For example, to add the folder <filename>/aaa/bbb/ccc</filename> to an archive, use the folders pane to open the <filename>/aaa/bbb</filename> folder, then enter <userinput>ccc</userinput> in the <guilabel>Filename</guilabel> text box.  
-    </para>
-    </note>
+           <para>Select the files and folders that you want to add.</para> 
          </listitem>
          <listitem>
-           <para>Click <guibutton>Add</guibutton>. &app; adds the files to the current folder in the archive.
+           <para>Click <guibutton>Add</guibutton>. &app; adds the files and folders to the current folder in the archive.
           </para> 
          </listitem>
       </orderedlist>
@@ -635,7 +688,7 @@
                       </listitem>
                       <listitem>
                         <para>
-		          Select your home folder in the folders pane. 
+		          Select your home folder in the list box. 
                         </para>
                       </listitem>
                       <listitem>
@@ -697,18 +750,29 @@
 	</varlistentry>
        <!-- ============= -->	
      <varlistentry>
-	<term><guibutton>Load Options</guibutton></term>
+	<term><guibutton>Save Options</guibutton></term>
 	  <listitem>
-            <para>Click on this button to display the <guilabel>Load Options</guilabel> dialog. Double-click on an entry in the folders pane to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box. Enter the name of the load-options file in the <guilabel>Filename</guilabel> text box, then click <guibutton>Open</guibutton>. 
+            <para>Click on this button to save the current selection of advanced add options to a file. The <guilabel>Save Options</guilabel> dialog is displayed. Enter a descriptive filename in the <guilabel>Options Name</guilabel> text box, then click <guibutton>Save</guibutton>. 
             </para>
           </listitem>
 	</varlistentry>
        <!-- ============= -->	
      <varlistentry>
-	<term><guibutton>Save Options</guibutton></term>
+	<term><guibutton>Load Options</guibutton></term>
 	  <listitem>
-            <para>Click on this button to display the <guilabel>Save Options</guilabel> dialog. Double-click on an entry in the folders pane to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box. Enter the name of the save-options file in the <guilabel>Filename</guilabel> text box, then click <guibutton>Save</guibutton>. 
-            </para>
+            <para>Click on this button to load or delete a previously saved selection of advanced add options. The <guilabel>Load Options</guilabel> dialog is displayed.</para>
+            <itemizedlist>
+              <listitem>
+                <para>
+                  To load a set of options, select the options file in the list box, then click <guibutton>Apply</guibutton>. 
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  To delete a set of options, select the options file in the list box, then click <guibutton>Remove</guibutton>. Click <guibutton>Close</guibutton> to close the <guilabel>Load Options</guilabel> dialog.
+                </para>
+              </listitem>
+            </itemizedlist>
           </listitem>
 	</varlistentry>
       </variablelist>
@@ -743,8 +807,53 @@
         </para>
       </listitem>
       <listitem>
-        <para>Click <guibutton>Rename</guibutton>. &app; renames the archive to the new filename, with the same file extension as the original file.
+        <para>Click <guibutton>Rename</guibutton>. &app; renames the archive to the new filename, with the same file extension as the original file. 
         </para>
+        <note>
+          <para>
+            You cannot use <guimenuitem>Rename</guimenuitem> to change the archive format. To change the archive format, you must choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Save As</guimenuitem></menuchoice>, as described in <xref linkend="file-roller-convert-archive"/>.
+          </para>
+        </note>
+      </listitem>
+    </orderedlist>
+  </sect2>
+
+  <!-- ======= Converting an Archive to Another Format ============= --> 
+  <sect2 id="file-roller-convert-archive">
+    <title>To Convert an Archive to Another Format</title>
+    <para>To convert an archive to another format and save as a new file, perform the following steps:
+    </para>
+    <orderedlist>
+      <listitem>
+        <para>Open the archive that you want to convert.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Save As</guimenuitem></menuchoice> to display the <guilabel>Save</guilabel> dialog.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Enter the new archive name in the <guilabel>Filename</guilabel> text box.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Select the new format from the <guilabel>Archive type</guilabel> drop-down list. Alternatively, enter the filename extension in the <guilabel>Filename</guilabel> text box, and select <guilabel>Automatic</guilabel> from the <guilabel>Archive type</guilabel> drop-down list.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Click <guibutton>Save</guibutton>. 
+        </para>
+        <note>
+          <para>
+            If all of the files in the archive are protected by a password, and you have not specified the password, &app; displays an error dialog.
+          </para>
+          <para>
+            If some but not all of the files in the archive are protected by a password, and you have not specified the password, &app; does not display an error dialog. However, &app; copies only the unprotected files to the new archive.
+          </para>
+          <para>
+            For more information about passwords, see <xref linkend="file-roller-encrypt-files"/>.
+          </para>
+        </note>
       </listitem>
     </orderedlist>
   </sect2>
@@ -764,11 +873,11 @@
         </para>
       </listitem>
       <listitem>
-        <para>Specify the path where &app; places the copied file. Double-click on an entry in the folders pane to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box.
+        <para>Specify the path where &app; places the copied file. Double-click on an entry in the list box to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box, then press <keycap>Return</keycap>.
         </para>
       </listitem>
       <listitem>
-        <para>Click <guibutton>Copy</guibutton>. &app; copies the archive to the specified position. If the specified path does not exist, &app; first creates the path and then copies the archive to the specified position.
+        <para>Click <guibutton>Copy</guibutton>. &app; copies the archive to the specified position. 
         </para>
       </listitem>
     </orderedlist>
@@ -789,11 +898,11 @@
         </para>
       </listitem>
       <listitem>
-        <para>Specify the new path for the archive. Double-click on an entry in the folders pane to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box.
+        <para>Specify the new path for the archive. Double-click on an entry in the list box to navigate to that path. Alternatively, enter the path in the <guilabel>Filename</guilabel> text box.
         </para>
       </listitem>
       <listitem>
-        <para>Click <guibutton>Move</guibutton>. &app; moves the archive to the specified position. If the specified path does not exist, &app; first creates the path and then moves the archive to the specified position.
+        <para>Click <guibutton>Move</guibutton>. &app; moves the archive to the specified position. 
         </para>
       </listitem>
     </orderedlist>
@@ -934,7 +1043,7 @@
           <para>Select the files that you want to move.</para>
         </listitem>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Move</guimenuitem></menuchoice>.  </para>
+          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Cut</guimenuitem></menuchoice>.  </para>
         </listitem>
         <listitem>
           <para>Open the location where you want to put the moved files.</para>
@@ -1291,7 +1400,11 @@
                 </para>
               </listitem>
               <listitem>
-                <para>If the archive contains encrypted files and you have not entered the correct password in the <guilabel>Password</guilabel> text box, &app; displays an <guilabel>Error</guilabel> dialog. Click <guibutton>Command Line Output</guibutton> to list each file in the archive: &app; indicates the unencrypted files with status <literal>OK</literal>, and indicates the encrypted files with status <literal>unable to get password</literal>.
+                <para>If the archive contains some encrypted and unencrypted files, and you have not entered the correct password in the <guilabel>Password</guilabel> text box, &app; opens the <guilabel>Test Result</guilabel> dialog to list each file in the archive, and indicates that each unencrypted file has status <literal>OK</literal>, and each encrypted file has status <literal>incorrect password</literal>.
+                </para>
+              </listitem>
+              <listitem>
+                <para>If the archive contains only encrypted files and you have not entered the correct password in the <guilabel>Password</guilabel> text box, &app; displays an <guilabel>Error</guilabel> dialog. 
                 </para>
               </listitem>
             </itemizedlist>
@@ -1334,16 +1447,13 @@
       <orderedlist>
         <listitem><para>Right-click on the files or folders in a file manager window. </para>
         </listitem>
-        <listitem><para>Choose <guimenuitem>Add To Archive</guimenuitem> from the file manager popup menu to display the &app; <guilabel>Add Files</guilabel> dialog.  </para>
+        <listitem><para>Choose <guimenuitem>Zip Objects</guimenuitem> from the file manager popup menu to display the &app; <guilabel>Zip Objects</guilabel> dialog.  </para>
         </listitem>
-        <listitem><para>Enter the archive name in the <guilabel>Add to archive</guilabel> text box. </para>
-                  <para>Alternatively, click <guibutton>Browse</guibutton> to display the <guilabel>Select Archive</guilabel> dialog. Select the archive, then click <guibutton>OK</guibutton>. </para>
+        <listitem><para>Enter the archive name in the <guilabel>Archive</guilabel> text box. </para>
         </listitem>
-        <listitem><para>Select the <guilabel>Add only if newer</guilabel> option to add the specified file to the archive only if the archive does not contain the specified file, or if the archive contains an older version of the specified file. For more information about this option, see <xref linkend="file-roller-advanced-options"/>. </para>
-                 <note><para>To select any of the other advanced options, you must invoke &app; as described in <xref linkend="file-roller-to-start"/>.</para></note>
-        </listitem>
-        <listitem><para>Click <guilabel>Add</guilabel> to add the selected files to the root folder of the specified archive.
+        <listitem><para>Click <guilabel>Zip</guilabel> to add the selected files to the root folder of the specified archive.
       </para>
+                 <note><para>To select any of the advanced add options, you must invoke &app; as described in <xref linkend="file-roller-to-start"/>.</para></note>
         </listitem>
       </orderedlist>
     </sect2>
