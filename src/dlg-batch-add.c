@@ -433,8 +433,6 @@ dlg_batch_add_files (FRWindow *window,
 				    strlen (automatic_name));
 	g_free (automatic_name);
 
-        gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
-				      GTK_WINDOW (window->app));
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE); 
 
 	gtk_widget_show (data->dialog);
