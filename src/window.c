@@ -1449,7 +1449,7 @@ convert__get_files_done_cb (gpointer data)
 	visit_dir_handle_free (window->vd_handle);
 	window->vd_handle = NULL;
 
-	fr_process_start (window->archive->process);
+	fr_process_start (window->convert_data.new_archive->process);
 }
 
 
@@ -1682,7 +1682,7 @@ _action_performed (FRArchive   *archive,
 		if (window->convert_data.converting) {
 			_action_started (window->archive, FR_ACTION_GET_LIST, window);
 
-			fr_process_clear (window->archive->process);
+			fr_process_clear (window->convert_data.new_archive->process);
 			window->vd_handle = fr_archive_add_with_wildcard (
 				  window->convert_data.new_archive,
 				  "*",

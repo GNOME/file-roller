@@ -1024,9 +1024,6 @@ add_with_wildcard__step2 (GList *file_list, gpointer data)
 
 	file_list_remove_from_pattern (&file_list, aww_data->exclude_files);
 
-	if (aww_data->done_func) 
-		aww_data->done_func (aww_data->done_data);
-
 	fr_archive_add (aww_data->archive,
 			file_list,
 			aww_data->base_dir,
@@ -1035,6 +1032,9 @@ add_with_wildcard__step2 (GList *file_list, gpointer data)
 			aww_data->password,
 			aww_data->compression);
 	path_list_free (file_list);
+
+	if (aww_data->done_func) 
+		aww_data->done_func (aww_data->done_data);
 
 	g_free (aww_data->base_dir);
 	g_free (aww_data->password);
@@ -1113,9 +1113,6 @@ add_directory__step2 (GList *file_list, gpointer data)
 {
 	AddDirectoryData *ad_data = data;
 
-	if (ad_data->done_func) 
-		ad_data->done_func (ad_data->done_data);
-
 	fr_archive_add (ad_data->archive,
 			file_list,
 			ad_data->base_dir,
@@ -1124,6 +1121,9 @@ add_directory__step2 (GList *file_list, gpointer data)
 			ad_data->password,
 			ad_data->compression);
 	path_list_free (file_list);
+
+	if (ad_data->done_func) 
+		ad_data->done_func (ad_data->done_data);
 
 	/**/
 
