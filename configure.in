@@ -72,6 +72,12 @@ fi
 
 dnl ******************************
 
+AC_ARG_ENABLE(deprecations,AC_HELP_STRING([--enable-deprecations],[warn about deprecated usages]))
+
+AM_CONDITIONAL(ENABLE_DEPRECATIONS, test "x$enable_deprecations" = xyes)
+
+dnl ******************************
+
 AC_ARG_ENABLE(schemas-install,AC_HELP_STRING([--disable-schemas-install],
 					     [Disable installation of the gconf schemas]))
 
