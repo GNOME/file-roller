@@ -1,3 +1,4 @@
+# translation of es.po to 
 # traducción de es.po al Spanish
 # translation of es.po to Spanish
 # translation of file-roller.HEAD.es.po to Spanish
@@ -10,10 +11,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-05-12 19:56+0200\n"
-"PO-Revision-Date: 2004-09-04 15:34+0200\n"
-"Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
-"Language-Team: Spanish <traductores@es.gnome.org>\n"
+"POT-Creation-Date: 2004-10-30 15:36+0200\n"
+"PO-Revision-Date: 2004-10-30 15:37+0200\n"
+"Last-Translator: \n"
+"Language-Team:  <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,7 +41,7 @@ msgstr "Componente de operaciones de extracción File Roller"
 msgid "File roller component"
 msgstr "Componente de File Roller"
 
-#: file-roller.desktop.in.h:1
+#: file-roller.desktop.in.h:1 src/window.c:855
 msgid "Archive Manager"
 msgstr "Gestor de archivos comprimidos"
 
@@ -53,263 +54,291 @@ msgid "Automatic"
 msgstr "Automático"
 
 #: src/actions.c:98
+msgid "Ar (.ar)"
+msgstr "Ar (.ar)"
+
+#: src/actions.c:99
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/actions.c:99
+#: src/actions.c:100
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/actions.c:100
+#: src/actions.c:101
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/actions.c:101
+#: src/actions.c:102
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/actions.c:102
+#: src/actions.c:103
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/actions.c:103
+#: src/actions.c:104
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar sin compresión (.tar)"
 
-#: src/actions.c:104
+#: src/actions.c:105
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar comprimido con bzip (.tar.bz)"
 
-#: src/actions.c:105
+#: src/actions.c:106
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar comprimido con bzip2 (.tar.bz2)"
 
-#: src/actions.c:106
+#: src/actions.c:107
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar comprimido con gzip (.tar.gz)"
 
-#: src/actions.c:107
+#: src/actions.c:108
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar comprimido con lzop (.tar.lzo)"
 
-#: src/actions.c:108
+#: src/actions.c:109
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar comprimido con compress (.tar.Z)"
 
-#: src/actions.c:109
+#: src/actions.c:110
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/actions.c:110
+#: src/actions.c:111
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/actions.c:111
+#: src/actions.c:112
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/actions.c:176 src/actions.c:196 src/dlg-batch-add.c:101
-#: src/dlg-batch-add.c:127 src/dlg-batch-add.c:169 src/window.c:3789
+#: src/actions.c:113
+msgid "7-Zip (.7z)"
+msgstr "7-Zip (.7z)"
+
+#: src/actions.c:178 src/actions.c:198 src/dlg-batch-add.c:102
+#: src/dlg-batch-add.c:121 src/dlg-batch-add.c:142 src/dlg-batch-add.c:168
+#: src/dlg-batch-add.c:211 src/window.c:3821
 msgid "Could not create the archive"
 msgstr "No se pudo crear el archivo comprimido"
 
-#: src/actions.c:177 src/actions.c:499 src/dlg-batch-add.c:102
+#: src/actions.c:179 src/actions.c:508 src/dlg-batch-add.c:103
+#: src/dlg-batch-add.c:143
 msgid "You have to specify an archive name."
 msgstr "Tiene que especificar un nombre del archivo comprimido."
 
-#: src/actions.c:197 src/actions.c:519
+#: src/actions.c:199 src/actions.c:528
 msgid "You don't have permission to create an archive in this folder"
 msgstr "No tiene permisos para crear un archivo comprimido en esta carpeta"
 
-#: src/actions.c:227 src/actions.c:540 src/actions.c:722 src/actions.c:903
+#: src/actions.c:229 src/actions.c:549 src/actions.c:734 src/actions.c:915
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "El archivo comprimido ya existe. ¿Desea sobreescribirlo?"
 
-#: src/actions.c:230 src/actions.c:543 src/actions.c:725 src/actions.c:906
+#: src/actions.c:232 src/actions.c:552 src/actions.c:737 src/actions.c:918
 msgid "Overwrite"
 msgstr "Sobreescribir"
 
-#: src/actions.c:247 src/actions.c:560
+#: src/actions.c:249 src/actions.c:569
 msgid "Could not delete the old archive."
 msgstr "No se pudo eliminar el archivo comprimido anterior."
 
-#: src/actions.c:292
+#: src/actions.c:297
 msgid "New"
 msgstr "Nuevo"
 
-#: src/actions.c:304 src/actions.c:432 src/actions.c:618
+#: src/actions.c:309 src/actions.c:441 src/actions.c:630
 msgid "All archives"
 msgstr "Todos los archivos comprimidos"
 
-#: src/actions.c:311 src/actions.c:439 src/actions.c:625
+#: src/actions.c:316 src/actions.c:448 src/actions.c:637
 msgid "All files"
 msgstr "Todos los archivos"
 
-#: src/actions.c:321 src/actions.c:633
+#: src/actions.c:326 src/actions.c:645
 msgid "Archive type:"
 msgstr "Tipo de archivo comprimido:"
 
-#: src/actions.c:420 src/ui.h:114
+#: src/actions.c:429 src/ui.h:114
 msgid "Open"
 msgstr "Abrir"
 
-#: src/actions.c:498 src/actions.c:518
+#: src/actions.c:507 src/actions.c:527
 msgid "Could not save the archive"
 msgstr "No se pudo guardar el archivo comprimido"
 
-#: src/actions.c:606
+#: src/actions.c:618
 msgid "Save"
 msgstr "Guardar"
 
-#: src/actions.c:748
+#: src/actions.c:760
 msgid "Could not copy the archive"
 msgstr "No se pudo copiar el archivo comprimido"
 
-#: src/actions.c:768
+#: src/actions.c:780
 msgid "Could not move the archive"
 msgstr "No se pudo mover el archivo comprimido"
 
-#: src/actions.c:797
+#: src/actions.c:809
 msgid "Copy"
 msgstr "Copiar"
 
-#: src/actions.c:797
+#: src/actions.c:809
 msgid "Move"
 msgstr "Mover"
 
-#: src/actions.c:802 src/ui.h:66
+#: src/actions.c:814 src/ui.h:66
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: src/actions.c:802
+#: src/actions.c:814
 msgid "_Move"
 msgstr "_Mover"
 
-#: src/actions.c:873 src/window.c:4903
+#: src/actions.c:885 src/window.c:4940
 msgid "Rename"
 msgstr "Renombrar"
 
-#: src/actions.c:874
+#: src/actions.c:886
 msgid "New archive name (without extension)"
 msgstr "Nombre nuevo para el archivo comprimido (sin extensión)"
 
-#: src/actions.c:878 src/window.c:4908
+#: src/actions.c:890 src/window.c:4945
 msgid "_Rename"
 msgstr "_Renombrar"
 
-#: src/actions.c:979
+#: src/actions.c:991
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
-msgstr "El archivo comprimido no puede moverse a la papelera. ¿Quiere borrarlo permanentemente?"
+msgstr ""
+"El archivo comprimido no puede moverse a la papelera. ¿Quiere borrarlo "
+"permanentemente?"
 
-#: src/actions.c:1216 src/window.c:4621
+#: src/actions.c:1228 src/window.c:4661
 msgid "Last Output"
 msgstr "Último resultado"
 
-#: src/actions.c:1236 src/dlg-extract.c:87
+#: src/actions.c:1248 src/dlg-extract.c:87
 msgid "Could not display help"
 msgstr "No se pudo mostrar la ayuda"
 
-#: src/actions.c:1269
+#: src/actions.c:1281
 msgid "translator_credits"
 msgstr ""
 "Miguel A. Arévalo <marevalo@marealo.net>\n"
 "Francisco Javier F. <serrador@cvs.gnome.org>"
 
 #. Create the application.
-#: src/actions.c:1277 src/gtk-utils.c:390 src/main.c:102 src/window.c:843
-#: src/window.c:1265 src/window.c:3089
+#: src/actions.c:1289 src/gtk-utils.c:390 src/main.c:102 src/window.c:1286
+#: src/window.c:3125
 msgid "File Roller"
 msgstr "File Roller"
 
-#: src/actions.c:1280
+#: src/actions.c:1292
 msgid "An archive manager for GNOME."
 msgstr "Un gestor de archivos comprimidos para GNOME."
 
-#: src/dlg-add-files.c:92 src/dlg-add-files.c:99 src/dlg-add-folder.c:121
-#: src/dlg-add-folder.c:128
+#: src/dlg-add-files.c:85 src/dlg-add-files.c:147 src/dlg-add-folder.c:115
+#: src/dlg-add-folder.c:247
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "No tiene los permisos apropiados para leer archivos de la carpeta «%s»"
 
-#: src/dlg-add-files.c:98 src/dlg-add-folder.c:127 src/window.c:1956
-#: src/window.c:1994
+#: src/dlg-add-files.c:91 src/dlg-add-files.c:153 src/dlg-add-folder.c:121
+#: src/dlg-add-folder.c:253 src/window.c:1982 src/window.c:2020
 msgid "Could not add the files to the archive"
 msgstr "No se pudieron añadir los archivos al archivo comprimido"
 
-#: src/dlg-add-files.c:155
+#: src/dlg-add-files.c:179
 msgid "Add Files"
 msgstr "Añadir archivos"
 
-#: src/dlg-add-files.c:167 src/dlg-add-folder.c:298
+#: src/dlg-add-files.c:191 src/dlg-add-folder.c:321
 msgid "_Add only if newer"
 msgstr "_Añadir sólo si es más nuevo"
 
-#: src/dlg-add-folder.c:286
+#: src/dlg-add-folder.c:309
 msgid "Add a Folder"
 msgstr "Añadir una carpeta"
 
-#: src/dlg-add-folder.c:299
+#: src/dlg-add-folder.c:322
 msgid "_Include subfolders"
 msgstr "_Incluir subcarpetas"
 
-#: src/dlg-add-folder.c:300
+#: src/dlg-add-folder.c:323
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Excluir las carpetas que sean en_laces simbólicos"
 
-#: src/dlg-add-folder.c:303 src/dlg-add-folder.c:308
+#: src/dlg-add-folder.c:326 src/dlg-add-folder.c:331
 msgid "example: *.o; *.bak"
 msgstr "ejemplo: *.o; *.bak"
 
-#: src/dlg-add-folder.c:304
+#: src/dlg-add-folder.c:327
 msgid "_Include files:"
 msgstr "_Incluir archivos:"
 
-#: src/dlg-add-folder.c:309
+#: src/dlg-add-folder.c:332
 msgid "E_xclude files:"
 msgstr "E_xcluir archivos:"
 
-#: src/dlg-add-folder.c:312
+#: src/dlg-add-folder.c:335
 msgid "_Load Options"
 msgstr "_Cargar opciones"
 
-#: src/dlg-add-folder.c:313
+#: src/dlg-add-folder.c:336
 msgid "Sa_ve Options"
 msgstr "_Guardar opciones"
 
-#: src/dlg-add-folder.c:775
+#: src/dlg-add-folder.c:796
 msgid "Save Options"
 msgstr "Guarda las opciones"
 
-#: src/dlg-add-folder.c:776
+#: src/dlg-add-folder.c:797
 msgid "Options Name:"
 msgstr "Nombre de opciones:"
 
-#: src/dlg-batch-add.c:128 src/fr-archive.c:624 src/window.c:3790
-#: src/window.c:3946
+#: src/dlg-batch-add.c:116 src/window.c:4887
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+"El nombre «%s» no es válido porque no puede contener el carácter : %s\n"
+"\n"
+"%s"
+
+#: src/dlg-batch-add.c:116 src/window.c:4879 src/window.c:4883
+#: src/window.c:4887
+msgid "Please use a different name."
+msgstr "Use un nombre diferente."
+
+#: src/dlg-batch-add.c:169 src/fr-archive.c:650 src/window.c:3822
+#: src/window.c:3978
 msgid "Archive type not supported."
 msgstr "Tipo de archivo no soportado."
 
-#: src/dlg-batch-add.c:148 src/dlg-extract.c:152 src/window.c:4188
+#: src/dlg-batch-add.c:190 src/dlg-extract.c:152 src/window.c:4219
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "La carpeta de destino no existe.  ¿Quiere crearla?"
 
-#: src/dlg-batch-add.c:151 src/dlg-extract.c:155 src/window.c:4191
+#: src/dlg-batch-add.c:193 src/dlg-extract.c:155 src/window.c:4222
 msgid "Create _Folder"
 msgstr "Crear _carpeta"
 
-#: src/dlg-batch-add.c:165 src/dlg-extract.c:172 src/window.c:4208
+#: src/dlg-batch-add.c:207 src/dlg-extract.c:172 src/window.c:4239
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "No se pudo crear la carpeta de destino %s."
 
-#: src/dlg-batch-add.c:189
+#: src/dlg-batch-add.c:231
 msgid "Archive not created"
 msgstr "Archivo no creado"
 
 #: src/dlg-extract.c:176 src/dlg-extract.c:196 src/dlg-extract.c:221
-#: src/window.c:4212 src/window.c:4232
+#: src/window.c:4243 src/window.c:4263
 msgid "Extraction not performed"
 msgstr "Extracción no realizada"
 
@@ -326,19 +355,19 @@ msgstr "Archivos"
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:397 src/file_roller.glade.h:17
+#: src/dlg-extract.c:397 src/file_roller.glade.h:16
 msgid "_Files:"
 msgstr "A_rchivos:"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:20
+#: src/dlg-extract.c:408 src/file_roller.glade.h:19
 msgid "example: *.txt; *.doc"
 msgstr "ejemplo: *.txt; *.doc"
 
-#: src/dlg-extract.c:411 src/file_roller.glade.h:14
+#: src/dlg-extract.c:411 src/file_roller.glade.h:13
 msgid "_All files"
 msgstr "_Todos los archivos"
 
-#: src/dlg-extract.c:418 src/file_roller.glade.h:19
+#: src/dlg-extract.c:418 src/file_roller.glade.h:18
 msgid "_Selected files"
 msgstr "Archivos _seleccionados"
 
@@ -358,15 +387,15 @@ msgstr "Sobre_escribir archivos existentes"
 msgid "Do not e_xtract older files"
 msgstr "No e_xtraer archivos antiguos"
 
-#: src/dlg-extract.c:459 src/file_roller.glade.h:18
+#: src/dlg-extract.c:459 src/file_roller.glade.h:17
 msgid "_Password:"
 msgstr "C_ontraseña:"
 
-#: src/dlg-extract.c:467
+#: src/dlg-extract.c:468
 msgid "_Open destination folder after extraction"
 msgstr "_Abrir carpeta de destino tras la extracción"
 
-#: src/dlg-extract.c:494 src/ui.h:94
+#: src/dlg-extract.c:495 src/ui.h:94
 msgid "Extract"
 msgstr "Extraer"
 
@@ -387,7 +416,7 @@ msgstr "%s Propiedades"
 msgid "Modified on:"
 msgstr "Modificado el:"
 
-#: src/dlg-prop.c:140 src/window.c:413
+#: src/dlg-prop.c:140 src/window.c:426
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
@@ -415,101 +444,98 @@ msgstr "Tipo desconocido"
 msgid "Symbolic link"
 msgstr "Enlace simbólico"
 
-#: src/file-utils.c:558
+#: src/file-utils.c:588
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "No se encontró una terminal, se usará xterm aunque quizá no funcione"
 
 #: src/file_roller.glade.h:1
-msgid "*"
-msgstr "*"
-
-#: src/file_roller.glade.h:2
 msgid ""
 "<i><b>Note:</b> the password will be used to encrypt files you add to the "
 "current archive, and to decrypt files you extract from the current archive. "
 "When the archive is closed the password will be deleted.</i>"
 msgstr ""
 "<i><b>Nota:</b> la contraseña se usará para cifrar los archivos que añada al "
-"archivo comprimido actual, y para descifrar los archivos que extraiga del archivo comprimido "
-"actual. Cuando se cierre el archivo se eliminará la contraseña.</i>"
+"archivo comprimido actual, y para descifrar los archivos que extraiga del "
+"archivo comprimido actual. Cuando se cierre el archivo se eliminará la "
+"contraseña.</i>"
 
-#: src/file_roller.glade.h:3
+#: src/file_roller.glade.h:2
 msgid "A_vailable application:"
 msgstr "Aplicación _disponible:"
 
-#: src/file_roller.glade.h:4
+#: src/file_roller.glade.h:3
 msgid "C_reate"
 msgstr "C_rear"
 
-#: src/file_roller.glade.h:5
+#: src/file_roller.glade.h:4
 msgid "Create Archive"
 msgstr "Crear archivo comprimido"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:5
 msgid "Delete"
 msgstr "Borrar"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:6
 msgid "Load Options"
 msgstr "Carga las opciones"
 
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:7
 msgid "Open Files"
 msgstr "Abrir archivos"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:8
 msgid "Open with an _application"
 msgstr "Abrir con una _aplicación"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:9
 msgid "Password"
 msgstr "Contraseña"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:10
 msgid "R_ecent applications:"
 msgstr "Aplicaciones _recientes:"
 
-#: src/file_roller.glade.h:12
+#: src/file_roller.glade.h:11
 msgid "View File"
 msgstr "Ver archivo"
 
-#: src/file_roller.glade.h:13
+#: src/file_roller.glade.h:12
 msgid "View with internal _viewer"
 msgstr "Ver con _visor interno"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:14
 msgid "_Application:"
 msgstr "_Aplicación:"
 
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:15
 msgid "_Archive:"
 msgstr "_Paquete:"
 
-#: src/fr-archive.c:599
+#: src/fr-archive.c:625
 msgid "The file does not exist."
 msgstr "El archivo no existe."
 
-#: src/fr-command-tar.c:384
+#: src/fr-command-tar.c:284
 msgid "Adding file: "
 msgstr "Añadiendo archivo: "
 
-#: src/fr-command-tar.c:430
+#: src/fr-command-tar.c:330
 msgid "Removing file: "
 msgstr "Eliminando archivo: "
 
-#: src/fr-command-tar.c:439 src/window.c:1367
+#: src/fr-command-tar.c:339 src/window.c:1388
 msgid "Deleting files from archive"
 msgstr "Eliminando archivos del archivo comprimido"
 
-#: src/fr-command-tar.c:472
+#: src/fr-command-tar.c:372
 msgid "Extracting file: "
 msgstr "Extrayendo archivo: "
 
-#: src/fr-command-tar.c:517
+#: src/fr-command-tar.c:417
 msgid "Recompressing archive"
 msgstr "Recomprimiendo archivo comprimido"
 
-#: src/fr-command-tar.c:651
+#: src/fr-command-tar.c:551
 msgid "Decompressing archive"
 msgstr "Descomprimiendo archivo comprimido"
 
@@ -540,7 +566,9 @@ msgstr "PAQUETE"
 
 #: src/main.c:64
 msgid "Add files asking the name of the archive and quit the program"
-msgstr "Añade archivos preguntando el nombre del archivo comprimido y luego sale del programa"
+msgstr ""
+"Añade archivos preguntando el nombre del archivo comprimido y luego sale del "
+"programa"
 
 #: src/main.c:68
 msgid "Extract archives to the specified folder and quit the program"
@@ -726,7 +754,7 @@ msgstr "Co_ntraseña..."
 msgid "Specify a password for this archive"
 msgstr "Especifique una contraseña para este archivo comprimido"
 
-#: src/ui.h:126 src/window.c:5015
+#: src/ui.h:126 src/window.c:5052
 msgid "_Paste"
 msgstr "_Pegar"
 
@@ -882,58 +910,58 @@ msgstr "por _ruta"
 msgid "Sort file list by location"
 msgstr "Ordena los archivos por su ruta"
 
-#: src/window.c:686
+#: src/window.c:703
 msgid "Folder"
 msgstr "Carpeta"
 
-#: src/window.c:851
+#: src/window.c:863
 msgid "[read only]"
 msgstr "[sólo lectura]"
 
-#: src/window.c:945
+#: src/window.c:957
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
 msgstr[0] "%d archivo (%s)"
 msgstr[1] "%d archivos (%s)"
 
-#: src/window.c:950
+#: src/window.c:962
 #, c-format
 msgid "%d file selected (%s)"
 msgid_plural "%d files selected (%s)"
 msgstr[0] "%d archivo seleccionado (%s)"
 msgstr[1] "%d archivos seleccionados (%s)"
 
-#: src/window.c:1364
+#: src/window.c:1385
 msgid "Reading archive"
 msgstr "Leyendo paquete"
 
-#: src/window.c:1370
+#: src/window.c:1391
 msgid "Adding files to archive"
 msgstr "Añadiendo archivos al paquete"
 
-#: src/window.c:1373
+#: src/window.c:1394
 msgid "Extracting files from archive"
 msgstr "Extrayendo archivos del paquete"
 
-#: src/window.c:1376
+#: src/window.c:1397
 msgid "Testing archive"
 msgstr "Verificando paquete"
 
-#: src/window.c:1379
+#: src/window.c:1400
 msgid "Getting the file list"
 msgstr "Obteniendo la lista de archivos"
 
-#: src/window.c:1386
+#: src/window.c:1407
 msgid "wait please..."
 msgstr "por favor aguarde..."
 
-#: src/window.c:1463
+#: src/window.c:1484
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "No se pudo mostrar la capeta: «%s»"
 
-#: src/window.c:1522
+#: src/window.c:1543
 msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
@@ -941,7 +969,7 @@ msgstr ""
 "Este paquete está protegido por contraseña.\n"
 "Especifique una contraseña con el comando: Editar->Contraseña"
 
-#: src/window.c:1524
+#: src/window.c:1545
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
@@ -949,55 +977,51 @@ msgstr ""
 "La contraseña especificada no es válida. especifique una contraseña nueva "
 "con el comando:Editar->Contraseña"
 
-#: src/window.c:1529
+#: src/window.c:1550 src/window.c:2183
 msgid "Could not perform the operation"
 msgstr "No se pudo efectuar la operación"
 
-#: src/window.c:1545
-msgid "Operation stopped"
-msgstr "Operación detenida"
-
-#: src/window.c:1567
+#: src/window.c:1575
 msgid "An error occurred while extracting files."
 msgstr "Ha ocurrido un error mientras se extraían los archivos."
 
-#: src/window.c:1571
+#: src/window.c:1579
 msgid "An error occurred while loading the archive."
 msgstr "Se produjo un error cargando el paquete."
 
-#: src/window.c:1575
+#: src/window.c:1583
 msgid "An error occurred while deleting files from the archive."
 msgstr "Se produjo un error borrando archivos del paquete."
 
-#: src/window.c:1579
+#: src/window.c:1587
 msgid "An error occurred while adding files to the archive."
 msgstr "Se produjo un error añadiendo archivos al paquete."
 
-#: src/window.c:1583
+#: src/window.c:1591
 msgid "An error occurred while testing archive."
 msgstr "Se produjo un error comprobando el paquete."
 
-#: src/window.c:1592
+#: src/window.c:1600
 msgid "Command not found."
 msgstr "Comando no encontrado."
 
-#: src/window.c:1595
+#: src/window.c:1603
 msgid "Command exited abnormally."
 msgstr "El comando terminó con error."
 
-#: src/window.c:1724
+#: src/window.c:1732
 msgid "Test Result"
 msgstr "Resultado de la comprobación"
 
-#: src/window.c:1957
+#: src/window.c:1983
 msgid "You don't have the right permissions."
 msgstr "No tiene los permisos apropiados."
 
-#: src/window.c:1995
+#: src/window.c:2021
 msgid "You can't add an archive to itself."
 msgstr "No puede añadir un paquete a sí mismo."
 
-#: src/window.c:2179
+#: src/window.c:2217
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1005,376 +1029,107 @@ msgstr ""
 "¿Quiere añadir este archivo al paquete actual o prefiere abrirlo como un "
 "paquete nuevo ?"
 
-#: src/window.c:2216
+#: src/window.c:2254
 msgid "Do you want to create a new archive with these files?"
 msgstr "¿Quiere crear un nuevo paquete con estos archivos?"
 
-#: src/window.c:2219
+#: src/window.c:2257
 msgid "Create _Archive"
 msgstr "Crear p_aquete"
 
-#: src/window.c:2542
+#: src/window.c:2578
 msgid "Size"
 msgstr "Tamaño"
 
-#: src/window.c:2543
+#: src/window.c:2579
 msgid "Type"
 msgstr "Tipo"
 
-#: src/window.c:2544
+#: src/window.c:2580
 msgid "Date Modified"
 msgstr "Fecha de modificación"
 
-#: src/window.c:2545
+#: src/window.c:2581
 msgid "Location"
 msgstr "Lugar"
 
-#: src/window.c:2552
+#: src/window.c:2588
 msgid "Name"
 msgstr "Nombre"
 
-#: src/window.c:3009
+#: src/window.c:3045
 #, c-format
 msgid "Open '%s'"
 msgstr "Abrir «%s»"
 
-#: src/window.c:3328
+#: src/window.c:3358
 msgid "Go to the previous visited location"
 msgstr "Ir a la ubicación visitada anterior"
 
-#: src/window.c:3336
+#: src/window.c:3366
 msgid "Go to the next visited location"
 msgstr "Ir a la ubicación visitada siguiente"
 
-#: src/window.c:3344
+#: src/window.c:3374
 msgid "Go up one level"
 msgstr "Subir un nivel"
 
-#: src/window.c:3352
+#: src/window.c:3382
 msgid "Go to the home location"
 msgstr "Ir a la ubicación inicial"
 
 #. current location
-#: src/window.c:3371
+#: src/window.c:3401
 msgid "Location:"
 msgstr "Lugar:"
 
-#: src/window.c:3881
+#: src/window.c:3913
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "No se pudo abrir «%s»"
 
-#: src/window.c:3939
+#: src/window.c:3971
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "No se pudo guardar el paquete «%s»"
 
-#: src/window.c:4835
+#: src/window.c:4879
 msgid "The new name is void."
 msgstr "El nombre nuevo está vacío."
 
-#: src/window.c:4835 src/window.c:4839 src/window.c:4848
-msgid "Please use a different name."
-msgstr "Use un nombre diferente."
-
-#: src/window.c:4839
+#: src/window.c:4883
 msgid "The new name is equal to the old one."
 msgstr "El nombre nuevo es igual al antiguo."
 
-#: src/window.c:4848
-#, c-format
-msgid ""
-"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
-"\n"
-"%s"
-msgstr ""
-"El nombre «%s» no es válido porque no puede contener el carácter : %s\n"
-"\n"
-"%s"
-
-#: src/window.c:4904
+#: src/window.c:4941
 msgid "New folder name"
 msgstr "Nombre de carpeta nuevo"
 
-#: src/window.c:4904
+#: src/window.c:4941
 msgid "New file name"
 msgstr "Nombre de archivo nuevo"
 
-#: src/window.c:4925
+#: src/window.c:4962
 msgid "Could not rename the folder"
 msgstr "No se pudo renombrar la carpeta"
 
-#: src/window.c:4925
+#: src/window.c:4962
 msgid "Could not rename the file"
 msgstr "No se pudo renombrar el archivo"
 
-#: src/window.c:5010
+#: src/window.c:5047
 msgid "Paste Selection"
 msgstr "Pegar selección"
 
-#: src/window.c:5011
+#: src/window.c:5048
 msgid "Destination folder"
 msgstr "Carpeta de destino"
 
-#: src/window.c:5597
+#: src/window.c:5519
 msgid "Add files to an archive"
 msgstr "Añadir archivos a un paquete"
 
-#: src/window.c:5624
+#: src/window.c:5546
 msgid "Extract archive"
 msgstr "Extraer paquete"
-
-#~ msgid "File size:"
-#~ msgstr "Tamaño del archivo:"
-
-#~ msgid "Date _modified"
-#~ msgstr "Fecha de _modificación"
-
-#~ msgid "File Roller Preferences"
-#~ msgstr "Preferencias de File Roller"
-
-#~ msgid "Low"
-#~ msgstr "Baja"
-
-#~ msgid "Maximum (slow)"
-#~ msgstr "Máxima (la más lenta)"
-
-#~ msgid "Minimum (fast)"
-#~ msgstr "Mínimo (rápido)"
-
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgid "_Location"
-#~ msgstr "_Dirección"
-
-#~ msgid "_Size"
-#~ msgstr "_Tamaño"
-
-#~ msgid "_Type"
-#~ msgstr "T_ipo"
-
-#~ msgid "_Add..."
-#~ msgstr "_Añadir..."
-
-#~ msgid "Add files and folders to the archive"
-#~ msgstr "Añadir archivos y carpetas al paquete"
-
-#~ msgid "View file with internal viewer"
-#~ msgstr "Ver el archivo con el visor interno"
-
-#~ msgid "Open selected files with the standard application"
-#~ msgstr "Abrir los archivos seleccionados con la aplicación estándar"
-
-#~ msgid "Open With..."
-#~ msgstr "Abrir con..."
-
-#~ msgid "View"
-#~ msgstr "Ver"
-
-#~ msgid "Stop"
-#~ msgstr "Parar"
-
-#~ msgid "Zip Objects..."
-#~ msgstr "Comprimir con zip los objetos..."
-
-#~ msgid "Zip Creator"
-#~ msgstr "Creador de zips"
-
-#~ msgid "Could not zip objects"
-#~ msgstr "No se pudieron comprimir los objetos"
-
-#~ msgid "Zip not performed"
-#~ msgstr "Compresión no realizada"
-
-#~ msgid "Zipped on:"
-#~ msgstr "Comprimido el:"
-
-#~ msgid "Zip Objects"
-#~ msgstr "Comprimir con zip los objetos"
-
-#~ msgid "_Zip"
-#~ msgstr "_Comprimir con zip"
-
-#~ msgid "Add to Archive..."
-#~ msgstr "Añadir al paquete..."
-
-#~ msgid "Handle compressed archives"
-#~ msgstr "Maneja archivos comprimidos"
-
-#~ msgid "Addition not performed"
-#~ msgstr "Adición no realizada"
-
-#~ msgid "Files to add: %d"
-#~ msgstr "Archivos a añadir: %d"
-
-#~ msgid "Folders to add: %d"
-#~ msgstr "Carpetas a añadir: %d"
-
-#~ msgid "Add _to archive:"
-#~ msgstr "Añadir _al paquete:"
-
-#~ msgid "Add only if _newer"
-#~ msgstr "Añadir sólo si es más _nuevo"
-
-#~ msgid "Select Archive"
-#~ msgstr "Seleccionar paquete"
-
-#~ msgid "Exclude o_ther file systems"
-#~ msgstr "Excluir _otros sistemas de archivos"
-
-#~ msgid "Exclude _backup files (*~)"
-#~ msgstr "Excluir archivos de _respaldo (*~)"
-
-#~ msgid "Exclude _hidden files (.*)"
-#~ msgstr "Excluir archivos oc_ultos (.*)"
-
-#~ msgid "Igno_re case"
-#~ msgstr "I_gnorar capitalización"
-
-#~ msgid "Bookmarks"
-#~ msgstr "Marcadores"
-
-#~ msgid "General"
-#~ msgstr "General"
-
-#~ msgid "Visible columns"
-#~ msgstr "Columnas visibles"
-
-#~ msgid "Date and time:"
-#~ msgstr "Fecha y hora:"
-
-#~ msgid "A_dd to Bookmarks"
-#~ msgstr "_Añadir a marcadores"
-
-#~ msgid "Extract to"
-#~ msgstr "Extraer a"
-
-#~ msgid "_Test"
-#~ msgstr "_Comprobar"
-
-#~ msgid "_Preferences"
-#~ msgstr "_Preferencias"
-
-#~ msgid "Edit File Roller preferences"
-#~ msgstr "Editar preferencias de File Roller"
-
-#~ msgid "Extract to..."
-#~ msgstr "Extraer a..."
-
-#~ msgid "Delete Files"
-#~ msgstr "Eliminar archivos"
-
-#~ msgid "New Archive"
-#~ msgstr "Paquete nuevo"
-
-#~ msgid "Save Archive"
-#~ msgstr "Guardar paquete"
-
-#~ msgid "Open Archive"
-#~ msgstr "Abrir paquete"
-
-#~ msgid "Copy Archive"
-#~ msgstr "Copiar paquete"
-
-#~ msgid "Move Archive"
-#~ msgstr "Mover paquete"
-
-#~ msgid "_Delete Files..."
-#~ msgstr "_Borrar archivos"
-
-#~ msgid "Delete selected files and folders from the archive"
-#~ msgstr "Elimina los archivos y carpetas seleccionadas del paquete"
-
-#~ msgid "New _Window"
-#~ msgstr "_Ventana nueva"
-
-#~ msgid "Open a new window"
-#~ msgstr "Abre una ventana nueva"
-
-#~ msgid "_Delete Files"
-#~ msgstr "_Borrar archivos"
-
-#~ msgid "1 file (%s)"
-#~ msgstr "1 archivo (%s)"
-
-#~ msgid "1 file selected (%s)"
-#~ msgstr "1 archivo seleccionado (%s)"
-
-#~ msgid "_Up"
-#~ msgstr "_Arriba"
-
-#~ msgid ""
-#~ "GConf error:\n"
-#~ "  %s"
-#~ msgstr ""
-#~ "Error de GConf:\n"
-#~ "  %s"
-
-#~ msgid "Extract in a Folder"
-#~ msgstr "Extraer en una carpeta"
-
-#~ msgid "_Recent archives:"
-#~ msgstr "Paquetes r_ecientes:"
-
-#~ msgid "Clo_se Window"
-#~ msgstr "_Cerrar ventana"
-
-#~ msgid "Close this window"
-#~ msgstr "Cierra esta ventana"
-
-#~ msgid "_Windows"
-#~ msgstr "Ven_tanas"
-
-#~ msgid "Extract To..."
-#~ msgstr "Extraer en..."
-
-#~ msgid ""
-#~ "Could not create the destination folder: %s.\n"
-#~ "Extraction not performed."
-#~ msgstr ""
-#~ "No se pudo crear la carpeta de destino %s.\n"
-#~ "Extracción no realizada."
-
-#~ msgid "gThumb"
-#~ msgstr "gThumb"
-
-#~ msgid "Open an existing archive"
-#~ msgstr "Abrir un paquete existente"
-
-#~ msgid "Exit"
-#~ msgstr "Salir"
-
-#~ msgid "by _Time"
-#~ msgstr "por ti_empo"
-
-#~ msgid "by _Path"
-#~ msgstr "por _ruta"
-
-#~ msgid "You don't have permissions to add files to this archive."
-#~ msgstr "No tiene permisos para añadir archivos al paquete."
-
-#~ msgid "Cannot load archive."
-#~ msgstr "No se pudo cargar el paquete."
-
-#~ msgid "_Name"
-#~ msgstr "_Nombre"
-
-#~ msgid "Archive will be deleted, are you sure?"
-#~ msgstr "El paquete se borrará, ¿está seguro?"
-
-#~ msgid "Delete current archive from disk"
-#~ msgstr "Borrar el paquete actual del disco"
-
-#~ msgid "_Test Archive"
-#~ msgstr "_Comprobar paquete"
-
-#~ msgid "Select All"
-#~ msgstr "Seleccionar todo"
-
-#~ msgid "Current Location:"
-#~ msgstr "Ruta actual:"
-
-#~ msgid " (invalid Unicode)"
-#~ msgstr " (Unicode inválido)"
 
