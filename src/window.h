@@ -27,6 +27,7 @@
 #include "egg-recent.h"
 #include "fr-archive.h"
 #include "typedefs.h"
+#include "file-list.h"
 
 #define GCONF_NOTIFICATIONS 9
 
@@ -108,6 +109,8 @@ typedef struct {
 						     * handle. */
 	gint             activity_ref;              /* when > 0 some activity
                                                      * is present. */
+
+	VisitDirHandle  *vd_handle;
 
 	/* Menu items. */
 

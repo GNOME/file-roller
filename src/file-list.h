@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,12 @@
 #define _FILE_LIST_H
 
 #include <glib.h>
+#include <libgnomevfs/gnome-vfs-file-size.h>
+#include <libgnomevfs/gnome-vfs-async-ops.h>
+
+
+typedef void (*DoneFunc)       (gpointer data);
+
 
 GList *   get_wildcard_file_list    (const char *directory, 
 				     const char *filter_pattern, 
@@ -36,5 +42,43 @@ GList *   get_wildcard_file_list    (const char *directory,
 
 GList *   get_directory_file_list   (const char *directory,
 				     const char *base_dir); 
+
+typedef struct _VisitDirData   VisitDirData;
+typedef struct _VisitDirHandle VisitDirHandle;
+
+typedef void (*VisitDirDoneFunc) (GList *files, gpointer data);
+
+void                visit_dir_handle_free         (VisitDirHandle   *handle);
+
+VisitDirHandle *    visit_dir_async               (const char       *directory, 
+						   const char       *filter_pattern, 
+						   gboolean          recursive,
+						   gboolean          follow_links,
+						   gboolean          same_fs,
+						   gboolean          no_backup_files,
+						   gboolean          no_dot_files,
+						   gboolean          ignorecase,
+						   VisitDirDoneFunc  done_func,
+						   gpointer          done_data);
+
+void                visit_dir_async_interrupt     (VisitDirHandle   *handle,
+						   DoneFunc          f,
+						   gpointer          data);
+
+VisitDirHandle *    get_wildcard_file_list_async  (const char       *directory, 
+						   const char       *filter_pattern, 
+						   gboolean          recursive,
+						   gboolean          follow_links,
+						   gboolean          same_fs,
+						   gboolean          no_backup_files,
+						   gboolean          no_dot_files,
+						   gboolean          ignorecase,
+						   VisitDirDoneFunc  done_func,
+						   gpointer          done_data);
+
+VisitDirHandle *    get_directory_file_list_async (const char       *directory,
+						   const char       *base_dir,
+						   VisitDirDoneFunc  done_func,
+						   gpointer          done_data); 
 
 #endif /* _FILE_LIST_H */

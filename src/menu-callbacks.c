@@ -898,14 +898,37 @@ sort_list_reversed (GtkWidget *widget,
 }
 
 
+/* -- stop_cb -- */
+
+
 void
-stop_cb (GtkWidget *widget, 
-	 void *data)
+stop__step2 (gpointer data)
 {
 	FRWindow *window = data;
+
 	if (window->activity_ref > 0)
 		fr_process_stop (window->archive->process);
 }
+
+
+void
+stop_cb (GtkWidget *widget, 
+	 void      *data)
+{
+	FRWindow *window = data;
+
+	if (window->vd_handle != NULL) {
+		visit_dir_async_interrupt (window->vd_handle, 
+					   stop__step2, 
+					   window);
+		window->vd_handle = NULL;
+
+	} else
+		stop__step2 (window);
+}
+
+
+/**/
 
 
 void

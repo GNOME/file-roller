@@ -1565,6 +1565,18 @@ get_file_list_from_url_list (gchar *url_list)
 
 
 static void
+add_directory_done_cb (gpointer data)
+{
+	FRWindow *window = data;
+
+	window_pop_message (window);
+
+	visit_dir_handle_free (window->vd_handle);
+	window->vd_handle = NULL;
+}
+
+
+static void
 drag_drop_add_file_list (FRWindow *window)
 {
 	GList     *list = window->dropped_file_list;
@@ -1627,12 +1639,15 @@ drag_drop_add_file_list (FRWindow *window)
 		window->adding_dropped_files = TRUE;
 
 		base_dir = remove_level_from_path (path);
-		fr_archive_add_directory (archive, 
-					  file_name_from_path (path),
-					  base_dir,
-					  window->update_dropped_files,
-					  window->password,
-					  window->compression);
+		window->vd_handle = fr_archive_add_directory (
+		      archive, 
+		      file_name_from_path (path),
+		      base_dir,
+		      window->update_dropped_files,
+		      window->password,
+		      window->compression,
+		      add_directory_done_cb,
+		      window);
 		g_free (base_dir);
 		g_free (path);
 
@@ -2729,7 +2744,7 @@ window_new ()
 
 	/* Data. */
 
-	window->archive = fr_archive_new (NULL);
+	window->archive = fr_archive_new ();
 	g_signal_connect (G_OBJECT (window->archive),
 			  "start",
 			  G_CALLBACK (_action_started),
@@ -2793,6 +2808,7 @@ window_new ()
 
 	window->activity_ref = 0;
 	window->activity_timeout_handle = 0;
+	window->vd_handle = NULL;
 
 	window->archive_present = FALSE;
 	window->archive_new = FALSE;
@@ -2991,6 +3007,11 @@ window_close (FRWindow *window)
 	if (window->theme_changed_handler_id != 0)
 		g_signal_handler_disconnect (icon_theme,
 					     window->theme_changed_handler_id);
+
+	if (window->vd_handle != NULL) {
+		visit_dir_async_interrupt (window->vd_handle, NULL, NULL);
+		window->vd_handle = NULL;
+	}
 
 	if (window->current_dir != NULL)
 		g_free (window->current_dir);

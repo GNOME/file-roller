@@ -130,7 +130,7 @@ fr_archive_init (FRArchive *archive)
 
 
 FRArchive *
-fr_archive_new ()
+fr_archive_new (void)
 {
 	return FR_ARCHIVE (g_object_new (FR_TYPE_ARCHIVE, NULL));
 }
@@ -728,71 +728,162 @@ file_list_remove_from_pattern (GList      **list,
 }
 
 
-/* Note: all paths unescaped. */
-void
-fr_archive_add_with_wildcard (FRArchive  *archive, 
-			      const char *include_files,
-			      const char *exclude_files,
-			      const char *base_dir,
-			      gboolean    update,
-			      gboolean    recursive,
-			      gboolean    follow_links,
-			      gboolean    same_fs,
-			      gboolean    no_backup_files,
-			      gboolean    no_dot_files,
-			      gboolean    ignore_case,
-			      const char *password,
-			      FRCompression compression)
+/* -- add with wildcard -- */
+
+
+typedef struct {
+	FRArchive     *archive;
+        char          *exclude_files;
+	char          *base_dir;
+	gboolean       update;
+	char          *password;
+	FRCompression  compression;
+	DoneFunc       done_func;
+	gpointer       done_data;
+} AddWithWildcardData;
+
+
+static void
+add_with_wildcard__step2 (GList *file_list, gpointer data)
 {
-	GList *file_list;
+	AddWithWildcardData *aww_data = data;
 
-	if (archive->read_only)
-		return;
+	file_list_remove_from_pattern (&file_list, aww_data->exclude_files);
 
-	file_list = get_wildcard_file_list (base_dir, 
-					    include_files, 
-					    recursive, 
-					    follow_links, 
-					    same_fs,
-					    no_backup_files, 
-					    no_dot_files, 
-					    ignore_case);
+	if (aww_data->done_func) 
+		aww_data->done_func (aww_data->done_data);
 
-	file_list_remove_from_pattern (&file_list, exclude_files);
-
-	fr_archive_add (archive,
+	fr_archive_add (aww_data->archive,
 			file_list,
-			base_dir,
-			update,
-			password,
-			compression);
+			aww_data->base_dir,
+			aww_data->update,
+			aww_data->password,
+			aww_data->compression);
 	path_list_free (file_list);
+
+	g_free (aww_data->base_dir);
+	g_free (aww_data->password);
+	g_free (aww_data->exclude_files);
 }
 
 
 /* Note: all paths unescaped. */
-void
-fr_archive_add_directory (FRArchive  *archive, 
-			  const char *directory,
-			  const char *base_dir,
-			  gboolean    update,
-			  const char *password,
-			  FRCompression compression)
-
+VisitDirHandle *
+fr_archive_add_with_wildcard (FRArchive     *archive, 
+			      const char    *include_files,
+			      const char    *exclude_files,
+			      const char    *base_dir,
+			      gboolean       update,
+			      gboolean       recursive,
+			      gboolean       follow_links,
+			      gboolean       same_fs,
+			      gboolean       no_backup_files,
+			      gboolean       no_dot_files,
+			      gboolean       ignore_case,
+			      const char    *password,
+			      FRCompression  compression,
+			      DoneFunc       done_func,
+			      gpointer       done_data)
 {
-	GList *file_list;
+	AddWithWildcardData *aww_data;
 
 	if (archive->read_only)
-		return;
+		return NULL;
 
-	file_list = get_directory_file_list (directory, base_dir);
-	fr_archive_add (archive,
+	aww_data = g_new0 (AddWithWildcardData, 1);
+	aww_data->archive = archive;
+	aww_data->base_dir = g_strdup (base_dir);
+	aww_data->update = update;
+	aww_data->password = g_strdup (password);
+	aww_data->compression = compression;
+	aww_data->exclude_files = g_strdup (exclude_files);
+	aww_data->done_func = done_func;
+	aww_data->done_data = done_data;
+
+	return get_wildcard_file_list_async (base_dir, 
+					     include_files, 
+					     recursive, 
+					     follow_links, 
+					     same_fs,
+					     no_backup_files, 
+					     no_dot_files, 
+					     ignore_case,
+					     add_with_wildcard__step2, 
+					     aww_data);
+}
+
+
+/* -- fr_archive_add_directory -- */
+
+
+typedef struct {
+	FRArchive     *archive;
+	char          *directory;
+	char          *base_dir;
+	gboolean       update;
+	char          *password;
+	FRCompression  compression;
+	DoneFunc       done_func;
+	gpointer       done_data;
+} AddDirectoryData;
+
+
+static void
+add_directory__step2 (GList *file_list, gpointer data)
+{
+	AddDirectoryData *ad_data = data;
+
+	if (ad_data->done_func) 
+		ad_data->done_func (ad_data->done_data);
+
+	fr_archive_add (ad_data->archive,
 			file_list,
-			base_dir,
-			update,
-			password,
-			compression);
+			ad_data->base_dir,
+			ad_data->update,
+			ad_data->password,
+			ad_data->compression);
 	path_list_free (file_list);
+
+	/**/
+
+	g_free (ad_data->directory);
+	g_free (ad_data->base_dir);
+	g_free (ad_data->password);
+	g_free (ad_data);
+}
+
+
+/* Note: all paths unescaped. */
+VisitDirHandle *
+fr_archive_add_directory (FRArchive     *archive, 
+			  const char    *directory,
+			  const char    *base_dir,
+			  gboolean       update,
+			  const char    *password,
+			  FRCompression  compression,
+			  DoneFunc       done_func,
+			  gpointer       done_data)
+
+{
+	AddDirectoryData *ad_data;
+
+	if (archive->read_only)
+		return NULL;
+
+	ad_data = g_new0 (AddDirectoryData, 1);
+	ad_data->archive = archive;
+	ad_data->directory = g_strdup (directory);
+	ad_data->base_dir = g_strdup (base_dir);
+	ad_data->update = update;
+	ad_data->password = g_strdup (password);
+	ad_data->compression = compression;
+	ad_data->done_func = done_func;
+	ad_data->done_data = done_data;
+
+	return get_directory_file_list_async (directory, 
+					      base_dir, 
+					      add_directory__step2, 
+					      ad_data);
 }
 
 

@@ -1,3 +1,13 @@
+2003-03-24  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/file-list.c (get_wildcard_file_list_async) 
+	(get_directory_file_list_async): 
+	* src/file-list.h: make get_wildcard_file_list and
+	get_directory_file_list asynchronous functions.
+
+	* src/window.c (add_directory_done_cb, drag_drop_add_file_list): 
+	* src/dlg-add.c (open_file_ok_cb): use the new functions.
+	
 2003-03-22  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/dlg-batch-add.c (add_clicked_cb): check whether the user
