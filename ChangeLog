@@ -1,5 +1,24 @@
 2003-04-06  Paolo Bacchilega  <paolo.bacch@tin.it>
 
+	* src/window.c: 
+	(window_batch_mode_start, window_batch_mode_stop): hide the main
+	window while in batch mode.
+	
+	* src/file-roller.schemas: 
+	* src/file_roller_prop.glade: 
+	* src/window.c: 
+	* src/dlg-preferences.c: remove the 'show name column' option, the
+	name must always be visible.
+
+	* src/fr-archive.c (fr_archive_stoppable): new function, emit a
+	stoppable signal.
+
+	* src/window.c (drag_drop_add_file_list): do not allow the user to
+	stop this operation.
+
+	* src/window.c (window_view_last_output): add a title parameter
+	(_action_performed): use 'Test Result' as title for the test operation.
+
 	* src/window.c (window_fake_load): use a better logic to determine
 	when to use the fake load.
 

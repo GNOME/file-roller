@@ -84,7 +84,6 @@ apply_cb (GtkWidget  *widget,
 {
 	/* Show/Hide Columns options. */
 
-	eel_gconf_set_boolean (PREF_LIST_SHOW_NAME, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_NAME])));
 	eel_gconf_set_boolean (PREF_LIST_SHOW_TYPE, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE])));
 	eel_gconf_set_boolean (PREF_LIST_SHOW_SIZE, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE])));
 	eel_gconf_set_boolean (PREF_LIST_SHOW_TIME, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME])));
@@ -168,7 +167,6 @@ dlg_preferences (GtkWidget *caller,
 
 	data->dialog = glade_xml_get_widget (data->gui, "options_dialog");
 
-	data->show_hide_column[COLUMN_NAME] = glade_xml_get_widget (data->gui, "name_checkbutton");
 	data->show_hide_column[COLUMN_TYPE] = glade_xml_get_widget (data->gui, "type_checkbutton");
 	data->show_hide_column[COLUMN_SIZE] = glade_xml_get_widget (data->gui, "size_checkbutton");
 	data->show_hide_column[COLUMN_TIME] = glade_xml_get_widget (data->gui, "time_checkbutton");
@@ -194,7 +192,6 @@ dlg_preferences (GtkWidget *caller,
 
 	/**/
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_NAME]), eel_gconf_get_boolean (PREF_LIST_SHOW_NAME));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE]), eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE]), eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME]), eel_gconf_get_boolean (PREF_LIST_SHOW_TIME));

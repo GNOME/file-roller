@@ -144,11 +144,14 @@ void             fr_archive_extract            (FRArchive     *archive,
 void             fr_archive_test               (FRArchive     *archive,
 						const char    *password);
 
-void             fr_archive_set_fake_load_func (FRArchive    *archive,
-						FakeLoadFunc  func,
-						gpointer      data);
+void             fr_archive_set_fake_load_func (FRArchive     *archive,
+						FakeLoadFunc   func,
+						gpointer       data);
 
-gboolean         fr_archive_fake_load          (FRArchive *archive);
+gboolean         fr_archive_fake_load          (FRArchive     *archive);
+
+void             fr_archive_stoppable          (FRArchive     *archive,
+						gboolean       stoppable);
 
 
 /* utils */

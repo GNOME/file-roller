@@ -823,8 +823,7 @@ _window_update_statusbar_list_info (FRWindow *window)
 
 	if ((window->archive == NULL)
 	    || (window->archive->command == NULL)) {
-		gnome_appbar_set_default (GNOME_APPBAR (window->statusbar),
-					  "");
+		gnome_appbar_set_default (GNOME_APPBAR (window->statusbar), "");
 		return;
 	}
 
@@ -992,7 +991,6 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->toolbar_new, ! running);
 	gtk_widget_set_sensitive (window->toolbar_open, ! running);
 	gtk_widget_set_sensitive (window->toolbar_add, ! no_archive && ! ro && ! running && ! compr_file);
-	/*gtk_widget_set_sensitive (window->toolbar_delete,  ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file); FIXME */
 	gtk_widget_set_sensitive (window->toolbar_extract, file_op);
 	gtk_widget_set_sensitive (window->toolbar_view, file_op && one_file_selected && ! dir_selected);
 	gtk_widget_set_sensitive (window->toolbar_stop, running && window->stoppable);
@@ -1063,7 +1061,6 @@ open_recent_cb (EggRecentView *view,
 }
 
 
-
 static gboolean
 real_close_progress_dialog (gpointer data)
 {
@@ -1074,13 +1071,8 @@ real_close_progress_dialog (gpointer data)
 		window->hide_progress_timeout = 0;
 	}
 
-	if (window->progress_dialog != NULL) {
+	if (window->progress_dialog != NULL) 
 		gtk_widget_hide (window->progress_dialog);
-		/* FIXME
-		   gtk_widget_destroy (window->progress_dialog);
-		   window->progress_dialog = NULL;
-		*/
-	}
 
 	return FALSE;
 }
@@ -1561,7 +1553,7 @@ _action_performed (FRArchive   *archive,
 		if (error->type != FR_PROC_ERROR_NONE) 
 			break;
 		
-		window_view_last_output (window);
+		window_view_last_output (window, _("Test Result"));
 		return;
 
 	case FR_ACTION_EXTRACT:
@@ -1694,7 +1686,6 @@ file_button_press_cb (GtkWidget      *widget,
 				event->time);
 		return TRUE;
 	}
-	
 
 	return FALSE;
 }
@@ -1853,14 +1844,6 @@ drag_drop_add_file_list (FRWindow *window)
 		return;
 	}
 
-	/*
-	{
-		FILE *log = fopen ("/home/pippo/fr-log", "a");
-		fprintf (log, "[0]\n");
-		fclose (log);
-	}
-	*/
-
 	window->adding_dropped_files = FALSE;
 
 	/* if all files are in the same directory call fr_archive_add once. */
@@ -1911,7 +1894,7 @@ drag_drop_add_file_list (FRWindow *window)
 	/* ...else call fr_command_add for each file.  This is needed to add
 	 * files without path info. */
 
-	/*fr_archive_set_stoppable (archive, FALSE); FIXME */
+	fr_archive_stoppable (archive, FALSE);
 
 	fr_process_clear (archive->process);
 	fr_command_uncompress (archive->command);
@@ -2069,12 +2052,12 @@ static gchar *
 make_url_list (GList    *list, 
 	       gboolean  plain_text)
 {
-	gchar *url_list;
-	gint   url_list_length;
-	gchar *prefix;
-	gint   prefix_length;
-	gchar *url_sep = "\r\n";
-	gint   url_sep_length;
+	char  *url_list;
+	int    url_list_length;
+	char  *prefix;
+	int    prefix_length;
+	char  *url_sep = "\r\n";
+	int    url_sep_length;
 	GList *scan;
 
 	if (list == NULL)
@@ -2105,7 +2088,7 @@ make_url_list (GList    *list,
 }
 
 
-static gchar *
+static char *
 _get_temp_dir_name ()
 {
 	static int count = 0;
@@ -2185,8 +2168,8 @@ file_list_drag_begin (GtkWidget          *widget,
 				    window->password);
 
 		while (window->activity_ref > 0)
-			while (gtk_events_pending())
-				gtk_main_iteration();
+			while (gtk_events_pending ())
+				gtk_main_iteration ();
 	}
 
 #ifdef DEBUG
@@ -2230,7 +2213,7 @@ file_list_drag_data_get  (GtkWidget          *widget,
 {
 	FRWindow *window = data;
 	GList    *list, *scan;
-	gchar    *url_list;
+	char     *url_list;
 
 #ifdef DEBUG
 	g_print ("::DragDataGet -->\n"); 
@@ -2245,7 +2228,7 @@ file_list_drag_data_get  (GtkWidget          *widget,
 	list = NULL;
 	if (! window->dragging_dirs) 
 		for (scan = window->drag_file_list; scan; scan = scan->next) {
-			gchar *url;
+			char *url;
 			url = g_strconcat (window->drag_temp_dir, 
 					   "/", 
 					   scan->data, 
@@ -2254,7 +2237,7 @@ file_list_drag_data_get  (GtkWidget          *widget,
 		}
 	else
 		for (scan = window->drag_file_list_names; scan; scan = scan->next) {
-			gchar *url;
+			char *url;
 			url = g_strconcat (window->drag_temp_dir, 
 					   window->current_dir,
 					   scan->data, 
@@ -3189,10 +3172,6 @@ window_new ()
 					   pref_view_statusbar_changed,
 					   window);
 	window->cnxn_id[i++] = eel_gconf_notification_add (
-					   PREF_LIST_SHOW_NAME,
-					   pref_show_field_changed,
-					   window);
-	window->cnxn_id[i++] = eel_gconf_notification_add (
 					   PREF_LIST_SHOW_TYPE,
 					   pref_show_field_changed,
 					   window);
@@ -3299,6 +3278,11 @@ window_close (FRWindow *window)
 		window->progress_timeout = 0;
 	}
 
+	if (window->hide_progress_timeout != 0) {
+		g_source_remove (window->hide_progress_timeout);
+		window->hide_progress_timeout = 0;
+	}
+
 	if (window->theme_changed_handler_id != 0)
 		g_signal_handler_disconnect (icon_theme,
 					     window->theme_changed_handler_id);
@@ -3322,9 +3306,9 @@ window_close (FRWindow *window)
 	if (window->password != NULL)
 		g_free (window->password);
 
-	g_object_unref (G_OBJECT (window->archive));
-	g_object_unref (G_OBJECT (window->list_store));
-	g_object_unref (G_OBJECT (window->empty_store));
+	g_object_unref (window->archive);
+	g_object_unref (window->list_store);
+	g_object_unref (window->empty_store);
 
 	if (window->drag_file_list != NULL)
 		path_list_free (window->drag_file_list);
@@ -3925,7 +3909,7 @@ window_get_file_list_selection (FRWindow *window,
 
 GList *
 window_get_file_list_pattern (FRWindow    *window,
-			      const gchar *pattern)
+			      const char  *pattern)
 {
 	GList  *list, *scan;
 	gchar **patterns;
@@ -3938,6 +3922,8 @@ window_get_file_list_pattern (FRWindow    *window,
         scan = window->archive->command->file_list;
         for (; scan; scan = scan->next) {
                 FileData *fd = scan->data;
+
+		/* FIXME: only files in the current location ? */
 
 		if (!fd)
 			continue;
@@ -3957,7 +3943,7 @@ window_get_file_list_pattern (FRWindow    *window,
 /* -- window_start/stop_activity_mode -- */
 
 
-static gint
+static int
 activity_cb (gpointer data)
 {
 	FRWindow *window = data;
@@ -4005,7 +3991,8 @@ window_stop_activity_mode (FRWindow *window)
 
 
 void
-window_view_last_output (FRWindow *window)
+window_view_last_output (FRWindow   *window,
+			 const char *title)
 {
 	GtkWidget     *dialog;
 	GtkWidget     *vbox;
@@ -4015,7 +4002,10 @@ window_view_last_output (FRWindow *window)
 	GtkTextIter    iter;
 	GList         *scan;
 
-	dialog = gtk_dialog_new_with_buttons (_("Last Output"), 
+	if (title == NULL)
+		title = _("Last Output");
+
+	dialog = gtk_dialog_new_with_buttons (title,
 					      GTK_WINDOW (window->app),
 					      GTK_DIALOG_DESTROY_WITH_PARENT, 
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
@@ -4371,9 +4361,6 @@ window_update_columns_visibility (FRWindow *window)
 	GtkTreeView       *tree_view = GTK_TREE_VIEW (window->list_view);
 	GtkTreeViewColumn *column;
 
-	column = gtk_tree_view_get_column (tree_view, 0);
-	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_NAME));
-
 	column = gtk_tree_view_get_column (tree_view, 1);
 	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE));
 
@@ -4464,8 +4451,10 @@ window_batch_mode_add_next_action (FRWindow      *window,
 
 	if (current == NULL)
 		list = g_list_prepend (list, a_desc);
+
 	else if (current->next == NULL)
 		list = g_list_append (list, a_desc);
+
 	else { 
 		GList *node;
 		
@@ -4591,9 +4580,8 @@ window_batch_mode_start (FRWindow *window)
 	if (window->batch_action_list == NULL)
 		return;
 
-	/* FIXME
+	/* FIXME: hide the main window while in batch mode? */
 	gtk_widget_hide (window->app);
-	*/
 
 	window->batch_mode = TRUE;
 	window->batch_action = window->batch_action_list;
@@ -4610,7 +4598,8 @@ window_batch_mode_stop (FRWindow *window)
 	window->extract_interact_use_default_dir = FALSE;
 	window->batch_mode = FALSE;
 
-	/* gtk_widget_show (window->app); FIXME */
+	/* FIXME: same as above. */
+	gtk_widget_show (window->app); 
 	window_archive_close (window);
 }
 

@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@
 #define PREF_LIST_SORT_METHOD      "/apps/file-roller/listing/sort_method"
 #define PREF_LIST_SORT_TYPE        "/apps/file-roller/listing/sort_type"
 #define PREF_LIST_MODE             "/apps/file-roller/listing/list_mode"
-#define PREF_LIST_SHOW_NAME        "/apps/file-roller/listing/show_name"
 #define PREF_LIST_SHOW_TYPE        "/apps/file-roller/listing/show_type"
 #define PREF_LIST_SHOW_SIZE        "/apps/file-roller/listing/show_size"
 #define PREF_LIST_SHOW_TIME        "/apps/file-roller/listing/show_time"

@@ -150,9 +150,9 @@ fr_archive_class_init (FRArchiveClass *class)
 }
 
 
-static void
-set_stoppable (FRArchive *archive,
-	       gboolean   stoppable)
+void
+fr_archive_stoppable (FRArchive *archive,
+		      gboolean   stoppable)
 {
 	g_signal_emit (G_OBJECT (archive), 
 		       fr_archive_signals[STOPPABLE],
@@ -165,7 +165,7 @@ static gboolean
 archive_sticky_only_cb (FRProcess *process,
 			FRArchive *archive)
 {
-	set_stoppable (archive, FALSE);
+	fr_archive_stoppable (archive, FALSE);
 	return TRUE;
 }
 
@@ -600,7 +600,7 @@ fr_archive_load (FRArchive  *archive,
 			  G_CALLBACK (archive_message_cb),
 			  archive);
 
-	set_stoppable (archive, TRUE);
+	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
 	fr_command_list (archive->command);
 
@@ -614,7 +614,7 @@ fr_archive_reload (FRArchive *archive)
 	g_return_if_fail (archive != NULL);
 	g_return_if_fail (archive->filename != NULL);
 
-	set_stoppable (archive, TRUE);
+	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
 	fr_command_list (archive->command);
 }
@@ -739,7 +739,7 @@ fr_archive_add (FRArchive   *archive,
 	if (archive->read_only)
 		return;
 
-	set_stoppable (archive, FALSE);
+	fr_archive_stoppable (archive, FALSE);
 
 	/* if the command cannot update,  get the list of files that are 
 	 * newer than the ones in the archive. */
@@ -923,7 +923,7 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 	if (archive->read_only)
 		return NULL;
 
-	set_stoppable (archive, TRUE);
+	fr_archive_stoppable (archive, TRUE);
 
 	aww_data = g_new0 (AddWithWildcardData, 1);
 	aww_data->archive = archive;
@@ -1005,7 +1005,7 @@ fr_archive_add_directory (FRArchive     *archive,
 	if (archive->read_only)
 		return NULL;
 
-	set_stoppable (archive, TRUE);
+	fr_archive_stoppable (archive, TRUE);
 
 	ad_data = g_new0 (AddDirectoryData, 1);
 	ad_data->archive = archive;
@@ -1079,7 +1079,7 @@ fr_archive_remove (FRArchive     *archive,
 	if (archive->read_only)
 		return;
 
-	set_stoppable (archive, FALSE);
+	fr_archive_stoppable (archive, FALSE);
 
 	fr_process_clear (archive->process);
 	fr_command_uncompress (archive->command);
@@ -1237,7 +1237,7 @@ fr_archive_extract (FRArchive  *archive,
 
 	g_return_if_fail (archive != NULL);
 
-	set_stoppable (archive, TRUE);
+	fr_archive_stoppable (archive, TRUE);
 
 	/* if a command supports all the requested options use 
 	 * fr_command_extract directly. */
@@ -1399,7 +1399,7 @@ void
 fr_archive_test (FRArchive  *archive,
 		 const char *password)
 {
-	set_stoppable (archive, TRUE);
+	fr_archive_stoppable (archive, TRUE);
 
 	fr_process_clear (archive->process);
 	fr_command_set_n_files (archive->command, 0);

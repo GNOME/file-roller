@@ -1115,7 +1115,7 @@ last_output_cb (GtkWidget *widget,
 		void      *data)
 {
 	FRWindow *window = data;
-	window_view_last_output (window);
+	window_view_last_output (window, _("Last Output"));
 }
 
 

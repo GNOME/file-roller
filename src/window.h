@@ -29,7 +29,7 @@
 #include "typedefs.h"
 #include "file-list.h"
 
-#define GCONF_NOTIFICATIONS 9
+#define GCONF_NOTIFICATIONS 8
 
 enum {
 	COLUMN_FILE_DATA,
@@ -311,7 +311,8 @@ void       window_stop_activity_mode        (FRWindow    *window);
 
 /**/
 
-void       window_view_last_output          (FRWindow *window); 
+void       window_view_last_output          (FRWindow *window,
+					     const char *title); 
 
 void       window_view_file                 (FRWindow *window, 
 					     char     *file);
