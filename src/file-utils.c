@@ -691,7 +691,7 @@ g_utf8_strchug (char *string)
 		c = g_utf8_get_char (scan);
 	}
 
-	g_memmove (string, scan, strlen ((char *) scan) + 1);
+	g_memmove (string, scan, strlen (scan) + 1);
 	
 	return string;
 }
@@ -700,13 +700,18 @@ g_utf8_strchug (char *string)
 static char*
 g_utf8_strchomp (char *string)
 {
-	char  *scan;
-	gsize  len;
+	char   *scan;
+	gsize   len;
  
 	g_return_val_if_fail (string != NULL, NULL);
 	
 	len = g_utf8_strlen (string, -1);
-	scan = g_utf8_offset_to_pointer (string, len);
+
+	if (len == 0)
+		return string;
+
+	scan = g_utf8_offset_to_pointer (string, len - 1);
+
 	while (len--) {
 		gunichar c = g_utf8_get_char (scan);
 		if (g_unichar_isspace (c))
