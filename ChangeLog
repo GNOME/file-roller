@@ -1,5 +1,12 @@
 2003-03-16  Paolo Bacchilega  <paolo.bacch@tin.it>
 
+	* src/file-utils.c: add ':' to the chars to escape.
+
+	* src/fr-command-tar.c (fr_command_tar_list, fr_command_tar_list)
+        (fr_command_tar_add, fr_command_tar_delete)
+        (fr_command_tar_extract): add --force-local option to handle
+        filenames with a ':' char
+
 	* src/fr-command-rar.c (split_line): 
 	* src/fr-command-lha.c (split_line_lha): 
 	* src/fr-command-zip.c (split_line): 

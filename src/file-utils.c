@@ -437,7 +437,7 @@ path_list_dup (GList *path_list)
 /* characters to escape */
 static gchar bad_char[] = { '$', '\'', '`', '"', '\\', '!', '?', '*',
 			    ' ', '(', ')', '[', ']', '&', '|', '@', '#',
-			    ';', '=', '-' };
+			    ':', ';', '=', '-' };
 
 /* the size of bad_char */
 static const gint bad_chars = sizeof (bad_char) / sizeof (gchar);
