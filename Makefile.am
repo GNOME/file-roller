@@ -3,6 +3,7 @@ SUBDIRS =		\
 	src		\
 	scripts		\
 	help		\
+	component	\
 	po
 
 @INTLTOOL_DESKTOP_RULE@

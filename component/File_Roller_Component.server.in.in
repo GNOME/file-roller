@@ -1,0 +1,53 @@
+<oaf_info>
+
+<oaf_server iid="OAFIID:File_Roller_Component_Extract"
+	type="shlib" location="@BONOBODIR@/libfile-roller-component.so">
+	<oaf_attribute name="repo_ids" type="stringv">
+		<item value="IDL:Bonobo/Unknown:1.0"/>
+		<item value="IDL:Bonobo/Listener:1.0"/>
+	</oaf_attribute>
+	<oaf_attribute name="name" type="string" _value="File Roller Component extract operations"/>
+	<oaf_attribute name="description" type="string" _value="File roller component"/>
+       <oaf_attribute name="bonobo:supported_uri_schemes" type="stringv">
+                <item value="file"/>
+        </oaf_attribute>
+	<oaf_attribute name="bonobo:supported_mime_types" type="stringv">
+		<item value="application/x-tar"/>
+		<item value="application/x-compressed-tar"/>
+		<item value="application/x-bzip-compressed-tar"/>
+		<item value="application/x-lzop-compressed-tar"/>
+		<item value="application/zip"/>
+		<item value="application/x-lha"/>
+		<item value="application/x-rar"/>
+		<item value="application/x-rar-compressed"/>
+		<item value="application/x-gzip"/>
+		<item value="application/x-compress"/>
+		<item value="application/x-lzop"/>
+	</oaf_attribute>
+	<oaf_attribute name="nautilus:context_menu_handler" type="boolean" value="true"/>
+	<oaf_attribute name="nautilus:can_handle_multiple_files" type="boolean" value="true"/>
+	<oaf_attribute name="nautilusverb:ExtractTo" type="string" _value="Extract To..."/>
+	<oaf_attribute name="nautilusverb:ExtractToSubfolder" type="string" _value="Extract To A Folder..."/>
+	<oaf_attribute name="nautilusverb:ExtractHere" type="string" _value="Extract Here..."/>
+</oaf_server>
+
+<oaf_server iid="OAFIID:File_Roller_Component_Add"
+	type="shlib" location="@BONOBODIR@/libfile-roller-component.so">
+	<oaf_attribute name="repo_ids" type="stringv">
+		<item value="IDL:Bonobo/Unknown:1.0"/>
+		<item value="IDL:Bonobo/Listener:1.0"/>
+	</oaf_attribute>
+	<oaf_attribute name="name" type="string" _value="File Roller Component add operations"/>
+	<oaf_attribute name="description" type="string" _value="File roller component"/>
+       <oaf_attribute name="bonobo:supported_uri_schemes" type="stringv">
+                <item value="file"/>
+        </oaf_attribute>
+	<oaf_attribute name="bonobo:supported_mime_types" type="stringv">
+		<item value="*/*"/>
+	</oaf_attribute>
+	<oaf_attribute name="nautilus:context_menu_handler" type="boolean" value="true"/>
+	<oaf_attribute name="nautilus:can_handle_multiple_files" type="boolean" value="true"/>
+	<oaf_attribute name="nautilusverb:AddToArchive" type="string" _value="Add To Archive..."/>
+</oaf_server>
+
+</oaf_info>

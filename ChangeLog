@@ -1,3 +1,18 @@
+2002-11-11  James Willcox  <jwillcox@gnome.org>
+
+	* Makefile.am:  add components to SUBDIRS
+	* configure.in:  add components/Makefile to AC_OUTPUT
+	* po/POTFILES.in:  added the .server file
+
+	* component/File_Roller_Component.server.in.in:
+	* component/Makefile.am:
+	* component/file-roller-component.c: (impl_Bonobo_Listener_event),
+	(file_roller_component_class_init), (file_roller_component_init):
+	* component/file-roller-component.h:
+	* component/libmain.c: (image_shlib_make_object):
+
+	New files.  Implements a context menu handler for nautilus.
+
 2002-11-07  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/main.c: added session management support.

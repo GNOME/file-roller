@@ -7,6 +7,8 @@ AC_CONFIG_SRCDIR(src/main.c)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
 
+AM_PROG_LIBTOOL
+
 dnl ==========================================================================
 dnl
 dnl If you add a version number here, you *must* add an AC_SUBST line for
@@ -94,6 +96,7 @@ scripts/Makefile
 src/Makefile
 src/icons/Makefile
 src/recent-files/Makefile
+component/Makefile
 po/Makefile.in
 help/Makefile
 help/C/Makefile
