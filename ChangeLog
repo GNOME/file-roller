@@ -1,3 +1,18 @@
+2002-10-16  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-process.h (BUFFER_SIZE): set buffer size to 16384. 
+	* src/fr-process.c (REFRESH_RATE): set refresh rate to 10 millisecs.
+
+	this makes loading much more faster (at least on my machine):
+
+	archive         files     before     after
+	-------------------------------------------
+	nautilus.tgz    1873      06''00     02''00
+	evolution.tgz   3478      10''00     03''00
+	gphoto2.tgz      592      02''10     00''97
+	
+	please send me your benchmarks.
+
 2002-10-13  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/fr-archive.c (create_command_from_sniffer): use a

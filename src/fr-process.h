@@ -38,7 +38,7 @@
 typedef struct _FRProcess       FRProcess;
 typedef struct _FRProcessClass  FRProcessClass;
 
-#define BUFFER_SIZE 4096
+#define BUFFER_SIZE 16384
 
 typedef struct {
 	GList *args;        /* command to execute */
@@ -68,11 +68,11 @@ struct _FRProcess {
 
 	guint        log_timeout;
 
-	char         o_buffer[BUFFER_SIZE + 1];
+	char        *o_buffer;
 	int          o_not_processed;
 	GList       *raw_output;
 
-	char         e_buffer[BUFFER_SIZE + 1];
+	char        *e_buffer;
 	int          e_not_processed;
 	GList       *raw_error;
 
