@@ -762,6 +762,8 @@ find_file_in_archive (FRArchive *archive,
 {
 	GList *scan;
 
+	g_return_val_if_fail (path != NULL, NULL);
+
 	for (scan = archive->command->file_list; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
 		if (strcmp (path, fdata->original_path) == 0)
