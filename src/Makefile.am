@@ -137,6 +137,3 @@ EXTRA_DIST = 			\
 	fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)
-
-DISTCLEANFILES =                \
-	$(schema_DATA)
