@@ -1,6 +1,14 @@
 2004-09-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (window_new, update_file_list_idle): 
+	* src/file-utils.c (application_get_command): do not escape spaces 
+	here.
+
+	* src/window.c (window_new, update_file_list_idle, window_new): added
+	deb and ar to the recent file type list.
+	(window_view_or_open_file): get the default application istead of
+	the default action.
+	(view_file):  if we are here it's better to use the internal viewer.
+
 	* src/window.h: restore the timeout correctly. remove the
 	empty_store gtk list store.
 

@@ -1425,8 +1425,8 @@ _window_add_to_recent_list (FRWindow *window,
 
 	/* avoid adding temporary archives to the list. */
 
-	tmp = g_strconcat (g_get_tmp_dir (), "/file-roller", NULL);
-	if (path_in_path (tmp, filename)) {
+	tmp = g_strconcat (g_get_tmp_dir (), "/fr-", NULL);
+	if (path_in_path (tmp, filename) == 0) {
 		g_free (tmp);
 		return;
 	}
@@ -3514,6 +3514,8 @@ window_new ()
 						"application/x-java-archive",
 						"application/x-jar",
                                                 "application/x-cd-image",
+                                                "application/x-deb",
+                                                "application/x-ar",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
@@ -5172,7 +5174,6 @@ view_file (FRArchive   *archive,
 {
 	ViewerData         *vdata = callback_data;
 	const char         *mime_type;
-	GnomeVFSMimeAction *mime_action;
 
 	g_signal_handlers_disconnect_matched (G_OBJECT (archive), 
 					      G_SIGNAL_MATCH_DATA, 
@@ -5185,32 +5186,8 @@ view_file (FRArchive   *archive,
 		return;
 	}
 
-	mime_type = gnome_vfs_mime_type_from_name_or_default (vdata->filename, NULL);
-	mime_action = gnome_vfs_mime_get_default_action (mime_type);
-
-	if ((mime_type == NULL) || (mime_action == NULL)) {
-		dlg_viewer (vdata->window, vdata->filename);
-		viewer_list = g_list_prepend (viewer_list, vdata);
-	} else {
-		FRProcess  *proc;
-
-		proc = fr_process_new ();
-		proc->term_on_stop = FALSE;
-		vdata->process = proc;
-		
-		fr_process_begin_command (proc, "nautilus");
-		fr_process_add_arg (proc, "--sm-disable"); 
-		fr_process_add_arg (proc, "--no-desktop");
-		fr_process_add_arg (proc, "--no-default-window");
-		fr_process_add_arg (proc, vdata->e_filename);
-		fr_process_end_command (proc);
-
-		viewer_list = g_list_prepend (viewer_list, vdata);
-		fr_process_start (proc);
-	}
-
-	if (mime_action != NULL)
-		gnome_vfs_mime_action_free (mime_action);
+	dlg_viewer (vdata->window, vdata->filename);
+	viewer_list = g_list_prepend (viewer_list, vdata);
 }
 
 
@@ -5350,43 +5327,32 @@ void
 window_view_or_open_file (FRWindow *window, 
 			  gchar    *filename)
 {
-	GnomeVFSMimeAction *action;
-	const char         *mime_type;
-	char               *command;
-	GList              *singleton;
+	GnomeVFSMimeApplication *application;
+	const char              *mime_type;
+	char                    *command;
+	GList                   *singleton;
 
 	
 	if (window->activity_ref > 0)
 		return;
-	
+
 	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, NULL);
 	if (mime_type == NULL) {
 		window_view_file (window, filename);
 		return;
 	}
 		
-	action = gnome_vfs_mime_get_default_action (mime_type);
-		
-	if (action == NULL) {
+	application = gnome_vfs_mime_get_default_application (mime_type);
+	if (application == NULL) {
 		dlg_viewer_or_app (window, filename);
 		return;
 	}
 		
-	switch (action->action_type) {
-	case GNOME_VFS_MIME_ACTION_TYPE_NONE:
-	case GNOME_VFS_MIME_ACTION_TYPE_COMPONENT:
-		window_view_file (window, filename);
-		break;
-		
-	case GNOME_VFS_MIME_ACTION_TYPE_APPLICATION:
-		command = application_get_command (action->action.application);
-		singleton = g_list_append (NULL, filename);
-		window_open_files (window, command, singleton);
-		g_list_free (singleton);
-		g_free (command);
-		break;
-	}
-	gnome_vfs_mime_action_free (action);
+	command = application_get_command (application);
+	singleton = g_list_append (NULL, filename);
+	window_open_files (window, command, singleton);
+	g_list_free (singleton);
+	g_free (command);
 }
 
 

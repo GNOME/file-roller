@@ -606,6 +606,7 @@ gchar *
 application_get_command (const GnomeVFSMimeApplication *app)
 {
 	char *command;
+	const char *bad_chars = "$\'`\"\\!?*()[]&|@#:;"; /* similar to shell_escape but without ' ' */
 	
 	if (app->requires_terminal) {
 		char *terminal;
@@ -615,7 +616,7 @@ application_get_command (const GnomeVFSMimeApplication *app)
 		if (terminal == NULL)
 			return NULL;
 
-		command_to_exec = shell_escape (app->command);
+		command_to_exec = escape_str (app->command, bad_chars);
 		command = g_strconcat (terminal,
 				       " ",
 				       command_to_exec,
@@ -623,7 +624,7 @@ application_get_command (const GnomeVFSMimeApplication *app)
 		g_free (terminal);
 		g_free (command_to_exec);
 	} else
-		command = shell_escape (app->command);
+		command = escape_str (app->command, bad_chars);
 
 	return command;
 }
