@@ -1,4 +1,20 @@
+2005-03-22  Madhan Raj	<raj_madan@rediffmail.com>
+
+	* src/file-list.c (get_directory_file_list_async): Do not concatenate 
+	/ to the root dir.
+	(get_directory_file_list_cb): base_len be zero for root dir.
+
+	Fixes bug #171195: File-Roller will not tar up any subdirectories 
+	directly under /
+
+2005-03-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (window_new): Fixed bug #170842: Toolbar buttons too 
+	wide.
+
 2005-03-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/actions.c (activate_action_about): updated copyright to 2005
 
 	* src/window.c (add_columns): added ellipsize property to the
 	columns.

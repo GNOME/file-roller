@@ -982,7 +982,11 @@ get_directory_file_list_cb (GList *files, gpointer data)
 
 	if (gfl_data->base_dir != NULL) {
 		GList *scan;
-		int    base_len = strlen (gfl_data->base_dir);
+		int    base_len;
+		
+		base_len = 0;
+		if (strcmp (gfl_data->base_dir, "/") != 0)
+			base_len = strlen (gfl_data->base_dir);
 
 		for (scan = files; scan; scan = scan->next) {
 			char *full_path = scan->data;
@@ -1021,7 +1025,10 @@ get_directory_file_list_async (const char       *directory,
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 
-	path = g_strconcat (base_dir, "/", directory, NULL);
+	if (strcmp (base_dir, "/") == 0)
+        	path = g_strconcat (base_dir, directory, NULL);
+	else
+		path = g_strconcat (base_dir, "/", directory, NULL);
 
 	handle = visit_dir_async (path,
 				  "*",

@@ -3675,7 +3675,7 @@ window_new (void)
 	window->recent_toolbar_menu = gtk_menu_new ();
 	open_recent_tool_item = gtk_menu_tool_button_new_from_stock (GTK_STOCK_OPEN);
 	gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->recent_toolbar_menu);
-	gtk_tool_item_set_homogeneous (open_recent_tool_item, TRUE);
+	gtk_tool_item_set_homogeneous (open_recent_tool_item, FALSE);
 	gtk_tool_item_set_tooltip (open_recent_tool_item, window->tooltips, _("Open archive"), NULL);
 	gtk_menu_tool_button_set_arrow_tooltip (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->tooltips,	_("Open a recently used archive"), NULL);
 	
