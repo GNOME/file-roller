@@ -1052,7 +1052,9 @@ about_cb (GtkWidget *widget,
 		"Paolo Bacchilega <paolo.bacch@tin.it>", NULL
 	};
 	const char       *documenters [] = {
-		"Alexander Kirillov", NULL
+		"Alexander Kirillov", 
+		"Breda McColgan",
+		NULL
 	};
 	const char       *translator_credits = _("translator_credits");
 
