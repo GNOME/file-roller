@@ -1,0 +1,2534 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FSF-India <locale@gnu.org.in>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: file-roller 2.2.x\n"
+"POT-Creation-Date: 2003-03-10 04:49+0100\n"
+"PO-Revision-Date: 2003-03-05 10:29+0530\n"
+"Last-Translator: FSF-India <locale@gnu.org.in>\n"
+"Language-Team: Malayalam <locale@gnu.org.in>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: component/File_Roller_Component.server.in.in.h:1
+msgid "Add To Archive..."
+msgstr "ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക..."
+
+#: component/File_Roller_Component.server.in.in.h:2
+msgid "Extract Here"
+msgstr "ഇവിടെ വലിച്ചിടുക"
+
+#: component/File_Roller_Component.server.in.in.h:3
+msgid "Extract In A Sub-Folder"
+msgstr "ഒരു ഉപ-കൂടില് വലിച്ചിടുക"
+
+#: component/File_Roller_Component.server.in.in.h:4
+msgid "Extract To..."
+msgstr "...ലേക്ക് വലിച്ചിടുക"
+
+#: component/File_Roller_Component.server.in.in.h:5
+#, fuzzy
+msgid "File Roller Component add operations"
+msgstr "ഫയല് റോളര് ഘടകം"
+
+#: component/File_Roller_Component.server.in.in.h:6
+#, fuzzy
+msgid "File Roller Component extract operations"
+msgstr "ഫയല് റോളര് ഘടകം"
+
+#: component/File_Roller_Component.server.in.in.h:7
+msgid "File roller component"
+msgstr "ഫയല് റോളര് ഘടകം"
+
+#: file-roller.desktop.in.h:1
+#, fuzzy
+msgid "Archive Manager"
+msgstr "ആര്‍ക്കേവ് തരം:"
+
+#. Create the application.
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
+#: src/gtk-utils.c:266 src/main.c:101 src/menu-callbacks.c:788
+#: src/window.c:744 src/window.c:753 src/window.c:2449 src/window.c:4167
+msgid "File Roller"
+msgstr "ഫയല് റോളര്"
+
+#: file-roller.desktop.in.h:3
+#, fuzzy
+msgid "Handle compressed archives"
+msgstr "Tar uncompressed (.tar)"
+
+#: src/dlg-add.c:118
+#, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "നിങ്ങള്ക്ക് \"%s\" ല് നിന്നും വായിക്കുവാനുള്ള അനുവാദമില്ല"
+
+#: src/dlg-add.c:343 src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "രചനകളും കൂടുകളും ചേര്‍ക്കുക"
+
+#: src/dlg-add.c:348
+msgid "_Add only if newer"
+msgstr "പുതിയതാണെങ്കില് മാത്രം ചേര്ക്കുക"
+
+#: src/dlg-add.c:349
+msgid "_Include sub-folders"
+msgstr "ഉപകൂടുകള് ഉള്‍പ്പെടുത്തുക"
+
+#: src/dlg-add.c:350
+msgid "Exclude folders that are symbolic lin_ks"
+msgstr "രചനയില്‌  വളരെയധികം പ്രതീകാത്മക ബന്ധങ്ങള്‌ ഉണ്ട്"
+
+#: src/dlg-add.c:351
+#, fuzzy
+msgid "Exclude o_ther file systems"
+msgstr "ഒളിഞ്ഞിരിക്കുന്ന രചനകള്‍ ഒഴിവാക്കുക (.*)"
+
+#: src/dlg-add.c:352
+msgid "Exclude _backup files (*~)"
+msgstr "ബാക്കപ്പ് രചനകള്‍ ഒഴിവാക്കുക (*~)"
+
+#: src/dlg-add.c:353
+msgid "Exclude _hidden files (.*)"
+msgstr "ഒളിഞ്ഞിരിക്കുന്ന രചനകള്‍ ഒഴിവാക്കുക (.*)"
+
+#: src/dlg-add.c:354
+msgid "E_xclude files:"
+msgstr "ഒഴിവാക്കേണ്ട രചനകള്‍:"
+
+#: src/dlg-add.c:356
+msgid "example: *.o; *.bak"
+msgstr "ഉദാ: *.o; *.bak"
+
+#: src/dlg-add.c:357
+#, fuzzy
+msgid "Igno_re case"
+msgstr "ലിപി അവഗണിക്കുക"
+
+#: src/dlg-add.c:358
+msgid "_Load Options"
+msgstr "ബദലുകള്‍ നിറയ്‌ക്കുക"
+
+#: src/dlg-add.c:359
+msgid "Sa_ve Options"
+msgstr "ബദലുകള്‌ സംരക്ഷിക്കുക"
+
+#: src/dlg-add.c:614
+msgid "Load Options"
+msgstr "ബദലുകള് നിറയ്‌ക്കുക"
+
+#: src/dlg-add.c:763
+msgid "Save Options"
+msgstr "ബദലുകള് സംരക്ഷിക്കുക"
+
+#: src/dlg-batch-add.c:99 src/dlg-extract.c:120 src/window.c:3227
+#, fuzzy
+msgid "Destination folder does not exist.  Do you want to create it?"
+msgstr "രചന \"%s\" നിലവിലില്ല.  താങ്കള് ഇത് ഉണ്ടാക്കാന് ഇഷ്ടപ്പെടുന്നുണ്ടോ?"
+
+#: src/dlg-batch-add.c:101 src/dlg-extract.c:122 src/window.c:3229
+msgid "Create _Folder"
+msgstr "കൂട്‌ നിര്‍മ്മിക്കുക"
+
+#: src/dlg-batch-add.c:121
+#, c-format
+msgid ""
+"Could not create the destination folder: %s.\n"
+"Addition not performed."
+msgstr ""
+
+#: src/dlg-batch-add.c:138
+msgid "Addition not performed."
+msgstr "കൂട്ടിച്ചേര്‍ത്തിട്ടില്ല"
+
+#. Set widgets data.
+#: src/dlg-batch-add.c:202
+#, c-format
+msgid "Adding %u files"
+msgstr "%u രചനകള് ചേര്‍ക്കുന്നു"
+
+#: src/dlg-extract.c:142 src/window.c:3249
+#, c-format
+msgid ""
+"Could not create the destination folder: %s.\n"
+"Extraction not performed."
+msgstr ""
+
+#: src/dlg-extract.c:157 src/window.c:3264
+msgid "Extraction not performed."
+msgstr "വലിച്ചിടല്‍ നടത്തിയില്ല."
+
+#: src/dlg-extract.c:176
+#, fuzzy, c-format
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "നിങ്ങള്ക്ക് \"%s\" ല് നിന്നും വായിക്കുവാനുള്ള അനുവാദമില്ല"
+
+#: src/dlg-extract.c:397 src/dlg-preferences.c:128 src/menu-callbacks.c:751
+#, c-format
+msgid "Could not display help: %s"
+msgstr "%s-ന്റെ സഹായഗ്രന്ഥം തുറക്കാനാവുന്നില്ല"
+
+#: src/dlg-extract.c:474
+msgid "Actions"
+msgstr "പ്ര‌വ‍ര്ത്തനം"
+
+#: src/dlg-extract.c:475
+msgid "Destination folder"
+msgstr "ലക്ഷ്യസ്ഥാന കൂട്"
+
+#: src/dlg-extract.c:476
+msgid "Files"
+msgstr "രചനകള്"
+
+#: src/dlg-extract.c:505
+msgid "Bookmarks"
+msgstr "അടയാളങ്ങള്‍‌"
+
+#: src/dlg-preferences.c:186
+msgid "General"
+msgstr "സാര്‍വത്രികമായ"
+
+#: src/dlg-preferences.c:191
+msgid "Visible columns"
+msgstr "ദൃശ്യമായ നിരകള്‍"
+
+#: src/dlg-prop.c:99
+msgid "Path:"
+msgstr "വഴി:"
+
+#: src/dlg-prop.c:112
+msgid "Name:"
+msgstr "നാമം:"
+
+#: src/dlg-prop.c:119
+#, c-format
+msgid "%s Properties"
+msgstr "%s ഗുണഗണങ്ങള്‌"
+
+#: src/dlg-prop.c:128
+msgid "File size:"
+msgstr "രചനയുടെ വലിപ്പം:‌‌"
+
+#: src/dlg-prop.c:139
+msgid "Number of files:"
+msgstr "രചനകളുടെ എണ്ണം:"
+
+#: src/dlg-prop.c:149
+msgid "Date and time:"
+msgstr "തീയതിയും സമയും"
+
+#: src/dlg-prop.c:155
+msgid "%d %B %Y, %H:%M"
+msgstr "%d %B %Y, %H:%M"
+
+#: src/file-data.c:28
+msgid "Unknown type"
+msgstr "അറിയാത്ത ഇനം"
+
+#: src/file-data.c:29
+msgid "Symbolic link"
+msgstr "ചിഹ്നിത ബന്ധം"
+
+#: src/file-utils.c:534
+msgid "Cannot find a terminal, using xterm, even if it may not work"
+msgstr ""
+
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
+msgid "    "
+msgstr ""
+
+#: src/file_roller.glade.h:2
+msgid "*"
+msgstr "*"
+
+#: src/file_roller.glade.h:3
+#, fuzzy
+msgid "A_dd to Bookmarks"
+msgstr "അടയാളങ്ങള്‍‌"
+
+#: src/file_roller.glade.h:4
+msgid "A_vailable application:"
+msgstr ""
+
+#: src/file_roller.glade.h:6
+#, fuzzy
+msgid "Add _to archive:"
+msgstr "ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക..."
+
+#: src/file_roller.glade.h:7
+#, fuzzy
+msgid "Add only if _newer"
+msgstr "പുതിയതാണെങ്കില് മാത്രം ചേര്ക്കുക"
+
+#: src/file_roller.glade.h:8 src/menu.h:464
+msgid "Delete Files"
+msgstr "രചനകള്‍ നീക്കംചെയ്യ‍ുക"
+
+#: src/file_roller.glade.h:9
+msgid "Do not e_xtract older files"
+msgstr ""
+
+#: src/file_roller.glade.h:10 src/window.c:2682
+msgid "Extract"
+msgstr "വലിച്ചിടുക"
+
+#: src/file_roller.glade.h:11
+#, fuzzy
+msgid "Extract to"
+msgstr "...ലേക്ക് വലിച്ചിടുക"
+
+#: src/file_roller.glade.h:12
+msgid ""
+"Note: the password will be used to encrypt files you add to the current "
+"archive, and to decrypt files you extract from the current archive. When the "
+"archive is closed the password will be deleted."
+msgstr ""
+
+#: src/file_roller.glade.h:13
+#, fuzzy
+msgid "Open Files"
+msgstr "തുറന്ന രചനകള്‍..."
+
+#: src/file_roller.glade.h:14
+#, fuzzy
+msgid "Open with an _application"
+msgstr "ഒരു പ്രയോഗം ഉപയോഗിച്ച് തുറക്കുക"
+
+#: src/file_roller.glade.h:15
+msgid "Over_write existing files"
+msgstr ""
+
+#: src/file_roller.glade.h:16
+#, fuzzy
+msgid "Password"
+msgstr "അടയാളവാക്ക്..."
+
+#: src/file_roller.glade.h:17
+#, fuzzy
+msgid "R_ecent applications:"
+msgstr "പ്രയോഗം"
+
+#: src/file_roller.glade.h:18
+#, fuzzy
+msgid "R_ecreate folders"
+msgstr "കൂട്‌ നിര്‍മ്മിക്കുക"
+
+#: src/file_roller.glade.h:19
+#, fuzzy
+msgid "Select archive"
+msgstr "ആര്‍ക്കേവ് തുറക്കുക"
+
+#: src/file_roller.glade.h:20 src/menu.h:450
+msgid "View File"
+msgstr "രചന കാണുക"
+
+#: src/file_roller.glade.h:21
+#, fuzzy
+msgid "View with internal _viewer"
+msgstr "ആന്തരിക ദ‌ര്‍ശിനികള് ഉപയോഗിച്ച് കാണുക"
+
+#: src/file_roller.glade.h:22
+#, fuzzy
+msgid "_All files"
+msgstr "എല്ലാ രചനകളും‌"
+
+#: src/file_roller.glade.h:23
+#, fuzzy
+msgid "_Application:"
+msgstr "പ്രയോഗം"
+
+#: src/file_roller.glade.h:24
+#, fuzzy
+msgid "_Files:"
+msgstr "രചനകള്"
+
+#: src/file_roller.glade.h:25
+#, fuzzy
+msgid "_Password:"
+msgstr "അടയാളവാക്ക്..."
+
+#: src/file_roller.glade.h:26
+#, fuzzy
+msgid "_Selected files"
+msgstr "എല്ലാ രചനകളും തെരഞ്ഞെടുക്കുക"
+
+#: src/file_roller.glade.h:27
+#, fuzzy
+msgid "_View destination folder after extraction"
+msgstr "വലിച്ചിടലിനു ശേഷം ലക്ഷ്യസ്ഥാന കൂട് കാണിക്കുക"
+
+#: src/file_roller.glade.h:28
+#, fuzzy
+msgid "example: *.txt; *.doc"
+msgstr "ഉദാ: *.o; *.bak"
+
+#: src/file_roller_prop.glade.h:2
+msgid "Compression _level:"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:3
+#, fuzzy
+msgid "Date _modified"
+msgstr "മാറ്റിയ തീയതി"
+
+#: src/file_roller_prop.glade.h:4
+#, fuzzy
+msgid "File Roller Preferences"
+msgstr "ഫയല് റോളര്"
+
+#: src/file_roller_prop.glade.h:5
+msgid "Low"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:6
+#, fuzzy
+msgid "Maximum (slow)"
+msgstr "ഏറ്റവും കൂടിയ (പതുക്കെ)"
+
+#: src/file_roller_prop.glade.h:7
+msgid "Minimum (fast)"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:8
+#, fuzzy
+msgid "Normal"
+msgstr "സാധാരണ"
+
+#: src/file_roller_prop.glade.h:9
+#, fuzzy
+msgid "_Name"
+msgstr "പേര‍്"
+
+#: src/file_roller_prop.glade.h:10
+#, fuzzy
+msgid "_Path"
+msgstr "വഴി"
+
+#: src/file_roller_prop.glade.h:11
+#, fuzzy
+msgid "_Recent archives:"
+msgstr "നിലവിലുള്ള ആര്‍ക്കേവിന്റെ പേര‌് മാറ്റുക"
+
+#: src/file_roller_prop.glade.h:12
+#, fuzzy
+msgid "_Size"
+msgstr "വലിപ്പം"
+
+#: src/file_roller_prop.glade.h:13
+#, fuzzy
+msgid "_Type"
+msgstr "തരം"
+
+#: src/gconf-utils.c:98
+#, c-format
+msgid ""
+"GConf error:\n"
+"  %s"
+msgstr ""
+"GConf പിശക്:\n"
+"  %s"
+
+#. Button
+#: src/gtk-utils.c:297
+msgid "Command _Line Output"
+msgstr "ആജ്ഞമേഘല ഫലം"
+
+#: src/main.c:59
+#, fuzzy
+msgid "Add files to the specified archive and quit the program"
+msgstr "രചനകള്‌ ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
+
+#: src/main.c:60
+msgid "ARCHIVE"
+msgstr "ആര്‍ക്കേവ്"
+
+#: src/main.c:63
+msgid "Add files asking the name of the archive and quit the program"
+msgstr ""
+
+#: src/main.c:67
+msgid "Extract archives to the specified folder and quit the program"
+msgstr ""
+
+#: src/main.c:68 src/main.c:76
+msgid "FOLDER"
+msgstr "കൂട്"
+
+#: src/main.c:71
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr ""
+
+#: src/main.c:75
+msgid "Default folder to use for the '--add' and '--extract' commands"
+msgstr ""
+
+#: src/main.c:79
+#, fuzzy
+msgid "Create destination folder without asking confirmation"
+msgstr "വലിച്ചിടലിനു ശേഷം ലക്ഷ്യസ്ഥാന കൂട് കാണിക്കുക"
+
+#: src/menu-callbacks.c:107
+msgid "Automatic"
+msgstr "തനിയെയുള്ള"
+
+#: src/menu-callbacks.c:108
+msgid "Ear (.ear)"
+msgstr "Ear (.ear)"
+
+#: src/menu-callbacks.c:109
+msgid "Jar (.jar)"
+msgstr "Jar (.jar)"
+
+#: src/menu-callbacks.c:110
+msgid "Lha (.lzh)"
+msgstr "Lha (.lzh)"
+
+#: src/menu-callbacks.c:111
+msgid "Rar (.rar)"
+msgstr "Rar (.rar)"
+
+#: src/menu-callbacks.c:112
+msgid "Tar uncompressed (.tar)"
+msgstr "Tar uncompressed (.tar)"
+
+#: src/menu-callbacks.c:113
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "Tar compressed with bzip (.tar.bz)"
+
+#: src/menu-callbacks.c:114
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "Tar compressed with bzip2 (.tar.bz2)"
+
+#: src/menu-callbacks.c:115
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "Tar compressed with gzip (.tar.gz)"
+
+#: src/menu-callbacks.c:116
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "Tar compressed with lzop (.tar.lzo)"
+
+#: src/menu-callbacks.c:117
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "Tar compressed with compress (.tar.Z)"
+
+#: src/menu-callbacks.c:118
+msgid "War (.war)"
+msgstr "War (.war)"
+
+#: src/menu-callbacks.c:119
+msgid "Zip (.zip)"
+msgstr "Zip (.zip)"
+
+#: src/menu-callbacks.c:175
+msgid "You don't have permission to create an archive in this folder"
+msgstr "ഈ കൂടില്‌ എഴുതുവാന്‌ താങ്കള്‌ക്ക് അനുവാദമില്ല"
+
+#: src/menu-callbacks.c:193 src/menu-callbacks.c:420 src/menu-callbacks.c:590
+msgid "Archive already exists.  Do you want to overwrite it?"
+msgstr "ആര്‍ക്കേവ് നിലനില്‌ക്കുന്നുണ്ട്. മാറ്റിയെഴുതണോ?"
+
+#: src/menu-callbacks.c:195 src/menu-callbacks.c:422 src/menu-callbacks.c:592
+msgid "Overwrite"
+msgstr "മേലെഴുത്ത്"
+
+#: src/menu-callbacks.c:212
+msgid "Could not delete old archive."
+msgstr "പഴയ ആര്‍ക്കേവ് നശിപ്പിക്കാനാകുന്നില്ല."
+
+#: src/menu-callbacks.c:253
+msgid "New Archive"
+msgstr "പുതിയ ആര്‍ക്കേവ്"
+
+#: src/menu-callbacks.c:265
+msgid "Archive type:"
+msgstr "ആര്‍ക്കേവ് തരം:"
+
+#: src/menu-callbacks.c:336
+msgid "Open Archive"
+msgstr "ആര്‍ക്കേവ് തുറക്കുക"
+
+#: src/menu-callbacks.c:445
+msgid "Could not copy archive"
+msgstr "ആര്‍ക്കേവ് പക‌ര്‍ത്താനായില്ല"
+
+#: src/menu-callbacks.c:461
+msgid "Could not move archive"
+msgstr "ആര്‍ക്കേവ് നീക്കാനായില്ല "
+
+#: src/menu-callbacks.c:483
+msgid "Copy archive"
+msgstr "ആര്‍ക്കേവ് പക‌ര്‍‍ത്തുക"
+
+#: src/menu-callbacks.c:483
+msgid "Move archive"
+msgstr "ആര്‍ക്കേവ് നീക്കുക"
+
+#: src/menu-callbacks.c:561
+msgid "New archive name (without extension)"
+msgstr "പുതിയ ആര്‍ക്കേവിന്റെ പേര‌്"
+
+#: src/menu-callbacks.c:565 src/menu.h:97
+msgid "_Rename"
+msgstr "പേര‍് മാറ്റുക"
+
+#: src/menu-callbacks.c:629
+msgid "Archive will be deleted, are you sure?"
+msgstr ""
+
+#: src/menu-callbacks.c:780
+msgid "translator_credits"
+msgstr "എഫ്.എസ്.എഫ് - ഇന്ത്യ <gnu@gnu.org.in>"
+
+#: src/menu-callbacks.c:791
+#, fuzzy
+msgid "An archive manager for GNOME."
+msgstr "ആര്‍ക്കേവ് പാലകന്"
+
+#: src/menu.h:67
+msgid "_New"
+msgstr "പുതിയ"
+
+#: src/menu.h:67 src/toolbar.h:39
+msgid "Create a new archive"
+msgstr "ഒരു പുതിയ ആര്‍ക്കേവ്‌ നിര്മ്മിക്കുക"
+
+#: src/menu.h:73
+msgid "_Open..."
+msgstr "തുറക്കുക..."
+
+#: src/menu.h:73
+#, fuzzy
+msgid "Open an existing archive"
+msgstr "ആര്‍ക്കേവ് പരിശോധിക്കുന്നു"
+
+#: src/menu.h:78
+msgid "Open R_ecent"
+msgstr "പുതുതായവ തുറക്കുക"
+
+#: src/menu.h:83
+msgid "Open Fi_les..."
+msgstr "രചനകള്‍ തുറക്കുക..."
+
+#: src/menu.h:83
+#, fuzzy
+msgid "Open selected files with an application"
+msgstr "ഒരു പ്രയോഗം ഉപയോഗിച്ച് തുറക്കുക"
+
+#: src/menu.h:89
+msgid "_View File"
+msgstr "രചന കാണുക"
+
+#: src/menu.h:89 src/menu.h:450
+#, fuzzy
+msgid "View file with internal viewer"
+msgstr "ആന്തരിക ദ‌ര്‍ശിനികള് ഉപയോഗിച്ച് കാണുക"
+
+#: src/menu.h:97
+msgid "Rename current archive"
+msgstr "നിലവിലുള്ള ആര്‍ക്കേവിന്റെ പേര‌് മാറ്റുക"
+
+#: src/menu.h:103
+msgid "Cop_y"
+msgstr "പക‍ര്പ്പ്"
+
+#: src/menu.h:103
+#, fuzzy
+msgid "Copy current archive to another folder"
+msgstr "ഇപ്പോഴുള്ള രചനയുടെ അല്ലെങ്കില്‌ കൂടിന്റെ കാഴ്ച"
+
+#: src/menu.h:109
+msgid "_Move"
+msgstr "മാറ്റുക"
+
+#: src/menu.h:109
+#, fuzzy
+msgid "Move current archive to another folder"
+msgstr "ഇപ്പോഴുള്ള രചനയുടെ അല്ലെങ്കില്‌ കൂടിന്റെ കാഴ്ച"
+
+#: src/menu.h:115 src/menu.h:170
+msgid "_Delete"
+msgstr "നീക്കം ചെയ്യ‍ുക"
+
+#: src/menu.h:115
+#, fuzzy
+msgid "Delete current archive from disk"
+msgstr "നിലവിലുള്ള ആര്‍ക്കേവിന്റെ പേര‌് മാറ്റുക"
+
+#: src/menu.h:123
+msgid "_Properties"
+msgstr "ഗുണഗണങ്ങള്‌"
+
+#: src/menu.h:123
+#, fuzzy
+msgid "Show archive properties"
+msgstr "ലോഗ് ഗുണഗണങ്ങള് കാണിക്കുക"
+
+#: src/menu.h:131
+msgid "_Close"
+msgstr "അടയ്‍ക്കുക"
+
+#: src/menu.h:131
+#, fuzzy
+msgid "Close current archive"
+msgstr "ഇപ്പോഴത്തെ ആര്‍ക്കേവ് പുതുക്കുക"
+
+#: src/menu.h:137
+msgid "E_xit"
+msgstr "പുറത്ത് കടക്കുക"
+
+#: src/menu.h:137
+msgid "Exit"
+msgstr "പുറത്ത് കടക്കുക"
+
+#: src/menu.h:164
+msgid "Add _Files..."
+msgstr "രചനകള്‍ ചേ‍ര്ക്കുക..."
+
+#: src/menu.h:164 src/menu.h:458 src/window.c:2672
+msgid "Add files to the archive"
+msgstr "രചനകള്‌ ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
+
+#: src/menu.h:170
+#, fuzzy
+msgid "Delete selected files and folders from the archive"
+msgstr "ആര്‍ക്കേവില്‍നിന്ന് രചനകള്‍ നശിപ്പിക്കുക"
+
+#: src/menu.h:176
+msgid "_Extract to..."
+msgstr "...ലേക്ക് വലിച്ചിടുക"
+
+#: src/menu.h:176 src/menu.h:470 src/window.c:2683
+#, fuzzy
+msgid "Extract files from the archive"
+msgstr "ആര്‍ക്കേവില് നിന്ന് രചനകള് വലിച്ചിടുന്നു"
+
+#: src/menu.h:190
+msgid "_Test Archive"
+msgstr "ആര്‍ക്കേവ് പരിശോധിക്കുക"
+
+#: src/menu.h:206
+msgid "Select _All"
+msgstr "എല്ലാം തെരഞ്ഞെടുക്കുക"
+
+#: src/menu.h:206
+msgid "Select all files"
+msgstr "എല്ലാ രചനകളും തെരഞ്ഞെടുക്കുക"
+
+#: src/menu.h:212
+msgid "Dese_lect All"
+msgstr "തെരഞ്ഞെടുത്തത് വേണ്ടാതാക്കുക"
+
+#: src/menu.h:212
+msgid "Deselect all files"
+msgstr "തെരഞ്ഞെടുത്തത് വേണ്ടാതാക്കുക"
+
+#: src/menu.h:220
+msgid "Pass_word..."
+msgstr "അടയാളവാക്ക്..."
+
+#: src/menu.h:228
+msgid "_Preferences"
+msgstr "മുന്ഗണനകള്"
+
+#: src/menu.h:239
+msgid "by _Name"
+msgstr "പേരനുസരിച്ച്"
+
+#: src/menu.h:239
+msgid "Sort file list by name"
+msgstr "രചന പേരനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: src/menu.h:245
+msgid "by _Size"
+msgstr "വലിപ്പമനുസരിച്ച്"
+
+#: src/menu.h:245
+msgid "Sort file list by file size"
+msgstr "രചന വലിപ്പമനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: src/menu.h:251
+msgid "by T_ype"
+msgstr "തരമനുസരിച്ച്"
+
+#: src/menu.h:251
+msgid "Sort file list by type"
+msgstr "രചന തരമനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: src/menu.h:257
+msgid "by _Time"
+msgstr "സമയമനുസരിച്ച്"
+
+#: src/menu.h:257
+msgid "Sort file list by modification time"
+msgstr "രചന പരിഷ്കരിച്ച സമയമനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: src/menu.h:263
+msgid "by _Path"
+msgstr "വഴിയനുസരിച്ച്"
+
+#: src/menu.h:263
+msgid "Sort file list by path"
+msgstr "രചന വഴിയനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: src/menu.h:280
+msgid "View All _Files"
+msgstr "എല്ലാ രചനകളും കാണുക"
+
+#: src/menu.h:286
+msgid "View as a F_older"
+msgstr "കൂടായി കാണുക"
+
+#: src/menu.h:308
+msgid "_Reversed Order"
+msgstr "വിപരീത ക്രമീകരണത്തില്"
+
+#: src/menu.h:308
+msgid "Reverse the list order"
+msgstr "നാമാവലി വിപരീത ക്രമത്തിലാക്കുക"
+
+#: src/menu.h:332
+msgid "_Toolbar"
+msgstr "ഉപകരണപ്പട്ട"
+
+#: src/menu.h:332
+msgid "View the main toolbar"
+msgstr "പ്രധാന ഉപകരണപ്പട്ട കാണിക്കുക"
+
+#: src/menu.h:338
+msgid "Stat_usbar"
+msgstr "അവസ്ഥാപ്പട്ട"
+
+#: src/menu.h:338
+msgid "View the statusbar"
+msgstr "അവസ്ഥാപ്പട്ട കാണിക്കുക"
+
+#: src/menu.h:346
+msgid "_Stop"
+msgstr "നിര്‌ത്തുക"
+
+#: src/menu.h:346 src/toolbar.h:55
+msgid "Stop current operation"
+msgstr "ഇപ്പോഴത്തെ പ്രവ‌ര്‍ത്തനം നിര്‌ത്തുക"
+
+#: src/menu.h:352
+msgid "_Reload"
+msgstr "പുതുക്കുക"
+
+#: src/menu.h:352
+msgid "Reload current archive"
+msgstr "ഇപ്പോഴത്തെ ആര്‍ക്കേവ് പുതുക്കുക"
+
+#: src/menu.h:363
+msgid "_Arrange Files"
+msgstr "രചനകള് ക്രമീകരിക്കുക"
+
+#: src/menu.h:368
+msgid "_Last Output"
+msgstr "അവസാന ഫലം"
+
+#: src/menu.h:381
+msgid "New _Window"
+msgstr "പുതിയ ജാലകം"
+
+#: src/menu.h:381
+msgid "Open a new window"
+msgstr "പുതിയ ജാലകം തുറക്കുക"
+
+#: src/menu.h:387
+msgid "Clo_se Window"
+msgstr "ജാലകം അടയ്‍ക്കുക"
+
+#: src/menu.h:387
+msgid "Close this window"
+msgstr "ഈ ജാലകം അടയ്‍ക്കുക"
+
+#: src/menu.h:400
+msgid "_Contents"
+msgstr "ഉള്ളടക്കം"
+
+#: src/menu.h:400
+msgid "Display the File Roller Manual"
+msgstr "ഫയല് റോളര്‍ മാന്വല്‍ ദൃശ്യമാക്കുക"
+
+#: src/menu.h:406
+msgid "_About"
+msgstr "കുറിപ്പ്"
+
+#: src/menu.h:406
+msgid "Information about the program"
+msgstr "പ്രയോഗത്തെക്കുറിച്ചുള്ള വിവരങ്ങള്‍"
+
+#: src/menu.h:418
+msgid "_Archive"
+msgstr "ആര്‍ക്കേവ്"
+
+#: src/menu.h:419
+msgid "_Edit"
+msgstr "ചിട്ട"
+
+#: src/menu.h:420
+msgid "_View"
+msgstr "കാഴ്ച"
+
+#: src/menu.h:421
+msgid "_Windows"
+msgstr "ജാലകങ്ങള്"
+
+#: src/menu.h:444
+msgid "Open Files..."
+msgstr "തുറന്ന രചനകള്‍..."
+
+#: src/menu.h:458
+msgid "Add Files..."
+msgstr "രചനകള്‍ ചേ‍ര്ക്കുക..."
+
+#: src/menu.h:464
+msgid "Delete files from the archive"
+msgstr "ആര്‍ക്കേവില്‍നിന്ന് രചനകള്‍ നശിപ്പിക്കുക"
+
+#: src/menu.h:470
+msgid "Extract to..."
+msgstr "...ലേക്ക് വലിച്ചിടുക"
+
+#: src/menu.h:478
+msgid "Select All"
+msgstr "എല്ലാം തെരഞ്ഞെടുക്കുക"
+
+#: src/toolbar.h:39
+msgid "New"
+msgstr "പുതിയ"
+
+#: src/toolbar.h:45
+msgid "Open"
+msgstr "തുറക്കുക"
+
+#: src/toolbar.h:45
+msgid "Open archive"
+msgstr "ആര്‍ക്കേവ് തുറക്കുക"
+
+#: src/toolbar.h:55
+msgid "Stop"
+msgstr "നിര്‌ത്തുക"
+
+#: src/window.c:608
+msgid "Folder"
+msgstr "കൂട്"
+
+#: src/window.c:752
+msgid "[read only]"
+msgstr "[വായിക്കാന് മാത്രം]"
+
+#: src/window.c:846
+#, c-format
+msgid "1 file (%s)"
+msgstr "1 രചന (%s)"
+
+#: src/window.c:849
+#, c-format
+msgid "%d files (%s)"
+msgstr "%d രചനകള്‍ (%s)"
+
+#: src/window.c:857
+#, c-format
+msgid "1 file selected (%s)"
+msgstr "ഒരു രചന തെരഞ്ഞെടുത്തു (%s)"
+
+#: src/window.c:860
+#, c-format
+msgid "%d files selected (%s)"
+msgstr "%d രചനകള്‍ തെരഞ്ഞെടുത്തു(%s)"
+
+#: src/window.c:1149
+msgid "Reading archive"
+msgstr "ആര്‍ക്കേവ് വായിക്കുന്നു"
+
+#: src/window.c:1152
+msgid "Deleting files from archive"
+msgstr "ആര്‍ക്കേവില് നിന്ന് രചനകള്‌‌ നീക്കിക്കളയുന്നു"
+
+#: src/window.c:1155
+msgid "Adding files to archive"
+msgstr "ആര്‍ക്കേവിലേക്ക് രചനകള്‌ ചേര്‍ക്കുന്നു"
+
+#: src/window.c:1158
+msgid "Extracting files from archive"
+msgstr "ആര്‍ക്കേവില് നിന്ന് രചനകള് വലിച്ചിടുന്നു"
+
+#: src/window.c:1161
+msgid "Testing archive"
+msgstr "ആര്‍ക്കേവ് പരിശോധിക്കുന്നു"
+
+#: src/window.c:1167
+msgid "wait please..."
+msgstr "കാത്തിരിക്കൂ..."
+
+#: src/window.c:1253
+msgid "Operation stopped"
+msgstr "പ്രവ‌ര്‍ത്തനം അവസാനിപ്പിച്ചു"
+
+#: src/window.c:1271
+msgid "An error occurred while extracting files."
+msgstr ""
+"%s രചന അച്ചടിക്കുന്പോള്‌ ഒരു പിശകുണ്ടായി.\n"
+"\n"
+"%s,"
+
+#: src/window.c:1275
+#, fuzzy
+msgid "An error occurred while loading the archive."
+msgstr "കണ്ടെത്തിയ ഈ രചനകളുടെ ഉള്ളടക്കം കൊണ്ടുവരന്നതില് തകരാറ് : %s"
+
+#: src/window.c:1279
+#, fuzzy
+msgid "An error occurred while deleting files from the archive."
+msgstr ""
+"%s രചന അച്ചടിക്കുന്പോള്‌ ഒരു പിശകുണ്ടായി.\n"
+"\n"
+"%s,"
+
+#: src/window.c:1283
+#, fuzzy
+msgid "An error occurred while adding files to the archive."
+msgstr ""
+"%s രചന അച്ചടിക്കുന്പോള്‌ ഒരു പിശകുണ്ടായി.\n"
+"\n"
+"%s,"
+
+#: src/window.c:1287
+#, fuzzy
+msgid "An error occurred while testing archive."
+msgstr ""
+"%s രചന അച്ചടിക്കുന്പോള്‌ ഒരു പിശകുണ്ടായി.\n"
+"\n"
+"%s,"
+
+#: src/window.c:1293
+msgid "Command not found."
+msgstr "പ്രവ‍ര്ത്തിപ്പിക്കാനുള്ള നിര്‍ദ്ദേശം കണ്ടില്ല."
+
+#: src/window.c:1296
+msgid "Command exited abnormally."
+msgstr ""
+
+#: src/window.c:1588
+msgid "You don't have permissions to add files to this archive."
+msgstr "നിങ്ങള്ക്ക് ആര്‍ക്കേവിലേക്ക് രചനകള്‍ ചേര്‍ക്കാന് അനുവാദമില്ല."
+
+#: src/window.c:1610
+msgid "You can't add an archive to itself."
+msgstr "ഒരു ആര്‍ക്കേവ് അതില്‍ത്തന്നെ ചേര്‍ക്കാനാവില്ല."
+
+#: src/window.c:1770
+msgid ""
+"Do you want to add this file to the current archive or open it as a new "
+"archive?"
+msgstr ""
+"Souhaitez-vous ajoutez ce fichier à l'archive actuelle ou l'ouvrir en tant "
+"que nouvelle archive ?"
+
+#: src/window.c:1813
+#, fuzzy
+msgid "Do you want to create a new archive with these files?"
+msgstr "ഈ കൂടില്‌ എഴുതുവാന്‌ താങ്കള്‌ക്ക് അനുവാദമില്ല"
+
+#: src/window.c:1815
+msgid "Create _Archive"
+msgstr "ആര്‍ക്കേവ് ഉണ്ടാക്കുക"
+
+#: src/window.c:2148
+msgid "Size"
+msgstr "വലിപ്പം"
+
+#: src/window.c:2149
+msgid "Type"
+msgstr "തരം"
+
+#: src/window.c:2150
+msgid "Date modified"
+msgstr "മാറ്റിയ തീയതി"
+
+#: src/window.c:2151
+msgid "Location"
+msgstr "സ്ഥാനം"
+
+#: src/window.c:2158
+msgid "Name"
+msgstr "പേര‍്"
+
+#: src/window.c:2617
+msgid "_Up"
+msgstr "മുകളില്‌"
+
+#. current location
+#: src/window.c:2639
+msgid "Current Location:"
+msgstr "സജീവ സ്ഥാനം‌:"
+
+#: src/window.c:2671
+msgid "Add"
+msgstr "കൂട്ടുക"
+
+#: src/window.c:2693
+msgid "View"
+msgstr "കാഴ്ച"
+
+#: src/window.c:2694
+msgid "View selected file"
+msgstr "തെരഞ്ഞെടുത്ത രചനകള്‍ കാണുക"
+
+#: src/window.c:3093
+msgid "File type not supported."
+msgstr "രചനാതരം പിന്തുണയ്‌ക്കപ്പെടാത്തതാണ‌്"
+
+#: src/window.c:3162
+#, fuzzy
+msgid "Cannot load archive."
+msgstr "പഴയ ആര്‍ക്കേവ് നശിപ്പിക്കാനാകുന്നില്ല."
+
+#: src/window.c:3576
+msgid "Last Output"
+msgstr "അവസാന ഫലം"
+
+#: src/window.c:4102
+msgid "Add files to an archive"
+msgstr "ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
+
+#: src/window.c:4127
+msgid "Extract archive"
+msgstr "ആര്‍ക്കേവ് വലിച്ചിടുക്കുക"
+
+#, fuzzy
+#~ msgid "stringv"
+#~ msgstr "വാക്യം"
+
+#~ msgid "name"
+#~ msgstr "പേര‍്"
+
+#, fuzzy
+#~ msgid "string"
+#~ msgstr "വാക്യം"
+
+#~ msgid "description"
+#~ msgstr "വിവരണം"
+
+#, fuzzy
+#~ msgid "file"
+#~ msgstr "1 രചന"
+
+#, fuzzy
+#~ msgid "bonobo:supported_mime_types"
+#~ msgstr "പിന്തുണയ്‌ക്കപ്പെടാത്ത ഛായാചിത്രസഞ്ചരണം"
+
+#, fuzzy
+#~ msgid "application/x-tar"
+#~ msgstr "പ്രയോഗം"
+
+#, fuzzy
+#~ msgid "application/x-lha"
+#~ msgstr "പ്രയോഗം"
+
+#, fuzzy
+#~ msgid "application/x-rar"
+#~ msgstr "പ്രയോഗം"
+
+#, fuzzy
+#~ msgid "application/x-gzip"
+#~ msgstr "പ്രയോഗം"
+
+#, fuzzy
+#~ msgid "application/x-bzip"
+#~ msgstr "പ്രയോഗം"
+
+#, fuzzy
+#~ msgid "application/x-compress"
+#~ msgstr "പ്രയോഗങ്ങള്‌"
+
+#, fuzzy
+#~ msgid "application/x-lzop"
+#~ msgstr "പ്രയോഗം"
+
+#, fuzzy
+#~ msgid "boolean"
+#~ msgstr "ബൂളിയന്"
+
+#, fuzzy
+#~ msgid "true"
+#~ msgstr "വൃക്ഷം"
+
+#, fuzzy
+#~ msgid "nautilusverb:ExtractHere"
+#~ msgstr "ഇവിടെ വലിച്ചിടുക"
+
+#, fuzzy
+#~ msgid "OAFIID:File_Roller_Component_Add"
+#~ msgstr "ഫയല് റോളര് ഘടകം"
+
+#, fuzzy
+#~ msgid "r"
+#~ msgstr "ro"
+
+#, fuzzy
+#~ msgid "w+"
+#~ msgstr "+"
+
+#, fuzzy
+#~ msgid "add %s\n"
+#~ msgstr "%d %s"
+
+#, fuzzy
+#~ msgid "basedir : %s\n"
+#~ msgstr "തിയ്യതി:%s\n"
+
+#~ msgid "/"
+#~ msgstr "/"
+
+#, fuzzy
+#~ msgid "destroy"
+#~ msgstr "തകര്ക്കുക"
+
+#, fuzzy
+#~ msgid "clicked"
+#~ msgstr "തടസപ്പെടുത്തിയ"
+
+#, fuzzy
+#~ msgid "changed"
+#~ msgstr "കൈമാറ്റം"
+
+#, fuzzy
+#~ msgid "toggled"
+#~ msgstr "മാറിവരിക"
+
+#, fuzzy
+#~ msgid "tooltips"
+#~ msgstr "ഉപകരണങ്ങള്"
+
+#~ msgid "="
+#~ msgstr "="
+
+#, fuzzy
+#~ msgid "=/Options/"
+#~ msgstr "ബദലുകള്‌"
+
+#, fuzzy
+#~ msgid "include_files"
+#~ msgstr "രചന ഉള്‍ക്കൊള്ളിക്കുക"
+
+#, fuzzy
+#~ msgid "exclude_files"
+#~ msgstr "ഒഴിവാക്കേണ്ട രചനകള്‍:"
+
+#, fuzzy
+#~ msgid "update"
+#~ msgstr "പരിഷ്ക്കരിക്കുക"
+
+#, fuzzy
+#~ msgid "recursive"
+#~ msgstr "ആവ‌ര്ത്തിച്ചുവരുന്ന"
+
+#, fuzzy
+#~ msgid "same_fs"
+#~ msgstr "കളികള്"
+
+#, fuzzy
+#~ msgid "no_dot_files"
+#~ msgstr "രചനയുടെ അവസാനം"
+
+#, fuzzy
+#~ msgid "ignore_case"
+#~ msgstr "ലിപി അവഗണിക്കുക"
+
+#, fuzzy
+#~ msgid "Could not find "
+#~ msgstr "%s തുറക്കാനാകുന്നില്ല"
+
+#, fuzzy
+#~ msgid "a_add_label"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "<b>%s</b>"
+#~ msgstr "<b>ഇടം</b>"
+
+#, fuzzy
+#~ msgid "d_selected_files_radio"
+#~ msgstr "തെരഞ്ഞെടുത്ത രചനകള്‍"
+
+#, fuzzy
+#~ msgid "file-roller"
+#~ msgstr "ഫയല് റോളര്"
+
+#, fuzzy
+#~ msgid "response"
+#~ msgstr "തനിയെയുള്ള-മറുപടി"
+
+#, fuzzy
+#~ msgid "e_password_entry"
+#~ msgstr "പാസ്‍വേ‍ര്ഡ് നല്കുന്ന പെട്ടി"
+
+#, fuzzy
+#~ msgid "e_password_hbox"
+#~ msgstr "പാസ്സ്‍വേ‍ര്ഡ്"
+
+#, fuzzy
+#~ msgid "e_actions_label"
+#~ msgstr "പ്രവ‍ര്ത്തനങ്ങള്‌"
+
+#, fuzzy
+#~ msgid "e_destination_folder_label"
+#~ msgstr "ലക്ഷ്യസ്ഥാന കൂട്"
+
+#, fuzzy
+#~ msgid "text"
+#~ msgstr "വാചകം"
+
+#, fuzzy
+#~ msgid "o_recent_tree_view"
+#~ msgstr "അച്ചടി-തിരനോട്ടം"
+
+#, fuzzy
+#~ msgid "o_del_button"
+#~ msgstr "ഒളിപ്പിക്കല് മൊട്ടുകള് കാണിക്കുക"
+
+#, fuzzy
+#~ msgid "password_dialog"
+#~ msgstr "അടയാളവാക്യം"
+
+#, fuzzy
+#~ msgid "pw_password_entry"
+#~ msgstr "പാസ്‍വേ‍ര്ഡ് നല്കുന്ന പെട്ടി"
+
+#, fuzzy
+#~ msgid "fr-settings"
+#~ msgstr "സജ്ജീകരണം"
+
+#, fuzzy
+#~ msgid "options_dialog"
+#~ msgstr "അക്ഷരരൂപം തെരഞ്ഞെടുക്കല്"
+
+#, fuzzy
+#~ msgid "name_checkbutton"
+#~ msgstr "സ്വയം വിടവുണ്ടാക്കല് സജീവമാക്കുക"
+
+#, fuzzy
+#~ msgid "compression_optionmenu"
+#~ msgstr "ചുരുക്കുക"
+
+#, fuzzy
+#~ msgid "general_label"
+#~ msgstr "പട്ടിക ലിഖിതം"
+
+#, fuzzy
+#~ msgid "prop_dialog"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "%d"
+#~ msgstr "%"
+
+#, fuzzy
+#~ msgid "va_cancel_button"
+#~ msgstr "ലഭ്യമായ മൊട്ടുകള്‌"
+
+#, fuzzy
+#~ msgid "file://"
+#~ msgstr "രചന"
+
+#, fuzzy
+#~ msgid "viewer_dialog"
+#~ msgstr "വ്യഞ്ജന സംവാദം"
+
+#, fuzzy
+#~ msgid "monospace"
+#~ msgstr "ഒരു സ്ഥാനം:"
+
+#, fuzzy
+#~ msgid "family"
+#~ msgstr "കുടുമ്പം:"
+
+#, fuzzy
+#~ msgid "/."
+#~ msgstr "/"
+
+#, fuzzy
+#~ msgid "directory creation failed: %s."
+#~ msgstr "%s വായിക്കുന്നതില്‌ പരാജയം : %s"
+
+#, fuzzy
+#~ msgid "gnome-terminal"
+#~ msgstr "ചുറുചുറുക്കുള്ള കല്പ്പനാസ്ഥാനം"
+
+#, fuzzy
+#~ msgid "-x"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "nxterm"
+#~ msgstr "കേന്ദ്രം"
+
+#, fuzzy
+#~ msgid "xterm"
+#~ msgstr "നിര്‍വചനം"
+
+#, fuzzy
+#~ msgid "dtterm"
+#~ msgstr "അക്ഷരം"
+
+#, fuzzy
+#~ msgid "-e"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid " "
+#~ msgstr " ("
+
+#, fuzzy
+#~ msgid "1.0"
+#~ msgstr "10"
+
+#~ msgid "no"
+#~ msgstr "ഇല്ല"
+
+#, fuzzy
+#~ msgid "http://glade.gnome.org/glade-2.0.dtd"
+#~ msgstr "http://www.gnome.org/"
+
+#, fuzzy
+#~ msgid "gnome"
+#~ msgstr "ഗ്നോം"
+
+#, fuzzy
+#~ msgid "GtkDialog"
+#~ msgstr "സംവാദപ്പെട്ടി"
+
+#, fuzzy
+#~ msgid "border_width"
+#~ msgstr "അരികിന്റെ വീതി"
+
+#, fuzzy
+#~ msgid "title"
+#~ msgstr "ഒരു തലക്കെട്ട്"
+
+#~ msgid "yes"
+#~ msgstr "ശരി"
+
+#~ msgid "type"
+#~ msgstr "ഇനം"
+
+#, fuzzy
+#~ msgid "window_position"
+#~ msgstr "ജാലകത്തിന്റെ സ്ഥാനം"
+
+#, fuzzy
+#~ msgid "modal"
+#~ msgstr "മാതൃക"
+
+#, fuzzy
+#~ msgid "resizable"
+#~ msgstr "വലിപ്പം മാറ്റാവുന്ന"
+
+#, fuzzy
+#~ msgid "destroy_with_parent"
+#~ msgstr "സെ‍ര്‍വ‍റില് റെജിസ്റ്റ‍ര് ചെയ്യ‍ുക"
+
+#, fuzzy
+#~ msgid "has_separator"
+#~ msgstr "വേ‍ര്തിരി"
+
+#, fuzzy
+#~ msgid "vbox"
+#~ msgstr "ഇന്‌ബോക്സ്"
+
+#, fuzzy
+#~ msgid "dialog-vbox9"
+#~ msgstr "സംഭാഷണ കളങ്ങള് ഉപയോഗിക്കുക"
+
+#~ msgid "visible"
+#~ msgstr "ദൃശ്യം"
+
+#, fuzzy
+#~ msgid "homogeneous"
+#~ msgstr "ഏകരൂപം"
+
+#, fuzzy
+#~ msgid "spacing"
+#~ msgstr "വിടവുകള്"
+
+#, fuzzy
+#~ msgid "action_area"
+#~ msgstr "നിഘണ്ടു"
+
+#, fuzzy
+#~ msgid "GtkHButtonBox"
+#~ msgstr "മൊട്ട്"
+
+#, fuzzy
+#~ msgid "layout_style"
+#~ msgstr "കെട്ടുംമട്ടും"
+
+#, fuzzy
+#~ msgid "GtkButton"
+#~ msgstr "മൊട്ട്"
+
+#, fuzzy
+#~ msgid "can_default"
+#~ msgstr "സ്വതേയുള്ളതാക്കാമോ"
+
+#, fuzzy
+#~ msgid "can_focus"
+#~ msgstr "അവസ്ഥ ഉണ്ട്"
+
+#~ msgid "label"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "use_stock"
+#~ msgstr "ശേഖരം ഉപയോഗിക്കൂ"
+
+#, fuzzy
+#~ msgid "relief"
+#~ msgstr "ബെലിസ്"
+
+#, fuzzy
+#~ msgid "response_id"
+#~ msgstr "തനിയെയുള്ള-മറുപടി"
+
+#, fuzzy
+#~ msgid "has_default"
+#~ msgstr "സ്വതേയുള്ളയുള്ളതാണ്"
+
+#, fuzzy
+#~ msgid "has_focus"
+#~ msgstr "അവസ്ഥ ഉണ്ട്"
+
+#, fuzzy
+#~ msgid "padding"
+#~ msgstr "സംരക്ഷിക്കുന്നു"
+
+#, fuzzy
+#~ msgid "expand"
+#~ msgstr "വികസിതം"
+
+#, fuzzy
+#~ msgid "fill"
+#~ msgstr "അവസാനിപ്പിക്കുക"
+
+#, fuzzy
+#~ msgid "pack_type"
+#~ msgstr "ഘടികാര തരം"
+
+#, fuzzy
+#~ msgid "GtkLabel"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "use_underline"
+#~ msgstr "അടിവര ഉപയോഗിക്കൂ"
+
+#, fuzzy
+#~ msgid "use_markup"
+#~ msgstr "മ‌ര്ക്കപ്പ് ഉപയോഗിക്കുക"
+
+#, fuzzy
+#~ msgid "justify"
+#~ msgstr "ക്രമീകരിക്കുക"
+
+#, fuzzy
+#~ msgid "wrap"
+#~ msgstr "ചുറ്റല്"
+
+#, fuzzy
+#~ msgid "selectable"
+#~ msgstr "തെരഞ്ഞെടുക്കാവുന്ന"
+
+#~ msgid "xalign"
+#~ msgstr "സമീകരണം"
+
+#~ msgid "yalign"
+#~ msgstr "y-സമീകരണം"
+
+#~ msgid "xpad"
+#~ msgstr "xpad"
+
+#~ msgid "ypad"
+#~ msgstr "ypad"
+
+#, fuzzy
+#~ msgid "label45"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "GnomeFileEntry"
+#~ msgstr "ഗ്നോം പ്രവേശം"
+
+#, fuzzy
+#~ msgid "history_id"
+#~ msgstr "ചരിത്രം ഐ ഡി"
+
+#, fuzzy
+#~ msgid "directory_entry"
+#~ msgstr "കൂട് പ്രവേശം"
+
+#, fuzzy
+#~ msgid "entry"
+#~ msgstr "പ്രവേശം"
+
+#~ msgid "GtkEntry"
+#~ msgstr "Gtk പ്രവേശം"
+
+#, fuzzy
+#~ msgid "editable"
+#~ msgstr "ചിട്ടപ്പെടുത്തിയ"
+
+#, fuzzy
+#~ msgid "visibility"
+#~ msgstr "ദൃശ്യമായ"
+
+#, fuzzy
+#~ msgid "max_length"
+#~ msgstr "ഏറ്റവും കൂടിയ നീളം‌"
+
+#, fuzzy
+#~ msgid "has_frame"
+#~ msgstr "ചട്ടക്കൂട് ഉണ്ടെങ്കില്‌"
+
+#, fuzzy
+#~ msgid "invisible_char"
+#~ msgstr "അദൃശ്യമായ അക്ഷരം"
+
+#, fuzzy
+#~ msgid "activates_default"
+#~ msgstr "സ്വതേയുള്ളതിനെ സജ്ജമാക്കുക"
+
+#, fuzzy
+#~ msgid "hbox6"
+#~ msgstr "മറുകുറി"
+
+#, fuzzy
+#~ msgid "scrolledwindow6"
+#~ msgstr "അവസാനം ഉണ്ടാക്കിയ ജാലകം"
+
+#, fuzzy
+#~ msgid "shadow_type"
+#~ msgstr "പ്രതിബിംബതരം"
+
+#, fuzzy
+#~ msgid "window_placement"
+#~ msgstr "ജാലകം മാറ്റിസ്ഥാപിക്കുക‌"
+
+#, fuzzy
+#~ msgid "GtkTreeView"
+#~ msgstr "വൃക്ഷകാഴ്ചാരീതി"
+
+#, fuzzy
+#~ msgid "headers_visible"
+#~ msgstr "ദൃശ്യം"
+
+#, fuzzy
+#~ msgid "reorderable"
+#~ msgstr "പുനക്രമീകരിക്കാവുന്നത്"
+
+#, fuzzy
+#~ msgid "enable_search"
+#~ msgstr "തെരച്ചില്‌ സജീവമാക്കുക"
+
+#, fuzzy
+#~ msgid "GtkAlignment"
+#~ msgstr "ക്രമീകരണം"
+
+#, fuzzy
+#~ msgid "alignment1"
+#~ msgstr "ക്രമീകരണം"
+
+#, fuzzy
+#~ msgid "xscale"
+#~ msgstr "തോത്"
+
+#, fuzzy
+#~ msgid "yscale"
+#~ msgstr "ഗ്രേസ്കെയില്‌"
+
+#, fuzzy
+#~ msgid "GtkImage"
+#~ msgstr "ചിത്രം"
+
+#, fuzzy
+#~ msgid "image5"
+#~ msgstr "ചിത്രം"
+
+#, fuzzy
+#~ msgid "stock"
+#~ msgstr "ശേഖരം ഉപയോഗിക്കൂ"
+
+#, fuzzy
+#~ msgid "icon_size"
+#~ msgstr "സൂചക വലിപ്പം"
+
+#, fuzzy
+#~ msgid "label40"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "label47"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "GtkTable"
+#~ msgstr "ചിട്ടപ്പെടുത്തിയ"
+
+#, fuzzy
+#~ msgid "table1"
+#~ msgstr "ചിട്ടപ്പെടുത്തിയ"
+
+#, fuzzy
+#~ msgid "n_rows"
+#~ msgstr "അന്വോഷണം"
+
+#, fuzzy
+#~ msgid "n_columns"
+#~ msgstr "ഗ്രന്ഥങ്ങള്"
+
+#, fuzzy
+#~ msgid "row_spacing"
+#~ msgstr "വരി വിടവ്"
+
+#, fuzzy
+#~ msgid "column_spacing"
+#~ msgstr "നിര വിടവ്"
+
+#, fuzzy
+#~ msgid "active"
+#~ msgstr "അചേതനമായ"
+
+#, fuzzy
+#~ msgid "inconsistent"
+#~ msgstr "സ്ഥിരതയില്ലാത്ത"
+
+#, fuzzy
+#~ msgid "draw_indicator"
+#~ msgstr "സൂചകം വരയ‌്ക്കുക"
+
+#, fuzzy
+#~ msgid "left_attach"
+#~ msgstr "ഇടത്ത് ചേര്ക്കുക"
+
+#, fuzzy
+#~ msgid "right_attach"
+#~ msgstr "വലത്ത് ചേര്ക്കുക"
+
+#, fuzzy
+#~ msgid "top_attach"
+#~ msgstr "മുകളില് ചേര്ക്കുക"
+
+#, fuzzy
+#~ msgid "bottom_attach"
+#~ msgstr "താഴെ ചേര്ക്കുക"
+
+#, fuzzy
+#~ msgid "x_options"
+#~ msgstr "ബദലുകള്‌"
+
+#, fuzzy
+#~ msgid "y_options"
+#~ msgstr "ബദലുകള്‌"
+
+#~ msgid "group"
+#~ msgstr "കൂട്ടം"
+
+#, fuzzy
+#~ msgid "label48"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "label31"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "dialog-vbox10"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "dialog-vbox11"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "label28"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "dialog-vbox12"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "table3"
+#~ msgstr "ചിട്ടപ്പെടുത്തിയ"
+
+#, fuzzy
+#~ msgid "dialog-vbox13"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "label42"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "scrolledwindow7"
+#~ msgstr "അവസാനം ഉണ്ടാക്കിയ ജാലകം"
+
+#, fuzzy
+#~ msgid "label44"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "scrolledwindow8"
+#~ msgstr "അവസാനം ഉണ്ടാക്കിയ ജാലകം"
+
+#, fuzzy
+#~ msgid "label24"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "dialog-vbox14"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "table2"
+#~ msgstr "ചിട്ടപ്പെടുത്തിയ"
+
+#, fuzzy
+#~ msgid "dialog-vbox15"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "label34"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "image2"
+#~ msgstr "ചിത്രം"
+
+#, fuzzy
+#~ msgid "label33"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "dialog-vbox18"
+#~ msgstr "സംവാദം 1"
+
+#, fuzzy
+#~ msgid "scrolledwindow10"
+#~ msgstr "അവസാനം ഉണ്ടാക്കിയ ജാലകം"
+
+#, fuzzy
+#~ msgid "GtkTextView"
+#~ msgstr "വാചക ദ‍ര്ശിനി"
+
+#, fuzzy
+#~ msgid "justification"
+#~ msgstr "ഉഭയക്രമീകരണം"
+
+#, fuzzy
+#~ msgid "wrap_mode"
+#~ msgstr "നിരത്തല്‌ രീതി"
+
+#, fuzzy
+#~ msgid "cursor_visible"
+#~ msgstr "ദൃശ്യമായ സ്ഥാനസൂചി"
+
+#, fuzzy
+#~ msgid "left_margin"
+#~ msgstr "ഇടത് ക്രമീകരണം"
+
+#, fuzzy
+#~ msgid "right_margin"
+#~ msgstr "വലത് പാ‌ര്ശ്വം"
+
+#, fuzzy
+#~ msgid "indent"
+#~ msgstr "വിടവ്"
+
+#, fuzzy
+#~ msgid "dialog-vbox2"
+#~ msgstr "സംഭാഷണ കളങ്ങള് ഉപയോഗിക്കുക"
+
+#, fuzzy
+#~ msgid "hbox2"
+#~ msgstr "മറുകുറി"
+
+#, fuzzy
+#~ msgid "hbox1"
+#~ msgstr "മറുകുറി"
+
+#, fuzzy
+#~ msgid "label8"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "label7"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "GtkOptionMenu"
+#~ msgstr "പ്ര‌വ‍ര്ത്തന പട്ടിക"
+
+#, fuzzy
+#~ msgid "history"
+#~ msgstr "ചരിത്രം"
+
+#, fuzzy
+#~ msgid "GtkMenu"
+#~ msgstr "പട്ടിക"
+
+#, fuzzy
+#~ msgid "menu1"
+#~ msgstr "പട്ടിക"
+
+#, fuzzy
+#~ msgid "very_fast1"
+#~ msgstr "അതിവേഗം"
+
+#, fuzzy
+#~ msgid "activate"
+#~ msgstr "അചേതനമായ"
+
+#, fuzzy
+#~ msgid "fast1"
+#~ msgstr "കിഴക്ക്"
+
+#, fuzzy
+#~ msgid "normal1"
+#~ msgstr "സാധാരണ"
+
+#, fuzzy
+#~ msgid "label3"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "GtkSpinButton"
+#~ msgstr "മൊട്ട്"
+
+#, fuzzy
+#~ msgid "climb_rate"
+#~ msgstr "മൂല്യവ‌ര്ദ്ധന"
+
+#, fuzzy
+#~ msgid "digits"
+#~ msgstr "അക്കങ്ങള്"
+
+#, fuzzy
+#~ msgid "numeric"
+#~ msgstr "സംഖ്യകള്‌"
+
+#, fuzzy
+#~ msgid "update_policy"
+#~ msgstr "നയം പരിഷ്ക്കരിക്കുക"
+
+#, fuzzy
+#~ msgid "adjustment"
+#~ msgstr "ക്രമീകരിക്കുക"
+
+#, fuzzy
+#~ msgid "hbox4"
+#~ msgstr "മറുകുറി"
+
+#, fuzzy
+#~ msgid "hbox3"
+#~ msgstr "മറുകുറി"
+
+#, fuzzy
+#~ msgid "label10"
+#~ msgstr "ലിഖിതം"
+
+#, fuzzy
+#~ msgid "application/octet-stream"
+#~ msgstr "പ്രയോഗങ്ങള്‌"
+
+#, fuzzy
+#~ msgid "FRArchive"
+#~ msgstr "ആര്‍ക്കേവ്"
+
+#, fuzzy
+#~ msgid "start"
+#~ msgstr "വീണ്ടും-തുടങ്ങുക"
+
+#, fuzzy
+#~ msgid "done"
+#~ msgstr "ഒന്നും"
+
+#, fuzzy
+#~ msgid ".tar"
+#~ msgstr "തുടങ്ങുക"
+
+#, fuzzy
+#~ msgid ".ear"
+#~ msgstr "വൃത്തിയാക്കല്"
+
+#, fuzzy
+#~ msgid ".z"
+#~ msgstr "."
+
+#, fuzzy
+#~ msgid ".Z"
+#~ msgstr "."
+
+#~ msgid "List"
+#~ msgstr "നാമാവലി"
+
+#~ msgid "Delete"
+#~ msgstr "നീക്കം ചെയ്യ‍ുക"
+
+#~ msgid "Test"
+#~ msgstr "പരീക്ഷിക്കുക"
+
+#, fuzzy
+#~ msgid "%s [DONE]\n"
+#~ msgstr "%s [%s]\n"
+
+#, fuzzy
+#~ msgid "nothing to update.\n"
+#~ msgstr "പുതുക്കരുത്"
+
+#, fuzzy
+#~ msgid "mv"
+#~ msgstr "മി"
+
+#, fuzzy
+#~ msgid "-f"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "%s%s"
+#~ msgstr ""
+#~ "%s\n"
+#~ "%s"
+
+#, fuzzy
+#~ msgid "%s/%s"
+#~ msgstr ""
+#~ "%s\n"
+#~ "%s"
+
+#, fuzzy
+#~ msgid "-> %s\n"
+#~ msgstr "To: %s\n"
+
+#, fuzzy
+#~ msgid "%s%s%d"
+#~ msgstr ""
+#~ "%s\n"
+#~ "%s"
+
+#, fuzzy
+#~ msgid "/file-roller."
+#~ msgstr "ഫയല് റോളര്"
+
+#, fuzzy
+#~ msgid "rm"
+#~ msgstr "മി"
+
+#, fuzzy
+#~ msgid "-d"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "uncompress"
+#~ msgstr "ചുരുക്കുക"
+
+#, fuzzy
+#~ msgid "FRCommandCFile"
+#~ msgstr "ആജ്ഞമേഘല"
+
+#, fuzzy
+#~ msgid "Jan"
+#~ msgstr "ജാപ്പാന്‌"
+
+#, fuzzy
+#~ msgid "Feb"
+#~ msgstr "വെബ്"
+
+#, fuzzy
+#~ msgid "Mar"
+#~ msgstr "മാ‌ര്ച്ച്"
+
+#, fuzzy
+#~ msgid "Apr"
+#~ msgstr "ഏപ്രില്"
+
+#~ msgid "May"
+#~ msgstr "മെയ്"
+
+#, fuzzy
+#~ msgid "Jun"
+#~ msgstr "ജൂണ്"
+
+#, fuzzy
+#~ msgid "Jul"
+#~ msgstr "ജൂലൈ"
+
+#, fuzzy
+#~ msgid "Aug"
+#~ msgstr "ആഗസ്ത്"
+
+#, fuzzy
+#~ msgid "Oct"
+#~ msgstr "ചെറുത്"
+
+#, fuzzy
+#~ msgid "Nov"
+#~ msgstr "(ഒന്നുമില്ല"
+
+#, fuzzy
+#~ msgid "Dec"
+#~ msgstr "ഡി.ഇ.സി"
+
+#, fuzzy
+#~ msgid "lha"
+#~ msgstr "ആല്ഫ"
+
+#, fuzzy
+#~ msgid "FRCommandLha"
+#~ msgstr "ആജ്ഞ:"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "rar"
+#~ msgstr "വലിപ്പ്"
+
+#, fuzzy
+#~ msgid "--"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "m1"
+#~ msgstr "മി"
+
+#, fuzzy
+#~ msgid "m2"
+#~ msgstr "മി"
+
+#, fuzzy
+#~ msgid "m3"
+#~ msgstr "മി"
+
+#, fuzzy
+#~ msgid "m5"
+#~ msgstr "മി"
+
+#, fuzzy
+#~ msgid "x"
+#~ msgstr "പിക്സല്"
+
+#, fuzzy
+#~ msgid "-u"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "FRCommandRar"
+#~ msgstr "ആജ്ഞ:"
+
+#, fuzzy
+#~ msgid " -> "
+#~ msgstr "   "
+
+#, fuzzy
+#~ msgid " link to "
+#~ msgstr "%s ല്‌ ബന്ധിപ്പിക്കുക"
+
+#, fuzzy
+#~ msgid "-z"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-Z"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "tar"
+#~ msgstr "തുടങ്ങുക"
+
+#, fuzzy
+#~ msgid "-C"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "--delete"
+#~ msgstr "നീക്കം ചെയ്യ‍ുക"
+
+#, fuzzy
+#~ msgid "-1"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-3"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-6"
+#~ msgstr "6"
+
+#, fuzzy
+#~ msgid "-9"
+#~ msgstr "9"
+
+#, fuzzy
+#~ msgid "compress"
+#~ msgstr "ചുരുക്കുക"
+
+#, fuzzy
+#~ msgid "FRCommandTar"
+#~ msgstr "ആജ്ഞ:"
+
+#, fuzzy
+#~ msgid "zipfile is empty"
+#~ msgstr "രചന ശൂന്യമാണ‌്"
+
+#, fuzzy
+#~ msgid "-v"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-l"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-y"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-P"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-o"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-n"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-j"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "-t"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "FRCommandZip"
+#~ msgstr "ആജ്ഞ:"
+
+#, fuzzy
+#~ msgid "FRCommand"
+#~ msgstr "ആജ്ഞ:"
+
+#, fuzzy
+#~ msgid "filename : %s\n"
+#~ msgstr "രചനാനാമം: %s"
+
+#, fuzzy
+#~ msgid "e_filename : %s\n"
+#~ msgstr "രചനാനാമം: %s"
+
+#, fuzzy
+#~ msgid "FRProcess"
+#~ msgstr "പൂരോഗതി‌"
+
+#, fuzzy
+#~ msgid "cd %s\n"
+#~ msgstr "%d %s"
+
+#, fuzzy
+#~ msgid "-c"
+#~ msgstr "-"
+
+#, fuzzy
+#~ msgid "%s "
+#~ msgstr "%s %d"
+
+#, fuzzy
+#~ msgid "eel-preferences"
+#~ msgstr "മുന്‍ഗണനകള്‍"
+
+#, fuzzy
+#~ msgid "trash:"
+#~ msgstr "ചവറ്റുകുട്ട:"
+
+#~ msgid "http://"
+#~ msgstr "http://"
+
+#, fuzzy
+#~ msgid "file:"
+#~ msgstr "1 രചന"
+
+#, fuzzy
+#~ msgid "help:"
+#~ msgstr "സഹായം"
+
+#, fuzzy
+#~ msgid "man:"
+#~ msgstr "ഒമാന്‌"
+
+#, fuzzy
+#~ msgid "info:"
+#~ msgstr "അനന്തം"
+
+#, fuzzy
+#~ msgid "hardware:"
+#~ msgstr "ഖരസാമഗ്രി"
+
+#, fuzzy
+#~ msgid "search:"
+#~ msgstr "തെരയുക"
+
+#, fuzzy
+#~ msgid "pipe:"
+#~ msgstr "ക്രിയാജാലകം:"
+
+#, fuzzy
+#~ msgid "file:/"
+#~ msgstr "രചന"
+
+#, fuzzy
+#~ msgid "add"
+#~ msgstr "കൂട്ടുക"
+
+#, fuzzy
+#~ msgid "extract-to"
+#~ msgstr "വലിച്ചിടുക"
+
+#, fuzzy
+#~ msgid "extract"
+#~ msgstr "വലിച്ചിടുക"
+
+#, fuzzy
+#~ msgid "default-dir"
+#~ msgstr "സ്വതേ"
+
+#~ msgid "UTF-8"
+#~ msgstr "UTF-8"
+
+#, fuzzy
+#~ msgid "Could not find %s"
+#~ msgstr "%s തുറക്കാനാകുന്നില്ല"
+
+#, fuzzy
+#~ msgid "Session/archive%d"
+#~ msgstr "ആര്‍ക്കേവ് പരിശോധിക്കുന്നു"
+
+#, fuzzy
+#~ msgid "Session/archives"
+#~ msgstr "ആര്‍ക്കേവ് പരിശോധിക്കുന്നു"
+
+#, fuzzy
+#~ msgid "die"
+#~ msgstr "ഡി.ഇ.സി"
+
+#, fuzzy
+#~ msgid "fr_window"
+#~ msgstr "ജാലകങ്ങള്"
+
+#, fuzzy
+#~ msgid "create %s\n"
+#~ msgstr "നിര്മ്മിക്കൂ %s?"
+
+#, fuzzy
+#~ msgid "cp %s %s\n"
+#~ msgstr "%s [%s]\n"
+
+#, fuzzy
+#~ msgid "mv %s %s\n"
+#~ msgstr "%s [%s]\n"
+
+#, fuzzy
+#~ msgid "rm %s\n"
+#~ msgstr "ഇവിടെ: ‌%s\n"
+
+#, fuzzy
+#~ msgid "Alexander Kirillov"
+#~ msgstr "അലക്സാണ്‌ര്‌ മുനിസ്"
+
+#, fuzzy
+#~ msgid "Copyright  2001-2002 Free Software Foundation, Inc."
+#~ msgstr "Copyright (C) 2001 Free Software Foundation, Inc."
+
+#~ msgid "size"
+#~ msgstr "വലിപ്പം"
+
+#, fuzzy
+#~ msgid "time"
+#~ msgstr "സമയം"
+
+#, fuzzy
+#~ msgid "path"
+#~ msgstr "വഴി"
+
+#, fuzzy
+#~ msgid "ascending"
+#~ msgstr "ആരോഹണം"
+
+#, fuzzy
+#~ msgid "descending"
+#~ msgstr "അവരോഹണം‌"
+
+#, fuzzy
+#~ msgid "as_folder"
+#~ msgstr "കൂട്:"
+
+#, fuzzy
+#~ msgid "very_fast"
+#~ msgstr "അതിവേഗം"
+
+#, fuzzy
+#~ msgid "fast"
+#~ msgstr "കിഴക്ക്"
+
+#, fuzzy
+#~ msgid "maximum"
+#~ msgstr "ഏറ്റവും കൂടിയ X"
+
+#, fuzzy
+#~ msgid "%s-%d"
+#~ msgstr "%s %d"
+
+#, fuzzy
+#~ msgid "/commands/"
+#~ msgstr "ആജ്ഞ:"
+
+#, fuzzy
+#~ msgid "_%d. %s"
+#~ msgstr "%d %s"
+
+#, fuzzy
+#~ msgid "%d. %s"
+#~ msgstr "%d %s"
+
+#, fuzzy
+#~ msgid "tip"
+#~ msgstr "മുകളില്‌"
+
+#, fuzzy
+#~ msgid "ui-component"
+#~ msgstr "വിഭാഗം"
+
+#, fuzzy
+#~ msgid "UI Component"
+#~ msgstr "ഭാഗം"
+
+#, fuzzy
+#~ msgid "show-icons"
+#~ msgstr "ചിഹ്നങ്ങള് പരതുക"
+
+#, fuzzy
+#~ msgid "Show Icons"
+#~ msgstr "സെക്കന്റുകള് കാണിക്കുക"
+
+#, fuzzy
+#~ msgid "Whether or not to show icons"
+#~ msgstr "ക്രമീകരണ സൂചകം ദൃശ്യമാക്കേണ്ടതു‌ണ്ടോ"
+
+#, fuzzy
+#~ msgid "show-numbers"
+#~ msgstr "തുള്ളിമഴ"
+
+#, fuzzy
+#~ msgid "Show Numbers"
+#~ msgstr "തുള്ളിമഴ"
+
+#, fuzzy
+#~ msgid "Whether or not to show numbers"
+#~ msgstr "ക്രമീകരണ സൂചകം ദൃശ്യമാക്കേണ്ടതു‌ണ്ടോ"
+
+#, fuzzy
+#~ msgid ".file-roller/bookmarks"
+#~ msgstr "ഒന്നാക്കിയ അടയാളങ്ങള്:"
+
+#, fuzzy
+#~ msgid ".file-roller/recents"
+#~ msgstr "ഫയല് റോളര് ഘടകം"
+
+#, fuzzy
+#~ msgid ".file-roller/options"
+#~ msgstr "ഫയല് റോളര് ഘടകം"
+
+#, fuzzy
+#~ msgid "gnome-fs-directory"
+#~ msgstr "പ്രവ‍ര്ത്തന വിവര സമാഹാരം"
+
+#, fuzzy
+#~ msgid "gnome-fs-regular"
+#~ msgstr "ക്രമപ്രകാരമുള്ള"
+
+#~ msgid "STRING"
+#~ msgstr "STRING"
+
+#, fuzzy
+#~ msgid "%d %b %Y, %H:%M"
+#~ msgstr "%d %B %Y, %H:%M"
+
+#, fuzzy
+#~ msgid "%s %s - %s"
+#~ msgstr "%s%s, %s"
+
+#~ msgid "%s, %s"
+#~ msgstr "%s, %s"
+
+#, fuzzy
+#~ msgid "/file-roller"
+#~ msgstr "ഫയല് റോളര്"
+
+#, fuzzy
+#~ msgid "nautilus "
+#~ msgstr "നോട്ടിലസ്"
+
+#~ msgid ""
+#~ "%s\n"
+#~ "%s"
+#~ msgstr ""
+#~ "%s\n"
+#~ "%s"
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "%"
+
+#, fuzzy
+#~ msgid "main"
+#~ msgstr "സാമ്രാജ്യം"
+
+#, fuzzy
+#~ msgid "show"
+#~ msgstr "കാണിക്കുക"
+
+#, fuzzy
+#~ msgid "key_press_event"
+#~ msgstr "അമ‍ര്ത്തി"
+
+#, fuzzy
+#~ msgid "drag_end"
+#~ msgstr "അയ‍യ്‍ക്കുക"
+
+#, fuzzy
+#~ msgid "LocationBar"
+#~ msgstr "സ്ഥാനപ്പട്ട"
+
+#, fuzzy
+#~ msgid "nautilus"
+#~ msgstr "നോട്ടിലസ്"
+
+#, fuzzy
+#~ msgid "--sm-disable"
+#~ msgstr "തടഞ്ഞുവെച്ചു"
+
+#, fuzzy
+#~ msgid "--no-desktop"
+#~ msgstr "പണിയിടം"
+
+#, fuzzy
+#~ msgid "file-roller.png"
+#~ msgstr "ഫയല് റോളര്"
