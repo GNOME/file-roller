@@ -1910,6 +1910,7 @@ get_file_list_from_url_list (gchar *url_list)
 	GList *list = NULL;
 	int    i;
 	char  *url_start, *url_end;
+	gboolean dnd_valid = FALSE;
 
 	i = 0;
 	url_start = url_list;
@@ -1925,21 +1926,35 @@ get_file_list_from_url_list (gchar *url_list)
 			url_start += 5;
 			if ((url_start[0] == '/') 
 			    && (url_start[1] == '/')) url_start += 2;
+
+			dnd_valid = TRUE;
+
+			url = g_strndup (url_start, url_end - url_start);
+			list = g_list_prepend (list, get_path_from_url (url));
+			g_free (url);
+
+			while ((url_list[i] != '\0')
+			       && ((url_list[i] == '\r') 
+				   || (url_list[i] == '\n'))) i++;
+			url_start = url_list + i;
+
 		} else {
-			path_list_free (list);
-			return NULL;
+			while ((url_list[i] != '\0')
+			       && ((url_list[i] == '\r') 
+				   || (url_list[i] == '\n'))) i++;
+			url_start = url_list + i;
+			if (url_list[i] == '\0' && !dnd_valid) {
+				path_list_free (list);
+				return NULL;
+			}
 		}
-
-		url = g_strndup (url_start, url_end - url_start);
-		list = g_list_prepend (list, get_path_from_url (url));
-		g_free (url);
-
-		while ((url_list[i] != '\0')
-		       && ((url_list[i] == '\r')
-			   || (url_list[i] == '\n'))) i++;
-		url_start = url_list + i;
 	}
 	
+	if (!dnd_valid) {
+		path_list_free (list);
+		return NULL;
+	}
+
 	return g_list_reverse (list);
 }
 
