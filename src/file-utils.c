@@ -941,6 +941,8 @@ _g_strdup_with_max_size (const char *s,
 const char *
 eat_spaces (const char *line)
 {
+	if (line == NULL)
+		return NULL;
 	while ((*line == ' ') && (*line != 0))
 		line++;
 	return line;
@@ -960,6 +962,10 @@ split_line (const char *line,
 
 	scan = eat_spaces (line);
 	for (i = 0; i < n_fields; i++) {
+		if (scan == NULL) {
+			fields[i] = NULL;
+			continue;
+		}
 		field_end = strchr (scan, ' ');
 		if (field_end != NULL) {
 			fields[i] = g_strndup (scan, field_end - scan);
@@ -978,9 +984,14 @@ get_last_field (const char *line,
 	const char *field;
 	int         i;
 
+	if (line == NULL)
+		return NULL;
+
 	last_field--;
 	field = eat_spaces (line);
 	for (i = 0; i < last_field; i++) {
+		if (field == NULL)
+			return NULL;
 		field = strchr (field, ' ');
 		field = eat_spaces (field);
 	}
