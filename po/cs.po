@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.0\n"
-"POT-Creation-Date: 2002-12-05 06:01+0100\n"
-"PO-Revision-Date: 2002-12-05 20:20+0100\n"
+"POT-Creation-Date: 2002-12-06 05:59+0100\n"
+"PO-Revision-Date: 2002-12-06 11:32+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "Správce archivů"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
-#: src/gtk-utils.c:266 src/main.c:106 src/window.c:699 src/window.c:708
+#: src/gtk-utils.c:266 src/main.c:107 src/window.c:699 src/window.c:708
 #: src/window.c:2369 src/window.c:4068
 msgid "File Roller"
 msgstr "File Roller"
@@ -61,7 +61,7 @@ msgstr "Zpracovat komprimované archivy"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Nemáte oprávnění potřebná pro čtení souborů z adresáře \"%s\""
 
-#: src/dlg-add.c:338 src/file_roller.glade.h:4
+#: src/dlg-add.c:338 src/file_roller.glade.h:8
 msgid "Add Files and Folders"
 msgstr "Přidat soubory a adresáře"
 
@@ -109,12 +109,12 @@ msgstr "_Načíst nastavení"
 msgid "Sa_ve Options"
 msgstr "_Uložit nastavení"
 
-#: src/dlg-add.c:610
-msgid "Load options"
+#: src/dlg-add.c:609
+msgid "Load Options"
 msgstr "Načíst nastavení"
 
 #: src/dlg-add.c:758
-msgid "Save options"
+msgid "Save Options"
 msgstr "Uložit nastavení"
 
 #. Set widgets data.
@@ -156,16 +156,16 @@ msgid "Could not display help: %s"
 msgstr "Nemohu zobrazit nápovědu: %s"
 
 #: src/dlg-extract.c:486
-msgid "Favorites extraction folders"
-msgstr "Oblíbené adresáře pro rozbalení"
+msgid "Bookmarks"
+msgstr "Oblíbené"
 
 #: src/dlg-preferences.c:186
 msgid "General"
 msgstr "Obecné"
 
 #: src/dlg-preferences.c:191
-msgid "Columns to Show"
-msgstr "Zobrazované sloupce"
+msgid "Visible columns"
+msgstr "Viditelné sloupce"
 
 #: src/dlg-prop.c:99
 msgid "Path:"
@@ -181,15 +181,15 @@ msgid "%s Properties"
 msgstr "Vlastnosti %s"
 
 #: src/dlg-prop.c:128
-msgid "File Size:"
+msgid "File size:"
 msgstr "Velikost souboru:"
 
 #: src/dlg-prop.c:139
-msgid "Number of Files:"
+msgid "Number of files:"
 msgstr "Počet souborů:"
 
 #: src/dlg-prop.c:149
-msgid "Date and Time:"
+msgid "Date and time:"
 msgstr "Datum a čas:"
 
 #: src/dlg-prop.c:155
@@ -208,55 +208,59 @@ msgstr "symbolický odkaz"
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "Nemohu najít terminál, používám xterm, i když to nemusí fungovat"
 
-#: src/file_roller.glade.h:1
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
+msgid "    "
+msgstr "    "
+
+#: src/file_roller.glade.h:2
 msgid "*"
 msgstr "*"
 
-#: src/file_roller.glade.h:2
-msgid "A_dd to favorites"
+#: src/file_roller.glade.h:3
+msgid "<b>Actions</b>"
+msgstr "<b>Akce</b>"
+
+#: src/file_roller.glade.h:4
+msgid "<b>Destination folder</b>"
+msgstr "<b>Cílový adresář</b>"
+
+#: src/file_roller.glade.h:5
+msgid "<b>Files</b>"
+msgstr "<b>Soubory</b>"
+
+#: src/file_roller.glade.h:6
+msgid "A_dd to Bookmarks"
 msgstr "Při_dat k oblíbeným"
 
-#: src/file_roller.glade.h:3
+#: src/file_roller.glade.h:7
 msgid "A_vailable application:"
 msgstr "_Dostupná aplikace:"
 
-#: src/file_roller.glade.h:5
+#: src/file_roller.glade.h:9
 msgid "Add _to archive:"
 msgstr "Přidat _do archivu:"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:10
 msgid "Add only if _newer"
 msgstr "Přidat jen, pokud je _novější"
 
-#: src/file_roller.glade.h:7
-msgid "Archive Properties"
-msgstr "Vlastnosti archivu"
-
-#: src/file_roller.glade.h:8 src/menu.h:464
+#: src/file_roller.glade.h:11 src/menu.h:464
 msgid "Delete Files"
 msgstr "Odstranit soubory"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:12
 msgid "Do not e_xtract older files"
 msgstr "Ne_rozbalovat starší soubory"
 
-#: src/file_roller.glade.h:10 src/window.c:2590
+#: src/file_roller.glade.h:13 src/window.c:2590
 msgid "Extract"
 msgstr "Rozbalit"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:14
 msgid "Extract to"
 msgstr "Rozbalit do"
 
-#: src/file_roller.glade.h:12
-msgid "Extract to:"
-msgstr "Rozbalit do:"
-
-#: src/file_roller.glade.h:13
-msgid "Files"
-msgstr "Soubory"
-
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:15
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
@@ -266,17 +270,13 @@ msgstr ""
 "aktuálního archivu, a pro dešifrování souborů, které rozbalíte z aktuálního "
 "archivu. Až archiv zavřete, bude heslo smazáno."
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:16
 msgid "Open Files"
 msgstr "Otevřít soubory"
 
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:17
 msgid "Open with an _application"
 msgstr "Otevřít pomocí _aplikace"
-
-#: src/file_roller.glade.h:17
-msgid "Other options"
-msgstr "Jiné možnosti"
 
 #: src/file_roller.glade.h:18
 msgid "Over_write existing files"
@@ -307,40 +307,32 @@ msgid "View with internal _viewer"
 msgstr "Zobrazit interním _prohlížečem"
 
 #: src/file_roller.glade.h:25
-msgid "Viewer"
-msgstr "Prohlížeč"
-
-#: src/file_roller.glade.h:26
-msgid "_All Files"
+msgid "_All files"
 msgstr "_Všechny soubory"
 
-#: src/file_roller.glade.h:27
+#: src/file_roller.glade.h:26
 msgid "_Application:"
 msgstr "_Aplikace:"
 
-#: src/file_roller.glade.h:28
+#: src/file_roller.glade.h:27
 msgid "_Files:"
 msgstr "_Soubory:"
 
-#: src/file_roller.glade.h:29
+#: src/file_roller.glade.h:28
 msgid "_Password:"
 msgstr "_Heslo:"
 
-#: src/file_roller.glade.h:30
-msgid "_Selected Files"
+#: src/file_roller.glade.h:29
+msgid "_Selected files"
 msgstr "_Vybrané soubory"
 
-#: src/file_roller.glade.h:31
+#: src/file_roller.glade.h:30
 msgid "_View destination folder after extraction"
 msgstr "Zobrazit _cílový adresář po rozbalení"
 
-#: src/file_roller.glade.h:32
+#: src/file_roller.glade.h:31
 msgid "example: *.txt; *.doc"
 msgstr "příklad: *.txt; *.doc"
-
-#: src/file_roller_prop.glade.h:1
-msgid "    "
-msgstr "    "
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -355,19 +347,19 @@ msgid "File Roller Preferences"
 msgstr "Nastavení File Roller"
 
 #: src/file_roller_prop.glade.h:5
-msgid "File _Name"
+msgid "File _name"
 msgstr "_Jméno souboru"
 
 #: src/file_roller_prop.glade.h:6
-msgid "File _Path"
+msgid "File _path"
 msgstr "_Cesta souboru"
 
 #: src/file_roller_prop.glade.h:7
-msgid "File _Size"
+msgid "File _size"
 msgstr "_Velikost souboru"
 
 #: src/file_roller_prop.glade.h:8
-msgid "File _Type"
+msgid "File _type"
 msgstr "_Typ souboru"
 
 #: src/file_roller_prop.glade.h:9
@@ -383,7 +375,7 @@ msgid "Very fast"
 msgstr "Velmi rychlá"
 
 #: src/file_roller_prop.glade.h:12
-msgid "_Modification Time"
+msgid "_Modification time"
 msgstr "_Čas změny"
 
 #: src/file_roller_prop.glade.h:13
@@ -1049,3 +1041,15 @@ msgstr "Přidat soubory do archivu"
 #: src/window.c:4028
 msgid "Extract archive"
 msgstr "Rozbalit archiv"
+
+#~ msgid "Favorites extraction folders"
+#~ msgstr "Oblíbené adresáře pro rozbalení"
+
+#~ msgid "Archive Properties"
+#~ msgstr "Vlastnosti archivu"
+
+#~ msgid "Other options"
+#~ msgstr "Jiné možnosti"
+
+#~ msgid "Viewer"
+#~ msgstr "Prohlížeč"
