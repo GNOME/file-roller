@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.0\n"
-"POT-Creation-Date: 2002-12-27 05:56+0100\n"
-"PO-Revision-Date: 2002-12-28 00:06+0100\n"
+"POT-Creation-Date: 2002-12-28 05:56+0100\n"
+"PO-Revision-Date: 2002-12-28 18:30+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr "Zpracovat komprimované archivy"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Nemáte oprávnění potřebná pro čtení souborů z adresáře \"%s\""
 
-#: src/dlg-add.c:338 src/file_roller.glade.h:8
+#: src/dlg-add.c:338 src/file_roller.glade.h:5
 msgid "Add Files and Folders"
 msgstr "Přidat soubory a adresáře"
 
@@ -168,7 +168,19 @@ msgstr "Nemáte oprávnění potřebná pro rozbalení archivů v adresáři \"%
 msgid "Could not display help: %s"
 msgstr "Nemohu zobrazit nápovědu: %s"
 
-#: src/dlg-extract.c:486
+#: src/dlg-extract.c:474
+msgid "Actions"
+msgstr "Akce"
+
+#: src/dlg-extract.c:475
+msgid "Destination folder"
+msgstr "Cílový adresář"
+
+#: src/dlg-extract.c:476
+msgid "Files"
+msgstr "Soubory"
+
+#: src/dlg-extract.c:505
 msgid "Bookmarks"
 msgstr "Oblíbené"
 
@@ -230,50 +242,38 @@ msgid "*"
 msgstr "*"
 
 #: src/file_roller.glade.h:3
-msgid "<b>Actions</b>"
-msgstr "<b>Akce</b>"
-
-#: src/file_roller.glade.h:4
-msgid "<b>Destination folder</b>"
-msgstr "<b>Cílový adresář</b>"
-
-#: src/file_roller.glade.h:5
-msgid "<b>Files</b>"
-msgstr "<b>Soubory</b>"
-
-#: src/file_roller.glade.h:6
 msgid "A_dd to Bookmarks"
 msgstr "Při_dat k oblíbeným"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:4
 msgid "A_vailable application:"
 msgstr "_Dostupná aplikace:"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Přidat _do archivu:"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:7
 msgid "Add only if _newer"
 msgstr "Přidat jen, pokud je _novější"
 
-#: src/file_roller.glade.h:11 src/menu.h:464
+#: src/file_roller.glade.h:8 src/menu.h:464
 msgid "Delete Files"
 msgstr "Odstranit soubory"
 
-#: src/file_roller.glade.h:12
+#: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
 msgstr "Ne_rozbalovat starší soubory"
 
-#: src/file_roller.glade.h:13 src/window.c:2603
+#: src/file_roller.glade.h:10 src/window.c:2603
 msgid "Extract"
 msgstr "Rozbalit"
 
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:11
 msgid "Extract to"
 msgstr "Rozbalit do"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:12
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
@@ -283,67 +283,67 @@ msgstr ""
 "aktuálního archivu, a pro dešifrování souborů, které rozbalíte z aktuálního "
 "archivu. Až archiv zavřete, bude heslo smazáno."
 
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:13
 msgid "Open Files"
 msgstr "Otevřít soubory"
 
-#: src/file_roller.glade.h:17
+#: src/file_roller.glade.h:14
 msgid "Open with an _application"
 msgstr "Otevřít pomocí _aplikace"
 
-#: src/file_roller.glade.h:18
+#: src/file_roller.glade.h:15
 msgid "Over_write existing files"
 msgstr "_Přepsat existující soubory"
 
-#: src/file_roller.glade.h:19
+#: src/file_roller.glade.h:16
 msgid "Password"
 msgstr "Heslo"
 
-#: src/file_roller.glade.h:20
+#: src/file_roller.glade.h:17
 msgid "R_ecent applications:"
 msgstr "N_edávné aplikace:"
 
-#: src/file_roller.glade.h:21
+#: src/file_roller.glade.h:18
 msgid "R_ecreate folders"
 msgstr "_Vytvořit adresáře"
 
-#: src/file_roller.glade.h:22
+#: src/file_roller.glade.h:19
 msgid "Select archive"
 msgstr "Vybrat archiv"
 
-#: src/file_roller.glade.h:23 src/menu.h:450
+#: src/file_roller.glade.h:20 src/menu.h:450
 msgid "View File"
 msgstr "Zobrazit soubor"
 
-#: src/file_roller.glade.h:24
+#: src/file_roller.glade.h:21
 msgid "View with internal _viewer"
 msgstr "Zobrazit interním _prohlížečem"
 
-#: src/file_roller.glade.h:25
+#: src/file_roller.glade.h:22
 msgid "_All files"
 msgstr "_Všechny soubory"
 
-#: src/file_roller.glade.h:26
+#: src/file_roller.glade.h:23
 msgid "_Application:"
 msgstr "_Aplikace:"
 
-#: src/file_roller.glade.h:27
+#: src/file_roller.glade.h:24
 msgid "_Files:"
 msgstr "_Soubory:"
 
-#: src/file_roller.glade.h:28
+#: src/file_roller.glade.h:25
 msgid "_Password:"
 msgstr "_Heslo:"
 
-#: src/file_roller.glade.h:29
+#: src/file_roller.glade.h:26
 msgid "_Selected files"
 msgstr "_Vybrané soubory"
 
-#: src/file_roller.glade.h:30
+#: src/file_roller.glade.h:27
 msgid "_View destination folder after extraction"
 msgstr "Zobrazit _cílový adresář po rozbalení"
 
-#: src/file_roller.glade.h:31
+#: src/file_roller.glade.h:28
 msgid "example: *.txt; *.doc"
 msgstr "příklad: *.txt; *.doc"
 
