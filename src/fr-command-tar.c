@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
 
 #include <glib.h>
@@ -84,6 +85,118 @@ mktime_from_string (char *date_s,
 }
 
 
+static gboolean
+_match_pattern (const char *line, 
+		const char *pattern)
+{
+	const char *l = line, *p = pattern;
+
+	for (; (*p != 0) && (*l != 0); p++, l++) {
+		if (*p != '%') {
+			if (*p != *l)
+				return FALSE;
+		} else {
+			p++;
+			switch (*p) {
+			case 'a':
+				break;
+			case 'n':
+				if (!isdigit (*l)) 
+					return FALSE;
+				break;
+			case 'c':
+				if (!isalpha (*l)) 
+					return FALSE;
+				break;
+			default:
+				return FALSE;
+			}
+		}
+	}
+	
+	return (*p == 0);
+}
+
+
+static int
+get_index_from_pattern (const char *line, 
+			const char *pattern)
+{
+	int         line_l, pattern_l;
+	const char *l;
+
+	line_l = strlen (line);
+	pattern_l = strlen (pattern);
+
+	if ((pattern_l == 0) || (line_l == 0))
+		return -1;
+
+	for (l = line; *l != 0; l++) 
+		if (_match_pattern (l, pattern))
+			return (l - line);
+	
+	return -1;
+}
+
+
+static char*
+get_next_field (const char *line,
+		int         start_from,
+		int         field_n)
+{
+	const char *f_start, *f_end;
+	
+	line = line + start_from;
+
+	f_start = line;
+	while ((*f_start == ' ') && (*f_start != *line))
+		f_start++;
+	f_end = f_start;
+
+	while ((field_n > 0) && (*f_end != 0)) {
+		if (*f_end == ' ') {
+			field_n--;
+			if (field_n != 0) {
+				while ((*f_end == ' ') && (*f_end != *line))
+					f_end++;
+				f_start = f_end;
+			}
+		} else
+			f_end++;
+	}
+	
+	return g_strndup (f_start, f_end - f_start);
+}
+
+
+static char*
+get_prev_field (const char *line,
+		int         start_from,
+		int         field_n)
+{
+	const char *f_start, *f_end;
+
+	f_start = line + start_from - 1;
+	while ((*f_start == ' ') && (*f_start != *line))
+		f_start--;
+	f_end = f_start;
+
+	while ((field_n > 0) && (*f_start != *line)) {
+		if (*f_start == ' ') {
+			field_n--;
+			if (field_n != 0) {
+				while ((*f_start == ' ') && (*f_start != *line))
+					f_start--;
+				f_end = f_start;
+			}
+		} else
+			f_start--;
+	}
+
+	return g_strndup (f_start + 1, f_end - f_start);
+}
+
+
 static void
 process_line (char     *line, 
 	      gpointer  data)
@@ -91,25 +204,33 @@ process_line (char     *line,
 	FileData    *fdata;
 	FRCommand   *comm = FR_COMMAND (data);
 	char       **fields;
-	const char  *name_field;
+	int          date_idx;
+	char        *field_date, *field_time, *field_size, *field_name;
 
 	g_return_if_fail (line != NULL);
 
 	fdata = file_data_new ();
 
-	fields = split_line (line, 5);
-	fdata->size = atol (fields[2]);
-	fdata->modified = mktime_from_string (fields[3], fields[4]);
-	g_strfreev (fields);
+	date_idx = get_index_from_pattern (line, "%n%n%n%n-%n%n-%n%n %n%n:%n%n:%n%n");
+
+	field_size = get_prev_field (line, date_idx, 1);
+	fdata->size = atol (field_size);
+	g_free (field_size);
+
+	field_date = get_next_field (line, date_idx, 1);
+	field_time = get_next_field (line, date_idx, 2);
+	fdata->modified = mktime_from_string (field_date, field_time);
+	g_free (field_date);
+	g_free (field_time);
 
 	/* Full path */
 
-	name_field = get_last_field (line, 6);
-	fields = g_strsplit (name_field, " -> ", 2);
+	field_name = get_next_field (line, date_idx, 3);
+	fields = g_strsplit (field_name, " -> ", 2);
 
 	if (fields[1] == NULL) {
 		g_strfreev (fields);
-		fields = g_strsplit (name_field, " link to ", 2);
+		fields = g_strsplit (field_name, " link to ", 2);
 	}
 
 	if (*(fields[0]) == '/') {
@@ -123,6 +244,7 @@ process_line (char     *line,
 	if (fields[1] != NULL)
 		fdata->link = g_strdup (fields[1]);
 	g_strfreev (fields);
+	g_free (field_name);
 
 	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);

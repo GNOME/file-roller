@@ -1,3 +1,23 @@
+2004-03-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/menu-callbacks.c (save_as_archive_cb, new_archive_cb): use the
+	new combo_box widget instead of the old option_menu.
+	(new_archive_cb, save_as_archive_cb, open_archive_cb):
+	(copy_or_move_archive): set the window parent.
+
+2004-03-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/menu-callbacks.c (new_archive_cb): use 
+	ACTION_SAVE | CREATE_FOLDER action
+
+	* src/dlg-extract.c (dlg_extract): use the SELECT_FOLDER action
+
+2004-02-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-command-tar.c (_match_pattern, get_index_from_pattern)
+	(get_next_field, get_prev_field): new functions.
+	(process_line): use a better logic to parse the tar output.
+
 2004-02-28  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu-callbacks.c (copy_or_move_archive): 

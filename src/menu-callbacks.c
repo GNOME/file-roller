@@ -78,28 +78,6 @@ new_archive (GtkWidget *file_sel,
 }
 
 
-static guint
-opt_menu_get_active_idx (GtkWidget *opt_menu)
-{
-        GtkWidget *item;
-        guint      idx;
-        GList     *scan;
-        GtkWidget *menu;
-
-        menu = gtk_option_menu_get_menu (GTK_OPTION_MENU (opt_menu));
-        item = gtk_menu_get_active (GTK_MENU (menu));
-
-        idx = 0;
-        scan = GTK_MENU_SHELL (menu)->children;
-        while (scan && (item != scan->data)) {
-                idx++;
-                scan = scan->next;
-        }
-
-        return idx;
-}
-
-
 typedef struct {
 	char *name;
 	char *ext;
@@ -128,13 +106,13 @@ FileTypeDescription write_type_desc[] = {
 static char *
 get_full_path (GtkWidget *file_sel)
 {
-	GtkWidget   *opt_menu;
+	GtkWidget   *combo_box;
 	char        *full_path;
 	char        *path;
 	const char  *filename;
 	int          file_type_idx;
 
-	opt_menu = g_object_get_data (G_OBJECT (file_sel), "fr_opt_menu");
+	combo_box = g_object_get_data (G_OBJECT (file_sel), "fr_combo_box");
 	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
 
 	if ((path == NULL) || (*path == 0))
@@ -146,7 +124,7 @@ get_full_path (GtkWidget *file_sel)
 		return NULL;
 	}
 	
-	file_type_idx = opt_menu_get_active_idx (opt_menu);
+	file_type_idx = gtk_combo_box_get_active (GTK_COMBO_BOX (combo_box));
 	if (file_type_idx > 0) {
 		full_path = g_strconcat (path, 
 					 write_type_desc[file_type_idx].ext,
@@ -269,24 +247,6 @@ new_file_response_cb (GtkWidget *w,
 }
 
 
-static GtkWidget *
-build_file_type_menu (FRWindow *window)
-{
-        GtkWidget *menu;
-        GtkWidget *item;
-	int        i;
-
-        menu = gtk_menu_new ();
-        for (i = 0; i < G_N_ELEMENTS (write_type_desc); i++) {
-                item = gtk_menu_item_new_with_label (_(write_type_desc[i].name));
-		gtk_widget_show (item);
-                gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-        }
-
-	return menu;
-}
-
-
 void
 new_archive_cb (GtkWidget *widget, 
 		void      *data)
@@ -311,18 +271,17 @@ new_archive_cb (GtkWidget *widget,
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
 	GtkWidget *hbox;
-	GtkWidget *vbox, *vbox2;
-	GtkWidget *opt_menu;
-	GtkWidget *menu;
+	GtkWidget *combo_box;
 	GtkFileFilter *filter;
 	int i;
 
-	file_sel = gtk_file_chooser_dialog_new (_("New"),
-					        NULL,
-					        GTK_FILE_CHOOSER_ACTION_SAVE,
-					        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					        GTK_STOCK_NEW, GTK_RESPONSE_OK,
-					        NULL);
+	file_sel = gtk_file_chooser_dialog_new (
+			_("New"),
+			GTK_WINDOW (window->app),
+			GTK_FILE_CHOOSER_ACTION_SAVE,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_NEW, GTK_RESPONSE_OK,
+			NULL);
 
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
@@ -341,31 +300,25 @@ new_archive_cb (GtkWidget *widget,
 
 	/**/
 
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), vbox);
-
-	vbox2 = gtk_vbox_new (FALSE, 6);
-	gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 6);
-
-	/**/
-
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox2), hbox, TRUE, TRUE, 0);
+	hbox = gtk_hbox_new (FALSE, 12);
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);
 
 	gtk_box_pack_start (GTK_BOX (hbox), 
 			    gtk_label_new (_("Archive type:")),
 			    FALSE, FALSE, 0);
 
-	opt_menu = gtk_option_menu_new ();
-	menu = build_file_type_menu (window);
-        gtk_option_menu_set_menu (GTK_OPTION_MENU (opt_menu), menu);
-	gtk_widget_show (opt_menu);
-	gtk_box_pack_start (GTK_BOX (hbox), opt_menu, FALSE, FALSE, 12);
+	combo_box = gtk_combo_box_new_text ();
+	for (i = 0; i < G_N_ELEMENTS (write_type_desc); i++)
+		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
+					   _(write_type_desc[i].name));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
+	gtk_box_pack_start (GTK_BOX (hbox), combo_box, TRUE, TRUE, 0);
+	gtk_widget_show_all (hbox);
 	
 	/**/
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
-	g_object_set_data (G_OBJECT (file_sel), "fr_opt_menu", opt_menu);
+	g_object_set_data (G_OBJECT (file_sel), "fr_combo_box", combo_box);
 	g_object_set_data (G_OBJECT (window->app), "fr_file_sel", file_sel);
 	
 	g_signal_connect (G_OBJECT (file_sel),
@@ -518,17 +471,17 @@ save_as_archive_cb (GtkWidget *widget,
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
 	GtkWidget *hbox;
-	GtkWidget *opt_menu;
-	GtkWidget *menu;
+	GtkWidget *combo_box;
 	GtkFileFilter *filter;
 	int i;
 
-	file_sel = gtk_file_chooser_dialog_new (_("Save"),
-					        NULL,
-					        GTK_FILE_CHOOSER_ACTION_SAVE,
-					        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					        GTK_STOCK_SAVE, GTK_RESPONSE_OK,
-					        NULL);
+	file_sel = gtk_file_chooser_dialog_new (
+			_("Save"),
+			GTK_WINDOW (window->app),
+			GTK_FILE_CHOOSER_ACTION_SAVE,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+			NULL);
 
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
@@ -551,17 +504,19 @@ save_as_archive_cb (GtkWidget *widget,
 	gtk_box_pack_start (GTK_BOX (hbox), 
 			    gtk_label_new (_("Archive type:")),
 			    FALSE, FALSE, 0);
-	opt_menu = gtk_option_menu_new ();
-	menu = build_file_type_menu (window);
-        gtk_option_menu_set_menu (GTK_OPTION_MENU (opt_menu), menu);
-	gtk_box_pack_start (GTK_BOX (hbox), opt_menu, TRUE, TRUE, 0);
+	combo_box = gtk_combo_box_new_text ();
+	for (i = 0; i < G_N_ELEMENTS (write_type_desc); i++)
+		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
+					   _(write_type_desc[i].name));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
+	gtk_box_pack_start (GTK_BOX (hbox), combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
 
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);	
 	/**/
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
-	g_object_set_data (G_OBJECT (file_sel), "fr_opt_menu", opt_menu);
+	g_object_set_data (G_OBJECT (file_sel), "fr_combo_box", combo_box);
 	
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response", 
@@ -642,12 +597,13 @@ open_archive_cb (GtkWidget *widget,
 	GtkFileFilter *filter;
 	int            i;
 
-	file_sel = gtk_file_chooser_dialog_new (_("Open"),
-					        NULL,
-					        GTK_FILE_CHOOSER_ACTION_OPEN,
-					        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					        GTK_STOCK_OPEN, GTK_RESPONSE_OK,
-					        NULL);
+	file_sel = gtk_file_chooser_dialog_new (
+			_("Open"),
+			GTK_WINDOW (window->app),
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+			NULL);
 
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
@@ -820,14 +776,15 @@ copy_or_move_archive (FRWindow *window,
 	data->copy = copy;
 	data->overwrite = overwrite;
 	data->file_sel = file_sel = 
-		gtk_file_chooser_dialog_new (copy ? _("Copy") : _("Move"),
-					     NULL,
-					     GTK_FILE_CHOOSER_ACTION_SAVE,
-					     GTK_STOCK_CANCEL,
-					     GTK_RESPONSE_CANCEL,
-					     copy ? _("_Copy"): _("_Move"),
-					     GTK_RESPONSE_OK,
-					     NULL);
+		gtk_file_chooser_dialog_new (
+		     copy ? _("Copy") : _("Move"),
+		     GTK_WINDOW (window->app),
+		     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+		     GTK_STOCK_CANCEL,
+		     GTK_RESPONSE_CANCEL,
+		     copy ? _("_Copy"): _("_Move"),
+		     GTK_RESPONSE_OK,
+		     NULL);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
  

@@ -483,7 +483,7 @@ dlg_extract (GtkWidget *widget,
 	data->dialog = gtk_file_chooser_dialog_new (
 				    _("Extract"),
 				    GTK_WINDOW (data->window->app),
-				    GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
+				    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 				    GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 				    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				    FR_STOCK_EXTRACT, GTK_RESPONSE_OK,
