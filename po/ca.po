@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.3.0\n"
-"POT-Creation-Date: 2003-05-21 22:52+0200\n"
-"PO-Revision-Date: 2003-05-21 23:02+0200\n"
+"POT-Creation-Date: 2003-05-28 14:08+0200\n"
+"PO-Revision-Date: 2003-05-28 14:09+0200\n"
 "Last-Translator: Raül Cambeiro <rulet@menta.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add To Archive..."
+msgid "Add to Archive..."
 msgstr "Afegeix a l'arxiu..."
 
 #: component/File_Roller_Component.server.in.in.h:2
@@ -24,11 +24,11 @@ msgid "Extract Here"
 msgstr "Extreu ací"
 
 #: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract In A Sub-Folder"
+msgid "Extract in a Folder"
 msgstr "Extreu a una subcarpeta"
 
 #: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract To..."
+msgid "Extract to..."
 msgstr "Extreu a..."
 
 #: component/File_Roller_Component.server.in.in.h:5
@@ -48,9 +48,9 @@ msgid "Archive Manager"
 msgstr "Gestor d'arxius"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:204
-#: src/gtk-utils.c:391 src/main.c:101 src/menu-callbacks.c:1008
-#: src/window.c:759 src/window.c:768 src/window.c:1153 src/window.c:2733
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:379
+#: src/main.c:101 src/menu-callbacks.c:1039 src/window.c:759 src/window.c:768
+#: src/window.c:1153 src/window.c:2733
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -64,9 +64,9 @@ msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr ""
 "No teniu els permisos necessaris per llegir els fitxers de la carpeta \"%s\""
 
-#: src/dlg-add.c:349 src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "Afegeix fitxers i carpetes"
+#: src/dlg-add.c:349
+msgid "Add Files"
+msgstr "Afegeix fitxers"
 
 #: src/dlg-add.c:354
 msgid "_Add only if newer"
@@ -120,7 +120,7 @@ msgstr "Carrega les opcions"
 msgid "Save Options"
 msgstr "Desa les opcions"
 
-#: src/dlg-batch-add.c:98
+#: src/dlg-batch-add.c:98 src/menu-callbacks.c:180 src/menu-callbacks.c:360
 msgid "You have to specify an archive name."
 msgstr "Teniu que especificar un nom d'arxiu."
 
@@ -175,24 +175,24 @@ msgid ""
 msgstr ""
 "No teniu els permisos necessaris per descomprimir arxius en la carpeta \"%s\""
 
-#: src/dlg-extract.c:402 src/dlg-preferences.c:127 src/menu-callbacks.c:971
+#: src/dlg-extract.c:412 src/dlg-preferences.c:127 src/menu-callbacks.c:1002
 #, c-format
 msgid "Could not display help: %s"
 msgstr "No s'ha pogut mostrar l'ajuda: %s"
 
-#: src/dlg-extract.c:479
+#: src/dlg-extract.c:489
 msgid "Actions"
 msgstr "Accions"
 
-#: src/dlg-extract.c:480
+#: src/dlg-extract.c:490
 msgid "Destination folder"
 msgstr "Carpeta de destinació"
 
-#: src/dlg-extract.c:481
+#: src/dlg-extract.c:491
 msgid "Files"
 msgstr "Fitxers"
 
-#: src/dlg-extract.c:510
+#: src/dlg-extract.c:520
 msgid "Bookmarks"
 msgstr "Preferits"
 
@@ -262,6 +262,10 @@ msgstr "Afegeix als _preferits"
 msgid "A_vailable application:"
 msgstr "Aplicació _disponible:"
 
+#: src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "Afegeix fitxers i carpetes"
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "A_fegeix a l'arxiu:"
@@ -313,12 +317,12 @@ msgid "Password"
 msgstr "Contrasenya"
 
 #: src/file_roller.glade.h:17
-msgid "R_ecent applications:"
-msgstr "Aplicacions r_ecents:"
+msgid "R_e-create folders"
+msgstr "Torna a cr_ear les carpetes"
 
 #: src/file_roller.glade.h:18
-msgid "R_ecreate folders"
-msgstr "Torna a cr_ear les carpetes"
+msgid "R_ecent applications:"
+msgstr "Aplicacions r_ecents:"
 
 #: src/file_roller.glade.h:19
 msgid "Select Archive"
@@ -437,12 +441,8 @@ msgstr ""
 "S'ha produït un error de GConf:\n"
 "  %s"
 
-#: src/gtk-utils.c:297
-msgid "gThumb"
-msgstr "gThumb"
-
 #. Button
-#: src/gtk-utils.c:422
+#: src/gtk-utils.c:410
 msgid "Command _Line Output"
 msgstr "Sortida de la _línea d'ordres"
 
@@ -541,81 +541,86 @@ msgstr "Zip (.zip)"
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:178 src/menu-callbacks.c:347
+#: src/menu-callbacks.c:197 src/menu-callbacks.c:377
 msgid "You don't have permission to create an archive in this folder"
 msgstr "No teniu permís per crear un arxiu en aquesta carpeta"
 
-#: src/menu-callbacks.c:204 src/menu-callbacks.c:365 src/menu-callbacks.c:576
-#: src/menu-callbacks.c:748
+#: src/menu-callbacks.c:223 src/menu-callbacks.c:395 src/menu-callbacks.c:606
+#: src/menu-callbacks.c:779
 msgid "Archive already exists.  Do you want to overwrite it?"
 msgstr "L'arxiu ja existeix. Voleu sobreescriure'l?"
 
-#: src/menu-callbacks.c:206 src/menu-callbacks.c:367 src/menu-callbacks.c:578
-#: src/menu-callbacks.c:750
+#: src/menu-callbacks.c:225 src/menu-callbacks.c:397 src/menu-callbacks.c:608
+#: src/menu-callbacks.c:781
 msgid "Overwrite"
 msgstr "Sobreescriu"
 
-#: src/menu-callbacks.c:223 src/menu-callbacks.c:384
+#: src/menu-callbacks.c:242 src/menu-callbacks.c:414
 msgid "Could not delete old archive."
 msgstr "No s'ha pogut suprimir l'arxiu antic."
 
-#: src/menu-callbacks.c:264
+#: src/menu-callbacks.c:283
 msgid "New Archive"
 msgstr "Nou arxiu"
 
-#: src/menu-callbacks.c:276 src/menu-callbacks.c:420
+#: src/menu-callbacks.c:295 src/menu-callbacks.c:450
 msgid "Archive type:"
 msgstr "Tipus de fitxer:"
 
-#: src/menu-callbacks.c:408
+#: src/menu-callbacks.c:438
 msgid "Save Archive"
 msgstr "Desa l'arxiu"
 
-#: src/menu-callbacks.c:491
+#: src/menu-callbacks.c:521
 msgid "Open Archive"
 msgstr "Obre un arxiu"
 
-#: src/menu-callbacks.c:601
+#: src/menu-callbacks.c:631
 msgid "Could not copy archive"
 msgstr "No s'ha pogut copiar l'arxiu"
 
-#: src/menu-callbacks.c:617
+#: src/menu-callbacks.c:647
 msgid "Could not move archive"
 msgstr "No s'ha pogut moure l'arxiu"
 
-#: src/menu-callbacks.c:641
-msgid "Copy archive"
+#: src/menu-callbacks.c:671
+msgid "Copy Archive"
 msgstr "Còpia l'arxiu"
 
-#: src/menu-callbacks.c:641
-msgid "Move archive"
+#: src/menu-callbacks.c:671
+msgid "Move Archive"
 msgstr "Mou l'arxiu"
 
-#: src/menu-callbacks.c:719
+#: src/menu-callbacks.c:749
+msgid "Rename Archive"
+msgstr "Desa l'arxiu"
+
+#: src/menu-callbacks.c:750
 msgid "New archive name (without extension)"
 msgstr "Nou nom per l'arxiu (sense extensió)"
 
-#: src/menu-callbacks.c:723 src/menu.h:108
+#: src/menu-callbacks.c:754
 msgid "_Rename"
 msgstr "_Canvia el nom"
 
-#: src/menu-callbacks.c:832
+#: src/menu-callbacks.c:863
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
-msgstr "No es pot mouse l'arxiu a la paperera. Voleu suprimir-lo permanentment?"
+msgstr ""
+"No es pot mouse l'arxiu a la paperera. Voleu suprimir-lo permanentment?"
 
-#: src/menu-callbacks.c:1000
+#: src/menu-callbacks.c:1031
 msgid "translator_credits"
 msgstr ""
 "Raül Cambeiro <rulet@menta.net>\n"
 "Jordi Mallach <jordi@sindominio.net>"
 
-#: src/menu-callbacks.c:1011
+#: src/menu-callbacks.c:1042
 msgid "An archive manager for GNOME."
 msgstr "Un gestor d'arxius pel GNOME."
 
-#: src/menu-callbacks.c:1185 src/window.c:4027
+#: src/menu-callbacks.c:1216 src/window.c:4027
 msgid "Last Output"
 msgstr "Última sortida"
 
@@ -664,20 +669,24 @@ msgid "View file with internal viewer"
 msgstr "Obre el fitxer amb el visualitzador intern"
 
 #: src/menu.h:108
+msgid "_Rename..."
+msgstr "_Canvia el nom..."
+
+#: src/menu.h:108
 msgid "Rename current archive"
 msgstr "Canvia el nom de l'arxiu actual"
 
 #: src/menu.h:114
-msgid "Cop_y"
-msgstr "_Copia"
+msgid "Cop_y..."
+msgstr "Còp_ia"
 
 #: src/menu.h:114
 msgid "Copy current archive to another folder"
 msgstr "Copia l'arxiu actual a una altra carpeta"
 
 #: src/menu.h:120
-msgid "_Move"
-msgstr "_Mou"
+msgid "_Move..."
+msgstr "_Mou..."
 
 #: src/menu.h:120
 msgid "Move current archive to another folder"
@@ -731,9 +740,9 @@ msgstr "Afegeix _fitxers..."
 msgid "Add files to the archive"
 msgstr "Afegeix fitxers a l'arxiu"
 
-#: src/menu.h:186 src/menu.h:474
-msgid "_Delete Files"
-msgstr "_Suprimeix els fitxers"
+#: src/menu.h:186
+msgid "_Delete Files..."
+msgstr "_Suprimeix els fitxers..."
 
 #: src/menu.h:186
 msgid "Delete selected files and folders from the archive"
@@ -800,20 +809,20 @@ msgid "Sort file list by type"
 msgstr "Ordena la llista de fitxers per tipus"
 
 #: src/menu.h:267
-msgid "by _Time"
-msgstr "per _Hora"
+msgid "by _Date modified"
+msgstr "per _data de modificació"
 
 #: src/menu.h:267
 msgid "Sort file list by modification time"
 msgstr "Ordena la llista de fitxers per hora de modificació"
 
 #: src/menu.h:273
-msgid "by _Path"
-msgstr "per _Camí"
+msgid "by _Location"
+msgstr "per _ubicació"
 
 #: src/menu.h:273
-msgid "Sort file list by path"
-msgstr "Ordena la llista de fitxers per camí"
+msgid "Sort file list by location"
+msgstr "Ordena la llista de fitxers per ubicació"
 
 #: src/menu.h:290
 msgid "View All _Files"
@@ -922,6 +931,10 @@ msgstr "_Finestres"
 #: src/menu.h:454
 msgid "Open Files..."
 msgstr "Obre fitxers..."
+
+#: src/menu.h:474
+msgid "_Delete Files"
+msgstr "_Suprimeix els fitxers"
 
 #: src/menu.h:474
 msgid "Delete files from the archive"
@@ -1111,6 +1124,18 @@ msgstr "Afegeix els fitxers a un arxiu"
 msgid "Extract archive"
 msgstr "Extreu arxiu"
 
+#~ msgid "Extract To..."
+#~ msgstr "Extreu a..."
+
+#~ msgid "gThumb"
+#~ msgstr "gThumb"
+
+#~ msgid "by _Time"
+#~ msgstr "per _Hora"
+
+#~ msgid "by _Path"
+#~ msgstr "per _Camí"
+
 #~ msgid "_Name"
 #~ msgstr "_Nom"
 
@@ -1129,9 +1154,6 @@ msgstr "Extreu arxiu"
 #~ msgid "Add Files..."
 #~ msgstr "Afegeix fitxers..."
 
-#~ msgid "Extract to..."
-#~ msgstr "Extreu a..."
-
 #~ msgid "Select All"
 #~ msgstr "Selecciona-ho tot"
 
@@ -1143,9 +1165,6 @@ msgstr "Extreu arxiu"
 
 #~ msgid "Current Location:"
 #~ msgstr "Ubicació actual:"
-
-#~ msgid "Add files"
-#~ msgstr "Afegeix fitxers"
 
 #~ msgid "Save options"
 #~ msgstr "Desa les opcions"
