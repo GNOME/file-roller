@@ -1,3 +1,10 @@
+2004-09-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (default_sort_func): return 0 instead of 1
+
+	Fixes bug #151113  - crash trying to open zip file for extraction
+	Patch by ed AT catmur.co.uk
+
 2004-09-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c (window_new, update_file_list_idle): 
