@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.4.x\n"
-"POT-Creation-Date: 2003-05-21 14:00+0200\n"
-"PO-Revision-Date: 2003-05-21 14:00+0200\n"
+"POT-Creation-Date: 2003-06-07 15:29+0200\n"
+"PO-Revision-Date: 2003-06-07 15:29+0200\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,20 +16,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add To Archive..."
-msgstr "Zu Archiv hinzufügen..."
+msgid "Add to Archive..."
+msgstr "Zu einem Archiv hinzufügen..."
 
 #: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
 msgstr "Hier entpacken"
 
 #: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract In A Sub-Folder"
-msgstr "In einem Unterordner entpacken"
+msgid "Extract in a Folder"
+msgstr "In einem Ordner entpacken"
 
 #: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract To..."
-msgstr "Entpacken in..."
+msgid "Extract to..."
+msgstr "Entpacken nach..."
 
 #: component/File_Roller_Component.server.in.in.h:5
 msgid "File Roller Component add operations"
@@ -48,9 +48,9 @@ msgid "Archive Manager"
 msgstr "Archiv-Manager"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:204
-#: src/gtk-utils.c:391 src/main.c:101 src/menu-callbacks.c:1008
-#: src/window.c:759 src/window.c:768 src/window.c:1153 src/window.c:2733
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:379
+#: src/main.c:101 src/menu-callbacks.c:1043 src/window.c:759 src/window.c:768
+#: src/window.c:1153 src/window.c:2733
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -65,9 +65,9 @@ msgstr ""
 "Sie haben nicht die erforderlichen Zugriffsrechte, um Dateien im Ordner »%s« "
 "zu lesen"
 
-#: src/dlg-add.c:349 src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "Dateien und Ordner hinzufügen"
+#: src/dlg-add.c:349
+msgid "Add Files"
+msgstr "Dateien hinzufügen"
 
 #: src/dlg-add.c:354
 msgid "_Add only if newer"
@@ -121,7 +121,7 @@ msgstr "Optionen laden"
 msgid "Save Options"
 msgstr "Optionen speichern"
 
-#: src/dlg-batch-add.c:98
+#: src/dlg-batch-add.c:98 src/menu-callbacks.c:180 src/menu-callbacks.c:360
 msgid "You have to specify an archive name."
 msgstr "Sie müssen einen Namen für das Archiv angeben."
 
@@ -177,24 +177,24 @@ msgstr ""
 "Sie haben nicht die erforderlichen Zugriffsreche, um Archive im Ordner »%s« "
 "zu entpacken"
 
-#: src/dlg-extract.c:402 src/dlg-preferences.c:127 src/menu-callbacks.c:971
+#: src/dlg-extract.c:412 src/dlg-preferences.c:127 src/menu-callbacks.c:1006
 #, c-format
 msgid "Could not display help: %s"
 msgstr "Die Hilfedatei konnte nicht dargestellt werden: %s"
 
-#: src/dlg-extract.c:479
+#: src/dlg-extract.c:489
 msgid "Actions"
 msgstr "Aktionen"
 
-#: src/dlg-extract.c:480
+#: src/dlg-extract.c:490
 msgid "Destination folder"
 msgstr "Zielordner"
 
-#: src/dlg-extract.c:481
+#: src/dlg-extract.c:491
 msgid "Files"
 msgstr "Dateien"
 
-#: src/dlg-extract.c:510
+#: src/dlg-extract.c:520
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
@@ -265,6 +265,10 @@ msgstr "Zu Favoriten _hinzufügen"
 msgid "A_vailable application:"
 msgstr "_Verfügbare Anwendung:"
 
+#: src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "Dateien und Ordner hinzufügen"
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "_Zum Archiv hinzufügen:"
@@ -279,7 +283,7 @@ msgstr "Dateien löschen"
 
 #: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
-msgstr "Keine älteren Dateien _entpacken"
+msgstr "_Keine älteren Dateien entpacken"
 
 #: src/file_roller.glade.h:10 src/window.c:2971
 msgid "Extract"
@@ -309,19 +313,19 @@ msgstr "Mit einer _Anwendung öffnen"
 
 #: src/file_roller.glade.h:15
 msgid "Over_write existing files"
-msgstr "Vorhandene Dateien _ersetzen"
+msgstr "_Vorhandene Dateien ersetzen"
 
 #: src/file_roller.glade.h:16
 msgid "Password"
 msgstr "Passwort"
 
 #: src/file_roller.glade.h:17
-msgid "R_ecent applications:"
-msgstr "_Zuletzt verwendete Programme"
+msgid "R_e-create folders"
+msgstr "Ordner _neu anlegen"
 
 #: src/file_roller.glade.h:18
-msgid "R_ecreate folders"
-msgstr "_Ordner neu anlegen"
+msgid "R_ecent applications:"
+msgstr "_Zuletzt verwendete Programme"
 
 #: src/file_roller.glade.h:19
 msgid "Select Archive"
@@ -337,7 +341,7 @@ msgstr "Mit interner _Ansicht anzeigen"
 
 #: src/file_roller.glade.h:22
 msgid "_All files"
-msgstr "_Alle Dateien"
+msgstr "A_lle Dateien"
 
 #: src/file_roller.glade.h:23
 msgid "_Application:"
@@ -357,7 +361,7 @@ msgstr "_Gewählte Dateien"
 
 #: src/file_roller.glade.h:27
 msgid "_View destination folder after extraction"
-msgstr "Nach dem Entpacken den Zielordner _anzeigen"
+msgstr "Nach dem Entpacken den _Zielordner anzeigen"
 
 #: src/file_roller.glade.h:28
 msgid "example: *.txt; *.doc"
@@ -365,7 +369,7 @@ msgstr "Beispiel: *.txt; *.doc"
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
-msgstr "Kompressions_grad:"
+msgstr "_Kompressionsgrad:"
 
 #: src/file_roller_prop.glade.h:3
 msgid "Date _modified"
@@ -440,12 +444,8 @@ msgstr ""
 "GConf-Fehler:\n"
 "  %s"
 
-#: src/gtk-utils.c:297
-msgid "gThumb"
-msgstr "gThumb"
-
 #. Button
-#: src/gtk-utils.c:422
+#: src/gtk-utils.c:410
 msgid "Command _Line Output"
 msgstr "Ausgabe der _Befehlszeile"
 
@@ -543,67 +543,71 @@ msgstr "Zip (.zip)"
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zip)"
 
-#: src/menu-callbacks.c:178 src/menu-callbacks.c:347
+#: src/menu-callbacks.c:197 src/menu-callbacks.c:377
 msgid "You don't have permission to create an archive in this folder"
 msgstr ""
 "Sie haben nicht die erforderlichen Zugriffsreche, um in diesem Ordner "
 "Archive anzulegen"
 
-#: src/menu-callbacks.c:204 src/menu-callbacks.c:365 src/menu-callbacks.c:576
-#: src/menu-callbacks.c:748
+#: src/menu-callbacks.c:223 src/menu-callbacks.c:395 src/menu-callbacks.c:610
+#: src/menu-callbacks.c:783
 msgid "Archive already exists.  Do you want to overwrite it?"
 msgstr "Das Archiv existiert bereits. Soll es überschrieben werden?"
 
-#: src/menu-callbacks.c:206 src/menu-callbacks.c:367 src/menu-callbacks.c:578
-#: src/menu-callbacks.c:750
+#: src/menu-callbacks.c:225 src/menu-callbacks.c:397 src/menu-callbacks.c:612
+#: src/menu-callbacks.c:785
 msgid "Overwrite"
 msgstr "Überschreiben"
 
-#: src/menu-callbacks.c:223 src/menu-callbacks.c:384
+#: src/menu-callbacks.c:242 src/menu-callbacks.c:414
 msgid "Could not delete old archive."
 msgstr "Das alte Archiv konnte nicht gelöscht werden."
 
-#: src/menu-callbacks.c:264
+#: src/menu-callbacks.c:283
 msgid "New Archive"
-msgstr "Neues Archiv"
+msgstr "Archiv anlegen"
 
-#: src/menu-callbacks.c:276 src/menu-callbacks.c:420
+#: src/menu-callbacks.c:295 src/menu-callbacks.c:450
 msgid "Archive type:"
 msgstr "Archivtyp:"
 
-#: src/menu-callbacks.c:408
+#: src/menu-callbacks.c:438
 msgid "Save Archive"
 msgstr "Archiv speichern"
 
-#: src/menu-callbacks.c:491
+#: src/menu-callbacks.c:521
 msgid "Open Archive"
 msgstr "Archiv öffnen"
 
-#: src/menu-callbacks.c:601
+#: src/menu-callbacks.c:635
 msgid "Could not copy archive"
 msgstr "Archiv konnte nicht kopiert werden"
 
-#: src/menu-callbacks.c:617
+#: src/menu-callbacks.c:651
 msgid "Could not move archive"
 msgstr "Archiv konnte nicht verschoben werden"
 
-#: src/menu-callbacks.c:641
-msgid "Copy archive"
+#: src/menu-callbacks.c:675
+msgid "Copy Archive"
 msgstr "Archiv kopieren"
 
-#: src/menu-callbacks.c:641
-msgid "Move archive"
+#: src/menu-callbacks.c:675
+msgid "Move Archive"
 msgstr "Archiv verschieben"
 
-#: src/menu-callbacks.c:719
+#: src/menu-callbacks.c:753
+msgid "Rename Archive"
+msgstr "Archiv umbenennen"
+
+#: src/menu-callbacks.c:754
 msgid "New archive name (without extension)"
 msgstr "Neuer Archiv-Name (ohne Erweiterung)"
 
-#: src/menu-callbacks.c:723 src/menu.h:108
+#: src/menu-callbacks.c:758
 msgid "_Rename"
 msgstr "_Umbenennen"
 
-#: src/menu-callbacks.c:832
+#: src/menu-callbacks.c:867
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
@@ -611,17 +615,17 @@ msgstr ""
 "Das Archiv konnte nicht in den Müll verschoben werden. Soll es endgültig "
 "gelöscht werden?"
 
-#: src/menu-callbacks.c:1000
+#: src/menu-callbacks.c:1035
 msgid "translator_credits"
 msgstr ""
 "Stefan Furtmayr <sf@paf.net>\n"
 "Christian Neumair <chris@gnome-de.org>"
 
-#: src/menu-callbacks.c:1011
+#: src/menu-callbacks.c:1046
 msgid "An archive manager for GNOME."
 msgstr "Ein Archiv-Manager für GNOME."
 
-#: src/menu-callbacks.c:1185 src/window.c:4027
+#: src/menu-callbacks.c:1220 src/window.c:4027
 msgid "Last Output"
 msgstr "Letzte Ausgabe"
 
@@ -672,20 +676,24 @@ msgid "View file with internal viewer"
 msgstr "Die gewählte Datei mit einer internen Ansicht anzeigen"
 
 #: src/menu.h:108
+msgid "_Rename..."
+msgstr "_Umbenennen..."
+
+#: src/menu.h:108
 msgid "Rename current archive"
 msgstr "Das momentan geöffnete Archiv umbenennen"
 
 #: src/menu.h:114
-msgid "Cop_y"
-msgstr "_Kopieren"
+msgid "Cop_y..."
+msgstr "_Kopieren..."
 
 #: src/menu.h:114
 msgid "Copy current archive to another folder"
 msgstr "Das momentan geöffnete Archiv in einen anderen Ordner kopieren"
 
 #: src/menu.h:120
-msgid "_Move"
-msgstr "_Verschieben"
+msgid "_Move..."
+msgstr "_Verschieben..."
 
 #: src/menu.h:120
 msgid "Move current archive to another folder"
@@ -739,9 +747,9 @@ msgstr "Dateien _hinzufügen..."
 msgid "Add files to the archive"
 msgstr "Dateien zum Archiv hinzufügen"
 
-#: src/menu.h:186 src/menu.h:474
-msgid "_Delete Files"
-msgstr "Dateien _löschen"
+#: src/menu.h:186
+msgid "_Delete Files..."
+msgstr "Dateien _löschen..."
 
 #: src/menu.h:186
 msgid "Delete selected files and folders from the archive"
@@ -773,7 +781,7 @@ msgstr "Alle Dateien abwählen"
 
 #: src/menu.h:230
 msgid "Pass_word..."
-msgstr "Pass_wort..."
+msgstr "_Passwort..."
 
 #: src/menu.h:238
 msgid "_Preferences"
@@ -789,7 +797,7 @@ msgstr "nach _Name"
 
 #: src/menu.h:249
 msgid "Sort file list by name"
-msgstr "Die Dateiliste nach Namen sortieren"
+msgstr "Die Dateiliste dem Namen nach sortieren"
 
 #: src/menu.h:255
 msgid "by _Size"
@@ -797,7 +805,7 @@ msgstr "nach _Größe"
 
 #: src/menu.h:255
 msgid "Sort file list by file size"
-msgstr "Die Dateiliste nach Größe sortieren"
+msgstr "Die Dateiliste der Größe nach sortieren"
 
 #: src/menu.h:261
 msgid "by T_ype"
@@ -805,23 +813,23 @@ msgstr "nach _Typ"
 
 #: src/menu.h:261
 msgid "Sort file list by type"
-msgstr "Die Dateiliste nach Typ sortieren"
+msgstr "Die Dateiliste dem Typ nach sortieren"
 
 #: src/menu.h:267
-msgid "by _Time"
-msgstr "Nach _Zeit"
+msgid "by _Date modified"
+msgstr "nach Än_derungsdatum"
 
 #: src/menu.h:267
 msgid "Sort file list by modification time"
-msgstr "Die Dateiliste nach Änderungsdatum sortieren"
+msgstr "Die Dateiliste dem Änderungsdatum nach sortieren"
 
 #: src/menu.h:273
-msgid "by _Path"
-msgstr "Nach _Pfad"
+msgid "by _Location"
+msgstr "nach _Speicherort"
 
 #: src/menu.h:273
-msgid "Sort file list by path"
-msgstr "Die Dateiliste nach Pfad sortieren"
+msgid "Sort file list by location"
+msgstr "Die Dateiliste dem Speicherort nach sortieren"
 
 #: src/menu.h:290
 msgid "View All _Files"
@@ -881,7 +889,7 @@ msgstr "_Letzte Ausgabe"
 
 #: src/menu.h:391
 msgid "New _Window"
-msgstr "Neues _Fenster"
+msgstr "_Neues Fenster"
 
 #: src/menu.h:391
 msgid "Open a new window"
@@ -930,6 +938,10 @@ msgstr "_Fenster"
 #: src/menu.h:454
 msgid "Open Files..."
 msgstr "Dateien öffnen..."
+
+#: src/menu.h:474
+msgid "_Delete Files"
+msgstr "Dateien _löschen"
 
 #: src/menu.h:474
 msgid "Delete files from the archive"
@@ -1121,3 +1133,15 @@ msgstr "Dateien zu einem Archiv hinzufügen"
 #: src/window.c:4581
 msgid "Extract archive"
 msgstr "Archiv entpacken"
+
+#~ msgid "Extract To..."
+#~ msgstr "Entpacken in..."
+
+#~ msgid "gThumb"
+#~ msgstr "gThumb"
+
+#~ msgid "by _Time"
+#~ msgstr "Nach _Zeit"
+
+#~ msgid "by _Path"
+#~ msgstr "Nach _Pfad"
