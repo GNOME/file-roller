@@ -1,3 +1,11 @@
+2005-02-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (display_progress_dialog): use gtk_widget_show instead of
+	gtk_window_present.
+
+	Fixes bug #168477: Create Archive should leave status window in the 
+	background while creating multiple folder archives.
+
 2005-02-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* file-roller/src/gtk-utils.c:

@@ -1259,9 +1259,9 @@ display_progress_dialog (gpointer data)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   window->stoppable);
-		if (!window->batch_mode)
-			gtk_window_present (GTK_WINDOW (window->app));
-		gtk_window_present (GTK_WINDOW (window->progress_dialog));
+		if (! window->batch_mode)
+			gtk_widget_show (window->app);
+		gtk_widget_show (window->progress_dialog);
 	}
 
 	window->progress_timeout = 0;
