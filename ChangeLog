@@ -1,5 +1,8 @@
 2005-03-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.c (window_open_files__extract_done_cb): store command
+	data to remove the temp dir before exiting.
+
 	* src/window.c (window_open_files__extract_done_cb)
 	(window_open_files_common): do not escape filenames with 
 	gnome_vfs_mime_application_launch.

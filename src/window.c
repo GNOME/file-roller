@@ -5449,6 +5449,7 @@ window_open_files__extract_done_cb (FRArchive   *archive,
 			uris = g_list_prepend (uris, gnome_vfs_get_uri_from_local_path (filename));
 		}
 
+		command_list = g_list_prepend (command_list, cdata);
 		gnome_vfs_mime_application_launch (cdata->app, uris);
 
 		path_list_free (uris);
