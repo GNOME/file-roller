@@ -3498,11 +3498,46 @@ gh_unref_pixbuf (gpointer  key,
 static void
 _window_clipboard_clear (FRWindow *window)
 {
-	if (window->clipboard)
+	if (window->clipboard != NULL)
 		path_list_free (window->clipboard);
 	window->clipboard = NULL;
 	g_free (window->clipboard_current_dir);
 	window->clipboard_current_dir = NULL;
+}
+
+
+static void
+_window_clipboard_remove_file_list (FRWindow *window,
+				    GList    *file_list)
+{
+	GList *scan1;
+
+	if (window->clipboard == NULL)
+		return;
+
+	if (file_list == NULL) {
+		_window_clipboard_clear (window);
+		return;
+	}
+
+	for (scan1 = file_list; scan1; scan1 = scan1->next) {
+		const char *name1 = scan1->data;
+		GList      *scan2;
+		for (scan2 = window->clipboard; scan2;) {
+			const char *name2 = scan2->data;
+			if (strcmp (name1, name2) == 0) {
+				GList *tmp = scan2->next;
+				window->clipboard = g_list_remove_link (window->clipboard, scan2);
+				g_free (scan2->data);
+				g_list_free (scan2);
+				scan2 = tmp;
+			} else
+				scan2 = scan2->next;
+		}
+	}
+
+	if (window->clipboard == NULL) 
+		_window_clipboard_clear (window);
 }
 
 
@@ -3973,6 +4008,8 @@ window_archive_remove (FRWindow      *window,
 		       GList         *file_list,
 		       FRCompression  compression)
 {
+	_window_clipboard_remove_file_list (window, file_list);
+
 	fr_process_clear (window->archive->process);
 	fr_archive_remove (window->archive, file_list, compression);
 	fr_process_start (window->archive->process);
@@ -4539,6 +4576,8 @@ rename_selection (FRWindow   *window,
 			   file_list,
 			   window->compression);
 
+	_window_clipboard_remove_file_list (window, file_list);
+
 	/* rename files. */
 
 	if (is_dir) {
@@ -4563,7 +4602,9 @@ rename_selection (FRWindow   *window,
 		char       *old_path = NULL, *common = NULL, *new_path = NULL;
 		
 		old_path = g_build_filename (tmp_dir, filename, NULL);
-		common = g_strdup (filename + strlen (current_dir) + strlen (old_name));
+
+		if (strlen (filename) > (strlen (current_dir) + strlen (old_name))) 
+			common = g_strdup (filename + strlen (current_dir) + strlen (old_name));
 		new_path = g_build_filename (tmp_dir, current_dir, new_name, common, NULL);
 
 		if (! is_dir) {
@@ -4865,6 +4906,11 @@ window_paste_selection (FRWindow *window)
 	fr_process_start (archive->process);
 
 	g_free (tmp_dir);
+
+	/**/
+
+	if (window->clipboard_op == FR_CLIPBOARD_OP_CUT)
+		_window_clipboard_clear (window);
 }
 
 
