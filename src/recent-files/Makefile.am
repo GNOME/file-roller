@@ -20,6 +20,8 @@ EGG_FILES =				\
         egg-recent-view-bonobo.h	\
         egg-recent-view-gtk.c		\
         egg-recent-view-gtk.h		\
+        egg-recent-view-uimanager.c	\
+        egg-recent-view-uimanager.h	\
         egg-recent-util.c		\
 	egg-recent-util.h
 

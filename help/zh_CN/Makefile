@@ -111,7 +111,7 @@ CATALOGS =  am.gmo ar.gmo az.gmo be.gmo bg.gmo bn.gmo ca.gmo cs.gmo cy.gmo da.gm
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -Wall -DDEBUG
+CFLAGS = -ggdb -Wall -Wuninitialized -DDEBUG -O2
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
