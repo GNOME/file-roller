@@ -83,6 +83,14 @@ GList *             path_list_dup                (GList *path_list);
 gboolean            is_mime_type                 (const char* type, 
 						  const char* pattern);
 
+gboolean            strchrs                      (const char *str,
+						  const char *chars);
+
+char*               escape_str_common            (const char *str, 
+						  const char *meta_chars,
+						  const char  prefix,
+						  const char  postfix);
+
 char*               escape_str                   (const char  *str, 
 						  const char  *meta_chars);
 

@@ -750,11 +750,18 @@ char *
 fr_command_tar_escape (FRCommand     *comm,
 		       const char    *str)
 {
-	char *estr, *estr2;
+	char *estr;
+	char *estr2;
 
-	estr = shell_escape (str);
-	estr2 = g_strconcat ("\"", estr, "\"", NULL);
+        estr = escape_str (str, "?*\\'");
+        estr2 = escape_str_common (estr, "[]", '[', ']');
 	g_free (estr);
+	
+	if ((strcmp (estr2, str) != 0) || strchrs (str, "& !()|@#:;")) {
+		char *estr3 = g_strconcat ("'", estr2, "'", NULL);
+		g_free (estr2);
+		estr2 = estr3;
+	}
 
 	return estr2;
 }

@@ -1,3 +1,14 @@
+2004-09-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/file-utils.h: 
+	* src/file-utils.c (escape_str_common): 
+	(strchrs): new functions
+
+	* src/fr-command-tar.c (fr_command_tar_escape): 
+
+	attempt to fix bug #153003: Does not properly extract files with 
+	special characters in their filenames from .tar.gz files
+
 2004-09-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c (last_output_window__unrealize_cb) 

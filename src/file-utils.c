@@ -479,21 +479,39 @@ count_chars_to_escape (const char *str,
 }
 
 
-/* escape with backslash the string @str. */
+gboolean
+strchrs (const char *str,
+	 const char *chars)
+{
+	const char *c;
+	for (c = chars; c != 0; c++)
+		if (strchr (str, *c) != NULL)
+			return TRUE;
+	return FALSE;
+}
+
+
 char*
-escape_str (const char *str, 
-	    const char *meta_chars)
+escape_str_common (const char *str, 
+		   const char *meta_chars,
+		   const char  prefix,
+		   const char  postfix)
 {
 	int         meta_chars_n = strlen (meta_chars);
 	char       *escaped;
-	int         i, new_l;
+	int         i, new_l, extra_chars = 0;
 	const char *s;
 	char       *t;
 
 	if (str == NULL) 
 		return NULL;
 
-	new_l = strlen (str) + count_chars_to_escape (str, meta_chars);
+	if (prefix)
+		extra_chars++;
+	if (postfix)
+		extra_chars++;
+
+	new_l = strlen (str) + (count_chars_to_escape (str, meta_chars) * extra_chars);
 	escaped = g_malloc (new_l + 1);
 
 	s = str;
@@ -502,13 +520,24 @@ escape_str (const char *str,
 		gboolean is_bad = FALSE;
 		for (i = 0; (i < meta_chars_n) && !is_bad; i++)
 			is_bad = (*s == meta_chars[i]);
-		if (is_bad)
-			*t++ = '\\';
+		if (is_bad && prefix)
+			*t++ = prefix;
 		*t++ = *s++;
+		if (is_bad && postfix)
+			*t++ = postfix;
 	}
 	*t = 0;
 
 	return escaped;
+}
+
+
+/* escape with backslash the string @str. */
+char*
+escape_str (const char *str, 
+	    const char *meta_chars)
+{
+	return escape_str_common (str, meta_chars, '\\', 0);
 }
 
 
