@@ -1934,6 +1934,10 @@ drag_drop_add_file_list (FRWindow *window)
 		window->adding_dropped_files = FALSE;
 		if (! window->batch_mode)
 			window_archive_reload (window);
+		else {
+			window->batch_action = g_list_next (window->batch_action);
+			_window_batch_start_current_action (window);
+		}
 		return;
 	}
 

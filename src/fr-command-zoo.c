@@ -120,19 +120,19 @@ split_line_zoo (char *line)
 	fields = g_new0 (char *, 6);
 	fields[5] = NULL;
 
-	// Get Length
+	/* Get Length */
 	scan = eat_spaces (line);
 	field_end = strchr (scan, ' ');
 	fields[0] = g_strndup (scan, field_end - scan);
 	scan = eat_spaces (field_end);
 
-	// Toss CF, Size Now
+	/* Toss CF, Size Now */
 	for (i = 0; i < 2; i++) {
 		field_end = strchr (scan, ' ');
 		scan = eat_spaces (field_end);
 	}
 
-	// Get Day, Month, Year, Time
+	/* Get Day, Month, Year, Time */
 	for (i = 1; i < 5; i++) {
 		if (i == 2 && g_ascii_strncasecmp (scan, "file", 4) == 0) {
 			g_strfreev(fields);
