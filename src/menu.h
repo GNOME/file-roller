@@ -113,7 +113,7 @@ GnomeUIInfo file_menu[] = {
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Move To _Trash"), N_("Move current archive to trash"), 
+	  N_("Move to _Trash"), N_("Move current archive to trash"), 
 	  delete_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_DELETE,
 	  0, 0, NULL },
@@ -358,7 +358,7 @@ GnomeUIInfo view_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Last Output"), " ", 
+	  N_("_Last Output"), N_("View the output produced by the last executed command"), 
 	  last_output_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
