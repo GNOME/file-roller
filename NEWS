@@ -1,3 +1,13 @@
+version 2.5.4
+-------------
+	* Fix bug #105739 (Can't open tar.gz files on Solaris).
+	* Fix bug #133358 (Small HIG fix for column header).
+	* Allow to extract more archives at once with the "Extract Here" 
+	  command.
+	* Use GType instead of guint.  Fixes segfaults on 64-bit architectures.
+	* Do not show the new window until we are sure that the archive 
+          has been opened with success.
+
 version 2.5.3
 -------------
 	* Simplify the "Load Options" and "Save Options" commands in the
