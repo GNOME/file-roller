@@ -34,9 +34,13 @@
 #include "preferences.h"
 #include "main.h"
 
-static void prepare_app     (poptContext pctx);
-static void initialize_data ();
-static void release_data    ();
+static void     prepare_app     (poptContext pctx);
+static void     initialize_data ();
+static void     release_data    ();
+
+static void     init_session        (char **argv);
+static gboolean session_is_restored (void);
+static gboolean load_session        (void);
 
 GList        *window_list = NULL;
 GList        *viewer_list = NULL;
@@ -85,11 +89,13 @@ struct poptOption options[] = {
 
 /* -- Main -- */
 
-int main (int argc, char **argv)
+int 
+main (int    argc, 
+      char **argv)
 {
 	GnomeProgram *program;
-	GValue value = { 0 };
-	poptContext pctx;
+	GValue        value = { 0 };
+	poptContext   pctx;
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -113,9 +119,13 @@ int main (int argc, char **argv)
 
 	if (! gnome_vfs_init ()) 
                 g_error ("Cannot initialize the Virtual File System.");
+
 	glade_gnome_init ();
 
+	init_session (argv);
+
 	initialize_data ();
+
 	prepare_app (pctx);
 	poptFreeContext (pctx);
 
@@ -130,7 +140,7 @@ int main (int argc, char **argv)
 
 
 void
-install_scripts ()
+install_scripts (void)
 {
 	char *src_dir;
 	char *dest_dir;
@@ -181,7 +191,7 @@ install_scripts ()
 
 
 void
-remove_scripts ()
+remove_scripts (void)
 {
 	char *dest_dir;
 	int   i;
@@ -330,6 +340,11 @@ prepare_app (poptContext pctx)
 	ensure_dir_exists (path, 0700);
 	g_free (path);
 
+	if (session_is_restored ()) {
+               load_session ();
+               return;
+	}
+
 	/**/
 
 	if (poptPeekArg (pctx) == NULL) { /* No archive specified. */
@@ -405,4 +420,158 @@ prepare_app (poptContext pctx)
 	g_free (default_dir);
 	g_free (add_to_path);
         g_free (extract_to_path);
+}
+
+
+^L
+ 
+ 
+/* The master client we use for SM */
+static GnomeClient *master_client = NULL;
+ 
+/* argv[0] from main(); used as the command to restart the program */
+static const char *program_argv0 = NULL;
+ 
+
+static void
+save_session (GnomeClient *client)
+{
+	const char  *prefix;
+	GList        *scan;
+	int          i = 0;
+	
+	prefix = gnome_client_get_config_prefix (client);
+	gnome_config_push_prefix (prefix);
+	
+	for (scan = window_list; scan; scan = scan->next) {
+		FRWindow *window = scan->data;
+		char     *key;
+		
+		if ((window->archive == NULL) 
+		    || (window->archive->filename == NULL))
+			continue;
+		
+		key = g_strdup_printf ("Session/archive%d", i);
+		gnome_config_set_string (key, window->archive->filename);
+		g_free (key);
+		
+		i++;
+	}
+	
+	gnome_config_set_int ("Session/archives", i);
+	
+	gnome_config_pop_prefix ();
+	gnome_config_sync ();
+}
+ 
+ 
+/* save_yourself handler for the master client */
+static gboolean
+client_save_yourself_cb (GnomeClient *client,
+			 gint phase,
+			 GnomeSaveStyle save_style,
+			 gboolean shutdown,
+			 GnomeInteractStyle interact_style,
+			 gboolean fast,
+			 gpointer data)
+{
+	const char *prefix;
+	char       *argv[4] = { NULL };
+	
+	save_session (client);
+	
+	prefix = gnome_client_get_config_prefix (client);
+	
+       /* Tell the session manager how to discard this save */
+	
+	argv[0] = "rm";
+	argv[1] = "-rf";
+	argv[2] = gnome_config_get_real_path (prefix);
+	argv[3] = NULL;
+	gnome_client_set_discard_command (client, 3, argv);
+ 
+	/* Tell the session manager how to clone or restart this instance */
+	
+	argv[0] = (char *) program_argv0;
+	argv[1] = NULL; /* "--debug-session"; */
+	
+	gnome_client_set_clone_command (client, 1, argv);
+	gnome_client_set_restart_command (client, 1, argv);
+	
+	return TRUE;
+}
+
+
+/* die handler for the master client */
+static void
+client_die_cb (GnomeClient *client, gpointer data)
+{
+	if (! client->save_yourself_emitted)
+		save_session (client);
+	
+	gtk_main_quit ();
+}
+
+
+static void
+init_session (char **argv)
+{
+	if (master_client != NULL)
+		return;
+	
+	program_argv0 = argv[0];
+	
+	master_client = gnome_master_client ();
+	
+	g_signal_connect (master_client, "save_yourself",
+			  G_CALLBACK (client_save_yourself_cb),
+			  NULL);
+ 
+	g_signal_connect (master_client, "die",
+			  G_CALLBACK (client_die_cb),
+			  NULL);
+}
+
+
+gboolean
+session_is_restored (void)
+{
+	gboolean restored;
+	
+	if (! master_client)
+		return FALSE;
+	
+	restored = (gnome_client_get_flags (master_client) & GNOME_CLIENT_RESTORED) != 0;
+	
+	return restored;
+}
+
+ 
+gboolean
+load_session (void)
+{
+	int i, n;
+	
+	gnome_config_push_prefix (gnome_client_get_config_prefix (master_client));
+	
+	n = gnome_config_get_int ("Session/archives");
+	for (i = 0; i < n; i++) {
+		FRWindow *window;
+		char     *key;
+		char     *filename;
+		
+		key = g_strdup_printf ("Session/archive%d", i);
+		filename = gnome_config_get_string (key);
+		g_free (key);
+		
+		window = window_new ();
+		gtk_widget_show (window->app);
+		window_archive_open (window, filename);
+		
+		g_free (filename);
+	}
+	
+	gnome_config_pop_prefix ();
+	
+	return TRUE;
 }

@@ -437,7 +437,7 @@ path_list_dup (GList *path_list)
 /* characters to escape */
 static gchar bad_char[] = { '$', '\'', '`', '"', '\\', '!', '?', '*',
 			    ' ', '(', ')', '[', ']', '&', '|', '@', '#',
-			    ';' };
+			    ';', '=' };
 
 /* the size of bad_char */
 static const gint bad_chars = sizeof (bad_char) / sizeof (gchar);
@@ -447,8 +447,8 @@ static const gint bad_chars = sizeof (bad_char) / sizeof (gchar);
 static gint
 count_chars_to_escape (const gchar *str)
 {
-	const gchar *s;
-	gint i, n;
+	const char *s;
+	int         i, n;
 
 	n = 0;
 	for (s = str; *s != 0; s++)
@@ -465,10 +465,10 @@ count_chars_to_escape (const gchar *str)
 gchar*
 shell_escape (const gchar *filename)
 {
-	gchar *escaped;
-	gint i, new_l;
-	const gchar *s;
-	gchar *t;
+	int         i, new_l;
+	char       *escaped;
+	const char *s;
+	char       *t;
 
 	if (filename == NULL) 
 		return NULL;
@@ -482,7 +482,7 @@ shell_escape (const gchar *filename)
 		gboolean is_bad;
 	
 		is_bad = FALSE;
-		for (i = 0; (i < bad_chars) && !is_bad; i++)
+		for (i = 0; (i < bad_chars) && ! is_bad; i++)
 			is_bad = (*s == bad_char[i]);
 
 		if (is_bad)

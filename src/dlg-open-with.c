@@ -173,6 +173,7 @@ app_activated_cb (GtkTreeView       *tree_view,
 	gtk_tree_model_get (data->app_model, &iter,
 			    1, &app,
 			    -1);
+
 	gtk_entry_set_text (GTK_ENTRY (data->o_app_entry), app->command);
 
 	open_cb (NULL, data);

@@ -539,10 +539,8 @@ escape_file_list (GList *file_list) {
 	GList *scan;
 
 	for (scan = file_list; scan; scan = scan->next) {
-		gchar *filename = scan->data;
-
-		e_file_list = g_list_prepend (e_file_list, 
-					      shell_escape (filename));
+		char *filename = scan->data;
+		e_file_list = g_list_prepend (e_file_list, shell_escape (filename));
 	}
 
 	return e_file_list;
