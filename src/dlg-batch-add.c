@@ -93,7 +93,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 	/* check whether the user entered a valid archive name. */
 
-	if (archive_name == '\0') {
+	if (*archive_name == '\0') {
 		GtkWidget  *d;
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
