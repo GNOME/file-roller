@@ -1846,10 +1846,7 @@ file_button_press_cb (GtkWidget      *widget,
 	if (selection == NULL)
 		return FALSE;
 
-	if (event->type != GDK_BUTTON_PRESS)
-		return FALSE;
-
-	if (event->button == 3) {
+	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
 		GtkTreePath *path;
 		GtkTreeIter  iter;
 
@@ -1867,7 +1864,7 @@ file_button_press_cb (GtkWidget      *widget,
 				gtk_tree_selection_unselect_all (selection);
 				gtk_tree_selection_select_iter (selection, &iter);
 			} 
-
+			
 		} else
 			gtk_tree_selection_unselect_all (selection);
 
@@ -1885,22 +1882,65 @@ file_button_press_cb (GtkWidget      *widget,
 						     event->x, event->y,
 						     &path, NULL, NULL, NULL)) {
 			gtk_tree_selection_unselect_all (selection);
-			return FALSE;
 		}
 
-		if (window->single_click
-		    && ! ((event->state & GDK_CONTROL_MASK) || (event->state & GDK_SHIFT_MASK))) {
-			gtk_tree_view_set_cursor (GTK_TREE_VIEW (widget),
-						  path,
-						  NULL,
-						  FALSE);
-			gtk_tree_view_row_activated (GTK_TREE_VIEW (widget), 
-						     path, 
-						     NULL);
+		if (window->path_clicked != NULL) {
+			gtk_tree_path_free (window->path_clicked);
+			window->path_clicked = NULL;
+		}
+
+		if (path != NULL) {
+			window->path_clicked = gtk_tree_path_copy (path);
+			gtk_tree_path_free (path);
+		}
+	} 
+
+	return FALSE;
+}
+
+
+static int
+file_button_release_cb (GtkWidget      *widget, 
+			GdkEventButton *event,
+			gpointer        data)
+{
+        FRWindow         *window = data;
+	GtkTreeSelection *selection;
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
+	if (selection == NULL)
+		return FALSE;
+
+	if (window->path_clicked == NULL)
+		return FALSE;
+	
+	if ((event->type == GDK_BUTTON_RELEASE) && (event->button == 1)) {
+		GtkTreePath *path = NULL;
+
+		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
+						   event->x, event->y,
+						   &path, NULL, NULL, NULL)) {
+
+			if ((gtk_tree_path_compare (window->path_clicked, path) == 0)
+			    && window->single_click
+			    && ! ((event->state & GDK_CONTROL_MASK) || (event->state & GDK_SHIFT_MASK))) {
+				gtk_tree_view_set_cursor (GTK_TREE_VIEW (widget),
+							  path,
+							  NULL,
+							  FALSE);
+				gtk_tree_view_row_activated (GTK_TREE_VIEW (widget), 
+							     path, 
+							     NULL);
+			}
 		}
 
 		if (path != NULL)
 			gtk_tree_path_free (path);
+	}
+
+	if (window->path_clicked != NULL) {
+		gtk_tree_path_free (window->path_clicked);
+		window->path_clicked = NULL;
 	}
 
 	return FALSE;
@@ -2469,6 +2509,11 @@ file_list_drag_data_get  (GtkWidget          *widget,
 #ifdef DEBUG
 	g_print ("::DragDataGet -->\n"); 
 #endif
+
+	if (window->path_clicked != NULL) {
+		gtk_tree_path_free (window->path_clicked);
+		window->path_clicked = NULL;
+	}
 
 	while (window->extracting_dragged_files 
 	       && ! window->extracting_dragged_files_interrupted)
@@ -3354,6 +3399,8 @@ window_new (void)
 
 	window->batch_adding_one_file = FALSE;
 
+	window->path_clicked = NULL;
+
 	/* Create the widgets. */
 
 	/* * File list. */
@@ -3413,7 +3460,11 @@ window_new (void)
 			  "button_press_event",
 			  G_CALLBACK (file_button_press_cb), 
 			  window);
-
+	g_signal_connect (G_OBJECT (window->list_view), 
+			  "button_release_event",
+			  G_CALLBACK (file_button_release_cb), 
+			  window);
+	
 	g_signal_connect (G_OBJECT (window->list_store), 
 			  "sort_column_changed",
 			  G_CALLBACK (sort_column_changed_cb), 

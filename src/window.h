@@ -117,6 +117,7 @@ typedef struct {
 
 	gboolean         give_focus_to_the_list;
 	gboolean         single_click;
+	GtkTreePath     *path_clicked;
 
 	WindowSortMethod sort_method;
 	GtkSortType      sort_type;
