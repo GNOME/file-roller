@@ -95,7 +95,7 @@ eel_gconf_handle_error (GError **error)
 	g_return_val_if_fail (error != NULL, FALSE);
 
 	if (*error != NULL) {
-		g_warning (_("GConf error:\n  %s"), (*error)->message);
+		g_warning ("GConf error:\n  %s", (*error)->message);
 		if (! shown_dialog) {
 			GtkWidget *d;
 

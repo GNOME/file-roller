@@ -422,10 +422,8 @@ prepare_app (poptContext pctx)
         g_free (extract_to_path);
 }
 
+
 
-^L
- 
- 
 /* The master client we use for SM */
 static GnomeClient *master_client = NULL;
  

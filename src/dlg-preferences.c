@@ -149,7 +149,9 @@ dlg_preferences (GtkWidget *caller,
 	DialogData *data;
 	GtkWidget  *btn_close;
 	GtkWidget  *help_button;
+	GtkWidget  *label;
 	int         i;
+	char       *label_txt;
 
 	data = g_new0 (DialogData, 1);
 
@@ -177,6 +179,16 @@ dlg_preferences (GtkWidget *caller,
 
         btn_close = glade_xml_get_widget (data->gui, "p_close_button");
 	help_button = glade_xml_get_widget (data->gui, "p_help_button");
+
+	label = glade_xml_get_widget (data->gui, "general_label");
+	label_txt = g_strdup_printf ("<b>%s</b>", _("General"));
+	gtk_label_set_markup (GTK_LABEL (label), label_txt);
+	g_free (label_txt);
+
+	label = glade_xml_get_widget (data->gui, "columns_to_show_label");
+	label_txt = g_strdup_printf ("<b>%s</b>", _("Columns to Show"));
+	gtk_label_set_markup (GTK_LABEL (label), label_txt);
+	g_free (label_txt);
 
 	/* Set widgets data. */
 
