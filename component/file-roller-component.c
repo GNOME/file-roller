@@ -23,12 +23,38 @@
 
 #include <config.h>
 
-#include <libbonobo.h>
-
 #include <string.h>
 #include <gtk/gtk.h>
 #include <glade/glade-xml.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libbonobo.h>
 #include "file-roller-component.h"
+
+#include <stdlib.h>
+
+
+static char *
+get_path_from_url (const char *url)
+{
+	GnomeVFSURI *uri     = NULL;
+	char        *escaped = NULL;
+	char        *path    = NULL;
+	
+	uri = gnome_vfs_uri_new (url);
+
+	if (uri != NULL)
+		escaped = gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
+
+	if (escaped != NULL)
+		path = gnome_vfs_unescape_string (escaped, NULL);
+	
+	if (uri != NULL)
+		gnome_vfs_uri_unref (uri);
+	g_free (escaped);
+	
+	return path;
+}
+
 
 static void
 impl_Bonobo_Listener_event (PortableServer_Servant servant,
@@ -38,10 +64,10 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 {
 	FileRollerComponent *frc;
 	const CORBA_sequence_CORBA_string *list;
-	char *cmd, *current_dir, *path;
-	char *cmd_option;
+	char    *cmd, *current_dir, *first_path;
+	char    *cmd_option;
 	GString *str;
-	int i;
+	int      i;
 
 	frc = FILE_ROLLER_COMPONENT (bonobo_object_from_servant (servant));
 	list = (CORBA_sequence_CORBA_string *)args;
@@ -52,31 +78,30 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 	/* they could in fact be in different directories, but we will
 	 * only look at the first one
 	 */
-	current_dir = NULL;
-	path = g_filename_from_uri (list->_buffer[0], NULL, NULL);
-	if (path != NULL) {
-		current_dir = g_path_get_dirname (path);
-		g_free (path);
-	}
+
+	first_path = get_path_from_url (list->_buffer[0]);
+	current_dir = g_path_get_dirname (first_path);
 
 	str = g_string_new ("file-roller");
 
-	if (strcmp (event_name, "AddToArchive") == 0) {
-		cmd_option = g_strdup_printf ("--default-dir=\"%s\" --add",
-					      current_dir);
-	} else if (strcmp (event_name, "ExtractTo") == 0) {
-		cmd_option = g_strdup_printf ("--default-dir=\"%s\" --extract",
-					      current_dir);
-	} else if (strcmp (event_name, "ExtractToSubfolder") == 0) {
+	if (strcmp (event_name, "AddToArchive") == 0) 
+		cmd_option = g_strdup_printf ("--default-dir=\"%s\" --add", current_dir);
+
+	else if (strcmp (event_name, "ExtractTo") == 0) 
+		cmd_option = g_strdup_printf ("--default-dir=\"%s\" --extract", current_dir);
+
+	else if (strcmp (event_name, "ExtractToSubfolder") == 0) {
 		char *base, *dir, *strip;
 		
-		base = g_path_get_basename (list->_buffer[0]);
+		base = g_path_get_basename (first_path);
 
 		strip = strstr (base, ".");
-		if (strip) {
+
+		if (strip != NULL) 
 			/* strip the extension */
 			strip[0] = '\0';
-		} else {
+
+		else {
 			char *tmp;
 
 			/* append something pseudo-quasi-unique....if it
@@ -88,49 +113,45 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 
 			base = tmp;
 		}
-		
-		dir = g_build_filename (current_dir, base);
+
+		dir = g_strconcat (current_dir, "/", base, NULL);
 		g_free (base);
 
-		cmd_option = g_strdup_printf ("--force --extract-to=\"%s\"",
-					      dir);
+		cmd_option = g_strdup_printf ("--force --extract-to=\"%s\"", dir);
 		g_free (dir);
-	} else if (strcmp (event_name, "ExtractHere") == 0) {
-		cmd_option = g_strdup_printf ("--force --extract-to=\"%s\"",
-					      current_dir);
-	}
+
+	} else if (strcmp (event_name, "ExtractHere") == 0) 
+		cmd_option = g_strdup_printf ("--force --extract-to=\"%s\"", current_dir);
+
+	g_free (first_path);
 
        	g_string_append_printf (str, " %s ", cmd_option);
 
 	for (i = 0; i < list->_length; i++) {
+		char *path = get_path_from_url (list->_buffer[i]);
 
-		path = g_filename_from_uri (list->_buffer[i], NULL, NULL);
-		if (path == NULL) {
+		if (path == NULL) 
 			continue;
-		}
 		
 		g_string_append_printf (str, " \"%s\"", path);
 		g_free (path);
 	}
 
 	cmd = g_string_free (str, FALSE);
-	
+
 	g_spawn_command_line_async (cmd, NULL);
+
 	g_free (cmd);
 	g_free (cmd_option);
-
-	if (current_dir != NULL) {
-		g_free (current_dir);
-	}
-
+	g_free (current_dir);
 }
+
 
 /* initialize the class */
 static void
 file_roller_component_class_init (FileRollerComponentClass *class)
 {
 	POA_Bonobo_Listener__epv *epv = &class->epv;
-
 	epv->event = impl_Bonobo_Listener_event;
 }
 
@@ -140,5 +161,8 @@ file_roller_component_init (FileRollerComponent *frc)
 {
 }
 
-BONOBO_TYPE_FUNC_FULL (FileRollerComponent, Bonobo_Listener, BONOBO_TYPE_OBJECT,
+
+BONOBO_TYPE_FUNC_FULL (FileRollerComponent, 
+		       Bonobo_Listener, 
+		       BONOBO_TYPE_OBJECT,
 		       file_roller_component);

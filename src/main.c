@@ -240,6 +240,13 @@ get_path_from_url (char *url)
 	path = gnome_vfs_unescape_string (escaped, NULL);
 	g_free (escaped);
 
+	{
+		char *line = g_strdup_printf ("echo \"[1] %s\" >> /home/gino/fr_log", path);
+		system (line);
+		g_free (line);
+	}
+
+
 	return path;
 }
 

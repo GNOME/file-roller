@@ -354,9 +354,9 @@ action_performed (FRCommand   *command,
 		  FRProcError *error,
 		  FRArchive   *archive)
 {
+#ifdef DEBUG
 	char *s_action = NULL;
 
-#ifdef DEBUG
 	switch (action) {
 	case FR_ACTION_LIST:
 		s_action = "List";

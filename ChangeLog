@@ -1,3 +1,11 @@
+2002-12-24  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* component/file-roller-component.c (get_path_from_url): new function.
+	(impl_Bonobo_Listener_event): use gnome_vfs_unescape_string instead of
+	g_filename_from_uri.
+
+	* component/File_Roller_Component.server.in.in: add application/x-bzip
+
 2002-12-21  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu-callbacks.c (about_cb): fixed bug #101727
