@@ -5,7 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller HEAD\n"
-"POT-Creation-Date: 2003-08-08 23:02+0800\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-23 01:20+0800\n"
 "PO-Revision-Date: 2003-08-08 23:03+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Projek Gabai <gabai-penyumbang@lists.sourceforge.org>\n"
@@ -18,12 +19,12 @@ msgid "Add to Archive..."
 msgstr "Tambah ke Arkib..."
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract to..."
-msgstr "Ekstrak ke..."
+msgid "Extract Here"
+msgstr "Ekstrak Sini"
 
 #: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
-msgstr "Opsrasi penambahan Komponen File Roller"
+msgstr "Operasi penambahan Komponen File Roller"
 
 #: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
@@ -38,13 +39,9 @@ msgid "Archive Manager"
 msgstr "Pengurus Arkib"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2
-#: src/gtk-utils.c:388
-#: src/main.c:101
-#: src/menu-callbacks.c:1076
-#: src/window.c:759
-#: src/window.c:1157
-#: src/window.c:2749
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:390 src/main.c:101
+#: src/menu-callbacks.c:1102 src/window.c:836 src/window.c:1248
+#: src/window.c:2918
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -52,117 +49,101 @@ msgstr "File Roller"
 msgid "Handle compressed archives"
 msgstr "Mengendali akrib termampat"
 
-#: src/dlg-add.c:116
-#: src/dlg-add.c:123
+#: src/dlg-add.c:113 src/dlg-add.c:120
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Anda tidak mempunyai keizinan yang betul untuk membaca fail dari folder \"%s\""
+msgstr ""
+"Anda tidak mempunyai keizinan yang betul untuk membaca fail dari folder \"%s"
+"\""
 
-#: src/dlg-add.c:122
-#: src/window.c:1788
-#: src/window.c:1821
+#: src/dlg-add.c:119 src/window.c:1917 src/window.c:1950
 msgid "Could not add the files to the archive"
 msgstr "Tak dapat menambah fail ke arkib"
 
-#: src/dlg-add.c:355
-#: src/file_roller.glade.h:5
-msgid "Add Files"
-msgstr "Tambah Fail"
+#: src/dlg-add.c:353 src/window.c:3156
+msgid "Add"
+msgstr "Tambah"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:358
 msgid "_Add only if newer"
 msgstr "_Tambah hanya jika lebih baru"
 
-#: src/dlg-add.c:361
+#: src/dlg-add.c:359
 msgid "_Include subfolders"
 msgstr "Ter_masuk subfolder"
 
-#: src/dlg-add.c:362
+#: src/dlg-add.c:360
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Kecualikan folder yang _pautan simbolik"
 
-#: src/dlg-add.c:363
+#: src/dlg-add.c:361
 msgid "Exclude o_ther file systems"
 msgstr "Kecualikan fail sistem _lain"
 
-#: src/dlg-add.c:364
+#: src/dlg-add.c:362
 msgid "Exclude _backup files (*~)"
 msgstr "Kecualikan fail _backup (*~)"
 
-#: src/dlg-add.c:365
+#: src/dlg-add.c:363
 msgid "Exclude _hidden files (.*)"
 msgstr "Kecualikan fail tersembunyi(.*)"
 
-#: src/dlg-add.c:366
+#: src/dlg-add.c:364
 msgid "E_xclude files:"
 msgstr "_Kecualikan fail:"
 
-#: src/dlg-add.c:368
+#: src/dlg-add.c:366
 msgid "example: *.o; *.bak"
 msgstr "contoh: *.o; *.bak"
 
-#: src/dlg-add.c:369
+#: src/dlg-add.c:367
 msgid "Igno_re case"
 msgstr "_Abaikan huruf besar/kecil"
 
-#: src/dlg-add.c:370
+#: src/dlg-add.c:368
 msgid "_Load Options"
 msgstr "_Muatkan opsyen"
 
-#: src/dlg-add.c:371
+#: src/dlg-add.c:369
 msgid "Sa_ve Options"
 msgstr "Si_mpan Opsyen"
 
-#: src/dlg-add.c:626
+#: src/dlg-add.c:624
 msgid "Load Options"
 msgstr "Muatkan opsyen"
 
-#: src/dlg-add.c:775
+#: src/dlg-add.c:773
 msgid "Save Options"
 msgstr "Simpan Opsyen"
 
-#: src/dlg-batch-add.c:99
-#: src/dlg-batch-add.c:125
-#: src/menu-callbacks.c:179
-#: src/menu-callbacks.c:198
-#: src/window.c:3428
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:177
+#: src/menu-callbacks.c:196 src/window.c:3670
 msgid "Could not create the archive"
 msgstr "Tak boleh mencipta arkib"
 
-#: src/dlg-batch-add.c:100
-#: src/menu-callbacks.c:180
-#: src/menu-callbacks.c:375
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:178 src/menu-callbacks.c:374
 msgid "You have to specify an archive name."
 msgstr "Anda mesti nyatakan nama bagi arkib."
 
-#: src/dlg-batch-add.c:126
-#: src/fr-archive.c:603
-#: src/window.c:3429
-#: src/window.c:3566
+#: src/dlg-batch-add.c:126 src/fr-archive.c:618 src/window.c:3671
+#: src/window.c:3814
 msgid "Archive type not supported."
 msgstr "Jenis arkib tidak disokong."
 
-#: src/dlg-batch-add.c:146
-#: src/dlg-extract.c:120
-#: src/window.c:3754
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:4042
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Folder destinasi tidak wujud. Adakan anda ingin menciptanya?"
 
-#: src/dlg-batch-add.c:149
-#: src/dlg-extract.c:123
-#: src/window.c:3757
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:4045
 msgid "Create _Folder"
 msgstr "Cipta _Folder"
 
-#: src/dlg-batch-add.c:164
-#: src/dlg-extract.c:139
-#: src/window.c:3773
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:4061
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Tak dapat mencipta folder destinasi: %s."
 
-#: src/dlg-batch-add.c:168
-#: src/dlg-batch-add.c:190
+#: src/dlg-batch-add.c:168 src/dlg-batch-add.c:190
 msgid "Addition not performed"
 msgstr "Penambahan tak dilakukan"
 
@@ -176,38 +157,36 @@ msgstr "Fail untuk ditambah: %d"
 msgid "Folders to add: %d"
 msgstr "Folder untuk ditambah: %d"
 
-#: src/dlg-extract.c:143
-#: src/dlg-extract.c:162
-#: src/dlg-extract.c:186
-#: src/window.c:3777
-#: src/window.c:3796
+#: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
+#: src/window.c:4065 src/window.c:4084
 msgid "Extraction not performed"
 msgstr "Pengekstrakan tak dilakukan"
 
 #: src/dlg-extract.c:181
 #, c-format
-msgid "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "Anda tidak mempunyai keizinan yang diperlukan untuk mengekstrak arkib di folder \"%s\""
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr ""
+"Anda tidak mempunyai keizinan yang diperlukan untuk mengekstrak arkib di "
+"folder \"%s\""
 
-#: src/dlg-extract.c:423
-#: src/dlg-preferences.c:125
-#: src/menu-callbacks.c:1035
+#: src/dlg-extract.c:428 src/dlg-preferences.c:125 src/menu-callbacks.c:1061
 msgid "Could not display help"
 msgstr "Tak dapat memapar bantuan"
 
-#: src/dlg-extract.c:502
+#: src/dlg-extract.c:507
 msgid "Actions"
 msgstr "Aksi"
 
-#: src/dlg-extract.c:503
+#: src/dlg-extract.c:508
 msgid "Destination folder"
 msgstr "Folder destinasi"
 
-#: src/dlg-extract.c:504
+#: src/dlg-extract.c:509
 msgid "Files"
 msgstr "Fail"
 
-#: src/dlg-extract.c:533
+#: src/dlg-extract.c:538
 msgid "Bookmarks"
 msgstr "TandaBuku"
 
@@ -256,12 +235,12 @@ msgstr "Jenis tidak diketahui"
 msgid "Symbolic link"
 msgstr "Pautan Simbolik"
 
-#: src/file-utils.c:535
+#: src/file-utils.c:536
 msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr "Tidak menjumpai terminal, menggunakan xterm, jika ianya tak boleh bekerja"
+msgstr ""
+"Tidak menjumpai terminal, menggunakan xterm, jika ianya tak boleh bekerja"
 
-#: src/file_roller.glade.h:1
-#: src/file_roller_prop.glade.h:1
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
 msgid "    "
 msgstr "    "
 
@@ -277,6 +256,10 @@ msgstr "_Tambah ke TandaBuku"
 msgid "A_vailable application:"
 msgstr "Ap_likasi yang ada:"
 
+#: src/file_roller.glade.h:5
+msgid "Add Files"
+msgstr "Tambah Fail"
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Tambah _ke arkib:"
@@ -286,15 +269,14 @@ msgid "Add only if _newer"
 msgstr "_Tambah hanya jika lebih baru"
 
 #: src/file_roller.glade.h:8
-msgid "Delete Files"
-msgstr "Padam Fail"
+msgid "Delete"
+msgstr "Padam"
 
 #: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
 msgstr "Jangan e_kstrak folder lama"
 
-#: src/file_roller.glade.h:10
-#: src/window.c:2987
+#: src/file_roller.glade.h:10 src/window.c:3167
 msgid "Extract"
 msgstr "Ekstrak"
 
@@ -303,8 +285,14 @@ msgid "Extract to"
 msgstr "Ekstrak ke"
 
 #: src/file_roller.glade.h:12
-msgid "Note: the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted."
-msgstr "Nota: katalaluan akan digunakan untuk menenkripsikan fail yang anda tambah ke arkib semasa, dan untuk mengnyahenkripsikan fail yang anda ekstrak dari arkib semasa. Bila arkib ditutup katalaluan akan dipadam."
+msgid ""
+"Note: the password will be used to encrypt files you add to the current "
+"archive, and to decrypt files you extract from the current archive. When the "
+"archive is closed the password will be deleted."
+msgstr ""
+"Nota: katalaluan akan digunakan untuk menenkripsikan fail yang anda tambah "
+"ke arkib semasa, dan untuk mengnyahenkripsikan fail yang anda ekstrak dari "
+"arkib semasa. Bila arkib ditutup katalaluan akan dipadam."
 
 #: src/file_roller.glade.h:13
 msgid "Open Files"
@@ -335,7 +323,6 @@ msgid "Select Archive"
 msgstr "Pilih Arkib"
 
 #: src/file_roller.glade.h:20
-#: src/menu.h:429
 msgid "View File"
 msgstr "Lihat Fail"
 
@@ -411,46 +398,36 @@ msgstr "_Saiz"
 msgid "_Type"
 msgstr "_Jenis"
 
-#: src/fr-archive.c:578
+#: src/fr-archive.c:593
 msgid "The file does not exist."
 msgstr "Fail tidak wujud."
 
-#: src/fr-command-tar.c:219
+#: src/fr-command-tar.c:218
 msgid "Adding file: "
 msgstr "Menambah fail: "
 
-#: src/fr-command-tar.c:265
+#: src/fr-command-tar.c:264
 msgid "Removing file: "
 msgstr "Membuang fail: "
 
-#: src/fr-command-tar.c:274
-#: src/window.c:1253
+#: src/fr-command-tar.c:273 src/window.c:1344
 msgid "Deleting files from archive"
 msgstr "Memadam fail dari arkib"
 
-#: src/fr-command-tar.c:307
+#: src/fr-command-tar.c:306
 msgid "Extracting file: "
 msgstr "Mengekstrak fail: "
 
-#: src/fr-command-tar.c:352
+#: src/fr-command-tar.c:351
 msgid "Recompressing archive"
 msgstr "Memampat semula akrib"
 
-#: src/fr-command-tar.c:486
+#: src/fr-command-tar.c:485
 msgid "Decompressing archive"
 msgstr "Mengnyahmampat akrib"
 
-#: src/gconf-utils.c:98
-#, c-format
-msgid ""
-"GConf error:\n"
-"  %s"
-msgstr ""
-"Ralat GConf:\n"
-"  %s"
-
 #. Button
-#: src/gtk-utils.c:419
+#: src/gtk-utils.c:421
 msgid "Command _Line Output"
 msgstr "Output Arahan _Baris"
 
@@ -470,14 +447,14 @@ msgstr "Penambahan fail bertanyakan nama bagi arkib dan keluar program"
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Ekstrak arkib ke folder tertentu dan keluar program"
 
-#: src/main.c:68
-#: src/main.c:76
+#: src/main.c:68 src/main.c:76
 msgid "FOLDER"
 msgstr "FOLDER"
 
 #: src/main.c:71
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "Pengekstrakan arkib akan bertanyakan folder destinasi dan keluar program"
+msgstr ""
+"Pengekstrakan arkib akan bertanyakan folder destinasi dan keluar program"
 
 #: src/main.c:75
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -487,453 +464,410 @@ msgstr "Folder default untuk digunakan oleh arahan '--add' dan '--extract' "
 msgid "Create destination folder without asking confirmation"
 msgstr "Cipta folder destinasi tanpa bertanyakan kepastian"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:106
 msgid "Automatic"
 msgstr "Automatik"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:107
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:108
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:109
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:110
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:111
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:112
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar tidak dimampat (.tar)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:113
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar dimampat dengan bzip (.tar.bz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:114
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar dimampat dengan bzip (.tar.bz2)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:115
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar dimampat dengan gzip (.tar.gz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:116
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar dimampat dengan lzop (.tar.lzo)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar dimampat dengan compress (.tar.Z)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:118
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:119
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:120
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:199
-#: src/menu-callbacks.c:394
+#: src/menu-callbacks.c:197 src/menu-callbacks.c:393
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Anda tidak mempunyai keizinan untuk mencipta arkib pada folder ini"
 
-#: src/menu-callbacks.c:228
-#: src/menu-callbacks.c:414
-#: src/menu-callbacks.c:633
-#: src/menu-callbacks.c:811
+#: src/menu-callbacks.c:226 src/menu-callbacks.c:413 src/menu-callbacks.c:636
+#: src/menu-callbacks.c:814
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Arkib  sudah wujud. Adakah anda ingin menindihnya?"
 
-#: src/menu-callbacks.c:231
-#: src/menu-callbacks.c:417
-#: src/menu-callbacks.c:636
-#: src/menu-callbacks.c:814
+#: src/menu-callbacks.c:229 src/menu-callbacks.c:416 src/menu-callbacks.c:639
+#: src/menu-callbacks.c:817
 msgid "Overwrite"
 msgstr "Tindih"
 
-#: src/menu-callbacks.c:247
-#: src/menu-callbacks.c:433
+#: src/menu-callbacks.c:245 src/menu-callbacks.c:432
 msgid "Could not delete the old archive."
 msgstr "Tak dapat memadam arkib lama."
 
-#: src/menu-callbacks.c:292
-msgid "New Archive"
-msgstr "Arkib Baru"
-
-#: src/menu-callbacks.c:310
-#: src/menu-callbacks.c:472
-msgid "Archive type:"
-msgstr "Jenis arkib:"
-
-#: src/menu-callbacks.c:374
-#: src/menu-callbacks.c:393
-msgid "Could not save the archive"
-msgstr "Tak dapat menyimpan arkib"
-
-#: src/menu-callbacks.c:460
-msgid "Save Archive"
-msgstr "Simpan Arkib"
-
-#: src/menu-callbacks.c:542
-msgid "Open Archive"
-msgstr "Buka Arkib"
-
-#: src/menu-callbacks.c:658
-msgid "Could not copy the archive"
-msgstr "Tak dapat menyalin arkib"
-
-#: src/menu-callbacks.c:676
-msgid "Could not move the archive"
-msgstr "Tak dapat memindah arkib"
-
-#: src/menu-callbacks.c:703
-msgid "Copy Archive"
-msgstr "Salin Arkib"
-
-#: src/menu-callbacks.c:703
-msgid "Move Archive"
-msgstr "Pindah Arkib"
-
-#: src/menu-callbacks.c:781
-msgid "Rename Archive"
-msgstr "Tukarnama Arkib"
-
-#: src/menu-callbacks.c:782
-msgid "New archive name (without extension)"
-msgstr "Nama arkib baru (tanpa penghujungan)"
-
-#: src/menu-callbacks.c:786
-msgid "_Rename"
-msgstr "_Tukarnama"
-
-#: src/menu-callbacks.c:896
-msgid "The archive cannot be moved to the Trash. Do you want to delete it permanently?"
-msgstr "Arkib tak dapat dipindah ke Sampah. Adakah anda ingin memadamnya terus?"
-
-#: src/menu-callbacks.c:1068
-msgid "translator_credits"
-msgstr "Hasbullah Bin Pit <sebol@ikhlas.com>, Merlimau."
-
-#: src/menu-callbacks.c:1079
-msgid "An archive manager for GNOME."
-msgstr "Pengurus Arkib bagi GNOME."
-
-#: src/menu-callbacks.c:1253
-#: src/window.c:4085
-msgid "Last Output"
-msgstr "Output Akhir"
-
-#: src/menu.h:69
-msgid "_New"
-msgstr "Ba_ru"
-
-#: src/menu.h:70
-#: src/toolbar.h:39
-msgid "Create a new archive"
-msgstr "Cipta arkib baru"
-
-#: src/menu.h:75
-msgid "Open R_ecent"
-msgstr "B_uka Kebelakangan"
-
-#: src/menu.h:84
-msgid "Open Fi_les..."
-msgstr "Buka Fai_l..."
-
-#: src/menu.h:84
-msgid "Open selected files with an application"
-msgstr "Buka fail dipilih dengan satu aplikasi"
-
-#: src/menu.h:90
-msgid "_View File"
-msgstr "_Lihat Fail"
-
-#: src/menu.h:90
-#: src/menu.h:429
-msgid "View file with internal viewer"
-msgstr "Lihat fail dengan pelihat dalaman"
-
-#: src/menu.h:98
-msgid "_Rename..."
-msgstr "_Tukarnama..."
-
-#: src/menu.h:98
-msgid "Rename current archive"
-msgstr "Tukarnama arkib semasa"
-
-#: src/menu.h:104
-msgid "Cop_y..."
-msgstr "_Salin..."
-
-#: src/menu.h:104
-msgid "Copy current archive to another folder"
-msgstr "Salin arkib semasa ke folder lain"
-
-#: src/menu.h:110
-msgid "_Move..."
-msgstr "_Pindah..."
-
-#: src/menu.h:110
-msgid "Move current archive to another folder"
-msgstr "Pindah arkib semasa ke folder lain"
-
-#: src/menu.h:116
-msgid "Move to _Trash"
-msgstr "Pindah ke _Sampah"
-
-#: src/menu.h:116
-msgid "Move current archive to trash"
-msgstr "Pindah arkib semasa ke Sampah"
-
-#: src/menu.h:122
-msgid "_Test"
-msgstr "_Uji"
-
-#: src/menu.h:122
-msgid "Test whether the archive contains errors"
-msgstr "Uji samada arkib mengandungi ralat"
-
-#: src/menu.h:130
-msgid "_Properties"
-msgstr "_Ciri-ciri"
-
-#: src/menu.h:130
-msgid "Show archive properties"
-msgstr "Papar ciri-ciri arkib"
-
-#: src/menu.h:162
-#: src/menu.h:437
-msgid "Add _Files..."
-msgstr "Tambah _Fail..."
-
-#: src/menu.h:162
-#: src/menu.h:437
-#: src/window.c:2977
-msgid "Add files to the archive"
-msgstr "Tambah fail ke arkib"
-
-#: src/menu.h:168
-msgid "_Delete Files..."
-msgstr "Pa_dam Fail..."
-
-#: src/menu.h:168
-msgid "Delete selected files and folders from the archive"
-msgstr "Padam fail dan folder dipilih dari arkib"
-
-#: src/menu.h:174
-#: src/menu.h:449
-msgid "_Extract to..."
-msgstr "Ekstrak ke..."
-
-#: src/menu.h:174
-#: src/menu.h:449
-#: src/window.c:2988
-msgid "Extract files from the archive"
-msgstr "Ekstrak fail dari arkib"
-
-#: src/menu.h:198
-#: src/menu.h:457
-msgid "Select _All"
-msgstr "Pilih _Semua"
-
-#: src/menu.h:198
-#: src/menu.h:457
-msgid "Select all files"
-msgstr "Semua semua fail"
-
-#: src/menu.h:204
-#: src/menu.h:463
-msgid "Dese_lect All"
-msgstr "_Nyahpilih Semua"
-
-#: src/menu.h:204
-#: src/menu.h:463
-msgid "Deselect all files"
-msgstr "Nyahpilih semua fail"
-
-#: src/menu.h:212
-msgid "Pass_word..."
-msgstr "Kata_laluan..."
-
-#: src/menu.h:220
-msgid "_Preferences"
-msgstr "Ke_utamaan"
-
-#: src/menu.h:220
-msgid "Edit File Roller preferences"
-msgstr "Edit Keutamaan File Roller"
-
-#: src/menu.h:231
-msgid "by _Name"
-msgstr "mengikut _Nama"
-
-#: src/menu.h:231
-msgid "Sort file list by name"
-msgstr "Isih fail mengikut nama"
-
-#: src/menu.h:237
-msgid "by _Size"
-msgstr "mengikut _Saiz"
-
-#: src/menu.h:237
-msgid "Sort file list by file size"
-msgstr "Isih fail mengikut saiz fail"
-
-#: src/menu.h:243
-msgid "by T_ype"
-msgstr "mengikut _Jenis"
-
-#: src/menu.h:243
-msgid "Sort file list by type"
-msgstr "Isih fail mengikut jenis"
-
-#: src/menu.h:249
-msgid "by _Date modified"
-msgstr "mengikut _Tarikh diubahsuai"
-
-#: src/menu.h:249
-msgid "Sort file list by modification time"
-msgstr "Isih fail mengikut masa diubahsuai"
-
-#: src/menu.h:255
-msgid "by _Location"
-msgstr "mengikut _Lokasi"
-
-#: src/menu.h:255
-msgid "Sort file list by location"
-msgstr "Isih fail mengikut lokasi"
-
-#: src/menu.h:272
-msgid "View All _Files"
-msgstr "Lihat Semua _Fail"
-
-#: src/menu.h:278
-msgid "View as a F_older"
-msgstr "Lihat sebagai F_older"
-
-#: src/menu.h:300
-msgid "_Reversed Order"
-msgstr "Turutan _Songsang"
-
-#: src/menu.h:300
-msgid "Reverse the list order"
-msgstr "Songsangkan turutan senarai"
-
-#: src/menu.h:325
-msgid "_Toolbar"
-msgstr "_Toolbar"
-
-#: src/menu.h:325
-msgid "View the main toolbar"
-msgstr "Lihat toolbar utama"
-
-#: src/menu.h:331
-msgid "Stat_usbar"
-msgstr "Bar Status"
-
-#: src/menu.h:331
-msgid "View the statusbar"
-msgstr "Lihat bar status"
-
-#: src/menu.h:339
-msgid "_Stop"
-msgstr "_Henti"
-
-#: src/menu.h:339
-#: src/toolbar.h:55
-msgid "Stop current operation"
-msgstr "Henti operasi semasa"
-
-#: src/menu.h:345
-msgid "_Reload"
-msgstr "_Ulangmuat"
-
-#: src/menu.h:345
-msgid "Reload current archive"
-msgstr "Ulangmuat arkib semasa"
-
-#: src/menu.h:356
-msgid "_Arrange Files"
-msgstr "_Susun Fail"
-
-#: src/menu.h:361
-msgid "_Last Output"
-msgstr "Output _Akhir"
-
-#: src/menu.h:361
-msgid "View the output produced by the last executed command"
-msgstr "Lihat output dihasilkan oleh arahan yg terakhir dilaksana"
-
-#: src/menu.h:367
-msgid "New _Window"
-msgstr "_Tetingkap Baru"
-
-#: src/menu.h:367
-msgid "Open a new window"
-msgstr "Buka tetingkap baru"
-
-#: src/menu.h:380
-msgid "_Contents"
-msgstr "_Kandungan"
-
-#: src/menu.h:380
-msgid "Display the File Roller Manual"
-msgstr "Papar Manual File Roller"
-
-#: src/menu.h:386
-msgid "_About"
-msgstr "_Perihal"
-
-#: src/menu.h:386
-msgid "Information about the program"
-msgstr "Perihal Program ini"
-
-#: src/menu.h:398
-msgid "_Archive"
-msgstr "_Arkib"
-
-#: src/menu.h:399
-msgid "_Edit"
-msgstr "_Edit"
-
-#: src/menu.h:400
-msgid "_View"
-msgstr "_Lihat"
-
-#: src/menu.h:423
-msgid "Open Files..."
-msgstr "Buka Fail..."
-
-#: src/menu.h:443
-msgid "_Delete Files"
-msgstr "Pa_dam Fail"
-
-#: src/menu.h:443
-msgid "Delete files from the archive"
-msgstr "Padam fail dari arkib"
-
-#: src/toolbar.h:39
+#: src/menu-callbacks.c:290 src/toolbar.h:39
 msgid "New"
 msgstr "Baru"
 
-#: src/toolbar.h:45
+#: src/menu-callbacks.c:308 src/menu-callbacks.c:471
+msgid "Archive type:"
+msgstr "Jenis arkib:"
+
+#: src/menu-callbacks.c:373 src/menu-callbacks.c:392
+msgid "Could not save the archive"
+msgstr "Tak dapat menyimpan arkib"
+
+#: src/menu-callbacks.c:459
+msgid "Save"
+msgstr "Simpan"
+
+#: src/menu-callbacks.c:545 src/toolbar.h:45
 msgid "Open"
 msgstr "Buka"
+
+#: src/menu-callbacks.c:661
+msgid "Could not copy the archive"
+msgstr "Tak dapat menyalin arkib"
+
+#: src/menu-callbacks.c:679
+msgid "Could not move the archive"
+msgstr "Tak dapat memindah arkib"
+
+#: src/menu-callbacks.c:706
+msgid "Copy"
+msgstr "Salin"
+
+#: src/menu-callbacks.c:706
+msgid "Move"
+msgstr "Pindah"
+
+#: src/menu-callbacks.c:784 src/window.c:4731
+msgid "Rename"
+msgstr "Tukarnama"
+
+#: src/menu-callbacks.c:785
+msgid "New archive name (without extension)"
+msgstr "Nama arkib baru (tanpa penghujungan)"
+
+#: src/menu-callbacks.c:789 src/window.c:4736
+msgid "_Rename"
+msgstr "_Tukarnama"
+
+#: src/menu-callbacks.c:899
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
+msgstr ""
+"Arkib tak dapat dipindah ke Sampah. Adakah anda ingin memadamnya terus?"
+
+#: src/menu-callbacks.c:1094
+msgid "translator_credits"
+msgstr "Hasbullah Bin Pit <sebol@ikhlas.com>, Merlimau."
+
+#: src/menu-callbacks.c:1105
+msgid "An archive manager for GNOME."
+msgstr "Pengurus Arkib bagi GNOME."
+
+#: src/menu-callbacks.c:1254 src/window.c:4468
+msgid "Last Output"
+msgstr "Output Akhir"
+
+#: src/menu.h:66
+msgid "_New"
+msgstr "Ba_ru"
+
+#: src/menu.h:67 src/toolbar.h:39
+msgid "Create a new archive"
+msgstr "Cipta arkib baru"
+
+#: src/menu.h:72
+msgid "Open R_ecent"
+msgstr "B_uka Kebelakangan"
+
+#: src/menu.h:81 src/menu.h:169 src/menu.h:453
+msgid "_Rename..."
+msgstr "_Tukarnama..."
+
+#: src/menu.h:81
+msgid "Rename current archive"
+msgstr "Tukarnama arkib semasa"
+
+#: src/menu.h:87
+msgid "Cop_y..."
+msgstr "_Salin..."
+
+#: src/menu.h:87
+msgid "Copy current archive to another folder"
+msgstr "Salin arkib semasa ke folder lain"
+
+#: src/menu.h:93
+msgid "_Move..."
+msgstr "_Pindah..."
+
+#: src/menu.h:93
+msgid "Move current archive to another folder"
+msgstr "Pindah arkib semasa ke folder lain"
+
+#: src/menu.h:99
+msgid "Move to _Trash"
+msgstr "Pindah ke _Sampah"
+
+#: src/menu.h:99
+msgid "Move current archive to trash"
+msgstr "Pindah arkib semasa ke Sampah"
+
+#: src/menu.h:105
+msgid "_Test"
+msgstr "_Uji"
+
+#: src/menu.h:105
+msgid "Test whether the archive contains errors"
+msgstr "Uji samada arkib mengandungi ralat"
+
+#: src/menu.h:113
+msgid "_Properties"
+msgstr "_Ciri-ciri"
+
+#: src/menu.h:113
+msgid "Show archive properties"
+msgstr "Papar ciri-ciri arkib"
+
+#: src/menu.h:151 src/menu.h:435
+msgid "_Add..."
+msgstr "_Tambah..."
+
+#: src/menu.h:151 src/menu.h:435
+msgid "Add files and folders to the archive"
+msgstr "Tambah fail dan folder ke arkib"
+
+#: src/menu.h:157 src/menu.h:441
+msgid "_Extract..."
+msgstr "_Ekstrak..."
+
+#: src/menu.h:157 src/menu.h:441 src/window.c:3168
+msgid "Extract files from the archive"
+msgstr "Ekstrak fail dari arkib"
+
+#: src/menu.h:169 src/menu.h:453
+msgid "Rename selection"
+msgstr "Tukarnama pemilihan"
+
+#: src/menu.h:175 src/menu.h:459
+msgid "_Delete..."
+msgstr "Pa_dam..."
+
+#: src/menu.h:175 src/menu.h:459
+msgid "Delete selection from the archive"
+msgstr "Padam pemilihan dari arkib"
+
+#: src/menu.h:183 src/menu.h:467
+msgid "Select _All"
+msgstr "Pilih _Semua"
+
+#: src/menu.h:183 src/menu.h:467
+msgid "Select all files"
+msgstr "Semua semua fail"
+
+#: src/menu.h:189 src/menu.h:473
+msgid "Dese_lect All"
+msgstr "_Nyahpilih Semua"
+
+#: src/menu.h:189 src/menu.h:473
+msgid "Deselect all files"
+msgstr "Nyahpilih semua fail"
+
+#: src/menu.h:197 src/menu.h:421
+msgid "Open Fi_les..."
+msgstr "Buka Fai_l..."
+
+#: src/menu.h:197 src/menu.h:421
+msgid "Open selected files with an application"
+msgstr "Buka fail dipilih dengan satu aplikasi"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "_View File"
+msgstr "_Lihat Fail"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "View file with internal viewer"
+msgstr "Lihat fail dengan pelihat dalaman"
+
+#: src/menu.h:211
+msgid "Pass_word..."
+msgstr "Kata_laluan..."
+
+#: src/menu.h:219
+msgid "_Preferences"
+msgstr "Ke_utamaan"
+
+#: src/menu.h:219
+msgid "Edit File Roller preferences"
+msgstr "Edit Keutamaan File Roller"
+
+#: src/menu.h:230
+msgid "by _Name"
+msgstr "mengikut _Nama"
+
+#: src/menu.h:230
+msgid "Sort file list by name"
+msgstr "Isih fail mengikut nama"
+
+#: src/menu.h:236
+msgid "by _Size"
+msgstr "mengikut _Saiz"
+
+#: src/menu.h:236
+msgid "Sort file list by file size"
+msgstr "Isih fail mengikut saiz fail"
+
+#: src/menu.h:242
+msgid "by T_ype"
+msgstr "mengikut _Jenis"
+
+#: src/menu.h:242
+msgid "Sort file list by type"
+msgstr "Isih fail mengikut jenis"
+
+#: src/menu.h:248
+msgid "by _Date modified"
+msgstr "mengikut _Tarikh diubahsuai"
+
+#: src/menu.h:248
+msgid "Sort file list by modification time"
+msgstr "Isih fail mengikut masa diubahsuai"
+
+#: src/menu.h:254
+msgid "by _Location"
+msgstr "mengikut _Lokasi"
+
+#: src/menu.h:254
+msgid "Sort file list by location"
+msgstr "Isih fail mengikut lokasi"
+
+#: src/menu.h:271
+msgid "View All _Files"
+msgstr "Lihat Semua _Fail"
+
+#: src/menu.h:277
+msgid "View as a F_older"
+msgstr "Lihat sebagai F_older"
+
+#: src/menu.h:299
+msgid "_Reversed Order"
+msgstr "Turutan _Songsang"
+
+#: src/menu.h:299
+msgid "Reverse the list order"
+msgstr "Songsangkan turutan senarai"
+
+#: src/menu.h:323
+msgid "_Toolbar"
+msgstr "_Toolbar"
+
+#: src/menu.h:323
+msgid "View the main toolbar"
+msgstr "Lihat toolbar utama"
+
+#: src/menu.h:329
+msgid "Stat_usbar"
+msgstr "Bar Status"
+
+#: src/menu.h:329
+msgid "View the statusbar"
+msgstr "Lihat bar status"
+
+#: src/menu.h:337
+msgid "_Stop"
+msgstr "_Henti"
+
+#: src/menu.h:337 src/toolbar.h:55
+msgid "Stop current operation"
+msgstr "Henti operasi semasa"
+
+#: src/menu.h:343
+msgid "_Reload"
+msgstr "_Ulangmuat"
+
+#: src/menu.h:343
+msgid "Reload current archive"
+msgstr "Ulangmuat arkib semasa"
+
+#: src/menu.h:354
+msgid "_Arrange Files"
+msgstr "_Susun Fail"
+
+#: src/menu.h:359
+msgid "_Last Output"
+msgstr "Output _Akhir"
+
+#: src/menu.h:359
+msgid "View the output produced by the last executed command"
+msgstr "Lihat output dihasilkan oleh arahan yg terakhir dilaksana"
+
+#: src/menu.h:372
+msgid "_Contents"
+msgstr "_Kandungan"
+
+#: src/menu.h:372
+msgid "Display the File Roller Manual"
+msgstr "Papar Manual File Roller"
+
+#: src/menu.h:378
+msgid "_About"
+msgstr "_Perihal"
+
+#: src/menu.h:378
+msgid "Information about the program"
+msgstr "Perihal Program ini"
+
+#: src/menu.h:390
+msgid "_Archive"
+msgstr "_Arkib"
+
+#: src/menu.h:391
+msgid "_Edit"
+msgstr "_Edit"
+
+#: src/menu.h:392
+msgid "_View"
+msgstr "_Lihat"
 
 #: src/toolbar.h:45
 msgid "Open archive"
@@ -943,175 +877,295 @@ msgstr "Buka arkib"
 msgid "Stop"
 msgstr "Henti"
 
-#: src/window.c:618
+#: src/window.c:679
 msgid "Folder"
 msgstr "Folder"
 
-#: src/window.c:767
+#: src/window.c:844
 msgid "[read only]"
 msgstr "[baca-saja]"
 
-#: src/window.c:862
+#: src/window.c:939
 #, c-format
-msgid "1 file (%s)"
-msgstr "1 fail (%s)"
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d fail (%s)"
+msgstr[1] "%d fail (%s)"
 
-#: src/window.c:865
+#: src/window.c:944
 #, c-format
-msgid "%d files (%s)"
-msgstr "%d fail (%s)"
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d fail dipilih (%s)"
+msgstr[1] "%d fail dipilih (%s)"
 
-#: src/window.c:873
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "1 fail dipilih (%s)"
-
-#: src/window.c:876
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d fail dipilih (%s)"
-
-#: src/window.c:1250
+#: src/window.c:1341
 msgid "Reading archive"
 msgstr "Membaca arkib"
 
-#: src/window.c:1256
+#: src/window.c:1347
 msgid "Adding files to archive"
-msgstr "Menabah fail ke arkib"
+msgstr "Menambah fail ke arkib"
 
-#: src/window.c:1259
+#: src/window.c:1350
 msgid "Extracting files from archive"
 msgstr "Mengekstrak fail dari arkib"
 
-#: src/window.c:1262
+#: src/window.c:1353
 msgid "Testing archive"
-msgstr "Mengju arkib"
+msgstr "Menguji arkib"
 
-#: src/window.c:1265
+#: src/window.c:1356
 msgid "Getting the file list"
 msgstr "Mendapatkan senarai fail"
 
-#: src/window.c:1271
+#: src/window.c:1362
 msgid "wait please..."
 msgstr "sila tunggu..."
 
-#: src/window.c:1332
+#: src/window.c:1423
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Tak dapat memapar folder \"%s\""
 
-#: src/window.c:1389
+#: src/window.c:1482
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+"Arkib ini dilindungi katalaluan.\n"
+"Sila nyatakan katalaluan dengan arahan: Edit -> Katalaluan"
+
+#: src/window.c:1484
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr ""
+"Katalaluan yang diberikan adalah tidak sahSila nyatakan katalaluan baru "
+"dengan arahan: Edit -> Katalaluan"
+
+#: src/window.c:1489
+msgid "Could not perform the operation"
+msgstr "Tak dapat melakukan operasi"
+
+#: src/window.c:1504
 msgid "Operation stopped"
 msgstr "Operasi dihentikan"
 
-#: src/window.c:1410
+#: src/window.c:1525
 msgid "An error occurred while extracting files."
 msgstr "Ralat berlaku ketika mengekstrak fail."
 
-#: src/window.c:1414
+#: src/window.c:1529
 msgid "An error occurred while loading the archive."
 msgstr "Terdapat ralat berlaku bila memuatkan arkib."
 
-#: src/window.c:1418
+#: src/window.c:1533
 msgid "An error occurred while deleting files from the archive."
 msgstr "Ralat berlaku bila memadam fail dari arkib."
 
-#: src/window.c:1422
+#: src/window.c:1537
 msgid "An error occurred while adding files to the archive."
 msgstr "Ralat berlaku bila menambah fail ke arkib."
 
-#: src/window.c:1426
+#: src/window.c:1541
 msgid "An error occurred while testing archive."
 msgstr "Terdapat ralat berlaku bila menguji arkib."
 
-#: src/window.c:1435
+#: src/window.c:1550
 msgid "Command not found."
 msgstr "Arahan tidak dijumpai."
 
-#: src/window.c:1438
+#: src/window.c:1553
 msgid "Command exited abnormally."
 msgstr "Arahan tamat secara tidak normal."
 
-#: src/window.c:1569
+#: src/window.c:1681
 msgid "Test Result"
 msgstr "Hasil Ujian"
 
-#: src/window.c:1789
+#: src/window.c:1918
 msgid "You don't have the right permissions."
 msgstr "Anda tidak mempunyai keizinan yang betul."
 
-#: src/window.c:1822
+#: src/window.c:1951
 msgid "You can't add an archive to itself."
 msgstr "Anda tak boleh menambah arkib ke dirinya."
 
-#: src/window.c:1994
-msgid "Do you want to add this file to the current archive or open it as a new archive?"
-msgstr "Adakah anda ingin menambah fail ini ke arkib semasa atau membukanya sebagai arkib baru?"
+#: src/window.c:2130
+msgid ""
+"Do you want to add this file to the current archive or open it as a new "
+"archive?"
+msgstr ""
+"Adakah anda ingin menambah fail ini ke arkib semasa atau membukanya sebagai "
+"arkib baru?"
 
-#: src/window.c:2039
+#: src/window.c:2167
 msgid "Do you want to create a new archive with these files?"
 msgstr "Adakah anda ingin mencipta arkib baru dengan fail ini?"
 
-#: src/window.c:2042
+#: src/window.c:2170
 msgid "Create _Archive"
 msgstr "Cipta _Arkib"
 
-#: src/window.c:2387
+#: src/window.c:2521
 msgid "Size"
 msgstr "Saiz"
 
-#: src/window.c:2388
+#: src/window.c:2522
 msgid "Type"
 msgstr "Jenis"
 
-#: src/window.c:2389
+#: src/window.c:2523
 msgid "Date modified"
 msgstr "Tarikh diubahsuai"
 
-#: src/window.c:2390
+#: src/window.c:2524
 msgid "Location"
 msgstr "Lokasi"
 
-#: src/window.c:2397
+#: src/window.c:2531
 msgid "Name"
 msgstr "Nama"
 
-#: src/window.c:2917
-msgid "_Up"
-msgstr "_Naik"
+#: src/window.c:3076
+msgid "Go to the previous visited location"
+msgstr "Pergi ke lokasi dilawati terdahulu"
+
+#: src/window.c:3084
+msgid "Go to the next visited location"
+msgstr "Pergi ke lokasi dilawati berikutnya"
+
+#: src/window.c:3092
+msgid "Go up one level"
+msgstr "Naik satu aras"
+
+#: src/window.c:3100
+msgid "Go to the home location"
+msgstr "Pergi ke lokasi rumah"
 
 #. current location
-#: src/window.c:2939
+#: src/window.c:3119
 msgid "Location:"
 msgstr "Lokasi:"
 
-#: src/window.c:2976
-msgid "Add"
-msgstr "Tambah"
+#: src/window.c:3157
+msgid "Add files to the archive"
+msgstr "Tambah fail ke arkib"
 
-#: src/window.c:2998
+#: src/window.c:3178
 msgid "View"
 msgstr "Lihat"
 
-#: src/window.c:2999
+#: src/window.c:3179
 msgid "View selected file"
 msgstr "Lihat fail dipilih"
 
-#: src/window.c:3508
+#: src/window.c:3756
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Tak dapat membuka \"%s\""
 
-#: src/window.c:3559
+#: src/window.c:3807
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Tak dapat menyimpan arkib\"%s\""
 
-#: src/window.c:4623
+#: src/window.c:4663
+msgid "The new name is void."
+msgstr "Nama baru tak sah."
+
+#: src/window.c:4663 src/window.c:4667 src/window.c:4676
+msgid "Please use a different name."
+msgstr "Sila nyatakan nama lain."
+
+#: src/window.c:4667
+msgid "The new name is equal to the old one."
+msgstr "Nama baru adalah sama dengan yang lama."
+
+#: src/window.c:4676
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+"Nama \"%s\" adalah tidak sah kerana ia mengandungi aksara: %s\n"
+"\n"
+"%s"
+
+#: src/window.c:4732
+msgid "New folder name"
+msgstr "Nama folder baru"
+
+#: src/window.c:4732
+msgid "New file name"
+msgstr "Nama fail baru"
+
+#: src/window.c:4753
+msgid "Could not rename the folder"
+msgstr "Tak dapat menukarnama folder"
+
+#: src/window.c:4753
+msgid "Could not rename the file"
+msgstr "Tak boleh menukarnama fail"
+
+#: src/window.c:5381
 msgid "Add files to an archive"
 msgstr "Tambah fail ke arkib"
 
-#: src/window.c:4648
+#: src/window.c:5406
 msgid "Extract archive"
 msgstr "Ekstrak arkib"
 
+#~ msgid "Extract to..."
+#~ msgstr "Ekstrak ke..."
+
+#~ msgid ""
+#~ "GConf error:\n"
+#~ "  %s"
+#~ msgstr ""
+#~ "Ralat GConf:\n"
+#~ "  %s"
+
+#~ msgid "New Archive"
+#~ msgstr "Arkib Baru"
+
+#~ msgid "Save Archive"
+#~ msgstr "Simpan Arkib"
+
+#~ msgid "Open Archive"
+#~ msgstr "Buka Arkib"
+
+#~ msgid "Copy Archive"
+#~ msgstr "Salin Arkib"
+
+#~ msgid "Move Archive"
+#~ msgstr "Pindah Arkib"
+
+#~ msgid "Add _Files..."
+#~ msgstr "Tambah _Fail..."
+
+#~ msgid "Delete selected files and folders from the archive"
+#~ msgstr "Padam fail dan folder dipilih dari arkib"
+
+#~ msgid "New _Window"
+#~ msgstr "_Tetingkap Baru"
+
+#~ msgid "Open a new window"
+#~ msgstr "Buka tetingkap baru"
+
+#~ msgid "Open Files..."
+#~ msgstr "Buka Fail..."
+
+#~ msgid "_Delete Files"
+#~ msgstr "Pa_dam Fail"
+
+#~ msgid "1 file (%s)"
+#~ msgstr "1 fail (%s)"
+
+#~ msgid "1 file selected (%s)"
+#~ msgstr "1 fail dipilih (%s)"
+
+#~ msgid "_Up"
+#~ msgstr "_Naik"
