@@ -6,13 +6,41 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: File-Roller for Gnome2\n"
-"POT-Creation-Date: 2002-11-09 04:39+0100\n"
-"PO-Revision-Date: 2002-11-09 13:59+0700\n"
+"POT-Creation-Date: 2002-11-14 04:38+0100\n"
+"PO-Revision-Date: 2002-11-14 18:45+0700\n"
 "Last-Translator: Trinh Minh Thanh <tmthanh@linuxmail.org>\n"
 "Language-Team: Gnome-Vi Team <Gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: component/File_Roller_Component.server.in.in.h:1
+msgid "Add To Archive..."
+msgstr "Thêm vào Lưu trữ..."
+
+#: component/File_Roller_Component.server.in.in.h:2
+msgid "Extract Here..."
+msgstr "Giải nén vào đây..."
+
+#: component/File_Roller_Component.server.in.in.h:3
+msgid "Extract To A Folder..."
+msgstr "Giải nén vào Thư mục..."
+
+#: component/File_Roller_Component.server.in.in.h:4
+msgid "Extract To..."
+msgstr "Giải nén vào..."
+
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "File Roller Component add operations"
+msgstr "Thành phần bổ sung chức năng File Roller"
+
+#: component/File_Roller_Component.server.in.in.h:6
+msgid "File Roller Component extract operations"
+msgstr "Thành phần chức năng giải nén File Roller"
+
+#: component/File_Roller_Component.server.in.in.h:7
+msgid "File roller component"
+msgstr "Thành phần File Roller"
 
 #: file-roller.desktop.in.h:1
 msgid "Archive Manager"
@@ -20,7 +48,7 @@ msgstr "Trình Quản Lý Lưu Trữ"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:153
-#: src/gtk-utils.c:256 src/main.c:101 src/window.c:690 src/window.c:699
+#: src/gtk-utils.c:256 src/main.c:106 src/window.c:690 src/window.c:699
 #: src/window.c:2360 src/window.c:4052
 msgid "File Roller"
 msgstr "File Roller"
@@ -34,9 +62,9 @@ msgstr "Quản lý lưu trữ dạng nén"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Bạn không có quyền đọc các tập tin ở thư mục \"%s\""
 
-#: src/dlg-add.c:338
-msgid "Add files"
-msgstr "Thêm tập tin"
+#: src/dlg-add.c:338 src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "Thêm tập tin và thư mục"
 
 #: src/dlg-add.c:343
 msgid "_Add only if newer"
@@ -131,6 +159,14 @@ msgstr "Không thể hiển thị trợ giúp: %s"
 msgid "Favorites extraction folders"
 msgstr "Thư mục giải nén ưa thích"
 
+#: src/dlg-preferences.c:186
+msgid "General"
+msgstr "Chung"
+
+#: src/dlg-preferences.c:191
+msgid "Columns to Show"
+msgstr "Cột hiển thị"
+
 #: src/dlg-prop.c:98
 msgid "Path:"
 msgstr "Đường dẫn:"
@@ -167,79 +203,59 @@ msgstr "Liên kết biểu tượng"
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "Không tìm thấy terminal, dùng xterm, thậm chí khi nó không làm việc"
 
-#: src/file_roller.glade2.h:1 src/file_roller_prop.glade2.h:1
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
 msgid "    "
 msgstr "    "
 
-#: src/file_roller.glade2.h:2
+#: src/file_roller.glade.h:2
 msgid "*"
 msgstr "*"
 
-#: src/file_roller.glade2.h:3
+#: src/file_roller.glade.h:3
 msgid "A_dd to favorites"
 msgstr "Thêm vào ưa thích"
 
-#: src/file_roller.glade2.h:4
+#: src/file_roller.glade.h:4
 msgid "A_vailable application:"
 msgstr "Ứng dụng hiện có:"
 
-#: src/file_roller.glade2.h:5
+#: src/file_roller.glade.h:6
 msgid "Add _to archive :"
 msgstr "Thêm vào lưu trữ :"
 
-#: src/file_roller.glade2.h:6
+#: src/file_roller.glade.h:7
 msgid "Add only if _newer"
 msgstr "Chỉ thêm nếu mới hơn"
 
-#: src/file_roller.glade2.h:7
+#: src/file_roller.glade.h:8
+msgid "Archive Properties"
+msgstr "Thuộc Tính Lưu Trữ"
+
+#: src/file_roller.glade.h:9 src/menu.h:464
+msgid "Delete Files"
+msgstr "Xóa tập tin"
+
+#: src/file_roller.glade.h:10
 msgid "Do not e_xtract older files"
 msgstr "Không giải nén tập tin cũ hơn"
 
-#: src/file_roller.glade2.h:8
+#: src/file_roller.glade.h:11 src/window.c:2579
+msgid "Extract"
+msgstr "Giải nén"
+
+#: src/file_roller.glade.h:12
 msgid "Extract to"
 msgstr "Giải nén vào"
 
-#: src/file_roller.glade2.h:9
+#: src/file_roller.glade.h:13
 msgid "Extract to:"
 msgstr "Giải nén vào:"
 
-#: src/file_roller.glade2.h:10
-msgid "File Roller - Add"
-msgstr "File Roller - Thêm"
-
-#: src/file_roller.glade2.h:11
-msgid "File Roller - Archive Informations"
-msgstr "File Roller - Thông tin lưu trữ"
-
-#: src/file_roller.glade2.h:12
-msgid "File Roller - Delete Files"
-msgstr "File Roller - Xoá tập tin"
-
-#: src/file_roller.glade2.h:13
-msgid "File Roller - Extract"
-msgstr "File Roller - Giải nén"
-
-#: src/file_roller.glade2.h:14
-msgid "File Roller - Open Files"
-msgstr "File Roller - Mở tập tin"
-
-#: src/file_roller.glade2.h:15
-msgid "File Roller - Password"
-msgstr "File Roller - Mật khẩu"
-
-#: src/file_roller.glade2.h:16
-msgid "File Roller - View File"
-msgstr "File Roller - Xem tập tin"
-
-#: src/file_roller.glade2.h:17
-msgid "File Roller - Viewer"
-msgstr "File Roller - Trình xem"
-
-#: src/file_roller.glade2.h:18
+#: src/file_roller.glade.h:14
 msgid "Files"
 msgstr "Tập tin"
 
-#: src/file_roller.glade2.h:19
+#: src/file_roller.glade.h:15
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
@@ -249,115 +265,123 @@ msgstr ""
 "thời, và để giải mã tập tin bạn giải nén từ lưu trữ hiện thời. Khi đóng lưu "
 "trữ, mật khẩu sẽ được xoá."
 
-#: src/file_roller.glade2.h:20
+#: src/file_roller.glade.h:16
+msgid "Open Files"
+msgstr "Mở tập tin"
+
+#: src/file_roller.glade.h:17
 msgid "Open with an _application"
 msgstr "Mở bằng ứng dụng"
 
-#: src/file_roller.glade2.h:21
+#: src/file_roller.glade.h:18
 msgid "Other options"
 msgstr "Tùy chọn khác"
 
-#: src/file_roller.glade2.h:22
+#: src/file_roller.glade.h:19
 msgid "Over_write existing files"
 msgstr "Ghi đè lên tập tin đang tồn tại"
 
-#: src/file_roller.glade2.h:23
+#: src/file_roller.glade.h:20
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: src/file_roller.glade.h:21
 msgid "R_ecent applications:"
 msgstr "Ứng dụng hiện thời:"
 
-#: src/file_roller.glade2.h:24
+#: src/file_roller.glade.h:22
 msgid "R_ecreate folders"
 msgstr "Tạo _lại thư mục"
 
-#: src/file_roller.glade2.h:25
+#: src/file_roller.glade.h:23
 msgid "Select archive"
 msgstr "Chọn lưu trữ"
 
-#: src/file_roller.glade2.h:26
+#: src/file_roller.glade.h:24 src/menu.h:450
+msgid "View File"
+msgstr "Xem tập tin"
+
+#: src/file_roller.glade.h:25
 msgid "View with internal _viewer"
 msgstr "Xem bằng trình xem bên trong"
 
-#: src/file_roller.glade2.h:27
+#: src/file_roller.glade.h:26
+msgid "Viewer"
+msgstr "Trình xem"
+
+#: src/file_roller.glade.h:27
 msgid "_All Files"
 msgstr "Thêm tập tin"
 
-#: src/file_roller.glade2.h:28
+#: src/file_roller.glade.h:28
 msgid "_Application:"
 msgstr "Ứng dụng:"
 
-#: src/file_roller.glade2.h:29
+#: src/file_roller.glade.h:29
 msgid "_Files:"
 msgstr "Tập tin:"
 
-#: src/file_roller.glade2.h:30
+#: src/file_roller.glade.h:30
 msgid "_Password:"
 msgstr "Mật khẩu:"
 
-#: src/file_roller.glade2.h:31
+#: src/file_roller.glade.h:31
 msgid "_Selected Files"
 msgstr "Tập tin được chọn"
 
-#: src/file_roller.glade2.h:32
+#: src/file_roller.glade.h:32
 msgid "_View destination folder after extraction"
 msgstr "_Xem thư mục đích sau khi giải nén"
 
-#: src/file_roller.glade2.h:33
+#: src/file_roller.glade.h:33
 msgid "example: *.txt; *.doc"
 msgstr "ví dụ: *.txt; *.doc"
 
-#: src/file_roller_prop.glade2.h:2
-msgid "Columns to Show"
-msgstr "Cột hiển thị"
-
-#: src/file_roller_prop.glade2.h:3
+#: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
 msgstr "Mức độ nén:"
 
-#: src/file_roller_prop.glade2.h:4
+#: src/file_roller_prop.glade.h:3
 msgid "Fast"
 msgstr "Nhanh"
 
-#: src/file_roller_prop.glade2.h:5
-msgid "File Roller - Preferences"
-msgstr "File Roller - Tùy thích"
+#: src/file_roller_prop.glade.h:4
+msgid "File Roller Preferences"
+msgstr "Tùy thích File Roller"
 
-#: src/file_roller_prop.glade2.h:6
+#: src/file_roller_prop.glade.h:5
 msgid "File _Name"
 msgstr "Tên tập tin"
 
-#: src/file_roller_prop.glade2.h:7
+#: src/file_roller_prop.glade.h:6
 msgid "File _Path"
 msgstr "Đường dẫn tới tập tin"
 
-#: src/file_roller_prop.glade2.h:8
+#: src/file_roller_prop.glade.h:7
 msgid "File _Size"
 msgstr "Kích thước tập tin"
 
-#: src/file_roller_prop.glade2.h:9
+#: src/file_roller_prop.glade.h:8
 msgid "File _Type"
 msgstr "Loại tập tin"
 
-#: src/file_roller_prop.glade2.h:10
-msgid "General"
-msgstr "Chung"
-
-#: src/file_roller_prop.glade2.h:11
+#: src/file_roller_prop.glade.h:9
 msgid "Maximum (slowest)"
 msgstr "Tối đa (chậm nhất)"
 
-#: src/file_roller_prop.glade2.h:12
+#: src/file_roller_prop.glade.h:10
 msgid "Normal"
 msgstr "Bình thường"
 
-#: src/file_roller_prop.glade2.h:13
+#: src/file_roller_prop.glade.h:11
 msgid "Very fast"
 msgstr "Rất nhanh"
 
-#: src/file_roller_prop.glade2.h:14
+#: src/file_roller_prop.glade.h:12
 msgid "_Modification Time"
 msgstr "Thời gian biến đổi"
 
-#: src/file_roller_prop.glade2.h:15
+#: src/file_roller_prop.glade.h:13
 msgid "_Recent archives:"
 msgstr "Lưu trữ hiện thời:"
 
@@ -375,35 +399,35 @@ msgstr ""
 msgid "Command _line output"
 msgstr "Output của dòng lệnh"
 
-#: src/main.c:60
+#: src/main.c:65
 msgid "Add files to the specified archive and quit the program"
 msgstr "Thêm tập tin vào lưu trữ chỉ định và thoát khỏi chương trình"
 
-#: src/main.c:61
+#: src/main.c:66
 msgid "ARCHIVE"
 msgstr "LƯU TRỮ"
 
-#: src/main.c:64
+#: src/main.c:69
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Thêm tập tin yêu cầu đặt tên cho lưu trữ và thoát khỏi chương trình"
 
-#: src/main.c:68
+#: src/main.c:73
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Giải nén lưu trữ vào thư mục chỉ định và thoát khỏi chương trình"
 
-#: src/main.c:69 src/main.c:77
+#: src/main.c:74 src/main.c:82
 msgid "FOLDER"
 msgstr "THƯ MỤC"
 
-#: src/main.c:72
+#: src/main.c:77
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Giải nén lưu trữ yêu cầu thư mục đích và thoát khỏi chương trình"
 
-#: src/main.c:76
+#: src/main.c:81
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "Thư mục mặc định để dùng cho các lệnh '--add' và '--extract'"
 
-#: src/main.c:80
+#: src/main.c:85
 msgid "Create destination folder without asking confirmation"
 msgstr "Tạo thư mục đích mà không yêu cầu phải xác định"
 
@@ -589,12 +613,12 @@ msgid "Rename current archive"
 msgstr "Đổi tên lưu trữ hiện thời"
 
 #: src/menu.h:123
-msgid "_Information"
-msgstr "Thông tin"
+msgid "_Properties"
+msgstr "Th_uộc tính"
 
 #: src/menu.h:123
-msgid "Show information about the archive"
-msgstr "Hiển thị thông tin về lưu trữ"
+msgid "Show archive properties"
+msgstr "Hiển thị thuộc tính lưu trữ"
 
 #: src/menu.h:131
 msgid "_Close"
@@ -808,17 +832,9 @@ msgstr "_Cửa sổ"
 msgid "Open Files..."
 msgstr "Mở tập tin..."
 
-#: src/menu.h:450
-msgid "View File"
-msgstr "Xem tập tin"
-
 #: src/menu.h:458
 msgid "Add Files..."
 msgstr "Thêm tập tin..."
-
-#: src/menu.h:464
-msgid "Delete Files"
-msgstr "Xóa tập tin"
 
 #: src/menu.h:464
 msgid "Delete files from the archive"
@@ -998,10 +1014,6 @@ msgstr "Vị trí hiện thời:"
 msgid "Add"
 msgstr "Thêm"
 
-#: src/window.c:2579
-msgid "Extract"
-msgstr "Giải nén"
-
 #: src/window.c:2590
 msgid "View"
 msgstr "Xem"
@@ -1029,6 +1041,36 @@ msgstr "Thêm tập tin vào một lưu trữ"
 #: src/window.c:4012
 msgid "Extract archive"
 msgstr "Giải nén lưu trữ"
+
+#~ msgid "Add files"
+#~ msgstr "Thêm tập tin"
+
+#~ msgid "File Roller - Add"
+#~ msgstr "File Roller - Thêm"
+
+#~ msgid "File Roller - Delete Files"
+#~ msgstr "File Roller - Xoá tập tin"
+
+#~ msgid "File Roller - Extract"
+#~ msgstr "File Roller - Giải nén"
+
+#~ msgid "File Roller - Open Files"
+#~ msgstr "File Roller - Mở tập tin"
+
+#~ msgid "File Roller - Password"
+#~ msgstr "File Roller - Mật khẩu"
+
+#~ msgid "File Roller - View File"
+#~ msgstr "File Roller - Xem tập tin"
+
+#~ msgid "File Roller - Viewer"
+#~ msgstr "File Roller - Trình xem"
+
+#~ msgid "_Information"
+#~ msgstr "Thông tin"
+
+#~ msgid "Show information about the archive"
+#~ msgstr "Hiển thị thông tin về lưu trữ"
 
 #~ msgid "No archive"
 #~ msgstr "Không có lưu trữ"
