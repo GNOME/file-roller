@@ -62,6 +62,14 @@ AC_SUBST(NAUTILUS_LIBS)
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
+dnl Checks for mkdtemp function
+
+mkdtemp_missing=false
+AC_CHECK_FUNC(mkdtemp,
+    [AC_DEFINE([HAVE_MKDTEMP], 1, [Have GlibC function to make temp dirs])],
+    mkdtemp_missing=true)
+AM_CONDITIONAL(MKDTEMP_MISSING, test x$mkdtemp_missing = xtrue)
+
 dnl ******************************
 
 ALL_LINGUAS="am ar az be bg bn bs ca cs cy da de el en_CA en_GB es et eu fa fi fr ga gu he hi hr hu id is it ja kn ko lt lv mk ml mn ms nb ne nl nn no pa pl pt pt_BR ro ru sk sl sq sr sr@ije sr@Latn sv ta th tk tr uk vi xh zh_CN zh_TW"
@@ -124,3 +132,13 @@ help/zh_CN/Makefile
 help/zh_HK/Makefile
 help/zh_TW/Makefile
 ])
+
+echo "
+
+Configuration:
+
+        Source code location:   ${srcdir}
+        Compiler:               ${CC}
+        Internal mkdtemp:       ${mkdtemp_missing}
+
+"

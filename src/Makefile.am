@@ -3,6 +3,12 @@ DIST_SUBDIRS=icons recent-files
 
 bin_PROGRAMS = file-roller
 
+if MKDTEMP_MISSING
+MKDTEMP_FILES=mkdtemp.c mkdtemp.h
+else
+MKDTEMP_FILES=
+endif
+
 glade_DATA =				\
 	file_roller.glade		
 gladedir = $(datadir)/file-roller/glade
@@ -110,6 +116,7 @@ file_roller_SOURCES = 			\
 	utf8-fnmatch.h			\
 	window.h			\
 	window.c			\
+	$(MKDTEMP_FILES)		\
 	$(BUILT_SOURCES)
 
 fr-marshal.h: fr-marshal.list $(GLIB_GENMARSHAL)

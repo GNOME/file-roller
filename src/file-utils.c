@@ -44,6 +44,10 @@
 #include "main.h"
 
 
+#ifndef HAVE_MKDTEMP
+#include "mkdtemp.h"
+#endif                                        
+                                            
 #define BUF_SIZE 4096
 #define MAX_PATTERNS 128
 
