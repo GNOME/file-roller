@@ -435,57 +435,50 @@ path_list_dup (GList *path_list)
 }
 
 
-/* characters to escape */
-static gchar bad_char[] = { '$', '\'', '`', '"', '\\', '!', '?', '*',
-			    ' ', '(', ')', '[', ']', '&', '|', '@', '#',
-			    ':', ';', '=', '-' };
-
-/* the size of bad_char */
-static const gint bad_chars = sizeof (bad_char) / sizeof (gchar);
-
-
 /* counts how many characters to escape in @str. */
-static gint
-count_chars_to_escape (const gchar *str)
+static int
+count_chars_to_escape (const char *str, 
+		       const char *meta_chars)
 {
-	const gchar *s;
-	gint i, n;
+	int         meta_chars_n = strlen (meta_chars);
+	const char *s;
+	int         n = 0;
 
-	n = 0;
-	for (s = str; *s != 0; s++)
-		for (i = 0; i < bad_chars; i++)
-			if (*s == bad_char[i]) {
+	for (s = str; *s != 0; s++) {
+		int i;
+		for (i = 0; i < meta_chars_n; i++) 
+			if (*s == meta_chars[i]) {
 				n++;
 				break;
 			}
+	}
 	return n;
 }
 
 
-/* escape with backslash the file name. */
-gchar*
-shell_escape (const gchar *filename)
+/* escape with backslash the string @str. */
+char*
+escape_str (const char *str, 
+	    const char *meta_chars)
 {
-	gchar *escaped;
-	gint i, new_l;
-	const gchar *s;
-	gchar *t;
+	int         meta_chars_n = strlen (meta_chars);
+	char       *escaped;
+	int         i, new_l;
+	const char *s;
+	char       *t;
 
-	if (filename == NULL) 
+	if (str == NULL) 
 		return NULL;
 
-	new_l = strlen (filename) + count_chars_to_escape (filename);
+	new_l = strlen (str) + count_chars_to_escape (str, meta_chars);
 	escaped = g_malloc (new_l + 1);
 
-	s = filename;
+	s = str;
 	t = escaped;
 	while (*s) {
-		gboolean is_bad;
-	
-		is_bad = FALSE;
-		for (i = 0; (i < bad_chars) && !is_bad; i++)
-			is_bad = (*s == bad_char[i]);
-
+		gboolean is_bad = FALSE;
+		for (i = 0; (i < meta_chars_n) && !is_bad; i++)
+			is_bad = (*s == meta_chars[i]);
 		if (is_bad)
 			*t++ = '\\';
 		*t++ = *s++;
@@ -493,6 +486,14 @@ shell_escape (const gchar *filename)
 	*t = 0;
 
 	return escaped;
+}
+
+
+/* escape with backslash the file name. */
+char*
+shell_escape (const char *filename)
+{
+	return escape_str (filename, "$\'`\"\\!?* ()[]&|@#:;=-");
 }
 
 

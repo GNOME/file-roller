@@ -91,6 +91,36 @@ mktime_from_string (char *date_s,
 }
 
 
+static char*
+zip_escape (const char *str)
+{
+	return escape_str (str, "*?[]");
+}
+
+
+static char*
+prepend_path_separator (const char *str)
+{
+	if (*str == '-' || g_str_has_prefix (str, "\\-")) 
+		return g_strconcat (".", G_DIR_SEPARATOR_S, str, NULL);
+	else 
+		return g_strdup (str);
+}
+
+
+static char*
+prepend_path_separator_zip_escape (const char *str)
+{
+	char *tmp1, *tmp2;
+
+	tmp2 = prepend_path_separator (str);
+	tmp1 = zip_escape (tmp2);
+	g_free (tmp2);
+	
+	return tmp1;
+}
+
+
 static void
 list__process_line (char     *line, 
 		    gpointer  data)
@@ -151,8 +181,33 @@ list__process_line (char     *line,
 
 
 static void
+add_filename_arg (FRCommand *comm) 
+{
+	char *temp = prepend_path_separator (comm->e_filename);
+	fr_process_add_arg (comm->process, temp);
+	g_free (temp);
+}
+
+
+static void
+add_password_arg (FRCommand     *comm,
+		  const char    *password)
+{
+	if (password != NULL) {
+		char *arg;
+		fr_process_add_arg (comm->process, "-P");
+		arg = g_strconcat ("\"", password, "\"", NULL);
+		fr_process_add_arg (comm->process, arg);
+		g_free (arg);
+	}
+}
+
+
+static void
 fr_command_zip_list (FRCommand *comm)
 {
+
+
 	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
 
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
@@ -164,7 +219,7 @@ fr_command_zip_list (FRCommand *comm)
 	fr_process_add_arg (comm->process, "-qq");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-l");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	add_filename_arg (comm);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -186,20 +241,6 @@ process_line__common (char     *line,
 		fr_command_progress (comm, fraction);
 	}
 
-}
-
-
-static void
-add_password_arg (FRCommand     *comm,
-		  const char    *password)
-{
-	if (password != NULL) {
-		char *arg;
-		fr_process_add_arg (comm->process, "-P");
-		arg = g_strconcat ("\"", password, "\"", NULL);
-		fr_process_add_arg (comm->process, arg);
-		g_free (arg);
-	}
 }
 
 
@@ -241,10 +282,13 @@ fr_command_zip_add (FRCommand     *comm,
 		fr_process_add_arg (comm->process, "-9"); break;
 	}
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	add_filename_arg (comm);
 
-	for (scan = file_list; scan; scan = scan->next) 
-		fr_process_add_arg (comm->process, (gchar*) scan->data);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *temp = prepend_path_separator_zip_escape ((char*) scan->data);
+		fr_process_add_arg (comm->process, temp);
+		g_free (temp);
+	}
 
 	fr_process_end_command (comm->process);
 }
@@ -262,10 +306,14 @@ fr_command_zip_delete (FRCommand *comm,
 
 	fr_process_begin_command (comm->process, "zip");
 	fr_process_add_arg (comm->process, "-d");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	add_filename_arg (comm);
 
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *temp = prepend_path_separator_zip_escape ((char*) scan->data);
+		fr_process_add_arg (comm->process, temp);
+		g_free (temp);
+	}
+
 	fr_process_end_command (comm->process);
 }
 
@@ -288,7 +336,7 @@ fr_command_zip_extract (FRCommand  *comm,
 	fr_process_begin_command (comm->process, "unzip");
 	
 	if (dest_dir != NULL) {
-		gchar *e_dest_dir = shell_escape (dest_dir);
+		char *e_dest_dir = shell_escape (dest_dir);
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, e_dest_dir);
 		g_free (e_dest_dir);
@@ -307,10 +355,13 @@ fr_command_zip_extract (FRCommand  *comm,
 
 	add_password_arg (comm, password);
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	add_filename_arg (comm);
 
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *temp = prepend_path_separator_zip_escape ((char*) scan->data);
+		fr_process_add_arg (comm->process, temp);
+		g_free (temp);
+	}
 
 	fr_process_end_command (comm->process);
 }
@@ -322,10 +373,8 @@ fr_command_zip_test (FRCommand   *comm,
 {
 	fr_process_begin_command (comm->process, "unzip");
 	fr_process_add_arg (comm->process, "-t");
-
 	add_password_arg (comm, password);
-
-	fr_process_add_arg (comm->process, comm->e_filename);
+	add_filename_arg (comm);
 	fr_process_end_command (comm->process);
 }
 

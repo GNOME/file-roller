@@ -80,6 +80,9 @@ GList *             path_list_dup                (GList *path_list);
 gboolean            is_mime_type                 (const char* type, 
 						  const char* pattern);
 
+char*               escape_str                   (const char  *str, 
+						  const char  *meta_chars);
+
 gchar *             shell_escape                 (const gchar *filename);
 
 gchar *             application_get_command      (const GnomeVFSMimeApplication *app);

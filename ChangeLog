@@ -1,5 +1,14 @@
 2003-11-09  Paolo Bacchilega  <paolo.bacch@tin.it>
 
+	* src/fr-command-zip.c (fr_command_zip_list, fr_command_zip_add) 
+	(fr_command_zip_delete, fr_command_zip_extract) 
+	(fr_command_zip_test): zip wildcards and non-option arguments not
+	escaped (bug #122486).  Patch from Claudio Bley.
+
+	* src/file-utils.h: 
+	* src/file-utils.c (escape_str): new function
+	(shell_escape): use the above function.
+
 	* src/fr-command-zip.c (add_password_arg, fr_command_zip_add) 
 	(fr_command_zip_extract, fr_command_zip_test): close the password
 	between "".
