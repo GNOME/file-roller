@@ -193,11 +193,11 @@ static void
 add_password_arg (FRCommand     *comm,
 		  const char    *password)
 {
-	fr_process_add_arg (comm->process, "-P");
-
-	if (password != NULL) {
+	if ((password != NULL) && (*password != 0)) {
 		char *arg;
 		char *e_password;
+
+		fr_process_add_arg (comm->process, "-P");
 
 		e_password = escape_str (password, "\"");
 		arg = g_strconcat ("\"", e_password, "\"", NULL);
@@ -205,8 +205,7 @@ add_password_arg (FRCommand     *comm,
 
 		fr_process_add_arg (comm->process, arg);
 		g_free (arg);
-	} else
-		fr_process_add_arg (comm->process, "\"\"");
+	}
 }
 
 

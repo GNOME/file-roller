@@ -1407,18 +1407,14 @@ static void _window_batch_start_current_action (FRWindow *window);
 
 
 static void
-open_nautilus (GtkWindow  *parent,
-	       const char *folder)
+open_folder (GtkWindow  *parent,
+	     const char *folder)
 {
-	char   *command_line;
-	char   *e_folder;
+	char   *uri;
 	GError *err = NULL;
-	
-	e_folder = shell_escape (folder);
-	command_line = g_strconcat ("nautilus ", e_folder, NULL);
-	g_free (e_folder);
-	
-	if (!g_spawn_command_line_async (command_line, &err) || (err != NULL)){
+
+	uri = g_strconcat ("file://", folder, NULL);
+	if (! gnome_url_show (uri, &err)) {
 		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
@@ -1439,8 +1435,7 @@ open_nautilus (GtkWindow  *parent,
 		gtk_widget_destroy (d);
 		g_clear_error (&err);
 	}
-
-	g_free (command_line);
+	g_free (uri);
 }
 
 
@@ -1721,7 +1716,7 @@ _action_performed (FRArchive   *archive,
 				  window);
 			
 		} else if (window->view_folder_after_extraction) {
-			open_nautilus (GTK_WINDOW (window->app), window->folder_to_view);
+			open_folder (GTK_WINDOW (window->app), window->folder_to_view);
 			window->view_folder_after_extraction = FALSE;
 		}
 		break;
@@ -3658,7 +3653,7 @@ window_close (FRWindow *window)
 }
 
 
-void
+gboolean
 window_archive_new (FRWindow   *window, 
 		    const char *filename)
 {
@@ -3685,7 +3680,7 @@ window_archive_new (FRWindow   *window,
 			window_batch_mode_stop (window);
 		}
 		
-		return;
+		return FALSE;
 	}
 
 	_window_history_clear (window);
@@ -3709,6 +3704,8 @@ window_archive_new (FRWindow   *window,
 		drag_drop_add_file_list (window);
 		window->add_after_creation = FALSE;
 	}
+
+	return TRUE;
 }
 
 

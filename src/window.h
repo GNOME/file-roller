@@ -251,7 +251,7 @@ void       window_close                     (FRWindow      *window);
 
 /* archive operations */
 
-void       window_archive_new               (FRWindow      *window, 
+gboolean   window_archive_new               (FRWindow      *window, 
 					     const char    *filename);
 
 gboolean   window_archive_open              (FRWindow      *window, 

@@ -61,16 +61,20 @@ new_archive (GtkWidget *file_sel,
 	     gchar     *path)
 {
 	FRWindow *archive_window;
+	gboolean  new_window;
 
-	if (window->archive_present) {
+	new_window = window->archive_present;
+
+	if (new_window) 
 		archive_window = window_new ();
-		gtk_widget_show (archive_window->app);
-	} else
+	else
 		archive_window = window;
 
-	window_archive_new (archive_window, path);	
-
-	gtk_widget_destroy (file_sel);
+	if (window_archive_new (archive_window, path)) {
+		gtk_window_present (GTK_WINDOW (archive_window->app));
+		gtk_widget_destroy (file_sel);
+	} else if (new_window)
+		window_close (archive_window);
 }
 
 

@@ -1,4 +1,23 @@
+Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
+
+	* src/fr-command-unstuff.c (fr_command_unstuff_list): add missing
+	semi-colon.
+
+2004-01-06  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command-zip.c (add_password_arg): do not add the password arg
+	if the password is an empty string (bug #130693).
+
+	* src/menu-callbacks.c (new_archive): do no destroy the file selector 
+	if the archive was not created (bug #130637).
+
+	* src/window.c (window_archive_new): return TRUE if the archive was 
+	created successfully, FALSE otherwise.
+
 2004-01-04  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (open_folder): use gnome_url_show instead of calling 
+	nautilus.
 
 	* src/fr-command-unstuff.c (fr_command_unstuff_list): fix bug #128748 (
 	Build fails on Solaris9: mkdtemp() doesn't exist).
