@@ -1,3 +1,13 @@
+2002-10-11  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* configure.in: update required libraries versions.
+
+	* src/recent-files/*: import egg-recent files.
+	
+	* src/window.c (get_icon): use gnome_icon_lookup to get the icon.
+	(open_recent_cb, _window_add_to_recent, pref_history_len_changed) 
+	(window_new): use egg-recent.
+
 2002-10-08  Peteris Krisjanis <peteris.krisjanis@os.lv>
 
 	* configure.in: Added lv to ALL_LINGUAS.

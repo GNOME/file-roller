@@ -25,18 +25,20 @@
 #include <fnmatch.h>
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
+#include <libgnomeui/gnome-icon-lookup.h>
+#include <libgnomeui/gnome-icon-theme.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include <libgnomevfs/gnome-vfs-directory.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include "bookmarks.h"
 #include "dlg-add.h"
 #include "dlg-batch-add.h"
 #include "dlg-extract.h"
 #include "dlg-viewer.h"
 #include "dlg-viewer-or-app.h"
+#include "egg-recent.h"
 #include "fr-archive.h"
 #include "file-data.h"
 #include "file-utils.h"
@@ -52,15 +54,16 @@
 #include "icons/pixbufs.h"
 
 
-#define ICON_SIZE 24.0
+#define ICON_SIZE 24
+#define DICON_SIZE 24.0
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
 #define FILES_TO_PROCESS_AT_ONCE 500
 #define DISPLAY_TIMEOUT_INTERVAL_MSECS 300
 
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
-#define ICON_TYPE_DIRECTORY "i-directory"
-#define ICON_TYPE_REGULAR   "i-regular"
+#define ICON_TYPE_DIRECTORY "gnome-fs-directory"
+#define ICON_TYPE_REGULAR   "gnome-fs-regular"
 
 enum {
 	TARGET_STRING,
@@ -77,6 +80,7 @@ static guint n_targets = sizeof (target_table) / sizeof (target_table[0]);
 static GdkPixbuf *folder_pixbuf = NULL;
 static GdkPixbuf *file_pixbuf = NULL;
 static GHashTable *pixbuf_hash = NULL;
+static GnomeIconTheme *icon_theme = NULL;
 
 
 /* -- window_update_file_list -- */
@@ -354,96 +358,14 @@ get_time_string (time_t time)
 #undef MAX_S_TIME_LEN
 
 
-static gchar *
-get_icon_path_from_name (const gchar *icon_name)
-{
-	char *name_with_ext;
-	char *icon_path = NULL;
-	char *tmp;
-	char *icon_theme = eel_gconf_get_string (PREF_DESKTOP_ICON_THEME);
-
-	if (! file_extension_is (icon_name, ".png"))
-		name_with_ext = g_strconcat (icon_name, ".png", NULL);
-	else
-		name_with_ext = g_strdup (icon_name);
-
-        if (icon_path == NULL) {
-                tmp = g_strconcat ("nautilus/", 
-				   icon_theme, 
-				   "/", 
-				   name_with_ext, 
-				   NULL);
-
-		icon_path = gnome_vfs_icon_path_from_filename (tmp);
-		g_free (tmp);
-        }
-
-	if (icon_path == NULL) {
-                tmp = g_strconcat ("document-icons/", 
-				   name_with_ext, 
-				   NULL);
-                icon_path = gnome_vfs_icon_path_from_filename (tmp);
-                g_free (tmp);
-	}
-
-	if (icon_path == NULL) {
-		tmp = g_strconcat (g_get_home_dir (),
-				   "/.nautilus/themes/",
-				   icon_theme, 
-				   "/", 
-				   name_with_ext, 
-				   NULL);
-		icon_path = gnome_vfs_icon_path_from_filename (tmp);
-		g_free (tmp);
-	}
-
-        if (icon_path == NULL) 
-		icon_path = gnome_vfs_icon_path_from_filename (name_with_ext);
-	g_free (name_with_ext);
-
-	g_free (icon_theme);
-
-	return icon_path;
-}
-
-
-static char *
-get_mime_name (const char *mime_type, 
-	       int         size)
-{
-	char *mime_type_modified;
-	char *first_slash;
-	char *mime_name;
-
-	mime_type_modified = g_strdup (mime_type);
-	first_slash = strchr (mime_type_modified, '/');
-	if (first_slash != NULL)
-		*first_slash = '-';
-
-	if (size > 0)
-		mime_name = g_strdup_printf ("gnome-%s-%d", 
-					     mime_type_modified, 
-					     size);
-	else
-		mime_name = g_strconcat ("gnome-",
-					 mime_type_modified,
-					 NULL);
-	g_free (mime_type_modified);
-
-	return mime_name;
-}
-
-
 static GdkPixbuf *
-get_icon (WindowListMode  list_mode,
-	  FileData       *fdata)
+get_icon (FileData *fdata)
 {
 	GdkPixbuf   *pixbuf;
-	const char  *icon_name;
+	char        *icon_name;
 	char        *icon_path;
-	char        *mime_name = NULL;
 	const char  *mime_type;
-	
+       
 	if (fdata->is_dir)
 		mime_type = MIME_TYPE_DIRECTORY;
 	else
@@ -457,69 +379,87 @@ get_icon (WindowListMode  list_mode,
 		return pixbuf;
 	}
 
-	if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS)) {
-		if (fdata->is_dir)
-			icon_name = ICON_TYPE_DIRECTORY;
-		else
-			icon_name = ICON_TYPE_REGULAR;
-	} else {
-		if (fdata->is_dir) 
-			icon_name = ICON_TYPE_DIRECTORY;
-		else {
-			icon_name = gnome_vfs_mime_get_icon (fdata->type);
-			if (icon_name == NULL) {
-				mime_name = get_mime_name (fdata->type, 0);
-				icon_name = mime_name;
-			}
-		}
-	}
+	if (fdata->is_dir)
+		icon_name = g_strdup (ICON_TYPE_DIRECTORY);
+	else if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS)) 
+		icon_name = g_strdup (ICON_TYPE_REGULAR);
+	else
+		icon_name = gnome_icon_lookup (icon_theme,
+					       NULL,
+					       NULL,
+					       NULL,
+					       NULL,
+					       mime_type,
+					       GNOME_ICON_LOOKUP_FLAGS_NONE,
+					       NULL);
 
-	icon_path = get_icon_path_from_name (icon_name);
-
-        if ((icon_path == NULL) && ! fdata->is_dir)
-                icon_path = get_icon_path_from_name (ICON_TYPE_REGULAR);
-
-	if (mime_name != NULL)
-		g_free (mime_name);
-
-	if (icon_path == NULL) {
+	if (icon_name == NULL) {
 		/* if nothing was found use the default internal icons. */
 		if (fdata->is_dir)
 			pixbuf = folder_pixbuf;
 		else
 			pixbuf = file_pixbuf;
 		g_object_ref (pixbuf);
+
 	} else {
-		/* ...else load the file from disk. */
+		icon_path = gnome_icon_theme_lookup_icon (icon_theme, 
+							  icon_name,
+							  ICON_SIZE,
+							  NULL,
+							  NULL);
 
-		pixbuf = gdk_pixbuf_new_from_file (icon_path, NULL);
-		if (pixbuf != NULL) {
-			GdkPixbuf *scaled;
-			int        new_w, new_h;
-			int        w, h;
-			double     factor;
+		if (icon_path == NULL) {
+			/* if nothing was found use the default internal 
+			 * icons. */
+			if (fdata->is_dir)
+				pixbuf = folder_pixbuf;
+			else
+				pixbuf = file_pixbuf;
+			g_object_ref (pixbuf);
 
-			/* scale keeping aspect ratio. */
+		} else {
+			/* ...else load the file from disk. */
 
-			w = gdk_pixbuf_get_width (pixbuf);
-			h = gdk_pixbuf_get_height (pixbuf);
-			
-			factor = MIN (ICON_SIZE / w, ICON_SIZE / h);
-			new_w  = MAX ((int) (factor * w), 1);
-			new_h  = MAX ((int) (factor * h), 1);
-			
-			scaled = gdk_pixbuf_scale_simple (pixbuf,
-							  new_w,
-							  new_h,
-							  GDK_INTERP_BILINEAR);
-			g_object_unref (G_OBJECT (pixbuf));
-			pixbuf = scaled;        
+			pixbuf = gdk_pixbuf_new_from_file (icon_path, NULL);
+			if (pixbuf != NULL) {
+				GdkPixbuf *scaled;
+				int        new_w, new_h;
+				int        w, h;
+				double     factor;
+				
+				/* scale keeping aspect ratio. */
+				
+				w = gdk_pixbuf_get_width (pixbuf);
+				h = gdk_pixbuf_get_height (pixbuf);
+				
+				factor = MIN (DICON_SIZE / w, DICON_SIZE / h);
+				new_w  = MAX ((int) (factor * w), 1);
+				new_h  = MAX ((int) (factor * h), 1);
+				
+				scaled = gdk_pixbuf_scale_simple (pixbuf,
+								  new_w,
+								  new_h,
+								  GDK_INTERP_BILINEAR);
+				g_object_unref (pixbuf);
+				pixbuf = scaled;        
+
+			} else {
+				/* ...else use the default internal icons. */
+
+				if (fdata->is_dir)
+					pixbuf = folder_pixbuf;
+				else
+					pixbuf = file_pixbuf;
+				g_object_ref (pixbuf);
+			}
 		}
 	}
-
+	
 	g_hash_table_insert (pixbuf_hash, (gpointer) mime_type, pixbuf);
-	g_object_ref (G_OBJECT (pixbuf));
+	g_object_ref (pixbuf);
+
 	g_free (icon_path);
+	g_free (icon_name);
 
 	return pixbuf;
 }
@@ -615,7 +555,7 @@ update_file_list_idle (gpointer callback_data)
 		GdkPixbuf   *pixbuf;
 		char        *utf8_name;
 
-		pixbuf = get_icon (window->list_mode, fdata);
+		pixbuf = get_icon (fdata);
 		utf8_name = g_locale_to_utf8 (fdata->list_name, 
 					      -1, NULL, NULL, NULL);
 		gtk_list_store_prepend (window->list_store, &iter);
@@ -1066,6 +1006,31 @@ _window_update_current_location (FRWindow *window)
 }
 
 
+static gboolean
+open_recent_cb (EggRecentView *view, 
+		EggRecentItem *item, 
+		gpointer       data)
+{
+	FRWindow   *window = data;
+        char       *uri;
+	int         prefix_len = strlen ("file://");
+	gboolean    result = FALSE;
+
+        uri = egg_recent_item_get_uri (item);
+
+	if (strlen (uri) > prefix_len) {
+		char *path = gnome_vfs_unescape_string (uri + prefix_len, "");
+		window_archive_open (window, path);
+		g_free (path);
+		result = TRUE;
+	}
+
+        g_free (uri);
+
+        return result;
+}
+
+
 void
 window_push_message (FRWindow   *window, 
 		      const char *msg)
@@ -1155,8 +1120,9 @@ _window_add_to_recent (FRWindow *window,
 		       char     *filename, 
 		       gboolean  add)
 {
-	Bookmarks *recent;
-	char      *tmp;
+	char *tmp;
+	char *uri;
+	char *filename_e;
 
 	/* avoid adding temporary archives to the list. */
 
@@ -1169,17 +1135,13 @@ _window_add_to_recent (FRWindow *window,
 
 	/**/
 
-	recent = bookmarks_new (RC_RECENT_FILE);
-	bookmarks_load_from_disk (recent);
-	if (add)
-		bookmarks_add (recent, filename);
-	else
-		bookmarks_remove (recent, filename);
-	bookmarks_set_max_lines (recent, eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
-	bookmarks_write_to_disk (recent);
-	bookmarks_free (recent);
-	
-	window_update_history_list (window);
+	filename_e = gnome_vfs_escape_path_string (filename);
+	uri = g_strconcat ("file://", filename_e, NULL);
+
+	egg_recent_model_add (window->recent_model, uri);
+
+	g_free (uri);
+	g_free (filename_e);
 }
 
 
@@ -2298,7 +2260,8 @@ pref_history_len_changed (GConfClient *client,
 			  gpointer     user_data)
 {
 	FRWindow *window = user_data;
-	window_update_history_list (window);
+	egg_recent_model_set_limit (window->recent_model, 
+				    eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
 }
 
 
@@ -2372,6 +2335,8 @@ window_new ()
 	GtkWidget        *up_image;
 	GtkTreeSelection *selection;
 	int               i;
+	EggRecentModel   *model;
+        EggRecentViewGtk *view;
 
 	/* data common to all windows. */
 
@@ -2382,6 +2347,9 @@ window_new ()
 
 	if (pixbuf_hash == NULL)
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
+
+	if (icon_theme == NULL)
+		icon_theme = gnome_icon_theme_new ();
 
 	/**/
 
@@ -2683,7 +2651,7 @@ window_new ()
 	window->mitem_rename_archive = file_menu[FILE_MENU_RANAME_ARCHIVE].widget;
 	window->mitem_delete_archive = file_menu[FILE_MENU_DELETE_ARCHIVE].widget;
 
-	window->mitem_bookmarks = GTK_MENU_ITEM (file_menu[FILE_MENU_RECENTS_MENU].widget)->submenu;
+	window->mitem_recents_menu = GTK_MENU_ITEM (file_menu[FILE_MENU_RECENTS_MENU].widget)->submenu;
 
 	window->mitem_add = edit_menu[EDIT_MENU_ADD].widget;
 	window->mitem_delete = edit_menu[EDIT_MENU_DELETE].widget;
@@ -2743,6 +2711,38 @@ window_new ()
 	window->password = NULL;
 	window->compression = preferences_get_compression_level ();
 
+	/**/
+
+	model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
+	egg_recent_model_set_filter_mime_types (model, 
+						"application/x-tar",
+						"application/x-compressed-tar",
+						"application/x-bzip-compressed-tar",
+						"application/x-lzop-compressed-tar",
+						"application/zip",
+						"application/x-lha",
+						"application/x-rar",
+						"application/x-rar-compressed",
+						"application/x-gzip",
+						"application/x-bzip",
+						"application/x-compress",
+						"application/x-lzop",
+						NULL);
+        egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
+	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
+
+	view = egg_recent_view_gtk_new (window->mitem_recents_menu, NULL);
+	window->recent_view = view;
+	egg_recent_view_set_model (EGG_RECENT_VIEW (view), model);
+
+	g_object_unref (model);
+	window->recent_model = egg_recent_view_get_model (EGG_RECENT_VIEW (view));
+
+	g_signal_connect (G_OBJECT (view), 
+			  "activate",
+			  G_CALLBACK (open_recent_cb),
+			  window);
+
 	/* Update menu items */
 
 	if (window->list_mode == WINDOW_LIST_MODE_FLAT)
@@ -2757,7 +2757,6 @@ window_new ()
 	_window_update_sensitivity (window);
 	window_update_file_list (window);
 	_window_update_current_location (window);
-	window_update_history_list (window);
 	window_update_columns_visibility (window);
 
 	/* Add notification callbacks. */
@@ -2924,6 +2923,11 @@ window_close (FRWindow *window)
 		window->folder_to_view = NULL;
 	}
 
+	if (window->recent_view != NULL) {
+		g_object_unref (window->recent_view);
+		window->recent_view = NULL;
+	}
+
 	if (window->batch_icon != NULL) {
 		g_object_unref (window->batch_icon);
 		window->batch_icon = NULL;
@@ -2949,8 +2953,13 @@ window_close (FRWindow *window)
 					      NULL);
 			g_hash_table_destroy (pixbuf_hash);
 		}
+
+		if (icon_theme != NULL)
+			g_object_unref (icon_theme);
+
 		if (file_pixbuf != NULL)
 			g_object_unref (file_pixbuf);
+
 		if (folder_pixbuf != NULL)
 			g_object_unref (folder_pixbuf);
 
@@ -3001,174 +3010,6 @@ window_archive_new (FRWindow   *window,
 		drag_drop_add_file_list (window);
 		window->add_dropped_files = FALSE;
 	}
-}
-
-
-/* -- window_update_history_list -- */
-
-
-static void 
-bookmark_selected_cb (GtkWidget *widget, 
-		      gpointer   data)
-{
-	FRWindow   *window = data;
-	const char *utf8_path;
-	char       *path;
-
-	utf8_path = g_object_get_data (G_OBJECT (widget), "full_path");
-	path = g_locale_from_utf8 (utf8_path, -1, NULL, NULL, NULL);
-	window_archive_open (window, path);
-	g_free (path);
-}
-
-
-static void
-put_hint_in_statusbar (GtkWidget* menuitem, gpointer data)
-{
-	char      *hint = g_object_get_data (G_OBJECT (menuitem), "full_path");
-	FRWindow  *window = data;
-	GtkWidget *bar = window->statusbar;
-
-	g_return_if_fail (hint != NULL);
-	g_return_if_fail (GNOME_IS_APPBAR (bar));
-
-        gnome_appbar_push (GNOME_APPBAR (bar), hint);
-}
-
-
-static void
-remove_hint_from_statusbar (GtkWidget* menuitem, gpointer data)
-{
-	FRWindow  *window = data;
-	GtkWidget *bar = window->statusbar;
-
-	g_return_if_fail (GNOME_IS_APPBAR (bar));
-
-	gnome_appbar_pop (GNOME_APPBAR (bar));
-}
-
-
-static char *
-escape_underscore (const char *name)
-{
-	const char *s;
-	char       *e_name, *t;
-	int         l = 0, us = 0;
-
-	if (name == NULL)
-		return NULL;
-
-	for (s = name; *s != 0; s++) {
-		if (*s == '_')
-			us++;
-		l++;
-	}
-	
-	if (us == 0)
-		return g_strdup (name);
-
-	e_name = g_malloc (sizeof (char) * (l + us + 1));
-
-	t = e_name;
-	for (s = name; *s != 0; s++) 
-		if (*s == '_') {
-			*t++ = '_';
-			*t++ = '_';
-		} else
-			*t++ = *s;
-	*t = 0;
-
-	return e_name;
-}
-
-
-void
-window_update_history_list (FRWindow *window)
-{
-	GList     *scan, *l;
-	Bookmarks *bookmarks;
-	int        i, offset;
-	GtkWidget *mitem;
-
-	bookmarks = bookmarks_new (RC_RECENT_FILE);
-	bookmarks_load_from_disk (bookmarks);
-
-	l = gtk_container_get_children (GTK_CONTAINER (window->mitem_bookmarks));
-
-	if (eel_gconf_get_boolean (PREF_DESKTOP_MENUS_HAVE_TEAROFF))
-		offset = 1;
-	else 
-		offset = 0;
-
-	for (i = 0; i < offset; i++) 
-		l = l->next;
-
-	for (scan = l; scan; scan = scan->next)
-		if (GTK_IS_WIDGET (scan->data))
-			gtk_widget_destroy (GTK_WIDGET (scan->data));
-
-	if (l) g_list_free (l);
-
-	if (bookmarks->list == NULL) {
-		mitem =  gtk_menu_item_new_with_label (_("No archive"));
-		gtk_menu_shell_append (GTK_MENU_SHELL (window->mitem_bookmarks), mitem);
-		gtk_widget_show (mitem);
-		gtk_widget_set_sensitive (mitem, FALSE);
-
-		bookmarks_free (bookmarks);
-		return;
-	}
-
-	/* Update bookmarks menu. */
-
-	for (i = 1, scan = bookmarks->list; scan && (i <= eel_gconf_get_integer (PREF_UI_HISTORY_LEN)); scan = scan->next, i++) {
-		char *utf8_path;
-		char *utf8_name;
-		char *label;
-		char *name;
-		
-		name = escape_underscore (file_name_from_path (scan->data));
-		utf8_name = g_locale_to_utf8 (name, -1, NULL, NULL, NULL);
-		g_free (name);
-		label = g_strdup_printf ("%s%d. %s", 
-					 (i < 10) ? "_" : "", 
-					 i, 
-					 utf8_name);
-		g_free (utf8_name);
-		mitem =  gtk_menu_item_new_with_mnemonic (label);
-		g_free (label);
-		gtk_widget_show (mitem);
-
-		/**/
-
-		utf8_path = g_locale_to_utf8 (scan->data, -1, NULL, NULL,
-					      NULL);
-		
-		g_object_set_data_full (G_OBJECT (mitem), 
-					"full_path", 
-					utf8_path,
-					g_free);
-		gtk_menu_shell_append (GTK_MENU_SHELL (window->mitem_bookmarks), mitem);
-		
-		/**/
-
-		g_signal_connect (G_OBJECT (mitem),
-				  "select",
-				  G_CALLBACK (put_hint_in_statusbar),
-				  window);
-		
-		g_signal_connect (G_OBJECT (mitem),
-				  "deselect",
-				  G_CALLBACK (remove_hint_from_statusbar),
-				  window);
-		
-		g_signal_connect (G_OBJECT (mitem), 
-				  "activate", 
-				  G_CALLBACK (bookmark_selected_cb), 
-				  window);
-	}
-
-	bookmarks_free (bookmarks);
 }
 
 

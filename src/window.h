@@ -24,6 +24,7 @@
 #define FR_WINDOW_H
 
 #include <gtk/gtk.h>
+#include "egg-recent.h"
 #include "fr-archive.h"
 #include "typedefs.h"
 
@@ -111,7 +112,7 @@ typedef struct {
 	GtkWidget *      mitem_new_archive;
 	GtkWidget *      mitem_open_archive;
 	GtkWidget *      mitem_close;
-	GtkWidget *      mitem_bookmarks;
+	GtkWidget *      mitem_recents_menu;
 
 	GtkWidget *      mitem_archive_prop;
 	GtkWidget *      mitem_move_archive;
@@ -146,6 +147,9 @@ typedef struct {
 
 	GtkWidget *      file_popup_menu;
 	GtkWidget *      popupmenu_file[8];
+
+	EggRecentViewGtk *recent_view;
+	EggRecentModel   *recent_model;
 
 	/* drag data */
 

@@ -26,7 +26,6 @@
 #include <gnome.h>
 #include <glade/glade.h>
 
-#include "bookmarks.h"
 #include "file-utils.h"
 #include "window.h"
 #include "typedefs.h"

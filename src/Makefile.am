@@ -1,5 +1,5 @@
-SUBDIRS=icons
-DIST_SUBDIRS=icons
+SUBDIRS=icons recent-files
+DIST_SUBDIRS=icons recent-files
 
 bin_PROGRAMS = file-roller
 
@@ -12,6 +12,7 @@ DISABLE_DEPRECATED = -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBU
 
 INCLUDES =						\
 	-I$(top_srcdir)					\
+	-I$(top_srcdir)/src/recent-files		\
 	-I$(top_builddir)				\
 	-DFR_PREFIX=\"$(prefix)\"           		\
         -DFR_SYSCONFDIR=\"$(sysconfdir)\"   		\
@@ -98,8 +99,9 @@ fr-marshal.c: fr-marshal.list $(GLIB_GENMARSHAL)
 	echo "#include \"fr-marshal.h\"" > $@ && \
 	$(GLIB_GENMARSHAL) $< --body --prefix=fr_marshal >> $@
 
-file_roller_LDADD =	\
-	@LIBOBJS@	\
+file_roller_LDADD =					\
+	@LIBOBJS@					\
+	$(top_builddir)/src/recent-files/librecent.a	\
 	$(FR_LIBS)
 
 schemadir = @GCONF_SCHEMA_FILE_DIR@
