@@ -5685,10 +5685,6 @@ window_archive__open_extract (FRWindow   *window,
 				      g_strdup (filename),
 				      (GFreeFunc) g_free);
 	if (dest_dir != NULL) {
-		window->view_folder_after_extraction = TRUE;
-		g_free (window->folder_to_view);
-		window->folder_to_view = g_strdup (dest_dir);
-
 		window_batch_mode_add_action (window,
 					      FR_BATCH_ACTION_EXTRACT,
 					      g_strdup (dest_dir),
