@@ -182,7 +182,7 @@ process_line (char     *line,
 static void
 fr_command_unstuff_list (FRCommand *comm)
 {
-	char *arg, *path, *template;
+	char *arg, *path;
 	char *filename;
 	char *path_dots;
 

@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2004 The Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,9 @@ enum {
 	TOOLBAR_NEW = 0,
 	TOOLBAR_OPEN,
 	TOOLBAR_SEP1,
+	TOOLBAR_ADD,
+	TOOLBAR_EXTRACT,
+	TOOLBAR_VIEW,
 	TOOLBAR_SEP2,
 	TOOLBAR_STOP
 };
@@ -48,6 +51,24 @@ GnomeUIInfo toolbar_data[] = {
 	  0, 0, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Add"), N_("Add files to the archive"), 
+	  add_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, FR_STOCK_ADD,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Extract"), N_("Extract files from the archive"), 
+	  dlg_extract, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, FR_STOCK_EXTRACT,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("View"), N_("View selected file"), 
+	  view_or_open_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, FR_STOCK_VIEW,
+	  0, 0, NULL },
 	
 	GNOMEUIINFO_SEPARATOR,
 

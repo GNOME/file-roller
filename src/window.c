@@ -1079,6 +1079,7 @@ _window_update_sensitivity (FRWindow *window)
 	/* popup menu */
 
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_OPEN], file_op && sel_not_null && ! dir_selected);
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_OPEN_WITH], file_op && sel_not_null && ! dir_selected);
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_VIEW], file_op && one_file_selected && ! dir_selected);
 
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_ADD], ! no_archive && ! ro && ! running && ! compr_file && can_modify);
@@ -3116,43 +3117,6 @@ window_new ()
                                           toolbar_data, 
                                           (GtkAccelGroup*) NULL,
                                           window);
-
-	i = 1;
-
-	window->toolbar_add = 
-		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
-					    GTK_TOOLBAR_CHILD_BUTTON,
-					    NULL, 
-					    _("Add"), 
-					    _("Add files to the archive"),
-					    NULL, 
-					    gtk_image_new_from_stock (FR_STOCK_ADD, GTK_ICON_SIZE_LARGE_TOOLBAR),
-					    GTK_SIGNAL_FUNC (add_cb), 
-					    window,
-					    TOOLBAR_SEP1 + i++);
-	window->toolbar_extract = 
-		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
-					    GTK_TOOLBAR_CHILD_BUTTON,
-					    NULL, 
-					    _("Extract"), 
-					    _("Extract files from the archive"),
-					    NULL, 
-					    gtk_image_new_from_stock (FR_STOCK_EXTRACT, GTK_ICON_SIZE_LARGE_TOOLBAR),
-					    GTK_SIGNAL_FUNC (dlg_extract), 
-					    window,
-					    TOOLBAR_SEP1 + i++);
-	window->toolbar_view = 
-		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
-					    GTK_TOOLBAR_CHILD_BUTTON,
-					    NULL, 
-					    _("View"), 
-					    _("View selected file"),
-					    NULL, 
-					    gtk_image_new_from_stock (FR_STOCK_VIEW, GTK_ICON_SIZE_LARGE_TOOLBAR),
-					    GTK_SIGNAL_FUNC (view_or_open_cb), 
-					    window,
-					    TOOLBAR_SEP1 + i++);
-
 	gnome_app_set_toolbar (GNOME_APP (window->app), GTK_TOOLBAR (toolbar));
 
 	/* Create popup menus. */
@@ -3255,6 +3219,9 @@ window_new ()
 	window->toolbar_new = toolbar_data[TOOLBAR_NEW].widget;
 	window->toolbar_open = toolbar_data[TOOLBAR_OPEN].widget;
 	window->toolbar_stop = toolbar_data[TOOLBAR_STOP].widget;
+	window->toolbar_add = toolbar_data[TOOLBAR_ADD].widget;
+	window->toolbar_extract = toolbar_data[TOOLBAR_EXTRACT].widget;
+	window->toolbar_view = toolbar_data[TOOLBAR_VIEW].widget;
 
 	window->open_default_dir = g_strdup (g_get_home_dir ());
 	window->add_default_dir = g_strdup (g_get_home_dir ());
@@ -3608,7 +3575,7 @@ gboolean
 window_archive_new (FRWindow   *window, 
 		    const char *filename)
 {
-	g_return_if_fail (window != NULL);
+	g_return_val_if_fail (window != NULL, FALSE);
 
 	if (! fr_archive_new_file (window->archive, filename)) {
 		GtkWidget *dialog;

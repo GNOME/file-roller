@@ -1,3 +1,18 @@
+version 2.5.2
+-------------
+	* Replace GtkFileSelection with GtkFileChooser everywhere.
+	* Use gnome_url_show instead of calling nautilus explicitly.
+	* Do not use mkdtemp which does not exist on Solaris9.
+	* Do not destroy the file selector is the archive was not created
+          successfully.
+	* Do not add the password argument if the password is an empty string.
+	* Use the stock system for the commands Add, Extract and View.
+        * Updated the egg_recent stuff.
+	* Changed name to "Zip Creator" and category to System Utility.
+        * The preferences dialog has been removed.
+        * The add dialog has been simplyfied.
+        * The extract dialog is a GtkFileChooser in folder mode now.
+
 version 2.5.1
 -------------
 	* Fix crash upon LZH file opening (#129794).

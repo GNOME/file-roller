@@ -29,6 +29,7 @@
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-utils.h"
+#include "fr-stock.h"
 #include "window.h"
 #include "gtk-utils.h"
 
@@ -87,9 +88,6 @@ file_sel_response_cb (GtkWidget      *w,
 	gboolean    update, recursive, follow_links;
 	GSList     *selections, *iter;
 	GList      *item_list = NULL;
-	gboolean    folders_selected;
-	char       *file_sel_path;
-	char       *path;
 	DialogData *data;
 
 	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
@@ -246,18 +244,6 @@ include_subfold_toggled_cb (GtkWidget *widget,
 }
 
 
-static int
-exclude_files_toggled_cb (GtkWidget *widget, 
-			  gpointer   callback_data)
-{
-	DialogData *data = callback_data;
-	
-	gtk_widget_set_sensitive (data->exclude_files_entry,
-				  GTK_TOGGLE_BUTTON (widget)->active);
-	return FALSE;   
-}
-
-
 static void load_options_cb (GtkWidget *w, GtkWidget *data);
 static void save_options_cb (GtkWidget *w, GtkWidget *data);
 
@@ -272,7 +258,6 @@ add_cb (GtkWidget *widget,
 	gchar       *dir;
 	GtkWidget   *main_box;
 	GtkWidget   *vbox, *hbox;
-	GtkWidget   *frame;
 	GtkWidget   *table;	
 	GtkTooltips *tooltips;
 	
@@ -286,7 +271,7 @@ add_cb (GtkWidget *widget,
 					     GTK_FILE_CHOOSER_ACTION_OPEN,
 					     GTK_STOCK_CANCEL, 
 					     GTK_RESPONSE_CANCEL,
-					     GTK_STOCK_ADD, 
+					     FR_STOCK_ADD, 
 					     GTK_RESPONSE_OK,
 					     NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
@@ -356,7 +341,7 @@ add_cb (GtkWidget *widget,
 
 	hbox = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), data->exclude_symlinks,
-			    TRUE, TRUE, 15);
+			    TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox,
 			    TRUE, TRUE, 0);
 

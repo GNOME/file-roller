@@ -390,6 +390,7 @@ GnomeUIInfo main_menu[] = {
 
 enum {
 	FILE_POPUP_MENU_OPEN = 0,
+	FILE_POPUP_MENU_OPEN_WITH = 0,
 	FILE_POPUP_MENU_VIEW,
 	FILE_POPUP_MENU_SEP1,
 	FILE_POPUP_MENU_ADD,
@@ -407,6 +408,12 @@ enum {
 
 
 GnomeUIInfo file_popup_menu_data[] = {
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Open"), N_("Open selected files with the standard application"),
+	  view_or_open_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
 	{ GNOME_APP_UI_ITEM, 
 	  N_("Open With..."), N_("Open selected files with an application"),
 	  open_with_cb, NULL, NULL,

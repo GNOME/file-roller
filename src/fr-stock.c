@@ -22,8 +22,12 @@
 
 #include <config.h>
 #include <gtk/gtk.h>
+#include <gnome.h>
 #include "fr-stock.h"
 #include "icons/pixbufs.h"
+
+
+static gboolean stock_initialized = FALSE;
 
 
 static struct {
@@ -36,6 +40,12 @@ static struct {
 	{ FR_STOCK_VIEW,    view_24_rgba,    NULL },
 };
 
+static const GtkStockItem stock_items [] = {
+	{ FR_STOCK_ADD, N_("_Add"), 0, 0, GETTEXT_PACKAGE },
+	{ FR_STOCK_EXTRACT, N_("_Extract"), 0, 0, GETTEXT_PACKAGE },
+	{ FR_STOCK_VIEW, N_("_View"), 0, 0, GETTEXT_PACKAGE },
+};
+
 
 void
 fr_stock_init (void)
@@ -43,8 +53,13 @@ fr_stock_init (void)
 	GtkIconFactory *factory;
 	int             i;
 
-	factory = gtk_icon_factory_new ();
+	if (stock_initialized)
+		return;
+	stock_initialized = TRUE;
 
+	gtk_stock_add_static (stock_items, G_N_ELEMENTS (stock_items));
+
+	factory = gtk_icon_factory_new ();
 	for (i = 0; i < G_N_ELEMENTS (items); i++) {
 		GtkIconSet    *set;
 		GtkIconSource *source;
@@ -90,8 +105,6 @@ fr_stock_init (void)
 		gtk_icon_source_free (source);
 		g_object_unref (pixbuf);
 	}
-
 	gtk_icon_factory_add_default (factory);
-
 	g_object_unref (factory);
 }
