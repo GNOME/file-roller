@@ -1,25 +1,28 @@
 # Bulgarian localization for File Roller.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Filip Andonov <demercel@c4.com>
-# Rostislav Raykov <zbrox@i-space.org>, update, 2004
-# 
+# Rostislav Raykov <zbrox@i-space.org>, 2004.
+# Vladimir Petkov <vpetkov@i-space.org>, 2005.
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-26 03:28+0200\n"
-"PO-Revision-Date: 2004-07-26 14:31+0300\n"
-"Last-Translator: Rostislav Raykov <zbrox@i-space.org>\n"
-"Language-Team: Bulgarian <dict@linux.zonebg.com>\n"
+"POT-Creation-Date: 2005-01-31 09:41+0200\n"
+"PO-Revision-Date: 2005-01-31 09:42+0200\n"
+"Last-Translator: Vladimir Petkov <vpetkov@i-space.org>\n"
+"Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
+#: nautilus/nautilus-fileroller.c:277
 msgid "Create Archive..."
-msgstr "Създаване на нов архив..."
+msgstr "Създаване на архив..."
 
 #: component/File_Roller_Component.server.in.in.h:2
+#: nautilus/nautilus-fileroller.c:241
 msgid "Extract Here"
 msgstr "Разархивиране тук"
 
@@ -35,9 +38,25 @@ msgstr "Операции по разархивиране към File Roller"
 msgid "File roller component"
 msgstr "Компонент на File Roller"
 
-#: file-roller.desktop.in.h:1
+#: nautilus/nautilus-fileroller.c:242
+msgid "Extract the selected archive in the current position"
+msgstr "Разархивиране на избрания архив в текущата папка"
+
+#: nautilus/nautilus-fileroller.c:259
+msgid "Extract To..."
+msgstr "Разархивира в..."
+
+#: nautilus/nautilus-fileroller.c:260
+msgid "Extract the selected archive"
+msgstr "Разархивиране на избрания архив"
+
+#: nautilus/nautilus-fileroller.c:278
+msgid "Create an archive with the selected objects"
+msgstr "Създаване на архив с избраните файлове"
+
+#: file-roller.desktop.in.h:1 src/window.c:842
 msgid "Archive Manager"
-msgstr "Мениджър на архивите"
+msgstr "Работа с архиви"
 
 #: file-roller.desktop.in.h:2
 msgid "Create and modify an archive"
@@ -48,151 +67,161 @@ msgid "Automatic"
 msgstr "Автоматично"
 
 #: src/actions.c:98
+msgid "Ar (.ar)"
+msgstr "Ar (.ar)"
+
+#: src/actions.c:99
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/actions.c:99
+#: src/actions.c:100
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/actions.c:100
+#: src/actions.c:101
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/actions.c:101
+#: src/actions.c:102
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/actions.c:102
+#: src/actions.c:103
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/actions.c:103
+#: src/actions.c:104
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar неархивиран (.tar)"
 
-#: src/actions.c:104
+#: src/actions.c:105
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar компресиран с bzip (.tar.bz)"
 
-#: src/actions.c:105
+#: src/actions.c:106
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar компресиран с bzip2 (.tar.bz2)"
 
-#: src/actions.c:106
+#: src/actions.c:107
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar компресиран с gzip (.tar.gz)"
 
-#: src/actions.c:107
+#: src/actions.c:108
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar компресиран с lzop (.tar.lzo)"
 
-#: src/actions.c:108
+#: src/actions.c:109
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar компрасиран с compress (.tar.Z)"
 
-#: src/actions.c:109
+#: src/actions.c:110
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/actions.c:110
+#: src/actions.c:111
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/actions.c:111
+#: src/actions.c:112
 msgid "Zoo (.zoo)"
 msgstr "Zoo·(.zoo)"
 
-#: src/actions.c:176 src/actions.c:196 src/dlg-batch-add.c:101
-#: src/dlg-batch-add.c:127 src/dlg-batch-add.c:169 src/window.c:3786
+#: src/actions.c:113
+msgid "7-Zip (.7z)"
+msgstr "7-Zip (.7z)"
+
+#: src/actions.c:178 src/actions.c:198 src/dlg-batch-add.c:104
+#: src/dlg-batch-add.c:123 src/dlg-batch-add.c:150 src/dlg-batch-add.c:172
+#: src/dlg-batch-add.c:215 src/dlg-batch-add.c:260 src/window.c:4049
 msgid "Could not create the archive"
 msgstr "Не може да бъде създаден архива"
 
-#: src/actions.c:177 src/actions.c:501 src/dlg-batch-add.c:102
+#: src/actions.c:179 src/actions.c:508 src/dlg-batch-add.c:105
+#: src/dlg-batch-add.c:261
 msgid "You have to specify an archive name."
 msgstr "Трябва да въведете име на архива."
 
-#: src/actions.c:197 src/actions.c:521
+#: src/actions.c:199 src/actions.c:528
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Не сте оторизиран да създавате архиви в тази папка"
 
-#: src/actions.c:227 src/actions.c:542 src/actions.c:725 src/actions.c:906
+#: src/actions.c:229 src/actions.c:549 src/actions.c:734 src/actions.c:915
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Архивът вече съществува. Желаете ли го презапишете?"
 
-#: src/actions.c:230 src/actions.c:545 src/actions.c:728 src/actions.c:909
+#: src/actions.c:232 src/actions.c:552 src/actions.c:737 src/actions.c:918
 msgid "Overwrite"
 msgstr "Презаписване"
 
-#: src/actions.c:247 src/actions.c:562
+#: src/actions.c:249 src/actions.c:569
 msgid "Could not delete the old archive."
-msgstr "Старият архив не може да бъде изтрит."
+msgstr "Стария архив не може да бъде изтрит."
 
-#: src/actions.c:293
+#: src/actions.c:297
 msgid "New"
 msgstr "Нов"
 
-#: src/actions.c:305 src/actions.c:434 src/actions.c:621
+#: src/actions.c:309 src/actions.c:441 src/actions.c:630
 msgid "All archives"
 msgstr "Всички архиви"
 
-#: src/actions.c:312 src/actions.c:441 src/actions.c:628
+#: src/actions.c:316 src/actions.c:448 src/actions.c:637
 msgid "All files"
 msgstr "Всички файлове"
 
-#: src/actions.c:322 src/actions.c:636
+#: src/actions.c:326 src/actions.c:645
 msgid "Archive type:"
 msgstr "Вид на архива:"
 
-#: src/actions.c:422 src/ui.h:114
+#: src/actions.c:429 src/ui.h:114 src/window.c:3654
 msgid "Open"
 msgstr "Отваряне"
 
-#: src/actions.c:500 src/actions.c:520
+#: src/actions.c:507 src/actions.c:527
 msgid "Could not save the archive"
 msgstr "Архивът не може да бъде запазен"
 
-#: src/actions.c:609
+#: src/actions.c:618
 msgid "Save"
 msgstr "Запазване"
 
-#: src/actions.c:751
+#: src/actions.c:760
 msgid "Could not copy the archive"
 msgstr "Архивът не може да бъде копиран"
 
-#: src/actions.c:771
+#: src/actions.c:780
 msgid "Could not move the archive"
 msgstr "Архивът не може да бъде преместен"
 
-#: src/actions.c:800
+#: src/actions.c:809
 msgid "Copy"
-msgstr "_Копиране"
+msgstr "Копиране"
 
-#: src/actions.c:800
+#: src/actions.c:809
 msgid "Move"
-msgstr "_Преместване"
+msgstr "Преместване"
 
-#: src/actions.c:805 src/ui.h:66
+#: src/actions.c:814 src/ui.h:66
 msgid "_Copy"
 msgstr "_Копиране"
 
-#: src/actions.c:805
+#: src/actions.c:814
 msgid "_Move"
 msgstr "_Преместване"
 
-#: src/actions.c:876 src/window.c:4900
+#: src/actions.c:885 src/window.c:5168
 msgid "Rename"
-msgstr "П_реименуване"
+msgstr "Преименуване"
 
-#: src/actions.c:877
+#: src/actions.c:886
 msgid "New archive name (without extension)"
 msgstr "Ново име на архив (без разширението)"
 
-#: src/actions.c:881 src/window.c:4905
+#: src/actions.c:890 src/window.c:5173
 msgid "_Rename"
 msgstr "П_реименуване"
 
-#: src/actions.c:982
+#: src/actions.c:991
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
@@ -200,168 +229,200 @@ msgstr ""
 "Архивът не може да бъде преместен в Кошчето. Искате ли да го изтриете "
 "напълно?"
 
-#: src/actions.c:1219 src/window.c:4618
+#: src/actions.c:1228 src/window.c:4889
 msgid "Last Output"
 msgstr "Последен изход"
 
-#: src/actions.c:1239 src/dlg-extract.c:87
+#: src/actions.c:1248 src/dlg-extract.c:90
 msgid "Could not display help"
 msgstr "Не може да се покаже помощ"
 
-#: src/actions.c:1272
+#: src/actions.c:1280
 msgid "translator_credits"
 msgstr "Ростислав Райков <zbrox@i-space.org>"
 
 #. Create the application.
-#: src/actions.c:1280 src/gtk-utils.c:390 src/main.c:102 src/window.c:843
-#: src/window.c:1274 src/window.c:3085
+#: src/actions.c:1290 src/gtk-utils.c:390 src/main.c:102 src/window.c:1297
+#: src/window.c:3280
 msgid "File Roller"
 msgstr "File Roller"
 
-#: src/actions.c:1283
+#: src/actions.c:1293
 msgid "An archive manager for GNOME."
 msgstr "Мениджър на архивите за GNOME."
 
-#: src/dlg-add-files.c:92 src/dlg-add-files.c:99 src/dlg-add-folder.c:121
+#: src/dlg-add-files.c:85 src/dlg-add-files.c:147 src/dlg-add-folder.c:117
+#: src/dlg-add-folder.c:246
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Не сте оторизиран да гледате файлове от папката \"%s\"."
 
-#: src/dlg-add-files.c:98 src/dlg-add-folder.c:127 src/window.c:1952
-#: src/window.c:1990
+#: src/dlg-add-files.c:91 src/dlg-add-files.c:153 src/dlg-add-folder.c:123
+#: src/dlg-add-folder.c:252 src/window.c:2054 src/window.c:2092
 msgid "Could not add the files to the archive"
 msgstr "Файловете на могат да бъдат добавени към архива"
 
-#: src/dlg-add-files.c:155
+#: src/dlg-add-files.c:179
 msgid "Add Files"
 msgstr "Добавяне на файлове"
 
-#: src/dlg-add-files.c:167 src/dlg-add-folder.c:299
+#: src/dlg-add-files.c:191 src/dlg-add-folder.c:323
 msgid "_Add only if newer"
 msgstr "Добавяне само ако са по-нови"
 
-#: src/dlg-add-folder.c:287
+#: src/dlg-add-folder.c:311
 msgid "Add a Folder"
 msgstr "Добавяне на папка"
 
-#: src/dlg-add-folder.c:300
+#: src/dlg-add-folder.c:324
 msgid "_Include subfolders"
 msgstr "_Включително поддиректории"
 
-#: src/dlg-add-folder.c:301
+#: src/dlg-add-folder.c:325
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "С изключение на директориите, които са препратки"
 
-#: src/dlg-add-folder.c:304 src/dlg-add-folder.c:309
+#: src/dlg-add-folder.c:328 src/dlg-add-folder.c:333
 msgid "example: *.o; *.bak"
 msgstr "(пример: *.txt; *.doc)"
 
-#: src/dlg-add-folder.c:305
+#: src/dlg-add-folder.c:329
 msgid "_Include files:"
 msgstr "Включително файлове:"
 
-#: src/dlg-add-folder.c:310
+#: src/dlg-add-folder.c:334
 msgid "E_xclude files:"
 msgstr "С изключение на файлове (.*)"
 
-#: src/dlg-add-folder.c:313
+#: src/dlg-add-folder.c:337
 msgid "_Load Options"
 msgstr "Опции за зареждане"
 
-#: src/dlg-add-folder.c:314
+#: src/dlg-add-folder.c:338
 msgid "Sa_ve Options"
 msgstr "Опции за запазване"
 
-#: src/dlg-add-folder.c:776
+#: src/dlg-add-folder.c:790
 msgid "Save Options"
 msgstr "Опции за запазване"
 
-#: src/dlg-add-folder.c:777
+#: src/dlg-add-folder.c:791
 msgid "Options Name:"
 msgstr "Име на настройката:"
 
-#: src/dlg-batch-add.c:128 src/fr-archive.c:631 src/window.c:3787
-#: src/window.c:3943
+#: src/dlg-batch-add.c:118 src/window.c:5115
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+"Името \"%s\" не е валидно, защото не съдържа символите: %s\n"
+"\n"
+"%s"
+
+#: src/dlg-batch-add.c:118 src/window.c:5107 src/window.c:5111
+#: src/window.c:5115
+msgid "Please use a different name."
+msgstr "Използвайте друго име."
+
+#: src/dlg-batch-add.c:151 src/fr-archive.c:714 src/window.c:4050
+#: src/window.c:4206
 msgid "Archive type not supported."
 msgstr "Този вид архиви не се поддържа."
 
-#: src/dlg-batch-add.c:148 src/dlg-extract.c:152 src/window.c:4185
+#: src/dlg-batch-add.c:173
+msgid ""
+"You don't have the right permissions to create an archive in the destination "
+"folder."
+msgstr ""
+"Нямате необходимите привилегии, за да създадете архив в целевата папка."
+
+#: src/dlg-batch-add.c:192 src/dlg-extract.c:156 src/window.c:4447
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Папката не съществува. Желаете ли да я създадете?"
 
-#: src/dlg-batch-add.c:151 src/dlg-extract.c:155 src/window.c:4188
+#: src/dlg-batch-add.c:195 src/dlg-extract.c:159 src/window.c:4450
 msgid "Create _Folder"
-msgstr "Създаване на _Папка"
+msgstr "Създаване на _папка"
 
-#: src/dlg-batch-add.c:165 src/dlg-extract.c:172 src/window.c:4205
+#: src/dlg-batch-add.c:211 src/dlg-extract.c:176 src/window.c:4467
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Папката не може да бъде създадена: %s"
 
-#: src/dlg-batch-add.c:189
+#: src/dlg-batch-add.c:235
 msgid "Archive not created"
 msgstr "Архива не е създаден"
 
-#: src/dlg-extract.c:176 src/dlg-extract.c:196 src/dlg-extract.c:221
-#: src/window.c:4209 src/window.c:4229
+#: src/dlg-batch-add.c:286
+msgid "The archive is already present.  Do you want to overwrite it?"
+msgstr "Архивът вече съществува. Желаете ли да го презапишете?"
+
+#: src/dlg-batch-add.c:289
+msgid "_Overwrite"
+msgstr "_Презаписване"
+
+#: src/dlg-extract.c:180 src/dlg-extract.c:200 src/dlg-extract.c:225
+#: src/window.c:4471 src/window.c:4491
 msgid "Extraction not performed"
 msgstr "Разархивирането не е изпълнено."
 
-#: src/dlg-extract.c:216
+#: src/dlg-extract.c:220
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Вие не сте оторизиран да разархивирате архиви в тази папка \"%s\""
 
-#: src/dlg-extract.c:380
+#: src/dlg-extract.c:381
 msgid "Files"
 msgstr "Файлове"
 
-#: src/dlg-extract.c:388 src/dlg-extract.c:438
+#: src/dlg-extract.c:389 src/dlg-extract.c:439
 msgid "    "
-msgstr "...."
+msgstr "    "
 
-#: src/dlg-extract.c:397 src/file_roller.glade.h:17
+#: src/dlg-extract.c:398 src/file_roller.glade.h:18
 msgid "_Files:"
-msgstr "Файлове:"
+msgstr "_Файлове:"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:20
+#: src/dlg-extract.c:409 src/file_roller.glade.h:21
 msgid "example: *.txt; *.doc"
 msgstr "(пример: *.txt; *.doc)"
 
-#: src/dlg-extract.c:411 src/file_roller.glade.h:14
+#: src/dlg-extract.c:412 src/file_roller.glade.h:15
 msgid "_All files"
-msgstr "Всички файлове"
+msgstr "_Всички файлове"
 
-#: src/dlg-extract.c:418 src/file_roller.glade.h:19
+#: src/dlg-extract.c:419 src/file_roller.glade.h:20
 msgid "_Selected files"
-msgstr "Избрани Файлове"
+msgstr "_Избрани файлове"
 
-#: src/dlg-extract.c:429
+#: src/dlg-extract.c:430
 msgid "Actions"
-msgstr "_Действия"
+msgstr "Действия"
 
-#: src/dlg-extract.c:445
+#: src/dlg-extract.c:446
 msgid "R_e-create folders"
 msgstr "Пресъздаване на папките"
 
-#: src/dlg-extract.c:449
+#: src/dlg-extract.c:450
 msgid "Over_write existing files"
 msgstr "Презапис на съществуващи файлове"
 
-#: src/dlg-extract.c:453
+#: src/dlg-extract.c:454
 msgid "Do not e_xtract older files"
 msgstr "По-стари файлове не се разархивират"
 
-#: src/dlg-extract.c:459 src/file_roller.glade.h:18
+#: src/dlg-extract.c:460 src/file_roller.glade.h:19
 msgid "_Password:"
 msgstr "_Парола:"
 
-#: src/dlg-extract.c:467
+#: src/dlg-extract.c:469
 msgid "_Open destination folder after extraction"
 msgstr "Показване на папката с файловете, след разархивирането"
 
-#: src/dlg-extract.c:494 src/ui.h:94
+#: src/dlg-extract.c:500 src/ui.h:94
 msgid "Extract"
 msgstr "Разархивиране"
 
@@ -376,13 +437,13 @@ msgstr "Име:"
 #: src/dlg-prop.c:125
 #, c-format
 msgid "%s Properties"
-msgstr "%s Свойства"
+msgstr "%s свойства"
 
 #: src/dlg-prop.c:134
 msgid "Modified on:"
 msgstr "Променен на:"
 
-#: src/dlg-prop.c:140 src/window.c:413
+#: src/dlg-prop.c:140 src/window.c:424
 msgid "%d %B %Y, %H:%M"
 msgstr "%d·%B·%Y,·%H:%M"
 
@@ -410,115 +471,116 @@ msgstr "Непознат вид"
 msgid "Symbolic link"
 msgstr "Препратка"
 
-#: src/file-utils.c:558
-msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr "Не може да бъде открит терминал, използва xterm, дори да не работи"
-
 #: src/file_roller.glade.h:1
-msgid "*"
-msgstr "*"
-
-#: src/file_roller.glade.h:2
 msgid ""
 "<i><b>Note:</b> the password will be used to encrypt files you add to the "
 "current archive, and to decrypt files you extract from the current archive. "
 "When the archive is closed the password will be deleted.</i>"
 msgstr ""
 "<i><b>Забележка:</b> паролата ще бъде използвана да се кодират файлове, "
-"който вие добавяте към текущия архив и да декодирате такива, които "
-"разархивирате.Когато архива бива затворен паролата ще бъде изтрита.</i>"
+"които вие добавяте към текущия архив и да декодирате такива, които "
+"разархивирате. Когато архива бива затворен паролата ще бъде изтрита.</i>"
+
+#: src/file_roller.glade.h:2
+msgid "A_vailable application:"
+msgstr "На_лични програми:"
 
 #: src/file_roller.glade.h:3
-msgid "A_vailable application:"
-msgstr "Налични програми:"
+msgid "C_reate"
+msgstr "_Създаване"
 
 #: src/file_roller.glade.h:4
-msgid "C_reate"
-msgstr "Създаване"
-
-#: src/file_roller.glade.h:5
 msgid "Create Archive"
 msgstr "Създаване на нов архив"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:5
 msgid "Delete"
 msgstr "Изтриване"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:6
 msgid "Load Options"
 msgstr "Опции на зареждането"
 
-#: src/file_roller.glade.h:8
-msgid "Open Files"
-msgstr "_Отваряне на файлове"
+#: src/file_roller.glade.h:7 src/window.c:2673
+msgid "Location"
+msgstr "Местоположение"
+
+#. current location
+#: src/file_roller.glade.h:8 src/window.c:3566
+msgid "Location:"
+msgstr "Местоположение:"
 
 #: src/file_roller.glade.h:9
+msgid "Open Files"
+msgstr "Отваряне на файлове"
+
+#: src/file_roller.glade.h:10
 msgid "Open with an _application"
 msgstr "Отваряне с избрана от вас програма"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:11
 msgid "Password"
 msgstr "Парола"
 
-#: src/file_roller.glade.h:11
-msgid "R_ecent applications:"
-msgstr "Последно ползвани програми:"
-
 #: src/file_roller.glade.h:12
+msgid "R_ecent applications:"
+msgstr "Посл_едно ползвани програми:"
+
+#: src/file_roller.glade.h:13
 msgid "View File"
 msgstr "Показване на файл"
 
-#: src/file_roller.glade.h:13
+#: src/file_roller.glade.h:14
 msgid "View with internal _viewer"
 msgstr "Показване с вътрешна програма"
 
-#: src/file_roller.glade.h:15
-msgid "_Application:"
-msgstr "Програма:"
-
 #: src/file_roller.glade.h:16
+msgid "_Application:"
+msgstr "_Програма:"
+
+#: src/file_roller.glade.h:17
 msgid "_Archive:"
 msgstr "_Архив:"
 
-#: src/fr-archive.c:606
+#: src/fr-archive.c:689
 msgid "The file does not exist."
 msgstr "Файлът не съществува."
 
-#: src/fr-command-tar.c:396
+#: src/fr-command-tar.c:284
 msgid "Adding file: "
-msgstr "Добавяне на файла"
+msgstr "Добавяне на файл: "
 
-#: src/fr-command-tar.c:442
+#: src/fr-command-tar.c:330
 msgid "Removing file: "
 msgstr "Премахване на файл: "
 
-#: src/fr-command-tar.c:451 src/window.c:1376
+#: src/fr-command-tar.c:339 src/window.c:1398
 msgid "Deleting files from archive"
 msgstr "Изтриване на файлове в архива"
 
-#: src/fr-command-tar.c:484
+#: src/fr-command-tar.c:372
 msgid "Extracting file: "
-msgstr "Разархивиране на файла"
+msgstr "Разархивиране на файл: "
 
-#: src/fr-command-tar.c:529
+#: src/fr-command-tar.c:417
 msgid "Recompressing archive"
 msgstr "Компресиране наново  на архива"
 
-#: src/fr-command-tar.c:663
+#: src/fr-command-tar.c:551
 msgid "Decompressing archive"
 msgstr "Разархивиране на компресирания файл"
 
-#: src/fr-stock.c:44
-msgid "_Add"
-msgstr "Добавяне"
-
 #: src/fr-stock.c:45
-msgid "_Extract"
-msgstr "Разархивиране"
+msgid "_Add"
+msgstr "_Добавяне"
 
-#: src/fr-stock.c:46 src/ui.h:36 src/ui.h:170
+#: src/fr-stock.c:46
+msgid "_Extract"
+msgstr "_Разархивиране"
+
+#: src/fr-stock.c:47 src/ui.h:36 src/ui.h:170
 msgid "_View"
-msgstr "_Показване"
+msgstr "_Изглед"
 
 #. Button
 #: src/gtk-utils.c:421
@@ -569,7 +631,7 @@ msgstr "_Редактиране"
 
 #: src/ui.h:37
 msgid "_Help"
-msgstr "Помощ"
+msgstr "_Помощ"
 
 #: src/ui.h:38
 msgid "_Arrange Files"
@@ -601,7 +663,7 @@ msgstr "Добавяне"
 
 #: src/ui.h:54
 msgid "Add a _Folder..."
-msgstr "_Добавяне на папка..."
+msgstr "Добавяне на _папка..."
 
 #: src/ui.h:55
 msgid "Add a folder to the archive"
@@ -609,7 +671,7 @@ msgstr "Добавяне на папка към архива"
 
 #: src/ui.h:58
 msgid "_Close"
-msgstr "Затваряне"
+msgstr "_Затваряне"
 
 #: src/ui.h:59
 msgid "Close the current archive"
@@ -617,7 +679,7 @@ msgstr "Затваря текущия архив"
 
 #: src/ui.h:62
 msgid "_Contents"
-msgstr "_Съдържание"
+msgstr "_Потребителско ръководство"
 
 #: src/ui.h:63
 msgid "Display the File Roller Manual"
@@ -637,7 +699,7 @@ msgstr "Копиране на текущия архив в друга папка
 
 #: src/ui.h:74
 msgid "Cu_t"
-msgstr "Отрязване"
+msgstr "От_рязване"
 
 #: src/ui.h:75
 msgid "Cut the selection"
@@ -645,7 +707,7 @@ msgstr "Отрязване на избраното"
 
 #: src/ui.h:78
 msgid "_Delete..."
-msgstr "Изтриване..."
+msgstr "_Изтриване..."
 
 #: src/ui.h:79
 msgid "Delete the selection from the archive"
@@ -653,11 +715,11 @@ msgstr "Изтриване на избраното от архива"
 
 #: src/ui.h:82
 msgid "Move to _Trash"
-msgstr "Преместване в _Кошчето"
+msgstr "Преместване в _кошчето"
 
 #: src/ui.h:83
 msgid "Move current archive to trash"
-msgstr "Преместване на текущия архив в Кошчето"
+msgstr "Преместване на текущия архив в кошчето"
 
 #: src/ui.h:86
 msgid "Dese_lect All"
@@ -677,7 +739,7 @@ msgstr "Разархивиране на файлове от архива"
 
 #: src/ui.h:98
 msgid "_Last Output"
-msgstr "Последен изход"
+msgstr "_Последен изход"
 
 #: src/ui.h:99
 msgid "View the output produced by the last executed command"
@@ -693,7 +755,7 @@ msgstr "Премества текущия архив в друга папка"
 
 #: src/ui.h:106
 msgid "_New"
-msgstr "Нов"
+msgstr "_Нов"
 
 #: src/ui.h:107
 msgid "Create a new archive"
@@ -701,15 +763,15 @@ msgstr "Създаване на нов архив"
 
 #: src/ui.h:110
 msgid "_Open..."
-msgstr "Отваряне..."
+msgstr "_Отваряне..."
 
-#: src/ui.h:111 src/ui.h:115
+#: src/ui.h:111 src/ui.h:115 src/window.c:3651 src/window.c:3654
 msgid "Open archive"
 msgstr "Отваряне на архив"
 
 #: src/ui.h:118
 msgid "Open Fi_les..."
-msgstr "_Отваряне на файлове"
+msgstr "Отваряне на фай_лове"
 
 #: src/ui.h:119
 msgid "Open selected files with an application"
@@ -717,23 +779,23 @@ msgstr "Отворяне на избрани файлове със зададе�
 
 #: src/ui.h:122
 msgid "Pass_word..."
-msgstr "_Парола"
+msgstr "_Парола..."
 
 #: src/ui.h:123
 msgid "Specify a password for this archive"
 msgstr "Определете парола за този архив"
 
-#: src/ui.h:126 src/window.c:5012
+#: src/ui.h:126 src/window.c:5280
 msgid "_Paste"
-msgstr "Поставяне"
+msgstr "_Поставяне"
 
 #: src/ui.h:127
 msgid "Paste the clipboard"
-msgstr "Поставяне на временната памет"
+msgstr "Поставяне от буфера за обмен"
 
 #: src/ui.h:130
 msgid "_Properties"
-msgstr "Свойства"
+msgstr "_Настройки"
 
 #: src/ui.h:131
 msgid "Show archive properties"
@@ -741,7 +803,7 @@ msgstr "Показване свойствата на архива"
 
 #: src/ui.h:134
 msgid "_Quit"
-msgstr "Изход"
+msgstr "_Спиране на програмата"
 
 #: src/ui.h:135
 msgid "Quit the application"
@@ -757,7 +819,7 @@ msgstr "Презареждане на текущия архив"
 
 #: src/ui.h:142 src/ui.h:146
 msgid "_Rename..."
-msgstr "П_реименуване на Архив"
+msgstr "П_реименуване..."
 
 #: src/ui.h:143
 msgid "Rename the selection"
@@ -769,7 +831,7 @@ msgstr "Преименуване на текущия архив"
 
 #: src/ui.h:150
 msgid "Save _As..."
-msgstr "Запазване като..."
+msgstr "Запазване _като..."
 
 #: src/ui.h:151
 msgid "Save the current archive with a different name"
@@ -785,15 +847,15 @@ msgstr "Избиране на всички файлове"
 
 #: src/ui.h:158
 msgid "_Stop"
-msgstr "Стоп"
+msgstr "_Спиране"
 
 #: src/ui.h:159
 msgid "Stop current operation"
-msgstr "Прекратяване на текущата операция"
+msgstr "Спиране на текущата операция"
 
 #: src/ui.h:162
 msgid "_Test Integrity"
-msgstr "Тестване на цялостта"
+msgstr "_Изпробване на цялостта"
 
 #: src/ui.h:163
 msgid "Test whether the archive contains errors"
@@ -801,7 +863,7 @@ msgstr "Тестване дали архива съдържа грешки"
 
 #: src/ui.h:166
 msgid "_View File"
-msgstr "Показване на файл"
+msgstr "Показ_ване на файл"
 
 #: src/ui.h:167 src/ui.h:171
 msgid "View the selected file"
@@ -817,7 +879,7 @@ msgstr "Показване на главната лента с инструме�
 
 #: src/ui.h:184
 msgid "Stat_usbar"
-msgstr "Лента за С_ъстоянието"
+msgstr "Лента за с_ъстоянието"
 
 #: src/ui.h:185
 msgid "View the statusbar"
@@ -837,11 +899,11 @@ msgstr "_Показване на всички файлове"
 
 #: src/ui.h:202
 msgid "View as a F_older"
-msgstr "Показване като _Папка"
+msgstr "Показване като _папка"
 
 #: src/ui.h:210
 msgid "by _Name"
-msgstr "по _Име"
+msgstr "по _име"
 
 #: src/ui.h:211
 msgid "Sort file list by name"
@@ -849,7 +911,7 @@ msgstr "Сортиране на списъка с файлове по име"
 
 #: src/ui.h:213
 msgid "by _Size"
-msgstr "по _Размер"
+msgstr "по _размер"
 
 #: src/ui.h:214
 msgid "Sort file list by file size"
@@ -857,7 +919,7 @@ msgstr "Сортиране на списъка с файлове по разме
 
 #: src/ui.h:216
 msgid "by T_ype"
-msgstr "по _Вид"
+msgstr "по _тип"
 
 #: src/ui.h:217
 msgid "Sort file list by type"
@@ -865,7 +927,7 @@ msgstr "Сортиране на списъка с файлове по тип"
 
 #: src/ui.h:219
 msgid "by _Date modified"
-msgstr "по _Дата на промяна"
+msgstr "по _дата на промяна"
 
 #: src/ui.h:220
 msgid "Sort file list by modification time"
@@ -873,68 +935,72 @@ msgstr "Сортиране на списъка с файлове по време
 
 #: src/ui.h:222
 msgid "by _Location"
-msgstr "по _Местонахождение"
+msgstr "по _местоположение"
 
 #: src/ui.h:223
 msgid "Sort file list by location"
 msgstr "Сортиране на списъка с файлове по местонахождение"
 
-#: src/window.c:686
+#: src/window.c:690
 msgid "Folder"
 msgstr "Папка"
 
-#: src/window.c:851
+#: src/window.c:850
 msgid "[read only]"
 msgstr "[само за четене]"
 
-#: src/window.c:945
+#: src/window.c:944
 #, c-format
 msgid "%d file (%s)"
-msgstr "%d файл (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d файл (%s)"
+msgstr[1] "%d файла (%s)"
 
-#: src/window.c:950
+#: src/window.c:949
 #, c-format
 msgid "%d file selected (%s)"
-msgstr "%d избран файл (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d избран файл (%s)"
+msgstr[1] "%d избрани файла (%s)"
 
-#: src/window.c:1373
+#: src/window.c:1395
 msgid "Reading archive"
 msgstr "Четене на архив"
 
-#: src/window.c:1379
+#: src/window.c:1401
 msgid "Adding files to archive"
 msgstr "Добавяне на файлове към архива"
 
-#: src/window.c:1382
+#: src/window.c:1404
 msgid "Extracting files from archive"
 msgstr "Разархивиране на файловете от архива"
 
-#: src/window.c:1385
+#: src/window.c:1407
 msgid "Testing archive"
 msgstr "Тестване на архива"
 
-#: src/window.c:1388
+#: src/window.c:1410
 msgid "Getting the file list"
 msgstr "Взимане на списъка с файлове"
 
-#: src/window.c:1395
+#: src/window.c:1417
 msgid "wait please..."
-msgstr "Моля, изчакайте..."
+msgstr "Изчакайте..."
 
-#: src/window.c:1472
+#: src/window.c:1494
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Не може да бъде показана папката \"%s\""
 
-#: src/window.c:1531
+#: src/window.c:1553
 msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
 msgstr ""
 "Този архив е защитен с парола.\n"
-"Моля, определете парола с командата: Редактиране -> Парола"
+"Определете парола с командата: Редактиране -> Парола"
 
-#: src/window.c:1533
+#: src/window.c:1555
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
@@ -942,51 +1008,51 @@ msgstr ""
 "Определената парола не е валидна, моля определете нова парола с командата: "
 "Редактиране -> Парола"
 
-#: src/window.c:1538
+#: src/window.c:1560 src/window.c:2255
 msgid "Could not perform the operation"
 msgstr "Не може да се извърши операцията"
 
-#: src/window.c:1563
+#: src/window.c:1585
 msgid "An error occurred while extracting files."
 msgstr "Възникна грешка при разархивиране на файловете."
 
-#: src/window.c:1567
+#: src/window.c:1589
 msgid "An error occurred while loading the archive."
 msgstr "Възникна грешка при зареждане на архива."
 
-#: src/window.c:1571
+#: src/window.c:1593
 msgid "An error occurred while deleting files from the archive."
 msgstr "Възникна грешка при изтриване на файлове от архива."
 
-#: src/window.c:1575
+#: src/window.c:1597
 msgid "An error occurred while adding files to the archive."
 msgstr "Възникна грешка при добавяне на файлове към архива."
 
-#: src/window.c:1579
+#: src/window.c:1601
 msgid "An error occurred while testing archive."
 msgstr "Възникна грешка при тестването на архива"
 
-#: src/window.c:1588
+#: src/window.c:1610
 msgid "Command not found."
 msgstr "Командата не е намерена."
 
-#: src/window.c:1591
+#: src/window.c:1613
 msgid "Command exited abnormally."
 msgstr "Командата спря неочаквано."
 
-#: src/window.c:1720
+#: src/window.c:1743
 msgid "Test Result"
 msgstr "Резултати от теста"
 
-#: src/window.c:1953
+#: src/window.c:2055
 msgid "You don't have the right permissions."
 msgstr "Вие не сте оторизиран."
 
-#: src/window.c:1991
+#: src/window.c:2093
 msgid "You can't add an archive to itself."
 msgstr "Не можете да добавяте архив към него самия."
 
-#: src/window.c:2175
+#: src/window.c:2289
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -994,481 +1060,101 @@ msgstr ""
 "Желаете ли да добавите този файл към текущия архив или да го отворите като "
 "нов архив?"
 
-#: src/window.c:2212
+#: src/window.c:2326
 msgid "Do you want to create a new archive with these files?"
 msgstr "Желаете ли да създадете нов архив с тези файлове?"
 
-#: src/window.c:2215
+#: src/window.c:2329
 msgid "Create _Archive"
 msgstr "Създаване на нов архив"
 
-#: src/window.c:2538
+#: src/window.c:2670
 msgid "Size"
 msgstr "Размер"
 
-#: src/window.c:2539
+#: src/window.c:2671
 msgid "Type"
 msgstr "Тип"
 
-#: src/window.c:2540
+#: src/window.c:2672
 msgid "Date Modified"
 msgstr "Дата на промяна"
 
-#: src/window.c:2541
-msgid "Location"
-msgstr "Местонахождение"
-
-#: src/window.c:2548
+#: src/window.c:2680
 msgid "Name"
 msgstr "Име"
 
-#: src/window.c:3005
+#: src/window.c:3173 src/window.c:3197
 #, c-format
 msgid "Open '%s'"
-msgstr "Отваряне на '%s'"
+msgstr "Отваряне на \"%s\""
 
-#: src/window.c:3324
+#: src/window.c:3523
 msgid "Go to the previous visited location"
 msgstr "Отиване в предишното посетено място"
 
-#: src/window.c:3332
+#: src/window.c:3531
 msgid "Go to the next visited location"
 msgstr "Отиване в следващото посетено място"
 
-#: src/window.c:3340
+#: src/window.c:3539
 msgid "Go up one level"
 msgstr "Отиване едно ниво нагоре"
 
-#: src/window.c:3348
+#: src/window.c:3547
 msgid "Go to the home location"
 msgstr "Отиване в личните файлове"
 
-#. current location
-#: src/window.c:3367
-msgid "Location:"
-msgstr "Местонахождение:"
+#: src/window.c:3652
+msgid "Open a recently used archive"
+msgstr "Отваряне на използван скоро архив"
 
-#: src/window.c:3878
+#: src/window.c:4141
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Не може да бъде отворен \"%s\""
 
-#: src/window.c:3936
+#: src/window.c:4199
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Невъзможно запазването на архива \"%s\""
 
-#: src/window.c:4832
+#: src/window.c:5107
 msgid "The new name is void."
 msgstr "Новото име е празно."
 
-#: src/window.c:4832 src/window.c:4836 src/window.c:4845
-msgid "Please use a different name."
-msgstr "Моля, използвайте друго име."
-
-#: src/window.c:4836
+#: src/window.c:5111
 msgid "The new name is equal to the old one."
 msgstr "Новото име е същото като старото."
 
-#: src/window.c:4845
-#, c-format
-msgid ""
-"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
-"\n"
-"%s"
-msgstr ""
-"Името \"%s\" не е валидно, защото не съдържа символите: %s\n"
-"\n"
-"%s"
-
-#: src/window.c:4901
+#: src/window.c:5169
 msgid "New folder name"
 msgstr "Ново име на папка"
 
-#: src/window.c:4901
+#: src/window.c:5169
 msgid "New file name"
 msgstr "Ново име на файл"
 
-#: src/window.c:4922
+#: src/window.c:5190
 msgid "Could not rename the folder"
 msgstr "Не може да се преименува папката"
 
-#: src/window.c:4922
+#: src/window.c:5190
 msgid "Could not rename the file"
 msgstr "Не може да бъде преименуван файла"
 
-#: src/window.c:5007
+#: src/window.c:5275
 msgid "Paste Selection"
 msgstr "Поставяне на избраното"
 
-#: src/window.c:5008
+#: src/window.c:5276
 msgid "Destination folder"
 msgstr "Папка, в която да се разархивира"
 
-#: src/window.c:5594
+#: src/window.c:5803
 msgid "Add files to an archive"
 msgstr "Добавяне на файлове към архив"
 
-#: src/window.c:5621
+#: src/window.c:5836
 msgid "Extract archive"
 msgstr "Разархивиране на архив"
-
-#~ msgid "Operation stopped"
-#~ msgstr "Операцията е спряна"
-
-#~ msgid "File size:"
-#~ msgstr "Размер на файла:"
-
-#~ msgid "Date _modified"
-#~ msgstr "Време на промяна"
-
-#~ msgid "File Roller Preferences"
-#~ msgstr "Настройки на File Roller"
-
-#~ msgid "Low"
-#~ msgstr "Ниско"
-
-#~ msgid "Maximum (slow)"
-#~ msgstr "Максимално (бавно)"
-
-#~ msgid "Minimum (fast)"
-#~ msgstr "Минимално (бързо)"
-
-#~ msgid "Normal"
-#~ msgstr "Нормален размер"
-
-#~ msgid "_Location"
-#~ msgstr "_Местонахождение"
-
-#~ msgid "_Size"
-#~ msgstr "Размер"
-
-#~ msgid "_Type"
-#~ msgstr "Вид"
-
-#~ msgid "_Add..."
-#~ msgstr "_Добавя файлове..."
-
-#~ msgid "Add files and folders to the archive"
-#~ msgstr "Добавя файлове и папки към архива"
-
-#~ msgid "View file with internal viewer"
-#~ msgstr "Показва файл с вътрешна програма"
-
-#~ msgid "Open selected files with the standard application"
-#~ msgstr "Отворя избрани файлове със зададена програма"
-
-#~ msgid "View"
-#~ msgstr "Показва"
-
-#~ msgid "Stop"
-#~ msgstr "Стоп"
-
-#~ msgid "Add to Archive..."
-#~ msgstr "Добавя към архив.."
-
-#~ msgid "Extract to..."
-#~ msgstr "Разархивира в..."
-
-# /usr/share/locale/bg/LC_MESSAGES/glib20.mo
-#~ msgid "Handle compressed archives"
-#~ msgstr "Поемай компресираните архиви"
-
-#~ msgid "Exclude o_ther file systems"
-#~ msgstr "С изключение на други файлови системи"
-
-#~ msgid "Exclude _backup files (*~)"
-#~ msgstr "С изключение на резервни копия (*~)"
-
-#~ msgid "Exclude _hidden files (.*)"
-#~ msgstr "С изключение на скрити файлове (.*)"
-
-#~ msgid "Igno_re case"
-#~ msgstr "Малки/Главни букви без значение"
-
-#~ msgid "Addition not performed"
-#~ msgstr "Добавянето не е извършено"
-
-#~ msgid "Files to add: %d"
-#~ msgstr "Файлове за добавяне: %d"
-
-#~ msgid "Folders to add: %d"
-#~ msgstr "Папки за добавяне: %d"
-
-#~ msgid "Bookmarks"
-#~ msgstr "Отметки"
-
-#~ msgid "General"
-#~ msgstr "Общо"
-
-#~ msgid "Visible columns"
-#~ msgstr "Видими колонки"
-
-#~ msgid "Date and time:"
-#~ msgstr "Дата и час:"
-
-#~ msgid "A_dd to Bookmarks"
-#~ msgstr "Добава към отметки"
-
-#~ msgid "Add _to archive:"
-#~ msgstr "Добавя към архив :"
-
-#~ msgid "Add only if _newer"
-#~ msgstr "Добавя само, ако са по-нови"
-
-#~ msgid "Delete Files"
-#~ msgstr "Изтрива файлове"
-
-#~ msgid "Extract to"
-#~ msgstr "Разархивира в"
-
-#~ msgid "Select Archive"
-#~ msgstr "Избор на архив"
-
-#~ msgid "New Archive"
-#~ msgstr "Нов архив"
-
-#~ msgid "Save Archive"
-#~ msgstr "Запис на архив"
-
-#~ msgid "Open Archive"
-#~ msgstr "Отваря Архив"
-
-#~ msgid "Copy Archive"
-#~ msgstr "_Копира Архив"
-
-#~ msgid "Move Archive"
-#~ msgstr "_Премества Архив"
-
-#~ msgid "_Test"
-#~ msgstr "_Тества"
-
-#~ msgid "_Delete Files..."
-#~ msgstr "_Изтрива файлове..."
-
-#~ msgid "Delete selected files and folders from the archive"
-#~ msgstr "Изтрива избрани файлове и папки от архива"
-
-#~ msgid "_Preferences"
-#~ msgstr "_Настройки"
-
-#~ msgid "Edit File Roller preferences"
-#~ msgstr "Редактиране на настройките на File Roller"
-
-#~ msgid "New _Window"
-#~ msgstr "Нов _Прозорец"
-
-#~ msgid "Open a new window"
-#~ msgstr "Отваря на нов прозорец"
-
-#~ msgid "_Delete Files"
-#~ msgstr "_Изтрива файлове"
-
-#~ msgid "1 file (%s)"
-#~ msgstr "1 файл (%s)"
-
-#~ msgid "1 file selected (%s)"
-#~ msgstr "1 избран файл (%s)"
-
-#~ msgid "_Up"
-#~ msgstr "Нагоре"
-
-#~ msgid "Save options"
-#~ msgstr "Опции на запис"
-
-#~ msgid "Extract to:"
-#~ msgstr "Разархивиране в::"
-
-#~ msgid "File Roller - Add"
-#~ msgstr "File Roller - Добавяне"
-
-#, fuzzy
-#~ msgid "File Roller - Delete Files"
-#~ msgstr "File Roller - Показване на Файл"
-
-#, fuzzy
-#~ msgid "File Roller - Extract"
-#~ msgstr "File Roller - Добавяне"
-
-#, fuzzy
-#~ msgid "File Roller - Open Files"
-#~ msgstr "File Roller - Показване на Файл"
-
-#, fuzzy
-#~ msgid "File Roller - Password"
-#~ msgstr "File Roller - Добавяне"
-
-#~ msgid "File Roller - View File"
-#~ msgstr "File Roller - Показване на Файл"
-
-#, fuzzy
-#~ msgid "File Roller - Viewer"
-#~ msgstr "File Roller - Показване на Файл"
-
-#, fuzzy
-#~ msgid "Other options"
-#~ msgstr "Опции на запис"
-
-#~ msgid "Columns to Show"
-#~ msgstr "Показване на Колони"
-
-#, fuzzy
-#~ msgid "File _Path"
-#~ msgstr "Път на файл"
-
-#, fuzzy
-#~ msgid "File _Size"
-#~ msgstr "Размер на файл"
-
-#, fuzzy
-#~ msgid "File _Type"
-#~ msgstr "Тип на файл"
-
-#, fuzzy
-#~ msgid "_Modification Time"
-#~ msgstr "Време на модификация"
-
-#, fuzzy
-#~ msgid "_Recent archives:"
-#~ msgstr "Отваря архив"
-
-#~ msgid "Copy archive"
-#~ msgstr "_Копиране на Архив"
-
-#~ msgid "Move archive"
-#~ msgstr "_Преместване на Архив"
-
-#~ msgid "Archive will be deleted, are you sure ?"
-#~ msgstr "Архивът ще бъде изтрит. Сигурни ли сте?"
-
-#~ msgid "Open an existing archive"
-#~ msgstr "Отваряне на съществуващ архив"
-
-#, fuzzy
-#~ msgid "Delete current archive from disk"
-#~ msgstr "Затваряне на текущия архив"
-
-#, fuzzy
-#~ msgid "Show information about the archive"
-#~ msgstr "Информация за програмата"
-
-#~ msgid "Exit"
-#~ msgstr "Изход от програмата"
-
-#, fuzzy
-#~ msgid "_Test Archive"
-#~ msgstr "_Neues Archiv"
-
-#~ msgid "by _Time"
-#~ msgstr "По _Време"
-
-#~ msgid "by _Path"
-#~ msgstr "по _Път"
-
-#~ msgid "Clo_se Window"
-#~ msgstr "_Затваряне на прозорец"
-
-#~ msgid "Close this window"
-#~ msgstr "Затваря този прозорец"
-
-#~ msgid "_Manual"
-#~ msgstr "_Ръководство"
-
-#~ msgid "_File"
-#~ msgstr "_Файл"
-
-#~ msgid "_Windows"
-#~ msgstr "_Прозорци"
-
-#~ msgid "Select All"
-#~ msgstr "Селектирай всички"
-
-#~ msgid "You don't have permissions to add files to this archive."
-#~ msgstr "Вие не сте оторизиран да добавяте файлове в този архив."
-
-#~ msgid "Path"
-#~ msgstr "Път"
-
-#~ msgid "Cannot load archive."
-#~ msgstr "Невъзможно зареждане на архив."
-
-#, fuzzy
-#~ msgid "File Roller - Last output"
-#~ msgstr "File Roller - Добавяне"
-
-#~ msgid "Archive Properties"
-#~ msgstr "Свойства на архива"
-
-#~ msgid "Associated Applications"
-#~ msgstr "Асоциирани приложения"
-
-#~ msgid "Remove"
-#~ msgstr "Премахване"
-
-#~ msgid "History"
-#~ msgstr "История"
-
-#~ msgid "Max history length:"
-#~ msgstr "Максимална дължина на историята:"
-
-#~ msgid "DIRECTORY"
-#~ msgstr "ДИРЕКТОРИЯ"
-
-#~ msgid "_Open Archive..."
-#~ msgstr "_Отваряне на Архив..."
-
-#~ msgid "_Close Archive"
-#~ msgstr "_Затваряне на Архив"
-
-#~ msgid "Archive _Properties..."
-#~ msgstr "Архив-_Свойства"
-
-#~ msgid "_View file"
-#~ msgstr "_Показване на файл"
-
-#~ msgid "_Stop operation"
-#~ msgstr "_Стоп на операция"
-
-#~ msgid "S_ort File List"
-#~ msgstr "_Сортиране"
-
-#~ msgid "_Options"
-#~ msgstr "_Опции"
-
-#~ msgid "System error: pipe."
-#~ msgstr "Системна грешка: pipe"
-
-#~ msgid "System error: fork."
-#~ msgstr "Системна грешка: fork"
-
-#~ msgid "Cannot change to specified directory."
-#~ msgstr "Не е възможно преминаване към зададена директория."
-
-#~ msgid "No further information on error."
-#~ msgstr "Няма допълнителна информация за грешка."
-
-#~ msgid "_Normal Size"
-#~ msgstr "_Нормален Размер"
-
-#~ msgid "Quit this window"
-#~ msgstr "Затваряне на този прозорец"
-
-#~ msgid "Document Viewer"
-#~ msgstr "Вюър"
-
-#~ msgid "View with:"
-#~ msgstr "Показване с:"
-
-#~ msgid "Make the default viewer"
-#~ msgstr "Установи като вюър по подразбиране"
-
-#~ msgid "Extract archives to the directory the archive file is in"
-#~ msgstr "Enpackt Archive in das Verzeichnis der Archiv-Datei"
-
-#, fuzzy
-#~ msgid "files"
-#~ msgstr "Dateien"
-
-#, fuzzy
-#~ msgid "Selected"
-#~ msgstr "Markierte Dateien"
