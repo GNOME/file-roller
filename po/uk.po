@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller-2.0.3\n"
-"POT-Creation-Date: 2003-01-20 17:11+0200\n"
-"PO-Revision-Date: 2003-01-20 09:46--500\n"
+"POT-Creation-Date: 2003-02-14 00:28+0200\n"
+"PO-Revision-Date: 2003-02-13 13:33--500\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <linux@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
@@ -50,11 +50,11 @@ msgstr "Менеджер архівів"
 #: src/gtk-utils.c:158
 #: src/gtk-utils.c:266
 #: src/main.c:101
-#: src/menu-callbacks.c:788
-#: src/window.c:704
-#: src/window.c:713
-#: src/window.c:2382
-#: src/window.c:4084
+#: src/menu-callbacks.c:789
+#: src/window.c:743
+#: src/window.c:752
+#: src/window.c:2448
+#: src/window.c:4167
 msgid "File Roller"
 msgstr "Файловий млин"
 
@@ -126,13 +126,13 @@ msgstr "Зберегти параметри"
 
 #: src/dlg-batch-add.c:99
 #: src/dlg-extract.c:120
-#: src/window.c:3144
+#: src/window.c:3227
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Теки призначення не існує. Створити?"
 
 #: src/dlg-batch-add.c:101
 #: src/dlg-extract.c:122
-#: src/window.c:3146
+#: src/window.c:3229
 msgid "Create _Folder"
 msgstr "Створити _теку"
 
@@ -154,7 +154,7 @@ msgid "Adding %u files"
 msgstr "Додавання %u файлів"
 
 #: src/dlg-extract.c:142
-#: src/window.c:3166
+#: src/window.c:3249
 #, c-format
 msgid "Could not create the destination folder: %s.\n"
 "Extraction not performed."
@@ -162,7 +162,7 @@ msgstr "Не вдалося створити теку призначення: %s
 "Розархівування не здійснено."
 
 #: src/dlg-extract.c:157
-#: src/window.c:3181
+#: src/window.c:3264
 msgid "Extraction not performed."
 msgstr "Розархівування не здійснено."
 
@@ -173,7 +173,7 @@ msgstr "Недостатньо прав для розархівування в �
 
 #: src/dlg-extract.c:397
 #: src/dlg-preferences.c:128
-#: src/menu-callbacks.c:751
+#: src/menu-callbacks.c:752
 #, c-format
 msgid "Could not display help: %s"
 msgstr "Не вдалося відобразити довідку: %s"
@@ -278,7 +278,7 @@ msgid "Do not e_xtract older files"
 msgstr "Не _добувати старіші файли"
 
 #: src/file_roller.glade.h:10
-#: src/window.c:2603
+#: src/window.c:2681
 msgid "Extract"
 msgstr "Добути"
 
@@ -500,72 +500,76 @@ msgstr "Архів War (.war)"
 msgid "Zip (.zip)"
 msgstr "Архів Zip (.zip)"
 
-#: src/menu-callbacks.c:175
+#: src/menu-callbacks.c:120
+msgid "Zoo (.zoo)"
+msgstr "Архів Zoo (.zoo)"
+
+#: src/menu-callbacks.c:176
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Ви не маєте права створювати архіви у цій теці"
 
-#: src/menu-callbacks.c:193
-#: src/menu-callbacks.c:420
-#: src/menu-callbacks.c:590
+#: src/menu-callbacks.c:194
+#: src/menu-callbacks.c:421
+#: src/menu-callbacks.c:591
 msgid "Archive already exists.  Do you want to overwrite it?"
 msgstr "Архів вже існує. Перезаписати?"
 
-#: src/menu-callbacks.c:195
-#: src/menu-callbacks.c:422
-#: src/menu-callbacks.c:592
+#: src/menu-callbacks.c:196
+#: src/menu-callbacks.c:423
+#: src/menu-callbacks.c:593
 msgid "Overwrite"
 msgstr "Перезаписати"
 
-#: src/menu-callbacks.c:212
+#: src/menu-callbacks.c:213
 msgid "Could not delete old archive."
 msgstr "Не вдалось стерти старий архів."
 
-#: src/menu-callbacks.c:253
+#: src/menu-callbacks.c:254
 msgid "New Archive"
 msgstr "Створення архіву"
 
-#: src/menu-callbacks.c:265
+#: src/menu-callbacks.c:266
 msgid "Archive type:"
 msgstr "Тип архіву:"
 
-#: src/menu-callbacks.c:336
+#: src/menu-callbacks.c:337
 msgid "Open Archive"
 msgstr "Відкриття архіву"
 
-#: src/menu-callbacks.c:445
+#: src/menu-callbacks.c:446
 msgid "Could not copy archive"
 msgstr "Не вдалось скопіювати архів"
 
-#: src/menu-callbacks.c:461
+#: src/menu-callbacks.c:462
 msgid "Could not move archive"
 msgstr "Не вдалось перенести архів"
 
-#: src/menu-callbacks.c:483
+#: src/menu-callbacks.c:484
 msgid "Copy archive"
 msgstr "Скопіювати архів"
 
-#: src/menu-callbacks.c:483
+#: src/menu-callbacks.c:484
 msgid "Move archive"
 msgstr "Перенести архів"
 
-#: src/menu-callbacks.c:561
+#: src/menu-callbacks.c:562
 msgid "New archive name (without extension)"
 msgstr "Нова назва (без розширення)"
 
-#: src/menu-callbacks.c:565
+#: src/menu-callbacks.c:566
 #: src/menu.h:97
 msgid "_Rename"
 msgstr "Пере_йменувати"
 
-#: src/menu-callbacks.c:629
+#: src/menu-callbacks.c:630
 msgid "Archive will be deleted, are you sure?"
 msgstr "Архів буде стерто. Продовжити?"
 
-#: src/menu-callbacks.c:780
+#: src/menu-callbacks.c:781
 msgid "translator_credits"
 msgstr "Юрій Сирота <yuriy@beer.com>"
 
-#: src/menu-callbacks.c:791
+#: src/menu-callbacks.c:792
 msgid "An archive manager for GNOME."
 msgstr "Менеджер архівів для середовища GNOME."
 
@@ -666,7 +670,7 @@ msgstr "Додати _файли..."
 
 #: src/menu.h:164
 #: src/menu.h:458
-#: src/window.c:2593
+#: src/window.c:2671
 msgid "Add files to the archive"
 msgstr "Додати файли до архіву"
 
@@ -680,7 +684,7 @@ msgstr "_Добути у..."
 
 #: src/menu.h:176
 #: src/menu.h:470
-#: src/window.c:2604
+#: src/window.c:2682
 msgid "Extract files from the archive"
 msgstr "Добути файли з архіву"
 
@@ -877,15 +881,6 @@ msgstr "Добути у..."
 msgid "Select All"
 msgstr "Вибрати все"
 
-#: src/recent-files/egg-recent-vfs-utils.c:90
-msgid " (invalid Unicode)"
-msgstr " (неприпустимий формат Unicode)"
-
-#: src/recent-files/egg-recent-view-bonobo.c:193
-#, c-format
-msgid "Open %s"
-msgstr "Відкрити %s"
-
 #: src/toolbar.h:39
 msgid "New"
 msgstr "Новий"
@@ -902,168 +897,168 @@ msgstr "Відкрити архів"
 msgid "Stop"
 msgstr "Зупинити"
 
-#: src/window.c:568
+#: src/window.c:607
 msgid "Folder"
 msgstr "Тека"
 
-#: src/window.c:712
+#: src/window.c:751
 msgid "[read only]"
 msgstr "[лише для зчитування]"
 
-#: src/window.c:806
+#: src/window.c:845
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 файл (%s)"
 
-#: src/window.c:809
+#: src/window.c:848
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d файла(ів) (%s)"
 
-#: src/window.c:817
+#: src/window.c:856
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 файл вибрано (%s)"
 
-#: src/window.c:820
+#: src/window.c:859
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d файла(ів) вибрано (%s)"
 
-#: src/window.c:1109
+#: src/window.c:1148
 msgid "Reading archive"
 msgstr "Зчитування архіву"
 
-#: src/window.c:1112
+#: src/window.c:1151
 msgid "Deleting files from archive"
 msgstr "Видалення файлів з архіву"
 
-#: src/window.c:1115
+#: src/window.c:1154
 msgid "Adding files to archive"
 msgstr "Додавання файлів до архіву"
 
-#: src/window.c:1118
+#: src/window.c:1157
 msgid "Extracting files from archive"
 msgstr "Добування файлів з архіву"
 
-#: src/window.c:1121
+#: src/window.c:1160
 msgid "Testing archive"
 msgstr "Перевірка архіву"
 
-#: src/window.c:1127
+#: src/window.c:1166
 msgid "wait please..."
 msgstr "Будь ласка, зачекайте..."
 
-#: src/window.c:1213
+#: src/window.c:1252
 msgid "Operation stopped"
 msgstr "Оперецію зупинено"
 
-#: src/window.c:1231
+#: src/window.c:1270
 msgid "An error occurred while extracting files."
 msgstr "Під час добування файлів сталася помилка."
 
-#: src/window.c:1235
+#: src/window.c:1274
 msgid "An error occurred while loading the archive."
 msgstr "Під час завантаження архіву сталася помилка."
 
-#: src/window.c:1239
+#: src/window.c:1278
 msgid "An error occurred while deleting files from the archive."
 msgstr "Під час видалення файлів з архіву сталася помилка."
 
-#: src/window.c:1243
+#: src/window.c:1282
 msgid "An error occurred while adding files to the archive."
 msgstr "Під час додавання файлів у архів сталася помилка."
 
-#: src/window.c:1247
+#: src/window.c:1286
 msgid "An error occurred while testing archive."
 msgstr "Під час перевірки архіву сталася помилка."
 
-#: src/window.c:1253
+#: src/window.c:1292
 msgid "Command not found."
 msgstr "Потрібної команди не знайдено."
 
-#: src/window.c:1256
+#: src/window.c:1295
 msgid "Command exited abnormally."
 msgstr "Робота програми завершилась некоректно."
 
-#: src/window.c:1548
+#: src/window.c:1587
 msgid "You don't have permissions to add files to this archive."
 msgstr "Ви не маєте права додавати файли у цей архів."
 
-#: src/window.c:1570
+#: src/window.c:1609
 msgid "You can't add an archive to itself."
 msgstr "Неможливо додати архів до самого себе."
 
-#: src/window.c:1730
+#: src/window.c:1769
 msgid "Do you want to add this file to the current archive or open it as a new archive?"
 msgstr "Додати цей файл у поточний архів, чи відкрити його як новий?"
 
-#: src/window.c:1773
+#: src/window.c:1812
 msgid "Do you want to create a new archive with these files?"
 msgstr "Створити новий архів і додати в нього вибрані файли?"
 
-#: src/window.c:1775
+#: src/window.c:1814
 msgid "Create _Archive"
 msgstr "Створити _архів"
 
-#: src/window.c:2108
+#: src/window.c:2147
 msgid "Size"
 msgstr "Розмір"
 
-#: src/window.c:2109
+#: src/window.c:2148
 msgid "Type"
 msgstr "Тип"
 
-#: src/window.c:2110
+#: src/window.c:2149
 msgid "Date modified"
 msgstr "Дата модифікації"
 
-#: src/window.c:2111
+#: src/window.c:2150
 msgid "Location"
 msgstr "Шлях"
 
-#: src/window.c:2118
+#: src/window.c:2157
 msgid "Name"
 msgstr "Назва"
 
-#: src/window.c:2538
+#: src/window.c:2616
 msgid "_Up"
 msgstr "В_гору"
 
 #. current location
-#: src/window.c:2560
+#: src/window.c:2638
 msgid "Current Location:"
 msgstr "Поточний шлях:"
 
-#: src/window.c:2592
+#: src/window.c:2670
 msgid "Add"
 msgstr "Додати"
 
-#: src/window.c:2614
+#: src/window.c:2692
 msgid "View"
 msgstr "Продивитись"
 
-#: src/window.c:2615
+#: src/window.c:2693
 msgid "View selected file"
 msgstr "Продивитись вибраний файл"
 
-#: src/window.c:3010
+#: src/window.c:3093
 msgid "File type not supported."
 msgstr "Невідомий тип файла."
 
-#: src/window.c:3079
+#: src/window.c:3162
 msgid "Cannot load archive."
 msgstr "Неможливо завантажити архів."
 
-#: src/window.c:3493
+#: src/window.c:3576
 msgid "Last Output"
 msgstr "Останній вивід"
 
-#: src/window.c:4019
+#: src/window.c:4102
 msgid "Add files to an archive"
 msgstr "Додати файли у архів"
 
-#: src/window.c:4044
+#: src/window.c:4127
 msgid "Extract archive"
 msgstr "Розархівувати"
 

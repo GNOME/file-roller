@@ -1,0 +1,995 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+  <!ENTITY legal SYSTEM "legal.xml">
+  <!ENTITY appversion "2.0.0">
+  <!ENTITY manrevision "2.0">
+  <!ENTITY date "June  2002">
+  <!ENTITY fr "<application>Файловий млин</application>">
+  <!-- Information about the entities
+       The legal.xml file contains legal information, there is no need to edit the file. 
+       Use the appversion entity to specify the version of the application.
+       Use the manrevision entity to specify the revision number of this manual.
+       Use the date entity to specify the release date of this manual.
+       Use the fr entity to specify the name of the application. -->
+]>
+<!-- 
+      (Do not remove this comment block.)
+  Maintained by the GNOME Documentation Project
+  http://developer.GNOME.org/projects/gdp
+  Template version: 2.0 beta
+  Template last modified Jan 30, 2002
+-->
+<!-- =============Document Header ============================= -->
+<article id="index" lang="uk">
+<!-- please do not change the id; for translations, change lang to -->
+<!-- appropriate code -->
+  <articleinfo> 
+    <title>Довідник користувача програми "Файловий млин", версія &manrevision;</title>       
+
+    <copyright> 
+      <year>2002</year> 
+      <holder>Александр Кириллов</holder> 
+    </copyright> 
+
+    <copyright> 
+      <year>2003</year> 
+      <holder>Максим Дубовой (Maxim Dubovoy)</holder> 
+    </copyright> 
+
+<!-- An address can be added to the publisher information.  If a role is 
+     not specified, the publisher/author is the same for all versions of the 
+     document.  -->
+    <publisher> 
+      <publishername> Проект документації GNOME</publishername> 
+    </publisher> 
+
+   &legal; <!-- This file contains link to license for the
+   documentation (GNU FDL), and other legal stuff such as "NO
+   WARRANTY" statement. Please do not change any of this. -->
+
+    <authorgroup> 
+      <author> 
+	<firstname>Александр</firstname> 
+	<surname>Кириллов</surname> 
+	<affiliation> 
+	  <orgname>Проект документування GNOME</orgname> 
+	  <address> <email>kirillov@math.sunysb.edu</email> </address> 
+	</affiliation> 
+      </author> 
+
+
+       <othercredit role="translator">
+	<firstname>Максим</firstname> 
+	<surname>Дубовой</surname> 
+	<affiliation> 
+	  <orgname>mylinux</orgname> 
+	  <address> <email>dmv@mylinux.com.ua</email> </address> 
+	</affiliation>
+	<contrib>mylinux</contrib>
+      </othercredit>
+
+    </authorgroup>
+
+
+    <releaseinfo> Довідка описує програму "&fr;" версії &appversion;.
+    </releaseinfo> 
+  </articleinfo> 
+
+  <indexterm zone="index"> 
+    <primary>Файловий млин</primary> 
+  </indexterm> 
+  <indexterm zone="index"> 
+    <primary>file-roller</primary> 
+  </indexterm>
+  <indexterm zone="index"> 
+    <primary>Архівування</primary> 
+  </indexterm>
+
+<!-- ============= Document Body ============================= -->
+<!-- ============= Introduction ============================== -->
+<!-- Use the Introduction section to give a brief overview of what
+     the application is and what it does. -->
+  <sect1 id="fr-introduction"> 
+    <title>Вступ</title> 
+    <para> "&fr;" - це графічна програма перегляду, добування,
+      та створення файлів архівів. Файл архіву - це файл, який відіграє роль
+      контейнера для зберігання інших файлів. Архів може містити файли, каталоги 
+      та підкаталоги, зазвичай у стисненій формі. Існує велика кількість 
+      типів архівів, які використовують різні формати та методи стискання.
+    </para>
+    <para>	
+      Можливості програми "&fr;"
+      </para> 
+    <itemizedlist> 
+      <listitem> 
+	<para>Підтримуються наступні формати:</para> 
+	<itemizedlist> 
+	  <listitem> 
+	    <para>Нестиснений архів tar(<filename>.tar</filename>)</para> 
+	  </listitem> 
+	  <listitem> 
+	    <para>Tar архів стиснений за допомогою 
+	      <application>gzip</application> 
+	      (<filename>.tar.gz, .tgz</filename>). Це найбільш
+              вживаний формат для систем Unix та Linux. 
+	    </para>  
+	  </listitem> 
+	  <listitem><para>Архів tar стиснений за допомогою
+	      <application>bzip</application> 
+	      (<filename>.tar.bz</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів tar стиснений за допомогою
+	      <application>bzip2</application> 
+	      (<filename>.tar.bz2</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів tar стиснений за допомогою
+	      <application>compress</application> 
+	      (<filename>.tar.Z</filename>). 
+	    </para>
+	  </listitem>
+
+	  <listitem><para>
+	      Архіви створені за допомогою
+	      <application>PKZIP</application> або
+	      <application>WinZip</application> 
+	      (<filename>.zip</filename>). Це стандартний
+              тип архівів у системах Microsoft Windows.
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів lha
+	      (<filename>.lha</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів rar
+	      (<filename>.rar</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів lzh
+	      (<filename>.lzh</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів ear
+	      (<filename>.ear</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів jar
+	      (<filename>.jar</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Архів war
+	      (<filename>.war</filename>). 
+	    </para>
+	  </listitem>
+
+
+	</itemizedlist> 
+      </listitem> 
+      <listitem> 
+	<para>
+          Можливість перегляду файлів архіву за допомогою модулів, які 
+          підключаються по протоколу bonobo для будь-яких програм у вашій
+					системі.
+	</para>
+      </listitem> 
+      <listitem> 
+	<para>Можливість додавати та видаляти файли з наявних архівів.
+       </para> 
+      </listitem> 
+      <listitem> 
+	<para>Підтримка перетягування</para> 
+      </listitem> 
+    </itemizedlist>
+    <para> 
+      Зауважте, що "&fr;" представляє лише графічний інтерфейс і використовує
+      для функціонування утиліти командного рядка, такі як 
+      <command>tar</command>, <command>gzip</command>, <command>bzip2</command>. 
+      Таким чином перераховані формати архівів 
+      підтримуватимуться лише якщо у вашій системі встановлені відповідні утиліти.
+      Більшість дистрибутивів Linux містить в собі всі такі
+      утиліти.    
+    </para>
+    <para>Для запуску програми "&fr;" відкрийте
+	<guimenu> Головне меню </guimenu>, та виберіть
+	<menuchoice> <guimenu>Приладдя</guimenu><guimenuitem>Файловий млин</guimenuitem> 
+	</menuchoice>. </para> 
+    <para>
+      Крім того можливий запуск програми "&fr;" з командного рядка. Для цього напишіть 
+      <command> file-roller </command> або <command> file-roller
+      <replaceable>filname.tar.gz</replaceable></command>  та натисніть
+      <keycap> Enter </keycap>. Тут
+      <replaceable>filename.tar.gz</replaceable> - ім'я файлу архіву
+	який ви бажаєте відкрити.
+    </para>
+
+
+  </sect1>
+
+<!-- =========== Opening and viewing archives ========================= -->
+
+  <indexterm zone="fr-opening-viewing"> 
+    <primary>Архіви</primary> 
+    <secondary>Перегляд</secondary>
+  </indexterm> 
+
+  <sect1 id="fr-opening-viewing"> 
+    <title>Відкриття та перегляд архіву</title> 
+
+<!-- ======= Opening an archive file ============= --> 
+    <sect2 id="fr-opening">
+      <title>Відкриття архіву</title>
+      <para>
+	Щоб відкрити архів виберіть <menuchoice>
+	  <guimenu> Архів </guimenu> <guimenuitem> Відкрити </guimenuitem> </menuchoice>
+	  (<keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>),
+	  або клацніть на кнопкці <guibutton> Відкрити </guibutton> 
+          на панелі інструментів. На екрані буде показано діалог 
+	  <guilabel>Відкриття архіву</guilabel>. 
+          Виберіть файл який ви бажаєте відкрити, потім клацніть
+	  <guibutton> Гаразд </guibutton>. Програма "&fr;" автоматично визначить тип архіву, та
+          покаже його вміст в головному вікні.
+          Крім того ви можете перетягнути файл архіву з іншої програми, наприклад
+          менеджера файлів.
+      </para>
+      <para>
+        
+	Якщо ви спробуєте відкрити файл архіву, який програма "&fr;" не зможе
+	розпізнати, то програма покаже повідомлення про помилку.
+
+      </para>
+      <para>
+	Якщо архів дуже великий або вашому комп'ютеру не вистачає швидкості,
+        операція відкриття може потребувати значного часу. Якщо ви бажаєте 
+        перервати цю операцію натисніть клавішу
+	<keycap> Esc </keycap> або клацніть кнопку <guibutton> Зупинити </guibutton>
+	на панелі інструментів.
+      </para>      
+
+    </sect2>
+
+<!-- ======= Viewing an archive file ============= --> 
+    <sect2 id="fr-viewing">
+      <title>Перегляд вмісту архіву</title>
+
+      <para>
+        Щойно ви відкрили архів, його вміст буде показано в головному
+        вікні програми "&fr;". Дивіться <xref linkend="fr-mainwindow-fig"/>). 
+      </para>
+      <figure id="fr-mainwindow-fig">
+	<title>Головне вікно програми "&fr;" </title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-mainwindow.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+      <para>
+        В головному вікні знаходиться список усіх файлів і каталогів архіву,
+        з ім'ям, типом, датою модифікації та іншою інформацією. Поле
+        <guilabel>Розмір</guilabel> показує не стиснений розмір, тобто 
+	розмір який матиме файл якщо його вилучити з архіву.
+ 	Поле <guilabel>Дата модифікації</guilabel> показує дату, коли файл було 
+	останній раз змінено.
+      </para>
+      <para>
+	Крім того у заголовку вікна показано ім'я архіву, а в 
+        нижній частині вікна показано загальну кількість файлів та не стиснений розмір архіву
+	(тобто, загальний розмір який будуть мати файли після їх добування з архіву).
+      </para>
+    </sect2>
+
+
+
+<!-- ======= Viewing an archive file ============= --> 
+    <sect2 id="fr-viewing-folder">
+      <title>Режими перегляду</title>
+      <para>
+        Якщо архів містить підкаталоги, ви маєте можливість вибрати один з двох
+        можливих способів перегляду їх вмісту.
+        <guilabel>Показувати як теку</guilabel> та <guilabel>Показувати всі файли</guilabel>.
+	Ви маєте змогу перемикатися між цими режимами, використовуючи меню <guimenu> Вигляд </guimenu>.
+      </para>
+      <para>
+	В режимі <guilabel>Показувати як теку</guilabel> (типовий),
+        каталоги показуються таким же чином як і в файловому менеджері.
+        Так для кожного каталогу список відображає піктограму та ім'я каталогу.
+        Для перегляду вмісту зробіть подвійне клацання на ньому.
+	Для переходу на один рівень вище клацніть кнопку
+ 	<guibutton>Вгору</guibutton> на панелі інструментів.
+	В цьому режимі панель інструментів, містить поле <guilabel> Поточний шлях </guilabel>,
+	яке показує повний шлях до каталогу, що відображається в поточний момент.
+      </para>
+      <para>
+	В режимі <guilabel>Показувати всі файли</guilabel> будуть показані у вигляді списку  
+	всі файли, які входять до складу архіву, в тому числі 
+	файли з усіх каталогів і підкаталогів. 
+      </para>
+    </sect2>
+    
+<!-- ======= Viewing an archive file ============= --> 
+    <sect2 id="fr-viewing-custom">
+      <title>Настройка відображення списку файлів</title>
+      <para>Програма "&fr;" дозволяє керувати способом виводу списку файлів наступним чином:
+      </para>
+      <itemizedlist>
+
+	<listitem><para> 
+	Перемикаючись між <guilabel>Показувати як теку</guilabel> та 
+	<guilabel>Показувати всі файли</guilabel> - дивіться
+	    <xref linkend="fr-viewing-folder"/>.
+	  </para></listitem>
+
+	<listitem><para>
+	    Вибираючи стовпчики, які потрібно показати (<guilabel>Ім'я</guilabel>,
+	    <guilabel>Тип</guilabel>, <guilabel>Розмір</guilabel> і т.д.) -
+	    дивіться <xref linkend="fr-prefs"/>. 
+	  </para></listitem> 
+	<listitem><para>
+	    Вибираючи порядок сортування файлів в списку. Ви можете сортувати файли
+	    за ім'ям, розміром і т.д. Для перемиканням між способами сортування
+	    виберіть <menuchoice><guimenu> Вигляд </guimenu>
+	     <guisubmenu> Впорядкувати файли </guisubmenu></menuchoice>. 
+	    Цей же результат досягається простим клацанням на заголовку відповідного
+            стовпця. Наприклад, для сортування файлів за часом модифікації 
+	    (в напрямку від більш ранньої дати до більш пізньої), клацніть на заголовку
+           <guilabel>Дата модифікації</guilabel>. Якщо клацнути на заголовку знову,
+	    порядок сортування зміниться на протилежний, в цьому випадку 
+            (від більш пізньої дати до більш ранньої).
+	  </para></listitem> 
+      </itemizedlist>
+    </sect2>
+  </sect1>
+
+  <!-- =============  Viewing a file in  an Archive ==================== -->
+  <sect1 id="fr-viewing-file"> 
+    <title>Перегляд файлів в архіві</title> 
+    <para>
+	Найбільш простий спосіб перегляду архіву - зробити подвійне клацання 
+	на файлі в головному вікні програми "&fr;". Ви також можете вибрати файл для
+	перегляду та клацнути кнопку <guibutton> Переглянути </guibutton> на панелі
+	інструментів. Програма "&fr;" автоматично вибере відповідну програму або переглядач
+        для цього типу файлу (використовуючи інформацію в 
+       <guilabel>File Types and Programs</guilabel> 
+	секції 
+        <menuchoice> <guimenu>Власивості стільниці</guimenu><guimenuitem>Додатково</guimenuitem>
+       </menuchoice>
+        та запустить її. Якщо "&fr;" не може визначити належну програму або переглядач,
+     	вам буде запропоновано вибрати її самому.
+    </para>
+     <note>
+      <title>Програми та Переглядачі</title>
+      <para>
+        Різниця між програмами та переглядачами полягає в тому
+	що переглядач показує вміст файлу всередині вікна програми
+	"&fr;" та не потребує запуску окремих зовнішніх програм.
+        Переглядачі, як правило, стартують набагато швидше
+	але мають дуже обмежений набір функцій.
+      </para>
+      <para> Для більш досвідчених користувачів слід зауважити,
+        що переглядачі не є частиною програми "&fr;". Перегляд здійснюється завдяки 
+        іншим програмам GNOME. При цьому використовується спеціальна технологія 
+        <application>bonobo</application>) , яка дозволяє цим програмам працювати 
+        всередині вікна програми "&fr;". Кількість доступних для програми "&fr;" переглядачів
+        залежить від кількості програм, встановлених на вашій системі, 
+        які можуть працювати по протоколу bonobo.
+     </para>
+     </note>
+     <warning>
+      <title>ПОПЕРЕДЖЕННЯ</title>
+      <para>
+        Будь ласка, зауважте, що програма "&fr;" дозволяє тільки переглядати файли але не 
+        змінювати їх. Якщо ви відкриєте файл та зробите в ньому зміни, ці зміни 
+        <emphasis>не будуть</emphasis> збережені а архіві, навіть якщо ви натиснете 
+        кнопку <guibutton> Зберегти </guibutton> в програмі. Причина полягає в тому, що 
+	програма "&fr;" створює тимчасову копію файлу, а потім передає цю копію відповідній програмі. 
+        Ця тимчасова копія буде видалена після закриття програми, таким чином всі зроблені 
+	зміни буде втрачено. 
+      </para>
+      <para>
+	Якщо Ви бажаєте редагувати файл з архіву та зберегти зміни в архіві 
+        вам потрібно<link linkend="fr-extracting"> витягти </link>
+        файл в тимчасове місце, відредагувати його, а потім  <link
+        linkend="fr-adding-files"> додати </link> цей файл в архів, замінивши оригінал.
+      </para>
+    </warning>
+    <para>
+      Ви також можете переглядати файл використовуючи вибрану вами програму замість
+      типової. Щоб відкрити програму, використовуючи зовнішній
+      переглядач, виберіть <menuchoice><guimenu>Архів</guimenu>
+      <guimenuitem>Переглянути файл</guimenuitem></menuchoice> або клацніть на файлі
+      правою кнопкою миші та виберіть з контекстного меню <guimenuitem>Переглянути файл</guimenuitem>.
+      "&fr;" відкриє файл використовуючи найбільш відповідний переглядач цього 
+      типу файлів; якщо "&fr;" не зможе знайти відповідного переглядача він спробує відкрити
+      вибраний файл в текстовому редакторі.
+    </para>
+    <para>
+       Щоб відкрити файл, використовуючи зовнішню програму, виберіть
+      <menuchoice><guimenu>Архів</guimenu> <guimenuitem>Відкрити файли</guimenuitem>
+      </menuchoice> або клацніть правою кнопкою миші на файлі та виберіть
+     <guimenuitem>Відкрити файли...</guimenuitem>. При цьому буде відкрито діалог, який покаже 
+      всі програми, якими можливо відкрити файл цього типу. Ви можете вибрати одну з них
+      клацнувши на ній, а потім клацнути <guibutton>Відкрити</guibutton>. 
+      Також ви можете власноруч ввести команду для запуску програми за вашим бажанням.
+    </para>
+  </sect1>
+ 
+  <!-- =============  Modifying an Archive ============================= -->
+  <sect1 id="fr-modifying"> 
+    <title>Модифікація архіву</title> 
+    <para>
+      "&fr;" дозволяє модифікувати файл архіву. Є два типа операцій:
+      такі що в впливають на архів у цілому (такі, як перейменування архіву) 
+      та такі, що впливають на індивідуальні файли та каталоги всередині архіву.   
+    </para>
+    <para>
+      Зауважте що всі операції над архівом зберігаються на диску негайно.
+      Наприклад, якщо ви видаляєте файл за архіву, "&fr;" видалить файл
+      як тільки ви клацнете кнопку <guibutton>Гаразд</guibutton>.
+      Це дещо відрізняє "&fr;" від більшості інших програм, які зберігають зміни на диску 
+      тільки коли ви закриваєте програму або вибираєте 
+      <guimenuitem>Зберегти</guimenuitem> в меню.  
+    </para>
+
+<!-- ======= Operations on Archive as a Whole  ============= --> 
+    <sect2 id="fr-modifying-archive">
+      <title>Оперування над архівом у цілому</title>
+      <para>
+	 Меню <guimenu>Архів</guimenu> програми "&fr;" містить
+	такі команди для зміни файла архіву.
+      </para>
+      <itemizedlist>
+	<listitem><para>
+	    <guimenuitem>Перейменувати</guimenuitem>
+	  </para>
+	</listitem>
+	<listitem><para>
+	    <guimenuitem>Скопіювати</guimenuitem>
+	  </para>
+	</listitem>
+	<listitem><para>
+	    <guimenuitem>Перенести</guimenuitem>
+	  </para>
+	</listitem>
+	<listitem><para>
+	    <guimenuitem>Стерти</guimenuitem>
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </sect2>
+
+<!-- ======= Adding files to an archive  ============= --> 
+
+  <indexterm zone="fr-adding-files"> 
+    <primary>Архів</primary> 
+    <secondary>Додавання файлів до</secondary>
+  </indexterm> 
+    <sect2 id="fr-adding-files">
+      <title>Додавання файлів до архіву</title>
+      <para>
+	Найбільш простим способом додавання файлу до відкритого архіву
+        є перетягання файлів у вікно програми "&fr;" з іншої GNOME-програми 
+        (такої як файловий менеджер). Ви також можете вибрати 
+	<menuchoice><guimenu>Правка</guimenu><guimenuitem>Додати
+	файли...</guimenuitem></menuchoice>, клацнути кнопку
+	<guibutton>Додати</guibutton> на панелі інструментів або
+	клацнути правою кнопкою миші на файлі у вікні програми "&fr;" та вибрати
+	<guimenuitem>Додати файли...</guimenuitem>. Це відкриє діалог
+	<guilabel>Додати файли й теки...</guilabel> , показаний на <xref
+	linkend="fr-add-dialog-fig"/>. В цьому діалозі, виберіть файли
+	які ви бажаєте додати, та натисніть кнопку <guibutton>Гаразд</guibutton>.  
+      </para>
+      <tip id="multi-select">
+	<title>Порада</title>
+	<para>Для вибору більш ніж одного файлу утримуйте кнопку
+	<keycap>Ctrl</keycap> Коли вибираєте файли. Для вибору неперервного
+        блоку файлів із списку, клацніть на першому файлі, потім утримуючи 
+        кнопку<keycap>Shift</keycap> клацніть на останньому файлі блоку.
+        Всі файлі всередині буде вибрано.
+	</para>
+      </tip>
+      <para>
+        Щоб додати каталог до архіву, напишіть ім'я каталогу в полі
+	<guilabel>Selection</guilabel>.  Наприклад, якщо ви бажаєте додати
+	каталог <filename>/aaa/bbb/ccc</filename> в архів, вам потрібно
+	перейти до каталогу <filename>/aaa/bbb</filename> 
+	та написати <filename>ccc</filename> в полі 
+	<guilabel>Selection</guilabel>.  
+        Зауважте, просте клацання на імені каталогу не працює.
+      </para>
+      <para>
+	Діалог <guilabel>Додати файли</guilabel> може буди використаний
+        для автоматичного вибору та додавання до архіву всіх файлів, які задовольняють
+        певним умовам. Це буде розглянуто в <xref linkend="fr-add-advanced"/>.
+      </para>
+      <para>
+        Будь ласка, зауважте, коли додаєте файли в архів, "&fr;" не
+	видаляє оригінальний файл, він залишається незмінним. Крім того, 
+        доданий до архіву файл буде мати такі ж атрибути дозволу та дату модифікації як
+        і оригінальний файл.  
+      </para>
+
+	
+    </sect2>
+
+<!-- ======= Deleting  files from an archive  ============= --> 
+
+  <indexterm zone="fr-deleting-files"> 
+    <primary>Архіви</primary> 
+    <secondary>Видалення файлів з</secondary>
+  </indexterm> 
+
+
+    <sect2 id="fr-deleting-files">
+      <title>Видалення файлів з архіву</title>
+      <para>
+        Для видалення файлів з відкритого архіву, виберіть файли
+	які ви бажаєте видалити (дивіться <link
+	linkend="multi-select">пояснення</link> для вибору багатьох файлів)
+	та виберіть <menuchoice><guimenu>Правка</guimenu><guimenuitem>Стерти
+	</guimenuitem></menuchoice>, або клацніть правою кнопкою миші на вибраних файлах
+        та виберіть <guimenuitem>Стерти файли</guimenuitem>. Це призведе до відкриття 
+        діалогу <guilabel>Стерти файли</guilabel>,
+	який дає вам вибір для видалення вибраних файлів або файлів, які задовольняють
+        заданому шаблону. Для отримання більш детальної інформації про шаблони файлів 
+        дивіться <link linkend="fr-pattern"> наступну секцію</link>. 
+      </para>
+    </sect2>
+
+<!-- ======= Adding files - Advanced Options  ============= --> 
+    <sect2 id="fr-add-advanced">
+      <title>Додавання файлів - розширені можливості</title>
+      <para>Як згадувалось раніше, найпростіший шлях додавання файлів до архіву -
+      вибрати файли які бажаєте додати з діалогу <guilabel>Додати файли</guilabel>
+      (дивіться <link linkend="multi-select">пояснення</link> для вибору багатьох файлів) 
+      та клацнути кнопку <guibutton>Гаразд</guibutton>.  
+      Крім усього, цей діалог дозволяє вибрати та додати файли, які задовольняють певному
+      шаблону. В цьому розділі буде описано таку можливість. 
+      </para>
+      <figure id="fr-add-dialog-fig">
+	<title>Діалог "Додати файли"</title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-add-dialog.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+      <para id="fr-pattern">
+        Для автоматичного вибору всіх файлів, які задовольняють певному шаблону
+        введіть шаблон в полі
+	<guilabel>Selection</guilabel>. Шаблон може використовувати 
+        стандартні метасимволи <keycap>*</keycap>
+	(задовольняє будь який набір символів) та <keycap>?</keycap> (задовольняє будь якому 
+	окремому символу). Наприклад, шаблон <filename>*</filename>
+	задовольняє всім файлам, коли <filename>*.tar*</filename> задовольняє
+	всім файлам з розширенням <filename>tar</filename>, можлива будь яка 
+        послідовність символів, наприклад <filename>filename.tar.gz</filename>. 
+	Слід зауважити, що за умовчанням
+	імена файлів в системі Unix чуттєві до регістру букв.
+        Ви можете скасувати це вибравши параметр <guilabel>Ігнорувати регістр букв</guilabel>.
+      </para>
+      <para>
+	Ви також можете ввести декілька шаблонів, розділених символом
+	(<keycap>;</keycap>). В цьому випадку, "&fr;" вибере всі файли які 
+        задовольняють принаймні одному з введених шаблонів.
+	Наприклад, Ви можете ввести <filename>*.jpg; *.jpeg</filename> для вибору всіх файлів
+        з розширенням <filename>jpg</filename> та <filename>jpeg</filename>. 
+      </para>
+      <para>
+	Ви можете змінити список вибраних файлів використовуючи наступний діалог:
+      </para>
+      <variablelist>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Додавати лише нові файли</guilabel></term>
+	  <listitem><para>
+	     Цей параметр визначає що має трапитись, якщо ви намагаєтесь додати 
+             файл до архіву, який вже містить файл з таким самим ім'ям.
+             Якщо цей параметр не вибрано, файл буде додано до архіву 
+             з заміною його попереднього вмісту. Якщо цей параметр вибрано
+             файл буде додано лише в тому випадку, коли він новіший
+             ніж файл з таким самим ім'ям, що вже міститься в архіві
+             ("&fr;" використовує час модифікації щоб визначити який файл новіший). 
+	  </para>
+	    <tip>
+	      <title>Порада</title>
+	      <para>
+                Ця опція дуже зручна для підтримки оновлення архівних даних.
+		Наприклад, нехай у Вас є архів <filename>backup.tar.gz</filename>, який
+                містить в стислій формі вміст вашого домашнього каталогу, який був 
+                тиждень тому. Ви бажаєте оновити архів таким чином, щоб він 
+                містив вміст вашого домашнього каталогу на поточний момент.
+   		Щоб зробити це, відкрийте архів в програмі "&fr;", клацніть кнопку <guibutton>Додати</guibutton>,
+		виберіть свій домашній каталог, виберіть опцію 
+		<guilabel>Додати лише нові файли</guilabel> та клацніть
+		<guibutton>Гаразд</guibutton>. Це автоматичного додасть до
+  		архіву всі файли створені або змінені протягом 
+                минулої доби. (Але це не видалить з архіву файли яки ви видалили з
+		домашнього каталогу протягом минулої доби). Це набагато швидше ніж 
+                створювати повний архів домашнього каталогу.
+	      </para>
+	    </tip>
+	  </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Включити підкаталоги</guilabel></term>
+	  <listitem><para>
+      		Якщо цей параметр вибрано, "&fr;" вибере файли які задовольняють 
+            	шаблону не лише з поточного каталогу, але й з усіх його підкаталогів.
+     		Зауважте, на відповідність шаблону перевірятимуться лише імена файлів, 
+ 		які знаходяться в підкаталогах, але не імена самих підкаталогів.
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Виключити підкаталоги, які є символічними посиланнями
+	    </guilabel></term>
+	  <listitem><para>
+	      Якщо цей параметр вибрано, "&fr;" не включить файли за каталогів, 
+	      які є символічними посиланнями на інші каталоги). 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Виключити інші файлові системи</guilabel></term>
+	  <listitem><para>
+		Якщо цей параметр вибрано, "&fr;" не включить файли 
+ 		з інших файлових систем.
+		Якщо ви не знайомі з файловою системою Unix - це приблизно 
+		еквівалентно включенню тільки файлів які фізично знаходяться лише на тому
+		самому диску і тому самому розділу диску, що й поточний каталог.
+		Зокрема, цей параметр не включатиме файли з переносних носіїв
+		(CD-диски, дискети, Zip-диски) та файли на інших комп'ютерах мережі
+		(наприклад файли на NFS), за винятком розділу, який містить поточний каталог.
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Виключити резервні файли</guilabel></term>
+	  <listitem><para>	      
+	      Якщо цей параметр вибрано, "&fr;" не включить файли
+	      з іменами, що закінчуються на "тильду" (<keycap>~</keycap>). 
+              По загальній  домовленості, тильда використовується для резервних копій файлів.
+	    </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Виключити сховані файли</guilabel></term>
+	  <listitem><para>
+	      Якщо цей параметр вибрано, "&fr;" не включить файли
+	      з іменами, які починаються з крапки (<keycap>.</keycap>). По загальній домовленості,
+ 	      ці файли використовуються для системної інформації та програмних настроювань,
+	      вони містять виключно дані користувачів.
+	     </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Виключити файли</guilabel></term>
+	  <listitem><para>
+
+		Цей параметр дозволяє виключити файли, ім'я яких задовольняє 
+		вказаному шаблону. Як і у випадку з полем 
+             <guilabel>Selection</guilabel> , шаблон може використовувати
+	      символи <keycap>*</keycap> та <keycap>?</keycap>. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Ігнорувати регістр</guilabel></term>
+	  <listitem><para> Якщо цей параметр вибрано, "&fr;" не відрізнятиме
+		символи верхнього та нижнього регістрів
+	        у назвах файлів. Наприклад шаблон
+	      <filename>*.jpeg</filename> буде відповідати файлам за розширенням
+	      <filename>jpeg</filename>, <filename>JPEG</filename> або
+	      <filename>JpeG</filename>. Якщо цей параметр не вибрано,
+	      "&fr;" буде чутливим до регістру символів, таким чином <filename>*.jpeg</filename>
+	      буде відповідати тільки файлам з розширенням <filename>jpeg</filename>,
+	      але не <filename>JPEG</filename>. 
+	    </para></listitem>
+	</varlistentry>
+      </variablelist>
+    </sect2>
+  </sect1>
+
+  <!-- =========== Extracting Files From an Archive ==================== -->
+
+  <indexterm zone="fr-extracting"> 
+    <primary>Архіви</primary> 
+    <secondary>Добування</secondary>
+  </indexterm> 
+
+  <sect1 id="fr-extracting"> 
+    <title>Добування файлів з архіву</title> 
+    <para>
+      Для добування файлів з архіву виберіть
+      <menuchoice><guimenu>Правка</guimenu> 
+	<guimenuitem>Добути у...</guimenuitem> </menuchoice>
+      або клацніть на кнопку <guibutton>Добути</guibutton> на панелі інструментів.
+      Це призведе до відкриття діалогу <guilabel>Добути</guilabel> який показано на 
+      <xref linkend="fr-extract-fig"/>. Цей діалог буде пояснено
+      більш детально в <xref linkend="fr-extract-dialog"/>. 
+    </para>
+    <para>
+	Ви також можете добути певні файли з архіву. Для цього виберіть в головному вікні програми "&fr;"
+        файли які ви бажаєте добути перед тим як клацнути на кнопку
+       <guibutton>Добути</guibutton>. 
+	Наприклад, ви можете добути окремий файл з архіву.
+    </para>
+    <para>
+	Зауважте, добування файлів за архіву на змінює самого файлу архіву.
+        "&fr;" лишає файл архіву незмінним.
+	Якщо цей архів вам більше не потрібний, ви маєте можливість видалити
+	його, вибрав
+      <menuchoice><guimenu>Архів</guimenu> <guimenuitem>Стерти </guimenuitem> </menuchoice>. 
+    </para>
+    <para>
+	Добуті файли будуть мати такі самі атрибути дозволу та час модифікації, як 
+	і оригінальні файли, це не має значення в який час ви їх добули.
+    </para>
+<!-- ======= Extract Dialog  ============= --> 
+    <sect2 id="fr-extract-dialog">
+      <title>Діалог Добути</title>
+      
+      <figure id="fr-extract-fig">
+	<title>Діалог Добути</title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-extract.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+      <para>
+	Цей діалог має наступні параметри:
+      </para>
+      <variablelist>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Каталог призначення</guilabel></term>
+	  <listitem><para>
+		Це поле показує каталог в який слід добути файли.
+		Ви можете використати кнопку
+	      <guibutton>Вибрати</guibutton> для вибору каталогу.
+		Також можна вибрати один з найчастіше використовуваних
+		каталогів з випадаючого списку або зробити подвійне клацання
+		на одному за каталогів в списку
+	      <guilabel>Закладок</guilabel>.
+	    </para>
+	    <para>
+	        Зауважте, що без вказання спеціальних параметрів, "&fr;" перебудує структури каталогів
+		після добування. Таким чином, якщо ви виберете
+	      <filename>/home/sasha</filename> в полі <guilabel>Тека призначення</guilabel>
+		 та ваш архів містить підкаталог
+	      <filename>doc</filename>, то вміст цього каталогу буде 
+		добуто в в каталог <filename>/home/sasha/doc</filename>.</para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Закладки</guilabel></term>
+	  <listitem><para>
+		В це поле ви можете додати каталоги які Ви найчастіше використовуєте
+		для добування файлів. Для добування в один із каталогів з 
+		списку улюблених зробіть подвійне клацання на ньому.
+		Для того, щоб додати каталог, який в поточний момент вибраний в 
+		полі <guilabel>Тека призначення</guilabel> в список улюблених,
+		клацніть <guilabel>Додати до закладок</guilabel>. 
+		Для видалення каталогу із списку улюблених, виберіть його за допомогою
+		миші та клацніть на кнопку
+	      <guibutton>Видалити</guibutton> .  
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Файли</guilabel></term>
+	  <listitem><para>
+		Цей параметр дозволяє вам вибрати файли які слід добути.
+	      	Можливі такі опції: <guilabel>Всі файли</guilabel> (добуває всі файли із архіву), 
+	      <guilabel>Вибрані файли</guilabel>, та
+	      <guilabel>Файли</guilabel>. Останній параметр добуває
+	      файли ґрунтуючись на шаблоні який ви ввели. Звичайним чином, 
+	      шаблон може використовувати спеціальні символи <keycap>*</keycap> та
+	      <keycap>?</keycap>. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Відтворити структуру каталогів</guilabel></term>
+	  <listitem><para>
+		Якщо цей параметр вибрано (типово), 
+		в процесі добування буде відтворено структуру каталогів.
+		Якщо параметр не вибрано, всі файли архіву (у тому числі файли з
+		підкаталогів) буде добуто у каталог призначення без створення підкаталогів.
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Переписати наявні файли</guilabel> та
+	  <guilabel>Не добувати старші файли</guilabel> </term>
+	  <listitem><para>
+		Ці два параметри контролюють поведінку програми "&fr;" якщо
+		каталог призначення вже містить файли або підкаталоги      
+		з таким самим ім'ям як і ті що мають бути добуті. 
+	    </para>
+	    <para>
+	      	Якщо <guilabel>Переписати наявні файли</guilabel> на вибрано,
+		наявні файли не буде переписано,
+	      	таким чином "&fr;" не буде добувати файли які вже існують в каталозі призначення.
+	    </para>
+	    <para>
+	      Якщо <guilabel>Переписати наявні файли</guilabel> вибрано , а
+	      <guilabel>Не добувати старші файли </guilabel> на вибрано, то "&fr;" добуде
+		всі файли з архіву, переписуючи, в разі необхідності, наявні в 
+		каталозі призначення файли. Це є типовою поведінкою.
+	    </para>
+	    <para>	  	   
+	      	Якщо обидва параметра <guilabel>Переписати наявні файли</guilabel>
+	      	та <guilabel>Не добувати старші файли</guilabel> вибрано
+	      	"&fr;" буде добувати файли лише у разі, якщо вони новіші за наявні.
+		"&fr;" використовує дату останньої модифікації для визначення який з файлів новіший.   
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Пароль</guilabel></term>
+	  <listitem><para>
+		В цьому полі можна вказати пароль, який буде використано
+		 при добуванні файла.
+		Цей параметр буде блоковано, якщо тип архіву не підтримує шифрування.
+		На поточний момент тільки ZIP архіви підтримують цю опцію.
+		Зауважте, шифрування яке впроваджується утилітами архівації
+		є слабким і небезпечним. Якщо вам дійсно потрібна безпека, використовуйте 
+		інструменти з потужними шифруванням, такі як 
+	     <ulink url="http://www.gnupg.org" type="http">the GNU Privacy 
+	     Guard</ulink>.
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Відкрити теку призначення після добування</guilabel></term>
+	  <listitem><para>
+		Якщо цей параметр активізовано, то після добування файлів з архіву
+		каталог призначення буде відкрито за допомогою файлового менеджера 
+		Nautilus. Це єдиний параметр діалогу який буде збережено.
+	  </para></listitem>
+	</varlistentry>
+      </variablelist>	
+    </sect2>	    
+  </sect1>
+
+  <!-- =============  Creating Archives ============================= -->
+  <sect1 id="fr-creating"> 
+    <title>Створення архівів</title> 
+    <para>
+      Для створення нового архіву виберіть з меню
+      <menuchoice><guimenu>Архів</guimenu>
+      <guimenuitem>Створити</guimenuitem></menuchoice> або використовуйте
+	кнопку <guibutton>Створити</guibutton> на панелі інструментів.
+	Це призведе до відкриття діалогу <guilabel>Створення архіву</guilabel>,
+	де вам слід ввести ім'я нового архіву. Без спеціальних вказань, "&fr;" 
+	визначає тип архіву за розширенням назви, тобто якщо ви введете
+  назву файла <filename>archive.tar.bz2</filename>, "&fr;" створить
+  стиснений за допомогою <application>bzip2</application> архів tar.
+	Крім того ви можете вибрати бажаний тип архіву безпосередньо
+	з випадаючого списку <guilabel>Тип архіву</guilabel>, що робити не рекомендується.
+    </para>
+    <para>
+	Після створення архіву ви можете додати в нього файли як описано в 
+	<xref linkend="fr-adding-files"/>.
+    </para> 
+    <para>
+	Зауважте, що "&fr;" запише файл архіву на диск лише після того як ви
+	додасте до нього якісь файли. Завдяки цьому на диск не буде записано порожній архів. 
+    </para>
+  </sect1>
+
+  <!-- ============= Customization ============================= -->
+  <sect1 id="fr-settings"> 
+    <title>Настройки</title> 
+
+    <sect2 id="fr-prefs">
+      <title>Діалог властивості</title>
+      <para>Для налаштування програми "&fr;", виберіть <menuchoice>
+	  <guimenu>Правка</guimenu>
+	  <guimenuitem>Властивості</guimenuitem> </menuchoice>. 
+	Це призведе до відкриття діалогу <guilabel>Властивості</guilabel>, який показано на <xref
+	  linkend="fr-prefs-fig"/>.
+      </para>
+      <figure id="fr-prefs-fig">
+	<title>Діалог властивості</title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-prefs.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+
+      <para>
+	<guilabel>Рівень стиснення</guilabel> регулює силу стискання,
+	якщо вибрати мінімальне, створений архів буде більшим ніж 
+	ви могли би одержати використовуючи більш сильні методи стискання. 
+	Але більш сильні методи стискання потребують більшого часу.
+      </para>
+      <para>
+	<guilabel>Останні архіви</guilabel> 
+	Дозволяє вибрати як багато архівів, які ви найчастіше використовували раніше
+	буде показано меню <guimenu>Архів</guimenu> <guimenu>Останні файли</guimenu>. 
+	Типово, параметр <guilabel>Останні архіви</guilabel> має значення 5, 
+	таким чином буде показано максимум 5 найчастіше використовуваних архівів.
+      </para>
+
+      <para>
+	Секція <guilabel>Видимі стовпчики</guilabel>
+	вибирає які стовпчики потрібно показати в головному вікні програми "&fr;". 
+	<guilabel>Дата модифікації</guilabel> показує час коли файл було
+	модифіковано востаннє.
+	<guilabel> Шлях </guilabel> показує повний шлях до файлу (
+	тобто ім'я файлу, включаючи всі батьківські каталоги, наприклад
+	<filename>/usr/share/doc/file-roller/Copying</filename>). 
+	Значення інших стовпчиків мають бути зрозумілими.</para>
+    </sect2>
+    
+    <sect2 id="fr-shotrcuts">
+      <title>Зміна комбінацій клавіш</title>
+      <para>
+	Для того щоб змінити або додати комбінацію клавіш, яка пов'язана з
+	елементами меню, відкрийте відповідне меню та наведіть курсор миші на 
+	на елемент меню, комбінацію клавіш якого ви бажаєте змінити 
+	(але не клацайте на ньому). Коли курсор знаходиться на потрібному елементі
+	натисніть бажану комбінацію клавіш. Надпис на елементі меню зміниться і одразу ж
+	покаже нову комбінацію клавіш. Тепер ви можете її використовувати.
+      </para>
+      <tip>
+	<title>Порада</title> 
+	<para>
+	Ви можете використовувати цей метод для зміни комбінацій клавіш 
+	в усіх програмах GNOME.
+	</para>
+      </tip>
+      <tip>
+	<title>Порада</title> 
+	<para>
+	В нових версіях GNOME ця можливість типово заблокована, щоб її 
+	активізувати потрібно додати до файлу 
+	 <filename>$(HOME)/.gtkrc-2.0</filename>
+	рядок <command>gtk-can-change-accels = 1</command>.
+        </para>
+      </tip>
+    </sect2>
+  </sect1>
+
+<!-- ============= About ================================== -->
+  <sect1 id="fr-about"> 
+    <title>Про програму "&fr;"</title> 
+
+    <para>Автор програми "&fr;" - Paolo Bacchilega 
+      (<email>paolo.bacch@tin.it</email>). Для отримання додаткової інформації
+	про програму "&fr;" завітайте, будь ласка, на <ulink
+      url="http://fileroller.sourceforge.net" type="http">сторінку програми "&fr;" в Інтернеті</ulink>. 
+    </para>
+    <para>
+ 	Довідку було написано Александром Кириловим <email>kirillov@math.sunysb.edu</email>
+    </para>
+    <para>Переклад українською виконав Максим Дубовий.
+     (<email>dmv@mylinux.com.ua</email>). 
+    </para>
+
+    <para> 
+	Програма росповсюджується за умовами GNU
+      	General Public Lcense версії 2 або більш новою (за бажанням),
+	яка публікується Фондом Вільного Програмного Забеспечення
+	(Free Software Foundation). Копію цієї ліцензії може бути знайдено
+        <ulink url="ghelp:gpl" type="help">тут</ulink> або у файлі
+        COPYING, який додається до вихідного коду програми.
+    </para>
+
+  </sect1> 
+</article>
