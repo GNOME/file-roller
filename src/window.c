@@ -690,7 +690,7 @@ window_update_file_list (FRWindow *window)
 	if (! window->archive_present || window->archive_new) {
 		gtk_list_store_clear (window->list_store);
 		gtk_widget_set_sensitive (window->list_view, FALSE);
-		gtk_widget_hide (window->list_view);
+		gtk_widget_hide_all (window->list_view->parent);
 		return;
 	} else
 		gtk_widget_set_sensitive (window->list_view, TRUE);
@@ -700,7 +700,7 @@ window_update_file_list (FRWindow *window)
 
 	gtk_list_store_clear (window->list_store);
 	if (! GTK_WIDGET_VISIBLE (window->list_view))
-		gtk_widget_show (window->list_view);
+		gtk_widget_show_all (window->list_view->parent);
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->list_store), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, window->sort_type);
 
@@ -2385,7 +2385,7 @@ window_new ()
 
 	/**/
 
-	window = g_new (FRWindow, 1);
+	window = g_new0 (FRWindow, 1);
 
 	/* Create the application. */
 
@@ -2737,6 +2737,7 @@ window_new ()
 	window->batch_mode = FALSE;
 	window->batch_action_list = NULL;
 	window->batch_action = NULL;
+	window->batch_icon = NULL;
 	window->extract_interact_use_default_dir = FALSE;
 
 	window->password = NULL;
@@ -2921,6 +2922,11 @@ window_close (FRWindow *window)
 	if (window->folder_to_view != NULL) {
 		g_free (window->folder_to_view);
 		window->folder_to_view = NULL;
+	}
+
+	if (window->batch_icon != NULL) {
+		g_object_unref (window->batch_icon);
+		window->batch_icon = NULL;
 	}
 
 	_window_free_batch_data (window);
@@ -3192,7 +3198,9 @@ window_archive_open (FRWindow   *window,
 
 	window->archive_present = FALSE;	
 
+	window->archive->fake_load = window->batch_mode;
 	success = fr_archive_load (window->archive, window->archive_filename);
+
 	if (! success) {
 		GtkWidget *dialog;
 
@@ -3217,6 +3225,7 @@ window_archive_reload (FRWindow *window)
 	if (window->archive_new)
 		return;
 
+	window->archive->fake_load = window->batch_mode;
 	fr_archive_reload (window->archive);
 }
 
@@ -3517,11 +3526,54 @@ window_get_file_list_pattern (FRWindow    *window,
 /* -- window_start/stop_activity_mode -- */
 
 
+static void
+set_icon_transparency (FRWindow *window,
+		       int       transparency)
+{
+	GdkPixbuf *orig = window->batch_icon;
+	GdkPixbuf *icon;
+	int        w, h;
+	
+	w = gdk_pixbuf_get_width (orig);
+	h = gdk_pixbuf_get_height (orig);
+	
+	icon = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (orig),
+			       TRUE,
+			       gdk_pixbuf_get_bits_per_sample (orig),
+			       w, h);
+	gdk_pixbuf_fill (icon, 0x00000000);
+	
+	gdk_pixbuf_composite (orig, icon,
+			      0, 0, w, h,
+			      0.0, 0.0, 1.0, 1.0,
+			      GDK_INTERP_NEAREST,
+			      transparency);
+	
+	gtk_image_set_from_pixbuf (GTK_IMAGE (window->batch_image), icon);
+	
+	g_object_unref (icon);  
+}
+
+
 static gint
 activity_cb (gpointer data)
 {
-        FRWindow *window = data;
-        gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->progress)); 
+	FRWindow   *window       = data;
+	static int  transparency = 0;
+	static int  direction    = 1;
+	
+	if (window->batch_mode && (window->batch_icon != NULL)) {
+		set_icon_transparency (window, transparency);
+		
+		transparency += direction * 17;
+		
+		if (transparency >= 255) 
+			direction = -1;
+		else if (transparency <= 0)
+			direction = +1;
+	} else
+		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->progress)); 
+	
         return TRUE;
 }
 
@@ -3545,6 +3597,9 @@ window_stop_activity_mode (FRWindow *window)
 
         if (--window->activity_ref > 0)
                 return;
+
+	if (window->batch_mode && (window->batch_icon != NULL)) 
+		set_icon_transparency (window, 255);
 
         if (window->activity_timeout_handle == 0)
                 return;
@@ -4171,7 +4226,12 @@ open_batch_window (FRWindow *window)
 	
 	icon_file = gnome_program_locate_file (NULL, GNOME_FILE_DOMAIN_APP_PIXMAP, "file-roller.png", TRUE, NULL);
 	if (icon_file != NULL) {
-		image = gtk_image_new_from_file (icon_file);
+		window->batch_icon = gdk_pixbuf_new_from_file (icon_file, NULL);
+		g_object_ref (window->batch_icon);
+
+		image = gtk_image_new_from_pixbuf (window->batch_icon);
+		window->batch_image = image;
+
 		gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
 		g_free (icon_file);
 	}
@@ -4224,8 +4284,11 @@ window_batch_mode_stop (FRWindow *window)
 
 	window->extract_interact_use_default_dir = FALSE;
 	window->batch_mode = FALSE;
+
 	close_batch_window (window);
+
 	gtk_widget_show (window->app);
+	window_archive_close (window);
 }
 
 

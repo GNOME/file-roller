@@ -1,4 +1,19 @@
+2002-09-28  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command.h:
+	* src/fr-command.c:
+	* src/fr-archive.h:
+	* src/fr-archive.c:
+	* src/window.c: do not load the archive if in batch mode.
+	(activity_cb, set_icon_transparency): animate the icon when there is
+	activity in batch mode.
+	(window_update_file_list): hide/show the scrolled window not the
+	list view.
+
 2002-09-25  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/main.c (command_done, viewer_done): use g_spawn_sync instead
+	of gnome_execute_shell.
 
 	* src/window.c: added break; to default cases.
 

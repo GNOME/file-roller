@@ -179,6 +179,9 @@ typedef struct {
 	GtkWidget *batch_message_lbl;
 	GtkWidget *batch_quit_button;
 	GtkWidget *batch_help_button;
+	GtkWidget *batch_image;
+       
+	GdkPixbuf *batch_icon;
 
 	gboolean   batch_mode;          /* whether we are in a non interactive
 					 * mode. */

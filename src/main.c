@@ -225,12 +225,17 @@ viewer_done (ViewerData *vdata)
 {
 	if ((vdata->temp_dir != NULL) 
 	    && path_is_dir (vdata->temp_dir)) {
-		char *command;
-		command = g_strconcat ("rm -rf ",
-				       vdata->temp_dir,
-				       NULL);
-		gnome_execute_shell (g_get_tmp_dir (), command); 
-		g_free (command);
+		char *argv[4];
+		
+		argv[0] = "rm";
+		argv[1] = "-rf";
+		argv[2] = vdata->temp_dir;
+		argv[3] = NULL;
+		g_spawn_sync (g_get_tmp_dir (), argv, NULL, 
+			      G_SPAWN_SEARCH_PATH, 
+			      NULL, NULL, 
+			      NULL, NULL, NULL,
+			      NULL);
 	}
 
 	g_free (vdata->filename);
@@ -249,15 +254,17 @@ command_done (CommandData *cdata)
 {
 	if ((cdata->temp_dir != NULL) 
 	    && path_is_dir (cdata->temp_dir)) {
-		char *command;
-		command = g_strconcat ("rm -rf ",
-				       cdata->temp_dir,
-				       NULL);
-#ifdef DEBUG
-		g_print ("rm -rf %s\n", cdata->temp_dir);
-#endif
-		gnome_execute_shell (g_get_tmp_dir (), command);
-		g_free (command);
+		char *argv[4];
+		
+		argv[0] = "rm";
+		argv[1] = "-rf";
+		argv[2] = cdata->temp_dir;
+		argv[3] = NULL;
+		g_spawn_sync (g_get_tmp_dir (), argv, NULL, 
+			      G_SPAWN_SEARCH_PATH, 
+			      NULL, NULL, 
+			      NULL, NULL, NULL,
+			      NULL);
 	}
 
 	g_free (cdata->command);

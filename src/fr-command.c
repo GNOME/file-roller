@@ -186,6 +186,7 @@ fr_command_init (FRCommand *comm)
 	comm->filename = NULL;
 	comm->e_filename = NULL;
 	comm->file_list = NULL;
+	comm->fake_load = FALSE;
 }
 
 
@@ -322,7 +323,16 @@ fr_command_list (FRCommand *comm)
 	comm->action = FR_ACTION_LIST;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm);
+
+	if (comm->fake_load) {
+		comm->process->error.type = FR_PROC_ERROR_NONE;
+		g_signal_emit (G_OBJECT (comm), 
+			       fr_command_signals[DONE], 
+			       0,
+			       comm->action,
+			       &comm->process->error);
+	} else 
+		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm);
 }
 
 

@@ -123,6 +123,7 @@ fr_archive_init (FRArchive *archive)
 	archive->command = NULL;
 	archive->process = fr_process_new ();
 	archive->is_compressed_file = FALSE;
+	archive->fake_load = FALSE;
 }
 
 
@@ -390,7 +391,8 @@ fr_archive_load (FRArchive  *archive,
 			  "done",
 			  G_CALLBACK (action_performed),
 			  archive);
-	
+
+	archive->command->fake_load = archive->fake_load;
 	fr_command_list (archive->command);
 
 	return TRUE;
@@ -403,6 +405,7 @@ fr_archive_reload (FRArchive *archive)
 	g_return_if_fail (archive != NULL);
 	g_return_if_fail (archive->filename != NULL);
 
+	archive->command->fake_load = archive->fake_load;
 	fr_command_list (archive->command);
 }
 

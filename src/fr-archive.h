@@ -48,6 +48,10 @@ struct _FRArchive {
 					  * or a compressed file. */
 	gboolean   read_only;            /* Whether archive is read-only
 					  * or not. */
+
+	gboolean   fake_load;            /* If TRUE archives are not read when
+					  * fr_archive_load is invoked, used
+					  * in batch mode. */
 };
 
 struct _FRArchiveClass {

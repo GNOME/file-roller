@@ -70,6 +70,9 @@ struct _FRCommand
 	FRAction   action;       /* current action. */
 	char      *filename;     /* archive filename. */
 	char      *e_filename;   /* escaped archive filename. */
+
+	gboolean   fake_load;    /* if TRUE does nothing when the list 
+				  * operation is invoked. */
 };
 
 struct _FRCommandClass
