@@ -204,6 +204,11 @@ ok_clicked_cb (GtkWidget  *widget,
 	skip_newer = !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton)) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));
 	junk_paths = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_recreate_dir_checkbutton));
 
+	eel_gconf_set_boolean (PREF_EXTRACT_OVERWRITE, overwrite);
+	if (!gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton)))
+		eel_gconf_set_boolean (PREF_EXTRACT_SKIP_NEWER, skip_newer);
+	eel_gconf_set_boolean (PREF_EXTRACT_RECREATE_FOLDERS, !junk_paths);
+
 	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton));
 	pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_files_radiobutton));
 
@@ -548,6 +553,15 @@ dlg_extract (GtkWidget *widget,
 		gtk_widget_set_sensitive (data->e_password_hbox, FALSE);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));
+
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_OVERWRITE, FALSE));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_SKIP_NEWER, FALSE));
+	if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton))) {
+		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton), TRUE);
+		gtk_widget_set_sensitive (data->e_not_newer_checkbutton, FALSE);
+	}
+	
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_recreate_dir_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_RECREATE_FOLDERS, TRUE));
 
 	/* Set the signals handlers. */
 

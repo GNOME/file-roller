@@ -154,19 +154,6 @@
       </schema>
 
       <schema>
-        <key>/schemas/apps/file-roller/general/view_folder_after_extraction</key>
-	<applyto>/apps/file-roller/general/view_folder_after_extraction</applyto>
-        <owner>file-roller</owner>
-        <type>bool</type>
-        <default>false</default>
-        <locale name="C">
-          <short>View destination folder after extraction</short>
-          <long>Whether to display (with Nautilus) the destination folder 
-	    after an extraction operation.</long>
-        </locale>
-      </schema>
-
-      <schema>
         <key>/schemas/apps/file-roller/general/compression_level</key>	
 	<applyto>/apps/file-roller/general/compression_level</applyto>
         <owner>file-roller</owner>
@@ -189,6 +176,55 @@
           <short></short>
           <long>
           </long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/dialogs/extract/view_destination_folder</key>
+	<applyto>/apps/file-roller/dialogs/extract/view_destination_folder</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>false</default>
+        <locale name="C">
+          <short>View destination folder after extraction</short>
+          <long>Whether to display (with Nautilus) the destination folder 
+	    after an extraction operation.</long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/dialogs/extract/overwrite</key>
+	<applyto>/apps/file-roller/dialogs/extract/overwrite</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>false</default>
+        <locale name="C">
+          <short>Overwrite existing files</short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/dialogs/extract/skip_newer</key>
+	<applyto>/apps/file-roller/dialogs/extract/skip_newer</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>false</default>
+        <locale name="C">
+          <short>Do not overwrite newer files</short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/dialogs/extract/recreate_folders</key>
+	<applyto>/apps/file-roller/dialogs/extract/recreate_folders</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>false</default>
+        <locale name="C">
+          <short>Recreate the folders stored in the archive</short>
+          <long></long>
         </locale>
       </schema>
 

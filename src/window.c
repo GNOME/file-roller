@@ -861,24 +861,13 @@ _window_update_statusbar_list_info (FRWindow *window)
 
 	if (tot_n == 0)
 		archive_info = g_strdup ("");
-	else if (tot_n == 1)
-		archive_info = g_strdup_printf (_("1 file (%s)"),
-						size_txt);
-	else
-		archive_info = g_strdup_printf (_("%d files (%s)"),
-						tot_n,
-						size_txt);
-
+	else 
+		archive_info = g_strdup_printf (ngettext ("%d file (%s)", "%d files (%s)", tot_n), tot_n, size_txt);
 
 	if (sel_n == 0)
 		selected_info = g_strdup ("");
-	else if (sel_n == 1)
-		selected_info = g_strdup_printf (_("1 file selected (%s)"), 
-						 sel_size_txt);
-	else
-		selected_info = g_strdup_printf (_("%d files selected (%s)"), 
-						 sel_n, 
-						 sel_size_txt);
+	else 
+		selected_info = g_strdup_printf (ngettext ("%d file selected (%s)", "%d files selected (%s)", sel_n), sel_n, sel_size_txt);
 
 	info = g_strconcat (archive_info,
 			    ((sel_n == 0) ? NULL : ", "), 
@@ -1384,14 +1373,36 @@ handle_errors (FRWindow    *window,
 	       FRAction     action, 
 	       FRProcError *error)
 {
-	if (error->type == FR_PROC_ERROR_STOPPED) {
+	if (error->type == FR_PROC_ERROR_ASK_PASSWORD) {
+		GtkWidget *dialog;
+		char      *msg;
+
+		if (window->password == NULL)
+			msg = _("This archive is password protected.\nPlease specify a password with the command: Edit->Password");
+		else
+			msg = _("The specified password is not valid, please specify a new password with the command: Edit->Password");
+
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  0,
+						  GTK_STOCK_DIALOG_WARNING,
+						  _("Could not perform the operation"),
+						  msg,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+						  NULL);
+		g_signal_connect (dialog, 
+				  "response",
+				  G_CALLBACK (gtk_widget_destroy), 
+				  NULL);
+		gtk_widget_show (dialog);
+
+	} else if (error->type == FR_PROC_ERROR_STOPPED) {
 		GtkWidget *dialog;
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						  0,
 						  GTK_STOCK_DIALOG_WARNING,
 						  _("Operation stopped"),
 						  NULL,
-						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
 		g_signal_connect (dialog, 
 				  "response",
@@ -2016,15 +2027,7 @@ window_drag_data_received  (GtkWidget          *widget,
 				drag_drop_add_file_list (window);
 
 			} else if (r == 1) { /* Open */
-				/* if this window already has an archive 
-				 * create a new window. */
-				if (window->archive_present) {
-					FRWindow *new_window;
-					new_window = window_new ();
-					gtk_widget_show (new_window->app);
-					window_archive_open (new_window, list->data, GTK_WINDOW (new_window->app));
-				} else
-					window_archive_open (window, list->data, GTK_WINDOW (window->app));
+				window_archive_open (window, list->data, GTK_WINDOW (window->app));
 			}
  		} else {
 			/* this way we do not free the list saved in
@@ -2671,7 +2674,7 @@ window_progress_cb (FRCommand  *command,
 
 	else {
 		window->progress_pulse = FALSE;
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->pd_progress_bar), fraction);
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->pd_progress_bar), CLAMP (fraction, 0.0, 1.0));
 	}
 
 	return TRUE;
@@ -3012,6 +3015,7 @@ window_new ()
 					    GTK_SIGNAL_FUNC (view_or_open_cb), 
 					    window,
 					    TOOLBAR_SEP1 + i++);
+
 	gnome_app_set_toolbar (GNOME_APP (window->app), GTK_TOOLBAR (toolbar));
 
 	/* Create popup menus. */
@@ -3171,6 +3175,7 @@ window_new ()
 						"application/x-compress",
 						"application/x-lzop",
 						"application/x-zoo",
+						"application/x-stuffit",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, 5));
@@ -3480,14 +3485,21 @@ window_archive_new (FRWindow   *window,
 
 
 gboolean
-window_archive_open (FRWindow   *window,
+window_archive_open (FRWindow   *current_window,
 		     const char *filename,
 		     GtkWindow  *parent)
 {
+	FRWindow *window;
 	GError   *gerror;
 	gboolean  success;
 
 	g_return_val_if_fail (window != NULL, FALSE);
+
+	if (current_window->archive_present) {
+		window = window_new ();
+		gtk_widget_show (window->app);
+	} else
+		window = current_window;
 
 	window_archive_close (window);
 

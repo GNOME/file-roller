@@ -46,7 +46,7 @@ GnomeUIInfo toolbar_data[] = {
 	  open_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_OPEN,
 	  0, 0, NULL },
-	
+
 	GNOMEUIINFO_SEPARATOR,
 	
 	GNOMEUIINFO_SEPARATOR,

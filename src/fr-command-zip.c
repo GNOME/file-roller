@@ -390,8 +390,12 @@ static void
 fr_command_zip_handle_error (FRCommand   *comm, 
 			     FRProcError *error)
 {
-	if ((error->type == FR_PROC_ERROR_GENERIC) && (error->status <= 1))
-		error->type = FR_PROC_ERROR_NONE;
+	if (error->type == FR_PROC_ERROR_GENERIC) {
+		if (error->status <= 1)
+			error->type = FR_PROC_ERROR_NONE;
+		else if (error->status == 82)
+			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+	}
 }
 
 

@@ -38,17 +38,6 @@
 
 
 void
-new_window_cb (GtkWidget *widget, 
-	       void      *data)
-{
-	FRWindow *window;
-
-	window = window_new ();
-	gtk_widget_show (window->app);
-}
-
-
-void
 close_window_cb (GtkWidget *widget, 
 		 void      *data)
 {
@@ -517,7 +506,7 @@ static void
 open_file_ok_cb (GtkWidget *w,
                  GtkWidget *file_sel)
 {
-	FRWindow   *window;
+	FRWindow   *window = NULL;
 	const char *path;
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");

@@ -41,9 +41,13 @@
 #define PREF_UI_STATUSBAR          "/apps/file-roller/ui/view_statusbar"
 
 #define PREF_EDIT_EDITORS          "/apps/file-roller/general/editors"
-#define PREF_EXTRACT_VIEW_FOLDER   "/apps/file-roller/general/view_folder_after_extraction"
 #define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/general/compression_level"
 #define PREF_MIGRATE_DIRECTORIES   "/apps/file-roller/general/migrate_directories"
+
+#define PREF_EXTRACT_VIEW_FOLDER      "/apps/file-roller/dialogs/extract/view_destination_folder"
+#define PREF_EXTRACT_OVERWRITE        "/apps/file-roller/dialogs/extract/overwrite"
+#define PREF_EXTRACT_SKIP_NEWER       "/apps/file-roller/dialogs/extract/skip_newer"
+#define PREF_EXTRACT_RECREATE_FOLDERS "/apps/file-roller/dialogs/extract/recreate_folders"
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"

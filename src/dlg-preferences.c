@@ -219,6 +219,10 @@ dlg_preferences (GtkWidget *caller,
 					  "toggled",
 					  G_CALLBACK (apply_cb),
 					  data);
+	g_signal_connect (G_OBJECT (data->compression_optionmenu),
+			  "changed",
+			  G_CALLBACK (apply_cb),
+			  data);
 
 	/* run dialog. */
 

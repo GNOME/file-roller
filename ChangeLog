@@ -1,5 +1,33 @@
 2003-11-10  Paolo Bacchilega  <paolo.bacch@tin.it>
 
+	* src/dlg-preferences.c (dlg_preferences): instantly apply
+	compression level changes.
+
+	* src/menu.h: remove the "View->New Window" command.
+
+	* src/fr-command-unstuff.c: 
+	* src/fr-command-unstuff.h: added unstuff support. Patch by
+	Bastien Nocera. 
+
+	* component/File_Roller_Component.server.in.in: remove "Extract
+	To..."; add "Extract Here" (bug #125102)
+
+	* src/preferences.h:
+	* src/dlg-extract.c (dlg_extract): store extraction options (bug
+	#126129) 
+
+	* src/file_roller.glade: make the labels selectable (bug #120593)
+
+	* src/typedefs.h: 
+	* src/fr-command-zip.c (fr_command_zip_handle_error): 
+	* src/window.c (handle_errors): capture the "incorrect password"
+	exception and ask the user to enter a new password.
+	(_window_update_statusbar_list_info): use ngettext.
+	(window_archive_open): open a new window if the current one
+	is not void.
+
+2003-11-10  Paolo Bacchilega  <paolo.bacch@tin.it>
+	
 	[ File Roller 2.4.2 released ] 
 
 	* src/fr-command-zip.c (add_password_arg): escape the char " if

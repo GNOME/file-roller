@@ -316,8 +316,7 @@ enum {
 	VIEW_MENU_SEP4,
 	VIEW_MENU_SORT_LIST,
 	VIEW_MENU_SEP5,
-	VIEW_MENU_LAST_OUTPUT,
-	VIEW_MENU_NEW_WINDOW
+	VIEW_MENU_LAST_OUTPUT
 };
 
 GnomeUIInfo view_menu[] = {
@@ -360,12 +359,6 @@ GnomeUIInfo view_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_Last Output"), N_("View the output produced by the last executed command"), 
 	  last_output_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  0, 0, NULL },
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("New _Window"), N_("Open a new window"), 
-	  new_window_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 

@@ -36,6 +36,7 @@
 #include "fr-command-lha.h"
 #include "fr-command-rar.h"
 #include "fr-command-tar.h"
+#include "fr-command-unstuff.h"
 #include "fr-command-zip.h"
 #include "fr-command-zoo.h"
 #include "fr-error.h"
@@ -258,6 +259,9 @@ create_command_from_mime_type (FRArchive  *archive,
 	} else if (is_mime_type (mime_type, "application/x-arj")) {
 		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
+	} else if (is_mime_type (mime_type, "application/x-stuffit")) {
+		archive->command = fr_command_unstuff_new (archive->process,
+							   filename);
 	} else 
 		return FALSE;
 
@@ -392,6 +396,10 @@ create_command_from_filename (FRArchive  *archive,
 	} else if (file_extension_is (filename, ".arj")) {
 		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
+	} else if (file_extension_is (filename, ".bin")
+		   || file_extension_is (filename, ".sit")) {
+		archive->command = fr_command_unstuff_new (archive->process,
+							   filename);
 	} else if (loading) {
 		if (file_extension_is (filename, ".gz")
 		    || file_extension_is (filename, ".z")
@@ -1446,6 +1454,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 {
 	static char * ext[] = {
 		".arj",
+		".bin",
 		".bz", 
 		".bz2", 
 		".ear",
@@ -1454,6 +1463,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 		".lzh",
 		".lzo",
 		".rar",
+		".sit",
 		".tar", 
 		".tar.bz", 
 		".tar.bz2", 

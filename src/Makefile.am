@@ -79,6 +79,8 @@ file_roller_SOURCES = 			\
 	fr-command-rar.h		\
 	fr-command-tar.c		\
 	fr-command-tar.h		\
+	fr-command-unstuff.c		\
+	fr-command-unstuff.h		\
 	fr-command-zip.c		\
 	fr-command-zip.h		\
 	fr-command-zoo.c		\
@@ -133,3 +135,6 @@ EXTRA_DIST = 			\
 	fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)
+
+DISTCLEANFILES =                \
+	$(schema_DATA)

@@ -24,9 +24,6 @@
 #define MENU_CALLBACKS_H
 
 
-void   new_window_cb                 (GtkWidget *widget, 
-				      void *data);
-
 void   close_window_cb               (GtkWidget *widget, 
 				      void *data);
 
