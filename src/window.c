@@ -5509,6 +5509,8 @@ window_set_toolbar_visibility (FRWindow   *window,
 		gtk_widget_show (window->toolbar->parent);
 	else
 		gtk_widget_hide (window->toolbar->parent);
+
+	set_active (window, "ViewToolbar", visible);
 }
 
 
@@ -5516,10 +5518,14 @@ void
 window_set_statusbar_visibility  (FRWindow   *window,
 				  gboolean    visible)
 {
+	g_return_if_fail (window != NULL);
+
 	if (visible) 
 		gtk_widget_show (window->statusbar);
 	else
 		gtk_widget_hide (window->statusbar);
+
+	set_active (window, "ViewStatusbar", visible);
 }
 
 
