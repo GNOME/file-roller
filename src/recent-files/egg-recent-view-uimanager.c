@@ -170,6 +170,7 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 			continue;
 
 		view->item_list = g_list_prepend (view->item_list, item);
+		egg_recent_item_ref (item);
 
 		name = g_strdup_printf (EGG_RECENT_NAME_PREFIX"%u", index);
 
@@ -201,7 +202,7 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 			g_free (tooltip);
 		}
 		egg_recent_item_ref (item);
-		g_object_set_data_full (G_OBJECT (action), "egg_recent_uri", item, (GFreeFunc)egg_recent_item_unref);
+		g_object_set_data_full (G_OBJECT (action), "egg_recent_uri", item, (GFreeFunc) egg_recent_item_unref);
 
 		if (view->action_callback != NULL) {
 			GClosure *closure;
