@@ -83,7 +83,7 @@ GnomeUIInfo file_menu[] = {
 	  N_("_Information"), N_("Show information about the archive"),
 	  dlg_prop, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
-	  0, 0, NULL },
+	  'i', GDK_CONTROL_MASK, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
 

@@ -181,6 +181,8 @@ ok_clicked_cb (GtkWidget  *widget,
 	}
 
 	window_set_extract_default_dir (window, extract_to_dir);
+	if (window->batch_mode)
+		window->extract_interact_use_default_dir = TRUE;
 
 	overwrite = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton));
 	skip_newer = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));

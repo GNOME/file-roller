@@ -2604,6 +2604,7 @@ window_new ()
 	window->batch_mode = FALSE;
 	window->batch_action_list = NULL;
 	window->batch_action = NULL;
+	window->extract_interact_use_default_dir = FALSE;
 
 	window->password = NULL;
 	window->compression = preferences.compression;
@@ -3703,6 +3704,11 @@ window_set_extract_default_dir (FRWindow *window,
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (default_dir != NULL);
 
+	/* do not change this dir while it's used by the non-interactive
+	 * extraction operation. */
+	if (window->extract_interact_use_default_dir)
+		return;
+
 	if (window->extract_default_dir != NULL) 
 		g_free (window->extract_default_dir);
 	window->extract_default_dir = g_strdup (default_dir);
@@ -3883,7 +3889,7 @@ _window_batch_start_current_action (FRWindow *window)
 	case FR_BATCH_ACTION_EXTRACT:
 		window_archive_extract (window,
 					NULL,
-					(gchar*) action->data,
+					(char*) action->data,
 					FALSE,
 					TRUE,
 					FALSE,
@@ -3891,8 +3897,19 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
-		window_push_message (window, _("Extract archive"));
-		dlg_extract (NULL, window);
+		if (window->extract_interact_use_default_dir 
+		    && (window->extract_default_dir != NULL))
+			window_archive_extract (window,
+						NULL,
+						window->extract_default_dir,
+						FALSE,
+						TRUE,
+						FALSE,
+						window->password);
+		else {
+			window_push_message (window, _("Extract archive"));
+			dlg_extract (NULL, window);
+		}
 		break;
 
 	case FR_BATCH_ACTION_CLOSE:
@@ -3998,7 +4015,8 @@ window_batch_mode_stop (FRWindow *window)
 {
 	if (!window->batch_mode) 
 		return;
-		
+
+	window->extract_interact_use_default_dir = FALSE;
 	window->batch_mode = FALSE;
 	close_batch_window (window);
 	gtk_widget_show (window->app);

@@ -174,10 +174,11 @@ typedef struct {
 	GtkWidget *batch_quit_button;
 	GtkWidget *batch_help_button;
 
-	gboolean batch_mode;          /* whether we are in a non interactive
-				       * mode. */
-	GList *  batch_action_list;   /* FRActionDescription * elements */
-	GList *  batch_action;        /* current action. */
+	gboolean   batch_mode;          /* whether we are in a non interactive
+					 * mode. */
+	GList     *batch_action_list;   /* FRActionDescription * elements */
+	GList     *batch_action;        /* current action. */
+	gboolean   extract_interact_use_default_dir;
 } FRWindow;
 
 
