@@ -2110,18 +2110,6 @@ make_url_list (GList    *list,
 }
 
 
-static char *
-_get_temp_dir_name ()
-{
-	static int count = 0;
-	return g_strdup_printf ("%s%s.%d.%d",
-				g_get_tmp_dir (),
-				"/file-roller",
-				getpid (),
-				count++);
-}
-
-
 static void 
 add_selected_name (GtkTreeModel *model,
 		   GtkTreePath  *path,
@@ -2182,7 +2170,7 @@ file_list_drag_begin (GtkWidget          *widget,
 		window->drag_file_list_names = _get_selection_as_names (window);
 
 	if (window->drag_file_list != NULL) {
-		window->drag_temp_dir = _get_temp_dir_name ();
+		window->drag_temp_dir = get_temp_work_dir_name ();
 		window->drag_temp_dirs = g_list_prepend (window->drag_temp_dirs, window->drag_temp_dir);
 
 		ensure_dir_exists (window->drag_temp_dir, 0700);
@@ -3626,7 +3614,7 @@ window_archive_save_as (FRWindow      *window,
 
 	fr_process_clear (window->archive->process);
 
-	window->convert_data.temp_dir = _get_temp_dir_name ();
+	window->convert_data.temp_dir = get_temp_work_dir_name ();
 	ensure_dir_exists (window->convert_data.temp_dir, 0700);
 
 	fr_command_extract (window->archive->command,
@@ -4281,7 +4269,7 @@ window_view_file (FRWindow *window,
 	vdata = g_new (ViewerData, 1);
 	vdata->window = window;
 	vdata->process = NULL;
-	vdata->temp_dir = _get_temp_dir_name ();
+	vdata->temp_dir = get_temp_work_dir_name ();
 	ensure_dir_exists (vdata->temp_dir, 0700);
 
 	vdata->filename = g_strconcat (vdata->temp_dir,
@@ -4364,7 +4352,7 @@ window_open_files (FRWindow *window,
 	cdata->process = NULL;
 	cdata->command = g_strdup (command);
 	cdata->file_list = NULL;
-	cdata->temp_dir = _get_temp_dir_name ();
+	cdata->temp_dir = get_temp_work_dir_name ();
 	ensure_dir_exists (cdata->temp_dir, 0700);
 
 	for (scan = file_list; scan; scan = scan->next) {

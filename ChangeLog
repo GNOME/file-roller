@@ -1,3 +1,12 @@
+2003-10-04  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command-cfile.c (fr_command_cfile_extract): 
+	* src/window.c (file_list_drag_begin, window_archive_save_as) 
+	(window_view_file, window_open_files): use the function below.
+
+	* src/file-utils.c (get_temp_work_dir_name): make this function
+	global and check for the folder existence.
+
 2003-09-30  Christian Rose  <menthos@menthos.com>
 
 	* configure.in: Added "eu" to ALL_LINGUAS.

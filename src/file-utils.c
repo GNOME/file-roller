@@ -928,3 +928,26 @@ get_last_field (const char *line,
 
 	return field;
 }
+
+
+#define MAX_TRIES 50
+
+
+char *
+get_temp_work_dir_name ()
+{
+	char       *result = NULL;
+	static int  count = 0;
+	int         try = 0;
+
+	do {
+		result = g_strdup_printf ("%s%s.%d.%d",
+					  g_get_tmp_dir (),
+					  "/file-roller",
+					  getpid (),
+					  count++);
+	} while (g_file_test (result, G_FILE_TEST_EXISTS)
+		 && (try++ < MAX_TRIES));
+
+	return result;
+}

@@ -31,6 +31,11 @@
 
 #define FILENAME_MAX_LENGTH 30 /* FIXME: find out the best value */
 
+#define get_home_relative_dir(x)        \
+        g_strconcat (g_get_home_dir (), \
+                     "/",               \
+                     (x),               \
+                     NULL)
 
 gboolean            path_is_file                 (const gchar *s);
 
@@ -100,10 +105,8 @@ char **             split_line                   (const char *line,
 const char *        get_last_field               (const char *line,
 						  int         last_field);
 
-#define get_home_relative_dir(x)        \
-        g_strconcat (g_get_home_dir (), \
-                     "/",               \
-                     (x),               \
-                     NULL)
+
+char *              get_temp_work_dir_name       ();
+
 
 #endif /* FILE_UTILS_H */

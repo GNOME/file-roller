@@ -163,18 +163,6 @@ fr_command_cfile_delete (FRCommand *comm,
 }
 
 
-static gchar *
-get_temp_dir_name ()
-{
-	static int count = 0;
-	return g_strdup_printf ("%s%s.%d.%d",
-				g_get_tmp_dir (),
-				"/file-roller-cfile",
-				getpid (),
-				count++);
-}
-
-
 static void
 fr_command_cfile_extract (FRCommand  *comm,
 			  GList      *file_list,
@@ -191,7 +179,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 	char           *temp_file;
 	char           *uncompr_file;
 
-	temp_dir = get_temp_dir_name ();
+	temp_dir = get_temp_work_dir_name ();
 	e_temp_dir = shell_escape (temp_dir);
 
 	/* create a temp dir. */

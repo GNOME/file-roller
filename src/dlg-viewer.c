@@ -95,8 +95,7 @@ load_document (GtkTextBuffer *text_buf,
                         
                         g_free (file_contents);
 
-                        if ((conv_error != NULL) || 
-                            !g_utf8_validate (converted_file_contents, bytes_written, NULL)) {
+                        if ((conv_error != NULL) || ! g_utf8_validate (converted_file_contents, bytes_written, NULL)) {
                                 /* Coversion failed */
                                 if (conv_error != NULL)
                                         g_error_free (conv_error);
@@ -107,12 +106,12 @@ load_document (GtkTextBuffer *text_buf,
 
                                 if (converted_file_contents != NULL)
                                         g_free (converted_file_contents);
-                                
-                                return;
-                        }
 
-                        file_contents = converted_file_contents;
-                        file_size = bytes_written;
+				return;
+                        } 
+
+			file_contents = converted_file_contents;
+			file_size = bytes_written;
                 }
 		
                 /* Insert text in the buffer */
