@@ -102,7 +102,6 @@ fr-marshal.c: fr-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=fr_marshal >> $@
 
 file_roller_LDADD =					\
-	@LIBOBJS@					\
 	$(top_builddir)/src/recent-files/librecent.a	\
 	$(FR_LIBS)
 
