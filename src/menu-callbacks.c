@@ -574,29 +574,33 @@ file_sel_destroy_cb (GtkWidget    *w,
 
 
 static void 
-copy_archive_ok_cb (GtkWidget    *w,
-		    CopyMoveData *data)
+copy_or_move_archive_ok_cb (GtkWidget    *w,
+			    CopyMoveData *data)
 {
-	FRWindow   *window;
-	const char *path;
-	char       *new_filename;
+	FRWindow    *window;
+	const char  *path;
+	const char  *filename;
+	char        *folder;
+	char        *new_path;
 
 	gtk_widget_hide (data->file_sel);
 
 	window = data->window;
 	path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (data->file_sel));
 
-	if (path == NULL) {
+	if ((path == NULL) || (*path == 0)) {
                 gtk_widget_destroy (data->file_sel);
 		return;
 	}
 
-	if (path[strlen (path) - 1] == '/')
-		new_filename = g_strconcat (path, file_name_from_path (window->archive_filename), NULL);
-	else
-		new_filename = g_strconcat (path, "/", file_name_from_path (window->archive_filename), NULL);
+	filename = file_name_from_path (path);
+	if ((filename == NULL) || (*filename == 0))
+		filename = file_name_from_path (window->archive_filename);
+	folder = remove_level_from_path (path);
+	new_path = g_build_filename (folder, filename, NULL);
+	g_free (folder);
 
-	if (path_is_file (new_filename)) {
+	if (path_is_file (new_path)) {
 		GtkWidget *d;
 		int        r;
 
@@ -612,7 +616,7 @@ copy_archive_ok_cb (GtkWidget    *w,
 		gtk_widget_destroy (GTK_WIDGET (d));
 		
 		if (r != GTK_RESPONSE_YES) {
-			g_free (new_filename);
+			g_free (new_path);
 			gtk_widget_destroy (data->file_sel);
 			return;
 		}
@@ -620,9 +624,9 @@ copy_archive_ok_cb (GtkWidget    *w,
 	
 	if (data->copy) {
 #ifdef DEBUG
-		g_print ("cp %s %s\n", window->archive_filename, new_filename);
+		g_print ("cp %s %s\n", window->archive_filename, new_path);
 #endif
-		if (! file_copy (window->archive_filename, new_filename)) {
+		if (! file_copy (window->archive_filename, new_path)) {
 			GtkWidget *dialog;
 			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
 							 GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -634,10 +638,10 @@ copy_archive_ok_cb (GtkWidget    *w,
 		}
 	} else {
 #ifdef DEBUG
-		g_print ("mv %s %s\n", window->archive_filename, new_filename);
+		g_print ("mv %s %s\n", window->archive_filename, new_path);
 #endif
-		if (file_move (window->archive_filename, new_filename)) 
-			window_archive_rename (window, new_filename);
+		if (file_move (window->archive_filename, new_path)) 
+			window_archive_rename (window, new_path);
 		else {
 			GtkWidget *dialog;
 			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
@@ -650,7 +654,7 @@ copy_archive_ok_cb (GtkWidget    *w,
 		}
 	}
 
-	g_free (new_filename);
+	g_free (new_path);
 	gtk_widget_destroy (data->file_sel);
 }
 
@@ -679,7 +683,7 @@ copy_or_move_archive (FRWindow *window,
 
 	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
 			  "clicked", 
-			  G_CALLBACK (copy_archive_ok_cb), 
+			  G_CALLBACK (copy_or_move_archive_ok_cb), 
 			  data);
 
 	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (file_sel)->cancel_button),
