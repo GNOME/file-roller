@@ -535,6 +535,7 @@ get_column_from_sort_method (WindowSortMethod sort_method)
 	case WINDOW_SORT_BY_TIME : return COLUMN_TIME;
 	case WINDOW_SORT_BY_PATH : return COLUMN_PATH;
 	default: 
+		break;
 	}
 
 	return COLUMN_NAME;
@@ -551,6 +552,7 @@ get_sort_method_from_column (int column_id)
 	case COLUMN_TIME : return WINDOW_SORT_BY_TIME;
 	case COLUMN_PATH : return WINDOW_SORT_BY_PATH;
 	default: 
+		break;
 	}
 
 	return WINDOW_SORT_BY_NAME;
@@ -1117,6 +1119,7 @@ _action_started (FRArchive *archive,
 		g_print ("Test");
 		break;
 	default:
+		break;
 	}
 	g_print (" [START]\n");
 #endif
@@ -1138,6 +1141,7 @@ _action_started (FRArchive *archive,
 		message = _("Testing archive");
 		break;
 	default:
+		break;
 	}
 
 	full_msg = g_strdup_printf ("%s, %s", message, _("wait please..."));
@@ -1375,6 +1379,7 @@ _action_performed (FRArchive   *archive,
 		break;
 
 	default:
+		break;
 	}
 
 	_window_update_sensitivity (window);

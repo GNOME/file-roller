@@ -31,7 +31,7 @@ enum {
 	TOOLBAR_OPEN,
 	TOOLBAR_SEP1,
 	TOOLBAR_SEP2,
-	TOOLBAR_STOP,
+	TOOLBAR_STOP
 };
 
 GnomeUIInfo toolbar_data[] = {
