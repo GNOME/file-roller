@@ -73,6 +73,8 @@ file_roller_SOURCES = 		\
 	fr-command-tar.h	\
 	fr-command-zip.c	\
 	fr-command-zip.h	\
+	fr-command-zoo.c	\
+	fr-command-zoo.h	\
 	fr-process.c		\
 	fr-process.h		\
 	gconf-utils.c		\

@@ -116,7 +116,8 @@ FileTypeDescription type_desc[] = {
 	{ N_("Tar compressed with lzop (.tar.lzo)"),   ".tar.lzo" }, 
 	{ N_("Tar compressed with compress (.tar.Z)"), ".tar.Z" }, 
 	{ N_("War (.war)"),                            ".war" },
-	{ N_("Zip (.zip)"),                            ".zip" }
+	{ N_("Zip (.zip)"),                            ".zip" },
+	{ N_("Zoo (.zoo)"),                            ".zoo" }
 };
 
 static int type_desc_n = sizeof (type_desc) / sizeof (FileTypeDescription);

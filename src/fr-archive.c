@@ -35,6 +35,7 @@
 #include "fr-command-rar.h"
 #include "fr-command-tar.h"
 #include "fr-command-zip.h"
+#include "fr-command-zoo.h"
 #include "fr-marshal.h"
 #include "fr-process.h"
 
@@ -183,6 +184,9 @@ create_command_from_mime_type (FRArchive  *archive,
 	} else if (is_mime_type (mime_type, "application/zip")) {
 		archive->command = fr_command_zip_new (archive->process, 
 						       filename);
+	} else if (is_mime_type (mime_type, "application/x-zoo")) {
+		archive->command = fr_command_zoo_new (archive->process,
+						       filename);
 	} else if (is_mime_type (mime_type, "application/x-rar")) {
 		archive->command = fr_command_rar_new (archive->process, 
 						       filename);
@@ -305,6 +309,9 @@ create_command_from_filename (FRArchive  *archive,
 		   || file_extension_is (filename, ".jar")
 		   || file_extension_is (filename, ".war")) {
 		archive->command = fr_command_zip_new (archive->process, 
+						       filename);
+	} else if (file_extension_is (filename, ".zoo")) {
+		archive->command = fr_command_zoo_new (archive->process,
 						       filename);
 	} else if (file_extension_is (filename, ".lzh")) {
 		archive->command = fr_command_lha_new (archive->process, 
@@ -1194,6 +1201,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 		".war",
 		".z", 
 		".zip",
+		".zoo",
 		".Z" 
 	};
 	int n = sizeof (ext) / sizeof (char*);

@@ -2753,6 +2753,7 @@ window_new ()
 						"application/x-bzip",
 						"application/x-compress",
 						"application/x-lzop",
+						"application/x-zoo",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
