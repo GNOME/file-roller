@@ -1,5 +1,5 @@
 # File Roller 2.x translation into Russian 
-# Copyright (C) 2001 Free Software Foundation, Inc.
+# Copyright (C) 2001-2003 Free Software Foundation, Inc.
 # Copyright (C) 2001 Sergei Acht
 # Sergei Acht <sergei@dgap.mipt.ru>, 2001.
 # No Copyright 2002 Vyacheslav Dikonov
@@ -10,39 +10,31 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller-2.3.2\n"
-"POT-Creation-Date: 2003-06-11 02:31+0300\n"
-"PO-Revision-Date: 2003-06-11 03:44+0300\n"
+"POT-Creation-Date: 2003-07-05 20:17+0400\n"
+"PO-Revision-Date: 2003-07-05 20:22+0400\n"
 "Last-Translator: \"Andrew W. Nosenko\" <awn@bcs.zp.ua>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add To Archive..."
+msgid "Add to Archive..."
 msgstr "Добавить в архив..."
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract Here"
-msgstr "Распаковать сюда"
+msgid "Extract to..."
+msgstr "Распаковать в ..."
 
 #: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract In A Sub-Folder"
-msgstr "Распаковать в папку"
-
-#: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract To..."
-msgstr "Распаковать в..."
-
-#: component/File_Roller_Component.server.in.in.h:5
 msgid "File Roller Component add operations"
 msgstr "Компонент операций добавления программы \"Файл Роллер\""
 
-#: component/File_Roller_Component.server.in.in.h:6
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr "Компонент операций распаковки программы \"Файл Роллер\""
 
-#: component/File_Roller_Component.server.in.in.h:7
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "Компонент программы \"Файл Роллер\""
 
@@ -51,9 +43,9 @@ msgid "Archive Manager"
 msgstr "Менеджер архивов"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:204
-#: src/gtk-utils.c:391 src/main.c:101 src/menu-callbacks.c:1008
-#: src/window.c:759 src/window.c:768 src/window.c:1153 src/window.c:2733
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
+#: src/menu-callbacks.c:1067 src/window.c:759 src/window.c:768
+#: src/window.c:1153 src/window.c:2745
 msgid "File Roller"
 msgstr "\"Файл Роллер\""
 
@@ -61,147 +53,148 @@ msgstr "\"Файл Роллер\""
 msgid "Handle compressed archives"
 msgstr "Универсальная программа для работы со сжатыми файлами"
 
-#: src/dlg-add.c:119
+#: src/dlg-add.c:116 src/dlg-add.c:123
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Недостаточно прав для чтения файлов из каталога  \"%s\""
 
-#: src/dlg-add.c:349 src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "Добавить файлы и папки"
+#: src/dlg-add.c:122 src/window.c:1784 src/window.c:1817
+msgid "Could not add the files to the archive"
+msgstr "Не удалось добавить файлы в архив"
 
-#: src/dlg-add.c:354
+#: src/dlg-add.c:355
+msgid "Add Files"
+msgstr "Добавить файлы"
+
+#: src/dlg-add.c:360
 msgid "_Add only if newer"
 msgstr "Добавлять только об_новлённые файлы"
 
-#: src/dlg-add.c:355
+#: src/dlg-add.c:361
 msgid "_Include sub-folders"
 msgstr "Включать _вложенные каталоги"
 
-#: src/dlg-add.c:356
+#: src/dlg-add.c:362
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Исключать си_мволические ссылки на каталоги"
 
-#: src/dlg-add.c:357
+#: src/dlg-add.c:363
 msgid "Exclude o_ther file systems"
 msgstr "Исключать содержимое _других дисков и разделов"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:364
 msgid "Exclude _backup files (*~)"
 msgstr "Исключать ре_зервные копии (*~)"
 
-#: src/dlg-add.c:359
+#: src/dlg-add.c:365
 msgid "Exclude _hidden files (.*)"
 msgstr "Исключать скр_ытые файлы (.*)"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:366
 msgid "E_xclude files:"
 msgstr "Исключать пере_численные:"
 
-#: src/dlg-add.c:362
+#: src/dlg-add.c:368
 msgid "example: *.o; *.bak"
 msgstr "(например: *.o; *.bak)"
 
-#: src/dlg-add.c:363
+#: src/dlg-add.c:369
 msgid "Igno_re case"
 msgstr "Игнорировать _регистр букв"
 
-#: src/dlg-add.c:364
+#: src/dlg-add.c:370
 msgid "_Load Options"
 msgstr "За_грузить параметры"
 
-#: src/dlg-add.c:365
+#: src/dlg-add.c:371
 msgid "Sa_ve Options"
 msgstr "Со_хранить параметры"
 
-#: src/dlg-add.c:620
+#: src/dlg-add.c:626
 msgid "Load Options"
 msgstr "Загрузить параметры"
 
-#: src/dlg-add.c:769
+#: src/dlg-add.c:775
 msgid "Save Options"
 msgstr "Сохранить параметры"
 
-#: src/dlg-batch-add.c:98
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
+#: src/menu-callbacks.c:198 src/window.c:3420
+msgid "Could not create the archive"
+msgstr "Не удалось создать архив"
+
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:180 src/menu-callbacks.c:368
 msgid "You have to specify an archive name."
 msgstr "Необходимо указать имя архива."
 
-#: src/dlg-batch-add.c:115 src/dlg-extract.c:120 src/window.c:3704
+#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3421
+#: src/window.c:3558
+msgid "Archive type not supported."
+msgstr "Неподдерживаемый тип архива."
+
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3746
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Целевая папка не существует. Создать её?"
 
-#: src/dlg-batch-add.c:117 src/dlg-extract.c:122 src/window.c:3706
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3749
 msgid "Create _Folder"
 msgstr "Создать _папку"
 
-#: src/dlg-batch-add.c:136
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3765
 #, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Addition not performed."
-msgstr ""
-"Не удалость создать целевую папку: %s. \n"
-"Добавление не состоялось."
+msgid "Could not create the destination folder: %s."
+msgstr "Не удалость создать целевую папку: %s."
 
-#: src/dlg-batch-add.c:154
-msgid "Addition not performed."
-msgstr "Добавление не состоялось."
+#: src/dlg-batch-add.c:168 src/dlg-batch-add.c:190
+msgid "Addition not performed"
+msgstr "Добавление не состоялось"
 
-#: src/dlg-batch-add.c:231
+#: src/dlg-batch-add.c:270
 #, c-format
 msgid "Files to add: %d"
 msgstr "Добавляется файлов: %d"
 
-#: src/dlg-batch-add.c:233
+#: src/dlg-batch-add.c:272
 #, c-format
 msgid "Folders to add: %d"
 msgstr "Добавляется папок: %d"
 
-#: src/dlg-extract.c:142 src/window.c:3726
-#, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Extraction not performed."
-msgstr ""
-"Не удалось создать целевой каталог: %s. \n"
-"Распаковка не состоялась."
+#: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
+#: src/window.c:3769 src/window.c:3788
+msgid "Extraction not performed"
+msgstr "Распаковка не состоялась"
 
-#: src/dlg-extract.c:157 src/window.c:3741
-msgid "Extraction not performed."
-msgstr "Распаковка не состоялась."
-
-#: src/dlg-extract.c:176
+#: src/dlg-extract.c:181
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Недостаточно прав для распаковки архивов в папку  \"%s\""
 
-#: src/dlg-extract.c:402 src/dlg-preferences.c:127 src/menu-callbacks.c:971
-#, c-format
-msgid "Could not display help: %s"
-msgstr "Невозможно показать руководство пользователя: %s"
+#: src/dlg-extract.c:423 src/dlg-preferences.c:127 src/menu-callbacks.c:1026
+msgid "Could not display help"
+msgstr "Невозможно показать справку"
 
-#: src/dlg-extract.c:479
+#: src/dlg-extract.c:502
 msgid "Actions"
 msgstr "Команды"
 
-#: src/dlg-extract.c:480
+#: src/dlg-extract.c:503
 msgid "Destination folder"
 msgstr "Целевой каталог"
 
-#: src/dlg-extract.c:481
+#: src/dlg-extract.c:504
 msgid "Files"
-msgstr "Файлы:"
+msgstr "Файлы"
 
-#: src/dlg-extract.c:510
+#: src/dlg-extract.c:533
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: src/dlg-preferences.c:184
+#: src/dlg-preferences.c:185
 msgid "General"
 msgstr "Общие"
 
-#: src/dlg-preferences.c:189
+#: src/dlg-preferences.c:190
 msgid "Visible columns"
 msgstr "Видимые столбцы"
 
@@ -264,6 +257,10 @@ msgstr "Доб_авить к закладкам"
 msgid "A_vailable application:"
 msgstr "_Доступные приложения:"
 
+#: src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "Добавить файлы и папки"
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Добавить в _архив :"
@@ -280,7 +277,7 @@ msgstr "Удалить файлы"
 msgid "Do not e_xtract older files"
 msgstr "Проп_ускать устаревшие файлы"
 
-#: src/file_roller.glade.h:10 src/window.c:2971
+#: src/file_roller.glade.h:10 src/window.c:2983
 msgid "Extract"
 msgstr "Распаковать"
 
@@ -315,19 +312,18 @@ msgid "Password"
 msgstr "Пароль"
 
 #: src/file_roller.glade.h:17
+msgid "R_e-create folders"
+msgstr "Воссо_здавать папки"
+
+#: src/file_roller.glade.h:18
 msgid "R_ecent applications:"
 msgstr "Н_едавно использовавшиеся приложения:"
 
-#: src/file_roller.glade.h:18
-msgid "R_ecreate folders"
-msgstr "Воссо_здавать структуру каталогов"
-
 #: src/file_roller.glade.h:19
-#, fuzzy
 msgid "Select Archive"
 msgstr "_Выбрать архив"
 
-#: src/file_roller.glade.h:20 src/menu.h:460
+#: src/file_roller.glade.h:20 src/menu.h:442
 msgid "View File"
 msgstr "Просмотреть файл"
 
@@ -407,6 +403,10 @@ msgstr "_Размер"
 msgid "_Type"
 msgstr "_Тип"
 
+#: src/fr-archive.c:578
+msgid "The file does not exist."
+msgstr "Файл не существует."
+
 #: src/fr-command-tar.c:219
 msgid "Adding file: "
 msgstr "Добавляется файл: "
@@ -440,12 +440,8 @@ msgstr ""
 "Произошла ошибка системы GConf:\n"
 "  %s"
 
-#: src/gtk-utils.c:297
-msgid "gThumb"
-msgstr "gThumb"
-
 #. Button
-#: src/gtk-utils.c:422
+#: src/gtk-utils.c:419
 msgid "Command _Line Output"
 msgstr "Показать вывод ко_мандной строки"
 
@@ -541,65 +537,73 @@ msgstr "Zip (.zip)"
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:178 src/menu-callbacks.c:347
+#: src/menu-callbacks.c:199 src/menu-callbacks.c:387
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Отсутствуют права на создание архива в этом каталоге"
 
-#: src/menu-callbacks.c:204 src/menu-callbacks.c:365 src/menu-callbacks.c:576
-#: src/menu-callbacks.c:748
-msgid "Archive already exists.  Do you want to overwrite it?"
+#: src/menu-callbacks.c:228 src/menu-callbacks.c:407 src/menu-callbacks.c:624
+#: src/menu-callbacks.c:802
+msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Архив уже существует. Перезаписать?"
 
-#: src/menu-callbacks.c:206 src/menu-callbacks.c:367 src/menu-callbacks.c:578
-#: src/menu-callbacks.c:750
+#: src/menu-callbacks.c:231 src/menu-callbacks.c:410 src/menu-callbacks.c:627
+#: src/menu-callbacks.c:805
 msgid "Overwrite"
 msgstr "Перезаписать"
 
-#: src/menu-callbacks.c:223 src/menu-callbacks.c:384
-msgid "Could not delete old archive."
+#: src/menu-callbacks.c:247 src/menu-callbacks.c:426
+msgid "Could not delete the old archive."
 msgstr "Не удалось удалить старый архив."
 
-#: src/menu-callbacks.c:264
+#: src/menu-callbacks.c:291
 msgid "New Archive"
 msgstr "Создание архива"
 
-#: src/menu-callbacks.c:276 src/menu-callbacks.c:420
+#: src/menu-callbacks.c:303 src/menu-callbacks.c:465
 msgid "Archive type:"
 msgstr "Тип файла:"
 
-#: src/menu-callbacks.c:408
+#: src/menu-callbacks.c:367 src/menu-callbacks.c:386
+msgid "Could not save the archive"
+msgstr "Не удалось сохранить архив"
+
+#: src/menu-callbacks.c:453
 msgid "Save Archive"
 msgstr "Сохранение архива"
 
-#: src/menu-callbacks.c:491
+#: src/menu-callbacks.c:535
 msgid "Open Archive"
 msgstr "Открытие архива"
 
-#: src/menu-callbacks.c:601
-msgid "Could not copy archive"
+#: src/menu-callbacks.c:649
+msgid "Could not copy the archive"
 msgstr "Не удалось скопировать архив"
 
-#: src/menu-callbacks.c:617
-msgid "Could not move archive"
+#: src/menu-callbacks.c:667
+msgid "Could not move the archive"
 msgstr "Не удалось переместить архив"
 
-#: src/menu-callbacks.c:641
-msgid "Copy archive"
-msgstr "Копирование архива"
+#: src/menu-callbacks.c:694
+msgid "Copy Archive"
+msgstr "Скопировать архив"
 
-#: src/menu-callbacks.c:641
-msgid "Move archive"
-msgstr "Перемещение архива"
+#: src/menu-callbacks.c:694
+msgid "Move Archive"
+msgstr "Переместить архив"
 
-#: src/menu-callbacks.c:719
+#: src/menu-callbacks.c:772
+msgid "Rename Archive"
+msgstr "Переименовать архив"
+
+#: src/menu-callbacks.c:773
 msgid "New archive name (without extension)"
 msgstr "Новое имя (без расширения)"
 
-#: src/menu-callbacks.c:723 src/menu.h:108
+#: src/menu-callbacks.c:777
 msgid "_Rename"
 msgstr "Пере_именовать"
 
-#: src/menu-callbacks.c:832
+#: src/menu-callbacks.c:887
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
@@ -607,7 +611,7 @@ msgstr ""
 "Архив не может быть перемещен в мусорную корзину.  Хотите ли удалить уго "
 "навсегда?"
 
-#: src/menu-callbacks.c:1000
+#: src/menu-callbacks.c:1059
 msgid "translator_credits"
 msgstr ""
 "Сергей Ахт <sergei@dgap.mipt.ru>\n"
@@ -615,15 +619,15 @@ msgstr ""
 "Дмитрий Мастрюков <dmitry@taurussoft.org>\n"
 "Андрей Носенко <awn@bcs.zp.ua>"
 
-#: src/menu-callbacks.c:1011
+#: src/menu-callbacks.c:1070
 msgid "An archive manager for GNOME."
 msgstr "Менеджер архивов для среды Гном."
 
-#: src/menu-callbacks.c:1185 src/window.c:4027
+#: src/menu-callbacks.c:1244 src/window.c:4077
 msgid "Last Output"
 msgstr "Журнал сообщений"
 
-#: src/menu.h:70
+#: src/menu.h:69
 msgid "_New"
 msgstr "_Создать"
 
@@ -631,303 +635,279 @@ msgstr "_Создать"
 msgid "Create a new archive"
 msgstr "Создать новый архив"
 
-#: src/menu.h:76
-msgid "_Open..."
-msgstr "_Открыть"
-
-#: src/menu.h:76
-msgid "Open an existing archive"
-msgstr "Открыть существующий архив"
-
-#: src/menu.h:81
+#: src/menu.h:75
 msgid "Open R_ecent"
 msgstr "Отрыть нед_авно использованные"
 
-#: src/menu.h:86
-msgid "Save _As..."
-msgstr "Сохранить _как"
-
-#: src/menu.h:86
-msgid "Save current archive in a different type or name"
-msgstr "Создать копию архива, отличающуюся именем и/или типом"
-
-#: src/menu.h:94
+#: src/menu.h:84
 msgid "Open Fi_les..."
 msgstr "Открыть фай_лы"
 
-#: src/menu.h:94
+#: src/menu.h:84
 msgid "Open selected files with an application"
 msgstr "Открыть выделенные файлы в соответствующей программе."
 
-#: src/menu.h:100
+#: src/menu.h:90
 msgid "_View File"
 msgstr "П_росмотреть файл"
 
-#: src/menu.h:100 src/menu.h:460
+#: src/menu.h:90 src/menu.h:442
 msgid "View file with internal viewer"
 msgstr "Использовать встроенную функцию просмотра"
 
-#: src/menu.h:108
+#: src/menu.h:98
+msgid "_Rename..."
+msgstr "Пере_именовать..."
+
+#: src/menu.h:98
 msgid "Rename current archive"
 msgstr "Переименовать текущий архив"
 
-#: src/menu.h:114
-msgid "Cop_y"
-msgstr "С_копировать"
+#: src/menu.h:104
+msgid "Cop_y..."
+msgstr "С_копировать..."
 
-#: src/menu.h:114
+#: src/menu.h:104
 msgid "Copy current archive to another folder"
 msgstr "Скопировать текущий архив в другой каталог"
 
-#: src/menu.h:120
-msgid "_Move"
-msgstr "Пере_местить"
+#: src/menu.h:110
+msgid "_Move..."
+msgstr "Пере_местить..."
 
-#: src/menu.h:120
+#: src/menu.h:110
 msgid "Move current archive to another folder"
 msgstr "Переместить текущий архив в другой каталог"
 
-#: src/menu.h:126
+#: src/menu.h:116
 msgid "Move To _Trash"
 msgstr "Переместить архив в м_усорную корзину"
 
-#: src/menu.h:126
+#: src/menu.h:116
 msgid "Move current archive to trash"
 msgstr "Переместить текущий архив в мусорную корзину"
 
-#: src/menu.h:132
+#: src/menu.h:122
 msgid "_Test"
 msgstr "_Проверить целостность"
 
-#: src/menu.h:132
+#: src/menu.h:122
 msgid "Test whether the archive contains errors"
 msgstr "Проверить архив на наличие ошибок"
 
-#: src/menu.h:140
+#: src/menu.h:130
 msgid "_Properties"
 msgstr "Показать сво_йства"
 
-#: src/menu.h:140
+#: src/menu.h:130
 msgid "Show archive properties"
 msgstr "Показать свойства архива"
 
-#: src/menu.h:148
-msgid "_Close"
-msgstr "_Закрыть"
-
-#: src/menu.h:148
-msgid "Close current archive"
-msgstr "Закрыть текущий архив"
-
-#: src/menu.h:154
-msgid "E_xit"
-msgstr "В_ыйти"
-
-#: src/menu.h:154
-msgid "Exit"
-msgstr "Завершить работу с программой \"Файл Роллер\""
-
-#: src/menu.h:180 src/menu.h:468
+#: src/menu.h:162 src/menu.h:450
 msgid "Add _Files..."
 msgstr "Добавить _файлы"
 
-#: src/menu.h:180 src/menu.h:468 src/window.c:2961
+#: src/menu.h:162 src/menu.h:450 src/window.c:2973
 msgid "Add files to the archive"
 msgstr "Добавить в архив новые файлы и каталоги"
 
-#: src/menu.h:186 src/menu.h:474
-msgid "_Delete Files"
-msgstr "_Удалить файлы"
+#: src/menu.h:168
+msgid "_Delete Files..."
+msgstr "_Удалить файлы..."
 
-#: src/menu.h:186
+#: src/menu.h:168
 msgid "Delete selected files and folders from the archive"
 msgstr "Удалить выделенные файлы и каталоги из архива"
 
-#: src/menu.h:192 src/menu.h:480
+#: src/menu.h:174 src/menu.h:462
 msgid "_Extract to..."
 msgstr "_Распаковать в ..."
 
-#: src/menu.h:192 src/menu.h:480 src/window.c:2972
+#: src/menu.h:174 src/menu.h:462 src/window.c:2984
 msgid "Extract files from the archive"
 msgstr "Распаковать файлы из архива"
 
-#: src/menu.h:216 src/menu.h:488
+#: src/menu.h:198 src/menu.h:470
 msgid "Select _All"
 msgstr "Выделить вс_ё"
 
-#: src/menu.h:216 src/menu.h:488
+#: src/menu.h:198 src/menu.h:470
 msgid "Select all files"
 msgstr "Выделить все файлы"
 
-#: src/menu.h:222 src/menu.h:494
+#: src/menu.h:204 src/menu.h:476
 msgid "Dese_lect All"
 msgstr "Снять в_ыделение"
 
-#: src/menu.h:222 src/menu.h:494
+#: src/menu.h:204 src/menu.h:476
 msgid "Deselect all files"
 msgstr "Отменить выделение всех файлов"
 
-#: src/menu.h:230
+#: src/menu.h:212
 msgid "Pass_word..."
 msgstr "Установить _пароль..."
 
-#: src/menu.h:238
+#: src/menu.h:220
 msgid "_Preferences"
 msgstr "_Изменить настройки"
 
-#: src/menu.h:238
+#: src/menu.h:220
 msgid "Edit File Roller preferences"
 msgstr "Изменить настройки программы \"Файл Роллер\""
 
-#: src/menu.h:249
+#: src/menu.h:231
 msgid "by _Name"
 msgstr "по и_мени"
 
-#: src/menu.h:249
+#: src/menu.h:231
 msgid "Sort file list by name"
 msgstr "Сортировать список файлов по именам файлов"
 
-#: src/menu.h:255
+#: src/menu.h:237
 msgid "by _Size"
 msgstr "по _размеру"
 
-#: src/menu.h:255
+#: src/menu.h:237
 msgid "Sort file list by file size"
 msgstr "Сортировать список файлов по размерам файлов"
 
-#: src/menu.h:261
+#: src/menu.h:243
 msgid "by T_ype"
 msgstr "по _типу"
 
-#: src/menu.h:261
+#: src/menu.h:243
 msgid "Sort file list by type"
 msgstr "Сортировать список файлов по типам файлов"
 
-#: src/menu.h:267
-msgid "by _Time"
-msgstr "по _времени"
+#: src/menu.h:249
+msgid "by _Date modified"
+msgstr "по дате изменения"
 
-#: src/menu.h:267
+#: src/menu.h:249
 msgid "Sort file list by modification time"
 msgstr "Сортировать список файлов по временам последнего изменения файлов"
 
-#: src/menu.h:273
-msgid "by _Path"
-msgstr "по _каталогу"
+#: src/menu.h:255
+msgid "by _Location"
+msgstr "по местоположению"
 
-#: src/menu.h:273
-msgid "Sort file list by path"
+#: src/menu.h:255
+msgid "Sort file list by location"
 msgstr "Сортировать список файлов по каталогу расположения файлов"
 
-#: src/menu.h:290
+#: src/menu.h:272
 msgid "View All _Files"
 msgstr "Показывать _общий список"
 
-#: src/menu.h:296
+#: src/menu.h:278
 msgid "View as a F_older"
 msgstr "Показывать тек_ущий каталог"
 
-#: src/menu.h:318
+#: src/menu.h:300
 msgid "_Reversed Order"
 msgstr "в обратном пор_ядке"
 
-#: src/menu.h:318
+#: src/menu.h:300
 msgid "Reverse the list order"
 msgstr "Инвертировать порядок сортировки"
 
-#: src/menu.h:342
+#: src/menu.h:324
 msgid "_Toolbar"
 msgstr "Показывать панель _инструментов"
 
-#: src/menu.h:342
+#: src/menu.h:324
 msgid "View the main toolbar"
 msgstr "Показывать панель инструментов"
 
-#: src/menu.h:348
+#: src/menu.h:330
 msgid "Stat_usbar"
 msgstr "Показывать строку сос_тояния"
 
-#: src/menu.h:348
+#: src/menu.h:330
 msgid "View the statusbar"
 msgstr "Показывать строку состояния"
 
-#: src/menu.h:356
+#: src/menu.h:338
 msgid "_Stop"
 msgstr "О_становить"
 
-#: src/menu.h:356 src/toolbar.h:55
+#: src/menu.h:338 src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Прервать текущую операцию"
 
-#: src/menu.h:362
+#: src/menu.h:344
 msgid "_Reload"
 msgstr "_Перечитать"
 
-#: src/menu.h:362
+#: src/menu.h:344
 msgid "Reload current archive"
 msgstr "Перечитать текущий архив"
 
-#: src/menu.h:373
+#: src/menu.h:355
 msgid "_Arrange Files"
 msgstr "Со_ртировать файлы"
 
-#: src/menu.h:378
+#: src/menu.h:360
 msgid "_Last Output"
 msgstr "Показать _журнал сообщений"
 
-#: src/menu.h:391
+#: src/menu.h:373
 msgid "New _Window"
 msgstr "_Создать окно"
 
-#: src/menu.h:391
+#: src/menu.h:373
 msgid "Open a new window"
 msgstr "Открыть новое окно"
 
-#: src/menu.h:397
+#: src/menu.h:379
 msgid "Clo_se Window"
 msgstr "_Закрыть окно"
 
-#: src/menu.h:397
+#: src/menu.h:379
 msgid "Close this window"
 msgstr "Закрыть текущее окно"
 
-#: src/menu.h:410
+#: src/menu.h:392
 msgid "_Contents"
 msgstr "_Содержание"
 
-#: src/menu.h:410
+#: src/menu.h:392
 msgid "Display the File Roller Manual"
 msgstr "Показать руководство пользователя"
 
-#: src/menu.h:416
+#: src/menu.h:398
 msgid "_About"
 msgstr "_О программе"
 
-#: src/menu.h:416
+#: src/menu.h:398
 msgid "Information about the program"
 msgstr "Сведения о программе"
 
-#: src/menu.h:428
+#: src/menu.h:410
 msgid "_Archive"
 msgstr "_Архив"
 
-#: src/menu.h:429
+#: src/menu.h:411
 msgid "_Edit"
 msgstr "_Правка"
 
-#: src/menu.h:430
+#: src/menu.h:412
 msgid "_View"
 msgstr "_Вид"
 
-#: src/menu.h:431
+#: src/menu.h:413
 msgid "_Windows"
 msgstr "_Окна"
 
-#: src/menu.h:454
+#: src/menu.h:436
 msgid "Open Files..."
 msgstr "Открыть файл(ы)"
 
-#: src/menu.h:474
+#: src/menu.h:456
+msgid "_Delete Files"
+msgstr "_Удалить файлы"
+
+#: src/menu.h:456
 msgid "Delete files from the archive"
 msgstr "Удалить файл(ы) из архива"
 
@@ -999,144 +979,124 @@ msgstr "Извлекается список файлов"
 msgid "wait please..."
 msgstr "подождите, пожалуйста..."
 
-#: src/window.c:1378
+#: src/window.c:1328
+#, c-format
+msgid "Could not display the folder \"%s\""
+msgstr "Невозможно показать папку \"%s\""
+
+#: src/window.c:1385
 msgid "Operation stopped"
 msgstr "Операция прервана"
 
-#: src/window.c:1396
+#: src/window.c:1406
 msgid "An error occurred while extracting files."
 msgstr "Во время распаковки файлов произошла ошибка."
 
-#: src/window.c:1400
+#: src/window.c:1410
 msgid "An error occurred while loading the archive."
 msgstr "Во время чтения архива произошла ошибка."
 
-#: src/window.c:1404
+#: src/window.c:1414
 msgid "An error occurred while deleting files from the archive."
 msgstr "Во время удаления файлов из архива произошла ошибка."
 
-#: src/window.c:1408
+#: src/window.c:1418
 msgid "An error occurred while adding files to the archive."
 msgstr "Во время добавления файлов в архив произошла ошибка."
 
-#: src/window.c:1412
+#: src/window.c:1422
 msgid "An error occurred while testing archive."
 msgstr "Во время проверки архива произошла ошибка."
 
-#: src/window.c:1421
+#: src/window.c:1431
 msgid "Command not found."
 msgstr "Требуемая программа не найдена."
 
-#: src/window.c:1424
+#: src/window.c:1434
 msgid "Command exited abnormally."
 msgstr "Работа программы завершилась некорректно."
 
-#: src/window.c:1559
+#: src/window.c:1565
 msgid "Test Result"
 msgstr "Результаты проверки"
 
-#: src/window.c:1779
-msgid "You don't have permissions to add files to this archive."
-msgstr "Отсутствуют права на добавление файлов в этот архив."
+#: src/window.c:1785
+msgid "You don't have the right permissions."
+msgstr "Недостаточно прав."
 
-#: src/window.c:1810
+#: src/window.c:1818
 msgid "You can't add an archive to itself."
 msgstr "Невозможно поместить архив внутрь самого себя."
 
-#: src/window.c:1980
+#: src/window.c:1990
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "Добавить этот файл в текущий архив или открыть его как новый?"
 
-#: src/window.c:2024
+#: src/window.c:2035
 msgid "Do you want to create a new archive with these files?"
 msgstr "Создать новый архив и добавить в него выбранные файлы?"
 
-#: src/window.c:2026
+#: src/window.c:2038
 msgid "Create _Archive"
 msgstr "Создать _архив"
 
-#: src/window.c:2371
+#: src/window.c:2383
 msgid "Size"
 msgstr "Размер"
 
-#: src/window.c:2372
+#: src/window.c:2384
 msgid "Type"
 msgstr "Тип"
 
-#: src/window.c:2373
+#: src/window.c:2385
 msgid "Date modified"
 msgstr "Изменён"
 
-#: src/window.c:2374
+#: src/window.c:2386
 msgid "Location"
 msgstr "Местоположение"
 
-#: src/window.c:2381
+#: src/window.c:2393
 msgid "Name"
 msgstr "Имя"
 
-#: src/window.c:2901
+#: src/window.c:2913
 msgid "_Up"
 msgstr "В_верх"
 
 #. current location
-#: src/window.c:2923
+#: src/window.c:2935
 msgid "Location:"
 msgstr "Местоположение:"
 
-#: src/window.c:2960
+#: src/window.c:2972
 msgid "Add"
 msgstr "Добавить"
 
-#: src/window.c:2982
+#: src/window.c:2994
 msgid "View"
 msgstr "Просмотреть"
 
-#: src/window.c:2983
+#: src/window.c:2995
 msgid "View selected file"
 msgstr "Просмотреть выделенный файл"
 
-#: src/window.c:3408 src/window.c:3521
-msgid "Archive type not supported."
-msgstr "Неподдерживаемый тип архива."
+#: src/window.c:3500
+#, c-format
+msgid "Could not open \"%s\""
+msgstr "Не удалось открыть \"%s\""
 
-#: src/window.c:3484
-msgid "Cannot load archive."
-msgstr "Невозможно загрузить архив."
+#: src/window.c:3551
+#, c-format
+msgid "Could not save the archive \"%s\""
+msgstr "Не удалось сохранить архив \"%s\""
 
-#: src/window.c:4556
+#: src/window.c:4606
 msgid "Add files to an archive"
 msgstr "Добавить файлы в архив"
 
-#: src/window.c:4581
+#: src/window.c:4631
 msgid "Extract archive"
 msgstr "Распаковать архив"
-
-#~ msgid "_Name"
-#~ msgstr "И_мя"
-
-#~ msgid "Archive will be deleted, are you sure?"
-#~ msgstr "Архив будет удалён. Продолжить?"
-
-#~ msgid "_Delete"
-#~ msgstr "У_далить"
-
-#~ msgid "Delete current archive from disk"
-#~ msgstr "Удалить текущий архив с диска"
-
-#~ msgid "_Test Archive"
-#~ msgstr "Про_верить архив"
-
-#~ msgid "Add Files..."
-#~ msgstr "Добавить файл(ы)"
-
-#~ msgid "Extract to..."
-#~ msgstr "Распаковать в ..."
-
-#~ msgid "Select All"
-#~ msgstr "Выбрать все"
-
-#~ msgid "Current Location:"
-#~ msgstr "Текущий каталог:"
