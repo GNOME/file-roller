@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2002-10-21 04:39+0200\n"
-"PO-Revision-Date: 2002-10-23 14:51+0200\n"
-"Last-Translator: Artis Trops <hornet@navigator.lv>\n"
+"POT-Creation-Date: 2002-11-09 04:39+0100\n"
+"PO-Revision-Date: 2002-11-09 21:40+0200\n"
+"Last-Translator: Artis Trops <hornet@navigators.lv>\n"
 "Language-Team: Latvian <ll10nt@os.lv>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -169,6 +169,10 @@ msgstr "Nezināms tips"
 #: src/file-data.c:29
 msgid "Symbolic link"
 msgstr "Simbolsaite"
+
+#: src/file-utils.c:534
+msgid "Cannot find a terminal, using xterm, even if it may not work"
+msgstr "Nevaru atrast termināli, lietoju xterm, pat ja tas varētu nestrādāt"
 
 #: src/file_roller.glade2.h:1
 #: src/file_roller_prop.glade2.h:1
@@ -358,10 +362,6 @@ msgstr "_Modifikācijas Laiks"
 #: src/file_roller_prop.glade2.h:15
 msgid "_Recent archives:"
 msgstr "_Nesenie arhīvi:"
-
-#: src/file-utils.c:534
-msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr "Nevaru atrast termināli, lietoju xterm, pat ja tas varētu nestrādāt"
 
 #: src/gconf-utils.c:98
 #, c-format
@@ -847,6 +847,15 @@ msgstr "Atspiest uz..."
 #: src/menu.h:478
 msgid "Select All"
 msgstr "Izvēlēties Visus"
+
+#: src/recent-files/egg-recent-vfs-utils.c:90
+msgid " (invalid Unicode)"
+msgstr " (nederīgs Unicode)"
+
+#: src/recent-files/egg-recent-view-bonobo.c:193
+#, c-format
+msgid "Open %s"
+msgstr "Atvērt %s"
 
 #: src/toolbar.h:39
 msgid "New"
