@@ -102,11 +102,13 @@ file_roller_LDADD =	\
 	@LIBOBJS@	\
 	$(FR_LIBS)
 
-schemadir       = @GCONF_SCHEMA_FILE_DIR@
-schema_DATA     = file-roller.schemas
+schemadir = @GCONF_SCHEMA_FILE_DIR@
+schema_DATA = file-roller.schemas
 
 install-data-local:
+if SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+endif
 
 EXTRA_DIST = 			\
 	$(glade_DATA)		\
