@@ -229,16 +229,21 @@ sort_by_path (gconstpointer  ptr1,
 }
 
 
+#define COMPARE_FUNC_NUM 5
+
+
 static GCompareFunc
 get_compare_func_from_idx (int column_index)
 {
-	static GCompareFunc compare_funcs[5] = {
+	static GCompareFunc compare_funcs[COMPARE_FUNC_NUM] = {
 		sort_by_name,
 		sort_by_type,
 		sort_by_size,
 		sort_by_time,
 		sort_by_path
 	};
+
+	column_index = CLAMP (column_index, 0, COMPARE_FUNC_NUM - 1);
 
 	return compare_funcs [column_index];
 }

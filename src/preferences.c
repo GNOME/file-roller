@@ -43,14 +43,16 @@ get_enum_from_string (EnumStringTable *table,
 {
 	int i;
 
+	/* return the first value if s_value is invalid */
+	
 	if (s_value == NULL)
-		return -1;
+		return table[0].i_value; 
 
 	for (i = 0; table[i].s_value != NULL; i++)
 		if (strcmp (s_value, table[i].s_value) == 0)
 			return table[i].i_value;
 	
-	return -1;
+	return table[0].i_value;
 }
 
 
@@ -64,7 +66,9 @@ get_string_from_enum (EnumStringTable *table,
 		if (i_value == table[i].i_value)
 			return table[i].s_value;
 	
-	return NULL;
+	/* return the first value if i_value is invalid */
+
+	return table[0].s_value;
 }
 
 
