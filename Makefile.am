@@ -26,6 +26,7 @@ EXTRA_DIST = 			\
 	MAINTAINERS		\
 	NEWS			\
 	README			\
+	acinclude.m4		\
 	file-roller.spec	\
 	file-roller.spec.in	\
 	intltool-merge.in	\

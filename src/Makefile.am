@@ -97,10 +97,13 @@ fr-marshal.c: fr-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=fr_marshal >> $@
 
 file_roller_LDADD =	\
+	@LIBOBJS@	\
 	$(FR_LIBS)
 
 EXTRA_DIST = 		\
 	$(glade_DATA)	\
+	fnmatch.c	\
+	fnmatch.h	\
 	fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)

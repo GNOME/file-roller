@@ -20,11 +20,17 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
+#ifdef HAVE_FNMATCH
 #include <fnmatch.h>
+#endif /* HAVE_FNMATCH */
 #include <string.h>
 #include <glib.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include "file-utils.h"
+
+#ifndef HAVE_FNMATCH
+#include "fnmatch.h"
+#endif /* ! HAVE_FNMATCH */
 
 typedef enum {
         GNOME_VFS_DIRECTORY_FILTER_DEFAULT = 0,
