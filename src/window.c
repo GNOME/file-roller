@@ -37,8 +37,7 @@
 #include "dlg-batch-add.h"
 #include "dlg-delete.h"
 #include "dlg-extract.h"
-#include "dlg-viewer.h"
-#include "dlg-viewer-or-app.h"
+#include "dlg-open-with.h"
 #include "egg-recent.h"
 #include "egg-recent-util.h"
 #include "eggtreemultidnd.h"
@@ -5163,76 +5162,6 @@ window_paste_selection (FRWindow *window)
 }
 
 
-/* -- window_view_file -- */
-
-
-static void
-view_file (FRArchive   *archive,
-	   FRAction     action, 
-	   FRProcError *error,
-	   gpointer     callback_data)
-{
-	ViewerData         *vdata = callback_data;
-	const char         *mime_type;
-
-	g_signal_handlers_disconnect_matched (G_OBJECT (archive), 
-					      G_SIGNAL_MATCH_DATA, 
-					      0, 
-					      0, NULL, 
-					      0, vdata);
-
-	if (error->type != FR_PROC_ERROR_NONE) {
-		viewer_done (vdata);
-		return;
-	}
-
-	dlg_viewer (vdata->window, vdata->filename);
-	viewer_list = g_list_prepend (viewer_list, vdata);
-}
-
-
-void 
-window_view_file (FRWindow *window, 
-		  char     *file)
-{
-	GList      *file_list;
-	ViewerData *vdata;
-
-        g_return_if_fail (window != NULL);
-
-	vdata = g_new (ViewerData, 1);
-	vdata->window = window;
-	vdata->process = NULL;
-	vdata->temp_dir = get_temp_work_dir ();
-
-	vdata->filename = g_strconcat (vdata->temp_dir,
-				       "/",
-				       file,
-				       NULL);
-	vdata->e_filename = shell_escape (vdata->filename);
-
-	g_signal_connect (G_OBJECT (window->archive), 
-			  "done",
-			  G_CALLBACK (view_file),
-			  vdata);
-
-	fr_process_clear (window->archive->process);
-	
-	file_list = g_list_prepend (NULL, file);
-	fr_archive_extract (window->archive,
-			    file_list,
-			    vdata->temp_dir,
-			    NULL,
-			    FALSE,
-			    TRUE,
-			    FALSE,
-			    window->password);
-	g_list_free (file_list);
-
-	fr_process_start (window->archive->process);
-}
-
-
 /* -- window_open_files -- */
 
 
@@ -5327,32 +5256,27 @@ void
 window_view_or_open_file (FRWindow *window, 
 			  gchar    *filename)
 {
-	GnomeVFSMimeApplication *application;
-	const char              *mime_type;
-	char                    *command;
-	GList                   *singleton;
+	const char              *mime_type = NULL;
+	GnomeVFSMimeApplication *application = NULL;
+	GList                   *file_list;
 
-	
 	if (window->activity_ref > 0)
 		return;
 
 	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, NULL);
-	if (mime_type == NULL) {
-		window_view_file (window, filename);
-		return;
-	}
-		
-	application = gnome_vfs_mime_get_default_application (mime_type);
-	if (application == NULL) {
-		dlg_viewer_or_app (window, filename);
-		return;
-	}
-		
-	command = application_get_command (application);
-	singleton = g_list_append (NULL, filename);
-	window_open_files (window, command, singleton);
-	g_list_free (singleton);
-	g_free (command);
+	if (mime_type != NULL)
+		application = gnome_vfs_mime_get_default_application (mime_type);
+
+	file_list = g_list_append (NULL, filename);
+
+	if (application != NULL) {
+		char *command = application_get_command (application);
+		window_open_files (window, command, file_list);
+		g_free (command);
+	} else 
+		dlg_open_with (window, file_list);
+
+	g_list_free (file_list);
 }
 
 

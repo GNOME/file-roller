@@ -1,3 +1,11 @@
+2004-09-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c: open the "open with" dialog if the file type does not
+	have a registered application; get rid of the internal viewer.
+
+	Fixes bug #153837: Internal viewer vs. other application question is 
+	asked for files that internal viewer can't even handle.
+	
 2004-09-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-tar.c (fr_command_tar_escape): another attept to fix

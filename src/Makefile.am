@@ -52,10 +52,6 @@ file_roller_SOURCES = 			\
 	dlg-password.h			\
 	dlg-prop.c			\
 	dlg-prop.h			\
-	dlg-viewer.c			\
-	dlg-viewer.h			\
-	dlg-viewer-or-app.c		\
-	dlg-viewer-or-app.h		\
 	eggtreemultidnd.c		\
 	eggtreemultidnd.h		\
 	ephy-ellipsizing-label.c	\
