@@ -1,14 +1,14 @@
 # Norwegian/Bokmaal translation of file-roller.
-# Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright (C) 2002-2004 Free Software Foundation, Inc.
 # Lars Alvik <lalvik@hotmail.com>, 2002.
-# Kjartan Maraas <kmaraas@gnome.org>, 2002-2003.
+# Kjartan Maraas <kmaraas@gnome.org>, 2002-2004.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file roller 2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-15 09:38+0100\n"
-"PO-Revision-Date: 2003-12-15 09:42+0100\n"
+"POT-Creation-Date: 2004-01-06 19:31+0100\n"
+"PO-Revision-Date: 2004-01-06 19:33+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "Arkiveringsbestyrer"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:390 src/main.c:101
-#: src/menu-callbacks.c:1102 src/window.c:836 src/window.c:1252
+#: src/menu-callbacks.c:1133 src/window.c:836 src/window.c:1252
 #: src/window.c:2922
 msgid "File Roller"
 msgstr "Filknuser"
@@ -51,77 +51,77 @@ msgstr "Filknuser"
 msgid "Handle compressed archives"
 msgstr "Håndter komprimerte arkiv"
 
-#: src/dlg-add.c:113 src/dlg-add.c:120
+#: src/dlg-add.c:119 src/dlg-add.c:126
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Du har ikke adgang til å lese filer fra mappen «%s»"
 
-#: src/dlg-add.c:119 src/window.c:1921 src/window.c:1954
+#: src/dlg-add.c:125 src/window.c:1921 src/window.c:1954
 msgid "Could not add the files to the archive"
 msgstr "Kunne ikke legge til filer i arkivet"
 
-#: src/dlg-add.c:353 src/window.c:3160
+#: src/dlg-add.c:366 src/window.c:3160
 msgid "Add"
 msgstr "Legg til"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:376
 msgid "_Add only if newer"
 msgstr "B_are legg til hvis nyere"
 
-#: src/dlg-add.c:359
+#: src/dlg-add.c:377
 msgid "_Include subfolders"
 msgstr "_Ta med undermapper"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:378
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Ekskluder kataloger som er symbolske len_ker"
 
-#: src/dlg-add.c:361
+#: src/dlg-add.c:379
 msgid "Exclude o_ther file systems"
 msgstr "Ekskluder _andre filsystemer"
 
-#: src/dlg-add.c:362
+#: src/dlg-add.c:380
 msgid "Exclude _backup files (*~)"
 msgstr "Ekskluder sikkerhetskopier (*~)"
 
-#: src/dlg-add.c:363
+#: src/dlg-add.c:381
 msgid "Exclude _hidden files (.*)"
 msgstr "Ekskluder _skjulte filer (.*)"
 
-#: src/dlg-add.c:364
+#: src/dlg-add.c:382
 msgid "E_xclude files:"
 msgstr "E_kskluder filer:"
 
-#: src/dlg-add.c:366
+#: src/dlg-add.c:384
 msgid "example: *.o; *.bak"
 msgstr "eksempel: *.o; *.bak"
 
-#: src/dlg-add.c:367
+#: src/dlg-add.c:385
 msgid "Igno_re case"
 msgstr "Ignorer store/små bokstaver"
 
-#: src/dlg-add.c:368
+#: src/dlg-add.c:386
 msgid "_Load Options"
 msgstr "A_lternativer for lesing"
 
-#: src/dlg-add.c:369
+#: src/dlg-add.c:387
 msgid "Sa_ve Options"
 msgstr "Al_ternativer for lagring"
 
-#: src/dlg-add.c:624
+#: src/dlg-add.c:635
 msgid "Load Options"
 msgstr "Alternativer for lasting"
 
-#: src/dlg-add.c:773
+#: src/dlg-add.c:788
 msgid "Save Options"
 msgstr "Alternativer for lagring"
 
-#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:177
-#: src/menu-callbacks.c:196 src/window.c:3674
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:187
+#: src/menu-callbacks.c:206 src/window.c:3674
 msgid "Could not create the archive"
 msgstr "Kunne ikke opprette arkivet"
 
-#: src/dlg-batch-add.c:100 src/menu-callbacks.c:178 src/menu-callbacks.c:374
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:188 src/menu-callbacks.c:389
 msgid "You have to specify an archive name."
 msgstr "Du må oppgi et navn for arkivet."
 
@@ -168,7 +168,7 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Du har ikke adgang til å pakke ut arkiver i mappen «%s»"
 
-#: src/dlg-extract.c:428 src/dlg-preferences.c:125 src/menu-callbacks.c:1061
+#: src/dlg-extract.c:428 src/dlg-preferences.c:125 src/menu-callbacks.c:1092
 msgid "Could not display help"
 msgstr "Kunne ikke vise hjelp"
 
@@ -521,89 +521,89 @@ msgstr "Zip (.zip)"
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:197 src/menu-callbacks.c:393
+#: src/menu-callbacks.c:207 src/menu-callbacks.c:408
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Du har ikke adgang til å opprette et arkiv i denne mappen"
 
-#: src/menu-callbacks.c:226 src/menu-callbacks.c:413 src/menu-callbacks.c:636
-#: src/menu-callbacks.c:814
+#: src/menu-callbacks.c:236 src/menu-callbacks.c:428 src/menu-callbacks.c:665
+#: src/menu-callbacks.c:845
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Arkivet eksisterer allerede. Vil du overskrive det?"
 
-#: src/menu-callbacks.c:229 src/menu-callbacks.c:416 src/menu-callbacks.c:639
-#: src/menu-callbacks.c:817
+#: src/menu-callbacks.c:239 src/menu-callbacks.c:431 src/menu-callbacks.c:668
+#: src/menu-callbacks.c:848
 msgid "Overwrite"
 msgstr "Overskriv"
 
-#: src/menu-callbacks.c:245 src/menu-callbacks.c:432
+#: src/menu-callbacks.c:255 src/menu-callbacks.c:447
 msgid "Could not delete the old archive."
 msgstr "Kunne ikke slette gammelt arkiv."
 
-#: src/menu-callbacks.c:290 src/toolbar.h:39
+#: src/menu-callbacks.c:299 src/toolbar.h:39
 msgid "New"
 msgstr "Ny"
 
-#: src/menu-callbacks.c:308 src/menu-callbacks.c:471
+#: src/menu-callbacks.c:321 src/menu-callbacks.c:489
 msgid "Archive type:"
 msgstr "Arkivtype:"
 
-#: src/menu-callbacks.c:373 src/menu-callbacks.c:392
+#: src/menu-callbacks.c:388 src/menu-callbacks.c:407
 msgid "Could not save the archive"
 msgstr "Kunne ikke lagre arkivet"
 
-#: src/menu-callbacks.c:459
+#: src/menu-callbacks.c:473
 msgid "Save"
-msgstr ""
+msgstr "Lagre"
 
-#: src/menu-callbacks.c:545 src/toolbar.h:45
+#: src/menu-callbacks.c:566 src/toolbar.h:45
 msgid "Open"
 msgstr "Åpne"
 
-#: src/menu-callbacks.c:661
+#: src/menu-callbacks.c:690
 msgid "Could not copy the archive"
 msgstr "Kunne ikke kopiere arkivet"
 
-#: src/menu-callbacks.c:679
+#: src/menu-callbacks.c:708
 msgid "Could not move the archive"
 msgstr "Kunne ikke flytte arkivet"
 
-#: src/menu-callbacks.c:706
+#: src/menu-callbacks.c:734
 msgid "Copy"
 msgstr "Kopier"
 
-#: src/menu-callbacks.c:706
+#: src/menu-callbacks.c:734 src/menu-callbacks.c:740
 msgid "Move"
 msgstr "Flytt"
 
-#: src/menu-callbacks.c:784 src/window.c:4735
+#: src/menu-callbacks.c:815 src/window.c:4735
 msgid "Rename"
 msgstr "Endre navn"
 
-#: src/menu-callbacks.c:785
+#: src/menu-callbacks.c:816
 msgid "New archive name (without extension)"
 msgstr "Nytt arkiv navn (uten filtypenavn)"
 
-#: src/menu-callbacks.c:789 src/window.c:4740
+#: src/menu-callbacks.c:820 src/window.c:4740
 msgid "_Rename"
 msgstr "End_re navn"
 
-#: src/menu-callbacks.c:899
+#: src/menu-callbacks.c:930
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
 msgstr "Plassering"
 
-#: src/menu-callbacks.c:1094
+#: src/menu-callbacks.c:1125
 msgid "translator_credits"
 msgstr ""
 "Lars Alvik <lalvik@hotmail.com>\n"
 "Kjartan Maraas <kmaraas@gnome.org>"
 
-#: src/menu-callbacks.c:1105
+#: src/menu-callbacks.c:1136
 msgid "An archive manager for GNOME."
 msgstr "En arkiverer for GNOME."
 
-#: src/menu-callbacks.c:1254 src/window.c:4472
+#: src/menu-callbacks.c:1285 src/window.c:4472
 msgid "Last Output"
 msgstr "Skrevet ut sist"
 
@@ -931,12 +931,14 @@ msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
 msgstr ""
+"Dette arkivet er passordbeskyttet.\n"
+"Vennligst oppgi et passord med kommandoen: Rediger->Passord"
 
 #: src/window.c:1488
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
-msgstr ""
+msgstr "Oppgitt passord er ikke gyldig. Vennligst oppgi et nytt passord med kommandoen: Rediger->Passord"
 
 #: src/window.c:1493
 msgid "Could not perform the operation"
@@ -1024,19 +1026,19 @@ msgstr "Navn"
 
 #: src/window.c:3080
 msgid "Go to the previous visited location"
-msgstr ""
+msgstr "Gå til tidligere besøkt lokasjon"
 
 #: src/window.c:3088
 msgid "Go to the next visited location"
-msgstr ""
+msgstr "Gå til neste besøkte lokasjon"
 
 #: src/window.c:3096
 msgid "Go up one level"
-msgstr ""
+msgstr "Gå opp et nivå"
 
 #: src/window.c:3104
 msgid "Go to the home location"
-msgstr ""
+msgstr "Gå til startlokasjonen"
 
 #. current location
 #: src/window.c:3123
@@ -1067,15 +1069,15 @@ msgstr "Kunne ikke lagre arkivet «%s»"
 
 #: src/window.c:4667
 msgid "The new name is void."
-msgstr ""
+msgstr "Det nye navnet er ugyldig."
 
 #: src/window.c:4667 src/window.c:4671 src/window.c:4680
 msgid "Please use a different name."
-msgstr ""
+msgstr "Vennligst bruk et annet navn."
 
 #: src/window.c:4671
 msgid "The new name is equal to the old one."
-msgstr ""
+msgstr "Det nye navnet er likt det gamle."
 
 #: src/window.c:4680
 #, c-format
@@ -1084,14 +1086,17 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Navnet «%s» er ugyldig fordi det ikke kan inneholde tegnene: %s\n"
+"\n"
+"%s"
 
 #: src/window.c:4736
 msgid "New folder name"
-msgstr ""
+msgstr "Navn på ny mappe"
 
 #: src/window.c:4736
 msgid "New file name"
-msgstr ""
+msgstr "Navn på ny fil"
 
 #: src/window.c:4757
 msgid "Could not rename the folder"
@@ -1108,48 +1113,3 @@ msgstr "Legg til filer i et arkiv"
 #: src/window.c:5410
 msgid "Extract archive"
 msgstr "Pakk ut arkiv"
-
-#~ msgid "Extract to..."
-#~ msgstr "Pakk ut til..."
-
-#~ msgid "New Archive"
-#~ msgstr "Nytt arkiv"
-
-#~ msgid "Save Archive"
-#~ msgstr "Lagre arkiv"
-
-#~ msgid "Open Archive"
-#~ msgstr "Åpne arkiv"
-
-#~ msgid "Copy Archive"
-#~ msgstr "Kopier arkiv"
-
-#~ msgid "Move Archive"
-#~ msgstr "Flytt arkiv"
-
-#~ msgid "Add _Files..."
-#~ msgstr "Legg til _filer..."
-
-#~ msgid "Delete selected files and folders from the archive"
-#~ msgstr "Slett valgte filer og mapper fra arkivet"
-
-#~ msgid "New _Window"
-#~ msgstr "Nytt vindu"
-
-#~ msgid "Open a new window"
-#~ msgstr "Åpne et nytt vindu"
-
-#~ msgid "Open Files..."
-#~ msgstr "Åpne filer..."
-
-#~ msgid "_Delete Files"
-#~ msgstr "_Slett filer"
-
-#~ msgid "1 file (%s)"
-#~ msgstr "1 fil (%s)"
-
-#~ msgid "1 file selected (%s)"
-#~ msgstr "1 fil valgt (%s)"
-
-#~ msgid "_Up"
-#~ msgstr "_Opp"
