@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-17 20:58+0300\n"
-"PO-Revision-Date: 2003-06-16 21:50+0200\n"
+"POT-Creation-Date: 2003-08-16 19:27+0300\n"
+"PO-Revision-Date: 2003-08-16 15:32+0200\n"
 "Last-Translator: Pauli Virtanen <pauli.virtanen@hut.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -20,26 +20,18 @@ msgid "Add to Archive..."
 msgstr "Lisää pakettiin..."
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract Here"
-msgstr "Pura tähän"
-
-#: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract in a Folder"
-msgstr "Pura hakemistoon"
-
-#: component/File_Roller_Component.server.in.in.h:4
 msgid "Extract to..."
 msgstr "Pura kohteeseen..."
 
-#: component/File_Roller_Component.server.in.in.h:5
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr "Tiedostokäärinkomponentin lisäämistoiminnot"
 
-#: component/File_Roller_Component.server.in.in.h:6
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr "Tiedostokäärinkomponentin purkutoiminnot"
 
-#: component/File_Roller_Component.server.in.in.h:7
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "Tiedostokäärinkomponentti"
 
@@ -49,8 +41,8 @@ msgstr "Pakettienkäsittelyohjelma"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
-#: src/menu-callbacks.c:1065 src/window.c:759 src/window.c:768
-#: src/window.c:1153 src/window.c:2750
+#: src/menu-callbacks.c:1076 src/window.c:759 src/window.c:1157
+#: src/window.c:2768
 msgid "File Roller"
 msgstr "Tiedostokäärin"
 
@@ -58,104 +50,114 @@ msgstr "Tiedostokäärin"
 msgid "Handle compressed archives"
 msgstr "Käsittele tiivistettyjä arkistoja"
 
-#: src/dlg-add.c:116 src/dlg-add.c:123
+#: src/dlg-add.c:113 src/dlg-add.c:120
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Sinulla ei ole oikeuksia lukea tiedostoja hakemistosta \"%s\""
 
-#: src/dlg-add.c:122 src/window.c:1789 src/window.c:1822
+#: src/dlg-add.c:119 src/window.c:1791 src/window.c:1824
 msgid "Could not add the files to the archive"
 msgstr "Tiedostojen lisääminen pakettiin epäonnistui"
 
-#: src/dlg-add.c:355
+#: src/dlg-add.c:351 src/file_roller.glade.h:5
 msgid "Add Files"
 msgstr "Lisää tiedostoja"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:356
 msgid "_Add only if newer"
 msgstr "Lisää vain jos _uudempi"
 
-#: src/dlg-add.c:361
-msgid "_Include sub-folders"
-msgstr "_Sisällytä alihakemistot"
+#: src/dlg-add.c:357
+msgid "_Include subfolders"
+msgstr "Sisäll_ytä alihakemistot"
 
-#: src/dlg-add.c:362
+#: src/dlg-add.c:358
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Jätä pois hakemistot, jotka ovat sym_bolisia linkkejä"
 
-#: src/dlg-add.c:363
+#: src/dlg-add.c:359
 msgid "Exclude o_ther file systems"
 msgstr "Jätä pois _muut tiedostojärjestelmät"
 
-#: src/dlg-add.c:364
+#: src/dlg-add.c:360
 msgid "Exclude _backup files (*~)"
 msgstr "Jätä pois _varmuuskopiot (*~)"
 
-#: src/dlg-add.c:365
+#: src/dlg-add.c:361
 msgid "Exclude _hidden files (.*)"
 msgstr "Jätä pois piilotie_dostot (.*)"
 
-#: src/dlg-add.c:366
+#: src/dlg-add.c:362
 msgid "E_xclude files:"
 msgstr "_Jätä pois tiedostot:"
 
-#: src/dlg-add.c:368
+#: src/dlg-add.c:364
 msgid "example: *.o; *.bak"
 msgstr "esimerkki: *.o; *.bak"
 
-#: src/dlg-add.c:369
+#: src/dlg-add.c:365
 msgid "Igno_re case"
 msgstr "Kirjaink_oolla ei merkitystä"
 
-#: src/dlg-add.c:370
+#: src/dlg-add.c:366
 msgid "_Load Options"
 msgstr "_Lataa asetukset"
 
-#: src/dlg-add.c:371
+#: src/dlg-add.c:367
 msgid "Sa_ve Options"
 msgstr "Tallenna _asetukset"
 
-#: src/dlg-add.c:626
+#: src/dlg-add.c:622
 msgid "Load Options"
 msgstr "Lataa asetukset"
 
-#: src/dlg-add.c:775
+#: src/dlg-add.c:771
 msgid "Save Options"
 msgstr "Tallenna asetukset"
 
-#: src/dlg-batch-add.c:97 src/menu-callbacks.c:180 src/menu-callbacks.c:368
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
+#: src/menu-callbacks.c:198 src/window.c:3449
+msgid "Could not create the archive"
+msgstr "Paketin luominen ei onnistunut"
+
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:180 src/menu-callbacks.c:375
 msgid "You have to specify an archive name."
 msgstr "Paketin nimi täytyy antaa."
 
-#: src/dlg-batch-add.c:117 src/dlg-extract.c:120 src/window.c:3750
+#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3450
+#: src/window.c:3587
+msgid "Archive type not supported."
+msgstr "Pakettityyppi ei ole tuettu."
+
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3775
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Kohdehakemisto ei ole olemassa. Haluatko luoda sen?"
 
-#: src/dlg-batch-add.c:120 src/dlg-extract.c:123 src/window.c:3753
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3778
 msgid "Create _Folder"
 msgstr "_Luo hakemisto"
 
-#: src/dlg-batch-add.c:135 src/dlg-extract.c:139 src/window.c:3769
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3794
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Kohdehakemiston luonti ei onnistunut: %s"
 
-#: src/dlg-batch-add.c:139 src/dlg-batch-add.c:161
+#: src/dlg-batch-add.c:168 src/dlg-batch-add.c:190
 msgid "Addition not performed"
 msgstr "Lisäämistä ei tapahtunut"
 
-#: src/dlg-batch-add.c:241
+#: src/dlg-batch-add.c:270
 #, c-format
 msgid "Files to add: %d"
 msgstr "Lisättäviä tiedostoja: %d"
 
-#: src/dlg-batch-add.c:243
+#: src/dlg-batch-add.c:272
 #, c-format
 msgid "Folders to add: %d"
 msgstr "Lisättäviä hakemistoja: %d"
 
 #: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
-#: src/window.c:3773 src/window.c:3792
+#: src/window.c:3798 src/window.c:3817
 msgid "Extraction not performed"
 msgstr "Purkua ei tapahtunut"
 
@@ -165,7 +167,7 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Sinulla ei ole oikeuksia purkaa paketteja hakemistoon \"%s\""
 
-#: src/dlg-extract.c:423 src/dlg-preferences.c:127 src/menu-callbacks.c:1026
+#: src/dlg-extract.c:423 src/dlg-preferences.c:125 src/menu-callbacks.c:1035
 msgid "Could not display help"
 msgstr "Ohjeen näyttäminen ei onnistunut"
 
@@ -185,11 +187,11 @@ msgstr "Tiedostot"
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
 
-#: src/dlg-preferences.c:185
+#: src/dlg-preferences.c:182
 msgid "General"
 msgstr "Yleistä"
 
-#: src/dlg-preferences.c:190
+#: src/dlg-preferences.c:187
 msgid "Visible columns"
 msgstr "Näkyvät sarakkeet"
 
@@ -250,10 +252,6 @@ msgstr "L_isää kirjanmerkkeihin"
 msgid "A_vailable application:"
 msgstr "_Mahdollinen sovellus:"
 
-#: src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "Lisää tiedostoja ja hakemistoja"
-
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Lisää _pakettiin:"
@@ -270,7 +268,7 @@ msgstr "Poista tiedostot"
 msgid "Do not e_xtract older files"
 msgstr "_Älä pura vanhempia tiedostoja"
 
-#: src/file_roller.glade.h:10 src/window.c:2988
+#: src/file_roller.glade.h:10 src/window.c:3006
 msgid "Extract"
 msgstr "Pura"
 
@@ -306,7 +304,7 @@ msgstr "Salasana"
 
 #: src/file_roller.glade.h:17
 msgid "R_e-create folders"
-msgstr "Luo hakemistot uudelleen"
+msgstr "Luo hakemistot _uudelleen"
 
 #: src/file_roller.glade.h:18
 msgid "R_ecent applications:"
@@ -316,7 +314,7 @@ msgstr "_Viimeisimmät sovellukset:"
 msgid "Select Archive"
 msgstr "Valitse paketti"
 
-#: src/file_roller.glade.h:20 src/menu.h:442
+#: src/file_roller.glade.h:20 src/menu.h:429
 msgid "View File"
 msgstr "Katsele tiedostoa"
 
@@ -381,28 +379,20 @@ msgid "Normal"
 msgstr "Tavallinen"
 
 #: src/file_roller_prop.glade.h:9
-msgid "_Path"
-msgstr "_Polku"
+msgid "_Location"
+msgstr "Si_jainti"
 
 #: src/file_roller_prop.glade.h:10
-msgid "_Recent archives:"
-msgstr "_Viimeisimpiä paketteja:"
-
-#: src/file_roller_prop.glade.h:11
 msgid "_Size"
 msgstr "_Koko"
 
-#: src/file_roller_prop.glade.h:12
+#: src/file_roller_prop.glade.h:11
 msgid "_Type"
 msgstr "_Tyyppi"
 
 #: src/fr-archive.c:578
 msgid "The file does not exist."
 msgstr "Tiedosto ei ole olemassa."
-
-#: src/fr-archive.c:603 src/window.c:3426 src/window.c:3562
-msgid "Archive type not supported."
-msgstr "Pakettityyppi ei ole tuettu."
 
 #: src/fr-command-tar.c:219
 msgid "Adding file: "
@@ -412,7 +402,7 @@ msgstr "Lisätään tiedosto: "
 msgid "Removing file: "
 msgstr "Poistetaan tiedosto: "
 
-#: src/fr-command-tar.c:274 src/window.c:1249
+#: src/fr-command-tar.c:274 src/window.c:1253
 msgid "Deleting files from archive"
 msgstr "Poistetaan tiedostoja paketista"
 
@@ -427,15 +417,6 @@ msgstr "Tiivistetään arkisto uudelleen"
 #: src/fr-command-tar.c:486
 msgid "Decompressing archive"
 msgstr "Puretaan arkiston tiivistys"
-
-#: src/gconf-utils.c:98
-#, c-format
-msgid ""
-"GConf error:\n"
-"  %s"
-msgstr ""
-"GConf-virhe:\n"
-"  %s"
 
 #. Button
 #: src/gtk-utils.c:419
@@ -534,91 +515,87 @@ msgstr "Zip (.zip)"
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:179 src/menu-callbacks.c:198 src/window.c:3425
-msgid "Could not create the archive"
-msgstr "Paketin luominen ei onnistunut"
-
-#: src/menu-callbacks.c:199 src/menu-callbacks.c:387
+#: src/menu-callbacks.c:199 src/menu-callbacks.c:394
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Sinulla ei ole oikeuksia luoda pakettia tähän hakemistoon"
 
-#: src/menu-callbacks.c:228 src/menu-callbacks.c:407 src/menu-callbacks.c:624
-#: src/menu-callbacks.c:802
+#: src/menu-callbacks.c:228 src/menu-callbacks.c:414 src/menu-callbacks.c:633
+#: src/menu-callbacks.c:811
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Paketti on jo olemassa. Haluatko korvata sen?"
 
-#: src/menu-callbacks.c:231 src/menu-callbacks.c:410 src/menu-callbacks.c:627
-#: src/menu-callbacks.c:805
+#: src/menu-callbacks.c:231 src/menu-callbacks.c:417 src/menu-callbacks.c:636
+#: src/menu-callbacks.c:814
 msgid "Overwrite"
 msgstr "Korvaa"
 
-#: src/menu-callbacks.c:247 src/menu-callbacks.c:426
+#: src/menu-callbacks.c:247 src/menu-callbacks.c:433
 msgid "Could not delete the old archive."
 msgstr "Vanhan paketin poisto ei onnistunut."
 
-#: src/menu-callbacks.c:291
+#: src/menu-callbacks.c:292
 msgid "New Archive"
 msgstr "Uusi paketti"
 
-#: src/menu-callbacks.c:303 src/menu-callbacks.c:465
+#: src/menu-callbacks.c:310 src/menu-callbacks.c:472
 msgid "Archive type:"
 msgstr "Paketin tyyppi:"
 
-#: src/menu-callbacks.c:367 src/menu-callbacks.c:386
+#: src/menu-callbacks.c:374 src/menu-callbacks.c:393
 msgid "Could not save the archive"
 msgstr "Paketin tallentaminen ei onnistunut"
 
-#: src/menu-callbacks.c:453
+#: src/menu-callbacks.c:460
 msgid "Save Archive"
 msgstr "Tallenna paketti"
 
-#: src/menu-callbacks.c:535
+#: src/menu-callbacks.c:542
 msgid "Open Archive"
 msgstr "Avaa paketti"
 
-#: src/menu-callbacks.c:649
+#: src/menu-callbacks.c:658
 msgid "Could not copy the archive"
 msgstr "Paketin kopiointi ei onnistunut"
 
-#: src/menu-callbacks.c:667
+#: src/menu-callbacks.c:676
 msgid "Could not move the archive"
 msgstr "Paketin siirtäminen ei onnistunut"
 
-#: src/menu-callbacks.c:694
+#: src/menu-callbacks.c:703
 msgid "Copy Archive"
 msgstr "Kopioi paketti"
 
-#: src/menu-callbacks.c:694
+#: src/menu-callbacks.c:703
 msgid "Move Archive"
 msgstr "Siirrä paketti"
 
-#: src/menu-callbacks.c:772
+#: src/menu-callbacks.c:781
 msgid "Rename Archive"
 msgstr "Nimeä paketti uudelleen"
 
-#: src/menu-callbacks.c:773
+#: src/menu-callbacks.c:782
 msgid "New archive name (without extension)"
 msgstr "Uuden paketin nimi (ilman päätettä)"
 
-#: src/menu-callbacks.c:777
+#: src/menu-callbacks.c:786
 msgid "_Rename"
 msgstr "_Nimeä uudelleen"
 
-#: src/menu-callbacks.c:887
+#: src/menu-callbacks.c:896
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
 msgstr "Pakettia ei voi siirtää roskakoriin. Haluatko poistaa sen pysyvästi?"
 
-#: src/menu-callbacks.c:1057
-msgid "translator_credits"
-msgstr "Pauli Virtanen, 2003\n\nhttp://gnome-fi.org/"
-
 #: src/menu-callbacks.c:1068
+msgid "translator_credits"
+msgstr "Suomennos: http://gnome-fi.sourceforge.net/"
+
+#: src/menu-callbacks.c:1079
 msgid "An archive manager for GNOME."
 msgstr "Gnomen pakettienkäsittelyohjelma"
 
-#: src/menu-callbacks.c:1242 src/window.c:4081
+#: src/menu-callbacks.c:1228 src/window.c:4138
 msgid "Last Output"
 msgstr "Viimeisin tuloste"
 
@@ -646,7 +623,7 @@ msgstr "Avaa valitut tiedostot ohjelmalla"
 msgid "_View File"
 msgstr "_Katsele tiedostoa"
 
-#: src/menu.h:90 src/menu.h:442
+#: src/menu.h:90 src/menu.h:429
 msgid "View file with internal viewer"
 msgstr "Katsele tiedostoa sisäänrakennetulla katselimella"
 
@@ -675,7 +652,7 @@ msgid "Move current archive to another folder"
 msgstr "Siirrä nykyinen paketti toiseen hakemistoon"
 
 #: src/menu.h:116
-msgid "Move To _Trash"
+msgid "Move to _Trash"
 msgstr "Siirrä _roskakoriin"
 
 #: src/menu.h:116
@@ -698,11 +675,11 @@ msgstr "_Ominaisuudet"
 msgid "Show archive properties"
 msgstr "Näytä paketin ominaisuudet"
 
-#: src/menu.h:162 src/menu.h:450
+#: src/menu.h:162 src/menu.h:437
 msgid "Add _Files..."
 msgstr "_Lisää tiedostoja..."
 
-#: src/menu.h:162 src/menu.h:450 src/window.c:2978
+#: src/menu.h:162 src/menu.h:437 src/window.c:2996
 msgid "Add files to the archive"
 msgstr "Lisää tiedostoja pakettiin"
 
@@ -714,27 +691,27 @@ msgstr "_Poista tiedostoja..."
 msgid "Delete selected files and folders from the archive"
 msgstr "Poista valitut tiedostot ja hakemistot paketista"
 
-#: src/menu.h:174 src/menu.h:462
+#: src/menu.h:174 src/menu.h:449
 msgid "_Extract to..."
 msgstr "Pu_ra kohteeseen..."
 
-#: src/menu.h:174 src/menu.h:462 src/window.c:2989
+#: src/menu.h:174 src/menu.h:449 src/window.c:3007
 msgid "Extract files from the archive"
 msgstr "Pura tiedostot paketista"
 
-#: src/menu.h:198 src/menu.h:470
+#: src/menu.h:198 src/menu.h:457
 msgid "Select _All"
 msgstr "_Valitse kaikki"
 
-#: src/menu.h:198 src/menu.h:470
+#: src/menu.h:198 src/menu.h:457
 msgid "Select all files"
 msgstr "Valitse kaikki tiedostot"
 
-#: src/menu.h:204 src/menu.h:476
+#: src/menu.h:204 src/menu.h:463
 msgid "Dese_lect All"
 msgstr "_Älä valitse mitään"
 
-#: src/menu.h:204 src/menu.h:476
+#: src/menu.h:204 src/menu.h:463
 msgid "Deselect all files"
 msgstr "Älä valitse mitään"
 
@@ -806,103 +783,95 @@ msgstr "K_äänteinen järjestys"
 msgid "Reverse the list order"
 msgstr "Käännä luettelon järjestys"
 
-#: src/menu.h:324
+#: src/menu.h:325
 msgid "_Toolbar"
 msgstr "Ty_ökalupalkki"
 
-#: src/menu.h:324
+#: src/menu.h:325
 msgid "View the main toolbar"
 msgstr "Näytä päätyökalupalkki"
 
-#: src/menu.h:330
+#: src/menu.h:331
 msgid "Stat_usbar"
 msgstr "Tila_rivi"
 
-#: src/menu.h:330
+#: src/menu.h:331
 msgid "View the statusbar"
 msgstr "Näytä tilarivi"
 
-#: src/menu.h:338
+#: src/menu.h:339
 msgid "_Stop"
 msgstr "_Pysäytä"
 
-#: src/menu.h:338 src/toolbar.h:55
+#: src/menu.h:339 src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Pysäytä nykyinen toiminto"
 
-#: src/menu.h:344
+#: src/menu.h:345
 msgid "_Reload"
 msgstr "Päi_vitä"
 
-#: src/menu.h:344
+#: src/menu.h:345
 msgid "Reload current archive"
 msgstr "Päivitä nykyinen paketti"
 
-#: src/menu.h:355
+#: src/menu.h:356
 msgid "_Arrange Files"
 msgstr "_Järjestele tiedostot"
 
-#: src/menu.h:360
+#: src/menu.h:361
 msgid "_Last Output"
 msgstr "Viimeisin _tuloste"
 
-#: src/menu.h:373
+#: src/menu.h:361
+msgid "View the output produced by the last executed command"
+msgstr "Näytä viimeisimmän komennon tuottama tuloste"
+
+#: src/menu.h:367
 msgid "New _Window"
 msgstr "Uusi _ikkuna"
 
-#: src/menu.h:373
+#: src/menu.h:367
 msgid "Open a new window"
 msgstr "Avaa uusi ikkuna"
 
-#: src/menu.h:379
-msgid "Clo_se Window"
-msgstr "_Sulje ikkuna"
-
-#: src/menu.h:379
-msgid "Close this window"
-msgstr "Sulje tämä ikkuna"
-
-#: src/menu.h:392
+#: src/menu.h:380
 msgid "_Contents"
 msgstr "_Sisältö"
 
-#: src/menu.h:392
+#: src/menu.h:380
 msgid "Display the File Roller Manual"
 msgstr "Näytä tiedostokäärimen ohje"
 
-#: src/menu.h:398
+#: src/menu.h:386
 msgid "_About"
 msgstr "_Tietoja"
 
-#: src/menu.h:398
+#: src/menu.h:386
 msgid "Information about the program"
 msgstr "Tietoja ohjelmasta"
 
-#: src/menu.h:410
+#: src/menu.h:398
 msgid "_Archive"
 msgstr "_Paketti"
 
-#: src/menu.h:411
+#: src/menu.h:399
 msgid "_Edit"
 msgstr "_Muokkaa"
 
-#: src/menu.h:412
+#: src/menu.h:400
 msgid "_View"
 msgstr "_Näytä"
 
-#: src/menu.h:413
-msgid "_Windows"
-msgstr "_Ikkunat"
-
-#: src/menu.h:436
+#: src/menu.h:423
 msgid "Open Files..."
 msgstr "Avaa tiedostoja..."
 
-#: src/menu.h:456
+#: src/menu.h:443
 msgid "_Delete Files"
 msgstr "_Poista tiedostoja"
 
-#: src/menu.h:456
+#: src/menu.h:443
 msgid "Delete files from the archive"
 msgstr "Poista tiedostoja paketista"
 
@@ -930,100 +899,100 @@ msgstr "Hakemisto"
 msgid "[read only]"
 msgstr "[vain luku]"
 
-#: src/window.c:863
+#: src/window.c:862
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 tiedosto (%s)"
 
-#: src/window.c:866
+#: src/window.c:865
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d tiedostoa (%s)"
 
-#: src/window.c:874
+#: src/window.c:873
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 tiedosto valittu (%s)"
 
-#: src/window.c:877
+#: src/window.c:876
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d tiedostoa valittu (%s)"
 
-#: src/window.c:1246
+#: src/window.c:1250
 msgid "Reading archive"
 msgstr "Luetaan pakettia"
 
-#: src/window.c:1252
+#: src/window.c:1256
 msgid "Adding files to archive"
 msgstr "Lisätään tiedostoja pakettiin"
 
-#: src/window.c:1255
+#: src/window.c:1259
 msgid "Extracting files from archive"
 msgstr "Puretaan tiedostoja paketista"
 
-#: src/window.c:1258
+#: src/window.c:1262
 msgid "Testing archive"
 msgstr "Testataan pakettia"
 
-#: src/window.c:1261
+#: src/window.c:1265
 msgid "Getting the file list"
 msgstr "Haetaan tiedostolista"
 
-#: src/window.c:1267
+#: src/window.c:1271
 msgid "wait please..."
 msgstr "odota..."
 
-#: src/window.c:1329
+#: src/window.c:1332
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Hakemiston \"%s\" näyttäminen epäonnistui"
 
-#: src/window.c:1386
+#: src/window.c:1389
 msgid "Operation stopped"
 msgstr "Toiminto pysäytetty"
 
-#: src/window.c:1407
+#: src/window.c:1410
 msgid "An error occurred while extracting files."
 msgstr "Tiedostojen purkamisessa tapahtui virhe."
 
-#: src/window.c:1411
+#: src/window.c:1414
 msgid "An error occurred while loading the archive."
 msgstr "Paketin lataamisessa tapahtui virhe."
 
-#: src/window.c:1415
+#: src/window.c:1418
 msgid "An error occurred while deleting files from the archive."
 msgstr "Tiedostojen paketista poistamisessa tapahtui virhe."
 
-#: src/window.c:1419
+#: src/window.c:1422
 msgid "An error occurred while adding files to the archive."
 msgstr "Tiedostojen pakettiin lisäämisessä tapahtui virhe."
 
-#: src/window.c:1423
+#: src/window.c:1426
 msgid "An error occurred while testing archive."
 msgstr "Paketin testaamisessa tapahtui virhe."
 
-#: src/window.c:1432
+#: src/window.c:1435
 msgid "Command not found."
 msgstr "Komentoa ei löydy."
 
-#: src/window.c:1435
+#: src/window.c:1438
 msgid "Command exited abnormally."
 msgstr "Komento poistui epänormaalisti."
 
-#: src/window.c:1570
+#: src/window.c:1569
 msgid "Test Result"
 msgstr "Testin tulos"
 
-#: src/window.c:1790
+#: src/window.c:1792
 msgid "You don't have the right permissions."
 msgstr "Tarvittavia oikeuksia ei ole."
 
-#: src/window.c:1823
+#: src/window.c:1825
 msgid "You can't add an archive to itself."
 msgstr "Pakettia ei voi lisätä itseensä."
 
-#: src/window.c:1995
+#: src/window.c:1997
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1031,69 +1000,69 @@ msgstr ""
 "Haluatko lisätä tämän tiedoston nykyiseen pakettiin vai avata sen uutena "
 "pakettina?"
 
-#: src/window.c:2040
+#: src/window.c:2042
 msgid "Do you want to create a new archive with these files?"
 msgstr "Haluatko luoda uuden paketin näistä tiedostoista?"
 
-#: src/window.c:2043
+#: src/window.c:2045
 msgid "Create _Archive"
 msgstr "Luo _paketti"
 
-#: src/window.c:2388
+#: src/window.c:2406
 msgid "Size"
 msgstr "Koko"
 
-#: src/window.c:2389
+#: src/window.c:2407
 msgid "Type"
 msgstr "Tyyppi"
 
-#: src/window.c:2390
+#: src/window.c:2408
 msgid "Date modified"
 msgstr "Muokkausaika"
 
-#: src/window.c:2391
+#: src/window.c:2409
 msgid "Location"
 msgstr "Sijainti"
 
-#: src/window.c:2398
+#: src/window.c:2416
 msgid "Name"
 msgstr "Nimi"
 
-#: src/window.c:2918
+#: src/window.c:2936
 msgid "_Up"
 msgstr "_Ylös"
 
 #. current location
-#: src/window.c:2940
+#: src/window.c:2958
 msgid "Location:"
 msgstr "Sijainti:"
 
-#: src/window.c:2977
+#: src/window.c:2995
 msgid "Add"
 msgstr "Lisää"
 
-#: src/window.c:2999
+#: src/window.c:3017
 msgid "View"
 msgstr "Katsele"
 
-#: src/window.c:3000
+#: src/window.c:3018
 msgid "View selected file"
 msgstr "Katsele valittua tiedostoa"
 
-#: src/window.c:3505
+#: src/window.c:3529
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Tiedoston \"%s\" avaaminen epäonnistui"
 
-#: src/window.c:3555
+#: src/window.c:3580
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Paketin \"%s\" tallentaminen epäonnistui"
 
-#: src/window.c:4610
+#: src/window.c:4676
 msgid "Add files to an archive"
 msgstr "Lisää tiedostoja pakettiin"
 
-#: src/window.c:4635
+#: src/window.c:4701
 msgid "Extract archive"
 msgstr "Pura paketti"
