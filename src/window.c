@@ -1364,7 +1364,6 @@ _action_started (FRArchive *archive,
 	char     *full_msg;
 
 	window_start_activity_mode (window);
-	_window_update_sensitivity (window);
 
 #ifdef DEBUG
 	switch (action) {
