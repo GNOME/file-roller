@@ -1851,7 +1851,7 @@ file_button_press_cb (GtkWidget      *widget,
 
 	if (event->button == 3) {
 		GtkTreePath *path;
-		GtkTreeIter iter;
+		GtkTreeIter  iter;
 
 		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
 						   event->x, event->y,
@@ -1879,12 +1879,28 @@ file_button_press_cb (GtkWidget      *widget,
 		return TRUE;
 
 	} else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 1)) {
-		GtkTreePath      *path;
+		GtkTreePath *path = NULL;
 
 		if (! gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
 						     event->x, event->y,
-						     &path, NULL, NULL, NULL))
+						     &path, NULL, NULL, NULL)) {
 			gtk_tree_selection_unselect_all (selection);
+			return FALSE;
+		}
+
+		if (window->single_click
+		    && ! ((event->state & GDK_CONTROL_MASK) || (event->state & GDK_SHIFT_MASK))) {
+			gtk_tree_view_set_cursor (GTK_TREE_VIEW (widget),
+						  path,
+						  NULL,
+						  FALSE);
+			gtk_tree_view_row_activated (GTK_TREE_VIEW (widget), 
+						     path, 
+						     NULL);
+		}
+
+		if (path != NULL)
+			gtk_tree_path_free (path);
 	}
 
 	return FALSE;
@@ -2583,8 +2599,23 @@ window_delete_event_cb (GtkWidget *caller,
 }
 
 
+static gboolean
+is_single_click_policy (void)
+{
+	char     *value;
+	gboolean  result = FALSE;
+
+	value = eel_gconf_get_string (PREF_NAUTILUS_CLICK_POLICY, "double");
+	result = strncmp (value, "single", 6) == 0;
+	g_free (value);
+
+	return result;
+}
+
+
 static void
-add_columns (GtkTreeView *treeview)
+add_columns (FRWindow    *window,
+	     GtkTreeView *treeview)
 {
 	static char       *titles[] = {N_("Size"), 
 				       N_("Type"), 
@@ -2604,7 +2635,17 @@ add_columns (GtkTreeView *treeview)
                                              "pixbuf", COLUMN_ICON,
                                              NULL);
 
-	renderer = gtk_cell_renderer_text_new ();
+	window->name_renderer = renderer = gtk_cell_renderer_text_new ();
+
+	window->single_click = is_single_click_policy ();
+	if (window->single_click) {
+		GValue  value = { 0, };
+		g_value_init (&value, PANGO_TYPE_UNDERLINE);
+		g_value_set_enum (&value, PANGO_UNDERLINE_SINGLE);
+		g_object_set_property (G_OBJECT (renderer), "underline", &value);
+		g_value_unset (&value);
+	}
+
 	gtk_tree_view_column_pack_start (column,
 					 renderer,
 					 TRUE);
@@ -2798,6 +2839,32 @@ pref_show_field_changed (GConfClient *client,
 {
 	FRWindow *window = user_data;
 	window_update_columns_visibility (window);
+}
+
+
+static void
+pref_click_policy_changed (GConfClient *client,
+			   guint        cnxn_id,
+			   GConfEntry  *entry,
+			   gpointer     user_data)
+{
+	FRWindow *window = user_data;
+	GValue    value = { 0, };
+
+	g_value_init (&value, PANGO_TYPE_UNDERLINE);
+
+	window->single_click = is_single_click_policy ();
+
+	if (window->single_click)
+		g_value_set_enum (&value, PANGO_UNDERLINE_SINGLE);
+	else
+		g_value_set_enum (&value, PANGO_UNDERLINE_NONE);
+	g_object_set_property (G_OBJECT (window->name_renderer), 
+			       "underline", 
+			       &value);
+	g_value_unset (&value);
+
+	gtk_widget_queue_draw (window->app);
 }
 
 
@@ -3302,7 +3369,7 @@ window_new (void)
 	window->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->list_store));
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (window->list_view), TRUE);
-	add_columns (GTK_TREE_VIEW (window->list_view));
+	add_columns (window, GTK_TREE_VIEW (window->list_view));
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (window->list_view), 
 					 TRUE);
 	gtk_tree_view_set_search_column (GTK_TREE_VIEW (window->list_view),
@@ -3659,6 +3726,11 @@ window_new (void)
 	window->cnxn_id[i++] = eel_gconf_notification_add (
 					   PREF_LIST_USE_MIME_ICONS,
 					   pref_use_mime_icons_changed,
+					   window);
+
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_NAUTILUS_CLICK_POLICY,
+					   pref_click_policy_changed,
 					   window);
 	
 	/* Give focus to the list. */

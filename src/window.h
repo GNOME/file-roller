@@ -30,7 +30,7 @@
 #include "typedefs.h"
 #include "file-list.h"
 
-#define GCONF_NOTIFICATIONS 8
+#define GCONF_NOTIFICATIONS 9
 
 enum {
 	COLUMN_FILE_DATA,
@@ -84,6 +84,7 @@ typedef struct {
 	GtkWidget *      home_button;
 	GtkWidget *      back_button;
 	GtkWidget *      fwd_button;
+	GtkCellRenderer *name_renderer;
 
 	GtkTooltips     *tooltips;
 	guint            help_message_cid;
@@ -115,6 +116,7 @@ typedef struct {
 	char *           folder_to_view;
 
 	gboolean         give_focus_to_the_list;
+	gboolean         single_click;
 
 	WindowSortMethod sort_method;
 	GtkSortType      sort_type;

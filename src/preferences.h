@@ -56,6 +56,8 @@
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"
 #define PREF_DESKTOP_MENUBAR_DETACHABLE "/desktop/gnome/interface/menubar_detachable"
 #define PREF_DESKTOP_TOOLBAR_DETACHABLE "/desktop/gnome/interface/toolbar_detachable"
+#define PREF_NAUTILUS_CLICK_POLICY "/apps/nautilus/preferences/click_policy"
+
 
 WindowSortMethod    preferences_get_sort_method ();
 

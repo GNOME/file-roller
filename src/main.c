@@ -137,6 +137,7 @@ initialize_data ()
 	gtk_window_set_default_icon_name ("file-roller");
 
 	eel_gconf_monitor_add ("/apps/file-roller");
+	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
 }
 
 /* Free application data. */
