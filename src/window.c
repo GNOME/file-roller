@@ -58,7 +58,7 @@
 #include "icons/pixbufs.h"
 
 
-#deinfe MAX_HISTORY_LEN 5
+#define MAX_HISTORY_LEN 5
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
 #define FILES_TO_PROCESS_AT_ONCE 500
