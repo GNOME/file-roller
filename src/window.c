@@ -117,7 +117,19 @@ _window_history_add (FRWindow   *window,
 			window->history_current = window->history;
 			return;
 		}
+
+		/* Add locations visited using the back button to the history
+		 * list. */
+		if ((window->history_current != NULL) 
+		    && (window->history != window->history_current)) {
+			GList *scan = window->history->next;
+			while (scan != window->history_current->next) {
+				window->history = g_list_prepend (window->history, g_strdup (scan->data));
+				scan = scan->next;
+			}
+		}
 	}
+
 	window->history = g_list_prepend (window->history, g_strdup (path));
 	window->history_current = window->history;
 }
