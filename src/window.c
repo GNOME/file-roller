@@ -451,34 +451,23 @@ scale_icon (GdkPixbuf *pixbuf,
 /* taken from egg-recent-util.c */
 static GdkPixbuf *
 load_icon_file (char          *filename,
-		guint          base_size,
 		guint          nominal_size)
 {
 	GdkPixbuf *pixbuf, *scaled_pixbuf;
         guint      width, height, size;
-        double     scale;
+
 	
-	pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+	pixbuf = gdk_pixbuf_new_from_file_at_size (filename, nominal_size, nominal_size, NULL);
 	
 	if (pixbuf == NULL) {
 		return NULL;
 	}
 
-	if (base_size == 0) {
-		width = gdk_pixbuf_get_width (pixbuf);
-		height = gdk_pixbuf_get_height (pixbuf);
-		size = MAX (width, height);
-		if (size > nominal_size) {
-			base_size = size;
-		} else {
-			/* Don't scale up small icons */
-			base_size = nominal_size;
-		}
-
-	} 
-
-	if (base_size != nominal_size) {
-		scale = (double) nominal_size / base_size;
+	width = gdk_pixbuf_get_width (pixbuf);
+	height = gdk_pixbuf_get_height (pixbuf);
+	size = MAX (width, height);
+	if (size > nominal_size) {
+		double scale = (double) size / nominal_size;
 		scaled_pixbuf = scale_icon (pixbuf, &scale);
 		g_object_unref (pixbuf);
 		pixbuf = scaled_pixbuf;
@@ -553,7 +542,7 @@ get_icon (GtkWidget *widget,
 
 		} else {
 			/* ...else load the file from disk. */
-			pixbuf = load_icon_file (icon_path, base_size, icon_size);
+			pixbuf = load_icon_file (icon_path, icon_size);
 
 			if (pixbuf == NULL) {
 				/* ...else use the default internal icons. */
