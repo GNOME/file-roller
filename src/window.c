@@ -81,8 +81,7 @@ enum {
 };
 
 static GtkTargetEntry target_table[] = {
-	{ "STRING",        0, TARGET_STRING },
-	{ "text/plain",    0, TARGET_STRING },
+	/*{ "STRING",        0, TARGET_STRING },*/
 	{ "text/uri-list", 0, TARGET_URL }
 };
 
