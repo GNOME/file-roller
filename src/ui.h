@@ -313,9 +313,6 @@ static const gchar *ui_info =
 "    <menuitem action='Paste'/>"
 "    <menuitem action='Rename'/>"
 "    <menuitem action='Delete'/>"
-"    <separator name='sep02'/>"
-"    <menuitem action='SelectAll'/>"
-"    <menuitem action='DeselectAll'/>"
 "  </popup>"
 "</ui>";
 

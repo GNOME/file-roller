@@ -753,15 +753,17 @@ fr_command_tar_escape (FRCommand     *comm,
 	char *estr;
 	char *estr2;
 
-        estr = escape_str (str, "?*\\'");
+        estr = escape_str (str, "?*\\'& !|()@#:;");
         estr2 = escape_str_common (estr, "[]", '[', ']');
 	g_free (estr);
-	
-	if ((strcmp (estr2, str) != 0) || strchrs (str, "& !()|@#:;")) {
-		char *estr3 = g_strconcat ("'", estr2, "'", NULL);
-		g_free (estr2);
-		estr2 = estr3;
-	}
+
+	/*
+	  if ((strcmp (estr2, str) != 0) || strchrs (str, "& !()|@#:;")) {
+	  char *estr3 = g_strconcat ("'", estr2, "'", NULL);
+	  g_free (estr2);
+	  estr2 = estr3;
+	  }
+	*/
 
 	return estr2;
 }
