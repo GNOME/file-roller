@@ -1693,7 +1693,7 @@ window_drag_data_received  (GtkWidget          *widget,
 
 	one_file = (list->next == NULL);
 	if (one_file)
-		is_an_archive = (fr_archive_utils_get_file_name_ext (list->data) != NULL);
+		is_an_archive = fr_archive_utils__file_is_archive (list->data);
 	else
 		is_an_archive = FALSE;
 

@@ -1,3 +1,21 @@
+2002-10-19  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-archive.c (create_command_from_sniffer): use a
+	personalized 'sniffer' to recognize supported archive formats with
+	exotic extensions (i.e. OpenOffice documents).
+	
+	* src/window.c (window_drag_data_received): use
+	fr_archive_utils__file_is_archive.
+
+	* src/fr-archive.c (fr_archive_utils__get_file_name_ext): rename
+	fr_archive_utils_get_file_name_ext as 
+	fr_archive_utils__get_file_name_ext
+	(fr_archive_utils__file_is_archive): new function
+
+	* src/fr-archive.h: 
+	* src/menu-callbacks.c (rename_archive_cb): use 
+	fr_archive_utils__get_file_name_ext.
+
 2002-10-16  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/fr-process.h (BUFFER_SIZE): set buffer size to 16384. 
