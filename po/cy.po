@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2003-07-24 03:21+0100\n"
-"PO-Revision-Date: 2003-07-24 03:21+0100\n"
+"POT-Creation-Date: 2003-08-09 16:39+0100\n"
+"PO-Revision-Date: 2003-08-09 16:40+0100\n"
 "Last-Translator: Dafydd Harries <daf@parassus.ath.cx>\n"
 "Language-Team: Cymraeg <gnome-cy@pengwyn.linux.org.uk>\n"
 "MIME-Version: 1.0\n"
@@ -45,8 +45,8 @@ msgstr "Rheolydd Archifau"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
-#: src/menu-callbacks.c:1076 src/window.c:759 src/window.c:1152
-#: src/window.c:2744
+#: src/menu-callbacks.c:1076 src/window.c:759 src/window.c:1157
+#: src/window.c:2749
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -59,7 +59,7 @@ msgstr "Gweithio ag archifau cywasg"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Does gennych chi ddim hawl i ddarllen ffeiliau o \"%s\""
 
-#: src/dlg-add.c:122 src/window.c:1783 src/window.c:1816
+#: src/dlg-add.c:122 src/window.c:1788 src/window.c:1821
 msgid "Could not add the files to the archive"
 msgstr "Methwyd ychwanegu ffeiliau i'r archif"
 
@@ -72,8 +72,8 @@ msgid "_Add only if newer"
 msgstr "_Ychwanegu os yn diweddarach"
 
 #: src/dlg-add.c:361
-msgid "_Include sub-folders"
-msgstr "_Cynnwys is-blygellau"
+msgid "_Include subfolders"
+msgstr "_Cynnwys isblygellau"
 
 #: src/dlg-add.c:362
 msgid "Exclude folders that are symbolic lin_ks"
@@ -120,7 +120,7 @@ msgid "Save Options"
 msgstr "Opsiynau Cadw"
 
 #: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
-#: src/menu-callbacks.c:198 src/window.c:3422
+#: src/menu-callbacks.c:198 src/window.c:3428
 msgid "Could not create the archive"
 msgstr "Methwyd creu'r archif"
 
@@ -128,20 +128,20 @@ msgstr "Methwyd creu'r archif"
 msgid "You have to specify an archive name."
 msgstr "Rhaid darparu enw archif."
 
-#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3423
-#: src/window.c:3560
+#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3429
+#: src/window.c:3566
 msgid "Archive type not supported."
 msgstr "Ni chynhelir y math yma o archif."
 
-#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3748
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3754
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Dydi'r blygell yna ddim yn bodoli.  Hoffech chi ei greu?"
 
-#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3751
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3757
 msgid "Create _Folder"
 msgstr "Creu _Plygell"
 
-#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3767
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3773
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Methwyd creu'r blygell allbwn: %s."
@@ -161,7 +161,7 @@ msgid "Folders to add: %d"
 msgstr "Plygellau i'w ychwanegu: %d"
 
 #: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
-#: src/window.c:3771 src/window.c:3790
+#: src/window.c:3777 src/window.c:3796
 msgid "Extraction not performed"
 msgstr "Ni wnaethpwyd yr echdyniad"
 
@@ -171,7 +171,7 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Does gennych chi ddim hawl i echdynnu ffeiliau yn y plygell \"%s\""
 
-#: src/dlg-extract.c:423 src/dlg-preferences.c:127 src/menu-callbacks.c:1035
+#: src/dlg-extract.c:423 src/dlg-preferences.c:125 src/menu-callbacks.c:1035
 msgid "Could not display help"
 msgstr "Methu dangos cymorth"
 
@@ -191,11 +191,11 @@ msgstr "Ffeiliau"
 msgid "Bookmarks"
 msgstr "Llyfrnodau"
 
-#: src/dlg-preferences.c:185
+#: src/dlg-preferences.c:182
 msgid "General"
 msgstr "Cyffredinol"
 
-#: src/dlg-preferences.c:190
+#: src/dlg-preferences.c:187
 msgid "Visible columns"
 msgstr "Colofnau gweledig"
 
@@ -274,7 +274,7 @@ msgstr "Dileu Ffeiliau"
 msgid "Do not e_xtract older files"
 msgstr "Peidio ag echdynnu ffeiliah _hen"
 
-#: src/file_roller.glade.h:10 src/window.c:2982
+#: src/file_roller.glade.h:10 src/window.c:2987
 msgid "Extract"
 msgstr "Echdynnu"
 
@@ -389,14 +389,10 @@ msgid "_Location"
 msgstr "_Lleoliad"
 
 #: src/file_roller_prop.glade.h:10
-msgid "_Recent archives:"
-msgstr "Archifau _diweddar:"
-
-#: src/file_roller_prop.glade.h:11
 msgid "_Size"
 msgstr "_Maint"
 
-#: src/file_roller_prop.glade.h:12
+#: src/file_roller_prop.glade.h:11
 msgid "_Type"
 msgstr "Ma_th"
 
@@ -412,7 +408,7 @@ msgstr "Ychwanegu'r ffeil: "
 msgid "Removing file: "
 msgstr "Dileu'r ffeil: "
 
-#: src/fr-command-tar.c:274 src/window.c:1248
+#: src/fr-command-tar.c:274 src/window.c:1253
 msgid "Deleting files from archive"
 msgstr "Dileu ffeiliau o'r archif"
 
@@ -617,7 +613,7 @@ msgstr ""
 msgid "An archive manager for GNOME."
 msgstr "Rheolydd archifau ar gyfer GNOME."
 
-#: src/menu-callbacks.c:1253 src/window.c:4079
+#: src/menu-callbacks.c:1253 src/window.c:4085
 msgid "Last Output"
 msgstr "Allbwn Diwethaf"
 
@@ -674,8 +670,8 @@ msgid "Move current archive to another folder"
 msgstr "Symud yr archif yma i plygell arall"
 
 #: src/menu.h:116
-msgid "Move To _Trash"
-msgstr "Symud i So_thach"
+msgid "Move to _Trash"
+msgstr "Symud i'r _Sbwriel"
 
 #: src/menu.h:116
 msgid "Move current archive to trash"
@@ -701,7 +697,7 @@ msgstr "Dangos priodweddau yr archif"
 msgid "Add _Files..."
 msgstr "Ychwanegu _Ffeiliau..."
 
-#: src/menu.h:162 src/menu.h:437 src/window.c:2972
+#: src/menu.h:162 src/menu.h:437 src/window.c:2977
 msgid "Add files to the archive"
 msgstr "Ychwanegu ffeiliau i'r archif"
 
@@ -717,7 +713,7 @@ msgstr "Dileu rhai o ffeiliau a plygellau o'r archif"
 msgid "_Extract to..."
 msgstr "_Echdynnu i..."
 
-#: src/menu.h:174 src/menu.h:449 src/window.c:2983
+#: src/menu.h:174 src/menu.h:449 src/window.c:2988
 msgid "Extract files from the archive"
 msgstr "Echdynnu ffeiliau o'r archif"
 
@@ -845,6 +841,11 @@ msgstr "_Trefnu Ffeiliau"
 msgid "_Last Output"
 msgstr "Allbwn _Diwethaf"
 
+#: src/menu.h:361
+msgid "View the output produced by the last executed command"
+msgstr "Gweld yr allbwn a gynhhyrchwyd gan y gorchymyn a weithredwyd "
+"ddiwethaf"
+
 #: src/menu.h:367
 msgid "New _Window"
 msgstr "_Ffenest Newydd"
@@ -937,80 +938,80 @@ msgstr "Detholwyd 1 ffeil (%s)"
 msgid "%d files selected (%s)"
 msgstr "Detholwyd %d ffeil (%s)"
 
-#: src/window.c:1245
+#: src/window.c:1250
 msgid "Reading archive"
 msgstr "Yn darllen yr archif"
 
-#: src/window.c:1251
+#: src/window.c:1256
 msgid "Adding files to archive"
 msgstr "Yn ychwanegu ffeiliau i'r archif"
 
-#: src/window.c:1254
+#: src/window.c:1259
 msgid "Extracting files from archive"
 msgstr "Yn echdynnu ffeiliau o'r archif"
 
-#: src/window.c:1257
+#: src/window.c:1262
 msgid "Testing archive"
 msgstr "Yn profi'r archif"
 
-#: src/window.c:1260
+#: src/window.c:1265
 msgid "Getting the file list"
 msgstr "Yn cyrchu'r rhestr ffeiliau"
 
-#: src/window.c:1266
+#: src/window.c:1271
 msgid "wait please..."
 msgstr "arhoswch os gwelwch yn dda..."
 
-#: src/window.c:1327
+#: src/window.c:1332
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Methwyd dangos y blygell \"%s\""
 
-#: src/window.c:1384
+#: src/window.c:1389
 msgid "Operation stopped"
 msgstr "Atalwyd y weithred"
 
-#: src/window.c:1405
+#: src/window.c:1410
 msgid "An error occurred while extracting files."
 msgstr "Digwyddod gwall wrth echdynnu ffeiliau."
 
-#: src/window.c:1409
+#: src/window.c:1414
 msgid "An error occurred while loading the archive."
 msgstr "Digwyddodd gwall wrth lwytho'r archif."
 
-#: src/window.c:1413
+#: src/window.c:1418
 msgid "An error occurred while deleting files from the archive."
 msgstr "Digwyddodd gwall wrth ddileu ffeiliau o'r archif."
 
-#: src/window.c:1417
+#: src/window.c:1422
 msgid "An error occurred while adding files to the archive."
 msgstr "Digwyddodd gwall wrth ychwanegu ffeiliau i'r archif."
 
-#: src/window.c:1421
+#: src/window.c:1426
 msgid "An error occurred while testing archive."
 msgstr "Digwyddodd gwall wrth brofi'r archif."
 
-#: src/window.c:1430
+#: src/window.c:1435
 msgid "Command not found."
 msgstr "Ni chanfodwyd y gorchymyn."
 
-#: src/window.c:1433
+#: src/window.c:1438
 msgid "Command exited abnormally."
 msgstr "Gorffenodd y gochymyn yn annaturiol."
 
-#: src/window.c:1564
+#: src/window.c:1569
 msgid "Test Result"
 msgstr "Canlyniad Prawf"
 
-#: src/window.c:1784
+#: src/window.c:1789
 msgid "You don't have the right permissions."
 msgstr "Does gennych chi mo'r hawliau cywir."
 
-#: src/window.c:1817
+#: src/window.c:1822
 msgid "You can't add an archive to itself."
 msgstr "Ni allwch ychwanegu archif i'w hunan."
 
-#: src/window.c:1989
+#: src/window.c:1994
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1018,72 +1019,75 @@ msgstr ""
 "Ydych chi eisiau ychwanegu'r ffeil hwn i'r archif cyfredol neu eu agor fel "
 "archif newydd?"
 
-#: src/window.c:2034
+#: src/window.c:2039
 msgid "Do you want to create a new archive with these files?"
 msgstr "Ydych chi eisiau creu archif newydd gyda'r ffeiliau yma?"
 
-#: src/window.c:2037
+#: src/window.c:2042
 msgid "Create _Archive"
 msgstr "Creu _Archif"
 
-#: src/window.c:2382
+#: src/window.c:2387
 msgid "Size"
 msgstr "Maint"
 
-#: src/window.c:2383
+#: src/window.c:2388
 msgid "Type"
 msgstr "Math"
 
-#: src/window.c:2384
+#: src/window.c:2389
 msgid "Date modified"
 msgstr "Dyddiad newid"
 
-#: src/window.c:2385
+#: src/window.c:2390
 msgid "Location"
 msgstr "Lleoliad"
 
-#: src/window.c:2392
+#: src/window.c:2397
 msgid "Name"
 msgstr "Enw"
 
-#: src/window.c:2912
+#: src/window.c:2917
 msgid "_Up"
 msgstr "I _Fyny"
 
 #. current location
-#: src/window.c:2934
+#: src/window.c:2939
 msgid "Location:"
 msgstr "Lleoliad:"
 
-#: src/window.c:2971
+#: src/window.c:2976
 msgid "Add"
 msgstr "Ychwanegu"
 
-#: src/window.c:2993
+#: src/window.c:2998
 msgid "View"
 msgstr "Golwg"
 
-#: src/window.c:2994
+#: src/window.c:2999
 msgid "View selected file"
 msgstr "Gweld y ffeil a ddetholwyd"
 
-#: src/window.c:3502
+#: src/window.c:3508
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Methwyd agor \"%s\""
 
-#: src/window.c:3553
+#: src/window.c:3559
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Methwyd cadw yr archif \"%s\""
 
-#: src/window.c:4617
+#: src/window.c:4623
 msgid "Add files to an archive"
 msgstr "Ychwanegu ffeiliau at archif"
 
-#: src/window.c:4642
+#: src/window.c:4648
 msgid "Extract archive"
 msgstr "Echdynnu archif"
+
+#~ msgid "_Recent archives:"
+#~ msgstr "Archifau _diweddar:"
 
 #~ msgid "Add Files and Folders"
 #~ msgstr "Ychwanegu Ffeiliau a Plygellau"
