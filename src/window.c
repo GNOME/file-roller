@@ -21,6 +21,7 @@
  */
 
 #include <config.h>
+#include <math.h>
 #include <string.h>
 #include <fnmatch.h>
 #include <gnome.h>
@@ -55,8 +56,6 @@
 #include "icons/pixbufs.h"
 
 
-#define ICON_SIZE 24
-#define DICON_SIZE 24.0
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
 #define FILES_TO_PROCESS_AT_ONCE 500
@@ -65,6 +64,8 @@
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
 #define ICON_TYPE_DIRECTORY "gnome-fs-directory"
 #define ICON_TYPE_REGULAR   "gnome-fs-regular"
+#define ICON_GTK_SIZE GTK_ICON_SIZE_LARGE_TOOLBAR
+
 
 enum {
 	TARGET_STRING,
@@ -82,6 +83,7 @@ static GdkPixbuf *folder_pixbuf = NULL;
 static GdkPixbuf *file_pixbuf = NULL;
 static GHashTable *pixbuf_hash = NULL;
 static GnomeIconTheme *icon_theme = NULL;
+static int icon_size = 0;
 
 
 /* -- window_update_file_list -- */
@@ -359,8 +361,64 @@ get_time_string (time_t time)
 #undef MAX_S_TIME_LEN
 
 
+/* taken from egg-recent-util.c */
 static GdkPixbuf *
-get_icon (FileData *fdata)
+scale_icon (GdkPixbuf *pixbuf,
+	    double    *scale)
+{
+	guint width, height;
+	
+	width = gdk_pixbuf_get_width (pixbuf);
+	height = gdk_pixbuf_get_height (pixbuf);
+	
+	width = floor (width * *scale + 0.5);
+	height = floor (height * *scale + 0.5);
+	
+        return gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
+}
+
+/* taken from egg-recent-util.c */
+static GdkPixbuf *
+load_icon_file (char          *filename,
+               guint          base_size,
+               guint          nominal_size)
+{
+	GdkPixbuf *pixbuf, *scaled_pixbuf;
+        guint width, height, size;
+        double scale;
+	
+	pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+	
+	if (pixbuf == NULL) {
+		return NULL;
+	}
+
+	if (base_size == 0) {
+		width = gdk_pixbuf_get_width (pixbuf);
+		height = gdk_pixbuf_get_height (pixbuf);
+		size = MAX (width, height);
+		if (size > nominal_size) {
+			base_size = size;
+		} else {
+			/* Don't scale up small icons */
+			base_size = nominal_size;
+		}
+	}
+
+	if (base_size != nominal_size) {
+		scale = (double)nominal_size/base_size;
+		scaled_pixbuf = scale_icon (pixbuf, &scale);
+		g_object_unref (pixbuf);
+		pixbuf = scaled_pixbuf;
+	}
+
+        return pixbuf;
+}
+
+
+static GdkPixbuf *
+get_icon (GtkWidget *widget,
+         FileData  *fdata)
 {
 	GdkPixbuf   *pixbuf;
 	char        *icon_name;
@@ -403,11 +461,14 @@ get_icon (FileData *fdata)
 		g_object_ref (pixbuf);
 
 	} else {
+		const GnomeIconData *icon_data;
+		int   base_size;
+
 		icon_path = gnome_icon_theme_lookup_icon (icon_theme, 
 							  icon_name,
-							  ICON_SIZE,
-							  NULL,
-							  NULL);
+							  icon_size,
+							  &icon_data,
+							  &base_size);
 
 		if (icon_path == NULL) {
 			/* if nothing was found use the default internal 
@@ -420,31 +481,9 @@ get_icon (FileData *fdata)
 
 		} else {
 			/* ...else load the file from disk. */
+			pixbuf = load_icon_file (icon_path, base_size, icon_size);
 
-			pixbuf = gdk_pixbuf_new_from_file (icon_path, NULL);
-			if (pixbuf != NULL) {
-				GdkPixbuf *scaled;
-				int        new_w, new_h;
-				int        w, h;
-				double     factor;
-				
-				/* scale keeping aspect ratio. */
-				
-				w = gdk_pixbuf_get_width (pixbuf);
-				h = gdk_pixbuf_get_height (pixbuf);
-				
-				factor = MIN (DICON_SIZE / w, DICON_SIZE / h);
-				new_w  = MAX ((int) (factor * w), 1);
-				new_h  = MAX ((int) (factor * h), 1);
-				
-				scaled = gdk_pixbuf_scale_simple (pixbuf,
-								  new_w,
-								  new_h,
-								  GDK_INTERP_BILINEAR);
-				g_object_unref (pixbuf);
-				pixbuf = scaled;        
-
-			} else {
+			if (pixbuf == NULL) {
 				/* ...else use the default internal icons. */
 
 				if (fdata->is_dir)
@@ -556,7 +595,7 @@ update_file_list_idle (gpointer callback_data)
 		GdkPixbuf   *pixbuf;
 		char        *utf8_name;
 
-		pixbuf = get_icon (fdata);
+		pixbuf = get_icon (window->app, fdata);
 		utf8_name = g_locale_to_utf8 (fdata->list_name, 
 					      -1, NULL, NULL, NULL);
 		gtk_list_store_prepend (window->list_store, &iter);
@@ -2340,6 +2379,30 @@ pref_use_mime_icons_changed (GConfClient *client,
 		g_hash_table_destroy (pixbuf_hash);
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	}
+
+	window_update_file_list (window);
+}
+
+
+static void
+theme_changed_cb (GnomeIconTheme *theme, FRWindow *window)
+{
+	int icon_width, icon_height;
+	
+	gtk_icon_size_lookup_for_settings (gtk_widget_get_settings (window->app),
+					   ICON_GTK_SIZE,
+					   &icon_width, &icon_height);
+	
+	icon_size = MAX (icon_width, icon_height);
+	
+	if (pixbuf_hash != NULL) {
+		g_hash_table_foreach (pixbuf_hash,
+				      gh_unref_pixbuf,
+				      NULL);
+		g_hash_table_destroy (pixbuf_hash);
+		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	}
+	
 	window_update_file_list (window);
 }
 
@@ -2359,6 +2422,7 @@ window_new ()
 	int               i;
 	EggRecentModel   *model;
         EggRecentViewGtk *view;
+	int               icon_width, icon_height;
 
 	/* data common to all windows. */
 
@@ -2370,8 +2434,10 @@ window_new ()
 	if (pixbuf_hash == NULL)
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
-	if (icon_theme == NULL)
+	if (icon_theme == NULL) {
 		icon_theme = gnome_icon_theme_new ();
+		gnome_icon_theme_set_allow_svg (icon_theme, TRUE);
+	}
 
 	/**/
 
@@ -2391,6 +2457,18 @@ window_new ()
 			  "show",
 			  G_CALLBACK (window_show_cb),
 			  window);
+
+	window->theme_changed_handler_id =
+		g_signal_connect (icon_theme,
+				  "changed",
+				  G_CALLBACK (theme_changed_cb),
+				  window);
+	
+	gtk_icon_size_lookup_for_settings (gtk_widget_get_settings (window->app),
+					   ICON_GTK_SIZE,
+					   &icon_width, &icon_height);
+	
+	icon_size = MAX (icon_width, icon_height);
 
 	gtk_window_set_default_size (GTK_WINDOW (window->app), 600, 480);
 
@@ -2907,6 +2985,10 @@ void
 window_close (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
+
+	if (window->theme_changed_handler_id != 0)
+		g_signal_handler_disconnect (icon_theme,
+					     window->theme_changed_handler_id);
 
 	if (window->current_dir != NULL)
 		g_free (window->current_dir);
