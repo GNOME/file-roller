@@ -88,6 +88,8 @@ file_roller_SOURCES = 			\
 	fr-command-zip.h		\
 	fr-command-zoo.c		\
 	fr-command-zoo.h		\
+	fr-command-7z.c			\
+	fr-command-7z.h			\
 	fr-error.c			\
 	fr-error.h			\
 	fr-stock.c			\

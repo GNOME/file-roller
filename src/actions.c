@@ -109,7 +109,8 @@ static FileTypeDescription write_type_desc[] = {
 	{ N_("Tar compressed with compress (.tar.Z)"), ".tar.Z" }, 
 	{ N_("War (.war)"),                            ".war" },
 	{ N_("Zip (.zip)"),                            ".zip" },
-	{ N_("Zoo (.zoo)"),                            ".zoo" }
+	{ N_("Zoo (.zoo)"),                            ".zoo" },
+	{ N_("7-Zip (.7z)"),                            ".7z" }
 };
 
 
@@ -282,7 +283,8 @@ activate_action_new (GtkAction *action,
 		"application/x-rar-compressed",
 		"application/x-tar",
 		"application/x-zoo",
-		"application/zip"
+		"application/zip",
+		"application/x-7zip"
 	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
@@ -415,7 +417,8 @@ activate_action_open (GtkAction *action,
 		"application/x-tar",
 		"application/x-zip",
 		"application/x-zoo",
-		"application/zip"
+		"application/zip",
+		"application/x-7zip"
 	};
 	GtkWidget     *file_sel;
 	FRWindow      *window = data;
@@ -602,6 +605,7 @@ activate_action_save_as (GtkAction *action,
 		"application/x-tar",
 		"application/x-zoo",
 		"application/zip",
+		"application/x-7zip"
 	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;

@@ -123,6 +123,10 @@ char *              get_temp_work_dir            (void);
 
 char *              get_temp_work_dir_name       (void);
 
+char *              str_substitute               (const char *str,
+						  const char *from_str,
+						  const char *to_str);
+
 /* misc functions used to parse a command output lines. */
 
 gboolean            file_list__match_pattern     (const char *line, 

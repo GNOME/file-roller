@@ -949,7 +949,7 @@ eat_spaces (const char *line)
 
 char **
 split_line (const char *line, 
-	    int   n_fields)
+	    int         n_fields)
 {
 	char       **fields;
 	const char  *scan, *field_end;
@@ -1133,4 +1133,35 @@ file_list__get_prev_field (const char *line,
 	}
 
 	return g_strndup (f_start + 1, f_end - f_start);
+}
+
+
+char *
+str_substitute (const char *str,
+		const char *from_str,
+		const char *to_str)
+{
+	char    **tokens;
+	int       i;
+	GString  *gstr;
+
+	if (str == NULL)
+		return NULL;
+
+	if (from_str == NULL)
+		return g_strdup (str);
+
+	if (strcmp (str, from_str) == 0)
+		return g_strdup (to_str);
+
+	tokens = g_strsplit (str, from_str, -1);
+
+	gstr = g_string_new (NULL);
+	for (i = 0; tokens[i] != NULL; i++) {
+		gstr = g_string_append (gstr, tokens[i]);
+		if ((to_str != NULL) && (tokens[i+1] != NULL))
+			gstr = g_string_append (gstr, to_str);
+	}
+
+	return g_string_free (gstr, FALSE);
 }

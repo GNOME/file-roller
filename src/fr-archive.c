@@ -44,6 +44,7 @@
 #include "fr-command-unstuff.h"
 #include "fr-command-zip.h"
 #include "fr-command-zoo.h"
+#include "fr-command-7z.h"
 #include "fr-error.h"
 #include "fr-marshal.h"
 #include "fr-process.h"
@@ -281,6 +282,9 @@ create_command_from_mime_type (FRArchive  *archive,
 		   is_mime_type (mime_type, "application/x-ar")) {
 		archive->command = fr_command_ar_new (archive->process, 
 						      filename);
+	} else if (is_mime_type (mime_type, "application/x-7zip")) {
+		archive->command = fr_command_7z_new (archive->process,
+						      filename);
 	} else 
 		return FALSE;
 
@@ -419,6 +423,9 @@ create_command_from_filename (FRArchive  *archive,
 		   || file_extension_is (filename, ".deb")) {
 		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
+	} else if (file_extension_is (filename, ".7z")) {
+		archive->command = fr_command_7z_new (archive->process,
+						      filename);
 	} else if (loading) {
 		if (file_extension_is (filename, ".gz")
 		    || file_extension_is (filename, ".z")
@@ -1415,13 +1422,26 @@ extract_in_chunks (FRCommand  *command,
 
 static char*
 compute_base_path (const char *base_dir,
-		   const char *path)
+		   const char *path,
+		   gboolean    junk_paths,
+		   gboolean    can_junk_paths)
 {
 	int         base_dir_len = strlen (base_dir);
 	int         path_len = strlen (path);
 	const char *base_path;
 	char       *name_end;
 	char       *new_path;
+
+	if (junk_paths) {
+		if (can_junk_paths)
+			new_path = g_strdup (file_name_from_path (path));
+		else
+			new_path = g_strdup (path);
+#ifdef DEBUG
+		g_print ("%s, %s --> %s\n", base_dir, path, new_path);
+#endif
+		return new_path;
+	}
 
 	if (path_len <= base_dir_len)
 		return NULL;
@@ -1448,7 +1468,9 @@ compute_base_path (const char *base_dir,
 
 static GList*
 compute_list_base_path (const char *base_dir,
-			GList      *filtered)
+			GList      *filtered,
+			gboolean    junk_paths,
+			gboolean    can_junk_paths)
 {
 	GList *scan;
 	GList *list = NULL, *list_unique = NULL;
@@ -1460,7 +1482,7 @@ compute_list_base_path (const char *base_dir,
 	for (scan = filtered; scan; scan = scan->next) {
 		const char *path = scan->data;
 		char       *new_path;
-		new_path = compute_base_path (base_dir, path);
+		new_path = compute_base_path (base_dir, path, junk_paths, can_junk_paths);
 		if (new_path != NULL)
 			list = g_list_prepend (list, new_path);
 	}
@@ -1648,7 +1670,7 @@ fr_archive_extract (FRArchive  *archive,
 				   password);
 
 		if (use_base_dir) {
-			GList *tmp_list = compute_list_base_path (base_dir, filtered);
+			GList *tmp_list = compute_list_base_path (base_dir, filtered, junk_paths, archive->command->propExtractCanJunkPaths);
 			g_list_free (filtered);
 			filtered = tmp_list;
 		}
@@ -1709,6 +1731,7 @@ G_CONST_RETURN char *
 fr_archive_utils__get_file_name_ext (const char *filename)
 {
 	static char * ext[] = {
+		".7z",
 		".ar",
 		".arj",
 		".bin",
