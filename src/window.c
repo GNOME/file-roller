@@ -67,6 +67,8 @@
 #define PROGRESS_DIALOG_WIDTH 300
 #define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
 #define HIDE_PROGRESS_TIMEOUT_MSECS 200 /* FIXME */
+#define NAME_COLUMN_WIDTH 250
+#define OTHER_COLUMNS_WIDTH 100
 
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
 #define ICON_TYPE_DIRECTORY "gnome-fs-directory"
@@ -2704,6 +2706,13 @@ add_columns (FRWindow    *window,
 		g_value_set_enum (&value, PANGO_UNDERLINE_SINGLE);
 		g_object_set_property (G_OBJECT (renderer), "underline", &value);
 		g_value_unset (&value);
+
+		/**/
+
+		g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
+		g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
+		g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
+		g_value_unset (&value);
 	}
 
 	gtk_tree_view_column_pack_start (column,
@@ -2713,7 +2722,8 @@ add_columns (FRWindow    *window,
                                              "text", COLUMN_NAME,
                                              NULL);
 
-	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+	gtk_tree_view_column_set_fixed_width (column, NAME_COLUMN_WIDTH);
 	gtk_tree_view_column_set_resizable (column, TRUE);
 
 	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
@@ -2721,16 +2731,24 @@ add_columns (FRWindow    *window,
 
 	/* Other columns */
 	for (j = 0, i = COLUMN_SIZE; i < NUMBER_OF_COLUMNS; i++, j++) {
+		GValue  value = { 0, };
+
 		renderer = gtk_cell_renderer_text_new ();
 		column = gtk_tree_view_column_new_with_attributes (_(titles[j]),
 								   renderer,
 								   "text", i,
 								   NULL);
 
-		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+		gtk_tree_view_column_set_fixed_width (column, OTHER_COLUMNS_WIDTH);
 		gtk_tree_view_column_set_resizable (column, TRUE);
 
 		gtk_tree_view_column_set_sort_column_id (column, i);
+
+		g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
+		g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
+		g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
+		g_value_unset (&value);
 
 		gtk_tree_view_append_column (treeview, column);
 	}
