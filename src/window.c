@@ -644,6 +644,11 @@ window_update_file_list (FRWindow *window)
 	} else
 		gtk_widget_set_sensitive (window->list_view, TRUE);
 
+	if (window->give_focus_to_the_list) {
+		gtk_widget_grab_focus (window->list_view);
+		window->give_focus_to_the_list = FALSE;
+	}
+
 	gtk_tree_view_set_model (GTK_TREE_VIEW (window->list_view), 
 				 GTK_TREE_MODEL (window->empty_store));
 
@@ -878,30 +883,31 @@ _window_update_sensitivity (FRWindow *window)
 	gboolean one_file_selected;
 	gboolean dir_selected;
 	int      n_selected;
- 
+
+	if (window->batch_mode)
+		return;
+
 	running           = window->activity_ref > 0;
-	no_archive        = ! window->archive_present;
-	ro                = window->archive->read_only;
-	file_op           = (window->archive_present 
-			     && ! window->archive_new 
-			     && ! running);
-	compr_file        = window->archive->is_compressed_file;
+	no_archive        = (window->archive == NULL) || ! window->archive_present;
+	ro                = ! no_archive && window->archive->read_only;
+	file_op           = ! no_archive && ! window->archive_new  && ! running;
+	compr_file        = ! no_archive && window->archive->is_compressed_file;
 	n_selected        = _gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
 	sel_not_null      = n_selected > 0;
 	one_file_selected = n_selected == 1;
-	dir_selected  = selection_has_a_dir (window); 
+	dir_selected      = selection_has_a_dir (window); 
 
 	gtk_widget_set_sensitive (window->mitem_new_archive, ! running);
 	gtk_widget_set_sensitive (window->mitem_open_archive, ! running);
 	gtk_widget_set_sensitive (window->mitem_close, ! no_archive);
-
+	
 	gtk_widget_set_sensitive (window->mitem_archive_prop, file_op);
-
+	
 	gtk_widget_set_sensitive (window->mitem_move_archive, file_op && ! ro);
 	gtk_widget_set_sensitive (window->mitem_copy_archive, file_op);
 	gtk_widget_set_sensitive (window->mitem_rename_archive, file_op && ! ro);
 	gtk_widget_set_sensitive (window->mitem_delete_archive, file_op && ! ro);
-
+	
 	gtk_widget_set_sensitive (window->mitem_add, ! no_archive && ! ro && ! running && ! compr_file);
 	gtk_widget_set_sensitive (window->mitem_delete, ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file);
 	gtk_widget_set_sensitive (window->mitem_extract, file_op);
@@ -911,9 +917,9 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->mitem_stop, running);
 	gtk_widget_set_sensitive (window->mitem_reload, ! (no_archive || running));
 	gtk_widget_set_sensitive (window->mitem_password, ! no_archive && ! running && window->archive->command->propPassword);
-
+	
 	/* toolbar */
-
+	
 	gtk_widget_set_sensitive (window->toolbar_new, ! running);
 	gtk_widget_set_sensitive (window->toolbar_open, ! running);
 	gtk_widget_set_sensitive (window->toolbar_add, ! no_archive && ! ro && ! running && ! compr_file);
@@ -921,7 +927,7 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->toolbar_extract, file_op);
 	gtk_widget_set_sensitive (window->toolbar_view, file_op && one_file_selected && ! dir_selected);
 	gtk_widget_set_sensitive (window->toolbar_stop, running);
-
+	
 	/* popup menu */
 
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_ADD], ! no_archive && ! ro && ! running && ! compr_file);
@@ -1210,6 +1216,7 @@ _action_performed (FRArchive   *archive,
 				  G_CALLBACK (gtk_widget_destroy), 
 				  NULL);
 		gtk_widget_show (dialog);
+
 	} else if (error->type != FR_PROC_ERROR_NONE) {
 		char      *msg = NULL;
 		char      *details = NULL;
@@ -1296,6 +1303,7 @@ _action_performed (FRArchive   *archive,
 			window->archive_new = FALSE;
 		}
 
+		_window_add_to_recent (window, window->archive_filename, TRUE);
 		window_update_file_list (window);
 		_window_update_title (window);
 		_window_update_current_location (window);
@@ -1325,9 +1333,15 @@ _action_performed (FRArchive   *archive,
 			drag_drop_add_file_list (window);
 			return;
 
-		} else if (! window->batch_mode) {
-			window_archive_reload (window);
-			return;
+		} else {
+			_window_add_to_recent (window, 
+					       window->archive_filename,
+					       TRUE);
+			
+			if (! window->batch_mode) {
+				window_archive_reload (window);
+				return;
+			} 
 		}
 		break;
 
@@ -1358,10 +1372,8 @@ _action_performed (FRArchive   *archive,
 
 	if (error->type != FR_PROC_ERROR_NONE) 
 		window_batch_mode_stop (window);
-	else {
-		if (! window->batch_mode) 
-			return;
 
+	else if (window->batch_mode) {
 		window->batch_action = g_list_next (window->batch_action);
 		_window_batch_start_current_action (window);
 	}
@@ -1458,16 +1470,17 @@ static char *
 get_path_from_url (char *url)
 {
 	GnomeVFSURI *uri;
-	char        *path;
 	char        *escaped;
+	char        *path;
 
 	if (url == NULL)
 		return NULL;
 
 	uri = gnome_vfs_uri_new (url);
 	escaped = gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
-	gnome_vfs_uri_unref (uri);
 	path = gnome_vfs_unescape_string (escaped, NULL);
+
+	gnome_vfs_uri_unref (uri);
 	g_free (escaped);
 
 	return path;
@@ -1691,7 +1704,7 @@ window_drag_data_received  (GtkWidget          *widget,
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
-	list = get_file_list_from_url_list ((gchar *)data->data);
+	list = get_file_list_from_url_list ((char *)data->data);
 	if (list == NULL)
 		return;
 
@@ -2696,6 +2709,8 @@ window_new ()
 	window->view_folder_after_extraction = FALSE;
 	window->folder_to_view = NULL;
 
+	window->give_focus_to_the_list = FALSE;
+
 	window->activity_ref = 0;
 	window->activity_timeout_handle = 0;
 
@@ -3049,6 +3064,7 @@ window_archive_open (FRWindow   *window,
 		window->archive_filename = g_strdup (filename);
 
 	window->archive_present = FALSE;	
+	window->give_focus_to_the_list = TRUE;
 
 	window->archive->fake_load = window->batch_mode && ! window->update_dropped_files;
 	success = fr_archive_load (window->archive, window->archive_filename);

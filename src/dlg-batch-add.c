@@ -73,6 +73,8 @@ add_clicked_cb (GtkWidget  *widget,
 	FRWindow *window = data->window; 
 	char     *archive_name_utf8;
 	char     *archive_name;
+	char     *archive_dir;
+	gboolean  do_not_add = FALSE;
 
 	data->add_clicked = TRUE;
 
@@ -84,12 +86,69 @@ add_clicked_cb (GtkWidget  *widget,
 
 	window->update_dropped_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_only_newer_checkbutton));
 
+	/* check directory existence. */
+
+	archive_dir = remove_level_from_path (archive_name);
+	if (! path_is_dir (archive_dir)) {
+		GtkWidget *d;
+		int        r;
+		
+		d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
+					     GTK_DIALOG_MODAL,
+					     GTK_STOCK_DIALOG_QUESTION,
+					     _("Destination folder does not exist.  Do you want to create it?"),
+					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					     _("Create _Folder"), GTK_RESPONSE_YES,
+					     NULL);
+			
+		r = gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+
+		if (r != GTK_RESPONSE_YES) 
+			do_not_add = TRUE;
+	}
+
+	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755)) {
+		GtkWidget  *d;
+		const char *error;
+
+		error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
+		
+		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
+					    GTK_DIALOG_DESTROY_WITH_PARENT,
+					    GTK_MESSAGE_ERROR,
+					    GTK_BUTTONS_CLOSE,
+					    _("Could not create the destination folder: %s.\nAddition not performed."), error);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (archive_dir);
+
+		return;
+	}
+
+	g_free (archive_dir);
+
+	if (do_not_add) {
+		GtkWidget *d;
+
+		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
+					    GTK_DIALOG_DESTROY_WITH_PARENT,
+					    GTK_MESSAGE_ERROR,
+					    GTK_BUTTONS_CLOSE,
+					    _("Addition not performed."));
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+
+		return;
+	}
+
 	if (! path_is_file (archive_name)) {
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup (data->file_list);
 		window->add_dropped_files = TRUE;
 		window_archive_new (window, archive_name);
+
 	} else {
 		window_batch_mode_add_next_action (window,
 						   FR_BATCH_ACTION_ADD,
@@ -97,6 +156,7 @@ add_clicked_cb (GtkWidget  *widget,
 						   (GFreeFunc) path_list_free);
 		window_archive_open (window, archive_name);
 	}
+
 	g_free (archive_name);
 
 	gtk_widget_destroy (data->dialog);

@@ -94,6 +94,8 @@ typedef struct {
 	gboolean         view_folder_after_extraction;
 	char *           folder_to_view;
 
+	gboolean         give_focus_to_the_list;
+
 	WindowSortMethod sort_method;
 	GtkSortType      sort_type;
 

@@ -62,10 +62,10 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 	str = g_string_new ("file-roller");
 
 	if (strcmp (event_name, "AddToArchive") == 0) {
-		cmd_option = g_strdup_printf ("--default-dir=%s --add",
+		cmd_option = g_strdup_printf ("--default-dir=\"%s\" --add",
 					      current_dir);
 	} else if (strcmp (event_name, "ExtractTo") == 0) {
-		cmd_option = g_strdup_printf ("--default-dir=%s --extract",
+		cmd_option = g_strdup_printf ("--default-dir=\"%s\" --extract",
 					      current_dir);
 	} else if (strcmp (event_name, "ExtractToSubfolder") == 0) {
 		char *base, *dir, *strip;
@@ -92,11 +92,11 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 		dir = g_build_filename (current_dir, base);
 		g_free (base);
 
-		cmd_option = g_strdup_printf ("--force --extract-to=%s",
+		cmd_option = g_strdup_printf ("--force --extract-to=\"%s\"",
 					      dir);
 		g_free (dir);
 	} else if (strcmp (event_name, "ExtractHere") == 0) {
-		cmd_option = g_strdup_printf ("--force --extract-to=%s",
+		cmd_option = g_strdup_printf ("--force --extract-to=\"%s\"",
 					      current_dir);
 	}
 

@@ -54,12 +54,6 @@ static gchar *extract_to = NULL;
 static gint   extract;
 static gchar *default_url = NULL;
 
-#define N_SCRIPTS 4
-static char *script[N_SCRIPTS] = { "Add_to_archive", 
-				   "Extract_here", 
-				   "Extract_in_a_subfolder", 
-				   "Extract_to" };
-
 struct poptOption options[] = {
 	{ "add-to", 'a', POPT_ARG_STRING, &add_to, 0,
 	  N_("Add files to the specified archive and quit the program"),

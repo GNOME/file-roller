@@ -1214,8 +1214,8 @@ fr_archive_utils__file_is_archive (const char *filename)
 	
 	mime_type = get_mime_type_from_content (filename);
 	
-	if (mime_type != NULL)
-		return TRUE;
+	if (mime_type == NULL)
+		return FALSE;
 	
 	mime_type = get_mime_type_from_sniffer (filename);
 	
