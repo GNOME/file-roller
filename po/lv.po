@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2002-12-27 05:56+0100\n"
-"PO-Revision-Date: 2002-12-28 00:08+0200\n"
+"POT-Creation-Date: 2002-12-28 05:56+0100\n"
+"PO-Revision-Date: 2002-12-28 19:39+0200\n"
 "Last-Translator: Artis Trops <hornet@navigator.lv>\n"
 "Language-Team: Latvian <ll10nt@os.lv>\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Jums nav vajadzīgās atļaujas, lai nolasītu failus no mapes \"%s\""
 
 #: src/dlg-add.c:338
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:5
 msgid "Add Files and Folders"
 msgstr "Pievienot Failus un Mapes"
 
@@ -175,7 +175,19 @@ msgstr "Jums nav vajadzīgās atļaujas, lai atspiestu arhīvus mapē \"%s\""
 msgid "Could not display help: %s"
 msgstr "Nevarēju parādīt palīdzību: %s"
 
-#: src/dlg-extract.c:486
+#: src/dlg-extract.c:474
+msgid "Actions"
+msgstr "Darbības"
+
+#: src/dlg-extract.c:475
+msgid "Destination folder"
+msgstr "Mērķa mape"
+
+#: src/dlg-extract.c:476
+msgid "Files"
+msgstr "Faili"
+
+#: src/dlg-extract.c:505
 msgid "Bookmarks"
 msgstr "Grāmatzīmes"
 
@@ -238,117 +250,105 @@ msgid "*"
 msgstr "*"
 
 #: src/file_roller.glade.h:3
-msgid "<b>Actions</b>"
-msgstr "<b>Darbības</b>"
-
-#: src/file_roller.glade.h:4
-msgid "<b>Destination folder</b>"
-msgstr "<b>Mērķa mape</b>"
-
-#: src/file_roller.glade.h:5
-msgid "<b>Files</b>"
-msgstr "<b>Faili</b>"
-
-#: src/file_roller.glade.h:6
 msgid "A_dd to Bookmarks"
 msgstr "Pievieno_t Grāmatzīmēm"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:4
 msgid "A_vailable application:"
 msgstr "Pi_eejamā aplikācija:"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "_Pievienot arhīvam:"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:7
 msgid "Add only if _newer"
 msgstr "Pievienot tikai, _ja jaunāks"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:8
 #: src/menu.h:464
 msgid "Delete Files"
 msgstr "Dzēst Failus"
 
-#: src/file_roller.glade.h:12
+#: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
 msgstr "Neatpiest _vecākus failus"
 
-#: src/file_roller.glade.h:13
+#: src/file_roller.glade.h:10
 #: src/window.c:2603
 msgid "Extract"
 msgstr "Atspiest"
 
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:11
 msgid "Extract to"
 msgstr "Atspiest iekš"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:12
 msgid "Note: the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted."
 msgstr "Piezīme: parole tiks lietota, lai šifrētu failus, kurus jūs pievienojat pašreizējam arhīvam,  un lai atšifrētu failus, kurus jūs atspiežat no pašreizējā arhīva. Kad arhīvs tiks aizvērts, parole tiks dzēsta."
 
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:13
 msgid "Open Files"
 msgstr "Atvērt Failus"
 
-#: src/file_roller.glade.h:17
+#: src/file_roller.glade.h:14
 msgid "Open with an _application"
 msgstr "Atvērt ar _aplikāciju"
 
-#: src/file_roller.glade.h:18
+#: src/file_roller.glade.h:15
 msgid "Over_write existing files"
 msgstr "Pār_rakstīt eksistējošos failus"
 
-#: src/file_roller.glade.h:19
+#: src/file_roller.glade.h:16
 msgid "Password"
 msgstr "Parole"
 
-#: src/file_roller.glade.h:20
+#: src/file_roller.glade.h:17
 msgid "R_ecent applications:"
 msgstr "_Nesenās aplikācijas:"
 
-#: src/file_roller.glade.h:21
+#: src/file_roller.glade.h:18
 msgid "R_ecreate folders"
 msgstr "Vēreiz iz_veidot mapes"
 
-#: src/file_roller.glade.h:22
+#: src/file_roller.glade.h:19
 msgid "Select archive"
 msgstr "Izvēlieties arhīvu"
 
-#: src/file_roller.glade.h:23
+#: src/file_roller.glade.h:20
 #: src/menu.h:450
 msgid "View File"
 msgstr "Skatīt Failu"
 
-#: src/file_roller.glade.h:24
+#: src/file_roller.glade.h:21
 msgid "View with internal _viewer"
 msgstr "Skatīt ar iekšējo s_katītāju"
 
-#: src/file_roller.glade.h:25
+#: src/file_roller.glade.h:22
 msgid "_All files"
 msgstr "_Visi faili"
 
-#: src/file_roller.glade.h:26
+#: src/file_roller.glade.h:23
 msgid "_Application:"
 msgstr "_Aplikācijas:"
 
-#: src/file_roller.glade.h:27
+#: src/file_roller.glade.h:24
 msgid "_Files:"
 msgstr "_Faili:"
 
-#: src/file_roller.glade.h:28
+#: src/file_roller.glade.h:25
 msgid "_Password:"
 msgstr "_Parole:"
 
-#: src/file_roller.glade.h:29
+#: src/file_roller.glade.h:26
 msgid "_Selected files"
 msgstr "_Izvēlētie faili"
 
-#: src/file_roller.glade.h:30
+#: src/file_roller.glade.h:27
 msgid "_View destination folder after extraction"
 msgstr "_Skatīt mērķa mapi pēc atspiešanas"
 
-#: src/file_roller.glade.h:31
+#: src/file_roller.glade.h:28
 msgid "example: *.txt; *.doc"
 msgstr "piemērs: *.txt; *.doc"
 
