@@ -170,14 +170,10 @@ list__process_line (char     *line,
 static void
 fr_command_7z_begin_command (FRCommand *comm)
 {
-	char *path;
-
-	path = g_find_program_in_path ("7za");
-	if (path != NULL)
+	if (is_program_in_path ("7za"))
 		fr_process_begin_command (comm->process, "7za");
 	else
 		fr_process_begin_command (comm->process, "7z");
-	g_free (path);
 }
 
 

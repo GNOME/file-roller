@@ -1,3 +1,13 @@
+2005-02-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/main.c: 
+	* src/main.h: 
+	* src/file-utils.c (is_program_in_path): added a cache to store
+	utilities presence.
+
+	* src/actions.c (get_supported_archive_types): use is_program_in_path
+	instead of g_find_program_in_path.
+
 2005-02-17  Adi Attar  <aattar@cvs.gnome.org>
 
 	* configure.in: Added "xh" to ALL_LINGUAS.

@@ -41,6 +41,7 @@
 #include <gconf/gconf-client.h>
 #include "file-utils.h"
 #include "utf8-fnmatch.h"
+#include "main.h"
 
 
 #define BUF_SIZE 4096
@@ -1140,15 +1141,29 @@ check_permissions (const char *path,
 	return TRUE;
 }
 
-gboolean is_program_in_path(const char *filename)
-{
-        gchar *str;
 
-        str = g_find_program_in_path(filename);
+gboolean 
+is_program_in_path (const char *filename)
+{
+        char *str;
+	char *value;
+	int   result = FALSE;
+
+	value = g_hash_table_lookup (programs_cache, filename);
+	if (value != NULL) {
+		result = (strcmp (value, "1") == 0);
+		return result;
+	}
+
+        str = g_find_program_in_path (filename);
         if (str != NULL) {
-                g_free(str);
-                return TRUE;
+                g_free (str);
+		result = TRUE;
         }
 
-        return FALSE;
+	g_hash_table_insert (programs_cache, 
+			     g_strdup (filename), 
+			     result ? "1" : "0");
+	
+        return result;
 }

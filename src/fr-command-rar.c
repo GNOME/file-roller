@@ -43,18 +43,9 @@ static FRCommandClass *parent_class = NULL;
 
 
 static gboolean
-fr_command_rar_have_rar (void)
+have_rar (void)
 {
-	char *path;
-	gboolean retval;
-	
-	retval = FALSE;
-	path = g_find_program_in_path ("rar");
-	if (path)
-		retval = TRUE;
-	g_free (path);
-	
-	return retval;
+	return is_program_in_path ("rar");
 }
 
 
@@ -206,7 +197,7 @@ fr_command_rar_list (FRCommand *comm)
 				      process_line,
 				      comm);
 
-	if (fr_command_rar_have_rar ())
+	if (have_rar ())
 		fr_process_begin_command (comm->process, "rar");
 	else
 		fr_process_begin_command (comm->process, "unrar");
@@ -302,7 +293,7 @@ fr_command_rar_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	if (fr_command_rar_have_rar ())
+	if (have_rar ())
 		fr_process_begin_command (comm->process, "rar");
 	else
 		fr_process_begin_command (comm->process, "unrar");
@@ -344,7 +335,7 @@ static void
 fr_command_rar_test (FRCommand   *comm,
 		     const char  *password)
 {
-	if (fr_command_rar_have_rar ())
+	if (have_rar ())
 		fr_process_begin_command (comm->process, "rar");
 	else
 		fr_process_begin_command (comm->process, "unrar");

@@ -57,6 +57,6 @@ extern GList       *window_list;
 extern GList       *viewer_list;
 extern GList       *command_list;
 extern gint         force_directory_creation;
-
+extern GHashTable  *programs_cache;
 
 #endif /* MAIN_H */

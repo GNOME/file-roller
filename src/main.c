@@ -48,6 +48,7 @@ GList        *window_list = NULL;
 GList        *viewer_list = NULL;
 GList        *command_list = NULL;
 gint          force_directory_creation;
+GHashTable   *programs_cache = NULL;
 
 static gchar *add_to = NULL;
 static gint   add;
@@ -140,6 +141,11 @@ initialize_data ()
 
 	eel_gconf_monitor_add ("/apps/file-roller");
 	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
+
+	programs_cache = g_hash_table_new_full (g_str_hash,
+						g_str_equal,
+						g_free,
+						NULL);
 }
 
 /* Free application data. */
@@ -206,6 +212,8 @@ command_done (CommandData *cdata)
 static void 
 release_data ()
 {
+	g_hash_table_destroy (programs_cache);
+
 	eel_global_client_free ();
 
 	while (viewer_list != NULL) {
