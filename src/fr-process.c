@@ -749,10 +749,19 @@ fr_process_start (FRProcess *fr_proc)
 	fr_proc->current_command = 0;
 	fr_proc->error.type = FR_PROC_ERROR_NONE;
 
-	fr_proc->running = TRUE;
 	fr_proc->stopping = FALSE;
 
-	start_current_command (fr_proc);
+	if (fr_proc->n_comm == -1) {
+		fr_proc->running = FALSE;
+		g_signal_emit (G_OBJECT (fr_proc),
+                               fr_process_signals[DONE],
+                               0,
+                               &fr_proc->error);
+		
+        } else {
+                fr_proc->running = TRUE;
+                start_current_command (fr_proc);
+        }
 }
 
 

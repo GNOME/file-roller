@@ -993,7 +993,7 @@ get_directory_file_list_async (const char       *directory,
 	path = g_strconcat (base_dir, "/", directory, NULL);
 	
 	handle = visit_dir_async (path,
-				  NULL,
+				  "*",
 				  TRUE,
 				  TRUE,
 				  TRUE,

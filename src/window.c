@@ -40,7 +40,6 @@
 #include "dlg-viewer-or-app.h"
 #include "egg-recent.h"
 #include "eggtreemultidnd.h"
-#include "ephy-ellipsizing-label.h"
 #include "fr-archive.h"
 #include "file-data.h"
 #include "file-utils.h"
@@ -62,6 +61,7 @@
 #define FILES_TO_PROCESS_AT_ONCE 500
 #define DISPLAY_TIMEOUT_INTERVAL_MSECS 300
 
+#define MAX_MESSAGE_LENGTH 50
 #define PROGRESS_DIALOG_WIDTH 300
 #define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
 #define HIDE_PROGRESS_TIMEOUT_MSECS 200 /* FIXME */
@@ -1176,9 +1176,8 @@ open_progress_dialog (FRWindow *window)
 		gtk_widget_set_size_request (window->pd_progress_bar, PROGRESS_DIALOG_WIDTH, -1);
 		gtk_box_pack_start (GTK_BOX (vbox), window->pd_progress_bar, TRUE, TRUE, 0);
 		
-		lbl = window->pd_message = ephy_ellipsizing_label_new ("");
+		lbl = window->pd_message = gtk_label_new ("");
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-		ephy_ellipsizing_label_set_mode (EPHY_ELLIPSIZING_LABEL (lbl), EPHY_ELLIPSIZE_MIDDLE);
 		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
 		
 		g_signal_connect (G_OBJECT (window->progress_dialog), 
@@ -2683,7 +2682,22 @@ window_message_cb  (FRCommand  *command,
 		    const char *msg,
 		    FRWindow   *window)		     
 {
-	ephy_ellipsizing_label_set_text (EPHY_ELLIPSIZING_LABEL (window->pd_message), msg);
+	char *new_msg;
+	char *utf8_msg;
+
+	new_msg = _g_strdup_with_max_size (msg, MAX_MESSAGE_LENGTH);
+
+	if (! g_utf8_validate (new_msg, -1, NULL))
+		utf8_msg = g_locale_to_utf8 (new_msg, -1 , 0, 0, 0);
+	else
+		utf8_msg = g_strdup (new_msg);
+
+	if (g_utf8_validate (utf8_msg, -1, NULL))
+		gtk_label_set_text (GTK_LABEL (window->pd_message), utf8_msg);
+
+	g_free (new_msg);
+	g_free (utf8_msg);
+
 	return TRUE;
 }
 

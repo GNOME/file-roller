@@ -1,3 +1,18 @@
+2004-01-15  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	[ File Roller 2.4.3 released ] 
+	
+	* src/window.c: do not use ephy-ellipsizing-label any more.
+
+	* src/eggtreemultidnd.c: 
+	* src/eggtreemultidnd.h: updated from libegg.
+
+	* src/file-list.c (get_directory_file_list_async): use * instead of 
+	NULL as filter.
+
+	* src/fr-process.c (fr_process_start): emit the DONE signal if no 
+	command is present.
+
 2003-12-22  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/fr-command-lha.c (split_line_lha): fix bug #129794 (file-roller 
