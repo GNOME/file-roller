@@ -174,7 +174,7 @@ add_password_arg (FRCommand	*comm,
 		char *arg, *e_password;
 		
 		e_password = escape_str (password, "\"");
-		g_assert (e_password != NULL);   /* since password is non-NULL */
+		g_assert (e_password != NULL);  /* since password is non-NULL */
 		
 		arg = g_strconcat ("-p\"", e_password, "\"", NULL);
 		
