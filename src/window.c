@@ -3662,8 +3662,9 @@ window_archive_new (FRWindow   *window,
 
 	if (! fr_archive_new_file (window->archive, filename)) {
 		GtkWidget *dialog;
+		GtkWindow *file_sel = g_object_get_data (G_OBJECT (window->app), "fr_file_sel");
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not create the archive"),

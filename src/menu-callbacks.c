@@ -318,6 +318,7 @@ new_archive_cb (GtkWidget *widget,
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
 	g_object_set_data (G_OBJECT (file_sel), "fr_opt_menu", opt_menu);
+	g_object_set_data (G_OBJECT (window->app), "fr_file_sel", file_sel);
 	
 	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
 			  "clicked", 
