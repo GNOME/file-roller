@@ -423,7 +423,7 @@ get_time_string (time_t time)
 	char        *time_utf8;
 
 	tm = localtime (& time);
-	strftime (s_time, MAX_S_TIME_LEN - 1, "%d %b %Y, %H:%M", tm);
+	strftime (s_time, MAX_S_TIME_LEN - 1, _("%d %B %Y, %H:%M"), tm);
 	time_utf8 = g_locale_to_utf8 (s_time, -1, NULL, NULL, NULL);
 
 	return time_utf8;
