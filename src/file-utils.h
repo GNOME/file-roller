@@ -119,8 +119,6 @@ const char *        get_last_field               (const char *line,
 
 char *              get_temp_work_dir            (void);
 
-char *              get_temp_work_dir_name       (void);
-
 char *              str_substitute               (const char *str,
 						  const char *from_str,
 						  const char *to_str);

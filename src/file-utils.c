@@ -928,29 +928,6 @@ get_temp_work_dir (void)
 }
 
 
-#define MAX_TRIES 50
-
-
-char *
-get_temp_work_dir_name (void)
-{
-	char       *result = NULL;
-	static int  count = 0;
-	int         try = 0;
-
-	do {
-		g_free (result);
-		result = g_strdup_printf ("%s%s.%d.%d",
-					  g_get_tmp_dir (),
-					  "/file-roller",
-					  getpid (),
-					  count++);
-	} while (path_is_file (result) && (try++ < MAX_TRIES));
-
-	return result;
-}
-
-
 /* file list utils */
 
 
