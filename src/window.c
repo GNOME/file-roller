@@ -633,7 +633,6 @@ get_action_from_sort_method (WindowSortMethod sort_method)
 typedef struct {
 	FRWindow *window;
 	GList    *file_list;
-	gboolean  add_timeout;
 } UpdateData;
 
 
@@ -748,12 +747,10 @@ update_file_list_idle (gpointer callback_data)
 		update_data_free (data);
 		return FALSE;
 
-	} else if (data->add_timeout) {
-		data->add_timeout = FALSE;
+	} else 
 		window->update_timeout_handle = g_timeout_add (DISPLAY_TIMEOUT_INTERVAL_MSECS, 
 							       update_file_list_idle, 
 							       data);
-	}
 
 	return FALSE;
 }
@@ -790,9 +787,6 @@ window_update_file_list (FRWindow *window)
 		gtk_widget_grab_focus (window->list_view);
 		window->give_focus_to_the_list = FALSE;
 	}
-
-	gtk_tree_view_set_model (GTK_TREE_VIEW (window->list_view), 
-				 GTK_TREE_MODEL (window->empty_store));
 
 	gtk_list_store_clear (window->list_store);
 	if (! GTK_WIDGET_VISIBLE (window->list_view))
@@ -837,7 +831,6 @@ window_update_file_list (FRWindow *window)
 	udata = g_new0 (UpdateData, 1);
 	udata->window = window;
 	udata->file_list = g_list_copy (file_list);
-	udata->add_timeout = TRUE;
 
 	update_file_list_idle (udata);
 
@@ -3267,14 +3260,6 @@ window_new ()
 						 G_TYPE_STRING,
 						 G_TYPE_STRING,
 						 G_TYPE_STRING);
-	window->empty_store = gtk_list_store_new (NUMBER_OF_COLUMNS, 
-						  G_TYPE_POINTER,
-						  GDK_TYPE_PIXBUF,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING);
 	window->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->list_store));
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (window->list_view), TRUE);
@@ -3758,7 +3743,6 @@ window_close (FRWindow *window)
 
 	g_object_unref (window->archive);
 	g_object_unref (window->list_store);
-	g_object_unref (window->empty_store);
 
 	_window_clipboard_clear (window);
 
