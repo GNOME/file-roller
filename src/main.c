@@ -352,7 +352,7 @@ prepare_app (poptContext pctx)
 
 	default_dir = get_path_from_url (default_url);
 	
-	if (g_path_is_absolute (extract_to))
+	if ((extract_to != NULL) && g_path_is_absolute (extract_to))
 		extract_to_path = get_path_from_url (extract_to);
 	else {
 		char *full_path;
