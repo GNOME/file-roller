@@ -20,11 +20,11 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLG_ADD_H
-#define DLG_ADD_H
+#ifndef DLG_ADD_FILES_H
+#define DLG_ADD_FILES_H
 
 #include <gtk/gtkwidget.h>
 
-void  add_cb (GtkWidget *widget, void *data);
+void  add_files_cb (GtkWidget *widget, void *data);
 
-#endif /* DLG_ADD_H */
+#endif /* DLG_ADD_FILES_H */

@@ -33,7 +33,6 @@
 #include <libgnomevfs/gnome-vfs-directory.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include "dlg-add.h"
 #include "dlg-batch-add.h"
 #include "dlg-extract.h"
 #include "dlg-viewer.h"
@@ -1041,7 +1040,8 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->mitem_rename_archive, file_op && ! ro);
 	gtk_widget_set_sensitive (window->mitem_delete_archive, file_op && ! ro);
 	
-	gtk_widget_set_sensitive (window->mitem_add, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	gtk_widget_set_sensitive (window->mitem_add_files, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	gtk_widget_set_sensitive (window->mitem_add_folder, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	gtk_widget_set_sensitive (window->mitem_delete, ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
 	gtk_widget_set_sensitive (window->mitem_extract, file_op);
 	gtk_widget_set_sensitive (window->mitem_test, ! no_archive && ! running && window->archive->command->propTest);
@@ -3254,7 +3254,8 @@ window_new ()
 
 	window->mitem_recents_menu = GTK_MENU_ITEM (file_menu[FILE_MENU_RECENTS_MENU].widget)->submenu;
 
-	window->mitem_add = edit_menu[EDIT_MENU_ADD].widget;
+ 	window->mitem_add_files = edit_menu[EDIT_MENU_ADD_FILES].widget;
+	window->mitem_add_folder = edit_menu[EDIT_MENU_ADD_FOLDER].widget;
 	window->mitem_delete = edit_menu[EDIT_MENU_DELETE].widget;
 	window->mitem_extract = edit_menu[EDIT_MENU_EXTRACT].widget;
 	window->mitem_open = edit_menu[EDIT_MENU_OPEN].widget;
@@ -3282,7 +3283,7 @@ window_new ()
 	window->mitem_password = edit_menu[EDIT_MENU_PASSWORD].widget;
 	window->mitem_last_output = view_menu[VIEW_MENU_LAST_OUTPUT].widget;
 
-	for (i = 0; i < 14; i++) 
+	for (i = 0; i < FILE_POPUP_MENU_SIZE; i++) 
 		window->popupmenu_file[i] = file_popup_menu_data[i].widget;
 
 	window->toolbar_new = toolbar_data[TOOLBAR_NEW].widget;
@@ -4867,15 +4868,46 @@ void
 window_paste_selection (FRWindow *window)
 {
 	FRArchive  *archive = window->archive;
-	const char *current_dir = window_get_current_location (window);
-	const char *current_dir_relative = current_dir + 1;
+	char       *current_dir = g_strdup (window_get_current_location (window));
+	char       *current_dir_relative = current_dir + 1;
 	GList      *scan;
 	char       *tmp_dir, *e_tmp_dir;
 	GHashTable *created_dirs;
 	GList      *new_file_list = NULL;
+	char       *utf8_path, *utf8_old_path, *destination;
+
 
 	if ((window->clipboard == NULL) || (window->list_mode == WINDOW_LIST_MODE_FLAT))
 		return;
+
+	/**/
+
+	utf8_old_path = g_filename_to_utf8 (window_get_current_location (window), -1, NULL, NULL, NULL);
+	utf8_path = _gtk_request_dialog_run (GTK_WINDOW (window->app),
+					       (GTK_DIALOG_DESTROY_WITH_PARENT 
+						| GTK_DIALOG_MODAL),
+					       _("Paste Selection"),
+					       _("Destination folder"),
+					       utf8_old_path,
+					       1024,
+					       GTK_STOCK_CANCEL,
+					       _("_Paste"));
+	g_free (utf8_old_path);
+	if (utf8_path == NULL)
+		return;
+
+	destination = g_filename_from_utf8 (utf8_path, -1, NULL, NULL, NULL);
+	g_free (utf8_path);
+
+	if (destination[0] != '/') 
+		current_dir = g_build_path (G_DIR_SEPARATOR_S, window_get_current_location (window), destination, NULL);
+	else
+		current_dir = g_strdup (destination);
+	g_free (destination);
+
+	current_dir_relative = current_dir + 1;
+
+	/**/
 
 	tmp_dir = get_temp_work_dir_name ();
 	e_tmp_dir = shell_escape (tmp_dir);
@@ -4950,6 +4982,7 @@ window_paste_selection (FRWindow *window)
 			window->compression);
 
 	path_list_free (new_file_list);
+	g_free (current_dir);
 
 	/* remove the tmp dir */
 

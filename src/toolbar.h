@@ -54,7 +54,7 @@ GnomeUIInfo toolbar_data[] = {
 
 	{ GNOME_APP_UI_ITEM, 
 	  N_("Add"), N_("Add files to the archive"), 
-	  add_cb, NULL, NULL,
+	  add_files_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, FR_STOCK_ADD,
 	  0, 0, NULL },
 

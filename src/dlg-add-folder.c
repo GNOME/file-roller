@@ -52,6 +52,7 @@ typedef struct {
 	GtkWidget *exclude_files_label;
 	GtkWidget *load_button;
 	GtkWidget *save_button;
+	char      *last_options;
 } DialogData;
 
 
@@ -61,6 +62,7 @@ open_file_destroy_cb (GtkWidget *w,
 {
 	DialogData *data;
 	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
+	g_free (data->last_options);
 	g_free (data);
 }
 
@@ -94,6 +96,7 @@ file_sel_response_cb (GtkWidget      *w,
 	GSList     *selections, *iter;
 	GList      *item_list = NULL;
 	DialogData *data;
+
 
 	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
 
@@ -148,33 +151,39 @@ file_sel_response_cb (GtkWidget      *w,
 		char *path = iter->data;
 		item_list = g_list_prepend (item_list, path);
 	}
-	
-	if ((item_list == NULL)) {
+
+	if (item_list != NULL) {
+		const char *folder = (char*) item_list->data;
 		const char *include_files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
 		const char *exclude_files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
-
-		if (utf8_only_spaces (include_files) 
-		    && utf8_only_spaces (exclude_files))
-			return FALSE;
+		char       *dest_dir;
 
 		if (utf8_only_spaces (include_files))
 			include_files = "*";
 		if (utf8_only_spaces (exclude_files))
 			exclude_files = NULL;
 
+		if (strcmp (folder, current_folder) == 0)
+			dest_dir = NULL;
+		else
+			dest_dir = g_build_path (G_DIR_SEPARATOR_S,
+						 window_get_current_location (window),
+						 file_name_from_path (folder),
+						 NULL);
+		
 		window_archive_add_with_wildcard (window,
 						  include_files,
 						  exclude_files,
-						  current_folder,
-						  NULL,
+						  folder,
+						  dest_dir,
 						  update,
 						  recursive,
 						  follow_links,
 						  window->password,
 						  window->compression);
 
-	} else 
-		window_archive_add_items (window, item_list, update);
+		g_free (dest_dir);
+	}
 
 	g_list_free (item_list);
 	g_slist_foreach (selections, (GFunc) g_free, NULL);
@@ -193,8 +202,9 @@ update_sensitivity (DialogData *data)
 	GSList   *selections;
 	gboolean  can_add_wildcard, wildcard_specified = FALSE;
 
+
 	selections = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (data->dialog));
-	can_add_wildcard = (selections == NULL);
+	can_add_wildcard = (selections != NULL);
 
 	if (can_add_wildcard) {
 		const char *files;
@@ -215,8 +225,8 @@ update_sensitivity (DialogData *data)
 	gtk_widget_set_sensitive (data->exclude_files_entry, can_add_wildcard);
 	gtk_widget_set_sensitive (data->include_files_label, can_add_wildcard);
 	gtk_widget_set_sensitive (data->exclude_files_label, can_add_wildcard);
-	gtk_widget_set_sensitive (data->include_subfold_checkbutton, can_add_wildcard && wildcard_specified);
-	gtk_widget_set_sensitive (data->exclude_symlinks, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton)) && can_add_wildcard && wildcard_specified);
+	gtk_widget_set_sensitive (data->include_subfold_checkbutton, can_add_wildcard);
+	gtk_widget_set_sensitive (data->exclude_symlinks, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton)) && can_add_wildcard);
 
 	g_slist_foreach (selections, (GFunc) g_free, FALSE);
 	g_slist_free (selections);
@@ -256,8 +266,8 @@ static void save_options_cb (GtkWidget *w, DialogData *data);
 
 /* create the "add" dialog. */
 void
-add_cb (GtkWidget *widget, 
-	void      *callback_data)
+add_folder_cb (GtkWidget *widget, 
+	       void      *callback_data)
 {
 	GtkWidget   *file_sel;
 	DialogData  *data;
@@ -269,18 +279,18 @@ add_cb (GtkWidget *widget,
 	
 	tooltips = gtk_tooltips_new ();
  
-	data = g_new (DialogData, 1);
+	data = g_new0 (DialogData, 1);
 	data->window = callback_data;
 	data->dialog = file_sel = 
-		gtk_file_chooser_dialog_new (_("Add"),
+		gtk_file_chooser_dialog_new (_("Add a Folder"),
 					     GTK_WINDOW (data->window->app),
-					     GTK_FILE_CHOOSER_ACTION_OPEN,
+					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 					     GTK_STOCK_CANCEL, 
 					     GTK_RESPONSE_CANCEL,
 					     FR_STOCK_ADD, 
 					     GTK_RESPONSE_OK,
 					     NULL);
-	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
 
 	data->add_if_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("_Add only if newer"));
@@ -300,7 +310,7 @@ add_cb (GtkWidget *widget,
 	data->load_button = gtk_button_new_with_mnemonic (_("_Load Options"));
 	data->save_button = gtk_button_new_with_mnemonic (_("Sa_ve Options"));
 
-	main_box = gtk_hbox_new (FALSE, 5);
+	main_box = gtk_hbox_new (FALSE, 20);
 	gtk_container_set_border_width (GTK_CONTAINER (main_box), 0);
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), main_box);
 
@@ -327,7 +337,7 @@ add_cb (GtkWidget *widget,
 			  data->include_files_entry, 
 			  1, 2,
 			  0, 1,
-			  0, 0,
+			  GTK_FILL|GTK_EXPAND, 0,
 			  0, 0);
 	gtk_table_attach (GTK_TABLE (table), 
 			  data->exclude_files_label,
@@ -339,7 +349,7 @@ add_cb (GtkWidget *widget,
 			  data->exclude_files_entry, 
 			  1, 2,
 			  1, 2,
-			  0, 0,
+			  GTK_FILL|GTK_EXPAND, 0,
 			  0, 0);
 
 	gtk_box_pack_start (GTK_BOX (vbox), data->include_subfold_checkbutton,
@@ -499,6 +509,9 @@ aod_apply_cb (GtkWidget *widget,
 	gtk_tree_model_get (aod_data->aod_model, &iter,
 			    1, &file_path,
 			    -1);
+
+	g_free (data->last_options);
+	data->last_options = g_strdup (file_name_from_path (file_path));
 
 	/* Load options. */
 	
@@ -754,14 +767,15 @@ save_options_cb (GtkWidget  *w,
 	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
 	ensure_dir_exists (options_dir, 0700);
 
-	opt_filename = _gtk_request_dialog_run (GTK_WINDOW (data->dialog),
-						GTK_DIALOG_MODAL,
-						_("Save Options"),
-						_("Options Name:"),
-						"",
-						1024,
-						GTK_STOCK_CANCEL,
-						GTK_STOCK_SAVE);
+	opt_filename = _gtk_request_dialog_run (
+			GTK_WINDOW (data->dialog),
+			GTK_DIALOG_MODAL,
+			_("Save Options"),
+			_("Options Name:"),
+			(data->last_options != NULL)?data->last_options:"",
+			1024,
+			GTK_STOCK_CANCEL,
+			GTK_STOCK_SAVE);
 
 	if (opt_filename == NULL) 
 		return;
@@ -795,6 +809,9 @@ save_options_cb (GtkWidget  *w,
 	config_set_bool   (opt_file_path, "recursive", recursive);
 	config_set_bool   (opt_file_path, "no_symlinks", no_symlinks);
 	gnome_config_sync ();
+
+	g_free (data->last_options);
+	data->last_options = g_strdup (file_name_from_path (opt_file_path));
 
 	/**/
 	

@@ -166,7 +166,8 @@ typedef struct {
 	GtkWidget *      mitem_password;
 	GtkWidget *      mitem_last_output;
 
-	GtkWidget *      mitem_add;
+	GtkWidget *      mitem_add_files;
+	GtkWidget *      mitem_add_folder;
 	GtkWidget *      mitem_delete;
 	GtkWidget *      mitem_extract;
 	GtkWidget *      mitem_test;
@@ -184,7 +185,7 @@ typedef struct {
 	GtkWidget *      toolbar_stop;
 
 	GtkWidget *      file_popup_menu;
-	GtkWidget *      popupmenu_file[14];
+	GtkWidget *      popupmenu_file[15];
 
 	EggRecentViewGtk *recent_view;
 	EggRecentModel   *recent_model;

@@ -26,7 +26,8 @@
 
 #include <config.h>
 
-#include "dlg-add.h"
+#include "dlg-add-files.h"
+#include "dlg-add-folder.h"
 #include "dlg-delete.h"
 #include "dlg-extract.h"
 #include "dlg-open-with.h"
@@ -124,7 +125,8 @@ GnomeUIInfo file_menu[] = {
 };
 
 enum {
-	EDIT_MENU_ADD = 0,
+	EDIT_MENU_ADD_FILES = 0,
+	EDIT_MENU_ADD_FOLDER,
 	EDIT_MENU_EXTRACT,
 	EDIT_MENU_SEP1,
 	EDIT_MENU_CUT,
@@ -140,14 +142,19 @@ enum {
 	EDIT_MENU_VIEW,
 	EDIT_MENU_SEP4,
 	EDIT_MENU_PASSWORD,
-	EDIT_MENU_SEP5,
 	EDIT_MENU_LENGTH
 };
 
 GnomeUIInfo edit_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Add..."), N_("Add files and folders to the archive"), 
-	  add_cb, NULL, NULL,
+	  N_("_Add Files..."), N_("Add files to the archive"), 
+	  add_files_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ADD,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Add a _Folder..."), N_("Add a folder to the archive"), 
+	  add_folder_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ADD,
 	  0, 0, NULL },
 
@@ -390,7 +397,7 @@ GnomeUIInfo main_menu[] = {
 
 enum {
 	FILE_POPUP_MENU_OPEN = 0,
-	FILE_POPUP_MENU_OPEN_WITH = 0,
+	FILE_POPUP_MENU_OPEN_WITH,
 	FILE_POPUP_MENU_VIEW,
 	FILE_POPUP_MENU_SEP1,
 	FILE_POPUP_MENU_ADD,
@@ -403,7 +410,8 @@ enum {
 	FILE_POPUP_MENU_DELETE,
 	FILE_POPUP_MENU_SEP3,
 	FILE_POPUP_MENU_SELECT_ALL,
-	FILE_POPUP_MENU_DESELECT_ALL
+	FILE_POPUP_MENU_DESELECT_ALL,
+	FILE_POPUP_MENU_SIZE
 };
 
 
@@ -429,8 +437,8 @@ GnomeUIInfo file_popup_menu_data[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Add..."), N_("Add files and folders to the archive"), 
-	  add_cb, NULL, NULL,
+	  N_("_Add Files..."), N_("Add files to the archive"), 
+	  add_files_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_ADD,
 	  0, 0, NULL },
 
