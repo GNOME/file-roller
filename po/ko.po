@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AC_PACKAGE_NAME AC_PACKAGE_VERSION\n"
-"POT-Creation-Date: 2003-01-05 19:03+0900\n"
-"PO-Revision-Date: 2003-01-05 20:06+0900\n"
-"Last-Translator: Young-Ho, Cha <ganadist@mizi.com>\n"
+"POT-Creation-Date: 2003-01-25 23:04+0900\n"
+"PO-Revision-Date: 2003-01-25 14:07+0900\n"
+"Last-Translator: Young-Ho, Cha <ganadist@chollian.net>\n"
 "Language-Team: GTP Korean <gnome-kr-translation@gnome.or.kr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,59 +61,59 @@ msgstr "압축된 파일 처리"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "\"%s\" 폴더에 압축 파일을 만들 허가권이 없습니다"
 
-#: src/dlg-add.c:338 src/file_roller.glade.h:5
+#: src/dlg-add.c:343 src/file_roller.glade.h:5
 msgid "Add Files and Folders"
 msgstr "파일과 디렉토리 압축"
 
-#: src/dlg-add.c:343
+#: src/dlg-add.c:348
 msgid "_Add only if newer"
 msgstr "새 파일만 압축(_A)"
 
-#: src/dlg-add.c:344
+#: src/dlg-add.c:349
 msgid "_Include sub-folders"
 msgstr "아래 폴더까지 포함(_I)"
 
-#: src/dlg-add.c:345
+#: src/dlg-add.c:350
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "심볼릭 연결인 폴더 제외(_K)"
 
-#: src/dlg-add.c:346
+#: src/dlg-add.c:351
 msgid "Exclude o_ther file systems"
 msgstr "다른 파일시스템 제외(_T)"
 
-#: src/dlg-add.c:347
+#: src/dlg-add.c:352
 msgid "Exclude _backup files (*~)"
 msgstr "백업 파일 제외 (*~)(_B)"
 
-#: src/dlg-add.c:348
+#: src/dlg-add.c:353
 msgid "Exclude _hidden files (.*)"
 msgstr "숨김 파일 제외 (.*)(_H)"
 
-#: src/dlg-add.c:349
+#: src/dlg-add.c:354
 msgid "E_xclude files:"
 msgstr "파일 제외(_X):"
 
-#: src/dlg-add.c:351
+#: src/dlg-add.c:356
 msgid "example: *.o; *.bak"
 msgstr "예: *.o; *.bak"
 
-#: src/dlg-add.c:352
+#: src/dlg-add.c:357
 msgid "Igno_re case"
 msgstr "대소문자 구분 안함(_R)"
 
-#: src/dlg-add.c:353
+#: src/dlg-add.c:358
 msgid "_Load Options"
 msgstr "옵션 읽기(_L)"
 
-#: src/dlg-add.c:354
+#: src/dlg-add.c:359
 msgid "Sa_ve Options"
 msgstr "옵션 저장(_V)"
 
-#: src/dlg-add.c:609
+#: src/dlg-add.c:614
 msgid "Load Options"
 msgstr "옵션 읽기"
 
-#: src/dlg-add.c:758
+#: src/dlg-add.c:763
 msgid "Save Options"
 msgstr "옵션 저장"
 
@@ -161,8 +161,7 @@ msgstr "압축을 풀 수 없습니다."
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr ""
-"\"%s\" 폴더에서 압축을 풀 수 있는 허가권이 없습니다."
+msgstr "\"%s\" 폴더에서 압축을 풀 수 있는 허가권이 없습니다."
 
 #: src/dlg-extract.c:397 src/dlg-preferences.c:128 src/menu-callbacks.c:751
 #, c-format
@@ -202,6 +201,7 @@ msgid "Name:"
 msgstr "이름:"
 
 #: src/dlg-prop.c:119
+#, c-format
 msgid "%s Properties"
 msgstr "%s 등록정보"
 
@@ -271,7 +271,7 @@ msgstr "풀기"
 
 #: src/file_roller.glade.h:11
 msgid "Extract to"
-msgstr ""
+msgstr "다른 곳에 풀기"
 
 #: src/file_roller.glade.h:12
 msgid ""
@@ -430,7 +430,7 @@ msgstr "폴더"
 
 #: src/main.c:71
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr ""
+msgstr "압축을 풀 위치를 물어서 푼다음 프로그램을 마칩니다"
 
 #: src/main.c:75
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -858,18 +858,9 @@ msgstr "다른 위치에 파일 풀기..."
 msgid "Select All"
 msgstr "모두 선택"
 
-#: src/recent-files/egg-recent-vfs-utils.c:90
-msgid " (invalid Unicode)"
-msgstr " (잘못된 유니코드)"
-
-#: src/recent-files/egg-recent-view-bonobo.c:193
-#, c-format
-msgid "Open %s"
-msgstr "%s 열기"
-
 #: src/toolbar.h:39
 msgid "New"
-msgstr "새로 만들기"
+msgstr "압축"
 
 #: src/toolbar.h:45
 msgid "Open"
@@ -979,8 +970,7 @@ msgstr "압축 파일 자신을 더할 수 없습니다."
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
-msgstr ""
-"이 파일을 현재 압축 파일이나 새로운 압축 파일에 더하겠습니까?"
+msgstr "이 파일을 현재 압축 파일이나 새로운 압축 파일에 더하겠습니까?"
 
 #: src/window.c:1773
 msgid "Do you want to create a new archive with these files?"
@@ -1050,4 +1040,3 @@ msgstr "압축 파일에 파일을 더합니다"
 #: src/window.c:4044
 msgid "Extract archive"
 msgstr "압축 파일을 풉니다"
-
