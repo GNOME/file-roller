@@ -282,7 +282,7 @@ egg_recent_model_read_raw (EggRecentModel *model, FILE *file)
 
 	rewind (file);
 
-	string = g_string_new ("");
+	string = g_string_new (NULL);
 	while (fgets (buf, EGG_RECENT_MODEL_BUFFER_SIZE, file)) {
 		string = g_string_append (string, buf);
 	}
@@ -585,6 +585,7 @@ egg_recent_model_filter (EggRecentModel *model,
 
 
 
+#if 0
 static void
 egg_recent_model_monitor_list_cb (GnomeVFSMonitorHandle *handle,
 			       const gchar *monitor_uri,
@@ -636,7 +637,7 @@ egg_recent_model_monitor_list (EggRecentModel *model, GList *list)
 			g_free (uri);
 	}
 }
-
+#endif
 
 
 static gboolean
@@ -717,8 +718,10 @@ egg_recent_model_read (EggRecentModel *model, FILE *file)
 
 	content = egg_recent_model_read_raw (model, file);
 
-	if (strlen (content) <= 0)
+	if (strlen (content) <= 0) {
+		g_free (content);
 		return NULL;
+	}
 
 	parse_info_init (&info);
 	
@@ -1389,14 +1392,15 @@ egg_recent_model_get_list (EggRecentModel *model)
 	GList *list=NULL;
 
 	file = egg_recent_model_open_file (model);
-	g_return_val_if_fail (file != NULL, FALSE);
+	g_return_val_if_fail (file != NULL, NULL);
 	
 	if (egg_recent_model_lock_file (file)) {
 		list = egg_recent_model_read (model, file);
 		
 	} else {
 		g_warning ("Failed to lock:  %s", strerror (errno));
-		return FALSE;
+		fclose (file);
+		return NULL;
 	}
 
 	if (!egg_recent_model_unlock_file (file))
@@ -1634,7 +1638,7 @@ egg_recent_model_changed (EggRecentModel *model)
 
 	if (model->priv->limit > 0) {
 		list = egg_recent_model_get_list (model);
-		egg_recent_model_monitor_list (model, list);
+		/* egg_recent_model_monitor_list (model, list); */
 	
 		g_signal_emit (G_OBJECT (model), model_signals[CHANGED], 0,
 			       list);
