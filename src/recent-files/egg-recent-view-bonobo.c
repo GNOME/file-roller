@@ -1,5 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-/**
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
@@ -670,7 +670,6 @@ egg_recent_view_bonobo_new (BonoboUIComponent *uic, const gchar *path)
 
 /**
  * egg_recent_view_bonobo_get_type:
- * @:
  *
  * This returns a GType representing a EggRecentViewBonobo object.
  *
