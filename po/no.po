@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file roller 0.5\n"
-"POT-Creation-Date: 2002-09-18 21:57+0200\n"
-"PO-Revision-Date: 2002-09-18 22:03+0200\n"
+"POT-Creation-Date: 2002-10-10 13:53+0200\n"
+"PO-Revision-Date: 2002-10-10 13:55+0200\n"
 "Last-Translator: Lars Alvik <profoss@linuxmail.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,8 +19,8 @@ msgstr "Arkiveringsbestyrer"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:153
-#: src/gtk-utils.c:256 src/main.c:101 src/window.c:748 src/window.c:757
-#: src/window.c:2387 src/window.c:4151
+#: src/gtk-utils.c:256 src/main.c:101 src/window.c:750 src/window.c:759
+#: src/window.c:2392 src/window.c:4211
 msgid "File Roller"
 msgstr "Filknuser"
 
@@ -71,7 +71,7 @@ msgstr "eksempel: *.o; *.bak"
 
 #: src/dlg-add.c:352
 msgid "Igno_re case"
-msgstr ""
+msgstr "Ignorer store/små bokstaver"
 
 #: src/dlg-add.c:353
 msgid "_Load Options"
@@ -95,15 +95,15 @@ msgstr "Alternativer for lagring"
 msgid "Adding %u files"
 msgstr "Legger til %u filer"
 
-#: src/dlg-extract.c:120 src/window.c:3262
+#: src/dlg-extract.c:120 src/window.c:3276
 msgid "Destination folder does not exist.  Do you want to create it ?"
 msgstr "Målmappen eksisterer ikke. Vil du opprette den?"
 
-#: src/dlg-extract.c:122 src/window.c:3264
+#: src/dlg-extract.c:122 src/window.c:3278
 msgid "Create _Folder"
 msgstr "Opprett _mappe"
 
-#: src/dlg-extract.c:142 src/window.c:3284
+#: src/dlg-extract.c:142 src/window.c:3298
 #, c-format
 msgid ""
 "Could not create the destination folder : %s.\n"
@@ -112,7 +112,7 @@ msgstr ""
 "Kunne ikke opprette målmappen: %s.\n"
 "Utpakking ble ikke utført."
 
-#: src/dlg-extract.c:157 src/window.c:3299
+#: src/dlg-extract.c:157 src/window.c:3313
 msgid "Extraction not performed."
 msgstr "Utpakking ble ikke utført."
 
@@ -128,9 +128,8 @@ msgid "Could not display help: %s"
 msgstr "Kunne ikke vise hjelp: %s"
 
 #: src/dlg-extract.c:486
-#, fuzzy
 msgid "Favorites extraction folders"
-msgstr "Favorit utpakkings kataloger"
+msgstr "Utpakkingskataloger for favoritter"
 
 #: src/dlg-prop.c:98
 msgid "Path:"
@@ -293,7 +292,7 @@ msgstr "_Valgte filer"
 
 #: src/file_roller.glade2.h:32
 msgid "_View destination folder after extraction"
-msgstr ""
+msgstr "_Vis målmappe etter utpakking"
 
 #: src/file_roller.glade2.h:33
 msgid "example: *.txt; *.doc"
@@ -374,9 +373,8 @@ msgid "Command _line output"
 msgstr "Kommando_linjeutskrift"
 
 #: src/main.c:60
-#, fuzzy
 msgid "Add files to the specified archive and quit the program"
-msgstr "Legg til filer til arkivet"
+msgstr "Legg til filer til spesifisert arkiv og avslutt programmet"
 
 #: src/main.c:61
 msgid "ARCHIVE"
@@ -387,9 +385,8 @@ msgid "Add files asking the name of the archive and quit the program"
 msgstr ""
 
 #: src/main.c:68
-#, fuzzy
 msgid "Extract archives to the specified folder and quit the program"
-msgstr "Legg til filer til arkivet"
+msgstr "Pakk ut filer til spesifisert mappe og avslutt programmet"
 
 #: src/main.c:69 src/main.c:77
 msgid "FOLDER"
@@ -544,7 +541,7 @@ msgstr "Åpne et eksisterene arkiv"
 
 #: src/menu.h:78
 msgid "Open R_ecent"
-msgstr ""
+msgstr "Åpne _siste"
 
 #: src/menu.h:83
 msgid "Open Fi_les..."
@@ -552,7 +549,7 @@ msgstr "Åpne fi_ler..."
 
 #: src/menu.h:83
 msgid "Open selected files with an application"
-msgstr ""
+msgstr "Åpne valgte filer i en applikasjon"
 
 #: src/menu.h:89
 msgid "_View File"
@@ -618,7 +615,7 @@ msgstr "Avslutt"
 msgid "Add _Files..."
 msgstr "Legg til _filer..."
 
-#: src/menu.h:164 src/menu.h:458 src/window.c:2596
+#: src/menu.h:164 src/menu.h:458 src/window.c:2601
 msgid "Add files to the archive"
 msgstr "Legg til filer til arkivet"
 
@@ -630,7 +627,7 @@ msgstr "Slett valgte filer og mapper fra arkivet"
 msgid "_Extract to..."
 msgstr "Pakk ut til..."
 
-#: src/menu.h:176 src/menu.h:470 src/window.c:2607
+#: src/menu.h:176 src/menu.h:470 src/window.c:2612
 msgid "Extract files from the archive"
 msgstr "Pakk ut filer fra arkivet"
 
@@ -700,7 +697,7 @@ msgstr "etter _sti"
 
 #: src/menu.h:263
 msgid "Sort file list by path"
-msgstr ""
+msgstr "Sorter listen etter sti"
 
 #: src/menu.h:280
 msgid "View All _Files"
@@ -850,177 +847,177 @@ msgstr "Åpne arkiv"
 msgid "Stop"
 msgstr "Stopp"
 
-#: src/window.c:625
+#: src/window.c:627
 msgid "Folder"
 msgstr "Mappe"
 
-#: src/window.c:756
+#: src/window.c:758
 msgid "[read only]"
 msgstr "[kun lesbar]"
 
-#: src/window.c:850
+#: src/window.c:852
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 fil (%s)"
 
-#: src/window.c:853
+#: src/window.c:855
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d filer (%s)"
 
-#: src/window.c:861
+#: src/window.c:863
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 fil valgt (%s)"
 
-#: src/window.c:864
+#: src/window.c:866
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d filer valgt (%s)"
 
-#: src/window.c:1126
+#: src/window.c:1129
 msgid "Reading archive"
 msgstr "Leser arkiv"
 
-#: src/window.c:1129
+#: src/window.c:1132
 msgid "Deleting files from archive"
 msgstr "Sletter filer fra arkiv"
 
-#: src/window.c:1132
+#: src/window.c:1135
 msgid "Adding files to archive"
 msgstr "Legger til filer i arkiv"
 
-#: src/window.c:1135
+#: src/window.c:1138
 msgid "Extracting files from archive"
 msgstr "Pakker ut filer fra arkiv"
 
-#: src/window.c:1138
+#: src/window.c:1141
 msgid "Testing archive"
 msgstr "Tester arkiv"
 
-#: src/window.c:1143
+#: src/window.c:1147
 msgid "wait please..."
 msgstr "vennligst vent..."
 
-#: src/window.c:1232
+#: src/window.c:1236
 msgid "Operation stopped"
 msgstr "Operasjonen stoppet"
 
-#: src/window.c:1249
+#: src/window.c:1253
 msgid "An error occurred while extracting files."
 msgstr "Det skjedde en feil under utpakking."
 
-#: src/window.c:1253
+#: src/window.c:1257
 msgid "An error occurred while loading the archive."
 msgstr "Det skjedde en feil under lasting av arkivet."
 
-#: src/window.c:1257
+#: src/window.c:1261
 msgid "An error occurred while deleting files from the archive."
 msgstr "Det skjedde en feil under sletting av filer fra arkivet."
 
-#: src/window.c:1261
+#: src/window.c:1265
 msgid "An error occurred while adding files to the archive."
 msgstr "Det skjedde en feil under sletting av filer fra arkivet."
 
-#: src/window.c:1265
+#: src/window.c:1269
 msgid "An error occurred while testing archive."
 msgstr "Det skjedde en feil under testing av arkivet."
 
-#: src/window.c:1271
+#: src/window.c:1275
 msgid "Command not found."
 msgstr "ikke eksisterene kommando"
 
-#: src/window.c:1274
+#: src/window.c:1278
 msgid "Command exited abnormally."
 msgstr "Unormal avsluttning av kommando"
 
-#: src/window.c:1559
+#: src/window.c:1564
 msgid "You don't have permissions to add files to this archive."
 msgstr "Du har ikke adgang til å legge til filer til arkivet."
 
-#: src/window.c:1581
+#: src/window.c:1586
 msgid "You can't add an archive to itself."
 msgstr "Du kan ikke legge arkivet inni arkivet."
 
-#: src/window.c:1741
+#: src/window.c:1746
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive ?"
 msgstr ""
 
-#: src/window.c:1784
+#: src/window.c:1789
 msgid "Do you want to create a new archive with these files ?"
 msgstr "Vil du lage et arkiv med disse filene ?"
 
-#: src/window.c:1786
+#: src/window.c:1791
 msgid "Create _Archive"
 msgstr "Opprett _arkiv"
 
-#: src/window.c:2119
+#: src/window.c:2124
 msgid "Size"
 msgstr "Størrelse"
 
-#: src/window.c:2120
+#: src/window.c:2125
 msgid "Type"
 msgstr "Filtype"
 
-#: src/window.c:2121
+#: src/window.c:2126
 msgid "Modified"
 msgstr "Sist endret"
 
-#: src/window.c:2122
+#: src/window.c:2127
 msgid "Path"
 msgstr "Sti"
 
-#: src/window.c:2129
+#: src/window.c:2134
 msgid "Name"
 msgstr "Navn"
 
-#: src/window.c:2541
+#: src/window.c:2546
 msgid "_Up"
 msgstr "_Opp"
 
 #. current location
-#: src/window.c:2563
+#: src/window.c:2568
 msgid "Current Location:"
 msgstr "Befinner seg nå i:"
 
-#: src/window.c:2595
+#: src/window.c:2600
 msgid "Add"
 msgstr "Legg til"
 
-#: src/window.c:2606
+#: src/window.c:2611
 msgid "Extract"
 msgstr "Pakk ut"
 
-#: src/window.c:2617
+#: src/window.c:2622
 msgid "View"
 msgstr "Vis"
 
-#: src/window.c:2618
+#: src/window.c:2623
 msgid "View selected file"
 msgstr "Vis valgt fil"
 
-#: src/window.c:2964
+#: src/window.c:2975
 msgid "File type not supported."
 msgstr "Filtypen ikke støttet."
 
-#: src/window.c:3102
+#: src/window.c:3113
 msgid "No archive"
 msgstr "Ingen arkiv"
 
-#: src/window.c:3198
+#: src/window.c:3211
 msgid "Cannot load archive."
 msgstr "Kan ikke laste arkivet."
 
-#: src/window.c:3565
+#: src/window.c:3625
 msgid "File Roller - Last output"
 msgstr "Filknuser - Forrige plassering"
 
-#: src/window.c:4086
+#: src/window.c:4146
 msgid "Add files to an archive"
 msgstr "Legg til filer i et arkiv"
 
-#: src/window.c:4111
+#: src/window.c:4171
 msgid "Extract archive"
 msgstr "Pakk ut arkiv"
