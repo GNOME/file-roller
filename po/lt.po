@@ -1,25 +1,28 @@
+# File Roller 2.x Lithuanian translation
+# Copyright (C) 2001-2003 Free Software Foundation, Inc.
 # Žygimantas Beručka <uid0@tuxfamily.org>, 2003.
 # 
 # 
 msgid ""
 msgstr ""
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "Project-Id-Version: File-Roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-10 08:39+0200\n"
-"PO-Revision-Date: 2003-11-10 17:59+0200\n"
+"POT-Creation-Date: 2003-12-03 13:29+0200\n"
+"PO-Revision-Date: 2003-12-03 13:09+0200\n"
 "Last-Translator: Žygimantas Beručka <uid0@tuxfamily.org>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
 msgid "Add to Archive..."
 msgstr "Įdėti į archyvą..."
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract to..."
-msgstr "Išskleisti į..."
+msgid "Extract Here"
+msgstr "Išskleisti čia"
 
 #: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
@@ -38,9 +41,9 @@ msgid "Archive Manager"
 msgstr "Archyvų Tvarkyklė"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
-#: src/menu-callbacks.c:1076 src/window.c:762 src/window.c:1160
-#: src/window.c:2759
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:390 src/main.c:101
+#: src/menu-callbacks.c:1102 src/window.c:836 src/window.c:1252
+#: src/window.c:2922
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -53,89 +56,89 @@ msgstr "Tvarkyti suspaustus archyvus"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Tu neturi reikiamo leidimo bylų skaitymui kataloge \"%s\""
 
-#: src/dlg-add.c:119 src/window.c:1794 src/window.c:1827
+#: src/dlg-add.c:119 src/window.c:1921 src/window.c:1954
 msgid "Could not add the files to the archive"
 msgstr "Nepavyko pridėti bylų į archyvą"
 
-#: src/dlg-add.c:351 src/file_roller.glade.h:5
-msgid "Add Files"
-msgstr "Pridėti Bylas"
+#: src/dlg-add.c:353 src/window.c:3160
+msgid "Add"
+msgstr "Įdėti"
 
-#: src/dlg-add.c:356
+#: src/dlg-add.c:358
 msgid "_Add only if newer"
 msgstr "_Pridėti tik jeigu naujesnė"
 
-#: src/dlg-add.c:357
+#: src/dlg-add.c:359
 msgid "_Include subfolders"
 msgstr "Įtraukt_i vidinius katalogus"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:360
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Išskirti katalogus kurie yra simbolinės _nuorodos"
 
-#: src/dlg-add.c:359
+#: src/dlg-add.c:361
 msgid "Exclude o_ther file systems"
 msgstr "Išskirti _kitas bylų sistemas"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:362
 msgid "Exclude _backup files (*~)"
 msgstr "Išskiriti _atsargines bylas (*~)"
 
-#: src/dlg-add.c:361
+#: src/dlg-add.c:363
 msgid "Exclude _hidden files (.*)"
 msgstr "Išskirti _paslėptas bylas (.*)"
 
-#: src/dlg-add.c:362
+#: src/dlg-add.c:364
 msgid "E_xclude files:"
 msgstr "Iš_skirti bylas:"
 
-#: src/dlg-add.c:364
+#: src/dlg-add.c:366
 msgid "example: *.o; *.bak"
 msgstr "pavyzdys: *.o; *.bak"
 
-#: src/dlg-add.c:365
+#: src/dlg-add.c:367
 msgid "Igno_re case"
 msgstr "Igno_ravimo atvejis"
 
-#: src/dlg-add.c:366
+#: src/dlg-add.c:368
 msgid "_Load Options"
 msgstr "Įke_lti Parinktis"
 
-#: src/dlg-add.c:367
+#: src/dlg-add.c:369
 msgid "Sa_ve Options"
 msgstr "Iš_saugoti Parinktis"
 
-#: src/dlg-add.c:622
+#: src/dlg-add.c:624
 msgid "Load Options"
 msgstr "Įkelti parinktis"
 
-#: src/dlg-add.c:771
+#: src/dlg-add.c:773
 msgid "Save Options"
 msgstr "Išsaugoti parinktis"
 
-#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
-#: src/menu-callbacks.c:198 src/window.c:3440
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:177
+#: src/menu-callbacks.c:196 src/window.c:3674
 msgid "Could not create the archive"
 msgstr "Archyvo sukurti nepavyko"
 
-#: src/dlg-batch-add.c:100 src/menu-callbacks.c:180 src/menu-callbacks.c:375
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:178 src/menu-callbacks.c:374
 msgid "You have to specify an archive name."
 msgstr "Tu turi nurodyti archyvo vardą."
 
-#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3441
-#: src/window.c:3578
+#: src/dlg-batch-add.c:126 src/fr-archive.c:618 src/window.c:3675
+#: src/window.c:3818
 msgid "Archive type not supported."
 msgstr "Archyvo tipas nepalaikomas."
 
-#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3766
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:4046
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Paskirties katalogas neegzistuoja.  Ar nori jį sukurti?"
 
-#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3769
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:4049
 msgid "Create _Folder"
 msgstr "Sukurti _katalogą"
 
-#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3785
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:4065
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Negaliu sukurti paskirties katalogo: %s."
@@ -155,7 +158,7 @@ msgid "Folders to add: %d"
 msgstr "Pridėti katalogus: %d"
 
 #: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
-#: src/window.c:3789 src/window.c:3808
+#: src/window.c:4069 src/window.c:4088
 msgid "Extraction not performed"
 msgstr "Išskleidimas neatliktas"
 
@@ -165,23 +168,23 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Tu neturi reikiamo leidimo išskleisti archyvus kataloge \"%s\""
 
-#: src/dlg-extract.c:423 src/dlg-preferences.c:125 src/menu-callbacks.c:1035
+#: src/dlg-extract.c:428 src/dlg-preferences.c:125 src/menu-callbacks.c:1061
 msgid "Could not display help"
 msgstr "Nepavyko parodyti pagalbos"
 
-#: src/dlg-extract.c:502
+#: src/dlg-extract.c:507
 msgid "Actions"
 msgstr "Veiksmai"
 
-#: src/dlg-extract.c:503
+#: src/dlg-extract.c:508
 msgid "Destination folder"
 msgstr "Paskirties katalogas"
 
-#: src/dlg-extract.c:504
+#: src/dlg-extract.c:509
 msgid "Files"
 msgstr "Bylos"
 
-#: src/dlg-extract.c:533
+#: src/dlg-extract.c:538
 msgid "Bookmarks"
 msgstr "Žymelės"
 
@@ -251,6 +254,10 @@ msgstr "Pri_dėti žymelę"
 msgid "A_vailable application:"
 msgstr "_Prieinamos programos:"
 
+#: src/file_roller.glade.h:5
+msgid "Add Files"
+msgstr "Pridėti Bylas"
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Įdė_ti į archyvą:"
@@ -260,14 +267,14 @@ msgid "Add only if _newer"
 msgstr "Įdėti tik jeigu _naujesnė"
 
 #: src/file_roller.glade.h:8
-msgid "Delete Files"
-msgstr "Ištrinti bylas"
+msgid "Delete"
+msgstr "Ištrinti"
 
 #: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
 msgstr "Neiš_skleisti senesnių bylų"
 
-#: src/file_roller.glade.h:10 src/window.c:2997
+#: src/file_roller.glade.h:10 src/window.c:3171
 msgid "Extract"
 msgstr "Išskleisti"
 
@@ -313,7 +320,7 @@ msgstr "N_esenos programos:"
 msgid "Select Archive"
 msgstr "Pasirink archyvą"
 
-#: src/file_roller.glade.h:20 src/menu.h:429
+#: src/file_roller.glade.h:20
 msgid "View File"
 msgstr "Žiūrėti bylą"
 
@@ -389,36 +396,36 @@ msgstr "_Dydis"
 msgid "_Type"
 msgstr "_Tipas"
 
-#: src/fr-archive.c:578
+#: src/fr-archive.c:593
 msgid "The file does not exist."
 msgstr "Byla neegzistuoja."
 
-#: src/fr-command-tar.c:219
+#: src/fr-command-tar.c:218
 msgid "Adding file: "
 msgstr "Pridedama byla: "
 
-#: src/fr-command-tar.c:265
+#: src/fr-command-tar.c:264
 msgid "Removing file: "
 msgstr "Šalinama byla: "
 
-#: src/fr-command-tar.c:274 src/window.c:1256
+#: src/fr-command-tar.c:273 src/window.c:1348
 msgid "Deleting files from archive"
 msgstr "Iš archyvo šalinamos bylos"
 
-#: src/fr-command-tar.c:307
+#: src/fr-command-tar.c:306
 msgid "Extracting file: "
 msgstr "Išskleidžiama byla: "
 
-#: src/fr-command-tar.c:352
+#: src/fr-command-tar.c:351
 msgid "Recompressing archive"
 msgstr "Perspaudžiamas archyvas"
 
-#: src/fr-command-tar.c:486
+#: src/fr-command-tar.c:485
 msgid "Decompressing archive"
 msgstr "Atspaudžiamas archyvas"
 
 #. Button
-#: src/gtk-utils.c:419
+#: src/gtk-utils.c:421
 msgid "Command _Line Output"
 msgstr "Komandinės _eilutės išvestis"
 
@@ -456,434 +463,410 @@ msgstr "Įprastas katalogas naudojamas '-add' ir '--extract' komandų"
 msgid "Create destination folder without asking confirmation"
 msgstr "Sukurti paskirties katalogą neklausiant patvirtinimo"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:106
 msgid "Automatic"
 msgstr "Automatiškas"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:107
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:108
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:109
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:110
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:111
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:112
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar nesuspaustas (.tar)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:113
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar suspaustas su bzip (.tar.bz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:114
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar suspaustas su bzip2 (.tar.bz2)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:115
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar suspaustas su gzip (.tar.gz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:116
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar suspaustas su lzop (.tar.lzo)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar suspaustas su compress (.tar.Z)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:118
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:119
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:120
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:199 src/menu-callbacks.c:394
+#: src/menu-callbacks.c:197 src/menu-callbacks.c:393
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Tu neturi leidimo sukurti archyvą šiame kataloge"
 
-#: src/menu-callbacks.c:228 src/menu-callbacks.c:414 src/menu-callbacks.c:633
-#: src/menu-callbacks.c:811
+#: src/menu-callbacks.c:226 src/menu-callbacks.c:413 src/menu-callbacks.c:636
+#: src/menu-callbacks.c:814
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Archyvas jau egzistuoja.  Ar tu nori jį perrašyti?"
 
-#: src/menu-callbacks.c:231 src/menu-callbacks.c:417 src/menu-callbacks.c:636
-#: src/menu-callbacks.c:814
+#: src/menu-callbacks.c:229 src/menu-callbacks.c:416 src/menu-callbacks.c:639
+#: src/menu-callbacks.c:817
 msgid "Overwrite"
 msgstr "Perrašyti"
 
-#: src/menu-callbacks.c:247 src/menu-callbacks.c:433
+#: src/menu-callbacks.c:245 src/menu-callbacks.c:432
 msgid "Could not delete the old archive."
 msgstr "Nepavyko ištrinti seno archyvo."
 
-#: src/menu-callbacks.c:292
-msgid "New Archive"
-msgstr "Naujas archyvas"
+#: src/menu-callbacks.c:290 src/toolbar.h:39
+msgid "New"
+msgstr "Naujas"
 
-#: src/menu-callbacks.c:310 src/menu-callbacks.c:472
+#: src/menu-callbacks.c:308 src/menu-callbacks.c:471
 msgid "Archive type:"
 msgstr "Archyvo tipas:"
 
-#: src/menu-callbacks.c:374 src/menu-callbacks.c:393
+#: src/menu-callbacks.c:373 src/menu-callbacks.c:392
 msgid "Could not save the archive"
 msgstr "Nepavyko išsaugoti archyvo"
 
-#: src/menu-callbacks.c:460
-msgid "Save Archive"
-msgstr "Išsaugoti archyvą"
+#: src/menu-callbacks.c:459
+msgid "Save"
+msgstr "Išsaugoti"
 
-#: src/menu-callbacks.c:542
-msgid "Open Archive"
-msgstr "Atidaryti archyvą"
+#: src/menu-callbacks.c:545 src/toolbar.h:45
+msgid "Open"
+msgstr "Atidaryti"
 
-#: src/menu-callbacks.c:658
+#: src/menu-callbacks.c:661
 msgid "Could not copy the archive"
 msgstr "Nepavyko nukopijuoti archyvo"
 
-#: src/menu-callbacks.c:676
+#: src/menu-callbacks.c:679
 msgid "Could not move the archive"
 msgstr "Negaliu perkelti archyvo"
 
-#: src/menu-callbacks.c:703
-msgid "Copy Archive"
-msgstr "Kopijuoti archyvą"
+#: src/menu-callbacks.c:706
+msgid "Copy"
+msgstr "Kopijuoti"
 
-#: src/menu-callbacks.c:703
-msgid "Move Archive"
-msgstr "Perkelti archyvą"
+#: src/menu-callbacks.c:706
+msgid "Move"
+msgstr "Perkelti"
 
-#: src/menu-callbacks.c:781
-msgid "Rename Archive"
-msgstr "Pervardinti archyvą"
+#: src/menu-callbacks.c:784 src/window.c:4735
+msgid "Rename"
+msgstr "Pervardinti"
 
-#: src/menu-callbacks.c:782
+#: src/menu-callbacks.c:785
 msgid "New archive name (without extension)"
 msgstr "Naujo archyvo vardas (be plėtinio)"
 
-#: src/menu-callbacks.c:786
+#: src/menu-callbacks.c:789 src/window.c:4740
 msgid "_Rename"
 msgstr "Pe_rvardinti"
 
-#: src/menu-callbacks.c:896
+#: src/menu-callbacks.c:899
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
 msgstr ""
 "Archyvas negali būti perkeltas į Šiukšlinę. Ar nori jį ištrinti visam laikui?"
 
-#: src/menu-callbacks.c:1068
+#: src/menu-callbacks.c:1094
 msgid "translator_credits"
 msgstr "Žygimantas Beručka <uid0@tuxfamily.org>"
 
-#: src/menu-callbacks.c:1079
+#: src/menu-callbacks.c:1105
 msgid "An archive manager for GNOME."
 msgstr "GNOME archyvų tvarkyklė."
 
-#: src/menu-callbacks.c:1228 src/window.c:4129
+#: src/menu-callbacks.c:1254 src/window.c:4472
 msgid "Last Output"
 msgstr "Paskutinė išvestis"
 
-#: src/menu.h:69
+#: src/menu.h:66
 msgid "_New"
 msgstr "_Naujas"
 
-#: src/menu.h:70 src/toolbar.h:39
+#: src/menu.h:67 src/toolbar.h:39
 msgid "Create a new archive"
 msgstr "Sukurti naują archyvą"
 
-#: src/menu.h:75
+#: src/menu.h:72
 msgid "Open R_ecent"
 msgstr "Atidaryti n_esenus"
 
-#: src/menu.h:84
-msgid "Open Fi_les..."
-msgstr "Atidaryti by_las..."
-
-#: src/menu.h:84
-msgid "Open selected files with an application"
-msgstr "Atidaryti pažymėtas bylas su programa"
-
-#: src/menu.h:90
-msgid "_View File"
-msgstr "Ž_iūrėti bylą"
-
-#: src/menu.h:90 src/menu.h:429
-msgid "View file with internal viewer"
-msgstr "Žiūrėti su vidine žiūrykle"
-
-#: src/menu.h:98
+#: src/menu.h:81 src/menu.h:169 src/menu.h:453
 msgid "_Rename..."
 msgstr "Pe_rvardinti..."
 
-#: src/menu.h:98
+#: src/menu.h:81
 msgid "Rename current archive"
 msgstr "Pervardinti šį archyvą"
 
-#: src/menu.h:104
+#: src/menu.h:87
 msgid "Cop_y..."
 msgstr "Kopi_juoti..."
 
-#: src/menu.h:104
+#: src/menu.h:87
 msgid "Copy current archive to another folder"
 msgstr "Kopijuoti šį archyvą į kitą katalogą"
 
-#: src/menu.h:110
+#: src/menu.h:93
 msgid "_Move..."
 msgstr "Per_kelti..."
 
-#: src/menu.h:110
+#: src/menu.h:93
 msgid "Move current archive to another folder"
 msgstr "Perkelti šį archyvą į kitą katalogą"
 
-#: src/menu.h:116
+#: src/menu.h:99
 msgid "Move to _Trash"
 msgstr "Perkelti į Šiukš_linę"
 
-#: src/menu.h:116
+#: src/menu.h:99
 msgid "Move current archive to trash"
 msgstr "Perkelti šį archyvą į šiukšlinę"
 
-#: src/menu.h:122
+#: src/menu.h:105
 msgid "_Test"
 msgstr "_Tikrinti"
 
-#: src/menu.h:122
+#: src/menu.h:105
 msgid "Test whether the archive contains errors"
 msgstr "Patikrinti ar archyve nėra klaidų"
 
-#: src/menu.h:130
+#: src/menu.h:113
 msgid "_Properties"
 msgstr "_Savybės"
 
-#: src/menu.h:130
+#: src/menu.h:113
 msgid "Show archive properties"
 msgstr "Rodyti archyvo savybes"
 
-#: src/menu.h:162 src/menu.h:437
-msgid "Add _Files..."
-msgstr "Pridėti _bylas..."
+#: src/menu.h:151 src/menu.h:435
+msgid "_Add..."
+msgstr "Į_dėti..."
 
-#: src/menu.h:162 src/menu.h:437 src/window.c:2987
-msgid "Add files to the archive"
-msgstr "Įdėti bylas į archyvą"
+#: src/menu.h:151 src/menu.h:435
+msgid "Add files and folders to the archive"
+msgstr "Įdėti bylas ir aplankus į archyvą"
 
-#: src/menu.h:168
-msgid "_Delete Files..."
-msgstr "Iš_trinti bylas..."
+#: src/menu.h:157 src/menu.h:441
+msgid "_Extract..."
+msgstr "_Išskleisti..."
 
-#: src/menu.h:168
-msgid "Delete selected files and folders from the archive"
-msgstr "Trinti pažymėtas bylas ir katalogus iš archyvo"
-
-#: src/menu.h:174 src/menu.h:449
-msgid "_Extract to..."
-msgstr "_Išskleisti į..."
-
-#: src/menu.h:174 src/menu.h:449 src/window.c:2998
+#: src/menu.h:157 src/menu.h:441 src/window.c:3172
 msgid "Extract files from the archive"
 msgstr "Išskleisti bylas iš archyvo"
 
-#: src/menu.h:198 src/menu.h:457
+#: src/menu.h:169 src/menu.h:453
+msgid "Rename selection"
+msgstr "Pervardinti pažymėtą"
+
+#: src/menu.h:175 src/menu.h:459
+msgid "_Delete..."
+msgstr "Iš_trinti..."
+
+#: src/menu.h:175 src/menu.h:459
+msgid "Delete selection from the archive"
+msgstr "Trinti pažymėtus iš archyvo"
+
+#: src/menu.h:183 src/menu.h:467
 msgid "Select _All"
 msgstr "Rinktis _visas"
 
-#: src/menu.h:198 src/menu.h:457
+#: src/menu.h:183 src/menu.h:467
 msgid "Select all files"
 msgstr "Rinktis visas bylas"
 
-#: src/menu.h:204 src/menu.h:463
+#: src/menu.h:189 src/menu.h:473
 msgid "Dese_lect All"
 msgstr "Nesi_rinkti jokios"
 
-#: src/menu.h:204 src/menu.h:463
+#: src/menu.h:189 src/menu.h:473
 msgid "Deselect all files"
 msgstr "Nesirinkti jokios bylos"
 
-#: src/menu.h:212
+#: src/menu.h:197 src/menu.h:421
+msgid "Open Fi_les..."
+msgstr "Atidaryti by_las..."
+
+#: src/menu.h:197 src/menu.h:421
+msgid "Open selected files with an application"
+msgstr "Atidaryti pažymėtas bylas su programa"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "_View File"
+msgstr "Ž_iūrėti bylą"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "View file with internal viewer"
+msgstr "Žiūrėti su vidine žiūrykle"
+
+#: src/menu.h:211
 msgid "Pass_word..."
 msgstr "Sla_ptažodis..."
 
-#: src/menu.h:220
+#: src/menu.h:219
 msgid "_Preferences"
 msgstr "_Parinktys"
 
-#: src/menu.h:220
+#: src/menu.h:219
 msgid "Edit File Roller preferences"
 msgstr "Keisti File Roller parinktis"
 
-#: src/menu.h:231
+#: src/menu.h:230
 msgid "by _Name"
 msgstr "pagal _vardą"
 
-#: src/menu.h:231
+#: src/menu.h:230
 msgid "Sort file list by name"
 msgstr "Rūšiuoti bylas pagal vardą"
 
-#: src/menu.h:237
+#: src/menu.h:236
 msgid "by _Size"
 msgstr "pagal _dydį"
 
-#: src/menu.h:237
+#: src/menu.h:236
 msgid "Sort file list by file size"
 msgstr "Rūšiuoti bylas pagal dydį"
 
-#: src/menu.h:243
+#: src/menu.h:242
 msgid "by T_ype"
 msgstr "pagal _tipą"
 
-#: src/menu.h:243
+#: src/menu.h:242
 msgid "Sort file list by type"
 msgstr "Rūšiuoti bylas pagal tipą"
 
-#: src/menu.h:249
+#: src/menu.h:248
 msgid "by _Date modified"
 msgstr "pagal modifikavimo _datą"
 
-#: src/menu.h:249
+#: src/menu.h:248
 msgid "Sort file list by modification time"
 msgstr "Rūšiuoti bylas pagal modifikavimo datą"
 
-#: src/menu.h:255
+#: src/menu.h:254
 msgid "by _Location"
 msgstr "pagal _vietą"
 
-#: src/menu.h:255
+#: src/menu.h:254
 msgid "Sort file list by location"
 msgstr "Rūšiuoti bylas pagal vietą"
 
-#: src/menu.h:272
+#: src/menu.h:271
 msgid "View All _Files"
 msgstr "Žiūrėti visas _bylas"
 
-#: src/menu.h:278
+#: src/menu.h:277
 msgid "View as a F_older"
 msgstr "Žiūrėti kaip _katalogą"
 
-#: src/menu.h:300
+#: src/menu.h:299
 msgid "_Reversed Order"
 msgstr "_Avirkštine tvarka"
 
-#: src/menu.h:300
+#: src/menu.h:299
 msgid "Reverse the list order"
 msgstr "Rūšiuoti atvirkštine tvarka"
 
-#: src/menu.h:325
+#: src/menu.h:323
 msgid "_Toolbar"
 msgstr "Į_rankių juosta"
 
-#: src/menu.h:325
+#: src/menu.h:323
 msgid "View the main toolbar"
 msgstr "Matyti pagrindinę įrankių juostą"
 
-#: src/menu.h:331
+#: src/menu.h:329
 msgid "Stat_usbar"
 msgstr "Būsenos j_uosta"
 
-#: src/menu.h:331
+#: src/menu.h:329
 msgid "View the statusbar"
 msgstr "Matyti būsenos juostą"
 
-#: src/menu.h:339
+#: src/menu.h:337
 msgid "_Stop"
 msgstr "_Stop"
 
-#: src/menu.h:339 src/toolbar.h:55
+#: src/menu.h:337 src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Sustabdyti šią operaciją"
 
-#: src/menu.h:345
+#: src/menu.h:343
 msgid "_Reload"
 msgstr "_Perkrauti"
 
-#: src/menu.h:345
+#: src/menu.h:343
 msgid "Reload current archive"
 msgstr "Perkrauti šį archyvą"
 
-#: src/menu.h:356
+#: src/menu.h:354
 msgid "_Arrange Files"
 msgstr "_Klasifikuoti bylas"
 
-#: src/menu.h:361
+#: src/menu.h:359
 msgid "_Last Output"
 msgstr "_Paskutinė išvestis"
 
-#: src/menu.h:361
+#: src/menu.h:359
 msgid "View the output produced by the last executed command"
 msgstr "Žiūrėti paskutinės vykdytos komandos išeitį"
 
-#: src/menu.h:367
-msgid "New _Window"
-msgstr "Naujas _langas"
-
-#: src/menu.h:367
-msgid "Open a new window"
-msgstr "Atidaryti naują langą"
-
-#: src/menu.h:380
+#: src/menu.h:372
 msgid "_Contents"
 msgstr "_Turinys"
 
-#: src/menu.h:380
+#: src/menu.h:372
 msgid "Display the File Roller Manual"
 msgstr "Rodyti File Roller instrukciją"
 
-#: src/menu.h:386
+#: src/menu.h:378
 msgid "_About"
 msgstr "_Apie"
 
-#: src/menu.h:386
+#: src/menu.h:378
 msgid "Information about the program"
-msgstr "Informacija apie programÄ"
+msgstr "Informacija apie programą"
 
-#: src/menu.h:398
+#: src/menu.h:390
 msgid "_Archive"
 msgstr "_Archyvas"
 
-#: src/menu.h:399
+#: src/menu.h:391
 msgid "_Edit"
 msgstr "_Keisti"
 
-#: src/menu.h:400
+#: src/menu.h:392
 msgid "_View"
 msgstr "Žiū_rėti"
-
-#: src/menu.h:423
-msgid "Open Files..."
-msgstr "Atidaryti Bylas..."
-
-#: src/menu.h:443
-msgid "_Delete Files"
-msgstr "_Ištrinti bylas"
-
-#: src/menu.h:443
-msgid "Delete files from the archive"
-msgstr "Trinti bylas iš archyvo"
-
-#: src/toolbar.h:39
-msgid "New"
-msgstr "Naujas"
-
-#: src/toolbar.h:45
-msgid "Open"
-msgstr "Atidaryti"
 
 #: src/toolbar.h:45
 msgid "Open archive"
@@ -893,177 +876,244 @@ msgstr "Atidaryti archyvą"
 msgid "Stop"
 msgstr "Stop"
 
-#: src/window.c:620
+#: src/window.c:679
 msgid "Folder"
 msgstr "Katalogas"
 
-#: src/window.c:770
+#: src/window.c:844
 msgid "[read only]"
 msgstr "[tik skaitymui]"
 
-#: src/window.c:865
+#: src/window.c:939
 #, c-format
-msgid "1 file (%s)"
-msgstr "1 byla (%s)"
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d byla (%s)"
+msgstr[1] "%d bylos (%s)"
+msgstr[2] "%d bylų (%s)"
 
-#: src/window.c:868
+#: src/window.c:944
 #, c-format
-msgid "%d files (%s)"
-msgstr "%d bylos (%s)"
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d byla pasirinkta (%s)"
+msgstr[1] "%d bylos pasirinktos (%s)"
+msgstr[2] "%d bylų pasirinkta (%s)"
 
-#: src/window.c:876
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "1 byla pasirinkta (%s)"
-
-#: src/window.c:879
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d bylos pasirinktos (%s)"
-
-#: src/window.c:1253
+#: src/window.c:1345
 msgid "Reading archive"
 msgstr "Skaitomas archyvas"
 
-#: src/window.c:1259
+#: src/window.c:1351
 msgid "Adding files to archive"
 msgstr "Bylos dedamos į archyvą"
 
-#: src/window.c:1262
+#: src/window.c:1354
 msgid "Extracting files from archive"
 msgstr "Bylos išskleidžiamos iš archyvo"
 
-#: src/window.c:1265
+#: src/window.c:1357
 msgid "Testing archive"
 msgstr "Tikrinamas archyvas"
 
-#: src/window.c:1268
+#: src/window.c:1360
 msgid "Getting the file list"
 msgstr "Gaunamas bylų sąrašas"
 
-#: src/window.c:1274
+#: src/window.c:1366
 msgid "wait please..."
 msgstr "prašau palaukti..."
 
-#: src/window.c:1335
+#: src/window.c:1427
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Nepavyko parodyti katalogo \"%s\""
 
-#: src/window.c:1392
+#: src/window.c:1486
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+"Šis archyvas yra apsaugotas slaptažodžiu.\n"
+"Prašau nurodyti slaptažodį su komanda: Keisti->Slaptažodis"
+
+#: src/window.c:1488
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr ""
+"Nurodytas slaptažodis yra netinkamas, prašau nurodyti naują slaptažodį su "
+"komanda: Keisti->Slaptažodis"
+
+#: src/window.c:1493
+msgid "Could not perform the operation"
+msgstr "Negaliu atlikti operacijos"
+
+#: src/window.c:1508
 msgid "Operation stopped"
 msgstr "Operacija sustabdyta"
 
-#: src/window.c:1413
+#: src/window.c:1529
 msgid "An error occurred while extracting files."
 msgstr "Įvyko klaida išskleidžiant bylas."
 
-#: src/window.c:1417
+#: src/window.c:1533
 msgid "An error occurred while loading the archive."
 msgstr "Įvyko klaida įkeliant archyvą."
 
-#: src/window.c:1421
+#: src/window.c:1537
 msgid "An error occurred while deleting files from the archive."
 msgstr "Įvyko klaida trinant bylas iš archyvo."
 
-#: src/window.c:1425
+#: src/window.c:1541
 msgid "An error occurred while adding files to the archive."
 msgstr "Įvyko klaida dedant bylas į archyvą."
 
-#: src/window.c:1429
+#: src/window.c:1545
 msgid "An error occurred while testing archive."
 msgstr "Įvyko klaida testuojant archyvą."
 
-#: src/window.c:1438
+#: src/window.c:1554
 msgid "Command not found."
 msgstr "Komanda nerasta."
 
-#: src/window.c:1441
+#: src/window.c:1557
 msgid "Command exited abnormally."
 msgstr "Komanda išėjo su anomalija."
 
-#: src/window.c:1572
+#: src/window.c:1685
 msgid "Test Result"
 msgstr "Tikrinimo rezultatas"
 
-#: src/window.c:1795
+#: src/window.c:1922
 msgid "You don't have the right permissions."
 msgstr "Tu neturi reikiamo leidimo."
 
-#: src/window.c:1828
+#: src/window.c:1955
 msgid "You can't add an archive to itself."
 msgstr "Tu negali įdėti archyvo į jį patį."
 
-#: src/window.c:2000
+#: src/window.c:2134
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 "Ar tu nori pridėti šią bylą į šį archyvą ar atidaryti ją kaip naują archyvą?"
 
-#: src/window.c:2045
+#: src/window.c:2171
 msgid "Do you want to create a new archive with these files?"
 msgstr "Ar tu nori sukurti naują archyvą su šiomis bylomis?"
 
-#: src/window.c:2048
+#: src/window.c:2174
 msgid "Create _Archive"
 msgstr "Sukurti _archyvą"
 
-#: src/window.c:2397
+#: src/window.c:2525
 msgid "Size"
 msgstr "Dydis"
 
-#: src/window.c:2398
+#: src/window.c:2526
 msgid "Type"
 msgstr "Tipas"
 
-#: src/window.c:2399
+#: src/window.c:2527
 msgid "Date modified"
 msgstr "Pakeitimo data"
 
-#: src/window.c:2400
+#: src/window.c:2528
 msgid "Location"
 msgstr "Vieta"
 
-#: src/window.c:2407
+#: src/window.c:2535
 msgid "Name"
 msgstr "Vardas"
 
-#: src/window.c:2927
-msgid "_Up"
-msgstr "A_ukštyn"
+#: src/window.c:3080
+msgid "Go to the previous visited location"
+msgstr "Eiti į prieštai aplankytą vietą"
+
+#: src/window.c:3088
+msgid "Go to the next visited location"
+msgstr "Eiti į kitą aplankytą vietą"
+
+#: src/window.c:3096
+msgid "Go up one level"
+msgstr "Eiti vienu lygiu aukštyn"
+
+#: src/window.c:3104
+msgid "Go to the home location"
+msgstr "Eiti į namų vietą"
 
 #. current location
-#: src/window.c:2949
+#: src/window.c:3123
 msgid "Location:"
 msgstr "Vieta:"
 
-#: src/window.c:2986
-msgid "Add"
-msgstr "Įdėti"
+#: src/window.c:3161
+msgid "Add files to the archive"
+msgstr "Įdėti bylas į archyvą"
 
-#: src/window.c:3008
+#: src/window.c:3182
 msgid "View"
 msgstr "Žiūrėti"
 
-#: src/window.c:3009
+#: src/window.c:3183
 msgid "View selected file"
 msgstr "Žiūrėti pasirinktą bylą"
 
-#: src/window.c:3520
+#: src/window.c:3760
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Negaliu atidaryti \"%s\""
 
-#: src/window.c:3571
+#: src/window.c:3811
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Negaliu išsaugoti archyvo \"%s\""
 
 #: src/window.c:4667
+msgid "The new name is void."
+msgstr "Vardas yra tuščias."
+
+#: src/window.c:4667 src/window.c:4671 src/window.c:4680
+msgid "Please use a different name."
+msgstr "Prašau naudoti kitą vardą."
+
+#: src/window.c:4671
+msgid "The new name is equal to the old one."
+msgstr "Naujas vardas yra toks pats kaip senasis."
+
+#: src/window.c:4680
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+"Vardas „%s“ yra negeras todėl, kad jame yra simbolių: %s\n"
+"\n"
+"%s"
+
+#: src/window.c:4736
+msgid "New folder name"
+msgstr "Naujas aplanko vardas"
+
+#: src/window.c:4736
+msgid "New file name"
+msgstr "Naujas bylos vardas"
+
+#: src/window.c:4757
+msgid "Could not rename the folder"
+msgstr "Nepavyko perrvardinti aplanko"
+
+#: src/window.c:4757
+msgid "Could not rename the file"
+msgstr "Nepavyko pervardinti bylos"
+
+#: src/window.c:5385
 msgid "Add files to an archive"
 msgstr "Įdėti bylas į archyvą"
 
-#: src/window.c:4692
+#: src/window.c:5410
 msgid "Extract archive"
 msgstr "Išskleisti archyvą"
