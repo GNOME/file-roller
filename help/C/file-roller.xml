@@ -219,10 +219,10 @@
       <title>Opening an Archive File</title>
       <para>
 	To open an archive file, choose <menuchoice>
-	  <guimenu>File</guimenu> <guimenuitem>Open</guimenuitem> </menuchoice>
+	  <guimenu>Archive</guimenu> <guimenuitem>Open</guimenuitem> </menuchoice>
 	  (<keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>),
 	  or click <guibutton>Open</guibutton> button in the
-	  toolbar. The <guilabel>Open File</guilabel> dialog is
+	  toolbar. The <guilabel>Open Archive</guilabel> dialog is
 	  displayed. Select the file that you want to open, then click
 	  <guibutton>OK</guibutton>. &fr; will automatically determine
 	  archive type and and show its contents in the main
@@ -268,7 +268,7 @@
          archive, with their names, types, modification dates and
          other information. <guilabel>Size</guilabel> field shows
          uncompressed size, i.e. the size the file would have if you
-         extracted it from the archive. <guilabel>Modifed</guilabel>
+         extracted it from the archive. <guilabel>Date modified</guilabel>
          filed shows the date this file was last modified. 
       </para>
       <para>
@@ -337,7 +337,7 @@
 	    Alternatively, you can just
 	    click on the heading of the corresponding column; for
 	    example, to have files sorted by modification date (earliest
-	    to latest), click on <guilabel>Modified</guilabel>
+	    to latest), click on <guilabel>Date modified</guilabel>
 	    heading. Clicking on the heading again reverses the order (in
 	    this case, it will order the files latest to earliest).    
 	  </para></listitem> 
@@ -347,7 +347,7 @@
 
   <!-- =============  Viewing a file in  an Archive ==================== -->
   <sect1 id="fr-viewing-file"> 
-    <title>Viewing a File in  an Archive</title> 
+    <title>Viewing a File in an Archive</title> 
     <para>
       The simplest way to view a file in the archive is to
       double-click on the file in &fr; main window. Alternatively, you
@@ -401,7 +401,7 @@
     <para>
       You can also view a file using the viewer or application you
       specify rather than the default one. To open a file using an
-      internal viewer, choose <menuchoice><guimenu>File</guimenu>
+      internal viewer, choose <menuchoice><guimenu>Archive</guimenu>
       <guimenuitem>View file</guimenuitem></menuchoice> or right-click
       on the filename and choose <guimenuitem>View
       file</guimenuitem>. &fr; will open the file using the most
@@ -410,9 +410,9 @@
     </para>
     <para>
       To open a file using an external application, choose
-      <menuchoice><guimenu>File</guimenu> <guimenuitem>Open file...
+      <menuchoice><guimenu>Archive</guimenu> <guimenuitem>Open Files...
       </guimenuitem></menuchoice> or right-click on the
-      filename and choose <guimenuitem>Open file
+      filename and choose <guimenuitem>Open Files
       ...</guimenuitem>. This will open a dialog that shows all
       applications that can open files of this type. You can select
       one of them by clicking on it and then clicking
@@ -444,12 +444,12 @@
     <sect2 id="fr-modifying-archive">
       <title>Operations on Archive as a Whole</title>
       <para>
-	 The <guimenu>File</guimenu> menu of &fr; contains the
+	 The <guimenu>Archive</guimenu> menu of &fr; contains the
 	 following commands for modifying the archive file:
       </para>
       <itemizedlist>
 	<listitem><para>
-	    <guimenuitem>Move</guimenuitem>
+	    <guimenuitem>Rename</guimenuitem>
 	  </para>
 	</listitem>
 	<listitem><para>
@@ -457,7 +457,7 @@
 	  </para>
 	</listitem>
 	<listitem><para>
-	    <guimenuitem>Rename</guimenuitem>
+	    <guimenuitem>Move</guimenuitem>
 	  </para>
 	</listitem>
 	<listitem><para>
@@ -481,12 +481,12 @@
 	The easiest way to add files to currently open archive is to
 	drag files to &fr; window from another GNOME application (such
 	as file manager). Alternatively, you can choose
-	<menuchoice><guimenu>Actions</guimenu><guimenuitem>Add
-	files</guimenuitem></menuchoice>, click on the
+	<menuchoice><guimenu>Edit</guimenu><guimenuitem>Add
+	Files...</guimenuitem></menuchoice>, click on the
 	<guibutton>Add</guibutton> button in the toolbar, or
 	right-click on a file in &fr; window and select
 	<guimenuitem>Add files</guimenuitem>. This opens
-	<guilabel>Add files</guilabel> dialog, shown in <xref
+	<guilabel>Add Files...</guilabel> dialog, shown in <xref
 	linkend="fr-add-dialog-fig"/>. In this dialog, select the
 	files you want to add and click <guibutton>OK</guibutton>.  
       </para>
@@ -501,10 +501,13 @@
 	</para>
       </tip>
       <para>
-	To add a whole folder to the archive, make sure that
-	<guilabel>Selection</guilabel> field is blank (you may have to
-	erase <keycap>*</keycap> from it) and click (not
-	double-click!) on the folder name. 
+	To add a whole folder to the archive, type the folder name in the
+	<guilabel>Selection</guilabel> field.  For example, say that you 
+	want to add the folder <filename>/aaa/bbb/ccc</filename> to an archive,
+	in this case you have to go to folder <filename>/aaa/bbb</filename> 
+	and type <filename>ccc</filename> in the 
+	<guilabel>Selection</guilabel> field.  
+	Note that just clicking on the folder name does not work. 
       </para>
       <para>
 	<guilabel>Add files</guilabel> dialog can also be used to
@@ -536,10 +539,10 @@
 	you want to delete (see this <link
 	linkend="multi-select">tip</link> on selecting multiple files)
 	and choose
-	<menuchoice><guimenu>Actions</guimenu><guimenuitem>Delete
-	files...</guimenuitem></menuchoice>, or right-click on the
+	<menuchoice><guimenu>Edit</guimenu><guimenuitem>Delete
+	</guimenuitem></menuchoice>, or right-click on the
 	selected files and choose <guimenuitem>Delete
-	files...</guimenuitem>. This opens <guilabel>Delete</guilabel>
+	Files</guimenuitem>. This opens <guilabel>Delete Files</guilabel>
 	dialog, which gives you a choice of deleting all files,
 	selected files, or files matching a pattern. To learn more
 	about filename patterns, see <link linkend="fr-pattern">next
@@ -633,7 +636,7 @@
 	</varlistentry>
        <!-- ============= -->	
 	<varlistentry>
-	  <term><guilabel>Include subfolders</guilabel></term>
+	  <term><guilabel>Include sub-folders</guilabel></term>
 	  <listitem><para>
 	      If this option is selected, &fr; will select all files
 	      matching the pattern not only in the current folder
@@ -716,9 +719,6 @@
       </variablelist>
     </sect2>
 
-
-
-
   </sect1>
 
   <!-- =========== Extracting Files From an Archive ==================== -->
@@ -728,14 +728,11 @@
     <secondary>extracting</secondary>
   </indexterm> 
 
-
-
-
   <sect1 id="fr-extracting"> 
     <title>Extracting Files From an Archive</title> 
     <para>
       To extract files from the archive, choose
-      <menuchoice><guimenu>Actions</guimenu> 
+      <menuchoice><guimenu>Edit</guimenu> 
 	<guimenuitem>Extract to...</guimenuitem> </menuchoice>
       or click on <guibutton>Extract</guibutton> button in the
       toolbar. This will open <guilabel>Extract</guilabel> dialog
@@ -754,8 +751,8 @@
       change the archive file. &fr; leaves the archive file
       unchanged. If you no longer need the archive file, you can
       delete it manually  by choosing
-      <menuchoice><guimenu>File</guimenu> <guimenuitem>Delete
-      Archive</guimenuitem> </menuchoice>. 
+      <menuchoice><guimenu>Archive</guimenu> <guimenuitem>Delete
+      </guimenuitem> </menuchoice>. 
     </para>
     <para>
       Extracted files will have the same permissions and modification
@@ -781,36 +778,35 @@
       <variablelist>
        <!-- ============= -->	
 	<varlistentry>
-	  <term><guilabel>Extract to</guilabel></term>
+	  <term><guilabel>Destination folder</guilabel></term>
 	  <listitem><para>
 	      This field shows the folder to which the
 	      files should be extracted. You can use
 	      <guibutton>Browse</guibutton> button to select a folder;
 	      you can also select one of recently used folders from
 	      the drop-down list or double-clcik on one of folders in
-	      <guilabel>Favorites Extraction Folders</guilabel>
-	      list.
+	      <guilabel>Bookmarks</guilabel> list.
 	    </para>
 	    <para>
 	      Please note that by default, &fr; reconstructs the
 	      folder structure when extracting. Thus,  if you selected
-	      <filename>/home/sasha</filename> in <guilabel>Extract
-		to</guilabel> field, and your archive contains subfolder
+	      <filename>/home/sasha</filename> in <guilabel>Destination 
+	      folder</guilabel> field, and your archive contains subfolder
 	      <filename>doc</filename>, then the contents of this
 	      subfolder will be extracted to
 	      <filename>/home/sasha/doc</filename>.  </para></listitem>
 	</varlistentry>
        <!-- ============= -->	
 	<varlistentry>
-	  <term><guilabel>Favorites Extraction Folders</guilabel></term>
+	  <term><guilabel>Bookmarks</guilabel></term>
 	  <listitem><para>
 	      In this field, you can add folders which you
 	      frequently use for extraction. To extract to one of 
-	      folders in the favorites list, double-clcik on it. 
-	      To add folder currently
-	      shown in <guilabel>Extract To</guilabel> field to the
+	      the folders in the favorites list, double-click on it. 
+	      To add the folder currently
+	      shown in <guilabel>Destination folder</guilabel> field to the
 	      list of favorites, click <guilabel>Add to
-		favorites</guilabel>. To remove a folder from the list of
+		Bookmarks</guilabel>. To remove a folder from the list of
 	      favorites, select it with the mouse and click
 	      <guibutton>Remove</guibutton> button.  
 	  </para></listitem>
@@ -821,8 +817,8 @@
 	  <listitem><para>
 	      This option allows you to select files to
 	      extract. Possible options are <guilabel>All
-		Files</guilabel> (extracts all files in the archive), 
-	      <guilabel>Selected Files</guilabel>, and
+		files</guilabel> (extracts all files in the archive), 
+	      <guilabel>Selected files</guilabel>, and
 	      <guilabel>Files</guilabel>. The last option extracts
 	      files matching the  pattern you enter. As usual, the
 	      pattern may use wildcards <keycap>*</keycap> and
@@ -879,10 +875,10 @@
 	  <listitem><para>
 	     With this option you can specify a password to use when 
 	     extracting files.  This option is disabled if the archive type
-	     do not support encryption, at the moment only ZIP archives 
+	     does not support encryption, at the moment only ZIP archives 
 	     support it.  Please note that encryption provided by archive
 	     utilities are weak and insecure, if security is truly 
-	     important use  strong encryption tools such as
+	     important for you use strong encryption tools such as
 	     <ulink url="http://www.gnupg.org" type="http">the GNU Privacy 
 	     Guard</ulink>.
 	  </para></listitem>
@@ -907,7 +903,7 @@
     <title>Creating Archives</title> 
     <para>
       To create a new archive, choose
-      <menuchoice><guimenu>File</guimenu>
+      <menuchoice><guimenu>Archive</guimenu>
       <guimenuitem>New</guimenuitem></menuchoice> or use
       <guibutton>New</guibutton> button in the toolbar. It will open
       the <guilabel>New Archive</guilabel> dialog, where you should
@@ -924,7 +920,7 @@
     </para> 
     <para>
       Please note that &fr; will write the archive file to disk only
-      after you add some files to it; it will not write to disk empty
+      after you add some files to it;  it will not write to disk empty
       archives. 
     </para>
   </sect1>
@@ -953,16 +949,6 @@
       </figure>
 
       <para>
-	<guilabel>Columns to Show</guilabel> section allows you to
-	select which columns should be shown in &fr; main
-	window. <guilabel>Modified Time</guilabel> shows the last
-	time the file was modified.  <guilabel>File Path</guilabel>
-	shows full path to the file (i.e., file name including all
-	parent folders, such as
-	<filename>/usr/share/doc/file-roller/Copying</filename>). Other
-	columns should be self-explanatory.</para>
-
-      <para>
 	<guilabel>Compression level</guilabel> regulates the speed of 
 	compression, if you choose a fast compression the resulting archive
 	will be bigger than the one you could get choosing a slower compression
@@ -975,6 +961,16 @@
 	archives</guilabel> is set to 5, so 5 most recent archives
 	are shown. 
       </para>
+
+      <para>
+	<guilabel>Visible columns</guilabel> section allows you to
+	select which columns should be shown in &fr; main
+	window. <guilabel>Date modified</guilabel> shows the last
+	time the file was modified.  <guilabel> Path</guilabel>
+	shows full path to the file (i.e., file name including all
+	parent folders, such as
+	<filename>/usr/share/doc/file-roller/Copying</filename>). Other
+	columns should be self-explanatory.</para>
     </sect2>
     
     <sect2 id="fr-shotrcuts">
@@ -993,6 +989,15 @@
 	<para>
 	  You can use this method to change keyboard shortcuts in all
 	  GNOME applications. 
+	</para>
+      </tip>
+      <tip>
+	<title>TIP</title> 
+	<para>
+	  In newer version of GNOME this feature is disabled by default, 
+	  to enalbe it again you have to add the line 
+	  <command>gtk-can-change-accels = 1</command>
+	  to the file <filename>$(HOME)/.gtkrc-2.0</filename>.
 	</para>
       </tip>
     </sect2>
