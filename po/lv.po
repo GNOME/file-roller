@@ -1,13 +1,67 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2002-10-06 23:07+0200\n"
+"POT-Creation-Date: 2002-10-21 04:39+0200\n"
+"PO-Revision-Date: 2002-10-23 14:51+0200\n"
 "Last-Translator: Artis Trops <hornet@navigator.lv>\n"
 "Language-Team: Latvian <ll10nt@os.lv>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: file-roller.desktop.in.h:1
+msgid "Archive Manager"
+msgstr "Arhīvu Pārvaldnieks"
+
+#. Create the application.
+#: file-roller.desktop.in.h:2
+#: src/gtk-utils.c:76
+#: src/gtk-utils.c:153
+#: src/gtk-utils.c:256
+#: src/main.c:101
+#: src/window.c:690
+#: src/window.c:699
+#: src/window.c:2360
+#: src/window.c:4052
+msgid "File Roller"
+msgstr "File Roller"
+
+#: file-roller.desktop.in.h:3
+msgid "Handle compressed archives"
+msgstr "Apstrādā kompresētus arhīvus"
+
+#: src/dlg-add.c:118
+#, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "Jums nav vajadzīgās atļaujas, lai nolasītu failus no mapes \"%s\""
+
+#: src/dlg-add.c:338
+msgid "Add files"
+msgstr "Pievienot failus"
+
+#: src/dlg-add.c:343
+msgid "_Add only if newer"
+msgstr "_Pievienot tikai, ja jaunāks"
+
+#: src/dlg-add.c:344
+msgid "_Include sub-folders"
+msgstr "_Iekļaut apakšmapes"
+
+#: src/dlg-add.c:345
+msgid "Exclude folders that are symbolic lin_ks"
+msgstr "Apiet mapes, kas ir _simbolsaites"
+
+#: src/dlg-add.c:346
+msgid "Exclude o_ther file systems"
+msgstr "Apiet _citas failsistēmas:"
+
+#: src/dlg-add.c:347
+msgid "Exclude _backup files (*~)"
+msgstr "Apiet _dublējumfailus (\"~)"
+
+#: src/dlg-add.c:348
+msgid "Exclude _hidden files (.*)"
+msgstr "Apiet _slēptos failus (.\")"
 
 #: src/dlg-add.c:349
 msgid "E_xclude files:"
@@ -38,23 +92,23 @@ msgid "Save options"
 msgstr "Saglabāt Opcijas"
 
 #. Set widgets data.
-#: src/dlg-batch-add.c:143
+#: src/dlg-batch-add.c:142
 #, c-format
 msgid "Adding %u files"
 msgstr "Pievienoju %u failus"
 
 #: src/dlg-extract.c:120
-#: src/window.c:3276
+#: src/window.c:3117
 msgid "Destination folder does not exist.  Do you want to create it ?"
 msgstr "Mērķa mape neeksistē.  Vai vēlaties to izveido ?"
 
 #: src/dlg-extract.c:122
-#: src/window.c:3278
+#: src/window.c:3119
 msgid "Create _Folder"
 msgstr "Izveidot _Mapi"
 
 #: src/dlg-extract.c:142
-#: src/window.c:3298
+#: src/window.c:3139
 #, c-format
 msgid ""
 "Could not create the destination folder : %s.\n"
@@ -64,7 +118,7 @@ msgstr ""
 "Atspiešana nav veikta."
 
 #: src/dlg-extract.c:157
-#: src/window.c:3313
+#: src/window.c:3154
 msgid "Extraction not performed."
 msgstr "Atspiešana nav veikta."
 
@@ -575,7 +629,7 @@ msgstr "Pievienot _Failus..."
 
 #: src/menu.h:164
 #: src/menu.h:458
-#: src/window.c:2601
+#: src/window.c:2569
 msgid "Add files to the archive"
 msgstr "Pievienot failus arhīvam"
 
@@ -589,7 +643,7 @@ msgstr "_Atspiest uz..."
 
 #: src/menu.h:176
 #: src/menu.h:470
-#: src/window.c:2612
+#: src/window.c:2580
 msgid "Extract files from the archive"
 msgstr "Atspiest failus no arhīva"
 
@@ -810,176 +864,172 @@ msgstr "Atvērt arhīvu"
 msgid "Stop"
 msgstr "Stop"
 
-#: src/window.c:627
+#: src/window.c:567
 msgid "Folder"
 msgstr "Mape"
 
-#: src/window.c:758
+#: src/window.c:698
 msgid "[read only]"
 msgstr "[rtikai lasāms]"
 
-#: src/window.c:852
+#: src/window.c:792
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 fails (%s)"
 
-#: src/window.c:855
+#: src/window.c:795
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d faili (%s)"
 
-#: src/window.c:863
+#: src/window.c:803
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 fails izvēlēts (%s)"
 
-#: src/window.c:866
+#: src/window.c:806
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d faili izvēlēti (%s)"
 
-#: src/window.c:1129
+#: src/window.c:1094
 msgid "Reading archive"
 msgstr "Lasu arhīvu"
 
-#: src/window.c:1132
+#: src/window.c:1097
 msgid "Deleting files from archive"
 msgstr "Dzēšu failus no arhīva"
 
-#: src/window.c:1135
+#: src/window.c:1100
 msgid "Adding files to archive"
 msgstr "Pievienoju failus arhīvam"
 
-#: src/window.c:1138
+#: src/window.c:1103
 msgid "Extracting files from archive"
 msgstr "Atspiežu failus no arhīva"
 
-#: src/window.c:1141
+#: src/window.c:1106
 msgid "Testing archive"
 msgstr "Testēju arhīvu"
 
-#: src/window.c:1147
+#: src/window.c:1112
 msgid "wait please..."
 msgstr "lūdzu uzgaidiet..."
 
-#: src/window.c:1236
+#: src/window.c:1198
 msgid "Operation stopped"
 msgstr "Operācija apturēta"
 
-#: src/window.c:1253
+#: src/window.c:1215
 msgid "An error occurred while extracting files."
 msgstr "Atgadījās kļūda failu atspiešanas laikā."
 
-#: src/window.c:1257
+#: src/window.c:1219
 msgid "An error occurred while loading the archive."
 msgstr "Atgadījās kļūda arhīva ielādes laikā."
 
-#: src/window.c:1261
+#: src/window.c:1223
 msgid "An error occurred while deleting files from the archive."
 msgstr "Atgadījās kļūda, dzēšot failus no arhīva."
 
-#: src/window.c:1265
+#: src/window.c:1227
 msgid "An error occurred while adding files to the archive."
 msgstr "Atgadījās kļūda, pievienojot failus arhīvam."
 
-#: src/window.c:1269
+#: src/window.c:1231
 msgid "An error occurred while testing archive."
 msgstr "Atgadījās kļūda, testējot arhīvu."
 
-#: src/window.c:1275
+#: src/window.c:1237
 msgid "Command not found."
 msgstr "Nomanda nav atrasta."
 
-#: src/window.c:1278
+#: src/window.c:1240
 msgid "Command exited abnormally."
 msgstr "Komanda izbeidzās nenormāli."
 
-#: src/window.c:1564
+#: src/window.c:1526
 msgid "You don't have permissions to add files to this archive."
 msgstr "Jums nav atļaujas pievienot failus šim arhīvam."
 
-#: src/window.c:1586
+#: src/window.c:1548
 msgid "You can't add an archive to itself."
 msgstr "Jūs nevarat pievienot arhīvu tam pašam."
 
-#: src/window.c:1746
+#: src/window.c:1708
 msgid "Do you want to add this file to the current archive or open it as a new archive ?"
 msgstr "Vai vēlaties pievienot šo failu pašreizējam arhīvam vai atvērt to kā jaunu arhīvu ?"
 
-#: src/window.c:1789
+#: src/window.c:1751
 msgid "Do you want to create a new archive with these files ?"
 msgstr "Vai vēlaties izveidot jaunu arhīvu ar šiem failiem ?"
 
-#: src/window.c:1791
+#: src/window.c:1753
 msgid "Create _Archive"
 msgstr "Izveidot _Arhīvu"
 
-#: src/window.c:2124
+#: src/window.c:2086
 msgid "Size"
 msgstr "Izmērs"
 
-#: src/window.c:2125
+#: src/window.c:2087
 msgid "Type"
 msgstr "Tips"
 
-#: src/window.c:2126
+#: src/window.c:2088
 msgid "Modified"
 msgstr "Modificēts"
 
-#: src/window.c:2127
+#: src/window.c:2089
 msgid "Path"
 msgstr "Ceļš"
 
-#: src/window.c:2134
+#: src/window.c:2096
 msgid "Name"
 msgstr "Nosaukums"
 
-#: src/window.c:2546
+#: src/window.c:2514
 msgid "_Up"
 msgstr "_Augšup"
 
 #. current location
-#: src/window.c:2568
+#: src/window.c:2536
 msgid "Current Location:"
 msgstr "Pašreizējā Lokācija:"
 
-#: src/window.c:2600
+#: src/window.c:2568
 msgid "Add"
 msgstr "Pievienot"
 
-#: src/window.c:2611
+#: src/window.c:2579
 msgid "Extract"
 msgstr "Atspiest"
 
-#: src/window.c:2622
+#: src/window.c:2590
 msgid "View"
 msgstr "Skatīt"
 
-#: src/window.c:2623
+#: src/window.c:2591
 msgid "View selected file"
 msgstr "Skatīt izvēlēto failu"
 
-#: src/window.c:2975
+#: src/window.c:2984
 msgid "File type not supported."
 msgstr "Faila tips nav atbalstīts."
 
-#: src/window.c:3113
-msgid "No archive"
-msgstr "Nav arhīva"
-
-#: src/window.c:3211
+#: src/window.c:3052
 msgid "Cannot load archive."
 msgstr "Nevaru ielādēt arhīvu."
 
-#: src/window.c:3625
+#: src/window.c:3466
 msgid "File Roller - Last output"
 msgstr "File Roller - Pēdējā izvade"
 
-#: src/window.c:4146
+#: src/window.c:3987
 msgid "Add files to an archive"
 msgstr "Pievienot failus arhīvam"
 
-#: src/window.c:4171
+#: src/window.c:4012
 msgid "Extract archive"
 msgstr "Atspiest arhīvu"
 
