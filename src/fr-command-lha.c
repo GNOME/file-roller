@@ -109,7 +109,7 @@ split_line_lha (char *line)
 	int    i;
 
 	fields = g_new0 (char *, n_fields + 1);
-	fields[n_fields + 1] = NULL;
+	fields[n_fields] = NULL;
 
 	i = 0;
 

@@ -99,7 +99,7 @@ split_line (char *line,
 	int    i;
 
 	fields = g_new0 (char *, n_fields + 1);
-	fields[n_fields + 1] = NULL;
+	fields[n_fields] = NULL;
 
 	scan = eat_spaces (line);
 	for (i = 0; i < n_fields; i++) {
