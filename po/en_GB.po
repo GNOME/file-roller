@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-03 23:06+0100\n"
-"PO-Revision-Date: 2004-05-03 21:21-0400\n"
+"POT-Creation-Date: 2004-10-20 23:48+0100\n"
+"PO-Revision-Date: 2004-10-20 23:48+0100\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,8 +48,8 @@ msgstr "Create and modify an archive"
 msgid "Automatic"
 msgstr "Automatic"
 
-#: src/actions.c:98
 #
+#: src/actions.c:98
 msgid "Ar (.ar)"
 msgstr "Ar (.ar)"
 
@@ -109,114 +109,141 @@ msgstr "Zip (.zip)"
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/actions.c:177 src/actions.c:197 src/dlg-batch-add.c:102
-#: src/dlg-batch-add.c:121 src/dlg-batch-add.c:142 src/dlg-batch-add.c:168
-#: src/dlg-batch-add.c:211 src/window.c:3821
+#: src/actions.c:113
+msgid "7-Zip (.7z)"
+msgstr "7-Zip (.7z)"
+
+#: src/actions.c:178
+#: src/actions.c:198
+#: src/dlg-batch-add.c:102
+#: src/dlg-batch-add.c:121
+#: src/dlg-batch-add.c:142
+#: src/dlg-batch-add.c:168
+#: src/dlg-batch-add.c:211
+#: src/window.c:3821
 msgid "Could not create the archive"
 msgstr "Could not create the archive"
 
-#: src/actions.c:178 src/actions.c:505 src/dlg-batch-add.c:103
+#: src/actions.c:179
+#: src/actions.c:508
+#: src/dlg-batch-add.c:103
 #: src/dlg-batch-add.c:143
 msgid "You have to specify an archive name."
 msgstr "You have to specify an archive name."
 
-#: src/actions.c:198 src/actions.c:525
+#: src/actions.c:199
+#: src/actions.c:528
 msgid "You don't have permission to create an archive in this folder"
 msgstr "You don't have permission to create an archive in this folder"
 
-#: src/actions.c:228 src/actions.c:546 src/actions.c:730 src/actions.c:911
+#: src/actions.c:229
+#: src/actions.c:549
+#: src/actions.c:734
+#: src/actions.c:915
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "The archive already exists.  Do you want to overwrite it?"
 
-#: src/actions.c:231 src/actions.c:549 src/actions.c:733 src/actions.c:914
+#: src/actions.c:232
+#: src/actions.c:552
+#: src/actions.c:737
+#: src/actions.c:918
 msgid "Overwrite"
 msgstr "Overwrite"
 
-#: src/actions.c:248 src/actions.c:566
+#: src/actions.c:249
+#: src/actions.c:569
 msgid "Could not delete the old archive."
 msgstr "Could not delete the old archive."
 
-#: src/actions.c:295
+#: src/actions.c:297
 msgid "New"
 msgstr "New"
 
-#: src/actions.c:307 src/actions.c:438 src/actions.c:626
+#: src/actions.c:309
+#: src/actions.c:441
+#: src/actions.c:630
 msgid "All archives"
 msgstr "All archives"
 
-#: src/actions.c:314 src/actions.c:445 src/actions.c:633
+#: src/actions.c:316
+#: src/actions.c:448
+#: src/actions.c:637
 msgid "All files"
 msgstr "All files"
 
-#: src/actions.c:324 src/actions.c:641
+#: src/actions.c:326
+#: src/actions.c:645
 msgid "Archive type:"
 msgstr "Archive type:"
 
-#: src/actions.c:426 src/ui.h:114
+#: src/actions.c:429
+#: src/ui.h:114
 msgid "Open"
 msgstr "Open"
 
-#: src/actions.c:504 src/actions.c:524
+#: src/actions.c:507
+#: src/actions.c:527
 msgid "Could not save the archive"
 msgstr "Could not save the archive"
 
-#: src/actions.c:614
+#: src/actions.c:618
 msgid "Save"
 msgstr "Save"
 
-#: src/actions.c:756
+#: src/actions.c:760
 msgid "Could not copy the archive"
 msgstr "Could not copy the archive"
 
-#: src/actions.c:776
+#: src/actions.c:780
 msgid "Could not move the archive"
 msgstr "Could not move the archive"
 
-#: src/actions.c:805
+#: src/actions.c:809
 msgid "Copy"
 msgstr "Copy"
 
-#: src/actions.c:805
+#: src/actions.c:809
 msgid "Move"
 msgstr "Move"
 
-#: src/actions.c:810 src/ui.h:66
+#: src/actions.c:814
+#: src/ui.h:66
 msgid "_Copy"
 msgstr "_Copy"
 
-#: src/actions.c:810
+#: src/actions.c:814
 msgid "_Move"
 msgstr "_Move"
 
-#: src/actions.c:881 src/window.c:4940
+#: src/actions.c:885
+#: src/window.c:4940
 msgid "Rename"
 msgstr "Rename"
 
-#: src/actions.c:882
+#: src/actions.c:886
 msgid "New archive name (without extension)"
 msgstr "New archive name (without extension)"
 
-#: src/actions.c:886 src/window.c:4945
+#: src/actions.c:890
+#: src/window.c:4945
 msgid "_Rename"
 msgstr "_Rename"
 
-#: src/actions.c:987
-msgid ""
-"The archive cannot be moved to the Trash. Do you want to delete it "
-"permanently?"
-msgstr ""
-"The archive cannot be moved to the Wastebasket. Do you want to delete it "
-"permanently?"
+#: src/actions.c:991
+msgid "The archive cannot be moved to the Trash. Do you want to delete it permanently?"
+msgstr "The archive cannot be moved to the Wastebasket. Do you want to delete it permanently?"
 
-#: src/actions.c:1224 src/window.c:4661
+#: src/actions.c:1228
+#: src/window.c:4661
 msgid "Last Output"
 msgstr "Last Output"
 
-#: src/actions.c:1244 src/dlg-extract.c:87
+#: src/actions.c:1248
+#: src/dlg-extract.c:87
 msgid "Could not display help"
 msgstr "Could not display help"
 
-#: src/actions.c:1277
+#: src/actions.c:1281
 msgid "translator_credits"
 msgstr ""
 "Abigail Brady <morwen@evilmagi_c.org>\n"
@@ -225,23 +252,33 @@ msgstr ""
 "David Lodge <dave@cirt.net>"
 
 #. Create the application.
-#: src/actions.c:1285 src/gtk-utils.c:390 src/main.c:102 src/window.c:855
-#: src/window.c:1286 src/window.c:3125
+#: src/actions.c:1289
+#: src/gtk-utils.c:390
+#: src/main.c:102
+#: src/window.c:855
+#: src/window.c:1286
+#: src/window.c:3125
 msgid "File Roller"
 msgstr "File Roller"
 
-#: src/actions.c:1288
+#: src/actions.c:1292
 msgid "An archive manager for GNOME."
 msgstr "An archive manager for GNOME."
 
-#: src/dlg-add-files.c:85 src/dlg-add-files.c:147 src/dlg-add-folder.c:115
+#: src/dlg-add-files.c:85
+#: src/dlg-add-files.c:147
+#: src/dlg-add-folder.c:115
 #: src/dlg-add-folder.c:247
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "You don't have the right permissions to read files from folder \"%s\""
 
-#: src/dlg-add-files.c:91 src/dlg-add-files.c:153 src/dlg-add-folder.c:121
-#: src/dlg-add-folder.c:253 src/window.c:1982 src/window.c:2020
+#: src/dlg-add-files.c:91
+#: src/dlg-add-files.c:153
+#: src/dlg-add-folder.c:121
+#: src/dlg-add-folder.c:253
+#: src/window.c:1982
+#: src/window.c:2020
 msgid "Could not add the files to the archive"
 msgstr "Could not add the files to the archive"
 
@@ -249,7 +286,8 @@ msgstr "Could not add the files to the archive"
 msgid "Add Files"
 msgstr "Add Files"
 
-#: src/dlg-add-files.c:191 src/dlg-add-folder.c:321
+#: src/dlg-add-files.c:191
+#: src/dlg-add-folder.c:321
 msgid "_Add only if newer"
 msgstr "_Add only if newer"
 
@@ -265,7 +303,8 @@ msgstr "_Include subfolders"
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Exclude folders that are symbolic lin_ks"
 
-#: src/dlg-add-folder.c:326 src/dlg-add-folder.c:331
+#: src/dlg-add-folder.c:326
+#: src/dlg-add-folder.c:331
 msgid "example: *.o; *.bak"
 msgstr "example: *.o; *.bak"
 
@@ -293,7 +332,8 @@ msgstr "Save Options"
 msgid "Options Name:"
 msgstr "Options Name:"
 
-#: src/dlg-batch-add.c:116 src/window.c:4887
+#: src/dlg-batch-add.c:116
+#: src/window.c:4887
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -304,25 +344,35 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/dlg-batch-add.c:116 src/window.c:4879 src/window.c:4883
+#: src/dlg-batch-add.c:116
+#: src/window.c:4879
+#: src/window.c:4883
 #: src/window.c:4887
 msgid "Please use a different name."
 msgstr "Please use a different name."
 
-#: src/dlg-batch-add.c:169 src/fr-archive.c:640 src/window.c:3822
+#: src/dlg-batch-add.c:169
+#: src/fr-archive.c:647
+#: src/window.c:3822
 #: src/window.c:3978
 msgid "Archive type not supported."
 msgstr "Archive type not supported."
 
-#: src/dlg-batch-add.c:190 src/dlg-extract.c:152 src/window.c:4219
+#: src/dlg-batch-add.c:190
+#: src/dlg-extract.c:152
+#: src/window.c:4219
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Destination folder does not exist.  Do you want to create it?"
 
-#: src/dlg-batch-add.c:193 src/dlg-extract.c:155 src/window.c:4222
+#: src/dlg-batch-add.c:193
+#: src/dlg-extract.c:155
+#: src/window.c:4222
 msgid "Create _Folder"
 msgstr "Create _Folder"
 
-#: src/dlg-batch-add.c:207 src/dlg-extract.c:172 src/window.c:4239
+#: src/dlg-batch-add.c:207
+#: src/dlg-extract.c:172
+#: src/window.c:4239
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Could not create the destination folder: %s."
@@ -331,39 +381,45 @@ msgstr "Could not create the destination folder: %s."
 msgid "Archive not created"
 msgstr "Archive not created"
 
-#: src/dlg-extract.c:176 src/dlg-extract.c:196 src/dlg-extract.c:221
-#: src/window.c:4243 src/window.c:4263
+#: src/dlg-extract.c:176
+#: src/dlg-extract.c:196
+#: src/dlg-extract.c:221
+#: src/window.c:4243
+#: src/window.c:4263
 msgid "Extraction not performed"
 msgstr "Extraction not performed"
 
 #: src/dlg-extract.c:216
 #, c-format
-msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
+msgid "You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "You don't have the right permissions to extract archives in the folder \"%s\""
 
 #: src/dlg-extract.c:380
 msgid "Files"
 msgstr "Files"
 
-#: src/dlg-extract.c:388 src/dlg-extract.c:438
+#: src/dlg-extract.c:388
+#: src/dlg-extract.c:438
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:397 src/file_roller.glade.h:17
+#: src/dlg-extract.c:397
+#: src/file_roller.glade.h:16
 msgid "_Files:"
 msgstr "_Files:"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:20
+#: src/dlg-extract.c:408
+#: src/file_roller.glade.h:19
 msgid "example: *.txt; *.doc"
 msgstr "example: *.txt; *.doc"
 
-#: src/dlg-extract.c:411 src/file_roller.glade.h:14
+#: src/dlg-extract.c:411
+#: src/file_roller.glade.h:13
 msgid "_All files"
 msgstr "_All files"
 
-#: src/dlg-extract.c:418 src/file_roller.glade.h:19
+#: src/dlg-extract.c:418
+#: src/file_roller.glade.h:18
 msgid "_Selected files"
 msgstr "_Selected files"
 
@@ -383,15 +439,17 @@ msgstr "Over_write existing files"
 msgid "Do not e_xtract older files"
 msgstr "Do not e_xtract older files"
 
-#: src/dlg-extract.c:459 src/file_roller.glade.h:18
+#: src/dlg-extract.c:459
+#: src/file_roller.glade.h:17
 msgid "_Password:"
 msgstr "_Password:"
 
-#: src/dlg-extract.c:467
+#: src/dlg-extract.c:468
 msgid "_Open destination folder after extraction"
 msgstr "_Open destination folder after extraction"
 
-#: src/dlg-extract.c:494 src/ui.h:94
+#: src/dlg-extract.c:495
+#: src/ui.h:94
 msgid "Extract"
 msgstr "Extract"
 
@@ -412,7 +470,8 @@ msgstr "%s Properties"
 msgid "Modified on:"
 msgstr "Modified on:"
 
-#: src/dlg-prop.c:140 src/window.c:426
+#: src/dlg-prop.c:140
+#: src/window.c:426
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
@@ -445,72 +504,62 @@ msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "Cannot find a terminal, using xterm, even if it may not work"
 
 #: src/file_roller.glade.h:1
-msgid "*"
-msgstr "*"
+msgid "<i><b>Note:</b> the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted.</i>"
+msgstr "<i><b>Note:</b> the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted.</i>"
 
 #: src/file_roller.glade.h:2
-msgid ""
-"<i><b>Note:</b> the password will be used to encrypt files you add to the "
-"current archive, and to decrypt files you extract from the current archive. "
-"When the archive is closed the password will be deleted.</i>"
-msgstr ""
-"<i><b>Note:</b> the password will be used to encrypt files you add to the "
-"current archive, and to decrypt files you extract from the current archive. "
-"When the archive is closed the password will be deleted.</i>"
-
-#: src/file_roller.glade.h:3
 msgid "A_vailable application:"
 msgstr "A_vailable application:"
 
-#: src/file_roller.glade.h:4
+#: src/file_roller.glade.h:3
 msgid "C_reate"
 msgstr "C_reate"
 
-#: src/file_roller.glade.h:5
+#: src/file_roller.glade.h:4
 msgid "Create Archive"
 msgstr "Create Archive"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:5
 msgid "Delete"
 msgstr "Delete"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:6
 msgid "Load Options"
 msgstr "Load Options"
 
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:7
 msgid "Open Files"
 msgstr "Open Files"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:8
 msgid "Open with an _application"
 msgstr "Open with an _application"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:9
 msgid "Password"
 msgstr "Password"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:10
 msgid "R_ecent applications:"
 msgstr "R_ecent applications:"
 
-#: src/file_roller.glade.h:12
+#: src/file_roller.glade.h:11
 msgid "View File"
 msgstr "View File"
 
-#: src/file_roller.glade.h:13
+#: src/file_roller.glade.h:12
 msgid "View with internal _viewer"
 msgstr "View with internal _viewer"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:14
 msgid "_Application:"
 msgstr "_Application:"
 
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:15
 msgid "_Archive:"
 msgstr "_Archive:"
 
-#: src/fr-archive.c:615
+#: src/fr-archive.c:622
 msgid "The file does not exist."
 msgstr "The file does not exist."
 
@@ -522,7 +571,8 @@ msgstr "Adding file: "
 msgid "Removing file: "
 msgstr "Removing file: "
 
-#: src/fr-command-tar.c:339 src/window.c:1388
+#: src/fr-command-tar.c:339
+#: src/window.c:1388
 msgid "Deleting files from archive"
 msgstr "Deleting files from archive"
 
@@ -546,7 +596,9 @@ msgstr "_Add"
 msgid "_Extract"
 msgstr "_Extract"
 
-#: src/fr-stock.c:46 src/ui.h:36 src/ui.h:170
+#: src/fr-stock.c:46
+#: src/ui.h:36
+#: src/ui.h:170
 msgid "_View"
 msgstr "_View"
 
@@ -571,7 +623,8 @@ msgstr "Add files asking the name of the archive and quit the program"
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Extract archives to the specified folder and quit the program"
 
-#: src/main.c:69 src/main.c:77
+#: src/main.c:69
+#: src/main.c:77
 msgid "FOLDER"
 msgstr "FOLDER"
 
@@ -619,7 +672,8 @@ msgstr "Information about the program"
 msgid "_Add Files..."
 msgstr "_Add Files..."
 
-#: src/ui.h:47 src/ui.h:51
+#: src/ui.h:47
+#: src/ui.h:51
 msgid "Add files to the archive"
 msgstr "Add files to the archive"
 
@@ -699,7 +753,8 @@ msgstr "Deselect all files"
 msgid "_Extract..."
 msgstr "_Extract..."
 
-#: src/ui.h:91 src/ui.h:95
+#: src/ui.h:91
+#: src/ui.h:95
 msgid "Extract files from the archive"
 msgstr "Extract files from the archive"
 
@@ -731,7 +786,8 @@ msgstr "Create a new archive"
 msgid "_Open..."
 msgstr "_Open..."
 
-#: src/ui.h:111 src/ui.h:115
+#: src/ui.h:111
+#: src/ui.h:115
 msgid "Open archive"
 msgstr "Open archive"
 
@@ -751,7 +807,8 @@ msgstr "Pass_word..."
 msgid "Specify a password for this archive"
 msgstr "Specify a password for this archive"
 
-#: src/ui.h:126 src/window.c:5052
+#: src/ui.h:126
+#: src/window.c:5052
 msgid "_Paste"
 msgstr "_Paste"
 
@@ -783,7 +840,8 @@ msgstr "_Reload"
 msgid "Reload current archive"
 msgstr "Reload current archive"
 
-#: src/ui.h:142 src/ui.h:146
+#: src/ui.h:142
+#: src/ui.h:146
 msgid "_Rename..."
 msgstr "_Rename..."
 
@@ -831,7 +889,8 @@ msgstr "Test whether the archive contains errors"
 msgid "_View File"
 msgstr "_View File"
 
-#: src/ui.h:167 src/ui.h:171
+#: src/ui.h:167
+#: src/ui.h:171
 msgid "View the selected file"
 msgstr "View the selected file"
 
@@ -967,14 +1026,11 @@ msgstr ""
 "Please specify a password with the command: Edit->Password"
 
 #: src/window.c:1545
-msgid ""
-"The specified password is not valid, please specify a new password with the "
-"command: Edit->Password"
-msgstr ""
-"The specified password is not valid, please specify a new password with the "
-"command: Edit->Password"
+msgid "The specified password is not valid, please specify a new password with the command: Edit->Password"
+msgstr "The specified password is not valid, please specify a new password with the command: Edit->Password"
 
-#: src/window.c:1550 src/window.c:2183
+#: src/window.c:1550
+#: src/window.c:2183
 msgid "Could not perform the operation"
 msgstr "Could not perform the operation"
 
@@ -1019,12 +1075,8 @@ msgid "You can't add an archive to itself."
 msgstr "You can't add an archive to itself."
 
 #: src/window.c:2217
-msgid ""
-"Do you want to add this file to the current archive or open it as a new "
-"archive?"
-msgstr ""
-"Do you want to add this file to the current archive or open it as a new "
-"archive?"
+msgid "Do you want to add this file to the current archive or open it as a new archive?"
+msgstr "Do you want to add this file to the current archive or open it as a new archive?"
 
 #: src/window.c:2254
 msgid "Do you want to create a new archive with these files?"
@@ -1130,50 +1182,3 @@ msgstr "Add files to an archive"
 msgid "Extract archive"
 msgstr "Extract archive"
 
-#~ msgid "Operation stopped"
-#~ msgstr "Operation stopped"
-
-#~ msgid "View file with internal viewer"
-#~ msgstr "View file with internal viewer"
-
-#~ msgid "Open selected files with the standard application"
-#~ msgstr "Open selected files with the standard application"
-
-#~ msgid "View"
-#~ msgstr "View"
-
-#~ msgid "Stop"
-#~ msgstr "Stop"
-
-#~ msgid "File size:"
-#~ msgstr "File size:"
-
-#~ msgid "Date _modified"
-#~ msgstr "Date _modified"
-
-#~ msgid "File Roller Preferences"
-#~ msgstr "File Roller Preferences"
-
-#~ msgid "Low"
-#~ msgstr "Low"
-
-#~ msgid "Maximum (slow)"
-#~ msgstr "Maximum (slow)"
-
-#~ msgid "Minimum (fast)"
-#~ msgstr "Minimum (fast)"
-
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgid "_Location"
-#~ msgstr "_Location"
-
-#~ msgid "_Size"
-#~ msgstr "_Size"
-
-#~ msgid "_Type"
-#~ msgstr "_Type"
-
-#~ msgid "Add files and folders to the archive"
-#~ msgstr "Add files and folders to the archive"
