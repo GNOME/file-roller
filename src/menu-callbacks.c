@@ -535,7 +535,7 @@ remove_extension (const char *filename)
 {
 	const char *ext;
 
-	ext = fr_archive_utils_get_file_name_ext (filename);
+	ext = fr_archive_utils__get_file_name_ext (filename);
 	if (ext == NULL)
 		return g_strdup (filename);
 	else
@@ -577,7 +577,7 @@ rename_archive_cb (GtkWidget *widget,
 	new_filename = g_strconcat (dir, 
 				    "/", 
 				    file_name_from_path (string),
-				    fr_archive_utils_get_file_name_ext (window->archive->filename),
+				    fr_archive_utils__get_file_name_ext (window->archive->filename),
 				    NULL);
 	g_free (dir);
 	g_free (string);

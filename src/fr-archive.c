@@ -40,6 +40,7 @@
 
 #define MAX_CHUNK_LEN 16000 /* FIXME : what is the max length of a command 
 			     * line ? */
+#define UNKNOWN_TYPE "application/octet-stream"
 
 enum {
 	START,
@@ -159,16 +160,13 @@ fr_archive_finalize (GObject *object)
 }
 
 
-/* filename must not be escaped. */
 static gboolean
-create_command_from_file_mime_type (FRArchive  *archive, 
-				    const char *filename) 
+create_command_from_mime_type (FRArchive  *archive, 
+			       const char *filename,
+			       const char *mime_type)
 {
-	const char* mime_type;
-	
 	archive->is_compressed_file = FALSE;
-	mime_type = gnome_vfs_get_file_mime_type (filename, NULL, FALSE);
-	
+
 	if (is_mime_type (mime_type, "application/x-tar")) {
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
@@ -192,7 +190,79 @@ create_command_from_file_mime_type (FRArchive  *archive,
 
 	return TRUE;
 }
+
+
+/* filename must not be escaped. */
+static const char *
+get_mime_type_from_content (const char *filename) 
+{
+	const char *mime_type;
+
+	mime_type = gnome_vfs_get_file_mime_type (filename, NULL, FALSE);
+
+	if (strcmp (mime_type, UNKNOWN_TYPE) == 0)
+		return NULL;
+
+	return mime_type;
+}
 	
+
+static gboolean
+hexcmp (const guchar *first_bytes,
+	const guchar *buffer,
+	int           len)
+{
+	int i;
+
+	for (i = 0; i < len; i++)
+		if (first_bytes[i] != buffer[i])
+			return FALSE;
+
+	return TRUE;
+}
+
+
+/* filename must not be escaped. */
+static const char *
+get_mime_type_from_sniffer (const char *filename) 
+{
+	static struct {
+		const char *mime_type;
+		const char *first_bytes;
+		int         len;
+	}            sniffer_data [] = { 
+		{ "application/zip",                   "\x50\x4B\x03\x04", 4 },
+		/* FIXME
+		{ "application/x-compressed-tar",      "\x1F\x8B\x08\x08", 4 },
+		{ "application/x-bzip-compressed-tar", "\x42\x5A\x68\x39", 4 },
+		*/
+		{ NULL, NULL, 0 } 
+	};
+	FILE        *file;
+	char         buffer[80];
+	int          n, i;
+
+	file = fopen (filename, "r");
+
+	if (file == NULL) 
+                return NULL;
+
+	n = fread (buffer, sizeof (char), sizeof (buffer), file);
+	buffer[n] = 0;
+
+	fclose (file);
+
+	for (i = 0; sniffer_data[i].mime_type != NULL; i++) {
+		const char *first_bytes = sniffer_data[i].first_bytes;
+		int          len        = sniffer_data[i].len;
+
+		if (hexcmp (first_bytes, buffer, len)) 
+			return sniffer_data[i].mime_type;
+	}
+
+	return NULL;
+}
+
 
 /* filename must not be escaped. */
 static gboolean
@@ -200,8 +270,6 @@ create_command_from_filename (FRArchive  *archive,
 			      const char *filename,
 			      gboolean    loading)
 {
-	archive->is_compressed_file = FALSE;
-
 	if (file_extension_is (filename, ".tar.gz")
 	    || file_extension_is (filename, ".tgz")) {
 		archive->command = fr_command_tar_new (archive->process, 
@@ -359,7 +427,8 @@ gboolean
 fr_archive_load (FRArchive  *archive, 
 		 const char *filename)
 {
-	FRCommand *tmp_command;
+	FRCommand  *tmp_command;
+	const char *mime_type;
 
 	g_return_val_if_fail (archive != NULL, FALSE);
 
@@ -376,9 +445,17 @@ fr_archive_load (FRArchive  *archive,
 
 	/* prefer mime-magic */
 
-	if (! create_command_from_file_mime_type (archive, filename)) 
-		if (! create_command_from_filename (archive, filename, TRUE))
+	mime_type = get_mime_type_from_sniffer (filename);
+	if (mime_type == NULL)
+		mime_type = get_mime_type_from_content (filename);
+
+	if ((mime_type == NULL)
+	    || ! create_command_from_mime_type (archive, filename, mime_type))
+		if (! create_command_from_filename (archive, filename, TRUE)) {
+			archive->command = tmp_command;
 			return FALSE;
+		}
+
 	if (tmp_command != NULL) 
 		g_object_unref (G_OBJECT (tmp_command));
 
@@ -1091,7 +1168,7 @@ fr_archive_test (FRArchive  *archive,
  * '.tar.gz' and not the '.gz' extension.
  */
 G_CONST_RETURN gchar *
-fr_archive_utils_get_file_name_ext (const char *filename)
+fr_archive_utils__get_file_name_ext (const char *filename)
 {
 	static char * ext[] = {
 		".bz", 
@@ -1126,4 +1203,27 @@ fr_archive_utils_get_file_name_ext (const char *filename)
 			return ext[i];
 
 	return NULL;
+}
+
+
+gboolean
+fr_archive_utils__file_is_archive (const char *filename)
+{
+	const char *mime_type;
+
+	mime_type = get_mime_type_from_content (filename);
+
+	if (mime_type != NULL)
+		return TRUE;
+
+	g_print ("\n-- CONTENT --> %s <--\n\n", mime_type);
+
+	mime_type = get_mime_type_from_sniffer (filename);
+
+	g_print ("\n-- SNIFFER --> %s <--\n\n", mime_type);
+
+	if (mime_type != NULL)
+		return TRUE;
+
+	return fr_archive_utils__get_file_name_ext (filename) != NULL;
 }

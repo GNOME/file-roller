@@ -129,6 +129,7 @@ void         fr_archive_test                  (FRArchive   *archive,
 
 /* utils */
 
-G_CONST_RETURN char *     fr_archive_utils_get_file_name_ext (const char *filename);
+G_CONST_RETURN char *     fr_archive_utils__get_file_name_ext (const char *filename);
+gboolean                  fr_archive_utils__file_is_archive (const char *filename);
 
 #endif /* ARCHIVE_H */
