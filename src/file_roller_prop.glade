@@ -4,7 +4,7 @@
 <glade-interface>
 
 <widget class="GtkDialog" id="options_dialog">
-  <property name="title" translatable="yes">File Roller - Preferences</property>
+  <property name="title" translatable="yes">File Roller Preferences</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
@@ -14,17 +14,14 @@
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox2">
-      <property name="border_width">2</property>
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
       <property name="spacing">0</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area2">
-	  <property name="border_width">5</property>
 	  <property name="visible">True</property>
 	  <property name="layout_style">GTK_BUTTONBOX_END</property>
-	  <property name="spacing">10</property>
 
 	  <child>
 	    <widget class="GtkButton" id="p_close_button">
@@ -59,10 +56,10 @@
 
       <child>
 	<widget class="GtkVBox" id="vbox3">
-	  <property name="border_width">5</property>
+	  <property name="border_width">12</property>
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
-	  <property name="spacing">10</property>
+	  <property name="spacing">12</property>
 
 	  <child>
 	    <widget class="GtkVBox" id="vbox5">
@@ -77,11 +74,11 @@
 		  <property name="spacing">5</property>
 
 		  <child>
-		    <widget class="GtkLabel" id="label9">
+		    <widget class="GtkLabel" id="general_label">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">General</property>
+		      <property name="label" translatable="yes">    </property>
 		      <property name="use_underline">False</property>
-		      <property name="use_markup">False</property>
+		      <property name="use_markup">True</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">False</property>
@@ -94,17 +91,6 @@
 		      <property name="padding">0</property>
 		      <property name="expand">False</property>
 		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkHSeparator" id="hseparator1">
-		      <property name="visible">True</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">True</property>
-		      <property name="fill">True</property>
 		    </packing>
 		  </child>
 		</widget>
@@ -144,13 +130,12 @@
 
 		  <child>
 		    <widget class="GtkTable" id="table1">
-		      <property name="border_width">5</property>
 		      <property name="visible">True</property>
 		      <property name="n_rows">2</property>
 		      <property name="n_columns">2</property>
 		      <property name="homogeneous">False</property>
-		      <property name="row_spacing">5</property>
-		      <property name="column_spacing">5</property>
+		      <property name="row_spacing">6</property>
+		      <property name="column_spacing">12</property>
 
 		      <child>
 			<widget class="GtkLabel" id="label7">
@@ -313,11 +298,11 @@
 		  <property name="spacing">5</property>
 
 		  <child>
-		    <widget class="GtkLabel" id="label11">
+		    <widget class="GtkLabel" id="columns_to_show_label">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Columns to Show</property>
+		      <property name="label" translatable="yes">    </property>
 		      <property name="use_underline">False</property>
-		      <property name="use_markup">False</property>
+		      <property name="use_markup">True</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">False</property>
@@ -330,17 +315,6 @@
 		      <property name="padding">0</property>
 		      <property name="expand">False</property>
 		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkHSeparator" id="hseparator2">
-		      <property name="visible">True</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">True</property>
-		      <property name="fill">True</property>
 		    </packing>
 		  </child>
 		</widget>
@@ -380,10 +354,9 @@
 
 		  <child>
 		    <widget class="GtkVBox" id="vbox4">
-		      <property name="border_width">5</property>
 		      <property name="visible">True</property>
 		      <property name="homogeneous">False</property>
-		      <property name="spacing">5</property>
+		      <property name="spacing">6</property>
 
 		      <child>
 			<widget class="GtkCheckButton" id="name_checkbutton">

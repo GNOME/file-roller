@@ -4,8 +4,8 @@ DIST_SUBDIRS=icons recent-files
 bin_PROGRAMS = file-roller
 
 glade_DATA =				\
-	file_roller.glade2		\
-	file_roller_prop.glade2
+	file_roller.glade		\
+	file_roller_prop.glade
 gladedir = $(datadir)/file-roller/glade
 
 DISABLE_DEPRECATED = -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGNOME_VFS_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED	-DBONOBO_DISABLE_DEPRECATED

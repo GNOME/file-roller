@@ -28,7 +28,7 @@
 #include "gtk-utils.h"
 
 
-#define EXTRACT_GLADE_FILE "file_roller.glade2"
+#define EXTRACT_GLADE_FILE "file_roller.glade"
 
 
 typedef struct {

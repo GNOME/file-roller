@@ -32,7 +32,7 @@
 #include "window.h"
 
 
-#define PROP_GLADE_FILE "file_roller.glade2"
+#define PROP_GLADE_FILE "file_roller.glade"
 
 
 typedef struct {

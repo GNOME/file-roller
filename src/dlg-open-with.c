@@ -33,7 +33,7 @@
 #include "window.h"
 
 
-#define GLADE_FILE "file_roller.glade2"
+#define GLADE_FILE "file_roller.glade"
 #define TEMP_DOCS  "temp_docs"
 
 

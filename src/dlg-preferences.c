@@ -40,7 +40,7 @@
 #include "gconf-utils.h"
 
 
-#define GLADE_FILE "file_roller_prop.glade2"
+#define GLADE_FILE "file_roller_prop.glade"
 
 
 typedef struct {
@@ -149,6 +149,8 @@ dlg_preferences (GtkWidget *caller,
 	DialogData *data;
 	GtkWidget  *btn_close;
 	GtkWidget  *help_button;
+	GtkWidget  *label;
+	char       *label_text;
 	int         i;
 
 	data = g_new0 (DialogData, 1);
@@ -179,6 +181,18 @@ dlg_preferences (GtkWidget *caller,
 	help_button = glade_xml_get_widget (data->gui, "p_help_button");
 
 	/* Set widgets data. */
+
+	label = glade_xml_get_widget (data->gui, "general_label");
+	label_text = g_strdup_printf ("<b>%s</b>", _("General"));
+	gtk_label_set_markup (GTK_LABEL (label), label_text);
+	g_free (label_text);
+
+	label = glade_xml_get_widget (data->gui, "columns_to_show_label");
+	label_text = g_strdup_printf ("<b>%s</b>", _("Columns to Show"));
+	gtk_label_set_markup (GTK_LABEL (label), label_text);
+	g_free (label_text);
+
+	/**/
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_NAME]), eel_gconf_get_boolean (PREF_LIST_SHOW_NAME));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE]), eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE));

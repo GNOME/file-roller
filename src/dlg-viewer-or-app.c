@@ -33,7 +33,7 @@
 #include "typedefs.h"
 
 
-#define GLADE_FILE "file_roller.glade2"
+#define GLADE_FILE "file_roller.glade"
 
 
 typedef struct {
