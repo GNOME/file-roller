@@ -15,7 +15,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  *
  * Authors:
- *   James Willcox <jwillcox@cs.indiana.edu>
+ *   James Willcox <jwillcox@gnome.org>
  */
 
 
@@ -50,6 +50,15 @@ egg_recent_view_get_type (void)
 	return view_type;
 }
 
+
+/**
+ * egg_recent_view_get_model:
+ * @view: a EggRecentView 
+ * 
+ * Gets the model for a view
+ * 
+ * Return Value: a EggRecentModel
+ **/
 EggRecentModel *
 egg_recent_view_get_model (EggRecentView *view)
 {
@@ -58,6 +67,14 @@ egg_recent_view_get_model (EggRecentView *view)
 	return EGG_RECENT_VIEW_GET_CLASS (view)->do_get_model (view);
 }
 
+/**
+ * egg_recent_view_set_model:
+ * @view: a EggRecentView
+ * @model: a EggRecentModel
+ *
+ * Sets the model for a view
+ * 
+ **/
 void
 egg_recent_view_set_model (EggRecentView *view, EggRecentModel *model)
 {

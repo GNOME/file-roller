@@ -21,10 +21,9 @@ struct _EggRecentItem {
 	gchar *uri;
 	gchar *mime_type;
 	time_t timestamp;
-
+	gchar *app;
+	
 	gboolean private;
-
-	GList *groups;
 	
 	int refcount;
 };
@@ -53,24 +52,14 @@ time_t egg_recent_item_get_timestamp (const EggRecentItem *item);
 
 G_CONST_RETURN gchar *egg_recent_item_peek_uri (const EggRecentItem *item);
 
-
-/* groups */
-G_CONST_RETURN GList *  egg_recent_item_get_groups (const EggRecentItem *item);
-
-gboolean       egg_recent_item_in_group (const EggRecentItem *item,
-					   const gchar *group_name);
-
-void           egg_recent_item_add_group (EggRecentItem *item,
-					    const gchar *group_name);
-
-void           egg_recent_item_remove_group (EggRecentItem *item,
-					       const gchar *group_name);
-
 void           egg_recent_item_set_private (EggRecentItem *item,
 					      gboolean priv);
 
 gboolean       egg_recent_item_get_private (const EggRecentItem *item);
 
+char          *egg_recent_item_get_application (EggRecentItem *item);
+void           egg_recent_item_set_application (EggRecentItem *item,
+						const char *app);
 
 G_END_DECLS
 

@@ -49,17 +49,13 @@
 #define EGG_RECENT_MODEL_EXPIRE_KEY EGG_RECENT_MODEL_KEY_DIR "/expire"
 
 struct _EggRecentModelPrivate {
-	GSList *mime_filter_values;	/* list of mime types we allow */
-	GSList *group_filter_values;	/* list of groups we allow */
-	GSList *scheme_filter_values;	/* list of URI schemes we allow */
-
 	EggRecentModelSort sort_type; /* type of sorting to be done */
 
 	int limit;			/* soft limit for length of the list */
 	int expire_days;		/* number of days to hold an item */
 
 	char *path;			/* path to the file we store stuff in */
-
+	char *app;
 	GHashTable *monitors;
 
 	GnomeVFSMonitorHandle *monitor;
@@ -84,17 +80,16 @@ static GType model_signals[LAST_SIGNAL] = { 0 };
 /* properties */
 enum {
 	PROP_BOGUS,
-	PROP_MIME_FILTERS,
-	PROP_GROUP_FILTERS,
-	PROP_SCHEME_FILTERS,
 	PROP_SORT_TYPE,
-	PROP_LIMIT
+	PROP_LIMIT,
+	PROP_APPLICATION_NAME
 };
 
 typedef struct {
 	GSList *states;
 	GList *items;
 	EggRecentItem *current_item;
+	EggRecentModel *model;
 }ParseInfo;
 
 typedef enum {
@@ -105,14 +100,9 @@ typedef enum {
 	STATE_MIME_TYPE,
 	STATE_TIMESTAMP,
 	STATE_PRIVATE,
-	STATE_GROUPS,
-	STATE_GROUP
+	STATE_APPLICATION,
+	STATE_UNKNOWN
 } ParseState;
-
-typedef struct _ChangedData {
-	EggRecentModel *model;
-	GList *list;
-}ChangedData;
 
 #define TAG_RECENT_FILES "RecentFiles"
 #define TAG_RECENT_ITEM "RecentItem"
@@ -120,8 +110,7 @@ typedef struct _ChangedData {
 #define TAG_MIME_TYPE "Mime-Type"
 #define TAG_TIMESTAMP "Timestamp"
 #define TAG_PRIVATE "Private"
-#define TAG_GROUPS "Groups"
-#define TAG_GROUP "Group"
+#define TAG_APPLICATION "Application"
 
 static void start_element_handler (GMarkupParseContext *context,
 			      const gchar *element_name,
@@ -150,25 +139,6 @@ static GMarkupParser parser = {start_element_handler, end_element_handler,
 			NULL,
 			error_handler};
 
-static gboolean
-egg_recent_model_string_match (const GSList *list, const gchar *str)
-{
-	const GSList *tmp;
-
-	if (list == NULL || str == NULL)
-		return TRUE;
-
-	tmp = list;
-	
-	while (tmp) {
-		if (g_pattern_match_string (tmp->data, str))
-			return TRUE;
-		
-		tmp = tmp->next;
-	}
-
-	return FALSE;
-}
 
 static gboolean
 egg_recent_model_write_raw (EggRecentModel *model, FILE *file,
@@ -229,24 +199,6 @@ egg_recent_model_delete_from_list (GList *list,
 	return list;
 }
 
-static void
-egg_recent_model_add_new_groups (EggRecentItem *item,
-				 EggRecentItem *upd_item)
-{
-	const GList *tmp;
-
-	tmp = egg_recent_item_get_groups (upd_item);
-
-	while (tmp) {
-		char *group = tmp->data;
-
-		if (!egg_recent_item_in_group (item, group))
-			egg_recent_item_add_group (item, group);
-
-		tmp = tmp->next;
-	}
-}
-
 static gboolean
 egg_recent_model_update_item (GList *items, EggRecentItem *upd_item)
 {
@@ -262,8 +214,6 @@ egg_recent_model_update_item (GList *items, EggRecentItem *upd_item)
 
 		if (gnome_vfs_uris_match (egg_recent_item_peek_uri (item), uri)) {
 			egg_recent_item_set_timestamp (item, (time_t) -1);
-
-			egg_recent_model_add_new_groups (item, upd_item);
 
 			return TRUE;
 		}
@@ -295,10 +245,11 @@ egg_recent_model_read_raw (EggRecentModel *model, FILE *file)
 
 
 static void
-parse_info_init (ParseInfo *info)
+parse_info_init (ParseInfo *info, EggRecentModel *model)
 {
 	info->states = g_slist_prepend (NULL, STATE_START);
 	info->items = NULL;
+	info->model = model;
 }
 
 static void
@@ -356,10 +307,12 @@ start_element_handler (GMarkupParseContext *context,
 	else if (ELEMENT_IS (TAG_PRIVATE)) {
 		push_state (info, STATE_PRIVATE);
 		egg_recent_item_set_private (info->current_item, TRUE);
-	} else if (ELEMENT_IS (TAG_GROUPS))
-		push_state (info, STATE_GROUPS);
-	else if (ELEMENT_IS (TAG_GROUP)) 
-		push_state (info, STATE_GROUP);
+	} else if (ELEMENT_IS (TAG_APPLICATION)) {
+		push_state (info, STATE_APPLICATION);
+	} else {
+		push_state (info, STATE_UNKNOWN);
+	}
+
 }
 
 static gint
@@ -391,14 +344,14 @@ end_element_handler (GMarkupParseContext *context,
 	ParseInfo *info = (ParseInfo *)user_data;
 
 	switch (peek_state (info)) {
-		case STATE_RECENT_ITEM:
-			info->items = g_list_append (info->items,
-						    info->current_item);
-			if (info->current_item->uri == NULL ||
-			    strlen (info->current_item->uri) == 0)
-				g_warning ("URI NOT LOADED");
+	case STATE_RECENT_ITEM:
+		info->items = g_list_append (info->items,
+					     info->current_item);
+		if (info->current_item->uri == NULL ||
+		    strlen (info->current_item->uri) == 0)
+			g_warning ("No current item found");
 		break;
-		default:
+	default:
 		break;
 	}
 
@@ -415,26 +368,26 @@ text_handler (GMarkupParseContext *context,
 	ParseInfo *info = (ParseInfo *)user_data;
 
 	switch (peek_state (info)) {
-		case STATE_START:
-		case STATE_RECENT_FILES:
-		case STATE_RECENT_ITEM:
-		case STATE_PRIVATE:
-		case STATE_GROUPS:
+	case STATE_START:
+	case STATE_RECENT_FILES:
+	case STATE_RECENT_ITEM:
+	case STATE_PRIVATE:
+	case STATE_UNKNOWN:
 		break;
-		case STATE_URI:
-			egg_recent_item_set_uri (info->current_item, text);
+	case STATE_URI:
+		egg_recent_item_set_uri (info->current_item, text);
 		break;
-		case STATE_MIME_TYPE:
-			egg_recent_item_set_mime_type (info->current_item,
-							 text);
+	case STATE_MIME_TYPE:
+		egg_recent_item_set_mime_type (info->current_item,
+					       text);
 		break;
-		case STATE_TIMESTAMP:
-			egg_recent_item_set_timestamp (info->current_item,
-							 (time_t)atoi (text));
+	case STATE_TIMESTAMP:
+		egg_recent_item_set_timestamp (info->current_item,
+					       (time_t)atoi (text));
 		break;
-		case STATE_GROUP:
-			egg_recent_item_add_group (info->current_item,
-						     text);
+	case STATE_APPLICATION:
+		egg_recent_item_set_application (info->current_item,
+						 text);
 		break;
 	}
 			
@@ -491,101 +444,10 @@ egg_recent_model_sort (EggRecentModel *model, GList *list)
 	return list;
 }
 
-static gboolean
-egg_recent_model_group_match (EggRecentItem *item, GSList *groups)
-{
-	GSList *tmp;
-
-	tmp = groups;
-
-	while (tmp != NULL) {
-		const gchar * group = (const gchar *)tmp->data;
-
-		if (egg_recent_item_in_group (item, group))
-			return TRUE;
-
-		tmp = tmp->next;
-	}
-
-	return FALSE;
-}
-
-static GList *
-egg_recent_model_filter (EggRecentModel *model,
-				GList *list)
-{
-	EggRecentItem *item;
-	GList *newlist = NULL;
-	gchar *mime_type;
-	gchar *uri;
-
-	g_return_val_if_fail (list != NULL, NULL);
-
-	while (list) {
-		gboolean pass_mime_test = FALSE;
-		gboolean pass_group_test = FALSE;
-		gboolean pass_scheme_test = FALSE;
-		item = (EggRecentItem *)list->data;
-		list = list->next;
-
-		uri = egg_recent_item_get_uri (item);
-
-		/* filter by mime type */
-		if (model->priv->mime_filter_values != NULL) {
-			mime_type = egg_recent_item_get_mime_type (item);
-
-			if (egg_recent_model_string_match
-					(model->priv->mime_filter_values,
-					 mime_type))
-				pass_mime_test = TRUE;
-
-			g_free (mime_type);
-		} else
-			pass_mime_test = TRUE;
-
-		/* filter by group */
-		if (pass_mime_test && model->priv->group_filter_values != NULL) {
-			if (egg_recent_model_group_match
-					(item, model->priv->group_filter_values))
-				pass_group_test = TRUE;
-		} else if (egg_recent_item_get_private (item)) {
-			pass_group_test = FALSE;
-		} else
-			pass_group_test = TRUE;
-
-		/* filter by URI scheme */
-		if (pass_mime_test && pass_group_test &&
-		    model->priv->scheme_filter_values != NULL) {
-			gchar *scheme;
-			
-			scheme = gnome_vfs_get_uri_scheme (uri);
-
-			if (egg_recent_model_string_match
-				(model->priv->scheme_filter_values, scheme))
-				pass_scheme_test = TRUE;
-
-			g_free (scheme);
-		} else
-			pass_scheme_test = TRUE;
-
-		if (pass_mime_test && pass_group_test && pass_scheme_test)
-			newlist = g_list_prepend (newlist, item);
-
-		g_free (uri);
-	}
-
-	if (newlist) {
-		newlist = g_list_reverse (newlist);
-		g_list_free (list);
-	}
-
-	
-	return newlist;
-}
-
-
-
 #if 0
+/* This code is problematic because it prevents people from ejecting
+ * removable media, etc :(
+ */
 static void
 egg_recent_model_monitor_list_cb (GnomeVFSMonitorHandle *handle,
 			       const gchar *monitor_uri,
@@ -637,6 +499,7 @@ egg_recent_model_monitor_list (EggRecentModel *model, GList *list)
 			g_free (uri);
 	}
 }
+
 #endif
 
 
@@ -723,7 +586,7 @@ egg_recent_model_read (EggRecentModel *model, FILE *file)
 		return NULL;
 	}
 
-	parse_info_init (&info);
+	parse_info_init (&info, model);
 	
 	ctx = g_markup_parse_context_new (&parser, 0, &info, NULL);
 	
@@ -755,14 +618,12 @@ out:
 	return list;
 }
 
-
 static gboolean
 egg_recent_model_write (EggRecentModel *model, FILE *file, GList *list)
 {
 	GString *string;
 	gchar *data;
 	EggRecentItem *item;
-	const GList *groups;
 	int i;
 	int ret;
 	
@@ -775,6 +636,8 @@ egg_recent_model_write (EggRecentModel *model, FILE *file, GList *list)
 		gchar *mime_type;
 		gchar *escaped_uri;
 		time_t timestamp;
+		gchar *app;
+		
 		item = (EggRecentItem *)list->data;
 
 
@@ -785,6 +648,7 @@ egg_recent_model_write (EggRecentModel *model, FILE *file, GList *list)
 
 		mime_type = egg_recent_item_get_mime_type (item);
 		timestamp = egg_recent_item_get_timestamp (item);
+		app = egg_recent_item_get_application (item);
 		
 		string = g_string_append (string, "  <" TAG_RECENT_ITEM ">\n");
 
@@ -806,37 +670,19 @@ egg_recent_model_write (EggRecentModel *model, FILE *file, GList *list)
 			string = g_string_append (string,
 					"    <" TAG_PRIVATE "/>\n");
 
-		/* write the groups */
-		string = g_string_append (string,
-				"    <" TAG_GROUPS ">\n");
-		groups = egg_recent_item_get_groups (item);
-
-		if (groups == NULL && egg_recent_item_get_private (item))
-			g_warning ("Item with URI \"%s\" marked as private, but"
-				   " does not belong to any groups.\n", uri);
-		
-		while (groups) {
-			const gchar *group = (const gchar *)groups->data;
-			gchar *escaped_group;
-
-			escaped_group = g_markup_escape_text (group, strlen(group));
-
+		if (app) {
 			g_string_append_printf (string,
-					"      <" TAG_GROUP ">%s</" TAG_GROUP ">\n",
-					escaped_group);
-
-			g_free (escaped_group);
-
-			groups = groups->next;
+						"    <" TAG_APPLICATION ">%s</" TAG_APPLICATION ">\n", app);
+		} else {
+			g_string_append_printf (string,
+						"    <" TAG_APPLICATION ">%s</" TAG_APPLICATION ">\n", model->priv->app);
 		}
+
+		string = g_string_append (string, "  </" TAG_RECENT_ITEM ">\n");
 		
-		string = g_string_append (string, "    </" TAG_GROUPS ">\n");
-
-		string = g_string_append (string,
-				"  </" TAG_RECENT_ITEM ">\n");
-
 		g_free (mime_type);
 		g_free (escaped_uri);
+		g_free (app);
 
 		list = list->next;
 		i++;
@@ -901,22 +747,6 @@ egg_recent_model_finalize (GObject *object)
 	egg_recent_model_monitor (model, FALSE);
 
 
-	g_slist_foreach (model->priv->mime_filter_values,
-			 (GFunc) g_pattern_spec_free, NULL);
-	g_slist_free (model->priv->mime_filter_values);
-	model->priv->mime_filter_values = NULL;
-
-	g_slist_foreach (model->priv->scheme_filter_values,
-			 (GFunc) g_pattern_spec_free, NULL);
-	g_slist_free (model->priv->scheme_filter_values);
-	model->priv->scheme_filter_values = NULL;
-
-	g_slist_foreach (model->priv->group_filter_values,
-			 (GFunc) g_free, NULL);
-	g_slist_free (model->priv->group_filter_values);
-	model->priv->group_filter_values = NULL;
-
-
 	if (model->priv->limit_change_notify_id)
 		gconf_client_notify_remove (model->priv->client,
 					    model->priv->limit_change_notify_id);
@@ -949,34 +779,22 @@ egg_recent_model_set_property (GObject *object,
 {
 	EggRecentModel *model = EGG_RECENT_MODEL (object);
 
-	switch (prop_id)
-	{
-		case PROP_MIME_FILTERS:
-			model->priv->mime_filter_values =
-				(GSList *)g_value_get_pointer (value);
+	switch (prop_id) {
+	case PROP_SORT_TYPE:
+		model->priv->sort_type = g_value_get_int (value);
+		break;
+		
+	case PROP_LIMIT:
+		egg_recent_model_set_limit (model,
+					    g_value_get_int (value));
 		break;
 
-		case PROP_GROUP_FILTERS:
-			model->priv->group_filter_values =
-				(GSList *)g_value_get_pointer (value);
+	case PROP_APPLICATION_NAME:
+		model->priv->app = g_strdup (g_value_get_string (value));
 		break;
 
-		case PROP_SCHEME_FILTERS:
-			model->priv->scheme_filter_values =
-				(GSList *)g_value_get_pointer (value);
-		break;
-
-		case PROP_SORT_TYPE:
-			model->priv->sort_type = g_value_get_int (value);
-		break;
-
-		case PROP_LIMIT:
-			egg_recent_model_set_limit (model,
-						g_value_get_int (value));
-		break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
 	}
 }
@@ -989,30 +807,21 @@ egg_recent_model_get_property (GObject *object,
 {
 	EggRecentModel *model = EGG_RECENT_MODEL (object);
 
-	switch (prop_id)
-	{
-		case PROP_MIME_FILTERS:
-			g_value_set_pointer (value, model->priv->mime_filter_values);
+	switch (prop_id) {
+	case PROP_SORT_TYPE:
+		g_value_set_int (value, model->priv->sort_type);
 		break;
-
-		case PROP_GROUP_FILTERS:
-			g_value_set_pointer (value, model->priv->group_filter_values);
+		
+	case PROP_LIMIT:
+		g_value_set_int (value, model->priv->limit);
 		break;
-
-		case PROP_SCHEME_FILTERS:
-			g_value_set_pointer (value, model->priv->scheme_filter_values);
+		
+	case PROP_APPLICATION_NAME:
+		g_value_set_string (value, model->priv->app);
 		break;
-
-		case PROP_SORT_TYPE:
-			g_value_set_int (value, model->priv->sort_type);
-		break;
-
-		case PROP_LIMIT:
-			g_value_set_int (value, model->priv->limit);
-		break;
-
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
 	}
 }
@@ -1036,46 +845,32 @@ egg_recent_model_class_init (EggRecentModelClass * klass)
 			G_TYPE_NONE, 1,
 			G_TYPE_POINTER);
 
-	
-	g_object_class_install_property (object_class,
-					 PROP_MIME_FILTERS,
-					 g_param_spec_pointer ("mime-filters",
-					 "Mime Filters",
-					 "List of mime types to be allowed.",
-					 G_PARAM_READWRITE));
-	
-	g_object_class_install_property (object_class,
-					 PROP_GROUP_FILTERS,
-					 g_param_spec_pointer ("group-filters",
-					 "Group Filters",
-					 "List of groups to be allowed.",
-					 G_PARAM_READWRITE));
-
-	g_object_class_install_property (object_class,
-					 PROP_SCHEME_FILTERS,
-					 g_param_spec_pointer ("scheme-filters",
-					 "Scheme Filters",
-					 "List of URI schemes to be allowed.",
-					 G_PARAM_READWRITE));
-
 	g_object_class_install_property (object_class,
 					 PROP_SORT_TYPE,
 					 g_param_spec_int ("sort-type",
-					 "Sort Type",
-					 "Type of sorting to be done.",
-					 0, EGG_RECENT_MODEL_SORT_NONE,
-					 EGG_RECENT_MODEL_SORT_MRU,
-					 G_PARAM_READWRITE));
+							   "Sort Type",
+							   "Type of sorting to be done.",
+							   0, EGG_RECENT_MODEL_SORT_NONE,
+							   EGG_RECENT_MODEL_SORT_MRU,
+							   G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,
 					 PROP_LIMIT,
 					 g_param_spec_int ("limit",
-					 "Limit",
-					 "Max number of items allowed.",
-					 -1, EGG_RECENT_MODEL_MAX_ITEMS,
-					 EGG_RECENT_MODEL_DEFAULT_LIMIT,
-					 G_PARAM_READWRITE));
+							   "Limit",
+							   "Max number of items allow	ed.",
+							   -1, EGG_RECENT_MODEL_MAX_ITEMS,
+							   EGG_RECENT_MODEL_DEFAULT_LIMIT,
+							   G_PARAM_READWRITE));
 
+	g_object_class_install_property (object_class,
+					 PROP_APPLICATION_NAME,
+					 g_param_spec_string ("application-name",
+							      "Application Name",
+							      "The name of the application",
+							      NULL,
+							      G_PARAM_READWRITE));
+	
 	klass->changed = NULL;
 }
 
@@ -1127,13 +922,9 @@ egg_recent_model_init (EggRecentModel * model)
 	
 
 	model->priv = g_new0 (EggRecentModelPrivate, 1);
-
+	model->priv->app = NULL;
 	model->priv->path = g_strdup_printf ("%s" EGG_RECENT_MODEL_FILE_PATH,
 					     g_get_home_dir ());
-
-	model->priv->mime_filter_values   = NULL;
-	model->priv->group_filter_values  = NULL;
-	model->priv->scheme_filter_values = NULL;
 	
 	model->priv->client = gconf_client_get_default ();
 	gconf_client_add_dir (model->priv->client, EGG_RECENT_MODEL_KEY_DIR,
@@ -1178,19 +969,21 @@ egg_recent_model_init (EggRecentModel * model)
 
 /**
  * egg_recent_model_new:
+ * @application:  the executable name of this application
  * @sort:  the type of sorting to use
- * @limit:  maximum number of items in the list
  *
  * This creates a new EggRecentModel object.
  *
  * Returns: a EggRecentModel object
  */
 EggRecentModel *
-egg_recent_model_new (EggRecentModelSort sort)
+egg_recent_model_new (const char *application,
+		      EggRecentModelSort sort)
 {
 	EggRecentModel *model;
 
 	model = EGG_RECENT_MODEL (g_object_new (egg_recent_model_get_type (),
+				  "application-name", application,	
 				  "sort-type", sort, NULL));
 
 	g_return_val_if_fail (model, NULL);
@@ -1205,7 +998,7 @@ egg_recent_model_new (EggRecentModelSort sort)
  *
  * This function adds an item to the list of recently used URIs.
  *
- * Returns: gboolean
+ * Returns: TRUE if successful, FALSE otherwise
  */
 gboolean
 egg_recent_model_add_full (EggRecentModel * model, EggRecentItem *item)
@@ -1285,7 +1078,7 @@ egg_recent_model_add_full (EggRecentModel * model, EggRecentItem *item)
  *
  * This function adds an item to the list of recently used URIs.
  *
- * Returns: gboolean
+ * Returns: TRUE if successful, FALSE otherwise
  */
 gboolean
 egg_recent_model_add (EggRecentModel *model, const gchar *uri)
@@ -1297,7 +1090,7 @@ egg_recent_model_add (EggRecentModel *model, const gchar *uri)
 	g_return_val_if_fail (uri != NULL, FALSE);
 
 	item = egg_recent_item_new_from_uri (uri);
-
+	
 	g_return_val_if_fail (item != NULL, FALSE);
 
 	ret = egg_recent_model_add_full (model, item);
@@ -1373,6 +1166,27 @@ out:
 		egg_recent_model_changed (model);
 	}
 
+	return ret;
+}
+
+static GList *
+egg_recent_model_filter (EggRecentModel *model,
+			 GList *list)
+{
+	GList *ret, *l;
+
+	ret = NULL;
+	for (l = list; l; l = l->next) {
+		EggRecentItem *item = l->data;
+
+		if (model->priv->app == NULL ||
+		    item->app == NULL ||
+		    strcmp (model->priv->app, item->app) == 0) {
+			ret = g_list_prepend (ret, egg_recent_item_ref (item));
+		}
+	}
+
+	EGG_RECENT_ITEM_LIST_UNREF (list);
 	return ret;
 }
 
@@ -1488,124 +1302,6 @@ egg_recent_model_clear (EggRecentModel *model)
 
 
 /**
- * egg_recent_model_set_filter_mime_types:
- * @model:  A EggRecentModel object.
- *
- * Sets which mime types are allowed in the list.
- *
- * Returns: void
- */
-void
-egg_recent_model_set_filter_mime_types (EggRecentModel *model,
-			       ...)
-{
-	va_list valist;
-	GSList *list = NULL;
-	gchar *str;
-
-	g_return_if_fail (model != NULL);
-
-	if (model->priv->mime_filter_values != NULL) {
-		g_slist_foreach (model->priv->mime_filter_values,
-				 (GFunc) g_pattern_spec_free, NULL);
-		g_slist_free (model->priv->mime_filter_values);
-		model->priv->mime_filter_values = NULL;
-	}
-
-	va_start (valist, model);
-
-	str = va_arg (valist, gchar*);
-
-	while (str != NULL) {
-		list = g_slist_prepend (list, g_pattern_spec_new (str));
-
-		str = va_arg (valist, gchar*);
-	}
-
-	va_end (valist);
-
-	model->priv->mime_filter_values = list;
-}
-
-/**
- * egg_recent_model_set_filter_groups:
- * @model:  A EggRecentModel object.
- *
- * Sets which groups are allowed in the list.
- *
- * Returns: void
- */
-void
-egg_recent_model_set_filter_groups (EggRecentModel *model,
-			       ...)
-{
-	va_list valist;
-	GSList *list = NULL;
-	gchar *str;
-
-	g_return_if_fail (model != NULL);
-
-	if (model->priv->group_filter_values != NULL) {
-		g_slist_foreach (model->priv->group_filter_values, (GFunc)g_free, NULL);
-		g_slist_free (model->priv->group_filter_values);
-		model->priv->group_filter_values = NULL;
-	}
-
-	va_start (valist, model);
-
-	str = va_arg (valist, gchar*);
-
-	while (str != NULL) {
-		list = g_slist_prepend (list, g_strdup (str));
-
-		str = va_arg (valist, gchar*);
-	}
-
-	va_end (valist);
-
-	model->priv->group_filter_values = list;
-}
-
-/**
- * egg_recent_model_set_filter_uri_schemes:
- * @model:  A EggRecentModel object.
- *
- * Sets which URI schemes (file, http, ftp, etc) are allowed in the list.
- *
- * Returns: void
- */
-void
-egg_recent_model_set_filter_uri_schemes (EggRecentModel *model, ...)
-{
-	va_list valist;
-	GSList *list = NULL;
-	gchar *str;
-
-	g_return_if_fail (model != NULL);
-
-	if (model->priv->scheme_filter_values != NULL) {
-		g_slist_foreach (model->priv->scheme_filter_values,
-				(GFunc) g_pattern_spec_free, NULL);
-		g_slist_free (model->priv->scheme_filter_values);
-		model->priv->scheme_filter_values = NULL;
-	}
-
-	va_start (valist, model);
-
-	str = va_arg (valist, gchar*);
-
-	while (str != NULL) {
-		list = g_slist_prepend (list, g_pattern_spec_new (str));
-
-		str = va_arg (valist, gchar*);
-	}
-
-	va_end (valist);
-
-	model->priv->scheme_filter_values = list;
-}
-
-/**
  * egg_recent_model_set_sort:
  * @model:  A EggRecentModel object.
  * @sort:  A EggRecentModelSort type
@@ -1679,7 +1375,7 @@ egg_recent_model_remove_expired_list (EggRecentModel *model, GList *list)
  * egg_recent_model_remove_expired:
  * @model:  A EggRecentModel object.
  *
- * Goes through the entire list, and removes any items that are older than
+ * Goes through the  list, and removes any items that are older than
  * the user-specified expiration period.
  *
  * Returns: void
