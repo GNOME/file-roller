@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Samúel Jón Gunnarsson  <sammi@techattack.nu>, 2003
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2003-02-21 09:50+0100\n"
-"PO-Revision-Date: 2003-05-17 14:29--100\n"
+"POT-Creation-Date: 2003-06-07 09:12+0200\n"
+"PO-Revision-Date: 2003-06-07 09:26--100\n"
 "Last-Translator: Samuel Jon Gunnarsson <sammi@techattack.nu>\n"
 "Language-Team: Icelandic <gnome@techattack.nu>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add To Archive..."
+msgid "Add to Archive..."
 msgstr "Bæta í skráarsafn..."
 
 #: component/File_Roller_Component.server.in.in.h:2
@@ -23,11 +23,11 @@ msgid "Extract Here"
 msgstr "Afþjappa hér"
 
 #: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract In A Sub-Folder"
-msgstr "Afþjappa í undirmöppu"
+msgid "Extract in a Folder"
+msgstr "Afþjappa í möppu"
 
 #: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract To..."
+msgid "Extract to..."
 msgstr "Afþjappa í..."
 
 #: component/File_Roller_Component.server.in.in.h:5
@@ -49,14 +49,13 @@ msgstr "Skráarsafnstjóri"
 #. Create the application.
 #: file-roller.desktop.in.h:2
 #: src/gtk-utils.c:76
-#: src/gtk-utils.c:158
-#: src/gtk-utils.c:266
+#: src/gtk-utils.c:379
 #: src/main.c:101
-#: src/menu-callbacks.c:789
-#: src/window.c:743
-#: src/window.c:752
-#: src/window.c:2448
-#: src/window.c:4167
+#: src/menu-callbacks.c:1043
+#: src/window.c:759
+#: src/window.c:768
+#: src/window.c:1153
+#: src/window.c:2733
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -64,99 +63,108 @@ msgstr "File Roller"
 msgid "Handle compressed archives"
 msgstr "Meðhöndlar þjöppuð skráarsöfn"
 
-#: src/dlg-add.c:118
+#: src/dlg-add.c:119
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Þú hefur ekki réttindi til að lesa skrár frá möppu \"%s\""
 
-#: src/dlg-add.c:343
-#: src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "Bæta við skrám og möppum"
+#: src/dlg-add.c:349
+msgid "Add Files"
+msgstr "Bæta við skrám"
 
-#: src/dlg-add.c:348
+#: src/dlg-add.c:354
 msgid "_Add only if newer"
 msgstr "Bæt_a einungis við nýrri skrám / möppum"
 
-#: src/dlg-add.c:349
+#: src/dlg-add.c:355
 msgid "_Include sub-folders"
 msgstr "Und_irmöppur fylgja"
 
-#: src/dlg-add.c:350
+#: src/dlg-add.c:356
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Hundsa sýndartengilsm_öppur"
 
-#: src/dlg-add.c:351
+#: src/dlg-add.c:357
 msgid "Exclude o_ther file systems"
 msgstr "Hundsa ö_nnur skráarkerfi"
 
-#: src/dlg-add.c:352
+#: src/dlg-add.c:358
 msgid "Exclude _backup files (*~)"
 msgstr "Hundsa _öryggisafritaðar skrár (*~)"
 
-#: src/dlg-add.c:353
+#: src/dlg-add.c:359
 msgid "Exclude _hidden files (.*)"
 msgstr "_Hundsa faldar skrár (.*)"
 
-#: src/dlg-add.c:354
+#: src/dlg-add.c:360
 msgid "E_xclude files:"
 msgstr "H_undsa skrár:"
 
-#: src/dlg-add.c:356
+#: src/dlg-add.c:362
 msgid "example: *.o; *.bak"
 msgstr "dæmi: *.o; *.bak"
 
-#: src/dlg-add.c:357
+#: src/dlg-add.c:363
 msgid "Igno_re case"
 msgstr "Hundsa hlutfall milli há-lágstafa"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:364
 msgid "_Load Options"
 msgstr "H_laða stillingum"
 
-#: src/dlg-add.c:359
+#: src/dlg-add.c:365
 msgid "Sa_ve Options"
 msgstr "_Vista stillingar"
 
-#: src/dlg-add.c:614
+#: src/dlg-add.c:620
 msgid "Load Options"
 msgstr "Hlaða stillingum"
 
-#: src/dlg-add.c:763
+#: src/dlg-add.c:769
 msgid "Save Options"
 msgstr "Vista stillingar"
 
-#: src/dlg-batch-add.c:99
+#: src/dlg-batch-add.c:98
+#: src/menu-callbacks.c:180
+#: src/menu-callbacks.c:360
+msgid "You have to specify an archive name."
+msgstr "Þú verður að skilgreina gerð skráarsafns."
+
+#: src/dlg-batch-add.c:115
 #: src/dlg-extract.c:120
-#: src/window.c:3227
+#: src/window.c:3704
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Áfangastaður finnst ekki. Viltu stofna hann?"
 
-#: src/dlg-batch-add.c:101
+#: src/dlg-batch-add.c:117
 #: src/dlg-extract.c:122
-#: src/window.c:3229
+#: src/window.c:3706
 msgid "Create _Folder"
 msgstr "Sto_fna Möppu "
 
-#: src/dlg-batch-add.c:121
+#: src/dlg-batch-add.c:136
 #, c-format
 msgid "Could not create the destination folder: %s.\n"
 "Addition not performed."
 msgstr "Ekki tókst að stofna möppuáfangastað: %s.\n"
 "Engum skjölum var bætt við."
 
-#: src/dlg-batch-add.c:138
+#: src/dlg-batch-add.c:154
 msgid "Addition not performed."
 msgstr "Viðbót skjala var ekki framkvæmd."
 
-#. Set widgets data.
-#: src/dlg-batch-add.c:202
+#: src/dlg-batch-add.c:231
 #, c-format
-msgid "Adding %u files"
-msgstr "Bæti við %u skrám"
+msgid "Files to add: %d"
+msgstr "Skrám sem bæta á við: %d"
+
+#: src/dlg-batch-add.c:233
+#, c-format
+msgid "Folders to add: %d"
+msgstr "Möppum sem bæta á við: %d"
 
 #: src/dlg-extract.c:142
-#: src/window.c:3249
+#: src/window.c:3726
 #, c-format
 msgid "Could not create the destination folder: %s.\n"
 "Extraction not performed."
@@ -164,7 +172,7 @@ msgstr "Ekki tókst að stofna áfangastaðsmöppu: %s.\n"
 "Engin afþjöppun átti sér stað."
 
 #: src/dlg-extract.c:157
-#: src/window.c:3264
+#: src/window.c:3741
 msgid "Extraction not performed."
 msgstr "Afþjöppun átti sér ekki stað."
 
@@ -173,34 +181,34 @@ msgstr "Afþjöppun átti sér ekki stað."
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Þú hefur ekki réttindi til að afþjappa skráarsafn í möppu \"%s\""
 
-#: src/dlg-extract.c:397
-#: src/dlg-preferences.c:128
-#: src/menu-callbacks.c:752
+#: src/dlg-extract.c:412
+#: src/dlg-preferences.c:127
+#: src/menu-callbacks.c:1006
 #, c-format
 msgid "Could not display help: %s"
 msgstr "Ekki tókst að sýna hjálp: %s"
 
-#: src/dlg-extract.c:474
+#: src/dlg-extract.c:489
 msgid "Actions"
 msgstr "Aðgerðir"
 
-#: src/dlg-extract.c:475
+#: src/dlg-extract.c:490
 msgid "Destination folder"
 msgstr "Áfangastaður"
 
-#: src/dlg-extract.c:476
+#: src/dlg-extract.c:491
 msgid "Files"
 msgstr "Skrár"
 
-#: src/dlg-extract.c:505
+#: src/dlg-extract.c:520
 msgid "Bookmarks"
 msgstr "Bókamerki"
 
-#: src/dlg-preferences.c:186
+#: src/dlg-preferences.c:184
 msgid "General"
 msgstr "Almennt"
 
-#: src/dlg-preferences.c:191
+#: src/dlg-preferences.c:189
 msgid "Visible columns"
 msgstr "Sýnilegir dálkar"
 
@@ -241,7 +249,7 @@ msgstr "Óþekkt skráargerð"
 msgid "Symbolic link"
 msgstr "Sýndartengill"
 
-#: src/file-utils.c:534
+#: src/file-utils.c:535
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "Ekki tókst að finna skel, nota xterm, jafnvel þó svo að það muni kannski ekki virka"
 
@@ -262,6 +270,10 @@ msgstr "B_æta við í bókamerki"
 msgid "A_vailable application:"
 msgstr "Forrit til _reiðu:"
 
+#: src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "Bæta við skrám og möppum"
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Bæ_ta við í skráarsafn:"
@@ -271,7 +283,6 @@ msgid "Add only if _newer"
 msgstr "Bæta einungis við _nýju"
 
 #: src/file_roller.glade.h:8
-#: src/menu.h:464
 msgid "Delete Files"
 msgstr "Eyða skrám"
 
@@ -280,7 +291,7 @@ msgid "Do not e_xtract older files"
 msgstr "Ekki afþjappa eldri skjöl"
 
 #: src/file_roller.glade.h:10
-#: src/window.c:2681
+#: src/window.c:2971
 msgid "Extract"
 msgstr "Afþjappa"
 
@@ -309,19 +320,19 @@ msgid "Password"
 msgstr "Lykilorð"
 
 #: src/file_roller.glade.h:17
+msgid "R_e-create folders"
+msgstr "_Endurbyggja möppur"
+
+#: src/file_roller.glade.h:18
 msgid "R_ecent applications:"
 msgstr "Nýl_eg forrit:"
 
-#: src/file_roller.glade.h:18
-msgid "R_ecreate folders"
-msgstr "_Endurbyggja möppur"
-
 #: src/file_roller.glade.h:19
-msgid "Select archive"
+msgid "Select Archive"
 msgstr "Veldu skráarsafn"
 
 #: src/file_roller.glade.h:20
-#: src/menu.h:450
+#: src/menu.h:460
 msgid "View File"
 msgstr "Skoða skrá"
 
@@ -386,24 +397,45 @@ msgid "Normal"
 msgstr "Venjulegur"
 
 #: src/file_roller_prop.glade.h:9
-msgid "_Name"
-msgstr "_Nafn"
-
-#: src/file_roller_prop.glade.h:10
 msgid "_Path"
 msgstr "Sló_ð"
 
-#: src/file_roller_prop.glade.h:11
+#: src/file_roller_prop.glade.h:10
 msgid "_Recent archives:"
 msgstr "Nýleg skráarsöfn:"
 
-#: src/file_roller_prop.glade.h:12
+#: src/file_roller_prop.glade.h:11
 msgid "_Size"
 msgstr "_Stærð"
 
-#: src/file_roller_prop.glade.h:13
+#: src/file_roller_prop.glade.h:12
 msgid "_Type"
 msgstr "_Gerð"
+
+#: src/fr-command-tar.c:219
+msgid "Adding file: "
+msgstr "Bæt við skrá:"
+
+#: src/fr-command-tar.c:265
+msgid "Removing file: "
+msgstr "Skrá fjarlægjist:"
+
+#: src/fr-command-tar.c:274
+#: src/window.c:1249
+msgid "Deleting files from archive"
+msgstr "Eyði skrám frá skráarsafni"
+
+#: src/fr-command-tar.c:307
+msgid "Extracting file: "
+msgstr "Afþjappa skrá:"
+
+#: src/fr-command-tar.c:352
+msgid "Recompressing archive"
+msgstr "Endurþjappa skráarsafn"
+
+#: src/fr-command-tar.c:486
+msgid "Decompressing archive"
+msgstr "Afþjappa skráarsafn"
 
 #: src/gconf-utils.c:98
 #, c-format
@@ -413,7 +445,7 @@ msgstr "GConf villa:\n"
 "  %s"
 
 #. Button
-#: src/gtk-utils.c:297
+#: src/gtk-utils.c:410
 msgid "Command _Line Output"
 msgstr "Skipana_línufærsla"
 
@@ -450,438 +482,480 @@ msgstr "Sjálfgefin mappa við notkun á '--add' og '--extract' skipununum"
 msgid "Create destination folder without asking confirmation"
 msgstr "Búa til áfangastaðsmöppu án þess að spyrja um staðfestingu"
 
-#: src/menu-callbacks.c:107
+#: src/menu-callbacks.c:108
 msgid "Automatic"
 msgstr "Sjálfvirkt"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:109
+msgid "Arj (.arj)"
+msgstr "Arj (.arj)"
+
+#: src/menu-callbacks.c:110
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:111
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:112
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:113
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:114
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar óþjappað (.tar)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:115
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar þjappað með bzip (.tar.bz)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:116
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar þjappað með bzip2 (.tar.bz2)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar þjappað með gzip (.tar.gz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:118
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar þjappað með lzop (.tar.lzo)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:119
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar þjappað með compress (.tar.Z)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:120
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:121
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:122
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:176
+#: src/menu-callbacks.c:197
+#: src/menu-callbacks.c:377
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Þú hefur ekki réttindi til að búa til skráarsafn í þessari möppu"
 
-#: src/menu-callbacks.c:194
-#: src/menu-callbacks.c:421
-#: src/menu-callbacks.c:591
+#: src/menu-callbacks.c:223
+#: src/menu-callbacks.c:395
+#: src/menu-callbacks.c:610
+#: src/menu-callbacks.c:783
 msgid "Archive already exists.  Do you want to overwrite it?"
 msgstr "Skráarsafn finnst nú þegar. Viltu rita yfir það?"
 
-#: src/menu-callbacks.c:196
-#: src/menu-callbacks.c:423
-#: src/menu-callbacks.c:593
+#: src/menu-callbacks.c:225
+#: src/menu-callbacks.c:397
+#: src/menu-callbacks.c:612
+#: src/menu-callbacks.c:785
 msgid "Overwrite"
 msgstr "Yfirrita"
 
-#: src/menu-callbacks.c:213
+#: src/menu-callbacks.c:242
+#: src/menu-callbacks.c:414
 msgid "Could not delete old archive."
 msgstr "Ekki tókst að eyða gamla skráarsafni."
 
-#: src/menu-callbacks.c:254
+#: src/menu-callbacks.c:283
 msgid "New Archive"
 msgstr "Nýtt skráarsafn"
 
-#: src/menu-callbacks.c:266
+#: src/menu-callbacks.c:295
+#: src/menu-callbacks.c:450
 msgid "Archive type:"
 msgstr "Gerð skráarsafns:"
 
-#: src/menu-callbacks.c:337
+#: src/menu-callbacks.c:438
+msgid "Save Archive"
+msgstr "Vista skráarsafn"
+
+#: src/menu-callbacks.c:521
 msgid "Open Archive"
 msgstr "Opna skráarsafn"
 
-#: src/menu-callbacks.c:446
+#: src/menu-callbacks.c:635
 msgid "Could not copy archive"
 msgstr "Ekki tókst að afrita skráarsafn"
 
-#: src/menu-callbacks.c:462
+#: src/menu-callbacks.c:651
 msgid "Could not move archive"
 msgstr "Ekki tókst að flytja skráarsafn"
 
-#: src/menu-callbacks.c:484
-msgid "Copy archive"
+#: src/menu-callbacks.c:675
+msgid "Copy Archive"
 msgstr "Afrita skráarsafn"
 
-#: src/menu-callbacks.c:484
-msgid "Move archive"
+#: src/menu-callbacks.c:675
+msgid "Move Archive"
 msgstr "Flytja skráarsafn"
 
-#: src/menu-callbacks.c:562
+#: src/menu-callbacks.c:753
+msgid "Rename Archive"
+msgstr "Endurnefna skráarsafn"
+
+#: src/menu-callbacks.c:754
 msgid "New archive name (without extension)"
 msgstr "Nýtt nafn skráarsafns ( án nafn skráargerðar )"
 
-#: src/menu-callbacks.c:566
-#: src/menu.h:97
+#: src/menu-callbacks.c:758
 msgid "_Rename"
 msgstr "Endu_rnefna"
 
-#: src/menu-callbacks.c:630
-msgid "Archive will be deleted, are you sure?"
-msgstr "Skráarsafninu mun verða eytt. Ertu viss?"
+#: src/menu-callbacks.c:867
+msgid "The archive cannot be moved to the Trash. Do you want to delete it permanently?"
+msgstr "Ekki var hægt að flytja skráarsafn í ruslið. Viltu eyða skráarsafninu endanlega?"
 
-#: src/menu-callbacks.c:781
+#: src/menu-callbacks.c:1035
 msgid "translator_credits"
 msgstr "Samúel Jón Gunnarsson  <sammi@techattack.nu>"
 
-#: src/menu-callbacks.c:792
+#: src/menu-callbacks.c:1046
 msgid "An archive manager for GNOME."
 msgstr "Skráarstjóri fyrir GNOME."
 
-#: src/menu.h:67
+#: src/menu-callbacks.c:1220
+#: src/window.c:4027
+msgid "Last Output"
+msgstr "Síðasta færsla"
+
+#: src/menu.h:70
 msgid "_New"
 msgstr "_Nýtt"
 
-#: src/menu.h:67
+#: src/menu.h:70
 #: src/toolbar.h:39
 msgid "Create a new archive"
 msgstr "Stofna nýtt skráarsafn"
 
-#: src/menu.h:73
+#: src/menu.h:76
 msgid "_Open..."
 msgstr "_Opna..."
 
-#: src/menu.h:73
+#: src/menu.h:76
 msgid "Open an existing archive"
 msgstr "Opna fyrirliggjandi skráarsafn "
 
-#: src/menu.h:78
+#: src/menu.h:81
 msgid "Open R_ecent"
 msgstr "Opna Nýl_egt"
 
-#: src/menu.h:83
+#: src/menu.h:86
+msgid "Save _As..."
+msgstr "Vist_a sem..."
+
+#: src/menu.h:86
+msgid "Save current archive in a different type or name"
+msgstr "Vista núverandi skráarsafn sem aðra gerð eða nafn"
+
+#: src/menu.h:94
 msgid "Open Fi_les..."
 msgstr "O_pna skrár..."
 
-#: src/menu.h:83
+#: src/menu.h:94
 msgid "Open selected files with an application"
 msgstr "Opna valdar skrár með forriti"
 
-#: src/menu.h:89
+#: src/menu.h:100
 msgid "_View File"
 msgstr "Sko_ða skrár"
 
-#: src/menu.h:89
-#: src/menu.h:450
+#: src/menu.h:100
+#: src/menu.h:460
 msgid "View file with internal viewer"
 msgstr "Skoða skrár með innbyggðum rýni"
 
-#: src/menu.h:97
+#: src/menu.h:108
+msgid "_Rename..."
+msgstr "Endu_rnefna"
+
+#: src/menu.h:108
 msgid "Rename current archive"
 msgstr "Endurnefna núverandi skráarsafn"
 
-#: src/menu.h:103
-msgid "Cop_y"
-msgstr "Af_rita"
+#: src/menu.h:114
+msgid "Cop_y..."
+msgstr "Af_rita..."
 
-#: src/menu.h:103
+#: src/menu.h:114
 msgid "Copy current archive to another folder"
 msgstr "Afrita núverandi skráarsafn yfir í aðra möppu"
 
-#: src/menu.h:109
-msgid "_Move"
-msgstr "_Flytja"
+#: src/menu.h:120
+msgid "_Move..."
+msgstr "_Flytja..."
 
-#: src/menu.h:109
+#: src/menu.h:120
 msgid "Move current archive to another folder"
 msgstr "Flytja núverandi skráarsafn í aðra möppu"
 
-#: src/menu.h:115
-#: src/menu.h:170
-msgid "_Delete"
-msgstr "_Eyða"
+#: src/menu.h:126
+msgid "Move To _Trash"
+msgstr "Flyt_ja í ruslið"
 
-#: src/menu.h:115
-msgid "Delete current archive from disk"
-msgstr "Eyða núverandi skráarsafni af diski"
+#: src/menu.h:126
+msgid "Move current archive to trash"
+msgstr "Flytja núverandi skráarsafn í ruslið"
 
-#: src/menu.h:123
+#: src/menu.h:132
+msgid "_Test"
+msgstr "_Prufa"
+
+#: src/menu.h:132
+msgid "Test whether the archive contains errors"
+msgstr "Athuga hvort að skráarsafn innihaldi villur"
+
+#: src/menu.h:140
 msgid "_Properties"
 msgstr "_Stillingar"
 
-#: src/menu.h:123
+#: src/menu.h:140
 msgid "Show archive properties"
 msgstr "Skoða stillingar skjalasafns"
 
-#: src/menu.h:131
+#: src/menu.h:148
 msgid "_Close"
 msgstr "_Loka"
 
-#: src/menu.h:131
+#: src/menu.h:148
 msgid "Close current archive"
 msgstr "Loka núverandi skjalasafni"
 
-#: src/menu.h:137
+#: src/menu.h:154
 msgid "E_xit"
 msgstr "H_ætta"
 
-#: src/menu.h:137
+#: src/menu.h:154
 msgid "Exit"
 msgstr "Hætta"
 
-#: src/menu.h:164
+#: src/menu.h:180
+#: src/menu.h:468
 msgid "Add _Files..."
 msgstr "B_æta við skrám..."
 
-#: src/menu.h:164
-#: src/menu.h:458
-#: src/window.c:2671
+#: src/menu.h:180
+#: src/menu.h:468
+#: src/window.c:2961
 msgid "Add files to the archive"
 msgstr "Bæta skrám við í skjalasafn"
 
-#: src/menu.h:170
+#: src/menu.h:186
+msgid "_Delete Files..."
+msgstr "E_yði skrám"
+
+#: src/menu.h:186
 msgid "Delete selected files and folders from the archive"
 msgstr "Eyða völdum skrám og möppum úr skjalasafni"
 
-#: src/menu.h:176
+#: src/menu.h:192
+#: src/menu.h:480
 msgid "_Extract to..."
 msgstr "_Afþjappa í..."
 
-#: src/menu.h:176
-#: src/menu.h:470
-#: src/window.c:2682
+#: src/menu.h:192
+#: src/menu.h:480
+#: src/window.c:2972
 msgid "Extract files from the archive"
 msgstr "Afþjappa skrám úr skjalasafni"
 
-#: src/menu.h:190
-msgid "_Test Archive"
-msgstr "At_huga skráarsafn"
-
-#: src/menu.h:206
+#: src/menu.h:216
+#: src/menu.h:488
 msgid "Select _All"
 msgstr "Velja _Allt"
 
-#: src/menu.h:206
+#: src/menu.h:216
+#: src/menu.h:488
 msgid "Select all files"
 msgstr "Velja allar skrár"
 
-#: src/menu.h:212
+#: src/menu.h:222
+#: src/menu.h:494
 msgid "Dese_lect All"
 msgstr "Ve_lja ekki neitt"
 
-#: src/menu.h:212
+#: src/menu.h:222
+#: src/menu.h:494
 msgid "Deselect all files"
 msgstr "Velja engar skrár né möppur"
 
-#: src/menu.h:220
+#: src/menu.h:230
 msgid "Pass_word..."
 msgstr "Lykil_orð..."
 
-#: src/menu.h:228
+#: src/menu.h:238
 msgid "_Preferences"
 msgstr "S_tillingar"
 
-#: src/menu.h:239
+#: src/menu.h:238
+msgid "Edit File Roller preferences"
+msgstr "Breyta stillingum fyrir File Roller"
+
+#: src/menu.h:249
 msgid "by _Name"
 msgstr "eftir _Nafni"
 
-#: src/menu.h:239
+#: src/menu.h:249
 msgid "Sort file list by name"
 msgstr "Flokka skráarlista eftir nafni"
 
-#: src/menu.h:245
+#: src/menu.h:255
 msgid "by _Size"
 msgstr "eftir _Stærð"
 
-#: src/menu.h:245
+#: src/menu.h:255
 msgid "Sort file list by file size"
 msgstr "Flokka skráarlista eftir skráarstærð"
 
-#: src/menu.h:251
+#: src/menu.h:261
 msgid "by T_ype"
 msgstr "eftir S_kráargerð"
 
-#: src/menu.h:251
+#: src/menu.h:261
 msgid "Sort file list by type"
 msgstr "Flokka skráarlista eftir skráargerð"
 
-#: src/menu.h:257
-msgid "by _Time"
-msgstr "eftir Dagse_tningu"
+#: src/menu.h:267
+msgid "by _Date modified"
+msgstr "eftir breyttri_ dagsetningu"
 
-#: src/menu.h:257
+#: src/menu.h:267
 msgid "Sort file list by modification time"
 msgstr "Flokka skráarlista eftir dagsetningu"
 
-#: src/menu.h:263
-msgid "by _Path"
-msgstr "eftir Sló_ð"
+#: src/menu.h:273
+msgid "by _Location"
+msgstr "eftir _staðsetningu"
 
-#: src/menu.h:263
-msgid "Sort file list by path"
+#: src/menu.h:273
+msgid "Sort file list by location"
 msgstr "Flokka skráarlista eftir skráarslóð"
 
-#: src/menu.h:280
+#: src/menu.h:290
 msgid "View All _Files"
 msgstr "Sko_ða allar skrár"
 
-#: src/menu.h:286
+#: src/menu.h:296
 msgid "View as a F_older"
 msgstr "M_öppusýn"
 
-#: src/menu.h:308
+#: src/menu.h:318
 msgid "_Reversed Order"
 msgstr "_Öfug uppröðun"
 
-#: src/menu.h:308
+#: src/menu.h:318
 msgid "Reverse the list order"
 msgstr "Sýna lista í öfugri röð"
 
-#: src/menu.h:332
+#: src/menu.h:342
 msgid "_Toolbar"
 msgstr "_Tólstika"
 
-#: src/menu.h:332
+#: src/menu.h:342
 msgid "View the main toolbar"
 msgstr "Sýna aðal tólstiku"
 
-#: src/menu.h:338
+#: src/menu.h:348
 msgid "Stat_usbar"
 msgstr "Stöð_ustika"
 
-#: src/menu.h:338
+#: src/menu.h:348
 msgid "View the statusbar"
 msgstr "Sýna stöðustiku"
 
-#: src/menu.h:346
+#: src/menu.h:356
 msgid "_Stop"
 msgstr "_Stopp"
 
-#: src/menu.h:346
+#: src/menu.h:356
 #: src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Stöðva núverandi aðgerð"
 
-#: src/menu.h:352
+#: src/menu.h:362
 msgid "_Reload"
 msgstr "Endu_rhlaða"
 
-#: src/menu.h:352
+#: src/menu.h:362
 msgid "Reload current archive"
 msgstr "Endurhlaða núverandi skráarsafn"
 
-#: src/menu.h:363
+#: src/menu.h:373
 msgid "_Arrange Files"
 msgstr "Flokk_a skrár"
 
-#: src/menu.h:368
+#: src/menu.h:378
 msgid "_Last Output"
 msgstr "Síðasta f_ærsla"
 
-#: src/menu.h:381
+#: src/menu.h:391
 msgid "New _Window"
 msgstr "_Nýr Gluggi"
 
-#: src/menu.h:381
+#: src/menu.h:391
 msgid "Open a new window"
 msgstr "Opna nýjan glugga"
 
-#: src/menu.h:387
+#: src/menu.h:397
 msgid "Clo_se Window"
 msgstr "_Loka Glugga"
 
-#: src/menu.h:387
+#: src/menu.h:397
 msgid "Close this window"
 msgstr "Loka þessum glugga"
 
-#: src/menu.h:400
+#: src/menu.h:410
 msgid "_Contents"
 msgstr "_Innihald"
 
-#: src/menu.h:400
+#: src/menu.h:410
 msgid "Display the File Roller Manual"
 msgstr "Opna File Roller handbókina"
 
-#: src/menu.h:406
+#: src/menu.h:416
 msgid "_About"
 msgstr "_Um"
 
-#: src/menu.h:406
+#: src/menu.h:416
 msgid "Information about the program"
 msgstr "Upplýsingar um forritið"
 
-#: src/menu.h:418
+#: src/menu.h:428
 msgid "_Archive"
 msgstr "_Skráarsafn"
 
-#: src/menu.h:419
+#: src/menu.h:429
 msgid "_Edit"
 msgstr "_Sýsl"
 
-#: src/menu.h:420
+#: src/menu.h:430
 msgid "_View"
 msgstr "Sý_n"
 
-#: src/menu.h:421
+#: src/menu.h:431
 msgid "_Windows"
 msgstr "_Gluggar"
 
-#: src/menu.h:444
+#: src/menu.h:454
 msgid "Open Files..."
 msgstr "Opna skrár..."
 
-#: src/menu.h:458
-msgid "Add Files..."
-msgstr "Bæta við skrám..."
+#: src/menu.h:474
+msgid "_Delete Files"
+msgstr "Ey_ða skrám"
 
-#: src/menu.h:464
+#: src/menu.h:474
 msgid "Delete files from the archive"
 msgstr "Eyða skrám frá skráarsafni"
-
-#: src/menu.h:470
-msgid "Extract to..."
-msgstr "Afþjappa í..."
-
-#: src/menu.h:478
-msgid "Select All"
-msgstr "Velja Allt"
 
 #: src/toolbar.h:39
 msgid "New"
@@ -899,168 +973,169 @@ msgstr "Opna skráarsafn"
 msgid "Stop"
 msgstr "Stopp"
 
-#: src/window.c:607
+#: src/window.c:618
 msgid "Folder"
 msgstr "Mappa"
 
-#: src/window.c:751
+#: src/window.c:767
 msgid "[read only]"
 msgstr "[ritvarið]"
 
-#: src/window.c:845
+#: src/window.c:863
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 skrá (%s)"
 
-#: src/window.c:848
+#: src/window.c:866
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d skrár (%s)"
 
-#: src/window.c:856
+#: src/window.c:874
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 skrá valin (%s)"
 
-#: src/window.c:859
+#: src/window.c:877
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d skrár valdar (%s)"
 
-#: src/window.c:1148
+#: src/window.c:1246
 msgid "Reading archive"
 msgstr "Les skráarsafn"
 
-#: src/window.c:1151
-msgid "Deleting files from archive"
-msgstr "Eyði skrám frá skráarsafni"
-
-#: src/window.c:1154
+#: src/window.c:1252
 msgid "Adding files to archive"
 msgstr "Bæti skrám við í skráarsafn"
 
-#: src/window.c:1157
+#: src/window.c:1255
 msgid "Extracting files from archive"
 msgstr "Afþjappa skrám frá skráarsafni"
 
-#: src/window.c:1160
+#: src/window.c:1258
 msgid "Testing archive"
 msgstr "Athuga skráarsafn"
 
-#: src/window.c:1166
+#: src/window.c:1261
+msgid "Getting the file list"
+msgstr "Sæki skráarlista"
+
+#: src/window.c:1267
 msgid "wait please..."
 msgstr "hinkrið vinsamlegast..."
 
-#: src/window.c:1252
+#: src/window.c:1378
 msgid "Operation stopped"
 msgstr "Aðgerð stöðvuð"
 
-#: src/window.c:1270
+#: src/window.c:1396
 msgid "An error occurred while extracting files."
 msgstr "Villa átti sér stað við afþjöppun skráa."
 
-#: src/window.c:1274
+#: src/window.c:1400
 msgid "An error occurred while loading the archive."
 msgstr "Villa átti sér stað við hleðslu skráarsafns"
 
-#: src/window.c:1278
+#: src/window.c:1404
 msgid "An error occurred while deleting files from the archive."
 msgstr "Villa átti sér stað er eyða átti skrám frá skráarsafni."
 
-#: src/window.c:1282
+#: src/window.c:1408
 msgid "An error occurred while adding files to the archive."
 msgstr "Villa átti sér stað er bæta átti við skrám í skráarsafn"
 
-#: src/window.c:1286
+#: src/window.c:1412
 msgid "An error occurred while testing archive."
 msgstr "Villa átti sér stað við athugun skráarsafns."
 
-#: src/window.c:1292
+#: src/window.c:1421
 msgid "Command not found."
 msgstr "Skipun fannst ekki."
 
-#: src/window.c:1295
+#: src/window.c:1424
 msgid "Command exited abnormally."
 msgstr "Óeðlileg stöðvun skipunar."
 
-#: src/window.c:1587
+#: src/window.c:1559
+msgid "Test Result"
+msgstr "Prufuniðurstöður"
+
+#: src/window.c:1779
 msgid "You don't have permissions to add files to this archive."
 msgstr "Þú hefur ekki réttindi til að bæta skrám við í þetta skráarsafn."
 
-#: src/window.c:1609
+#: src/window.c:1810
 msgid "You can't add an archive to itself."
 msgstr "Þú getur ekki bætt skráarsafninu sjálfu í sjálft sig."
 
-#: src/window.c:1769
+#: src/window.c:1980
 msgid "Do you want to add this file to the current archive or open it as a new archive?"
 msgstr "Vilt þú bæta þessari skrá í núverandi skráarsafn eða opna það sem nýtt skráarsafn?"
 
-#: src/window.c:1812
+#: src/window.c:2024
 msgid "Do you want to create a new archive with these files?"
 msgstr "Vilt þú búa til nýtt skráarsafn með þessum skrám?"
 
-#: src/window.c:1814
+#: src/window.c:2026
 msgid "Create _Archive"
 msgstr "Stofn_a skráarsafn"
 
-#: src/window.c:2147
+#: src/window.c:2371
 msgid "Size"
 msgstr "Stærð"
 
-#: src/window.c:2148
+#: src/window.c:2372
 msgid "Type"
 msgstr "Gerð"
 
-#: src/window.c:2149
+#: src/window.c:2373
 msgid "Date modified"
 msgstr "Breytt þann"
 
-#: src/window.c:2150
+#: src/window.c:2374
 msgid "Location"
 msgstr "Staðsetning"
 
-#: src/window.c:2157
+#: src/window.c:2381
 msgid "Name"
 msgstr "Nafn"
 
-#: src/window.c:2616
+#: src/window.c:2901
 msgid "_Up"
 msgstr "_Upp"
 
 #. current location
-#: src/window.c:2638
-msgid "Current Location:"
-msgstr "Núverandi staðsetning:"
+#: src/window.c:2923
+msgid "Location:"
+msgstr "Staðsetning:"
 
-#: src/window.c:2670
+#: src/window.c:2960
 msgid "Add"
 msgstr "Bæta við"
 
-#: src/window.c:2692
+#: src/window.c:2982
 msgid "View"
 msgstr "Skoða"
 
-#: src/window.c:2693
+#: src/window.c:2983
 msgid "View selected file"
 msgstr "Skoða valda skrá"
 
-#: src/window.c:3093
-msgid "File type not supported."
-msgstr "Þessi skráargerð er ekki studd."
+#: src/window.c:3408
+#: src/window.c:3521
+msgid "Archive type not supported."
+msgstr "Skráarsafn ekki stutt."
 
-#: src/window.c:3162
+#: src/window.c:3484
 msgid "Cannot load archive."
 msgstr "Ekki tókst að hlaða skráarsafni."
 
-#: src/window.c:3576
-msgid "Last Output"
-msgstr "Síðasta færsla"
-
-#: src/window.c:4102
+#: src/window.c:4556
 msgid "Add files to an archive"
 msgstr "Bæta skrám við í skráarsafn"
 
-#: src/window.c:4127
+#: src/window.c:4581
 msgid "Extract archive"
 msgstr "Afþjappa skráarsafn"
 
