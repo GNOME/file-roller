@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -86,6 +86,22 @@ add_clicked_cb (GtkWidget  *widget,
 
 	window->update_dropped_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_only_newer_checkbutton));
 
+	/* check whether the user entered an archive name. */
+
+	if (! fr_archive_utils__file_is_archive (archive_name)) {
+		GtkWidget  *d;
+
+		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
+					    GTK_DIALOG_DESTROY_WITH_PARENT,
+					    GTK_MESSAGE_ERROR,
+					    GTK_BUTTONS_CLOSE,
+					    _("You have to specify an archive name."));
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+
+		return;
+	}
+
 	/* check directory existence. */
 
 	archive_dir = remove_level_from_path (archive_name);
@@ -103,9 +119,8 @@ add_clicked_cb (GtkWidget  *widget,
 			
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (archive_name);
 
-		if (r != GTK_RESPONSE_YES) 
-			do_not_add = TRUE;
 	}
 
 	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755)) {
@@ -122,6 +137,7 @@ add_clicked_cb (GtkWidget  *widget,
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (archive_dir);
+		g_free (archive_name);
 
 		return;
 	}
@@ -137,6 +153,7 @@ add_clicked_cb (GtkWidget  *widget,
 					    GTK_BUTTONS_CLOSE,
 					    _("Addition not performed."));
 		gtk_dialog_run (GTK_DIALOG (d));
+		g_free (archive_name);
 		gtk_widget_destroy (GTK_WIDGET (d));
 
 		return;
@@ -158,7 +175,6 @@ add_clicked_cb (GtkWidget  *widget,
 	}
 
 	g_free (archive_name);
-
 	gtk_widget_destroy (data->dialog);
 }
 

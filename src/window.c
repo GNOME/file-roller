@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -376,6 +376,7 @@ scale_icon (GdkPixbuf *pixbuf,
 	
         return gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
 }
+
 
 /* taken from egg-recent-util.c */
 static GdkPixbuf *
@@ -1782,6 +1783,7 @@ window_drag_data_received  (GtkWidget          *widget,
 				 * window->dropped_file_list. */
 				list = NULL;
 				drag_drop_add_file_list (window);
+
 			} else if (r == 1) { /* Open */
 				/* if this window already has an archive 
 				 * create a new window. */

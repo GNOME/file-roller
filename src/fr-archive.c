@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -567,8 +567,8 @@ newer_files_only (FRArchive  *archive,
 	GList *scan;
 
 	for (scan = file_list; scan; scan = scan->next) {
-		gchar *filename = scan->data;
-		gchar *fullpath;
+		char     *filename = scan->data;
+		char     *fullpath;
 		FileData *fdata;
 
 		fdata = find_file_in_archive (archive, filename);
