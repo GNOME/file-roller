@@ -419,10 +419,9 @@ create_command_from_filename (FRArchive  *archive,
 	} else if (file_extension_is (filename, ".arj")) {
 		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
-	} else if (file_extension_is (filename, ".ar")
-		   || file_extension_is (filename, ".deb")) {
-		archive->command = fr_command_arj_new (archive->process, 
-						       filename);
+	} else if (file_extension_is (filename, ".ar")) {
+		archive->command = fr_command_ar_new (archive->process, 
+						      filename);
 	} else if (file_extension_is (filename, ".7z")) {
 		archive->command = fr_command_7z_new (archive->process,
 						      filename);
@@ -451,6 +450,10 @@ create_command_from_filename (FRArchive  *archive,
 		} else if (file_extension_is (filename, ".iso")) {
 			archive->command = fr_command_iso_new (archive->process,
 							       filename);
+		} else if (file_extension_is (filename, ".deb")) {
+			archive->command = fr_command_ar_new (archive->process, 
+							      filename);
+
 		} else
 			return FALSE;
 	} else
