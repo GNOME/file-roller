@@ -7,9 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.1.4\n"
-"POT-Creation-Date: 2002-12-11 19:47+0100\n"
-"PO-Revision-Date: 2002-12-11 19:45+0100\n"
-"Last-Translator: Jean-Michel Ardantz <jmardantz@ifrance.com>\n"
+"POT-Creation-Date: 2002-12-20 10:30+0100\n"
+"PO-Revision-Date: 2002-12-20 10:14+0100\n"
+"Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -357,48 +357,48 @@ msgid "Compression _level:"
 msgstr "Tau_x de compression :"
 
 #: src/file_roller_prop.glade.h:3
-msgid "Fast"
-msgstr "Rapide"
+msgid "Date _modified"
+msgstr "Date _modifié"
 
 #: src/file_roller_prop.glade.h:4
 msgid "File Roller Preferences"
 msgstr "Préférences"
 
 #: src/file_roller_prop.glade.h:5
-msgid "File _name"
-msgstr "_Nom"
+msgid "Low"
+msgstr "Faible"
 
 #: src/file_roller_prop.glade.h:6
-msgid "File _path"
-msgstr "_Chemin d'accès"
+msgid "Maximum (slow)"
+msgstr "Maximum (lent)"
 
 #: src/file_roller_prop.glade.h:7
-msgid "File _size"
-msgstr "_Taille"
+msgid "Minimum (fast)"
+msgstr "Minimum (rapide)"
 
 #: src/file_roller_prop.glade.h:8
-msgid "File _type"
-msgstr "T_ype"
-
-#: src/file_roller_prop.glade.h:9
-msgid "Maximum (slowest)"
-msgstr "Maximum (le plus lent)"
-
-#: src/file_roller_prop.glade.h:10
 msgid "Normal"
 msgstr "Normal"
 
+#: src/file_roller_prop.glade.h:9
+msgid "_Name"
+msgstr "_Nom"
+
+#: src/file_roller_prop.glade.h:10
+msgid "_Path"
+msgstr "_Chemin d'accès"
+
 #: src/file_roller_prop.glade.h:11
-msgid "Very fast"
-msgstr "Minimum (le plus rapide)"
-
-#: src/file_roller_prop.glade.h:12
-msgid "_Modification time"
-msgstr "_Date de modification"
-
-#: src/file_roller_prop.glade.h:13
 msgid "_Recent archives:"
 msgstr "Archives _récentes :"
+
+#: src/file_roller_prop.glade.h:12
+msgid "_Size"
+msgstr "_Taille"
+
+#: src/file_roller_prop.glade.h:13
+msgid "_Type"
+msgstr "_Type"
 
 #: src/gconf-utils.c:98
 #, c-format
@@ -411,8 +411,8 @@ msgstr ""
 
 #. Button
 #: src/gtk-utils.c:297
-msgid "Command _line output"
-msgstr "Résultat de la ligne de commande"
+msgid "Command _Line Output"
+msgstr "Résultat de la _ligne de commande"
 
 #: src/main.c:59
 msgid "Add files to the specified archive and quit the program"
@@ -434,7 +434,7 @@ msgstr ""
 
 #: src/main.c:68 src/main.c:76
 msgid "FOLDER"
-msgstr "REPERTOIRE"
+msgstr "RÉPERTOIRE"
 
 #: src/main.c:71
 msgid "Extract archives asking the destination folder and quit the program"
@@ -514,7 +514,7 @@ msgstr "Archive déjà existante. Voulez-vous l'écraser ?"
 
 #: src/menu-callbacks.c:195 src/menu-callbacks.c:422 src/menu-callbacks.c:592
 msgid "Overwrite"
-msgstr "Ecraser"
+msgstr "Écraser"
 
 #: src/menu-callbacks.c:212
 msgid "Could not delete old archive."
@@ -566,8 +566,9 @@ msgstr ""
 "Mainteneur :\n"
 "Jean-Michel Ardantz <jmardantz@ifrance.com>\n"
 "\n"
-"Contributeur :\n"
-"Roland Baudin <roland65@free.fr>"
+"Contributeurs :\n"
+"Roland Baudin <roland65@free.fr>\n"
+"Christophe Merlet (RedFox) <redfox@redfoxcenter.org>"
 
 #: src/menu-callbacks.c:790
 msgid "Copyright (C) 2001 Free Software Foundation, Inc."
@@ -595,35 +596,35 @@ msgstr "Ouvrir une archive existante"
 
 #: src/menu.h:78
 msgid "Open R_ecent"
-msgstr "Ouvrir r_écent"
+msgstr "Ouvrir ré_cent"
 
 #: src/menu.h:83
 msgid "Open Fi_les..."
-msgstr "Ouvrir _fichiers..."
+msgstr "Ouvrir les _fichiers..."
 
 #: src/menu.h:83
 msgid "Open selected files with an application"
-msgstr "Ouvrir les fichiers sélectionnées avec une application"
+msgstr "Ouvre les fichiers sélectionnées avec une application"
 
 #: src/menu.h:89
 msgid "_View File"
-msgstr "_Voir fichier"
+msgstr "_Afficher le fichier"
 
 #: src/menu.h:89 src/menu.h:450
 msgid "View file with internal viewer"
-msgstr "Voir le fichier avec le visualiseur interne"
+msgstr "Affiche le fichier avec le visionneur interne"
 
 #: src/menu.h:97
 msgid "Rename current archive"
-msgstr "Renommer l'archive actuelle"
+msgstr "Renomme l'archive courante"
 
 #: src/menu.h:103
 msgid "Cop_y"
-msgstr "_Copie"
+msgstr "_Copier"
 
 #: src/menu.h:103
 msgid "Copy current archive to another folder"
-msgstr "Copier l'archive vers un autre répertoire"
+msgstr "Copie l'archive courante vers un autre répertoire"
 
 #: src/menu.h:109
 msgid "_Move"
@@ -631,7 +632,7 @@ msgstr "_Déplacer"
 
 #: src/menu.h:109
 msgid "Move current archive to another folder"
-msgstr "Déplacer l'archive vers un autre répertoire"
+msgstr "Déplace l'archive courante vers un autre répertoire"
 
 #: src/menu.h:115 src/menu.h:170
 msgid "_Delete"
@@ -639,7 +640,7 @@ msgstr "_Supprimer"
 
 #: src/menu.h:115
 msgid "Delete current archive from disk"
-msgstr "Supprimer l'archive actuelle"
+msgstr "Supprime l'archive courante du disque"
 
 #: src/menu.h:123
 msgid "_Properties"
@@ -655,7 +656,7 @@ msgstr "_Fermer"
 
 #: src/menu.h:131
 msgid "Close current archive"
-msgstr "Fermer l'archive actuelle"
+msgstr "Ferme l'archive courante"
 
 #: src/menu.h:137
 msgid "E_xit"
@@ -663,19 +664,19 @@ msgstr "_Quitter"
 
 #: src/menu.h:137
 msgid "Exit"
-msgstr "Quitter"
+msgstr "Quitte"
 
 #: src/menu.h:164
 msgid "Add _Files..."
-msgstr "A_jouter fichiers..."
+msgstr "A_jouter des fichiers..."
 
 #: src/menu.h:164 src/menu.h:458 src/window.c:2593
 msgid "Add files to the archive"
-msgstr "Ajouter des fichiers à l'archive"
+msgstr "Ajoute des fichiers à l'archive"
 
 #: src/menu.h:170
 msgid "Delete selected files and folders from the archive"
-msgstr "Supprimer les fichiers et réperoires de l'archive"
+msgstr "Supprime des fichiers et répertoires de l'archive"
 
 #: src/menu.h:176
 msgid "_Extract to..."
@@ -683,11 +684,11 @@ msgstr "_Extraire vers..."
 
 #: src/menu.h:176 src/menu.h:470 src/window.c:2604
 msgid "Extract files from the archive"
-msgstr "Extraire les fichiers de l'archive"
+msgstr "Extrait les fichiers de l'archive"
 
 #: src/menu.h:190
 msgid "_Test Archive"
-msgstr "Tester _archive"
+msgstr "_Tester l'archive"
 
 #: src/menu.h:206
 msgid "Select _All"
@@ -695,7 +696,7 @@ msgstr "Sélectionner _tout"
 
 #: src/menu.h:206
 msgid "Select all files"
-msgstr "Sélectionner tous les fichiers"
+msgstr "Sélectionne tous les fichiers"
 
 #: src/menu.h:212
 msgid "Dese_lect All"
@@ -703,7 +704,7 @@ msgstr "Dése_lectionner tout"
 
 #: src/menu.h:212
 msgid "Deselect all files"
-msgstr "Déselectionner tous les fichiers"
+msgstr "Désélectionne tous les fichiers"
 
 #: src/menu.h:220
 msgid "Pass_word..."
@@ -775,7 +776,7 @@ msgstr "Barre d'_outils"
 
 #: src/menu.h:332
 msgid "View the main toolbar"
-msgstr "Afficher la barre d'outils"
+msgstr "Affiche la barre d'outils"
 
 #: src/menu.h:338
 msgid "Stat_usbar"
@@ -783,15 +784,15 @@ msgstr "Barre d'é_tat"
 
 #: src/menu.h:338
 msgid "View the statusbar"
-msgstr "Afficher la barre d'é_tat"
+msgstr "Affiche la barre d'état"
 
 #: src/menu.h:346
 msgid "_Stop"
-msgstr "_Arrêt"
+msgstr "_Arrêter"
 
 #: src/menu.h:346 src/toolbar.h:55
 msgid "Stop current operation"
-msgstr "Arrêter l'opération en cours"
+msgstr "Arrête l'opération en cours"
 
 #: src/menu.h:352
 msgid "_Reload"
@@ -799,7 +800,7 @@ msgstr "_Recharger"
 
 #: src/menu.h:352
 msgid "Reload current archive"
-msgstr "Recharger l'archive actuelle"
+msgstr "Recharge l'archive courante"
 
 #: src/menu.h:363
 msgid "_Arrange Files"
@@ -815,7 +816,7 @@ msgstr "_Nouvelle fenêtre"
 
 #: src/menu.h:381
 msgid "Open a new window"
-msgstr "Ouvrir une nouvelle fenêtre"
+msgstr "Ouvre une nouvelle fenêtre"
 
 #: src/menu.h:387
 msgid "Clo_se Window"
@@ -823,7 +824,7 @@ msgstr "_Fermer fenêtre"
 
 #: src/menu.h:387
 msgid "Close this window"
-msgstr "Fermer cette fenêtre"
+msgstr "Ferme cette fenêtre"
 
 #: src/menu.h:400
 msgid "_Manual"
@@ -831,7 +832,7 @@ msgstr "_Manuel"
 
 #: src/menu.h:400
 msgid "Display the File Roller Manual"
-msgstr "Afficher le manuel d'utilisation File Roller"
+msgstr "Affiche le manuel d'utilisation de File Roller"
 
 #: src/menu.h:406
 msgid "_About"
@@ -842,8 +843,8 @@ msgid "Information about the program"
 msgstr "Informations à propos du programme"
 
 #: src/menu.h:418
-msgid "_File"
-msgstr "_Fichier"
+msgid "_Archive"
+msgstr "_Archive"
 
 #: src/menu.h:419
 msgid "_Edit"
@@ -859,11 +860,11 @@ msgstr "F_enêtre"
 
 #: src/menu.h:444
 msgid "Open Files..."
-msgstr "Ouvrir fichiers..."
+msgstr "Ouvrir des fichiers..."
 
 #: src/menu.h:458
 msgid "Add Files..."
-msgstr "Ajouter fichiers..."
+msgstr "Ajouter des fichiers..."
 
 #: src/menu.h:464
 msgid "Delete files from the archive"
@@ -1020,12 +1021,12 @@ msgid "Type"
 msgstr "Type"
 
 #: src/window.c:2110
-msgid "Modified"
-msgstr "Modifié"
+msgid "Date modified"
+msgstr "Date modifié"
 
 #: src/window.c:2111
-msgid "Path"
-msgstr "Chemin d'accès"
+msgid "Location"
+msgstr "Emplacement"
 
 #: src/window.c:2118
 msgid "Name"
@@ -1071,3 +1072,27 @@ msgstr "Ajouter des fichiers à l'archive"
 #: src/window.c:4044
 msgid "Extract archive"
 msgstr "Extraire archive"
+
+#~ msgid "Fast"
+#~ msgstr "Rapide"
+
+#~ msgid "File _name"
+#~ msgstr "_Nom"
+
+#~ msgid "File _path"
+#~ msgstr "_Chemin d'accès"
+
+#~ msgid "File _size"
+#~ msgstr "_Taille"
+
+#~ msgid "File _type"
+#~ msgstr "T_ype"
+
+#~ msgid "Very fast"
+#~ msgstr "Minimum (le plus rapide)"
+
+#~ msgid "_Modification time"
+#~ msgstr "_Date de modification"
+
+#~ msgid "_File"
+#~ msgstr "_Fichier"
