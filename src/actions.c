@@ -1269,7 +1269,6 @@ activate_action_about (GtkAction *action,
 {
 	FRWindow         *window = data;
 	static GtkWidget *about = NULL;
-	GdkPixbuf        *logo;
 	const char       *authors[] = {
 		"Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL
 	};
@@ -1286,8 +1285,6 @@ activate_action_about (GtkAction *action,
 		return;
 	}
 
-	logo = gdk_pixbuf_new_from_file (PIXMAPSDIR "/file-roller.png", NULL);
-
 	about = gtk_about_dialog_new ();
 	g_object_set (about,
 		      "name",  _("File Roller"),
@@ -1297,14 +1294,11 @@ activate_action_about (GtkAction *action,
 		      "authors", authors,
 		      "documenters", documenters,
 		      "translator_credits", strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
-		      "logo", logo,
+		      "logo_icon_name", "file-roller",
 		      "website", NULL,
 		      "website_label", NULL,
 		      "license", NULL,
 		      NULL);
-
-	if (logo != NULL)
-                g_object_unref (logo);
 
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (about), TRUE);
 	gtk_window_set_transient_for (GTK_WINDOW (about), 
