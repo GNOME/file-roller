@@ -2491,7 +2491,7 @@ add_columns (GtkTreeView *treeview)
 {
 	static char       *titles[] = {N_("Size"), 
 				       N_("Type"), 
-				       N_("Date modified"), 
+				       N_("Date Modified"), 
 				       N_("Location")};
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
