@@ -65,7 +65,7 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 	FileRollerComponent *frc;
 	const CORBA_sequence_CORBA_string *list;
 	char    *cmd, *current_dir, *first_path;
-	char    *cmd_option;
+	char    *cmd_option = NULL;
 	GString *str;
 	int      i;
 
@@ -130,7 +130,8 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 
 	g_free (first_path);
 
-       	g_string_append_printf (str, " %s ", cmd_option);
+	if (cmd_option != NULL)
+		g_string_append_printf (str, " %s ", cmd_option);
 
 	for (i = 0; i < list->_length; i++) {
 		char *path = get_path_from_url (list->_buffer[i]);

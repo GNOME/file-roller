@@ -70,6 +70,16 @@ new_archive (GtkWidget *file_sel,
 	else
 		archive_window = window;
 
+	/* Pass the add_after_creation options to the new window. */
+	if (archive_window != window) {
+		archive_window->add_after_creation = window->add_after_creation;
+		if (archive_window->add_after_creation) {
+			archive_window->dropped_file_list = window->dropped_file_list;
+			window->dropped_file_list = NULL;
+		}
+		window->add_after_creation = FALSE;
+	}
+
 	if (window_archive_new (archive_window, path)) {
 		gtk_window_present (GTK_WINDOW (archive_window->app));
 		gtk_widget_destroy (file_sel);
@@ -577,10 +587,10 @@ open_archive_cb (GtkWidget *widget,
 		"application/x-tar",
 		"application/x-compressed-tar",
 		"application/x-bzip-compressed-tar",
+		"application/x-lzop-compressed-tar",
 		"application/x-arj",
 		"application/zip",
-		"application/x-java-archive",
-		"application/x-jar",
+		"application/x-zip",
 		"application/x-lha",
 		"application/x-rar",
 		"application/x-rar-compressed",
@@ -591,6 +601,8 @@ open_archive_cb (GtkWidget *widget,
 		"application/x-compress",
 		"application/x-lzop",
 		"application/x-zoo",
+		"application/x-java-archive",
+		"application/x-jar"
 	};
 	GtkWidget     *file_sel;
 	FRWindow      *window = data;

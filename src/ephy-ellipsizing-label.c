@@ -732,7 +732,7 @@ real_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 		if (label->priv->full_text == NULL) {
 			pango_layout_set_text (GTK_LABEL (label)->layout, "", -1);
 		} else {
-			EphyEllipsizeMode mode;
+			EphyEllipsizeMode mode = EPHY_ELLIPSIZE_START;
 
 			if (label->priv->mode != EPHY_ELLIPSIZE_NONE)
 				mode = label->priv->mode;

@@ -493,9 +493,9 @@ static GdkPixbuf *
 get_icon (GtkWidget *widget,
 	  FileData  *fdata)
 {
-	GdkPixbuf   *pixbuf;
-	char        *icon_name;
-	char        *icon_path;
+	GdkPixbuf   *pixbuf = NULL;
+	char        *icon_name = NULL;
+	char        *icon_path = NULL;
 	const char  *mime_type;
        
 	if (fdata->is_dir)
@@ -838,13 +838,13 @@ _window_update_title (FRWindow *window)
 		gtk_window_set_title (GTK_WINDOW (window->app), 
 				      _("File Roller"));
 	else {
-		char *title;
-		char *utf8_name;
-		
+		char     *title;
+		char     *utf8_name;
+
 		utf8_name = g_filename_to_utf8 (file_name_from_path (window->archive_filename), -1, NULL, NULL, NULL);
 		title = g_strdup_printf ("%s %s",
 					 utf8_name,
-					 (window->archive->read_only) ? _("[read only]") : "");
+					 window->archive->read_only ? _("[read only]") : "");
 
 		gtk_window_set_title (GTK_WINDOW (window->app), title);
 		g_free (title);
@@ -1378,6 +1378,7 @@ _action_started (FRArchive *archive,
 		message = _("Getting the file list");
 		break;
 	default:
+		message = "";
 		break;
 	}
 
@@ -1392,8 +1393,8 @@ _action_started (FRArchive *archive,
 
 
 static void
-_window_add_to_recent (FRWindow *window, 
-		       char     *filename)
+_window_add_to_recent_list (FRWindow *window, 
+			    char     *filename)
 {
 	char *tmp;
 	char *uri;
@@ -1414,6 +1415,26 @@ _window_add_to_recent (FRWindow *window,
 	uri = g_strconcat ("file://", filename_e, NULL);
 
 	egg_recent_model_add (window->recent_model, uri);
+
+	g_free (uri);
+	g_free (filename_e);
+}
+
+
+static void
+_window_remove_from_recent_list (FRWindow *window, 
+				 char     *filename)
+{
+	char *uri;
+	char *filename_e;
+
+	if (filename == NULL)
+		return;
+
+	filename_e = gnome_vfs_escape_path_string (filename);
+	uri = g_strconcat ("file://", filename_e, NULL);
+
+	egg_recent_model_delete (window->recent_model, uri);
 
 	g_free (uri);
 	g_free (filename_e);
@@ -1632,6 +1653,7 @@ _action_performed (FRArchive   *archive,
 	switch (action) {
 	case FR_ACTION_LIST:
 		if (error->type != FR_PROC_ERROR_NONE) {
+			_window_remove_from_recent_list (window, window->archive_filename);
 			window_archive_close (window);
 			break;
 		}
@@ -1653,7 +1675,7 @@ _action_performed (FRArchive   *archive,
 			window->archive_new = FALSE;
 		}
 
-		_window_add_to_recent (window, window->archive_filename);
+		_window_add_to_recent_list (window, window->archive_filename);
 		window_update_file_list (window);
 		_window_update_title (window);
 		_window_update_current_location (window);
@@ -1673,7 +1695,7 @@ _action_performed (FRArchive   *archive,
 			window->archive_new = FALSE;
 			/* the archive file is created only when you add some
 			 * file to it. */
-			_window_add_to_recent (window, window->archive_filename);
+			_window_add_to_recent_list (window, window->archive_filename);
 		}
 
 		if (window->adding_dropped_files) {
@@ -1682,7 +1704,7 @@ _action_performed (FRArchive   *archive,
 			return;
 			
 		} else {
-			_window_add_to_recent (window, window->archive_filename);
+			_window_add_to_recent_list (window, window->archive_filename);
 			
 			if (! window->batch_mode) {
 				window_archive_reload (window);
@@ -2134,7 +2156,12 @@ window_drag_data_received  (GtkWidget          *widget,
 	else
 		is_an_archive = FALSE;
 
-	if (window->archive_present && ! window->archive->is_compressed_file) {
+	if (window->archive_present
+	    && (window->archive != NULL)
+	    && ! window->archive->read_only
+	    && ! window->archive->is_compressed_file 
+	    && ((window->archive->command != NULL) 
+		&& window->archive->command->propCanModify)) {
 		if (one_file && is_an_archive) {
 			GtkWidget *d;
 			gint       r;
@@ -3319,11 +3346,14 @@ window_new ()
 						"application/x-lha",
 						"application/x-rar",
 						"application/x-rar-compressed",
+						"application/x-rpm",
+						"application/x-stuffit",
 						"application/x-gzip",
 						"application/x-bzip",
 						"application/x-compress",
 						"application/x-lzop",
 						"application/x-zoo",
+						"application/x-java-archive",
 						"application/x-jar",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
@@ -3655,6 +3685,8 @@ window_archive_new (FRWindow   *window,
 			_window_update_statusbar_list_info (window);
 			window_batch_mode_stop (window);
 		}
+
+		window->add_after_creation = FALSE;
 		
 		return FALSE;
 	}
@@ -3677,8 +3709,8 @@ window_archive_new (FRWindow   *window,
 	_window_update_current_location (window);
 
 	if (window->add_after_creation) {
-		drag_drop_add_file_list (window);
 		window->add_after_creation = FALSE;
+		drag_drop_add_file_list (window);
 	}
 
 	return TRUE;
@@ -3690,18 +3722,18 @@ window_archive_open (FRWindow   *current_window,
 		     const char *filename,
 		     GtkWindow  *parent)
 {
-	FRWindow *window;
+	FRWindow *window = NULL;
 	GError   *gerror;
 	gboolean  new_window_created = FALSE;
 	gboolean  success;
-
-	g_return_val_if_fail (window != NULL, FALSE);
 
 	if (current_window->archive_present) {
 		new_window_created = TRUE;
 		window = window_new ();
 	} else
 		window = current_window;
+
+	g_return_val_if_fail (window != NULL, FALSE);
 
 	window_archive_close (window);
 
@@ -3747,6 +3779,8 @@ window_archive_open (FRWindow   *current_window,
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
+		_window_remove_from_recent_list (window, window->archive_filename);
+
 		if (new_window_created)
 			window_close (window);
 
@@ -3757,7 +3791,7 @@ window_archive_open (FRWindow   *current_window,
 			window_batch_mode_stop (window);
 		}
 	} else {
-		_window_add_to_recent (window, window->archive_filename);
+		_window_add_to_recent_list (window, window->archive_filename);
 		if (new_window_created)
 			gtk_widget_show (window->app);
 	}
@@ -3877,7 +3911,7 @@ window_archive_rename (FRWindow   *window,
 		window->archive_filename = g_strdup (filename);
 
 		_window_update_title (window);
-		_window_add_to_recent (window, window->archive_filename);
+		_window_add_to_recent_list (window, window->archive_filename);
 	}
 }
 

@@ -1,3 +1,35 @@
+2004-03-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (window_new, window_archive_open)
+	(_window_remove_from_recent_list, _action_performed): 
+
+	Remove a file from the recent file list if the file could not be 
+	loaded.
+
+	Add RPM and Suffit to the recent file list mime types.
+	
+	* component/file-roller-component.c (impl_Bonobo_Listener_event): 
+	check whether cmd_option != NULL before adding to the command line.
+
+	* src/menu-callbacks.c (new_archive): Pass the add_after_creation 
+	options to the new window.
+	
+	* src/window.c (window_drag_data_received): check whether the archive 
+	can be modified before accepting the drop.
+	(get_icon): init variables to NULL.
+
+	Fix bug #138154 (File-Roller Crash when dropping a file dragged from 
+	archive).
+
+	* src/fr-command-tar.c (tar_get_last_field): new function.
+	(process_line): use the above function to read the filename.
+
+	Fix reading of filenames with spaces.
+
+2004-03-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	[ File Roller 2.6.0 released ] 
+
 2004-03-22  Guntupalli Karunakar  <karunakar@freedomink.org>
 
         * configure.in: Added "pa" (Punjabi) to ALL_LINGUAS.
