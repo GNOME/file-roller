@@ -1763,7 +1763,7 @@ window_drag_data_received  (GtkWidget          *widget,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Do you want to create a new archive with these files ?"),
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						     _("Create Archive"), GTK_RESPONSE_YES,
+						     _("Create _Archive"), GTK_RESPONSE_YES,
 						     NULL);
 			
 			r = gtk_dialog_run (GTK_DIALOG (d));

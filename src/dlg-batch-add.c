@@ -71,14 +71,17 @@ add_clicked_cb (GtkWidget  *widget,
 		DialogData *data)
 {
 	FRWindow *window = data->window; 
-	gchar    *archive_name;
+	char     *archive_name_utf8;
+	char     *archive_name;
 
 	data->add_clicked = TRUE;
 
 	/* Collect data */
 
-	archive_name = gnome_file_entry_get_full_path (GNOME_FILE_ENTRY (data->a_add_to_fileentry), FALSE);
-	
+	archive_name_utf8 = gnome_file_entry_get_full_path (GNOME_FILE_ENTRY (data->a_add_to_fileentry), FALSE);
+	archive_name = g_locale_from_utf8 (archive_name_utf8, -1, NULL, NULL, NULL);
+	g_free (archive_name_utf8);
+
 	window->update_dropped_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_only_newer_checkbutton));
 
 	if (! path_is_file (archive_name)) {
