@@ -1,0 +1,1095 @@
+# Thai translation for file-roller.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the file-roller package.
+# Paisa Seeluangsawat <paisa@users.sf.net>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: file-roller\n"
+"POT-Creation-Date: 2003-05-10 20:08+0200\n"
+"PO-Revision-Date: 2003-05-10 22:05-0600\n"
+"Last-Translator: Paisa Seeluangsawat <paisa@users.sf.net>\n"
+"Language-Team: Thai\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=TIS-620\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# archive จริงๆแล้วแปลว่า แฟ้มจัดเก็บ, ไม่ใช่ แฟ้มบีบอัด
+# both .tar.gz and .tar.Z has the same ชนิดจัดเก็บ
+# but different ชนิดการบีบอัด
+#: component/File_Roller_Component.server.in.in.h:1
+msgid "Add To Archive..."
+msgstr "เพิ่มลงใน แฟ้มจัดเก็บ..."
+
+#: component/File_Roller_Component.server.in.in.h:2
+msgid "Extract Here"
+msgstr "ลอกออกมา ที่นี่"
+
+#: component/File_Roller_Component.server.in.in.h:3
+msgid "Extract In A Sub-Folder"
+msgstr "ลอกออกมา ในโฟลเดอร์ย่อย"
+
+#: component/File_Roller_Component.server.in.in.h:4
+msgid "Extract To..."
+msgstr "ลอกออกมา ใน..."
+
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "File Roller Component add operations"
+msgstr ""
+
+#: component/File_Roller_Component.server.in.in.h:6
+msgid "File Roller Component extract operations"
+msgstr ""
+
+#: component/File_Roller_Component.server.in.in.h:7
+msgid "File roller component"
+msgstr ""
+
+#: file-roller.desktop.in.h:1
+msgid "Archive Manager"
+msgstr "ผู้จัดการ แฟ้มจัดเก็บ..."
+
+#. Create the application.
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
+#: src/gtk-utils.c:266 src/main.c:101 src/menu-callbacks.c:941
+#: src/window.c:758 src/window.c:767 src/window.c:1152 src/window.c:2731
+msgid "File Roller"
+msgstr "File Roller"
+
+#: file-roller.desktop.in.h:3
+msgid "Handle compressed archives"
+msgstr "จัดการแฟ้มจัดเก็บ"
+
+#: src/dlg-add.c:118
+#, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "คุณไม่ได้รับสิทธิ์สำหรับการอ่านแฟ้มในโฟลเดอร์ \"%s\""
+
+#: src/dlg-add.c:344 src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "เพิ่มแฟ้มและโฟลเดอร์"
+
+#: src/dlg-add.c:349
+msgid "_Add only if newer"
+msgstr "เพิ่มเฉพาะถ้าใหม่กว่า (_A)"
+
+#: src/dlg-add.c:350
+msgid "_Include sub-folders"
+msgstr "รวมโฟลเดอร์ย่อย (_I)"
+
+#: src/dlg-add.c:351
+msgid "Exclude folders that are symbolic lin_ks"
+msgstr "ไม่รวมโฟลเดอร์ที่เป็นจุดเชื่อม (_k)"
+
+#: src/dlg-add.c:352
+msgid "Exclude o_ther file systems"
+msgstr "ไม่รวม file system อื่น (_k)"
+
+#: src/dlg-add.c:353
+msgid "Exclude _backup files (*~)"
+msgstr "ไม่รวมแฟ้มสำรอง (*~) (_B)"
+
+#: src/dlg-add.c:354
+msgid "Exclude _hidden files (.*)"
+msgstr "ไม่รวมแฟ้มที่ซ่อนไว้ (.*) (_H)"
+
+#: src/dlg-add.c:355
+msgid "E_xclude files:"
+msgstr "แฟ้มที่ไม่รวม (_X):"
+
+#: src/dlg-add.c:357
+msgid "example: *.o; *.bak"
+msgstr "ตัวอย่าง: *.o; *.bak"
+
+#: src/dlg-add.c:358
+msgid "Igno_re case"
+msgstr "ไม่สนว่าตัวอักษรใหญ่หรือเล็ก (_R)"
+
+#: src/dlg-add.c:359
+msgid "_Load Options"
+msgstr "อ่านตัวเลือก (_L)"
+
+#: src/dlg-add.c:360
+msgid "Sa_ve Options"
+msgstr "บันทึกตัวเลือก (_V)"
+
+#: src/dlg-add.c:615
+msgid "Load Options"
+msgstr "อ่านตัวเลือก"
+
+#: src/dlg-add.c:764
+msgid "Save Options"
+msgstr "บันทึกตัวเลือก"
+
+#: src/dlg-batch-add.c:98
+msgid "You have to specify an archive name."
+msgstr "คุณต้องใส่ชื่อแฟ้มจัดเก็บ"
+
+#: src/dlg-batch-add.c:115 src/dlg-extract.c:120 src/window.c:3700
+msgid "Destination folder does not exist.  Do you want to create it?"
+msgstr "โฟลเดอร์ปลายทางไม่มีตัวตน  จะสร้างมันไหม ?"
+
+#: src/dlg-batch-add.c:117 src/dlg-extract.c:122 src/window.c:3702
+msgid "Create _Folder"
+msgstr "สร้างโฟลเดอร์ (_F)"
+
+#: src/dlg-batch-add.c:136
+#, c-format
+msgid ""
+"Could not create the destination folder: %s.\n"
+"Addition not performed."
+msgstr ""
+"สร้างโฟลเดอร์ปลายทางไม่สำเร็จ: %s.\n"
+"ยกเลิกการเพิ่มแฟ้ม"
+
+#: src/dlg-batch-add.c:154
+msgid "Addition not performed."
+msgstr "ยกเลิกการเพิ่มแฟ้ม"
+
+#: src/dlg-batch-add.c:231
+#, c-format
+msgid "Files to add: %d"
+msgstr "แฟ้มที่จะถูกเพิ่ม: %d"
+
+#: src/dlg-batch-add.c:233
+#, c-format
+msgid "Folders to add: %d"
+msgstr "โฟลเดอร์ที่จะถูกเพิ่ม: %d"
+
+#: src/dlg-extract.c:142 src/window.c:3722
+#, c-format
+msgid ""
+"Could not create the destination folder: %s.\n"
+"Extraction not performed."
+msgstr ""
+"สร้างโฟลเดอร์ปลายทางไม่สำเร็จ: %s.\n"
+"ยกเลิกการลอกแฟ้ม"
+
+#: src/dlg-extract.c:157 src/window.c:3737
+msgid "Extraction not performed."
+msgstr "ยกเลิกการลอกแฟ้ม"
+
+#: src/dlg-extract.c:176
+#, c-format
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "คุณไม่ได้รับสิทธิ์สำหรับการลอกแฟ้มในโฟลเดอร์ \"%s\""
+
+#: src/dlg-extract.c:397 src/dlg-preferences.c:127 src/menu-callbacks.c:904
+#, c-format
+msgid "Could not display help: %s"
+msgstr "แสดงวิธีใช้ไม่สำเร็จ: %s"
+
+#: src/dlg-extract.c:474
+msgid "Actions"
+msgstr "ทำการ"
+
+#: src/dlg-extract.c:475
+msgid "Destination folder"
+msgstr "โฟลเดอร์ปลายทาง"
+
+#: src/dlg-extract.c:476
+msgid "Files"
+msgstr "แฟ้ม"
+
+#: src/dlg-extract.c:505
+msgid "Bookmarks"
+msgstr "ที่คั่นหนังสือ"
+
+#: src/dlg-preferences.c:184
+msgid "General"
+msgstr "ทั่วไป"
+
+#: src/dlg-preferences.c:189
+msgid "Visible columns"
+msgstr "คอลัมน์ที่แสดง"
+
+#: src/dlg-prop.c:99
+msgid "Path:"
+msgstr "เส้นทาง:"
+
+#: src/dlg-prop.c:112
+msgid "Name:"
+msgstr "ชื่อ:"
+
+#: src/dlg-prop.c:119
+#, c-format
+msgid "%s Properties"
+msgstr "คุณสมบัติ %s"
+
+#: src/dlg-prop.c:128
+msgid "File size:"
+msgstr "ขนาดแฟ้ม:"
+
+#: src/dlg-prop.c:139
+msgid "Number of files:"
+msgstr "จำนวนแฟ้ม:"
+
+#: src/dlg-prop.c:149
+msgid "Date and time:"
+msgstr "วันและเวลา"
+
+#: src/dlg-prop.c:155
+msgid "%d %B %Y, %H:%M"
+msgstr "%d %B %Y, %H:%M"
+
+#: src/file-data.c:28
+msgid "Unknown type"
+msgstr "ชนิดที่ไม่รู้จัก"
+
+#: src/file-data.c:29
+msgid "Symbolic link"
+msgstr "จุดเชื่อม"
+
+#: src/file-utils.c:534
+msgid "Cannot find a terminal, using xterm, even if it may not work"
+msgstr ""
+
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
+msgid "    "
+msgstr "    "
+
+#: src/file_roller.glade.h:2
+msgid "*"
+msgstr "*"
+
+#: src/file_roller.glade.h:3
+msgid "A_dd to Bookmarks"
+msgstr "เพิ่มลงในที่คั่นหนังสือ (_D)"
+
+#: src/file_roller.glade.h:4
+msgid "A_vailable application:"
+msgstr "โปรแกรมที่มี (_V)"
+
+#: src/file_roller.glade.h:6
+msgid "Add _to archive:"
+msgstr "เพิ่มลงในแฟ้มจัดเก็บ (_T)"
+
+#: src/file_roller.glade.h:7
+msgid "Add only if _newer"
+msgstr "เพิ่มเฉพาะถ้าใหม่กว่า (_N)"
+
+#: src/file_roller.glade.h:8
+msgid "Delete Files"
+msgstr "ลบแฟ้ม"
+
+#: src/file_roller.glade.h:9
+msgid "Do not e_xtract older files"
+msgstr "อย่าลอกแฟ้มที่เก่ากว่า"
+
+#: src/file_roller.glade.h:10 src/window.c:2969
+msgid "Extract"
+msgstr "ลอก"
+
+#: src/file_roller.glade.h:11
+msgid "Extract to"
+msgstr "ลอกไปที่"
+
+#: src/file_roller.glade.h:12
+#, fuzzy
+msgid ""
+"Note: the password will be used to encrypt files you add to the current "
+"archive, and to decrypt files you extract from the current archive. When the "
+"archive is closed the password will be deleted."
+msgstr ""
+"หมายเหตุ: file-roller ใช้รหัสผ่านนี้เข้ารหัสแฟ้มที่ตอนที่จัดเก็บและลอกออก  "
+"รหัสจะถูกลบออกเมื่อปิดแฟ้มจัดเก็บนี้แลัว"
+
+#: src/file_roller.glade.h:13
+msgid "Open Files"
+msgstr "เปิดแฟ้ม"
+
+#: src/file_roller.glade.h:14
+msgid "Open with an _application"
+msgstr "เปิดด้วยโปรแกรม (_A)"
+
+#: src/file_roller.glade.h:15
+msgid "Over_write existing files"
+msgstr "เขียนทับแฟ้มที่มีอยู่แล้ว (_W)"
+
+#: src/file_roller.glade.h:16
+msgid "Password"
+msgstr "รหัสผ่าน"
+
+#: src/file_roller.glade.h:17
+msgid "R_ecent applications:"
+msgstr "โปรแกรมที่พึ่งใช้ (_E)"
+
+#: src/file_roller.glade.h:18
+msgid "R_ecreate folders"
+msgstr "สร้างโฟลเดอร์ย่อยๆ (_E)"
+
+#: src/file_roller.glade.h:19
+msgid "Select Archive"
+msgstr "เลือกแฟ้มจัดเก็บ"
+
+#: src/file_roller.glade.h:20 src/menu.h:460
+msgid "View File"
+msgstr "เปิดดูแฟ้ม"
+
+#: src/file_roller.glade.h:21
+msgid "View with internal _viewer"
+msgstr "เปิดดูด้วยตัวแสดงของ file-roller (_V)"
+
+#: src/file_roller.glade.h:22
+msgid "_All files"
+msgstr "แฟ้มทั้งหมด (_A)"
+
+#: src/file_roller.glade.h:23
+msgid "_Application:"
+msgstr "โปรแกรม (_A):"
+
+#: src/file_roller.glade.h:24
+msgid "_Files:"
+msgstr "แฟ้ม (_F):"
+
+#: src/file_roller.glade.h:25
+msgid "_Password:"
+msgstr "รหัสผ่าน (_P):"
+
+#: src/file_roller.glade.h:26
+msgid "_Selected files"
+msgstr "แฟ้มที่เลือก (_S):"
+
+#: src/file_roller.glade.h:27
+msgid "_View destination folder after extraction"
+msgstr "เปิดดูโฟลเดอร์ปลายทางเมื่อลอกแฟ้มเสร็จ (_V)"
+
+#: src/file_roller.glade.h:28
+msgid "example: *.txt; *.doc"
+msgstr "ตัวอย่าง: *.txt; *.doc"
+
+#: src/file_roller_prop.glade.h:2
+msgid "Compression _level:"
+msgstr "ระดับการบีบอัด (_L):"
+
+#: src/file_roller_prop.glade.h:3
+msgid "Date _modified"
+msgstr "วันที่แก้ไข (_M)"
+
+#: src/file_roller_prop.glade.h:4
+msgid "File Roller Preferences"
+msgstr "ปรับแต่ง Filer Roller"
+
+#: src/file_roller_prop.glade.h:5
+msgid "Low"
+msgstr "ต่ำ"
+
+#: src/file_roller_prop.glade.h:6
+msgid "Maximum (slow)"
+msgstr "สูงสุด (ช้า)"
+
+#: src/file_roller_prop.glade.h:7
+msgid "Minimum (fast)"
+msgstr "ต่ำสุด (เร็ว)"
+
+#: src/file_roller_prop.glade.h:8
+msgid "Normal"
+msgstr "ปรกติ"
+
+#: src/file_roller_prop.glade.h:9
+msgid "_Path"
+msgstr "เส้นทาง (_P)"
+
+#: src/file_roller_prop.glade.h:10
+msgid "_Recent archives:"
+msgstr "แฟ้มจัดเก็บที่พึ่งเปิด (_R):"
+
+#: src/file_roller_prop.glade.h:11
+msgid "_Size"
+msgstr "ขนาด (_S)"
+
+#: src/file_roller_prop.glade.h:12
+msgid "_Type"
+msgstr "ชนิด (_T)"
+
+#: src/fr-command-tar.c:273
+msgid "Adding file: "
+msgstr "กำลังเพิ่มแฟ้ม: "
+
+#: src/fr-command-tar.c:319
+msgid "Removing file: "
+msgstr "กำลังลบแฟ้ม: "
+
+#: src/fr-command-tar.c:328 src/window.c:1247
+msgid "Deleting files from archive"
+msgstr "กำลังลบแฟ้มออกจากแฟ้มจัดเก็บ"
+
+#: src/fr-command-tar.c:361
+msgid "Extracting file: "
+msgstr "กำลังลอกแฟ้ม: "
+
+#: src/fr-command-tar.c:406
+msgid "Recompressing archive"
+msgstr "กำลังบีบอัดแฟ้มกลับ"
+
+#: src/fr-command-tar.c:540
+msgid "Decompressing archive"
+msgstr "กำลังขยายแฟ้มจัดเก็บ"
+
+#: src/gconf-utils.c:98
+#, c-format
+msgid ""
+"GConf error:\n"
+"  %s"
+msgstr ""
+"GConf error:\n"
+"  %s"
+
+#. Button
+#: src/gtk-utils.c:297
+msgid "Command _Line Output"
+msgstr ""
+
+#: src/main.c:59
+msgid "Add files to the specified archive and quit the program"
+msgstr "เพิ่มแฟ้มลงในแฟ้มจัดเก็บแล้วออกจากโปรแกรม"
+
+#: src/main.c:60
+msgid "ARCHIVE"
+msgstr "แฟ้มจัดเก็บ"
+
+#: src/main.c:63
+msgid "Add files asking the name of the archive and quit the program"
+msgstr "ถามชื่อแฟ้มจัดเก็บ, เพิ่มแฟ้ม, แล้วออกจากโปรแกรม"
+
+#: src/main.c:67
+msgid "Extract archives to the specified folder and quit the program"
+msgstr "ลอกแฟ้มลงในโฟลเดอร์ที่สั่งแล้วออกจากโปรแกรม"
+
+#: src/main.c:68 src/main.c:76
+msgid "FOLDER"
+msgstr "โฟลเดอร์"
+
+#: src/main.c:71
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr "ถามชื่อโฟลเดอร์ปลายทาง, ลอกแฟ้ม, แล้วออกจากโปรแกรม"
+
+#: src/main.c:75
+msgid "Default folder to use for the '--add' and '--extract' commands"
+msgstr "โฟลเดอร์ปริยายสำหรับคำสั่ง '--add' และ '--extract'"
+
+#: src/main.c:79
+msgid "Create destination folder without asking confirmation"
+msgstr "สร้างโฟลเดอร์ปลายทางโดยไม่ต้องถาม"
+
+#: src/menu-callbacks.c:107
+msgid "Automatic"
+msgstr "อัตโนมัต"
+
+#: src/menu-callbacks.c:108
+msgid "Ear (.ear)"
+msgstr "Ear (.ear)"
+
+#: src/menu-callbacks.c:109
+msgid "Jar (.jar)"
+msgstr "Jar (.jar)"
+
+#: src/menu-callbacks.c:110
+msgid "Lha (.lzh)"
+msgstr "Lha (.lzh)"
+
+#: src/menu-callbacks.c:111
+msgid "Rar (.rar)"
+msgstr "Rar (.rar)"
+
+#: src/menu-callbacks.c:112
+msgid "Tar uncompressed (.tar)"
+msgstr "Tar ไม่บีบอัด (.tar)"
+
+#: src/menu-callbacks.c:113
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "Tar บีบอัดด้วย with bzip (.tar.bz)"
+
+#: src/menu-callbacks.c:114
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "Tar บีบอัดด้วย with bzip2 (.tar.bz2)"
+
+#: src/menu-callbacks.c:115
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "Tar บีบอัดด้วย with gzip (.tar.gz)"
+
+#: src/menu-callbacks.c:116
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "Tar บีบอัดด้วย with lzop (.tar.lzo)"
+
+#: src/menu-callbacks.c:117
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "Tar บีบอัดด้วย with compress (.tar.Z)"
+
+#: src/menu-callbacks.c:118
+msgid "War (.war)"
+msgstr "War (.war)"
+
+#: src/menu-callbacks.c:119
+msgid "Zip (.zip)"
+msgstr "Zip (.zip)"
+
+#: src/menu-callbacks.c:120
+msgid "Zoo (.zoo)"
+msgstr "Zoo (.zoo)"
+
+#: src/menu-callbacks.c:176 src/menu-callbacks.c:345
+msgid "You don't have permission to create an archive in this folder"
+msgstr "คุณไม่ได้รับสิทธิ์ที่จะสร้างแฟ้มจัดเก็บในโฟลเดอร์นี้"
+
+#: src/menu-callbacks.c:202 src/menu-callbacks.c:363 src/menu-callbacks.c:573
+#: src/menu-callbacks.c:743
+msgid "Archive already exists.  Do you want to overwrite it?"
+msgstr "แฟ้มจัดเก็บมีอยู่แล้ว  จะเขียนทับไหม ?"
+
+#: src/menu-callbacks.c:204 src/menu-callbacks.c:365 src/menu-callbacks.c:575
+#: src/menu-callbacks.c:745
+msgid "Overwrite"
+msgstr "เขียนทับ"
+
+#: src/menu-callbacks.c:221 src/menu-callbacks.c:382
+msgid "Could not delete old archive."
+msgstr "ลบแฟ้มจัดเก็บอันเก่าไม่สำเร็จ"
+
+#: src/menu-callbacks.c:262
+msgid "New Archive"
+msgstr "แฟ้มจัดเก็บใหม่"
+
+#: src/menu-callbacks.c:274 src/menu-callbacks.c:418
+msgid "Archive type:"
+msgstr "ชนิดแฟ้มจัดเก็บ"
+
+#: src/menu-callbacks.c:406
+msgid "Save Archive"
+msgstr "บันทึกแฟ้มจัดเก็บ"
+
+#: src/menu-callbacks.c:489
+msgid "Open Archive"
+msgstr "เปิดแฟ้มจัดเก็บ"
+
+#: src/menu-callbacks.c:598
+msgid "Could not copy archive"
+msgstr "คัดลอกแฟ้มจัดเก็บไม่สำเร็จ"
+
+#: src/menu-callbacks.c:614
+msgid "Could not move archive"
+msgstr "ย้ายแฟ้มจัดเก็บไม่สำเร็จ"
+
+#: src/menu-callbacks.c:636
+msgid "Copy archive"
+msgstr "คัดลอกแฟ้มจัดเก็บ"
+
+#: src/menu-callbacks.c:636
+msgid "Move archive"
+msgstr "ย้ายแฟ้มจัดเก็บ"
+
+#: src/menu-callbacks.c:714
+msgid "New archive name (without extension)"
+msgstr "ชื่อแฟ้มจัดเก็บใหม่ (ไม่ใส่นามสกุล)"
+
+#: src/menu-callbacks.c:718 src/menu.h:108
+msgid "_Rename"
+msgstr "เปลี่ยนชื่อ (_R)"
+
+#: src/menu-callbacks.c:782
+msgid "Archive will be deleted, are you sure?"
+msgstr "แฟ้มจัดเก็บจะถูกลบ แน่ใจนะ ?"
+
+#: src/menu-callbacks.c:933
+msgid "translator_credits"
+msgstr "แปลโดย L10N@opentle.org"
+
+#: src/menu-callbacks.c:944
+msgid "An archive manager for GNOME."
+msgstr "ผู้จัดการแฟ้มจัดเก็บของ GNOME"
+
+#: src/menu-callbacks.c:1118 src/window.c:4020
+msgid "Last Output"
+msgstr ""
+
+#: src/menu.h:70
+msgid "_New"
+msgstr "ใหม่ (_N)"
+
+#: src/menu.h:70 src/toolbar.h:39
+msgid "Create a new archive"
+msgstr "สร้างแฟ้มจัดเก็บใหม่"
+
+#: src/menu.h:76
+msgid "_Open..."
+msgstr "เปิด... (_O)"
+
+#: src/menu.h:76
+msgid "Open an existing archive"
+msgstr "เปิดแฟ้มจัดเก็บที่มีอยู่"
+
+#: src/menu.h:81
+msgid "Open R_ecent"
+msgstr "เปิดที่พึ่งใช้ (_E)"
+
+#: src/menu.h:86
+msgid "Save _As..."
+msgstr "บันทึกเป็น... (_A)"
+
+#: src/menu.h:86
+msgid "Save current archive in a different type or name"
+msgstr "บันทึกแฟ้มจัดเก็บลงในชนิดหรือชื่อใหม่"
+
+#: src/menu.h:94
+msgid "Open Fi_les..."
+msgstr "เปิดแฟ้ม... (_L)"
+
+#: src/menu.h:94
+msgid "Open selected files with an application"
+msgstr "เปิดแฟ้มที่เลือกด้วยโปรแกรม"
+
+#: src/menu.h:100
+msgid "_View File"
+msgstr "ดูแฟ้ม (_V)"
+
+#: src/menu.h:100 src/menu.h:460
+msgid "View file with internal viewer"
+msgstr "ดูแฟ้มด้วยตัวแสดงที่มากับ file-roller"
+
+#: src/menu.h:108
+msgid "Rename current archive"
+msgstr "เปลี่ยนชื่อแฟ้มจัดเก็บ"
+
+#: src/menu.h:114
+msgid "Cop_y"
+msgstr "คัดลอก (_Y)"
+
+#: src/menu.h:114
+msgid "Copy current archive to another folder"
+msgstr "คัดลอกแฟ้มจัดเก็บนี้ไปโฟลเดอร์ใหม่"
+
+#: src/menu.h:120
+msgid "_Move"
+msgstr "ย้าย (_M)"
+
+#: src/menu.h:120
+msgid "Move current archive to another folder"
+msgstr "ย้ายแฟ้มจัดเก็บนี้ไปโฟลเดอร์ใหม่"
+
+#: src/menu.h:126
+msgid "_Delete"
+msgstr "ลบ (_D)"
+
+#: src/menu.h:126
+msgid "Delete current archive from disk"
+msgstr "ลบแฟ้มจัดเก็บนี้ออกจากแผ่นข้อมูล"
+
+#: src/menu.h:132
+msgid "_Test"
+msgstr "ทดสอบ (_T)"
+
+#: src/menu.h:132
+msgid "Test whether the archive contains errors"
+msgstr "ตรวจหาข้อผิดพลาดในสอบว่าแฟ้มจัดเก็บนี้"
+
+#: src/menu.h:140
+msgid "_Properties"
+msgstr "คุณลักษณะ (_P)"
+
+#: src/menu.h:140
+msgid "Show archive properties"
+msgstr "แสดงคุณลักษณะของแฟ้มจัดเก็บนี้"
+
+#: src/menu.h:148
+msgid "_Close"
+msgstr "ปิด (_C)"
+
+#: src/menu.h:148
+msgid "Close current archive"
+msgstr "ปิดแฟ้มจัดเก็บนี้"
+
+#: src/menu.h:154
+msgid "E_xit"
+msgstr "ออก (_X)"
+
+#: src/menu.h:154
+msgid "Exit"
+msgstr "ออก"
+
+#: src/menu.h:180 src/menu.h:468
+msgid "Add _Files..."
+msgstr "เพิ่มแฟ้ม... (_F)"
+
+#: src/menu.h:180 src/menu.h:468 src/window.c:2959
+msgid "Add files to the archive"
+msgstr "เพิ่มแฟ้มลงในแฟ้มจัดเก็บนี้"
+
+#: src/menu.h:186 src/menu.h:474
+msgid "_Delete Files"
+msgstr "ลบแฟ้ม (_D)"
+
+#: src/menu.h:186
+msgid "Delete selected files and folders from the archive"
+msgstr "ลบแฟ้มออกจากในแฟ้มจัดเก็บนี้"
+
+#: src/menu.h:192 src/menu.h:480
+msgid "_Extract to..."
+msgstr "ลอกลงใน... (_E)"
+
+#: src/menu.h:192 src/menu.h:480 src/window.c:2970
+msgid "Extract files from the archive"
+msgstr "ลอกแฟ้มออกจากแฟ้มจัดเก็บ"
+
+#: src/menu.h:216 src/menu.h:488
+msgid "Select _All"
+msgstr "เลือกทั้งหมด (_A)"
+
+#: src/menu.h:216 src/menu.h:488
+msgid "Select all files"
+msgstr "เลือกแฟ้มทั้งหมด"
+
+#: src/menu.h:222 src/menu.h:494
+msgid "Dese_lect All"
+msgstr "ไม่เลือกทั้งหมด (_L)"
+
+#: src/menu.h:222 src/menu.h:494
+msgid "Deselect all files"
+msgstr "ไม่เลือกแฟ้มทั้งหมด"
+
+#: src/menu.h:230
+msgid "Pass_word..."
+msgstr "รหัสผ่าน (_W)"
+
+#: src/menu.h:238
+msgid "_Preferences"
+msgstr "ตั้งค่า (_P)"
+
+#: src/menu.h:238
+msgid "Edit File Roller preferences"
+msgstr "ตั้งค่าสำหรับ File Roller"
+
+#: src/menu.h:249
+msgid "by _Name"
+msgstr "ตาม ชื่อ (_N)"
+
+#: src/menu.h:249
+msgid "Sort file list by name"
+msgstr "เรียงตามชื่อ"
+
+#: src/menu.h:255
+msgid "by _Size"
+msgstr "ตาม ขนาด (_S)"
+
+#: src/menu.h:255
+msgid "Sort file list by file size"
+msgstr "เรียงตามขนาดแฟ้ม"
+
+#: src/menu.h:261
+msgid "by T_ype"
+msgstr "ตาม ชนิด (_Y)"
+
+#: src/menu.h:261
+msgid "Sort file list by type"
+msgstr "เรียงตามชนิดแฟ้ม"
+
+#: src/menu.h:267
+msgid "by _Time"
+msgstr "ตาม เวลา (_T)"
+
+#: src/menu.h:267
+msgid "Sort file list by modification time"
+msgstr "เรียงตามเวลาที่ถูกแก้ไข"
+
+#: src/menu.h:273
+msgid "by _Path"
+msgstr "ตาม เส้นทาง (_P)"
+
+#: src/menu.h:273
+msgid "Sort file list by path"
+msgstr "เรียงตามเส้นทาง (path)"
+
+#: src/menu.h:290
+msgid "View All _Files"
+msgstr "ดูแฟ้ม ทั้งหมด (_F)"
+
+#: src/menu.h:296
+msgid "View as a F_older"
+msgstr "มองเป็นโฟลเดอร์ (_O)"
+
+#: src/menu.h:318
+msgid "_Reversed Order"
+msgstr "เรียงย้อนกลับ (_R)"
+
+#: src/menu.h:318
+msgid "Reverse the list order"
+msgstr "เรียงรายการย้อนทิศ (เช่น จากมากไปน้อย)"
+
+#: src/menu.h:342
+msgid "_Toolbar"
+msgstr "แถบเครื่องมือ (_T)"
+
+#: src/menu.h:342
+msgid "View the main toolbar"
+msgstr "ดูแถบเครื่องมือหลัก"
+
+#: src/menu.h:348
+msgid "Stat_usbar"
+msgstr "แถบสถานะ (_U)"
+
+#: src/menu.h:348
+msgid "View the statusbar"
+msgstr "ดูแถบสถานะ"
+
+#: src/menu.h:356
+msgid "_Stop"
+msgstr "หยุด (_S)"
+
+#: src/menu.h:356 src/toolbar.h:55
+msgid "Stop current operation"
+msgstr "หยุดปฏิบัติการที่ทำอยู่"
+
+#: src/menu.h:362
+msgid "_Reload"
+msgstr "อ่านใหม่ (_R)"
+
+#: src/menu.h:362
+msgid "Reload current archive"
+msgstr "อ่านแฟ้มจัดเก็บนี้ขึ้นมาใหม่"
+
+#: src/menu.h:373
+msgid "_Arrange Files"
+msgstr "จัดเรียงแฟ้ม (_A)"
+
+#: src/menu.h:378
+msgid "_Last Output"
+msgstr ""
+
+#: src/menu.h:391
+msgid "New _Window"
+msgstr "หน้าต่างใหม่ (_W)"
+
+#: src/menu.h:391
+msgid "Open a new window"
+msgstr "เปิดหน้าต่างใหม่"
+
+#: src/menu.h:397
+msgid "Clo_se Window"
+msgstr "ปิดหน้าต่าง (_S)"
+
+#: src/menu.h:397
+msgid "Close this window"
+msgstr "ปิดหน้าต่างนี้"
+
+#: src/menu.h:410
+msgid "_Contents"
+msgstr "เนื้อหา (_C)"
+
+#: src/menu.h:410
+msgid "Display the File Roller Manual"
+msgstr "เปิดเนื้อหาคู่มือ File Roller"
+
+#: src/menu.h:416
+msgid "_About"
+msgstr "เกี่ยวกับ (_A)"
+
+#: src/menu.h:416
+msgid "Information about the program"
+msgstr "ข้อมูลเกี่ยวกับโปรแกรมนี้"
+
+#: src/menu.h:428
+msgid "_Archive"
+msgstr "แฟ้มจัดเก็บ (_A)"
+
+#: src/menu.h:429
+msgid "_Edit"
+msgstr "แก้ไข (_E)"
+
+#: src/menu.h:430
+msgid "_View"
+msgstr "ดู (_V)"
+
+#: src/menu.h:431
+msgid "_Windows"
+msgstr "หน้าต่าง (_W)"
+
+#: src/menu.h:454
+msgid "Open Files..."
+msgstr "เปิดแฟ้ม..."
+
+#: src/menu.h:474
+msgid "Delete files from the archive"
+msgstr "ลบแฟ้มออกจากแฟ้มจัดเก็บ"
+
+#: src/toolbar.h:39
+msgid "New"
+msgstr "ใหม่"
+
+#: src/toolbar.h:45
+msgid "Open"
+msgstr "เปิด"
+
+#: src/toolbar.h:45
+msgid "Open archive"
+msgstr "เปิดแฟ้มจัดเก็บ"
+
+#: src/toolbar.h:55
+msgid "Stop"
+msgstr "หยุด"
+
+#: src/window.c:617
+msgid "Folder"
+msgstr "โฟลเดอร์"
+
+#: src/window.c:766
+msgid "[read only]"
+msgstr "[อ่านเท่านั้น]"
+
+#: src/window.c:862
+#, c-format
+msgid "1 file (%s)"
+msgstr "1 แฟ้ม (%s)"
+
+#: src/window.c:865
+#, c-format
+msgid "%d files (%s)"
+msgstr "%d แฟ้ม (%s)"
+
+#: src/window.c:873
+#, c-format
+msgid "1 file selected (%s)"
+msgstr "เลือกไว้ 1 แฟ้ม (%s)"
+
+#: src/window.c:876
+#, c-format
+msgid "%d files selected (%s)"
+msgstr "เลือกไว้ %d แฟ้ม (%s)"
+
+#: src/window.c:1244
+msgid "Reading archive"
+msgstr "กำลังแฟ้มจัดเก็บ"
+
+#: src/window.c:1250
+msgid "Adding files to archive"
+msgstr "กำลังเพิ่มแฟ้มลงในแฟ้มจัดเก็บ"
+
+#: src/window.c:1253
+msgid "Extracting files from archive"
+msgstr "กำลังลองแฟ้มออกจากแฟ้มจัดเก็บ"
+
+#: src/window.c:1256
+msgid "Testing archive"
+msgstr "กำลังทดสอบแฟ้มจัดเก็บ"
+
+#: src/window.c:1259
+msgid "Getting the file list"
+msgstr "กำลังเรียบเรียงรายการแฟ้ม"
+
+#: src/window.c:1265
+msgid "wait please..."
+msgstr "โปรดรอ..."
+
+#: src/window.c:1376
+msgid "Operation stopped"
+msgstr "ปฏิบัติการถูกหยุด"
+
+#: src/window.c:1394
+msgid "An error occurred while extracting files."
+msgstr "เกิดข้อผิดพลาดขณะลอกแฟ้มออก"
+
+#: src/window.c:1398
+msgid "An error occurred while loading the archive."
+msgstr "เกิดข้อผิดพลาดขณะอ่านแฟ้มจัดเก็บ"
+
+#: src/window.c:1402
+msgid "An error occurred while deleting files from the archive."
+msgstr "เกิดข้อผิดพลาดขณะลบแฟ้มออกจากแฟ้มจัดเก็บ"
+
+#: src/window.c:1406
+msgid "An error occurred while adding files to the archive."
+msgstr "เกิดข้อผิดพลาดขณะเพิ่มแฟ้มลงในแฟ้มจัดเก็บ"
+
+#: src/window.c:1410
+msgid "An error occurred while testing archive."
+msgstr "เกิดข้อผิดพลาดขณะทดสอบแฟ้มจักเก็บ"
+
+#: src/window.c:1419
+msgid "Command not found."
+msgstr "หาคำสั่งไม่เจอ"
+
+#: src/window.c:1422
+msgid "Command exited abnormally."
+msgstr "คำสั่งหยุดทำงานอย่างไม่ปรกติ"
+
+#: src/window.c:1557
+msgid "Test Result"
+msgstr "ผลการทดสอบ"
+
+#: src/window.c:1777
+msgid "You don't have permissions to add files to this archive."
+msgstr "คุณไม่ได้รับสิทธิ์สำหรับการเพิ่มแฟ้มลงในแฟ้มจัดเก็บนี้"
+
+#: src/window.c:1808
+msgid "You can't add an archive to itself."
+msgstr "จะเพิ่มแฟ้มจัดเก็บลงในตัวแฟ้มจัดเก็บเองไม่ได้"
+
+#: src/window.c:1978
+msgid ""
+"Do you want to add this file to the current archive or open it as a new "
+"archive?"
+msgstr "ต้องการจะเพิ่มแฟ้มจัดเก็บนี้ลงในแฟ้มจัดเก็บที่เปิดอยู่ หรือเปิดแฟ้มจัดเก็บนี้"
+
+#: src/window.c:2022
+msgid "Do you want to create a new archive with these files?"
+msgstr "ต้องการจะสร้างแฟ้มจัดเก็บใหม่ด้วยแฟ้มเหล่านี้หรือไม่ ?"
+
+#: src/window.c:2024
+msgid "Create _Archive"
+msgstr "สร้างแฟ้มจัดเก็บ (_A)"
+
+#: src/window.c:2369
+msgid "Size"
+msgstr "ขนาด"
+
+#: src/window.c:2370
+msgid "Type"
+msgstr "ชนิด"
+
+#: src/window.c:2371
+msgid "Date modified"
+msgstr "วันที่แก้ไข"
+
+#: src/window.c:2372
+msgid "Location"
+msgstr "ตำแหน่ง"
+
+#: src/window.c:2379
+msgid "Name"
+msgstr "ชื่อ"
+
+#: src/window.c:2899
+msgid "_Up"
+msgstr "ขึ้น (_U)"
+
+#. current location
+#: src/window.c:2921
+msgid "Location:"
+msgstr "ตำแหน่ง:"
+
+#: src/window.c:2958
+msgid "Add"
+msgstr "เพิ่ม"
+
+#: src/window.c:2980
+msgid "View"
+msgstr "ดู"
+
+#: src/window.c:2981
+msgid "View selected file"
+msgstr "ดูแฟ้มที่เลือก"
+
+#: src/window.c:3404 src/window.c:3517
+msgid "Archive type not supported."
+msgstr "ไม่รู้จักชนิดแฟ้มจัดเก็บนี้"
+
+#: src/window.c:3480
+msgid "Cannot load archive."
+msgstr "ไม่สามารถอ่านแฟ้มจัดเก็บ"
+
+#: src/window.c:4549
+msgid "Add files to an archive"
+msgstr "เพิ่มแฟ้มลงในแฟ้มจัดเก็บ"
+
+#: src/window.c:4574
+msgid "Extract archive"
+msgstr "ลอกออกจากแฟ้มจัดเก็บ"
