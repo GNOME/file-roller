@@ -53,11 +53,13 @@ mktime_from_string (char *date_s,
 	struct tm   tm = {0, };
 	char      **fields;
 
+	tm.tm_isdst = -1;
+
 	/* date */
 
 	fields = g_strsplit (date_s, "-", 3);
 	if (fields[0] != NULL) {
-		tm.tm_year = atoi (fields[0]);
+		tm.tm_year = atoi (fields[0]) - 1900;
 		tm.tm_mon = atoi (fields[1]) - 1;
 		tm.tm_mday = atoi (fields[2]);
 	}
