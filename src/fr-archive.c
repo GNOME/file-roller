@@ -504,7 +504,7 @@ action_performed (FRCommand   *command,
 		s_action = "Get list";
 		break;
 	}
-	g_print ("%s [DONE]\n", s_action);
+	g_print ("%s [DONE] (FR::Archive)\n", s_action);
 #endif
 
 	g_signal_emit (G_OBJECT (archive), 

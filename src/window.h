@@ -109,6 +109,7 @@ typedef struct {
 					       * in the Add dialog. */
 	char *           extract_default_dir; /* default directory to be used
 					       * in the Extract dialog. */
+	gboolean         freeze_default_dir;
 
 	gboolean         view_folder_after_extraction;
 	char *           folder_to_view;
@@ -348,7 +349,8 @@ void       window_update_columns_visibility (FRWindow *window);
 void       window_update_history_list       (FRWindow *window);
 
 void       window_set_default_dir           (FRWindow *window,
-					     char     *default_dir);
+					     char     *default_dir,
+					     gboolean  freeze);
 
 void       window_set_open_default_dir      (FRWindow *window,
 					     char     *default_dir);

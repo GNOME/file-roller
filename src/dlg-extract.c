@@ -123,7 +123,8 @@ file_sel_response_cb (GtkWidget   *w,
 	char       *password;
 	const char *base_dir = NULL;
 
-	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+	if ((response == GTK_RESPONSE_CANCEL) 
+	    || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
 		return TRUE;
 	}
@@ -359,7 +360,7 @@ create_extra_widget (DialogData *data)
 	GtkWidget *hbox29;
 	GtkWidget *label47;
 	GtkWidget *table1;
-	GSList *e_files_radiobutton_group = NULL;
+	GSList    *e_files_radiobutton_group = NULL;
 	GtkWidget *vbox20;
 	GtkWidget *e_actions_label;
 	GtkWidget *hbox30;

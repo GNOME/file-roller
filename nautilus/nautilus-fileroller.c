@@ -22,8 +22,11 @@
  */
 
 #include <config.h>
+#include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-file-info.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
@@ -34,8 +37,44 @@ static GObjectClass *parent_class;
 
 
 static void
-extract_callback (NautilusMenuItem *item,
-		  gpointer          user_data)
+extract_to_callback (NautilusMenuItem *item,
+		     gpointer          user_data)
+{
+	GList            *files;
+	NautilusFileInfo *file;
+	char             *uri, *path, *default_dir;
+	GString          *cmd;
+
+	files = g_object_get_data (G_OBJECT (item), "files");
+	file = files->data;
+
+	uri = nautilus_file_info_get_uri (file);
+	path = gnome_vfs_get_local_path_from_uri (uri);
+	default_dir = g_strconcat ("file://", 
+				   g_get_home_dir(), 
+				   "/",
+				   "Desktop", 
+				   NULL);
+	cmd = g_string_new ("file-roller");
+	g_string_append_printf (cmd, 
+				" --default-dir=\"%s\" --extract \"%s\"", 
+				default_dir,
+				path);
+
+	g_print ("EXEC: %s\n", cmd->str);
+
+	g_spawn_command_line_async (cmd->str, NULL);
+
+	g_string_free (cmd, TRUE);
+	g_free (default_dir);
+	g_free (path);
+	g_free (uri);
+}
+
+
+static void
+extract_here_callback (NautilusMenuItem *item,
+		       gpointer          user_data)
 {
 	GList            *files;
 	NautilusFileInfo *file;
@@ -106,22 +145,29 @@ add_callback (NautilusMenuItem *item,
 
 
 static char *mime_types[] = {
-	"application/x-tar",
-	"application/x-compressed-tar",
-	"application/x-bzip-compressed-tar",
-	"application/x-lzop-compressed-tar",
-	"application/zip",
+	"application/x-ar",
 	"application/x-arj",
-	"application/x-zip",
+	"application/x-bzip",
+	"application/x-bzip-compressed-tar",
+	"application/x-compress",
+	"application/x-compressed-tar",
+	"application/x-deb",
+	"application/x-gtar",
+	"application/x-gzip",
 	"application/x-lha",
+	"application/x-lhz",
 	"application/x-rar",
 	"application/x-rar-compressed",
-	"application/x-gzip",
-	"application/x-bzip",
-	"application/x-compress",
+	"application/x-tar",
+	"application/x-zip",
+	"application/x-zip-compressed",
+	"application/zip",
+	"multipart/x-zip",
+	"application/x-rpm",
+	"application/x-jar",
+	"application/x-java-archive",
 	"application/x-lzop",
 	"application/x-zoo",
-	"application/x-jar",
 	"application/x-cd-image",
 	NULL
 };
@@ -145,28 +191,77 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 			    GtkWidget            *window,
 			    GList                *files)
 {
+	GList    *items = NULL;
+	GList    *scan;
+	gboolean  can_write = FALSE;
 	gboolean  one_item;
 	gboolean  one_archive = FALSE;
-	GList    *items = NULL;
 
+	
+	for (scan = files; scan; scan = scan->next) {
+		NautilusFileInfo *file = scan->data;
+		char             *scheme;
+		gboolean          local;
 
-	one_item = (files != NULL) && (files->next == NULL);
+		scheme = nautilus_file_info_get_uri_scheme (file);
+		local = strncmp (scheme, "file", 4) == 0;
+		g_free (scheme);
 
-	if (one_item) {
-		NautilusFileInfo *file = files->data;
-		one_archive = is_archive (file);
+		if (!local)
+			return NULL;
 	}
 
-	if (one_archive) {		
+	/**/
+
+	one_item = (files != NULL) && (files->next == NULL);
+	if (one_item) {
+		NautilusFileInfo *file = files->data;
+		char             *parent_uri;
+		GnomeVFSFileInfo *info;
+		GnomeVFSResult    result;
+		
+		one_archive = is_archive (file);
+
+		parent_uri = nautilus_file_info_get_parent_uri (file);
+
+		info = gnome_vfs_file_info_new ();
+		result = gnome_vfs_get_file_info (parent_uri,
+						  info,
+						  GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS);
+		if (result == GNOME_VFS_OK)
+			can_write = (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE) != 0;
+		gnome_vfs_file_info_unref (info);
+		g_free (parent_uri);
+	}
+
+	if (one_archive && can_write) {
 		NautilusMenuItem *item;
 
-		item = nautilus_menu_item_new ("NautilusFr::extract",
+		item = nautilus_menu_item_new ("NautilusFr::extract_here",
 					       _("Extract Here"),
 					       _("Extract the selected archive in the current position"),
 					       NULL);
 		g_signal_connect (item, 
 				  "activate",
-				  G_CALLBACK (extract_callback),
+				  G_CALLBACK (extract_here_callback),
+				  provider);
+		g_object_set_data_full (G_OBJECT (item), 
+					"files",
+					nautilus_file_info_list_copy (files),
+					(GDestroyNotify) nautilus_file_info_list_free);
+
+		items = g_list_append (items, item);
+
+	} else if (one_archive && !can_write) {
+		NautilusMenuItem *item;
+
+		item = nautilus_menu_item_new ("NautilusFr::extract_to",
+					       _("Extract To..."),
+					       _("Extract the selected archive"),
+					       NULL);
+		g_signal_connect (item, 
+				  "activate",
+				  G_CALLBACK (extract_to_callback),
 				  provider);
 		g_object_set_data_full (G_OBJECT (item), 
 					"files",

@@ -1326,7 +1326,7 @@ open_progress_dialog (FRWindow *window)
 		gtk_widget_set_size_request (window->pd_progress_bar, PROGRESS_DIALOG_WIDTH, -1);
 		gtk_box_pack_start (GTK_BOX (vbox), window->pd_progress_bar, TRUE, TRUE, 0);
 		
-		/* FIXME */
+		/**/
 	        lbl = window->pd_message = gtk_label_new (""); 
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
 		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_MIDDLE);
@@ -1704,7 +1704,8 @@ _action_performed (FRArchive   *archive,
 			tmp = remove_level_from_path (window->archive_filename);
 			window_set_open_default_dir (window, tmp);
 			window_set_add_default_dir (window, tmp);
-			window_set_extract_default_dir (window, tmp);
+			if (!window->freeze_default_dir)
+				window_set_extract_default_dir (window, tmp);
 			g_free (tmp);
 
 			window->archive_new = FALSE;
@@ -5462,10 +5463,13 @@ window_set_extract_default_dir (FRWindow *window,
 
 void
 window_set_default_dir (FRWindow *window,
-			gchar    *default_dir)
+			gchar    *default_dir,
+			gboolean  freeze)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (default_dir != NULL);
+
+	window->freeze_default_dir = freeze;
 
 	window_set_open_default_dir    (window, default_dir);
 	window_set_add_default_dir     (window, default_dir);
@@ -5621,10 +5625,16 @@ _window_batch_start_current_action (FRWindow *window)
 	action = (FRBatchActionDescription *) window->batch_action->data;
 	switch (action->action) {
 	case FR_BATCH_ACTION_OPEN:
+#ifdef DEBUG
+		g_print ("[BATCH] Open\n");
+#endif
 		window_archive_open (window, (char*) action->data, GTK_WINDOW (window->app));
 		break;
 
 	case FR_BATCH_ACTION_OPEN_AND_ADD:
+#ifdef DEBUG
+		g_print ("[BATCH] Open & Add\n");
+#endif
 		adata = (OpenAndAddData *) action->data;
 		if (! path_is_file (adata->archive_name)) {
 			if (window->dropped_file_list != NULL)
@@ -5644,6 +5654,9 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_ADD:
+#ifdef DEBUG
+		g_print ("[BATCH] Add\n");
+#endif
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup ((GList*) action->data);
@@ -5652,11 +5665,17 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_ADD_INTERACT:
+#ifdef DEBUG
+		g_print ("[BATCH] Add interactive\n");
+#endif
 		window_push_message (window, _("Add files to an archive"));
 		dlg_batch_add_files (window, (GList*) action->data);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT:
+#ifdef DEBUG
+		g_print ("[BATCH] Extract\n");
+#endif
 		window_archive_extract (window,
 					NULL,
 					(char*) action->data,
@@ -5668,6 +5687,9 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
+#ifdef DEBUG
+		g_print ("[BATCH] Extract interactive\n");
+#endif
 		if (window->extract_interact_use_default_dir 
 		    && (window->extract_default_dir != NULL))
 			window_archive_extract (window,
@@ -5685,12 +5707,18 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_CLOSE:
+#ifdef DEBUG
+		g_print ("[BATCH] Close\n");
+#endif
 		window_archive_close (window);
 		window->batch_action = g_list_next (window->batch_action);
 		_window_batch_start_current_action (window);
 		break;
 
 	case FR_BATCH_ACTION_QUIT:
+#ifdef DEBUG
+		g_print ("[BATCH] Quit\n");
+#endif
 		window_close (window);
 		break;
 	}
@@ -5707,8 +5735,6 @@ window_batch_mode_start (FRWindow *window)
 
 	if (window->batch_action_list == NULL)
 		return;
-
-	/*gtk_widget_hide (window->app);*/
 
 	window->batch_mode = TRUE;
 	window->batch_action = window->batch_action_list;

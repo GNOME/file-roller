@@ -350,6 +350,22 @@ fr_command_set_filename (FRCommand *comm,
 }
 
 
+static gboolean
+fake_load_done (gpointer data)
+{
+	FRCommand *comm = data;
+
+	comm->process->error.type = FR_PROC_ERROR_NONE;
+	g_signal_emit (G_OBJECT (comm), 
+		       fr_command_signals[DONE], 
+		       0,
+		       comm->action,
+		       &comm->process->error);
+
+	return FALSE;
+}
+
+
 void
 fr_command_list (FRCommand *comm)
 {
@@ -367,24 +383,7 @@ fr_command_list (FRCommand *comm)
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
-	if (comm->fake_load) {
-
-#ifdef DEBUG
-		g_print ("FAKE LOAD\n");
-#endif
-
-		g_signal_emit (G_OBJECT (comm), 
-			       fr_command_signals[START], 
-			       0,
-			       comm->action);
-
-		comm->process->error.type = FR_PROC_ERROR_NONE;
-		g_signal_emit (G_OBJECT (comm), 
-			       fr_command_signals[DONE], 
-			       0,
-			       comm->action,
-			       &comm->process->error);
-	} else 
+	if (!comm->fake_load) 
 		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm);
 }
 

@@ -314,8 +314,8 @@ prepare_app (poptContext pctx)
 {
 	char *path;
 	char *default_dir;
-	char *extract_to_path;
-        char *add_to_path;
+	char *extract_to_path = NULL;
+        char *add_to_path = NULL;
 
 	/* create the config dir if necessary. */
 
@@ -346,17 +346,22 @@ prepare_app (poptContext pctx)
 	} 
 
 	default_dir = get_path_from_url (default_url);
-	
-	if ((extract_to != NULL) && g_path_is_absolute (extract_to))
-		extract_to_path = get_path_from_url (extract_to);
-	else {
-		char *full_path;
-		char *current_dir = g_get_current_dir ();
 
-		full_path = g_build_filename (current_dir, extract_to, NULL);
-		g_free (current_dir);
-		extract_to_path = get_path_from_url (full_path);
-		g_free (full_path);
+	if (extract_to != NULL) {
+		if (g_path_is_absolute (extract_to))
+			extract_to_path = get_path_from_url (extract_to);
+		else {
+			char *current_dir = g_get_current_dir ();
+			char *full_path;
+
+			full_path = g_build_filename (current_dir, 
+						      extract_to, 
+						      NULL);
+			extract_to_path = get_path_from_url (full_path);
+
+			g_free (current_dir);
+			g_free (full_path);
+		}
 	}
 
         add_to_path = get_path_from_url (add_to);
@@ -368,8 +373,7 @@ prepare_app (poptContext pctx)
 
 		window = window_new ();
 		if (default_dir != NULL)
-			window_set_default_dir (window, default_dir);
-		/*gtk_widget_show (window->app);*/
+			window_set_default_dir (window, default_dir, TRUE);
 		
 		while ((filename = poptGetArg (pctx)) != NULL) {
 			char *path;
@@ -398,9 +402,8 @@ prepare_app (poptContext pctx)
 		
 		window = window_new ();
 		if (default_dir != NULL)
-			window_set_default_dir (window, default_dir);
-		/*gtk_widget_show (window->app);*/
-		
+			window_set_default_dir (window, default_dir, TRUE);
+
 		while ((archive = poptGetArg (pctx)) != NULL) 
 			window_archive__open_extract (window, 
 						      archive, 
