@@ -152,7 +152,13 @@ process_line (char     *line,
 		/* read file info. */
 		
 		fields = split_line (line, 6);
-		if ((*fdata->name == 0) || (fields[5][1] == 'D')) {
+
+		g_print ("%s\n", fields[5]);
+
+		if ((fdata->name == NULL)
+		    || (*fdata->name == '\0') 
+		    || (fields[5][1] == 'D') 
+		    || (fields[5][0] == 'd')) {
 			file_data_free (fdata);
 		} else {
 			fdata->size = atol (fields[0]);
