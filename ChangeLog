@@ -1,3 +1,9 @@
+2004-09-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (window_new, update_file_list_idle): 
+	* src/window.h: Remove and restore the timeout each
+	time.  See bugs #152347 and #151113.
+
 2004-09-16  Kaushal Kumar  <kaushal.kumar@wipro.com>
 
 	* src/window.c (get_file_list_from_url_list): Handle multiple 
