@@ -2258,7 +2258,7 @@ file_list_drag_data_get  (GtkWidget          *widget,
 	}
 
 	if ((window->drag_file_list == NULL) 
-	    || (window->drag_file_list_names == NULL))
+	    && (window->drag_file_list_names == NULL))
 		return;
 
 	/**/
