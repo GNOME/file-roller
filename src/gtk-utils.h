@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,5 +65,15 @@ void        _gtk_label_set_locale_text   (GtkLabel   *label,
 					  const char *text);
 
 char *      _gtk_label_get_locale_text   (GtkLabel   *label);
+
+void        _gtk_entry_set_filename_text (GtkEntry   *entry,
+					  const char *text);
+
+char *      _gtk_entry_get_filename_text (GtkEntry   *entry);
+
+void        _gtk_label_set_filename_text (GtkLabel   *label,
+					  const char *text);
+
+char *      _gtk_label_get_filename_text (GtkLabel   *label);
 
 #endif

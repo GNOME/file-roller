@@ -21,10 +21,7 @@
  */
 
 #include <config.h>
-
 #include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 #include <gtk/gtk.h>
 #include <gnome.h>
@@ -112,7 +109,7 @@ open_file_ok_cb (GtkWidget *w,
 		char      *utf8_path;
 		char      *message;
 
-		utf8_path = g_locale_to_utf8 (base_dir, -1, NULL, NULL, NULL);
+		utf8_path = g_filename_to_utf8 (base_dir, -1, NULL, NULL, NULL);
 		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 
@@ -210,7 +207,7 @@ open_file_ok_cb (GtkWidget *w,
 		} else
 			exclude_files = NULL;
 
-		include_files = g_locale_to_utf8 (file_name_from_path (path), 
+		include_files = g_filename_to_utf8 (file_name_from_path (path), 
 						  -1, 0, 0, 0);
 		window_archive_add_with_wildcard (window,
 						  include_files,
@@ -240,12 +237,13 @@ static void
 selection_entry_changed (GtkWidget  *widget, 
 			 DialogData *data)
 {
-	char *path;
+	const char *path;
 	gboolean    wildcard;
 
-	path = _gtk_entry_get_locale_text (GTK_ENTRY (GTK_FILE_SELECTION (data->dialog)->selection_entry));
+	path = gtk_entry_get_text (GTK_ENTRY (GTK_FILE_SELECTION (data->dialog)->selection_entry));
+	wildcard = ((g_utf8_strchr (path, -1, '*') != NULL) 
+		    || (g_utf8_strchr (path, -1, '?') != NULL));
 
-	wildcard = (strchr (path, '*') != NULL) || (strchr (path, '?') != NULL);
 	gtk_widget_set_sensitive (data->include_subfold_checkbutton, wildcard);
 	gtk_widget_set_sensitive (data->exclude_symlinks, GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton)->active && wildcard);
 	gtk_widget_set_sensitive (data->exclude_other_fs, GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton)->active && wildcard);
@@ -255,8 +253,6 @@ selection_entry_changed (GtkWidget  *widget,
 	gtk_widget_set_sensitive (data->exclude_files_entry,  GTK_TOGGLE_BUTTON (data->exclude_files_checkbutton)->active && wildcard);
 	gtk_widget_set_sensitive (data->include_subfold_checkbutton, wildcard);
 	gtk_widget_set_sensitive (data->ignore_case, wildcard);
-
-	g_free (path);
 }
 
 

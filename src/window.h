@@ -199,6 +199,9 @@ typedef struct {
 	gboolean update_dropped_files;  /* the update flag of the add 
 					 * operation.  */
 
+	gboolean extracting_dragged_files;
+	gboolean extracting_dragged_files_interrupted;
+
 	/* progress dialog data */
 
 	GtkWidget *progress_dialog;
@@ -306,6 +309,8 @@ GList *    window_get_file_list_pattern     (FRWindow    *window,
 					     const char  *pattern);
 
 /**/
+
+void       window_stop                      (FRWindow    *window);
 
 void       window_start_activity_mode       (FRWindow    *window);
 

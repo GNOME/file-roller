@@ -97,7 +97,7 @@ filter_apply (Filter     *filter,
 	    && (name[strlen (name) - 1] == '~'))
 		return FALSE;
 
-	utf8_name = g_locale_to_utf8 (file_name, -1, NULL, NULL, NULL);
+	utf8_name = g_filename_to_utf8 (file_name, -1, NULL, NULL, NULL);
 	retval = match_patterns (filter->patterns, utf8_name, filter->fnmatch_flags);
 	g_free (utf8_name);
 

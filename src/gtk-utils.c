@@ -548,3 +548,59 @@ _gtk_label_get_locale_text (GtkLabel *label)
 
 	return text;
 }
+
+
+void
+_gtk_entry_set_filename_text (GtkEntry   *entry,
+			      const char *text)
+{
+	char *utf8_text;
+
+	utf8_text = g_filename_to_utf8 (text, -1, NULL, NULL, NULL);
+	gtk_entry_set_text (entry, utf8_text);
+	g_free (utf8_text);
+}
+
+
+char *
+_gtk_entry_get_filename_text (GtkEntry   *entry)
+{
+	const char *utf8_text;
+	char       *text;
+
+	utf8_text = gtk_entry_get_text (entry);
+	if (utf8_text == NULL)
+		return NULL;
+
+	text = g_filename_from_utf8 (utf8_text, -1, NULL, NULL, NULL);
+
+	return text;
+}
+
+
+void
+_gtk_label_set_filename_text (GtkLabel   *label,
+			      const char *text)
+{
+	char *utf8_text;
+
+	utf8_text = g_filename_to_utf8 (text, -1, NULL, NULL, NULL);
+	gtk_label_set_text (label, utf8_text);
+	g_free (utf8_text);
+}
+
+
+char *
+_gtk_label_get_filename_text (GtkLabel   *label)
+{
+	const char *utf8_text;
+	char       *text;
+
+	utf8_text = gtk_label_get_text (label);
+	if (utf8_text == NULL)
+		return NULL;
+
+	text = g_filename_from_utf8 (utf8_text, -1, NULL, NULL, NULL);
+
+	return text;
+}

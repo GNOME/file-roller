@@ -104,7 +104,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	/* collect extraction options. */
 
 	extract_to_dir_utf8 = gnome_file_entry_get_full_path (GNOME_FILE_ENTRY (data->e_extract_to_fileentry), FALSE);
-	extract_to_dir = g_locale_from_utf8 (extract_to_dir_utf8, -1, 0, 0, 0);
+	extract_to_dir = g_filename_from_utf8 (extract_to_dir_utf8, -1, 0, 0, 0);
 	g_free (extract_to_dir_utf8);
 
 	/* check directory existence. */
@@ -177,7 +177,7 @@ ok_clicked_cb (GtkWidget  *widget,
 		char      *utf8_path;
 		char      *message;
 		
-		utf8_path = g_locale_to_utf8 (extract_to_dir, -1, NULL, NULL, NULL);
+		utf8_path = g_filename_to_utf8 (extract_to_dir, -1, NULL, NULL, NULL);
 		message = g_strdup_printf (_("You don't have the right permissions to extract archives in the folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
@@ -315,7 +315,7 @@ update_bookmark_list (DialogData *data)
 		gtk_list_store_append (GTK_LIST_STORE (data->fav_model),
 				       &iter);
 
-		utf8_name = g_locale_to_utf8 (scan->data, -1, 0, 0, 0);
+		utf8_name = g_filename_to_utf8 (scan->data, -1, 0, 0, 0);
 		gtk_list_store_set (GTK_LIST_STORE (data->fav_model), &iter,
 				    0, utf8_name,
 				    -1);
@@ -334,7 +334,7 @@ add_fav_cb (GtkWidget  *widget,
 	Bookmarks  *bookmarks;
 	char       *path;
 
-	path = _gtk_entry_get_locale_text (GTK_ENTRY (data->e_extract_to_entry));
+	path = _gtk_entry_get_filename_text (GTK_ENTRY (data->e_extract_to_entry));
 	if (path == NULL) 
 		return;
 
@@ -513,7 +513,7 @@ dlg_extract (GtkWidget *widget,
 		path = g_strconcat (window->extract_default_dir, "/", NULL);
 	else
 		path = g_strdup (window->extract_default_dir);
-	_gtk_entry_set_locale_text (GTK_ENTRY (data->e_extract_to_entry), path);
+	_gtk_entry_set_filename_text (GTK_ENTRY (data->e_extract_to_entry), path);
 	g_free (path);
 	
 	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)

@@ -874,8 +874,8 @@ file_list_remove_from_pattern (GList      **list,
 		char *path = scan->data;
 		char *utf8_name;
 
-		utf8_name = g_locale_to_utf8 (file_name_from_path (path), 
-					      -1, NULL, NULL, NULL);
+		utf8_name = g_filename_to_utf8 (file_name_from_path (path), 
+						-1, NULL, NULL, NULL);
 		if (match_patterns (patterns, utf8_name, FNM_CASEFOLD)) {
 			*list = g_list_remove_link (*list, scan);
 			g_free (scan->data);

@@ -189,7 +189,7 @@ dlg_viewer (FRWindow   *window,
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
 	g_object_unref (text_buf);
 
-	utf8_text = g_locale_to_utf8 (file_name_from_path (filename), -1, 0, 0, 0);
+	utf8_text = g_filename_to_utf8 (file_name_from_path (filename), -1, 0, 0, 0);
 	gtk_window_set_title (GTK_WINDOW (data->dialog), utf8_text);
 	g_free (utf8_text);
 

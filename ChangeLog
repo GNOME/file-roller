@@ -1,3 +1,41 @@
+2003-08-14  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.h: 
+	* src/window.c (file_list_drag_begin, file_list_drag_end) 
+	(file_list_drag_data_get): start extracting in
+	file_list_drag_being, and wait for extration completion in
+	file_list_drag_end (bug #119829).
+
+2003-08-13  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/dlg-batch-add.c (dlg_batch_add_files): 
+	* src/dlg-extract.c (add_fav_cb): 
+	* src/dlg-add.c (selection_entry_changed): use the
+	_get/set_filename_text the functions.
+
+	* src/gtk-utils.h:
+	* src/gtk-utils.c (_gtk_entry_set_filename_text) 
+	(_gtk_entry_get_filename_text, _gtk_label_set_filename_text) 
+	(_gtk_label_get_filename_text): new functions.
+
+	* Makefile.am (EXTRA_DIST): remove acinclude.m4
+
+	* src/window.c (update_file_list_idle): 
+	* src/menu-callbacks.c (rename_archive_cb): 
+	* src/dlg-batch-add.c (add_clicked_cb): 
+	* src/dlg-extract.c (update_bookmark_list): 
+	* src/dlg-prop.c (dlg_prop): 
+	* src/dlg-viewer.c (dlg_viewer): 
+	* src/file-list.c (filter_apply): 
+	* src/fr-archive.c (file_list_remove_from_pattern): 
+	* src/dlg-add.c (open_file_ok_cb): use g_filename_to_utf8 /
+	g_filename_from_utf8 instead of g_locale_to_utf8 /
+	g_locale_from_utf8 where appropriate.
+
+2003-08-12  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command-cfile.c (list__process_line): fix bug #119698.
+
 2003-08-11  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	[ File Roller 2.3.4 released ]

@@ -773,7 +773,7 @@ rename_archive_cb (GtkWidget *widget,
 	char       *dir, *filename, *new_filename;
 
 	name = remove_extension (file_name_from_path (window->archive_filename));
-	utf8_old_string = g_locale_to_utf8 (name, -1, NULL, NULL, NULL);
+	utf8_old_string = g_filename_to_utf8 (name, -1, NULL, NULL, NULL);
 	g_free (name);
 	utf8_string = _gtk_request_dialog_run (GTK_WINDOW (window->app),
 					       (GTK_DIALOG_DESTROY_WITH_PARENT 
@@ -788,7 +788,7 @@ rename_archive_cb (GtkWidget *widget,
 	if (utf8_string == NULL)
 		return;
 
-	string = g_locale_from_utf8 (utf8_string, -1, NULL, NULL, NULL);
+	string = g_filename_from_utf8 (utf8_string, -1, NULL, NULL, NULL);
 	g_free (utf8_string);
 
 	filename = window->archive->filename;
@@ -1185,17 +1185,7 @@ sort_list_reversed (GtkWidget *widget,
 }
 
 
-/* -- stop_cb -- */
-
-
-void
-stop__step2 (gpointer data)
-{
-	FRWindow *window = data;
-
-	if (window->activity_ref > 0)
-		fr_process_stop (window->archive->process);
-}
+/**/
 
 
 void
@@ -1203,24 +1193,9 @@ stop_cb (GtkWidget *widget,
 	 void      *data)
 {
 	FRWindow *window = data;
-
-	if (! window->stoppable)
-		return;
-
-	if (window->vd_handle != NULL) {
-		visit_dir_async_interrupt (window->vd_handle, 
-					   stop__step2, 
-					   window);
-		window->vd_handle = NULL;
-		window_pop_message (window);
-		window_stop_activity_mode (window);
-
-		if (window->convert_data.converting) 
-			window_convert_data_free (window);
-
-	} else
-		stop__step2 (window);
+	window_stop (window);
 }
+
 
 
 /**/

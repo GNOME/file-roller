@@ -59,6 +59,9 @@ list__process_line (char     *line,
 	fdata->size = atol (fields[1]);
 	g_strfreev (fields);
 
+	if (fdata->size == -1)
+		fdata->size = get_file_size (comm->filename);
+
 	filename = remove_extension_from_path (comm->filename);
 	fdata->full_path = g_strconcat ("/", 
 					file_name_from_path (filename),

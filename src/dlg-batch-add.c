@@ -82,7 +82,7 @@ add_clicked_cb (GtkWidget  *widget,
 	/* Collect data */
 
 	archive_name_utf8 = gnome_file_entry_get_full_path (GNOME_FILE_ENTRY (data->a_add_to_fileentry), FALSE);
-	archive_name = g_locale_from_utf8 (archive_name_utf8, -1, NULL, NULL, NULL);
+	archive_name = g_filename_from_utf8 (archive_name_utf8, -1, NULL, NULL, NULL);
 	g_free (archive_name_utf8);
 
 	window->update_dropped_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_only_newer_checkbutton));
@@ -284,7 +284,7 @@ dlg_batch_add_files (FRWindow *window,
 	g_free (markup);
 
 	path = g_strconcat (window->add_default_dir, "/", NULL);
-	_gtk_entry_set_locale_text (GTK_ENTRY (data->a_add_to_entry), path);
+	_gtk_entry_set_filename_text (GTK_ENTRY (data->a_add_to_entry), path);
 	g_free (path);
 
 	/* Set the signals handlers. */

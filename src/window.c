@@ -607,8 +607,8 @@ update_file_list_idle (gpointer callback_data)
 		char        *utf8_name;
 
 		pixbuf = get_icon (window->app, fdata);
-		utf8_name = g_locale_to_utf8 (fdata->list_name, 
-					      -1, NULL, NULL, NULL);
+		utf8_name = g_filename_to_utf8 (fdata->list_name, 
+						-1, NULL, NULL, NULL);
 		gtk_list_store_prepend (window->list_store, &iter);
 		if (fdata->is_dir)
 			gtk_list_store_set (window->list_store, &iter,
@@ -630,7 +630,7 @@ update_file_list_idle (gpointer callback_data)
 			s_time = get_time_string (fdata->modified);
 			desc = file_data_get_type_description (fdata);
 
-			utf8_path = g_locale_to_utf8 (fdata->path, -1, 0, 0, 0);
+			utf8_path = g_filename_to_utf8 (fdata->path, -1, 0, 0, 0);
 
 			gtk_list_store_set (window->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
@@ -761,7 +761,7 @@ _window_update_title (FRWindow *window)
 		char *title;
 		char *utf8_name;
 		
-		utf8_name = g_locale_to_utf8 (file_name_from_path (window->archive_filename), -1, NULL, NULL, NULL);
+		utf8_name = g_filename_to_utf8 (file_name_from_path (window->archive_filename), -1, NULL, NULL, NULL);
 		title = g_strdup_printf ("%s %s",
 					 utf8_name,
 					 (window->archive->read_only) ? _("[read only]") : "");
@@ -1328,7 +1328,7 @@ open_nautilus (GtkWindow  *parent,
 		char      *utf8_name;
 		char      *message;
 
-		utf8_name = g_locale_to_utf8 (folder, -1, 0, 0, 0);
+		utf8_name = g_filename_to_utf8 (folder, -1, 0, 0, 0);
 		message = g_strdup_printf (_("Could not display the folder \"%s\""), utf8_name);
 		g_free (utf8_name);
 		d = _gtk_message_dialog_new (parent,
@@ -1570,6 +1570,9 @@ _action_performed (FRArchive   *archive,
 		return;
 
 	case FR_ACTION_EXTRACT:
+		if (window->extracting_dragged_files) 
+			window->extracting_dragged_files = FALSE;
+
 		if (error->type != FR_PROC_ERROR_NONE) {
 			if (window->convert_data.converting) {
 				rmdir_recursive (window->convert_data.temp_dir);
@@ -2162,6 +2165,11 @@ file_list_drag_begin (GtkWidget          *widget,
 
 	if (window->activity_ref > 0) 
 		return;
+	
+	if (window->drag_file_list != NULL) {
+		path_list_free (window->drag_file_list);
+		window->drag_file_list = NULL;
+	}
 
 	window->drag_file_list = window_get_file_list_selection (window, TRUE, & (window->dragging_dirs));
 
@@ -2178,6 +2186,10 @@ file_list_drag_begin (GtkWidget          *widget,
 		window->drag_temp_dirs = g_list_prepend (window->drag_temp_dirs, window->drag_temp_dir);
 
 		ensure_dir_exists (window->drag_temp_dir, 0700);
+		
+		window->extracting_dragged_files = TRUE;
+		window->extracting_dragged_files_interrupted = FALSE;
+
 		fr_archive_extract (window->archive,
 				    window->drag_file_list,
 				    window->drag_temp_dir,
@@ -2185,10 +2197,6 @@ file_list_drag_begin (GtkWidget          *widget,
 				    TRUE,
 				    FALSE,
 				    window->password);
-
-		while (window->activity_ref > 0)
-			while (gtk_events_pending ())
-				gtk_main_iteration ();
 	}
 
 #ifdef DEBUG
@@ -2208,13 +2216,8 @@ file_list_drag_end (GtkWidget      *widget,
 	g_print ("::DragEnd -->\n");
 #endif
 
-	if (window->activity_ref > 0) 
-		return;
-
-	if (window->drag_file_list != NULL) {
-		path_list_free (window->drag_file_list);
-		window->drag_file_list = NULL;
-	}
+	if (window->extracting_dragged_files) 
+		window->extracting_dragged_files_interrupted = TRUE;
 
 #ifdef DEBUG
 	g_print ("::DragEnd <--\n");
@@ -2238,11 +2241,27 @@ file_list_drag_data_get  (GtkWidget          *widget,
 	g_print ("::DragDataGet -->\n"); 
 #endif
 
-	if (window->activity_ref > 0) 
+	while (window->extracting_dragged_files 
+	       && ! window->extracting_dragged_files_interrupted)
+		while (window->extracting_dragged_files
+		       && ! window->extracting_dragged_files_interrupted
+		       && gtk_events_pending ())
+			gtk_main_iteration ();
+
+#ifdef DEBUG
+	g_print ("::DragDataGet -[step 2]-->\n"); 
+#endif
+
+	if (window->extracting_dragged_files_interrupted) {
+		window_stop (window);
+		return;
+	}
+
+	if ((window->drag_file_list == NULL) 
+	    || (window->drag_file_list_names == NULL))
 		return;
 
-	if (window->drag_file_list == NULL) 
-		return;
+	/**/
 	
 	list = NULL;
 	if (! window->dragging_dirs) 
@@ -3124,6 +3143,8 @@ window_new ()
 	window->add_after_creation = FALSE;
 	window->add_after_opening = FALSE;
 	window->adding_dropped_files = FALSE;
+	window->extracting_dragged_files = FALSE;
+	window->extracting_dragged_files_interrupted = FALSE;
 
 	window->batch_mode = FALSE;
 	window->batch_action_list = NULL;
@@ -3504,7 +3525,7 @@ window_archive_open (FRWindow   *window,
 		char *utf8_name, *message;
 		char *reason;
 
-		utf8_name = g_locale_to_utf8 (file_name_from_path (window->archive_filename), -1, 0, 0, 0);
+		utf8_name = g_filename_to_utf8 (file_name_from_path (window->archive_filename), -1, 0, 0, 0);
 		message = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
 		g_free (utf8_name);
 		reason = gerror != NULL ? gerror->message : "";
@@ -3555,7 +3576,7 @@ window_archive_save_as (FRWindow      *window,
 		char *utf8_name;
 		char *message;
 
-		utf8_name = g_locale_to_utf8 (file_name_from_path (filename), -1, NULL, NULL, NULL);
+		utf8_name = g_filename_to_utf8 (file_name_from_path (filename), -1, NULL, NULL, NULL);
 		message = g_strdup_printf (_("Could not save the archive \"%s\""), file_name_from_path (filename));
 		g_free (utf8_name);
 
@@ -3832,6 +3853,38 @@ window_archive_close (FRWindow *window)
 }
 
 
+static void
+window_stop__step2 (gpointer data)
+{
+	FRWindow *window = data;
+
+	if (window->activity_ref > 0)
+		fr_process_stop (window->archive->process);
+}
+
+
+void
+window_stop (FRWindow *window)
+{
+	if (! window->stoppable)
+		return;
+
+	if (window->vd_handle != NULL) {
+		visit_dir_async_interrupt (window->vd_handle, 
+					   window_stop__step2, 
+					   window);
+		window->vd_handle = NULL;
+		window_pop_message (window);
+		window_stop_activity_mode (window);
+
+		if (window->convert_data.converting) 
+			window_convert_data_free (window);
+
+	} else
+		window_stop__step2 (window);
+}
+
+
 void
 window_set_password (FRWindow   *window,
 		     const char *password)
@@ -4005,7 +4058,7 @@ window_get_file_list_pattern (FRWindow    *window,
 		if (!fd)
 			continue;
 
-		utf8_name = g_locale_to_utf8 (fd->name, -1, NULL, NULL, NULL);
+		utf8_name = g_filename_to_utf8 (fd->name, -1, NULL, NULL, NULL);
 		if (match_patterns (patterns, utf8_name, FNM_CASEFOLD))
 			list = g_list_prepend (list, 
 					       g_strdup (fd->original_path));
