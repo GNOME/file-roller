@@ -197,12 +197,12 @@ static const char *
 get_mime_type_from_content (const char *filename) 
 {
 	const char *mime_type;
-
+	
 	mime_type = gnome_vfs_get_file_mime_type (filename, NULL, FALSE);
-
+	
 	if (strcmp (mime_type, UNKNOWN_TYPE) == 0)
 		return NULL;
-
+	
 	return mime_type;
 }
 	
@@ -239,15 +239,15 @@ get_mime_type_from_sniffer (const char *filename)
 		{ NULL, NULL, 0 } 
 	};
 	FILE        *file;
-	char         buffer[80];
+	char         buffer[5];
 	int          n, i;
 
-	file = fopen (filename, "r");
+	file = fopen (filename, "rb");
 
 	if (file == NULL) 
                 return NULL;
 
-	n = fread (buffer, sizeof (char), sizeof (buffer), file);
+	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, file);
 	buffer[n] = 0;
 
 	fclose (file);
@@ -1216,11 +1216,7 @@ fr_archive_utils__file_is_archive (const char *filename)
 	if (mime_type != NULL)
 		return TRUE;
 
-	g_print ("\n-- CONTENT --> %s <--\n\n", mime_type);
-
 	mime_type = get_mime_type_from_sniffer (filename);
-
-	g_print ("\n-- SNIFFER --> %s <--\n\n", mime_type);
 
 	if (mime_type != NULL)
 		return TRUE;
