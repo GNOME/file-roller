@@ -1398,13 +1398,26 @@ extract_in_chunks (FRCommand  *command,
 
 static char*
 compute_base_path (const char *e_base_dir,
-		   const char *path)
+		   const char *path,
+		   gboolean    junk_paths,
+		   gboolean    can_junk_paths)
 {
 	int         e_base_dir_len = strlen (e_base_dir);
 	int         path_len = strlen (path);
 	const char *base_path;
 	char       *name_end;
 	char       *new_path;
+
+	if (junk_paths) {
+		if (can_junk_paths)
+			new_path = g_strdup (file_name_from_path (path));
+		else
+			new_path = g_strdup (path);
+#ifdef DEBUG
+		g_print ("%s, %s --> %s\n", e_base_dir, path, new_path);
+#endif
+		return new_path;
+	}
 
 	if (path_len <= e_base_dir_len)
 		return NULL;
@@ -1430,7 +1443,9 @@ compute_base_path (const char *e_base_dir,
 
 static GList*
 compute_list_base_path (const char *base_dir,
-			GList      *e_filtered)
+			GList      *e_filtered,
+			gboolean    junk_paths,
+			gboolean    can_junk_paths)
 {
 	char  *e_base_dir = shell_escape (base_dir);
 	GList *scan;
@@ -1443,7 +1458,7 @@ compute_list_base_path (const char *base_dir,
 	for (scan = e_filtered; scan; scan = scan->next) {
 		const char *path = scan->data;
 		char       *new_path;
-		new_path = compute_base_path (e_base_dir, path);
+		new_path = compute_base_path (e_base_dir, path, junk_paths, can_junk_paths);
 		if (new_path != NULL)
 			list = g_list_prepend (list, new_path);
 	}
@@ -1632,7 +1647,7 @@ fr_archive_extract (FRArchive  *archive,
 				   password);
 
 		if (use_base_dir) {
-			GList *tmp = compute_list_base_path (base_dir, e_filtered);
+			GList *tmp = compute_list_base_path (base_dir, e_filtered, junk_paths, archive->command->propExtractCanJunkPaths);
 			path_list_free (e_filtered);
 			e_filtered = tmp;
 		}

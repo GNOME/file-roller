@@ -39,6 +39,7 @@
 #include "dlg-extract.h"
 #include "dlg-viewer.h"
 #include "dlg-viewer-or-app.h"
+#include "dlg-open-with.h"
 #include "egg-recent.h"
 #include "egg-recent-util.h"
 #include "eggtreemultidnd.h"
@@ -5162,8 +5163,7 @@ view_file (FRArchive   *archive,
 	   FRProcError *error,
 	   gpointer     callback_data)
 {
-	ViewerData         *vdata = callback_data;
-	const char         *mime_type;
+	ViewerData *vdata = callback_data;
 
 	g_signal_handlers_disconnect_matched (G_OBJECT (archive), 
 					      G_SIGNAL_MATCH_DATA, 
