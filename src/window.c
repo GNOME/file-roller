@@ -2702,7 +2702,7 @@ default_sort_func (GtkTreeModel *model,
 		   GtkTreeIter  *b, 
 		   gpointer      user_data)
 {
-	return 1;
+	return 0;
 }
 
 
