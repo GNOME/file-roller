@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -189,7 +189,7 @@ ok_clicked_cb (GtkWidget  *widget,
 		window->extract_interact_use_default_dir = TRUE;
 
 	overwrite = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton));
-	skip_newer = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));
+	skip_newer = !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton)) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));
 	junk_paths = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_recreate_dir_checkbutton));
 
 	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton));
@@ -263,6 +263,16 @@ path_entry_changed (GtkWidget  *widget,
 	path = gtk_entry_get_text (GTK_ENTRY (data->e_extract_to_entry));
 	can_add = g_utf8_strlen (path, -1) > 0;
 	gtk_widget_set_sensitive (data->e_add_fav_button, can_add);
+}
+
+
+static void
+overwrite_toggled_cb (GtkToggleButton *button,
+		      DialogData      *data)
+{
+	gboolean active = gtk_toggle_button_get_active (button);
+	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton), !active);
+	gtk_widget_set_sensitive (data->e_not_newer_checkbutton, active);
 }
 
 
@@ -546,6 +556,10 @@ dlg_extract (GtkWidget *widget,
 	g_signal_connect (G_OBJECT (data->e_remove_fav_button), 
 			  "clicked",
 			  G_CALLBACK (remove_fav_cb),
+			  data);
+	g_signal_connect (G_OBJECT (data->e_overwrite_checkbutton), 
+			  "toggled",
+			  G_CALLBACK (overwrite_toggled_cb),
 			  data);
 	g_signal_connect (G_OBJECT (data->e_extract_to_entry), 
 			  "changed",

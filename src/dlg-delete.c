@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -62,6 +62,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	gboolean  pattern_files;
 	FRWindow *window = data->window;
 	GList    *file_list;
+	gboolean  do_not_remove_if_null = FALSE;
 
 	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio));
 	pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_files_radio));
@@ -76,6 +77,8 @@ ok_clicked_cb (GtkWidget  *widget,
 		pattern = _gtk_entry_get_locale_text (GTK_ENTRY (data->d_files_entry));
 		file_list = window_get_file_list_pattern (window, pattern);
 		g_free (pattern);
+		if (file_list == NULL) 
+			do_not_remove_if_null = TRUE;
 	}
 
 	/* close the dialog. */
@@ -84,7 +87,8 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	/* remove ! */
 
-	fr_archive_remove (window->archive, file_list, window->compression);
+	if (! do_not_remove_if_null || (file_list != NULL))
+		fr_archive_remove (window->archive, file_list, window->compression);
 
 	if (file_list != NULL) {
 		g_list_foreach (file_list, (GFunc) g_free, NULL);
