@@ -1,7 +1,13 @@
 2004-09-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/file-utils.c (application_get_command): do not escape spaces
+	here.
+
 	* src/window.c (update_file_list_idle): restore the timeout
 	correctly.
+	(window_view_or_open_file): use the default application instead of
+	the default action.
+	(view_file): if we are here it's better to use the internal viewer.
 
 	* src/file_roller.glade: 
 	* src/dlg-batch-add.c (dlg_batch_add_files): make the WM give

@@ -68,21 +68,24 @@ static void
 load_document (GtkTextBuffer *text_buf, 
 	       const char    *filename)
 {  
+	char           *efilename;
 	char           *file_contents;
         GnomeVFSResult  res;
         gsize           file_size;
         GtkTextIter     iter;
 	char           *uri;
 
-	uri = g_strconcat ("file://", filename, NULL);
+	efilename = gnome_vfs_escape_path_string (filename);
+	uri = g_strconcat ("file://", efilename, NULL);
 	res = gnome_vfs_x_read_entire_file (uri, &file_size, &file_contents);
 	g_free (uri);
+	g_free (efilename);
 
 	if (res != GNOME_VFS_OK) {
 		/* FIXME : popup a dialog. */
 		return;
 	}
-	
+
 	if (file_size > 0) {
 		if (!g_utf8_validate (file_contents, file_size, NULL)) {
 			/* The file contains invalid UTF8 data.
@@ -113,7 +116,7 @@ load_document (GtkTextBuffer *text_buf,
 			file_contents = converted_file_contents;
 			file_size = bytes_written;
                 }
-		
+
                 /* Insert text in the buffer */
                 gtk_text_buffer_get_iter_at_offset (text_buf, &iter, 0);
                 gtk_text_buffer_insert (text_buf, &iter, file_contents, file_size);
