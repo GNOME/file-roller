@@ -101,18 +101,26 @@ eat_spaces (char *line)
 
 
 static char **
-split_line (char *line, 
-	    int   n_fields)
+split_line_lha (char *line)
 {
-	char **fields;
-	char  *scan, *field_end;
-	int    i;
+	char     **fields;
+	int        n_fields = 7;
+	char      *scan, *field_end;
+	int        i;
 
 	fields = g_new0 (char *, n_fields + 1);
 	fields[n_fields + 1] = NULL;
 
+	i = 0;
+
+	if (strncmp (line, "[MS-DOS]", 8) == 0) {
+		fields[i++] = g_strdup ("");
+		fields[i++] = g_strdup ("");
+		line += strlen ("[MS-DOS]");
+	}
+
 	scan = eat_spaces (line);
-	for (i = 0; i < n_fields; i++) {
+	for (; i < n_fields; i++) {
 		field_end = strchr (scan, ' ');
 		fields[i] = g_strndup (scan, field_end - scan);
 		scan = eat_spaces (field_end);
@@ -127,9 +135,11 @@ get_last_field (char *line)
 {
 	int   i;
 	char *field;
-	int   n = 8;
+	int   n = 7;
 
-	n--;
+	if (strncmp (line, "[MS-DOS]", 8) == 0) 
+		n--;
+
 	field = eat_spaces (line);
 	for (i = 0; i < n; i++) {
 		field = strchr (field, ' ');
@@ -153,7 +163,7 @@ process_line (char     *line,
 
 	fdata = file_data_new ();
 
-	fields = split_line (line, 7);
+	fields = split_line_lha (line);
 	fdata->size = atol (fields[2]);
 	fdata->modified = mktime_from_string (fields[4], 
 					      fields[5], 

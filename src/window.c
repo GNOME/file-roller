@@ -689,9 +689,15 @@ window_update_file_list (FRWindow *window)
 
 	if (! window->archive_present || window->archive_new) {
 		gtk_list_store_clear (window->list_store);
-		gtk_widget_set_sensitive (window->list_view, FALSE);
-		gtk_widget_hide_all (window->list_view->parent);
+		if (window->archive_new) {
+			gtk_widget_show_all (window->list_view->parent);
+			gtk_widget_set_sensitive (window->list_view, TRUE);
+		} else {
+			gtk_widget_hide_all (window->list_view->parent);
+			gtk_widget_set_sensitive (window->list_view, FALSE);
+		}
 		return;
+
 	} else
 		gtk_widget_set_sensitive (window->list_view, TRUE);
 
