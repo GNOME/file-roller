@@ -1,3 +1,19 @@
+2004-04-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/file_roller.glade: 
+	* src/dlg-prop.c (dlg_prop): Added compression ratio and content size.
+
+	* src/Makefile.am (glade_DATA): Removed file_roller_prop.glade
+
+	* src/window.h: 
+	* src/window.c (window_archive_extract): 
+	* src/fr-archive.h: 
+	* src/fr-archive.c (compute_base_path, compute_list_base_path)
+	(fr_archive_extract): 
+
+	Fixed bug 140971: Unwanted behavior of File-Roller on reconstructing 
+	directories.
+	
 2004-04-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/dlg-add-folder.c: 

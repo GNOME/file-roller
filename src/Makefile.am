@@ -4,8 +4,7 @@ DIST_SUBDIRS=icons recent-files
 bin_PROGRAMS = file-roller
 
 glade_DATA =				\
-	file_roller.glade		\
-	file_roller_prop.glade
+	file_roller.glade		
 gladedir = $(datadir)/file-roller/glade
 
 if ENABLE_DEPRECATIONS

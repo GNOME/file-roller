@@ -1387,6 +1387,84 @@ extract_in_chunks (FRCommand  *command,
 }
 
 
+static char*
+compute_base_path (const char *e_base_dir,
+		   const char *path)
+{
+	int         e_base_dir_len = strlen (e_base_dir);
+	int         path_len = strlen (path);
+	const char *base_path;
+	char       *name_end;
+	char       *new_path;
+
+	if (path_len <= e_base_dir_len)
+		return NULL;
+	base_path = path + e_base_dir_len;
+	if (path[0] != '/')
+		base_path -= 1;
+	name_end = strchr (base_path, '/');
+
+	if (name_end == NULL)
+		new_path = g_strdup (path);
+	else {
+		int name_len = name_end - path;
+		new_path = g_strndup (path, name_len);
+	}
+
+#ifdef DEBUG
+	g_print ("%s, %s --> %s\n", e_base_dir, path, new_path);
+#endif
+
+	return new_path;
+}
+
+
+static GList*
+compute_list_base_path (const char *base_dir,
+			GList      *e_filtered)
+{
+	char  *e_base_dir = shell_escape (base_dir);
+	GList *scan;
+	GList *list = NULL, *list_unique = NULL;
+	GList *last_inserted;
+
+	if (e_filtered == NULL)
+		return NULL;
+
+	for (scan = e_filtered; scan; scan = scan->next) {
+		const char *path = scan->data;
+		char       *new_path;
+		new_path = compute_base_path (e_base_dir, path);
+		if (new_path != NULL)
+			list = g_list_prepend (list, new_path);
+	}
+
+	/* The above operation can create duplicates, we remove them here. */
+	list = g_list_sort (list, (GCompareFunc)strcmp);
+	
+	last_inserted = NULL;
+	for (scan = list; scan; scan = scan->next) {
+		const char *path = scan->data;
+
+		if (last_inserted != NULL) {
+			const char *last_path = (const char*)last_inserted->data;
+			if (strcmp (last_path, path) == 0) {
+				g_free (scan->data);
+				continue;
+			}
+		}
+
+		last_inserted = scan;
+		list_unique = g_list_prepend (list_unique, scan->data);
+	}
+
+	g_list_free (list);
+	g_free (e_base_dir);
+
+	return list_unique;
+}
+
+
 /* Note : All paths unescaped.  
  * Note2: Do not escape dest_dir it will escaped in fr_command_extract if 
  *        needed. */
@@ -1394,6 +1472,7 @@ void
 fr_archive_extract (FRArchive  *archive,
 		    GList      *file_list,
 		    const char *dest_dir,
+		    const char *base_dir,
 		    gboolean    skip_older,
 		    gboolean    overwrite,
 		    gboolean    junk_paths,
@@ -1402,6 +1481,7 @@ fr_archive_extract (FRArchive  *archive,
 	GList    *filtered, *e_filtered;
 	GList    *scan;
 	gboolean  extract_all;
+	gboolean  use_base_dir;
 	gboolean  move_to_dest_dir;
 
 	g_return_if_fail (archive != NULL);
@@ -1411,7 +1491,12 @@ fr_archive_extract (FRArchive  *archive,
 	/* if a command supports all the requested options use 
 	 * fr_command_extract directly. */
 
-	if (! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
+	use_base_dir = ! ((base_dir == NULL) 
+			  || (strcmp (base_dir, "") == 0)
+			  || (strcmp (base_dir, "/") == 0));
+		
+	if (! use_base_dir
+	    && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
 	    && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
 	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) {
 		GList *e_file_list;
@@ -1430,9 +1515,10 @@ fr_archive_extract (FRArchive  *archive,
 	}
 
 	/* .. else we have to implement the unsupported options. */
-
-	move_to_dest_dir = (junk_paths 
-			    && ! archive->command->propExtractCanJunkPaths);
+	
+	move_to_dest_dir = (use_base_dir
+			    || ((junk_paths 
+				 && ! archive->command->propExtractCanJunkPaths)));
 
 	extract_all = (file_list == NULL);
 	if (extract_all) {
@@ -1518,6 +1604,13 @@ fr_archive_extract (FRArchive  *archive,
 				   skip_older,
 				   junk_paths,
 				   password);
+
+		if (use_base_dir) {
+			GList *tmp = compute_list_base_path (base_dir, e_filtered);
+			path_list_free (e_filtered);
+			e_filtered = tmp;
+		}
+
 		move_files_in_chunks (archive, 
 				      e_filtered, 
 				      temp_dir, 

@@ -117,6 +117,7 @@ file_sel_response_cb (GtkWidget   *w,
 	gboolean    junk_paths;
 	GList      *file_list;
 	char       *password;
+	const char *base_dir = NULL;
 
 	if (response == GTK_RESPONSE_CANCEL) {
 		gtk_widget_destroy (data->dialog);
@@ -289,9 +290,13 @@ file_sel_response_cb (GtkWidget   *w,
 		window->password = g_strdup (password);
 	}
 
+	if (selected_files)
+		base_dir = window_get_current_location (window);
+
 	window_archive_extract (window,
 				file_list,
 				extract_to_dir,
+				base_dir,
 				skip_newer,
 				overwrite,
 				junk_paths,
