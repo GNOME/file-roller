@@ -120,7 +120,7 @@ file_sel_response_cb (GtkWidget   *w,
 	char       *password;
 	const char *base_dir = NULL;
 
-	if (response == GTK_RESPONSE_CANCEL) {
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
 		return TRUE;
 	}

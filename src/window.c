@@ -1913,6 +1913,9 @@ get_file_list_from_url_list (gchar *url_list)
 			url_start += 5;
 			if ((url_start[0] == '/') 
 			    && (url_start[1] == '/')) url_start += 2;
+		} else {
+			path_list_free (list);
+			return NULL;
 		}
 
 		url = g_strndup (url_start, url_end - url_start);
@@ -2145,8 +2148,21 @@ window_drag_data_received  (GtkWidget          *widget,
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
 	list = get_file_list_from_url_list ((char *)data->data);
-	if (list == NULL)
-		return;
+
+	if (list == NULL) {
+	        GtkWidget *dlg;
+                dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					       GTK_DIALOG_MODAL,
+					       GTK_STOCK_DIALOG_ERROR,
+					       _("Could not perform the operation"),
+					       NULL,
+					       GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+					       NULL);
+                gtk_widget_show(dlg);
+                gtk_dialog_run(GTK_DIALOG(dlg));
+                gtk_widget_destroy(dlg);
+ 		return;
+	}
 
 	if (window->dropped_file_list != NULL)
 		path_list_free (window->dropped_file_list);

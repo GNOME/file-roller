@@ -1,3 +1,21 @@
+2004-08-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/dlg-extract.c (file_sel_response_cb): 
+	* src/actions.c (new_file_response_cb, open_file_response_cb) 
+	(save_file_response_cb, copy_or_move_archive_response_cb): 
+
+	Check for GTK_RESPONSE_DELETE_EVENT
+
+	* src/dlg-add-files.c: 
+	* src/dlg-add-folder.c: Fixed bug #150327 and other issues.
+
+2004-08-17  Subrahmanyam Madduri <smadduri@novell.com>
+
+	* src/window.c: avoids crashing while DND of 'Home' icon into 
+	file-roller.
+	
+	Fixes BUG #150328
+
 2004-08-17  Mark McLoughlin  <mark@skynet.ie>
 
 	* src/recent-files/egg-recent-item.c,

@@ -156,7 +156,7 @@ new_file_response_cb (GtkWidget *w,
 	gchar    *path;
 	gchar    *dir;
 
-	if (response == GTK_RESPONSE_CANCEL) {
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (file_sel);
 		return;
 	}
@@ -369,7 +369,7 @@ open_file_response_cb (GtkWidget *w,
 	FRWindow   *window = NULL;
 	char *path;
 
-	if (response == GTK_RESPONSE_CANCEL) {
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (file_sel);
 		return;
 	}
@@ -480,7 +480,7 @@ save_file_response_cb (GtkWidget *w,
 	char     *path;
 	char     *dir;
 
-	if (response == GTK_RESPONSE_CANCEL) {
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (file_sel);
 		return;
 	}
@@ -692,7 +692,7 @@ copy_or_move_archive_response_cb (GtkWidget    *w,
 	char        *folder;
 	char        *new_path;
 
-	if (response == GTK_RESPONSE_CANCEL) {
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (w);
 		return;
 	}

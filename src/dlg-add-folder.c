@@ -57,11 +57,9 @@ typedef struct {
 
 
 static void
-open_file_destroy_cb (GtkWidget *w,
-		      GtkWidget *file_sel)
+open_file_destroy_cb (GtkWidget  *widget,
+		      DialogData *data)
 {
-	DialogData *data;
-	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
 	g_free (data->last_options);
 	g_free (data);
 }
@@ -86,26 +84,22 @@ utf8_only_spaces (const char *text)
 
 
 static int
-file_sel_response_cb (GtkWidget      *w,
-		      int             response,
-		      GtkFileChooser *file_sel)
+file_sel_response_cb (GtkWidget    *widget,
+		      int           response,
+		      DialogData   *data)
 {
-	FRWindow   *window;
-	char       *current_folder;
-	gboolean    update, recursive, follow_links;
-	GSList     *selections, *iter;
-	GList      *item_list = NULL;
-	DialogData *data;
+	GtkFileChooser *file_sel = GTK_FILE_CHOOSER (widget);
+	FRWindow       *window = data->window;
+	char           *current_folder;
+	gboolean        update, recursive, follow_links;
+	GSList         *selections, *iter;
+	GList          *item_list = NULL;
 
 
-	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
-
-	if (response == GTK_RESPONSE_CANCEL) {
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
 		return TRUE;
 	}
-
-	window = data->window;
 
 	current_folder = gtk_file_chooser_get_current_folder (file_sel);
 
@@ -126,13 +120,10 @@ file_sel_response_cb (GtkWidget      *w,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not add the files to the archive"),
 					     message,
-					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					     GTK_STOCK_OK, GTK_RESPONSE_OK,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (utf8_path);
 		g_free (message);
 
 		g_free (current_folder);
@@ -239,6 +230,37 @@ static void
 selection_changed_cb (GtkWidget  *file_sel, 
 		      DialogData *data)
 {
+	FRWindow   *window = data->window;
+	char       *current_folder;
+
+        current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (file_sel));
+
+        /* check folder permissions. */
+                                                                                                
+        if (path_is_dir (current_folder)
+            && access (current_folder, R_OK | X_OK) != 0) {
+                GtkWidget *d;
+                char      *utf8_path;
+                char      *message;
+		
+                utf8_path = g_filename_to_utf8 (current_folder, -1, NULL, NULL, NULL);
+                message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
+                g_free (utf8_path);
+		
+                d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+                                             GTK_DIALOG_MODAL,
+                                             GTK_STOCK_DIALOG_ERROR,
+                                             _("Could not add the files to the archive"),
+                                             message,
+                                             GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+                                             NULL);
+                gtk_dialog_run (GTK_DIALOG (d));
+                gtk_widget_destroy (GTK_WIDGET (d));
+                g_free (message);
+		
+                g_free (current_folder);
+        }
+
 	update_sensitivity (data);
 }
 
@@ -383,8 +405,6 @@ add_folder_cb (GtkWidget *widget,
 	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (file_sel), dir);
 	g_free (dir);
 
-	g_object_set_data (G_OBJECT (file_sel), "fr_dialog_data", data);
-
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), FALSE);
 
 	update_sensitivity (data);
@@ -394,12 +414,12 @@ add_folder_cb (GtkWidget *widget,
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
 			  G_CALLBACK (open_file_destroy_cb),
-			  file_sel);
+			  data);
 
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response",
 			  G_CALLBACK (file_sel_response_cb),
-			  file_sel);
+			  data);
 
 	g_signal_connect (G_OBJECT (file_sel), 
 			  "selection-changed",
