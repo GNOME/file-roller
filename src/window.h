@@ -144,6 +144,7 @@ typedef struct {
 	GtkWidget *      mitem_sort[5];
 	GtkWidget *      mitem_sort_reversed;
 	GtkWidget *      mitem_password;
+	GtkWidget *      mitem_last_output;
 
 	GtkWidget *      mitem_add;
 	GtkWidget *      mitem_delete;

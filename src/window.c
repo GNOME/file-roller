@@ -986,6 +986,11 @@ _window_update_sensitivity (FRWindow *window)
 
 	gtk_widget_set_sensitive (window->mitem_select_all, ! no_archive);
 	gtk_widget_set_sensitive (window->mitem_unselect_all, ! no_archive);
+
+	gtk_widget_set_sensitive (window->mitem_last_output, 
+				  ((window->archive != NULL)
+				   && (window->archive->process != NULL)
+				   && (window->archive->process->raw_output != NULL)));
 	
 	/* toolbar */
 	
@@ -3085,6 +3090,7 @@ window_new ()
 		window->mitem_sort[i] = sort_by_radio_list[i].widget;
 	window->mitem_sort_reversed = arrange_menu[ARRANGE_MENU_REVERSED_ORDER].widget;
 	window->mitem_password = edit_menu[EDIT_MENU_PASSWORD].widget;
+	window->mitem_last_output = view_menu[VIEW_MENU_LAST_OUTPUT].widget;
 
 	for (i = 0; i < 8; i++) 
 		window->popupmenu_file[i] = file_popup_menu_data[i].widget;
