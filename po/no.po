@@ -5,13 +5,41 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file roller 0.5\n"
-"POT-Creation-Date: 2002-10-10 13:53+0200\n"
-"PO-Revision-Date: 2002-10-10 13:55+0200\n"
+"POT-Creation-Date: 2002-11-22 22:07+0100\n"
+"PO-Revision-Date: 2002-11-22 22:16+0100\n"
 "Last-Translator: Lars Alvik <profoss@linuxmail.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: component/File_Roller_Component.server.in.in.h:1
+msgid "Add To Archive..."
+msgstr "Legg til i arkiv..."
+
+#: component/File_Roller_Component.server.in.in.h:2
+msgid "Extract Here..."
+msgstr "Pakk ut her..."
+
+#: component/File_Roller_Component.server.in.in.h:3
+msgid "Extract To A Folder..."
+msgstr "Pakk ut til en mappe..."
+
+#: component/File_Roller_Component.server.in.in.h:4
+msgid "Extract To..."
+msgstr "Pakk ut til..."
+
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "File Roller Component add operations"
+msgstr "Filknuser-komponent, operasjoner for tillegg"
+
+#: component/File_Roller_Component.server.in.in.h:6
+msgid "File Roller Component extract operations"
+msgstr "Filknuser-komponent, operasjoner for utpakking"
+
+#: component/File_Roller_Component.server.in.in.h:7
+msgid "File roller component"
+msgstr "Filknuser-komponent"
 
 #: file-roller.desktop.in.h:1
 msgid "Archive Manager"
@@ -19,8 +47,8 @@ msgstr "Arkiveringsbestyrer"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:153
-#: src/gtk-utils.c:256 src/main.c:101 src/window.c:750 src/window.c:759
-#: src/window.c:2392 src/window.c:4211
+#: src/gtk-utils.c:256 src/main.c:106 src/window.c:690 src/window.c:699
+#: src/window.c:2360 src/window.c:4052
 msgid "File Roller"
 msgstr "Filknuser"
 
@@ -33,9 +61,9 @@ msgstr "Håndter komprimerte arkiv"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Du har ikke adgang til å lese filer fra mappen «%s»"
 
-#: src/dlg-add.c:338
-msgid "Add files"
-msgstr "Legg til filer"
+#: src/dlg-add.c:338 src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "Legg til filer og mapper"
 
 #: src/dlg-add.c:343
 msgid "_Add only if newer"
@@ -90,20 +118,20 @@ msgid "Save options"
 msgstr "Alternativer for lagring"
 
 #. Set widgets data.
-#: src/dlg-batch-add.c:143
+#: src/dlg-batch-add.c:142
 #, c-format
 msgid "Adding %u files"
 msgstr "Legger til %u filer"
 
-#: src/dlg-extract.c:120 src/window.c:3276
+#: src/dlg-extract.c:120 src/window.c:3117
 msgid "Destination folder does not exist.  Do you want to create it ?"
 msgstr "Målmappen eksisterer ikke. Vil du opprette den?"
 
-#: src/dlg-extract.c:122 src/window.c:3278
+#: src/dlg-extract.c:122 src/window.c:3119
 msgid "Create _Folder"
 msgstr "Opprett _mappe"
 
-#: src/dlg-extract.c:142 src/window.c:3298
+#: src/dlg-extract.c:142 src/window.c:3139
 #, c-format
 msgid ""
 "Could not create the destination folder : %s.\n"
@@ -112,7 +140,7 @@ msgstr ""
 "Kunne ikke opprette målmappen: %s.\n"
 "Utpakking ble ikke utført."
 
-#: src/dlg-extract.c:157 src/window.c:3313
+#: src/dlg-extract.c:157 src/window.c:3154
 msgid "Extraction not performed."
 msgstr "Utpakking ble ikke utført."
 
@@ -130,6 +158,14 @@ msgstr "Kunne ikke vise hjelp: %s"
 #: src/dlg-extract.c:486
 msgid "Favorites extraction folders"
 msgstr "Utpakkingskataloger for favoritter"
+
+#: src/dlg-preferences.c:186
+msgid "General"
+msgstr "Generell"
+
+#: src/dlg-preferences.c:191
+msgid "Columns to Show"
+msgstr "Kolonner som skal vises"
 
 #: src/dlg-prop.c:98
 msgid "Path:"
@@ -163,200 +199,188 @@ msgstr "Ukjent type"
 msgid "Symbolic link"
 msgstr "Symbolsk lenke"
 
-#: src/file_roller.glade2.h:1 src/file_roller_prop.glade2.h:1
+#: src/file-utils.c:534
+msgid "Cannot find a terminal, using xterm, even if it may not work"
+msgstr "Kan ikke finne en terminal. Bruker xterm selv om den kanskje ikke virker"
+
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
 msgid "    "
 msgstr "    "
 
-#: src/file_roller.glade2.h:2
+#: src/file_roller.glade.h:2
 msgid "*"
 msgstr "*"
 
-#: src/file_roller.glade2.h:3
+#: src/file_roller.glade.h:3
 msgid "A_dd to favorites"
 msgstr "Le_gg til i favoritter"
 
-#: src/file_roller.glade2.h:4
+#: src/file_roller.glade.h:4
 msgid "A_vailable application:"
 msgstr "Til_gjengelig applikasjon:"
 
-#: src/file_roller.glade2.h:5
+#: src/file_roller.glade.h:6
 msgid "Add _to archive :"
 msgstr "Legg _til i arkivet :"
 
-#: src/file_roller.glade2.h:6
+#: src/file_roller.glade.h:7
 msgid "Add only if _newer"
 msgstr "Kun legg til hvis _nyere"
 
-#: src/file_roller.glade2.h:7
+#: src/file_roller.glade.h:8
+msgid "Archive Properties"
+msgstr "Egenskaper for arkiv"
+
+#: src/file_roller.glade.h:9 src/menu.h:464
+msgid "Delete Files"
+msgstr "Slett filer"
+
+#: src/file_roller.glade.h:10
 msgid "Do not e_xtract older files"
 msgstr "Ikke pa_kk ut eldre filer"
 
-#: src/file_roller.glade2.h:8
+#: src/file_roller.glade.h:11 src/window.c:2579
+msgid "Extract"
+msgstr "Pakk ut"
+
+#: src/file_roller.glade.h:12
 msgid "Extract to"
 msgstr "Pakk ut til"
 
-#: src/file_roller.glade2.h:9
+#: src/file_roller.glade.h:13
 msgid "Extract to:"
 msgstr "Pakk ut til:"
 
-#: src/file_roller.glade2.h:10
-msgid "File Roller - Add"
-msgstr "Filknuser - Legg til"
-
-#: src/file_roller.glade2.h:11
-msgid "File Roller - Archive Informations"
-msgstr "Filknuser - Informasjon om arkiv"
-
-#: src/file_roller.glade2.h:12
-msgid "File Roller - Delete Files"
-msgstr "Filknuser - Slett filer"
-
-#: src/file_roller.glade2.h:13
-msgid "File Roller - Extract"
-msgstr "Filknuser - Trekk ut"
-
-#: src/file_roller.glade2.h:14
-msgid "File Roller - Open Files"
-msgstr "Filknuser - Åpne filer"
-
-#: src/file_roller.glade2.h:15
-msgid "File Roller - Password"
-msgstr "Filknuser - Passord"
-
-#: src/file_roller.glade2.h:16
-msgid "File Roller - View File"
-msgstr "Filknuser - Vis fil"
-
-#: src/file_roller.glade2.h:17
-msgid "File Roller - Viewer"
-msgstr "Filknuser - Visning"
-
-#: src/file_roller.glade2.h:18
+#: src/file_roller.glade.h:14
 msgid "Files"
 msgstr "Filer"
 
-#: src/file_roller.glade2.h:19
+#: src/file_roller.glade.h:15
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
 "archive is closed the password will be deleted."
-msgstr ""
+msgstr "Merk: passordet vil brukes til å kryptere filer du legger til i aktivt arkiv, og til å dekryptere filer du pakker ut fra dette arkivet. Når arkivet lukkes vil passordet slettes."
 
-#: src/file_roller.glade2.h:20
+#: src/file_roller.glade.h:16
+msgid "Open Files"
+msgstr "Åpne filer"
+
+#: src/file_roller.glade.h:17
 msgid "Open with an _application"
 msgstr "Åpne med en _applikasjon"
 
-#: src/file_roller.glade2.h:21
+#: src/file_roller.glade.h:18
 msgid "Other options"
 msgstr "Andre alternativer"
 
-#: src/file_roller.glade2.h:22
+#: src/file_roller.glade.h:19
 msgid "Over_write existing files"
 msgstr "Overs_kriv eksisterende filer"
 
-#: src/file_roller.glade2.h:23
+#: src/file_roller.glade.h:20
+msgid "Password"
+msgstr "Passord"
+
+#: src/file_roller.glade.h:21
 msgid "R_ecent applications:"
 msgstr "N_ylig brukte applikasjoner:"
 
-#: src/file_roller.glade2.h:24
+#: src/file_roller.glade.h:22
 msgid "R_ecreate folders"
 msgstr "Gj_enskap mapper"
 
-#: src/file_roller.glade2.h:25
+#: src/file_roller.glade.h:23
 msgid "Select archive"
 msgstr "Velg arkiv"
 
-#: src/file_roller.glade2.h:26
+#: src/file_roller.glade.h:24 src/menu.h:450
+msgid "View File"
+msgstr "Vis fil"
+
+#: src/file_roller.glade.h:25
 msgid "View with internal _viewer"
 msgstr "Vis med internt _visningsprogram"
 
-#: src/file_roller.glade2.h:27
+#: src/file_roller.glade.h:26
+msgid "Viewer"
+msgstr "Visning"
+
+#: src/file_roller.glade.h:27
 msgid "_All Files"
 msgstr "_Alle filer"
 
-#: src/file_roller.glade2.h:28
+#: src/file_roller.glade.h:28
 msgid "_Application:"
 msgstr "_Applikasjon:"
 
-#: src/file_roller.glade2.h:29
+#: src/file_roller.glade.h:29
 msgid "_Files:"
 msgstr "_Filer:"
 
-#: src/file_roller.glade2.h:30
+#: src/file_roller.glade.h:30
 msgid "_Password:"
 msgstr "_Passord:"
 
-#: src/file_roller.glade2.h:31
+#: src/file_roller.glade.h:31
 msgid "_Selected Files"
 msgstr "_Valgte filer"
 
-#: src/file_roller.glade2.h:32
+#: src/file_roller.glade.h:32
 msgid "_View destination folder after extraction"
 msgstr "_Vis målmappe etter utpakking"
 
-#: src/file_roller.glade2.h:33
+#: src/file_roller.glade.h:33
 msgid "example: *.txt; *.doc"
 msgstr "eksempel: *.txt; *.doc"
 
-#: src/file_roller_prop.glade2.h:2
-msgid "Columns to Show"
-msgstr "Kolonner som skal vises"
-
-#: src/file_roller_prop.glade2.h:3
+#: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
 msgstr "Kompresjo_nsnivå:"
 
-#: src/file_roller_prop.glade2.h:4
+#: src/file_roller_prop.glade.h:3
 msgid "Fast"
 msgstr "Rask"
 
-#: src/file_roller_prop.glade2.h:5
-msgid "File Roller - Preferences"
-msgstr "Filknuser - Brukervalg"
+#: src/file_roller_prop.glade.h:4
+msgid "File Roller Preferences"
+msgstr "Brukervalg for filknuser"
 
-#: src/file_roller_prop.glade2.h:6
+#: src/file_roller_prop.glade.h:5
 msgid "File _Name"
 msgstr "Fil_navn"
 
-#: src/file_roller_prop.glade2.h:7
+#: src/file_roller_prop.glade.h:6
 msgid "File _Path"
 msgstr "S_ti til fil"
 
-#: src/file_roller_prop.glade2.h:8
+#: src/file_roller_prop.glade.h:7
 msgid "File _Size"
 msgstr "Fil_størrelse"
 
-#: src/file_roller_prop.glade2.h:9
+#: src/file_roller_prop.glade.h:8
 msgid "File _Type"
 msgstr "Fil_type"
 
-#: src/file_roller_prop.glade2.h:10
-msgid "General"
-msgstr "Generell"
-
-#: src/file_roller_prop.glade2.h:11
+#: src/file_roller_prop.glade.h:9
 msgid "Maximum (slowest)"
 msgstr "Maksimum (tregest)"
 
-#: src/file_roller_prop.glade2.h:12
+#: src/file_roller_prop.glade.h:10
 msgid "Normal"
 msgstr "Normal"
 
-#: src/file_roller_prop.glade2.h:13
+#: src/file_roller_prop.glade.h:11
 msgid "Very fast"
 msgstr "Meget rask"
 
-#: src/file_roller_prop.glade2.h:14
+#: src/file_roller_prop.glade.h:12
 msgid "_Modification Time"
 msgstr "_Endringstid"
 
-#: src/file_roller_prop.glade2.h:15
+#: src/file_roller_prop.glade.h:13
 msgid "_Recent archives:"
 msgstr "_Nylig åpnede arkiv:"
-
-#: src/file-utils.c:534
-msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr ""
 
 #: src/gconf-utils.c:98
 #, c-format
@@ -372,37 +396,37 @@ msgstr ""
 msgid "Command _line output"
 msgstr "Kommando_linjeutskrift"
 
-#: src/main.c:60
+#: src/main.c:65
 msgid "Add files to the specified archive and quit the program"
 msgstr "Legg til filer til spesifisert arkiv og avslutt programmet"
 
-#: src/main.c:61
+#: src/main.c:66
 msgid "ARCHIVE"
 msgstr "ARKIV"
 
-#: src/main.c:64
+#: src/main.c:69
 msgid "Add files asking the name of the archive and quit the program"
-msgstr ""
+msgstr "Legg til filer ved å spørre etter arkivnavn og så lukke programmet"
 
-#: src/main.c:68
+#: src/main.c:73
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Pakk ut filer til spesifisert mappe og avslutt programmet"
 
-#: src/main.c:69 src/main.c:77
+#: src/main.c:74 src/main.c:82
 msgid "FOLDER"
 msgstr "MAPPE"
 
-#: src/main.c:72
+#: src/main.c:77
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr ""
+msgstr "Pakk ut arkiv ved å spørre etter målmappe og avslutte programmet"
 
-#: src/main.c:76
+#: src/main.c:81
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
+msgstr "Forvalgt mappe som skal brukes for kommandoene «--add» og «--extract»"
 
-#: src/main.c:80
+#: src/main.c:85
 msgid "Create destination folder without asking confirmation"
-msgstr ""
+msgstr "Opprett målmappe uten å spørre etter bekreftelse"
 
 #: src/menu-callbacks.c:107
 msgid "Automatic"
@@ -588,12 +612,12 @@ msgid "Rename current archive"
 msgstr "Gi nytt navn til dette arkivet"
 
 #: src/menu.h:123
-msgid "_Information"
-msgstr "_Informasjon"
+msgid "_Properties"
+msgstr "_Egenskaper"
 
 #: src/menu.h:123
-msgid "Show information about the archive"
-msgstr "Vis informasjon om arkivet"
+msgid "Show archive properties"
+msgstr "Vis egenskaper for arkiv"
 
 #: src/menu.h:131
 msgid "_Close"
@@ -615,7 +639,7 @@ msgstr "Avslutt"
 msgid "Add _Files..."
 msgstr "Legg til _filer..."
 
-#: src/menu.h:164 src/menu.h:458 src/window.c:2601
+#: src/menu.h:164 src/menu.h:458 src/window.c:2569
 msgid "Add files to the archive"
 msgstr "Legg til filer til arkivet"
 
@@ -627,7 +651,7 @@ msgstr "Slett valgte filer og mapper fra arkivet"
 msgid "_Extract to..."
 msgstr "Pakk ut til..."
 
-#: src/menu.h:176 src/menu.h:470 src/window.c:2612
+#: src/menu.h:176 src/menu.h:470 src/window.c:2580
 msgid "Extract files from the archive"
 msgstr "Pakk ut filer fra arkivet"
 
@@ -753,7 +777,7 @@ msgstr "_Plasser filer"
 
 #: src/menu.h:368
 msgid "_Last Output"
-msgstr ""
+msgstr "_Sist skrevet ut"
 
 #: src/menu.h:381
 msgid "New _Window"
@@ -807,17 +831,9 @@ msgstr "_Vinduer"
 msgid "Open Files..."
 msgstr "Åpne filer..."
 
-#: src/menu.h:450
-msgid "View File"
-msgstr "Vis fil"
-
 #: src/menu.h:458
 msgid "Add Files..."
 msgstr "Legg til filer..."
-
-#: src/menu.h:464
-msgid "Delete Files"
-msgstr "Slett filer"
 
 #: src/menu.h:464
 msgid "Delete files from the archive"
@@ -830,6 +846,15 @@ msgstr "Pakk ut til..."
 #: src/menu.h:478
 msgid "Select All"
 msgstr "Velg alle"
+
+#: src/recent-files/egg-recent-vfs-utils.c:90
+msgid " (invalid Unicode)"
+msgstr " (ugyldig Unicode)"
+
+#: src/recent-files/egg-recent-view-bonobo.c:193
+#, c-format
+msgid "Open %s"
+msgstr "Åpne %s"
 
 #: src/toolbar.h:39
 msgid "New"
@@ -847,177 +872,169 @@ msgstr "Åpne arkiv"
 msgid "Stop"
 msgstr "Stopp"
 
-#: src/window.c:627
+#: src/window.c:567
 msgid "Folder"
 msgstr "Mappe"
 
-#: src/window.c:758
+#: src/window.c:698
 msgid "[read only]"
 msgstr "[kun lesbar]"
 
-#: src/window.c:852
+#: src/window.c:792
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 fil (%s)"
 
-#: src/window.c:855
+#: src/window.c:795
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d filer (%s)"
 
-#: src/window.c:863
+#: src/window.c:803
 #, c-format
 msgid "1 file selected (%s)"
 msgstr "1 fil valgt (%s)"
 
-#: src/window.c:866
+#: src/window.c:806
 #, c-format
 msgid "%d files selected (%s)"
 msgstr "%d filer valgt (%s)"
 
-#: src/window.c:1129
+#: src/window.c:1094
 msgid "Reading archive"
 msgstr "Leser arkiv"
 
-#: src/window.c:1132
+#: src/window.c:1097
 msgid "Deleting files from archive"
 msgstr "Sletter filer fra arkiv"
 
-#: src/window.c:1135
+#: src/window.c:1100
 msgid "Adding files to archive"
 msgstr "Legger til filer i arkiv"
 
-#: src/window.c:1138
+#: src/window.c:1103
 msgid "Extracting files from archive"
 msgstr "Pakker ut filer fra arkiv"
 
-#: src/window.c:1141
+#: src/window.c:1106
 msgid "Testing archive"
 msgstr "Tester arkiv"
 
-#: src/window.c:1147
+#: src/window.c:1112
 msgid "wait please..."
 msgstr "vennligst vent..."
 
-#: src/window.c:1236
+#: src/window.c:1198
 msgid "Operation stopped"
 msgstr "Operasjonen stoppet"
 
-#: src/window.c:1253
+#: src/window.c:1215
 msgid "An error occurred while extracting files."
 msgstr "Det skjedde en feil under utpakking."
 
-#: src/window.c:1257
+#: src/window.c:1219
 msgid "An error occurred while loading the archive."
 msgstr "Det skjedde en feil under lasting av arkivet."
 
-#: src/window.c:1261
+#: src/window.c:1223
 msgid "An error occurred while deleting files from the archive."
 msgstr "Det skjedde en feil under sletting av filer fra arkivet."
 
-#: src/window.c:1265
+#: src/window.c:1227
 msgid "An error occurred while adding files to the archive."
 msgstr "Det skjedde en feil under sletting av filer fra arkivet."
 
-#: src/window.c:1269
+#: src/window.c:1231
 msgid "An error occurred while testing archive."
 msgstr "Det skjedde en feil under testing av arkivet."
 
-#: src/window.c:1275
+#: src/window.c:1237
 msgid "Command not found."
 msgstr "ikke eksisterene kommando"
 
-#: src/window.c:1278
+#: src/window.c:1240
 msgid "Command exited abnormally."
 msgstr "Unormal avsluttning av kommando"
 
-#: src/window.c:1564
+#: src/window.c:1526
 msgid "You don't have permissions to add files to this archive."
 msgstr "Du har ikke adgang til å legge til filer til arkivet."
 
-#: src/window.c:1586
+#: src/window.c:1548
 msgid "You can't add an archive to itself."
 msgstr "Du kan ikke legge arkivet inni arkivet."
 
-#: src/window.c:1746
+#: src/window.c:1708
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive ?"
-msgstr ""
+msgstr "Vil du legge til denne filen i aktivt arkiv eller åpne den som et nytt arkiv?"
 
-#: src/window.c:1789
+#: src/window.c:1751
 msgid "Do you want to create a new archive with these files ?"
 msgstr "Vil du lage et arkiv med disse filene ?"
 
-#: src/window.c:1791
+#: src/window.c:1753
 msgid "Create _Archive"
 msgstr "Opprett _arkiv"
 
-#: src/window.c:2124
+#: src/window.c:2086
 msgid "Size"
 msgstr "Størrelse"
 
-#: src/window.c:2125
+#: src/window.c:2087
 msgid "Type"
 msgstr "Filtype"
 
-#: src/window.c:2126
+#: src/window.c:2088
 msgid "Modified"
 msgstr "Sist endret"
 
-#: src/window.c:2127
+#: src/window.c:2089
 msgid "Path"
 msgstr "Sti"
 
-#: src/window.c:2134
+#: src/window.c:2096
 msgid "Name"
 msgstr "Navn"
 
-#: src/window.c:2546
+#: src/window.c:2514
 msgid "_Up"
 msgstr "_Opp"
 
 #. current location
-#: src/window.c:2568
+#: src/window.c:2536
 msgid "Current Location:"
 msgstr "Befinner seg nå i:"
 
-#: src/window.c:2600
+#: src/window.c:2568
 msgid "Add"
 msgstr "Legg til"
 
-#: src/window.c:2611
-msgid "Extract"
-msgstr "Pakk ut"
-
-#: src/window.c:2622
+#: src/window.c:2590
 msgid "View"
 msgstr "Vis"
 
-#: src/window.c:2623
+#: src/window.c:2591
 msgid "View selected file"
 msgstr "Vis valgt fil"
 
-#: src/window.c:2975
+#: src/window.c:2984
 msgid "File type not supported."
 msgstr "Filtypen ikke støttet."
 
-#: src/window.c:3113
-msgid "No archive"
-msgstr "Ingen arkiv"
-
-#: src/window.c:3211
+#: src/window.c:3052
 msgid "Cannot load archive."
 msgstr "Kan ikke laste arkivet."
 
-#: src/window.c:3625
+#: src/window.c:3466
 msgid "File Roller - Last output"
 msgstr "Filknuser - Forrige plassering"
 
-#: src/window.c:4146
+#: src/window.c:3987
 msgid "Add files to an archive"
 msgstr "Legg til filer i et arkiv"
 
-#: src/window.c:4171
+#: src/window.c:4012
 msgid "Extract archive"
 msgstr "Pakk ut arkiv"
