@@ -22,17 +22,22 @@
 
 #include <config.h>
 #include <string.h>
+#include <math.h>
 
 #include <gnome.h>
 #include <glade/glade.h>
 
 #include "file-utils.h"
+#include "fr-stock.h"
 #include "window.h"
 #include "typedefs.h"
 #include "gtk-utils.h"
 
 
 #define GLADE_FILE "file_roller.glade"
+#define UPDATE_DROPPED_FILES (FALSE)
+#define ARCHIVE_MIME_TYPE ("application/x-compressed-tar")
+#define ARCHIVE_ICON_SIZE (48)
 
 
 typedef struct {
@@ -40,10 +45,7 @@ typedef struct {
 	GladeXML  *gui;
 
 	GtkWidget *dialog;
-	GtkWidget *a_add_label;
-	GtkWidget *a_add_to_fileentry;
 	GtkWidget *a_add_to_entry;
-	GtkWidget *a_only_newer_checkbutton;
 
 	GList     *file_list;
 	gboolean   add_clicked;
@@ -71,39 +73,33 @@ add_clicked_cb (GtkWidget  *widget,
 		DialogData *data)
 {
 	FRWindow *window = data->window; 
-	char     *archive_name_utf8;
 	char     *archive_name;
 	char     *archive_dir;
-	char     *archive_name_test;
+	char     *archive_file;
 	gboolean  do_not_add = FALSE;
 
 	data->add_clicked = TRUE;
 
 	/* Collect data */
 
-	archive_name_utf8 = gnome_file_entry_get_full_path (GNOME_FILE_ENTRY (data->a_add_to_fileentry), FALSE);
-	archive_name = g_filename_from_utf8 (archive_name_utf8, -1, NULL, NULL, NULL);
-	g_free (archive_name_utf8);
-
-	window->update_dropped_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_only_newer_checkbutton));
+	window->update_dropped_files = UPDATE_DROPPED_FILES;
+	archive_name = g_filename_from_utf8 (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)), -1, NULL, NULL, NULL);
 
 	/* check whether the user entered an archive name. */
 
-	archive_name_test = remove_ending_separator (archive_name);
-	if (path_is_dir (archive_name_test)) {
+	if (path_is_dir (archive_name)) {
 		GtkWidget  *d;
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
+					     _("Could not zip objects"),
 					     _("You have to specify an archive name."),
 					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (archive_name);
-		g_free (archive_name_test);
 
 		return;
 	}
@@ -122,9 +118,9 @@ add_clicked_cb (GtkWidget  *widget,
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
+					     _("Could not zip objects"),
 					     _("Archive type not supported."),
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -134,8 +130,7 @@ add_clicked_cb (GtkWidget  *widget,
 	}
 
 	/* check directory existence. */
-
-	archive_dir = remove_level_from_path (archive_name);
+	archive_dir = remove_level_from_path ((char*) data->file_list->data);
 	if (! path_is_dir (archive_dir)) {
 		GtkWidget *d;
 		int        r;
@@ -151,8 +146,6 @@ add_clicked_cb (GtkWidget  *widget,
 			
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (archive_name);
-
 	}
 
 	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755)) {
@@ -165,7 +158,7 @@ add_clicked_cb (GtkWidget  *widget,
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
-					     _("Addition not performed"),
+					     _("Could not zip objects"),
 					     message,
 					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
 					     NULL);
@@ -175,11 +168,8 @@ add_clicked_cb (GtkWidget  *widget,
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (archive_dir);
 		g_free (archive_name);
-
 		return;
 	}
-
-	g_free (archive_dir);
 
 	if (do_not_add) {
 		GtkWidget *d;
@@ -187,23 +177,25 @@ add_clicked_cb (GtkWidget  *widget,
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
-					     _("Addition not performed"),
+					     _("Zip not performed"),
 					     NULL,
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
+		g_free (archive_dir);
 		g_free (archive_name);
 		gtk_widget_destroy (GTK_WIDGET (d));
-
 		return;
 	}
 
-	if (! path_is_file (archive_name)) {
+	archive_file = g_build_filename (archive_dir, archive_name, NULL);
+
+	if (! path_is_file (archive_file)) {
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup (data->file_list);
 		window->add_after_creation = TRUE;
-		window_archive_new (window, archive_name);
+		window_archive_new (window, archive_file);
 
 	} else {
 		window->add_after_opening = TRUE;
@@ -212,11 +204,121 @@ add_clicked_cb (GtkWidget  *widget,
 						   FR_BATCH_ACTION_ADD,
 						   path_list_dup (data->file_list),
 						   (GFreeFunc) path_list_free);
-		window_archive_open (window, archive_name, GTK_WINDOW (window->app));
+		window_archive_open (window, archive_file, GTK_WINDOW (window->app));
 	}
 
 	g_free (archive_name);
+	g_free (archive_dir);
+	g_free (archive_file);
+
 	gtk_widget_destroy (data->dialog);
+}
+
+
+/* taken from egg-recent-util.c */
+static GdkPixbuf *
+scale_icon (GdkPixbuf *pixbuf,
+	    double    *scale)
+{
+	guint width, height;
+	
+	width = gdk_pixbuf_get_width (pixbuf);
+	height = gdk_pixbuf_get_height (pixbuf);
+	
+	width = floor (width * *scale + 0.5);
+	height = floor (height * *scale + 0.5);
+	
+        return gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
+}
+
+
+/* taken from egg-recent-util.c */
+static GdkPixbuf *
+load_icon_file (char          *filename,
+		guint          base_size,
+		guint          nominal_size)
+{
+	GdkPixbuf *pixbuf, *scaled_pixbuf;
+        guint      width, height, size;
+        double     scale;
+	
+	pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+	
+	if (pixbuf == NULL) {
+		return NULL;
+	}
+
+	if (base_size == 0) {
+		width = gdk_pixbuf_get_width (pixbuf);
+		height = gdk_pixbuf_get_height (pixbuf);
+		size = MAX (width, height);
+		if (size > nominal_size) {
+			base_size = size;
+		} else {
+			/* Don't scale up small icons */
+			base_size = nominal_size;
+		}
+
+	} 
+
+	if (base_size != nominal_size) {
+		scale = (double) nominal_size / base_size;
+		scaled_pixbuf = scale_icon (pixbuf, &scale);
+		g_object_unref (pixbuf);
+		pixbuf = scaled_pixbuf;
+	}
+
+        return pixbuf;
+}
+
+
+static GdkPixbuf *
+get_pixbuf_from_mime_type (const char *mime_type,
+			   int         icon_size)
+{
+	GnomeIconTheme *icon_theme;
+	char           *icon_name = NULL;
+	GdkPixbuf      *icon = NULL;
+
+	icon_theme = gnome_icon_theme_new ();
+
+	if (icon_theme == NULL)
+		return NULL;
+
+	gnome_icon_theme_set_allow_svg (icon_theme, TRUE);
+
+	icon_name = gnome_icon_lookup (icon_theme,
+				       NULL,
+				       NULL,
+				       NULL,
+				       NULL,
+				       mime_type,
+				       GNOME_ICON_LOOKUP_FLAGS_NONE,
+				       NULL);
+
+	if (icon_name != NULL) {
+		char                *icon_path = NULL;
+		const GnomeIconData *icon_data;
+		int                  base_size;
+
+		icon_path = gnome_icon_theme_lookup_icon (icon_theme, 
+							  icon_name,
+							  icon_size,
+							  &icon_data,
+							  &base_size);
+
+		if (icon_path != NULL) {
+			icon = load_icon_file (icon_path, 
+					       base_size, 
+					       icon_size);
+			g_free (icon_path);
+		}
+	}
+
+	g_free (icon_name);
+	g_object_unref (icon_theme);
+	
+	return icon;
 }
 
 
@@ -227,11 +329,8 @@ dlg_batch_add_files (FRWindow *window,
         DialogData *data;
 	GtkWidget  *cancel_button;
 	GtkWidget  *add_button;
-	GList      *scan;
-	int         n_files = 0, n_folders = 0;
-	char       *label_files = NULL, *label_folders = NULL, *label;
+	GtkWidget  *add_image;
 	char       *path;
-	char       *markup;
 
         data = g_new (DialogData, 1);
 
@@ -248,42 +347,17 @@ dlg_batch_add_files (FRWindow *window,
         /* Get the widgets. */
 
         data->dialog = glade_xml_get_widget (data->gui, "batch_add_files_dialog");
-	data->a_add_label = glade_xml_get_widget (data->gui, "a_add_label");
-	data->a_add_to_fileentry = glade_xml_get_widget (data->gui, "a_add_to_fileentry");
 	data->a_add_to_entry = glade_xml_get_widget (data->gui, "a_add_to_entry");
-	data->a_only_newer_checkbutton = glade_xml_get_widget (data->gui, "a_only_newer_checkbutton");
 
 	add_button = glade_xml_get_widget (data->gui, "a_add_button");
 	cancel_button = glade_xml_get_widget (data->gui, "a_cancel_button");
 
+	add_image = glade_xml_get_widget (data->gui, "a_add_image");
+	gtk_image_set_from_pixbuf (GTK_IMAGE (add_image), get_pixbuf_from_mime_type (ARCHIVE_MIME_TYPE, ARCHIVE_ICON_SIZE));
+
 	/* Set widgets data. */
 
-	for (scan = file_list; scan; scan = scan->next) {
-		char *path = scan->data;
-		if (path_is_dir (path))
-			n_folders++;
-		else if (path_is_file (path))
-			n_files++;
-	}
-
-	if (n_files > 0) 
-		label_files = g_strdup_printf (_("Files to add: %d"), n_files);
-	if (n_folders > 0)
-		label_folders = g_strdup_printf (_("Folders to add: %d"), n_folders);
-	
-	label = g_strconcat ((label_folders ? label_folders : label_files),
-			     ((label_folders && label_files) ? "\n" : ""),
-			     ((label_folders && label_files) ? label_files : NULL),
-			     NULL);
-	g_free (label_files);
-	g_free (label_folders);
-
-	markup = g_strdup_printf ("<b>%s</b>", label);
-	g_free (label);
-	gtk_label_set_markup (GTK_LABEL (data->a_add_label), markup);
-	g_free (markup);
-
-	path = g_strconcat (window->add_default_dir, "/", NULL);
+	path = g_strconcat (file_name_from_path ((char*) file_list->data), ".tgz", NULL);
 	_gtk_entry_set_filename_text (GTK_ENTRY (data->a_add_to_entry), path);
 	g_free (path);
 

@@ -660,12 +660,10 @@ file_sel_destroy_cb (GtkWidget    *w,
 
 static void 
 copy_or_move_archive_response_cb (GtkWidget    *w,
-				  gint         response,
+				  int           response,
 				  CopyMoveData *data)
 {
-	FRWindow    *window;
-	char        *path;
-	const char  *filename;
+	FRWindow    *window = data->window;;
 	char        *folder;
 	char        *new_path;
 
@@ -676,21 +674,21 @@ copy_or_move_archive_response_cb (GtkWidget    *w,
 
 	gtk_widget_hide (data->file_sel);
 
-	window = data->window;
-	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->file_sel));
+	folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (data->file_sel));
 
-	if ((path == NULL) || (*path == 0)) {
-                gtk_widget_destroy (data->file_sel);
+	if ((folder == NULL) || (*folder == 0)) {
+		g_free (folder);
+		gtk_widget_show (data->file_sel);
 		return;
 	}
 
-	filename = file_name_from_path (path);
-	if ((filename == NULL) || (*filename == 0))
-		filename = file_name_from_path (window->archive_filename);
-	folder = remove_level_from_path (path);
-	new_path = g_build_filename (folder, filename, NULL);
-	g_free (path);
+	new_path = g_build_filename (folder, file_name_from_path (window->archive_filename), NULL);
 	g_free (folder);
+
+	if (strcmp (new_path, window->archive_filename) == 0) {
+		gtk_widget_show (data->file_sel);
+		return;
+	}
 
 	if (path_is_file (new_path)) {
 		GtkWidget *d;
@@ -737,6 +735,7 @@ copy_or_move_archive_response_cb (GtkWidget    *w,
 #endif
 		if (file_move (window->archive_filename, new_path)) 
 			window_archive_rename (window, new_path);
+
 		else {
 			GtkWidget *dialog;
 			dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
@@ -768,22 +767,20 @@ copy_or_move_archive (FRWindow *window,
 	data->window = window;
 	data->copy = copy;
 	data->overwrite = overwrite;
-	data->file_sel = file_sel = gtk_file_chooser_dialog_new (copy ? _("Copy") : _("Move"),
-								 NULL,
-								 GTK_FILE_CHOOSER_ACTION_SAVE,
-								 GTK_STOCK_CANCEL,
-								 GTK_RESPONSE_CANCEL,
-					        		 copy ? GTK_STOCK_COPY :
-								        _("Move"),
-								 GTK_RESPONSE_OK,
-								 NULL);
-
+	data->file_sel = file_sel = 
+		gtk_file_chooser_dialog_new (copy ? _("Copy") : _("Move"),
+					     NULL,
+					     GTK_FILE_CHOOSER_ACTION_SAVE,
+					     GTK_STOCK_CANCEL,
+					     GTK_RESPONSE_CANCEL,
+					     copy ? _("_Copy"): _("_Move"),
+					     GTK_RESPONSE_OK,
+					     NULL);
+	gtk_file_chooser_set_folder_mode (GTK_FILE_CHOOSER (file_sel),
+					  TRUE);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
  
-	/*gtk_widget_set_sensitive (GTK_FILE_SELECTION (file_sel)->file_list,
-				  FALSE);*/
-
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response", 
 			  G_CALLBACK (copy_or_move_archive_response_cb), 
@@ -1127,7 +1124,7 @@ manual_cb (GtkWidget *widget,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not display help"),
 						  err->message,
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
                 
                 g_signal_connect (G_OBJECT (dialog), "response",

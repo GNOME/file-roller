@@ -1608,7 +1608,7 @@ gboolean
 fr_archive_utils__file_is_archive (const char *filename)
 {
 	const char *mime_type;
-	
+
 	mime_type = get_mime_type_from_content (filename);
 	
 	if (mime_type == NULL)

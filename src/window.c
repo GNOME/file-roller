@@ -455,8 +455,8 @@ load_icon_file (char          *filename,
 		guint          nominal_size)
 {
 	GdkPixbuf *pixbuf, *scaled_pixbuf;
-        guint width, height, size;
-        double scale;
+        guint      width, height, size;
+        double     scale;
 	
 	pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
 	
@@ -1430,7 +1430,7 @@ open_folder (GtkWindow  *parent,
 					     GTK_STOCK_DIALOG_ERROR,
 					     message,
 					     err->message,
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
 		g_free (message);
 
@@ -1914,7 +1914,7 @@ drag_drop_add_file_list (FRWindow *window)
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not add the files to the archive"),
 						  _("You don't have the right permissions."),
-						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -1947,7 +1947,7 @@ drag_drop_add_file_list (FRWindow *window)
 							  GTK_STOCK_DIALOG_ERROR,
 							  _("Could not add the files to the archive"),
 							  _("You can't add an archive to itself."),
-							  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+							  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -3586,7 +3586,7 @@ window_archive_new (FRWindow   *window,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not create the archive"),
 						  _("Archive type not supported."),
-						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -3681,7 +3681,7 @@ window_archive_open (FRWindow   *current_window,
 						  GTK_STOCK_DIALOG_ERROR,
 						  message,
 						  reason,
-						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
 		g_free (message);
 
@@ -3731,8 +3731,7 @@ window_archive_save_as (FRWindow      *window,
 						  GTK_STOCK_DIALOG_ERROR,
 						  message,
 						  _("Archive type not supported."),
-						  NULL,
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 		g_free (message);
 
@@ -3986,7 +3985,7 @@ window_archive_extract (FRWindow   *window,
 						     GTK_STOCK_DIALOG_ERROR,
 						     _("Extraction not performed"),
 						     message,
-						     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						     NULL);
 			g_free (message);
 						   
@@ -4005,7 +4004,7 @@ window_archive_extract (FRWindow   *window,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Extraction not performed"),
 					     NULL,
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
