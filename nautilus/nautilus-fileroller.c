@@ -252,7 +252,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 		items = g_list_append (items, item);
 
-	} else if (one_archive && !can_write) {
+	} else if (one_archive && ! can_write) {
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_to",

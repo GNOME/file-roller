@@ -1,3 +1,24 @@
+2004-12-07  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-archive.h: 
+	* src/window.h: 
+	* src/window.c (window_archive__open_add): 
+	* src/fr-archive.c (create_command_from_filename): 
+	* src/dlg-batch-add.c (add_clicked_cb): 
+	* src/fr-command-cfile.c (fr_command_cfile_add): Added ability to 
+	create compressed files from the Nautilus context menu command.  
+	
+	Fixed bug #160617: "Create archive" context menu item does not support 
+	single-file bz2 or gz
+	
+	* src/file_roller.glade: 
+	* src/dlg-batch-add.c (dlg_batch_add_files): Added ability to select a 
+	destination folder.
+	
+	Fixed bug #160401: create archive doesn't work on read-only CD-ROM
+	
+	* src/file-utils.c (check_permissions): new function.
+
 2004-12-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command.c (fr_command_list): 

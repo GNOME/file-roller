@@ -206,7 +206,98 @@ fr_command_cfile_add (FRCommand     *comm,
 		      const char    *password,
 		      FRCompression  compression)
 {
-	/* never called */
+	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
+	const char     *filename;
+	char           *temp_dir;
+	char           *e_temp_dir;
+	char           *temp_file;
+
+	if ((file_list == NULL) || (file_list->data == NULL))
+		return;
+
+	/* create a temp dir. */
+
+	temp_dir = get_temp_work_dir ();
+	e_temp_dir = fr_command_escape (comm, temp_dir);
+
+	/* copy file to the temp dir */
+
+	filename = file_list->data;
+
+	temp_file = g_strconcat (e_temp_dir, "/", filename, NULL);
+
+	fr_process_begin_command (comm->process, "cp");
+	fr_process_set_working_dir (comm->process, base_dir);
+	fr_process_add_arg (comm->process, "-f");
+	fr_process_add_arg (comm->process, filename);
+	fr_process_add_arg (comm->process, temp_file);
+	fr_process_end_command (comm->process);
+
+	/**/
+
+	switch (comm_cfile->compress_prog) {
+	case FR_COMPRESS_PROGRAM_NONE:
+		break;
+		
+	case FR_COMPRESS_PROGRAM_GZIP:
+		fr_process_begin_command (comm->process, "gzip");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		break;
+
+	case FR_COMPRESS_PROGRAM_BZIP:
+		fr_process_begin_command (comm->process, "bzip");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		break;
+
+	case FR_COMPRESS_PROGRAM_BZIP2:
+		fr_process_begin_command (comm->process, "bzip2");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		break;
+
+	case FR_COMPRESS_PROGRAM_COMPRESS: 
+		fr_process_begin_command (comm->process, "compress");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		break;
+
+	case FR_COMPRESS_PROGRAM_LZOP: /* FIXME: untested. */
+		fr_process_begin_command (comm->process, "lzop");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "-fU");
+		fr_process_add_arg (comm->process, "--no-stdin");
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		break;
+	}
+
+      	/* copy compressed file to the dest dir */
+
+	fr_process_begin_command (comm->process, "cp");
+	fr_process_set_working_dir (comm->process, e_temp_dir);
+	fr_process_add_arg (comm->process, "-f");
+	fr_process_add_arg (comm->process, "*");
+	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_end_command (comm->process);
+
+	/* remove the temp dir */
+
+	fr_process_begin_command (comm->process, "rm");
+	fr_process_set_sticky (comm->process, TRUE);
+	fr_process_add_arg (comm->process, "-rf");
+	fr_process_add_arg (comm->process, e_temp_dir);
+	fr_process_end_command (comm->process);
+
+	g_free (temp_file);
+	g_free (e_temp_dir);
+	g_free (temp_dir);
 }
 
 
@@ -236,15 +327,10 @@ fr_command_cfile_extract (FRCommand  *comm,
 	char           *compr_file;
 	char           *e_compr_file;
 
+	/* create a temp dir. */
+
 	temp_dir = get_temp_work_dir ();
 	e_temp_dir = fr_command_escape (comm, temp_dir);
-
-	/* create a temp dir. */
-	/*
-	fr_process_begin_command (comm->process, "mkdir");
-	fr_process_add_arg (comm->process, e_temp_dir);
-	fr_process_end_command (comm->process);
-	*/
 
 	/* copy file to the temp dir, remove the already existing file first */
 

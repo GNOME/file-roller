@@ -3135,7 +3135,7 @@ go_forward_cb (GtkWidget *widget,
 
 
 FRWindow *
-window_new ()
+window_new (void)
 {
 	FRWindow         *window;
 	GtkWidget        *toolbar;
@@ -3297,6 +3297,8 @@ window_new ()
 	window->convert_data.new_archive = NULL;
 
 	window->stoppable = TRUE;
+
+	window->batch_adding_one_file = FALSE;
 
 	/* Create the widgets. */
 
@@ -5738,6 +5740,7 @@ window_batch_mode_start (FRWindow *window)
 
 	window->batch_mode = TRUE;
 	window->batch_action = window->batch_action_list;
+	window->archive->can_create_compressed_file = window->batch_adding_one_file;
 	_window_batch_start_current_action (window);
 }
 
@@ -5750,6 +5753,7 @@ window_batch_mode_stop (FRWindow *window)
 
 	window->extract_interact_use_default_dir = FALSE;
 	window->batch_mode = FALSE;
+	window->archive->can_create_compressed_file = FALSE;
 
 	if (window->non_interactive)
 		window_close (window);
@@ -5795,6 +5799,7 @@ window_archive__open_add (FRWindow   *window,
 			  GList      *file_list)
 {
 	window->non_interactive = TRUE;
+	window->batch_adding_one_file = (file_list->next == NULL) && (path_is_file (file_list->data));
 
 	if (archive != NULL) {
 		OpenAndAddData *adata;

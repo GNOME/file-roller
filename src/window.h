@@ -185,6 +185,7 @@ typedef struct {
 
 	gboolean extracting_dragged_files;
 	gboolean extracting_dragged_files_interrupted;
+	gboolean batch_adding_one_file;
 
 	/* progress dialog data */
 
@@ -210,7 +211,7 @@ typedef struct {
 } FRWindow;
 
 
-FRWindow * window_new                       ();
+FRWindow * window_new                       (void);
 
 void       window_close                     (FRWindow      *window);
 

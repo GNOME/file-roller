@@ -51,6 +51,7 @@ struct _FRArchive {
 					  * or a compressed file. */
 	gboolean   read_only;            /* Whether archive is read-only
 					  * or not. */
+	gboolean   can_create_compressed_file;
 
 	FakeLoadFunc fake_load_func;     /* If returns TRUE, archives are not read when
 					  * fr_archive_load is invoked, used

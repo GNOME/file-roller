@@ -141,4 +141,7 @@ char*               file_list__get_prev_field    (const char *line,
 						  int         start_from,
 						  int         field_n);
 
+gboolean            check_permissions            (const char *path,
+						  int         mode);
+
 #endif /* FILE_UTILS_H */

@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 
 #include "file-utils.h"
 #include "fr-stock.h"
@@ -50,6 +51,7 @@ typedef struct {
 
 	GtkWidget *dialog;
 	GtkWidget *a_add_to_entry;
+	GtkWidget *a_location_filechooserbutton;
 	GtkWidget *add_image;
 
 	GList     *file_list;
@@ -131,26 +133,6 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 	
-	/**/
-
-	if (path_is_dir (archive_name)) {
-		GtkWidget  *d;
-
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
-					     _("You have to specify an archive name."),
-					     GTK_STOCK_OK, GTK_RESPONSE_OK,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (archive_name);
-
-		return;
-	}
-
 	/* if the user do not specify an extension use tgz as default */
 	if (strchr (archive_name, '.') == NULL) {
 		char *new_archive_name;
@@ -179,7 +161,27 @@ add_clicked_cb (GtkWidget  *widget,
 
 	/* Check directory existence. */
 
-	archive_dir = remove_level_from_path ((char*) data->file_list->data);
+	archive_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton));
+
+	if (! check_permissions (archive_dir, R_OK|W_OK|X_OK)) {
+		GtkWidget  *d;
+
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not create the archive"),
+					     _("You don't have the right permissions to create an archive in the destination folder."),
+					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
+
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (archive_dir);
+		g_free (archive_name);
+		return;
+	}
+
 	if (! path_is_dir (archive_dir)) {
 		GtkWidget *d;
 		int        r;
@@ -196,6 +198,8 @@ add_clicked_cb (GtkWidget  *widget,
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+
+		do_not_add = (r != GTK_RESPONSE_YES);
 	}
 
 	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755)) {
@@ -240,11 +244,65 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
+	/**/
+
 	archive_file = g_build_filename (archive_dir, archive_name, NULL);
 	archive_ext = fr_archive_utils__get_file_name_ext (archive_name);
 
 	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, archive_ext);
 
+	if (path_is_dir (archive_file)) {
+		GtkWidget  *d;
+
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not create the archive"),
+					     _("You have to specify an archive name."),
+					     GTK_STOCK_OK, GTK_RESPONSE_OK,
+					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (archive_name);
+		g_free (archive_dir);
+		g_free (archive_file);
+		return;
+	}
+	
+	if (path_is_file (archive_file)
+	    && ((strcmp (archive_ext, ".gz") == 0)
+		|| (strcmp (archive_ext, ".z") == 0)
+		|| (strcmp (archive_ext, ".Z") == 0)
+		|| (strcmp (archive_ext, ".bz") == 0)
+		|| (strcmp (archive_ext, ".bz2") == 0)
+		|| (strcmp (archive_ext, ".lzo") == 0))) {
+		GtkWidget *d;
+		int        r;
+		
+		d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
+					     GTK_DIALOG_MODAL,
+					     GTK_STOCK_DIALOG_QUESTION,
+					     _("The archive is already present.  Do you want to overwrite it?"),
+					     NULL,
+					     GTK_STOCK_NO, GTK_RESPONSE_NO,
+					     _("_Overwrite"), GTK_RESPONSE_YES,
+					     NULL);
+			
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
+		r = gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+			
+		if (r == GTK_RESPONSE_YES)
+			gnome_vfs_unlink (archive_file);
+		else {
+			g_free (archive_name);
+			g_free (archive_dir);
+			g_free (archive_file);
+			return;
+		}
+	}
+		
 	if (! path_is_file (archive_file)) {
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
@@ -254,7 +312,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 	} else {
 		window->add_after_opening = TRUE;
-
+		
 		window_batch_mode_add_next_action (window,
 						   FR_BATCH_ACTION_ADD,
 						   path_list_dup (data->file_list),
@@ -401,6 +459,8 @@ dlg_batch_add_files (FRWindow *window,
 	GtkWidget  *add_button;
 	char       *path, *automatic_name = NULL;
 	char       *default_ext;
+	const char *first_filename;
+	char       *parent;
 
         data = g_new (DialogData, 1);
 
@@ -418,6 +478,7 @@ dlg_batch_add_files (FRWindow *window,
 
         data->dialog = glade_xml_get_widget (data->gui, "batch_add_files_dialog");
 	data->a_add_to_entry = glade_xml_get_widget (data->gui, "a_add_to_entry");
+	data->a_location_filechooserbutton = glade_xml_get_widget (data->gui, "a_location_filechooserbutton");
 
 	add_button = glade_xml_get_widget (data->gui, "a_add_button");
 	cancel_button = glade_xml_get_widget (data->gui, "a_cancel_button");
@@ -426,20 +487,26 @@ dlg_batch_add_files (FRWindow *window,
 
 	/* Set widgets data. */
 
-	if (file_list->next == NULL)
-		automatic_name = g_strdup (file_name_from_path ((char*) file_list->data));
-	else {
-		const char *first_filename = (char*) file_list->data;
-		char       *parent = remove_level_from_path (first_filename);
+	first_filename = (char*) file_list->data;
+	parent = remove_level_from_path (first_filename);
 
+	if (file_list->next == NULL) {
+		automatic_name = g_strdup (file_name_from_path ((char*) file_list->data));
+	} else {
 		automatic_name = g_strdup (file_name_from_path (parent));
-		g_free (parent);
 		
 		if ((automatic_name == NULL) || (automatic_name[0] == '\0')) {
 			g_free (automatic_name);
 			automatic_name = g_strdup (file_name_from_path (first_filename));
 		}
 	}
+
+	if (check_permissions (parent, R_OK|W_OK|X_OK))
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), parent);
+	else
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), g_get_home_dir());
+
+	g_free (parent);
 
 	default_ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, DEFAULT_EXTENSION);
 	path = g_strconcat (automatic_name, default_ext, NULL);

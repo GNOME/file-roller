@@ -1095,3 +1095,70 @@ str_substitute (const char *str,
 
 	return g_string_free (gstr, FALSE);
 }
+
+
+char *
+escape_uri (const char *uri)
+{
+	const char *start = NULL;
+	const char *uri_no_method;
+	char       *method;
+	char       *epath, *euri;
+
+	if (uri == NULL)
+		return NULL;
+
+	start = strstr (uri, "://");
+	if (start != NULL) {
+		uri_no_method = start + strlen ("://");
+		method = g_strndup (uri, start - uri);
+	} else {
+		uri_no_method = uri;
+		method = NULL;
+	}
+	
+	epath = gnome_vfs_escape_host_and_path_string (uri_no_method);
+	
+	if (method != NULL) {
+		euri = g_strdup_printf ("%s://%s", method, epath);
+		g_free (epath);
+	} else
+		euri = epath;
+
+	g_free (method);
+
+	return euri;
+}
+
+
+gboolean
+check_permissions (const char *path,
+		   int         mode) 
+{
+	GnomeVFSFileInfo *info;
+	GnomeVFSResult    vfs_result;
+	char             *escaped;
+
+	info = gnome_vfs_file_info_new ();
+	escaped = escape_uri (path);
+	vfs_result = gnome_vfs_get_file_info (escaped, 
+					      info, 
+					      (GNOME_VFS_FILE_INFO_DEFAULT 
+					       | GNOME_VFS_FILE_INFO_FOLLOW_LINKS
+					       | GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS));
+	g_free (escaped);
+
+	if (vfs_result != GNOME_VFS_OK) 
+		return FALSE; 
+
+	if ((mode & R_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_READABLE)) 
+		return FALSE; 
+
+	if ((mode & W_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE)) 
+		return FALSE; 
+
+	if ((mode & X_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE)) 
+		return FALSE; 
+
+	return TRUE;
+}

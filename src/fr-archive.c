@@ -192,6 +192,7 @@ fr_archive_init (FRArchive *archive)
 	archive->filename = NULL;
 	archive->command = NULL;
 	archive->is_compressed_file = FALSE;
+	archive->can_create_compressed_file = FALSE;
 
 	archive->fake_load_func = NULL;
 	archive->fake_load_data = NULL;
@@ -377,89 +378,151 @@ create_command_from_filename (FRArchive  *archive,
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
 						       FR_COMPRESS_PROGRAM_GZIP);
-	} else if (file_extension_is (filename, ".tar.bz2")
-		   || file_extension_is (filename, ".tbz2")) {
+		return TRUE;
+	} 
+	
+	if (file_extension_is (filename, ".tar.bz2")
+	    || file_extension_is (filename, ".tbz2")) {
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
 						       FR_COMPRESS_PROGRAM_BZIP2);
-	} else if (file_extension_is (filename, ".tar.bz")
-		   || file_extension_is (filename, ".tbz")) {
+		return TRUE;
+	} 
+	
+	if (file_extension_is (filename, ".tar.bz")
+	    || file_extension_is (filename, ".tbz")) {
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
 						       FR_COMPRESS_PROGRAM_BZIP);
-	} else if (file_extension_is (filename, ".tar.Z")
-		   || file_extension_is (filename, ".taz")) {
+		return TRUE;
+	} 
+	
+	if (file_extension_is (filename, ".tar.Z")
+	    || file_extension_is (filename, ".taz")) {
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
 						       FR_COMPRESS_PROGRAM_COMPRESS);
-	} else if (file_extension_is (filename, ".tar.lzo")
-		   || file_extension_is (filename, ".tzo")) {
+		return TRUE;
+	}
+	
+	if (file_extension_is (filename, ".tar.lzo")
+	    || file_extension_is (filename, ".tzo")) {
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
 						       FR_COMPRESS_PROGRAM_LZOP);
-	} else if (file_extension_is (filename, ".tar")) {
+		return TRUE;
+	} 
+	
+	if (file_extension_is (filename, ".tar")) {
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
 						       FR_COMPRESS_PROGRAM_NONE);
-	} else if (file_extension_is (filename, ".zip")
-		   || file_extension_is (filename, ".ear")
-		   || file_extension_is (filename, ".jar")
-		   || file_extension_is (filename, ".war")) {
+		return TRUE;
+	} 
+
+	if (file_extension_is (filename, ".zip")
+	    || file_extension_is (filename, ".ear")
+	    || file_extension_is (filename, ".jar")
+	    || file_extension_is (filename, ".war")) {
 		archive->command = fr_command_zip_new (archive->process, 
 						       filename);
-	} else if (file_extension_is (filename, ".zoo")) {
+		return TRUE;
+	} 
+	
+	if (file_extension_is (filename, ".zoo")) {
 		archive->command = fr_command_zoo_new (archive->process,
 						       filename);
-	} else if (file_extension_is (filename, ".lzh")) {
+		return TRUE;
+	} 
+	
+	if (file_extension_is (filename, ".lzh")) {
 		archive->command = fr_command_lha_new (archive->process, 
 						       filename);
-	} else if (file_extension_is (filename, ".rar")) {
+		return TRUE;
+	} 
+	
+	if (file_extension_is (filename, ".rar")) {
 		archive->command = fr_command_rar_new (archive->process, 
 						       filename);
-	} else if (file_extension_is (filename, ".arj")) {
+		return TRUE;
+	} 
+
+	if (file_extension_is (filename, ".arj")) {
 		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
-	} else if (file_extension_is (filename, ".ar")) {
+		return TRUE;
+	} 
+
+	if (file_extension_is (filename, ".ar")) {
 		archive->command = fr_command_ar_new (archive->process, 
 						      filename);
-	} else if (file_extension_is (filename, ".7z")) {
+		return TRUE;
+	} 
+
+	if (file_extension_is (filename, ".7z")) {
 		archive->command = fr_command_7z_new (archive->process,
 						      filename);
-	} else if (loading) {
+		return TRUE;
+	} 
+
+	if (loading || archive->can_create_compressed_file) {
+
 		if (file_extension_is (filename, ".gz")
 		    || file_extension_is (filename, ".z")
 		    || file_extension_is (filename, ".Z")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_GZIP);
 			archive->is_compressed_file = TRUE;
-		} else if (file_extension_is (filename, ".bz")) {
+			return TRUE;
+		} 
+
+		if (file_extension_is (filename, ".bz")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_BZIP);
 			archive->is_compressed_file = TRUE;
-		} else if (file_extension_is (filename, ".bz2")) {
+			return TRUE;
+		} 
+
+		if (file_extension_is (filename, ".bz2")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_BZIP2);
 			archive->is_compressed_file = TRUE;
-		} else if (file_extension_is (filename, ".lzo")) {
+			return TRUE;
+		}
+
+		if (file_extension_is (filename, ".lzo")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_LZOP);
 			archive->is_compressed_file = TRUE;
-		} else if (file_extension_is (filename, ".bin")
-			   || file_extension_is (filename, ".sit")) {
+			return TRUE;
+		} 
+	} 
+
+	if (loading) {
+		
+		if (file_extension_is (filename, ".bin")
+		    || file_extension_is (filename, ".sit")) {
 			archive->command = fr_command_unstuff_new (archive->process,
 								   filename);
-		} else if (file_extension_is (filename, ".rpm")) {
+			return TRUE;
+		} 
+
+		if (file_extension_is (filename, ".rpm")) {
 			archive->command = fr_command_rpm_new (archive->process,
 							       filename);
-		} else if (file_extension_is (filename, ".iso")) {
+			return TRUE;
+		} 
+
+		if (file_extension_is (filename, ".iso")) {
 			archive->command = fr_command_iso_new (archive->process,
 							       filename);
-		} else if (file_extension_is (filename, ".deb")) {
+			return TRUE;
+		} 
+		
+		if (file_extension_is (filename, ".deb")) {
 			archive->command = fr_command_ar_new (archive->process, 
 							      filename);
+			return TRUE;
+		} 
+	}
 
-		} else
-			return FALSE;
-	} else
-		return FALSE;
-	
-	return TRUE;
+	return FALSE;
 }
 
 
