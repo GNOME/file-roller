@@ -2,223 +2,202 @@
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Ilmar Kerm <ikerm@hot.ee>, 2002.
 # Tõivo Leedjärv <toivo@linux.ee>, 2002, 2003.
-#
+# Martin Anderson <martin@all-tec.ee>, 2004.
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2003-09-02 20:22+0200\n"
-"PO-Revision-Date: 2003-09-03 00:15+0300\n"
-"Last-Translator: Priit Laes <amd@tt.ee>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-27 03:24+0100\n"
+"PO-Revision-Date: 2004-01-09 01:59+0200\n"
+"Last-Translator: Martin Anderson <martin@all-tec.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add to Archive..."
-msgstr "Lisa arhiivi..."
+msgid "Extract Here"
+msgstr "Paki siia lahti"
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract to..."
-msgstr "Paki lahti kataloogi..."
-
-#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr "File Rolleri komponendi lisamise tegevused"
 
-#: component/File_Roller_Component.server.in.in.h:4
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component extract operations"
 msgstr "File Rolleri komponendi lahtipakkimise tegevused"
 
-#: component/File_Roller_Component.server.in.in.h:5
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File roller component"
 msgstr "File Roller komponent"
 
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "Zip Objects..."
+msgstr ""
+
 #: file-roller.desktop.in.h:1
-msgid "Archive Manager"
-msgstr "Arhiivihaldur"
+msgid "Create and modify zips and other archive types"
+msgstr ""
 
-#. Create the application.
 #: file-roller.desktop.in.h:2
-#: src/gtk-utils.c:388
-#: src/main.c:101
-#: src/menu-callbacks.c:1076
-#: src/window.c:759
-#: src/window.c:1157
-#: src/window.c:2768
-msgid "File Roller"
-msgstr "File Roller"
+msgid "Zip Creator"
+msgstr ""
 
-#: file-roller.desktop.in.h:3
-msgid "Handle compressed archives"
-msgstr "Käsitle pakitud arhiive"
-
-#: src/dlg-add.c:113
-#: src/dlg-add.c:120
+#: src/dlg-add.c:118 src/dlg-add.c:125
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Sul ei ole kataloogist \"%s\" lugemiseks vajalikke õigusi"
 
-#: src/dlg-add.c:119
-#: src/window.c:1791
-#: src/window.c:1824
+#: src/dlg-add.c:124 src/window.c:1930 src/window.c:1967
 msgid "Could not add the files to the archive"
 msgstr "Ei saa faile arhiivi lisada"
 
-#: src/dlg-add.c:351
-#: src/file_roller.glade.h:5
-msgid "Add Files"
-msgstr "Lisa faile"
+#: src/dlg-add.c:274 src/toolbar.h:56
+msgid "Add"
+msgstr "Lisa"
 
-#: src/dlg-add.c:356
+#: src/dlg-add.c:285
 msgid "_Add only if newer"
 msgstr "_Lisa, kui uuem"
 
-#: src/dlg-add.c:357
+#: src/dlg-add.c:286
 msgid "_Include subfolders"
 msgstr "L_isa ka alamkataloogid"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:287
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Jäta välja kataloogid, mis on sümboolsed lin_gid"
 
-#: src/dlg-add.c:359
-msgid "Exclude o_ther file systems"
-msgstr "Ära lisa teistelt faili_süsteemidelt"
-
-#: src/dlg-add.c:360
-msgid "Exclude _backup files (*~)"
-msgstr "Ära lisa _tagavarakoopiaid (*~)"
-
-#: src/dlg-add.c:361
-msgid "Exclude _hidden files (.*)"
-msgstr "Ära lisa _peidetud faile (.*)"
-
-#: src/dlg-add.c:362
-msgid "E_xclude files:"
-msgstr "Ära lisa faile:"
-
-#: src/dlg-add.c:364
+#: src/dlg-add.c:290 src/dlg-add.c:295
 msgid "example: *.o; *.bak"
 msgstr "näide: *.o; *.bak"
 
-#: src/dlg-add.c:365
-msgid "Igno_re case"
-msgstr "Tõstut_undetu"
+#: src/dlg-add.c:291
+#, fuzzy
+msgid "_Include files:"
+msgstr "Ära lisa faile:"
 
-#: src/dlg-add.c:366
+#: src/dlg-add.c:296
+msgid "E_xclude files:"
+msgstr "Ära lisa faile:"
+
+#: src/dlg-add.c:299
 msgid "_Load Options"
 msgstr "_Lae häälestus"
 
-#: src/dlg-add.c:367
+#: src/dlg-add.c:300
 msgid "Sa_ve Options"
 msgstr "_Salvesta häälestus"
 
-#: src/dlg-add.c:622
-msgid "Load Options"
-msgstr "Lae häälestus"
-
-#: src/dlg-add.c:771
+#: src/dlg-add.c:758
 msgid "Save Options"
 msgstr "Salvesta häälestus"
 
-#: src/dlg-batch-add.c:99
-#: src/dlg-batch-add.c:125
-#: src/menu-callbacks.c:179
-#: src/menu-callbacks.c:198
-#: src/window.c:3449
-msgid "Could not create the archive"
-msgstr "Ei saa arhiivi luua"
+#: src/dlg-add.c:759
+msgid "Options Name:"
+msgstr ""
 
-#: src/dlg-batch-add.c:100
-#: src/menu-callbacks.c:180
-#: src/menu-callbacks.c:375
+#: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
+#, fuzzy
+msgid "Could not zip objects"
+msgstr "Ei saa kuvada abiinfot"
+
+#: src/dlg-batch-add.c:102 src/menu-callbacks.c:190 src/menu-callbacks.c:423
 msgid "You have to specify an archive name."
 msgstr "Sa pead arhiivi nime sisestama."
 
-#: src/dlg-batch-add.c:126
-#: src/fr-archive.c:603
-#: src/window.c:3450
-#: src/window.c:3587
+#: src/dlg-batch-add.c:127 src/fr-archive.c:624 src/window.c:3646
+#: src/window.c:3796
 msgid "Archive type not supported."
 msgstr "Arhiivi tüüp ei ole toetatud."
 
-#: src/dlg-batch-add.c:146
-#: src/dlg-extract.c:120
-#: src/window.c:3775
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:150 src/window.c:4026
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Sihtkataloogi pole olemas.  Kas tahad selle luua?"
 
-#: src/dlg-batch-add.c:149
-#: src/dlg-extract.c:123
-#: src/window.c:3778
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:153 src/window.c:4029
 msgid "Create _Folder"
 msgstr "Loo _kataloog"
 
-#: src/dlg-batch-add.c:164
-#: src/dlg-extract.c:139
-#: src/window.c:3794
+#: src/dlg-batch-add.c:162 src/dlg-extract.c:169 src/window.c:4045
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Ei saa luua sihtkataloogi: %s."
 
-#: src/dlg-batch-add.c:168
-#: src/dlg-batch-add.c:190
-msgid "Addition not performed"
+#: src/dlg-batch-add.c:185
+#, fuzzy
+msgid "Zip not performed"
 msgstr "Lisamist ei teostatud"
 
-#: src/dlg-batch-add.c:270
-#, c-format
-msgid "Files to add: %d"
-msgstr "Lisatavaid faile: %d"
-
-#: src/dlg-batch-add.c:272
-#, c-format
-msgid "Folders to add: %d"
-msgstr "Lisatavaid katalooge: %d"
-
-#: src/dlg-extract.c:143
-#: src/dlg-extract.c:162
-#: src/dlg-extract.c:186
-#: src/window.c:3798
-#: src/window.c:3817
-msgid "Extraction not performed"
-msgstr "Lahtipakkimist ei teostatud"
-
-#: src/dlg-extract.c:181
-#, c-format
-msgid "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "Sul ei ole kataloogi \"%s\" lahtipakkimiseks piisavalt õigusi"
-
-#: src/dlg-extract.c:423
-#: src/dlg-preferences.c:125
-#: src/menu-callbacks.c:1035
+#: src/dlg-extract.c:87 src/menu-callbacks.c:1177
 msgid "Could not display help"
 msgstr "Ei saa kuvada abiinfot"
 
-#: src/dlg-extract.c:502
-msgid "Actions"
-msgstr "Tegevused"
+#: src/dlg-extract.c:173 src/dlg-extract.c:192 src/dlg-extract.c:216
+#: src/window.c:4049 src/window.c:4068
+msgid "Extraction not performed"
+msgstr "Lahtipakkimist ei teostatud"
 
-#: src/dlg-extract.c:503
-msgid "Destination folder"
-msgstr "Sihtkataloog"
+#: src/dlg-extract.c:211
+#, c-format
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "Sul ei ole kataloogi \"%s\" lahtipakkimiseks piisavalt õigusi"
 
-#: src/dlg-extract.c:504
+#: src/dlg-extract.c:370
 msgid "Files"
 msgstr "Failid"
 
-#: src/dlg-extract.c:533
-msgid "Bookmarks"
-msgstr "Järjehoidjad"
+#: src/dlg-extract.c:378 src/dlg-extract.c:428 src/file_roller_prop.glade.h:1
+msgid "    "
+msgstr "    "
 
-#: src/dlg-preferences.c:182
-msgid "General"
-msgstr "Üldine"
+#: src/dlg-extract.c:387 src/file_roller.glade.h:16
+msgid "_Files:"
+msgstr "_Failid:"
 
-#: src/dlg-preferences.c:187
-msgid "Visible columns"
-msgstr "Nähtavad veerud"
+#: src/dlg-extract.c:398 src/file_roller.glade.h:20
+msgid "example: *.txt; *.doc"
+msgstr "näide: *.txt; *.doc"
+
+#: src/dlg-extract.c:401 src/file_roller.glade.h:13
+msgid "_All files"
+msgstr "_Kõik failid"
+
+#: src/dlg-extract.c:408 src/file_roller.glade.h:18
+msgid "_Selected files"
+msgstr "_Valitud failid"
+
+#: src/dlg-extract.c:419
+msgid "Actions"
+msgstr "Tegevused"
+
+#: src/dlg-extract.c:435
+msgid "R_e-create folders"
+msgstr "_Loo kataloogid uuesti"
+
+#: src/dlg-extract.c:439
+msgid "Over_write existing files"
+msgstr "_Kirjuta olemasolevad failid üle"
+
+#: src/dlg-extract.c:443
+msgid "Do not e_xtract older files"
+msgstr "Ära paki _vanemaid faile lahti"
+
+#: src/dlg-extract.c:449 src/file_roller.glade.h:17
+msgid "_Password:"
+msgstr "_Salasõna:"
+
+#: src/dlg-extract.c:457
+#, fuzzy
+msgid "_Open destination folder after extraction"
+msgstr "Peale lahtipakkimist _näita sihtkataloogi"
+
+#: src/dlg-extract.c:484 src/toolbar.h:62
+msgid "Extract"
+msgstr "Paki lahti"
 
 #: src/dlg-prop.c:99
 msgid "Path:"
@@ -242,8 +221,8 @@ msgid "Number of files:"
 msgstr "Failide arv:"
 
 #: src/dlg-prop.c:149
-msgid "Date and time:"
-msgstr "Kuupäev ja kell:"
+msgid "Zipped on:"
+msgstr ""
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
@@ -257,120 +236,78 @@ msgstr "Tundmatu tüüp"
 msgid "Symbolic link"
 msgstr "Sümboolne link"
 
-#: src/file-utils.c:535
+#: src/file-utils.c:537
 msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr "Ei leia terminali, kasutusse läheb xterm, kuigi ka see ei pruugi töötada"
+msgstr ""
+"Ei leia terminali, kasutusse läheb xterm, kuigi ka see ei pruugi töötada"
 
 #: src/file_roller.glade.h:1
-#: src/file_roller_prop.glade.h:1
-msgid "    "
-msgstr "    "
-
-#: src/file_roller.glade.h:2
 msgid "*"
 msgstr "*"
 
-#: src/file_roller.glade.h:3
-msgid "A_dd to Bookmarks"
-msgstr "_Lisa järjehoidjatesse"
+#: src/file_roller.glade.h:2
+#, fuzzy
+msgid ""
+"<i><b>Note:</b> the password will be used to encrypt files you add to the "
+"current archive, and to decrypt files you extract from the current archive. "
+"When the archive is closed the password will be deleted.</i>"
+msgstr ""
+"Märkus: salasõna kasutatakse failide, mis lisatakse arhiivi, krüpteerimiseks "
+"ja nende failide, mis pakitakse lahti, dekrüpteerimiseks. Kui arhiiv "
+"suletakse, siis parool kustutatakse."
 
-#: src/file_roller.glade.h:4
+#: src/file_roller.glade.h:3
 msgid "A_vailable application:"
 msgstr "_Saadaval rakendus:"
 
+#: src/file_roller.glade.h:4
+msgid "Delete"
+msgstr "Kustuta"
+
+#: src/file_roller.glade.h:5
+msgid "Load Options"
+msgstr "Lae häälestus"
+
 #: src/file_roller.glade.h:6
-msgid "Add _to archive:"
-msgstr "Lisa _arhiivi:"
-
-#: src/file_roller.glade.h:7
-msgid "Add only if _newer"
-msgstr "Lisa ainult _uuemad"
-
-#: src/file_roller.glade.h:8
-msgid "Delete Files"
-msgstr "Kustuta failid"
-
-#: src/file_roller.glade.h:9
-msgid "Do not e_xtract older files"
-msgstr "Ära paki _vanemaid faile lahti"
-
-#: src/file_roller.glade.h:10
-#: src/window.c:3006
-msgid "Extract"
-msgstr "Paki lahti"
-
-#: src/file_roller.glade.h:11
-msgid "Extract to"
-msgstr "Paki lahti kataloogi"
-
-#: src/file_roller.glade.h:12
-msgid "Note: the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted."
-msgstr "Märkus: salasõna kasutatakse failide, mis lisatakse arhiivi, krüpteerimiseks ja nende failide, mis pakitakse lahti, dekrüpteerimiseks. Kui arhiiv suletakse, siis parool kustutatakse."
-
-#: src/file_roller.glade.h:13
 msgid "Open Files"
 msgstr "Ava failid"
 
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:7
 msgid "Open with an _application"
 msgstr "Ava _rakendusega"
 
-#: src/file_roller.glade.h:15
-msgid "Over_write existing files"
-msgstr "_Kirjuta olemasolevad failid üle"
-
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:8
 msgid "Password"
 msgstr "Salasõna"
 
-#: src/file_roller.glade.h:17
-msgid "R_e-create folders"
-msgstr "_Loo kataloogid uuesti"
-
-#: src/file_roller.glade.h:18
+#: src/file_roller.glade.h:9
 msgid "R_ecent applications:"
 msgstr "_Hiljutised rakendused:"
 
-#: src/file_roller.glade.h:19
-msgid "Select Archive"
-msgstr "Vali arhiiv"
-
-#: src/file_roller.glade.h:20
-#: src/menu.h:429
+#: src/file_roller.glade.h:10
 msgid "View File"
 msgstr "Vaata faili"
 
-#: src/file_roller.glade.h:21
+#: src/file_roller.glade.h:11
 msgid "View with internal _viewer"
 msgstr "Vaata sisemise _vaaturiga"
 
-#: src/file_roller.glade.h:22
-msgid "_All files"
-msgstr "_Kõik failid"
+#: src/file_roller.glade.h:12
+msgid "Zip Objects"
+msgstr ""
 
-#: src/file_roller.glade.h:23
+#: src/file_roller.glade.h:14
 msgid "_Application:"
 msgstr "_Rakendus:"
 
-#: src/file_roller.glade.h:24
-msgid "_Files:"
-msgstr "_Failid:"
+#: src/file_roller.glade.h:15
+#, fuzzy
+msgid "_Archive:"
+msgstr "_Arhiivi"
 
-#: src/file_roller.glade.h:25
-msgid "_Password:"
-msgstr "_Salasõna:"
-
-#: src/file_roller.glade.h:26
-msgid "_Selected files"
-msgstr "_Valitud failid"
-
-#: src/file_roller.glade.h:27
-msgid "_View destination folder after extraction"
-msgstr "Peale lahtipakkimist _näita sihtkataloogi"
-
-#: src/file_roller.glade.h:28
-msgid "example: *.txt; *.doc"
-msgstr "näide: *.txt; *.doc"
+#: src/file_roller.glade.h:19
+msgid "_Zip"
+msgstr ""
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -412,701 +349,879 @@ msgstr "_Suurus"
 msgid "_Type"
 msgstr "_Tüüp"
 
-#: src/fr-archive.c:578
+#: src/fr-archive.c:599
 msgid "The file does not exist."
 msgstr "Faili pole olemas."
 
-#: src/fr-command-tar.c:219
+#: src/fr-command-tar.c:232
 msgid "Adding file: "
 msgstr "Lisatav fail: "
 
-#: src/fr-command-tar.c:265
+#: src/fr-command-tar.c:278
 msgid "Removing file: "
 msgstr "Eemaldatav fail: "
 
-#: src/fr-command-tar.c:274
-#: src/window.c:1253
+#: src/fr-command-tar.c:287 src/window.c:1366
 msgid "Deleting files from archive"
 msgstr "Arhiivist failide kustutamine"
 
-#: src/fr-command-tar.c:307
+#: src/fr-command-tar.c:320
 msgid "Extracting file: "
 msgstr "Lahtipakitav fail: "
 
-#: src/fr-command-tar.c:352
+#: src/fr-command-tar.c:365
 msgid "Recompressing archive"
 msgstr "Arhiivi uuestipakkimine"
 
-#: src/fr-command-tar.c:486
+#: src/fr-command-tar.c:499
 msgid "Decompressing archive"
 msgstr "Arhiivi lahtipakkimine"
 
+#: src/fr-stock.c:44
+#, fuzzy
+msgid "_Add"
+msgstr "Lisa"
+
+#: src/fr-stock.c:45
+#, fuzzy
+msgid "_Extract"
+msgstr "Paki lahti"
+
+#: src/fr-stock.c:46 src/menu.h:382
+msgid "_View"
+msgstr "_Vaade"
+
+#. Create the application.
+#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1218
+#: src/window.c:839 src/window.c:1265 src/window.c:2926
+msgid "File Roller"
+msgstr "File Roller"
+
 #. Button
-#: src/gtk-utils.c:419
+#: src/gtk-utils.c:421
 msgid "Command _Line Output"
 msgstr "Käsu_rea väljund"
 
-#: src/main.c:59
+#: src/main.c:60
 msgid "Add files to the specified archive and quit the program"
 msgstr "Lisa failid määratud arhiivi ja välju programmist"
 
-#: src/main.c:60
+#: src/main.c:61
 msgid "ARCHIVE"
 msgstr "ARCHIVE"
 
-#: src/main.c:63
+#: src/main.c:64
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Lisa failid, küsides arhiivi nime ning välju programmist"
 
-#: src/main.c:67
+#: src/main.c:68
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Paki arhiivid lahti määratud kataloogi ja välju programmist"
 
-#: src/main.c:68
-#: src/main.c:76
+#: src/main.c:69 src/main.c:77
 msgid "FOLDER"
 msgstr "FOLDER"
 
-#: src/main.c:71
+#: src/main.c:72
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Paki arhiivid lahti, küsides sihtkataloogi ning välju programmist"
 
-#: src/main.c:75
+#: src/main.c:76
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "Vaikekataloog, mida kasutatakse '--add' ja '--extract' käskude puhul"
 
-#: src/main.c:79
+#: src/main.c:80
 msgid "Create destination folder without asking confirmation"
 msgstr "Loo sihtkataloog kinnitust küsimata"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:110
 msgid "Automatic"
 msgstr "Automaatne"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:111
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:112
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:113
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:114
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:115
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:116
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar pakkimata (.tar)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar pakitud bzipiga (.tar.bz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:118
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar pakitud bzip2ga (.tar.bz2)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:119
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar pakitud gzipiga (.tar.gz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:120
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar pakitud lzopiga (.tar.lzo)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:121
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar pakitud compressiga (.tar.Z)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:122
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:123
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:124
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:199
-#: src/menu-callbacks.c:394
+#: src/menu-callbacks.c:189 src/menu-callbacks.c:208 src/window.c:3645
+msgid "Could not create the archive"
+msgstr "Ei saa arhiivi luua"
+
+#: src/menu-callbacks.c:209 src/menu-callbacks.c:442
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Sul pole siia kataloogi arhiivi tekitamiseks piisavalt õigusi"
 
-#: src/menu-callbacks.c:228
-#: src/menu-callbacks.c:414
-#: src/menu-callbacks.c:633
-#: src/menu-callbacks.c:811
+#: src/menu-callbacks.c:238 src/menu-callbacks.c:462 src/menu-callbacks.c:752
+#: src/menu-callbacks.c:930
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Arhiiv on juba olemas.  Kas soovid selle üle kirjutada?"
 
-#: src/menu-callbacks.c:231
-#: src/menu-callbacks.c:417
-#: src/menu-callbacks.c:636
-#: src/menu-callbacks.c:814
+#: src/menu-callbacks.c:241 src/menu-callbacks.c:465 src/menu-callbacks.c:755
+#: src/menu-callbacks.c:933
 msgid "Overwrite"
 msgstr "Kirjuta üle"
 
-#: src/menu-callbacks.c:247
-#: src/menu-callbacks.c:433
+#: src/menu-callbacks.c:257 src/menu-callbacks.c:481
 msgid "Could not delete the old archive."
 msgstr "Ei saa vana arhiivi kustutada."
 
-#: src/menu-callbacks.c:292
-msgid "New Archive"
-msgstr "Uus arhiiv"
+#: src/menu-callbacks.c:320 src/toolbar.h:42
+msgid "New"
+msgstr "Uus"
 
-#: src/menu-callbacks.c:310
-#: src/menu-callbacks.c:472
+#: src/menu-callbacks.c:331 src/menu-callbacks.c:537 src/menu-callbacks.c:656
+#, fuzzy
+msgid "All archives"
+msgstr "_Arhiivi"
+
+#: src/menu-callbacks.c:338 src/menu-callbacks.c:544 src/menu-callbacks.c:663
+#, fuzzy
+msgid "All files"
+msgstr "_Kõik failid"
+
+#: src/menu-callbacks.c:356 src/menu-callbacks.c:552
 msgid "Archive type:"
 msgstr "Arhiivi tüüp:"
 
-#: src/menu-callbacks.c:374
-#: src/menu-callbacks.c:393
+#: src/menu-callbacks.c:422 src/menu-callbacks.c:441
 msgid "Could not save the archive"
 msgstr "Ei saa arhiivi salvestada"
 
-#: src/menu-callbacks.c:460
-msgid "Save Archive"
-msgstr "Salvesta arhiiv"
+#: src/menu-callbacks.c:526
+msgid "Save"
+msgstr "Salvesta"
 
-#: src/menu-callbacks.c:542
-msgid "Open Archive"
-msgstr "Ava arhiiv"
+#: src/menu-callbacks.c:645 src/menu.h:412 src/toolbar.h:48
+msgid "Open"
+msgstr "Ava"
 
-#: src/menu-callbacks.c:658
+#: src/menu-callbacks.c:777
 msgid "Could not copy the archive"
 msgstr "Ei saa arhiivi kopeerida"
 
-#: src/menu-callbacks.c:676
+#: src/menu-callbacks.c:796
 msgid "Could not move the archive"
 msgstr "Ei saa arhiivi liigutada"
 
-#: src/menu-callbacks.c:703
-msgid "Copy Archive"
-msgstr "Kopeeri arhiiv"
+#: src/menu-callbacks.c:823
+msgid "Copy"
+msgstr "Kopeeri"
 
-#: src/menu-callbacks.c:703
-msgid "Move Archive"
-msgstr "Liiguta arhiiv"
+#: src/menu-callbacks.c:823
+msgid "Move"
+msgstr "Liiguta"
 
-#: src/menu-callbacks.c:781
-msgid "Rename Archive"
-msgstr "Nimeta arhiiv ümber"
+#: src/menu-callbacks.c:828
+#, fuzzy
+msgid "_Copy"
+msgstr "Kopeeri"
 
-#: src/menu-callbacks.c:782
+#: src/menu-callbacks.c:828
+#, fuzzy
+msgid "_Move"
+msgstr "Liiguta"
+
+#: src/menu-callbacks.c:900 src/window.c:4717
+msgid "Rename"
+msgstr "Nimeta ümber"
+
+#: src/menu-callbacks.c:901
 msgid "New archive name (without extension)"
 msgstr "Uus arhiivi nimi (ilma laiendita)"
 
-#: src/menu-callbacks.c:786
+#: src/menu-callbacks.c:905 src/window.c:4722
 msgid "_Rename"
 msgstr "_Nimeta ümber"
 
-#: src/menu-callbacks.c:896
-msgid "The archive cannot be moved to the Trash. Do you want to delete it permanently?"
+#: src/menu-callbacks.c:1015
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
 msgstr "Ei saa arhiivi prügikasti tõsta. Kas soovid seda lõplikult kustutada?"
 
-#: src/menu-callbacks.c:1068
+#: src/menu-callbacks.c:1210
 msgid "translator_credits"
 msgstr ""
 "Tõlge eesti keelde:\n"
 "\tIlmar Kerm <ikerm@hot.ee>, 2002.\n"
-"\tTõivo Leedjärv <toivo@linux.ee>, 2002, 2003."
+"\tTõivo Leedjärv <toivo@linux.ee>, 2002, 2003.\n"
+"\tMartin Anderson <martin@all-tec.ee>, 2004."
 
-#: src/menu-callbacks.c:1079
+#: src/menu-callbacks.c:1221
 msgid "An archive manager for GNOME."
 msgstr "GNOME-keskkonna arhiivihaldur."
 
-#: src/menu-callbacks.c:1228
-#: src/window.c:4138
+#: src/menu-callbacks.c:1370 src/window.c:4454
 msgid "Last Output"
 msgstr "Viimane väljund"
 
-#: src/menu.h:69
+#: src/menu.h:65
 msgid "_New"
 msgstr "_Uus"
 
-#: src/menu.h:70
-#: src/toolbar.h:39
+#: src/menu.h:66 src/toolbar.h:42
 msgid "Create a new archive"
 msgstr "Loo uus arhiiv"
 
-#: src/menu.h:75
+#: src/menu.h:71
 msgid "Open R_ecent"
 msgstr "Ava _hiljutine"
 
-#: src/menu.h:84
-msgid "Open Fi_les..."
-msgstr "Ava _failid..."
-
-#: src/menu.h:84
-msgid "Open selected files with an application"
-msgstr "Ava valitud failid rahendusega"
-
-#: src/menu.h:90
-msgid "_View File"
-msgstr "_Vaata faili"
-
-#: src/menu.h:90
-#: src/menu.h:429
-msgid "View file with internal viewer"
-msgstr "Vaata faili sisemise vaaturiga"
-
-#: src/menu.h:98
+#: src/menu.h:80 src/menu.h:167 src/menu.h:450
 msgid "_Rename..."
 msgstr "_Nimeta ümber..."
 
-#: src/menu.h:98
+#: src/menu.h:80
 msgid "Rename current archive"
 msgstr "Nimeta aktiivne arhiiv ümber"
 
-#: src/menu.h:104
+#: src/menu.h:86
 msgid "Cop_y..."
 msgstr "_Kopeeri..."
 
-#: src/menu.h:104
+#: src/menu.h:86
 msgid "Copy current archive to another folder"
 msgstr "Kopeeri aktiivne arhiiv teise kataloogi"
 
-#: src/menu.h:110
+#: src/menu.h:92
 msgid "_Move..."
 msgstr "_Liiguta..."
 
-#: src/menu.h:110
+#: src/menu.h:92
 msgid "Move current archive to another folder"
 msgstr "Liiguta aktiivne arhiiv teise kataloogi"
 
-#: src/menu.h:116
+#: src/menu.h:98
 msgid "Move to _Trash"
 msgstr "Tõsta _prügikasti"
 
-#: src/menu.h:116
+#: src/menu.h:98
 msgid "Move current archive to trash"
 msgstr "Tõsta aktiivne arhiiv prügikasti"
 
-#: src/menu.h:122
-msgid "_Test"
-msgstr "_Kontrolli"
+#: src/menu.h:104
+msgid "_Test Integrity"
+msgstr ""
 
-#: src/menu.h:122
+#: src/menu.h:104
 msgid "Test whether the archive contains errors"
 msgstr "Kontrolli, kas arhiivis esineb vigu"
 
-#: src/menu.h:130
+#: src/menu.h:112
 msgid "_Properties"
 msgstr "_Omadused"
 
-#: src/menu.h:130
+#: src/menu.h:112
 msgid "Show archive properties"
 msgstr "Näita arhiivi omadusi"
 
-#: src/menu.h:162
-#: src/menu.h:437
-msgid "Add _Files..."
-msgstr "Lisa _failid..."
+#: src/menu.h:149 src/menu.h:432
+msgid "_Add..."
+msgstr "_Lisa..."
 
-#: src/menu.h:162
-#: src/menu.h:437
-#: src/window.c:2996
-msgid "Add files to the archive"
-msgstr "Lisa failid arhiivi"
+#: src/menu.h:149 src/menu.h:432
+msgid "Add files and folders to the archive"
+msgstr "Lisa failid ja kataloogid arhiivi"
 
-#: src/menu.h:168
-msgid "_Delete Files..."
-msgstr "K_ustuta failid..."
+#: src/menu.h:155 src/menu.h:438
+msgid "_Extract..."
+msgstr "_Paki lahti..."
 
-#: src/menu.h:168
-msgid "Delete selected files and folders from the archive"
-msgstr "Kustuta arhiivist märgitud failid ja kataloogid"
-
-#: src/menu.h:174
-#: src/menu.h:449
-msgid "_Extract to..."
-msgstr "_Paki lahti kataloogi..."
-
-#: src/menu.h:174
-#: src/menu.h:449
-#: src/window.c:3007
+#: src/menu.h:155 src/menu.h:438 src/toolbar.h:62
 msgid "Extract files from the archive"
 msgstr "Paki failid arhiivist lahti"
 
-#: src/menu.h:198
-#: src/menu.h:457
+#: src/menu.h:167 src/menu.h:450
+msgid "Rename selection"
+msgstr "Nimeta valitu ümber"
+
+#: src/menu.h:173 src/menu.h:456
+msgid "_Delete..."
+msgstr "_Kustuta failid..."
+
+#: src/menu.h:173 src/menu.h:456
+msgid "Delete selection from the archive"
+msgstr "Kustuta valitud failid arhiivist"
+
+#: src/menu.h:181 src/menu.h:464
 msgid "Select _All"
 msgstr "Vali _kõik"
 
-#: src/menu.h:198
-#: src/menu.h:457
+#: src/menu.h:181 src/menu.h:464
 msgid "Select all files"
 msgstr "Vali kõik failid"
 
-#: src/menu.h:204
-#: src/menu.h:463
+#: src/menu.h:187 src/menu.h:470
 msgid "Dese_lect All"
 msgstr "_Tühista valik"
 
-#: src/menu.h:204
-#: src/menu.h:463
+#: src/menu.h:187 src/menu.h:470
 msgid "Deselect all files"
 msgstr "Tühista kõikide failide valik"
 
-#: src/menu.h:212
+#: src/menu.h:195
+msgid "Open Fi_les..."
+msgstr "Ava _failid..."
+
+#: src/menu.h:195 src/menu.h:418
+msgid "Open selected files with an application"
+msgstr "Ava valitud failid rahendusega"
+
+#: src/menu.h:201 src/menu.h:424
+msgid "_View File"
+msgstr "_Vaata faili"
+
+#: src/menu.h:201 src/menu.h:424
+msgid "View file with internal viewer"
+msgstr "Vaata faili sisemise vaaturiga"
+
+#: src/menu.h:209
 msgid "Pass_word..."
 msgstr "_Salasõna..."
 
 #: src/menu.h:220
-msgid "_Preferences"
-msgstr "_Häälestus"
-
-#: src/menu.h:220
-msgid "Edit File Roller preferences"
-msgstr "Muuda File Rolleri häälestust"
-
-#: src/menu.h:231
 msgid "by _Name"
 msgstr "_Nime järgi"
 
-#: src/menu.h:231
+#: src/menu.h:220
 msgid "Sort file list by name"
 msgstr "Sorteeri failide nimekiri nime järgi"
 
-#: src/menu.h:237
+#: src/menu.h:226
 msgid "by _Size"
 msgstr "_Suuruse järgi"
 
-#: src/menu.h:237
+#: src/menu.h:226
 msgid "Sort file list by file size"
 msgstr "Sorteeri failide nimekiri suuruse järgi"
 
-#: src/menu.h:243
+#: src/menu.h:232
 msgid "by T_ype"
 msgstr "_Tüübi järgi"
 
-#: src/menu.h:243
+#: src/menu.h:232
 msgid "Sort file list by type"
 msgstr "Sorteeri failide nimekiri tüübi järgi"
 
-#: src/menu.h:249
+#: src/menu.h:238
 msgid "by _Date modified"
 msgstr "_Muutmise kuupäeva järgi"
 
-#: src/menu.h:249
+#: src/menu.h:238
 msgid "Sort file list by modification time"
 msgstr "Sorteeri failide nimekiri muutmise aja järgi"
 
-#: src/menu.h:255
+#: src/menu.h:244
 msgid "by _Location"
 msgstr "_Asukoha järgi"
 
-#: src/menu.h:255
+#: src/menu.h:244
 msgid "Sort file list by location"
 msgstr "Sorteeri failide nimekiri asukoha järgi"
 
-#: src/menu.h:272
+#: src/menu.h:261
 msgid "View All _Files"
 msgstr "Näita kõiki _faile"
 
-#: src/menu.h:278
+#: src/menu.h:267
 msgid "View as a F_older"
 msgstr "Vaata _kataloogina"
 
-#: src/menu.h:300
+#: src/menu.h:289
 msgid "_Reversed Order"
 msgstr "_Tagurpidi järjestus"
 
-#: src/menu.h:300
+#: src/menu.h:289
 msgid "Reverse the list order"
 msgstr "Näitab nimekirja tagurpidi järjestuses"
 
-#: src/menu.h:325
+#: src/menu.h:313
 msgid "_Toolbar"
 msgstr "_Tööriistariba"
 
-#: src/menu.h:325
+#: src/menu.h:313
 msgid "View the main toolbar"
 msgstr "Näita tööriistariba"
 
-#: src/menu.h:331
+#: src/menu.h:319
 msgid "Stat_usbar"
 msgstr "_Olekuriba"
 
-#: src/menu.h:331
+#: src/menu.h:319
 msgid "View the statusbar"
 msgstr "Näita olekuriba"
 
-#: src/menu.h:339
+#: src/menu.h:327
 msgid "_Stop"
 msgstr "_Seiska"
 
-#: src/menu.h:339
-#: src/toolbar.h:55
+#: src/menu.h:327 src/toolbar.h:76
 msgid "Stop current operation"
 msgstr "Peata käimasolev tegevus"
 
-#: src/menu.h:345
+#: src/menu.h:333
 msgid "_Reload"
 msgstr "_Lae uuesti"
 
-#: src/menu.h:345
+#: src/menu.h:333
 msgid "Reload current archive"
 msgstr "Laeb aktiivse arhiivi uuesti"
 
-#: src/menu.h:356
+#: src/menu.h:344
 msgid "_Arrange Files"
 msgstr "_Korrasta failid"
 
-#: src/menu.h:361
+#: src/menu.h:349
 msgid "_Last Output"
 msgstr "_Viimane väljund"
 
-#: src/menu.h:361
+#: src/menu.h:349
 msgid "View the output produced by the last executed command"
 msgstr "Vaata viimase käivitatud käsu väljundit"
 
-#: src/menu.h:367
-msgid "New _Window"
-msgstr "Uus _aken"
-
-#: src/menu.h:367
-msgid "Open a new window"
-msgstr "Ava uus aken"
-
-#: src/menu.h:380
+#: src/menu.h:362
 msgid "_Contents"
 msgstr "_Sisu"
 
-#: src/menu.h:380
+#: src/menu.h:362
 msgid "Display the File Roller Manual"
 msgstr "Kuva File Rolleri kasutajajuhend"
 
-#: src/menu.h:386
+#: src/menu.h:368
 msgid "_About"
 msgstr "_Info"
 
-#: src/menu.h:386
+#: src/menu.h:368
 msgid "Information about the program"
 msgstr "Info programmi kohta"
 
-#: src/menu.h:398
+#: src/menu.h:380
 msgid "_Archive"
 msgstr "_Arhiivi"
 
-#: src/menu.h:399
+#: src/menu.h:381
 msgid "_Edit"
 msgstr "_Redaktor"
 
-#: src/menu.h:400
-msgid "_View"
-msgstr "_Vaade"
+#: src/menu.h:412
+#, fuzzy
+msgid "Open selected files with the standard application"
+msgstr "Ava valitud failid rahendusega"
 
-#: src/menu.h:423
-msgid "Open Files..."
+#: src/menu.h:418
+#, fuzzy
+msgid "Open With..."
 msgstr "Ava failid..."
 
-#: src/menu.h:443
-msgid "_Delete Files"
-msgstr "_Kustuta failid"
-
-#: src/menu.h:443
-msgid "Delete files from the archive"
-msgstr "Kustuta failid arhiivist"
-
-#: src/toolbar.h:39
-msgid "New"
-msgstr "Uus"
-
-#: src/toolbar.h:45
-msgid "Open"
-msgstr "Ava"
-
-#: src/toolbar.h:45
+#: src/toolbar.h:48
 msgid "Open archive"
 msgstr "Ava arhiiv"
 
-#: src/toolbar.h:55
+#: src/toolbar.h:56
+msgid "Add files to the archive"
+msgstr "Lisa failid arhiivi"
+
+#: src/toolbar.h:68
+msgid "View"
+msgstr "Vaata"
+
+#: src/toolbar.h:68
+msgid "View selected file"
+msgstr "Vaata valitud faili"
+
+#: src/toolbar.h:76
 msgid "Stop"
 msgstr "Seiska"
 
-#: src/window.c:618
+#: src/window.c:682
 msgid "Folder"
 msgstr "Kataloog"
 
-#: src/window.c:767
+#: src/window.c:847
 msgid "[read only]"
 msgstr "[ainult lugemiseks]"
 
-#: src/window.c:862
-#, c-format
-msgid "1 file (%s)"
-msgstr "1 fail (%s)"
+#: src/window.c:942
+#, fuzzy, c-format
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d faili (%s)"
+msgstr[1] "%d faili (%s)"
 
-#: src/window.c:865
-#, c-format
-msgid "%d files (%s)"
-msgstr "%d faili (%s)"
+#: src/window.c:947
+#, fuzzy, c-format
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d faili valitud (%s)"
+msgstr[1] "%d faili valitud (%s)"
 
-#: src/window.c:873
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "1 fail valitud (%s)"
-
-#: src/window.c:876
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d faili valitud (%s)"
-
-#: src/window.c:1250
+#: src/window.c:1363
 msgid "Reading archive"
 msgstr "Arhiivi lugemine"
 
-#: src/window.c:1256
+#: src/window.c:1369
 msgid "Adding files to archive"
 msgstr "Arhiivi failide lisamine"
 
-#: src/window.c:1259
+#: src/window.c:1372
 msgid "Extracting files from archive"
 msgstr "Failide arhiivist lahtipakkimine"
 
-#: src/window.c:1262
+#: src/window.c:1375
 msgid "Testing archive"
 msgstr "Arhiivi kontrollimine"
 
-#: src/window.c:1265
+#: src/window.c:1378
 msgid "Getting the file list"
 msgstr "Failide nimekirja hankimine"
 
-#: src/window.c:1271
+#: src/window.c:1384
 msgid "wait please..."
 msgstr "palun oota..."
 
-#: src/window.c:1332
+#: src/window.c:1441
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Ei saa kuvada kataloogi \"%s\""
 
-#: src/window.c:1389
+#: src/window.c:1499
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+"Arhiiv on salasõnaga kaitstud.\n"
+"Palun anna salasõnaga käsuga: Redaktor->Salasõna"
+
+#: src/window.c:1501
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr ""
+"Pakutud salasõna ei sobi, palun anna uus salasõna käsuga: Redaktor->Salasõna"
+
+#: src/window.c:1506
+msgid "Could not perform the operation"
+msgstr "Ei saanud tööga hakkama"
+
+#: src/window.c:1521
 msgid "Operation stopped"
 msgstr "Tegevus peatatud"
 
-#: src/window.c:1410
+#: src/window.c:1542
 msgid "An error occurred while extracting files."
 msgstr "Failide lahtipakkimisel tekkis viga."
 
-#: src/window.c:1414
+#: src/window.c:1546
 msgid "An error occurred while loading the archive."
 msgstr "Arhiivi laadimisel tekkis viga."
 
-#: src/window.c:1418
+#: src/window.c:1550
 msgid "An error occurred while deleting files from the archive."
 msgstr "Arhiivist failide kustutamisel tekkis viga."
 
-#: src/window.c:1422
+#: src/window.c:1554
 msgid "An error occurred while adding files to the archive."
 msgstr "Arhiivi failide lisamisel tekkis viga."
 
-#: src/window.c:1426
+#: src/window.c:1558
 msgid "An error occurred while testing archive."
 msgstr "Arhiivi kontrollimisel tekkis viga."
 
-#: src/window.c:1435
+#: src/window.c:1567
 msgid "Command not found."
 msgstr "Käsku ei leitud."
 
-#: src/window.c:1438
+#: src/window.c:1570
 msgid "Command exited abnormally."
 msgstr "Käsk lõpetas ebanormaalselt."
 
-#: src/window.c:1569
+#: src/window.c:1698
 msgid "Test Result"
 msgstr "Kontrolli tulemus"
 
-#: src/window.c:1792
+#: src/window.c:1931
 msgid "You don't have the right permissions."
 msgstr "Sul ei ole vajalikke õigusi."
 
-#: src/window.c:1825
+#: src/window.c:1968
 msgid "You can't add an archive to itself."
 msgstr "Sa ei saa lisada arhiivi iseendasse."
 
-#: src/window.c:1997
-msgid "Do you want to add this file to the current archive or open it as a new archive?"
-msgstr "Kas soovid lisada selle faili aktiivsesse arhiivi või avada uue arhiivina?"
+#: src/window.c:2145
+msgid ""
+"Do you want to add this file to the current archive or open it as a new "
+"archive?"
+msgstr ""
+"Kas soovid lisada selle faili aktiivsesse arhiivi või avada uue arhiivina?"
 
-#: src/window.c:2042
+#: src/window.c:2182
 msgid "Do you want to create a new archive with these files?"
 msgstr "Kas soovid nende failidega uue arhiivi luua?"
 
-#: src/window.c:2045
+#: src/window.c:2185
 msgid "Create _Archive"
 msgstr "Loo _arhiiv"
 
-#: src/window.c:2406
+#: src/window.c:2509
 msgid "Size"
 msgstr "Suurus"
 
-#: src/window.c:2407
+#: src/window.c:2510
 msgid "Type"
 msgstr "Tüüp"
 
-#: src/window.c:2408
-msgid "Date modified"
+#: src/window.c:2511
+#, fuzzy
+msgid "Date Modified"
 msgstr "Muudetud"
 
-#: src/window.c:2409
+#: src/window.c:2512
 msgid "Location"
 msgstr "Asukoht"
 
-#: src/window.c:2416
+#: src/window.c:2519
 msgid "Name"
 msgstr "Nimi"
 
-#: src/window.c:2936
-msgid "_Up"
-msgstr "_Üles"
+#: src/window.c:3084
+msgid "Go to the previous visited location"
+msgstr "Mine eelmisse külastatud kohta"
+
+#: src/window.c:3092
+msgid "Go to the next visited location"
+msgstr "Mine järgmisse külastatud kohta"
+
+#: src/window.c:3100
+msgid "Go up one level"
+msgstr "Üles"
+
+#: src/window.c:3108
+msgid "Go to the home location"
+msgstr "Mine kodukataloogi"
 
 #. current location
-#: src/window.c:2958
+#: src/window.c:3127
 msgid "Location:"
 msgstr "Asukoht:"
 
-#: src/window.c:2995
-msgid "Add"
-msgstr "Lisa"
-
-#: src/window.c:3017
-msgid "View"
-msgstr "Vaata"
-
-#: src/window.c:3018
-msgid "View selected file"
-msgstr "Vaata valitud faili"
-
-#: src/window.c:3529
+#: src/window.c:3734
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Ei saa \"%s\" avada"
 
-#: src/window.c:3580
+#: src/window.c:3789
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Ei saa arhiivi \"%s\" salvestada"
 
-#: src/window.c:4676
+#: src/window.c:4649
+msgid "The new name is void."
+msgstr "Uus nimi on kehtetu."
+
+#: src/window.c:4649 src/window.c:4653 src/window.c:4662
+msgid "Please use a different name."
+msgstr "Palun kasuta mõnda teist nime."
+
+#: src/window.c:4653
+msgid "The new name is equal to the old one."
+msgstr "Uus ja vana nimi on samad."
+
+#: src/window.c:4662
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+"Nimi \"%s\" ei sobi sest ei tohi sisaldada sümboleid: %s\n"
+"\n"
+"%s"
+
+#: src/window.c:4718
+msgid "New folder name"
+msgstr "Uus kataloogi nimi"
+
+#: src/window.c:4718
+msgid "New file name"
+msgstr "Uus faili nimi"
+
+#: src/window.c:4739
+msgid "Could not rename the folder"
+msgstr "Kataloogi nime muutmine ei õnnestunud."
+
+#: src/window.c:4739
+msgid "Could not rename the file"
+msgstr "Arhiivi nime muutmine ei õnnestunud."
+
+#: src/window.c:5367
 msgid "Add files to an archive"
 msgstr "Lisa failid arhiivi"
 
-#: src/window.c:4701
+#: src/window.c:5392
 msgid "Extract archive"
 msgstr "Paki arhiiv lahti"
 
+#~ msgid "Add to Archive..."
+#~ msgstr "Lisa arhiivi..."
+
+#~ msgid "Extract to..."
+#~ msgstr "Paki lahti kataloogi..."
+
+#~ msgid "Archive Manager"
+#~ msgstr "Arhiivihaldur"
+
+#~ msgid "Handle compressed archives"
+#~ msgstr "Käsitle pakitud arhiive"
+
+#~ msgid "Add Files"
+#~ msgstr "Lisa faile"
+
+#~ msgid "Exclude o_ther file systems"
+#~ msgstr "Ära lisa teistelt faili_süsteemidelt"
+
+#~ msgid "Exclude _backup files (*~)"
+#~ msgstr "Ära lisa _tagavarakoopiaid (*~)"
+
+#~ msgid "Exclude _hidden files (.*)"
+#~ msgstr "Ära lisa _peidetud faile (.*)"
+
+#~ msgid "Igno_re case"
+#~ msgstr "Tõstut_undetu"
+
+#~ msgid "Files to add: %d"
+#~ msgstr "Lisatavaid faile: %d"
+
+#~ msgid "Folders to add: %d"
+#~ msgstr "Lisatavaid katalooge: %d"
+
+#~ msgid "Destination folder"
+#~ msgstr "Sihtkataloog"
+
+#~ msgid "Bookmarks"
+#~ msgstr "Järjehoidjad"
+
+#~ msgid "General"
+#~ msgstr "Üldine"
+
+#~ msgid "Visible columns"
+#~ msgstr "Nähtavad veerud"
+
+#~ msgid "Date and time:"
+#~ msgstr "Kuupäev ja kell:"
+
+#~ msgid "A_dd to Bookmarks"
+#~ msgstr "_Lisa järjehoidjatesse"
+
+#~ msgid "Add _to archive:"
+#~ msgstr "Lisa _arhiivi:"
+
+#~ msgid "Add only if _newer"
+#~ msgstr "Lisa ainult _uuemad"
+
+#~ msgid "Extract to"
+#~ msgstr "Paki lahti kataloogi"
+
+#~ msgid "Select Archive"
+#~ msgstr "Vali arhiiv"
+
+#~ msgid "New Archive"
+#~ msgstr "Uus arhiiv"
+
+#~ msgid "Save Archive"
+#~ msgstr "Salvesta arhiiv"
+
+#~ msgid "Open Archive"
+#~ msgstr "Ava arhiiv"
+
+#~ msgid "Copy Archive"
+#~ msgstr "Kopeeri arhiiv"
+
+#~ msgid "Move Archive"
+#~ msgstr "Liiguta arhiiv"
+
+#~ msgid "_Test"
+#~ msgstr "_Kontrolli"
+
+#~ msgid "Add _Files..."
+#~ msgstr "Lisa _failid..."
+
+#~ msgid "Delete selected files and folders from the archive"
+#~ msgstr "Kustuta arhiivist märgitud failid ja kataloogid"
+
+#~ msgid "_Preferences"
+#~ msgstr "_Häälestus"
+
+#~ msgid "Edit File Roller preferences"
+#~ msgstr "Muuda File Rolleri häälestust"
+
+#~ msgid "New _Window"
+#~ msgstr "Uus _aken"
+
+#~ msgid "Open a new window"
+#~ msgstr "Ava uus aken"
+
+#~ msgid "_Delete Files"
+#~ msgstr "_Kustuta failid"
+
+#~ msgid "1 file (%s)"
+#~ msgstr "1 fail (%s)"
+
+#~ msgid "1 file selected (%s)"
+#~ msgstr "1 fail valitud (%s)"
+
+#~ msgid "_Up"
+#~ msgstr "_Üles"
+
+#~ msgid "Rename Archive"
+#~ msgstr "Nimeta arhiiv ümber"
