@@ -63,6 +63,7 @@
 #define ACTIVITY_PULSE_STEP (0.033)
 #define FILES_TO_PROCESS_AT_ONCE 500
 #define DISPLAY_TIMEOUT_INTERVAL_MSECS 300
+#define MAX_MESSAGE_LENGTH 50
 
 #define PROGRESS_DIALOG_WIDTH 300
 #define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
@@ -1280,7 +1281,8 @@ open_progress_dialog (FRWindow *window)
 		gtk_widget_set_size_request (window->pd_progress_bar, PROGRESS_DIALOG_WIDTH, -1);
 		gtk_box_pack_start (GTK_BOX (vbox), window->pd_progress_bar, TRUE, TRUE, 0);
 		
-		lbl = window->pd_message = ephy_ellipsizing_label_new ("");
+		/* FIXME */
+	        lbl = window->pd_message = ephy_ellipsizing_label_new (""); 
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
 		ephy_ellipsizing_label_set_mode (EPHY_ELLIPSIZING_LABEL (lbl), EPHY_ELLIPSIZE_MIDDLE);
 		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
@@ -2793,8 +2795,28 @@ window_message_cb  (FRCommand  *command,
 		    const char *msg,
 		    FRWindow   *window)		     
 {
-	ephy_ellipsizing_label_set_text (EPHY_ELLIPSIZING_LABEL (window->pd_message), msg);
-	return TRUE;
+	char *utf8_msg;
+
+	if (msg == NULL)
+		return TRUE;
+
+	while (*msg == ' ')
+		msg++;
+
+	if (*msg == 0)
+		return TRUE;
+
+	if (! g_utf8_validate (msg, -1, NULL))
+                utf8_msg = g_locale_to_utf8 (msg, -1 , 0, 0, 0);
+        else
+                utf8_msg = g_strdup (msg);
+
+        if (g_utf8_validate (utf8_msg, -1, NULL))
+		ephy_ellipsizing_label_set_text (EPHY_ELLIPSIZING_LABEL (window->pd_message), utf8_msg);
+
+	g_free (utf8_msg);
+
+        return TRUE;
 }
 
 
