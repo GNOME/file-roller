@@ -126,7 +126,7 @@ process_line (char     *line,
 
 		/* read file name. */
 	  
-		encrypted = line[0] == '*' ? TRUE : FALSE;
+		encrypted = (line[0] == '*') ? TRUE : FALSE;
 		
 		name_field = line + 1;
 
@@ -143,22 +143,23 @@ process_line (char     *line,
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
 		fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
+
 	} else {
 		FileData *fdata;
-
+		
 		fdata = rar_comm->fdata;
 
 		/* read file info. */
 		
-		fields = split_line (line, 5);
-		fdata->size = atol (fields[0]);
-		fdata->modified = mktime_from_string (fields[3], fields[4]); 
-		g_strfreev (fields);
-		
-		if (*fdata->name == 0)
+		fields = split_line (line, 6);
+		if ((*fdata->name == 0) || (fields[5][1] == 'D')) {
 			file_data_free (fdata);
-		else
+		} else {
+			fdata->size = atol (fields[0]);
+			fdata->modified = mktime_from_string (fields[3], fields[4]); 
+			g_strfreev (fields);
 			comm->file_list = g_list_prepend (comm->file_list, fdata);
+		}
 
 		rar_comm->fdata = NULL;
 	}

@@ -1867,7 +1867,7 @@ file_button_press_cb (GtkWidget      *widget,
 			if (! gtk_tree_selection_iter_is_selected (selection, &iter)) {
 				gtk_tree_selection_unselect_all (selection);
 				gtk_tree_selection_select_iter (selection, &iter);
-			}
+			} 
 
 		} else
 			gtk_tree_selection_unselect_all (selection);
