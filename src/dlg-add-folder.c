@@ -405,7 +405,7 @@ add_folder_cb (GtkWidget *widget,
 	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (file_sel), dir);
 	g_free (dir);
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), TRUE);
 
 	update_sensitivity (data);
 
