@@ -90,6 +90,9 @@ void   sort_list_reversed            (GtkWidget *widget,
 void   select_all_cb                 (GtkWidget *widget, 
 				      void *data);
 
+void   deselect_all_cb               (GtkWidget *widget, 
+				      void *data);
+
 void   manual_cb                     (GtkWidget *widget, 
 				      void *data);
 
@@ -99,10 +102,19 @@ void   about_cb                      (GtkWidget *widget,
 void   stop_cb                       (GtkWidget *widget, 
 				      void *data);
 
+void   reload_cb                     (GtkWidget *widget, 
+				      void *data);
+
 void   test_cb                       (GtkWidget *widget, 
 				      void *data);
 
 void   last_output_cb                (GtkWidget *widget, 
+				      void      *data);
+
+void   view_toolbar_cb               (GtkWidget *widget, 
+				      void      *data);
+
+void   view_statusbar_cb             (GtkWidget *widget, 
 				      void      *data);
 
 #endif /* MENU_CALLBACKS_H */

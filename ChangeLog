@@ -1,9 +1,17 @@
 2002-08-21  Paolo Bacchilega  <paolo.bacch@tin.it>
 
+	* src/window.c: 
+	* src/window.h: 
+	* src/toolbar.h: 
+	* src/menu.h: Changed menu and toolbar to make it follow the HIG. 
+	Added "Deselect All", "View Toolbar", "View Statusbar" and "Reload"
+	commands.
+
 	* src/dlg-extract.c (ok_clicked_cb): 
 	* src/window.c (_window_batch_start_current_action): when extracting
 	multiple archives let the user specify the destination folder only 
 	once.
+	(_window_update_title): make the title follow the HIG.
 
 2002-08-20  Paolo Bacchilega  <paolo.bacch@tin.it>
 

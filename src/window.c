@@ -729,10 +729,10 @@ _window_update_title (FRWindow *window)
 		char *utf8_name;
 		
 		utf8_name = g_locale_to_utf8 (file_name_from_path (window->archive_filename), -1, NULL, NULL, NULL);
-		title = g_strdup_printf ("%s - %s %s",
-					 _("File Roller"),
+		title = g_strdup_printf ("%s %s - %s",
 					 utf8_name,
-					 (window->archive->read_only) ? _("[read only]") : "");
+					 (window->archive->read_only) ? _("[read only]") : "",
+					 _("File Roller"));
 
 		gtk_window_set_title (GTK_WINDOW (window->app), title);
 		g_free (title);
@@ -936,14 +936,15 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->mitem_open, file_op && sel_not_null && ! dir_selected);
 	gtk_widget_set_sensitive (window->mitem_view, file_op && one_file_selected && ! dir_selected);
 	gtk_widget_set_sensitive (window->mitem_stop, running);
+	gtk_widget_set_sensitive (window->mitem_reload, ! (no_archive || running));
 	gtk_widget_set_sensitive (window->mitem_password, ! no_archive && ! running && window->archive->command->propPassword);
 
 	/* toolbar */
 
 	gtk_widget_set_sensitive (window->toolbar_new, ! running);
 	gtk_widget_set_sensitive (window->toolbar_open, ! running);
-	gtk_widget_set_sensitive (window->toolbar_close, ! no_archive);
 	gtk_widget_set_sensitive (window->toolbar_add, ! no_archive && ! ro && ! running && ! compr_file);
+	/*gtk_widget_set_sensitive (window->toolbar_delete,  ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file); FIXME */
 	gtk_widget_set_sensitive (window->toolbar_extract, file_op);
 	gtk_widget_set_sensitive (window->toolbar_view, file_op && one_file_selected && ! dir_selected);
 	gtk_widget_set_sensitive (window->toolbar_stop, running);
@@ -2227,6 +2228,17 @@ window_show_cb (GtkWidget *widget,
 		FRWindow  *window)
 {
 	_window_update_current_location (window);
+
+	set_check_menu_item_state (window, 
+				   window->mitem_view_toolbar, 
+				   preferences.view_toolbar);
+	window_set_toolbar_visibility (window, preferences.view_toolbar);
+
+	set_check_menu_item_state (window, 
+				   window->mitem_view_statusbar, 
+				   preferences.view_statusbar);
+	window_set_statusbar_visibility (window, preferences.view_statusbar);
+	
 	return TRUE;
 }
 
@@ -2457,44 +2469,61 @@ window_new ()
 
 	/* Create the toolbar. */
 
-        toolbar = gtk_toolbar_new ();
+	window->toolbar = toolbar = gtk_toolbar_new ();
         gnome_app_fill_toolbar_with_data (GTK_TOOLBAR (toolbar), 
                                           toolbar_data, 
                                           (GtkAccelGroup*) NULL,
                                           window);
+
+	i = 1;
+
 	window->toolbar_add = 
 		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_BUTTON,
 					    NULL, 
 					    _("Add"), 
-					    _("Add files"),
+					    _("Add files to the archive"),
 					    NULL, 
+					    /*gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_LARGE_TOOLBAR),*/
 					    create_icon (add_pixbuf),
 					    GTK_SIGNAL_FUNC (add_cb), 
 					    window,
-					    TOOLBAR_SEP1 + 1);
+					    TOOLBAR_SEP1 + i++);
+	/* FIXME
+	window->toolbar_delete = 
+		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
+					    GTK_TOOLBAR_CHILD_BUTTON,
+					    NULL, 
+					    _("Remove"), 
+					    _("Remove files from the archive"),
+					    NULL, 
+					    gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_LARGE_TOOLBAR),
+					    GTK_SIGNAL_FUNC (dlg_delete), 
+					    window,
+					    TOOLBAR_SEP1 + i++);
+	*/
 	window->toolbar_extract = 
 		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_BUTTON,
 					    NULL, 
 					    _("Extract"), 
-					    _("Extract"),
+					    _("Extract files from the archive"),
 					    NULL, 
 					    create_icon (extract_pixbuf),
 					    GTK_SIGNAL_FUNC (dlg_extract), 
 					    window,
-					    TOOLBAR_SEP1 + 2);
+					    TOOLBAR_SEP1 + i++);
 	window->toolbar_view = 
 		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_BUTTON,
 					    NULL, 
 					    _("View"), 
-					    _("View File"),
+					    _("View selected file"),
 					    NULL, 
 					    create_icon (view_pixbuf),
 					    GTK_SIGNAL_FUNC (view_or_open_cb), 
 					    window,
-					    TOOLBAR_SEP1 + 3);
+					    TOOLBAR_SEP1 + i++);
 	gnome_app_set_toolbar (GNOME_APP (window->app), GTK_TOOLBAR (toolbar));
 
 	/* Create popup menus. */
@@ -2561,7 +2590,10 @@ window_new ()
 	window->mitem_test = edit_menu[EDIT_MENU_TEST].widget;
 	window->mitem_view = file_menu[FILE_MENU_VIEW].widget;
 	window->mitem_stop = view_menu[VIEW_MENU_STOP].widget;
+	window->mitem_reload = view_menu[VIEW_MENU_RELOAD].widget;
 
+	window->mitem_view_toolbar = view_menu[VIEW_MENU_TOOLBAR].widget;
+	window->mitem_view_statusbar = view_menu[VIEW_MENU_STATUSBAR].widget;
 	window->mitem_view_flat   = view_list[VIEW_LIST_VIEW_ALL].widget;
 	window->mitem_view_as_dir = view_list[VIEW_LIST_AS_DIR].widget;
 	set_check_menu_item_state (window, window->mitem_view_as_dir, TRUE);
@@ -2575,7 +2607,6 @@ window_new ()
 
 	window->toolbar_new = toolbar_data[TOOLBAR_NEW].widget;
 	window->toolbar_open = toolbar_data[TOOLBAR_OPEN].widget;
-	window->toolbar_close = toolbar_data[TOOLBAR_CLOSE].widget;
 	window->toolbar_stop = toolbar_data[TOOLBAR_STOP].widget;
 
 	window->open_default_dir = g_strdup (g_get_home_dir ());
@@ -2710,7 +2741,6 @@ window_close (FRWindow *window)
 	if (window->password != NULL)
 		g_free (window->password);
 
-	gtk_widget_destroy (window->app);
 	g_object_unref (G_OBJECT (window->archive));
 	g_object_unref (G_OBJECT (window->list_store));
 	g_object_unref (G_OBJECT (window->empty_store));
@@ -2747,7 +2777,10 @@ window_close (FRWindow *window)
 	preferences.sort_type = window->sort_type;
 	preferences.list_mode = window->list_mode;
 	preferences.compression = window->compression;
+	preferences.view_toolbar = GTK_WIDGET_VISIBLE (window->toolbar->parent);
+	preferences.view_statusbar = GTK_WIDGET_VISIBLE (window->statusbar);
 
+	gtk_widget_destroy (window->app);
 	window_list = g_list_remove (window_list, window);
 	g_free (window);
 
@@ -3366,8 +3399,7 @@ window_stop_activity_mode (FRWindow *window)
 
         gtk_timeout_remove (window->activity_timeout_handle);
         window->activity_timeout_handle = 0;
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->progress),
-				       0.0);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->progress), 0.0);
 	_window_update_sensitivity (window);
 }
 
@@ -3748,6 +3780,28 @@ window_update_columns_visibility (FRWindow *window)
 
 	column = gtk_tree_view_get_column (tree_view, 4);
 	gtk_tree_view_column_set_visible (column, preferences.show_path);
+}
+
+
+void
+window_set_toolbar_visibility (FRWindow   *window,
+			       gboolean    visible)
+{
+	if (visible)
+		gtk_widget_show (window->toolbar->parent);
+	else
+		gtk_widget_hide (window->toolbar->parent);
+}
+
+
+void
+window_set_statusbar_visibility  (FRWindow   *window,
+				  gboolean    visible)
+{
+	if (visible) 
+		gtk_widget_show (window->statusbar);
+	else
+		gtk_widget_hide (window->statusbar);
 }
 
 

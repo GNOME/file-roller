@@ -86,6 +86,10 @@ preferences_load ()
 
 	preferences.max_history_len = get_int_with_default (
 		"file-roller/Main Window/Max History List", 5);
+	preferences.view_toolbar = get_bool_with_default (
+		"file-roller/Main Window/View Toolbar", TRUE);
+	preferences.view_statusbar = get_bool_with_default (
+		"file-roller/Main Window/View Statubar", TRUE);
 
 	preferences.view_folder = get_bool_with_default (
 		"file-roller/Extract/View Folder", FALSE);
@@ -145,6 +149,10 @@ preferences_save ()
 
 	gnome_config_set_int  ("file-roller/Main Window/Max History List",
 			       preferences.max_history_len);
+	gnome_config_set_bool ("file-roller/Main Window/View Toolbar",
+			       preferences.view_toolbar);
+	gnome_config_set_bool ("file-roller/Main Window/View Statubar",
+			       preferences.view_statusbar);
 
 	gnome_config_set_bool ("file-roller/Extract/View Folder",
 			       preferences.view_folder);

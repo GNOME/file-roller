@@ -29,7 +29,6 @@
 enum {
 	TOOLBAR_NEW = 0,
 	TOOLBAR_OPEN,
-	TOOLBAR_CLOSE,
 	TOOLBAR_SEP1,
 	TOOLBAR_SEP2,
 	TOOLBAR_STOP,
@@ -46,12 +45,6 @@ GnomeUIInfo toolbar_data[] = {
 	  N_("Open"), N_("Open archive"), 
 	  open_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_OPEN,
-	  0, 0, NULL },
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("Close"), N_("Close current archive"), 
-	  close_archive_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_CLOSE, 
 	  0, 0, NULL },
 	
 	GNOMEUIINFO_SEPARATOR,

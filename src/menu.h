@@ -43,15 +43,15 @@ enum {
 	FILE_MENU_OPEN_ARCHIVE,
 	FILE_MENU_RECENTS_MENU,
 	FILE_MENU_SEP1,
-	FILE_MENU_ARCHIVE_PROP,
-	FILE_MENU_SEP2,
 	FILE_MENU_OPEN,
 	FILE_MENU_VIEW,
-	FILE_MENU_SEP3,
+	FILE_MENU_SEP2,
 	FILE_MENU_MOVE_ARCHIVE,
 	FILE_MENU_COPY_ARCHIVE,
 	FILE_MENU_DELETE_ARCHIVE,
 	FILE_MENU_RANAME_ARCHIVE,
+	FILE_MENU_SEP3,
+	FILE_MENU_ARCHIVE_PROP,
 	FILE_MENU_SEP4,
 	FILE_MENU_CLOSE_ARCHIVE,
 	FILE_MENU_EXIT,
@@ -75,20 +75,12 @@ GnomeUIInfo file_menu[] = {
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_OPEN,
 	  'o', GDK_CONTROL_MASK, NULL },
 
-	GNOMEUIINFO_SUBTREE (N_("Recents _Files"), recents_menu),
-
-	GNOMEUIINFO_SEPARATOR,
-
-	{ GNOME_APP_UI_ITEM,
-	  N_("_Information"), N_("Show information about the archive"),
-	  dlg_prop, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  'i', GDK_CONTROL_MASK, NULL },
+	GNOMEUIINFO_SUBTREE (N_("Open R_ecent"), recents_menu),
 
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Open Files _with..."), N_("Open selected files with an application"), 
+	  N_("Open Fi_les..."), N_("Open selected files with an application"), 
 	  open_with_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -127,6 +119,14 @@ GnomeUIInfo file_menu[] = {
 
 	GNOMEUIINFO_SEPARATOR,
 
+	{ GNOME_APP_UI_ITEM,
+	  N_("_Information"), N_("Show information about the archive"),
+	  dlg_prop, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  'i', GDK_CONTROL_MASK, NULL },
+
+	GNOMEUIINFO_SEPARATOR,
+
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_Close"), N_("Close current archive"), 
 	  close_archive_cb, NULL, NULL,
@@ -146,14 +146,14 @@ enum {
 	EDIT_MENU_ADD = 0,
 	EDIT_MENU_DELETE,
 	EDIT_MENU_EXTRACT,
-	EDIT_MENU_SEP1,
-	EDIT_MENU_SELECT_ALL,
-	EDIT_MENU_SEP2,
 	/*EDIT_MENU_UUENCODE,*/
 	EDIT_MENU_TEST,
 	/*EDIT_MENU_COMMENT,*/
-	EDIT_MENU_SEP3,
+	EDIT_MENU_SEP1,
+	EDIT_MENU_SELECT_ALL,
+	EDIT_MENU_SEP2,
 	EDIT_MENU_PASSWORD,
+	EDIT_MENU_SEP3,
 	EDIT_MENU_PREFERENCES,
 	EDIT_MENU_LENGTH
 };
@@ -176,16 +176,6 @@ GnomeUIInfo edit_menu[] = {
 	  dlg_extract, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  'x', GDK_CONTROL_MASK, NULL },
-
-	GNOMEUIINFO_SEPARATOR,
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("Select _All"), N_("Select all files"), 
-	  select_all_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  'a', GDK_CONTROL_MASK, NULL },
-
-	GNOMEUIINFO_SEPARATOR,
 
 	/* FIXME
 	{ GNOME_APP_UI_ITEM, 
@@ -212,10 +202,26 @@ GnomeUIInfo edit_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
+	  N_("Select _All"), N_("Select all files"), 
+	  select_all_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  'a', GDK_CONTROL_MASK, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Dese_lect All"), N_("Deselect all files"), 
+	  deselect_all_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  'a', GDK_SHIFT_MASK | GDK_CONTROL_MASK, NULL },
+
+	GNOMEUIINFO_SEPARATOR,
+
+	{ GNOME_APP_UI_ITEM, 
 	  N_("Pass_word..."), " ", 
 	  dlg_password, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
+
+	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_Preferences"), " ", 
@@ -270,7 +276,7 @@ enum {
 
 GnomeUIInfo view_list[] = {
 	{ GNOME_APP_UI_ITEM, 
-	  N_("View all _Files"), " ", 
+	  N_("View All _Files"), " ", 
 	  set_list_mode_flat_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -307,21 +313,45 @@ GnomeUIInfo arrange_menu[] = {
 };
 
 enum {
-	VIEW_MENU_STOP,
+	VIEW_MENU_TOOLBAR,
+	VIEW_MENU_STATUSBAR,
 	VIEW_MENU_SEP1,
-	VIEW_MENU_VIEW_LIST,
+	VIEW_MENU_STOP,
+	VIEW_MENU_RELOAD,
 	VIEW_MENU_SEP2,
-	VIEW_MENU_SORT_LIST,
+	VIEW_MENU_VIEW_LIST,
 	VIEW_MENU_SEP3,
+	VIEW_MENU_SORT_LIST,
+	VIEW_MENU_SEP4,
 	VIEW_MENU_LAST_OUTPUT
 };
 
 GnomeUIInfo view_menu[] = {
+	{ GNOME_APP_UI_TOGGLEITEM, 
+	  N_("_Toolbar"), N_("View the main toolbar"), 
+	  view_toolbar_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_TOGGLEITEM, 
+	  N_("Stat_usbar"), N_("View the statusbar"), 
+	  view_statusbar_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
+	GNOMEUIINFO_SEPARATOR,
+
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_Stop"), N_("Stop current operation"), 
 	  stop_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP,
 	  GDK_Escape, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_Reload"), N_("Reload current archive"), 
+	  reload_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REFRESH,
+	  'r', GDK_CONTROL_MASK, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
 

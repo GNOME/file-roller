@@ -46,6 +46,8 @@ typedef struct {
 
 	int               editors_n;
 	GList *           editors;   /* char * elements. */
+	guint             view_toolbar;
+	guint             view_statusbar;
 
 	/* Destop options. */
 
@@ -61,6 +63,7 @@ typedef struct {
 	gboolean          view_folder;
 
 	/* Add options */
+
 	FRCompression     compression;
 } Preferences;
 

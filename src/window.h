@@ -59,6 +59,7 @@ typedef struct {
 	GtkWidget *      list_view;
 	GtkListStore *   list_store;
 	GtkListStore *   empty_store;
+	GtkWidget *      toolbar;
 	GtkWidget *      statusbar;
 	GtkWidget *      progress;
 
@@ -116,6 +117,8 @@ typedef struct {
 	GtkWidget *      mitem_rename_archive;
 	GtkWidget *      mitem_delete_archive;
 
+	GtkWidget *      mitem_view_toolbar;
+	GtkWidget *      mitem_view_statusbar;
 	GtkWidget *      mitem_view_flat;
 	GtkWidget *      mitem_view_as_dir;
 	GtkWidget *      mitem_sort[5];
@@ -129,11 +132,12 @@ typedef struct {
 	GtkWidget *      mitem_view;
 	GtkWidget *      mitem_open;
 	GtkWidget *      mitem_stop;
+	GtkWidget *      mitem_reload;
 
 	GtkWidget *      toolbar_new;
 	GtkWidget *      toolbar_open;
-	GtkWidget *      toolbar_close;
 	GtkWidget *      toolbar_add;
+	GtkWidget *      toolbar_delete;
 	GtkWidget *      toolbar_extract;
 	GtkWidget *      toolbar_view;
 	GtkWidget *      toolbar_stop;
@@ -277,6 +281,12 @@ void       window_push_message              (FRWindow   *window,
 					     const char *msg);
 
 void       window_pop_message               (FRWindow   *window);
+
+void       window_set_toolbar_visibility    (FRWindow   *window,
+					     gboolean    value);
+
+void       window_set_statusbar_visibility  (FRWindow   *window,
+					     gboolean    value);
 
 /* batch mode procedures. */
 

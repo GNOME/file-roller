@@ -729,6 +729,15 @@ select_all_cb (GtkWidget *widget,
 
 
 void
+deselect_all_cb (GtkWidget *widget, 
+		 void *data)
+{
+	FRWindow *window = data;
+	gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+}
+
+
+void
 manual_cb (GtkWidget *widget, 
            void      *data)
 {
@@ -904,6 +913,16 @@ stop_cb (GtkWidget *widget,
 
 
 void
+reload_cb (GtkWidget *widget, 
+	   void *data)
+{
+	FRWindow *window = data;
+	if (window->activity_ref == 0)
+		window_archive_reload (window);
+}
+
+
+void
 test_cb (GtkWidget *widget, 
 	 void      *data)
 {
@@ -918,4 +937,22 @@ last_output_cb (GtkWidget *widget,
 {
 	FRWindow *window = data;
 	window_view_last_output (window);
+}
+
+
+void
+view_toolbar_cb (GtkWidget *widget, 
+		 void      *data)
+{
+	FRWindow *window = data;
+	window_set_toolbar_visibility (window, GTK_CHECK_MENU_ITEM (widget)->active);
+}
+
+
+void
+view_statusbar_cb (GtkWidget *widget, 
+		   void      *data)
+{
+	FRWindow *window = data;
+	window_set_statusbar_visibility (window, GTK_CHECK_MENU_ITEM (widget)->active);
 }
