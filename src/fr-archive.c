@@ -1060,13 +1060,19 @@ static void
 _archive_remove (FRArchive *archive,
 		 GList     *file_list)
 {
-	GList *e_file_list;
-	GList *scan;
+	gboolean  file_list_created = FALSE;
+	GList    *e_file_list;
+	GList    *scan;
 
 	/* file_list == NULL means delete all files in archive. */
-
-	if (file_list == NULL) 
-		file_list = archive->command->file_list;
+	
+	if (file_list == NULL) {
+		for (scan = archive->command->file_list; scan != NULL; scan = scan->next) {
+			FileData *fdata = (FileData*) scan->data;
+			file_list = g_list_prepend (file_list, fdata->original_path);
+		}
+		file_list_created = TRUE;
+	} 
 
 	e_file_list = escape_file_list (file_list);
 	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
@@ -1092,6 +1098,8 @@ _archive_remove (FRArchive *archive,
 		prev->next = scan;
 	}
 
+	if (file_list_created)
+		g_list_free (file_list);
 	path_list_free (e_file_list);
 }
 
