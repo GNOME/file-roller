@@ -58,6 +58,7 @@
 #include "icons/pixbufs.h"
 
 
+#define LAST_OUTPUT_DIALOG_NAME "last_output"
 #define MAX_HISTORY_LEN 5
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
@@ -4649,6 +4650,15 @@ window_stop_activity_mode (FRWindow *window)
 }
 
 
+static gboolean
+last_output_window__unrealize_cb (GtkWidget  *widget, 
+				  gpointer    data)
+{
+	pref_util_save_window_geometry (GTK_WINDOW (widget), LAST_OUTPUT_DIALOG_NAME);
+	return FALSE;
+}
+
+
 void
 window_view_last_output (FRWindow   *window,
 			 const char *title)
@@ -4718,6 +4728,11 @@ window_view_last_output (FRWindow   *window,
 			  G_CALLBACK (gtk_widget_destroy), 
 			  NULL);
 
+	g_signal_connect (G_OBJECT (dialog), 
+			  "unrealize",
+			  G_CALLBACK (last_output_window__unrealize_cb),
+			  NULL);
+
 	/**/
 
 	gtk_text_buffer_get_iter_at_offset (text_buffer, &iter, 0);
@@ -4739,7 +4754,7 @@ window_view_last_output (FRWindow   *window,
 
 	/**/
 
-	gtk_window_present (GTK_WINDOW (dialog));
+	pref_util_restore_window_geometry (GTK_WINDOW (dialog), LAST_OUTPUT_DIALOG_NAME);
 }
 
 
