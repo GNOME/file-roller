@@ -179,6 +179,7 @@ create_button (const char *stock_id,
 char *
 _gtk_request_dialog_run (GtkWindow        *parent,
 			 GtkDialogFlags    flags,
+			 const char       *title,
 			 const char       *message,
 			 const char       *default_value,
 			 int               max_length,
@@ -192,16 +193,10 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 	GtkWidget    *vbox;
 	GtkWidget    *entry;
 	GtkWidget    *button;
-	GtkStockItem  item;
-	char         *title;
 	char         *stock_id;
 	char         *result;
 
 	stock_id = GTK_STOCK_DIALOG_QUESTION;
-	if (gtk_stock_lookup (stock_id, &item))
-		title = item.label;
-	else
-		title = _("File Roller");
 
 	dialog = gtk_dialog_new_with_buttons (title, parent, flags, NULL);
 
@@ -287,16 +282,9 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 	GtkWidget    *image;
 	GtkWidget    *hbox;
 	GtkWidget    *button;
-	GtkStockItem  item;
-	char         *title;
-	char         *stock_id = GTK_STOCK_DIALOG_QUESTION;
+	char         *stock_id = GTK_STOCK_DIALOG_WARNING;
 
-	if (gtk_stock_lookup (stock_id, &item))
-		title = item.label;
-	else
-		title = _("gThumb");
-
-	d = gtk_dialog_new_with_buttons (title, parent, flags, NULL);
+	d = gtk_dialog_new_with_buttons ("", parent, flags, NULL);
 	gtk_window_set_resizable (GTK_WINDOW (d), FALSE);
 
 	gtk_dialog_set_has_separator (GTK_DIALOG (d), FALSE);

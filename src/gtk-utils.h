@@ -36,6 +36,7 @@ GtkWidget*  _gtk_message_dialog_new   (GtkWindow        *parent,
 
 gchar*      _gtk_request_dialog_run   (GtkWindow        *parent,
 				       GtkDialogFlags    flags,
+				       const char       *title,
 				       const char       *message,
 				       const char       *default_value,
 				       int               max_length,

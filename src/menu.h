@@ -105,19 +105,19 @@ GnomeUIInfo file_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Rename"), N_("Rename current archive"), 
+	  N_("_Rename..."), N_("Rename current archive"), 
 	  rename_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Cop_y"), N_("Copy current archive to another folder"), 
+	  N_("Cop_y..."), N_("Copy current archive to another folder"), 
 	  copy_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Move"), N_("Move current archive to another folder"), 
+	  N_("_Move..."), N_("Move current archive to another folder"), 
 	  move_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -183,7 +183,7 @@ GnomeUIInfo edit_menu[] = {
 	  'z', GDK_CONTROL_MASK, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Delete Files"), N_("Delete selected files and folders from the archive"), 
+	  N_("_Delete Files..."), N_("Delete selected files and folders from the archive"), 
 	  dlg_delete, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_REMOVE,
 	  'd', GDK_CONTROL_MASK, NULL },
@@ -264,13 +264,13 @@ GnomeUIInfo sort_by_radio_list[] = {
           0, 0, NULL },
         
         { GNOME_APP_UI_ITEM, 
-          N_("by _Time"), N_("Sort file list by modification time"), 
+          N_("by _Date modified"), N_("Sort file list by modification time"), 
 	  sort_list_by_time, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },
 
         { GNOME_APP_UI_ITEM, 
-          N_("by _Path"), N_("Sort file list by path"), 
+          N_("by _Location"), N_("Sort file list by location"), 
 	  sort_list_by_path, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },

@@ -341,6 +341,8 @@ create_command_from_filename (FRArchive  *archive,
 			      const char *filename,
 			      gboolean    loading)
 {
+	archive->is_compressed_file = FALSE;
+
 	if (file_extension_is (filename, ".tar.gz")
 	    || file_extension_is (filename, ".tgz")) {
 		archive->command = fr_command_tar_new (archive->process, 

@@ -131,11 +131,19 @@ get_full_path (GtkWidget *file_sel)
 	GtkWidget   *opt_menu;
 	char        *full_path;
 	const char  *path;
+	const char  *filename;
 	int          file_type_idx;
 
 	opt_menu = g_object_get_data (G_OBJECT (file_sel), "fr_opt_menu");
 	path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel));
 
+	if ((path == NULL) || (*path == 0))
+		return NULL;
+
+	filename = file_name_from_path (path);
+	if ((filename == NULL) || (*filename == 0))
+		return NULL;
+	
 	file_type_idx = opt_menu_get_active_idx (opt_menu);
 	if (file_type_idx > 0) 
 		full_path = g_strconcat (path, 
@@ -159,9 +167,20 @@ new_file_ok_cb (GtkWidget *w,
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
 	path = get_full_path (file_sel);
-        if (path == NULL) {
-		gtk_widget_destroy (file_sel);
-                return;
+
+	if ((path == NULL) || (*path == 0)) {
+		GtkWidget *dialog;
+
+		g_free (path);
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 _("You have to specify an archive name."));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		return;
 	}
 	
 	dir = remove_level_from_path (path);
@@ -328,9 +347,20 @@ save_file_ok_cb (GtkWidget *w,
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
 	path = get_full_path (file_sel);
-        if (path == NULL) {
-		gtk_widget_destroy (file_sel);
-                return;
+
+	if ((path == NULL) || (*path == 0)) {
+		GtkWidget *dialog;
+
+		g_free (path);
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 _("You have to specify an archive name."));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		return;
 	}
 	
 	dir = remove_level_from_path (path);
@@ -638,7 +668,7 @@ copy_or_move_archive (FRWindow *window,
 	data->window = window;
 	data->copy = copy;
 	data->overwrite = overwrite;
-	data->file_sel = file_sel = gtk_file_selection_new (copy ? _("Copy archive") : _("Move archive"));
+	data->file_sel = file_sel = gtk_file_selection_new (copy ? _("Copy Archive") : _("Move Archive"));
 
 	dir = g_strconcat (window->open_default_dir, "/", NULL);
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
@@ -716,6 +746,7 @@ rename_archive_cb (GtkWidget *widget,
 	utf8_string = _gtk_request_dialog_run (GTK_WINDOW (window->app),
 					       (GTK_DIALOG_DESTROY_WITH_PARENT 
 						| GTK_DIALOG_MODAL),
+					       _("Rename Archive"),
 					       _("New archive name (without extension)"),
 					       utf8_old_string,
 					       1024,
@@ -830,7 +861,7 @@ delete_archive_cb (GtkWidget *widget,
 		d = _gtk_yesno_dialog_new (GTK_WINDOW (window->app),
 					   GTK_DIALOG_MODAL,
 					   _("The archive cannot be moved to the Trash. Do you want to delete it permanently?"),
-					   GTK_STOCK_CANCEL,
+					   GTK_STOCK_NO,
 					   GTK_STOCK_DELETE);
 		
 		r = gtk_dialog_run (GTK_DIALOG (d));
