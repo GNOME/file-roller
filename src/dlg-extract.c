@@ -410,6 +410,21 @@ help_clicked_cb (GtkWidget  *widget,
 }
 
 
+static void
+set_bold_label (GladeXML   *gui,
+		const char *widget_name,
+		const char *label_txt)
+{
+	GtkWidget *label;
+	char      *bold_label;
+
+	label = glade_xml_get_widget (gui, widget_name);
+	bold_label = g_strconcat ("<b>", label_txt, "</b>", NULL);
+	gtk_label_set_markup (GTK_LABEL (label), bold_label);
+	g_free (bold_label);
+}
+
+
 void
 dlg_extract (GtkWidget *widget,
 	     gpointer   callback_data)
@@ -455,6 +470,10 @@ dlg_extract (GtkWidget *widget,
         data->e_password_hbox = glade_xml_get_widget (data->gui, "e_password_hbox");
 
         data->e_view_folder_checkbutton = glade_xml_get_widget (data->gui, "e_view_folder_checkbutton");
+
+	set_bold_label (data->gui, "e_actions_label", _("Actions"));
+	set_bold_label (data->gui, "e_destination_folder_label", _("Destination folder"));
+	set_bold_label (data->gui, "e_files_label", _("Files"));
 
 	ok_button = glade_xml_get_widget (data->gui, "e_ok_button");
 	cancel_button = glade_xml_get_widget (data->gui, "e_cancel_button");
