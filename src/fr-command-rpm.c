@@ -208,7 +208,7 @@ fr_command_rpm_finalize (GObject *object)
 GType
 fr_command_rpm_get_type ()
 {
-        static guint type = 0;
+        static GType type = 0;
 
         if (! type) {
                 GTypeInfo type_info = {

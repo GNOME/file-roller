@@ -325,7 +325,7 @@ fr_command_cfile_finalize (GObject *object)
 GType
 fr_command_cfile_get_type ()
 {
-        static guint type = 0;
+        static GType type = 0;
 
         if (! type) {
                 GTypeInfo type_info = {

@@ -369,7 +369,7 @@ fr_command_zoo_finalize (GObject *object)
 GType
 fr_command_zoo_get_type ()
 {
-        static guint type = 0;
+        static GType type = 0;
 
         if (! type) {
                 GTypeInfo type_info = {

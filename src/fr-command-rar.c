@@ -356,7 +356,7 @@ fr_command_rar_finalize (GObject *object)
 GType
 fr_command_rar_get_type ()
 {
-        static guint type = 0;
+        static GType type = 0;
 
         if (! type) {
                 GTypeInfo type_info = {

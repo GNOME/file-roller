@@ -739,7 +739,7 @@ fr_command_tar_finalize (GObject *object)
 GType
 fr_command_tar_get_type ()
 {
-        static guint type = 0;
+        static GType type = 0;
 
         if (! type) {
                 GTypeInfo type_info = {

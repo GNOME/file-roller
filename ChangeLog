@@ -1,3 +1,19 @@
+2004-02-08  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command-zoo.c (fr_command_zoo_get_type): 
+	* src/fr-command-zip.c (fr_command_zip_get_type): 
+	* src/fr-command-unstuff.c (fr_command_unstuff_get_type): 
+	* src/fr-command-tar.c (fr_command_tar_get_type): 
+	* src/fr-command-rpm.c (fr_command_rpm_get_type): 
+	* src/fr-command-rar.c (fr_command_rar_get_type): 
+	* src/fr-command-lha.c (fr_command_lha_get_type): 
+	* src/fr-command-cfile.c (fr_command_cfile_get_type): 
+	* src/fr-command-arj.c (fr_command_arj_get_type): 
+	* src/fr-command.c (fr_command_get_type): 
+
+	Use GType instead of guint.  Fixes segfaults on 64-bit architectures.
+	Patch by Aron Griffis <agriffis@gentoo.org>
+	
 2004-02-05  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/window.h: Add a FR_BATCH_ACTION_QUIT command.
