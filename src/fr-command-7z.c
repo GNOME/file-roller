@@ -168,13 +168,27 @@ list__process_line (char     *line,
 
 
 static void
+fr_command_7z_begin_command (FRCommand *comm)
+{
+	char *path;
+
+	path = g_find_program_in_path ("7za");
+	if (path != NULL)
+		fr_process_begin_command (comm->process, "7za");
+	else
+		fr_process_begin_command (comm->process, "7z");
+	g_free (path);
+}
+
+
+static void
 fr_command_7z_list (FRCommand *comm)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      list__process_line,
 				      comm);
 
-	fr_process_begin_command (comm->process, "7z");
+	fr_command_7z_begin_command (comm);
 	fr_process_add_arg (comm->process, "l");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
@@ -194,7 +208,7 @@ fr_command_7z_add (FRCommand     *comm,
 {
 	GList *scan;
 
-	fr_process_begin_command (comm->process, "7z");
+	fr_command_7z_begin_command (comm);
 
 	if (base_dir != NULL) 
 		fr_process_set_working_dir (comm->process, base_dir);
@@ -236,7 +250,7 @@ fr_command_7z_delete (FRCommand *comm,
 {
 	GList *scan;
 
-	fr_process_begin_command (comm->process, "7z");
+	fr_command_7z_begin_command (comm);
 	fr_process_add_arg (comm->process, "d");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
@@ -264,7 +278,7 @@ fr_command_7z_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_begin_command (comm->process, "7z");
+	fr_command_7z_begin_command (comm);
 
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "e");
@@ -298,7 +312,7 @@ static void
 fr_command_7z_test (FRCommand   *comm,
 		    const char  *password)
 {
-	fr_process_begin_command (comm->process, "7z");
+	fr_command_7z_begin_command (comm);
 	fr_process_add_arg (comm->process, "t");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
