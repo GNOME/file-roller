@@ -80,20 +80,26 @@ utf8_only_spaces (const char *text)
 
 
 static int
-open_file_ok_cb (GtkWidget *w,
-                 GtkWidget *file_sel)
+file_sel_response_cb (GtkWidget *w,
+		      gint	response,
+		      GtkWidget *file_sel)
 {
 	FRWindow   *window;
-	const char *file_sel_path;
+	char *file_sel_path;
 	char       *path;
 	DialogData *data;
 	gboolean    update;
 	char       *base_dir;
 
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (file_sel);
+		return;
+	}
+
 	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
 	window = data->window;
 
-	file_sel_path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel));
+	file_sel_path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
 
         if (file_sel_path == NULL)
                 return FALSE;
@@ -137,17 +143,17 @@ open_file_ok_cb (GtkWidget *w,
 
 	if ((strchr (path, '*') == NULL) && (strchr (path, '?') == NULL)) {
 		GList  *files;
-		char  **scan;
-		char  **selections;
+		GSList *selections;
+		GSList *iter;
 
-		selections = gtk_file_selection_get_selections (GTK_FILE_SELECTION (file_sel));
+		selections = gtk_file_chooser_get_filenames (GTK_FILE_CHOOSER (file_sel));
 
 		files = NULL;
-		if (*selections == NULL)
+		if (selections == NULL)
                         files = g_list_prepend (files, (gpointer) file_name_from_path (path));
 
-		for (scan = selections; *scan != NULL; scan++) {
-			files = g_list_prepend (files, (gpointer) file_name_from_path (*scan));
+		for (iter = selections; iter != NULL; iter = iter->next) {
+			files = g_list_prepend (files, (gpointer) file_name_from_path (iter->data));
 #ifdef DEBUG
 			g_print ("add %s\n", *scan);
 #endif
@@ -181,10 +187,13 @@ open_file_ok_cb (GtkWidget *w,
 
 			g_free (first_path);
 		}
-		
-		g_list_free (files);
-		g_strfreev (selections); 
 
+		for (iter = selections; iter != NULL; iter = iter->next) {
+			g_free (iter->data);
+		}
+
+		g_list_free (files);
+		g_slist_free (selections);
 	} else {
 		gboolean    recursive;
 		gboolean    no_symlinks;
@@ -227,6 +236,7 @@ open_file_ok_cb (GtkWidget *w,
 		g_free (include_files);
 	}
 
+	g_free (file_sel_path);
 	g_free (path);
 	g_free (base_dir);
 	gtk_widget_destroy (file_sel);
@@ -239,12 +249,14 @@ static void
 selection_entry_changed (GtkWidget  *widget, 
 			 DialogData *data)
 {
-	const char *path;
-	gboolean    wildcard;
+	char     *path;
+	gboolean  wildcard;
 
-	path = gtk_entry_get_text (GTK_ENTRY (GTK_FILE_SELECTION (data->dialog)->selection_entry));
+	/* Need to be fixed */
+	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->dialog));
 	wildcard = ((g_utf8_strchr (path, -1, '*') != NULL) 
 		    || (g_utf8_strchr (path, -1, '?') != NULL));
+	g_free (path);
 
 	gtk_widget_set_sensitive (data->include_subfold_checkbutton, wildcard);
 	gtk_widget_set_sensitive (data->exclude_symlinks, GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton)->active && wildcard);
@@ -350,10 +362,16 @@ add_cb (GtkWidget *widget,
  
 	data = g_new (DialogData, 1);
 	data->window = callback_data;
-	data->dialog = file_sel = gtk_file_selection_new (_("Add"));
-	gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (file_sel));
-
-	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_sel), TRUE);
+	data->dialog = file_sel = 
+		gtk_file_chooser_dialog_new (_("Add"),
+					     GTK_WINDOW (data->window->app),
+					     GTK_FILE_CHOOSER_ACTION_OPEN,
+					     GTK_STOCK_CANCEL, 
+					     GTK_RESPONSE_CANCEL,
+					     GTK_STOCK_ADD, 
+					     GTK_RESPONSE_OK,
+					     NULL);
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
 
 	data->add_if_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("_Add only if newer"));
 	data->include_subfold_checkbutton = gtk_check_button_new_with_mnemonic (_("_Include subfolders"));
@@ -368,11 +386,9 @@ add_cb (GtkWidget *widget,
 	data->load_button = create_button (GTK_STOCK_OPEN, _("_Load Options"));
         data->save_button = create_button (GTK_STOCK_SAVE, _("Sa_ve Options"));
 
-	frame = GTK_FILE_SELECTION (file_sel)->action_area;
-
 	main_box = gtk_hbox_new (FALSE, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (main_box), 0);
-	gtk_container_add (GTK_CONTAINER (frame), main_box);
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), main_box);
 
 	vbox = gtk_vbox_new (FALSE, 1);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
@@ -431,18 +447,14 @@ add_cb (GtkWidget *widget,
 			    FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), data->save_button,
 			    FALSE, FALSE, 0);
+
+	gtk_widget_show_all (main_box);
 	
-	/**/
-
-	gtk_widget_show_all (frame);
-
 	/* set data */
 
 	dir = g_strconcat (data->window->add_default_dir, "/", "*", NULL);
-	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
+	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (file_sel), dir);
 	g_free (dir);
-
-	gtk_editable_select_region (GTK_EDITABLE (GTK_FILE_SELECTION (data->dialog)->selection_entry), 0, -1);
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_dialog_data", data);
 
@@ -461,18 +473,13 @@ add_cb (GtkWidget *widget,
 			  G_CALLBACK (open_file_destroy_cb),
 			  file_sel);
 
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (file_sel)->cancel_button),
-				  "clicked", 
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (file_sel));
-
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
-			  "clicked",
-			  G_CALLBACK (open_file_ok_cb), 
+	g_signal_connect (G_OBJECT (file_sel),
+			  "response",
+			  G_CALLBACK (file_sel_response_cb),
 			  file_sel);
 
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->selection_entry), 
-			  "changed",
+	g_signal_connect (G_OBJECT (file_sel), 
+			  "selection-changed",
 			  G_CALLBACK (selection_entry_changed),
 			  data);
 	
@@ -499,11 +506,9 @@ add_cb (GtkWidget *widget,
 	g_object_set_data (G_OBJECT (file_sel), "tooltips", tooltips);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 600);
 	gtk_widget_show (file_sel);
 }
-
-
-
 
 
 static gboolean
@@ -537,8 +542,9 @@ config_get_string (const char *config_file,
 
 
 static void
-load_options_ok_cb (GtkWidget *w,
-		    GtkWidget *opt_sel)
+load_options_response_cb (GtkWidget *w,
+			  gint response,
+			  GtkWidget *opt_sel)
 {
 	GtkWidget  *file_sel;
 	DialogData *data;
@@ -554,12 +560,17 @@ load_options_ok_cb (GtkWidget *w,
 	gboolean    no_dot_files;
 	gboolean    ignore_case;
 	char       *exclude_files;
+
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (opt_sel);
+		return;
+	}
 	
 	file_sel = g_object_get_data (G_OBJECT (opt_sel), "fr_file_sel");
 	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
 	window = data->window;
 
-	opt_file_path = g_strdup (gtk_file_selection_get_filename (GTK_FILE_SELECTION (opt_sel)));
+	opt_file_path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (opt_sel));
 	
         if (opt_file_path == NULL) {
 		g_free (opt_file_path);
@@ -584,8 +595,8 @@ load_options_ok_cb (GtkWidget *w,
 
 	/* Sync widgets with options. */
 
-	gtk_file_selection_complete (GTK_FILE_SELECTION (file_sel),
-				     file_sel_path);
+	/*gtk_file_selection_complete (GTK_FILE_SELECTION (file_sel),
+				     file_sel_path);*/
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton), update);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), recursive);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->exclude_symlinks), no_symlinks);
@@ -621,9 +632,14 @@ load_options_cb (GtkWidget  *w,
 
 	ensure_dir_exists (options_dir, 0700);
 	
-	opt_sel = gtk_file_selection_new (_("Load Options"));
-	gtk_file_selection_set_filename (GTK_FILE_SELECTION (opt_sel), 
-					 options_dir_slash);
+	opt_sel = gtk_file_chooser_dialog_new (_("Load Options"),
+					       NULL,
+					       GTK_FILE_CHOOSER_ACTION_OPEN,
+					       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+					       NULL);
+	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (opt_sel), 
+				       options_dir_slash);
 
 	g_free (options_dir);
 	g_free (options_dir_slash);
@@ -631,18 +647,13 @@ load_options_cb (GtkWidget  *w,
 	g_object_set_data (G_OBJECT (opt_sel), "fr_file_sel", file_sel);
 	
 	/* Signals */
-	
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (opt_sel)->cancel_button),
-				  "clicked", 
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (opt_sel));
-	
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (opt_sel)->ok_button),
-			  "clicked",
-			  G_CALLBACK (load_options_ok_cb), 
+	g_signal_connect (G_OBJECT (opt_sel),
+			  "response",
+			  G_CALLBACK (load_options_response_cb), 
 			  opt_sel);
 	
 	gtk_window_set_modal (GTK_WINDOW (opt_sel), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (opt_sel), 600, 400);
 	gtk_widget_show (opt_sel);
 }
 
@@ -679,8 +690,9 @@ config_set_string (const char *config_file,
 
 
 static void
-save_options_ok_cb (GtkWidget *w,
-		    GtkWidget *opt_sel)
+save_options_response_cb (GtkWidget *w,
+			  gint response,
+			  GtkWidget *opt_sel)
 {
 	DialogData *data;
 	FRWindow   *window;
@@ -697,12 +709,17 @@ save_options_ok_cb (GtkWidget *w,
 	gboolean    no_dot_files;
 	gboolean    ignore_case;
 	const char *exclude_files;
-	
+
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (opt_sel);
+		return;
+	}
+
 	file_sel = g_object_get_data (G_OBJECT (opt_sel), "fr_file_sel");
 	data = g_object_get_data (G_OBJECT (file_sel), "fr_dialog_data");
 	window = data->window;
 	
-	opt_file_path = g_strdup (gtk_file_selection_get_filename (GTK_FILE_SELECTION (opt_sel)));
+	opt_file_path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (opt_sel));
 
         if (opt_file_path == NULL) {
 		g_free (opt_file_path);
@@ -712,7 +729,7 @@ save_options_ok_cb (GtkWidget *w,
 	
 	/* Get options. */
 	
-	file_sel_path = g_strdup (gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel)));
+	file_sel_path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
 	path = remove_ending_separator (file_sel_path);
 	base_dir = remove_level_from_path (path);
 	
@@ -763,34 +780,31 @@ save_options_cb (GtkWidget  *w,
 {
 	GtkWidget *opt_sel;
 	char      *options_dir;
-	char      *options_dir_slash;
 
-	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);	
-	options_dir_slash = g_strconcat (options_dir, "/", NULL);
+	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
 
 	ensure_dir_exists (options_dir, 0700);
 	
-	opt_sel = gtk_file_selection_new (_("Save Options"));
-	gtk_file_selection_set_filename (GTK_FILE_SELECTION (opt_sel), 
-					 options_dir_slash);
+	opt_sel = gtk_file_chooser_dialog_new (_("Save Options"),
+					       NULL,
+					       GTK_FILE_CHOOSER_ACTION_SAVE,
+					       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					       GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+					       NULL);
+ 
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (opt_sel), options_dir);
 
 	g_free (options_dir);
-	g_free (options_dir_slash);
 	
 	g_object_set_data (G_OBJECT (opt_sel), "fr_file_sel", file_sel);
 	
 	/* Signals */
-	
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (opt_sel)->cancel_button),
-				  "clicked", 
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (opt_sel));
-	
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (opt_sel)->ok_button),
-			  "clicked",
-			  G_CALLBACK (save_options_ok_cb), 
+	g_signal_connect (G_OBJECT (opt_sel),
+			  "response",
+			  G_CALLBACK (save_options_response_cb), 
 			  opt_sel);
 	
+	gtk_window_set_default_size (GTK_WINDOW (opt_sel), 600, 400);
 	gtk_window_set_modal (GTK_WINDOW (opt_sel), TRUE);
 	gtk_widget_show (opt_sel);
 }

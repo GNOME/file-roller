@@ -1,3 +1,19 @@
+2004-01-04  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command-unstuff.c (fr_command_unstuff_list): fix bug #128748 (
+	Build fails on Solaris9: mkdtemp() doesn't exist).
+
+2003-12-04  Jan Arne Petersen  <jpetersen@uni-bonn.de>
+
+	* src/dlg-add.c: (file_sel_response_cb), (selection_entry_changed),
+	(add_cb), (load_options_response_cb), (load_options_cb),
+	(save_options_response_cb), (save_options_cb):
+	* src/menu-callbacks.c: (get_full_path), (new_file_response_cb),
+	(new_archive_cb), (save_file_response_cb), (save_as_archive_cb),
+	(open_file_response_cb), (open_archive_cb),
+	(copy_or_move_archive_response_cb), (copy_or_move_archive): replace
+	GtkFileSelection with GtkFileChooser.
+
 2004-01-03  Robert Sedak  <robert.sedak@sk.htnet.hr>
 
         * configure.in: Added "hr" in ALL_LINGUAS.

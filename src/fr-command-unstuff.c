@@ -194,9 +194,8 @@ fr_command_unstuff_list (FRCommand *comm)
 	fr_process_add_arg (comm->process, "--trace");
 
 	/* Actually unpack everything in a temporary directory */
-	template = g_strdup_printf ("%s/file-roller-unstuffXXXXXX",
-			g_get_tmp_dir ());
-	path = mkdtemp (template);
+	path = get_temp_work_dir_name ();
+	ensure_dir_exists (path, 0700)
 	path_dots = unstuff_is_shit_with_filenames (path);
 	g_free (path);
 

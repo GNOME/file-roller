@@ -115,11 +115,8 @@ int main (int argc, char **argv)
                 g_error ("Cannot initialize the Virtual File System.");
 
 	glade_gnome_init ();
-
 	init_session (argv);
-
 	initialize_data ();
-
 	prepare_app (pctx);
 	poptFreeContext (pctx);
 

@@ -128,39 +128,49 @@ get_full_path (GtkWidget *file_sel)
 {
 	GtkWidget   *opt_menu;
 	char        *full_path;
-	const char  *path;
+	char        *path;
 	const char  *filename;
 	int          file_type_idx;
 
 	opt_menu = g_object_get_data (G_OBJECT (file_sel), "fr_opt_menu");
-	path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel));
+	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
 
 	if ((path == NULL) || (*path == 0))
 		return NULL;
 
 	filename = file_name_from_path (path);
-	if ((filename == NULL) || (*filename == 0))
+	if ((filename == NULL) || (*filename == 0)) {
+		g_free (path);
 		return NULL;
+	}
 	
 	file_type_idx = opt_menu_get_active_idx (opt_menu);
-	if (file_type_idx > 0) 
+	if (file_type_idx > 0) {
 		full_path = g_strconcat (path, 
 					 type_desc[file_type_idx].ext,
 					 NULL);
-	else
-		full_path = g_strdup (path);
+		g_free (path);
+	} else {
+		full_path = path;
+	}
 
 	return full_path;
 }
 
 
 static void 
-new_file_ok_cb (GtkWidget *w,
-		GtkWidget *file_sel)
+new_file_response_cb (GtkWidget *w,
+		      gint response,
+		      GtkWidget *file_sel)
 {
 	FRWindow *window;
 	gchar    *path;
 	gchar    *dir;
+
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (file_sel);
+		return;
+	}
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
@@ -285,16 +295,19 @@ new_archive_cb (GtkWidget *widget,
 	GtkWidget *vbox, *vbox2;
 	GtkWidget *opt_menu;
 	GtkWidget *menu;
-	char      *dir;
 
-	file_sel = gtk_file_selection_new (_("New"));
+	file_sel = gtk_file_chooser_dialog_new (_("New"),
+					        NULL,
+					        GTK_FILE_CHOOSER_ACTION_SAVE,
+					        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					        GTK_STOCK_NEW, GTK_RESPONSE_OK,
+					        NULL);
 
-	dir = g_strconcat (window->open_default_dir, "/", NULL);
-	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
-	g_free (dir);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
+					     window->open_default_dir);
 
 	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), vbox, TRUE, TRUE, 0);
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), vbox);
 
 	vbox2 = gtk_vbox_new (FALSE, 6);
 	gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 6);
@@ -320,15 +333,10 @@ new_archive_cb (GtkWidget *widget,
 	g_object_set_data (G_OBJECT (file_sel), "fr_opt_menu", opt_menu);
 	g_object_set_data (G_OBJECT (window->app), "fr_file_sel", file_sel);
 	
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
-			  "clicked", 
-			  G_CALLBACK (new_file_ok_cb), 
+	g_signal_connect (G_OBJECT (file_sel),
+			  "response", 
+			  G_CALLBACK (new_file_response_cb), 
 			  file_sel);
-
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (file_sel)->cancel_button),
-				  "clicked", 
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (file_sel));
 
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
@@ -336,6 +344,7 @@ new_archive_cb (GtkWidget *widget,
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show_all (file_sel);
 }
 
@@ -351,12 +360,18 @@ save_file_destroy_cb (GtkWidget *w,
 
 
 static void 
-save_file_ok_cb (GtkWidget *w,
-		 GtkWidget *file_sel)
+save_file_response_cb (GtkWidget *w,
+		       gint response,
+		       GtkWidget *file_sel)
 {
 	FRWindow *window;
 	char     *path;
 	char     *dir;
+
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (file_sel);
+		return;
+	}
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
@@ -454,18 +469,21 @@ save_as_archive_cb (GtkWidget *widget,
 	GtkWidget *hbox;
 	GtkWidget *opt_menu;
 	GtkWidget *menu;
-	char      *dir;
 
-	file_sel = gtk_file_selection_new (_("Save"));
+	file_sel = gtk_file_chooser_dialog_new (_("Save"),
+					        NULL,
+					        GTK_FILE_CHOOSER_ACTION_SAVE,
+					        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					        GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+					        NULL);
 
-	dir = g_strconcat (window->open_default_dir, "/", NULL);
-	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
-	g_free (dir);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
+					     window->open_default_dir);
 
 	/**/
 
 	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), hbox, TRUE, TRUE, 0);
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);
 
 	gtk_box_pack_start (GTK_BOX (hbox), 
 			    gtk_label_new (_("Archive type:")),
@@ -482,15 +500,10 @@ save_as_archive_cb (GtkWidget *widget,
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
 	g_object_set_data (G_OBJECT (file_sel), "fr_opt_menu", opt_menu);
 	
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
-			  "clicked", 
-			  G_CALLBACK (save_file_ok_cb), 
+	g_signal_connect (G_OBJECT (file_sel),
+			  "response", 
+			  G_CALLBACK (save_file_response_cb), 
 			  file_sel);
-
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (file_sel)->cancel_button),
-				  "clicked", 
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (file_sel));
 
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
@@ -498,6 +511,7 @@ save_as_archive_cb (GtkWidget *widget,
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show_all (file_sel);
 }
 
@@ -513,14 +527,20 @@ open_file_destroy_cb (GtkWidget *w,
 
 
 static void 
-open_file_ok_cb (GtkWidget *w,
-                 GtkWidget *file_sel)
+open_file_response_cb (GtkWidget *w,
+		       gint response,
+		       GtkWidget *file_sel)
 {
 	FRWindow   *window = NULL;
-	const char *path;
+	char *path;
+
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (file_sel);
+		return;
+	}
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
-	path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel));
+	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
 
         if (path == NULL)
                 return;
@@ -529,6 +549,8 @@ open_file_ok_cb (GtkWidget *w,
 
 	if (window_archive_open (window, path, GTK_WINDOW (file_sel)))
 		gtk_widget_destroy (file_sel);
+
+	g_free (path);
 }
 
 
@@ -538,36 +560,36 @@ open_archive_cb (GtkWidget *widget,
 {
 	GtkWidget *file_sel;
 	FRWindow  *window = data;
-	char      *dir;
 
 	g_print ("[-2]\n");
 
-        file_sel = gtk_file_selection_new (_("Open"));
+	file_sel = gtk_file_chooser_dialog_new (_("Open"),
+					        NULL,
+					        GTK_FILE_CHOOSER_ACTION_OPEN,
+					        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					        GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+					        NULL);
 
-	dir = g_strconcat (window->open_default_dir, "/", NULL);
-	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
-	g_free (dir);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
+					     window->open_default_dir);
+
 
 	/**/
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
 	
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
-			  "clicked", 
-			  G_CALLBACK (open_file_ok_cb), 
+	g_signal_connect (G_OBJECT (file_sel),
+			  "response", 
+			  G_CALLBACK (open_file_response_cb), 
 			  file_sel);
  
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (file_sel)->cancel_button),
-				  "clicked", 
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (file_sel));
-
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
 			  G_CALLBACK (open_file_destroy_cb),
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show (file_sel);
 }
 
@@ -600,19 +622,25 @@ file_sel_destroy_cb (GtkWidget    *w,
 
 
 static void 
-copy_or_move_archive_ok_cb (GtkWidget    *w,
-			    CopyMoveData *data)
+copy_or_move_archive_response_cb (GtkWidget    *w,
+				  gint         response,
+				  CopyMoveData *data)
 {
 	FRWindow    *window;
-	const char  *path;
+	char        *path;
 	const char  *filename;
 	char        *folder;
 	char        *new_path;
 
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (w);
+		return;
+	}
+
 	gtk_widget_hide (data->file_sel);
 
 	window = data->window;
-	path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (data->file_sel));
+	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->file_sel));
 
 	if ((path == NULL) || (*path == 0)) {
                 gtk_widget_destroy (data->file_sel);
@@ -624,6 +652,7 @@ copy_or_move_archive_ok_cb (GtkWidget    *w,
 		filename = file_name_from_path (window->archive_filename);
 	folder = remove_level_from_path (path);
 	new_path = g_build_filename (folder, filename, NULL);
+	g_free (path);
 	g_free (folder);
 
 	if (path_is_file (new_path)) {
@@ -696,31 +725,32 @@ copy_or_move_archive (FRWindow *window,
 		      gboolean  overwrite)
 {
 	GtkWidget    *file_sel;
-	char         *dir;
 	CopyMoveData *data;
 
 	data = g_new (CopyMoveData, 1);
 	data->window = window;
 	data->copy = copy;
 	data->overwrite = overwrite;
-	data->file_sel = file_sel = gtk_file_selection_new (copy ? _("Copy") : _("Move"));
+	data->file_sel = file_sel = gtk_file_chooser_dialog_new (copy ? _("Copy") : _("Move"),
+								 NULL,
+								 GTK_FILE_CHOOSER_ACTION_SAVE,
+								 GTK_STOCK_CANCEL,
+								 GTK_RESPONSE_CANCEL,
+					        		 copy ? GTK_STOCK_COPY :
+								        _("Move"),
+								 GTK_RESPONSE_OK,
+								 NULL);
 
-	dir = g_strconcat (window->open_default_dir, "/", NULL);
-	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
-	g_free (dir);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
+					     window->open_default_dir);
+ 
+	/*gtk_widget_set_sensitive (GTK_FILE_SELECTION (file_sel)->file_list,
+				  FALSE);*/
 
-	gtk_widget_set_sensitive (GTK_FILE_SELECTION (file_sel)->file_list,
-				  FALSE);
-
-	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
-			  "clicked", 
-			  G_CALLBACK (copy_or_move_archive_ok_cb), 
+	g_signal_connect (G_OBJECT (file_sel),
+			  "response", 
+			  G_CALLBACK (copy_or_move_archive_response_cb), 
 			  data);
-
-	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (file_sel)->cancel_button),
-				  "clicked", 
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (file_sel));
 
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
@@ -728,6 +758,7 @@ copy_or_move_archive (FRWindow *window,
 			  data);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show (file_sel);
 }
 
