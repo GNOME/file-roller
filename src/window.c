@@ -786,9 +786,6 @@ window_update_file_list (FRWindow *window)
 		window->give_focus_to_the_list = FALSE;
 	}
 
-	gtk_tree_view_set_model (GTK_TREE_VIEW (window->list_view), 
-				 GTK_TREE_MODEL (window->empty_store));
-
 	gtk_list_store_clear (window->list_store);
 	if (! GTK_WIDGET_VISIBLE (window->list_view))
 		gtk_widget_show_all (window->list_view->parent);
@@ -3262,14 +3259,6 @@ window_new ()
 						 G_TYPE_STRING,
 						 G_TYPE_STRING,
 						 G_TYPE_STRING);
-	window->empty_store = gtk_list_store_new (NUMBER_OF_COLUMNS, 
-						  G_TYPE_POINTER,
-						  GDK_TYPE_PIXBUF,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING,
-						  G_TYPE_STRING);
 	window->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->list_store));
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (window->list_view), TRUE);
@@ -3753,7 +3742,6 @@ window_close (FRWindow *window)
 
 	g_object_unref (window->archive);
 	g_object_unref (window->list_store);
-	g_object_unref (window->empty_store);
 
 	_window_clipboard_clear (window);
 
@@ -5330,32 +5318,27 @@ window_view_or_open_file (FRWindow *window,
 			  gchar    *filename)
 
 {
-	GnomeVFSMimeApplication *application;
-	const char              *mime_type;
-	char                    *command;
-	GList                   *singleton;
+	const char              *mime_type = NULL;
+	GnomeVFSMimeApplication *application = NULL;
+	GList                   *file_list;
 
-	
 	if (window->activity_ref > 0)
 		return;
-	
+
 	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, NULL);
-	if (mime_type == NULL) {
-		window_view_file (window, filename);
-		return;
-	}
+	if (mime_type != NULL)
+		application = gnome_vfs_mime_get_default_application (mime_type);
 
-	application = gnome_vfs_mime_get_default_application (mime_type);
-	if (application == NULL) {	
-		dlg_viewer_or_app (window, filename);
-		return;
-	}
+	file_list = g_list_append (NULL, filename);
 
-	command = application_get_command (application);
-	singleton = g_list_append (NULL, filename);
-	window_open_files (window, command, singleton);
-	g_list_free (singleton);
-	g_free (command);
+	if (application != NULL) {
+		char *command = application_get_command (application);
+		window_open_files (window, command, file_list);
+		g_free (command);
+	} else 
+		dlg_open_with (window, file_list);
+
+	g_list_free (file_list);
 }
 
 
