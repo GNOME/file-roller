@@ -631,7 +631,6 @@ get_action_from_sort_method (WindowSortMethod sort_method)
 typedef struct {
 	FRWindow *window;
 	GList    *file_list;
-	gboolean  add_timeout;
 } UpdateData;
 
 
@@ -746,12 +745,10 @@ update_file_list_idle (gpointer callback_data)
 		update_data_free (data);
 		return FALSE;
 
-	} else if (data->add_timeout) {
-		data->add_timeout = FALSE;
+	} else 
 		window->update_timeout_handle = g_timeout_add (DISPLAY_TIMEOUT_INTERVAL_MSECS, 
 							       update_file_list_idle, 
 							       data);
-	}
 
 	return FALSE;
 }
@@ -835,7 +832,6 @@ window_update_file_list (FRWindow *window)
 	udata = g_new0 (UpdateData, 1);
 	udata->window = window;
 	udata->file_list = g_list_copy (file_list);
-	udata->add_timeout = TRUE;
 
 	update_file_list_idle (udata);
 
