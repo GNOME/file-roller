@@ -186,8 +186,6 @@ remove_scripts ()
 }
 
 
-
-
 static void 
 initialize_data ()
 {

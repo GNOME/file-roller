@@ -48,9 +48,10 @@ typedef struct {
 
 #define FR_TYPE_FILE_DATA (file_data_get_type ())
 
-GType        file_data_get_type (void);
-FileData *   file_data_new      (void);
-FileData *   file_data_copy     (FileData *src);
-void         file_data_free     (FileData *fdata);
+GType           file_data_get_type             (void);
+FileData *      file_data_new                  (void);
+FileData *      file_data_copy                 (FileData *src);
+void            file_data_free                 (FileData *fdata);
+const char *    file_data_get_type_description (const FileData *fdata);
 
 #endif /* FILE_DATA_H */

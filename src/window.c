@@ -60,7 +60,6 @@
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
 #define ICON_TYPE_DIRECTORY "i-directory"
 #define ICON_TYPE_REGULAR   "i-regular"
-#define DESCRIPTION_UNKNOWN _("Unknown type")
 
 enum {
 	TARGET_STRING,
@@ -172,13 +171,8 @@ sort_by_type (gconstpointer  ptr1,
 	} else if (fdata1->is_dir && fdata2->is_dir) 
 		return sort_by_name (ptr1, ptr2);
 
-	desc1 = gnome_vfs_mime_get_description (fdata1->type);
-	if (desc1 == NULL)
-		desc1 = DESCRIPTION_UNKNOWN;
-
-	desc2 = gnome_vfs_mime_get_description (fdata2->type);
-	if (desc2 == NULL)
-		desc2 = DESCRIPTION_UNKNOWN;
+	desc1 = file_data_get_type_description (fdata1);
+	desc2 = file_data_get_type_description (fdata2);
 
 	result = strcasecmp (desc1, desc2);
 	if (result == 0)
@@ -630,9 +624,7 @@ update_file_list_idle (gpointer callback_data)
 
 			s_size = gnome_vfs_format_file_size_for_display (fdata->size);
 			s_time = get_time_string (fdata->modified);
-			desc = gnome_vfs_mime_get_description (fdata->type);
-			if (desc == NULL)
-				desc = DESCRIPTION_UNKNOWN;
+			desc = file_data_get_type_description (fdata);
 
 			gtk_list_store_set (window->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,

@@ -20,7 +20,13 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+#include <gnome.h>
+#include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-data.h"
+
+#define DESCRIPTION_UNKNOWN _("Unknown type")
+#define DESCRIPTION_SYMLINK _("Symbolic link")
 
 
 FileData *
@@ -81,5 +87,21 @@ file_data_get_type (void)
 		type = g_boxed_type_register_static ("FRFileData", (GBoxedCopyFunc) file_data_copy, (GBoxedFreeFunc) file_data_free);
   
 	return type;
+}
+
+
+const char *
+file_data_get_type_description (const FileData *fdata)
+{
+	const char *desc;
+
+	if (fdata->link != NULL)
+		return DESCRIPTION_SYMLINK;
+
+	desc = gnome_vfs_mime_get_description (fdata->type);
+	if (desc == NULL)
+		desc = DESCRIPTION_UNKNOWN;
+
+	return desc;
 }
 
