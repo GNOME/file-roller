@@ -82,6 +82,8 @@ char **             search_util_get_patterns     (const char  *pattern_string);
 
 GnomeVFSFileSize    get_dest_free_space          (const char  *path);
 
+gboolean            rmdir_recursive              (const gchar *directory);
+
 
 #define get_home_relative_dir(x)        \
         g_strconcat (g_get_home_dir (), \

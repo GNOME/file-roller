@@ -101,14 +101,15 @@ _window_get_current_dir (FRWindow *window)
 	scan = window->archive->command->file_list;
 	for (; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
+		int       current_dir_len = strlen (window->current_dir);
 
 		if (strncmp (fdata->full_path, 
 			     window->current_dir, 
-			     strlen (window->current_dir)) == 0) {
+			     current_dir_len) == 0) {
 			if (g_hash_table_lookup (names_hash, 
 						 fdata->list_name) != NULL) 
 				continue;
-			
+
 			g_hash_table_insert (names_hash, 
 					     fdata->list_name, 
 					     GINT_TO_POINTER (1));
@@ -298,20 +299,23 @@ set_check_menu_item_state (FRWindow  *window,
 
 
 static void
-_window_sort_file_list (FRWindow *window)
+_window_compute_list_names (FRWindow *window, GList *file_list)
 {
 	GList *scan;
 
-	scan = window->archive->command->file_list;
-	for (; scan; scan = scan->next) {
+	for (scan = file_list; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
 		compute_file_list_name (window, fdata);
 	}
+}
 
-	window->archive->command->file_list = g_list_sort (window->archive->command->file_list, get_compare_func_from_idx (window->sort_method));
 
+static void
+_window_sort_file_list (FRWindow *window, GList **file_list)
+{
+	*file_list = g_list_sort (*file_list, get_compare_func_from_idx (window->sort_method));
 	if (window->sort_type == GTK_SORT_DESCENDING)
-		window->archive->command->file_list = g_list_reverse (window->archive->command->file_list);
+		*file_list = g_list_reverse (*file_list);
 }
 
 
@@ -700,18 +704,23 @@ window_update_file_list (FRWindow *window)
 
 	window_start_activity_mode (window);
 
-	_window_sort_file_list (window);
-	if (window->list_mode == WINDOW_LIST_MODE_FLAT)
+	if (window->list_mode == WINDOW_LIST_MODE_FLAT) {
+		_window_compute_list_names (window, window->archive->command->file_list);
+		_window_sort_file_list (window, &window->archive->command->file_list);
 		file_list = window->archive->command->file_list;
-	else {
+
+	} else {
+		_window_compute_list_names (window, window->archive->command->file_list);
 		dir_list = _window_get_current_dir (window);
 
 		while ((dir_list == NULL) 
 		       && (strcmp (window->current_dir, "/") != 0)) {
 			_go_up_one_level (window);
+			_window_compute_list_names (window, window->archive->command->file_list);
 			dir_list = _window_get_current_dir (window);
 		}
 
+		_window_sort_file_list (window, &dir_list);
 		file_list = dir_list;
 	}
 
@@ -939,6 +948,7 @@ _window_update_sensitivity (FRWindow *window)
 
 	gtk_widget_set_sensitive (window->mitem_new_archive, ! running);
 	gtk_widget_set_sensitive (window->mitem_open_archive, ! running);
+	gtk_widget_set_sensitive (window->mitem_save_as_archive, ! no_archive && ! compr_file);
 	gtk_widget_set_sensitive (window->mitem_close, ! no_archive);
 	
 	gtk_widget_set_sensitive (window->mitem_archive_prop, file_op);
@@ -978,86 +988,34 @@ _window_update_sensitivity (FRWindow *window)
 }
 
 
-static void
-location_opt_changed_cb (GtkWidget *caller,
-			 FRWindow  *window)
+static gboolean
+location_entry_key_press_event_cb (GtkWidget   *widget,
+				   GdkEventKey *event,
+				   FRWindow    *window)
 {
-	GtkWidget *item;
-        GtkWidget *menu;
-	char      *path;
-	char      *location;
+	if ((event->keyval == GDK_Return) 
+	    || (event->keyval == GDK_KP_Enter) 
+	    || (event->keyval == GDK_ISO_Enter)) 
+		window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (window->location_entry)));
 
-	menu = gtk_option_menu_get_menu (GTK_OPTION_MENU (window->location_opt));
-        item = gtk_menu_get_active (GTK_MENU (menu));
-	path = g_object_get_data (G_OBJECT (item), "path");
-	location = g_strconcat (path,
-				(strcmp (path, "/") == 0) ? NULL : "/",
-				NULL);
-
-	window_go_to_location (window, location);
-	g_free (location);
+	return FALSE;
 }
 
 
 static void
 _window_update_current_location (FRWindow *window)
 {
-	GtkWidget *menu;
-	GtkWidget *item;
-	char      *current_dir;
-
 	if (window->list_mode == WINDOW_LIST_MODE_FLAT) {
 		gtk_widget_hide (window->location_bar);
 		return;
-	} else
-		gtk_widget_show (window->location_bar);
+	} 
 
-	if (! window->archive_present) {
-		menu = gtk_menu_new ();
-		item = gtk_menu_item_new_with_label (" ");
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-		gtk_widget_show_all (menu);
-		gtk_option_menu_set_menu (GTK_OPTION_MENU (window->location_opt),
-					  menu);
-		
-		gtk_widget_set_sensitive (window->up_button, FALSE);
-		gtk_widget_set_sensitive (window->location_label, FALSE);
-		gtk_widget_set_sensitive (window->location_opt, FALSE);
-		return;
-	} else {
-		gtk_widget_set_sensitive (window->location_opt, TRUE);
-		gtk_widget_set_sensitive (window->location_label, TRUE);
-		gtk_widget_set_sensitive (window->up_button, strcmp (window->current_dir, "/") != 0);
-	}
+	gtk_widget_show (window->location_bar);
 
-	menu = gtk_menu_new ();
-
-	current_dir = window->current_dir;
-	do {
-		char *sub_dir;
-
-		sub_dir = remove_level_from_path (current_dir);
-		item = gtk_menu_item_new_with_label (sub_dir);
-
-		g_object_set_data_full (G_OBJECT (item), 
-					"path", 
-					sub_dir,
-					g_free);
-		g_signal_connect (G_OBJECT (item), 
-				  "activate",
-				  G_CALLBACK (location_opt_changed_cb), 
-				  window);
-
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-		current_dir = sub_dir;
-	} while (strcmp (current_dir, "/") != 0);
-
-	gtk_widget_show_all (menu);
-	gtk_option_menu_set_menu (GTK_OPTION_MENU (window->location_opt),
-				  menu);
-
-	if (! GTK_WIDGET_VISIBLE (window->location_bar))
-		gtk_widget_show (window->location_bar);
+	gtk_entry_set_text (GTK_ENTRY (window->location_entry), window->archive_present? window->current_dir: "");
+	gtk_widget_set_sensitive (window->up_button, window->archive_present && (window->current_dir != NULL) && (strcmp (window->current_dir, "/") != 0));
+	gtk_widget_set_sensitive (window->location_entry, window->archive_present);
+	gtk_widget_set_sensitive (window->location_label, window->archive_present);
 }
 
 
@@ -1233,17 +1191,38 @@ open_nautilus (const char *folder)
 }
 
 
-static void
-_action_performed (FRArchive   *archive,
-		   FRAction     action, 
-		   FRProcError *error, 
-		   gpointer     data)
+void
+window_convert_data_free (FRWindow *window)
 {
-	FRWindow *window = data;
+	window->convert_data.converting = FALSE;
 
-	window_stop_activity_mode (window);
+	g_free (window->convert_data.temp_dir);
+	window->convert_data.temp_dir = NULL;
+	
+	g_object_unref (window->convert_data.new_archive);
+	window->convert_data.new_archive = NULL;
+}
+
+
+static void
+convert__get_files_done_cb (gpointer data)
+{
+	FRWindow  *window = data;
+
 	window_pop_message (window);
+	window_stop_activity_mode (window);
 
+	visit_dir_handle_free (window->vd_handle);
+	window->vd_handle = NULL;
+}
+
+
+static void
+handle_errors (FRWindow    *window,
+	       FRArchive   *archive,
+	       FRAction     action, 
+	       FRProcError *error)
+{
 	if (error->type == FR_PROC_ERROR_STOPPED) {
 		GtkWidget *dialog;
 		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
@@ -1261,7 +1240,7 @@ _action_performed (FRArchive   *archive,
 		char      *msg = NULL;
 		char      *details = NULL;
 		GtkWidget *dialog;
-		FRProcess *process = window->archive->process;
+		FRProcess *process = archive->process;
 
 		if (action == FR_ACTION_LIST) 
 			window_archive_close (window);
@@ -1317,6 +1296,38 @@ _action_performed (FRArchive   *archive,
 
 		gtk_widget_show (dialog);
 	}
+}
+
+
+static void
+convert__action_performed (FRArchive   *archive,
+			   FRAction     action, 
+			   FRProcError *error,
+			   gpointer     data)
+{
+	FRWindow *window = data;
+
+	handle_errors (window, archive, action, error);
+	rmdir_recursive (window->convert_data.temp_dir);
+	window_convert_data_free (window);
+
+	_window_update_sensitivity (window);
+	_window_update_statusbar_list_info (window);
+}
+
+
+static void
+_action_performed (FRArchive   *archive,
+		   FRAction     action, 
+		   FRProcError *error, 
+		   gpointer     data)
+{
+	FRWindow *window = data;
+
+	window_stop_activity_mode (window);
+	window_pop_message (window);
+
+	handle_errors (window, archive, action, error);
 
 	switch (action) {
 	case FR_ACTION_LIST:
@@ -1394,10 +1405,35 @@ _action_performed (FRArchive   *archive,
 
 	case FR_ACTION_EXTRACT:
 		if (error->type != FR_PROC_ERROR_NONE) {
+			if (window->convert_data.converting) {
+				rmdir_recursive (window->convert_data.temp_dir);
+				window_convert_data_free (window);
+			}
 			window->view_folder_after_extraction = FALSE;
 			break;
 		}
-		if (window->view_folder_after_extraction) {
+
+		if (window->convert_data.converting) {
+			window_start_activity_mode (window);
+			window_push_message (window, _("Getting file list, wait please..."));
+			window->vd_handle = fr_archive_add_with_wildcard (
+				  window->convert_data.new_archive,
+				  "*",
+				  NULL,
+				  window->convert_data.temp_dir,
+				  FALSE,
+				  TRUE,
+				  FALSE,
+				  FALSE,
+				  FALSE,
+				  FALSE,
+				  FALSE,
+				  window->password,
+				  window->compression,
+				  convert__get_files_done_cb,
+				  window);
+			
+		} else if (window->view_folder_after_extraction) {
 			open_nautilus (window->folder_to_view);
 			window->view_folder_after_extraction = FALSE;
 		}
@@ -1565,18 +1601,6 @@ get_file_list_from_url_list (gchar *url_list)
 
 
 static void
-add_directory_done_cb (gpointer data)
-{
-	FRWindow *window = data;
-
-	window_pop_message (window);
-
-	visit_dir_handle_free (window->vd_handle);
-	window->vd_handle = NULL;
-}
-
-
-static void
 drag_drop_add_file_list (FRWindow *window)
 {
 	GList     *list = window->dropped_file_list;
@@ -1639,15 +1663,12 @@ drag_drop_add_file_list (FRWindow *window)
 		window->adding_dropped_files = TRUE;
 
 		base_dir = remove_level_from_path (path);
-		window->vd_handle = fr_archive_add_directory (
-		      archive, 
-		      file_name_from_path (path),
-		      base_dir,
-		      window->update_dropped_files,
-		      window->password,
-		      window->compression,
-		      add_directory_done_cb,
-		      window);
+		window_archive_add_directory (window,
+					      file_name_from_path (path),
+					      base_dir,
+					      window->update_dropped_files,
+					      window->password,
+					      window->compression);
 		g_free (base_dir);
 		g_free (path);
 
@@ -2095,12 +2116,15 @@ create_icon (const guint8 rgba_data [])
 }
 
 
-static gint
+static gboolean
 key_press_cb (GtkWidget   *widget, 
               GdkEventKey *event,
               gpointer     data)
 {
         FRWindow *window = data;
+
+	if (GTK_WIDGET_HAS_FOCUS (window->location_entry)) 
+		return FALSE;
 	
 	switch (event->keyval) {
 	case GDK_Escape:
@@ -2652,13 +2676,18 @@ window_new ()
 
 	/* current location */
 
-	window->location_label = gtk_label_new (_("Current Location:"));
+	window->location_label = gtk_label_new (_("Location:"));
 	gtk_box_pack_start (GTK_BOX (location_box), 
 			    window->location_label, FALSE, FALSE, 5);
 
-	window->location_opt = gtk_option_menu_new ();
+	window->location_entry = gtk_entry_new ();
 	gtk_box_pack_start (GTK_BOX (location_box), 
-			    window->location_opt, FALSE, FALSE, 0);
+			    window->location_entry, TRUE, TRUE, 5);
+
+	g_signal_connect (G_OBJECT (window->location_entry), 
+			  "key_press_event",
+			  G_CALLBACK (location_entry_key_press_event_cb),
+			  window);
 
 	gtk_widget_show_all (window->location_bar);
 
@@ -2762,6 +2791,7 @@ window_new ()
 
 	window->mitem_new_archive = file_menu[FILE_MENU_NEW_ARCHIVE].widget;
 	window->mitem_open_archive = file_menu[FILE_MENU_OPEN_ARCHIVE].widget;
+	window->mitem_save_as_archive = file_menu[FILE_MENU_SAVE_AS_ARCHIVE].widget;
 	window->mitem_close = file_menu[FILE_MENU_CLOSE_ARCHIVE].widget;
 
 	window->mitem_archive_prop = file_menu[FILE_MENU_ARCHIVE_PROP].widget;
@@ -2832,6 +2862,10 @@ window_new ()
 
 	window->password = NULL;
 	window->compression = preferences_get_compression_level ();
+
+	window->convert_data.converting = FALSE;
+	window->convert_data.temp_dir = NULL;
+	window->convert_data.new_archive = NULL;
 
 	/**/
 
@@ -3192,6 +3226,63 @@ window_archive_open (FRWindow   *window,
 
 
 void
+window_archive_save_as (FRWindow      *window, 
+			const char    *filename)
+{
+	g_return_if_fail (window != NULL);
+	g_return_if_fail (filename != NULL);
+	g_return_if_fail (window->archive != NULL);
+
+	g_return_if_fail (window->convert_data.temp_dir == NULL);
+	g_return_if_fail (window->convert_data.new_archive == NULL);
+
+	/* create the new archive */
+
+	window->convert_data.new_archive = fr_archive_new ();
+	if (! fr_archive_new_file (window->convert_data.new_archive, filename)) {
+		GtkWidget *dialog;
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 _("File type not supported."));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		
+		g_object_unref (window->convert_data.new_archive);
+		window->convert_data.new_archive = NULL;
+
+		return;
+	}
+
+	g_return_if_fail (window->convert_data.new_archive->command != NULL);
+
+	g_signal_connect (G_OBJECT (window->convert_data.new_archive),
+			  "done",
+			  G_CALLBACK (convert__action_performed),
+			  window);
+
+	window->convert_data.converting = TRUE;
+
+	fr_process_clear (window->archive->process);
+
+	window->convert_data.temp_dir = _get_temp_dir_name ();
+	ensure_dir_exists (window->convert_data.temp_dir, 0700);
+
+	fr_command_extract (window->archive->command,
+			    NULL,
+			    window->convert_data.temp_dir,
+			    TRUE,
+			    FALSE,
+			    FALSE,
+			    window->password);
+
+	fr_process_start (window->archive->process);
+}
+
+
+void
 window_archive_reload (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
@@ -3222,6 +3313,82 @@ window_archive_rename (FRWindow   *window,
 		_window_update_title (window);
 		_window_add_to_recent (window, window->archive_filename, TRUE);
 	}
+}
+
+
+/**/
+
+
+static void
+add_files_done_cb (gpointer data)
+{
+	FRWindow *window = data;
+
+	window_pop_message (window);
+	window_stop_activity_mode (window);
+
+	visit_dir_handle_free (window->vd_handle);
+	window->vd_handle = NULL;
+}
+
+
+void
+window_archive_add_with_wildcard (FRWindow      *window,
+				  const char    *include_files,
+				  const char    *exclude_files,
+				  const char    *base_dir,
+				  gboolean       update,
+				  gboolean       recursive,
+				  gboolean       follow_links,
+				  gboolean       same_fs,
+				  gboolean       no_backup_files,
+				  gboolean       no_dot_files,
+				  gboolean       ignore_case,
+				  const char    *password,
+				  FRCompression  compression)
+{
+	g_return_if_fail (window->vd_handle == NULL);
+
+	window_start_activity_mode (window);
+	window_push_message (window, _("Getting file list, wait please..."));
+	window->vd_handle = fr_archive_add_with_wildcard (window->archive,
+							  include_files,
+							  exclude_files,
+							  base_dir,
+							  update,
+							  recursive,
+							  follow_links,
+							  same_fs,
+							  no_backup_files,
+							  no_dot_files,
+							  ignore_case,
+							  password,
+							  compression,
+							  add_files_done_cb,
+							  window);
+}
+
+
+void
+window_archive_add_directory (FRWindow      *window,
+			      const char    *directory,
+			      const char    *base_dir,
+			      gboolean       update,
+			      const char    *password,
+			      FRCompression  compression)
+{
+	g_return_if_fail (window->vd_handle == NULL);
+
+	window_start_activity_mode (window);
+	window_push_message (window, _("Getting file list, wait please..."));
+	window->vd_handle = fr_archive_add_directory (window->archive, 
+						      directory,
+						      base_dir, 
+						      update,
+						      password,
+						      compression,
+						      add_files_done_cb,
+						      window);
 }
 
 
@@ -3337,13 +3504,18 @@ window_set_password (FRWindow   *window,
 
 
 void
-window_go_to_location (FRWindow *window, char *path)
+window_go_to_location (FRWindow *window, const char *path)
 {
 	g_return_if_fail (window != NULL);
+	g_return_if_fail (path != NULL);
 
 	if (window->current_dir)
 		g_free (window->current_dir);
-	window->current_dir = g_strdup (path);
+
+	if (path[strlen (path) - 1] != '/')
+		window->current_dir = g_strconcat (path, "/", NULL);
+	else
+		window->current_dir = g_strdup (path);
 
 	window_update_file_list (window);
 	_window_update_current_location (window);
@@ -3556,11 +3728,14 @@ void
 window_start_activity_mode (FRWindow *window)
 {
         g_return_if_fail (window != NULL);
+
         if (window->activity_ref++ > 0)
                 return;
+
         window->activity_timeout_handle = gtk_timeout_add (ACTIVITY_DELAY,
 							   activity_cb, 
 							   window);
+	_window_update_sensitivity (window);
 }
 
 

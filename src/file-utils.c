@@ -637,3 +637,95 @@ get_dest_free_space (const char  *path)
 	else
 		return ret_val;
 }
+
+
+#define SPECIAL_DIR(x) (! strcmp (x, "..") || ! strcmp (x, "."))
+
+
+static gboolean 
+path_list_new (const char  *path, 
+	       GList      **files, 
+	       GList      **dirs)
+{
+	DIR *dp;
+	struct dirent *dir;
+	struct stat stat_buf;
+	GList *f_list = NULL;
+	GList *d_list = NULL;
+
+	dp = opendir (path);
+	if (dp == NULL) return FALSE;
+
+	while ((dir = readdir (dp)) != NULL) {
+		gchar *name;
+		gchar *filepath;
+
+		/* Skip removed files */
+		if (dir->d_ino == 0) 
+			continue;
+
+		name = dir->d_name;
+		if (strcmp (path, "/") == 0)
+			filepath = g_strconcat (path, name, NULL);
+		else
+			filepath = g_strconcat (path, "/", name, NULL);
+
+		if (stat (filepath, &stat_buf) >= 0) {
+			if (dirs  
+			    && S_ISDIR (stat_buf.st_mode) 
+			    && ! SPECIAL_DIR (name))
+			{
+				d_list = g_list_prepend (d_list, filepath);
+				filepath = NULL;
+			} else if (files && S_ISREG (stat_buf.st_mode)) {
+				f_list = g_list_prepend (f_list, filepath);
+				filepath = NULL;
+			}
+		}
+
+		if (filepath) g_free (filepath);
+	}
+	closedir (dp);
+
+	if (dirs) *dirs = g_list_reverse (d_list);
+	if (files) *files = g_list_reverse (f_list);
+
+	return TRUE;
+}
+
+
+gboolean
+rmdir_recursive (const gchar *directory)
+{
+	GList    *files, *dirs;
+	GList    *scan;
+	gboolean  error = FALSE;
+
+	if (! path_is_dir (directory)) 
+		return FALSE;
+
+	path_list_new (directory, &files, &dirs);
+
+	for (scan = files; scan; scan = scan->next) {
+		char *file = scan->data;
+		if ((unlink (file) < 0)) {
+			g_warning ("Cannot delete %s\n", file);
+			error = TRUE;
+		}
+	}
+	path_list_free (files);
+
+	for (scan = dirs; scan; scan = scan->next) {
+		char *sub_dir = scan->data;
+		if (rmdir_recursive (sub_dir) == FALSE)
+			error = TRUE;
+		if (rmdir (sub_dir) == 0)
+			error = TRUE;
+	}
+	path_list_free (dirs);
+
+	if (rmdir (directory) == 0)
+		error = TRUE;
+
+	return !error;
+}

@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,6 +59,12 @@ typedef struct {
 } FRBatchActionDescription;
 
 typedef struct {
+	guint      converting : 1;
+	char      *temp_dir;
+	FRArchive *new_archive;
+} FRConvertData;
+
+typedef struct {
         GtkWidget *      app;
 	GtkWidget *      list_view;
 	GtkListStore *   list_store;
@@ -68,7 +74,7 @@ typedef struct {
 	GtkWidget *      progress;
 
 	GtkWidget *      location_bar;
-	GtkWidget *      location_opt;
+	GtkWidget *      location_entry;
 	GtkWidget *      location_label;
 	GtkWidget *      up_button;
 
@@ -112,10 +118,13 @@ typedef struct {
 
 	VisitDirHandle  *vd_handle;
 
+	FRConvertData    convert_data;
+
 	/* Menu items. */
 
 	GtkWidget *      mitem_new_archive;
 	GtkWidget *      mitem_open_archive;
+	GtkWidget *      mitem_save_as_archive;
 	GtkWidget *      mitem_close;
 	GtkWidget *      mitem_recents_menu;
 
@@ -206,42 +215,66 @@ typedef struct {
 
 FRWindow * window_new                       ();
 
-void       window_close                     (FRWindow   *window);
+void       window_close                     (FRWindow      *window);
 
 /* archive operations */
 
-void       window_archive_new               (FRWindow   *window, 
-					     const char *filename);
+void       window_archive_new               (FRWindow      *window, 
+					     const char    *filename);
 
-void       window_archive_open              (FRWindow   *window, 
-					     const char *filename);
+void       window_archive_open              (FRWindow      *window, 
+					     const char    *filename);
 
-void       window_archive_reload            (FRWindow   *window);
+void       window_archive_save_as           (FRWindow      *window, 
+					     const char    *filename);
 
-void       window_archive_rename            (FRWindow   *window, 
-					     const char *filename);
+void       window_archive_reload            (FRWindow      *window);
 
-void       window_archive_add_files         (FRWindow   *window,
-					     GList      *file_list,
-					     gboolean    update);
+void       window_archive_rename            (FRWindow      *window, 
+					     const char    *filename);
 
-void       window_archive_extract           (FRWindow   *window,
-					     GList      *file_list,
-					     const char *extract_to_dir,
-					     gboolean    skip_older,
-					     gboolean    overwrite,
-					     gboolean    junk_paths,
-					     const char *password);
+void       window_archive_add_files         (FRWindow      *window,
+					     GList         *file_list,
+					     gboolean       update);
 
-void       window_archive_close             (FRWindow   *window);
+void       window_archive_add_with_wildcard (FRWindow      *window,
+					     const char    *include_files,
+					     const char    *exclude_files,
+					     const char    *base_dir,
+					     gboolean       update,
+					     gboolean       recursive,
+					     gboolean       follow_links,
+					     gboolean       same_fs,
+					     gboolean       no_backup_files,
+					     gboolean       no_dot_files,
+					     gboolean       ignore_case,
+					     const char    *password,
+					     FRCompression  compression);
 
-void       window_set_password              (FRWindow   *window,
-					     const char *password);
+void       window_archive_add_directory     (FRWindow      *window,
+					     const char    *directory,
+					     const char    *base_dir,
+					     gboolean       update,
+					     const char    *password,
+					     FRCompression  compression);
+
+void       window_archive_extract           (FRWindow      *window,
+					     GList         *file_list,
+					     const char    *extract_to_dir,
+					     gboolean       skip_older,
+					     gboolean       overwrite,
+					     gboolean       junk_paths,
+					     const char    *password);
+
+void       window_archive_close             (FRWindow      *window);
+
+void       window_set_password              (FRWindow      *window,
+					     const char    *password);
 
 /**/
 
 void       window_go_to_location            (FRWindow       *window, 
-					     char           *path);
+					     const char     *path);
 
 void       window_go_up_one_level           (FRWindow       *window);
 
@@ -335,5 +368,10 @@ void       window_archive__open_add           (FRWindow      *window,
 					       GList         *file_list);
 
 void       window_archive__close              (FRWindow      *window);
+
+
+/**/
+
+void       window_convert_data_free           (FRWindow *window);
 
 #endif /* FR_WINDOW_H */

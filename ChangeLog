@@ -1,3 +1,32 @@
+2003-03-30  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/menu-callbacks.c (new_file_ok_cb): use tgz as default extension.
+
+	* src/window.c (window_convert_data_free) 
+	(convert__action_performed, _action_performed, window_new): added
+	convert archive function.
+
+	* src/menu-callbacks.c (save_as_archive_cb, save_file_ok_cb): 
+
+	* src/file-utils.c (rmdir_recursive): new function
+
+	* file-roller.mime: 
+	* file-roller.keys: added zoo archive
+
+	* src/window.c (location_entry_key_press_event_cb) 
+	(_window_update_current_location, key_press_cb, window_new): use
+	a text entry instead of the option menu for the location.
+
+2003-03-29  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/dlg-add.c (open_file_ok_cb): 
+	* src/window.c (add_files_done_cb) 
+	(window_archive_add_with_wildcard, window_archive_add_directory) 
+	(drag_drop_add_file_list): 
+	* src/window.h: 
+	* src/menu-callbacks.c (stop_cb): Allow to stop the "get file list"
+	operation.
+	
 2003-03-25  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	[ File Roller 2.3.0 released ]

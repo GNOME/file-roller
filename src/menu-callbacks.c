@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -180,13 +180,21 @@ new_file_ok_cb (GtkWidget *w,
 	}
 	g_free (dir);
 
+	/* if the user do not specify an extension use tgz as default */
+	if (strchr (path, '.') == NULL) {
+		char *new_path;
+		new_path = g_strconcat (path, ".tgz", NULL);
+		g_free (path);
+		path = new_path;
+	}
+
 #ifdef DEBUG
 	g_print ("create %s\n", path); 
 #endif
 
 	if (path_is_file (path)) {
 		GtkWidget *dialog;
-		int r;
+		int        r;
 
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						  GTK_DIALOG_MODAL,
@@ -293,6 +301,150 @@ new_archive_cb (GtkWidget *widget,
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
+	gtk_widget_show_all (file_sel);
+}
+
+
+/* -- save as archive -- */
+
+
+static void
+save_file_destroy_cb (GtkWidget *w,
+		      GtkWidget *file_sel)
+{
+}
+
+
+static void 
+save_file_ok_cb (GtkWidget *w,
+		 GtkWidget *file_sel)
+{
+	FRWindow *window;
+	char     *path;
+	char     *dir;
+
+	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
+
+	path = get_full_path (file_sel);
+        if (path == NULL) {
+		gtk_widget_destroy (file_sel);
+                return;
+	}
+	
+	dir = remove_level_from_path (path);
+	if (access (dir, R_OK | W_OK | X_OK) != 0) {
+		GtkWidget *dialog;
+
+		g_free (dir);
+		g_free (path);
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 _("You don't have permission to create an archive in this folder"));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		return;
+	}
+	g_free (dir);
+
+#ifdef DEBUG
+	g_print ("save as %s\n", path); 
+#endif
+
+	if (path_is_file (path)) {
+		GtkWidget *dialog;
+		int r;
+
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  GTK_DIALOG_MODAL,
+						  GTK_STOCK_DIALOG_QUESTION,
+						  _("Archive already exists.  Do you want to overwrite it?"),
+						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						  _("Overwrite"), GTK_RESPONSE_YES,
+						  NULL);
+
+		r = gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+
+		if (r != GTK_RESPONSE_YES) {
+			g_free (path);
+			return;
+		}
+
+		if (unlink (path) != 0) {
+			GtkWidget *dialog;
+			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
+							 GTK_DIALOG_DESTROY_WITH_PARENT,
+							 GTK_MESSAGE_ERROR,
+							 GTK_BUTTONS_CLOSE,
+							 _("Could not delete old archive."));
+			gtk_dialog_run (GTK_DIALOG (dialog));
+			gtk_widget_destroy (GTK_WIDGET (dialog));
+			return;
+		}
+	} 
+
+	window_archive_save_as (window, path);
+	gtk_widget_destroy (file_sel);
+	g_free (path);
+}
+
+
+void
+save_as_archive_cb (GtkWidget *widget, 
+		    void *data)
+{
+	FRWindow  *window = data;
+	GtkWidget *file_sel;
+	GtkWidget *hbox;
+	GtkWidget *opt_menu;
+	GtkWidget *menu;
+	char      *dir;
+
+	file_sel = gtk_file_selection_new (_("Save Archive"));
+
+	dir = g_strconcat (window->open_default_dir, "/", NULL);
+	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
+	g_free (dir);
+
+	/**/
+
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), hbox, TRUE, TRUE, 0);
+
+	gtk_box_pack_start (GTK_BOX (hbox), 
+			    gtk_label_new (_("Archive type:")),
+			    FALSE, FALSE, 0);
+
+	opt_menu = gtk_option_menu_new ();
+	menu = build_file_type_menu (window);
+        gtk_option_menu_set_menu (GTK_OPTION_MENU (opt_menu), menu);
+	gtk_widget_show (opt_menu);
+	gtk_box_pack_start (GTK_BOX (hbox), opt_menu, FALSE, FALSE, 12);
+	
+	/**/
+
+	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
+	g_object_set_data (G_OBJECT (file_sel), "fr_opt_menu", opt_menu);
+	
+	g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (file_sel)->ok_button),
+			  "clicked", 
+			  G_CALLBACK (save_file_ok_cb), 
+			  file_sel);
+
+	g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (file_sel)->cancel_button),
+				  "clicked", 
+				  G_CALLBACK (gtk_widget_destroy),
+				  G_OBJECT (file_sel));
+
+	g_signal_connect (G_OBJECT (file_sel),
+			  "destroy", 
+			  G_CALLBACK (save_file_destroy_cb),
+			  file_sel);
+
+	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 	gtk_widget_show_all (file_sel);
 }
 
@@ -922,6 +1074,11 @@ stop_cb (GtkWidget *widget,
 					   stop__step2, 
 					   window);
 		window->vd_handle = NULL;
+		window_pop_message (window);
+		window_stop_activity_mode (window);
+
+		if (window->convert_data.converting) 
+			window_convert_data_free (window);
 
 	} else
 		stop__step2 (window);

@@ -81,18 +81,6 @@ only_spaces (const char *text)
 }
 
 
-static void
-add_files_done_cb (gpointer data)
-{
-	FRWindow *window = data;
-
-	window_pop_message (window);
-
-	visit_dir_handle_free (window->vd_handle);
-	window->vd_handle = NULL;
-}
-
-
 static int
 open_file_ok_cb (GtkWidget *w,
                  GtkWidget *file_sel)
@@ -171,16 +159,13 @@ open_file_ok_cb (GtkWidget *w,
 
 			first_path = g_build_path (G_DIR_SEPARATOR_S, base_dir, first, NULL);
 			if (path_is_dir (first_path)) {
-				window_push_message (window, _("Getting file list, wait please..."));
-				window->vd_handle = fr_archive_add_directory (
-				      window->archive, 
-				      file_name_from_path (first), 
-				      base_dir, 
-				      FALSE,
-				      window->password,
-				      window->compression,
-				      add_files_done_cb,
-				      window);
+				window_archive_add_directory (window,
+							      file_name_from_path (first), 
+							      base_dir, 
+							      FALSE,
+							      window->password,
+							      window->compression);
+
 			} else 
 				fr_archive_add (window->archive,
 						files,
@@ -217,23 +202,19 @@ open_file_ok_cb (GtkWidget *w,
 		} else
 			exclude_files = NULL;
 
-		window_push_message (window, _("Getting file list, wait please..."));
-		window->vd_handle = fr_archive_add_with_wildcard (
-			  window->archive,
-			  file_name_from_path (path),
-			  exclude_files,
-			  base_dir,
-			  update,
-			  recursive,
-			  ! no_symlinks,
-			  same_fs,
-			  no_backup_files,
-			  no_dot_files,
-			  ignore_case,
-			  window->password,
-			  window->compression,
-			  add_files_done_cb,
-			  window);
+		window_archive_add_with_wildcard (window,
+						  file_name_from_path (path),
+						  exclude_files,
+						  base_dir,
+						  update,
+						  recursive,
+						  ! no_symlinks,
+						  same_fs,
+						  no_backup_files,
+						  no_dot_files,
+						  ignore_case,
+						  window->password,
+						  window->compression);
 	}
 
 	g_free (path);

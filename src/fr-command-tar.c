@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -310,7 +310,7 @@ fr_command_tar_extract (FRCommand  *comm,
 	add_compress_arg (comm);
 
 	if (dest_dir != NULL) {
-		gchar *e_dest_dir = shell_escape (dest_dir);
+		char *e_dest_dir = shell_escape (dest_dir);
 		fr_process_add_arg (comm->process, "-C");
 		fr_process_add_arg (comm->process, e_dest_dir);
 		g_free (e_dest_dir);
@@ -328,7 +328,7 @@ fr_command_tar_recompress (FRCommand     *comm,
 			   FRCompression  compression)
 {
 	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
-	gchar        *new_name = NULL;
+	char         *new_name = NULL;
 
 	switch (c_tar->compress_prog) {
 	case FR_COMPRESS_PROGRAM_NONE:

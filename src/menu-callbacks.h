@@ -39,6 +39,9 @@ void   open_archive_cb               (GtkWidget *widget,
 void   close_archive_cb              (GtkWidget *widget, 
 				      void *data);
 
+void   save_as_archive_cb            (GtkWidget *widget, 
+				      void *data);
+
 void   move_archive_cb               (GtkWidget *widget, 
 				      void *data);
 
