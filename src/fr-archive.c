@@ -721,11 +721,11 @@ newer_files_only (FRArchive  *archive,
 
 /* Note: all paths unescaped. */
 void
-fr_archive_add (FRArchive   *archive, 
-		GList       *file_list, 
-		const char  *base_dir,
-		gboolean     update,
-		const char  *password,
+fr_archive_add (FRArchive     *archive, 
+		GList         *file_list, 
+		const char    *base_dir,
+		gboolean       update,
+		const char    *password,
 		FRCompression  compression)
 {
 	GList    *new_file_list;

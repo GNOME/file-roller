@@ -389,8 +389,8 @@ scale_icon (GdkPixbuf *pixbuf,
 /* taken from egg-recent-util.c */
 static GdkPixbuf *
 load_icon_file (char          *filename,
-               guint          base_size,
-               guint          nominal_size)
+		guint          base_size,
+		guint          nominal_size)
 {
 	GdkPixbuf *pixbuf, *scaled_pixbuf;
         guint width, height, size;
@@ -412,10 +412,11 @@ load_icon_file (char          *filename,
 			/* Don't scale up small icons */
 			base_size = nominal_size;
 		}
-	}
+
+	} 
 
 	if (base_size != nominal_size) {
-		scale = (double)nominal_size/base_size;
+		scale = (double) nominal_size / base_size;
 		scaled_pixbuf = scale_icon (pixbuf, &scale);
 		g_object_unref (pixbuf);
 		pixbuf = scaled_pixbuf;
@@ -2274,11 +2275,20 @@ create_icon (const guint8 rgba_data [])
 {
 	GtkWidget *image;
 	GdkPixbuf *pixbuf;
-	
+	int        max_size;
+
 	pixbuf = gdk_pixbuf_new_from_inline (-1, rgba_data, FALSE, NULL);
 
 	if (pixbuf == NULL)
 		return NULL;
+
+	max_size = MAX (gdk_pixbuf_get_width (pixbuf), gdk_pixbuf_get_height (pixbuf));
+	if (icon_size != max_size) {
+		double     scale = (double) icon_size / max_size;
+		GdkPixbuf *scaled_pixbuf = scale_icon (pixbuf, &scale);
+		g_object_unref (pixbuf);
+		pixbuf = scaled_pixbuf;
+	}
 
 	image = gtk_image_new_from_pixbuf (pixbuf);
 	g_object_unref (pixbuf);
@@ -2383,6 +2393,8 @@ add_columns (GtkTreeView *treeview)
                                              NULL);
 
 	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_column_set_resizable (column, TRUE);
+
 	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
@@ -2395,6 +2407,8 @@ add_columns (GtkTreeView *treeview)
 								   NULL);
 
 		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+		gtk_tree_view_column_set_resizable (column, TRUE);
+
 		gtk_tree_view_column_set_sort_column_id (column, i);
 
 		gtk_tree_view_append_column (treeview, column);
