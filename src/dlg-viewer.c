@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
+#include <gconf/gconf-client.h>
 #include <libgnomeui/gnome-file-entry.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
@@ -127,6 +128,34 @@ load_document (GtkTextBuffer *text_buf,
 }
 
 
+/* From nautilus-text-view.c 
+ *   Copyright (C) 2000 Eazel, Inc.
+ *   Copyright (C) 2002 Sun Microsystems Inc.  */
+static void
+set_monospace_font (GtkWidget *widget)
+{
+        GConfClient *conf_client;
+        char        *monospace_font;
+
+	/* Pick up the monospace font from desktop preferences */
+
+        conf_client = gconf_client_get_default ();
+        monospace_font = gconf_client_get_string (conf_client, "/desktop/gnome/interface/monospace_font_name", NULL);
+
+        if (monospace_font != NULL) {
+		PangoFontDescription *monospace_font_desc;
+
+                monospace_font_desc = pango_font_description_from_string (monospace_font);
+                gtk_widget_modify_font (widget, monospace_font_desc);
+                pango_font_description_free (monospace_font_desc);
+
+		g_free (monospace_font);
+        }
+
+        g_object_unref (conf_client);
+}
+
+
 void
 dlg_viewer (FRWindow   *window,
 	    const char *filename)
@@ -153,9 +182,9 @@ dlg_viewer (FRWindow   *window,
 
 	/* Set widgets data. */
 
+	set_monospace_font (text_view);
+
 	text_buf = gtk_text_buffer_new (NULL);
-	gtk_text_buffer_create_tag (text_buf, "monospace",
-				    "family", "monospace", NULL);
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (text_view), text_buf);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
 	g_object_unref (text_buf);

@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -613,4 +613,27 @@ search_util_get_patterns (const char *pattern_string)
 		patterns[i] = g_strstrip (patterns[i]);
 	
 	return patterns;
+}
+
+
+GnomeVFSFileSize
+get_dest_free_space (const char  *path)
+{
+	char             *escaped;
+	GnomeVFSURI      *uri;
+	GnomeVFSResult    result;
+	GnomeVFSFileSize  ret_val;
+
+	escaped = gnome_vfs_escape_path_string (path);
+	uri = gnome_vfs_uri_new (escaped);
+	g_free (escaped);
+
+	result = gnome_vfs_get_volume_free_space (uri, &ret_val);
+
+	gnome_vfs_uri_unref (uri);
+
+	if (result != GNOME_VFS_OK)
+		return (GnomeVFSFileSize) 0;
+	else
+		return ret_val;
 }

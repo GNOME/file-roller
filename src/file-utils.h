@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -79,6 +79,9 @@ gboolean            match_patterns               (char       **patterns,
 						  const char  *string);
 
 char **             search_util_get_patterns     (const char  *pattern_string);
+
+GnomeVFSFileSize    get_dest_free_space          (const char  *path);
+
 
 #define get_home_relative_dir(x)        \
         g_strconcat (g_get_home_dir (), \

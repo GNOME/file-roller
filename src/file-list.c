@@ -655,13 +655,39 @@ visit_dir_data_free (VisitDirData *vdd)
 static void _visit_dir_async (const char *dir, VisitDirData *vdd);
 
 
+static gboolean
+same_fs (const char *path1,
+	 const char *path2)
+{
+	char           *escaped;
+	GnomeVFSURI    *uri1, *uri2;
+	GnomeVFSResult  result;
+	gboolean        same;
+
+	escaped = gnome_vfs_escape_path_string (path1);
+	uri1 = gnome_vfs_uri_new (escaped);
+	g_free (escaped);
+
+	escaped = gnome_vfs_escape_path_string (path2);
+	uri2 = gnome_vfs_uri_new (escaped);
+	g_free (escaped);
+
+	result = gnome_vfs_check_same_fs_uris (uri1, uri2, &same);
+
+	gnome_vfs_uri_unref (uri1);
+        gnome_vfs_uri_unref (uri2);
+
+	return (result == GNOME_VFS_OK) && same;
+}
+
+
 static void
 vd_path_list_done_cb (PathListData *pld, 
 		      gpointer      data)
 {
 	VisitDirData *vdd = data;
 	GList        *scan;
-	char         *sub_dir;
+	char         *sub_dir = NULL;
 
 	if (vdd->interrupted) {
 		if (vdd->interrupt_func) 
@@ -725,14 +751,26 @@ vd_path_list_done_cb (PathListData *pld,
 		return;
 	}
 
-	scan = vdd->dirs;
-	sub_dir = (char*) scan->data;
-	vdd->dirs = g_list_remove_link (vdd->dirs, scan);
-	g_list_free (scan);
+	while ((scan = vdd->dirs) != NULL) {
+		sub_dir = (char*) scan->data;
+		vdd->dirs = g_list_remove_link (vdd->dirs, scan);
 
-	_visit_dir_async (sub_dir, vdd);
+		if (! vdd->same_fs || same_fs (vdd->directory, sub_dir)) {
+			_visit_dir_async (sub_dir, vdd);
+			break;
+		} else {
+			g_free (sub_dir);
+			sub_dir = NULL;
+		}
+	}
 
-	g_free (sub_dir);
+	if (sub_dir == NULL) {
+		if (vdd->done_func)
+			(* vdd->done_func) (vdd->files, vdd->done_data);
+		visit_dir_data_free (vdd);
+
+	} else
+		g_free (sub_dir);
 }
 
 
