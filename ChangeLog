@@ -1,5 +1,10 @@
 2005-03-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.c (progress_dialog_delete_event): return TRUE
+
+	Fixes bug #170329: Aborting File Add can sometimes crash the 
+	application.
+	
 	* src/window.c (window_open_files__extract_done_cb): store command
 	data to remove the temp dir before exiting.
 

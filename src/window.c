@@ -1224,7 +1224,7 @@ close_progress_dialog (FRWindow *window)
 }
 
 
-static void
+static gboolean
 progress_dialog_delete_event (GtkWidget *caller,
 			      GdkEvent  *event,
 			      FRWindow  *window)
@@ -1233,6 +1233,8 @@ progress_dialog_delete_event (GtkWidget *caller,
 		activate_action_stop (NULL, window);
 		close_progress_dialog (window);
 	}
+
+	return TRUE;
 }
 
 
