@@ -30,7 +30,7 @@
 #include "file-list.h"
 
 #define GCONF_NOTIFICATIONS 8
-c
+
 enum {
 	COLUMN_FILE_DATA,
 	COLUMN_ICON,
