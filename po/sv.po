@@ -8,13 +8,41 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2002-10-30 00:21+0100\n"
-"PO-Revision-Date: 2002-10-30 00:22+0100\n"
+"POT-Creation-Date: 2002-11-12 21:13+0100\n"
+"PO-Revision-Date: 2002-11-12 21:14+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: component/File_Roller_Component.server.in.in.h:1
+msgid "Add To Archive..."
+msgstr "Lägg till i arkiv..."
+
+#: component/File_Roller_Component.server.in.in.h:2
+msgid "Extract Here..."
+msgstr "Packa upp här..."
+
+#: component/File_Roller_Component.server.in.in.h:3
+msgid "Extract To A Folder..."
+msgstr "Packa upp i en mapp..."
+
+#: component/File_Roller_Component.server.in.in.h:4
+msgid "Extract To..."
+msgstr "Packa upp till..."
+
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "File Roller Component add operations"
+msgstr "Tilläggningsåtgärder för File Roller-komponenten"
+
+#: component/File_Roller_Component.server.in.in.h:6
+msgid "File Roller Component extract operations"
+msgstr "Uppackningsåtgärder för File Roller-komponenten"
+
+#: component/File_Roller_Component.server.in.in.h:7
+msgid "File roller component"
+msgstr "File roller-komponent"
 
 #: file-roller.desktop.in.h:1
 msgid "Archive Manager"
@@ -22,7 +50,7 @@ msgstr "Arkivhanterare"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:153
-#: src/gtk-utils.c:256 src/main.c:101 src/window.c:690 src/window.c:699
+#: src/gtk-utils.c:256 src/main.c:106 src/window.c:690 src/window.c:699
 #: src/window.c:2360 src/window.c:4052
 msgid "File Roller"
 msgstr "File Roller"
@@ -37,9 +65,9 @@ msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr ""
 "Du har inte de rättigheter som krävs för att läsa filer i mappen \"%s\""
 
-#: src/dlg-add.c:338
-msgid "Add files"
-msgstr "Lägg till filer"
+#: src/dlg-add.c:338 src/file_roller.glade2.h:5
+msgid "Add Files and Folders"
+msgstr "Lägg till filer och mappar"
 
 #: src/dlg-add.c:343
 msgid "_Add only if newer"
@@ -189,63 +217,43 @@ msgstr "_Lägg till i favoriter"
 msgid "A_vailable application:"
 msgstr "_Tillgängligt program:"
 
-#: src/file_roller.glade2.h:5
+#: src/file_roller.glade2.h:6
 msgid "Add _to archive :"
 msgstr "Lägg _till i arkiv:"
 
-#: src/file_roller.glade2.h:6
+#: src/file_roller.glade2.h:7
 msgid "Add only if _newer"
 msgstr "Lägg endast till om _nyare"
 
-#: src/file_roller.glade2.h:7
+#: src/file_roller.glade2.h:8
+msgid "Archive Properties"
+msgstr "Arkivegenskaper"
+
+#: src/file_roller.glade2.h:9 src/menu.h:464
+msgid "Delete Files"
+msgstr "Ta bort filer"
+
+#: src/file_roller.glade2.h:10
 msgid "Do not e_xtract older files"
 msgstr "_Packa inte upp äldre filer"
 
-#: src/file_roller.glade2.h:8
+#: src/file_roller.glade2.h:11 src/window.c:2579
+msgid "Extract"
+msgstr "Packa upp"
+
+#: src/file_roller.glade2.h:12
 msgid "Extract to"
 msgstr "Packa upp i"
 
-#: src/file_roller.glade2.h:9
+#: src/file_roller.glade2.h:13
 msgid "Extract to:"
 msgstr "Packa upp i:"
 
-#: src/file_roller.glade2.h:10
-msgid "File Roller - Add"
-msgstr "File Roller - Lägg till"
-
-#: src/file_roller.glade2.h:11
-msgid "File Roller - Archive Informations"
-msgstr "File Roller - Arkivinformation"
-
-#: src/file_roller.glade2.h:12
-msgid "File Roller - Delete Files"
-msgstr "File Roller - Ta bort filer"
-
-#: src/file_roller.glade2.h:13
-msgid "File Roller - Extract"
-msgstr "File Roller - Packa upp"
-
 #: src/file_roller.glade2.h:14
-msgid "File Roller - Open Files"
-msgstr "File Roller - Öppna Filer"
-
-#: src/file_roller.glade2.h:15
-msgid "File Roller - Password"
-msgstr "File Roller - Lösenord"
-
-#: src/file_roller.glade2.h:16
-msgid "File Roller - View File"
-msgstr "File Roller - Visa fil"
-
-#: src/file_roller.glade2.h:17
-msgid "File Roller - Viewer"
-msgstr "File Roller - Visare"
-
-#: src/file_roller.glade2.h:18
 msgid "Files"
 msgstr "Filer"
 
-#: src/file_roller.glade2.h:19
+#: src/file_roller.glade2.h:15
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
@@ -256,33 +264,49 @@ msgstr ""
 "upp från det aktuella arkivet. När arkivet stängs kommer lösenordet att tas "
 "bort."
 
-#: src/file_roller.glade2.h:20
+#: src/file_roller.glade2.h:16
+msgid "Open Files"
+msgstr "Öppna filer"
+
+#: src/file_roller.glade2.h:17
 msgid "Open with an _application"
 msgstr "Öppna med ett _program"
 
-#: src/file_roller.glade2.h:21
+#: src/file_roller.glade2.h:18
 msgid "Other options"
 msgstr "Andra alternativ"
 
-#: src/file_roller.glade2.h:22
+#: src/file_roller.glade2.h:19
 msgid "Over_write existing files"
 msgstr "Skriv _över befintliga filer"
 
-#: src/file_roller.glade2.h:23
+#: src/file_roller.glade2.h:20
+msgid "Password"
+msgstr "Lösenord"
+
+#: src/file_roller.glade2.h:21
 msgid "R_ecent applications:"
 msgstr "N_yligen använda program:"
 
-#: src/file_roller.glade2.h:24
+#: src/file_roller.glade2.h:22
 msgid "R_ecreate folders"
 msgstr "Skapa _om mappar"
 
-#: src/file_roller.glade2.h:25
+#: src/file_roller.glade2.h:23
 msgid "Select archive"
 msgstr "Välj arkiv"
 
-#: src/file_roller.glade2.h:26
+#: src/file_roller.glade2.h:24 src/menu.h:450
+msgid "View File"
+msgstr "Visa fil"
+
+#: src/file_roller.glade2.h:25
 msgid "View with internal _viewer"
 msgstr "Visa med inbyggd _visare"
+
+#: src/file_roller.glade2.h:26
+msgid "Viewer"
+msgstr "Visare"
 
 #: src/file_roller.glade2.h:27
 msgid "_All Files"
@@ -382,35 +406,35 @@ msgstr ""
 msgid "Command _line output"
 msgstr "Kommando_radsutdata"
 
-#: src/main.c:60
+#: src/main.c:65
 msgid "Add files to the specified archive and quit the program"
 msgstr "Lägg till filer till det angivna arkivet och avsluta programmet"
 
-#: src/main.c:61
+#: src/main.c:66
 msgid "ARCHIVE"
 msgstr "ARKIV"
 
-#: src/main.c:64
+#: src/main.c:69
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Lägg till filer, fråga om namn på arkivet och avsluta programmet"
 
-#: src/main.c:68
+#: src/main.c:73
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Packa upp filer till den angivna mappen och avsluta programmet"
 
-#: src/main.c:69 src/main.c:77
+#: src/main.c:74 src/main.c:82
 msgid "FOLDER"
 msgstr "MAPP"
 
-#: src/main.c:72
+#: src/main.c:77
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Packa upp arkiv, fråga om målmappen och avsluta programmet"
 
-#: src/main.c:76
+#: src/main.c:81
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "Standardmapp att använda för kommandona \"--add\" och \"--extract\""
 
-#: src/main.c:80
+#: src/main.c:85
 msgid "Create destination folder without asking confirmation"
 msgstr "Skapa målmapp utan att fråga efter bekräftelse"
 
@@ -599,12 +623,12 @@ msgid "Rename current archive"
 msgstr "Byt namn på aktuellt arkiv"
 
 #: src/menu.h:123
-msgid "_Information"
-msgstr "_Information"
+msgid "_Properties"
+msgstr "_Egenskaper"
 
 #: src/menu.h:123
-msgid "Show information about the archive"
-msgstr "Visa information om arkivet"
+msgid "Show archive properties"
+msgstr "Visa arkivegenskaper"
 
 #: src/menu.h:131
 msgid "_Close"
@@ -818,17 +842,9 @@ msgstr "_Fönster"
 msgid "Open Files..."
 msgstr "Öppna filer..."
 
-#: src/menu.h:450
-msgid "View File"
-msgstr "Visa fil"
-
 #: src/menu.h:458
 msgid "Add Files..."
 msgstr "Lägg till filer..."
-
-#: src/menu.h:464
-msgid "Delete Files"
-msgstr "Ta bort filer"
 
 #: src/menu.h:464
 msgid "Delete files from the archive"
@@ -1008,10 +1024,6 @@ msgstr "Aktuell plats:"
 msgid "Add"
 msgstr "Lägg till"
 
-#: src/window.c:2579
-msgid "Extract"
-msgstr "Packa upp"
-
 #: src/window.c:2590
 msgid "View"
 msgstr "Visa"
@@ -1040,6 +1052,42 @@ msgstr "Lägg till filer till arkivet"
 msgid "Extract archive"
 msgstr "Packa upp arkiv"
 
+#~ msgid "File Roller component"
+#~ msgstr "File Roller-komponent"
+
+#~ msgid "Properties"
+#~ msgstr "Egenskaper"
+
+#~ msgid "Add files"
+#~ msgstr "Lägg till filer"
+
+#~ msgid "File Roller - Add"
+#~ msgstr "File Roller - Lägg till"
+
+#~ msgid "File Roller - Delete Files"
+#~ msgstr "File Roller - Ta bort filer"
+
+#~ msgid "File Roller - Extract"
+#~ msgstr "File Roller - Packa upp"
+
+#~ msgid "File Roller - Open Files"
+#~ msgstr "File Roller - Öppna Filer"
+
+#~ msgid "File Roller - Password"
+#~ msgstr "File Roller - Lösenord"
+
+#~ msgid "File Roller - View File"
+#~ msgstr "File Roller - Visa fil"
+
+#~ msgid "File Roller - Viewer"
+#~ msgstr "File Roller - Visare"
+
+#~ msgid "_Information"
+#~ msgstr "_Information"
+
+#~ msgid "Show information about the archive"
+#~ msgstr "Visa information om arkivet"
+
 #~ msgid "No archive"
 #~ msgstr "Inget arkiv"
 
@@ -1057,9 +1105,6 @@ msgstr "Packa upp arkiv"
 
 #~ msgid "Encoded archive:"
 #~ msgstr "Kodat arkiv:"
-
-#~ msgid "File Roller - Comment"
-#~ msgstr "File Roller - Kommentar"
 
 #~ msgid "File Roller - Encode"
 #~ msgstr "File Roller - Koda"
@@ -1196,17 +1241,8 @@ msgstr "Packa upp arkiv"
 #~ msgid "DIRECTORY"
 #~ msgstr "KATALOG"
 
-#~ msgid "Archive Properties"
-#~ msgstr "Arkivegenskaper"
-
 #~ msgid "Recreate directories"
 #~ msgstr "Återskapa kataloger"
-
-#~ msgid "Properties"
-#~ msgstr "Egenskaper"
-
-#~ msgid "Show archive properties"
-#~ msgstr "Visa arkivegenskaper"
 
 #~ msgid "Extract archives to the directory the archive file is in"
 #~ msgstr "Packa upp filer till arkivet till den katalog arkivfilen är i"
