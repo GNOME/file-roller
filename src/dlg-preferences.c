@@ -51,7 +51,6 @@ typedef struct {
 	GtkWidget *dialog;
 
 	GtkWidget *show_hide_column[NUMBER_OF_COLUMNS]; /* checkbuttons */
-	GtkWidget *history_len_spinbutton;
 	GtkWidget *compression_optionmenu;
 } DialogData;
 
@@ -92,7 +91,6 @@ apply_cb (GtkWidget  *widget,
 
 	/* Misc options. */
 
-	eel_gconf_set_integer (PREF_UI_HISTORY_LEN, gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (data->history_len_spinbutton)));
 	preferences_set_compression_level (opt_menu_get_active_idx (data->compression_optionmenu));
 }
 
@@ -173,7 +171,6 @@ dlg_preferences (GtkWidget *caller,
 	data->show_hide_column[COLUMN_TIME] = glade_xml_get_widget (data->gui, "time_checkbutton");
 	data->show_hide_column[COLUMN_PATH] = glade_xml_get_widget (data->gui, "path_checkbutton");
 
-        data->history_len_spinbutton = glade_xml_get_widget (data->gui, "history_len_spinbutton");
 	data->compression_optionmenu = glade_xml_get_widget (data->gui, "compression_optionmenu");
 
         btn_close = glade_xml_get_widget (data->gui, "p_close_button");
@@ -197,8 +194,6 @@ dlg_preferences (GtkWidget *caller,
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE]), eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME]), eel_gconf_get_boolean (PREF_LIST_SHOW_TIME));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_PATH]), eel_gconf_get_boolean (PREF_LIST_SHOW_PATH));
-
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->history_len_spinbutton), (gfloat) eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
 
 	gtk_option_menu_set_history (GTK_OPTION_MENU (data->compression_optionmenu), preferences_get_compression_level ());
 
