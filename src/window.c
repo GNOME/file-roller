@@ -3654,13 +3654,14 @@ window_archive_open (FRWindow   *current_window,
 {
 	FRWindow *window;
 	GError   *gerror;
+	gboolean  new_window_created = FALSE;
 	gboolean  success;
 
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	if (current_window->archive_present) {
+		new_window_created = TRUE;
 		window = window_new ();
-		gtk_widget_show (window->app);
 	} else
 		window = current_window;
 
@@ -3708,16 +3709,20 @@ window_archive_open (FRWindow   *current_window,
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
+		if (new_window_created)
+			window_close (window);
+
 		if (window->batch_mode) {
 			window_archive_close (window);
 			_window_update_sensitivity (window);
 			_window_update_statusbar_list_info (window);
 			window_batch_mode_stop (window);
 		}
-	} 
-
-	if (success)
+	} else {
 		_window_add_to_recent (window, window->archive_filename);
+		if (new_window_created)
+			gtk_widget_show (window->app);
+	}
 
 	return success;
 }
