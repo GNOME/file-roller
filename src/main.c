@@ -358,7 +358,7 @@ prepare_app (poptContext pctx)
 		FRWindow    *window;
 		GList       *file_list = NULL;
 		const char  *filename;
-		
+
 		window = window_new ();
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir);

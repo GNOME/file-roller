@@ -26,19 +26,22 @@
 
 #include <gnome.h>
 #include <glade/glade.h>
+#include <libgnomevfs/gnome-vfs-types.h>
+#include <libgnomevfs/gnome-vfs-mime.h>
 
 #include "file-utils.h"
 #include "fr-stock.h"
+#include "gconf-utils.h"
 #include "window.h"
 #include "typedefs.h"
 #include "gtk-utils.h"
+#include "preferences.h"
 
 
 #define GLADE_FILE "file_roller.glade"
 #define UPDATE_DROPPED_FILES (FALSE)
-#define ARCHIVE_MIME_TYPE ("application/x-compressed-tar")
 #define ARCHIVE_ICON_SIZE (48)
-
+#define DEFAULT_EXTENSION ".tar.gz"
 
 typedef struct {
 	FRWindow  *window;
@@ -46,6 +49,7 @@ typedef struct {
 
 	GtkWidget *dialog;
 	GtkWidget *a_add_to_entry;
+	GtkWidget *add_image;
 
 	GList     *file_list;
 	gboolean   add_clicked;
@@ -72,11 +76,12 @@ static void
 add_clicked_cb (GtkWidget  *widget, 
 		DialogData *data)
 {
-	FRWindow *window = data->window; 
-	char     *archive_name;
-	char     *archive_dir;
-	char     *archive_file;
-	gboolean  do_not_add = FALSE;
+	FRWindow   *window = data->window; 
+	char       *archive_name;
+	char       *archive_dir;
+	char       *archive_file;
+	const char *archive_ext;
+	gboolean    do_not_add = FALSE;
 
 	data->add_clicked = TRUE;
 
@@ -189,6 +194,9 @@ add_clicked_cb (GtkWidget  *widget,
 	}
 
 	archive_file = g_build_filename (archive_dir, archive_name, NULL);
+	archive_ext = fr_archive_utils__get_file_name_ext (archive_name);
+
+	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, archive_ext);
 
 	if (! path_is_file (archive_file)) {
 		if (window->dropped_file_list != NULL)
@@ -322,6 +330,21 @@ get_pixbuf_from_mime_type (const char *mime_type,
 }
 
 
+static void
+entry_changed_cb (GtkEditable *editable,
+		  DialogData  *data)
+{
+	char       *filename;
+	const char *mime_type;
+
+	filename = gtk_editable_get_chars (editable, 0, -1);
+	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, GNOME_VFS_MIME_TYPE_UNKNOWN);
+	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_pixbuf_from_mime_type (mime_type, ARCHIVE_ICON_SIZE));
+
+	g_free (filename);
+}
+
+
 void
 dlg_batch_add_files (FRWindow *window,
 		     GList    *file_list)
@@ -329,8 +352,8 @@ dlg_batch_add_files (FRWindow *window,
         DialogData *data;
 	GtkWidget  *cancel_button;
 	GtkWidget  *add_button;
-	GtkWidget  *add_image;
-	char       *path;
+	char       *path, *automatic_name = NULL;
+	char       *default_ext;
 
         data = g_new (DialogData, 1);
 
@@ -352,14 +375,28 @@ dlg_batch_add_files (FRWindow *window,
 	add_button = glade_xml_get_widget (data->gui, "a_add_button");
 	cancel_button = glade_xml_get_widget (data->gui, "a_cancel_button");
 
-	add_image = glade_xml_get_widget (data->gui, "a_add_image");
-	gtk_image_set_from_pixbuf (GTK_IMAGE (add_image), get_pixbuf_from_mime_type (ARCHIVE_MIME_TYPE, ARCHIVE_ICON_SIZE));
+	data->add_image = glade_xml_get_widget (data->gui, "a_add_image");
 
 	/* Set widgets data. */
 
-	path = g_strconcat (file_name_from_path ((char*) file_list->data), ".tgz", NULL);
-	_gtk_entry_set_filename_text (GTK_ENTRY (data->a_add_to_entry), path);
-	g_free (path);
+	if (file_list->next == NULL)
+		automatic_name = g_strdup (file_name_from_path ((char*) file_list->data));
+	else {
+		const char *first_filename = (char*) file_list->data;
+		char       *parent = remove_level_from_path (first_filename);
+
+		automatic_name = g_strdup (file_name_from_path (parent));
+		g_free (parent);
+		
+		if ((automatic_name == NULL) || (automatic_name[0] == '\0')) {
+			g_free (automatic_name);
+			automatic_name = g_strdup (file_name_from_path (first_filename));
+		}
+	}
+
+	default_ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, DEFAULT_EXTENSION);
+	path = g_strconcat (automatic_name, default_ext, NULL);
+	g_free (default_ext);
 
 	/* Set the signals handlers. */
 
@@ -375,12 +412,21 @@ dlg_batch_add_files (FRWindow *window,
 			  "clicked",
 			  G_CALLBACK (add_clicked_cb),
 			  data);
+	g_signal_connect (G_OBJECT (data->a_add_to_entry), 
+			  "changed",
+			  G_CALLBACK (entry_changed_cb),
+			  data);
 
 	/* Run dialog. */
 
+	_gtk_entry_set_filename_text (GTK_ENTRY (data->a_add_to_entry), path);
+	g_free (path);
+
 	gtk_widget_grab_focus (data->a_add_to_entry);
-	gtk_editable_set_position  (GTK_EDITABLE (data->a_add_to_entry), 
-				    strlen (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry))));
+	gtk_editable_select_region (GTK_EDITABLE (data->a_add_to_entry),
+				    0,
+				    strlen (automatic_name));
+	g_free (automatic_name);
 
         gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
 				      GTK_WINDOW (window->app));

@@ -593,7 +593,7 @@ path_list_async_new (const char       *uri,
 		     PathListDoneFunc  f,
 		     gpointer          data)
 {
-	GnomeVFSAsyncHandle *handle;
+	GnomeVFSAsyncHandle *handle = NULL;
 	PathListData        *pli;
 	char                *escaped;
 	PathListHandle      *pl_handle;
@@ -1022,7 +1022,7 @@ get_directory_file_list_async (const char       *directory,
 	gfl_data->done_data = done_data;
 
 	path = g_strconcat (base_dir, "/", directory, NULL);
-	
+
 	handle = visit_dir_async (path,
 				  "*",
 				  TRUE,

@@ -170,13 +170,27 @@ add_compress_arg (FRCommand *comm)
 
 
 static void
+begin_tar_command (FRCommand *comm)
+{
+	char *path = NULL;
+
+	path = g_find_program_in_path ("gtar");
+	if (path != NULL)
+		fr_process_begin_command (comm->process, "gtar");
+	else
+		fr_process_begin_command (comm->process, "tar");
+	g_free (path);
+}
+
+
+static void
 fr_command_tar_list (FRCommand *comm)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      process_line,
 				      comm);
 
-	fr_process_begin_command (comm->process, "gtar");
+	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "-tvf");
 	fr_process_add_arg (comm->process, comm->e_filename);
@@ -234,7 +248,7 @@ fr_command_tar_add (FRCommand     *comm,
 				      process_line__add,
 				      comm);
 
-	fr_process_begin_command (comm->process, "gtar");
+	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "-v");
 
@@ -285,7 +299,7 @@ fr_command_tar_delete (FRCommand *comm,
 				      process_line__delete,
 				      comm);
 
-	fr_process_begin_command (comm->process, "gtar");
+	begin_tar_command (comm);
 	fr_process_set_begin_func (comm->process, begin_func__delete, comm);
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "-v");
@@ -322,7 +336,7 @@ fr_command_tar_extract (FRCommand  *comm,
 				      process_line__extract,
 				      comm);
 
-	fr_process_begin_command (comm->process, "gtar");
+	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-xf");

@@ -1,3 +1,21 @@
+2004-02-19  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/dlg-batch-add.c (dlg_batch_add_files): 
+	* src/preferences.h (PREF_BATCH_ADD_DEFAULT_EXTENSION): 
+	* src/file-roller.schemas: save and load the default extension.
+
+	* src/window.c (drag_drop_add_file_list): remove fr_process_clear
+	and fr_process_start from here.
+
+	* src/fr-command-tar.c (begin_tar_command, fr_command_tar_list)
+	(fr_command_tar_add, fr_command_tar_delete)
+	(fr_command_tar_extract): use gtar if present, otherwise use tar.
+
+	* component/File_Roller_Component.server.in.in: 
+	* src/menu-callbacks.c (open_archive_cb): 
+	* src/window.c (window_new): 
+	* file-roller.applications: added application/x-jar
+
 2004-02-16  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu-callbacks.c (copy_or_move_archive_response_cb): remove the

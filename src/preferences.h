@@ -49,10 +49,11 @@
 #define PREF_EXTRACT_SKIP_NEWER       "/apps/file-roller/dialogs/extract/skip_newer"
 #define PREF_EXTRACT_RECREATE_FOLDERS "/apps/file-roller/dialogs/extract/recreate_folders"
 
+#define PREF_BATCH_ADD_DEFAULT_EXTENSION "/apps/file-roller/dialogs/batch-add/default_extension"
+
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"
 #define PREF_DESKTOP_TOOLBAR_DETACHABLE "/desktop/gnome/interface/toolbar_detachable"
-
 
 WindowSortMethod    preferences_get_sort_method ();
 

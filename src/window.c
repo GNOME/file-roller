@@ -1977,14 +1977,12 @@ drag_drop_add_file_list (FRWindow *window)
 
 		base_dir = remove_level_from_path (path);
 
-		fr_process_clear (window->archive->process);
 		window_archive_add_directory (window,
 					      file_name_from_path (path),
 					      base_dir,
 					      window->update_dropped_files,
 					      window->password,
 					      window->compression);
-		fr_process_start (window->archive->process);
 
 		g_free (base_dir);
 		g_free (path);
@@ -3287,6 +3285,7 @@ window_new ()
 						"application/x-compress",
 						"application/x-lzop",
 						"application/x-zoo",
+						"application/x-jar",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
