@@ -54,7 +54,7 @@ struct _FRCommand
 
 	/*<protected>*/
 
-	/* properties the command support. */
+	/* properties the command supports. */
 
 	uint propCanModify : 1;
 	uint propAddCanUpdate : 1;

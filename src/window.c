@@ -1026,7 +1026,7 @@ _window_update_sensitivity (FRWindow *window)
 
 	gtk_widget_set_sensitive (window->mitem_new_archive, ! running);
 	gtk_widget_set_sensitive (window->mitem_open_archive, ! running);
-	gtk_widget_set_sensitive (window->mitem_save_as_archive, ! no_archive && ! compr_file);
+	gtk_widget_set_sensitive (window->mitem_save_as_archive, ! no_archive && ! compr_file && ! running);
 	gtk_widget_set_sensitive (window->mitem_close, ! no_archive);
 	
 	gtk_widget_set_sensitive (window->mitem_archive_prop, file_op);
@@ -1090,6 +1090,10 @@ _window_update_sensitivity (FRWindow *window)
 
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_SELECT_ALL], ! no_archive);	
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DESELECT_ALL], ! no_archive);
+
+	/* recents menu. */
+
+	gtk_widget_set_sensitive (window->mitem_recents_menu, ! running);
 }
 
 

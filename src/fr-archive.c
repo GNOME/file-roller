@@ -887,8 +887,6 @@ fr_archive_add (FRArchive     *archive,
 		return;
 	}
 
-	/*fr_process_clear (archive->process); FIXME */
-
 	fr_command_uncompress (archive->command);
 
 	/* when files are already present in a tar archive and are added
@@ -964,8 +962,6 @@ fr_archive_add (FRArchive     *archive,
 
 	}
 	g_free (tmp_base_dir);
-
-	/* fr_process_start (archive->process); FIXME */
 }
 
 
@@ -1403,7 +1399,6 @@ fr_archive_extract (FRArchive  *archive,
 		GList *e_file_list;
 
 		e_file_list = escape_file_list (file_list);
-		/*fr_process_clear (archive->process); FIXME */
 		extract_in_chunks (archive->command,
 				   e_file_list,
 				   dest_dir,
@@ -1412,14 +1407,11 @@ fr_archive_extract (FRArchive  *archive,
 				   junk_paths,
 				   password);
 		path_list_free (e_file_list);
-		/* fr_process_start (archive->process); FIXME */
 
 		return;
 	}
 
 	/* .. else we have to implement the unsupported options. */
-
-	/*fr_process_clear (archive->process);*/
 
 	move_to_dest_dir = (junk_paths 
 			    && ! archive->command->propExtractCanJunkPaths);
@@ -1539,8 +1531,6 @@ fr_archive_extract (FRArchive  *archive,
 	if (extract_all) 
 		/* the list has been created in this function. */
 		path_list_free (file_list);
-
-	/* fr_process_start (archive->process); FIXME */
 }
 
 

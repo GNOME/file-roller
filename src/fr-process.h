@@ -48,10 +48,10 @@ typedef void (*ProcFunc)     (gpointer data);
 typedef struct {
 	GList *args;              /* command to execute */
 	char  *dir;               /* working directory */
-	guint  sticky : 1;        /* whether the command must be executed even if
-				   * a previous command has failed. */
-	guint  ignore_error : 1;  /* whether to continue to execute other commands 
-				   * if this command fails. */
+	guint  sticky : 1;        /* whether the command must be executed even
+				   * if a previous command has failed. */
+	guint  ignore_error : 1;  /* whether to continue to execute other 
+				   * commands if this command fails. */
 
 	ProcFunc begin_func;
 	gpointer begin_data;
