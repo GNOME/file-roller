@@ -241,10 +241,8 @@ process_line__generic (char     *line,
 		       gpointer  data,
 		       char     *action_msg)
 {
-	FRCommand    *comm = FR_COMMAND (data);
-	char         *msg;
-	char         *filename;
-	double        fraction;
+	FRCommand  *comm = FR_COMMAND (data);
+	char       *msg;
 
 	if (line == NULL)
 		return;
@@ -252,15 +250,12 @@ process_line__generic (char     *line,
 	if (line[strlen (line) - 1] == '/') /* ignore directories */
 		return;
 
-	filename = _g_strdup_with_max_size (line, FILENAME_MAX_LENGTH);
-	msg = g_strconcat (action_msg, filename, NULL);
-	g_free (filename);
-
+	msg = g_strconcat (action_msg, line, NULL);
 	fr_command_message (comm, msg);
 	g_free (msg);
 
 	if (comm->n_files != 0) {
-		fraction = (double) comm->n_file++ / comm->n_files;
+		double fraction = (double) comm->n_file++ / comm->n_files;
 		fr_command_progress (comm, fraction);
 	}
 }

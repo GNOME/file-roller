@@ -41,6 +41,7 @@
 #include "dlg-viewer-or-app.h"
 #include "egg-recent.h"
 #include "eggtreemultidnd.h"
+#include "ephy-ellipsizing-label.h"
 #include "fr-archive.h"
 #include "file-data.h"
 #include "file-utils.h"
@@ -1168,8 +1169,9 @@ open_progress_dialog (FRWindow *window)
 		gtk_widget_set_size_request (window->pd_progress_bar, PROGRESS_DIALOG_WIDTH, -1);
 		gtk_box_pack_start (GTK_BOX (vbox), window->pd_progress_bar, TRUE, TRUE, 0);
 		
-		lbl = window->pd_message = gtk_label_new ("");
+		lbl = window->pd_message = ephy_ellipsizing_label_new ("");
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+		ephy_ellipsizing_label_set_mode (EPHY_ELLIPSIZING_LABEL (lbl), EPHY_ELLIPSIZE_MIDDLE);
 		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
 		
 		g_signal_connect (G_OBJECT (window->progress_dialog), 
@@ -2655,7 +2657,7 @@ window_message_cb  (FRCommand  *command,
 		    const char *msg,
 		    FRWindow   *window)		     
 {
-	gtk_label_set_text (GTK_LABEL (window->pd_message), msg);
+	ephy_ellipsizing_label_set_text (EPHY_ELLIPSIZING_LABEL (window->pd_message), msg);
 	return TRUE;
 }
 
@@ -3128,7 +3130,9 @@ window_new ()
 						"application/x-compressed-tar",
 						"application/x-bzip-compressed-tar",
 						"application/x-lzop-compressed-tar",
+						"application/x-arj",
 						"application/zip",
+						"application/x-zip",
 						"application/x-lha",
 						"application/x-rar",
 						"application/x-rar-compressed",

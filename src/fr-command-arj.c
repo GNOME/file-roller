@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,21 +25,17 @@
 #include <time.h>
 
 #include <glib.h>
-#include <gnome.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 
 #include "file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
-#include "fr-command-zip.h"
+#include "fr-command-arj.h"
 
-#define EMPTY_ARCHIVE_WARNING        "zipfile is empty"
-#define EMPTY_ARCHIVE_WARNING_LENGTH 16
-
-static void fr_command_zip_class_init  (FRCommandZipClass *class);
-static void fr_command_zip_init        (FRCommand         *afile);
-static void fr_command_zip_finalize    (GObject           *object);
+static void fr_command_arj_class_init  (FRCommandArjClass *class);
+static void fr_command_arj_init        (FRCommand         *afile);
+static void fr_command_arj_finalize    (GObject           *object);
 
 /* Parent Class */
 
@@ -59,18 +55,15 @@ mktime_from_string (char *date_s,
 
 	fields = g_strsplit (date_s, "-", 3);
 	if (fields[0] != NULL) {
-		tm.tm_mon = atoi (fields[0]) - 1;
-		if (fields[1] != NULL) {
-			tm.tm_mday = atoi (fields[1]);
-			if (fields[2] != NULL) { 
-				/* warning : this will work until 2075 ;) */
-				int y = atoi (fields[2]);
-				if (y >= 75)
-					tm.tm_year = atoi (fields[2]);
-				else
-					tm.tm_year = 100 + atoi (fields[2]);
-			}
-		}
+		/* warning : this will work until 2075 ;) */
+		int y = atoi (fields[0]);
+		if (y >= 75)
+			tm.tm_year = y;
+		else
+			tm.tm_year = 100 + y;
+
+		tm.tm_mon = atoi (fields[1]) - 1;
+		tm.tm_mday = atoi (fields[2]);
 	}
 	g_strfreev (fields);
 
@@ -78,7 +71,7 @@ mktime_from_string (char *date_s,
 
 	fields = g_strsplit (time_s, ":", 3);
 	if (fields[0] != NULL) {
-		tm.tm_hour = atoi (fields[0]) - 1;
+		tm.tm_hour = atoi (fields[0]);
 		if (fields[1] != NULL) {
 			tm.tm_min = atoi (fields[1]);
 			if (fields[2] != NULL)
@@ -127,7 +120,7 @@ get_last_field (char *line)
 {
 	int   i;
 	char *field;
-	int   n = 8;
+	int   n = 2;
 
 	n--;
 	field = eat_spaces (line);
@@ -144,75 +137,86 @@ static void
 list__process_line (char     *line, 
 		    gpointer  data)
 {
-	FileData   *fdata;
-	FRCommand  *comm = FR_COMMAND (data);
-	char      **fields;
-	char       *name_field;
-	gint        line_l;
+	FRCommand     *comm = FR_COMMAND (data);
+	FRCommandArj  *arj_comm = FR_COMMAND_ARJ (comm);
 
 	g_return_if_fail (line != NULL);
 
-	/* check whether unzip gave the empty archive warning. */
-
-	if (FR_COMMAND_ZIP (comm)->is_empty)
-		return;
-
-	line_l = strlen (line);
-	if (line_l > EMPTY_ARCHIVE_WARNING_LENGTH) 
-		if (strcmp (line + line_l - EMPTY_ARCHIVE_WARNING_LENGTH, 
-			    EMPTY_ARCHIVE_WARNING) == 0) {
-			FR_COMMAND_ZIP (comm)->is_empty = TRUE;
-			return;
+	if (! arj_comm->list_started) {
+		if (strncmp (line, "--------", 8) == 0) {
+			arj_comm->list_started = TRUE;
+			arj_comm->line_no = 1;
 		}
-
-	/**/
-
-	fdata = file_data_new ();
-
-	fields = split_line (line, 7);
-	fdata->size = atol (fields[0]);
-	fdata->modified = mktime_from_string (fields[4], fields[5]);
-	g_strfreev (fields);
-
-	/* Full path */
-
-	name_field = get_last_field (line);
-
-	if (*name_field == '/') {
-		fdata->full_path = g_strdup (name_field);
-		fdata->original_path = fdata->full_path;
-	} else {
-		fdata->full_path = g_strconcat ("/", name_field, NULL);
-		fdata->original_path = fdata->full_path + 1;
+		return;
 	}
 
-	fdata->link = NULL;
+	if (strncmp (line, "--------", 8) == 0) {
+		arj_comm->list_started = FALSE;
+		return;
+	}
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-	fdata->path = remove_level_from_path (fdata->full_path);
-	fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
+	if (arj_comm->line_no == 4) {
+		arj_comm->line_no = 1;
+		return;
 
-	if (*fdata->name == 0)
-		file_data_free (fdata);
-	else
-		comm->file_list = g_list_prepend (comm->file_list, fdata);
+	} else if (arj_comm->line_no == 1) { /* Read the filename. */
+		FileData   *fdata;
+		const char *name_field;
+
+		arj_comm->fdata = fdata = file_data_new ();
+
+		name_field = get_last_field (line);
+		
+		if (*name_field == '/') {
+			fdata->full_path = g_strdup (name_field);
+			fdata->original_path = fdata->full_path;
+		} else {
+			fdata->full_path = g_strconcat ("/", name_field, NULL);
+			fdata->original_path = fdata->full_path + 1;
+		}
+		
+		fdata->link = NULL;
+		
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+		fdata->path = remove_level_from_path (fdata->full_path);
+		fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
+
+	} else if (arj_comm->line_no == 2) { /* Read file size and date. */
+		FileData  *fdata;
+		char     **fields;
+
+		fdata = arj_comm->fdata;
+
+		/* read file info. */
+		
+		fields = split_line (line, 7);
+		fdata->size = atol (fields[2]);
+		fdata->modified = mktime_from_string (fields[5], fields[6]); 
+		g_strfreev (fields);
+		
+		if (*fdata->name == 0)
+			file_data_free (fdata);
+		else
+			comm->file_list = g_list_prepend (comm->file_list, fdata);
+		arj_comm->fdata = NULL;
+	}
+
+	arj_comm->line_no++;
 }
 
 
 static void
-fr_command_zip_list (FRCommand *comm)
+fr_command_arj_list (FRCommand *comm)
 {
-	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
-
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      list__process_line,
 				      comm);
 
 	fr_process_clear (comm->process);
-	fr_process_begin_command (comm->process, "unzip");
-	fr_process_add_arg (comm->process, "-qq");
-	fr_process_add_arg (comm->process, "-v");
-	fr_process_add_arg (comm->process, "-l");
+	fr_process_begin_command (comm->process, "arj");
+	fr_process_add_arg (comm->process, "v");
+	fr_process_add_arg (comm->process, "-y");
+	fr_process_add_arg (comm->process, "-");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
@@ -220,26 +224,7 @@ fr_command_zip_list (FRCommand *comm)
 
 
 static void
-process_line__common (char     *line, 
-		      gpointer  data)
-{
-	FRCommand  *comm = FR_COMMAND (data);
-
-	if (line == NULL)
-		return;
-
-	fr_command_message (comm, line);
-
-	if (comm->n_files != 0) {
-		double fraction = (double) comm->n_file++ / comm->n_files;
-		fr_command_progress (comm, fraction);
-	}
-
-}
-
-
-static void
-fr_command_zip_add (FRCommand     *comm,
+fr_command_arj_add (FRCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
@@ -248,11 +233,9 @@ fr_command_zip_add (FRCommand     *comm,
 {
 	GList *scan;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
-				      process_line__common,
-				      comm);
+	fr_process_begin_command (comm->process, "arj");
 
-	fr_process_begin_command (comm->process, "zip");
+	fr_process_add_arg (comm->process, "a");
 
 	if (base_dir != NULL) 
 		fr_process_set_working_dir (comm->process, base_dir);
@@ -264,20 +247,25 @@ fr_command_zip_add (FRCommand     *comm,
 		fr_process_add_arg (comm->process, "-u");
 
 	if (password != NULL) {
-		fr_process_add_arg (comm->process, "-P");
-		fr_process_add_arg (comm->process, password);
+		char *swtch = g_strconcat ("-g/", password, NULL);
+		fr_process_add_arg (comm->process, swtch);
+		g_free (swtch);
 	}
 
 	switch (compression) {
 	case FR_COMPRESSION_VERY_FAST:
-		fr_process_add_arg (comm->process, "-1"); break;
+		fr_process_add_arg (comm->process, "-m3"); break;
 	case FR_COMPRESSION_FAST:
-		fr_process_add_arg (comm->process, "-3"); break;
+		fr_process_add_arg (comm->process, "-m2"); break;
 	case FR_COMPRESSION_NORMAL:
-		fr_process_add_arg (comm->process, "-6"); break;
+		fr_process_add_arg (comm->process, "-m1"); break;
 	case FR_COMPRESSION_MAXIMUM:
-		fr_process_add_arg (comm->process, "-9"); break;
+		fr_process_add_arg (comm->process, "-m1"); break;
 	}
+
+	fr_process_add_arg (comm->process, "-i");
+	fr_process_add_arg (comm->process, "-y");
+	fr_process_add_arg (comm->process, "-");
 
 	fr_process_add_arg (comm->process, comm->e_filename);
 
@@ -289,17 +277,18 @@ fr_command_zip_add (FRCommand     *comm,
 
 
 static void
-fr_command_zip_delete (FRCommand *comm,
+fr_command_arj_delete (FRCommand *comm,
 		       GList     *file_list)
 {
 	GList *scan;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
-				      process_line__common,
-				      comm);
+	fr_process_begin_command (comm->process, "arj");
+	fr_process_add_arg (comm->process, "d");
 
-	fr_process_begin_command (comm->process, "zip");
-	fr_process_add_arg (comm->process, "-d");
+	fr_process_add_arg (comm->process, "-i");
+	fr_process_add_arg (comm->process, "-y");
+	fr_process_add_arg (comm->process, "-");
+
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next)
@@ -309,7 +298,7 @@ fr_command_zip_delete (FRCommand *comm,
 
 
 static void
-fr_command_zip_extract (FRCommand  *comm,
+fr_command_arj_extract (FRCommand  *comm,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -319,34 +308,36 @@ fr_command_zip_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
-				      process_line__common,
-				      comm);
+	fr_process_begin_command (comm->process, "arj");
 
-	fr_process_begin_command (comm->process, "unzip");
-	
+	fr_process_add_arg (comm->process, "e");
+
 	if (dest_dir != NULL) {
-		gchar *e_dest_dir = shell_escape (dest_dir);
-		fr_process_add_arg (comm->process, "-d");
-		fr_process_add_arg (comm->process, e_dest_dir);
+		char *e_dest_dir = shell_escape (dest_dir);
+		char *swtch = g_strconcat ("-ht/", e_dest_dir, NULL);
+		fr_process_add_arg (comm->process, swtch);
+		g_free (swtch);
 		g_free (e_dest_dir);
 	}
 
-	if (overwrite)
-		fr_process_add_arg (comm->process, "-o");
-	else
+	if (! overwrite)
 		fr_process_add_arg (comm->process, "-n");
 
 	if (skip_older)
 		fr_process_add_arg (comm->process, "-u");
 
 	if (junk_paths)
-		fr_process_add_arg (comm->process, "-j");
+		fr_process_add_arg (comm->process, "-e");
 
 	if (password != NULL) {
-		fr_process_add_arg (comm->process, "-P");
-		fr_process_add_arg (comm->process, password);
+		char *swtch = g_strconcat ("-g/", password, NULL);
+		fr_process_add_arg (comm->process, swtch);
+		g_free (swtch);
 	}
+
+	fr_process_add_arg (comm->process, "-i");
+	fr_process_add_arg (comm->process, "-y");
+	fr_process_add_arg (comm->process, "-");
 
 	fr_process_add_arg (comm->process, comm->e_filename);
 
@@ -358,34 +349,38 @@ fr_command_zip_extract (FRCommand  *comm,
 
 
 static void
-fr_command_zip_test (FRCommand   *comm,
+fr_command_arj_test (FRCommand   *comm,
 		     const char  *password)
 {
-	fr_process_begin_command (comm->process, "unzip");
-	fr_process_add_arg (comm->process, "-t");
-
+	fr_process_begin_command (comm->process, "arj");
+	fr_process_add_arg (comm->process, "t");
 	if (password != NULL) {
-		fr_process_add_arg (comm->process, "-P");
-		fr_process_add_arg (comm->process, password);
+		char *swtch = g_strconcat ("-g/", password, NULL);
+		fr_process_add_arg (comm->process, swtch);
+		g_free (swtch);
 	}
-
+	fr_process_add_arg (comm->process, "-i");
+	fr_process_add_arg (comm->process, "-y");
+	fr_process_add_arg (comm->process, "-");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 }
 
 
 static void
-fr_command_zip_handle_error (FRCommand   *comm, 
+fr_command_arj_handle_error (FRCommand   *comm, 
 			     FRProcError *error)
 {
+	/* FIXME
 	if ((error->type == FR_PROC_ERROR_GENERIC) 
 	    && (error->status <= 1))
 		error->type = FR_PROC_ERROR_NONE;
+	*/
 }
 
 
 static void 
-fr_command_zip_class_init (FRCommandZipClass *class)
+fr_command_arj_class_init (FRCommandArjClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
         FRCommandClass *afc;
@@ -393,19 +388,19 @@ fr_command_zip_class_init (FRCommandZipClass *class)
         parent_class = g_type_class_peek_parent (class);
 	afc = (FRCommandClass*) class;
 
-	gobject_class->finalize = fr_command_zip_finalize;
+	gobject_class->finalize = fr_command_arj_finalize;
 
-        afc->list           = fr_command_zip_list;
-	afc->add            = fr_command_zip_add;
-	afc->delete         = fr_command_zip_delete;
-	afc->extract        = fr_command_zip_extract;
-	afc->test           = fr_command_zip_test;
-	afc->handle_error   = fr_command_zip_handle_error;
+        afc->list           = fr_command_arj_list;
+	afc->add            = fr_command_arj_add;
+	afc->delete         = fr_command_arj_delete;
+	afc->extract        = fr_command_arj_extract;
+	afc->test           = fr_command_arj_test;
+	afc->handle_error   = fr_command_arj_handle_error;
 }
 
  
 static void 
-fr_command_zip_init (FRCommand *comm)
+fr_command_arj_init (FRCommand *comm)
 {
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
@@ -415,15 +410,16 @@ fr_command_zip_init (FRCommand *comm)
 	comm->propPassword                 = TRUE;
 	comm->propTest                     = TRUE;
 
-	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
+	FR_COMMAND_ARJ (comm)->list_started = FALSE;
+	FR_COMMAND_ARJ (comm)->fdata = FALSE;
 }
 
 
 static void 
-fr_command_zip_finalize (GObject *object)
+fr_command_arj_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_ZIP (object));
+        g_return_if_fail (FR_IS_COMMAND_ARJ (object));
 
 	/* Chain up */
         if (G_OBJECT_CLASS (parent_class)->finalize)
@@ -432,25 +428,25 @@ fr_command_zip_finalize (GObject *object)
 
 
 GType
-fr_command_zip_get_type ()
+fr_command_arj_get_type ()
 {
         static guint type = 0;
 
         if (! type) {
                 GTypeInfo type_info = {
-			sizeof (FRCommandZipClass),
+			sizeof (FRCommandArjClass),
 			NULL,
 			NULL,
-			(GClassInitFunc) fr_command_zip_class_init,
+			(GClassInitFunc) fr_command_arj_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandZip),
+			sizeof (FRCommandArj),
 			0,
-			(GInstanceInitFunc) fr_command_zip_init
+			(GInstanceInitFunc) fr_command_arj_init
 		};
 
 		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandZip",
+					       "FRCommandArj",
 					       &type_info,
 					       0);
         }
@@ -460,12 +456,12 @@ fr_command_zip_get_type ()
 
 
 FRCommand *
-fr_command_zip_new (FRProcess  *process,
+fr_command_arj_new (FRProcess  *process,
 		    const char *filename)
 {
 	FRCommand *comm;
 
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ZIP, NULL));
+	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ARJ, NULL));
 	fr_command_construct (comm, process, filename);
 
 	return comm;

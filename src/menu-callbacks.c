@@ -105,6 +105,7 @@ typedef struct {
 
 FileTypeDescription type_desc[] = { 
 	{ N_("Automatic"),                             NULL},
+	{ N_("Arj (.arj)"),                            ".arj" },
 	{ N_("Ear (.ear)"),                            ".ear" },
 	{ N_("Jar (.jar)"),                            ".jar" },
 	{ N_("Lha (.lzh)"),                            ".lzh" },

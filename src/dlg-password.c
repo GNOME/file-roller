@@ -123,6 +123,7 @@ dlg_password (GtkWidget *widget,
 
 	/* Run dialog. */
 
+	gtk_widget_grab_focus (data->pw_password_entry);
         gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
 				      GTK_WINDOW (window->app));
         gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);

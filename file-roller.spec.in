@@ -75,6 +75,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/application-registry/file-roller.applications
 %{_datadir}/mime-info/*
 %{_datadir}/pixmaps/file-roller.png
+%{_libdir}/bonobo/*.a
+%{_libdir}/bonobo/*.la
+%{_libdir}/bonobo/*.so
+%{_libdir}/bonobo/servers/*.server
+%{_datadir}/omf/file-roller/*.omf
 %doc %{_datadir}/gnome/help/file-roller
 %doc AUTHORS NEWS README COPYING
 %config %{_sysconfdir}/gconf/schemas/*

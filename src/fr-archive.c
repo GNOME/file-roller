@@ -30,6 +30,7 @@
 #include "file-utils.h"
 #include "fr-archive.h"
 #include "fr-command.h"
+#include "fr-command-arj.h"
 #include "fr-command-cfile.h"
 #include "fr-command-lha.h"
 #include "fr-command-rar.h"
@@ -240,7 +241,8 @@ create_command_from_mime_type (FRArchive  *archive,
 		archive->command = fr_command_tar_new (archive->process, 
 						       filename, 
 						       FR_COMPRESS_PROGRAM_BZIP2);
-	} else if (is_mime_type (mime_type, "application/zip")) {
+	} else if (is_mime_type (mime_type, "application/zip") ||
+		   is_mime_type (mime_type, "application/x-zip")) {
 		archive->command = fr_command_zip_new (archive->process, 
 						       filename);
 	} else if (is_mime_type (mime_type, "application/x-zoo")) {
@@ -248,6 +250,9 @@ create_command_from_mime_type (FRArchive  *archive,
 						       filename);
 	} else if (is_mime_type (mime_type, "application/x-rar")) {
 		archive->command = fr_command_rar_new (archive->process, 
+						       filename);
+	} else if (is_mime_type (mime_type, "application/x-arj")) {
+		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
 	} else 
 		return FALSE;
@@ -377,6 +382,9 @@ create_command_from_filename (FRArchive  *archive,
 						       filename);
 	} else if (file_extension_is (filename, ".rar")) {
 		archive->command = fr_command_rar_new (archive->process, 
+						       filename);
+	} else if (file_extension_is (filename, ".arj")) {
+		archive->command = fr_command_arj_new (archive->process, 
 						       filename);
 	} else if (loading) {
 		if (file_extension_is (filename, ".gz")
@@ -1417,6 +1425,7 @@ G_CONST_RETURN char *
 fr_archive_utils__get_file_name_ext (const char *filename)
 {
 	static char * ext[] = {
+		".arj",
 		".bz", 
 		".bz2", 
 		".ear",
