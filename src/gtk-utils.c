@@ -294,7 +294,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 
 	/* Button */
 
-	button = gtk_toggle_button_new_with_mnemonic (_("Command _line output"));
+	button = gtk_toggle_button_new_with_mnemonic (_("Command _Line Output"));
 
 	/* Add text */
 

@@ -415,7 +415,7 @@ GnomeUIInfo help_menu[] = {
 /* Definition of the main menu */
 
 GnomeUIInfo main_menu[] = {
-	GNOMEUIINFO_SUBTREE (N_("_File"), file_menu),
+	GNOMEUIINFO_SUBTREE (N_("_Archive"), file_menu),
 	GNOMEUIINFO_SUBTREE (N_("_Edit"), edit_menu),
 	GNOMEUIINFO_SUBTREE (N_("_View"), view_menu),
 	GNOMEUIINFO_SUBTREE (N_("_Windows"), windows_menu),

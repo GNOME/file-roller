@@ -178,7 +178,7 @@
 			      <child>
 				<widget class="GtkMenuItem" id="very_fast1">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Very fast</property>
+				  <property name="label" translatable="yes">Minimum (fast)</property>
 				  <property name="use_underline">True</property>
 				  <signal name="activate" handler="on_very_fast1_activate" last_modification_time="Fri, 09 Aug 2002 09:26:51 GMT"/>
 				</widget>
@@ -187,7 +187,7 @@
 			      <child>
 				<widget class="GtkMenuItem" id="fast1">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Fast</property>
+				  <property name="label" translatable="yes">Low</property>
 				  <property name="use_underline">True</property>
 				  <signal name="activate" handler="on_fast1_activate" last_modification_time="Fri, 09 Aug 2002 09:26:51 GMT"/>
 				</widget>
@@ -205,7 +205,7 @@
 			      <child>
 				<widget class="GtkMenuItem" id="maximum_(slowest)1">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">Maximum (slowest)</property>
+				  <property name="label" translatable="yes">Maximum (slow)</property>
 				  <property name="use_underline">True</property>
 				  <signal name="activate" handler="on_maximum_(slowest)1_activate" last_modification_time="Fri, 09 Aug 2002 09:26:51 GMT"/>
 				</widget>
@@ -365,9 +365,8 @@
 		      <child>
 			<widget class="GtkCheckButton" id="name_checkbutton">
 			  <property name="visible">True</property>
-			  <property name="sensitive">True</property>
 			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">File _name</property>
+			  <property name="label" translatable="yes">_Name</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="active">True</property>
@@ -382,10 +381,10 @@
 		      </child>
 
 		      <child>
-			<widget class="GtkCheckButton" id="type_checkbutton">
+			<widget class="GtkCheckButton" id="size_checkbutton">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">File _type</property>
+			  <property name="label" translatable="yes">_Size</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="active">False</property>
@@ -400,10 +399,10 @@
 		      </child>
 
 		      <child>
-			<widget class="GtkCheckButton" id="size_checkbutton">
+			<widget class="GtkCheckButton" id="type_checkbutton">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">File _size</property>
+			  <property name="label" translatable="yes">_Type</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="active">False</property>
@@ -421,7 +420,7 @@
 			<widget class="GtkCheckButton" id="time_checkbutton">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">_Modification time</property>
+			  <property name="label" translatable="yes">Date _modified</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="active">False</property>
@@ -439,7 +438,7 @@
 			<widget class="GtkCheckButton" id="path_checkbutton">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">File _path</property>
+			  <property name="label" translatable="yes">_Path</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="active">False</property>
