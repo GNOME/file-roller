@@ -333,6 +333,11 @@ prepare_app (poptContext pctx)
 	/* create the config dir if necessary. */
 
 	path = get_home_relative_dir (RC_DIR);
+
+	/* before the gconf port this was a file, now it's folder. */
+	if (path_is_file (path))
+		unlink (path);
+
 	ensure_dir_exists (path, 0700);
 	g_free (path);
 
