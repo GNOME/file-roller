@@ -237,7 +237,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 	char           *e_compr_file;
 
 	temp_dir = get_temp_work_dir ();
-	e_temp_dir = shell_escape (temp_dir);
+	e_temp_dir = fr_command_escape (comm, temp_dir);
 
 	/* create a temp dir. */
 	/*
@@ -250,7 +250,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 
 	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
 	if (compr_file != NULL) 
-		e_compr_file = shell_escape (compr_file);
+		e_compr_file = fr_command_escape (comm, compr_file);
 	else 
 		e_compr_file = NULL;
 	
@@ -320,7 +320,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 	/* copy uncompress file to the dest dir */
 
 	uncompr_file = remove_extension_from_path (temp_file);
-	e_dest_dir = shell_escape (dest_dir);
+	e_dest_dir = fr_command_escape (comm, dest_dir);
 
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_add_arg (comm->process, "-f");

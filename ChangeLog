@@ -1,3 +1,23 @@
+2004-09-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* file-roller.mime: Fixed bug #152160: MIME type conflicts with 
+	freedesktop.org
+
+	* src/fr-archive.c (NO_DOT_FILES, NO_BACKUP_FILES): 
+	* src/file-list.c (get_directory_file_list_async): 
+
+	Fixed bug #153002: By adding directory to archive using file-roller, 
+	hidden files do not get added.
+	
+	* src/fr-command-tar.c: 
+	* src/fr-archive.c: 
+	* src/fr-command.c: 
+	* src/fr-command.h: 
+	* src/fr-command-zip.c (fr_command_zip_add): 
+
+	Fixed bug #153003: file-roller: Does not properly extract files with 
+	special characters in their filenames from .tar.gz files
+
 2004-09-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-ar.h:
@@ -5,7 +25,7 @@
 	* src/actions.c: 
 	* src/fr-archive.c: 
 
-	Added AR/Debian archives support.
+	Added AR/Debian archives support. (bug #152994: support for deb files)
 
 	* configure.in: changed version number to 2.9.0, updated requirements.
 

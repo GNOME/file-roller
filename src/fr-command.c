@@ -130,6 +130,14 @@ base_fr_command_recompress (FRCommand     *comm,
 }
 
 
+char *
+base_fr_command_escape (FRCommand     *comm,
+			const char    *str)
+{
+	return shell_escape (str);
+}
+
+
 static void
 base_fr_command_handle_error (FRCommand *comm, 
 			      FRProcError *error)
@@ -193,6 +201,7 @@ fr_command_class_init (FRCommandClass *class)
 	class->uncompress     = base_fr_command_uncompress;
 	class->recompress     = base_fr_command_recompress;
 
+	class->escape         = base_fr_command_escape;
 	class->handle_error   = base_fr_command_handle_error;
 
 	class->start          = NULL;
@@ -466,6 +475,14 @@ fr_command_recompress (FRCommand     *comm,
 {
 	fr_command_progress (comm, -1.0);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
+}
+
+
+char *
+fr_command_escape (FRCommand     *comm,
+		   const char    *str)
+{
+	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->escape (comm, str);
 }
 
 

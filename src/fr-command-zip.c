@@ -295,7 +295,7 @@ fr_command_zip_add (FRCommand     *comm,
 	add_filename_arg (comm);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *temp = prepend_path_separator_zip_escape ((char*) scan->data);
+		char *temp = prepend_path_separator ((char*) scan->data);
 		fr_process_add_arg (comm->process, temp);
 		g_free (temp);
 	}
@@ -346,7 +346,7 @@ fr_command_zip_extract (FRCommand  *comm,
 	fr_process_begin_command (comm->process, "unzip");
 	
 	if (dest_dir != NULL) {
-		char *e_dest_dir = shell_escape (dest_dir);
+		char *e_dest_dir = fr_command_escape (comm, dest_dir);
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, e_dest_dir);
 		g_free (e_dest_dir);

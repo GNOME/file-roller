@@ -305,7 +305,7 @@ fr_command_tar_add (FRCommand     *comm,
 	fr_process_add_arg (comm->process, "-v");
 
 	if (base_dir != NULL) {
-		gchar *e_base_dir = shell_escape (base_dir);
+		char *e_base_dir = shell_escape (base_dir);
 		fr_process_add_arg (comm->process, "-C");
 		fr_process_add_arg (comm->process, e_base_dir);
 		g_free (e_base_dir);
@@ -384,7 +384,7 @@ fr_command_tar_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (comm->process, 
 				      process_line__extract,
 				      comm);
 
@@ -746,6 +746,20 @@ fr_command_tar_uncompress (FRCommand *comm)
 }
 
 
+char *
+fr_command_tar_escape (FRCommand     *comm,
+		       const char    *str)
+{
+	char *estr, *estr2;
+
+	estr = shell_escape (str);
+	estr2 = g_strconcat ("\"", estr, "\"", NULL);
+	g_free (estr);
+
+	return estr2;
+}
+
+
 static void 
 fr_command_tar_class_init (FRCommandTarClass *class)
 {
@@ -764,6 +778,8 @@ fr_command_tar_class_init (FRCommandTarClass *class)
 
 	afc->recompress   = fr_command_tar_recompress;
 	afc->uncompress   = fr_command_tar_uncompress;
+
+	afc->escape       = fr_command_tar_escape;
 }
 
  

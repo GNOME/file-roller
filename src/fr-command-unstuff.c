@@ -213,12 +213,12 @@ fr_command_unstuff_list (FRCommand *comm)
 
 static void
 fr_command_unstuff_extract (FRCommand  *comm,
-			GList      *file_list,
-			const char *dest_dir,
-			gboolean    overwrite,
-			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			    GList      *file_list,
+			    const char *dest_dir,
+			    gboolean    overwrite,
+			    gboolean    skip_older,
+			    gboolean    junk_paths,
+			    const char *password)
 {
 #if 0
 	GList *scan;
@@ -229,9 +229,9 @@ fr_command_unstuff_extract (FRCommand  *comm,
 	fr_process_add_arg (comm->process, "x");
 
 	if (dest_dir != NULL) {
-		gchar *e_dest_dir = shell_escape (dest_dir);
-		gchar *e_dest_dir_dots = unstuff_is_shit_with_filenames (e_dest_dir);
-		gchar *arg = g_strdup_printf ("-d=%s", e_dest_dir_dots);
+		char *e_dest_dir = fr_command_escape (comm, dest_dir);
+		char *e_dest_dir_dots = unstuff_is_shit_with_filenames (e_dest_dir);
+		char *arg = g_strdup_printf ("-d=%s", e_dest_dir_dots);
 		fr_process_add_arg (comm->process, arg);
 		FR_COMMAND_UNSTUFF (comm)->target_dir = NULL;
 		g_free (arg);

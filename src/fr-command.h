@@ -120,6 +120,8 @@ struct _FRCommandClass
 	void        (*handle_error)   (FRCommand     *comm,
 				       FRProcError   *error);
 
+	char *      (*escape)         (FRCommand     *comm,
+				       const char    *str);
 
 	/*<signals>*/
 
@@ -173,6 +175,9 @@ void           fr_command_uncompress         (FRCommand     *comm);
 
 void           fr_command_recompress         (FRCommand     *comm,
 					      FRCompression  compression);
+
+char *         fr_command_escape             (FRCommand     *comm,
+					      const char    *str);
 
 /* protected functions */
 

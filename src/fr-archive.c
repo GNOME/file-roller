@@ -53,8 +53,8 @@
 			     * line ? */
 #define UNKNOWN_TYPE "application/octet-stream"
 #define SAME_FS (FALSE)
-#define NO_BACKUP_FILES (TRUE)
-#define NO_DOT_FILES (TRUE)
+#define NO_BACKUP_FILES (FALSE)
+#define NO_DOT_FILES (FALSE)
 #define IGNORE_CASE (TRUE)
 
 
@@ -787,14 +787,33 @@ static void _archive_remove (FRArchive *archive, GList *file_list);
 
 
 static GList *
-escape_file_list (GList *file_list) 
+escape_file_list (FRCommand *command,
+		  GList     *file_list) 
 {
 	GList *e_file_list = NULL;
 	GList *scan;
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = scan->data;
-		e_file_list = g_list_prepend (e_file_list, shell_escape (filename));
+		char *escape = fr_command_escape (command, filename);
+		e_file_list = g_list_prepend (e_file_list, escape);
+	}
+
+	return e_file_list;
+}
+
+
+static GList *
+shell_escape_file_list (FRCommand *command,
+			GList     *file_list) 
+{
+	GList *e_file_list = NULL;
+	GList *scan;
+
+	for (scan = file_list; scan; scan = scan->next) {
+		char *filename = scan->data;
+		char *escape = shell_escape (filename);
+		e_file_list = g_list_prepend (e_file_list, escape);
 	}
 
 	return e_file_list;
@@ -941,7 +960,7 @@ fr_archive_add (FRArchive     *archive,
 
 	/* add now. */
 
-	e_file_list = escape_file_list (new_file_list);
+	e_file_list = shell_escape_file_list (archive->command, new_file_list);
 	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
 
 	for (scan = e_file_list; scan != NULL; ) {
@@ -1214,7 +1233,7 @@ _archive_remove (FRArchive *archive,
 		file_list_created = TRUE;
 	}
 
-	e_file_list = escape_file_list (file_list);
+	e_file_list = escape_file_list (archive->command, file_list);
 	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
 
 	for (scan = e_file_list; scan != NULL; ) {
@@ -1279,21 +1298,23 @@ move_files_to_dir (FRArchive  *archive,
 	fr_process_add_arg (archive->process, "-f");
 	for (scan = file_list; scan; scan = scan->next) {
 		char  path[4096]; /* FIXME : 4096 ? */
-		char *filename = scan->data;
+		char *e_filename = shell_escape (scan->data);
 		
-		if (filename[0] == '/')
-			sprintf (path, "%s%s", source_dir, filename);
+		if (e_filename[0] == '/')
+			sprintf (path, "%s%s", source_dir, e_filename);
 		else
-			sprintf (path, "%s/%s", source_dir, filename);
+			sprintf (path, "%s/%s", source_dir, e_filename);
 		
 		fr_process_add_arg (archive->process, path);
+
+		g_free (e_filename);
 	}
 	fr_process_add_arg (archive->process, dest_dir);
 	fr_process_end_command (archive->process);
 }
 
 
-/* Note: all paths escaped, temp_dir and dest_dir unescaped. */
+/* Note: all paths unescaped, temp_dir and dest_dir unescaped. */
 static void
 move_files_in_chunks (FRArchive  *archive,
 		      GList      *file_list,
@@ -1332,7 +1353,7 @@ move_files_in_chunks (FRArchive  *archive,
 				   e_dest_dir);
 		prev->next = scan;
 	}	
-	
+
 	g_free (e_temp_dir);
 	g_free (e_dest_dir);
 }
@@ -1393,18 +1414,19 @@ extract_in_chunks (FRCommand  *command,
 
 
 static char*
-compute_base_path (const char *e_base_dir,
+compute_base_path (const char *base_dir,
 		   const char *path)
 {
-	int         e_base_dir_len = strlen (e_base_dir);
+	int         base_dir_len = strlen (base_dir);
 	int         path_len = strlen (path);
 	const char *base_path;
 	char       *name_end;
 	char       *new_path;
 
-	if (path_len <= e_base_dir_len)
+	if (path_len <= base_dir_len)
 		return NULL;
-	base_path = path + e_base_dir_len;
+
+	base_path = path + base_dir_len;
 	if (path[0] != '/')
 		base_path -= 1;
 	name_end = strchr (base_path, '/');
@@ -1417,7 +1439,7 @@ compute_base_path (const char *e_base_dir,
 	}
 
 #ifdef DEBUG
-	g_print ("%s, %s --> %s\n", e_base_dir, path, new_path);
+	g_print ("%s, %s --> %s\n", base_dir, path, new_path);
 #endif
 
 	return new_path;
@@ -1426,20 +1448,19 @@ compute_base_path (const char *e_base_dir,
 
 static GList*
 compute_list_base_path (const char *base_dir,
-			GList      *e_filtered)
+			GList      *filtered)
 {
-	char  *e_base_dir = shell_escape (base_dir);
 	GList *scan;
 	GList *list = NULL, *list_unique = NULL;
 	GList *last_inserted;
 
-	if (e_filtered == NULL)
+	if (filtered == NULL)
 		return NULL;
 
-	for (scan = e_filtered; scan; scan = scan->next) {
+	for (scan = filtered; scan; scan = scan->next) {
 		const char *path = scan->data;
 		char       *new_path;
-		new_path = compute_base_path (e_base_dir, path);
+		new_path = compute_base_path (base_dir, path);
 		if (new_path != NULL)
 			list = g_list_prepend (list, new_path);
 	}
@@ -1464,7 +1485,6 @@ compute_list_base_path (const char *base_dir,
 	}
 
 	g_list_free (list);
-	g_free (e_base_dir);
 
 	return list_unique;
 }
@@ -1520,7 +1540,7 @@ fr_archive_extract (FRArchive  *archive,
 	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) {
 		GList *e_file_list;
 
-		e_file_list = escape_file_list (file_list);
+		e_file_list = escape_file_list (archive->command, file_list);
 		extract_in_chunks (archive->command,
 				   e_file_list,
 				   dest_dir,
@@ -1612,7 +1632,7 @@ fr_archive_extract (FRArchive  *archive,
 		return;
 	} 
 
-	e_filtered = escape_file_list (filtered);	
+	e_filtered = escape_file_list (archive->command, filtered);	
 
 	if (move_to_dest_dir) {
 		char *temp_dir;
@@ -1628,13 +1648,13 @@ fr_archive_extract (FRArchive  *archive,
 				   password);
 
 		if (use_base_dir) {
-			GList *tmp = compute_list_base_path (base_dir, e_filtered);
-			path_list_free (e_filtered);
-			e_filtered = tmp;
+			GList *tmp_list = compute_list_base_path (base_dir, filtered);
+			g_list_free (filtered);
+			filtered = tmp_list;
 		}
 
 		move_files_in_chunks (archive, 
-				      e_filtered, 
+				      filtered, 
 				      temp_dir, 
 				      dest_dir);
 

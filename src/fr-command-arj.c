@@ -263,7 +263,7 @@ fr_command_arj_extract (FRCommand  *comm,
 		fr_process_add_arg (comm->process, "x");
 
 	if (dest_dir != NULL) {
-		char *e_dest_dir = shell_escape (dest_dir);
+		char *e_dest_dir = fr_command_escape (comm, dest_dir);
 		char *swtch = g_strconcat ("-ht/", e_dest_dir, NULL);
 		fr_process_add_arg (comm->process, swtch);
 		g_free (swtch);

@@ -2095,7 +2095,7 @@ drag_drop_add_file_list (FRWindow *window)
 		GList *only_names_list = NULL;
 
 		for (scan = list; scan; scan = scan->next)
-			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
+			only_names_list = g_list_prepend (only_names_list, file_name_from_path (scan->data));
 
 		fr_process_clear (archive->process);
 		fr_archive_add (archive,
@@ -2127,8 +2127,7 @@ drag_drop_add_file_list (FRWindow *window)
 		GList *singleton;
 		
 		basedir = remove_level_from_path (fullpath);
-		singleton = g_list_prepend (NULL, 
-					    shell_escape (file_name_from_path (fullpath)));
+		singleton = g_list_prepend (NULL, shell_escape (file_name_from_path (fullpath)));
 		fr_command_add (archive->command,
 				singleton,
 				basedir,
@@ -5324,7 +5323,7 @@ window_open_files (FRWindow *window,
 					file,
 					NULL);
 		cdata->file_list = g_list_prepend (cdata->file_list,
-						   shell_escape (filename));
+						   fr_command_escape (window->archive->command, filename));
 		g_free (filename);
 	}
 
