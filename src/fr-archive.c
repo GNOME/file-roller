@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <sys/param.h>
 #include <glib.h>
 #include <gnome.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
@@ -49,8 +50,7 @@
 #include "utf8-fnmatch.h"
 
 
-#define MAX_CHUNK_LEN 16000 /* FIXME : what is the max length of a command 
-			     * line ? */
+#define MAX_CHUNK_LEN (NCARGS - PATH_MAX) /* Max length of the command line */
 #define UNKNOWN_TYPE "application/octet-stream"
 #define SAME_FS (FALSE)
 #define NO_BACKUP_FILES (FALSE)
