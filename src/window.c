@@ -1842,10 +1842,8 @@ file_button_press_cb (GtkWidget      *widget,
         FRWindow         *window = data;
 	GtkTreeSelection *selection;
 
-	/* FIXME: uncomment after freeze 
 	if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->list_view))) 
                 return FALSE;
-	*/
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
 	if (selection == NULL)
@@ -1917,10 +1915,8 @@ file_button_release_cb (GtkWidget      *widget,
         FRWindow         *window = data;
 	GtkTreeSelection *selection;
 
-	/* FIXME: uncomment after freeze 
 	if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->list_view))) 
                 return FALSE;
-	*/
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
 	if (selection == NULL)

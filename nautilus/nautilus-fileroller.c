@@ -199,6 +199,9 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	gboolean  one_item;
 	gboolean  one_archive = FALSE;
 
+
+	if (files == NULL)
+		return NULL;
 	
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
