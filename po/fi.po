@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-28 18:52+0200\n"
-"PO-Revision-Date: 2004-02-28 18:38+0200\n"
+"POT-Creation-Date: 2004-03-07 14:02+0200\n"
+"PO-Revision-Date: 2004-03-07 14:15+0200\n"
 "Last-Translator: Pauli Virtanen <pauli.virtanen@hut.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -17,32 +17,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
+msgid "Create Archive..."
+msgstr "Luo arkisto..."
+
+#: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
 msgstr "Pura tähän"
 
-#: component/File_Roller_Component.server.in.in.h:2
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr "Tiedostokäärinkomponentin lisäämistoiminnot"
 
-#: component/File_Roller_Component.server.in.in.h:3
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr "Tiedostokäärinkomponentin purkutoiminnot"
 
-#: component/File_Roller_Component.server.in.in.h:4
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "Tiedostokäärinkomponentti"
 
-#: component/File_Roller_Component.server.in.in.h:5
-msgid "Zip Objects..."
-msgstr "Arkistoi kohteet..."
-
 #: file-roller.desktop.in.h:1
-msgid "Create and modify zips and other archive types"
-msgstr "Luo ja muokkaa zip- ja muitakin arkistoja"
+msgid "Archive Manager"
+msgstr "Pakettienkäsittelyohjelma"
 
 #: file-roller.desktop.in.h:2
-msgid "Zip Creator"
-msgstr "Arkistojen luonti"
+msgid "Create and modify an archive"
+msgstr "Luo arkisto tai muokkaa arkistoa"
 
 #: src/dlg-add.c:118 src/dlg-add.c:125
 #, c-format
@@ -98,10 +98,11 @@ msgid "Options Name:"
 msgstr "Asetusten nimi:"
 
 #: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
-msgid "Could not zip objects"
-msgstr "Kohteiden arkistointi ei onnistunut"
+#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
+msgid "Could not create the archive"
+msgstr "Arkiston luominen ei onnistunut"
 
-#: src/dlg-batch-add.c:102 src/menu-callbacks.c:190 src/menu-callbacks.c:423
+#: src/dlg-batch-add.c:102 src/menu-callbacks.c:168 src/menu-callbacks.c:376
 msgid "You have to specify an archive name."
 msgstr "Arkiston nimi täytyy antaa."
 
@@ -124,10 +125,10 @@ msgid "Could not create the destination folder: %s."
 msgstr "Kohdehakemiston luonti ei onnistunut: %s."
 
 #: src/dlg-batch-add.c:185
-msgid "Zip not performed"
-msgstr "Arkistointia ei tehty"
+msgid "Archive not created"
+msgstr "Arkistoa ei luotu"
 
-#: src/dlg-extract.c:87 src/menu-callbacks.c:1175
+#: src/dlg-extract.c:87 src/menu-callbacks.c:1132
 msgid "Could not display help"
 msgstr "Ohjeen näyttäminen ei onnistunut"
 
@@ -150,7 +151,7 @@ msgstr "Tiedostot"
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:387 src/file_roller.glade.h:16
+#: src/dlg-extract.c:387 src/file_roller.glade.h:17
 msgid "_Files:"
 msgstr "_Tiedostot:"
 
@@ -158,11 +159,11 @@ msgstr "_Tiedostot:"
 msgid "example: *.txt; *.doc"
 msgstr "esimerkki: *.txt; *.doc"
 
-#: src/dlg-extract.c:401 src/file_roller.glade.h:13
+#: src/dlg-extract.c:401 src/file_roller.glade.h:14
 msgid "_All files"
 msgstr "_Kaikki tiedostot"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:18
+#: src/dlg-extract.c:408 src/file_roller.glade.h:19
 msgid "_Selected files"
 msgstr "_Valitut tiedostot"
 
@@ -182,7 +183,7 @@ msgstr "Ko_rvaa olemassa olevat tiedostot"
 msgid "Do not e_xtract older files"
 msgstr "_Älä pura vanhempia tiedostoja"
 
-#: src/dlg-extract.c:449 src/file_roller.glade.h:17
+#: src/dlg-extract.c:449 src/file_roller.glade.h:18
 msgid "_Password:"
 msgstr "Salasa_na:"
 
@@ -216,8 +217,8 @@ msgid "Number of files:"
 msgstr "Tiedostojen määrä:"
 
 #: src/dlg-prop.c:149
-msgid "Zipped on:"
-msgstr "Arkistoitu:"
+msgid "Modified on:"
+msgstr "Muokattu:"
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
@@ -254,52 +255,52 @@ msgid "A_vailable application:"
 msgstr "_Mahdollinen sovellus:"
 
 #: src/file_roller.glade.h:4
+msgid "C_reate"
+msgstr "_Luo"
+
+#: src/file_roller.glade.h:5
+msgid "Create Archive"
+msgstr "Luo arkisto"
+
+#: src/file_roller.glade.h:6
 msgid "Delete"
 msgstr "Poista"
 
-#: src/file_roller.glade.h:5
+#: src/file_roller.glade.h:7
 msgid "Load Options"
 msgstr "Lataa asetukset"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:8
 msgid "Open Files"
 msgstr "Avaa tiedostot"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:9
 msgid "Open with an _application"
 msgstr "Avaa so_velluksella"
 
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:10
 msgid "Password"
 msgstr "Salasana"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:11
 msgid "R_ecent applications:"
 msgstr "_Viimeisimmät sovellukset:"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:12
 msgid "View File"
 msgstr "Katsele tiedostoa"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:13
 msgid "View with internal _viewer"
 msgstr "Katsele sisäänrakennetulla _katselimella"
 
-#: src/file_roller.glade.h:12
-msgid "Zip Objects"
-msgstr "Arkistoi kohteet"
-
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:15
 msgid "_Application:"
 msgstr "_Sovellus:"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:16
 msgid "_Archive:"
 msgstr "_Arkisto:"
-
-#: src/file_roller.glade.h:19
-msgid "_Zip"
-msgstr "A_rkistoi"
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -345,27 +346,27 @@ msgstr "_Tyyppi"
 msgid "The file does not exist."
 msgstr "Tiedosto ei ole olemassa."
 
-#: src/fr-command-tar.c:232
+#: src/fr-command-tar.c:354
 msgid "Adding file: "
 msgstr "Lisätään tiedosto: "
 
-#: src/fr-command-tar.c:278
+#: src/fr-command-tar.c:400
 msgid "Removing file: "
 msgstr "Poistetaan tiedosto: "
 
-#: src/fr-command-tar.c:287 src/window.c:1366
+#: src/fr-command-tar.c:409 src/window.c:1366
 msgid "Deleting files from archive"
 msgstr "Poistetaan tiedostoja arkistosta"
 
-#: src/fr-command-tar.c:320
+#: src/fr-command-tar.c:442
 msgid "Extracting file: "
 msgstr "Puretaan tiedosto: "
 
-#: src/fr-command-tar.c:365
+#: src/fr-command-tar.c:487
 msgid "Recompressing archive"
 msgstr "Tiivistetään arkisto uudelleen"
 
-#: src/fr-command-tar.c:499
+#: src/fr-command-tar.c:621
 msgid "Decompressing archive"
 msgstr "Puretaan arkiston tiivistys"
 
@@ -382,7 +383,7 @@ msgid "_View"
 msgstr "_Näytä"
 
 #. Create the application.
-#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1216
+#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1173
 #: src/window.c:839 src/window.c:1265 src/window.c:2926
 msgid "File Roller"
 msgstr "Tiedostokäärin"
@@ -424,170 +425,166 @@ msgstr "\"--add\" ja \"--extract\"-komentojen oletusarvoinen hakemisto"
 msgid "Create destination folder without asking confirmation"
 msgstr "Luo kohdehakemisto kysymättä"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:88
 msgid "Automatic"
 msgstr "Automaattinen"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:89
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:90
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:91
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:92
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:93
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:94
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar, tiivistämätön (.tar)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:95
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar, bzip-tiivistetty (.tar.bz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:96
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar, bzip2-tiivistetty (.tar.bz2)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:97
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar, gzip-tiivistetty (.tar.gz)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:98
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar, lzop-tiivistetty (.tar.lzo)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:99
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar, compress-tiivistetty (.tar.Z)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:100
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:123
+#: src/menu-callbacks.c:101
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:124
+#: src/menu-callbacks.c:102
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:189 src/menu-callbacks.c:208 src/window.c:3645
-msgid "Could not create the archive"
-msgstr "Arkiston luominen ei onnistunut"
-
-#: src/menu-callbacks.c:209 src/menu-callbacks.c:442
+#: src/menu-callbacks.c:187 src/menu-callbacks.c:395
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Sinulla ei ole oikeuksia luoda arkistoa tähän hakemistoon"
 
-#: src/menu-callbacks.c:238 src/menu-callbacks.c:462 src/menu-callbacks.c:752
-#: src/menu-callbacks.c:928
+#: src/menu-callbacks.c:216 src/menu-callbacks.c:415 src/menu-callbacks.c:708
+#: src/menu-callbacks.c:885
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Arkisto on jo olemassa. Haluatko korvata sen?"
 
-#: src/menu-callbacks.c:241 src/menu-callbacks.c:465 src/menu-callbacks.c:755
-#: src/menu-callbacks.c:931
+#: src/menu-callbacks.c:219 src/menu-callbacks.c:418 src/menu-callbacks.c:711
+#: src/menu-callbacks.c:888
 msgid "Overwrite"
 msgstr "Korvaa"
 
-#: src/menu-callbacks.c:257 src/menu-callbacks.c:481
+#: src/menu-callbacks.c:235 src/menu-callbacks.c:434
 msgid "Could not delete the old archive."
 msgstr "Vanhan arkiston poisto ei onnistunut."
 
-#: src/menu-callbacks.c:320 src/toolbar.h:42
+#: src/menu-callbacks.c:279 src/toolbar.h:42
 msgid "New"
 msgstr "Uusi"
 
-#: src/menu-callbacks.c:331 src/menu-callbacks.c:537 src/menu-callbacks.c:656
+#: src/menu-callbacks.c:290 src/menu-callbacks.c:490 src/menu-callbacks.c:612
 msgid "All archives"
 msgstr "Kaikki arkistot"
 
-#: src/menu-callbacks.c:338 src/menu-callbacks.c:544 src/menu-callbacks.c:663
+#: src/menu-callbacks.c:297 src/menu-callbacks.c:497 src/menu-callbacks.c:619
 msgid "All files"
 msgstr "Kaikki tiedostot"
 
-#: src/menu-callbacks.c:356 src/menu-callbacks.c:552
+#: src/menu-callbacks.c:307 src/menu-callbacks.c:505
 msgid "Archive type:"
 msgstr "Arkiston tyyppi:"
 
-#: src/menu-callbacks.c:422 src/menu-callbacks.c:441
+#: src/menu-callbacks.c:375 src/menu-callbacks.c:394
 msgid "Could not save the archive"
 msgstr "Arkiston tallentaminen ei onnistunut"
 
-#: src/menu-callbacks.c:526
+#: src/menu-callbacks.c:479
 msgid "Save"
 msgstr "Tallenna"
 
-#: src/menu-callbacks.c:645 src/menu.h:412 src/toolbar.h:48
+#: src/menu-callbacks.c:601 src/menu.h:412 src/toolbar.h:48
 msgid "Open"
 msgstr "Avaa"
 
-#: src/menu-callbacks.c:777
+#: src/menu-callbacks.c:733
 msgid "Could not copy the archive"
 msgstr "Arkiston kopiointi ei onnistunut"
 
-#: src/menu-callbacks.c:796
+#: src/menu-callbacks.c:752
 msgid "Could not move the archive"
 msgstr "Arkiston siirtäminen ei onnistunut"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Copy"
 msgstr "Kopioi"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Move"
 msgstr "Siirrä"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Copy"
 msgstr "_Kopioi"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Move"
 msgstr "_Siirrä"
 
-#: src/menu-callbacks.c:898 src/window.c:4717
+#: src/menu-callbacks.c:855 src/window.c:4717
 msgid "Rename"
 msgstr "Nimeä uudelleen"
 
-#: src/menu-callbacks.c:899
+#: src/menu-callbacks.c:856
 msgid "New archive name (without extension)"
 msgstr "Uuden arkiston nimi (ilman päätettä)"
 
-#: src/menu-callbacks.c:903 src/window.c:4722
+#: src/menu-callbacks.c:860 src/window.c:4722
 msgid "_Rename"
 msgstr "_Nimeä uudelleen"
 
-#: src/menu-callbacks.c:1013
+#: src/menu-callbacks.c:970
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
 msgstr "Arkistoa ei voi siirtää roskakoriin. Haluatko poistaa sen pysyvästi?"
 
-#: src/menu-callbacks.c:1208
+#: src/menu-callbacks.c:1165
 msgid "translator_credits"
 msgstr ""
 "Pauli Virtanen, 2003-2004\n"
 "\n"
 "http://gnome-fi.org/"
 
-#: src/menu-callbacks.c:1219
+#: src/menu-callbacks.c:1176
 msgid "An archive manager for GNOME."
 msgstr "Gnomen arkistonkäsittelyohjelma"
 
-#: src/menu-callbacks.c:1368 src/window.c:4454
+#: src/menu-callbacks.c:1325 src/window.c:4454
 msgid "Last Output"
 msgstr "Viimeisin tuloste"
 
@@ -1095,11 +1092,29 @@ msgstr "Lisää tiedostoja arkistoon"
 msgid "Extract archive"
 msgstr "Pura arkisto"
 
+#~ msgid "Zip Objects..."
+#~ msgstr "Arkistoi kohteet..."
+
+#~ msgid "Zip Creator"
+#~ msgstr "Arkistojen luonti"
+
+#~ msgid "Could not zip objects"
+#~ msgstr "Kohteiden arkistointi ei onnistunut"
+
+#~ msgid "Zip not performed"
+#~ msgstr "Arkistointia ei tehty"
+
+#~ msgid "Zipped on:"
+#~ msgstr "Arkistoitu:"
+
+#~ msgid "Zip Objects"
+#~ msgstr "Arkistoi kohteet"
+
+#~ msgid "_Zip"
+#~ msgstr "A_rkistoi"
+
 #~ msgid "Add to Archive..."
 #~ msgstr "Lisää pakettiin..."
-
-#~ msgid "Archive Manager"
-#~ msgstr "Pakettienkäsittelyohjelma"
 
 #~ msgid "Handle compressed archives"
 #~ msgstr "Käsittele tiivistettyjä arkistoja"
