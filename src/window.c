@@ -223,8 +223,8 @@ static gint
 sort_by_path (gconstpointer  ptr1,
               gconstpointer  ptr2)
 {
-	gint result;
 	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
+	int             result;
 
 	if (fdata1->is_dir != fdata2->is_dir) {
 		if (fdata1->is_dir)
@@ -266,7 +266,7 @@ static void
 compute_file_list_name (FRWindow *window, 
 			FileData *fdata)
 {
-	gchar *scan, *end;
+	char *scan, *end;
 
 	fdata->is_dir = FALSE;
 	if (fdata->list_name != NULL)
@@ -429,7 +429,7 @@ load_icon_file (char          *filename,
 
 static GdkPixbuf *
 get_icon (GtkWidget *widget,
-         FileData  *fdata)
+	  FileData  *fdata)
 {
 	GdkPixbuf   *pixbuf;
 	char        *icon_name;

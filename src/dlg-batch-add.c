@@ -74,6 +74,7 @@ add_clicked_cb (GtkWidget  *widget,
 	char     *archive_name_utf8;
 	char     *archive_name;
 	char     *archive_dir;
+	char     *archive_name_test;
 	gboolean  do_not_add = FALSE;
 
 	data->add_clicked = TRUE;
@@ -88,18 +89,46 @@ add_clicked_cb (GtkWidget  *widget,
 
 	/* check whether the user entered an archive name. */
 
-	if (! fr_archive_utils__file_is_archive (archive_name)) {
+	archive_name_test = remove_ending_separator (archive_name);
+	if (path_is_dir (archive_name_test)) {
 		GtkWidget  *d;
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not create the archive"),
 					     _("You have to specify an archive name."),
-					     NULL,
 					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (archive_name);
+		g_free (archive_name_test);
+
+		return;
+	}
+
+	/* if the user do not specify an extension use tgz as default */
+	if (strchr (archive_name, '.') == NULL) {
+		char *new_archive_name;
+		new_archive_name = g_strconcat (archive_name, ".tgz", NULL);
+		g_free (archive_name);
+		archive_name = new_archive_name;
+	}
+
+	if (! fr_archive_utils__file_is_archive (archive_name)) {
+		GtkWidget  *d;
+
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_MODAL,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not create the archive"),
+					     _("Archive type not supported."),
+					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     NULL);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (archive_name);
 
 		return;
 	}

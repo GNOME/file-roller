@@ -193,13 +193,13 @@ fr_command_rar_add (FRCommand     *comm,
 
 	switch (compression) {
 	case FR_COMPRESSION_VERY_FAST:
-		fr_process_add_arg (comm->process, "m1"); break;
+		fr_process_add_arg (comm->process, "-m1"); break;
 	case FR_COMPRESSION_FAST:
-		fr_process_add_arg (comm->process, "m2"); break;
+		fr_process_add_arg (comm->process, "-m2"); break;
 	case FR_COMPRESSION_NORMAL:
-		fr_process_add_arg (comm->process, "m3"); break;
+		fr_process_add_arg (comm->process, "-m3"); break;
 	case FR_COMPRESSION_MAXIMUM:
-		fr_process_add_arg (comm->process, "m5"); break;
+		fr_process_add_arg (comm->process, "-m5"); break;
 	}
 
 	/* stop switches scanning */
