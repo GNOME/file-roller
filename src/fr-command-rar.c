@@ -450,6 +450,11 @@ fr_command_rar_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
+	if ((!is_program_in_path("rar")) ||
+	    (!is_program_in_path("unrar"))) {
+		return NULL;
+	}
+
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_RAR, NULL));
 	fr_command_construct (comm, process, filename);
 

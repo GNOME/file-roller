@@ -405,6 +405,10 @@ fr_command_arj_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
+	if (!is_program_in_path("arj")) {
+		return NULL;
+	}
+
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ARJ, NULL));
 	fr_command_construct (comm, process, filename);
 

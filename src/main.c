@@ -55,6 +55,8 @@ static gchar *extract_to = NULL;
 static gint   extract;
 static gchar *default_url = NULL;
 
+extern get_supported_archive_types ();
+
 struct poptOption options[] = {
 	{ "add-to", 'a', POPT_ARG_STRING, &add_to, 0,
 	  N_("Add files to the specified archive and quit the program"),
@@ -331,6 +333,8 @@ prepare_app (poptContext pctx)
 
 	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
                 migrate_to_new_directories ();
+
+	get_supported_archive_types();
 
 	if (session_is_restored ()) {
 		load_session ();

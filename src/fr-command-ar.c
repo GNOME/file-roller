@@ -362,6 +362,9 @@ fr_command_ar_new (FRProcess  *process,
 		   const char *filename)
 {
 	FRCommand *comm;
+
+	if(! is_program_in_path ("ar")) 
+		return NULL;
 	
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_AR, NULL));
 	fr_command_construct (comm, process, filename);

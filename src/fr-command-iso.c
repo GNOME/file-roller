@@ -248,6 +248,10 @@ fr_command_iso_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
+	if (!is_program_in_path("isoinfo")) {
+		return NULL;
+	}
+
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ISO, NULL));
 	fr_command_construct (comm, process, filename);
 

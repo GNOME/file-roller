@@ -240,6 +240,10 @@ fr_command_rpm_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
+	if (!is_program_in_path("rpm2cpio")) {
+		return NULL;
+	}
+
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_RPM, NULL));
 	fr_command_construct (comm, process, filename);
 

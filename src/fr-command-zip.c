@@ -483,6 +483,11 @@ fr_command_zip_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
+	if ((!is_program_in_path("zip")) ||
+	    (!is_program_in_path("unzip"))) {
+		return NULL;
+	}
+
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ZIP, NULL));
 	fr_command_construct (comm, process, filename);
 

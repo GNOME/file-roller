@@ -1139,3 +1139,16 @@ check_permissions (const char *path,
 
 	return TRUE;
 }
+
+gboolean is_program_in_path(const char *filename)
+{
+        gchar *str;
+
+        str = g_find_program_in_path(filename);
+        if (str != NULL) {
+                g_free(str);
+                return TRUE;
+        }
+
+        return FALSE;
+}

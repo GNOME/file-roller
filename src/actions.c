@@ -92,26 +92,323 @@ typedef struct {
 	char *ext;
 } FileTypeDescription;
 
+/* these arrays need to increase in size if new types are introduced */
+static FileTypeDescription write_type_desc[18]; 
+static char * save_mime_type[19];
+static char *open_mime_type[24];
 
-static FileTypeDescription write_type_desc[] = { 
-	{ N_("Automatic"),                             NULL},
-	{ N_("Ar (.ar)"),                              ".ar" },
-	{ N_("Arj (.arj)"),                            ".arj" },
-	{ N_("Ear (.ear)"),                            ".ear" },
-	{ N_("Jar (.jar)"),                            ".jar" },
-	{ N_("Lha (.lzh)"),                            ".lzh" },
-	{ N_("Rar (.rar)"),                            ".rar" },
-	{ N_("Tar uncompressed (.tar)"),               ".tar" }, 
-	{ N_("Tar compressed with bzip (.tar.bz)"),    ".tar.bz" }, 
-	{ N_("Tar compressed with bzip2 (.tar.bz2)"),  ".tar.bz2" }, 
-	{ N_("Tar compressed with gzip (.tar.gz)"),    ".tar.gz" }, 
-	{ N_("Tar compressed with lzop (.tar.lzo)"),   ".tar.lzo" }, 
-	{ N_("Tar compressed with compress (.tar.Z)"), ".tar.Z" }, 
-	{ N_("War (.war)"),                            ".war" },
-	{ N_("Zip (.zip)"),                            ".zip" },
-	{ N_("Zoo (.zoo)"),                            ".zoo" },
-	{ N_("7-Zip (.7z)"),                            ".7z" }
-};
+void 
+get_supported_archive_types ()
+{
+	int wi, si, oi;
+	gchar *str;
+
+	wi = 0;
+	si = 0;
+	oi = 0;
+
+	write_type_desc[wi].name = g_strdup(N_("Automatic"));
+	write_type_desc[wi].ext = NULL;
+	wi++;
+
+	str = g_find_program_in_path("ar");
+	if (str != NULL) {
+		write_type_desc[wi].name = g_strdup(N_("Ar (.ar)"));
+		write_type_desc[wi].ext = g_strdup(".ar");
+		wi++;
+		save_mime_type[si] = g_strdup("application/x-ar");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-ar");
+		oi++;
+		open_mime_type[oi] = g_strdup("application/x-deb");
+		oi++;
+		g_free(str);	
+	}
+
+	str = g_find_program_in_path("arj");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("Arj (.arj)"));
+		write_type_desc[wi].ext = g_strdup(".arj");	
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-arj");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-arj");
+                oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("bzip2");
+        if (str != NULL) {
+                save_mime_type[si] = g_strdup("application/x-bzip");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-bzip");
+		oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("compress");
+        if (str != NULL) {
+		save_mime_type[si] = g_strdup("application/x-compress");
+                si++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("isoinfo");
+        if (str != NULL) {
+		save_mime_type[si] = g_strdup("application/x-cd-image");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-cd-image");
+		oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("zip");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("Ear (.ear)"));
+                write_type_desc[wi].ext = g_strdup(".ear");
+                wi++;
+		g_free(str);
+	}
+
+	str = g_find_program_in_path("gzip");
+        if (str != NULL) {
+                save_mime_type[si] = g_strdup("application/x-gzip");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-gzip");
+		oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("zip");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("Jar (.jar)"));
+		write_type_desc[wi].ext = g_strdup(".jar");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-jar");
+		si++;
+		save_mime_type[si] = g_strdup("application/x-java-archive");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-java-archive");
+		oi++;
+		open_mime_type[oi] = g_strdup("application/x-jar");
+		oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("lha");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("Lha (.lzh)"));
+		write_type_desc[wi].ext = g_strdup(".lzh");
+                wi++;
+		save_mime_type[si++] = g_strdup("application/x-lha");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-lha");
+		oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("lzop");
+        if (str != NULL) {
+                save_mime_type[si] = g_strdup("application/x-lzop");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-lzop");
+                oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("rar");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("Rar (.rar)"));
+		write_type_desc[wi].ext = g_strdup(".rar");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-rar");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-rar");
+		oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("rpm2cpio");
+        if (str != NULL) {
+                open_mime_type[oi] = g_strdup("application/x-rpm");
+                oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("tar");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("Tar uncompressed (.tar)"));
+		write_type_desc[wi].ext = g_strdup(".tar");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-tar");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-tar");
+		oi++;
+                g_free(str);
+
+		str = g_find_program_in_path("bzip");
+                if (str != NULL) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with bzip (.tar.bz)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.bz");
+                        wi++;
+                        g_free(str);
+                }
+
+		str = g_find_program_in_path("bzip2");
+                if (str != NULL) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with bzip2 (.tar.bz2)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.bz2");
+                        wi++;
+			save_mime_type[si] = g_strdup("application/x-bzip-compressed-tar");
+                        si++;
+			open_mime_type[oi] = g_strdup("application/x-bzip-compressed-tar");
+			oi++;
+                        g_free(str);
+                }
+
+		str = g_find_program_in_path("gzip");
+                if (str != NULL) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with gzip (.tar.gz)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.gz");
+                        wi++;
+			save_mime_type[si] = g_strdup("application/x-compressed-tar");
+			si++;
+			open_mime_type[oi] = g_strdup("application/x-compressed-tar");
+			oi++;
+                        g_free(str);
+                }
+
+		str = g_find_program_in_path("lzop");
+                if (str != NULL) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with lzop (.tar.lzo)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.lzo");
+                        wi++;
+			open_mime_type[oi] = g_strdup("application/x-lzop-compressed-tar");	
+			oi++;
+                        g_free(str);
+                }
+
+		str = g_find_program_in_path("compress");
+                if (str != NULL) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with compress (.tar.Z)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.Z");
+                        wi++;
+                        g_free(str);
+                }
+
+		str = g_find_program_in_path("rar");
+        	if (str != NULL) {
+                	save_mime_type[si] = g_strdup("application/x-rar-compressed");
+                	si++;
+                	open_mime_type[oi] = g_strdup("application/x-rar-compressed");
+                	oi++;
+                	g_free(str);
+        	}
+	}		
+
+	str = g_find_program_in_path("uncompress");
+        if (str != NULL) {
+                open_mime_type[oi] = g_strdup("application/x-compress");
+                oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("unstuff");
+        if (str != NULL) {
+                open_mime_type[oi] = g_strdup("application/x-stuffit");
+                oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("unzip");
+        if (str != NULL) {
+                open_mime_type[oi] = g_strdup("application/zip");
+                oi++;
+                open_mime_type[oi] = g_strdup("application/x-zip");
+                oi++;
+                g_free(str);
+        }
+        
+	str = g_find_program_in_path("zip");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("War (.war)"));
+                write_type_desc[wi].ext = g_strdup(".war");
+                wi++;
+		write_type_desc[wi].name = g_strdup(N_("Zip (.zip)"));
+                write_type_desc[wi].ext = g_strdup(".zip");
+                wi++;
+		save_mime_type[si] = g_strdup("application/zip");
+                si++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("zoo");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("Zoo (.zoo)"));
+		write_type_desc[wi].ext = g_strdup(".7z");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-zoo");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-zoo");
+		oi++;
+                g_free(str);
+        }
+
+	str = g_find_program_in_path("7za");
+        if (str != NULL) {
+                write_type_desc[wi].name = g_strdup(N_("7-Zip (.7z)"));
+		write_type_desc[wi].ext = g_strdup(".zoo");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-7zip");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-7zip");
+		oi++;	
+                g_free(str);
+        }
+	else {
+		str = g_find_program_in_path("7z");
+        	if (str != NULL) {
+                	write_type_desc[wi].name = g_strdup(N_("7-Zip (.7z)"));
+			write_type_desc[wi].ext = g_strdup(".7z");
+                	wi++;
+			save_mime_type[si] = g_strdup("application/x-7zip");
+                	si++;
+			open_mime_type[oi] = g_strdup("application/x-7zip");
+                	oi++;
+                	g_free(str);
+		}
+        }
+
+	write_type_desc[wi].name = NULL;
+	write_type_desc[wi].ext = NULL;
+	save_mime_type[si] = NULL;
+	open_mime_type[oi] = NULL;
+}
+
+
+/* when on Automatic the user provided extension needs to be supported, 
+   otherwise an existing unsupported archive can be deleted (if the user
+   provided name matches with its name) before we find out that the 
+   archive is unsupported
+*/
+static gboolean 
+is_supported_extension (GtkWidget *file_sel, 
+			char      *filename)
+{
+	int        i;
+	GtkWidget *combo_box;
+	
+	combo_box = g_object_get_data (G_OBJECT (file_sel), "fr_combo_box");
+	if (gtk_combo_box_get_active (GTK_COMBO_BOX (combo_box)) > 0) 
+		/* not on Automatic */
+		return TRUE;
+	
+	for (i = 1; write_type_desc[i].name != NULL; i++) 
+		if (file_extension_is (filename, write_type_desc[i].ext)) 
+			return TRUE;
+	
+	return FALSE;
+}
 
 
 static char *
@@ -151,7 +448,7 @@ get_full_path (GtkWidget *file_sel)
 
 static void 
 new_file_response_cb (GtkWidget *w,
-		      gint response,
+		      int        response,
 		      GtkWidget *file_sel)
 {
 	FRWindow *window;
@@ -223,6 +520,21 @@ new_file_response_cb (GtkWidget *w,
 		GtkWidget *dialog;
 		int        r;
 
+		if (!is_supported_extension(file_sel, path)) {
+                	dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
+                                                  GTK_DIALOG_MODAL,
+                                                  GTK_STOCK_DIALOG_ERROR,
+                                                  _("Could not create the archive"),
+                                                  _("Archive type not supported."),
+                                                  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+                                                  NULL);
+                	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
+                	gtk_dialog_run (GTK_DIALOG (dialog));
+                	gtk_widget_destroy (GTK_WIDGET (dialog));
+			g_free (path);
+			return;
+		}
+
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_QUESTION,
@@ -253,6 +565,7 @@ new_file_response_cb (GtkWidget *w,
 			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
+			g_free (path);
 			return;
 		}
 	} 
@@ -266,26 +579,6 @@ void
 activate_action_new (GtkAction *action, 
 		     gpointer   data)
 {
-	static const char * save_mime_type[] = {
-		"application/x-ar",
-		"application/x-arj",
-		"application/x-bzip",
-		"application/x-bzip-compressed-tar",
-		"application/x-cd-image",
-		"application/x-compress",
-		"application/x-compressed-tar",
-		"application/x-gzip",
-		"application/x-java-archive",
-		"application/x-jar",
-		"application/x-lha",
-		"application/x-lzop",
-		"application/x-rar",
-		"application/x-rar-compressed",
-		"application/x-tar",
-		"application/x-zoo",
-		"application/zip",
-		"application/x-7zip"
-	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
 	GtkWidget *hbox;
@@ -307,7 +600,7 @@ activate_action_new (GtkAction *action,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; i < G_N_ELEMENTS (save_mime_type); i++)
+	for (i = 0; save_mime_type[i] != NULL; i++)
 		gtk_file_filter_add_mime_type (filter, save_mime_type[i]);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
@@ -327,7 +620,7 @@ activate_action_new (GtkAction *action,
 			    FALSE, FALSE, 0);
 
 	combo_box = gtk_combo_box_new_text ();
-	for (i = 0; i < G_N_ELEMENTS (write_type_desc); i++)
+	for (i = 0; write_type_desc[i].name != NULL; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
 					   _(write_type_desc[i].name));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
@@ -395,31 +688,6 @@ void
 activate_action_open (GtkAction *action, 
 		      gpointer   data)
 {
-	static const char * open_mime_type[] = {
-		"application/x-ar",
-		"application/x-arj",
-		"application/x-bzip",
-		"application/x-bzip-compressed-tar",
-		"application/x-cd-image",
-		"application/x-compress",
-		"application/x-compressed-tar",
-		"application/x-deb",
-		"application/x-gzip",
-		"application/x-jar",
-		"application/x-java-archive",
-		"application/x-lha",
-		"application/x-lzop",
-		"application/x-lzop-compressed-tar",
-		"application/x-rar",
-		"application/x-rar-compressed",
-		"application/x-rpm",
-		"application/x-stuffit",
-		"application/x-tar",
-		"application/x-zip",
-		"application/x-zoo",
-		"application/zip",
-		"application/x-7zip"
-	};
 	GtkWidget     *file_sel;
 	FRWindow      *window = data;
 	GtkFileFilter *filter;
@@ -439,7 +707,7 @@ activate_action_open (GtkAction *action,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; i < G_N_ELEMENTS (open_mime_type); i++)
+	for (i = 0; open_mime_type[i] != NULL; i++)
 		gtk_file_filter_add_mime_type (filter, open_mime_type[i]);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
@@ -543,6 +811,21 @@ save_file_response_cb (GtkWidget *w,
 		GtkWidget *dialog;
 		int r;
 
+		if (!is_supported_extension(file_sel, path)) {
+                        dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
+                                                  GTK_DIALOG_MODAL,
+                                                  GTK_STOCK_DIALOG_ERROR,
+                                                  _("Could not create the archive"),
+                                                  _("Archive type not supported."),
+                                                  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+                                                  NULL);
+                        gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
+                        gtk_dialog_run (GTK_DIALOG (dialog));
+                        gtk_widget_destroy (GTK_WIDGET (dialog));
+                        g_free (path);
+                        return;
+                }
+
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_QUESTION,
@@ -573,6 +856,7 @@ save_file_response_cb (GtkWidget *w,
 			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
+			g_free (path);
 			return;
 		}
 	} 
@@ -587,26 +871,6 @@ void
 activate_action_save_as (GtkAction *action, 
 			 gpointer   data)
 {
-	static const char * save_mime_type[] = {
-		"application/x-ar",
-		"application/x-arj",
-		"application/x-bzip",
-		"application/x-bzip-compressed-tar",
-		"application/x-cd-image",
-		"application/x-compress",
-		"application/x-compressed-tar",
-		"application/x-gzip",
-		"application/x-lha",
-		"application/x-lzop",
-		"application/x-jar",
-		"application/x-java-archive",
-		"application/x-rar",
-		"application/x-rar-compressed",
-		"application/x-tar",
-		"application/x-zoo",
-		"application/zip",
-		"application/x-7zip"
-	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
 	GtkWidget *hbox;
@@ -628,7 +892,7 @@ activate_action_save_as (GtkAction *action,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; i < G_N_ELEMENTS (save_mime_type); i++)
+	for (i = 0; save_mime_type[i] != NULL; i++)
 		gtk_file_filter_add_mime_type (filter, save_mime_type[i]);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
@@ -644,8 +908,9 @@ activate_action_save_as (GtkAction *action,
 	gtk_box_pack_start (GTK_BOX (hbox), 
 			    gtk_label_new (_("Archive type:")),
 			    FALSE, FALSE, 0);
+	
 	combo_box = gtk_combo_box_new_text ();
-	for (i = 0; i < G_N_ELEMENTS (write_type_desc); i++)
+	for (i = 0; write_type_desc[i].name != NULL; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
 					   _(write_type_desc[i].name));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);

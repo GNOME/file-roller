@@ -512,6 +512,32 @@ fr_command_cfile_new (FRProcess         *process,
 {
 	FRCommand *comm;
 
+	if ((prog == FR_COMPRESS_PROGRAM_GZIP) &&
+	    (!is_program_in_path("gzip"))) {
+		return NULL;
+	}
+
+	if ((prog == FR_COMPRESS_PROGRAM_BZIP) &&
+	    (!is_program_in_path("bzip"))) { 
+		return NULL;
+	}
+
+	if ((prog == FR_COMPRESS_PROGRAM_BZIP2) &&
+	    (!is_program_in_path("bzip2"))) {
+		return NULL;
+	}
+
+	if ((prog == FR_COMPRESS_PROGRAM_COMPRESS) && 
+	    ((!is_program_in_path("compress")) || 
+	     (!is_program_in_path("uncompress")))) {
+		return NULL;
+	}
+
+	if ((prog == FR_COMPRESS_PROGRAM_LZOP) &&
+	    (!is_program_in_path("lzop"))) {
+		return NULL;
+	}
+
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_CFILE, NULL));
 	fr_command_construct (comm, process, filename);
 	FR_COMMAND_CFILE (comm)->compress_prog = prog;

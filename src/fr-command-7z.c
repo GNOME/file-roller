@@ -399,6 +399,11 @@ fr_command_7z_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
+	if ((!is_program_in_path("7za")) &&
+	    (!is_program_in_path("7z"))) {
+		return NULL;
+	}
+
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_7Z, NULL));
 	fr_command_construct (comm, process, filename);
 
