@@ -23,7 +23,6 @@
 #include <config.h>
 #include <math.h>
 #include <string.h>
-#include <fnmatch.h>
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <libgnomeui/gnome-icon-lookup.h>

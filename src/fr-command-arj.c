@@ -310,7 +310,10 @@ fr_command_arj_extract (FRCommand  *comm,
 
 	fr_process_begin_command (comm->process, "arj");
 
-	fr_process_add_arg (comm->process, "e");
+	if (junk_paths)
+		fr_process_add_arg (comm->process, "e");
+	else
+		fr_process_add_arg (comm->process, "x");
 
 	if (dest_dir != NULL) {
 		char *e_dest_dir = shell_escape (dest_dir);
@@ -325,9 +328,6 @@ fr_command_arj_extract (FRCommand  *comm,
 
 	if (skip_older)
 		fr_process_add_arg (comm->process, "-u");
-
-	if (junk_paths)
-		fr_process_add_arg (comm->process, "-e");
 
 	if (password != NULL) {
 		char *swtch = g_strconcat ("-g/", password, NULL);

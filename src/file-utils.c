@@ -20,7 +20,6 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
-#include <fnmatch.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,6 +38,8 @@
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <gconf/gconf-client.h>
 #include "file-utils.h"
+#include "utf8-fnmatch.h"
+
 
 #define BUF_SIZE 4096
 
@@ -575,15 +576,12 @@ application_get_command (const GnomeVFSMimeApplication *app)
 }
 
 
-#define CASE_INSENSITIVE (1 << 4)
-
-
 gboolean
 match_patterns (char       **patterns, 
 		const char  *string)
 {
-	gint i;
-	gint result;
+	int i;
+	int result;
        
 	if (patterns[0] == NULL)
 		return TRUE;
@@ -594,7 +592,7 @@ match_patterns (char       **patterns,
 	result = FNM_NOMATCH;
 	i = 0;
 	while ((result != 0) && (patterns[i] != NULL)) {
-		result = fnmatch (patterns[i], string, CASE_INSENSITIVE);
+		result = g_utf8_fnmatch (patterns[i], string, FNM_CASEFOLD);
 		i++;
 	}
 	

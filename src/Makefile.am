@@ -96,6 +96,8 @@ file_roller_SOURCES = 			\
 	preferences.h			\
 	toolbar.h			\
 	typedefs.h			\
+	utf8-fnmatch.c			\
+	utf8-fnmatch.h			\
 	window.h			\
 	window.c			\
 	$(BUILT_SOURCES)
