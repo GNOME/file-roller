@@ -355,16 +355,18 @@ static void _window_update_statusbar_list_info (FRWindow *window);
 
 #define MAX_S_TIME_LEN 128
 
-static const char *
+static char *
 get_time_string (time_t time)
 {
 	struct tm   *tm;
-	static char  s_time[MAX_S_TIME_LEN];
+	char         s_time[MAX_S_TIME_LEN];
+	char        *time_utf8;
 
 	tm = localtime (& time);
 	strftime (s_time, MAX_S_TIME_LEN - 1, "%d %b %Y, %H:%M", tm);
-	
-	return s_time;
+	time_utf8 = g_locale_to_utf8 (s_time, -1, NULL, NULL, NULL);
+
+	return time_utf8;
 }
 
 #undef MAX_S_TIME_LEN
@@ -622,7 +624,7 @@ update_file_list_idle (gpointer callback_data)
 					    -1);
 		else {
 			char       *s_size;
-			const char *s_time;
+			char       *s_time;
 			const char *desc;
 			char       *utf8_path;
 
@@ -643,6 +645,7 @@ update_file_list_idle (gpointer callback_data)
 					    -1);
 			g_free (utf8_path);
 			g_free (s_size);
+			g_free (s_time);
 		}
 		g_free (utf8_name);
 		g_object_unref (pixbuf);
