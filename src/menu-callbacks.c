@@ -774,7 +774,7 @@ about_cb (GtkWidget *widget,
 	static GtkWidget *about = NULL;
 	GdkPixbuf        *logo;
 	const char       *authors[] = {
-		"Paolo Bacchilega", NULL
+		"Paolo Bacchilega <paolo.bacch@tin.it>", NULL
 	};
 	const char       *documenters [] = {
 		"Alexander Kirillov", NULL

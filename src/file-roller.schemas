@@ -8,8 +8,13 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Install Nautilus scripts</short>
+          <long>Whether the Nautilus scripts should be installed next time 
+	    File Roller is started.  The scripts are : Add_to_archive (add 
+	    selected files to an archive); Extract_to (extract archive asking
+	    the destination folder); Extract_here (extract archive in the 
+	    current folder); Extract_in_a_subfolder (extract archive in a 
+	    subfolder with the same name of the archive). </long>
         </locale>
       </schema>
 
@@ -20,8 +25,10 @@
         <type>string</type>
         <default>name</default>
         <locale name="C">
-          <short></short>
-          <long>Possible values: name, size, type, time, path.</long>
+          <short>How to sort files</short>
+          <long>What criteria must be used to arrange files. Possible values:
+	    name, size, type, time, path.
+	  </long>
         </locale>
       </schema>
 
@@ -32,8 +39,9 @@
         <type>string</type>
         <default>ascending</default>
         <locale name="C">
-          <short></short>
-          <long>Possible values: ascending, descending.</long>
+          <short>Sort type</short>
+          <long>Whether to sort in ascending or descending direction. Possible
+	    values: ascending, descending.</long>
         </locale>
       </schema>
 
@@ -44,8 +52,9 @@
         <type>string</type>
         <default>as_folder</default>
         <locale name="C">
-          <short></short>
-          <long>Possible values: all_files, as_folder.</long>
+          <short>List Mode</short>
+          <long>Whether to view all files in the archive (all_files), or
+	    view the archive as a folder (as_folder).</long>
         </locale>
       </schema>
 
@@ -56,8 +65,8 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Display name</short>
+          <long>Display the Name column in the main window.</long>
         </locale>
       </schema>
 
@@ -68,8 +77,8 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Display type</short>
+          <long>Display the Type column in the main window.</long>
         </locale>
       </schema>
 
@@ -80,8 +89,8 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Display size</short>
+          <long>Display the Size column in the main window.</long>
         </locale>
       </schema>
 
@@ -92,8 +101,8 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Display time</short>
+          <long>Display the Time column in the main window.</long>
         </locale>
       </schema>
 
@@ -104,8 +113,8 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Display path</short>
+          <long>Display the Path column in the main window.</long>
         </locale>
       </schema>
 
@@ -116,8 +125,10 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Use mime icons</short>
+          <long>if TRUE will display icons depending on the file type (slower),
+	    otherwise will use always the same icon for all files (faster).
+	  </long>
         </locale>
       </schema>
 
@@ -128,8 +139,8 @@
         <type>int</type>
         <default>5</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Max history length</short>
+          <long>Max number of items in the Open Recents menu.</long>
         </locale>
       </schema>
 
@@ -140,8 +151,8 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>View toolbar</short>
+          <long>Whether to display the toolbar.</long>
         </locale>
       </schema>
 
@@ -152,8 +163,8 @@
         <type>bool</type>
         <default>true</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>View statusbar</short>
+          <long>Whether to display the statusbar.</long>
         </locale>
       </schema>
 
@@ -165,8 +176,9 @@
 	<list_type>string</list_type>
         <default>[]</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>Editors</short>
+          <long>List of applications entered in the Open file dialog and not associated
+	    with the file type.</long>
         </locale>
       </schema>
 
@@ -177,8 +189,9 @@
         <type>bool</type>
         <default>false</default>
         <locale name="C">
-          <short></short>
-          <long></long>
+          <short>View destination folder after extraction</short>
+          <long>Whether to display (with Nautilus) the destination folder after an
+	    extraction operation.</long>
         </locale>
       </schema>
 
@@ -189,8 +202,9 @@
         <type>string</type>
         <default>normal</default>
         <locale name="C">
-          <short></short>
-          <long>Possible values : very_fast, fast, normal, maximum.</long>
+          <short>Compression level</short>
+          <long>Compression level used when adding files to an archive. Possible 
+	    values : very_fast, fast, normal, maximum.</long>
         </locale>
       </schema>
 
