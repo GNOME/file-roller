@@ -1,0 +1,85 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.52)
+ 
+AC_INIT(file-roller, 2.0.0)
+AC_CONFIG_SRCDIR(src/main.c)
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_CONFIG_HEADER(config.h)
+
+dnl ==========================================================================
+dnl
+dnl If you add a version number here, you *must* add an AC_SUBST line for
+dnl it too, or it will never make it into the spec file!
+dnl
+dnl ==========================================================================
+
+GLIB_REQUIRED=2.0.0
+GTK_REQUIRED=2.0.0
+LIBGNOME_REQUIRED=2.0.0
+LIBGNOMEUI_REQUIRED=2.0.0
+GNOME_VFS_REQUIRED=2.0.0
+LIBGLADE_REQUIRED=2.0.0
+BONOBO_ACTIVATION_REQUIRED=1.0.0
+LIBBONOBO_REQUIRED=2.0.0
+LIBBONOBOUI_REQUIRED=2.0.0
+
+AC_SUBST(GLIB_REQUIRED)
+AC_SUBST(GTK_REQUIRED)
+AC_SUBST(LIBGNOME_REQUIRED)
+AC_SUBST(LIBGNOMEUI_REQUIRED)
+AC_SUBST(GNOME_VFS_REQUIRED)
+AC_SUBST(LIBGLADE_REQUIRED)
+AC_SUBST(BONOBO_ACTIVATION_REQUIRED)
+AC_SUBST(LIBBONOBO_REQUIRED)
+AC_SUBST(LIBBONOBOUI_REQUIRED)
+
+dnl ===========================================================================
+
+PKG_CHECK_MODULES(FR, 		\
+	glib-2.0 		\
+	gthread-2.0		\
+	gtk+-2.0 		\
+	libgnome-2.0 		\
+	libgnomeui-2.0		\
+	gnome-vfs-2.0		\
+	gnome-vfs-module-2.0	\
+	libglade-2.0		\
+	bonobo-activation-2.0)
+AC_SUBST(FR_CFLAGS)
+AC_SUBST(FR_LIBS)
+
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+
+dnl ******************************
+
+ALL_LINGUAS="es bg de fr_FR it ja ko nl no pl pt_BR ru sv"
+
+GETTEXT_PACKAGE=file-roller-2.0
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
+
+AM_GLIB_GNU_GETTEXT
+
+AC_PROG_INTLTOOL
+
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(LOCALEDIR, "${ac_default_prefix}/${DATADIRNAME}/locale")
+else
+  AC_DEFINE_UNQUOTED(LOCALEDIR, "${prefix}/${DATADIRNAME}/locale")
+fi
+
+dnl ******************************
+
+dnl ******************************
+
+AC_OUTPUT([
+Makefile
+file-roller.spec
+scripts/Makefile
+src/Makefile
+src/icons/Makefile
+po/Makefile.in
+help/Makefile
+help/C/Makefile
+])

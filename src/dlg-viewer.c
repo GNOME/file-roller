@@ -1,0 +1,180 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+
+/*
+ *  File-Roller
+ *
+ *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
+ */
+
+#include <config.h>
+#include <string.h>
+
+#include <gtk/gtk.h>
+#include <glade/glade.h>
+#include <libgnomeui/gnome-file-entry.h>
+#include <libgnomevfs/gnome-vfs-types.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
+#include "misc.h"
+#include "window.h"
+#include "gnome-vfs-helpers.h"
+
+
+#define PROP_GLADE_FILE "file_roller.glade2"
+
+
+typedef struct {
+	GladeXML  *gui;
+	FRWindow  *window;
+	GtkWidget *dialog;
+	GtkWidget *pw_password_entry;
+} DialogData;
+
+
+/* called when the main dialog is closed. */
+static void
+destroy_cb (GtkWidget  *widget,
+            DialogData *data)
+{
+	g_object_unref (data->gui);
+        g_free (data);
+}
+
+
+static void
+close_clicked_cb (GtkWidget  *widget,
+		  DialogData *data)
+{
+	gtk_widget_destroy (data->dialog);
+}
+
+
+static void
+load_document (GtkTextBuffer *text_buf, 
+	       const char    *filename)
+{  
+	char           *file_contents;
+        GnomeVFSResult  res;
+        gsize           file_size;
+        GtkTextIter     iter;
+	char           *uri;
+
+	uri = g_strconcat ("file://", filename, NULL);
+	res = gnome_vfs_x_read_entire_file (uri, &file_size, &file_contents);
+	g_free (uri);
+
+	if (res != GNOME_VFS_OK) {
+		/* FIXME : popup a dialog. */
+		return;
+	}
+	
+	if (file_size > 0) {
+		if (!g_utf8_validate (file_contents, file_size, NULL)) {
+			/* The file contains invalid UTF8 data.
+			 * Try to convert it to UTF-8 from currence locale */
+			GError *conv_error = NULL;
+			char   *converted_file_contents = NULL;
+			gsize   bytes_written;
+                        
+			converted_file_contents = g_locale_to_utf8 (file_contents, file_size, NULL, &bytes_written, &conv_error); 
+                        
+                        g_free (file_contents);
+
+                        if ((conv_error != NULL) || 
+                            !g_utf8_validate (converted_file_contents, bytes_written, NULL)) {
+                                /* Coversion failed */
+                                if (conv_error != NULL)
+                                        g_error_free (conv_error);
+
+				/* FIXME  : popup a dialog.
+				 * g_print ("Invalid UTF-8 data\n"); 
+				 */
+
+                                if (converted_file_contents != NULL)
+                                        g_free (converted_file_contents);
+                                
+                                return;
+                        }
+
+                        file_contents = converted_file_contents;
+                        file_size = bytes_written;
+                }
+		
+                /* Insert text in the buffer */
+                gtk_text_buffer_get_iter_at_offset (text_buf, &iter, 0);
+                gtk_text_buffer_insert (text_buf, &iter, file_contents, file_size);
+
+                /* Place the cursor at the start of the document */
+                gtk_text_buffer_get_iter_at_offset (text_buf, &iter, 0);
+                gtk_text_buffer_place_cursor (text_buf, &iter);
+        }
+
+        g_free (file_contents);
+}
+
+
+void
+dlg_viewer (FRWindow   *window,
+	    const char *filename)
+{
+	DialogData    *data;
+	GtkWidget     *text_view;
+	GtkWidget     *close_button;
+	GtkTextBuffer *text_buf;
+
+        data = g_new (DialogData, 1);
+	data->window = window;
+	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
+	if (!data->gui) {
+                g_warning ("Could not find " PROP_GLADE_FILE "\n");
+                return;
+        }
+
+        /* Get the widgets. */
+
+	data->dialog = glade_xml_get_widget (data->gui, "viewer_dialog");
+	text_view = glade_xml_get_widget (data->gui, "v_viewer_textview");
+	close_button = glade_xml_get_widget (data->gui, "v_close_button");
+
+	/* Set widgets data. */
+
+	text_buf = gtk_text_buffer_new (NULL);
+	gtk_text_buffer_create_tag (text_buf, "monospace",
+				    "family", "monospace", NULL);
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (text_view), text_buf);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
+	g_object_unref (text_buf);
+
+	load_document (text_buf, filename);
+
+	/* Set the signals handlers. */
+
+	g_signal_connect (G_OBJECT (data->dialog), 
+			  "destroy",
+			  G_CALLBACK (destroy_cb),
+			  data);
+
+	g_signal_connect (G_OBJECT (close_button),
+			  "clicked",
+			  G_CALLBACK (close_clicked_cb),
+			  data);
+
+	/* Run dialog. */
+
+        gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
+				      GTK_WINDOW (window->app));
+	gtk_widget_show (data->dialog);
+}

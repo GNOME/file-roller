@@ -1,0 +1,213 @@
+2002-07-27  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* configure.in (GNOME_VFS_REQUIRED): updated required libraries 
+	version.
+
+	* src/dlg-viewer.c (dlg_viewer): do not let edit the text.
+
+2002-07-24  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* help/C/file-roller.xml: s/directory/folder/g
+
+2002-07-23  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/main.c (install_scripts): ensure the existence of the scripts
+	folder before installing the scripts.
+
+2002-07-19  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command-zip.c (mktime_from_string): Fixed year computation.
+
+	* src/dlg-preferences.c (dlg_preferences): Add an option to install or
+	remove Nautilus scripts.
+
+2002-07-18  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (open_nautilus): escape folder name.
+
+	* src/main.c (install_scripts): New functions to install the nautilus
+	scripts.
+	* src/preferences.[ch]: New option to keep trace whether we need to 
+	install the scripts.
+	
+	* scripts/Add_to_archive: 
+	* scripts/Extract_here: 
+	* scripts/Extract_in_a_subfolder: 
+	* scripts/Extract_to: Fixed handling of paths with spaces.
+	
+2002-07-11  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (open_nautilus): Use g_spawn_command_line_async instead
+	of gnome_execute_shell and display an error dialog if this is the case.
+
+2002-07-08  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (window_view_last_output): 
+	* src/misc.c (misc_error_dialog_new): Use bytes_written as text len.
+
+2002-07-06  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (window_close): destroy the tooltips when closing 
+	the window.
+
+2002-07-05  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* help/C/file-roller.xml: Updated documentation of the extraction
+	dialog.
+
+	* src/dlg-extract.c (dlg_extract): 
+	* src/dlg-preferences.c (dlg_preferences): Add the help button.
+
+	* src/fr-process.c (start_current_command): Free command string.
+
+2002-07-04  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/file_roller.glade2: reorganize the extraction dialog.
+	
+	* src/dlg-extract.c: 
+	* src/window.c (_action_performed): 
+	* src/preferences.c: Add an option to view the destination folder 
+	after the extraction.
+
+2002-07-02  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (window_view_file): 
+	(window_open_files): 
+	* src/fr-archive.c (fr_archive_extract): create the temp dirs with 0700
+	mode.
+
+	* src/window.c (file_list_drag_begin): 
+	(window_archive_extract): 
+	* src/dlg-extract.c (ok_clicked_cb): create destination dirs with 0755 
+	mode.
+
+	* src/dlg-add.c (save_options_cb): 
+	(load_options_cb): Create .file-roller dir with 0700 mode.
+
+	* src/file-utils.c (ensure_dir_exists): Add a mode parameter.
+	
+2002-06-30  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/misc.c (misc_error_dialog_new): set resizable to FALSE.
+
+	* POTFILES.in: updated.
+
+2002-06-28  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/dlg-open-with.c (app_activated_cb): 
+	(recent_activated_cb): Use row_activated signal to start command.
+
+2002-06-27  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/misc.c (misc_error_dialog_new): 
+	* src/window.c (window_view_last_output): convert to UTF-8 before
+	displaing output.
+
+2002-06-18  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (_window_update_sensitivity): make password item 
+	sensitive only when the command support passwords.
+	(get_file_list_from_url_list): unescape dropped files paths.
+
+	* src/menu.h: options menu re-arranged.
+	
+2002-06-17  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/menu.h: actions menu re-arranged.
+
+	* src/dlg-extract.c (ok_clicked_cb): Check directory existence and 
+	permissions here and do not close the dialog if an error occurred so
+	the user can re-type the directory without invoking the command again.
+
+	* src/window.c (open_files): 
+	* src/main.c (command_done): 
+	(release_data): remove temp dirs at exit, not when the external
+	applications are closed.	
+
+	* src/fr-process.c (fr_process_finalize): do not emit signals when
+	finalizing the process.
+
+2002-06-09  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* Makefile.am:
+	* configure.in: remove viewer subdir.
+
+	* src/window.c (view_file): Use Nautilus as document viewer.  If the
+	file has no mime type or action associated use the internal viewer.
+
+	* src/dlg-viewer.h: 
+	* src/dlg-viewer.c: The internal viewer is now a simple text viewer.
+
+	* src/gnome-vfs-helpers.h: 
+	* src/gnome-vfs-helpers.c: Used by the internal viewer to load the 
+	document.
+
+2002-06-08  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/dlg-password.c: 
+	* src/dlg-password.h: New files.  Implement the password dialog.
+
+	* src/window.h: 
+	* src/window.c: Added a password variable.
+	
+	* src/fr-command.h: 
+	* src/fr-command.h: Added a password argument to add and extract.
+
+	* src/fr-command-zip.c (fr_command_zip_test): Implement the test.
+
+	* src/fr-command.h:
+	* src/fr-command.c: Added a virtual test function.
+
+	* src/fr-process.c (fr_process_set_err_line_func): new function used
+	to process the standard error.
+	(fr_process_set_out_line_func): renamed fr_process_set_proc_line_func
+	to fr_process_set_out_line_func.
+
+	* src/fr-process.h: Added an error buffer.
+
+	* src/fr-process.c (start_current_command): uses 
+	g_spawn_async_with_pipes.
+
+2002-06-05  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* help/*: Manual.
+	
+	* src/*.glade2
+	* src/dlg-add.c (add_cb): Added mnemonics to all dialogs.
+
+2002-06-03  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/file-utils.c: add ';' to bad_char.
+
+2002-05-27  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* configure.in: added AC_PREREQ(2.50)
+
+2002-05-18  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* all files: merged changes from file-roller 1.0.1
+
+2002-05-04  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* viewer/main.c (build_component_menu): Use a menu to show available 
+	components.
+
+2002-05-03  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.c (get_icon): Add a reference to the pixbuf if we use an
+	internal icon.
+	(get_icon_path_from_name): Add .nautilus/themes to the search path.
+
+2002-05-02  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* scripts/: Added Extract_here and Extract_in_a_subfolder 
+
+2002-04-29  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/main.c (prepare_app): Added '--force' command line option.
+
+2002-04-26  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/menu.h: Added some keyboard shortcuts.
+	
+	* imported all files

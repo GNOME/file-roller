@@ -1,0 +1,1041 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+  <!ENTITY legal SYSTEM "legal.xml">
+  <!ENTITY appversion "2.0.0">
+  <!ENTITY manrevision "2.0">
+  <!ENTITY date "June  2002">
+  <!ENTITY fr "<application>File Roller</application>">
+  <!-- Information about the entities
+       The legal.xml file contains legal information, there is no need to edit the file. 
+       Use the appversion entity to specify the version of the application.
+       Use the manrevision entity to specify the revision number of this manual.
+       Use the date entity to specify the release date of this manual.
+       Use the fr entity to specify the name of the application. -->
+]>
+<!-- 
+      (Do not remove this comment block.)
+  Maintained by the GNOME Documentation Project
+  http://developer.GNOME.org/projects/gdp
+  Template version: 2.0 beta
+  Template last modified Jan 30, 2002
+-->
+<!-- =============Document Header ============================= -->
+<article id="index" lang="en">
+<!-- please do not change the id; for translations, change lang to -->
+<!-- appropriate code -->
+  <articleinfo> 
+    <title>File Roller Manual &manrevision;</title>       
+
+    <copyright> 
+      <year>2002</year> 
+      <holder>Alexander Kirillov</holder> 
+    </copyright> 
+
+<!-- translators: uncomment this:
+
+  <copyright>
+   <year>2002</year>
+   <holder>ME-THE-TRANSLATOR (Latin translation)</holder>
+  </copyright>
+
+   -->
+<!-- An address can be added to the publisher information.  If a role is 
+     not specified, the publisher/author is the same for all versions of the 
+     document.  -->
+    <publisher> 
+      <publishername> GNOME Documentation Project </publishername> 
+    </publisher> 
+
+   &legal; <!-- This file contains link to license for the
+   documentation (GNU FDL), and other legal stuff such as "NO
+   WARRANTY" statement. Please do not change any of this. -->
+
+    <authorgroup> 
+      <author> 
+	<firstname>Alexander</firstname> 
+	<surname>Kirillov</surname> 
+	<affiliation> 
+	  <orgname>GNOME Documentation Project</orgname> 
+	  <address> <email>kirillov@math.sunysb.edu</email> </address> 
+	</affiliation> 
+      </author> 
+    </authorgroup>
+
+
+    <releaseinfo> This manual describes version &appversion; of &fr;.
+    </releaseinfo> 
+  </articleinfo> 
+
+  <indexterm zone="index"> 
+    <primary>File Roller</primary> 
+  </indexterm> 
+  <indexterm zone="index"> 
+    <primary>file-roller</primary> 
+  </indexterm>
+  <indexterm zone="index"> 
+    <primary>Archiving</primary> 
+  </indexterm>
+
+<!-- ============= Document Body ============================= -->
+<!-- ============= Introduction ============================== -->
+<!-- Use the Introduction section to give a brief overview of what
+     the application is and what it does. -->
+  <sect1 id="fr-introduction"> 
+    <title>Introduction</title> 
+    <para>The &fr; is a graphical application for viewing, unpacking,
+      and creating archive files. An archive file is a file that
+      acts as a container for other files. An archive can contain
+      many files, folders, and subfolders, usually in
+      compressed form. There are many types of archives, using
+      different formats and  compression methods. 
+    </para>
+    <para>	
+      &fr; provides the following
+      features:</para> 
+    <itemizedlist> 
+      <listitem> 
+	<para>Support for the following archive formats:</para> 
+	<itemizedlist> 
+	  <listitem> 
+	    <para>Uncompressed tar archive (<filename>.tar</filename>)</para> 
+	  </listitem> 
+	  <listitem> 
+	    <para>Tar archive compressed with
+	      <application>gzip</application> 
+	      (<filename>.tar.gz, .tgz</filename>). This is the most
+	      common archive format on Unix and Linux systems.  
+	    </para>  
+	  </listitem> 
+	  <listitem><para>Tar archive compressed with
+	      <application>bzip</application> 
+	      (<filename>.tar.bz</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Tar archive compressed with
+	      <application>bzip2</application> 
+	      (<filename>.tar.bz2</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Tar archive compressed with
+	      <application>compress</application> 
+	      (<filename>.tar.Z</filename>). 
+	    </para>
+	  </listitem>
+
+	  <listitem><para>
+	      Archives created with
+	      <application>PKZIP</application> or
+	      <application>WinZip</application> 
+	      (<filename>.zip</filename>). This is the  de-facto standard
+	      archive type on Microsoft Windows systems.
+	    </para>
+	  </listitem>
+	  <listitem><para>Lha archive 
+	      (<filename>.lha</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Rar archive 
+	      (<filename>.rar</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Lha archive 
+	      (<filename>.lzh</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Ear archive 
+	      (<filename>.ear</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>Jar archive 
+	      (<filename>.jar</filename>). 
+	    </para>
+	  </listitem>
+	  <listitem><para>War archive 
+	      (<filename>.war</filename>). 
+	    </para>
+	  </listitem>
+
+
+	</itemizedlist> 
+      </listitem> 
+      <listitem> 
+	<para> Ability to view files in the archive using 
+	  either Bonobo-enabled <quote>viewers</quote> for fast
+	  viewing or any application installed on your system when
+	  more advanced features are neeeded.  
+	</para>
+      </listitem> 
+      <listitem> 
+	<para>Ability to add or remove files from an existing
+	  archive.  </para> 
+      </listitem> 
+      <listitem> 
+	<para>Drug and drop support.</para> 
+      </listitem> 
+    </itemizedlist>
+    <para> 
+      Please note that &fr; provides just the graphical interface; it
+      relies on command-line utilities such as <command>tar</command>,
+      <command>gzip</command>, <command>bzip2</command> for for its
+      operations. Thus, it will only support the formats listed above
+      if you have appropriate command line tools installed on
+      your system. Most Linux distributions include all of these
+      tools. 
+    </para>
+    <para>To start &fr;  open the 
+	<guimenu> Main Menu</guimenu>, then choose 
+	<menuchoice> 
+	  <guimenu>Programs</guimenu> 
+	  <guisubmenu>Utilities</guisubmenu> 
+	  <guimenuitem>File Roller</guimenuitem> 
+	</menuchoice>. </para> 
+    <para>
+      You can also start &fr; from the command line. To do so, type
+      <command>file-roller</command> or <command>file-roller
+      <replaceable>filename.tar.gz</replaceable></command>  and press
+      <keycap>Return</keycap>. Here
+      <replaceable>filename.tar.gz</replaceable> is the name of the
+      archive file you want to open. 
+    </para>
+
+
+  </sect1>
+
+<!-- =========== Opening and viewing archives ========================= -->
+
+  <indexterm zone="fr-opening-viewing"> 
+    <primary>Archives</primary> 
+    <secondary>Viewing</secondary>
+  </indexterm> 
+
+
+  <sect1 id="fr-opening-viewing"> 
+    <title>Opening and Viewing Archives</title> 
+
+
+<!-- ======= Opening an archive file ============= --> 
+    <sect2 id="fr-opening">
+      <title>Opening an Archive File</title>
+      <para>
+	To open an archive file, choose <menuchoice>
+	  <guimenu>File</guimenu> <guimenuitem>Open
+	  Archive</guimenuitem> </menuchoice>
+	  (<keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>),
+	  or click <guibutton>Open</guibutton> button in the
+	  toolbar. The <guilabel>Open File</guilabel> dialog is
+	  displayed. Select the file that you want to open, then click
+	  <guibutton>OK</guibutton>. &fr; will automatically determine
+	  archive type and and show its contents in the main
+	  window. You can also use <guibutton>Open</guibutton> button
+	  on the toolbar, or drag a file from another application such
+	  as a file manager.
+      </para>
+      <para>
+	If you try to open an archive file format that &fr; does
+	not recognize, the application displays an error
+	message.
+      </para>
+      <para>
+	If the archive file is very large, or you have a slow system,
+	the operation of opening the archive can take significant
+	time. If you want to abort this operation, press
+	<keycap>Esc</keycap> key or click <guibutton>Stop</guibutton>
+	button in the toolbar. 
+      </para>      
+
+    </sect2>
+
+<!-- ======= Viewing an archive file ============= --> 
+    <sect2 id="fr-viewing">
+      <title>Viewing an Archive Contents</title>
+
+      <para>
+	Once you have opened an archive, its contents is shown in &fr;
+         main window (see <xref linkend="fr-mainwindow-fig"/>). 
+      </para>
+      <figure id="fr-mainwindow-fig">
+	<title>&fr; Main Window </title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-mainwindow.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+      <para>
+	This window shows the list of all files and folders in the
+         archive, with their names, types, modification dates and
+         other information. <guilabel>Size</guilabel> field shows
+         uncompressed size, i.e. the size the file would have if you
+         extracted it from the archive. <guilabel>Modifed</guilabel>
+         filed shows the date this file was last modified. 
+      </para>
+      <para>
+	In addition, archive name is shown in
+         window titlebar, and total number of files and  size of the
+         archive (uncompressed - i.e., the total size these fiels
+         would have after extracting)  is shown at the bottom of the
+         window. 
+      </para>
+    </sect2>
+
+
+
+<!-- ======= Viewing an archive file ============= --> 
+    <sect2 id="fr-viewing-folder">
+      <title>Folder View and File View</title>
+      <para>
+	If the archive contains subfolders, you can choose one of
+	two possible ways to show its contents, <guilabel>Folder
+	  View</guilabel> and <guilabel>File View</guilabel>. You can
+	switch between these views using <guimenu>Options</guimenu>
+	menu. 
+      </para>
+      <para>
+	In <guilabel>Folders View</guilabel> (default), the
+	subfolders are shown in the same way as in a file
+	manager. That is, for each subfolder the list shows the
+	folder icon and the subfolder name. To view the contents of a
+	subfolder, double-click on it.  To go up one level in the
+	folder tree, click on the <guibutton>Up</guibutton> button in
+	the toolbar. In this view, the toolbar also contains
+	<guilabel>Location</guilabel> field, which shows the full
+	pathname of the currently shown folder.
+      </para>
+      <para>
+	In the <guilabel>File View</guilabel>, all files in the archive
+	- including those in subfolders - are shown in a flat
+	list. 
+      </para>
+    </sect2>
+    
+<!-- ======= Viewing an archive file ============= --> 
+    <sect2 id="fr-viewing-custom">
+      <title>Customizing the File List</title>
+      <para>&fr; allows you to customize the way files are shown as
+	follows:
+      </para>
+      <itemizedlist>
+
+	<listitem><para> 
+	    Switching between <guilabel>Folder
+	    View</guilabel> and <guilabel>File View</guilabel> - see
+	    <xref linkend="fr-viewing-folder"/>.
+	  </para></listitem>
+
+	<listitem><para>
+	    Selecting the columns to show (<guilabel>Name</guilabel>,
+	    <guilabel>Type</guilabel>, <guilabel>Size</guilabel>, etc) -
+	    see <xref linkend="fr-prefs"/>. 
+	  </para></listitem> 
+	<listitem><para>
+	    Selecting the order of files in the list. You can have the
+	    files sorted by name, size, etc. To switch between these
+	    orderings, choose <menuchoice><guimenu>Options</guimenu>
+	      <guisubmenu>Sort File
+		List</guisubmenu></menuchoice>. Alternatively, you can just
+	    click on the heading of the corresponding column; for
+	    example, to have files sorted by modification date (earliest
+	    to latest), click on <guilabel>Modified</guilabel>
+	    heading. Clicking on the heading again reverses the order (in
+	    this case, it will order the files latest to earliest).    
+	  </para></listitem> 
+      </itemizedlist>
+    </sect2>
+  </sect1>
+
+  <!-- =============  Viewing a file in  an Archive ==================== -->
+  <sect1 id="fr-viewing-file"> 
+    <title>Viewing a File in  an Archive</title> 
+    <para>
+      The simplest way to view a file in the archive is to
+      double-click on the file in &fr; main window. Alternatively, you
+      can select the file and click <guibutton>View</guibutton> button
+      in the toolbar. &fr; will automatically determine the
+      appropriate viewer or application for this file type (using
+      information shown in <guilabel>File Types and
+      Programs</guilabel> section of GNOME Control Center) and launch
+      it.  If &fr; can not determine the appropriate viewer or
+      application, it will prompt you to select one. 
+    </para>
+     <note>
+      <title>Viewers and Applications</title>
+      <para>
+	The difference between viewers and applications is that viewers
+	show file contents inside a &fr; window and thus do not require
+	launching a separate application. Viewers are usually much
+	faster to start but have very limited functionality
+      </para>
+      <para>For advanced users, we note that these viewers are not
+	a part of &fr;. Instead, they are provided by other GNOME
+	applications and use special technology
+	(<application>bonobo</application>) which allows them to work
+	inside &fr; window. Thus, the number of viewers available to
+	&fr; depends on bonobo-enabled applications installed on your
+	system. 
+      </para>
+    </note>
+     <warning>
+      <title>WARNING</title>
+      <para>
+	Please note that &fr; only allows you to view a file but not
+	change it. If you open a file with an application and make any
+	changes to it, these changes <emphasis>will not</emphasis> be
+	saved in the archive, even if you clicked
+	<guibutton>Save</guibutton> button in the application. (The
+	reason is that &fr; creates a temporary copy of the file and
+	then passes this copy to the application. This temporary copy
+	is deleted after you close the application, and the changes are
+	lost.)
+      </para>
+      <para>
+	If you want to edit  a file in the archive and have your
+	changes saved in the archive, you should <link
+	  linkend="fr-extracting">extract</link>
+	the file to  a temporary location, edit it, and then <link
+	  linkend="fr-adding-files">add</link> this file back to the archive,
+	overwriting the original.   
+      </para>
+    </warning>
+    <para>
+      You can also view a file using the viewer or application you
+      specify rather than the default one. To open a file using an
+      internal viewer, choose <menuchoice><guimenu>Actions</guimenu>
+      <guimenuitem>View file</guimenuitem></menuchoice> or right-click
+      on the filename and choose <guimenuitem>View
+      file</guimenuitem>. &fr; will open the file using the most
+      appropriate viewer for files of this type; if it can't find a
+      viewer, it will try to show the file using text viewer.
+    </para>
+    <para>
+      To open a file using an external application, choose
+      <menuchoice><guimenu>Actions</guimenu> <guimenuitem>Open file
+      with...</guimenuitem></menuchoice> or right-click on the
+      filename and choose <guimenuitem>Open file
+      with...</guimenuitem>. This will open a dialog that shows all
+      applications that can open files of this type. You can select
+      one of them by clicking on it and then clicking
+      <guibutton>OK</guibutton>. You can also manually enter the
+      command to launch the application of your choice. 
+    </para>
+  </sect1>
+ 
+  <!-- =============  Modifying an Archive ============================= -->
+  <sect1 id="fr-modifying"> 
+    <title>Modifying an Archive</title> 
+    <para>
+      &fr; allows you to modify an archive file. There are two types
+      of operations: those that affect the archive  as a whole
+      (such as renaming the archive) and those that affect individual
+      files or folders inside the archive. 
+    </para>
+    <para>
+      Please note that all operations on the archive are saved to disk
+      immediately. For example, if you are deleting a file from the
+      archive, &fr; will delete it as soon as you click
+      <guibutton>OK</guibutton> button. This is different from most
+      applications which save the changes to disk only when you quit
+      the application or select <guimenuitem>Save</guimenuitem> in the
+      menu.  
+    </para>
+
+<!-- ======= Operations on Archive as a Whole  ============= --> 
+    <sect2 id="fr-modifying-archive">
+      <title>Operations on Archive as a Whole</title>
+      <para>
+	 The <guimenu>File</guimenu> menu of &fr; contains the
+	 following commands for modifying the archive file:
+      </para>
+      <itemizedlist>
+	<listitem><para>
+	    <guimenuitem>Move Archive</guimenuitem>
+	  </para>
+	</listitem>
+	<listitem><para>
+	    <guimenuitem>Copy Archive</guimenuitem>
+	  </para>
+	</listitem>
+	<listitem><para>
+	    <guimenuitem>Rename Archive</guimenuitem>
+	  </para>
+	</listitem>
+	<listitem><para>
+	    <guimenuitem>Delete Archive</guimenuitem>
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </sect2>
+
+<!-- ======= Adding files to an archive  ============= --> 
+
+  <indexterm zone="fr-adding-files"> 
+    <primary>Archives</primary> 
+    <secondary>Adding files to</secondary>
+  </indexterm> 
+
+
+    <sect2 id="fr-adding-files">
+      <title>Adding Files to an Archive</title>
+      <para>
+	The easiest way to add files to currently open archive is to
+	drag files to &fr; window from another GNOME application (such
+	as file manager). Alternatively, you can choose
+	<menuchoice><guimenu>Actions</guimenu><guimenuitem>Add
+	files</guimenuitem></menuchoice>, click on the
+	<guibutton>Add</guibutton> button in the toolbar, or
+	right-click on a file in &fr; window and select
+	<guimenuitem>Add files</guimenuitem>. This opens
+	<guilabel>Add files</guilabel> dialog, shown in <xref
+	linkend="fr-add-dialog-fig"/>. In this dialog, select the
+	files you want to add and click <guibutton>OK</guibutton>.  
+      </para>
+      <tip id="multi-select">
+	<title>TIP</title>
+	<para>To select more than one file, hold down
+	<keycap>Ctrl</keycap> key when selecting files. To select a
+	continous block of files from the list, click on the first
+	file, then hold down <keycap>Shift</keycap> key and click on
+	the last file of the block. All files between them will be
+	selected. 
+	</para>
+      </tip>
+      <para>
+	To add a whole folder to the archive, make sure that
+	<guilabel>Selection</guilabel> field is blank (you may have to
+	erase <keycap>*</keycap> from it) and click (not
+	double-click!) on the folder name. 
+      </para>
+      <para>
+	<guilabel>Add files</guilabel> dialog can also be used to
+	automatically select and add all files satisfying certain
+	criteria. This is discussed in <xref linkend="fr-add-advanced"/>.
+      </para>
+      <para>
+	Please note that when adding files to the archive, &fr; does
+	not remove the original file; it remains unchanged. Also, the
+	added file in the archive will have the same permissions and
+	modification date as the original file. 
+      </para>
+
+	
+    </sect2>
+
+<!-- ======= Deleting  files from an archive  ============= --> 
+
+  <indexterm zone="fr-deleting-files"> 
+    <primary>Archives</primary> 
+    <secondary>deleting files from</secondary>
+  </indexterm> 
+
+
+    <sect2 id="fr-deleting-files">
+      <title>Deleting  Files From  an Archive</title>
+      <para>
+	To delete files from currently open archive, select the files
+	you want to delete (see this <link
+	linkend="multi-select">tip</link> on selecting multiple files)
+	and choose
+	<menuchoice><guimenu>Actions</guimenu><guimenuitem>Delete
+	files...</guimenuitem></menuchoice>, or right-click on the
+	selected files and choose <guimenuitem>Delete
+	files...</guimenuitem>. This opens <guilabel>Delete</guilabel>
+	dialog, which gives you a choice of deleting all files,
+	selected files, or files matching a pattern. To learn more
+	about filename patterns, see <link linkend="fr-pattern">next
+	section</link>. 
+      </para>
+    </sect2>
+
+<!-- ======= Adding files - Advanced Options  ============= --> 
+    <sect2 id="fr-add-advanced">
+      <title>Adding Files - Advanced Options</title>
+      <para>As mentioned before, the simplest way to add files to an
+      archive using <guilabel>Add Files</guilabel> dialog is just
+      select the files you want to add (see this <link
+	linkend="multi-select">tip</link> on selecting multiple files)
+      and click <guibutton>OK</guibutton>. However, this dialog also
+      allows you to automatically select and add files satisfying
+      certain criteria. This section describes these features. 
+      </para>
+      <figure id="fr-add-dialog-fig">
+	<title>Add Files Dialog</title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-add-dialog.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+      <para id="fr-pattern">
+	To automatically select all files matching a certain pattern,
+	enter the pattern in <guilabel>Selection</guilabel> field. The
+	pattern may use standard wildcard symbols <keycap>*</keycap>
+	(matches any string) and <keycap>?</keycap> (matches any
+	single symbol). For example, pattern <filename>*</filename>
+	matches all files, while <filename>*.tar*</filename> matches
+	all files with extension <filename>tar</filename>, possibly
+	followed by any sequence of symbols, for example
+	<filename>filename.tar.gz</filename>. Please note that by
+	default filenames in Unix are case-sensitive; you can override
+	this by selecting <guilabel>Ignore case</guilabel> option, as
+	described below. 
+      </para>
+      <para>
+	You can also enter several patterns separated by semicolon
+	(<keycap>;</keycap>). In this case, &fr; will select all files
+	which match at least one of the patterns. For example, you can
+	enter <filename>*.jpg; *.jpeg</filename> to select all files
+	with extensions <filename>jpg</filename> and
+	<filename>jpeg</filename>. 
+      </para>
+      <para>
+	You can modify the selection using the following options in
+	this dialog: 
+      </para>
+      <variablelist>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Add only if newer</guilabel></term>
+	  <listitem><para>
+	      This option controls what happens if the archive already
+	      contains a file with the same name as the one you are
+	      adding. If this option is unselected, the file will be
+	      added, overwriting previous archive contents. If this
+	      option is selected, the file will be added only if it is
+	      newer than the file already in the archive (&fr; uses
+	      modification time to determine which file is newer).  
+	  </para>
+	    <tip>
+	      <title>TIP</title>
+	      <para>
+		This option is very convenient for keeping backups
+		up-to-date. For example, assume that you have an
+		archive <filename>backup.tar.gz</filename> which
+		contain, in archived form, the contents of your home
+		folder as it was a week ago. You want to update it
+		so that it contains the contents of your home
+		folder as it is now. To do so, open the archive in
+		&fr;, click on <guibutton>Add</guibutton> button,
+		select your home folder, select option
+		<guilabel>Add only if newer</guilabel> and click
+		<guibutton>OK</guibutton>. This will automatically add
+		to the archive all files that have been created during
+		the last week and update all files that have been
+		modified during the last week. (However, it will not
+		remove from the archive the files you have deleted
+		during the last week.). This is much faster than doing
+		full backup of your home folder. 
+	      </para>
+	    </tip>
+	  </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Include subfolders</guilabel></term>
+	  <listitem><para>
+	      If this option is selected, &fr; will select all files
+	      matching the pattern not only in the current folder
+	      but also in its subfolders. Please note that it is the
+	      filename that must match the pattern, not the subfolder
+	      name. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Exclude folders that are symbolic links
+	    </guilabel></term>
+	  <listitem><para>
+	      If this option is selected, &fr; will not include files
+	      from  folders that are symbolic links (i.e.,
+	    <quote>pointers</quote> or <quote>shortcuts</quote> to
+	    other folders). 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Exclude other file systems</guilabel></term>
+	  <listitem><para>
+	      If this option is selected, &fr; will not include files
+	  from filesystems other than the current one. If you are  not
+	  familiar with Unix notion of filesystem, this  is roughly
+	  equivalent to including only the files that are physically
+	  on the same disk and partition as the current folder. In
+	  particular, this option will exclude files on removable
+	  media (CD's, floppies, Zip disks) and files 
+	  on other computers in the network (such as files from an NFS
+	  filesystem), except for the one that contains the current
+	  folder. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Exclude backup files</guilabel></term>
+	  <listitem><para>	      
+	      If this option is selected, &fr; will not include files
+	      with the name ending with  tilde (<keycap>~</keycap>). By
+	      a common convention, tilde is used for backup files. 
+	    </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Exclude hidden files</guilabel></term>
+	  <listitem><para>
+	      If this option is selected, &fr; will not include files
+	      with the name starting with  dot (<keycap>.</keycap>). By
+	      a common convention,  these files are used for system
+	      information and applications' settings; they rarely contain
+	      user data. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Exclude files</guilabel></term>
+	  <listitem><para>
+	      This option allows you to exclude files whose name
+	      matches specified pattern. As with the
+	      <guilabel>Selection</guilabel> field, the pattern may use
+	      wildcards <keycap>*</keycap> and <keycap>?</keycap>. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Ignore case</guilabel></term>
+	  <listitem><para> If this option is selected, &fr; will not
+	      distinguish between lower case and upper case symbols in the
+	      filename, so for example, pattern
+	      <filename>*.jpeg</filename> will match files with extensions
+	      <filename>jpeg</filename>, <filename>JPEG</filename>, or
+	      <filename>JpeG</filename>. If this option is not selected,
+	      &fr; will be case-sensitive, so <filename>*.jpeg</filename>
+	      will match files with extension <filename>jpeg</filename>
+	      but not <filename>JPEG</filename>. 
+	    </para></listitem>
+	</varlistentry>
+      </variablelist>
+    </sect2>
+
+
+
+
+  </sect1>
+
+  <!-- =========== Extracting Files From an Archive ==================== -->
+
+  <indexterm zone="fr-extracting"> 
+    <primary>Archives</primary> 
+    <secondary>extracting</secondary>
+  </indexterm> 
+
+
+
+
+  <sect1 id="fr-extracting"> 
+    <title>Extracting Files From an Archive</title> 
+    <para>
+      To extract files from the archive, choose
+      <menuchoice><guimenu>Actions</guimenu> 
+	<guimenuitem>Extract to...</guimenuitem> </menuchoice>
+      or click on <guibutton>Extract</guibutton> button in the
+      toolbar. This will open <guilabel>Extract</guilabel> dialog
+      shown in <xref linkend="fr-extract-fig"/>. This dialog is
+      explained in detail in <xref linkend="fr-extract-dialog"/>. 
+    </para>
+    <para>
+      You can also extract only some of the files in the archive. To
+      do so, select the files you want to extract in the main &fr;
+      window before clicking on <guibutton>Extract</guibutton>
+      button. For example, you can extract a single file from the
+      archive. 
+    </para>
+    <para>
+      Please note that extracting files from the archive does not
+      change the archive file. &fr; leaves the archive file
+      unchanged. If you no longer need the archive file, you can
+      delete it manually  by choosing
+      <menuchoice><guimenu>File</guimenu> <guimenuitem>Delete
+      Archive</guimenuitem> </menuchoice>. 
+    </para>
+    <para>
+      Extracted files will have the same permissions and modification
+      time as the original ones, no matter when you extracted them.  
+    </para>
+<!-- ======= Extract Dialog  ============= --> 
+    <sect2 id="fr-extract-dialog">
+      <title>Extract Dialog</title>
+      
+      <figure id="fr-extract-fig">
+	<title>Extract Dialog</title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-extract.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+      <para>
+	This dialog contains the following options:
+      </para>
+      <variablelist>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Extract to</guilabel></term>
+	  <listitem><para>
+	      This field shows the folder to which the
+	      files should be extracted. You can use
+	      <guibutton>Browse</guibutton> button to select a folder;
+	      you can also select one of recently used folders from
+	      the drop-down list or double-clcik on one of folders in
+	      <guilabel>Favorites Extraction Folders</guilabel>
+	      list.
+	    </para>
+	    <para>
+	      Please note that by default, &fr; reconstructs the
+	      folder structure when extracting. Thus,  if you selected
+	      <filename>/home/sasha</filename> in <guilabel>Extract
+		to</guilabel> field, and your archive contains subfolder
+	      <filename>doc</filename>, then the contents of this
+	      subfolder will be extracted to
+	      <filename>/home/sasha/doc</filename>.  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Favorites Extraction Folders</guilabel></term>
+	  <listitem><para>
+	      In this field, you can add folders which you
+	      frequently use for extraction. To extract to one of 
+	      folders in the favorites list, double-clcik on it. 
+	      To add folder currently
+	      shown in <guilabel>Extract To</guilabel> field to the
+	      list of favorites, click <guilabel>Add to
+		favorites</guilabel>. To remove a folder from the list of
+	      favorites, select it with the mouse and click
+	      <guibutton>Remove</guibutton> button.  
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Files</guilabel></term>
+	  <listitem><para>
+	      This option allows you to select files to
+	      extract. Possible options are <guilabel>All
+		Files</guilabel> (extracts all files in the archive), 
+	      <guilabel>Selected Files</guilabel>, and
+	      <guilabel>Files</guilabel>. The last option extracts
+	      files matching the  pattern you enter. As usual, the
+	      pattern may use wildcards <keycap>*</keycap> and
+	      <keycap>?</keycap>. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Recreate folders</guilabel></term>
+	  <listitem><para>
+	      If this option is selected (default), then extraction
+	      will recreate the folder structure, creating
+	      subfolders as needed. If this option is not
+	      selected, all files in the archive (including those in
+	      subfolders) will be extracted to the target
+	      folder; no subfolders will be created. 
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Overwrite existing files</guilabel> and
+	  <guilabel>Do not extract older files</guilabel> </term>
+	  <listitem><para>
+	      These two options control behavior of &fr; when the
+	      target folder already contains a file or subfolder
+	      with the same name as the one being extracted. 
+	    </para>
+	    <para>
+	      If <guilabel>Overwrite existing files</guilabel> is
+	      unselected, then existing files will not be overwritten,
+	      so &fr; will not extract files which are already present
+	      in target folder.
+	    </para>
+	    <para>
+	      If <guilabel>Overwrite existing files</guilabel> is
+	      selected and <guilabel>Do not extract older
+	      files</guilabel> is unselected, then  &fr; will extract
+	      all files from the archive, overwriting already existing
+	      files in the target folder if necessary. This is the
+	      default behavior. 
+	    </para>
+	    <para>	  	   
+	      If both <guilabel>Overwrite existing files</guilabel>
+	      and <guilabel>Do not extract older files</guilabel> are
+	      selected, then  &fr; will  overwrite existing files only
+	      if the file being extracted is newer than the existing
+	      file. &fr; uses last modification date to determine which
+	      file is newer.  	    
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Password</guilabel></term>
+	  <listitem><para>
+	     With this option you can specify a password to use when 
+	     extracting files.  This option is disabled if the archive type
+	     do not support encryption, at the moment only ZIP archives 
+	     support it.  Please note that encryption provided by archive
+	     utilities are weak and insecure, if security is truly 
+	     important use  strong encryption tools such as
+	     <ulink url="http://www.gnupg.org" type="http">the GNU Privacy 
+	     Guard</ulink>.
+	  </para></listitem>
+	</varlistentry>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>View destination folder after 
+	  extraction</guilabel></term>
+	  <listitem><para>
+	     If this option is activated, after extraction of the files
+	     the destination folder is visualized with the Nautilus file
+	     manager.  This is the only option of the extraction dialog 
+	     which get saved.
+	  </para></listitem>
+	</varlistentry>
+      </variablelist>	
+    </sect2>	    
+  </sect1>
+
+  <!-- =============  Creating Archives ============================= -->
+  <sect1 id="fr-creating"> 
+    <title>Creating Archives</title> 
+    <para>
+      To create a new archive, choose
+      <menuchoice><guimenu>File</guimenu>
+      <guimenuitem>New</guimenuitem></menuchoice> or use
+      <guibutton>New</guibutton> button in the toolbar. It will open
+      the <guilabel>New Archive</guilabel> dialog, where you should
+      enter the new archive name.  By default, &fr; determines the
+      archive type from the filename extension, so if you entered the
+      filename <filename>archive.tar.bz2</filename>, &fr; will create
+      a <application>bzip2</application>-compressed tar archive. You
+      can also explicitly specify archive type using <guilabel>File
+      type</guilabel> drop-down list, though it is not recommended.
+    </para>
+    <para>
+      After creating an archive, you can add files to it as described
+      in <xref linkend="fr-adding-files"/>.
+    </para> 
+    <para>
+      Please note that &fr; will write the archive file to disk only
+      after you add some files to it; it will not write to disk empty
+      archives. 
+    </para>
+  </sect1>
+
+  <!-- ============= Customization ============================= -->
+  <sect1 id="fr-settings"> 
+    <title>Settings</title> 
+
+    <sect2 id="fr-prefs">
+      <title>Preferences Dialog</title>
+      <para>To configure &fr;, choose <menuchoice>
+	  <guimenu>Options</guimenu>
+	  <guimenuitem>Preferences</guimenuitem> </menuchoice>. This will
+	open the <guilabel>Preferences</guilabel> dialog shown in <xref
+	  linkend="fr-prefs-fig"/>.
+      </para>
+      <figure id="fr-prefs-fig">
+	<title>Preferences Dialog</title>
+	<screenshot> 
+	  <mediaobject> 
+	    <imageobject><imagedata
+		fileref="figures/fr-prefs.png" format="PNG"/> 
+	    </imageobject>
+	  </mediaobject>
+	</screenshot>
+      </figure>
+
+      <para>
+	<guilabel>Columns to Show</guilabel> section allows you to
+	select which columns should be shown in &fr; main
+	window. <guilabel>Modified Time</guilabel> shows the last
+	time the file was modified.  <guilabel>File Path</guilabel>
+	shows full path to the file (i.e., file name including all
+	parent folders, such as
+	<filename>/usr/share/doc/file-roller/Copying</filename>). Other
+	columns should be self-explanatory.</para>
+
+      <para><guilabel>Install Nautilus scripts</guilabel> install the following
+	scripts :</para>
+      <itemizedlist>
+	<listitem>
+	  <para><guilabel>Add_to_archive</guilabel></para>
+	  <para>Add selected files to an archive.</para></listitem>
+	<listitem>
+	  <para><guilabel>Extract_to</guilabel></para>
+	  <para> Extract selected archive asking the destination folder.
+	  </para></listitem>
+	<listitem>
+	  <para><guilabel>Extract_here</guilabel></para>
+	  <para> Extract selected archive in the current folder. 
+	  </para></listitem>
+	<listitem>
+	  <para><guilabel>Extract_in_a_subfolder</guilabel></para>
+	  <para> Extract selected archive in a subfolder with the same name of
+	  the archive. Add selected files to an archive. </para></listitem>
+      </itemizedlist>
+      <para>To use this scripts with Nautilus select one or more files, 
+	right-click and use the script you want from the 
+	<guimenu>Script</guimenu> menu.</para>
+      <para>
+	<guilabel>History Size</guilabel> allows you to specify how
+	many recently accessed files should be shown in &fr;
+	<guimenu>File</guimenu> menu. By default, <guilabel>History
+	Size</guilabel> is set to 5, so  5 most recent files
+	are shown. 
+      </para>
+    </sect2>
+    
+    <sect2 id="fr-shotrcuts">
+      <title>Changing Keyboard Shortcuts</title>
+      <para>
+	To change or add keyborad shortcuts associated with menu items,
+	open  the corresponding menu and move the mouse cursor over
+	the menu item for which you want to change the shortcut (do
+	not click on the menu item!). While the mouse cursor is over
+	the desired item, press the key combination you want to use as
+	the shortcut for this item. The menu will change to show the
+	new shotrcut. That's it - now you can use the new shortcut. 
+      </para>
+      <tip>
+	<title>TIP</title> 
+	<para>
+	  You can use this method to change keyboard shortcuts in all
+	  GNOME applications. 
+	</para>
+      </tip>
+    </sect2>
+  </sect1>
+
+<!-- ============= About ================================== -->
+  <sect1 id="fr-about"> 
+    <title>About &fr;</title> 
+
+    <para> &fr; was written by Paolo Bacchilega
+      (<email>paolo.bacch@tin.it</email>). To find more information
+      about &fr;, please visit the <ulink
+      url="http://fileroller.sourceforge.net" type="http">File Roller
+      Web page</ulink>. 
+    </para>
+    <para>
+      This manual was written by Alexander Kirillov
+      (<email>kirillov@math.sunysb.edu</email>). 
+    </para>
+
+    <para> This program is distributed under the terms of the GNU
+      General Public license as published by the Free Software
+      Foundation; either version 2 of the License, or (at your option)
+      any later version. A copy of this license can be found at this
+      <ulink url="ghelp:gpl" type="help">link</ulink>, or in the file
+      COPYING included with the source code of this program. </para>
+
+  </sect1> 
+</article>
