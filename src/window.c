@@ -3521,6 +3521,12 @@ window_close (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
+	_window_remove_notifications (window);
+	if (window->recent_view != NULL) {
+		g_object_unref (window->recent_view);
+		window->recent_view = NULL;
+	}
+
 	gtk_object_destroy (GTK_OBJECT (window->tooltips));
 
 	while (window->activity_ref > 0)
@@ -3589,13 +3595,7 @@ window_close (FRWindow *window)
 		window->folder_to_view = NULL;
 	}
 
-	if (window->recent_view != NULL) {
-		g_object_unref (window->recent_view);
-		window->recent_view = NULL;
-	}
-
 	_window_free_batch_data (window);
-	_window_remove_notifications (window);
 
 	/* save preferences. */
 
