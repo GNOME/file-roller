@@ -33,7 +33,7 @@
 #include "fr-process.h"
 #include "fr-marshal.h"
 
-#define REFRESH_RATE 100
+#define REFRESH_RATE 10
 
 enum {
 	START,
@@ -156,6 +156,9 @@ fr_process_init (FRProcess *fr_proc)
 	fr_proc->output_fd = 0;
 	fr_proc->error_fd = 0;
 
+	fr_proc->o_buffer = g_new (char, BUFFER_SIZE + 1);
+	fr_proc->e_buffer = g_new (char, BUFFER_SIZE + 1);
+
 	fr_proc->log_timeout = 0;
 	fr_proc->o_not_processed = 0;
 	fr_proc->e_not_processed = 0;
@@ -213,6 +216,9 @@ fr_process_finalize (GObject *object)
 		g_list_free (fr_proc->raw_error);
 		fr_proc->raw_error = NULL;
 	}
+
+	g_free (fr_proc->o_buffer);
+	g_free (fr_proc->e_buffer);
 
 	g_clear_error (&fr_proc->error.gerror);
 	g_clear_error (&fr_proc->first_error.gerror);
