@@ -3198,7 +3198,7 @@ window_archive_open (FRWindow   *window,
 
 	window->archive_present = FALSE;	
 
-	window->archive->fake_load = window->batch_mode;
+	window->archive->fake_load = window->batch_mode && ! window->update_dropped_files;
 	success = fr_archive_load (window->archive, window->archive_filename);
 
 	if (! success) {
@@ -3225,7 +3225,7 @@ window_archive_reload (FRWindow *window)
 	if (window->archive_new)
 		return;
 
-	window->archive->fake_load = window->batch_mode;
+	window->archive->fake_load = window->batch_mode && ! window->update_dropped_files;
 	fr_archive_reload (window->archive);
 }
 
