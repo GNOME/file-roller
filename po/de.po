@@ -6,13 +6,41 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.0.x\n"
-"POT-Creation-Date: 2002-11-02 13:47+0100\n"
-"PO-Revision-Date: 2002-11-02 13:45+0100\n"
+"POT-Creation-Date: 2002-11-20 17:30+0100\n"
+"PO-Revision-Date: 2002-11-20 17:29+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: component/File_Roller_Component.server.in.in.h:1
+msgid "Add To Archive..."
+msgstr "Zum Archiv hinzufügen..."
+
+#: component/File_Roller_Component.server.in.in.h:2
+msgid "Extract Here..."
+msgstr "Hier entpacken..."
+
+#: component/File_Roller_Component.server.in.in.h:3
+msgid "Extract To A Folder..."
+msgstr "In einem Ordner entpacken..."
+
+#: component/File_Roller_Component.server.in.in.h:4
+msgid "Extract To..."
+msgstr "Entpacken in..."
+
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "File Roller Component add operations"
+msgstr "Hinzufügen-Operationen der File Roller-Komponente"
+
+#: component/File_Roller_Component.server.in.in.h:6
+msgid "File Roller Component extract operations"
+msgstr "Entpacken-Operationen der File Roller-Komponente"
+
+#: component/File_Roller_Component.server.in.in.h:7
+msgid "File roller component"
+msgstr "File Roller-Komponente"
 
 #: file-roller.desktop.in.h:1
 msgid "Archive Manager"
@@ -20,7 +48,7 @@ msgstr "Archiv-Manager"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:153
-#: src/gtk-utils.c:256 src/main.c:101 src/window.c:690 src/window.c:699
+#: src/gtk-utils.c:256 src/main.c:106 src/window.c:690 src/window.c:699
 #: src/window.c:2360 src/window.c:4052
 msgid "File Roller"
 msgstr "File Roller"
@@ -34,9 +62,9 @@ msgstr "Komprimierte Archive handhaben"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Sie haben nicht die Berechtigungen, um Dateien im Ordner »%s« zu lesen"
 
-#: src/dlg-add.c:338
-msgid "Add files"
-msgstr "Dateien hinzufügen"
+#: src/dlg-add.c:338 src/file_roller.glade.h:5
+msgid "Add Files and Folders"
+msgstr "Dateien und Ordner hinzufügen"
 
 #: src/dlg-add.c:343
 msgid "_Add only if newer"
@@ -133,6 +161,14 @@ msgstr "Hilfedatei konnte nicht dargestellt werden: %s"
 msgid "Favorites extraction folders"
 msgstr "Favorisierte Zielordner"
 
+#: src/dlg-preferences.c:186
+msgid "General"
+msgstr "Allgemein"
+
+#: src/dlg-preferences.c:191
+msgid "Columns to Show"
+msgstr "Anzuzeigende Spalten"
+
 #: src/dlg-prop.c:98
 msgid "Path:"
 msgstr "Pfad:"
@@ -171,79 +207,59 @@ msgstr ""
 "Es konnte kein Terminal gefunden werden, xterm wird verwendet, selbst wenn "
 "es nicht funktioniert"
 
-#: src/file_roller.glade2.h:1 src/file_roller_prop.glade2.h:1
+#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
 msgid "    "
 msgstr "    "
 
-#: src/file_roller.glade2.h:2
+#: src/file_roller.glade.h:2
 msgid "*"
 msgstr "*"
 
-#: src/file_roller.glade2.h:3
+#: src/file_roller.glade.h:3
 msgid "A_dd to favorites"
 msgstr "Zu Favoriten _hinzufügen"
 
-#: src/file_roller.glade2.h:4
+#: src/file_roller.glade.h:4
 msgid "A_vailable application:"
 msgstr "Verfügbare _Anwendung:"
 
-#: src/file_roller.glade2.h:5
+#: src/file_roller.glade.h:6
 msgid "Add _to archive :"
 msgstr "_Zum Archiv hinzufügen:"
 
-#: src/file_roller.glade2.h:6
+#: src/file_roller.glade.h:7
 msgid "Add only if _newer"
 msgstr "Nur hinzufügen, falls _neuer"
 
-#: src/file_roller.glade2.h:7
+#: src/file_roller.glade.h:8
+msgid "Archive Properties"
+msgstr "Archiv-Eigenschaften"
+
+#: src/file_roller.glade.h:9 src/menu.h:464
+msgid "Delete Files"
+msgstr "Dateien löschen"
+
+#: src/file_roller.glade.h:10
 msgid "Do not e_xtract older files"
 msgstr "Keine älteren Dateien _entpacken"
 
-#: src/file_roller.glade2.h:8
+#: src/file_roller.glade.h:11 src/window.c:2579
+msgid "Extract"
+msgstr "Entpacken"
+
+#: src/file_roller.glade.h:12
 msgid "Extract to"
-msgstr "Entpacken nach"
+msgstr "Entpacken in"
 
-#: src/file_roller.glade2.h:9
+#: src/file_roller.glade.h:13
 msgid "Extract to:"
-msgstr "Entpacken nach:"
+msgstr "Entpacken in:"
 
-#: src/file_roller.glade2.h:10
-msgid "File Roller - Add"
-msgstr "File Roller - Hinzufügen"
-
-#: src/file_roller.glade2.h:11
-msgid "File Roller - Archive Informations"
-msgstr "File Roller - Archiv-Eigenschaften"
-
-#: src/file_roller.glade2.h:12
-msgid "File Roller - Delete Files"
-msgstr "File Roller - Dateien löschen"
-
-#: src/file_roller.glade2.h:13
-msgid "File Roller - Extract"
-msgstr "File Roller - Entpacken"
-
-#: src/file_roller.glade2.h:14
-msgid "File Roller - Open Files"
-msgstr "File Roller - Dateien öffnen"
-
-#: src/file_roller.glade2.h:15
-msgid "File Roller - Password"
-msgstr "File Roller - Passwort"
-
-#: src/file_roller.glade2.h:16
-msgid "File Roller - View File"
-msgstr "File Roller - Datei betrachten"
-
-#: src/file_roller.glade2.h:17
-msgid "File Roller - Viewer"
-msgstr "File Roller - Betrachter"
-
-#: src/file_roller.glade2.h:18
+#: src/file_roller.glade.h:14
 msgid "Files"
 msgstr "Dateien"
 
-#: src/file_roller.glade2.h:19
+#: src/file_roller.glade.h:15
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
@@ -253,115 +269,123 @@ msgstr ""
 "verschlüsseln und Dateien aus dem aktuellen Archiv zu entschlüsseln. Wenn "
 "das Archiv geschlossen ist, wird das Passwort gelöscht."
 
-#: src/file_roller.glade2.h:20
+#: src/file_roller.glade.h:16
+msgid "Open Files"
+msgstr "Dateien öffnen"
+
+#: src/file_roller.glade.h:17
 msgid "Open with an _application"
 msgstr "Mit einer _Anwendung öffnen"
 
-#: src/file_roller.glade2.h:21
+#: src/file_roller.glade.h:18
 msgid "Other options"
 msgstr "Weitere Optionen"
 
-#: src/file_roller.glade2.h:22
+#: src/file_roller.glade.h:19
 msgid "Over_write existing files"
 msgstr "Vorhandene Dateien _ersetzen"
 
-#: src/file_roller.glade2.h:23
+#: src/file_roller.glade.h:20
+msgid "Password"
+msgstr "Passwort"
+
+#: src/file_roller.glade.h:21
 msgid "R_ecent applications:"
 msgstr "_Zuletzt verwendete Programme"
 
-#: src/file_roller.glade2.h:24
+#: src/file_roller.glade.h:22
 msgid "R_ecreate folders"
 msgstr "_Ordner neu erstellen"
 
-#: src/file_roller.glade2.h:25
+#: src/file_roller.glade.h:23
 msgid "Select archive"
 msgstr "Wählen Sie ein Archiv"
 
-#: src/file_roller.glade2.h:26
+#: src/file_roller.glade.h:24 src/menu.h:450
+msgid "View File"
+msgstr "Datei betrachten"
+
+#: src/file_roller.glade.h:25
 msgid "View with internal _viewer"
 msgstr "Mit internem _Betrachter ansehen"
 
-#: src/file_roller.glade2.h:27
+#: src/file_roller.glade.h:26
+msgid "Viewer"
+msgstr "Betrachter"
+
+#: src/file_roller.glade.h:27
 msgid "_All Files"
 msgstr "_Alle Dateien"
 
-#: src/file_roller.glade2.h:28
+#: src/file_roller.glade.h:28
 msgid "_Application:"
 msgstr "_Anwendung:"
 
-#: src/file_roller.glade2.h:29
+#: src/file_roller.glade.h:29
 msgid "_Files:"
 msgstr "_Dateien:"
 
-#: src/file_roller.glade2.h:30
+#: src/file_roller.glade.h:30
 msgid "_Password:"
 msgstr "_Passwort:"
 
-#: src/file_roller.glade2.h:31
+#: src/file_roller.glade.h:31
 msgid "_Selected Files"
 msgstr "_Markierte Dateien"
 
-#: src/file_roller.glade2.h:32
+#: src/file_roller.glade.h:32
 msgid "_View destination folder after extraction"
 msgstr "Nach dem Entpacken Zielordner _anzeigen"
 
-#: src/file_roller.glade2.h:33
+#: src/file_roller.glade.h:33
 msgid "example: *.txt; *.doc"
 msgstr "Beispiel: *.txt; *.doc"
 
-#: src/file_roller_prop.glade2.h:2
-msgid "Columns to Show"
-msgstr "Anzuzeigende Spalten"
-
-#: src/file_roller_prop.glade2.h:3
+#: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
 msgstr "Kompressions_grad:"
 
-#: src/file_roller_prop.glade2.h:4
+#: src/file_roller_prop.glade.h:3
 msgid "Fast"
 msgstr "Schnell"
 
-#: src/file_roller_prop.glade2.h:5
-msgid "File Roller - Preferences"
+#: src/file_roller_prop.glade.h:4
+msgid "File Roller Preferences"
 msgstr "File Roller - Einstellungen"
 
-#: src/file_roller_prop.glade2.h:6
+#: src/file_roller_prop.glade.h:5
 msgid "File _Name"
 msgstr "Datei_name"
 
-#: src/file_roller_prop.glade2.h:7
+#: src/file_roller_prop.glade.h:6
 msgid "File _Path"
 msgstr "_Pfad"
 
-#: src/file_roller_prop.glade2.h:8
+#: src/file_roller_prop.glade.h:7
 msgid "File _Size"
 msgstr "_Größe"
 
-#: src/file_roller_prop.glade2.h:9
+#: src/file_roller_prop.glade.h:8
 msgid "File _Type"
 msgstr "_Typ"
 
-#: src/file_roller_prop.glade2.h:10
-msgid "General"
-msgstr "Allgemein"
-
-#: src/file_roller_prop.glade2.h:11
+#: src/file_roller_prop.glade.h:9
 msgid "Maximum (slowest)"
 msgstr "Maximum (am langsamsten)"
 
-#: src/file_roller_prop.glade2.h:12
+#: src/file_roller_prop.glade.h:10
 msgid "Normal"
 msgstr "Normal"
 
-#: src/file_roller_prop.glade2.h:13
+#: src/file_roller_prop.glade.h:11
 msgid "Very fast"
 msgstr "Sehr schnell"
 
-#: src/file_roller_prop.glade2.h:14
+#: src/file_roller_prop.glade.h:12
 msgid "_Modification Time"
 msgstr "_Zeitpunkt der Änderung"
 
-#: src/file_roller_prop.glade2.h:15
+#: src/file_roller_prop.glade.h:13
 msgid "_Recent archives:"
 msgstr "_Zuletzt geöffnete Archive:"
 
@@ -379,35 +403,35 @@ msgstr ""
 msgid "Command _line output"
 msgstr "System_meldungen"
 
-#: src/main.c:60
+#: src/main.c:65
 msgid "Add files to the specified archive and quit the program"
 msgstr "Dateien zum angegebenen Archive hinzufügen und das Programm beenden"
 
-#: src/main.c:61
+#: src/main.c:66
 msgid "ARCHIVE"
 msgstr "ARCHIV"
 
-#: src/main.c:64
+#: src/main.c:69
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Dateien zum anzugebenden Archiv hinzufügen und das Programm beenden"
 
-#: src/main.c:68
+#: src/main.c:73
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Archive in angegebenen Ordner entpacken und das Programm beenden"
 
-#: src/main.c:69 src/main.c:77
+#: src/main.c:74 src/main.c:82
 msgid "FOLDER"
 msgstr "ORDNER"
 
-#: src/main.c:72
+#: src/main.c:77
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Archive in anzugebenden Zielordner enpacken und das Programm beenden"
 
-#: src/main.c:76
+#: src/main.c:81
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "Vorgabeordner für die »--add« und »--extract«-Befehle"
 
-#: src/main.c:80
+#: src/main.c:85
 msgid "Create destination folder without asking confirmation"
 msgstr "Zielordner ohne Nachfrage anlegen"
 
@@ -596,12 +620,12 @@ msgid "Rename current archive"
 msgstr "Aktuelles Archiv umbenennen"
 
 #: src/menu.h:123
-msgid "_Information"
-msgstr "_Informationen"
+msgid "_Properties"
+msgstr "Ei_genschaften"
 
 #: src/menu.h:123
-msgid "Show information about the archive"
-msgstr "Informationen zum Archiv anzeigen"
+msgid "Show archive properties"
+msgstr "Die Archiv-Eigenschaften anzeigen"
 
 #: src/menu.h:131
 msgid "_Close"
@@ -633,7 +657,7 @@ msgstr "Markierte Dateien und Ordner aus dem Archiv löschen"
 
 #: src/menu.h:176
 msgid "_Extract to..."
-msgstr "_Entpacken nach..."
+msgstr "_Entpacken in..."
 
 #: src/menu.h:176 src/menu.h:470 src/window.c:2580
 msgid "Extract files from the archive"
@@ -815,17 +839,9 @@ msgstr "_Fenster"
 msgid "Open Files..."
 msgstr "Dateien öffnen..."
 
-#: src/menu.h:450
-msgid "View File"
-msgstr "Datei betrachten"
-
 #: src/menu.h:458
 msgid "Add Files..."
 msgstr "Dateien hinzufügen..."
-
-#: src/menu.h:464
-msgid "Delete Files"
-msgstr "Dateien löschen"
 
 #: src/menu.h:464
 msgid "Delete files from the archive"
@@ -833,7 +849,7 @@ msgstr "Dateien aus dem Archiv löschen"
 
 #: src/menu.h:470
 msgid "Extract to..."
-msgstr "Entpacken nach..."
+msgstr "Entpacken in..."
 
 #: src/menu.h:478
 msgid "Select All"
@@ -1004,10 +1020,6 @@ msgstr "Aktueller Ordner:"
 #: src/window.c:2568
 msgid "Add"
 msgstr "Hinzufügen"
-
-#: src/window.c:2579
-msgid "Extract"
-msgstr "Entpacken"
 
 #: src/window.c:2590
 msgid "View"
