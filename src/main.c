@@ -147,14 +147,30 @@ install_scripts ()
 
 	for (i = 0; i < N_SCRIPTS; i++) {
 		char *line;
+		char *name_with_spaces;
+		int   j;
 
-		line = g_strdup_printf ("cp %s/%s %s\n", src_dir, script[i], dest_dir);
+		name_with_spaces = g_strdup (script[i]);
+
+		for (j = 0; name_with_spaces[j] != 0; j++)
+			if (name_with_spaces[j] == '_')
+				name_with_spaces[j] = ' ';
+
+		line = g_strdup_printf ("cp %s/%s \"%s/%s\"\n", 
+					src_dir, 
+					script[i], 
+					dest_dir,
+					name_with_spaces);
 		system (line);
 		g_free (line);
 
-		line = g_strdup_printf ("chmod 0700 %s/%s\n", dest_dir, script[i]);
+		line = g_strdup_printf ("chmod 0700 \"%s/%s\"\n", 
+					dest_dir, 
+					name_with_spaces);
 		system (line);
 		g_free (line);
+
+		g_free (name_with_spaces);
 	}
 
 	g_free (src_dir);
