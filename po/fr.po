@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.1.4\n"
-"POT-Creation-Date: 2002-12-20 10:30+0100\n"
-"PO-Revision-Date: 2002-12-20 10:14+0100\n"
+"POT-Creation-Date: 2002-12-22 15:01+0100\n"
+"PO-Revision-Date: 2002-12-22 15:01+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -49,8 +49,8 @@ msgstr "Gestionnaire d'archives"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
-#: src/gtk-utils.c:266 src/main.c:101 src/window.c:704 src/window.c:713
-#: src/window.c:2382 src/window.c:4084
+#: src/gtk-utils.c:266 src/main.c:101 src/menu-callbacks.c:788
+#: src/window.c:704 src/window.c:713 src/window.c:2382 src/window.c:4084
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -263,7 +263,7 @@ msgstr "Ajouter seulement si plus _récent"
 
 #: src/file_roller.glade.h:11 src/menu.h:464
 msgid "Delete Files"
-msgstr "Supprimer fichiers"
+msgstr "Supprimer les fichiers"
 
 #: src/file_roller.glade.h:12
 msgid "Do not e_xtract older files"
@@ -314,15 +314,15 @@ msgstr "_Recréer les répertoires"
 
 #: src/file_roller.glade.h:22
 msgid "Select archive"
-msgstr "Selectionner archive"
+msgstr "Sélectionner une archive"
 
 #: src/file_roller.glade.h:23 src/menu.h:450
 msgid "View File"
-msgstr "Visualiser fichier"
+msgstr "Voir le fichier"
 
 #: src/file_roller.glade.h:24
 msgid "View with internal _viewer"
-msgstr "Voir avec le _visualiseur interne"
+msgstr "Voir avec le _visionneur interne"
 
 #: src/file_roller.glade.h:25
 msgid "_All files"
@@ -346,7 +346,7 @@ msgstr "Fichiers _sélectionnés"
 
 #: src/file_roller.glade.h:30
 msgid "_View destination folder after extraction"
-msgstr "V_oir le répertoire de destination après extraction"
+msgstr "_Afficher le répertoire de destination après extraction"
 
 #: src/file_roller.glade.h:31
 msgid "example: *.txt; *.doc"
@@ -358,7 +358,7 @@ msgstr "Tau_x de compression :"
 
 #: src/file_roller_prop.glade.h:3
 msgid "Date _modified"
-msgstr "Date _modifié"
+msgstr "_Modifié"
 
 #: src/file_roller_prop.glade.h:4
 msgid "File Roller Preferences"
@@ -370,11 +370,11 @@ msgstr "Faible"
 
 #: src/file_roller_prop.glade.h:6
 msgid "Maximum (slow)"
-msgstr "Maximum (lent)"
+msgstr "Maximum (le plus lent)"
 
 #: src/file_roller_prop.glade.h:7
 msgid "Minimum (fast)"
-msgstr "Minimum (rapide)"
+msgstr "Minimum (le plus rapide)"
 
 #: src/file_roller_prop.glade.h:8
 msgid "Normal"
@@ -398,7 +398,7 @@ msgstr "_Taille"
 
 #: src/file_roller_prop.glade.h:13
 msgid "_Type"
-msgstr "_Type"
+msgstr "T_ype"
 
 #: src/gconf-utils.c:98
 #, c-format
@@ -569,10 +569,6 @@ msgstr ""
 "Contributeurs :\n"
 "Roland Baudin <roland65@free.fr>\n"
 "Christophe Merlet (RedFox) <redfox@redfoxcenter.org>"
-
-#: src/menu-callbacks.c:790
-msgid "Copyright (C) 2001 Free Software Foundation, Inc."
-msgstr "Copyright © 2001 Free Software Foundation, Inc."
 
 #: src/menu-callbacks.c:791
 msgid "An archive manager for GNOME."
@@ -756,11 +752,11 @@ msgstr "Trier les fichiers par chemin d'accès"
 
 #: src/menu.h:280
 msgid "View All _Files"
-msgstr "Voir tous les _fichiers"
+msgstr "Afficher tous les _fichiers"
 
 #: src/menu.h:286
 msgid "View as a F_older"
-msgstr "Voir l'ar_borescence"
+msgstr "Afficher les _répertoires"
 
 #: src/menu.h:308
 msgid "_Reversed Order"
@@ -901,7 +897,7 @@ msgstr "Ouvre une archive"
 
 #: src/toolbar.h:55
 msgid "Stop"
-msgstr "Arrêt"
+msgstr "Arrêter"
 
 #: src/window.c:568
 msgid "Folder"
@@ -1039,7 +1035,7 @@ msgstr "_Haut"
 #. current location
 #: src/window.c:2560
 msgid "Current Location:"
-msgstr "Emplacement actuel:"
+msgstr "Emplacement actuel :"
 
 #: src/window.c:2592
 msgid "Add"
@@ -1051,7 +1047,7 @@ msgstr "Voir"
 
 #: src/window.c:2615
 msgid "View selected file"
-msgstr "Voir le fichier sélectionné"
+msgstr "Affiche le fichier sélectionné"
 
 #: src/window.c:3010
 msgid "File type not supported."
@@ -1072,6 +1068,9 @@ msgstr "Ajouter des fichiers à l'archive"
 #: src/window.c:4044
 msgid "Extract archive"
 msgstr "Extraire archive"
+
+#~ msgid "Copyright (C) 2001 Free Software Foundation, Inc."
+#~ msgstr "Copyright © 2001 Free Software Foundation, Inc."
 
 #~ msgid "Fast"
 #~ msgstr "Rapide"
