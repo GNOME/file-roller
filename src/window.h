@@ -219,6 +219,7 @@ typedef struct {
 	guint      cnxn_id[GCONF_NOTIFICATIONS];
 
 	gulong     theme_changed_handler_id;
+	gboolean   non_interactive;
 } FRWindow;
 
 
@@ -231,8 +232,9 @@ void       window_close                     (FRWindow      *window);
 void       window_archive_new               (FRWindow      *window, 
 					     const char    *filename);
 
-void       window_archive_open              (FRWindow      *window, 
-					     const char    *filename);
+gboolean   window_archive_open              (FRWindow      *window, 
+					     const char    *filename,
+					     GtkWindow     *parent);
 
 void       window_archive_save_as           (FRWindow      *window, 
 					     const char    *filename);

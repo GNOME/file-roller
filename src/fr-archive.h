@@ -90,7 +90,8 @@ gboolean         fr_archive_new_file           (FRArchive     *archive,
 						const char    *filename);
 
 gboolean         fr_archive_load               (FRArchive     *archive,
-						const char    *filename);
+						const char    *filename,
+						GError       **gerror);
 
 void             fr_archive_reload             (FRArchive     *archive);
 

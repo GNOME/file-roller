@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <glib.h>
+#include <gnome.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include "file-data.h"
 #include "file-list.h"
@@ -37,6 +38,7 @@
 #include "fr-command-tar.h"
 #include "fr-command-zip.h"
 #include "fr-command-zoo.h"
+#include "fr-error.h"
 #include "fr-marshal.h"
 #include "fr-process.h"
 #include "utf8-fnmatch.h"
@@ -560,16 +562,22 @@ fr_archive_fake_load (FRArchive *archive)
 
 /* filename must not be escaped. */
 gboolean
-fr_archive_load (FRArchive  *archive, 
-		 const char *filename)
+fr_archive_load (FRArchive   *archive, 
+		 const char  *filename,
+		 GError     **gerror)
 {
 	FRCommand  *tmp_command;
 	const char *mime_type;
 
 	g_return_val_if_fail (archive != NULL, FALSE);
 
-	if (access (filename, F_OK) != 0) /* file must exists. */
+	if (access (filename, F_OK) != 0) { /* file must exists. */
+		if (gerror != NULL) 
+			*gerror = g_error_new (fr_error_quark (),
+					       0,
+					       _("The file does not exist."));
 		return FALSE;
+	}
 
 	archive->read_only = access (filename, W_OK) != 0;
 
@@ -589,6 +597,11 @@ fr_archive_load (FRArchive  *archive,
 	    || ! create_command_from_mime_type (archive, filename, mime_type))
 		if (! create_command_from_filename (archive, filename, TRUE)) {
 			archive->command = tmp_command;
+			if (gerror != NULL) 
+				*gerror = g_error_new (fr_error_quark (),
+						       0,
+						       _("Archive type not supported."));
+
                         return FALSE;
 		}
 	
@@ -643,7 +656,7 @@ fr_archive_rename (FRArchive  *archive,
 		/* If the archive is a compressed file we have to reload it,
 		 * because in this case the 'content' of the archive changes 
 		 * too. */
-		fr_archive_load (archive, filename);
+		fr_archive_load (archive, filename, NULL);
 
 	else {
 		if (archive->filename != NULL)

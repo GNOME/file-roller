@@ -410,7 +410,7 @@ prepare_app (poptContext pctx)
 			
 			window = window_new ();
 			gtk_widget_show (window->app);
-			window_archive_open (window, archive);
+			window_archive_open (window, archive, GTK_WINDOW (window->app));
 		}
 	}
 	
@@ -562,7 +562,7 @@ load_session (void)
 
 		window = window_new ();
 		gtk_widget_show (window->app);
-		window_archive_open (window, filename);
+		window_archive_open (window, filename, GTK_WINDOW (window->app));
 
 		g_free (filename);
 	}

@@ -38,6 +38,7 @@
 #include "main.h"
 #include "window.h"
 #include "gconf-utils.h"
+#include "gtk-utils.h"
 
 
 #define GLADE_FILE "file_roller_prop.glade"
@@ -120,13 +121,13 @@ help_clicked_cb (GtkWidget  *widget,
 	if (err != NULL) {
 		GtkWidget *dialog;
 		
-		dialog = gtk_message_dialog_new (GTK_WINDOW (data->dialog),
-						 0,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("Could not display help: %s"),
-						 err->message);
-		
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
+						  GTK_DIALOG_DESTROY_WITH_PARENT, 
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not display help"),
+						  err->message,
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
 		g_signal_connect (G_OBJECT (dialog), "response",
 				  G_CALLBACK (gtk_widget_destroy),
 				  NULL);

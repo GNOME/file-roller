@@ -173,11 +173,13 @@ new_file_ok_cb (GtkWidget *w,
 
 		g_free (path);
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("You have to specify an archive name."));
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
+						  GTK_DIALOG_DESTROY_WITH_PARENT,
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not create the archive"),
+						  _("You have to specify an archive name."),
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -190,11 +192,14 @@ new_file_ok_cb (GtkWidget *w,
 		g_free (dir);
 		g_free (path);
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("You don't have permission to create an archive in this folder"));
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
+						  GTK_DIALOG_DESTROY_WITH_PARENT,
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not create the archive"),
+						  _("You don't have permission to create an archive in this folder"),
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
+
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -217,10 +222,11 @@ new_file_ok_cb (GtkWidget *w,
 		GtkWidget *dialog;
 		int        r;
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_QUESTION,
-						  _("Archive already exists.  Do you want to overwrite it?"),
+						  _("The archive already exists.  Do you want to overwrite it?"),
+						  NULL,
 						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						  _("Overwrite"), GTK_RESPONSE_YES,
 						  NULL);
@@ -235,11 +241,13 @@ new_file_ok_cb (GtkWidget *w,
 
 		if (unlink (path) != 0) {
 			GtkWidget *dialog;
-			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-							 GTK_DIALOG_DESTROY_WITH_PARENT,
-							 GTK_MESSAGE_ERROR,
-							 GTK_BUTTONS_CLOSE,
-							 _("Could not delete old archive."));
+			dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
+							  GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_STOCK_DIALOG_ERROR,
+							  _("Could not delete the old archive."),
+							  NULL,
+							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			return;
@@ -353,11 +361,13 @@ save_file_ok_cb (GtkWidget *w,
 
 		g_free (path);
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("You have to specify an archive name."));
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  GTK_DIALOG_DESTROY_WITH_PARENT,
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not save the archive"),
+						  _("You have to specify an archive name."),
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -370,11 +380,13 @@ save_file_ok_cb (GtkWidget *w,
 		g_free (dir);
 		g_free (path);
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("You don't have permission to create an archive in this folder"));
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  GTK_DIALOG_DESTROY_WITH_PARENT,
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not save the archive"),
+						  _("You don't have permission to create an archive in this folder"),
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -392,7 +404,8 @@ save_file_ok_cb (GtkWidget *w,
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_QUESTION,
-						  _("Archive already exists.  Do you want to overwrite it?"),
+						  _("The archive already exists.  Do you want to overwrite it?"),
+						  NULL,
 						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						  _("Overwrite"), GTK_RESPONSE_YES,
 						  NULL);
@@ -407,11 +420,13 @@ save_file_ok_cb (GtkWidget *w,
 
 		if (unlink (path) != 0) {
 			GtkWidget *dialog;
-			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-							 GTK_DIALOG_DESTROY_WITH_PARENT,
-							 GTK_MESSAGE_ERROR,
-							 GTK_BUTTONS_CLOSE,
-							 _("Could not delete old archive."));
+			dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+							  GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_STOCK_DIALOG_ERROR,
+							  _("Could not delete the old archive."),
+							  NULL,
+							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			return;
@@ -495,8 +510,8 @@ static void
 open_file_ok_cb (GtkWidget *w,
                  GtkWidget *file_sel)
 {
-	FRWindow *window;
-	const gchar *path;
+	FRWindow   *window;
+	const char *path;
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 	path = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_sel));
@@ -504,9 +519,8 @@ open_file_ok_cb (GtkWidget *w,
         if (path == NULL)
                 return;
 
-	window_archive_open (window, path);
-
-	gtk_widget_destroy (file_sel);
+	if (window_archive_open (window, path, GTK_WINDOW (file_sel)))
+		gtk_widget_destroy (file_sel);
 }
 
 
@@ -607,7 +621,8 @@ copy_or_move_archive_ok_cb (GtkWidget    *w,
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
-					     _("Archive already exists.  Do you want to overwrite it?"),
+					     _("The archive already exists.  Do you want to overwrite it?"),
+					     NULL,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Overwrite"), GTK_RESPONSE_YES,
 					     NULL);
@@ -628,11 +643,13 @@ copy_or_move_archive_ok_cb (GtkWidget    *w,
 #endif
 		if (! file_copy (window->archive_filename, new_path)) {
 			GtkWidget *dialog;
-			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-							 GTK_DIALOG_DESTROY_WITH_PARENT,
-							 GTK_MESSAGE_ERROR,
-							 GTK_BUTTONS_CLOSE,
-							 _("Could not copy archive"));
+			dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+							  GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_STOCK_DIALOG_ERROR,
+							  _("Could not copy the archive"),
+							  NULL,
+							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
 		}
@@ -644,11 +661,13 @@ copy_or_move_archive_ok_cb (GtkWidget    *w,
 			window_archive_rename (window, new_path);
 		else {
 			GtkWidget *dialog;
-			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-							 GTK_DIALOG_DESTROY_WITH_PARENT,
-							 GTK_MESSAGE_ERROR,
-							 GTK_BUTTONS_CLOSE,
-							 _("Could not move archive"));
+			dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+							  GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_STOCK_DIALOG_ERROR,
+							  _("Could not move the archive"),
+							  NULL,
+							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
 		}
@@ -780,7 +799,8 @@ rename_archive_cb (GtkWidget *widget,
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
-					     _("Archive already exists.  Do you want to overwrite it?"),
+					     _("The archive already exists.  Do you want to overwrite it?"),
+					     NULL,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Overwrite"), GTK_RESPONSE_YES,
 					     NULL);
@@ -1000,11 +1020,13 @@ manual_cb (GtkWidget *widget,
         if (err != NULL) {
                 GtkWidget *dialog;
                 
-                dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-                                                 GTK_DIALOG_DESTROY_WITH_PARENT,                                                 GTK_MESSAGE_ERROR,
-                                                 GTK_BUTTONS_CLOSE,
-                                                 _("Could not display help: %s"),
-                                                 err->message);
+                dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  GTK_DIALOG_DESTROY_WITH_PARENT, 
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not display help"),
+						  err->message,
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
                 
                 g_signal_connect (G_OBJECT (dialog), "response",
                                   G_CALLBACK (gtk_widget_destroy),

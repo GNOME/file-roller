@@ -66,27 +66,17 @@ GnomeUIInfo recents_menu[] = {
 };
 
 GnomeUIInfo file_menu[] = {
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_New"), N_("Create a new archive"), 
-	  new_archive_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_NEW,
-	  'n', GDK_CONTROL_MASK, NULL },
+	GNOMEUIINFO_MENU_NEW_ITEM (N_("_New"), 
+				   N_("Create a new archive"), 
+				   new_archive_cb, NULL),
 
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Open..."), N_("Open an existing archive"), 
-	  open_archive_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_OPEN,
-	  'o', GDK_CONTROL_MASK, NULL },
+	GNOMEUIINFO_MENU_OPEN_ITEM (open_archive_cb, NULL),
 
 	GNOMEUIINFO_SUBTREE (N_("Open R_ecent"), recents_menu),
 
 	GNOMEUIINFO_SEPARATOR,
 
-	{ GNOME_APP_UI_ITEM, 
-	  N_("Save _As..."), N_("Save current archive in a different type or name"), 
-	  save_as_archive_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_SAVE_AS,
-	  's', GDK_SHIFT_MASK | GDK_CONTROL_MASK, NULL },
+	GNOMEUIINFO_MENU_SAVE_AS_ITEM (save_as_archive_cb, NULL),
 
 	GNOMEUIINFO_SEPARATOR,
 
@@ -144,17 +134,9 @@ GnomeUIInfo file_menu[] = {
 
 	GNOMEUIINFO_SEPARATOR,
 
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Close"), N_("Close current archive"), 
-	  close_archive_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_CLOSE,
-	  0, 0, NULL },
+	GNOMEUIINFO_MENU_CLOSE_ITEM (close_archive_cb, NULL),
 
-	{ GNOME_APP_UI_ITEM, 
-	  N_("E_xit"), N_("Exit"), 
-	  quit_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_QUIT, 
-	  'q', GDK_CONTROL_MASK, NULL },
+	GNOMEUIINFO_MENU_QUIT_ITEM(quit_cb, NULL),
 
 	GNOMEUIINFO_END
 };

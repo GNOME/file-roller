@@ -1,4 +1,25 @@
+2003-06-08  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/dlg-preferences.c: 
+	* menu.h:
+	* fr-error.[ch]:
+	* fr-archive.[ch]:
+	* gtk-utils.[ch]:
+	* window.[ch]:
+	* main.c:
+	* menu-callbacks.c:
+	* dlg-batch-add.c:
+	* dlg-add.c:
+	* dlg-extract.c:
+	* dlg-preferences.c: make alert dialogs HIG compliant (bugs
+	#114578, #114581).
+	
 2003-05-29  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.h: 
+	* src/window.c (window_new, window_batch_mode_stop) 
+	(window_archive__open_extract, window_archive__open_add): close
+	the window if in non interactive mode (bug #112594).
 
 	* src/menu-callbacks.c (copy_or_move_archive_ok_cb): fix bug #113805
 

@@ -91,11 +91,13 @@ add_clicked_cb (GtkWidget  *widget,
 	if (! fr_archive_utils__file_is_archive (archive_name)) {
 		GtkWidget  *d;
 
-		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-					    GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_MESSAGE_ERROR,
-					    GTK_BUTTONS_CLOSE,
-					    _("You have to specify an archive name."));
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("You have to specify an archive name."),
+					     NULL,
+					     GTK_STOCK_OK, GTK_RESPONSE_OK,
+					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -113,6 +115,7 @@ add_clicked_cb (GtkWidget  *widget,
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
 					     _("Destination folder does not exist.  Do you want to create it?"),
+					     NULL,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Create _Folder"), GTK_RESPONSE_YES,
 					     NULL);
@@ -126,14 +129,19 @@ add_clicked_cb (GtkWidget  *widget,
 	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755)) {
 		GtkWidget  *d;
 		const char *error;
+		char       *message;
 
 		error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
-		
-		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-					    GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_MESSAGE_ERROR,
-					    GTK_BUTTONS_CLOSE,
-					    _("Could not create the destination folder: %s.\nAddition not performed."), error);
+		message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Addition not performed"),
+					     message,
+					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     NULL);
+		g_free (message);
+
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (archive_dir);
@@ -147,11 +155,13 @@ add_clicked_cb (GtkWidget  *widget,
 	if (do_not_add) {
 		GtkWidget *d;
 
-		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-					    GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_MESSAGE_ERROR,
-					    GTK_BUTTONS_CLOSE,
-					    _("Addition not performed."));
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Addition not performed"),
+					     NULL,
+					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		g_free (archive_name);
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -173,7 +183,7 @@ add_clicked_cb (GtkWidget  *widget,
 						   FR_BATCH_ACTION_ADD,
 						   path_list_dup (data->file_list),
 						   (GFreeFunc) path_list_free);
-		window_archive_open (window, archive_name);
+		window_archive_open (window, archive_name, GTK_WINDOW (window->app));
 	}
 
 	g_free (archive_name);

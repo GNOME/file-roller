@@ -118,6 +118,7 @@ ok_clicked_cb (GtkWidget  *widget,
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Destination folder does not exist.  Do you want to create it?"),
+						     NULL,
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
@@ -132,14 +133,19 @@ ok_clicked_cb (GtkWidget  *widget,
 		if (! do_not_extract && ! ensure_dir_exists (extract_to_dir, 0755)) {
 			GtkWidget  *d;
 			const char *error;
+			char       *message;
 
 			error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
+			message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
+			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						     GTK_DIALOG_DESTROY_WITH_PARENT,
+						     GTK_STOCK_DIALOG_ERROR,
+						     _("Extraction not performed"),
+						     message,
+						     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						     NULL);
+			g_free (message);
 
-			d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						    GTK_DIALOG_DESTROY_WITH_PARENT,
-						    GTK_MESSAGE_ERROR,
-						    GTK_BUTTONS_CLOSE,
-						    _("Could not create the destination folder: %s.\nExtraction not performed."), error);
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -150,11 +156,13 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (do_not_extract) {
 		GtkWidget *d;
 
-		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-					    GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_MESSAGE_ERROR,
-					    GTK_BUTTONS_CLOSE,
-					    _("Extraction not performed."));
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Extraction not performed"),
+					     NULL,
+					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -167,17 +175,21 @@ ok_clicked_cb (GtkWidget  *widget,
 	    && access (extract_to_dir, R_OK | W_OK | X_OK) != 0) {
 		GtkWidget *d;
 		char      *utf8_path;
-
+		char      *message;
+		
 		utf8_path = g_locale_to_utf8 (extract_to_dir, -1, NULL, NULL, NULL);
-		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-					    GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_MESSAGE_ERROR,
-					    GTK_BUTTONS_CLOSE,
-					    _("You don't have the right permissions to extract archives in the folder \"%s\""),
-					    utf8_path);
+		message = g_strdup_printf (_("You don't have the right permissions to extract archives in the folder \"%s\""), utf8_path);
+		g_free (utf8_path);
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Extraction not performed"),
+					     message,
+					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     NULL);
+		g_free (message);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (utf8_path);
 
 		g_free (extract_to_dir);
 
@@ -405,12 +417,13 @@ help_clicked_cb (GtkWidget  *widget,
 	if (err != NULL) {
 		GtkWidget *dialog;
 		
-		dialog = gtk_message_dialog_new (GTK_WINDOW (data->dialog),
-						 0,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("Could not display help: %s"),
-						 err->message);
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
+						  GTK_DIALOG_DESTROY_WITH_PARENT, 
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not display help"),
+						  err->message,
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
 		
 		g_signal_connect (G_OBJECT (dialog), "response",
 				  G_CALLBACK (gtk_widget_destroy),

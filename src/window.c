@@ -1052,7 +1052,7 @@ open_recent_cb (EggRecentView *view,
 
 	if (strlen (uri) > prefix_len) {
 		char *path = gnome_vfs_unescape_string (uri + prefix_len, "");
-		window_archive_open (window, path);
+		window_archive_open (window, path, GTK_WINDOW (window->app));
 		g_free (path);
 		result = TRUE;
 	}
@@ -1309,7 +1309,8 @@ static void _window_batch_start_current_action (FRWindow *window);
 
 
 static void
-open_nautilus (const char *folder)
+open_nautilus (GtkWindow  *parent,
+	       const char *folder)
 {
 	char   *command_line;
 	char   *e_folder;
@@ -1321,13 +1322,21 @@ open_nautilus (const char *folder)
 	
 	if (!g_spawn_command_line_async (command_line, &err) || (err != NULL)){
 		GtkWidget *d;
-	
-		d = _gtk_message_dialog_new (NULL,
+		char      *utf8_name;
+		char      *message;
+
+		utf8_name = g_locale_to_utf8 (folder, -1, 0, 0, 0);
+		message = g_strdup_printf (_("Could not display the folder \"%s\""), utf8_name);
+		g_free (utf8_name);
+		d = _gtk_message_dialog_new (parent,
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
+					     message,
 					     err->message,
 					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
 					     NULL);
+		g_free (message);
+
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (d);
 		g_clear_error (&err);
@@ -1371,11 +1380,13 @@ handle_errors (FRWindow    *window,
 {
 	if (error->type == FR_PROC_ERROR_STOPPED) {
 		GtkWidget *dialog;
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 0,
-						 GTK_MESSAGE_WARNING,
-						 GTK_BUTTONS_CLOSE,
-						 _("Operation stopped"));
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  0,
+						  GTK_STOCK_DIALOG_WARNING,
+						  _("Operation stopped"),
+						  NULL,
+						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  NULL);
 		g_signal_connect (dialog, 
 				  "response",
 				  G_CALLBACK (gtk_widget_destroy), 
@@ -1590,7 +1601,7 @@ _action_performed (FRArchive   *archive,
 				  window);
 			
 		} else if (window->view_folder_after_extraction) {
-			open_nautilus (window->folder_to_view);
+			open_nautilus (GTK_WINDOW (window->app), window->folder_to_view);
 			window->view_folder_after_extraction = FALSE;
 		}
 		break;
@@ -1772,11 +1783,13 @@ drag_drop_add_file_list (FRWindow *window)
 	if (window->archive->read_only) {
 		GtkWidget *dialog;
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("You don't have permissions to add files to this archive."));
+		dialog = _gtk_message_dialog_new (NULL,
+						  GTK_DIALOG_DESTROY_WITH_PARENT,
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not add the files to the archive"),
+						  _("You don't have the right permissions."),
+						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		window->adding_dropped_files = FALSE;
@@ -1803,11 +1816,13 @@ drag_drop_add_file_list (FRWindow *window)
 			GtkWidget *dialog;
 
 			window->adding_dropped_files = FALSE;
-			dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-							 GTK_DIALOG_DESTROY_WITH_PARENT,
-							 GTK_MESSAGE_ERROR,
-							 GTK_BUTTONS_CLOSE,
-							 _("You can't add an archive to itself."));
+			dialog = _gtk_message_dialog_new (NULL,
+							  GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_STOCK_DIALOG_ERROR,
+							  _("Could not add the files to the archive"),
+							  _("You can't add an archive to itself."),
+							  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			
@@ -1978,6 +1993,7 @@ window_drag_data_received  (GtkWidget          *widget,
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Do you want to add this file to the current archive or open it as a new archive?"),
+						     NULL,
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     GTK_STOCK_ADD, 0,
 						     GTK_STOCK_OPEN, 1,
@@ -2001,9 +2017,9 @@ window_drag_data_received  (GtkWidget          *widget,
 					FRWindow *new_window;
 					new_window = window_new ();
 					gtk_widget_show (new_window->app);
-					window_archive_open (new_window, list->data);
+					window_archive_open (new_window, list->data, GTK_WINDOW (new_window->app));
 				} else
-					window_archive_open (window, list->data);
+					window_archive_open (window, list->data, GTK_WINDOW (window->app));
 			}
  		} else {
 			/* this way we do not free the list saved in
@@ -2013,7 +2029,7 @@ window_drag_data_received  (GtkWidget          *widget,
 		}
 	} else {
 		if (one_file && is_an_archive) 
-			window_archive_open (window, list->data);
+			window_archive_open (window, list->data, GTK_WINDOW (window->app));
 		else {
 			GtkWidget *d;
 			int        r;
@@ -2022,6 +2038,7 @@ window_drag_data_received  (GtkWidget          *widget,
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Do you want to create a new archive with these files?"),
+						     NULL,
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Archive"), GTK_RESPONSE_YES,
 						     NULL);
@@ -3112,6 +3129,7 @@ window_new ()
 	window->batch_action_list = NULL;
 	window->batch_action = NULL;
 	window->extract_interact_use_default_dir = FALSE;
+	window->non_interactive = FALSE;
 
 	window->password = NULL;
 	window->compression = preferences_get_compression_level ();
@@ -3401,11 +3419,13 @@ window_archive_new (FRWindow   *window,
 	if (! fr_archive_new_file (window->archive, filename)) {
 		GtkWidget *dialog;
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("Archive type not supported."));
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  GTK_DIALOG_MODAL,
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not create the archive"),
+						  _("Archive type not supported."),
+						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
@@ -3444,13 +3464,15 @@ window_archive_new (FRWindow   *window,
 }
 
 
-void
+gboolean
 window_archive_open (FRWindow   *window,
-		     const char *filename)
+		     const char *filename,
+		     GtkWindow  *parent)
 {
-	gboolean success;
+	GError   *gerror;
+	gboolean  success;
 
-	g_return_if_fail (window != NULL);
+	g_return_val_if_fail (window != NULL, FALSE);
 
 	window_archive_close (window);
 
@@ -3471,17 +3493,28 @@ window_archive_open (FRWindow   *window,
 	window->archive_present = FALSE;	
 	window->give_focus_to_the_list = TRUE;
 
-	success = fr_archive_load (window->archive, window->archive_filename);
+	success = fr_archive_load (window->archive, window->archive_filename, &gerror);
 	window->add_after_opening = FALSE;
 
 	if (! success) {
 		GtkWidget *dialog;
+		char *utf8_name, *message;
+		char *reason;
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app), 
-						 GTK_DIALOG_DESTROY_WITH_PARENT, 
-						 GTK_MESSAGE_ERROR, 
-						 GTK_BUTTONS_CLOSE, 
-						 _("Cannot load archive."));
+		utf8_name = g_locale_to_utf8 (file_name_from_path (window->archive_filename), -1, 0, 0, 0);
+		message = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
+		g_free (utf8_name);
+		reason = gerror != NULL ? gerror->message : "";
+
+		dialog = _gtk_message_dialog_new (parent, 
+						  GTK_DIALOG_DESTROY_WITH_PARENT, 
+						  GTK_STOCK_DIALOG_ERROR,
+						  message,
+						  reason,
+						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  NULL);
+		g_free (message);
+
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
@@ -3491,9 +3524,11 @@ window_archive_open (FRWindow   *window,
 			_window_update_statusbar_list_info (window);
 			window_batch_mode_stop (window);
 		}
-	}
-	
+	} 
+
 	_window_add_to_recent (window, window->archive_filename, success);
+
+	return success;
 }
 
 
@@ -3513,12 +3548,23 @@ window_archive_save_as (FRWindow      *window,
 	window->convert_data.new_archive = fr_archive_new ();
 	if (! fr_archive_new_file (window->convert_data.new_archive, filename)) {
 		GtkWidget *dialog;
+		char *utf8_name;
+		char *message;
 
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("Archive type not supported."));
+		utf8_name = g_locale_to_utf8 (file_name_from_path (filename), -1, NULL, NULL, NULL);
+		message = g_strdup_printf (_("Could not save the archive \"%s\""), file_name_from_path (filename));
+		g_free (utf8_name);
+
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						  GTK_DIALOG_DESTROY_WITH_PARENT,
+						  GTK_STOCK_DIALOG_ERROR,
+						  message,
+						  _("Archive type not supported."),
+						  NULL,
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
+		g_free (message);
+
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		
@@ -3702,6 +3748,7 @@ window_archive_extract (FRWindow   *window,
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Destination folder does not exist.  Do you want to create it?"),
+						     NULL,
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
@@ -3716,14 +3763,19 @@ window_archive_extract (FRWindow   *window,
 		if (! do_not_extract && ! ensure_dir_exists (extract_to_dir, 0755)) {
 			GtkWidget  *d;
 			const char *error;
+			char       *message;
 
 			error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
-
-			d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-						    GTK_DIALOG_DESTROY_WITH_PARENT,
-						    GTK_MESSAGE_ERROR,
-						    GTK_BUTTONS_CLOSE,
-						    _("Could not create the destination folder: %s.\nExtraction not performed."), error);
+			message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
+			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						     GTK_DIALOG_MODAL,
+						     GTK_STOCK_DIALOG_ERROR,
+						     _("Extraction not performed"),
+						     message,
+						     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						     NULL);
+			g_free (message);
+						   
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -3734,11 +3786,13 @@ window_archive_extract (FRWindow   *window,
 	if (do_not_extract) {
 		GtkWidget *d;
 
-		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
-					    GTK_DIALOG_DESTROY_WITH_PARENT,
-					    GTK_MESSAGE_ERROR,
-					    GTK_BUTTONS_CLOSE,
-					    _("Extraction not performed."));
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_MODAL,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Extraction not performed"),
+					     NULL,
+					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -4522,7 +4576,7 @@ _window_batch_start_current_action (FRWindow *window)
 	action = (FRBatchActionDescription *) window->batch_action->data;
 	switch (action->action) {
 	case FR_BATCH_ACTION_OPEN:
-		window_archive_open (window, (gchar*) action->data);
+		window_archive_open (window, (char*) action->data, GTK_WINDOW (window->app));
 		break;
 
 	case FR_BATCH_ACTION_OPEN_AND_ADD:
@@ -4540,7 +4594,7 @@ _window_batch_start_current_action (FRWindow *window)
 							   FR_BATCH_ACTION_ADD,
 							   path_list_dup (adata->file_list),
 							   (GFreeFunc) path_list_free);
-			window_archive_open (window, adata->archive_name);
+			window_archive_open (window, adata->archive_name, GTK_WINDOW (window->app));
 		}
 		break;
 
@@ -4601,7 +4655,6 @@ window_batch_mode_start (FRWindow *window)
 	if (window->batch_action_list == NULL)
 		return;
 
-	/* FIXME: hide the main window while in batch mode? */
 	gtk_widget_hide (window->app);
 
 	window->batch_mode = TRUE;
@@ -4619,9 +4672,12 @@ window_batch_mode_stop (FRWindow *window)
 	window->extract_interact_use_default_dir = FALSE;
 	window->batch_mode = FALSE;
 
-	/* FIXME: same as above. */
-	gtk_widget_show (window->app); 
-	window_archive_close (window);
+	if (window->non_interactive)
+		window_close (window);
+	else {
+		gtk_widget_show (window->app); 
+		window_archive_close (window);
+	}
 }
 
 
@@ -4630,6 +4686,8 @@ window_archive__open_extract (FRWindow   *window,
 			      const char *filename,
 			      const char *dest_dir)
 {
+	window->non_interactive = TRUE;
+
 	window_batch_mode_add_action (window,
 				      FR_BATCH_ACTION_OPEN,
 				      g_strdup (filename),
@@ -4652,6 +4710,8 @@ window_archive__open_add (FRWindow   *window,
 			  const char *archive,
 			  GList      *file_list)
 {
+	window->non_interactive = TRUE;
+
 	if (archive != NULL) {
 		OpenAndAddData *adata;
 
