@@ -3,6 +3,7 @@ SUBDIRS =		\
 	src		\
 	help		\
 	component	\
+	nautilus	\
 	po
 
 

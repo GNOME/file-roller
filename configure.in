@@ -25,6 +25,7 @@ LIBGLADE_REQUIRED=2.4.0
 BONOBO_ACTIVATION_REQUIRED=1.0.0
 LIBBONOBO_REQUIRED=2.6.0
 LIBBONOBOUI_REQUIRED=2.6.0
+NAUTILUS_REQUIRED=2.9.0
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
@@ -35,6 +36,7 @@ AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(BONOBO_ACTIVATION_REQUIRED)
 AC_SUBST(LIBBONOBO_REQUIRED)
 AC_SUBST(LIBBONOBOUI_REQUIRED)
+AC_SUBST(NAUTILUS_REQUIRED)
 
 dnl ===========================================================================
 
@@ -50,6 +52,13 @@ PKG_CHECK_MODULES(FR,					\
 	bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
+
+PKG_CHECK_MODULES(NAUTILUS,				\
+	libnautilus-extension >= $NAUTILUS_REQUIRED 	\
+	glib-2.0 >= $GLIB_REQUIRED)
+AC_SUBST(NAUTILUS_CFLAGS)
+AC_SUBST(NAUTILUS_LIBS)
+
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
@@ -98,6 +107,7 @@ src/Makefile
 src/icons/Makefile
 src/recent-files/Makefile
 component/Makefile
+nautilus/Makefile
 po/Makefile.in
 help/Makefile
 help/C/Makefile
