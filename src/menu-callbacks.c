@@ -785,9 +785,9 @@ about_cb (GtkWidget *widget,
 	}
 
 	logo = gdk_pixbuf_new_from_file (PIXMAPSDIR "/file-roller.png", NULL);
-	about = gnome_about_new ("File Roller", 
+	about = gnome_about_new (_("File Roller"), 
 				 VERSION,
-				 _("Copyright (C) 2001 Free Software Foundation, Inc."),
+				 "Copyright \xc2\xa9 2001-2002 Free Software Foundation, Inc.",
 				 _("An archive manager for GNOME."),
 				 authors,
 				 documenters,
