@@ -125,8 +125,6 @@ endif
 EXTRA_DIST = 			\
 	$(glade_DATA)		\
 	$(schema_DATA)		\
-	fnmatch.c		\
-	fnmatch.h		\
 	fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)
