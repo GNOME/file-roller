@@ -407,6 +407,7 @@ create_extra_widget (DialogData *data)
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_tooltips_set_tip (tooltips, data->e_files_entry, _("example: *.txt; *.doc"), NULL);
 	gtk_entry_set_activates_default (GTK_ENTRY (data->e_files_entry), TRUE);
+	gtk_entry_set_visibility (GTK_ENTRY(data->e_password_entry), FALSE);
 	
 	data->e_all_radiobutton = gtk_radio_button_new_with_mnemonic (NULL, _("_All files"));
 	gtk_table_attach (GTK_TABLE (table1), data->e_all_radiobutton, 0, 2, 0, 1,
