@@ -4152,7 +4152,7 @@ window_batch_mode_start (FRWindow *window)
 void
 window_batch_mode_stop (FRWindow *window)
 {
-	if (!window->batch_mode) 
+	if (! window->batch_mode) 
 		return;
 
 	window->extract_interact_use_default_dir = FALSE;

@@ -5,11 +5,11 @@ SUBDIRS =		\
 	component	\
 	po
 
-@INTLTOOL_DESKTOP_RULE@
 
 desktopdir = $(datadir)/applications
 desktop_in_files=file-roller.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop) 
+@INTLTOOL_DESKTOP_RULE@
 
 icondir = $(datadir)/pixmaps
 icon_DATA = file-roller.png
