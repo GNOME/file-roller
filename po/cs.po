@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.0\n"
-"POT-Creation-Date: 2002-12-03 05:50+0100\n"
-"PO-Revision-Date: 2002-12-03 16:52+0100\n"
+"POT-Creation-Date: 2002-12-05 06:01+0100\n"
+"PO-Revision-Date: 2002-12-05 20:20+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,9 +46,9 @@ msgid "Archive Manager"
 msgstr "Správce archivů"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:153
-#: src/gtk-utils.c:256 src/main.c:106 src/window.c:699 src/window.c:708
-#: src/window.c:2369 src/window.c:4063
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
+#: src/gtk-utils.c:266 src/main.c:106 src/window.c:699 src/window.c:708
+#: src/window.c:2369 src/window.c:4068
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -124,7 +124,7 @@ msgid "Adding %u files"
 msgstr "Přidávám %u souborů"
 
 #: src/dlg-extract.c:120 src/window.c:3128
-msgid "Destination folder does not exist.  Do you want to create it ?"
+msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Cílový adresář neexistuje. Chcete jej vytvořit?"
 
 #: src/dlg-extract.c:122 src/window.c:3130
@@ -134,7 +134,7 @@ msgstr "Vytvořit _adresář"
 #: src/dlg-extract.c:142 src/window.c:3150
 #, c-format
 msgid ""
-"Could not create the destination folder : %s.\n"
+"Could not create the destination folder: %s.\n"
 "Extraction not performed."
 msgstr ""
 "Nemohu vytvořit cílový adresář: %s.\n"
@@ -221,7 +221,7 @@ msgid "A_vailable application:"
 msgstr "_Dostupná aplikace:"
 
 #: src/file_roller.glade.h:5
-msgid "Add _to archive :"
+msgid "Add _to archive:"
 msgstr "Přidat _do archivu:"
 
 #: src/file_roller.glade.h:6
@@ -400,7 +400,7 @@ msgstr ""
 "  %s"
 
 #. Button
-#: src/gtk-utils.c:281
+#: src/gtk-utils.c:297
 msgid "Command _line output"
 msgstr "Výstup příkazového _řádku"
 
@@ -493,7 +493,7 @@ msgid "You don't have permission to create an archive in this folder"
 msgstr "Nemáte oprávnění vytvářet v tomto adresáři archiv"
 
 #: src/menu-callbacks.c:193 src/menu-callbacks.c:420 src/menu-callbacks.c:590
-msgid "Archive already exists.  Do you want to overwrite it ?"
+msgid "Archive already exists.  Do you want to overwrite it?"
 msgstr "Archiv již existuje. Chcete jej přepsat?"
 
 #: src/menu-callbacks.c:195 src/menu-callbacks.c:422 src/menu-callbacks.c:592
@@ -509,8 +509,8 @@ msgid "New Archive"
 msgstr "Nový archiv"
 
 #: src/menu-callbacks.c:265
-msgid "Archive type :"
-msgstr "Typ archivu :"
+msgid "Archive type:"
+msgstr "Typ archivu:"
 
 #: src/menu-callbacks.c:336
 msgid "Open Archive"
@@ -541,12 +541,16 @@ msgid "_Rename"
 msgstr "_Přejmenovat"
 
 #: src/menu-callbacks.c:629
-msgid "Archive will be deleted, are you sure ?"
+msgid "Archive will be deleted, are you sure?"
 msgstr "Archiv bude odstraněn, jste si jisti?"
 
 #: src/menu-callbacks.c:780
 msgid "translator_credits"
 msgstr "Miloslav Trmač <mitr@volny.cz>"
+
+#: src/menu-callbacks.c:790
+msgid "Copyright (C) 2001 Free Software Foundation, Inc."
+msgstr "Copyright (C) 2001 Free Software Foundation, Inc."
 
 #: src/menu-callbacks.c:791
 msgid "An archive manager for GNOME."
@@ -972,13 +976,13 @@ msgstr "Nemůžete přidat archiv sám do sebe."
 #: src/window.c:1717
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
-"archive ?"
+"archive?"
 msgstr ""
 "Chcete přidat tento soubor do aktuálního archivu nebo jej otevřít jako nový "
 "archiv?"
 
 #: src/window.c:1760
-msgid "Do you want to create a new archive with these files ?"
+msgid "Do you want to create a new archive with these files?"
 msgstr "Chcete vytvořit nový archiv s těmito soubory?"
 
 #: src/window.c:1762
@@ -1035,13 +1039,13 @@ msgid "Cannot load archive."
 msgstr "Nemohu načíst archiv."
 
 #: src/window.c:3477
-msgid "File Roller - Last output"
-msgstr "File Roller - poslední výstup"
+msgid "Last Output"
+msgstr "Poslední výstup"
 
-#: src/window.c:3998
+#: src/window.c:4003
 msgid "Add files to an archive"
 msgstr "Přidat soubory do archivu"
 
-#: src/window.c:4023
+#: src/window.c:4028
 msgid "Extract archive"
 msgstr "Rozbalit archiv"
