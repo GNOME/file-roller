@@ -25,6 +25,7 @@
 
 
 #include <glib.h>
+#include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "preferences.h"
 #include "fr-process.h"
 #include "window.h"
@@ -39,11 +40,12 @@ typedef struct {
 } ViewerData;
 
 typedef struct {
-	FRWindow  *window;
-	FRProcess *process;
-	char      *command;
-	GList     *file_list;
-	char      *temp_dir;
+	FRWindow           *window;
+	FRProcess          *process;
+	char               *command;
+	GnomeVFSMimeApplication *app;
+	GList              *file_list;
+	char               *temp_dir;
 } CommandData;
 
 

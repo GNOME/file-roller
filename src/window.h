@@ -24,6 +24,7 @@
 #define FR_WINDOW_H
 
 #include <gtk/gtk.h>
+#include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "egg-recent.h"
 #include "fr-archive.h"
 #include "typedefs.h"
@@ -332,8 +333,12 @@ void       window_view_file                 (FRWindow *window,
 					     char     *file);
 
 void       window_open_files                (FRWindow *window, 
-					     char     *command,
-					     GList    *file_list);
+					     GList    *file_list,
+					     char     *command);
+
+void       window_open_files_with_application (FRWindow *window, 
+					       GList    *file_list,
+					       GnomeVFSMimeApplication *app);
 
 void       window_view_or_open_file         (FRWindow *window, 
 					     char     *file);

@@ -89,9 +89,10 @@ open_cb (GtkWidget *widget,
 
 	for (scan = data->app_list; scan && !present; scan = scan->next) {
 		GnomeVFSMimeApplication *app = scan->data;
-		if (strcmp (app->command, application) == 0) {
-			command = application_get_command (app);
-			present = TRUE;
+		if (strcmp (gnome_vfs_mime_application_get_exec (app), application) == 0) {
+			window_open_files_with_application (data->window, data->file_list, app);
+			gtk_widget_destroy (data->dialog);
+			return;
 		}
 	}
 
@@ -116,10 +117,7 @@ open_cb (GtkWidget *widget,
 	/* exec the application */
 
 	if (command != NULL) {
-		window_open_files (data->window,
-				   command,
-				   data->file_list);
-		
+		window_open_files (data->window, data->file_list, command);
 		g_free (command);
 	}
 
@@ -151,7 +149,7 @@ app_button_press_cb (GtkWidget      *widget,
 	gtk_tree_model_get (data->app_model, &iter,
 			    1, &app,
 			    -1);
-	gtk_entry_set_text (GTK_ENTRY (data->o_app_entry), app->command);
+	gtk_entry_set_text (GTK_ENTRY (data->o_app_entry), gnome_vfs_mime_application_get_exec (app));
 
 	return FALSE;
 }
@@ -173,7 +171,7 @@ app_activated_cb (GtkTreeView       *tree_view,
 	gtk_tree_model_get (data->app_model, &iter,
 			    1, &app,
 			    -1);
-	gtk_entry_set_text (GTK_ENTRY (data->o_app_entry), app->command);
+	gtk_entry_set_text (GTK_ENTRY (data->o_app_entry), gnome_vfs_mime_application_get_exec (app));
 
 	open_cb (NULL, data);
 }
@@ -377,14 +375,14 @@ dlg_open_with (FRWindow *window,
 		if (app_names != NULL) {
 			GList *p;
 			for (p = app_names; p && !found; p = p->next)
-				if (strcmp ((char*)p->data, app->command) == 0)
+				if (strcmp ((char*)p->data, gnome_vfs_mime_application_get_exec (app)) == 0)
 					found = TRUE;
 		}
 
 		if (found)
 			continue;
 
-		app_names = g_list_prepend (app_names, app->command);
+		app_names = g_list_prepend (app_names, (char*) gnome_vfs_mime_application_get_exec (app));
 
 		gtk_list_store_append (GTK_LIST_STORE (data->app_model),
 				       &iter);

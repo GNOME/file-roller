@@ -5268,14 +5268,12 @@ window_paste_selection (FRWindow *window)
 
 
 static void
-open_files (FRArchive   *archive,
-	    FRAction     action, 
-	    FRProcError *error,
-	    gpointer     callback_data)
+window_open_files__extract_done_cb (FRArchive   *archive,
+				    FRAction     action, 
+				    FRProcError *error,
+				    gpointer     callback_data)
 {
 	CommandData  *cdata = callback_data;
-	FRProcess    *proc;
-	GList        *scan;
 
 	g_signal_handlers_disconnect_matched (G_OBJECT (archive), 
 					      G_SIGNAL_MATCH_DATA, 
@@ -5289,37 +5287,58 @@ open_files (FRArchive   *archive,
 		return;
 	}
 
-	proc = fr_process_new ();
-	fr_process_use_standard_locale (proc, FALSE);
-	proc->term_on_stop = FALSE;
-	cdata->process = proc;
+	if (cdata->command != NULL) {
+		FRProcess  *proc;
+		GList      *scan;
 
-	fr_process_begin_command (proc, cdata->command);
-	for (scan = cdata->file_list; scan; scan = scan->next) {
-		char *filename = scan->data;
-		fr_process_add_arg (proc, filename);
+		proc = fr_process_new ();
+		fr_process_use_standard_locale (proc, FALSE);
+		proc->term_on_stop = FALSE;
+		cdata->process = proc;
+		
+		fr_process_begin_command (proc, cdata->command);
+		for (scan = cdata->file_list; scan; scan = scan->next) {
+			char *filename = scan->data;
+			fr_process_add_arg (proc, filename);
+		}
+		fr_process_end_command (proc);
+		
+		command_list = g_list_prepend (command_list, cdata);
+		fr_process_start (proc);
+
+	} else if (cdata->app != NULL) {
+		GList *uris = NULL, *scan;
+
+		for (scan = cdata->file_list; scan; scan = scan->next) {
+			char *filename = scan->data;
+			uris = g_list_prepend (uris, gnome_vfs_get_uri_from_local_path (filename));
+		}
+
+		gnome_vfs_mime_application_launch (cdata->app, uris);
+
+		path_list_free (uris);
 	}
-	fr_process_end_command (proc);
-
-	command_list = g_list_prepend (command_list, cdata);
-	fr_process_start (proc);
 }
 
 
-void
-window_open_files (FRWindow *window, 
-		   char     *command,
-		   GList    *file_list)
+static void
+window_open_files_common (FRWindow                *window, 
+			  GList                   *file_list,
+			  char                    *command,
+			  GnomeVFSMimeApplication *app)
 {
 	CommandData *cdata;
 	GList       *scan;
 
         g_return_if_fail (window != NULL);
 
-	cdata = g_new (CommandData, 1);
+	cdata = g_new0 (CommandData, 1);
 	cdata->window = window;
 	cdata->process = NULL;
-	cdata->command = g_strdup (command);
+	if (command != NULL)
+		cdata->command = g_strdup (command);
+	if (app != NULL)
+		cdata->app = gnome_vfs_mime_application_copy (app);
 	cdata->file_list = NULL;
 	cdata->temp_dir = get_temp_work_dir ();
 
@@ -5338,7 +5357,7 @@ window_open_files (FRWindow *window,
 
 	g_signal_connect (G_OBJECT (window->archive), 
 			  "done",
-			  G_CALLBACK (open_files),
+			  G_CALLBACK (window_open_files__extract_done_cb),
 			  cdata);
 
 	fr_process_clear (window->archive->process);
@@ -5351,6 +5370,24 @@ window_open_files (FRWindow *window,
 			    FALSE,
 			    window->password);
 	fr_process_start (window->archive->process);
+}
+
+
+void
+window_open_files (FRWindow *window, 
+		   GList    *file_list,
+		   char     *command)
+{
+	window_open_files_common (window, file_list, command, NULL);
+}
+
+
+void
+window_open_files_with_application (FRWindow *window, 
+				    GList    *file_list,
+				    GnomeVFSMimeApplication *app)
+{
+	window_open_files_common (window, file_list, NULL, app);
 }
 
 
@@ -5371,11 +5408,9 @@ window_view_or_open_file (FRWindow *window,
 
 	file_list = g_list_append (NULL, filename);
 
-	if (application != NULL) {
-		char *command = application_get_command (application);
-		window_open_files (window, command, file_list);
-		g_free (command);
-	} else 
+	if (application != NULL) 
+		window_open_files_with_application  (window, file_list, application);
+	else 
 		dlg_open_with (window, file_list);
 
 	g_list_free (file_list);

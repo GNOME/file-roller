@@ -96,8 +96,6 @@ char*               escape_str                   (const char  *str,
 
 gchar *             shell_escape                 (const gchar *filename);
 
-gchar *             application_get_command      (const GnomeVFSMimeApplication *app);
-
 gboolean            match_patterns               (char       **patterns, 
 						  const char  *string,
 						  int          flags);

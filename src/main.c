@@ -189,6 +189,7 @@ command_done (CommandData *cdata)
 	}
 
 	g_free (cdata->command);
+	gnome_vfs_mime_application_free (cdata->app);
 	path_list_free (cdata->file_list);
 	g_free (cdata->temp_dir);
 	if (cdata->process != NULL) 
