@@ -350,22 +350,6 @@ fr_command_set_filename (FRCommand *comm,
 }
 
 
-static gboolean
-fake_load_done (gpointer data)
-{
-	FRCommand *comm = data;
-
-	comm->process->error.type = FR_PROC_ERROR_NONE;
-	g_signal_emit (G_OBJECT (comm), 
-		       fr_command_signals[DONE], 
-		       0,
-		       comm->action,
-		       &comm->process->error);
-
-	return FALSE;
-}
-
-
 void
 fr_command_list (FRCommand *comm)
 {

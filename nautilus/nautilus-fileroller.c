@@ -313,11 +313,6 @@ nautilus_fr_class_init (NautilusFrClass *class)
 }
 
 
-/* Type registration.  Because this type is implemented in a module
- * that can be unloaded, we separate type registration from get_type().
- * the type_register() function will be called by the module's
- * initialization function. */
-
 static GType fr_type = 0;
 
 

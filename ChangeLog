@@ -1,4 +1,11 @@
+2004-12-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* nautilus/fileroller-module.c (nautilus_module_initialize): bind
+	text domain here.
+
 2004-12-07  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-command.c: removed unused function.
 
 	* src/fr-archive.h: 
 	* src/window.h: 
@@ -82,7 +89,12 @@
 	* src/dlg-add-folder.c: 
 
 	Fixes bug #159172: tooltips leaked.  Patch by Paolo Borelli.
-	
+
+2004-11-24  Dennis Cranston <dennis_cranston@yahoo.com>
+
+	* src/main.c: (initialize_data):  Set window icon with
+	gtk_window_set_default_icon_name () to use the theme icon.
+
 2004-11-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/file-utils.c (split_line, eat_spaces, get_last_field): 
