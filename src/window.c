@@ -5432,8 +5432,9 @@ window_open_files__extract_done_cb (FRArchive   *archive,
 		
 		fr_process_begin_command (proc, cdata->command);
 		for (scan = cdata->file_list; scan; scan = scan->next) {
-			char *filename = scan->data;
+			char *filename = shell_escape (scan->data);
 			fr_process_add_arg (proc, filename);
+			g_free (filename);
 		}
 		fr_process_end_command (proc);
 		
@@ -5484,9 +5485,7 @@ window_open_files_common (FRWindow                *window,
 					"/",
 					file,
 					NULL);
-		cdata->file_list = g_list_prepend (cdata->file_list,
-						   shell_escape (filename));
-		g_free (filename);
+		cdata->file_list = g_list_prepend (cdata->file_list, filename);
 	}
 
 	g_signal_connect (G_OBJECT (window->archive), 

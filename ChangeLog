@@ -1,3 +1,12 @@
+2005-03-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (window_open_files__extract_done_cb)
+	(window_open_files_common): do not escape filenames with 
+	gnome_vfs_mime_application_launch.
+
+	Fixes bug #170258: file-roller can't open for preview files with a 
+	white space in filename.
+
 2005-03-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* nautilus/nautilus-fileroller.c (nautilus_fr_get_file_items): 
