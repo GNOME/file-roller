@@ -51,6 +51,8 @@ file_roller_SOURCES = 		\
 	dlg-viewer.h		\
 	dlg-viewer-or-app.c	\
 	dlg-viewer-or-app.h	\
+	eggtreemultidnd.c	\
+	eggtreemultidnd.h	\
 	file-data.c		\
 	file-data.h		\
 	file-list.c		\

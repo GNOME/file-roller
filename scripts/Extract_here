@@ -1,5 +1,0 @@
-#!/bin/sh
-
-quoted=$(echo -e "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" | awk 'BEGIN { FS = "\n" } { printf "\"%s\" ", $1 }' | sed -e s#\"\"##)
-
-eval "file-roller --force --extract-to=$NAUTILUS_SCRIPT_CURRENT_URI $quoted"

@@ -27,8 +27,6 @@
 #include "typedefs.h"
 #include "window.h"
 
-#define PREF_INSTALL_SCRIPTS       "/apps/file-roller/general/install_nautilus_scripts"
-
 #define PREF_LIST_SORT_METHOD      "/apps/file-roller/listing/sort_method"
 #define PREF_LIST_SORT_TYPE        "/apps/file-roller/listing/sort_type"
 #define PREF_LIST_MODE             "/apps/file-roller/listing/list_mode"

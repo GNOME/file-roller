@@ -49,8 +49,6 @@ typedef struct {
 
 void  viewer_done      (ViewerData  *vdata);
 void  command_done     (CommandData *cdata);
-void  install_scripts  ();
-void  remove_scripts   ();
 
 
 extern GList       *window_list;

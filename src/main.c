@@ -138,79 +138,6 @@ int main (int argc, char **argv)
 /* Initialize application data. */
 
 
-void
-install_scripts ()
-{
-	char *src_dir;
-	char *dest_dir;
-	int   i;
-
-	src_dir = g_strconcat (FR_DATADIR, 
-			       "/file-roller/scripts", 
-			       NULL);
-	dest_dir = g_strconcat (g_get_home_dir (), 
-				"/.gnome2/nautilus-scripts",
-				NULL);
-
-	ensure_dir_exists (dest_dir, 0700);
-
-	for (i = 0; i < N_SCRIPTS; i++) {
-		char *line;
-		char *name_with_spaces;
-		int   j;
-
-		name_with_spaces = g_strdup (script[i]);
-
-		for (j = 0; name_with_spaces[j] != 0; j++)
-			if (name_with_spaces[j] == '_')
-				name_with_spaces[j] = ' ';
-
-		line = g_strdup_printf ("cp %s/%s \"%s/%s\"\n", 
-					src_dir, 
-					script[i], 
-					dest_dir,
-					name_with_spaces);
-		system (line);
-		g_free (line);
-
-		line = g_strdup_printf ("chmod 0700 \"%s/%s\"\n", 
-					dest_dir, 
-					name_with_spaces);
-		system (line);
-		g_free (line);
-
-		g_free (name_with_spaces);
-	}
-
-	g_free (src_dir);
-	g_free (dest_dir);
-
-	eel_gconf_set_boolean (PREF_INSTALL_SCRIPTS, FALSE);
-}
-
-
-void
-remove_scripts ()
-{
-	char *dest_dir;
-	int   i;
-
-	dest_dir = g_strconcat (g_get_home_dir (), 
-				"/.gnome2/nautilus-scripts",
-				NULL);
-
-	for (i = 0; i < N_SCRIPTS; i++) {
-		char *line;
-
-		line = g_strdup_printf ("rm -f %s/%s\n", dest_dir, script[i]);
-		system (line);
-		g_free (line);
-	}
-
-	g_free (dest_dir);
-}
-
-
 static void 
 initialize_data ()
 {
@@ -222,9 +149,6 @@ initialize_data ()
 		gnome_window_icon_set_default_from_file (icon_path);
 
 	eel_gconf_monitor_add ("/apps/file-roller");
-
-	if (eel_gconf_get_boolean (PREF_INSTALL_SCRIPTS))
-		install_scripts ();
 }
 
 /* Free application data. */

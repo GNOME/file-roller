@@ -39,6 +39,7 @@
 #include "dlg-viewer.h"
 #include "dlg-viewer-or-app.h"
 #include "egg-recent.h"
+#include "eggtreemultidnd.h"
 #include "fr-archive.h"
 #include "file-data.h"
 #include "file-utils.h"
@@ -2440,6 +2441,8 @@ window_new ()
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
+	egg_tree_multi_drag_add_drag_support (GTK_TREE_VIEW (window->list_view));
+
 	g_signal_connect (selection,
                           "changed",
                           G_CALLBACK (selection_changed_cb),
