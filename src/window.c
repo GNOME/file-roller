@@ -2553,21 +2553,21 @@ window_new ()
 
 	window->mitem_bookmarks = GTK_MENU_ITEM (file_menu[FILE_MENU_RECENTS_MENU].widget)->submenu;
 
-	window->mitem_add = actions_menu[ACTIONS_MENU_ADD].widget;
-	window->mitem_delete = actions_menu[ACTIONS_MENU_DELETE].widget;
-	window->mitem_extract = actions_menu[ACTIONS_MENU_EXTRACT].widget;
-	window->mitem_open = actions_menu[ACTIONS_MENU_OPEN].widget;
-	window->mitem_test = actions_menu[ACTIONS_MENU_TEST].widget;
-	window->mitem_view = actions_menu[ACTIONS_MENU_VIEW].widget;
-	window->mitem_stop = actions_menu[ACTIONS_MENU_STOP].widget;
+	window->mitem_add = edit_menu[EDIT_MENU_ADD].widget;
+	window->mitem_delete = edit_menu[EDIT_MENU_DELETE].widget;
+	window->mitem_extract = edit_menu[EDIT_MENU_EXTRACT].widget;
+	window->mitem_open = file_menu[FILE_MENU_OPEN].widget;
+	window->mitem_test = edit_menu[EDIT_MENU_TEST].widget;
+	window->mitem_view = file_menu[FILE_MENU_VIEW].widget;
+	window->mitem_stop = view_menu[VIEW_MENU_STOP].widget;
 
 	window->mitem_view_flat   = view_list[VIEW_LIST_VIEW_ALL].widget;
 	window->mitem_view_as_dir = view_list[VIEW_LIST_AS_DIR].widget;
 	set_check_menu_item_state (window, window->mitem_view_as_dir, TRUE);
 	for (i = 0; i < 5; i++)
 		window->mitem_sort[i] = sort_by_radio_list[i].widget;
-	window->mitem_sort_reversed = options_menu[OPTIONS_MENU_REVERSED_ORDER].widget;
-	window->mitem_password = options_menu[OPTIONS_MENU_PASSWORD].widget;
+	window->mitem_sort_reversed = arrange_menu[ARRANGE_MENU_REVERSED_ORDER].widget;
+	window->mitem_password = edit_menu[EDIT_MENU_PASSWORD].widget;
 
 	for (i = 0; i < 8; i++) 
 		window->popupmenu_file[i] = file_popup_menu_data[i].widget;
@@ -2576,8 +2576,6 @@ window_new ()
 	window->toolbar_open = toolbar_data[TOOLBAR_OPEN].widget;
 	window->toolbar_close = toolbar_data[TOOLBAR_CLOSE].widget;
 	window->toolbar_stop = toolbar_data[TOOLBAR_STOP].widget;
-
-	window->bookmarks_tooltips = NULL;
 
 	window->open_default_dir = g_strdup (g_get_home_dir ());
 	window->add_default_dir = g_strdup (g_get_home_dir ());
@@ -2734,11 +2732,6 @@ window_close (FRWindow *window)
 		window->file_popup_menu = NULL;
 	}
 
-	if (window->bookmarks_tooltips != NULL) {
-                g_object_unref (window->bookmarks_tooltips);
-		window->bookmarks_tooltips = NULL;
-	}
-
 	if (window->folder_to_view != NULL) {
 		g_free (window->folder_to_view);
 		window->folder_to_view = NULL;
@@ -2833,6 +2826,32 @@ bookmark_selected_cb (GtkWidget *widget,
 }
 
 
+static void
+put_hint_in_statusbar (GtkWidget* menuitem, gpointer data)
+{
+	char      *hint = g_object_get_data (G_OBJECT (menuitem), "full_path");
+	FRWindow  *window = data;
+	GtkWidget *bar = window->statusbar;
+
+	g_return_if_fail (hint != NULL);
+	g_return_if_fail (GNOME_IS_APPBAR (bar));
+
+        gnome_appbar_push (GNOME_APPBAR (bar), hint);
+}
+
+
+static void
+remove_hint_from_statusbar (GtkWidget* menuitem, gpointer data)
+{
+	FRWindow  *window = data;
+	GtkWidget *bar = window->statusbar;
+
+	g_return_if_fail (GNOME_IS_APPBAR (bar));
+
+	gnome_appbar_pop (GNOME_APPBAR (bar));
+}
+
+
 static char *
 escape_underscore (const char *name)
 {
@@ -2878,12 +2897,6 @@ window_update_history_list (FRWindow *window)
 	bookmarks = bookmarks_new (RC_RECENT_FILE);
 	bookmarks_load_from_disk (bookmarks);
 
-	if (window->bookmarks_tooltips != NULL) 
-                g_object_unref (window->bookmarks_tooltips);
-	window->bookmarks_tooltips = gtk_tooltips_new ();
-	g_object_ref (window->bookmarks_tooltips);
-	gtk_object_sink (GTK_OBJECT (window->bookmarks_tooltips));
-
 	l = gtk_container_get_children (GTK_CONTAINER (window->mitem_bookmarks));
 
 	if (preferences.menus_have_tearoff)
@@ -2926,28 +2939,33 @@ window_update_history_list (FRWindow *window)
 					 i, 
 					 utf8_name);
 		g_free (utf8_name);
-
 		mitem =  gtk_menu_item_new_with_mnemonic (label);
 		g_free (label);
-
-		utf8_path = g_locale_to_utf8 (scan->data, 
-					      -1, NULL, NULL, NULL);
-		gtk_tooltips_set_tip (window->bookmarks_tooltips, 
-				      GTK_WIDGET (mitem),
-				      utf8_path,
-				      NULL);	
-		g_free (utf8_path);
-		g_object_set_data (G_OBJECT (mitem), 
-				   "tooltips", 
-				   window->bookmarks_tooltips);
 		gtk_widget_show (mitem);
+
+		/**/
+
+		utf8_path = g_locale_to_utf8 (scan->data, -1, NULL, NULL,
+					      NULL);
 		
 		g_object_set_data_full (G_OBJECT (mitem), 
 					"full_path", 
-					g_strdup (scan->data),
+					utf8_path,
 					g_free);
 		gtk_menu_shell_append (GTK_MENU_SHELL (window->mitem_bookmarks), mitem);
+		
+		/**/
 
+		g_signal_connect (G_OBJECT (mitem),
+				  "select",
+				  G_CALLBACK (put_hint_in_statusbar),
+				  window);
+		
+		g_signal_connect (G_OBJECT (mitem),
+				  "deselect",
+				  G_CALLBACK (remove_hint_from_statusbar),
+				  window);
+		
 		g_signal_connect (G_OBJECT (mitem), 
 				  "activate", 
 				  G_CALLBACK (bookmark_selected_cb), 

@@ -141,8 +141,6 @@ typedef struct {
 	GtkWidget *      file_popup_menu;
 	GtkWidget *      popupmenu_file[8];
 
-	GtkTooltips *    bookmarks_tooltips;
-
 	/* drag data */
 
 	GList *  drag_file_list;        /* the list of files we are 

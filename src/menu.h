@@ -42,14 +42,17 @@ enum {
 	FILE_MENU_NEW_ARCHIVE = 0,
 	FILE_MENU_OPEN_ARCHIVE,
 	FILE_MENU_RECENTS_MENU,
-	FILE_MENU_SEP3,
+	FILE_MENU_SEP1,
 	FILE_MENU_ARCHIVE_PROP,
-	FILE_MENU_SEP4,
+	FILE_MENU_SEP2,
+	FILE_MENU_OPEN,
+	FILE_MENU_VIEW,
+	FILE_MENU_SEP3,
 	FILE_MENU_MOVE_ARCHIVE,
 	FILE_MENU_COPY_ARCHIVE,
 	FILE_MENU_RANAME_ARCHIVE,
 	FILE_MENU_DELETE_ARCHIVE,
-	FILE_MENU_SEP1,
+	FILE_MENU_SEP4,
 	FILE_MENU_CLOSE_ARCHIVE,
 	FILE_MENU_EXIT,
 	FILE_MENU_LENGTH
@@ -81,6 +84,20 @@ GnomeUIInfo file_menu[] = {
 	  dlg_prop, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
+
+	GNOMEUIINFO_SEPARATOR,
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("Open Files _with..."), N_("Open selected files with an application"), 
+	  open_with_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_View File"), N_("View file with internal viewer"), 
+	  view_or_open_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  'v', GDK_CONTROL_MASK, NULL },
 
 	GNOMEUIINFO_SEPARATOR,
 
@@ -126,25 +143,22 @@ GnomeUIInfo file_menu[] = {
 };
 
 enum {
-	ACTIONS_MENU_ADD = 0,
-	ACTIONS_MENU_DELETE,
-	ACTIONS_MENU_EXTRACT,
-	ACTIONS_MENU_SEP1,
-	ACTIONS_MENU_SELECT_ALL,
-	ACTIONS_MENU_SEP2,
-	ACTIONS_MENU_OPEN,
-	ACTIONS_MENU_VIEW,
-	ACTIONS_MENU_SEP3,
-	ACTIONS_MENU_STOP,
-	ACTIONS_MENU_SEP4,
-	/*ACTIONS_MENU_UUENCODE,*/
-	ACTIONS_MENU_TEST,
-	/*ACTIONS_MENU_COMMENT,*/
-	ACTIONS_MENU_VIEW_LAST_OUPUT,
-	ACTIONS_MENU_LENGTH
+	EDIT_MENU_ADD = 0,
+	EDIT_MENU_DELETE,
+	EDIT_MENU_EXTRACT,
+	EDIT_MENU_SEP1,
+	EDIT_MENU_SELECT_ALL,
+	EDIT_MENU_SEP2,
+	/*EDIT_MENU_UUENCODE,*/
+	EDIT_MENU_TEST,
+	/*EDIT_MENU_COMMENT,*/
+	EDIT_MENU_SEP3,
+	EDIT_MENU_PASSWORD,
+	EDIT_MENU_PREFERENCES,
+	EDIT_MENU_LENGTH
 };
 
-GnomeUIInfo actions_menu[] = {
+GnomeUIInfo edit_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
 	  N_("Add _Files..."), N_("Add files to the archive"), 
 	  add_cb, NULL, NULL,
@@ -173,28 +187,6 @@ GnomeUIInfo actions_menu[] = {
 
 	GNOMEUIINFO_SEPARATOR,
 
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Open Files with..."), N_("Open selected files with an application"), 
-	  open_with_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  0, 0, NULL },
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_View File"), N_("View file with internal viewer"), 
-	  view_or_open_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  'v', GDK_CONTROL_MASK, NULL },
-
-	GNOMEUIINFO_SEPARATOR,
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Stop Operation"), N_("Stop current operation"), 
-	  stop_cb, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP,
-	  GDK_Escape, 0, NULL },
-
-	GNOMEUIINFO_SEPARATOR,
-
 	/* FIXME
 	{ GNOME_APP_UI_ITEM, 
 	  N_("_UUencode..."), " ",
@@ -217,11 +209,19 @@ GnomeUIInfo actions_menu[] = {
 	  0, 0, NULL },
 	*/
 
+	GNOMEUIINFO_SEPARATOR,
+
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Vi_ew Last Output"), " ", 
-	  last_output_cb, NULL, NULL,
+	  N_("Pass_word..."), " ", 
+	  dlg_password, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_Preferences"), " ", 
+	  dlg_preferences, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PREFERENCES, 
+	  'p', GDK_CONTROL_MASK, NULL },
 
 	GNOMEUIINFO_END
 };
@@ -229,31 +229,31 @@ GnomeUIInfo actions_menu[] = {
 
 GnomeUIInfo sort_by_radio_list[] = {
         { GNOME_APP_UI_ITEM, 
-          N_("Arrange by _Name"), N_("Sort file list by name"), 
+          N_("by _Name"), N_("Sort file list by name"), 
           sort_list_by_name, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },
 
         { GNOME_APP_UI_ITEM, 
-          N_("Arrange by _Size"), N_("Sort file list by file size"), 
+          N_("by _Size"), N_("Sort file list by file size"), 
 	  sort_list_by_size, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },
 
         { GNOME_APP_UI_ITEM, 
-          N_("Arrange by _Type"), N_("Sort file list by type"), 
+          N_("by T_ype"), N_("Sort file list by type"), 
 	  sort_list_by_type, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },
         
         { GNOME_APP_UI_ITEM, 
-          N_("Arrange by _Time"), N_("Sort file list by modification time"), 
+          N_("by _Time"), N_("Sort file list by modification time"), 
 	  sort_list_by_time, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },
 
         { GNOME_APP_UI_ITEM, 
-          N_("Arrange by _Path"), N_("Sort file list by path"), 
+          N_("by _Path"), N_("Sort file list by path"), 
 	  sort_list_by_path, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },
@@ -270,7 +270,7 @@ enum {
 
 GnomeUIInfo view_list[] = {
 	{ GNOME_APP_UI_ITEM, 
-	  N_("View All _Files"), " ", 
+	  N_("View all _Files"), " ", 
 	  set_list_mode_flat_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -286,37 +286,14 @@ GnomeUIInfo view_list[] = {
 
 
 enum {
-	OPTIONS_MENU_PREFERENCES = 0,
-	OPTIONS_MENU_PASSWORD,
-	OPTIONS_MENU_SEP1,
-	OPTIONS_MENU_VIEW_LIST,
-	OPTIONS_MENU_SEP2,
-	OPTIONS_MENU_SORT_LIST,
-	OPTIONS_MENU_SEP3,
-	OPTIONS_MENU_REVERSED_ORDER
+	ARRANGE_MENU_SORT_LIST = 0,
+	ARRANGE_MENU_SEP1,
+	ARRANGE_MENU_REVERSED_ORDER
 };
 
 
-GnomeUIInfo options_menu[] = {
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Preferences"), " ", 
-	  dlg_preferences, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PREFERENCES, 
-	  'p', GDK_CONTROL_MASK, NULL },
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("Pass_word..."), " ", 
-	  dlg_password, NULL, NULL,
-	  GNOME_APP_PIXMAP_NONE, 0,
-	  0, 0, NULL },
-
-	GNOMEUIINFO_SEPARATOR,
-
-	GNOMEUIINFO_RADIOLIST (view_list),
-
-	GNOMEUIINFO_SEPARATOR,
-
-        GNOMEUIINFO_RADIOLIST (sort_by_radio_list),
+GnomeUIInfo arrange_menu[] = {
+	GNOMEUIINFO_RADIOLIST (sort_by_radio_list),
 
 	GNOMEUIINFO_SEPARATOR,
 
@@ -325,6 +302,42 @@ GnomeUIInfo options_menu[] = {
 	  sort_list_reversed, NULL, NULL,
           GNOME_APP_PIXMAP_NONE, NULL,
           0, 0, NULL },
+	
+	GNOMEUIINFO_END
+};
+
+enum {
+	VIEW_MENU_STOP,
+	VIEW_MENU_SEP1,
+	VIEW_MENU_SORT_LIST,
+	VIEW_MENU_SEP2,
+	VIEW_MENU_VIEW_LIST,
+	VIEW_MENU_SEP3,
+	VIEW_MENU_LAST_OUTPUT
+};
+
+GnomeUIInfo view_menu[] = {
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_Stop"), N_("Stop current operation"), 
+	  stop_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_STOP,
+	  GDK_Escape, 0, NULL },
+
+	GNOMEUIINFO_SEPARATOR,
+
+	GNOMEUIINFO_SUBTREE (N_("_Arrange Files"), arrange_menu),
+
+	GNOMEUIINFO_SEPARATOR,
+
+	GNOMEUIINFO_RADIOLIST (view_list),
+
+	GNOMEUIINFO_SEPARATOR,
+
+	{ GNOME_APP_UI_ITEM, 
+	  N_("_Last Output"), " ", 
+	  last_output_cb, NULL, NULL,
+	  GNOME_APP_PIXMAP_NONE, 0,
+	  0, 0, NULL },
 
 	GNOMEUIINFO_END
 };
@@ -371,10 +384,9 @@ GnomeUIInfo help_menu[] = {
 /* Definition of the main menu */
 
 GnomeUIInfo main_menu[] = {
-	/*GNOMEUIINFO_MENU_FILE_TREE (file_menu),*/
 	GNOMEUIINFO_SUBTREE (N_("_File"), file_menu),
-	GNOMEUIINFO_SUBTREE (N_("_Actions"), actions_menu),
-	GNOMEUIINFO_SUBTREE (N_("_Options"), options_menu),
+	GNOMEUIINFO_SUBTREE (N_("_Edit"), edit_menu),
+	GNOMEUIINFO_SUBTREE (N_("_View"), view_menu),
 	GNOMEUIINFO_SUBTREE (N_("_Windows"), windows_menu),
 	GNOMEUIINFO_MENU_HELP_TREE (help_menu),
 	GNOMEUIINFO_END
