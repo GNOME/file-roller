@@ -84,55 +84,6 @@ mktime_from_string (char *date_s,
 }
 
 
-static char *
-eat_spaces (char *line)
-{
-	while ((*line == ' ') && (*line != 0))
-		line++;
-	return line;
-}
-
-
-static char **
-split_line (char *line, 
-	    int   n_fields)
-{
-	char **fields;
-	char  *scan, *field_end;
-	int    i;
-
-	fields = g_new0 (char *, n_fields + 1);
-	fields[n_fields] = NULL;
-
-	scan = eat_spaces (line);
-	for (i = 0; i < n_fields; i++) {
-		field_end = strchr (scan, ' ');
-		fields[i] = g_strndup (scan, field_end - scan);
-		scan = eat_spaces (field_end);
-	}
-
-	return fields;
-}
-
-
-static char *
-get_last_field (char *line)
-{
-	int   i;
-	char *field;
-	int   n = 2;
-
-	n--;
-	field = eat_spaces (line);
-	for (i = 0; i < n; i++) {
-		field = strchr (field, ' ');
-		field = eat_spaces (field);
-	}
-
-	return field;
-}
-
-
 static void
 list__process_line (char     *line, 
 		    gpointer  data)
@@ -165,7 +116,7 @@ list__process_line (char     *line,
 
 		arj_comm->fdata = fdata = file_data_new ();
 
-		name_field = get_last_field (line);
+		name_field = get_last_field (line, 2);
 		
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
@@ -239,9 +190,6 @@ fr_command_arj_add (FRCommand     *comm,
 
 	if (base_dir != NULL) 
 		fr_process_set_working_dir (comm->process, base_dir);
-
-	/* preserve links. */
-	fr_process_add_arg (comm->process, "-y");
 
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
@@ -371,11 +319,7 @@ static void
 fr_command_arj_handle_error (FRCommand   *comm, 
 			     FRProcError *error)
 {
-	/* FIXME
-	if ((error->type == FR_PROC_ERROR_GENERIC) 
-	    && (error->status <= 1))
-		error->type = FR_PROC_ERROR_NONE;
-	*/
+	/* FIXME */
 }
 
 

@@ -78,57 +78,6 @@ mktime_from_string (char *date_s,
 }
 
 
-static char *
-eat_spaces (char *line)
-{
-	while ((*line == ' ') && (*line != 0))
-		line++;
-	return line;
-}
-
-
-static char **
-split_line (char *line, 
-	    int   n_fields)
-{
-	char **fields;
-	char  *scan, *field_end;
-	int    i;
-
-	fields = g_new0 (char *, n_fields + 1);
-	fields[n_fields] = NULL;
-
-	scan = eat_spaces (line);
-	for (i = 0; i < n_fields; i++) {
-		field_end = strchr (scan, ' ');
-		if (field_end != NULL) {
-			fields[i] = g_strndup (scan, field_end - scan);
-			scan = eat_spaces (field_end);
-		}
-	}
-
-	return fields;
-}
-
-
-static char *
-get_last_field (char *line)
-{
-	int   i;
-	char *field;
-	int   n = 1;
-
-	n--;
-	field = eat_spaces (line);
-	for (i = 0; i < n; i++) {
-		field = strchr (field, ' ');
-		field = eat_spaces (field);
-	}
-
-	return field;
-}
-
-
 static void
 process_line (char     *line, 
 	      gpointer  data)
@@ -136,7 +85,7 @@ process_line (char     *line,
 	FRCommand     *comm = FR_COMMAND (data);
 	FRCommandRar  *rar_comm = FR_COMMAND_RAR (comm);
 	char         **fields;
-	char          *name_field;
+	const char    *name_field;
 
 	g_return_if_fail (line != NULL);
 
@@ -160,7 +109,7 @@ process_line (char     *line,
 
 		/* read file name. */
 
-		name_field = get_last_field (line);
+		name_field = get_last_field (line, 1);
 
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);

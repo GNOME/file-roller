@@ -45,7 +45,7 @@ static FRCommandClass *parent_class = NULL;
 /* -- list -- */
 
 static time_t
-mktime_from_zoo_string (char *mday_s,
+mktime_from_string_zoo (char *mday_s,
 			char *month_s,
 			char *year_s,
 			char *time_s)
@@ -106,21 +106,12 @@ mktime_from_zoo_string (char *mday_s,
 }
 
 
-static char *
-eat_spaces (char *line)
-{
-	while ((*line == ' ') && (*line != 0))
-		line++;
-	return line;
-}
-
-
 static char **
-split_zoo_line (char *line)
+split_line_zoo (char *line)
 {
-	char **fields;
-	char *scan, *field_end;
-	int i;
+	char       **fields;
+	const char  *scan, *field_end;
+	int          i;
 
 	if (line[0] == '-') {
 		return NULL;
@@ -156,12 +147,12 @@ split_zoo_line (char *line)
 }
 
 
-static char *
-get_last_field (char *line)
+static const char *
+get_last_field_zoo (char *line)
 {
-	int   i;
-	char *field;
-	int   n = 6;
+	const char *field;
+	int         i;
+	int         n = 6;
 
 	field = eat_spaces (line);
 	for (i = 0; i < n; i++) {
@@ -184,23 +175,23 @@ static void
 process_zoo_line (char     *line, 
 		  gpointer  data)
 {
-	FileData   *fdata;
-	FRCommand  *zoo_comm = FR_COMMAND (data);
-	char      **fields;
-	char       *name_field;
+	FileData    *fdata;
+	FRCommand   *zoo_comm = FR_COMMAND (data);
+	char       **fields;
+	const char  *name_field;
 
 	g_return_if_fail (line != NULL);
 	if (line[0] == '-')
 		return;
 
-	fields = split_zoo_line (line);
+	fields = split_line_zoo (line);
 	if (fields == NULL)
 		return;
 
 	fdata = file_data_new ();
 
 	fdata->size = atol (fields[0]);
-	fdata->modified = mktime_from_zoo_string (fields[1],
+	fdata->modified = mktime_from_string_zoo (fields[1],
 						  fields[2],
 						  fields[3],
 						  fields[4]);
@@ -208,7 +199,7 @@ process_zoo_line (char     *line,
 
 	/* Full path */
 
-	name_field = get_last_field (line);
+	name_field = get_last_field_zoo (line);
 	if (*(name_field) == '/') {
 		fdata->full_path = g_strdup (name_field);
 		fdata->original_path = fdata->full_path;

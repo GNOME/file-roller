@@ -1,3 +1,17 @@
+2003-05-19  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	[ File Roller 2.3.1 released ]
+	
+	* src/file-utils.c (split_line, eat_spaces, get_last_field): new
+	functions.
+	* src/fr-command-rar.c (mktime_from_string): 
+	* src/fr-command-lha.c (process_line): 
+	* src/fr-command-zoo.c (process_zoo_line): 
+	* src/fr-command-zip.c (list__process_line): 
+	* src/fr-command-tar.c (process_line): 
+	* src/fr-command-arj.c (list__process_line): use the global functions
+	instead of redefining them each time.
+	
 2003-05-18  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/file-utils.c (search_util_get_patterns): make this function

@@ -44,37 +44,6 @@ static void fr_command_cfile_finalize    (GObject             *object);
 static FRCommandClass *parent_class = NULL;
 
 
-static char *
-eat_spaces (char *line)
-{
-	while ((*line == ' ') && (*line != 0))
-		line++;
-	return line;
-}
-
-
-static char **
-split_line (char *line, 
-	    int   n_fields)
-{
-	char **fields;
-	char  *scan, *field_end;
-	int    i;
-
-	fields = g_new0 (char *, n_fields + 1);
-	fields[n_fields] = NULL;
-
-	scan = eat_spaces (line);
-	for (i = 0; i < n_fields; i++) {
-		field_end = strchr (scan, ' ');
-		fields[i] = g_strndup (scan, field_end - scan);
-		scan = eat_spaces (field_end);
-	}
-
-	return fields;
-}
-
-
 static void
 list__process_line (char     *line, 
 		    gpointer  data)

@@ -39,6 +39,8 @@
 #include "fr-command-zoo.h"
 #include "fr-marshal.h"
 #include "fr-process.h"
+#include "utf8-fnmatch.h"
+
 
 #define MAX_CHUNK_LEN 16000 /* FIXME : what is the max length of a command 
 			     * line ? */
@@ -855,14 +857,18 @@ file_list_remove_from_pattern (GList      **list,
 	
 	for (scan = *list; scan;) {
 		char *path = scan->data;
+		char *utf8_name;
 
-		if (match_patterns (patterns, file_name_from_path (path))) {
+		utf8_name = g_locale_to_utf8 (file_name_from_path (path), 
+					      -1, NULL, NULL, NULL);
+		if (match_patterns (patterns, utf8_name, FNM_CASEFOLD)) {
 			*list = g_list_remove_link (*list, scan);
 			g_free (scan->data);
 			g_list_free (scan);
 			scan = *list;
 		} else
 			scan = scan->next;
+		g_free (utf8_name);
 	}
 	
 	g_strfreev (patterns);

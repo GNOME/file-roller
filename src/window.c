@@ -52,6 +52,7 @@
 #include "gconf-utils.h"
 #include "toolbar.h"
 #include "typedefs.h"
+#include "utf8-fnmatch.h"
 
 #include "icons/pixbufs.h"
 
@@ -3947,7 +3948,7 @@ window_get_file_list_pattern (FRWindow    *window,
 			continue;
 
 		utf8_name = g_locale_to_utf8 (fd->name, -1, NULL, NULL, NULL);
-		if (match_patterns (patterns, utf8_name))
+		if (match_patterns (patterns, utf8_name, FNM_CASEFOLD))
 			list = g_list_prepend (list, 
 					       g_strdup (fd->original_path));
 		g_free (utf8_name);

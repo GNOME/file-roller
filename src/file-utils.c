@@ -578,7 +578,8 @@ application_get_command (const GnomeVFSMimeApplication *app)
 
 gboolean
 match_patterns (char       **patterns, 
-		const char  *string)
+		const char  *string,
+		int          flags)
 {
 	int i;
 	int result;
@@ -592,7 +593,7 @@ match_patterns (char       **patterns,
 	result = FNM_NOMATCH;
 	i = 0;
 	while ((result != 0) && (patterns[i] != NULL)) {
-		result = g_utf8_fnmatch (patterns[i], string, FNM_CASEFOLD);
+		result = g_utf8_fnmatch (patterns[i], string, flags);
 		i++;
 	}
 	
@@ -875,4 +876,55 @@ _g_strdup_with_max_size (const char *s,
 		result = g_strdup (s);
 
 	return result;
+}
+
+
+const char *
+eat_spaces (const char *line)
+{
+	while ((*line == ' ') && (*line != 0))
+		line++;
+	return line;
+}
+
+
+char **
+split_line (const char *line, 
+	    int   n_fields)
+{
+	char       **fields;
+	const char  *scan, *field_end;
+	int          i;
+
+	fields = g_new0 (char *, n_fields + 1);
+	fields[n_fields] = NULL;
+
+	scan = eat_spaces (line);
+	for (i = 0; i < n_fields; i++) {
+		field_end = strchr (scan, ' ');
+		if (field_end != NULL) {
+			fields[i] = g_strndup (scan, field_end - scan);
+			scan = eat_spaces (field_end);
+		}
+	}
+
+	return fields;
+}
+
+
+const char *
+get_last_field (const char *line,
+		int         last_field)
+{
+	const char *field;
+	int         i;
+
+	last_field--;
+	field = eat_spaces (line);
+	for (i = 0; i < last_field; i++) {
+		field = strchr (field, ' ');
+		field = eat_spaces (field);
+	}
+
+	return field;
 }

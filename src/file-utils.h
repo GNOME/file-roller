@@ -79,7 +79,8 @@ gchar *             shell_escape                 (const gchar *filename);
 gchar *             application_get_command      (const GnomeVFSMimeApplication *app);
 
 gboolean            match_patterns               (char       **patterns, 
-						  const char  *string);
+						  const char  *string,
+						  int          flags);
 
 char **             search_util_get_patterns     (const char  *pattern_string);
 
@@ -89,6 +90,14 @@ gboolean            rmdir_recursive              (const gchar *directory);
 
 char *              _g_strdup_with_max_size      (const char *s,
 						  int         max_size);
+
+const char *        eat_spaces                   (const char *line);
+
+char **             split_line                   (const char *line, 
+						  int   n_fields);
+
+const char *        get_last_field               (const char *line,
+						  int         last_field);
 
 #define get_home_relative_dir(x)        \
         g_strconcat (g_get_home_dir (), \

@@ -81,6 +81,8 @@ filter_apply (Filter     *filter,
 	      const char *name)
 {
 	const char *file_name;
+	char       *utf8_name;
+	gboolean    retval;
 
         g_return_val_if_fail (filter != NULL, FALSE);
         g_return_val_if_fail (name != NULL, FALSE);
@@ -95,7 +97,11 @@ filter_apply (Filter     *filter,
 	    && (name[strlen (name) - 1] == '~'))
 		return FALSE;
 
-        return match_patterns (filter->patterns, file_name);
+	utf8_name = g_locale_to_utf8 (file_name, -1, NULL, NULL, NULL);
+	retval = match_patterns (filter->patterns, utf8_name, filter->fnmatch_flags);
+	g_free (utf8_name);
+
+        return retval;
 }
 
 
