@@ -6,21 +6,22 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: File-roller CVS\n"
-"POT-Creation-Date: 2003-10-14 21:42+0200\n"
-"PO-Revision-Date: 2003-10-14 21:43+0200\n"
+"POT-Creation-Date: 2003-12-01 17:00+0100\n"
+"PO-Revision-Date: 2003-12-01 17:12+0100\n"
 "Last-Translator: Andras Timar <timar@gnome.hu>\n"
 "Language-Team: Hungarian <hu@gnome.hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
 msgid "Add to Archive..."
 msgstr "Hozzáadás az archívumhoz..."
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract to..."
-msgstr "Kicsomagolás adott helyre..."
+msgid "Extract Here"
+msgstr "Kicsomagolás ide"
 
 #: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
@@ -39,9 +40,9 @@ msgid "Archive Manager"
 msgstr "Archívumkezelő"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
-#: src/menu-callbacks.c:1076 src/window.c:759 src/window.c:1157
-#: src/window.c:2756
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:390 src/main.c:101
+#: src/menu-callbacks.c:1102 src/window.c:836 src/window.c:1252
+#: src/window.c:2922
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -55,89 +56,89 @@ msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr ""
 "Nincs megfelelő jogosultságod a fájlok olvasásához a(z) \"%s\" mappából."
 
-#: src/dlg-add.c:119 src/window.c:1791 src/window.c:1824
+#: src/dlg-add.c:119 src/window.c:1921 src/window.c:1954
 msgid "Could not add the files to the archive"
 msgstr "Nem sikerült a fájlok hozzáadása az archívumhoz"
 
-#: src/dlg-add.c:351 src/file_roller.glade.h:5
-msgid "Add Files"
-msgstr "Fájlok hozzáadása"
+#: src/dlg-add.c:353 src/window.c:3160
+msgid "Add"
+msgstr "Hozzáadás"
 
-#: src/dlg-add.c:356
+#: src/dlg-add.c:358
 msgid "_Add only if newer"
 msgstr "_Hozzáadás, ha újabb"
 
-#: src/dlg-add.c:357
+#: src/dlg-add.c:359
 msgid "_Include subfolders"
 msgstr "_Almappák hozzáadása"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:360
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Olyan mappák _kizárása, amelyek szimbolikus linkek"
 
-#: src/dlg-add.c:359
+#: src/dlg-add.c:361
 msgid "Exclude o_ther file systems"
 msgstr "Más _fájlrendszer kizárása"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:362
 msgid "Exclude _backup files (*~)"
 msgstr "_Biztonsági mentések kizárása (*~)"
 
-#: src/dlg-add.c:361
+#: src/dlg-add.c:363
 msgid "Exclude _hidden files (.*)"
 msgstr "_Rejtett fájlok kizárása (.*)"
 
-#: src/dlg-add.c:362
+#: src/dlg-add.c:364
 msgid "E_xclude files:"
 msgstr "Fájlok _kizárása:"
 
-#: src/dlg-add.c:364
+#: src/dlg-add.c:366
 msgid "example: *.o; *.bak"
 msgstr "például: *.o; *.bak"
 
-#: src/dlg-add.c:365
+#: src/dlg-add.c:367
 msgid "Igno_re case"
 msgstr "_Kis- és nagybetűk közötti különbség figyelmen kívül hagyása"
 
-#: src/dlg-add.c:366
+#: src/dlg-add.c:368
 msgid "_Load Options"
 msgstr "_Betöltés beállításai"
 
-#: src/dlg-add.c:367
+#: src/dlg-add.c:369
 msgid "Sa_ve Options"
 msgstr "_Mentés beállításai"
 
-#: src/dlg-add.c:622
+#: src/dlg-add.c:624
 msgid "Load Options"
 msgstr "Betöltés beállításai"
 
-#: src/dlg-add.c:771
+#: src/dlg-add.c:773
 msgid "Save Options"
 msgstr "Mentés beállításai"
 
-#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
-#: src/menu-callbacks.c:198 src/window.c:3437
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:177
+#: src/menu-callbacks.c:196 src/window.c:3674
 msgid "Could not create the archive"
 msgstr "Nem sikerült létrehozni az archívumot"
 
-#: src/dlg-batch-add.c:100 src/menu-callbacks.c:180 src/menu-callbacks.c:375
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:178 src/menu-callbacks.c:374
 msgid "You have to specify an archive name."
 msgstr "Meg kell adni egy archívumnevet."
 
-#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3438
-#: src/window.c:3575
+#: src/dlg-batch-add.c:126 src/fr-archive.c:618 src/window.c:3675
+#: src/window.c:3818
 msgid "Archive type not supported."
 msgstr "Az archívumtípus nem támogatott."
 
-#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3763
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:4046
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "A célmappa nem létezik. Létrehozod?"
 
-#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3766
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:4049
 msgid "Create _Folder"
 msgstr "Mappa _létrehozása"
 
-#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3782
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:4065
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Nem sikerült létrehozni a célmappát: %s."
@@ -157,7 +158,7 @@ msgid "Folders to add: %d"
 msgstr "Hozzáadandó mappák: %d"
 
 #: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
-#: src/window.c:3786 src/window.c:3805
+#: src/window.c:4069 src/window.c:4088
 msgid "Extraction not performed"
 msgstr "A kicsomagolás nem történt meg."
 
@@ -169,23 +170,23 @@ msgstr ""
 "Nincs megfelelő jogosultságod archívumok kicsomagolásához ebbe a könyvtárba: "
 "\"%s\""
 
-#: src/dlg-extract.c:423 src/dlg-preferences.c:125 src/menu-callbacks.c:1035
+#: src/dlg-extract.c:428 src/dlg-preferences.c:125 src/menu-callbacks.c:1061
 msgid "Could not display help"
 msgstr "A súgó megjelenítése nem sikerült"
 
-#: src/dlg-extract.c:502
+#: src/dlg-extract.c:507
 msgid "Actions"
 msgstr "Műveletek"
 
-#: src/dlg-extract.c:503
+#: src/dlg-extract.c:508
 msgid "Destination folder"
 msgstr "Célmappa"
 
-#: src/dlg-extract.c:504
+#: src/dlg-extract.c:509
 msgid "Files"
 msgstr "Fájlok"
 
-#: src/dlg-extract.c:533
+#: src/dlg-extract.c:538
 msgid "Bookmarks"
 msgstr "Könyvjelzők"
 
@@ -224,7 +225,7 @@ msgstr "Dátum és idő:"
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
-msgstr "%Y. %B %-d., %H.%M"
+msgstr "%Y. %B %e., %H.%M"
 
 #: src/file-data.c:28
 msgid "Unknown type"
@@ -234,7 +235,7 @@ msgstr "Ismeretlen típus"
 msgid "Symbolic link"
 msgstr "Szimbolikus link"
 
-#: src/file-utils.c:535
+#: src/file-utils.c:536
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr ""
 "Nem található terminál, az xterm lesz használva, még ha az esetleg nem is "
@@ -256,6 +257,10 @@ msgstr "H_ozzáadás a kedvencekhez"
 msgid "A_vailable application:"
 msgstr "E_lérhető alkalmazások:"
 
+#: src/file_roller.glade.h:5
+msgid "Add Files"
+msgstr "Fájlok hozzáadása"
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Ho_zzáadás az archívumhoz:"
@@ -265,14 +270,14 @@ msgid "Add only if _newer"
 msgstr "Hozzáadás, _ha újabb"
 
 #: src/file_roller.glade.h:8
-msgid "Delete Files"
-msgstr "Fájlok törlése"
+msgid "Delete"
+msgstr "Törlés"
 
 #: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
 msgstr "Ne csomagoljon ki régebbi fájlokat"
 
-#: src/file_roller.glade.h:10 src/window.c:2994
+#: src/file_roller.glade.h:10 src/window.c:3171
 msgid "Extract"
 msgstr "Kicsomagolás"
 
@@ -318,7 +323,7 @@ msgstr "_Legutóbbi alkalmazások:"
 msgid "Select Archive"
 msgstr "Archívum kiválasztása"
 
-#: src/file_roller.glade.h:20 src/menu.h:429
+#: src/file_roller.glade.h:20
 msgid "View File"
 msgstr "Fájl megtekintése"
 
@@ -394,36 +399,36 @@ msgstr "_Méret"
 msgid "_Type"
 msgstr "_Típus"
 
-#: src/fr-archive.c:578
+#: src/fr-archive.c:593
 msgid "The file does not exist."
 msgstr "A fájl nem létezik."
 
-#: src/fr-command-tar.c:219
+#: src/fr-command-tar.c:218
 msgid "Adding file: "
 msgstr "Fájl hozzáadása: "
 
-#: src/fr-command-tar.c:265
+#: src/fr-command-tar.c:264
 msgid "Removing file: "
 msgstr "Fájl eltávolítása: "
 
-#: src/fr-command-tar.c:274 src/window.c:1253
+#: src/fr-command-tar.c:273 src/window.c:1348
 msgid "Deleting files from archive"
 msgstr "Fájlok törlése az archívumból"
 
-#: src/fr-command-tar.c:307
+#: src/fr-command-tar.c:306
 msgid "Extracting file: "
 msgstr "Fájl kicsomagolása: "
 
-#: src/fr-command-tar.c:352
+#: src/fr-command-tar.c:351
 msgid "Recompressing archive"
 msgstr "Archívum újratömörítése"
 
-#: src/fr-command-tar.c:486
+#: src/fr-command-tar.c:485
 msgid "Decompressing archive"
 msgstr "Archívum kicsomagolása"
 
 #. Button
-#: src/gtk-utils.c:419
+#: src/gtk-utils.c:421
 msgid "Command _Line Output"
 msgstr "Parancssori _kimenet"
 
@@ -463,433 +468,409 @@ msgstr ""
 msgid "Create destination folder without asking confirmation"
 msgstr "Célmappa létrehozása megerősítés kérése nélkül"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:106
 msgid "Automatic"
 msgstr "Automatikus"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:107
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:108
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:109
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:110
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:111
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:112
 msgid "Tar uncompressed (.tar)"
 msgstr "Nem tömörített tar (.tar)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:113
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Bzip-pel tömörített tar (.tar.bz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:114
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Bzip2-vel tömörített tar (.tar.bz2)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:115
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Gzip-pel tömörített tar (.tar.gz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:116
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Lzop-pal tömörített tar (.tar.lzo)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Compress-szel tömörített tar (.tar.Z)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:118
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:119
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:120
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:199 src/menu-callbacks.c:394
+#: src/menu-callbacks.c:197 src/menu-callbacks.c:393
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Nincs jogod archívum létrehozására ebben a mappában"
 
-#: src/menu-callbacks.c:228 src/menu-callbacks.c:414 src/menu-callbacks.c:633
-#: src/menu-callbacks.c:811
+#: src/menu-callbacks.c:226 src/menu-callbacks.c:413 src/menu-callbacks.c:636
+#: src/menu-callbacks.c:814
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Az archívum már létezik. Felülírod?"
 
-#: src/menu-callbacks.c:231 src/menu-callbacks.c:417 src/menu-callbacks.c:636
-#: src/menu-callbacks.c:814
+#: src/menu-callbacks.c:229 src/menu-callbacks.c:416 src/menu-callbacks.c:639
+#: src/menu-callbacks.c:817
 msgid "Overwrite"
 msgstr "Felülírás"
 
-#: src/menu-callbacks.c:247 src/menu-callbacks.c:433
+#: src/menu-callbacks.c:245 src/menu-callbacks.c:432
 msgid "Could not delete the old archive."
 msgstr "Nem sikerült törölni a régi archívumot."
 
-#: src/menu-callbacks.c:292
-msgid "New Archive"
-msgstr "Új archívum"
+#: src/menu-callbacks.c:290 src/toolbar.h:39
+msgid "New"
+msgstr "Új"
 
-#: src/menu-callbacks.c:310 src/menu-callbacks.c:472
+#: src/menu-callbacks.c:308 src/menu-callbacks.c:471
 msgid "Archive type:"
 msgstr "Archívum típusa:"
 
-#: src/menu-callbacks.c:374 src/menu-callbacks.c:393
+#: src/menu-callbacks.c:373 src/menu-callbacks.c:392
 msgid "Could not save the archive"
 msgstr "Az archívum mentése nem sikerült"
 
-#: src/menu-callbacks.c:460
-msgid "Save Archive"
-msgstr "Archívum mentése"
+#: src/menu-callbacks.c:459
+msgid "Save"
+msgstr "Mentés"
 
-#: src/menu-callbacks.c:542
-msgid "Open Archive"
-msgstr "Archívum megnyitása"
+#: src/menu-callbacks.c:545 src/toolbar.h:45
+msgid "Open"
+msgstr "Megnyitás"
 
-#: src/menu-callbacks.c:658
+#: src/menu-callbacks.c:661
 msgid "Could not copy the archive"
 msgstr "Az archívum másolása nem sikerült"
 
-#: src/menu-callbacks.c:676
+#: src/menu-callbacks.c:679
 msgid "Could not move the archive"
 msgstr "Az archívum áthelyezése nem sikerült"
 
-#: src/menu-callbacks.c:703
-msgid "Copy Archive"
-msgstr "Archívum másolása"
+#: src/menu-callbacks.c:706
+msgid "Copy"
+msgstr "Másolás"
 
-#: src/menu-callbacks.c:703
-msgid "Move Archive"
-msgstr "Archívum áthelyezése"
+#: src/menu-callbacks.c:706
+msgid "Move"
+msgstr "Áthelyezés"
 
-#: src/menu-callbacks.c:781
-msgid "Rename Archive"
-msgstr "Archívum átnevezése"
+#: src/menu-callbacks.c:784 src/window.c:4735
+msgid "Rename"
+msgstr "Átnevezés"
 
-#: src/menu-callbacks.c:782
+#: src/menu-callbacks.c:785
 msgid "New archive name (without extension)"
 msgstr "Új archívumnév (kiterjesztés nélkül)"
 
-#: src/menu-callbacks.c:786
+#: src/menu-callbacks.c:789 src/window.c:4740
 msgid "_Rename"
 msgstr "Á_tnevezés"
 
-#: src/menu-callbacks.c:896
+#: src/menu-callbacks.c:899
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
 msgstr "Az archívumot nem lehet a Kukába helyezni. Törlöd véglegesen?"
 
-#: src/menu-callbacks.c:1068
+#: src/menu-callbacks.c:1094
 msgid "translator_credits"
 msgstr "Tímár András <timar@gnome.hu>"
 
-#: src/menu-callbacks.c:1079
+#: src/menu-callbacks.c:1105
 msgid "An archive manager for GNOME."
 msgstr "Archívumkezelő a GNOME-hoz."
 
-#: src/menu-callbacks.c:1228 src/window.c:4126
+#: src/menu-callbacks.c:1254 src/window.c:4472
 msgid "Last Output"
 msgstr "Utolsó kimenet"
 
-#: src/menu.h:69
+#: src/menu.h:66
 msgid "_New"
 msgstr "Ú_j"
 
-#: src/menu.h:70 src/toolbar.h:39
+#: src/menu.h:67 src/toolbar.h:39
 msgid "Create a new archive"
 msgstr "Új archívum létrehozása"
 
-#: src/menu.h:75
+#: src/menu.h:72
 msgid "Open R_ecent"
 msgstr "_Legutóbbi megnyitása"
 
-#: src/menu.h:84
-msgid "Open Fi_les..."
-msgstr "_Fájlok megnyitása..."
-
-#: src/menu.h:84
-msgid "Open selected files with an application"
-msgstr "Kijelölt fájlok megnyitása egy alkalmazással"
-
-#: src/menu.h:90
-msgid "_View File"
-msgstr "_Fájl megtekintése"
-
-#: src/menu.h:90 src/menu.h:429
-msgid "View file with internal viewer"
-msgstr "Fájl megtekintése a belső nézőkével"
-
-#: src/menu.h:98
+#: src/menu.h:81 src/menu.h:169 src/menu.h:453
 msgid "_Rename..."
 msgstr "Á_tnevezés..."
 
-#: src/menu.h:98
+#: src/menu.h:81
 msgid "Rename current archive"
 msgstr "Az aktuális archívum átnevezése"
 
-#: src/menu.h:104
+#: src/menu.h:87
 msgid "Cop_y..."
 msgstr "_Másolás..."
 
-#: src/menu.h:104
+#: src/menu.h:87
 msgid "Copy current archive to another folder"
 msgstr "Az aktuális archívum másolása másik mappába"
 
-#: src/menu.h:110
+#: src/menu.h:93
 msgid "_Move..."
 msgstr "Á_thelyezés..."
 
-#: src/menu.h:110
+#: src/menu.h:93
 msgid "Move current archive to another folder"
 msgstr "Az aktuális archívum áthelyezése másik mappába"
 
-#: src/menu.h:116
+#: src/menu.h:99
 msgid "Move to _Trash"
 msgstr "Áthelyezés a _Kukába"
 
-#: src/menu.h:116
+#: src/menu.h:99
 msgid "Move current archive to trash"
 msgstr "Az aktuális archívum áthelyezése a kukába"
 
-#: src/menu.h:122
+#: src/menu.h:105
 msgid "_Test"
 msgstr "_Teszt"
 
-#: src/menu.h:122
+#: src/menu.h:105
 msgid "Test whether the archive contains errors"
 msgstr "Az archívum tesztelése, hogy van-e benne hiba"
 
-#: src/menu.h:130
+#: src/menu.h:113
 msgid "_Properties"
 msgstr "_Tulajdonságok"
 
-#: src/menu.h:130
+#: src/menu.h:113
 msgid "Show archive properties"
 msgstr "Az archívum tulajdonságainak megjelenítése"
 
-#: src/menu.h:162 src/menu.h:437
-msgid "Add _Files..."
-msgstr "_Fájlok hozzáadása..."
+#: src/menu.h:151 src/menu.h:435
+msgid "_Add..."
+msgstr "_Hozzáadás..."
 
-#: src/menu.h:162 src/menu.h:437 src/window.c:2984
-msgid "Add files to the archive"
-msgstr "Fájlok hozzáadása az archívumhoz"
+#: src/menu.h:151 src/menu.h:435
+msgid "Add files and folders to the archive"
+msgstr "Fájlok és mappák hozzáadása az archívumhoz"
 
-#: src/menu.h:168
-msgid "_Delete Files..."
-msgstr "_Fájlok törlése..."
+#: src/menu.h:157 src/menu.h:441
+msgid "_Extract..."
+msgstr "_Kicsomagolás..."
 
-#: src/menu.h:168
-msgid "Delete selected files and folders from the archive"
-msgstr "A kijelölt fájlok és mappák törlése az archívumból"
-
-#: src/menu.h:174 src/menu.h:449
-msgid "_Extract to..."
-msgstr "_Kicsomagolás adott helyre..."
-
-#: src/menu.h:174 src/menu.h:449 src/window.c:2995
+#: src/menu.h:157 src/menu.h:441 src/window.c:3172
 msgid "Extract files from the archive"
 msgstr "Fájlok kicsomagolása az archívumból"
 
-#: src/menu.h:198 src/menu.h:457
+#: src/menu.h:169 src/menu.h:453
+msgid "Rename selection"
+msgstr "Kijelölés átnevezése"
+
+#: src/menu.h:175 src/menu.h:459
+msgid "_Delete..."
+msgstr "_Törlés..."
+
+#: src/menu.h:175 src/menu.h:459
+msgid "Delete selection from the archive"
+msgstr "Kijelölés törlése az archívumból"
+
+#: src/menu.h:183 src/menu.h:467
 msgid "Select _All"
 msgstr "_Mindent kijelöl"
 
-#: src/menu.h:198 src/menu.h:457
+#: src/menu.h:183 src/menu.h:467
 msgid "Select all files"
 msgstr "Minden fájl kijelölése"
 
-#: src/menu.h:204 src/menu.h:463
+#: src/menu.h:189 src/menu.h:473
 msgid "Dese_lect All"
 msgstr "Kijelölés _megszüntetése"
 
-#: src/menu.h:204 src/menu.h:463
+#: src/menu.h:189 src/menu.h:473
 msgid "Deselect all files"
 msgstr "Megszünteti az összes fájl kijelölését"
 
-#: src/menu.h:212
+#: src/menu.h:197 src/menu.h:421
+msgid "Open Fi_les..."
+msgstr "_Fájlok megnyitása..."
+
+#: src/menu.h:197 src/menu.h:421
+msgid "Open selected files with an application"
+msgstr "Kijelölt fájlok megnyitása egy alkalmazással"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "_View File"
+msgstr "_Fájl megtekintése"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "View file with internal viewer"
+msgstr "Fájl megtekintése a belső nézőkével"
+
+#: src/menu.h:211
 msgid "Pass_word..."
 msgstr "_Jelszó..."
 
-#: src/menu.h:220
+#: src/menu.h:219
 msgid "_Preferences"
 msgstr "_Beállítások"
 
-#: src/menu.h:220
+#: src/menu.h:219
 msgid "Edit File Roller preferences"
 msgstr "A File Roller beállításainak szerkesztése"
 
-#: src/menu.h:231
+#: src/menu.h:230
 msgid "by _Name"
 msgstr "_Név szerint"
 
-#: src/menu.h:231
+#: src/menu.h:230
 msgid "Sort file list by name"
 msgstr "A fájlok rendezése név szerint"
 
-#: src/menu.h:237
+#: src/menu.h:236
 msgid "by _Size"
 msgstr "_Méret szerint"
 
-#: src/menu.h:237
+#: src/menu.h:236
 msgid "Sort file list by file size"
 msgstr "A fájlok rendezése méret szerint"
 
-#: src/menu.h:243
+#: src/menu.h:242
 msgid "by T_ype"
 msgstr "_Típus szerint"
 
-#: src/menu.h:243
+#: src/menu.h:242
 msgid "Sort file list by type"
 msgstr "A fájlok rendezése típus szerint"
 
-#: src/menu.h:249
+#: src/menu.h:248
 msgid "by _Date modified"
 msgstr "Módosítás _dátuma szerint"
 
-#: src/menu.h:249
+#: src/menu.h:248
 msgid "Sort file list by modification time"
 msgstr "A fájlok rendezése a módosítás ideje szerint"
 
-#: src/menu.h:255
+#: src/menu.h:254
 msgid "by _Location"
 msgstr "_Hely szerint"
 
-#: src/menu.h:255
+#: src/menu.h:254
 msgid "Sort file list by location"
 msgstr "A fájlok rendezése útvonal szerint"
 
-#: src/menu.h:272
+#: src/menu.h:271
 msgid "View All _Files"
 msgstr "Minden _fájl megtekintése"
 
-#: src/menu.h:278
+#: src/menu.h:277
 msgid "View as a F_older"
 msgstr "Megjelenítés _mappaként"
 
-#: src/menu.h:300
+#: src/menu.h:299
 msgid "_Reversed Order"
 msgstr "_Fordított sorrend"
 
-#: src/menu.h:300
+#: src/menu.h:299
 msgid "Reverse the list order"
 msgstr "Fordított rendezési sorrend"
 
-#: src/menu.h:325
+#: src/menu.h:323
 msgid "_Toolbar"
 msgstr "_Eszköztár"
 
-#: src/menu.h:325
+#: src/menu.h:323
 msgid "View the main toolbar"
 msgstr "A fő eszköztár megjelenítése"
 
-#: src/menu.h:331
+#: src/menu.h:329
 msgid "Stat_usbar"
 msgstr "Állap_otsor"
 
-#: src/menu.h:331
+#: src/menu.h:329
 msgid "View the statusbar"
 msgstr "Az állapotsor megjelenítése"
 
-#: src/menu.h:339
+#: src/menu.h:337
 msgid "_Stop"
 msgstr "_Leállítás"
 
-#: src/menu.h:339 src/toolbar.h:55
+#: src/menu.h:337 src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Az aktuális művelet leállítása"
 
-#: src/menu.h:345
+#: src/menu.h:343
 msgid "_Reload"
 msgstr "_Frissítés"
 
-#: src/menu.h:345
+#: src/menu.h:343
 msgid "Reload current archive"
 msgstr "Az aktuális archívum újrabetöltése"
 
-#: src/menu.h:356
+#: src/menu.h:354
 msgid "_Arrange Files"
 msgstr "_Fájlok rendezése"
 
-#: src/menu.h:361
+#: src/menu.h:359
 msgid "_Last Output"
 msgstr "_Utolsó kimenet"
 
-#: src/menu.h:361
+#: src/menu.h:359
 msgid "View the output produced by the last executed command"
 msgstr "Az utoljára végrehajtott parancs kimenetének megtekintése"
 
-#: src/menu.h:367
-msgid "New _Window"
-msgstr "Új _ablak"
-
-#: src/menu.h:367
-msgid "Open a new window"
-msgstr "Új ablak megnyitása"
-
-#: src/menu.h:380
+#: src/menu.h:372
 msgid "_Contents"
 msgstr "_Tartalom"
 
-#: src/menu.h:380
+#: src/menu.h:372
 msgid "Display the File Roller Manual"
 msgstr "A File Roller kézikönyvének megjelenítése"
 
-#: src/menu.h:386
+#: src/menu.h:378
 msgid "_About"
 msgstr "_Névjegy"
 
-#: src/menu.h:386
+#: src/menu.h:378
 msgid "Information about the program"
 msgstr "Információk a programról"
 
-#: src/menu.h:398
+#: src/menu.h:390
 msgid "_Archive"
 msgstr "_Archívum"
 
-#: src/menu.h:399
+#: src/menu.h:391
 msgid "_Edit"
 msgstr "S_zerkesztés"
 
-#: src/menu.h:400
+#: src/menu.h:392
 msgid "_View"
 msgstr "_Nézet"
-
-#: src/menu.h:423
-msgid "Open Files..."
-msgstr "Fájlok megnyitása..."
-
-#: src/menu.h:443
-msgid "_Delete Files"
-msgstr "_Fájlok törlése"
-
-#: src/menu.h:443
-msgid "Delete files from the archive"
-msgstr "Fájlok törlése az archívumból"
-
-#: src/toolbar.h:39
-msgid "New"
-msgstr "Új"
-
-#: src/toolbar.h:45
-msgid "Open"
-msgstr "Megnyitás"
 
 #: src/toolbar.h:45
 msgid "Open archive"
@@ -899,108 +880,120 @@ msgstr "Archívum megnyitása"
 msgid "Stop"
 msgstr "Leállítás"
 
-#: src/window.c:618
+#: src/window.c:679
 msgid "Folder"
 msgstr "Mappa"
 
-#: src/window.c:767
+#: src/window.c:844
 msgid "[read only]"
 msgstr "[csak olvasható]"
 
-#: src/window.c:862
+#: src/window.c:939
 #, c-format
-msgid "1 file (%s)"
-msgstr "1 fájl (%s)"
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d fájl (%s)"
+msgstr[1] "%d fájl (%s)"
 
-#: src/window.c:865
+#: src/window.c:944
 #, c-format
-msgid "%d files (%s)"
-msgstr "%d fájl (%s)"
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d fájl kijelölve (%s)"
+msgstr[1] "%d fájl kijelölve (%s)"
 
-#: src/window.c:873
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "1 fájl kijelölve (%s)"
-
-#: src/window.c:876
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d fájl kijelölve (%s)"
-
-#: src/window.c:1250
+#: src/window.c:1345
 msgid "Reading archive"
 msgstr "Archívum olvasása"
 
-#: src/window.c:1256
+#: src/window.c:1351
 msgid "Adding files to archive"
 msgstr "Fájlok hozzáadása az archívumhoz"
 
-#: src/window.c:1259
+#: src/window.c:1354
 msgid "Extracting files from archive"
 msgstr "Fájlok kicsomagolása az archívumból"
 
-#: src/window.c:1262
+#: src/window.c:1357
 msgid "Testing archive"
 msgstr "Archívum tesztelése"
 
-#: src/window.c:1265
+#: src/window.c:1360
 msgid "Getting the file list"
 msgstr "Fájllista lekérése"
 
-#: src/window.c:1271
+#: src/window.c:1366
 msgid "wait please..."
 msgstr "várj..."
 
-#: src/window.c:1332
+#: src/window.c:1427
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "A mappa megjelenítése nem sikerült: %s"
 
-#: src/window.c:1389
+#: src/window.c:1486
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+"Az archívum jelszóval védett.\n"
+"Add meg a jelszót a Szerkesztés->Jelszó paranccsal."
+
+#: src/window.c:1488
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr "A megadott jelszó nem érvényes. Add meg az új jelszót a Szerkesztés->Jelszó paranccsal."
+
+#: src/window.c:1493
+msgid "Could not perform the operation"
+msgstr "A művelet nem végrehajtható"
+
+#: src/window.c:1508
 msgid "Operation stopped"
 msgstr "A művelet leállítva"
 
-#: src/window.c:1410
+#: src/window.c:1529
 msgid "An error occurred while extracting files."
 msgstr "Hiba történt a fájlok kicsomagolása közben."
 
-#: src/window.c:1414
+#: src/window.c:1533
 msgid "An error occurred while loading the archive."
 msgstr "Hiba történt az archívum betöltése közben."
 
-#: src/window.c:1418
+#: src/window.c:1537
 msgid "An error occurred while deleting files from the archive."
 msgstr "Hiba történt a fájlok archívumból való kitörlése közben."
 
-#: src/window.c:1422
+#: src/window.c:1541
 msgid "An error occurred while adding files to the archive."
 msgstr "Hiba történt a fájlok archívumhoz való hozzáadása közben."
 
-#: src/window.c:1426
+#: src/window.c:1545
 msgid "An error occurred while testing archive."
 msgstr "Hiba történt az archívum tesztelése közben."
 
-#: src/window.c:1435
+#: src/window.c:1554
 msgid "Command not found."
 msgstr "A parancs nem található."
 
-#: src/window.c:1438
+#: src/window.c:1557
 msgid "Command exited abnormally."
 msgstr "A parancs abnormálisan lépett ki."
 
-#: src/window.c:1569
+#: src/window.c:1685
 msgid "Test Result"
 msgstr "Teszteredmény"
 
-#: src/window.c:1792
+#: src/window.c:1922
 msgid "You don't have the right permissions."
 msgstr "Nincs megfelelő jogosultságod."
 
-#: src/window.c:1825
+#: src/window.c:1955
 msgid "You can't add an archive to itself."
 msgstr "Nem lehet az archívumot saját magához hozzáadni."
 
-#: src/window.c:1997
+#: src/window.c:2134
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1008,69 +1001,165 @@ msgstr ""
 "Ezt a fájlt az aktuális archívumhoz szeretnéd hozzáadni, vagy megnyitod új "
 "archívumként?"
 
-#: src/window.c:2042
+#: src/window.c:2171
 msgid "Do you want to create a new archive with these files?"
 msgstr "Akarsz új archívumot létrehozni ezekből a fájlokból?"
 
-#: src/window.c:2045
+#: src/window.c:2174
 msgid "Create _Archive"
 msgstr "Archívum _létrehozása"
 
-#: src/window.c:2394
+#: src/window.c:2525
 msgid "Size"
 msgstr "Méret"
 
-#: src/window.c:2395
+#: src/window.c:2526
 msgid "Type"
 msgstr "Típus"
 
-#: src/window.c:2396
+#: src/window.c:2527
 msgid "Date modified"
 msgstr "Módosítás dátuma"
 
-#: src/window.c:2397
+#: src/window.c:2528
 msgid "Location"
 msgstr "Hely"
 
-#: src/window.c:2404
+#: src/window.c:2535
 msgid "Name"
 msgstr "Név"
 
-#: src/window.c:2924
-msgid "_Up"
-msgstr "_Fel"
+#: src/window.c:3080
+msgid "Go to the previous visited location"
+msgstr "Ugrás az előző helyre"
+
+#: src/window.c:3088
+msgid "Go to the next visited location"
+msgstr "Ugrás a követlező helyre"
+
+#: src/window.c:3096
+msgid "Go up one level"
+msgstr "Ugrás egy szinttel feljebb"
+
+#: src/window.c:3104
+msgid "Go to the home location"
+msgstr "Ugrás a kezdőhelyre"
 
 #. current location
-#: src/window.c:2946
+#: src/window.c:3123
 msgid "Location:"
 msgstr "Hely:"
 
-#: src/window.c:2983
-msgid "Add"
-msgstr "Hozzáadás"
+#: src/window.c:3161
+msgid "Add files to the archive"
+msgstr "Fájlok hozzáadása az archívumhoz"
 
-#: src/window.c:3005
+#: src/window.c:3182
 msgid "View"
 msgstr "Nézet"
 
-#: src/window.c:3006
+#: src/window.c:3183
 msgid "View selected file"
 msgstr "Kijelölt fájl megtekintése"
 
-#: src/window.c:3517
+#: src/window.c:3760
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "\"%s\" megnyitása nem sikerült"
 
-#: src/window.c:3568
+#: src/window.c:3811
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "A(z) \"%s\" archívum mentése nem sikerült"
 
-#: src/window.c:4664
+#: src/window.c:4667
+msgid "The new name is void."
+msgstr "Az új név üres."
+
+#: src/window.c:4667 src/window.c:4671 src/window.c:4680
+msgid "Please use a different name."
+msgstr "Használj más nevet"
+
+#: src/window.c:4671
+msgid "The new name is equal to the old one."
+msgstr "Az új név ugyanaz, mint a régi."
+
+#: src/window.c:4680
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+"A(z) \"%s\" név nem érvényes, mert a névben nem lehetnek ezek a karakterek: %s\n"
+"\n"
+"%s"
+
+#: src/window.c:4736
+msgid "New folder name"
+msgstr "Új mappanév"
+
+#: src/window.c:4736
+msgid "New file name"
+msgstr "Új fájlnév"
+
+#: src/window.c:4757
+msgid "Could not rename the folder"
+msgstr "A mappa átnevezése nem sikerült"
+
+#: src/window.c:4757
+msgid "Could not rename the file"
+msgstr "A fájl átnevezése nem sikerült"
+
+#: src/window.c:5385
 msgid "Add files to an archive"
 msgstr "Fájlok hozzáadása az archívumhoz"
 
-#: src/window.c:4689
+#: src/window.c:5410
 msgid "Extract archive"
 msgstr "Archívum kicsomagolása"
+
+#~ msgid "Extract to..."
+#~ msgstr "Kicsomagolás adott helyre..."
+
+#~ msgid "New Archive"
+#~ msgstr "Új archívum"
+
+#~ msgid "Save Archive"
+#~ msgstr "Archívum mentése"
+
+#~ msgid "Open Archive"
+#~ msgstr "Archívum megnyitása"
+
+#~ msgid "Copy Archive"
+#~ msgstr "Archívum másolása"
+
+#~ msgid "Move Archive"
+#~ msgstr "Archívum áthelyezése"
+
+#~ msgid "Add _Files..."
+#~ msgstr "_Fájlok hozzáadása..."
+
+#~ msgid "Delete selected files and folders from the archive"
+#~ msgstr "A kijelölt fájlok és mappák törlése az archívumból"
+
+#~ msgid "New _Window"
+#~ msgstr "Új _ablak"
+
+#~ msgid "Open a new window"
+#~ msgstr "Új ablak megnyitása"
+
+#~ msgid "Open Files..."
+#~ msgstr "Fájlok megnyitása..."
+
+#~ msgid "_Delete Files"
+#~ msgstr "_Fájlok törlése"
+
+#~ msgid "1 file (%s)"
+#~ msgstr "1 fájl (%s)"
+
+#~ msgid "1 file selected (%s)"
+#~ msgstr "1 fájl kijelölve (%s)"
+
+#~ msgid "_Up"
+#~ msgstr "_Fel"
