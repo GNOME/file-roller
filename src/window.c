@@ -1236,7 +1236,8 @@ display_progress_dialog (gpointer data)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   window->stoppable);
-		gtk_window_present (GTK_WINDOW (window->app));
+		if (!window->batch_mode)
+			gtk_window_present (GTK_WINDOW (window->app));
 		gtk_window_present (GTK_WINDOW (window->progress_dialog));
 	}
 
@@ -1264,7 +1265,7 @@ open_progress_dialog (FRWindow *window)
 	if (window->progress_dialog == NULL) {
 		window->progress_dialog = gtk_dialog_new_with_buttons (
 						       _("File Roller"),
-						       GTK_WINDOW (window->app),
+						       NULL /*GTK_WINDOW (window->app)*/,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
 						       GTK_STOCK_STOP, GTK_RESPONSE_OK,
 						       NULL);
@@ -5652,7 +5653,7 @@ window_batch_mode_start (FRWindow *window)
 	if (window->batch_action_list == NULL)
 		return;
 
-	/* gtk_widget_hide (window->app); FIXME */
+	gtk_widget_hide (window->app);
 
 	window->batch_mode = TRUE;
 	window->batch_action = window->batch_action_list;
