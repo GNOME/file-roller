@@ -101,7 +101,7 @@ static char *open_mime_type[24];
 
 
 void 
-get_supported_archive_types ()
+get_supported_archive_types (void)
 {
 	int  wi, si, oi;
 

@@ -233,7 +233,7 @@ fr_command_init (FRCommand *comm)
 
 static void 
 fr_command_start (FRProcess *process,
-		  gpointer data)
+		  gpointer   data)
 {
 	FRCommand *comm = FR_COMMAND (data);
 	g_signal_emit (G_OBJECT (comm), 
@@ -244,26 +244,31 @@ fr_command_start (FRProcess *process,
 
 
 static void 
-fr_command_done (FRProcess *process,
+fr_command_done (FRProcess   *process,
 		 FRProcError *error, 
-		 gpointer data)
+		 gpointer     data)
 {
 	FRCommand *comm = FR_COMMAND (data);
 
 	if (error->type != FR_PROC_ERROR_NONE) 
 		fr_command_handle_error (comm, error);
+	else
+		comm->process->restart = FALSE;
 
-	g_signal_emit (G_OBJECT (comm),
-		       fr_command_signals[DONE], 
-		       0,
-		       comm->action, 
-		       error);
+	if (comm->process->restart)
+		fr_process_start (comm->process);
+	else
+		g_signal_emit (G_OBJECT (comm),
+			       fr_command_signals[DONE], 
+			       0,
+			       comm->action, 
+			       error);
 }
 
 
 void
-fr_command_construct (FRCommand *comm,
-		      FRProcess *process,
+fr_command_construct (FRCommand  *comm,
+		      FRProcess  *process,
 		      const char *fr_command_name)
 {
 	fr_command_set_filename (comm, fr_command_name);
@@ -469,9 +474,12 @@ fr_command_escape (FRCommand     *comm,
 }
 
 
-/* fraction == -1 means : I don't known how much time the current operation will take, 
- *                        the dialog will display this info pulsing the progress bar. 
- * fraction in [0.0, 1.0] means the amount of work, in percentage, accomplished. */
+/* fraction == -1 means : I don't known how much time the current operation 
+ *                        will take, the dialog will display this info pulsing 
+ *                        the progress bar. 
+ * fraction in [0.0, 1.0] means the amount of work, in percentage, 
+ *                        accomplished. 
+ */
 void
 fr_command_progress (FRCommand     *comm,
 		     double         fraction)

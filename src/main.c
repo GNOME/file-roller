@@ -56,7 +56,7 @@ static gchar *extract_to = NULL;
 static gint   extract;
 static gchar *default_url = NULL;
 
-extern get_supported_archive_types ();
+extern void get_supported_archive_types (void);
 
 struct poptOption options[] = {
 	{ "add-to", 'a', POPT_ARG_STRING, &add_to, 0,

@@ -132,7 +132,8 @@ fr_command_iso_list (FRCommand *comm)
 				      comm);
 
 	fr_process_begin_command (comm->process, "isoinfo");
-	fr_process_add_arg (comm->process, "-R -J -l -i");
+	fr_process_add_arg (comm->process, "-J -R");
+	fr_process_add_arg (comm->process, "-l -i");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
@@ -169,7 +170,8 @@ fr_command_iso_extract (FRCommand  *comm,
 
 		fr_process_begin_command (comm->process, "isoinfo");
 		fr_process_set_working_dir (comm->process, fullpath);
-		fr_process_add_arg (comm->process, "-R -J -i");
+		fr_process_add_arg (comm->process, "-J -R");
+		fr_process_add_arg (comm->process, "-i");
 		fr_process_add_arg (comm->process, comm->e_filename);
 		fr_process_add_arg (comm->process, "-x");
 		fr_process_add_arg (comm->process, scanpath);
@@ -179,6 +181,22 @@ fr_command_iso_extract (FRCommand  *comm,
 		fr_process_start (comm->process);
 		
 		g_free (fullpath);
+	}
+}
+
+
+static void
+fr_command_iso_handle_error (FRCommand   *comm, 
+			     FRProcError *error)
+{
+	if (error->type == 2) { /* ERROR: Unable to find Joliet SVD */
+
+		/* Remove the -J -R options and start again */
+		fr_process_set_arg_at (comm->process, 
+				       comm->process->error_command, 
+				       1, 
+				       "");
+		comm->process->restart = TRUE;
 	}
 }
 
@@ -196,6 +214,7 @@ fr_command_iso_class_init (FRCommandIsoClass *class)
 
         afc->list           = fr_command_iso_list;
 	afc->extract        = fr_command_iso_extract;
+	afc->handle_error   = fr_command_iso_handle_error;
 }
 
 

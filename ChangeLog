@@ -1,6 +1,9 @@
 2005-02-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-iso.c (list__process_line): fix line parsing.
+	(fr_command_iso_list, fr_command_iso_extract): do not use -J -R
+	options.
+	(fr_command_iso_handle_error): read iso files without Joliet info.
 
 2005-02-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
 

@@ -69,10 +69,16 @@ struct _FRProcess {
 	gboolean     term_on_stop;     /* whether we must terminate the command
 					* when calling fr_process_stop. */
 
+	/*< protected >*/
+
+	gboolean     restart;          /* Whether the process must restart
+					* after an error. */
+
 	/*< private >*/
 
 	GPtrArray   *comm;             /* FRCommandInfo elements. */
 	gint         n_comm;           /* total number of commands */
+	gint         current_comm;     /* currenlty editing command. */
 
 	pid_t        command_pid;
 	int          output_fd;
@@ -100,6 +106,7 @@ struct _FRProcess {
 	gboolean     running;
 	gboolean     stopping;
 	gint         current_command;	
+	gint         error_command;    /* command that coused an error. */
 
 	gboolean     use_standard_locale;
 	gboolean     sticky_only;      /* whether to execute only sticky 
@@ -130,7 +137,16 @@ void        fr_process_clear                (FRProcess    *fr_proc);
 void        fr_process_begin_command        (FRProcess    *fr_proc, 
 					     const char   *arg);
 
+void        fr_process_begin_command_at     (FRProcess    *fr_proc, 
+					     const char   *arg,
+					     int           index);
+
 void        fr_process_add_arg              (FRProcess    *fr_proc, 
+					     const char   *arg);
+
+void        fr_process_set_arg_at           (FRProcess    *fr_proc, 
+					     int           n_comm,
+					     int           n_arg,
 					     const char   *arg);
 
 void        fr_process_set_begin_func       (FRProcess    *fr_proc, 

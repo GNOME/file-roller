@@ -161,6 +161,7 @@ fr_process_init (FRProcess *fr_proc)
 
 	fr_proc->comm = g_ptr_array_new ();
 	fr_proc->n_comm = -1;
+	fr_proc->current_comm = -1;
 
 	fr_proc->command_pid = 0;
 	fr_proc->output_fd = 0;
@@ -186,6 +187,7 @@ fr_process_init (FRProcess *fr_proc)
 
 	fr_proc->running = FALSE;
 	fr_proc->stopping = FALSE;
+	fr_proc->restart = FALSE;
 
 	fr_proc->use_standard_locale = FALSE;
 }
@@ -252,6 +254,30 @@ fr_process_begin_command (FRProcess  *fr_proc,
 	c_info->args = g_list_prepend (NULL, g_strdup (arg));
 	g_ptr_array_add (fr_proc->comm, c_info);
 	fr_proc->n_comm++;
+	fr_proc->current_comm = fr_proc->n_comm;
+}
+
+
+void
+fr_process_begin_command_at (FRProcess  *fr_proc, 
+			     const char *arg,
+			     int         index)
+{
+	FRCommandInfo *c_info, *old_c_info;
+
+	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (index >= 0 && index <= fr_proc->n_comm);
+
+	fr_proc->current_comm = index;
+
+	old_c_info = g_ptr_array_index (fr_proc->comm, index);
+
+	if (old_c_info != NULL)
+		fr_command_info_free (old_c_info);
+
+	c_info = fr_command_info_new ();
+	c_info->args = g_list_prepend (NULL, g_strdup (arg));
+	g_ptr_array_index (fr_proc->comm, index) = c_info;
 }
 
 
@@ -263,7 +289,7 @@ fr_process_set_working_dir (FRProcess  *fr_proc,
 
 	g_return_if_fail (fr_proc != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	if (c_info->dir != NULL)
 		g_free (c_info->dir);
 	c_info->dir = g_strdup (dir);
@@ -278,7 +304,7 @@ fr_process_set_sticky (FRProcess *fr_proc,
 
 	g_return_if_fail (fr_proc != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->sticky = sticky;
 }
 
@@ -291,7 +317,7 @@ fr_process_set_ignore_error (FRProcess *fr_proc,
 
 	g_return_if_fail (fr_proc != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->ignore_error = ignore_error;
 }
 
@@ -304,8 +330,28 @@ fr_process_add_arg (FRProcess  *fr_proc,
 
 	g_return_if_fail (fr_proc != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->args = g_list_prepend (c_info->args, g_strdup (arg));
+}
+
+
+void
+fr_process_set_arg_at (FRProcess  *fr_proc, 
+		       int         n_comm,
+		       int         n_arg,
+		       const char *arg_value)
+{
+	FRCommandInfo *c_info;
+	GList         *arg;
+
+	g_return_if_fail (fr_proc != NULL);
+
+	c_info = g_ptr_array_index (fr_proc->comm, n_comm);
+	arg = g_list_nth (c_info->args, n_arg);
+	g_return_if_fail (arg != NULL);
+	
+	g_free (arg->data);
+	arg->data = g_strdup (arg_value);
 }
 
 
@@ -318,7 +364,7 @@ fr_process_set_begin_func (FRProcess    *fr_proc,
 
 	g_return_if_fail (fr_proc != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->begin_func = func;
 	c_info->begin_data = func_data;
 }
@@ -333,7 +379,7 @@ fr_process_set_end_func (FRProcess    *fr_proc,
 
 	g_return_if_fail (fr_proc != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->end_func = func;
 	c_info->end_data = func_data;
 }
@@ -346,7 +392,7 @@ fr_process_end_command (FRProcess *fr_proc)
 
 	g_return_if_fail (fr_proc != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->args = g_list_reverse (c_info->args);
 }
 
@@ -370,6 +416,7 @@ fr_process_clear (FRProcess *fr_proc)
 		g_ptr_array_remove_index_fast (fr_proc->comm, 0);
 
 	fr_proc->n_comm = -1;
+	fr_proc->current_comm = -1;
 }
 
 
@@ -601,6 +648,7 @@ allow_sticky_processes_only (FRProcess *fr_proc,
 {
 	if (! fr_proc->sticky_only) {
 		/* Remember the first error. */
+		fr_proc->error_command = fr_proc->current_command;
 		fr_proc->first_error.type = fr_proc->error.type;
 		fr_proc->first_error.status = fr_proc->error.status;
 		g_clear_error (&fr_proc->first_error.gerror);
@@ -760,9 +808,10 @@ fr_process_start (FRProcess *fr_proc)
 		fr_proc->raw_error = NULL;
 	}
 
-	g_signal_emit (G_OBJECT (fr_proc), 
-		       fr_process_signals[START],
-		       0);
+	if (!fr_proc->restart)
+		g_signal_emit (G_OBJECT (fr_proc), 
+			       fr_process_signals[START],
+			       0);
 
 	fr_proc->sticky_only = FALSE;
 	fr_proc->current_command = 0;
