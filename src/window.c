@@ -5650,7 +5650,7 @@ window_batch_mode_start (FRWindow *window)
 	if (window->batch_action_list == NULL)
 		return;
 
-	gtk_widget_hide (window->app);
+	/* gtk_widget_hide (window->app); FIXME */
 
 	window->batch_mode = TRUE;
 	window->batch_action = window->batch_action_list;
