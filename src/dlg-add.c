@@ -154,21 +154,26 @@ open_file_ok_cb (GtkWidget *w,
 #endif
 
 		if (files != NULL) {
-			gchar *first = files->data;
-			if (path_is_dir (first))
+			char *first = files->data;
+			char *first_path;
+
+			first_path = g_build_path (G_DIR_SEPARATOR_S, base_dir, first, NULL);
+			if (path_is_dir (first_path)) {
 				fr_archive_add_directory (window->archive, 
 							  file_name_from_path (first), 
 							  base_dir, 
 							  FALSE,
 							  window->password,
 							  window->compression);
-			else 
+			} else 
 				fr_archive_add (window->archive,
 						files,
 						base_dir,
 						update,
 						window->password,
 						window->compression);
+
+			g_free (first_path);
 		}
 		
 		g_list_free (files);
