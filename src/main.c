@@ -28,6 +28,7 @@
 #include <glade/glade.h>
 #include "file-utils.h"
 #include "fr-process.h"
+#include "gconf-utils.h"
 #include "window.h"
 #include "typedefs.h"
 #include "preferences.h"
@@ -40,7 +41,6 @@ static void release_data    ();
 GList        *window_list = NULL;
 GList        *viewer_list = NULL;
 GList        *command_list = NULL;
-Preferences   preferences;
 gint          force_directory_creation;
 
 static gchar *add_to = NULL;
@@ -160,7 +160,7 @@ install_scripts ()
 	g_free (src_dir);
 	g_free (dest_dir);
 
-	preferences.install_scripts = FALSE;
+	eel_gconf_set_boolean (PREF_INSTALL_SCRIPTS, FALSE);
 }
 
 
@@ -189,14 +189,16 @@ remove_scripts ()
 static void 
 initialize_data ()
 {
-	gchar *icon_path = PIXMAPSDIR "/file-roller.png";
+	char *icon_path = PIXMAPSDIR "/file-roller.png";
+
 	if (! g_file_test (icon_path, G_FILE_TEST_EXISTS))
                 g_warning ("Could not find %s", icon_path);
 	else
 		gnome_window_icon_set_default_from_file (icon_path);
-	preferences_load ();
 
-	if (preferences.install_scripts) 
+	eel_gconf_monitor_add ("/apps/file-roller");
+
+	if (eel_gconf_get_boolean (PREF_INSTALL_SCRIPTS))
 		install_scripts ();
 }
 
@@ -256,8 +258,7 @@ command_done (CommandData *cdata)
 static void 
 release_data ()
 {
-	preferences_save ();
-	preferences_release ();
+	eel_global_client_free ();
 
 	while (viewer_list != NULL) {
 		ViewerData *vdata = viewer_list->data;

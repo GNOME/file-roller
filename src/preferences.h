@@ -25,52 +25,48 @@
 
 #include <gtk/gtkenums.h>
 #include "typedefs.h"
+#include "window.h"
+
+#define PREF_INSTALL_SCRIPTS       "/apps/file-roller/install/nautilus_scripts"
+
+#define PREF_LIST_SORT_METHOD      "/apps/file-roller/listing/sort_method"
+#define PREF_LIST_SORT_TYPE        "/apps/file-roller/listing/sort_type"
+#define PREF_LIST_MODE             "/apps/file-roller/listing/list_mode"
+#define PREF_LIST_SHOW_NAME        "/apps/file-roller/listing/show_name"
+#define PREF_LIST_SHOW_TYPE        "/apps/file-roller/listing/show_type"
+#define PREF_LIST_SHOW_SIZE        "/apps/file-roller/listing/show_size"
+#define PREF_LIST_SHOW_TIME        "/apps/file-roller/listing/show_time"
+#define PREF_LIST_SHOW_PATH        "/apps/file-roller/listing/show_path"
+#define PREF_LIST_USE_MIME_ICONS   "/apps/file-roller/listing/use_mime_icons"
+
+#define PREF_UI_HISTORY_LEN        "/apps/file-roller/ui/history_len"
+#define PREF_UI_TOOLBAR            "/apps/file-roller/ui/view_toolbar"
+#define PREF_UI_STATUSBAR          "/apps/file-roller/ui/view_statusbar"
+
+#define PREF_EDIT_EDITORS          "/apps/file-roller/edit/editors"
+#define PREF_EXTRACT_VIEW_FOLDER   "/apps/file-roller/extract/view_folder"
+#define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/add/compression_level"
+
+#define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
+#define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"
+#define PREF_DESKTOP_TOOLBAR_DETACHABLE "/desktop/gnome/interface/toolbar_detachable"
 
 
-typedef struct {
-	WindowSortMethod  sort_method;
-	GtkSortType       sort_type;    /* ascending or discending. */
-	WindowListMode    list_mode;
+WindowSortMethod    preferences_get_sort_method ();
 
-	guint             show_name : 1;
-	guint             show_type : 1;
-	guint             show_size : 1;
-	guint             show_time : 1;
-	guint             show_path : 1;
+void                preferences_set_sort_method (WindowSortMethod i_value);
 
-	gboolean          use_mime_icons;
+GtkSortType         preferences_get_sort_type ();
 
-	int               max_history_len;
+void                preferences_set_sort_type (GtkSortType i_value);
 
-	/* Other editors. */
+WindowListMode      preferences_get_list_mode ();
 
-	int               editors_n;
-	GList *           editors;   /* char * elements. */
-	guint             view_toolbar;
-	guint             view_statusbar;
+void                preferences_set_list_mode (WindowListMode i_value);
 
-	/* Destop options. */
+FRCompression       preferences_get_compression_level ();
 
-	gboolean          menus_have_tearoff;
-	gboolean          toolbar_detachable;
-	gchar *           nautilus_theme;
-
-	gboolean          install_scripts;     /* first time automatic 
-						* installation. */
-
-	/* Extraction options */
-
-	gboolean          view_folder;
-
-	/* Add options */
-
-	FRCompression     compression;
-} Preferences;
-
-
-void  preferences_load    ();
-void  preferences_save    ();
-void  preferences_release ();
+void                preferences_set_compression_level (FRCompression i_value);
 
 
 #endif /* PREFERENCES_H */

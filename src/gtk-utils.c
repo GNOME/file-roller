@@ -38,7 +38,7 @@ count_selected (GtkTreeModel *model,
 
 
 int
-misc_count_selected (GtkTreeSelection *selection)
+_gtk_count_selected (GtkTreeSelection *selection)
 {
 	int n = 0;
 
@@ -50,7 +50,7 @@ misc_count_selected (GtkTreeSelection *selection)
 
 
 GtkWidget*
-misc_message_dialog_new (GtkWindow        *parent,
+_gtk_message_dialog_new (GtkWindow        *parent,
 			 GtkDialogFlags    flags,
 			 const char       *stock_id,
 			 const char       *message,
@@ -127,7 +127,7 @@ misc_message_dialog_new (GtkWindow        *parent,
 
 
 char *
-misc_request_dialog_run (GtkWindow        *parent,
+_gtk_request_dialog_run (GtkWindow        *parent,
 			 GtkDialogFlags    flags,
 			 const char       *message,
 			 const char       *default_value,
@@ -226,7 +226,7 @@ toggle_visibility (GtkWidget *widget)
 
 
 GtkWidget*
-misc_error_dialog_new (GtkWindow        *parent,
+_gtk_error_dialog_new (GtkWindow        *parent,
 		       GtkDialogFlags    flags,
 		       GList            *row_output,
 		       const char       *format,

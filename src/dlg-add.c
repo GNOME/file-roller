@@ -33,7 +33,7 @@
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-utils.h"
 #include "window.h"
-#include "misc.h"
+#include "gtk-utils.h"
 
 
 typedef struct {

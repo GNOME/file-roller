@@ -28,7 +28,7 @@
 #include <libgnomeui/gnome-file-entry.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
-#include "misc.h"
+#include "gtk-utils.h"
 #include "window.h"
 
 

@@ -20,21 +20,21 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MISC_H
-#define MISC_H
+#ifndef GTK_UTILS_H
+#define GTK_UTILS_H
 
 #include <gtk/gtk.h>
 
-int         misc_count_selected       (GtkTreeSelection *selection);
+int         _gtk_count_selected       (GtkTreeSelection *selection);
 
-GtkWidget*  misc_message_dialog_new   (GtkWindow        *parent,
+GtkWidget*  _gtk_message_dialog_new   (GtkWindow        *parent,
 				       GtkDialogFlags    flags,
 				       const char       *stock_id,
 				       const char       *message,
 				       const char       *first_button_text,
 				       ...);
 
-gchar*      misc_request_dialog_run   (GtkWindow        *parent,
+gchar*      _gtk_request_dialog_run   (GtkWindow        *parent,
 				       GtkDialogFlags    flags,
 				       const char       *message,
 				       const char       *default_value,
@@ -42,7 +42,7 @@ gchar*      misc_request_dialog_run   (GtkWindow        *parent,
 				       const char       *no_button_text,
 				       const char       *yes_button_text);
 
-GtkWidget*  misc_error_dialog_new     (GtkWindow        *parent,
+GtkWidget*  _gtk_error_dialog_new     (GtkWindow        *parent,
 				       GtkDialogFlags    flags,
 				       GList            *row_output,
 				       const char       *format,

@@ -29,9 +29,10 @@
 #include "bookmarks.h"
 #include "file-utils.h"
 #include "main.h"
-#include "misc.h"
+#include "gtk-utils.h"
 #include "window.h"
 #include "typedefs.h"
+#include "gconf-utils.h"
 
 
 #define GLADE_FILE "file_roller.glade2"
@@ -113,7 +114,7 @@ ok_clicked_cb (GtkWidget  *widget,
 			GtkWidget *d;
 			int        r;
 		
-			d = misc_message_dialog_new (GTK_WINDOW (data->dialog),
+			d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Destination folder does not exist.  Do you want to create it ?"),
@@ -203,7 +204,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	} else
 		password = NULL;
 
-	preferences.view_folder = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton));
+	eel_gconf_set_boolean (PREF_EXTRACT_VIEW_FOLDER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton)));
 
 	/* create the file list. */
 
@@ -223,7 +224,7 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	/* extract ! */
 
-	if (preferences.view_folder) {
+	if (eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER)) {
 		window->view_folder_after_extraction = TRUE;
 		g_free (window->folder_to_view);
 		window->folder_to_view = g_strdup (extract_to_dir);
@@ -468,7 +469,7 @@ dlg_extract (GtkWidget *widget,
 	_gtk_entry_set_locale_text (GTK_ENTRY (data->e_extract_to_entry), path);
 	g_free (path);
 	
-	if (misc_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
+	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton), TRUE);
 	else {
 		gtk_widget_set_sensitive (data->e_selected_radiobutton, FALSE);
@@ -499,7 +500,7 @@ dlg_extract (GtkWidget *widget,
 	} else 
 		gtk_widget_set_sensitive (data->e_password_hbox, FALSE);
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), preferences.view_folder);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER));
 
 	/* Set the signals handlers. */
 

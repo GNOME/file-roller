@@ -25,7 +25,7 @@
 #include <glade/glade.h>
 #include <libgnomeui/gnome-file-entry.h>
 #include "window.h"
-#include "misc.h"
+#include "gtk-utils.h"
 
 
 #define EXTRACT_GLADE_FILE "file_roller.glade2"
@@ -134,7 +134,7 @@ dlg_delete (GtkWidget *widget,
 
 	/* Set widgets data. */
 
-	if (misc_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
+	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio), TRUE);
 	else {
 		gtk_widget_set_sensitive (data->d_selected_files_radio, FALSE);

@@ -30,7 +30,7 @@
 #include "file-utils.h"
 #include "window.h"
 #include "typedefs.h"
-#include "misc.h"
+#include "gtk-utils.h"
 
 
 #define GLADE_FILE "file_roller.glade2"

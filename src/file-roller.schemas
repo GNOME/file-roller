@@ -1,0 +1,198 @@
+<gconfschemafile>
+    <schemalist>    
+
+      <schema>
+        <key>/schemas/apps/file-roller/install/nautilus_scripts</key>
+	<applyto>/apps/file-roller/install/nautilus_scripts</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/sort_method</key>
+	<applyto>/apps/file-roller/listing/sort_method</applyto>
+        <owner>file-roller</owner>
+        <type>string</type>
+        <default>name</default>
+        <locale name="C">
+          <short></short>
+          <long>Possible values: name, size, type, time, path.</long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/sort_type</key>
+	<applyto>/apps/file-roller/listing/sort_type</applyto>
+        <owner>file-roller</owner>
+        <type>string</type>
+        <default>ascending</default>
+        <locale name="C">
+          <short></short>
+          <long>Possible values: ascending, descending.</long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/list_mode</key>
+	<applyto>/apps/file-roller/listing/list_mode</applyto>
+        <owner>file-roller</owner>
+        <type>string</type>
+        <default>as_folder</default>
+        <locale name="C">
+          <short></short>
+          <long>Possible values: all_files, as_folder.</long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/show_name</key>
+	<applyto>/apps/file-roller/listing/show_name</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/show_type</key>
+	<applyto>/apps/file-roller/listing/show_type</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/show_size</key>
+	<applyto>/apps/file-roller/listing/show_size</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/show_time</key>
+	<applyto>/apps/file-roller/listing/show_time</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/show_path</key>
+	<applyto>/apps/file-roller/listing/show_path</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/listing/use_mime_icons</key>
+	<applyto>/apps/file-roller/listing/use_mime_icons</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/ui/history_len</key>
+	<applyto>/apps/file-roller/ui/history_len</applyto>
+        <owner>file-roller</owner>
+        <type>int</type>
+        <default>5</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/ui/view_toolbar</key>
+	<applyto>/apps/file-roller/ui/view_toolbar</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/ui/view_statusbar</key>
+	<applyto>/apps/file-roller/ui/view_statusbar</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>true</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/edit/editors</key>
+	<applyto>/apps/file-roller/edit/editors</applyto>
+        <owner>file-roller</owner>
+        <type>list</type>
+	<list_type>string</list_type>
+        <default>[]</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/extract/view_folder</key>
+	<applyto>/apps/file-roller/extract/view_folder</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>false</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+
+      <schema>
+        <key>/schemas/apps/file-roller/add/compression_level</key>	
+	<applyto>/apps/file-roller/add/compression_level</applyto>
+        <owner>file-roller</owner>
+        <type>string</type>
+        <default>normal</default>
+        <locale name="C">
+          <short></short>
+          <long>Possible values : very_fast, fast, normal, maximum.</long>
+        </locale>
+      </schema>
+
+  </schemalist>
+</gconfschemafile>

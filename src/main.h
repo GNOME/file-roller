@@ -56,7 +56,6 @@ void  remove_scripts   ();
 extern GList       *window_list;
 extern GList       *viewer_list;
 extern GList       *command_list;
-extern Preferences  preferences;
 extern gint         force_directory_creation;
 
 

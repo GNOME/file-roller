@@ -28,6 +28,7 @@
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-utils.h"
+#include "gconf-utils.h"
 #include "main.h"
 #include "window.h"
 
@@ -76,10 +77,11 @@ open_cb (GtkWidget *widget,
 	 gpointer   callback_data)
 {
 	DialogData  *data = callback_data;
-	GList       *scan;
-	const gchar *application;
+	const char  *application;
 	gboolean     present = FALSE;
-	gchar       *command = NULL;
+	char        *command = NULL;
+	GList       *scan;
+	GSList      *sscan, *editors;
 
 	application = gtk_entry_get_text (GTK_ENTRY (data->o_app_entry));
 
@@ -93,8 +95,9 @@ open_cb (GtkWidget *widget,
 		}
 	}
 
-	for (scan = preferences.editors; scan && !present; scan = scan->next) {
-		gchar *recent_command = scan->data;
+	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
+	for (sscan = editors; sscan && ! present; sscan = sscan->next) {
+		char *recent_command = sscan->data;
 		if (strcmp (recent_command, application) == 0) {
 			command = g_strdup (recent_command);
 			present = TRUE;
@@ -102,12 +105,13 @@ open_cb (GtkWidget *widget,
 	}
 
 	if (! present) {
-		preferences.editors_n++;
-		preferences.editors = g_list_prepend (preferences.editors,
-						      g_strdup (application));
-
+		editors = g_slist_prepend (editors, g_strdup (application));
 		command = g_strdup (application);
+		eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
 	}
+
+	g_slist_foreach (editors, (GFunc) g_free, NULL);
+	g_slist_free (editors);
 
 	/* exec the application */
 
@@ -236,7 +240,8 @@ delete_recent_cb (GtkWidget *widget,
 	DialogData       *data = callback_data;
 	GtkTreeSelection *selection;
 	GtkTreeIter       iter;
-	gchar            *editor;
+	char             *editor;
+	GSList           *editors;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view));
 	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
@@ -247,7 +252,16 @@ delete_recent_cb (GtkWidget *widget,
 			    -1);
 	gtk_list_store_remove (GTK_LIST_STORE (data->recent_model), &iter);
 
-	preferences.editors = g_list_remove (preferences.editors, editor);
+	/**/
+
+	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
+	editors = g_slist_remove (editors, editor);
+	eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
+	g_slist_foreach (editors, (GFunc) g_free, NULL);
+	g_slist_free (editors);
+
+	/**/
+
 	g_free (editor);
 }
 
@@ -259,8 +273,8 @@ dlg_open_with (FRWindow *window,
 {
 	DialogData              *data;
 	GnomeVFSMimeApplication *app;
-	GList                   *scan;
-	GList                   *app_names = NULL;
+	GList                   *scan, *app_names = NULL;
+	GSList                  *sscan, *editors;
 	GtkWidget               *ok_button;
 	GtkWidget               *cancel_button;
 	GtkTreeIter              iter;
@@ -405,14 +419,17 @@ dlg_open_with (FRWindow *window,
 				 data->recent_model);
 	g_object_unref (G_OBJECT (data->recent_model));
 
-	for (scan = preferences.editors; scan; scan = scan->next) {
-		gchar *editor = scan->data;
+	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
+	for (sscan = editors; sscan; sscan = sscan->next) {
+		char *editor = sscan->data;
 
 		gtk_list_store_append (GTK_LIST_STORE (data->recent_model), &iter);
 		gtk_list_store_set (GTK_LIST_STORE (data->recent_model), &iter,
 				    0, editor,
 				    -1);
 	}
+	g_slist_foreach (editors, (GFunc) g_free, NULL);
+	g_slist_free (editors);
 
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes (NULL,

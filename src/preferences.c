@@ -20,164 +20,181 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include <libgnome/libgnome.h>
 #include <gconf/gconf-client.h>
 #include "typedefs.h"
 #include "preferences.h"
 #include "main.h"
 #include "file-utils.h"
+#include "gconf-utils.h"
+#include "window.h"
 
 
-static gint
-get_int_with_default (gchar *config_path, gint def)
+typedef struct {
+	int   i_value;
+	char *s_value;
+} EnumStringTable;
+
+
+static int
+get_enum_from_string (EnumStringTable *table,
+		      const char      *s_value)
 {
-	gchar *path_with_def;
-	gint result;
-
-	path_with_def = g_strdup_printf ("%s=%d", config_path, def);
-	result = gnome_config_get_int (path_with_def);
-	g_free (path_with_def);
-					 
-	return result;
-}
-
-
-static gint
-get_bool_with_default (gchar *config_path, gboolean def)
-{
-	gchar *path_with_def;
-	gboolean result;
-
-	path_with_def = g_strdup_printf ("%s=%s", config_path, 
-					 def ? "true" : "false");
-	result = gnome_config_get_bool (path_with_def);
-	g_free (path_with_def);
-					 
-	return result;
-}
-
-
-void 
-preferences_load () 
-{
-	GConfClient *client;
 	int i;
 
-	preferences.sort_method = get_int_with_default (
-		"file-roller/Main Window/Sort Method", WINDOW_SORT_BY_NAME);
-	preferences.sort_type = get_int_with_default (
-		"file-roller/Main Window/Sort Type", GTK_SORT_ASCENDING);
-	preferences.list_mode = get_int_with_default (
-		"file-roller/Main Window/List Mode", WINDOW_LIST_MODE_AS_DIR);
+	if (s_value == NULL)
+		return -1;
 
-	preferences.show_name = get_bool_with_default (
-		"file-roller/File List/Name", TRUE);
-	preferences.show_type = get_bool_with_default (
-		"file-roller/File List/Type", TRUE);
-	preferences.show_size = get_bool_with_default (
-		"file-roller/File List/Size", TRUE);
-	preferences.show_time = get_bool_with_default (
-		"file-roller/File List/Time", TRUE);
-	preferences.show_path = get_bool_with_default (
-		"file-roller/File List/Path", TRUE);
-
-	preferences.use_mime_icons = get_bool_with_default (
-		"file-roller/File List/Use Mime Icons", TRUE);
-
-	preferences.max_history_len = get_int_with_default (
-		"file-roller/Main Window/Max History List", 5);
-	preferences.view_toolbar = get_bool_with_default (
-		"file-roller/Main Window/View Toolbar", TRUE);
-	preferences.view_statusbar = get_bool_with_default (
-		"file-roller/Main Window/View Statubar", TRUE);
-
-	preferences.view_folder = get_bool_with_default (
-		"file-roller/Extract/View Folder", FALSE);
-	preferences.compression = get_int_with_default (
-		"file-roller/Add/Compression", FR_COMPRESSION_NORMAL);
-
-	preferences.editors_n = gnome_config_get_int (
-		"file-roller/Editors/editors=0");
-	preferences.editors = NULL;
-	for (i = 0; i < preferences.editors_n; i++) {
-		gchar *prop_name;
-		gchar *prop_val;
-
-		prop_name = g_strdup_printf ("file-roller/Editors/editor%d", i);
-		prop_val = gnome_config_get_string (prop_name);
-		if (prop_val != NULL)
-			preferences.editors = g_list_prepend (preferences.editors, prop_val);
-		g_free (prop_name);
-	}
-
-	client = gconf_client_get_default ();
-	preferences.menus_have_tearoff = gconf_client_get_bool (client, "/desktop/gnome/interface/menus_have_tearoff", NULL);
-	preferences.toolbar_detachable = gconf_client_get_bool (client, "/desktop/gnome/interface/toolbar_detachable", NULL);
-	preferences.nautilus_theme = gconf_client_get_string (client, "/desktop/gnome/file_views/icon_theme", NULL);
-	g_object_unref (G_OBJECT (client));
-
-	preferences.install_scripts = get_bool_with_default (
-		"file-roller/Main/Install Scripts", TRUE);
-}
-
-
-void 
-preferences_save ()
-{
-	GList *scan;
-	int i;
-
-	gnome_config_set_int  ("file-roller/Main Window/Sort Method",
-			       preferences.sort_method);
-	gnome_config_set_int  ("file-roller/Main Window/Sort Type",
-			       preferences.sort_type);
-	gnome_config_set_int  ("file-roller/Main Window/List Mode",
-			       preferences.list_mode);
-
-	gnome_config_set_bool ("file-roller/File List/Name",
-			       preferences.show_name);
-	gnome_config_set_bool ("file-roller/File List/Type",
-			       preferences.show_type);
-	gnome_config_set_bool ("file-roller/File List/Size",
-			       preferences.show_size);
-	gnome_config_set_bool ("file-roller/File List/Time",
-			       preferences.show_time);
-	gnome_config_set_bool ("file-roller/File List/Path",
-			       preferences.show_path);
-	gnome_config_set_bool ("file-roller/File List/Use Mime Icons",
-			       preferences.use_mime_icons);
-
-	gnome_config_set_int  ("file-roller/Main Window/Max History List",
-			       preferences.max_history_len);
-	gnome_config_set_bool ("file-roller/Main Window/View Toolbar",
-			       preferences.view_toolbar);
-	gnome_config_set_bool ("file-roller/Main Window/View Statubar",
-			       preferences.view_statusbar);
-
-	gnome_config_set_bool ("file-roller/Extract/View Folder",
-			       preferences.view_folder);
-	gnome_config_set_int ("file-roller/Add/Compression",
-			      preferences.compression);
+	for (i = 0; table[i].s_value != NULL; i++)
+		if (strcmp (s_value, table[i].s_value) == 0)
+			return table[i].i_value;
 	
-	gnome_config_set_int ("file-roller/Editors/editors", preferences.editors_n);
-	for (i = 0, scan = preferences.editors; scan; scan = scan->next) {
-		gchar *prop_name;
-		prop_name = g_strdup_printf ("file-roller/Editors/editor%d", i++);
-		gnome_config_set_string (prop_name, (gchar*) scan->data);
-		g_free (prop_name);
-	}
+	return -1;
+}
 
-	gnome_config_set_bool ("file-roller/Main/Install Scripts",
-			       preferences.install_scripts);
 
-	gnome_config_sync ();
+static char *
+get_string_from_enum (EnumStringTable *table,
+		      int              i_value)
+{
+	int i;
+
+	for (i = 0; table[i].s_value != NULL; i++)
+		if (i_value == table[i].i_value)
+			return table[i].s_value;
+	
+	return NULL;
+}
+
+
+/* --------------- */
+
+
+static EnumStringTable sort_method_table [] = {
+	{ WINDOW_SORT_BY_NAME, "name" },
+	{ WINDOW_SORT_BY_SIZE, "size" },
+        { WINDOW_SORT_BY_TYPE, "type" },
+        { WINDOW_SORT_BY_TIME, "time" },
+        { WINDOW_SORT_BY_PATH, "path" },
+	{ 0, NULL }
+};
+
+static EnumStringTable sort_type_table [] = {
+	{ GTK_SORT_ASCENDING, "ascending" },
+	{ GTK_SORT_DESCENDING, "descending" },
+	{ 0, NULL }
+};
+
+static EnumStringTable list_mode_table [] = {
+	{ WINDOW_LIST_MODE_FLAT, "all_files" },
+	{ WINDOW_LIST_MODE_AS_DIR, "as_folder" },
+	{ 0, NULL }
+};
+
+static EnumStringTable compression_level_table [] = {
+	{ FR_COMPRESSION_VERY_FAST, "very_fast" },
+	{ FR_COMPRESSION_FAST, "fast" },
+	{ FR_COMPRESSION_NORMAL, "normal" },
+	{ FR_COMPRESSION_MAXIMUM, "maximum" },
+	{ 0, NULL }
+};
+
+
+/* --------------- */
+
+
+WindowSortMethod
+preferences_get_sort_method ()
+{
+	char *s_value;
+	int   i_value;
+
+	s_value = eel_gconf_get_string (PREF_LIST_SORT_METHOD);
+	i_value = get_enum_from_string (sort_method_table, s_value);
+	g_free (s_value);
+
+	return (WindowSortMethod) i_value;
 }
 
 
 void
-preferences_release ()
+preferences_set_sort_method (WindowSortMethod i_value)
 {
-	path_list_free (preferences.editors);
-	if (preferences.nautilus_theme != NULL)
-		g_free (preferences.nautilus_theme);
+	char *s_value;
+
+	s_value = get_string_from_enum (sort_method_table, i_value);
+	eel_gconf_set_string (PREF_LIST_SORT_METHOD, s_value);
+}
+
+
+GtkSortType
+preferences_get_sort_type ()
+{
+	char *s_value;
+	int   i_value;
+
+	s_value = eel_gconf_get_string (PREF_LIST_SORT_TYPE);
+	i_value = get_enum_from_string (sort_type_table, s_value);
+	g_free (s_value);
+
+	return (GtkSortType) i_value;
+}
+
+
+void
+preferences_set_sort_type (GtkSortType i_value)
+{
+	char *s_value;
+
+	s_value = get_string_from_enum (sort_type_table, i_value);
+	eel_gconf_set_string (PREF_LIST_SORT_TYPE, s_value);
+}
+
+
+WindowListMode
+preferences_get_list_mode ()
+{
+	char *s_value;
+	int   i_value;
+
+	s_value = eel_gconf_get_string (PREF_LIST_MODE);
+	i_value = get_enum_from_string (list_mode_table, s_value);
+	g_free (s_value);
+
+	return (WindowListMode) i_value;
+}
+
+
+void
+preferences_set_list_mode (WindowListMode i_value)
+{
+	char *s_value;
+
+	s_value = get_string_from_enum (list_mode_table, i_value);
+	eel_gconf_set_string (PREF_LIST_MODE, s_value);
+}
+
+
+FRCompression
+preferences_get_compression_level ()
+{
+	char *s_value;
+	int   i_value;
+
+	s_value = eel_gconf_get_string (PREF_ADD_COMPRESSION_LEVEL);
+	i_value = get_enum_from_string (compression_level_table, s_value);
+	g_free (s_value);
+
+	return (FRCompression) i_value;
+}
+
+
+void
+preferences_set_compression_level (FRCompression i_value)
+{
+	char *s_value;
+
+	s_value = get_string_from_enum (compression_level_table, i_value);
+	eel_gconf_set_string (PREF_ADD_COMPRESSION_LEVEL, s_value);
 }

@@ -28,10 +28,11 @@
 #include <fcntl.h>
 #include <gnome.h>
 #include "main.h"
-#include "misc.h"
+#include "gtk-utils.h"
 #include "window.h"
 #include "file-utils.h"
 #include "fr-process.h"
+#include "gconf-utils.h"
 #include "menu-callbacks.h"
 
 
@@ -186,7 +187,7 @@ new_file_ok_cb (GtkWidget *w,
 		GtkWidget *dialog;
 		int r;
 
-		dialog = misc_message_dialog_new (GTK_WINDOW (window->app),
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_QUESTION,
 						  _("Archive already exists.  Do you want to overwrite it ?"),
@@ -415,7 +416,7 @@ copy_archive_ok_cb (GtkWidget    *w,
 		GtkWidget *d;
 		int        r;
 
-		d = misc_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
 					     _("Archive already exists.  Do you want to overwrite it ?"),
@@ -556,7 +557,7 @@ rename_archive_cb (GtkWidget *widget,
 	name = remove_extension (file_name_from_path (window->archive_filename));
 	utf8_old_string = g_locale_to_utf8 (name, -1, NULL, NULL, NULL);
 	g_free (name);
-	utf8_string = misc_request_dialog_run (GTK_WINDOW (window->app),
+	utf8_string = _gtk_request_dialog_run (GTK_WINDOW (window->app),
 					       (GTK_DIALOG_DESTROY_WITH_PARENT 
 						| GTK_DIALOG_MODAL),
 					       _("New archive name (without extension)"),
@@ -585,7 +586,7 @@ rename_archive_cb (GtkWidget *widget,
 		GtkWidget *d;
 		int        r;
 
-		d = misc_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
 					     _("Archive already exists.  Do you want to overwrite it ?"),
@@ -624,7 +625,7 @@ delete_archive_cb (GtkWidget *widget,
 	GtkWidget *dialog;
 	int r;
 
-	dialog = misc_message_dialog_new (GTK_WINDOW (window->app),
+	dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					  GTK_DIALOG_MODAL,
 					  GTK_STOCK_DIALOG_QUESTION,
 					  _("Archive will be deleted, are you sure ?"),
@@ -821,7 +822,7 @@ sort_list_by_name (GtkWidget *widget,
 
 	window->sort_method = WINDOW_SORT_BY_NAME;
 	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_file_list (window);
+	window_update_list_order (window);
 }
 
 
@@ -836,7 +837,7 @@ sort_list_by_type (GtkWidget *widget,
 
 	window->sort_method = WINDOW_SORT_BY_TYPE;
 	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_file_list (window);
+	window_update_list_order (window);
 }
 
 
@@ -851,7 +852,7 @@ sort_list_by_size (GtkWidget *widget,
 
 	window->sort_method = WINDOW_SORT_BY_SIZE;
 	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_file_list (window);
+	window_update_list_order (window);
 }
 
 
@@ -866,7 +867,7 @@ sort_list_by_time (GtkWidget *widget,
 
 	window->sort_method = WINDOW_SORT_BY_TIME;
 	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_file_list (window);
+	window_update_list_order (window);
 }
 
 
@@ -881,7 +882,7 @@ sort_list_by_path (GtkWidget *widget,
 
 	window->sort_method = WINDOW_SORT_BY_PATH;
 	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_file_list (window);
+	window_update_list_order (window);
 }
 
 
@@ -894,7 +895,7 @@ sort_list_reversed (GtkWidget *widget,
 		window->sort_type = GTK_SORT_DESCENDING;
 	else
 		window->sort_type = GTK_SORT_ASCENDING;
-	window_update_file_list (window);
+	window_update_list_order (window);
 }
 
 
@@ -940,8 +941,7 @@ void
 view_toolbar_cb (GtkWidget *widget, 
 		 void      *data)
 {
-	FRWindow *window = data;
-	window_set_toolbar_visibility (window, GTK_CHECK_MENU_ITEM (widget)->active);
+	eel_gconf_set_boolean (PREF_UI_TOOLBAR, GTK_CHECK_MENU_ITEM (widget)->active);
 }
 
 
@@ -949,6 +949,5 @@ void
 view_statusbar_cb (GtkWidget *widget, 
 		   void      *data)
 {
-	FRWindow *window = data;
-	window_set_statusbar_visibility (window, GTK_CHECK_MENU_ITEM (widget)->active);
+	eel_gconf_set_boolean (PREF_UI_STATUSBAR, GTK_CHECK_MENU_ITEM (widget)->active);
 }

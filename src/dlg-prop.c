@@ -24,13 +24,13 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
+#include <gnome.h>
 #include <glade/glade.h>
 #include <libgnomeui/gnome-file-entry.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include "file-utils.h"
 #include "window.h"
-
 
 #define PROP_GLADE_FILE "file_roller.glade2"
 
@@ -51,6 +51,17 @@ destroy_cb (GtkWidget  *widget,
 }
 
 
+static void
+set_label (GtkWidget *label, const char *text)
+{
+	char *t;
+
+	t = g_strdup_printf ("<b>%s</b>", text);
+	gtk_label_set_markup (GTK_LABEL (label), t);
+	g_free (t);
+}
+
+
 void
 dlg_prop (GtkWidget *widget,
 	  gpointer   callback_data)
@@ -58,6 +69,7 @@ dlg_prop (GtkWidget *widget,
         DialogData       *data;
 	FRWindow         *window = callback_data;
 	GtkWidget        *ok_button;
+	GtkWidget        *label_label;
 	GtkWidget        *label;
 	char             *s;
 	const char       *s1;
@@ -80,6 +92,9 @@ dlg_prop (GtkWidget *widget,
 
 	/* Set widgets data. */
 	
+	label_label = glade_xml_get_widget (data->gui, "p_path_label_label");
+	set_label (label_label, _("Path:"));
+
 	label = glade_xml_get_widget (data->gui, "p_path_label");
 	/* window->archive_filename is unescaped. */
 	s = remove_level_from_path (window->archive_filename); 
@@ -88,11 +103,21 @@ dlg_prop (GtkWidget *widget,
 	g_free (utf8_name);
 	g_free (s);
 
+	/**/
+
+	label_label = glade_xml_get_widget (data->gui, "p_name_label_label");
+	set_label (label_label, _("Name:"));
+
 	label = glade_xml_get_widget (data->gui, "p_name_label");
 	s1 = file_name_from_path (window->archive_filename);
 	utf8_name = g_locale_to_utf8 (s1, -1, NULL, NULL, NULL);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 	g_free (utf8_name);
+
+	/**/
+
+	label_label = glade_xml_get_widget (data->gui, "p_size_label_label");
+	set_label (label_label, _("File Size:"));
 
 	label = glade_xml_get_widget (data->gui, "p_size_label");
 	size = get_file_size (window->archive_filename);
@@ -100,10 +125,20 @@ dlg_prop (GtkWidget *widget,
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
+	/**/
+
+	label_label = glade_xml_get_widget (data->gui, "p_files_label_label");
+	set_label (label_label, _("Number of Files:"));
+
 	label = glade_xml_get_widget (data->gui, "p_files_label");
 	s = g_strdup_printf ("%d", g_list_length (window->archive->command->file_list));
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
+
+	/**/
+
+	label_label = glade_xml_get_widget (data->gui, "p_date_label_label");
+	set_label (label_label, _("Date and Time:"));
 
 	label = glade_xml_get_widget (data->gui, "p_date_label");
 	t = get_file_mtime (window->archive->filename);

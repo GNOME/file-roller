@@ -37,6 +37,7 @@
 
 #include "main.h"
 #include "window.h"
+#include "gconf-utils.h"
 
 
 #define GLADE_FILE "file_roller_prop.glade2"
@@ -58,8 +59,8 @@ static guint
 opt_menu_get_active_idx (GtkWidget *opt_menu)
 {
         GtkWidget *item;
-        guint idx;
-        GList *scan;
+        guint      idx;
+        GList     *scan;
         GtkWidget *menu;
 
         menu = gtk_option_menu_get_menu (GTK_OPTION_MENU (opt_menu));
@@ -83,19 +84,16 @@ apply_cb (GtkWidget  *widget,
 {
 	/* Show/Hide Columns options. */
 
-	preferences.show_name = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_NAME]));
-	preferences.show_type = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE]));
-	preferences.show_size = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE]));
-	preferences.show_time = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME]));
-	preferences.show_path = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_PATH]));
-
-	window_update_columns_visibility (data->window);
+	eel_gconf_set_boolean (PREF_LIST_SHOW_NAME, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_NAME])));
+	eel_gconf_set_boolean (PREF_LIST_SHOW_TYPE, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE])));
+	eel_gconf_set_boolean (PREF_LIST_SHOW_SIZE, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE])));
+	eel_gconf_set_boolean (PREF_LIST_SHOW_TIME, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME])));
+	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_PATH])));
 
 	/* Misc options. */
 
-	preferences.max_history_len = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (data->history_len_spinbutton));
-	window_update_history_list (data->window);
-	data->window->compression = opt_menu_get_active_idx (data->compression_optionmenu);
+	eel_gconf_set_integer (PREF_UI_HISTORY_LEN, gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (data->history_len_spinbutton)));
+	preferences_set_compression_level (opt_menu_get_active_idx (data->compression_optionmenu));
 }
 
 
@@ -181,17 +179,16 @@ dlg_preferences (GtkWidget *caller,
 	help_button = glade_xml_get_widget (data->gui, "p_help_button");
 
 	/* Set widgets data. */
-	
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_NAME]), preferences.show_name);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE]), preferences.show_type);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE]), preferences.show_size);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME]), preferences.show_time);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_PATH]), preferences.show_path);
 
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->history_len_spinbutton),
-				   (gfloat) preferences.max_history_len);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_NAME]), eel_gconf_get_boolean (PREF_LIST_SHOW_NAME));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TYPE]), eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_SIZE]), eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_TIME]), eel_gconf_get_boolean (PREF_LIST_SHOW_TIME));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->show_hide_column[COLUMN_PATH]), eel_gconf_get_boolean (PREF_LIST_SHOW_PATH));
 
-	gtk_option_menu_set_history (GTK_OPTION_MENU (data->compression_optionmenu), window->compression);
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->history_len_spinbutton), (gfloat) eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
+
+	gtk_option_menu_set_history (GTK_OPTION_MENU (data->compression_optionmenu), preferences_get_compression_level ());
 
 	/* Set the signals handlers. */
 

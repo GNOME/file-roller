@@ -72,15 +72,17 @@ file_roller_SOURCES = 		\
 	fr-command-zip.h	\
 	fr-process.c		\
 	fr-process.h		\
+	gconf-utils.c		\
+	gconf-utils.h		\
 	gnome-vfs-helpers.c	\
 	gnome-vfs-helpers.h	\
+	gtk-utils.c		\
+	gtk-utils.h		\
 	main.c			\
 	main.h			\
 	menu-callbacks.c	\
 	menu-callbacks.h	\
 	menu.h			\
-	misc.c			\
-	misc.h			\
 	preferences.c		\
 	preferences.h		\
 	toolbar.h		\
@@ -100,10 +102,17 @@ file_roller_LDADD =	\
 	@LIBOBJS@	\
 	$(FR_LIBS)
 
-EXTRA_DIST = 		\
-	$(glade_DATA)	\
-	fnmatch.c	\
-	fnmatch.h	\
+schemadir       = @GCONF_SCHEMA_FILE_DIR@
+schema_DATA     = file-roller.schemas
+
+install-data-local:
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+
+EXTRA_DIST = 			\
+	$(glade_DATA)		\
+	$(schema_DATA)		\
+	fnmatch.c		\
+	fnmatch.h		\
 	fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)

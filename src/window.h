@@ -234,6 +234,8 @@ void       window_set_list_mode             (FRWindow       *window,
 
 void       window_update_file_list          (FRWindow    *window);
 
+void       window_update_list_order         (FRWindow    *window);
+
 GList *    window_get_file_list_selection   (FRWindow    *window, 
 					     gboolean     recursive,
 					     gboolean    *has_dirs);

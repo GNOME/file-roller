@@ -44,7 +44,8 @@
 #include "main.h"
 #include "menu-callbacks.h"
 #include "menu.h"
-#include "misc.h"
+#include "gtk-utils.h"
+#include "gconf-utils.h"
 #include "toolbar.h"
 #include "typedefs.h"
 
@@ -351,9 +352,10 @@ get_time_string (time_t time)
 static gchar *
 get_icon_path_from_name (const gchar *icon_name)
 {
-	gchar *name_with_ext;
-	gchar *icon_path = NULL;
-	gchar *tmp;
+	char *name_with_ext;
+	char *icon_path = NULL;
+	char *tmp;
+	char *icon_theme = eel_gconf_get_string (PREF_DESKTOP_ICON_THEME);
 
 	if (! file_extension_is (icon_name, ".png"))
 		name_with_ext = g_strconcat (icon_name, ".png", NULL);
@@ -362,10 +364,11 @@ get_icon_path_from_name (const gchar *icon_name)
 
         if (icon_path == NULL) {
                 tmp = g_strconcat ("nautilus/", 
-				   preferences.nautilus_theme, 
+				   icon_theme, 
 				   "/", 
 				   name_with_ext, 
 				   NULL);
+
 		icon_path = gnome_vfs_icon_path_from_filename (tmp);
 		g_free (tmp);
         }
@@ -381,7 +384,7 @@ get_icon_path_from_name (const gchar *icon_name)
 	if (icon_path == NULL) {
 		tmp = g_strconcat (g_get_home_dir (),
 				   "/.nautilus/themes/",
-				   preferences.nautilus_theme, 
+				   icon_theme, 
 				   "/", 
 				   name_with_ext, 
 				   NULL);
@@ -392,6 +395,8 @@ get_icon_path_from_name (const gchar *icon_name)
         if (icon_path == NULL) 
 		icon_path = gnome_vfs_icon_path_from_filename (name_with_ext);
 	g_free (name_with_ext);
+
+	g_free (icon_theme);
 
 	return icon_path;
 }
@@ -447,7 +452,7 @@ get_icon (WindowListMode  list_mode,
 		return pixbuf;
 	}
 
-	if (! preferences.use_mime_icons) {
+	if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS)) {
 		if (fdata->is_dir)
 			icon_name = ICON_TYPE_DIRECTORY;
 		else
@@ -685,11 +690,12 @@ window_update_file_list (FRWindow *window)
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (window->list_view), 
 				 GTK_TREE_MODEL (window->empty_store));
+
 	gtk_list_store_clear (window->list_store);
 	if (! GTK_WIDGET_VISIBLE (window->list_view))
 		gtk_widget_show (window->list_view);
 
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->list_store), -1, window->sort_type);
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->list_store), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, window->sort_type);
 
 	window_start_activity_mode (window);
 
@@ -719,6 +725,13 @@ window_update_file_list (FRWindow *window)
 		g_list_free (dir_list);
 
 	_window_update_statusbar_list_info (window);
+}
+
+
+void
+window_update_list_order (FRWindow *window)
+{
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->list_store), get_column_from_sort_method (window->sort_method), window->sort_type);
 }
 
 
@@ -917,7 +930,7 @@ _window_update_sensitivity (FRWindow *window)
 			     && ! window->archive_new 
 			     && ! running);
 	compr_file        = window->archive->is_compressed_file;
-	n_selected        = misc_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+	n_selected        = _gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
 	sel_not_null      = n_selected > 0;
 	one_file_selected = n_selected == 1;
 	dir_selected  = selection_has_a_dir (window); 
@@ -1153,7 +1166,7 @@ _window_add_to_recent (FRWindow *window,
 		bookmarks_add (recent, filename);
 	else
 		bookmarks_remove (recent, filename);
-	bookmarks_set_max_lines (recent, preferences.max_history_len);
+	bookmarks_set_max_lines (recent, eel_gconf_get_integer (PREF_UI_HISTORY_LEN));
 	bookmarks_write_to_disk (recent);
 	bookmarks_free (recent);
 	
@@ -1179,7 +1192,7 @@ open_nautilus (const char *folder)
 	if (!g_spawn_command_line_async (command_line, &err) || (err != NULL)){
 		GtkWidget *d;
 	
-		d = misc_message_dialog_new (NULL,
+		d = _gtk_message_dialog_new (NULL,
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
 					     err->message,
@@ -1264,7 +1277,7 @@ _action_performed (FRArchive   *archive,
 			break;
 		}
 
-		dialog = misc_error_dialog_new (GTK_WINDOW (window->app),
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (window->app),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						(process->raw_error != NULL) ? process->raw_error : process->raw_output,
 						details ? "%s\n%s" : "%s",
@@ -1717,7 +1730,7 @@ window_drag_data_received  (GtkWidget          *widget,
 			GtkWidget *d;
 			gint       r;
 
-			d = misc_message_dialog_new (GTK_WINDOW (window->app),
+			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Do you want to add this file to the current archive or open it as a new archive ?"),
@@ -1760,7 +1773,7 @@ window_drag_data_received  (GtkWidget          *widget,
 			GtkWidget *d;
 			int        r;
 
-			d = misc_message_dialog_new (GTK_WINDOW (window->app),
+			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Do you want to create a new archive with these files ?"),
@@ -2245,19 +2258,94 @@ static gboolean
 window_show_cb (GtkWidget *widget,
 		FRWindow  *window)
 {
+	gboolean view_foobar;
+
 	_window_update_current_location (window);
 
+	view_foobar = eel_gconf_get_boolean (PREF_UI_TOOLBAR);
 	set_check_menu_item_state (window, 
 				   window->mitem_view_toolbar, 
-				   preferences.view_toolbar);
-	window_set_toolbar_visibility (window, preferences.view_toolbar);
+				   view_foobar);
+	window_set_toolbar_visibility (window, view_foobar);
 
+	view_foobar = eel_gconf_get_boolean (PREF_UI_STATUSBAR);
 	set_check_menu_item_state (window, 
 				   window->mitem_view_statusbar, 
-				   preferences.view_statusbar);
-	window_set_statusbar_visibility (window, preferences.view_statusbar);
+				   view_foobar);
+	window_set_statusbar_visibility (window, view_foobar);
 	
 	return TRUE;
+}
+
+
+/* preferences changes notification callbacks */
+
+
+static void
+pref_history_len_changed (GConfClient *client,
+			  guint        cnxn_id,
+			  GConfEntry  *entry,
+			  gpointer     user_data)
+{
+	FRWindow *window = user_data;
+	window_update_history_list (window);
+}
+
+
+static void
+pref_view_toolbar_changed (GConfClient *client,
+			   guint        cnxn_id,
+			   GConfEntry  *entry,
+			   gpointer     user_data)
+{
+	FRWindow *window = user_data;
+	window_set_toolbar_visibility (window, gconf_value_get_bool (gconf_entry_get_value (entry)));
+}
+
+
+static void
+pref_view_statusbar_changed (GConfClient *client,
+			     guint        cnxn_id,
+			     GConfEntry  *entry,
+			     gpointer     user_data)
+{
+	FRWindow *window = user_data;
+	window_set_statusbar_visibility (window, gconf_value_get_bool (gconf_entry_get_value (entry)));
+}
+
+
+static void
+pref_show_field_changed (GConfClient *client,
+			 guint        cnxn_id,
+			 GConfEntry  *entry,
+			 gpointer     user_data)
+{
+	FRWindow *window = user_data;
+	window_update_columns_visibility (window);
+}
+
+
+static void gh_unref_pixbuf (gpointer  key,
+			     gpointer  value,
+			     gpointer  user_data);
+
+
+static void
+pref_use_mime_icons_changed (GConfClient *client,
+			     guint        cnxn_id,
+			     GConfEntry  *entry,
+			     gpointer     user_data)
+{
+	FRWindow *window = user_data;
+	
+	if (pixbuf_hash != NULL) {
+		g_hash_table_foreach (pixbuf_hash, 
+				      gh_unref_pixbuf,
+				      NULL);
+		g_hash_table_destroy (pixbuf_hash);
+		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	}
+	window_update_file_list (window);
 }
 
 
@@ -2426,7 +2514,7 @@ window_new ()
 						     "LocationBar",
 						     (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL 
 						      | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE 
-						      | (preferences.toolbar_detachable ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
+						      | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
 						     BONOBO_DOCK_TOP,
 						     2, 1, 0);
 
@@ -2502,24 +2590,10 @@ window_new ()
 					    _("Add"), 
 					    _("Add files to the archive"),
 					    NULL, 
-					    /*gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_LARGE_TOOLBAR),*/
 					    create_icon (add_pixbuf),
 					    GTK_SIGNAL_FUNC (add_cb), 
 					    window,
 					    TOOLBAR_SEP1 + i++);
-	/* FIXME
-	window->toolbar_delete = 
-		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
-					    GTK_TOOLBAR_CHILD_BUTTON,
-					    NULL, 
-					    _("Remove"), 
-					    _("Remove files from the archive"),
-					    NULL, 
-					    gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_LARGE_TOOLBAR),
-					    GTK_SIGNAL_FUNC (dlg_delete), 
-					    window,
-					    TOOLBAR_SEP1 + i++);
-	*/
 	window->toolbar_extract = 
 		gtk_toolbar_insert_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_BUTTON,
@@ -2583,10 +2657,10 @@ window_new ()
 			  G_CALLBACK (_action_performed),
 			  window);
 
-	window->sort_method = preferences.sort_method;
-	window->sort_type = preferences.sort_type;
+	window->sort_method = preferences_get_sort_method ();
+	window->sort_type = preferences_get_sort_type ();
 
-	window->list_mode = preferences.list_mode;
+	window->list_mode = preferences_get_list_mode ();
 	window->current_dir = g_strdup ("/");
 
 	window->mitem_new_archive = file_menu[FILE_MENU_NEW_ARCHIVE].widget;
@@ -2656,9 +2730,9 @@ window_new ()
 	window->extract_interact_use_default_dir = FALSE;
 
 	window->password = NULL;
-	window->compression = preferences.compression;
+	window->compression = preferences_get_compression_level ();
 
-	/* update menu items */
+	/* Update menu items */
 
 	if (window->list_mode == WINDOW_LIST_MODE_FLAT)
 		set_check_menu_item_state (window, window->mitem_view_flat, TRUE);
@@ -2674,6 +2748,37 @@ window_new ()
 	_window_update_current_location (window);
 	window_update_history_list (window);
 	window_update_columns_visibility (window);
+
+	/* Add notification callbacks. */
+
+	eel_gconf_notification_add (PREF_UI_HISTORY_LEN,
+				    pref_history_len_changed,
+				    window);
+	eel_gconf_notification_add (PREF_UI_TOOLBAR,
+				    pref_view_toolbar_changed,
+				    window);
+	eel_gconf_notification_add (PREF_UI_STATUSBAR,
+				    pref_view_statusbar_changed,
+				    window);
+	eel_gconf_notification_add (PREF_LIST_SHOW_NAME,
+				    pref_show_field_changed,
+				    window);
+	eel_gconf_notification_add (PREF_LIST_SHOW_TYPE,
+				    pref_show_field_changed,
+				    window);
+	eel_gconf_notification_add (PREF_LIST_SHOW_SIZE,
+				    pref_show_field_changed,
+				    window);
+	eel_gconf_notification_add (PREF_LIST_SHOW_TIME,
+				    pref_show_field_changed,
+				    window);
+	eel_gconf_notification_add (PREF_LIST_SHOW_PATH,
+				    pref_show_field_changed,
+				    window);
+
+	eel_gconf_notification_add (PREF_LIST_USE_MIME_ICONS,
+				    pref_use_mime_icons_changed,
+				    window);
 
 	/* Give focus to the list. */
 
@@ -2791,12 +2896,9 @@ window_close (FRWindow *window)
 
 	/* save preferences. */
 
-	preferences.sort_method = window->sort_method;
-	preferences.sort_type = window->sort_type;
-	preferences.list_mode = window->list_mode;
-	preferences.compression = window->compression;
-	preferences.view_toolbar = GTK_WIDGET_VISIBLE (window->toolbar->parent);
-	preferences.view_statusbar = GTK_WIDGET_VISIBLE (window->statusbar);
+	preferences_set_sort_method (window->sort_method);
+	preferences_set_sort_type (window->sort_type);
+	preferences_set_list_mode (window->list_mode);
 
 	gtk_widget_destroy (window->app);
 	window_list = g_list_remove (window_list, window);
@@ -2955,7 +3057,7 @@ window_update_history_list (FRWindow *window)
 
 	l = gtk_container_get_children (GTK_CONTAINER (window->mitem_bookmarks));
 
-	if (preferences.menus_have_tearoff)
+	if (eel_gconf_get_boolean (PREF_DESKTOP_MENUS_HAVE_TEAROFF))
 		offset = 1;
 	else 
 		offset = 0;
@@ -2981,7 +3083,7 @@ window_update_history_list (FRWindow *window)
 
 	/* Update bookmarks menu. */
 
-	for (i = 1, scan = bookmarks->list; scan && (i <= preferences.max_history_len); scan = scan->next, i++) {
+	for (i = 1, scan = bookmarks->list; scan && (i <= eel_gconf_get_integer (PREF_UI_HISTORY_LEN)); scan = scan->next, i++) {
 		char *utf8_path;
 		char *utf8_name;
 		char *label;
@@ -3127,7 +3229,7 @@ window_archive_extract (FRWindow   *window,
 			GtkWidget *d;
 			int        r;
 		
-			d = misc_message_dialog_new (GTK_WINDOW (window->app),
+			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
 						     _("Destination folder does not exist.  Do you want to create it ?"),
@@ -3785,19 +3887,19 @@ window_update_columns_visibility (FRWindow *window)
 	GtkTreeViewColumn *column;
 
 	column = gtk_tree_view_get_column (tree_view, 0);
-	gtk_tree_view_column_set_visible (column, preferences.show_name);
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_NAME));
 
 	column = gtk_tree_view_get_column (tree_view, 1);
-	gtk_tree_view_column_set_visible (column, preferences.show_size);
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_SIZE));
 
 	column = gtk_tree_view_get_column (tree_view, 2);
-	gtk_tree_view_column_set_visible (column, preferences.show_type);
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_TYPE));
 
 	column = gtk_tree_view_get_column (tree_view, 3);
-	gtk_tree_view_column_set_visible (column, preferences.show_time);
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_TIME));
 
 	column = gtk_tree_view_get_column (tree_view, 4);
-	gtk_tree_view_column_set_visible (column, preferences.show_path);
+	gtk_tree_view_column_set_visible (column, eel_gconf_get_boolean (PREF_LIST_SHOW_PATH));
 }
 
 
