@@ -102,6 +102,7 @@ add_clicked_cb (GtkWidget  *widget,
 					     _("You have to specify an archive name."),
 					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (archive_name);
@@ -127,6 +128,7 @@ add_clicked_cb (GtkWidget  *widget,
 					     _("Archive type not supported."),
 					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (archive_name);
@@ -149,6 +151,7 @@ add_clicked_cb (GtkWidget  *widget,
 					     _("Create _Folder"), GTK_RESPONSE_YES,
 					     NULL);
 			
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 	}
@@ -167,6 +170,7 @@ add_clicked_cb (GtkWidget  *widget,
 					     message,
 					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 		g_free (message);
 
 		gtk_dialog_run (GTK_DIALOG (d));
@@ -186,6 +190,7 @@ add_clicked_cb (GtkWidget  *widget,
 					     NULL,
 					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		g_free (archive_dir);
 		g_free (archive_name);

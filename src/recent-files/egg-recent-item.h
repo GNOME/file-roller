@@ -22,7 +22,7 @@ struct _EggRecentItem {
 	gchar *mime_type;
 	time_t timestamp;
 
-	gboolean private;
+	gboolean private_data;
 
 	GList *groups;
 	

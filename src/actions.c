@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2004 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,29 +20,28 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
-
 #include <config.h>
+#include <gnome.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <gnome.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include "actions.h"
+#include "dlg-add-files.h"
+#include "dlg-add-folder.h"
+#include "dlg-extract.h"
+#include "dlg-delete.h"
+#include "dlg-open-with.h"
+#include "dlg-password.h"
 #include "main.h"
 #include "gtk-utils.h"
 #include "window.h"
 #include "file-utils.h"
 #include "fr-process.h"
 #include "gconf-utils.h"
-#include "menu-callbacks.h"
-
-
-void
-close_window_cb (GtkWidget *widget, 
-		 void      *data)
-{
-	window_close ((FRWindow *) data);
-}
+#include "dlg-prop.h"
 
 
 /* -- new archive -- */
@@ -94,7 +93,7 @@ typedef struct {
 } FileTypeDescription;
 
 
-FileTypeDescription write_type_desc[] = { 
+static FileTypeDescription write_type_desc[] = { 
 	{ N_("Automatic"),                             NULL},
 	{ N_("Arj (.arj)"),                            ".arj" },
 	{ N_("Ear (.ear)"),                            ".ear" },
@@ -178,6 +177,7 @@ new_file_response_cb (GtkWidget *w,
 						  _("You have to specify an archive name."),
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -198,6 +198,7 @@ new_file_response_cb (GtkWidget *w,
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -229,6 +230,7 @@ new_file_response_cb (GtkWidget *w,
 						  _("Overwrite"), GTK_RESPONSE_YES,
 						  NULL);
 
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
@@ -246,6 +248,7 @@ new_file_response_cb (GtkWidget *w,
 							  NULL,
 							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			return;
@@ -258,8 +261,8 @@ new_file_response_cb (GtkWidget *w,
 
 
 void
-new_archive_cb (GtkWidget *widget, 
-		void      *data)
+activate_action_new (GtkAction *action, 
+		     gpointer   data)
 {
 	static const char * save_mime_type[] = {
 		"application/x-tar",
@@ -293,6 +296,7 @@ new_archive_cb (GtkWidget *widget,
 			GTK_STOCK_NEW, GTK_RESPONSE_OK,
 			NULL);
 
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
 
@@ -346,7 +350,116 @@ new_archive_cb (GtkWidget *widget,
 }
 
 
-/* -- save as archive -- */
+/* -- open archive -- */
+
+
+static void
+open_file_destroy_cb (GtkWidget *w,
+		      GtkWidget *file_sel)
+{
+}
+
+
+static void 
+open_file_response_cb (GtkWidget *w,
+		       gint response,
+		       GtkWidget *file_sel)
+{
+	FRWindow   *window = NULL;
+	char *path;
+
+	if (response == GTK_RESPONSE_CANCEL) {
+		gtk_widget_destroy (file_sel);
+		return;
+	}
+
+	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
+	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
+
+        if (path == NULL)
+                return;
+
+	if (window_archive_open (window, path, GTK_WINDOW (file_sel)))
+		gtk_widget_destroy (file_sel);
+
+	g_free (path);
+}
+
+
+void
+activate_action_open (GtkAction *action, 
+		      gpointer   data)
+{
+	static const char * open_mime_type[] = {
+		"application/x-tar",
+		"application/x-compressed-tar",
+		"application/x-bzip-compressed-tar",
+		"application/x-lzop-compressed-tar",
+		"application/x-arj",
+		"application/zip",
+		"application/x-zip",
+		"application/x-lha",
+		"application/x-rar",
+		"application/x-rar-compressed",
+		"application/x-rpm",
+		"application/x-stuffit",
+		"application/x-gzip",
+		"application/x-bzip",
+		"application/x-compress",
+		"application/x-lzop",
+		"application/x-zoo",
+		"application/x-java-archive",
+		"application/x-jar"
+	};
+	GtkWidget     *file_sel;
+	FRWindow      *window = data;
+	GtkFileFilter *filter;
+	int            i;
+
+	file_sel = gtk_file_chooser_dialog_new (
+			_("Open"),
+			GTK_WINDOW (window->app),
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+			NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
+
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
+					     window->open_default_dir);
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All archives"));
+	for (i = 0; i < G_N_ELEMENTS (open_mime_type); i++)
+		gtk_file_filter_add_mime_type (filter, open_mime_type[i]);
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All files"));
+	gtk_file_filter_add_pattern (filter, "*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
+	/**/
+
+	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
+	
+	g_signal_connect (G_OBJECT (file_sel),
+			  "response", 
+			  G_CALLBACK (open_file_response_cb), 
+			  file_sel);
+ 
+	g_signal_connect (G_OBJECT (file_sel),
+			  "destroy", 
+			  G_CALLBACK (open_file_destroy_cb),
+			  file_sel);
+
+	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
+	gtk_widget_show (file_sel);
+}
+
+
+/* -- save archive -- */
 
 
 static void
@@ -386,6 +499,7 @@ save_file_response_cb (GtkWidget *w,
 						  _("You have to specify an archive name."),
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -405,6 +519,7 @@ save_file_response_cb (GtkWidget *w,
 						  _("You don't have permission to create an archive in this folder"),
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return;
@@ -428,6 +543,7 @@ save_file_response_cb (GtkWidget *w,
 						  _("Overwrite"), GTK_RESPONSE_YES,
 						  NULL);
 
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
@@ -445,6 +561,7 @@ save_file_response_cb (GtkWidget *w,
 							  NULL,
 							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			return;
@@ -458,8 +575,8 @@ save_file_response_cb (GtkWidget *w,
 
 
 void
-save_as_archive_cb (GtkWidget *widget, 
-		    void *data)
+activate_action_save_as (GtkAction *action, 
+			 gpointer   data)
 {
 	static const char * save_mime_type[] = {
 		"application/x-tar",
@@ -493,6 +610,7 @@ save_as_archive_cb (GtkWidget *widget,
 			GTK_STOCK_SAVE, GTK_RESPONSE_OK,
 			NULL);
 
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
 
@@ -540,122 +658,6 @@ save_as_archive_cb (GtkWidget *widget,
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 	gtk_widget_show_all (file_sel);
-}
-
-
-/* -- open archive -- */
-
-
-static void
-open_file_destroy_cb (GtkWidget *w,
-		      GtkWidget *file_sel)
-{
-}
-
-
-static void 
-open_file_response_cb (GtkWidget *w,
-		       gint response,
-		       GtkWidget *file_sel)
-{
-	FRWindow   *window = NULL;
-	char *path;
-
-	if (response == GTK_RESPONSE_CANCEL) {
-		gtk_widget_destroy (file_sel);
-		return;
-	}
-
-	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
-	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
-
-        if (path == NULL)
-                return;
-
-	if (window_archive_open (window, path, GTK_WINDOW (file_sel)))
-		gtk_widget_destroy (file_sel);
-
-	g_free (path);
-}
-
-
-void
-open_archive_cb (GtkWidget *widget, 
-		 void      *data)
-{
-	static const char * open_mime_type[] = {
-		"application/x-tar",
-		"application/x-compressed-tar",
-		"application/x-bzip-compressed-tar",
-		"application/x-lzop-compressed-tar",
-		"application/x-arj",
-		"application/zip",
-		"application/x-zip",
-		"application/x-lha",
-		"application/x-rar",
-		"application/x-rar-compressed",
-		"application/x-rpm",
-		"application/x-stuffit",
-		"application/x-gzip",
-		"application/x-bzip",
-		"application/x-compress",
-		"application/x-lzop",
-		"application/x-zoo",
-		"application/x-java-archive",
-		"application/x-jar"
-	};
-	GtkWidget     *file_sel;
-	FRWindow      *window = data;
-	GtkFileFilter *filter;
-	int            i;
-
-	file_sel = gtk_file_chooser_dialog_new (
-			_("Open"),
-			GTK_WINDOW (window->app),
-			GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_OK,
-			NULL);
-
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
-					     window->open_default_dir);
-
-	filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; i < G_N_ELEMENTS (open_mime_type); i++)
-		gtk_file_filter_add_mime_type (filter, open_mime_type[i]);
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
-
-	filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("All files"));
-	gtk_file_filter_add_pattern (filter, "*");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-
-	/**/
-
-	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
-	
-	g_signal_connect (G_OBJECT (file_sel),
-			  "response", 
-			  G_CALLBACK (open_file_response_cb), 
-			  file_sel);
- 
-	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy", 
-			  G_CALLBACK (open_file_destroy_cb),
-			  file_sel);
-
-	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
-	gtk_widget_show (file_sel);
-}
-
-
-void
-close_archive_cb (GtkWidget *widget, 
-		  void      *data)
-{
-	window_archive_close ((FRWindow*) data);
 }
 
 
@@ -723,6 +725,7 @@ copy_or_move_archive_response_cb (GtkWidget    *w,
 					     _("Overwrite"), GTK_RESPONSE_YES,
 					     NULL);
 	
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		
@@ -746,6 +749,7 @@ copy_or_move_archive_response_cb (GtkWidget    *w,
 							  NULL,
 							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
 		}
@@ -765,6 +769,7 @@ copy_or_move_archive_response_cb (GtkWidget    *w,
 							  NULL,
 							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
 		}
@@ -797,6 +802,7 @@ copy_or_move_archive (FRWindow *window,
 		     copy ? _("_Copy"): _("_Move"),
 		     GTK_RESPONSE_OK,
 		     NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
  
@@ -816,18 +822,18 @@ copy_or_move_archive (FRWindow *window,
 
 
 void
-move_archive_cb (GtkWidget *widget, 
-		 void      *data)
+activate_action_copy_archive (GtkAction *action,
+			      gpointer   data)
 {
-	copy_or_move_archive ((FRWindow *) data, FALSE, FALSE);
+	copy_or_move_archive ((FRWindow *) data, TRUE, FALSE);
 }
 
 
 void
-copy_archive_cb (GtkWidget *widget, 
-		 void      *data)
+activate_action_move_archive (GtkAction *action,
+			      gpointer   data)
 {
-	copy_or_move_archive ((FRWindow *) data, TRUE, FALSE);
+	copy_or_move_archive ((FRWindow *) data, FALSE, FALSE);
 }
 
 
@@ -848,9 +854,9 @@ remove_extension (const char *filename)
 
 
 void
-rename_archive_cb (GtkWidget *widget, 
-		   void      *data)
-{	
+activate_action_rename_archive (GtkAction *action,
+				gpointer   data)
+{
 	FRWindow   *window = data;
 	char       *name;
 	char       *utf8_old_string;
@@ -899,7 +905,7 @@ rename_archive_cb (GtkWidget *widget,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Overwrite"), GTK_RESPONSE_YES,
 					     NULL);
-	
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		
@@ -921,15 +927,6 @@ rename_archive_cb (GtkWidget *widget,
 
 
 /* -- delete archive -- */
-
-
-void delete_archive__step2 (GnomeVFSResult result,
-			    gpointer       data)
-{
-	FRWindow *window = data;
-	if (result == GNOME_VFS_OK)
-		window_archive_close (window);
-}
 
 
 static char *
@@ -962,8 +959,8 @@ get_trash_path (const char *filename)
 
 
 void
-delete_archive_cb (GtkWidget *widget, 
-		   void *data)
+activate_action_delete_archive (GtkAction *action,
+				gpointer   data)
 {
 	FRWindow *window = data;
 	char     *trash_path;
@@ -983,6 +980,7 @@ delete_archive_cb (GtkWidget *widget,
 					   GTK_STOCK_NO,
 					   GTK_STOCK_DELETE);
 		
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		
@@ -1014,35 +1012,136 @@ delete_archive_cb (GtkWidget *widget,
 
 
 void
-quit_cb (GtkWidget *widget, 
-	 void      *data)
+activate_action_test_archive (GtkAction *action,
+			      gpointer   data)
 {
-	window_close ((FRWindow*) data);
+	FRWindow *window = data;
+	fr_archive_test (window->archive, window->password);
 }
 
 
 void
-view_cb (GtkWidget *widget, 
-	 void      *data)
+activate_action_properties (GtkAction *action,
+			    gpointer   data)
+{
+	FRWindow *window = data;
+	dlg_prop (window);
+}
+
+
+void
+activate_action_close (GtkAction *action, 
+		       gpointer   data)
+{
+	window_archive_close ((FRWindow*) data);
+}
+
+
+void
+activate_action_quit (GtkAction *action, 
+		      gpointer   data)
+{
+	FRWindow *window = data;
+	window_close (window);
+}
+
+
+void
+activate_action_add_files (GtkAction *action, 
+			   gpointer   data)
+{
+	add_files_cb (NULL, data);
+}
+
+
+void
+activate_action_add_folder (GtkAction *action, 
+			    gpointer   data)
+{
+	add_folder_cb (NULL, data);
+}
+
+
+void
+activate_action_extract (GtkAction *action, 
+			 gpointer   data)
+{
+	dlg_extract (NULL, data);
+}
+
+
+void
+activate_action_copy (GtkAction *action, 
+		      gpointer   data)
+{
+	window_copy_selection ((FRWindow*) data);
+}
+
+
+void
+activate_action_cut (GtkAction *action, 
+		     gpointer   data)
+{
+	window_cut_selection ((FRWindow*) data);
+}
+
+
+void
+activate_action_paste (GtkAction *action, 
+		       gpointer   data)
+{
+	window_paste_selection ((FRWindow*) data);
+}
+
+
+void
+activate_action_rename (GtkAction *action, 
+			gpointer   data)
+{
+	window_rename_selection ((FRWindow*) data);
+}
+
+
+void
+activate_action_delete (GtkAction *action, 
+			gpointer   data)
+{
+	dlg_delete (NULL, data);
+}
+
+
+void
+activate_action_select_all (GtkAction *action, 
+			    gpointer   data)
+{
+	FRWindow *window = data;
+	gtk_tree_selection_select_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+}
+
+
+void
+activate_action_deselect_all (GtkAction *action, 
+			      gpointer   data)
+{
+	FRWindow *window = data;
+	gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+}
+
+
+void
+activate_action_open_with (GtkAction *action, 
+			   gpointer   data)
+{
+	open_with_cb (NULL, (FRWindow*) data);
+}
+
+
+void
+activate_action_view_or_open (GtkAction *action, 
+			      gpointer   data)
 {
 	FRWindow *window = data;
 	GList    *file_list;
-
-	file_list = window_get_file_list_selection (window, FALSE, NULL);
-	if (file_list == NULL) 
-		return;
-
-	window_view_file (window, file_list->data);
-	path_list_free (file_list);
-}
-
-
-void
-view_or_open_cb (GtkWidget *widget, 
-		 void *data)
-{
-	FRWindow *window = data;
-	GList *file_list;
 
 	file_list = window_get_file_list_selection (window, FALSE, NULL);
 	if (file_list == NULL) 
@@ -1054,80 +1153,73 @@ view_or_open_cb (GtkWidget *widget,
 
 
 void
-go_up_one_level_cb (GtkWidget *widget, 
-		    void *data)
+activate_action_password (GtkAction *action, 
+			  gpointer   data)
 {
-	window_go_up_one_level ((FRWindow*) data);
+	dlg_password (NULL, (FRWindow*) data);
 }
 
 
 void
-go_home_cb (GtkWidget *widget, 
-	    void *data)
+activate_action_view_toolbar (GtkAction *action, 
+			      gpointer   data)
 {
-	window_go_to_location ((FRWindow*) data, "/");
+	eel_gconf_set_boolean (PREF_UI_TOOLBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
 
 
 void
-go_back_cb (GtkWidget *widget, 
-	    void *data)
+activate_action_view_statusbar (GtkAction *action, 
+				gpointer   data)
 {
-	window_go_back ((FRWindow*) data);
+	eel_gconf_set_boolean (PREF_UI_STATUSBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
 
 
 void
-go_forward_cb (GtkWidget *widget, 
-	       void *data)
-{
-	window_go_forward ((FRWindow*) data);
-}
-
-
-void
-set_list_mode_flat_cb (GtkWidget *widget, 
-		       void *data)
-{
-	GtkCheckMenuItem *mitem = GTK_CHECK_MENU_ITEM (widget);
-        if (! mitem->active)
-                return;
-	window_set_list_mode ((FRWindow*) data, WINDOW_LIST_MODE_FLAT);
-}
-
-
-void
-set_list_mode_as_dir_cb (GtkWidget *widget, 
-			 void *data)
-{
-	GtkCheckMenuItem *mitem = GTK_CHECK_MENU_ITEM (widget);
-        if (! mitem->active)
-                return;
-	window_set_list_mode ((FRWindow*) data, WINDOW_LIST_MODE_AS_DIR);
-}
-
-
-void
-select_all_cb (GtkWidget *widget, 
-	       void *data)
+activate_action_stop (GtkAction *action, 
+		      gpointer   data)
 {
 	FRWindow *window = data;
-	gtk_tree_selection_select_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+	window_stop (window);
 }
 
 
 void
-deselect_all_cb (GtkWidget *widget, 
-		 void *data)
+activate_action_reload (GtkAction *action, 
+			gpointer   data)
 {
 	FRWindow *window = data;
-	gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+	if (window->activity_ref == 0)
+		window_archive_reload (window);
 }
 
 
 void
-manual_cb (GtkWidget *widget, 
-           void      *data)
+activate_action_sort_reverse_order (GtkAction *action, 
+				    gpointer   data)
+{
+	FRWindow *window = data;
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
+		window->sort_type = GTK_SORT_DESCENDING;
+	else
+		window->sort_type = GTK_SORT_ASCENDING;
+	window_update_list_order (window);
+}
+
+
+void
+activate_action_last_output (GtkAction *action, 
+			     gpointer   data)
+{
+	FRWindow *window = data;
+	window_view_last_output (window, _("Last Output"));
+}
+
+
+void
+activate_action_manual (GtkAction *action, 
+			gpointer   data)
 {
 	FRWindow *window = data;
 	GError   *err;
@@ -1145,7 +1237,7 @@ manual_cb (GtkWidget *widget,
 						  err->message,
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
-                
+                gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
                 g_signal_connect (G_OBJECT (dialog), "response",
                                   G_CALLBACK (gtk_widget_destroy),
                                   NULL);
@@ -1160,8 +1252,8 @@ manual_cb (GtkWidget *widget,
 
 
 void
-about_cb (GtkWidget *widget, 
-	  void *data)
+activate_action_about (GtkAction *action, 
+		       gpointer   data)
 {
 	FRWindow         *window = data;
 	static GtkWidget *about = NULL;
@@ -1203,183 +1295,4 @@ about_cb (GtkWidget *widget,
 			  &about);
 
 	gtk_widget_show_all (about);
-}
-
-
-void
-sort_list_by_name (GtkWidget *widget, 
-		   void *data)
-{
-	FRWindow *window = data;
-
-	if (! GTK_CHECK_MENU_ITEM (widget)->active)
-		return;
-
-	window->sort_method = WINDOW_SORT_BY_NAME;
-	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_list_order (window);
-}
-
-
-void
-sort_list_by_type (GtkWidget *widget, 
-		   void *data)
-{
-	FRWindow *window = data;
-
-	if (! GTK_CHECK_MENU_ITEM (widget)->active)
-		return;
-
-	window->sort_method = WINDOW_SORT_BY_TYPE;
-	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_list_order (window);
-}
-
-
-void
-sort_list_by_size (GtkWidget *widget, 
-		   void *data)
-{
-	FRWindow *window = data;
-
-	if (! GTK_CHECK_MENU_ITEM (widget)->active)
-		return;
-
-	window->sort_method = WINDOW_SORT_BY_SIZE;
-	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_list_order (window);
-}
-
-
-void
-sort_list_by_time (GtkWidget *widget, 
-		   void *data)
-{
-	FRWindow *window = data;
-
-	if (! GTK_CHECK_MENU_ITEM (widget)->active)
-		return;
-
-	window->sort_method = WINDOW_SORT_BY_TIME;
-	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_list_order (window);
-}
-
-
-void
-sort_list_by_path (GtkWidget *widget, 
-		   void *data)
-{
-	FRWindow *window = data;
-
-	if (! GTK_CHECK_MENU_ITEM (widget)->active)
-		return;
-
-	window->sort_method = WINDOW_SORT_BY_PATH;
-	window->sort_type = GTK_SORT_ASCENDING;
-	window_update_list_order (window);
-}
-
-
-void
-sort_list_reversed (GtkWidget *widget, 
-		    void *data)
-{
-	FRWindow *window = data;
-	if (window->sort_type == GTK_SORT_ASCENDING)
-		window->sort_type = GTK_SORT_DESCENDING;
-	else
-		window->sort_type = GTK_SORT_ASCENDING;
-	window_update_list_order (window);
-}
-
-
-/**/
-
-
-void
-stop_cb (GtkWidget *widget, 
-	 void      *data)
-{
-	FRWindow *window = data;
-	window_stop (window);
-}
-
-
-
-/**/
-
-
-void
-reload_cb (GtkWidget *widget, 
-	   void *data)
-{
-	FRWindow *window = data;
-	if (window->activity_ref == 0)
-		window_archive_reload (window);
-}
-
-
-void
-test_cb (GtkWidget *widget, 
-	 void      *data)
-{
-	FRWindow *window = data;
-	fr_archive_test (window->archive, window->password);
-}
-
-
-void
-last_output_cb (GtkWidget *widget, 
-		void      *data)
-{
-	FRWindow *window = data;
-	window_view_last_output (window, _("Last Output"));
-}
-
-
-void
-view_toolbar_cb (GtkWidget *widget, 
-		 void      *data)
-{
-	eel_gconf_set_boolean (PREF_UI_TOOLBAR, GTK_CHECK_MENU_ITEM (widget)->active);
-}
-
-
-void
-view_statusbar_cb (GtkWidget *widget, 
-		   void      *data)
-{
-	eel_gconf_set_boolean (PREF_UI_STATUSBAR, GTK_CHECK_MENU_ITEM (widget)->active);
-}
-
-
-void
-rename_cb (GtkWidget *widget, 
-	   void *data)
-{
-	window_rename_selection ((FRWindow*) data);
-}
-
-
-void
-cut_cb (GtkWidget *widget, 
-	void *data)
-{
-	window_cut_selection ((FRWindow*) data);
-}
-
-
-void
-copy_cb (GtkWidget *widget, 
-	 void *data)
-{
-	window_copy_selection ((FRWindow*) data);
-}
-
-void
-paste_cb (GtkWidget *widget, 
-	  void *data)
-{
-	window_paste_selection ((FRWindow*) data);
 }

@@ -23,8 +23,9 @@
 #ifndef DLG_PROP_H
 #define DLG_PROP_H
 
+#include "window.h"
 
-void dlg_prop (GtkWidget *widget, gpointer data);
+void dlg_prop (FRWindow *window);
 
 
 #endif /* DLG_DELETE_H */

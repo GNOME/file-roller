@@ -1,3 +1,39 @@
+2004-05-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/actions.c:
+	* src/actions.h:
+	* src/ui.h:
+	* src/recent-files/egg-recent-view-uimanager.c: 
+	* src/recent-files/egg-recent-view-uimanager.h: new files
+	* src/window.c: 
+
+	Use the Gtk + UI Manager to handle the menubar and the toolbar.
+
+2004-04-21  Bastien Nocera  <hadess@hadess.net>
+	
+	* src/fr-command-cfile.c: (get_uncompressed_name_from_archive),
+	(list__process_line), (fr_command_cfile_extract):
+	for gzip compressed files, use the name saved in the archive header
+	in place instead of guessing from the filename if the archive header
+	is available
+
+2004-04-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/dlg-batch-add.c (add_clicked_cb): 
+	* src/dlg-extract.c (dlg_extract): 
+	* src/menu-callbacks.c (manual_cb): 
+	* src/window.c (window_rename_selection): 
+	* src/dlg-add-files.c (add_files_cb): 
+	* src/dlg-add-folder.c (add_folder_cb): 
+
+	Fixes bug #139502: The Dialog Boxes do not have a default action.
+	Patch by sri_nathc AT yahoo DOT com 
+
+2004-04-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/dlg-prop.c (dlg_prop): display the compression ratio as a number
+	not as a percentage.
+
 2004-04-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/file_roller.glade: 

@@ -70,15 +70,13 @@ set_label (GtkWidget *label, const char *text)
 
 
 void
-dlg_prop (GtkWidget *widget,
-	  gpointer   callback_data)
+dlg_prop (FRWindow *window)
 {
         DialogData       *data;
-	FRWindow         *window = callback_data;
 	GtkWidget        *ok_button;
 	GtkWidget        *label_label;
 	GtkWidget        *label;
-	char             *s, *s_ratio = NULL;
+	char             *s;
 	const char       *s1;
 	GnomeVFSFileSize  size, uncompressed_size;
 	struct tm        *tm;
@@ -86,6 +84,7 @@ dlg_prop (GtkWidget *widget,
 	char              time_txt[50];
 	char             *utf8_name;
 	char             *title_txt;
+	double            ratio;
 	
         data = g_new (DialogData, 1);
 
@@ -181,12 +180,11 @@ dlg_prop (GtkWidget *widget,
 	label = glade_xml_get_widget (data->gui, "p_cratio_label");
 
 	if (uncompressed_size != 0) 
-		s_ratio = g_strdup_printf ("%.0f", ((double)uncompressed_size / size) * 100.0);
+		ratio = (double) uncompressed_size / size;
 	else
-		s_ratio = g_strdup ("0");
-	s = g_strdup_printf ("%s%%", s_ratio);
+		ratio = 0.0;
+	s = g_strdup_printf ("%0.2f", ratio);
 	gtk_label_set_text (GTK_LABEL (label), s);
-	g_free (s_ratio);
 	g_free (s);
 
 	/**/

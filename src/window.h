@@ -86,6 +86,9 @@ typedef struct {
 	GtkWidget *      fwd_button;
 
 	GtkTooltips     *tooltips;
+	guint            help_message_cid;
+	guint            list_info_cid;
+	guint            progress_cid;
 
 	GtkWidget *      up_arrows[5];
 	GtkWidget *      down_arrows[5];
@@ -136,59 +139,12 @@ typedef struct {
 	guint            clipboard_op : 1;
 	char            *clipboard_current_dir;
 
-	/* Menu items. */
+	GtkActionGroup  *actions;
 
-	GtkWidget *      mitem_new_archive;
-	GtkWidget *      mitem_open_archive;
-	GtkWidget *      mitem_save_as_archive;
-	GtkWidget *      mitem_close;
-	GtkWidget *      mitem_recents_menu;
-
-	GtkWidget *      mitem_archive_prop;
-	GtkWidget *      mitem_move_archive;
-	GtkWidget *      mitem_copy_archive;
-	GtkWidget *      mitem_rename_archive;
-	GtkWidget *      mitem_delete_archive;
-
-	GtkWidget *      mitem_cut;
-	GtkWidget *      mitem_copy;
-	GtkWidget *      mitem_paste;
-	GtkWidget *      mitem_select_all;
-	GtkWidget *      mitem_unselect_all;
-	GtkWidget *      mitem_rename;
-
-	GtkWidget *      mitem_view_toolbar;
-	GtkWidget *      mitem_view_statusbar;
-	GtkWidget *      mitem_view_flat;
-	GtkWidget *      mitem_view_as_dir;
-	GtkWidget *      mitem_sort[5];
-	GtkWidget *      mitem_sort_reversed;
-	GtkWidget *      mitem_password;
-	GtkWidget *      mitem_last_output;
-
-	GtkWidget *      mitem_add_files;
-	GtkWidget *      mitem_add_folder;
-	GtkWidget *      mitem_delete;
-	GtkWidget *      mitem_extract;
-	GtkWidget *      mitem_test;
-	GtkWidget *      mitem_view;
-	GtkWidget *      mitem_open;
-	GtkWidget *      mitem_stop;
-	GtkWidget *      mitem_reload;
-
-	GtkWidget *      toolbar_new;
-	GtkWidget *      toolbar_open;
-	GtkWidget *      toolbar_add;
-	GtkWidget *      toolbar_delete;
-	GtkWidget *      toolbar_extract;
-	GtkWidget *      toolbar_view;
-	GtkWidget *      toolbar_stop;
-
-	GtkWidget *      file_popup_menu;
-	GtkWidget *      popupmenu_file[15];
-
-	EggRecentViewGtk *recent_view;
+	EggRecentViewUIManager *recent_view;
 	EggRecentModel   *recent_model;
+	GtkWidget        *file_popup_menu;
+	GtkWidget        *mitem_recents_menu;
 
 	/* drag data */
 

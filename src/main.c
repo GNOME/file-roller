@@ -104,7 +104,6 @@ int main (int argc, char **argv)
                                       GNOME_PARAM_APP_SYSCONFDIR, FR_SYSCONFDIR,
                                       GNOME_PARAM_APP_DATADIR, FR_DATADIR,
                                       GNOME_PARAM_APP_LIBDIR, FR_LIBDIR,
-
 				      NULL);
 
 	g_object_get_property (G_OBJECT (program),

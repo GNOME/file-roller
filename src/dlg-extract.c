@@ -88,6 +88,7 @@ show_dialog_help (DialogData *data)
 						  err->message,
 						  GTK_STOCK_OK, GTK_RESPONSE_OK,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		
 		g_signal_connect (G_OBJECT (dialog), "response",
 				  G_CALLBACK (gtk_widget_destroy),
@@ -154,6 +155,7 @@ file_sel_response_cb (GtkWidget   *w,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
 			
+			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 			r = gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -175,6 +177,7 @@ file_sel_response_cb (GtkWidget   *w,
 						     message,
 						     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
 						     NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 			g_free (message);
 
 			gtk_dialog_run (GTK_DIALOG (d));
@@ -194,6 +197,7 @@ file_sel_response_cb (GtkWidget   *w,
 					     NULL,
 					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -218,6 +222,7 @@ file_sel_response_cb (GtkWidget   *w,
 					     message,
 					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 		g_free (message);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -496,6 +501,7 @@ dlg_extract (GtkWidget *widget,
 	file_sel = GTK_FILE_CHOOSER (data->dialog);
 	gtk_file_chooser_set_select_multiple (file_sel, FALSE);
 	gtk_file_chooser_set_local_only (file_sel, TRUE);
+	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	gtk_file_chooser_set_extra_widget (file_sel, create_extra_widget (data));
 

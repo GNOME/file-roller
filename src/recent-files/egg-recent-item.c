@@ -36,7 +36,7 @@ egg_recent_item_new (void)
 	item = g_new (EggRecentItem, 1);
 
 	item->groups = NULL;
-	item->private = FALSE;
+	item->private_data = FALSE;
 	item->uri = NULL;
 	item->mime_type = NULL;
 
@@ -133,7 +133,7 @@ egg_recent_item_copy (const EggRecentItem *item)
 	if (item->mime_type)
 		newitem->mime_type = g_strdup (item->mime_type);
 	newitem->timestamp = item->timestamp;
-	newitem->private = item->private;
+	newitem->private_data = item->private_data;
 	newitem->groups = egg_recent_item_copy_groups (item->groups);
 
 	return newitem;
@@ -323,13 +323,13 @@ egg_recent_item_remove_group (EggRecentItem *item, const gchar *group_name)
 void
 egg_recent_item_set_private (EggRecentItem *item, gboolean priv)
 {
-	item->private = priv;
+	item->private_data = priv;
 }
 
 gboolean
 egg_recent_item_get_private (const EggRecentItem *item)
 {
-	return item->private;
+	return item->private_data;
 }
 
 GType

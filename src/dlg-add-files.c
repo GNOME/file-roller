@@ -100,6 +100,7 @@ file_sel_response_cb (GtkWidget      *w,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (utf8_path);
@@ -161,6 +162,7 @@ add_files_cb (GtkWidget *widget,
 					     NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 
 	data->add_if_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("_Add only if newer"));
 

@@ -53,6 +53,7 @@
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"
+#define PREF_DESKTOP_MENUBAR_DETACHABLE "/desktop/gnome/interface/menubar_detachable"
 #define PREF_DESKTOP_TOOLBAR_DETACHABLE "/desktop/gnome/interface/toolbar_detachable"
 
 WindowSortMethod    preferences_get_sort_method ();

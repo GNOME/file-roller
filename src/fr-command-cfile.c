@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <fcntl.h>
 
 #include <glib.h>
 #include <libgnomevfs/gnome-vfs-types.h>
@@ -42,6 +43,58 @@ static void fr_command_cfile_finalize    (GObject             *object);
 /* Parent Class */
 
 static FRCommandClass *parent_class = NULL;
+
+
+static char *
+get_uncompressed_name_from_archive (FRCommand  *comm, 
+				    const char *e_filename)
+{
+	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
+	int             fd;
+	char            buffer[11];
+	char           *filename = NULL;
+	GString        *str = NULL;
+	
+	if (comm_cfile->compress_prog != FR_COMPRESS_PROGRAM_GZIP)
+		return NULL;
+	
+	fd = open (e_filename, O_RDONLY);
+	if (fd < 0) 
+		return NULL;
+	
+	if (read (fd, &buffer, 11) < 11) {
+		close (fd);
+		return NULL;
+	}
+	
+	/* Do we have the extra field in the header ?*/
+	if ((buffer[10] & 0x04) != 0) {
+		close (fd);
+		return NULL;
+	}
+	
+	str = g_string_new ("");
+	/* Don't lose the first character */
+	g_string_append_c (str, buffer[10]);
+	while (read (fd, &buffer, 1) > 0) {
+		if (buffer[0] == '\0') {
+			close (fd);
+			/* FIXME verify if there's a '/' in the name,
+			 * and discard it if so */
+			filename = g_strdup (str->str);
+			g_string_free (str, FALSE);
+			g_message ("filename is: %s", filename);
+			return filename;
+		}
+		
+		g_string_append_c (str, buffer[0]);
+	}
+	
+	close (fd);
+	g_string_free (str, FALSE);
+	
+	return NULL;
+}
 
 
 static void
@@ -62,7 +115,10 @@ list__process_line (char     *line,
 	if (fdata->size == -1)
 		fdata->size = get_file_size (comm->filename);
 
-	filename = remove_extension_from_path (comm->filename);
+	filename = get_uncompressed_name_from_archive (comm, comm->filename);
+	if (filename == NULL) 
+		filename = remove_extension_from_path (comm->filename);
+
 	fdata->full_path = g_strconcat ("/", 
 					file_name_from_path (filename),
 					NULL);
@@ -177,6 +233,8 @@ fr_command_cfile_extract (FRCommand  *comm,
 	char           *e_dest_dir;
 	char           *temp_file;
 	char           *uncompr_file;
+	char           *compr_file;
+	char           *e_compr_file;
 
 	temp_dir = get_temp_work_dir_name ();
 	e_temp_dir = shell_escape (temp_dir);
@@ -187,20 +245,30 @@ fr_command_cfile_extract (FRCommand  *comm,
 	fr_process_add_arg (comm->process, e_temp_dir);
 	fr_process_end_command (comm->process);
 
-	/* copy file to the temp dir */
+
+	/* copy file to the temp dir, remove the already existing file first */
+
+	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
+	if (compr_file != NULL) 
+		e_compr_file = shell_escape (compr_file);
+	else 
+		e_compr_file = NULL;
+	
+	temp_file = g_strconcat (e_temp_dir,
+				 "/",
+				 (e_compr_file != NULL) ? e_compr_file : file_name_from_path (comm->e_filename),
+				 e_compr_file ? ".gz" : NULL,
+				 NULL);
+	g_free (e_compr_file);
+	g_free (compr_file);
 
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_add_arg (comm->process, "-f");
 	fr_process_add_arg (comm->process, comm->e_filename);
-	fr_process_add_arg (comm->process, e_temp_dir);
+	fr_process_add_arg (comm->process, temp_file);
 	fr_process_end_command (comm->process);
 
 	/* uncompress the file */
-
-	temp_file = g_strconcat (e_temp_dir, 
-				 "/", 
-				 file_name_from_path (comm->e_filename), 
-				 NULL);
 
 	switch (comm_cfile->compress_prog) {
 	case FR_COMPRESS_PROGRAM_NONE:
@@ -210,6 +278,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
+		fr_process_add_arg (comm->process, "-N");
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
 		break;

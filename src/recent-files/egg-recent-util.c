@@ -53,6 +53,7 @@ egg_recent_util_escape_underlines (const gchar* text)
 	return g_string_free (str, FALSE);
 }
 
+#ifndef USE_STABLE_LIBGNOMEUI
 static GdkPixbuf *
 scale_icon (GdkPixbuf *pixbuf,
 	    double *scale)
@@ -105,7 +106,6 @@ load_icon_file (char          *filename,
 	return pixbuf;
 }
 
-#ifndef USE_STABLE_LIBGNOMEUI
 GdkPixbuf *
 egg_recent_util_get_icon (GnomeIconTheme *theme, const gchar *uri,
 			  const gchar *mime_type, int size)
@@ -127,6 +127,10 @@ egg_recent_util_get_icon (GnomeIconTheme *theme, const gchar *uri,
 						 &icon_data,
 						 &base_size);
 	g_free (icon);
+
+	if (filename == NULL) {
+		return NULL;
+	}
 
 	pixbuf = load_icon_file (filename, base_size, size);
 	g_free (filename);

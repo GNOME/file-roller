@@ -32,6 +32,8 @@ BUILT_SOURCES =			\
 	fr-marshal.h
 
 file_roller_SOURCES = 			\
+	actions.h			\
+	actions.c			\
 	bookmarks.c			\
 	bookmarks.h			\
 	dlg-add-files.c			\
@@ -100,13 +102,10 @@ file_roller_SOURCES = 			\
 	gtk-utils.h			\
 	main.c				\
 	main.h				\
-	menu-callbacks.c		\
-	menu-callbacks.h		\
-	menu.h				\
 	preferences.c			\
 	preferences.h			\
-	toolbar.h			\
 	typedefs.h			\
+	ui.h				\
 	utf8-fnmatch.c			\
 	utf8-fnmatch.h			\
 	window.h			\

@@ -33,11 +33,14 @@
 #include <libgnomevfs/gnome-vfs-directory.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include "actions.h"
 #include "dlg-batch-add.h"
+#include "dlg-delete.h"
 #include "dlg-extract.h"
 #include "dlg-viewer.h"
 #include "dlg-viewer-or-app.h"
 #include "egg-recent.h"
+#include "egg-recent-util.h"
 #include "eggtreemultidnd.h"
 #include "ephy-ellipsizing-label.h"
 #include "fr-archive.h"
@@ -46,12 +49,10 @@
 #include "file-utils.h"
 #include "window.h"
 #include "main.h"
-#include "menu-callbacks.h"
-#include "menu.h"
 #include "gtk-utils.h"
 #include "gconf-utils.h"
-#include "toolbar.h"
 #include "typedefs.h"
+#include "ui.h"
 #include "utf8-fnmatch.h"
 
 #include "icons/pixbufs.h"
@@ -348,21 +349,6 @@ compute_file_list_name (FRWindow *window,
 
 
 static void
-set_check_menu_item_state (FRWindow  *window,
-                           GtkWidget *mitem, 
-                           gboolean   active)
-{
-        g_signal_handlers_block_matched (G_OBJECT (mitem), 
-					 G_SIGNAL_MATCH_DATA,
-					 0, 0, NULL, 0, window);
-        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), active);
-        g_signal_handlers_unblock_matched (G_OBJECT (mitem), 
-					   G_SIGNAL_MATCH_DATA,
-					   0, 0, NULL, 0, window);
-}
-
-
-static void
 _window_compute_list_names (FRWindow *window, GList *file_list)
 {
 	GList *scan;
@@ -610,6 +596,23 @@ get_sort_method_from_column (int column_id)
 	}
 
 	return WINDOW_SORT_BY_NAME;
+}
+
+
+static const char *
+get_action_from_sort_method (WindowSortMethod sort_method)
+{
+	switch (sort_method) {
+	case WINDOW_SORT_BY_NAME : return "SortByName";
+	case WINDOW_SORT_BY_SIZE : return "SortBySize";
+	case WINDOW_SORT_BY_TYPE : return "SortByType";
+	case WINDOW_SORT_BY_TIME : return "SortByDate";
+	case WINDOW_SORT_BY_PATH : return "SortByLocation";
+	default: 
+		break;
+	}
+
+	return "SortByName";
 }
 
 
@@ -903,9 +906,8 @@ _window_update_statusbar_list_info (FRWindow *window)
 	if (window == NULL)
 		return;
 
-	if ((window->archive == NULL)
-	    || (window->archive->command == NULL)) {
-		gnome_appbar_set_default (GNOME_APPBAR (window->statusbar), "");
+	if ((window->archive == NULL) || (window->archive->command == NULL)) {
+		gtk_statusbar_pop (GTK_STATUSBAR (window->statusbar), window->list_info_cid);
 		return;
 	}
 
@@ -952,7 +954,7 @@ _window_update_statusbar_list_info (FRWindow *window)
 			    selected_info, 
 			    NULL);
 
-	gnome_appbar_set_default (GNOME_APPBAR (window->statusbar), info);
+	gtk_statusbar_push (GTK_STATUSBAR (window->statusbar), window->list_info_cid, info);
 
 	g_free (size_txt);
 	g_free (sel_size_txt);
@@ -1001,6 +1003,30 @@ selection_has_a_dir (FRWindow *window)
 
 
 static void
+set_active (FRWindow   *window,
+	    const char *action_name, 
+	    gboolean    is_active)
+{
+	GtkAction *action;
+	action = gtk_action_group_get_action (window->actions, action_name);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), is_active);
+}
+
+
+
+
+static void
+set_sensitive (FRWindow   *window,
+	       const char *action_name, 
+	       gboolean    sensitive)
+{
+	GtkAction *action;
+	action = gtk_action_group_get_action (window->actions, action_name);
+	g_object_set (action, "sensitive", sensitive, NULL);
+}
+
+
+static void
 _window_update_sensitivity (FRWindow *window)
 {
 	gboolean no_archive;
@@ -1028,78 +1054,48 @@ _window_update_sensitivity (FRWindow *window)
 	one_file_selected = n_selected == 1;
 	dir_selected      = selection_has_a_dir (window); 
 
-	gtk_widget_set_sensitive (window->mitem_new_archive, ! running);
-	gtk_widget_set_sensitive (window->mitem_open_archive, ! running);
-	gtk_widget_set_sensitive (window->mitem_save_as_archive, ! no_archive && ! compr_file && ! running);
-	gtk_widget_set_sensitive (window->mitem_close, ! no_archive);
-	
-	gtk_widget_set_sensitive (window->mitem_archive_prop, file_op);
-	
-	gtk_widget_set_sensitive (window->mitem_move_archive, file_op && ! ro);
-	gtk_widget_set_sensitive (window->mitem_copy_archive, file_op);
-	gtk_widget_set_sensitive (window->mitem_rename_archive, file_op && ! ro);
-	gtk_widget_set_sensitive (window->mitem_delete_archive, file_op && ! ro);
-	
-	gtk_widget_set_sensitive (window->mitem_add_files, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	gtk_widget_set_sensitive (window->mitem_add_folder, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	gtk_widget_set_sensitive (window->mitem_delete, ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
-	gtk_widget_set_sensitive (window->mitem_extract, file_op);
-	gtk_widget_set_sensitive (window->mitem_test, ! no_archive && ! running && window->archive->command->propTest);
-	gtk_widget_set_sensitive (window->mitem_open, file_op && sel_not_null && ! dir_selected);
-	gtk_widget_set_sensitive (window->mitem_view, file_op && one_file_selected && ! dir_selected);
+	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	set_sensitive (window, "Close", ! no_archive);
+	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
+	set_sensitive (window, "CopyArchive", file_op);
+	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
+	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
+	set_sensitive (window, "DeleteArchive", file_op && ! ro);
+	set_sensitive (window, "DeselectAll", ! no_archive && sel_not_null);
+	set_sensitive (window, "Extract", file_op);
+	set_sensitive (window, "Extract_Toolbar", file_op);
+	set_sensitive (window, "LastOutput", ((window->archive != NULL)
+					      && (window->archive->process != NULL)
+					      && (window->archive->process->raw_output != NULL)));
+	set_sensitive (window, "MoveArchive", file_op && ! ro);
+	set_sensitive (window, "New", ! running);
+	set_sensitive (window, "Open", ! running);
+	set_sensitive (window, "Open_Toolbar", ! running);
+	set_sensitive (window, "OpenSelection", file_op && sel_not_null && ! dir_selected);
+	set_sensitive (window, "Password", ! no_archive && ! running && window->archive->command->propPassword);
+	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->list_mode != WINDOW_LIST_MODE_FLAT) && (window->clipboard != NULL));
+	set_sensitive (window, "Properties", file_op);
+	set_sensitive (window, "Quit", !running || window->stoppable);
+	set_sensitive (window, "Reload", ! (no_archive || running));
+	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
+	set_sensitive (window, "RenameArchive", file_op && ! ro);
+	set_sensitive (window, "SaveAs", ! no_archive && ! compr_file && ! running);
+	set_sensitive (window, "SelectAll", ! no_archive);
+	set_sensitive (window, "Stop", running && window->stoppable);
+	set_sensitive (window, "TestArchive", ! no_archive && ! running && window->archive->command->propTest);
+	set_sensitive (window, "ViewSelection", file_op && one_file_selected && ! dir_selected);
+	set_sensitive (window, "ViewSelection_Toolbar", file_op && one_file_selected && ! dir_selected);
 
-	gtk_widget_set_sensitive (window->mitem_stop, running && window->stoppable);
 	if (window->progress_dialog != NULL)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   running && window->stoppable);
 
-	gtk_widget_set_sensitive (window->mitem_reload, ! (no_archive || running));
-	gtk_widget_set_sensitive (window->mitem_password, ! no_archive && ! running && window->archive->command->propPassword);
-
-	gtk_widget_set_sensitive (window->mitem_select_all, ! no_archive);
-	gtk_widget_set_sensitive (window->mitem_unselect_all, ! no_archive);
-
-	gtk_widget_set_sensitive (window->mitem_last_output, 
-				  ((window->archive != NULL)
-				   && (window->archive->process != NULL)
-				   && (window->archive->process->raw_output != NULL)));
-	
-	gtk_widget_set_sensitive (window->mitem_cut, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
-	gtk_widget_set_sensitive (window->mitem_copy, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
-	gtk_widget_set_sensitive (window->mitem_paste, ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->list_mode != WINDOW_LIST_MODE_FLAT) && (window->clipboard != NULL));
-	gtk_widget_set_sensitive (window->mitem_rename, ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
-
-	/* toolbar */
-	
-	gtk_widget_set_sensitive (window->toolbar_new, ! running);
-	gtk_widget_set_sensitive (window->toolbar_open, ! running);
-	gtk_widget_set_sensitive (window->toolbar_add, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	gtk_widget_set_sensitive (window->toolbar_extract, file_op);
-	gtk_widget_set_sensitive (window->toolbar_view, file_op && one_file_selected && ! dir_selected);
-	gtk_widget_set_sensitive (window->toolbar_stop, running && window->stoppable);
-	
-	/* popup menu */
-
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_OPEN], file_op && sel_not_null && ! dir_selected);
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_OPEN_WITH], file_op && sel_not_null && ! dir_selected);
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_VIEW], file_op && one_file_selected && ! dir_selected);
-
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_ADD], ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_EXTRACT], file_op);
-
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_CUT], ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_COPY], ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_PASTE], ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->list_mode != WINDOW_LIST_MODE_FLAT) && (window->clipboard != NULL));
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_RENAME], ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DELETE], ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
-
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_SELECT_ALL], ! no_archive);	
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DESELECT_ALL], ! no_archive);
-
 	/* recents menu. */
 
-	gtk_widget_set_sensitive (window->mitem_recents_menu, ! running);
+	set_sensitive (window, "RecentFilesMenu", ! running);
 }
 
 
@@ -1143,17 +1139,21 @@ _window_update_current_location (FRWindow *window)
 }
 
 
-static gboolean
-open_recent_cb (EggRecentView *view, 
-		EggRecentItem *item, 
-		gpointer       data)
+static void
+activate_action_open_recent (GtkAction *action, 
+			     gpointer   data)
 {
-	FRWindow   *window = data;
-        char       *uri;
-	int         prefix_len = strlen ("file://");
-	gboolean    result = FALSE;
+	FRWindow      *window = data;
+	EggRecentItem *item;
+        char          *uri;
+	int            prefix_len = strlen ("file://");
+	gboolean       result = FALSE;
+
+	item = egg_recent_view_uimanager_get_item (window->recent_view, action);
+	g_return_if_fail (item != NULL);
 
         uri = egg_recent_item_get_uri (item);
+	g_return_if_fail (uri != NULL);
 
 	if (strlen (uri) > prefix_len) {
 		char *path = gnome_vfs_unescape_string (uri + prefix_len, "");
@@ -1163,8 +1163,6 @@ open_recent_cb (EggRecentView *view,
 	}
 
         g_free (uri);
-
-        return result;
 }
 
 
@@ -1209,7 +1207,7 @@ progress_dialog_delete_event (GtkWidget *caller,
 			      FRWindow  *window)
 {
 	if (window->stoppable) {
-		stop_cb (NULL, window);
+		activate_action_stop (NULL, window);
 		close_progress_dialog (window);
 	}
 }
@@ -1221,7 +1219,7 @@ progress_dialog_response (GtkDialog *dialog,
 			  FRWindow  *window)
 {
 	if ((response_id == GTK_RESPONSE_OK) && window->stoppable) {
-		stop_cb (NULL, window);
+		activate_action_stop (NULL, window);
 		close_progress_dialog (window);
 	}
 }
@@ -1272,6 +1270,7 @@ open_progress_dialog (FRWindow *window)
 		d = GTK_DIALOG (window->progress_dialog);
 		gtk_dialog_set_has_separator (d, FALSE);
 		gtk_window_set_resizable (GTK_WINDOW (d), FALSE);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		
 		vbox = gtk_vbox_new (FALSE, 5);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
@@ -1311,14 +1310,14 @@ void
 window_push_message (FRWindow   *window, 
 		      const char *msg)
 {
-	gnome_appbar_push (GNOME_APPBAR (window->statusbar), msg);
+	gtk_statusbar_push (GTK_STATUSBAR (window->statusbar), window->progress_cid, msg);
 }
 
 
 void
 window_pop_message (FRWindow *window)
 {
-	gnome_appbar_pop (GNOME_APPBAR (window->statusbar));
+	gtk_statusbar_pop (GTK_STATUSBAR (window->statusbar), window->progress_cid);
 }
 
 
@@ -1471,6 +1470,7 @@ open_folder (GtkWindow  *parent,
 					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
 		g_free (message);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (d);
@@ -1530,6 +1530,7 @@ handle_errors (FRWindow    *window,
 						  msg,
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 		g_signal_connect (dialog, 
 				  "response",
 				  G_CALLBACK (gtk_widget_destroy), 
@@ -1545,6 +1546,7 @@ handle_errors (FRWindow    *window,
 						  NULL,
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 		g_signal_connect (dialog, 
 				  "response",
 				  G_CALLBACK (gtk_widget_destroy), 
@@ -1955,6 +1957,7 @@ drag_drop_add_file_list (FRWindow *window)
 						  _("You don't have the right permissions."),
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		window->adding_dropped_files = FALSE;
@@ -1992,6 +1995,7 @@ drag_drop_add_file_list (FRWindow *window)
 							  _("You can't add an archive to itself."),
 							  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 							  NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			
@@ -2215,6 +2219,7 @@ window_drag_data_received  (GtkWidget          *widget,
 						     _("Create _Archive"), GTK_RESPONSE_YES,
 						     NULL);
 			
+			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 			r = gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -2224,7 +2229,7 @@ window_drag_data_received  (GtkWidget          *widget,
 				/* this way we do not free the list saved in
 				 * window->dropped_file_list. */
 				list = NULL; 
-				new_archive_cb (NULL, window);
+				activate_action_new (NULL, window);
 			}
 		}
 	}
@@ -2480,7 +2485,7 @@ key_press_cb (GtkWidget   *widget,
 	
 	switch (event->keyval) {
 	case GDK_Escape:
-		stop_cb (NULL, window);
+		activate_action_stop (NULL, window);
 		break;
 
 	case GDK_Delete:
@@ -2527,9 +2532,6 @@ window_delete_event_cb (GtkWidget *caller,
 			GdkEvent  *event, 
 			FRWindow  *window)
 {
-#ifdef DEBUG
-	g_print ("DELETE\n");
-#endif
 	window_close (window);
 }
 
@@ -2678,9 +2680,8 @@ sort_column_changed_cb (GtkTreeSortable *sortable,
 	window->sort_method = get_sort_method_from_column (column_id);
 	window->sort_type = order;
 	
-	set_check_menu_item_state (window, window->mitem_sort[window->sort_method], TRUE);
-	set_check_menu_item_state (window, window->mitem_sort_reversed, 
-				   (window->sort_type == GTK_SORT_DESCENDING));
+	set_active (window, get_action_from_sort_method (window->sort_method), TRUE);
+	set_active (window, "SortReverseOrder", (window->sort_type == GTK_SORT_DESCENDING));
 }
 
 
@@ -2693,16 +2694,10 @@ window_show_cb (GtkWidget *widget,
 	_window_update_current_location (window);
 
 	view_foobar = eel_gconf_get_boolean (PREF_UI_TOOLBAR, TRUE);
-	set_check_menu_item_state (window, 
-				   window->mitem_view_toolbar, 
-				   view_foobar);
-	window_set_toolbar_visibility (window, view_foobar);
-
+	set_active (window, "ViewToolbar", view_foobar);
+	
 	view_foobar = eel_gconf_get_boolean (PREF_UI_STATUSBAR, TRUE);
-	set_check_menu_item_state (window, 
-				   window->mitem_view_statusbar, 
-				   view_foobar);
-	window_set_statusbar_visibility (window, view_foobar);
+	set_active (window, "ViewStatusbar", view_foobar);
 	
 	return TRUE;
 }
@@ -2730,6 +2725,9 @@ pref_view_toolbar_changed (GConfClient *client,
 			   gpointer     user_data)
 {
 	FRWindow *window = user_data;
+
+	g_return_if_fail (window != NULL);
+
 	window_set_toolbar_visibility (window, gconf_value_get_bool (gconf_entry_get_value (entry)));
 }
 
@@ -2857,14 +2855,11 @@ window_stoppable_cb  (FRCommand  *command,
 		      FRWindow   *window)		     
 {
 	window->stoppable = stoppable;
-
-	gtk_widget_set_sensitive (window->mitem_stop, stoppable);
-	gtk_widget_set_sensitive (window->toolbar_stop, window->stoppable);
+	set_sensitive (window, "Stop", stoppable);
 	if (window->progress_dialog != NULL)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   stoppable);
-
 	return TRUE;
 }
 
@@ -2918,6 +2913,140 @@ create_locationbar_button (const char *stock_id,
 }
 
 
+static void
+menu_item_select_cb (GtkMenuItem *proxy,
+                     FRWindow    *window)
+{
+        GtkAction *action;
+        char      *message;
+                                                                                
+        action = g_object_get_data (G_OBJECT (proxy),  "gtk-action");
+        g_return_if_fail (action != NULL);
+                                                                                
+        g_object_get (G_OBJECT (action), "tooltip", &message, NULL);
+        if (message) {
+		gtk_statusbar_push (GTK_STATUSBAR (window->statusbar),
+				    window->help_message_cid, message);
+		g_free (message);
+        }
+}
+
+
+static void
+menu_item_deselect_cb (GtkMenuItem *proxy,
+                       FRWindow    *window)
+{
+        gtk_statusbar_pop (GTK_STATUSBAR (window->statusbar),
+                           window->help_message_cid);
+}
+
+
+static void
+disconnect_proxy_cb (GtkUIManager *manager,
+                     GtkAction    *action,
+                     GtkWidget    *proxy,
+                     FRWindow     *window)
+{
+        if (GTK_IS_MENU_ITEM (proxy)) {
+                g_signal_handlers_disconnect_by_func
+                        (proxy, G_CALLBACK (menu_item_select_cb), window);
+                g_signal_handlers_disconnect_by_func
+                        (proxy, G_CALLBACK (menu_item_deselect_cb), window);
+        }
+}
+
+
+static void
+connect_proxy_cb (GtkUIManager *manager,
+                  GtkAction    *action,
+                  GtkWidget    *proxy,
+                  FRWindow     *window)
+{
+        if (GTK_IS_MENU_ITEM (proxy)) {
+		g_signal_connect (proxy, "select",
+				  G_CALLBACK (menu_item_select_cb), window);
+		g_signal_connect (proxy, "deselect",
+				  G_CALLBACK (menu_item_deselect_cb), window);
+	}
+}
+
+
+static void
+view_as_radio_action (GtkAction      *action,
+		      GtkRadioAction *current,
+		      gpointer        data)
+{
+	FRWindow *window = data;
+	window_set_list_mode (window, gtk_radio_action_get_current_value (current));
+}
+
+
+static void
+sort_by_radio_action (GtkAction      *action,
+		      GtkRadioAction *current,
+		      gpointer        data)
+{
+	FRWindow *window = data;
+	window->sort_method = gtk_radio_action_get_current_value (current);
+	window->sort_type = GTK_SORT_ASCENDING;
+	window_update_list_order (window);
+}
+
+
+static char*
+recent_set_tooltip (EggRecentItem *item,
+		    gpointer       user_data)
+{
+	gchar *uri;
+	gchar *escaped;
+	gchar *tooltip;
+
+	uri = egg_recent_item_get_uri_for_display (item);
+	if (uri == NULL)
+		return NULL;
+
+	escaped = egg_recent_util_escape_underlines (uri);
+	tooltip = g_strdup_printf (_("Open '%s'"), escaped);
+
+	g_free (uri);
+	g_free (escaped);
+
+	return tooltip;
+}
+
+
+void
+go_up_one_level_cb (GtkWidget *widget, 
+		    void      *data)
+{
+	window_go_up_one_level ((FRWindow*) data);
+}
+
+
+void
+go_home_cb (GtkWidget *widget, 
+	    void      *data)
+{
+	window_go_to_location ((FRWindow*) data, "/");
+}
+
+
+void
+go_back_cb (GtkWidget *widget, 
+	    void      *data)
+{
+	window_go_back ((FRWindow*) data);
+}
+
+
+void
+go_forward_cb (GtkWidget *widget, 
+	       void      *data)
+{
+	window_go_forward ((FRWindow*) data);
+}
+
+
 
 FRWindow *
 window_new ()
@@ -2930,8 +3059,11 @@ window_new ()
 	GtkTreeSelection *selection;
 	int               i;
 	EggRecentModel   *model;
-        EggRecentViewGtk *view;
+        EggRecentViewUIManager *view;
 	int               icon_width, icon_height;
+	GtkActionGroup   *actions;
+	GtkUIManager     *ui;
+	GError           *error = NULL;		
 
 	/* data common to all windows. */
 
@@ -2954,8 +3086,8 @@ window_new ()
 
 	/* Create the application. */
 
-        window->app = gnome_app_new ("main", _("File Roller"));
-        gnome_window_icon_set_from_default (GTK_WINDOW (window->app));
+	window->app = gnome_app_new ("main", _("File Roller"));
+	gnome_window_icon_set_from_default (GTK_WINDOW (window->app));
 
 	g_signal_connect (G_OBJECT (window->app), 
 			  "delete_event",
@@ -2995,6 +3127,87 @@ window_new ()
 			  "key_press_event",
 			  G_CALLBACK (key_press_cb), 
 			  window);
+
+
+	/* Initialize Data. */
+
+	window->archive = fr_archive_new ();
+	g_signal_connect (G_OBJECT (window->archive),
+			  "start",
+			  G_CALLBACK (_action_started),
+			  window);
+	g_signal_connect (G_OBJECT (window->archive),
+			  "done",
+			  G_CALLBACK (_action_performed),
+			  window);
+	g_signal_connect (G_OBJECT (window->archive), 
+			  "progress",
+			  G_CALLBACK (window_progress_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->archive), 
+			  "message",
+			  G_CALLBACK (window_message_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->archive), 
+			  "stoppable",
+			  G_CALLBACK (window_stoppable_cb),
+			  window);
+
+	fr_archive_set_fake_load_func (window->archive,
+				       window_fake_load,
+				       window);
+
+	window->sort_method = preferences_get_sort_method ();
+	window->sort_type = preferences_get_sort_type ();
+
+	window->list_mode = preferences_get_list_mode ();
+	window->history = NULL;
+	window->history_current = NULL;
+
+	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, (window->list_mode == WINDOW_LIST_MODE_FLAT));
+
+	window->open_default_dir = g_strdup (g_get_home_dir ());
+	window->add_default_dir = g_strdup (g_get_home_dir ());
+	window->extract_default_dir = g_strdup (g_get_home_dir ());
+	window->view_folder_after_extraction = FALSE;
+	window->folder_to_view = NULL;
+
+	window->give_focus_to_the_list = FALSE;
+
+	window->activity_ref = 0;
+	window->activity_timeout_handle = 0;
+	window->vd_handle = NULL;
+
+	window->archive_present = FALSE;
+	window->archive_new = FALSE;
+	window->archive_filename = NULL;
+
+	window->drag_temp_dir = NULL;
+	window->drag_temp_dirs = NULL;
+	window->drag_file_list = NULL;
+	window->drag_file_list_names = NULL;
+
+	window->dropped_file_list = NULL;
+	window->add_after_creation = FALSE;
+	window->add_after_opening = FALSE;
+	window->adding_dropped_files = FALSE;
+	window->extracting_dragged_files = FALSE;
+	window->extracting_dragged_files_interrupted = FALSE;
+
+	window->batch_mode = FALSE;
+	window->batch_action_list = NULL;
+	window->batch_action = NULL;
+	window->extract_interact_use_default_dir = FALSE;
+	window->non_interactive = FALSE;
+
+	window->password = NULL;
+	window->compression = preferences_get_compression_level ();
+
+	window->convert_data.converting = FALSE;
+	window->convert_data.temp_dir = NULL;
+	window->convert_data.new_archive = NULL;
+
+	window->stoppable = TRUE;
 
 	/* Create the widgets. */
 
@@ -3105,7 +3318,7 @@ window_new ()
 						      | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE 
 						      | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
 						     BONOBO_DOCK_TOP,
-						     2, 1, 0);
+						     3, 1, 0);
 
 	/* buttons. */
 
@@ -3173,169 +3386,78 @@ window_new ()
 	gnome_app_set_contents (GNOME_APP (window->app), scrolled_window);
 	gtk_widget_show_all (scrolled_window);
 
-	/* Create the main menu. */
 
-	gnome_app_create_menus_with_data (GNOME_APP (window->app), main_menu, 
-					  window);
+	/* Build the menu and the toolbar. */
 
-	/* Create the toolbar. */
+	window->actions = actions = gtk_action_group_new ("Actions");
+	gtk_action_group_set_translation_domain (actions, NULL);
+	gtk_action_group_add_actions (actions, 
+				      action_entries, 
+				      n_action_entries, 
+				      window);
+	gtk_action_group_add_toggle_actions (actions, 
+					     action_toggle_entries, 
+					     n_action_toggle_entries, 
+					     window);
+	gtk_action_group_add_radio_actions (actions, 
+					    view_as_entries, 
+					    n_view_as_entries,
+					    window->list_mode,
+					    G_CALLBACK (view_as_radio_action), 
+					    window);
+	gtk_action_group_add_radio_actions (actions, 
+					    sort_by_entries, 
+					    n_sort_by_entries,
+					    window->sort_type,
+					    G_CALLBACK (sort_by_radio_action), 
+					    window);
+	
+	ui = gtk_ui_manager_new ();
+	
+	g_signal_connect (ui, "connect_proxy",
+			  G_CALLBACK (connect_proxy_cb), window);
+	g_signal_connect (ui, "disconnect_proxy",
+			  G_CALLBACK (disconnect_proxy_cb), window);
+	
+	gtk_ui_manager_insert_action_group (ui, actions, 0);
+	gtk_window_add_accel_group (GTK_WINDOW (window->app), 
+				    gtk_ui_manager_get_accel_group (ui));
+	
+	if (!gtk_ui_manager_add_ui_from_string (ui, ui_info, -1, &error)) {
+		g_message ("building menus failed: %s", error->message);
+		g_error_free (error);
+	}
 
-	window->toolbar = toolbar = gtk_toolbar_new ();
-        gnome_app_fill_toolbar_with_data (GTK_TOOLBAR (toolbar), 
-                                          toolbar_data, 
-                                          (GtkAccelGroup*) NULL,
-                                          window);
-	gnome_app_set_toolbar (GNOME_APP (window->app), GTK_TOOLBAR (toolbar));
+	gnome_app_add_docked (GNOME_APP (window->app),
+			      gtk_ui_manager_get_widget (ui, "/MenuBar"),
+			      "MenuBar",
+			      (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL 
+			       | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE 
+			       | (eel_gconf_get_boolean (PREF_DESKTOP_MENUBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
+			      BONOBO_DOCK_TOP,
+			      1, 1, 0);
+	window->toolbar = toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
+	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
+	
+	gnome_app_add_docked (GNOME_APP (window->app),
+			      toolbar,
+			      "ToolBar",
+			      (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL 
+			       | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE 
+			       | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
+			      BONOBO_DOCK_TOP,
+			      2, 1, 0);
 
-	/* Create popup menus. */
+	window->file_popup_menu = gtk_ui_manager_get_widget (ui, "/ListPopupMenu");
 
-	window->file_popup_menu = gtk_menu_new ();
-	gnome_app_fill_menu_with_data (GTK_MENU_SHELL (window->file_popup_menu),
-				       file_popup_menu_data,
-				       (GtkAccelGroup*) NULL,
-				       FALSE,
-				       0,
-				       window);
+	/* Create the statusbar. */
 
-	/* Create a statusbar. */
-
-        window->statusbar = gnome_appbar_new (FALSE, TRUE, 
-                                              GNOME_PREFERENCES_USER);
-        gnome_app_set_statusbar (GNOME_APP (window->app), window->statusbar);
-        gnome_app_install_appbar_menu_hints (GNOME_APPBAR (window->statusbar),
-                                             main_menu);
-
-	/* Data. */
-
-	window->archive = fr_archive_new ();
-	g_signal_connect (G_OBJECT (window->archive),
-			  "start",
-			  G_CALLBACK (_action_started),
-			  window);
-	g_signal_connect (G_OBJECT (window->archive),
-			  "done",
-			  G_CALLBACK (_action_performed),
-			  window);
-	g_signal_connect (G_OBJECT (window->archive), 
-			  "progress",
-			  G_CALLBACK (window_progress_cb),
-			  window);
-	g_signal_connect (G_OBJECT (window->archive), 
-			  "message",
-			  G_CALLBACK (window_message_cb),
-			  window);
-	g_signal_connect (G_OBJECT (window->archive), 
-			  "stoppable",
-			  G_CALLBACK (window_stoppable_cb),
-			  window);
-
-	fr_archive_set_fake_load_func (window->archive,
-				       window_fake_load,
-				       window);
-
-	window->sort_method = preferences_get_sort_method ();
-	window->sort_type = preferences_get_sort_type ();
-
-	window->list_mode = preferences_get_list_mode ();
-	window->history = NULL;
-	window->history_current = NULL;
-
-	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, (window->list_mode == WINDOW_LIST_MODE_FLAT));
-
-	window->mitem_new_archive = file_menu[FILE_MENU_NEW_ARCHIVE].widget;
-	window->mitem_open_archive = file_menu[FILE_MENU_OPEN_ARCHIVE].widget;
-	window->mitem_save_as_archive = file_menu[FILE_MENU_SAVE_AS_ARCHIVE].widget;
-	window->mitem_close = file_menu[FILE_MENU_CLOSE_ARCHIVE].widget;
-
-	window->mitem_archive_prop = file_menu[FILE_MENU_ARCHIVE_PROP].widget;
-	window->mitem_move_archive = file_menu[FILE_MENU_MOVE_ARCHIVE].widget;
-	window->mitem_copy_archive = file_menu[FILE_MENU_COPY_ARCHIVE].widget;
-	window->mitem_rename_archive = file_menu[FILE_MENU_RANAME_ARCHIVE].widget;
-	window->mitem_delete_archive = file_menu[FILE_MENU_DELETE_ARCHIVE].widget;
-
-	window->mitem_recents_menu = GTK_MENU_ITEM (file_menu[FILE_MENU_RECENTS_MENU].widget)->submenu;
-
- 	window->mitem_add_files = edit_menu[EDIT_MENU_ADD_FILES].widget;
-	window->mitem_add_folder = edit_menu[EDIT_MENU_ADD_FOLDER].widget;
-	window->mitem_delete = edit_menu[EDIT_MENU_DELETE].widget;
-	window->mitem_extract = edit_menu[EDIT_MENU_EXTRACT].widget;
-	window->mitem_open = edit_menu[EDIT_MENU_OPEN].widget;
-	window->mitem_test = file_menu[FILE_MENU_TEST].widget;
-	window->mitem_view = edit_menu[EDIT_MENU_VIEW].widget;
-	window->mitem_stop = view_menu[VIEW_MENU_STOP].widget;
-	window->mitem_reload = view_menu[VIEW_MENU_RELOAD].widget;
-
-	window->mitem_cut = edit_menu[EDIT_MENU_CUT].widget;
-	window->mitem_copy = edit_menu[EDIT_MENU_COPY].widget;
-	window->mitem_paste = edit_menu[EDIT_MENU_PASTE].widget;
-	window->mitem_rename = edit_menu[EDIT_MENU_RENAME].widget;
-
-	window->mitem_select_all = edit_menu[EDIT_MENU_SELECT_ALL].widget;
-	window->mitem_unselect_all = edit_menu[EDIT_MENU_DESELECT_ALL].widget;
-
-	window->mitem_view_toolbar = view_menu[VIEW_MENU_TOOLBAR].widget;
-	window->mitem_view_statusbar = view_menu[VIEW_MENU_STATUSBAR].widget;
-	window->mitem_view_flat   = view_list[VIEW_LIST_VIEW_ALL].widget;
-	window->mitem_view_as_dir = view_list[VIEW_LIST_AS_DIR].widget;
-	set_check_menu_item_state (window, window->mitem_view_as_dir, TRUE);
-	for (i = 0; i < 5; i++)
-		window->mitem_sort[i] = sort_by_radio_list[i].widget;
-	window->mitem_sort_reversed = arrange_menu[ARRANGE_MENU_REVERSED_ORDER].widget;
-	window->mitem_password = edit_menu[EDIT_MENU_PASSWORD].widget;
-	window->mitem_last_output = view_menu[VIEW_MENU_LAST_OUTPUT].widget;
-
-	for (i = 0; i < FILE_POPUP_MENU_SIZE; i++) 
-		window->popupmenu_file[i] = file_popup_menu_data[i].widget;
-
-	window->toolbar_new = toolbar_data[TOOLBAR_NEW].widget;
-	window->toolbar_open = toolbar_data[TOOLBAR_OPEN].widget;
-	window->toolbar_stop = toolbar_data[TOOLBAR_STOP].widget;
-	window->toolbar_add = toolbar_data[TOOLBAR_ADD].widget;
-	window->toolbar_extract = toolbar_data[TOOLBAR_EXTRACT].widget;
-	window->toolbar_view = toolbar_data[TOOLBAR_VIEW].widget;
-
-	window->open_default_dir = g_strdup (g_get_home_dir ());
-	window->add_default_dir = g_strdup (g_get_home_dir ());
-	window->extract_default_dir = g_strdup (g_get_home_dir ());
-	window->view_folder_after_extraction = FALSE;
-	window->folder_to_view = NULL;
-
-	window->give_focus_to_the_list = FALSE;
-
-	window->activity_ref = 0;
-	window->activity_timeout_handle = 0;
-	window->vd_handle = NULL;
-
-	window->archive_present = FALSE;
-	window->archive_new = FALSE;
-	window->archive_filename = NULL;
-
-	window->drag_temp_dir = NULL;
-	window->drag_temp_dirs = NULL;
-	window->drag_file_list = NULL;
-	window->drag_file_list_names = NULL;
-
-	window->dropped_file_list = NULL;
-	window->add_after_creation = FALSE;
-	window->add_after_opening = FALSE;
-	window->adding_dropped_files = FALSE;
-	window->extracting_dragged_files = FALSE;
-	window->extracting_dragged_files_interrupted = FALSE;
-
-	window->batch_mode = FALSE;
-	window->batch_action_list = NULL;
-	window->batch_action = NULL;
-	window->extract_interact_use_default_dir = FALSE;
-	window->non_interactive = FALSE;
-
-	window->password = NULL;
-	window->compression = preferences_get_compression_level ();
-
-	window->convert_data.converting = FALSE;
-	window->convert_data.temp_dir = NULL;
-	window->convert_data.new_archive = NULL;
-
-	window->stoppable = TRUE;
+	window->statusbar = gtk_statusbar_new ();
+	window->help_message_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->statusbar), "help_message");
+	window->list_info_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->statusbar), "list_info");
+	window->progress_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->statusbar), "progress");
+	gnome_app_set_statusbar (GNOME_APP (window->app), window->statusbar);
+	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->statusbar), TRUE);
 
 	/**/
 
@@ -3364,27 +3486,14 @@ window_new ()
         egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
 	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
 
-	view = egg_recent_view_gtk_new (window->mitem_recents_menu, NULL);
-	window->recent_view = view;
+	window->recent_view = view = egg_recent_view_uimanager_new (ui, 
+								    "/MenuBar/Archive/OpenRecent",
+								    G_CALLBACK (activate_action_open_recent),
+								    window);
+	egg_recent_view_uimanager_set_tooltip_func (view, recent_set_tooltip, window);
 	egg_recent_view_set_model (EGG_RECENT_VIEW (view), model);
-
 	g_object_unref (model);
 	window->recent_model = egg_recent_view_get_model (EGG_RECENT_VIEW (view));
-
-	g_signal_connect (G_OBJECT (view), 
-			  "activate",
-			  G_CALLBACK (open_recent_cb),
-			  window);
-
-	/* Update menu items */
-
-	if (window->list_mode == WINDOW_LIST_MODE_FLAT)
-		set_check_menu_item_state (window, window->mitem_view_flat, TRUE);
-	else
-		set_check_menu_item_state (window, window->mitem_view_as_dir, TRUE);
-	set_check_menu_item_state (window, window->mitem_sort[window->sort_method], TRUE);
-	if (window->sort_type == GTK_SORT_DESCENDING)
-		set_check_menu_item_state (window, window->mitem_sort_reversed, TRUE);
 
 	_window_update_title (window);
 	_window_update_sensitivity (window);
@@ -3681,6 +3790,7 @@ window_archive_new (FRWindow   *window,
 						  _("Archive type not supported."),
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
@@ -3780,6 +3890,7 @@ window_archive_open (FRWindow   *current_window,
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
 		g_free (message);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -3836,6 +3947,7 @@ window_archive_save_as (FRWindow      *window,
 						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 		g_free (message);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -4079,6 +4191,7 @@ window_archive_extract (FRWindow   *window,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
 			
+			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 			r = gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -4101,6 +4214,7 @@ window_archive_extract (FRWindow   *window,
 						     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						     NULL);
 			g_free (message);
+			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 						   
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
@@ -4119,6 +4233,7 @@ window_archive_extract (FRWindow   *window,
 					     NULL,
 					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -4510,6 +4625,7 @@ window_view_last_output (FRWindow   *window,
 					      GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 					      NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 	
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
@@ -4810,6 +4926,7 @@ window_rename_selection (FRWindow *window)
 						       reason,
 						       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						       NULL);
+			gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_OK);
 			g_free (reason);
 			g_free (utf8_name);
 			g_free (new_name);
@@ -5322,6 +5439,8 @@ void
 window_set_toolbar_visibility (FRWindow   *window,
 			       gboolean    visible)
 {
+	g_return_if_fail (window != NULL);
+
 	if (visible)
 		gtk_widget_show (window->toolbar->parent);
 	else
