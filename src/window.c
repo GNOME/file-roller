@@ -4577,12 +4577,14 @@ rename_selection (FRWindow   *window,
 		  const char *current_dir)
 {
 	char       *tmp_dir;
+	char       *e_tmp_dir;
 	FRArchive  *archive = window->archive;
 	GList      *scan, *new_file_list = NULL;
 
 	fr_process_clear (archive->process);
 
 	tmp_dir = get_temp_work_dir_name ();
+	e_tmp_dir = shell_escape (tmp_dir);
 	ensure_dir_exists (tmp_dir, 0700);
 
 	fr_archive_extract (archive,
@@ -4603,18 +4605,24 @@ rename_selection (FRWindow   *window,
 
 	if (is_dir) {
 		char *old_path, *new_path;
+		char *e_old_path, *e_new_path;
 		
 		old_path = g_build_filename (tmp_dir, current_dir, old_name, NULL);
 		new_path = g_build_filename (tmp_dir, current_dir, new_name, NULL);
 		
+		e_old_path = shell_escape (old_path);
+		e_new_path = shell_escape (new_path);
+
 		fr_process_begin_command (archive->process, "mv");
 		fr_process_add_arg (archive->process, "-f");
-		fr_process_add_arg (archive->process, old_path);
-		fr_process_add_arg (archive->process, new_path);
+		fr_process_add_arg (archive->process, e_old_path);
+		fr_process_add_arg (archive->process, e_new_path);
 		fr_process_end_command (archive->process);
 
 		g_free (old_path);
 		g_free (new_path);
+		g_free (e_old_path);
+		g_free (e_new_path);
 	}
 
 	for (scan = file_list; scan; scan = scan->next) {
@@ -4629,11 +4637,19 @@ rename_selection (FRWindow   *window,
 		new_path = g_build_filename (tmp_dir, current_dir, new_name, common, NULL);
 
 		if (! is_dir) {
+			char *e_old_path, *e_new_path;
+
+			e_old_path = shell_escape (old_path);
+			e_new_path = shell_escape (new_path);
+
 			fr_process_begin_command (archive->process, "mv");
 			fr_process_add_arg (archive->process, "-f");
-			fr_process_add_arg (archive->process, old_path);
-			fr_process_add_arg (archive->process, new_path);
+			fr_process_add_arg (archive->process, e_old_path);
+			fr_process_add_arg (archive->process, e_new_path);
 			fr_process_end_command (archive->process);
+
+			g_free (e_old_path);
+			g_free (e_new_path);
 		}
 
 		new_file_list = g_list_prepend (new_file_list, g_build_filename (current_dir_relative, new_name, common, NULL));
@@ -4659,12 +4675,13 @@ rename_selection (FRWindow   *window,
 	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
 	fr_process_set_sticky (archive->process, TRUE);
 	fr_process_add_arg (archive->process, "-rf");
-	fr_process_add_arg (archive->process, tmp_dir);
+	fr_process_add_arg (archive->process, e_tmp_dir);
 	fr_process_end_command (archive->process);
 
 	fr_process_start (archive->process);
 
 	g_free (tmp_dir);
+	g_free (e_tmp_dir);
 }
 
 
@@ -4839,7 +4856,7 @@ window_paste_selection (FRWindow *window)
 	const char *current_dir = window_get_current_location (window);
 	const char *current_dir_relative = current_dir + 1;
 	GList      *scan;
-	char       *tmp_dir;
+	char       *tmp_dir, *e_tmp_dir;
 	GHashTable *created_dirs;
 	GList      *new_file_list = NULL;
 
@@ -4847,6 +4864,8 @@ window_paste_selection (FRWindow *window)
 		return;
 
 	tmp_dir = get_temp_work_dir_name ();
+	e_tmp_dir = shell_escape (tmp_dir);
+	
 	ensure_dir_exists (tmp_dir, 0700);
 
 	created_dirs = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
@@ -4894,14 +4913,17 @@ window_paste_selection (FRWindow *window)
 		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->clipboard_current_dir) - 1, NULL);
 
 		if (strcmp (old_name, new_name) != 0) {
+			char *e_old_name = shell_escape (old_name);
+			char *e_new_name = shell_escape (new_name);
 			fr_process_begin_command (archive->process, "mv");
 			fr_process_set_working_dir (archive->process, tmp_dir);
 			fr_process_add_arg (archive->process, "-f");
-			fr_process_add_arg (archive->process, old_name);
-			fr_process_add_arg (archive->process, new_name);
+			fr_process_add_arg (archive->process, e_old_name);
+			fr_process_add_arg (archive->process, e_new_name);
 			fr_process_end_command (archive->process);
+			g_free (e_old_name);
+			g_free (e_new_name);
 		}
-
 		new_file_list = g_list_prepend (new_file_list, new_name);
 	}
 
@@ -4921,12 +4943,13 @@ window_paste_selection (FRWindow *window)
 	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
 	fr_process_set_sticky (archive->process, TRUE);
 	fr_process_add_arg (archive->process, "-rf");
-	fr_process_add_arg (archive->process, tmp_dir);
+	fr_process_add_arg (archive->process, e_tmp_dir);
 	fr_process_end_command (archive->process);
 
 	fr_process_start (archive->process);
 
 	g_free (tmp_dir);
+	g_free (e_tmp_dir);
 
 	/**/
 
