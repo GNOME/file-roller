@@ -99,7 +99,6 @@ add_callback (NautilusMenuItem *item,
 		g_free (uri);
 	}
 
-	g_print ("EXEC: %s\n", cmd->str); /*FIXME*/
 	g_spawn_command_line_async (cmd->str, NULL);
 
 	g_string_free (cmd, TRUE);
@@ -168,12 +167,6 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusFileInfo *file = files->data;
 		one_archive = is_archive (file);
 	}
-
-	/*
-	for (scan = files; scan; scan = scan->next) {
-		NautilusFileInfo *file = scan->data;
-	}
-	*/
 
 	if (one_archive) {		
 		NautilusMenuItem *item;
