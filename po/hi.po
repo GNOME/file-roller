@@ -5,345 +5,437 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: File Roller hindi\n"
-"POT-Creation-Date: 2002-07-30 11:20+0200\n"
-"PO-Revision-Date: 2002-01-03 19:30+0530\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-24 15:54+0530\n"
+"PO-Revision-Date: 2004-02-24 15:55+0530\n"
 "Last-Translator: Ambuj Varshney <ambuj_v(at)rediffmail.com>\n"
-"Language-Team: Gnome Hindi Team <indlinux-hindi-gnome@lists.sourceforge.net>\n"
+"Language-Team: Gnome Hindi Team <indlinux-hindi-gnome@lists.sourceforge."
+"net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: component/File_Roller_Component.server.in.in.h:1
+#, fuzzy
+msgid "Extract Here"
+msgstr "सिकुडि फ़ाइल को बडा करे"
+
+#: component/File_Roller_Component.server.in.in.h:2
+#, fuzzy
+msgid "File Roller Component add operations"
+msgstr "फ़ाइल रोल्लर - सिकुडि  फ़ाइल के बारे मे जानकारी"
+
+#: component/File_Roller_Component.server.in.in.h:3
+#, fuzzy
+msgid "File Roller Component extract operations"
+msgstr "फ़ाइल रोल्लर - सिकुडि  फ़ाइल के बारे मे जानकारी"
+
+#: component/File_Roller_Component.server.in.in.h:4
+#, fuzzy
+msgid "File roller component"
+msgstr "फ़ाइल रोल्लर-एन्कोड"
+
+#: component/File_Roller_Component.server.in.in.h:5
+msgid "Zip Objects..."
+msgstr ""
+
 #: file-roller.desktop.in.h:1
-msgid "Archive Manager"
-msgstr "सीकोडने वाला"
+msgid "Create and modify zips and other archive types"
+msgstr ""
 
-#. Create the application.
-#: file-roller.desktop.in.h:2 src/main.c:101 src/misc.c:76 src/misc.c:153
-#: src/misc.c:256 src/window.c:734 src/window.c:741 src/window.c:2260
-#: src/window.c:3824
-msgid "File Roller"
-msgstr "फ़ाइल रोल्लर"
+#: file-roller.desktop.in.h:2
+msgid "Zip Creator"
+msgstr ""
 
-#: file-roller.desktop.in.h:3
-msgid "Handle compressed archives"
-msgstr "सिकुडि फ़ाइल को सम्भाले"
+#: src/dlg-add.c:118 src/dlg-add.c:125
+#, fuzzy, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "आप्के पास अधिकार नही है की आप उस फ़ोलडर मे फ़ाइल को बडा कर सके \"%s\""
 
-#: src/dlg-add.c:311 src/window.c:2466
-msgid "Add files"
-msgstr "फ़ाइलों को जोडे"
+#: src/dlg-add.c:124 src/window.c:1930 src/window.c:1967
+#, fuzzy
+msgid "Could not add the files to the archive"
+msgstr "फ़ाइल को जोडे (सिकुडी फ़ाइल मे)"
 
-#: src/dlg-add.c:316
+#: src/dlg-add.c:274 src/toolbar.h:56
+msgid "Add"
+msgstr "जोडे"
+
+#: src/dlg-add.c:285
 msgid "_Add only if newer"
 msgstr "खालि नैइ फ़ाइल को जोडे (_A)"
 
-#: src/dlg-add.c:317
-msgid "_Include sub-folders"
+#: src/dlg-add.c:286
+#, fuzzy
+msgid "_Include subfolders"
 msgstr "फ़ोळर के अन्दर वाले फ़ाइल को भी जोडे (_I)"
 
-#: src/dlg-add.c:318
+#: src/dlg-add.c:287
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "जो फ़ोळर के स्य्म्बोल्लिक सम्बन्ध है उन्हे मत जोडे (_k)"
 
-#: src/dlg-add.c:319
-msgid "Exclude o_ther file systems"
-msgstr "दूसरे फ़ाइल सिस्टम को मत जोडे (_t)"
-
-#: src/dlg-add.c:320
-msgid "Exclude _backup files (*~)"
-msgstr "बेकऊप(दूस्री प्रति ) को मत जोडे (*~) (_b)"
-
-#: src/dlg-add.c:321
-msgid "Exclude _hidden files (.*)"
-msgstr "छुपी फ़ाइल को मत जोडे (.*) (_h)"
-
-#: src/dlg-add.c:322
-msgid "E_xclude files:"
-msgstr "फ़ाइल को मत जोडे (_x)"
-
-#: src/dlg-add.c:324
+#: src/dlg-add.c:290 src/dlg-add.c:295
 msgid "example: *.o; *.bak"
 msgstr "उदाहरण: *.o; *.bak"
 
-#: src/dlg-add.c:325
-msgid "Igno_re case"
-msgstr "यह केस को जाने दे (_r)"
+#: src/dlg-add.c:291
+#, fuzzy
+msgid "_Include files:"
+msgstr "फ़ाइल को मत जोडे (_x)"
 
-#: src/dlg-add.c:326
+#: src/dlg-add.c:296
+msgid "E_xclude files:"
+msgstr "फ़ाइल को मत जोडे (_x)"
+
+#: src/dlg-add.c:299
 msgid "_Load Options"
 msgstr "विकल्पों को लोड करे (_L)"
 
-#: src/dlg-add.c:327
+#: src/dlg-add.c:300
 msgid "Sa_ve Options"
 msgstr "विकल्पों को सनग्रहित करे (_v)"
 
-#: src/dlg-add.c:583
-msgid "Load options"
-msgstr "विकल्पों को लोड करे"
+#: src/dlg-add.c:758
+#, fuzzy
+msgid "Save Options"
+msgstr "विकल्पों को सनग्रहित करे (_v)"
 
-#: src/dlg-add.c:731
-msgid "Save options"
-msgstr "विकल्पों को सन्ग्रहित करे"
+#: src/dlg-add.c:759
+#, fuzzy
+msgid "Options Name:"
+msgstr "ओपशन्स :"
 
-#. Set widgets data.
-#: src/dlg-batch-add.c:147
-#, c-format
-msgid "Adding %u files"
-msgstr "फ़ाइल %u को जोडा जा राहा है"
+#: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
+#, fuzzy
+msgid "Could not zip objects"
+msgstr "मद्दत दिखाइ नही जा सकि: %s"
 
-#: src/dlg-extract.c:115 src/window.c:3015
-msgid "Destination folder does not exist.  Do you want to create it ?"
+#: src/dlg-batch-add.c:102 src/menu-callbacks.c:190 src/menu-callbacks.c:423
+msgid "You have to specify an archive name."
+msgstr ""
+
+#: src/dlg-batch-add.c:127 src/fr-archive.c:624 src/window.c:3646
+#: src/window.c:3796
+#, fuzzy
+msgid "Archive type not supported."
+msgstr "यह फ़ाइल फ़ाइल रोल्लर द्वारा लोड नही की जा सक्ति "
+
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:150 src/window.c:4026
+#, fuzzy
+msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "मन्जिल पर फ़ोलडर मोजूद नही है क्या आप बनाना चाह्ते है"
 
-#: src/dlg-extract.c:117 src/window.c:3017
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:153 src/window.c:4029
 msgid "Create _Folder"
 msgstr "फ़ोलडर बनाए (_F)"
 
-#: src/dlg-extract.c:137 src/window.c:3037
-#, c-format
-msgid ""
-"Could not create the destination folder : %s.\n"
-"Extraction not performed."
-msgstr "फ़ोलडर बनाया नही जा सका : %s \n"
+#: src/dlg-batch-add.c:162 src/dlg-extract.c:169 src/window.c:4045
+#, fuzzy, c-format
+msgid "Could not create the destination folder: %s."
+msgstr ""
+"फ़ोलडर बनाया नही जा सका : %s \n"
 "फ़ाइल बडी नही कर पाए।"
 
-#: src/dlg-extract.c:152 src/window.c:3052
-msgid "Extraction not performed."
+#: src/dlg-batch-add.c:185
+#, fuzzy
+msgid "Zip not performed"
 msgstr "फ़ाइल बडि नही हो पाइ"
 
-#: src/dlg-extract.c:168
-#, c-format
-msgid ""
-"You don't have the right permissions to extract archive in the folder \"%s\""
-msgstr ""
-"आप्के पास अधिकार नही है की आप उस फ़ोलडर मे फ़ाइल को बडा कर सके \"%s\""
-
-#: src/dlg-extract.c:383 src/dlg-preferences.c:118 src/menu-callbacks.c:747
-#, c-format
-msgid "Could not display help: %s"
+#: src/dlg-extract.c:87 src/menu-callbacks.c:1177
+#, fuzzy
+msgid "Could not display help"
 msgstr "मद्दत दिखाइ नही जा सकि: %s"
 
-#: src/dlg-extract.c:472
-msgid "Favorites extraction folders"
-msgstr "पसंदीदार फ़ाइल बडा कर्ने का फ़ोलडर"
+#: src/dlg-extract.c:173 src/dlg-extract.c:192 src/dlg-extract.c:216
+#: src/window.c:4049 src/window.c:4068
+#, fuzzy
+msgid "Extraction not performed"
+msgstr "फ़ाइल बडि नही हो पाइ"
 
-#: src/dlg-open-with.c:388
-msgid "Associated Applications"
-msgstr "सम्बन्ध वाला प्रोग्राम"
+#: src/dlg-extract.c:211
+#, fuzzy, c-format
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "आप्के पास अधिकार नही है की आप उस फ़ोलडर मे फ़ाइल को बडा कर सके \"%s\""
 
-#: src/dlg-open-with.c:418
-msgid "Recent Applications"
-msgstr "हाल का प्रोग्राम(Application)"
-
-#: src/file_roller.glade2.h:1
-msgid "*"
-msgstr "*"
-
-#: src/file_roller.glade2.h:2
-msgid "A_dd to favorites"
-msgstr "पसनद दीदार मे जोडे (_d)"
-
-#: src/file_roller.glade2.h:3
-msgid "Add _to archive :"
-msgstr "छोटि की फ़ाइल मे जोडे (_t):"
-
-#: src/file_roller.glade2.h:4
-msgid "Add only if _newer"
-msgstr "अगर नइ है तो जोडे (_n)"
-
-#: src/file_roller.glade2.h:5
-msgid "Ba_se 64"
-msgstr ""
-
-#: src/file_roller.glade2.h:6
-msgid "Date and Time:"
-msgstr "समय और तारीख"
-
-#: src/file_roller.glade2.h:7
-msgid "Do not e_xtract older files"
-msgstr "पुरानी फ़ाइल को मत बडा करो"
-
-#: src/file_roller.glade2.h:8
-msgid "Encode Type"
-msgstr "एनकोड प्र्कार"
-
-#: src/file_roller.glade2.h:9
-msgid "Encoded archive:"
-msgstr "एन्कोडिड सीकुडि फ़ाइल"
-
-#: src/file_roller.glade2.h:10
-msgid "Extract to"
-msgstr "बडा करो"
-
-#: src/file_roller.glade2.h:11
-msgid "Extract to:"
-msgstr "बडा करो:"
-
-#: src/file_roller.glade2.h:12
-msgid "File Roller - Add"
-msgstr "फ़ाइल रोल्लर - जोडो"
-
-#: src/file_roller.glade2.h:13
-msgid "File Roller - Archive Informations"
-msgstr "फ़ाइल रोल्लर - सिकुडि  फ़ाइल के बारे मे जानकारी"
-
-#: src/file_roller.glade2.h:14
-msgid "File Roller - Comment"
-msgstr ""
-
-#: src/file_roller.glade2.h:15
-msgid "File Roller - Delete Files"
-msgstr "फ़ाइल रोल्लर - हटाओ फ़ाइल"
-
-#: src/file_roller.glade2.h:16
-msgid "File Roller - Encode"
-msgstr "फ़ाइल रोल्लर-एन्कोड"
-
-#: src/file_roller.glade2.h:17
-msgid "File Roller - Extract"
-msgstr "फ़ाइल रोल्लर - बडा करो"
-
-#: src/file_roller.glade2.h:18
-msgid "File Roller - Open Files"
-msgstr "फ़ाइल रोल्लर - खोलो फ़ाइल"
-
-#: src/file_roller.glade2.h:19
-msgid "File Roller - Password"
-msgstr "फ़ाइल रोल्लर - गुपत अक्षर"
-
-#: src/file_roller.glade2.h:20
-msgid "File Roller - View File"
-msgstr "फ़ाइल रोल्लर - फ़ाइल दिखाओ"
-
-#: src/file_roller.glade2.h:21
-msgid "File Roller - Viewer"
-msgstr "फ़ाइल रोल्लर - फ़ाइल दिखाने वाला"
-
-#: src/file_roller.glade2.h:22
-msgid "File Size:"
-msgstr "फ़ाइल का आकार:"
-
-#: src/file_roller.glade2.h:23
+#: src/dlg-extract.c:370
 msgid "Files"
 msgstr "फ़ाइलें"
 
-#: src/file_roller.glade2.h:24
-msgid "Name:"
-msgstr "नाम:"
+#: src/dlg-extract.c:378 src/dlg-extract.c:428 src/file_roller_prop.glade.h:1
+msgid "    "
+msgstr ""
 
-#: src/file_roller.glade2.h:25
-msgid ""
-"Note: the password will be used to encrypt files you add to the current "
-"archive, and to decrypt files you extract from the current archive. When the "
-"archive is closed the password will be deleted."
-msgstr "नोट:यह गुपत अक्षर उन फ़ाइल के लीये प्रयोग मे प्रयुक्त कीया जाएगा जो आप इस सिकुडी फ़ाइल मे जोड्ना चाह्ते है,"
-"और यह गुपत अक्षर ऊन सिकुडी फ़ाइल को बडा करने के लिए प्रयोग मे लाया जाएगा और जब यह सिकुडी फ़ाइल बन्द की जाएगि यह गुपत अक्षर हटा दिया जाएगा"
-#: src/file_roller.glade2.h:26
-msgid "Number of Files:"
-msgstr "फ़ाइल की सन्खया:"
-
-#: src/file_roller.glade2.h:27
-msgid "Open with an _application"
-msgstr "प्रोग्राम के साथ खोले (_a)"
-
-#: src/file_roller.glade2.h:28
-msgid "Options :"
-msgstr "ओपशन्स :"
-
-#: src/file_roller.glade2.h:29 src/file_roller_prop.glade2.h:9
-msgid "Other options"
-msgstr "दुसरे ओप्शन्स "
-
-#: src/file_roller.glade2.h:30
-msgid "Over_write existing files"
-msgstr "पहले से मोजूद फ़ाइल के ऊपर लिखे (_w)"
-
-#: src/file_roller.glade2.h:31
-msgid "Path:"
-msgstr "रास्ता:"
-
-#: src/file_roller.glade2.h:32
-msgid "R_ecreate folders"
-msgstr "फ़ोल्डरस को द्वारा बनाए (_e)"
-
-#: src/file_roller.glade2.h:33
-msgid "View with internal _viewer"
-msgstr "प्रोग्राम मे मोजूद फ़ाइल दिखाने के प्रोग्राम द्वरा दिखाए (_v)"
-
-#: src/file_roller.glade2.h:34
-msgid "_All Files"
-msgstr "सभि फ़ाइल (_A)"
-
-#: src/file_roller.glade2.h:35
-msgid "_Application:"
-msgstr "प्रोग्राम (_A):"
-
-#: src/file_roller.glade2.h:36
-msgid "_Destination Folder:"
-msgstr "मान्जिल फ़ोडर की (_D):"
-
-#: src/file_roller.glade2.h:37
+#: src/dlg-extract.c:387 src/file_roller.glade.h:16
 msgid "_Files:"
 msgstr "फ़ाइलस (_F):"
 
-#: src/file_roller.glade2.h:38
-msgid "_Password:"
-msgstr "गुपत अक्षर (_P):"
-
-#: src/file_roller.glade2.h:39
-msgid "_Selected Files"
-msgstr "चुनी फ़ाइलस (_S)"
-
-#: src/file_roller.glade2.h:40
-msgid "_UU"
-msgstr ""
-
-#: src/file_roller.glade2.h:41
-msgid "_View destination folder after extraction"
-msgstr "जिस फ़ोलडर मे फ़ाइल को बडा किया गाया है उसे फ़ाइल बडा करने के बाद दिखाए (_V)"
-
-#: src/file_roller.glade2.h:42
+#: src/dlg-extract.c:398 src/file_roller.glade.h:20
 msgid "example: *.txt; *.doc"
 msgstr "उदहारन:। *.txt; *.doc"
 
-#: src/file_roller_prop.glade2.h:1
-msgid "Columns to Show"
+#: src/dlg-extract.c:401 src/file_roller.glade.h:13
+#, fuzzy
+msgid "_All files"
+msgstr "सभि फ़ाइल (_A)"
+
+#: src/dlg-extract.c:408 src/file_roller.glade.h:18
+#, fuzzy
+msgid "_Selected files"
+msgstr "चुनी फ़ाइलस (_S)"
+
+#: src/dlg-extract.c:419
+#, fuzzy
+msgid "Actions"
+msgstr "काम (_A)"
+
+#: src/dlg-extract.c:435
+#, fuzzy
+msgid "R_e-create folders"
+msgstr "फ़ोल्डरस को द्वारा बनाए (_e)"
+
+#: src/dlg-extract.c:439
+msgid "Over_write existing files"
+msgstr "पहले से मोजूद फ़ाइल के ऊपर लिखे (_w)"
+
+#: src/dlg-extract.c:443
+msgid "Do not e_xtract older files"
+msgstr "पुरानी फ़ाइल को मत बडा करो"
+
+#: src/dlg-extract.c:449 src/file_roller.glade.h:17
+msgid "_Password:"
+msgstr "गुपत अक्षर (_P):"
+
+#: src/dlg-extract.c:457
+#, fuzzy
+msgid "_Open destination folder after extraction"
+msgstr "जिस फ़ोलडर मे फ़ाइल को बडा किया गाया है उसे फ़ाइल बडा करने के बाद दिखाए (_V)"
+
+#: src/dlg-extract.c:484 src/toolbar.h:62
+msgid "Extract"
+msgstr "बडा करे"
+
+#: src/dlg-prop.c:99
+msgid "Path:"
+msgstr "रास्ता:"
+
+#: src/dlg-prop.c:112
+msgid "Name:"
+msgstr "नाम:"
+
+#: src/dlg-prop.c:119
+#, c-format
+msgid "%s Properties"
 msgstr ""
 
-#: src/file_roller_prop.glade2.h:2
-msgid "File Roller - Preferences"
+#: src/dlg-prop.c:128
+#, fuzzy
+msgid "File size:"
+msgstr "फ़ाइल का आकार:"
+
+#: src/dlg-prop.c:139
+#, fuzzy
+msgid "Number of files:"
+msgstr "फ़ाइल की सन्खया:"
+
+#: src/dlg-prop.c:149
+msgid "Zipped on:"
 msgstr ""
 
-#: src/file_roller_prop.glade2.h:3
-msgid "File _Name"
-msgstr "फ़ाइल का नाम (_N)"
-
-#: src/file_roller_prop.glade2.h:4
-msgid "File _Path"
-msgstr "फ़ाइल का रासता (_P)"
-
-#: src/file_roller_prop.glade2.h:5
-msgid "File _Size"
-msgstr "फ़ाइल का आकार (_S)"
-
-#: src/file_roller_prop.glade2.h:6
-msgid "File _Type"
-msgstr "फ़ाइल का प्रकार (_T)"
-
-#: src/file_roller_prop.glade2.h:7
-msgid "Install Nautilus scripts"
-msgstr "नौटिलुस की सक्रिप्ट को डाले"
-
-#: src/file_roller_prop.glade2.h:8
-msgid "Max _history length:"
+#: src/dlg-prop.c:155
+msgid "%d %B %Y, %H:%M"
 msgstr ""
 
-#: src/file_roller_prop.glade2.h:10
-msgid "_Modification Time"
-msgstr "बदल्ने का समय (_M)"
+#: src/file-data.c:28
+msgid "Unknown type"
+msgstr "अन्जान प्रकार"
 
-#: src/file-utils.c:534
+#: src/file-data.c:29
+msgid "Symbolic link"
+msgstr ""
+
+#: src/file-utils.c:537
 msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr "टेरमिनल को खोजा नही जा सका , xterm का इस्तमाल किया जा राहा है यह काम भी नही कर साक्ता"
+msgstr ""
+"टेरमिनल को खोजा नही जा सका , xterm का इस्तमाल किया जा राहा है यह काम भी नही कर "
+"साक्ता"
+
+#: src/file_roller.glade.h:1
+msgid "*"
+msgstr "*"
+
+#: src/file_roller.glade.h:2
+#, fuzzy
+msgid ""
+"<i><b>Note:</b> the password will be used to encrypt files you add to the "
+"current archive, and to decrypt files you extract from the current archive. "
+"When the archive is closed the password will be deleted.</i>"
+msgstr ""
+"नोट:यह गुपत अक्षर उन फ़ाइल के लीये प्रयोग मे प्रयुक्त कीया जाएगा जो आप इस सिकुडी फ़ाइल मे "
+"जोड्ना चाह्ते है,और यह गुपत अक्षर ऊन सिकुडी फ़ाइल को बडा करने के लिए प्रयोग मे लाया "
+"जाएगा और जब यह सिकुडी फ़ाइल बन्द की जाएगि यह गुपत अक्षर हटा दिया जाएगा"
+
+#: src/file_roller.glade.h:3
+#, fuzzy
+msgid "A_vailable application:"
+msgstr "प्रोग्राम (_A):"
+
+#: src/file_roller.glade.h:4
+#, fuzzy
+msgid "Delete"
+msgstr "हटाए (_D)"
+
+#: src/file_roller.glade.h:5
+#, fuzzy
+msgid "Load Options"
+msgstr "विकल्पों को लोड करे (_L)"
+
+#: src/file_roller.glade.h:6
+#, fuzzy
+msgid "Open Files"
+msgstr "फ़ाइल को इसके द्वरा खोले (_O)"
+
+#: src/file_roller.glade.h:7
+msgid "Open with an _application"
+msgstr "प्रोग्राम के साथ खोले (_a)"
+
+#: src/file_roller.glade.h:8
+#, fuzzy
+msgid "Password"
+msgstr "गुपत अक्षर (_P):"
+
+#: src/file_roller.glade.h:9
+#, fuzzy
+msgid "R_ecent applications:"
+msgstr "हाल का प्रोग्राम(Application)"
+
+#: src/file_roller.glade.h:10
+msgid "View File"
+msgstr "फ़ाइल को दिखाओ "
+
+#: src/file_roller.glade.h:11
+msgid "View with internal _viewer"
+msgstr "प्रोग्राम मे मोजूद फ़ाइल दिखाने के प्रोग्राम द्वरा दिखाए (_v)"
+
+#: src/file_roller.glade.h:12
+msgid "Zip Objects"
+msgstr ""
+
+#: src/file_roller.glade.h:14
+msgid "_Application:"
+msgstr "प्रोग्राम (_A):"
+
+#: src/file_roller.glade.h:15
+#, fuzzy
+msgid "_Archive:"
+msgstr "नइ छोटि फ़ाइल (_A)"
+
+#: src/file_roller.glade.h:19
+msgid "_Zip"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:2
+msgid "Compression _level:"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:3
+#, fuzzy
+msgid "Date _modified"
+msgstr "छेडा हुआ"
+
+#: src/file_roller_prop.glade.h:4
+#, fuzzy
+msgid "File Roller Preferences"
+msgstr "फ़ाइल रोल्लर-एन्कोड"
+
+#: src/file_roller_prop.glade.h:5
+msgid "Low"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:6
+msgid "Maximum (slow)"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:7
+msgid "Minimum (fast)"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:8
+msgid "Normal"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:9
+#, fuzzy
+msgid "_Location"
+msgstr "विकल्पों को लोड करे (_L)"
+
+#: src/file_roller_prop.glade.h:10
+#, fuzzy
+msgid "_Size"
+msgstr "आकार"
+
+#: src/file_roller_prop.glade.h:11
+#, fuzzy
+msgid "_Type"
+msgstr "प्रकार"
+
+#: src/fr-archive.c:599
+msgid "The file does not exist."
+msgstr ""
+
+#: src/fr-command-tar.c:232
+#, fuzzy
+msgid "Adding file: "
+msgstr "फ़ाइल %u को जोडा जा राहा है"
+
+#: src/fr-command-tar.c:278
+msgid "Removing file: "
+msgstr ""
+
+#: src/fr-command-tar.c:287 src/window.c:1366
+msgid "Deleting files from archive"
+msgstr "फ़ाइलस को छोटि की फ़ाइल से हटाया जा राहा है"
+
+#: src/fr-command-tar.c:320
+#, fuzzy
+msgid "Extracting file: "
+msgstr "छोटी की फ़ाइल को बडा किया जा रहा है"
+
+#: src/fr-command-tar.c:365
+#, fuzzy
+msgid "Recompressing archive"
+msgstr "सिकुडि फ़ाइल को सम्भाले"
+
+#: src/fr-command-tar.c:499
+#, fuzzy
+msgid "Decompressing archive"
+msgstr "सिकुडि फ़ाइल को सम्भाले"
+
+#: src/fr-stock.c:44
+#, fuzzy
+msgid "_Add"
+msgstr "जोडे"
+
+#: src/fr-stock.c:45
+#, fuzzy
+msgid "_Extract"
+msgstr "बडा करे"
+
+#: src/fr-stock.c:46 src/menu.h:382
+#, fuzzy
+msgid "_View"
+msgstr "दिखाओ"
+
+#. Create the application.
+#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1218
+#: src/window.c:839 src/window.c:1265 src/window.c:2926
+msgid "File Roller"
+msgstr "फ़ाइल रोल्लर"
+
+#. Button
+#: src/gtk-utils.c:421
+msgid "Command _Line Output"
+msgstr ""
 
 #: src/main.c:60
 msgid "Add files to the specified archive and quit the program"
@@ -377,555 +469,715 @@ msgstr "पहले से चुने गए फ़ोलडर मे -add औ�
 msgid "Create destination folder without asking confirmation"
 msgstr "बिना पूछे मन्जिल पे फ़ोलडर बनाए "
 
-#: src/menu-callbacks.c:106
+#: src/menu-callbacks.c:110
 msgid "Automatic"
 msgstr "आप्ने आप"
 
-#: src/menu-callbacks.c:107
-msgid "Ear (.ear)"
-msgstr ""
-
-#: src/menu-callbacks.c:108
-msgid "Jar (.jar)"
-msgstr ""
-
-#: src/menu-callbacks.c:109
-msgid "Lha (.lzh)"
-msgstr ""
-
-#: src/menu-callbacks.c:110
-msgid "Rar (.rar)"
-msgstr ""
-
 #: src/menu-callbacks.c:111
-msgid "Tar uncompressed (.tar)"
+msgid "Arj (.arj)"
 msgstr ""
 
 #: src/menu-callbacks.c:112
-msgid "Tar compressed with bzip (.tar.bz)"
+msgid "Ear (.ear)"
 msgstr ""
 
 #: src/menu-callbacks.c:113
-msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgid "Jar (.jar)"
 msgstr ""
 
 #: src/menu-callbacks.c:114
-msgid "Tar compressed with gzip (.tar.gz)"
+msgid "Lha (.lzh)"
 msgstr ""
 
 #: src/menu-callbacks.c:115
-msgid "Tar compressed with lzop (.tar.lzo)"
+msgid "Rar (.rar)"
 msgstr ""
 
 #: src/menu-callbacks.c:116
-msgid "Tar compressed with compress (.tar.Z)"
+msgid "Tar uncompressed (.tar)"
 msgstr ""
 
 #: src/menu-callbacks.c:117
-msgid "War (.war)"
+msgid "Tar compressed with bzip (.tar.bz)"
 msgstr ""
 
 #: src/menu-callbacks.c:118
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr ""
+
+#: src/menu-callbacks.c:119
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr ""
+
+#: src/menu-callbacks.c:120
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr ""
+
+#: src/menu-callbacks.c:121
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr ""
+
+#: src/menu-callbacks.c:122
+msgid "War (.war)"
+msgstr ""
+
+#: src/menu-callbacks.c:123
 msgid "Zip (.zip)"
 msgstr ""
 
-#: src/menu-callbacks.c:178
+#: src/menu-callbacks.c:124
+msgid "Zoo (.zoo)"
+msgstr ""
+
+#: src/menu-callbacks.c:189 src/menu-callbacks.c:208 src/window.c:3645
+#, fuzzy
+msgid "Could not create the archive"
+msgstr "पुरानी छोटी फ़ाइल को हटया नही जा सका"
+
+#: src/menu-callbacks.c:209 src/menu-callbacks.c:442
 msgid "You don't have permission to create an archive in this folder"
 msgstr "आप्के पास इस फ़ोलडर मे छोटी फ़ाइल बनाने की इजाजत नही है"
 
-#: src/menu-callbacks.c:196 src/menu-callbacks.c:425 src/menu-callbacks.c:595
-msgid "Archive already exists.  Do you want to overwrite it ?"
+#: src/menu-callbacks.c:238 src/menu-callbacks.c:462 src/menu-callbacks.c:752
+#: src/menu-callbacks.c:930
+#, fuzzy
+msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "इस नाम से फ़ाइल  पह्ले से मोजूद है कया आप इस के ऊपर लिखना चाह्ते है"
 
-#: src/menu-callbacks.c:198 src/menu-callbacks.c:427 src/menu-callbacks.c:597
+#: src/menu-callbacks.c:241 src/menu-callbacks.c:465 src/menu-callbacks.c:755
+#: src/menu-callbacks.c:933
 msgid "Overwrite"
 msgstr "इस के ऊपर लिखे"
 
-#: src/menu-callbacks.c:215
-msgid "Could not delete old archive."
+#: src/menu-callbacks.c:257 src/menu-callbacks.c:481
+#, fuzzy
+msgid "Could not delete the old archive."
 msgstr "पुरानी छोटी फ़ाइल को हटया नही जा सका"
 
-#: src/menu-callbacks.c:257
-msgid "New Archive"
-msgstr "नयी छोटी फ़ाइल"
-
-#.
-#: src/menu-callbacks.c:265
-msgid "File type :"
-msgstr "फ़ाइल का प्रकार"
-
-#: src/menu-callbacks.c:341
-msgid "Open Archive"
-msgstr "छोटी फ़ाइल खोले"
-
-#: src/menu-callbacks.c:450
-msgid "Could not copy archive"
-msgstr "छोटी की फ़ाइल को कोपी नही कर पाए"
-
-#: src/menu-callbacks.c:466
-msgid "Could not move archive"
-msgstr "छोटी की फ़ाइल को इधर से ऊधर नही कर पाए"
-
-#: src/menu-callbacks.c:488
-msgid "Copy archive"
-msgstr "छोटी की फ़ाइल को कोपि नही कर पाए"
-
-#: src/menu-callbacks.c:488
-msgid "Move archive"
-msgstr "छोटी की फ़ाइल को इधर से उधर करे"
-
-#: src/menu-callbacks.c:566
-msgid "New archive name (without extension)"
-msgstr "नइ छोटि की फ़ाइल का नाम (बिना extension)"
-
-#: src/menu-callbacks.c:570
-msgid "_Rename"
-msgstr "द्वारा नाम दो (_R)"
-
-#: src/menu-callbacks.c:634
-msgid "Archive will be deleted, are you sure ?"
-msgstr "यह छोटि फ़ाइल को हटाया जा राहा है क्या आप इछ्छुक है?"
-
-#: src/menu-callbacks.c:784
-msgid "An archive manager for GNOME."
-msgstr "ग्नोम के लिए छोटी फ़ाइल करने वाला प्रोग्राम"
-
-#: src/menu.h:59
-msgid "New _Archive"
-msgstr "नइ छोटि फ़ाइल (_A)"
-
-#: src/menu.h:59 src/toolbar.h:40
-msgid "Create a new archive"
-msgstr "नइ फ़ाइल(छोटि) बनाए"
-
-#: src/menu.h:65
-msgid "_Open Archive..."
-msgstr "खोले फ़ाइल(छोटि)...(_O)"
-
-#: src/menu.h:65
-msgid "Open an existing archive"
-msgstr "पह्ले से मोजूद फ़ाइल(छोटि)को खोले"
-
-#: src/menu.h:73
-msgid "Archive _Information..."
-msgstr "फ़ाइल(छोटि) के बारे मे जानकारी"
-
-#: src/menu.h:73
-msgid "Show information about the archive"
-msgstr "फ़ाइल(छोटि) के बारे मे जानकारी  दिखाए"
-
-#: src/menu.h:81
-msgid "_Move Archive"
-msgstr "छोटि फ़ाइल को इधर से उधर करे (_M)"
-
-#: src/menu.h:87
-msgid "Copy Arc_hive"
-msgstr "फ़ाइल(छोटि) को कोपि करे (_h)"
-
-#: src/menu.h:93
-msgid "_Rename Archive"
-msgstr "फ़ाइल(छोटि) को दूसरा नाम दो (_R)"
-
-#: src/menu.h:99
-msgid "_Delete Archive"
-msgstr "फ़ाइल(छोटि) को हटाए (_D)"
-
-#: src/menu.h:107
-msgid "_Close Archive"
-msgstr "फ़ाइल(छोटि) को बन्द करे (_C)"
-
-#: src/menu.h:107 src/toolbar.h:52
-msgid "Close current archive"
-msgstr "यह फ़ाइल(छोटि) को बान्द करे"
-
-#: src/menu.h:113
-msgid "E_xit"
-msgstr "बाहर (_x)"
-
-#: src/menu.h:113
-msgid "Exit"
-msgstr "बाहर"
-
-#: src/menu.h:142 src/menu.h:393
-msgid "Add _Files..."
-msgstr "फ़ाइल को जोडे...(_F)"
-
-#: src/menu.h:142 src/menu.h:393
-msgid "Add files to the archive"
-msgstr "फ़ाइल को जोडे (सिकुडी फ़ाइल मे)"
-
-#: src/menu.h:148
-msgid "_Delete"
-msgstr "हटाए (_D)"
-
-#: src/menu.h:148
-msgid "Delete selected files and folders from the archive"
-msgstr "चयान किये फ़ाइल व फ़ोलडर को हटाए"
-
-#: src/menu.h:154 src/menu.h:405
-msgid "_Extract to..."
-msgstr "यहा बडा करे...(_E)"
-
-#: src/menu.h:154 src/menu.h:405
-msgid "Extract files from the archive"
-msgstr "फ़ाइल(छोटि) मे से फ़ाइल बाडा करे"
-
-#: src/menu.h:162
-msgid "Select _All"
-msgstr "सभी का चयन करे (_A)"
-
-#: src/menu.h:162
-msgid "Select all files"
-msgstr "सभी फ़ाइल का चयन करे"
-
-#: src/menu.h:170 src/menu.h:413
-msgid "_Open Files with..."
-msgstr "फ़ाइल को इसके द्वरा खोले (_O)"
-
-#: src/menu.h:170
-msgid "Open selected files with an application"
-msgstr "चयन की फ़ाइल को परोग्राम द्वरा खोले"
-
-#: src/menu.h:176 src/menu.h:419
-msgid "_View File"
-msgstr "फ़ाइल को दिखाए (_V)"
-
-#: src/menu.h:176 src/menu.h:419
-msgid "View file with internal viewer"
-msgstr "फ़ाइल को अनदर मोजूद प्रोग्राम द्वरा दिखाए"
-
-#: src/menu.h:184
-msgid "_Stop Operation"
-msgstr "कार्य को रोके (_S)"
-
-#: src/menu.h:184 src/toolbar.h:62
-msgid "Stop current operation"
-msgstr "कार्य को रोके"
-
-#: src/menu.h:200
-msgid "_Test Archive"
-msgstr "फ़ाइल(छोटि) को जांचे (_T)"
-
-#: src/menu.h:214
-msgid "Vi_ew Last Output"
-msgstr "पिछ्ले ओउटपुट को देखे"
-
-#: src/menu.h:225
-msgid "Arrange by _Name"
-msgstr "नाम के आधार पर लगाए (_N)" 
-
-#: src/menu.h:225
-msgid "Sort file list by name"
-msgstr "नाम के आधार पर फ़ाइल की लिस्ट को लगाए"
-
-#: src/menu.h:231
-msgid "Arrange by _Size"
-msgstr "आकार के हिसाब से लगाए (_S)"
-
-#: src/menu.h:231
-msgid "Sort file list by file size"
-msgstr "फ़ाइल की सूची को आकर के हिसाब से लगाए"
-
-#: src/menu.h:237
-msgid "Arrange by _Type"
-msgstr "प्रकार के आधार पर ढीक से लगाए (_T)"
-
-#: src/menu.h:237
-msgid "Sort file list by type"
-msgstr "फ़ाइल लिस्ट को प्रकार के आधार पर ढीक से लगाए "
-
-#: src/menu.h:243
-msgid "Arrange by _Time"
-msgstr "सामय के अनुसार लगाए (_T)"
-
-#: src/menu.h:243
-msgid "Sort file list by modification time"
-msgstr "फ़ाइल की लिस्ट को सामय जब इस का इस्त्माल हुआ है उस के अनुसार लगाए"
-
-#: src/menu.h:249
-msgid "Arrange by _Path"
-msgstr "रास्ते के अनुसार लगाए (_P)"
-
-#: src/menu.h:249
-msgid "Sort file list by path"
-msgstr "फ़ाइल की लिस्ट को ढीक से लगाए"
-
-#: src/menu.h:266
-msgid "View All _Files"
-msgstr "सभी फ़ाइल दिखाए (_F)"
-
-#: src/menu.h:272
-msgid "View as a F_older"
-msgstr "फ़ोलडर के रूप मे देखे (_o)"
-
-#: src/menu.h:295
-msgid "_Preferences"
-msgstr ""
-
-#: src/menu.h:301
-msgid "Pass_word..."
-msgstr "गुपत अक्षर... (_w)"
-
-#: src/menu.h:317
-msgid "_Reversed Order"
-msgstr "पीछे से (_R)"
-
-#: src/menu.h:317
-msgid "Reverse the list order"
-msgstr "पीछे से लिस्ट्को लगाए"
-
-#: src/menu.h:330
-msgid "New _Window"
-msgstr "नइ खिडकी (_W)"
-
-#: src/menu.h:330
-msgid "Open a new window"
-msgstr "नइ खिडकी खोले"
-
-#: src/menu.h:336
-msgid "Clo_se Window"
-msgstr "खिड्की बान्द करे (_s)"
-
-#: src/menu.h:336
-msgid "Close this window"
-msgstr "इस खिड्की को बन्द करे"
-
-#: src/menu.h:349
-msgid "_Manual"
-msgstr "निर्देश पुस्तक (_M)"
-
-#: src/menu.h:349
-msgid "Display the File Roller Manual"
-msgstr "फ़ाइल रोल्लर की पुस्तक दिखाए"
-
-#: src/menu.h:355
-msgid "_About..."
-msgstr "के बारे मे...(_A)"
-
-#: src/menu.h:355
-msgid "Information about the program"
-msgstr "परोग्राम के बारे मे जानकारि"
-
-#: src/menu.h:368
-msgid "_Actions"
-msgstr "काम (_A)"
-
-#: src/menu.h:369
-msgid "_Options"
-msgstr "विक्लप (_O)"
-
-#: src/menu.h:370
-msgid "_Windows"
-msgstr "खिडकी (_W)"
-
-#: src/menu.h:399
-msgid "_Delete Files"
-msgstr "फ़ाइल हटाए (_D)"
-
-#: src/menu.h:399
-msgid "Delete files from the archive"
-msgstr "फ़ाइलस को छोटी की फ़ाइल से हटाए"
-
-#: src/menu.h:427
-msgid "Select All"
-msgstr "सबका चयन करो"
-
-#. Button
-#: src/misc.c:281
-msgid "Command _line output"
-msgstr ""
-
-#: src/toolbar.h:40
+#: src/menu-callbacks.c:320 src/toolbar.h:42
 msgid "New"
 msgstr "नया"
 
-#: src/toolbar.h:46
+#: src/menu-callbacks.c:331 src/menu-callbacks.c:537 src/menu-callbacks.c:656
+#, fuzzy
+msgid "All archives"
+msgstr "खोलो छोटी की फ़ाइल"
+
+#: src/menu-callbacks.c:338 src/menu-callbacks.c:544 src/menu-callbacks.c:663
+#, fuzzy
+msgid "All files"
+msgstr "सभि फ़ाइल (_A)"
+
+#: src/menu-callbacks.c:356 src/menu-callbacks.c:552
+#, fuzzy
+msgid "Archive type:"
+msgstr "फ़ाइल का प्रकार"
+
+#: src/menu-callbacks.c:422 src/menu-callbacks.c:441
+#, fuzzy
+msgid "Could not save the archive"
+msgstr "छोटी की फ़ाइल को इधर से ऊधर नही कर पाए"
+
+#: src/menu-callbacks.c:526
+msgid "Save"
+msgstr ""
+
+#: src/menu-callbacks.c:645 src/menu.h:412 src/toolbar.h:48
 msgid "Open"
 msgstr "खोलो"
 
-#: src/toolbar.h:46
+#: src/menu-callbacks.c:777
+#, fuzzy
+msgid "Could not copy the archive"
+msgstr "छोटी की फ़ाइल को कोपी नही कर पाए"
+
+#: src/menu-callbacks.c:796
+#, fuzzy
+msgid "Could not move the archive"
+msgstr "छोटी की फ़ाइल को इधर से ऊधर नही कर पाए"
+
+#: src/menu-callbacks.c:823
+msgid "Copy"
+msgstr ""
+
+#: src/menu-callbacks.c:823
+msgid "Move"
+msgstr ""
+
+#: src/menu-callbacks.c:828
+msgid "_Copy"
+msgstr ""
+
+#: src/menu-callbacks.c:828
+msgid "_Move"
+msgstr ""
+
+#: src/menu-callbacks.c:900 src/window.c:4717
+#, fuzzy
+msgid "Rename"
+msgstr "द्वारा नाम दो (_R)"
+
+#: src/menu-callbacks.c:901
+msgid "New archive name (without extension)"
+msgstr "नइ छोटि की फ़ाइल का नाम (बिना extension)"
+
+#: src/menu-callbacks.c:905 src/window.c:4722
+msgid "_Rename"
+msgstr "द्वारा नाम दो (_R)"
+
+#: src/menu-callbacks.c:1015
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
+msgstr ""
+
+#: src/menu-callbacks.c:1210
+msgid "translator_credits"
+msgstr ""
+
+#: src/menu-callbacks.c:1221
+msgid "An archive manager for GNOME."
+msgstr "ग्नोम के लिए छोटी फ़ाइल करने वाला प्रोग्राम"
+
+#: src/menu-callbacks.c:1370 src/window.c:4454
+#, fuzzy
+msgid "Last Output"
+msgstr "पिछ्ले ओउटपुट को देखे"
+
+#: src/menu.h:65
+#, fuzzy
+msgid "_New"
+msgstr "नया"
+
+#: src/menu.h:66 src/toolbar.h:42
+msgid "Create a new archive"
+msgstr "नइ फ़ाइल(छोटि) बनाए"
+
+#: src/menu.h:71
+msgid "Open R_ecent"
+msgstr ""
+
+#: src/menu.h:80 src/menu.h:167 src/menu.h:450
+#, fuzzy
+msgid "_Rename..."
+msgstr "द्वारा नाम दो (_R)"
+
+#: src/menu.h:80
+#, fuzzy
+msgid "Rename current archive"
+msgstr "यह फ़ाइल(छोटि) को बान्द करे"
+
+#: src/menu.h:86
+msgid "Cop_y..."
+msgstr ""
+
+#: src/menu.h:86
+#, fuzzy
+msgid "Copy current archive to another folder"
+msgstr "यह फ़ाइल(छोटि) को बान्द करे"
+
+#: src/menu.h:92
+msgid "_Move..."
+msgstr ""
+
+#: src/menu.h:92
+#, fuzzy
+msgid "Move current archive to another folder"
+msgstr "यह फ़ाइल(छोटि) को बान्द करे"
+
+#: src/menu.h:98
+msgid "Move to _Trash"
+msgstr ""
+
+#: src/menu.h:98
+#, fuzzy
+msgid "Move current archive to trash"
+msgstr "यह फ़ाइल(छोटि) को बान्द करे"
+
+#: src/menu.h:104
+msgid "_Test Integrity"
+msgstr ""
+
+#: src/menu.h:104
+msgid "Test whether the archive contains errors"
+msgstr ""
+
+#: src/menu.h:112
+msgid "_Properties"
+msgstr ""
+
+#: src/menu.h:112
+msgid "Show archive properties"
+msgstr ""
+
+#: src/menu.h:149 src/menu.h:432
+#, fuzzy
+msgid "_Add..."
+msgstr "के बारे मे...(_A)"
+
+#: src/menu.h:149 src/menu.h:432
+#, fuzzy
+msgid "Add files and folders to the archive"
+msgstr "फ़ाइल को जोडे (सिकुडी फ़ाइल मे)"
+
+#: src/menu.h:155 src/menu.h:438
+#, fuzzy
+msgid "_Extract..."
+msgstr "यहा बडा करे...(_E)"
+
+#: src/menu.h:155 src/menu.h:438 src/toolbar.h:62
+msgid "Extract files from the archive"
+msgstr "फ़ाइल(छोटि) मे से फ़ाइल बाडा करे"
+
+#: src/menu.h:167 src/menu.h:450
+msgid "Rename selection"
+msgstr ""
+
+#: src/menu.h:173 src/menu.h:456
+#, fuzzy
+msgid "_Delete..."
+msgstr "हटाए (_D)"
+
+#: src/menu.h:173 src/menu.h:456
+#, fuzzy
+msgid "Delete selection from the archive"
+msgstr "फ़ाइलस को छोटी की फ़ाइल से हटाए"
+
+#: src/menu.h:181 src/menu.h:464
+msgid "Select _All"
+msgstr "सभी का चयन करे (_A)"
+
+#: src/menu.h:181 src/menu.h:464
+msgid "Select all files"
+msgstr "सभी फ़ाइल का चयन करे"
+
+#: src/menu.h:187 src/menu.h:470
+#, fuzzy
+msgid "Dese_lect All"
+msgstr "सबका चयन करो"
+
+#: src/menu.h:187 src/menu.h:470
+#, fuzzy
+msgid "Deselect all files"
+msgstr "सभी फ़ाइल का चयन करे"
+
+#: src/menu.h:195
+#, fuzzy
+msgid "Open Fi_les..."
+msgstr "फ़ाइल को इसके द्वरा खोले (_O)"
+
+#: src/menu.h:195 src/menu.h:418
+msgid "Open selected files with an application"
+msgstr "चयन की फ़ाइल को परोग्राम द्वरा खोले"
+
+#: src/menu.h:201 src/menu.h:424
+msgid "_View File"
+msgstr "फ़ाइल को दिखाए (_V)"
+
+#: src/menu.h:201 src/menu.h:424
+msgid "View file with internal viewer"
+msgstr "फ़ाइल को अनदर मोजूद प्रोग्राम द्वरा दिखाए"
+
+#: src/menu.h:209
+msgid "Pass_word..."
+msgstr "गुपत अक्षर... (_w)"
+
+#: src/menu.h:220
+#, fuzzy
+msgid "by _Name"
+msgstr "नाम"
+
+#: src/menu.h:220
+msgid "Sort file list by name"
+msgstr "नाम के आधार पर फ़ाइल की लिस्ट को लगाए"
+
+#: src/menu.h:226
+#, fuzzy
+msgid "by _Size"
+msgstr "आकार"
+
+#: src/menu.h:226
+msgid "Sort file list by file size"
+msgstr "फ़ाइल की सूची को आकर के हिसाब से लगाए"
+
+#: src/menu.h:232
+#, fuzzy
+msgid "by T_ype"
+msgstr "प्रकार"
+
+#: src/menu.h:232
+msgid "Sort file list by type"
+msgstr "फ़ाइल लिस्ट को प्रकार के आधार पर ढीक से लगाए "
+
+#: src/menu.h:238
+msgid "by _Date modified"
+msgstr ""
+
+#: src/menu.h:238
+msgid "Sort file list by modification time"
+msgstr "फ़ाइल की लिस्ट को सामय जब इस का इस्त्माल हुआ है उस के अनुसार लगाए"
+
+#: src/menu.h:244
+#, fuzzy
+msgid "by _Location"
+msgstr "विकल्पों को लोड करे (_L)"
+
+#: src/menu.h:244
+#, fuzzy
+msgid "Sort file list by location"
+msgstr "फ़ाइल की लिस्ट को ढीक से लगाए"
+
+#: src/menu.h:261
+msgid "View All _Files"
+msgstr "सभी फ़ाइल दिखाए (_F)"
+
+#: src/menu.h:267
+msgid "View as a F_older"
+msgstr "फ़ोलडर के रूप मे देखे (_o)"
+
+#: src/menu.h:289
+msgid "_Reversed Order"
+msgstr "पीछे से (_R)"
+
+#: src/menu.h:289
+msgid "Reverse the list order"
+msgstr "पीछे से लिस्ट्को लगाए"
+
+#: src/menu.h:313
+msgid "_Toolbar"
+msgstr ""
+
+#: src/menu.h:313
+msgid "View the main toolbar"
+msgstr ""
+
+#: src/menu.h:319
+msgid "Stat_usbar"
+msgstr ""
+
+#: src/menu.h:319
+msgid "View the statusbar"
+msgstr ""
+
+#: src/menu.h:327
+#, fuzzy
+msgid "_Stop"
+msgstr "रोको"
+
+#: src/menu.h:327 src/toolbar.h:76
+msgid "Stop current operation"
+msgstr "कार्य को रोके"
+
+#: src/menu.h:333
+msgid "_Reload"
+msgstr ""
+
+#: src/menu.h:333
+#, fuzzy
+msgid "Reload current archive"
+msgstr "यह फ़ाइल(छोटि) को बान्द करे"
+
+#: src/menu.h:344
+#, fuzzy
+msgid "_Arrange Files"
+msgstr "सामय के अनुसार लगाए (_T)"
+
+#: src/menu.h:349
+#, fuzzy
+msgid "_Last Output"
+msgstr "पिछ्ले ओउटपुट को देखे"
+
+#: src/menu.h:349
+msgid "View the output produced by the last executed command"
+msgstr ""
+
+#: src/menu.h:362
+msgid "_Contents"
+msgstr ""
+
+#: src/menu.h:362
+msgid "Display the File Roller Manual"
+msgstr "फ़ाइल रोल्लर की पुस्तक दिखाए"
+
+#: src/menu.h:368
+#, fuzzy
+msgid "_About"
+msgstr "के बारे मे...(_A)"
+
+#: src/menu.h:368
+msgid "Information about the program"
+msgstr "परोग्राम के बारे मे जानकारि"
+
+#: src/menu.h:380
+#, fuzzy
+msgid "_Archive"
+msgstr "नइ छोटि फ़ाइल (_A)"
+
+#: src/menu.h:381
+#, fuzzy
+msgid "_Edit"
+msgstr "बाहर"
+
+#: src/menu.h:412
+#, fuzzy
+msgid "Open selected files with the standard application"
+msgstr "चयन की फ़ाइल को परोग्राम द्वरा खोले"
+
+#: src/menu.h:418
+#, fuzzy
+msgid "Open With..."
+msgstr "फ़ाइल को इसके द्वरा खोले (_O)"
+
+#: src/toolbar.h:48
 msgid "Open archive"
 msgstr "खोलो छोटी की फ़ाइल"
 
-#: src/toolbar.h:52
-msgid "Close"
-msgstr "बन्द करो"
+#: src/toolbar.h:56
+msgid "Add files to the archive"
+msgstr "फ़ाइल को जोडे (सिकुडी फ़ाइल मे)"
 
-#: src/toolbar.h:62
-msgid "Stop"
-msgstr "रोको"
-
-#: src/window.c:63
-msgid "Unknown type"
-msgstr "अन्जान प्रकार"
-
-#: src/window.c:621
-msgid "Folder"
-msgstr "फ़ोलडर"
-
-#: src/window.c:743
-msgid "[read only]"
-msgstr "[खाली पडने योग्य] "
-
-#: src/window.c:836
-#, c-format
-msgid "1 file (%s)"
-msgstr "1 फाइल (%s)"
-
-#: src/window.c:839
-#, c-format
-msgid "%d files (%s)"
-msgstr "%d फ़ाइलस(%s)"
-
-#: src/window.c:847
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "१ फ़ाइल का चयन किया(%s)"
-
-#: src/window.c:850
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d फ़ाइलस का चायन (%s)"
-
-#: src/window.c:1111
-msgid "Reading archive"
-msgstr "फ़ाइल(छोटि) को पडा जा राहा है"
-
-#: src/window.c:1114
-msgid "Deleting files from archive"
-msgstr "फ़ाइलस को छोटि की फ़ाइल से हटाया जा राहा है"
-
-#: src/window.c:1117
-msgid "Adding files to archive"
-msgstr "फ़ाइल को जोडा जा राहा है छोटि की फ़ाइल मे"
-
-#: src/window.c:1120
-msgid "Extracting files from archive"
-msgstr "छोटी की फ़ाइल को बडा किया जा रहा है"
-
-#: src/window.c:1123
-msgid "Testing archive"
-msgstr "फ़ाइल(छोटि) को जांचा जा रहा है"
-
-#: src/window.c:1128
-msgid "wait please..."
-msgstr "थोडी देर रुके...."
-
-#: src/window.c:1217
-msgid "Operation stopped"
-msgstr "कार्य रुक गया"
-
-#: src/window.c:1234
-msgid "An error occurred while extracting files."
-msgstr "फ़ाइल को बडा कारते समय मुश्किल आइ"
-
-#: src/window.c:1238
-msgid "An error occurred while loading the archive."
-msgstr "फ़ाइल(छोटि) को लोड करने मे परेशानी आइ"
-
-#: src/window.c:1242
-msgid "An error occurred while deleting files from the archive."
-msgstr "फ़ाइल(छोटि) मे से फ़ाइल हटाने मे परेशानी आइ"
-
-#: src/window.c:1246
-msgid "An error occurred while adding files to the archive."
-msgstr "छोटि की फ़ाइल मे और फ़ाइल जोडने मे परेशानी आइ"
-
-#: src/window.c:1250
-msgid "An error occurred while testing archive."
-msgstr "छोटि कि फ़ाइल को जांचने मे परेशानी आइ"
-
-#: src/window.c:1256
-msgid "Command not found."
-msgstr "कमांड नही मिला "
-
-#: src/window.c:1259
-msgid "Command exited abnormally."
-msgstr "कमांड ठीक तरह से बन्द नही हुआ"
-
-#: src/window.c:1538
-msgid "You don't have permissions to add files to this archive."
-msgstr "आपके पास फ़ाइल जोडने के अधिकार इस फ़ाइल(छोटि) के लिए नही है"
-
-#: src/window.c:1560
-msgid "You can't add an archive to itself."
-msgstr "आप फ़ाइल(छोटि) मे फ़ाइल(छोटि) को जोड नही सक्ति"
-
-#: src/window.c:1716
-msgid ""
-"Do you want to add this file to the current archive or open it as a new "
-"archive ?"
-msgstr "कया आप इस फ़ाइल को इस छोटि फ़ाइल मे जोडना चहाते है या इसे नइ छोटि फ़ाइल के रूप मे खोलना चाह्ते है?"
-
-#: src/window.c:1759
-msgid "Do you want to create a new archive with these files ?"
-msgstr "कया आप इन फ़ाइलो के साथ छोटि फ़ाइल बनाना चहाते है"
-
-#: src/window.c:1761
-msgid "Create Archive"
-msgstr "छोटि फ़ाइल को बनाए"
-
-#: src/window.c:2078
-msgid "Size"
-msgstr "आकार"
-
-#: src/window.c:2079
-msgid "Type"
-msgstr "प्रकार"
-
-#: src/window.c:2080
-msgid "Modified"
-msgstr "छेडा हुआ"
-
-#: src/window.c:2081
-msgid "Path"
-msgstr "रासता"
-
-#: src/window.c:2088
-msgid "Name"
-msgstr "नाम"
-
-#: src/window.c:2414
-msgid "_Up"
-msgstr "ऊपर (_U)"
-
-#. current location
-#: src/window.c:2436
-msgid "Current Location:"
-msgstr "मोजूदा स्थान:"
-
-#: src/window.c:2465
-msgid "Add"
-msgstr "जोडे"
-
-#: src/window.c:2476 src/window.c:2477
-msgid "Extract"
-msgstr "बडा करे"
-
-#: src/window.c:2487
+#: src/toolbar.h:68
 msgid "View"
 msgstr "दिखाओ"
 
-#: src/window.c:2488
-msgid "View File"
-msgstr "फ़ाइल को दिखाओ "
+#: src/toolbar.h:68
+#, fuzzy
+msgid "View selected file"
+msgstr "चुनी फ़ाइलस (_S)"
 
-#: src/window.c:2784
-msgid "File type not supported."
-msgstr "यह फ़ाइल फ़ाइल रोल्लर द्वारा लोड नही की जा सक्ति "
+#: src/toolbar.h:76
+msgid "Stop"
+msgstr "रोको"
 
-#: src/window.c:2951
-msgid "Cannot load archive."
-msgstr "छोटि  फ़ाइल को लोड नही कर पाए"
+#: src/window.c:682
+msgid "Folder"
+msgstr "फ़ोलडर"
 
-#: src/window.c:3319
-msgid "File Roller - Last output"
-msgstr "फ़ाइल रोल्लर - पिछला ओउटपुट"
+#: src/window.c:847
+msgid "[read only]"
+msgstr "[खाली पडने योग्य] "
 
-#: src/window.c:3783
+#: src/window.c:942
+#, fuzzy, c-format
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d फ़ाइलस(%s)"
+msgstr[1] "%d फ़ाइलस(%s)"
+
+#: src/window.c:947
+#, fuzzy, c-format
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d फ़ाइलस का चायन (%s)"
+msgstr[1] "%d फ़ाइलस का चायन (%s)"
+
+#: src/window.c:1363
+msgid "Reading archive"
+msgstr "फ़ाइल(छोटि) को पडा जा राहा है"
+
+#: src/window.c:1369
+msgid "Adding files to archive"
+msgstr "फ़ाइल को जोडा जा राहा है छोटि की फ़ाइल मे"
+
+#: src/window.c:1372
+msgid "Extracting files from archive"
+msgstr "छोटी की फ़ाइल को बडा किया जा रहा है"
+
+#: src/window.c:1375
+msgid "Testing archive"
+msgstr "फ़ाइल(छोटि) को जांचा जा रहा है"
+
+#: src/window.c:1378
+msgid "Getting the file list"
+msgstr ""
+
+#: src/window.c:1384
+msgid "wait please..."
+msgstr "थोडी देर रुके...."
+
+#: src/window.c:1441
+#, fuzzy, c-format
+msgid "Could not display the folder \"%s\""
+msgstr "मद्दत दिखाइ नही जा सकि: %s"
+
+#: src/window.c:1499
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+
+#: src/window.c:1501
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr ""
+
+#: src/window.c:1506
+msgid "Could not perform the operation"
+msgstr ""
+
+#: src/window.c:1521
+msgid "Operation stopped"
+msgstr "कार्य रुक गया"
+
+#: src/window.c:1542
+msgid "An error occurred while extracting files."
+msgstr "फ़ाइल को बडा कारते समय मुश्किल आइ"
+
+#: src/window.c:1546
+msgid "An error occurred while loading the archive."
+msgstr "फ़ाइल(छोटि) को लोड करने मे परेशानी आइ"
+
+#: src/window.c:1550
+msgid "An error occurred while deleting files from the archive."
+msgstr "फ़ाइल(छोटि) मे से फ़ाइल हटाने मे परेशानी आइ"
+
+#: src/window.c:1554
+msgid "An error occurred while adding files to the archive."
+msgstr "छोटि की फ़ाइल मे और फ़ाइल जोडने मे परेशानी आइ"
+
+#: src/window.c:1558
+msgid "An error occurred while testing archive."
+msgstr "छोटि कि फ़ाइल को जांचने मे परेशानी आइ"
+
+#: src/window.c:1567
+msgid "Command not found."
+msgstr "कमांड नही मिला "
+
+#: src/window.c:1570
+msgid "Command exited abnormally."
+msgstr "कमांड ठीक तरह से बन्द नही हुआ"
+
+#: src/window.c:1698
+msgid "Test Result"
+msgstr ""
+
+#: src/window.c:1931
+#, fuzzy
+msgid "You don't have the right permissions."
+msgstr "आप्के पास अधिकार नही है की आप उस फ़ोलडर मे फ़ाइल को बडा कर सके \"%s\""
+
+#: src/window.c:1968
+msgid "You can't add an archive to itself."
+msgstr "आप फ़ाइल(छोटि) मे फ़ाइल(छोटि) को जोड नही सक्ति"
+
+#: src/window.c:2145
+#, fuzzy
+msgid ""
+"Do you want to add this file to the current archive or open it as a new "
+"archive?"
+msgstr ""
+"कया आप इस फ़ाइल को इस छोटि फ़ाइल मे जोडना चहाते है या इसे नइ छोटि फ़ाइल के रूप मे "
+"खोलना चाह्ते है?"
+
+#: src/window.c:2182
+#, fuzzy
+msgid "Do you want to create a new archive with these files?"
+msgstr "कया आप इन फ़ाइलो के साथ छोटि फ़ाइल बनाना चहाते है"
+
+#: src/window.c:2185
+#, fuzzy
+msgid "Create _Archive"
+msgstr "छोटि फ़ाइल को बनाए"
+
+#: src/window.c:2509
+msgid "Size"
+msgstr "आकार"
+
+#: src/window.c:2510
+msgid "Type"
+msgstr "प्रकार"
+
+#: src/window.c:2511
+#, fuzzy
+msgid "Date Modified"
+msgstr "छेडा हुआ"
+
+#: src/window.c:2512
+#, fuzzy
+msgid "Location"
+msgstr "विकल्पों को लोड करे"
+
+#: src/window.c:2519
+msgid "Name"
+msgstr "नाम"
+
+#: src/window.c:3084
+msgid "Go to the previous visited location"
+msgstr ""
+
+#: src/window.c:3092
+msgid "Go to the next visited location"
+msgstr ""
+
+#: src/window.c:3100
+msgid "Go up one level"
+msgstr ""
+
+#: src/window.c:3108
+msgid "Go to the home location"
+msgstr ""
+
+#. current location
+#: src/window.c:3127
+#, fuzzy
+msgid "Location:"
+msgstr "मोजूदा स्थान:"
+
+#: src/window.c:3734
+#, fuzzy, c-format
+msgid "Could not open \"%s\""
+msgstr "मद्दत दिखाइ नही जा सकि: %s"
+
+#: src/window.c:3789
+#, fuzzy, c-format
+msgid "Could not save the archive \"%s\""
+msgstr "छोटी की फ़ाइल को इधर से ऊधर नही कर पाए"
+
+#: src/window.c:4649
+msgid "The new name is void."
+msgstr ""
+
+#: src/window.c:4649 src/window.c:4653 src/window.c:4662
+msgid "Please use a different name."
+msgstr ""
+
+#: src/window.c:4653
+msgid "The new name is equal to the old one."
+msgstr ""
+
+#: src/window.c:4662
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/window.c:4718
+msgid "New folder name"
+msgstr ""
+
+#: src/window.c:4718
+#, fuzzy
+msgid "New file name"
+msgstr "फ़ाइल का नाम (_N)"
+
+#: src/window.c:4739
+#, fuzzy
+msgid "Could not rename the folder"
+msgstr "पुरानी छोटी फ़ाइल को हटया नही जा सका"
+
+#: src/window.c:4739
+#, fuzzy
+msgid "Could not rename the file"
+msgstr "छोटी की फ़ाइल को इधर से ऊधर नही कर पाए"
+
+#: src/window.c:5367
 msgid "Add files to an archive"
 msgstr "नइ फ़ाइल को जोडे"
 
-#: src/window.c:3798
+#: src/window.c:5392
 msgid "Extract archive"
 msgstr "सिकुडि फ़ाइल को बडा करे"
+
