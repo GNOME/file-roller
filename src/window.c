@@ -3453,7 +3453,7 @@ window_archive_new (FRWindow   *window,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not create the archive"),
 						  _("Archive type not supported."),
-						  GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
 						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -3590,8 +3590,7 @@ window_archive_save_as (FRWindow      *window,
 						  GTK_STOCK_DIALOG_ERROR,
 						  message,
 						  _("Archive type not supported."),
-						  NULL,
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 		g_free (message);
 
