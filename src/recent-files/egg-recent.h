@@ -3,4 +3,3 @@
 #include "egg-recent-view.h"
 #include "egg-recent-view-bonobo.h"
 #include "egg-recent-view-gtk.h"
-#include "egg-recent-view-uimanager.h"

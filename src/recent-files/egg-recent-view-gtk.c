@@ -182,91 +182,108 @@ egg_recent_view_gtk_destroy_cb (gpointer data, GClosure *closure)
 }
 
 static GtkWidget *
+egg_recent_view_gtk_new_separator (EggRecentViewGtk *view)
+{
+	GtkWidget *retval;
+
+	g_return_val_if_fail (view, NULL);
+	
+	retval = gtk_separator_menu_item_new ();
+
+	/**
+	 * this is a tag so we can distinguish our menu items
+	 * from others that may be in the menu.
+	 */
+	g_object_set_data (G_OBJECT (retval),
+			   view->uid,
+			   GINT_TO_POINTER (1));
+
+
+	gtk_widget_show (retval);
+
+	return retval;
+}
+
+static GtkWidget *
 egg_recent_view_gtk_new_menu_item (EggRecentViewGtk *view,
 				   EggRecentItem *item,
 				   gint index)
 {
 	GtkWidget *menu_item;
-	EggRecentViewGtkMenuData *md=(EggRecentViewGtkMenuData *)g_malloc (sizeof (EggRecentViewGtkMenuData));
+	EggRecentViewGtkMenuData *md;
+	gchar *mime_type;
+	GtkWidget *image;
+	GdkPixbuf *pixbuf;
+	gchar *text;
+	gchar *short_name;
+	gchar *escaped;
 
 	g_return_val_if_fail (view, NULL);
+	g_return_val_if_fail (item, NULL);
 
-	if (item != NULL) {
-		gchar *mime_type;
-		GtkWidget *image;
-		GdkPixbuf *pixbuf;
-		gchar *text;
-		gchar *short_name;
-		gchar *escaped;
+	short_name = egg_recent_item_get_short_name (item);
+	if (!short_name)
+		return NULL;
 
-		short_name = egg_recent_item_get_short_name (item);
-		escaped = egg_recent_util_escape_underlines (short_name);
-		g_free (short_name);
+	escaped = egg_recent_util_escape_underlines (short_name);
+	g_free (short_name);
 
-		if (view->show_numbers) {
-			/* avoid having conflicting mnemonics */
-			if (index >= 10)
-				text = g_strdup_printf ("%d.  %s", index,
-							escaped);
-			else
-				text = g_strdup_printf ("_%d.  %s", index,
-							escaped);
-			g_free (escaped);
-		} else {
-			text = escaped;
-		}
+	if (view->show_numbers) {
+		/* avoid having conflicting mnemonics */
+		if (index >= 10)
+			text = g_strdup_printf ("%d.  %s", index,
+						escaped);
+		else
+			text = g_strdup_printf ("_%d.  %s", index,
+						escaped);
+		g_free (escaped);
+	} else {
+		text = escaped;
+	}
 
-
-		mime_type = egg_recent_item_get_mime_type (item);
+	mime_type = egg_recent_item_get_mime_type (item);
 #ifndef USE_STABLE_LIBGNOMEUI
-		{
-			int width, height;
-			gchar *uri;
+	{
+		int width, height;
+		gchar *uri;
 
-			gtk_icon_size_lookup_for_settings
-					(gtk_widget_get_settings (view->menu),
-					 view->icon_size,
-					 &width, &height);
+		gtk_icon_size_lookup_for_settings
+			(gtk_widget_get_settings (view->menu),
+			 view->icon_size,
+			 &width, &height);
 
-			uri = egg_recent_item_get_uri (item);
-			pixbuf = egg_recent_util_get_icon (view->theme, uri,
-							   mime_type,
-							   height);
-			g_free (uri);
-		}
+		uri = egg_recent_item_get_uri (item);
+		pixbuf = egg_recent_util_get_icon (view->theme, uri,
+						   mime_type,
+						   height);
+		g_free (uri);
+	}
 #else
-		pixbuf = NULL;
+	pixbuf = NULL;
 #endif
-		image = gtk_image_new_from_pixbuf (pixbuf);
-		if (pixbuf)
-			g_object_unref (pixbuf);
+	image = gtk_image_new_from_pixbuf (pixbuf);
+	if (pixbuf)
+		g_object_unref (pixbuf);
 
-		if (view->show_icons)
-			gtk_widget_show (image);
+	if (view->show_icons)
+		gtk_widget_show (image);
 
-		menu_item = gtk_image_menu_item_new_with_mnemonic (text);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),
-					       image);
+	menu_item = gtk_image_menu_item_new_with_mnemonic (text);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),
+				       image);
 
-		md->view = view;
-		md->item = item;
+	md = g_new0 (EggRecentViewGtkMenuData, 1);
+	md->view = view;
+	md->item = egg_recent_item_ref (item);
 
-		egg_recent_item_ref (md->item);
+	g_signal_connect_data (G_OBJECT (menu_item), "activate",
+			       G_CALLBACK (egg_recent_view_gtk_menu_cb),
+			       md,
+			       (GClosureNotify)egg_recent_view_gtk_destroy_cb,
+			       0);
 
-		g_signal_connect_data (G_OBJECT (menu_item), "activate",
-				 G_CALLBACK (egg_recent_view_gtk_menu_cb),
-				 md,
-				 (GClosureNotify)egg_recent_view_gtk_destroy_cb,
-				 0);
-
-		g_free (mime_type);
-		g_free (text);
-	}
-	else {
-		menu_item = gtk_separator_menu_item_new ();
-	}
-	
-	g_return_val_if_fail (menu_item, NULL);
+	g_free (mime_type);
+	g_free (text);
 
 	/**
 	 * this is a tag so we can distinguish our menu items
@@ -296,7 +313,10 @@ egg_recent_view_gtk_add_to_menu (EggRecentViewGtk *view,
 
 	menu_offset = egg_recent_view_gtk_find_menu_offset (view);
 
-	menu_item = egg_recent_view_gtk_new_menu_item (view, item, display);
+	if (item != NULL)
+		menu_item = egg_recent_view_gtk_new_menu_item (view, item, display);
+	else
+		menu_item = egg_recent_view_gtk_new_separator (view);
 
 	if (view->tooltip_func != NULL && menu_item != NULL) {
 		view->tooltip_func (view->tooltips, menu_item,
@@ -307,9 +327,6 @@ egg_recent_view_gtk_add_to_menu (EggRecentViewGtk *view,
 		gtk_menu_shell_insert (GTK_MENU_SHELL (view->menu), menu_item,
 			       menu_offset+index);
 }
-
-
-
 
 static void
 egg_recent_view_gtk_set_list (EggRecentViewGtk *view, GList *list)

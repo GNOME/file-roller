@@ -300,7 +300,8 @@ egg_recent_item_get_short_name (const EggRecentItem *item)
 		return NULL;
 
 	uri = gnome_vfs_uri_new (item->uri);
-	g_assert (uri != NULL); /* We already checked this in egg_recent_item_set_uri() */
+	if (uri == NULL)
+		return NULL;
 
 	short_name = gnome_vfs_uri_extract_short_name (uri);
 	valid = FALSE;
