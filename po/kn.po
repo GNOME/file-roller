@@ -6,39 +6,31 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: File-Roller.Gnome.Core-2.1\n"
-"POT-Creation-Date: 2002-12-12 05:57+0100\n"
-"PO-Revision-Date: 2002-12-20 16:35+0530\n"
-"Last-Translator: Pramod <rpramod@postmaster.co.uk>\n"
+"POT-Creation-Date: 2003-10-12 02:40+0200\n"
+"PO-Revision-Date: 2002-05-29 20:19+0530\n"
+"Last-Translator: Pramod.R <rpramod@postmasterr.co.uk>\n"
 "Language-Team: Kannada <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add To Archive..."
+msgid "Add to Archive..."
 msgstr ""
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract Here"
-msgstr "ಇಲ್ಲಿ ಅಯ್ದು ಹಾಕು..."
+msgid "Extract to..."
+msgstr "ಬೇರೆಕಡೆ ಅಯ್ದು ತೆಗೆ..."
 
 #: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract In A Sub-Folder"
-msgstr ""
-
-#: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract To..."
-msgstr "ಬೇರೆಕಡೆ ಅಯ್ದು ಹಾಕು..."
-
-#: component/File_Roller_Component.server.in.in.h:5
 msgid "File Roller Component add operations"
 msgstr ""
 
-#: component/File_Roller_Component.server.in.in.h:6
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr ""
 
-#: component/File_Roller_Component.server.in.in.h:7
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr ""
 
@@ -48,14 +40,12 @@ msgstr ""
 
 #. Create the application.
 #: file-roller.desktop.in.h:2
-#: src/gtk-utils.c:76
-#: src/gtk-utils.c:158
-#: src/gtk-utils.c:266
+#: src/gtk-utils.c:388
 #: src/main.c:101
-#: src/window.c:704
-#: src/window.c:713
-#: src/window.c:2382
-#: src/window.c:4084
+#: src/menu-callbacks.c:1076
+#: src/window.c:759
+#: src/window.c:1157
+#: src/window.c:2756
 msgid "File Roller"
 msgstr "ಫೈಲ್ ರೋಲರ್"
 
@@ -63,129 +53,170 @@ msgstr "ಫೈಲ್ ರೋಲರ್"
 msgid "Handle compressed archives"
 msgstr ""
 
-#: src/dlg-add.c:118
+#: src/dlg-add.c:113
+#: src/dlg-add.c:120
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr ""
 
-#: src/dlg-add.c:338
-#: src/file_roller.glade.h:8
-msgid "Add Files and Folders"
-msgstr ""
-
-#: src/dlg-add.c:343
-msgid "_Add only if newer"
-msgstr ""
-
-#: src/dlg-add.c:344
-msgid "_Include sub-folders"
-msgstr ""
-
-#: src/dlg-add.c:345
-msgid "Exclude folders that are symbolic lin_ks"
-msgstr ""
-
-#: src/dlg-add.c:346
-msgid "Exclude o_ther file systems"
-msgstr ""
-
-#: src/dlg-add.c:347
-msgid "Exclude _backup files (*~)"
-msgstr ""
-
-#: src/dlg-add.c:348
-msgid "Exclude _hidden files (.*)"
-msgstr ""
-
-#: src/dlg-add.c:349
-msgid "E_xclude files:"
+#: src/dlg-add.c:119
+#: src/window.c:1791
+#: src/window.c:1824
+msgid "Could not add the files to the archive"
 msgstr ""
 
 #: src/dlg-add.c:351
+#: src/file_roller.glade.h:5
+msgid "Add Files"
+msgstr "ಕಡತಗಳನ್ನು ಸೇರಿಸು"
+
+#: src/dlg-add.c:356
+msgid "_Add only if newer"
+msgstr ""
+
+#: src/dlg-add.c:357
+msgid "_Include subfolders"
+msgstr ""
+
+#: src/dlg-add.c:358
+msgid "Exclude folders that are symbolic lin_ks"
+msgstr ""
+
+#: src/dlg-add.c:359
+msgid "Exclude o_ther file systems"
+msgstr ""
+
+#: src/dlg-add.c:360
+msgid "Exclude _backup files (*~)"
+msgstr ""
+
+#: src/dlg-add.c:361
+msgid "Exclude _hidden files (.*)"
+msgstr ""
+
+#: src/dlg-add.c:362
+msgid "E_xclude files:"
+msgstr ""
+
+#: src/dlg-add.c:364
 msgid "example: *.o; *.bak"
 msgstr ""
 
-#: src/dlg-add.c:352
+#: src/dlg-add.c:365
 msgid "Igno_re case"
 msgstr ""
 
-#: src/dlg-add.c:353
+#: src/dlg-add.c:366
 msgid "_Load Options"
 msgstr "ಆಯ್ಕೆಗಳನ್ನು ಒದು"
 
-#: src/dlg-add.c:354
+#: src/dlg-add.c:367
 msgid "Sa_ve Options"
 msgstr "ಅಯ್ಕೆಗಳನ್ನು ಉಲಿಸು"
 
-#: src/dlg-add.c:609
+#: src/dlg-add.c:622
 msgid "Load Options"
 msgstr "ಆಯ್ಕೆಗಳನ್ನು ಒದು"
 
-#: src/dlg-add.c:758
+#: src/dlg-add.c:771
 msgid "Save Options"
 msgstr "ಅಯ್ಕೆಗಳನ್ನು ಉಲಿಸು"
 
 #: src/dlg-batch-add.c:99
+#: src/dlg-batch-add.c:125
+#: src/menu-callbacks.c:179
+#: src/menu-callbacks.c:198
+#: src/window.c:3437
+msgid "Could not create the archive"
+msgstr ""
+
+#: src/dlg-batch-add.c:100
+#: src/menu-callbacks.c:180
+#: src/menu-callbacks.c:375
+msgid "You have to specify an archive name."
+msgstr ""
+
+#: src/dlg-batch-add.c:126
+#: src/fr-archive.c:603
+#: src/window.c:3438
+#: src/window.c:3575
+msgid "Archive type not supported."
+msgstr ""
+
+#: src/dlg-batch-add.c:146
 #: src/dlg-extract.c:120
-#: src/window.c:3144
+#: src/window.c:3763
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr ""
 
-#: src/dlg-batch-add.c:101
-#: src/dlg-extract.c:122
-#: src/window.c:3146
+#: src/dlg-batch-add.c:149
+#: src/dlg-extract.c:123
+#: src/window.c:3766
 msgid "Create _Folder"
 msgstr ""
 
-#: src/dlg-batch-add.c:121
+#: src/dlg-batch-add.c:164
+#: src/dlg-extract.c:139
+#: src/window.c:3782
 #, c-format
-msgid "Could not create the destination folder: %s.\n"
-"Addition not performed."
+msgid "Could not create the destination folder: %s."
 msgstr ""
 
-#: src/dlg-batch-add.c:138
-msgid "Addition not performed."
+#: src/dlg-batch-add.c:168
+#: src/dlg-batch-add.c:190
+msgid "Addition not performed"
 msgstr ""
 
-#. Set widgets data.
-#: src/dlg-batch-add.c:202
+#: src/dlg-batch-add.c:270
 #, c-format
-msgid "Adding %u files"
+msgid "Files to add: %d"
 msgstr ""
 
-#: src/dlg-extract.c:142
-#: src/window.c:3166
+#: src/dlg-batch-add.c:272
 #, c-format
-msgid "Could not create the destination folder: %s.\n"
-"Extraction not performed."
+msgid "Folders to add: %d"
 msgstr ""
 
-#: src/dlg-extract.c:157
-#: src/window.c:3181
-msgid "Extraction not performed."
+#: src/dlg-extract.c:143
+#: src/dlg-extract.c:162
+#: src/dlg-extract.c:186
+#: src/window.c:3786
+#: src/window.c:3805
+msgid "Extraction not performed"
 msgstr ""
 
-#: src/dlg-extract.c:176
+#: src/dlg-extract.c:181
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr ""
 
-#: src/dlg-extract.c:397
-#: src/dlg-preferences.c:128
-#: src/menu-callbacks.c:751
-#, c-format
-msgid "Could not display help: %s"
+#: src/dlg-extract.c:423
+#: src/dlg-preferences.c:125
+#: src/menu-callbacks.c:1035
+msgid "Could not display help"
 msgstr ""
 
-#: src/dlg-extract.c:486
+#: src/dlg-extract.c:502
+msgid "Actions"
+msgstr "ಕಾರ್ಯಗಳು"
+
+#: src/dlg-extract.c:503
+msgid "Destination folder"
+msgstr ""
+
+#: src/dlg-extract.c:504
+msgid "Files"
+msgstr "ಕಡತಗಳು"
+
+#: src/dlg-extract.c:533
 msgid "Bookmarks"
 msgstr "ಪುಟ ಗುರುತುಗಳು"
 
-#: src/dlg-preferences.c:186
+#: src/dlg-preferences.c:182
 msgid "General"
 msgstr "ಸಾಮಾನ್ಯ"
 
-#: src/dlg-preferences.c:191
+#: src/dlg-preferences.c:187
 msgid "Visible columns"
 msgstr ""
 
@@ -226,7 +257,7 @@ msgstr "ಗೊತ್ತಾಗದ ವರ್ಗ"
 msgid "Symbolic link"
 msgstr "ಸಮೀಪ ಮಾರ್ಗ"
 
-#: src/file-utils.c:534
+#: src/file-utils.c:535
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr ""
 
@@ -240,117 +271,104 @@ msgid "*"
 msgstr "*"
 
 #: src/file_roller.glade.h:3
-msgid "<b>Actions</b>"
-msgstr "<b>ಕಾರ್ಯಗಳು</b>"
-
-#: src/file_roller.glade.h:4
-msgid "<b>Destination folder</b>"
-msgstr ""
-
-#: src/file_roller.glade.h:5
-msgid "<b>Files</b>"
-msgstr "<b>ಕಡತಗಳು</b>"
-
-#: src/file_roller.glade.h:6
 msgid "A_dd to Bookmarks"
 msgstr ""
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:4
 msgid "A_vailable application:"
 msgstr ""
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr ""
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:7
 msgid "Add only if _newer"
 msgstr ""
 
-#: src/file_roller.glade.h:11
-#: src/menu.h:464
+#: src/file_roller.glade.h:8
 msgid "Delete Files"
 msgstr ""
 
-#: src/file_roller.glade.h:12
+#: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
 msgstr ""
 
-#: src/file_roller.glade.h:13
-#: src/window.c:2603
+#: src/file_roller.glade.h:10
+#: src/window.c:2994
 msgid "Extract"
 msgstr "ಆಯ್ದು ತೆಗೆ"
 
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:11
 msgid "Extract to"
 msgstr "ಬೇರೆಕಡೆ ಅಯ್ದು ಹಾಕು"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:12
 msgid "Note: the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted."
 msgstr ""
 
-#: src/file_roller.glade.h:16
+#: src/file_roller.glade.h:13
 msgid "Open Files"
-msgstr ""
+msgstr "ಕಡತಗಳನ್ನು ತೆಗೆ"
 
-#: src/file_roller.glade.h:17
+#: src/file_roller.glade.h:14
 msgid "Open with an _application"
 msgstr ""
 
-#: src/file_roller.glade.h:18
+#: src/file_roller.glade.h:15
 msgid "Over_write existing files"
 msgstr ""
 
-#: src/file_roller.glade.h:19
+#: src/file_roller.glade.h:16
 msgid "Password"
+msgstr "ಪ್ರವೇಶ ಪದ"
+
+#: src/file_roller.glade.h:17
+msgid "R_e-create folders"
 msgstr ""
 
-#: src/file_roller.glade.h:20
+#: src/file_roller.glade.h:18
 msgid "R_ecent applications:"
 msgstr ""
 
-#: src/file_roller.glade.h:21
-msgid "R_ecreate folders"
+#: src/file_roller.glade.h:19
+msgid "Select Archive"
 msgstr ""
 
-#: src/file_roller.glade.h:22
-msgid "Select archive"
-msgstr ""
-
-#: src/file_roller.glade.h:23
-#: src/menu.h:450
+#: src/file_roller.glade.h:20
+#: src/menu.h:429
 msgid "View File"
-msgstr ""
+msgstr "ಕಡತವನ್ನು ವೀಕ್ಷಿಸು"
 
-#: src/file_roller.glade.h:24
+#: src/file_roller.glade.h:21
 msgid "View with internal _viewer"
 msgstr ""
 
-#: src/file_roller.glade.h:25
+#: src/file_roller.glade.h:22
 msgid "_All files"
 msgstr "ಎಲ್ಲ ಕಡತಗಳು"
 
-#: src/file_roller.glade.h:26
+#: src/file_roller.glade.h:23
 msgid "_Application:"
 msgstr "ಅನ್ವಯ:"
 
-#: src/file_roller.glade.h:27
+#: src/file_roller.glade.h:24
 msgid "_Files:"
 msgstr "ಕಡತಗಳು:"
 
-#: src/file_roller.glade.h:28
+#: src/file_roller.glade.h:25
 msgid "_Password:"
 msgstr "ಪ್ರವೇಶ ಪದ:"
 
-#: src/file_roller.glade.h:29
+#: src/file_roller.glade.h:26
 msgid "_Selected files"
 msgstr "ಅಯ್ದ ಕಡತಗಳು"
 
-#: src/file_roller.glade.h:30
+#: src/file_roller.glade.h:27
 msgid "_View destination folder after extraction"
 msgstr ""
 
-#: src/file_roller.glade.h:31
+#: src/file_roller.glade.h:28
 msgid "example: *.txt; *.doc"
 msgstr ""
 
@@ -359,58 +377,73 @@ msgid "Compression _level:"
 msgstr ""
 
 #: src/file_roller_prop.glade.h:3
-msgid "Fast"
-msgstr "ವೇಗ"
+msgid "Date _modified"
+msgstr "ಬದಲಾಯಿಸಲಾದ ದಿನಾಂಕ"
 
 #: src/file_roller_prop.glade.h:4
 msgid "File Roller Preferences"
 msgstr ""
 
 #: src/file_roller_prop.glade.h:5
-msgid "File _name"
-msgstr "ಕಡತದ ಹೆಸರು"
-
-#: src/file_roller_prop.glade.h:6
-msgid "File _path"
-msgstr "ಕಡತದ ಮಾರ್ಗ"
-
-#: src/file_roller_prop.glade.h:7
-msgid "File _size"
-msgstr "ಕಡತದ ಗಾತ್ರ"
-
-#: src/file_roller_prop.glade.h:8
-msgid "File _type"
-msgstr "ಕಡತದ ವರ್ಗ:"
-
-#: src/file_roller_prop.glade.h:9
-msgid "Maximum (slowest)"
+msgid "Low"
 msgstr ""
 
-#: src/file_roller_prop.glade.h:10
+#: src/file_roller_prop.glade.h:6
+msgid "Maximum (slow)"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:7
+msgid "Minimum (fast)"
+msgstr ""
+
+#: src/file_roller_prop.glade.h:8
 msgid "Normal"
 msgstr "ಸಾಮಾನ್ಯ"
 
+#: src/file_roller_prop.glade.h:9
+msgid "_Location"
+msgstr "ಸ್ಥಳ"
+
+#: src/file_roller_prop.glade.h:10
+msgid "_Size"
+msgstr "ಗಾತ್ರ"
+
 #: src/file_roller_prop.glade.h:11
-msgid "Very fast"
-msgstr "ಅತಿ ವೇಗ"
+msgid "_Type"
+msgstr "ವರ್ಗ"
 
-#: src/file_roller_prop.glade.h:12
-msgid "_Modification time"
-msgstr "ಬದಲಾಯಿಸಿದ ಸಮಯ"
-
-#: src/file_roller_prop.glade.h:13
-msgid "_Recent archives:"
+#: src/fr-archive.c:578
+msgid "The file does not exist."
 msgstr ""
 
-#: src/gconf-utils.c:98
-#, c-format
-msgid "GConf error:\n"
-"  %s"
+#: src/fr-command-tar.c:219
+msgid "Adding file: "
+msgstr ""
+
+#: src/fr-command-tar.c:265
+msgid "Removing file: "
+msgstr ""
+
+#: src/fr-command-tar.c:274
+#: src/window.c:1253
+msgid "Deleting files from archive"
+msgstr ""
+
+#: src/fr-command-tar.c:307
+msgid "Extracting file: "
+msgstr ""
+
+#: src/fr-command-tar.c:352
+msgid "Recompressing archive"
+msgstr ""
+
+#: src/fr-command-tar.c:486
+msgid "Decompressing archive"
 msgstr ""
 
 #. Button
-#: src/gtk-utils.c:297
-msgid "Command _line output"
+#: src/gtk-utils.c:419
+msgid "Command _Line Output"
 msgstr ""
 
 #: src/main.c:59
@@ -446,447 +479,445 @@ msgstr ""
 msgid "Create destination folder without asking confirmation"
 msgstr ""
 
-#: src/menu-callbacks.c:107
+#: src/menu-callbacks.c:108
 msgid "Automatic"
 msgstr ""
 
-#: src/menu-callbacks.c:108
-msgid "Ear (.ear)"
-msgstr ""
-
 #: src/menu-callbacks.c:109
-msgid "Jar (.jar)"
+msgid "Arj (.arj)"
 msgstr ""
 
 #: src/menu-callbacks.c:110
-msgid "Lha (.lzh)"
+msgid "Ear (.ear)"
 msgstr ""
 
 #: src/menu-callbacks.c:111
-msgid "Rar (.rar)"
+msgid "Jar (.jar)"
 msgstr ""
 
 #: src/menu-callbacks.c:112
-msgid "Tar uncompressed (.tar)"
+msgid "Lha (.lzh)"
 msgstr ""
 
 #: src/menu-callbacks.c:113
-msgid "Tar compressed with bzip (.tar.bz)"
+msgid "Rar (.rar)"
 msgstr ""
 
 #: src/menu-callbacks.c:114
-msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgid "Tar uncompressed (.tar)"
 msgstr ""
 
 #: src/menu-callbacks.c:115
-msgid "Tar compressed with gzip (.tar.gz)"
+msgid "Tar compressed with bzip (.tar.bz)"
 msgstr ""
 
 #: src/menu-callbacks.c:116
-msgid "Tar compressed with lzop (.tar.lzo)"
+msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr ""
 
 #: src/menu-callbacks.c:117
-msgid "Tar compressed with compress (.tar.Z)"
+msgid "Tar compressed with gzip (.tar.gz)"
 msgstr ""
 
 #: src/menu-callbacks.c:118
-msgid "War (.war)"
+msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr ""
 
 #: src/menu-callbacks.c:119
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr ""
+
+#: src/menu-callbacks.c:120
+msgid "War (.war)"
+msgstr ""
+
+#: src/menu-callbacks.c:121
 msgid "Zip (.zip)"
 msgstr ""
 
-#: src/menu-callbacks.c:175
+#: src/menu-callbacks.c:122
+msgid "Zoo (.zoo)"
+msgstr ""
+
+#: src/menu-callbacks.c:199
+#: src/menu-callbacks.c:394
 msgid "You don't have permission to create an archive in this folder"
 msgstr ""
 
-#: src/menu-callbacks.c:193
-#: src/menu-callbacks.c:420
-#: src/menu-callbacks.c:590
-msgid "Archive already exists.  Do you want to overwrite it?"
+#: src/menu-callbacks.c:228
+#: src/menu-callbacks.c:414
+#: src/menu-callbacks.c:633
+#: src/menu-callbacks.c:811
+msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr ""
 
-#: src/menu-callbacks.c:195
-#: src/menu-callbacks.c:422
-#: src/menu-callbacks.c:592
+#: src/menu-callbacks.c:231
+#: src/menu-callbacks.c:417
+#: src/menu-callbacks.c:636
+#: src/menu-callbacks.c:814
 msgid "Overwrite"
 msgstr ""
 
-#: src/menu-callbacks.c:212
-msgid "Could not delete old archive."
+#: src/menu-callbacks.c:247
+#: src/menu-callbacks.c:433
+msgid "Could not delete the old archive."
 msgstr ""
 
-#: src/menu-callbacks.c:253
+#: src/menu-callbacks.c:292
 msgid "New Archive"
 msgstr ""
 
-#: src/menu-callbacks.c:265
+#: src/menu-callbacks.c:310
+#: src/menu-callbacks.c:472
 msgid "Archive type:"
 msgstr ""
 
-#: src/menu-callbacks.c:336
+#: src/menu-callbacks.c:374
+#: src/menu-callbacks.c:393
+msgid "Could not save the archive"
+msgstr ""
+
+#: src/menu-callbacks.c:460
+msgid "Save Archive"
+msgstr ""
+
+#: src/menu-callbacks.c:542
 msgid "Open Archive"
 msgstr ""
 
-#: src/menu-callbacks.c:445
-msgid "Could not copy archive"
+#: src/menu-callbacks.c:658
+msgid "Could not copy the archive"
 msgstr ""
 
-#: src/menu-callbacks.c:461
-msgid "Could not move archive"
+#: src/menu-callbacks.c:676
+msgid "Could not move the archive"
 msgstr ""
 
-#: src/menu-callbacks.c:483
-msgid "Copy archive"
+#: src/menu-callbacks.c:703
+msgid "Copy Archive"
 msgstr ""
 
-#: src/menu-callbacks.c:483
-msgid "Move archive"
+#: src/menu-callbacks.c:703
+msgid "Move Archive"
 msgstr ""
 
-#: src/menu-callbacks.c:561
+#: src/menu-callbacks.c:781
+msgid "Rename Archive"
+msgstr ""
+
+#: src/menu-callbacks.c:782
 msgid "New archive name (without extension)"
 msgstr ""
 
-#: src/menu-callbacks.c:565
-#: src/menu.h:97
+#: src/menu-callbacks.c:786
 msgid "_Rename"
 msgstr ""
 
-#: src/menu-callbacks.c:629
-msgid "Archive will be deleted, are you sure?"
+#: src/menu-callbacks.c:896
+msgid "The archive cannot be moved to the Trash. Do you want to delete it permanently?"
 msgstr ""
 
-#: src/menu-callbacks.c:780
+#: src/menu-callbacks.c:1068
 msgid "translator_credits"
 msgstr ""
 
-#: src/menu-callbacks.c:790
-msgid "Copyright (C) 2001 Free Software Foundation, Inc."
-msgstr ""
-
-#: src/menu-callbacks.c:791
+#: src/menu-callbacks.c:1079
 msgid "An archive manager for GNOME."
 msgstr ""
 
-#: src/menu.h:67
+#: src/menu-callbacks.c:1228
+#: src/window.c:4126
+msgid "Last Output"
+msgstr ""
+
+#: src/menu.h:69
 msgid "_New"
 msgstr "ಹೊಸ"
 
-#: src/menu.h:67
+#: src/menu.h:70
 #: src/toolbar.h:39
 msgid "Create a new archive"
 msgstr ""
 
-#: src/menu.h:73
-msgid "_Open..."
-msgstr "ತೆಗೆ..."
-
-#: src/menu.h:73
-msgid "Open an existing archive"
-msgstr ""
-
-#: src/menu.h:78
+#: src/menu.h:75
 msgid "Open R_ecent"
 msgstr ""
 
-#: src/menu.h:83
+#: src/menu.h:84
 msgid "Open Fi_les..."
 msgstr "ಕಡತಗಳನ್ನು ತೆಗೆ..."
 
-#: src/menu.h:83
+#: src/menu.h:84
 msgid "Open selected files with an application"
 msgstr ""
 
-#: src/menu.h:89
+#: src/menu.h:90
 msgid "_View File"
 msgstr "ಕಡತವನ್ನು ವೀಕ್ಷಿಸು"
 
-#: src/menu.h:89
-#: src/menu.h:450
+#: src/menu.h:90
+#: src/menu.h:429
 msgid "View file with internal viewer"
 msgstr ""
 
-#: src/menu.h:97
+#: src/menu.h:98
+msgid "_Rename..."
+msgstr "ಹೆಸರು ಬದಲಾಯಿಸು..."
+
+#: src/menu.h:98
 msgid "Rename current archive"
 msgstr ""
 
-#: src/menu.h:103
-msgid "Cop_y"
-msgstr "ನಕಲಿಸು"
+#: src/menu.h:104
+msgid "Cop_y..."
+msgstr "ನಕಲಿಸು..."
 
-#: src/menu.h:103
+#: src/menu.h:104
 msgid "Copy current archive to another folder"
 msgstr ""
 
-#: src/menu.h:109
-msgid "_Move"
+#: src/menu.h:110
+msgid "_Move..."
 msgstr "ಜರಗಿಸು"
 
-#: src/menu.h:109
+#: src/menu.h:110
 msgid "Move current archive to another folder"
 msgstr ""
 
-#: src/menu.h:115
-#: src/menu.h:170
-msgid "_Delete"
-msgstr "ಅಳಿಸು"
-
-#: src/menu.h:115
-msgid "Delete current archive from disk"
+#: src/menu.h:116
+msgid "Move to _Trash"
 msgstr ""
 
-#: src/menu.h:123
+#: src/menu.h:116
+msgid "Move current archive to trash"
+msgstr ""
+
+#: src/menu.h:122
+msgid "_Test"
+msgstr "ಪರೀಕ್ಷಿಸು"
+
+#: src/menu.h:122
+msgid "Test whether the archive contains errors"
+msgstr ""
+
+#: src/menu.h:130
 msgid "_Properties"
 msgstr "ಲಕ್ಷಣಗಳು"
 
-#: src/menu.h:123
+#: src/menu.h:130
 msgid "Show archive properties"
 msgstr ""
 
-#: src/menu.h:131
-msgid "_Close"
-msgstr "ಮುಚ್ಚು"
-
-#: src/menu.h:131
-msgid "Close current archive"
-msgstr ""
-
-#: src/menu.h:137
-msgid "E_xit"
-msgstr "ಆಚೆ ಬಾ"
-
-#: src/menu.h:137
-msgid "Exit"
-msgstr "ಆಚೆ ಬಾ"
-
-#: src/menu.h:164
+#: src/menu.h:162
+#: src/menu.h:437
 msgid "Add _Files..."
 msgstr "ಕಡತಗಳನ್ನು ಸೇರಿಸು"
 
-#: src/menu.h:164
-#: src/menu.h:458
-#: src/window.c:2593
+#: src/menu.h:162
+#: src/menu.h:437
+#: src/window.c:2984
 msgid "Add files to the archive"
 msgstr ""
 
-#: src/menu.h:170
+#: src/menu.h:168
+msgid "_Delete Files..."
+msgstr "ಕಡತಗಳನ್ನು ಅಳಿಸು..."
+
+#: src/menu.h:168
 msgid "Delete selected files and folders from the archive"
 msgstr ""
 
-#: src/menu.h:176
+#: src/menu.h:174
+#: src/menu.h:449
 msgid "_Extract to..."
 msgstr "ಬೇರೆಕಡೆ ಅಯ್ದು ಹಾಕು..."
 
-#: src/menu.h:176
-#: src/menu.h:470
-#: src/window.c:2604
+#: src/menu.h:174
+#: src/menu.h:449
+#: src/window.c:2995
 msgid "Extract files from the archive"
 msgstr ""
 
-#: src/menu.h:190
-msgid "_Test Archive"
-msgstr ""
-
-#: src/menu.h:206
+#: src/menu.h:198
+#: src/menu.h:457
 msgid "Select _All"
 msgstr "ಎಲ್ಲವನ್ನು ಆಯ್ಕೆಮಾಡು"
 
-#: src/menu.h:206
+#: src/menu.h:198
+#: src/menu.h:457
 msgid "Select all files"
 msgstr "ಎಲ್ಲ ಕಡತಗಳನ್ನು ಆಯ್ಕೆಮಾಡು"
 
-#: src/menu.h:212
+#: src/menu.h:204
+#: src/menu.h:463
 msgid "Dese_lect All"
 msgstr ""
 
-#: src/menu.h:212
+#: src/menu.h:204
+#: src/menu.h:463
 msgid "Deselect all files"
 msgstr ""
 
-#: src/menu.h:220
+#: src/menu.h:212
 msgid "Pass_word..."
 msgstr "ಪ್ರವೇಶ ಪದ"
 
-#: src/menu.h:228
+#: src/menu.h:220
 msgid "_Preferences"
 msgstr "ಇಚ್ಛೆಗಳು"
 
-#: src/menu.h:239
+#: src/menu.h:220
+msgid "Edit File Roller preferences"
+msgstr ""
+
+#: src/menu.h:231
 msgid "by _Name"
 msgstr "ಹೆಸರಿನ ಮೇಲೆ"
 
-#: src/menu.h:239
+#: src/menu.h:231
 msgid "Sort file list by name"
 msgstr ""
 
-#: src/menu.h:245
+#: src/menu.h:237
 msgid "by _Size"
 msgstr "ಗಾತ್ರದ ಮೇಲೆ"
 
-#: src/menu.h:245
+#: src/menu.h:237
 msgid "Sort file list by file size"
 msgstr ""
 
-#: src/menu.h:251
+#: src/menu.h:243
 msgid "by T_ype"
 msgstr "ಶೈಲಿಯ ಮೇಲೆ"
 
-#: src/menu.h:251
+#: src/menu.h:243
 msgid "Sort file list by type"
 msgstr ""
 
-#: src/menu.h:257
-msgid "by _Time"
-msgstr "ಸಮಯದ ಮೇಲೆ"
+#: src/menu.h:249
+msgid "by _Date modified"
+msgstr ""
 
-#: src/menu.h:257
+#: src/menu.h:249
 msgid "Sort file list by modification time"
 msgstr ""
 
-#: src/menu.h:263
-msgid "by _Path"
-msgstr "ಮಾರ್ಗದ ಮೇಲೆ"
-
-#: src/menu.h:263
-msgid "Sort file list by path"
+#: src/menu.h:255
+msgid "by _Location"
 msgstr ""
 
-#: src/menu.h:280
+#: src/menu.h:255
+msgid "Sort file list by location"
+msgstr ""
+
+#: src/menu.h:272
 msgid "View All _Files"
 msgstr "ಎಲ್ಲ ಕಡತಗಳನ್ನು ವೀಕ್ಷಿಸು"
 
-#: src/menu.h:286
+#: src/menu.h:278
 msgid "View as a F_older"
 msgstr ""
 
-#: src/menu.h:308
+#: src/menu.h:300
 msgid "_Reversed Order"
 msgstr ""
 
-#: src/menu.h:308
+#: src/menu.h:300
 msgid "Reverse the list order"
 msgstr ""
 
-#: src/menu.h:332
+#: src/menu.h:325
 msgid "_Toolbar"
 msgstr "ಉಪಕರಣ ಪಟ್ಟಿ"
 
-#: src/menu.h:332
+#: src/menu.h:325
 msgid "View the main toolbar"
 msgstr "ಮುಖ್ಯ ಉಪಕರಣ ಪಟ್ಟಿಯನ್ನು ವೀಕ್ಷಿಸು"
 
-#: src/menu.h:338
+#: src/menu.h:331
 msgid "Stat_usbar"
 msgstr "ಸ್ಥಿತಿ ಪಟ್ಟಿಕೆ"
 
-#: src/menu.h:338
+#: src/menu.h:331
 msgid "View the statusbar"
 msgstr "ಸ್ಥಿತಿ ಪಟ್ಟಿಕೆಯನ್ನು ವೀಕ್ಷಿಸು"
 
-#: src/menu.h:346
+#: src/menu.h:339
 msgid "_Stop"
 msgstr "ನಿಲ್ಲಿಸು"
 
-#: src/menu.h:346
+#: src/menu.h:339
 #: src/toolbar.h:55
 msgid "Stop current operation"
 msgstr ""
 
-#: src/menu.h:352
+#: src/menu.h:345
 msgid "_Reload"
 msgstr "ಮತ್ತೆ ತುಂಬು"
 
-#: src/menu.h:352
+#: src/menu.h:345
 msgid "Reload current archive"
 msgstr ""
 
-#: src/menu.h:363
+#: src/menu.h:356
 msgid "_Arrange Files"
 msgstr ""
 
-#: src/menu.h:368
+#: src/menu.h:361
 msgid "_Last Output"
 msgstr ""
 
-#: src/menu.h:381
+#: src/menu.h:361
+msgid "View the output produced by the last executed command"
+msgstr ""
+
+#: src/menu.h:367
 msgid "New _Window"
 msgstr "ಹೊಸ ಕಿಟಕಿ"
 
-#: src/menu.h:381
+#: src/menu.h:367
 msgid "Open a new window"
 msgstr "ಹೊಸ ಕಿಟಕಿಯನ್ನು ತೆಗೆ"
 
-#: src/menu.h:387
-msgid "Clo_se Window"
-msgstr "ಕಿಟಿಕಿಯನ್ನು ಮುಚ್ಚು"
-
-#: src/menu.h:387
-msgid "Close this window"
-msgstr "ಈ ಕಿಟಿಕಿಯನ್ನು ಮುಚ್ಚು"
-
-#: src/menu.h:400
-msgid "_Manual"
+#: src/menu.h:380
+msgid "_Contents"
 msgstr ""
 
-#: src/menu.h:400
+#: src/menu.h:380
 msgid "Display the File Roller Manual"
 msgstr ""
 
-#: src/menu.h:406
+#: src/menu.h:386
 msgid "_About"
 msgstr "ತಂತ್ರಾಂಶದ ಬಗ್ಗೆ"
 
-#: src/menu.h:406
+#: src/menu.h:386
 msgid "Information about the program"
 msgstr ""
 
-#: src/menu.h:418
-msgid "_File"
-msgstr "ಕಡತ"
+#: src/menu.h:398
+msgid "_Archive"
+msgstr ""
 
-#: src/menu.h:419
+#: src/menu.h:399
 msgid "_Edit"
 msgstr "ಸಂಸ್ಕರಿಸು"
 
-#: src/menu.h:420
+#: src/menu.h:400
 msgid "_View"
 msgstr "ನೋಟ"
 
-#: src/menu.h:421
-msgid "_Windows"
-msgstr "ಕಿಟಕಿಗಳು"
-
-#: src/menu.h:444
+#: src/menu.h:423
 msgid "Open Files..."
 msgstr "ಕಡತಗಳನ್ನು ತೆಗೆ..."
 
-#: src/menu.h:458
-msgid "Add Files..."
-msgstr "ಕಡತಗಳನ್ನು ಸೇರಿಸು..."
+#: src/menu.h:443
+msgid "_Delete Files"
+msgstr "ಕಡತಗಳನ್ನು ಅಳಿಸು"
 
-#: src/menu.h:464
+#: src/menu.h:443
 msgid "Delete files from the archive"
 msgstr ""
-
-#: src/menu.h:470
-msgid "Extract to..."
-msgstr "ಬೇರೆಕಡೆ ಅಯ್ದು ತೆಗೆ..."
-
-#: src/menu.h:478
-msgid "Select All"
-msgstr "ಎಲ್ಲಾ ಅಯ್ಕೆಮಾಡು"
-
-#: src/recent-files/egg-recent-vfs-utils.c:90
-msgid " (invalid Unicode)"
-msgstr "(ತಪ್ಪು ಯುನಿಕೋಡ್)"
-
-#: src/recent-files/egg-recent-view-bonobo.c:193
-#, c-format
-msgid "Open %s"
-msgstr "ತೆಗೆ %s"
 
 #: src/toolbar.h:39
 msgid "New"
@@ -904,168 +935,175 @@ msgstr ""
 msgid "Stop"
 msgstr "ನಿಲ್ಲಿಸು"
 
-#: src/window.c:568
+#: src/window.c:618
 msgid "Folder"
 msgstr "ಕಡತ ಕೋಶ"
 
-#: src/window.c:712
+#: src/window.c:767
 msgid "[read only]"
 msgstr "(ಓದಳು ಮಾತ್ರ ಹಕ್ಕಿದೆ)"
 
-#: src/window.c:806
+#: src/window.c:862
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 ಕಡತ (%s)"
 
-#: src/window.c:809
+#: src/window.c:865
 #, c-format
 msgid "%d files (%s)"
 msgstr "%d ಕಡತಗಳು (%s)"
 
-#: src/window.c:817
+#: src/window.c:873
 #, c-format
 msgid "1 file selected (%s)"
 msgstr ""
 
-#: src/window.c:820
+#: src/window.c:876
 #, c-format
 msgid "%d files selected (%s)"
 msgstr ""
 
-#: src/window.c:1109
+#: src/window.c:1250
 msgid "Reading archive"
 msgstr ""
 
-#: src/window.c:1112
-msgid "Deleting files from archive"
-msgstr ""
-
-#: src/window.c:1115
+#: src/window.c:1256
 msgid "Adding files to archive"
 msgstr ""
 
-#: src/window.c:1118
+#: src/window.c:1259
 msgid "Extracting files from archive"
 msgstr ""
 
-#: src/window.c:1121
+#: src/window.c:1262
 msgid "Testing archive"
 msgstr ""
 
-#: src/window.c:1127
+#: src/window.c:1265
+msgid "Getting the file list"
+msgstr ""
+
+#: src/window.c:1271
 msgid "wait please..."
 msgstr ""
 
-#: src/window.c:1213
+#: src/window.c:1332
+#, c-format
+msgid "Could not display the folder \"%s\""
+msgstr ""
+
+#: src/window.c:1389
 msgid "Operation stopped"
 msgstr ""
 
-#: src/window.c:1231
+#: src/window.c:1410
 msgid "An error occurred while extracting files."
 msgstr ""
 
-#: src/window.c:1235
+#: src/window.c:1414
 msgid "An error occurred while loading the archive."
 msgstr ""
 
-#: src/window.c:1239
+#: src/window.c:1418
 msgid "An error occurred while deleting files from the archive."
 msgstr ""
 
-#: src/window.c:1243
+#: src/window.c:1422
 msgid "An error occurred while adding files to the archive."
 msgstr ""
 
-#: src/window.c:1247
+#: src/window.c:1426
 msgid "An error occurred while testing archive."
 msgstr ""
 
-#: src/window.c:1253
+#: src/window.c:1435
 msgid "Command not found."
 msgstr ""
 
-#: src/window.c:1256
+#: src/window.c:1438
 msgid "Command exited abnormally."
 msgstr ""
 
-#: src/window.c:1548
-msgid "You don't have permissions to add files to this archive."
+#: src/window.c:1569
+msgid "Test Result"
 msgstr ""
 
-#: src/window.c:1570
+#: src/window.c:1792
+msgid "You don't have the right permissions."
+msgstr ""
+
+#: src/window.c:1825
 msgid "You can't add an archive to itself."
 msgstr ""
 
-#: src/window.c:1730
+#: src/window.c:1997
 msgid "Do you want to add this file to the current archive or open it as a new archive?"
 msgstr ""
 
-#: src/window.c:1773
+#: src/window.c:2042
 msgid "Do you want to create a new archive with these files?"
 msgstr ""
 
-#: src/window.c:1775
+#: src/window.c:2045
 msgid "Create _Archive"
 msgstr ""
 
-#: src/window.c:2108
+#: src/window.c:2394
 msgid "Size"
 msgstr "ಗಾತ್ರ"
 
-#: src/window.c:2109
+#: src/window.c:2395
 msgid "Type"
 msgstr "ಶೈಲಿ"
 
-#: src/window.c:2110
-msgid "Modified"
-msgstr "ಬದಲಾಯಿಸಲಾದ"
+#: src/window.c:2396
+msgid "Date modified"
+msgstr "ಬದಲಾಯಿಸಲಾದ ದಿನಾಂಕ"
 
-#: src/window.c:2111
-msgid "Path"
-msgstr "ಮಾರ್ಗ"
+#: src/window.c:2397
+msgid "Location"
+msgstr "ಸ್ಥಳ"
 
-#: src/window.c:2118
+#: src/window.c:2404
 msgid "Name"
 msgstr "ಹೆಸರು"
 
-#: src/window.c:2538
+#: src/window.c:2924
 msgid "_Up"
 msgstr "ಮೇಲೆ"
 
 #. current location
-#: src/window.c:2560
-msgid "Current Location:"
-msgstr ""
+#: src/window.c:2946
+msgid "Location:"
+msgstr "ಸ್ಥಳ:"
 
-#: src/window.c:2592
+#: src/window.c:2983
 msgid "Add"
 msgstr "ಸೇರಿಸು"
 
-#: src/window.c:2614
+#: src/window.c:3005
 msgid "View"
 msgstr "ನೋಟ"
 
-#: src/window.c:2615
+#: src/window.c:3006
 msgid "View selected file"
 msgstr "ಅಯ್ದ ಕಡತವನ್ನು ವೀಕ್ಷಿಸು"
 
-#: src/window.c:3010
-msgid "File type not supported."
+#: src/window.c:3517
+#, c-format
+msgid "Could not open \"%s\""
 msgstr ""
 
-#: src/window.c:3079
-msgid "Cannot load archive."
+#: src/window.c:3568
+#, c-format
+msgid "Could not save the archive \"%s\""
 msgstr ""
 
-#: src/window.c:3493
-msgid "Last Output"
-msgstr ""
-
-#: src/window.c:4019
+#: src/window.c:4664
 msgid "Add files to an archive"
 msgstr ""
 
-#: src/window.c:4044
+#: src/window.c:4689
 msgid "Extract archive"
 msgstr ""
 
