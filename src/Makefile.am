@@ -54,8 +54,6 @@ file_roller_SOURCES = 			\
 	dlg-prop.h			\
 	eggtreemultidnd.c		\
 	eggtreemultidnd.h		\
-	ephy-ellipsizing-label.c	\
-	ephy-ellipsizing-label.h	\
 	file-data.c			\
 	file-data.h			\
 	file-list.c			\

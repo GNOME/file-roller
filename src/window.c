@@ -41,7 +41,6 @@
 #include "egg-recent.h"
 #include "egg-recent-util.h"
 #include "eggtreemultidnd.h"
-#include "ephy-ellipsizing-label.h"
 #include "fr-archive.h"
 #include "fr-stock.h"
 #include "file-data.h"
@@ -1328,9 +1327,9 @@ open_progress_dialog (FRWindow *window)
 		gtk_box_pack_start (GTK_BOX (vbox), window->pd_progress_bar, TRUE, TRUE, 0);
 		
 		/* FIXME */
-	        lbl = window->pd_message = ephy_ellipsizing_label_new (""); 
+	        lbl = window->pd_message = gtk_label_new (""); 
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-		ephy_ellipsizing_label_set_mode (EPHY_ELLIPSIZING_LABEL (lbl), EPHY_ELLIPSIZE_MIDDLE);
+		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_MIDDLE);
 		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
 		
 		g_signal_connect (G_OBJECT (window->progress_dialog), 
@@ -2901,7 +2900,7 @@ window_message_cb  (FRCommand  *command,
                 utf8_msg = g_strdup (msg);
 
         if (g_utf8_validate (utf8_msg, -1, NULL))
-		ephy_ellipsizing_label_set_text (EPHY_ELLIPSIZING_LABEL (window->pd_message), utf8_msg);
+		gtk_label_set_text (GTK_LABEL (window->pd_message), utf8_msg);
 
 	g_free (utf8_msg);
 

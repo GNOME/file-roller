@@ -140,17 +140,6 @@ is_archive (NautilusFileInfo *file)
 }
 
 
-/* nautilus_menu_provider_get_file_items
- *  
- * This function is called by Nautilus when it wants context menu
- * items from the extension.
- *
- * This function is called in the main thread before a context menu
- * is shown, so it should return quickly.
- * 
- * The function should return a GList of allocated NautilusMenuItem
- * items.
- */
 static GList *
 nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 			    GtkWidget            *window,
