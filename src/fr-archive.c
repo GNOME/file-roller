@@ -316,26 +316,29 @@ action_performed (FRCommand   *command,
 
 
 /* filename must not be escaped. */
-void
+gboolean
 fr_archive_new_file (FRArchive  *archive, 
 		     const char *filename)
 {
 	FRCommand *tmp_command;
 
 	if (filename == NULL)
-		return;
+		return FALSE;
+
+	tmp_command = archive->command;
+	if (! create_command_from_filename (archive, filename, FALSE)) {
+		archive->command = tmp_command;
+		return FALSE;
+	}
+
+	if (tmp_command != NULL) 
+		g_object_unref (G_OBJECT (tmp_command));
 
 	archive->read_only = FALSE;
 
 	if (archive->filename != NULL)
 		g_free (archive->filename);	
 	archive->filename = g_strdup (filename);
-
-	tmp_command = archive->command;
-	if (! create_command_from_filename (archive, filename, FALSE))
-		return;
-	if (tmp_command != NULL) 
-		g_object_unref (G_OBJECT (tmp_command));
 
 	g_signal_connect (G_OBJECT (archive->command), 
 			  "start",
@@ -345,6 +348,8 @@ fr_archive_new_file (FRArchive  *archive,
 			  "done",
 			  G_CALLBACK (action_performed),
 			  archive);
+
+	return TRUE;
 }
 
 

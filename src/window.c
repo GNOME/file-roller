@@ -2774,7 +2774,7 @@ window_archive_new (FRWindow   *window,
 {
 	g_return_if_fail (window != NULL);
 
-	if (fr_archive_utils_get_file_name_ext (filename) == NULL) {
+	if (! fr_archive_new_file (window->archive, filename)) {
 		GtkWidget *dialog;
 
 		dialog = gtk_message_dialog_new (GTK_WINDOW (window->app),
@@ -2784,6 +2784,7 @@ window_archive_new (FRWindow   *window,
 						 _("File type not supported."));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+		
 		return;
 	}
 
@@ -2798,7 +2799,6 @@ window_archive_new (FRWindow   *window,
 	window->archive_present = TRUE;
 	window->archive_new = TRUE;
 
-	fr_archive_new_file (window->archive, filename);
 	window_set_password (window, NULL);
 
 	window_update_file_list (window);

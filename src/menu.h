@@ -70,7 +70,7 @@ GnomeUIInfo file_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM,
-	  N_("Archive _Information..."), N_("Show information about the archive"),
+	  N_("Archive _Information"), N_("Show information about the archive"),
 	  dlg_prop, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -352,7 +352,7 @@ GnomeUIInfo help_menu[] = {
           0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_About..."), N_("Information about the program"), 
+	  N_("_About"), N_("Information about the program"), 
 	  about_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GNOME_STOCK_ABOUT, 
 	  0, 0, NULL },

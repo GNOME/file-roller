@@ -69,7 +69,7 @@ FRArchive *  fr_archive_new                   ();
 
 void         fr_archive_free                  (FRArchive   *archive);
 
-void         fr_archive_new_file              (FRArchive   *archive,
+gboolean     fr_archive_new_file              (FRArchive   *archive,
 					       const char  *filename);
 
 gboolean     fr_archive_load                  (FRArchive   *archive,
