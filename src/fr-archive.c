@@ -55,7 +55,7 @@
 #define SAME_FS (FALSE)
 #define NO_BACKUP_FILES (FALSE)
 #define NO_DOT_FILES (FALSE)
-#define IGNORE_CASE (TRUE)
+#define IGNORE_CASE (FALSE)
 
 
 enum {
@@ -1027,7 +1027,7 @@ file_list_remove_from_pattern (GList      **list,
 		utf8_name = g_filename_to_utf8 (file_name_from_path (path), 
 						-1, NULL, NULL, NULL);
 
-		if (match_patterns (patterns, utf8_name, FNM_CASEFOLD)) {
+		if (match_patterns (patterns, utf8_name, 0)) {
 			*list = g_list_remove_link (*list, scan);
 			g_free (scan->data);
 			g_list_free (scan);

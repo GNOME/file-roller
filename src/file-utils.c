@@ -650,7 +650,7 @@ match_patterns (char       **patterns,
 		result = g_utf8_fnmatch (patterns[i], string, flags);
 		i++;
 	}
-	
+
 	return (result == 0);
 }
 

@@ -58,7 +58,7 @@ filter_new (const gchar                    *pattern,
         new->patterns = search_util_get_patterns (pattern);
         new->fnmatch_flags = 0;
 	new->options = options;
-        if (options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
+        if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
                 new->fnmatch_flags |= FNM_CASEFOLD;
 
         return new;
@@ -70,7 +70,7 @@ filter_set_options (Filter                         *filter,
 		    GnomeVFSDirectoryFilterOptions  options)
 {
 	filter->options = options;
-        if (options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
+        if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
                 filter->fnmatch_flags |= FNM_CASEFOLD;
 }
 
@@ -850,9 +850,9 @@ visit_dir_async (const char       *directory,
 		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES;
 	if (no_dot_files)
 		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NODOTFILES;
-	if (ignorecase)
+	if (ignorecase) 
 		filter_options |= GNOME_VFS_DIRECTORY_FILTER_IGNORECASE;
-
+	
 	if (filter_pattern != NULL)
 		vdd->filter = filter_new (filter_pattern, filter_options);
 
