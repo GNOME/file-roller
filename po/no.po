@@ -4,9 +4,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-08-24 11:44+0200\n"
-"PO-Revision-Date: 2002-02-02 21:24+0100\n"
+"Project-Id-Version: file roller 0.5\n"
+"POT-Creation-Date: 2002-08-27 00:00+0200\n"
+"PO-Revision-Date: 2002-08-27 00:04+0200\n"
 "Last-Translator: Lars Alvik <profoss@linuxmail.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,112 +22,99 @@ msgstr "Arkiveringsbestyrer"
 #: src/misc.c:256 src/window.c:730 src/window.c:739 src/window.c:2294
 #: src/window.c:4022
 msgid "File Roller"
-msgstr "Fil knuser"
+msgstr "Filknuser"
 
 #: file-roller.desktop.in.h:3
-#, fuzzy
 msgid "Handle compressed archives"
-msgstr "Upakket tar (.tar)"
+msgstr "Håndter komprimerte arkiv"
 
 #: src/dlg-add.c:118
-#, fuzzy, c-format
+#, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Du har ikke adgang til å opprette et arkiv i denne katalogen"
+msgstr "Du har ikke adgang til å lese filer fra mappen «%s»"
 
-#: src/dlg-add.c:341
+#: src/dlg-add.c:338
 msgid "Add files"
 msgstr "Legg til filer"
 
-#: src/dlg-add.c:346
-#, fuzzy
+#: src/dlg-add.c:343
 msgid "_Add only if newer"
-msgstr "Bare legg til hvis nyere"
+msgstr "B_are legg til hvis nyere"
+
+#: src/dlg-add.c:344
+msgid "_Include sub-folders"
+msgstr "_Ta med underkataloger"
+
+#: src/dlg-add.c:345
+msgid "Exclude folders that are symbolic lin_ks"
+msgstr "Ekskluder kataloger som er symbolske len_ker"
+
+#: src/dlg-add.c:346
+msgid "Exclude o_ther file systems"
+msgstr "Ekskluder _andre filsystemer"
 
 #: src/dlg-add.c:347
-#, fuzzy
-msgid "_Include sub-folders"
-msgstr "Inkluder med under kataloger"
+msgid "Exclude _backup files (*~)"
+msgstr "Ekskluder sikkerhetskopier (*~)"
 
 #: src/dlg-add.c:348
-#, fuzzy
-msgid "Exclude folders that are symbolic lin_ks"
-msgstr "Ekskluder kataloger som er symbolske lenker"
+msgid "Exclude _hidden files (.*)"
+msgstr "Ekskluder _skjulte filer (.*)"
 
 #: src/dlg-add.c:349
-#, fuzzy
-msgid "Exclude o_ther file systems"
-msgstr "Ekskluder andre fil systemer"
-
-#: src/dlg-add.c:350
-#, fuzzy
-msgid "Exclude _backup files (*~)"
-msgstr "Ekskluder backup filer (*~)"
+msgid "E_xclude files:"
+msgstr "E_kskluder filer:"
 
 #: src/dlg-add.c:351
-#, fuzzy
-msgid "Exclude _hidden files (.*)"
-msgstr "Ekskluder skjulte filer (.*)"
+msgid "example: *.o; *.bak"
+msgstr "eksempel: *.o; *.bak"
 
 #: src/dlg-add.c:352
-#, fuzzy
-msgid "E_xclude files:"
-msgstr "Ekskluder skjulte filer (.*)"
-
-#: src/dlg-add.c:354
-#, fuzzy
-msgid "example: *.o; *.bak"
-msgstr "(eksempel: *.txt)"
-
-#: src/dlg-add.c:355
 msgid "Igno_re case"
 msgstr ""
 
-#: src/dlg-add.c:356
-#, fuzzy
+#: src/dlg-add.c:353
 msgid "_Load Options"
-msgstr "Anternativer"
+msgstr "A_lternativer for lesing"
 
-#: src/dlg-add.c:357
-#, fuzzy
+#: src/dlg-add.c:354
 msgid "Sa_ve Options"
-msgstr "Anternativer"
+msgstr "Al_ternativer for lagring"
 
-#: src/dlg-add.c:613
-#, fuzzy
+#: src/dlg-add.c:610
 msgid "Load options"
-msgstr "Anternativer"
+msgstr "Alternativer for lesing"
 
-#: src/dlg-add.c:761
-#, fuzzy
+#: src/dlg-add.c:758
 msgid "Save options"
-msgstr "Anternativer"
+msgstr "Alternativer for lagring"
 
 #. Set widgets data.
 #: src/dlg-batch-add.c:143
-#, fuzzy, c-format
+#, c-format
 msgid "Adding %u files"
-msgstr "Legg til filer"
+msgstr "Legger til %u filer"
 
 #: src/dlg-extract.c:119 src/window.c:3133
-#, fuzzy
 msgid "Destination folder does not exist.  Do you want to create it ?"
-msgstr "Et arkiv eksisterer allerede. Vil du overskrive det ?"
+msgstr "Målmappen eksisterer ikke. Vil du opprette den?"
 
 #: src/dlg-extract.c:121 src/window.c:3135
-#, fuzzy
 msgid "Create _Folder"
-msgstr "fil"
+msgstr "Opprett _mappe"
 
 #: src/dlg-extract.c:141 src/window.c:3155
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not create the destination folder : %s.\n"
 "Extraction not performed."
-msgstr "Kan ikke skifte til den katalogen."
+msgstr ""
+"Kunne ikke opprette målmappen: %s.\n"
+"Utpakking ble ikke utført."
 
 #: src/dlg-extract.c:156 src/window.c:3170
 msgid "Extraction not performed."
-msgstr ""
+msgstr "Utpakking ble ikke utført."
 
 #: src/dlg-extract.c:175
 #, fuzzy, c-format
@@ -136,9 +123,9 @@ msgid ""
 msgstr "Du har ikke adgang til å opprette et arkiv i denne katalogen"
 
 #: src/dlg-extract.c:396 src/dlg-preferences.c:130 src/menu-callbacks.c:752
-#, fuzzy, c-format
+#, c-format
 msgid "Could not display help: %s"
-msgstr "Kunne ikke finne %s"
+msgstr "Kunne ikke vise hjelp: %s"
 
 #: src/dlg-extract.c:485
 #, fuzzy
@@ -147,39 +134,35 @@ msgstr "Favorit utpakkings kataloger"
 
 #: src/file-data.c:28
 msgid "Unknown type"
-msgstr ""
+msgstr "Ukjent type"
 
 #: src/file-data.c:29
 msgid "Symbolic link"
-msgstr ""
+msgstr "Symbolsk lenke"
 
 #: src/file_roller.glade2.h:1 src/file_roller_prop.glade2.h:1
 msgid "    "
-msgstr ""
+msgstr "    "
 
 #: src/file_roller.glade2.h:2
 msgid "*"
-msgstr ""
+msgstr "*"
 
 #: src/file_roller.glade2.h:3
-#, fuzzy
 msgid "A_dd to favorites"
-msgstr "Legg til favoritter"
+msgstr "Le_gg til i favoritter"
 
 #: src/file_roller.glade2.h:4
-#, fuzzy
 msgid "A_vailable application:"
-msgstr "Program"
+msgstr "Til_gjengelig applikasjon:"
 
 #: src/file_roller.glade2.h:5
-#, fuzzy
 msgid "Add _to archive :"
-msgstr "Legg til filer til arkivet"
+msgstr "Legg _til i arkivet :"
 
 #: src/file_roller.glade2.h:6
-#, fuzzy
 msgid "Add only if _newer"
-msgstr "Bare legg til hvis nyere"
+msgstr "Kun legg til hvis _nyere"
 
 #: src/file_roller.glade2.h:7
 msgid "Date and Time:"
@@ -199,44 +182,36 @@ msgid "Extract to:"
 msgstr "Pakk ut til:"
 
 #: src/file_roller.glade2.h:11
-#, fuzzy
 msgid "File Roller - Add"
-msgstr "Fil knuser"
+msgstr "Filknuser - Legg til"
 
 #: src/file_roller.glade2.h:12
-#, fuzzy
 msgid "File Roller - Archive Informations"
-msgstr "Arkiv Innstillinger"
+msgstr "Filknuser - Informasjon om arkiv"
 
 #: src/file_roller.glade2.h:13
-#, fuzzy
 msgid "File Roller - Delete Files"
-msgstr "Fil knuser"
+msgstr "Filknuser - Slett filer"
 
 #: src/file_roller.glade2.h:14
-#, fuzzy
 msgid "File Roller - Extract"
-msgstr "Fil knuser"
+msgstr "Filknuser - Trekk ut"
 
 #: src/file_roller.glade2.h:15
-#, fuzzy
 msgid "File Roller - Open Files"
-msgstr "Fil knuser"
+msgstr "Filknuser - Åpne filer"
 
 #: src/file_roller.glade2.h:16
-#, fuzzy
 msgid "File Roller - Password"
-msgstr "Fil knuser"
+msgstr "Filknuser - Passord"
 
 #: src/file_roller.glade2.h:17
-#, fuzzy
 msgid "File Roller - View File"
-msgstr "Fil knuser"
+msgstr "Filknuser - Vis fil"
 
 #: src/file_roller.glade2.h:18
-#, fuzzy
 msgid "File Roller - Viewer"
-msgstr "Fil knuser"
+msgstr "Filknuser - Visning"
 
 #: src/file_roller.glade2.h:19
 msgid "File Size:"
@@ -262,76 +237,64 @@ msgid "Number of Files:"
 msgstr "Antall filer"
 
 #: src/file_roller.glade2.h:24
-#, fuzzy
 msgid "Open with an _application"
-msgstr "Åpne med..."
+msgstr "Åpne med en _applikasjon"
 
 #: src/file_roller.glade2.h:25
-#, fuzzy
 msgid "Other options"
-msgstr "Anternativer"
+msgstr "Andre alternativer"
 
 #: src/file_roller.glade2.h:26
-#, fuzzy
 msgid "Over_write existing files"
-msgstr "Overskriv eksisterene filer"
+msgstr "Overs_kriv eksisterende filer"
 
 #: src/file_roller.glade2.h:27
 msgid "Path:"
-msgstr ""
+msgstr "Sti:"
 
 #: src/file_roller.glade2.h:28
-#, fuzzy
 msgid "R_ecent applications:"
-msgstr "Beslektete programer"
+msgstr "N_ylig brukte applikasjoner:"
 
 #: src/file_roller.glade2.h:29
-#, fuzzy
 msgid "R_ecreate folders"
-msgstr "fil"
+msgstr "Gj_enskap mapper"
 
 #: src/file_roller.glade2.h:30
-#, fuzzy
 msgid "Select archive"
-msgstr "Slett Arkiv"
+msgstr "Velg arkiv"
 
 #: src/file_roller.glade2.h:31
-#, fuzzy
 msgid "View with internal _viewer"
-msgstr "Vis fil med intern fremviser"
+msgstr "Vis med internt _visningsprogram"
 
 #: src/file_roller.glade2.h:32
-#, fuzzy
 msgid "_All Files"
-msgstr "Alle filer"
+msgstr "_Alle filer"
 
 #: src/file_roller.glade2.h:33
-#, fuzzy
 msgid "_Application:"
-msgstr "Program"
+msgstr "_Applikasjon:"
 
 #: src/file_roller.glade2.h:34
-#, fuzzy
 msgid "_Files:"
-msgstr "Filer:"
+msgstr "_Filer:"
 
 #: src/file_roller.glade2.h:35
 msgid "_Password:"
-msgstr ""
+msgstr "_Passord:"
 
 #: src/file_roller.glade2.h:36
-#, fuzzy
 msgid "_Selected Files"
-msgstr "Utvalgte filer"
+msgstr "_Valgte filer"
 
 #: src/file_roller.glade2.h:37
 msgid "_View destination folder after extraction"
 msgstr ""
 
 #: src/file_roller.glade2.h:38
-#, fuzzy
 msgid "example: *.txt; *.doc"
-msgstr "(eksempel: *.txt)"
+msgstr "eksempel: *.txt; *.doc"
 
 #: src/file_roller_prop.glade2.h:2
 msgid "Columns to Show"
@@ -343,32 +306,27 @@ msgstr ""
 
 #: src/file_roller_prop.glade2.h:4
 msgid "Fast"
-msgstr ""
+msgstr "Rask"
 
 #: src/file_roller_prop.glade2.h:5
-#, fuzzy
 msgid "File Roller - Preferences"
-msgstr "Fil knuser"
+msgstr "Filknuser - Brukervalg"
 
 #: src/file_roller_prop.glade2.h:6
-#, fuzzy
 msgid "File _Name"
-msgstr "Fil størrelse"
+msgstr "Fil_navn"
 
 #: src/file_roller_prop.glade2.h:7
-#, fuzzy
 msgid "File _Path"
-msgstr "Fil type :"
+msgstr "S_ti til fil"
 
 #: src/file_roller_prop.glade2.h:8
-#, fuzzy
 msgid "File _Size"
-msgstr "Fil størrelse"
+msgstr "Fil_størrelse"
 
 #: src/file_roller_prop.glade2.h:9
-#, fuzzy
 msgid "File _Type"
-msgstr "Fil type :"
+msgstr "Fil_type"
 
 #: src/file_roller_prop.glade2.h:10
 msgid "General"
@@ -376,25 +334,23 @@ msgstr "Generell"
 
 #: src/file_roller_prop.glade2.h:11
 msgid "Maximum (slowest)"
-msgstr ""
+msgstr "Maksimum (tregest)"
 
 #: src/file_roller_prop.glade2.h:12
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: src/file_roller_prop.glade2.h:13
 msgid "Very fast"
-msgstr ""
+msgstr "Meget rask"
 
 #: src/file_roller_prop.glade2.h:14
-#, fuzzy
 msgid "_Modification Time"
-msgstr "Sist endret"
+msgstr "_Endringstid"
 
 #: src/file_roller_prop.glade2.h:15
-#, fuzzy
 msgid "_Recent archives:"
-msgstr "Åpne arkiv"
+msgstr "_Nylig åpnede arkiv:"
 
 #: src/file-utils.c:534
 msgid "Cannot find a terminal, using xterm, even if it may not work"
@@ -440,19 +396,19 @@ msgstr "Automatisk"
 
 #: src/menu-callbacks.c:107
 msgid "Ear (.ear)"
-msgstr ""
+msgstr "Ear (.ear)"
 
 #: src/menu-callbacks.c:108
 msgid "Jar (.jar)"
-msgstr ""
+msgstr "Jar (.jar)"
 
 #: src/menu-callbacks.c:109
 msgid "Lha (.lzh)"
-msgstr ""
+msgstr "Lha (.lzh)"
 
 #: src/menu-callbacks.c:110
 msgid "Rar (.rar)"
-msgstr ""
+msgstr "Rar (.rar)"
 
 #: src/menu-callbacks.c:111
 msgid "Tar uncompressed (.tar)"
@@ -480,11 +436,11 @@ msgstr "Tar pakket med compress (.tar.Z)"
 
 #: src/menu-callbacks.c:117
 msgid "War (.war)"
-msgstr ""
+msgstr "War (.war)"
 
 #: src/menu-callbacks.c:118
 msgid "Zip (.zip)"
-msgstr ""
+msgstr "Zip (.zip)"
 
 #: src/menu-callbacks.c:174
 #, fuzzy
@@ -497,12 +453,11 @@ msgstr "Et arkiv eksisterer allerede. Vil du overskrive det ?"
 
 #: src/menu-callbacks.c:194 src/menu-callbacks.c:423 src/menu-callbacks.c:593
 msgid "Overwrite"
-msgstr ""
+msgstr "Overskriv"
 
 #: src/menu-callbacks.c:211
-#, fuzzy
 msgid "Could not delete old archive."
-msgstr "Kopier arkiv"
+msgstr "Kunne ikke slette gammelt arkiv."
 
 #: src/menu-callbacks.c:253
 msgid "New Archive"
@@ -518,14 +473,12 @@ msgid "Open Archive"
 msgstr "Åpne arkiv"
 
 #: src/menu-callbacks.c:446
-#, fuzzy
 msgid "Could not copy archive"
-msgstr "Kopier arkiv"
+msgstr "Kunne ikke kopiere arkiv"
 
 #: src/menu-callbacks.c:462
-#, fuzzy
 msgid "Could not move archive"
-msgstr "Kunne ikke åpne fil %s"
+msgstr "Kunne ikke flytte arkiv"
 
 #: src/menu-callbacks.c:484
 msgid "Copy archive"
@@ -540,9 +493,8 @@ msgid "New archive name (without extension)"
 msgstr "Nytt arkiv navn (uten filtypenavn)"
 
 #: src/menu-callbacks.c:566 src/menu.h:115
-#, fuzzy
 msgid "_Rename"
-msgstr "Slett"
+msgstr "End_re navn"
 
 #: src/menu-callbacks.c:630
 msgid "Archive will be deleted, are you sure ?"
@@ -551,24 +503,24 @@ msgstr "Arkivet vil bli slette, er du helt sikker?"
 #: src/menu-callbacks.c:781
 msgid "translator_credits"
 msgstr ""
+"Lars Alvik <lalvik@hotmail.com>\n"
+"Kjartan Maraas <kmaraas@gnome.org>"
 
 #: src/menu-callbacks.c:792
 msgid "An archive manager for GNOME."
 msgstr "En arkiverer for GNOME."
 
 #: src/menu.h:67
-#, fuzzy
 msgid "_New"
-msgstr "Ny"
+msgstr "_Ny"
 
 #: src/menu.h:67 src/toolbar.h:39
 msgid "Create a new archive"
 msgstr "Lag et nytt arkiv"
 
 #: src/menu.h:73
-#, fuzzy
 msgid "_Open..."
-msgstr "Åpne med..."
+msgstr "_Åpne..."
 
 #: src/menu.h:73
 msgid "Open an existing archive"
@@ -579,18 +531,16 @@ msgid "Open R_ecent"
 msgstr ""
 
 #: src/menu.h:83
-#, fuzzy
 msgid "Open Fi_les..."
-msgstr "Åpne filer med..."
+msgstr "Åpne fi_ler..."
 
 #: src/menu.h:83
 msgid "Open selected files with an application"
 msgstr ""
 
 #: src/menu.h:89
-#, fuzzy
 msgid "_View File"
-msgstr "Vis fil"
+msgstr "_Vis fil"
 
 #: src/menu.h:89 src/menu.h:449
 msgid "View file with internal viewer"
@@ -598,7 +548,7 @@ msgstr "Vis fil med intern fremviser"
 
 #: src/menu.h:97
 msgid "_Move"
-msgstr ""
+msgstr "_Flytt"
 
 #: src/menu.h:97
 #, fuzzy
@@ -607,7 +557,7 @@ msgstr "Lukke dette arkivet"
 
 #: src/menu.h:103
 msgid "Cop_y"
-msgstr ""
+msgstr "Kop_ier"
 
 #: src/menu.h:103
 #, fuzzy
@@ -615,9 +565,8 @@ msgid "Copy current archive to another folder"
 msgstr "Lukke dette arkivet"
 
 #: src/menu.h:109 src/menu.h:169
-#, fuzzy
 msgid "_Delete"
-msgstr "Slett"
+msgstr "_Slett"
 
 #: src/menu.h:109
 #, fuzzy
@@ -630,9 +579,8 @@ msgid "Rename current archive"
 msgstr "Lukke dette arkivet"
 
 #: src/menu.h:123
-#, fuzzy
 msgid "_Information"
-msgstr "Arkiv Innstillinger"
+msgstr "_Informasjon"
 
 #: src/menu.h:123
 #, fuzzy
@@ -640,9 +588,8 @@ msgid "Show information about the archive"
 msgstr "Informasjon om programet"
 
 #: src/menu.h:131
-#, fuzzy
 msgid "_Close"
-msgstr "Lukk"
+msgstr "_Lukk"
 
 #: src/menu.h:131
 msgid "Close current archive"
@@ -650,16 +597,15 @@ msgstr "Lukke dette arkivet"
 
 #: src/menu.h:137
 msgid "E_xit"
-msgstr "Ut"
+msgstr "A_vslutt"
 
 #: src/menu.h:137
 msgid "Exit"
-msgstr "Ut"
+msgstr "Avslutt"
 
 #: src/menu.h:163
-#, fuzzy
 msgid "Add _Files..."
-msgstr "Legg til _filer"
+msgstr "Legg til _filer..."
 
 #: src/menu.h:163 src/menu.h:457 src/window.c:2503
 msgid "Add files to the archive"
@@ -692,78 +638,68 @@ msgid "Select all files"
 msgstr "velg alle filene"
 
 #: src/menu.h:211
-#, fuzzy
 msgid "Dese_lect All"
-msgstr "Velg alle"
+msgstr "Ve_lg bort alle"
 
 #: src/menu.h:211
-#, fuzzy
 msgid "Deselect all files"
-msgstr "velg alle filene"
+msgstr "Velg bort alle filer"
 
 #: src/menu.h:219
 msgid "Pass_word..."
-msgstr ""
+msgstr "Pass_ord..."
 
 #: src/menu.h:227
-#, fuzzy
 msgid "_Preferences"
-msgstr "Innstillinger"
+msgstr "_Brukervalg"
 
 #: src/menu.h:238
-#, fuzzy
 msgid "by _Name"
-msgstr "Navn"
+msgstr "etter _navn"
 
 #: src/menu.h:238
 msgid "Sort file list by name"
 msgstr "Ordne filene etter navn"
 
 #: src/menu.h:244
-#, fuzzy
 msgid "by _Size"
-msgstr "Størrelse"
+msgstr "etter _størrelse"
 
 #: src/menu.h:244
 msgid "Sort file list by file size"
 msgstr "Ordne filene etter størrelse"
 
 #: src/menu.h:250
-#, fuzzy
 msgid "by T_ype"
-msgstr "Filtype"
+msgstr "etter t_ype"
 
 #: src/menu.h:250
 msgid "Sort file list by type"
 msgstr "Ordne filene etter filtype"
 
 #: src/menu.h:256
-#, fuzzy
 msgid "by _Time"
-msgstr "Etter _Tid"
+msgstr "etter _tid"
 
 #: src/menu.h:256
 msgid "Sort file list by modification time"
 msgstr "Ordne filene etter sist brukte"
 
 #: src/menu.h:262
-#, fuzzy
 msgid "by _Path"
-msgstr "Fil type :"
+msgstr "etter _sti"
 
 #: src/menu.h:262
 msgid "Sort file list by path"
 msgstr ""
 
 #: src/menu.h:279
-#, fuzzy
 msgid "View All _Files"
-msgstr "Vis alle _filene"
+msgstr "Vis alle _filer"
 
 #: src/menu.h:285
-#, fuzzy
 msgid "View as a F_older"
-msgstr "Vis som katalog"
+msgstr "Vis som en _mappe"
 
 #: src/menu.h:307
 msgid "_Reversed Order"
@@ -775,24 +711,23 @@ msgstr "Reverser listen"
 
 #: src/menu.h:331
 msgid "_Toolbar"
-msgstr ""
+msgstr "Verk_tøylinje"
 
 #: src/menu.h:331
 msgid "View the main toolbar"
-msgstr ""
+msgstr "Vis hovedverktøylinjen"
 
 #: src/menu.h:337
 msgid "Stat_usbar"
-msgstr ""
+msgstr "Stat_uslinje"
 
 #: src/menu.h:337
 msgid "View the statusbar"
-msgstr ""
+msgstr "Vis statuslinjen"
 
 #: src/menu.h:345
-#, fuzzy
 msgid "_Stop"
-msgstr "Stopp"
+msgstr "_Stopp"
 
 #: src/menu.h:345 src/toolbar.h:55
 msgid "Stop current operation"
@@ -800,17 +735,15 @@ msgstr "Stop denne handlingen"
 
 #: src/menu.h:351
 msgid "_Reload"
-msgstr ""
+msgstr "_Gjenles"
 
 #: src/menu.h:351
-#, fuzzy
 msgid "Reload current archive"
-msgstr "Lukke dette arkivet"
+msgstr "Gjenles dette arkivet"
 
 #: src/menu.h:362
-#, fuzzy
 msgid "_Arrange Files"
-msgstr "Etter _Tid"
+msgstr "_Plasser filer"
 
 #: src/menu.h:367
 msgid "_Last Output"
@@ -834,57 +767,49 @@ msgstr "Lukk dette vinduet"
 
 #: src/menu.h:399
 msgid "_Manual"
-msgstr ""
+msgstr "_Håndbok"
 
 #: src/menu.h:399
 msgid "Display the File Roller Manual"
-msgstr ""
+msgstr "Vis håndboken for Filknuser"
 
 #: src/menu.h:405
-#, fuzzy
 msgid "_About"
-msgstr "Om..."
+msgstr "_Om"
 
 #: src/menu.h:405
 msgid "Information about the program"
 msgstr "Informasjon om programet"
 
 #: src/menu.h:417
-#, fuzzy
 msgid "_File"
-msgstr "Filer:"
+msgstr "_Fil"
 
 #: src/menu.h:418
-#, fuzzy
 msgid "_Edit"
-msgstr "Ut"
+msgstr "R_ediger"
 
 #: src/menu.h:419
-#, fuzzy
 msgid "_View"
-msgstr "Vis"
+msgstr "_Vis"
 
 #: src/menu.h:420
-#, fuzzy
 msgid "_Windows"
-msgstr "Nytt vindu"
+msgstr "_Vinduer"
 
 #: src/menu.h:443
-#, fuzzy
 msgid "Open Files..."
-msgstr "Åpne filer med..."
+msgstr "Åpne filer..."
 
 #: src/menu.h:449
 msgid "View File"
 msgstr "Vis fil"
 
 #: src/menu.h:457
-#, fuzzy
 msgid "Add Files..."
-msgstr "Legg til _filer"
+msgstr "Legg til filer..."
 
 #: src/menu.h:463
-#, fuzzy
 msgid "Delete Files"
 msgstr "Slett filer"
 
@@ -893,7 +818,6 @@ msgid "Delete files from the archive"
 msgstr "Slett filer fra arkivet"
 
 #: src/menu.h:469
-#, fuzzy
 msgid "Extract to..."
 msgstr "Pakk ut til..."
 
@@ -903,9 +827,8 @@ msgstr "Velg alle"
 
 #. Button
 #: src/misc.c:281
-#, fuzzy
 msgid "Command _line output"
-msgstr "ikke eksisterene kommando"
+msgstr "Kommando_linjeutskrift"
 
 #: src/toolbar.h:39
 msgid "New"
@@ -924,66 +847,60 @@ msgid "Stop"
 msgstr "Stopp"
 
 #: src/window.c:615
-#, fuzzy
 msgid "Folder"
-msgstr "fil"
+msgstr "Mappe"
 
 #: src/window.c:738
 msgid "[read only]"
 msgstr "[kun lesbar]"
 
 #: src/window.c:832
-#, fuzzy, c-format
+#, c-format
 msgid "1 file (%s)"
-msgstr "Legg til filer"
+msgstr "1 fil (%s)"
 
 #: src/window.c:835
-#, fuzzy, c-format
+#, c-format
 msgid "%d files (%s)"
-msgstr "Legg til filer"
+msgstr "%d filer (%s)"
 
 #: src/window.c:843
-#, fuzzy, c-format
+#, c-format
 msgid "1 file selected (%s)"
-msgstr "Legg til filer"
+msgstr "1 fil valgt (%s)"
 
 #: src/window.c:846
-#, fuzzy, c-format
+#, c-format
 msgid "%d files selected (%s)"
-msgstr "Legg til filer"
+msgstr "%d filer valgt (%s)"
 
 #: src/window.c:1108
-#, fuzzy
 msgid "Reading archive"
-msgstr "Åpne arkiv"
+msgstr "Leser arkiv"
 
 #: src/window.c:1111
-#, fuzzy
 msgid "Deleting files from archive"
-msgstr "Slett filer fra arkivet"
+msgstr "Sletter filer fra arkiv"
 
 #: src/window.c:1114
-#, fuzzy
 msgid "Adding files to archive"
-msgstr "Legg til filer til arkivet"
+msgstr "Legger til filer i arkiv"
 
 #: src/window.c:1117
-#, fuzzy
 msgid "Extracting files from archive"
-msgstr "Pakk ut filer fra arkivet"
+msgstr "Pakker ut filer fra arkiv"
 
 #: src/window.c:1120
-#, fuzzy
 msgid "Testing archive"
-msgstr "Slett Arkiv"
+msgstr "Tester arkiv"
 
 #: src/window.c:1125
 msgid "wait please..."
-msgstr ""
+msgstr "vennligst vent..."
 
 #: src/window.c:1214
 msgid "Operation stopped"
-msgstr ""
+msgstr "Operasjonen stoppet"
 
 #: src/window.c:1231
 msgid "An error occurred while extracting files."
@@ -1033,9 +950,8 @@ msgid "Do you want to create a new archive with these files ?"
 msgstr "Vil du lage et arkiv med disse filene ?"
 
 #: src/window.c:1768
-#, fuzzy
 msgid "Create _Archive"
-msgstr "Lag et nytt arkiv"
+msgstr "Opprett _arkiv"
 
 #: src/window.c:2101
 msgid "Size"
@@ -1051,7 +967,7 @@ msgstr "Sist endret"
 
 #: src/window.c:2104
 msgid "Path"
-msgstr ""
+msgstr "Sti"
 
 #: src/window.c:2111
 msgid "Name"
@@ -1059,7 +975,7 @@ msgstr "Navn"
 
 #: src/window.c:2448
 msgid "_Up"
-msgstr ""
+msgstr "_Opp"
 
 #. current location
 #: src/window.c:2470
@@ -1079,184 +995,29 @@ msgid "View"
 msgstr "Vis"
 
 #: src/window.c:2539
-#, fuzzy
 msgid "View selected file"
-msgstr "Utvalgte filer"
+msgstr "Vis valgt fil"
 
 #: src/window.c:2835
 msgid "File type not supported."
 msgstr "Filtypen ikke støttet."
 
 #: src/window.c:2973
-#, fuzzy
 msgid "No archive"
-msgstr "Kopier arkiv"
+msgstr "Ingen arkiv"
 
 #: src/window.c:3069
 msgid "Cannot load archive."
 msgstr "Kan ikke laste arkivet."
 
 #: src/window.c:3436
-#, fuzzy
 msgid "File Roller - Last output"
-msgstr "Fil knuser"
+msgstr "Filknuser - Forrige plassering"
 
 #: src/window.c:3957
-#, fuzzy
 msgid "Add files to an archive"
-msgstr "Legg til filer til arkivet"
+msgstr "Legg til filer i et arkiv"
 
 #: src/window.c:3982
-#, fuzzy
 msgid "Extract archive"
-msgstr "Lag et nytt arkiv"
-
-#~ msgid "Associated Applications"
-#~ msgstr "Beslektete programer"
-
-#, fuzzy
-#~ msgid "Encoded archive:"
-#~ msgstr "Flytt arkiv"
-
-#, fuzzy
-#~ msgid "File Roller - Comment"
-#~ msgstr "Fil knuser"
-
-#, fuzzy
-#~ msgid "File Roller - Encode"
-#~ msgstr "Fil knuser"
-
-#, fuzzy
-#~ msgid "Options :"
-#~ msgstr "Anternativer"
-
-#, fuzzy
-#~ msgid "_Destination Folder:"
-#~ msgstr "Favorit utpakkings kataloger"
-
-#~ msgid "New _Archive"
-#~ msgstr "Nytt _Arkiv"
-
-#~ msgid "_Open Archive..."
-#~ msgstr "Åone arkiv..."
-
-#~ msgid "_Move Archive"
-#~ msgstr "Flytte arkiv"
-
-#~ msgid "Copy Arc_hive"
-#~ msgstr "Kopier Arkiv"
-
-#~ msgid "_Rename Archive"
-#~ msgstr "Skifte navn på arkiv"
-
-#~ msgid "_Close Archive"
-#~ msgstr "Lukke arkiv"
-
-#, fuzzy
-#~ msgid "_Stop Operation"
-#~ msgstr "Stop handlingen"
-
-#, fuzzy
-#~ msgid "Arrange by _Name"
-#~ msgstr "Etter _Navn"
-
-#, fuzzy
-#~ msgid "Arrange by _Size"
-#~ msgstr "Etter _Størrelse"
-
-#, fuzzy
-#~ msgid "Arrange by _Type"
-#~ msgstr "Etter fil_Type"
-
-#~ msgid "_Actions"
-#~ msgstr "H_Andlinger"
-
-#~ msgid "_Options"
-#~ msgstr "Valg"
-
-#, fuzzy
-#~ msgid "Other Options"
-#~ msgstr "Anternativer"
-
-#, fuzzy
-#~ msgid "Add current folder to favorites"
-#~ msgstr "Legg til favoritter"
-
-#, fuzzy
-#~ msgid "Remove selected folder from favorites"
-#~ msgstr "Slett filer fra arkivet"
-
-#~ msgid "_View file"
-#~ msgstr "Vis fil"
-
-#~ msgid "S_ort File List"
-#~ msgstr "_ordne filene"
-
-#~ msgid "Could not open file %s"
-#~ msgstr "Kunne ikke åpne fil %s"
-
-#, fuzzy
-#~ msgid "Quit the program"
-#~ msgstr "Informasjon om programet"
-
-#, fuzzy
-#~ msgid "View _with"
-#~ msgstr "Fremviser:"
-
-#~ msgid "Make the default viewer"
-#~ msgstr "Gjør dette til fast fremviser"
-
-#~ msgid "Document Viewer"
-#~ msgstr "Tekst fremviser"
-
-#~ msgid "Could not find file %s"
-#~ msgstr "Kunne ikke finne %s"
-
-#~ msgid "You must specify a file"
-#~ msgstr "Du må spesifisere en fil"
-
-#~ msgid "System error: pipe."
-#~ msgstr "System feil: pipe."
-
-#~ msgid "System error: fork."
-#~ msgstr "System feil: fork."
-
-#, fuzzy
-#~ msgid "Cannot change to specified folder."
-#~ msgstr "Kan ikke skifte til den katalogen."
-
-#~ msgid "No further information on error."
-#~ msgstr "Ingen videre informasjon om feilen."
-
-#~ msgid "Delete"
-#~ msgstr "Slett"
-
-#~ msgid "Remove"
-#~ msgstr "Slett"
-
-#, fuzzy
-#~ msgid "_Delete..."
-#~ msgstr "Slett filer"
-
-#~ msgid "Archive Properties"
-#~ msgstr "Arkiv anternativer"
-
-#~ msgid "Recreate directories"
-#~ msgstr "Gjennopprett kataloger"
-
-#, fuzzy
-#~ msgid "Create Directory"
-#~ msgstr "Gjennopprett kataloger"
-
-#~ msgid "Show archive properties"
-#~ msgstr "Vis arkiv innstillinger"
-
-#, fuzzy
-#~ msgid "Extract archives to the directory the archive file is in"
-#~ msgstr "Pakk ut filer fra arkivet"
-
-#~ msgid "files"
-#~ msgstr "filer"
-
-#~ msgid "Selected"
-#~ msgstr "Valgt"
+msgstr "Pakk ut arkiv"
