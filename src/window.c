@@ -2818,11 +2818,14 @@ static void
 bookmark_selected_cb (GtkWidget *widget, 
 		      gpointer   data)
 {
-	FRWindow *window = data;
-	char     *path;
+	FRWindow   *window = data;
+	const char *utf8_path;
+	char       *path;
 
-	path = g_object_get_data (G_OBJECT (widget), "full_path");
+	utf8_path = g_object_get_data (G_OBJECT (widget), "full_path");
+	path = g_locale_from_utf8 (utf8_path, -1, NULL, NULL, NULL);
 	window_archive_open (window, path);
+	g_free (path);
 }
 
 
