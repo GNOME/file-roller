@@ -86,10 +86,11 @@ list__process_line (char     *line,
 	if (line[0] == 'D') {
 		if (comm_iso->cur_path != NULL)
 			g_free (comm_iso->cur_path);
-		comm_iso->cur_path = g_strdup (get_last_field(line, 4));
+		comm_iso->cur_path = g_strdup (get_last_field (line, 4));
 		
-	} else if (line[0] == '-') {
-		/* Is file */
+	} else if (line[0] == '-') { /* Is file */
+		const char *last_field, *first_bracket;
+
 		fdata = file_data_new ();
 		
 		fields = split_line (line, 8);
@@ -98,7 +99,22 @@ list__process_line (char     *line,
 		g_strfreev (fields);
 		
 		/* Full path */
-		name_field = get_last_field (line, 12);
+
+		last_field = get_last_field (line, 9);
+		first_bracket = strchr (last_field, ']');
+		if (first_bracket == NULL) {
+			file_data_free (fdata);
+			return;
+		}
+			
+		name_field = eat_spaces (first_bracket + 1);
+		if ((name_field == NULL) 
+		    || (strcmp (name_field, ".") == 0)
+		    || (strcmp (name_field, "..") == 0)) {
+			file_data_free (fdata);
+			return;
+		}
+
 		fdata->original_path = fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
