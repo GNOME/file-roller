@@ -1,9 +1,5 @@
 #!/bin/sh
 
-if test $# -ne 1; then
-	exit 1
-fi
-
 quoted=$(echo -e "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" | awk 'BEGIN { FS = "\n" } { printf "\"%s\" ", $1 }' | sed -e s#\"\"##)
 
 eval "file-roller --default-dir=$NAUTILUS_SCRIPT_CURRENT_URI --extract $quoted"

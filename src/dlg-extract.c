@@ -71,11 +71,12 @@ static void
 destroy_cb (GtkWidget  *widget,
             DialogData *data)
 {
-	if (! data->extract_clicked)
+	if (! data->extract_clicked) {
+		window_pop_message (data->window);
 		window_batch_mode_stop (data->window);
-	window_pop_message (data->window);
+	}
 
-        g_object_unref (G_OBJECT (data->gui));
+        g_object_unref (data->gui);
         g_free (data);
 }
 

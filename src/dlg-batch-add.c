@@ -55,11 +55,12 @@ static void
 destroy_cb (GtkWidget  *widget,
             DialogData *data)
 {
-	if (! data->add_clicked)
+	if (! data->add_clicked) {
+		window_pop_message (data->window);
 		window_batch_mode_stop (data->window);
-	window_pop_message (data->window);
+	}
 
-	g_object_unref (G_OBJECT (data->gui));
+	g_object_unref (data->gui);
         g_free (data);
 }
 
@@ -81,25 +82,16 @@ add_clicked_cb (GtkWidget  *widget,
 	window->update_dropped_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_only_newer_checkbutton));
 
 	if (! path_is_file (archive_name)) {
-		window_batch_mode_add_action (window,
-					      FR_BATCH_ACTION_QUIT,
-					      NULL,
-					      NULL);
-
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup (data->file_list);
 		window->add_dropped_files = TRUE;
 		window_archive_new (window, archive_name);
 	} else {
-		window_batch_mode_add_action (window,
-					      FR_BATCH_ACTION_ADD,
-					      path_list_dup (data->file_list),
-					      (GFreeFunc) path_list_free);
-		window_batch_mode_add_action (window,
-					      FR_BATCH_ACTION_QUIT,
-					      NULL,
-					      NULL);
+		window_batch_mode_add_next_action (window,
+						   FR_BATCH_ACTION_ADD,
+						   path_list_dup (data->file_list),
+						   (GFreeFunc) path_list_free);
 		window_archive_open (window, archive_name);
 	}
 	g_free (archive_name);
@@ -174,7 +166,7 @@ dlg_batch_add_files (FRWindow *window,
 
         gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
 				      GTK_WINDOW (window->app));
-        gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
+	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE); 
 
 	gtk_widget_show (data->dialog);
 }

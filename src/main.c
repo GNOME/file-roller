@@ -300,88 +300,84 @@ prepare_app (poptContext pctx)
 	char *extract_to_path;
         char *add_to_path;
 
-
 	/* create the config dir if necessary. */
 
-	path = g_strconcat (g_get_home_dir (),
-			    "/.file-roller",
-			    NULL);
+	path = g_strconcat (g_get_home_dir (), "/.file-roller", NULL);
 	ensure_dir_exists (path, 0700);
 	g_free (path);
 
 	/**/
 
+	if (poptPeekArg (pctx) == NULL) { /* No archive specified. */
+		FRWindow *window;
+		window = window_new ();
+		gtk_widget_show (window->app);
+		return;
+	} 
+
 	default_dir = get_path_from_url (default_url);
 	extract_to_path = get_path_from_url (extract_to);
         add_to_path = get_path_from_url (add_to);
 
-	if (poptPeekArg (pctx) == NULL) { 
-		/* no archive specified. */
-		FRWindow *window;
+	if ((add_to != NULL) || (add == 1)) { /* Add files to an archive */
+		FRWindow    *window;
+		GList       *file_list = NULL;
+		const char  *filename;
+		
 		window = window_new ();
+		if (default_dir != NULL)
+			window_set_default_dir (window, default_dir);
 		gtk_widget_show (window->app);
-	} else {
-		const gchar *archive;
-
-		if ((add_to != NULL) || (add == 1)) {
-			FRWindow    *window;
-			GList       *file_list = NULL;
-			const gchar *filename;
-
-			window = window_new ();
-			if (default_dir != NULL)
-				window_set_default_dir (window, default_dir);
-			gtk_widget_show (window->app);
-
-			while ((filename = poptGetArg (pctx)) != NULL) {
-				gchar *path;
-
-				if (! g_path_is_absolute (filename)) {
-					char *current_dir;
-					current_dir = g_get_current_dir ();
-					path = g_strconcat (current_dir, 
-							    "/", 
-							    filename, 
-							    NULL);
-					g_free (current_dir);
-				} else
-					path = g_strdup (filename);
-				file_list = g_list_prepend (file_list, path);
-			}
-			file_list = g_list_reverse (file_list);
-
-			if (add_to != NULL)
-				window_archive__open_add_close (window, 
-								add_to_path,
-								file_list);
-			else 
-				window_archive__open_add_close (window, 
-								NULL,
-								file_list);
-
-			if (default_dir != NULL)
-				g_free (default_dir);
-
-			return;
+		
+		while ((filename = poptGetArg (pctx)) != NULL) {
+			char *path;
+			
+			if (! g_path_is_absolute (filename)) {
+				char *current_dir;
+				current_dir = g_get_current_dir ();
+				path = g_strconcat (current_dir, 
+						    "/", 
+						    filename, 
+						    NULL);
+				g_free (current_dir);
+			} else
+				path = g_strdup (filename);
+			file_list = g_list_prepend (file_list, path);
 		}
+		file_list = g_list_reverse (file_list);
+		
+		window_archive__open_add (window, add_to_path, file_list);
+		window_archive__close (window);
+		window_batch_mode_start (window);
 
+	} else if ((extract_to != NULL) || (extract == 1)) { /* Extract all archives. */
+		FRWindow   *window;
+		const char *archive;
+		
+		window = window_new ();
+		if (default_dir != NULL)
+			window_set_default_dir (window, default_dir);
+		gtk_widget_show (window->app);
+		
+		while ((archive = poptGetArg (pctx)) != NULL) 
+			window_archive__open_extract (window, 
+						      archive, 
+						      extract_to_path);
+		window_archive__close (window);
+		window_batch_mode_start (window);
+
+	} else { /* Open each archives in a window */
+		const char *archive;
+		
 		while ((archive = poptGetArg (pctx)) != NULL) {
 			FRWindow *window;
-
+			
 			window = window_new ();
-			if (default_dir != NULL)
-				window_set_default_dir (window, default_dir);
 			gtk_widget_show (window->app);
-
-			if (extract_to != NULL)
-				window_archive__open_extract_close (window, archive, extract_to_path);
-			else if (extract == 1) 
-				window_archive__open_extract_close (window, archive, NULL);
-			else
-				window_archive_open (window, archive);
+			window_archive_open (window, archive);
 		}
 	}
-
+	
 	g_free (default_dir);
 	g_free (add_to_path);
         g_free (extract_to_path);

@@ -45,7 +45,7 @@ typedef enum {
 	FR_BATCH_ACTION_ADD_INTERACT,
 	FR_BATCH_ACTION_EXTRACT,
 	FR_BATCH_ACTION_EXTRACT_INTERACT,
-	FR_BATCH_ACTION_QUIT,
+	FR_BATCH_ACTION_CLOSE,
 } FRBatchAction;
 
 typedef struct {
@@ -286,16 +286,23 @@ void       window_batch_mode_add_action       (FRWindow      *window,
 					       void          *data,
 					       GFreeFunc      free_func);
 
+void       window_batch_mode_add_next_action  (FRWindow      *window,
+					       FRBatchAction  action,
+					       void          *data,
+					       GFreeFunc      free_func);
+
 void       window_batch_mode_start            (FRWindow      *window);
 
 void       window_batch_mode_stop             (FRWindow      *window);
 
-void       window_archive__open_extract_close (FRWindow      *window, 
+void       window_archive__open_extract       (FRWindow      *window, 
 					       const char    *filename,
 					       const char    *dest_dir);
 
-void       window_archive__open_add_close     (FRWindow      *window, 
+void       window_archive__open_add           (FRWindow      *window, 
 					       const char    *archive,
 					       GList         *file_list);
+
+void       window_archive__close              (FRWindow      *window);
 
 #endif /* FR_WINDOW_H */

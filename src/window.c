@@ -1047,7 +1047,8 @@ window_push_message (FRWindow   *window,
 {
 	if (window->batch_mode) {
 		GtkLabel *l = GTK_LABEL (window->batch_action_lbl);
-		gtk_label_set_markup (l, msg);
+		gtk_label_set_text (l, msg);
+		g_print ("-> %s <-\n", msg);
 	}
 	gnome_appbar_push (GNOME_APPBAR (window->statusbar), msg);	
 }
@@ -1059,7 +1060,8 @@ window_pop_message (FRWindow *window)
 	gnome_appbar_pop (GNOME_APPBAR (window->statusbar));
 	if (window->batch_mode) {
 		GtkLabel *l = GTK_LABEL (window->batch_action_lbl);
-		gtk_label_set_text (l, "");
+		gtk_label_set_text (l, "****");
+		g_print ("-> **** <-\n");
 	}
 }
 
@@ -1322,12 +1324,16 @@ _action_performed (FRArchive   *archive,
 					       TRUE);
 		}
 
-		if (window->adding_dropped_files) 
+		if (window->adding_dropped_files) {
 			/* continue adding dropped files. */
 			drag_drop_add_file_list (window);
-		else
+			return;
+
+		} else if (! window->batch_mode) {
 			window_archive_reload (window);
-		return;
+			return;
+		}
+		break;
 
 	case FR_ACTION_TEST:
 		if (error->type != FR_PROC_ERROR_NONE) 
@@ -1520,6 +1526,8 @@ drag_drop_add_file_list (FRWindow *window)
 	if (window->activity_ref > 0) 
 		return;
 
+	/**/
+
 	if (window->archive->read_only) {
 		GtkWidget *dialog;
 
@@ -1577,6 +1585,7 @@ drag_drop_add_file_list (FRWindow *window)
 					  window->compression);
 		g_free (base_dir);
 		g_free (path);
+
 		return;
 	}
 
@@ -3767,6 +3776,45 @@ window_batch_mode_add_action (FRWindow      *window,
 }
 
 
+void
+window_batch_mode_add_next_action (FRWindow      *window,
+				   FRBatchAction  action,
+				   void          *data,
+				   GFreeFunc      free_func)
+{
+	FRBatchActionDescription *a_desc;
+	GList                    *list, *current;
+
+	g_return_if_fail (window != NULL);
+
+	a_desc = g_new (FRBatchActionDescription, 1);
+	a_desc->action    = action;
+	a_desc->data      = data;
+	a_desc->free_func = free_func;
+
+	list = window->batch_action_list;
+	current = window->batch_action;
+
+	/* insert after current */
+
+	if (current == NULL)
+		list = g_list_prepend (list, a_desc);
+	else if (current->next == NULL)
+		list = g_list_append (list, a_desc);
+	else { 
+		GList *node;
+		
+		node = g_list_append (NULL, a_desc);
+		node->next = current->next;
+		node->next->prev = node;
+		node->prev = current;
+		current->next = node;
+	}
+
+	window->batch_action_list = list;
+}
+
+
 typedef struct {
 	char  *archive_name;
 	GList *file_list;
@@ -3805,25 +3853,16 @@ _window_batch_start_current_action (FRWindow *window)
 	case FR_BATCH_ACTION_OPEN_AND_ADD:
 		adata = (OpenAndAddData *) action->data;
 		if (! path_is_file (adata->archive_name)) {
-			window_batch_mode_add_action (window,
-						      FR_BATCH_ACTION_QUIT,
-						      NULL,
-						      NULL);
-
 			if (window->dropped_file_list != NULL)
 				path_list_free (window->dropped_file_list);
 			window->dropped_file_list = path_list_dup (adata->file_list);
 			window->add_dropped_files = TRUE;
 			window_archive_new (window, adata->archive_name);
 		} else {
-			window_batch_mode_add_action (window,
-						      FR_BATCH_ACTION_ADD,
-						      path_list_dup (adata->file_list),
-						      (GFreeFunc) path_list_free);
-			window_batch_mode_add_action (window,
-						      FR_BATCH_ACTION_QUIT,
-						      NULL,
-						      NULL);
+			window_batch_mode_add_next_action (window,
+							   FR_BATCH_ACTION_ADD,
+							   path_list_dup (adata->file_list),
+							   (GFreeFunc) path_list_free);
 			window_archive_open (window, adata->archive_name);
 		}
 		break;
@@ -3856,10 +3895,23 @@ _window_batch_start_current_action (FRWindow *window)
 		dlg_extract (NULL, window);
 		break;
 
-	case FR_BATCH_ACTION_QUIT:
+	case FR_BATCH_ACTION_CLOSE:
 		window_close (window);
 		break;
 	}
+}
+
+
+static void 
+batch_window_response (GtkDialog *dialog, 
+		       int        response_id,
+		       FRWindow  *window)
+{
+	if (response_id == GTK_RESPONSE_HELP) 
+		manual_cb (NULL, window);
+	
+	else if (response_id == GTK_RESPONSE_OK) 
+		window_close (window);
 }
 
 
@@ -3902,8 +3954,12 @@ open_batch_window (FRWindow *window)
 	}
 
 	lbl = window->batch_action_lbl = gtk_label_new ("");
-	gtk_label_set_use_markup (GTK_LABEL (lbl), TRUE);
 	gtk_box_pack_start (GTK_BOX (hbox), lbl, TRUE, TRUE, 0);
+
+	g_signal_connect (G_OBJECT (window->batch_win), 
+			  "response",
+			  G_CALLBACK (batch_window_response),
+			  window);
 
 	gtk_widget_show_all (vbox);
 	gtk_window_present (GTK_WINDOW (window->batch_win));
@@ -3950,12 +4006,10 @@ window_batch_mode_stop (FRWindow *window)
 
 
 void
-window_archive__open_extract_close (FRWindow   *window, 
-				    const char *filename,
-				    const char *dest_dir)
+window_archive__open_extract (FRWindow   *window, 
+			      const char *filename,
+			      const char *dest_dir)
 {
-	window_batch_mode_clear (window);
-
 	window_batch_mode_add_action (window,
 				      FR_BATCH_ACTION_OPEN,
 				      g_strdup (filename),
@@ -3970,22 +4024,14 @@ window_archive__open_extract_close (FRWindow   *window,
 					      FR_BATCH_ACTION_EXTRACT_INTERACT,
 					      NULL,
 					      NULL);
-	window_batch_mode_add_action (window,
-				      FR_BATCH_ACTION_QUIT,
-				      NULL,
-				      NULL);
-
-	window_batch_mode_start (window);	
 }
 
 
 void
-window_archive__open_add_close (FRWindow   *window, 
-				const char *archive,
-				GList      *file_list)
+window_archive__open_add (FRWindow   *window, 
+			  const char *archive,
+			  GList      *file_list)
 {
-	window_batch_mode_clear (window);
-
 	if (archive != NULL) {
 		OpenAndAddData *adata;
 
@@ -4001,6 +4047,14 @@ window_archive__open_add_close (FRWindow   *window,
 					      FR_BATCH_ACTION_ADD_INTERACT,
 					      file_list,
 					      NULL);
+}
 
-	window_batch_mode_start (window);
+
+void
+window_archive__close (FRWindow   *window)
+{
+	window_batch_mode_add_action (window,
+				      FR_BATCH_ACTION_CLOSE,
+				      NULL,
+				      NULL);
 }
