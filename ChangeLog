@@ -1,9 +1,13 @@
+2003-08-25  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	[ File Roller 2.3.5 released ]
+
 2003-08-14  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/window.h: 
 	* src/window.c (file_list_drag_begin, file_list_drag_end) 
 	(file_list_drag_data_get): start extracting in
-	file_list_drag_being, and wait for extration completion in
+	file_list_drag_begin, and wait for extraction completion in
 	file_list_drag_end (bug #119829).
 
 2003-08-13  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -11,7 +15,7 @@
 	* src/dlg-batch-add.c (dlg_batch_add_files): 
 	* src/dlg-extract.c (add_fav_cb): 
 	* src/dlg-add.c (selection_entry_changed): use the
-	_get/set_filename_text the functions.
+	_get/set_filename_text functions.
 
 	* src/gtk-utils.h:
 	* src/gtk-utils.c (_gtk_entry_set_filename_text) 
