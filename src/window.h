@@ -184,7 +184,7 @@ typedef struct {
 	GtkWidget *      toolbar_stop;
 
 	GtkWidget *      file_popup_menu;
-	GtkWidget *      popupmenu_file[14];
+	GtkWidget *      popupmenu_file[15];
 
 	EggRecentViewGtk *recent_view;
 	EggRecentModel   *recent_model;

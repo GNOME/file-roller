@@ -3282,7 +3282,7 @@ window_new ()
 	window->mitem_password = edit_menu[EDIT_MENU_PASSWORD].widget;
 	window->mitem_last_output = view_menu[VIEW_MENU_LAST_OUTPUT].widget;
 
-	for (i = 0; i < 14; i++) 
+	for (i = 0; i < FILE_POPUP_MENU_SIZE; i++) 
 		window->popupmenu_file[i] = file_popup_menu_data[i].widget;
 
 	window->toolbar_new = toolbar_data[TOOLBAR_NEW].widget;
