@@ -281,10 +281,11 @@ void       window_archive_add_with_wildcard (FRWindow      *window,
 					     gboolean       update,
 					     gboolean       recursive,
 					     gboolean       follow_links,
-					     gboolean       same_fs,
+					     /*gboolean       same_fs,
 					     gboolean       no_backup_files,
 					     gboolean       no_dot_files,
 					     gboolean       ignore_case,
+					     */
 					     const char    *password,
 					     FRCompression  compression);
 
@@ -294,6 +295,10 @@ void       window_archive_add_directory     (FRWindow      *window,
 					     gboolean       update,
 					     const char    *password,
 					     FRCompression  compression);
+
+void       window_archive_add_items         (FRWindow      *window,
+					     GList         *item_list,
+					     gboolean       update);
 
 void       window_archive_remove            (FRWindow      *window,
 					     GList         *file_list,

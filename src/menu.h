@@ -31,7 +31,6 @@
 #include "dlg-extract.h"
 #include "dlg-open-with.h"
 #include "dlg-password.h"
-#include "dlg-preferences.h"
 #include "dlg-prop.h"
 #include "menu-callbacks.h"
 
@@ -102,7 +101,7 @@ GnomeUIInfo file_menu[] = {
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Test"), N_("Test whether the archive contains errors"),
+	  N_("_Test Integrity"), N_("Test whether the archive contains errors"),
 	  test_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -142,7 +141,6 @@ enum {
 	EDIT_MENU_SEP4,
 	EDIT_MENU_PASSWORD,
 	EDIT_MENU_SEP5,
-	EDIT_MENU_PREFERENCES,
 	EDIT_MENU_LENGTH
 };
 
@@ -211,14 +209,6 @@ GnomeUIInfo edit_menu[] = {
 	  N_("Pass_word..."), " ", 
 	  dlg_password, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
-	  0, 0, NULL },
-
-	GNOMEUIINFO_SEPARATOR,
-
-	{ GNOME_APP_UI_ITEM, 
-	  N_("_Preferences"), N_("Edit File Roller preferences"), 
-	  dlg_preferences, NULL, NULL,
-	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_PREFERENCES, 
 	  0, 0, NULL },
 
 	GNOMEUIINFO_END
@@ -418,7 +408,7 @@ enum {
 
 GnomeUIInfo file_popup_menu_data[] = {
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Open Fi_les..."), N_("Open selected files with an application"),
+	  N_("Open With..."), N_("Open selected files with an application"),
 	  open_with_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },

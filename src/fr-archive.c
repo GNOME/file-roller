@@ -49,6 +49,11 @@
 #define MAX_CHUNK_LEN 16000 /* FIXME : what is the max length of a command 
 			     * line ? */
 #define UNKNOWN_TYPE "application/octet-stream"
+#define SAME_FS (FALSE)
+#define NO_BACKUP_FILES (TRUE)
+#define NO_DOT_FILES (TRUE)
+#define IGNORE_CASE (TRUE)
+
 
 enum {
 	START,
@@ -1049,10 +1054,11 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 			      gboolean       update,
 			      gboolean       recursive,
 			      gboolean       follow_links,
-			      gboolean       same_fs,
+			      /*gboolean       same_fs,
 			      gboolean       no_backup_files,
 			      gboolean       no_dot_files,
 			      gboolean       ignore_case,
+			      */
 			      const char    *password,
 			      FRCompression  compression,
 			      DoneFunc       done_func,
@@ -1080,10 +1086,10 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 					     include_files, 
 					     recursive, 
 					     follow_links, 
-					     same_fs,
-					     no_backup_files, 
-					     no_dot_files, 
-					     ignore_case,
+					     SAME_FS,
+					     NO_BACKUP_FILES,
+					     NO_DOT_FILES,
+					     IGNORE_CASE,
 					     add_with_wildcard__step2, 
 					     aww_data);
 }
@@ -1110,14 +1116,16 @@ add_directory__step2 (GList *file_list, gpointer data)
 {
 	AddDirectoryData *ad_data = data;
 
-	fr_archive_add (ad_data->archive,
-			file_list,
-			ad_data->base_dir,
-			ad_data->dest_dir,
-			ad_data->update,
-			ad_data->password,
-			ad_data->compression);
-	path_list_free (file_list);
+	if (file_list != NULL) {
+		fr_archive_add (ad_data->archive,
+				file_list,
+				ad_data->base_dir,
+				ad_data->dest_dir,
+				ad_data->update,
+				ad_data->password,
+				ad_data->compression);
+		path_list_free (file_list);
+	}
 
 	if (ad_data->done_func) 
 		ad_data->done_func (ad_data->done_data);

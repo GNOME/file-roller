@@ -47,8 +47,6 @@ file_roller_SOURCES = 			\
 	dlg-open-with.h			\
 	dlg-password.c			\
 	dlg-password.h			\
-	dlg-preferences.c		\
-	dlg-preferences.h		\
 	dlg-prop.c			\
 	dlg-prop.h			\
 	dlg-viewer.c			\

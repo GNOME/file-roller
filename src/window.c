@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1707,10 +1707,6 @@ _action_performed (FRArchive   *archive,
 				  NULL,
 				  FALSE,
 				  TRUE,
-				  FALSE,
-				  FALSE,
-				  FALSE,
-				  FALSE,
 				  FALSE,
 				  window->password,
 				  window->compression,
@@ -3904,10 +3900,6 @@ window_archive_add_with_wildcard (FRWindow      *window,
 				  gboolean       update,
 				  gboolean       recursive,
 				  gboolean       follow_links,
-				  gboolean       same_fs,
-				  gboolean       no_backup_files,
-				  gboolean       no_dot_files,
-				  gboolean       ignore_case,
 				  const char    *password,
 				  FRCompression  compression)
 {
@@ -3924,10 +3916,6 @@ window_archive_add_with_wildcard (FRWindow      *window,
 							  update,
 							  recursive,
 							  follow_links,
-							  same_fs,
-							  no_backup_files,
-							  no_dot_files,
-							  ignore_case,
 							  password,
 							  compression,
 							  add_files_done_cb,
@@ -3957,6 +3945,17 @@ window_archive_add_directory (FRWindow      *window,
 						      compression,
 						      add_files_done_cb,
 						      window);
+}
+
+
+void
+window_archive_add_items (FRWindow      *window,
+			  GList         *item_list,
+			  gboolean       update)
+{
+	window->dropped_file_list = path_list_dup (item_list);
+	window->update_dropped_files = update;
+	drag_drop_add_file_list (window);
 }
 
 

@@ -66,6 +66,16 @@ filter_new (const gchar                    *pattern,
 
 
 static void
+filter_set_options (Filter                         *filter,
+		    GnomeVFSDirectoryFilterOptions  options)
+{
+	filter->options = options;
+        if (options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
+                filter->fnmatch_flags |= FNM_CASEFOLD;
+}
+
+
+static void
 filter_destroy (Filter *filter)
 {
         g_return_if_fail (filter != NULL);
@@ -90,11 +100,11 @@ filter_apply (Filter     *filter,
 	file_name = file_name_from_path (name);
 
 	if ((filter->options & GNOME_VFS_DIRECTORY_FILTER_NODOTFILES)
-	    && ((name[0] == '.') || (strstr (name, "/.") != NULL)))
+	    && ((file_name[0] == '.') || (strstr (file_name, "/.") != NULL)))
 		return FALSE;
 
 	if ((filter->options & GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES)
-	    && (name[strlen (name) - 1] == '~'))
+	    && (file_name[strlen (file_name) - 1] == '~'))
 		return FALSE;
 
 	utf8_name = g_filename_to_utf8 (file_name, -1, NULL, NULL, NULL);
@@ -193,6 +203,27 @@ wc_visit_cb (const gchar      *rel_path,
 }
 
 
+static gboolean
+pattern_present (char       **patterns,
+		 const char  *pattern)
+{
+	gboolean found = FALSE;
+	int      i;
+       
+	if ((patterns == NULL) || (patterns[0] == NULL))
+		return FALSE;
+	
+	if (pattern == NULL)
+		return FALSE;
+	
+	for (i = 0; (patterns[i] != NULL) && !found; i++) 
+		if (g_utf8_collate (patterns[i], pattern) == 0) 
+			found = TRUE;
+	
+	return found;
+}
+
+
 GList *
 get_wildcard_file_list (const char  *directory, 
 			const char  *filter_pattern, 
@@ -217,15 +248,16 @@ get_wildcard_file_list (const char  *directory,
 
 	/* file filter */
 
+	data->filter = filter_new (filter_pattern, GNOME_VFS_DIRECTORY_FILTER_DEFAULT);
+
 	filter_options = GNOME_VFS_DIRECTORY_FILTER_DEFAULT;
-	if (no_backup_files)
+	if (no_backup_files && !pattern_present (data->filter->patterns, "*~"))
 		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES;
-	if (no_dot_files)
+	if (no_dot_files && !pattern_present (data->filter->patterns, ".*"))
 		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NODOTFILES;
 	if (ignorecase)
 		filter_options |= GNOME_VFS_DIRECTORY_FILTER_IGNORECASE;
-
-	data->filter = filter_new (filter_pattern, filter_options);
+	filter_set_options (data->filter, filter_options);
 
 	/* info options */
 
@@ -361,7 +393,6 @@ get_directory_file_list (const char *directory,
 			 const char *base_dir)
 {
 	DirSearchData *                data;
-	GnomeVFSDirectoryFilterOptions filter_options;
 	GnomeVFSResult                 result;
 	GnomeVFSFileInfoOptions        info_options; 
 	GnomeVFSDirectoryVisitOptions  visit_options;
@@ -371,9 +402,9 @@ get_directory_file_list (const char *directory,
 
 	/* file filter */
 
-	filter_options = (GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES
-			  | GNOME_VFS_DIRECTORY_FILTER_NODOTFILES);
-	data->filter = filter_new ("*", filter_options);
+	data->filter = filter_new ("*", 
+				   (GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES
+				    | GNOME_VFS_DIRECTORY_FILTER_NODOTFILES));
 
 	/* options. */
 
@@ -993,7 +1024,7 @@ get_directory_file_list_async (const char       *directory,
 	path = g_strconcat (base_dir, "/", directory, NULL);
 	
 	handle = visit_dir_async (path,
-				  NULL,
+				  "*",
 				  TRUE,
 				  TRUE,
 				  TRUE,

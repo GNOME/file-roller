@@ -146,7 +146,7 @@ dlg_prop (GtkWidget *widget,
 	/**/
 
 	label_label = glade_xml_get_widget (data->gui, "p_date_label_label");
-	set_label (label_label, _("Date and time:"));
+	set_label (label_label, _("Zipped on:"));
 
 	label = glade_xml_get_widget (data->gui, "p_date_label");
 
