@@ -102,6 +102,30 @@ open_file_ok_cb (GtkWidget *w,
 	path = remove_ending_separator (file_sel_path);
 	base_dir = remove_level_from_path (path);
 
+	/* check directory permissions. */
+
+	if (path_is_dir (base_dir) 
+	    && access (base_dir, R_OK | X_OK) != 0) {
+		GtkWidget *d;
+		char      *utf8_path;
+
+		utf8_path = g_locale_to_utf8 (base_dir, -1, NULL, NULL, NULL);
+		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
+					    GTK_DIALOG_DESTROY_WITH_PARENT,
+					    GTK_MESSAGE_ERROR,
+					    GTK_BUTTONS_CLOSE,
+					    _("You don't have the right permissions to read files from folder \"%s\""),
+					    utf8_path);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (utf8_path);
+
+		g_free (base_dir);
+		g_free (path);
+
+		return FALSE;
+	}
+
 	window_set_add_default_dir (window, base_dir);
 
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));

@@ -161,14 +161,19 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (path_is_dir (extract_to_dir) 
 	    && access (extract_to_dir, R_OK | W_OK | X_OK) != 0) {
 		GtkWidget *d;
+		char      *utf8_path;
+
+		utf8_path = g_locale_to_utf8 (extract_to_dir, -1, NULL, NULL, NULL);
 		d = gtk_message_dialog_new (GTK_WINDOW (window->app),
 					    GTK_DIALOG_DESTROY_WITH_PARENT,
 					    GTK_MESSAGE_ERROR,
 					    GTK_BUTTONS_CLOSE,
-					    _("You don't have the right permissions to extract archive in the folder \"%s\""),
-					    extract_to_dir);
+					    _("You don't have the right permissions to extract archives in the folder \"%s\""),
+					    utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (utf8_path);
+
 		g_free (extract_to_dir);
 
 		return;

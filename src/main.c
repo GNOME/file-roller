@@ -161,7 +161,6 @@ install_scripts ()
 	g_free (dest_dir);
 
 	preferences.install_scripts = FALSE;
-	preferences.scripts_installed = TRUE;
 }
 
 
@@ -184,8 +183,6 @@ remove_scripts ()
 	}
 
 	g_free (dest_dir);
-
-	preferences.scripts_installed = FALSE;
 }
 
 

@@ -114,8 +114,6 @@ preferences_load ()
 
 	preferences.install_scripts = get_bool_with_default (
 		"file-roller/Main/Install Scripts", TRUE);
-	preferences.scripts_installed = get_bool_with_default (
-		"file-roller/Main/Scripts Installed", FALSE);
 }
 
 
@@ -163,8 +161,6 @@ preferences_save ()
 
 	gnome_config_set_bool ("file-roller/Main/Install Scripts",
 			       preferences.install_scripts);
-	gnome_config_set_bool ("file-roller/Main/Scripts Installed",
-			       preferences.scripts_installed);
 
 	gnome_config_sync ();
 }

@@ -50,7 +50,6 @@ typedef struct {
 
 	GtkWidget *show_hide_column[NUMBER_OF_COLUMNS]; /* checkbuttons */
 	GtkWidget *history_len_spinbutton;
-	GtkWidget *install_scripts;
 	GtkWidget *compression_optionmenu;
 } DialogData;
 
@@ -97,17 +96,6 @@ apply_cb (GtkWidget  *widget,
 	preferences.max_history_len = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (data->history_len_spinbutton));
 	window_update_history_list (data->window);
 	data->window->compression = opt_menu_get_active_idx (data->compression_optionmenu);
-}
-
-
-static void
-install_scripts_cb (GtkWidget  *widget, 
-		    DialogData *data)
-{
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->install_scripts)))
-		install_scripts ();
-	else
-		remove_scripts ();
 }
 
 
@@ -187,7 +175,6 @@ dlg_preferences (GtkWidget *caller,
 	data->show_hide_column[COLUMN_PATH] = glade_xml_get_widget (data->gui, "path_checkbutton");
 
         data->history_len_spinbutton = glade_xml_get_widget (data->gui, "history_len_spinbutton");
-	data->install_scripts = glade_xml_get_widget (data->gui, "install_scripts_checkbutton");
 	data->compression_optionmenu = glade_xml_get_widget (data->gui, "compression_optionmenu");
 
         btn_close = glade_xml_get_widget (data->gui, "p_close_button");
@@ -203,7 +190,6 @@ dlg_preferences (GtkWidget *caller,
 
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->history_len_spinbutton),
 				   (gfloat) preferences.max_history_len);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->install_scripts), preferences.scripts_installed);
 
 	gtk_option_menu_set_history (GTK_OPTION_MENU (data->compression_optionmenu), window->compression);
 
@@ -229,11 +215,6 @@ dlg_preferences (GtkWidget *caller,
 					  "toggled",
 					  G_CALLBACK (apply_cb),
 					  data);
-
-	g_signal_connect (G_OBJECT (data->install_scripts),
-			  "toggled",
-			  G_CALLBACK (install_scripts_cb),
-			  data);
 
 	/* run dialog. */
 

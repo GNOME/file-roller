@@ -55,8 +55,6 @@ typedef struct {
 
 	gboolean          install_scripts;     /* first time automatic 
 						* installation. */
-	gboolean          scripts_installed;   /* whether the scripts are
-						* instaleld. */
 
 	/* Extraction options */
 
