@@ -1276,8 +1276,7 @@ _action_started (FRArchive *archive,
 
 static void
 _window_add_to_recent (FRWindow *window, 
-		       char     *filename, 
-		       gboolean  add)
+		       char     *filename)
 {
 	char *tmp;
 	char *uri;
@@ -1519,7 +1518,7 @@ _action_performed (FRArchive   *archive,
 			window->archive_new = FALSE;
 		}
 
-		_window_add_to_recent (window, window->archive_filename, TRUE);
+		_window_add_to_recent (window, window->archive_filename);
 		window_update_file_list (window);
 		_window_update_title (window);
 		_window_update_current_location (window);
@@ -1539,9 +1538,7 @@ _action_performed (FRArchive   *archive,
 			window->archive_new = FALSE;
 			/* the archive file is created only when you add some
 			 * file to it. */
-			_window_add_to_recent (window, 
-					       window->archive_filename,
-					       TRUE);
+			_window_add_to_recent (window, window->archive_filename);
 		}
 
 		if (window->adding_dropped_files) {
@@ -1552,9 +1549,7 @@ _action_performed (FRArchive   *archive,
 			}
 
 		} else {
-			_window_add_to_recent (window, 
-					       window->archive_filename,
-					       TRUE);
+			_window_add_to_recent (window, window->archive_filename);
 			
 			if (! window->batch_mode) {
 				window_archive_reload (window);
@@ -3526,7 +3521,8 @@ window_archive_open (FRWindow   *window,
 		}
 	} 
 
-	_window_add_to_recent (window, window->archive_filename, success);
+	if (success)
+		_window_add_to_recent (window, window->archive_filename);
 
 	return success;
 }
@@ -3644,7 +3640,7 @@ window_archive_rename (FRWindow   *window,
 		window->archive_filename = g_strdup (filename);
 
 		_window_update_title (window);
-		_window_add_to_recent (window, window->archive_filename, TRUE);
+		_window_add_to_recent (window, window->archive_filename);
 	}
 }
 
