@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.2.3\n"
-"POT-Creation-Date: 2003-05-06 00:35+0200\n"
-"PO-Revision-Date: 2003-04-25 21:10+0200\n"
+"POT-Creation-Date: 2003-08-08 16:01+0200\n"
+"PO-Revision-Date: 2003-08-08 16:01+0200\n"
 "Last-Translator: Slobodan Sredojević <ssl@uns.ns.ac.yu>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,41 +18,33 @@ msgstr ""
 # "Plural-Forms: nplurals=3;    plural=n%10==1 && n%100!=11 ? "
 # "0 :    n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add To Archive..."
+msgid "Add to Archive..."
 msgstr "Dodaj u arhivu..."
 
 #: component/File_Roller_Component.server.in.in.h:2
-msgid "Extract Here"
-msgstr "Raspakuj ovde"
-
-#: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract In A Sub-Folder"
-msgstr "Raspakuj u pod-direktorijum"
-
-#: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract To..."
+msgid "Extract to..."
 msgstr "Raspakuj u..."
 
-#: component/File_Roller_Component.server.in.in.h:5
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
-msgstr ""
+msgstr "Operacije dodavanja za File Roller komponentu"
 
-#: component/File_Roller_Component.server.in.in.h:6
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
-msgstr ""
+msgstr "Operacije raspakivanja za File Roller komponentu"
 
-#: component/File_Roller_Component.server.in.in.h:7
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
-msgstr ""
+msgstr "File roller komponenta"
 
 #: file-roller.desktop.in.h:1
 msgid "Archive Manager"
 msgstr "Upravljanje arhivom"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
-#: src/gtk-utils.c:266 src/main.c:101 src/menu-callbacks.c:941
-#: src/window.c:758 src/window.c:767 src/window.c:1152 src/window.c:2731
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:388 src/main.c:101
+#: src/menu-callbacks.c:1076 src/window.c:759 src/window.c:1157
+#: src/window.c:2749
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -60,148 +52,148 @@ msgstr "File Roller"
 msgid "Handle compressed archives"
 msgstr "Upravljanje sažetim arhivama"
 
-#: src/dlg-add.c:118
+#: src/dlg-add.c:116 src/dlg-add.c:123
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr ""
-"Nemate odgovarajuća ovlašćenja da čitate datoteke iz „%s“ direktorijuma"
+msgstr "Nemate odgovarajuća ovlašćenja da čitate datoteke iz „%s“ direktorijuma"
 
-#: src/dlg-add.c:344 src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "Dodaj datoteke i direktorijume"
+#: src/dlg-add.c:122 src/window.c:1788 src/window.c:1821
+msgid "Could not add the files to the archive"
+msgstr "Ne može da doda datoteke u arhivu"
 
-#: src/dlg-add.c:349
+#: src/dlg-add.c:355 src/file_roller.glade.h:5
+msgid "Add Files"
+msgstr "Dodaj datoteke"
+
+#: src/dlg-add.c:360
 msgid "_Add only if newer"
 msgstr "_Dodaj samo ako je novija"
 
-#: src/dlg-add.c:350
-msgid "_Include sub-folders"
+#: src/dlg-add.c:361
+msgid "_Include subfolders"
 msgstr "_Uključi pod-direktorijume"
 
-#: src/dlg-add.c:351
+#: src/dlg-add.c:362
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Isključi direktorijume koji predstavljaju simbo_ličke veze"
 
-#: src/dlg-add.c:352
+#: src/dlg-add.c:363
 msgid "Exclude o_ther file systems"
 msgstr "Isključi druge siste_me datoteka"
 
-#: src/dlg-add.c:353
+#: src/dlg-add.c:364
 msgid "Exclude _backup files (*~)"
 msgstr "Isključi _sačuvane primerke datoteka (*~)"
 
-#: src/dlg-add.c:354
+#: src/dlg-add.c:365
 msgid "Exclude _hidden files (.*)"
 msgstr "Isključi skrivene da_toteke (.*)"
 
-#: src/dlg-add.c:355
+#: src/dlg-add.c:366
 msgid "E_xclude files:"
 msgstr "Is_ključi datoteke:"
 
-#: src/dlg-add.c:357
+#: src/dlg-add.c:368
 msgid "example: *.o; *.bak"
 msgstr "Primer: *.o; *.bak"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:369
 msgid "Igno_re case"
 msgstr "Nije bitna _veličina slova"
 
-#: src/dlg-add.c:359
+#: src/dlg-add.c:370
 msgid "_Load Options"
 msgstr "Učitaj podešavanja"
 
-#: src/dlg-add.c:360
+#: src/dlg-add.c:371
 msgid "Sa_ve Options"
 msgstr "Snimi podešavanja"
 
-#: src/dlg-add.c:615
+#: src/dlg-add.c:626
 msgid "Load Options"
 msgstr "Učitaj podešavanja"
 
-#: src/dlg-add.c:764
+#: src/dlg-add.c:775
 msgid "Save Options"
 msgstr "Sačuvaj podešavanja"
 
-#: src/dlg-batch-add.c:98
-msgid "You have to specify an archive name."
-msgstr ""
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:179
+#: src/menu-callbacks.c:198 src/window.c:3428
+msgid "Could not create the archive"
+msgstr "Ne može da napravi arhivu"
 
-#: src/dlg-batch-add.c:115 src/dlg-extract.c:120 src/window.c:3700
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:180 src/menu-callbacks.c:375
+msgid "You have to specify an archive name."
+msgstr "Morate navesti ime arhive."
+
+#: src/dlg-batch-add.c:126 src/fr-archive.c:603 src/window.c:3429
+#: src/window.c:3566
+msgid "Archive type not supported."
+msgstr "Vrsta arhive nije podržana."
+
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:3754
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Odredišno stablo ne postoji. Da li želite da ga stvorite?"
 
-#: src/dlg-batch-add.c:117 src/dlg-extract.c:122 src/window.c:3702
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:3757
 msgid "Create _Folder"
 msgstr "Napravi _direktorijum"
 
-#: src/dlg-batch-add.c:136
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:3773
 #, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Addition not performed."
-msgstr ""
-"Ne mogu napraviti odredišni direktorijum: %s.\n"
-"Dodavanje nije izvršeno."
+msgid "Could not create the destination folder: %s."
+msgstr "Ne može da napravi odredišni direktorijum: %s."
 
-#: src/dlg-batch-add.c:154
-msgid "Addition not performed."
-msgstr "Dodavanje nije izvršeno."
+#: src/dlg-batch-add.c:168 src/dlg-batch-add.c:190
+msgid "Addition not performed"
+msgstr "Dodavanje nije izvršeno"
 
-#: src/dlg-batch-add.c:231
+#: src/dlg-batch-add.c:270
 #, c-format
 msgid "Files to add: %d"
-msgstr ""
+msgstr "Koliko datoteka dodaje: %d"
 
-#: src/dlg-batch-add.c:233
+#: src/dlg-batch-add.c:272
 #, c-format
 msgid "Folders to add: %d"
-msgstr ""
+msgstr "Koliko direktorijuma dodaje: %d"
 
-#: src/dlg-extract.c:142 src/window.c:3722
-#, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Extraction not performed."
-msgstr ""
-"Ne mogu da napravim odredišni direktorijum: %s. \n"
-"Nije urađeno raspakivanje."
+#: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
+#: src/window.c:3777 src/window.c:3796
+msgid "Extraction not performed"
+msgstr "Raspakivanje nije izvedeno"
 
-#: src/dlg-extract.c:157 src/window.c:3737
-msgid "Extraction not performed."
-msgstr "Raspakivanje nije urađeno"
-
-#: src/dlg-extract.c:176
+#: src/dlg-extract.c:181
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Nemate ovlašćenja da raspakujete arhive u ovom direktorijumu „%s“"
 
-#: src/dlg-extract.c:397 src/dlg-preferences.c:127 src/menu-callbacks.c:904
-#, c-format
-msgid "Could not display help: %s"
-msgstr "Ne mogu da prikažem pomoć: %s"
+#: src/dlg-extract.c:423 src/dlg-preferences.c:125 src/menu-callbacks.c:1035
+msgid "Could not display help"
+msgstr "Ne može da prikaže pomoć"
 
-#: src/dlg-extract.c:474
+#: src/dlg-extract.c:502
 msgid "Actions"
 msgstr "Radnje"
 
-#: src/dlg-extract.c:475
+#: src/dlg-extract.c:503
 msgid "Destination folder"
 msgstr "Odredište"
 
-#: src/dlg-extract.c:476
+#: src/dlg-extract.c:504
 msgid "Files"
 msgstr "Datoteke"
 
-#: src/dlg-extract.c:505
+#: src/dlg-extract.c:533
 msgid "Bookmarks"
 msgstr "Spisak sačuvanih putanja"
 
-#: src/dlg-preferences.c:184
+#: src/dlg-preferences.c:182
 msgid "General"
 msgstr "Opšte"
 
-#: src/dlg-preferences.c:189
+#: src/dlg-preferences.c:187
 msgid "Visible columns"
 msgstr "Vidljive kolone"
 
@@ -242,7 +234,7 @@ msgstr "Nepoznata arhiva"
 msgid "Symbolic link"
 msgstr "Simbolička veza"
 
-#: src/file-utils.c:534
+#: src/file-utils.c:535
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr ""
 "Ne mogu pronaći terminal, koristiću iksterm (xterm) čak iako to možda neće "
@@ -277,11 +269,10 @@ msgid "Delete Files"
 msgstr "Izbriši datoteke"
 
 #: src/file_roller.glade.h:9
-#, fuzzy
 msgid "Do not e_xtract older files"
-msgstr "Nemo_j raspakovati zastarele datoteke"
+msgstr "Ne raspakuj starije datoteke"
 
-#: src/file_roller.glade.h:10 src/window.c:2969
+#: src/file_roller.glade.h:10 src/window.c:2987
 msgid "Extract"
 msgstr "Raspakuj"
 
@@ -290,14 +281,13 @@ msgid "Extract to"
 msgstr "Raspakuj u"
 
 #: src/file_roller.glade.h:12
-#, fuzzy
 msgid ""
 "Note: the password will be used to encrypt files you add to the current "
 "archive, and to decrypt files you extract from the current archive. When the "
 "archive is closed the password will be deleted."
 msgstr ""
 "Napomena: lozinka će biti korišćena za šifrovanje datoteka koje dodajete "
-"uarhivu, i za dešifrovanje datoteka koje raspakujete iz arhive. Kadase "
+"uarhivu, i za dešifrovanje datoteka koje raspakujete iz arhive. Kada se "
 "arhiva zatvori, lozinka se više neće koristiti."
 
 #: src/file_roller.glade.h:13
@@ -317,19 +307,18 @@ msgid "Password"
 msgstr "Lozinka"
 
 #: src/file_roller.glade.h:17
+msgid "R_e-create folders"
+msgstr "Ponovo _obrazuj direktorijume"
+
+#: src/file_roller.glade.h:18
 msgid "R_ecent applications:"
 msgstr "Lista poslednje korišćenih programa:"
 
-#: src/file_roller.glade.h:18
-msgid "R_ecreate folders"
-msgstr "Ponovo _obrazuj direktorijume"
-
 #: src/file_roller.glade.h:19
-#, fuzzy
 msgid "Select Archive"
 msgstr "Izaberi arhivu"
 
-#: src/file_roller.glade.h:20 src/menu.h:460
+#: src/file_roller.glade.h:20 src/menu.h:429
 msgid "View File"
 msgstr "Pogledaj datoteku"
 
@@ -394,48 +383,44 @@ msgid "Normal"
 msgstr "Normalan"
 
 #: src/file_roller_prop.glade.h:9
-msgid "_Path"
+msgid "_Location"
 msgstr "_Putanja"
 
 #: src/file_roller_prop.glade.h:10
-msgid "_Recent archives:"
-msgstr "_Zapamti poslednjih:"
-
-#: src/file_roller_prop.glade.h:11
 msgid "_Size"
 msgstr "_Veličina"
 
-#: src/file_roller_prop.glade.h:12
+#: src/file_roller_prop.glade.h:11
 msgid "_Type"
 msgstr "_Tip"
 
-#: src/fr-command-tar.c:273
-#, fuzzy
+#: src/fr-archive.c:578
+msgid "The file does not exist."
+msgstr "Datoteka ne postoji."
+
+#: src/fr-command-tar.c:219
 msgid "Adding file: "
-msgstr "Dodavanje %u datoteka"
+msgstr "Dodaje datoteku: "
 
-#: src/fr-command-tar.c:319
+#: src/fr-command-tar.c:265
 msgid "Removing file: "
-msgstr ""
+msgstr "Uklanja datoteku: "
 
-#: src/fr-command-tar.c:328 src/window.c:1247
+#: src/fr-command-tar.c:274 src/window.c:1253
 msgid "Deleting files from archive"
 msgstr "Brisanje datoteka iz arhive"
 
-#: src/fr-command-tar.c:361
-#, fuzzy
+#: src/fr-command-tar.c:307
 msgid "Extracting file: "
-msgstr "Raspakivanje datoteka iz arhive"
+msgstr "Raspakuje datoteku: "
 
-#: src/fr-command-tar.c:406
-#, fuzzy
+#: src/fr-command-tar.c:352
 msgid "Recompressing archive"
-msgstr "Upravljanje sažetim arhivama"
+msgstr "Ponovo sažima arhivu"
 
-#: src/fr-command-tar.c:540
-#, fuzzy
+#: src/fr-command-tar.c:486
 msgid "Decompressing archive"
-msgstr "Upravljanje sažetim arhivama"
+msgstr "Od-sažima arhivu"
 
 #: src/gconf-utils.c:98
 #, c-format
@@ -443,11 +428,11 @@ msgid ""
 "GConf error:\n"
 "  %s"
 msgstr ""
-"GConf greška:\n"
+"Gkonf greška:\n"
 "  %s"
 
 #. Button
-#: src/gtk-utils.c:297
+#: src/gtk-utils.c:419
 msgid "Command _Line Output"
 msgstr "Prikaz linije za _unos naredbi"
 
@@ -484,139 +469,155 @@ msgstr ""
 msgid "Create destination folder without asking confirmation"
 msgstr "Napravi odredišni direktorijum bez potvrđivanja"
 
-#: src/menu-callbacks.c:107
+#: src/menu-callbacks.c:108
 msgid "Automatic"
 msgstr "Prepoznaj po nastavku"
 
-#: src/menu-callbacks.c:108
+#: src/menu-callbacks.c:109
+msgid "Arj (.arj)"
+msgstr "Arj (.arj)"
+
+#: src/menu-callbacks.c:110
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:109
+#: src/menu-callbacks.c:111
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:112
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:113
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:114
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar nekompresovana (.tar)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:115
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar kompresovana sa bzip programom (.tar.bz)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:116
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar kompresovana sa bzip2 programom (.tar.bz2)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:117
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar kompresovana sa gzip programom (tar.gz)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:118
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar kompresovana sa lzop programom (.tar.lzo)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:119
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar kompresovana sa compress programom (.tar.Z)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:120
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:121
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:120
-#, fuzzy
+#: src/menu-callbacks.c:122
 msgid "Zoo (.zoo)"
-msgstr "Zip (.zip)"
+msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:176 src/menu-callbacks.c:345
+#: src/menu-callbacks.c:199 src/menu-callbacks.c:394
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Nemate dozvolu da stvorite arhivu u ovom stablu"
 
-#: src/menu-callbacks.c:202 src/menu-callbacks.c:363 src/menu-callbacks.c:573
-#: src/menu-callbacks.c:743
-msgid "Archive already exists.  Do you want to overwrite it?"
-msgstr "Arhiva već postoji. Da li želite da prepišete preko nje"
+#: src/menu-callbacks.c:228 src/menu-callbacks.c:414 src/menu-callbacks.c:633
+#: src/menu-callbacks.c:811
+msgid "The archive already exists.  Do you want to overwrite it?"
+msgstr "Arhiva već postoji. Da li želite da presnimite preko nje?"
 
-#: src/menu-callbacks.c:204 src/menu-callbacks.c:365 src/menu-callbacks.c:575
-#: src/menu-callbacks.c:745
+#: src/menu-callbacks.c:231 src/menu-callbacks.c:417 src/menu-callbacks.c:636
+#: src/menu-callbacks.c:814
 msgid "Overwrite"
-msgstr "Prepiši"
+msgstr "Presnimi"
 
-#: src/menu-callbacks.c:221 src/menu-callbacks.c:382
-msgid "Could not delete old archive."
+#: src/menu-callbacks.c:247 src/menu-callbacks.c:433
+msgid "Could not delete the old archive."
 msgstr "Ne mogu ukloniti staru arhivu."
 
-#: src/menu-callbacks.c:262
+#: src/menu-callbacks.c:292
 msgid "New Archive"
 msgstr "Nova arhiva"
 
-#: src/menu-callbacks.c:274 src/menu-callbacks.c:418
+#: src/menu-callbacks.c:310 src/menu-callbacks.c:472
 msgid "Archive type:"
 msgstr "Tip arhive:"
 
-#: src/menu-callbacks.c:406
-#, fuzzy
-msgid "Save Archive"
-msgstr "Nova arhiva"
+#: src/menu-callbacks.c:374 src/menu-callbacks.c:393
+msgid "Could not save the archive"
+msgstr "Ne može da sačuva arhivu"
 
-#: src/menu-callbacks.c:489
+#: src/menu-callbacks.c:460
+msgid "Save Archive"
+msgstr "Sačuvaj arhivu"
+
+#: src/menu-callbacks.c:542
 msgid "Open Archive"
 msgstr "Otvori arhivu"
 
-#: src/menu-callbacks.c:598
-msgid "Could not copy archive"
-msgstr "Ne mogu umnožiti arhivu"
+#: src/menu-callbacks.c:658
+msgid "Could not copy the archive"
+msgstr "Ne može da umnoži arhivu"
 
-#: src/menu-callbacks.c:614
-msgid "Could not move archive"
-msgstr "Ne mogu premestiti arhivu"
+#: src/menu-callbacks.c:676
+msgid "Could not move the archive"
+msgstr "Ne može da premesti arhivu"
 
-#: src/menu-callbacks.c:636
-msgid "Copy archive"
+#: src/menu-callbacks.c:703
+msgid "Copy Archive"
 msgstr "Umnoži arhivu"
 
-#: src/menu-callbacks.c:636
-msgid "Move archive"
+#: src/menu-callbacks.c:703
+msgid "Move Archive"
 msgstr "Premesti arhivu"
 
-#: src/menu-callbacks.c:714
+#: src/menu-callbacks.c:781
+msgid "Rename Archive"
+msgstr "Preimenuj arhivu"
+
+#: src/menu-callbacks.c:782
 msgid "New archive name (without extension)"
 msgstr "Novo ime arhive (bez nastavka)"
 
-#: src/menu-callbacks.c:718 src/menu.h:108
+#: src/menu-callbacks.c:786
 msgid "_Rename"
 msgstr "Preimenu_j"
 
-#: src/menu-callbacks.c:782
-msgid "Archive will be deleted, are you sure?"
-msgstr "Arhiva će biti izbrisana. Da li ste sigurni?"
+#: src/menu-callbacks.c:896
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
+msgstr "Ne može da prebaci arhivu u smeće. Želite li da je trajno obrišete?"
 
-#: src/menu-callbacks.c:933
+#: src/menu-callbacks.c:1068
 msgid "translator_credits"
-msgstr "Slobodan Sredojević <ssl@uns.ns.ac.yu>"
+msgstr ""
+"Slobodan Sredojević <ssl@uns.ns.ac.yu>\n"
+"Danilo Šegan <danilo@prevod.org>\n"
+"\n"
+"http://Prevod.org/"
 
-#: src/menu-callbacks.c:944
+#: src/menu-callbacks.c:1079
 msgid "An archive manager for GNOME."
 msgstr "Alat za rad sa arhivama za Gnom okruženje"
 
-#: src/menu-callbacks.c:1118 src/window.c:4020
+#: src/menu-callbacks.c:1253 src/window.c:4085
 msgid "Last Output"
 msgstr "Detaljan ispis"
 
-#: src/menu.h:70
+#: src/menu.h:69
 msgid "_New"
 msgstr "_Nova"
 
@@ -624,307 +625,271 @@ msgstr "_Nova"
 msgid "Create a new archive"
 msgstr "Napravi novu arhivu"
 
-#: src/menu.h:76
-msgid "_Open..."
-msgstr "_Otvori..."
-
-#: src/menu.h:76
-msgid "Open an existing archive"
-msgstr "Otvori arhivu"
-
-#: src/menu.h:81
+#: src/menu.h:75
 msgid "Open R_ecent"
 msgstr "_Lista otvaranih arhiva"
 
-#: src/menu.h:86
-msgid "Save _As..."
-msgstr ""
-
-#: src/menu.h:86
-#, fuzzy
-msgid "Save current archive in a different type or name"
-msgstr "Premešta arhivu na drugo mesto"
-
-#: src/menu.h:94
+#: src/menu.h:84
 msgid "Open Fi_les..."
 msgstr "O_tvori datoteke..."
 
-#: src/menu.h:94
+#: src/menu.h:84
 msgid "Open selected files with an application"
 msgstr "Otvara izabrane datoteke pomoću odgovarajućeg programa"
 
-#: src/menu.h:100
+#: src/menu.h:90
 msgid "_View File"
 msgstr "_Pogledaj datoteku"
 
-#: src/menu.h:100 src/menu.h:460
+#: src/menu.h:90 src/menu.h:429
 msgid "View file with internal viewer"
 msgstr "Prikazuje datoteku sa ugrađenim preglednikom"
 
-#: src/menu.h:108
+#: src/menu.h:98
+msgid "_Rename..."
+msgstr "Preimenu_j..."
+
+#: src/menu.h:98
 msgid "Rename current archive"
-msgstr "Promeni ime arhivi"
+msgstr "Promeni ime tekućoj arhivi"
 
-#: src/menu.h:114
-msgid "Cop_y"
-msgstr "U_množi"
+#: src/menu.h:104
+msgid "Cop_y..."
+msgstr "_Umnoži..."
 
-#: src/menu.h:114
+#: src/menu.h:104
 msgid "Copy current archive to another folder"
 msgstr "Umnožava arhivu i smešta je u neki drugi direktorijum"
 
-#: src/menu.h:120
-msgid "_Move"
-msgstr "P_remesti"
+#: src/menu.h:110
+msgid "_Move..."
+msgstr "P_remesti..."
 
-#: src/menu.h:120
+#: src/menu.h:110
 msgid "Move current archive to another folder"
 msgstr "Premešta arhivu na drugo mesto"
 
-#: src/menu.h:126
-msgid "_Delete"
-msgstr "_Ukloni"
+#: src/menu.h:116
+msgid "Move to _Trash"
+msgstr "Prebaci u _Smeće"
 
-#: src/menu.h:126
-msgid "Delete current archive from disk"
-msgstr "Uklanja arhivu sa diska"
+#: src/menu.h:116
+msgid "Move current archive to trash"
+msgstr "Prebaci tekuću arhivu u smeće"
 
-#: src/menu.h:132
-#, fuzzy
+#: src/menu.h:122
 msgid "_Test"
-msgstr "_Tip"
+msgstr "Pro_veri"
 
-#: src/menu.h:132
+#: src/menu.h:122
 msgid "Test whether the archive contains errors"
-msgstr ""
+msgstr "Proveri da li arhiva sadrži greške"
 
-#: src/menu.h:140
+#: src/menu.h:130
 msgid "_Properties"
 msgstr "O_sobine"
 
-#: src/menu.h:140
+#: src/menu.h:130
 msgid "Show archive properties"
 msgstr "Prikazuje osobine arhive"
 
-#: src/menu.h:148
-msgid "_Close"
-msgstr "_Zatvori"
-
-#: src/menu.h:148
-msgid "Close current archive"
-msgstr "Zatvara arhivu"
-
-#: src/menu.h:154
-msgid "E_xit"
-msgstr "_Izlaz"
-
-#: src/menu.h:154
-msgid "Exit"
-msgstr "Izlaz iz programa"
-
-#: src/menu.h:180 src/menu.h:468
+#: src/menu.h:162 src/menu.h:437
 msgid "Add _Files..."
 msgstr "Dodaj _datoteke..."
 
-#: src/menu.h:180 src/menu.h:468 src/window.c:2959
+#: src/menu.h:162 src/menu.h:437 src/window.c:2977
 msgid "Add files to the archive"
 msgstr "Dodaje datoteke u arhivu"
 
-#: src/menu.h:186 src/menu.h:474
-#, fuzzy
-msgid "_Delete Files"
-msgstr "Izbriši datoteke"
+#: src/menu.h:168
+msgid "_Delete Files..."
+msgstr "Iz_briši datoteke..."
 
-#: src/menu.h:186
+#: src/menu.h:168
 msgid "Delete selected files and folders from the archive"
 msgstr "Ukloni izabrane datoteke i direktorijume iz arhive"
 
-#: src/menu.h:192 src/menu.h:480
+#: src/menu.h:174 src/menu.h:449
 msgid "_Extract to..."
 msgstr "_Raspakuj u..."
 
-#: src/menu.h:192 src/menu.h:480 src/window.c:2970
+#: src/menu.h:174 src/menu.h:449 src/window.c:2988
 msgid "Extract files from the archive"
 msgstr "Raspakuj datoteke iz arhive"
 
-#: src/menu.h:216 src/menu.h:488
+#: src/menu.h:198 src/menu.h:457
 msgid "Select _All"
 msgstr "Izaberi sv_e"
 
-#: src/menu.h:216 src/menu.h:488
+#: src/menu.h:198 src/menu.h:457
 msgid "Select all files"
 msgstr "Izaberi sve datoteke"
 
-#: src/menu.h:222 src/menu.h:494
+#: src/menu.h:204 src/menu.h:463
 msgid "Dese_lect All"
 msgstr "Poništi iza_brano"
 
-#: src/menu.h:222 src/menu.h:494
+#: src/menu.h:204 src/menu.h:463
 msgid "Deselect all files"
 msgstr "Poništava izbor datoteka"
 
-#: src/menu.h:230
+#: src/menu.h:212
 msgid "Pass_word..."
 msgstr "_Lozinka..."
 
-#: src/menu.h:238
+#: src/menu.h:220
 msgid "_Preferences"
 msgstr "_Postavke"
 
-#: src/menu.h:238
-#, fuzzy
+#: src/menu.h:220
 msgid "Edit File Roller preferences"
-msgstr "File Roller postavke"
+msgstr "Uredi postavke za File Roller"
 
-#: src/menu.h:249
+#: src/menu.h:231
 msgid "by _Name"
 msgstr "po _imenu"
 
-#: src/menu.h:249
+#: src/menu.h:231
 msgid "Sort file list by name"
 msgstr "Poređaj spisak datoteka po imenu"
 
-#: src/menu.h:255
+#: src/menu.h:237
 msgid "by _Size"
 msgstr "po _veličini"
 
-#: src/menu.h:255
+#: src/menu.h:237
 msgid "Sort file list by file size"
 msgstr "Poređaj spisak datoteka po veličini"
 
-#: src/menu.h:261
+#: src/menu.h:243
 msgid "by T_ype"
 msgstr "po _tipu"
 
-#: src/menu.h:261
+#: src/menu.h:243
 msgid "Sort file list by type"
 msgstr "Poređaj spisak datoteka po tipu"
 
-#: src/menu.h:267
-msgid "by _Time"
-msgstr "po vre_menu"
+#: src/menu.h:249
+msgid "by _Date modified"
+msgstr "po _datumu izmene"
 
-#: src/menu.h:267
+#: src/menu.h:249
 msgid "Sort file list by modification time"
 msgstr "Poređaj spisak datoteka po datumu i vremenu izmene"
 
-#: src/menu.h:273
-msgid "by _Path"
+#: src/menu.h:255
+msgid "by _Location"
 msgstr "po _putanji"
 
-#: src/menu.h:273
-msgid "Sort file list by path"
+#: src/menu.h:255
+msgid "Sort file list by location"
 msgstr "Poređaj spisak datoteka po putanji"
 
-#: src/menu.h:290
+#: src/menu.h:272
 msgid "View All _Files"
 msgstr "Prikaži sv_e datoteke"
 
-#: src/menu.h:296
+#: src/menu.h:278
 msgid "View as a F_older"
 msgstr "Prikaži kao _direktorijum"
 
-#: src/menu.h:318
+#: src/menu.h:300
 msgid "_Reversed Order"
 msgstr "_Obrnuti redosled"
 
-#: src/menu.h:318
+#: src/menu.h:300
 msgid "Reverse the list order"
 msgstr "Obrnuti redosled spiska"
 
-#: src/menu.h:342
+#: src/menu.h:325
 msgid "_Toolbar"
 msgstr "_Linija sa ikonicama"
 
-#: src/menu.h:342
+#: src/menu.h:325
 msgid "View the main toolbar"
 msgstr "Prikazuje liniju sa ikonicama"
 
-#: src/menu.h:348
+#: src/menu.h:331
 msgid "Stat_usbar"
 msgstr "Linija sa _stanjem"
 
-#: src/menu.h:348
+#: src/menu.h:331
 msgid "View the statusbar"
 msgstr "Prikazuje linuju sa stanjem"
 
-#: src/menu.h:356
+#: src/menu.h:339
 msgid "_Stop"
 msgstr "_Prekini"
 
-#: src/menu.h:356 src/toolbar.h:55
+#: src/menu.h:339 src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Prekini započetu radnju"
 
-#: src/menu.h:362
+#: src/menu.h:345
 msgid "_Reload"
 msgstr "_Učitaj ponovo"
 
-#: src/menu.h:362
+#: src/menu.h:345
 msgid "Reload current archive"
 msgstr "Ponovo učitava arhivu"
 
-#: src/menu.h:373
+#: src/menu.h:356
 msgid "_Arrange Files"
 msgstr "Poređaj datote_ke"
 
-#: src/menu.h:378
+#: src/menu.h:361
 msgid "_Last Output"
 msgstr "De_taljan ispis"
 
-#: src/menu.h:391
+#: src/menu.h:361
+msgid "View the output produced by the last executed command"
+msgstr "Pogledaj izlaz koji je dala poslednje izvršena naredba"
+
+#: src/menu.h:367
 msgid "New _Window"
 msgstr "_Novi prozor"
 
-#: src/menu.h:391
+#: src/menu.h:367
 msgid "Open a new window"
 msgstr "Otvori novi prozor"
 
-#: src/menu.h:397
-msgid "Clo_se Window"
-msgstr "_Zatvori prozor"
-
-#: src/menu.h:397
-msgid "Close this window"
-msgstr "Zatvori ovaj prozor"
-
-#: src/menu.h:410
+#: src/menu.h:380
 msgid "_Contents"
 msgstr "_Sadržaj"
 
-#: src/menu.h:410
+#: src/menu.h:380
 msgid "Display the File Roller Manual"
 msgstr "Prikaži vodič"
 
-#: src/menu.h:416
+#: src/menu.h:386
 msgid "_About"
 msgstr "O _programu"
 
-#: src/menu.h:416
+#: src/menu.h:386
 msgid "Information about the program"
 msgstr "Podaci o programu"
 
-#: src/menu.h:428
+#: src/menu.h:398
 msgid "_Archive"
 msgstr "_Arhiva"
 
-#: src/menu.h:429
+#: src/menu.h:399
 msgid "_Edit"
 msgstr "_Uredi"
 
-#: src/menu.h:430
+#: src/menu.h:400
 msgid "_View"
 msgstr "_Pogledaj"
 
-#: src/menu.h:431
-msgid "_Windows"
-msgstr "P_rozori"
-
-#: src/menu.h:454
+#: src/menu.h:423
 msgid "Open Files..."
 msgstr "Otvori datoteke..."
 
-#: src/menu.h:474
+#: src/menu.h:443
+msgid "_Delete Files"
+msgstr "Iz_briši datoteke"
+
+#: src/menu.h:443
 msgid "Delete files from the archive"
 msgstr "Ukloni datoteke iz arhive"
 
@@ -944,19 +909,21 @@ msgstr "Otvori arhivu"
 msgid "Stop"
 msgstr "Prekini"
 
-#: src/window.c:617
+#: src/window.c:618
 msgid "Folder"
 msgstr "Direktorijum"
 
-#: src/window.c:766
+#: src/window.c:767
 msgid "[read only]"
 msgstr "[samo za čitanje]"
 
+# bug: plural-forms
 #: src/window.c:862
 #, c-format
 msgid "1 file (%s)"
 msgstr "1 datoteka (%s)"
 
+# bug: plural-forms
 #: src/window.c:865
 #, c-format
 msgid "%d files (%s)"
@@ -982,75 +949,80 @@ msgstr "%d datoteka izabrano (%s)"
 # msgstr[0] "%d datoteka izabrana (%s)"
 # msgstr[1] "%d datoteke izabrane (%s)"
 # msgstr[2] "%d datoteka izabrano (%s)"
-#: src/window.c:1244
+#: src/window.c:1250
 msgid "Reading archive"
 msgstr "Učitavam arhivu"
 
-#: src/window.c:1250
+#: src/window.c:1256
 msgid "Adding files to archive"
 msgstr "Dodavanje datoteka u arhivu"
 
-#: src/window.c:1253
+#: src/window.c:1259
 msgid "Extracting files from archive"
 msgstr "Raspakivanje datoteka iz arhive"
 
-#: src/window.c:1256
+#: src/window.c:1262
 msgid "Testing archive"
 msgstr "Isprobavam arhivu"
 
-#: src/window.c:1259
-msgid "Getting the file list"
-msgstr ""
-
 #: src/window.c:1265
+msgid "Getting the file list"
+msgstr "Učitava spisak datoteka"
+
+#: src/window.c:1271
 msgid "wait please..."
 msgstr "molim sačekajte..."
 
-#: src/window.c:1376
+#: src/window.c:1332
+#, c-format
+msgid "Could not display the folder \"%s\""
+msgstr "Ne može da prikaže direktorijum „%s“"
+
+#: src/window.c:1389
 msgid "Operation stopped"
 msgstr "Radnja je prekinuta"
 
-#: src/window.c:1394
+#: src/window.c:1410
 msgid "An error occurred while extracting files."
 msgstr "Dogodila se greška prilikom raspakivanja"
 
-#: src/window.c:1398
+#: src/window.c:1414
 msgid "An error occurred while loading the archive."
 msgstr "Dogodila se greška prilikom učitavanja arhive"
 
-#: src/window.c:1402
+#: src/window.c:1418
 msgid "An error occurred while deleting files from the archive."
 msgstr "Dogodila se greška prilikom uklanjanja datoteka iz arhive"
 
-#: src/window.c:1406
+#: src/window.c:1422
 msgid "An error occurred while adding files to the archive."
 msgstr "Dogodila se greška prilikom dodavanja datoteka u arhivu"
 
-#: src/window.c:1410
+#: src/window.c:1426
 msgid "An error occurred while testing archive."
 msgstr "Dogodila se greška prilikom ispitivanja arhive"
 
-#: src/window.c:1419
+#: src/window.c:1435
 msgid "Command not found."
 msgstr "Naredba nije pronađena"
 
-#: src/window.c:1422
+#: src/window.c:1438
 msgid "Command exited abnormally."
 msgstr "Naredba je prekinuta neočekivano"
 
-#: src/window.c:1557
+#: src/window.c:1569
 msgid "Test Result"
-msgstr ""
+msgstr "Rezultat provere"
 
-#: src/window.c:1777
-msgid "You don't have permissions to add files to this archive."
-msgstr "Nemate ovlašćenja za dodavanje datoteka u ovu arhivu"
+#: src/window.c:1789
+msgid "You don't have the right permissions."
+msgstr "Nemate odgovarajuća ovlašćenja."
 
-#: src/window.c:1808
+#: src/window.c:1822
 msgid "You can't add an archive to itself."
 msgstr "Ne možete dodati arhivu u samu sebe"
 
-#: src/window.c:1978
+#: src/window.c:1994
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1058,85 +1030,151 @@ msgstr ""
 "Da li želite da dodate ovu datoteku u već otvorenu arhivu ili da napravite "
 "novuarhivu?"
 
-#: src/window.c:2022
+#: src/window.c:2039
 msgid "Do you want to create a new archive with these files?"
 msgstr "Da li želite da napravite novu arhivu sa ovim datotekama?"
 
-#: src/window.c:2024
+#: src/window.c:2042
 msgid "Create _Archive"
 msgstr "Napravi _arhivu"
 
-#: src/window.c:2369
+#: src/window.c:2387
 msgid "Size"
 msgstr "Veličina"
 
-#: src/window.c:2370
+#: src/window.c:2388
 msgid "Type"
 msgstr "Tip"
 
-#: src/window.c:2371
-#, fuzzy
+#: src/window.c:2389
 msgid "Date modified"
-msgstr "Datum i vreme izmene"
+msgstr "Datum izmene"
 
-#: src/window.c:2372
+#: src/window.c:2390
 msgid "Location"
 msgstr "Putanja"
 
-#: src/window.c:2379
+#: src/window.c:2397
 msgid "Name"
 msgstr "Ime"
 
-#: src/window.c:2899
+#: src/window.c:2917
 msgid "_Up"
 msgstr "_Gore"
 
 #. current location
-#: src/window.c:2921
-#, fuzzy
+#: src/window.c:2939
 msgid "Location:"
-msgstr "Putanja"
+msgstr "Putanja:"
 
-#: src/window.c:2958
+#: src/window.c:2976
 msgid "Add"
 msgstr "Dodaj"
 
-#: src/window.c:2980
+#: src/window.c:2998
 msgid "View"
 msgstr "Pogledaj"
 
-#: src/window.c:2981
+#: src/window.c:2999
 msgid "View selected file"
 msgstr "Pogledaj izabranu datoteku"
 
-#: src/window.c:3404 src/window.c:3517
-#, fuzzy
-msgid "Archive type not supported."
-msgstr "Tip arhive nije podržan"
+#: src/window.c:3508
+#, c-format
+msgid "Could not open \"%s\""
+msgstr "Ne može da otvori „%s“"
 
-#: src/window.c:3480
-msgid "Cannot load archive."
-msgstr "Ne mogu da učitam arhivu."
+#: src/window.c:3559
+#, c-format
+msgid "Could not save the archive \"%s\""
+msgstr "Ne može da sačuva arhivu „%s“"
 
-#: src/window.c:4549
+#: src/window.c:4623
 msgid "Add files to an archive"
 msgstr "Dodaj datoteke u arhivu"
 
-#: src/window.c:4574
+#: src/window.c:4648
 msgid "Extract archive"
 msgstr "Raspakuj arhivu"
+
+#~ msgid "Extract Here"
+#~ msgstr "Raspakuj ovde"
+
+#~ msgid "Extract In A Sub-Folder"
+#~ msgstr "Raspakuj u pod-direktorijum"
+
+#~ msgid "Extract To..."
+#~ msgstr "Raspakuj u..."
+
+#~ msgid "Add Files and Folders"
+#~ msgstr "Dodaj datoteke i direktorijume"
+
+#~ msgid ""
+#~ "Could not create the destination folder: %s.\n"
+#~ "Extraction not performed."
+#~ msgstr ""
+#~ "Ne mogu da napravim odredišni direktorijum: %s. \n"
+#~ "Nije urađeno raspakivanje."
+
+#~ msgid "_Path"
+#~ msgstr "_Putanja"
+
+#~ msgid "_Recent archives:"
+#~ msgstr "_Zapamti poslednjih:"
+
+#~ msgid "Archive will be deleted, are you sure?"
+#~ msgstr "Arhiva će biti izbrisana. Da li ste sigurni?"
+
+#~ msgid "_Open..."
+#~ msgstr "_Otvori..."
+
+#~ msgid "Open an existing archive"
+#~ msgstr "Otvori arhivu"
+
+#~ msgid "_Delete"
+#~ msgstr "_Ukloni"
+
+#~ msgid "Delete current archive from disk"
+#~ msgstr "Uklanja arhivu sa diska"
+
+#~ msgid "_Close"
+#~ msgstr "_Zatvori"
+
+#~ msgid "Close current archive"
+#~ msgstr "Zatvara arhivu"
+
+#~ msgid "E_xit"
+#~ msgstr "_Izlaz"
+
+#~ msgid "Exit"
+#~ msgstr "Izlaz iz programa"
+
+#~ msgid "by _Time"
+#~ msgstr "po vre_menu"
+
+#~ msgid "by _Path"
+#~ msgstr "po _putanji"
+
+#~ msgid "Clo_se Window"
+#~ msgstr "_Zatvori prozor"
+
+#~ msgid "Close this window"
+#~ msgstr "Zatvori ovaj prozor"
+
+#~ msgid "_Windows"
+#~ msgstr "P_rozori"
+
+#~ msgid "You don't have permissions to add files to this archive."
+#~ msgstr "Nemate ovlašćenja za dodavanje datoteka u ovu arhivu"
+
+#~ msgid "Cannot load archive."
+#~ msgstr "Ne mogu da učitam arhivu."
 
 #~ msgid "_Name"
 #~ msgstr "_Ime"
 
 #~ msgid "_Test Archive"
 #~ msgstr "_Isprobaj arhivu"
-
-#~ msgid "Add Files..."
-#~ msgstr "Dodaj datoteke..."
-
-#~ msgid "Extract to..."
-#~ msgstr "Raspakuj u..."
 
 #~ msgid "Select All"
 #~ msgstr "Izaberi sve"
