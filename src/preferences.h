@@ -44,6 +44,7 @@
 #define PREF_EDIT_EDITORS          "/apps/file-roller/general/editors"
 #define PREF_EXTRACT_VIEW_FOLDER   "/apps/file-roller/general/view_folder_after_extraction"
 #define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/general/compression_level"
+#define PREF_MIGRATE_DIRECTORIES   "/apps/file-roller/general/migrate_directories"
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"

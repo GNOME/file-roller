@@ -28,6 +28,7 @@
 #include <libgnomeui/gnome-file-entry.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include "file-utils.h"
 #include "gtk-utils.h"
 #include "window.h"
 #include "gnome-vfs-helpers.h"
@@ -134,6 +135,7 @@ dlg_viewer (FRWindow   *window,
 	GtkWidget     *text_view;
 	GtkWidget     *close_button;
 	GtkTextBuffer *text_buf;
+	char          *utf8_text;
 
         data = g_new (DialogData, 1);
 	data->window = window;
@@ -157,6 +159,10 @@ dlg_viewer (FRWindow   *window,
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (text_view), text_buf);
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
 	g_object_unref (text_buf);
+
+	utf8_text = g_locale_to_utf8 (file_name_from_path (filename), -1, 0, 0, 0);
+	gtk_window_set_title (GTK_WINDOW (data->dialog), utf8_text);
+	g_free (utf8_text);
 
 	load_document (text_buf, filename);
 

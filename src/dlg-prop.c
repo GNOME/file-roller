@@ -125,7 +125,7 @@ dlg_prop (GtkWidget *widget,
 	/**/
 
 	label_label = glade_xml_get_widget (data->gui, "p_size_label_label");
-	set_label (label_label, _("File Size:"));
+	set_label (label_label, _("File size:"));
 
 	label = glade_xml_get_widget (data->gui, "p_size_label");
 	size = get_file_size (window->archive_filename);
@@ -136,7 +136,7 @@ dlg_prop (GtkWidget *widget,
 	/**/
 
 	label_label = glade_xml_get_widget (data->gui, "p_files_label_label");
-	set_label (label_label, _("Number of Files:"));
+	set_label (label_label, _("Number of files:"));
 
 	label = glade_xml_get_widget (data->gui, "p_files_label");
 	s = g_strdup_printf ("%d", g_list_length (window->archive->command->file_list));
@@ -146,7 +146,7 @@ dlg_prop (GtkWidget *widget,
 	/**/
 
 	label_label = glade_xml_get_widget (data->gui, "p_date_label_label");
-	set_label (label_label, _("Date and Time:"));
+	set_label (label_label, _("Date and time:"));
 
 	label = glade_xml_get_widget (data->gui, "p_date_label");
 

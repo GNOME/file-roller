@@ -80,4 +80,10 @@ gboolean            match_patterns               (char       **patterns,
 
 char **             search_util_get_patterns     (const char  *pattern_string);
 
+#define get_home_relative_dir(x)        \
+        g_strconcat (g_get_home_dir (), \
+                     "/",               \
+                     (x),               \
+                     NULL)
+
 #endif /* FILE_UTILS_H */

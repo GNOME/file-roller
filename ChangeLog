@@ -1,3 +1,22 @@
+2002-12-05  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/file_roller.glade: re-layout the 'Extact' dialog.
+	
+	* src/dlg-extract.c (dlg_extract): use 'Bookmarks' instead of 
+	'Favourites'.
+
+	* src/main.c (migrate_to_new_directories, migrate_file_from_to) 
+	(migrate_dir_from_to): use .gnome2/file-roller as config dir, and 
+	provide a migration from the old .file-roller dir.
+
+	* src/dlg-viewer.c (dlg_viewer): set the document filename as title.
+
+	* src/file_roller_prop.glade: use sentence capitalization in 
+	toggle buttons.
+	
+	* src/dlg-preferences.c (dlg_preferences): use 'Visible columns" as in 
+	rhythmbox.
+
 2002-12-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/file_roller.glade: 

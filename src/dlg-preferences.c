@@ -188,7 +188,7 @@ dlg_preferences (GtkWidget *caller,
 	g_free (label_text);
 
 	label = glade_xml_get_widget (data->gui, "columns_to_show_label");
-	label_text = g_strdup_printf ("<b>%s</b>", _("Columns to Show"));
+	label_text = g_strdup_printf ("<b>%s</b>", _("Visible columns"));
 	gtk_label_set_markup (GTK_LABEL (label), label_text);
 	g_free (label_text);
 

@@ -601,15 +601,16 @@ load_options_cb (GtkWidget  *w,
 	char       *options_dir;
 	char       *options_dir_slash;
 	
-	options_dir = g_strconcat (g_get_home_dir (), "/.file-roller/options", NULL);
+	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
+	options_dir_slash = g_strconcat (options_dir, "/", NULL);
+
 	ensure_dir_exists (options_dir, 0700);
-	g_free (options_dir);
 	
-	options_dir_slash = g_strconcat (g_get_home_dir (), "/.file-roller/options/", NULL);
-	
-	opt_sel = gtk_file_selection_new (_("Load options"));
+	opt_sel = gtk_file_selection_new (_("Load Options"));
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (opt_sel), 
 					 options_dir_slash);
+
+	g_free (options_dir);
 	g_free (options_dir_slash);
 	
 	g_object_set_data (G_OBJECT (opt_sel), "fr_file_sel", file_sel);
@@ -748,16 +749,17 @@ save_options_cb (GtkWidget  *w,
 	GtkWidget *opt_sel;
 	char      *options_dir;
 	char      *options_dir_slash;
-	
-	options_dir = g_strconcat (g_get_home_dir (), "/.file-roller/options", NULL);
+
+	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);	
+	options_dir_slash = g_strconcat (options_dir, "/", NULL);
+
 	ensure_dir_exists (options_dir, 0700);
-	g_free (options_dir);
 	
-	options_dir_slash = g_strconcat (g_get_home_dir (), "/.file-roller/options/", NULL);
-	
-	opt_sel = gtk_file_selection_new (_("Save options"));
+	opt_sel = gtk_file_selection_new (_("Save Options"));
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (opt_sel), 
 					 options_dir_slash);
+
+	g_free (options_dir);
 	g_free (options_dir_slash);
 	
 	g_object_set_data (G_OBJECT (opt_sel), "fr_file_sel", file_sel);

@@ -483,7 +483,7 @@ dlg_extract (GtkWidget *widget,
 	g_object_unref (G_OBJECT (data->fav_model));
 
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (_("Favorites extraction folders"),
+	column = gtk_tree_view_column_new_with_attributes (_("Bookmarks"),
 							   renderer,
 							   "text", 0,
 							   NULL);
