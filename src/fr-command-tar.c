@@ -221,17 +221,18 @@ begin_tar_command (FRCommand *comm)
 	prev_path = g_getenv ("PATH");
 	temp = g_strdup_printf ("PATH=%s:%s", prev_path, "/usr/sfw/bin");
 	putenv (temp);
+	g_free (temp);
 
 	path = g_find_program_in_path ("gtar");
 	if (path != NULL)
 		fr_process_begin_command (comm->process, path);
 	else
 		fr_process_begin_command (comm->process, "tar");
+	g_free (path);
 
 	temp = g_strdup_printf ("PATH=%s", prev_path);
 	putenv (temp);
-
-	g_free (path);
+	g_free (temp);
 }
 
 
