@@ -240,15 +240,15 @@ get_mime_type_from_sniffer (const char *filename)
 		{ NULL, NULL, 0 } 
 	};
 	FILE        *file;
-	char         buffer[80];
+	char         buffer[5];
 	int          n, i;
 	
-	file = fopen (filename, "r");
+	file = fopen (filename, "rb");
 	
 	if (file == NULL) 
                 return NULL;
 	
-	n = fread (buffer, sizeof (char), sizeof (buffer), file);
+	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, file);
 	buffer[n] = 0;
 	
 	fclose (file);
