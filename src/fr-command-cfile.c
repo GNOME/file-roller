@@ -44,41 +44,130 @@ static void fr_command_cfile_finalize    (GObject             *object);
 static FRCommandClass *parent_class = NULL;
 
 
-static void
-fr_command_cfile_list (FRCommand *comm)
+static char *
+eat_spaces (char *line)
 {
-	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
-	FileData       *fdata;
-	gchar          *filename;
+	while ((*line == ' ') && (*line != 0))
+		line++;
+	return line;
+}
+
+
+static char **
+split_line (char *line, 
+	    int   n_fields)
+{
+	char **fields;
+	char  *scan, *field_end;
+	int    i;
+
+	fields = g_new0 (char *, n_fields + 1);
+	fields[n_fields] = NULL;
+
+	scan = eat_spaces (line);
+	for (i = 0; i < n_fields; i++) {
+		field_end = strchr (scan, ' ');
+		fields[i] = g_strndup (scan, field_end - scan);
+		scan = eat_spaces (field_end);
+	}
+
+	return fields;
+}
+
+
+static void
+list__process_line (char     *line, 
+		    gpointer  data)
+{
+	FRCommand  *comm = FR_COMMAND (data);
+	FileData   *fdata;
+	char      **fields;
+	char       *filename;
 
 	fdata = file_data_new ();
 
+	fields = split_line (line, 2);
+	fdata->size = atol (fields[1]);
+	g_strfreev (fields);
+
 	filename = remove_extension_from_path (comm->filename);
 	fdata->full_path = g_strconcat ("/", 
-					file_name_from_path (filename), 
+					file_name_from_path (filename),
 					NULL);
 	g_free (filename);
 
 	fdata->original_path = fdata->full_path + 1;
 	fdata->link = NULL;
-	fdata->size = get_file_size (comm->filename);
 	fdata->modified = get_file_mtime (comm->filename);
-
+	
 	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
 	fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
-
+	
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else 
 		comm->file_list = g_list_prepend (comm->file_list, fdata);
-	
-	comm_cfile->error.type = FR_PROC_ERROR_NONE;
-	comm_cfile->error.status = 0;
-	g_signal_emit_by_name (G_OBJECT (comm), 
-			       "done",
-			       comm->action, 
-			       &comm_cfile->error);
+}
+
+
+static void
+fr_command_cfile_list (FRCommand *comm)
+{
+	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
+
+	if (comm_cfile->compress_prog == FR_COMPRESS_PROGRAM_GZIP) {
+		/* gzip let us known the uncompressed size */
+
+		fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+					      list__process_line,
+					      comm);
+		
+		fr_process_clear (comm->process);
+		fr_process_begin_command (comm->process, "gzip");
+		fr_process_add_arg (comm->process, "-l");
+		fr_process_add_arg (comm->process, "-q");
+		fr_process_add_arg (comm->process, comm->e_filename);
+		fr_process_end_command (comm->process);
+		fr_process_start (comm->process);
+
+	} else {
+		/* ... other compressors do not support this feature so 
+		 * simply use the archive size, suboptimal but there is no 
+		 * alternative. */
+
+		FileData *fdata;
+		char     *filename;
+
+		fdata = file_data_new ();
+
+		filename = remove_extension_from_path (comm->filename);
+		fdata->full_path = g_strconcat ("/", 
+						file_name_from_path (filename),
+						NULL);
+		g_free (filename);
+
+		fdata->original_path = fdata->full_path + 1;
+		fdata->link = NULL;
+		fdata->size = get_file_size (comm->filename);
+		fdata->modified = get_file_mtime (comm->filename);
+		
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+		fdata->path = remove_level_from_path (fdata->full_path);
+		fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
+		
+		if (*fdata->name == 0)
+			file_data_free (fdata);
+		else 
+			comm->file_list = g_list_prepend (comm->file_list, fdata);
+		
+		comm_cfile->error.type = FR_PROC_ERROR_NONE;
+		comm_cfile->error.status = 0;
+		g_signal_emit_by_name (G_OBJECT (comm), 
+				       "done",
+				       comm->action, 
+				       &comm_cfile->error);
+	}
 }
 
 
