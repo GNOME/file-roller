@@ -1,5 +1,8 @@
 2003-06-17  Paolo Bacchilega  <paolo.bacch@tin.it>
 
+	* src/Makefile.am (file_roller_LDADD): removed LIBOBJ, no more
+	needed because fnmatch is gone now.
+
 	* src/file-utils.h: include <sys/types.h> because of mode_t
 
 2003-06-12  Breda McColgan  <breda.mccolgan@sun.com>
