@@ -70,7 +70,12 @@ impl_Bonobo_Listener_event (PortableServer_Servant servant,
 	int      i;
 
 	frc = FILE_ROLLER_COMPONENT (bonobo_object_from_servant (servant));
-	list = (CORBA_sequence_CORBA_string *)args;
+
+	if (!CORBA_TypeCode_equivalent (args->_type, TC_CORBA_sequence_CORBA_string, ev)) {
+		return;
+	}
+
+	list = (CORBA_sequence_CORBA_string *)args->_value;
 
 	g_return_if_fail (frc != NULL);
 	g_return_if_fail (list != NULL);
