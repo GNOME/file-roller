@@ -61,7 +61,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	gboolean  selected_files;
 	gboolean  pattern_files;
 	FRWindow *window = data->window;
-	GList    *file_list;
+	GList    *file_list = NULL;
 	gboolean  do_not_remove_if_null = FALSE;
 
 	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio));
@@ -69,7 +69,6 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	/* create the file list. */
 
-	file_list = NULL;
 	if (selected_files) 
 		file_list = window_get_file_list_selection (window, TRUE, NULL);
 	else if (pattern_files) {

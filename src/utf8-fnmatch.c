@@ -301,3 +301,103 @@ g_utf8_fnmatch (const char *pattern,
 }
 
 
+#ifdef UTF8_FN_MATCH_TEST
+
+
+static gboolean noisy = FALSE;
+
+
+static void
+verbose (const gchar *format, ...)
+{
+	gchar *msg;
+	va_list args;
+	
+	va_start (args, format);
+	msg = g_strdup_vprintf (format, args);
+	va_end (args);
+	
+	if (noisy)
+		g_print (msg);
+	g_free (msg);
+}
+
+
+static gboolean
+test_match (gchar *pattern,
+            gchar *string,
+            gboolean match)
+{
+	verbose ("matching \"%s\" against \"%s\" \t", string, pattern);
+	
+	if ((g_utf8_fnmatch (pattern, string, FNM_CASEFOLD) == 0) != match)
+		{
+			g_print ("failed \t(unexpected %s)\n", (match ? "mismatch" : "match"));
+			return FALSE;
+		}
+	
+	verbose ("passed (%s)\n", match ? "match" : "nomatch");
+	
+	return TRUE;
+}
+
+
+#define TEST_MATCH(pattern, string, match) {	\
+  total++;			\
+  if (test_match (pattern, string, match)) \
+    passed++; \
+  else \
+    failed++; \
+}
+
+
+int main (int argc, gchar **argv) {
+	gint total = 0;
+	gint passed = 0;
+	gint failed = 0;
+	gint i;
+	
+	for (i = 1; i < argc; i++)
+		if (strcmp ("--noisy", argv[i]) == 0)
+			noisy = TRUE;
+	
+	TEST_MATCH("*x", "x", TRUE);
+	TEST_MATCH("*x", "xx", TRUE);
+	TEST_MATCH("*x", "yyyx", TRUE);
+	TEST_MATCH("*x", "yyxy", FALSE);
+	TEST_MATCH("?x", "x", FALSE);
+	TEST_MATCH("?x", "xx", TRUE);
+	TEST_MATCH("?x", "yyyx", FALSE);
+	TEST_MATCH("?x", "yyxy", FALSE);
+	TEST_MATCH("*?x", "xx", TRUE);
+	TEST_MATCH("?*x", "xx", TRUE);
+	TEST_MATCH("*?x", "x", FALSE);
+	TEST_MATCH("?*x", "x", FALSE);
+	TEST_MATCH("*?*x", "yx", TRUE);
+	TEST_MATCH("*?*x", "xxxx", TRUE);
+	TEST_MATCH("x*??", "xyzw", TRUE);
+	TEST_MATCH("*x", "\xc3\x84x", TRUE);
+	TEST_MATCH("?x", "\xc3\x84x", TRUE);
+	TEST_MATCH("??x", "\xc3\x84x", FALSE);
+	TEST_MATCH("ab\xc3\xa4\xc3\xb6", "ab\xc3\xa4\xc3\xb6", TRUE);
+	TEST_MATCH("ab\xc3\xa4\xc3\xb6", "abao", FALSE);
+	TEST_MATCH("ab?\xc3\xb6", "ab\xc3\xa4\xc3\xb6", TRUE);
+	TEST_MATCH("ab?\xc3\xb6", "abao", FALSE);
+	TEST_MATCH("ab\xc3\xa4?", "ab\xc3\xa4\xc3\xb6", TRUE);
+	TEST_MATCH("ab\xc3\xa4?", "abao", FALSE);
+	TEST_MATCH("ab??", "ab\xc3\xa4\xc3\xb6", TRUE);
+	TEST_MATCH("ab*", "ab\xc3\xa4\xc3\xb6", TRUE);
+	TEST_MATCH("ab*\xc3\xb6", "ab\xc3\xa4\xc3\xb6", TRUE);
+	TEST_MATCH("ab*\xc3\xb6", "aba\xc3\xb6x\xc3\xb6", TRUE);
+	TEST_MATCH("*.o", "gtkcellrendererthreestates.o", TRUE);
+	TEST_MATCH("A*.o", "AA.o", TRUE);
+	TEST_MATCH("A*.o", "aaaa.o", TRUE);
+	TEST_MATCH("A*.o", "B.o", FALSE);
+
+	verbose ("\n%u tests passed, %u failed\n", passed, failed);
+        
+	return failed;
+}
+
+#endif
+
