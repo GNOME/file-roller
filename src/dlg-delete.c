@@ -87,7 +87,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	/* remove ! */
 
 	if (! do_not_remove_if_null || (file_list != NULL))
-		fr_archive_remove (window->archive, file_list, window->compression);
+		window_archive_remove (window, file_list, window->compression);
 
 	if (file_list != NULL) {
 		g_list_foreach (file_list, (GFunc) g_free, NULL);

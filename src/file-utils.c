@@ -935,7 +935,7 @@ get_last_field (const char *line,
 
 
 char *
-get_temp_work_dir_name ()
+get_temp_work_dir_name (void)
 {
 	char       *result = NULL;
 	static int  count = 0;
@@ -948,8 +948,7 @@ get_temp_work_dir_name ()
 					  "/file-roller",
 					  getpid (),
 					  count++);
-	} while (g_file_test (result, G_FILE_TEST_EXISTS)
-		 && (try++ < MAX_TRIES));
+	} while (path_is_file (result) && (try++ < MAX_TRIES));
 
 	return result;
 }

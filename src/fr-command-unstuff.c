@@ -190,9 +190,7 @@ fr_command_unstuff_list (FRCommand *comm)
 				      process_line,
 				      comm);
 
-	fr_process_clear (comm->process);
 	fr_process_begin_command (comm->process, "unstuff");
-
 	fr_process_add_arg (comm->process, "--trace");
 
 	/* Actually unpack everything in a temporary directory */

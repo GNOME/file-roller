@@ -108,8 +108,7 @@ char **             split_line                   (const char *line,
 const char *        get_last_field               (const char *line,
 						  int         last_field);
 
-
-char *              get_temp_work_dir_name       ();
+char *              get_temp_work_dir_name       (void);
 
 
 #endif /* FILE_UTILS_H */

@@ -1047,7 +1047,7 @@ _window_update_sensitivity (FRWindow *window)
 	gtk_widget_set_sensitive (window->mitem_password, ! no_archive && ! running && window->archive->command->propPassword);
 
 	gtk_widget_set_sensitive (window->mitem_select_all, ! no_archive);
-	/*	gtk_widget_set_sensitive (window->mitem_unselect_all, ! no_archive);*/
+	gtk_widget_set_sensitive (window->mitem_unselect_all, ! no_archive);
 
 	gtk_widget_set_sensitive (window->mitem_last_output, 
 				  ((window->archive != NULL)
@@ -1448,6 +1448,8 @@ convert__get_files_done_cb (gpointer data)
 
 	visit_dir_handle_free (window->vd_handle);
 	window->vd_handle = NULL;
+
+	fr_process_start (window->archive->process);
 }
 
 
@@ -1680,6 +1682,7 @@ _action_performed (FRArchive   *archive,
 		if (window->convert_data.converting) {
 			_action_started (window->archive, FR_ACTION_GET_LIST, window);
 
+			fr_process_clear (window->archive->process);
 			window->vd_handle = fr_archive_add_with_wildcard (
 				  window->convert_data.new_archive,
 				  "*",
@@ -1947,12 +1950,16 @@ drag_drop_add_file_list (FRWindow *window)
 		window->adding_dropped_files = TRUE;
 
 		base_dir = remove_level_from_path (path);
+
+		fr_process_clear (window->archive->process);
 		window_archive_add_directory (window,
 					      file_name_from_path (path),
 					      base_dir,
 					      window->update_dropped_files,
 					      window->password,
 					      window->compression);
+		fr_process_start (window->archive->process);
+
 		g_free (base_dir);
 		g_free (path);
 
@@ -1992,6 +1999,7 @@ drag_drop_add_file_list (FRWindow *window)
 		for (scan = list; scan; scan = scan->next)
 			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
 
+		fr_process_clear (archive->process);
 		fr_archive_add (archive,
 				only_names_list,
 				first_basedir,
@@ -1999,6 +2007,7 @@ drag_drop_add_file_list (FRWindow *window)
 				window->update_dropped_files,
 				window->password,
 				window->compression);
+		fr_process_start (archive->process);
 
 		g_list_free (only_names_list);
 		g_free (first_basedir);
@@ -2015,8 +2024,8 @@ drag_drop_add_file_list (FRWindow *window)
 	fr_process_clear (archive->process);
 	fr_command_uncompress (archive->command);
 	for (scan = list; scan; scan = scan->next) {
-		gchar *fullpath = scan->data;
-		gchar *basedir;
+		char  *fullpath = scan->data;
+		char  *basedir;
 		GList *singleton;
 		
 		basedir = remove_level_from_path (fullpath);
@@ -2266,6 +2275,7 @@ file_list_drag_begin (GtkWidget          *widget,
 		window->extracting_dragged_files = TRUE;
 		window->extracting_dragged_files_interrupted = FALSE;
 
+		fr_process_clear (window->archive->process);
 		fr_archive_extract (window->archive,
 				    window->drag_file_list,
 				    window->drag_temp_dir,
@@ -2273,6 +2283,7 @@ file_list_drag_begin (GtkWidget          *widget,
 				    TRUE,
 				    FALSE,
 				    window->password);
+		fr_process_start (window->archive->process);
 	}
 
 #ifdef DEBUG
@@ -3227,7 +3238,7 @@ window_new ()
 	window->mitem_rename = edit_menu[EDIT_MENU_RENAME].widget;
 
 	window->mitem_select_all = edit_menu[EDIT_MENU_SELECT_ALL].widget;
-	/*	window->mitem_unselect_all = edit_menu[EDIT_MENU_DESELECT_ALL].widget;*/
+	window->mitem_unselect_all = edit_menu[EDIT_MENU_DESELECT_ALL].widget;
 
 	window->mitem_view_toolbar = view_menu[VIEW_MENU_TOOLBAR].widget;
 	window->mitem_view_statusbar = view_menu[VIEW_MENU_STATUSBAR].widget;
@@ -3816,6 +3827,27 @@ window_archive_rename (FRWindow   *window,
 /**/
 
 
+void
+window_archive_add (FRWindow      *window,
+		    GList         *file_list,
+		    const char    *base_dir,
+		    const char    *dest_dir,
+		    gboolean       update,
+		    const char    *password,
+		    FRCompression  compression)
+{
+	fr_process_clear (window->archive->process);
+	fr_archive_add (window->archive,
+			file_list,
+			base_dir,
+			dest_dir,
+			update,
+			password,
+			compression);
+	fr_process_start (window->archive->process);
+}
+
+
 static void
 add_files_done_cb (gpointer data)
 {
@@ -3826,6 +3858,8 @@ add_files_done_cb (gpointer data)
 
 	visit_dir_handle_free (window->vd_handle);
 	window->vd_handle = NULL;
+
+	fr_process_start (window->archive->process);
 }
 
 
@@ -3848,6 +3882,7 @@ window_archive_add_with_wildcard (FRWindow      *window,
 
 	_action_started (window->archive, FR_ACTION_GET_LIST, window);
 
+	fr_process_clear (window->archive->process);
 	window->vd_handle = fr_archive_add_with_wildcard (window->archive,
 							  include_files,
 							  exclude_files,
@@ -3879,6 +3914,7 @@ window_archive_add_directory (FRWindow      *window,
 
 	_action_started (window->archive, FR_ACTION_GET_LIST, window);
 
+	fr_process_clear (window->archive->process);
 	window->vd_handle = fr_archive_add_directory (window->archive, 
 						      directory,
 						      base_dir, 
@@ -3888,6 +3924,17 @@ window_archive_add_directory (FRWindow      *window,
 						      compression,
 						      add_files_done_cb,
 						      window);
+}
+
+
+void
+window_archive_remove (FRWindow      *window,
+		       GList         *file_list,
+		       FRCompression  compression)
+{
+	fr_process_clear (window->archive->process);
+	fr_archive_remove (window->archive, file_list, compression);
+	fr_process_start (window->archive->process);
 }
 
 
@@ -3965,6 +4012,7 @@ window_archive_extract (FRWindow   *window,
 		return;
 	}
 
+	fr_process_clear (window->archive->process);
 	fr_archive_extract (window->archive,
 			    file_list,
 			    extract_to_dir,
@@ -3972,6 +4020,7 @@ window_archive_extract (FRWindow   *window,
 			    overwrite,
 			    junk_paths,
 			    password);
+	fr_process_start (window->archive->process);
 }
 
 
@@ -4418,6 +4467,231 @@ window_view_last_output (FRWindow   *window,
 }
 
 
+/* -- window_rename_selection -- */
+
+
+static gboolean
+valid_name (const char  *new_name,
+	    const char  *old_name,
+	    char       **reason)
+{
+	char     *utf8_new_name;
+	gboolean  retval = TRUE;
+
+	new_name = eat_spaces (new_name);
+	utf8_new_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
+
+	if (*new_name == '\0') {
+		*reason = g_strdup_printf ("%s\n\n%s", _("The new name is void."), _("Please use a different name."));
+		retval = FALSE;
+
+	} else if (strcmp (new_name, old_name) == 0) {
+		*reason = g_strdup_printf ("%s\n\n%s", _("The new name is equal to the old one."), _("Please use a different name."));
+		retval = FALSE;
+		
+	} else {
+		const char *bad_chars = "/\\*";
+		int i, l = strlen (bad_chars);
+
+		for (i = 0; i < l; i++) 
+			if (strchr (new_name, bad_chars[i]) != NULL) {
+				*reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_new_name, bad_chars, _("Please use a different name."));
+				retval = FALSE;
+				break;
+			}
+	}
+
+	g_free (utf8_new_name);
+
+	return retval;
+}
+
+
+static char *
+get_first_level_dir (const char *path,
+		     const char *current_dir)
+{
+	const char * from_current;
+	const char * first_sep;
+
+	g_return_val_if_fail (path != NULL, NULL);
+	g_return_val_if_fail (current_dir != NULL, NULL);
+
+	from_current = path + strlen (current_dir) - 1;
+	first_sep = strchr (from_current, G_DIR_SEPARATOR);
+
+	if (first_sep == NULL)
+		return g_strdup (from_current);
+	else
+		return g_strndup (from_current, first_sep - from_current);
+}
+
+
+/* -- window_rename_selection -- */
+
+
+static void
+rename_selection (FRWindow   *window,
+		  GList      *file_list,
+		  const char *old_name, 
+		  const char *new_name,
+		  gboolean    is_dir)
+{
+	char      *tmp_dir;
+	FRArchive *archive = window->archive;
+	GList     *scan, *new_file_list = NULL;
+
+	fr_process_clear (archive->process);
+
+	tmp_dir = get_temp_work_dir_name ();
+	ensure_dir_exists (tmp_dir, 0700);
+
+	fr_archive_extract (archive,
+			    file_list,
+			    tmp_dir,
+			    FALSE,
+			    TRUE,
+			    FALSE,
+			    window->password);
+
+	fr_archive_remove (archive,
+			   file_list,
+			   window->compression);
+
+	/* rename files. */
+		
+	if (is_dir) {
+		const char *current_dir = window_get_current_location (window);
+		char       *old_path, *new_path;
+		
+		old_path = g_build_filename (tmp_dir, current_dir, old_name, NULL);
+		new_path = g_build_filename (tmp_dir, current_dir, new_name, NULL);
+		
+		fr_process_begin_command (archive->process, "mv");
+		fr_process_add_arg (archive->process, "-f");
+		fr_process_add_arg (archive->process, old_path);
+		fr_process_add_arg (archive->process, new_path);
+		fr_process_end_command (archive->process);
+
+		g_free (old_path);
+		g_free (new_path);
+	}
+
+	for (scan = file_list; scan; scan = scan->next) {
+		const char *current_dir = window_get_current_location (window);
+		const char *current_dir_relative = current_dir + 1;
+		const char *filename = (char*) scan->data;
+		char       *old_path, *common, *new_path;
+
+		old_path = g_build_filename (tmp_dir, filename, NULL);
+		common = g_strdup (filename + strlen (current_dir_relative) + strlen (old_name));
+		new_path = g_build_filename (tmp_dir, current_dir, new_name, common, NULL);
+
+		if (! is_dir) {
+			fr_process_begin_command (archive->process, "mv");
+			fr_process_add_arg (archive->process, "-f");
+			fr_process_add_arg (archive->process, old_path);
+			fr_process_add_arg (archive->process, new_path);
+			fr_process_end_command (archive->process);
+		}
+
+		new_file_list = g_list_prepend (new_file_list, g_build_filename (current_dir_relative, new_name, common, NULL));
+
+		g_free (common);
+		g_free (old_path);
+		g_free (new_path);
+	}
+
+	new_file_list = g_list_reverse (new_file_list);
+
+	fr_archive_add (archive,
+			new_file_list,
+			tmp_dir,
+			NULL,
+			FALSE,
+			window->password,
+			window->compression);
+
+	/* remove the tmp dir */
+
+	fr_process_begin_command (archive->process, "rm");
+	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+	fr_process_set_sticky (archive->process, TRUE);
+	fr_process_add_arg (archive->process, "-rf");
+	fr_process_add_arg (archive->process, tmp_dir);
+	fr_process_end_command (archive->process);
+
+	fr_process_start (archive->process);
+
+	g_free (tmp_dir);
+}
+
+
+void
+window_rename_selection (FRWindow *window)
+{
+	GList    *selection;
+	gboolean  has_dir;
+	char     *old_name, *utf8_old_name, *utf8_new_name;
+
+	selection = window_get_file_list_selection (window, TRUE, &has_dir);
+	if (selection == NULL)
+		return;
+
+	if (has_dir)
+		old_name = get_first_level_dir ((char*) selection->data, window_get_current_location (window));
+	else
+		old_name = g_strdup (file_name_from_path ((char*) selection->data));
+
+ retry__rename_selection:
+	utf8_old_name = g_locale_to_utf8 (old_name, -1 ,0 ,0 ,0);
+	utf8_new_name = _gtk_request_dialog_run (GTK_WINDOW (window->app),
+						 (GTK_DIALOG_DESTROY_WITH_PARENT 
+						  | GTK_DIALOG_MODAL),
+						 _("Rename"),
+						 (has_dir? _("New folder name"): _("New file name")),
+						 utf8_old_name,
+						 1024,
+						 GTK_STOCK_CANCEL,
+						 _("_Rename"));
+	g_free (utf8_old_name);
+
+	if (utf8_new_name != NULL) {
+		char *new_name = g_filename_from_utf8 (utf8_new_name, -1, 0, 0, 0);
+		char *reason = NULL;
+
+		g_free (utf8_new_name);
+
+		if (! valid_name (new_name, old_name, &reason)) {
+			char      *utf8_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
+			GtkWidget *dlg;
+			
+			dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+						       GTK_DIALOG_DESTROY_WITH_PARENT,
+						       GTK_STOCK_DIALOG_ERROR,
+						       (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
+						       reason,
+						       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
+						       NULL);
+			g_free (reason);
+			g_free (utf8_name);
+			g_free (new_name);
+			
+			gtk_dialog_run (GTK_DIALOG (dlg));
+			gtk_widget_destroy (dlg);
+
+			goto retry__rename_selection;
+		}
+
+		rename_selection (window, selection, old_name, new_name, has_dir);
+		g_free (new_name);
+	}
+
+	g_free (old_name);
+	path_list_free (selection);
+}
+
+
 /* -- window_view_file -- */
 
 
@@ -4497,6 +4771,8 @@ window_view_file (FRWindow *window,
 			  G_CALLBACK (view_file),
 			  vdata);
 
+	fr_process_clear (window->archive->process);
+	
 	file_list = g_list_prepend (NULL, file);
 	fr_archive_extract (window->archive,
 			    file_list,
@@ -4506,6 +4782,8 @@ window_view_file (FRWindow *window,
 			    FALSE,
 			    window->password);
 	g_list_free (file_list);
+
+	fr_process_start (window->archive->process);
 }
 
 
@@ -4587,6 +4865,7 @@ window_open_files (FRWindow *window,
 			  G_CALLBACK (open_files),
 			  cdata);
 
+	fr_process_clear (window->archive->process);
 	fr_archive_extract (window->archive,
 			    file_list,
 			    cdata->temp_dir,
@@ -4594,6 +4873,7 @@ window_open_files (FRWindow *window,
 			    TRUE,
 			    FALSE,
 			    window->password);
+	fr_process_start (window->archive->process);
 }
 
 

@@ -171,19 +171,20 @@ open_file_ok_cb (GtkWidget *w,
 							      window->compression);
 
 			} else 
-				fr_archive_add (window->archive,
-						files,
-						base_dir,
-						window_get_current_location (window),
-						update,
-						window->password,
-						window->compression);
+				window_archive_add (window,
+						    files,
+						    base_dir,
+						    window_get_current_location (window),
+						    update,
+						    window->password,
+						    window->compression);
 
 			g_free (first_path);
 		}
 		
 		g_list_free (files);
 		g_strfreev (selections); 
+
 	} else {
 		gboolean    recursive;
 		gboolean    no_symlinks;

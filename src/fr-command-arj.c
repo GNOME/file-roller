@@ -163,7 +163,6 @@ fr_command_arj_list (FRCommand *comm)
 				      list__process_line,
 				      comm);
 
-	fr_process_clear (comm->process);
 	fr_process_begin_command (comm->process, "arj");
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-y");

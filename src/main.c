@@ -138,7 +138,7 @@ initialize_data ()
 {
 	char *icon_path = PIXMAPSDIR "/file-roller.png";
 
-	if (! g_file_test (icon_path, G_FILE_TEST_EXISTS))
+	if (! path_is_file (icon_path))
                 g_warning ("Could not find %s", icon_path);
 	else
 		gnome_window_icon_set_default_from_file (icon_path);

@@ -129,7 +129,7 @@ fr_command_rpm_list (FRCommand *comm)
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      list__process_line,
 				      comm);
-	fr_process_clear (comm->process);
+
 	fr_process_begin_command (comm->process, "rpm2cpio");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_add_arg (comm->process, "| cpio --list --force-local --verbose");
@@ -149,7 +149,6 @@ fr_command_rpm_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_clear (comm->process);
 	fr_process_begin_command (comm->process, "rpm2cpio");
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);

@@ -221,7 +221,6 @@ fr_command_zip_list (FRCommand *comm)
 				      list__process_line,
 				      comm);
 
-	fr_process_clear (comm->process);
 	fr_process_begin_command (comm->process, "unzip");
 	fr_process_add_arg (comm->process, "-qq");
 	fr_process_add_arg (comm->process, "-v");

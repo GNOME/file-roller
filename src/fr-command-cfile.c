@@ -94,8 +94,7 @@ fr_command_cfile_list (FRCommand *comm)
 		fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 					      list__process_line,
 					      comm);
-		
-		fr_process_clear (comm->process);
+
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_add_arg (comm->process, "-l");
 		fr_process_add_arg (comm->process, "-q");

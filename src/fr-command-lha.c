@@ -195,7 +195,6 @@ fr_command_lha_list (FRCommand *comm)
 				      process_line,
 				      comm);
 
-	fr_process_clear (comm->process);
 	fr_process_begin_command (comm->process, "lha");
 	fr_process_add_arg (comm->process, "lq");
 	fr_process_add_arg (comm->process, comm->e_filename);

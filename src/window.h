@@ -257,9 +257,13 @@ void       window_archive_reload            (FRWindow      *window);
 void       window_archive_rename            (FRWindow      *window, 
 					     const char    *filename);
 
-void       window_archive_add_files         (FRWindow      *window,
+void       window_archive_add               (FRWindow      *window,
 					     GList         *file_list,
-					     gboolean       update);
+					     const char    *base_dir,
+					     const char    *dest_dir,
+					     gboolean       update,
+					     const char    *password,
+					     FRCompression  compression);
 
 void       window_archive_add_with_wildcard (FRWindow      *window,
 					     const char    *include_files,
@@ -280,6 +284,10 @@ void       window_archive_add_directory     (FRWindow      *window,
 					     const char    *base_dir,
 					     gboolean       update,
 					     const char    *password,
+					     FRCompression  compression);
+
+void       window_archive_remove            (FRWindow      *window,
+					     GList         *file_list,
 					     FRCompression  compression);
 
 void       window_archive_extract           (FRWindow      *window,
@@ -323,6 +331,8 @@ GList *    window_get_file_list_selection   (FRWindow    *window,
 
 GList *    window_get_file_list_pattern     (FRWindow    *window,
 					     const char  *pattern);
+
+void       window_rename_selection          (FRWindow    *window);
 
 /**/
 

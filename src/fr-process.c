@@ -59,6 +59,7 @@ fr_command_info_new ()
 	c_info->args = NULL;
 	c_info->dir = NULL;
 	c_info->sticky = FALSE;
+	c_info->ignore_error = FALSE;
 
 	return c_info;
 }
@@ -279,6 +280,19 @@ fr_process_set_sticky (FRProcess *fr_proc,
 
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
 	c_info->sticky = sticky;
+}
+
+
+void
+fr_process_set_ignore_error (FRProcess *fr_proc, 
+			     gboolean   ignore_error)
+{
+	FRCommandInfo *c_info;
+
+	g_return_if_fail (fr_proc != NULL);
+
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->n_comm);
+	c_info->ignore_error = ignore_error;
 }
 
 
@@ -610,6 +624,8 @@ check_child (gpointer data)
 	pid_t           pid;
 	int             status;
 
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_command);
+
 	/* Remove check. */
 
 	g_source_remove (fr_proc->log_timeout);	
@@ -625,6 +641,11 @@ check_child (gpointer data)
 						      check_child,
 						      fr_proc);
 		return FALSE;
+	}
+
+	if (c_info->ignore_error) {
+		fr_proc->error.type = FR_PROC_ERROR_NONE;
+		g_print ("[ignore error]\n");
 	}
 
 	if (fr_proc->error.type != FR_PROC_ERROR_STOPPED) {
@@ -658,7 +679,6 @@ check_child (gpointer data)
 
 	/**/
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_command);
 	if (c_info->end_func != NULL)
 		(*c_info->end_func) (c_info->end_data);
 

@@ -226,7 +226,6 @@ fr_command_zoo_list (FRCommand *zoo_comm)
 				      process_zoo_line,
 				      zoo_comm);
 
-	fr_process_clear (zoo_comm->process);
 	fr_process_begin_command (zoo_comm->process, "zoo");
 	fr_process_add_arg (zoo_comm->process, "lq");
 	fr_process_add_arg (zoo_comm->process, zoo_comm->e_filename);

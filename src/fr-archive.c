@@ -642,7 +642,10 @@ fr_archive_load (FRArchive   *archive,
 
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
+
+	fr_process_clear (archive->process);
 	fr_command_list (archive->command);
+	fr_process_start (archive->process);
 
 	return TRUE;
 }
@@ -656,7 +659,10 @@ fr_archive_reload (FRArchive *archive)
 
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
+
+	fr_process_clear (archive->process);
 	fr_command_list (archive->command);
+	fr_process_start (archive->process);
 }
 
 
@@ -881,7 +887,7 @@ fr_archive_add (FRArchive     *archive,
 		return;
 	}
 
-	fr_process_clear (archive->process);
+	/*fr_process_clear (archive->process); FIXME */
 
 	fr_command_uncompress (archive->command);
 
@@ -906,6 +912,7 @@ fr_archive_add (FRArchive     *archive,
 
 		if (del_list != NULL) {
 			_archive_remove (archive, del_list);
+			fr_process_set_ignore_error (archive->process, TRUE);
 			g_list_free (del_list);
 		}
 	}
@@ -958,7 +965,7 @@ fr_archive_add (FRArchive     *archive,
 	}
 	g_free (tmp_base_dir);
 
-	fr_process_start (archive->process);
+	/* fr_process_start (archive->process); FIXME */
 }
 
 
@@ -1222,11 +1229,9 @@ fr_archive_remove (FRArchive     *archive,
 
 	fr_archive_stoppable (archive, FALSE);
 
-	fr_process_clear (archive->process);
 	fr_command_uncompress (archive->command);
 	_archive_remove (archive, file_list);
 	fr_command_recompress (archive->command, compression);
-	fr_process_start (archive->process);
 }
 
 
@@ -1389,8 +1394,7 @@ fr_archive_extract (FRArchive  *archive,
 		GList *e_file_list;
 
 		e_file_list = escape_file_list (file_list);
-
-		fr_process_clear (archive->process);
+		/*fr_process_clear (archive->process); FIXME */
 		extract_in_chunks (archive->command,
 				   e_file_list,
 				   dest_dir,
@@ -1398,16 +1402,15 @@ fr_archive_extract (FRArchive  *archive,
 				   skip_older,
 				   junk_paths,
 				   password);
-
 		path_list_free (e_file_list);
+		/* fr_process_start (archive->process); FIXME */
 
-		fr_process_start (archive->process);
 		return;
 	}
 
 	/* .. else we have to implement the unsupported options. */
 
-	fr_process_clear (archive->process);
+	/*fr_process_clear (archive->process);*/
 
 	move_to_dest_dir = (junk_paths 
 			    && ! archive->command->propExtractCanJunkPaths);
@@ -1528,7 +1531,7 @@ fr_archive_extract (FRArchive  *archive,
 		/* the list has been created in this function. */
 		path_list_free (file_list);
 
-	fr_process_start (archive->process);
+	/* fr_process_start (archive->process); FIXME */
 }
 
 

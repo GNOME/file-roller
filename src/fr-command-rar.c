@@ -173,7 +173,6 @@ fr_command_rar_list (FRCommand *comm)
 				      process_line,
 				      comm);
 
-	fr_process_clear (comm->process);
 	if (fr_command_rar_have_rar ())
 		fr_process_begin_command (comm->process, "rar");
 	else

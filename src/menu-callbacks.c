@@ -176,7 +176,7 @@ new_file_ok_cb (GtkWidget *w,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not create the archive"),
 						  _("You have to specify an archive name."),
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -195,7 +195,7 @@ new_file_ok_cb (GtkWidget *w,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not create the archive"),
 						  _("You don't have permission to create an archive in this folder"),
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 
 		gtk_dialog_run (GTK_DIALOG (dialog));
@@ -244,7 +244,7 @@ new_file_ok_cb (GtkWidget *w,
 							  GTK_STOCK_DIALOG_ERROR,
 							  _("Could not delete the old archive."),
 							  NULL,
-							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -287,7 +287,7 @@ new_archive_cb (GtkWidget *widget,
 	GtkWidget *menu;
 	char      *dir;
 
-	file_sel = gtk_file_selection_new (_("New Archive"));
+	file_sel = gtk_file_selection_new (_("New"));
 
 	dir = g_strconcat (window->open_default_dir, "/", NULL);
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
@@ -371,7 +371,7 @@ save_file_ok_cb (GtkWidget *w,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not save the archive"),
 						  _("You have to specify an archive name."),
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -390,7 +390,7 @@ save_file_ok_cb (GtkWidget *w,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not save the archive"),
 						  _("You don't have permission to create an archive in this folder"),
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -430,7 +430,7 @@ save_file_ok_cb (GtkWidget *w,
 							  GTK_STOCK_DIALOG_ERROR,
 							  _("Could not delete the old archive."),
 							  NULL,
-							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -455,7 +455,7 @@ save_as_archive_cb (GtkWidget *widget,
 	GtkWidget *menu;
 	char      *dir;
 
-	file_sel = gtk_file_selection_new (_("Save Archive"));
+	file_sel = gtk_file_selection_new (_("Save"));
 
 	dir = g_strconcat (window->open_default_dir, "/", NULL);
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
@@ -659,7 +659,7 @@ copy_or_move_archive_ok_cb (GtkWidget    *w,
 							  GTK_STOCK_DIALOG_ERROR,
 							  _("Could not copy the archive"),
 							  NULL,
-							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
@@ -677,7 +677,7 @@ copy_or_move_archive_ok_cb (GtkWidget    *w,
 							  GTK_STOCK_DIALOG_ERROR,
 							  _("Could not move the archive"),
 							  NULL,
-							  GTK_STOCK_OK, GTK_RESPONSE_OK,
+							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
@@ -702,7 +702,7 @@ copy_or_move_archive (FRWindow *window,
 	data->window = window;
 	data->copy = copy;
 	data->overwrite = overwrite;
-	data->file_sel = file_sel = gtk_file_selection_new (copy ? _("Copy Archive") : _("Move Archive"));
+	data->file_sel = file_sel = gtk_file_selection_new (copy ? _("Copy") : _("Move"));
 
 	dir = g_strconcat (window->open_default_dir, "/", NULL);
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
@@ -780,7 +780,7 @@ rename_archive_cb (GtkWidget *widget,
 	utf8_string = _gtk_request_dialog_run (GTK_WINDOW (window->app),
 					       (GTK_DIALOG_DESTROY_WITH_PARENT 
 						| GTK_DIALOG_MODAL),
-					       _("Rename Archive"),
+					       _("Rename"),
 					       _("New archive name (without extension)"),
 					       utf8_old_string,
 					       1024,
@@ -1267,4 +1267,12 @@ view_statusbar_cb (GtkWidget *widget,
 		   void      *data)
 {
 	eel_gconf_set_boolean (PREF_UI_STATUSBAR, GTK_CHECK_MENU_ITEM (widget)->active);
+}
+
+
+void
+rename_cb (GtkWidget *widget, 
+	   void *data)
+{
+	window_rename_selection ((FRWindow*) data);
 }
