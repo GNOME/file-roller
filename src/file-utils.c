@@ -958,6 +958,15 @@ get_last_field (const char *line,
 }
 
 
+char *
+get_temp_work_dir (void)
+{
+	char temp_dir_template[] = "/tmp/fr-XXXXXX";
+	g_assert (mkdtemp (temp_dir_template) != NULL);
+	return g_strdup (temp_dir_template);
+}
+
+
 #define MAX_TRIES 50
 
 

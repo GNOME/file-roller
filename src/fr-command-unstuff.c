@@ -194,8 +194,7 @@ fr_command_unstuff_list (FRCommand *comm)
 	fr_process_add_arg (comm->process, "--trace");
 
 	/* Actually unpack everything in a temporary directory */
-	path = get_temp_work_dir_name ();
-	ensure_dir_exists (path, 0700);
+	path = get_temp_work_dir ();
 	path_dots = unstuff_is_shit_with_filenames (path);
 	g_free (path);
 

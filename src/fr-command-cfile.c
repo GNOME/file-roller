@@ -236,15 +236,15 @@ fr_command_cfile_extract (FRCommand  *comm,
 	char           *compr_file;
 	char           *e_compr_file;
 
-	temp_dir = get_temp_work_dir_name ();
+	temp_dir = get_temp_work_dir ();
 	e_temp_dir = shell_escape (temp_dir);
 
 	/* create a temp dir. */
-
+	/*
 	fr_process_begin_command (comm->process, "mkdir");
 	fr_process_add_arg (comm->process, e_temp_dir);
 	fr_process_end_command (comm->process);
-
+	*/
 
 	/* copy file to the temp dir, remove the already existing file first */
 

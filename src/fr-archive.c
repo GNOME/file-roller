@@ -728,7 +728,7 @@ create_tmp_base_dir (const char *base_dir,
 	g_print ("dest_dir: %s\n", dest_dir);
 #endif
 
-	temp_dir = get_temp_work_dir_name ();
+	temp_dir = get_temp_work_dir ();
 	tmp = remove_level_from_path (dest_dir);
 	parent_dir =  g_build_filename (temp_dir, tmp, NULL);
 	g_free (tmp);
@@ -1622,8 +1622,7 @@ fr_archive_extract (FRArchive  *archive,
 		char *temp_dir;
 		char *e_temp_dir;
 
-		temp_dir = get_temp_work_dir_name ();
-		ensure_dir_exists (temp_dir, 0700);
+		temp_dir = get_temp_work_dir ();
 		extract_in_chunks (archive->command,
 				   e_filtered,
 				   temp_dir,

@@ -2357,11 +2357,9 @@ file_list_drag_begin (GtkWidget          *widget,
 		window->drag_file_list_names = _get_selection_as_names (window);
 
 	if (window->drag_file_list != NULL) {
-		window->drag_temp_dir = get_temp_work_dir_name ();
+		window->drag_temp_dir = get_temp_work_dir ();
 		window->drag_temp_dirs = g_list_prepend (window->drag_temp_dirs, window->drag_temp_dir);
 
-		ensure_dir_exists (window->drag_temp_dir, 0700);
-		
 		window->extracting_dragged_files = TRUE;
 		window->extracting_dragged_files_interrupted = FALSE;
 
@@ -3998,8 +3996,7 @@ window_archive_save_as (FRWindow      *window,
 
 	fr_process_clear (window->archive->process);
 
-	window->convert_data.temp_dir = get_temp_work_dir_name ();
-	ensure_dir_exists (window->convert_data.temp_dir, 0700);
+	window->convert_data.temp_dir = get_temp_work_dir ();
 
 	fr_command_extract (window->archive->command,
 			    NULL,
@@ -4730,9 +4727,8 @@ rename_selection (FRWindow   *window,
 
 	fr_process_clear (archive->process);
 
-	tmp_dir = get_temp_work_dir_name ();
+	tmp_dir = get_temp_work_dir ();
 	e_tmp_dir = shell_escape (tmp_dir);
-	ensure_dir_exists (tmp_dir, 0700);
 
 	fr_archive_extract (archive,
 			    file_list,
@@ -5043,11 +5039,9 @@ window_paste_selection (FRWindow *window)
 
 	/**/
 
-	tmp_dir = get_temp_work_dir_name ();
+	tmp_dir = get_temp_work_dir ();
 	e_tmp_dir = shell_escape (tmp_dir);
 	
-	ensure_dir_exists (tmp_dir, 0700);
-
 	created_dirs = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	for (scan = window->clipboard; scan; scan = scan->next) {
 		const char *old_name = (char*) scan->data;
@@ -5205,8 +5199,7 @@ window_view_file (FRWindow *window,
 	vdata = g_new (ViewerData, 1);
 	vdata->window = window;
 	vdata->process = NULL;
-	vdata->temp_dir = get_temp_work_dir_name ();
-	ensure_dir_exists (vdata->temp_dir, 0700);
+	vdata->temp_dir = get_temp_work_dir ();
 
 	vdata->filename = g_strconcat (vdata->temp_dir,
 				       "/",
@@ -5293,8 +5286,7 @@ window_open_files (FRWindow *window,
 	cdata->process = NULL;
 	cdata->command = g_strdup (command);
 	cdata->file_list = NULL;
-	cdata->temp_dir = get_temp_work_dir_name ();
-	ensure_dir_exists (cdata->temp_dir, 0700);
+	cdata->temp_dir = get_temp_work_dir ();
 
 	for (scan = file_list; scan; scan = scan->next) {
 		gchar *file = scan->data;
