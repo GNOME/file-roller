@@ -211,7 +211,7 @@ process_line (char     *line,
 
 	fdata = file_data_new ();
 
-	date_idx = get_index_from_pattern (line, "%n%n%n%n-%n%n-%n%n %n%n:%n%n:%n%n");
+	date_idx = get_index_from_pattern (line, "%n%n%n%n-%n%n-%n%n %n%n:%n%n");
 
 	field_size = get_prev_field (line, date_idx, 1);
 	fdata->size = atol (field_size);
