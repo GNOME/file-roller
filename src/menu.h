@@ -41,6 +41,7 @@
 enum {
 	FILE_MENU_NEW_ARCHIVE = 0,
 	FILE_MENU_OPEN_ARCHIVE,
+	FILE_MENU_RECENTS_MENU,
 	FILE_MENU_SEP3,
 	FILE_MENU_ARCHIVE_PROP,
 	FILE_MENU_SEP4,
@@ -54,23 +55,29 @@ enum {
 	FILE_MENU_LENGTH
 };
 
+GnomeUIInfo recents_menu[] = {
+	GNOMEUIINFO_END
+};
+
 GnomeUIInfo file_menu[] = {
 	{ GNOME_APP_UI_ITEM, 
-	  N_("New _Archive"), N_("Create a new archive"), 
+	  N_("_New"), N_("Create a new archive"), 
 	  new_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_NEW,
 	  'n', GDK_CONTROL_MASK, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Open Archive..."), N_("Open an existing archive"), 
+	  N_("_Open..."), N_("Open an existing archive"), 
 	  open_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_OPEN,
 	  'o', GDK_CONTROL_MASK, NULL },
 
+	GNOMEUIINFO_SUBTREE (N_("Recents _Files"), recents_menu),
+
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM,
-	  N_("Archive _Information"), N_("Show information about the archive"),
+	  N_("_Information"), N_("Show information about the archive"),
 	  dlg_prop, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -78,25 +85,25 @@ GnomeUIInfo file_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Move Archive"), " ", 
+	  N_("_Move"), N_("Move current archive to another folder"), 
 	  move_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("Copy Arc_hive"), " ", 
+	  N_("Cop_y"), N_("Copy current archive to another folder"), 
 	  copy_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Rename Archive"), " ", 
+	  N_("_Rename"), N_("Rename current archive"), 
 	  rename_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Delete Archive"), " ", 
+	  N_("_Delete"), N_("Delete current archive from disk"), 
 	  delete_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_NONE, 0,
 	  0, 0, NULL },
@@ -104,7 +111,7 @@ GnomeUIInfo file_menu[] = {
 	GNOMEUIINFO_SEPARATOR,
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Close Archive"), N_("Close current archive"), 
+	  N_("_Close"), N_("Close current archive"), 
 	  close_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_CLOSE,
 	  0, 0, NULL },
@@ -364,7 +371,8 @@ GnomeUIInfo help_menu[] = {
 /* Definition of the main menu */
 
 GnomeUIInfo main_menu[] = {
-	GNOMEUIINFO_MENU_FILE_TREE (file_menu),
+	/*GNOMEUIINFO_MENU_FILE_TREE (file_menu),*/
+	GNOMEUIINFO_SUBTREE (N_("_File"), file_menu),
 	GNOMEUIINFO_SUBTREE (N_("_Actions"), actions_menu),
 	GNOMEUIINFO_SUBTREE (N_("_Options"), options_menu),
 	GNOMEUIINFO_SUBTREE (N_("_Windows"), windows_menu),

@@ -2551,7 +2551,7 @@ window_new ()
 	window->mitem_rename_archive = file_menu[FILE_MENU_RANAME_ARCHIVE].widget;
 	window->mitem_delete_archive = file_menu[FILE_MENU_DELETE_ARCHIVE].widget;
 
-	window->mitem_bookmarks = GTK_MENU_ITEM (main_menu[0].widget)->submenu;
+	window->mitem_bookmarks = GTK_MENU_ITEM (file_menu[FILE_MENU_RECENTS_MENU].widget)->submenu;
 
 	window->mitem_add = actions_menu[ACTIONS_MENU_ADD].widget;
 	window->mitem_delete = actions_menu[ACTIONS_MENU_DELETE].widget;
@@ -2833,6 +2833,40 @@ bookmark_selected_cb (GtkWidget *widget,
 }
 
 
+static char *
+escape_underscore (const char *name)
+{
+	const char *s;
+	char       *e_name, *t;
+	int         l = 0, us = 0;
+
+	if (name == NULL)
+		return NULL;
+
+	for (s = name; *s != 0; s++) {
+		if (*s == '_')
+			us++;
+		l++;
+	}
+	
+	if (us == 0)
+		return g_strdup (name);
+
+	e_name = g_malloc (sizeof (char) * (l + us + 1));
+
+	t = e_name;
+	for (s = name; *s != 0; s++) 
+		if (*s == '_') {
+			*t++ = '_';
+			*t++ = '_';
+		} else
+			*t++ = *s;
+	*t = 0;
+
+	return e_name;
+}
+
+
 void
 window_update_history_list (FRWindow *window)
 {
@@ -2853,11 +2887,11 @@ window_update_history_list (FRWindow *window)
 	l = gtk_container_get_children (GTK_CONTAINER (window->mitem_bookmarks));
 
 	if (preferences.menus_have_tearoff)
-		offset = 2;
-	else 
 		offset = 1;
+	else 
+		offset = 0;
 
-	for (i = 0; i < FILE_MENU_EXIT + offset; i++) 
+	for (i = 0; i < offset; i++) 
 		l = l->next;
 
 	for (scan = l; scan; scan = scan->next)
@@ -2867,28 +2901,33 @@ window_update_history_list (FRWindow *window)
 	if (l) g_list_free (l);
 
 	if (bookmarks->list == NULL) {
+		mitem =  gtk_menu_item_new_with_label (_("No archive"));
+		gtk_menu_shell_append (GTK_MENU_SHELL (window->mitem_bookmarks), mitem);
+		gtk_widget_show (mitem);
+		gtk_widget_set_sensitive (mitem, FALSE);
+
 		bookmarks_free (bookmarks);
 		return;
 	}
 
-	mitem =  gtk_menu_item_new ();
-	gtk_widget_show (mitem);
-	gtk_widget_set_sensitive (mitem, FALSE);
-	gtk_menu_shell_append (GTK_MENU_SHELL (window->mitem_bookmarks), mitem);
-
 	/* Update bookmarks menu. */
 
-	for (i = 1, scan = bookmarks->list; scan; scan = scan->next) {
-		char * utf8_path;
-		char * utf8_name;
-		char * label;
-
-		utf8_name = g_locale_to_utf8 (file_name_from_path (scan->data),
-					      -1, NULL, NULL, NULL);
-		label = g_strdup_printf ("%d. %s", i++, utf8_name);
+	for (i = 1, scan = bookmarks->list; scan && (i <= preferences.max_history_len); scan = scan->next, i++) {
+		char *utf8_path;
+		char *utf8_name;
+		char *label;
+		char *name;
+		
+		name = escape_underscore (file_name_from_path (scan->data));
+		utf8_name = g_locale_to_utf8 (name, -1, NULL, NULL, NULL);
+		g_free (name);
+		label = g_strdup_printf ("%s%d. %s", 
+					 (i < 10) ? "_" : "", 
+					 i, 
+					 utf8_name);
 		g_free (utf8_name);
 
-		mitem =  gtk_menu_item_new_with_label (label);
+		mitem =  gtk_menu_item_new_with_mnemonic (label);
 		g_free (label);
 
 		utf8_path = g_locale_to_utf8 (scan->data, 
