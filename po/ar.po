@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-11-19 14:16+0100\n"
-"PO-Revision-Date: 2003-12-19 01:22+0100\n"
+"PO-Revision-Date: 2003-12-26 06:07+0100\n"
 "Last-Translator: Arafat Medini <lumina@silverpen.de>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: component/File_Roller_Component.server.in.in.h:1
 msgid "Add to Archive..."
-msgstr "اضافة للرزمة..."
+msgstr "اضافة للمحفوظة..."
 
 #: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
@@ -38,18 +38,18 @@ msgstr "مكون فايل رلا"
 
 #: file-roller.desktop.in.h:1
 msgid "Archive Manager"
-msgstr "مدير الرزم"
+msgstr "مدير المحفوظات"
 
 #. Create the application.
 #: file-roller.desktop.in.h:2 src/gtk-utils.c:390 src/main.c:101
 #: src/menu-callbacks.c:1101 src/window.c:836 src/window.c:1248
 #: src/window.c:2918
 msgid "File Roller"
-msgstr "فايل رلا"
+msgstr "فايل رولا"
 
 #: file-roller.desktop.in.h:3
 msgid "Handle compressed archives"
-msgstr "معالجة الرزم المضغوطة"
+msgstr "معالجة المحفوظات المضغوطة"
 
 #: src/dlg-add.c:113 src/dlg-add.c:120
 #, c-format
@@ -58,7 +58,7 @@ msgstr "لا تملك التصاريح الكافية لقراءة الملفا�
 
 #: src/dlg-add.c:119 src/window.c:1917 src/window.c:1950
 msgid "Could not add the files to the archive"
-msgstr "لا يمكن اضافة الملفات للرزمة"
+msgstr "لا يمكن اضافة الملفات للمحفوظة"
 
 #: src/dlg-add.c:353 src/window.c:3156
 msgid "Add"
@@ -119,20 +119,20 @@ msgstr "خيارات الحفظ"
 #: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:177
 #: src/menu-callbacks.c:196 src/window.c:3634
 msgid "Could not create the archive"
-msgstr "لا يمكن إنشاء الرزمة"
+msgstr "لا يمكن إنشاء المحفوظة"
 
 #: src/dlg-batch-add.c:100 src/menu-callbacks.c:178 src/menu-callbacks.c:373
 msgid "You have to specify an archive name."
-msgstr "يجب تحديد إسم رزمة."
+msgstr "يجب تحديد إسم محفوظة."
 
 #: src/dlg-batch-add.c:126 src/fr-archive.c:618 src/window.c:3635
 #: src/window.c:3778
 msgid "Archive type not supported."
-msgstr "نوع الرزمة غير مدعوم."
+msgstr "نوع المحفوظة غير مدعوم."
 
 #: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:4004
 msgid "Destination folder does not exist.  Do you want to create it?"
-msgstr "الدليل المرسل اليه غير موجود. أتريد انشاءه؟"
+msgstr "الدليل المرسل اليه غير موجود. هل تريد انشاءه؟"
 
 #: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:4007
 msgid "Create _Folder"
@@ -167,7 +167,7 @@ msgstr "لم يؤدّى الاستخراج"
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr ""
-"لا تملك التصاريح الكافية لاستخراج الرزم في الدليل\"%s\""
+"لا تملك التصاريح الكافية لاستخراج المحفوظات في الدليل\"%s\""
 
 #: src/dlg-extract.c:428 src/dlg-preferences.c:125 src/menu-callbacks.c:1060
 msgid "Could not display help"
@@ -175,7 +175,7 @@ msgstr "لم يمكن عرض المساعدة"
 
 #: src/dlg-extract.c:507
 msgid "Actions"
-msgstr "عمليات"
+msgstr "أعمال"
 
 #: src/dlg-extract.c:508
 msgid "Destination folder"
@@ -260,7 +260,7 @@ msgstr "اضافة ملفات"
 
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
-msgstr "اضافة لل_رزمة:"
+msgstr "اضافة لل_محفوظة"
 
 #: src/file_roller.glade.h:7
 msgid "Add only if _newer"
@@ -288,8 +288,8 @@ msgid ""
 "archive, and to decrypt files you extract from the current archive. When the "
 "archive is closed the password will be deleted."
 msgstr ""
-"ملاحظة: ستستعمل كلمة السر لتشفير الملفات التي ستضيفها للرزمة الحالية،"
-" و لفك التشفير عند استخراجها منها. ستمحى كلمة السر عند غلق الرزمة"
+"ملاحظة: ستستعمل كلمة السر لتشفير الملفات التي ستضيفها للمحفوظة الحالية،"
+" و لفك التشفير عند استخراجها منها. ستمحى كلمة السر عند غلق المحفوظة"
 
 #: src/file_roller.glade.h:13
 msgid "Open Files"
@@ -409,7 +409,7 @@ msgstr "جاري حذف الملف:"
 
 #: src/fr-command-tar.c:273 src/window.c:1344
 msgid "Deleting files from archive"
-msgstr "جاري مسح الملفات من الرزمة"
+msgstr "جاري مسح الملفات من المحفوظة"
 
 #: src/fr-command-tar.c:306
 msgid "Extracting file: "
@@ -430,19 +430,19 @@ msgstr "إخراج سطرالأو_امر"
 
 #: src/main.c:59
 msgid "Add files to the specified archive and quit the program"
-msgstr "اضافة الملفات لالرزمة المخصصة ثم إنهاء البرنامج"
+msgstr "اضافة الملفات للمحفوظة المخصصة ثم إنهاء البرنامج"
 
 #: src/main.c:60
 msgid "ARCHIVE"
-msgstr "الرزمة"
+msgstr "محفوظة"
 
 #: src/main.c:63
 msgid "Add files asking the name of the archive and quit the program"
-msgstr "اضافة الملفات بالسؤال عن إسم الرزمة ثم إنهاء البرنامج"
+msgstr "اضافة الملفات بالسؤال عن إسم المحفوظة ثم إنهاء البرنامج"
 
 #: src/main.c:67
 msgid "Extract archives to the specified folder and quit the program"
-msgstr "استخراج الرزم إلى الدليل المخصص ثم إنهاء البرنامج"
+msgstr "استخراج المحفوظات إلى الدليل المخصص ثم إنهاء البرنامج"
 
 #: src/main.c:68 src/main.c:76
 msgid "FOLDER"
@@ -450,7 +450,7 @@ msgstr "الدليل"
 
 #: src/main.c:71
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "استخراج الرزم بالسؤال عن الدليل المرسل اليه ثم انهاء البرنامج"
+msgstr "استخراج المحفوظات بالسؤال عن الدليل المرسل اليه ثم انهاء البرنامج"
 
 #: src/main.c:75
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -522,12 +522,12 @@ msgstr "Zoo·(.zoo)"
 
 #: src/menu-callbacks.c:197 src/menu-callbacks.c:392
 msgid "You don't have permission to create an archive in this folder"
-msgstr "لا تملك التراخيص الكافية لإنشاء رزمة في هذا الدليل"
+msgstr "لا تملك التراخيص الكافية لإنشاء محفوظة في هذا الدليل"
 
 #: src/menu-callbacks.c:226 src/menu-callbacks.c:412 src/menu-callbacks.c:635
 #: src/menu-callbacks.c:813
 msgid "The archive already exists.  Do you want to overwrite it?"
-msgstr "الأرشيف موجود. أتريد تنميقه؟"
+msgstr "المحفوظة موجودة. هل تريد تنميقها؟"
 
 #: src/menu-callbacks.c:229 src/menu-callbacks.c:415 src/menu-callbacks.c:638
 #: src/menu-callbacks.c:816
@@ -536,7 +536,7 @@ msgstr "تنميق"
 
 #: src/menu-callbacks.c:245 src/menu-callbacks.c:431
 msgid "Could not delete the old archive."
-msgstr "لم يمكن محو الأرشيف القديم."
+msgstr "لم يمكن محو المحفوظة القديمة."
 
 #: src/menu-callbacks.c:290 src/toolbar.h:39
 msgid "New"
@@ -544,11 +544,11 @@ msgstr "جديد"
 
 #: src/menu-callbacks.c:308 src/menu-callbacks.c:470
 msgid "Archive type:"
-msgstr "نوع الرزمة:"
+msgstr "نوع المحفوظة:"
 
 #: src/menu-callbacks.c:372 src/menu-callbacks.c:391
 msgid "Could not save the archive"
-msgstr "لا يمكن حفظ الرزمة"
+msgstr "لم يمكن حفظ المحفوظة"
 
 #: src/menu-callbacks.c:458
 msgid "Save"
@@ -560,11 +560,11 @@ msgstr "فتح"
 
 #: src/menu-callbacks.c:660
 msgid "Could not copy the archive"
-msgstr "لا يمكن نسخ الرزمة"
+msgstr "لم يمكن نسخ المحفوظة"
 
 #: src/menu-callbacks.c:678
 msgid "Could not move the archive"
-msgstr "لا يمكن نقل الرزمة"
+msgstr "لا يمكن نقل المحفوظة"
 
 #: src/menu-callbacks.c:705
 msgid "Copy"
@@ -580,28 +580,28 @@ msgstr "اعادة التسمية"
 
 #: src/menu-callbacks.c:784
 msgid "New archive name (without extension)"
-msgstr "إسم أرشيف جديد (بدون امتداد)"
+msgstr "إسم محفوظة جديد (بدون امتداد)"
 
 #: src/menu-callbacks.c:788 src/window.c:4694
 msgid "_Rename"
-msgstr "اعادة التسمية"
+msgstr "ا_عادة التسمية"
 
 #: src/menu-callbacks.c:898
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
 msgstr ""
-"لا يمكن نقل الرزمة لسلة القمامة. أتريد محوها بصفة دائمة؟"
+"لا يمكن نقل المحفوظة لسلة المهملات. هل تريد محوها بصفة دائمة؟"
 
 #: src/menu-callbacks.c:1093
 msgid "translator_credits"
-msgstr "مجموعة عربآيز (http://www.arabeyes.org):"
+msgstr "تحت إشراف عرب آيز (http://www.arabeyes.org):"
 ""
 "عرفات المديني، تونس (lumina@silverpen.de)"
 
 #: src/menu-callbacks.c:1104
 msgid "An archive manager for GNOME."
-msgstr "مدير رزم لجنوم."
+msgstr "مدير محفوظات لجنوم."
 
 #: src/menu-callbacks.c:1253 src/window.c:4430
 msgid "Last Output"
@@ -613,7 +613,7 @@ msgstr "_جديد"
 
 #: src/menu.h:67 src/toolbar.h:39
 msgid "Create a new archive"
-msgstr "انشاء رزمة جديدة"
+msgstr "انشاء محفوظة جديدة"
 
 #: src/menu.h:72
 msgid "Open R_ecent"
@@ -625,7 +625,7 @@ msgstr "ا_عادة التسمية..."
 
 #: src/menu.h:81
 msgid "Rename current archive"
-msgstr "إعادة تسمية الرزمة الحالية"
+msgstr "إعادة تسمية المحفوظة الحالية"
 
 #: src/menu.h:87
 msgid "Cop_y..."
@@ -633,7 +633,7 @@ msgstr "ن_سخ..."
 
 #: src/menu.h:87
 msgid "Copy current archive to another folder"
-msgstr "نسخ الأرشيف الحالي إلى دليل آخر"
+msgstr "نسخ المحفوظة الحالية إلى دليل آخر"
 
 #: src/menu.h:93
 msgid "_Move..."
@@ -641,15 +641,15 @@ msgstr "_نقل..."
 
 #: src/menu.h:93
 msgid "Move current archive to another folder"
-msgstr "نقل الأرشيف الحالي إلى دليل آخر"
+msgstr "نقل المحفوظة الحالية إلى دليل آخر"
 
 #: src/menu.h:99
 msgid "Move to _Trash"
-msgstr "نقل ل_سلة المهملات"
+msgstr "نقل إلى _سلة المهملات"
 
 #: src/menu.h:99
 msgid "Move current archive to trash"
-msgstr "نقل الرزمة الحالية لسلة المهملات"
+msgstr "نقل المحفوظة الحالية إلى سلة المهملات"
 
 #: src/menu.h:105
 msgid "_Test"
@@ -657,7 +657,7 @@ msgstr "ا_ختبار"
 
 #: src/menu.h:105
 msgid "Test whether the archive contains errors"
-msgstr "اختبار ما اذا كان الأرشيف يحتوي على أخطاء"
+msgstr "اختبار ما اذا كانت المحفوظة تحوي أخطاءا"
 
 #: src/menu.h:113
 msgid "_Properties"
@@ -665,7 +665,7 @@ msgstr "ال_خصائص"
 
 #: src/menu.h:113
 msgid "Show archive properties"
-msgstr "اظهار خصائص الأرشيف"
+msgstr "اظهار خصائص المحفوظة"
 
 #: src/menu.h:151 src/menu.h:435
 msgid "_Add..."
@@ -673,7 +673,7 @@ msgstr "ا_ضافة..."
 
 #: src/menu.h:151 src/menu.h:435
 msgid "Add files and folders to the archive"
-msgstr "اضافة ملفات و دلائل لالرزمة"
+msgstr "اضافة ملفات و دلائل للمحفوظة"
 
 #: src/menu.h:157 src/menu.h:441
 msgid "_Extract..."
@@ -681,7 +681,7 @@ msgstr "ا_ستخراج..."
 
 #: src/menu.h:157 src/menu.h:441 src/window.c:3168
 msgid "Extract files from the archive"
-msgstr "استخراج ملفات من الأرشيف"
+msgstr "استخراج ملفات من المحفوظة"
 
 #: src/menu.h:169 src/menu.h:453
 msgid "Rename selection"
@@ -689,11 +689,11 @@ msgstr "اعادة تسمية المنتقى"
 
 #: src/menu.h:175 src/menu.h:459
 msgid "_Delete..."
-msgstr "_مسح..."
+msgstr "_حذف..."
 
 #: src/menu.h:175 src/menu.h:459
 msgid "Delete selection from the archive"
-msgstr "مسح المنتقى من الرزمة"
+msgstr "حذف المنتقى من المحفوظة"
 
 #: src/menu.h:183 src/menu.h:467
 msgid "Select _All"
@@ -825,7 +825,7 @@ msgstr "إ_عادة التحميل"
 
 #: src/menu.h:343
 msgid "Reload current archive"
-msgstr "أعادة تحميل الأرشيف الحالي"
+msgstr "إعادة تحميل المحفوظة الحالية"
 
 #: src/menu.h:354
 msgid "_Arrange Files"
@@ -857,7 +857,7 @@ msgstr "معلومات عن البرنامج"
 
 #: src/menu.h:390
 msgid "_Archive"
-msgstr "ال_رزمة"
+msgstr "_محفوظة"
 
 #: src/menu.h:391
 msgid "_Edit"
@@ -869,7 +869,7 @@ msgstr "_عرض"
 
 #: src/toolbar.h:45
 msgid "Open archive"
-msgstr "فتح الرزمة"
+msgstr "فتح محفوظة"
 
 #: src/toolbar.h:55
 msgid "Stop"
@@ -895,27 +895,27 @@ msgstr "اختير الملف %d (%s)"
 
 #: src/window.c:1341
 msgid "Reading archive"
-msgstr "بصدد قراءة الرزمة"
+msgstr "جاري قراءة المحفوظة"
 
 #: src/window.c:1347
 msgid "Adding files to archive"
-msgstr "بصدد إضافة الملفات للرزمة"
+msgstr "جاري إضافة الملفات للمحفوظة"
 
 #: src/window.c:1350
 msgid "Extracting files from archive"
-msgstr "بصدد استخراج الملفات من الرزمة"
+msgstr "جاري استخراج الملفات من المحفوظة"
 
 #: src/window.c:1353
 msgid "Testing archive"
-msgstr "بصدد تجريب الرزمة"
+msgstr "جاري اختبار المحفوظة"
 
 #: src/window.c:1356
 msgid "Getting the file list"
-msgstr "بصدد تلقي قائمة الملفات"
+msgstr "جاري تلقي قائمة الملفات"
 
 #: src/window.c:1362
 msgid "wait please..."
-msgstr "رجاء انتظر..."
+msgstr "الرجاء الانتظار..."
 
 #: src/window.c:1423
 #, c-format
@@ -927,7 +927,7 @@ msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
 msgstr ""
-"الأرشيف محمي بكلمة سر.\n"
+"المحفوظة محمية بكلمة سر.\n"
 "الرجاء تخصيص كلمة سر بالأمر: تحرير->كلمة سر"
 
 #: src/window.c:1484
@@ -951,19 +951,19 @@ msgstr "حدث خطأ عند استخراج الملفات."
 
 #: src/window.c:1529
 msgid "An error occurred while loading the archive."
-msgstr "حدث خطأ عند تحميل الرزمة."
+msgstr "حدث خطأ عند تحميل المحفوظة."
 
 #: src/window.c:1533
 msgid "An error occurred while deleting files from the archive."
-msgstr "حدث خطأ أثناء حذف الملفات من الرزمة."
+msgstr "حدث خطأ أثناء حذف الملفات من المحفوظة."
 
 #: src/window.c:1537
 msgid "An error occurred while adding files to the archive."
-msgstr "حدث خطأ أثناء إضافة الملفات للرزمة"
+msgstr "حدث خطأ أثناء إضافة الملفات للمحفوظة"
 
 #: src/window.c:1541
 msgid "An error occurred while testing archive."
-msgstr "حدث خطأ عند اختبار الرزمة."
+msgstr "حدث خطأ عند اختبار المحفوظة."
 
 #: src/window.c:1550
 msgid "Command not found."
@@ -983,22 +983,22 @@ msgstr "لا تملك التصاريح الكافية."
 
 #: src/window.c:1951
 msgid "You can't add an archive to itself."
-msgstr "لا يمكنك اضافة رزمة لنفسها."
+msgstr "لا يمكنك اضافة محفوظة لنفسها."
 
 #: src/window.c:2130
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
-"هل تريد اضافة هذا الملف للرزمة الحالية أو فتحه كرزمة جديدة؟"
+"هل تريد اضافة هذا الملف للمحفوظة الحالية أو فتحها كمحفوظة جديدة؟"
 
 #: src/window.c:2167
 msgid "Do you want to create a new archive with these files?"
-msgstr "هل تريد إنشاء رزمة جديد بهذه الملفّات؟"
+msgstr "هل تريد إنشاء محفوظة جديدة بهذه الملفّات؟"
 
 #: src/window.c:2170
 msgid "Create _Archive"
-msgstr "انشاء _رزمة"
+msgstr "انشاء _محفوظة"
 
 #: src/window.c:2521
 msgid "Size"
@@ -1010,7 +1010,7 @@ msgstr "النوع"
 
 #: src/window.c:2523
 msgid "Date modified"
-msgstr "عُدّل التاريخ"
+msgstr "تاريخ التعديل"
 
 #: src/window.c:2524
 msgid "Location"
@@ -1043,7 +1043,7 @@ msgstr "الموقع:"
 
 #: src/window.c:3157
 msgid "Add files to the archive"
-msgstr "اضافة الملفات للارزمة"
+msgstr "اضافة الملفات للمحفوظة"
 
 #: src/window.c:3178
 msgid "View"
@@ -1061,7 +1061,7 @@ msgstr "لم يمكن فتح \"%s\""
 #: src/window.c:3771
 #, c-format
 msgid "Could not save the archive \"%s\""
-msgstr "لم يمكن حفظ الرزمة \"%s\""
+msgstr "لم يمكن حفظ المحفوظة \"%s\""
 
 #: src/window.c:4621
 msgid "The new name is void."
@@ -1104,11 +1104,11 @@ msgstr "لم يمكن اعادة تسمية الملف"
 
 #: src/window.c:5334
 msgid "Add files to an archive"
-msgstr "اضافة الملفات لالرزمة"
+msgstr "اضافة الملفات للمحفوظة"
 
 #: src/window.c:5359
 msgid "Extract archive"
-msgstr "استخراج الرزمة"
+msgstr "استخراج المحفوظة"
 
 #~ msgid "Extract In A Sub-Folder"
 #~ msgstr "استخراج في دليل ثانوي"
