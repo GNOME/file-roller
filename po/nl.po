@@ -6,42 +6,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-24 03:53+0100\n"
-"PO-Revision-Date: 2004-02-11 00:05+0100\n"
+"POT-Creation-Date: 2004-03-08 14:28+0100\n"
+"PO-Revision-Date: 2004-03-08 16:30+0100\n"
 "Last-Translator: Michiel Sikkes <michiel@sikkes.xs4all.nl>\n"
 "Language-Team:  Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);"
 
 #: component/File_Roller_Component.server.in.in.h:1
+msgid "Create Archive..."
+msgstr "_Nieuw archief maken"
+
+#: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
 msgstr "Hier uitpakken"
 
-#: component/File_Roller_Component.server.in.in.h:2
+#: component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr "File Roller Component inpak handelingen"
 
-#: component/File_Roller_Component.server.in.in.h:3
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr "File Roller Component uitpak handelingen"
 
-#: component/File_Roller_Component.server.in.in.h:4
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "File roller component"
 
-#: component/File_Roller_Component.server.in.in.h:5
-msgid "Zip Objects..."
-msgstr "Zip objecten"
-
 #: file-roller.desktop.in.h:1
-msgid "Create and modify zips and other archive types"
-msgstr "Maak of wijzig zip- en andere archieven"
+msgid "Archive Manager"
+msgstr "Archiefbeheer"
 
 #: file-roller.desktop.in.h:2
-msgid "Zip Creator"
-msgstr "Zip Comprimeerder"
+msgid "Create and modify an archive"
+msgstr "Maak en wijzig een archief"
 
 #: src/dlg-add.c:118 src/dlg-add.c:125
 #, c-format
@@ -98,10 +98,11 @@ msgid "Options Name:"
 msgstr "Optie Naam:"
 
 #: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
-msgid "Could not zip objects"
-msgstr "Kon objecten niet zippen"
+#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
+msgid "Could not create the archive"
+msgstr "Kan het archief niet aanmaken"
 
-#: src/dlg-batch-add.c:102 src/menu-callbacks.c:190 src/menu-callbacks.c:423
+#: src/dlg-batch-add.c:102 src/menu-callbacks.c:168 src/menu-callbacks.c:376
 msgid "You have to specify an archive name."
 msgstr "U moet een archiefnaam geven."
 
@@ -124,10 +125,10 @@ msgid "Could not create the destination folder: %s."
 msgstr "Kan de doelmap niet aanmaken: %s."
 
 #: src/dlg-batch-add.c:185
-msgid "Zip not performed"
-msgstr "Zip niet uitgevoerd"
+msgid "Archive not created"
+msgstr "Archief niet gemaakt"
 
-#: src/dlg-extract.c:87 src/menu-callbacks.c:1177
+#: src/dlg-extract.c:87 src/menu-callbacks.c:1132
 msgid "Could not display help"
 msgstr "Kan hulp niet tonen"
 
@@ -151,7 +152,7 @@ msgstr "Bestanden"
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:387 src/file_roller.glade.h:16
+#: src/dlg-extract.c:387 src/file_roller.glade.h:17
 msgid "_Files:"
 msgstr "_Bestanden:"
 
@@ -159,11 +160,11 @@ msgstr "_Bestanden:"
 msgid "example: *.txt; *.doc"
 msgstr "voorbeeld: *.txt; *.doc"
 
-#: src/dlg-extract.c:401 src/file_roller.glade.h:13
+#: src/dlg-extract.c:401 src/file_roller.glade.h:14
 msgid "_All files"
 msgstr "_Alle bestanden"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:18
+#: src/dlg-extract.c:408 src/file_roller.glade.h:19
 msgid "_Selected files"
 msgstr "_Geselecteerde bestanden"
 
@@ -183,7 +184,7 @@ msgstr "Bestaande bestanden o_verschrijven"
 msgid "Do not e_xtract older files"
 msgstr "_Oudere bestanden niet uitpakken"
 
-#: src/dlg-extract.c:449 src/file_roller.glade.h:17
+#: src/dlg-extract.c:449 src/file_roller.glade.h:18
 msgid "_Password:"
 msgstr "_Wachtwoord:"
 
@@ -217,8 +218,8 @@ msgid "Number of files:"
 msgstr "Aantal bestanden:"
 
 #: src/dlg-prop.c:149
-msgid "Zipped on:"
-msgstr "GeZipt op:"
+msgid "Modified on:"
+msgstr "Wijzigingsdatum:"
 
 #: src/dlg-prop.c:155
 msgid "%d %B %Y, %H:%M"
@@ -257,52 +258,52 @@ msgid "A_vailable application:"
 msgstr "_Beschikbare toepassing:"
 
 #: src/file_roller.glade.h:4
+msgid "C_reate"
+msgstr "_Maak"
+
+#: src/file_roller.glade.h:5
+msgid "Create Archive"
+msgstr "_Nieuw archief maken"
+
+#: src/file_roller.glade.h:6
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: src/file_roller.glade.h:5
+#: src/file_roller.glade.h:7
 msgid "Load Options"
 msgstr "Voorkeuren openen"
 
-#: src/file_roller.glade.h:6
+#: src/file_roller.glade.h:8
 msgid "Open Files"
 msgstr "Bestanden _openen"
 
-#: src/file_roller.glade.h:7
+#: src/file_roller.glade.h:9
 msgid "Open with an _application"
 msgstr "Met een _toepassing openen"
 
-#: src/file_roller.glade.h:8
+#: src/file_roller.glade.h:10
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: src/file_roller.glade.h:9
+#: src/file_roller.glade.h:11
 msgid "R_ecent applications:"
 msgstr "_Recente toepassingen:"
 
-#: src/file_roller.glade.h:10
+#: src/file_roller.glade.h:12
 msgid "View File"
 msgstr "Bestand weergeven"
 
-#: src/file_roller.glade.h:11
+#: src/file_roller.glade.h:13
 msgid "View with internal _viewer"
 msgstr "Weergeven met interne _weergave"
 
-#: src/file_roller.glade.h:12
-msgid "Zip Objects"
-msgstr "Zip objecten"
-
-#: src/file_roller.glade.h:14
+#: src/file_roller.glade.h:15
 msgid "_Application:"
 msgstr "_Toepassing:"
 
-#: src/file_roller.glade.h:15
+#: src/file_roller.glade.h:16
 msgid "_Archive:"
 msgstr "_Archief:"
-
-#: src/file_roller.glade.h:19
-msgid "_Zip"
-msgstr "_Zip"
 
 #: src/file_roller_prop.glade.h:2
 msgid "Compression _level:"
@@ -348,27 +349,27 @@ msgstr "_Type"
 msgid "The file does not exist."
 msgstr "Het bestand bestaat niet."
 
-#: src/fr-command-tar.c:232
+#: src/fr-command-tar.c:354
 msgid "Adding file: "
 msgstr "Toevoegen van bestand:"
 
-#: src/fr-command-tar.c:278
+#: src/fr-command-tar.c:400
 msgid "Removing file: "
 msgstr "Verwijderen van bestand:"
 
-#: src/fr-command-tar.c:287 src/window.c:1366
+#: src/fr-command-tar.c:409 src/window.c:1366
 msgid "Deleting files from archive"
 msgstr "Bestanden uit het archief verwijderen"
 
-#: src/fr-command-tar.c:320
+#: src/fr-command-tar.c:442
 msgid "Extracting file: "
 msgstr "Uitpakken van bestand:"
 
-#: src/fr-command-tar.c:365
+#: src/fr-command-tar.c:487
 msgid "Recompressing archive"
 msgstr "Archief opnieuw comprimeren"
 
-#: src/fr-command-tar.c:499
+#: src/fr-command-tar.c:621
 msgid "Decompressing archive"
 msgstr "Archief decomprimeren"
 
@@ -385,7 +386,7 @@ msgid "_View"
 msgstr "Beel_d"
 
 #. Create the application.
-#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1218
+#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1173
 #: src/window.c:839 src/window.c:1265 src/window.c:2926
 msgid "File Roller"
 msgstr "File-roller"
@@ -427,155 +428,151 @@ msgstr "De standaardmap voor het gebruik van '--add' en '--extract' opdrachten"
 msgid "Create destination folder without asking confirmation"
 msgstr "Doelmap aanmaken zonder toestemming te vragen"
 
-#: src/menu-callbacks.c:110
+#: src/menu-callbacks.c:88
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: src/menu-callbacks.c:111
+#: src/menu-callbacks.c:89
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: src/menu-callbacks.c:112
+#: src/menu-callbacks.c:90
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: src/menu-callbacks.c:113
+#: src/menu-callbacks.c:91
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: src/menu-callbacks.c:114
+#: src/menu-callbacks.c:92
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: src/menu-callbacks.c:115
+#: src/menu-callbacks.c:93
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: src/menu-callbacks.c:116
+#: src/menu-callbacks.c:94
 msgid "Tar uncompressed (.tar)"
 msgstr "Ongecomprimeerde tar (.tar)"
 
-#: src/menu-callbacks.c:117
+#: src/menu-callbacks.c:95
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Met bzip gecomprimeerde tar (.tar.bz)"
 
-#: src/menu-callbacks.c:118
+#: src/menu-callbacks.c:96
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Met bzip2 gecomprimeerde tar (.tar.bz2)"
 
-#: src/menu-callbacks.c:119
+#: src/menu-callbacks.c:97
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Met gzip gecomprimeerde tar (.tar.gz)"
 
-#: src/menu-callbacks.c:120
+#: src/menu-callbacks.c:98
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Met lzop gecomprimeerde tar (.tar.lzo)"
 
-#: src/menu-callbacks.c:121
+#: src/menu-callbacks.c:99
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Met compress gecomprimeerde tar (.tar.Z)"
 
-#: src/menu-callbacks.c:122
+#: src/menu-callbacks.c:100
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: src/menu-callbacks.c:123
+#: src/menu-callbacks.c:101
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:124
+#: src/menu-callbacks.c:102
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: src/menu-callbacks.c:189 src/menu-callbacks.c:208 src/window.c:3645
-msgid "Could not create the archive"
-msgstr "Kan het archief niet aanmaken"
-
-#: src/menu-callbacks.c:209 src/menu-callbacks.c:442
+#: src/menu-callbacks.c:187 src/menu-callbacks.c:395
 msgid "You don't have permission to create an archive in this folder"
 msgstr ""
 "U beschikt niet over de juiste rechten om een archief aan te maken in deze "
 "map"
 
-#: src/menu-callbacks.c:238 src/menu-callbacks.c:462 src/menu-callbacks.c:752
-#: src/menu-callbacks.c:930
+#: src/menu-callbacks.c:216 src/menu-callbacks.c:415 src/menu-callbacks.c:708
+#: src/menu-callbacks.c:885
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Het archief bestaat al. Wilt u het overschrijven?"
 
-#: src/menu-callbacks.c:241 src/menu-callbacks.c:465 src/menu-callbacks.c:755
-#: src/menu-callbacks.c:933
+#: src/menu-callbacks.c:219 src/menu-callbacks.c:418 src/menu-callbacks.c:711
+#: src/menu-callbacks.c:888
 msgid "Overwrite"
 msgstr "Overschrijven"
 
-#: src/menu-callbacks.c:257 src/menu-callbacks.c:481
+#: src/menu-callbacks.c:235 src/menu-callbacks.c:434
 msgid "Could not delete the old archive."
 msgstr "Het oude archief kan niet verwijderd worden."
 
-#: src/menu-callbacks.c:320 src/toolbar.h:42
+#: src/menu-callbacks.c:279 src/toolbar.h:42
 msgid "New"
 msgstr "Nieuw"
 
-#: src/menu-callbacks.c:331 src/menu-callbacks.c:537 src/menu-callbacks.c:656
+#: src/menu-callbacks.c:290 src/menu-callbacks.c:490 src/menu-callbacks.c:612
 msgid "All archives"
 msgstr "Alle archieven"
 
-#: src/menu-callbacks.c:338 src/menu-callbacks.c:544 src/menu-callbacks.c:663
+#: src/menu-callbacks.c:297 src/menu-callbacks.c:497 src/menu-callbacks.c:619
 msgid "All files"
 msgstr "Alle bestanden"
 
-#: src/menu-callbacks.c:356 src/menu-callbacks.c:552
+#: src/menu-callbacks.c:307 src/menu-callbacks.c:505
 msgid "Archive type:"
 msgstr "Archieftype:"
 
-#: src/menu-callbacks.c:422 src/menu-callbacks.c:441
+#: src/menu-callbacks.c:375 src/menu-callbacks.c:394
 msgid "Could not save the archive"
 msgstr "Kan het archief niet opslaan"
 
-#: src/menu-callbacks.c:526
+#: src/menu-callbacks.c:479
 msgid "Save"
 msgstr "Opslaan"
 
-#: src/menu-callbacks.c:645 src/menu.h:412 src/toolbar.h:48
+#: src/menu-callbacks.c:601 src/menu.h:412 src/toolbar.h:48
 msgid "Open"
 msgstr "Openen"
 
-#: src/menu-callbacks.c:777
+#: src/menu-callbacks.c:733
 msgid "Could not copy the archive"
 msgstr "Kan het archief niet kopiëren"
 
-#: src/menu-callbacks.c:796
+#: src/menu-callbacks.c:752
 msgid "Could not move the archive"
 msgstr "Kan het archief niet verplaatsen"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/menu-callbacks.c:823
+#: src/menu-callbacks.c:780
 msgid "Move"
 msgstr "Verplaatsen"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Copy"
 msgstr "_Kopiëren"
 
-#: src/menu-callbacks.c:828
+#: src/menu-callbacks.c:785
 msgid "_Move"
 msgstr "_Verplaatsen"
 
-#: src/menu-callbacks.c:900 src/window.c:4717
+#: src/menu-callbacks.c:855 src/window.c:4717
 msgid "Rename"
 msgstr "Hernoemen"
 
-#: src/menu-callbacks.c:901
+#: src/menu-callbacks.c:856
 msgid "New archive name (without extension)"
 msgstr "Nieuwe archiefnaam (zonder extensie)"
 
-#: src/menu-callbacks.c:905 src/window.c:4722
+#: src/menu-callbacks.c:860 src/window.c:4722
 msgid "_Rename"
 msgstr "_Hernoemen"
 
-#: src/menu-callbacks.c:1015
+#: src/menu-callbacks.c:970
 msgid ""
 "The archive cannot be moved to the Trash. Do you want to delete it "
 "permanently?"
@@ -583,18 +580,18 @@ msgstr ""
 "Het archief kan niet naar de prullenbak verplaatst worden. Wilt u het "
 "definitief verwijderen?"
 
-#: src/menu-callbacks.c:1210
+#: src/menu-callbacks.c:1165
 msgid "translator_credits"
 msgstr ""
 "Michiel Sikkes <michiel@sikkes.xs4all.nl>\n"
 "Kees van den Broek <kvdb@NOSPAMkvdb.net>\n"
 "Hongli Lai <hongli@telekabel.nl>"
 
-#: src/menu-callbacks.c:1221
+#: src/menu-callbacks.c:1176
 msgid "An archive manager for GNOME."
 msgstr "Archiefbeheer voor GNOME."
 
-#: src/menu-callbacks.c:1370 src/window.c:4454
+#: src/menu-callbacks.c:1325 src/window.c:4454
 msgid "Last Output"
 msgstr "Laatste uitvoer"
 
@@ -658,7 +655,6 @@ msgstr "_Eigenschappen"
 msgid "Show archive properties"
 msgstr "Archief-eigenschappen weergeven"
 
-#. GRUT modified this item
 #: src/menu.h:149 src/menu.h:432
 msgid "_Add..."
 msgstr "_Toevoegen..."
@@ -831,7 +827,6 @@ msgstr "_Inhoud"
 msgid "Display the File Roller Manual"
 msgstr "Laat de File Roller handleiding zien"
 
-#. GRUT modified this item
 #: src/menu.h:368
 msgid "_About"
 msgstr "In_fo"
@@ -1108,11 +1103,29 @@ msgstr "Voeg bestanden aan een archief toe"
 msgid "Extract archive"
 msgstr "Archief uitpakken"
 
+#~ msgid "Zip Objects..."
+#~ msgstr "Zip objecten"
+
+#~ msgid "Zip Creator"
+#~ msgstr "Zip Comprimeerder"
+
+#~ msgid "Could not zip objects"
+#~ msgstr "Kon objecten niet zippen"
+
+#~ msgid "Zip not performed"
+#~ msgstr "Zip niet uitgevoerd"
+
+#~ msgid "Zipped on:"
+#~ msgstr "GeZipt op:"
+
+#~ msgid "Zip Objects"
+#~ msgstr "Zip objecten"
+
+#~ msgid "_Zip"
+#~ msgstr "_Zip"
+
 #~ msgid "Add to Archive..."
 #~ msgstr "Toevoegen aan archief..."
-
-#~ msgid "Archive Manager"
-#~ msgstr "Archiefbeheer"
 
 #~ msgid "Handle compressed archives"
 #~ msgstr "Gecomprimeerde archieven beheren"
