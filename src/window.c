@@ -3929,7 +3929,7 @@ window_get_file_list_pattern (FRWindow    *window,
 			      const char  *pattern)
 {
 	GList  *list, *scan;
-	gchar **patterns;
+	char  **patterns;
 
 	g_return_val_if_fail (window != NULL, NULL);
 
@@ -3939,15 +3939,18 @@ window_get_file_list_pattern (FRWindow    *window,
         scan = window->archive->command->file_list;
         for (; scan; scan = scan->next) {
                 FileData *fd = scan->data;
+		char     *utf8_name;
 
 		/* FIXME: only files in the current location ? */
 
 		if (!fd)
 			continue;
 
-		if (match_patterns (patterns, fd->name))
+		utf8_name = g_locale_to_utf8 (fd->name, -1, NULL, NULL, NULL);
+		if (match_patterns (patterns, utf8_name))
 			list = g_list_prepend (list, 
 					       g_strdup (fd->original_path));
+		g_free (utf8_name);
         }
 
 	if (patterns != NULL) 

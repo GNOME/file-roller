@@ -112,14 +112,14 @@ g_utf8_rangematch (const char  *pattern,
 	ok = FALSE;
 
 	c = g_utf8_get_char (pattern);
-	pattern = g_utf8_next_char(pattern);
+	pattern = g_utf8_next_char (pattern);
 
 	do {
 		gunichar c2;
 
 		if (c == '\\' && !(flags & FNM_NOESCAPE)) {
 			c = g_utf8_get_char (pattern);
-			pattern = g_utf8_next_char(pattern);
+			pattern = g_utf8_next_char (pattern);
 		}
 
 		if (c == EOS)

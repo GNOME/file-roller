@@ -600,15 +600,136 @@ match_patterns (char       **patterns,
 }
 
 
+static const char *
+g_utf8_strstr (const char *haystack, const char *needle)
+{
+	const char *s;
+	gsize       i;
+	gsize       haystack_len = g_utf8_strlen (haystack, -1);
+	gsize       needle_len = g_utf8_strlen (needle, -1);
+	int         needle_size = strlen (needle);
+
+	s = haystack;
+	for (i = 0; i <= haystack_len - needle_len; i++) {
+		if (strncmp (s, needle, needle_size) == 0)
+			return s;
+		s = g_utf8_next_char(s);
+	}
+
+	return NULL;
+}
+
+
+static char**
+g_utf8_strsplit (const char *string,
+		 const char *delimiter,
+		 int         max_tokens)
+{
+	GSList      *string_list = NULL, *slist;
+	char       **str_array;
+	const char  *s;
+	guint        n = 0;
+	const char  *remainder;
+
+	g_return_val_if_fail (string != NULL, NULL);
+	g_return_val_if_fail (delimiter != NULL, NULL);
+	g_return_val_if_fail (delimiter[0] != '\0', NULL);
+	
+	if (max_tokens < 1)
+		max_tokens = G_MAXINT;
+	
+	remainder = string;
+	s = g_utf8_strstr (remainder, delimiter);
+	if (s != NULL) {
+		gsize delimiter_size = strlen (delimiter);
+		
+		while (--max_tokens && (s != NULL)) {
+			gsize  size = s - remainder;
+			char  *new_string;
+
+			new_string = g_new (char, size + 1);
+			strncpy (new_string, remainder, size);
+			new_string[size] = 0;
+
+			string_list = g_slist_prepend (string_list, new_string);
+			n++;
+			remainder = s + delimiter_size;
+			s = g_utf8_strstr (remainder, delimiter);
+		}
+	}
+	if (*string) {
+		n++;
+		string_list = g_slist_prepend (string_list, g_strdup (remainder));
+	}
+	
+	str_array = g_new (char*, n + 1);
+	
+	str_array[n--] = NULL;
+	for (slist = string_list; slist; slist = slist->next)
+		str_array[n--] = slist->data;
+	
+	g_slist_free (string_list);
+	
+	return str_array;
+}
+
+
+static char*
+g_utf8_strchug (char *string)
+{
+	char     *scan;
+	gunichar  c;
+                                                                                
+	g_return_val_if_fail (string != NULL, NULL);
+	
+	scan = string;
+	c = g_utf8_get_char (scan);
+	while (g_unichar_isspace (c)) {
+		scan = g_utf8_next_char (scan);
+		c = g_utf8_get_char (scan);
+	}
+
+	g_memmove (string, scan, strlen ((char *) scan) + 1);
+	
+	return string;
+}
+
+
+static char*
+g_utf8_strchomp (char *string)
+{
+	char  *scan;
+	gsize  len;
+ 
+	g_return_val_if_fail (string != NULL, NULL);
+	
+	len = g_utf8_strlen (string, -1);
+	scan = g_utf8_offset_to_pointer (string, len);
+	while (len--) {
+		gunichar c = g_utf8_get_char (scan);
+		if (g_unichar_isspace (c))
+			*scan = '\0';
+		else
+			break;
+		scan = g_utf8_find_prev_char (string, scan);
+	}
+	
+	return string;
+}
+
+
+#define g_utf8_strstrip( string )    g_utf8_strchomp (g_utf8_strchug (string))
+
+
 char **
 search_util_get_patterns (const char *pattern_string)
 {
-	gchar **patterns;
-	gint    i;
+	char **patterns;
+	int    i;
 	
-	patterns = g_strsplit (pattern_string, ";", 10);
+	patterns = g_utf8_strsplit (pattern_string, ";", 10);
 	for (i = 0; patterns[i] != NULL; i++) 
-		patterns[i] = g_strstrip (patterns[i]);
+		patterns[i] = g_utf8_strstrip (patterns[i]);
 	
 	return patterns;
 }

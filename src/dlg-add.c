@@ -65,17 +65,18 @@ open_file_destroy_cb (GtkWidget *w,
 
 
 static gboolean
-only_spaces (const char *text)
+utf8_only_spaces (const char *text)
 {
-	int l, i;
+	const char *scan;
 	
 	if (text == NULL)
 		return TRUE;
 
-	l = strlen (text);
-	for (i = 0; i < l; i++)
-		if (*text != ' ')
+	for (scan = text; *scan != 0; scan = g_utf8_next_char (scan)) {
+		gunichar c = g_utf8_get_char (scan);
+		if (! g_unichar_isspace (c))
 			return FALSE;
+	}
 
 	return TRUE;
 }
@@ -186,6 +187,7 @@ open_file_ok_cb (GtkWidget *w,
 		gboolean    no_backup_files;
 		gboolean    no_dot_files;
 		gboolean    ignore_case;
+		char       *include_files;
 		const char *exclude_files;
 
 		recursive = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton));
@@ -197,13 +199,15 @@ open_file_ok_cb (GtkWidget *w,
 
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->exclude_files_checkbutton))) {
 			exclude_files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
-			if (only_spaces (exclude_files))
+			if (utf8_only_spaces (exclude_files)) 
 				exclude_files = NULL;
 		} else
 			exclude_files = NULL;
 
+		include_files = g_locale_to_utf8 (file_name_from_path (path), 
+						  -1, 0, 0, 0);
 		window_archive_add_with_wildcard (window,
-						  file_name_from_path (path),
+						  include_files,
 						  exclude_files,
 						  base_dir,
 						  update,
@@ -215,6 +219,7 @@ open_file_ok_cb (GtkWidget *w,
 						  ignore_case,
 						  window->password,
 						  window->compression);
+		g_free (include_files);
 	}
 
 	g_free (path);
@@ -584,7 +589,7 @@ load_options_ok_cb (GtkWidget *w,
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->exclude_backup_files), no_backup_files);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->exclude_dot_files), no_dot_files);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->ignore_case), ignore_case);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->exclude_files_checkbutton), ! only_spaces (exclude_files));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->exclude_files_checkbutton), ! utf8_only_spaces (exclude_files));
 	gtk_entry_set_text (GTK_ENTRY (data->exclude_files_entry), exclude_files);
 	
 	/**/
@@ -718,7 +723,7 @@ save_options_ok_cb (GtkWidget *w,
 	
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->exclude_files_checkbutton))) {
 		exclude_files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
-		if (only_spaces (exclude_files))
+		if (utf8_only_spaces (exclude_files))
 			exclude_files = NULL;
 	} else
 		exclude_files = NULL;

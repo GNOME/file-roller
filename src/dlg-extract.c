@@ -212,10 +212,15 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (selected_files) 
 		file_list = window_get_file_list_selection (window, TRUE, NULL);
 	else if (pattern_files) {
-		char *pattern;
-		pattern = _gtk_entry_get_locale_text (GTK_ENTRY (data->e_files_entry));
+		const char *pattern;
+		pattern = gtk_entry_get_text (GTK_ENTRY (data->e_files_entry));
 		file_list = window_get_file_list_pattern (window, pattern);
-		g_free (pattern);
+		if (file_list == NULL) {
+			gtk_widget_destroy (data->dialog);
+			g_free (extract_to_dir);
+			g_free (password);
+			return;
+		}
 	}
 
 	/* close the dialog. */
