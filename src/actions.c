@@ -1289,14 +1289,19 @@ activate_action_about (GtkAction *action,
 	logo = gdk_pixbuf_new_from_file (PIXMAPSDIR "/file-roller.png", NULL);
 
 	about = gtk_about_dialog_new ();
-	gtk_about_dialog_set_name (GTK_ABOUT_DIALOG (about), _("File Roller"));
-	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (about), VERSION);
-	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (about), "Copyright \xc2\xa9 2001-2004 Free Software Foundation, Inc.");
-	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (about), _("An archive manager for GNOME."));
-	gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (about), (char**)authors);
-	gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (about), (char**)documenters);
-	gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (about), strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL);
-	gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (about), logo);
+	g_object_set (about,
+		      "name",  _("File Roller"),
+		      "version", VERSION,
+		      "copyright", "Copyright \xc2\xa9 2001-2004 Free Software Foundation, Inc.",
+		      "comments", ("An archive manager for GNOME."),
+		      "authors", authors,
+		      "documenters", documenters,
+		      "translator_credits", strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
+		      "logo", logo,
+		      "website", NULL,
+		      "website_label", NULL,
+		      "license", NULL,
+		      NULL);
 
 	if (logo != NULL)
                 g_object_unref (logo);
@@ -1310,5 +1315,5 @@ activate_action_about (GtkAction *action,
 			  G_CALLBACK (gtk_widget_destroyed), 
 			  &about);
 
-	gtk_widget_show_all (about);
+	gtk_widget_show (about);
 }
