@@ -117,7 +117,7 @@ ok_clicked_cb (GtkWidget  *widget,
 			d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
-						     _("Destination folder does not exist.  Do you want to create it ?"),
+						     _("Destination folder does not exist.  Do you want to create it?"),
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
@@ -139,7 +139,7 @@ ok_clicked_cb (GtkWidget  *widget,
 						    GTK_DIALOG_DESTROY_WITH_PARENT,
 						    GTK_MESSAGE_ERROR,
 						    GTK_BUTTONS_CLOSE,
-						    _("Could not create the destination folder : %s.\nExtraction not performed."), error);
+						    _("Could not create the destination folder: %s.\nExtraction not performed."), error);
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 

@@ -190,7 +190,7 @@ new_file_ok_cb (GtkWidget *w,
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_QUESTION,
-						  _("Archive already exists.  Do you want to overwrite it ?"),
+						  _("Archive already exists.  Do you want to overwrite it?"),
 						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						  _("Overwrite"), GTK_RESPONSE_YES,
 						  NULL);
@@ -262,7 +262,7 @@ new_archive_cb (GtkWidget *widget,
 	gtk_box_pack_start (GTK_BOX (GTK_FILE_SELECTION (file_sel)->action_area), hbox, TRUE, TRUE, 0);
 
 	gtk_box_pack_start (GTK_BOX (hbox), 
-			    gtk_label_new (_("Archive type :")),
+			    gtk_label_new (_("Archive type:")),
 			    FALSE, FALSE, 0);
 
 	opt_menu = gtk_option_menu_new ();
@@ -417,7 +417,7 @@ copy_archive_ok_cb (GtkWidget    *w,
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
-					     _("Archive already exists.  Do you want to overwrite it ?"),
+					     _("Archive already exists.  Do you want to overwrite it?"),
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Overwrite"), GTK_RESPONSE_YES,
 					     NULL);
@@ -587,7 +587,7 @@ rename_archive_cb (GtkWidget *widget,
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
-					     _("Archive already exists.  Do you want to overwrite it ?"),
+					     _("Archive already exists.  Do you want to overwrite it?"),
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Overwrite"), GTK_RESPONSE_YES,
 					     NULL);
@@ -626,7 +626,7 @@ delete_archive_cb (GtkWidget *widget,
 	dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 					  GTK_DIALOG_MODAL,
 					  GTK_STOCK_DIALOG_QUESTION,
-					  _("Archive will be deleted, are you sure ?"),
+					  _("Archive will be deleted, are you sure?"),
 					  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					  GTK_STOCK_DELETE, GTK_RESPONSE_YES,
 					  NULL);
@@ -787,7 +787,7 @@ about_cb (GtkWidget *widget,
 	logo = gdk_pixbuf_new_from_file (PIXMAPSDIR "/file-roller.png", NULL);
 	about = gnome_about_new ("File Roller", 
 				 VERSION,
-				 _("(C) 2001 Free Software Foundation, Inc."),
+				 _("Copyright (C) 2001 Free Software Foundation, Inc."),
 				 _("An archive manager for GNOME."),
 				 authors,
 				 documenters,

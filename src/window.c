@@ -1714,7 +1714,7 @@ window_drag_data_received  (GtkWidget          *widget,
 			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
-						     _("Do you want to add this file to the current archive or open it as a new archive ?"),
+						     _("Do you want to add this file to the current archive or open it as a new archive?"),
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     GTK_STOCK_ADD, 0,
 						     GTK_STOCK_OPEN, 1,
@@ -1757,7 +1757,7 @@ window_drag_data_received  (GtkWidget          *widget,
 			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
-						     _("Do you want to create a new archive with these files ?"),
+						     _("Do you want to create a new archive with these files?"),
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Archive"), GTK_RESPONSE_YES,
 						     NULL);
@@ -3125,7 +3125,7 @@ window_archive_extract (FRWindow   *window,
 			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
-						     _("Destination folder does not exist.  Do you want to create it ?"),
+						     _("Destination folder does not exist.  Do you want to create it?"),
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
@@ -3147,7 +3147,7 @@ window_archive_extract (FRWindow   *window,
 						    GTK_DIALOG_DESTROY_WITH_PARENT,
 						    GTK_MESSAGE_ERROR,
 						    GTK_BUTTONS_CLOSE,
-						    _("Could not create the destination folder : %s.\nExtraction not performed."), error);
+						    _("Could not create the destination folder: %s.\nExtraction not performed."), error);
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
