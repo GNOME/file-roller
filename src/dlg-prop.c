@@ -74,7 +74,9 @@ dlg_prop (GtkWidget *widget,
 	char             *s;
 	const char       *s1;
 	GnomeVFSFileSize  size;
-	time_t            t;
+	struct tm        *tm;
+	time_t            timer;
+	char              time_txt[50];
 	gchar            *utf8_name;
 
         data = g_new (DialogData, 1);
@@ -141,9 +143,11 @@ dlg_prop (GtkWidget *widget,
 	set_label (label_label, _("Date and Time:"));
 
 	label = glade_xml_get_widget (data->gui, "p_date_label");
-	t = get_file_mtime (window->archive->filename);
-	s = g_strdup (ctime (&t));
-	s[strlen (s) - 1] = 0;
+
+	timer = get_file_mtime (window->archive->filename);
+	tm = localtime (&timer);
+	strftime (time_txt, 50, _("%d %B %Y, %H:%M"), tm);
+	s = g_locale_to_utf8 (time_txt, -1, 0, 0, 0);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
