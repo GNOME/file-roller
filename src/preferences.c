@@ -31,6 +31,9 @@
 #include "window.h"
 
 
+#define DIALOG_PREFIX "/apps/file-roller/dialogs/"
+
+
 typedef struct {
 	int   i_value;
 	char *s_value;
@@ -201,4 +204,66 @@ preferences_set_compression_level (FRCompression i_value)
 
 	s_value = get_string_from_enum (compression_level_table, i_value);
 	eel_gconf_set_string (PREF_ADD_COMPRESSION_LEVEL, s_value);
+}
+
+
+static void
+set_dialog_property_int (const char *dialog, 
+			 const char *property, 
+			 int         value)
+{
+	char *key;
+
+	key = g_strconcat (DIALOG_PREFIX, dialog, "/", property, NULL);
+	eel_gconf_set_integer (key, value);
+	g_free (key);
+}
+
+
+void
+pref_util_save_window_geometry (GtkWindow  *window,
+				const char *dialog)
+{
+	int x, y, width, height;
+
+	gtk_window_get_position (window, &x, &y);
+	set_dialog_property_int (dialog, "x", x); 
+	set_dialog_property_int (dialog, "y", y); 
+
+	gtk_window_get_size (window, &width, &height);
+	set_dialog_property_int (dialog, "width", width); 
+	set_dialog_property_int (dialog, "height", height); 
+}
+
+
+static int
+get_dialog_property_int (const char *dialog, 
+			 const char *property)
+{
+	char *key;
+	int   value;
+
+	key = g_strconcat (DIALOG_PREFIX, dialog, "/", property, NULL);
+	value = eel_gconf_get_integer (key, -1);
+	g_free (key);
+
+	return value;
+}
+
+
+void
+pref_util_restore_window_geometry (GtkWindow  *window,
+				   const char *dialog)
+{
+	int x, y, width, height;
+
+	x = get_dialog_property_int (dialog, "x");
+	y = get_dialog_property_int (dialog, "y");
+	width = get_dialog_property_int (dialog, "width");
+	height = get_dialog_property_int (dialog, "height");
+
+	if (width != -1 && height != 1) 
+		gtk_window_set_default_size (window, width, height);
+
+	gtk_window_present (window);
 }

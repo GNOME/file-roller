@@ -33,8 +33,10 @@
 #include "gtk-utils.h"
 #include "window.h"
 #include "gnome-vfs-helpers.h"
+#include "preferences.h"
 
 
+#define DIALOG_NAME "viewer"
 #define GLADE_FILE "file_roller.glade"
 
 
@@ -61,6 +63,15 @@ close_clicked_cb (GtkWidget  *widget,
 		  DialogData *data)
 {
 	gtk_widget_destroy (data->dialog);
+}
+
+
+static gboolean
+unrealize_cb (GtkWidget  *widget, 
+	      DialogData *data)
+{
+	pref_util_save_window_geometry (GTK_WINDOW (widget), DIALOG_NAME);
+	return FALSE;
 }
 
 
@@ -201,6 +212,11 @@ dlg_viewer (FRWindow   *window,
 			  G_CALLBACK (destroy_cb),
 			  data);
 
+	g_signal_connect (G_OBJECT (data->dialog), 
+			  "unrealize",
+			  G_CALLBACK (unrealize_cb),
+			  data);
+
 	g_signal_connect (G_OBJECT (close_button),
 			  "clicked",
 			  G_CALLBACK (close_clicked_cb),
@@ -210,5 +226,5 @@ dlg_viewer (FRWindow   *window,
 
         gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
 				      GTK_WINDOW (window->app));
-	gtk_widget_show (data->dialog);
+	pref_util_restore_window_geometry (GTK_WINDOW (data->dialog), DIALOG_NAME);
 }

@@ -2095,7 +2095,7 @@ drag_drop_add_file_list (FRWindow *window)
 		GList *only_names_list = NULL;
 
 		for (scan = list; scan; scan = scan->next)
-			only_names_list = g_list_prepend (only_names_list, file_name_from_path (scan->data));
+			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
 
 		fr_process_clear (archive->process);
 		fr_archive_add (archive,
@@ -5315,15 +5315,15 @@ window_open_files (FRWindow *window,
 	cdata->temp_dir = get_temp_work_dir ();
 
 	for (scan = file_list; scan; scan = scan->next) {
-		gchar *file = scan->data;
-		gchar *filename;
+		char *file = scan->data;
+		char *filename;
 
 		filename = g_strconcat (cdata->temp_dir,
 					"/",
 					file,
 					NULL);
 		cdata->file_list = g_list_prepend (cdata->file_list,
-						   fr_command_escape (window->archive->command, filename));
+						   shell_escape (filename));
 		g_free (filename);
 	}
 

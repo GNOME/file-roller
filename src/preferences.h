@@ -23,6 +23,7 @@
 #ifndef PREFERENCES_H
 #define PREFERENCES_H
 
+#include <gtk/gtkwindow.h>
 #include <gtk/gtkenums.h>
 #include "typedefs.h"
 #include "window.h"
@@ -53,7 +54,7 @@
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"
-#define PREF_DESKTOP_MENUBAR_DETACHABLE "/desktop/gnome/interface/menubar_detachable"
+#define PREF_DESKTOP_MENUBAR_DETACHABLE "/desktop/gnome/interface/menubar_detach1able"
 #define PREF_DESKTOP_TOOLBAR_DETACHABLE "/desktop/gnome/interface/toolbar_detachable"
 
 WindowSortMethod    preferences_get_sort_method ();
@@ -72,5 +73,10 @@ FRCompression       preferences_get_compression_level ();
 
 void                preferences_set_compression_level (FRCompression i_value);
 
+void                pref_util_save_window_geometry (GtkWindow  *window,
+						    const char *dialog);
+
+void                pref_util_restore_window_geometry (GtkWindow  *window,
+						       const char *dialog);
 
 #endif /* PREFERENCES_H */
