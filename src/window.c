@@ -5352,6 +5352,12 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_CLOSE:
+		window_archive_close (window);
+		window->batch_action = g_list_next (window->batch_action);
+		_window_batch_start_current_action (window);
+		break;
+
+	case FR_BATCH_ACTION_QUIT:
 		window_close (window);
 		break;
 	}
@@ -5416,6 +5422,10 @@ window_archive__open_extract (FRWindow   *window,
 					      FR_BATCH_ACTION_EXTRACT_INTERACT,
 					      NULL,
 					      NULL);
+	window_batch_mode_add_action (window,
+				      FR_BATCH_ACTION_CLOSE,
+				      NULL,
+				      NULL);
 }
 
 
@@ -5441,6 +5451,10 @@ window_archive__open_add (FRWindow   *window,
 					      FR_BATCH_ACTION_ADD_INTERACT,
 					      file_list,
 					      NULL);
+	window_batch_mode_add_action (window,
+				      FR_BATCH_ACTION_CLOSE,
+				      NULL,
+				      NULL);
 }
 
 
@@ -5449,6 +5463,16 @@ window_archive__close (FRWindow   *window)
 {
 	window_batch_mode_add_action (window,
 				      FR_BATCH_ACTION_CLOSE,
+				      NULL,
+				      NULL);
+}
+
+
+void
+window_archive__quit (FRWindow   *window)
+{
+	window_batch_mode_add_action (window,
+				      FR_BATCH_ACTION_QUIT,
 				      NULL,
 				      NULL);
 }

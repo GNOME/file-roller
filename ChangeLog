@@ -1,3 +1,13 @@
+2004-02-05  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/window.h: Add a FR_BATCH_ACTION_QUIT command.
+	* src/window.c (_window_batch_start_current_action)
+	(window_archive__quit): quit the program.
+	(window_archive__close): close the archive.
+
+	Allow to extract more archives at once with the "Extract Here" 
+	command.
+
 2004-02-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/fr-command-tar.c (fr_command_tar_list, fr_command_tar_add)

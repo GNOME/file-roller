@@ -49,7 +49,8 @@ typedef enum {
 	FR_BATCH_ACTION_ADD_INTERACT,
 	FR_BATCH_ACTION_EXTRACT,
 	FR_BATCH_ACTION_EXTRACT_INTERACT,
-	FR_BATCH_ACTION_CLOSE
+	FR_BATCH_ACTION_CLOSE,
+	FR_BATCH_ACTION_QUIT
 } FRBatchAction;
 
 typedef struct {
@@ -281,11 +282,6 @@ void       window_archive_add_with_wildcard (FRWindow      *window,
 					     gboolean       update,
 					     gboolean       recursive,
 					     gboolean       follow_links,
-					     /*gboolean       same_fs,
-					     gboolean       no_backup_files,
-					     gboolean       no_dot_files,
-					     gboolean       ignore_case,
-					     */
 					     const char    *password,
 					     FRCompression  compression);
 
@@ -431,6 +427,8 @@ void       window_archive__open_add           (FRWindow      *window,
 					       GList         *file_list);
 
 void       window_archive__close              (FRWindow      *window);
+
+void       window_archive__quit               (FRWindow      *window);
 
 
 /**/

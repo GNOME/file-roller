@@ -382,7 +382,7 @@ prepare_app (poptContext pctx)
 		file_list = g_list_reverse (file_list);
 		
 		window_archive__open_add (window, add_to_path, file_list);
-		window_archive__close (window);
+		window_archive__quit (window);
 		window_batch_mode_start (window);
 
 	} else if ((extract_to != NULL) || (extract == 1)) { /* Extract all archives. */
@@ -398,7 +398,7 @@ prepare_app (poptContext pctx)
 			window_archive__open_extract (window, 
 						      archive, 
 						      extract_to_path);
-		window_archive__close (window);
+		window_archive__quit (window);
 		window_batch_mode_start (window);
 
 	} else { /* Open each archives in a window */
