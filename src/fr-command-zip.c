@@ -193,13 +193,20 @@ static void
 add_password_arg (FRCommand     *comm,
 		  const char    *password)
 {
+	fr_process_add_arg (comm->process, "-P");
+
 	if (password != NULL) {
 		char *arg;
-		fr_process_add_arg (comm->process, "-P");
-		arg = g_strconcat ("\"", password, "\"", NULL);
+		char *e_password;
+
+		e_password = escape_str (password, "\"");
+		arg = g_strconcat ("\"", e_password, "\"", NULL);
+		g_free (e_password);
+
 		fr_process_add_arg (comm->process, arg);
 		g_free (arg);
-	}
+	} else
+		fr_process_add_arg (comm->process, "\"\"");
 }
 
 
@@ -383,8 +390,7 @@ static void
 fr_command_zip_handle_error (FRCommand   *comm, 
 			     FRProcError *error)
 {
-	if ((error->type == FR_PROC_ERROR_GENERIC) 
-	    && (error->status <= 1))
+	if ((error->type == FR_PROC_ERROR_GENERIC) && (error->status <= 1))
 		error->type = FR_PROC_ERROR_NONE;
 }
 
