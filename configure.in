@@ -38,16 +38,16 @@ AC_SUBST(LIBBONOBOUI_REQUIRED)
 
 dnl ===========================================================================
 
-PKG_CHECK_MODULES(FR, 		\
-	glib-2.0 		\
-	gthread-2.0		\
-	gtk+-2.0 		\
-	libgnome-2.0 		\
-	libgnomeui-2.0		\
-	gnome-vfs-2.0		\
-	gnome-vfs-module-2.0	\
-	libglade-2.0		\
-	bonobo-activation-2.0)
+PKG_CHECK_MODULES(FR,					\
+	glib-2.0 >= $GLIB_REQUIRED			\
+	gthread-2.0					\
+	gtk+-2.0 >= $GTK_REQUIRED			\
+	libgnome-2.0 >= $LIBGNOME_REQUIRED		\
+	libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED		\
+	gnome-vfs-2.0 >= $GNOME_VFS_REQUIRED		\
+	gnome-vfs-module-2.0				\
+	libglade-2.0 >= $LIBGLADE_REQUIRED		\
+	bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
 
