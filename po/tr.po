@@ -6,7 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"POT-Creation-Date: 2003-01-30 12:10+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-12-28 21:36+0000\n"
 "PO-Revision-Date: 2003-01-30 20:16+0000\n"
 "Last-Translator: Görkem Çetin <gorkem@gelecek.com.tr>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -15,7 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
-msgid "Add To Archive..."
+#, fuzzy
+msgid "Add to Archive..."
 msgstr "Arşive Ekle..."
 
 #: component/File_Roller_Component.server.in.in.h:2
@@ -23,22 +25,14 @@ msgid "Extract Here"
 msgstr "Buraya Aç"
 
 #: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract In A Sub-Folder"
-msgstr "Alt Dizine Aç"
-
-#: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract To..."
-msgstr "Aç..."
-
-#: component/File_Roller_Component.server.in.in.h:5
 msgid "File Roller Component add operations"
 msgstr ""
 
-#: component/File_Roller_Component.server.in.in.h:6
+#: component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr ""
 
-#: component/File_Roller_Component.server.in.in.h:7
+#: component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "File roller bileşeni"
 
@@ -47,9 +41,9 @@ msgid "Archive Manager"
 msgstr "Arşiv Yöneticisi"
 
 #. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:158
-#: src/gtk-utils.c:266 src/main.c:101 src/menu-callbacks.c:788
-#: src/window.c:744 src/window.c:753 src/window.c:2449 src/window.c:4167
+#: file-roller.desktop.in.h:2 src/gtk-utils.c:390 src/main.c:101
+#: src/menu-callbacks.c:1102 src/window.c:836 src/window.c:1252
+#: src/window.c:2922
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -57,138 +51,158 @@ msgstr "File Roller"
 msgid "Handle compressed archives"
 msgstr "Sıkıştırılmış arşivleri açar"
 
-#: src/dlg-add.c:118
+#: src/dlg-add.c:113 src/dlg-add.c:120
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "\"%s\" dizininde bulunan dosyaları okumak için yeterli hakkınız yoktur."
+msgstr ""
+"\"%s\" dizininde bulunan dosyaları okumak için yeterli hakkınız yoktur."
 
-#: src/dlg-add.c:343 src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "Dosya ve Dizin Ekle"
+#: src/dlg-add.c:119 src/window.c:1921 src/window.c:1954
+#, fuzzy
+msgid "Could not add the files to the archive"
+msgstr "Arşive dosya ekle"
 
-#: src/dlg-add.c:348
+#: src/dlg-add.c:353 src/window.c:3160
+msgid "Add"
+msgstr "Ekle"
+
+#: src/dlg-add.c:358
 msgid "_Add only if newer"
 msgstr "_Eğer yeniyse ekle"
 
-#: src/dlg-add.c:349
-msgid "_Include sub-folders"
+#: src/dlg-add.c:359
+#, fuzzy
+msgid "_Include subfolders"
 msgstr "_Alt dizinleri de ekle"
 
-#: src/dlg-add.c:350
+#: src/dlg-add.c:360
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Sembolik bağlantı olan dizinleri hariç tut"
 
-#: src/dlg-add.c:351
+#: src/dlg-add.c:361
 msgid "Exclude o_ther file systems"
 msgstr "D_iğer dosya sistemlerini hariç tut"
 
-#: src/dlg-add.c:352
+#: src/dlg-add.c:362
 msgid "Exclude _backup files (*~)"
 msgstr "Yedekleme dosyalarını hariç tut (*~)"
 
-#: src/dlg-add.c:353
+#: src/dlg-add.c:363
 msgid "Exclude _hidden files (.*)"
 msgstr "Gizli dosyaları _hariç tut (.*)"
 
-#: src/dlg-add.c:354
+#: src/dlg-add.c:364
 msgid "E_xclude files:"
 msgstr "_Hariç tut:"
 
-#: src/dlg-add.c:356
+#: src/dlg-add.c:366
 msgid "example: *.o; *.bak"
 msgstr "örnek: *.o, *.bak"
 
-#: src/dlg-add.c:357
+#: src/dlg-add.c:367
 msgid "Igno_re case"
 msgstr "Büyük/küçük harf uyumluluğunu gözardı et"
 
-#: src/dlg-add.c:358
+#: src/dlg-add.c:368
 msgid "_Load Options"
 msgstr "_Yükleme Seçenekleri"
 
-#: src/dlg-add.c:359
+#: src/dlg-add.c:369
 msgid "Sa_ve Options"
 msgstr "Kaydetme _Seçenekleri"
 
-#: src/dlg-add.c:614
+#: src/dlg-add.c:624
 msgid "Load Options"
 msgstr "Yükleme Seçenekleri"
 
-#: src/dlg-add.c:763
+#: src/dlg-add.c:773
 msgid "Save Options"
 msgstr "Kaydetme Seçenekleri"
 
-#: src/dlg-batch-add.c:99 src/dlg-extract.c:120 src/window.c:3227
+#: src/dlg-batch-add.c:99 src/dlg-batch-add.c:125 src/menu-callbacks.c:177
+#: src/menu-callbacks.c:196 src/window.c:3674
+#, fuzzy
+msgid "Could not create the archive"
+msgstr "Eski arşiv silinemedi."
+
+#: src/dlg-batch-add.c:100 src/menu-callbacks.c:178 src/menu-callbacks.c:374
+msgid "You have to specify an archive name."
+msgstr ""
+
+#: src/dlg-batch-add.c:126 src/fr-archive.c:618 src/window.c:3675
+#: src/window.c:3818
+#, fuzzy
+msgid "Archive type not supported."
+msgstr "Dosya türü desteklenmiyor."
+
+#: src/dlg-batch-add.c:146 src/dlg-extract.c:120 src/window.c:4046
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "Hedef dizin mevcut değil. Bunu oluşturmak istiyor musunuz?"
 
-#: src/dlg-batch-add.c:101 src/dlg-extract.c:122 src/window.c:3229
+#: src/dlg-batch-add.c:149 src/dlg-extract.c:123 src/window.c:4049
 msgid "Create _Folder"
 msgstr "Dizin _Yarat"
 
-#: src/dlg-batch-add.c:121
-#, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Addition not performed."
+#: src/dlg-batch-add.c:164 src/dlg-extract.c:139 src/window.c:4065
+#, fuzzy, c-format
+msgid "Could not create the destination folder: %s."
 msgstr ""
 "Hedef dizin oluşturulamadı. %s.\n"
 "Ekleme işlemi gerçekleşmedi."
 
-#: src/dlg-batch-add.c:138
-msgid "Addition not performed."
+#: src/dlg-batch-add.c:168 src/dlg-batch-add.c:190
+#, fuzzy
+msgid "Addition not performed"
 msgstr "Ekleme işlemine izin verilmedi."
 
-#. Set widgets data.
-#: src/dlg-batch-add.c:202
+#: src/dlg-batch-add.c:270
 #, c-format
-msgid "Adding %u files"
-msgstr "%u dosya eklendi"
-
-#: src/dlg-extract.c:142 src/window.c:3249
-#, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Extraction not performed."
+msgid "Files to add: %d"
 msgstr ""
-"%s hedef dizini oluşturulamadı.\n"
-"Açma işlemi gerçekleşmedi."
 
-#: src/dlg-extract.c:157 src/window.c:3264
-msgid "Extraction not performed."
+#: src/dlg-batch-add.c:272
+#, c-format
+msgid "Folders to add: %d"
+msgstr ""
+
+#: src/dlg-extract.c:143 src/dlg-extract.c:162 src/dlg-extract.c:186
+#: src/window.c:4069 src/window.c:4088
+#, fuzzy
+msgid "Extraction not performed"
 msgstr "Açma işlemi gerçekleşmedi."
 
-#: src/dlg-extract.c:176
+#: src/dlg-extract.c:181
 #, c-format
-msgid "You don't have the right permissions to extract archives in the folder \"%s\""
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr ""
 
-#: src/dlg-extract.c:397 src/dlg-preferences.c:128 src/menu-callbacks.c:751
-#, c-format
-msgid "Could not display help: %s"
+#: src/dlg-extract.c:428 src/dlg-preferences.c:125 src/menu-callbacks.c:1061
+#, fuzzy
+msgid "Could not display help"
 msgstr "Yardım görüntülenemedi: %s"
 
-#: src/dlg-extract.c:474
+#: src/dlg-extract.c:507
 msgid "Actions"
 msgstr "Eylemler"
 
-#: src/dlg-extract.c:475
+#: src/dlg-extract.c:508
 msgid "Destination folder"
 msgstr "Hedef dizin"
 
-#: src/dlg-extract.c:476
+#: src/dlg-extract.c:509
 msgid "Files"
 msgstr "Dosyalar"
 
-#: src/dlg-extract.c:505
+#: src/dlg-extract.c:538
 msgid "Bookmarks"
 msgstr "Yer imleri"
 
-#: src/dlg-preferences.c:186
+#: src/dlg-preferences.c:182
 msgid "General"
 msgstr "Genel"
 
-#: src/dlg-preferences.c:191
+#: src/dlg-preferences.c:187
 msgid "Visible columns"
 msgstr "Görünen sütunlar"
 
@@ -229,7 +243,7 @@ msgstr "Bilinmeyen tür"
 msgid "Symbolic link"
 msgstr "Sembolik bağlantı"
 
-#: src/file-utils.c:534
+#: src/file-utils.c:536
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "Bir terminal bulunamadı. Xterm kullanılacak"
 
@@ -249,6 +263,11 @@ msgstr "Yer İ_mlerine Ekle"
 msgid "A_vailable application:"
 msgstr "_Kullanılabilir uygulama:"
 
+#: src/file_roller.glade.h:5
+#, fuzzy
+msgid "Add Files"
+msgstr "Dosya Ekle..."
+
 #: src/file_roller.glade.h:6
 msgid "Add _to archive:"
 msgstr "Arşive _ekle:"
@@ -257,15 +276,16 @@ msgstr "Arşive _ekle:"
 msgid "Add only if _newer"
 msgstr "_Sadece yeniyse ekle"
 
-#: src/file_roller.glade.h:8 src/menu.h:464
-msgid "Delete Files"
-msgstr "Dosyaları Sil"
+#: src/file_roller.glade.h:8
+#, fuzzy
+msgid "Delete"
+msgstr "_Sil"
 
 #: src/file_roller.glade.h:9
 msgid "Do not e_xtract older files"
 msgstr "E_ski dosyaları açma"
 
-#: src/file_roller.glade.h:10 src/window.c:2682
+#: src/file_roller.glade.h:10 src/window.c:3171
 msgid "Extract"
 msgstr "Aç"
 
@@ -297,18 +317,20 @@ msgid "Password"
 msgstr "Parola"
 
 #: src/file_roller.glade.h:17
+#, fuzzy
+msgid "R_e-create folders"
+msgstr "D_izinleri yeniden yarat"
+
+#: src/file_roller.glade.h:18
 msgid "R_ecent applications:"
 msgstr "Son kullanılan uygulamalar:"
 
-#: src/file_roller.glade.h:18
-msgid "R_ecreate folders"
-msgstr "D_izinleri yeniden yarat"
-
 #: src/file_roller.glade.h:19
-msgid "Select archive"
+#, fuzzy
+msgid "Select Archive"
 msgstr "Arşivi seç"
 
-#: src/file_roller.glade.h:20 src/menu.h:450
+#: src/file_roller.glade.h:20
 msgid "View File"
 msgstr "Dosyayı Görüntüle"
 
@@ -373,36 +395,52 @@ msgid "Normal"
 msgstr "Normal"
 
 #: src/file_roller_prop.glade.h:9
-msgid "_Name"
-msgstr "İ_sim"
+#, fuzzy
+msgid "_Location"
+msgstr "Konum"
 
 #: src/file_roller_prop.glade.h:10
-msgid "_Path"
-msgstr "_Yol"
-
-#: src/file_roller_prop.glade.h:11
-msgid "_Recent archives:"
-msgstr "_Son kullanılan arşivler:"
-
-#: src/file_roller_prop.glade.h:12
 msgid "_Size"
 msgstr "_Boyut"
 
-#: src/file_roller_prop.glade.h:13
+#: src/file_roller_prop.glade.h:11
 msgid "_Type"
 msgstr "_Tür"
 
-#: src/gconf-utils.c:98
-#, c-format
-msgid ""
-"GConf error:\n"
-"  %s"
+#: src/fr-archive.c:593
+msgid "The file does not exist."
 msgstr ""
-"GConf hatası:\n"
-"  %s"
+
+#: src/fr-command-tar.c:218
+#, fuzzy
+msgid "Adding file: "
+msgstr "%u dosya eklendi"
+
+#: src/fr-command-tar.c:264
+msgid "Removing file: "
+msgstr ""
+
+#: src/fr-command-tar.c:273 src/window.c:1348
+msgid "Deleting files from archive"
+msgstr "Arşivden dosyalar siliniyor"
+
+#: src/fr-command-tar.c:306
+#, fuzzy
+msgid "Extracting file: "
+msgstr "Arşivden dosyalar açılıyor"
+
+#: src/fr-command-tar.c:351
+#, fuzzy
+msgid "Recompressing archive"
+msgstr "Sıkıştırılmış arşivleri açar"
+
+#: src/fr-command-tar.c:485
+#, fuzzy
+msgid "Decompressing archive"
+msgstr "Sıkıştırılmış arşivleri açar"
 
 #. Button
-#: src/gtk-utils.c:297
+#: src/gtk-utils.c:421
 msgid "Command _Line Output"
 msgstr "_Komut Satırı Çıktısı"
 
@@ -438,9 +476,14 @@ msgstr ""
 msgid "Create destination folder without asking confirmation"
 msgstr ""
 
-#: src/menu-callbacks.c:107
+#: src/menu-callbacks.c:106
 msgid "Automatic"
 msgstr "Otomatik"
+
+#: src/menu-callbacks.c:107
+#, fuzzy
+msgid "Arj (.arj)"
+msgstr "War (.war)"
 
 #: src/menu-callbacks.c:108
 msgid "Ear (.ear)"
@@ -490,71 +533,104 @@ msgstr "War (.war)"
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: src/menu-callbacks.c:175
+#: src/menu-callbacks.c:120
+#, fuzzy
+msgid "Zoo (.zoo)"
+msgstr "Zip (.zip)"
+
+#: src/menu-callbacks.c:197 src/menu-callbacks.c:393
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Bu dizin içinde bir arşiv oluşturmak için yeterli izniniz yok."
 
-#: src/menu-callbacks.c:193 src/menu-callbacks.c:420 src/menu-callbacks.c:590
-msgid "Archive already exists.  Do you want to overwrite it?"
+#: src/menu-callbacks.c:226 src/menu-callbacks.c:413 src/menu-callbacks.c:636
+#: src/menu-callbacks.c:814
+#, fuzzy
+msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "Bu arşiv zaten var. Üzerine yazılsın mı?"
 
-#: src/menu-callbacks.c:195 src/menu-callbacks.c:422 src/menu-callbacks.c:592
+#: src/menu-callbacks.c:229 src/menu-callbacks.c:416 src/menu-callbacks.c:639
+#: src/menu-callbacks.c:817
 msgid "Overwrite"
 msgstr "Üzerine yaz"
 
-#: src/menu-callbacks.c:212
-msgid "Could not delete old archive."
+#: src/menu-callbacks.c:245 src/menu-callbacks.c:432
+#, fuzzy
+msgid "Could not delete the old archive."
 msgstr "Eski arşiv silinemedi."
 
-#: src/menu-callbacks.c:253
-msgid "New Archive"
-msgstr "Yeni Arşiv"
+#: src/menu-callbacks.c:290 src/toolbar.h:39
+msgid "New"
+msgstr "Yeni"
 
-#: src/menu-callbacks.c:265
+#: src/menu-callbacks.c:308 src/menu-callbacks.c:471
 msgid "Archive type:"
 msgstr "Arşiv türü:"
 
-#: src/menu-callbacks.c:336
-msgid "Open Archive"
-msgstr "Arşiv Aç"
-
-#: src/menu-callbacks.c:445
-msgid "Could not copy archive"
-msgstr "Arşiv kopyalanamadı"
-
-#: src/menu-callbacks.c:461
-msgid "Could not move archive"
+#: src/menu-callbacks.c:373 src/menu-callbacks.c:392
+#, fuzzy
+msgid "Could not save the archive"
 msgstr "Arşiv taşınamadı"
 
-#: src/menu-callbacks.c:483
-msgid "Copy archive"
-msgstr "Arşivi kopyala"
+#: src/menu-callbacks.c:459
+msgid "Save"
+msgstr ""
 
-#: src/menu-callbacks.c:483
-msgid "Move archive"
-msgstr "Arşivi taşı"
+#: src/menu-callbacks.c:545 src/toolbar.h:45
+msgid "Open"
+msgstr "Aç"
 
-#: src/menu-callbacks.c:561
+#: src/menu-callbacks.c:661
+#, fuzzy
+msgid "Could not copy the archive"
+msgstr "Arşiv kopyalanamadı"
+
+#: src/menu-callbacks.c:679
+#, fuzzy
+msgid "Could not move the archive"
+msgstr "Arşiv taşınamadı"
+
+#: src/menu-callbacks.c:706
+#, fuzzy
+msgid "Copy"
+msgstr "K_opyala"
+
+#: src/menu-callbacks.c:706
+#, fuzzy
+msgid "Move"
+msgstr "_Taşı"
+
+#: src/menu-callbacks.c:784 src/window.c:4735
+#, fuzzy
+msgid "Rename"
+msgstr "_Yeniden adlandır"
+
+#: src/menu-callbacks.c:785
 msgid "New archive name (without extension)"
 msgstr "Yeni arşiv adı (uzantısız)"
 
-#: src/menu-callbacks.c:565 src/menu.h:97
+#: src/menu-callbacks.c:789 src/window.c:4740
 msgid "_Rename"
 msgstr "_Yeniden adlandır"
 
-#: src/menu-callbacks.c:629
-msgid "Archive will be deleted, are you sure?"
-msgstr "Arşiv silinecektir, devam edilsin mi?"
+#: src/menu-callbacks.c:899
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
+msgstr ""
 
-#: src/menu-callbacks.c:780
+#: src/menu-callbacks.c:1094
 msgid "translator_credits"
 msgstr "Görkem Çetin"
 
-#: src/menu-callbacks.c:791
+#: src/menu-callbacks.c:1105
 msgid "An archive manager for GNOME."
 msgstr "GNOME için arşiv yöneticisi"
 
-#: src/menu.h:67
+#: src/menu-callbacks.c:1254 src/window.c:4472
+msgid "Last Output"
+msgstr "Son Çıktı"
+
+#: src/menu.h:66
 msgid "_New"
 msgstr "_Yeni"
 
@@ -562,305 +638,271 @@ msgstr "_Yeni"
 msgid "Create a new archive"
 msgstr "Yeni bir arşiv oluştur"
 
-#: src/menu.h:73
-msgid "_Open..."
-msgstr "_Aç..."
-
-#: src/menu.h:73
-msgid "Open an existing archive"
-msgstr "Mevcut bir arşivi aç"
-
-#: src/menu.h:78
+#: src/menu.h:72
 msgid "Open R_ecent"
 msgstr "_Son Kullanılanlardan Aç"
 
-#: src/menu.h:83
-msgid "Open Fi_les..."
-msgstr "_Dosyaları Aç..."
+#: src/menu.h:81 src/menu.h:169 src/menu.h:453
+#, fuzzy
+msgid "_Rename..."
+msgstr "_Yeniden adlandır"
 
-#: src/menu.h:83
-msgid "Open selected files with an application"
-msgstr "Seçilen dosyaları bir uygulama ile aç"
-
-#: src/menu.h:89
-msgid "_View File"
-msgstr "_Dosyayı Görüntüle"
-
-#: src/menu.h:89 src/menu.h:450
-msgid "View file with internal viewer"
-msgstr "Dosyayı dahili bir program ile görüntüle"
-
-#: src/menu.h:97
+#: src/menu.h:81
 msgid "Rename current archive"
 msgstr "Mevcut arşivi yeniden adlandır"
 
-#: src/menu.h:103
-msgid "Cop_y"
+#: src/menu.h:87
+#, fuzzy
+msgid "Cop_y..."
 msgstr "K_opyala"
 
-#: src/menu.h:103
+#: src/menu.h:87
 msgid "Copy current archive to another folder"
 msgstr "Güncel arşivi başka bir dizine kopyala"
 
-#: src/menu.h:109
-msgid "_Move"
+#: src/menu.h:93
+#, fuzzy
+msgid "_Move..."
 msgstr "_Taşı"
 
-#: src/menu.h:109
+#: src/menu.h:93
 msgid "Move current archive to another folder"
 msgstr "Güncel arşivi başka bir dizine taşı"
 
-#: src/menu.h:115 src/menu.h:170
-msgid "_Delete"
-msgstr "_Sil"
+#: src/menu.h:99
+msgid "Move to _Trash"
+msgstr ""
 
-#: src/menu.h:115
-msgid "Delete current archive from disk"
-msgstr "Güncel arşivi diskten sil"
+#: src/menu.h:99
+#, fuzzy
+msgid "Move current archive to trash"
+msgstr "Güncel arşivi başka bir dizine taşı"
 
-#: src/menu.h:123
+#: src/menu.h:105
+#, fuzzy
+msgid "_Test"
+msgstr "_Tür"
+
+#: src/menu.h:105
+msgid "Test whether the archive contains errors"
+msgstr ""
+
+#: src/menu.h:113
 msgid "_Properties"
 msgstr "Ö_zellikler"
 
-#: src/menu.h:123
+#: src/menu.h:113
 msgid "Show archive properties"
 msgstr "Arşiv özelliklerini göster"
 
-#: src/menu.h:131
-msgid "_Close"
-msgstr "_Kapat"
+#: src/menu.h:151 src/menu.h:435
+#, fuzzy
+msgid "_Add..."
+msgstr "Dosya Ekle..."
 
-#: src/menu.h:131
-msgid "Close current archive"
-msgstr "Güncel arşivi kapat"
-
-#: src/menu.h:137
-msgid "E_xit"
-msgstr "Çı_k"
-
-#: src/menu.h:137
-msgid "Exit"
-msgstr "Çık"
-
-#: src/menu.h:164
-msgid "Add _Files..."
-msgstr "_Dosya Ekle..."
-
-#: src/menu.h:164 src/menu.h:458 src/window.c:2672
-msgid "Add files to the archive"
+#: src/menu.h:151 src/menu.h:435
+#, fuzzy
+msgid "Add files and folders to the archive"
 msgstr "Arşive dosya ekle"
 
-#: src/menu.h:170
-msgid "Delete selected files and folders from the archive"
-msgstr "Seçilen dosya ve dizinleri arşivden sil"
-
-#: src/menu.h:176
-msgid "_Extract to..."
+#: src/menu.h:157 src/menu.h:441
+#, fuzzy
+msgid "_Extract..."
 msgstr "_Buraya aç..."
 
-#: src/menu.h:176 src/menu.h:470 src/window.c:2683
+#: src/menu.h:157 src/menu.h:441 src/window.c:3172
 msgid "Extract files from the archive"
 msgstr "Arşivden dosyaları aç"
 
-#: src/menu.h:190
-msgid "_Test Archive"
-msgstr "_Arşivi Denetle"
+#: src/menu.h:169 src/menu.h:453
+msgid "Rename selection"
+msgstr ""
 
-#: src/menu.h:206
+#: src/menu.h:175 src/menu.h:459
+#, fuzzy
+msgid "_Delete..."
+msgstr "_Sil"
+
+#: src/menu.h:175 src/menu.h:459
+#, fuzzy
+msgid "Delete selection from the archive"
+msgstr "Arşivden dosyaları sil"
+
+#: src/menu.h:183 src/menu.h:467
 msgid "Select _All"
 msgstr "_Hepsini Seç"
 
-#: src/menu.h:206
+#: src/menu.h:183 src/menu.h:467
 msgid "Select all files"
 msgstr "Tüm dosyaları seç"
 
-#: src/menu.h:212
+#: src/menu.h:189 src/menu.h:473
 msgid "Dese_lect All"
 msgstr "_Seçimi Kaldır"
 
-#: src/menu.h:212
+#: src/menu.h:189 src/menu.h:473
 msgid "Deselect all files"
 msgstr "Seçimi kaldır"
 
-#: src/menu.h:220
+#: src/menu.h:197 src/menu.h:421
+msgid "Open Fi_les..."
+msgstr "_Dosyaları Aç..."
+
+#: src/menu.h:197 src/menu.h:421
+msgid "Open selected files with an application"
+msgstr "Seçilen dosyaları bir uygulama ile aç"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "_View File"
+msgstr "_Dosyayı Görüntüle"
+
+#: src/menu.h:203 src/menu.h:427
+msgid "View file with internal viewer"
+msgstr "Dosyayı dahili bir program ile görüntüle"
+
+#: src/menu.h:211
 msgid "Pass_word..."
 msgstr "_Parola..."
 
-#: src/menu.h:228
+#: src/menu.h:219
 msgid "_Preferences"
 msgstr "_Tercihler"
 
-#: src/menu.h:239
+#: src/menu.h:219
+#, fuzzy
+msgid "Edit File Roller preferences"
+msgstr "File Roller Tercihleri"
+
+#: src/menu.h:230
 msgid "by _Name"
 msgstr "İ_sme Göre"
 
-#: src/menu.h:239
+#: src/menu.h:230
 msgid "Sort file list by name"
 msgstr "Dosyaları isme göre sırala"
 
-#: src/menu.h:245
+#: src/menu.h:236
 msgid "by _Size"
 msgstr "_Boyuta Göre"
 
-#: src/menu.h:245
+#: src/menu.h:236
 msgid "Sort file list by file size"
 msgstr "Dosyaları boyuta göre sırala"
 
-#: src/menu.h:251
+#: src/menu.h:242
 msgid "by T_ype"
 msgstr "_Türe Göre"
 
-#: src/menu.h:251
+#: src/menu.h:242
 msgid "Sort file list by type"
 msgstr "Dosyaları türe göre sırala"
 
-#: src/menu.h:257
-msgid "by _Time"
-msgstr "T_arihe Göre"
+#: src/menu.h:248
+#, fuzzy
+msgid "by _Date modified"
+msgstr "Değiştirilme tarihi"
 
-#: src/menu.h:257
+#: src/menu.h:248
 msgid "Sort file list by modification time"
 msgstr "Dosyaları değiştirilme tarihine göre sırala"
 
-#: src/menu.h:263
-msgid "by _Path"
-msgstr "_Yola Göre"
+#: src/menu.h:254
+#, fuzzy
+msgid "by _Location"
+msgstr "Konum"
 
-#: src/menu.h:263
-msgid "Sort file list by path"
+#: src/menu.h:254
+#, fuzzy
+msgid "Sort file list by location"
 msgstr "Dosyaları yola göre sırala"
 
-#: src/menu.h:280
+#: src/menu.h:271
 msgid "View All _Files"
 msgstr "Tü_m Dosyaları Görüntüle"
 
-#: src/menu.h:286
+#: src/menu.h:277
 msgid "View as a F_older"
 msgstr "Di_zin Olarak Görüntüle"
 
-#: src/menu.h:308
+#: src/menu.h:299
 msgid "_Reversed Order"
 msgstr "_Ters Sıralı Görüntüle"
 
-#: src/menu.h:308
+#: src/menu.h:299
 msgid "Reverse the list order"
 msgstr "Liste sırasını tersine çevir"
 
-#: src/menu.h:332
+#: src/menu.h:323
 msgid "_Toolbar"
 msgstr "_Araç çubuğu"
 
-#: src/menu.h:332
+#: src/menu.h:323
 msgid "View the main toolbar"
 msgstr "Ana araç çubuğunu görüntüle"
 
-#: src/menu.h:338
+#: src/menu.h:329
 msgid "Stat_usbar"
 msgstr "_Durum çubuğu"
 
-#: src/menu.h:338
+#: src/menu.h:329
 msgid "View the statusbar"
 msgstr "Durum çubuğunu göster"
 
-#: src/menu.h:346
+#: src/menu.h:337
 msgid "_Stop"
 msgstr "_Dur"
 
-#: src/menu.h:346 src/toolbar.h:55
+#: src/menu.h:337 src/toolbar.h:55
 msgid "Stop current operation"
 msgstr "Güncel işlemi durdur"
 
-#: src/menu.h:352
+#: src/menu.h:343
 msgid "_Reload"
 msgstr "_Yeniden yükle"
 
-#: src/menu.h:352
+#: src/menu.h:343
 msgid "Reload current archive"
 msgstr "Güncel arşivi yeniden yükle"
 
-#: src/menu.h:363
+#: src/menu.h:354
 msgid "_Arrange Files"
 msgstr "Do_syaları Düzenle"
 
-#: src/menu.h:368
+#: src/menu.h:359
 msgid "_Last Output"
 msgstr "_Son Çıktı"
 
-#: src/menu.h:381
-msgid "New _Window"
-msgstr "Yeni _Pencere"
+#: src/menu.h:359
+msgid "View the output produced by the last executed command"
+msgstr ""
 
-#: src/menu.h:381
-msgid "Open a new window"
-msgstr "Yeni bir pencere aç"
-
-#: src/menu.h:387
-msgid "Clo_se Window"
-msgstr "P_encereyi Kapat"
-
-#: src/menu.h:387
-msgid "Close this window"
-msgstr "Bu pencereyi kapat"
-
-#: src/menu.h:400
+#: src/menu.h:372
 msgid "_Contents"
 msgstr "İç_indekiler"
 
-#: src/menu.h:400
+#: src/menu.h:372
 msgid "Display the File Roller Manual"
 msgstr "File Roller Kılavuzunu Görüntüle"
 
-#: src/menu.h:406
+#: src/menu.h:378
 msgid "_About"
 msgstr "_Hakkında"
 
-#: src/menu.h:406
+#: src/menu.h:378
 msgid "Information about the program"
 msgstr "Program hakkında bilgi"
 
-#: src/menu.h:418
+#: src/menu.h:390
 msgid "_Archive"
 msgstr "_Arşiv"
 
-#: src/menu.h:419
+#: src/menu.h:391
 msgid "_Edit"
 msgstr "Dü_zenle"
 
-#: src/menu.h:420
+#: src/menu.h:392
 msgid "_View"
 msgstr "_Görüntüle"
-
-#: src/menu.h:421
-msgid "_Windows"
-msgstr "_Pencereler"
-
-#: src/menu.h:444
-msgid "Open Files..."
-msgstr "Dosyaları Aç..."
-
-#: src/menu.h:458
-msgid "Add Files..."
-msgstr "Dosya Ekle..."
-
-#: src/menu.h:464
-msgid "Delete files from the archive"
-msgstr "Arşivden dosyaları sil"
-
-#: src/menu.h:470
-msgid "Extract to..."
-msgstr "Buraya aç..."
-
-#: src/menu.h:478
-msgid "Select All"
-msgstr "Hepsini Seç"
-
-#: src/toolbar.h:39
-msgid "New"
-msgstr "Yeni"
-
-#: src/toolbar.h:45
-msgid "Open"
-msgstr "Aç"
 
 #: src/toolbar.h:45
 msgid "Open archive"
@@ -870,170 +912,367 @@ msgstr "Arşivi aç"
 msgid "Stop"
 msgstr "Dur"
 
-#: src/window.c:608
+#: src/window.c:679
 msgid "Folder"
 msgstr "Dizin"
 
-#: src/window.c:752
+#: src/window.c:844
 msgid "[read only]"
 msgstr "[salt okunur]"
 
-#: src/window.c:846
-#, c-format
-msgid "1 file (%s)"
-msgstr "1 dosya (%s)"
+#: src/window.c:939
+#, fuzzy, c-format
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d dosya (%s)"
+msgstr[1] "%d dosya (%s)"
 
-#: src/window.c:849
-#, c-format
-msgid "%d files (%s)"
-msgstr "%d dosya (%s)"
+#: src/window.c:944
+#, fuzzy, c-format
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d dosya seçildi (%s)"
+msgstr[1] "%d dosya seçildi (%s)"
 
-#: src/window.c:857
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "1 dosya seçildi (%s)"
-
-#: src/window.c:860
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d dosya seçildi (%s)"
-
-#: src/window.c:1149
+#: src/window.c:1345
 msgid "Reading archive"
 msgstr "Arşiv okunuyor"
 
-#: src/window.c:1152
-msgid "Deleting files from archive"
-msgstr "Arşivden dosyalar siliniyor"
-
-#: src/window.c:1155
+#: src/window.c:1351
 msgid "Adding files to archive"
 msgstr "Arşive dosya ekleniyor"
 
-#: src/window.c:1158
+#: src/window.c:1354
 msgid "Extracting files from archive"
 msgstr "Arşivden dosyalar açılıyor"
 
-#: src/window.c:1161
+#: src/window.c:1357
 msgid "Testing archive"
 msgstr "Arşiv denetleniyor"
 
-#: src/window.c:1167
+#: src/window.c:1360
+msgid "Getting the file list"
+msgstr ""
+
+#: src/window.c:1366
 msgid "wait please..."
 msgstr "lütfen bekleyiniz..."
 
-#: src/window.c:1253
+#: src/window.c:1427
+#, fuzzy, c-format
+msgid "Could not display the folder \"%s\""
+msgstr "Yardım görüntülenemedi: %s"
+
+#: src/window.c:1486
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+
+#: src/window.c:1488
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr ""
+
+#: src/window.c:1493
+msgid "Could not perform the operation"
+msgstr ""
+
+#: src/window.c:1508
 msgid "Operation stopped"
 msgstr "İşlem durduruldu"
 
-#: src/window.c:1271
+#: src/window.c:1529
 msgid "An error occurred while extracting files."
 msgstr "Dosyalar açılırken bir hata oluştu"
 
-#: src/window.c:1275
+#: src/window.c:1533
 msgid "An error occurred while loading the archive."
 msgstr "Arşiv yüklenirken bir hata oluştu."
 
-#: src/window.c:1279
+#: src/window.c:1537
 msgid "An error occurred while deleting files from the archive."
 msgstr "Arşivden dosyalar silinirken bir hata oluştu."
 
-#: src/window.c:1283
+#: src/window.c:1541
 msgid "An error occurred while adding files to the archive."
 msgstr "Arşive dosya eklenirken bir hata oluştu."
 
-#: src/window.c:1287
+#: src/window.c:1545
 msgid "An error occurred while testing archive."
 msgstr "Arşiv denetlenirken bir hata oluştu."
 
-#: src/window.c:1293
+#: src/window.c:1554
 msgid "Command not found."
 msgstr "Komut bulunamadı."
 
-#: src/window.c:1296
+#: src/window.c:1557
 msgid "Command exited abnormally."
 msgstr "Komut hatalı bir şekilde sonlandı."
 
-#: src/window.c:1588
-msgid "You don't have permissions to add files to this archive."
-msgstr "Bu arşive dosya eklemek için yeterli izniniz yok."
+#: src/window.c:1685
+msgid "Test Result"
+msgstr ""
 
-#: src/window.c:1610
+#: src/window.c:1922
+#, fuzzy
+msgid "You don't have the right permissions."
+msgstr ""
+"\"%s\" dizininde bulunan dosyaları okumak için yeterli hakkınız yoktur."
+
+#: src/window.c:1955
 msgid "You can't add an archive to itself."
 msgstr "Bir arşivi kendi üzerine ekleyemezsiniz."
 
-#: src/window.c:1770
+#: src/window.c:2134
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 
-#: src/window.c:1813
+#: src/window.c:2171
 msgid "Do you want to create a new archive with these files?"
 msgstr "Bu dosyalarla yeni bir arşiv oluşturmak istiyor musunuz?"
 
-#: src/window.c:1815
+#: src/window.c:2174
 msgid "Create _Archive"
 msgstr "Arşiv _Oluştur"
 
-#: src/window.c:2148
+#: src/window.c:2525
 msgid "Size"
 msgstr "Boyut"
 
-#: src/window.c:2149
+#: src/window.c:2526
 msgid "Type"
 msgstr "Tür"
 
-#: src/window.c:2150
+#: src/window.c:2527
 msgid "Date modified"
 msgstr "Değiştirilme tarihi"
 
-#: src/window.c:2151
+#: src/window.c:2528
 msgid "Location"
 msgstr "Konum"
 
-#: src/window.c:2158
+#: src/window.c:2535
 msgid "Name"
 msgstr "İsim"
 
-#: src/window.c:2617
-msgid "_Up"
-msgstr "_Yukarı"
+#: src/window.c:3080
+msgid "Go to the previous visited location"
+msgstr ""
+
+#: src/window.c:3088
+msgid "Go to the next visited location"
+msgstr ""
+
+#: src/window.c:3096
+msgid "Go up one level"
+msgstr ""
+
+#: src/window.c:3104
+msgid "Go to the home location"
+msgstr ""
 
 #. current location
-#: src/window.c:2639
-msgid "Current Location:"
-msgstr "Güncel Konum:"
+#: src/window.c:3123
+#, fuzzy
+msgid "Location:"
+msgstr "Konum"
 
-#: src/window.c:2671
-msgid "Add"
-msgstr "Ekle"
+#: src/window.c:3161
+msgid "Add files to the archive"
+msgstr "Arşive dosya ekle"
 
-#: src/window.c:2693
+#: src/window.c:3182
 msgid "View"
 msgstr "Görüntüle"
 
-#: src/window.c:2694
+#: src/window.c:3183
 msgid "View selected file"
 msgstr "Seçili dosyayı görüntüle"
 
-#: src/window.c:3093
-msgid "File type not supported."
-msgstr "Dosya türü desteklenmiyor."
+#: src/window.c:3760
+#, fuzzy, c-format
+msgid "Could not open \"%s\""
+msgstr "Yardım görüntülenemedi: %s"
 
-#: src/window.c:3162
-msgid "Cannot load archive."
-msgstr "Arşiv yüklenemedi."
+#: src/window.c:3811
+#, fuzzy, c-format
+msgid "Could not save the archive \"%s\""
+msgstr "Arşiv taşınamadı"
 
-#: src/window.c:3576
-msgid "Last Output"
-msgstr "Son Çıktı"
+#: src/window.c:4667
+msgid "The new name is void."
+msgstr ""
 
-#: src/window.c:4102
+#: src/window.c:4667 src/window.c:4671 src/window.c:4680
+msgid "Please use a different name."
+msgstr ""
+
+#: src/window.c:4671
+msgid "The new name is equal to the old one."
+msgstr ""
+
+#: src/window.c:4680
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/window.c:4736
+msgid "New folder name"
+msgstr ""
+
+#: src/window.c:4736
+msgid "New file name"
+msgstr ""
+
+#: src/window.c:4757
+#, fuzzy
+msgid "Could not rename the folder"
+msgstr "Eski arşiv silinemedi."
+
+#: src/window.c:4757
+#, fuzzy
+msgid "Could not rename the file"
+msgstr "Arşiv taşınamadı"
+
+#: src/window.c:5385
 msgid "Add files to an archive"
 msgstr "Arşive dosya ekle"
 
-#: src/window.c:4127
+#: src/window.c:5410
 msgid "Extract archive"
 msgstr "Arşivi aç"
 
+#~ msgid "Extract In A Sub-Folder"
+#~ msgstr "Alt Dizine Aç"
+
+#~ msgid "Extract To..."
+#~ msgstr "Aç..."
+
+#~ msgid "Add Files and Folders"
+#~ msgstr "Dosya ve Dizin Ekle"
+
+#~ msgid ""
+#~ "Could not create the destination folder: %s.\n"
+#~ "Extraction not performed."
+#~ msgstr ""
+#~ "%s hedef dizini oluşturulamadı.\n"
+#~ "Açma işlemi gerçekleşmedi."
+
+#~ msgid "Delete Files"
+#~ msgstr "Dosyaları Sil"
+
+#~ msgid "_Name"
+#~ msgstr "İ_sim"
+
+#~ msgid "_Path"
+#~ msgstr "_Yol"
+
+#~ msgid "_Recent archives:"
+#~ msgstr "_Son kullanılan arşivler:"
+
+#~ msgid ""
+#~ "GConf error:\n"
+#~ "  %s"
+#~ msgstr ""
+#~ "GConf hatası:\n"
+#~ "  %s"
+
+#~ msgid "New Archive"
+#~ msgstr "Yeni Arşiv"
+
+#~ msgid "Open Archive"
+#~ msgstr "Arşiv Aç"
+
+#~ msgid "Copy archive"
+#~ msgstr "Arşivi kopyala"
+
+#~ msgid "Move archive"
+#~ msgstr "Arşivi taşı"
+
+#~ msgid "Archive will be deleted, are you sure?"
+#~ msgstr "Arşiv silinecektir, devam edilsin mi?"
+
+#~ msgid "_Open..."
+#~ msgstr "_Aç..."
+
+#~ msgid "Open an existing archive"
+#~ msgstr "Mevcut bir arşivi aç"
+
+#~ msgid "Delete current archive from disk"
+#~ msgstr "Güncel arşivi diskten sil"
+
+#~ msgid "_Close"
+#~ msgstr "_Kapat"
+
+#~ msgid "Close current archive"
+#~ msgstr "Güncel arşivi kapat"
+
+#~ msgid "E_xit"
+#~ msgstr "Çı_k"
+
+#~ msgid "Exit"
+#~ msgstr "Çık"
+
+#~ msgid "Add _Files..."
+#~ msgstr "_Dosya Ekle..."
+
+#~ msgid "Delete selected files and folders from the archive"
+#~ msgstr "Seçilen dosya ve dizinleri arşivden sil"
+
+#~ msgid "_Test Archive"
+#~ msgstr "_Arşivi Denetle"
+
+#~ msgid "by _Time"
+#~ msgstr "T_arihe Göre"
+
+#~ msgid "by _Path"
+#~ msgstr "_Yola Göre"
+
+#~ msgid "New _Window"
+#~ msgstr "Yeni _Pencere"
+
+#~ msgid "Open a new window"
+#~ msgstr "Yeni bir pencere aç"
+
+#~ msgid "Clo_se Window"
+#~ msgstr "P_encereyi Kapat"
+
+#~ msgid "Close this window"
+#~ msgstr "Bu pencereyi kapat"
+
+#~ msgid "_Windows"
+#~ msgstr "_Pencereler"
+
+#~ msgid "Open Files..."
+#~ msgstr "Dosyaları Aç..."
+
+#~ msgid "Extract to..."
+#~ msgstr "Buraya aç..."
+
+#~ msgid "Select All"
+#~ msgstr "Hepsini Seç"
+
+#~ msgid "1 file (%s)"
+#~ msgstr "1 dosya (%s)"
+
+#~ msgid "1 file selected (%s)"
+#~ msgstr "1 dosya seçildi (%s)"
+
+#~ msgid "You don't have permissions to add files to this archive."
+#~ msgstr "Bu arşive dosya eklemek için yeterli izniniz yok."
+
+#~ msgid "_Up"
+#~ msgstr "_Yukarı"
+
+#~ msgid "Current Location:"
+#~ msgstr "Güncel Konum:"
+
+#~ msgid "Cannot load archive."
+#~ msgstr "Arşiv yüklenemedi."
