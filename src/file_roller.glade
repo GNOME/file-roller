@@ -5,19 +5,20 @@
 <requires lib="gnome"/>
 
 <widget class="GtkDialog" id="extract_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">Extract</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="has_separator">True</property>
+  <property name="has_separator">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox9">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">8</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area9">
@@ -85,10 +86,10 @@
 
 	      <child>
 		<widget class="GtkVBox" id="vbox6">
-		  <property name="border_width">5</property>
+		  <property name="border_width">6</property>
 		  <property name="visible">True</property>
 		  <property name="homogeneous">False</property>
-		  <property name="spacing">5</property>
+		  <property name="spacing">6</property>
 
 		  <child>
 		    <widget class="GnomeFileEntry" id="e_extract_to_fileentry">
@@ -310,13 +311,13 @@
 
 		      <child>
 			<widget class="GtkTable" id="table1">
-			  <property name="border_width">5</property>
+			  <property name="border_width">6</property>
 			  <property name="visible">True</property>
 			  <property name="n_rows">3</property>
 			  <property name="n_columns">2</property>
 			  <property name="homogeneous">False</property>
 			  <property name="row_spacing">6</property>
-			  <property name="column_spacing">5</property>
+			  <property name="column_spacing">6</property>
 
 			  <child>
 			    <widget class="GtkRadioButton" id="e_files_radiobutton">
@@ -449,7 +450,7 @@
 
 		  <child>
 		    <widget class="GtkVBox" id="vbox15">
-		      <property name="border_width">5</property>
+		      <property name="border_width">6</property>
 		      <property name="visible">True</property>
 		      <property name="homogeneous">False</property>
 		      <property name="spacing">6</property>
@@ -626,19 +627,20 @@
 </widget>
 
 <widget class="GtkDialog" id="viewer_or_app_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">View File</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="has_separator">True</property>
+  <property name="has_separator">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox10">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area10">
@@ -677,7 +679,7 @@
 
       <child>
 	<widget class="GtkVBox" id="vbox10">
-	  <property name="border_width">12</property>
+	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">6</property>
@@ -730,19 +732,20 @@
 </widget>
 
 <widget class="GtkDialog" id="batch_add_files_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">Add Files and Folders</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="has_separator">True</property>
+  <property name="has_separator">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox11">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area11">
@@ -783,7 +786,7 @@
 
       <child>
 	<widget class="GtkVBox" id="vbox8">
-	  <property name="border_width">12</property>
+	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">6</property>
@@ -902,19 +905,20 @@
 </widget>
 
 <widget class="GtkDialog" id="prop_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">Archive Properties</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="has_separator">True</property>
+  <property name="has_separator">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox12">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area12">
@@ -942,7 +946,7 @@
 
       <child>
 	<widget class="GtkTable" id="table3">
-	  <property name="border_width">12</property>
+	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
 	  <property name="n_rows">5</property>
 	  <property name="n_columns">2</property>
@@ -1201,6 +1205,7 @@
 </widget>
 
 <widget class="GtkDialog" id="open_with_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">Open Files</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -1213,7 +1218,7 @@
     <widget class="GtkVBox" id="dialog-vbox13">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area13">
@@ -1255,7 +1260,7 @@
 
       <child>
 	<widget class="GtkVBox" id="vbox7">
-	  <property name="border_width">12</property>
+	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">12</property>
@@ -1563,19 +1568,20 @@
 </widget>
 
 <widget class="GtkDialog" id="delete_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">Delete Files</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="has_separator">True</property>
+  <property name="has_separator">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox14">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area14">
@@ -1614,7 +1620,7 @@
 
       <child>
 	<widget class="GtkTable" id="table2">
-	  <property name="border_width">12</property>
+	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
 	  <property name="n_rows">3</property>
 	  <property name="n_columns">2</property>
@@ -1720,19 +1726,20 @@
 </widget>
 
 <widget class="GtkDialog" id="password_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">Password</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="has_separator">True</property>
+  <property name="has_separator">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox15">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area15">
@@ -1774,7 +1781,7 @@
 
       <child>
 	<widget class="GtkVBox" id="vbox11">
-	  <property name="border_width">12</property>
+	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">12</property>
@@ -1895,6 +1902,7 @@
 </widget>
 
 <widget class="GtkDialog" id="viewer_dialog">
+  <property name="border_width">6</property>
   <property name="width_request">500</property>
   <property name="height_request">400</property>
   <property name="title" translatable="yes">Viewer</property>
@@ -1909,7 +1917,7 @@
     <widget class="GtkVBox" id="dialog-vbox18">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">0</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area18">
@@ -1938,6 +1946,7 @@
 
       <child>
 	<widget class="GtkScrolledWindow" id="scrolledwindow10">
+	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
 	  <property name="can_focus">True</property>
 	  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
