@@ -77,6 +77,11 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 
 	dialog = gtk_dialog_new_with_buttons (title, parent, flags, NULL);
 
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+        gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
+        gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
+        gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+
 	/* Add label and image */
 
 	image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_DIALOG);
@@ -153,6 +158,11 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 		title = _("File Roller");
 
 	dialog = gtk_dialog_new_with_buttons (title, parent, flags, NULL);
+
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+        gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
+        gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
+        gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
 
 	/* Add label and image */
 
@@ -259,6 +269,12 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 					      NULL);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+        gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
+        gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
+        gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+
 	gtk_widget_set_size_request (dialog, 500, -1);
 
 	/* Add label and image */

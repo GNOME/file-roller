@@ -3474,12 +3474,17 @@ window_view_last_output (FRWindow *window)
 	GtkTextIter    iter;
 	GList         *scan;
 
-	dialog = gtk_dialog_new_with_buttons (_("File Roller - Last output"), 
+	dialog = gtk_dialog_new_with_buttons (_("Last Output"), 
 					      GTK_WINDOW (window->app),
 					      GTK_DIALOG_DESTROY_WITH_PARENT, 
 					      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 					      NULL);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+        gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
+        gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
+        gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+
 	gtk_widget_set_size_request (dialog, 500, 300);
 
 	/* Add text */

@@ -33,7 +33,7 @@
 #include "gnome-vfs-helpers.h"
 
 
-#define PROP_GLADE_FILE "file_roller.glade"
+#define GLADE_FILE "file_roller.glade"
 
 
 typedef struct {
@@ -137,9 +137,9 @@ dlg_viewer (FRWindow   *window,
 
         data = g_new (DialogData, 1);
 	data->window = window;
-	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
+	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-                g_warning ("Could not find " PROP_GLADE_FILE "\n");
+                g_warning ("Could not find " GLADE_FILE "\n");
                 return;
         }
 

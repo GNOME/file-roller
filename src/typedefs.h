@@ -24,8 +24,8 @@
 #define TYPEDEFS_H
 
 
-#define RC_BOOKMARKS_FILE ".file-roller/bookmarks"
-#define RC_RECENT_FILE    ".file-roller/recents"
+#define RC_BOOKMARKS_FILE ".gnome2/file-roller/bookmarks"
+#define RC_RECENT_FILE    ".gnome2/file-roller/recents"
 
 
 typedef enum {
