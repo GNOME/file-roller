@@ -1,3 +1,28 @@
+2004-02-21  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/dlg-extract.c (create_extra_widget): remove the border.
+
+	* src/menu-callbacks.c (open_archive_cb): added the rpm and stuffit
+	types.
+	(save_as_archive_cb): add a filter for the "save archive" dialog.
+	(new_archive_cb): add a filter for the "new archive" dialog
+	(open_archive_cb): simplify filter for the "open archive" dialog.
+
+	* src/dlg-extract.c (file_sel_response_cb): save the specified 
+	password as the general password.
+
+	* src/window.c (progress_dialog_delete_event): new function
+	* src/window.c (open_progress_dialog): handle the delete_event event
+	for the progress dialog.
+
+	* src/fr-command-zip.c (add_password_arg): Add a always_specify 
+	parameter.
+	(fr_command_zip_extract, fr_command_zip_test): always use the password
+	on the command line so we get the right status if the user did not 
+	specify the password for a protected archive.
+	(fr_command_zip_add): do not specify the password on the command line
+	if the user did not enter a password.
+
 2004-02-20  Breda McColgan  <breda.mccolgan@sun.com>
 
 	* help/C/file-roller.xml: updated for GNOME 2.6

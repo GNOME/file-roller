@@ -106,7 +106,7 @@ typedef struct {
 } FileTypeDescription;
 
 
-FileTypeDescription type_desc[] = { 
+FileTypeDescription write_type_desc[] = { 
 	{ N_("Automatic"),                             NULL},
 	{ N_("Arj (.arj)"),                            ".arj" },
 	{ N_("Ear (.ear)"),                            ".ear" },
@@ -123,8 +123,6 @@ FileTypeDescription type_desc[] = {
 	{ N_("Zip (.zip)"),                            ".zip" },
 	{ N_("Zoo (.zoo)"),                            ".zoo" }
 };
-
-static int type_desc_n = sizeof (type_desc) / sizeof (FileTypeDescription);
 
 
 static char *
@@ -151,7 +149,7 @@ get_full_path (GtkWidget *file_sel)
 	file_type_idx = opt_menu_get_active_idx (opt_menu);
 	if (file_type_idx > 0) {
 		full_path = g_strconcat (path, 
-					 type_desc[file_type_idx].ext,
+					 write_type_desc[file_type_idx].ext,
 					 NULL);
 		g_free (path);
 	} else {
@@ -279,8 +277,8 @@ build_file_type_menu (FRWindow *window)
 	int        i;
 
         menu = gtk_menu_new ();
-        for (i = 0; i < type_desc_n; i++) {
-                item = gtk_menu_item_new_with_label (_(type_desc[i].name));
+        for (i = 0; i < G_N_ELEMENTS (write_type_desc); i++) {
+                item = gtk_menu_item_new_with_label (_(write_type_desc[i].name));
 		gtk_widget_show (item);
                 gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
         }
@@ -293,12 +291,31 @@ void
 new_archive_cb (GtkWidget *widget, 
 		void      *data)
 {
+	static const char * save_mime_type[] = {
+		"application/x-tar",
+		"application/x-compressed-tar",
+		"application/x-bzip-compressed-tar",
+		"application/x-arj",
+		"application/zip",
+		"application/x-java-archive",
+		"application/x-jar",
+		"application/x-lha",
+		"application/x-rar",
+		"application/x-rar-compressed",
+		"application/x-gzip",
+		"application/x-bzip",
+		"application/x-compress",
+		"application/x-lzop",
+		"application/x-zoo",
+	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
 	GtkWidget *hbox;
 	GtkWidget *vbox, *vbox2;
 	GtkWidget *opt_menu;
 	GtkWidget *menu;
+	GtkFileFilter *filter;
+	int i;
 
 	file_sel = gtk_file_chooser_dialog_new (_("New"),
 					        NULL,
@@ -309,6 +326,20 @@ new_archive_cb (GtkWidget *widget,
 
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All archives"));
+	for (i = 0; i < G_N_ELEMENTS (save_mime_type); i++)
+		gtk_file_filter_add_mime_type (filter, save_mime_type[i]);
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All files"));
+	gtk_file_filter_add_pattern (filter, "*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
+	/**/
 
 	vbox = gtk_vbox_new (FALSE, 0);
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), vbox);
@@ -467,11 +498,30 @@ void
 save_as_archive_cb (GtkWidget *widget, 
 		    void *data)
 {
+	static const char * save_mime_type[] = {
+		"application/x-tar",
+		"application/x-compressed-tar",
+		"application/x-bzip-compressed-tar",
+		"application/x-arj",
+		"application/zip",
+		"application/x-java-archive",
+		"application/x-jar",
+		"application/x-lha",
+		"application/x-rar",
+		"application/x-rar-compressed",
+		"application/x-gzip",
+		"application/x-bzip",
+		"application/x-compress",
+		"application/x-lzop",
+		"application/x-zoo",
+	};
 	FRWindow  *window = data;
 	GtkWidget *file_sel;
 	GtkWidget *hbox;
 	GtkWidget *opt_menu;
 	GtkWidget *menu;
+	GtkFileFilter *filter;
+	int i;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Save"),
 					        NULL,
@@ -483,16 +533,28 @@ save_as_archive_cb (GtkWidget *widget,
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
 
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All archives"));
+	for (i = 0; i < G_N_ELEMENTS (save_mime_type); i++)
+		gtk_file_filter_add_mime_type (filter, save_mime_type[i]);
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All files"));
+	gtk_file_filter_add_pattern (filter, "*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
 	/**/
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_hbox_new (FALSE, 12);
 	gtk_box_pack_start (GTK_BOX (hbox), 
 			    gtk_label_new (_("Archive type:")),
 			    FALSE, FALSE, 0);
 	opt_menu = gtk_option_menu_new ();
 	menu = build_file_type_menu (window);
         gtk_option_menu_set_menu (GTK_OPTION_MENU (opt_menu), menu);
-	gtk_box_pack_start (GTK_BOX (hbox), opt_menu, FALSE, FALSE, 12);
+	gtk_box_pack_start (GTK_BOX (hbox), opt_menu, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
 
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);	
@@ -567,6 +629,7 @@ open_archive_cb (GtkWidget *widget,
 		"application/x-lha",
 		"application/x-rar",
 		"application/x-rar-compressed",
+		"application/x-rpm",
 		"application/x-stuffit",
 		"application/x-gzip",
 		"application/x-bzip",
@@ -600,16 +663,6 @@ open_archive_cb (GtkWidget *widget,
 	gtk_file_filter_set_name (filter, _("All files"));
 	gtk_file_filter_add_pattern (filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-
-	for (i = 1; i < G_N_ELEMENTS (type_desc); i++) {
-		char *pattern;
-		filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _(type_desc[i].name));
-		pattern = g_strconcat ("*", type_desc[i].ext, NULL);
-		gtk_file_filter_add_pattern (filter, pattern);
-		g_free (pattern);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-	}
 
 	/**/
 

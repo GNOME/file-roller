@@ -284,6 +284,11 @@ file_sel_response_cb (GtkWidget   *w,
 		window->folder_to_view = g_strdup (extract_to_dir);
 	}
 
+	if (password != NULL) {
+		g_free (window->password);
+		window->password = g_strdup (password);
+	}
+
 	window_archive_extract (window,
 				file_list,
 				extract_to_dir,
@@ -353,7 +358,7 @@ create_extra_widget (DialogData *data)
 	tooltips = gtk_tooltips_new ();
 	
 	vbox1 = gtk_vbox_new (FALSE, 6);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 0);
 
 	hbox28 = gtk_hbox_new (FALSE, 12);
 	gtk_box_pack_start (GTK_BOX (vbox1), hbox28, TRUE, TRUE, 0);

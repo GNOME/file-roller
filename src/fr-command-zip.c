@@ -192,17 +192,21 @@ add_filename_arg (FRCommand *comm)
 
 static void
 add_password_arg (FRCommand     *comm,
-		  const char    *password)
+		  const char    *password,
+		  gboolean       always_specify)
 {
-	if ((password != NULL) && (*password != 0)) {
+	if (always_specify || ((password != NULL) && (*password != 0))) {
 		char *arg;
 		char *e_password;
 
 		fr_process_add_arg (comm->process, "-P");
 
 		e_password = escape_str (password, "\"");
-		arg = g_strconcat ("\"", e_password, "\"", NULL);
-		g_free (e_password);
+		if (e_password != NULL) {
+			arg = g_strconcat ("\"", e_password, "\"", NULL);
+			g_free (e_password);
+		} else
+			arg = g_strdup ("\"\"");
 
 		fr_process_add_arg (comm->process, arg);
 		g_free (arg);
@@ -275,7 +279,7 @@ fr_command_zip_add (FRCommand     *comm,
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
 
-	add_password_arg (comm, password);
+	add_password_arg (comm, password, FALSE);
 
 	switch (compression) {
 	case FR_COMPRESSION_VERY_FAST:
@@ -359,7 +363,7 @@ fr_command_zip_extract (FRCommand  *comm,
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "-j");
 
-	add_password_arg (comm, password);
+	add_password_arg (comm, password, TRUE);
 
 	add_filename_arg (comm);
 
@@ -379,7 +383,7 @@ fr_command_zip_test (FRCommand   *comm,
 {
 	fr_process_begin_command (comm->process, "unzip");
 	fr_process_add_arg (comm->process, "-t");
-	add_password_arg (comm, password);
+	add_password_arg (comm, password, TRUE);
 	add_filename_arg (comm);
 	fr_process_end_command (comm->process);
 }
@@ -392,7 +396,7 @@ fr_command_zip_handle_error (FRCommand   *comm,
 	if (error->type == FR_PROC_ERROR_GENERIC) {
 		if (error->status <= 1)
 			error->type = FR_PROC_ERROR_NONE;
-		else if (error->status == 82)
+		else if ((error->status == 82) || (error->status == 5))
 			error->type = FR_PROC_ERROR_ASK_PASSWORD;
 	}
 }

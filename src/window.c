@@ -1200,15 +1200,24 @@ close_progress_dialog (FRWindow *window)
 }
 
 
+static void
+progress_dialog_delete_event (GtkWidget *caller,
+			      GdkEvent  *event,
+			      FRWindow  *window)
+{
+	if (window->stoppable) {
+		stop_cb (NULL, window);
+		close_progress_dialog (window);
+	}
+}
+
+
 static void 
 progress_dialog_response (GtkDialog *dialog, 
 			  int        response_id,
 			  FRWindow  *window)
 {
-	if (response_id == GTK_RESPONSE_DELETE_EVENT) 
-		window->progress_dialog = NULL;
-	
-	else if ((response_id == GTK_RESPONSE_OK) && window->stoppable) {
+	if ((response_id == GTK_RESPONSE_OK) && window->stoppable) {
 		stop_cb (NULL, window);
 		close_progress_dialog (window);
 	}
@@ -1279,6 +1288,10 @@ open_progress_dialog (FRWindow *window)
 		g_signal_connect (G_OBJECT (window->progress_dialog), 
 				  "response",
 				  G_CALLBACK (progress_dialog_response),
+				  window);
+		g_signal_connect (G_OBJECT (window->progress_dialog), 
+				  "delete_event",
+				  G_CALLBACK (progress_dialog_delete_event),
 				  window);
 
 		gtk_widget_show_all (vbox);
