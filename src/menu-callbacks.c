@@ -528,7 +528,7 @@ open_archive_cb (GtkWidget *widget,
 	FRWindow  *window = data;
 	char      *dir;
 
-        file_sel = gtk_file_selection_new (_("Open Archive"));
+        file_sel = gtk_file_selection_new (_("Open"));
 
 	dir = g_strconcat (window->open_default_dir, "/", NULL);
 	gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_sel), dir);
@@ -962,6 +962,30 @@ go_up_one_level_cb (GtkWidget *widget,
 		    void *data)
 {
 	window_go_up_one_level ((FRWindow*) data);
+}
+
+
+void
+go_home_cb (GtkWidget *widget, 
+	    void *data)
+{
+	window_go_to_location ((FRWindow*) data, "/");
+}
+
+
+void
+go_back_cb (GtkWidget *widget, 
+	    void *data)
+{
+	window_go_back ((FRWindow*) data);
+}
+
+
+void
+go_forward_cb (GtkWidget *widget, 
+	       void *data)
+{
+	window_go_forward ((FRWindow*) data);
 }
 
 

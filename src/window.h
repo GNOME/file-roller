@@ -75,6 +75,11 @@ typedef struct {
 	GtkWidget *      location_entry;
 	GtkWidget *      location_label;
 	GtkWidget *      up_button;
+	GtkWidget *      home_button;
+	GtkWidget *      back_button;
+	GtkWidget *      fwd_button;
+
+	GtkTooltips     *tooltips;
 
 	GtkWidget *      up_arrows[5];
 	GtkWidget *      down_arrows[5];
@@ -105,7 +110,8 @@ typedef struct {
 	GtkSortType      sort_type;
 
 	WindowListMode   list_mode;
-	char *           current_dir;
+	GList *          history;
+	GList *          history_current;
 	char *           password;
 	FRCompression    compression;
 
@@ -290,7 +296,13 @@ void       window_set_password              (FRWindow      *window,
 void       window_go_to_location            (FRWindow       *window, 
 					     const char     *path);
 
+const char*window_get_current_location      (FRWindow       *window);
+
 void       window_go_up_one_level           (FRWindow       *window);
+
+void       window_go_back                   (FRWindow       *window);
+
+void       window_go_forward                (FRWindow       *window);
 
 void       window_set_list_mode             (FRWindow       *window, 
 					     WindowListMode  list_mode);

@@ -942,6 +942,7 @@ get_temp_work_dir_name ()
 	int         try = 0;
 
 	do {
+		g_free (result);
 		result = g_strdup_printf ("%s%s.%d.%d",
 					  g_get_tmp_dir (),
 					  "/file-roller",

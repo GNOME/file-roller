@@ -91,11 +91,71 @@ static GnomeIconTheme *icon_theme = NULL;
 static int icon_size = 0;
 
 
+/* -- window history -- */
+
+static void
+_window_history_clear (FRWindow *window)
+{
+	if (window->history != NULL)
+		path_list_free (window->history);
+	window->history = NULL;
+	window->history_current = NULL;
+}
+
+
+static void
+_window_history_add (FRWindow   *window,
+		     const char *path)
+{
+	if (window->history != NULL) {
+		char *first_path = (char*) window->history->data;
+		if (strcmp (first_path, path) == 0) {
+			window->history_current = window->history;
+			return;
+		}
+	}
+	window->history = g_list_prepend (window->history, g_strdup (path));
+	window->history_current = window->history;
+}
+
+
+static void
+_window_history_pop (FRWindow   *window)
+{
+	GList *first;
+
+	if (window->history == NULL)
+		return;
+	first = window->history;
+	window->history = g_list_remove_link (window->history, first);
+	if (window->history_current == first)
+		window->history_current = window->history;
+	g_free (first->data);
+	g_list_free (first);
+}
+
+
+#ifdef DEBUG
+static void
+_window_history_print (FRWindow   *window)
+{
+	GList *list;
+
+	g_print ("history:\n");
+	for (list = window->history; list; list = list->next)
+		g_print ("\t%s %s\n", 
+			 (char*) list->data, 
+			 (list == window->history_current)? "<-": "");
+	g_print ("\n");
+}
+#endif
+
+
 /* -- window_update_file_list -- */
 
 
 static GList *
-_window_get_current_dir (FRWindow *window)
+_window_get_current_dir_list (FRWindow *window)
 {
 	GList      *scan;
 	GList      *dir_list = NULL;
@@ -105,19 +165,12 @@ _window_get_current_dir (FRWindow *window)
 
 	scan = window->archive->command->file_list;
 	for (; scan; scan = scan->next) {
-		FileData *fdata = scan->data;
-		int       current_dir_len = strlen (window->current_dir);
-
-		if (strncmp (fdata->full_path, 
-			     window->current_dir, 
-			     current_dir_len) == 0) {
-			if (g_hash_table_lookup (names_hash, 
-						 fdata->list_name) != NULL) 
+		FileData   *fdata = scan->data;
+		const char *current_dir = window_get_current_location (window);
+		if (strncmp (fdata->full_path, current_dir, strlen (current_dir)) == 0) {
+			if (g_hash_table_lookup (names_hash, fdata->list_name) != NULL) 
 				continue;
-
-			g_hash_table_insert (names_hash, 
-					     fdata->list_name, 
-					     GINT_TO_POINTER (1));
+			g_hash_table_insert (names_hash, fdata->list_name, GINT_TO_POINTER (1));
 			dir_list = g_list_prepend (dir_list, fdata);
 		}
 	}
@@ -266,7 +319,8 @@ static void
 compute_file_list_name (FRWindow *window, 
 			FileData *fdata)
 {
-	char *scan, *end;
+	const char *current_dir = window_get_current_location (window);
+	char       *scan, *end;
 
 	fdata->is_dir = FALSE;
 	if (fdata->list_name != NULL)
@@ -277,7 +331,7 @@ compute_file_list_name (FRWindow *window,
 		return;
 	}
 
-	scan = fdata->full_path + strlen (window->current_dir);
+	scan = fdata->full_path + strlen (current_dir);
 	end = strchr (scan, '/');
 	if (end == NULL)
 		fdata->list_name = g_strdup (scan);
@@ -324,29 +378,31 @@ _window_sort_file_list (FRWindow *window, GList **file_list)
 }
 
 
-static void
-_go_up_one_level (FRWindow *window)
+static char *
+get_parent_dir (const char *current_dir)
 {
+	char *dir;
 	char *new_dir;
+	char *retval;
 
-	g_return_if_fail (window != NULL);
+	if (current_dir == NULL)
+		return NULL;
+	if (strcmp (current_dir, "/") == 0)
+		return g_strdup ("/");
 
-	if (window->list_mode != WINDOW_LIST_MODE_AS_DIR)
-		return;
-	if (window->current_dir == NULL)
-		return;
-	if (strcmp (window->current_dir, "/") == 0)
-		return;
+	dir = g_strdup (current_dir);
+	dir[strlen (dir) - 1] = 0;
+	new_dir = remove_level_from_path (dir);
+	g_free (dir);
 
-	window->current_dir[strlen (window->current_dir) - 1] = 0;
-	new_dir = remove_level_from_path (window->current_dir);
-	g_free (window->current_dir);
 	if (new_dir[strlen (new_dir) - 1] == '/')
-		window->current_dir = new_dir;
+		retval = new_dir;
 	else {
-		window->current_dir = g_strconcat (new_dir, "/", NULL);
+		retval = g_strconcat (new_dir, "/", NULL);
 		g_free (new_dir);
-	}	
+	}
+
+	return retval;
 }
 
 
@@ -719,15 +775,27 @@ window_update_file_list (FRWindow *window)
 		file_list = window->archive->command->file_list;
 
 	} else {
-		_window_compute_list_names (window, window->archive->command->file_list);
-		dir_list = _window_get_current_dir (window);
+		char *current_dir = g_strdup (window_get_current_location (window));
 
-		while ((dir_list == NULL) 
-		       && (strcmp (window->current_dir, "/") != 0)) {
-			_go_up_one_level (window);
+		_window_compute_list_names (window, window->archive->command->file_list);
+		dir_list = _window_get_current_dir_list (window);
+
+		while ((dir_list == NULL) && (strcmp (current_dir, "/") != 0)) {
+			char *tmp;
+
+			_window_history_pop (window);
+
+			tmp = get_parent_dir (current_dir);
+			g_free (current_dir);
+			current_dir = tmp;
+
+			_window_history_add (window, current_dir);
+
 			_window_compute_list_names (window, window->archive->command->file_list);
-			dir_list = _window_get_current_dir (window);
+			dir_list = _window_get_current_dir_list (window);
 		}
+
+		g_free (current_dir);
 
 		_window_sort_file_list (window, &dir_list);
 		file_list = dir_list;
@@ -1020,6 +1088,8 @@ location_entry_key_press_event_cb (GtkWidget   *widget,
 static void
 _window_update_current_location (FRWindow *window)
 {
+	const char *current_dir = window_get_current_location (window);
+
 	if (window->list_mode == WINDOW_LIST_MODE_FLAT) {
 		gtk_widget_hide (window->location_bar);
 		return;
@@ -1027,10 +1097,17 @@ _window_update_current_location (FRWindow *window)
 
 	gtk_widget_show (window->location_bar);
 
-	gtk_entry_set_text (GTK_ENTRY (window->location_entry), window->archive_present? window->current_dir: "");
-	gtk_widget_set_sensitive (window->up_button, window->archive_present && (window->current_dir != NULL) && (strcmp (window->current_dir, "/") != 0));
+	gtk_entry_set_text (GTK_ENTRY (window->location_entry), window->archive_present? current_dir: "");
+	gtk_widget_set_sensitive (window->home_button, window->archive_present);
+	gtk_widget_set_sensitive (window->up_button, window->archive_present && (current_dir != NULL) && (strcmp (current_dir, "/") != 0));
+	gtk_widget_set_sensitive (window->back_button, window->archive_present && (current_dir != NULL) && (window->history_current != NULL) && (window->history_current->next != NULL));
+	gtk_widget_set_sensitive (window->fwd_button, window->archive_present && (current_dir != NULL) && (window->history_current != NULL) && (window->history_current->prev != NULL));
 	gtk_widget_set_sensitive (window->location_entry, window->archive_present);
 	gtk_widget_set_sensitive (window->location_label, window->archive_present);
+
+#ifdef DEBUG
+	_window_history_print (window);
+#endif
 }
 
 
@@ -1523,9 +1600,8 @@ _action_performed (FRArchive   *archive,
 
 			window->archive_present = TRUE;
 			
-			if (window->current_dir != NULL)
-				g_free (window->current_dir);
-			window->current_dir = g_strdup ("/");
+			_window_history_clear (window);
+			_window_history_add (window, "/");
 
 			tmp = remove_level_from_path (window->archive_filename);
 			window_set_open_default_dir (window, tmp);
@@ -1660,14 +1736,13 @@ row_activated_cb (GtkTreeView       *tree_view,
 	if (fdata->is_dir) {
 		char *new_dir;
 		
-		new_dir = g_strconcat (window->current_dir, 
+		new_dir = g_strconcat (window_get_current_location (window),
 				       fdata->list_name,
 				       "/",
 				       NULL);
-		
-		g_free (window->current_dir);
-		window->current_dir = new_dir;
-		
+		_window_history_add (window, new_dir);
+		g_free (new_dir);
+
 		window_update_file_list (window);
 		_window_update_current_location (window);
 	} else 
@@ -1913,7 +1988,7 @@ drag_drop_add_file_list (FRWindow *window)
 		fr_archive_add (archive,
 				only_names_list,
 				first_basedir,
-				window->current_dir,
+				window_get_current_location (window),
 				window->update_dropped_files,
 				window->password,
 				window->compression);
@@ -2271,7 +2346,7 @@ file_list_drag_data_get  (GtkWidget          *widget,
 		for (scan = window->drag_file_list_names; scan; scan = scan->next) {
 			char *url;
 			url = g_strconcat (window->drag_temp_dir, 
-					   window->current_dir,
+					   window_get_current_location (window),
 					   scan->data, 
 					   NULL);
 			list = g_list_prepend (list, url);
@@ -2721,6 +2796,43 @@ window_fake_load (FRArchive *archive,
 }
 
 
+static GtkWidget*
+create_locationbar_button (const char *stock_id,
+			   gboolean    view_text)
+{
+	GtkWidget    *button;
+	GtkWidget    *box;
+	GtkWidget    *image;
+
+	button = gtk_button_new ();
+	gtk_button_set_relief (GTK_BUTTON (button),
+			       GTK_RELIEF_NONE);
+
+	box = gtk_hbox_new (FALSE, 1);
+	image = gtk_image_new ();
+	gtk_image_set_from_stock (GTK_IMAGE (image), 
+				  stock_id,
+				  GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_box_pack_start (GTK_BOX (box), image, !view_text, FALSE, 0);
+
+	if (view_text) {
+		GtkStockItem  stock_item;
+		const char   *text;
+		GtkWidget    *label;
+		if (gtk_stock_lookup (stock_id, &stock_item)) 
+			text = stock_item.label;
+		else 
+			text = "";
+		label = gtk_label_new_with_mnemonic (text);
+		gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
+	}
+
+	gtk_container_add (GTK_CONTAINER (button), box);
+
+	return button;
+}
+
+
 
 FRWindow *
 window_new ()
@@ -2730,8 +2842,6 @@ window_new ()
 	GtkWidget        *scrolled_window;
 	GtkWidget        *vbox;
 	GtkWidget        *location_box;
-	GtkWidget        *up_box;
-	GtkWidget        *up_image;
 	GtkTreeSelection *selection;
 	int               i;
 	EggRecentModel   *model;
@@ -2772,7 +2882,7 @@ window_new ()
 			  G_CALLBACK (window_show_cb),
 			  window);
 
-	window->theme_changed_handler_id =
+	window->theme_changed_handler_id = 
 		g_signal_connect (icon_theme,
 				  "changed",
 				  G_CALLBACK (theme_changed_cb),
@@ -2912,29 +3022,40 @@ window_new ()
 						     BONOBO_DOCK_TOP,
 						     2, 1, 0);
 
-	/* up button. */
+	/* buttons. */
 
-	window->up_button = gtk_button_new ();
-	gtk_button_set_relief (GTK_BUTTON (window->up_button),
-			       GTK_RELIEF_NONE);
+	window->tooltips = gtk_tooltips_new ();
 
-	up_box = gtk_hbox_new (FALSE, 1);
-	up_image = gtk_image_new ();
-	gtk_image_set_from_stock (GTK_IMAGE (up_image), 
-				  GTK_STOCK_GO_UP, 
-				  GTK_ICON_SIZE_SMALL_TOOLBAR);
-	gtk_box_pack_start (GTK_BOX (up_box), 
-			    up_image, FALSE, FALSE, 0);
+	window->back_button = create_locationbar_button (GTK_STOCK_GO_BACK, TRUE);
+	gtk_tooltips_set_tip (window->tooltips, window->back_button, _("Go to the previous visited location"), NULL);
+	gtk_box_pack_start (GTK_BOX (location_box), window->back_button, FALSE, FALSE, 0);
+	g_signal_connect (G_OBJECT (window->back_button), 
+			  "clicked",
+			  G_CALLBACK (go_back_cb),
+			  window);
 
-	gtk_box_pack_start (GTK_BOX (up_box), 
-			    gtk_label_new_with_mnemonic (_("_Up")), TRUE, TRUE, 0);
+	window->fwd_button = create_locationbar_button (GTK_STOCK_GO_FORWARD, FALSE);
+	gtk_tooltips_set_tip (window->tooltips, window->fwd_button, _("Go to the next visited location"), NULL);
+	gtk_box_pack_start (GTK_BOX (location_box), window->fwd_button, FALSE, FALSE, 0);
+	g_signal_connect (G_OBJECT (window->fwd_button), 
+			  "clicked",
+			  G_CALLBACK (go_forward_cb),
+			  window);
 
-	gtk_container_add (GTK_CONTAINER (window->up_button), up_box);
-	gtk_box_pack_start (GTK_BOX (location_box), 
-			    window->up_button, FALSE, FALSE, 0);
+	window->up_button = create_locationbar_button (GTK_STOCK_GO_UP, FALSE);
+	gtk_tooltips_set_tip (window->tooltips, window->up_button, _("Go up one level"), NULL);
+	gtk_box_pack_start (GTK_BOX (location_box), window->up_button, FALSE, FALSE, 0);
 	g_signal_connect (G_OBJECT (window->up_button), 
 			  "clicked",
 			  G_CALLBACK (go_up_one_level_cb),
+			  window);
+
+	window->home_button = create_locationbar_button (GTK_STOCK_HOME, FALSE);
+	gtk_tooltips_set_tip (window->tooltips, window->home_button, _("Go to the home location"), NULL);
+	gtk_box_pack_start (GTK_BOX (location_box), window->home_button, FALSE, FALSE, 0);
+	g_signal_connect (G_OBJECT (window->home_button), 
+			  "clicked",
+			  G_CALLBACK (go_home_cb),
 			  window);
 
 	/* separator */
@@ -3068,7 +3189,8 @@ window_new ()
 	window->sort_type = preferences_get_sort_type ();
 
 	window->list_mode = preferences_get_list_mode ();
-	window->current_dir = g_strdup ("/");
+	window->history = NULL;
+	window->history_current = NULL;
 
 	window->mitem_new_archive = file_menu[FILE_MENU_NEW_ARCHIVE].widget;
 	window->mitem_open_archive = file_menu[FILE_MENU_OPEN_ARCHIVE].widget;
@@ -3326,6 +3448,8 @@ window_close (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
+	gtk_object_destroy (GTK_OBJECT (window->tooltips));
+
 	while (window->activity_ref > 0)
 		window_stop_activity_mode (window);
 
@@ -3348,8 +3472,8 @@ window_close (FRWindow *window)
 		window->vd_handle = NULL;
 	}
 
-	if (window->current_dir != NULL)
-		g_free (window->current_dir);
+	_window_history_clear (window);
+
 	if (window->open_default_dir != NULL)
 		g_free (window->open_default_dir);
 	if (window->add_default_dir != NULL)
@@ -3459,9 +3583,8 @@ window_archive_new (FRWindow   *window,
 		return;
 	}
 
-	if (window->current_dir != NULL)
-		g_free (window->current_dir);
-	window->current_dir = g_strdup ("/");
+	_window_history_clear (window);
+	_window_history_add (window, "/");
 
 	if (window->archive_filename != NULL)
 		g_free (window->archive_filename);
@@ -3716,7 +3839,7 @@ window_archive_add_with_wildcard (FRWindow      *window,
 							  include_files,
 							  exclude_files,
 							  base_dir,
-							  window->current_dir,
+							  window_get_current_location (window),
 							  update,
 							  recursive,
 							  follow_links,
@@ -3746,7 +3869,7 @@ window_archive_add_directory (FRWindow      *window,
 	window->vd_handle = fr_archive_add_directory (window->archive, 
 						      directory,
 						      base_dir, 
-						      window->current_dir,
+						      window_get_current_location (window),
 						      update,
 						      password,
 						      compression,
@@ -3909,16 +4032,46 @@ window_set_password (FRWindow   *window,
 void
 window_go_to_location (FRWindow *window, const char *path)
 {
+	char *dir;
+
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (path != NULL);
 
-	if (window->current_dir)
-		g_free (window->current_dir);
-
 	if (path[strlen (path) - 1] != '/')
-		window->current_dir = g_strconcat (path, "/", NULL);
+		dir = g_strconcat (path, "/", NULL);
 	else
-		window->current_dir = g_strdup (path);
+		dir = g_strdup (path);
+	_window_history_add (window, dir);
+	g_free (dir);
+
+	window_update_file_list (window);
+	_window_update_current_location (window);
+}
+
+
+const char *
+window_get_current_location (FRWindow *window)
+{
+	if (window->history_current == NULL) {
+		_window_history_add (window, "/");
+		return window->history_current->data;
+	} else
+		return (const char*) window->history_current->data;
+}
+
+
+void
+window_go_up_one_level (FRWindow *window)
+{
+	const char *current_dir;
+	char       *parent_dir;
+
+	g_return_if_fail (window != NULL);
+
+	current_dir = window_get_current_location (window);
+	parent_dir = get_parent_dir (current_dir);
+	_window_history_add (window, parent_dir);
+	g_free (parent_dir);
 
 	window_update_file_list (window);
 	_window_update_current_location (window);
@@ -3926,11 +4079,36 @@ window_go_to_location (FRWindow *window, const char *path)
 
 
 void
-window_go_up_one_level (FRWindow *window)
+window_go_back (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
-	_go_up_one_level (window);
+	if (window->history == NULL)
+		return;
+	if (window->history_current == NULL)
+		return;
+	if (window->history_current->next == NULL)
+		return;
+	window->history_current = window->history_current->next;
+
+	window_update_file_list (window);
+	_window_update_current_location (window);
+}
+
+
+void
+window_go_forward (FRWindow *window)
+{
+	g_return_if_fail (window != NULL);
+
+	if (window->history == NULL)
+		return;
+	if (window->history_current == NULL)
+		return;
+	if (window->history_current->prev == NULL)
+		return;
+	window->history_current = window->history_current->prev;
+
 	window_update_file_list (window);
 	_window_update_current_location (window);
 }
@@ -3943,6 +4121,11 @@ window_set_list_mode (FRWindow       *window,
 	g_return_if_fail (window != NULL);
 
 	window->list_mode = list_mode;
+	if (window->list_mode == WINDOW_LIST_MODE_FLAT) {
+		_window_history_clear (window);
+		_window_history_add (window, "/");
+	}
+	
 	window_update_file_list (window);
 	_window_update_current_location (window);
 }
@@ -3960,7 +4143,7 @@ get_dir_list (FRWindow *window,
 	char  *dirname;
 	int    dirname_l;
 
-	dirname = g_strconcat (window->current_dir,
+	dirname = g_strconcat (window_get_current_location (window),
 			       fdata->list_name,
 			       "/",
 			       NULL);

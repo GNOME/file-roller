@@ -174,7 +174,7 @@ open_file_ok_cb (GtkWidget *w,
 				fr_archive_add (window->archive,
 						files,
 						base_dir,
-						window->current_dir,
+						window_get_current_location (window),
 						update,
 						window->password,
 						window->compression);
@@ -349,7 +349,7 @@ add_cb (GtkWidget *widget,
  
 	data = g_new (DialogData, 1);
 	data->window = callback_data;
-	data->dialog = file_sel = gtk_file_selection_new (_("Add Files"));
+	data->dialog = file_sel = gtk_file_selection_new (_("Add"));
 	gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (file_sel));
 
 	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_sel), TRUE);

@@ -1,7 +1,20 @@
+2003-11-11  Paolo Bacchilega  <paolo.bacch@tin.it>
+
+	* src/fr-command-tar.c (fr_command_tar_uncompress): always rename the 
+	archive to make sure that when uncompressed it does not overwrite 
+	another archive with the same name.
+
+	* src/dlg-add.c (open_file_ok_cb): 
+	* src/window.h: 
+	* src/window.c (window_new): added ability to go back and forward 
+	in location history.
+
 2003-11-10  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/window.c (drag_drop_add_file_list) 
-	(window_archive_add_with_wildcard, window_archive_add_directory): 
+	(window_archive_add_with_wildcard, window_archive_add_directory) 
+	(window_set_list_mode): set current dir to / when in flat view mode.
+
 	* src/dlg-add.c (open_file_ok_cb): 
 	* src/fr-archive.c (fr_archive_add, create_tmp_base_dir): add
 	files and folders to the current directory (bug #104816).

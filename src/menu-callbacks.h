@@ -60,7 +60,16 @@ void   view_cb                       (GtkWidget *widget,
 void   view_or_open_cb               (GtkWidget *widget, 
 				      void *data);
 
+void   go_home_cb                    (GtkWidget *widget, 
+				      void *data);
+
 void   go_up_one_level_cb            (GtkWidget *widget, 
+				      void *data);
+
+void   go_back_cb                    (GtkWidget *widget, 
+				      void *data);
+
+void   go_forward_cb                 (GtkWidget *widget, 
 				      void *data);
 
 void   set_list_mode_flat_cb         (GtkWidget *widget, 
