@@ -193,7 +193,8 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 		action = g_object_new (GTK_TYPE_ACTION,
 				       "name", name,
 				       "label", label,
-				       "stock_id", GTK_STOCK_OPEN,
+				       (view->show_icons)?"stock_id":NULL, 
+				       GTK_STOCK_OPEN,
 				       NULL);
 		if (tooltip != NULL) {
 			g_object_set (action, "tooltip", tooltip, NULL);

@@ -1152,6 +1152,30 @@ _window_update_current_location (FRWindow *window)
 
 
 static void
+open_recent_item_activate_cb (EggRecentViewGtk *view, 
+			      EggRecentItem    *item,
+			      gpointer          data)
+{
+	FRWindow      *window = data;
+        char          *uri;
+	int            prefix_len = strlen ("file://");
+	gboolean       result = FALSE;
+
+        uri = egg_recent_item_get_uri (item);
+	g_return_if_fail (uri != NULL);
+
+	if (strlen (uri) > prefix_len) {
+		char *path = gnome_vfs_unescape_string (uri + prefix_len, "");
+		window_archive_open (window, path, GTK_WINDOW (window->app));
+		g_free (path);
+		result = TRUE;
+	}
+
+        g_free (uri);
+}
+
+
+static void
 activate_action_open_recent (GtkAction *action, 
 			     gpointer   data)
 {
@@ -3051,6 +3075,33 @@ recent_set_tooltip (EggRecentItem *item,
 }
 
 
+static void
+recent_gtk_set_tooltip (GtkTooltips   *tooltips,
+			GtkWidget     *menu,
+			EggRecentItem *item,
+			gpointer       user_data)
+{
+	gchar *uri;
+	gchar *escaped;
+	gchar *tooltip;
+
+	uri = egg_recent_item_get_uri_for_display (item);
+	if (uri == NULL)
+		return;
+
+	escaped = egg_recent_util_escape_underlines (uri);
+	tooltip = g_strdup_printf (_("Open '%s'"), escaped);
+
+	gtk_tooltips_set_tip (tooltips,
+			      menu,
+			      tooltip,
+			      NULL);
+
+	g_free (uri);
+	g_free (escaped);
+}
+
+
 void
 go_up_one_level_cb (GtkWidget *widget, 
 		    void      *data)
@@ -3094,11 +3145,12 @@ window_new ()
 	GtkWidget        *location_box;
 	GtkTreeSelection *selection;
 	int               i;
-	EggRecentModel   *model;
+	EggRecentModel   *recent_model;
         EggRecentViewUIManager *view;
 	int               icon_width, icon_height;
 	GtkActionGroup   *actions;
 	GtkUIManager     *ui;
+	GtkToolItem      *open_recent_tool_item;
 	GError           *error = NULL;		
 
 	/* data common to all windows. */
@@ -3468,6 +3520,27 @@ window_new ()
 			      1, 1, 0);
 	window->toolbar = toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
+
+	/* Add the recent menu tool item */
+	
+	window->recent_toolbar_menu = gtk_menu_new ();
+	open_recent_tool_item = gtk_menu_tool_button_new_from_stock (GTK_STOCK_OPEN);
+	gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->recent_toolbar_menu);
+	gtk_tool_item_set_homogeneous (open_recent_tool_item, TRUE);
+	gtk_tool_item_set_tooltip (open_recent_tool_item, window->tooltips, _("Open archive"), NULL);
+	gtk_menu_tool_button_set_arrow_tooltip (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->tooltips,	_("Open a recently used archive"), NULL);
+	
+	window->open_action = gtk_action_new ("Toolbar_Open", _("Open"), _("Open archive"), GTK_STOCK_OPEN);
+	g_signal_connect (window->open_action,
+			  "activate",
+			  G_CALLBACK (activate_action_open),
+			  window);
+	gtk_action_connect_proxy (window->open_action, GTK_WIDGET (open_recent_tool_item));
+	
+	gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
+	gtk_toolbar_insert (GTK_TOOLBAR (window->toolbar), open_recent_tool_item, 1);
+
+	/**/
 	
 	gnome_app_add_docked (GNOME_APP (window->app),
 			      toolbar,
@@ -3489,10 +3562,10 @@ window_new ()
 	gnome_app_set_statusbar (GNOME_APP (window->app), window->statusbar);
 	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->statusbar), TRUE);
 
-	/**/
+	/* Create the Egg::Recent model */
 
-	model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
-	egg_recent_model_set_filter_mime_types (model, 
+	recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
+	egg_recent_model_set_filter_mime_types (recent_model, 
 						"application/x-tar",
 						"application/x-compressed-tar",
 						"application/x-bzip-compressed-tar",
@@ -3516,17 +3589,35 @@ window_new ()
                                                 "application/x-deb",
                                                 "application/x-ar",
 						NULL);
-        egg_recent_model_set_filter_uri_schemes (model, "file", NULL);
-	egg_recent_model_set_limit (model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
+        egg_recent_model_set_filter_uri_schemes (recent_model, "file", NULL);
+	egg_recent_model_set_limit (recent_model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
+
+	/* Create the UIManager view used in the 'Open Recent' submenu. */
 
 	window->recent_view = view = egg_recent_view_uimanager_new (ui, 
 								    "/MenuBar/Archive/OpenRecent",
 								    G_CALLBACK (activate_action_open_recent),
 								    window);
+	egg_recent_view_uimanager_show_icons (EGG_RECENT_VIEW_UIMANAGER (view), FALSE);
 	egg_recent_view_uimanager_set_tooltip_func (view, recent_set_tooltip, window);
-	egg_recent_view_set_model (EGG_RECENT_VIEW (view), model);
-	g_object_unref (model);
-	window->recent_model = egg_recent_view_get_model (EGG_RECENT_VIEW (view));
+	egg_recent_view_set_model (EGG_RECENT_VIEW (view), recent_model); 
+
+	/* Create the Gtk view used in the toolbar. */
+
+	window->recent_view_toolbar = egg_recent_view_gtk_new (window->recent_toolbar_menu, NULL);
+	egg_recent_view_gtk_show_icons (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), TRUE);
+	egg_recent_view_gtk_show_numbers (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), FALSE);
+	egg_recent_view_gtk_set_tooltip_func (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), recent_gtk_set_tooltip, window);
+	g_signal_connect (window->recent_view_toolbar,
+			  "activate",
+			  G_CALLBACK (open_recent_item_activate_cb),
+			  window);
+	egg_recent_view_set_model (EGG_RECENT_VIEW (window->recent_view_toolbar), recent_model);
+
+	window->recent_model = recent_model;
+	g_object_unref (recent_model);
+
+	/**/
 
 	_window_update_title (window);
 	_window_update_sensitivity (window);
@@ -3702,6 +3793,16 @@ window_close (FRWindow *window)
 	if (window->recent_view != NULL) {
 		g_object_unref (window->recent_view);
 		window->recent_view = NULL;
+	}
+
+	if (window->open_action != NULL) {
+		g_object_unref (window->open_action);
+		window->open_action = NULL;
+	}
+
+	if (window->recent_toolbar_menu != NULL) {
+		gtk_widget_destroy (window->recent_toolbar_menu);
+		window->recent_toolbar_menu = NULL;
 	}
 
 	gtk_object_destroy (GTK_OBJECT (window->tooltips));

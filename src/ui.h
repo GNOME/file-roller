@@ -295,7 +295,6 @@ static const gchar *ui_info =
 "  </menubar>"
 "  <toolbar  name='ToolBar'>"
 "    <toolitem action='New'/>"
-"    <toolitem action='Open_Toolbar'/>"
 "    <separator name='sep01'/>"
 "    <toolitem action='AddFiles_Toolbar'/>"
 "    <toolitem action='Extract_Toolbar'/>"

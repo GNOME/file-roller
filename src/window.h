@@ -144,9 +144,12 @@ typedef struct {
 	GtkActionGroup  *actions;
 
 	EggRecentViewUIManager *recent_view;
+	EggRecentViewGtk *recent_view_toolbar;
 	EggRecentModel   *recent_model;
 	GtkWidget        *file_popup_menu;
 	GtkWidget        *mitem_recents_menu;
+	GtkWidget        *recent_toolbar_menu;
+	GtkAction        *open_action;
 
 	/* drag data */
 
