@@ -3209,7 +3209,7 @@ recent_set_tooltip (EggRecentItem *item,
 
 	g_free (uri);
 	g_free (escaped);
-
+	
 	return tooltip;
 }
 
@@ -3238,6 +3238,7 @@ recent_gtk_set_tooltip (GtkTooltips   *tooltips,
 
 	g_free (uri);
 	g_free (escaped);
+	g_free (tooltip);
 }
 
 
