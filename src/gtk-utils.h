@@ -42,6 +42,12 @@ gchar*      _gtk_request_dialog_run   (GtkWindow        *parent,
 				       const char       *no_button_text,
 				       const char       *yes_button_text);
 
+GtkWidget*  _gtk_yesno_dialog_new     (GtkWindow        *parent,
+				       GtkDialogFlags    flags,
+				       const char       *message,
+				       const char       *no_button_text,
+				       const char       *yes_button_text);
+
 GtkWidget*  _gtk_error_dialog_new     (GtkWindow        *parent,
 				       GtkDialogFlags    flags,
 				       GList            *row_output,

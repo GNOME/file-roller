@@ -123,7 +123,7 @@ GnomeUIInfo file_menu[] = {
 	  0, 0, NULL },
 
 	{ GNOME_APP_UI_ITEM, 
-	  N_("_Delete"), N_("Delete current archive from disk"), 
+	  N_("Move To _Trash"), N_("Move current archive to trash"), 
 	  delete_archive_cb, NULL, NULL,
 	  GNOME_APP_PIXMAP_STOCK, GTK_STOCK_DELETE,
 	  0, 0, NULL },

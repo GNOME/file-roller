@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <gnome.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include "main.h"
 #include "gtk-utils.h"
 #include "window.h"
@@ -529,6 +530,7 @@ close_archive_cb (GtkWidget *widget,
 typedef struct {
 	FRWindow  *window;
 	gboolean   copy;
+	gboolean   overwrite;
 	GtkWidget *file_sel;
 } CopyMoveData;
 
@@ -625,7 +627,8 @@ copy_archive_ok_cb (GtkWidget    *w,
 
 static void
 copy_or_move_archive (FRWindow *window, 
-		      gboolean  copy)
+		      gboolean  copy,
+		      gboolean  overwrite)
 {
 	GtkWidget    *file_sel;
 	char         *dir;
@@ -634,6 +637,7 @@ copy_or_move_archive (FRWindow *window,
 	data = g_new (CopyMoveData, 1);
 	data->window = window;
 	data->copy = copy;
+	data->overwrite = overwrite;
 	data->file_sel = file_sel = gtk_file_selection_new (copy ? _("Copy archive") : _("Move archive"));
 
 	dir = g_strconcat (window->open_default_dir, "/", NULL);
@@ -667,7 +671,7 @@ void
 move_archive_cb (GtkWidget *widget, 
 		 void      *data)
 {
-	copy_or_move_archive ((FRWindow *) data, FALSE);
+	copy_or_move_archive ((FRWindow *) data, FALSE, FALSE);
 }
 
 
@@ -675,7 +679,7 @@ void
 copy_archive_cb (GtkWidget *widget, 
 		 void      *data)
 {
-	copy_or_move_archive ((FRWindow *) data, TRUE);
+	copy_or_move_archive ((FRWindow *) data, TRUE, FALSE);
 }
 
 
@@ -769,31 +773,93 @@ rename_archive_cb (GtkWidget *widget,
 /* -- delete archive -- */
 
 
+void delete_archive__step2 (GnomeVFSResult result,
+			    gpointer       data)
+{
+	FRWindow *window = data;
+	if (result == GNOME_VFS_OK)
+		window_archive_close (window);
+}
+
+
+static char *
+get_trash_path (const char *filename)
+{
+	char        *e_filename;
+	GnomeVFSURI *uri, *trash_uri;
+
+	e_filename = gnome_vfs_escape_path_string (filename);
+	uri = gnome_vfs_uri_new (e_filename);
+	g_free (e_filename);
+
+	gnome_vfs_find_directory (uri, 
+				  GNOME_VFS_DIRECTORY_KIND_TRASH,
+				  &trash_uri, 
+				  TRUE,
+				  TRUE,
+				  0777);
+	gnome_vfs_uri_unref (uri);
+
+	if (trash_uri == NULL)
+		return NULL;
+	else {
+		char *trash_path;
+		trash_path = gnome_vfs_uri_to_string (trash_uri, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
+		gnome_vfs_uri_unref (trash_uri);
+		return trash_path;
+	}
+}
+
+
 void
 delete_archive_cb (GtkWidget *widget, 
 		   void *data)
 {
 	FRWindow *window = data;
-	GtkWidget *dialog;
-	int r;
+	char     *trash_path;
 
-	dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-					  GTK_DIALOG_MODAL,
-					  GTK_STOCK_DIALOG_QUESTION,
-					  _("Archive will be deleted, are you sure?"),
-					  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					  GTK_STOCK_DELETE, GTK_RESPONSE_YES,
-					  NULL);
-
-	r = gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-	if (r == GTK_RESPONSE_YES) {
 #ifdef DEBUG
-		g_print ("rm %s\n", window->archive->filename);
+	g_print ("rm %s\n", window->archive->filename);
 #endif
-		if (unlink (window->archive->filename) == 0)
+
+	trash_path = get_trash_path (window->archive->filename);
+
+	if (trash_path == NULL) {
+		GtkWidget *d;
+		int        r;
+		d = _gtk_yesno_dialog_new (GTK_WINDOW (window->app),
+					   GTK_DIALOG_MODAL,
+					   _("The archive cannot be moved to the Trash. Do you want to delete it permanently?"),
+					   GTK_STOCK_CANCEL,
+					   GTK_STOCK_DELETE);
+		
+		r = gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		
+		if (r == GTK_RESPONSE_YES) {
+			if (unlink (window->archive->filename) == 0)
+				window_archive_close (window);
+		}
+		
+	} else {
+		const char *filename;
+		char       *dest_filename;
+		
+		filename = file_name_from_path (window->archive->filename);
+		if (trash_path[strlen (trash_path) - 1] == '/')
+			dest_filename = g_strconcat (trash_path, 
+						     filename,
+						     NULL);
+		else
+			dest_filename = g_strconcat (trash_path, 
+						     "/", 
+						     filename,
+						     NULL);
+		
+		if (file_move (window->archive_filename, dest_filename))
 			window_archive_close (window);
 	}
+	g_free (trash_path);
 }
 
 
