@@ -86,6 +86,8 @@ typedef struct {
 	GtkWidget *      fwd_button;
 	GtkCellRenderer *name_renderer;
 
+	gint             current_view_length;
+
 	GtkTooltips     *tooltips;
 	guint            help_message_cid;
 	guint            list_info_cid;

@@ -757,6 +757,7 @@ window_update_file_list (FRWindow *window)
 
 	if (! window->archive_present || window->archive_new) {
 		gtk_list_store_clear (window->list_store);
+		window->current_view_length = 0;
 
 		if (window->archive_new) {
 			gtk_widget_set_sensitive (window->list_view, TRUE);
@@ -815,6 +816,8 @@ window_update_file_list (FRWindow *window)
 		_window_sort_file_list (window, &dir_list);
 		file_list = dir_list;
 	}
+
+	window->current_view_length = g_list_length (file_list);
 
 	udata = g_new0 (UpdateData, 1);
 	udata->window = window;
@@ -1093,6 +1096,10 @@ _window_update_sensitivity (FRWindow *window)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   running && window->stoppable);
+
+
+	set_sensitive (window, "SelectAll", (window->current_view_length > 0) && (window->current_view_length != n_selected));
+	set_sensitive (window, "DeselectAll", n_selected > 0);
 
 	/* recents menu. */
 
@@ -3434,6 +3441,8 @@ window_new (void)
 
 	window->path_clicked = NULL;
 
+	window->current_view_length = 0;
+
 	/* Create the widgets. */
 
 	/* * File list. */
@@ -5463,6 +5472,7 @@ window_open_files__extract_done_cb (FRArchive   *archive,
 
 	} else if (cdata->app != NULL) {
 		GList *uris = NULL, *scan;
+		GnomeVFSResult result;
 
 		for (scan = cdata->file_list; scan; scan = scan->next) {
 			char *filename = scan->data;
@@ -5470,8 +5480,13 @@ window_open_files__extract_done_cb (FRArchive   *archive,
 		}
 
 		command_list = g_list_prepend (command_list, cdata);
-		gnome_vfs_mime_application_launch (cdata->app, uris);
-
+		result = gnome_vfs_mime_application_launch (cdata->app, uris);
+		if (result != GNOME_VFS_OK) 
+			_gtk_error_dialog_run (GTK_WINDOW (cdata->window->app),
+					       _("Could not perform the operation"),
+					       "%s",
+					       gnome_vfs_result_to_string (result));
+		
 		path_list_free (uris);
 	}
 }

@@ -497,6 +497,37 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 
 
 void
+_gtk_error_dialog_run (GtkWindow        *parent,
+		       const gchar      *main_message,
+		       const gchar      *format,
+		       ...)
+{
+	GtkWidget *d;
+	char      *message;
+	va_list    args;
+
+	va_start (args, format);
+	message = g_strdup_vprintf (format, args);
+	va_end (args);
+
+	d =  _gtk_message_dialog_new (parent,
+				      GTK_DIALOG_MODAL,
+				      GTK_STOCK_DIALOG_ERROR,
+				      main_message,
+				      message,
+				      GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+				      NULL);
+	g_free (message);
+
+	g_signal_connect (G_OBJECT (d), "response",
+			  G_CALLBACK (gtk_widget_destroy),
+			  NULL);
+
+	gtk_widget_show (d);
+}
+
+
+void
 _gtk_entry_set_locale_text (GtkEntry   *entry,
 			    const char *text)
 {

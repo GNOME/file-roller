@@ -71,8 +71,6 @@ struct _EggRecentViewUIManager {
 	EggRecentModel *model;
 	GConfClient    *client;
 	GtkIconSize     icon_size;
-
-	GList          *item_list;
 };
 
 
@@ -100,16 +98,6 @@ enum {
 static guint view_signals[LAST_SIGNAL] = { 0 };
 
 static void
-free_item_list (EggRecentViewUIManager *view)
-{
-	if (view->item_list == NULL)
-		return;
-	g_list_foreach (view->item_list, (GFunc) egg_recent_item_unref, NULL);
-	g_list_free (view->item_list);
-	view->item_list = NULL;
-}
-
-static void
 egg_recent_view_uimanager_clear (EggRecentViewUIManager *view)
 {
 	if (view->merge_id != 0) {
@@ -117,15 +105,13 @@ egg_recent_view_uimanager_clear (EggRecentViewUIManager *view)
 		view->merge_id = 0;
 	}
 
-	gtk_ui_manager_ensure_update (view->uimanager);
-	
 	if (view->action_group != NULL) {
 		gtk_ui_manager_remove_action_group (view->uimanager, view->action_group);
 		g_object_unref (view->action_group);
 		view->action_group = NULL;
 	}
-	
-	free_item_list (view);
+
+	gtk_ui_manager_ensure_update (view->uimanager);
 }
 
 static void
@@ -138,22 +124,29 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 
 	egg_recent_view_uimanager_clear (view);
 
-	if (view->action_group == NULL) {
-		view->action_group = gtk_action_group_new ("EggRecentActions");
-		gtk_ui_manager_insert_action_group (view->uimanager, view->action_group, 0);
-	}
-
 	if (view->merge_id == 0)
 		view->merge_id = gtk_ui_manager_new_merge_id (view->uimanager);
 
-	if (view->leading_sep) 
+	if (view->action_group == NULL) {
+		gchar *group = g_strdup_printf ("EggRecentActions%u", 
+						view->merge_id);
+		view->action_group = gtk_action_group_new (group);
+		gtk_ui_manager_insert_action_group (view->uimanager, view->action_group, 0);
+		g_free (group);
+	}
+
+	if (view->leading_sep) {
+		gchar *action = g_strdup_printf ("EggRecentLeadingSeparator%u",
+						 view->merge_id);
 		gtk_ui_manager_add_ui (view->uimanager, 
 				       view->merge_id, 
 				       view->path,
-				       "EggRecentLeadingSeparator", 
+				       action,
 				       EGG_RECENT_SEPARATOR,
 				       GTK_UI_MANAGER_AUTO, 
 				       FALSE);
+		g_free (action);
+	}
 
 	for (scan = list; scan; scan = scan->next, index++) {
 		EggRecentItem *item = scan->data;
@@ -169,10 +162,9 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 		if (uri == NULL)
 			continue;
 
-		view->item_list = g_list_prepend (view->item_list, item);
-		egg_recent_item_ref (item);
-
-		name = g_strdup_printf (EGG_RECENT_NAME_PREFIX"%u", index);
+		name = g_strdup_printf (EGG_RECENT_NAME_PREFIX"%u-%u", 
+					view->merge_id,
+					index);
 
 		if (view->tooltip_func != NULL)
 			tooltip = (*view->tooltip_func) (item, view->tooltip_func_data);
@@ -184,9 +176,13 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 
 		if (view->show_numbers) {
 			if (index >= 10)
-				label = g_strdup_printf ("%d.  %s", index, escaped);
+				label = g_strdup_printf ("%d.  %s", 
+							 index, 
+							 escaped);
 			else
-				label = g_strdup_printf ("_%d.  %s", index, escaped);
+				label = g_strdup_printf ("_%d.  %s", 
+							 index, 
+							 escaped);
 			g_free (escaped);
 		} else 
 			label = escaped;
@@ -194,7 +190,7 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 		action = g_object_new (GTK_TYPE_ACTION,
 				       "name", name,
 				       "label", label,
-				       (view->show_icons)?"stock_id":NULL, 
+				       (view->show_icons)? "stock_id": NULL, 
 				       GTK_STOCK_OPEN,
 				       NULL);
 		if (tooltip != NULL) {
@@ -202,7 +198,10 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 			g_free (tooltip);
 		}
 		egg_recent_item_ref (item);
-		g_object_set_data_full (G_OBJECT (action), "egg_recent_uri", item, (GFreeFunc) egg_recent_item_unref);
+		g_object_set_data_full (G_OBJECT (action), 
+					"egg_recent_uri", 
+					item, 
+					(GFreeFunc) egg_recent_item_unref);
 
 		if (view->action_callback != NULL) {
 			GClosure *closure;
@@ -225,16 +224,18 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 		g_free (label);
 	}
 
-	view->item_list = g_list_reverse (view->item_list);
-
-	if (view->trailing_sep) 
+	if (view->trailing_sep) {
+		gchar *action = g_strdup_printf ("EggRecentTrailingSeparator%u",
+						view->merge_id);
 		gtk_ui_manager_add_ui (view->uimanager, 
 				       view->merge_id, 
 				       view->path,
-				       "EggRecentTrailingSeparator", 
+				       action,
 				       EGG_RECENT_SEPARATOR,
 				       GTK_UI_MANAGER_AUTO, 
 				       FALSE);
+		g_free (action);
+	}
 }
 
 static void
@@ -373,7 +374,7 @@ egg_recent_view_uimanager_finalize (GObject *object)
 
 	g_free (view->path);
 
-	free_item_list (view);
+	egg_recent_view_uimanager_clear (view);
 
 	if (view->action_group != NULL) {
 		g_object_unref (view->action_group);
@@ -527,8 +528,6 @@ egg_recent_view_uimanager_init (EggRecentViewUIManager * view)
 	view->tooltip_func_data = NULL;
 
 	view->icon_size = GTK_ICON_SIZE_MENU;
-
-	view->item_list = NULL;
 }
 
 void
@@ -735,11 +734,5 @@ EggRecentItem*
 egg_recent_view_uimanager_get_item (EggRecentViewUIManager   *view,
 				    GtkAction                *action)
 {
-	const char *name;
-	int         n;
-	
-	name = gtk_action_get_name (action);
-	n = atoi (name + strlen (EGG_RECENT_NAME_PREFIX));
-
-	return g_list_nth (view->item_list, n - 1)->data;
+	return g_object_get_data (G_OBJECT(action), "egg_recent_uri");
 }

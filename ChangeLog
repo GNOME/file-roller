@@ -1,4 +1,23 @@
+2005-03-31  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.h: 
+	* src/window.c (_window_update_sensitivity): 
+
+	Fixed bug #172219: Select All and Deselect all doesnt work properly.
+	
+	* src/recent-files/egg-recent-view-uimanager.c (egg_recent_view_uimanager_clear): 
+	call gtk_ui_manager_ensure_update after removing the action group.
+
+	* src/window.c (window_open_files__extract_done_cb): show an error
+	dialog if an error occurred.
+
+	* src/gtk-utils.h: 
+	* src/gtk-utils.c (_gtk_error_dialog_run): new function
+
 2005-03-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/recent-files/egg-recent-view-uimanager.c: Applied patch by
+	 David A Knight, see bug #141667.
 
 	* src/fr-command-tar.c (begin_tar_command): free temp after use.
 
