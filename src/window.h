@@ -64,6 +64,11 @@ typedef struct {
 	FRArchive *new_archive;
 } FRConvertData;
 
+typedef enum {
+	FR_CLIPBOARD_OP_CUT,
+	FR_CLIPBOARD_OP_COPY
+} FRClipboardOp;
+
 typedef struct {
         GtkWidget *      app;
 	GtkWidget *      list_view;
@@ -126,6 +131,10 @@ typedef struct {
 
 	gboolean         stoppable;
 
+	GList           *clipboard;
+	guint            clipboard_op : 1;
+	char            *clipboard_current_dir;
+
 	/* Menu items. */
 
 	GtkWidget *      mitem_new_archive;
@@ -174,7 +183,7 @@ typedef struct {
 	GtkWidget *      toolbar_stop;
 
 	GtkWidget *      file_popup_menu;
-	GtkWidget *      popupmenu_file[8];
+	GtkWidget *      popupmenu_file[14];
 
 	EggRecentViewGtk *recent_view;
 	EggRecentModel   *recent_model;
@@ -333,6 +342,12 @@ GList *    window_get_file_list_pattern     (FRWindow    *window,
 					     const char  *pattern);
 
 void       window_rename_selection          (FRWindow    *window);
+
+void       window_cut_selection             (FRWindow    *window);
+
+void       window_copy_selection            (FRWindow    *window);
+
+void       window_paste_selection           (FRWindow    *window);
 
 /**/
 

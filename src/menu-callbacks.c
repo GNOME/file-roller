@@ -1276,3 +1276,26 @@ rename_cb (GtkWidget *widget,
 {
 	window_rename_selection ((FRWindow*) data);
 }
+
+
+void
+cut_cb (GtkWidget *widget, 
+	void *data)
+{
+	window_cut_selection ((FRWindow*) data);
+}
+
+
+void
+copy_cb (GtkWidget *widget, 
+	 void *data)
+{
+	window_copy_selection ((FRWindow*) data);
+}
+
+void
+paste_cb (GtkWidget *widget, 
+	  void *data)
+{
+	window_paste_selection ((FRWindow*) data);
+}

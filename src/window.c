@@ -93,6 +93,7 @@ static int icon_size = 0;
 
 /* -- window history -- */
 
+
 static void
 _window_history_clear (FRWindow *window)
 {
@@ -668,7 +669,9 @@ update_file_list_idle (gpointer callback_data)
 		utf8_name = g_filename_to_utf8 (fdata->list_name, 
 						-1, NULL, NULL, NULL);
 		gtk_list_store_prepend (window->list_store, &iter);
-		if (fdata->is_dir)
+		if (fdata->is_dir) {
+			char *tmp = remove_ending_separator (window_get_current_location (window));
+			char *utf8_path = g_filename_to_utf8 (tmp, -1, 0, 0, 0);
 			gtk_list_store_set (window->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
 					    COLUMN_ICON, pixbuf,
@@ -676,9 +679,12 @@ update_file_list_idle (gpointer callback_data)
 					    COLUMN_TYPE, _("Folder"),
 					    COLUMN_SIZE, "",
 					    COLUMN_TIME, "",
-					    COLUMN_PATH, "",
+					    COLUMN_PATH, utf8_path,
 					    -1);
-		else {
+			g_free (utf8_path);
+			g_free (tmp);
+
+		} else {
 			char       *s_size;
 			char       *s_time;
 			const char *desc;
@@ -1054,9 +1060,9 @@ _window_update_sensitivity (FRWindow *window)
 				   && (window->archive->process != NULL)
 				   && (window->archive->process->raw_output != NULL)));
 	
-	gtk_widget_set_sensitive (window->mitem_cut, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null);
-	gtk_widget_set_sensitive (window->mitem_copy, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null);
-	gtk_widget_set_sensitive (window->mitem_paste, ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	gtk_widget_set_sensitive (window->mitem_cut, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
+	gtk_widget_set_sensitive (window->mitem_copy, ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
+	gtk_widget_set_sensitive (window->mitem_paste, ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->list_mode != WINDOW_LIST_MODE_FLAT) && (window->clipboard != NULL));
 	gtk_widget_set_sensitive (window->mitem_rename, ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
 
 	/* toolbar */
@@ -1070,11 +1076,20 @@ _window_update_sensitivity (FRWindow *window)
 	
 	/* popup menu */
 
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_ADD], ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DELETE], ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
-	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_EXTRACT], file_op);
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_OPEN], file_op && sel_not_null && ! dir_selected);
 	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_VIEW], file_op && one_file_selected && ! dir_selected);
+
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_ADD], ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_EXTRACT], file_op);
+
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_CUT], ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_COPY], ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_PASTE], ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->list_mode != WINDOW_LIST_MODE_FLAT) && (window->clipboard != NULL));
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_RENAME], ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DELETE], ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
+
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_SELECT_ALL], ! no_archive);	
+	gtk_widget_set_sensitive (window->popupmenu_file[FILE_POPUP_MENU_DESELECT_ALL], ! no_archive);
 }
 
 
@@ -1766,32 +1781,37 @@ file_button_press_cb (GtkWidget      *widget,
 		      GdkEventButton *event,
 		      gpointer        data)
 {
-        FRWindow *window = data;
+        FRWindow         *window = data;
+	GtkTreeSelection *selection;
 
-	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
-		GtkTreeSelection *selection;
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
+	if (selection == NULL)
+		return FALSE;
+
+	if (event->type != GDK_BUTTON_PRESS)
+		return FALSE;
+
+	if (event->button == 3) {
 		GtkTreePath *path;
 		GtkTreeIter iter;
 
-		if (! gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
-						     event->x, event->y,
-						     &path, NULL, NULL, NULL))
-			return FALSE;
-		
-		if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (window->list_store), &iter, path)) {
+		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
+						   event->x, event->y,
+						   &path, NULL, NULL, NULL)) {
+
+			if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (window->list_store), &iter, path)) {
+				gtk_tree_path_free (path);
+				return FALSE;
+			}
 			gtk_tree_path_free (path);
-			return FALSE;
-		}
-		gtk_tree_path_free (path);
+			
+			if (! gtk_tree_selection_iter_is_selected (selection, &iter)) {
+				gtk_tree_selection_unselect_all (selection);
+				gtk_tree_selection_select_iter (selection, &iter);
+			}
 
-		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
-		if (selection == NULL)
-			return FALSE;
-
-		if (! gtk_tree_selection_iter_is_selected (selection, &iter)) {
+		} else
 			gtk_tree_selection_unselect_all (selection);
-			gtk_tree_selection_select_iter (selection, &iter);
-		}
 
 		gtk_menu_popup (GTK_MENU (window->file_popup_menu),
 				NULL, NULL, NULL, 
@@ -1799,6 +1819,14 @@ file_button_press_cb (GtkWidget      *widget,
 				event->button,
 				event->time);
 		return TRUE;
+
+	} else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 1)) {
+		GtkTreePath      *path;
+
+		if (! gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
+						     event->x, event->y,
+						     &path, NULL, NULL, NULL))
+			gtk_tree_selection_unselect_all (selection);
 	}
 
 	return FALSE;
@@ -3251,7 +3279,7 @@ window_new ()
 	window->mitem_password = edit_menu[EDIT_MENU_PASSWORD].widget;
 	window->mitem_last_output = view_menu[VIEW_MENU_LAST_OUTPUT].widget;
 
-	for (i = 0; i < 8; i++) 
+	for (i = 0; i < 14; i++) 
 		window->popupmenu_file[i] = file_popup_menu_data[i].widget;
 
 	window->toolbar_new = toolbar_data[TOOLBAR_NEW].widget;
@@ -3467,6 +3495,17 @@ gh_unref_pixbuf (gpointer  key,
 }
 
 
+static void
+_window_clipboard_clear (FRWindow *window)
+{
+	if (window->clipboard)
+		path_list_free (window->clipboard);
+	window->clipboard = NULL;
+	g_free (window->clipboard_current_dir);
+	window->clipboard_current_dir = NULL;
+}
+
+
 void
 window_close (FRWindow *window)
 {
@@ -3513,6 +3552,8 @@ window_close (FRWindow *window)
 	g_object_unref (window->archive);
 	g_object_unref (window->list_store);
 	g_object_unref (window->empty_store);
+
+	_window_clipboard_clear (window);
 
 	if (window->drag_file_list != NULL)
 		path_list_free (window->drag_file_list);
@@ -4029,12 +4070,12 @@ window_archive_close (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
+	_window_clipboard_clear (window);
 	window_set_password (window, NULL);
 	_window_remove_drag_temp_dirs (window);
 
 	window->archive_new = FALSE;
 	window->archive_present = FALSE;
-
 	_window_update_title (window);
 	_window_update_sensitivity (window);
 	window_update_file_list (window);
@@ -4460,7 +4501,6 @@ window_view_last_output (FRWindow   *window,
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", 1);
 	}
 
-
 	/**/
 
 	gtk_window_present (GTK_WINDOW (dialog));
@@ -4468,6 +4508,102 @@ window_view_last_output (FRWindow   *window,
 
 
 /* -- window_rename_selection -- */
+
+
+static void
+rename_selection (FRWindow   *window,
+		  GList      *file_list,
+		  const char *old_name, 
+		  const char *new_name,
+		  gboolean    is_dir,
+		  const char *current_dir)
+{
+	char       *tmp_dir;
+	FRArchive  *archive = window->archive;
+	GList      *scan, *new_file_list = NULL;
+
+	fr_process_clear (archive->process);
+
+	tmp_dir = get_temp_work_dir_name ();
+	ensure_dir_exists (tmp_dir, 0700);
+
+	fr_archive_extract (archive,
+			    file_list,
+			    tmp_dir,
+			    FALSE,
+			    TRUE,
+			    FALSE,
+			    window->password);
+
+	fr_archive_remove (archive,
+			   file_list,
+			   window->compression);
+
+	/* rename files. */
+
+	if (is_dir) {
+		char *old_path, *new_path;
+		
+		old_path = g_build_filename (tmp_dir, current_dir, old_name, NULL);
+		new_path = g_build_filename (tmp_dir, current_dir, new_name, NULL);
+		
+		fr_process_begin_command (archive->process, "mv");
+		fr_process_add_arg (archive->process, "-f");
+		fr_process_add_arg (archive->process, old_path);
+		fr_process_add_arg (archive->process, new_path);
+		fr_process_end_command (archive->process);
+
+		g_free (old_path);
+		g_free (new_path);
+	}
+
+	for (scan = file_list; scan; scan = scan->next) {
+		const char *current_dir_relative = current_dir + 1;
+		const char *filename = (char*) scan->data;
+		char       *old_path = NULL, *common = NULL, *new_path = NULL;
+		
+		old_path = g_build_filename (tmp_dir, filename, NULL);
+		common = g_strdup (filename + strlen (current_dir) + strlen (old_name));
+		new_path = g_build_filename (tmp_dir, current_dir, new_name, common, NULL);
+
+		if (! is_dir) {
+			fr_process_begin_command (archive->process, "mv");
+			fr_process_add_arg (archive->process, "-f");
+			fr_process_add_arg (archive->process, old_path);
+			fr_process_add_arg (archive->process, new_path);
+			fr_process_end_command (archive->process);
+		}
+
+		new_file_list = g_list_prepend (new_file_list, g_build_filename (current_dir_relative, new_name, common, NULL));
+
+		g_free (old_path);
+		g_free (common);
+		g_free (new_path);
+	}
+
+	new_file_list = g_list_reverse (new_file_list);
+
+	fr_archive_add (archive,
+			new_file_list,
+			tmp_dir,
+			NULL,
+			FALSE,
+			window->password,
+			window->compression);
+
+	/* remove the tmp dir */
+
+	fr_process_begin_command (archive->process, "rm");
+	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+	fr_process_set_sticky (archive->process, TRUE);
+	fr_process_add_arg (archive->process, "-rf");
+	fr_process_add_arg (archive->process, tmp_dir);
+	fr_process_end_command (archive->process);
+
+	fr_process_start (archive->process);
+
+	g_free (tmp_dir);
+}
 
 
 static gboolean
@@ -4527,116 +4663,18 @@ get_first_level_dir (const char *path,
 }
 
 
-/* -- window_rename_selection -- */
-
-
-static void
-rename_selection (FRWindow   *window,
-		  GList      *file_list,
-		  const char *old_name, 
-		  const char *new_name,
-		  gboolean    is_dir)
-{
-	char      *tmp_dir;
-	FRArchive *archive = window->archive;
-	GList     *scan, *new_file_list = NULL;
-
-	fr_process_clear (archive->process);
-
-	tmp_dir = get_temp_work_dir_name ();
-	ensure_dir_exists (tmp_dir, 0700);
-
-	fr_archive_extract (archive,
-			    file_list,
-			    tmp_dir,
-			    FALSE,
-			    TRUE,
-			    FALSE,
-			    window->password);
-
-	fr_archive_remove (archive,
-			   file_list,
-			   window->compression);
-
-	/* rename files. */
-		
-	if (is_dir) {
-		const char *current_dir = window_get_current_location (window);
-		char       *old_path, *new_path;
-		
-		old_path = g_build_filename (tmp_dir, current_dir, old_name, NULL);
-		new_path = g_build_filename (tmp_dir, current_dir, new_name, NULL);
-		
-		fr_process_begin_command (archive->process, "mv");
-		fr_process_add_arg (archive->process, "-f");
-		fr_process_add_arg (archive->process, old_path);
-		fr_process_add_arg (archive->process, new_path);
-		fr_process_end_command (archive->process);
-
-		g_free (old_path);
-		g_free (new_path);
-	}
-
-	for (scan = file_list; scan; scan = scan->next) {
-		const char *current_dir = window_get_current_location (window);
-		const char *current_dir_relative = current_dir + 1;
-		const char *filename = (char*) scan->data;
-		char       *old_path, *common, *new_path;
-
-		old_path = g_build_filename (tmp_dir, filename, NULL);
-		common = g_strdup (filename + strlen (current_dir_relative) + strlen (old_name));
-		new_path = g_build_filename (tmp_dir, current_dir, new_name, common, NULL);
-
-		if (! is_dir) {
-			fr_process_begin_command (archive->process, "mv");
-			fr_process_add_arg (archive->process, "-f");
-			fr_process_add_arg (archive->process, old_path);
-			fr_process_add_arg (archive->process, new_path);
-			fr_process_end_command (archive->process);
-		}
-
-		new_file_list = g_list_prepend (new_file_list, g_build_filename (current_dir_relative, new_name, common, NULL));
-
-		g_free (common);
-		g_free (old_path);
-		g_free (new_path);
-	}
-
-	new_file_list = g_list_reverse (new_file_list);
-
-	fr_archive_add (archive,
-			new_file_list,
-			tmp_dir,
-			NULL,
-			FALSE,
-			window->password,
-			window->compression);
-
-	/* remove the tmp dir */
-
-	fr_process_begin_command (archive->process, "rm");
-	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
-	fr_process_set_sticky (archive->process, TRUE);
-	fr_process_add_arg (archive->process, "-rf");
-	fr_process_add_arg (archive->process, tmp_dir);
-	fr_process_end_command (archive->process);
-
-	fr_process_start (archive->process);
-
-	g_free (tmp_dir);
-}
-
-
 void
 window_rename_selection (FRWindow *window)
 {
-	GList    *selection;
+	GList    *selection, *selection_fd;
 	gboolean  has_dir;
 	char     *old_name, *utf8_old_name, *utf8_new_name;
 
 	selection = window_get_file_list_selection (window, TRUE, &has_dir);
 	if (selection == NULL)
 		return;
+
+	selection_fd = _get_selection_as_fd (window);
 
 	if (has_dir)
 		old_name = get_first_level_dir ((char*) selection->data, window_get_current_location (window));
@@ -4659,6 +4697,7 @@ window_rename_selection (FRWindow *window)
 	if (utf8_new_name != NULL) {
 		char *new_name = g_filename_from_utf8 (utf8_new_name, -1, 0, 0, 0);
 		char *reason = NULL;
+		char *current_dir = NULL;
 
 		g_free (utf8_new_name);
 
@@ -4683,12 +4722,149 @@ window_rename_selection (FRWindow *window)
 			goto retry__rename_selection;
 		}
 
-		rename_selection (window, selection, old_name, new_name, has_dir);
+		if (has_dir)
+			current_dir = g_strdup (window_get_current_location (window));
+		else {
+			FileData *fd = (FileData*) selection_fd->data;
+			current_dir = g_strdup (fd->path);
+		}
+
+		rename_selection (window, selection, old_name, new_name, has_dir, current_dir);
+
+		g_free (current_dir);
 		g_free (new_name);
 	}
 
 	g_free (old_name);
 	path_list_free (selection);
+	g_list_free (selection_fd);
+}
+
+
+void
+window_cut_selection (FRWindow *window)
+{
+	_window_clipboard_clear (window);
+
+	window->clipboard = window_get_file_list_selection (window, TRUE, NULL);
+	window->clipboard_op = FR_CLIPBOARD_OP_CUT;
+
+	window->clipboard_current_dir = g_strdup (window_get_current_location (window));
+
+	_window_update_sensitivity (window);
+
+}
+
+
+void
+window_copy_selection (FRWindow *window)
+{
+	_window_clipboard_clear (window);
+
+	window->clipboard = window_get_file_list_selection (window, TRUE, NULL);
+	window->clipboard_op = FR_CLIPBOARD_OP_COPY;
+
+	window->clipboard_current_dir = g_strdup (window_get_current_location (window));
+
+	_window_update_sensitivity (window);
+}
+
+
+void
+window_paste_selection (FRWindow *window)
+{
+	FRArchive  *archive = window->archive;
+	const char *current_dir = window_get_current_location (window);
+	const char *current_dir_relative = current_dir + 1;
+	GList      *scan;
+	char       *tmp_dir;
+	GHashTable *created_dirs;
+	GList      *new_file_list = NULL;
+
+	if ((window->clipboard == NULL) || (window->list_mode == WINDOW_LIST_MODE_FLAT))
+		return;
+
+	tmp_dir = get_temp_work_dir_name ();
+	ensure_dir_exists (tmp_dir, 0700);
+
+	created_dirs = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+	for (scan = window->clipboard; scan; scan = scan->next) {
+		const char *old_name = (char*) scan->data;
+		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->clipboard_current_dir) - 1, NULL);
+		char       *dir = remove_level_from_path (new_name);
+
+		if (g_hash_table_lookup (created_dirs, dir) == NULL) {
+			char *dir_path = g_build_filename (tmp_dir, dir, NULL);
+#ifdef DEBUG
+			g_print ("mktree %s\n", dir_path);
+#endif
+			ensure_dir_exists (dir_path, 0700); 
+			g_free (dir_path);
+			g_hash_table_replace (created_dirs, g_strdup (dir), "1");
+		}
+
+		g_free (dir);
+		g_free (new_name);
+	}
+	g_hash_table_destroy (created_dirs);
+
+	/**/
+
+	fr_process_clear (archive->process);
+
+	fr_archive_extract (archive,
+			    window->clipboard,
+			    tmp_dir,
+			    FALSE,
+			    TRUE,
+			    FALSE,
+			    window->password);
+	
+	if (window->clipboard_op == FR_CLIPBOARD_OP_CUT)
+		fr_archive_remove (archive,
+				   window->clipboard,
+				   window->compression);
+
+	/**/
+
+	for (scan = window->clipboard; scan; scan = scan->next) {
+		const char *old_name = (char*) scan->data;
+		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->clipboard_current_dir) - 1, NULL);
+
+		if (strcmp (old_name, new_name) != 0) {
+			fr_process_begin_command (archive->process, "mv");
+			fr_process_set_working_dir (archive->process, tmp_dir);
+			fr_process_add_arg (archive->process, "-f");
+			fr_process_add_arg (archive->process, old_name);
+			fr_process_add_arg (archive->process, new_name);
+			fr_process_end_command (archive->process);
+		}
+
+		new_file_list = g_list_prepend (new_file_list, new_name);
+	}
+
+	fr_archive_add (archive,
+			new_file_list,
+			tmp_dir,
+			NULL,
+			FALSE,
+			window->password,
+			window->compression);
+
+	path_list_free (new_file_list);
+
+	/* remove the tmp dir */
+
+	fr_process_begin_command (archive->process, "rm");
+	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+	fr_process_set_sticky (archive->process, TRUE);
+	fr_process_add_arg (archive->process, "-rf");
+	fr_process_add_arg (archive->process, tmp_dir);
+	fr_process_end_command (archive->process);
+
+	fr_process_start (archive->process);
+
+	g_free (tmp_dir);
 }
 
 

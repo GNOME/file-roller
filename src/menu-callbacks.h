@@ -129,4 +129,13 @@ void   view_statusbar_cb             (GtkWidget *widget,
 void   rename_cb                     (GtkWidget *widget, 
 				      void *data);
 
+void   cut_cb                        (GtkWidget *widget, 
+				      void *data);
+
+void   copy_cb                       (GtkWidget *widget, 
+				      void *data);
+
+void   paste_cb                      (GtkWidget *widget, 
+				      void *data);
+
 #endif /* MENU_CALLBACKS_H */
