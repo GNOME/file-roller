@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-16 08:00-0600\n"
-"PO-Revision-Date: 2004-08-23 16:37+0530\n"
+"POT-Creation-Date: 2004-08-24 03:13+0200\n"
+"PO-Revision-Date: 2004-08-24 11:38+0530\n"
 "Last-Translator: Jayaradha N <jaya@pune.redhat.com>\n"
 "Language-Team: Tamil <zhakanini@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -21,10 +21,11 @@ msgstr ""
 "0500\n"
 "X-Generator: KBabel 1.3.1\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=(n != 1);\n\n"
+"\n"
 
 #: component/File_Roller_Component.server.in.in.h:1
 msgid "Create Archive..."
-msgstr "களஞ்சியத்தை உருவாக்கு"
+msgstr "களஞ்சியத்தை உருவாக்கு..."
 
 #: component/File_Roller_Component.server.in.in.h:2
 msgid "Extract Here"
@@ -50,184 +51,362 @@ msgstr "களஞ்சிய மேலாளர்"
 msgid "Create and modify an archive"
 msgstr "களஞ்சியத்தை உருவாக்கு அல்லது திருத்து"
 
-#: src/dlg-add.c:118 src/dlg-add.c:125
+#: src/actions.c:97
+msgid "Automatic"
+msgstr "தானாக"
+
+#: src/actions.c:98
+msgid "Arj (.arj)"
+msgstr "Arj (.arj)"
+
+#: src/actions.c:99
+msgid "Ear (.ear)"
+msgstr "Ear (.ear)"
+
+#: src/actions.c:100
+msgid "Jar (.jar)"
+msgstr "Jar (.jar)"
+
+#: src/actions.c:101
+msgid "Lha (.lzh)"
+msgstr "Lha (.lzh)"
+
+#: src/actions.c:102
+msgid "Rar (.rar)"
+msgstr "Rar (.rar)"
+
+#: src/actions.c:103
+msgid "Tar uncompressed (.tar)"
+msgstr "Tar குறுக்கப்படாமல் (.tar)"
+
+#: src/actions.c:104
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "Tar bzip ஆல் குறுக்கப்பட்ட (.tar.bz)"
+
+#: src/actions.c:105
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "Tar bzip2 ஆல் குறுக்கப்பட்ட (.tar.bz2)"
+
+#: src/actions.c:106
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "Tar gzip ஆல் குறுக்கப்பட்ட (.tar.gz)"
+
+#: src/actions.c:107
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "Tar lzop ஆல் குறுக்கப்பட்ட (.tar.lzo)"
+
+#: src/actions.c:108
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "Tar compress ஆல் குறுக்கப்பட்ட (.tar.Z)"
+
+#: src/actions.c:109
+msgid "War (.war)"
+msgstr "War (.war)"
+
+#: src/actions.c:110
+msgid "Zip (.zip)"
+msgstr "Zip (.zip)"
+
+#: src/actions.c:111
+msgid "Zoo (.zoo)"
+msgstr "Zoo (.zoo)"
+
+#: src/actions.c:176 src/actions.c:196 src/dlg-batch-add.c:101
+#: src/dlg-batch-add.c:127 src/dlg-batch-add.c:169 src/window.c:3812
+msgid "Could not create the archive"
+msgstr "காப்பகத்தை உருவாக்க முடியவில்லை"
+
+#: src/actions.c:177 src/actions.c:501 src/dlg-batch-add.c:102
+msgid "You have to specify an archive name."
+msgstr "காப்பகத்தின் பெயரைக் குறிப்பிட வேண்டும்."
+
+#: src/actions.c:197 src/actions.c:521
+msgid "You don't have permission to create an archive in this folder"
+msgstr "இந்த அடைவில் காப்பகம் உருவாக்க உங்களுக்கு அனுமதி இல்லை"
+
+#: src/actions.c:227 src/actions.c:542 src/actions.c:725 src/actions.c:906
+msgid "The archive already exists.  Do you want to overwrite it?"
+msgstr "¸¡ôÀ¸õ ¯ûÇÐ. §Á¦ÄØ¾Å¡?"
+
+#: src/actions.c:230 src/actions.c:545 src/actions.c:728 src/actions.c:909
+msgid "Overwrite"
+msgstr "மேலெழுது"
+
+#: src/actions.c:247 src/actions.c:562
+msgid "Could not delete the old archive."
+msgstr "பழைய காப்பகத்தை நீக்க முடியவில்லை."
+
+#: src/actions.c:293
+msgid "New"
+msgstr "புதியது"
+
+#: src/actions.c:305 src/actions.c:434 src/actions.c:621
+msgid "All archives"
+msgstr "எல்லா காப்பகங்கள்"
+
+#: src/actions.c:312 src/actions.c:441 src/actions.c:628
+msgid "All files"
+msgstr "எல்லா கோப்புகள்"
+
+#: src/actions.c:322 src/actions.c:636
+msgid "Archive type:"
+msgstr "காப்பக வகை:"
+
+#: src/actions.c:422 src/ui.h:114
+msgid "Open"
+msgstr "திறக்கவும்"
+
+#: src/actions.c:500 src/actions.c:520
+msgid "Could not save the archive"
+msgstr "காப்பகத்தை சேமிக்க முடியவில்லை"
+
+#: src/actions.c:609
+msgid "Save"
+msgstr "சேமி"
+
+#: src/actions.c:751
+msgid "Could not copy the archive"
+msgstr "காப்பகத்தை நகல் செய்ய முடியவில்லை"
+
+#: src/actions.c:771
+msgid "Could not move the archive"
+msgstr "காப்பகத்தை நகர்த்த முடியவில்லை"
+
+#: src/actions.c:800
+msgid "Copy"
+msgstr "நகல்"
+
+#: src/actions.c:800
+msgid "Move"
+msgstr "நகர்த்து"
+
+#: src/actions.c:805 src/ui.h:66
+msgid "_Copy"
+msgstr "நகல் செய்"
+
+#: src/actions.c:805
+msgid "_Move"
+msgstr "நகர்த்து"
+
+#: src/actions.c:876 src/window.c:4924
+msgid "Rename"
+msgstr "பெயர் மாற்று"
+
+#: src/actions.c:877
+msgid "New archive name (without extension)"
+msgstr "புதிய காப்பகத்தின் பெயர் (ஒட்டு இல்லாமல்)"
+
+#: src/actions.c:881 src/window.c:4929
+msgid "_Rename"
+msgstr "_பெயர் மாற்று"
+
+#: src/actions.c:982
+msgid ""
+"The archive cannot be moved to the Trash. Do you want to delete it "
+"permanently?"
+msgstr "¸¡ôÀ¸ò¨¾ Ìô¨ÀìÌ ¿¸÷ò¾ ÓÊÂÅ¢ø¨Ä. «¨¾ ¿¢Ãó¾ÃÁ¡¸ ¿£ì¸¢ Å¢¼Å¡?"
+
+#: src/actions.c:1219 src/window.c:4643
+msgid "Last Output"
+msgstr "முந்தைய வெளியீடு"
+
+#: src/actions.c:1239 src/dlg-extract.c:87
+msgid "Could not display help"
+msgstr "உதவியைக் காட்ட முடியவில்லை"
+
+#: src/actions.c:1272
+msgid "translator_credits"
+msgstr "மொழிபெயர்ப்பர் விபரங்கள்"
+
+#. Create the application.
+#: src/actions.c:1280 src/gtk-utils.c:390 src/main.c:102 src/window.c:855
+#: src/window.c:1286 src/window.c:3111
+msgid "File Roller"
+msgstr "கோப்பு உருட்டி"
+
+#: src/actions.c:1283
+msgid "An archive manager for GNOME."
+msgstr "க்னோமுக்கான காப்பக மேலாளர்"
+
+#: src/dlg-add-files.c:85 src/dlg-add-files.c:147 src/dlg-add-folder.c:115
+#: src/dlg-add-folder.c:247
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "\"%s\" என்ற அடைவிலிருந்து கோப்புகளை பார்க்க உங்களுக்கு அனுமதி இல்லை"
 
-#: src/dlg-add.c:124 src/window.c:1930 src/window.c:1967
+#: src/dlg-add-files.c:91 src/dlg-add-files.c:153 src/dlg-add-folder.c:121
+#: src/dlg-add-folder.c:253 src/window.c:1967 src/window.c:2005
 msgid "Could not add the files to the archive"
 msgstr "காப்பகத்துக்கு கோப்புகளை சேர்க்க முடியவில்லை"
 
-#: src/dlg-add.c:274 src/toolbar.h:56
-msgid "Add"
-msgstr "சேர்"
+#: src/dlg-add-files.c:179
+msgid "Add Files"
+msgstr "கோப்புகளை சேர்"
 
-#: src/dlg-add.c:285
+#: src/dlg-add-files.c:191 src/dlg-add-folder.c:321
 msgid "_Add only if newer"
 msgstr "புதிதாக இருந்தால் மட்டும் சேர்க்கவும்"
 
-#: src/dlg-add.c:286
+#: src/dlg-add-folder.c:309
+msgid "Add a Folder"
+msgstr "அடைவைச்சேர்"
+
+#: src/dlg-add-folder.c:322
 msgid "_Include subfolders"
 msgstr "உள்அடைவுகளை சேர்க்கவும்"
 
-#: src/dlg-add.c:287
+#: src/dlg-add-folder.c:323
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "அடையாள இணைப்பாக உள்ள அடைவுகளை விட்டுவிடவும்"
 
-#: src/dlg-add.c:290 src/dlg-add.c:295
+#: src/dlg-add-folder.c:326 src/dlg-add-folder.c:331
 msgid "example: *.o; *.bak"
 msgstr "எடுத்துக்காட்டு: *.o; *.bak"
 
-#: src/dlg-add.c:291
+#: src/dlg-add-folder.c:327
 msgid "_Include files:"
 msgstr "உள்ளிடு கோப்புகள்:"
 
-#: src/dlg-add.c:296
+#: src/dlg-add-folder.c:332
 msgid "E_xclude files:"
 msgstr "விட்டுவிடும் கோப்புகள்:"
 
-#: src/dlg-add.c:299
+#: src/dlg-add-folder.c:335
 msgid "_Load Options"
 msgstr "ஏற்றும் விருப்பங்கள்"
 
-#: src/dlg-add.c:300
+#: src/dlg-add-folder.c:336
 msgid "Sa_ve Options"
 msgstr "சேமிப்பு விருப்பங்கள்"
 
-#: src/dlg-add.c:758
+#: src/dlg-add-folder.c:796
 msgid "Save Options"
 msgstr "சேமிப்பு விருப்பங்கள்"
 
-#: src/dlg-add.c:759
+#: src/dlg-add-folder.c:797
 msgid "Options Name:"
 msgstr "விருப்பங்கள் பெயர்:"
 
-#: src/dlg-batch-add.c:101 src/dlg-batch-add.c:126 src/dlg-batch-add.c:166
-#: src/menu-callbacks.c:167 src/menu-callbacks.c:186 src/window.c:3645
-msgid "Could not create the archive"
-msgstr "காப்பகத்தை உருவாக்க முடியவில்லை"
-
-#: src/dlg-batch-add.c:102 src/menu-callbacks.c:168 src/menu-callbacks.c:376
-msgid "You have to specify an archive name."
-msgstr "காப்பகத்தின் பெயரைக் குறிப்பிட வேண்டும்."
-
-#: src/dlg-batch-add.c:127 src/fr-archive.c:624 src/window.c:3646
-#: src/window.c:3796
+#: src/dlg-batch-add.c:128 src/fr-archive.c:631 src/window.c:3813
+#: src/window.c:3969
 msgid "Archive type not supported."
 msgstr "ஆவண வகைக்கு ஆதரவு இல்லை."
 
-#: src/dlg-batch-add.c:146 src/dlg-extract.c:150 src/window.c:4026
+#: src/dlg-batch-add.c:148 src/dlg-extract.c:152 src/window.c:4210
 msgid "Destination folder does not exist.  Do you want to create it?"
 msgstr "சேரும் அடைவு இல்லை. உருவாக்க வேண்டுமா?"
 
-#: src/dlg-batch-add.c:149 src/dlg-extract.c:153 src/window.c:4029
+#: src/dlg-batch-add.c:151 src/dlg-extract.c:155 src/window.c:4213
 msgid "Create _Folder"
 msgstr "அடைவு உருவாக்கு"
 
-#: src/dlg-batch-add.c:162 src/dlg-extract.c:169 src/window.c:4045
+#: src/dlg-batch-add.c:165 src/dlg-extract.c:172 src/window.c:4230
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "சேர்வு அடைவு %s ஐ உருவாக்க முடியவில்லை."
 
-#: src/dlg-batch-add.c:185
+#: src/dlg-batch-add.c:189
 msgid "Archive not created"
 msgstr "களஞ்சியத்தை உருவாக்க முடியவில்லை"
 
-#: src/dlg-extract.c:87 src/menu-callbacks.c:1132
-msgid "Could not display help"
-msgstr "உதவியைக் காட்ட முடியவில்லை"
-
-#: src/dlg-extract.c:173 src/dlg-extract.c:192 src/dlg-extract.c:216
-#: src/window.c:4049 src/window.c:4068
+#: src/dlg-extract.c:176 src/dlg-extract.c:196 src/dlg-extract.c:221
+#: src/window.c:4234 src/window.c:4254
 msgid "Extraction not performed"
 msgstr "பிரித்தெடுப்பு நடக்கவில்லை"
 
-#: src/dlg-extract.c:211
+#: src/dlg-extract.c:216
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "\"%s\" என்ற அடைவில் உள்ள காப்பகங்களை பிரித்தெடுக்க உங்களுக்கு அனுமதி இல்லை"
 
-#: src/dlg-extract.c:370
+#: src/dlg-extract.c:380
 msgid "Files"
 msgstr "கோப்புகள்"
 
-#: src/dlg-extract.c:378 src/dlg-extract.c:428 src/file_roller_prop.glade.h:1
+#: src/dlg-extract.c:388 src/dlg-extract.c:438
 msgid "    "
 msgstr "    "
 
-#: src/dlg-extract.c:387 src/file_roller.glade.h:17
+#: src/dlg-extract.c:397 src/file_roller.glade.h:17
 msgid "_Files:"
 msgstr "கோப்புகள்:"
 
-#: src/dlg-extract.c:398 src/file_roller.glade.h:20
+#: src/dlg-extract.c:408 src/file_roller.glade.h:20
 msgid "example: *.txt; *.doc"
 msgstr "எடுத்துக்காட்டு: *.txt; *.doc"
 
-#: src/dlg-extract.c:401 src/file_roller.glade.h:14
+#: src/dlg-extract.c:411 src/file_roller.glade.h:14
 msgid "_All files"
 msgstr "எல்லா கோப்புகள்"
 
-#: src/dlg-extract.c:408 src/file_roller.glade.h:19
+#: src/dlg-extract.c:418 src/file_roller.glade.h:19
 msgid "_Selected files"
 msgstr "தேர்ந்தெடுக்கப்பட்ட கோப்புகள்"
 
-#: src/dlg-extract.c:419
+#: src/dlg-extract.c:429
 msgid "Actions"
 msgstr "செயல்கள்"
 
-#: src/dlg-extract.c:435
+#: src/dlg-extract.c:445
 msgid "R_e-create folders"
 msgstr "கோப்புகளை மீள உருவாக்கவும்"
 
-#: src/dlg-extract.c:439
+#: src/dlg-extract.c:449
 msgid "Over_write existing files"
 msgstr "இருக்கும் கோப்புகளை மேலெழுதவும்"
 
-#: src/dlg-extract.c:443
+#: src/dlg-extract.c:453
 msgid "Do not e_xtract older files"
 msgstr "பழைய கோப்புகளை பிரிக்காதே"
 
-#: src/dlg-extract.c:449 src/file_roller.glade.h:18
+#: src/dlg-extract.c:459 src/file_roller.glade.h:18
 msgid "_Password:"
 msgstr "கடவுச் சொல்:"
 
-#: src/dlg-extract.c:457
+#: src/dlg-extract.c:467
 msgid "_Open destination folder after extraction"
 msgstr "பிரித்தெடுத்த பிறகு சேர்வு அடைவைத் திறக்கவும்"
 
-#: src/dlg-extract.c:484 src/toolbar.h:62
+#: src/dlg-extract.c:494 src/ui.h:94
 msgid "Extract"
 msgstr "பிரித்தெடு"
 
-#: src/dlg-prop.c:99
+#: src/dlg-prop.c:105
 msgid "Path:"
 msgstr "பாதை:"
 
-#: src/dlg-prop.c:112
+#: src/dlg-prop.c:118
 msgid "Name:"
 msgstr "பெயர்:"
 
-#: src/dlg-prop.c:119
+#: src/dlg-prop.c:125
 #, c-format
 msgid "%s Properties"
 msgstr "%s பண்புகள்"
 
-#: src/dlg-prop.c:128
-msgid "File size:"
-msgstr "கோப்பு அளவு:"
-
-#: src/dlg-prop.c:139
-msgid "Number of files:"
-msgstr "கோப்புகளின் எண்ணிக்கை:"
-
-#: src/dlg-prop.c:149
+#: src/dlg-prop.c:134
 msgid "Modified on:"
 msgstr "மாற்றிய தேதி:"
 
-#: src/dlg-prop.c:155
+#: src/dlg-prop.c:140 src/window.c:425
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
+
+#: src/dlg-prop.c:148
+msgid "Archive size:"
+msgstr "காப்பக வகை:"
+
+#: src/dlg-prop.c:159
+msgid "Content size:"
+msgstr "உள்ளடக்க அளவு:"
+
+#: src/dlg-prop.c:178
+msgid "Compression ratio:"
+msgstr "சுருக்க விகிதம்:ம் நிலை"
+
+#: src/dlg-prop.c:193
+msgid "Number of files:"
+msgstr "கோப்புகளின் எண்ணிக்கை:"
 
 #: src/file-data.c:28
 msgid "Unknown type"
@@ -237,7 +416,7 @@ msgstr "தெரியாத வகை"
 msgid "Symbolic link"
 msgstr "அடையாள இணைப்பு"
 
-#: src/file-utils.c:537
+#: src/file-utils.c:558
 msgid "Cannot find a terminal, using xterm, even if it may not work"
 msgstr "முனையம் ஒன்றைக் கண்டுபிடிக்க முடியவில்லை, இயக்க முடியாவிட்டாலும், xterm பயன்படுத்தும்"
 
@@ -250,7 +429,9 @@ msgid ""
 "<i><b>Note:</b> the password will be used to encrypt files you add to the "
 "current archive, and to decrypt files you extract from the current archive. "
 "When the archive is closed the password will be deleted.</i>"
-msgstr "<i><b>குறிப்பு:</b> தற்போதைய களஞ்சியத்தை குறிமுறையாக்க கடவுச்சொல் சேர்க்கப்பட்டது, குறிமுறை நீக்க களஞ்சியத்தை மூடும் போது கடவுச்சொல் நீக்கப்படும்.</i>"
+msgstr ""
+"<i><b>குறிப்பு:</b> தற்போதைய களஞ்சியத்தை குறிமுறையாக்க கடவுச்சொல் சேர்க்கப்பட்டது, "
+"குறிமுறை நீக்க களஞ்சியத்தை மூடும் போது கடவுச்சொல் நீக்கப்படும்.</i>"
 
 #: src/file_roller.glade.h:3
 msgid "A_vailable application:"
@@ -304,71 +485,31 @@ msgstr "பயன்பாடு:"
 msgid "_Archive:"
 msgstr "காப்பகம்:"
 
-#: src/file_roller_prop.glade.h:2
-msgid "Compression _level:"
-msgstr "குறுக்கம் நிலை"
-
-#: src/file_roller_prop.glade.h:3
-msgid "Date _modified"
-msgstr "மாற்றிய தேதி"
-
-#: src/file_roller_prop.glade.h:4
-msgid "File Roller Preferences"
-msgstr "கோப்பு உருட்டி விருப்பங்கள்"
-
-#: src/file_roller_prop.glade.h:5
-msgid "Low"
-msgstr "குறைவு"
-
-#: src/file_roller_prop.glade.h:6
-msgid "Maximum (slow)"
-msgstr "அதிகம் (மெதுவான)"
-
-#: src/file_roller_prop.glade.h:7
-msgid "Minimum (fast)"
-msgstr "குறைவு (வேகமான)"
-
-#: src/file_roller_prop.glade.h:8
-msgid "Normal"
-msgstr "இயல்பானது"
-
-#: src/file_roller_prop.glade.h:9
-msgid "_Location"
-msgstr "இடம்"
-
-#: src/file_roller_prop.glade.h:10
-msgid "_Size"
-msgstr "அளவு"
-
-#: src/file_roller_prop.glade.h:11
-msgid "_Type"
-msgstr "வகை"
-
-#: src/fr-archive.c:599
+#: src/fr-archive.c:606
 msgid "The file does not exist."
 msgstr "கோப்பு இல்லை"
 
-#: src/fr-command-tar.c:354
+#: src/fr-command-tar.c:396
 msgid "Adding file: "
 msgstr "கோப்பு சேர்க்கப்படுகிறது:"
 
-#: src/fr-command-tar.c:400
+#: src/fr-command-tar.c:442
 msgid "Removing file: "
 msgstr "கோப்பு நீக்கப்படுகிறது:"
 
-#: src/fr-command-tar.c:409 src/window.c:1366
+#: src/fr-command-tar.c:451 src/window.c:1388
 msgid "Deleting files from archive"
 msgstr "காப்பகத்திலிருந்து கோப்புகள் நீக்கப்படுகின்றன"
 
-#: src/fr-command-tar.c:442
+#: src/fr-command-tar.c:484
 msgid "Extracting file: "
 msgstr "கோப்பு பிரிக்கப்படுகிறது:"
 
-#: src/fr-command-tar.c:487
+#: src/fr-command-tar.c:529
 msgid "Recompressing archive"
 msgstr "காப்பகம் மறுகுறுக்கப்படுகிறது"
 
-#: src/fr-command-tar.c:621
+#: src/fr-command-tar.c:663
 msgid "Decompressing archive"
 msgstr "காப்பகம் விரிக்கப்படுகிறது"
 
@@ -380,15 +521,9 @@ msgstr "சேர்"
 msgid "_Extract"
 msgstr "பிரித்தெடு"
 
-#: src/fr-stock.c:46 src/menu.h:382
+#: src/fr-stock.c:46 src/ui.h:36 src/ui.h:170
 msgid "_View"
 msgstr "காட்சி"
-
-#. Create the application.
-#: src/gtk-utils.c:390 src/main.c:102 src/menu-callbacks.c:1173
-#: src/window.c:839 src/window.c:1265 src/window.c:2926
-msgid "File Roller"
-msgstr "கோப்பு உருட்டி"
 
 #. Button
 #: src/gtk-utils.c:421
@@ -427,494 +562,378 @@ msgstr "'--add' மற்றும் '--extract' கட்டளைகளை �
 msgid "Create destination folder without asking confirmation"
 msgstr "உறுதிப்படுத்தாமல் இலக்கு அடைவை உருவாக்கு"
 
-#: src/menu-callbacks.c:88
-msgid "Automatic"
-msgstr "தானாக"
-
-#: src/menu-callbacks.c:89
-msgid "Arj (.arj)"
-msgstr "Arj (.arj)"
-
-#: src/menu-callbacks.c:90
-msgid "Ear (.ear)"
-msgstr "Ear (.ear)"
-
-#: src/menu-callbacks.c:91
-msgid "Jar (.jar)"
-msgstr "Jar (.jar)"
-
-#: src/menu-callbacks.c:92
-msgid "Lha (.lzh)"
-msgstr "Lha (.lzh)"
-
-#: src/menu-callbacks.c:93
-msgid "Rar (.rar)"
-msgstr "Rar (.rar)"
-
-#: src/menu-callbacks.c:94
-msgid "Tar uncompressed (.tar)"
-msgstr "Tar குறுக்கப்படாமல் (.tar)"
-
-#: src/menu-callbacks.c:95
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "Tar bzip ஆல் குறுக்கப்பட்ட (.tar.bz)"
-
-#: src/menu-callbacks.c:96
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "Tar bzip2 ஆல் குறுக்கப்பட்ட (.tar.bz2)"
-
-#: src/menu-callbacks.c:97
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "Tar gzip ஆல் குறுக்கப்பட்ட (.tar.gz)"
-
-#: src/menu-callbacks.c:98
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "Tar lzop ஆல் குறுக்கப்பட்ட (.tar.lzo)"
-
-#: src/menu-callbacks.c:99
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "Tar compress ஆல் குறுக்கப்பட்ட (.tar.Z)"
-
-#: src/menu-callbacks.c:100
-msgid "War (.war)"
-msgstr "War (.war)"
-
-#: src/menu-callbacks.c:101
-msgid "Zip (.zip)"
-msgstr "Zip (.zip)"
-
-#: src/menu-callbacks.c:102
-msgid "Zoo (.zoo)"
-msgstr "Zoo (.zoo)"
-
-#: src/menu-callbacks.c:187 src/menu-callbacks.c:395
-msgid "You don't have permission to create an archive in this folder"
-msgstr "இந்த அடைவில் காப்பகம் உருவாக்க உங்களுக்கு அனுமதி இல்லை"
-
-#: src/menu-callbacks.c:216 src/menu-callbacks.c:415 src/menu-callbacks.c:708
-#: src/menu-callbacks.c:885
-msgid "The archive already exists.  Do you want to overwrite it?"
-msgstr "¸¡ôÀ¸õ ¯ûÇÐ. §Á¦ÄØ¾Å¡?"
-
-#: src/menu-callbacks.c:219 src/menu-callbacks.c:418 src/menu-callbacks.c:711
-#: src/menu-callbacks.c:888
-msgid "Overwrite"
-msgstr "மேலெழுது"
-
-#: src/menu-callbacks.c:235 src/menu-callbacks.c:434
-msgid "Could not delete the old archive."
-msgstr "பழைய காப்பகத்தை நீக்க முடியவில்லை."
-
-#: src/menu-callbacks.c:279 src/toolbar.h:42
-msgid "New"
-msgstr "புதியது"
-
-#: src/menu-callbacks.c:290 src/menu-callbacks.c:490 src/menu-callbacks.c:612
-msgid "All archives"
-msgstr "எல்லா காப்பகங்கள்"
-
-#: src/menu-callbacks.c:297 src/menu-callbacks.c:497 src/menu-callbacks.c:619
-msgid "All files"
-msgstr "எல்லா கோப்புகள்"
-
-#: src/menu-callbacks.c:307 src/menu-callbacks.c:505
-msgid "Archive type:"
-msgstr "காப்பக வகை:"
-
-#: src/menu-callbacks.c:375 src/menu-callbacks.c:394
-msgid "Could not save the archive"
-msgstr "காப்பகத்தை சேமிக்க முடியவில்லை"
-
-#: src/menu-callbacks.c:479
-msgid "Save"
-msgstr "சேமி"
-
-#: src/menu-callbacks.c:601 src/menu.h:412 src/toolbar.h:48
-msgid "Open"
-msgstr "திறக்கவும்"
-
-#: src/menu-callbacks.c:733
-msgid "Could not copy the archive"
-msgstr "காப்பகத்தை நகல் செய்ய முடியவில்லை"
-
-#: src/menu-callbacks.c:752
-msgid "Could not move the archive"
-msgstr "காப்பகத்தை நகர்த்த முடியவில்லை"
-
-#: src/menu-callbacks.c:780
-msgid "Copy"
-msgstr "நகல்"
-
-#: src/menu-callbacks.c:780
-msgid "Move"
-msgstr "நகர்த்து"
-
-#: src/menu-callbacks.c:785
-msgid "_Copy"
-msgstr "நகல் செய்"
-
-#: src/menu-callbacks.c:785
-msgid "_Move"
-msgstr "நகர்த்து"
-
-#: src/menu-callbacks.c:855 src/window.c:4717
-msgid "Rename"
-msgstr "பெயர் மாற்று"
-
-#: src/menu-callbacks.c:856
-msgid "New archive name (without extension)"
-msgstr "புதிய காப்பகத்தின் பெயர் (ஒட்டு இல்லாமல்)"
-
-#: src/menu-callbacks.c:860 src/window.c:4722
-msgid "_Rename"
-msgstr "_பெயர் மாற்று"
-
-#: src/menu-callbacks.c:970
-msgid ""
-"The archive cannot be moved to the Trash. Do you want to delete it "
-"permanently?"
-msgstr "¸¡ôÀ¸ò¨¾ Ìô¨ÀìÌ ¿¸÷ò¾ ÓÊÂÅ¢ø¨Ä. «¨¾ ¿¢Ãó¾ÃÁ¡¸ ¿£ì¸¢ Å¢¼Å¡?"
-
-#: src/menu-callbacks.c:1165
-msgid "translator_credits"
-msgstr "மொழிபெயர்ப்பர் விபரங்கள்"
-
-#: src/menu-callbacks.c:1176
-msgid "An archive manager for GNOME."
-msgstr "க்னோமுக்கான காப்பக மேலாளர்"
-
-#: src/menu-callbacks.c:1325 src/window.c:4454
-msgid "Last Output"
-msgstr "முந்தைய வெளியீடு"
-
-#: src/menu.h:65
-msgid "_New"
-msgstr "புதியது"
-
-#: src/menu.h:66 src/toolbar.h:42
-msgid "Create a new archive"
-msgstr "புதிய காப்பகம் உருவாக்கு"
-
-#: src/menu.h:71
-msgid "Open R_ecent"
-msgstr "சமீபத்திய¨¾ திற"
-
-#: src/menu.h:80 src/menu.h:167 src/menu.h:450
-msgid "_Rename..."
-msgstr "_பெயர் மாற்று..."
-
-#: src/menu.h:80
-msgid "Rename current archive"
-msgstr "இந்த காப்பகத்தை பெயர் மாற்று"
-
-#: src/menu.h:86
-msgid "Cop_y..."
-msgstr "நகல் செய்..."
-
-#: src/menu.h:86
-msgid "Copy current archive to another folder"
-msgstr "இந்த காப்பகத்தை இன்னொரு அடைவுக்கு நகல்செய்"
-
-#: src/menu.h:92
-msgid "_Move..."
-msgstr "நகர்த்து..."
-
-#: src/menu.h:92
-msgid "Move current archive to another folder"
-msgstr "இந்த காப்பகத்தை இன்னொரு அடைவுக்கு நகர்த்தவும்"
-
-#: src/menu.h:98
-msgid "Move to _Trash"
-msgstr "குப்பைக்கு நகர்த்தவும்"
-
-#: src/menu.h:98
-msgid "Move current archive to trash"
-msgstr "இந்த காப்பகத்தை குப்பைக்கு நகர்த்தவும்"
-
-#: src/menu.h:104
-msgid "_Test Integrity"
-msgstr "நாணயத்தன்மையை சோதி"
-
-#: src/menu.h:104
-msgid "Test whether the archive contains errors"
-msgstr "காப்பகத்தில் பிழைகள் உள்ளனவா என்று சோதி"
-
-#: src/menu.h:112
-msgid "_Properties"
-msgstr "பண்புகள்"
-
-#: src/menu.h:112
-msgid "Show archive properties"
-msgstr "காப்பக பண்புகளை காட்டவும"
-
-#: src/menu.h:149 src/menu.h:432
-msgid "_Add..."
-msgstr "சேர்"
-
-#: src/menu.h:149 src/menu.h:432
-msgid "Add files and folders to the archive"
-msgstr "காப்பகத்துக்கு கோப்புகளையும் அடைவுகளையும் சேர்"
-
-#: src/menu.h:155 src/menu.h:438
-msgid "_Extract..."
-msgstr "பிரித்தெடு..."
-
-#: src/menu.h:155 src/menu.h:438 src/toolbar.h:62
-msgid "Extract files from the archive"
-msgstr "காப்பகத்திலிருந்து கோப்புகளை பிரித்தெடு"
-
-#: src/menu.h:167 src/menu.h:450
-msgid "Rename selection"
-msgstr "தேர்வுக்கு மறுபெயரிடு"
-
-#: src/menu.h:173 src/menu.h:456
-msgid "_Delete..."
-msgstr "நீக்கு..."
-
-#: src/menu.h:173 src/menu.h:456
-msgid "Delete selection from the archive"
-msgstr "காப்பகத்திலிருந்து தேர்வை நீக்கு"
-
-#: src/menu.h:181 src/menu.h:464
-msgid "Select _All"
-msgstr "அனைத்தையும் தெரிவு செய்க"
-
-#: src/menu.h:181 src/menu.h:464
-msgid "Select all files"
-msgstr "எல்லா கோப்புகளையும் தேர்ந்தெடுக்கவும்"
-
-#: src/menu.h:187 src/menu.h:470
-msgid "Dese_lect All"
-msgstr "எல்லா கோப்புகளையும் விட்டுவிடவும்"
-
-#: src/menu.h:187 src/menu.h:470
-msgid "Deselect all files"
-msgstr "எல்லா கோப்புகளையும் விட்டு விடவும்"
-
-#: src/menu.h:195
-msgid "Open Fi_les..."
-msgstr "கோப்புகளை திறக்கவும்..."
-
-#: src/menu.h:195 src/menu.h:418
-msgid "Open selected files with an application"
-msgstr "தேர்ந்தெடுக்கப்பட்ட கோப்புகளை பயன்பாடு ஒன்றினால் திறக்கவும்"
-
-#: src/menu.h:201 src/menu.h:424
-msgid "_View File"
-msgstr "கோப்பு காட்சி"
-
-#: src/menu.h:201 src/menu.h:424
-msgid "View file with internal viewer"
-msgstr "உள்ளமை காட்டியில் கோப்பை பார்க்கவும்"
-
-#: src/menu.h:209
-msgid "Pass_word..."
-msgstr "கடவுச்சொல்..."
-
-#: src/menu.h:220
-msgid "by _Name"
-msgstr "பெÂÃ¢ன்படி"
-
-#: src/menu.h:220
-msgid "Sort file list by name"
-msgstr "கோப்பு பட்டியலை பெயர்படி அடுக்கவும்"
-
-#: src/menu.h:226
-msgid "by _Size"
-msgstr "அளவுப்படி"
-
-#: src/menu.h:226
-msgid "Sort file list by file size"
-msgstr "கோப்பு பட்டியலை கோப்பு அளவுப்படி அடுக்கவும்"
-
-#: src/menu.h:232
-msgid "by T_ype"
-msgstr "வகைப்படி"
-
-#: src/menu.h:232
-msgid "Sort file list by type"
-msgstr "கோப்புப் பட்டியலை வகைப்படி அடுக்கவும்"
-
-#: src/menu.h:238
-msgid "by _Date modified"
-msgstr "மாற்றப்பட்ட தேதிப்படி"
-
-#: src/menu.h:238
-msgid "Sort file list by modification time"
-msgstr "கோப்புப் பட்டியலை மாற்றிய் நேரப்படி அடுக்கவும்"
-
-#: src/menu.h:244
-msgid "by _Location"
-msgstr "இடப்படி «டுக்கவும்"
-
-#: src/menu.h:244
-msgid "Sort file list by location"
-msgstr "கோப்புப் பட்டியலை  இடத்தைப் பொறுத்து நேரப்படி அடுக்கவும்"
-
-#: src/menu.h:261
-msgid "View All _Files"
-msgstr "எல்லா கோப்புகளையும் பார்க்கவும்"
-
-#: src/menu.h:267
-msgid "View as a F_older"
-msgstr "எல்லா அடைவுகளையும் பார்க்கவும்"
-
-#: src/menu.h:289
-msgid "_Reversed Order"
-msgstr "தலைகீழ் வரிசை"
-
-#: src/menu.h:289
-msgid "Reverse the list order"
-msgstr "பட்டியல் வரிசையை தலைகீழாக்கு"
-
-#: src/menu.h:313
-msgid "_Toolbar"
-msgstr "கருவிப்பட்டை"
-
-#: src/menu.h:313
-msgid "View the main toolbar"
-msgstr "முக்கிய கருவிப்பட்டையை பார்"
-
-#: src/menu.h:319
-msgid "Stat_usbar"
-msgstr "நிலைப்பட்டி"
-
-#: src/menu.h:319
-msgid "View the statusbar"
-msgstr "நிலைப்பட்டியை பார்க்கவும்"
-
-#: src/menu.h:327
-msgid "_Stop"
-msgstr "நிறுத்து"
-
-#: src/menu.h:327 src/toolbar.h:76
-msgid "Stop current operation"
-msgstr "இந்த செயலை நிறுத்தவும்"
-
-#: src/menu.h:333
-msgid "_Reload"
-msgstr "மீண்டும்"
-
-#: src/menu.h:333
-msgid "Reload current archive"
-msgstr "இந்த காப்பகத்தை மீள்ஏற்று"
-
-#: src/menu.h:344
-msgid "_Arrange Files"
-msgstr "கோப்புகளை ஒழுங்குபடுத்து"
-
-#: src/menu.h:349
-msgid "_Last Output"
-msgstr "கடைசி வெளியீடு"
-
-#: src/menu.h:349
-msgid "View the output produced by the last executed command"
-msgstr "¸¨¼º¢Â¡¸ þÂì¸¢Â ¸ð¼¨ÇÂ¢ý ¦ÅÇ¢Â£ð¨¼ô À¡÷ì¸×õ"
-
-#: src/menu.h:362
-msgid "_Contents"
-msgstr "_உள்ளடக்கங்கள்"
-
-#: src/menu.h:362
-msgid "Display the File Roller Manual"
-msgstr "கோப்பு உருட்டி கையேட்டை காட்டவும்"
-
-#: src/menu.h:368
-msgid "_About"
-msgstr "_பற்றி"
-
-#: src/menu.h:368
-msgid "Information about the program"
-msgstr "நிரலைப்பற்றிய தகவல்"
-
-#: src/menu.h:380
+#: src/ui.h:34
 msgid "_Archive"
 msgstr "காப்பகம்"
 
-#: src/menu.h:381
+#: src/ui.h:35
 msgid "_Edit"
 msgstr "தொகு"
 
-#: src/menu.h:412
-msgid "Open selected files with the standard application"
-msgstr "§¾÷ó¦¾Îì¸ôÀð¼ §¸¡ôÒ¸¨Ç ÀÂýÀ¡ðÊÉ¡ø ¾¢Èì¸×õ"
+#: src/ui.h:37
+msgid "_Help"
+msgstr "(_H)உதவி"
 
-#: src/menu.h:418
-msgid "Open With..."
-msgstr "இதனால் திற..."
+#: src/ui.h:38
+msgid "_Arrange Files"
+msgstr "கோப்புகளை ஒழுங்குபடுத்து"
 
-#: src/toolbar.h:48
-msgid "Open archive"
-msgstr "காப்பகத்தைத் திற"
+#: src/ui.h:39
+msgid "Open R_ecent"
+msgstr "சமீபத்திய¨¾ திற"
 
-#: src/toolbar.h:56
+#: src/ui.h:42
+msgid "_About"
+msgstr "_பற்றி"
+
+#: src/ui.h:43
+msgid "Information about the program"
+msgstr "நிரலைப்பற்றிய தகவல்"
+
+#: src/ui.h:46
+msgid "_Add Files..."
+msgstr "(_A)கோப்புகளை சேர்..."
+
+#: src/ui.h:47 src/ui.h:51
 msgid "Add files to the archive"
 msgstr "காப்பகத்துள் கோப்புகளைச் சேர்"
 
-#: src/toolbar.h:68
-msgid "View"
-msgstr "காட்சி"
+#: src/ui.h:50
+msgid "Add"
+msgstr "சேர்"
 
-#: src/toolbar.h:68
-msgid "View selected file"
-msgstr "தேர்ந்தெடுக்கப்பட்ட கோப்பை பார்"
+#: src/ui.h:54
+msgid "Add a _Folder..."
+msgstr "(_F)அடைவைச்சேர்..."
 
-#: src/toolbar.h:76
-msgid "Stop"
+#: src/ui.h:55
+msgid "Add a folder to the archive"
+msgstr "காப்பகத்துள் அடைவைச்சேர்"
+
+#: src/ui.h:58
+msgid "_Close"
+msgstr "(_C)மூடு"
+
+#: src/ui.h:59
+msgid "Close the current archive"
+msgstr "தற்போதைய காப்பகத்தை மூடு"
+
+#: src/ui.h:62
+msgid "_Contents"
+msgstr "_உள்ளடக்கங்கள்"
+
+#: src/ui.h:63
+msgid "Display the File Roller Manual"
+msgstr "கோப்பு உருட்டி கையேட்டை காட்டவும்"
+
+#: src/ui.h:67
+msgid "Copy the selection"
+msgstr "தேர்வை நகலெடு"
+
+#: src/ui.h:70
+msgid "Cop_y..."
+msgstr "நகல் செய்..."
+
+#: src/ui.h:71
+msgid "Copy current archive to another folder"
+msgstr "இந்த காப்பகத்தை இன்னொரு அடைவுக்கு நகல்செய்"
+
+#: src/ui.h:74
+msgid "Cu_t"
+msgstr "(_t)வெட்டு"
+
+#: src/ui.h:75
+msgid "Cut the selection"
+msgstr "தேர்வுகளை வெட்டு"
+
+#: src/ui.h:78
+msgid "_Delete..."
+msgstr "நீக்கு..."
+
+#: src/ui.h:79
+msgid "Delete the selection from the archive"
+msgstr "தேர்வுசெய்தவைகளை காப்பகத்திலிருந்து நீக்கு"
+
+#: src/ui.h:82
+msgid "Move to _Trash"
+msgstr "குப்பைக்கு நகர்த்தவும்"
+
+#: src/ui.h:83
+msgid "Move current archive to trash"
+msgstr "இந்த காப்பகத்தை குப்பைக்கு நகர்த்தவும்"
+
+#: src/ui.h:86
+msgid "Dese_lect All"
+msgstr "எல்லா கோப்புகளையும் விட்டுவிடவும்"
+
+#: src/ui.h:87
+msgid "Deselect all files"
+msgstr "எல்லா கோப்புகளையும் விட்டு விடவும்"
+
+#: src/ui.h:90
+msgid "_Extract..."
+msgstr "பிரித்தெடு..."
+
+#: src/ui.h:91 src/ui.h:95
+msgid "Extract files from the archive"
+msgstr "காப்பகத்திலிருந்து கோப்புகளை பிரித்தெடு"
+
+#: src/ui.h:98
+msgid "_Last Output"
+msgstr "கடைசி வெளியீடு"
+
+#: src/ui.h:99
+msgid "View the output produced by the last executed command"
+msgstr "¸¨¼º¢Â¡¸ þÂì¸¢Â ¸ð¼¨ÇÂ¢ý ¦ÅÇ¢Â£ð¨¼ô À¡÷ì¸×õ"
+
+#: src/ui.h:102
+msgid "_Move..."
+msgstr "நகர்த்து..."
+
+#: src/ui.h:103
+msgid "Move current archive to another folder"
+msgstr "இந்த காப்பகத்தை இன்னொரு அடைவுக்கு நகர்த்தவும்"
+
+#: src/ui.h:106
+msgid "_New"
+msgstr "புதியது"
+
+#: src/ui.h:107
+msgid "Create a new archive"
+msgstr "புதிய காப்பகம் உருவாக்கு"
+
+#: src/ui.h:110
+msgid "_Open..."
+msgstr "(_O)திற..."
+
+#: src/ui.h:111 src/ui.h:115
+msgid "Open archive"
+msgstr "காப்பகத்தைத் திற"
+
+#: src/ui.h:118
+msgid "Open Fi_les..."
+msgstr "கோப்புகளை திறக்கவும்..."
+
+#: src/ui.h:119
+msgid "Open selected files with an application"
+msgstr "தேர்ந்தெடுக்கப்பட்ட கோப்புகளை பயன்பாடு ஒன்றினால் திறக்கவும்"
+
+#: src/ui.h:122
+msgid "Pass_word..."
+msgstr "கடவுச்சொல்..."
+
+#: src/ui.h:123
+msgid "Specify a password for this archive"
+msgstr "இந்த காப்பகத்திற்கான கடவுச்சொல்லை குறிப்பிடு"
+
+#: src/ui.h:126 src/window.c:5036
+msgid "_Paste"
+msgstr "(_P)ஒட்டு"
+
+#: src/ui.h:127
+msgid "Paste the clipboard"
+msgstr "தற்காலிக நினைவிடத்தில் ஒட்டு"
+
+#: src/ui.h:130
+msgid "_Properties"
+msgstr "பண்புகள்"
+
+#: src/ui.h:131
+msgid "Show archive properties"
+msgstr "காப்பக பண்புகளை காட்டவும"
+
+#: src/ui.h:134
+msgid "_Quit"
+msgstr "(_Q)வெளிச்செல்"
+
+#: src/ui.h:135
+msgid "Quit the application"
+msgstr "பயன்பாட்டிலிருந்து வெளியேறு"
+
+#: src/ui.h:138
+msgid "_Reload"
+msgstr "மீண்டும்"
+
+#: src/ui.h:139
+msgid "Reload current archive"
+msgstr "இந்த காப்பகத்தை மீள்ஏற்று"
+
+#: src/ui.h:142 src/ui.h:146
+msgid "_Rename..."
+msgstr "_பெயர் மாற்று..."
+
+#: src/ui.h:143
+msgid "Rename the selection"
+msgstr "தேர்விற்கு மறுபெயரிடு"
+
+#: src/ui.h:147
+msgid "Rename current archive"
+msgstr "இந்த காப்பகத்தை பெயர் மாற்று"
+
+#: src/ui.h:150
+msgid "Save _As..."
+msgstr "(_A)எனச்சேமி..."
+
+#: src/ui.h:151
+msgid "Save the current archive with a different name"
+msgstr "தற்போதைய காப்பகத்தை வேறு பெயரில் சேமி"
+
+#: src/ui.h:154
+msgid "Select _All"
+msgstr "அனைத்தையும் தெரிவு செய்க"
+
+#: src/ui.h:155
+msgid "Select all files"
+msgstr "எல்லா கோப்புகளையும் தேர்ந்தெடுக்கவும்"
+
+#: src/ui.h:158
+msgid "_Stop"
 msgstr "நிறுத்து"
 
-#: src/window.c:682
+#: src/ui.h:159
+msgid "Stop current operation"
+msgstr "இந்த செயலை நிறுத்தவும்"
+
+#: src/ui.h:162
+msgid "_Test Integrity"
+msgstr "நாணயத்தன்மையை சோதி"
+
+#: src/ui.h:163
+msgid "Test whether the archive contains errors"
+msgstr "காப்பகத்தில் பிழைகள் உள்ளனவா என்று சோதி"
+
+#: src/ui.h:166
+msgid "_View File"
+msgstr "கோப்பு காட்சி"
+
+#: src/ui.h:167 src/ui.h:171
+msgid "View the selected file"
+msgstr "தேர்ந்தெடுக்கப்பட்ட கோப்பை பார்"
+
+#: src/ui.h:179
+msgid "_Toolbar"
+msgstr "கருவிப்பட்டை"
+
+#: src/ui.h:180
+msgid "View the main toolbar"
+msgstr "முக்கிய கருவிப்பட்டையை பார்"
+
+#: src/ui.h:184
+msgid "Stat_usbar"
+msgstr "நிலைப்பட்டி"
+
+#: src/ui.h:185
+msgid "View the statusbar"
+msgstr "நிலைப்பட்டியை பார்க்கவும்"
+
+#: src/ui.h:189
+msgid "_Reversed Order"
+msgstr "தலைகீழ் வரிசை"
+
+#: src/ui.h:190
+msgid "Reverse the list order"
+msgstr "பட்டியல் வரிசையை தலைகீழாக்கு"
+
+#: src/ui.h:199
+msgid "View All _Files"
+msgstr "எல்லா கோப்புகளையும் பார்க்கவும்"
+
+#: src/ui.h:202
+msgid "View as a F_older"
+msgstr "எல்லா அடைவுகளையும் பார்க்கவும்"
+
+#: src/ui.h:210
+msgid "by _Name"
+msgstr "பெÂÃ¢ன்படி"
+
+#: src/ui.h:211
+msgid "Sort file list by name"
+msgstr "கோப்பு பட்டியலை பெயர்படி அடுக்கவும்"
+
+#: src/ui.h:213
+msgid "by _Size"
+msgstr "அளவுப்படி"
+
+#: src/ui.h:214
+msgid "Sort file list by file size"
+msgstr "கோப்பு பட்டியலை கோப்பு அளவுப்படி அடுக்கவும்"
+
+#: src/ui.h:216
+msgid "by T_ype"
+msgstr "வகைப்படி"
+
+#: src/ui.h:217
+msgid "Sort file list by type"
+msgstr "கோப்புப் பட்டியலை வகைப்படி அடுக்கவும்"
+
+#: src/ui.h:219
+msgid "by _Date modified"
+msgstr "மாற்றப்பட்ட தேதிப்படி"
+
+#: src/ui.h:220
+msgid "Sort file list by modification time"
+msgstr "கோப்புப் பட்டியலை மாற்றிய் நேரப்படி அடுக்கவும்"
+
+#: src/ui.h:222
+msgid "by _Location"
+msgstr "இடப்படி «டுக்கவும்"
+
+#: src/ui.h:223
+msgid "Sort file list by location"
+msgstr "கோப்புப் பட்டியலை  இடத்தைப் பொறுத்து நேரப்படி அடுக்கவும்"
+
+#: src/window.c:698
 msgid "Folder"
 msgstr "அடைவு"
 
-#: src/window.c:847
+#: src/window.c:863
 msgid "[read only]"
 msgstr "[படிக்க மட்டும்]"
 
-#: src/window.c:942
+#: src/window.c:957
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
 msgstr[0] "%d கோப்பு (%s)"
 msgstr[1] ""
 
-#: src/window.c:947
+#: src/window.c:962
 #, c-format
 msgid "%d file selected (%s)"
 msgid_plural "%d files selected (%s)"
 msgstr[0] "%d தேர்வு செய்யப்பட்ட (%s)"
 msgstr[1] ""
 
-#: src/window.c:1363
+#: src/window.c:1385
 msgid "Reading archive"
 msgstr "காப்பகம் படிக்கப்படுகிறது"
 
-#: src/window.c:1369
+#: src/window.c:1391
 msgid "Adding files to archive"
 msgstr "கோப்புகள் காப்பகத்துள் சேர்க்கப்படுகின்றன"
 
-#: src/window.c:1372
+#: src/window.c:1394
 msgid "Extracting files from archive"
 msgstr "காப்பகத்திலிருந்து கோப்புகள் பிரிக்கப்படுகின்றன"
 
-#: src/window.c:1375
+#: src/window.c:1397
 msgid "Testing archive"
 msgstr "காப்பகம் சோதிக்கப்படுகிறது"
 
-#: src/window.c:1378
+#: src/window.c:1400
 msgid "Getting the file list"
 msgstr "கோப்புப் பட்டியல் பெறப்படுகிறது"
 
-#: src/window.c:1384
+#: src/window.c:1407
 msgid "wait please..."
 msgstr "காத்திருக்கவும்..."
 
-#: src/window.c:1441
+#: src/window.c:1484
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "\"%s\" «¨¼¨Å ¸¡ð¼ ÓÊÂÅ¢ø¨Ä"
 
-#: src/window.c:1499
+#: src/window.c:1543
 msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
@@ -922,138 +941,141 @@ msgstr ""
 "இந்த காப்பகம் கடவுச்சொல்லால் பாதுகாக்கப்பட்டுள்ளது\n"
 "தயவுசெய்து கடவுச்சொல்லை குறிப்பிட: திருத்து -> கடவுச்சொல் கட்டளையை பயன்படுத்தவும்"
 
-#: src/window.c:1501
+#: src/window.c:1545
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
-msgstr "குறிப்பிட்ட கடவுச்சொல் செல்லாதும் புதிய கடவுச்சொல்லை திருத்து-> கடவுச்சொல்லை பயன்படுத்தி உள்ளிடவும்"
+msgstr ""
+"குறிப்பிட்ட கடவுச்சொல் செல்லாதும் புதிய கடவுச்சொல்லை திருத்து-> கடவுச்சொல்லை பயன்படுத்தி "
+"உள்ளிடவும்"
 
-#: src/window.c:1506
+#: src/window.c:1550 src/window.c:2169
 msgid "Could not perform the operation"
 msgstr "¦ºÂ¨Äî ¦ºöÂ ÓÊÂÅ¢ø¨Ä"
 
-#: src/window.c:1521
-msgid "Operation stopped"
-msgstr "¦ºÂø ¿¢Úò¾ôÀð¼Ð"
-
-#: src/window.c:1542
+#: src/window.c:1575
 msgid "An error occurred while extracting files."
 msgstr "§¸¡ôÒ¸¨Çô À¢Ã¢ìÌõ§À¡Ð À¢¨Æ ²üÀð¼Ð."
 
-#: src/window.c:1546
+#: src/window.c:1579
 msgid "An error occurred while loading the archive."
 msgstr "¸¡ôÀ¸ò¨¾ ²üÚõ§À¡Ð À¢¨Æ ²üÀð¼Ð."
 
-#: src/window.c:1550
+#: src/window.c:1583
 msgid "An error occurred while deleting files from the archive."
 msgstr "¸¡ôÀ¸ò¾¢Ä¢ÕóÐ §¸¡ôÒ¸¨Ç ¿£ìÌõ§À¡Ð À¢¨Æ ²üÀð¼Ð."
 
-#: src/window.c:1554
+#: src/window.c:1587
 msgid "An error occurred while adding files to the archive."
 msgstr "¸¡ôÀ¸ò¾¢ø §¸¡ôÒ¸¨Ç §º÷ìÌõ§À¡Ð À¢¨Æ ²üÀð¼Ð"
 
-#: src/window.c:1558
+#: src/window.c:1591
 msgid "An error occurred while testing archive."
 msgstr "¸¡ôÀ¸ò¨¾ §º¡¾¢ìÌõ§À¡Ð À¢¨Æ ²üÀð¼Ð."
 
-#: src/window.c:1567
+#: src/window.c:1600
 msgid "Command not found."
 msgstr "¸ð¼¨Ç ¸¢¨¼ì¸Å¢ø¨Ä."
 
-#: src/window.c:1570
+#: src/window.c:1603
 msgid "Command exited abnormally."
 msgstr "¸ð¼¨Ç ÓÈ¢ó¾Ð."
 
-#: src/window.c:1698
+#: src/window.c:1732
 msgid "Test Result"
 msgstr "சோதனை முடிவு"
 
-#: src/window.c:1931
+#: src/window.c:1968
 msgid "You don't have the right permissions."
 msgstr "¯í¸ÙìÌ §¾¨ÅÂ¡É «ÛÁ¾¢¸û þø¨Ä."
 
-#: src/window.c:1968
+#: src/window.c:2006
 msgid "You can't add an archive to itself."
 msgstr "´Õ ¸¡ôÀ¸ò¨¾ «¾Ûû§Ç§Â §º÷ì¸ ÓÊÂ¡Ð."
 
-#: src/window.c:2145
+#: src/window.c:2203
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "இந்த கோப்பை தற்போதைய காப்பகத்தில் சேர்க்கவேண்டுமா அல்லது புதிய காப்பகத்தை திறக்க வேண்டுமா?"
 
-#: src/window.c:2182
+#: src/window.c:2240
 msgid "Do you want to create a new archive with these files?"
 msgstr "þó¾ §¸¡ôÒ¸¨Çì ¦¸¡ñ¼ Ò¾¢Â ¸¡ôÀ¸ò¨¾ ¯ÕÅ¡ì¸ §ÅñÎÁ¡?"
 
-#: src/window.c:2185
+#: src/window.c:2243
 msgid "Create _Archive"
 msgstr "காப்பகம் உருவாக்கு"
 
-#: src/window.c:2509
+#: src/window.c:2564
 msgid "Size"
 msgstr "அளவு"
 
-#: src/window.c:2510
+#: src/window.c:2565
 msgid "Type"
 msgstr "þனம்"
 
-#: src/window.c:2511
+#: src/window.c:2566
 msgid "Date Modified"
 msgstr "மாற்றிய் தேதி"
 
-#: src/window.c:2512
+#: src/window.c:2567
 msgid "Location"
 msgstr "இடம்"
 
-#: src/window.c:2519
+#: src/window.c:2574
 msgid "Name"
 msgstr "பெயர்"
 
-#: src/window.c:3084
+#: src/window.c:3031
+#, c-format
+msgid "Open '%s'"
+msgstr "திற '%s'"
+
+#: src/window.c:3350
 msgid "Go to the previous visited location"
 msgstr "முந்தைÂ §À¡É இடத்திற்குப் போகவும்"
 
-#: src/window.c:3092
+#: src/window.c:3358
 msgid "Go to the next visited location"
 msgstr "அடுத்து போன இடத்துக்குப் போகவும்"
 
-#: src/window.c:3100
+#: src/window.c:3366
 msgid "Go up one level"
 msgstr "ஒரு நிலை மேலே போகவும்"
 
-#: src/window.c:3108
+#: src/window.c:3374
 msgid "Go to the home location"
 msgstr "இல்ல இடத்துக்குப் போகவும்"
 
 #. current location
-#: src/window.c:3127
+#: src/window.c:3393
 msgid "Location:"
 msgstr "இடம்:"
 
-#: src/window.c:3734
+#: src/window.c:3904
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "\"%s\" ³ò ¾¢Èì¸ ÓÊÂÅ¢ø¨Ä"
 
-#: src/window.c:3789
+#: src/window.c:3962
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "¸¡ôÀ¸õ \"%s\"³ §ºÁ¢ì¸ ÓÊÂÅ¢ø¨Ä"
 
-#: src/window.c:4649
+#: src/window.c:4856
 msgid "The new name is void."
 msgstr "புதிய பெயர் வெற்றாக உள்ளது."
 
-#: src/window.c:4649 src/window.c:4653 src/window.c:4662
+#: src/window.c:4856 src/window.c:4860 src/window.c:4869
 msgid "Please use a different name."
 msgstr "இன்னொரு பெயரை பயன்படுத்தவும்."
 
-#: src/window.c:4653
+#: src/window.c:4860
 msgid "The new name is equal to the old one."
 msgstr "Ò¾¢Â ¦ÀÂ÷ À¨ÆÂ¾üÌ ºÁÁ¡¸ ¯ûÇÐ."
 
-#: src/window.c:4662
+#: src/window.c:4869
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -1064,27 +1086,35 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/window.c:4718
+#: src/window.c:4925
 msgid "New folder name"
 msgstr "புதிய் அடைவு பெயர்"
 
-#: src/window.c:4718
+#: src/window.c:4925
 msgid "New file name"
 msgstr "புதிய கோப்பு பெயர்"
 
-#: src/window.c:4739
+#: src/window.c:4946
 msgid "Could not rename the folder"
 msgstr "அடைவுக்கு வேறு பெயரிடமுடியவில்லை"
 
-#: src/window.c:4739
+#: src/window.c:4946
 msgid "Could not rename the file"
 msgstr "கோப்புக்கு வேறு பெயரிடமுடியவில்லை"
 
-#: src/window.c:5367
+#: src/window.c:5031
+msgid "Paste Selection"
+msgstr "தேர்ந்தெடுத்தவைகளை ஒட்டு"
+
+#: src/window.c:5032
+msgid "Destination folder"
+msgstr "இலக்கு அடைவு"
+
+#: src/window.c:5614
 msgid "Add files to an archive"
 msgstr "காப்பகத்துள் கோப்புகளைச் சேர்"
 
-#: src/window.c:5392
+#: src/window.c:5641
 msgid "Extract archive"
 msgstr "காப்பகத்தை பிரித்தெடு"
 
