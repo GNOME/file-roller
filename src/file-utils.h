@@ -43,6 +43,9 @@ gboolean            path_is_dir                  (const gchar *s);
 
 gboolean            dir_is_empty                 (const gchar *s);
 
+gboolean            path_in_path                 (const char  *path_src,
+						  const char  *path_dest);
+
 GnomeVFSFileSize    get_file_size                (const gchar *s);
 
 time_t              get_file_mtime               (const gchar *s);

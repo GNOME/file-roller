@@ -924,7 +924,7 @@ get_wildcard_file_list_cb (GList *files, gpointer data)
 		for (scan = files; scan; scan = scan->next) {
 			char *full_path = scan->data;
 			
-			if (strncmp (full_path, gfl_data->directory, base_len) == 0) {
+			if (path_in_path (gfl_data->directory, full_path)) {
 				char *rel_path = g_strdup (full_path + base_len + 1);
 				rel_files = g_list_prepend (rel_files, rel_path);
 			}
@@ -987,7 +987,7 @@ get_directory_file_list_cb (GList *files, gpointer data)
 		for (scan = files; scan; scan = scan->next) {
 			char *full_path = scan->data;
 			
-			if (strncmp (full_path, gfl_data->base_dir, base_len) == 0) {
+			if (strncmp (gfl_data->base_dir, full_path, base_len) == 0) {
 				char *rel_path = g_strdup (full_path + base_len + 1);
 				rel_files = g_list_prepend (rel_files, rel_path);
 			}

@@ -1,3 +1,16 @@
+2004-04-08  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/dlg-add.c (aod_apply_cb, save_options_cb): remember the last
+	used options and use the name as the default value when saving
+	the options.
+
+	* src/file-list.c (get_directory_file_list_cb)
+	(get_wildcard_file_list_cb): 
+	* src/window.c (_window_get_current_dir_list): 
+	(_window_add_to_recent_list): use the function path_in_path.
+	
+	* src/file-utils.c (path_in_path): new function.
+
 2004-04-09  Guntupalli Karunakar  <karunakar@freedomink.org>
 
         * configure.in: Added "gu" (Gujarati) to ALL_LINGUAS.

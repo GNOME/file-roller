@@ -989,13 +989,22 @@ file_list_remove_from_pattern (GList      **list,
 
 		utf8_name = g_filename_to_utf8 (file_name_from_path (path), 
 						-1, NULL, NULL, NULL);
+
+		if (strcmp ("lt-gthumb", utf8_name) == 0)
+			g_print ("%s <--> %s\n", pattern, utf8_name);
+
 		if (match_patterns (patterns, utf8_name, FNM_CASEFOLD)) {
 			*list = g_list_remove_link (*list, scan);
 			g_free (scan->data);
 			g_list_free (scan);
 			scan = *list;
-		} else
+			if (strcmp ("lt-gthumb", utf8_name) == 0)
+				g_print ("Y\n");
+		} else {
 			scan = scan->next;
+			if (strcmp ("lt-gthumb", utf8_name) == 0)
+				g_print ("N\n");
+		}
 
 		g_free (utf8_name);
 	}

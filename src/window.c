@@ -164,14 +164,16 @@ _window_get_current_dir_list (FRWindow *window)
 	GList      *scan;
 	GList      *dir_list = NULL;
 	GHashTable *names_hash = NULL;
+	const char *current_dir = window_get_current_location (window);
+	int         current_dir_l = strlen (current_dir);
 
 	names_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
 	scan = window->archive->command->file_list;
 	for (; scan; scan = scan->next) {
 		FileData   *fdata = scan->data;
-		const char *current_dir = window_get_current_location (window);
-		if (strncmp (fdata->full_path, current_dir, strlen (current_dir)) == 0) {
+
+		if (strncmp (current_dir, fdata->full_path, current_dir_l) == 0) {
 			if (g_hash_table_lookup (names_hash, fdata->list_name) != NULL) 
 				continue;
 			g_hash_table_insert (names_hash, fdata->list_name, GINT_TO_POINTER (1));
@@ -1403,7 +1405,7 @@ _window_add_to_recent_list (FRWindow *window,
 	/* avoid adding temporary archives to the list. */
 
 	tmp = g_strconcat (g_get_tmp_dir (), "/file-roller", NULL);
-	if (strncmp (tmp, filename, strlen (tmp)) == 0) {
+	if (path_in_path (tmp, filename)) {
 		g_free (tmp);
 		return;
 	}
@@ -2021,6 +2023,7 @@ drag_drop_add_file_list (FRWindow *window)
 		window_archive_add_directory (window,
 					      file_name_from_path (path),
 					      base_dir,
+					      NULL,
 					      window->update_dropped_files,
 					      window->password,
 					      window->compression);
@@ -3960,22 +3963,27 @@ window_archive_add_with_wildcard (FRWindow      *window,
 				  const char    *include_files,
 				  const char    *exclude_files,
 				  const char    *base_dir,
+				  const char    *dest_dir,
 				  gboolean       update,
 				  gboolean       recursive,
 				  gboolean       follow_links,
 				  const char    *password,
 				  FRCompression  compression)
 {
+	const char *real_dest_dir;
+
 	g_return_if_fail (window->vd_handle == NULL);
 
 	_action_started (window->archive, FR_ACTION_GET_LIST, window);
+
+	real_dest_dir = (dest_dir == NULL)? window_get_current_location (window): dest_dir;
 
 	fr_process_clear (window->archive->process);
 	window->vd_handle = fr_archive_add_with_wildcard (window->archive,
 							  include_files,
 							  exclude_files,
 							  base_dir,
-							  window_get_current_location (window),
+							  real_dest_dir,
 							  update,
 							  recursive,
 							  follow_links,
@@ -3990,19 +3998,24 @@ void
 window_archive_add_directory (FRWindow      *window,
 			      const char    *directory,
 			      const char    *base_dir,
+			      const char    *dest_dir,
 			      gboolean       update,
 			      const char    *password,
 			      FRCompression  compression)
 {
+	const char *real_dest_dir;
+
 	g_return_if_fail (window->vd_handle == NULL);
 
 	_action_started (window->archive, FR_ACTION_GET_LIST, window);
+
+	real_dest_dir = (dest_dir == NULL)? window_get_current_location (window): dest_dir;
 
 	fr_process_clear (window->archive->process);
 	window->vd_handle = fr_archive_add_directory (window->archive, 
 						      directory,
 						      base_dir, 
-						      window_get_current_location (window),
+						      real_dest_dir,
 						      update,
 						      password,
 						      compression,
@@ -4316,10 +4329,11 @@ get_dir_list (FRWindow *window,
 	for (; scan; scan = scan->next) {
 		FileData *fd = scan->data;
 
-		if (strncmp (fd->full_path, dirname, dirname_l) == 0)
+		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
 			list = g_list_prepend (list, 
 					       g_strdup (fd->original_path));
 	}
+
 	g_free (dirname);
 
 	return g_list_reverse (list);

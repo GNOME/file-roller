@@ -43,6 +43,8 @@
 
 
 #define BUF_SIZE 4096
+#define MAX_PATTERNS 128
+
 
 gboolean
 path_is_file (const gchar *path)
@@ -119,6 +121,25 @@ dir_is_empty (const gchar *path)
 	closedir (dp);
 
 	return TRUE;
+}
+
+
+/* Check whether the path_src is contained in path_dest */
+gboolean
+path_in_path (const char  *path_src,
+	      const char  *path_dest)
+{
+	int path_src_l, path_dest_l;
+
+	if ((path_src == NULL) || (path_dest == NULL))
+		return FALSE;
+	
+	path_src_l = strlen (path_src);
+	path_dest_l = strlen (path_dest);
+	
+	return ((path_dest_l > path_src_l)
+		&& (strncmp (path_src, path_dest, path_src_l) == 0)
+		&& ((path_src_l == 1) || (path_dest[path_src_l] == '/')));
 }
 
 
@@ -735,7 +756,7 @@ search_util_get_patterns (const char *pattern_string)
 	char **patterns;
 	int    i;
 	
-	patterns = g_utf8_strsplit (pattern_string, ";", 10);
+	patterns = g_utf8_strsplit (pattern_string, ";", MAX_PATTERNS);
 	for (i = 0; patterns[i] != NULL; i++) 
 		patterns[i] = g_utf8_strstrip (patterns[i]);
 	
