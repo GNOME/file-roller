@@ -198,6 +198,7 @@ fr_command_iso_init (FRCommand *comm)
 	comm->propExtractCanJunkPaths      = FALSE;
 	comm->propPassword                 = FALSE;
 	comm->propTest                     = FALSE;
+	comm->propCanExtractAll            = FALSE;
 }
 
 

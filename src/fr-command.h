@@ -64,6 +64,7 @@ struct _FRCommand
 	uint propExtractCanJunkPaths : 1;
 	uint propPassword : 1;
 	uint propTest : 1;
+	uint propCanExtractAll : 1;
 
 	/* used by the progress signal */
 

@@ -1492,6 +1492,7 @@ fr_archive_extract (FRArchive  *archive,
 	gboolean  extract_all;
 	gboolean  use_base_dir;
 	gboolean  move_to_dest_dir;
+	gboolean  file_list_created = FALSE;
 
 	g_return_if_fail (archive != NULL);
 
@@ -1500,10 +1501,23 @@ fr_archive_extract (FRArchive  *archive,
 	/* if a command supports all the requested options use 
 	 * fr_command_extract directly. */
 
+	extract_all = (file_list == NULL);
+	if (extract_all && ! archive->command->propCanExtractAll) {
+		GList *scan;
+
+		scan = archive->command->file_list;
+		for (; scan; scan = scan->next) {
+			FileData *fdata = scan->data;
+			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
+		}
+
+		file_list_created = TRUE;
+	}
+
 	use_base_dir = ! ((base_dir == NULL) 
 			  || (strcmp (base_dir, "") == 0)
 			  || (strcmp (base_dir, "/") == 0));
-		
+	
 	if (! use_base_dir
 	    && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
 	    && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
@@ -1520,6 +1534,9 @@ fr_archive_extract (FRArchive  *archive,
 				   password);
 		path_list_free (e_file_list);
 
+		if (file_list_created) 
+			path_list_free (file_list);
+
 		return;
 	}
 
@@ -1529,8 +1546,7 @@ fr_archive_extract (FRArchive  *archive,
 			    || ((junk_paths 
 				 && ! archive->command->propExtractCanJunkPaths)));
 
-	extract_all = (file_list == NULL);
-	if (extract_all) {
+	if (extract_all && ! file_list_created) {
 		GList *scan;
 
 		scan = archive->command->file_list;
@@ -1538,6 +1554,8 @@ fr_archive_extract (FRArchive  *archive,
 			FileData *fdata = scan->data;
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}
+
+		file_list_created = TRUE;
 	}
 
 	filtered = NULL;
@@ -1648,7 +1666,7 @@ fr_archive_extract (FRArchive  *archive,
 	if (filtered != NULL)
 		g_list_free (filtered);
 
-	if (extract_all) 
+	if (file_list_created) 
 		/* the list has been created in this function. */
 		path_list_free (file_list);
 }
