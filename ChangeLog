@@ -1,5 +1,11 @@
 2003-11-10  Paolo Bacchilega  <paolo.bacch@tin.it>
 
+	* src/window.c (drag_drop_add_file_list) 
+	(window_archive_add_with_wildcard, window_archive_add_directory): 
+	* src/dlg-add.c (open_file_ok_cb): 
+	* src/fr-archive.c (fr_archive_add, create_tmp_base_dir): add
+	files and folders to the current directory (bug #104816).
+
 	* src/dlg-preferences.c (dlg_preferences): instantly apply
 	compression level changes.
 

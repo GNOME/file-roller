@@ -679,6 +679,56 @@ fr_archive_rename (FRArchive  *archive,
 /* -- add -- */
 
 
+static char *
+create_tmp_base_dir (const char *base_dir,
+		     const char *dest_path) 
+{
+	char *dest_dir;
+	char *temp_dir;
+	char *tmp;
+	char *parent_dir, *dir;
+
+	if ((dest_path == NULL) 
+	    || (*dest_path == '\0') 
+	    || (strcmp (dest_path, "/") == 0)) 
+		return g_strdup (base_dir);
+
+	dest_dir = g_strdup (dest_path);
+	if (dest_dir[strlen (dest_dir) - 1] == G_DIR_SEPARATOR)
+		dest_dir[strlen (dest_dir) - 1] = 0;
+
+#ifdef DEBUG
+	g_print ("base_dir: %s\n", base_dir);
+	g_print ("dest_dir: %s\n", dest_dir);
+#endif
+
+	temp_dir = get_temp_work_dir_name ();
+	tmp = remove_level_from_path (dest_dir);
+	parent_dir =  g_build_filename (temp_dir, tmp, NULL);
+	g_free (tmp);
+
+	ensure_dir_exists (parent_dir, 0700);
+
+#ifdef DEBUG
+	g_print ("mkdir %s\n", parent_dir);
+#endif
+
+	g_free (parent_dir);
+
+	dir = g_build_filename (temp_dir, "/", dest_dir, NULL);
+	symlink (base_dir, dir);
+
+#ifdef DEBUG
+	g_print ("symlink %s --> %s\n", dir, base_dir);
+#endif
+
+	g_free (dir);
+	g_free (dest_dir);
+
+	return temp_dir;
+}
+
+
 /* Note: all paths unescaped. */
 static FileData *
 find_file_in_archive (FRArchive *archive, 
@@ -756,14 +806,17 @@ void
 fr_archive_add (FRArchive     *archive, 
 		GList         *file_list, 
 		const char    *base_dir,
+		const char    *dest_dir,
 		gboolean       update,
 		const char    *password,
 		FRCompression  compression)
 {
-	GList    *new_file_list;
-	gboolean  free_new_file_list;
+	GList    *new_file_list = NULL;
+	gboolean  base_dir_created = FALSE;
+	gboolean  new_file_list_created = FALSE;
 	GList    *e_file_list;
 	GList    *scan;
+	char     *tmp_base_dir = NULL;
 
 	if (file_list == NULL)
 		return;
@@ -771,22 +824,47 @@ fr_archive_add (FRArchive     *archive,
 	if (archive->read_only)
 		return;
 
+	tmp_base_dir = g_strdup (base_dir);
+
+	if ((dest_dir != NULL) && (*dest_dir != '\0') && (strcmp (dest_dir, "/") != 0)) {
+		const char *rel_dest_dir = dest_dir;
+
+		tmp_base_dir = create_tmp_base_dir (base_dir, dest_dir);
+		base_dir_created = TRUE;
+
+		if (dest_dir[0] == G_DIR_SEPARATOR)
+			rel_dest_dir = dest_dir + 1;
+
+		new_file_list_created = TRUE;
+		new_file_list = NULL;
+		for (scan = file_list; scan != NULL; scan = scan->next) {
+			char *filename = scan->data;
+			new_file_list = g_list_prepend (new_file_list, g_build_filename (rel_dest_dir, filename, NULL));
+		}
+	} else
+		new_file_list = file_list;
+
 	fr_archive_stoppable (archive, FALSE);
 
 	/* if the command cannot update,  get the list of files that are 
 	 * newer than the ones in the archive. */
 
-	free_new_file_list = FALSE;
 	if (update && ! archive->command->propAddCanUpdate) {
-		free_new_file_list = TRUE;
-		new_file_list = newer_files_only (archive, file_list, base_dir);
-	} else
-		new_file_list = file_list;
+		GList *tmp_file_list = new_file_list;
+		new_file_list = newer_files_only (archive, tmp_file_list, tmp_base_dir);
+		if (new_file_list_created)
+			path_list_free (tmp_file_list);
+		new_file_list_created = TRUE;
+	} 
 
 	if (new_file_list == NULL) {
 #ifdef DEBUG
 		g_print ("nothing to update.\n");
 #endif
+
+		if (base_dir_created) 
+			rmdir_recursive (tmp_base_dir);
+		g_free (tmp_base_dir);
 
 		archive->process->error.type = FR_PROC_ERROR_NONE;
 		g_signal_emit_by_name (G_OBJECT (archive->process), 
@@ -849,7 +927,7 @@ fr_archive_add (FRArchive     *archive,
 		prev->next = NULL;
 		fr_command_add (archive->command, 
 				chunk_list, 
-				base_dir, 
+				tmp_base_dir, 
 				update,
 				password,
 				compression);
@@ -857,10 +935,22 @@ fr_archive_add (FRArchive     *archive,
 	}
 
 	path_list_free (e_file_list);
-	if (free_new_file_list)
+	if (new_file_list_created)
 		g_list_free (new_file_list);
 
 	fr_command_recompress (archive->command, compression);
+
+	if (base_dir_created) { /* remove the temp dir */
+		fr_process_begin_command (archive->process, "rm");
+		fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+		fr_process_set_sticky (archive->process, TRUE);
+		fr_process_add_arg (archive->process, "-rf");
+		fr_process_add_arg (archive->process, tmp_base_dir);
+		fr_process_end_command (archive->process);
+
+	}
+	g_free (tmp_base_dir);
+
 	fr_process_start (archive->process);
 }
 
@@ -904,6 +994,7 @@ typedef struct {
 	FRArchive     *archive;
         char          *exclude_files;
 	char          *base_dir;
+	char          *dest_dir;
 	gboolean       update;
 	char          *password;
 	FRCompression  compression;
@@ -925,6 +1016,7 @@ add_with_wildcard__step2 (GList *file_list, gpointer data)
 	fr_archive_add (aww_data->archive,
 			file_list,
 			aww_data->base_dir,
+			aww_data->dest_dir,
 			aww_data->update,
 			aww_data->password,
 			aww_data->compression);
@@ -942,6 +1034,7 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 			      const char    *include_files,
 			      const char    *exclude_files,
 			      const char    *base_dir,
+			      const char    *dest_dir,
 			      gboolean       update,
 			      gboolean       recursive,
 			      gboolean       follow_links,
@@ -964,6 +1057,7 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 	aww_data = g_new0 (AddWithWildcardData, 1);
 	aww_data->archive = archive;
 	aww_data->base_dir = g_strdup (base_dir);
+	aww_data->dest_dir = g_strdup (dest_dir);
 	aww_data->update = update;
 	aww_data->password = g_strdup (password);
 	aww_data->compression = compression;
@@ -991,6 +1085,7 @@ typedef struct {
 	FRArchive     *archive;
 	char          *directory;
 	char          *base_dir;
+	char          *dest_dir;
 	gboolean       update;
 	char          *password;
 	FRCompression  compression;
@@ -1010,6 +1105,7 @@ add_directory__step2 (GList *file_list, gpointer data)
 	fr_archive_add (ad_data->archive,
 			file_list,
 			ad_data->base_dir,
+			ad_data->dest_dir,
 			ad_data->update,
 			ad_data->password,
 			ad_data->compression);
@@ -1029,6 +1125,7 @@ VisitDirHandle *
 fr_archive_add_directory (FRArchive     *archive, 
 			  const char    *directory,
 			  const char    *base_dir,
+			  const char    *dest_dir,
 			  gboolean       update,
 			  const char    *password,
 			  FRCompression  compression,
@@ -1047,6 +1144,7 @@ fr_archive_add_directory (FRArchive     *archive,
 	ad_data->archive = archive;
 	ad_data->directory = g_strdup (directory);
 	ad_data->base_dir = g_strdup (base_dir);
+	ad_data->dest_dir = g_strdup (dest_dir);
 	ad_data->update = update;
 	ad_data->password = g_strdup (password);
 	ad_data->compression = compression;
@@ -1382,10 +1480,7 @@ fr_archive_extract (FRArchive  *archive,
 		char *temp_dir;
 		char *e_temp_dir;
 
-		temp_dir = g_strdup_printf ("%s%s%d",
-					    g_get_tmp_dir (),
-					    "/file-roller.",
-					    getpid ());
+		temp_dir = get_temp_work_dir_name ();
 		ensure_dir_exists (temp_dir, 0700);
 		extract_in_chunks (archive->command,
 				   e_filtered,
@@ -1394,7 +1489,6 @@ fr_archive_extract (FRArchive  *archive,
 				   skip_older,
 				   junk_paths,
 				   password);
-
 		move_files_in_chunks (archive, 
 				      e_filtered, 
 				      temp_dir, 

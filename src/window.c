@@ -1561,11 +1561,9 @@ _action_performed (FRArchive   *archive,
 
 		if (window->adding_dropped_files) {
 			/* continue adding dropped files. */
-			if (window->dropped_file_list != NULL) {
-				drag_drop_add_file_list (window);
-				return;
-			}
-
+			drag_drop_add_file_list (window);
+			return;
+			
 		} else {
 			_window_add_to_recent (window, window->archive_filename);
 			
@@ -1604,6 +1602,7 @@ _action_performed (FRArchive   *archive,
 				  "*",
 				  NULL,
 				  window->convert_data.temp_dir,
+				  NULL,
 				  FALSE,
 				  TRUE,
 				  FALSE,
@@ -1914,6 +1913,7 @@ drag_drop_add_file_list (FRWindow *window)
 		fr_archive_add (archive,
 				only_names_list,
 				first_basedir,
+				window->current_dir,
 				window->update_dropped_files,
 				window->password,
 				window->compression);
@@ -1924,7 +1924,7 @@ drag_drop_add_file_list (FRWindow *window)
 		return;
 	}
 	g_free (first_basedir);
-	
+
 	/* ...else call fr_command_add for each file.  This is needed to add
 	 * files without path info. */
 
@@ -3716,6 +3716,7 @@ window_archive_add_with_wildcard (FRWindow      *window,
 							  include_files,
 							  exclude_files,
 							  base_dir,
+							  window->current_dir,
 							  update,
 							  recursive,
 							  follow_links,
@@ -3745,6 +3746,7 @@ window_archive_add_directory (FRWindow      *window,
 	window->vd_handle = fr_archive_add_directory (window->archive, 
 						      directory,
 						      base_dir, 
+						      window->current_dir,
 						      update,
 						      password,
 						      compression,

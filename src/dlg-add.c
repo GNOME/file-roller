@@ -174,6 +174,7 @@ open_file_ok_cb (GtkWidget *w,
 				fr_archive_add (window->archive,
 						files,
 						base_dir,
+						window->current_dir,
 						update,
 						window->password,
 						window->compression);
