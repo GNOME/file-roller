@@ -455,12 +455,13 @@ save_session (GnomeClient *client)
 		FRWindow *window = scan->data;
 		char     *key;
 
+		key = g_strdup_printf ("Session/archive%d", i);
+
 		if ((window->archive == NULL) 
 		    || (window->archive->filename == NULL))
-			continue;
-
-		key = g_strdup_printf ("Session/archive%d", i);
-		gnome_config_set_string (key, window->archive->filename);
+			gnome_config_set_string (key, "");
+		else
+			gnome_config_set_string (key, window->archive->filename);
 		g_free (key);
 
 		i++;
@@ -573,7 +574,8 @@ load_session (void)
 
 		window = window_new ();
 		gtk_widget_show (window->app);
-		window_archive_open (window, filename, GTK_WINDOW (window->app));
+		if (strlen (filename) != 0)
+			window_archive_open (window, filename, GTK_WINDOW (window->app));
 
 		g_free (filename);
 	}
