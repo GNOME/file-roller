@@ -28,6 +28,7 @@
 #include <glade/glade.h>
 #include "file-utils.h"
 #include "fr-process.h"
+#include "fr-stock.h"
 #include "gconf-utils.h"
 #include "window.h"
 #include "typedefs.h"
@@ -115,6 +116,7 @@ int main (int argc, char **argv)
                 g_error ("Cannot initialize the Virtual File System.");
 
 	glade_gnome_init ();
+	fr_stock_init ();
 	init_session (argv);
 	initialize_data ();
 	prepare_app (pctx);

@@ -348,7 +348,6 @@ new_archive_cb (GtkWidget *widget,
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
-	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show_all (file_sel);
 }
 
@@ -515,7 +514,6 @@ save_as_archive_cb (GtkWidget *widget,
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show_all (file_sel);
 }
 
@@ -549,8 +547,6 @@ open_file_response_cb (GtkWidget *w,
         if (path == NULL)
                 return;
 
-	g_print ("[-1]\n");
-
 	if (window_archive_open (window, path, GTK_WINDOW (file_sel)))
 		gtk_widget_destroy (file_sel);
 
@@ -562,10 +558,27 @@ void
 open_archive_cb (GtkWidget *widget, 
 		 void      *data)
 {
-	GtkWidget *file_sel;
-	FRWindow  *window = data;
-
-	g_print ("[-2]\n");
+	static const char * open_mime_type[] = {
+		"application/x-tar",
+		"application/x-compressed-tar",
+		"application/x-bzip-compressed-tar",
+		"application/x-arj",
+		"application/zip",
+		"application/x-java-archive",
+		"application/x-lha",
+		"application/x-rar",
+		"application/x-rar-compressed",
+		"application/x-stuffit",
+		"application/x-gzip",
+		"application/x-bzip",
+		"application/x-compress",
+		"application/x-lzop",
+		"application/x-zoo",
+	};
+	GtkWidget     *file_sel;
+	FRWindow      *window = data;
+	GtkFileFilter *filter;
+	int            i;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Open"),
 					        NULL,
@@ -577,6 +590,27 @@ open_archive_cb (GtkWidget *widget,
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
 
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All archives"));
+	for (i = 0; i < G_N_ELEMENTS (open_mime_type); i++)
+		gtk_file_filter_add_mime_type (filter, open_mime_type[i]);
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("All files"));
+	gtk_file_filter_add_pattern (filter, "*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+
+	for (i = 1; i < G_N_ELEMENTS (type_desc); i++) {
+		char *pattern;
+		filter = gtk_file_filter_new ();
+		gtk_file_filter_set_name (filter, _(type_desc[i].name));
+		pattern = g_strconcat ("*", type_desc[i].ext, NULL);
+		gtk_file_filter_add_pattern (filter, pattern);
+		g_free (pattern);
+		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
+	}
 
 	/**/
 
@@ -593,7 +627,6 @@ open_archive_cb (GtkWidget *widget,
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show (file_sel);
 }
 
@@ -762,7 +795,6 @@ copy_or_move_archive (FRWindow *window,
 			  data);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 400);
 	gtk_widget_show (file_sel);
 }
 

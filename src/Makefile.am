@@ -89,6 +89,8 @@ file_roller_SOURCES = 			\
 	fr-command-zoo.h		\
 	fr-error.c			\
 	fr-error.h			\
+	fr-stock.c			\
+	fr-stock.h			\
 	fr-process.c			\
 	fr-process.h			\
 	gconf-utils.c			\

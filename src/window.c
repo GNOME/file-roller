@@ -42,6 +42,7 @@
 #include "eggtreemultidnd.h"
 #include "ephy-ellipsizing-label.h"
 #include "fr-archive.h"
+#include "fr-stock.h"
 #include "file-data.h"
 #include "file-utils.h"
 #include "window.h"
@@ -2421,33 +2422,6 @@ file_list_drag_data_get  (GtkWidget          *widget,
 /* -- window_new -- */
 
 
-static GtkWidget *
-create_icon (const guint8 rgba_data [])
-{
-	GtkWidget *image;
-	GdkPixbuf *pixbuf;
-	int        max_size;
-
-	pixbuf = gdk_pixbuf_new_from_inline (-1, rgba_data, FALSE, NULL);
-
-	if (pixbuf == NULL)
-		return NULL;
-
-	max_size = MAX (gdk_pixbuf_get_width (pixbuf), gdk_pixbuf_get_height (pixbuf));
-	if (icon_size != max_size) {
-		double     scale = (double) icon_size / max_size;
-		GdkPixbuf *scaled_pixbuf = scale_icon (pixbuf, &scale);
-		g_object_unref (pixbuf);
-		pixbuf = scaled_pixbuf;
-	}
-
-	image = gtk_image_new_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
-
-	return image;
-}
-
-
 static gboolean
 key_press_cb (GtkWidget   *widget, 
               GdkEventKey *event,
@@ -3155,7 +3129,7 @@ window_new ()
 					    _("Add"), 
 					    _("Add files to the archive"),
 					    NULL, 
-					    create_icon (add_pixbuf),
+					    gtk_image_new_from_stock (FR_STOCK_ADD, GTK_ICON_SIZE_LARGE_TOOLBAR),
 					    GTK_SIGNAL_FUNC (add_cb), 
 					    window,
 					    TOOLBAR_SEP1 + i++);
@@ -3166,7 +3140,7 @@ window_new ()
 					    _("Extract"), 
 					    _("Extract files from the archive"),
 					    NULL, 
-					    create_icon (extract_pixbuf),
+					    gtk_image_new_from_stock (FR_STOCK_EXTRACT, GTK_ICON_SIZE_LARGE_TOOLBAR),
 					    GTK_SIGNAL_FUNC (dlg_extract), 
 					    window,
 					    TOOLBAR_SEP1 + i++);
@@ -3177,7 +3151,7 @@ window_new ()
 					    _("View"), 
 					    _("View selected file"),
 					    NULL, 
-					    create_icon (view_pixbuf),
+					    gtk_image_new_from_stock (FR_STOCK_VIEW, GTK_ICON_SIZE_LARGE_TOOLBAR),
 					    GTK_SIGNAL_FUNC (view_or_open_cb), 
 					    window,
 					    TOOLBAR_SEP1 + i++);

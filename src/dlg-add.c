@@ -252,8 +252,11 @@ selection_entry_changed (GtkWidget  *widget,
 	char     *path;
 	gboolean  wildcard;
 
-	/* Need to be fixed */
+	/* FIXME: Need to be fixed */
+	return;
+
 	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->dialog));
+
 	wildcard = ((g_utf8_strchr (path, -1, '*') != NULL) 
 		    || (g_utf8_strchr (path, -1, '?') != NULL));
 	g_free (path);
@@ -506,7 +509,6 @@ add_cb (GtkWidget *widget,
 	g_object_set_data (G_OBJECT (file_sel), "tooltips", tooltips);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
-	gtk_window_set_default_size (GTK_WINDOW (file_sel), 600, 600);
 	gtk_widget_show (file_sel);
 }
 
@@ -653,7 +655,6 @@ load_options_cb (GtkWidget  *w,
 			  opt_sel);
 	
 	gtk_window_set_modal (GTK_WINDOW (opt_sel), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW (opt_sel), 600, 400);
 	gtk_widget_show (opt_sel);
 }
 
@@ -804,7 +805,6 @@ save_options_cb (GtkWidget  *w,
 			  G_CALLBACK (save_options_response_cb), 
 			  opt_sel);
 	
-	gtk_window_set_default_size (GTK_WINDOW (opt_sel), 600, 400);
 	gtk_window_set_modal (GTK_WINDOW (opt_sel), TRUE);
 	gtk_widget_show (opt_sel);
 }
