@@ -27,6 +27,8 @@
 #include "fr-archive.h"
 #include "typedefs.h"
 
+#define GCONF_NOTIFICATIONS 9
+
 enum {
 	COLUMN_FILE_DATA,
 	COLUMN_ICON,
@@ -183,6 +185,8 @@ typedef struct {
 	GList     *batch_action_list;   /* FRActionDescription * elements */
 	GList     *batch_action;        /* current action. */
 	gboolean   extract_interact_use_default_dir;
+
+	guint      cnxn_id[GCONF_NOTIFICATIONS];
 } FRWindow;
 
 

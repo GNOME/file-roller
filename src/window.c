@@ -2751,35 +2751,45 @@ window_new ()
 
 	/* Add notification callbacks. */
 
-	eel_gconf_notification_add (PREF_UI_HISTORY_LEN,
-				    pref_history_len_changed,
-				    window);
-	eel_gconf_notification_add (PREF_UI_TOOLBAR,
-				    pref_view_toolbar_changed,
-				    window);
-	eel_gconf_notification_add (PREF_UI_STATUSBAR,
-				    pref_view_statusbar_changed,
-				    window);
-	eel_gconf_notification_add (PREF_LIST_SHOW_NAME,
-				    pref_show_field_changed,
-				    window);
-	eel_gconf_notification_add (PREF_LIST_SHOW_TYPE,
-				    pref_show_field_changed,
-				    window);
-	eel_gconf_notification_add (PREF_LIST_SHOW_SIZE,
-				    pref_show_field_changed,
-				    window);
-	eel_gconf_notification_add (PREF_LIST_SHOW_TIME,
-				    pref_show_field_changed,
-				    window);
-	eel_gconf_notification_add (PREF_LIST_SHOW_PATH,
-				    pref_show_field_changed,
-				    window);
+	i = 0;
 
-	eel_gconf_notification_add (PREF_LIST_USE_MIME_ICONS,
-				    pref_use_mime_icons_changed,
-				    window);
-
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_UI_HISTORY_LEN,
+					   pref_history_len_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_UI_TOOLBAR,
+					   pref_view_toolbar_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_UI_STATUSBAR,
+					   pref_view_statusbar_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_LIST_SHOW_NAME,
+					   pref_show_field_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_LIST_SHOW_TYPE,
+					   pref_show_field_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_LIST_SHOW_SIZE,
+					   pref_show_field_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_LIST_SHOW_TIME,
+					   pref_show_field_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_LIST_SHOW_PATH,
+					   pref_show_field_changed,
+					   window);
+	window->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_LIST_USE_MIME_ICONS,
+					   pref_use_mime_icons_changed,
+					   window);
+	
 	/* Give focus to the list. */
 
 	gtk_widget_grab_focus (window->list_view);
@@ -2793,6 +2803,17 @@ window_new ()
 
 
 /* -- window_close -- */
+
+
+static void
+_window_remove_notifications (FRWindow *window)
+{
+	int i;
+
+	for (i = 0; i < GCONF_NOTIFICATIONS; i++)
+		if (window->cnxn_id[i] != -1)
+			eel_gconf_notification_remove (window->cnxn_id[i]);
+}
 
 
 static void
@@ -2893,6 +2914,7 @@ window_close (FRWindow *window)
 	}
 
 	_window_free_batch_data (window);
+	_window_remove_notifications (window);
 
 	/* save preferences. */
 

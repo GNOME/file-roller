@@ -27,7 +27,7 @@
 #include "typedefs.h"
 #include "window.h"
 
-#define PREF_INSTALL_SCRIPTS       "/apps/file-roller/install/nautilus_scripts"
+#define PREF_INSTALL_SCRIPTS       "/apps/file-roller/general/install_nautilus_scripts"
 
 #define PREF_LIST_SORT_METHOD      "/apps/file-roller/listing/sort_method"
 #define PREF_LIST_SORT_TYPE        "/apps/file-roller/listing/sort_type"
@@ -43,9 +43,9 @@
 #define PREF_UI_TOOLBAR            "/apps/file-roller/ui/view_toolbar"
 #define PREF_UI_STATUSBAR          "/apps/file-roller/ui/view_statusbar"
 
-#define PREF_EDIT_EDITORS          "/apps/file-roller/edit/editors"
-#define PREF_EXTRACT_VIEW_FOLDER   "/apps/file-roller/extract/view_folder"
-#define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/add/compression_level"
+#define PREF_EDIT_EDITORS          "/apps/file-roller/general/editors"
+#define PREF_EXTRACT_VIEW_FOLDER   "/apps/file-roller/general/view_folder_after_extraction"
+#define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/general/compression_level"
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"
