@@ -144,8 +144,6 @@ process_line (char     *line,
 		
 		fields = split_line (line, 6);
 
-		g_print ("%s\n", fields[5]);
-
 		if ((fdata->name == NULL)
 		    || (*fdata->name == '\0') 
 		    || (fields[5][1] == 'D') 
@@ -441,10 +439,8 @@ fr_command_rar_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
-	if ((!is_program_in_path("rar")) ||
-	    (!is_program_in_path("unrar"))) {
+	if ((!is_program_in_path("rar")) && (!is_program_in_path("unrar"))) 
 		return NULL;
-	}
 
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_RAR, NULL));
 	fr_command_construct (comm, process, filename);
