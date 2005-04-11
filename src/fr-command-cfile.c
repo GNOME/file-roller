@@ -54,7 +54,7 @@ get_uncompressed_name_from_archive (FRCommand  *comm,
 	char            buffer[11];
 	char           *filename = NULL;
 	GString        *str = NULL;
-	
+
 	if (comm_cfile->compress_prog != FR_COMPRESS_PROGRAM_GZIP)
 		return NULL;
 	
@@ -66,9 +66,15 @@ get_uncompressed_name_from_archive (FRCommand  *comm,
 		close (fd);
 		return NULL;
 	}
-	
-	/* Do we have the extra field in the header ?*/
-	if ((buffer[10] & 0x04) != 0) {
+
+	/* Check whether the FLG.FNAME is set */
+	if (((unsigned char)(buffer[3]) & 0x08) != 0x08) {
+		close (fd);
+		return NULL;
+	}
+
+	/* Check whether the FLG.FEXTRA is set */
+	if (((unsigned char)(buffer[3]) & 0x04) == 0x04) {
 		close (fd);
 		return NULL;
 	}
@@ -79,11 +85,11 @@ get_uncompressed_name_from_archive (FRCommand  *comm,
 	while (read (fd, &buffer, 1) > 0) {
 		if (buffer[0] == '\0') {
 			close (fd);
-			/* FIXME verify if there's a '/' in the name,
-			 * and discard it if so */
-			filename = g_strdup (str->str);
-			g_string_free (str, FALSE);
+			filename = g_strdup (file_name_from_path (str->str));
+			g_string_free (str, TRUE);
+#ifdef DEBUG
 			g_message ("filename is: %s", filename);
+#endif
 			return filename;
 		}
 		
@@ -91,8 +97,8 @@ get_uncompressed_name_from_archive (FRCommand  *comm,
 	}
 	
 	close (fd);
-	g_string_free (str, FALSE);
-	
+	g_string_free (str, TRUE);
+
 	return NULL;
 }
 
@@ -321,11 +327,11 @@ fr_command_cfile_extract (FRCommand  *comm,
 	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
 	char           *temp_dir;
 	char           *e_temp_dir;
-	char           *e_dest_dir;
+	char           *dest_file;
+	char           *e_dest_file;
 	char           *temp_file;
 	char           *uncompr_file;
 	char           *compr_file;
-	char           *e_compr_file;
 
 	/* create a temp dir. */
 
@@ -334,19 +340,10 @@ fr_command_cfile_extract (FRCommand  *comm,
 
 	/* copy file to the temp dir, remove the already existing file first */
 
-	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
-	if (compr_file != NULL) 
-		e_compr_file = fr_command_escape (comm, compr_file);
-	else 
-		e_compr_file = NULL;
-	
 	temp_file = g_strconcat (e_temp_dir,
 				 "/",
-				 (e_compr_file != NULL) ? e_compr_file : file_name_from_path (comm->e_filename),
-				 e_compr_file ? ".gz" : NULL,
+				 file_name_from_path (comm->e_filename),
 				 NULL);
-	g_free (e_compr_file);
-	g_free (compr_file);
 
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_add_arg (comm->process, "-f");
@@ -364,7 +361,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
-		fr_process_add_arg (comm->process, "-N");
+		fr_process_add_arg (comm->process, "-n");
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
 		break;
@@ -406,12 +403,24 @@ fr_command_cfile_extract (FRCommand  *comm,
 	/* copy uncompress file to the dest dir */
 
 	uncompr_file = remove_extension_from_path (temp_file);
-	e_dest_dir = fr_command_escape (comm, dest_dir);
+
+	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
+	if (compr_file == NULL) {
+		g_print ("[0]\n");
+		compr_file = remove_extension_from_path (file_name_from_path (comm->e_filename));
+	}
+	dest_file = g_strconcat (dest_dir,
+				 "/",
+				 compr_file,
+				 NULL);
+	e_dest_file = fr_command_escape (comm, dest_file);
+	g_free (compr_file);
+	g_free (dest_file);
 
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_add_arg (comm->process, "-f");
 	fr_process_add_arg (comm->process, uncompr_file);
-	fr_process_add_arg (comm->process, e_dest_dir);
+	fr_process_add_arg (comm->process, e_dest_file);
 	fr_process_end_command (comm->process);
 
 	/* remove the temp dir */
@@ -422,7 +431,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 	fr_process_add_arg (comm->process, e_temp_dir);
 	fr_process_end_command (comm->process);
 
-	g_free (e_dest_dir);
+	g_free (e_dest_file);
 	g_free (uncompr_file);
 	g_free (temp_file);
 	g_free (e_temp_dir);

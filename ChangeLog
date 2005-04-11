@@ -1,3 +1,12 @@
+2005-04-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-command-cfile.c (get_uncompressed_name_from_archive): use
+	only the filename.
+	(get_uncompressed_name_from_archive): check whether the FNAME
+	flag is set.
+
+	Fixes bug #300238: Unable to gunzip "gzip'd ubuntu mail archives".
+
 2005-03-31  Steve Murphy  <murf@e-tools.com>
 
         * configure.in: Added "rw" to ALL_LINGUAS.
