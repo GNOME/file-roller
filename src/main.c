@@ -21,7 +21,10 @@
  */
 
 #include <config.h>
-#include <gnome.h>
+#include <libgnome/gnome-config.h>
+#include <libgnomeui/gnome-client.h>
+#include <libgnomeui/gnome-app.h>
+#include <libgnomeui/gnome-ui-init.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <libgnomevfs/gnome-vfs-init.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
@@ -117,7 +120,7 @@ int main (int argc, char **argv)
 	if (! gnome_vfs_init ()) 
                 g_error ("Cannot initialize the Virtual File System.");
 
-	glade_gnome_init ();
+	glade_init ();
 	fr_stock_init ();
 	init_session (argv);
 	initialize_data ();

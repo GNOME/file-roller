@@ -23,12 +23,11 @@
 #include <config.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <libgnomeui/gnome-file-entry.h>
 #include "window.h"
 #include "gtk-utils.h"
 
 
-#define EXTRACT_GLADE_FILE "file_roller.glade"
+#define EXTRACT_GLADE_FILE "file-roller.glade"
 
 
 typedef struct {

@@ -23,7 +23,10 @@
 #include <config.h>
 #include <math.h>
 #include <string.h>
-#include <gnome.h>
+
+#include <glib/gi18n.h>
+#include <gdk/gdkkeysyms.h>
+#include <libgnomeui/gnome-app.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <libgnomeui/gnome-icon-lookup.h>
 #include <libgnomeui/gnome-icon-theme.h>

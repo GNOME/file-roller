@@ -9,15 +9,13 @@ else
 MKDTEMP_FILES=
 endif
 
-glade_DATA =				\
-	file_roller.glade		
-gladedir = $(datadir)/file-roller/glade
-
 if ENABLE_DEPRECATIONS
 DISABLE_DEPRECATED = -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGNOME_VFS_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED -DBONOBO_DISABLE_DEPRECATED
 else
 DISABLE_DEPRECATED =
 endif
+
+gladedir = $(datadir)/file-roller/glade
 
 INCLUDES =						\
 	-I$(top_srcdir)					\
@@ -130,17 +128,7 @@ file_roller_LDADD =					\
 	$(top_builddir)/src/recent-files/librecent.a	\
 	$(FR_LIBS)
 
-schemadir = @GCONF_SCHEMA_FILE_DIR@
-schema_DATA = file-roller.schemas
-
-if SCHEMAS_INSTALL
-install-data-local:
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
-endif
-
 EXTRA_DIST = 			\
-	$(glade_DATA)		\
-	$(schema_DATA)		\
 	fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)

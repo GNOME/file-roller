@@ -23,7 +23,6 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gnome.h>
 #include "fr-stock.h"
 #include "icons/pixbufs.h"
 

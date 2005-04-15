@@ -1,3 +1,52 @@
+2005-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c: 
+	* src/ui.h: 
+	* src/preferences.c: 
+	* src/main.c: 
+	* src/gconf-utils.c: 
+	* src/fr-command-zip.c: 
+	* src/fr-command-tar.c: 
+	* src/fr-command-rpm.c: 
+	* src/fr-command-iso.c: 
+	* src/fr-command-7z.c: 
+	* src/fr-archive.c: 
+	* src/file-utils.c: 
+	* src/file-data.c: 
+	* src/dlg-prop.c: 
+	* src/dlg-password.c: 
+	* src/dlg-open-with.c: 
+	* src/dlg-extract.c: 
+	* src/dlg-delete.c: 
+	* src/dlg-add-folder.c: 
+	* src/dlg-batch-add.c: 
+	* src/dlg-add-files.c: 
+	* src/actions.c: 
+
+	Fixes bug #171618: header cleanup.  Patch by Kristof Vansant.
+	
+2005-04-06  Alan Horkan <horkana@tcd.ie>
+
+        * src/ui.h: Be nice to translators, allow stock labels 
+        (and keybindings where appropriate) to show through.  
+        Should make translation work a little less painful.
+	
+2005-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/dlg-add-files.c (GLADE_FILE): 
+	* src/dlg-add-folder.c (GLADE_FILE, save_options_cb): restore
+	the selected folder.
+
+	* src/dlg-prop.c (PROP_GLADE_FILE): 
+	* src/dlg-password.c (PROP_GLADE_FILE): 
+	* src/dlg-open-with.c (GLADE_FILE): 
+	* src/dlg-delete.c (EXTRACT_GLADE_FILE): 
+	* src/dlg-batch-add.c (GLADE_FILE): 
+
+	rename file_roller.glade to file-roller.glade
+	
+	* configure.in: set version to 2.11.0
+
 2005-04-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-rar.c (fr_command_rar_new): && instead of ||

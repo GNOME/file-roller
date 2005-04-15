@@ -46,7 +46,8 @@
 
 #include <config.h>
 #include <string.h>
-#include <gnome.h>
+#include <errno.h>
+
 #include <gconf/gconf-client.h>
 #include <gconf/gconf.h>
 #include "gconf-utils.h"

@@ -26,7 +26,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <gnome.h>
+#include <libgnome/gnome-help.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include "actions.h"
 #include "dlg-add-files.h"

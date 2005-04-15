@@ -21,7 +21,6 @@
  */
 
 #include <string.h>
-#include <libgnome/libgnome.h>
 #include <gconf/gconf-client.h>
 #include "typedefs.h"
 #include "preferences.h"

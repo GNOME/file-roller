@@ -28,9 +28,9 @@
 #include <time.h>
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
-#include <gnome.h>
 
 #include "file-data.h"
 #include "file-utils.h"

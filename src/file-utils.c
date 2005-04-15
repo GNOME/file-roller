@@ -35,7 +35,6 @@
 #include <dirent.h>
 
 #include <glib.h>
-#include <libgnome/libgnome.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <gconf/gconf-client.h>

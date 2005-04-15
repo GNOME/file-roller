@@ -25,8 +25,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/param.h>
+
 #include <glib.h>
-#include <gnome.h>
+#include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include "file-data.h"
 #include "file-list.h"

@@ -23,8 +23,11 @@
 #include <config.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
 
-#include <gnome.h>
+#include <gtk/gtk.h>
+#include <libgnomeui/gnome-icon-theme.h>
+#include <libgnomeui/gnome-icon-lookup.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
@@ -39,7 +42,7 @@
 #include "preferences.h"
 
 
-#define GLADE_FILE "file_roller.glade"
+#define GLADE_FILE "file-roller.glade"
 #define UPDATE_DROPPED_FILES (FALSE)
 #define ARCHIVE_ICON_SIZE (48)
 #define DEFAULT_EXTENSION ".tar.gz"

@@ -26,7 +26,6 @@
 #include <time.h>
 
 #include <glib.h>
-#include <gnome.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 

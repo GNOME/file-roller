@@ -25,14 +25,13 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <libgnomeui/gnome-file-entry.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include "gtk-utils.h"
 #include "window.h"
 
 
-#define PROP_GLADE_FILE "file_roller.glade"
+#define PROP_GLADE_FILE "file-roller.glade"
 
 
 typedef struct {

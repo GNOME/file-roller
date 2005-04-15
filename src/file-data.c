@@ -21,7 +21,7 @@
  */
 
 #include <config.h>
-#include <gnome.h>
+#include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-data.h"
 

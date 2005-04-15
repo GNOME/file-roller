@@ -22,9 +22,10 @@
 
 #include <config.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <gtk/gtk.h>
-#include <gnome.h>
+#include <libgnome/gnome-config.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
@@ -36,7 +37,7 @@
 #include "gtk-utils.h"
 
 
-#define GLADE_FILE "file_roller.glade"
+#define GLADE_FILE "file-roller.glade"
 
 
 typedef struct {
@@ -547,12 +548,12 @@ aod_apply_cb (GtkWidget *widget,
 
 	/* Sync widgets with options. */
 
-	if (base_dir != NULL)
+	if (base_dir != NULL) 
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), base_dir);
-	/* FIXME
+
 	if (filename != NULL)
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (data->dialog), filename);
-	*/
+		gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (data->dialog), filename);
+		
 	if (include_files != NULL)
 		gtk_entry_set_text (GTK_ENTRY (data->include_files_entry), include_files);
 	if (exclude_files != NULL)

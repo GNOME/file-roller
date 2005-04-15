@@ -22,9 +22,9 @@
 
 #include <config.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <gtk/gtk.h>
-#include <gnome.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
@@ -36,7 +36,7 @@
 #include "gtk-utils.h"
 
 
-#define GLADE_FILE "file_roller.glade"
+#define GLADE_FILE "file-roller.glade"
 
 
 typedef struct {
