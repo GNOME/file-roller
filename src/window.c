@@ -5210,9 +5210,9 @@ name_is_present (FRWindow    *window,
 			char *utf8_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
 
 			if (filename[new_filename_l] == G_DIR_SEPARATOR)
-				*reason = g_strdup_printf (_("A folder named \"%s\" already exists, please use a different name"), utf8_name);
+				*reason = g_strdup_printf (_("A folder named \"%s\" already exists.\n\n%s"), utf8_name, _("Please use a different name."));
 			else
-				*reason = g_strdup_printf (_("A file named \"%s\" already exists, please use a different name"), utf8_name);
+				*reason = g_strdup_printf (_("A file named \"%s\" already exists.\n\n%s"), utf8_name, _("Please use a different name."));
 
 			retval = TRUE;
 			break;
@@ -5308,7 +5308,7 @@ window_rename_selection (FRWindow *window)
 		gtk_widget_destroy (dlg);
 		g_free (reason);
 		g_free (new_name);
-		goto free_data__rename_selection;
+		goto retry__rename_selection;
 	}
 
 	rename_selection (window, selection, old_name, new_name, has_dir, current_dir);

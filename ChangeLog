@@ -2,6 +2,8 @@
 
 	* src/window.c (window_rename_selection): do not ask anything,
 	simply suggest to use a different name.
+	(name_is_present): split the string to reuse an already present
+	phrase.  Allow the user to retype the name if an error occurs.
 
 	Fixed bug #168287: Rename file in archive can overwrite other 
 	existing files.
