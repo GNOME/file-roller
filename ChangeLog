@@ -1,5 +1,15 @@
 2005-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.c (window_rename_selection): 
+
+	Fixed bug #168287: Rename file in archive can overwrite other 
+	existing files.
+
+	* data/glade/file-roller-extract.glade: 
+
+	Fixed bugs #300763 Non-English string? and #300764: String mismarked 
+	for translation?
+
 	* src/window.c: 
 	* src/ui.h: 
 	* src/preferences.c: 
@@ -30,6 +40,9 @@
         * src/ui.h: Be nice to translators, allow stock labels 
         (and keybindings where appropriate) to show through.  
         Should make translation work a little less painful.
+	
+	Fixes bug #172867: allow stock labels to show through, be nice to 
+	translators
 	
 2005-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 

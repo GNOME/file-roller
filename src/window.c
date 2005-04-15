@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -5183,12 +5183,56 @@ get_first_level_dir (const char *path,
 }
 
 
+static gboolean
+name_is_present (FRWindow    *window,
+		 const char  *current_dir,
+		 const char  *new_name,
+		 char       **reason) 
+{
+	gboolean  retval = FALSE;
+	GList    *file_list, *scan;
+	char     *new_filename;
+	int       new_filename_l;
+
+	*reason = NULL;
+
+	new_filename = g_build_filename (current_dir, new_name, NULL);
+	new_filename_l = strlen (new_filename);
+
+	file_list = window->archive->command->file_list;
+	for (scan = file_list; scan; scan = scan->next) {
+		FileData   *file_data = (FileData *) scan->data;
+		const char *filename = file_data->full_path;
+
+		if ((strncmp (filename, new_filename, new_filename_l) == 0)
+		    && ((filename[new_filename_l] == '\0')
+			|| (filename[new_filename_l] == G_DIR_SEPARATOR))) {
+			char *utf8_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
+
+			if (filename[new_filename_l] == G_DIR_SEPARATOR)
+				*reason = g_strdup_printf (_("A folder named \"%s\" already exists, do you want to overwrite it?"), utf8_name);
+			else
+				*reason = g_strdup_printf (_("A file named \"%s\" already exists, do you want to overwrite it?"), utf8_name);
+
+			retval = TRUE;
+			break;
+		}
+	}
+
+	g_free (new_filename);
+
+	return retval;
+}
+
+
 void
 window_rename_selection (FRWindow *window)
 {
 	GList    *selection, *selection_fd;
 	gboolean  has_dir;
-	char     *old_name, *utf8_old_name, *utf8_new_name;
+	char     *old_name, *utf8_old_name, *new_name, *utf8_new_name;
+	char     *reason = NULL;
+	char     *current_dir = NULL;
 
 	selection = window_get_file_list_selection (window, TRUE, &has_dir);
 	if (selection == NULL)
@@ -5214,48 +5258,69 @@ window_rename_selection (FRWindow *window)
 						 _("_Rename"));
 	g_free (utf8_old_name);
 
-	if (utf8_new_name != NULL) {
-		char *new_name = g_filename_from_utf8 (utf8_new_name, -1, 0, 0, 0);
-		char *reason = NULL;
-		char *current_dir = NULL;
+	if (utf8_new_name == NULL) 
+		goto free_data__rename_selection;
 
-		g_free (utf8_new_name);
+	new_name = g_filename_from_utf8 (utf8_new_name, -1, 0, 0, 0);
+	g_free (utf8_new_name);
 
-		if (! valid_name (new_name, old_name, &reason)) {
-			char      *utf8_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
-			GtkWidget *dlg;
-			
-			dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-						       GTK_DIALOG_DESTROY_WITH_PARENT,
-						       GTK_STOCK_DIALOG_ERROR,
-						       (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
-						       reason,
-						       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-						       NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_OK);
-			g_free (reason);
-			g_free (utf8_name);
-			g_free (new_name);
-			
-			gtk_dialog_run (GTK_DIALOG (dlg));
-			gtk_widget_destroy (dlg);
-
-			goto retry__rename_selection;
-		}
-
-		if (has_dir)
-			current_dir = g_strdup (window_get_current_location (window));
-		else {
-			FileData *fd = (FileData*) selection_fd->data;
-			current_dir = g_strdup (fd->path);
-		}
-
-		rename_selection (window, selection, old_name, new_name, has_dir, current_dir);
-
-		g_free (current_dir);
+	if (! valid_name (new_name, old_name, &reason)) {
+		char      *utf8_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
+		GtkWidget *dlg;
+		
+		dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					       GTK_DIALOG_DESTROY_WITH_PARENT,
+					       GTK_STOCK_DIALOG_ERROR,
+					       (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
+					       reason,
+					       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
+					       NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_OK);
+		g_free (reason);
+		g_free (utf8_name);
 		g_free (new_name);
+		
+		gtk_dialog_run (GTK_DIALOG (dlg));
+		gtk_widget_destroy (dlg);
+		
+		goto retry__rename_selection;
 	}
 
+	if (has_dir)
+		current_dir = g_strdup (window_get_current_location (window));
+	else {
+		FileData *fd = (FileData*) selection_fd->data;
+		current_dir = g_strdup (fd->path);
+	}
+
+	if (name_is_present (window, current_dir, new_name, &reason)) {
+		GtkWidget *dlg;
+		int        r;
+
+		dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app), 
+					       GTK_DIALOG_MODAL,
+					       GTK_STOCK_DIALOG_QUESTION,
+					       (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
+					       reason,
+					       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					       _("Overwrite"), GTK_RESPONSE_YES,
+					       NULL);
+		r = gtk_dialog_run (GTK_DIALOG (dlg));
+		gtk_widget_destroy (dlg);
+		g_free (reason);
+
+		if (r != GTK_RESPONSE_YES) {
+			g_free (new_name);
+			goto free_data__rename_selection;
+		}
+	}
+
+	rename_selection (window, selection, old_name, new_name, has_dir, current_dir);
+	
+	g_free (current_dir);
+	g_free (new_name);
+
+free_data__rename_selection:
 	g_free (old_name);
 	path_list_free (selection);
 	g_list_free (selection_fd);
