@@ -5210,9 +5210,9 @@ name_is_present (FRWindow    *window,
 			char *utf8_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
 
 			if (filename[new_filename_l] == G_DIR_SEPARATOR)
-				*reason = g_strdup_printf (_("A folder named \"%s\" already exists, do you want to overwrite it?"), utf8_name);
+				*reason = g_strdup_printf (_("A folder named \"%s\" already exists, please use a different name"), utf8_name);
 			else
-				*reason = g_strdup_printf (_("A file named \"%s\" already exists, do you want to overwrite it?"), utf8_name);
+				*reason = g_strdup_printf (_("A file named \"%s\" already exists, please use a different name"), utf8_name);
 
 			retval = TRUE;
 			break;
@@ -5302,17 +5302,13 @@ window_rename_selection (FRWindow *window)
 					       GTK_STOCK_DIALOG_QUESTION,
 					       (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
 					       reason,
-					       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					       _("Overwrite"), GTK_RESPONSE_YES,
+					       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 					       NULL);
 		r = gtk_dialog_run (GTK_DIALOG (dlg));
 		gtk_widget_destroy (dlg);
 		g_free (reason);
-
-		if (r != GTK_RESPONSE_YES) {
-			g_free (new_name);
-			goto free_data__rename_selection;
-		}
+		g_free (new_name);
+		goto free_data__rename_selection;
 	}
 
 	rename_selection (window, selection, old_name, new_name, has_dir, current_dir);
