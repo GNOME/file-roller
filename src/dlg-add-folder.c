@@ -549,10 +549,10 @@ aod_apply_cb (GtkWidget *widget,
 
 	if (base_dir != NULL)
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), base_dir);
-	/* FIXME
+
 	if (filename != NULL)
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (data->dialog), filename);
-	*/
+		gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (data->dialog), filename);
+
 	if (include_files != NULL)
 		gtk_entry_set_text (GTK_ENTRY (data->include_files_entry), include_files);
 	if (exclude_files != NULL)
