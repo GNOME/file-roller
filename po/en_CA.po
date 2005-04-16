@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-15 11:50-0400\n"
-"PO-Revision-Date: 2005-04-15 22:34-0500\n"
+"POT-Creation-Date: 2005-04-16 13:59-0400\n"
+"PO-Revision-Date: 2005-04-16 22:34-0500\n"
 "Last-Translator: Adam Weinberger <adamw@gnome.org>\n"
 "Language-Team: Canadian English <adamw@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -118,21 +118,17 @@ msgstr "_Selected files"
 msgid "example: *.txt; *.doc"
 msgstr "example: *.txt; *.doc"
 
-#: ../data/glade/file-roller-extract.glade.h:1 ../src/ui.h:94
+#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5378
+msgid "Destination folder"
+msgstr "Destination folder"
+
+#: ../data/glade/file-roller-extract.glade.h:2 ../src/ui.h:94
 msgid "Extract"
 msgstr "Extract"
 
-#: ../data/glade/file-roller-extract.glade.h:2
+#: ../data/glade/file-roller-extract.glade.h:3
 msgid "Extract in _folder:"
 msgstr "Extract in _folder:"
-
-#: ../data/glade/file-roller-extract.glade.h:3
-msgid "Seleziona un file"
-msgstr "Select a file"
-
-#: ../data/glade/file-roller-extract.glade.h:4
-msgid "e_okbutton"
-msgstr "e_okbutton"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:108
@@ -315,7 +311,7 @@ msgstr "_Copy"
 msgid "_Move"
 msgstr "_Move"
 
-#: ../src/actions.c:1123 ../src/window.c:5209
+#: ../src/actions.c:1123 ../src/window.c:5253
 msgid "Rename"
 msgstr "Rename"
 
@@ -323,7 +319,7 @@ msgstr "Rename"
 msgid "New archive name (without extension)"
 msgstr "New archive name (without extension)"
 
-#: ../src/actions.c:1128 ../src/window.c:5214
+#: ../src/actions.c:1128 ../src/window.c:5258
 msgid "_Rename"
 msgstr "_Rename"
 
@@ -427,7 +423,7 @@ msgstr ""
 "%s"
 
 #: ../src/dlg-batch-add.c:121 ../src/window.c:5148 ../src/window.c:5152
-#: ../src/window.c:5156
+#: ../src/window.c:5156 ../src/window.c:5213 ../src/window.c:5215
 msgid "Please use a different name."
 msgstr "Please use a different name."
 
@@ -962,7 +958,7 @@ msgstr ""
 "The specified password is not valid. Please specify a new password with the "
 "command: Edit->Password"
 
-#: ../src/window.c:1574 ../src/window.c:2277 ../src/window.c:5490
+#: ../src/window.c:1574 ../src/window.c:2277 ../src/window.c:5551
 msgid "Could not perform the operation"
 msgstr "Could not perform the operation"
 
@@ -1081,38 +1077,56 @@ msgstr "The new name is void."
 msgid "The new name is equal to the old one."
 msgstr "The new name is equal to the old one."
 
-#: ../src/window.c:5210
+#: ../src/window.c:5213
+#, c-format
+msgid ""
+"A folder named \"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"A folder named \"%s\" already exists.\n"
+"\n"
+"%s"
+
+#: ../src/window.c:5215
+#, c-format
+msgid ""
+"A file named \"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"A file named \"%s\" already exists.\n"
+"\n"
+"%s"
+
+#: ../src/window.c:5254
 msgid "New folder name"
 msgstr "New folder name"
 
-#: ../src/window.c:5210
+#: ../src/window.c:5254
 msgid "New file name"
 msgstr "New file name"
 
-#: ../src/window.c:5231
+#: ../src/window.c:5274 ../src/window.c:5303
 msgid "Could not rename the folder"
 msgstr "Could not rename the folder"
 
-#: ../src/window.c:5231
+#: ../src/window.c:5274 ../src/window.c:5303
 msgid "Could not rename the file"
 msgstr "Could not rename the file"
 
-#: ../src/window.c:5316
+#: ../src/window.c:5377
 msgid "Paste Selection"
 msgstr "Paste Selection"
 
-#: ../src/window.c:5317
-msgid "Destination folder"
-msgstr "Destination folder"
-
-#: ../src/window.c:5321
+#: ../src/window.c:5382
 msgid "_Paste"
 msgstr "_Paste"
 
-#: ../src/window.c:5850
+#: ../src/window.c:5911
 msgid "Add files to an archive"
 msgstr "Add files to an archive"
 
-#: ../src/window.c:5883
+#: ../src/window.c:5944
 msgid "Extract archive"
 msgstr "Extract archive"
