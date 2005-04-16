@@ -468,8 +468,11 @@ process_output (FRProcess *fr_proc)
 		fr_proc->raw_output = g_list_prepend (fr_proc->raw_output, 
 						      g_strdup (line));
 
-		if (fr_proc->o_proc_line_func != NULL)
-			(*fr_proc->o_proc_line_func) (line, fr_proc->o_proc_line_data);
+		if ((fr_proc->o_proc_line_func != NULL) && (line != NULL)) {
+			char *tmp_line = g_strdup (line);
+			(*fr_proc->o_proc_line_func) (tmp_line, fr_proc->o_proc_line_data);
+			g_free (tmp_line);
+		}
 
 		line = eol + 1;
 	}
@@ -510,8 +513,11 @@ process_error (FRProcess *fr_proc)
 		fr_proc->raw_error = g_list_prepend (fr_proc->raw_error, 
 						     g_strdup (line));
 
-		if (fr_proc->e_proc_line_func != NULL)
-			(*fr_proc->e_proc_line_func) (line, fr_proc->e_proc_line_data);
+		if ((fr_proc->e_proc_line_func != NULL) && (line != NULL)) {
+			char *tmp_line = g_strdup (line);
+			(*fr_proc->e_proc_line_func) (tmp_line, fr_proc->e_proc_line_data);
+			g_free (tmp_line);
+		}
 
 		line = eol + 1;
 	}

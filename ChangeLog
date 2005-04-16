@@ -1,3 +1,9 @@
+2005-04-16  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-process.c (process_error, process_output): create a temp
+	variable t store the current line.  
+	(process_output, process_error): Attemp to fix bug #164894.
+
 2005-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c (window_rename_selection): do not ask anything,
