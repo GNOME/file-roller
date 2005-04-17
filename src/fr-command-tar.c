@@ -212,27 +212,21 @@ add_compress_arg (FRCommand *comm)
 static void
 begin_tar_command (FRCommand *comm)
 {
-	char       *path = NULL;
-	const char *prev_path = NULL;
-	char       *temp = NULL;
+	char *command = NULL;
 
 	/* In solaris gtar is present under /usr/sfw/bin */
 
-	prev_path = g_getenv ("PATH");
-	temp = g_strdup_printf ("PATH=%s:%s", prev_path, "/usr/sfw/bin");
-	putenv (temp);
-	g_free (temp);
-
-	path = g_find_program_in_path ("gtar");
-	if (path != NULL)
-		fr_process_begin_command (comm->process, path);
+	command = g_find_program_in_path ("gtar");
+#if defined (__SVR4) && defined (__sun)
+	if (g_file_test ("/usr/sfw/bin/gtar", G_FILE_TEST_IS_EXECUTABLE)) {
+		command = g_strdup ("/usr/sfw/bin/gtar");
+	}
+#endif
+	if (command != NULL)
+		fr_process_begin_command (comm->process, command);
 	else
 		fr_process_begin_command (comm->process, "tar");
-	g_free (path);
-
-	temp = g_strdup_printf ("PATH=%s", prev_path);
-	putenv (temp);
-	g_free (temp);
+	g_free (command);
 }
 
 
