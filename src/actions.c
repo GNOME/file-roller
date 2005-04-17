@@ -1515,7 +1515,7 @@ activate_action_about (GtkAction *action,
 		"Breda McColgan",
 		NULL
 	};
-	const char       *translator_credits = _("translator_credits");
+	const char       *translator_credits = _("translator-credits");
 
 
 	if (about != NULL) {
@@ -1531,7 +1531,7 @@ activate_action_about (GtkAction *action,
 		      "comments", _("An archive manager for GNOME."),
 		      "authors", authors,
 		      "documenters", documenters,
-		      "translator_credits", strcmp (translator_credits, "translator_credits") != 0 ? translator_credits : NULL,
+		      "translator_credits", strcmp (translator_credits, "translator-credits") != 0 ? translator_credits : NULL,
 		      "logo_icon_name", "file-roller",
 		      "website", NULL,
 		      "website_label", NULL,
