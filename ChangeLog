@@ -14,6 +14,10 @@
 	* src/fr-process.c (process_error, process_output): 
 
 	removed useless hacks.
+
+	* src/window.c (window_message_cb): ensure the string is not NULL.
+
+	Fixes bug #164894: crash on zip with incorrect filenames
 	
 2005-04-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
