@@ -114,7 +114,7 @@ file_sel_response_cb (GtkWidget    *widget,
 		char      *utf8_path;
 		char      *message;
 
-		utf8_path = g_filename_to_utf8 (current_folder, -1, NULL, NULL, NULL);
+		utf8_path = g_filename_display_name (current_folder);
 		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 
@@ -243,7 +243,7 @@ selection_changed_cb (GtkWidget  *file_sel,
                 char      *utf8_path;
                 char      *message;
 		
-                utf8_path = g_filename_to_utf8 (current_folder, -1, NULL, NULL, NULL);
+                utf8_path = g_filename_display_name (current_folder);
                 message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
                 g_free (utf8_path);
 		

@@ -75,7 +75,6 @@ dlg_prop (FRWindow *window)
 	GtkWidget        *label_label;
 	GtkWidget        *label;
 	char             *s;
-	const char       *s1;
 	GnomeVFSFileSize  size, uncompressed_size;
 	struct tm        *tm;
 	time_t            timer;
@@ -103,9 +102,9 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Path:"));
 
 	label = glade_xml_get_widget (data->gui, "p_path_label");
-	/* window->archive_filename is unescaped. */
+	/* note: window->archive_filename is unescaped. */
 	s = remove_level_from_path (window->archive_filename); 
-	utf8_name = g_filename_to_utf8 (s, -1, NULL, NULL, NULL);
+	utf8_name = g_filename_display_name (s);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 	g_free (utf8_name);
 	g_free (s);
@@ -116,8 +115,7 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Name:"));
 
 	label = glade_xml_get_widget (data->gui, "p_name_label");
-	s1 = file_name_from_path (window->archive_filename);
-	utf8_name = g_filename_to_utf8 (s1, -1, NULL, NULL, NULL);
+	utf8_name = g_filename_display_basename (window->archive_filename);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
 	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);

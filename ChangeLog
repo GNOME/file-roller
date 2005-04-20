@@ -1,6 +1,24 @@
+2005-04-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/dlg-prop.c (dlg_prop): 
+	* src/dlg-batch-add.c (add_clicked_cb): 
+	* src/dlg-add-folder.c (selection_changed_cb)
+	(file_sel_response_cb): 
+	* src/dlg-add-files.c (selection_changed_cb)
+	(file_sel_response_cb): 
+	* src/window.c: 
+
+	Use g_filename_display_name and g_filename_display_basename.
+
+	* src/fr-command-zip.c (process_line__common): 
+	* src/fr-process.c (process_error, process_output): 
+
+	removed useless hacks.
+	
 2005-04-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/actions.c (activate_action_about): s/translator_credits/translator-credits/
+	* src/actions.c (activate_action_about): 
+	s/translator_credits/translator-credits/
 
 	Fixes bug #300956: Please use a hyphen instead of an underscore, i.e 
 	"translator-credits".

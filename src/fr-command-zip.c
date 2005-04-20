@@ -139,6 +139,10 @@ list__process_line (char     *line,
 		return;
 
 	line_l = strlen (line);
+
+	if (line_l == 0)
+		return;
+
 	if (line_l > EMPTY_ARCHIVE_WARNING_LENGTH) 
 		if (strcmp (line + line_l - EMPTY_ARCHIVE_WARNING_LENGTH, 
 			    EMPTY_ARCHIVE_WARNING) == 0) {
@@ -239,14 +243,11 @@ process_line__common (char     *line,
 		      gpointer  data)
 {
 	FRCommand  *comm = FR_COMMAND (data);
-	char       *local_line;
 
 	if (line == NULL)
 		return;
 
-	local_line = g_strdup (line);
-	fr_command_message (comm, local_line);
-	g_free (local_line);
+	fr_command_message (comm, line);
 
 	if (comm->n_files != 0) {
 		double fraction = (double) comm->n_file++ / comm->n_files;
