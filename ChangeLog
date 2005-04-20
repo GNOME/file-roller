@@ -1,5 +1,10 @@
 2005-04-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-archive.c (fr_archive_load): disconnect the signals 
+	callbacks before unreferencing the object.
+
+	* data/glade/file-roller.glade: center 'create archive' window.
+
 	* src/main.c (startup_cb): 
 
 	Fixed bug #162729: File Roller doesn't exit cleanly on invalid 
