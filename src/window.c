@@ -3039,6 +3039,9 @@ window_message_cb  (FRCommand  *command,
         else
                 utf8_msg = g_strdup (msg);
 
+	if (utf8_msg == NULL)
+		return TRUE;
+
         if (g_utf8_validate (utf8_msg, -1, NULL))
 		gtk_label_set_text (GTK_LABEL (window->pd_message), utf8_msg);
 	
