@@ -216,7 +216,7 @@ file_sel_response_cb (GtkWidget   *w,
 		char      *utf8_path;
 		char      *message;
 		
-		utf8_path = g_filename_to_utf8 (extract_to_dir, -1, NULL, NULL, NULL);
+		utf8_path = g_filename_display_name (extract_to_dir);
 		message = g_strdup_printf (_("You don't have the right permissions to extract archives in the folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),

@@ -114,7 +114,7 @@ add_clicked_cb (GtkWidget  *widget,
 		
 	} else if (strchrs (archive_name, BAD_CHARS)) {
 		GtkWidget  *d;
-		char       *utf8_name = g_filename_to_utf8 (archive_name, -1, NULL, NULL, NULL);
+		char       *utf8_name = g_filename_display_name (archive_name);
 		char       *reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_name, BAD_CHARS, _("Please use a different name."));
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),

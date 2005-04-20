@@ -679,12 +679,11 @@ update_file_list_idle (gpointer callback_data)
 		char        *utf8_name;
 
 		pixbuf = get_icon (window->app, fdata);
-		utf8_name = g_filename_to_utf8 (fdata->list_name, 
-						-1, NULL, NULL, NULL);
+		utf8_name = g_filename_display_name (fdata->list_name);
 		gtk_list_store_prepend (window->list_store, &iter);
 		if (fdata->is_dir) {
 			char *tmp = remove_ending_separator (window_get_current_location (window));
-			char *utf8_path = g_filename_to_utf8 (tmp, -1, 0, 0, 0);
+			char *utf8_path = g_filename_display_name (tmp);
 			gtk_list_store_set (window->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
 					    COLUMN_ICON, pixbuf,
@@ -707,7 +706,7 @@ update_file_list_idle (gpointer callback_data)
 			s_time = get_time_string (fdata->modified);
 			desc = file_data_get_type_description (fdata);
 
-			utf8_path = g_filename_to_utf8 (fdata->path, -1, 0, 0, 0);
+			utf8_path = g_filename_display_name (fdata->path);
 
 			gtk_list_store_set (window->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
@@ -849,7 +848,7 @@ _window_update_title (FRWindow *window)
 		char     *title;
 		char     *utf8_name;
 
-		utf8_name = g_filename_to_utf8 (file_name_from_path (window->archive_filename), -1, NULL, NULL, NULL);
+		utf8_name = g_filename_display_basename (window->archive_filename);
 		title = g_strdup_printf ("%s %s",
 					 utf8_name,
 					 window->archive->read_only ? _("[read only]") : "");
@@ -1501,7 +1500,7 @@ open_folder (GtkWindow  *parent,
 		char      *utf8_name;
 		char      *message;
 
-		utf8_name = g_filename_to_utf8 (folder, -1, 0, 0, 0);
+		utf8_name = g_filename_display_name (folder);
 		message = g_strdup_printf (_("Could not display the folder \"%s\""), utf8_name);
 		g_free (utf8_name);
 		d = _gtk_message_dialog_new (parent,
@@ -4178,7 +4177,7 @@ window_archive_open (FRWindow   *current_window,
 		char *utf8_name, *message;
 		char *reason;
 
-		utf8_name = g_filename_to_utf8 (file_name_from_path (window->archive_filename), -1, 0, 0, 0);
+		utf8_name = g_filename_display_basename (window->archive_filename);
 		message = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
 		g_free (utf8_name);
 		reason = gerror != NULL ? gerror->message : "";
@@ -4236,7 +4235,7 @@ window_archive_save_as (FRWindow      *window,
 		char *utf8_name;
 		char *message;
 
-		utf8_name = g_filename_to_utf8 (file_name_from_path (filename), -1, NULL, NULL, NULL);
+		utf8_name = g_filename_display_basename (filename);
 		message = g_strdup_printf (_("Could not save the archive \"%s\""), file_name_from_path (filename));
 		g_free (utf8_name);
 
@@ -5142,7 +5141,7 @@ valid_name (const char  *new_name,
 	gboolean  retval = TRUE;
 
 	new_name = eat_spaces (new_name);
-	utf8_new_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
+	utf8_new_name = g_filename_display_name (new_name);
 
 	if (*new_name == '\0') {
 		*reason = g_strdup_printf ("%s\n\n%s", _("The new name is void."), _("Please use a different name."));
@@ -5222,7 +5221,7 @@ window_rename_selection (FRWindow *window)
 		g_free (utf8_new_name);
 
 		if (! valid_name (new_name, old_name, &reason)) {
-			char      *utf8_name = g_filename_to_utf8 (new_name, -1, NULL, NULL, NULL);
+			char      *utf8_name = g_filename_display_name (new_name);
 			GtkWidget *dlg;
 			
 			dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),

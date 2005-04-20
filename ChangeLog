@@ -1,11 +1,27 @@
 2005-04-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.c (update_file_list_idle, window_archive_open)
+	(valid_name): 
+	* src/gtk-utils.c (_gtk_label_set_filename_text): 
+	* src/dlg-prop.c (dlg_prop): 
+	* src/dlg-extract.c (file_sel_response_cb): 
+	* src/dlg-batch-add.c (add_clicked_cb): 
+	* src/dlg-add-folder.c (file_sel_response_cb)
+	(selection_changed_cb): 
+	* src/dlg-add-files.c (file_sel_response_cb)
+	(selection_changed_cb): 
+
+	Use g_filename_display_name and g_filename_display_basename
+	where appropriate.
+	
 	* src/fr-command-zip.c (process_line__common): 
 	* src/fr-process.c (process_output): 
 	(process_error): revert useless hacks.
 
 	* src/window.c (window_message_cb): ensure the string is not NULL.
 
+	Fixes bug #164894: crash on zip with incorrect filenames
+	
 2005-04-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-tar.c (begin_tar_command): 
