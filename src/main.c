@@ -21,6 +21,8 @@
  */
 
 #include <config.h>
+#include <string.h>
+
 #include <gnome.h>
 #include <libgnomeui/gnome-window-icon.h>
 #include <libgnomevfs/gnome-vfs-init.h>
@@ -89,11 +91,30 @@ struct poptOption options[] = {
 
 /* -- Main -- */
 
+
+static guint startup_id = 0;
+static poptContext pctx = NULL; 
+
+
+static gboolean
+startup_cb (gpointer data)
+{
+	g_source_remove (startup_id);
+	startup_id = 0;
+
+	initialize_data ();
+	prepare_app (pctx);
+	poptFreeContext (pctx);
+	pctx = NULL;
+
+	return FALSE;
+}
+
+
 int main (int argc, char **argv)
 {
 	GnomeProgram *program;
 	GValue value = { 0 };
-	poptContext pctx;
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -120,12 +141,8 @@ int main (int argc, char **argv)
 	glade_gnome_init ();
 	fr_stock_init ();
 	init_session (argv);
-	initialize_data ();
-	prepare_app (pctx);
-	poptFreeContext (pctx);
-
+	startup_id = g_idle_add (startup_cb, NULL);
 	gtk_main ();
-
 	release_data ();
 
 	return 0;

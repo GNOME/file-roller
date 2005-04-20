@@ -1,5 +1,10 @@
 2005-04-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/main.c (startup_cb): 
+
+	Fixed bug #162729: File Roller doesn't exit cleanly on invalid 
+	archive extension.
+
 	* src/window.c (update_file_list_idle, window_archive_open)
 	(valid_name): 
 	* src/gtk-utils.c (_gtk_label_set_filename_text): 

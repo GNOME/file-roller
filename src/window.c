@@ -5931,9 +5931,9 @@ window_batch_mode_stop (FRWindow *window)
 	window->batch_mode = FALSE;
 	window->archive->can_create_compressed_file = FALSE;
 
-	if (window->non_interactive)
+	if (window->non_interactive) {
 		window_close (window);
-	else {
+	} else {
 		gtk_widget_show (window->app); 
 		window_archive_close (window);
 	}
