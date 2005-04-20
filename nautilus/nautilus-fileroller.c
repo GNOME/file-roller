@@ -78,9 +78,9 @@ static void
 extract_here_callback (NautilusMenuItem *item,
 		       gpointer          user_data)
 {
-	GList            *files;
+	GList            *files, *scan;
 	NautilusFileInfo *file;
-	char             *uri, *path, *dir_files;
+	char             *uri, *path, *dir;
 	GString          *cmd;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
@@ -88,20 +88,30 @@ extract_here_callback (NautilusMenuItem *item,
 
 	uri = nautilus_file_info_get_uri (file);
 	path = gnome_vfs_get_local_path_from_uri (uri);
-	dir_files = g_strconcat (path, "_FILES", NULL);
+	dir = g_path_get_dirname (path);
 
 	cmd = g_string_new ("file-roller");
-	g_string_append_printf (cmd, 
-				" --force --extract-to=\"%s\" \"%s\"", 
-				dir_files,
-				path);
+	g_string_append_printf (cmd," --default-dir=\"%s\" --extract-here --force", dir);
+
+	g_free (dir);
+	g_free (path);
+	g_free (uri);
+
+	for (scan = files; scan; scan = scan->next) {
+		NautilusFileInfo *file = scan->data;
+		
+		uri = nautilus_file_info_get_uri (file);
+		path = gnome_vfs_get_local_path_from_uri (uri);
+
+		g_string_append_printf (cmd, " \"%s\"", path);
+
+		g_free (path);
+		g_free (uri);
+	}
 
 	g_spawn_command_line_async (cmd->str, NULL);
 
 	g_string_free (cmd, TRUE);
-	g_free (dir_files);
-	g_free (path);
-	g_free (uri);
 }
 
 
@@ -195,9 +205,10 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 {
 	GList    *items = NULL;
 	GList    *scan;
-	gboolean  can_write = FALSE;
+	gboolean  can_write = TRUE;
 	gboolean  one_item;
 	gboolean  one_archive = FALSE;
+	gboolean  all_archives = TRUE;
 
 
 	if (files == NULL)
@@ -214,32 +225,34 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 		if (!local)
 			return NULL;
+
+		if (all_archives && ! is_archive (file))
+			all_archives = FALSE;
+
+
+		if (can_write) {
+			char             *parent_uri;
+			GnomeVFSFileInfo *info;
+			GnomeVFSResult    result;
+
+			parent_uri = nautilus_file_info_get_parent_uri (file);
+			info = gnome_vfs_file_info_new ();
+			result = gnome_vfs_get_file_info (parent_uri,
+							  info,
+							  GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS);
+			if (result == GNOME_VFS_OK)
+				can_write = (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE) != 0;
+			gnome_vfs_file_info_unref (info);
+			g_free (parent_uri);
+		}
 	}
 
 	/**/
 
 	one_item = (files != NULL) && (files->next == NULL);
-	if (one_item) {
-		NautilusFileInfo *file = files->data;
-		char             *parent_uri;
-		GnomeVFSFileInfo *info;
-		GnomeVFSResult    result;
-		
-		one_archive = is_archive (file);
+	one_archive = one_item && all_archives;
 
-		parent_uri = nautilus_file_info_get_parent_uri (file);
-
-		info = gnome_vfs_file_info_new ();
-		result = gnome_vfs_get_file_info (parent_uri,
-						  info,
-						  GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS);
-		if (result == GNOME_VFS_OK)
-			can_write = (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE) != 0;
-		gnome_vfs_file_info_unref (info);
-		g_free (parent_uri);
-	}
-
-	if (one_archive && can_write) {
+	if (all_archives && can_write) {
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_here",
@@ -257,7 +270,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 		items = g_list_append (items, item);
 
-	} else if (one_archive && ! can_write) {
+	} else if (all_archives && ! can_write) {
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_to",
@@ -275,7 +288,9 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 		items = g_list_append (items, item);
 
-	} else {
+	} 
+
+	if (! one_archive) {
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::add",

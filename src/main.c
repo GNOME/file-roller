@@ -59,6 +59,7 @@ static gchar *add_to = NULL;
 static gint   add;
 static gchar *extract_to = NULL;
 static gint   extract;
+static gint   extract_here;
 static gchar *default_url = NULL;
 
 extern void get_supported_archive_types (void);
@@ -78,6 +79,10 @@ struct poptOption options[] = {
 
 	{ "extract", 'f', POPT_ARG_NONE, &extract, 0,
           N_("Extract archives asking the destination folder and quit the program"),
+          0 },
+
+	{ "extract-here", 'h', POPT_ARG_NONE, &extract_here, 0,
+          N_("Extract archives using the archive name as destination folder and quit the program"),
           0 },
 
 	{ "default-dir", 0, POPT_ARG_STRING, &default_url, 0,
@@ -380,7 +385,7 @@ prepare_app (poptContext pctx)
 
 	default_dir = get_path_from_url (default_url);
 
-	if (extract_to != NULL) {
+	if ((extract_here == 0) && (extract_to != NULL)) {
 		if (g_path_is_absolute (extract_to))
 			extract_to_path = get_path_from_url (extract_to);
 		else {
@@ -429,7 +434,9 @@ prepare_app (poptContext pctx)
 		window_archive__quit (window);
 		window_batch_mode_start (window);
 
-	} else if ((extract_to != NULL) || (extract == 1)) { /* Extract all archives. */
+	} else if ((extract_to != NULL) 
+		   || (extract == 1) 
+		   || (extract_here == 1)) { /* Extract all archives. */
 		FRWindow   *window;
 		const char *archive;
 		
@@ -437,10 +444,21 @@ prepare_app (poptContext pctx)
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir, TRUE);
 
-		while ((archive = poptGetArg (pctx)) != NULL) 
+		while ((archive = poptGetArg (pctx)) != NULL) {
+			if (extract_here == 1) {
+				g_free (extract_to_path);
+				extract_to_path = g_strconcat (archive, "_FILES", NULL);
+			}
+				
 			window_archive__open_extract (window, 
 						      archive, 
 						      extract_to_path);
+
+			if (extract_here == 1) {
+				g_free (extract_to_path);
+				extract_to_path = NULL;
+			}
+		}
 		window_archive__quit (window);
 		window_batch_mode_start (window);
 

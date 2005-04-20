@@ -52,6 +52,10 @@
 #include "utf8-fnmatch.h"
 
 
+#define g_signal_handlers_disconnect_by_data(instance, data) \
+    g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
+                                          0, 0, NULL, NULL, (data))
+
 #define MAX_CHUNK_LEN (NCARGS - PATH_MAX) /* Max length of the command line */
 #define UNKNOWN_TYPE "application/octet-stream"
 #define SAME_FS (FALSE)
@@ -533,6 +537,7 @@ action_started (FRCommand *command,
 		FRAction   action,
 		FRArchive *archive)
 {
+	g_print ("FRArchive::action_started: %d\n", action);
 	g_signal_emit (G_OBJECT (archive), 
 		       fr_archive_signals[START],
 		       0,
@@ -716,9 +721,11 @@ fr_archive_load (FRArchive   *archive,
 
                         return FALSE;
 		}
-	
-	if (tmp_command != NULL) 
-		g_object_unref (G_OBJECT (tmp_command));
+
+	if (tmp_command != NULL) { 
+		g_signal_handlers_disconnect_by_data (tmp_command, archive);
+		g_object_unref (tmp_command);
+	}
 
 	g_signal_connect (G_OBJECT (archive->command), 
 			  "start",

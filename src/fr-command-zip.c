@@ -220,8 +220,6 @@ add_password_arg (FRCommand     *comm,
 static void
 fr_command_zip_list (FRCommand *comm)
 {
-
-
 	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
 
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 

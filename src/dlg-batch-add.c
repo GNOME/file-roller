@@ -188,11 +188,17 @@ add_clicked_cb (GtkWidget  *widget,
 	if (! path_is_dir (archive_dir)) {
 		GtkWidget *d;
 		int        r;
-		
+		char      *folder_name;
+		char      *msg;
+
+		folder_name = g_filename_display_name (archive_dir);
+		msg = g_strdup_printf (_("Destination folder \"%s\" does not exist.\n\nDo you want to create it?"), folder_name);
+		g_free (folder_name);
+
 		d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
-					     _("Destination folder does not exist.  Do you want to create it?"),
+					     msg,
 					     NULL,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Create _Folder"), GTK_RESPONSE_YES,
@@ -201,6 +207,8 @@ add_clicked_cb (GtkWidget  *widget,
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+
+		g_free (msg);
 
 		do_not_add = (r != GTK_RESPONSE_YES);
 	}

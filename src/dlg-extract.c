@@ -153,11 +153,17 @@ extract_cb (GtkWidget   *w,
 		if (! force_directory_creation) {
 			GtkWidget *d;
 			int        r;
-		
+			char      *folder_name;
+			char      *msg;
+
+			folder_name = g_filename_display_name (extract_to_dir);
+			msg = g_strdup_printf (_("Destination folder \"%s\" does not exist.\n\nDo you want to create it?"), folder_name);
+			g_free (folder_name);
+
 			d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
 						     GTK_DIALOG_MODAL,
 						     GTK_STOCK_DIALOG_QUESTION,
-						     _("Destination folder does not exist.  Do you want to create it?"),
+						     msg,
 						     NULL,
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
@@ -167,6 +173,8 @@ extract_cb (GtkWidget   *w,
 			r = gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
+			g_free (msg);
+			
 			if (r != GTK_RESPONSE_YES) 
 				do_not_extract = TRUE;
 		}
@@ -194,7 +202,7 @@ extract_cb (GtkWidget   *w,
 			return FALSE;
 		}
 	} 
-	
+
 	if (do_not_extract) {
 		GtkWidget *d;
 
@@ -208,6 +216,9 @@ extract_cb (GtkWidget   *w,
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+
+		if (data->window->batch_mode) 
+			gtk_widget_destroy (data->dialog);
 
 		return FALSE;
 	}
