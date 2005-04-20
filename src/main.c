@@ -118,7 +118,6 @@ int main (int argc, char **argv)
 {
 	GnomeProgram *program;
 	GValue value = { 0 };
-	poptContext pctx;
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
