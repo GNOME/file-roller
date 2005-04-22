@@ -1,7 +1,12 @@
 2005-04-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c: 
 	* nautilus/nautilus-fileroller.c: 
+	(extract_here_callback): 
+
+	Do not create a _FILES folder.  Bug #167261: "Extract Here" 
+	(Nautilus integration) not useful anymore (regression!)
+	
+	* src/window.c: 
 	* src/main.c: 
 
 	Allow to extract more archives at once.  Added a --extract-here
