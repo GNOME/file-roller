@@ -580,12 +580,12 @@ start_current_command (FRProcess *fr_proc)
 	
 	argv[i++] = command->str;
 	argv[i] = NULL;
-	
+
 #ifdef DEBUG
 	{
 		int j;
 		
-		g_print ("/bin/sh "); 
+		g_print ("/bin/sh ");
 		for (j = 0; j < i; j++)
 			g_print ("%s ", argv[j]);
 		g_print ("\n"); 

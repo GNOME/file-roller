@@ -1,3 +1,15 @@
+version 2.11.1
+--------------
+	* Do not create a _FILES folder anymore (#167261).
+	* Allow to extract more archives at once.  Added an --extract-here
+	  command line option.
+	* Use g_filename_display_name and g_filename_display_basename when
+          appropriate.
+	* Prevent renaming of files to silently overwrite other existing 
+          files (#168287).
+	* Header cleanup (#171618).
+	* Allow stock labels to show through, be nice to translators (#172867).
+
 version 2.10.2
 --------------
 	* Fixed bug #300238: Unable to gunzip "gzip'd ubuntu mail archives".
