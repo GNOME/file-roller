@@ -190,7 +190,7 @@ process_zoo_line (char     *line,
 
 	fdata = file_data_new ();
 
-	fdata->size = atol (fields[0]);
+	fdata->size = atoll (fields[0]);
 	fdata->modified = mktime_from_string_zoo (fields[1],
 						  fields[2],
 						  fields[3],

@@ -141,7 +141,7 @@ list__process_line (char     *line,
 		/* read file info. */
 		
 		fields = split_line (line, 7);
-		fdata->size = atol (fields[2]);
+		fdata->size = atoll (fields[2]);
 		fdata->modified = mktime_from_string (fields[5], fields[6]); 
 		g_strfreev (fields);
 		

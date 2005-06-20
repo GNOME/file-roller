@@ -165,7 +165,7 @@ process_line (char     *line,
 	fdata = file_data_new ();
 
 	fields = split_line_lha (line);
-	fdata->size = atol (fields[2]);
+	fdata->size = atoll (fields[2]);
 	fdata->modified = mktime_from_string (fields[4], 
 					      fields[5], 
 					      fields[6]);

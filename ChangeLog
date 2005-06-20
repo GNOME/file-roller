@@ -1,5 +1,32 @@
+2005-06-19  Fabio Bonelli <fbonelli@gmail.com>
+
+	* src/file-data.h:
+
+	long int size -> long long size
+
+	* src/fr-command-7z.c (list__process_line):
+	* src/fr-command-ar.c (process_line): 
+	* src/fr-command-arj.c (list__process_line):
+	* src/fr-command-cfile.c (list__process_line):
+	* src/fr-command-iso.c (list__process_line):
+	* src/fr-command-lha.c (process_line):
+	* src/fr-command-rar.c (process_line):
+	* src/fr-command-rpm.c (list__process_line):
+	* src/fr-command-tar.c (process_line):
+	* src/fr-command-zip.c (list__process_line):
+	* src/fr-command-zoo.c (process_line):
+	
+	s/atol/atoll/
+
+	Fixes bug #142860: File-roller displays files larger
+	than 2GB as 2GB.
+
 2005-05-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* .cvsignore: addef *.diff files
+
+2005-05-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
+	
 	[ File Roller 2.11.1 released ]
 
 2005-04-20  Paolo Bacchilega  <paobac@cvs.gnome.org>

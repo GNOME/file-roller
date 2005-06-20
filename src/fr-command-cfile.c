@@ -115,7 +115,7 @@ list__process_line (char     *line,
 	fdata = file_data_new ();
 
 	fields = split_line (line, 2);
-	fdata->size = atol (fields[1]);
+	fdata->size = atoll (fields[1]);
 	g_strfreev (fields);
 
 	if (fdata->size == -1)

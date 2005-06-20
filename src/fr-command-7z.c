@@ -138,7 +138,7 @@ list__process_line (char     *line,
 		return;
 	}
 
-	fdata->size = atol (fields[3]);
+	fdata->size = atoll (fields[3]);
 	fdata->modified = mktime_from_string (fields[0], fields[1]); 
 	g_strfreev (fields);
 

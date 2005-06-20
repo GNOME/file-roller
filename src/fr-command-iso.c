@@ -93,7 +93,7 @@ list__process_line (char     *line,
 		fdata = file_data_new ();
 		
 		fields = split_line (line, 8);
-		fdata->size = atol (fields[4]);
+		fdata->size = atoll (fields[4]);
 		fdata->modified = mktime_from_string (fields[5], fields[6], fields[7]);
 		g_strfreev (fields);
 		
