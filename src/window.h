@@ -150,7 +150,7 @@ typedef struct {
 
 	GtkActionGroup  *actions;
 
-	EggRecentViewUIManager *recent_view;
+	EggRecentViewGtk *recent_view_menu;
 	EggRecentViewGtk *recent_view_toolbar;
 	EggRecentModel   *recent_model;
 	GtkWidget        *file_popup_menu;

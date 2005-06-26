@@ -66,10 +66,6 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Copy the selection"),
 	  G_CALLBACK (activate_action_copy) },
-	{ "CopyArchive", NULL,
-	  N_("Cop_y..."), NULL,
-	  N_("Copy current archive to another folder"),
-	  G_CALLBACK (activate_action_copy_archive) },
 	{ "Cut", GTK_STOCK_CUT,
 	  NULL, NULL,
 	  N_("Cut the selection"),
@@ -78,10 +74,6 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Delete the selection from the archive"),
 	  G_CALLBACK (activate_action_delete) },
-	{ "DeleteArchive", GTK_STOCK_DELETE,
-	  N_("Move to _Trash"), NULL,
-	  N_("Move current archive to trash"),
-	  G_CALLBACK (activate_action_delete_archive) },
 	{ "DeselectAll", NULL,
 	  N_("Dese_lect All"), NULL,
 	  N_("Deselect all files"),
@@ -98,10 +90,6 @@ static GtkActionEntry action_entries[] = {
 	  N_("_Last Output"), NULL,
 	  N_("View the output produced by the last executed command"),
 	  G_CALLBACK (activate_action_last_output) },
-	{ "MoveArchive", NULL,
-	  N_("_Move..."), NULL,
-	  N_("Move current archive to another folder"),
-	  G_CALLBACK (activate_action_move_archive) },
 	{ "New", GTK_STOCK_NEW,
 	  NULL, NULL,
 	  N_("Create a new archive"),
@@ -142,10 +130,6 @@ static GtkActionEntry action_entries[] = {
 	  N_("_Rename..."), "F2",
 	  N_("Rename the selection"),
 	  G_CALLBACK (activate_action_rename) },
-	{ "RenameArchive", NULL,
-	  N_("_Rename..."), NULL,
-	  N_("Rename current archive"),
-	  G_CALLBACK (activate_action_rename_archive) },
 	{ "SaveAs", GTK_STOCK_SAVE_AS,
 	  NULL, NULL,
 	  N_("Save the current archive with a different name"),
@@ -231,19 +215,12 @@ static const gchar *ui_info =
 "    <menu name='Archive' action='ArchiveMenu'>"
 "      <menuitem action='New'/>"
 "      <menuitem action='Open'/>"
-"      <menu name='OpenRecent' action='RecentFilesMenu'>"
-"      </menu>"
-"      <separator name='sep01'/>"
 "      <menuitem action='SaveAs'/>"
-"      <separator name='sep02'/>"
-"      <menuitem action='RenameArchive'/>"
-"      <menuitem action='CopyArchive'/>"
-"      <menuitem action='MoveArchive'/>"
-"      <menuitem action='DeleteArchive'/>"
-"      <menuitem action='TestArchive'/>"
-"      <separator name='sep03'/>"
+"      <separator/>"
 "      <menuitem action='Properties'/>"
-"      <separator name='sep04'/>"
+"      <menuitem action='TestArchive'/>"
+"      <separator/>"
+"      <placeholder name='RecentFilesMenu' action='RecentFilesMenu'/>"
 "      <menuitem action='Close'/>"
 "      <menuitem action='Quit'/>"
 "    </menu>"
@@ -251,41 +228,41 @@ static const gchar *ui_info =
 "      <menuitem action='AddFiles'/>"
 "      <menuitem action='AddFolder'/>"
 "      <menuitem action='Extract'/>"
-"      <separator name='sep01'/>"
+"      <separator/>"
 "      <menuitem action='Cut'/>"
 "      <menuitem action='Copy'/>"
 "      <menuitem action='Paste'/>"
 "      <menuitem action='Rename'/>"
 "      <menuitem action='Delete'/>"
-"      <separator name='sep02'/>"
+"      <separator/>"
 "      <menuitem action='SelectAll'/>"
 "      <menuitem action='DeselectAll'/>"
-"      <separator name='sep03'/>"
+"      <separator/>"
 "      <menuitem action='OpenSelection'/>"
 "      <menuitem action='ViewSelection'/>"
-"      <separator name='sep04'/>"
+"      <separator/>"
 "      <menuitem action='Password'/>"
 "    </menu>"
 "    <menu action='ViewMenu'>"
 "      <menuitem action='ViewToolbar'/>"
 "      <menuitem action='ViewStatusbar'/>"
-"      <separator name='sep01'/>"
+"      <separator/>"
 "      <menuitem action='Stop'/>"
 "      <menuitem action='Reload'/>"
-"      <separator name='sep02'/>"
+"      <separator/>"
 "      <menuitem action='ViewAllFiles'/>"
 "      <menuitem action='ViewAsFolder'/>"
-"      <separator name='sep03'/>"
+"      <separator/>"
 "      <menu action='ArrangeFilesMenu'>"
 "        <menuitem action='SortByName'/>"
 "        <menuitem action='SortBySize'/>"
 "        <menuitem action='SortByType'/>"
 "        <menuitem action='SortByDate'/>"
 "        <menuitem action='SortByLocation'/>"
-"        <separator name='sep01'/>"
+"        <separator/>"
 "        <menuitem action='SortReverseOrder'/>"
 "      </menu>"
-"      <separator name='sep04'/>"
+"      <separator/>"
 "      <menuitem action='LastOutput'/>"
 "    </menu>"
 "    <menu action='HelpMenu'>"
@@ -295,18 +272,18 @@ static const gchar *ui_info =
 "  </menubar>"
 "  <toolbar  name='ToolBar'>"
 "    <toolitem action='New'/>"
-"    <separator name='sep01'/>"
+"    <separator/>"
 "    <toolitem action='AddFiles_Toolbar'/>"
 "    <toolitem action='Extract_Toolbar'/>"
 "    <toolitem action='ViewSelection_Toolbar'/>"
-"    <separator name='sep02'/>"
+"    <separator/>"
 "    <toolitem action='Stop'/>"
 "  </toolbar>"
 "  <popup name='ListPopupMenu'>"
 "    <menuitem action='ViewSelection'/>"
 "    <menuitem action='OpenSelection'/>"
 "    <menuitem action='Extract'/>"
-"    <separator name='sep01'/>"
+"    <separator/>"
 "    <menuitem action='Cut'/>"
 "    <menuitem action='Copy'/>"
 "    <menuitem action='Paste'/>"

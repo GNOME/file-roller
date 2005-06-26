@@ -193,7 +193,9 @@ egg_recent_model_write_raw (EggRecentModel *model, FILE *file,
 	if (fputs (content, file) == EOF)
 		return FALSE;
 
+#ifndef G_OS_WIN32
 	fsync (fd);
+#endif
 	rewind (file);
 
 	return TRUE;
@@ -643,6 +645,8 @@ egg_recent_model_monitor_list (EggRecentModel *model, GList *list)
 static gboolean
 egg_recent_model_changed_timeout (EggRecentModel *model)
 {
+	model->priv->changed_timeout = 0;
+
 	egg_recent_model_changed (model);
 
 	return FALSE;
@@ -882,6 +886,7 @@ egg_recent_model_open_file (EggRecentModel *model)
 static gboolean
 egg_recent_model_lock_file (FILE *file)
 {
+#ifdef F_TLOCK
 	int fd;
 	gint	try = 5;
 
@@ -911,23 +916,34 @@ egg_recent_model_lock_file (FILE *file)
 	}
 
 	return FALSE;
+#else
+	return TRUE;
+#endif
 }
 
 static gboolean
 egg_recent_model_unlock_file (FILE *file)
 {
+#ifdef F_TLOCK
 	int fd;
 
 	rewind (file);
 	fd = fileno (file);
 
 	return (lockf (fd, F_ULOCK, 0) == 0) ? TRUE : FALSE;
+#else
+	return TRUE;
+#endif
 }
 
 static void
 egg_recent_model_finalize (GObject *object)
 {
 	EggRecentModel *model = EGG_RECENT_MODEL (object);
+
+	if (model->priv->changed_timeout > 0) {
+		g_source_remove (model->priv->changed_timeout);
+	}
 
 	egg_recent_model_monitor (model, FALSE);
 

@@ -72,6 +72,7 @@
 #define HIDE_PROGRESS_TIMEOUT_MSECS 200 /* FIXME */
 #define NAME_COLUMN_WIDTH 250
 #define OTHER_COLUMNS_WIDTH 100
+#define RECENT_ITEM_MAX_WIDTH 25
 
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
 #define ICON_TYPE_DIRECTORY "gnome-fs-directory"
@@ -1065,17 +1066,14 @@ _window_update_sensitivity (FRWindow *window)
 	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	set_sensitive (window, "Close", ! no_archive);
 	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
-	set_sensitive (window, "CopyArchive", file_op);
 	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
-	set_sensitive (window, "DeleteArchive", file_op && ! ro);
 	set_sensitive (window, "DeselectAll", ! no_archive && sel_not_null);
 	set_sensitive (window, "Extract", file_op);
 	set_sensitive (window, "Extract_Toolbar", file_op);
 	set_sensitive (window, "LastOutput", ((window->archive != NULL)
 					      && (window->archive->process != NULL)
 					      && (window->archive->process->raw_output != NULL)));
-	set_sensitive (window, "MoveArchive", file_op && ! ro);
 	set_sensitive (window, "New", ! running);
 	set_sensitive (window, "Open", ! running);
 	set_sensitive (window, "Open_Toolbar", ! running);
@@ -1086,7 +1084,6 @@ _window_update_sensitivity (FRWindow *window)
 	set_sensitive (window, "Quit", !running || window->stoppable);
 	set_sensitive (window, "Reload", ! (no_archive || running));
 	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
-	set_sensitive (window, "RenameArchive", file_op && ! ro);
 	set_sensitive (window, "SaveAs", ! no_archive && ! compr_file && ! running);
 	set_sensitive (window, "SelectAll", ! no_archive);
 	set_sensitive (window, "Stop", running && window->stoppable);
@@ -1158,33 +1155,6 @@ open_recent_item_activate_cb (EggRecentViewGtk *view,
         char          *uri;
 	int            prefix_len = strlen ("file://");
 	gboolean       result = FALSE;
-
-        uri = egg_recent_item_get_uri (item);
-	g_return_if_fail (uri != NULL);
-
-	if (strlen (uri) > prefix_len) {
-		char *path = gnome_vfs_unescape_string (uri + prefix_len, "");
-		window_archive_open (window, path, GTK_WINDOW (window->app));
-		g_free (path);
-		result = TRUE;
-	}
-
-        g_free (uri);
-}
-
-
-static void
-activate_action_open_recent (GtkAction *action, 
-			     gpointer   data)
-{
-	FRWindow      *window = data;
-	EggRecentItem *item;
-        char          *uri;
-	int            prefix_len = strlen ("file://");
-	gboolean       result = FALSE;
-
-	item = egg_recent_view_uimanager_get_item (window->recent_view, action);
-	g_return_if_fail (item != NULL);
 
         uri = egg_recent_item_get_uri (item);
 	g_return_if_fail (uri != NULL);
@@ -3197,28 +3167,6 @@ sort_by_radio_action (GtkAction      *action,
 }
 
 
-static char*
-recent_set_tooltip (EggRecentItem *item,
-		    gpointer       user_data)
-{
-	gchar *uri;
-	gchar *escaped;
-	gchar *tooltip;
-
-	uri = egg_recent_item_get_uri_for_display (item);
-	if (uri == NULL)
-		return NULL;
-
-	escaped = egg_recent_util_escape_underlines (uri);
-	tooltip = g_strdup_printf (_("Open '%s'"), escaped);
-
-	g_free (uri);
-	g_free (escaped);
-	
-	return tooltip;
-}
-
-
 static void
 recent_gtk_set_tooltip (GtkTooltips   *tooltips,
 			GtkWidget     *menu,
@@ -3290,11 +3238,11 @@ window_new (void)
 	GtkTreeSelection *selection;
 	int               i;
 	EggRecentModel   *recent_model;
-        EggRecentViewUIManager *view;
 	int               icon_width, icon_height;
 	GtkActionGroup   *actions;
 	GtkUIManager     *ui;
 	GtkToolItem      *open_recent_tool_item;
+	GtkWidget        *menu, *menu_item;
 	GError           *error = NULL;		
 
 	/* data common to all windows. */
@@ -3757,27 +3705,41 @@ window_new (void)
         egg_recent_model_set_filter_uri_schemes (recent_model, "file", NULL);
 	egg_recent_model_set_limit (recent_model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
 
-	/* Create the UIManager view used in the 'Open Recent' submenu. */
+	/* Create the Gtk view used in the 'Archive' menu. */
 
-	window->recent_view = view = egg_recent_view_uimanager_new (ui, 
-								    "/MenuBar/Archive/OpenRecent",
-								    G_CALLBACK (activate_action_open_recent),
-								    window);
-	egg_recent_view_uimanager_show_icons (EGG_RECENT_VIEW_UIMANAGER (view), FALSE);
-	egg_recent_view_uimanager_set_tooltip_func (view, recent_set_tooltip, window);
-	egg_recent_view_set_model (EGG_RECENT_VIEW (view), recent_model); 
+	menu_item = gtk_ui_manager_get_widget (ui, "/MenuBar/Archive");
+        menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item));
+        menu_item = gtk_ui_manager_get_widget (ui, "/MenuBar/Archive/RecentFilesMenu");
+
+	g_return_val_if_fail (menu_item != NULL, NULL);
+	g_return_val_if_fail (menu != NULL, NULL);
+
+	window->recent_view_menu = egg_recent_view_gtk_new (menu, menu_item);
+	egg_recent_view_set_model (EGG_RECENT_VIEW (window->recent_view_menu), recent_model); 
+	egg_recent_view_gtk_show_icons (EGG_RECENT_VIEW_GTK (window->recent_view_menu), TRUE);
+	egg_recent_view_gtk_show_numbers (EGG_RECENT_VIEW_GTK (window->recent_view_menu), TRUE);
+	egg_recent_view_gtk_set_trailing_sep (EGG_RECENT_VIEW_GTK (window->recent_view_menu), TRUE);
+	egg_recent_view_gtk_set_label_width (EGG_RECENT_VIEW_GTK (window->recent_view_menu), RECENT_ITEM_MAX_WIDTH);
+	g_signal_connect (window->recent_view_menu,
+			  "activate",
+			  G_CALLBACK (open_recent_item_activate_cb),
+			  window);
 
 	/* Create the Gtk view used in the toolbar. */
 
 	window->recent_view_toolbar = egg_recent_view_gtk_new (window->recent_toolbar_menu, NULL);
+	egg_recent_view_set_model (EGG_RECENT_VIEW (window->recent_view_toolbar), recent_model);
 	egg_recent_view_gtk_show_icons (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), TRUE);
 	egg_recent_view_gtk_show_numbers (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), FALSE);
-	egg_recent_view_gtk_set_tooltip_func (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), recent_gtk_set_tooltip, window);
+	egg_recent_view_gtk_set_label_width (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), RECENT_ITEM_MAX_WIDTH);
+	egg_recent_view_gtk_set_tooltip_func (EGG_RECENT_VIEW_GTK (window->recent_view_toolbar), 
+					      recent_gtk_set_tooltip, 
+					      window);
 	g_signal_connect (window->recent_view_toolbar,
 			  "activate",
 			  G_CALLBACK (open_recent_item_activate_cb),
 			  window);
-	egg_recent_view_set_model (EGG_RECENT_VIEW (window->recent_view_toolbar), recent_model);
+
 
 	window->recent_model = recent_model;
 	g_object_unref (recent_model);
@@ -3839,7 +3801,7 @@ window_new (void)
 	/* Add the window to the window list. */
 
 	window_list = g_list_prepend (window_list, window);
-	
+
 	return window;
 }
 
@@ -3960,10 +3922,6 @@ window_close (FRWindow *window)
 	g_return_if_fail (window != NULL);
 
 	_window_remove_notifications (window);
-	if (window->recent_view != NULL) {
-		g_object_unref (window->recent_view);
-		window->recent_view = NULL;
-	}
 
 	if (window->open_action != NULL) {
 		g_object_unref (window->open_action);

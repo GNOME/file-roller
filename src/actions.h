@@ -32,14 +32,6 @@ void activate_action_open (GtkAction *action, gpointer data);
 
 void activate_action_save_as (GtkAction *action, gpointer data);
 
-void activate_action_copy_archive (GtkAction *action, gpointer data);
-
-void activate_action_move_archive (GtkAction *action, gpointer data);
-
-void activate_action_rename_archive (GtkAction *action, gpointer data);
-
-void activate_action_delete_archive (GtkAction *action, gpointer data);
-
 void activate_action_test_archive (GtkAction *action, gpointer data);
 
 void activate_action_properties (GtkAction *action, gpointer data);
