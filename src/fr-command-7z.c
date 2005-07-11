@@ -93,18 +93,6 @@ change_to_unix_dir_separator (char *path)
 
 
 static void
-eat_trailing_spaces (char *name)
-{
-	char *c = name + strlen (name) - 1;
-
-	while ((*c == ' ') && (c != name)) {
-		*c = 0;
-		c--;
-	}
-}
-
-
-static void
 list__process_line (char     *line, 
 		    gpointer  data)
 {
@@ -143,7 +131,8 @@ list__process_line (char     *line,
 	g_strfreev (fields);
 
 	name_field = g_strdup (get_last_field (line, 6));
-	eat_trailing_spaces (name_field);
+	if (name_field == NULL) 
+		name_field = g_strdup (get_last_field (line, 5));
 
 	change_to_unix_dir_separator (name_field);
 	

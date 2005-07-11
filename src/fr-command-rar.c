@@ -152,9 +152,9 @@ process_line (char     *line,
 		} else {
 			fdata->size = atoll (fields[0]);
 			fdata->modified = mktime_from_string (fields[3], fields[4]); 
-			g_strfreev (fields);
 			comm->file_list = g_list_prepend (comm->file_list, fdata);
 		}
+		g_strfreev (fields);
 
 		rar_comm->fdata = NULL;
 	}
