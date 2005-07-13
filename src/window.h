@@ -85,6 +85,7 @@ typedef struct {
 	GtkWidget *      back_button;
 	GtkWidget *      fwd_button;
 	GtkCellRenderer *name_renderer;
+	GtkTreePath     *hover_path;
 
 	gint             current_view_length;
 

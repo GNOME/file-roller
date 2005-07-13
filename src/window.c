@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include <glib/gi18n.h>
+#include <gdk/gdkcursor.h>
 #include <gdk/gdkkeysyms.h>
 #include <libgnomeui/gnome-app.h>
 #include <libgnomeui/gnome-window-icon.h>
@@ -1943,6 +1944,87 @@ file_button_release_cb (GtkWidget      *widget,
 }
 
 
+static gboolean
+file_motion_notify_callback (GtkWidget *widget,
+			     GdkEventMotion *event,
+			     gpointer user_data)
+{
+        FRWindow    *window = user_data;
+	GdkCursor   *cursor;
+	GtkTreePath *last_hover_path;
+	GtkTreeIter  iter;
+ 	
+	if (! window->single_click) 
+		return FALSE;
+
+	if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->list_view))) 
+                return FALSE;
+
+	last_hover_path = window->hover_path;
+
+	gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
+				       event->x, event->y,
+				       &window->hover_path,
+				       NULL, NULL, NULL);
+
+	if (window->hover_path != NULL) 
+		cursor = gdk_cursor_new (GDK_HAND2);
+	else 
+		cursor = NULL;
+	
+	gdk_window_set_cursor (event->window, cursor);
+
+	/* only redraw if the hover row has changed */
+	if (!(last_hover_path == NULL && window->hover_path == NULL) &&
+	    (!(last_hover_path != NULL && window->hover_path != NULL) ||
+	     gtk_tree_path_compare (last_hover_path, window->hover_path))) {
+		if (last_hover_path) {
+			gtk_tree_model_get_iter (GTK_TREE_MODEL (window->list_store),
+						 &iter, last_hover_path);
+			gtk_tree_model_row_changed (GTK_TREE_MODEL (window->list_store),
+						    last_hover_path, &iter);
+		}
+		
+		if (window->hover_path) {
+			gtk_tree_model_get_iter (GTK_TREE_MODEL (window->list_store),
+						 &iter, window->hover_path);
+			gtk_tree_model_row_changed (GTK_TREE_MODEL (window->list_store),
+						    window->hover_path, &iter);
+		}
+	}
+	
+	gtk_tree_path_free (last_hover_path);
+
+ 	return FALSE;
+}
+
+
+static gboolean 
+file_leave_notify_callback (GtkWidget *widget,
+			    GdkEventCrossing *event,
+			    gpointer user_data)
+{
+        FRWindow *window = user_data;
+	GtkTreeIter iter;
+
+	if (window->single_click && (window->hover_path != NULL)) {
+		gtk_tree_model_get_iter (GTK_TREE_MODEL (window->list_store),
+					 &iter, 
+					 window->hover_path);
+		gtk_tree_model_row_changed (GTK_TREE_MODEL (window->list_store),
+					    window->hover_path,
+					    &iter);
+
+		gtk_tree_path_free (window->hover_path);
+		window->hover_path = NULL;
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 /* -- drag and drop -- */
 
 
@@ -2655,6 +2737,44 @@ is_single_click_policy (void)
 
 
 static void
+filename_cell_data_func (GtkTreeViewColumn *column,
+			 GtkCellRenderer   *renderer,
+			 GtkTreeModel      *model,
+			 GtkTreeIter       *iter,
+			 FRWindow          *window)
+{
+	char *text;
+	GtkTreePath *path;
+	PangoUnderline underline;
+
+	gtk_tree_model_get (model, iter,
+			    COLUMN_NAME, &text,
+			    -1);
+
+	if (window->single_click) {
+		path = gtk_tree_model_get_path (model, iter);
+
+		if (window->hover_path == NULL ||
+		    gtk_tree_path_compare (path, window->hover_path)) 
+			underline = PANGO_UNDERLINE_NONE;
+		else 
+			underline = PANGO_UNDERLINE_SINGLE;
+		
+		gtk_tree_path_free (path);
+
+	} else 
+		underline = PANGO_UNDERLINE_NONE;
+
+	g_object_set (G_OBJECT (renderer),
+		      "text", text,
+		      "underline", underline,
+		      NULL);
+
+	g_free (text);
+}
+
+
+static void
 add_columns (FRWindow    *window,
 	     GtkTreeView *treeview)
 {
@@ -2664,6 +2784,7 @@ add_columns (FRWindow    *window,
 				       N_("Location")};
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
+	GValue             value = { 0, };
 	int                i, j;
 
 	/* The Name column. */
@@ -2679,20 +2800,11 @@ add_columns (FRWindow    *window,
 	window->name_renderer = renderer = gtk_cell_renderer_text_new ();
 
 	window->single_click = is_single_click_policy ();
-	if (window->single_click) {
-		GValue  value = { 0, };
-		g_value_init (&value, PANGO_TYPE_UNDERLINE);
-		g_value_set_enum (&value, PANGO_UNDERLINE_SINGLE);
-		g_object_set_property (G_OBJECT (renderer), "underline", &value);
-		g_value_unset (&value);
-
-		/**/
-
-		g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
-		g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
-		g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
-		g_value_unset (&value);
-	}
+	
+	g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
+	g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
+	g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
+	g_value_unset (&value);
 
 	gtk_tree_view_column_pack_start (column,
 					 renderer,
@@ -2704,8 +2816,10 @@ add_columns (FRWindow    *window,
 	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
 	gtk_tree_view_column_set_fixed_width (column, NAME_COLUMN_WIDTH);
 	gtk_tree_view_column_set_resizable (column, TRUE);
-
 	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
+	gtk_tree_view_column_set_cell_data_func (column, renderer,
+						 (GtkTreeCellDataFunc) filename_cell_data_func,
+						 window, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
 	/* Other columns */
@@ -2905,23 +3019,16 @@ pref_click_policy_changed (GConfClient *client,
 			   GConfEntry  *entry,
 			   gpointer     user_data)
 {
-	FRWindow *window = user_data;
-	GValue    value = { 0, };
-
-	g_value_init (&value, PANGO_TYPE_UNDERLINE);
+	FRWindow   *window = user_data;
+	GdkWindow  *win = gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->list_view));
+	GdkDisplay *display;
 
 	window->single_click = is_single_click_policy ();
 
-	if (window->single_click)
-		g_value_set_enum (&value, PANGO_UNDERLINE_SINGLE);
-	else
-		g_value_set_enum (&value, PANGO_UNDERLINE_NONE);
-	g_object_set_property (G_OBJECT (window->name_renderer), 
-			       "underline", 
-			       &value);
-	g_value_unset (&value);
-
-	gtk_widget_queue_draw (window->app);
+	gdk_window_set_cursor (win, NULL);
+	display = gtk_widget_get_display (GTK_WIDGET (window->list_view));
+	if (display != NULL) 
+		gdk_display_flush (display);
 }
 
 
@@ -3460,7 +3567,15 @@ window_new (void)
 			  "button_release_event",
 			  G_CALLBACK (file_button_release_cb), 
 			  window);
-	
+	g_signal_connect (G_OBJECT (window->list_view), 
+			  "motion_notify_event",
+			  G_CALLBACK (file_motion_notify_callback), 
+			  window);
+	g_signal_connect (G_OBJECT (window->list_view), 
+			  "leave_notify_event",
+			  G_CALLBACK (file_leave_notify_callback), 
+			  window);
+
 	g_signal_connect (G_OBJECT (window->list_store), 
 			  "sort_column_changed",
 			  G_CALLBACK (sort_column_changed_cb), 
