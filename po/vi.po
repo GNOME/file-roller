@@ -7,16 +7,17 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: File-Roller Gnome 2.10\n"
+"Project-Id-Version: File-Roller Gnome 2.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-21 05:52+0000\n"
-"PO-Revision-Date: 2005-05-06 16:44+0930\n"
+"POT-Creation-Date: 2005-07-21 22:50+0000\n"
+"PO-Revision-Date: 2005-07-22 16:48+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: LocFactoryEditor 1.2.2\n"
 
 #: ../component/File_Roller_Component.server.in.in.h:1
 #: ../nautilus/nautilus-fileroller.c:297
@@ -128,9 +129,8 @@ msgid "Extract"
 msgstr "Giải nén"
 
 #: ../data/glade/file-roller-extract.glade.h:3
-#, fuzzy
 msgid "Extract in _folder:"
-msgstr "Đang giải nén tập tin: "
+msgstr "Giải nén vào _danh mục:"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:134
@@ -296,7 +296,6 @@ msgid "Could not display help"
 msgstr "Không thể hiển thị trợ giúp"
 
 #: ../src/actions.c:1168
-#, fuzzy
 msgid "translator-credits"
 msgstr "Nhóm Việt hóa GNOME (http://gnomevi.sourceforge.net)"
 
@@ -391,12 +390,14 @@ msgid ""
 msgstr "Bạn không có đủ quyền để tạo kho lưu trong danh mục đích ấy."
 
 #: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4563
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
 "\n"
 "Do you want to create it?"
-msgstr "Không có danh mục đích.  Bạn có muốn tạo nó không?"
+msgstr "Không có danh mục đích « %s ».\n"
+"\n"
+"Bạn có muốn tạo nó không?"
 
 #: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4572
 msgid "Create _Folder"
@@ -573,16 +574,14 @@ msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Giải nén kho lưu yêu cầu danh mục đích rồi thoát khỏi chương trình"
 
 #: ../src/main.c:85
-#, fuzzy
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
-msgstr "Giải nén kho lưu yêu cầu danh mục đích rồi thoát khỏi chương trình"
+msgstr "Giải nén kho lưu dùng tên kho lưu là danh mục đích, rồi thoát khỏi chương trình."
 
 #: ../src/main.c:89
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
-"Danh mục mặc định để dùng cho lệnh '--add' (thêm) và '--extract' (giải nén)"
+msgstr "Danh mục mặc định để dùng cho lệnh « --add » (thêm) và « --extract » (giải nén)"
 
 #: ../src/main.c:93
 msgid "Create destination folder without asking confirmation"
@@ -1073,254 +1072,3 @@ msgstr "Thêm tập tin vào một kho lưu"
 #: ../src/window.c:6028
 msgid "Extract archive"
 msgstr "Giải nén kho lưu"
-
-msgid "Could not copy the archive"
-msgstr "Không sao chép được kho lưu"
-
-msgid "Could not move the archive"
-msgstr "Không di chuyển được kho lưu"
-
-msgid "Copy"
-msgstr "Chép"
-
-msgid "Move"
-msgstr "Di chuyển"
-
-msgid "_Copy"
-msgstr "_Chép"
-
-msgid "_Move"
-msgstr "_Di chuyển"
-
-msgid "New archive name (without extension)"
-msgstr "Tên kho lưu mới (không có phần mở rộng)"
-
-msgid ""
-"The archive cannot be moved to the Trash. Do you want to delete it "
-"permanently?"
-msgstr "Không bỏ được kho lưu ấy vào Sọt Rác. Bạn có muốn xóa hẳn nó đi không?"
-
-msgid "Cop_y..."
-msgstr "_Chép..."
-
-msgid "Copy current archive to another folder"
-msgstr "Sao chép kho lưu hiện thời vào danh mục khác"
-
-msgid "Move to _Trash"
-msgstr "_Bỏ vào Sọt Rác"
-
-msgid "Move current archive to trash"
-msgstr "Bỏ kho lưu hiện thời vào Sọt Rác"
-
-msgid "_Move..."
-msgstr "_Di chuyển..."
-
-msgid "Move current archive to another folder"
-msgstr "Di chuyển kho lưu hiện thời sang danh mục khác"
-
-msgid "Rename current archive"
-msgstr "Đổi tên kho lưu hiện thời"
-
-msgid "Add to Archive..."
-msgstr "Thêm vào kho lưu..."
-
-msgid "Handle compressed archives"
-msgstr "Quản lý kho lưu dạng nén"
-
-msgid "Exclude o_ther file systems"
-msgstr "Loại trừ hệ thống tập tin _khác"
-
-msgid "Exclude _backup files (*~)"
-msgstr "Loại trừ tập tin _sao lưu (*~)"
-
-msgid "Exclude _hidden files (.*)"
-msgstr "Loại trừ tập tin ẩ_n (.*)"
-
-msgid "Igno_re case"
-msgstr "_Bỏ qua chữ hoa/thường"
-
-msgid "Addition not performed"
-msgstr "Chưa thêm gì."
-
-msgid "Files to add: %d"
-msgstr "Tập tin cần thêm: %d"
-
-msgid "Folders to add: %d"
-msgstr "Danh mục cần thêm: %d"
-
-msgid "Bookmarks"
-msgstr "Đánh dấu"
-
-msgid "General"
-msgstr "Chung"
-
-msgid "Visible columns"
-msgstr "Cột thấy được"
-
-msgid "File size:"
-msgstr "Cỡ tập tin:"
-
-msgid "Date and time:"
-msgstr "Ngày và Giờ:"
-
-msgid "Cannot find a terminal, using xterm, even if it may not work"
-msgstr ""
-"Không tìm thấy thiết bị cuỗi nên sẽ dùng xterm, thậm chí nếu nó sẽ không làm "
-"việc"
-
-msgid "*"
-msgstr "*"
-
-msgid "A_dd to Bookmarks"
-msgstr "T_hêm vào Đánh dấu"
-
-msgid "Add _to archive:"
-msgstr "Thêm _vào kho lưu :"
-
-msgid "Add only if _newer"
-msgstr "Chỉ thêm nếu _mới hơn"
-
-msgid "Extract to"
-msgstr "Giải nén vào"
-
-msgid "Select Archive"
-msgstr "Chọn kho lưu"
-
-msgid "View File"
-msgstr "Xem tập tin"
-
-msgid "View with internal _viewer"
-msgstr "Xem bằng bộ _xem nội bộ"
-
-msgid "Date _modified"
-msgstr "Ngày _sửa đổi"
-
-msgid "File Roller Preferences"
-msgstr "Sở thích File Roller"
-
-msgid "Low"
-msgstr "Thấp"
-
-msgid "Maximum (slow)"
-msgstr "Tối đa (chậm)"
-
-msgid "Minimum (fast)"
-msgstr "Tối thiểu (nhanh)"
-
-msgid "Normal"
-msgstr "Thường"
-
-msgid "_Location"
-msgstr "_Vị trí"
-
-msgid "_Size"
-msgstr "_Cỡ"
-
-msgid "_Type"
-msgstr "_Kiểu"
-
-msgid "New Archive"
-msgstr "Kho lưu mới"
-
-msgid "Save Archive"
-msgstr "Lưu kho lưu"
-
-msgid "Open Archive"
-msgstr "Mở kho lưu"
-
-msgid "Copy Archive"
-msgstr "Sao chép kho lưu"
-
-msgid "Move Archive"
-msgstr "Di chuyển kho lưu"
-
-msgid "Rename Archive"
-msgstr "Đổi tên kho lưu"
-
-msgid "_New"
-msgstr "Mớ_i"
-
-msgid "View file with internal viewer"
-msgstr "Xem tập tin bằng trình xem bên trong"
-
-msgid "_Test"
-msgstr "_Kiểm tra"
-
-msgid "_Properties"
-msgstr "_Thuộc tính"
-
-#, fuzzy
-msgid "_Delete Files..."
-msgstr "_Xóa bỏ tập tin"
-
-msgid "Delete selected files and folders from the archive"
-msgstr "Xóa bỏ tập tin và thư mục được chọn ra khỏi kho lưu"
-
-msgid "_Preferences"
-msgstr "_Sở thích"
-
-msgid "Edit File Roller preferences"
-msgstr "Biên soạn Sở thích cho File Roller"
-
-msgid "_Stop"
-msgstr "_Dừng"
-
-msgid "_Reload"
-msgstr "Tải _lại"
-
-msgid "New _Window"
-msgstr "_Cửa sổ mới"
-
-msgid "Open a new window"
-msgstr "Mở một cửa sổ mới"
-
-msgid "_About"
-msgstr "_Giới thiệu"
-
-msgid "Open Files..."
-msgstr "Mở tập tin..."
-
-msgid "_Delete Files"
-msgstr "_Xóa bỏ tập tin"
-
-msgid "Stop"
-msgstr "Dừng"
-
-msgid "1 file (%s)"
-msgstr "1 tập tin (%s)"
-
-msgid "1 file selected (%s)"
-msgstr "1 tập tin được chọn (%s)"
-
-msgid "Operation stopped"
-msgstr "Thao tác đã dừng"
-
-msgid "_Up"
-msgstr "_Lên"
-
-msgid "View"
-msgstr "Xem"
-
-#~ msgid "Open with an _application"
-#~ msgstr "_Mở bằng ứng dụng"
-
-#~ msgid "_Close"
-#~ msgstr "_Đóng"
-
-#~ msgid "_Contents"
-#~ msgstr "_Nội dung"
-
-#~ msgid "Cu_t"
-#~ msgstr "_Cắt"
-
-#~ msgid "_Delete..."
-#~ msgstr "_Xóa bỏ..."
-
-#~ msgid "_Open..."
-#~ msgstr "_Mở..."
-
-#~ msgid "_Quit"
-#~ msgstr "_Thoát"
-
-#~ msgid "Save _As..."
-#~ msgstr "Lưu _mới..."
