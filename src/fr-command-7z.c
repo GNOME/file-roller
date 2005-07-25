@@ -92,6 +92,15 @@ change_to_unix_dir_separator (char *path)
 }
 
 
+static int
+str_rfind (const char *str, 
+	   int         c)
+{
+	char *tmp = strrchr (str, c);
+	return (tmp == NULL) ? -1 : (tmp - str);
+}
+
+
 static void
 list__process_line (char     *line, 
 		    gpointer  data)
@@ -106,6 +115,7 @@ list__process_line (char     *line,
 
 	if (! p7z_comm->list_started) {
 		if (strncmp (line, "--------", 8) == 0) {
+			p7z_comm->name_index = str_rfind (line, ' ') + 1;
 			p7z_comm->list_started = TRUE;
 		}
 		return;
@@ -118,7 +128,7 @@ list__process_line (char     *line,
 
 	fdata = file_data_new ();
 
-	fields = split_line (line, 5);
+	fields = split_line (line, 4);
 
 	if (fields[2][0] == 'D') { /* skip directories */
 		g_strfreev (fields);
@@ -130,9 +140,7 @@ list__process_line (char     *line,
 	fdata->modified = mktime_from_string (fields[0], fields[1]); 
 	g_strfreev (fields);
 
-	name_field = g_strdup (get_last_field (line, 6));
-	if (name_field == NULL) 
-		name_field = g_strdup (get_last_field (line, 5));
+	name_field = g_strdup (line + p7z_comm->name_index);
 
 	change_to_unix_dir_separator (name_field);
 	

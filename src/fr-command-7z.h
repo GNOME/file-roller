@@ -39,8 +39,9 @@ typedef struct _FRCommand7zClass  FRCommand7zClass;
 
 struct _FRCommand7z
 {
-	FRCommand  __parent;
+	FRCommand __parent;
 	gboolean  list_started;
+	int       name_index;
 };
 
 struct _FRCommand7zClass
