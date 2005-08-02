@@ -1,5 +1,11 @@
 2005-08-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-command-rar.c (fr_command_rar_add)
+	(fr_command_rar_extract, fr_command_rar_test): 
+
+	Fixes bug #312240: escape sequences in rar output.
+	Patch by Claudio Bley.
+
 	* src/fr-archive.c (fr_archive_extract): removed a blank line.
 
 	* src/fr-process.c (process_output, process_error): read output till 
