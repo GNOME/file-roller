@@ -1696,7 +1696,6 @@ fr_archive_extract (FRArchive  *archive,
 		else
 			sprintf (dest_filename, "%s/%s", dest_dir, filename);
 		
-
 #ifdef DEBUG		
 		g_print ("-> %s\n", dest_filename);
 #endif

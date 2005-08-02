@@ -456,23 +456,31 @@ process_output (FRProcess *fr_proc)
 	if ((n < 0) && (errno == EINTR))
 		goto again;
 
-	if (n <= 0)
+	if (n < 0)
 		return FALSE;
 
 	fr_proc->o_buffer[fr_proc->o_not_processed + n] = 0;
 
 	line = fr_proc->o_buffer;
-	while ((eol = strchr (line, '\n')) != NULL) {
-		*eol = 0;
+	while (*line != 0) {
+		eol = strchr (line, '\n');
+		
+		if (eol != NULL)
+			*(eol++) = 0;
+		else if (n == 0) /* EOF on file descriptor */
+			eol = line + strlen (line);
+		else 
+			break;
 
 		fr_proc->raw_output = g_list_prepend (fr_proc->raw_output, 
 						      g_strdup (line));
 
-		if ((fr_proc->o_proc_line_func != NULL) && (line != NULL)) {
+		if (fr_proc->o_proc_line_func != NULL) {
+			g_assert (line != NULL);
 			(*fr_proc->o_proc_line_func) (line, fr_proc->o_proc_line_data);
 		}
 
-		line = eol + 1;
+		line = eol;
 	}
 	
 	/* shift unprocessed text to the beginning. */
@@ -481,7 +489,7 @@ process_output (FRProcess *fr_proc)
 	for (i = 0; *line != 0; line++, i++)
 		fr_proc->o_buffer[i] = *line;
 
-	return TRUE;
+	return n > 0;
 }
 
 
@@ -499,23 +507,31 @@ process_error (FRProcess *fr_proc)
 	if ((n < 0) && (errno == EINTR))
 		goto again;
 
-	if (n <= 0)
+	if (n < 0)
 		return FALSE;
 
 	fr_proc->e_buffer[fr_proc->e_not_processed + n] = 0;
 
 	line = fr_proc->e_buffer;
-	while ((eol = strchr (line, '\n')) != NULL) {
-		*eol = 0;
+	while (*line != 0) {
+		eol = strchr (line, '\n');
+		
+		if (eol != NULL)
+			*(eol++) = 0;
+		else if (n == 0) /* EOF on file descriptor */
+			eol = line + strlen (line);
+		else 
+			break;
 
 		fr_proc->raw_error = g_list_prepend (fr_proc->raw_error, 
 						     g_strdup (line));
 
-		if ((fr_proc->e_proc_line_func != NULL) && (line != NULL)) {
+		if (fr_proc->e_proc_line_func != NULL) {
+			g_assert (line != NULL);
 			(*fr_proc->e_proc_line_func) (line, fr_proc->e_proc_line_data);
 		}
 
-		line = eol + 1;
+		line = eol;
 	}
 	
 	/* shift unprocessed text to the beginning. */
@@ -524,7 +540,7 @@ process_error (FRProcess *fr_proc)
 	for (i = 0; *line != 0; line++, i++)
 		fr_proc->e_buffer[i] = *line;
 
-	return TRUE;
+	return n > 0;
 }
 
 
@@ -716,10 +732,8 @@ check_child (gpointer data)
 
 	/* Read all pending output. */
 
-	if (fr_proc->error.type == FR_PROC_ERROR_NONE) {
-		while (process_output (fr_proc)) ;
-		while (process_error (fr_proc)) ;
-	}
+	while (process_output (fr_proc)) ;
+	while (process_error (fr_proc)) ;
 
 	close (fr_proc->output_fd);
 	close (fr_proc->error_fd);

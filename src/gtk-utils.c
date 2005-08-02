@@ -427,7 +427,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
                                         GTK_POLICY_AUTOMATIC, 
                                         GTK_POLICY_AUTOMATIC);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled),
-                                             GTK_SHADOW_NONE /*ETCHED_IN*/);
+                                             GTK_SHADOW_ETCHED_IN);
 	gtk_widget_set_size_request (scrolled, -1, 200);
 
 	text_buf = gtk_text_buffer_new (NULL);

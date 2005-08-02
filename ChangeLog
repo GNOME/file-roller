@@ -1,3 +1,15 @@
+2005-08-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-archive.c (fr_archive_extract): removed a blank line.
+
+	* src/fr-process.c (process_output, process_error): read output till 
+	the EOF is reached.
+	* src/gtk-utils.c (_gtk_error_dialog_new): use a shadow for the output
+	textarea.
+
+	Fixes bug #312246: FR does not read all pending output.  
+	Patch by Claudio Bley.
+	
 2005-07-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.11.90 released ]	
