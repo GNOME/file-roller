@@ -300,7 +300,7 @@ get_supported_archive_types (void)
 
 	if (is_program_in_path ("zoo")) {
                 write_type_desc[wi].name = g_strdup(N_("Zoo (.zoo)"));
-		write_type_desc[wi].ext = g_strdup(".7z");
+		write_type_desc[wi].ext = g_strdup(".zoo");
                 wi++;
 		save_mime_type[si] = g_strdup("application/x-zoo");
 		si++;
@@ -308,24 +308,16 @@ get_supported_archive_types (void)
 		oi++;
         }
 
-	if (is_program_in_path ("7za")) {
+	if (is_program_in_path ("7za") || is_program_in_path ("7z")) {
                 write_type_desc[wi].name = g_strdup(N_("7-Zip (.7z)"));
-		write_type_desc[wi].ext = g_strdup(".zoo");
+		write_type_desc[wi].ext = g_strdup(".7z");
                 wi++;
 		save_mime_type[si] = g_strdup("application/x-7zip");
 		si++;
 		open_mime_type[oi] = g_strdup("application/x-7zip");
 		oi++;	
 
-        } else if (is_program_in_path ("7z")) {
-		write_type_desc[wi].name = g_strdup(N_("7-Zip (.7z)"));
-		write_type_desc[wi].ext = g_strdup(".7z");
-		wi++;
-		save_mime_type[si] = g_strdup("application/x-7zip");
-		si++;
-		open_mime_type[oi] = g_strdup("application/x-7zip");
-		oi++;
-	}
+        } 
 
 	write_type_desc[wi].name = NULL;
 	write_type_desc[wi].ext = NULL;
