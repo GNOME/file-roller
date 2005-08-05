@@ -148,39 +148,45 @@ fr_command_iso_extract (FRCommand  *comm,
 			gboolean    junk_paths,
 			const char *password)
 {
+	char  *e_dest_dir = fr_command_escape (comm, dest_dir);
 	GList *scan;
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char       *scanpath = (char*)scan->data;
+		char       *path = scan->data;
 		const char *filename;
-                char       *fullpath, *temppath = NULL;
+                char       *file_dir, *e_temp_dest_dir = NULL, *temp_dest_dir = NULL;
 	
-		filename = file_name_from_path (scanpath);
-		temppath = remove_level_from_path (scanpath+1); /* Add one to ignore initial '/' */
-		if (temppath == NULL)
-			temppath = g_strdup ("/");
-		if (dest_dir != NULL) {
-			fullpath = g_build_filename (dest_dir, temppath, NULL);
-			g_free (temppath);
-		} else 
-			fullpath = temppath;
+		filename = file_name_from_path (path);
+		file_dir = remove_level_from_path (path);
+		if ((file_dir != NULL) && (strcmp (file_dir, "/") != 0)) 
+			e_temp_dest_dir = g_build_filename (e_dest_dir, file_dir, NULL);
+		 else 
+			e_temp_dest_dir = g_strdup (e_dest_dir);
+		g_free (file_dir);
+		if (e_temp_dest_dir == NULL) 
+			continue;
 
-		ensure_dir_exists (fullpath, 0700);
+		temp_dest_dir = unescape_str (e_temp_dest_dir);
+		ensure_dir_exists (temp_dest_dir, 0700);
 
 		fr_process_begin_command (comm->process, "isoinfo");
-		fr_process_set_working_dir (comm->process, fullpath);
+		fr_process_set_working_dir (comm->process, temp_dest_dir);
 		fr_process_add_arg (comm->process, "-J -R");
 		fr_process_add_arg (comm->process, "-i");
 		fr_process_add_arg (comm->process, comm->e_filename);
 		fr_process_add_arg (comm->process, "-x");
-		fr_process_add_arg (comm->process, scanpath);
+		fr_process_add_arg (comm->process, path);
 		fr_process_add_arg (comm->process, ">");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
-		fr_process_start (comm->process);
-		
-		g_free (fullpath);
+	
+		g_free (e_temp_dest_dir);
+		g_free (temp_dest_dir);
 	}
+
+	g_free (e_dest_dir);
+
+	fr_process_start (comm->process);
 }
 
 

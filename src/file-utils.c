@@ -388,21 +388,21 @@ ensure_dir_exists (const gchar *a_path,
 	if (! a_path) return FALSE;
 
 	if (! path_is_dir (a_path)) {
-		gchar *path = g_strdup (a_path);
-		gchar *p = path;
-
+		char *path = g_strdup (a_path);
+		char *p = path;
+		
 		while (*p != '\0') {
 			p++;
 			if ((*p == '/') || (*p == '\0')) {
 				gboolean end = TRUE;
-
+				
 				if (*p != '\0') {
 					*p = '\0';
 					end = FALSE;
 				}
-
-			if (! path_is_dir (path)) {
-					if (mkdir (path, mode) < 0) {
+				
+				if (! path_is_dir (path)) {
+					if (gnome_vfs_make_directory (path, mode) != GNOME_VFS_OK) {
 						g_warning ("directory creation failed: %s.", path);
 						g_free (path);
 						return FALSE;
@@ -542,6 +542,32 @@ escape_str (const char *str,
 	    const char *meta_chars)
 {
 	return escape_str_common (str, meta_chars, '\\', 0);
+}
+
+
+/* remove backslashes from a string. */
+char*
+unescape_str (const char  *str)
+{
+	char       *new_str;
+	const char *s;
+	char       *t;
+
+	if (str == NULL)
+		return NULL;
+
+	new_str = g_malloc (strlen (str) + 1);
+
+	s = str;
+	t = new_str;
+	while (*s) {
+		if (*s == '\\')
+			s++;
+		*t++ = *s++;
+	}
+	*t = 0;
+
+	return new_str;
 }
 
 

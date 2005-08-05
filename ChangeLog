@@ -4,6 +4,18 @@
 
 2005-08-05  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-command-iso.c (fr_command_iso_extract): unescape the directory
+	name before using it.  
+	
+	Fixes bug #311437: [breezy] can't extract a filename from a directory
+	with a space in it from ISO.
+
+	* src/file-utils.c (ensure_dir_exists): 
+
+	Use gnome_vfs_make_directory instead of mkdir
+
+	* src/file-utils.c (unescape_str): new function.
+	
 	* configure.in: 
 	* Makefile.am:
 	* .cvsignore: 
