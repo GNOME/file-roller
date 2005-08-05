@@ -23,11 +23,13 @@ EXTRA_DIST = 			\
 	intltool-merge.in	\
 	intltool-update.in	\
 	intltool-extract.in	\
-	omf.make		\
-	xmldocs.make
+	gnome-doc-utils.make
 
 DISTCLEANFILES =                        \
+	gnome-doc-utils.make		\
 	po/.intltool-merge-cache        \
 	intltool-extract                \
 	intltool-merge                  \
 	intltool-update
+
+DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
