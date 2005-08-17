@@ -82,17 +82,11 @@
 
 #define BAD_CHARS "/\\*"
 
-enum {
-	TARGET_STRING,
-	TARGET_URL
-};
-
 static GtkTargetEntry target_table[] = {
-	/*{ "STRING",        0, TARGET_STRING },*/
-	{ "text/uri-list", 0, TARGET_URL }
+	{ "text/uri-list", 0, 0 },
 };
-
 static guint n_targets = sizeof (target_table) / sizeof (target_table[0]);
+
 static GdkPixbuf *folder_pixbuf = NULL;
 static GdkPixbuf *file_pixbuf = NULL;
 static GHashTable *pixbuf_hash = NULL;
@@ -2028,77 +2022,17 @@ file_leave_notify_callback (GtkWidget *widget,
 /* -- drag and drop -- */
 
 
-static char *
-get_path_from_url (char *url)
-{
-	GnomeVFSURI *uri;
-	char        *escaped;
-	char        *path;
-
-	if (url == NULL)
-		return NULL;
-
-	uri = gnome_vfs_uri_new (url);
-	escaped = gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
-	path = gnome_vfs_unescape_string (escaped, NULL);
-
-	gnome_vfs_uri_unref (uri);
-	g_free (escaped);
-
-	return path;
-}
-
-
 static GList *
-get_file_list_from_url_list (gchar *url_list)
+get_file_list_from_uris (gchar **uris)
 {
 	GList *list = NULL;
 	int    i;
-	char  *url_start, *url_end;
-	gboolean dnd_valid = FALSE;
 
-	i = 0;
-	url_start = url_list;
-	while (url_list[i] != '\0')	{
-		char *url;
-
-		while ((url_list[i] != '\0')
-		       && (url_list[i] != '\r')
-		       && (url_list[i] != '\n')) i++;
-
-		url_end = url_list + i;
-		if (strncmp (url_start, "file:", 5) == 0) {
-			url_start += 5;
-			if ((url_start[0] == '/') 
-			    && (url_start[1] == '/')) url_start += 2;
-
-			dnd_valid = TRUE;
-
-			url = g_strndup (url_start, url_end - url_start);
-			list = g_list_prepend (list, get_path_from_url (url));
-			g_free (url);
-
-			while ((url_list[i] != '\0')
-			       && ((url_list[i] == '\r') 
-				   || (url_list[i] == '\n'))) i++;
-			url_start = url_list + i;
-
-		} else {
-			while ((url_list[i] != '\0')
-			       && ((url_list[i] == '\r') 
-				   || (url_list[i] == '\n'))) i++;
-			url_start = url_list + i;
-			if (url_list[i] == '\0' && !dnd_valid) {
-				path_list_free (list);
-				return NULL;
-			}
-		}
-	}
-	
-	if (!dnd_valid) {
-		path_list_free (list);
+	if (uris == NULL)
 		return NULL;
-	}
+
+	for (i = 0; uris[i] != NULL; i++)
+		list = g_list_prepend (list, g_strdup (uris[i]));
 
 	return g_list_reverse (list);
 }
@@ -2287,7 +2221,26 @@ drag_drop_add_file_list (FRWindow *window)
 }
 
 
-void  
+static gboolean
+window_drag_motion (GtkWidget      *widget,
+		    GdkDragContext *drag_context,
+		    gint            x,
+		    gint            y,
+		    guint           time,
+		    gpointer        user_data)
+{
+	FRWindow  *window = user_data;
+
+	if (gtk_drag_get_source_widget (drag_context) == window->list_view) {
+		gdk_drag_status (drag_context, 0, time);
+		return FALSE;
+	} 
+	
+	return TRUE;
+}
+
+
+static void  
 window_drag_data_received  (GtkWidget          *widget,
 			    GdkDragContext     *context,
 			    gint                x,
@@ -2297,14 +2250,20 @@ window_drag_data_received  (GtkWidget          *widget,
 			    guint               time,
 			    gpointer            extra_data)
 {
-	FRWindow *window = extra_data;
-	GList    *list;
-	gboolean  one_file;
-	gboolean  is_an_archive;
+	FRWindow  *window = extra_data;
+	GList     *list;
+	gboolean   one_file;
+	gboolean   is_an_archive;
+	char     **uris;
 
 #ifdef DEBUG
 	g_print ("::DragDataReceived -->\n");
 #endif
+
+	if (gtk_drag_get_source_widget (context) == window->list_view) {
+		gtk_drag_finish (context, FALSE, FALSE, time);
+		return;
+	}
 
 	if (! ((data->length >= 0) && (data->format == 8))) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
@@ -2318,7 +2277,9 @@ window_drag_data_received  (GtkWidget          *widget,
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
-	list = get_file_list_from_url_list ((char *)data->data);
+	uris = gtk_selection_data_get_uris (data);
+	list = get_file_list_from_uris (uris);
+	g_strfreev (uris);
 
 	if (list == NULL) {
 	        GtkWidget *dlg;
@@ -2428,43 +2389,23 @@ window_drag_data_received  (GtkWidget          *widget,
 }
 
 
-static gchar *
-make_url_list (GList    *list, 
-	       gboolean  plain_text)
+static gchar **
+make_uris (GList *list)
 {
-	char  *url_list;
-	int    url_list_length;
-	char  *prefix;
-	int    prefix_length;
-	char  *url_sep = "\r\n";
-	int    url_sep_length;
-	GList *scan;
+	gchar **uris;
+	int     i, l;
+	GList  *scan;
 
 	if (list == NULL)
 		return NULL;
-	
-	prefix = (plain_text) ? g_strdup ("") : g_strdup ("file://");
-	prefix_length = strlen (prefix);
-	url_sep_length = strlen (url_sep);
 
-	url_list_length = 0;
-	for (scan = list; scan; scan = scan->next)
-		url_list_length += (prefix_length 
-				    + strlen (scan->data)
-				    + url_sep_length);
+	l = g_list_length (list);
+	uris = g_new (char*, l + 1);
+	for (i = 0, scan = list; scan; scan = scan->next) 
+		uris[i++] = g_strdup (scan->data);
+	uris[i] = NULL;
 
-	url_list = g_malloc (url_list_length + 1);
-	*url_list = 0;
-
-	for (scan = list; scan; scan = scan->next) {
-		url_list = strncat (url_list, prefix, prefix_length);
-		url_list = strncat (url_list, scan->data, strlen (scan->data));
-		url_list = strncat (url_list, url_sep, url_sep_length);
-	}
-
-	g_free (prefix);
-
-	return url_list;
+	return uris;
 }
 
 
@@ -2580,13 +2521,16 @@ file_list_drag_data_get  (GtkWidget          *widget,
 			  guint               time,
 			  gpointer            data)
 {
-	FRWindow *window = data;
-	GList    *list, *scan;
-	char     *url_list;
+	FRWindow  *window = data;
+	GList     *list, *scan;
+	char     **uris;
 
 #ifdef DEBUG
 	g_print ("::DragDataGet -->\n"); 
 #endif
+
+	if (context->source_window == context->dest_window)
+		return;
 
 	if (window->path_clicked != NULL) {
 		gtk_tree_path_free (window->path_clicked);
@@ -2635,20 +2579,13 @@ file_list_drag_data_get  (GtkWidget          *widget,
 			list = g_list_prepend (list, url);
 		}
 
+	uris = make_uris (list);
+	if (uris != NULL) {
+		gtk_selection_data_set_uris (selection_data, uris);
+		g_strfreev (uris);
+	}
 
-	url_list = make_url_list (list, (info == TARGET_STRING));
 	path_list_free (list);
-
-	if (url_list == NULL) 
-		return;
-
-	gtk_selection_data_set (selection_data, 
-				selection_data->target,
-				8, 
-				url_list, 
-				strlen (url_list));
-
-	g_free (url_list);
 
 #ifdef DEBUG
 	g_print ("::DragDataGet <--\n");
@@ -3408,6 +3345,10 @@ window_new (void)
 	g_signal_connect (G_OBJECT (window->app), 
 			  "drag_data_received",
 			  G_CALLBACK (window_drag_data_received), 
+			  window);
+	g_signal_connect (G_OBJECT (window->app), 
+			  "drag_motion",
+			  G_CALLBACK (window_drag_motion), 
 			  window);
 
 	g_signal_connect (G_OBJECT (window->app), 

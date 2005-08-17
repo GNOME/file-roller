@@ -1,3 +1,9 @@
+2005-08-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (file_list_drag_data_get): use 
+	gtk_selection_data_set_uris to set the contents os the selection.
+	(window_drag_data_received): Do not allow DnD on the same window.
+
 2005-08-08  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.11.91 released ]
