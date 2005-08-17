@@ -35,6 +35,7 @@
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include <libgnomevfs/gnome-vfs-directory.h>
+#include <libgnomevfs/gnome-vfs-uri.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "actions.h"
@@ -2023,16 +2024,25 @@ file_leave_notify_callback (GtkWidget *widget,
 
 
 static GList *
-get_file_list_from_uris (gchar **uris)
+get_file_list_from_uri_list (gchar *uri_list)
 {
+	GList *uris = NULL, *scan;
 	GList *list = NULL;
-	int    i;
 
-	if (uris == NULL)
+	if (uri_list == NULL)
 		return NULL;
 
-	for (i = 0; uris[i] != NULL; i++)
-		list = g_list_prepend (list, g_strdup (uris[i]));
+	uris = gnome_vfs_uri_list_parse (uri_list);
+	for (scan = uris; scan; scan = g_list_next (scan)) {
+		char *uri = gnome_vfs_uri_to_string (scan->data, 
+						     GNOME_VFS_URI_HIDE_NONE);
+		char *path = gnome_vfs_get_local_path_from_uri (uri);
+
+		if (path != NULL)
+			list = g_list_prepend (list, path);
+		g_free (uri);
+	}
+	gnome_vfs_uri_list_free (uris);
 
 	return g_list_reverse (list);
 }
@@ -2254,7 +2264,6 @@ window_drag_data_received  (GtkWidget          *widget,
 	GList     *list;
 	gboolean   one_file;
 	gboolean   is_an_archive;
-	char     **uris;
 
 #ifdef DEBUG
 	g_print ("::DragDataReceived -->\n");
@@ -2277,10 +2286,7 @@ window_drag_data_received  (GtkWidget          *widget,
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
-	uris = gtk_selection_data_get_uris (data);
-	list = get_file_list_from_uris (uris);
-	g_strfreev (uris);
-
+	list = get_file_list_from_uri_list (data->data);
 	if (list == NULL) {
 	        GtkWidget *dlg;
                 dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),
