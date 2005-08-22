@@ -305,7 +305,6 @@ get_mime_type_from_content (const char *filename)
 	const char *mime_type;
 	
 	mime_type = gnome_vfs_get_file_mime_type (filename, NULL, FALSE);
-	
 	if (strcmp (mime_type, UNKNOWN_TYPE) == 0)
 		return NULL;
 	
