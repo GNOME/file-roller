@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.9.90\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-14 13:29+0200\n"
+"POT-Creation-Date: 2005-08-27 22:29+0200\n"
 "PO-Revision-Date: 2005-08-14 13:42+0200\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
@@ -69,12 +69,12 @@ msgstr "Suprimeix"
 msgid "Load Options"
 msgstr "Carrega les opcions"
 
-#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2784
+#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2727
 msgid "Location"
 msgstr "Ubicació"
 
 #. current location
-#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3672
+#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3619
 msgid "Location:"
 msgstr "Ubicació:"
 
@@ -118,7 +118,7 @@ msgstr "Fitxers _seleccionats"
 msgid "example: *.txt; *.doc"
 msgstr "exemple: *.txt; *.doc"
 
-#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5462
+#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5409
 msgid "Destination folder"
 msgstr "Carpeta de destinació"
 
@@ -132,7 +132,7 @@ msgstr "E_xtreu a la carpeta:"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:134
-#: ../src/window.c:851 ../src/window.c:1281 ../src/window.c:3376
+#: ../src/window.c:846 ../src/window.c:1276 ../src/window.c:3319
 msgid "Archive Manager"
 msgstr "Gestor d'arxius"
 
@@ -227,7 +227,7 @@ msgstr "7-Zip (.7z)"
 #: ../src/actions.c:415 ../src/actions.c:435 ../src/actions.c:467
 #: ../src/actions.c:783 ../src/dlg-batch-add.c:107 ../src/dlg-batch-add.c:126
 #: ../src/dlg-batch-add.c:153 ../src/dlg-batch-add.c:175
-#: ../src/dlg-batch-add.c:226 ../src/dlg-batch-add.c:271 ../src/window.c:4165
+#: ../src/dlg-batch-add.c:226 ../src/dlg-batch-add.c:271 ../src/window.c:4112
 msgid "Could not create the archive"
 msgstr "No s'ha pogut crear l'arxiu"
 
@@ -241,7 +241,7 @@ msgid "You don't have permission to create an archive in this folder"
 msgstr "No teniu permís per crear un arxiu en aquesta carpeta"
 
 #: ../src/actions.c:468 ../src/actions.c:784 ../src/dlg-batch-add.c:154
-#: ../src/fr-archive.c:720 ../src/window.c:4166 ../src/window.c:4322
+#: ../src/fr-archive.c:719 ../src/window.c:4113 ../src/window.c:4269
 msgid "Archive type not supported."
 msgstr "Aquest tipus d'arxiu no està implementat."
 
@@ -273,7 +273,7 @@ msgstr "Tots els fitxers"
 msgid "Archive type:"
 msgstr "Tipus d'arxiu:"
 
-#: ../src/actions.c:662 ../src/window.c:3760
+#: ../src/actions.c:662 ../src/window.c:3707
 msgid "Open"
 msgstr "Obre"
 
@@ -285,7 +285,7 @@ msgstr "No s'ha pogut desar l'arxiu"
 msgid "Save"
 msgstr "Desa"
 
-#: ../src/actions.c:1108 ../src/window.c:5014
+#: ../src/actions.c:1108 ../src/window.c:4961
 msgid "Last Output"
 msgstr "Última sortida"
 
@@ -316,7 +316,7 @@ msgstr ""
 
 #: ../src/dlg-add-files.c:91 ../src/dlg-add-files.c:153
 #: ../src/dlg-add-folder.c:124 ../src/dlg-add-folder.c:253
-#: ../src/window.c:2127 ../src/window.c:2165
+#: ../src/window.c:2071 ../src/window.c:2109
 msgid "Could not add the files to the archive"
 msgstr "No s'han pogut afegir els fitxers a l'arxiu"
 
@@ -368,7 +368,7 @@ msgstr "Desa les opcions"
 msgid "Options Name:"
 msgstr "Nom de les opcions:"
 
-#: ../src/dlg-batch-add.c:121 ../src/window.c:5240
+#: ../src/dlg-batch-add.c:121 ../src/window.c:5187
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -379,8 +379,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:121 ../src/window.c:5232 ../src/window.c:5236
-#: ../src/window.c:5240 ../src/window.c:5297 ../src/window.c:5299
+#: ../src/dlg-batch-add.c:121 ../src/window.c:5179 ../src/window.c:5183
+#: ../src/window.c:5187 ../src/window.c:5244 ../src/window.c:5246
 msgid "Please use a different name."
 msgstr "Utilitzeu un nom diferent."
 
@@ -391,7 +391,7 @@ msgid ""
 msgstr ""
 "No teniu els permisos adequats per a crear un arxiu a la carpeta de destí."
 
-#: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4563
+#: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4510
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -402,11 +402,11 @@ msgstr ""
 "\n"
 "Voleu crear-la?"
 
-#: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4572
+#: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4519
 msgid "Create _Folder"
 msgstr "Crea la _carpeta"
 
-#: ../src/dlg-batch-add.c:222 ../src/dlg-extract.c:188 ../src/window.c:4591
+#: ../src/dlg-batch-add.c:222 ../src/dlg-extract.c:188 ../src/window.c:4538
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "No s'ha pogut crear la carpeta de destinació: %s."
@@ -424,7 +424,7 @@ msgid "_Overwrite"
 msgstr "S_obreescriu"
 
 #: ../src/dlg-extract.c:192 ../src/dlg-extract.c:212 ../src/dlg-extract.c:240
-#: ../src/window.c:4595 ../src/window.c:4615
+#: ../src/window.c:4542 ../src/window.c:4562
 msgid "Extraction not performed"
 msgstr "No s'ha realitzat l'extracció"
 
@@ -480,7 +480,7 @@ msgstr "Propietats de %s"
 msgid "Modified on:"
 msgstr "Modificat el:"
 
-#: ../src/dlg-prop.c:136 ../src/window.c:431
+#: ../src/dlg-prop.c:136 ../src/window.c:426
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
@@ -508,7 +508,7 @@ msgstr "Tipus desconegut"
 msgid "Symbolic link"
 msgstr "Enllaç simbòlic"
 
-#: ../src/fr-archive.c:695
+#: ../src/fr-archive.c:694
 msgid "The file does not exist."
 msgstr "El fitxer no existeix."
 
@@ -520,7 +520,7 @@ msgstr "S'està afegint el fitxer: "
 msgid "Removing file: "
 msgstr "S'està suprimint el fitxer: "
 
-#: ../src/fr-command-tar.c:336 ../src/window.c:1382
+#: ../src/fr-command-tar.c:336 ../src/window.c:1377
 msgid "Deleting files from archive"
 msgstr "S'estan suprimint els fitxers de l'arxiu"
 
@@ -688,7 +688,7 @@ msgstr "Mostra la sortida produïda per la última ordre executada"
 msgid "Create a new archive"
 msgstr "Crea un nou arxiu"
 
-#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3757 ../src/window.c:3760
+#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3704 ../src/window.c:3707
 msgid "Open archive"
 msgstr "Obre arxiu"
 
@@ -836,58 +836,58 @@ msgstr "per _ubicació"
 msgid "Sort file list by location"
 msgstr "Ordena la llista de fitxers per ubicació"
 
-#: ../src/window.c:696
+#: ../src/window.c:691
 msgid "Folder"
 msgstr "Carpeta"
 
-#: ../src/window.c:859
+#: ../src/window.c:854
 msgid "[read only]"
 msgstr "[només lectura]"
 
-#: ../src/window.c:953
+#: ../src/window.c:948
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
 msgstr[0] "%d fitxer (%s)"
 msgstr[1] "%d fitxers (%s)"
 
-#: ../src/window.c:958
+#: ../src/window.c:953
 #, c-format
 msgid "%d file selected (%s)"
 msgid_plural "%d files selected (%s)"
 msgstr[0] "%d fitxer seleccionat (%s)"
 msgstr[1] "%d fitxers seleccionats (%s)"
 
-#: ../src/window.c:1379
+#: ../src/window.c:1374
 msgid "Reading archive"
 msgstr "S'està llegint l'arxiu"
 
-#: ../src/window.c:1385
+#: ../src/window.c:1380
 msgid "Adding files to archive"
 msgstr "S'estan afegint els fitxers a l'arxiu"
 
-#: ../src/window.c:1388
+#: ../src/window.c:1383
 msgid "Extracting files from archive"
 msgstr "S'estan extraient els fitxers de l'arxiu"
 
-#: ../src/window.c:1391
+#: ../src/window.c:1386
 msgid "Testing archive"
 msgstr "S'està verificant l'arxiu"
 
-#: ../src/window.c:1394
+#: ../src/window.c:1389
 msgid "Getting the file list"
 msgstr "S'està obtenint la llista de fitxers"
 
-#: ../src/window.c:1401
+#: ../src/window.c:1396
 msgid "wait please..."
 msgstr "espereu si us plau..."
 
-#: ../src/window.c:1478
+#: ../src/window.c:1473
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "No s'ha pogut mostrar la carpeta «%s»"
 
-#: ../src/window.c:1537
+#: ../src/window.c:1532
 msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
@@ -895,7 +895,7 @@ msgstr ""
 "Aquest arxiu està protegit amb contrasenya.\n"
 "Si us plau, especifiqueu una contrasenya amb l'ordre: Edita->Contrasenya"
 
-#: ../src/window.c:1539
+#: ../src/window.c:1534
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
@@ -903,125 +903,125 @@ msgstr ""
 "La contrasenya especificada no és vàlida, especifiqueu una nova contrasenya "
 "amb l'ordre: Edita->Contrasenya"
 
-#: ../src/window.c:1544 ../src/window.c:2328 ../src/window.c:5635
+#: ../src/window.c:1539 ../src/window.c:2295 ../src/window.c:5582
 msgid "Could not perform the operation"
 msgstr "No s'ha pogut realitzar l'operació"
 
-#: ../src/window.c:1569
+#: ../src/window.c:1564
 msgid "An error occurred while extracting files."
 msgstr "S'ha produït un error en extreure els fitxers."
 
-#: ../src/window.c:1573
+#: ../src/window.c:1568
 msgid "An error occurred while loading the archive."
 msgstr "S'ha produït un error en carregar l'arxiu."
 
-#: ../src/window.c:1577
+#: ../src/window.c:1572
 msgid "An error occurred while deleting files from the archive."
 msgstr "S'ha produït un error en suprimir els fitxers de l'arxiu."
 
-#: ../src/window.c:1581
+#: ../src/window.c:1576
 msgid "An error occurred while adding files to the archive."
 msgstr "S'ha produït un error en afegir els fitxers a l'arxiu."
 
-#: ../src/window.c:1585
+#: ../src/window.c:1580
 msgid "An error occurred while testing archive."
 msgstr "S'ha produït un error en verificar l'arxiu."
 
-#: ../src/window.c:1594
+#: ../src/window.c:1589
 msgid "Command not found."
 msgstr "No s'ha trobat l'ordre."
 
-#: ../src/window.c:1597
+#: ../src/window.c:1592
 msgid "Command exited abnormally."
 msgstr "L'ordre no ha acabat normalment."
 
-#: ../src/window.c:1727
+#: ../src/window.c:1722
 msgid "Test Result"
 msgstr "Resultat de la comprovació"
 
-#: ../src/window.c:2128
+#: ../src/window.c:2072
 msgid "You don't have the right permissions."
 msgstr "No teniu els permisos necessaris."
 
-#: ../src/window.c:2166
+#: ../src/window.c:2110
 msgid "You can't add an archive to itself."
 msgstr "No es pot afegir un arxiu a si mateix."
 
-#: ../src/window.c:2362
+#: ../src/window.c:2329
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 "Voleu afegir aquest fitxer a l'arxiu actual o obrir-lo com a nou arxiu?"
 
-#: ../src/window.c:2399
+#: ../src/window.c:2366
 msgid "Do you want to create a new archive with these files?"
 msgstr "Voleu crear un nou arxiu amb aquests fitxers?"
 
-#: ../src/window.c:2402
+#: ../src/window.c:2369
 msgid "Create _Archive"
 msgstr "Crea un _arxiu"
 
-#: ../src/window.c:2781
+#: ../src/window.c:2724
 msgid "Size"
 msgstr "Mida"
 
-#: ../src/window.c:2782
+#: ../src/window.c:2725
 msgid "Type"
 msgstr "Tipus"
 
-#: ../src/window.c:2783
+#: ../src/window.c:2726
 msgid "Date Modified"
 msgstr "Data de modificació"
 
-#: ../src/window.c:2792
+#: ../src/window.c:2735
 msgid "Name"
 msgstr "Nom"
 
-#: ../src/window.c:3292
+#: ../src/window.c:3235
 #, c-format
 msgid "Open '%s'"
 msgstr "Obre «%s»"
 
-#: ../src/window.c:3629
+#: ../src/window.c:3576
 msgid "Go to the previous visited location"
 msgstr "Vés a la ubicació anteriorment visitada"
 
-#: ../src/window.c:3637
+#: ../src/window.c:3584
 msgid "Go to the next visited location"
 msgstr "Vés a a ubicació posteriorment visitada"
 
-#: ../src/window.c:3645
+#: ../src/window.c:3592
 msgid "Go up one level"
 msgstr "Vés amunt un nivell"
 
-#: ../src/window.c:3653
+#: ../src/window.c:3600
 msgid "Go to the home location"
 msgstr "Vés a la ubicació inicial"
 
-#: ../src/window.c:3758
+#: ../src/window.c:3705
 msgid "Open a recently used archive"
 msgstr "Obre un arxiu usat recentment"
 
-#: ../src/window.c:4257
+#: ../src/window.c:4204
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "No s'ha pogut obrir «%s»"
 
-#: ../src/window.c:4315
+#: ../src/window.c:4262
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "No s'ha pogut desar l'arxiu «%s»"
 
-#: ../src/window.c:5232
+#: ../src/window.c:5179
 msgid "The new name is void."
 msgstr "El nou nom és buit."
 
-#: ../src/window.c:5236
+#: ../src/window.c:5183
 msgid "The new name is equal to the old one."
 msgstr "El nou nom és igual que el vell."
 
-#: ../src/window.c:5297
+#: ../src/window.c:5244
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1032,7 +1032,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5299
+#: ../src/window.c:5246
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1043,436 +1043,42 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5337
+#: ../src/window.c:5284
 msgid "Rename"
 msgstr "Canvia el nom"
 
-#: ../src/window.c:5338
+#: ../src/window.c:5285
 msgid "New folder name"
 msgstr "Nou nom de la carpeta"
 
-#: ../src/window.c:5338
+#: ../src/window.c:5285
 msgid "New file name"
 msgstr "Nou nom del fitxer"
 
-#: ../src/window.c:5342
+#: ../src/window.c:5289
 msgid "_Rename"
 msgstr "_Canvia el nom"
 
-#: ../src/window.c:5358 ../src/window.c:5387
+#: ../src/window.c:5305 ../src/window.c:5334
 msgid "Could not rename the folder"
 msgstr "No s'ha pogut reanomenar la carpeta"
 
-#: ../src/window.c:5358 ../src/window.c:5387
+#: ../src/window.c:5305 ../src/window.c:5334
 msgid "Could not rename the file"
 msgstr "No s'ha pogut reanomenar el fitxer"
 
-#: ../src/window.c:5461
+#: ../src/window.c:5408
 msgid "Paste Selection"
 msgstr "Enganxa la selecció"
 
-#: ../src/window.c:5466
+#: ../src/window.c:5413
 msgid "_Paste"
 msgstr "_Enganxa"
 
-#: ../src/window.c:5995
+#: ../src/window.c:5942
 msgid "Add files to an archive"
 msgstr "Afegeix els fitxers a un arxiu"
 
-#: ../src/window.c:6028
+#: ../src/window.c:5975
 msgid "Extract archive"
 msgstr "Extreu l'arxiu"
-
-#~ msgid "Could not copy the archive"
-#~ msgstr "No s'ha pogut copiar l'arxiu"
-
-#~ msgid "Could not move the archive"
-#~ msgstr "No s'ha pogut moure l'arxiu"
-
-#~ msgid "Copy"
-#~ msgstr "Copia"
-
-#~ msgid "Move"
-#~ msgstr "Mou"
-
-#~ msgid "_Copy"
-#~ msgstr "_Copia"
-
-#~ msgid "_Move"
-#~ msgstr "_Mou"
-
-#~ msgid "New archive name (without extension)"
-#~ msgstr "Nou nom per l'arxiu (sense extensió)"
-
-#~ msgid ""
-#~ "The archive cannot be moved to the Trash. Do you want to delete it "
-#~ "permanently?"
-#~ msgstr ""
-#~ "No es pot mouse l'arxiu a la paperera. Voleu suprimir-lo permanentment?"
-
-#~ msgid "Open with an _application"
-#~ msgstr "Obre amb una _aplicació"
-
-#~ msgid "View File"
-#~ msgstr "Visualitza el fitxer"
-
-#~ msgid "View with internal _viewer"
-#~ msgstr "Obre amb el _visualitzador intern"
-
-#~ msgid "_About"
-#~ msgstr "_Quant a"
-
-#~ msgid "_Close"
-#~ msgstr "Tan_ca"
-
-#~ msgid "_Contents"
-#~ msgstr "_Continguts"
-
-#~ msgid "Cop_y..."
-#~ msgstr "Cop_ia"
-
-#~ msgid "Copy current archive to another folder"
-#~ msgstr "Copia l'arxiu actual a una altra carpeta"
-
-#~ msgid "Cu_t"
-#~ msgstr "_Talla"
-
-#~ msgid "_Delete..."
-#~ msgstr "S_uprimeix..."
-
-#~ msgid "Move to _Trash"
-#~ msgstr "Mou a la _paperera"
-
-#~ msgid "Move current archive to trash"
-#~ msgstr "Mou l'arxiu actual a la paperera"
-
-#~ msgid "_Move..."
-#~ msgstr "_Mou..."
-
-#~ msgid "Move current archive to another folder"
-#~ msgstr "Mou l'arxiu actual a una altra carpeta"
-
-#~ msgid "_New"
-#~ msgstr "_Nou"
-
-#~ msgid "_Open..."
-#~ msgstr "_Obre..."
-
-#~ msgid "_Properties"
-#~ msgstr "_Propietats"
-
-#~ msgid "_Quit"
-#~ msgstr "_Surt"
-
-#~ msgid "_Reload"
-#~ msgstr "_Actualitza"
-
-#~ msgid "Rename current archive"
-#~ msgstr "Canvia el nom de l'arxiu actual"
-
-#~ msgid "Save _As..."
-#~ msgstr "_Anomena i desa..."
-
-#~ msgid "_Stop"
-#~ msgstr "_Atura"
-
-#~ msgid "Cannot find a terminal, using xterm, even if it may not work"
-#~ msgstr ""
-#~ "No s'ha pogut trobar un terminal: s'usarà l'xterm, fins i tot si no "
-#~ "funcionés"
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid "File size:"
-#~ msgstr "Mida del fitxer:"
-
-#~ msgid "Date _modified"
-#~ msgstr "Data de _modificació"
-
-#~ msgid "File Roller Preferences"
-#~ msgstr "Preferències de File Roller"
-
-#~ msgid "Low"
-#~ msgstr "Baixa"
-
-#~ msgid "Maximum (slow)"
-#~ msgstr "Màxima (lenta)"
-
-#~ msgid "Minimum (fast)"
-#~ msgstr "Mínima (ràpida)"
-
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgid "_Location"
-#~ msgstr "_Ubicació"
-
-#~ msgid "_Size"
-#~ msgstr "_Mida"
-
-#~ msgid "_Type"
-#~ msgstr "_Tipus"
-
-#~ msgid "_Add..."
-#~ msgstr "_Afegeix..."
-
-#~ msgid "Add files and folders to the archive"
-#~ msgstr "Afegeix fitxers i carpetes a l'arxiu"
-
-#~ msgid "View file with internal viewer"
-#~ msgstr "Obre el fitxer amb el visualitzador intern"
-
-#~ msgid "Open selected files with the standard application"
-#~ msgstr "Obre els fitxers seleccionats amb l'aplicació estàndard"
-
-#~ msgid "Open With..."
-#~ msgstr "Obre amb..."
-
-#~ msgid "View"
-#~ msgstr "Visualitza"
-
-#~ msgid "Stop"
-#~ msgstr "Atura"
-
-#~ msgid "Operation stopped"
-#~ msgstr "L'operació ha estat aturada"
-
-#~ msgid "Add to Archive..."
-#~ msgstr "Afegeix a l'arxiu..."
-
-#~ msgid "Handle compressed archives"
-#~ msgstr "Gestiona arxius comprimits"
-
-#~ msgid "Exclude o_ther file systems"
-#~ msgstr "Exclou al_tres sistemes de fitxers"
-
-#~ msgid "Exclude _backup files (*~)"
-#~ msgstr "Exclou fitxers de _còpia de seguretat (*~)"
-
-#~ msgid "Exclude _hidden files (.*)"
-#~ msgstr "Exclou fitxers _ocults (.*)"
-
-#~ msgid "Igno_re case"
-#~ msgstr "No facis distinció entre _majúscules i minúscules"
-
-#~ msgid "Addition not performed"
-#~ msgstr "No s'ha realitzat l'afegiment"
-
-#~ msgid "Files to add: %d"
-#~ msgstr "Fitxers a afegir: %d"
-
-#~ msgid "Folders to add: %d"
-#~ msgstr "Carpetes a afegir: %d"
-
-#~ msgid "Bookmarks"
-#~ msgstr "Preferits"
-
-#~ msgid "General"
-#~ msgstr "General"
-
-#~ msgid "Visible columns"
-#~ msgstr "Columnes visibles"
-
-#~ msgid "Date and time:"
-#~ msgstr "Data i hora:"
-
-#~ msgid "A_dd to Bookmarks"
-#~ msgstr "Afegeix als _preferits"
-
-#~ msgid "Add _to archive:"
-#~ msgstr "A_fegeix a l'arxiu:"
-
-#~ msgid "Add only if _newer"
-#~ msgstr "Afegeix _només si és més recent"
-
-#~ msgid "Extract to"
-#~ msgstr "Extreu a"
-
-#~ msgid "Select Archive"
-#~ msgstr "Selecciona un arxiu"
-
-#~ msgid "_Test"
-#~ msgstr "_Comprova"
-
-#~ msgid "_Preferences"
-#~ msgstr "_Preferències"
-
-#~ msgid "Edit File Roller preferences"
-#~ msgstr "Edita les preferències del File Roller"
-
-#~ msgid "Extract to..."
-#~ msgstr "Extreu a..."
-
-#~ msgid "Delete Files"
-#~ msgstr "Suprimeix fitxers"
-
-#~ msgid "New Archive"
-#~ msgstr "Nou arxiu"
-
-#~ msgid "Save Archive"
-#~ msgstr "Desa l'arxiu"
-
-#~ msgid "Open Archive"
-#~ msgstr "Obre un arxiu"
-
-#~ msgid "Copy Archive"
-#~ msgstr "Copia l'arxiu"
-
-#~ msgid "Move Archive"
-#~ msgstr "Mou l'arxiu"
-
-#~ msgid "_Delete Files..."
-#~ msgstr "_Suprimeix els fitxers..."
-
-#~ msgid "Delete selected files and folders from the archive"
-#~ msgstr "Suprimeix els fitxers i les carpetes seleccionades de l'arxiu"
-
-#~ msgid "New _Window"
-#~ msgstr "Nova _finestra"
-
-#~ msgid "Open a new window"
-#~ msgstr "Obre una nova finestra"
-
-#~ msgid "_Delete Files"
-#~ msgstr "_Suprimeix els fitxers"
-
-#~ msgid "1 file (%s)"
-#~ msgstr "1 fitxer (%s)"
-
-#~ msgid "1 file selected (%s)"
-#~ msgstr "1 fitxer seleccionat (%s)"
-
-#~ msgid "_Up"
-#~ msgstr "Am_unt"
-
-#~ msgid "_Recent archives:"
-#~ msgstr "Arxius _recents:"
-
-#~ msgid ""
-#~ "GConf error:\n"
-#~ "  %s"
-#~ msgstr ""
-#~ "S'ha produït un error de GConf:\n"
-#~ "  %s"
-
-#~ msgid "Clo_se Window"
-#~ msgstr "_Tanca finestra"
-
-#~ msgid "Close this window"
-#~ msgstr "Tanca aquesta finestra"
-
-#~ msgid "_Windows"
-#~ msgstr "_Finestres"
-
-#~ msgid ""
-#~ "Could not create the destination folder: %s.\n"
-#~ "Extraction not performed."
-#~ msgstr ""
-#~ "No s'ha pogut crear la carpeta de destinació: %s.\n"
-#~ "No s'ha realitzat l'extracció."
-
-#~ msgid "Exit"
-#~ msgstr "Surt"
-
-#~ msgid "You don't have permissions to add files to this archive."
-#~ msgstr "No teniu permisos per afegir fitxers a aquest arxiu."
-
-#~ msgid "Cannot load archive."
-#~ msgstr "No s'ha pogut carregar l'arxiu."
-
-#~ msgid "gThumb"
-#~ msgstr "gThumb"
-
-#~ msgid "by _Time"
-#~ msgstr "per _Hora"
-
-#~ msgid "by _Path"
-#~ msgstr "per _Camí"
-
-#~ msgid "_Name"
-#~ msgstr "_Nom"
-
-#~ msgid "Archive will be deleted, are you sure?"
-#~ msgstr "S'esborrarà l'arxiu, n'esteu segur?"
-
-#~ msgid "Delete current archive from disk"
-#~ msgstr "Suprimeix l'arxiu actual del disc"
-
-#~ msgid "_Test Archive"
-#~ msgstr "_Verifica l'arxiu"
-
-#~ msgid "Select All"
-#~ msgstr "Selecciona-ho tot"
-
-#~ msgid " (invalid Unicode)"
-#~ msgstr " (Unicode invàlid)"
-
-#~ msgid "Current Location:"
-#~ msgstr "Ubicació actual:"
-
-#~ msgid "Save options"
-#~ msgstr "Desa les opcions"
-
-#~ msgid "Extract to:"
-#~ msgstr "Extreu a:"
-
-#~ msgid "File Roller - Add"
-#~ msgstr "File Roller - Afegeix"
-
-#~ msgid "File Roller - Delete Files"
-#~ msgstr "File Roller - Suprimeix fitxers"
-
-#~ msgid "File Roller - Extract"
-#~ msgstr "File Roller - Extreu"
-
-#~ msgid "File Roller - Open Files"
-#~ msgstr "File Roller - Obre fitxers"
-
-#~ msgid "File Roller - Password"
-#~ msgstr "File Roller - Contrasenya"
-
-#~ msgid "File Roller - View File"
-#~ msgstr "File Roller - Visualitza fitxer"
-
-#~ msgid "File Roller - Viewer"
-#~ msgstr "File Roller - Visualitzador"
-
-#~ msgid "Other options"
-#~ msgstr "Altres opcions"
-
-#~ msgid "Columns to Show"
-#~ msgstr "Columnes a mostrar"
-
-#~ msgid "Fast"
-#~ msgstr "Ràpida"
-
-#~ msgid "File _Path"
-#~ msgstr "_Camí del fitxer"
-
-#~ msgid "File _Size"
-#~ msgstr "_Mida del fitxer"
-
-#~ msgid "File _Type"
-#~ msgstr "_Tipus del fitxer"
-
-#~ msgid "Very fast"
-#~ msgstr "Molt ràpida"
-
-#~ msgid "_Modification Time"
-#~ msgstr "Hora de _modificació"
-
-#~ msgid "_Information"
-#~ msgstr "_Informació"
-
-#~ msgid "Show information about the archive"
-#~ msgstr "Mostra informació sobre l'arxiu"
-
-#~ msgid "_Manual"
-#~ msgstr "_Manual"
-
-#~ msgid "_File"
-#~ msgstr "_Fitxer"
-
-#~ msgid "File Roller - Last output"
-#~ msgstr "File Roller - Última sortida"

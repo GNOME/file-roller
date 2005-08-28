@@ -6,7 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version:file-roller.HEAD\n"
-"POT-Creation-Date: 2003-06-06 03:55+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-27 22:29+0200\n"
 "PO-Revision-Date: 2004-03-19 04:42+0800\n"
 "Last-Translator: FSF-India <locale@gnu.org.in>\n"
 "Language-Team: Malayalam <locale@gnu.org.in>\n"
@@ -14,1103 +15,1095 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: component/File_Roller_Component.server.in.in.h:1
-msgid "Add to Archive..."
-msgstr "ശഖരത്തില് േച൪ക്കുക"
+#: ../component/File_Roller_Component.server.in.in.h:1
+#: ../nautilus/nautilus-fileroller.c:297
+#, fuzzy
+msgid "Create Archive..."
+msgstr "ആര്‍ക്കേവ് ഉണ്ടാക്കുക"
 
-#: component/File_Roller_Component.server.in.in.h:2
+#: ../component/File_Roller_Component.server.in.in.h:2
+#: ../nautilus/nautilus-fileroller.c:259
 msgid "Extract Here"
 msgstr "ഇവിടെ വലിച്ചിടുക"
 
-#: component/File_Roller_Component.server.in.in.h:3
-msgid "Extract in a Folder"
-msgstr "കൂട്ടില് വലിച്ചിടുക"
-
-#: component/File_Roller_Component.server.in.in.h:4
-msgid "Extract to..."
-msgstr "...ലേക്ക് വലിച്ചിടുക"
-
-#: component/File_Roller_Component.server.in.in.h:5
+#: ../component/File_Roller_Component.server.in.in.h:3
 msgid "File Roller Component add operations"
 msgstr ""
 
-#: component/File_Roller_Component.server.in.in.h:6
+#: ../component/File_Roller_Component.server.in.in.h:4
 msgid "File Roller Component extract operations"
 msgstr ""
 
-#: component/File_Roller_Component.server.in.in.h:7
+#: ../component/File_Roller_Component.server.in.in.h:5
 msgid "File roller component"
 msgstr "ഫയല് റോളര് ഘടകം"
 
-#: file-roller.desktop.in.h:1
+#: ../data/glade/file-roller.glade.h:1
+#, fuzzy
+msgid ""
+"<i><b>Note:</b> the password will be used to encrypt files you add to the "
+"current archive, and to decrypt files you extract from the current archive. "
+"When the archive is closed the password will be deleted.</i>"
+msgstr "രചനകെളസൂക്ഷിക്കാനുംേച൪ക്കാനുംഅടയാളവാകൃംഉപേയാഗിയ്ക്കുംശഖരംഅടച്ചുകഴിഞ്ഞാല്അടയാളവാകൃംനശിപ്പിച്ചുകളയും"
+
+#: ../data/glade/file-roller.glade.h:2
+msgid "A_vailable application:"
+msgstr "ലഭ്യമായ പ്രയോഗം:"
+
+#: ../data/glade/file-roller.glade.h:3
+msgid "C_reate"
+msgstr ""
+
+#: ../data/glade/file-roller.glade.h:4
+#, fuzzy
+msgid "Create Archive"
+msgstr "ആര്‍ക്കേവ് ഉണ്ടാക്കുക"
+
+#: ../data/glade/file-roller.glade.h:5
+#, fuzzy
+msgid "Delete"
+msgstr "രചനകള്‍ നീക്കംചെയ്യ‍ുക"
+
+#: ../data/glade/file-roller.glade.h:6
+msgid "Load Options"
+msgstr "ബദലുകള് നിറയ്‌ക്കുക"
+
+#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2727
+msgid "Location"
+msgstr "സ്ഥാനം"
+
+#. current location
+#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3619
+msgid "Location:"
+msgstr "സ്ഥാനം:"
+
+#: ../data/glade/file-roller.glade.h:9
+msgid "Open Files"
+msgstr "രചനകള്‍ തുറക്കുക"
+
+#: ../data/glade/file-roller.glade.h:10
+msgid "Password"
+msgstr "അടയാളവാക്യം"
+
+#: ../data/glade/file-roller.glade.h:11
+msgid "R_ecent applications:"
+msgstr "അവസാനം ഉപയോഗിച്ച പ്രയോഗം:"
+
+#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:427
+msgid "_All files"
+msgstr "എല്ലാ രചനകളും‌"
+
+#: ../data/glade/file-roller.glade.h:13
+msgid "_Application:"
+msgstr "പ്രയോഗം:"
+
+#: ../data/glade/file-roller.glade.h:14
+#, fuzzy
+msgid "_Archive:"
+msgstr "േശഖരം "
+
+#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:413
+msgid "_Files:"
+msgstr "രചനകള്:"
+
+#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:475
+msgid "_Password:"
+msgstr "അടയാളവാക്ക്:"
+
+#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:434
+msgid "_Selected files"
+msgstr "തെരഞ്ഞെടുത്ത രചനകള്‍"
+
+#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:424
+msgid "example: *.txt; *.doc"
+msgstr "ഉദാഹരണം : *.txt ; *.doc"
+
+#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5409
+msgid "Destination folder"
+msgstr "ലക്ഷ്യസ്ഥാന കൂട്"
+
+#: ../data/glade/file-roller-extract.glade.h:2 ../src/ui.h:86
+msgid "Extract"
+msgstr "വലിച്ചിടുക"
+
+#: ../data/glade/file-roller-extract.glade.h:3
+#, fuzzy
+msgid "Extract in _folder:"
+msgstr "കൂട്ടില് വലിച്ചിടുക"
+
+#. Create the application.
+#: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:134
+#: ../src/window.c:846 ../src/window.c:1276 ../src/window.c:3319
 msgid "Archive Manager"
 msgstr "േശഖര പാലകന്"
 
-#. Create the application.
-#: file-roller.desktop.in.h:2 src/gtk-utils.c:76 src/gtk-utils.c:379
-#: src/main.c:101 src/menu-callbacks.c:1043 src/window.c:759 src/window.c:768
-#: src/window.c:1153 src/window.c:2733
+#: ../data/file-roller.desktop.in.h:2
+#, fuzzy
+msgid "Create and modify an archive"
+msgstr "ഒരു പുതിയ ആര്‍ക്കേവ്‌ നിര്മ്മിക്കുക"
+
+#: ../nautilus/nautilus-fileroller.c:260
+msgid "Extract the selected archive in the current position"
+msgstr ""
+
+#: ../nautilus/nautilus-fileroller.c:277
+#, fuzzy
+msgid "Extract To..."
+msgstr "...ലേക്ക് വലിച്ചിടുക"
+
+#: ../nautilus/nautilus-fileroller.c:278
+#, fuzzy
+msgid "Extract the selected archive"
+msgstr "ആര്‍ക്കേവ് വലിച്ചിടുക്കുക"
+
+#: ../nautilus/nautilus-fileroller.c:298
+#, fuzzy
+msgid "Create an archive with the selected objects"
+msgstr "ഈരചനകള്െകാണ്ട്ഒരുപുതിയേശഖരംഉണ്ടാക്കണേമാ?"
+
+#: ../src/actions.c:112
+msgid "Automatic"
+msgstr "തനിയെയുള്ള"
+
+#: ../src/actions.c:117
+#, fuzzy
+msgid "Ar (.ar)"
+msgstr "Ear (.ear)"
+
+#: ../src/actions.c:129
+msgid "Arj (.arj)"
+msgstr ""
+
+#: ../src/actions.c:158
+msgid "Ear (.ear)"
+msgstr "Ear (.ear)"
+
+#: ../src/actions.c:171
+msgid "Jar (.jar)"
+msgstr "Jar (.jar)"
+
+#: ../src/actions.c:185
+msgid "Lha (.lzh)"
+msgstr "Lha (.lzh)"
+
+#: ../src/actions.c:202
+msgid "Rar (.rar)"
+msgstr "Rar (.rar)"
+
+#: ../src/actions.c:217
+msgid "Tar uncompressed (.tar)"
+msgstr "Tar uncompressed (.tar)"
+
+#: ../src/actions.c:226
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "Tar compressed with bzip (.tar.bz)"
+
+#: ../src/actions.c:232
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "Tar compressed with bzip2 (.tar.bz2)"
+
+#: ../src/actions.c:242
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "Tar compressed with gzip (.tar.gz)"
+
+#: ../src/actions.c:252
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "Tar compressed with lzop (.tar.lzo)"
+
+#: ../src/actions.c:260
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "Tar compressed with compress (.tar.Z)"
+
+#: ../src/actions.c:291
+msgid "War (.war)"
+msgstr "War (.war)"
+
+#: ../src/actions.c:294
+msgid "Zip (.zip)"
+msgstr "Zip (.zip)"
+
+#: ../src/actions.c:302
+msgid "Zoo (.zoo)"
+msgstr ""
+
+#: ../src/actions.c:312
+#, fuzzy
+msgid "7-Zip (.7z)"
+msgstr "Zip (.zip)"
+
+#: ../src/actions.c:415 ../src/actions.c:435 ../src/actions.c:467
+#: ../src/actions.c:783 ../src/dlg-batch-add.c:107 ../src/dlg-batch-add.c:126
+#: ../src/dlg-batch-add.c:153 ../src/dlg-batch-add.c:175
+#: ../src/dlg-batch-add.c:226 ../src/dlg-batch-add.c:271 ../src/window.c:4112
+#, fuzzy
+msgid "Could not create the archive"
+msgstr "പഴയ ആര്‍ക്കേവ് നശിപ്പിക്കാനാകുന്നില്ല."
+
+#: ../src/actions.c:416 ../src/actions.c:741 ../src/dlg-batch-add.c:108
+#: ../src/dlg-batch-add.c:272
+msgid "You have to specify an archive name."
+msgstr "േശഖരത്തിെ൯റേപരുപറയുക"
+
+#: ../src/actions.c:436 ../src/actions.c:761
+msgid "You don't have permission to create an archive in this folder"
+msgstr "ഈ കൂടില്‌ എഴുതുവാന്‌ താങ്കള്‌ക്ക് അനുവാദമില്ല"
+
+#: ../src/actions.c:468 ../src/actions.c:784 ../src/dlg-batch-add.c:154
+#: ../src/fr-archive.c:719 ../src/window.c:4113 ../src/window.c:4269
+msgid "Archive type not supported."
+msgstr "ഈേശഖരംഉപേയാഗിക്കാനാവില്ല"
+
+#: ../src/actions.c:481 ../src/actions.c:797
+#, fuzzy
+msgid "The archive already exists.  Do you want to overwrite it?"
+msgstr "ആര്‍ക്കേവ് നിലനില്‌ക്കുന്നുണ്ട്. മാറ്റിയെഴുതണോ?"
+
+#: ../src/actions.c:484 ../src/actions.c:800
+msgid "Overwrite"
+msgstr "മേലെഴുത്ത്"
+
+#: ../src/actions.c:501 ../src/actions.c:817
+#, fuzzy
+msgid "Could not delete the old archive."
+msgstr "പഴയ ആര്‍ക്കേവ് നശിപ്പിക്കാനാകുന്നില്ല."
+
+#: ../src/actions.c:530
+msgid "New"
+msgstr "പുതിയ"
+
+#: ../src/actions.c:567 ../src/actions.c:674 ../src/actions.c:859
+#, fuzzy
+msgid "All archives"
+msgstr "േശഖരം "
+
+#: ../src/actions.c:574 ../src/actions.c:681 ../src/actions.c:866
+#, fuzzy
+msgid "All files"
+msgstr "എല്ലാ രചനകളും‌"
+
+#: ../src/actions.c:584 ../src/actions.c:874
+msgid "Archive type:"
+msgstr "ആര്‍ക്കേവ് തരം:"
+
+#: ../src/actions.c:662 ../src/window.c:3707
+msgid "Open"
+msgstr "തുറക്കുക"
+
+#: ../src/actions.c:740 ../src/actions.c:760
+#, fuzzy
+msgid "Could not save the archive"
+msgstr "ആര്‍ക്കേവ് നീക്കാനായില്ല "
+
+#: ../src/actions.c:847
+msgid "Save"
+msgstr ""
+
+#: ../src/actions.c:1108 ../src/window.c:4961
+msgid "Last Output"
+msgstr "അവസാന ഫലം"
+
+#: ../src/actions.c:1128 ../src/dlg-extract.c:100
+#, fuzzy
+msgid "Could not display help"
+msgstr "%s-ന്റെ സഹായഗ്രന്ഥം തുറക്കാനാവുന്നില്ല"
+
+#: ../src/actions.c:1160
+#, fuzzy
+msgid "translator-credits"
+msgstr "എഫ്.എസ്.എഫ് - ഇന്ത്യ <gnu@gnu.org.in>"
+
+#: ../src/actions.c:1170
 msgid "File Roller"
 msgstr "ഫയല് റോളര്"
 
-#: file-roller.desktop.in.h:3
-msgid "Handle compressed archives"
-msgstr "ചുരു്കിയേശഖരംെെകകാരൃംെചയ്യുക"
+#: ../src/actions.c:1173
+msgid "An archive manager for GNOME."
+msgstr ""
 
-#: src/dlg-add.c:119
+#: ../src/dlg-add-files.c:85 ../src/dlg-add-files.c:147
+#: ../src/dlg-add-folder.c:118 ../src/dlg-add-folder.c:247
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "നിങ്ങള്ക്ക് \"%s\" ല് നിന്നും വായിക്കുവാനുള്ള അനുവാദമില്ല"
 
-#: src/dlg-add.c:349
+#: ../src/dlg-add-files.c:91 ../src/dlg-add-files.c:153
+#: ../src/dlg-add-folder.c:124 ../src/dlg-add-folder.c:253
+#: ../src/window.c:2071 ../src/window.c:2109
+#, fuzzy
+msgid "Could not add the files to the archive"
+msgstr "രചനകള്‌ ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
+
+#: ../src/dlg-add-files.c:179
 msgid "Add Files"
 msgstr "ലിഖിതങള്േച൪ക്കുക"
 
-#: src/dlg-add.c:354
+#: ../src/dlg-add-files.c:191 ../src/dlg-add-folder.c:324
 msgid "_Add only if newer"
 msgstr "പുതിയതാണെങ്കില് മാത്രം ചേര്ക്കുക"
 
-#: src/dlg-add.c:355
-msgid "_Include sub-folders"
+#: ../src/dlg-add-folder.c:312
+#, fuzzy
+msgid "Add a Folder"
+msgstr "രചനകളും കൂടുകളും ചേര്‍ക്കുക"
+
+#: ../src/dlg-add-folder.c:325
+#, fuzzy
+msgid "_Include subfolders"
 msgstr "ഉപകൂടുകള് ഉള്‍പ്പെടുത്തുക"
 
-#: src/dlg-add.c:356
+#: ../src/dlg-add-folder.c:326
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "രചനയില്‌  വളരെയധികം പ്രതീകാത്മക ബന്ധങ്ങള്‌ ഉണ്ട്"
 
-#: src/dlg-add.c:357
-msgid "Exclude o_ther file systems"
-msgstr "ബാക്കിരചനകള്ഒഴിവാക്കുക"
-
-#: src/dlg-add.c:358
-msgid "Exclude _backup files (*~)"
-msgstr "ബാക്കപ്പ് രചനകള്‍ ഒഴിവാക്കുക (*~)"
-
-#: src/dlg-add.c:359
-msgid "Exclude _hidden files (.*)"
-msgstr "ഒളിഞ്ഞിരിക്കുന്ന രചനകള്‍ ഒഴിവാക്കുക (.*)"
-
-#: src/dlg-add.c:360
-msgid "E_xclude files:"
-msgstr "ഒഴിവാക്കേണ്ട രചനകള്‍:"
-
-#: src/dlg-add.c:362
+#: ../src/dlg-add-folder.c:329 ../src/dlg-add-folder.c:334
 msgid "example: *.o; *.bak"
 msgstr "ഉദാ: *.o; *.bak"
 
-#: src/dlg-add.c:363
-msgid "Igno_re case"
-msgstr "േകസ്അവഗണിക്കുക"
+#: ../src/dlg-add-folder.c:330
+#, fuzzy
+msgid "_Include files:"
+msgstr "ഒഴിവാക്കേണ്ട രചനകള്‍:"
 
-#: src/dlg-add.c:364
+#: ../src/dlg-add-folder.c:335
+msgid "E_xclude files:"
+msgstr "ഒഴിവാക്കേണ്ട രചനകള്‍:"
+
+#: ../src/dlg-add-folder.c:338
 msgid "_Load Options"
 msgstr "ബദലുകള്‍ നിറയ്‌ക്കുക"
 
-#: src/dlg-add.c:365
+#: ../src/dlg-add-folder.c:339
 msgid "Sa_ve Options"
 msgstr "ബദലുകള്‌ സംരക്ഷിക്കുക"
 
-#: src/dlg-add.c:620
-msgid "Load Options"
-msgstr "ബദലുകള് നിറയ്‌ക്കുക"
-
-#: src/dlg-add.c:769
+#: ../src/dlg-add-folder.c:791
 msgid "Save Options"
 msgstr "ബദലുകള് സംരക്ഷിക്കുക"
 
-#: src/dlg-batch-add.c:98 src/menu-callbacks.c:180 src/menu-callbacks.c:360
-msgid "You have to specify an archive name."
-msgstr "േശഖരത്തിെ൯റേപരുപറയുക"
+#: ../src/dlg-add-folder.c:792
+msgid "Options Name:"
+msgstr ""
 
-#: src/dlg-batch-add.c:115 src/dlg-extract.c:120 src/window.c:3704
-msgid "Destination folder does not exist.  Do you want to create it?"
+#: ../src/dlg-batch-add.c:121 ../src/window.c:5187
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
+"\n"
+"%s"
+msgstr ""
+
+#: ../src/dlg-batch-add.c:121 ../src/window.c:5179 ../src/window.c:5183
+#: ../src/window.c:5187 ../src/window.c:5244 ../src/window.c:5246
+msgid "Please use a different name."
+msgstr ""
+
+#: ../src/dlg-batch-add.c:176
+#, fuzzy
+msgid ""
+"You don't have the right permissions to create an archive in the destination "
+"folder."
+msgstr "ഈ കൂടില്‌ എഴുതുവാന്‌ താങ്കള്‌ക്ക് അനുവാദമില്ല"
+
+#: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4510
+#, fuzzy, c-format
+msgid ""
+"Destination folder \"%s\" does not exist.\n"
+"\n"
+"Do you want to create it?"
 msgstr "ലക്ഷൃസ്ഥാനകൂട്നിലവിലില്ല. സ്റിഷ്ടിക്കണേമാ?"
 
-#: src/dlg-batch-add.c:117 src/dlg-extract.c:122 src/window.c:3706
+#: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4519
 msgid "Create _Folder"
 msgstr "കൂട്‌ നിര്‍മ്മിക്കുക"
 
-#: src/dlg-batch-add.c:136
-#, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Addition not performed."
+#: ../src/dlg-batch-add.c:222 ../src/dlg-extract.c:188 ../src/window.c:4538
+#, fuzzy, c-format
+msgid "Could not create the destination folder: %s."
 msgstr ""
 "ലക്ഷൃസ്ഥാനകൂട്: %s.\n"
 "കൂട്ടിേച൪ത്തില്ല"
 
-#: src/dlg-batch-add.c:154
-msgid "Addition not performed."
-msgstr "കൂട്ടിച്ചേര്‍ത്തിട്ടില്ല"
+#: ../src/dlg-batch-add.c:246
+#, fuzzy
+msgid "Archive not created"
+msgstr "ഈേശഖരംഉപേയാഗിക്കാനാവില്ല"
 
-#: src/dlg-batch-add.c:231
-#, fuzzy, c-format
-msgid "Files to add: %d"
-msgstr "േച൪േക്കണ്ട രചനകള്"
+#: ../src/dlg-batch-add.c:297
+#, fuzzy
+msgid "The archive is already present.  Do you want to overwrite it?"
+msgstr "ആര്‍ക്കേവ് നിലനില്‌ക്കുന്നുണ്ട്. മാറ്റിയെഴുതണോ?"
 
-#: src/dlg-batch-add.c:233
-#, fuzzy, c-format
-msgid "Folders to add: %d"
-msgstr "േച൪േക്കണ്ട കൂടുകള്"
+#: ../src/dlg-batch-add.c:300
+#, fuzzy
+msgid "_Overwrite"
+msgstr "മേലെഴുത്ത്"
 
-#: src/dlg-extract.c:142 src/window.c:3726
-#, c-format
-msgid ""
-"Could not create the destination folder: %s.\n"
-"Extraction not performed."
-msgstr ""
-"ലക്ഷൃസ്ഥാനകൂടിെന സ്റിഷ്ടിക്കാ൯സാധിച്ചില്ല: %s.\n"
-"വലിച്ചിട്ടില്ല"
-
-#: src/dlg-extract.c:157 src/window.c:3741
-msgid "Extraction not performed."
+#: ../src/dlg-extract.c:192 ../src/dlg-extract.c:212 ../src/dlg-extract.c:240
+#: ../src/window.c:4542 ../src/window.c:4562
+#, fuzzy
+msgid "Extraction not performed"
 msgstr "വലിച്ചിടല്‍ നടത്തിയില്ല."
 
-#: src/dlg-extract.c:176
+#: ../src/dlg-extract.c:235
 #, fuzzy, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "േശഖരെത്ത കൂട്ടില് േച൪ക്കാ൯ താ൯കള്ക്കുഅനുവാദമില്ല"
 
-#: src/dlg-extract.c:412 src/dlg-preferences.c:127 src/menu-callbacks.c:1006
-#, c-format
-msgid "Could not display help: %s"
-msgstr "%s-ന്റെ സഹായഗ്രന്ഥം തുറക്കാനാവുന്നില്ല"
-
-#: src/dlg-extract.c:489
-msgid "Actions"
-msgstr "പ്ര‌വ‍ര്ത്തനം"
-
-#: src/dlg-extract.c:490
-msgid "Destination folder"
-msgstr "ലക്ഷ്യസ്ഥാന കൂട്"
-
-#: src/dlg-extract.c:491
+#: ../src/dlg-extract.c:396
 msgid "Files"
 msgstr "രചനകള്"
 
-#: src/dlg-extract.c:520
-msgid "Bookmarks"
-msgstr "അടയാളങ്ങള്‍‌"
+#: ../src/dlg-extract.c:404 ../src/dlg-extract.c:454
+msgid "    "
+msgstr "   "
 
-#: src/dlg-preferences.c:184
-msgid "General"
-msgstr "സാര്‍വത്രികമായ"
+#: ../src/dlg-extract.c:445
+msgid "Actions"
+msgstr "പ്ര‌വ‍ര്ത്തനം"
 
-#: src/dlg-preferences.c:189
-msgid "Visible columns"
-msgstr "ദൃശ്യമായ നിരകള്‍"
+#: ../src/dlg-extract.c:461
+msgid "R_e-create folders"
+msgstr "കൂടിെനപുനഃസ്റിഷ്ടിയ്ക്കുക"
 
-#: src/dlg-prop.c:99
+#: ../src/dlg-extract.c:465
+msgid "Over_write existing files"
+msgstr "നിലവിലുള്ള രചനകള്‌‌ മാറ്റി എഴുതുക"
+
+#: ../src/dlg-extract.c:469
+msgid "Do not e_xtract older files"
+msgstr "പഴയരചനകെളഎടുേക്കണ്ട"
+
+#: ../src/dlg-extract.c:484
+#, fuzzy
+msgid "_Open destination folder after extraction"
+msgstr "വലിച്ചിടലിനു ശേഷം ലക്ഷ്യസ്ഥാന കൂട് കാണിക്കുക"
+
+#: ../src/dlg-prop.c:102
 msgid "Path:"
 msgstr "വഴി:"
 
-#: src/dlg-prop.c:112
+#: ../src/dlg-prop.c:115
 msgid "Name:"
 msgstr "നാമം:"
 
-#: src/dlg-prop.c:119
+#: ../src/dlg-prop.c:121
 #, c-format
 msgid "%s Properties"
 msgstr "%s ഗുണഗണങ്ങള്‌"
 
-#: src/dlg-prop.c:128
-msgid "File size:"
-msgstr "രചനയുടെ വലിപ്പം:‌‌"
+#: ../src/dlg-prop.c:130
+msgid "Modified on:"
+msgstr ""
 
-#: src/dlg-prop.c:139
-msgid "Number of files:"
-msgstr "രചനകളുടെ എണ്ണം:"
-
-#: src/dlg-prop.c:149
-msgid "Date and time:"
-msgstr "തീയതിയും സമയും"
-
-#: src/dlg-prop.c:155
+#: ../src/dlg-prop.c:136 ../src/window.c:426
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
-#: src/file-data.c:28
+#: ../src/dlg-prop.c:144
+#, fuzzy
+msgid "Archive size:"
+msgstr "ആര്‍ക്കേവ് തരം:"
+
+#: ../src/dlg-prop.c:155
+#, fuzzy
+msgid "Content size:"
+msgstr "ഉള്ളടക്കം"
+
+#: ../src/dlg-prop.c:174
+#, fuzzy
+msgid "Compression ratio:"
+msgstr "ചുരുക്കുന്നഅളവ്"
+
+#: ../src/dlg-prop.c:189
+msgid "Number of files:"
+msgstr "രചനകളുടെ എണ്ണം:"
+
+#: ../src/file-data.c:28
 msgid "Unknown type"
 msgstr "അറിയാത്ത ഇനം"
 
-#: src/file-data.c:29
+#: ../src/file-data.c:29
 msgid "Symbolic link"
 msgstr "ചിഹ്നിത ബന്ധം"
 
-#: src/file-utils.c:535
-msgid "Cannot find a terminal, using xterm, even if it may not work"
+#: ../src/fr-archive.c:694
+msgid "The file does not exist."
 msgstr ""
 
-#: src/file_roller.glade.h:1 src/file_roller_prop.glade.h:1
-msgid "    "
-msgstr "   "
-
-#: src/file_roller.glade.h:2
-msgid "*"
-msgstr "*"
-
-#: src/file_roller.glade.h:3
-msgid "A_dd to Bookmarks"
-msgstr "അടയാളം കൂട്ടിച്ചേര്‍ക്കുക"
-
-#: src/file_roller.glade.h:4
-msgid "A_vailable application:"
-msgstr "ലഭ്യമായ പ്രയോഗം:"
-
-#: src/file_roller.glade.h:5
-msgid "Add Files and Folders"
-msgstr "രചനകളും കൂടുകളും ചേര്‍ക്കുക"
-
-#: src/file_roller.glade.h:6
-msgid "Add _to archive:"
-msgstr "ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക:"
-
-#: src/file_roller.glade.h:7
-msgid "Add only if _newer"
-msgstr "പുതിയതാണെങ്കില് മാത്രം ചേര്‍ക്കുക"
-
-#: src/file_roller.glade.h:8
-msgid "Delete Files"
-msgstr "രചനകള്‍ നീക്കംചെയ്യ‍ുക"
-
-#: src/file_roller.glade.h:9
-msgid "Do not e_xtract older files"
-msgstr "പഴയരചനകെളഎടുേക്കണ്ട"
-
-#: src/file_roller.glade.h:10 src/window.c:2971
-msgid "Extract"
-msgstr "വലിച്ചിടുക"
-
-#: src/file_roller.glade.h:11
-msgid "Extract to"
-msgstr " ഇതിേലയ്ക്ക് വലിച്ചിടുക"
-
-#: src/file_roller.glade.h:12
-msgid ""
-"Note: the password will be used to encrypt files you add to the current "
-"archive, and to decrypt files you extract from the current archive. When the "
-"archive is closed the password will be deleted."
-msgstr ""
-"രചനകെളസൂക്ഷിക്കാനുംേച൪ക്കാനുംഅടയാളവാകൃംഉപേയാഗിയ്ക്കും"
-"ശഖരംഅടച്ചുകഴിഞ്ഞാല്അടയാളവാകൃംനശിപ്പിച്ചുകളയും"
-
-#: src/file_roller.glade.h:13
-msgid "Open Files"
-msgstr "രചനകള്‍ തുറക്കുക"
-
-#: src/file_roller.glade.h:14
-msgid "Open with an _application"
-msgstr "ഒരു പ്രയോഗം ഉപയോഗിച്ച് തുറക്കുക"
-
-#: src/file_roller.glade.h:15
-msgid "Over_write existing files"
-msgstr "നിലവിലുള്ള രചനകള്‌‌ മാറ്റി എഴുതുക"
-
-#: src/file_roller.glade.h:16
-msgid "Password"
-msgstr "അടയാളവാക്യം"
-
-#: src/file_roller.glade.h:17
-msgid "R_e-create folders"
-msgstr "കൂടിെനപുനഃസ്റിഷ്ടിയ്ക്കുക"
-
-#: src/file_roller.glade.h:18
-msgid "R_ecent applications:"
-msgstr "അവസാനം ഉപയോഗിച്ച പ്രയോഗം:"
-
-#: src/file_roller.glade.h:19
-msgid "Select Archive"
-msgstr "േശഖരെത്തതപ്പിഎടുക്കുക"
-
-#: src/file_roller.glade.h:20 src/menu.h:460
-msgid "View File"
-msgstr "രചന കാണുക"
-
-#: src/file_roller.glade.h:21
-msgid "View with internal _viewer"
-msgstr "ആന്തരിക ദ‌ര്‍ശിനികള് ഉപയോഗിച്ച് കാണുക"
-
-#: src/file_roller.glade.h:22
-msgid "_All files"
-msgstr "എല്ലാ രചനകളും‌"
-
-#: src/file_roller.glade.h:23
-msgid "_Application:"
-msgstr "പ്രയോഗം:"
-
-#: src/file_roller.glade.h:24
-msgid "_Files:"
-msgstr "രചനകള്:"
-
-#: src/file_roller.glade.h:25
-msgid "_Password:"
-msgstr "അടയാളവാക്ക്:"
-
-#: src/file_roller.glade.h:26
-msgid "_Selected files"
-msgstr "തെരഞ്ഞെടുത്ത രചനകള്‍"
-
-#: src/file_roller.glade.h:27
-msgid "_View destination folder after extraction"
-msgstr "വലിച്ചിടലിനു ശേഷം ലക്ഷ്യസ്ഥാന കൂട് കാണിക്കുക"
-
-#: src/file_roller.glade.h:28
-msgid "example: *.txt; *.doc"
-msgstr "ഉദാഹരണം : *.txt ; *.doc"
-
-#: src/file_roller_prop.glade.h:2
-msgid "Compression _level:"
-msgstr "ചുരുക്കുന്നഅളവ്"
-
-#: src/file_roller_prop.glade.h:3
-msgid "Date _modified"
-msgstr "മാറ്റിയ തീയതി"
-
-#: src/file_roller_prop.glade.h:4
-msgid "File Roller Preferences"
-msgstr "ഫയല് റോളര്‍ മുന്ഗണനഗള്"
-
-#: src/file_roller_prop.glade.h:5
-msgid "Low"
-msgstr "കുറഞ്ഞ"
-
-#: src/file_roller_prop.glade.h:6
-msgid "Maximum (slow)"
-msgstr "ഏറ്റവും കൂടിയ (പതുക്കെ)"
-
-#: src/file_roller_prop.glade.h:7
-msgid "Minimum (fast)"
-msgstr "ഏറ്റവും കുറഞ്ഞ (വേഗത്തില്‍)"
-
-#: src/file_roller_prop.glade.h:8
-msgid "Normal"
-msgstr "സാധാരണ"
-
-#: src/file_roller_prop.glade.h:9
-msgid "_Path"
-msgstr "വഴി"
-
-#: src/file_roller_prop.glade.h:10
-msgid "_Recent archives:"
-msgstr "അവസാനം ഉപയോഗിച്ച ആര്‍ക്കേവുകള്‍"
-
-#: src/file_roller_prop.glade.h:11
-msgid "_Size"
-msgstr "വലിപ്പം:"
-
-#: src/file_roller_prop.glade.h:12
-msgid "_Type"
-msgstr "തരം"
-
-#: src/fr-command-tar.c:219
+#: ../src/fr-command-tar.c:281
 msgid "Adding file: "
 msgstr "രചനകള്േച൪ക്കുന്നു"
 
-#: src/fr-command-tar.c:265
+#: ../src/fr-command-tar.c:327
 msgid "Removing file: "
 msgstr "രചനകള് മാറ്റുന്നു"
 
-#: src/fr-command-tar.c:274 src/window.c:1249
+#: ../src/fr-command-tar.c:336 ../src/window.c:1377
 msgid "Deleting files from archive"
 msgstr "ആര്‍ക്കേവില് നിന്ന് രചനകള്‌‌ നീക്കിക്കളയുന്നു"
 
-#: src/fr-command-tar.c:307
+#: ../src/fr-command-tar.c:369
 msgid "Extracting file: "
 msgstr " രചനകള്വലിെച്ചടുക്കു്നു"
 
-#: src/fr-command-tar.c:352
+#: ../src/fr-command-tar.c:414
 msgid "Recompressing archive"
 msgstr "ചുരുക്കിയേശഖരം"
 
-#: src/fr-command-tar.c:486
+#: ../src/fr-command-tar.c:548
 msgid "Decompressing archive"
 msgstr ""
 
-#: src/gconf-utils.c:98
-#, c-format
-msgid ""
-"GConf error:\n"
-"  %s"
-msgstr ""
-"GConf പിശക്:\n"
-"  %s"
-
-#. Button
-#: src/gtk-utils.c:410
-msgid "Command _Line Output"
-msgstr "ആജ്ഞമേഘല ഫലം"
-
-#: src/main.c:59
-msgid "Add files to the specified archive and quit the program"
-msgstr " രചനകെളപറഞ്ഞേശഖരത്തില്േച൪ത്ത്തീ൪ത്തുേപാരുക"
-
-#: src/main.c:60
-msgid "ARCHIVE"
-msgstr "േശഖരo"
-
-#: src/main.c:63
-msgid "Add files asking the name of the archive and quit the program"
-msgstr "രചനകെള േശഖരത്തിെ൯റ േപരു േചാദിച്ച് അതില്ല് േച൪ത്ത്തീ൪ത്തുേപാരുക"
-
-#: src/main.c:67
-msgid "Extract archives to the specified folder and quit the program"
-msgstr "രചനകെളപറഞ്ഞേശഖരത്തില്വലിച്ചിട്ട്തീ൪ത്തുേപാരുക"
-
-#: src/main.c:68 src/main.c:76
-msgid "FOLDER"
-msgstr "കൂട്"
-
-#: src/main.c:71
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr "േശഖരെത്ത കൂടിെ൯റ േപരു േചാദിച്ച് അതില്ല് േച൪ത്ത്തീ൪ത്തുേപാരുക"
-
-#: src/main.c:75
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
-
-#: src/main.c:79
-msgid "Create destination folder without asking confirmation"
-msgstr "ലക്ഷൃകൂടിെനഅനുവാദംേചാദിക്കാെതസ്റിഷ്ടിയ്ക്കുക"
-
-#: src/menu-callbacks.c:108
-msgid "Automatic"
-msgstr "തനിയെയുള്ള"
-
-#: src/menu-callbacks.c:109
-msgid "Arj (.arj)"
-msgstr ""
-
-#: src/menu-callbacks.c:110
-msgid "Ear (.ear)"
-msgstr "Ear (.ear)"
-
-#: src/menu-callbacks.c:111
-msgid "Jar (.jar)"
-msgstr "Jar (.jar)"
-
-#: src/menu-callbacks.c:112
-msgid "Lha (.lzh)"
-msgstr "Lha (.lzh)"
-
-#: src/menu-callbacks.c:113
-msgid "Rar (.rar)"
-msgstr "Rar (.rar)"
-
-#: src/menu-callbacks.c:114
-msgid "Tar uncompressed (.tar)"
-msgstr "Tar uncompressed (.tar)"
-
-#: src/menu-callbacks.c:115
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "Tar compressed with bzip (.tar.bz)"
-
-#: src/menu-callbacks.c:116
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "Tar compressed with bzip2 (.tar.bz2)"
-
-#: src/menu-callbacks.c:117
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "Tar compressed with gzip (.tar.gz)"
-
-#: src/menu-callbacks.c:118
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "Tar compressed with lzop (.tar.lzo)"
-
-#: src/menu-callbacks.c:119
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "Tar compressed with compress (.tar.Z)"
-
-#: src/menu-callbacks.c:120
-msgid "War (.war)"
-msgstr "War (.war)"
-
-#: src/menu-callbacks.c:121
-msgid "Zip (.zip)"
-msgstr "Zip (.zip)"
-
-#: src/menu-callbacks.c:122
-msgid "Zoo (.zoo)"
-msgstr ""
-
-#: src/menu-callbacks.c:197 src/menu-callbacks.c:377
-msgid "You don't have permission to create an archive in this folder"
-msgstr "ഈ കൂടില്‌ എഴുതുവാന്‌ താങ്കള്‌ക്ക് അനുവാദമില്ല"
-
-#: src/menu-callbacks.c:223 src/menu-callbacks.c:395 src/menu-callbacks.c:610
-#: src/menu-callbacks.c:783
-msgid "Archive already exists.  Do you want to overwrite it?"
-msgstr "ആര്‍ക്കേവ് നിലനില്‌ക്കുന്നുണ്ട്. മാറ്റിയെഴുതണോ?"
-
-#: src/menu-callbacks.c:225 src/menu-callbacks.c:397 src/menu-callbacks.c:612
-#: src/menu-callbacks.c:785
-msgid "Overwrite"
-msgstr "മേലെഴുത്ത്"
-
-#: src/menu-callbacks.c:242 src/menu-callbacks.c:414
-msgid "Could not delete old archive."
-msgstr "പഴയ ആര്‍ക്കേവ് നശിപ്പിക്കാനാകുന്നില്ല."
-
-#: src/menu-callbacks.c:283
-msgid "New Archive"
-msgstr "പുതിയ ആര്‍ക്കേവ്"
-
-#: src/menu-callbacks.c:295 src/menu-callbacks.c:450
-msgid "Archive type:"
-msgstr "ആര്‍ക്കേവ് തരം:"
-
-#: src/menu-callbacks.c:438
-msgid "Save Archive"
-msgstr "േശഖരെത്തസംരക്ഷിയ്ക്കുക"
-
-#: src/menu-callbacks.c:521
-msgid "Open Archive"
-msgstr "ആര്‍ക്കേവ് തുറക്കുക"
-
-#: src/menu-callbacks.c:635
-msgid "Could not copy archive"
-msgstr "ആര്‍ക്കേവ് പക‌ര്‍ത്താനായില്ല"
-
-#: src/menu-callbacks.c:651
-msgid "Could not move archive"
-msgstr "ആര്‍ക്കേവ് നീക്കാനായില്ല "
-
-#: src/menu-callbacks.c:675
-msgid "Copy Archive"
-msgstr "േശഖരെത്ത പക൪ത്തുക"
-
-#: src/menu-callbacks.c:675
-msgid "Move Archive"
-msgstr "േശഖരെത്ത  നീക്കുക"
-
-#: src/menu-callbacks.c:753
-msgid "Rename Archive"
-msgstr "േശഖരത്തിെ൯റേപരുമാറ്റുക "
-
-#: src/menu-callbacks.c:754
-msgid "New archive name (without extension)"
-msgstr "പുതിയ ആര്‍ക്കേവിന്റെ പേര‌്"
-
-#: src/menu-callbacks.c:758
-msgid "_Rename"
-msgstr "പേര‍് മാറ്റുക"
-
-#: src/menu-callbacks.c:867
-msgid ""
-"The archive cannot be moved to the Trash. Do you want to delete it "
-"permanently?"
-msgstr "േശഖരെത്ത ചവറ്റുകുട്ടയില് ഇടാനാവുന്നില്ല. നശിപ്പിച്ചുകളയെട്ട?"
-
-#: src/menu-callbacks.c:1035
-msgid "translator_credits"
-msgstr "എഫ്.എസ്.എഫ് - ഇന്ത്യ <gnu@gnu.org.in>"
-
-#: src/menu-callbacks.c:1046
-msgid "An archive manager for GNOME."
-msgstr ""
-
-#: src/menu-callbacks.c:1220 src/window.c:4027
-msgid "Last Output"
-msgstr "അവസാന ഫലം"
-
-#: src/menu.h:70
-msgid "_New"
-msgstr "പുതിയ"
-
-#: src/menu.h:70 src/toolbar.h:39
-msgid "Create a new archive"
-msgstr "ഒരു പുതിയ ആര്‍ക്കേവ്‌ നിര്മ്മിക്കുക"
-
-#: src/menu.h:76
-msgid "_Open..."
-msgstr "തുറക്കുക..."
-
-#: src/menu.h:76
-msgid "Open an existing archive"
-msgstr "നിലവിലിരിയ്ക്കുന്ന ഒരു േശഖരെത്ത തുറക്കുക"
-
-#: src/menu.h:81
-msgid "Open R_ecent"
-msgstr "പുതുതായവ തുറക്കുക"
-
-#: src/menu.h:86
-msgid "Save _As..."
-msgstr "പേ‍ര‍് മാറ്റി‌ സംരക്ഷിക്കുക"
-
-#: src/menu.h:86
-msgid "Save current archive in a different type or name"
-msgstr "ഈേശഖരെത്തമെററാരുേപരില്സംരക്ഷിയ്ക്കുക"
-
-#: src/menu.h:94
-msgid "Open Fi_les..."
-msgstr "രചനകള്‍ തുറക്കുക..."
-
-#: src/menu.h:94
-msgid "Open selected files with an application"
-msgstr ""
-
-#: src/menu.h:100
-msgid "_View File"
-msgstr "രചന കാണുക"
-
-#: src/menu.h:100 src/menu.h:460
-msgid "View file with internal viewer"
-msgstr ""
-
-#: src/menu.h:108
-msgid "_Rename..."
-msgstr "പേര‍് മാറ്റുക..."
-
-#: src/menu.h:108
-msgid "Rename current archive"
-msgstr "നിലവിലുള്ള ആര്‍ക്കേവിന്റെ പേര‌് മാറ്റുക"
-
-#: src/menu.h:114
-msgid "Cop_y..."
-msgstr "പക൪ത്തുക"
-
-#: src/menu.h:114
-msgid "Copy current archive to another folder"
-msgstr "ഈേശഖരെത്തമെററാരുകൂട്ടിേലയ്ക്കുപക൪ത്തുക"
-
-#: src/menu.h:120
-msgid "_Move..."
-msgstr "നീക്കുക"
-
-#: src/menu.h:120
-msgid "Move current archive to another folder"
-msgstr "ഈേശഖരെത്തമെററാരുകൂട്ടിേലയ്ക്കു നീക്കുക"
-
-#: src/menu.h:126
-msgid "Move To _Trash"
-msgstr "ചവറ്റുകുട്ടയിലേക്ക് നീക്കുക"
-
-#: src/menu.h:126
-msgid "Move current archive to trash"
-msgstr "ഈേശഖരെത്ത ചവറ്റുകുട്ടയിലേക്ക് നീക്കുക"
-
-#: src/menu.h:132
-msgid "_Test"
-msgstr "പരീക്ഷണം"
-
-#: src/menu.h:132
-msgid "Test whether the archive contains errors"
-msgstr "േശഖരത്തില് െതററുകള് ഉേണ്ടാ എന്ന് പരിേശാധിയ്ക്കുക"
-
-#: src/menu.h:140
-msgid "_Properties"
-msgstr "ഗുണഗണങ്ങള്‌"
-
-#: src/menu.h:140
-msgid "Show archive properties"
-msgstr "േശഖരത്തിെ൯റ ഗുണഗണങ്ങള് കാണിയ്കകുക "
-
-#: src/menu.h:148
-msgid "_Close"
-msgstr "അടയ്‍ക്കുക"
-
-#: src/menu.h:148
-msgid "Close current archive"
-msgstr "ഈേശഖരം അടയ്‍ക്കുക "
-
-#: src/menu.h:154
-msgid "E_xit"
-msgstr "പുറത്ത് കടക്കുക"
-
-#: src/menu.h:154
-msgid "Exit"
-msgstr "പുറത്ത് കടക്കുക"
-
-#: src/menu.h:180 src/menu.h:468
-msgid "Add _Files..."
-msgstr "രചനകള്‍ ചേ‍ര്ക്കുക..."
-
-#: src/menu.h:180 src/menu.h:468 src/window.c:2961
-msgid "Add files to the archive"
-msgstr "രചനകള്‌ ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
-
-#: src/menu.h:186
-msgid "_Delete Files..."
-msgstr "രചനകള്‍ നശിപ്പിയ്ക്കുക..."
-
-#: src/menu.h:186
-msgid "Delete selected files and folders from the archive"
-msgstr "േശഖരത്തില്നിന്ന് തിരെഞ്ഞടുത്ത രചനകളുംകൂടുകളും നശിപ്പിയ്ക്കുക"
-
-#: src/menu.h:192 src/menu.h:480
-msgid "_Extract to..."
-msgstr "...ലേക്ക് വലിച്ചിടുക"
-
-#: src/menu.h:192 src/menu.h:480 src/window.c:2972
-msgid "Extract files from the archive"
-msgstr "േശഖരത്തില്നിന്ന് ""രചനകള്‍ വലിച്ചിടുക്കുക"
-
-#: src/menu.h:216 src/menu.h:488
-msgid "Select _All"
-msgstr "എല്ലാം തെരഞ്ഞെടുക്കുക"
-
-#: src/menu.h:216 src/menu.h:488
-msgid "Select all files"
-msgstr "എല്ലാ രചനകളും തെരഞ്ഞെടുക്കുക"
-
-#: src/menu.h:222 src/menu.h:494
-msgid "Dese_lect All"
-msgstr "തെരഞ്ഞെടുത്തത് വേണ്ടാതാക്കുക"
-
-#: src/menu.h:222 src/menu.h:494
-msgid "Deselect all files"
-msgstr "തെരഞ്ഞെടുത്തത് വേണ്ടാതാക്കുക"
-
-#: src/menu.h:230
-msgid "Pass_word..."
-msgstr "അടയാളവാക്ക്..."
-
-#: src/menu.h:238
-msgid "_Preferences"
-msgstr "മുന്ഗണനകള്"
-
-#: src/menu.h:238
-msgid "Edit File Roller preferences"
-msgstr ""
-
-#: src/menu.h:249
-msgid "by _Name"
-msgstr "പേരനുസരിച്ച്"
-
-#: src/menu.h:249
-msgid "Sort file list by name"
-msgstr "രചന പേരനുസരിച്ച് ക്രമീകരിക്കുക"
-
-#: src/menu.h:255
-msgid "by _Size"
-msgstr "വലിപ്പമനുസരിച്ച്"
-
-#: src/menu.h:255
-msgid "Sort file list by file size"
-msgstr "രചന വലിപ്പമനുസരിച്ച് ക്രമീകരിക്കുക"
-
-#: src/menu.h:261
-msgid "by T_ype"
-msgstr "തരമനുസരിച്ച്"
-
-#: src/menu.h:261
-msgid "Sort file list by type"
-msgstr "രചന തരമനുസരിച്ച് ക്രമീകരിക്കുക"
-
-#: src/menu.h:267
-msgid "by _Date modified"
-msgstr "തിയതി അനുസരിച്ച് ക്രമീകരിക്കുക"
-
-#: src/menu.h:267
-msgid "Sort file list by modification time"
-msgstr "രചന പരിഷ്കരിച്ച സമയമനുസരിച്ച് ക്രമീകരിക്കുക"
-
-#: src/menu.h:273
-msgid "by _Location"
-msgstr "സഥലഅനുസരിച്ച്"
-
-#: src/menu.h:273
-msgid "Sort file list by location"
-msgstr "രചന സഥലഅനുസരിച്ച് ക്രമീകരിക്കുക"
-
-#: src/menu.h:290
-msgid "View All _Files"
-msgstr "എല്ലാ രചനകളും കാണുക"
-
-#: src/menu.h:296
-msgid "View as a F_older"
-msgstr "കൂടായി കാണുക"
-
-#: src/menu.h:318
-msgid "_Reversed Order"
-msgstr "വിപരീത ക്രമീകരണത്തില്"
-
-#: src/menu.h:318
-msgid "Reverse the list order"
-msgstr "നാമാവലി വിപരീത ക്രമത്തിലാക്കുക"
-
-#: src/menu.h:342
-msgid "_Toolbar"
-msgstr "ഉപകരണപ്പട്ട"
-
-#: src/menu.h:342
-msgid "View the main toolbar"
-msgstr "പ്രധാന ഉപകരണപ്പട്ട കാണിക്കുക"
-
-#: src/menu.h:348
-msgid "Stat_usbar"
-msgstr "അവസ്ഥാപ്പട്ട"
-
-#: src/menu.h:348
-msgid "View the statusbar"
-msgstr "അവസ്ഥാപ്പട്ട കാണിക്കുക"
-
-#: src/menu.h:356
-msgid "_Stop"
-msgstr "നിര്‌ത്തുക"
-
-#: src/menu.h:356 src/toolbar.h:55
-msgid "Stop current operation"
-msgstr "ഇപ്പോഴത്തെ പ്രവ‌ര്‍ത്തനം നിര്‌ത്തുക"
-
-#: src/menu.h:362
-msgid "_Reload"
-msgstr "പുതുക്കുക"
-
-#: src/menu.h:362
-msgid "Reload current archive"
-msgstr "ഇപ്പോഴത്തെ ആര്‍ക്കേവ് പുതുക്കുക"
-
-#: src/menu.h:373
-msgid "_Arrange Files"
-msgstr "രചനകള് ക്രമീകരിക്കുക"
-
-#: src/menu.h:378
-msgid "_Last Output"
-msgstr "അവസാന ഫലം"
-
-#: src/menu.h:391
-msgid "New _Window"
-msgstr "പുതിയ ജാലകം"
-
-#: src/menu.h:391
-msgid "Open a new window"
-msgstr "പുതിയ ജാലകം തുറക്കുക"
-
-#: src/menu.h:397
-msgid "Clo_se Window"
-msgstr "ജാലകം അടയ്‍ക്കുക"
-
-#: src/menu.h:397
-msgid "Close this window"
-msgstr "ഈ ജാലകം അടയ്‍ക്കുക"
-
-#: src/menu.h:410
-msgid "_Contents"
-msgstr "ഉള്ളടക്കം"
-
-#: src/menu.h:410
-msgid "Display the File Roller Manual"
-msgstr "ഫയല് റോളര്‍ മാന്വല്‍ ദൃശ്യമാക്കുക"
-
-#: src/menu.h:416
-msgid "_About"
-msgstr "കുറിപ്പ്"
-
-#: src/menu.h:416
-msgid "Information about the program"
-msgstr "പ്രയോഗത്തെക്കുറിച്ചുള്ള വിവരങ്ങള്‍"
-
-#: src/menu.h:428
-msgid "_Archive"
-msgstr "േശഖരം "
-
-#: src/menu.h:429
-msgid "_Edit"
-msgstr "തിരുത്തല്"
-
-#: src/menu.h:430
+#: ../src/fr-stock.c:44
+#, fuzzy
+msgid "_Add"
+msgstr "ചേര്‍ക്കുക"
+
+#: ../src/fr-stock.c:45
+#, fuzzy
+msgid "_Extract"
+msgstr "വലിച്ചിടുക"
+
+#: ../src/fr-stock.c:46 ../src/ui.h:36 ../src/ui.h:154
 msgid "_View"
 msgstr "കാഴ്ച"
 
-#: src/menu.h:431
-msgid "_Windows"
-msgstr "ജാലകങ്ങള്"
+#. Button
+#: ../src/gtk-utils.c:421
+msgid "Command _Line Output"
+msgstr "ആജ്ഞമേഘല ഫലം"
 
-#: src/menu.h:454
-msgid "Open Files..."
-msgstr "തുറന്ന രചനകള്‍..."
+#: ../src/main.c:69
+msgid "Add files to the specified archive and quit the program"
+msgstr " രചനകെളപറഞ്ഞേശഖരത്തില്േച൪ത്ത്തീ൪ത്തുേപാരുക"
 
-#: src/menu.h:474
-msgid "_Delete Files"
-msgstr "രചനകള്‍ നശിപ്പിക്കുക"
+#: ../src/main.c:70
+msgid "ARCHIVE"
+msgstr "േശഖരo"
 
-#: src/menu.h:474
-msgid "Delete files from the archive"
+#: ../src/main.c:73
+msgid "Add files asking the name of the archive and quit the program"
+msgstr "രചനകെള േശഖരത്തിെ൯റ േപരു േചാദിച്ച് അതില്ല് േച൪ത്ത്തീ൪ത്തുേപാരുക"
+
+#: ../src/main.c:77
+msgid "Extract archives to the specified folder and quit the program"
+msgstr "രചനകെളപറഞ്ഞേശഖരത്തില്വലിച്ചിട്ട്തീ൪ത്തുേപാരുക"
+
+#: ../src/main.c:78 ../src/main.c:90
+msgid "FOLDER"
+msgstr "കൂട്"
+
+#: ../src/main.c:81
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr "േശഖരെത്ത കൂടിെ൯റ േപരു േചാദിച്ച് അതില്ല് േച൪ത്ത്തീ൪ത്തുേപാരുക"
+
+#: ../src/main.c:85
+#, fuzzy
+msgid ""
+"Extract archives using the archive name as destination folder and quit the "
+"program"
+msgstr "േശഖരെത്ത കൂടിെ൯റ േപരു േചാദിച്ച് അതില്ല് േച൪ത്ത്തീ൪ത്തുേപാരുക"
+
+#: ../src/main.c:89
+msgid "Default folder to use for the '--add' and '--extract' commands"
+msgstr ""
+
+#: ../src/main.c:93
+msgid "Create destination folder without asking confirmation"
+msgstr "ലക്ഷൃകൂടിെനഅനുവാദംേചാദിക്കാെതസ്റിഷ്ടിയ്ക്കുക"
+
+#: ../src/ui.h:34
+msgid "_Archive"
+msgstr "േശഖരം "
+
+#: ../src/ui.h:35
+msgid "_Edit"
+msgstr "തിരുത്തല്"
+
+#: ../src/ui.h:37
+msgid "_Help"
+msgstr ""
+
+#: ../src/ui.h:38
+msgid "_Arrange Files"
+msgstr "രചനകള് ക്രമീകരിക്കുക"
+
+#: ../src/ui.h:39
+msgid "Open R_ecent"
+msgstr "പുതുതായവ തുറക്കുക"
+
+#: ../src/ui.h:43
+msgid "Information about the program"
+msgstr "പ്രയോഗത്തെക്കുറിച്ചുള്ള വിവരങ്ങള്‍"
+
+#: ../src/ui.h:46
+#, fuzzy
+msgid "_Add Files..."
+msgstr "രചനകള്‍ ചേ‍ര്ക്കുക..."
+
+#: ../src/ui.h:47 ../src/ui.h:51
+msgid "Add files to the archive"
+msgstr "രചനകള്‌ ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
+
+#: ../src/ui.h:50
+msgid "Add"
+msgstr "ചേര്‍ക്കുക"
+
+#: ../src/ui.h:54
+#, fuzzy
+msgid "Add a _Folder..."
+msgstr "രചനകള്‍ ചേ‍ര്ക്കുക..."
+
+#: ../src/ui.h:55
+#, fuzzy
+msgid "Add a folder to the archive"
+msgstr "രചനകള്‌ ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
+
+#: ../src/ui.h:59
+#, fuzzy
+msgid "Close the current archive"
+msgstr "ഈേശഖരം അടയ്‍ക്കുക "
+
+#: ../src/ui.h:63
+msgid "Display the File Roller Manual"
+msgstr "ഫയല് റോളര്‍ മാന്വല്‍ ദൃശ്യമാക്കുക"
+
+#: ../src/ui.h:67
+msgid "Copy the selection"
+msgstr ""
+
+#: ../src/ui.h:71
+msgid "Cut the selection"
+msgstr ""
+
+#: ../src/ui.h:75
+#, fuzzy
+msgid "Delete the selection from the archive"
 msgstr "ആര്‍ക്കേവില്‍നിന്ന് രചനകള്‍ നശിപ്പിക്കുക"
 
-#: src/toolbar.h:39
-msgid "New"
-msgstr "പുതിയ"
+#: ../src/ui.h:78
+msgid "Dese_lect All"
+msgstr "തെരഞ്ഞെടുത്തത് വേണ്ടാതാക്കുക"
 
-#: src/toolbar.h:45
-msgid "Open"
-msgstr "തുറക്കുക"
+#: ../src/ui.h:79
+msgid "Deselect all files"
+msgstr "തെരഞ്ഞെടുത്തത് വേണ്ടാതാക്കുക"
 
-#: src/toolbar.h:45
+#: ../src/ui.h:82
+#, fuzzy
+msgid "_Extract..."
+msgstr "...ലേക്ക് വലിച്ചിടുക"
+
+#: ../src/ui.h:83 ../src/ui.h:87
+msgid "Extract files from the archive"
+msgstr "േശഖരത്തില്നിന്ന് രചനകള്‍ വലിച്ചിടുക്കുക"
+
+#: ../src/ui.h:90
+msgid "_Last Output"
+msgstr "അവസാന ഫലം"
+
+#: ../src/ui.h:91
+msgid "View the output produced by the last executed command"
+msgstr ""
+
+#: ../src/ui.h:95
+msgid "Create a new archive"
+msgstr "ഒരു പുതിയ ആര്‍ക്കേവ്‌ നിര്മ്മിക്കുക"
+
+#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3704 ../src/window.c:3707
 msgid "Open archive"
 msgstr "ആര്‍ക്കേവ് തുറക്കുക"
 
-#: src/toolbar.h:55
-msgid "Stop"
-msgstr "നിര്‌ത്തുക"
+#: ../src/ui.h:106
+msgid "Open Fi_les..."
+msgstr "രചനകള്‍ തുറക്കുക..."
 
-#: src/window.c:618
+#: ../src/ui.h:107
+msgid "Open selected files with an application"
+msgstr ""
+
+#: ../src/ui.h:110
+msgid "Pass_word..."
+msgstr "അടയാളവാക്ക്..."
+
+#: ../src/ui.h:111
+msgid "Specify a password for this archive"
+msgstr ""
+
+#: ../src/ui.h:115
+msgid "Paste the clipboard"
+msgstr ""
+
+#: ../src/ui.h:119
+msgid "Show archive properties"
+msgstr "േശഖരത്തിെ൯റ ഗുണഗണങ്ങള് കാണിയ്കകുക "
+
+#: ../src/ui.h:123
+#, fuzzy
+msgid "Quit the application"
+msgstr "ഒരു പ്രയോഗം ഉപയോഗിച്ച് തുറക്കുക"
+
+#: ../src/ui.h:127
+msgid "Reload current archive"
+msgstr "ഇപ്പോഴത്തെ ആര്‍ക്കേവ് പുതുക്കുക"
+
+#: ../src/ui.h:130
+msgid "_Rename..."
+msgstr "പേര‍് മാറ്റുക..."
+
+#: ../src/ui.h:131
+msgid "Rename the selection"
+msgstr ""
+
+#: ../src/ui.h:135
+#, fuzzy
+msgid "Save the current archive with a different name"
+msgstr "ഈേശഖരെത്തമെററാരുേപരില്സംരക്ഷിയ്ക്കുക"
+
+#: ../src/ui.h:138
+msgid "Select _All"
+msgstr "എല്ലാം തെരഞ്ഞെടുക്കുക"
+
+#: ../src/ui.h:139
+msgid "Select all files"
+msgstr "എല്ലാ രചനകളും തെരഞ്ഞെടുക്കുക"
+
+#: ../src/ui.h:143
+msgid "Stop current operation"
+msgstr "ഇപ്പോഴത്തെ പ്രവ‌ര്‍ത്തനം നിര്‌ത്തുക"
+
+#: ../src/ui.h:146
+msgid "_Test Integrity"
+msgstr ""
+
+#: ../src/ui.h:147
+msgid "Test whether the archive contains errors"
+msgstr "േശഖരത്തില് െതററുകള് ഉേണ്ടാ എന്ന് പരിേശാധിയ്ക്കുക"
+
+#: ../src/ui.h:150
+msgid "_View File"
+msgstr "രചന കാണുക"
+
+#: ../src/ui.h:151 ../src/ui.h:155
+#, fuzzy
+msgid "View the selected file"
+msgstr "തെരഞ്ഞെടുത്ത രചനകള്‍ കാണുക"
+
+#: ../src/ui.h:163
+msgid "_Toolbar"
+msgstr "ഉപകരണപ്പട്ട"
+
+#: ../src/ui.h:164
+msgid "View the main toolbar"
+msgstr "പ്രധാന ഉപകരണപ്പട്ട കാണിക്കുക"
+
+#: ../src/ui.h:168
+msgid "Stat_usbar"
+msgstr "അവസ്ഥാപ്പട്ട"
+
+#: ../src/ui.h:169
+msgid "View the statusbar"
+msgstr "അവസ്ഥാപ്പട്ട കാണിക്കുക"
+
+#: ../src/ui.h:173
+msgid "_Reversed Order"
+msgstr "വിപരീത ക്രമീകരണത്തില്"
+
+#: ../src/ui.h:174
+msgid "Reverse the list order"
+msgstr "നാമാവലി വിപരീത ക്രമത്തിലാക്കുക"
+
+#: ../src/ui.h:183
+msgid "View All _Files"
+msgstr "എല്ലാ രചനകളും കാണുക"
+
+#: ../src/ui.h:186
+msgid "View as a F_older"
+msgstr "കൂടായി കാണുക"
+
+#: ../src/ui.h:194
+msgid "by _Name"
+msgstr "പേരനുസരിച്ച്"
+
+#: ../src/ui.h:195
+msgid "Sort file list by name"
+msgstr "രചന പേരനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: ../src/ui.h:197
+msgid "by _Size"
+msgstr "വലിപ്പമനുസരിച്ച്"
+
+#: ../src/ui.h:198
+msgid "Sort file list by file size"
+msgstr "രചന വലിപ്പമനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: ../src/ui.h:200
+msgid "by T_ype"
+msgstr "തരമനുസരിച്ച്"
+
+#: ../src/ui.h:201
+msgid "Sort file list by type"
+msgstr "രചന തരമനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: ../src/ui.h:203
+msgid "by _Date modified"
+msgstr "തിയതി അനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: ../src/ui.h:204
+msgid "Sort file list by modification time"
+msgstr "രചന പരിഷ്കരിച്ച സമയമനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: ../src/ui.h:206
+msgid "by _Location"
+msgstr "സഥലഅനുസരിച്ച്"
+
+#: ../src/ui.h:207
+msgid "Sort file list by location"
+msgstr "രചന സഥലഅനുസരിച്ച് ക്രമീകരിക്കുക"
+
+#: ../src/window.c:691
 msgid "Folder"
 msgstr "കൂട്"
 
-#: src/window.c:767
+#: ../src/window.c:854
 msgid "[read only]"
 msgstr "[വായിക്കാന് മാത്രം]"
 
-#: src/window.c:863
-#, c-format
-msgid "1 file (%s)"
-msgstr "1 രചന (%s)"
+#: ../src/window.c:948
+#, fuzzy, c-format
+msgid "%d file (%s)"
+msgid_plural "%d files (%s)"
+msgstr[0] "%d രചനകള്‍ (%s)"
+msgstr[1] "%d രചനകള്‍ (%s)"
 
-#: src/window.c:866
-#, c-format
-msgid "%d files (%s)"
-msgstr "%d രചനകള്‍ (%s)"
+#: ../src/window.c:953
+#, fuzzy, c-format
+msgid "%d file selected (%s)"
+msgid_plural "%d files selected (%s)"
+msgstr[0] "%d രചനകള്‍ തെരഞ്ഞെടുത്തു(%s)"
+msgstr[1] "%d രചനകള്‍ തെരഞ്ഞെടുത്തു(%s)"
 
-#: src/window.c:874
-#, c-format
-msgid "1 file selected (%s)"
-msgstr "ഒരു രചന തെരഞ്ഞെടുത്തു (%s)"
-
-#: src/window.c:877
-#, c-format
-msgid "%d files selected (%s)"
-msgstr "%d രചനകള്‍ തെരഞ്ഞെടുത്തു(%s)"
-
-#: src/window.c:1246
+#: ../src/window.c:1374
 msgid "Reading archive"
 msgstr "ആര്‍ക്കേവ് വായിക്കുന്നു"
 
-#: src/window.c:1252
+#: ../src/window.c:1380
 msgid "Adding files to archive"
 msgstr "ആര്‍ക്കേവിലേക്ക് രചനകള്‌ ചേര്‍ക്കുന്നു"
 
-#: src/window.c:1255
+#: ../src/window.c:1383
 msgid "Extracting files from archive"
 msgstr "ആര്‍ക്കേവില് നിന്ന് രചനകള് വലിച്ചിടുന്നു"
 
-#: src/window.c:1258
+#: ../src/window.c:1386
 msgid "Testing archive"
 msgstr "ആര്‍ക്കേവ് പരിശോധിക്കുന്നു"
 
-#: src/window.c:1261
+#: ../src/window.c:1389
 msgid "Getting the file list"
 msgstr ""
 
-#: src/window.c:1267
+#: ../src/window.c:1396
 msgid "wait please..."
 msgstr "കാത്തിരിക്കൂ..."
 
-#: src/window.c:1378
-msgid "Operation stopped"
-msgstr "പ്രവ‌ര്‍ത്തനം അവസാനിപ്പിച്ചു"
+#: ../src/window.c:1473
+#, fuzzy, c-format
+msgid "Could not display the folder \"%s\""
+msgstr "%s-ന്റെ സഹായഗ്രന്ഥം തുറക്കാനാവുന്നില്ല"
 
-#: src/window.c:1396
+#: ../src/window.c:1532
+msgid ""
+"This archive is password protected.\n"
+"Please specify a password with the command: Edit->Password"
+msgstr ""
+
+#: ../src/window.c:1534
+msgid ""
+"The specified password is not valid, please specify a new password with the "
+"command: Edit->Password"
+msgstr ""
+
+#: ../src/window.c:1539 ../src/window.c:2295 ../src/window.c:5582
+msgid "Could not perform the operation"
+msgstr ""
+
+#: ../src/window.c:1564
 msgid "An error occurred while extracting files."
 msgstr ""
 "%s രചന അച്ചടിക്കുന്പോള്‌ ഒരു പിശകുണ്ടായി.\n"
 "\n"
 "%s,"
 
-#: src/window.c:1400
+#: ../src/window.c:1568
 msgid "An error occurred while loading the archive."
 msgstr "ശഖരം തുറക്കുേപാള് ഒരു പിശകുണ്ടായി."
 
-#: src/window.c:1404
+#: ../src/window.c:1572
 msgid "An error occurred while deleting files from the archive."
 msgstr "േശഖരത്തില്നിന്ന്രചനകള്നശിപ്പിയ്ക്കുേപാള്ഒരു പിശകുണ്ടായി."
 
-#: src/window.c:1408
+#: ../src/window.c:1576
 msgid "An error occurred while adding files to the archive."
 msgstr "േശഖരത്തില്രചനകള്േച൪ക്കുേപാള് ഒരു പിശകുണ്ടായി."
 
-#: src/window.c:1412
+#: ../src/window.c:1580
 msgid "An error occurred while testing archive."
 msgstr "േശഖരംപരിേശാധിക്കുേപാള് ഒരു പിശകുണ്ടായി."
 
-#: src/window.c:1421
+#: ../src/window.c:1589
 msgid "Command not found."
 msgstr "പ്രവ‍ര്ത്തിപ്പിക്കാനുള്ള നിര്‍ദ്ദേശം കണ്ടില്ല."
 
-#: src/window.c:1424
+#: ../src/window.c:1592
 msgid "Command exited abnormally."
 msgstr "നിര്‍ദ്ദേശം അസാധാരണമായിപുറത്തുവന്നു"
 
-#: src/window.c:1559
+#: ../src/window.c:1722
 msgid "Test Result"
 msgstr "പരിേശാധനാഫലം"
 
-#: src/window.c:1779
-msgid "You don't have permissions to add files to this archive."
-msgstr "നിങ്ങള്ക്ക് ആര്‍ക്കേവിലേക്ക് രചനകള്‍ ചേര്‍ക്കാന് അനുവാദമില്ല."
+#: ../src/window.c:2072
+#, fuzzy
+msgid "You don't have the right permissions."
+msgstr "നിങ്ങള്ക്ക് \"%s\" ല് നിന്നും വായിക്കുവാനുള്ള അനുവാദമില്ല"
 
-#: src/window.c:1810
+#: ../src/window.c:2110
 msgid "You can't add an archive to itself."
 msgstr "ഒരു ആര്‍ക്കേവ് അതില്‍ത്തന്നെ ചേര്‍ക്കാനാവില്ല."
 
-#: src/window.c:1980
+#: ../src/window.c:2329
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "ഈരചനകള് പഴയേശഖരത്ില്േച൪ക്കണേമാ അേതാ ഒരുപുതിയേശഖരംഉണ്ടാക്കണേമാ?"
 
-#: src/window.c:2024
+#: ../src/window.c:2366
 msgid "Do you want to create a new archive with these files?"
 msgstr "ഈരചനകള്െകാണ്ട്ഒരുപുതിയേശഖരംഉണ്ടാക്കണേമാ?"
 
-#: src/window.c:2026
+#: ../src/window.c:2369
 msgid "Create _Archive"
 msgstr "ആര്‍ക്കേവ് ഉണ്ടാക്കുക"
 
-#: src/window.c:2371
+#: ../src/window.c:2724
 msgid "Size"
 msgstr "വലിപ്പം"
 
-#: src/window.c:2372
+#: ../src/window.c:2725
 msgid "Type"
 msgstr "തരം"
 
-#: src/window.c:2373
-msgid "Date modified"
+#: ../src/window.c:2726
+#, fuzzy
+msgid "Date Modified"
 msgstr "മാറ്റിയ തീയതി"
 
-#: src/window.c:2374
-msgid "Location"
-msgstr "സ്ഥാനം"
-
-#: src/window.c:2381
+#: ../src/window.c:2735
 msgid "Name"
 msgstr "പേര‍്"
 
-#: src/window.c:2901
-msgid "_Up"
-msgstr "മുകളില്‌"
+#: ../src/window.c:3235
+#, fuzzy, c-format
+msgid "Open '%s'"
+msgstr "രചനകള്‍ തുറക്കുക"
 
-#. current location
-#: src/window.c:2923
-msgid "Location:"
-msgstr "സ്ഥാനം:"
-
-#: src/window.c:2960
-msgid "Add"
-msgstr "ചേര്‍ക്കുക"
-
-#: src/window.c:2982
-msgid "View"
-msgstr "കാഴ്ച"
-
-#: src/window.c:2983
-msgid "View selected file"
-msgstr "തെരഞ്ഞെടുത്ത രചനകള്‍ കാണുക"
-
-#: src/window.c:3408 src/window.c:3521
-msgid "Archive type not supported."
-msgstr "ഈേശഖരംഉപേയാഗിക്കാനാവില്ല"
-
-#: src/window.c:3484
-msgid "Cannot load archive."
+#: ../src/window.c:3576
+msgid "Go to the previous visited location"
 msgstr ""
 
-#: src/window.c:4556
+#: ../src/window.c:3584
+msgid "Go to the next visited location"
+msgstr ""
+
+#: ../src/window.c:3592
+msgid "Go up one level"
+msgstr ""
+
+#: ../src/window.c:3600
+msgid "Go to the home location"
+msgstr ""
+
+#: ../src/window.c:3705
+#, fuzzy
+msgid "Open a recently used archive"
+msgstr "നിലവിലിരിയ്ക്കുന്ന ഒരു േശഖരെത്ത തുറക്കുക"
+
+#: ../src/window.c:4204
+#, fuzzy, c-format
+msgid "Could not open \"%s\""
+msgstr "%s-ന്റെ സഹായഗ്രന്ഥം തുറക്കാനാവുന്നില്ല"
+
+#: ../src/window.c:4262
+#, fuzzy, c-format
+msgid "Could not save the archive \"%s\""
+msgstr "ആര്‍ക്കേവ് നീക്കാനായില്ല "
+
+#: ../src/window.c:5179
+msgid "The new name is void."
+msgstr ""
+
+#: ../src/window.c:5183
+msgid "The new name is equal to the old one."
+msgstr ""
+
+#: ../src/window.c:5244
+#, c-format
+msgid ""
+"A folder named \"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: ../src/window.c:5246
+#, c-format
+msgid ""
+"A file named \"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: ../src/window.c:5284
+#, fuzzy
+msgid "Rename"
+msgstr "പേര‍് മാറ്റുക"
+
+#: ../src/window.c:5285
+msgid "New folder name"
+msgstr ""
+
+#: ../src/window.c:5285
+msgid "New file name"
+msgstr ""
+
+#: ../src/window.c:5289
+msgid "_Rename"
+msgstr "പേര‍് മാറ്റുക"
+
+#: ../src/window.c:5305 ../src/window.c:5334
+#, fuzzy
+msgid "Could not rename the folder"
+msgstr "പഴയ ആര്‍ക്കേവ് നശിപ്പിക്കാനാകുന്നില്ല."
+
+#: ../src/window.c:5305 ../src/window.c:5334
+#, fuzzy
+msgid "Could not rename the file"
+msgstr "ആര്‍ക്കേവ് നീക്കാനായില്ല "
+
+#: ../src/window.c:5408
+msgid "Paste Selection"
+msgstr ""
+
+#: ../src/window.c:5413
+#, fuzzy
+msgid "_Paste"
+msgstr "വഴി"
+
+#: ../src/window.c:5942
 msgid "Add files to an archive"
 msgstr "ആര്‍ക്കേവിലേക്ക് ചേര്‍ക്കുക"
 
-#: src/window.c:4581
+#: ../src/window.c:5975
 msgid "Extract archive"
 msgstr "ആര്‍ക്കേവ് വലിച്ചിടുക്കുക"
