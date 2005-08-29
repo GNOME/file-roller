@@ -5,12 +5,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller 2.5.2\n"
+"Project-Id-Version: AC_PACKAGE_NAME AC_PACKAGE_VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-27 22:29+0200\n"
-"PO-Revision-Date: 2005-02-04 06:52+0900\n"
-"Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
-"Language-Team: Gnome Korea <gnome-kr-hackers@lists.kldp.net>\n"
+"POT-Creation-Date: 2005-08-30 00:49+0900\n"
+"PO-Revision-Date: 2005-08-30 00:51+0900\n"
+"Last-Translator: Young-Ho Cha <ganadist at gmail dot com>\n"
+"Language-Team: GNOME Korea <gnome-kr-hackers@lists.kldp.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,7 +50,7 @@ msgstr ""
 
 #: ../data/glade/file-roller.glade.h:2
 msgid "A_vailable application:"
-msgstr "쓸 수 있는 프로그램(_A):"
+msgstr "쓸 수 있는 프로그램(_V):"
 
 #: ../data/glade/file-roller.glade.h:3
 msgid "C_reate"
@@ -126,9 +126,8 @@ msgid "Extract"
 msgstr "풀기"
 
 #: ../data/glade/file-roller-extract.glade.h:3
-#, fuzzy
 msgid "Extract in _folder:"
-msgstr "파일을 풀어내는 중: "
+msgstr "폴더에 풀기(_F):"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:134
@@ -294,7 +293,6 @@ msgid "Could not display help"
 msgstr "도움말을 보여줄 수 없습니다"
 
 #: ../src/actions.c:1160
-#, fuzzy
 msgid "translator-credits"
 msgstr ""
 "강정희 <Keizi@mail.co.kr>\n"
@@ -389,15 +387,18 @@ msgstr "다른 이름을 사용하십시오."
 msgid ""
 "You don't have the right permissions to create an archive in the destination "
 "folder."
-msgstr "압축 파일을 만들 위치에 올바른 권한이 없습니다"
+msgstr "압축 파일을 만들 위치에 올바른 권한이 없습니다."
 
 #: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4510
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
 "\n"
 "Do you want to create it?"
-msgstr "목표 폴더가 없습니다. 만드시겠습니까?"
+msgstr ""
+"목표 폴더 \"%s\"(이)가 없습니다.\n"
+"\n"
+"만드시겠습니까?"
 
 #: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4519
 msgid "Create _Folder"
@@ -457,7 +458,7 @@ msgstr "오래된 파일은 풀지 않기(_X)"
 
 #: ../src/dlg-extract.c:484
 msgid "_Open destination folder after extraction"
-msgstr "풀고난 뒤에 압축을 푼 폴더 열기(_V)"
+msgstr "풀고난 뒤에 압축을 푼 폴더 열기(_O)"
 
 #: ../src/dlg-prop.c:102
 msgid "Path:"
@@ -574,11 +575,11 @@ msgid "Extract archives asking the destination folder and quit the program"
 msgstr "풀 폴더를 물어보고 압축을 푼 다음 프로그램을 끝냅니다"
 
 #: ../src/main.c:85
-#, fuzzy
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
-msgstr "풀 폴더를 물어보고 압축을 푼 다음 프로그램을 끝냅니다"
+msgstr ""
+"압축 파일 이름을 풀 폴더를 만들고 압축을 푼 다음 프로그램을 끝냅니다"
 
 #: ../src/main.c:89
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -686,7 +687,7 @@ msgstr "압축 파일을 엽니다"
 
 #: ../src/ui.h:106
 msgid "Open Fi_les..."
-msgstr "파일 열기(_I)..."
+msgstr "파일 열기(_L)..."
 
 #: ../src/ui.h:107
 msgid "Open selected files with an application"
@@ -1017,6 +1018,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\"%s\"(이)라는 폴더가 이미 있습니다.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5246
 #, c-format
@@ -1025,6 +1029,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\"%s\"(이)라는 파일이 이미 있습니다.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5284
 msgid "Rename"
