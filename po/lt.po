@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: File-Roller HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-27 22:29+0200\n"
-"PO-Revision-Date: 2005-03-03 12:21+0200\n"
+"POT-Creation-Date: 2005-08-30 20:08+0300\n"
+"PO-Revision-Date: 2005-08-30 20:12+0300\n"
 "Last-Translator: Žygimantas Beručka <uid0@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%"
-"100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ../component/File_Roller_Component.server.in.in.h:1
 #: ../nautilus/nautilus-fileroller.c:297
@@ -127,9 +126,8 @@ msgid "Extract"
 msgstr "Išskleisti"
 
 #: ../data/glade/file-roller-extract.glade.h:3
-#, fuzzy
 msgid "Extract in _folder:"
-msgstr "Išskleidžiama byla: "
+msgstr "Išskleisti _aplanke: "
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:134
@@ -295,7 +293,6 @@ msgid "Could not display help"
 msgstr "Nepavyko parodyti pagalbos"
 
 #: ../src/actions.c:1160
-#, fuzzy
 msgid "translator-credits"
 msgstr "Žygimantas Beručka <uid0@akl.lt>"
 
@@ -390,12 +387,15 @@ msgid ""
 msgstr "Jūs neturite leidimo sukurti archyvą paskirties aplanke."
 
 #: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4510
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
 "\n"
 "Do you want to create it?"
-msgstr "Paskirties aplankas neegzistuoja.  Ar norite jį sukurti?"
+msgstr ""
+"Paskirties aplankas „%s“ neegzistuoja.\n"
+"\n"
+"Ar norite jį sukurti?"
 
 #: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4519
 msgid "Create _Folder"
@@ -572,11 +572,12 @@ msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Išskleisti archyvus paklausus paskirties aplanko ir uždaryti programą"
 
 #: ../src/main.c:85
-#, fuzzy
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
-msgstr "Išskleisti archyvus paklausus paskirties aplanko ir uždaryti programą"
+msgstr ""
+"Išskleisti archyvus naudojant archyvo pavadinimą kaip paskirties aplanką "
+"ir uždaryti programą"
 
 #: ../src/main.c:89
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -1020,6 +1021,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Aplankas pavadinimu „%s“ jau yra.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5246
 #, c-format
@@ -1028,6 +1032,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Byla pavadinimu „%s“ jau yra.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5284
 msgid "Rename"
