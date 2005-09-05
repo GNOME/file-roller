@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-27 22:29+0200\n"
+"POT-Creation-Date: 2005-09-05 21:52+0200\n"
 "PO-Revision-Date: 2005-04-07 19:03+0200\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
@@ -131,9 +131,8 @@ msgid "Extract"
 msgstr "Erauzi"
 
 #: ../data/glade/file-roller-extract.glade.h:3
-#, fuzzy
 msgid "Extract in _folder:"
-msgstr "Fitxategia erauzten:"
+msgstr "Erauzi _karpetan:"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:134
@@ -299,7 +298,6 @@ msgid "Could not display help"
 msgstr "Ezin izan da laguntza erakutsi"
 
 #: ../src/actions.c:1160
-#, fuzzy
 msgid "translator-credits"
 msgstr ""
 "Mikel Olasagasti <hey_neken@mundurat.net>\n"
@@ -397,12 +395,14 @@ msgid ""
 msgstr "Ez duzu baimenik helburuko karpetan artxibo bat sortzeko"
 
 #: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4510
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
 "\n"
 "Do you want to create it?"
-msgstr "Helburu karpeta ez dago. Sortu nahi duzu?"
+msgstr "Helburuko \"%s\" karpeta ez dago\n."
+"\n"
+"Sortu nahi duzu?"
 
 #: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4519
 msgid "Create _Folder"
@@ -579,11 +579,10 @@ msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Erauzi artxiboak helburuko karpeta eskatuz eta programatik irten"
 
 #: ../src/main.c:85
-#, fuzzy
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
-msgstr "Erauzi artxiboak helburuko karpeta eskatuz eta programatik irten"
+msgstr "Erauzi artxiboak artxiboaren izena helburuko karpeta gisa erabiliz eta irten programatik"
 
 #: ../src/main.c:89
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -1027,6 +1026,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\"%s\" izeneko karpeta badago lehendik.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5246
 #, c-format
@@ -1035,6 +1037,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\"%s\" izeneko fitxategia badago lehendik.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5284
 msgid "Rename"
