@@ -1,7 +1,3 @@
-# translation of file-roller-it-2004-03-01.po to italiano
-# translation of file-roller-it.po to italiano
-# translation of file-roller.HEAD.po to italiano
-# translation of file-roller.HEAD.it.po to italiano
 # Italian localization for File Roller.
 # Copyright (C) 2001,2003, 2004 Free Software Foundation, Inc.
 # Paolo Bacchilega <paolo.bacch@tin.it>, 2001.
@@ -12,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller-it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-27 22:29+0200\n"
-"PO-Revision-Date: 2005-03-01 22:34+0100\n"
+"POT-Creation-Date: 2005-10-02 17:59+0200\n"
+"PO-Revision-Date: 2005-10-02 17:57+0200\n"
 "Last-Translator: Roberto Rosselli Del Turco <rosselli@ling.unipi.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -131,9 +127,8 @@ msgid "Extract"
 msgstr "Estrai"
 
 #: ../data/glade/file-roller-extract.glade.h:3
-#, fuzzy
 msgid "Extract in _folder:"
-msgstr "Estrazione del file: "
+msgstr "Estrai nella _cartella:"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:134
@@ -151,7 +146,7 @@ msgstr "Estrai l'archivio selezionato nella posizione corrente"
 
 #: ../nautilus/nautilus-fileroller.c:277
 msgid "Extract To..."
-msgstr "_Estrai in..."
+msgstr "Estrai in..."
 
 #: ../nautilus/nautilus-fileroller.c:278
 msgid "Extract the selected archive"
@@ -301,7 +296,6 @@ msgid "Could not display help"
 msgstr "Impossibile mostrare la guida"
 
 #: ../src/actions.c:1160
-#, fuzzy
 msgid "translator-credits"
 msgstr ""
 "Paolo Bacchilega <paolo.bacch@tin.it>\n"
@@ -401,12 +395,15 @@ msgstr ""
 "destinazione."
 
 #: ../src/dlg-batch-add.c:195 ../src/dlg-extract.c:160 ../src/window.c:4510
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
 "\n"
 "Do you want to create it?"
-msgstr "La cartella di destinazione non esiste. Si desidera crearla?"
+msgstr ""
+"La cartella di destinazione \"%s\" non esiste. \n"
+"\n"
+"Si desidera crearla?"
 
 #: ../src/dlg-batch-add.c:204 ../src/dlg-extract.c:169 ../src/window.c:4519
 msgid "Create _Folder"
@@ -587,13 +584,12 @@ msgstr ""
 "programma"
 
 #: ../src/main.c:85
-#, fuzzy
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
 msgstr ""
-"Estrai gli archivi chiedendo la cartella di destinazione e chiudi il "
-"programma"
+"Estrai gli archivi usando il nome dell'archivio come cartella di "
+"destinazione e chiudi il programma"
 
 #: ../src/main.c:89
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -1037,6 +1033,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"La cartella chiamata \"%s\" esiste già.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5246
 #, c-format
@@ -1045,6 +1044,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Il file chiamato \"%s\" esiste già.\n"
+"\n"
+"%s"
 
 #: ../src/window.c:5284
 msgid "Rename"
