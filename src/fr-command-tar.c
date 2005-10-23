@@ -750,7 +750,7 @@ fr_command_tar_escape (FRCommand     *comm,
 	char *estr;
 	char *estr2;
 
-        estr = escape_str (str, "?*\\'& !|()@#:;");
+        estr = escape_str (str, "$?*\\'& !|()@#:;");
         estr2 = escape_str_common (estr, "[]", '[', ']');
 	g_free (estr);
 
