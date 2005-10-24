@@ -150,7 +150,7 @@ process_line (char     *line,
 		    || (fields[5][0] == 'd')) {
 			file_data_free (fdata);
 		} else {
-			fdata->size = atoll (fields[0]);
+			fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
 			fdata->modified = mktime_from_string (fields[3], fields[4]); 
 			comm->file_list = g_list_prepend (comm->file_list, fdata);
 		}

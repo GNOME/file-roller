@@ -126,7 +126,7 @@ process_line (char     *line,
 		if (ssize[0] == '\0')
 			size = 0;
 		else
-			size = atoi (ssize);
+			size = g_ascii_strtoull (ssize, NULL, 10);
 
 		if (comm->file_list != NULL) {
 			fdata = (FileData *) comm->file_list->data;

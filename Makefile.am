@@ -3,7 +3,6 @@ SUBDIRS =		\
 	data		\
 	src		\
 	help		\
-	component	\
 	nautilus	\
 	po
 

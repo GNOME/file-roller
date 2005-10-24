@@ -155,7 +155,7 @@ list__process_line (char     *line,
 	fdata = file_data_new ();
 
 	fields = split_line (line, 7);
-	fdata->size = atoll (fields[0]);
+	fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
 	fdata->modified = mktime_from_string (fields[4], fields[5]);
 	g_strfreev (fields);
 

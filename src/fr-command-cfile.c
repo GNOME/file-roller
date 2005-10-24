@@ -115,10 +115,10 @@ list__process_line (char     *line,
 	fdata = file_data_new ();
 
 	fields = split_line (line, 2);
-	fdata->size = atoll (fields[1]);
+	fdata->size = g_ascii_strtoull (fields[1], NULL, 10);
 	g_strfreev (fields);
 
-	if (fdata->size == -1)
+	if (fdata->size == 0)
 		fdata->size = get_file_size (comm->filename);
 
 	filename = get_uncompressed_name_from_archive (comm, comm->filename);

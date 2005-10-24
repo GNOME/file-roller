@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.52)
  
-AC_INIT(file-roller, 2.12.1)
+AC_INIT(file-roller, 2.13.1)
 AC_CONFIG_SRCDIR(src/main.c)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
@@ -24,9 +24,6 @@ LIBGNOME_REQUIRED=2.6.0
 LIBGNOMEUI_REQUIRED=2.6.0
 GNOME_VFS_REQUIRED=2.9.0
 LIBGLADE_REQUIRED=2.4.0
-BONOBO_ACTIVATION_REQUIRED=1.0.0
-LIBBONOBO_REQUIRED=2.6.0
-LIBBONOBOUI_REQUIRED=2.6.0
 NAUTILUS_REQUIRED=2.9.0
 
 AC_SUBST(GLIB_REQUIRED)
@@ -35,9 +32,6 @@ AC_SUBST(LIBGNOME_REQUIRED)
 AC_SUBST(LIBGNOMEUI_REQUIRED)
 AC_SUBST(GNOME_VFS_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
-AC_SUBST(BONOBO_ACTIVATION_REQUIRED)
-AC_SUBST(LIBBONOBO_REQUIRED)
-AC_SUBST(LIBBONOBOUI_REQUIRED)
 AC_SUBST(NAUTILUS_REQUIRED)
 
 dnl ===========================================================================
@@ -50,8 +44,7 @@ PKG_CHECK_MODULES(FR,					\
 	libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED		\
 	gnome-vfs-2.0 >= $GNOME_VFS_REQUIRED		\
 	gnome-vfs-module-2.0				\
-	libglade-2.0 >= $LIBGLADE_REQUIRED		\
-	bonobo-activation-2.0 >= $BONOBO_ACTIVATION_REQUIRED)
+	libglade-2.0 >= $LIBGLADE_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
 
@@ -118,7 +111,6 @@ data/glade/Makefile
 src/Makefile
 src/icons/Makefile
 src/recent-files/Makefile
-component/Makefile
 nautilus/Makefile
 help/Makefile
 po/Makefile.in

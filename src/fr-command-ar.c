@@ -134,7 +134,7 @@ process_line (char     *line,
 	date_idx = file_list__get_index_from_pattern (line, "%c%c%c %a%n %n%n:%n%n %n%n%n%n");
 
 	field_size = file_list__get_prev_field (line, date_idx, 1);
-	fdata->size = atoll (field_size);
+	fdata->size = g_ascii_strtoull (field_size, NULL, 10);
 	g_free (field_size);
 
 	field_month = file_list__get_next_field (line, date_idx, 1);

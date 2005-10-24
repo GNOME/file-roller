@@ -1,3 +1,30 @@
+2005-10-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	[ File Roller 2.13.1 released ]
+
+	* Makefile.am:
+	* configure.in:
+	* component/*: 
+
+	Removed bonobo component.
+	
+	* src/file-data.h: 
+	* src/fr-command-zoo.c (process_zoo_line): 
+	* src/fr-command-zip.c (list__process_line): 
+	* src/fr-command-unstuff.c (process_line): 
+	* src/fr-command-tar.c (process_line): 
+	* src/fr-command-rpm.c (list__process_line): 
+	* src/fr-command-rar.c (process_line): 
+	* src/fr-command-lha.c (process_line): 
+	* src/fr-command-iso.c (list__process_line): 
+	* src/fr-command-cfile.c (list__process_line): 
+	* src/fr-command-arj.c (list__process_line): 
+	* src/fr-command-ar.c (process_line): 
+	* src/fr-command-7z.c (list__process_line): 
+
+	Fixes bug #319600: compilation under AIX 5.1 aborts with ".atoll 
+	not found".
+	
 2005-10-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-tar.c (fr_command_tar_escape): escape $

@@ -31,7 +31,7 @@ typedef struct {
 	char       *original_path;    /* path read from command line. */
 	char       *full_path;        /* "/" + original_path. */
 	char       *link;
-	long long   size;
+	guint64     size;
 	time_t      modified;
 
 	char       *name;             /* The file name. */
