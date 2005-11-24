@@ -348,6 +348,10 @@ add_folder_cb (GtkWidget *widget,
 
 	gtk_box_pack_start (GTK_BOX (vbox), data->add_if_newer_checkbutton, 
 			    TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), data->include_subfold_checkbutton,
+			    TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), data->exclude_symlinks,
+			    TRUE, TRUE, 0);
 
 	table = gtk_table_new (2, 2, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
@@ -379,15 +383,6 @@ add_folder_cb (GtkWidget *widget,
 			  1, 2,
 			  GTK_FILL|GTK_EXPAND, 0,
 			  0, 0);
-
-	gtk_box_pack_start (GTK_BOX (vbox), data->include_subfold_checkbutton,
-			    TRUE, TRUE, 0);
-
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), data->exclude_symlinks,
-			    TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox,
-			    TRUE, TRUE, 0);
 
 	/**/
 	

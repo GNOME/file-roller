@@ -1220,7 +1220,7 @@ progress_dialog_response (GtkDialog *dialog,
 			  int        response_id,
 			  FRWindow  *window)
 {
-	if ((response_id == GTK_RESPONSE_OK) && window->stoppable) {
+	if ((response_id == GTK_RESPONSE_CANCEL) && window->stoppable) {
 		activate_action_stop (NULL, window);
 		close_progress_dialog (window);
 	}
@@ -1390,7 +1390,7 @@ open_progress_dialog (FRWindow *window)
 						       title,
 						       parent,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
-						       GTK_STOCK_STOP, GTK_RESPONSE_OK,
+						       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						       NULL);
 		d = GTK_DIALOG (window->progress_dialog);
 		gtk_dialog_set_has_separator (d, FALSE);
@@ -1410,7 +1410,7 @@ open_progress_dialog (FRWindow *window)
 		g_free (markup);
 
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
+		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
 		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);		
 
 		/* archive name */
@@ -1435,7 +1435,7 @@ open_progress_dialog (FRWindow *window)
 			g_free (filename);
 
 			gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-			gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
+			gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
 			gtk_box_pack_start (GTK_BOX (hbox), lbl, TRUE, TRUE, 0);
 		}
 
@@ -1457,7 +1457,7 @@ open_progress_dialog (FRWindow *window)
 		pango_attr_list_unref (attr_list);
 
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
+		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
 		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
 
 		/**/

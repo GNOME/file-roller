@@ -251,7 +251,6 @@ process_line__common (char     *line,
 		double fraction = (double) comm->n_file++ / comm->n_files;
 		fr_command_progress (comm, fraction);
 	}
-
 }
 
 

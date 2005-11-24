@@ -267,7 +267,7 @@ process_line__generic (char     *line,
 
 	comm->n_file++;
 
-	msg = g_strconcat (action_msg, line, NULL);
+	msg = g_strconcat (action_msg, file_name_from_path (line), NULL);
 	fr_command_message (comm, msg);
 	g_free (msg);
 
