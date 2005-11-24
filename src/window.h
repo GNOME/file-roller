@@ -98,6 +98,7 @@ typedef struct {
 	GtkWidget *      down_arrows[5];
 
 	FRArchive *      archive;
+	FRAction         current_action;
 	gboolean         archive_present;
 	gboolean         archive_new;        /* A new archive has been created
 					      * but it doesn't contain any 
@@ -196,11 +197,15 @@ typedef struct {
 	/* progress dialog data */
 
 	GtkWidget *progress_dialog;
+	GtkWidget *pd_action;
+	GtkWidget *pd_archive;
 	GtkWidget *pd_message;
 	GtkWidget *pd_progress_bar;
 	gboolean   progress_pulse;
 	guint      progress_timeout;  /* Timeout to display the progress dialog. */
 	guint      hide_progress_timeout;  /* Timeout to hide the progress dialog. */
+	FRAction   pd_last_action;
+	char      *pd_last_archive;
 
 	/* batch mode data */
 
@@ -266,6 +271,14 @@ void       window_archive_add_directory     (FRWindow      *window,
 					     FRCompression  compression);
 
 void       window_archive_add_items         (FRWindow      *window,
+					     GList         *dir_list,
+					     const char    *base_dir,
+					     const char    *dest_dir,
+					     gboolean       update,
+					     const char    *password,
+					     FRCompression  compression);
+
+void       window_archive_add_dropped_items (FRWindow      *window,
 					     GList         *item_list,
 					     gboolean       update);
 

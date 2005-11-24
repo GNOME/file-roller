@@ -56,7 +56,7 @@
     g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
                                           0, 0, NULL, NULL, (data))
 
-#define MAX_CHUNK_LEN (NCARGS - PATH_MAX) /* Max length of the command line */
+#define MAX_CHUNK_LEN (NCARGS * 2 / 3) /* Max command line length */
 #define UNKNOWN_TYPE "application/octet-stream"
 #define SAME_FS (FALSE)
 #define NO_BACKUP_FILES (FALSE)
@@ -183,10 +183,20 @@ fr_archive_stoppable (FRArchive *archive,
 
 
 static gboolean
+fr_archive_add_is_stoppable (FRArchive *archive)
+{
+	if (archive->add_is_stoppable_func != NULL)
+		return (*archive->add_is_stoppable_func) (archive, archive->add_is_stoppable_data);
+	else
+		return FALSE;
+}
+
+
+static gboolean
 archive_sticky_only_cb (FRProcess *process,
 			FRArchive *archive)
 {
-	fr_archive_stoppable (archive, FALSE);
+	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
 	return TRUE;
 }
 
@@ -201,6 +211,9 @@ fr_archive_init (FRArchive *archive)
 
 	archive->fake_load_func = NULL;
 	archive->fake_load_data = NULL;
+
+	archive->add_is_stoppable_func = NULL;
+	archive->add_is_stoppable_data = NULL;
 
 	archive->process = fr_process_new ();
 	g_signal_connect (G_OBJECT (archive->process), 
@@ -313,9 +326,9 @@ get_mime_type_from_content (const char *filename)
 
 
 static gboolean
-hexcmp (const guchar *first_bytes,
-	const guchar *buffer,
-	int           len)
+hexcmp (const char *first_bytes,
+	const char *buffer,
+	int         len)
 {
 	int i;
 	
@@ -536,7 +549,9 @@ action_started (FRCommand *command,
 		FRAction   action,
 		FRArchive *archive)
 {
+#ifdef DEBUG
 	g_print ("FRArchive::action_started: %d\n", action);
+#endif
 	g_signal_emit (G_OBJECT (archive), 
 		       fr_archive_signals[START],
 		       0,
@@ -571,6 +586,9 @@ action_performed (FRCommand   *command,
 		break;
 	case FR_ACTION_GET_LIST:
 		s_action = "Get list";
+		break;
+	default:
+		s_action = "";
 		break;
 	}
 	g_print ("%s [DONE] (FR::Archive)\n", s_action);
@@ -938,6 +956,16 @@ newer_files_only (FRArchive  *archive,
 }
 
 
+void
+fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
+				      FakeLoadFunc   func,
+				      gpointer       data)
+{
+	archive->add_is_stoppable_func = func;
+	archive->add_is_stoppable_data = data;
+}
+
+
 /* Note: all paths unescaped. */
 void
 fr_archive_add (FRArchive     *archive, 
@@ -981,7 +1009,7 @@ fr_archive_add (FRArchive     *archive,
 	} else
 		new_file_list = file_list;
 
-	fr_archive_stoppable (archive, FALSE);
+	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
 
 	/* if the command cannot update,  get the list of files that are 
 	 * newer than the ones in the archive. */
@@ -1215,7 +1243,7 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 
 typedef struct {
 	FRArchive     *archive;
-	char          *directory;
+	GList         *dir_list;
 	char          *base_dir;
 	char          *dest_dir;
 	gboolean       update;
@@ -1247,7 +1275,7 @@ add_directory__step2 (GList *file_list, gpointer data)
 
 	/**/
 
-	g_free (ad_data->directory);
+	path_list_free (ad_data->dir_list);
 	g_free (ad_data->base_dir);
 	g_free (ad_data->password);
 	g_free (ad_data);
@@ -1276,7 +1304,7 @@ fr_archive_add_directory (FRArchive     *archive,
 
 	ad_data = g_new0 (AddDirectoryData, 1);
 	ad_data->archive = archive;
-	ad_data->directory = g_strdup (directory);
+	ad_data->dir_list = g_list_prepend (NULL, g_strdup (directory));
 	ad_data->base_dir = g_strdup (base_dir);
 	ad_data->dest_dir = g_strdup (dest_dir);
 	ad_data->update = update;
@@ -1285,10 +1313,48 @@ fr_archive_add_directory (FRArchive     *archive,
 	ad_data->done_func = done_func;
 	ad_data->done_data = done_data;
 
-	return get_directory_file_list_async (directory, 
-					      base_dir, 
-					      add_directory__step2, 
-					      ad_data);
+	return get_items_file_list_async (ad_data->dir_list,
+					  base_dir, 
+					  add_directory__step2, 
+					  ad_data);
+}
+
+
+/* Note: all paths unescaped. */
+VisitDirHandle *
+fr_archive_add_items (FRArchive     *archive, 
+		      GList         *item_list,
+		      const char    *base_dir,
+		      const char    *dest_dir,
+		      gboolean       update,
+		      const char    *password,
+		      FRCompression  compression,
+		      DoneFunc       done_func,
+		      gpointer       done_data)
+	
+{
+	AddDirectoryData *ad_data;
+
+	if (archive->read_only)
+		return NULL;
+
+	fr_archive_stoppable (archive, TRUE);
+
+	ad_data = g_new0 (AddDirectoryData, 1);
+	ad_data->archive = archive;
+	ad_data->dir_list = path_list_dup (item_list);
+	ad_data->base_dir = g_strdup (base_dir);
+	ad_data->dest_dir = g_strdup (dest_dir);
+	ad_data->update = update;
+	ad_data->password = g_strdup (password);
+	ad_data->compression = compression;
+	ad_data->done_func = done_func;
+	ad_data->done_data = done_data;
+
+	return get_items_file_list_async (ad_data->dir_list, 
+					  base_dir, 
+					  add_directory__step2, 
+					  ad_data);
 }
 
 
@@ -1617,6 +1683,7 @@ fr_archive_extract (FRArchive  *archive,
 	if (extract_all && ! archive->command->propCanExtractAll) {
 		GList *scan;
 
+		file_list = NULL;
 		scan = archive->command->file_list;
 		for (; scan; scan = scan->next) {
 			FileData *fdata = scan->data;
@@ -1661,6 +1728,7 @@ fr_archive_extract (FRArchive  *archive,
 	if (extract_all && ! file_list_created) {
 		GList *scan;
 
+		file_list = NULL;
 		scan = archive->command->file_list;
 		for (; scan; scan = scan->next) {
 			FileData *fdata = scan->data;

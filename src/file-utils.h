@@ -146,4 +146,6 @@ gboolean            check_permissions            (const char *path,
 
 gboolean 	    is_program_in_path		 (const char *filename);
 
+int                 strcmp_null_tollerant        (const char *s1, const char *s2);
+
 #endif /* FILE_UTILS_H */

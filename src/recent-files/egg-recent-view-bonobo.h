@@ -53,6 +53,9 @@ void egg_recent_view_bonobo_set_icon_size (EggRecentViewBonobo *view,
 
 GtkIconSize egg_recent_view_bonobo_get_icon_size (EggRecentViewBonobo *view);
 
+void egg_recent_view_bonobo_set_label_width (EggRecentViewBonobo *view,
+					     gint                 chars);
+gint egg_recent_view_bonobo_get_label_width (EggRecentViewBonobo *view);
 G_END_DECLS
 
 #endif /* __EGG_RECENT_VIEW_BONOBO_H__ */

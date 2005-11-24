@@ -820,7 +820,8 @@ _visit_dir_async (const char   *dir,
 
 
 VisitDirHandle *
-visit_dir_async (const char       *directory, 
+visit_dir_async (VisitDirHandle   *handle,
+		 const char       *directory, 
 		 const char       *filter_pattern, 
 		 gboolean          recursive,
 		 gboolean          follow_links,
@@ -833,7 +834,6 @@ visit_dir_async (const char       *directory,
 {
 	VisitDirData                   *vdd;
 	GnomeVFSDirectoryFilterOptions  filter_options;
-	VisitDirHandle                 *handle;
 
 	vdd = g_new0 (VisitDirData, 1);
 	vdd->directory = g_strdup (directory);
@@ -858,7 +858,8 @@ visit_dir_async (const char       *directory,
 
 	/* handle */
 
-	handle = g_new0 (VisitDirHandle, 1);
+	if (handle == NULL) 
+		handle = g_new0 (VisitDirHandle, 1);
 	handle->vdd_data = vdd;
 
 	_visit_dir_async (directory, vdd);
@@ -875,9 +876,9 @@ visit_dir_handle_free (VisitDirHandle   *handle)
 
 
 void
-visit_dir_async_interrupt    (VisitDirHandle   *handle,
-			      DoneFunc          f,
-			      gpointer          data)
+visit_dir_async_interrupt (VisitDirHandle   *handle,
+			   DoneFunc          f,
+			   gpointer          data)
 {
 	handle->vdd_data->interrupt_func = f;
 	handle->vdd_data->interrupt_data = data;
@@ -891,10 +892,17 @@ visit_dir_async_interrupt    (VisitDirHandle   *handle,
 
 
 typedef struct {
+	GList             *dir_list;
+	GList             *current_dir;
+	GList             *files;
+	VisitDirHandle    *handle;
+
 	char              *directory;
 	char              *base_dir;
 	VisitDirDoneFunc   done_func;
 	gpointer           done_data;
+
+	guint              visit_timeout;
 } GetFileListData;
 
 
@@ -905,10 +913,14 @@ get_file_list_data_free (GetFileListData *gfl_data)
 	if (gfl_data == NULL)
 		return;
 
+	path_list_free (gfl_data->dir_list);
 	g_free (gfl_data->directory);
 	g_free (gfl_data->base_dir);
 	g_free (gfl_data);
 }
+
+
+/* -- get_wildcard_file_list_async -- */
 
 
 static void 
@@ -961,7 +973,8 @@ get_wildcard_file_list_async  (const char       *directory,
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 	
-	return visit_dir_async (directory,
+	return visit_dir_async (NULL,
+				directory,
 				filter_pattern, 
 				recursive,
 				follow_links,
@@ -972,6 +985,9 @@ get_wildcard_file_list_async  (const char       *directory,
 				get_wildcard_file_list_cb,
 				gfl_data);
 }
+
+
+/* -- get_directory_file_list_async -- */
 
 
 static void 
@@ -1030,7 +1046,8 @@ get_directory_file_list_async (const char       *directory,
 	else
 		path = g_strconcat (base_dir, "/", directory, NULL);
 
-	handle = visit_dir_async (path,
+	handle = visit_dir_async (NULL,
+				  path,
 				  "*",
 				  TRUE,
 				  TRUE,
@@ -1043,4 +1060,129 @@ get_directory_file_list_async (const char       *directory,
 	g_free (path);
 
 	return handle;
+}
+
+
+/* -- get_items_file_list_async -- */
+
+
+static VisitDirHandle *visit_current_dir (GetFileListData *gfl_data);
+
+
+static gboolean
+visit_current_dir_idle_cb (gpointer data)
+{
+	GetFileListData *gfl_data = data;
+
+	g_source_remove (gfl_data->visit_timeout);
+	gfl_data->visit_timeout = 0;
+
+	visit_current_dir (gfl_data);
+
+	return FALSE;
+}
+
+
+static void 
+get_items_file_list_cb (GList *files, gpointer data)
+{
+	GetFileListData *gfl_data = data;
+
+	if (gfl_data->base_dir != NULL) {
+		GList *scan;
+		int    base_len;
+		
+		base_len = 0;
+		if (strcmp (gfl_data->base_dir, "/") != 0)
+			base_len = strlen (gfl_data->base_dir);
+
+		for (scan = files; scan; scan = scan->next) {
+			char *full_path = scan->data;
+
+			if (strncmp (gfl_data->base_dir, full_path, base_len) == 0) {
+				char *rel_path = g_strdup (full_path + base_len + 1);
+				gfl_data->files = g_list_prepend (gfl_data->files, rel_path);
+			}
+		}
+	}
+
+	gfl_data->current_dir = g_list_next (gfl_data->current_dir);
+	gfl_data->visit_timeout = g_idle_add (visit_current_dir_idle_cb, gfl_data);
+}
+
+
+static VisitDirHandle *
+visit_current_dir (GetFileListData *gfl_data)
+{
+	const char *directory;
+	char       *path;
+
+	if (gfl_data->current_dir == NULL) {
+		if (gfl_data->done_func) 
+			/* gfl_data->files must be deallocated in gfl_data->done_func */
+			gfl_data->done_func (gfl_data->files, gfl_data->done_data);
+		else 
+			path_list_free (gfl_data->files);
+		get_file_list_data_free (gfl_data);
+		return NULL;
+	}
+
+	directory = file_name_from_path ((char*) gfl_data->current_dir->data);
+	if (strcmp (gfl_data->base_dir, "/") == 0)
+        	path = g_strconcat (gfl_data->base_dir, directory, NULL);
+	else
+		path = g_strconcat (gfl_data->base_dir, "/", directory, NULL);
+
+	visit_dir_async (gfl_data->handle,
+			 path,
+			 "*",
+			 TRUE,
+			 TRUE,
+			 TRUE,
+			 FALSE,
+			 FALSE,
+			 FALSE,
+			 get_items_file_list_cb,
+			 gfl_data);
+	g_free (path);
+
+	return gfl_data->handle;
+}
+
+
+VisitDirHandle *
+get_items_file_list_async (GList            *item_list,
+			   const char       *base_dir,
+			   VisitDirDoneFunc  done_func,
+			   gpointer          done_data)
+{
+	GetFileListData *gfl_data;
+	int              base_len;
+	GList           *scan;
+
+	g_return_val_if_fail (base_dir != NULL, NULL);
+
+	gfl_data = g_new0 (GetFileListData, 1);
+	
+	base_len = 0;
+	if (strcmp (base_dir, "/") != 0)
+		base_len = strlen (base_dir);
+	
+	for (scan = item_list; scan; scan = scan->next) {
+		char *path = scan->data;
+
+		if (path_is_file (path)) {
+			char *rel_path = g_strdup (path + base_len + 1);
+			gfl_data->files = g_list_prepend (gfl_data->files, rel_path);
+		} else if (path_is_dir (path))
+			gfl_data->dir_list = g_list_prepend (gfl_data->dir_list, g_strdup (path));
+	}
+
+	gfl_data->current_dir = gfl_data->dir_list;
+	gfl_data->base_dir  = g_strdup (base_dir);
+	gfl_data->done_func = done_func;
+	gfl_data->done_data = done_data;
+	gfl_data->handle = g_new0 (VisitDirHandle, 1);
+
+	return visit_current_dir (gfl_data);
 }

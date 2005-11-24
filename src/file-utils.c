@@ -1196,3 +1196,17 @@ is_program_in_path (const char *filename)
 	
         return result;
 }
+
+
+int
+strcmp_null_tollerant (const char *s1, const char *s2)
+{
+	if ((s1 == NULL) && (s2 == NULL))
+		return 0;
+	else if ((s1 != NULL) && (s2 == NULL))
+		return 1;
+	else if ((s1 == NULL) && (s2 != NULL))
+		return -1;
+	else
+		return strcmp (s1, s2);
+}

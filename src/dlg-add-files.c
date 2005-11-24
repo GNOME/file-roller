@@ -113,7 +113,7 @@ file_sel_response_cb (GtkWidget      *widget,
 	}
 
 	if (item_list != NULL) 
-		window_archive_add_items (window, item_list, update);
+		window_archive_add_dropped_items (window, item_list, update);
 
 	g_list_free (item_list);
 	g_slist_foreach (selections, (GFunc) g_free, NULL);

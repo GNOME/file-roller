@@ -1,3 +1,43 @@
+2005-11-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/recent-files/*: 
+
+	Updated from libegg.
+	
+	* src/window.h: 
+	* src/window.c: 
+	* src/fr-archive.h: 
+	* src/fr-archive.c (MAX_CHUNK_LEN): use NCARGS * 2 / 3 as max command 
+	line length.
+	(fr_archive_add_items): new function.
+	(fr_archive_set_add_is_stoppable_func): new function.
+	* src/file-utils.h (strcmp_null_tollerant): 
+	* src/file-utils.c (strcmp_null_tollerant): new function.
+	* src/file-list.h: 
+	* src/file-list.c (visit_dir_async)
+	(get_directory_file_list_async): 
+	* src/dlg-add-files.c:
+
+	Set progress dialog display delay to 1 second.  More HIG compliant
+	progress dialog.  Use a single command execution to add many files
+	and folders to an archive.  Allow to stop creation of a new archive.
+
+	* src/fr-command.h: added FR_ACTION_NONE and FR_ACTION_SAVE.
+
+	* src/fr-command-tar.h: 
+	* src/fr-command-tar.c (process_line__generic): 
+
+	Emit the MESSAGE signal	every ACTIVITY_DELAY msecs instead of emitting 
+	it for every output line.
+	
+	* data/glade/file-roller-extract.glade: Fixed dialog border size.
+
+2005-11-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/file-utils.c (strcmp_null_tollerant): new function
+	* src/window.c (open_progress_dialog): use PANGO_ELLIPSIZE_LEFT
+	instead of PANGO_ELLIPSIZE_MIDDLE.
+
 2005-11-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* component/*: removed files from CVS too.

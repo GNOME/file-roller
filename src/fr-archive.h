@@ -57,6 +57,10 @@ struct _FRArchive {
 					  * fr_archive_load is invoked, used
 					  * in batch mode. */
 	gpointer     fake_load_data;
+
+	FakeLoadFunc add_is_stoppable_func; /* Returns whether the add operation is 
+					     * stoppable. */
+	gpointer     add_is_stoppable_data;
 };
 
 struct _FRArchiveClass {
@@ -130,6 +134,17 @@ VisitDirHandle * fr_archive_add_directory      (FRArchive     *archive,
 						DoneFunc       done_func,
 						gpointer       done_data);
 
+VisitDirHandle * fr_archive_add_items          (FRArchive     *archive, 
+						GList         *item_list,
+						const char    *base_dir,
+						const char    *dest_dir,
+						gboolean       update,
+						const char    *password,
+						FRCompression  compression,
+						DoneFunc       done_func,
+						gpointer       done_data);
+
+
 void             fr_archive_remove             (FRArchive     *archive,
 						GList         *file_list,
 						FRCompression  compression);
@@ -151,6 +166,10 @@ void             fr_archive_set_fake_load_func (FRArchive     *archive,
 						gpointer       data);
 
 gboolean         fr_archive_fake_load          (FRArchive     *archive);
+
+void             fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
+						       FakeLoadFunc   func,
+						       gpointer       data);
 
 void             fr_archive_stoppable          (FRArchive     *archive,
 						gboolean       stoppable);

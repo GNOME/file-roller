@@ -48,7 +48,6 @@ static void     init_session        (char **argv);
 static gboolean session_is_restored (void);
 static gboolean load_session        (void);
 
-
 GList        *window_list = NULL;
 GList        *viewer_list = NULL;
 GList        *command_list = NULL;
@@ -62,7 +61,11 @@ static gint   extract;
 static gint   extract_here;
 static gchar *default_url = NULL;
 
-extern void get_supported_archive_types (void);
+/* these arrays need to increase in size if new types are introduced */
+
+FileTypeDescription write_type_desc[18]; 
+char *save_mime_type[19];
+char *open_mime_type[24];
 
 struct poptOption options[] = {
 	{ "add-to", 'a', POPT_ARG_STRING, &add_to, 0,
@@ -119,7 +122,8 @@ startup_cb (gpointer data)
 }
 
 
-int main (int argc, char **argv)
+int 
+main (int argc, char **argv)
 {
 	GnomeProgram *program;
 	GValue value = { 0 };
@@ -346,6 +350,232 @@ migrate_to_new_directories (void)
 
 
 static void 
+compute_supported_archive_types (void)
+{
+	int  wi, si, oi;
+
+	wi = 0;
+	si = 0;
+	oi = 0;
+
+	write_type_desc[wi].name = g_strdup(N_("Automatic"));
+	write_type_desc[wi].ext = NULL;
+	wi++;
+
+	if (is_program_in_path ("ar")) {
+		write_type_desc[wi].name = g_strdup(N_("Ar (.ar)"));
+		write_type_desc[wi].ext = g_strdup(".ar");
+		wi++;
+		save_mime_type[si] = g_strdup("application/x-ar");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-ar");
+		oi++;
+		open_mime_type[oi] = g_strdup("application/x-deb");
+		oi++;
+	}
+
+	if (is_program_in_path ("arj")) {
+                write_type_desc[wi].name = g_strdup(N_("Arj (.arj)"));
+		write_type_desc[wi].ext = g_strdup(".arj");	
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-arj");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-arj");
+                oi++;
+        }
+
+	if (is_program_in_path ("bzip2")) {
+                save_mime_type[si] = g_strdup("application/x-bzip");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-bzip");
+		oi++;
+        }
+
+	if (is_program_in_path ("compress")) {
+		save_mime_type[si] = g_strdup("application/x-compress");
+                si++;
+        }
+
+	if (is_program_in_path ("isoinfo")) {
+		save_mime_type[si] = g_strdup("application/x-cd-image");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-cd-image");
+		oi++;
+        }
+
+	if (is_program_in_path ("zip")) {
+                write_type_desc[wi].name = g_strdup(N_("Ear (.ear)"));
+                write_type_desc[wi].ext = g_strdup(".ear");
+                wi++;
+	}
+
+	if (is_program_in_path ("gzip")) {
+                save_mime_type[si] = g_strdup("application/x-gzip");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-gzip");
+		oi++;
+        }
+
+	if (is_program_in_path ("zip")) {
+                write_type_desc[wi].name = g_strdup(N_("Jar (.jar)"));
+		write_type_desc[wi].ext = g_strdup(".jar");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-jar");
+		si++;
+		save_mime_type[si] = g_strdup("application/x-java-archive");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-java-archive");
+		oi++;
+		open_mime_type[oi] = g_strdup("application/x-jar");
+		oi++;
+        }
+
+	if (is_program_in_path ("lha")) {
+                write_type_desc[wi].name = g_strdup(N_("Lha (.lzh)"));
+		write_type_desc[wi].ext = g_strdup(".lzh");
+                wi++;
+		save_mime_type[si++] = g_strdup("application/x-lha");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-lha");
+		oi++;
+        }
+
+	if (is_program_in_path ("lzop")) {
+                save_mime_type[si] = g_strdup("application/x-lzop");
+                si++;
+		open_mime_type[oi] = g_strdup("application/x-lzop");
+                oi++;
+        }
+
+	if (is_program_in_path ("rar")) {
+                write_type_desc[wi].name = g_strdup(N_("Rar (.rar)"));
+		write_type_desc[wi].ext = g_strdup(".rar");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-rar");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-rar");
+		oi++;
+        }
+
+	if (is_program_in_path ("rpm2cpio")) {
+                open_mime_type[oi] = g_strdup("application/x-rpm");
+                oi++;
+        }
+
+	if (is_program_in_path ("tar")) {
+                write_type_desc[wi].name = g_strdup(N_("Tar uncompressed (.tar)"));
+		write_type_desc[wi].ext = g_strdup(".tar");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-tar");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-tar");
+		oi++;
+
+		if (is_program_in_path ("bzip")) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with bzip (.tar.bz)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.bz");
+                        wi++;
+                }
+
+		if (is_program_in_path ("bzip2")) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with bzip2 (.tar.bz2)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.bz2");
+                        wi++;
+			save_mime_type[si] = g_strdup("application/x-bzip-compressed-tar");
+                        si++;
+			open_mime_type[oi] = g_strdup("application/x-bzip-compressed-tar");
+			oi++;
+                }
+
+		if (is_program_in_path ("gzip")) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with gzip (.tar.gz)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.gz");
+                        wi++;
+			save_mime_type[si] = g_strdup("application/x-compressed-tar");
+			si++;
+			open_mime_type[oi] = g_strdup("application/x-compressed-tar");
+			oi++;
+                }
+
+		if (is_program_in_path ("lzop")) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with lzop (.tar.lzo)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.lzo");
+                        wi++;
+			open_mime_type[oi] = g_strdup("application/x-lzop-compressed-tar");	
+			oi++;
+                }
+
+		if (is_program_in_path ("compress")) {
+                        write_type_desc[wi].name = g_strdup(N_("Tar compressed with compress (.tar.Z)"));
+                        write_type_desc[wi].ext = g_strdup(".tar.Z");
+                        wi++;
+                }
+
+		if (is_program_in_path ("rar")) {
+                	save_mime_type[si] = g_strdup("application/x-rar-compressed");
+                	si++;
+                	open_mime_type[oi] = g_strdup("application/x-rar-compressed");
+                	oi++;
+        	}
+	}		
+
+	if (is_program_in_path ("uncompress")) {
+                open_mime_type[oi] = g_strdup("application/x-compress");
+                oi++;
+        }
+
+	if (is_program_in_path ("unstuff")) {
+                open_mime_type[oi] = g_strdup("application/x-stuffit");
+                oi++;
+        }
+
+	if (is_program_in_path ("unzip")) {
+                open_mime_type[oi] = g_strdup("application/zip");
+                oi++;
+                open_mime_type[oi] = g_strdup("application/x-zip");
+                oi++;
+        }
+        
+	if (is_program_in_path ("zip")) {
+                write_type_desc[wi].name = g_strdup(N_("War (.war)"));
+                write_type_desc[wi].ext = g_strdup(".war");
+                wi++;
+		write_type_desc[wi].name = g_strdup(N_("Zip (.zip)"));
+                write_type_desc[wi].ext = g_strdup(".zip");
+                wi++;
+		save_mime_type[si] = g_strdup("application/zip");
+                si++;
+        }
+
+	if (is_program_in_path ("zoo")) {
+                write_type_desc[wi].name = g_strdup(N_("Zoo (.zoo)"));
+		write_type_desc[wi].ext = g_strdup(".zoo");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-zoo");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-zoo");
+		oi++;
+        }
+
+	if (is_program_in_path ("7za") || is_program_in_path ("7z")) {
+                write_type_desc[wi].name = g_strdup(N_("7-Zip (.7z)"));
+		write_type_desc[wi].ext = g_strdup(".7z");
+                wi++;
+		save_mime_type[si] = g_strdup("application/x-7zip");
+		si++;
+		open_mime_type[oi] = g_strdup("application/x-7zip");
+		oi++;	
+
+        } 
+
+	write_type_desc[wi].name = NULL;
+	write_type_desc[wi].ext = NULL;
+	save_mime_type[si] = NULL;
+	open_mime_type[oi] = NULL;
+}
+
+
+static void 
 prepare_app (poptContext pctx)
 {
 	char *path;
@@ -367,7 +597,7 @@ prepare_app (poptContext pctx)
 	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
                 migrate_to_new_directories ();
 
-	get_supported_archive_types();
+	compute_supported_archive_types();
 
 	if (session_is_restored ()) {
 		load_session ();

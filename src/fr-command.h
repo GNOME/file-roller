@@ -38,12 +38,14 @@ typedef struct _FRCommand       FRCommand;
 typedef struct _FRCommandClass  FRCommandClass;
 
 typedef enum {
+	FR_ACTION_NONE,
 	FR_ACTION_LIST,
 	FR_ACTION_ADD,
 	FR_ACTION_DELETE,
 	FR_ACTION_EXTRACT,
 	FR_ACTION_TEST,
-	FR_ACTION_GET_LIST
+	FR_ACTION_GET_LIST,
+	FR_ACTION_SAVE
 } FRAction;
 
 struct _FRCommand

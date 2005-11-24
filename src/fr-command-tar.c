@@ -39,6 +39,8 @@
 #include "fr-command.h"
 #include "fr-command-tar.h"
 
+#define ACTIVITY_DELAY 20
+
 static void fr_command_tar_class_init  (FRCommandTarClass *class);
 static void fr_command_tar_init        (FRCommand         *afile);
 static void fr_command_tar_finalize    (GObject           *object);
@@ -253,9 +255,9 @@ static void
 process_line__generic (char     *line, 
 		       gpointer  data,
 		       char     *action_msg)
-{
-	FRCommand  *comm = FR_COMMAND (data);
-	char       *msg;
+{	
+	FRCommand *comm = FR_COMMAND (data);
+	char      *msg;
 
 	if (line == NULL)
 		return;
@@ -267,8 +269,9 @@ process_line__generic (char     *line,
 	fr_command_message (comm, msg);
 	g_free (msg);
 
+	comm->n_file++;
 	if (comm->n_files != 0) {
-		double fraction = (double) comm->n_file++ / comm->n_files;
+		double fraction = (double) comm->n_file / comm->n_files;
 		fr_command_progress (comm, fraction);
 	}
 }

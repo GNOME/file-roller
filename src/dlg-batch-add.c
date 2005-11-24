@@ -40,6 +40,7 @@
 #include "typedefs.h"
 #include "gtk-utils.h"
 #include "preferences.h"
+#include "main.h"
 
 
 #define GLADE_FILE "file-roller.glade"
@@ -49,16 +50,18 @@
 #define BAD_CHARS "/\\*"
 
 typedef struct {
-	FRWindow  *window;
-	GladeXML  *gui;
+	FRWindow   *window;
+	GladeXML   *gui;
 
-	GtkWidget *dialog;
-	GtkWidget *a_add_to_entry;
-	GtkWidget *a_location_filechooserbutton;
-	GtkWidget *add_image;
+	GtkWidget  *dialog;
+	GtkWidget  *a_add_to_entry;
+	GtkWidget  *a_location_filechooserbutton;
+	GtkWidget  *add_image;
+	GtkWidget  *a_archive_type_combo_box;
 
-	GList     *file_list;
-	gboolean   add_clicked;
+	GList      *file_list;
+	gboolean    add_clicked;
+	const char *last_mime_type;
 } DialogData;
 
 
@@ -447,6 +450,27 @@ get_pixbuf_from_mime_type (const char *mime_type,
 
 
 static void
+update_archive_type_combo_box_from_ext (DialogData  *data,
+					const char  *ext)
+{
+	int idx = 0;
+	int i;
+
+	if (ext == NULL) {
+		gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), idx);
+		return;
+	}
+
+	for (i = 1; write_type_desc[i].name != NULL; i++) 
+		if (strcmp (ext, write_type_desc[i].ext) == 0) {
+			idx = i;
+			break;
+		}
+	gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), idx);
+}
+
+
+static void
 entry_changed_cb (GtkEditable *editable,
 		  DialogData  *data)
 {
@@ -455,8 +479,45 @@ entry_changed_cb (GtkEditable *editable,
 
 	filename = gtk_editable_get_chars (editable, 0, -1);
 	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, GNOME_VFS_MIME_TYPE_UNKNOWN);
+	if (strcmp_null_tollerant (data->last_mime_type, mime_type) == 0) 
+		return;
+
+	data->last_mime_type = mime_type;
 	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_pixbuf_from_mime_type (mime_type, ARCHIVE_ICON_SIZE));
 
+	update_archive_type_combo_box_from_ext (data, fr_archive_utils__get_file_name_ext (filename));
+	g_free (filename);
+}
+
+
+static void
+archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
+				   DialogData  *data)
+{
+	int         idx = gtk_combo_box_get_active (combo_box);
+	char       *filename, *new_filename;	
+	const char *ext;
+
+	if (idx < 1)
+		return;
+
+	filename = gtk_editable_get_chars (GTK_EDITABLE (data->a_add_to_entry), 0, -1);
+
+	/* remove the old extension */
+
+	ext = fr_archive_utils__get_file_name_ext (filename);
+	if (ext != NULL) {
+		char *no_ext = g_strndup (filename, strlen (filename) - strlen (ext));
+		g_free (filename);
+		filename = no_ext;
+	}
+
+	/* add the new extension */
+
+	new_filename = g_strconcat (filename, write_type_desc[idx].ext, NULL);
+	gtk_entry_set_text (GTK_ENTRY (data->a_add_to_entry), new_filename);
+
+	g_free (new_filename);
 	g_free (filename);
 }
 
@@ -468,12 +529,14 @@ dlg_batch_add_files (FRWindow *window,
         DialogData *data;
 	GtkWidget  *cancel_button;
 	GtkWidget  *add_button;
+	GtkWidget  *a_archive_type_box;
 	char       *path, *automatic_name = NULL;
 	char       *default_ext;
 	const char *first_filename;
 	char       *parent;
+	int         i;
 
-        data = g_new (DialogData, 1);
+        data = g_new0 (DialogData, 1);
 
         data->window = window;
 	data->file_list = file_list;
@@ -493,6 +556,7 @@ dlg_batch_add_files (FRWindow *window,
 
 	add_button = glade_xml_get_widget (data->gui, "a_add_button");
 	cancel_button = glade_xml_get_widget (data->gui, "a_cancel_button");
+	a_archive_type_box = glade_xml_get_widget (data->gui, "a_archive_type_box");
 
 	data->add_image = glade_xml_get_widget (data->gui, "a_add_image");
 
@@ -523,6 +587,16 @@ dlg_batch_add_files (FRWindow *window,
 	path = g_strconcat (automatic_name, default_ext, NULL);
 	g_free (default_ext);
 
+	/* archive type combobox */
+
+	data->a_archive_type_combo_box = gtk_combo_box_new_text ();
+	for (i = 0; write_type_desc[i].name != NULL; i++)
+		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box),
+					   _(write_type_desc[i].name));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), 0);
+	gtk_box_pack_start (GTK_BOX (a_archive_type_box), data->a_archive_type_combo_box, TRUE, TRUE, 0);
+	gtk_widget_show_all (a_archive_type_box);
+
 	/* Set the signals handlers. */
 
         g_signal_connect (G_OBJECT (data->dialog), 
@@ -540,6 +614,10 @@ dlg_batch_add_files (FRWindow *window,
 	g_signal_connect (G_OBJECT (data->a_add_to_entry), 
 			  "changed",
 			  G_CALLBACK (entry_changed_cb),
+			  data);
+	g_signal_connect (G_OBJECT (data->a_archive_type_combo_box), 
+			  "changed",
+			  G_CALLBACK (archive_type_combo_box_changed_cb),
 			  data);
 
 	/* Run dialog. */

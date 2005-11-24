@@ -48,37 +48,38 @@ typedef struct _VisitDirHandle VisitDirHandle;
 
 typedef void (*VisitDirDoneFunc) (GList *files, gpointer data);
 
-void                visit_dir_handle_free         (VisitDirHandle   *handle);
-
-VisitDirHandle *    visit_dir_async               (const char       *directory, 
-						   const char       *filter_pattern, 
-						   gboolean          recursive,
-						   gboolean          follow_links,
-						   gboolean          same_fs,
-						   gboolean          no_backup_files,
-						   gboolean          no_dot_files,
-						   gboolean          ignorecase,
-						   VisitDirDoneFunc  done_func,
-						   gpointer          done_data);
-
-void                visit_dir_async_interrupt     (VisitDirHandle   *handle,
-						   DoneFunc          f,
-						   gpointer          data);
-
-VisitDirHandle *    get_wildcard_file_list_async  (const char       *directory, 
-						   const char       *filter_pattern, 
-						   gboolean          recursive,
-						   gboolean          follow_links,
-						   gboolean          same_fs,
-						   gboolean          no_backup_files,
-						   gboolean          no_dot_files,
-						   gboolean          ignorecase,
-						   VisitDirDoneFunc  done_func,
-						   gpointer          done_data);
-
-VisitDirHandle *    get_directory_file_list_async (const char       *directory,
-						   const char       *base_dir,
-						   VisitDirDoneFunc  done_func,
-						   gpointer          done_data); 
+void                visit_dir_handle_free           (VisitDirHandle   *handle);
+VisitDirHandle *    visit_dir_async                 (VisitDirHandle   *handle,
+						     const char       *directory, 
+						     const char       *filter_pattern, 
+						     gboolean          recursive,
+						     gboolean          follow_links,
+						     gboolean          same_fs,
+						     gboolean          no_backup_files,
+						     gboolean          no_dot_files,
+						     gboolean          ignorecase,
+						     VisitDirDoneFunc  done_func,
+						     gpointer          done_data);
+void                visit_dir_async_interrupt       (VisitDirHandle   *handle,
+						     DoneFunc          f,
+						     gpointer          data);
+VisitDirHandle *    get_wildcard_file_list_async    (const char       *directory, 
+						     const char       *filter_pattern, 
+						     gboolean          recursive,
+						     gboolean          follow_links,
+						     gboolean          same_fs,
+						     gboolean          no_backup_files,
+						     gboolean          no_dot_files,
+						     gboolean          ignorecase,
+						     VisitDirDoneFunc  done_func,
+						     gpointer          done_data);
+VisitDirHandle *    get_directory_file_list_async   (const char       *directory,
+						     const char       *base_dir,
+						     VisitDirDoneFunc  done_func,
+						     gpointer          done_data); 
+VisitDirHandle *    get_items_file_list_async       (GList            *item_list,
+						     const char       *base_dir,
+						     VisitDirDoneFunc  done_func,
+						     gpointer          done_data);
 
 #endif /* _FILE_LIST_H */

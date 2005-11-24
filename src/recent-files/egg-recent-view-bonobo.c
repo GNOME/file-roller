@@ -28,15 +28,14 @@
 #include <gtk/gtk.h>
 #include <libbonoboui.h>
 #include <libgnomevfs/gnome-vfs.h>
-#ifndef USE_STABLE_LIBGNOMEUI
-#include <libgnomeui/gnome-icon-theme.h>
-#endif
 #include <gconf/gconf-client.h>
 #include "egg-recent-model.h"
 #include "egg-recent-view.h"
 #include "egg-recent-view-bonobo.h"
 #include "egg-recent-util.h"
 #include "egg-recent-item.h"
+
+#define DEFAULT_LABEL_WIDTH 30
 
 struct _EggRecentViewBonobo {
 	GObject parent_instance;	/* We emit signals */
@@ -52,15 +51,17 @@ struct _EggRecentViewBonobo {
 
 	gboolean show_icons;
 	gboolean show_numbers;
-#ifndef USE_STABLE_LIBGNOMEUI
-	GnomeIconTheme *theme;
-#endif
+
+	GtkIconTheme *theme;
+
 	EggRecentViewBonoboTooltipFunc tooltip_func;
 	gpointer tooltip_func_data;
 
 	EggRecentModel *model;
 	GConfClient *client;
 	GtkIconSize icon_size;
+	
+	gint label_width;	
 };
 
 
@@ -82,7 +83,8 @@ enum {
 	PROP_UI_COMPONENT,
 	PROP_MENU_PATH,
 	PROP_SHOW_ICONS,
-	PROP_SHOW_NUMBERS
+	PROP_SHOW_NUMBERS,
+	PROP_LABEL_WIDTH	
 };
 
 static guint egg_recent_view_bonobo_signals[LAST_SIGNAL] = { 0 };
@@ -144,6 +146,49 @@ egg_recent_view_bonobo_menu_data_destroy_cb (gpointer data, GClosure *closure)
 	g_free (md);
 }
 
+static gchar *
+str_end_truncate (const gchar *string,
+		  guint        truncate_length)
+{
+	gchar       *truncate;
+	guint        n_chars;
+	guint        num_left_chars;
+	guint        delimiter_chars;
+	guint	     delimiter_length;
+	const gchar *delimiter = "\342\200\246";
+	
+	g_return_val_if_fail (string != NULL, NULL);
+	g_return_val_if_fail (g_utf8_validate (string, -1, NULL), NULL);
+
+	n_chars = g_utf8_strlen (string, -1);
+
+	/* Make sure the string is not already small enough. */
+	if (n_chars <= truncate_length) {
+		return g_strdup (string);
+	}
+	
+	/* It doesn't make sense to truncate strings to less than
+	 * the size of the delimiter plus 2 characters (one on each
+	 * side)
+	 */
+	delimiter_length = strlen (delimiter);
+	delimiter_chars = g_utf8_strlen (delimiter, delimiter_length);
+	if (truncate_length < (delimiter_chars + 2)) {
+		return g_strdup (string);
+	}
+
+
+	/* Find the position where the truncation will occur. */
+	num_left_chars = (truncate_length - delimiter_chars);
+	
+	truncate = g_new0 (gchar, 
+			   (g_utf8_offset_to_pointer (string, num_left_chars) - string) + delimiter_length + 1);
+
+	g_utf8_strncpy (truncate, string, num_left_chars);
+	g_utf8_strncpy (g_utf8_offset_to_pointer (truncate, num_left_chars), delimiter, delimiter_chars);
+		
+	return truncate;		   
+}
 
 static void
 egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
@@ -178,6 +223,7 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 
 	for (i = 1; i <= g_list_length (list); ++i)
 	{
+		gchar *temp_base_uri;
 		EggRecentItem *item = (EggRecentItem *)g_list_nth_data (list, i-1);	
 
 		utf8_uri = egg_recent_item_get_uri_for_display (item);
@@ -191,7 +237,9 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 
 		egg_recent_item_ref (md->item);
 
-		base_uri = g_path_get_basename (utf8_uri);
+		temp_base_uri = egg_recent_item_get_short_name (item);
+		base_uri = str_end_truncate (temp_base_uri, view->label_width);
+		g_free (temp_base_uri);
 		xml_escaped_name = g_markup_escape_text (base_uri,
 							 strlen (base_uri));
 	
@@ -209,34 +257,29 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 		}
 
 		if (tip == NULL)
-			tip = g_strdup ("");
+			tip = g_strdup_printf ("Open '%s'", utf8_uri);
 
 		verb_name = g_strdup_printf ("%s-%d", view->uid, i);
 
 		if (view->show_icons) {
+			GtkSettings *settings;
 			GdkPixbuf *pixbuf;
 			gchar *mime_type;
 			gchar *uri;
+			gint width, height;
 
 			mime_type = egg_recent_item_get_mime_type (item);
 			uri = egg_recent_item_get_uri (item);
-#ifndef USE_STABLE_LIBGNOMEUI
-			{
-				int width, height;
+			
+			settings = gtk_settings_get_default ();
 
-				gtk_icon_size_lookup_for_settings
-					(gtk_settings_get_default (),
-					 view->icon_size,
-					 &width, &height);
-				pixbuf = egg_recent_util_get_icon
-							(view->theme,
-							 uri, mime_type,
-							 height);
-			}
-#else
-			pixbuf = NULL;
-#endif
-
+			gtk_icon_size_lookup_for_settings (settings,
+							   view->icon_size,
+							   &width, &height);
+			
+			pixbuf = egg_recent_util_get_icon (view->theme,
+							   uri, mime_type,
+							   MAX (width, height));
 
 			if (pixbuf != NULL) {
 				gchar *pixbuf_xml;
@@ -256,8 +299,8 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 			g_free (mime_type);
 			g_free (uri);
 		} else
-			cmd = g_strdup_printf ("<cmd name=\"%s\"/> ",
-					       verb_name);
+			cmd = g_strdup_printf ("<cmd name=\"%s\"/> ", verb_name);
+		
 		bonobo_ui_component_set_translate (ui_component, "/commands/", cmd, NULL);
 
 		closure = g_cclosure_new (G_CALLBACK (egg_recent_view_bonobo_menu_cb),
@@ -320,12 +363,52 @@ egg_recent_view_bonobo_set_list (EggRecentViewBonobo *view, GList *list)
 }
 
 static void
+egg_recent_view_bonobo_set_empty_list (EggRecentViewBonobo *view)
+{
+	BonoboUIComponent* ui_component;
+	gchar *verb_name;
+	gchar *cmd;
+	gchar *xml;
+
+	g_return_if_fail (view);
+
+	ui_component = view->uic;
+	g_return_if_fail (BONOBO_IS_UI_COMPONENT (ui_component));
+
+	egg_recent_view_bonobo_clear (view);
+	
+	bonobo_ui_component_freeze (ui_component, NULL);
+	
+	/* this is our only item */
+	verb_name = g_strdup_printf ("%s-0", view->uid);
+
+	cmd = g_strdup_printf ("<cmd name=\"%s\"" 
+			       "     sensitive=\"0\"/> ", verb_name);
+	bonobo_ui_component_set_translate (ui_component, "/commands/", cmd, NULL);
+	bonobo_ui_component_add_verb_full (ui_component, verb_name, NULL); 
+
+	xml = g_strdup_printf ("<menuitem name=\"%s\" "
+			       "          verb=\"%s\" "
+			       "          _label=\"%s\"/>",
+			       verb_name,
+			       verb_name,
+			       "Empty");
+	bonobo_ui_component_set_translate (ui_component, view->path, xml, NULL);
+	
+	g_free (verb_name);
+	g_free (cmd);
+	g_free (xml);
+	
+	bonobo_ui_component_thaw (ui_component, NULL);
+}
+
+static void
 model_changed_cb (EggRecentModel *model, GList *list, EggRecentViewBonobo *view)
 {
 	if (list != NULL)
 		egg_recent_view_bonobo_set_list (view, list);
 	else
-		egg_recent_view_bonobo_clear (view);
+		egg_recent_view_bonobo_set_empty_list (view);
 }
 
 
@@ -382,11 +465,17 @@ egg_recent_view_bonobo_set_property (GObject *object,
 		case PROP_SHOW_ICONS:
 			egg_recent_view_bonobo_show_icons (view,
 						g_value_get_boolean (value));
-		default:
+		break;
 		case PROP_SHOW_NUMBERS:
 			egg_recent_view_bonobo_show_numbers (view,
 						g_value_get_boolean (value));
-		break;
+		break;						
+		case PROP_LABEL_WIDTH:
+		        egg_recent_view_bonobo_set_label_width (view,
+						g_value_get_int (value));
+		break;						
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
 	}
 }
@@ -413,6 +502,9 @@ egg_recent_view_bonobo_get_property (GObject *object,
 		case PROP_SHOW_NUMBERS:
 			g_value_set_boolean (value, view->show_numbers);
 		break;
+		case PROP_LABEL_WIDTH:
+			g_value_set_int (value, view->label_width);
+		break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
@@ -428,9 +520,6 @@ egg_recent_view_bonobo_finalize (GObject *object)
 
 	g_object_unref (view->model);
 	g_object_unref (view->uic);
-#ifndef USE_STABLE_LIBGNOMEUI
-	g_object_unref (view->theme);
-#endif
 	g_object_unref (view->client);
 }
 
@@ -487,7 +576,15 @@ egg_recent_view_bonobo_class_init (EggRecentViewBonoboClass * klass)
 					   TRUE,
 					   G_PARAM_READWRITE));
 
-
+	g_object_class_install_property (object_class,
+					 PROP_LABEL_WIDTH,
+					 g_param_spec_int ("label-width",
+					   "Label Width",
+					   "The desired width of the menu label, in characters",
+					   -1,
+					   G_MAXINT,
+					   DEFAULT_LABEL_WIDTH,
+					   G_PARAM_READWRITE));
 
 	klass->activate = NULL;
 }
@@ -516,25 +613,22 @@ show_menus_changed_cb (GConfClient *client,
 
 }
 
-#ifndef USE_STABLE_LIBGNOMEUI
 static void
-theme_changed_cb (GnomeIconTheme *theme, EggRecentViewBonobo *view)
+theme_changed_cb (GtkIconTheme *theme,
+		  EggRecentViewBonobo *view)
 {
 	if (view->model != NULL)
 		egg_recent_model_changed (view->model);
 }
-#endif
 
 static void
 egg_recent_view_bonobo_init (EggRecentViewBonobo *view)
 {
 	view->uid = egg_recent_util_get_unique_id ();
-#ifndef USE_STABLE_LIBGNOMEUI
-	view->theme = gnome_icon_theme_new ();
-	gnome_icon_theme_set_allow_svg (view->theme, TRUE);
+	
+	view->theme = gtk_icon_theme_get_default ();
 	g_signal_connect_object (view->theme, "changed",
 				 G_CALLBACK (theme_changed_cb), view, 0);
-#endif
 
 	view->client = gconf_client_get_default ();
 	view->show_icons =
@@ -554,6 +648,8 @@ egg_recent_view_bonobo_init (EggRecentViewBonobo *view)
 	view->tooltip_func_data = NULL;
 
 	view->icon_size = GTK_ICON_SIZE_MENU;
+	
+	view->label_width = DEFAULT_LABEL_WIDTH;	
 }
 
 void
@@ -590,6 +686,23 @@ egg_recent_view_bonobo_show_numbers (EggRecentViewBonobo *view, gboolean show)
 
 	if (view->model)
 		egg_recent_model_changed (view->model);
+}
+
+void
+egg_recent_view_bonobo_set_label_width (EggRecentViewBonobo *view,
+				        gint                 chars)
+{
+	g_return_if_fail (EGG_IS_RECENT_VIEW_BONOBO (view));
+
+	view->label_width = chars;
+}
+
+gint
+egg_recent_view_bonobo_get_label_width (EggRecentViewBonobo *view)
+{
+	g_return_val_if_fail (EGG_IS_RECENT_VIEW_BONOBO (view), -1);
+
+	return view->label_width;
 }
 
 void

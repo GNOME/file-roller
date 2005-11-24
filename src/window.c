@@ -70,8 +70,8 @@
 #define MAX_MESSAGE_LENGTH 50
 
 #define PROGRESS_DIALOG_WIDTH 300
-#define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
-#define HIDE_PROGRESS_TIMEOUT_MSECS 200 /* FIXME */
+#define PROGRESS_TIMEOUT_MSECS 1000     /* FIXME */
+#define HIDE_PROGRESS_TIMEOUT_MSECS 333 /* FIXME */
 #define NAME_COLUMN_WIDTH 250
 #define OTHER_COLUMNS_WIDTH 100
 #define RECENT_ITEM_MAX_WIDTH 25
@@ -184,7 +184,7 @@ _window_get_current_dir_list (FRWindow *window)
 
 	scan = window->archive->command->file_list;
 	for (; scan; scan = scan->next) {
-		FileData   *fdata = scan->data;
+		FileData *fdata = scan->data;
 
 		if (strncmp (current_dir, fdata->full_path, current_dir_l) == 0) {
 			if (g_hash_table_lookup (names_hash, fdata->list_name) != NULL) 
@@ -1227,12 +1227,118 @@ progress_dialog_response (GtkDialog *dialog,
 }
 
 
+static const char*
+_get_message_from_action (FRAction action)
+{
+	char *message = "";
+
+	switch (action) {
+	case FR_ACTION_LIST:
+		message = _("Reading archive");
+		break;
+	case FR_ACTION_DELETE:
+		message = _("Deleting files from archive");
+		break;
+	case FR_ACTION_ADD:
+		message = _("Adding files to archive");
+		break;
+	case FR_ACTION_EXTRACT:
+		message = _("Extracting files from archive");
+		break;
+	case FR_ACTION_TEST:
+		message = _("Testing archive");
+		break;
+	case FR_ACTION_GET_LIST:
+		message = _("Getting the file list");
+		break;
+	case FR_ACTION_SAVE:
+		message = _("Saving archive");
+		break;
+	default:
+		message = "";
+		break;
+	}
+
+	return message;
+}
+
+
+static void
+_progress_dialog__set_last_action (FRWindow *window,
+				   FRAction  action)
+{
+	const char *title;
+	char       *markup;
+
+	window->pd_last_action = action;
+	title = _get_message_from_action (window->pd_last_action);
+	gtk_window_set_title (GTK_WINDOW (window->progress_dialog), title);
+	markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", title);
+	gtk_label_set_markup (GTK_LABEL (window->pd_action), markup);
+	g_free (markup);
+}
+
+
+static gboolean
+window_message_cb  (FRCommand  *command,
+		    const char *msg,
+		    FRWindow   *window)		     
+{
+	if (msg != NULL) {
+		while (*msg == ' ')
+			msg++;
+		if (*msg == 0)
+			msg = NULL;
+	}
+
+	if (msg == NULL) {
+		gtk_label_set_text (GTK_LABEL (window->pd_message), "");
+	} else {
+		char *utf8_msg;
+
+		if (! g_utf8_validate (msg, -1, NULL))
+			utf8_msg = g_locale_to_utf8 (msg, -1 , 0, 0, 0);
+		else
+			utf8_msg = g_strdup (msg);
+		if (utf8_msg == NULL)
+			return TRUE;
+
+		if (g_utf8_validate (utf8_msg, -1, NULL))
+			gtk_label_set_text (GTK_LABEL (window->pd_message), utf8_msg);
+		g_free (utf8_msg);
+	}
+
+	if (window->convert_data.converting) {
+		if (window->pd_last_action != FR_ACTION_SAVE) 
+			_progress_dialog__set_last_action (window, FR_ACTION_SAVE);
+	} else if (window->pd_last_action != window->current_action) 
+		_progress_dialog__set_last_action (window, window->current_action);
+
+	if (strcmp_null_tollerant (window->pd_last_archive, window->archive_filename) != 0) {
+		g_free (window->pd_last_archive);
+		if (window->archive_filename == NULL) {
+			window->pd_last_archive = NULL;
+			gtk_label_set_text (GTK_LABEL (window->pd_archive), "");
+		} else {
+			char *filename;
+			window->pd_last_archive = g_strdup (window->archive_filename);
+			filename = g_filename_display_basename (window->pd_last_archive);
+			gtk_label_set_text (GTK_LABEL (window->pd_archive), filename);
+			g_free (filename);
+		}
+	}
+
+        return TRUE;
+}
+
+
 static gboolean
 display_progress_dialog (gpointer data)
 {
 	FRWindow *window = data;
 
-	g_source_remove (window->progress_timeout);
+	if (window->progress_timeout != 0)
+		g_source_remove (window->progress_timeout);
 
 	if (window->progress_dialog != NULL) {
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->progress_dialog),
@@ -1240,7 +1346,9 @@ display_progress_dialog (gpointer data)
 						   window->stoppable);
 		if (! window->batch_mode)
 			gtk_widget_show (window->app);
+
 		gtk_widget_show (window->progress_dialog);
+		window_message_cb (NULL, NULL, window);
 	}
 
 	window->progress_timeout = 0;
@@ -1265,15 +1373,21 @@ open_progress_dialog (FRWindow *window)
 		return;
 
 	if (window->progress_dialog == NULL) {
-		GtkWindow *parent;
+		GtkWindow     *parent;
+		const char    *title;
+		char          *markup;
+		char          *filename;
+		PangoAttrList *attr_list;
 
 		if (window->batch_mode)
 			parent = NULL;
 		else
 			parent = GTK_WINDOW (window->app);
 
+		window->pd_last_action = window->current_action;
+		title = _get_message_from_action (window->pd_last_action);
 		window->progress_dialog = gtk_dialog_new_with_buttons (
-						       _("Archive Manager"),
+						       title,
 						       parent,
 						       GTK_DIALOG_DESTROY_WITH_PARENT,
 						       GTK_STOCK_STOP, GTK_RESPONSE_OK,
@@ -1287,18 +1401,67 @@ open_progress_dialog (FRWindow *window)
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 		gtk_box_pack_start (GTK_BOX (d->vbox), vbox, FALSE, FALSE, 10);
 		
+		/* action label */
+
+	        lbl = window->pd_action = gtk_label_new (""); 
+
+		markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", title);
+		gtk_label_set_markup (GTK_LABEL (lbl), markup);
+		g_free (markup);
+
+		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
+		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);		
+
+		/* archive name */
+
+		g_free (window->pd_last_archive);
+		window->pd_last_archive = NULL;
+		if (window->archive_filename != NULL) {
+			GtkWidget *hbox;
+
+			hbox = gtk_hbox_new (FALSE, 6);
+			gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 6);
+
+			lbl = gtk_label_new ("");
+			markup = g_markup_printf_escaped ("<b>%s</b>", _("Name:"));
+			gtk_label_set_markup (GTK_LABEL (lbl), markup);
+			g_free (markup);
+			gtk_box_pack_start (GTK_BOX (hbox), lbl, FALSE, FALSE, 0);
+
+			window->pd_last_archive = g_strdup (window->archive_filename);
+			filename = g_filename_display_basename (window->pd_last_archive);
+			lbl = window->pd_archive = gtk_label_new (filename); 
+			g_free (filename);
+
+			gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+			gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
+			gtk_box_pack_start (GTK_BOX (hbox), lbl, TRUE, TRUE, 0);
+		}
+
+		/* progress bar */
+
 		window->pd_progress_bar = gtk_progress_bar_new ();
 		gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->pd_progress_bar), ACTIVITY_PULSE_STEP);
 		
 		gtk_widget_set_size_request (window->pd_progress_bar, PROGRESS_DIALOG_WIDTH, -1);
 		gtk_box_pack_start (GTK_BOX (vbox), window->pd_progress_bar, TRUE, TRUE, 0);
 		
-		/**/
+		/* details label */
+
 	        lbl = window->pd_message = gtk_label_new (""); 
+
+		attr_list = pango_attr_list_new ();
+		pango_attr_list_insert (attr_list, pango_attr_style_new (PANGO_STYLE_ITALIC));
+		gtk_label_set_attributes (GTK_LABEL (lbl), attr_list);
+		pango_attr_list_unref (attr_list);
+
 		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_MIDDLE);
+		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
 		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
-		
+
+		/**/
+
 		g_signal_connect (G_OBJECT (window->progress_dialog), 
 				  "response",
 				  G_CALLBACK (progress_dialog_response),
@@ -1309,7 +1472,7 @@ open_progress_dialog (FRWindow *window)
 				  window);
 
 		gtk_widget_show_all (vbox);
-	}
+	} 
 
 	window->progress_timeout = g_timeout_add (PROGRESS_TIMEOUT_MSECS, 
 						  display_progress_dialog, 
@@ -1319,7 +1482,7 @@ open_progress_dialog (FRWindow *window)
 
 void
 window_push_message (FRWindow   *window, 
-		      const char *msg)
+		     const char *msg)
 {
 	gtk_statusbar_push (GTK_STATUSBAR (window->statusbar), window->progress_cid, msg);
 }
@@ -1329,6 +1492,8 @@ void
 window_pop_message (FRWindow *window)
 {
 	gtk_statusbar_pop (GTK_STATUSBAR (window->statusbar), window->progress_cid);
+	if (window->progress_dialog != NULL)
+		gtk_label_set_text (GTK_LABEL (window->pd_message), "");
 }
 
 
@@ -1341,6 +1506,8 @@ _action_started (FRArchive *archive,
 	char     *message;
 	char     *full_msg;
 
+
+	window->current_action = action;
 	window_start_activity_mode (window);
 
 #ifdef DEBUG
@@ -1369,31 +1536,7 @@ _action_started (FRArchive *archive,
 	g_print (" [START]\n");
 #endif
 
-	switch (action) {
-	case FR_ACTION_LIST:
-		message = _("Reading archive");
-		break;
-	case FR_ACTION_DELETE:
-		message = _("Deleting files from archive");
-		break;
-	case FR_ACTION_ADD:
-		message = _("Adding files to archive");
-		break;
-	case FR_ACTION_EXTRACT:
-		message = _("Extracting files from archive");
-		break;
-	case FR_ACTION_TEST:
-		message = _("Testing archive");
-		break;
-	case FR_ACTION_GET_LIST:
-		message = _("Getting the file list");
-		break;
-	default:
-		message = "";
-		break;
-	}
-
-	full_msg = g_strdup_printf ("%s, %s", message, _("wait please..."));
+	full_msg = g_strdup_printf ("%s, %s", _get_message_from_action (action), _("wait please..."));
 	window_push_message (window, full_msg);
 	g_free (full_msg);
 
@@ -1579,8 +1722,12 @@ handle_errors (FRWindow    *window,
 		case FR_ACTION_TEST:
 			msg = _("An error occurred while testing archive.");
 			break;
+
 		case FR_ACTION_GET_LIST:
 			/* FIXME */
+			break;
+
+		default:
 			break;
 		}
 
@@ -2024,7 +2171,7 @@ file_leave_notify_callback (GtkWidget *widget,
 
 
 static GList *
-get_file_list_from_uri_list (gchar *uri_list)
+get_file_list_from_uri_list (char *uri_list)
 {
 	GList *uris = NULL, *scan;
 	GList *list = NULL;
@@ -2048,14 +2195,49 @@ get_file_list_from_uri_list (gchar *uri_list)
 }
 
 
+static gboolean
+all_files_in_same_dir (GList *list)
+{
+	gboolean  same_dir = TRUE;
+	char     *first_basedir;
+	GList    *scan;
+
+	if (list == NULL)
+		return FALSE;
+
+	first_basedir = remove_level_from_path (list->data);
+	if (first_basedir == NULL) 
+		return TRUE;
+
+	for (scan = list->next; scan; scan = scan->next) {
+		char *path = scan->data;
+		char *basedir;
+
+		basedir = remove_level_from_path (path);
+		if (basedir == NULL) {
+			same_dir = FALSE;
+			break;
+		}
+
+		if (strcmp (first_basedir, basedir) != 0) {
+			same_dir = FALSE;
+			g_free (basedir);
+			break;
+		}
+		g_free (basedir);
+	}
+	g_free (first_basedir);
+
+	return same_dir;
+}
+
+
 static void
 drag_drop_add_file_list (FRWindow *window)
 {
 	GList     *list = window->dropped_file_list;
 	FRArchive *archive = window->archive;
 	GList     *scan;
-	char      *first_basedir;
-	gboolean   same_dir;
 
 	if (window->activity_ref > 0) 
 		return;
@@ -2127,6 +2309,30 @@ drag_drop_add_file_list (FRWindow *window)
 
 	/* add directories. */
 
+	/* if all files/dirs are in the same directory call window_archive_add_items... */
+
+	if (all_files_in_same_dir (list)) {
+		char *first_base_dir;
+
+		window->dropped_file_list = NULL;
+
+		first_base_dir = remove_level_from_path (list->data);
+		window_archive_add_items (window,
+					  list,
+					  first_base_dir,
+					  NULL,
+					  window->update_dropped_files,
+					  window->password,
+					  window->compression);
+
+		path_list_free (list);
+		g_free (first_base_dir);
+
+		return;
+	}
+
+	/* ...else add a directory at a time. */
+
 	for (scan = list; scan; scan = scan->next) {
 		char *path = scan->data;
 		char *base_dir;
@@ -2136,7 +2342,6 @@ drag_drop_add_file_list (FRWindow *window)
 
 		window->dropped_file_list = g_list_remove_link (list, scan);
 		window->adding_dropped_files = TRUE;
-
 		base_dir = remove_level_from_path (path);
 
 		window_archive_add_directory (window,
@@ -2149,39 +2354,16 @@ drag_drop_add_file_list (FRWindow *window)
 
 		g_free (base_dir);
 		g_free (path);
-
 		return;
 	}
-
-	window->adding_dropped_files = FALSE;
 
 	/* if all files are in the same directory call fr_archive_add once. */
 
-	same_dir = TRUE;
-	first_basedir = remove_level_from_path (list->data);
-
-	if (first_basedir == NULL) 
-		return;
-
-	for (scan = list->next; scan; scan = scan->next) {
-		char *basedir;
-
-		basedir = remove_level_from_path (scan->data);
-		if (basedir == NULL) {
-			same_dir = FALSE;
-			break;
-		}
-
-		if (strcmp (first_basedir, basedir) != 0) {
-			same_dir = FALSE;
-			g_free (basedir);
-			break;
-		}
-		g_free (basedir);
-	}
-
-	if (same_dir) {
+	if (all_files_in_same_dir (list)) {
+		char  *first_basedir;
 		GList *only_names_list = NULL;
+
+		first_basedir = remove_level_from_path (list->data);
 
 		for (scan = list; scan; scan = scan->next)
 			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
@@ -2201,7 +2383,6 @@ drag_drop_add_file_list (FRWindow *window)
 
 		return;
 	}
-	g_free (first_basedir);
 
 	/* ...else call fr_command_add for each file.  This is needed to add
 	 * files without path info. */
@@ -2228,6 +2409,9 @@ drag_drop_add_file_list (FRWindow *window)
 	}
 	fr_command_recompress (archive->command, window->compression);
 	fr_process_start (archive->process);
+
+	path_list_free (window->dropped_file_list);
+	window->dropped_file_list = NULL;
 }
 
 
@@ -2286,7 +2470,7 @@ window_drag_data_received  (GtkWidget          *widget,
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
-	list = get_file_list_from_uri_list (data->data);
+	list = get_file_list_from_uri_list ((char*)data->data);
 	if (list == NULL) {
 	        GtkWidget *dlg;
                 dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),
@@ -3040,37 +3224,6 @@ window_progress_cb (FRCommand  *command,
 }
 
 
-static gboolean
-window_message_cb  (FRCommand  *command,
-		    const char *msg,
-		    FRWindow   *window)		     
-{
-	char *utf8_msg;
-
-	if (msg == NULL)
-		return TRUE;
-
-	while (*msg == ' ')
-		msg++;
-
-	if (*msg == 0)
-		return TRUE;
-
-	if (! g_utf8_validate (msg, -1, NULL))
-                utf8_msg = g_locale_to_utf8 (msg, -1 , 0, 0, 0);
-        else
-                utf8_msg = g_strdup (msg);
-
-	if (utf8_msg == NULL)
-		return TRUE;
-
-        if (g_utf8_validate (utf8_msg, -1, NULL))
-		gtk_label_set_text (GTK_LABEL (window->pd_message), utf8_msg);
-	
-	g_free (utf8_msg);
-
-        return TRUE;
-}
 
 
 static gboolean
@@ -3097,6 +3250,15 @@ window_fake_load (FRArchive *archive,
 	return (window->batch_mode 
 		&& ! (window->add_after_opening && window->update_dropped_files && ! archive->command->propAddCanUpdate)
 		&& ! (window->add_after_opening && ! window->update_dropped_files && ! archive->command->propAddCanReplace));
+}
+
+
+static gboolean
+window_add_is_stoppable (FRArchive *archive,
+			 gpointer   data)
+{
+	FRWindow *window = data;
+	return window->archive_new;
 }
 
 
@@ -3390,6 +3552,9 @@ window_new (void)
 	fr_archive_set_fake_load_func (window->archive,
 				       window_fake_load,
 				       window);
+	fr_archive_set_add_is_stoppable_func (window->archive,
+					      window_add_is_stoppable,
+					      window);
 
 	window->sort_method = preferences_get_sort_method ();
 	window->sort_type = preferences_get_sort_type ();
@@ -3397,6 +3562,8 @@ window_new (void)
 	window->list_mode = preferences_get_list_mode ();
 	window->history = NULL;
 	window->history_current = NULL;
+
+	window->current_action = FR_ACTION_NONE;
 
 	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, (window->list_mode == WINDOW_LIST_MODE_FLAT));
 
@@ -4064,6 +4231,8 @@ window_close (FRWindow *window)
 
 	_window_free_batch_data (window);
 
+	g_free (window->pd_last_archive);
+
 	/* save preferences. */
 
 	preferences_set_sort_method (window->sort_method);
@@ -4383,7 +4552,7 @@ static void
 add_files_done_cb (gpointer data)
 {
 	FRWindow *window = data;
-
+	
 	window_pop_message (window);
 	window_stop_activity_mode (window);
 
@@ -4463,7 +4632,37 @@ window_archive_add_directory (FRWindow      *window,
 void
 window_archive_add_items (FRWindow      *window,
 			  GList         *item_list,
-			  gboolean       update)
+			  const char    *base_dir,
+			  const char    *dest_dir,
+			  gboolean       update,
+			  const char    *password,
+			  FRCompression  compression)
+{
+	const char *real_dest_dir;
+
+	g_return_if_fail (window->vd_handle == NULL);
+
+	_action_started (window->archive, FR_ACTION_GET_LIST, window);
+
+	real_dest_dir = (dest_dir == NULL)? window_get_current_location (window): dest_dir;
+
+	fr_process_clear (window->archive->process);
+	window->vd_handle = fr_archive_add_items (window->archive, 
+						  item_list,
+						  base_dir, 
+						  real_dest_dir,
+						  update,
+						  password,
+						  compression,
+						  add_files_done_cb,
+						  window);
+}
+
+
+void
+window_archive_add_dropped_items (FRWindow      *window,
+				  GList         *item_list,
+				  gboolean       update)
 {
 	window->dropped_file_list = path_list_dup (item_list);
 	window->update_dropped_files = update;
@@ -5198,8 +5397,8 @@ static char *
 get_first_level_dir (const char *path,
 		     const char *current_dir)
 {
-	const char * from_current;
-	const char * first_sep;
+	const char *from_current;
+	const char *first_sep;
 
 	g_return_val_if_fail (path != NULL, NULL);
 	g_return_val_if_fail (current_dir != NULL, NULL);
@@ -5455,7 +5654,6 @@ window_paste_selection (FRWindow *window)
 	/**/
 
 	fr_process_clear (archive->process);
-
 	fr_archive_extract (archive,
 			    window->clipboard,
 			    tmp_dir,
@@ -5464,7 +5662,6 @@ window_paste_selection (FRWindow *window)
 			    TRUE,
 			    FALSE,
 			    window->password);
-	
 	if (window->clipboard_op == FR_CLIPBOARD_OP_CUT)
 		fr_archive_remove (archive,
 				   window->clipboard,
@@ -5612,7 +5809,6 @@ window_open_files_common (FRWindow                *window,
 	for (scan = file_list; scan; scan = scan->next) {
 		char *file = scan->data;
 		char *filename;
-
 		filename = g_strconcat (cdata->temp_dir,
 					"/",
 					file,
@@ -5648,8 +5844,8 @@ window_open_files (FRWindow *window,
 
 
 void
-window_open_files_with_application (FRWindow *window, 
-				    GList    *file_list,
+window_open_files_with_application (FRWindow                *window, 
+				    GList                   *file_list,
 				    GnomeVFSMimeApplication *app)
 {
 	window_open_files_common (window, file_list, NULL, app);
@@ -5658,27 +5854,27 @@ window_open_files_with_application (FRWindow *window,
 
 void
 window_view_or_open_file (FRWindow *window, 
-			  gchar    *filename)
+			  char     *filename)
 {
 	const char              *mime_type = NULL;
 	GnomeVFSMimeApplication *application = NULL;
-	GList                   *file_list;
+	GList                   *file_list = NULL;
 
 	if (window->activity_ref > 0)
 		return;
 
 	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, NULL);
-	if (mime_type != NULL)
+	if (mime_type != NULL) 
 		application = gnome_vfs_mime_get_default_application (mime_type);
-
-	file_list = g_list_append (NULL, filename);
+	file_list = g_list_append (NULL, g_strdup (filename));
 
 	if (application != NULL) 
-		window_open_files_with_application  (window, file_list, application);
-	else 
+		window_open_files_with_application (window, file_list, application);
+	else
 		dlg_open_with (window, file_list);
 
-	g_list_free (file_list);
+	if (application != NULL)
+		gnome_vfs_mime_application_free (application);
 }
 
 

@@ -4,6 +4,7 @@
 <glade-interface>
 
 <widget class="GtkDialog" id="extract_dialog">
+  <property name="border_width">6</property>
   <property name="title" translatable="yes">Extract</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -16,13 +17,14 @@
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
+  <property name="urgency_hint">False</property>
   <property name="has_separator">False</property>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox1">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
-      <property name="spacing">6</property>
+      <property name="spacing">12</property>
 
       <child internal-child="action_area">
 	<widget class="GtkHButtonBox" id="dialog-action_area1">
@@ -121,6 +123,7 @@
 		  <property name="action">GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER</property>
 		  <property name="local_only">True</property>
 		  <property name="show_hidden">False</property>
+		  <property name="do_overwrite_confirmation">False</property>
 		  <property name="width_chars">-1</property>
 		</widget>
 		<packing>
