@@ -1311,8 +1311,8 @@ window_message_cb  (FRCommand  *command,
 	if (window->convert_data.converting) {
 		if (window->pd_last_action != FR_ACTION_SAVE) 
 			_progress_dialog__set_last_action (window, FR_ACTION_SAVE);
-	} else if (window->pd_last_action != window->current_action) 
-		_progress_dialog__set_last_action (window, window->current_action);
+	} else if (window->pd_last_action != window->archive->command->action) 
+		_progress_dialog__set_last_action (window, window->archive->command->action);
 
 	if (strcmp_null_tollerant (window->pd_last_archive, window->archive_filename) != 0) {
 		g_free (window->pd_last_archive);
@@ -1403,6 +1403,36 @@ open_progress_dialog (FRWindow *window)
 		
 		/* action label */
 
+		window->pd_last_action = FR_ACTION_NONE;
+	        lbl = window->pd_action = gtk_label_new (""); 
+
+		markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", title);
+		gtk_label_set_markup (GTK_LABEL (lbl), markup);
+		g_free (markup);
+
+		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
+		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);		
+
+		/* archive name */
+
+		g_free (window->pd_last_archive);
+		window->pd_last_archive = NULL;
+		if (window->archive_filename != NULL) {
+			window->pd_last_archive = g_strdup (window->archive_filename);
+			filename = g_filename_display_basename (window->pd_last_archive);
+			lbl = window->pd_archive = gtk_label_new (filename); 
+			g_free (filename);
+
+			gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+			gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_START);
+			gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 6);
+		}
+
+		/* progress bar */
+
+		/* action label */
+
 	        lbl = window->pd_action = gtk_label_new (""); 
 
 		markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", title);
@@ -1485,6 +1515,8 @@ window_push_message (FRWindow   *window,
 		     const char *msg)
 {
 	gtk_statusbar_push (GTK_STATUSBAR (window->statusbar), window->progress_cid, msg);
+	if (window->progress_dialog != NULL)
+		window_message_cb (NULL, msg, window);
 }
 
 

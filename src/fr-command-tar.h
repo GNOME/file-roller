@@ -47,6 +47,7 @@ struct _FRCommandTar
 	FRCompressProgram  compress_prog;
 	char              *uncomp_filename;
 	gboolean           name_modified;
+
 	char              *msg;
 };
 

@@ -265,11 +265,12 @@ process_line__generic (char     *line,
 	if (line[strlen (line) - 1] == '/') /* ignore directories */
 		return;
 
+	comm->n_file++;
+
 	msg = g_strconcat (action_msg, line, NULL);
 	fr_command_message (comm, msg);
 	g_free (msg);
 
-	comm->n_file++;
 	if (comm->n_files != 0) {
 		double fraction = (double) comm->n_file / comm->n_files;
 		fr_command_progress (comm, fraction);
@@ -795,6 +796,8 @@ fr_command_tar_class_init (FRCommandTarClass *class)
 static void 
 fr_command_tar_init (FRCommand *comm)
 {
+	FRCommandTar *comm_tar = (FRCommandTar*) comm;
+
 	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = FALSE; 
@@ -803,6 +806,8 @@ fr_command_tar_init (FRCommand *comm)
 	comm->propExtractCanJunkPaths      = FALSE;
 	comm->propPassword                 = FALSE;
 	comm->propTest                     = FALSE;
+
+	comm_tar->msg = NULL;
 }
 
 
@@ -819,6 +824,11 @@ fr_command_tar_finalize (GObject *object)
 	if (comm_tar->uncomp_filename != NULL) {
 		g_free (comm_tar->uncomp_filename);
 		comm_tar->uncomp_filename = NULL;
+	}
+
+	if (comm_tar->msg != NULL) {
+		g_free (comm_tar->msg);
+		comm_tar->msg = NULL;
 	}
 
 	/* Chain up */
