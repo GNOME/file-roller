@@ -1502,9 +1502,9 @@ _action_started (FRArchive *archive,
 		 FRAction   action, 
 		 gpointer   data)
 {
-	FRWindow *window = data;
-	char     *message;
-	char     *full_msg;
+	FRWindow   *window = data;
+	const char *message;
+	char       *full_msg;
 
 
 	window->current_action = action;
@@ -1536,13 +1536,14 @@ _action_started (FRArchive *archive,
 	g_print (" [START]\n");
 #endif
 
-	full_msg = g_strdup_printf ("%s, %s", _get_message_from_action (action), _("wait please..."));
+	message = _get_message_from_action (action);
+	full_msg = g_strdup_printf ("%s, %s", message, _("wait please..."));
 	window_push_message (window, full_msg);
-	g_free (full_msg);
-
 	open_progress_dialog (window); 
 	fr_command_progress (window->archive->command, -1.0);
 	fr_command_message (window->archive->command, message);
+
+	g_free (full_msg);
 }
 
 
@@ -5803,9 +5804,9 @@ window_open_files_common (FRWindow                *window,
 		cdata->command = g_strdup (command);
 	if (app != NULL)
 		cdata->app = gnome_vfs_mime_application_copy (app);
-	cdata->file_list = NULL;
 	cdata->temp_dir = get_temp_work_dir ();
 
+	cdata->file_list = NULL;
 	for (scan = file_list; scan; scan = scan->next) {
 		char *file = scan->data;
 		char *filename;
@@ -5866,13 +5867,14 @@ window_view_or_open_file (FRWindow *window,
 	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, NULL);
 	if (mime_type != NULL) 
 		application = gnome_vfs_mime_get_default_application (mime_type);
-	file_list = g_list_append (NULL, g_strdup (filename));
+	file_list = g_list_append (NULL, filename);
 
 	if (application != NULL) 
 		window_open_files_with_application (window, file_list, application);
 	else
 		dlg_open_with (window, file_list);
 
+	g_list_free (file_list);
 	if (application != NULL)
 		gnome_vfs_mime_application_free (application);
 }
