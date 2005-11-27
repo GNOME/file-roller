@@ -345,6 +345,8 @@ fr_command_arj_class_init (FRCommandArjClass *class)
 static void 
 fr_command_arj_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_ARJ;
+
 	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 

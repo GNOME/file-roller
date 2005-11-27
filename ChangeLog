@@ -1,5 +1,18 @@
 2005-11-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* nautilus/nautilus-fileroller.c: 
+	* data/file-roller.mime: 
+	* data/file-roller.keys: 
+	* data/file-roller.desktop.in: fixed 7zip mime type.
+
+	* src/fr-command-*.c:
+	* src/fr-archive.c (fr_archive_load): make archive read only is zip
+	is not present.
+
+	* src/fr-command-zip.c (fr_command_zip_new): 
+
+	Fixed bug #316564: needs unzip AND zip.
+
 	* src/window.c: set HIDE_PROGRESS_TIMEOUT_MSECS to 500
 
 	* src/dlg-add-folder.c (add_folder_cb): remove unused var.

@@ -335,6 +335,8 @@ fr_command_7z_class_init (FRCommand7zClass *class)
 static void 
 fr_command_7z_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_7ZIP;
+
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
 	comm->propExtractCanAvoidOverwrite = FALSE;

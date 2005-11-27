@@ -744,6 +744,10 @@ fr_archive_load (FRArchive   *archive,
 		g_object_unref (tmp_command);
 	}
 
+	if ((archive->command->file_type == FR_FILE_TYPE_ZIP)
+	    && (!is_program_in_path ("zip"))) 
+		archive->read_only = TRUE;
+
 	g_signal_connect (G_OBJECT (archive->command), 
 			  "start",
 			  G_CALLBACK (action_started),

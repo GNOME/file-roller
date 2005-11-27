@@ -344,6 +344,8 @@ fr_command_zoo_class_init (FRCommandZooClass *class)
 static void 
 fr_command_zoo_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_ZOO;
+
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = FALSE; 
 	comm->propExtractCanAvoidOverwrite = FALSE;

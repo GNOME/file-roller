@@ -182,6 +182,8 @@ fr_command_rpm_class_init (FRCommandRpmClass *class)
 static void 
 fr_command_rpm_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_RPM;
+
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;

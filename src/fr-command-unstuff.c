@@ -288,6 +288,8 @@ fr_command_unstuff_class_init (FRCommandUnstuffClass *class)
 static void 
 fr_command_unstuff_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_STUFFIT;
+
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;

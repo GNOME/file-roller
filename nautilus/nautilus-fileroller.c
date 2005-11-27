@@ -181,6 +181,7 @@ static char *mime_types[] = {
 	"application/x-lzop",
 	"application/x-zoo",
 	"application/x-cd-image",
+	"application/x-7z-compressed",
 	NULL
 };
 

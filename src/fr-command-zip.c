@@ -425,6 +425,8 @@ fr_command_zip_class_init (FRCommandZipClass *class)
 static void 
 fr_command_zip_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_ZIP;
+
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
 	comm->propExtractCanAvoidOverwrite = TRUE;
@@ -483,8 +485,8 @@ fr_command_zip_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
-	if ((!is_program_in_path("zip")) ||
-	    (!is_program_in_path("unzip"))) {
+	if (!is_program_in_path ("zip") &&
+	    !is_program_in_path ("unzip")) {
 		return NULL;
 	}
 

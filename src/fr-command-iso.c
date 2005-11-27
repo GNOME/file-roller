@@ -229,6 +229,8 @@ fr_command_iso_init (FRCommand *comm)
 	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
 
 	comm_iso->cur_path = NULL;
+
+	comm->file_type = FR_FILE_TYPE_ISO;
 	
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;

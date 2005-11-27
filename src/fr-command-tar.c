@@ -798,6 +798,8 @@ fr_command_tar_init (FRCommand *comm)
 {
 	FRCommandTar *comm_tar = (FRCommandTar*) comm;
 
+	comm->file_type = FR_FILE_TYPE_TAR;
+
 	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = FALSE; 

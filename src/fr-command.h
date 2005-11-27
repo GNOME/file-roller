@@ -52,7 +52,8 @@ struct _FRCommand
 {
         GObject  __parent;
 
-	GList * file_list;       /* FileData elements */
+	FRFileType  file_type;
+	GList      *file_list;       /* FileData elements */
 
 	/*<protected>*/
 

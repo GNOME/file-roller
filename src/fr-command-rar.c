@@ -392,6 +392,8 @@ fr_command_rar_class_init (FRCommandRarClass *class)
 static void 
 fr_command_rar_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_RAR;
+
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
 	comm->propExtractCanAvoidOverwrite = TRUE;

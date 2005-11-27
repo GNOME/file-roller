@@ -551,5 +551,16 @@ fr_command_cfile_new (FRProcess         *process,
 	fr_command_construct (comm, process, filename);
 	FR_COMMAND_CFILE (comm)->compress_prog = prog;
 
+	if (prog == FR_COMPRESS_PROGRAM_GZIP)
+		comm->file_type = FR_FILE_TYPE_GZIP;
+	else if (prog == FR_COMPRESS_PROGRAM_BZIP)
+		comm->file_type = FR_FILE_TYPE_BZIP;
+	else if (prog == FR_COMPRESS_PROGRAM_BZIP2)
+		comm->file_type = FR_FILE_TYPE_BZIP2;
+	else if (prog == FR_COMPRESS_PROGRAM_COMPRESS)
+		comm->file_type = FR_FILE_TYPE_COMPRESS;
+	else if (prog == FR_COMPRESS_PROGRAM_LZOP)
+		comm->file_type = FR_FILE_TYPE_LZOP;
+
 	return comm;
 }

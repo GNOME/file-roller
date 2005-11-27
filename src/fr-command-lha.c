@@ -311,6 +311,8 @@ fr_command_lha_class_init (FRCommandLhaClass *class)
 static void 
 fr_command_lha_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_LHA;
+
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
 	comm->propExtractCanAvoidOverwrite = FALSE;

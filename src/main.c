@@ -86,7 +86,7 @@ FRFileTypeDescription file_type_desc[] = {
 	{ FR_FILE_TYPE_WAR,          ".war",     "application/zip", N_("War (.war)") },
 	{ FR_FILE_TYPE_ZIP,          ".zip",     "application/zip", N_("Zip (.zip)") },
 	{ FR_FILE_TYPE_ZOO,          ".zoo",     "application/x-zoo", N_("Zoo (.zoo)") },
-	{ FR_FILE_TYPE_7ZIP,         ".7z",      "application/x-7zip", N_("7-Zip (.7z)") }
+	{ FR_FILE_TYPE_7ZIP,         ".7z",      "application/x-7z-compressed", N_("7-Zip (.7z)") }
 };
 
 

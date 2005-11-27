@@ -306,6 +306,8 @@ fr_command_ar_class_init (FRCommandArClass *class)
 static void 
 fr_command_ar_init (FRCommand *comm)
 {
+	comm->file_type = FR_FILE_TYPE_AR;
+
 	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
