@@ -84,5 +84,52 @@ typedef struct {
 } FRProcError;
 
 
+typedef enum {
+	FR_FILE_TYPE_AR,
+	FR_FILE_TYPE_DEB,
+	FR_FILE_TYPE_ARJ,
+	FR_FILE_TYPE_BZIP,
+	FR_FILE_TYPE_BZIP2,
+	FR_FILE_TYPE_COMPRESS,
+	FR_FILE_TYPE_ISO,
+	FR_FILE_TYPE_EAR,
+	FR_FILE_TYPE_GZIP,
+	FR_FILE_TYPE_JAR,
+	FR_FILE_TYPE_LHA,
+	FR_FILE_TYPE_LZOP,
+	FR_FILE_TYPE_RAR,
+	FR_FILE_TYPE_RPM,
+	FR_FILE_TYPE_TAR,
+	FR_FILE_TYPE_TAR_BZ,
+	FR_FILE_TYPE_TAR_BZ2,
+	FR_FILE_TYPE_TAR_GZ,
+	FR_FILE_TYPE_TAR_LZOP,
+	FR_FILE_TYPE_TAR_COMPRESS,
+	FR_FILE_TYPE_STUFFIT,
+	FR_FILE_TYPE_WAR,
+	FR_FILE_TYPE_ZIP,
+	FR_FILE_TYPE_ZOO,
+	FR_FILE_TYPE_7ZIP,
+	FR_FILE_TYPE_NULL
+} FRFileType;
+
+
+typedef struct {
+	FRFileType  id;
+	char       *ext;
+	char       *mime_type;
+	char       *name;
+} FRFileTypeDescription;
+
+
+typedef struct {
+	char       *command;
+	gboolean    can_open;
+	gboolean    can_save;
+	gboolean    support_many_files;
+	FRFileType  file_type;
+} FRCommandDescription;
+
+
 #endif /* TYPEDEFS_H */
 

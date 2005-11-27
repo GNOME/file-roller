@@ -104,8 +104,8 @@ is_supported_extension (GtkWidget *file_sel,
 		/* not on Automatic */
 		return TRUE;
 	
-	for (i = 1; write_type_desc[i].name != NULL; i++) 
-		if (file_extension_is (filename, write_type_desc[i].ext)) 
+	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++) 
+		if (file_extension_is (filename, file_type_desc[save_type[i]].ext)) 
 			return TRUE;
 	
 	return FALSE;
@@ -119,7 +119,7 @@ get_full_path (GtkWidget *file_sel)
 	char        *full_path;
 	char        *path;
 	const char  *filename;
-	int          file_type_idx;
+	int          idx;
 
 	combo_box = g_object_get_data (G_OBJECT (file_sel), "fr_combo_box");
 	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
@@ -133,10 +133,10 @@ get_full_path (GtkWidget *file_sel)
 		return NULL;
 	}
 	
-	file_type_idx = gtk_combo_box_get_active (GTK_COMBO_BOX (combo_box));
-	if (file_type_idx > 0) {
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (combo_box));
+	if (idx > 0) {
 		full_path = g_strconcat (path, 
-					 write_type_desc[file_type_idx].ext,
+					 file_type_desc[save_type[idx]].ext, 
 					 NULL);
 		g_free (path);
 	} else {
@@ -326,8 +326,8 @@ activate_action_new (GtkAction *action,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; save_mime_type[i] != NULL; i++)
-		gtk_file_filter_add_mime_type (filter, save_mime_type[i]);
+	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++) 
+		gtk_file_filter_add_mime_type (filter, file_type_desc[save_type[i]].mime_type);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
 
@@ -346,9 +346,9 @@ activate_action_new (GtkAction *action,
 			    FALSE, FALSE, 0);
 
 	combo_box = gtk_combo_box_new_text ();
-	for (i = 0; write_type_desc[i].name != NULL; i++)
+	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
-					   _(write_type_desc[i].name));
+					   _(file_type_desc[save_type[i]].name));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
 	gtk_box_pack_start (GTK_BOX (hbox), combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
@@ -433,8 +433,8 @@ activate_action_open (GtkAction *action,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; open_mime_type[i] != NULL; i++)
-		gtk_file_filter_add_mime_type (filter, open_mime_type[i]);
+	for (i = 0; open_type[i] != FR_FILE_TYPE_NULL; i++)
+		gtk_file_filter_add_mime_type (filter, file_type_desc[open_type[i]].mime_type);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
 
@@ -618,8 +618,8 @@ activate_action_save_as (GtkAction *action,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; save_mime_type[i] != NULL; i++)
-		gtk_file_filter_add_mime_type (filter, save_mime_type[i]);
+	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)
+		gtk_file_filter_add_mime_type (filter, file_type_desc[save_type[i]].mime_type);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
 
@@ -636,9 +636,9 @@ activate_action_save_as (GtkAction *action,
 			    FALSE, FALSE, 0);
 	
 	combo_box = gtk_combo_box_new_text ();
-	for (i = 0; write_type_desc[i].name != NULL; i++)
+	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
-					   _(write_type_desc[i].name));
+					   _(file_type_desc[save_type[i]].name));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
 	gtk_box_pack_start (GTK_BOX (hbox), combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);

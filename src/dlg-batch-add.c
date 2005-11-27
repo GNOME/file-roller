@@ -62,6 +62,7 @@ typedef struct {
 	GList      *file_list;
 	gboolean    add_clicked;
 	const char *last_mime_type;
+	gboolean    single_file;
 } DialogData;
 
 
@@ -80,6 +81,23 @@ destroy_cb (GtkWidget  *widget,
 }
 
 
+static const char *
+get_ext (DialogData *data)
+{
+	FRFileType *save_type_list;
+	int         idx;
+
+	if (data->single_file)
+		save_type_list = single_file_save_type;
+	else
+		save_type_list =  save_type;
+
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
+
+	return file_type_desc[save_type_list[idx]].ext;
+}
+
+
 /* called when the "add" button is pressed. */
 static void
 add_clicked_cb (GtkWidget  *widget, 
@@ -89,6 +107,7 @@ add_clicked_cb (GtkWidget  *widget,
 	char       *archive_name;
 	char       *archive_dir;
 	char       *archive_file;
+	char       *tmp;
 	const char *archive_ext;
 	gboolean    do_not_add = FALSE;
 
@@ -139,32 +158,6 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 	
-	/* if the user do not specify an extension use tgz as default */
-	if (strchr (archive_name, '.') == NULL) {
-		char *new_archive_name;
-		new_archive_name = g_strconcat (archive_name, ".tgz", NULL);
-		g_free (archive_name);
-		archive_name = new_archive_name;
-	}
-
-	if (! fr_archive_utils__file_is_archive (archive_name)) {
-		GtkWidget  *d;
-
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-					     GTK_DIALOG_MODAL,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
-					     _("Archive type not supported."),
-					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (archive_name);
-
-		return;
-	}
-
 	/* Check directory existence. */
 
 	archive_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton));
@@ -260,9 +253,11 @@ add_clicked_cb (GtkWidget  *widget,
 
 	/**/
 
+	archive_ext = get_ext (data);
+	tmp = archive_name;
+	archive_name = g_strconcat (tmp, archive_ext, NULL);
+	g_free (tmp);
 	archive_file = g_build_filename (archive_dir, archive_name, NULL);
-	archive_ext = fr_archive_utils__get_file_name_ext (archive_name);
-
 	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, archive_ext);
 
 	if (path_is_dir (archive_file)) {
@@ -450,75 +445,49 @@ get_pixbuf_from_mime_type (const char *mime_type,
 
 
 static void
-update_archive_type_combo_box_from_ext (DialogData  *data,
-					const char  *ext)
-{
-	int idx = 0;
-	int i;
-
-	if (ext == NULL) {
-		gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), idx);
-		return;
-	}
-
-	for (i = 1; write_type_desc[i].name != NULL; i++) 
-		if (strcmp (ext, write_type_desc[i].ext) == 0) {
-			idx = i;
-			break;
-		}
-	gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), idx);
-}
-
-
-static void
-entry_changed_cb (GtkEditable *editable,
-		  DialogData  *data)
-{
-	char       *filename;
-	const char *mime_type;
-
-	filename = gtk_editable_get_chars (editable, 0, -1);
-	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, GNOME_VFS_MIME_TYPE_UNKNOWN);
-	if (strcmp_null_tollerant (data->last_mime_type, mime_type) == 0) 
-		return;
-
-	data->last_mime_type = mime_type;
-	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_pixbuf_from_mime_type (mime_type, ARCHIVE_ICON_SIZE));
-
-	update_archive_type_combo_box_from_ext (data, fr_archive_utils__get_file_name_ext (filename));
-	g_free (filename);
-}
-
-
-static void
 archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 				   DialogData  *data)
 {
+	FRFileType *save_type_list;
+	const char *mime_type;
 	int         idx = gtk_combo_box_get_active (combo_box);
-	char       *filename, *new_filename;	
-	const char *ext;
 
-	if (idx < 1)
+	if (data->single_file)
+		save_type_list = single_file_save_type;
+	else
+		save_type_list =  save_type;
+	mime_type = file_type_desc[save_type_list[idx]].mime_type;
+
+	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_pixbuf_from_mime_type (mime_type, ARCHIVE_ICON_SIZE));
+}
+
+
+static void
+update_archive_type_combo_box_from_ext (DialogData  *data,
+					const char  *ext)
+{
+	FRFileType *save_type_list;
+	int         idx = 0;
+	int         i;
+
+	if (ext == NULL) {
+		gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), 0);
 		return;
-
-	filename = gtk_editable_get_chars (GTK_EDITABLE (data->a_add_to_entry), 0, -1);
-
-	/* remove the old extension */
-
-	ext = fr_archive_utils__get_file_name_ext (filename);
-	if (ext != NULL) {
-		char *no_ext = g_strndup (filename, strlen (filename) - strlen (ext));
-		g_free (filename);
-		filename = no_ext;
 	}
 
-	/* add the new extension */
+	if (data->single_file)
+		save_type_list = single_file_save_type;
+	else
+		save_type_list =  save_type;
 
-	new_filename = g_strconcat (filename, write_type_desc[idx].ext, NULL);
-	gtk_entry_set_text (GTK_ENTRY (data->a_add_to_entry), new_filename);
+	for (i = 0; save_type_list[i] != FR_FILE_TYPE_NULL; i++) {
+		if (strcmp (ext, file_type_desc[save_type_list[i]].ext) == 0) {
+			idx = i;
+			break;
+		}
+	}
 
-	g_free (new_filename);
-	g_free (filename);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), idx);
 }
 
 
@@ -530,17 +499,23 @@ dlg_batch_add_files (FRWindow *window,
 	GtkWidget  *cancel_button;
 	GtkWidget  *add_button;
 	GtkWidget  *a_archive_type_box;
-	char       *path, *automatic_name = NULL;
+	char       *automatic_name = NULL;
 	char       *default_ext;
 	const char *first_filename;
 	char       *parent;
 	int         i;
+	FRFileType *save_type_list;
+
+	if (file_list == NULL)
+		return;
 
         data = g_new0 (DialogData, 1);
 
         data->window = window;
 	data->file_list = file_list;
 	data->add_clicked = FALSE;
+
+	data->single_file = ((file_list->next == NULL) && path_is_file ((char*) file_list->data));
 
 	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
@@ -565,35 +540,38 @@ dlg_batch_add_files (FRWindow *window,
 	first_filename = (char*) file_list->data;
 	parent = remove_level_from_path (first_filename);
 
-	if (file_list->next == NULL) {
+	if (file_list->next == NULL)
 		automatic_name = g_strdup (file_name_from_path ((char*) file_list->data));
-	} else {
+	else {
 		automatic_name = g_strdup (file_name_from_path (parent));
-		
 		if ((automatic_name == NULL) || (automatic_name[0] == '\0')) {
 			g_free (automatic_name);
 			automatic_name = g_strdup (file_name_from_path (first_filename));
 		}
 	}
 
+	_gtk_entry_set_filename_text (GTK_ENTRY (data->a_add_to_entry), automatic_name);
+	g_free (automatic_name);
+
 	if (check_permissions (parent, R_OK|W_OK|X_OK))
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), parent);
 	else
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), g_get_home_dir());
-
 	g_free (parent);
-
-	default_ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, DEFAULT_EXTENSION);
-	path = g_strconcat (automatic_name, default_ext, NULL);
-	g_free (default_ext);
 
 	/* archive type combobox */
 
 	data->a_archive_type_combo_box = gtk_combo_box_new_text ();
-	for (i = 0; write_type_desc[i].name != NULL; i++)
-		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box),
-					   _(write_type_desc[i].name));
-	gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), 0);
+	if (data->single_file)
+		save_type_list = single_file_save_type;
+	else
+		save_type_list = save_type;
+
+	for (i = 0; save_type_list[i] != FR_FILE_TYPE_NULL; i++) {
+		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box), 
+					   file_type_desc[save_type_list[i]].ext);
+	}
+
 	gtk_box_pack_start (GTK_BOX (a_archive_type_box), data->a_archive_type_combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (a_archive_type_box);
 
@@ -611,10 +589,6 @@ dlg_batch_add_files (FRWindow *window,
 			  "clicked",
 			  G_CALLBACK (add_clicked_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->a_add_to_entry), 
-			  "changed",
-			  G_CALLBACK (entry_changed_cb),
-			  data);
 	g_signal_connect (G_OBJECT (data->a_archive_type_combo_box), 
 			  "changed",
 			  G_CALLBACK (archive_type_combo_box_changed_cb),
@@ -622,14 +596,13 @@ dlg_batch_add_files (FRWindow *window,
 
 	/* Run dialog. */
 
-	_gtk_entry_set_filename_text (GTK_ENTRY (data->a_add_to_entry), path);
-	g_free (path);
+	default_ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, DEFAULT_EXTENSION);
+	update_archive_type_combo_box_from_ext (data, default_ext);
+	g_free (default_ext);
 
 	gtk_widget_grab_focus (data->a_add_to_entry);
 	gtk_editable_select_region (GTK_EDITABLE (data->a_add_to_entry),
-				    0,
-				    strlen (automatic_name));
-	g_free (automatic_name);
+				    0, -1);
 
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE); 
 

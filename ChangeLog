@@ -1,3 +1,19 @@
+2005-11-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c: set HIDE_PROGRESS_TIMEOUT_MSECS to 500
+
+	* src/dlg-add-folder.c (add_folder_cb): remove unused var.
+
+	* src/typedefs.h: 
+	* src/main.h: 
+	* src/main.c: 
+	* src/actions.c (is_supported_extension): 
+	* src/dlg-batch-add.c: 
+	* data/glade/file-roller.glade: 
+
+	Simplify the add dialog populating the file type combobox with the 
+	extensions instead of the descriptions.
+
 2005-11-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c (_action_started): init the message.

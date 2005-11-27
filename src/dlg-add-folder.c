@@ -297,7 +297,7 @@ add_folder_cb (GtkWidget *widget,
 	DialogData  *data;
 	gchar       *dir;
 	GtkWidget   *main_box;
-	GtkWidget   *vbox, *hbox;
+	GtkWidget   *vbox;
 	GtkWidget   *table;	
 
 	data = g_new0 (DialogData, 1);

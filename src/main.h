@@ -59,14 +59,12 @@ extern GList       *command_list;
 extern gint         force_directory_creation;
 extern GHashTable  *programs_cache;
 
-
-typedef struct {
-	char *name;
-	char *ext;
-} FileTypeDescription;
-
-extern FileTypeDescription write_type_desc[]; 
-extern char *save_mime_type[];
-extern char *open_mime_type[];
+extern FRFileTypeDescription file_type_desc[];
+extern FRFileType single_file_save_type[]; /* File types that can be saved when
+					    * a single file is selected.  
+					    * Includes single file compressors
+					    * such as gzip, compress, etc. */
+extern FRFileType save_type[];             /* File types that can be saved. */
+extern FRFileType open_type[];             /* File types that can be opened. */
 
 #endif /* MAIN_H */
