@@ -145,7 +145,7 @@ extract_cb (GtkWidget   *w,
 
 	/* collect extraction options. */
 
-	extract_to_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (data->e_destination_filechooserbutton));
+	extract_to_dir = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->e_destination_filechooserbutton));
 
 	/* check directory existence. */
 
