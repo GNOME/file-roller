@@ -427,4 +427,8 @@ void       window_archive__quit               (FRWindow      *window);
 
 void       window_convert_data_free           (FRWindow *window);
 
+void       fr_window_file_list_drag_data_get  (FRWindow         *window,
+					       GList            *path_list,
+					       GtkSelectionData *selection_data);
+
 #endif /* FR_WINDOW_H */

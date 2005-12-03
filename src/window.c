@@ -1924,7 +1924,7 @@ _action_performed (FRArchive   *archive,
 }
 
 
-static void
+static gboolean
 row_activated_cb (GtkTreeView       *tree_view, 
 		  GtkTreePath       *path, 
 		  GtkTreeViewColumn *column, 
@@ -1937,7 +1937,7 @@ row_activated_cb (GtkTreeView       *tree_view,
 	if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (window->list_store), 
 				       &iter, 
 				       path))
-		return;
+		return FALSE;
 	
 	gtk_tree_model_get (GTK_TREE_MODEL (window->list_store), &iter,
                             COLUMN_FILE_DATA, &fdata,
@@ -1958,6 +1958,8 @@ row_activated_cb (GtkTreeView       *tree_view,
 	} else 
 		window_view_or_open_file (window, 
 					  fdata->original_path);
+
+	return FALSE;
 }
 
 
@@ -2028,6 +2030,8 @@ file_button_press_cb (GtkWidget      *widget,
 			window->path_clicked = gtk_tree_path_copy (path);
 			gtk_tree_path_free (path);
 		}
+
+		return FALSE;
 	} 
 
 	return FALSE;
@@ -2160,8 +2164,6 @@ file_leave_notify_callback (GtkWidget *widget,
 
 		gtk_tree_path_free (window->hover_path);
 		window->hover_path = NULL;
-
-		return TRUE;
 	}
 
 	return FALSE;
@@ -2704,7 +2706,16 @@ file_list_drag_end (GtkWidget      *widget,
 }
 
 
-static void  
+void
+fr_window_file_list_drag_data_get (FRWindow         *window,
+				   GList            *path_list,
+				   GtkSelectionData *selection_data)
+{
+	g_print ("DRAG DATA GET.");
+}
+
+
+static gboolean
 file_list_drag_data_get  (GtkWidget          *widget,
 			  GdkDragContext     *context,
 			  GtkSelectionData   *selection_data,
@@ -2721,7 +2732,7 @@ file_list_drag_data_get  (GtkWidget          *widget,
 #endif
 
 	if (context->source_window == context->dest_window)
-		return;
+		return FALSE;
 
 	if (window->path_clicked != NULL) {
 		gtk_tree_path_free (window->path_clicked);
@@ -2741,15 +2752,15 @@ file_list_drag_data_get  (GtkWidget          *widget,
 
 	if (window->extracting_dragged_files_interrupted) {
 		window_stop (window);
-		return;
+		return TRUE;
 	}
 
 	if ((window->drag_file_list == NULL) 
 	    && (window->drag_file_list_names == NULL))
-		return;
+		return TRUE;
 
 	/**/
-	
+
 	list = NULL;
 	if (! window->dragging_dirs) 
 		for (scan = window->drag_file_list; scan; scan = scan->next) {
@@ -2781,6 +2792,8 @@ file_list_drag_data_get  (GtkWidget          *widget,
 #ifdef DEBUG
 	g_print ("::DragDataGet <--\n");
 #endif
+
+	return TRUE;
 }
 
 
@@ -2831,13 +2844,15 @@ key_press_cb (GtkWidget   *widget,
 }
 
 
-static void
+static gboolean
 selection_changed_cb (GtkTreeSelection *selection,
 		      gpointer          user_data)
 {
 	FRWindow *window = user_data;
 	_window_update_statusbar_list_info (window);
 	_window_update_sensitivity (window);
+
+	return FALSE;
 }
 
 
@@ -3631,6 +3646,7 @@ window_new (void)
 						 G_TYPE_STRING,
 						 G_TYPE_STRING,
 						 G_TYPE_STRING);
+	g_object_set_data (G_OBJECT (window->list_store), "FRWindow", window);
 	window->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->list_store));
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (window->list_view), TRUE);
