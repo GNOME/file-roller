@@ -377,7 +377,7 @@ static void
 _window_sort_file_list (FRWindow *window, GList **file_list)
 {
 	*file_list = g_list_sort (*file_list, get_compare_func_from_idx (window->sort_method));
-	if (window->sort_type == GTK_SORT_DESCENDING)
+	if (window->sort_type == GTK_SORT_ASCENDING)
 		*file_list = g_list_reverse (*file_list);
 }
 
@@ -779,8 +779,6 @@ window_update_file_list (FRWindow *window)
 	gtk_list_store_clear (window->list_store);
 	if (! GTK_WIDGET_VISIBLE (window->list_view))
 		gtk_widget_show_all (window->list_view->parent);
-
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->list_store), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, window->sort_type);
 
 	window_start_activity_mode (window);
 
@@ -3056,16 +3054,6 @@ path_column_sort_func (GtkTreeModel *model,
 }
 
 
-static int
-default_sort_func (GtkTreeModel *model, 
-		   GtkTreeIter  *a, 
-		   GtkTreeIter  *b, 
-		   gpointer      user_data)
-{
-	return 0;
-}
-
-
 static void
 sort_column_changed_cb (GtkTreeSortable *sortable,
 			gpointer         user_data)
@@ -3655,8 +3643,6 @@ window_new (void)
 					 TRUE);
 	gtk_tree_view_set_search_column (GTK_TREE_VIEW (window->list_view),
 					 COLUMN_NAME);
-
-	gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (window->list_store), default_sort_func,  NULL, NULL);
 
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->list_store),
 					 COLUMN_NAME, name_column_sort_func,
