@@ -1422,7 +1422,7 @@ open_progress_dialog (FRWindow *window)
 			gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 6);
 
 			lbl = gtk_label_new ("");
-			markup = g_markup_printf_escaped ("<b>%s</b>", _("Name:"));
+			markup = g_markup_printf_escaped ("<b>%s</b>", _("Archive:"));
 			gtk_label_set_markup (GTK_LABEL (lbl), markup);
 			g_free (markup);
 			gtk_box_pack_start (GTK_BOX (hbox), lbl, FALSE, FALSE, 0);

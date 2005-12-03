@@ -1,5 +1,12 @@
 2005-12-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.c (_window_sort_file_list, window_new)
+	(open_progress_dialog): use Archive instead of Name in the progress
+	dialog.
+
+	Fixed bug #311821: ascending and descending indicators are opposite 
+	from expected.  Removed the default sort function.
+
 	* data/glade/file-roller-extract.glade: 
 
 	Fixed bug #317423: Conflicting mnemonic in "Extract" dialog.
