@@ -1,9 +1,15 @@
 ## Process this file with automake to produce Makefile.in.
+if ENABLE_NAUTILUS_ACTIONS
+NAUTILUS = nautilus
+else
+NAUTILUS =
+endif
+
 SUBDIRS =		\
 	data		\
 	src		\
 	help		\
-	nautilus	\
+	$(NAUTILUS)	\
 	po
 
 distcleancheck_listfiles = find . -type f -print | grep -v 'omf\.out'
