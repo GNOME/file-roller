@@ -77,6 +77,7 @@ typedef struct {
 	GtkListStore *   list_store;
 	GtkWidget *      toolbar;
 	GtkWidget *      statusbar;
+	GtkWidget *      progress_bar;
 	GtkWidget *      location_bar;
 	GtkWidget *      location_entry;
 	GtkWidget *      location_label;

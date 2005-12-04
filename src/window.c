@@ -1189,6 +1189,8 @@ close_progress_dialog (FRWindow *window)
 		window->progress_timeout = 0;
 	}
 
+	gtk_widget_hide (window->progress_bar);
+
 	if (window->hide_progress_timeout != 0)
 		return;
 	
@@ -1361,6 +1363,12 @@ open_progress_dialog (FRWindow *window)
 	GtkDialog *d;
 	GtkWidget *vbox;
 	GtkWidget *lbl;
+
+	if (window->extracting_dragged_files) {
+		gtk_widget_show (window->progress_bar);
+		return;
+	} else
+		gtk_widget_hide (window->progress_bar);
 
 	if (window->hide_progress_timeout != 0) {
 		g_source_remove (window->hide_progress_timeout);
@@ -2630,7 +2638,7 @@ _get_selection_as_names (FRWindow *window)
 }
 
 
-static void  
+static gboolean
 file_list_drag_begin (GtkWidget          *widget,
 		      GdkDragContext     *context,
 		      gpointer            data)
@@ -2642,7 +2650,7 @@ file_list_drag_begin (GtkWidget          *widget,
 #endif
 
 	if (window->activity_ref > 0) 
-		return;
+		return FALSE;
 	
 	if (window->drag_file_list != NULL) {
 		path_list_free (window->drag_file_list);
@@ -2681,6 +2689,8 @@ file_list_drag_begin (GtkWidget          *widget,
 #ifdef DEBUG
 	g_print ("::DragBegin <--\n");
 #endif
+
+	return FALSE;
 }
 
 
@@ -3222,6 +3232,7 @@ window_progress_cb (FRCommand  *command,
 	else {
 		window->progress_pulse = FALSE;
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->pd_progress_bar), CLAMP (fraction, 0.0, 1.0));
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->progress_bar), CLAMP (fraction, 0.0, 1.0));
 	}
 
 	return TRUE;
@@ -3904,6 +3915,10 @@ window_new (void)
 	window->help_message_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->statusbar), "help_message");
 	window->list_info_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->statusbar), "list_info");
 	window->progress_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->statusbar), "progress");
+	
+	window->progress_bar = gtk_progress_bar_new ();
+	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->progress_bar), ACTIVITY_PULSE_STEP);
+	gtk_box_pack_end (GTK_BOX (window->statusbar), window->progress_bar, FALSE, FALSE, 0);
 	gnome_app_set_statusbar (GNOME_APP (window->app), window->statusbar);
 	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->statusbar), TRUE);
 
@@ -5098,7 +5113,9 @@ activity_cb (gpointer data)
 	
 	if ((window->pd_progress_bar != NULL) && window->progress_pulse)
 		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->pd_progress_bar)); 
-	
+	if (window->progress_pulse)
+		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->progress_bar)); 
+
         return TRUE;
 }
 
@@ -5134,6 +5151,7 @@ window_stop_activity_mode (FRWindow *window)
 	
 	if (window->progress_dialog != NULL)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->pd_progress_bar), 0.0);
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->progress_bar), 0.0);
 	_window_update_sensitivity (window);
 }
 
