@@ -204,7 +204,7 @@ add_password_arg (FRCommand     *comm,
 
 		fr_process_add_arg (comm->process, "-P");
 
-		e_password = escape_str (password, "\"");
+		e_password = escape_str (password, "\"*?[]'`()$!;");
 		if (e_password != NULL) {
 			arg = g_strconcat ("\"", e_password, "\"", NULL);
 			g_free (e_password);

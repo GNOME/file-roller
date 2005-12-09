@@ -171,7 +171,7 @@ add_password_arg (FRCommand	*comm,
 	if (password != NULL && password[0] != '\0') {
 		char *arg, *e_password;
 		
-		e_password = escape_str (password, "\"");
+		e_password = escape_str (password, "\"*?[]'`()$!;");
 		g_assert (e_password != NULL);  /* since password is non-NULL */
 		
 		arg = g_strconcat ("-p\"", e_password, "\"", NULL);

@@ -1,3 +1,13 @@
+2005-12-09  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-process.c (REFRESH_RATE): set to 20
+
+	* src/fr-command-zip.c (add_password_arg): 
+	* src/fr-command-rar.c (add_password_arg): escape other special
+	characters as well.  
+
+	Fixes bug #323534: Passwords improperly escaped for zip files
+	
 2005-12-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.h: 

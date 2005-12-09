@@ -33,7 +33,7 @@
 #include "fr-process.h"
 #include "fr-marshal.h"
 
-#define REFRESH_RATE 10
+#define REFRESH_RATE 20
 
 enum {
 	START,
