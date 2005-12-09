@@ -39,6 +39,7 @@
 #include "window.h"
 #include "typedefs.h"
 #include "gtk-utils.h"
+#include "glib-utils.h"
 #include "preferences.h"
 #include "main.h"
 

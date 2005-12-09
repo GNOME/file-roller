@@ -1,3 +1,25 @@
+2005-12-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/eggtreemultidnd.c: 
+	* src/window.c:
+	* src/window.h:
+	
+	first attempt to fix multi file dnd (#315069)
+
+	* src/glib-utils.c:
+	* src/glib-utils.h: new files
+	* src/file-utils.c:
+	* src/file-utils.h:
+	* src/fr-process.c:
+	* src/fr-archive.c:
+	* src/fr-command-*.c:
+	* src/main.c:
+	* src/dlg-batch-add.c:
+	* src/bookmarks.c:
+	
+	moved some functions to glib-utils.c; added a debug function to get rid
+	of too many #ifdefs.
+
 2005-12-09  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-process.c (REFRESH_RATE): set to 20

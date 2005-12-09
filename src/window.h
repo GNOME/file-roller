@@ -327,6 +327,10 @@ GList *    window_get_file_list_selection   (FRWindow    *window,
 					     gboolean     recursive,
 					     gboolean    *has_dirs);
 
+GList *    window_get_file_list_from_path_list (FRWindow *window,
+						GList    *path_list,
+						gboolean *has_dirs);
+
 GList *    window_get_file_list_pattern     (FRWindow    *window,
 					     const char  *pattern);
 
@@ -428,7 +432,7 @@ void       window_archive__quit               (FRWindow      *window);
 
 void       window_convert_data_free           (FRWindow *window);
 
-void       fr_window_file_list_drag_data_get  (FRWindow         *window,
+gboolean   fr_window_file_list_drag_data_get  (FRWindow         *window,
 					       GList            *path_list,
 					       GtkSelectionData *selection_data);
 

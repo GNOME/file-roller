@@ -32,6 +32,7 @@
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <glade/glade.h>
 #include "file-utils.h"
+#include "glib-utils.h"
 #include "fr-process.h"
 #include "fr-stock.h"
 #include "gconf-utils.h"

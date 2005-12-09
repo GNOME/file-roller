@@ -32,6 +32,7 @@
 #include <glib.h>
 #include "fr-process.h"
 #include "fr-marshal.h"
+#include "glib-utils.h"
 
 #define REFRESH_RATE 20
 
@@ -566,20 +567,15 @@ start_current_command (FRProcess *fr_proc)
 	char          **argv;
 	int             i = 0;
 
-#ifdef DEBUG
-	g_print ("%d/%d) ", fr_proc->current_command, fr_proc->n_comm);
-#endif
+	debug (DEBUG_INFO, "%d/%d) ", fr_proc->current_command, fr_proc->n_comm);
 	
 	c_info = g_ptr_array_index (fr_proc->comm, 
 				    fr_proc->current_command);
 	arg_list = c_info->args;
 	dir = c_info->dir;
 
-	if (dir != NULL) {
-#ifdef DEBUG
-		g_print ("cd %s\n", dir); 
-#endif
-	}
+	if (dir != NULL) 
+		debug (DEBUG_INFO, "cd %s\n", dir); 
 	
 	command = NULL;
 	
@@ -711,7 +707,7 @@ check_child (gpointer data)
 
 	if (c_info->ignore_error) {
 		fr_proc->error.type = FR_PROC_ERROR_NONE;
-		g_print ("[ignore error]\n");
+		debug (DEBUG_INFO, "[ignore error]\n");
 	}
 
 	if (fr_proc->error.type != FR_PROC_ERROR_STOPPED) {

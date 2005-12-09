@@ -36,6 +36,7 @@
 
 #include "file-data.h"
 #include "file-utils.h"
+#include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-tar.h"
 

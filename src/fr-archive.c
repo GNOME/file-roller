@@ -32,6 +32,7 @@
 #include "file-data.h"
 #include "file-list.h"
 #include "file-utils.h"
+#include "glib-utils.h"
 #include "fr-archive.h"
 #include "fr-command.h"
 #include "fr-command-ar.h"
@@ -549,9 +550,7 @@ action_started (FRCommand *command,
 		FRAction   action,
 		FRArchive *archive)
 {
-#ifdef DEBUG
-	g_print ("FRArchive::action_started: %d\n", action);
-#endif
+	debug (DEBUG_INFO, "FRArchive::action_started: %d\n", action);
 	g_signal_emit (G_OBJECT (archive), 
 		       fr_archive_signals[START],
 		       0,
@@ -591,7 +590,7 @@ action_performed (FRCommand   *command,
 		s_action = "";
 		break;
 	}
-	g_print ("%s [DONE] (FR::Archive)\n", s_action);
+	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", s_action);
 #endif
 
 	g_signal_emit (G_OBJECT (archive), 
@@ -835,10 +834,8 @@ create_tmp_base_dir (const char *base_dir,
 	if (dest_dir[strlen (dest_dir) - 1] == G_DIR_SEPARATOR)
 		dest_dir[strlen (dest_dir) - 1] = 0;
 
-#ifdef DEBUG
-	g_print ("base_dir: %s\n", base_dir);
-	g_print ("dest_dir: %s\n", dest_dir);
-#endif
+	debug (DEBUG_INFO, "base_dir: %s\n", base_dir);
+	debug (DEBUG_INFO, "dest_dir: %s\n", dest_dir);
 
 	temp_dir = get_temp_work_dir ();
 	tmp = remove_level_from_path (dest_dir);
@@ -847,18 +844,14 @@ create_tmp_base_dir (const char *base_dir,
 
 	ensure_dir_exists (parent_dir, 0700);
 
-#ifdef DEBUG
-	g_print ("mkdir %s\n", parent_dir);
-#endif
+	debug (DEBUG_INFO, "mkdir %s\n", parent_dir);
 
 	g_free (parent_dir);
 
 	dir = g_build_filename (temp_dir, "/", dest_dir, NULL);
 	symlink (base_dir, dir);
 
-#ifdef DEBUG
-	g_print ("symlink %s --> %s\n", dir, base_dir);
-#endif
+	debug (DEBUG_INFO, "symlink %s --> %s\n", dir, base_dir);
 
 	g_free (dir);
 	g_free (dest_dir);
@@ -1027,9 +1020,7 @@ fr_archive_add (FRArchive     *archive,
 	} 
 
 	if (new_file_list == NULL) {
-#ifdef DEBUG
-		g_print ("nothing to update.\n");
-#endif
+		debug (DEBUG_INFO, "nothing to update.\n");
 
 		if (base_dir_created) 
 			rmdir_recursive (tmp_base_dir);
@@ -1581,9 +1572,7 @@ compute_base_path (const char *base_dir,
 			new_path = g_strdup (file_name_from_path (path));
 		else
 			new_path = g_strdup (path);
-#ifdef DEBUG
-		g_print ("%s, %s --> %s\n", base_dir, path, new_path);
-#endif
+		debug (DEBUG_INFO, "%s, %s --> %s\n", base_dir, path, new_path);
 		return new_path;
 	}
 
@@ -1602,9 +1591,7 @@ compute_base_path (const char *base_dir,
 		new_path = g_strndup (path, name_len);
 	}
 
-#ifdef DEBUG
-	g_print ("%s, %s --> %s\n", base_dir, path, new_path);
-#endif
+	debug (DEBUG_INFO, "%s, %s --> %s\n", base_dir, path, new_path);
 
 	return new_path;
 }
@@ -1767,9 +1754,7 @@ fr_archive_extract (FRArchive  *archive,
 		else
 			sprintf (dest_filename, "%s/%s", dest_dir, filename);
 		
-#ifdef DEBUG		
-		g_print ("-> %s\n", dest_filename);
-#endif
+		debug (DEBUG_INFO, "-> %s\n", dest_filename);
 
 		/**/
 		
@@ -1790,9 +1775,7 @@ fr_archive_extract (FRArchive  *archive,
 	if (filtered == NULL) {
 		/* all files got filtered, do nothing. */
 
-#ifdef DEBUG
-		g_print ("All files got filtered, do nothing.\n");
-#endif
+		debug (DEBUG_INFO, "All files got filtered, do nothing.\n");
 
 		if (extract_all) 
 			path_list_free (file_list);

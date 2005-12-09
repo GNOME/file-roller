@@ -26,6 +26,7 @@
 #include <glib.h>
 #include "file-data.h"
 #include "file-utils.h"
+#include "glib-utils.h"
 #include "fr-process.h"
 #include "fr-command.h"
 #include "fr-marshal.h"
@@ -348,10 +349,8 @@ fr_command_set_filename (FRCommand *comm,
 
 	comm->e_filename = shell_escape (comm->filename);
 
-#ifdef DEBUG
-	g_print ("filename : %s\n", comm->filename);
-	g_print ("e_filename : %s\n", comm->e_filename);
-#endif
+	debug (DEBUG_INFO, "filename : %s\n", comm->filename);
+	debug (DEBUG_INFO, "e_filename : %s\n", comm->e_filename);
 }
 
 

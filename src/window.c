@@ -46,10 +46,12 @@
 #include "egg-recent.h"
 #include "egg-recent-util.h"
 #include "eggtreemultidnd.h"
+#include "fr-list-model.h"
 #include "fr-archive.h"
 #include "fr-stock.h"
 #include "file-data.h"
 #include "file-utils.h"
+#include "glib-utils.h"
 #include "window.h"
 #include "main.h"
 #include "gtk-utils.h"
@@ -158,12 +160,12 @@ _window_history_print (FRWindow   *window)
 {
 	GList *list;
 
-	g_print ("history:\n");
+	debug (DEBUG_INFO, "history:\n");
 	for (list = window->history; list; list = list->next)
-		g_print ("\t%s %s\n", 
+		debug (DEBUG_INFO, "\t%s %s\n", 
 			 (char*) list->data, 
 			 (list == window->history_current)? "<-": "");
-	g_print ("\n");
+	debug (DEBUG_INFO, "\n");
 }
 #endif
 
@@ -1539,7 +1541,7 @@ _action_started (FRArchive *archive,
 	default:
 		break;
 	}
-	g_print (" [START]\n");
+	debug (DEBUG_INFO, " [START]\n");
 #endif
 
 	message = _get_message_from_action (action);
@@ -2458,9 +2460,7 @@ window_drag_data_received  (GtkWidget          *widget,
 	gboolean   one_file;
 	gboolean   is_an_archive;
 
-#ifdef DEBUG
-	g_print ("::DragDataReceived -->\n");
-#endif
+	debug (DEBUG_INFO, "::DragDataReceived -->\n");
 
 	if (gtk_drag_get_source_widget (context) == window->list_view) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
@@ -2582,9 +2582,7 @@ window_drag_data_received  (GtkWidget          *widget,
 		window->dropped_file_list = NULL;
 	}
 
-#ifdef DEBUG
-	g_print ("::DragDataReceived <--\n");
-#endif
+	debug (DEBUG_INFO, "::DragDataReceived <--\n");
 }
 
 
@@ -2645,52 +2643,12 @@ file_list_drag_begin (GtkWidget          *widget,
 {
 	FRWindow *window = data;
 
-#ifdef DEBUG
-	g_print ("::DragBegin -->\n");
-#endif
+	debug (DEBUG_INFO, "::DragBegin -->\n");
 
 	if (window->activity_ref > 0) 
 		return FALSE;
-	
-	if (window->drag_file_list != NULL) {
-		path_list_free (window->drag_file_list);
-		window->drag_file_list = NULL;
-	}
 
-	window->drag_file_list = window_get_file_list_selection (window, TRUE, & (window->dragging_dirs));
-
-	if (window->drag_file_list_names != NULL) {
-		path_list_free (window->drag_file_list_names);
-		window->drag_file_list_names = NULL;
-	}
-
-	if (window->dragging_dirs)
-		window->drag_file_list_names = _get_selection_as_names (window);
-
-	if (window->drag_file_list != NULL) {
-		window->drag_temp_dir = get_temp_work_dir ();
-		window->drag_temp_dirs = g_list_prepend (window->drag_temp_dirs, window->drag_temp_dir);
-
-		window->extracting_dragged_files = TRUE;
-		window->extracting_dragged_files_interrupted = FALSE;
-
-		fr_process_clear (window->archive->process);
-		fr_archive_extract (window->archive,
-				    window->drag_file_list,
-				    window->drag_temp_dir,
-				    NULL,
-				    FALSE,
-				    TRUE,
-				    FALSE,
-				    window->password);
-		fr_process_start (window->archive->process);
-	}
-
-#ifdef DEBUG
-	g_print ("::DragBegin <--\n");
-#endif
-
-	return FALSE;
+	return TRUE;
 }
 
 
@@ -2701,71 +2659,91 @@ file_list_drag_end (GtkWidget      *widget,
 {
 	FRWindow *window = data;
 
-#ifdef DEBUG
-	g_print ("::DragEnd -->\n");
-#endif
+	debug (DEBUG_INFO, "::DragEnd -->\n");
 
 	if (window->extracting_dragged_files) 
 		window->extracting_dragged_files_interrupted = TRUE;
 
-#ifdef DEBUG
-	g_print ("::DragEnd <--\n");
-#endif
+	if (window->drag_file_list != NULL) {
+		path_list_free (window->drag_file_list);
+		window->drag_file_list = NULL;
+	}
+
+	if (window->drag_file_list_names != NULL) {
+		path_list_free (window->drag_file_list_names);
+		window->drag_file_list_names = NULL;
+	}
+
+	debug (DEBUG_INFO, "::DragEnd <--\n");
 }
 
 
-void
+gboolean
 fr_window_file_list_drag_data_get (FRWindow         *window,
 				   GList            *path_list,
 				   GtkSelectionData *selection_data)
 {
-	g_print ("DRAG DATA GET.");
-}
+	GList  *list, *scan;
+	char  **uris;
 
-
-static gboolean
-file_list_drag_data_get  (GtkWidget          *widget,
-			  GdkDragContext     *context,
-			  GtkSelectionData   *selection_data,
-			  guint               info,
-			  guint               time,
-			  gpointer            data)
-{
-	FRWindow  *window = data;
-	GList     *list, *scan;
-	char     **uris;
-
-#ifdef DEBUG
-	g_print ("::DragDataGet -->\n"); 
-#endif
-
-	if (context->source_window == context->dest_window)
-		return FALSE;
+	debug (DEBUG_INFO, "::DragDataGet -->\n"); 
 
 	if (window->path_clicked != NULL) {
 		gtk_tree_path_free (window->path_clicked);
 		window->path_clicked = NULL;
 	}
 
-	while (window->extracting_dragged_files 
-	       && ! window->extracting_dragged_files_interrupted)
-		while (window->extracting_dragged_files
-		       && ! window->extracting_dragged_files_interrupted
-		       && gtk_events_pending ())
-			gtk_main_iteration ();
+	if (window->activity_ref > 0) 
+		return FALSE;
+	
+	if (window->drag_file_list == NULL) {
+		window->drag_file_list = window_get_file_list_from_path_list (window, path_list, & (window->dragging_dirs));
+		
+		if (window->drag_file_list == NULL)
+			return FALSE;
 
-#ifdef DEBUG
-	g_print ("::DragDataGet -[step 2]-->\n"); 
-#endif
+		if (window->dragging_dirs)
+			window->drag_file_list_names = _get_selection_as_names (window);
 
-	if (window->extracting_dragged_files_interrupted) {
-		window_stop (window);
-		return TRUE;
+		if (window->drag_file_list != NULL) {
+			window->drag_temp_dir = get_temp_work_dir ();
+			window->drag_temp_dirs = g_list_prepend (window->drag_temp_dirs, window->drag_temp_dir);
+			
+			window->extracting_dragged_files = TRUE;
+			window->extracting_dragged_files_interrupted = FALSE;
+			
+			fr_process_clear (window->archive->process);
+			fr_archive_extract (window->archive,
+					    window->drag_file_list,
+					    window->drag_temp_dir,
+					    NULL,
+					    FALSE,
+					    TRUE,
+					    FALSE,
+					    window->password);
+			fr_process_start (window->archive->process);
+		}
+		
+		/* wait for extracion completion... */
+		
+		while (window->extracting_dragged_files 
+		       && ! window->extracting_dragged_files_interrupted)
+			while (window->extracting_dragged_files
+			       && ! window->extracting_dragged_files_interrupted
+			       && gtk_events_pending ())
+				gtk_main_iteration ();
+		
+		debug (DEBUG_INFO, "::DragDataGet -[step 2]-->\n"); 
+		
+		if (window->extracting_dragged_files_interrupted) {
+			window_stop (window);
+			return FALSE;
+		}
 	}
-
+	
 	if ((window->drag_file_list == NULL) 
 	    && (window->drag_file_list_names == NULL))
-		return TRUE;
+		return FALSE;
 
 	/**/
 
@@ -2797,9 +2775,7 @@ file_list_drag_data_get  (GtkWidget          *widget,
 
 	path_list_free (list);
 
-#ifdef DEBUG
-	g_print ("::DragDataGet <--\n");
-#endif
+	debug (DEBUG_INFO, "::DragDataGet <--\n");
 
 	return TRUE;
 }
@@ -3637,14 +3613,14 @@ window_new (void)
 
 	/* * File list. */
 
-	window->list_store = gtk_list_store_new (NUMBER_OF_COLUMNS, 
-						 G_TYPE_POINTER,
-						 GDK_TYPE_PIXBUF,
-						 G_TYPE_STRING,
-						 G_TYPE_STRING,
-						 G_TYPE_STRING,
-						 G_TYPE_STRING,
-						 G_TYPE_STRING);
+	window->list_store = fr_list_model_new (NUMBER_OF_COLUMNS, 
+						G_TYPE_POINTER,
+						GDK_TYPE_PIXBUF,
+						G_TYPE_STRING,
+						G_TYPE_STRING,
+						G_TYPE_STRING,
+						G_TYPE_STRING,
+						G_TYPE_STRING);
 	g_object_set_data (G_OBJECT (window->list_store), "FRWindow", window);
 	window->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->list_store));
 
@@ -3677,7 +3653,6 @@ window_new (void)
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
-	egg_tree_multi_drag_add_drag_support (GTK_TREE_VIEW (window->list_view));
 
 	g_signal_connect (selection,
                           "changed",
@@ -3687,6 +3662,7 @@ window_new (void)
                           "row_activated",
                           G_CALLBACK (row_activated_cb),
                           window);
+
 	g_signal_connect (G_OBJECT (window->list_view), 
 			  "button_press_event",
 			  G_CALLBACK (file_button_press_cb), 
@@ -3709,15 +3685,19 @@ window_new (void)
 			  G_CALLBACK (sort_column_changed_cb), 
 			  window);
 
+	/*
         gtk_drag_source_set (window->list_view, 
 			     GDK_BUTTON1_MASK | GDK_BUTTON2_MASK,
 			     target_table, n_targets, 
 			     GDK_ACTION_COPY);
-
+	*/
+	/*
 	g_signal_connect (G_OBJECT (window->list_view), 
 			  "drag_data_get",
 			  G_CALLBACK (file_list_drag_data_get), 
 			  window);
+	*/
+
 	g_signal_connect (G_OBJECT (window->list_view), 
 			  "drag_begin",
 			  G_CALLBACK (file_list_drag_begin), 
@@ -3726,6 +3706,8 @@ window_new (void)
 			  "drag_end",
 			  G_CALLBACK (file_list_drag_end), 
 			  window);
+
+	egg_tree_multi_drag_add_drag_support (GTK_TREE_VIEW (window->list_view));
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
@@ -5064,6 +5046,63 @@ window_get_file_list_selection (FRWindow *window,
 }
 
 
+/* -- -- */
+
+
+GList *
+window_get_file_list_from_path_list (FRWindow *window,
+				     GList    *path_list,
+				     gboolean *has_dirs)
+{
+	GtkTreeModel *model = GTK_TREE_MODEL (window->list_store);
+	GList        *selections = NULL, *list, *scan;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	if (has_dirs != NULL)
+		*has_dirs = FALSE;
+
+	for (scan = path_list; scan; scan = scan->next) {
+		GtkTreeRowReference *reference = scan->data;
+		GtkTreePath         *path;
+		GtkTreeIter          iter;
+		FileData            *fdata;
+
+		path = gtk_tree_row_reference_get_path (reference);
+		if (path == NULL)
+			continue;
+
+		if (! gtk_tree_model_get_iter (model, &iter, path))
+			continue;
+
+		gtk_tree_model_get (model, &iter,
+				    COLUMN_FILE_DATA, &fdata,
+				    -1);
+
+		selections = g_list_prepend (selections, fdata);
+	}
+
+	list = NULL;
+        for (scan = selections; scan; scan = scan->next) {
+                FileData *fd = scan->data;
+
+		if (!fd)
+			continue;
+
+		if (fd->is_dir) {
+			if (has_dirs != NULL)
+				*has_dirs = TRUE;
+			list = g_list_concat (list, get_dir_list (window, fd));
+		} else
+			list = g_list_prepend (list, g_strdup (fd->original_path));
+        }
+	if (selections)
+		g_list_free (selections);
+
+        return g_list_reverse (list);
+}
+
+
 /* -- window_get_file_list_pattern -- */
 
 
@@ -5659,9 +5698,9 @@ window_paste_selection (FRWindow *window)
 
 		if (g_hash_table_lookup (created_dirs, dir) == NULL) {
 			char *dir_path = g_build_filename (tmp_dir, dir, NULL);
-#ifdef DEBUG
-			g_print ("mktree %s\n", dir_path);
-#endif
+
+			debug (DEBUG_INFO, "mktree %s\n", dir_path);
+
 			ensure_dir_exists (dir_path, 0700); 
 			g_free (dir_path);
 			g_hash_table_replace (created_dirs, g_strdup (dir), "1");
@@ -6114,16 +6153,14 @@ _window_batch_start_current_action (FRWindow *window)
 	action = (FRBatchActionDescription *) window->batch_action->data;
 	switch (action->action) {
 	case FR_BATCH_ACTION_OPEN:
-#ifdef DEBUG
-		g_print ("[BATCH] Open\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Open\n");
+
 		window_archive_open (window, (char*) action->data, GTK_WINDOW (window->app));
 		break;
 
 	case FR_BATCH_ACTION_OPEN_AND_ADD:
-#ifdef DEBUG
-		g_print ("[BATCH] Open & Add\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Open & Add\n");
+
 		adata = (OpenAndAddData *) action->data;
 		if (! path_is_file (adata->archive_name)) {
 			if (window->dropped_file_list != NULL)
@@ -6143,9 +6180,8 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_ADD:
-#ifdef DEBUG
-		g_print ("[BATCH] Add\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Add\n");
+
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup ((GList*) action->data);
@@ -6154,17 +6190,15 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_ADD_INTERACT:
-#ifdef DEBUG
-		g_print ("[BATCH] Add interactive\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Add interactive\n");
+
 		window_push_message (window, _("Add files to an archive"));
 		dlg_batch_add_files (window, (GList*) action->data);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT:
-#ifdef DEBUG
-		g_print ("[BATCH] Extract\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Extract\n");
+
 		window_archive_extract (window,
 					NULL,
 					(char*) action->data,
@@ -6176,9 +6210,8 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
-#ifdef DEBUG
-		g_print ("[BATCH] Extract interactive\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Extract interactive\n");
+
 		if (window->extract_interact_use_default_dir 
 		    && (window->extract_default_dir != NULL))
 			window_archive_extract (window,
@@ -6196,18 +6229,16 @@ _window_batch_start_current_action (FRWindow *window)
 		break;
 
 	case FR_BATCH_ACTION_CLOSE:
-#ifdef DEBUG
-		g_print ("[BATCH] Close\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Close\n");
+		
 		window_archive_close (window);
 		window->batch_action = g_list_next (window->batch_action);
 		_window_batch_start_current_action (window);
 		break;
 
 	case FR_BATCH_ACTION_QUIT:
-#ifdef DEBUG
-		g_print ("[BATCH] Quit\n");
-#endif
+		debug (DEBUG_INFO, "[BATCH] Quit\n");
+
 		window_close (window);
 		break;
 	}

@@ -41,6 +41,7 @@
 #include "file-utils.h"
 #include "fr-process.h"
 #include "gconf-utils.h"
+#include "glib-utils.h"
 #include "dlg-prop.h"
 
 
@@ -219,9 +220,7 @@ new_file_response_cb (GtkWidget *w,
 		path = new_path;
 	}
 
-#ifdef DEBUG
-	g_print ("create %s\n", path); 
-#endif
+	debug (DEBUG_INFO, "create %s\n", path); 
 
 	if (path_is_file (path)) {
 		GtkWidget *dialog;
@@ -577,9 +576,7 @@ save_file_response_cb (GtkWidget *w,
 	}
 	g_free (dir);
 
-#ifdef DEBUG
-	g_print ("save as %s\n", path); 
-#endif
+	debug (DEBUG_INFO, "save as %s\n", path); 
 
 	if (path_is_file (path)) {
 		GtkWidget *dialog;

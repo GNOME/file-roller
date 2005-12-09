@@ -26,6 +26,7 @@
 #include <errno.h>
 
 #include "bookmarks.h"
+#include "glib-utils.h"
 #include "file-utils.h"
 
 
@@ -164,7 +165,7 @@ bookmarks_write_to_disk (Bookmarks *bookmarks)
 	g_free (path);
 	
 	if (!f)	{
-		g_print ("ERROR opening bookmark file\n");
+		debug (DEBUG_INFO, "ERROR opening bookmark file\n");
 		return;
 	}
 
@@ -173,9 +174,8 @@ bookmarks_write_to_disk (Bookmarks *bookmarks)
 	scan = bookmarks->list;
 	while ((lines < bookmarks->max_lines) && scan) {
 		if (! fprintf (f, "\"%s\"\n", (gchar*) scan->data)) {
-			g_print ("ERROR saving to bookmark file\n");
+			debug (DEBUG_INFO, "ERROR saving to bookmark file\n");
 			fclose (f);
-			
 			return;
 		}
 		lines++;

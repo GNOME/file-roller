@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include "file-utils.h"
+#include "glib-utils.h"
 #include "file-list.h"
 #include "utf8-fnmatch.h"
 

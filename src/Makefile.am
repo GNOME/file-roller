@@ -94,12 +94,16 @@ file_roller_SOURCES = 			\
 	fr-command-7z.h			\
 	fr-error.c			\
 	fr-error.h			\
+	fr-list-model.c			\
+	fr-list-model.h			\
 	fr-stock.c			\
 	fr-stock.h			\
 	fr-process.c			\
 	fr-process.h			\
 	gconf-utils.c			\
 	gconf-utils.h			\
+	glib-utils.c			\
+	glib-utils.h			\
 	gnome-vfs-helpers.c		\
 	gnome-vfs-helpers.h		\
 	gtk-utils.c			\
