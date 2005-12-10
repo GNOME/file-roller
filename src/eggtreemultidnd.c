@@ -34,6 +34,10 @@
 
 #define EGG_TREE_MULTI_DND_STRING "EggTreeMultiDndString"
 
+static GtkTargetEntry target_table[] = {
+        { "text/uri-list", 0, 1 },
+};
+
 typedef struct
 {
   guint   pressed_button;
@@ -145,9 +149,9 @@ egg_tree_multi_drag_source_drag_data_delete (EggTreeMultiDragSource *drag_source
  * Return value: %TRUE if data of the required type was provided 
  **/
 gboolean
-egg_tree_multi_drag_source_drag_data_get    (EggTreeMultiDragSource *drag_source,
-					     GList                  *path_list,
-					     GtkSelectionData  *selection_data)
+egg_tree_multi_drag_source_drag_data_get (EggTreeMultiDragSource *drag_source,
+					  GList                  *path_list,
+					  GtkSelectionData       *selection_data)
 {
   EggTreeMultiDragSourceIface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
 
@@ -173,6 +177,7 @@ stop_drag_check (GtkWidget *widget)
   
   g_slist_free (priv_data->event_list);
   priv_data->event_list = NULL;
+
   g_signal_handler_disconnect (widget, priv_data->motion_notify_handler);
   g_signal_handler_disconnect (widget, priv_data->button_release_handler);
 }
@@ -195,6 +200,7 @@ egg_tree_multi_drag_button_release_event (GtkWidget      *widget,
 
   return FALSE;
 }
+
 
 static void
 selection_foreach (GtkTreeModel *model,
@@ -244,22 +250,14 @@ egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
 				   guint             info,
 				   guint             time)
 {
-  GtkTreeView      *tree_view;
-  GtkTreeModel     *model;
-  /*TreeViewDragInfo *di;*/
-  GList            *path_list;
+  GtkTreeView  *tree_view;
+  GtkTreeModel *model;
+  GList        *path_list;
 
   tree_view = GTK_TREE_VIEW (widget);
   model = gtk_tree_view_get_model (tree_view);
   if (model == NULL)
     return;
-
-  /*
-  di = get_info (GTK_TREE_VIEW (widget));
-
-  if (di == NULL)
-    return;
-  */
 
   path_list = get_context_data (context);
   if (path_list == NULL)
@@ -279,11 +277,6 @@ egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
 }
 
 
-static GtkTargetEntry target_table[] = {
-        { "text/uri-list", 0, 1 },
-};
-
-
 static gboolean
 egg_tree_multi_drag_motion_event (GtkWidget      *widget,
 				  GdkEventMotion *event,
@@ -299,24 +292,17 @@ egg_tree_multi_drag_motion_event (GtkWidget      *widget,
 				event->x,
 				event->y))
     {
-      GList *path_list = NULL;
+      GList            *path_list = NULL;
       GtkTreeSelection *selection;
-      GtkTreeModel *model;
-      GdkDragContext *context;
-      /*
-      TreeViewDragInfo *di;
+      GtkTreeModel     *model;
+      GdkDragContext   *context;
 
-      
-      di = get_info (GTK_TREE_VIEW (widget));
-
-      if (di == NULL)
-	return FALSE;
-      */
+      stop_drag_check (widget);
 
       selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-      stop_drag_check (widget);
       gtk_tree_selection_selected_foreach (selection, selection_foreach, &path_list);
       path_list = g_list_reverse (path_list);
+
       model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
       if (egg_tree_multi_drag_source_row_draggable (EGG_TREE_MULTI_DRAG_SOURCE (model), path_list))
 	{
@@ -348,11 +334,11 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
 					GdkEventButton *event,
 					gpointer        data)
 {
-  GtkTreeView *tree_view;
-  GtkTreePath *path = NULL;
-  GtkTreeViewColumn *column = NULL;
-  gint cell_x, cell_y;
-  GtkTreeSelection *selection;
+  GtkTreeView         *tree_view;
+  GtkTreePath         *path = NULL;
+  GtkTreeViewColumn   *column = NULL;
+  gint                 cell_x, cell_y;
+  GtkTreeSelection    *selection;
   EggTreeMultiDndData *priv_data;
 
   if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (widget)))
@@ -429,6 +415,7 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
   
   return FALSE;
 }
+
 
 void
 egg_tree_multi_drag_add_drag_support (GtkTreeView *tree_view)

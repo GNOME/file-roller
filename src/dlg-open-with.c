@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2005 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-utils.h"
 #include "gconf-utils.h"
+#include "gtk-utils.h"
 #include "main.h"
 #include "window.h"
 
@@ -36,6 +37,7 @@
 #define GLADE_FILE "file-roller.glade"
 #define TEMP_DOCS  "temp_docs"
 
+enum { ICON_COLUMN, TEXT_COLUMN, DATA_COLUMN, N_COLUMNS };
 
 typedef struct {
 	FRWindow     *window;
@@ -82,12 +84,10 @@ open_cb (GtkWidget *widget,
 	char        *command = NULL;
 	GList       *scan;
 	GSList      *sscan, *editors;
-
+	
 	application = gtk_entry_get_text (GTK_ENTRY (data->o_app_entry));
-
-	/* add the command to the editors list if not already present. */
-
-	for (scan = data->app_list; scan && !present; scan = scan->next) {
+	
+	for (scan = data->app_list; scan; scan = scan->next) {
 		GnomeVFSMimeApplication *app = scan->data;
 		if (strcmp (gnome_vfs_mime_application_get_exec (app), application) == 0) {
 			window_open_files_with_application (data->window, data->file_list, app);
@@ -95,6 +95,8 @@ open_cb (GtkWidget *widget,
 			return;
 		}
 	}
+	
+	/* add the command to the editors list if not already present. */
 
 	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
 	for (sscan = editors; sscan && ! present; sscan = sscan->next) {
@@ -125,36 +127,98 @@ open_cb (GtkWidget *widget,
 }
 
 
-static int
-app_button_press_cb (GtkWidget      *widget, 
-		     GdkEventButton *event,
-		     gpointer        callback_data)
+static void
+app_list_selection_changed_cb (GtkTreeSelection *selection,
+			       gpointer          p)
 {
-        DialogData              *data = callback_data;
-	GtkTreePath             *path;
+	DialogData              *data = p;
 	GtkTreeIter              iter;
-	GnomeVFSMimeApplication *app;
+        GnomeVFSMimeApplication *app;
+	
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_app_tree_view));
+	if (selection == NULL)
+		return;
+	
+	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
+		return;
 
-	if (! gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (data->o_app_tree_view),
-					     event->x, event->y,
-					     &path, NULL, NULL, NULL))
-		return FALSE;
-
-	if (! gtk_tree_model_get_iter (data->app_model, &iter, path)) {
-		gtk_tree_path_free (path);
-		return FALSE;
-	}
-	gtk_tree_path_free (path);
-
-	gtk_tree_model_get (data->app_model, &iter,
-			    1, &app,
-			    -1);
-	gtk_entry_set_text (GTK_ENTRY (data->o_app_entry), gnome_vfs_mime_application_get_exec (app));
-
-	return FALSE;
+        gtk_tree_model_get (data->app_model, &iter,
+                            DATA_COLUMN, &app,
+                            -1);
+	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), gnome_vfs_mime_application_get_exec (app));
 }
 
 
+static void
+app_activated_cb (GtkTreeView       *tree_view,
+                  GtkTreePath       *path,
+                  GtkTreeViewColumn *column,
+                  gpointer           callback_data)
+{
+        DialogData              *data = callback_data;
+	GtkTreeIter              iter;
+	GnomeVFSMimeApplication *app;
+
+	if (! gtk_tree_model_get_iter (data->app_model, &iter, path)) 
+		return;
+	
+	gtk_tree_model_get (data->app_model, &iter,
+			    DATA_COLUMN, &app,
+			    -1);
+
+	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), gnome_vfs_mime_application_get_exec (app));
+
+	open_cb (NULL, data);
+}
+
+
+static void
+recent_list_selection_changed_cb (GtkTreeSelection *selection,
+				  gpointer          p)
+{
+	DialogData   *data = p;
+	GtkTreeIter   iter;
+	char         *editor;
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view));
+	if (selection == NULL)
+		return;
+
+	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
+		return;
+
+	gtk_tree_model_get (data->recent_model, &iter,
+                            0, &editor,
+                            -1);
+	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), editor);
+        g_free (editor);
+}
+
+
+static void
+recent_activated_cb (GtkTreeView       *tree_view,
+		     GtkTreePath       *path,
+		     GtkTreeViewColumn *column,
+		     gpointer           callback_data)
+{
+        DialogData   *data = callback_data;
+	GtkTreeIter   iter;
+	char         *editor;
+
+	if (! gtk_tree_model_get_iter (data->recent_model, &iter, path)) 
+		return;
+	
+	gtk_tree_model_get (data->recent_model, &iter,
+			    0, &editor,
+			    -1);
+	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), editor);
+	g_free (editor);
+
+	open_cb (NULL, data);
+}
+
+
+/*
 static void
 app_activated_cb (GtkTreeView       *tree_view,
                   GtkTreePath       *path,
@@ -229,6 +293,7 @@ recent_activated_cb (GtkTreeView       *tree_view,
 
 	open_cb (NULL, data);
 }
+*/
 
 
 static void
@@ -278,6 +343,8 @@ dlg_open_with (FRWindow *window,
 	GtkTreeIter              iter;
 	GtkCellRenderer         *renderer;
 	GtkTreeViewColumn       *column;
+	GtkIconTheme            *theme;
+	int                      icon_size;
 
 	if (file_list == NULL)
 		return;
@@ -309,19 +376,19 @@ dlg_open_with (FRWindow *window,
 			  G_CALLBACK (open_with__destroy_cb),
 			  data);
 
-	g_signal_connect (G_OBJECT (data->o_app_tree_view), 
-			  "button_press_event",
-			  G_CALLBACK (app_button_press_cb), 
-			  data);
+	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_app_tree_view))),
+                          "changed",
+                          G_CALLBACK (app_list_selection_changed_cb),
+                          data);
 	g_signal_connect (G_OBJECT (data->o_app_tree_view),
                           "row_activated",
                           G_CALLBACK (app_activated_cb),
                           data);
 
-	g_signal_connect (G_OBJECT (data->o_recent_tree_view), 
-			  "button_press_event",
-			  G_CALLBACK (recent_button_press_cb), 
-			  data);
+	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view))),
+                          "changed",
+                          G_CALLBACK (recent_list_selection_changed_cb),
+                          data);
 	g_signal_connect (G_OBJECT (data->o_recent_tree_view),
                           "row_activated",
                           G_CALLBACK (recent_activated_cb),
@@ -354,20 +421,26 @@ dlg_open_with (FRWindow *window,
 			data->app_list = g_list_concat (data->app_list, gnome_vfs_mime_get_all_applications (result));
 	}
 
-	data->app_model = GTK_TREE_MODEL (gtk_list_store_new (2, 
+	data->app_model = GTK_TREE_MODEL (gtk_list_store_new (N_COLUMNS, 
+							      GDK_TYPE_PIXBUF,
 							      G_TYPE_STRING,
 							      G_TYPE_POINTER));
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (data->app_model),
-                                              0,
+                                              TEXT_COLUMN,
 					      GTK_SORT_ASCENDING);
 	
 	gtk_tree_view_set_model (GTK_TREE_VIEW (data->o_app_tree_view),
 				 data->app_model);
 	g_object_unref (G_OBJECT (data->app_model));
 
+	theme = gtk_icon_theme_get_default ();
+	icon_size = get_folder_pixbuf_size_for_list (GTK_WIDGET (data->dialog));
+
 	for (scan = data->app_list; scan; scan = scan->next) {
-		gboolean found;
+		gboolean   found;
+		char      *utf8_name;
+		GdkPixbuf *icon;
 
 		app = scan->data;
 
@@ -384,20 +457,37 @@ dlg_open_with (FRWindow *window,
 
 		app_names = g_list_prepend (app_names, (char*) gnome_vfs_mime_application_get_exec (app));
 
+		utf8_name = g_locale_to_utf8 (app->name, -1, NULL, NULL, NULL);
+		icon = create_pixbuf (theme, gnome_vfs_mime_application_get_icon (app), icon_size);
+
 		gtk_list_store_append (GTK_LIST_STORE (data->app_model),
 				       &iter);
-		gtk_list_store_set (GTK_LIST_STORE (data->app_model), &iter,
-				    0, app->name,
-				    1, app,
+		gtk_list_store_set (GTK_LIST_STORE (data->app_model), 
+				    &iter,
+				    ICON_COLUMN, icon,
+				    TEXT_COLUMN, utf8_name,
+				    DATA_COLUMN, app,
 				    -1);
+
+		g_free (utf8_name);
 	}
 
+	column = gtk_tree_view_column_new ();
+
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes (column, renderer,
+					     "pixbuf", ICON_COLUMN,
+					     NULL);
+
 	renderer = gtk_cell_renderer_text_new ();
-	column = gtk_tree_view_column_new_with_attributes (NULL,
-							   renderer,
-							   "text", 0,
-							   NULL);
-	gtk_tree_view_column_set_sort_column_id (column, 0);
+	gtk_tree_view_column_pack_start (column,
+                                         renderer,
+                                         TRUE);
+        gtk_tree_view_column_set_attributes (column, renderer,
+                                             "text", TEXT_COLUMN,
+                                             NULL);
+
 	gtk_tree_view_append_column (GTK_TREE_VIEW (data->o_app_tree_view),
 				     column);
 

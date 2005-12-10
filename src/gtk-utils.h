@@ -81,4 +81,10 @@ void        _gtk_label_set_filename_text (GtkLabel   *label,
 
 char *      _gtk_label_get_filename_text (GtkLabel   *label);
 
+GdkPixbuf * create_pixbuf                (GtkIconTheme  *icon_theme,
+					  const char    *icon_name,
+					  int            icon_size);
+
+int         get_folder_pixbuf_size_for_list (GtkWidget *widget);
+
 #endif

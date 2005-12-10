@@ -39,15 +39,15 @@ struct _EggTreeMultiDragSourceIface
   GTypeInterface g_iface;
 
   /* VTable - not signals */
-  gboolean     (* row_draggable)        (EggTreeMultiDragSource   *drag_source,
-                                         GList                    *path_list);
+  gboolean  (* row_draggable)     (EggTreeMultiDragSource *drag_source,
+				   GList                  *path_list);
 
-  gboolean     (* drag_data_get)        (EggTreeMultiDragSource   *drag_source,
-                                         GList                    *path_list,
-                                         GtkSelectionData         *selection_data);
+  gboolean  (* drag_data_get)     (EggTreeMultiDragSource *drag_source,
+				   GList                  *path_list,
+				   GtkSelectionData       *selection_data);
 
-  gboolean     (* drag_data_delete)     (EggTreeMultiDragSource *drag_source,
-                                         GList                  *path_list);
+  gboolean  (* drag_data_delete)  (EggTreeMultiDragSource *drag_source,
+				   GList                  *path_list);
 };
 
 GType    egg_tree_multi_drag_source_get_type         (void) G_GNUC_CONST;
@@ -67,9 +67,8 @@ gboolean egg_tree_multi_drag_source_drag_data_delete (EggTreeMultiDragSource *dr
 gboolean egg_tree_multi_drag_source_drag_data_get    (EggTreeMultiDragSource *drag_source,
 						      GList                  *path_list,
 						      GtkSelectionData       *selection_data);
+
 void     egg_tree_multi_drag_add_drag_support        (GtkTreeView            *tree_view);
-
-
 
 G_END_DECLS
 

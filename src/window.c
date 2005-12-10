@@ -85,16 +85,15 @@
 
 #define BAD_CHARS "/\\*"
 
-static GtkTargetEntry target_table[] = {
-	{ "text/uri-list", 0, 0 },
-};
-static guint n_targets = sizeof (target_table) / sizeof (target_table[0]);
-
-static GdkPixbuf *folder_pixbuf = NULL;
-static GdkPixbuf *file_pixbuf = NULL;
-static GHashTable *pixbuf_hash = NULL;
+static GdkPixbuf      *folder_pixbuf = NULL;
+static GdkPixbuf      *file_pixbuf = NULL;
+static GHashTable     *pixbuf_hash = NULL;
 static GnomeIconTheme *icon_theme = NULL;
-static int icon_size = 0;
+static int             icon_size = 0;
+
+static GtkTargetEntry target_table[] = {
+        { "text/uri-list", 0, 1 },
+};
 
 
 /* -- window history -- */
@@ -3498,7 +3497,7 @@ window_new (void)
 
 	gtk_drag_dest_set (window->app,
 			   GTK_DEST_DEFAULT_ALL,
-			   target_table, n_targets,
+			   target_table, G_N_ELEMENTS (target_table),
 			   GDK_ACTION_COPY);
 	
 	g_signal_connect (G_OBJECT (window->app), 
@@ -3684,19 +3683,6 @@ window_new (void)
 			  "sort_column_changed",
 			  G_CALLBACK (sort_column_changed_cb), 
 			  window);
-
-	/*
-        gtk_drag_source_set (window->list_view, 
-			     GDK_BUTTON1_MASK | GDK_BUTTON2_MASK,
-			     target_table, n_targets, 
-			     GDK_ACTION_COPY);
-	*/
-	/*
-	g_signal_connect (G_OBJECT (window->list_view), 
-			  "drag_data_get",
-			  G_CALLBACK (file_list_drag_data_get), 
-			  window);
-	*/
 
 	g_signal_connect (G_OBJECT (window->list_view), 
 			  "drag_begin",
