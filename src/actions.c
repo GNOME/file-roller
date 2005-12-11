@@ -98,11 +98,9 @@ is_supported_extension (GtkWidget *file_sel,
 			char      *filename)
 {
 	int i;
-	
 	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++) 
 		if (file_extension_is (filename, file_type_desc[save_type[i]].ext)) 
 			return TRUE;
-	
 	return FALSE;
 }
 
@@ -144,21 +142,12 @@ get_full_path (GtkWidget *file_sel)
 }
 
 
-static void 
-new_file_response_cb (GtkWidget *w,
-		      int        response,
-		      GtkWidget *file_sel)
+static char *
+get_archive_filename_from_selector (FRWindow  *window,
+				    GtkWidget *file_sel)
 {
-	FRWindow *window;
-	char     *path;
-	char     *dir;
-
-	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (file_sel);
-		return;
-	}
-
-	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
+	char *path = NULL;
+	char *dir;
 
 	path = get_full_path (file_sel);
 	if ((path == NULL) || (*path == 0)) {
@@ -176,7 +165,7 @@ new_file_response_cb (GtkWidget *w,
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
-		return;
+		return NULL;
 	}
 	
 	dir = remove_level_from_path (path);
@@ -197,13 +186,13 @@ new_file_response_cb (GtkWidget *w,
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
-		return;
+		return NULL;
 	}
 	g_free (dir);
 
-	/* if the user did not specify an extension use the filetype combobox current type
+	/* if the user did not specify a valid extension use the filetype combobox current type
 	 * or tar.gz if automatic is selected. */
-	if (strchr (path, '.') == NULL) {
+	if (fr_archive_utils__get_file_name_ext (path) == NULL) {
 		GtkWidget *combo_box;
 		int        idx;
 		char      *new_path;
@@ -220,7 +209,7 @@ new_file_response_cb (GtkWidget *w,
 		path = new_path;
 	}
 
-	debug (DEBUG_INFO, "create %s\n", path); 
+	debug (DEBUG_INFO, "create/save %s\n", path); 
 
 	if (path_is_file (path)) {
 		GtkWidget *dialog;
@@ -238,7 +227,7 @@ new_file_response_cb (GtkWidget *w,
                 	gtk_dialog_run (GTK_DIALOG (dialog));
                 	gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_free (path);
-			return;
+			return NULL;
 		}
 
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
@@ -256,7 +245,7 @@ new_file_response_cb (GtkWidget *w,
 
 		if (r != GTK_RESPONSE_YES) {
 			g_free (path);
-			return;
+			return NULL;
 		}
 
 		if (unlink (path) != 0) {
@@ -272,12 +261,34 @@ new_file_response_cb (GtkWidget *w,
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_free (path);
-			return;
+			return NULL;
 		}
-	} 
+	}
 
-	new_archive (file_sel, window, path);
-	g_free (path);
+	return path;
+}
+
+
+static void 
+new_file_response_cb (GtkWidget *w,
+		      int        response,
+		      GtkWidget *file_sel)
+{
+	FRWindow *window;
+	char     *path;
+
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+		gtk_widget_destroy (file_sel);
+		return;
+	}
+
+	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
+
+	path = get_archive_filename_from_selector (window, file_sel);
+	if (path != NULL) {
+		new_archive (file_sel, window, path);
+		g_free (path);
+	}
 }
 
 
@@ -321,12 +332,12 @@ void
 activate_action_new (GtkAction *action, 
 		     gpointer   data)
 {
-	FRWindow  *window = data;
-	GtkWidget *file_sel;
-	GtkWidget *hbox;
-	GtkWidget *combo_box;
+	FRWindow      *window = data;
+	GtkWidget     *file_sel;
+	GtkWidget     *hbox;
+	GtkWidget     *combo_box;
 	GtkFileFilter *filter;
-	int i;
+	int            i;
 
 	file_sel = gtk_file_chooser_dialog_new (
 			_("New"),
@@ -405,12 +416,10 @@ activate_action_new (GtkAction *action,
 			  "response", 
 			  G_CALLBACK (new_file_response_cb), 
 			  file_sel);
-
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
 			  G_CALLBACK (new_file_destroy_cb),
 			  file_sel);
-
 	g_signal_connect (G_OBJECT (combo_box),
 			  "changed", 
 			  G_CALLBACK (filetype_combobox_changed_cb),
@@ -433,11 +442,11 @@ open_file_destroy_cb (GtkWidget *w,
 
 static void 
 open_file_response_cb (GtkWidget *w,
-		       gint response,
+		       int        response,
 		       GtkWidget *file_sel)
 {
-	FRWindow   *window = NULL;
-	char *path;
+	FRWindow *window = NULL;
+	char     *path;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (file_sel);
@@ -521,12 +530,11 @@ save_file_destroy_cb (GtkWidget *w,
 
 static void 
 save_file_response_cb (GtkWidget *w,
-		       gint response,
+		       gint       response,
 		       GtkWidget *file_sel)
 {
 	FRWindow *window;
 	char     *path;
-	char     *dir;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (file_sel);
@@ -535,106 +543,12 @@ save_file_response_cb (GtkWidget *w,
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
-	path = get_full_path (file_sel);
-
-	if ((path == NULL) || (*path == 0)) {
-		GtkWidget *dialog;
-
+	path = get_archive_filename_from_selector (window, file_sel);
+	if (path != NULL) {
+		window_archive_save_as (window, path);
+		gtk_widget_destroy (file_sel);
 		g_free (path);
-
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not save the archive"),
-						  _("You have to specify an archive name."),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-		return;
 	}
-	
-	dir = remove_level_from_path (path);
-	if (access (dir, R_OK | W_OK | X_OK) != 0) {
-		GtkWidget *dialog;
-
-		g_free (dir);
-		g_free (path);
-
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not save the archive"),
-						  _("You don't have permission to create an archive in this folder"),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-		return;
-	}
-	g_free (dir);
-
-	debug (DEBUG_INFO, "save as %s\n", path); 
-
-	if (path_is_file (path)) {
-		GtkWidget *dialog;
-		int r;
-
-		if (!is_supported_extension(file_sel, path)) {
-                        dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
-                                                  GTK_DIALOG_MODAL,
-                                                  GTK_STOCK_DIALOG_ERROR,
-                                                  _("Could not create the archive"),
-                                                  _("Archive type not supported."),
-                                                  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-                                                  NULL);
-                        gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-                        gtk_dialog_run (GTK_DIALOG (dialog));
-                        gtk_widget_destroy (GTK_WIDGET (dialog));
-                        g_free (path);
-                        return;
-                }
-
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-						  GTK_DIALOG_MODAL,
-						  GTK_STOCK_DIALOG_QUESTION,
-						  _("The archive already exists.  Do you want to overwrite it?"),
-						  NULL,
-						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						  _("Overwrite"), GTK_RESPONSE_YES,
-						  NULL);
-
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-		r = gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-
-		if (r != GTK_RESPONSE_YES) {
-			g_free (path);
-			return;
-		}
-
-		if (unlink (path) != 0) {
-			GtkWidget *dialog;
-			dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-							  GTK_DIALOG_DESTROY_WITH_PARENT,
-							  GTK_STOCK_DIALOG_ERROR,
-							  _("Could not delete the old archive."),
-							  NULL,
-							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-							  NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-			gtk_dialog_run (GTK_DIALOG (dialog));
-			gtk_widget_destroy (GTK_WIDGET (dialog));
-			g_free (path);
-			return;
-		}
-	} 
-
-	window_archive_save_as (window, path);
-	gtk_widget_destroy (file_sel);
-	g_free (path);
 }
 
 
@@ -642,12 +556,12 @@ void
 activate_action_save_as (GtkAction *action, 
 			 gpointer   data)
 {
-	FRWindow  *window = data;
-	GtkWidget *file_sel;
-	GtkWidget *hbox;
-	GtkWidget *combo_box;
+	FRWindow      *window = data;
+	GtkWidget     *file_sel;
+	GtkWidget     *hbox;
+	GtkWidget     *combo_box;
 	GtkFileFilter *filter;
-	int i;
+	int            i;
 
 	file_sel = gtk_file_chooser_dialog_new (
 			_("Save"),
@@ -660,6 +574,9 @@ activate_action_save_as (GtkAction *action,
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
 					     window->open_default_dir);
+
+	if (window->archive_filename != NULL) 
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), file_name_from_path (window->archive_filename));
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
@@ -681,6 +598,7 @@ activate_action_save_as (GtkAction *action,
 			    FALSE, FALSE, 0);
 	
 	combo_box = gtk_combo_box_new_text ();
+	gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), _("Automatic"));
 	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
 					   _(file_type_desc[save_type[i]].name));
@@ -688,7 +606,8 @@ activate_action_save_as (GtkAction *action,
 	gtk_box_pack_start (GTK_BOX (hbox), combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
 
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);	
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);
+	
 	/**/
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
@@ -698,10 +617,13 @@ activate_action_save_as (GtkAction *action,
 			  "response", 
 			  G_CALLBACK (save_file_response_cb), 
 			  file_sel);
-
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
 			  G_CALLBACK (save_file_destroy_cb),
+			  file_sel);
+	g_signal_connect (G_OBJECT (combo_box),
+			  "changed", 
+			  G_CALLBACK (filetype_combobox_changed_cb),
 			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);

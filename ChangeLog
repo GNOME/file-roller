@@ -1,3 +1,14 @@
+2005-12-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/actions.c (check_archive_filename_from_selector)
+	(new_file_response_cb, save_file_response_cb): use a unique
+	function to get the filename from the filechooser, to be
+	used both when creating and when saving an archive.
+
+	* src/actions.c (activate_action_save_as): set the archive filename.
+
+	Fixes bug #323713: "Save as" should default to current archive filename
+
 2005-12-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-list-model.c (fr_list_model_multi_row_draggable): 
