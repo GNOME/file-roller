@@ -1,3 +1,29 @@
+version 2.13.2
+---------------
+	* Fixed bug #323713: "Save as" should default to current archive 
+	  filename
+	* Fixed bug #315069: file-roller: drag 'n drop doesn't work for more 
+          than 1 file.
+	* Fixed bug #323534: Passwords improperly escaped for zip files
+	* Do not open a progress dialog	when dragging files, use a progressbar
+	  in the statusbar instead.
+	* Fixed bug #316364: Nautilus dependency should be optional
+	* Fixed bug #311821: ascending and descending indicators are opposite 
+	  from expected.
+	* Fixed bug #317423: Conflicting mnemonic in "Extract" dialog.
+	* Fixed bug #323068: file-roller fails in chosing extract-to directory
+	* Fixed bug #322197: Improve Naming Filename when create new Archive 
+	  file
+	* Fixed bug #316564: needs unzip AND zip.
+	* Simplified the add dialog populating the file type combobox with the 
+	  extensions instead of the descriptions.
+	* Set progress dialog display delay to 1 second.  
+	* More HIG compliant progress dialog.  
+	* Use a single command execution to add many files and folders to an 
+	  archive to speed up the operation.  
+	* Allow to stop creation of a new archive.
+	* Correctly associate fr to 7zip files.
+
 version 2.13.1
 ---------------
 	* Fixed bug #319600: compilation under AIX 5.1 aborts with ".atoll 
