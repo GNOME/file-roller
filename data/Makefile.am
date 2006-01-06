@@ -5,9 +5,6 @@ desktop_in_files=file-roller.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop) 
 @INTLTOOL_DESKTOP_RULE@
 
-applicationsdir = $(datadir)/application-registry
-applications_DATA = file-roller.applications
-
 icondir = $(datadir)/pixmaps
 icon_DATA = file-roller.png
 
@@ -23,7 +20,6 @@ mimedir = $(datadir)/mime-info
 mime_DATA = file-roller.mime file-roller.keys
 
 EXTRA_DIST = 			\
-	$(applications_DATA)	\
 	$(desktop_in_files)	\
 	$(desktop_DATA)		\
 	$(mime_DATA)		\
