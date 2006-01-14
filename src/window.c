@@ -2598,7 +2598,7 @@ make_uris (GList *list)
 	l = g_list_length (list);
 	uris = g_new (char*, l + 1);
 	for (i = 0, scan = list; scan; scan = scan->next) 
-		uris[i++] = g_strdup (scan->data);
+		uris[i++] = gnome_vfs_escape_host_and_path_string (scan->data);
 	uris[i] = NULL;
 
 	return uris;
