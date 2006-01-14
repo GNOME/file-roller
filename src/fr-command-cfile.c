@@ -406,10 +406,8 @@ fr_command_cfile_extract (FRCommand  *comm,
 	uncompr_file = remove_extension_from_path (temp_file);
 
 	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
-	if (compr_file == NULL) {
-		g_print ("[0]\n");
+	if (compr_file == NULL) 
 		compr_file = remove_extension_from_path (file_name_from_path (comm->e_filename));
-	}
 	dest_file = g_strconcat (dest_dir,
 				 "/",
 				 compr_file,
