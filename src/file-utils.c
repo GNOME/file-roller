@@ -105,19 +105,49 @@ path_is_dir (const gchar *path)
 
 
 gboolean
-dir_is_empty (const gchar *path)
+dir_is_empty (const char *path)
 {
 	DIR *dp;
-	int n;
+	int  n;
 
 	if (strcmp (path, "/") == 0)
 		return FALSE;
 
 	dp = opendir (path);
+	if (dp == NULL)
+		return TRUE;
+
 	n = 0;
 	while (readdir (dp) != NULL) {
 		n++;
 		if (n > 2) {
+			closedir (dp);
+			return FALSE;
+		}
+	}
+	closedir (dp);
+
+	return TRUE;
+}
+
+
+gboolean
+dir_contains_one_object (const char *path)
+{
+	DIR *dp;
+	int  n;
+
+	if (strcmp (path, "/") == 0)
+		return FALSE;
+
+	dp = opendir (path);
+	if (dp == NULL)
+		return FALSE;
+
+	n = 0;
+	while (readdir (dp) != NULL) {
+		n++;
+		if (n > 3) {
 			closedir (dp);
 			return FALSE;
 		}

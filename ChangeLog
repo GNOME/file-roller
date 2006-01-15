@@ -1,3 +1,17 @@
+2006-01-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* nautilus/nautilus-fileroller.c (extract_here_callback): 
+	* src/file-utils.h: 
+	* src/window.h: 
+	* src/main.c (prepare_app): 
+	* src/fr-process.h (fr_process_stop): 
+	* src/fr-process.c: 
+	* src/file-utils.c: 
+	* src/window.c (window_archive_extract__common): 
+
+	Fixed bug #168388 - file roller shouldn't create an ARCHIVE_FILES 
+	folder if the archive only have one root folder
+
 2006-01-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c (make_uris): escape the path when creating the dnd uri

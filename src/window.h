@@ -220,6 +220,7 @@ typedef struct {
 
 	gulong     theme_changed_handler_id;
 	gboolean   non_interactive;
+	char      *extract_here_dir;
 } FRWindow;
 
 
@@ -288,6 +289,15 @@ void       window_archive_remove            (FRWindow      *window,
 					     FRCompression  compression);
 
 void       window_archive_extract           (FRWindow      *window,
+					     GList         *file_list,
+					     const char    *extract_to_dir,
+					     const char    *base_dir,
+					     gboolean       skip_older,
+					     gboolean       overwrite,
+					     gboolean       junk_paths,
+					     const char    *password);
+
+void       window_archive_extract_here      (FRWindow      *window,
 					     GList         *file_list,
 					     const char    *extract_to_dir,
 					     const char    *base_dir,

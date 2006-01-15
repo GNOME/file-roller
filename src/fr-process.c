@@ -387,6 +387,21 @@ fr_process_set_end_func (FRProcess    *fr_proc,
 
 
 void
+fr_process_set_continue_func (FRProcess    *fr_proc, 
+			      ContinueFunc  func,
+			      gpointer      func_data)
+{
+	FRCommandInfo *c_info;
+
+	g_return_if_fail (fr_proc != NULL);
+
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
+	c_info->continue_func = func;
+	c_info->continue_data = func_data;
+}
+
+
+void
 fr_process_end_command (FRProcess *fr_proc)
 {
 	FRCommandInfo *c_info;
@@ -685,6 +700,7 @@ check_child (gpointer data)
 	FRCommandInfo  *c_info;
 	pid_t           pid;
 	int             status;
+	gboolean        continue_process;
 
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_command);
 
@@ -742,23 +758,30 @@ check_child (gpointer data)
 	if (c_info->end_func != NULL)
 		(*c_info->end_func) (c_info->end_data);
 
+	/* Check whether to continue or stop the process */
+
+	continue_process = TRUE;
+	if (c_info->continue_func != NULL)
+		continue_process = (*c_info->continue_func) (c_info->continue_data);
+
 	/* Execute next command. */
-
-	if (fr_proc->error.type != FR_PROC_ERROR_NONE) 
-		allow_sticky_processes_only (fr_proc, TRUE);
-
-	if (fr_proc->sticky_only) {
-		do {
+	if (continue_process) {
+		if (fr_proc->error.type != FR_PROC_ERROR_NONE) 
+			allow_sticky_processes_only (fr_proc, TRUE);
+		
+		if (fr_proc->sticky_only) {
+			do {
+				fr_proc->current_command++;
+			} while ((fr_proc->current_command <= fr_proc->n_comm)
+				 && ! command_is_sticky (fr_proc, 
+							 fr_proc->current_command));
+		} else
 			fr_proc->current_command++;
-		} while ((fr_proc->current_command <= fr_proc->n_comm)
-			 && ! command_is_sticky (fr_proc, 
-						 fr_proc->current_command));
-	} else
-		fr_proc->current_command++;
 
-	if (fr_proc->current_command <= fr_proc->n_comm) {
-		start_current_command (fr_proc);
-		return FALSE;
+		if (fr_proc->current_command <= fr_proc->n_comm) {
+			start_current_command (fr_proc);
+			return FALSE;
+		}
 	}
 
 	/* Done */

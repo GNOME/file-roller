@@ -91,8 +91,8 @@ extract_here_callback (NautilusMenuItem *item,
 	dir = g_path_get_dirname (path);
 
 	cmd = g_string_new ("file-roller");
-	/*g_string_append_printf (cmd," --default-dir=\"%s\" --extract-here --force", dir);*/
 	g_string_append_printf (cmd," --extract-to=\"%s\" --force", dir);
+
 	g_free (dir);
 	g_free (path);
 	g_free (uri);

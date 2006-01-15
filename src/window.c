@@ -4218,6 +4218,7 @@ window_close (FRWindow *window)
 	_window_free_batch_data (window);
 
 	g_free (window->pd_last_archive);
+	g_free (window->extract_here_dir);
 
 	/* save preferences. */
 
@@ -4672,17 +4673,28 @@ window_archive_remove (FRWindow      *window,
 /* -- window_archive_extract -- */
 
 
-void
-window_archive_extract (FRWindow   *window,
-			GList      *file_list,
-			const char *extract_to_dir,
-			const char *base_dir,
-			gboolean    skip_older,
-			gboolean    overwrite,
-			gboolean    junk_paths,
-			const char *password)
+static gboolean 
+extract__content_is_singleton (gpointer data)
 {
-	gboolean do_not_extract = FALSE;
+	FRWindow *window = data;
+	return dir_contains_one_object (window->extract_here_dir);
+}
+
+
+static void
+window_archive_extract__common (FRWindow   *window,
+				GList      *file_list,
+				const char *extract_to_dir,
+				const char *base_dir,
+				gboolean    skip_older,
+				gboolean    overwrite,
+				gboolean    junk_paths,
+				const char *password,
+				gboolean    extract_here)
+{
+	gboolean    do_not_extract = FALSE;
+	char       *e_arg, *singleton;
+	const char *dest_dir;
 
 	if (! path_is_dir (extract_to_dir)) {
 		if (! force_directory_creation) {
@@ -4757,15 +4769,104 @@ window_archive_extract (FRWindow   *window,
 	}
 
 	fr_process_clear (window->archive->process);
+
+	dest_dir = extract_to_dir;
+	if (extract_here) {
+		g_free (window->extract_here_dir);
+		window->extract_here_dir = g_strconcat (window->archive_filename,
+							"_FILES",
+							NULL);
+		dest_dir = window->extract_here_dir;
+
+		ensure_dir_exists (window->extract_here_dir, 0755);
+	}
+
 	fr_archive_extract (window->archive,
 			    file_list,
-			    extract_to_dir,
+			    dest_dir,
 			    base_dir,
 			    skip_older,
 			    overwrite,
 			    junk_paths,
 			    password);
+
+	fr_process_set_continue_func (window->archive->process,
+				      extract__content_is_singleton,
+				      window);
+
+	/* move the singleton to the parent dir */	
+
+	fr_process_begin_command (window->archive->process, "mv");
+	fr_process_add_arg (window->archive->process, "-f");
+
+	e_arg = shell_escape (window->extract_here_dir);
+	singleton = g_strconcat (e_arg, G_DIR_SEPARATOR_S, "*", NULL);
+	g_free (e_arg);
+	fr_process_add_arg (window->archive->process, singleton);
+	g_free (singleton);
+
+	e_arg = shell_escape (extract_to_dir);
+	fr_process_add_arg (window->archive->process, e_arg);
+	g_free (e_arg);
+
+	fr_process_end_command (window->archive->process);
+
+	/* remove the extract_here_dir */
+
+	fr_process_begin_command (window->archive->process, "rm");
+	fr_process_add_arg (window->archive->process, "-rf");
+
+	e_arg = shell_escape (window->extract_here_dir);
+	fr_process_add_arg (window->archive->process, e_arg);
+	g_free (e_arg);
+
+	fr_process_end_command (window->archive->process);
+
 	fr_process_start (window->archive->process);
+}
+
+
+void
+window_archive_extract_here (FRWindow   *window,
+			     GList      *file_list,
+			     const char *extract_to_dir,
+			     const char *base_dir,
+			     gboolean    skip_older,
+			     gboolean    overwrite,
+			     gboolean    junk_paths,
+			     const char *password)
+{
+	window_archive_extract__common (window, 
+					file_list,
+					extract_to_dir,
+					base_dir,
+					skip_older,
+					overwrite,
+					junk_paths,
+					password,
+					TRUE);
+}
+
+
+void
+window_archive_extract (FRWindow   *window,
+			GList      *file_list,
+			const char *extract_to_dir,
+			const char *base_dir,
+			gboolean    skip_older,
+			gboolean    overwrite,
+			gboolean    junk_paths,
+			const char *password)
+{
+	window_archive_extract__common (window, 
+					file_list,
+					extract_to_dir,
+					base_dir,
+					skip_older,
+					overwrite,
+					junk_paths,
+					password,
+					FALSE);
 }
 
 
@@ -6185,14 +6286,14 @@ _window_batch_start_current_action (FRWindow *window)
 	case FR_BATCH_ACTION_EXTRACT:
 		debug (DEBUG_INFO, "[BATCH] Extract\n");
 
-		window_archive_extract (window,
-					NULL,
-					(char*) action->data,
-					NULL,
-					FALSE,
-					TRUE,
-					FALSE,
-					window->password);
+		window_archive_extract_here (window,
+					     NULL,
+					     (char*) action->data,
+					     NULL,
+					     FALSE,
+					     TRUE,
+					     FALSE,
+					     window->password);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:

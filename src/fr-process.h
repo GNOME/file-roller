@@ -41,8 +41,9 @@ typedef struct _FRProcessClass  FRProcessClass;
 #define BUFFER_SIZE 16384
 
 
-typedef void (*ProcLineFunc) (char *line, gpointer data);
-typedef void (*ProcFunc)     (gpointer data);
+typedef void     (*ProcLineFunc) (char *line, gpointer data);
+typedef void     (*ProcFunc)     (gpointer data);
+typedef gboolean (*ContinueFunc) (gpointer data);
 
 
 typedef struct {
@@ -53,11 +54,14 @@ typedef struct {
 	guint  ignore_error : 1;  /* whether to continue to execute other 
 				   * commands if this command fails. */
 
-	ProcFunc begin_func;
-	gpointer begin_data;
+	ContinueFunc continue_func;
+	gpointer     continue_data;
 
-	ProcFunc end_func;
-	gpointer end_data;
+	ProcFunc     begin_func;
+	gpointer     begin_data;
+
+	ProcFunc     end_func;
+	gpointer     end_data;
 } FRCommandInfo;
 
 
@@ -120,67 +124,51 @@ struct _FRProcessClass {
 	/* -- Signals -- */
 
 	void (* start)         (FRProcess   *fr_proc);
-
 	void (* done)          (FRProcess   *fr_proc,
 				FRProcError *error);
-
 	void (* sticky_only)   (FRProcess   *fr_proc);
 };
 
 
 GType       fr_process_get_type             (void);
-
-FRProcess * fr_process_new                  ();
-
+FRProcess * fr_process_new                  (void);
 void        fr_process_clear                (FRProcess    *fr_proc);
-
 void        fr_process_begin_command        (FRProcess    *fr_proc, 
 					     const char   *arg);
-
 void        fr_process_begin_command_at     (FRProcess    *fr_proc, 
 					     const char   *arg,
 					     int           index);
-
 void        fr_process_add_arg              (FRProcess    *fr_proc, 
 					     const char   *arg);
-
 void        fr_process_set_arg_at           (FRProcess    *fr_proc, 
 					     int           n_comm,
 					     int           n_arg,
 					     const char   *arg);
-
 void        fr_process_set_begin_func       (FRProcess    *fr_proc, 
 					     ProcFunc      func,
 					     gpointer      func_data);
-
 void        fr_process_set_end_func         (FRProcess    *fr_proc, 
 					     ProcFunc      func,
 					     gpointer      func_data);
-
+void        fr_process_set_continue_func    (FRProcess    *fr_proc, 
+					     ContinueFunc  func,
+					     gpointer      func_data);
 void        fr_process_end_command          (FRProcess    *fr_proc);
-
 void        fr_process_set_working_dir      (FRProcess    *fr_proc, 
 					     const char   *arg);
-
 void        fr_process_set_sticky           (FRProcess    *fr_proc, 
 					     gboolean      sticky);
-
 void        fr_process_set_ignore_error     (FRProcess    *fr_proc, 
 					     gboolean      ignore_error);
-
 void        fr_process_use_standard_locale  (FRProcess    *fr_proc,
 					     gboolean      use_stand_locale);
-
 void        fr_process_set_out_line_func    (FRProcess    *fr_proc, 
 					     ProcLineFunc  func,
 					     gpointer      func_data);
-
 void        fr_process_set_err_line_func    (FRProcess    *fr_proc, 
 					     ProcLineFunc  func,
 					     gpointer      func_data);
-
 void        fr_process_start                (FRProcess    *fr_proc);
-
 void        fr_process_stop                 (FRProcess    *fr_proc);
 
 
