@@ -4779,6 +4779,9 @@ window_archive_extract__common (FRWindow   *window,
 		dest_dir = window->extract_here_dir;
 
 		ensure_dir_exists (window->extract_here_dir, 0755);
+	} else {
+		g_free (window->extract_here_dir);
+		window->extract_here_dir = NULL;
 	}
 
 	fr_archive_extract (window->archive,

@@ -1,3 +1,11 @@
+2006-01-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (window_archive_extract__common): 
+	* src/file-utils.c (dir_contains_one_object): reset window->extract_here_dir
+	when not porforming an extract_here action.
+
+	Fixes bug #328331 - Crashes on extraction
+
 2006-01-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* data/file-roller.desktop.in (Categories): added GTK

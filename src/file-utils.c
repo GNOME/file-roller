@@ -137,6 +137,9 @@ dir_contains_one_object (const char *path)
 	DIR *dp;
 	int  n;
 
+	if (path == NULL)
+		return FALSE;
+
 	if (strcmp (path, "/") == 0)
 		return FALSE;
 
