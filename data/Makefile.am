@@ -16,13 +16,9 @@ install-data-local:
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
 endif
 
-mimedir = $(datadir)/mime-info
-mime_DATA = file-roller.mime file-roller.keys
-
 EXTRA_DIST = 			\
 	$(desktop_in_files)	\
 	$(desktop_DATA)		\
-	$(mime_DATA)		\
 	$(icon_DATA)		\
 	$(schema_DATA)
 
