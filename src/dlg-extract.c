@@ -401,7 +401,7 @@ create_extra_widget (DialogData *data)
 	hbox29 = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox19), hbox29, TRUE, TRUE, 0);
 
-	label47 = gtk_label_new (_("    "));
+	label47 = gtk_label_new ("    ");
 	gtk_box_pack_start (GTK_BOX (hbox29), label47, FALSE, FALSE, 0);
 	gtk_label_set_justify (GTK_LABEL (label47), GTK_JUSTIFY_LEFT);
 
@@ -451,7 +451,7 @@ create_extra_widget (DialogData *data)
 	hbox30 = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox20), hbox30, TRUE, TRUE, 0);
 
-	label48 = gtk_label_new (_("    "));
+	label48 = gtk_label_new ("    ");
 	gtk_box_pack_start (GTK_BOX (hbox30), label48, FALSE, FALSE, 0);
 	gtk_label_set_justify (GTK_LABEL (label48), GTK_JUSTIFY_LEFT);
 
