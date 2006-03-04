@@ -885,6 +885,20 @@ activate_action_about (GtkAction *action,
 		NULL
 	};
 	const char       *translator_credits = _("translator-credits");
+	const char *license[] = {
+		"GNOME Terminal is free software; you can redistribute it and/or modify \n"
+		"it under the terms of the GNU General Public License as published by \n"
+		"the Free Software Foundation; either version 2 of the License, or \n"
+		"(at your option) any later version.",
+		"GNOME Terminal is distributed in the hope that it will be useful, \n"
+		"but WITHOUT ANY WARRANTY; without even the implied warranty of \n"
+		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \n"
+		"GNU General Public License for more details.",
+		"You should have received a copy of the GNU General Public License \n"
+		"along with Nautilus; if not, write to the Free Software Foundation, Inc., \n"
+		"51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
+	};
+	char *license_text;
 
 
 	if (about != NULL) {
@@ -893,6 +907,10 @@ activate_action_about (GtkAction *action,
 	}
 
 	about = gtk_about_dialog_new ();
+
+	license_text = g_strconcat (license[0], "\n\n", license[1], "\n\n",
+				    license[2], "\n\n", NULL);
+
 	g_object_set (about,
 		      "name",  _("File Roller"),
 		      "version", VERSION,
@@ -904,8 +922,10 @@ activate_action_about (GtkAction *action,
 		      "logo_icon_name", "file-roller",
 		      "website", NULL,
 		      "website_label", NULL,
-		      "license", NULL,
+		      "license", license_text,
 		      NULL);
+
+	g_free (license_text);
 
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (about), TRUE);
 	gtk_window_set_transient_for (GTK_WINDOW (about), 
