@@ -886,11 +886,11 @@ activate_action_about (GtkAction *action,
 	};
 	const char       *translator_credits = _("translator-credits");
 	const char *license[] = {
-		"GNOME Terminal is free software; you can redistribute it and/or modify \n"
+		"File Roller is free software; you can redistribute it and/or modify \n"
 		"it under the terms of the GNU General Public License as published by \n"
 		"the Free Software Foundation; either version 2 of the License, or \n"
 		"(at your option) any later version.",
-		"GNOME Terminal is distributed in the hope that it will be useful, \n"
+		"File Roller is distributed in the hope that it will be useful, \n"
 		"but WITHOUT ANY WARRANTY; without even the implied warranty of \n"
 		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \n"
 		"GNU General Public License for more details.",
