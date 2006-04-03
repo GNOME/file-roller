@@ -205,6 +205,9 @@ main (int argc, char **argv)
                                       GNOME_PARAM_APP_LIBDIR, FR_LIBDIR,
 				      NULL);
 
+	g_set_application_name (_("File Roller"));
+	gtk_window_set_default_icon_name ("file-roller");
+
 	g_object_get_property (G_OBJECT (program),
 			       GNOME_PARAM_POPT_CONTEXT,
 			       g_value_init (&value, G_TYPE_POINTER));
@@ -229,8 +232,6 @@ main (int argc, char **argv)
 static void 
 initialize_data ()
 {
-	gtk_window_set_default_icon_name ("file-roller");
-
 	eel_gconf_monitor_add ("/apps/file-roller");
 	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
 

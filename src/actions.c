@@ -875,66 +875,47 @@ activate_action_about (GtkAction *action,
 		       gpointer   data)
 {
 	FRWindow         *window = data;
-	static GtkWidget *about = NULL;
+	
+	char *license_text;
+
 	const char       *authors[] = {
 		"Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL
 	};
+
 	const char       *documenters [] = {
 		"Alexander Kirillov", 
 		"Breda McColgan",
 		NULL
 	};
-	const char       *translator_credits = _("translator-credits");
+	
 	const char *license[] = {
-		"File Roller is free software; you can redistribute it and/or modify \n"
-		"it under the terms of the GNU General Public License as published by \n"
-		"the Free Software Foundation; either version 2 of the License, or \n"
+		"File Roller is free software; you can redistribute it and/or modify "
+		"it under the terms of the GNU General Public License as published by "
+		"the Free Software Foundation; either version 2 of the License, or "
 		"(at your option) any later version.",
-		"File Roller is distributed in the hope that it will be useful, \n"
-		"but WITHOUT ANY WARRANTY; without even the implied warranty of \n"
-		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \n"
+		"File Roller is distributed in the hope that it will be useful, "
+		"but WITHOUT ANY WARRANTY; without even the implied warranty of "
+		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
 		"GNU General Public License for more details.",
-		"You should have received a copy of the GNU General Public License \n"
-		"along with Nautilus; if not, write to the Free Software Foundation, Inc., \n"
+		"You should have received a copy of the GNU General Public License "
+		"along with Nautilus; if not, write to the Free Software Foundation, Inc., "
 		"51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
 	};
-	char *license_text;
-
-
-	if (about != NULL) {
-		gtk_window_present (GTK_WINDOW (about));
-		return;
-	}
-
-	about = gtk_about_dialog_new ();
 
 	license_text = g_strconcat (license[0], "\n\n", license[1], "\n\n",
 				    license[2], "\n\n", NULL);
 
-	g_object_set (about,
-		      "name",  _("File Roller"),
-		      "version", VERSION,
-		      "copyright", "Copyright \xc2\xa9 2001-2005 Free Software Foundation, Inc.",
-		      "comments", _("An archive manager for GNOME."),
-		      "authors", authors,
-		      "documenters", documenters,
-		      "translator_credits", strcmp (translator_credits, "translator-credits") != 0 ? translator_credits : NULL,
-		      "logo_icon_name", "file-roller",
-		      "website", NULL,
-		      "website_label", NULL,
-		      "license", license_text,
-		      NULL);
+	gtk_show_about_dialog (GTK_WINDOW (window->app),
+			       "version", VERSION,
+			       "copyright", "Copyright \xc2\xa9 2001-2006 Free Software Foundation, Inc.",
+			       "comments", _("An archive manager for GNOME."),
+			       "authors", authors,
+			       "documenters", documenters,
+			       "translator-credits", _("translator-credits"),
+			       "logo-icon-name", "file-roller",
+			       "license", license_text,
+			       "wrap-license", TRUE,
+			       NULL);
 
 	g_free (license_text);
-
-	gtk_window_set_destroy_with_parent (GTK_WINDOW (about), TRUE);
-	gtk_window_set_transient_for (GTK_WINDOW (about), 
-				      GTK_WINDOW (window->app));
-
-	g_signal_connect (G_OBJECT (about), 
-			  "destroy",
-			  G_CALLBACK (gtk_widget_destroyed), 
-			  &about);
-
-	gtk_widget_show (about);
 }
