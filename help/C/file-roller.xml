@@ -676,7 +676,7 @@
       </orderedlist>
     </para>
     <para>You cannot add folders to the archive with the <guilabel>Add Files</guilabel> dialog. To add a folder see <xref linkend="file-roller-add-folder"/>.</para>
-    <para>The <guilabel>Add Files</guilabel> dialog provides the <guilabel>Add only if newer</guilabel> option, see <xref linkend="file-roller-advanced-options"/> for more information on this option.</para>
+    <para>The <guilabel>Add Files</guilabel> dialog provides the <guilabel>Add only if newer</guilabel> option, see <xref linkend="file-roller-add-options"/> for more information on this option.</para>
     <para>You can also add files to an archive in a file manager window, without opening an &app; window. See <xref linkend="file-roller-fmgr"/> for more information.</para>
     <para>The Add operation adds a <emphasis>copy</emphasis> of the specified files or folders to the archive. &app; does not remove the original files, which remain unchanged in the file system. The copies that are added to the archive have the same permissions and modification date as the original files. 
     </para>
@@ -703,7 +703,7 @@
          </listitem>
       </orderedlist>
     </para>
-    <para>The <guilabel>Add a Folder</guilabel> dialog provides several advanced options. See <xref linkend="file-roller-advanced-options"/> for more information.</para>
+    <para>The <guilabel>Add a Folder</guilabel> dialog provides several advanced options. See <xref linkend="file-roller-add-options"/> for more information.</para>
     </sect2>
 
   <!-- ======= Converting an Archive to Another Format ============= --> 
@@ -1268,9 +1268,9 @@
 </sect1>
 
 <!-- ======= Add Advanced Options  ============= --> 
-    <sect1 id="file-roller-advanced-options">
-      <title>Advanced Add Options</title>
-      <para>The following option is available in the <guilabel>Add Files</guilabel> and <guilabel>Add a Folder</guilabel> dialogs: 
+    <sect1 id="file-roller-add-options">
+      <title>Add Options</title>
+      <para>The <guilabel>Add Files</guilabel> and <guilabel>Add a Folder</guilabel> dialogs provide the following option: 
       </para>
       <variablelist>
        <!-- ============= -->	
@@ -1316,6 +1316,8 @@
 	</listitem>
       </varlistentry>
       </variablelist>
+      <sect2 id="file-roller-add-folder-options">
+      <title>Add to Folder Options</title>
       <para>The following options are available in the <guilabel>Add a Folder</guilabel> dialog and allow to automatically select and add all files that satisfy certain criteria: 
       </para>
       <variablelist>
@@ -1388,6 +1390,7 @@
           </listitem>
 	</varlistentry>
       </variablelist>
+    </sect2>
   </sect1>
 
 <!-- ======= Extract Options  ============= --> 

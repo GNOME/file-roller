@@ -1,5 +1,19 @@
 2006-04-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/gtk-utils.h (show_help_dialog): 
+	* src/gtk-utils.c: 
+	* src/dlg-prop.c: 
+	* src/dlg-extract.c: 
+	* src/dlg-add-folder.c (file_sel_response_cb): 
+	* src/dlg-add-files.c (file_sel_response_cb): 
+	* src/actions.c (new_file_response_cb): 
+	* help/C/file-roller.xml: 
+	* data/glade/file-roller.glade: 
+
+	Added help button to all the dialogs.
+	Fixed bug #336632 - Help for Extract Dialog pointing to incorrect 
+	location.
+	
 	* src/window.c (window_open_files__extract_done_cb): do not 
 	escape the path here.
 	* src/fr-command-tar.c (fr_command_tar_escape): double escape \

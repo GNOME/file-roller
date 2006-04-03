@@ -24,6 +24,7 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <libgnome/gnome-help.h>
 
 
 static void 
@@ -768,4 +769,38 @@ get_folder_pixbuf_size_for_list (GtkWidget *widget)
                                            GTK_ICON_SIZE_SMALL_TOOLBAR,
                                            &icon_width, &icon_height);
 	return MAX (icon_width, icon_height);
+}
+
+
+void
+show_help_dialog (GtkWindow  *parent, 
+		  const char *section)
+{
+	GError *err;
+
+	err = NULL;  
+	gnome_help_display ("file-roller", section, &err);
+	
+	if (err != NULL) {
+		GtkWidget *dialog;
+		
+		dialog = _gtk_message_dialog_new (parent,
+						  GTK_DIALOG_DESTROY_WITH_PARENT, 
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not display help"),
+						  err->message,
+						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+		
+		g_signal_connect (G_OBJECT (dialog), "response",
+				  G_CALLBACK (gtk_widget_destroy),
+				  NULL);
+		
+		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+		
+		gtk_widget_show (dialog);
+		
+		g_error_free (err);
+	}
 }

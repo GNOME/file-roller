@@ -28,6 +28,7 @@
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include "file-utils.h"
+#include "gtk-utils.h"
 #include "window.h"
 
 #define PROP_GLADE_FILE "file-roller.glade"
@@ -67,11 +68,21 @@ set_label (GtkWidget *label, const char *text)
 }
 
 
+static int
+help_cb (GtkWidget   *w,
+	 DialogData  *data)
+{
+	show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-view-archive-properties");
+	return TRUE;
+}
+
+
 void
 dlg_prop (FRWindow *window)
 {
         DialogData       *data;
 	GtkWidget        *ok_button;
+	GtkWidget        *help_button;
 	GtkWidget        *label_label;
 	GtkWidget        *label;
 	char             *s;
@@ -95,6 +106,7 @@ dlg_prop (FRWindow *window)
 
         data->dialog = glade_xml_get_widget (data->gui, "prop_dialog");
 	ok_button = glade_xml_get_widget (data->gui, "p_ok_button");
+	help_button = glade_xml_get_widget (data->gui, "p_help_button");
 
 	/* Set widgets data. */
 	
@@ -203,6 +215,10 @@ dlg_prop (FRWindow *window)
 				  "clicked",
 				  G_CALLBACK (gtk_widget_destroy),
 				  G_OBJECT (data->dialog));
+	g_signal_connect (G_OBJECT (help_button), 
+			  "clicked",
+			  G_CALLBACK (help_cb),
+			  G_OBJECT (data));
 
 	/* Run dialog. */
 

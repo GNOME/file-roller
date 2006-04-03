@@ -24,7 +24,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <libgnome/gnome-help.h>
 #include <glade/glade.h>
 
 #include "bookmarks.h"
@@ -83,44 +82,11 @@ destroy_cb (GtkWidget  *widget,
 }
 
 
-static void
-show_dialog_help (DialogData *data)
-{
-	GError *err;
-
-	err = NULL;  
-	gnome_help_display ("file-roller", "fr-extracting", &err);
-	
-	if (err != NULL) {
-		GtkWidget *dialog;
-		
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
-						  GTK_DIALOG_DESTROY_WITH_PARENT, 
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not display help"),
-						  err->message,
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-		
-		g_signal_connect (G_OBJECT (dialog), "response",
-				  G_CALLBACK (gtk_widget_destroy),
-				  NULL);
-		
-		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-		
-		gtk_widget_show (dialog);
-		
-		g_error_free (err);
-	}
-}
-
-
 static int
 help_cb (GtkWidget   *w,
 	 DialogData  *data)
 {
-	show_dialog_help (data);
+	show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-extract-options");
 	return TRUE;
 }
 

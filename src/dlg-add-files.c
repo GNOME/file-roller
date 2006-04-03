@@ -71,6 +71,11 @@ file_sel_response_cb (GtkWidget      *widget,
 		return TRUE;
 	}
 
+	if (response == GTK_RESPONSE_HELP) {
+		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-add-options");
+		return TRUE;
+	}
+
 	current_folder = gtk_file_chooser_get_current_folder (file_sel);
 
 	/* check folder permissions. */
@@ -179,10 +184,9 @@ add_files_cb (GtkWidget *widget,
 		gtk_file_chooser_dialog_new (_("Add Files"),
 					     GTK_WINDOW (data->window->app),
 					     GTK_FILE_CHOOSER_ACTION_OPEN,
-					     GTK_STOCK_CANCEL, 
-					     GTK_RESPONSE_CANCEL,
-					     FR_STOCK_ADD, 
-					     GTK_RESPONSE_OK,
+					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					     FR_STOCK_ADD, GTK_RESPONSE_OK,
+					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);

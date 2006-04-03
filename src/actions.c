@@ -282,6 +282,11 @@ new_file_response_cb (GtkWidget *w,
 		return;
 	}
 
+	if (response == GTK_RESPONSE_HELP) {
+		show_help_dialog (GTK_WINDOW (file_sel), "file-roller-create");
+		return;
+	}
+
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
 	path = get_archive_filename_from_selector (window, file_sel);
@@ -345,6 +350,7 @@ activate_action_new (GtkAction *action,
 			GTK_FILE_CHOOSER_ACTION_SAVE,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_NEW, GTK_RESPONSE_OK,
+			GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 			NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
@@ -541,6 +547,11 @@ save_file_response_cb (GtkWidget *w,
 		return;
 	}
 
+	if (response == GTK_RESPONSE_HELP) {
+		show_help_dialog (GTK_WINDOW (file_sel), "file-roller-convert-archive");
+		return;
+	}
+
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
 	path = get_archive_filename_from_selector (window, file_sel);
@@ -569,6 +580,7 @@ activate_action_save_as (GtkAction *action,
 			GTK_FILE_CHOOSER_ACTION_SAVE,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+			GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 			NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
