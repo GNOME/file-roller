@@ -5,6 +5,7 @@ srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
 PKG_NAME="File Roller"
+REQUIRED_AUTOMAKE_VERSION=1.8
 
 (test -f $srcdir/configure.in \
   && test -f $srcdir/ChangeLog \
@@ -19,6 +20,4 @@ which gnome-autogen.sh || {
     exit 1
 }
 
-REQUIRED_AUTOMAKE_VERSION=1.7.2
-
-USE_GNOME2_MACROS=1 . gnome-autogen.sh
+USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . gnome-autogen.sh
