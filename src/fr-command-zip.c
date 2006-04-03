@@ -95,7 +95,7 @@ mktime_from_string (char *date_s,
 static char*
 zip_escape (const char *str)
 {
-	return escape_str (str, "*?[]");
+	return escape_str (str, "*?[]\\");
 }
 
 

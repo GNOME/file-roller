@@ -5918,8 +5918,8 @@ window_open_files__extract_done_cb (FRArchive   *archive,
 		GnomeVFSResult result;
 
 		for (scan = cdata->file_list; scan; scan = scan->next) {
-			char *filename = scan->data;
-			uris = g_list_prepend (uris, gnome_vfs_get_uri_from_local_path (filename));
+			char *filename = g_strdup (scan->data);
+			uris = g_list_prepend (uris, filename);
 		}
 
 		command_list = g_list_prepend (command_list, cdata);

@@ -129,6 +129,7 @@ process_line (char     *line,
 	char       **fields;
 	int          date_idx;
 	char        *field_date, *field_time, *field_size, *field_name;
+	char        *name;
 
 	g_return_if_fail (line != NULL);
 
@@ -156,13 +157,15 @@ process_line (char     *line,
 		fields = g_strsplit (field_name, " link to ", 2);
 	}
 
-	if (*(fields[0]) == '/') {
-		fdata->full_path = g_strdup (fields[0]);
+	name = unescape_str (fields[0]);
+	if (*name == '/') {
+		fdata->full_path = g_strdup (name);
 		fdata->original_path = fdata->full_path;
 	} else {
-		fdata->full_path = g_strconcat ("/", fields[0], NULL);
+		fdata->full_path = g_strconcat ("/", name, NULL);
 		fdata->original_path = fdata->full_path + 1;
 	}
+	g_free (name);
 
 	if (fields[1] != NULL)
 		fdata->link = g_strdup (fields[1]);
@@ -754,20 +757,16 @@ fr_command_tar_escape (FRCommand     *comm,
 {
 	char *estr;
 	char *estr2;
+	char *estr3;
 
-        estr = escape_str (str, "$?*\\'& !|()@#:;");
-        estr2 = escape_str_common (estr, "[]", '[', ']');
+        estr = escape_str (str, "\\$?*'& !|()@#:;");
+        estr2 = escape_str (estr, "\\");
+        estr3 = escape_str_common (estr2, "[]", '[', ']');
+
 	g_free (estr);
+	g_free (estr2);
 
-	/*
-	  if ((strcmp (estr2, str) != 0) || strchrs (str, "& !()|@#:;")) {
-	  char *estr3 = g_strconcat ("'", estr2, "'", NULL);
-	  g_free (estr2);
-	  estr2 = estr3;
-	  }
-	*/
-
-	return estr2;
+	return estr3;
 }
 
 
