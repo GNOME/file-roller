@@ -1,5 +1,12 @@
 2006-04-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/eggtreemultidnd.c (egg_tree_multi_drag_motion_event): 
+
+	Use GDK_ACTION_MOVE instead of GDK_ACTION_COPY
+	Fixes bug #335659 - File Roller should move not copy files.
+
+	* src/glib-utils.c (debug): use FILE-ROLLER as prefix.
+
 	* src/window.c (window_archive_extract__common): check
 	whether all files got filtered.
 

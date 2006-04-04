@@ -465,7 +465,7 @@ debug (const char *file,
 	str = g_strdup_vprintf (format, args);
 	va_end (args);
 
-	g_fprintf (stderr, "[GTHUMB] %s:%d (%s):\n\t%s\n", file, line, function, str);
+	g_fprintf (stderr, "[FILE-ROLLER] %s:%d (%s):\n\t%s\n", file, line, function, str);
 
 	g_free (str);
 #else /* ! DEBUG */
