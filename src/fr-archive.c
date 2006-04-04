@@ -1774,9 +1774,7 @@ fr_archive_extract (FRArchive  *archive,
 
 	if (filtered == NULL) {
 		/* all files got filtered, do nothing. */
-
 		debug (DEBUG_INFO, "All files got filtered, do nothing.\n");
-
 		if (extract_all) 
 			path_list_free (file_list);
 		return;

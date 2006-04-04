@@ -1,3 +1,10 @@
+2006-04-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (window_archive_extract__common): check
+	whether all files got filtered.
+
+	Fixes bug #336854 - crash on twice unpacking to the same location.
+
 2006-04-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* configure.in: set version to 2.14.1

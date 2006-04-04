@@ -4793,6 +4793,11 @@ window_archive_extract__common (FRWindow   *window,
 			    junk_paths,
 			    password);
 
+	if (window->archive->process->n_comm < 0) { /* no file to extract */
+		fr_process_start (window->archive->process);
+		return;
+	}
+
 	fr_process_set_continue_func (window->archive->process,
 				      extract__content_is_singleton,
 				      window);

@@ -395,6 +395,9 @@ fr_process_set_continue_func (FRProcess    *fr_proc,
 
 	g_return_if_fail (fr_proc != NULL);
 
+	if (fr_proc->current_comm < 0)
+		return;
+
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->continue_func = func;
 	c_info->continue_data = func_data;
