@@ -1,5 +1,11 @@
 2006-04-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-command-7z.c (list__process_line): check fields length
+	before processing the line. Do not substitute / with \
+
+	Fixes bug #335368 - Crash when opening large 7z-archive.
+	Fixes buf #326193 - file-roller creates empty 7zip archives.
+
 	* src/eggtreemultidnd.c (egg_tree_multi_drag_motion_event): 
 
 	Use GDK_ACTION_MOVE instead of GDK_ACTION_COPY

@@ -88,8 +88,15 @@ change_to_unix_dir_separator (char *path)
 	char *c;
 	
 	for (c = path; *c != 0; c++)
-		if (*c == '\\')
+		if ((*c == '\\') && (*(c+1) != '\\'))
 			*c = '/';
+}
+
+
+static char*
+to_dos (const char *path)
+{
+	return str_substitute (path, "/", "\\\\");
 }
 
 
@@ -130,6 +137,12 @@ list__process_line (char     *line,
 	fdata = file_data_new ();
 
 	fields = split_line (line, 4);
+
+	if (g_strv_length (fields) < 4) {
+		g_strfreev (fields);
+		file_data_free (fdata);
+		return;
+	}
 
 	if (fields[2][0] == 'D') { /* skip directories */
 		g_strfreev (fields);
@@ -228,7 +241,7 @@ fr_command_7z_add (FRCommand     *comm,
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = str_substitute ((char*) scan->data, "/", "\\\\");
+		char *filename = to_dos (scan->data);
 		fr_process_add_arg (comm->process, filename);
 		g_free (filename);
 	}
@@ -251,7 +264,7 @@ fr_command_7z_delete (FRCommand *comm,
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = str_substitute ((char*) scan->data, "/", "\\\\");
+		char *filename = to_dos (scan->data);
 		fr_process_add_arg (comm->process, filename);
 		g_free (filename);
 	}
@@ -292,7 +305,7 @@ fr_command_7z_extract (FRCommand  *comm,
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = str_substitute ((char*) scan->data, "/", "\\\\");
+		char *filename = to_dos (scan->data);
 		fr_process_add_arg (comm->process, filename);
 		g_free (filename);
 	}
