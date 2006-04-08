@@ -352,8 +352,8 @@ get_mime_type_from_sniffer (const char *filename)
 	}            sniffer_data [] = { 
 		{"application/zip",                   "\x50\x4B\x03\x04", 4},
 		/* FIXME
-		 *{"application/x-compressed-tar",      "\x1F\x8B\x08\x08", 4},
-		 *{"application/x-bzip-compressed-tar", "\x42\x5A\x68\x39", 4},
+		   {"application/x-compressed-tar",      "\x1F\x8B\x08\x08", 4},
+		   {"application/x-bzip-compressed-tar", "\x42\x5A\x68\x39", 4},
 		 */
 		{ NULL, NULL, 0 } 
 	};
@@ -723,6 +723,7 @@ fr_archive_load (FRArchive   *archive,
 	/* prefer mime-magic */
 
 	mime_type = get_mime_type_from_sniffer (filename);
+
 	if (mime_type == NULL)
 		mime_type = get_mime_type_from_content (filename);
 	

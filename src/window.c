@@ -3916,6 +3916,7 @@ window_new (void)
                                                 "application/x-cd-image",
                                                 "application/x-deb",
                                                 "application/x-ar",
+						"application/x-7z-compressed",
 						NULL);
         egg_recent_model_set_filter_uri_schemes (recent_model, "file", NULL);
 	egg_recent_model_set_limit (recent_model, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
@@ -5923,7 +5924,7 @@ window_open_files__extract_done_cb (FRArchive   *archive,
 		GnomeVFSResult result;
 
 		for (scan = cdata->file_list; scan; scan = scan->next) {
-			char *filename = g_strdup (scan->data);
+			char *filename = gnome_vfs_get_uri_from_local_path (scan->data);
 			uris = g_list_prepend (uris, filename);
 		}
 
