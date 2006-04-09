@@ -92,10 +92,27 @@ mktime_from_string (char *date_s,
 }
 
 
+static char *
+fr_command_zip_escape (FRCommand     *comm,
+		       const char    *str)
+{
+	char *estr;
+	char *estr2;
+
+	estr = escape_str (str, "\\");
+	estr2 = shell_escape (estr);
+
+	g_free (estr);
+
+	return estr2;
+	
+}
+
+
 static char*
 zip_escape (const char *str)
 {
-	return escape_str (str, "*?[]\\");
+	return escape_str (str, "*?[]");
 }
 
 
@@ -420,6 +437,8 @@ fr_command_zip_class_init (FRCommandZipClass *class)
 	afc->extract        = fr_command_zip_extract;
 	afc->test           = fr_command_zip_test;
 	afc->handle_error   = fr_command_zip_handle_error;
+
+	afc->escape         = fr_command_zip_escape;
 }
 
  

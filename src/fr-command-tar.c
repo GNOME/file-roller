@@ -751,7 +751,7 @@ fr_command_tar_uncompress (FRCommand *comm)
 }
 
 
-char *
+static char *
 fr_command_tar_escape (FRCommand     *comm,
 		       const char    *str)
 {
