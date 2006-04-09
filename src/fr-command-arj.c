@@ -281,7 +281,8 @@ fr_command_arj_extract (FRCommand  *comm,
 		char *swtch = g_strconcat ("-g/", password, NULL);
 		fr_process_add_arg (comm->process, swtch);
 		g_free (swtch);
-	}
+	} else
+ 		fr_process_add_arg (comm->process, "-g/");
 
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, "-y");
@@ -319,7 +320,12 @@ static void
 fr_command_arj_handle_error (FRCommand   *comm, 
 			     FRProcError *error)
 {
-	/* FIXME */
+	if (error->type == FR_PROC_ERROR_GENERIC) {
+ 		if (error->status <= 1)
+ 			error->type = FR_PROC_ERROR_NONE;
+		else if (error->status == 3) 
+ 			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+ 	}
 }
 
 
