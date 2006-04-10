@@ -727,9 +727,8 @@ check_child (gpointer data)
 	if (c_info->ignore_error) {
 		fr_proc->error.type = FR_PROC_ERROR_NONE;
 		debug (DEBUG_INFO, "[ignore error]\n");
-	}
 
-	if (fr_proc->error.type != FR_PROC_ERROR_STOPPED) {
+	} else if (fr_proc->error.type != FR_PROC_ERROR_STOPPED) {
 		if (WIFEXITED (status)) {
 			if (WEXITSTATUS (status) == 0)
 				fr_proc->error.type = FR_PROC_ERROR_NONE;
