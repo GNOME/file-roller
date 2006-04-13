@@ -759,8 +759,8 @@ fr_command_tar_escape (FRCommand     *comm,
 	char *estr2;
 	char *estr3;
 
-        estr = escape_str (str, "\\$?*'& !|()@#:;");
-        estr2 = escape_str (estr, "\\");
+        estr = escape_str (str, "\\");
+        estr2 = escape_str (estr, "\\$?*'& !|()@#:;");
         estr3 = escape_str_common (estr2, "[]", '[', ']');
 
 	g_free (estr);
