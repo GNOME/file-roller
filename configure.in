@@ -78,15 +78,12 @@ AM_CONDITIONAL(MKDTEMP_MISSING, test x$mkdtemp_missing = xtrue)
 
 dnl ******************************
 
-AC_SUBST([CONFIG_STATUS_DEPENDENCIES],['$(top_srcdir)/po/LINGUAS'])
-ALL_LINGUAS="`cat "$srcdir/po/LINGUAS" | grep -v '^#'`"
-
 GETTEXT_PACKAGE=file-roller
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GetText Package])
 
 AM_GLIB_GNU_GETTEXT
-AC_PROG_INTLTOOL
+IT_PROG_INTLTOOL([0.34.90])
 
 if test "x${prefix}" = "xNONE"; then
   AC_DEFINE_UNQUOTED(LOCALEDIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Locale dir])
