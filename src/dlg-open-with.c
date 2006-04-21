@@ -304,7 +304,7 @@ delete_recent_cb (GtkWidget *widget,
 	GtkTreeSelection *selection;
 	GtkTreeIter       iter;
 	char             *editor;
-	GSList           *editors;
+	GSList           *editors, *link;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view));
 	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
@@ -318,8 +318,13 @@ delete_recent_cb (GtkWidget *widget,
 	/**/
 
 	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
-	editors = g_slist_remove (editors, editor);
-	eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
+	link = g_slist_find_custom (editors, editor, (GCompareFunc) strcmp);
+	if (link != NULL) {
+		editors = g_slist_remove_link (editors, link);
+		eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
+		g_free (link->data);
+		g_slist_free (link);
+	}
 	g_slist_foreach (editors, (GFunc) g_free, NULL);
 	g_slist_free (editors);
 
