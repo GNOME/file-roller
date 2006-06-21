@@ -37,6 +37,7 @@ typedef struct {
 	char       *name;             /* The file name. */
 	char       *path;             /* The directory. */
 	const char *type;             /* The mime type. */
+	gboolean    encrypted;        /* Wether this file is password. */ 
 
 	/* Additional data. */
 

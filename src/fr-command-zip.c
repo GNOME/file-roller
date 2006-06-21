@@ -35,8 +35,7 @@
 #include "fr-command.h"
 #include "fr-command-zip.h"
 
-#define EMPTY_ARCHIVE_WARNING        "zipfile is empty"
-#define EMPTY_ARCHIVE_WARNING_LENGTH 16
+#define EMPTY_ARCHIVE_WARNING        "Empty zipfile."
 
 static void fr_command_zip_class_init  (FRCommandZipClass *class);
 static void fr_command_zip_init        (FRCommand         *afile);
@@ -50,43 +49,43 @@ static FRCommandClass *parent_class = NULL;
 /* -- list -- */
 
 static time_t
-mktime_from_string (char *date_s, 
-		    char *time_s)
+mktime_from_string (char *datetime_s)
 {
-	struct tm   tm = {0, };
-	char      **fields;
+	struct tm  tm = {0, };
+	char      *date;
+	char      *time;
+	char      *year;
+	char      *month;
+	char      *day;
+        char      *hour;
+        char      *min;
+        char      *sec;
 
 	/* date */
 
-	fields = g_strsplit (date_s, "-", 3);
-	if (fields[0] != NULL) {
-		tm.tm_mon = atoi (fields[0]) - 1;
-		if (fields[1] != NULL) {
-			tm.tm_mday = atoi (fields[1]);
-			if (fields[2] != NULL) { 
-				/* warning : this will work until 2075 ;) */
-				int y = atoi (fields[2]);
-				if (y >= 75)
-					tm.tm_year = atoi (fields[2]);
-				else
-					tm.tm_year = 100 + atoi (fields[2]);
-			}
-		}
-	}
-	g_strfreev (fields);
+	date = datetime_s;
+	year = g_strndup (date, 4);
+	month = g_strndup (date + 4, 2);
+	day = g_strndup (date + 6, 2);
+	tm.tm_year = atoi (year) - 1900;
+	tm.tm_mon = atoi (month) - 1;
+	tm.tm_mday = atoi (day);
+	g_free (year);
+	g_free (month);
+	g_free (day);
 
 	/* time */
 
-	fields = g_strsplit (time_s, ":", 3);
-	if (fields[0] != NULL) {
-		tm.tm_hour = atoi (fields[0]);
-		if (fields[1] != NULL) {
-			tm.tm_min = atoi (fields[1]);
-			if (fields[2] != NULL)
-				tm.tm_sec = atoi (fields[2]);
-		}
-	}
-	g_strfreev (fields);
+	time = datetime_s + 9;
+	hour = g_strndup (time, 2);
+	min = g_strndup (time + 2, 2);
+	sec = g_strndup (time + 4, 2);
+	tm.tm_hour = atoi (hour) - 1;
+	tm.tm_min = atoi (min);
+	tm.tm_sec = atoi (sec);
+	g_free(hour);
+	g_free(min);
+	g_free(sec);
 
 	return mktime (&tm);
 }
@@ -161,20 +160,25 @@ list__process_line (char     *line,
 	if (line_l == 0)
 		return;
 
-	if (line_l > EMPTY_ARCHIVE_WARNING_LENGTH) 
-		if (strcmp (line + line_l - EMPTY_ARCHIVE_WARNING_LENGTH, 
-			    EMPTY_ARCHIVE_WARNING) == 0) {
-			FR_COMMAND_ZIP (comm)->is_empty = TRUE;
-			return;
-		}
+	if (strcmp (line,
+		    EMPTY_ARCHIVE_WARNING) == 0) {
+		FR_COMMAND_ZIP (comm)->is_empty = TRUE;
+		return;
+	}
+
+	/* check whether this is the first or last line zipinfo
+	 * gave. */
+	if ((line[0] == 'A') || (line[2] == 'f'))
+		return;
 
 	/**/
 
 	fdata = file_data_new ();
 
 	fields = split_line (line, 7);
-	fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
-	fdata->modified = mktime_from_string (fields[4], fields[5]);
+	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
+	fdata->modified = mktime_from_string (fields[6]);
+	fdata->encrypted = (*fields[4] == 'B') || (*fields[4] == 'T');
 	g_strfreev (fields);
 
 	/* Full path */
@@ -245,9 +249,9 @@ fr_command_zip_list (FRCommand *comm)
 				      comm);
 
 	fr_process_begin_command (comm->process, "unzip");
-	fr_process_add_arg (comm->process, "-qq");
-	fr_process_add_arg (comm->process, "-v");
-	fr_process_add_arg (comm->process, "-l");
+	fr_process_add_arg (comm->process, "-Z");
+	fr_process_add_arg (comm->process, "-T");
+	fr_process_add_arg (comm->process, "-s");
 	add_filename_arg (comm);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);

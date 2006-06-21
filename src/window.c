@@ -487,7 +487,25 @@ get_icon (GtkWidget *widget,
 	char        *icon_name = NULL;
 	char        *icon_path = NULL;
 	const char  *mime_type;
-       
+
+
+       	/* If the file is encrypted, we show a proper emblem */
+   
+	if (fdata->encrypted) {
+		const GnomeIconData *icon_data;
+		int                  base_size;
+		char                *emblem_path;
+
+		emblem_path = gnome_icon_theme_lookup_icon (icon_theme, 
+							    "emblem-nowrite",
+							    icon_size,
+							    &icon_data,
+							    &base_size);
+		if (emblem_path != NULL)
+			pixbuf = load_icon_file (emblem_path, icon_size);
+		return pixbuf;
+	}
+
 	if (fdata->is_dir)
 		mime_type = MIME_TYPE_DIRECTORY;
 	else

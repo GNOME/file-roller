@@ -70,6 +70,7 @@ file_data_copy (FileData *src)
 	fdata->name = g_strdup (src->name);
 	fdata->path = g_strdup (src->path);
 	fdata->type = src->type;
+	fdata->encrypted = src->encrypted;
 
 	fdata->is_dir = src->is_dir;
 	fdata->list_name = g_strdup (src->list_name);

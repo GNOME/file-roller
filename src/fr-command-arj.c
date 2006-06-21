@@ -141,9 +141,10 @@ list__process_line (char     *line,
 
 		/* read file info. */
 		
-		fields = split_line (line, 7);
+		fields = split_line (line, 10);
 		fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
 		fdata->modified = mktime_from_string (fields[5], fields[6]); 
+		fdata->encrypted = (g_ascii_strcasecmp (fields[9], "11") == 0);
 		g_strfreev (fields);
 		
 		if (*fdata->name == 0)
