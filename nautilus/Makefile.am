@@ -22,5 +22,5 @@ libnautilus_fileroller_la_SOURCES =     \
 	nautilus-fileroller.h           \
 	fileroller-module.c
 
-libnautilus_fileroller_la_LDFLAGS = -module -avoid-version
+libnautilus_fileroller_la_LDFLAGS = -module -avoid-version -no-undefined
 libnautilus_fileroller_la_LIBADD  = $(NAUTILUS_LIBS)
