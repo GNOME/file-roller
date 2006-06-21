@@ -41,7 +41,7 @@
 #include "preferences.h"
 #include "main.h"
 
-static void     prepare_app         (poptContext pctx);
+static void     prepare_app         (void);
 static void     initialize_data     (void);
 static void     release_data        (void);
 
@@ -54,6 +54,8 @@ GList        *viewer_list = NULL;
 GList        *command_list = NULL;
 gint          force_directory_creation;
 GHashTable   *programs_cache = NULL;
+
+static gchar **remaining_args;
 
 static gchar *add_to = NULL;
 static gint   add;
@@ -130,36 +132,40 @@ FRCommandDescription tar_command_desc[] = {
 };
 
 
-struct poptOption options[] = {
-	{ "add-to", 'a', POPT_ARG_STRING, &add_to, 0,
+static const GOptionEntry options[] = {
+	{ "add-to", 'a', 0, G_OPTION_ARG_STRING, &add_to,
 	  N_("Add files to the specified archive and quit the program"),
 	  N_("ARCHIVE") },
 
-	{ "add", 'd', POPT_ARG_NONE, &add, 0,
+	{ "add", 'd', 0, G_OPTION_ARG_NONE, &add,
 	  N_("Add files asking the name of the archive and quit the program"),
-	  0 },
+	  NULL },
 
-	{ "extract-to", 'e', POPT_ARG_STRING, &extract_to, 0,
-          N_("Extract archives to the specified folder and quit the program"),
-          N_("FOLDER") },
+	{ "extract-to", 'e', 0, G_OPTION_ARG_STRING, &extract_to,
+	  N_("Extract archives to the specified folder and quit the program"),
+	  N_("FOLDER") },
 
-	{ "extract", 'f', POPT_ARG_NONE, &extract, 0,
-          N_("Extract archives asking the destination folder and quit the program"),
-          0 },
+	{ "extract", 'f', 0, G_OPTION_ARG_NONE, &extract,
+	  N_("Extract archives asking the destination folder and quit the program"),
+	  NULL },
 
-	{ "extract-here", 'h', POPT_ARG_NONE, &extract_here, 0,
-          N_("Extract archives using the archive name as destination folder and quit the program"),
-          0 },
+	{ "extract-here", 'h', 0, G_OPTION_ARG_NONE, &extract_here,
+	  N_("Extract archives using the archive name as destination folder and quit the program"),
+	  NULL },
 
-	{ "default-dir", 0, POPT_ARG_STRING, &default_url, 0,
+	{ "default-dir", '\0', 0, G_OPTION_ARG_STRING, &default_url,
 	  N_("Default folder to use for the '--add' and '--extract' commands"),
 	  N_("FOLDER") },
 
-        { "force", 0, POPT_ARG_NONE, &force_directory_creation, 0,
-          N_("Create destination folder without asking confirmation"),
-          0 },
+	{ "force", '\0', 0, G_OPTION_ARG_NONE, &force_directory_creation,
+	  N_("Create destination folder without asking confirmation"),
+	  NULL },
+
+	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining_args, 
+	  NULL, 
+	  NULL },
  
-	{ NULL, '\0', 0, NULL, 0 }
+	{ NULL }
 };
 
 
@@ -167,7 +173,7 @@ struct poptOption options[] = {
 
 
 static guint startup_id = 0;
-static poptContext pctx = NULL; 
+static GOptionContext *context;
 
 
 static gboolean
@@ -177,9 +183,7 @@ startup_cb (gpointer data)
 	startup_id = 0;
 
 	initialize_data ();
-	prepare_app (pctx);
-	poptFreeContext (pctx);
-	pctx = NULL;
+	prepare_app ();
 
 	return FALSE;
 }
@@ -189,15 +193,20 @@ int
 main (int argc, char **argv)
 {
 	GnomeProgram *program;
-	GValue value = { 0 };
+	gchar        *description;
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
+	description = g_strdup_printf ("- %s", _("Create and modify an archive"));
+	context = g_option_context_new (description);
+	g_free (description);
+	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
+
 	program = gnome_program_init ("file-roller", VERSION,
 				      LIBGNOMEUI_MODULE, argc, argv,
-				      GNOME_PARAM_POPT_TABLE, options,
+				      GNOME_PARAM_GOPTION_CONTEXT, context,
 				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Archive Manager"),
 				      GNOME_PARAM_APP_PREFIX, FR_PREFIX,
                                       GNOME_PARAM_APP_SYSCONFDIR, FR_SYSCONFDIR,
@@ -207,11 +216,6 @@ main (int argc, char **argv)
 
 	g_set_application_name (_("File Roller"));
 	gtk_window_set_default_icon_name ("file-roller");
-
-	g_object_get_property (G_OBJECT (program),
-			       GNOME_PARAM_POPT_CONTEXT,
-			       g_value_init (&value, G_TYPE_POINTER));
-	pctx = g_value_get_pointer (&value);
 
 	if (! gnome_vfs_init ()) 
                 g_error ("Cannot initialize the Virtual File System.");
@@ -230,7 +234,7 @@ main (int argc, char **argv)
 
 
 static void 
-initialize_data ()
+initialize_data (void)
 {
 	eel_gconf_monitor_add ("/apps/file-roller");
 	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
@@ -451,7 +455,7 @@ compute_supported_archive_types (void)
 
 
 static void 
-prepare_app (poptContext pctx)
+prepare_app (void)
 {
 	char *path;
 	char *default_dir;
@@ -481,7 +485,7 @@ prepare_app (poptContext pctx)
 
 	/**/
 
-	if (poptPeekArg (pctx) == NULL) { /* No archive specified. */
+	if (remaining_args == NULL) { /* No archive specified. */
 		FRWindow *window;
 		window = window_new ();
 		gtk_widget_show (window->app);
@@ -518,7 +522,8 @@ prepare_app (poptContext pctx)
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir, TRUE);
 		
-		while ((filename = poptGetArg (pctx)) != NULL) {
+		int i = 0;
+		while ((filename = remaining_args[i++]) != NULL) {
 			char *path;
 			
 			if (! g_path_is_absolute (filename)) {
@@ -549,7 +554,8 @@ prepare_app (poptContext pctx)
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir, TRUE);
 
-		while ((archive = poptGetArg (pctx)) != NULL) {
+		int i = 0;
+		while ((archive = remaining_args[i++]) != NULL) {
 			if (extract_here == 1) {
 				g_free (extract_to_path);
 				extract_to_path = g_strconcat (archive, "_FILES", NULL);
@@ -570,7 +576,8 @@ prepare_app (poptContext pctx)
 	} else { /* Open each archives in a window */
 		const char *archive;
 		
-		while ((archive = poptGetArg (pctx)) != NULL) {
+		int i = 0;
+		while ((archive = remaining_args[i++]) != NULL) {
 			FRWindow *window;
 			
 			window = window_new ();
