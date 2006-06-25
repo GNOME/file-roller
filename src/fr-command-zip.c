@@ -166,9 +166,9 @@ list__process_line (char     *line,
 		return;
 	}
 
-	/* check whether this is the first or last line zipinfo
-	 * gave. */
-	if ((line[0] == 'A') || (line[2] == 'f'))
+	/* ignore lines that do not describe a file or a
+	 * directory. */
+	if ((line[0] != 'd') && (line[0] != '-'))
 		return;
 
 	/**/
