@@ -103,7 +103,7 @@ static GtkActionEntry action_entries[] = {
 	  N_("Open archive"),
 	  G_CALLBACK (activate_action_open) },
 	{ "OpenSelection", NULL,
-	  N_("Open Fi_les..."), NULL,
+	  N_("Op_en With..."), NULL,
 	  N_("Open selected files with an application"),
 	  G_CALLBACK (activate_action_open_with) },
 	{ "Password", NULL,
@@ -147,7 +147,7 @@ static GtkActionEntry action_entries[] = {
 	  N_("Test whether the archive contains errors"),
 	  G_CALLBACK (activate_action_test_archive) },
 	{ "ViewSelection", FR_STOCK_VIEW,
-	  N_("_View File"), NULL,
+	  N_("_View"), NULL,
 	  N_("View the selected file"),
 	  G_CALLBACK (activate_action_view_or_open) },
 	{ "ViewSelection_Toolbar", FR_STOCK_VIEW,
@@ -217,8 +217,10 @@ static const gchar *ui_info =
 "      <menuitem action='Open'/>"
 "      <menuitem action='SaveAs'/>"
 "      <separator/>"
-"      <menuitem action='Properties'/>"
+"      <menuitem action='Extract'/>"
 "      <menuitem action='TestArchive'/>"
+"      <separator/>"
+"      <menuitem action='Properties'/>"
 "      <separator/>"
 "      <placeholder name='RecentFilesMenu' action='RecentFilesMenu'/>"
 "      <menuitem action='Close'/>"
@@ -227,7 +229,6 @@ static const gchar *ui_info =
 "    <menu action='EditMenu'>"
 "      <menuitem action='AddFiles'/>"
 "      <menuitem action='AddFolder'/>"
-"      <menuitem action='Extract'/>"
 "      <separator/>"
 "      <menuitem action='Cut'/>"
 "      <menuitem action='Copy'/>"
@@ -237,9 +238,6 @@ static const gchar *ui_info =
 "      <separator/>"
 "      <menuitem action='SelectAll'/>"
 "      <menuitem action='DeselectAll'/>"
-"      <separator/>"
-"      <menuitem action='OpenSelection'/>"
-"      <menuitem action='ViewSelection'/>"
 "      <separator/>"
 "      <menuitem action='Password'/>"
 "    </menu>"

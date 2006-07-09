@@ -2807,18 +2807,24 @@ key_press_cb (GtkWidget   *widget,
               gpointer     data)
 {
         FRWindow *window = data;
+	gboolean  retval = FALSE;
+	gboolean  alt;
 
 	if (GTK_WIDGET_HAS_FOCUS (window->location_entry)) 
 		return FALSE;
+
+	alt = (event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK;
 	
 	switch (event->keyval) {
 	case GDK_Escape:
 		activate_action_stop (NULL, window);
+		retval = TRUE;
 		break;
 
 	case GDK_Delete:
 		if (window->activity_ref == 0)
 			dlg_delete (NULL, window);
+		retval = TRUE;
 		break;
 
 	case GDK_F10:
@@ -2835,13 +2841,51 @@ key_press_cb (GtkWidget   *widget,
 					3,
 					GDK_CURRENT_TIME);
 		}
-		return FALSE;
+		retval = TRUE;
+		break;
+		
+	case GDK_Up:
+	case GDK_KP_Up:
+		if (alt) {
+			window_go_up_one_level (window);
+			retval = TRUE;
+		}
+		break;
+
+	case GDK_BackSpace:
+		window_go_up_one_level (window);
+		retval = TRUE;
+		break;
+		
+	case GDK_Right:
+	case GDK_KP_Right:
+		if (alt) {
+			window_go_forward (window);
+			retval = TRUE;
+		}
+		break;
+
+	case GDK_Left:
+	case GDK_KP_Left:
+		if (alt) {
+			window_go_back (window);
+			retval = TRUE;
+		}
+		break;
+
+	case GDK_Home:
+	case GDK_KP_Home:
+		if (alt) {
+			window_go_to_location (window, "/");
+			retval = TRUE;
+		}
+		break;
 
 	default:
-		return FALSE;
+		break;
 	}
 
-	return TRUE;
+	return retval;
 }
 
 
