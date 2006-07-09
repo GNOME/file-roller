@@ -37,6 +37,8 @@
 #define PREF_LIST_SHOW_PATH        "/apps/file-roller/listing/show_path"
 #define PREF_LIST_USE_MIME_ICONS   "/apps/file-roller/listing/use_mime_icons"
 
+#define PREF_UI_WINDOW_WIDTH       "/apps/file-roller/ui/window_width"
+#define PREF_UI_WINDOW_HEIGHT      "/apps/file-roller/ui/window_height"
 #define PREF_UI_HISTORY_LEN        "/apps/file-roller/ui/history_len"
 #define PREF_UI_TOOLBAR            "/apps/file-roller/ui/view_toolbar"
 #define PREF_UI_STATUSBAR          "/apps/file-roller/ui/view_statusbar"

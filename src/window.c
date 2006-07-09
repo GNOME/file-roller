@@ -78,6 +78,9 @@
 #define OTHER_COLUMNS_WIDTH 100
 #define RECENT_ITEM_MAX_WIDTH 25
 
+#define DEF_WIN_WIDTH 600
+#define DEF_WIN_HEIGHT 480
+
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
 #define ICON_TYPE_DIRECTORY "gnome-fs-directory"
 #define ICON_TYPE_REGULAR   "gnome-fs-regular"
@@ -3555,8 +3558,10 @@ window_new (void)
 	
 	icon_size = MAX (icon_width, icon_height);
 
-	gtk_window_set_default_size (GTK_WINDOW (window->app), 600, 480);
-
+	gtk_window_set_default_size (GTK_WINDOW (window->app), 
+				     eel_gconf_get_integer (PREF_UI_WINDOW_WIDTH, DEF_WIN_WIDTH),
+                                     eel_gconf_get_integer (PREF_UI_WINDOW_HEIGHT, DEF_WIN_HEIGHT));
+	
 	gtk_drag_dest_set (window->app,
 			   GTK_DEST_DEFAULT_ALL,
 			   target_table, G_N_ELEMENTS (target_table),
@@ -4197,6 +4202,8 @@ _window_clipboard_remove_file_list (FRWindow *window,
 void
 window_close (FRWindow *window)
 {
+	int width, height;
+
 	g_return_if_fail (window != NULL);
 
 	_window_remove_notifications (window);
@@ -4284,6 +4291,10 @@ window_close (FRWindow *window)
 	g_free (window->extract_here_dir);
 
 	/* save preferences. */
+
+	gdk_drawable_get_size (GTK_WIDGET (window->app)->window, &width, &height);
+	eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
+	eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
 
 	preferences_set_sort_method (window->sort_method);
 	preferences_set_sort_type (window->sort_type);
