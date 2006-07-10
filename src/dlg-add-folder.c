@@ -24,6 +24,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <libgnome/gnome-config.h>
 #include <glade/glade.h>

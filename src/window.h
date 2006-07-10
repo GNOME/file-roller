@@ -25,7 +25,6 @@
 
 #include <gtk/gtk.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
-#include "egg-recent.h"
 #include "fr-archive.h"
 #include "typedefs.h"
 #include "file-list.h"
@@ -153,9 +152,16 @@ typedef struct {
 
 	GtkActionGroup  *actions;
 
+	/*
 	EggRecentViewGtk *recent_view_menu;
 	EggRecentViewGtk *recent_view_toolbar;
 	EggRecentModel   *recent_model;
+	*/
+
+	GtkRecentManager *recent_manager;
+	GtkWidget        *recent_chooser_menu;
+	GtkWidget        *recent_chooser_toolbar;
+
 	GtkWidget        *file_popup_menu;
 	GtkWidget        *mitem_recents_menu;
 	GtkWidget        *recent_toolbar_menu;

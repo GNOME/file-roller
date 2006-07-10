@@ -1,5 +1,5 @@
-SUBDIRS=icons recent-files
-DIST_SUBDIRS=icons recent-files
+SUBDIRS=icons
+DIST_SUBDIRS=icons
 
 bin_PROGRAMS = file-roller
 
@@ -19,7 +19,6 @@ gladedir = $(datadir)/file-roller/glade
 
 INCLUDES =						\
 	-I$(top_srcdir)					\
-	-I$(top_srcdir)/src/recent-files		\
 	-I$(top_builddir)				\
 	-DFR_PREFIX=\"$(prefix)\"           		\
         -DFR_SYSCONFDIR=\"$(sysconfdir)\"   		\
@@ -128,11 +127,8 @@ fr-marshal.c: fr-marshal.list $(GLIB_GENMARSHAL)
 	echo "#include \"fr-marshal.h\"" > $@ && \
 	$(GLIB_GENMARSHAL) $< --body --prefix=fr_marshal >> $@
 
-file_roller_LDADD =					\
-	$(top_builddir)/src/recent-files/librecent.a	\
-	$(FR_LIBS)
+file_roller_LDADD = $(FR_LIBS)
 
-EXTRA_DIST = 			\
-	fr-marshal.list
+EXTRA_DIST = fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)

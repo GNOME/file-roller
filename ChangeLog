@@ -1,3 +1,22 @@
+2006-07-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/main.h: 
+	* src/dlg-add-files.c: 
+	* src/dlg-add-folder.c: 
+	* src/gtk-utils.h: 
+
+        Include <glib/gi18n.h>
+
+	* src/Makefile.am: 
+	* src/recent-files/*: removed
+	* src/window.h: 
+	* src/window.c: 
+	* src/ui.h: 
+
+	Use GtkRecent instead of EggRecent.
+	
+	* configure.in: require gtk 2.10 for GtkRecent
+
 2006-07-09  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* data/file-roller.schemas: 

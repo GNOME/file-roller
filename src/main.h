@@ -25,6 +25,7 @@
 
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "preferences.h"
 #include "fr-process.h"

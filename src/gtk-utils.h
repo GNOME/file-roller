@@ -23,6 +23,7 @@
 #ifndef GTK_UTILS_H
 #define GTK_UTILS_H
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 int         _gtk_count_selected       (GtkTreeSelection *selection);

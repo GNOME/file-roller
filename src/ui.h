@@ -36,7 +36,7 @@ static GtkActionEntry action_entries[] = {
 	{ "ViewMenu", NULL, N_("_View") },
 	{ "HelpMenu", NULL, N_("_Help") },
 	{ "ArrangeFilesMenu", NULL, N_("_Arrange Files") },
-	{ "RecentFilesMenu", NULL, N_("Open R_ecent") },
+	{ "OpenRecentMenu", NULL, N_("Open R_ecent") },
 
 	{ "About", GTK_STOCK_ABOUT,
 	  NULL, NULL,
@@ -215,6 +215,9 @@ static const gchar *ui_info =
 "    <menu name='Archive' action='ArchiveMenu'>"
 "      <menuitem action='New'/>"
 "      <menuitem action='Open'/>"
+"      <menu name='OpenRecentMenu' action='OpenRecentMenu'>"
+"        <menuitem action='Open'/>"
+"      </menu>"
 "      <menuitem action='SaveAs'/>"
 "      <separator/>"
 "      <menuitem action='Extract'/>"
@@ -222,7 +225,6 @@ static const gchar *ui_info =
 "      <separator/>"
 "      <menuitem action='Properties'/>"
 "      <separator/>"
-"      <placeholder name='RecentFilesMenu' action='RecentFilesMenu'/>"
 "      <menuitem action='Close'/>"
 "      <menuitem action='Quit'/>"
 "    </menu>"
