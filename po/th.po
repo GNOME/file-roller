@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: th\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-24 15:49+0700\n"
-"PO-Revision-Date: 2006-02-24 15:50+0700\n"
+"POT-Creation-Date: 2006-07-10 09:21+0700\n"
+"PO-Revision-Date: 2006-07-10 09:23+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n@opentle.org>\n"
 "MIME-Version: 1.0\n"
@@ -59,12 +59,12 @@ msgstr "ลบ"
 msgid "Load Options"
 msgstr "โหลดตัวเลือก"
 
-#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2910
+#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2975
 msgid "Location"
 msgstr "ตำแหน่ง"
 
 #. current location
-#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3768
+#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3835
 msgid "Location:"
 msgstr "ตำแหน่ง:"
 
@@ -80,7 +80,7 @@ msgstr "รหัสผ่าน"
 msgid "R_ecent applications:"
 msgstr "โปรแกรมที่_เพิ่งใช้:"
 
-#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:427
+#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:393
 msgid "_All files"
 msgstr "ทุก_แฟ้ม"
 
@@ -92,23 +92,23 @@ msgstr "โปร_แกรม:"
 msgid "_Archive:"
 msgstr "แฟ้ม_จัดเก็บ:"
 
-#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:413
+#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:379
 msgid "_Files:"
 msgstr "แ_ฟ้ม:"
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:475
+#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:441
 msgid "_Password:"
 msgstr "_รหัสผ่าน:"
 
-#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:434
+#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:400
 msgid "_Selected files"
 msgstr "แฟ้มที่เลื_อก"
 
-#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:424
+#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:390
 msgid "example: *.txt; *.doc"
 msgstr "ตัวอย่างเช่น *.txt; *.doc"
 
-#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5758
+#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5837
 msgid "Destination folder"
 msgstr "โฟลเดอร์ปลายทาง"
 
@@ -121,12 +121,12 @@ msgid "Extract"
 msgstr "แตก"
 
 #. Create the application.
-#: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:201
-#: ../src/window.c:845 ../src/window.c:3471
+#: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:391 ../src/main.c:210
+#: ../src/window.c:866 ../src/window.c:3536
 msgid "Archive Manager"
 msgstr "โปรแกรมจัดการแฟ้มจัดเก็บ"
 
-#: ../data/file-roller.desktop.in.h:2
+#: ../data/file-roller.desktop.in.h:2 ../src/main.c:202
 msgid "Create and modify an archive"
 msgstr "สร้างและแก้ไขแฟ้มจัดเก็บ"
 
@@ -157,7 +157,7 @@ msgstr "สร้างแฟ้มจัดเก็บใหม่จากแ
 #: ../src/actions.c:161 ../src/actions.c:181 ../src/actions.c:222
 #: ../src/dlg-batch-add.c:130 ../src/dlg-batch-add.c:149
 #: ../src/dlg-batch-add.c:172 ../src/dlg-batch-add.c:223
-#: ../src/dlg-batch-add.c:270 ../src/window.c:4268
+#: ../src/dlg-batch-add.c:270 ../src/window.c:4342
 msgid "Could not create the archive"
 msgstr "ไม่สามารถสร้างแฟ้มจัดเก็บได้"
 
@@ -169,8 +169,8 @@ msgstr "คุณต้องระบุชื่อแฟ้มจัดเก
 msgid "You don't have permission to create an archive in this folder"
 msgstr "คุณไม่ได้รับสิทธิ์ในการสร้างแฟ้มจัดเก็บในโฟลเดอร์นี้"
 
-#: ../src/actions.c:223 ../src/fr-archive.c:736 ../src/window.c:4269
-#: ../src/window.c:4425
+#: ../src/actions.c:223 ../src/fr-archive.c:740 ../src/window.c:4343
+#: ../src/window.c:4499
 msgid "Archive type not supported."
 msgstr "ไม่รู้จักชนิดแฟ้มจัดเก็บนี้"
 
@@ -186,43 +186,47 @@ msgstr "เขียนทับ"
 msgid "Could not delete the old archive."
 msgstr "ไม่สามารถลบแฟ้มจัดเก็บอันเก่าได้"
 
-#: ../src/actions.c:343
+#: ../src/actions.c:348
 msgid "New"
 msgstr "สร้างใหม่"
 
-#: ../src/actions.c:380 ../src/actions.c:491 ../src/actions.c:582
+#: ../src/actions.c:386 ../src/actions.c:497 ../src/actions.c:594
 msgid "All archives"
 msgstr "แฟ้มจัดเก็บทั้งหมด"
 
-#: ../src/actions.c:387 ../src/actions.c:498 ../src/actions.c:589
+#: ../src/actions.c:393 ../src/actions.c:504 ../src/actions.c:601
 msgid "All files"
 msgstr "แฟ้มทั้งหมด"
 
-#: ../src/actions.c:397 ../src/actions.c:597
+#: ../src/actions.c:403 ../src/actions.c:609
 msgid "Archive type:"
 msgstr "ชนิดแฟ้มจัดเก็บ:"
 
-#: ../src/actions.c:401 ../src/actions.c:601
+#: ../src/actions.c:407 ../src/actions.c:613
 msgid "Automatic"
 msgstr "อัตโนมัติ"
 
-#: ../src/actions.c:479 ../src/window.c:3856
+#: ../src/actions.c:485 ../src/window.c:3923
 msgid "Open"
 msgstr "เปิด"
 
-#: ../src/actions.c:567
+#: ../src/actions.c:578
 msgid "Save"
 msgstr "บันทึก"
 
-#: ../src/actions.c:835 ../src/window.c:5310
+#: ../src/actions.c:847 ../src/window.c:5389
 msgid "Last Output"
 msgstr "ผลคำสั่งล่าสุด"
 
-#: ../src/actions.c:855 ../src/dlg-extract.c:100
+#: ../src/actions.c:867 ../src/gtk-utils.c:790
 msgid "Could not display help"
 msgstr "ไม่สามารถแสดงคำแนะนำวิธีใช้"
 
-#: ../src/actions.c:887
+#: ../src/actions.c:923
+msgid "An archive manager for GNOME."
+msgstr "โปรแกรมจัดการแฟ้มจัดเก็บของ GNOME"
+
+#: ../src/actions.c:926
 msgid "translator-credits"
 msgstr ""
 "ไพศาข์ สีเหลืองสวัสดิ์\n"
@@ -234,75 +238,67 @@ msgstr ""
 "ถ้ามีเวลาโปรดมาช่วยกันแปล :-)\n"
 "http://gnome-th.sf.net"
 
-#: ../src/actions.c:897
-msgid "File Roller"
-msgstr "File Roller"
-
-#: ../src/actions.c:900
-msgid "An archive manager for GNOME."
-msgstr "โปรแกรมจัดการแฟ้มจัดเก็บของ GNOME"
-
-#: ../src/dlg-add-files.c:85 ../src/dlg-add-files.c:147
-#: ../src/dlg-add-folder.c:118 ../src/dlg-add-folder.c:247
+#: ../src/dlg-add-files.c:90 ../src/dlg-add-files.c:152
+#: ../src/dlg-add-folder.c:122 ../src/dlg-add-folder.c:251
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "คุณไม่ได้รับสิทธิ์ในการอ่านแฟ้มในโฟลเดอร์ \"%s\""
 
-#: ../src/dlg-add-files.c:91 ../src/dlg-add-files.c:153
-#: ../src/dlg-add-folder.c:124 ../src/dlg-add-folder.c:253
-#: ../src/window.c:2263 ../src/window.c:2301
+#: ../src/dlg-add-files.c:96 ../src/dlg-add-files.c:158
+#: ../src/dlg-add-folder.c:128 ../src/dlg-add-folder.c:257
+#: ../src/window.c:2284 ../src/window.c:2322
 msgid "Could not add the files to the archive"
 msgstr "ไม่สามารถเพิ่มแฟ้มเข้าแฟ้มจัดเก็บ"
 
-#: ../src/dlg-add-files.c:179
+#: ../src/dlg-add-files.c:184
 msgid "Add Files"
 msgstr "เพิ่มแฟ้ม"
 
-#: ../src/dlg-add-files.c:191 ../src/dlg-add-folder.c:324
+#: ../src/dlg-add-files.c:195 ../src/dlg-add-folder.c:327
 msgid "_Add only if newer"
 msgstr "เพิ่มเ_ฉพาะแฟ้มที่ใหม่กว่า"
 
-#: ../src/dlg-add-folder.c:312
+#: ../src/dlg-add-folder.c:316
 msgid "Add a Folder"
 msgstr "เพิ่มโฟลเดอร์"
 
-#: ../src/dlg-add-folder.c:325
+#: ../src/dlg-add-folder.c:328
 msgid "_Include subfolders"
 msgstr "รวมโฟลเดอร์_ย่อย"
 
-#: ../src/dlg-add-folder.c:326
+#: ../src/dlg-add-folder.c:329
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "ไม่ร_วมโฟลเดอร์ที่เป็นจุดเชื่อม"
 
-#: ../src/dlg-add-folder.c:329 ../src/dlg-add-folder.c:334
+#: ../src/dlg-add-folder.c:332 ../src/dlg-add-folder.c:337
 msgid "example: *.o; *.bak"
 msgstr "ตัวอย่างเช่น *.o; *.bak"
 
-#: ../src/dlg-add-folder.c:330
+#: ../src/dlg-add-folder.c:333
 msgid "_Include files:"
 msgstr "_รวมแฟ้ม:"
 
-#: ../src/dlg-add-folder.c:335
+#: ../src/dlg-add-folder.c:338
 msgid "E_xclude files:"
 msgstr "ไ_ม่รวมแฟ้ม:"
 
-#: ../src/dlg-add-folder.c:338
+#: ../src/dlg-add-folder.c:341
 msgid "_Load Options"
 msgstr "โ_หลดตัวเลือก"
 
-#: ../src/dlg-add-folder.c:339
+#: ../src/dlg-add-folder.c:342
 msgid "Sa_ve Options"
 msgstr "_บันทึกตัวเลือก"
 
-#: ../src/dlg-add-folder.c:786
+#: ../src/dlg-add-folder.c:789
 msgid "Save Options"
 msgstr "บันทึกตัวเลือก"
 
-#: ../src/dlg-add-folder.c:787
+#: ../src/dlg-add-folder.c:790
 msgid "Options Name:"
 msgstr "ชื่อตัวเลือก:"
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5536
+#: ../src/dlg-batch-add.c:144 ../src/window.c:5615
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -313,8 +309,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5528 ../src/window.c:5532
-#: ../src/window.c:5536 ../src/window.c:5593 ../src/window.c:5595
+#: ../src/dlg-batch-add.c:144 ../src/window.c:5607 ../src/window.c:5611
+#: ../src/window.c:5615 ../src/window.c:5672 ../src/window.c:5674
 msgid "Please use a different name."
 msgstr "กรุณาใช้ชื่ออื่น"
 
@@ -324,7 +320,7 @@ msgid ""
 "folder."
 msgstr "คุณไม่มีสิทธิ์สร้างแฟ้มจัดเก็บในโฟลเดอร์นี้"
 
-#: ../src/dlg-batch-add.c:192 ../src/dlg-extract.c:160 ../src/window.c:4707
+#: ../src/dlg-batch-add.c:192 ../src/dlg-extract.c:126 ../src/window.c:4781
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -335,11 +331,11 @@ msgstr ""
 "\n"
 "คุณต้องการสร้างขึ้นใหม่หรือไม่?"
 
-#: ../src/dlg-batch-add.c:201 ../src/dlg-extract.c:169 ../src/window.c:4716
+#: ../src/dlg-batch-add.c:201 ../src/dlg-extract.c:135 ../src/window.c:4790
 msgid "Create _Folder"
 msgstr "สร้างโฟลเ_ดอร์"
 
-#: ../src/dlg-batch-add.c:219 ../src/dlg-extract.c:188 ../src/window.c:4735
+#: ../src/dlg-batch-add.c:219 ../src/dlg-extract.c:154 ../src/window.c:4809
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "ไม่สามารถสร้างโฟลเดอร์ปลายทาง: %s"
@@ -356,76 +352,76 @@ msgstr "แฟ้มจัดเก็บนี้มีอยู่แล้ว
 msgid "_Overwrite"
 msgstr "เขียน_ทับ"
 
-#: ../src/dlg-extract.c:192 ../src/dlg-extract.c:212 ../src/dlg-extract.c:240
-#: ../src/window.c:4739 ../src/window.c:4759
+#: ../src/dlg-extract.c:158 ../src/dlg-extract.c:178 ../src/dlg-extract.c:206
+#: ../src/window.c:4813 ../src/window.c:4833
 msgid "Extraction not performed"
 msgstr "ไม่สามารถทำการแตกแฟ้มได้้"
 
-#: ../src/dlg-extract.c:235
+#: ../src/dlg-extract.c:201
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "คุณไม่ได้รับสิทธิ์ในการแตกแฟ้มจากแฟ้มจัดเก็บลงในโฟลเดอร์ \"%s\""
 
-#: ../src/dlg-extract.c:396
+#: ../src/dlg-extract.c:362
 msgid "Files"
 msgstr "แฟ้ม"
 
-#: ../src/dlg-extract.c:445
+#: ../src/dlg-extract.c:411
 msgid "Actions"
 msgstr "ปฏิบัติการ"
 
-#: ../src/dlg-extract.c:461
+#: ../src/dlg-extract.c:427
 msgid "R_e-create folders"
 msgstr "_สร้างโฟลเดอร์ต่างๆ ขณะแตก"
 
-#: ../src/dlg-extract.c:465
+#: ../src/dlg-extract.c:431
 msgid "Over_write existing files"
 msgstr "เ_ขียนทับแฟ้มที่มีอยู่แล้ว"
 
-#: ../src/dlg-extract.c:469
+#: ../src/dlg-extract.c:435
 msgid "Do not e_xtract older files"
 msgstr "อย่าแตกแฟ้มที่เ_ก่ากว่าออกมา"
 
-#: ../src/dlg-extract.c:484
+#: ../src/dlg-extract.c:450
 msgid "_Open destination folder after extraction"
 msgstr "_เปิดโฟลเดอร์ปลายทางหลังจากแตกแฟ้มเสร็จ"
 
 # This is in the archive property box.  "Location" would do.
-#: ../src/dlg-prop.c:102
+#: ../src/dlg-prop.c:114
 msgid "Path:"
 msgstr "พาธ:"
 
-#: ../src/dlg-prop.c:115
+#: ../src/dlg-prop.c:127
 msgid "Name:"
 msgstr "ชื่อ:"
 
-#: ../src/dlg-prop.c:121
+#: ../src/dlg-prop.c:133
 #, c-format
 msgid "%s Properties"
 msgstr "คุณสมบัติของ %s"
 
-#: ../src/dlg-prop.c:130
+#: ../src/dlg-prop.c:142
 msgid "Modified on:"
 msgstr "แก้ไขเมื่อ:"
 
-#: ../src/dlg-prop.c:136 ../src/window.c:427
+#: ../src/dlg-prop.c:148 ../src/window.c:430
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Ey, %H:%M"
 
-#: ../src/dlg-prop.c:144
+#: ../src/dlg-prop.c:156
 msgid "Archive size:"
 msgstr "ขนาดแฟ้มจัดเก็บ:"
 
-#: ../src/dlg-prop.c:155
+#: ../src/dlg-prop.c:167
 msgid "Content size:"
 msgstr "ขนาดเนื้อหา"
 
-#: ../src/dlg-prop.c:174
+#: ../src/dlg-prop.c:186
 msgid "Compression ratio:"
 msgstr "อัตราการบีบอัด:"
 
-#: ../src/dlg-prop.c:189
+#: ../src/dlg-prop.c:201
 msgid "Number of files:"
 msgstr "จำนวนแฟ้ม:"
 
@@ -437,31 +433,31 @@ msgstr "ชนิดที่ไม่รู้จัก"
 msgid "Symbolic link"
 msgstr "ลิงก์สัญลักษณ์"
 
-#: ../src/fr-archive.c:711
+#: ../src/fr-archive.c:714
 msgid "The file does not exist."
 msgstr "ไม่มีแฟ้มนี้อยู่"
 
-#: ../src/fr-command-tar.c:286
+#: ../src/fr-command-tar.c:289
 msgid "Adding file: "
 msgstr "กำลังเพิ่มแฟ้ม: "
 
-#: ../src/fr-command-tar.c:332
+#: ../src/fr-command-tar.c:335
 msgid "Removing file: "
 msgstr "กำลังเอาแฟ้มออก: "
 
-#: ../src/fr-command-tar.c:341 ../src/window.c:1241
+#: ../src/fr-command-tar.c:344 ../src/window.c:1262
 msgid "Deleting files from archive"
 msgstr "กำลังลบแฟ้มออกจากแฟ้มจัดเก็บ"
 
-#: ../src/fr-command-tar.c:374
+#: ../src/fr-command-tar.c:377
 msgid "Extracting file: "
 msgstr "กำลังแตกแฟ้ม: "
 
-#: ../src/fr-command-tar.c:419
+#: ../src/fr-command-tar.c:422
 msgid "Recompressing archive"
 msgstr "กำลังบีบอัดแฟ้มกลับ"
 
-#: ../src/fr-command-tar.c:553
+#: ../src/fr-command-tar.c:556
 msgid "Decompressing archive"
 msgstr "กำลังคลายบีบอัดแฟ้มจัดเก็บ"
 
@@ -473,118 +469,122 @@ msgstr "เ_พิ่ม"
 msgid "_Extract"
 msgstr "แ_ตกออก"
 
-#: ../src/fr-stock.c:46 ../src/ui.h:36 ../src/ui.h:154
+#: ../src/fr-stock.c:46 ../src/ui.h:36 ../src/ui.h:150 ../src/ui.h:154
 msgid "_View"
 msgstr "_มุมมอง"
 
 #. Button
-#: ../src/gtk-utils.c:421
+#: ../src/gtk-utils.c:422
 msgid "Command _Line Output"
 msgstr "_ผลลัพธ์คำสั่ง"
 
-#: ../src/main.c:66
+#: ../src/main.c:68
 msgid "Ar (.ar)"
 msgstr "Ar (.ar)"
 
-#: ../src/main.c:68
+#: ../src/main.c:70
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: ../src/main.c:73
+#: ../src/main.c:75
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: ../src/main.c:75
+#: ../src/main.c:77
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: ../src/main.c:76
+#: ../src/main.c:78
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: ../src/main.c:78
+#: ../src/main.c:80
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: ../src/main.c:80
+#: ../src/main.c:82
 msgid "Tar uncompressed (.tar)"
 msgstr "Tar ไม่บีบอัด (.tar)"
 
-#: ../src/main.c:81
+#: ../src/main.c:83
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar บีบอัดด้วย bzip (.tar.bz)"
 
-#: ../src/main.c:82
+#: ../src/main.c:84
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar บีบอัดด้วย bzip2 (.tar.bz2)"
 
-#: ../src/main.c:83
+#: ../src/main.c:85
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar บีบอัดด้วย gzip (.tar.gz)"
 
-#: ../src/main.c:84
+#: ../src/main.c:86
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar บีบอัดด้วย lzop (.tar.lzo)"
 
-#: ../src/main.c:85
+#: ../src/main.c:87
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar บีบอัดด้วย compress (.tar.Z)"
 
-#: ../src/main.c:87
+#: ../src/main.c:89
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: ../src/main.c:88
+#: ../src/main.c:90
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: ../src/main.c:89
+#: ../src/main.c:91
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: ../src/main.c:90
+#: ../src/main.c:92
 msgid "7-Zip (.7z)"
 msgstr "7-Zip (.7z)"
 
-#: ../src/main.c:135
+#: ../src/main.c:137
 msgid "Add files to the specified archive and quit the program"
 msgstr "เพิ่มแฟ้มลงในแฟ้มจัดเก็บที่กำหนด แล้วออกจากโปรแกรม"
 
-#: ../src/main.c:136
+#: ../src/main.c:138
 msgid "ARCHIVE"
 msgstr "แฟ้มจัดเก็บ"
 
-#: ../src/main.c:139
+#: ../src/main.c:141
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "เพิ่มแฟ้ม ถามชื่อแฟ้มจัดเก็บ แล้วออกจากโปรแกรม"
 
-#: ../src/main.c:143
+#: ../src/main.c:145
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "แตกแฟ้มในแฟ้มจัดเก็บลงในโฟลเดอร์ที่กำหนด แล้วออกจากโปรแกรม"
 
-#: ../src/main.c:144 ../src/main.c:156
+#: ../src/main.c:146 ../src/main.c:158
 msgid "FOLDER"
 msgstr "โฟลเดอร์"
 
-#: ../src/main.c:147
+#: ../src/main.c:149
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "แตกแฟ้มออกมา ถามชื่อโฟลเดอร์ปลายทาง แล้วออกจากโปรแกรม"
 
-#: ../src/main.c:151
+#: ../src/main.c:153
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
 msgstr "แตกแฟ้มออกมา โดยใช้ชื่อแฟ้มจัดเก็บเป็นชื่อโฟลเดอร์ปลายทาง แล้วออกจากโปรแกรม"
 
-#: ../src/main.c:155
+#: ../src/main.c:157
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "โฟลเดอร์ปริยายที่ใช้สำหรับคำสั่ง '--add' และ '--extract'"
 
-#: ../src/main.c:159
+#: ../src/main.c:161
 msgid "Create destination folder without asking confirmation"
 msgstr "สร้างโฟลเดอร์ปลายทางโดยไม่ต้องถามยืนยัน"
 
-#: ../src/recent-files/egg-recent-view-gtk.c:344 ../src/window.c:3387
+#: ../src/main.c:217
+msgid "File Roller"
+msgstr "File Roller"
+
+#: ../src/recent-files/egg-recent-view-gtk.c:344 ../src/window.c:3452
 #, c-format
 msgid "Open '%s'"
 msgstr "เปิด '%s'"
@@ -685,13 +685,13 @@ msgstr "แสดงผลลัพธ์ที่ได้จากคำสั
 msgid "Create a new archive"
 msgstr "สร้างแฟ้มจัดเก็บใหม่"
 
-#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3853 ../src/window.c:3856
+#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3920 ../src/window.c:3923
 msgid "Open archive"
 msgstr "เปิดแฟ้มจัดเก็บ"
 
 #: ../src/ui.h:106
-msgid "Open Fi_les..."
-msgstr "เปิดแ_ฟ้ม..."
+msgid "Op_en With..."
+msgstr "เปิด_ด้วย..."
 
 #: ../src/ui.h:107
 msgid "Open selected files with an application"
@@ -753,10 +753,6 @@ msgstr "_ทดสอบความสมบูรณ์"
 #: ../src/ui.h:147
 msgid "Test whether the archive contains errors"
 msgstr "ทดสอบหาข้อผิดพลาดในแฟ้มจัดเก็บนี้มี"
-
-#: ../src/ui.h:150
-msgid "_View File"
-msgstr "แ_สดงแฟ้ม"
 
 #: ../src/ui.h:151 ../src/ui.h:155
 msgid "View the selected file"
@@ -834,190 +830,190 @@ msgstr "ตาม_ตำแหน่ง"
 msgid "Sort file list by location"
 msgstr "เรียงตามตำแหน่ง"
 
-#: ../src/window.c:692
+#: ../src/window.c:713
 msgid "Folder"
 msgstr "โฟลเดอร์"
 
-#: ../src/window.c:853
+#: ../src/window.c:874
 msgid "[read only]"
 msgstr "[อ่านได้อย่างเดียว]"
 
-#: ../src/window.c:947
+#: ../src/window.c:968
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
 msgstr[0] "%d แฟ้ม (%s)"
 
-#: ../src/window.c:952
+#: ../src/window.c:973
 #, c-format
 msgid "%d file selected (%s)"
 msgid_plural "%d files selected (%s)"
 msgstr[0] "เลือกไว้ %d แฟ้ม (%s)"
 
-#: ../src/window.c:1238
+#: ../src/window.c:1259
 msgid "Reading archive"
 msgstr "กำลังอ่านแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1244
+#: ../src/window.c:1265
 msgid "Adding files to archive"
 msgstr "กำลังเพิ่มแฟ้มลงในแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1247
+#: ../src/window.c:1268
 msgid "Extracting files from archive"
 msgstr "กำลังแตกแฟ้มออกจากแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1250
+#: ../src/window.c:1271
 msgid "Testing archive"
 msgstr "กำลังทดสอบแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1253
+#: ../src/window.c:1274
 msgid "Getting the file list"
 msgstr "กำลังเรียบเรียงรายการแฟ้ม"
 
-#: ../src/window.c:1256
+#: ../src/window.c:1277
 msgid "Saving archive"
 msgstr "กำลังบันทึกแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1434
+#: ../src/window.c:1455
 msgid "Archive:"
 msgstr "แฟ้มจัดเก็บ:"
 
-#: ../src/window.c:1547
+#: ../src/window.c:1568
 msgid "wait please..."
 msgstr "โปรดรอสักครู่..."
 
-#: ../src/window.c:1624
+#: ../src/window.c:1645
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "ไม่สามารถแสดงโฟลเดอร์ \"%s\""
 
-#: ../src/window.c:1683
+#: ../src/window.c:1704
 msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
 msgstr "แฟ้มจัดเก็บนี้ถูกเข้ารหัสป้องกัน กรุณาใส่รหัสผ่านโดยเลือก: แก้ไข->รหัสผ่าน"
 
-#: ../src/window.c:1685
+#: ../src/window.c:1706
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
 msgstr "รหัสผ่านไม่ถูกต้อง กรุณาใส่รหัสผ่านใหม่โดยเลือก: แก้ไข->รหัสผ่าน"
 
-#: ../src/window.c:1690 ../src/window.c:2487 ../src/window.c:5929
+#: ../src/window.c:1711 ../src/window.c:2508 ../src/window.c:6008
 msgid "Could not perform the operation"
 msgstr "ไม่สามารถดำเนินการตามที่กำหนด"
 
-#: ../src/window.c:1715
+#: ../src/window.c:1736
 msgid "An error occurred while extracting files."
 msgstr "เกิดข้อผิดพลาดขณะแตกแฟ้มออก"
 
-#: ../src/window.c:1719
+#: ../src/window.c:1740
 msgid "An error occurred while loading the archive."
 msgstr "เกิดข้อผิดพลาดขณะโหลดแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1723
+#: ../src/window.c:1744
 msgid "An error occurred while deleting files from the archive."
 msgstr "เกิดข้อผิดพลาดขณะลบแฟ้มออกจากแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1727
+#: ../src/window.c:1748
 msgid "An error occurred while adding files to the archive."
 msgstr "เกิดข้อผิดพลาดขณะเพิ่มแฟ้มลงในแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1731
+#: ../src/window.c:1752
 msgid "An error occurred while testing archive."
 msgstr "เกิดข้อผิดพลาดขณะทดสอบแฟ้มจัดเก็บ"
 
-#: ../src/window.c:1744
+#: ../src/window.c:1765
 msgid "Command not found."
 msgstr "ไม่พบคำสั่ง"
 
-#: ../src/window.c:1747
+#: ../src/window.c:1768
 msgid "Command exited abnormally."
 msgstr "คำสั่งหยุดทำงานอย่างไม่ปกติ"
 
-#: ../src/window.c:1877
+#: ../src/window.c:1898
 msgid "Test Result"
 msgstr "ผลการทดสอบ"
 
-#: ../src/window.c:2264
+#: ../src/window.c:2285
 msgid "You don't have the right permissions."
 msgstr "คุณไม่ได้รับอนุญาต"
 
-#: ../src/window.c:2302
+#: ../src/window.c:2323
 msgid "You can't add an archive to itself."
 msgstr "คุณไม่สามารถเพิ่มแฟ้มจัดเก็บลงในตัวมันเองได้"
 
 # Doesn't follow msgid word-for-word.  But this is what the program is really asking.
-#: ../src/window.c:2521
+#: ../src/window.c:2542
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "คุณต้องการเพิ่มแฟ้มนี้ลงในแฟ้มจัดเก็บที่เปิดอยู่ หรือเปิดแฟ้มจัดเก็บใหม่?"
 
-#: ../src/window.c:2558
+#: ../src/window.c:2579
 msgid "Do you want to create a new archive with these files?"
 msgstr "คุณต้องการสร้างแฟ้มจัดเก็บใหม่ด้วยแฟ้มเหล่านี้หรือไม่?"
 
-#: ../src/window.c:2561
+#: ../src/window.c:2582
 msgid "Create _Archive"
 msgstr "ส_ร้างแฟ้มจัดเก็บ"
 
-#: ../src/window.c:2907
+#: ../src/window.c:2972
 msgid "Size"
 msgstr "ขนาด"
 
-#: ../src/window.c:2908
+#: ../src/window.c:2973
 msgid "Type"
 msgstr "ประเภท"
 
-#: ../src/window.c:2909
+#: ../src/window.c:2974
 msgid "Date Modified"
 msgstr "แก้ไขเมื่อ"
 
-#: ../src/window.c:2918
+#: ../src/window.c:2983
 msgid "Name"
 msgstr "ชื่อ"
 
-#: ../src/window.c:3725
+#: ../src/window.c:3792
 msgid "Go to the previous visited location"
 msgstr "ถอยกลับไปดูตำแหน่งก่อนหน้า"
 
-#: ../src/window.c:3733
+#: ../src/window.c:3800
 msgid "Go to the next visited location"
 msgstr "เดินหน้าไปตำแหน่งเดิมถัดไป"
 
-#: ../src/window.c:3741
+#: ../src/window.c:3808
 msgid "Go up one level"
 msgstr "ขึ้นไปหนึ่งระดับ"
 
 # This is not 'home' as in ~.  It's the top level in the archive.
-#: ../src/window.c:3749
+#: ../src/window.c:3816
 msgid "Go to the home location"
 msgstr "กลับไปตำแหน่งเริ่มต้น"
 
-#: ../src/window.c:3854
+#: ../src/window.c:3921
 msgid "Open a recently used archive"
 msgstr "เปิดแฟ้มจัดเก็บล่าสุด"
 
-#: ../src/window.c:4360
+#: ../src/window.c:4434
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "ไม่สามารถเปิด \"%s\""
 
-#: ../src/window.c:4418
+#: ../src/window.c:4492
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "ไม่สามารถบันทึกแฟ้มจัดเก็บ \"%s\""
 
-#: ../src/window.c:5528
+#: ../src/window.c:5607
 msgid "The new name is void."
 msgstr "ชื่อใหม่ยังว่างอยู่"
 
-#: ../src/window.c:5532
+#: ../src/window.c:5611
 msgid "The new name is equal to the old one."
 msgstr "ชื่อใหม่เหมือนกับชื่อเก่า"
 
-#: ../src/window.c:5593
+#: ../src/window.c:5672
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1028,7 +1024,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5595
+#: ../src/window.c:5674
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1039,45 +1035,48 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5633
+#: ../src/window.c:5712
 msgid "Rename"
 msgstr "เปลี่ยนชื่อ"
 
-#: ../src/window.c:5634
+#: ../src/window.c:5713
 msgid "New folder name"
 msgstr "ชื่อโฟลเดอร์ใหม่"
 
-#: ../src/window.c:5634
+#: ../src/window.c:5713
 msgid "New file name"
 msgstr "ชื่อแฟ้มใหม่"
 
-#: ../src/window.c:5638
+#: ../src/window.c:5717
 msgid "_Rename"
 msgstr "เ_ปลี่ยนชื่อ"
 
-#: ../src/window.c:5654 ../src/window.c:5683
+#: ../src/window.c:5733 ../src/window.c:5762
 msgid "Could not rename the folder"
 msgstr "เปลี่ยนชื่อโฟลเดอร์ไม่สำเร็จ"
 
-#: ../src/window.c:5654 ../src/window.c:5683
+#: ../src/window.c:5733 ../src/window.c:5762
 msgid "Could not rename the file"
 msgstr "เปลี่ยนชื่อแฟ้มไม่สำเร็จ"
 
-#: ../src/window.c:5757
+#: ../src/window.c:5836
 msgid "Paste Selection"
 msgstr "แปะแฟ้มที่เลือก"
 
-#: ../src/window.c:5762
+#: ../src/window.c:5841
 msgid "_Paste"
 msgstr "_แปะ"
 
-#: ../src/window.c:6285
+#: ../src/window.c:6364
 msgid "Add files to an archive"
 msgstr "เพิ่มแฟ้มลงในแฟ้มจัดเก็บ"
 
-#: ../src/window.c:6316
+#: ../src/window.c:6395
 msgid "Extract archive"
 msgstr "แตกแฟ้มออกจากแฟ้มจัดเก็บ"
+
+#~ msgid "_View File"
+#~ msgstr "แ_สดงแฟ้ม"
 
 #~ msgid "Could not save the archive"
 #~ msgstr "ไม่สามารถบันทึกแฟ้มจัดเก็บได้"
