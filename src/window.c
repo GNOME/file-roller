@@ -1116,7 +1116,7 @@ _window_update_sensitivity (FRWindow *window)
 
 	/* recents menu. */
 
-	set_sensitive (window, "RecentFilesMenu", ! running);
+	set_sensitive (window, "OpenRecentMenu", ! running);
 }
 
 
