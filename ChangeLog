@@ -1,5 +1,10 @@
 2006-07-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-command-tar.c (fr_command_tar_add)
+	(fr_command_tar_extract): add p option to preserve permissions.
+
+	Fixes bug #340050 – tar permissions are not preserved.
+
 	* nautilus/nautilus-fileroller.c: 
 
 	Fixed bug #339913 – "create archive" option does not work on some 

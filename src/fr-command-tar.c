@@ -308,6 +308,7 @@ fr_command_tar_add (FRCommand     *comm,
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "-v");
+	fr_process_add_arg (comm->process, "-p");
 
 	if (base_dir != NULL) {
 		char *e_base_dir = shell_escape (base_dir);
@@ -396,6 +397,7 @@ fr_command_tar_extract (FRCommand  *comm,
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "-v");
+	fr_process_add_arg (comm->process, "-p");
 	fr_process_add_arg (comm->process, "-xf");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	add_compress_arg (comm);
