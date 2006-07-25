@@ -517,12 +517,12 @@ prepare_app (void)
 		FRWindow    *window;
 		GList       *file_list = NULL;
 		const char  *filename;
+		int          i = 0;
 
 		window = window_new ();
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir, TRUE);
 		
-		int i = 0;
 		while ((filename = remaining_args[i++]) != NULL) {
 			char *path;
 			
@@ -549,12 +549,12 @@ prepare_app (void)
 		   || (extract_here == 1)) { /* Extract all archives. */
 		FRWindow   *window;
 		const char *archive;
+		int         i = 0;
 		
 		window = window_new ();
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir, TRUE);
 
-		int i = 0;
 		while ((archive = remaining_args[i++]) != NULL) {
 			if (extract_here == 1) {
 				g_free (extract_to_path);
