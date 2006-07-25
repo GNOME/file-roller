@@ -190,7 +190,8 @@ unescape_str (const char  *str)
 char*
 shell_escape (const char *filename)
 {
-	return escape_str (filename, "$\'`\"\\!?* ()[]&|:;");
+	/*return escape_str (filename, "$\'`\"\\!?* ()[]&|:;");*/
+	return g_shell_quote (filename);
 }
 
 

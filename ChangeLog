@@ -1,5 +1,10 @@
 2006-07-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/glib-utils.c (shell_escape): implement shell_escape with 
+	g_shell_quote
+
+	Fixed bug #343739 – Seems to not escape file names correctly.
+	
 	* src/fr-command-tar.c (fr_command_tar_add)
 	(fr_command_tar_extract): add p option to preserve permissions.
 
