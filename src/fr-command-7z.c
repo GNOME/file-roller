@@ -188,7 +188,8 @@ fr_command_7z_begin_command (FRCommand *comm)
 
 
 static void
-fr_command_7z_list (FRCommand *comm)
+fr_command_7z_list (FRCommand  *comm,
+		    const char *password)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      list__process_line,

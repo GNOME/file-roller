@@ -43,14 +43,21 @@ enum {
 };
 
 typedef enum {
+	FR_BATCH_ACTION_NONE,
 	FR_BATCH_ACTION_OPEN,
 	FR_BATCH_ACTION_ADD,
 	FR_BATCH_ACTION_OPEN_AND_ADD,
 	FR_BATCH_ACTION_ADD_INTERACT,
 	FR_BATCH_ACTION_EXTRACT,
+	FR_BATCH_ACTION_EXTRACT_HERE,
 	FR_BATCH_ACTION_EXTRACT_INTERACT,
+	FR_BATCH_ACTION_RENAME,
+	FR_BATCH_ACTION_PASTE,
+	FR_BATCH_ACTION_VIEW,
+	FR_BATCH_ACTION_SAVE_AS,
 	FR_BATCH_ACTION_CLOSE,
-	FR_BATCH_ACTION_QUIT
+	FR_BATCH_ACTION_QUIT,
+	FR_BATCH_ACTIONS
 } FRBatchAction;
 
 typedef struct {
@@ -115,9 +122,12 @@ typedef struct {
 	char *           extract_default_dir; /* default directory to be used
 					       * in the Extract dialog. */
 	gboolean         freeze_default_dir;
+	gboolean         asked_for_password;
 
 	gboolean         view_folder_after_extraction;
 	char *           folder_to_view;
+
+	FRBatchActionDescription current_action_desc;
 
 	gboolean         give_focus_to_the_list;
 	gboolean         single_click;
@@ -413,6 +423,17 @@ void       window_set_toolbar_visibility    (FRWindow   *window,
 void       window_set_statusbar_visibility  (FRWindow   *window,
 					     gboolean    value);
 
+/**/
+
+void       window_current_action_description_set   (FRWindow      *window,
+						    FRBatchAction  action,
+						    void          *data,
+						    GFreeFunc      free_func);
+
+void       window_current_action_description_reset (FRWindow      *window);
+
+void       window_restart_current_action           (FRWindow      *window);
+
 /* batch mode procedures. */
 
 void       window_batch_mode_clear            (FRWindow      *window);
@@ -431,7 +452,13 @@ void       window_batch_mode_start            (FRWindow      *window);
 
 void       window_batch_mode_stop             (FRWindow      *window);
 
+void       window_batch_mode_resume           (FRWindow      *window);
+
 void       window_archive__open_extract       (FRWindow      *window, 
+					       const char    *filename,
+					       const char    *dest_dir);
+
+void       window_archive__open_extract_here  (FRWindow      *window, 
 					       const char    *filename,
 					       const char    *dest_dir);
 

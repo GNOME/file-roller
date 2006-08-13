@@ -239,7 +239,8 @@ begin_tar_command (FRCommand *comm)
 
 
 static void
-fr_command_tar_list (FRCommand *comm)
+fr_command_tar_list (FRCommand  *comm,
+		     const char *password)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      process_line,

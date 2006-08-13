@@ -221,7 +221,8 @@ process_zoo_line (char     *line,
 
 
 static void
-fr_command_zoo_list (FRCommand *zoo_comm)
+fr_command_zoo_list (FRCommand  *zoo_comm,
+		     const char *password)
 {
 	fr_process_set_out_line_func (FR_COMMAND (zoo_comm)->process,
 				      process_zoo_line,

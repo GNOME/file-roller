@@ -240,7 +240,8 @@ add_password_arg (FRCommand     *comm,
 
 
 static void
-fr_command_zip_list (FRCommand *comm)
+fr_command_zip_list (FRCommand  *comm,
+		     const char *password)
 {
 	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
 

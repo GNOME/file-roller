@@ -494,7 +494,7 @@ prepare_app (void)
 
 	default_dir = get_path_from_url (default_url);
 
-	if ((extract_here == 0) && (extract_to != NULL)) {
+	if (extract_to != NULL) {
 		if (g_path_is_absolute (extract_to))
 			extract_to_path = get_path_from_url (extract_to);
 		else {
@@ -556,24 +556,19 @@ prepare_app (void)
 			window_set_default_dir (window, default_dir, TRUE);
 
 		while ((archive = remaining_args[i++]) != NULL) {
-			if (extract_here == 1) {
-				g_free (extract_to_path);
-				extract_to_path = g_strconcat (archive, "_FILES", NULL);
-			}
-				
-			window_archive__open_extract (window, 
-						      archive, 
-						      extract_to_path);
-
-			if (extract_here == 1) {
-				g_free (extract_to_path);
-				extract_to_path = NULL;
-			}
+			if (extract_here == 1) 
+				window_archive__open_extract_here (window, 
+								   archive, 
+								   extract_to_path);
+			else
+				window_archive__open_extract (window, 
+							      archive, 
+							      extract_to_path);
 		}
 		window_archive__quit (window);
 		window_batch_mode_start (window);
 
-	} else { /* Open each archives in a window */
+	} else { /* Open each archive in a window */
 		const char *archive;
 		
 		int i = 0;

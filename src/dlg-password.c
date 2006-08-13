@@ -53,42 +53,61 @@ destroy_cb (GtkWidget  *widget,
 
 
 static void
-ok_clicked_cb (GtkWidget  *widget,
-	       DialogData *data)
+response_cb (GtkWidget  *dialog,
+	     int         response_id,
+	     DialogData *data)
 {
 	char *password;
 
-	password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
-	window_set_password (data->window, password);
-	g_free (password);
+	switch (response_id) {
+	case GTK_RESPONSE_OK:
+		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
+		window_set_password (data->window, password);
+		g_free (password);
+		break;
+	default:
+		break;
+	}
 
 	gtk_widget_destroy (data->dialog);
 }
 
 
 static void
-response_cb (GtkWidget  *dialog,
-	     int         response_id,
-	     DialogData *data)
+ask_password__response_cb (GtkWidget  *dialog,
+			   int         response_id,
+			   DialogData *data)
 {
+	char *password;
+
 	switch (response_id) {
 	case GTK_RESPONSE_OK:
-		ok_clicked_cb (NULL, data);
+		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
+		window_set_password (data->window, password);
+		g_free (password);
+		if (data->window->batch_mode)
+			window_batch_mode_resume (data->window);
+		else
+			window_restart_current_action (data->window);
 		break;
-	case GTK_RESPONSE_CLOSE:
+
 	default:
-		gtk_widget_destroy (data->dialog);
+		if (data->window->batch_mode)
+			window_close (data->window);
+		else
+			window_current_action_description_reset (data->window);
 		break;
 	}
+
+	gtk_widget_destroy (data->dialog);
 }
 
 
-void
-dlg_password (GtkWidget *widget,
-	      gpointer   callback_data)
+static void
+dlg_password__common (FRWindow *window,
+		      gboolean  ask_password)
 {
-        DialogData       *data;
-	FRWindow         *window = callback_data;
+        DialogData *data;
 
         data = g_new (DialogData, 1);
 	data->window = window;
@@ -103,6 +122,9 @@ dlg_password (GtkWidget *widget,
         data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
 	data->pw_password_entry = glade_xml_get_widget (data->gui, "pw_password_entry");
 
+	if (ask_password)
+		gtk_widget_hide (glade_xml_get_widget (data->gui, "pw_note_hbox"));
+
 	/* Set widgets data. */
 
 	if (window->password != NULL)
@@ -114,18 +136,41 @@ dlg_password (GtkWidget *widget,
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-
-	g_signal_connect (G_OBJECT (data->dialog), 
-			  "response",
-			  G_CALLBACK (response_cb),
-			  data);
+	
+	if (ask_password) 
+		g_signal_connect (G_OBJECT (data->dialog), 
+				  "response",
+				  G_CALLBACK (ask_password__response_cb),
+				  data);
+	else
+		g_signal_connect (G_OBJECT (data->dialog), 
+				  "response",
+				  G_CALLBACK (response_cb),
+				  data);
 
 	/* Run dialog. */
 
 	gtk_widget_grab_focus (data->pw_password_entry);
-        gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
-				      GTK_WINDOW (window->app));
-        gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
+	if (GTK_WIDGET_REALIZED (window->app))
+		gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
+					      GTK_WINDOW (window->app));
+        gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 
 	gtk_widget_show (data->dialog);
+}
+
+
+void
+dlg_password (GtkWidget *widget,
+	      gpointer   callback_data)
+{
+	FRWindow *window = callback_data;
+	dlg_password__common (window, FALSE);
+}
+
+
+void
+ask_password (FRWindow *window)
+{
+	dlg_password__common (window, TRUE);
 }

@@ -92,7 +92,8 @@ struct _FRCommandClass
 
 	/*<virtual functions>*/
 
-	void        (*list)           (FRCommand     *comm);
+	void        (*list)           (FRCommand     *comm,
+				       const char    *password);
 
 	void        (*add)            (FRCommand     *comm,
 				       GList         *file_list,
@@ -151,7 +152,8 @@ void           fr_command_construct          (FRCommand     *comm,
 void           fr_command_set_filename       (FRCommand     *comm,
 					      const char    *filename);
 
-void           fr_command_list               (FRCommand     *comm);
+void           fr_command_list               (FRCommand     *comm,
+					      const char    *password);
 
 void           fr_command_add                (FRCommand     *comm,
 					      GList         *file_list,

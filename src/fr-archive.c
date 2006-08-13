@@ -700,6 +700,7 @@ fr_archive_fake_load (FRArchive *archive)
 gboolean
 fr_archive_load (FRArchive   *archive, 
 		 const char  *filename,
+		 const char  *password,
 		 GError     **gerror)
 {
 	FRCommand  *tmp_command;
@@ -772,7 +773,7 @@ fr_archive_load (FRArchive   *archive,
 	archive->command->fake_load = fr_archive_fake_load (archive);
 
 	fr_process_clear (archive->process);
-	fr_command_list (archive->command);
+	fr_command_list (archive->command, password);
 	fr_process_start (archive->process);
 
 	return TRUE;
@@ -780,7 +781,8 @@ fr_archive_load (FRArchive   *archive,
 
 
 void
-fr_archive_reload (FRArchive *archive)
+fr_archive_reload (FRArchive  *archive,
+		   const char *password)
 {
 	g_return_if_fail (archive != NULL);
 	g_return_if_fail (archive->filename != NULL);
@@ -789,7 +791,7 @@ fr_archive_reload (FRArchive *archive)
 	archive->command->fake_load = fr_archive_fake_load (archive);
 
 	fr_process_clear (archive->process);
-	fr_command_list (archive->command);
+	fr_command_list (archive->command, password);
 	fr_process_start (archive->process);
 }
 
@@ -805,7 +807,7 @@ fr_archive_rename (FRArchive  *archive,
 		/* If the archive is a compressed file we have to reload it,
 		 * because in this case the 'content' of the archive changes 
 		 * too. */
-		fr_archive_load (archive, filename, NULL);
+		fr_archive_load (archive, filename, NULL, NULL);
 
 	else {
 		if (archive->filename != NULL)

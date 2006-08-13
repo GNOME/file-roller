@@ -181,14 +181,14 @@ add_password_arg (FRCommand	*comm,
 		
 		g_free (e_password);
 		g_free (arg);
-	} else if (disable_query) {
+	} else if (disable_query) 
 		fr_process_add_arg (comm->process, "-p-");
-	}
 }
 
 
 static void
-fr_command_rar_list (FRCommand *comm)
+fr_command_rar_list (FRCommand  *comm,
+		     const char *password)
 {
 	FR_COMMAND_RAR (comm)->list_started = FALSE;
 
@@ -203,9 +203,7 @@ fr_command_rar_list (FRCommand *comm)
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-c-");
 
-	/* Fixme: listing rar archives fails when headers and data
-	          are encrypted (-hp option) without a password. */
-	add_password_arg (comm, NULL, TRUE);
+	add_password_arg (comm, password, TRUE);
 	
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--"); 
@@ -369,7 +367,8 @@ fr_command_rar_handle_error (FRCommand   *comm,
 			error->type = FR_PROC_ERROR_NONE;
 		else if (error->status == 3)
 			error->type = FR_PROC_ERROR_ASK_PASSWORD;
-	}
+	} else if (error->type == FR_PROC_ERROR_EXITED_ABNORMALLY)
+		error->type = FR_PROC_ERROR_ASK_PASSWORD;
 }
 
 

@@ -76,7 +76,8 @@ fr_command_get_type ()
 
 
 static void
-base_fr_command_list (FRCommand *comm)
+base_fr_command_list (FRCommand  *comm,
+		      const char *password)
 {
 }
 
@@ -355,7 +356,8 @@ fr_command_set_filename (FRCommand *comm,
 
 
 void
-fr_command_list (FRCommand *comm)
+fr_command_list (FRCommand  *comm,
+		 const char *password)
 {
 	g_return_if_fail (FR_IS_COMMAND (comm));
 
@@ -372,7 +374,7 @@ fr_command_list (FRCommand *comm)
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
 	if (!comm->fake_load) 
-		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm);
+		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm, password);
 }
 
 

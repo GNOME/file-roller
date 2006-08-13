@@ -96,9 +96,11 @@ gboolean         fr_archive_new_file           (FRArchive     *archive,
 
 gboolean         fr_archive_load               (FRArchive     *archive,
 						const char    *filename,
+						const char    *password,
 						GError       **gerror);
 
-void             fr_archive_reload             (FRArchive     *archive);
+void             fr_archive_reload             (FRArchive     *archive,
+						const char    *password);
 
 void             fr_archive_rename             (FRArchive     *archive,
 						const char    *filename);

@@ -180,7 +180,8 @@ process_line (char     *line,
 
 
 static void
-fr_command_unstuff_list (FRCommand *comm)
+fr_command_unstuff_list (FRCommand  *comm,
+			 const char *password)
 {
 	char *arg, *path;
 	char *filename;

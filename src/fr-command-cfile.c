@@ -147,7 +147,8 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_cfile_list (FRCommand *comm)
+fr_command_cfile_list (FRCommand  *comm,
+		       const char *password)
 {
 	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
 
