@@ -1,9 +1,11 @@
+@INTLTOOL_DESKTOP_RULE@
+
 SUBDIRS = glade
 
+desktop_in_files=file-roller.desktop.in.in
+
 desktopdir = $(datadir)/applications
-desktop_in_files=file-roller.desktop.in
-desktop_DATA = $(desktop_in_files:.desktop.in=.desktop) 
-@INTLTOOL_DESKTOP_RULE@
+desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop) 
 
 icondir = $(datadir)/icons/hicolor/48x48/apps
 icon_DATA = file-roller.png
