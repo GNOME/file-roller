@@ -2,10 +2,11 @@
 
 SUBDIRS = glade
 
-desktop_in_files=file-roller.desktop.in.in
+desktop_in_in_files = file-roller.desktop.in.in
+desktop_in_files = $(desktop_in_in_files:.desktop.in.in=.desktop.in) 
 
 desktopdir = $(datadir)/applications
-desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop) 
+desktop_DATA = $(desktop_in_files:.desktop.in=.desktop) 
 
 icondir = $(datadir)/icons/hicolor/48x48/apps
 icon_DATA = file-roller.png
@@ -30,6 +31,7 @@ install-data-local:
 endif
 
 EXTRA_DIST = 			\
+	$(desktop_in_in_files)	\
 	$(desktop_in_files)	\
 	$(desktop_DATA)		\
 	$(icon_DATA)		\
@@ -37,4 +39,5 @@ EXTRA_DIST = 			\
 
 
 DISTCLEANFILES =                \
+	$(desktop_in_files)	\
 	$(desktop_DATA)	
