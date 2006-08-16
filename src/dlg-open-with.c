@@ -418,12 +418,12 @@ dlg_open_with (FRWindow *window,
 
 	data->app_list = NULL;
 	for (scan = data->file_list; scan; scan = scan->next) {
-		const char *result;
+		const char *mime_type;
 		const char *name = scan->data;
 
-		result = gnome_vfs_mime_type_from_name_or_default (name, NULL);
-		if (result != NULL)
-			data->app_list = g_list_concat (data->app_list, gnome_vfs_mime_get_all_applications (result));
+		mime_type = get_mime_type (name);
+		if ((mime_type != NULL) && (strcmp (mime_type, GNOME_VFS_MIME_TYPE_UNKNOWN) != 0))
+			data->app_list = g_list_concat (data->app_list, gnome_vfs_mime_get_all_applications (mime_type));
 	}
 
 	data->app_model = GTK_TREE_MODEL (gtk_list_store_new (N_COLUMNS, 

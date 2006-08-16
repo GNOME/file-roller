@@ -511,7 +511,7 @@ get_icon (GtkWidget *widget,
 	if (fdata->is_dir)
 		mime_type = MIME_TYPE_DIRECTORY;
 	else
-		mime_type = fdata->type;
+		mime_type = file_data_get_mime_type (fdata);
 
 	/* look in the hash table. */
 
@@ -6249,8 +6249,8 @@ window_view_or_open_file (FRWindow *window,
 	if (window->activity_ref > 0)
 		return;
 
-	mime_type = gnome_vfs_mime_type_from_name_or_default (filename, NULL);
-	if (mime_type != NULL) 
+	mime_type = get_mime_type (filename);
+	if ((mime_type != NULL) && (strcmp (mime_type, GNOME_VFS_MIME_TYPE_UNKNOWN) != 0))
 		application = gnome_vfs_mime_get_default_application (mime_type);
 	file_list = g_list_append (NULL, filename);
 

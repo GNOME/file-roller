@@ -39,6 +39,7 @@
 #include "window.h"
 #include "typedefs.h"
 #include "preferences.h"
+#include "file-data.h"
 #include "main.h"
 
 static void     prepare_app         (void);
@@ -310,6 +311,7 @@ static void
 release_data ()
 {
 	g_hash_table_destroy (programs_cache);
+	file_data_release_data ();
 
 	eel_global_client_free ();
 

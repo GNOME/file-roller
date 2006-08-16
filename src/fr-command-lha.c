@@ -188,7 +188,6 @@ process_line (char     *line,
 
 	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
-	fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);

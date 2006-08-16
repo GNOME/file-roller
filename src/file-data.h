@@ -36,8 +36,6 @@ typedef struct {
 
 	char       *name;             /* The file name. */
 	char       *path;             /* The directory. */
-	const char *type;             /* The mime type. */
-	gboolean    encrypted;        /* Wether this file is password. */ 
 
 	/* Additional data. */
 
@@ -45,14 +43,21 @@ typedef struct {
 				       * a directory. */
 	char       *list_name;        /* The string visualized in the list
 				       * view. */
+
+	/* Private data */
+
+	guint       mime_type;
 } FileData;
 
 #define FR_TYPE_FILE_DATA (file_data_get_type ())
 
-GType           file_data_get_type             (void);
-FileData *      file_data_new                  (void);
-FileData *      file_data_copy                 (FileData *src);
-void            file_data_free                 (FileData *fdata);
-const char *    file_data_get_type_description (const FileData *fdata);
+GType           file_data_get_type                  (void);
+FileData *      file_data_new                       (void);
+FileData *      file_data_copy                      (FileData *src);
+void            file_data_free                      (FileData *fdata);
+const char *    file_data_get_mime_type             (const FileData *fdata);
+const char *    file_data_get_mime_type_description (const FileData *fdata);
+
+void            file_data_release_data (void);
 
 #endif /* FILE_DATA_H */

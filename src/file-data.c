@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001-2006 The Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,33 +24,49 @@
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-data.h"
+#include "file-utils.h"
 
 #define DESCRIPTION_UNKNOWN _("Unknown type")
 #define DESCRIPTION_SYMLINK _("Symbolic link")
 
 
+static GHashTable *mime_type_hash = NULL;
+
+
 FileData *
 file_data_new ()
 {
-	return g_new0 (FileData, 1);
+	FileData *fdata;
+
+	fdata = g_new0 (FileData, 1);
+	fdata->type = 0;
+
+	if (mime_type_hash == NULL)
+		mime_type_hash = g_hash_table_new_full (g_int_hash, 
+							g_int_equal,
+							NULL,
+							(GDestroyNotify) g_free);
+
+	return fdata;
+}
+
+
+void
+file_data_release_data (void)
+{
+	if (mime_type_hash != NULL)
+		g_hash_table_destroy (mime_type_hash);
 }
 
 
 void
 file_data_free (FileData *fdata)
 {
-	if (fdata->full_path)
-		g_free (fdata->full_path);
-	if (fdata->name)
-		g_free (fdata->name);
-	if (fdata->path)
-		g_free (fdata->path);
-	if (fdata->link)
-		g_free (fdata->link);
-
-	if (fdata->list_name)
-		g_free (fdata->list_name);
-	
+	g_free (fdata->full_path);
+	g_free (fdata->name);
+	g_free (fdata->path);
+	g_free (fdata->link);
+	g_free (fdata->list_name);
 	g_free (fdata);
 }
 
@@ -70,7 +86,6 @@ file_data_copy (FileData *src)
 	fdata->name = g_strdup (src->name);
 	fdata->path = g_strdup (src->path);
 	fdata->type = src->type;
-	fdata->encrypted = src->encrypted;
 
 	fdata->is_dir = src->is_dir;
 	fdata->list_name = g_strdup (src->list_name);
@@ -91,15 +106,52 @@ file_data_get_type (void)
 }
 
 
+static void
+file_data_update_mime_type (FileData *fdata)
+{
+	const char *mime_type;
+
+	mime_type = get_mime_type (fdata->full_path);
+
+	if (mime_type == NULL) {
+		fdata->type = 0;
+		return;
+	}
+
+	fdata->type = g_str_hash ((gconstpointer) mime_type);
+
+	if (g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->type) == NULL)
+		g_hash_table_insert (mime_type_hash, (gpointer) &fdata->type, g_strdup (mime_type));
+}
+
+
 const char *
-file_data_get_type_description (const FileData *fdata)
+file_data_get_mime_type (const FileData *fdata)
+{
+	const char *mime_type;
+
+	if (fdata->type == 0)
+		file_data_update_mime_type ((FileData*)fdata);
+	if (fdata->type == 0)
+		return GNOME_VFS_MIME_TYPE_UNKNOWN;
+
+	mime_type = g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->type);
+	if (mime_type == NULL)
+		mime_type = GNOME_VFS_MIME_TYPE_UNKNOWN;
+
+	return mime_type;
+}
+
+
+const char *
+file_data_get_mime_type_description (const FileData *fdata)
 {
 	const char *desc;
 
 	if (fdata->link != NULL)
 		return DESCRIPTION_SYMLINK;
 
-	desc = gnome_vfs_mime_get_description (fdata->type);
+	desc = gnome_vfs_mime_get_description (file_data_get_mime_type (fdata));
 	if (desc == NULL)
 		desc = DESCRIPTION_UNKNOWN;
 

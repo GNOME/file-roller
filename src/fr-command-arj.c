@@ -131,7 +131,6 @@ list__process_line (char     *line,
 		
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
-		fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
 
 	} else if (arj_comm->line_no == 2) { /* Read file size and date. */
 		FileData  *fdata;

@@ -471,6 +471,13 @@ is_mime_type (const char* type, const char* pattern) {
 }
 
 
+G_CONST_RETURN char*
+get_mime_type (const char  *filename)
+{
+	return gnome_vfs_get_mime_type_for_name (filename);
+}
+
+
 void
 path_list_free (GList *path_list)
 {

@@ -118,7 +118,7 @@ list__process_line (char     *line,
 		fdata->original_path = fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
-		fdata->type = gnome_vfs_mime_type_from_name_or_default (fdata->name, GNOME_VFS_MIME_TYPE_UNKNOWN);
+
 		comm->file_list = g_list_prepend (comm->file_list, fdata);
 	}
 }

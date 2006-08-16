@@ -64,6 +64,7 @@ void                path_list_free               (GList *path_list);
 GList *             path_list_dup                (GList *path_list);
 gboolean            is_mime_type                 (const char* type, 
 						  const char* pattern);
+G_CONST_RETURN char*get_mime_type                (const char  *filename);
 GnomeVFSFileSize    get_dest_free_space          (const char  *path);
 gboolean            rmdir_recursive              (const gchar *directory);
 char *              get_temp_work_dir            (void);
