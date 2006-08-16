@@ -39,7 +39,7 @@ file_data_new ()
 	FileData *fdata;
 
 	fdata = g_new0 (FileData, 1);
-	fdata->type = 0;
+	fdata->mime_type = 0;
 
 	if (mime_type_hash == NULL)
 		mime_type_hash = g_hash_table_new_full (g_int_hash, 
@@ -85,7 +85,8 @@ file_data_copy (FileData *src)
 	fdata->modified = src->modified;
 	fdata->name = g_strdup (src->name);
 	fdata->path = g_strdup (src->path);
-	fdata->type = src->type;
+	fdata->mime_type = src->mime_type;
+	fdata->encrypted = src->encrypted;
 
 	fdata->is_dir = src->is_dir;
 	fdata->list_name = g_strdup (src->list_name);
@@ -114,14 +115,14 @@ file_data_update_mime_type (FileData *fdata)
 	mime_type = get_mime_type (fdata->full_path);
 
 	if (mime_type == NULL) {
-		fdata->type = 0;
+		fdata->mime_type = 0;
 		return;
 	}
 
-	fdata->type = g_str_hash ((gconstpointer) mime_type);
+	fdata->mime_type = g_str_hash ((gconstpointer) mime_type);
 
-	if (g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->type) == NULL)
-		g_hash_table_insert (mime_type_hash, (gpointer) &fdata->type, g_strdup (mime_type));
+	if (g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type) == NULL)
+		g_hash_table_insert (mime_type_hash, (gpointer) &fdata->mime_type, g_strdup (mime_type));
 }
 
 
@@ -130,12 +131,12 @@ file_data_get_mime_type (const FileData *fdata)
 {
 	const char *mime_type;
 
-	if (fdata->type == 0)
+	if (fdata->mime_type == 0)
 		file_data_update_mime_type ((FileData*)fdata);
-	if (fdata->type == 0)
+	if (fdata->mime_type == 0)
 		return GNOME_VFS_MIME_TYPE_UNKNOWN;
 
-	mime_type = g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->type);
+	mime_type = g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type);
 	if (mime_type == NULL)
 		mime_type = GNOME_VFS_MIME_TYPE_UNKNOWN;
 

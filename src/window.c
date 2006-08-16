@@ -260,8 +260,8 @@ sort_by_type (gconstpointer  ptr1,
 	} else if (fdata1->is_dir && fdata2->is_dir) 
 		return sort_by_name (ptr1, ptr2);
 
-	desc1 = file_data_get_type_description (fdata1);
-	desc2 = file_data_get_type_description (fdata2);
+	desc1 = file_data_get_mime_type_description (fdata1);
+	desc2 = file_data_get_mime_type_description (fdata2);
 
 	result = strcasecmp (desc1, desc2);
 	if (result == 0)
@@ -725,7 +725,7 @@ update_file_list_idle (gpointer callback_data)
 
 			s_size = gnome_vfs_format_file_size_for_display (fdata->size);
 			s_time = get_time_string (fdata->modified);
-			desc = file_data_get_type_description (fdata);
+			desc = file_data_get_mime_type_description (fdata);
 
 			utf8_path = g_filename_display_name (fdata->path);
 

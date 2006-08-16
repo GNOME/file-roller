@@ -36,6 +36,7 @@ typedef struct {
 
 	char       *name;             /* The file name. */
 	char       *path;             /* The directory. */
+	gboolean    encrypted;        /* whether the file is encrypted. */
 
 	/* Additional data. */
 
