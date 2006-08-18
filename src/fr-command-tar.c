@@ -644,7 +644,7 @@ get_temp_name (FRCommandTar *c_tar,
 		char *tmp_file_name;
 		g_free (temp_name);
 		g_free (uncomp_temp_name);
-		tmp_file_name = g_strdup_printf ("fr.%d.%d.%s", 
+		tmp_file_name = g_strdup_printf (".fr.%d.%d.%s", 
 						 getpid (), 
 						 count++, 
 						 filename);
