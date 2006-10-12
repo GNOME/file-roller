@@ -104,6 +104,7 @@ unstuff_is_shit_with_filenames (const char *orig)
 	return filename;
 }
 	
+	
 static void
 process_line (char     *line, 
 	      gpointer  data)
@@ -165,6 +166,7 @@ process_line (char     *line,
 
 	fdata = file_data_new ();
 	fdata->full_path = filename;
+	fdata->original_path = filename;
 	fdata->link = NULL;
 	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
