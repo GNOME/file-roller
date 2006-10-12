@@ -64,7 +64,21 @@ mktime_from_string (char *month,
 			}
 	}
 	tm.tm_mday = atoi (mday);
-	tm.tm_year = atoi (year) - 1900;
+	if (strchr (year, ':') != NULL) {
+		char **fields = g_strsplit (year, ":", 2);
+        	if (n_fields (fields) == 2) {
+	        	time_t      now;
+        		struct tm  *now_tm;
+
+	  		tm.tm_hour = atoi (fields[0]) - 1;
+	  		tm.tm_min = atoi (fields[1]);
+	  
+	  		now = time(NULL);
+	  		now_tm = localtime (&now);
+	  		tm.tm_year = now_tm->tm_year;
+        	}
+	} else
+		tm.tm_year = atoi (year) - 1900;
 
 	return mktime (&tm);
 }
@@ -133,7 +147,7 @@ fr_command_rpm_list (FRCommand  *comm,
 
 	fr_process_begin_command (comm->process, "rpm2cpio");
 	fr_process_add_arg (comm->process, comm->e_filename);
-	fr_process_add_arg (comm->process, "| cpio --list --force-local --verbose");
+	fr_process_add_arg (comm->process, "| cpio -tv");
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -154,7 +168,7 @@ fr_command_rpm_extract (FRCommand  *comm,
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);
 	fr_process_add_arg (comm->process, comm->e_filename);
-	fr_process_add_arg (comm->process, "| cpio --extract --force-local --unconditional --make-directories");
+	fr_process_add_arg (comm->process, "| cpio -idu");
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = (char*) scan->data;
 		fr_process_add_arg (comm->process, filename);

@@ -95,8 +95,6 @@ list__process_line (char     *line,
 
 	g_return_if_fail (line != NULL);
 
-g_print ("%s\n", line);
-
 	if (line[0] == 'd') /* Ignore directories. */
 		return;
 
