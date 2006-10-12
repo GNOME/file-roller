@@ -620,8 +620,10 @@ char *
 get_temp_work_dir (void)
 {
 	char temp_dir_template[] = "/tmp/fr-XXXXXX";
-	g_assert (mkdtemp (temp_dir_template) != NULL);
-	return g_strdup (temp_dir_template);
+	if (mkdtemp (temp_dir_template) == NULL)
+		return NULL;
+	else
+		return g_strdup (temp_dir_template);
 }
 
 

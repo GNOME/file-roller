@@ -2716,6 +2716,22 @@ fr_window_file_list_drag_data_get (FRWindow         *window,
 
 		if (window->drag_file_list != NULL) {
 			window->drag_temp_dir = get_temp_work_dir ();
+			if (window->drag_temp_dir == NULL) {
+				GtkWidget *d;
+				window_stop (window);
+				d = _gtk_error_dialog_new (GTK_WINDOW (window->app), 
+							   GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                   	   NULL,
+                                                   	   "%s\n%s",
+                                                   	   _("Could not perform the operation"),
+                                                   	   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
+                                g_signal_connect (d, 
+                                		  "response",
+                                  		  G_CALLBACK (gtk_widget_destroy), 
+                                  		  NULL);
+                                gtk_widget_show (d);
+				return FALSE;
+			}
 			window->drag_temp_dirs = g_list_prepend (window->drag_temp_dirs, window->drag_temp_dir);
 			
 			window->extracting_dragged_files = TRUE;
