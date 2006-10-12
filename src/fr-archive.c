@@ -35,6 +35,7 @@
 #include "glib-utils.h"
 #include "fr-archive.h"
 #include "fr-command.h"
+#include "fr-command-ace.h"
 #include "fr-command-ar.h"
 #include "fr-command-arj.h"
 #include "fr-command-cfile.h"
@@ -305,6 +306,9 @@ create_command_from_mime_type (FRArchive  *archive,
 		   is_mime_type (mime_type, "application/x-ar")) {
 		archive->command = fr_command_ar_new (archive->process, 
 						      filename);
+	} else if (is_mime_type (mime_type, "application/x-ace")) {
+		archive->command = fr_command_ace_new (archive->process, 
+						       filename);
 	} else if (is_mime_type (mime_type, "application/x-7zip")) {
 		archive->command = fr_command_7z_new (archive->process,
 						      filename);
@@ -478,6 +482,12 @@ create_command_from_filename (FRArchive  *archive,
 	if (file_extension_is (filename, ".ar")) {
 		archive->command = fr_command_ar_new (archive->process, 
 						      filename);
+		return (archive->command != NULL);
+	} 
+
+	if (file_extension_is (filename, ".ace")) {
+		archive->command = fr_command_ace_new (archive->process, 
+						       filename);
 		return (archive->command != NULL);
 	} 
 
@@ -1864,6 +1874,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 {
 	static char * ext[] = {
 		".7z",
+		".ace",
 		".ar",
 		".arj",
 		".bin",

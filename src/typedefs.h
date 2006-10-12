@@ -85,6 +85,7 @@ typedef struct {
 
 
 typedef enum {
+	FR_FILE_TYPE_ACE,
 	FR_FILE_TYPE_AR,
 	FR_FILE_TYPE_DEB,
 	FR_FILE_TYPE_ARJ,

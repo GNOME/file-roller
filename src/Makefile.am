@@ -67,6 +67,8 @@ file_roller_SOURCES = 			\
 	fr-archive.h			\
 	fr-command.c			\
 	fr-command.h			\
+	fr-command-ace.c		\
+	fr-command-ace.h		\
 	fr-command-ar.c			\
 	fr-command-ar.h			\
 	fr-command-arj.c		\

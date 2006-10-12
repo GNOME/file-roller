@@ -449,6 +449,21 @@ get_last_field (const char *line,
 }
 
 
+int
+n_fields (char **str_array)
+{
+	int i;
+
+	if (str_array == NULL)
+		return 0;
+
+	i = 0;
+	while (str_array[i] != NULL)
+		i++;
+	return i;
+}
+
+
 void
 debug (const char *file,
        int         line,

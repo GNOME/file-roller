@@ -66,6 +66,7 @@ static gint   extract_here;
 static gchar *default_url = NULL;
 
 FRFileTypeDescription file_type_desc[] = {
+	{ FR_FILE_TYPE_ACE,          ".ace",     "application/x-ace", N_("Ace (.ace)") },
 	{ FR_FILE_TYPE_AR,           ".ar",      "application/x-ar", N_("Ar (.ar)") },
 	{ FR_FILE_TYPE_DEB,          ".deb",     "application/x-deb", NULL },
 	{ FR_FILE_TYPE_ARJ,          ".arj",     "application/x-arj", N_("Arj (.arj)") },
@@ -106,6 +107,7 @@ FRCommandDescription command_desc[] = {
 	{ "rar",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_RAR },
 	{ "gzip",       TRUE,  TRUE,  FALSE, FR_FILE_TYPE_GZIP },
 	{ "bzip2",      TRUE,  TRUE,  FALSE, FR_FILE_TYPE_BZIP2 },
+	{ "unace",      TRUE,  FALSE, TRUE,  FR_FILE_TYPE_ACE },
 	{ "ar",         TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_AR },
 	{ "ar",         TRUE,  FALSE, TRUE,  FR_FILE_TYPE_DEB },
 	{ "arj",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_ARJ },
