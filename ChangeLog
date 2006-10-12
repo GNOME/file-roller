@@ -1,5 +1,13 @@
 2006-10-12  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/file-utils.h: 
+	* src/file-utils.c: added function dir_is_temp_dir
+	* src/dlg-extract.c (dlg_extract): 
+	* src/window.c (_action_performed): do not save the temp dir as default
+	extraction dir.
+	
+	Fixes bug #303213 - default to extract in home instead of tmp
+	
 	* src/fr-command-rpm.c (mktime_from_string): fixed date parsing function.
 	use short format arguments.
 	

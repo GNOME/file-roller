@@ -498,9 +498,13 @@ dlg_extract (GtkWidget *widget,
 
 	/* Set widgets data. */
 
-	if (window->extract_default_dir != NULL)
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->e_destination_filechooserbutton), window->extract_default_dir);
-	
+	if (window->extract_default_dir != NULL) {
+		const char *folder = window->extract_default_dir;
+		if (dir_is_temp_dir (folder))
+			folder = g_get_home_dir ();
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->e_destination_filechooserbutton), folder);
+	}
+		
 	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton), TRUE);
 	else {

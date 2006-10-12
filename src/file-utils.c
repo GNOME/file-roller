@@ -161,6 +161,13 @@ dir_contains_one_object (const char *path)
 }
 
 
+gboolean 
+dir_is_temp_dir (const char *dir) {
+	const char *tmp_dir = g_get_tmp_dir ();
+	return (strncmp (dir, tmp_dir, strlen (tmp_dir)) == 0);
+}
+
+
 /* Check whether the path_src is contained in path_dest */
 gboolean
 path_in_path (const char  *path_src,

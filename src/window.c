@@ -1807,7 +1807,9 @@ _action_performed (FRArchive   *archive,
 {
 	FRWindow *window = data;
 	gboolean  continue_batch = FALSE;
-
+	char     *archive_dir;
+	gboolean  temp_dir;
+	
 	window_stop_activity_mode (window);
 	window_pop_message (window);
 	close_progress_dialog (window);
@@ -1822,25 +1824,27 @@ _action_performed (FRArchive   *archive,
 			break;
 		}
 
+		archive_dir = remove_level_from_path (window->archive_filename);
+		temp_dir = dir_is_temp_dir (archive_dir);
 		if (! window->archive_present) {
-			char *tmp;
-
 			window->archive_present = TRUE;
 			
 			_window_history_clear (window);
 			_window_history_add (window, "/");
 
-			tmp = remove_level_from_path (window->archive_filename);
-			window_set_open_default_dir (window, tmp);
-			window_set_add_default_dir (window, tmp);
-			if (!window->freeze_default_dir)
-				window_set_extract_default_dir (window, tmp);
-			g_free (tmp);
+			if (! temp_dir) {
+				window_set_open_default_dir (window, archive_dir);
+				window_set_add_default_dir (window, archive_dir);
+				if (!window->freeze_default_dir)
+					window_set_extract_default_dir (window, archive_dir);
+			}
 
 			window->archive_new = FALSE;
 		}
-
-		_window_add_to_recent_list (window, window->archive_filename);
+		g_free (archive_dir);
+		if (! temp_dir)
+			_window_add_to_recent_list (window, window->archive_filename);
+			
 		window_update_file_list (window);
 		_window_update_title (window);
 		_window_update_current_location (window);
