@@ -39,6 +39,7 @@
 #include "fr-command-ar.h"
 #include "fr-command-arj.h"
 #include "fr-command-cfile.h"
+#include "fr-command-cpio.h"
 #include "fr-command-iso.h"
 #include "fr-command-lha.h"
 #include "fr-command-rar.h"
@@ -312,6 +313,9 @@ create_command_from_mime_type (FRArchive  *archive,
 	} else if (is_mime_type (mime_type, "application/x-7zip")) {
 		archive->command = fr_command_7z_new (archive->process,
 						      filename);
+	} else if (is_mime_type (mime_type, "application/x-cpio")) {
+		archive->command = fr_command_cpio_new (archive->process,
+						        filename);						      
 	} else 
 		return FALSE;
 
@@ -485,12 +489,6 @@ create_command_from_filename (FRArchive  *archive,
 		return (archive->command != NULL);
 	} 
 
-	if (file_extension_is (filename, ".ace")) {
-		archive->command = fr_command_ace_new (archive->process, 
-						       filename);
-		return (archive->command != NULL);
-	} 
-
 	if (file_extension_is (filename, ".7z")) {
 		archive->command = fr_command_7z_new (archive->process,
 						      filename);
@@ -522,12 +520,17 @@ create_command_from_filename (FRArchive  *archive,
 		if (file_extension_is (filename, ".lzo")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_LZOP);
 			archive->is_compressed_file = TRUE;
-			return (archive->command != NULL);
+			return (archive->command != NULL);			
 		} 
+		
+		if (file_extension_is (filename, ".cpio")) {
+			archive->command = fr_command_cpio_new (archive->process,
+							        filename);
+			return (archive->command != NULL);
+		}		
 	} 
 
 	if (loading) {
-		
 		if (file_extension_is (filename, ".bin")
 		    || file_extension_is (filename, ".sit")) {
 			archive->command = fr_command_unstuff_new (archive->process,
@@ -552,6 +555,12 @@ create_command_from_filename (FRArchive  *archive,
 							      filename);
 			return (archive->command != NULL);
 		} 
+
+		if (file_extension_is (filename, ".ace")) {
+			archive->command = fr_command_ace_new (archive->process, 
+							       filename);
+			return (archive->command != NULL);
+		} 		
 	}
 
 	return FALSE;
@@ -1879,7 +1888,8 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 		".arj",
 		".bin",
 		".bz", 
-		".bz2", 
+		".bz2",
+		".cpio", 
 		".deb",
 		".ear",
 		".gz", 

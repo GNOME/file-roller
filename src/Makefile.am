@@ -75,6 +75,8 @@ file_roller_SOURCES = 			\
 	fr-command-arj.h		\
 	fr-command-cfile.c		\
 	fr-command-cfile.h		\
+	fr-command-cpio.c		\
+	fr-command-cpio.h		\
 	fr-command-iso.c		\
 	fr-command-iso.h		\
 	fr-command-lha.c		\
