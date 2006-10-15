@@ -188,7 +188,7 @@ fr_command_arj_add (FRCommand     *comm,
 	fr_process_begin_command (comm->process, "arj");
 
 	fr_process_add_arg (comm->process, "a");
-
+	
 	if (base_dir != NULL) 
 		fr_process_set_working_dir (comm->process, base_dir);
 
@@ -355,9 +355,9 @@ fr_command_arj_init (FRCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_ARJ;
 
-	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE; 
-	comm->propAddCanReplace            = TRUE; 
+	comm->propAddCanReplace            = TRUE;
+	comm->propAddCanStoreFolders       = FALSE;
 	comm->propExtractCanAvoidOverwrite = TRUE;
 	comm->propExtractCanSkipOlder      = TRUE;
 	comm->propExtractCanJunkPaths      = TRUE;

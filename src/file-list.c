@@ -34,6 +34,7 @@
 
 /* -- filter -- */
  
+ 
 typedef enum {
         GNOME_VFS_DIRECTORY_FILTER_DEFAULT = 0,
         GNOME_VFS_DIRECTORY_FILTER_NODOTFILES = 1 << 1,
@@ -42,6 +43,7 @@ typedef enum {
 } GnomeVFSDirectoryFilterOptions;
 
 typedef struct {
+	char                            *pattern;
 	char                           **patterns;
 	int                              fnmatch_flags;
 	GnomeVFSDirectoryFilterOptions   options;
@@ -52,17 +54,18 @@ static Filter *
 filter_new (const gchar                    *pattern, 
 	    GnomeVFSDirectoryFilterOptions  options)
 {
-	Filter *new;
+	Filter *filter;
 
-        new = g_new (Filter, 1);
+        filter = g_new (Filter, 1);
 
-        new->patterns = search_util_get_patterns (pattern);
-        new->fnmatch_flags = 0;
-	new->options = options;
+	filter->pattern = g_strdup (pattern);
+        filter->patterns = search_util_get_patterns (pattern);
+        filter->fnmatch_flags = 0;
+	filter->options = options;
         if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
-                new->fnmatch_flags |= FNM_CASEFOLD;
+                filter->fnmatch_flags |= FNM_CASEFOLD;
 
-        return new;
+        return filter;
 }
 
 
@@ -81,6 +84,7 @@ filter_destroy (Filter *filter)
 {
         g_return_if_fail (filter != NULL);
 
+	g_free (filter->pattern);
 	if (filter->patterns != NULL)
 		g_strfreev (filter->patterns);
         g_free (filter);
@@ -642,10 +646,12 @@ path_list_async_interrupt (PathListHandle   *handle,
 
 
 struct _VisitDirData {
+	char             *base_dir;
 	char             *directory;
 	gboolean          recursive;
 	gboolean          follow_links;
 	gboolean          same_fs;
+	gboolean          include_directories;
 	VisitDirDoneFunc  done_func;
 	gpointer          done_data;
 	DoneFunc          interrupt_func;
@@ -658,7 +664,9 @@ struct _VisitDirData {
 	/* private */
 	
 	Filter           *filter;
+	GHashTable       *dirnames;
 };
+
 
 struct _VisitDirHandle {
 	VisitDirData   *vdd_data;
@@ -671,6 +679,7 @@ visit_dir_data_free (VisitDirData *vdd)
 	if (vdd == NULL)
 		return;
 
+	g_free (vdd->base_dir);
 	g_free (vdd->directory);
 
 	if (vdd->dirs != NULL)
@@ -680,6 +689,9 @@ visit_dir_data_free (VisitDirData *vdd)
 	
 	if (vdd->filter)
 		filter_destroy (vdd->filter);
+
+	if (vdd->dirnames)
+		g_hash_table_destroy (vdd->dirnames);
 
 	g_free (vdd);
 }
@@ -711,6 +723,48 @@ same_fs (const char *path1,
         gnome_vfs_uri_unref (uri2);
 
 	return (result == GNOME_VFS_OK) && same;
+}
+
+
+static GList*
+get_dir_list_from_file_list (VisitDirData *vdd, 
+			     GList        *files,
+			     gboolean      is_dir_list)
+{
+	GList *scan;
+	GList *dir_list = NULL;
+	
+	for (scan = files; scan; scan = scan->next) {
+		char *filename = scan->data;
+		char *dir_name;
+		
+		if (is_dir_list)
+			dir_name = g_strdup (filename + strlen (vdd->base_dir) + 1);
+		else
+			dir_name = remove_level_from_path (filename + strlen (vdd->base_dir) + 1);
+		
+		while ((dir_name != NULL) && (dir_name[0] != '\0') && (strcmp (dir_name, "/") != 0)) {
+			char *tmp;
+			char *dir;
+			
+			/* avoid to insert duplicated folders */
+
+			dir = g_strconcat (vdd->base_dir, "/", dir_name, NULL);
+			if (g_hash_table_lookup (vdd->dirnames, dir) == NULL) { 
+				g_hash_table_insert (vdd->dirnames, dir, GINT_TO_POINTER (1));
+				dir_list = g_list_prepend (dir_list, dir);
+			} else
+				g_free (dir);
+			
+			tmp = dir_name;
+			dir_name = remove_level_from_path (tmp);
+			g_free (tmp);
+		}
+		
+		g_free (dir_name);	
+	}
+	
+	return dir_list;
 }
 
 
@@ -760,15 +814,21 @@ vd_path_list_done_cb (PathListData *pld,
 				scan = scan->next;
 		}
 
+	if (vdd->include_directories)
+		vdd->files = g_list_concat (get_dir_list_from_file_list (vdd, pld->files, FALSE), vdd->files);
 	vdd->files = g_list_concat (pld->files, vdd->files);
 	pld->files = NULL;
+	
+	if (vdd->include_directories)
+		if (strcmp (vdd->filter->pattern, "*") == 0) 
+			vdd->files = g_list_concat (get_dir_list_from_file_list (vdd, pld->dirs, TRUE), vdd->files);
 
 	if (! vdd->recursive) {
 		if (vdd->done_func)
 			(* vdd->done_func) (vdd->files, vdd->done_data);
 		path_list_data_free (pld);
 		visit_dir_data_free (vdd);
-
+		
 		return;
 	}
 
@@ -780,7 +840,7 @@ vd_path_list_done_cb (PathListData *pld,
 		if (vdd->done_func)
 			(* vdd->done_func) (vdd->files, vdd->done_data);
 		visit_dir_data_free (vdd);
-
+		
 		return;
 	}
 
@@ -830,6 +890,7 @@ visit_dir_async (VisitDirHandle   *handle,
 		 gboolean          no_backup_files,
 		 gboolean          no_dot_files,
 		 gboolean          ignorecase,
+		 gboolean          include_directories,
 		 VisitDirDoneFunc  done_func,
 		 gpointer          done_data)
 {
@@ -837,12 +898,15 @@ visit_dir_async (VisitDirHandle   *handle,
 	GnomeVFSDirectoryFilterOptions  filter_options;
 
 	vdd = g_new0 (VisitDirData, 1);
+	vdd->base_dir = g_strdup (directory);
 	vdd->directory = g_strdup (directory);
 	vdd->recursive = recursive;
+	vdd->include_directories = include_directories;
 	vdd->follow_links = follow_links;
 	vdd->same_fs = same_fs;
 	vdd->done_func = done_func;
 	vdd->done_data = done_data;
+	vdd->dirnames = g_hash_table_new (g_str_hash, g_str_equal);
 
 	/* file filter */
 
@@ -900,6 +964,7 @@ typedef struct {
 
 	char              *directory;
 	char              *base_dir;
+	gboolean           include_directories;
 	VisitDirDoneFunc   done_func;
 	gpointer           done_data;
 
@@ -963,6 +1028,7 @@ get_wildcard_file_list_async  (const char       *directory,
 			       gboolean          no_backup_files,
 			       gboolean          no_dot_files,
 			       gboolean          ignorecase,
+			       gboolean          include_directories,
 			       VisitDirDoneFunc  done_func,
 			       gpointer          done_data)
 {
@@ -983,6 +1049,7 @@ get_wildcard_file_list_async  (const char       *directory,
 				no_backup_files,
 				no_dot_files,
 				ignorecase,
+				include_directories,
 				get_wildcard_file_list_cb,
 				gfl_data);
 }
@@ -1028,6 +1095,7 @@ get_directory_file_list_cb (GList *files, gpointer data)
 VisitDirHandle *
 get_directory_file_list_async (const char       *directory,
 			       const char       *base_dir,
+			       gboolean          include_directories,
 			       VisitDirDoneFunc  done_func,
 			       gpointer          done_data)
 {
@@ -1039,6 +1107,7 @@ get_directory_file_list_async (const char       *directory,
 
 	gfl_data->directory = g_strdup (directory);
 	gfl_data->base_dir  = g_strdup (base_dir);
+	gfl_data->include_directories = include_directories;
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 
@@ -1056,6 +1125,7 @@ get_directory_file_list_async (const char       *directory,
 				  FALSE,
 				  FALSE,
 				  FALSE,
+				  include_directories,
 				  get_directory_file_list_cb,
 				  gfl_data);
 	g_free (path);
@@ -1143,6 +1213,7 @@ visit_current_dir (GetFileListData *gfl_data)
 			 FALSE,
 			 FALSE,
 			 FALSE,
+			 gfl_data->include_directories,
 			 get_items_file_list_cb,
 			 gfl_data);
 	g_free (path);
@@ -1154,6 +1225,7 @@ visit_current_dir (GetFileListData *gfl_data)
 VisitDirHandle *
 get_items_file_list_async (GList            *item_list,
 			   const char       *base_dir,
+			   gboolean          include_directories,
 			   VisitDirDoneFunc  done_func,
 			   gpointer          done_data)
 {
@@ -1180,7 +1252,8 @@ get_items_file_list_async (GList            *item_list,
 	}
 
 	gfl_data->current_dir = gfl_data->dir_list;
-	gfl_data->base_dir  = g_strdup (base_dir);
+	gfl_data->base_dir = g_strdup (base_dir);
+	gfl_data->include_directories = include_directories;
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 	gfl_data->handle = g_new0 (VisitDirHandle, 1);

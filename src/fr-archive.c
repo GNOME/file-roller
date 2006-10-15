@@ -1253,6 +1253,7 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 					     NO_BACKUP_FILES,
 					     NO_DOT_FILES,
 					     IGNORE_CASE,
+					     archive->command->propAddCanStoreFolders,
 					     add_with_wildcard__step2, 
 					     aww_data);
 }
@@ -1335,6 +1336,7 @@ fr_archive_add_directory (FRArchive     *archive,
 
 	return get_items_file_list_async (ad_data->dir_list,
 					  base_dir, 
+					  archive->command->propAddCanStoreFolders,
 					  add_directory__step2, 
 					  ad_data);
 }
@@ -1373,6 +1375,7 @@ fr_archive_add_items (FRArchive     *archive,
 
 	return get_items_file_list_async (ad_data->dir_list, 
 					  base_dir, 
+					  archive->command->propAddCanStoreFolders,
 					  add_directory__step2, 
 					  ad_data);
 }

@@ -201,6 +201,7 @@ fr_command_cpio_init (FRCommand *comm)
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
+	comm->propAddCanStoreFolders       = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = FALSE;

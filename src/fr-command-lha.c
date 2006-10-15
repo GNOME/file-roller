@@ -186,7 +186,12 @@ process_line (char     *line,
 
 	fdata->link = NULL;
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+	fdata->dir = line[0] == 'd';
+	if (fdata->dir)
+		fdata->name =  dir_name_from_path (fdata->full_path);
+	else
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+
 	fdata->path = remove_level_from_path (fdata->full_path);
 
 	if (*fdata->name == 0)
@@ -316,6 +321,7 @@ fr_command_lha_init (FRCommand *comm)
 
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
+	comm->propAddCanStoreFolders       = TRUE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = TRUE;

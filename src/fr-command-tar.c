@@ -172,9 +172,13 @@ process_line (char     *line,
 	g_strfreev (fields);
 	g_free (field_name);
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+	fdata->dir = line[0] == 'd';
+	if (fdata->dir)
+		fdata->name =  dir_name_from_path (fdata->full_path);
+	else
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
-
+	
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else 
@@ -225,9 +229,8 @@ begin_tar_command (FRCommand *comm)
 
 	command = g_find_program_in_path ("gtar");
 #if defined (__SVR4) && defined (__sun)
-	if (g_file_test ("/usr/sfw/bin/gtar", G_FILE_TEST_IS_EXECUTABLE)) {
+	if (g_file_test ("/usr/sfw/bin/gtar", G_FILE_TEST_IS_EXECUTABLE))
 		command = g_strdup ("/usr/sfw/bin/gtar");
-	}
 #endif
 	if (command != NULL)
 		fr_process_begin_command (comm->process, command);
@@ -307,6 +310,7 @@ fr_command_tar_add (FRCommand     *comm,
 
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_add_arg (comm->process, "--no-recursion");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-p");
 
@@ -804,7 +808,8 @@ fr_command_tar_init (FRCommand *comm)
 
 	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = FALSE; 
+	comm->propAddCanReplace            = FALSE;
+	comm->propAddCanStoreFolders       = TRUE; 
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = FALSE;

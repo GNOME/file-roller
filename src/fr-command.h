@@ -62,6 +62,7 @@ struct _FRCommand
 	guint propCanModify : 1;
 	guint propAddCanUpdate : 1;
 	guint propAddCanReplace : 1;
+	guint propAddCanStoreFolders : 1;
 	guint propExtractCanAvoidOverwrite : 1;
 	guint propExtractCanSkipOlder : 1;
 	guint propExtractCanJunkPaths : 1;

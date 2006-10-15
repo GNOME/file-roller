@@ -52,6 +52,7 @@ have_rar (void)
 
 /* -- list -- */
 
+
 static time_t
 mktime_from_string (char *date_s, 
 		    char *time_s)
@@ -131,8 +132,6 @@ process_line (char     *line,
 		}
 		
 		fdata->link = NULL;
-		
-		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
 
 	} else {
@@ -144,19 +143,30 @@ process_line (char     *line,
 		
 		fields = split_line (line, 6);
 
-		if ((fdata->name == NULL)
-		    || (*fdata->name == '\0') 
-		    || (fields[5][1] == 'D') 
-		    || (fields[5][0] == 'd')) {
-			file_data_free (fdata);
-		} else {
-			fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
-			fdata->modified = mktime_from_string (fields[3], fields[4]); 
-			comm->file_list = g_list_prepend (comm->file_list, fdata);
-		}
-		g_strfreev (fields);
+		fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
+		fdata->modified = mktime_from_string (fields[3], fields[4]);
 
+		if ((fields[5][1] == 'D') || (fields[5][0] == 'd')) {
+			gboolean  original_is_full = fdata->original_path == fdata->full_path;
+			char     *path = fdata->full_path;
+						
+			fdata->full_path = g_strconcat (path, "/", NULL);
+			if (original_is_full)
+				fdata->original_path = fdata->full_path;
+			else
+				fdata->original_path = fdata->full_path + 1;
+			fdata->name =  dir_name_from_path (fdata->full_path);
+			
+			fdata->dir = TRUE;
+			
+			g_free (path);
+		} else
+			fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+
+		comm->file_list = g_list_prepend (comm->file_list, fdata);
 		rar_comm->fdata = NULL;
+		
+		g_strfreev (fields);
 	}
 
 	rar_comm->odd_line = ! rar_comm->odd_line;
@@ -398,6 +408,7 @@ fr_command_rar_init (FRCommand *comm)
 
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
+	comm->propAddCanStoreFolders       = TRUE;
 	comm->propExtractCanAvoidOverwrite = TRUE;
 	comm->propExtractCanSkipOlder      = TRUE;
 	comm->propExtractCanJunkPaths      = TRUE;

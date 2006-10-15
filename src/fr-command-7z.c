@@ -353,6 +353,7 @@ fr_command_7z_init (FRCommand *comm)
 
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
+	comm->propAddCanStoreFolders       = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = TRUE;

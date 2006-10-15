@@ -76,7 +76,7 @@ file_data_copy (FileData *src)
 {
 	FileData *fdata;
 
-	fdata = g_new (FileData, 1);
+	fdata = g_new0 (FileData, 1);
 
 	fdata->original_path = g_strdup (src->original_path);
 	fdata->full_path = g_strdup (src->full_path);
@@ -87,8 +87,9 @@ file_data_copy (FileData *src)
 	fdata->path = g_strdup (src->path);
 	fdata->mime_type = src->mime_type;
 	fdata->encrypted = src->encrypted;
+	fdata->dir = src->dir;
 
-	fdata->is_dir = src->is_dir;
+	fdata->list_dir = src->list_dir;
 	fdata->list_name = g_strdup (src->list_name);
 
 	return fdata;
@@ -159,3 +160,9 @@ file_data_get_mime_type_description (const FileData *fdata)
 	return desc;
 }
 
+
+gboolean
+file_data_is_dir (const FileData *fdata)
+{
+	return fdata->dir || fdata->list_dir;
+}

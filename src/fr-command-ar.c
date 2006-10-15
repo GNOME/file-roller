@@ -311,6 +311,7 @@ fr_command_ar_init (FRCommand *comm)
 	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
+	comm->propAddCanStoreFolders       = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = FALSE;

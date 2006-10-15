@@ -56,6 +56,7 @@ gboolean            ensure_dir_exists            (const gchar *a_path,
 						  mode_t       mode);
 gboolean            file_is_hidden               (const gchar *name);
 G_CONST_RETURN char*file_name_from_path          (const gchar *path);
+char *              dir_name_from_path           (const gchar *path);
 gchar *             remove_level_from_path       (const gchar *path);
 gchar *             remove_extension_from_path   (const gchar *path);
 gchar *             remove_ending_separator      (const gchar *path);

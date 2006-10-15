@@ -177,28 +177,15 @@ _window_history_print (FRWindow   *window)
 static GList *
 _window_get_current_dir_list (FRWindow *window)
 {
-	GList      *scan;
 	GList      *dir_list = NULL;
-	GHashTable *names_hash = NULL;
-	const char *current_dir = window_get_current_location (window);
-	int         current_dir_l = strlen (current_dir);
-
-	names_hash = g_hash_table_new (g_str_hash, g_str_equal);
-
-	scan = window->archive->command->file_list;
-	for (; scan; scan = scan->next) {
+	GList      *scan;
+	
+	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
-
-		if (strncmp (current_dir, fdata->full_path, current_dir_l) == 0) {
-			if (g_hash_table_lookup (names_hash, fdata->list_name) != NULL) 
-				continue;
-			g_hash_table_insert (names_hash, fdata->list_name, GINT_TO_POINTER (1));
-			dir_list = g_list_prepend (dir_list, fdata);
-		}
+		if (fdata->list_name == NULL)
+			continue;
+		dir_list = g_list_prepend (dir_list, fdata);
 	}
-
-	if (names_hash != NULL)
-		g_hash_table_destroy (names_hash);
 
 	return g_list_reverse (dir_list);
 }
@@ -210,8 +197,8 @@ sort_by_name (gconstpointer  ptr1,
 {
 	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
 
-	if (fdata1->is_dir != fdata2->is_dir) {
-		if (fdata1->is_dir)
+	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
+		if (file_data_is_dir (fdata1))
 			return -1;
 		else
 			return 1;
@@ -227,12 +214,12 @@ sort_by_size (gconstpointer  ptr1,
 {
 	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
 
-	if (fdata1->is_dir != fdata2->is_dir) {
-		if (fdata1->is_dir)
+	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
+		if (file_data_is_dir (fdata1))
 			return -1;
 		else
 			return 1;
-	} else if (fdata1->is_dir && fdata2->is_dir) 
+	} else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2)) 
 		return sort_by_name (ptr1, ptr2);
 
 	if (fdata1->size == fdata2->size)
@@ -252,12 +239,12 @@ sort_by_type (gconstpointer  ptr1,
 	int             result;
 	const char     *desc1, *desc2;
 
-	if (fdata1->is_dir != fdata2->is_dir) {
-		if (fdata1->is_dir)
+	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
+		if (file_data_is_dir (fdata1))
 			return -1;
 		else
 			return 1;
-	} else if (fdata1->is_dir && fdata2->is_dir) 
+	} else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2)) 
 		return sort_by_name (ptr1, ptr2);
 
 	desc1 = file_data_get_mime_type_description (fdata1);
@@ -277,12 +264,12 @@ sort_by_time (gconstpointer  ptr1,
 {
 	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
 
-	if (fdata1->is_dir != fdata2->is_dir) {
-		if (fdata1->is_dir)
+	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
+		if (file_data_is_dir (fdata1))
 			return -1;
 		else
 			return 1;
-	} else if (fdata1->is_dir && fdata2->is_dir) 
+	} else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2)) 
 		return sort_by_name (ptr1, ptr2);
 
 	if (fdata1->modified == fdata2->modified)
@@ -301,12 +288,12 @@ sort_by_path (gconstpointer  ptr1,
 	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
 	int             result;
 
-	if (fdata1->is_dir != fdata2->is_dir) {
-		if (fdata1->is_dir)
+	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
+		if (file_data_is_dir (fdata1))
 			return -1;
 		else
 			return 1;
-	} else if (fdata1->is_dir && fdata2->is_dir) 
+	} else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2)) 
 		return sort_by_name (ptr1, ptr2);
 
 	result = strcasecmp (fdata1->path, fdata2->path);
@@ -338,41 +325,97 @@ get_compare_func_from_idx (int column_index)
 
 
 static void
-compute_file_list_name (FRWindow *window, 
-			FileData *fdata)
+compute_file_list_name (FRWindow   *window, 
+			FileData   *fdata,
+			const char *current_dir,
+			int         current_dir_len,
+			GHashTable *names_hash)
 {
-	const char *current_dir = window_get_current_location (window);
-	char       *scan, *end;
+	
+	register char *scan, *end;
 
-	fdata->is_dir = FALSE;
-	if (fdata->list_name != NULL)
-		g_free (fdata->list_name);
-
+	g_free (fdata->list_name);
+	fdata->list_name = NULL;
+	fdata->list_dir = FALSE;
+	
 	if (window->list_mode == WINDOW_LIST_MODE_FLAT) {
 		fdata->list_name = g_strdup (fdata->name);
 		return;
 	}
 
-	scan = fdata->full_path + strlen (current_dir);
+	if (strncmp (fdata->full_path, current_dir, current_dir_len) != 0) 
+		return;
+
+	if (strlen (fdata->full_path) == current_dir_len) 
+		return;
+
+	scan = fdata->full_path + current_dir_len;
 	end = strchr (scan, '/');
-	if (end == NULL)
-		fdata->list_name = g_strdup (scan);
-	else {
-		fdata->is_dir = TRUE;
-		fdata->list_name = g_strndup (scan, end - scan);
+	if (end != NULL) { /* folder */ 
+		char *dir_name = g_strndup (scan, end - scan);
+		
+		/* avoid to insert duplicated folders */
+		if (g_hash_table_lookup (names_hash, dir_name) != NULL) {
+			g_free (dir_name); 
+			return;
+		}
+		g_hash_table_insert (names_hash, dir_name, GINT_TO_POINTER (1));
+		
+		if (! fdata->dir)
+			fdata->list_dir = TRUE;
+			
+		fdata->list_name = dir_name;
 	}
+	else  /* file */
+		fdata->list_name = g_strdup (scan);
 }
 
 
 static void
 _window_compute_list_names (FRWindow *window, GList *file_list)
 {
-	GList *scan;
+	const char *current_dir;
+	int         current_dir_len;
+	GHashTable *names_hash;
+	GList      *scan;
 
+	current_dir = window_get_current_location (window);
+	current_dir_len = strlen (current_dir);
+	names_hash = g_hash_table_new (g_str_hash, g_str_equal);
+			
 	for (scan = file_list; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
-		compute_file_list_name (window, fdata);
+		compute_file_list_name (window, fdata, current_dir, current_dir_len, names_hash);
 	}
+
+	g_hash_table_destroy (names_hash);	
+}
+
+
+static gboolean
+_window_dir_exists_in_archive (FRWindow   *window, 
+		    	       const char *dir_name)
+{
+	int    dir_name_len;
+	GList *scan;
+
+	if (dir_name == NULL)
+		return FALSE;
+
+	dir_name_len = strlen (dir_name);
+	if (dir_name_len == 0)
+		return TRUE;
+
+	if (strcmp (dir_name, "/") == 0)
+		return TRUE;
+			
+	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
+		FileData *fdata = scan->data;
+		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0)
+			return TRUE;
+	}
+	
+	return FALSE;
 }
 
 
@@ -493,7 +536,7 @@ get_icon (GtkWidget *widget,
 
        	/* If the file is encrypted, we show a proper emblem */
    
-	if (!fdata->is_dir && fdata->encrypted) {
+	if (! file_data_is_dir (fdata) && fdata->encrypted) {
 		const GnomeIconData *icon_data;
 		int                  base_size;
 		char                *emblem_path;
@@ -508,7 +551,7 @@ get_icon (GtkWidget *widget,
 		return pixbuf;
 	}
 
-	if (fdata->is_dir)
+	if (file_data_is_dir (fdata))
 		mime_type = MIME_TYPE_DIRECTORY;
 	else
 		mime_type = file_data_get_mime_type (fdata);
@@ -521,7 +564,7 @@ get_icon (GtkWidget *widget,
 		return pixbuf;
 	}
 
-	if (fdata->is_dir)
+	if (file_data_is_dir (fdata))
 		icon_name = g_strdup (ICON_TYPE_DIRECTORY);
 	else if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS, TRUE)) 
 		icon_name = g_strdup (ICON_TYPE_REGULAR);
@@ -537,7 +580,7 @@ get_icon (GtkWidget *widget,
 
 	if (icon_name == NULL) {
 		/* if nothing was found use the default internal icons. */
-		if (fdata->is_dir)
+		if (file_data_is_dir (fdata))
 			pixbuf = folder_pixbuf;
 		else
 			pixbuf = file_pixbuf;
@@ -556,7 +599,7 @@ get_icon (GtkWidget *widget,
 		if (icon_path == NULL) {
 			/* if nothing was found use the default internal 
 			 * icons. */
-			if (fdata->is_dir)
+			if (file_data_is_dir (fdata))
 				pixbuf = folder_pixbuf;
 			else
 				pixbuf = file_pixbuf;
@@ -569,7 +612,7 @@ get_icon (GtkWidget *widget,
 			if (pixbuf == NULL) {
 				/* ...else use the default internal icons. */
 
-				if (fdata->is_dir)
+				if (file_data_is_dir (fdata))
 					pixbuf = folder_pixbuf;
 				else
 					pixbuf = file_pixbuf;
@@ -699,12 +742,23 @@ update_file_list_idle (gpointer callback_data)
 		GdkPixbuf   *pixbuf;
 		char        *utf8_name;
 
+		if (fdata->list_name == NULL)
+			continue;
+
 		pixbuf = get_icon (window->app, fdata);
 		utf8_name = g_filename_display_name (fdata->list_name);
 		gtk_list_store_prepend (window->list_store, &iter);
-		if (fdata->is_dir) {
-			char *tmp = remove_ending_separator (window_get_current_location (window));
-			char *utf8_path = g_filename_display_name (tmp);
+		if (file_data_is_dir (fdata)) {
+			char *utf8_path;
+			char *tmp;
+			
+			if (fdata->dir) 
+				tmp = remove_level_from_path (fdata->path);
+			else 
+				tmp = remove_ending_separator (window_get_current_location (window));
+			utf8_path = g_filename_display_name (tmp);
+			g_free (tmp);
+			
 			gtk_list_store_set (window->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
 					    COLUMN_ICON, pixbuf,
@@ -715,7 +769,6 @@ update_file_list_idle (gpointer callback_data)
 					    COLUMN_PATH, utf8_path,
 					    -1);
 			g_free (utf8_path);
-			g_free (tmp);
 
 		} else {
 			char       *s_size;
@@ -811,10 +864,7 @@ window_update_file_list (FRWindow *window)
 	} else {
 		char *current_dir = g_strdup (window_get_current_location (window));
 
-		_window_compute_list_names (window, window->archive->command->file_list);
-		dir_list = _window_get_current_dir_list (window);
-
-		while ((dir_list == NULL) && (strcmp (current_dir, "/") != 0)) {
+		while (! _window_dir_exists_in_archive (window, current_dir)) { 
 			char *tmp;
 
 			_window_history_pop (window);
@@ -824,10 +874,10 @@ window_update_file_list (FRWindow *window)
 			current_dir = tmp;
 
 			_window_history_add (window, current_dir);
-
-			_window_compute_list_names (window, window->archive->command->file_list);
-			dir_list = _window_get_current_dir_list (window);
 		}
+
+		_window_compute_list_names (window, window->archive->command->file_list);
+		dir_list = _window_get_current_dir_list (window);
 
 		g_free (current_dir);
 
@@ -892,7 +942,7 @@ add_selected_fd (GtkTreeModel *model,
                             COLUMN_FILE_DATA, &fdata,
                             -1);
 
-	if (! fdata->is_dir) 
+	if (! fdata->list_dir) 
 		*list = g_list_prepend (*list, fdata);
 }
 
@@ -987,20 +1037,20 @@ _window_update_statusbar_list_info (FRWindow *window)
 
 
 static void
-check_whether_is_a_dir (GtkTreeModel *model,
-			GtkTreePath  *path,
-			GtkTreeIter  *iter,
-			gpointer      data)
+check_whether_has_a_dir (GtkTreeModel *model,
+			 GtkTreePath  *path,
+			 GtkTreeIter  *iter,
+			 gpointer      data)
 {
-	gboolean *is_a_dir = data;
+	gboolean *has_a_dir = data;
 	FileData *fdata;
         
         gtk_tree_model_get (model, iter,
                             COLUMN_FILE_DATA, &fdata,
                             -1);
 
-	if (fdata->is_dir)
-		*is_a_dir = fdata->is_dir;
+	if (file_data_is_dir (fdata))
+		*has_a_dir = TRUE;
 }
 
 
@@ -1008,7 +1058,7 @@ static gboolean
 selection_has_a_dir (FRWindow *window)
 {
 	GtkTreeSelection *selection;
-	gboolean          is_a_dir = FALSE;
+	gboolean          has_a_dir = FALSE;
 
 	if (! GTK_WIDGET_REALIZED (window->list_view))
 		return FALSE;
@@ -1016,11 +1066,12 @@ selection_has_a_dir (FRWindow *window)
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
 	if (selection == NULL)
 		return FALSE;
-	gtk_tree_selection_selected_foreach (selection, 
-					     check_whether_is_a_dir, 
-					     &is_a_dir);
 
-	return is_a_dir;
+	gtk_tree_selection_selected_foreach (selection, 
+					     check_whether_has_a_dir, 
+					     &has_a_dir);
+
+	return has_a_dir;
 }
 
 
@@ -1964,7 +2015,7 @@ row_activated_cb (GtkTreeView       *tree_view,
                             COLUMN_FILE_DATA, &fdata,
                             -1);
 
-	if (fdata->is_dir) {
+	if (file_data_is_dir (fdata)) {
 		char *new_dir;
 		
 		new_dir = g_strconcat (window_get_current_location (window),
@@ -5261,7 +5312,7 @@ window_get_file_list_selection (FRWindow *window,
 		if (!fd)
 			continue;
 
-		if (fd->is_dir) {
+		if (file_data_is_dir (fd)) {
 			if (has_dirs != NULL)
 				*has_dirs = TRUE;
 
@@ -5320,7 +5371,7 @@ window_get_file_list_from_path_list (FRWindow *window,
 		if (!fd)
 			continue;
 
-		if (fd->is_dir) {
+		if (file_data_is_dir (fd)) {
 			if (has_dirs != NULL)
 				*has_dirs = TRUE;
 			list = g_list_concat (list, get_dir_list (window, fd));

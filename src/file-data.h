@@ -36,11 +36,12 @@ typedef struct {
 
 	char       *name;             /* The file name. */
 	char       *path;             /* The directory. */
-	gboolean    encrypted;        /* whether the file is encrypted. */
-
+	gboolean    encrypted;        /* Whether the file is encrypted. */
+	gboolean    dir;              /* Whether this is a directory listed in the archive */
+	
 	/* Additional data. */
 
-	gboolean    is_dir;           /* Whether this entry is used to show
+	gboolean    list_dir;         /* Whether this entry is used to show
 				       * a directory. */
 	char       *list_name;        /* The string visualized in the list
 				       * view. */
@@ -58,6 +59,7 @@ FileData *      file_data_copy                      (FileData *src);
 void            file_data_free                      (FileData *fdata);
 const char *    file_data_get_mime_type             (const FileData *fdata);
 const char *    file_data_get_mime_type_description (const FileData *fdata);
+gboolean        file_data_is_dir                    (const FileData *fdata);
 
 void            file_data_release_data (void);
 

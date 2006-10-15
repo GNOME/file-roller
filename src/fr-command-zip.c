@@ -195,9 +195,14 @@ list__process_line (char     *line,
 
 	fdata->link = NULL;
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+	fdata->dir = line[0] == 'd';
+	if (fdata->dir)
+		fdata->name =  dir_name_from_path (fdata->full_path);
+	else
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
-
+	
+	
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
@@ -249,9 +254,7 @@ fr_command_zip_list (FRCommand  *comm,
 				      comm);
 
 	fr_process_begin_command (comm->process, "unzip");
-	fr_process_add_arg (comm->process, "-Z");
-	fr_process_add_arg (comm->process, "-T");
-	fr_process_add_arg (comm->process, "-s");
+	fr_process_add_arg (comm->process, "-ZTs");
 	add_filename_arg (comm);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
