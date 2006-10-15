@@ -100,14 +100,22 @@ list__process_line (char     *line,
 
 	fdata = file_data_new ();
 
+#ifdef __sun
+	fields = split_line (line, 9);
+	fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
+	fdata->modified = mktime_from_string (fields[5], fields[6], fields[8]);
+	g_strfreev (fields);
+
+	name_field = get_last_field (line, 10);
+#else
 	fields = split_line (line, 8);
 	fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
 	fdata->modified = mktime_from_string (fields[5], fields[6], fields[7]);
 	g_strfreev (fields);
 
-	/* Full path */
-
 	name_field = get_last_field (line, 9);
+#endif /* __sun */
+
 	fields = g_strsplit (name_field, " -> ", 2);
 
 	if (fields[1] == NULL) {
@@ -145,7 +153,7 @@ fr_command_cpio_list (FRCommand  *comm,
 				      list__process_line,
 				      comm);
 
-	fr_process_begin_command (comm->process, "cpio -tv <");
+	fr_process_begin_command (comm->process, "cpio -itv <");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
