@@ -1130,6 +1130,7 @@ _window_update_sensitivity (FRWindow *window)
 	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
+	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	set_sensitive (window, "Close", ! no_archive);
 	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
@@ -4020,6 +4021,24 @@ window_new (void)
 	
 	gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
 	gtk_toolbar_insert (GTK_TOOLBAR (window->toolbar), open_recent_tool_item, 1);
+
+	/**/
+	
+	/*
+	open_recent_tool_item = gtk_menu_tool_button_new_from_stock (FR_STOCK_ADD);
+        gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (open_recent_tool_item),
+                                       gtk_ui_manager_get_widget (ui, "/AddMenu"));
+        gtk_tool_item_set_homogeneous (open_recent_tool_item, FALSE);
+        gtk_tool_item_set_tooltip (open_recent_tool_item, window->tooltips, _("Add files to the archive"), NULL);
+        gtk_menu_tool_button_set_arrow_tooltip (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->tooltips,  _("Add files to the archive"), NULL);
+        gtk_action_connect_proxy (gtk_ui_manager_get_action (ui, "/Toolbar/AddFiles_Toolbar"),
+                                  GTK_WIDGET (open_recent_tool_item));
+
+        gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
+        gtk_toolbar_insert (GTK_TOOLBAR (window->toolbar), 
+                            open_recent_tool_item, 
+                            4);
+        */
 
 	/**/
 	

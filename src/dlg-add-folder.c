@@ -318,7 +318,7 @@ add_folder_cb (GtkWidget *widget,
 					     GTK_WINDOW (data->window->app),
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					     FR_STOCK_ADD, GTK_RESPONSE_OK,
+					     FR_STOCK_ADD_FOLDER, GTK_RESPONSE_OK,
 					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), FALSE);

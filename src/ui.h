@@ -47,13 +47,17 @@ static GtkActionEntry action_entries[] = {
 	  N_("Add files to the archive"),
 	  G_CALLBACK (activate_action_add_files) },
 	{ "AddFiles_Toolbar", FR_STOCK_ADD,
-	  N_("Add"), NULL,
+	  N_("Add Files"), NULL,
 	  N_("Add files to the archive"),
 	  G_CALLBACK (activate_action_add_files) },
-	{ "AddFolder", FR_STOCK_ADD,
+	{ "AddFolder", FR_STOCK_ADD_FOLDER,
 	  N_("Add a _Folder..."), NULL,
 	  N_("Add a folder to the archive"),
 	  G_CALLBACK (activate_action_add_folder) },
+	{ "AddFolder_Toolbar", FR_STOCK_ADD_FOLDER,
+	  N_("Add Folder"), NULL,
+	  N_("Add a folder to the archive"),
+	  G_CALLBACK (activate_action_add_folder) },	  
 	{ "Close", GTK_STOCK_CLOSE,
 	  NULL, NULL,
 	  N_("Close the current archive"),
@@ -272,9 +276,10 @@ static const gchar *ui_info =
 "  </menubar>"
 "  <toolbar  name='ToolBar'>"
 "    <toolitem action='New'/>"
+"    <toolitem action='Extract_Toolbar'/>"
 "    <separator/>"
 "    <toolitem action='AddFiles_Toolbar'/>"
-"    <toolitem action='Extract_Toolbar'/>"
+"    <toolitem action='AddFolder_Toolbar'/>"
 "    <toolitem action='ViewSelection_Toolbar'/>"
 "    <separator/>"
 "    <toolitem action='Stop'/>"
@@ -282,6 +287,7 @@ static const gchar *ui_info =
 "  <popup name='ListPopupMenu'>"
 "    <menuitem action='ViewSelection'/>"
 "    <menuitem action='OpenSelection'/>"
+"    <separator/>"
 "    <menuitem action='Extract'/>"
 "    <separator/>"
 "    <menuitem action='Cut'/>"
@@ -290,6 +296,11 @@ static const gchar *ui_info =
 "    <menuitem action='Rename'/>"
 "    <menuitem action='Delete'/>"
 "  </popup>"
+"  <popup name='AddMenu'>"
+"    <menuitem action='AddFiles'/>"
+"    <menuitem action='AddFolder'/>"
+"  </popup>"
+
 "</ui>";
 
 

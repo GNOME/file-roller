@@ -35,13 +35,15 @@ static struct {
 	gconstpointer  default_pixbuf;
 	gconstpointer  menu_pixbuf;
 } items[] = {
-	{ FR_STOCK_ADD,     add_24_rgba,     NULL },
-	{ FR_STOCK_EXTRACT, extract_24_rgba, NULL },
-	{ FR_STOCK_VIEW,    view_24_rgba,    NULL },
+	{ FR_STOCK_ADD,        add_24_rgba,        add_16_rgba },
+	{ FR_STOCK_ADD_FOLDER, add_folder_24_rgba, add_folder_16_rgba },
+	{ FR_STOCK_EXTRACT,    extract_24_rgba,    extract_16_rgba },
+	{ FR_STOCK_VIEW,       view_24_rgba,       NULL },
 };
 
 static const GtkStockItem stock_items [] = {
 	{ FR_STOCK_ADD, N_("_Add"), 0, 0, GETTEXT_PACKAGE },
+	{ FR_STOCK_ADD_FOLDER, N_("_Add"), 0, 0, GETTEXT_PACKAGE },	
 	{ FR_STOCK_EXTRACT, N_("_Extract"), 0, 0, GETTEXT_PACKAGE },
 	{ FR_STOCK_VIEW, N_("_View"), 0, 0, GETTEXT_PACKAGE },
 };
@@ -78,6 +80,9 @@ fr_stock_init (void)
 
 			gtk_icon_source_set_size_wildcarded (source, FALSE);
 			gtk_icon_source_set_size (source, GTK_ICON_SIZE_MENU);
+			gtk_icon_set_add_source (set, source);
+			
+			gtk_icon_source_set_size (source, GTK_ICON_SIZE_BUTTON);
 			gtk_icon_set_add_source (set, source);
 
 			g_object_unref (pixbuf);
