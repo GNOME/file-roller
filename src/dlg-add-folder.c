@@ -547,11 +547,12 @@ aod_apply_cb (GtkWidget *widget,
 
 	/* Sync widgets with options. */
 
-	if (base_dir != NULL) 
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), base_dir);
-
-	if (filename != NULL)
-		gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (data->dialog), filename);
+	if (base_dir != NULL) { 
+		if ((filename != NULL) && (strcmp (filename, base_dir) != 0)) 
+			gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (data->dialog), filename);
+		else
+			gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), base_dir);
+	}
 		
 	if (include_files != NULL)
 		gtk_entry_set_text (GTK_ENTRY (data->include_files_entry), include_files);
