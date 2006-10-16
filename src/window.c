@@ -1894,9 +1894,10 @@ _action_performed (FRArchive   *archive,
 			window->archive_new = FALSE;
 		}
 		g_free (archive_dir);
-		if (! temp_dir)
-			_window_add_to_recent_list (window, window->archive_filename);
 			
+		if (! temp_dir) 
+			_window_add_to_recent_list (window, window->archive_filename);
+		
 		window_update_file_list (window);
 		_window_update_title (window);
 		_window_update_current_location (window);

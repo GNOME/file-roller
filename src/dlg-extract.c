@@ -36,17 +36,12 @@
 #include "gconf-utils.h"
 
 
-#define GLADE_FILE "file-roller-extract.glade"
-
-
 typedef struct {
 	FRWindow     *window;
-	GladeXML     *gui;
 
 	GtkWidget    *dialog;
 
 	GtkWidget    *e_main_vbox;
-	GtkWidget    *e_destination_filechooserbutton;
 	GtkWidget    *e_all_radiobutton;
 	GtkWidget    *e_selected_radiobutton;
 	GtkWidget    *e_files_radiobutton;
@@ -70,8 +65,6 @@ static void
 destroy_cb (GtkWidget  *widget,
             DialogData *data)
 {
-	g_object_unref (G_OBJECT (data->gui));
-
 	if (! data->extract_clicked) {
 		window_pop_message (data->window);
 		window_batch_mode_stop (data->window);
@@ -79,15 +72,6 @@ destroy_cb (GtkWidget  *widget,
 
 	g_object_unref (data->tooltips);
 	g_free (data);
-}
-
-
-static int
-help_cb (GtkWidget   *w,
-	 DialogData  *data)
-{
-	show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-extract-options");
-	return TRUE;
 }
 
 
@@ -111,7 +95,7 @@ extract_cb (GtkWidget   *w,
 
 	/* collect extraction options. */
 
-	extract_to_dir = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->e_destination_filechooserbutton));
+	extract_to_dir = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->dialog));
 
 	/* check directory existence. */
 
@@ -300,6 +284,28 @@ extract_cb (GtkWidget   *w,
 }
 
 
+static int
+file_sel_response_cb (GtkWidget    *widget,
+		      int           response,
+		      DialogData   *data)
+{
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+		gtk_widget_destroy (data->dialog);
+		return TRUE;
+	}
+
+	if (response == GTK_RESPONSE_HELP) {
+		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-extract-options");
+		return TRUE;
+	}
+	
+	if (response == GTK_RESPONSE_OK) 
+		return extract_cb (widget, data);
+		
+	return FALSE;
+}
+	
+
 static void
 files_entry_changed_cb (GtkWidget  *widget, 
 			DialogData *data)
@@ -462,17 +468,11 @@ void
 dlg_extract (GtkWidget *widget,
 	     gpointer   callback_data)
 {
-	FRWindow          *window = callback_data;
-        DialogData        *data;
-	GtkWidget         *e_okbutton, *e_cancelbutton, *e_helpbutton;
-
-        data = g_new (DialogData, 1);
-
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-        if (! data->gui) {
-                g_warning ("Could not find " GLADE_FILE "\n");
-                return;
-	}
+	FRWindow   *window = callback_data;
+        DialogData *data;
+	GtkWidget  *file_sel;
+	
+        data = g_new0 (DialogData, 1);
 
         data->window = window;
 	data->extract_clicked = FALSE;
@@ -481,20 +481,22 @@ dlg_extract (GtkWidget *widget,
 	g_object_ref (G_OBJECT (data->tooltips));
 	gtk_object_sink (GTK_OBJECT (data->tooltips));
 
-        /* Get the widgets. */
+	data->dialog = file_sel = 
+		gtk_file_chooser_dialog_new (_("Extract"),
+					     GTK_WINDOW (data->window->app),
+					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					     FR_STOCK_EXTRACT, GTK_RESPONSE_OK,
+					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+					     NULL);
+	
+	gtk_window_set_default_size (GTK_WINDOW (file_sel), 530, 510);
+					     
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), FALSE);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
+	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 
-	data->dialog = glade_xml_get_widget (data->gui, "extract_dialog");
-	data->e_main_vbox = glade_xml_get_widget (data->gui, "e_main_vbox");
-	data->e_destination_filechooserbutton = glade_xml_get_widget (data->gui, "e_destination_filechooserbutton");
-	e_okbutton = glade_xml_get_widget (data->gui, "e_okbutton");
-	e_cancelbutton = glade_xml_get_widget (data->gui, "e_cancelbutton");
-	e_helpbutton = glade_xml_get_widget (data->gui, "e_helpbutton");
-
-	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
-	gtk_button_set_use_stock (GTK_BUTTON (e_okbutton), TRUE);
-	gtk_button_set_label (GTK_BUTTON (e_okbutton), FR_STOCK_EXTRACT);
-
-	gtk_box_pack_start (GTK_BOX (data->e_main_vbox), create_extra_widget (data), TRUE, TRUE, 0);
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), create_extra_widget (data));
 
 	/* Set widgets data. */
 
@@ -502,7 +504,7 @@ dlg_extract (GtkWidget *widget,
 		const char *folder = window->extract_default_dir;
 		if (dir_is_temp_dir (folder))
 			folder = g_get_home_dir ();
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->e_destination_filechooserbutton), folder);
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), folder);
 	}
 		
 	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
@@ -537,17 +539,9 @@ dlg_extract (GtkWidget *widget,
 			  G_CALLBACK (destroy_cb),
 			  data);
 
-	g_signal_connect (G_OBJECT (e_okbutton), 
-			  "clicked",
-			  G_CALLBACK (extract_cb),
-			  data);
-	g_signal_connect_swapped (G_OBJECT (e_cancelbutton), 
-				  "clicked",
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (data->dialog));
-	g_signal_connect (G_OBJECT (e_helpbutton), 
-			  "clicked",
-			  G_CALLBACK (help_cb),
+	g_signal_connect (G_OBJECT (file_sel),
+			  "response",
+			  G_CALLBACK (file_sel_response_cb),
 			  data);
 
 	g_signal_connect (G_OBJECT (data->e_overwrite_checkbutton), 
@@ -561,9 +555,6 @@ dlg_extract (GtkWidget *widget,
 
 	/* Run dialog. */
 
-        gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
-				      GTK_WINDOW (window->app));
-        gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
-
-	gtk_widget_show (data->dialog);
+	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
+	gtk_widget_show (file_sel);	
 }

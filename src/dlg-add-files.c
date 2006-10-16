@@ -189,6 +189,9 @@ add_files_cb (GtkWidget *widget,
 					     FR_STOCK_ADD, GTK_RESPONSE_OK,
 					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
+					     
+	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 450);
+					     
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);

@@ -1,4 +1,4 @@
-glade_DATA = file-roller.glade file-roller-extract.glade
+glade_DATA = file-roller.glade
 gladedir = $(datadir)/file-roller/glade
 
 EXTRA_DIST = $(glade_DATA)
