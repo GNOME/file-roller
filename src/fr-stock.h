@@ -23,10 +23,10 @@
 #ifndef FR_STOCK_H
 #define FR_STOCK_H
 
-#define FR_STOCK_ADD        "fr-add"
-#define FR_STOCK_ADD_FOLDER "fr-add-folder"
-#define FR_STOCK_EXTRACT    "fr-extract"
-#define FR_STOCK_VIEW       "fr-view"
+#define FR_STOCK_ADD_FILES  "add-files-to-archive"
+#define FR_STOCK_ADD_FOLDER "add-folder-to-archive"
+#define FR_STOCK_EXTRACT    "extract-archive"
+#define FR_STOCK_VIEW       "preview-file"
 
 void fr_stock_init (void);
 

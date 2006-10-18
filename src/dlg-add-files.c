@@ -186,7 +186,7 @@ add_files_cb (GtkWidget *widget,
 					     GTK_WINDOW (data->window->app),
 					     GTK_FILE_CHOOSER_ACTION_OPEN,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					     FR_STOCK_ADD, GTK_RESPONSE_OK,
+					     FR_STOCK_ADD_FILES, GTK_RESPONSE_OK,
 					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
 					     

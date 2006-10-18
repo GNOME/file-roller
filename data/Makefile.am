@@ -1,6 +1,6 @@
 @INTLTOOL_DESKTOP_RULE@
 
-SUBDIRS = glade
+SUBDIRS = glade icons
 
 desktop_in_in_files = file-roller.desktop.in.in
 desktop_in_files = $(desktop_in_in_files:.desktop.in.in=.desktop.in) 
@@ -8,13 +8,16 @@ desktop_in_files = $(desktop_in_in_files:.desktop.in.in=.desktop.in)
 desktopdir = $(datadir)/applications
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop) 
 
-icondir = $(datadir)/icons/hicolor/48x48/apps
-icon_DATA = file-roller.png
+schemadir = @GCONF_SCHEMA_FILE_DIR@
+schema_DATA = file-roller.schemas
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
 
-install-data-hook:
-	@-if test -z "$(DESTDIR)"; then \
+install-data-local:
+if GCONF_SCHEMAS_INSTALL
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+endif
+	if test -z "$(DESTDIR)"; then \
 		echo "Updating Gtk icon cache."; \
 		$(gtk_update_icon_cache); \
 	else \
@@ -22,19 +25,11 @@ install-data-hook:
 		echo "***   $(gtk_update_icon_cache)"; \
 	fi
 
-schemadir = @GCONF_SCHEMA_FILE_DIR@
-schema_DATA = file-roller.schemas
-
-if GCONF_SCHEMAS_INSTALL
-install-data-local:
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
-endif
 
 EXTRA_DIST = 			\
 	$(desktop_in_in_files)	\
 	$(desktop_in_files)	\
 	$(desktop_DATA)		\
-	$(icon_DATA)		\
 	$(schema_DATA)
 
 

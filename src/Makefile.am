@@ -1,6 +1,3 @@
-SUBDIRS=icons
-DIST_SUBDIRS=icons
-
 bin_PROGRAMS = file-roller
 
 if MKDTEMP_MISSING

@@ -24,92 +24,58 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include "fr-stock.h"
-#include "icons/pixbufs.h"
 
 
 static gboolean stock_initialized = FALSE;
 
-
-static struct {
-	const char    *stock_id;
-	gconstpointer  default_pixbuf;
-	gconstpointer  menu_pixbuf;
-} items[] = {
-	{ FR_STOCK_ADD,        add_24_rgba,        add_16_rgba },
-	{ FR_STOCK_ADD_FOLDER, add_folder_24_rgba, add_folder_16_rgba },
-	{ FR_STOCK_EXTRACT,    extract_24_rgba,    extract_16_rgba },
-	{ FR_STOCK_VIEW,       view_24_rgba,       NULL },
+static const  struct {
+        char *stock_id;
+        char *icon;
+} stock_icons [] = {
+        { FR_STOCK_ADD_FILES,  "add-files-to-archive" },
+        { FR_STOCK_ADD_FOLDER, "add-folder-to-archive" },
+        { FR_STOCK_EXTRACT,    "extract-archive" },
+        { FR_STOCK_VIEW,       "preview-file" }
 };
 
 static const GtkStockItem stock_items [] = {
-	{ FR_STOCK_ADD, N_("_Add"), 0, 0, GETTEXT_PACKAGE },
+	{ FR_STOCK_ADD_FILES, N_("_Add"), 0, 0, GETTEXT_PACKAGE },
 	{ FR_STOCK_ADD_FOLDER, N_("_Add"), 0, 0, GETTEXT_PACKAGE },	
 	{ FR_STOCK_EXTRACT, N_("_Extract"), 0, 0, GETTEXT_PACKAGE },
 	{ FR_STOCK_VIEW, N_("_View"), 0, 0, GETTEXT_PACKAGE },
 };
 
-
 void
 fr_stock_init (void)
-{
+{        
 	GtkIconFactory *factory;
-	int             i;
-
+        GtkIconSource  *source;
+        int             i;
+	
 	if (stock_initialized)
 		return;
 	stock_initialized = TRUE;
 
 	gtk_stock_add_static (stock_items, G_N_ELEMENTS (stock_items));
 
-	factory = gtk_icon_factory_new ();
-	for (i = 0; i < G_N_ELEMENTS (items); i++) {
-		GtkIconSet    *set;
-		GtkIconSource *source;
-		GdkPixbuf     *pixbuf;
+        factory = gtk_icon_factory_new ();
+        gtk_icon_factory_add_default (factory);
 
-		set = gtk_icon_set_new ();
+        source = gtk_icon_source_new ();
 
-		source = gtk_icon_source_new ();
+        for (i = 0; i < G_N_ELEMENTS (stock_icons); i++) {
+                GtkIconSet *set;
 
-		if (items[i].menu_pixbuf != NULL) {
-			pixbuf = gdk_pixbuf_new_from_inline (-1, 
-							     items[i].menu_pixbuf, 
-							     FALSE, 
-							     NULL);
-			gtk_icon_source_set_pixbuf (source, pixbuf);
+                gtk_icon_source_set_icon_name (source, stock_icons [i].icon);
 
-			gtk_icon_source_set_size_wildcarded (source, FALSE);
-			gtk_icon_source_set_size (source, GTK_ICON_SIZE_MENU);
-			gtk_icon_set_add_source (set, source);
-			
-			gtk_icon_source_set_size (source, GTK_ICON_SIZE_BUTTON);
-			gtk_icon_set_add_source (set, source);
+                set = gtk_icon_set_new ();
+                gtk_icon_set_add_source (set, source);
 
-			g_object_unref (pixbuf);
-		}
+                gtk_icon_factory_add (factory, stock_icons [i].stock_id, set);
+                gtk_icon_set_unref (set);
+        }
 
-		pixbuf = gdk_pixbuf_new_from_inline (-1, 
-						     items[i].default_pixbuf, 
-						     FALSE, 
-						     NULL);
-		
-		gtk_icon_source_set_pixbuf (source, pixbuf);
+        gtk_icon_source_free (source);
 
-		gtk_icon_source_set_size_wildcarded (source, FALSE);
-		gtk_icon_source_set_size (source, GTK_ICON_SIZE_LARGE_TOOLBAR);
-		gtk_icon_set_add_source (set, source);
-
-		gtk_icon_source_set_size_wildcarded (source, TRUE);
-		gtk_icon_source_set_state_wildcarded (source, TRUE);
-		gtk_icon_source_set_direction_wildcarded (source, TRUE);
-		gtk_icon_set_add_source (set, source);
-
-		gtk_icon_factory_add (factory, items[i].stock_id, set);
-
-		gtk_icon_set_unref (set);
-		gtk_icon_source_free (source);
-		g_object_unref (pixbuf);
-	}
-	gtk_icon_factory_add_default (factory);
-	g_object_unref (factory);
+        g_object_unref (factory);
 }

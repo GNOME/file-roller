@@ -59,8 +59,6 @@
 #include "ui.h"
 #include "utf8-fnmatch.h"
 
-#include "icons/pixbufs.h"
-
 
 #define LAST_OUTPUT_DIALOG_NAME "last_output"
 #define MAX_HISTORY_LEN 5
@@ -87,8 +85,6 @@
 
 #define BAD_CHARS "/\\*"
 
-static GdkPixbuf      *folder_pixbuf = NULL;
-static GdkPixbuf      *file_pixbuf = NULL;
 static GHashTable     *pixbuf_hash = NULL;
 static GnomeIconTheme *icon_theme = NULL;
 static int             icon_size = 0;
@@ -579,12 +575,7 @@ get_icon (GtkWidget *widget,
 					       NULL);
 
 	if (icon_name == NULL) {
-		/* if nothing was found use the default internal icons. */
-		if (file_data_is_dir (fdata))
-			pixbuf = folder_pixbuf;
-		else
-			pixbuf = file_pixbuf;
-		g_object_ref (pixbuf);
+		return NULL;
 
 	} else {
 		const GnomeIconData *icon_data;
@@ -597,26 +588,14 @@ get_icon (GtkWidget *widget,
 							  &base_size);
 
 		if (icon_path == NULL) {
-			/* if nothing was found use the default internal 
-			 * icons. */
-			if (file_data_is_dir (fdata))
-				pixbuf = folder_pixbuf;
-			else
-				pixbuf = file_pixbuf;
-			g_object_ref (pixbuf);
+			return NULL;
 
 		} else {
 			/* ...else load the file from disk. */
 			pixbuf = load_icon_file (icon_path, icon_size);
 
 			if (pixbuf == NULL) {
-				/* ...else use the default internal icons. */
-
-				if (file_data_is_dir (fdata))
-					pixbuf = folder_pixbuf;
-				else
-					pixbuf = file_pixbuf;
-				g_object_ref (pixbuf);
+				return NULL;
 			}
 		}
 	}
@@ -3592,11 +3571,6 @@ window_new (void)
 
 	/* data common to all windows. */
 
-	if (file_pixbuf == NULL) 
-		file_pixbuf = gdk_pixbuf_new_from_inline (-1, file_rgba, FALSE, NULL);
-	if (folder_pixbuf == NULL)
-		folder_pixbuf = gdk_pixbuf_new_from_inline (-1, folder_rgba, FALSE, NULL);
-
 	if (pixbuf_hash == NULL)
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
@@ -4356,12 +4330,6 @@ window_close (FRWindow *window)
 
 		if (icon_theme != NULL)
 			g_object_unref (icon_theme);
-
-		if (file_pixbuf != NULL)
-			g_object_unref (file_pixbuf);
-
-		if (folder_pixbuf != NULL)
-			g_object_unref (folder_pixbuf);
 
                 gtk_main_quit ();
 	}
