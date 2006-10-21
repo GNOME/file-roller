@@ -46,6 +46,7 @@ static FRCommandClass *parent_class = NULL;
 
 /* -- list -- */
 
+
 static time_t
 mktime_from_string (char *date_s, 
 		    char *time_s)
@@ -81,7 +82,7 @@ mktime_from_string (char *date_s,
 	return mktime (&tm);
 }
 
-
+/*
 static void
 change_to_unix_dir_separator (char *path)
 {
@@ -98,7 +99,7 @@ to_dos (const char *path)
 {
 	return str_substitute (path, "/", "\\\\");
 }
-
+*/
 
 static int
 str_rfind (const char *str, 
@@ -156,7 +157,7 @@ list__process_line (char     *line,
 
 	name_field = g_strdup (line + p7z_comm->name_index);
 
-	change_to_unix_dir_separator (name_field);
+	/*change_to_unix_dir_separator (name_field);*/
 	
 	if (*name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
@@ -181,6 +182,8 @@ fr_command_7z_begin_command (FRCommand *comm)
 {
 	if (is_program_in_path ("7za"))
 		fr_process_begin_command (comm->process, "7za");
+	else if (is_program_in_path ("7zr"))
+		fr_process_begin_command (comm->process, "7zr");
 	else
 		fr_process_begin_command (comm->process, "7z");
 }
@@ -216,8 +219,13 @@ fr_command_7z_add (FRCommand     *comm,
 
 	fr_command_7z_begin_command (comm);
 
-	if (base_dir != NULL) 
+	if (base_dir != NULL) { 
+		char *working_dir;
 		fr_process_set_working_dir (comm->process, base_dir);
+		working_dir = g_strconcat ("-w", base_dir, NULL);
+		fr_process_add_arg (comm->process, working_dir);
+		g_free (working_dir);
+	}
 
 	if (update)
 		fr_process_add_arg (comm->process, "u");
@@ -226,6 +234,7 @@ fr_command_7z_add (FRCommand     *comm,
 
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
+	fr_process_add_arg (comm->process, "-l");
 
 	switch (compression) {
 	case FR_COMPRESSION_VERY_FAST:
@@ -241,9 +250,8 @@ fr_command_7z_add (FRCommand     *comm,
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = to_dos (scan->data);
+		char *filename = scan->data;
 		fr_process_add_arg (comm->process, filename);
-		g_free (filename);
 	}
 
 	fr_process_end_command (comm->process);
@@ -264,9 +272,8 @@ fr_command_7z_delete (FRCommand *comm,
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = to_dos (scan->data);
+		char *filename = scan->data;
 		fr_process_add_arg (comm->process, filename);
-		g_free (filename);
 	}
 
 	fr_process_end_command (comm->process);
@@ -305,9 +312,8 @@ fr_command_7z_extract (FRCommand  *comm,
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = to_dos (scan->data);
+		char *filename = scan->data;
 		fr_process_add_arg (comm->process, filename);
-		g_free (filename);
 	}
 
 	fr_process_end_command (comm->process);
@@ -327,6 +333,17 @@ fr_command_7z_test (FRCommand   *comm,
 }
 
 
+static void
+fr_command_7z_handle_error (FRCommand   *comm, 
+			    FRProcError *error)
+{
+	if (error->type == FR_PROC_ERROR_GENERIC) {
+		if (error->status <= 1)
+			error->type = FR_PROC_ERROR_NONE;
+	}
+}
+
+
 static void 
 fr_command_7z_class_init (FRCommand7zClass *class)
 {
@@ -343,6 +360,7 @@ fr_command_7z_class_init (FRCommand7zClass *class)
 	afc->delete         = fr_command_7z_delete;
 	afc->extract        = fr_command_7z_extract;
 	afc->test           = fr_command_7z_test;
+	afc->handle_error   = fr_command_7z_handle_error;
 }
 
  
@@ -408,8 +426,9 @@ fr_command_7z_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
-	if ((!is_program_in_path("7za")) &&
-	    (!is_program_in_path("7z"))) {
+	if (! is_program_in_path("7za") 
+	    && ! is_program_in_path("7zr")
+	    && ! is_program_in_path("7z")) { 
 		return NULL;
 	}
 

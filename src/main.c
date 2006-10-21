@@ -125,7 +125,8 @@ FRCommandDescription command_desc[] = {
 	{ "unstuff",    TRUE,  FALSE, FALSE, FR_FILE_TYPE_STUFFIT },
 	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_WAR },
 	{ "zoo",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_ZOO },
-	{ "7za",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_7ZIP }
+	{ "7za",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_7ZIP },
+	{ "7zr",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_7ZIP }
 };
 
 FRCommandDescription tar_command_desc[] = {

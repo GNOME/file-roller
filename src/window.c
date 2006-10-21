@@ -1592,7 +1592,7 @@ _window_add_to_recent_list (FRWindow *window,
 	/* avoid adding temporary archives to the list. */
 
 	tmp = g_strconcat (g_get_tmp_dir (), "/fr-", NULL);
-	if (path_in_path (tmp, filename)) {
+	if (strncmp (tmp, filename, strlen (tmp)) == 0) {
 		g_free (tmp);
 		return;
 	}

@@ -1,3 +1,16 @@
+2006-10-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (_window_add_to_recent_list): 
+	
+	Do not add temp archives to the recent files list (really this time).
+
+	* src/main.c:	
+	* src/fr-command-7z.c (fr_command_7z_new): Use the 7zr command if available.
+	Use the unix notation for paths instead of the dos notation.  Allow to
+	create 7zip archives.
+	
+	Fixes bug #349824 – does not work with 7zr.
+
 2006-10-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* configure.in: 
