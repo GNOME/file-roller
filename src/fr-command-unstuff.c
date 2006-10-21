@@ -229,7 +229,6 @@ fr_command_unstuff_extract (FRCommand  *comm,
 	char  *filename;
 
 	fr_process_begin_command (comm->process, "unstuff");
-	fr_process_add_arg (comm->process, "x");
 
 	if (dest_dir != NULL) {
 		char *e_dest_dir = fr_command_escape (comm, dest_dir);
