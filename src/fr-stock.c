@@ -42,7 +42,7 @@ static const GtkStockItem stock_items [] = {
 	{ FR_STOCK_ADD_FILES, N_("_Add"), 0, 0, GETTEXT_PACKAGE },
 	{ FR_STOCK_ADD_FOLDER, N_("_Add"), 0, 0, GETTEXT_PACKAGE },	
 	{ FR_STOCK_EXTRACT, N_("_Extract"), 0, 0, GETTEXT_PACKAGE },
-	{ FR_STOCK_VIEW, N_("_View"), 0, 0, GETTEXT_PACKAGE },
+	{ FR_STOCK_VIEW, N_("_View File"), 0, 0, GETTEXT_PACKAGE },
 };
 
 void

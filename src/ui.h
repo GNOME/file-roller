@@ -151,11 +151,11 @@ static GtkActionEntry action_entries[] = {
 	  N_("Test whether the archive contains errors"),
 	  G_CALLBACK (activate_action_test_archive) },
 	{ "ViewSelection", FR_STOCK_VIEW,
-	  N_("_View"), NULL,
+	  NULL, NULL,
 	  N_("View the selected file"),
 	  G_CALLBACK (activate_action_view_or_open) },
 	{ "ViewSelection_Toolbar", FR_STOCK_VIEW,
-	  N_("_View"), NULL,
+	  NULL, NULL,
 	  N_("View the selected file"),
 	  G_CALLBACK (activate_action_view_or_open) },
 };
