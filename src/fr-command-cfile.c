@@ -330,7 +330,9 @@ fr_command_cfile_extract (FRCommand  *comm,
 	char           *dest_file;
 	char           *e_dest_file;
 	char           *temp_file;
+	char           *e_temp_file;
 	char           *uncompr_file;
+	char           *e_uncompr_file;
 	char           *compr_file;
 
 	/* create a temp dir. */
@@ -340,15 +342,16 @@ fr_command_cfile_extract (FRCommand  *comm,
 
 	/* copy file to the temp dir, remove the already existing file first */
 
-	temp_file = g_strconcat (e_temp_dir,
+	temp_file = g_strconcat (temp_dir,
 				 "/",
-				 file_name_from_path (comm->e_filename),
+				 file_name_from_path (comm->filename),
 				 NULL);
+	e_temp_file = fr_command_escape (comm, temp_file);
 
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_add_arg (comm->process, "-f");
 	fr_process_add_arg (comm->process, comm->e_filename);
-	fr_process_add_arg (comm->process, temp_file);
+	fr_process_add_arg (comm->process, e_temp_file);
 	fr_process_end_command (comm->process);
 
 	/* uncompress the file */
@@ -362,7 +365,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, "-n");
-		fr_process_add_arg (comm->process, temp_file);
+		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
 		break;
 
@@ -370,7 +373,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 		fr_process_begin_command (comm->process, "bzip");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
-		fr_process_add_arg (comm->process, temp_file);
+		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
 		break;
 
@@ -378,14 +381,14 @@ fr_command_cfile_extract (FRCommand  *comm,
 		fr_process_begin_command (comm->process, "bzip2");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
-		fr_process_add_arg (comm->process, temp_file);
+		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
 		break;
 
 	case FR_COMPRESS_PROGRAM_COMPRESS: 
 		fr_process_begin_command (comm->process, "uncompress");
 		fr_process_add_arg (comm->process, "-f");
-		fr_process_add_arg (comm->process, temp_file);
+		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
 		break;
 
@@ -395,7 +398,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, "-fU");
 		fr_process_add_arg (comm->process, "--no-stdin");
-		fr_process_add_arg (comm->process, temp_file);
+		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
 		break;
 	}
@@ -403,10 +406,11 @@ fr_command_cfile_extract (FRCommand  *comm,
 	/* copy uncompress file to the dest dir */
 
 	uncompr_file = remove_extension_from_path (temp_file);
-
+        e_uncompr_file = fr_command_escape (comm, uncompr_file);
+        
 	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
 	if (compr_file == NULL) 
-		compr_file = remove_extension_from_path (file_name_from_path (comm->e_filename));
+		compr_file = remove_extension_from_path (file_name_from_path (comm->filename));
 	dest_file = g_strconcat (dest_dir,
 				 "/",
 				 compr_file,
@@ -417,7 +421,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_add_arg (comm->process, "-f");
-	fr_process_add_arg (comm->process, uncompr_file);
+	fr_process_add_arg (comm->process, e_uncompr_file);
 	fr_process_add_arg (comm->process, e_dest_file);
 	fr_process_end_command (comm->process);
 
@@ -431,7 +435,9 @@ fr_command_cfile_extract (FRCommand  *comm,
 
 	g_free (e_dest_file);
 	g_free (uncompr_file);
+	g_free (e_uncompr_file);
 	g_free (temp_file);
+	g_free (e_temp_file);
 	g_free (e_temp_dir);
 	g_free (temp_dir);
 }

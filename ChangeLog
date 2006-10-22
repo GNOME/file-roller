@@ -1,3 +1,11 @@
+2006-10-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-command-cfile.c (fr_command_cfile_extract): do not escape the 
+	filename twice.
+	
+	Fixes bug #355307 – If uncompressed name not specified in compressed file,
+	cannot view, bad extracted filename.
+
 2006-10-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-unstuff.c (fr_command_unstuff_extract): 
