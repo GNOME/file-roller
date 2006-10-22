@@ -76,6 +76,8 @@ file_roller_SOURCES = 			\
 	fr-command-cpio.h		\
 	fr-command-iso.c		\
 	fr-command-iso.h		\
+	fr-command-jar.h		\
+	fr-command-jar.c		\
 	fr-command-lha.c		\
 	fr-command-lha.h		\
 	fr-command-rar.c		\
@@ -108,6 +110,8 @@ file_roller_SOURCES = 			\
 	gnome-vfs-helpers.h		\
 	gtk-utils.c			\
 	gtk-utils.h			\
+	java-utils.c			\
+	java-utils.h			\
 	main.c				\
 	main.h				\
 	preferences.c			\

@@ -41,6 +41,7 @@
 #include "fr-command-cfile.h"
 #include "fr-command-cpio.h"
 #include "fr-command-iso.h"
+#include "fr-command-jar.h"
 #include "fr-command-lha.h"
 #include "fr-command-rar.h"
 #include "fr-command-rpm.h"
@@ -376,6 +377,9 @@ get_mime_type_from_sniffer (const char *filename)
 	
 	if (file == NULL) 
                 return NULL;
+                
+        if (file_extension_is (filename, ".jar"))
+        	return NULL;
 	
 	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, file);
 	buffer[n] = 0;
@@ -451,9 +455,14 @@ create_command_from_filename (FRArchive  *archive,
 
 	if (file_extension_is (filename, ".zip")
 	    || file_extension_is (filename, ".ear")
-	    || file_extension_is (filename, ".jar")
 	    || file_extension_is (filename, ".war")) {
 		archive->command = fr_command_zip_new (archive->process, 
+						       filename);
+		return (archive->command != NULL);
+	} 
+
+	if (file_extension_is (filename, ".jar")) {
+		archive->command = fr_command_jar_new (archive->process, 
 						       filename);
 		return (archive->command != NULL);
 	} 
