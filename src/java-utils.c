@@ -66,9 +66,9 @@
 /* represents the utf8 strings in class file */
 struct utf_string	
 {
-	guint16 index;
-	guint16 length;
-	gchar *str;
+	guint16  index;
+	guint16  length;
+	char    *str;
 };
 
 /* structure that holds class information in a class file */
@@ -78,8 +78,9 @@ struct class_info
 	guint16 name_index; /* index into the utf_strings */
 };
 
-struct classfile
-{
+typedef struct {
+	int     fd;
+	
 	guint32 magic_no;		/* 0xCAFEBABE (JVM Specification) :) */
 
 	guint16 major;			/* versions */
@@ -92,8 +93,7 @@ struct classfile
 	guint16 access_flags;
 	guint16 this_class;		/* the index of the class the file is named after. */
 	
-	/* not needed */
-#if 0	
+#if 0 /* not needed */
 	guint16         super_class;
 	guint16         interfaces_count;
 	guint16        *interfaces;
@@ -104,278 +104,332 @@ struct classfile
 	guint16         attributes_count;
 	attribute_info *attributes;
 #endif
-};
+} JavaClassFile;
 
 
-static struct classfile cfile;
-static int    fdesc = -1;
+static JavaClassFile*
+java_class_file_new (void)
+{
+	JavaClassFile *cfile;
+	
+	cfile = g_new0 (JavaClassFile, 1);
+	cfile->fd = -1;
+	
+	return cfile;
+}
+
+
+static void
+java_class_file_free (JavaClassFile *cfile)
+{
+	GSList *scan;
+
+	if (cfile->const_pool_class != NULL) {
+		g_slist_foreach (cfile->const_pool_class, (GFunc)g_free, NULL);
+		g_slist_free (cfile->const_pool_class);
+	}
+
+	for (scan = cfile->const_pool_utf; scan ; scan = scan->next) {
+		struct utf_string *string = scan->data;
+		g_free (string->str);
+	}
+	
+	if (cfile->const_pool_utf != NULL) {
+		g_slist_foreach (cfile->const_pool_utf, (GFunc)g_free, NULL);
+		g_slist_free (cfile->const_pool_utf);
+	}
+
+	if (cfile->fd != -1)
+		close (cfile->fd);
+
+	g_free (cfile);
+}
 
 
 /* The following function loads the utf8 strings and class structures from the 
  * class file. */
 static void
-load_constant_pool_utfs (void)
+load_constant_pool_utfs (JavaClassFile *cfile)
 {
-	guint8 tag;
-	guint16 i = 0;		// should be comparable with const_pool_count
-	while( i < (cfile.const_pool_count - 1) && read( fdesc, &tag, 1 ) != -1 )	{
+	guint8  tag;
+	guint16 i = 0;		/* should be comparable with const_pool_count */
+	
+	while ((i < cfile->const_pool_count - 1) && (read (cfile->fd, &tag, 1) != -1)) {
 		struct utf_string *txt = NULL;
 		struct class_info *class = NULL;
-		switch(tag)	{				//	identify the structure's tag
-			case CONST_CLASS:				//	new class structure found in class file
-				class = g_new( struct class_info, 1 );
-				class->index = i + 1;
-				if( read( fdesc, &class->name_index, 2 ) != 2 )
-					return;			//	error reading
-				class->name_index = GUINT16_FROM_BE(class->name_index);
-				cfile.const_pool_class = g_slist_append( cfile.const_pool_class, class );
-				break;
-			case CONST_FIELDREF:
-				lseek( fdesc, CONST_FIELDREF_INFO, SEEK_CUR);
-				break;
-			case CONST_METHODREF:
-				lseek( fdesc, CONST_METHODREF_INFO, SEEK_CUR);
-				break;
-			case CONST_INTERFACEMETHODREF:
-				lseek( fdesc, CONST_INTERFACEMETHODREF_INFO, SEEK_CUR);
-				break;
-			case CONST_STRING:
-				lseek( fdesc, CONST_STRING_INFO, SEEK_CUR);
-				break;
-			case CONST_INTEGER:
-				lseek( fdesc, CONST_INTEGER_INFO, SEEK_CUR);
-				break;
-			case CONST_FLOAT:
-				lseek( fdesc, CONST_FLOAT_INFO, SEEK_CUR);
-				break;
-			case CONST_LONG:
-				lseek( fdesc, CONST_LONG_INFO, SEEK_CUR);
-				break;
-			case CONST_DOUBLE:
-				lseek( fdesc, CONST_DOUBLE_INFO, SEEK_CUR);
-				break;
-			case CONST_NAMEANDTYPE:
-				lseek( fdesc, CONST_NAMEANDTYPE_INFO, SEEK_CUR);
-				break;
-			case CONST_UTF8:						//	new utf8 string found in class file
-				txt = g_new( struct utf_string, 1);
-				txt->index = i + 1;
-				if( read( fdesc, &(txt->length), 2 ) == -1 )
-					return;			//	error while reading
-				txt->length = GUINT16_FROM_BE(txt->length);
-				txt->str = g_new( gchar, txt->length );
-				if( read( fdesc, txt->str, txt->length ) == -1 )
-					return;			//	error while reading
-				cfile.const_pool_utf = g_slist_append( cfile.const_pool_utf, txt );
-				break;
-			default:
-					return;			//	error - unknown tag in class file
-				break;
+		
+		switch (tag) {
+		case CONST_CLASS:
+			class = g_new0 (struct class_info, 1);
+			class->index = i + 1;
+			if (read (cfile->fd, &class->name_index, 2) != 2)
+				return;	/* error reading */
+			class->name_index = GUINT16_FROM_BE (class->name_index);
+			cfile->const_pool_class = g_slist_append (cfile->const_pool_class, class);
+			break;
+		
+		case CONST_FIELDREF:
+			lseek (cfile->fd, CONST_FIELDREF_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_METHODREF:
+			lseek (cfile->fd, CONST_METHODREF_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_INTERFACEMETHODREF:
+			lseek (cfile->fd, CONST_INTERFACEMETHODREF_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_STRING:
+			lseek (cfile->fd, CONST_STRING_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_INTEGER:
+			lseek (cfile->fd, CONST_INTEGER_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_FLOAT:
+			lseek (cfile->fd, CONST_FLOAT_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_LONG:
+			lseek (cfile->fd, CONST_LONG_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_DOUBLE:
+			lseek (cfile->fd, CONST_DOUBLE_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_NAMEANDTYPE:
+			lseek (cfile->fd, CONST_NAMEANDTYPE_INFO, SEEK_CUR);
+			break;
+		
+		case CONST_UTF8:
+			txt = g_new0 (struct utf_string, 1);
+			txt->index = i + 1;
+			if (read (cfile->fd, &(txt->length), 2) == -1)
+				return;	/* error while reading */
+			txt->length = GUINT16_FROM_BE (txt->length);
+			txt->str = g_new0 (char, txt->length);
+			if (read (cfile->fd, txt->str, txt->length) == -1)
+				return;	/* error while reading */
+			cfile->const_pool_utf = g_slist_append (cfile->const_pool_utf, txt);
+			break;
+		
+		default:
+			return;	/* error - unknown tag in class file */
+			break;
 		}
 		i++;
 	}
-	if( i != (cfile.const_pool_count - 1) )
-		return;		//	error - all entries not read
+	
 #ifdef DEBUG
-	else
-		g_print( "Number of Entries: %d", i );
+	g_print( "Number of Entries: %d\n", i );
 #endif
 }
 
 
-/*	This function frees up the space used by the cfile.(very important)	*/
-static void
-free_classfile_structure()
+static char*
+close_and_exit (JavaClassFile *cfile) 
 {
-	GSList *scan;
-
-	g_slist_foreach( cfile.const_pool_class, (GFunc)g_free, NULL );
-	g_slist_free(cfile.const_pool_class);
-
-	for( scan = cfile.const_pool_utf; scan ; scan = scan->next )	{
-		struct utf_string *string= scan->data;
-		g_free(string->str);
-	}
-	g_slist_foreach( cfile.const_pool_utf, (GFunc)g_free, NULL );
-	g_slist_free(cfile.const_pool_utf);
-
-	memset( &cfile, 0, sizeof(struct classfile) );			//	set memory to 0
+	java_class_file_free (cfile);
+	return NULL;
 }
 
 
-/*	This function extracts the package name from a class file	*/
-gchar*
-get_package_name_from_class_file( gchar *fname )
+/* This function extracts the package name from a class file */
+char*
+get_package_name_from_class_file (char *fname)
 {
-	gchar *package = NULL;
-	guint16 length = 0, end = 0, utf_index = 0;
-	int i = 0;
-	if(g_file_test( fname, G_FILE_TEST_EXISTS))	{			//	check if file exists
-		fdesc = open( fname, O_RDONLY );
-		guint32 magic;
-		guint16 major, minor, count;
+	char          *package = NULL;
+	JavaClassFile *cfile;
+	guint16        length = 0, end = 0, utf_index = 0;
+	guint32        magic;
+	guint16        major, minor, count;
+	int            i = 0;
+	
+	if (! g_file_test (fname, G_FILE_TEST_EXISTS))
+		return NULL;
 
-		if( fdesc == -1 )
-			return NULL;		//	cannot open file
+	cfile = java_class_file_new ();
+	cfile->fd = open (fname, O_RDONLY);
+	if (cfile->fd == -1)
+		return close_and_exit (cfile);
 
-		if( (i = read( fdesc, &magic, 4 )) != 4 )
-			return NULL;				//	unexpected EOF
-		cfile.magic_no = GUINT32_FROM_BE(magic);
+	if ((i = read (cfile->fd, &magic, 4)) != 4)
+		return close_and_exit (cfile);
+	cfile->magic_no = GUINT32_FROM_BE (magic);
 
-		if( read( fdesc, &major, 2 ) != 2 )
-			return NULL;				//	unexpected EOF
-		cfile.major = GUINT16_FROM_BE(major);
+	if (read (cfile->fd, &major, 2 ) != 2)
+		return close_and_exit (cfile);
+	cfile->major = GUINT16_FROM_BE (major);
 
-		if( read( fdesc, &minor, 2 ) != 2 )
-			return NULL;				//	unexpected EOF
-		cfile.minor = GUINT16_FROM_BE(minor);
+	if (read (cfile->fd, &minor, 2) != 2)
+		return close_and_exit (cfile);
+	cfile->minor = GUINT16_FROM_BE (minor);
 
-		if( read( fdesc, &count, 2 ) != 2 )
-			return NULL;				//	unexpected EOF
-		cfile.const_pool_count = GUINT16_FROM_BE(count);
-		load_constant_pool_utfs();
+	if (read (cfile->fd, &count, 2) != 2)
+		return close_and_exit (cfile);
+	cfile->const_pool_count = GUINT16_FROM_BE(count);
+	load_constant_pool_utfs (cfile);
 
-		if( read( fdesc, &cfile.access_flags, 2 ) != 2 )
-			return NULL;				//	unexpected EOF
-		cfile.access_flags = GUINT16_FROM_BE(cfile.access_flags);
+	if (read (cfile->fd, &cfile->access_flags, 2) != 2)
+		return close_and_exit (cfile);
+	cfile->access_flags = GUINT16_FROM_BE (cfile->access_flags);
 
-		if( read( fdesc, &cfile.this_class, 2 ) != 2 )
-			return NULL;				//	unexpected EOF
-		cfile.this_class = GUINT16_FROM_BE(cfile.this_class);
+	if (read (cfile->fd, &cfile->this_class, 2) != 2)
+		return close_and_exit (cfile);
+	cfile->this_class = GUINT16_FROM_BE(cfile->this_class);
+
+	/* now search for the class structure with index = cfile->this_class */
+	
+	for (i = 0; (i < g_slist_length (cfile->const_pool_class)) && (utf_index == 0); i++ ) {
+		struct class_info *class = g_slist_nth_data (cfile->const_pool_class, i);
+		if (class->index == cfile->this_class)
+			utf_index = class->name_index; /* terminates loop */
 	}
-	else
-		return NULL;				//	unexpected EOF
 
-
-	//	now search for the class structure with index = cfile.this_class
-	for( i = 0; (i < g_slist_length(cfile.const_pool_class)) && (utf_index == 0); i++ )	{
-		struct class_info *class = g_slist_nth_data( cfile.const_pool_class, i );
-		if( class->index == cfile.this_class )
-			utf_index = class->name_index;			//	terminates loop
-	}
-
-	//	now search for the utf8 string with index = utf_index
-	for( i = 0; i < g_slist_length(cfile.const_pool_utf); i++ )	{
-		struct utf_string *data = g_slist_nth_data( cfile.const_pool_utf, i );
-		if( data->index == utf_index )	{
-			package = g_strndup( data->str, data->length );
+	/* now search for the utf8 string with index = utf_index */
+	
+	for (i = 0; i < g_slist_length (cfile->const_pool_utf); i++) {
+		struct utf_string *data = g_slist_nth_data (cfile->const_pool_utf, i);
+		if (data->index == utf_index) {
+			package = g_strndup (data->str, data->length);
 			length = data->length;
 			break;
 		}
 	}
 
-	if(package)	{
-		for( i = length; (i >= 0) && (end == 0); i-- )	{
-			if( package[i] == '/' )
-				end = i;	//	terminates loop
-		}
-		package = g_strndup( package, end );		//	ensure null terminated string
+	if (package != NULL) {
+		for (i = length; (i >= 0) && (end == 0); i-- )
+			if (package[i] == '/')
+				end = i;
+		package = g_strndup (package, end);
 	}
 
-	free_classfile_structure();			//	free the memory held by the cfile structure.
+	java_class_file_free (cfile);
+	
 	return package;
 }
 
 
-/*
-	This function consumes a comment from the java file
-	multiline = TRUE implies that comment is multiline
-*/
+/* This function consumes a comment from the java file 
+ * multiline = TRUE implies that comment is multiline */
 static void
-consume_comment( gboolean multiline )
+consume_comment (int      fdesc,
+		 gboolean multiline)
 {
-	//	this function consumes a comment - it implements a DFA (Deterministic finite automata)
-	gchar ch;
 	gboolean escaped = FALSE;
 	gboolean star = FALSE;
-	while( read( fdesc, &ch, 1 ) == 1 )	{
-		switch(ch)	{
-			case '/':
-				if( escaped )
-					break;
-				else if(star == TRUE)
-					return;
+	char     ch;
+		
+	while (read (fdesc, &ch, 1) == 1) {
+		switch (ch) {
+		case '/':
+			if (escaped)
 				break;
-			case '\n':
-				if(multiline == FALSE)
-					return;
-				break;
-			case '*':
-				escaped = FALSE;
-				star = TRUE;
-				break;
-			case '\\':
-				escaped = (escaped == TRUE) ? FALSE : TRUE;
-				break;
-			default:
-				escaped = FALSE;
-				star = FALSE;
-				break;
+			else if (star)
+				return;
+			break;
+			
+		case '\n':
+			if (! multiline)
+				return;
+			break;
+			
+		case '*':
+			escaped = FALSE;
+			star = TRUE;
+			break;
+			
+		case '\\':
+			escaped = ! escaped;
+			break;
+			
+		default:
+			escaped = FALSE;
+			star = FALSE;
+			break;
 		}
 	}
 }
 
 
-/*	This function extracts package name from a java file	*/
-gchar*
-get_package_name_from_java_file( gchar *fname )
+/* This function extracts package name from a java file */
+char*
+get_package_name_from_java_file (char *fname)
 {
-	gchar *package = NULL, *first_valid_word, ch;
-	gboolean prev_char_is_bslash = FALSE;
-	gboolean valid_char_found = FALSE;
+	char          *package = NULL;
+	JavaClassFile *cfile;
+	gboolean       prev_char_is_bslash = FALSE;
+	gboolean       valid_char_found = FALSE;
+	char           ch;
+	
+	if (! g_file_test (fname, G_FILE_TEST_EXISTS))
+		return NULL;
 
-	if(g_file_test( fname, G_FILE_TEST_EXISTS))	{
-		fdesc = open( fname, O_RDONLY );
-		while( (valid_char_found == FALSE) && (read( fdesc, &ch, 1 ) == 1) )	{
-			switch(ch)	{
-				case '/':
-					if(prev_char_is_bslash == TRUE)	{		//	single line comment found
-						consume_comment(FALSE);
-						prev_char_is_bslash = FALSE;
-					}
-					else
-						prev_char_is_bslash = TRUE;			//	indicate '/' occured
-					break;
-				case '*':
-					if(prev_char_is_bslash == TRUE)			//	multiline comment
-						consume_comment(TRUE);
-					prev_char_is_bslash = FALSE;
-					break;
-				case ' ':case '\t':case '\r':case '\n':
-					prev_char_is_bslash = FALSE;			//	white space
-					break;
-				default:
-					prev_char_is_bslash = FALSE;
-					valid_char_found = TRUE;
-					break;
+	cfile = java_class_file_new ();
+	cfile->fd = open (fname, O_RDONLY);
+	if (cfile->fd == -1)
+		return close_and_exit (cfile);
+	
+	while (! valid_char_found && (read (cfile->fd, &ch, 1) == 1)) {
+		switch (ch) {
+		case '/':
+			if (prev_char_is_bslash == TRUE) { 
+				consume_comment (cfile->fd, FALSE);
+				prev_char_is_bslash = FALSE;
 			}
-		}
-		if( ch == 'p' )	{				//	probable - package statement
-			first_valid_word = g_malloc(8);
-			first_valid_word[0] = 'p';
-			if( read( fdesc, &first_valid_word[1], 6 ) != 6 )
-				return NULL;			//	unexpected EOF
-			first_valid_word[7] = 0;
-			if( !g_ascii_strcasecmp( first_valid_word, "package" ) )	{		//	package statement found
-				//	code to read package name here
-				gint index = 0;
-				gchar *buffer = g_malloc(100);
-				while( read( fdesc, &ch, 1 ) == 1 )	{
-					if( ch == ';' )			//	read upto the nearest ';'
-						break;
-					if( ch == '.' )			//	convert '.' to '/'
-						buffer[index++] = '/';
-					else if( (ch >=48 && ch <= 57) || (ch >= 65 && ch <= 90) || (ch >= 97 && ch <= 122) )
-						buffer[index++] = ch;	//	valid character
-				}
-				buffer[index] = 0;
-				package = g_strdup( buffer );
-			//	g_free( buffer );
-			}
+			else
+				prev_char_is_bslash = TRUE;
+			break;
+				
+		case '*':
+			if (prev_char_is_bslash == TRUE)
+				consume_comment (cfile->fd, TRUE);
+			prev_char_is_bslash = FALSE;
+			break;
+			
+		case ' ':
+		case '\t':
+		case '\r':
+		case '\n':
+			prev_char_is_bslash = FALSE;
+			break;
+				
+		default:
+			prev_char_is_bslash = FALSE;
+			valid_char_found = TRUE;
+			break;
 		}
 	}
-	else
-		return NULL;	//	error - unable to open file.
+	
+	if (ch == 'p')	{
+		char first_valid_word[8] = "";
+		
+		first_valid_word[0] = 'p';
+		if (read (cfile->fd, &first_valid_word[1], 6) != 6) 
+			return close_and_exit (cfile);
+			
+		first_valid_word[7] = 0;
+		if (g_ascii_strcasecmp (first_valid_word, "package") == 0) {
+			char buffer[500];
+			int  index = 0;
+			
+			while (read (cfile->fd, &ch, 1) == 1) {
+				if (ch == ';')
+					break;
+				if (ch == '.')
+					buffer[index++] = '/';
+				else 
+					buffer[index++] = ch;
+			}
+			buffer[index] = 0;
+			package = g_strdup (buffer);
+		}
+	}
+
+	java_class_file_free (cfile);
 
 	return package;
 }
