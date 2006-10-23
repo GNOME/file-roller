@@ -784,6 +784,15 @@ activate_action_view_or_open (GtkAction *action,
 
 
 void
+activate_action_open_folder (GtkAction *action, 
+			     gpointer   data)
+{
+	FRWindow *window = data;
+	window_current_folder_activated (window);
+}
+
+
+void
 activate_action_password (GtkAction *action, 
 			  gpointer   data)
 {

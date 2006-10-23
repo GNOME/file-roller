@@ -65,6 +65,8 @@ void activate_action_open_with (GtkAction *action, gpointer data);
 
 void activate_action_view_or_open (GtkAction *action, gpointer data);
 
+void activate_action_open_folder (GtkAction *action, gpointer data);
+
 void activate_action_password (GtkAction *action, gpointer data);
 
 

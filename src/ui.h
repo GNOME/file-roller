@@ -158,6 +158,10 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("View the selected file"),
 	  G_CALLBACK (activate_action_view_or_open) },
+	{ "OpenFolder", GTK_STOCK_OPEN,
+	  NULL, NULL,
+	  N_("Open the selected folder"),
+	  G_CALLBACK (activate_action_open_folder) },
 };
 static guint n_action_entries = G_N_ELEMENTS (action_entries);
 
@@ -284,9 +288,20 @@ static const gchar *ui_info =
 "    <separator/>"
 "    <toolitem action='Stop'/>"
 "  </toolbar>"
-"  <popup name='ListPopupMenu'>"
+"  <popup name='FilePopupMenu'>"
 "    <menuitem action='ViewSelection'/>"
 "    <menuitem action='OpenSelection'/>"
+"    <separator/>"
+"    <menuitem action='Extract'/>"
+"    <separator/>"
+"    <menuitem action='Cut'/>"
+"    <menuitem action='Copy'/>"
+"    <menuitem action='Paste'/>"
+"    <menuitem action='Rename'/>"
+"    <menuitem action='Delete'/>"
+"  </popup>"
+"  <popup name='FolderPopupMenu'>"
+"    <menuitem action='OpenFolder'/>"
 "    <separator/>"
 "    <menuitem action='Extract'/>"
 "    <separator/>"

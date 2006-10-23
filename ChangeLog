@@ -1,5 +1,14 @@
 2006-10-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.h: 
+	* src/actions.c (activate_action_open_folder): 
+	* src/actions.h: 
+	* src/window.c (window_get_selected_folder): 
+	* src/ui.h: 
+	
+	Fixed bug #338210 – Context menu option "open files" not available for 
+	folders.
+	
 	* src/fr-command-rar.c (fr_command_rar_handle_error): do not change
 	FR_PROC_ERROR_EXITED_ABNORMALLY errors to FR_PROC_ERROR_ASK_PASSWORD
 	

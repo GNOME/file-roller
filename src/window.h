@@ -173,6 +173,7 @@ typedef struct {
 	GtkWidget        *recent_chooser_toolbar;
 
 	GtkWidget        *file_popup_menu;
+	GtkWidget        *folder_popup_menu;
 	GtkWidget        *mitem_recents_menu;
 	GtkWidget        *recent_toolbar_menu;
 	GtkAction        *open_action;
@@ -339,6 +340,8 @@ void       window_go_up_one_level           (FRWindow       *window);
 void       window_go_back                   (FRWindow       *window);
 
 void       window_go_forward                (FRWindow       *window);
+
+void       window_current_folder_activated  (FRWindow       *window);
 
 void       window_set_list_mode             (FRWindow       *window, 
 					     WindowListMode  list_mode);

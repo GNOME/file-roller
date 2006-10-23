@@ -1124,6 +1124,7 @@ _window_update_sensitivity (FRWindow *window)
 	set_sensitive (window, "Open", ! running);
 	set_sensitive (window, "Open_Toolbar", ! running);
 	set_sensitive (window, "OpenSelection", file_op && sel_not_null && ! dir_selected);
+	set_sensitive (window, "OpenFolder", file_op && one_file_selected && dir_selected);
 	set_sensitive (window, "Password", ! running && (window->asked_for_password || (! no_archive && window->archive->command->propPassword)));
 	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->list_mode != WINDOW_LIST_MODE_FLAT) && (window->clipboard != NULL));
 	set_sensitive (window, "Properties", file_op);
@@ -1978,6 +1979,28 @@ _action_performed (FRArchive   *archive,
 }
 
 
+static FileData * window_get_selected_folder (FRWindow *window);
+
+
+void
+window_current_folder_activated (FRWindow *window)
+{
+	FileData *fdata;
+	char     *new_dir;
+	
+	fdata = window_get_selected_folder (window);
+	if (fdata == NULL)
+		return;
+
+	new_dir = g_strconcat (window_get_current_location (window),
+			       fdata->list_name,
+			       "/",
+			       NULL);
+	window_go_to_location (window, new_dir);
+	g_free (new_dir);	
+}
+
+
 static gboolean
 row_activated_cb (GtkTreeView       *tree_view, 
 		  GtkTreePath       *path, 
@@ -1999,19 +2022,14 @@ row_activated_cb (GtkTreeView       *tree_view,
 
 	if (file_data_is_dir (fdata)) {
 		char *new_dir;
-		
 		new_dir = g_strconcat (window_get_current_location (window),
 				       fdata->list_name,
 				       "/",
 				       NULL);
-		_window_history_add (window, new_dir);
+		window_go_to_location (window, new_dir);
 		g_free (new_dir);
-
-		window_update_file_list (window);
-		_window_update_current_location (window);
 	} else 
-		window_view_or_open_file (window, 
-					  fdata->original_path);
+		window_view_or_open_file (window, fdata->original_path);
 
 	return FALSE;
 }
@@ -2040,7 +2058,8 @@ file_button_press_cb (GtkWidget      *widget,
 	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
 		GtkTreePath *path;
 		GtkTreeIter  iter;
-
+		int          n_selected;
+		
 		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->list_view),
 						   event->x, event->y,
 						   &path, NULL, NULL, NULL)) {
@@ -2059,11 +2078,19 @@ file_button_press_cb (GtkWidget      *widget,
 		} else
 			gtk_tree_selection_unselect_all (selection);
 
-		gtk_menu_popup (GTK_MENU (window->file_popup_menu),
-				NULL, NULL, NULL, 
-				window, 
-				event->button,
-				event->time);
+		n_selected = _gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+		if ((n_selected == 1) && selection_has_a_dir (window)) 
+			gtk_menu_popup (GTK_MENU (window->folder_popup_menu),
+					NULL, NULL, NULL, 
+					window, 
+					event->button,
+					event->time);
+		else
+			gtk_menu_popup (GTK_MENU (window->file_popup_menu),
+					NULL, NULL, NULL, 
+					window, 
+					event->button,
+					event->time);
 		return TRUE;
 
 	} else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 1)) {
@@ -4027,7 +4054,8 @@ window_new (void)
 			      BONOBO_DOCK_TOP,
 			      2, 1, 0);
 
-	window->file_popup_menu = gtk_ui_manager_get_widget (ui, "/ListPopupMenu");
+	window->file_popup_menu = gtk_ui_manager_get_widget (ui, "/FilePopupMenu");
+	window->folder_popup_menu = gtk_ui_manager_get_widget (ui, "/FolderPopupMenu");
 
 	/* Create the statusbar. */
 
@@ -4291,6 +4319,11 @@ window_close (FRWindow *window)
 	if (window->file_popup_menu != NULL) {
 		gtk_widget_destroy (window->file_popup_menu);
 		window->file_popup_menu = NULL;
+	}
+
+	if (window->folder_popup_menu != NULL) {
+		gtk_widget_destroy (window->folder_popup_menu);
+		window->folder_popup_menu = NULL;
 	}
 
 	if (window->folder_to_view != NULL) {
@@ -5314,6 +5347,39 @@ window_get_file_list_selection (FRWindow *window,
 		g_list_free (selections);
 
         return g_list_reverse (list);
+}
+
+
+static FileData *
+window_get_selected_folder (FRWindow *window)
+{
+	GtkTreeSelection *selection;
+	GList            *selections = NULL, *scan;
+	FileData         *fdata = NULL;
+	
+	g_return_val_if_fail (window != NULL, NULL);
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
+	if (selection == NULL)
+		return NULL;
+	gtk_tree_selection_selected_foreach (selection, add_selected, &selections);
+
+        for (scan = selections; scan; scan = scan->next) {
+                FileData *fd = scan->data;
+		if ((fd != NULL) && file_data_is_dir (fd)) {
+			if (fdata != NULL) {
+				file_data_free (fdata);
+				fdata = NULL;
+				break;
+			} 
+			fdata = file_data_copy (fd);
+		}
+        }
+
+	if (selections != NULL)
+		g_list_free (selections);
+
+        return fdata;
 }
 
 
