@@ -1602,6 +1602,7 @@ _window_add_to_recent_list (FRWindow *window,
 
 	filename_e = gnome_vfs_escape_path_string (filename);
 	uri = g_strconcat ("file://", filename_e, NULL);
+	
 	gtk_recent_manager_add_item (window->recent_manager, uri);
 
 	g_free (uri);

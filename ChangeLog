@@ -1,6 +1,12 @@
 2006-10-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/java-utils.c: remove c++ commets, changed code style.
+	* src/fr-command-rar.c (fr_command_rar_handle_error): do not change
+	FR_PROC_ERROR_EXITED_ABNORMALLY errors to FR_PROC_ERROR_ASK_PASSWORD
+	
+	Fixes bug #347019 – incorrect error message shown when trying to open 
+	incomplete archive
+	
+	* src/java-utils.c: removed c++ comments, changed code style.
 
 2006-10-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
 

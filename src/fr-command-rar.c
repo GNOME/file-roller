@@ -376,8 +376,7 @@ fr_command_rar_handle_error (FRCommand   *comm,
 			error->type = FR_PROC_ERROR_NONE;
 		else if (error->status == 3)
 			error->type = FR_PROC_ERROR_ASK_PASSWORD;
-	} else if (error->type == FR_PROC_ERROR_EXITED_ABNORMALLY)
-		error->type = FR_PROC_ERROR_ASK_PASSWORD;
+	}
 }
 
 
