@@ -257,7 +257,7 @@ fr_command_rar_add (FRCommand     *comm,
 	add_password_arg (comm, password, FALSE);
 
 	/* disable percentage indicator */
-	fr_process_add_arg (comm->process, "-idp");
+	fr_process_add_arg (comm->process, "-Idp");
 	
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--"); 
@@ -323,7 +323,7 @@ fr_command_rar_extract (FRCommand  *comm,
 	add_password_arg (comm, password, TRUE);
 
 	/* disable percentage indicator */
-	fr_process_add_arg (comm->process, "-idp");
+	fr_process_add_arg (comm->process, "-Idp");
 	
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--"); 
@@ -357,7 +357,7 @@ fr_command_rar_test (FRCommand   *comm,
 	add_password_arg (comm, password, TRUE);
 
 	/* disable percentage indicator */
-	fr_process_add_arg (comm->process, "-idp");
+	fr_process_add_arg (comm->process, "-Idp");
 
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--");
