@@ -272,14 +272,12 @@ process_line__generic (char     *line,
 	if (line[strlen (line) - 1] == '/') /* ignore directories */
 		return;
 
-	comm->n_file++;
-
 	msg = g_strconcat (action_msg, file_name_from_path (line), NULL);
 	fr_command_message (comm, msg);
 	g_free (msg);
 
 	if (comm->n_files != 0) {
-		double fraction = (double) comm->n_file / (comm->n_files+1);
+		double fraction = (double) ++comm->n_file / (comm->n_files + 1);
 		fr_command_progress (comm, fraction);
 	}
 }

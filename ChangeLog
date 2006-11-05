@@ -1,5 +1,10 @@
 2006-11-05  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-command-zip.c (process_line__common): 
+	* src/fr-command-tar.c (process_line__generic): 
+	* src/fr-command.c (fr_command_set_n_files): do not display a 100% progress
+	bar when the last file is processed.
+	
 	* src/window.c (window_close): remove the update list timeout when closing
 	the window (bug #370691).
 	
@@ -16,8 +21,8 @@
 	
 	* src/file-utils.c (path_exists): 
 	* src/file-utils.h: added path_exists function
-	
 	* src/fr-command.c (fr_command_done): always set restart to FALSE
+	 
 	* src/fr-command-iso.h:
 	* src/fr-command-iso.c: use isoinfo.sh to get the supported extensions.
 	

@@ -508,7 +508,7 @@ fr_command_set_n_files (FRCommand     *comm,
 			int            n_files)
 {
 	comm->n_files = n_files;
-	comm->n_file = 1;
+	comm->n_file = 0;
 }
 
 
