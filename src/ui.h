@@ -63,7 +63,7 @@ static GtkActionEntry action_entries[] = {
 	  N_("Close the current archive"),
 	  G_CALLBACK (activate_action_close) },
 	{ "Contents", GTK_STOCK_HELP,
-	  NULL, "F1",
+	  N_("Contents"), "F1",
 	  N_("Display the File Roller Manual"),
 	  G_CALLBACK (activate_action_manual) },
 	{ "Copy", GTK_STOCK_COPY,
