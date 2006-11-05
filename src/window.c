@@ -4259,6 +4259,11 @@ window_close (FRWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
+	if (window->update_timeout_handle != 0) {
+		g_source_remove (window->update_timeout_handle);
+		window->update_timeout_handle = 0;
+	}
+
 	_window_remove_notifications (window);
 
 	if (window->open_action != NULL) {
