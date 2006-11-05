@@ -38,6 +38,7 @@
                      NULL)
 
 gboolean            path_is_file                 (const gchar *s);
+gboolean            path_exists                  (const gchar *s);
 gboolean            path_is_dir                  (const gchar *s);
 gboolean            dir_is_empty                 (const gchar *s);
 gboolean            dir_contains_one_object      (const char  *path);

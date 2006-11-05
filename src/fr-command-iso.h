@@ -40,7 +40,8 @@ typedef struct _FRCommandIsoClass  FRCommandIsoClass;
 struct _FRCommandIso
 {
 	FRCommand  __parent;
-	char * cur_path;
+	char      *cur_path;
+	gboolean   joliet;
 };
 
 struct _FRCommandIsoClass

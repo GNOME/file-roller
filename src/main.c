@@ -348,7 +348,7 @@ get_path_from_url (char *url)
 	gnome_vfs_uri_unref (uri);
 	path = gnome_vfs_unescape_string (escaped, NULL);
 	g_free (escaped);
-
+	
 	return path;
 }
 

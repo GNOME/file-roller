@@ -253,10 +253,9 @@ fr_command_done (FRProcess   *process,
 {
 	FRCommand *comm = FR_COMMAND (data);
 
+	comm->process->restart = FALSE;
 	if (error->type != FR_PROC_ERROR_NONE) 
 		fr_command_handle_error (comm, error);
-	else
-		comm->process->restart = FALSE;
 
 	if (comm->process->restart)
 		fr_process_start (comm->process);

@@ -1,3 +1,25 @@
+2006-11-05  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c: do not update the window widgets when in batch mode.  Use
+	the move-here.sh script to rename the extraction folder if a folder with
+	the same name already exists.
+	
+	* src/fr-archive.c (fr_archive_extract): do not add directories in the
+	extraction list when using tar.
+	
+	* src/file-utils.c (path_exists): 
+	* src/file-utils.h: added path_exists function
+	
+	* src/fr-command.c (fr_command_done): always set restart to FALSE
+	* src/fr-command-iso.h:
+	* src/fr-command-iso.c: use isoinfo.sh to get the supported extensions.
+	
+	* src/sh/Makefile.am: new file
+	* src/sh/isoinfo.sh: new file
+	* src/sh/move-here.sh: new file
+	* src/Makefile.am:
+	* configure.in: added some shell scripts.
+
 2006-10-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-rar.c (fr_command_rar_test): 

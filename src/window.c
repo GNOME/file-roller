@@ -1218,7 +1218,8 @@ close_progress_dialog (FRWindow *window)
 		window->progress_timeout = 0;
 	}
 
-	gtk_widget_hide (window->progress_bar);
+	if (! window->batch_mode && GTK_WIDGET_MAPPED (window->app))
+		gtk_widget_hide (window->progress_bar);
 
 	if (window->hide_progress_timeout != 0)
 		return;
@@ -1393,12 +1394,14 @@ open_progress_dialog (FRWindow *window)
 	GtkWidget *vbox;
 	GtkWidget *lbl;
 
-	if (window->extracting_dragged_files) {
-		gtk_widget_show (window->progress_bar);
-		return;
-	} else
-		gtk_widget_hide (window->progress_bar);
-
+	if (! window->batch_mode) {
+		if (window->extracting_dragged_files) {
+			gtk_widget_show (window->progress_bar);
+			return;
+		} else
+			gtk_widget_hide (window->progress_bar);
+	}
+	
 	if (window->hide_progress_timeout != 0) {
 		g_source_remove (window->hide_progress_timeout);
 		window->hide_progress_timeout = 0;
@@ -1519,14 +1522,16 @@ void
 window_push_message (FRWindow   *window, 
 		     const char *msg)
 {
-	gtk_statusbar_push (GTK_STATUSBAR (window->statusbar), window->progress_cid, msg);
+	if (GTK_WIDGET_MAPPED (window->app))
+		gtk_statusbar_push (GTK_STATUSBAR (window->statusbar), window->progress_cid, msg);
 }
 
 
 void
 window_pop_message (FRWindow *window)
 {
-	gtk_statusbar_pop (GTK_STATUSBAR (window->statusbar), window->progress_cid);
+	if (GTK_WIDGET_MAPPED (window->app))
+		gtk_statusbar_pop (GTK_STATUSBAR (window->statusbar), window->progress_cid);
 	if (window->progress_dialog != NULL)
 		gtk_label_set_text (GTK_LABEL (window->pd_message), "");
 }
@@ -1589,6 +1594,9 @@ _window_add_to_recent_list (FRWindow *window,
 	char *tmp;
 	char *uri;
 	char *filename_e;
+
+	if (window->batch_mode)
+		return;
 
 	/* avoid adding temporary archives to the list. */
 
@@ -1799,7 +1807,7 @@ handle_errors (FRWindow    *window,
 						details);
 		g_signal_connect (dialog, 
 				  "response",
-				  G_CALLBACK (gtk_widget_destroy), 
+				  (window->batch_mode) ? G_CALLBACK (gtk_main_quit) : G_CALLBACK (gtk_widget_destroy), 
 				  NULL);
 
 		gtk_widget_show (dialog);
@@ -1964,8 +1972,10 @@ _action_performed (FRArchive   *archive,
 		break;
 	}
 
-	_window_update_sensitivity (window);
-	_window_update_statusbar_list_info (window);
+	if (! window->batch_mode) {
+		_window_update_sensitivity (window);
+		_window_update_statusbar_list_info (window);
+	}
 
 	if (continue_batch) {
 		if (error->type != FR_PROC_ERROR_NONE) 
@@ -3759,6 +3769,8 @@ window_new (void)
 	window->current_action_desc.data = NULL;
 	window->current_action_desc.free_func = NULL;
 
+	window->pd_last_archive = NULL;
+
 	/* Create the widgets. */
 
 	/* * File list. */
@@ -4451,8 +4463,7 @@ window_archive_open (FRWindow   *current_window,
 		g_free (window->archive_filename);
 
 	if (! g_path_is_absolute (filename)) {
-		char *current_dir;
-		current_dir = g_get_current_dir ();
+		char *current_dir = g_get_current_dir ();
 		window->archive_filename = g_strconcat (current_dir, 
 							"/", 
 							filename, 
@@ -4795,14 +4806,6 @@ window_archive_remove (FRWindow      *window,
 /* -- window_archive_extract -- */
 
 
-static gboolean 
-extract__content_is_singleton (gpointer data)
-{
-	FRWindow *window = data;
-	return dir_contains_one_object (window->extract_here_dir);
-}
-
-
 typedef struct {
 	GList    *file_list;
 	char     *extract_to_dir;
@@ -4884,7 +4887,7 @@ window_archive_extract__common (FRWindow   *window,
 				gboolean    extract_here)
 {
 	gboolean     do_not_extract = FALSE;
-	char        *e_arg, *singleton;
+	char        *e_arg;
 	const char  *dest_dir;
 	ExtractData *edata;
 
@@ -5004,38 +5007,17 @@ window_archive_extract__common (FRWindow   *window,
 		return;
 	}
 
-	fr_process_set_continue_func (window->archive->process,
-				      extract__content_is_singleton,
-				      window);
+	/* move the singleton to the parent dir and remove the _FILES dir */	
 
-	/* move the singleton to the parent dir */	
-
-	fr_process_begin_command (window->archive->process, "mv");
-	fr_process_add_arg (window->archive->process, "-f");
-
+	fr_process_begin_command (window->archive->process, "sh " PRIVEXECDIR "move-here.sh");
 	e_arg = shell_escape (window->extract_here_dir);
-	singleton = g_strconcat (e_arg, G_DIR_SEPARATOR_S, "*", NULL);
+	fr_process_add_arg (window->archive->process, e_arg);
 	g_free (e_arg);
-	fr_process_add_arg (window->archive->process, singleton);
-	g_free (singleton);
-
 	e_arg = shell_escape (edata->extract_to_dir);
 	fr_process_add_arg (window->archive->process, e_arg);
 	g_free (e_arg);
-
 	fr_process_end_command (window->archive->process);
-
-	/* remove the extract_here_dir */
-
-	fr_process_begin_command (window->archive->process, "rm");
-	fr_process_add_arg (window->archive->process, "-rf");
-
-	e_arg = shell_escape (window->extract_here_dir);
-	fr_process_add_arg (window->archive->process, e_arg);
-	g_free (e_arg);
-
-	fr_process_end_command (window->archive->process);
-
+	
 	fr_process_start (window->archive->process);
 }
 
@@ -5527,8 +5509,11 @@ window_stop_activity_mode (FRWindow *window)
 	
 	if (window->progress_dialog != NULL)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->pd_progress_bar), 0.0);
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->progress_bar), 0.0);
-	_window_update_sensitivity (window);
+
+	if (! window->batch_mode) {
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->progress_bar), 0.0);
+		_window_update_sensitivity (window);
+	}
 }
 
 
@@ -6721,9 +6706,9 @@ window_batch_mode_add_action (FRWindow      *window,
 
 	g_return_if_fail (window != NULL);
 
-	a_desc = g_new (FRBatchActionDescription, 1);
-	a_desc->action    = action;
-	a_desc->data      = data;
+	a_desc = g_new0 (FRBatchActionDescription, 1);
+	a_desc->action = action;
+	a_desc->data = data;
 	a_desc->free_func = free_func;
 
 	window->batch_action_list = g_list_append (window->batch_action_list,
@@ -6742,9 +6727,9 @@ window_batch_mode_add_next_action (FRWindow      *window,
 
 	g_return_if_fail (window != NULL);
 
-	a_desc = g_new (FRBatchActionDescription, 1);
-	a_desc->action    = action;
-	a_desc->data      = data;
+	a_desc = g_new0 (FRBatchActionDescription, 1);
+	a_desc->action = action;
+	a_desc->data = data;
 	a_desc->free_func = free_func;
 
 	list = window->batch_action_list;
@@ -6761,7 +6746,7 @@ window_batch_mode_add_next_action (FRWindow      *window,
 	else { 
 		GList *node;
 		
-		node = g_list_append (NULL, a_desc);
+		node = g_list_prepend (NULL, a_desc);
 		node->next = current->next;
 		node->next->prev = node;
 		node->prev = current;

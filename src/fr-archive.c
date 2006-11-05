@@ -732,7 +732,7 @@ fr_archive_load (FRArchive   *archive,
 		 GError     **gerror)
 {
 	FRCommand  *tmp_command;
-	const char *mime_type;
+	const char *mime_type = NULL;
 
 	g_return_val_if_fail (archive != NULL, FALSE);
 
@@ -746,19 +746,20 @@ fr_archive_load (FRArchive   *archive,
 
 	archive->read_only = access (filename, W_OK) != 0;
 
-	if (archive->filename != NULL)
-		g_free (archive->filename);
-	archive->filename = g_strdup (filename);
+	if (archive->filename != filename) {
+		if (archive->filename != NULL)
+			g_free (archive->filename);
+		archive->filename = g_strdup (filename);
+	}
 
 	tmp_command = archive->command;
 
 	/* prefer mime-magic */
 
 	mime_type = get_mime_type_from_sniffer (filename);
-
 	if (mime_type == NULL)
 		mime_type = get_mime_type_from_content (filename);
-	
+
 	if ((mime_type == NULL)
 	    || ! create_command_from_mime_type (archive, filename, mime_type))
 		if (! create_command_from_filename (archive, filename, TRUE)) {
@@ -1757,8 +1758,7 @@ fr_archive_extract (FRArchive  *archive,
 		GList *scan;
 
 		file_list = NULL;
-		scan = archive->command->file_list;
-		for (; scan; scan = scan->next) {
+		for (scan = archive->command->file_list; scan; scan = scan->next) {
 			FileData *fdata = scan->data;
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}
@@ -1776,6 +1776,15 @@ fr_archive_extract (FRArchive  *archive,
 		fdata = find_file_in_archive (archive, arch_filename);
 
 		if (fdata == NULL)
+			continue;
+
+		if (((archive->command->file_type == FR_FILE_TYPE_TAR)
+		     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
+		     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
+		     || (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
+		     || (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
+		     || (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS))
+		    && fdata->dir)
 			continue;
 
 		/* get the destination file path. */
@@ -1797,13 +1806,13 @@ fr_archive_extract (FRArchive  *archive,
 		
 		if (! archive->command->propExtractCanSkipOlder
 		    && skip_older 
-		    && path_is_file (dest_filename)
+		    && path_exists (dest_filename)
 		    && (fdata->modified < get_file_mtime (dest_filename)))
 			continue;
 
 		if (! archive->command->propExtractCanAvoidOverwrite
 		    && ! overwrite 
-		    && path_is_file (dest_filename))
+		    && path_exists (dest_filename))
 			continue;
 
 		filtered = g_list_prepend (filtered, fdata->original_path);
@@ -1811,7 +1820,7 @@ fr_archive_extract (FRArchive  *archive,
 
 	if (filtered == NULL) {
 		/* all files got filtered, do nothing. */
-		debug (DEBUG_INFO, "All files got filtered, do nothing.\n");
+		debug (DEBUG_INFO, "All files got filtered, nothing to do.\n");
 		if (extract_all) 
 			path_list_free (file_list);
 		return;

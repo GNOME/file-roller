@@ -1,3 +1,5 @@
+SUBDIRS = sh
+
 bin_PROGRAMS = file-roller
 
 if MKDTEMP_MISSING
@@ -24,6 +26,7 @@ INCLUDES =						\
 	-DPIXMAPSDIR=\""$(datadir)/pixmaps"\"		\
 	-DGLADEDIR=\""$(gladedir)"\" 			\
 	-DICONDIR=\""$(datadir)/file-roller/icons"\"	\
+	-DPRIVEXECDIR=\""$(libexecdir)/file-roller/"\"	\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)
 

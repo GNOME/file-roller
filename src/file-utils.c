@@ -51,6 +51,32 @@
 
 
 gboolean
+path_exists (const gchar *path)
+{
+	GnomeVFSFileInfo *info;
+	GnomeVFSResult result;
+	gboolean exists;
+	gchar *escaped;
+
+	if (! path || ! *path) return FALSE; 
+
+	info = gnome_vfs_file_info_new ();
+	escaped = gnome_vfs_escape_path_string (path);
+	result = gnome_vfs_get_file_info (escaped, 
+					  info, 
+					  (GNOME_VFS_FILE_INFO_DEFAULT 
+					   | GNOME_VFS_FILE_INFO_FOLLOW_LINKS));
+
+	exists = (result == GNOME_VFS_OK);		
+	
+	g_free (escaped);
+	gnome_vfs_file_info_unref (info);
+
+	return exists;
+}
+
+
+gboolean
 path_is_file (const gchar *path)
 {
 	GnomeVFSFileInfo *info;

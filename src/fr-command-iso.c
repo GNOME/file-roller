@@ -84,8 +84,7 @@ list__process_line (char     *line,
 		return;
 
 	if (line[0] == 'D') {
-		if (comm_iso->cur_path != NULL)
-			g_free (comm_iso->cur_path);
+		g_free (comm_iso->cur_path);
 		comm_iso->cur_path = g_strdup (get_last_field (line, 4));
 		
 	} else if (line[0] == '-') { /* Is file */
@@ -115,7 +114,11 @@ list__process_line (char     *line,
 			return;
 		}
 
-		fdata->original_path = fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
+		if (comm_iso->cur_path[0] != '/') 
+			fdata->full_path = g_strstrip (g_strconcat ("/", comm_iso->cur_path, name_field, NULL));
+		else 
+			fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
+		fdata->original_path = fdata->full_path + 1;
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
 
@@ -128,15 +131,21 @@ static void
 fr_command_iso_list (FRCommand  *comm,
 		     const char *password)
 {
+	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
+	
+	g_free (comm_iso->cur_path);
+	comm_iso->cur_path = NULL;
+	
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      list__process_line,
 				      comm);
 
-	fr_process_begin_command (comm->process, "isoinfo");
-	fr_process_add_arg (comm->process, "-J -R");
-	fr_process_add_arg (comm->process, "-l -i");
+	fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
+	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, "-l");
 	fr_process_end_command (comm->process);
+	
 	fr_process_start (comm->process);
 }
 
@@ -150,8 +159,11 @@ fr_command_iso_extract (FRCommand  *comm,
 			gboolean    junk_paths,
 			const char *password)
 {
-	char  *e_dest_dir = fr_command_escape (comm, dest_dir);
-	GList *scan;
+	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
+	char         *e_dest_dir;
+	GList        *scan;
+
+	e_dest_dir = fr_command_escape (comm, dest_dir);
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char       *path = scan->data;
@@ -165,15 +177,15 @@ fr_command_iso_extract (FRCommand  *comm,
 		 else 
 			e_temp_dest_dir = g_strdup (e_dest_dir);
 		g_free (file_dir);
+		
 		if (e_temp_dest_dir == NULL) 
 			continue;
 
 		temp_dest_dir = unescape_str (e_temp_dest_dir);
 		ensure_dir_exists (temp_dest_dir, 0700);
 
-		fr_process_begin_command (comm->process, "isoinfo");
+		fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
-		fr_process_add_arg (comm->process, "-J -R");
 		fr_process_add_arg (comm->process, "-i");
 		fr_process_add_arg (comm->process, comm->e_filename);
 		fr_process_add_arg (comm->process, "-x");
@@ -196,14 +208,18 @@ static void
 fr_command_iso_handle_error (FRCommand   *comm, 
 			     FRProcError *error)
 {
-	if (error->type == 2) { /* ERROR: Unable to find Joliet SVD */
-
+	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
+	
+	return;
+	
+	if (comm_iso->joliet && (error->type == 2)) { /* ERROR: Unable to find Joliet SVD */
 		/* Remove the -J -R options and start again */
 		fr_process_set_arg_at (comm->process, 
 				       comm->process->error_command, 
 				       1, 
 				       "");
 		comm->process->restart = TRUE;
+		comm_iso->joliet = FALSE;
 	}
 }
 
@@ -230,9 +246,10 @@ fr_command_iso_init (FRCommand *comm)
 {
 	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
 
-	comm_iso->cur_path = NULL;
-
 	comm->file_type = FR_FILE_TYPE_ISO;
+
+	comm_iso->cur_path = NULL;
+	comm_iso->joliet = TRUE;
 	
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
@@ -249,8 +266,15 @@ fr_command_iso_init (FRCommand *comm)
 static void 
 fr_command_iso_finalize (GObject *object)
 {
+	FRCommandIso *comm_iso;
+	
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_ISO (object));
+
+	comm_iso = FR_COMMAND_ISO (object);
+
+	g_free (comm_iso->cur_path);
+	comm_iso->cur_path = NULL;
 
 	/* Chain up */
         if (G_OBJECT_CLASS (parent_class)->finalize)
@@ -292,7 +316,7 @@ fr_command_iso_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
-	if (!is_program_in_path("isoinfo")) {
+	if (! is_program_in_path ("isoinfo")) {
 		return NULL;
 	}
 
