@@ -159,9 +159,8 @@ fr_command_iso_extract (FRCommand  *comm,
 			gboolean    junk_paths,
 			const char *password)
 {
-	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
-	char         *e_dest_dir;
-	GList        *scan;
+	char  *e_dest_dir;
+	GList *scan;
 
 	e_dest_dir = fr_command_escape (comm, dest_dir);
 
