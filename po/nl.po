@@ -3,14 +3,15 @@
 # Kees van den Broek <kvdb@NOSPAMkvdb.net>
 # Hongli Lai <hongli@telekabel.nl>
 # Tino Meinen <a.t.meinen@chello.nl> 2004, 2006.
+# Wouter Bolsterlee <wbolster@gnome.org>, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-08 01:13+0200\n"
-"PO-Revision-Date: 2006-08-08 01:13+0200\n"
-"Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
+"POT-Creation-Date: 2006-11-08 11:20+0100\n"
+"PO-Revision-Date: 2006-11-08 11:20+0100 \n"
+"Last-Translator: Wouter Bolsterlee <wbolster@gnome.org>\n"
 "Language-Team:  Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,12 +49,12 @@ msgstr "Verwijderen"
 msgid "Load Options"
 msgstr "Voorkeuren openen"
 
-#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2947
+#: ../data/glade/file-roller.glade.h:7 ../src/window.c:3054
 msgid "Location"
 msgstr "Locatie"
 
 #. current location
-#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3825
+#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3931
 msgid "Location:"
 msgstr "Locatie:"
 
@@ -69,7 +70,7 @@ msgstr "Wachtwoord"
 msgid "R_ecent applications:"
 msgstr "_Recente toepassingen:"
 
-#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:393
+#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:399
 msgid "_All files"
 msgstr "_Alle bestanden"
 
@@ -81,41 +82,29 @@ msgstr "_Toepassing:"
 msgid "_Archive:"
 msgstr "_Archief:"
 
-#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:379
+#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:385
 msgid "_Files:"
 msgstr "_Bestanden:"
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:441
+#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:447
 msgid "_Password:"
 msgstr "_Wachtwoord:"
 
-#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:400
+#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:406
 msgid "_Selected files"
 msgstr "_Geselecteerde bestanden"
 
-#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:390
+#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
 msgstr "voorbeeld: *.txt; *.doc"
 
-#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5767
-msgid "Destination folder"
-msgstr "Doelmap"
-
-#: ../data/glade/file-roller-extract.glade.h:2
-msgid "Ex_tract in folder:"
-msgstr "Uitpakken in _map:"
-
-#: ../data/glade/file-roller-extract.glade.h:3 ../src/ui.h:86
-msgid "Extract"
-msgstr "Uitpakken"
-
 #. Create the application.
-#: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:391 ../src/main.c:210
-#: ../src/window.c:864 ../src/window.c:3526
+#: ../data/file-roller.desktop.in.in.h:1 ../src/gtk-utils.c:391
+#: ../src/main.c:216 ../src/window.c:894 ../src/window.c:3626
 msgid "Archive Manager"
 msgstr "Archiefbeheer"
 
-#: ../data/file-roller.desktop.in.h:2 ../src/main.c:202
+#: ../data/file-roller.desktop.in.in.h:2 ../src/main.c:208
 msgid "Create and modify an archive"
 msgstr "Maak en wijzig een archief"
 
@@ -146,7 +135,7 @@ msgstr "Maak een archief met de geselecteerde objecten"
 #: ../src/actions.c:161 ../src/actions.c:181 ../src/actions.c:222
 #: ../src/dlg-batch-add.c:130 ../src/dlg-batch-add.c:149
 #: ../src/dlg-batch-add.c:172 ../src/dlg-batch-add.c:223
-#: ../src/dlg-batch-add.c:270 ../src/window.c:4272
+#: ../src/dlg-batch-add.c:270 ../src/window.c:4403
 msgid "Could not create the archive"
 msgstr "Kan het archief niet aanmaken"
 
@@ -160,8 +149,8 @@ msgstr ""
 "U beschikt niet over de juiste rechten om een archief aan te maken in deze "
 "map"
 
-#: ../src/actions.c:223 ../src/fr-archive.c:740 ../src/window.c:4273
-#: ../src/window.c:4429
+#: ../src/actions.c:223 ../src/fr-archive.c:770 ../src/window.c:4404
+#: ../src/window.c:4558
 msgid "Archive type not supported."
 msgstr "Archieftype wordt niet ondersteund."
 
@@ -182,7 +171,7 @@ msgid "New"
 msgstr "Nieuw"
 
 #: ../src/actions.c:386 ../src/actions.c:497 ../src/actions.c:594
-#: ../src/window.c:3479
+#: ../src/window.c:3586
 msgid "All archives"
 msgstr "Alle archieven"
 
@@ -198,7 +187,7 @@ msgstr "Archieftype:"
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: ../src/actions.c:485 ../src/window.c:3923
+#: ../src/actions.c:485 ../src/window.c:4029
 msgid "Open"
 msgstr "Openen"
 
@@ -206,19 +195,19 @@ msgstr "Openen"
 msgid "Save"
 msgstr "Opslaan"
 
-#: ../src/actions.c:847 ../src/window.c:5319
+#: ../src/actions.c:856 ../src/window.c:5547
 msgid "Last Output"
 msgstr "Laatste uitvoer"
 
-#: ../src/actions.c:867 ../src/gtk-utils.c:790
+#: ../src/actions.c:876 ../src/gtk-utils.c:790
 msgid "Could not display help"
 msgstr "Kon hulp niet tonen"
 
-#: ../src/actions.c:923
+#: ../src/actions.c:932
 msgid "An archive manager for GNOME."
 msgstr "Archiefbeheer voor GNOME."
 
-#: ../src/actions.c:926
+#: ../src/actions.c:935
 msgid "translator-credits"
 msgstr ""
 "Tino Meinen\n"
@@ -235,15 +224,15 @@ msgstr "U beschikt niet over de rechten om bestanden te lezen in de map ‘%s’
 
 #: ../src/dlg-add-files.c:97 ../src/dlg-add-files.c:159
 #: ../src/dlg-add-folder.c:129 ../src/dlg-add-folder.c:258
-#: ../src/window.c:2256 ../src/window.c:2294
+#: ../src/window.c:2347 ../src/window.c:2385
 msgid "Could not add the files to the archive"
 msgstr "Kan de bestanden niet aan archief toevoegen"
 
-#: ../src/dlg-add-files.c:185
+#: ../src/dlg-add-files.c:185 ../src/ui.h:50
 msgid "Add Files"
 msgstr "Bestanden toevoegen"
 
-#: ../src/dlg-add-files.c:196 ../src/dlg-add-folder.c:328
+#: ../src/dlg-add-files.c:199 ../src/dlg-add-folder.c:331
 msgid "_Add only if newer"
 msgstr "_Alleen toevoegen indien nieuwer"
 
@@ -251,43 +240,43 @@ msgstr "_Alleen toevoegen indien nieuwer"
 msgid "Add a Folder"
 msgstr "Een map toevoegen"
 
-#: ../src/dlg-add-folder.c:329
+#: ../src/dlg-add-folder.c:332
 msgid "_Include subfolders"
 msgstr "_Inclusief submappen"
 
-#: ../src/dlg-add-folder.c:330
+#: ../src/dlg-add-folder.c:333
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "_Symbolische verwijzingen die een map zijn uitsluiten"
 
-#: ../src/dlg-add-folder.c:333 ../src/dlg-add-folder.c:338
+#: ../src/dlg-add-folder.c:336 ../src/dlg-add-folder.c:341
 msgid "example: *.o; *.bak"
 msgstr "voorbeeld: *.o; *.bak"
 
-#: ../src/dlg-add-folder.c:334
+#: ../src/dlg-add-folder.c:337
 msgid "_Include files:"
 msgstr "Bestanden _bijsluiten:"
 
-#: ../src/dlg-add-folder.c:339
+#: ../src/dlg-add-folder.c:342
 msgid "E_xclude files:"
 msgstr "Bestanden _uitsluiten:"
 
-#: ../src/dlg-add-folder.c:342
+#: ../src/dlg-add-folder.c:345
 msgid "_Load Options"
 msgstr "Voorkeuren _openen"
 
-#: ../src/dlg-add-folder.c:343
+#: ../src/dlg-add-folder.c:346
 msgid "Sa_ve Options"
 msgstr "Voorkeuren o_pslaan"
 
-#: ../src/dlg-add-folder.c:790
+#: ../src/dlg-add-folder.c:794
 msgid "Save Options"
 msgstr "Voorkeuren opslaan"
 
-#: ../src/dlg-add-folder.c:791
+#: ../src/dlg-add-folder.c:795
 msgid "Options Name:"
 msgstr "Optie Naam:"
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5545
+#: ../src/dlg-batch-add.c:144 ../src/window.c:5830
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -298,8 +287,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5537 ../src/window.c:5541
-#: ../src/window.c:5545 ../src/window.c:5602 ../src/window.c:5604
+#: ../src/dlg-batch-add.c:144 ../src/window.c:5822 ../src/window.c:5826
+#: ../src/window.c:5830 ../src/window.c:5887 ../src/window.c:5889
 msgid "Please use a different name."
 msgstr "Gebruik een andere naam."
 
@@ -311,7 +300,7 @@ msgstr ""
 "U beschikt niet over de juiste rechten om een archief aan te maken in de "
 "doelmap."
 
-#: ../src/dlg-batch-add.c:192 ../src/dlg-extract.c:126 ../src/window.c:4711
+#: ../src/dlg-batch-add.c:192 ../src/dlg-extract.c:110 ../src/window.c:4921
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -322,11 +311,11 @@ msgstr ""
 "\n"
 "Wilt u deze aanmaken?"
 
-#: ../src/dlg-batch-add.c:201 ../src/dlg-extract.c:135 ../src/window.c:4720
+#: ../src/dlg-batch-add.c:201 ../src/dlg-extract.c:119 ../src/window.c:4930
 msgid "Create _Folder"
 msgstr "_Nieuwe map"
 
-#: ../src/dlg-batch-add.c:219 ../src/dlg-extract.c:154 ../src/window.c:4739
+#: ../src/dlg-batch-add.c:219 ../src/dlg-extract.c:138 ../src/window.c:4949
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Kan de doelmap niet aanmaken: %s."
@@ -343,40 +332,44 @@ msgstr "Het archief bestaat al. Wilt u het overschrijven?"
 msgid "_Overwrite"
 msgstr "_Overschrijven"
 
-#: ../src/dlg-extract.c:158 ../src/dlg-extract.c:178 ../src/dlg-extract.c:206
-#: ../src/window.c:4743 ../src/window.c:4763
+#: ../src/dlg-extract.c:142 ../src/dlg-extract.c:162 ../src/dlg-extract.c:190
+#: ../src/window.c:4953 ../src/window.c:4973
 msgid "Extraction not performed"
 msgstr "Archief niet uitgepakt"
 
-#: ../src/dlg-extract.c:201
+#: ../src/dlg-extract.c:185
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "U beschikt niet over de rechten om bestanden uit te pakken in map ‘%s’"
 
-#: ../src/dlg-extract.c:362
+#: ../src/dlg-extract.c:368
 msgid "Files"
 msgstr "Bestanden"
 
-#: ../src/dlg-extract.c:411
+#: ../src/dlg-extract.c:417
 msgid "Actions"
 msgstr "Acties"
 
-#: ../src/dlg-extract.c:427
+#: ../src/dlg-extract.c:433
 msgid "R_e-create folders"
 msgstr "_Mappen opnieuw aanmaken"
 
-#: ../src/dlg-extract.c:431
+#: ../src/dlg-extract.c:437
 msgid "Over_write existing files"
 msgstr "Bestaande bestanden o_verschrijven"
 
-#: ../src/dlg-extract.c:435
+#: ../src/dlg-extract.c:441
 msgid "Do not e_xtract older files"
 msgstr "_Oudere bestanden niet uitpakken"
 
-#: ../src/dlg-extract.c:450
+#: ../src/dlg-extract.c:456
 msgid "_Open destination folder after extraction"
 msgstr "_Doelmap weergeven na uitpakken"
+
+#: ../src/dlg-extract.c:485 ../src/ui.h:90
+msgid "Extract"
+msgstr "Uitpakken"
 
 #: ../src/dlg-prop.c:114
 msgid "Path:"
@@ -395,7 +388,7 @@ msgstr "%s Eigenschappen"
 msgid "Modified on:"
 msgstr "Wijzigingsdatum:"
 
-#: ../src/dlg-prop.c:148 ../src/window.c:428
+#: ../src/dlg-prop.c:148 ../src/window.c:468
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
@@ -415,163 +408,167 @@ msgstr "Compressieniveau:"
 msgid "Number of files:"
 msgstr "Aantal bestanden:"
 
-#: ../src/file-data.c:28
+#: ../src/file-data.c:29
 msgid "Unknown type"
 msgstr "Onbekend type"
 
-#: ../src/file-data.c:29
+#: ../src/file-data.c:30
 msgid "Symbolic link"
 msgstr "Symbolische verwijzing"
 
-#: ../src/fr-archive.c:714
+#: ../src/fr-archive.c:743
 msgid "The file does not exist."
 msgstr "Het bestand bestaat niet."
 
-#: ../src/fr-command-tar.c:289
+#: ../src/fr-command-tar.c:290
 msgid "Adding file: "
 msgstr "Toevoegen van bestand:"
 
-#: ../src/fr-command-tar.c:336
+#: ../src/fr-command-tar.c:338
 msgid "Removing file: "
 msgstr "Verwijderen van bestand:"
 
-#: ../src/fr-command-tar.c:345 ../src/window.c:1236
+#: ../src/fr-command-tar.c:347 ../src/window.c:1270
 msgid "Deleting files from archive"
 msgstr "Bestanden uit het archief verwijderen"
 
-#: ../src/fr-command-tar.c:378
+#: ../src/fr-command-tar.c:380
 msgid "Extracting file: "
 msgstr "Uitpakken van bestand:"
 
-#: ../src/fr-command-tar.c:424
+#: ../src/fr-command-tar.c:426
 msgid "Recompressing archive"
 msgstr "Archief opnieuw comprimeren"
 
-#: ../src/fr-command-tar.c:558
+#: ../src/fr-command-tar.c:560
 msgid "Decompressing archive"
 msgstr "Archief decomprimeren"
 
-#: ../src/fr-stock.c:44
+#: ../src/fr-stock.c:42 ../src/fr-stock.c:43
 msgid "_Add"
 msgstr "_Toevoegen"
 
-#: ../src/fr-stock.c:45
+#: ../src/fr-stock.c:44
 msgid "_Extract"
 msgstr "_Uitpakken"
 
-#: ../src/fr-stock.c:46 ../src/ui.h:36 ../src/ui.h:150 ../src/ui.h:154
-msgid "_View"
-msgstr "Beel_d"
+#: ../src/fr-stock.c:45
+msgid "_View File"
+msgstr "Bestand weerge_ven"
 
 #. Button
 #: ../src/gtk-utils.c:422
 msgid "Command _Line Output"
 msgstr "Opdracht_regel uitvoer"
 
-#: ../src/main.c:68
+#: ../src/main.c:69
+msgid "Ace (.ace)"
+msgstr "Ace (.ace)"
+
+#: ../src/main.c:70
 msgid "Ar (.ar)"
 msgstr "Ar (.ar)"
 
-#: ../src/main.c:70
+#: ../src/main.c:71
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: ../src/main.c:75
+#: ../src/main.c:78
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: ../src/main.c:77
+#: ../src/main.c:80
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: ../src/main.c:78
+#: ../src/main.c:81
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: ../src/main.c:80
+#: ../src/main.c:83
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: ../src/main.c:82
+#: ../src/main.c:85
 msgid "Tar uncompressed (.tar)"
 msgstr "Ongecomprimeerde tar (.tar)"
 
-#: ../src/main.c:83
+#: ../src/main.c:86
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Met bzip gecomprimeerde tar (.tar.bz)"
 
-#: ../src/main.c:84
+#: ../src/main.c:87
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Met bzip2 gecomprimeerde tar (.tar.bz2)"
 
-#: ../src/main.c:85
+#: ../src/main.c:88
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Met gzip gecomprimeerde tar (.tar.gz)"
 
-#: ../src/main.c:86
+#: ../src/main.c:89
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Met lzop gecomprimeerde tar (.tar.lzo)"
 
-#: ../src/main.c:87
+#: ../src/main.c:90
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Met compress gecomprimeerde tar (.tar.Z)"
 
-#: ../src/main.c:89
+#: ../src/main.c:92
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: ../src/main.c:90
+#: ../src/main.c:93
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: ../src/main.c:91
+#: ../src/main.c:94
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: ../src/main.c:92
+#: ../src/main.c:95
 msgid "7-Zip (.7z)"
 msgstr "7-Zip (.7z)"
 
-#: ../src/main.c:137
+#: ../src/main.c:143
 msgid "Add files to the specified archive and quit the program"
 msgstr "Bestanden toevoegen aan het opgegeven archief en programma afsluiten"
 
-#: ../src/main.c:138
+#: ../src/main.c:144
 msgid "ARCHIVE"
 msgstr "ARCHIEF"
 
-#: ../src/main.c:141
+#: ../src/main.c:147
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "De naam voor het archief vragen, bestanden toevoegen en afsluiten"
 
-#: ../src/main.c:145
+#: ../src/main.c:151
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Archieven uitpakken naar de opgegeven map en programma afsluiten"
 
-#: ../src/main.c:146 ../src/main.c:158
+#: ../src/main.c:152 ../src/main.c:164
 msgid "FOLDER"
 msgstr "MAP"
 
-#: ../src/main.c:149
+#: ../src/main.c:155
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Naam voor de doelmap vragen, bestanden uitpakken en afsluiten"
 
-#: ../src/main.c:153
+#: ../src/main.c:159
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
 msgstr ""
 "Archieven uitpakken met archiefnaam als doelmap en het programma afsluiten."
 
-#: ../src/main.c:157
+#: ../src/main.c:163
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "De standaardmap voor het gebruik van '--add' en '--extract' opdrachten"
 
-#: ../src/main.c:161
+#: ../src/main.c:167
 msgid "Create destination folder without asking confirmation"
 msgstr "Doelmap aanmaken zonder toestemming te vragen"
 
-#: ../src/main.c:217
+#: ../src/main.c:223
 msgid "File Roller"
 msgstr "File-roller"
 
@@ -582,6 +579,10 @@ msgstr "_Archief"
 #: ../src/ui.h:35
 msgid "_Edit"
 msgstr "Be_werken"
+
+#: ../src/ui.h:36
+msgid "_View"
+msgstr "Beel_d"
 
 #: ../src/ui.h:37
 msgid "_Help"
@@ -607,270 +608,278 @@ msgstr "_Bestanden toevoegen..."
 msgid "Add files to the archive"
 msgstr "Bestanden aan het archief toevoegen"
 
-#: ../src/ui.h:50
-msgid "Add"
-msgstr "Toevoegen"
-
 #: ../src/ui.h:54
 msgid "Add a _Folder..."
 msgstr "Een _map toevoegen..."
 
-#: ../src/ui.h:55
+#: ../src/ui.h:55 ../src/ui.h:59
 msgid "Add a folder to the archive"
 msgstr "Een map aan het archief toevoegen"
 
-#: ../src/ui.h:59
+#: ../src/ui.h:58
+msgid "Add Folder"
+msgstr "Map toevoegen"
+
+#: ../src/ui.h:63
 msgid "Close the current archive"
 msgstr "Huidige archief sluiten"
 
-#: ../src/ui.h:63
+#: ../src/ui.h:66
+msgid "Contents"
+msgstr "Inhoud"
+
+#: ../src/ui.h:67
 msgid "Display the File Roller Manual"
 msgstr "Laat de File Roller handleiding zien"
 
-#: ../src/ui.h:67
+#: ../src/ui.h:71
 msgid "Copy the selection"
 msgstr "De selectie kopiëren"
 
-#: ../src/ui.h:71
+#: ../src/ui.h:75
 msgid "Cut the selection"
 msgstr "De selectie knippen"
 
-#: ../src/ui.h:75
+#: ../src/ui.h:79
 msgid "Delete the selection from the archive"
 msgstr "De selectie uit het archief verwijderen"
 
-#: ../src/ui.h:78
+#: ../src/ui.h:82
 msgid "Dese_lect All"
 msgstr "_Niets selecteren"
 
-#: ../src/ui.h:79
+#: ../src/ui.h:83
 msgid "Deselect all files"
 msgstr "Geen bestanden selecteren"
 
-#: ../src/ui.h:82
+#: ../src/ui.h:86
 msgid "_Extract..."
 msgstr "_Uitpakken naar..."
 
-#: ../src/ui.h:83 ../src/ui.h:87
+#: ../src/ui.h:87 ../src/ui.h:91
 msgid "Extract files from the archive"
 msgstr "Bestanden in het archief uitpakken"
 
-#: ../src/ui.h:90
+#: ../src/ui.h:94
 msgid "_Last Output"
 msgstr "_Laatste uitvoer"
 
-#: ../src/ui.h:91
+#: ../src/ui.h:95
 msgid "View the output produced by the last executed command"
 msgstr "De uitvoer weergeven van de laatst uitgevoerde opdracht"
 
-#: ../src/ui.h:95
+#: ../src/ui.h:99
 msgid "Create a new archive"
 msgstr "Een nieuw archief aanmaken"
 
-#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3920 ../src/window.c:3923
+#: ../src/ui.h:103 ../src/ui.h:107 ../src/window.c:4026 ../src/window.c:4029
 msgid "Open archive"
 msgstr "Open archief"
 
-#: ../src/ui.h:106
+#: ../src/ui.h:110
 msgid "Op_en With..."
 msgstr "Op_enen met..."
 
-#: ../src/ui.h:107
+#: ../src/ui.h:111
 msgid "Open selected files with an application"
 msgstr "Geselecteerde bestanden met een toepassing openen"
 
-#: ../src/ui.h:110
+#: ../src/ui.h:114
 msgid "Pass_word..."
 msgstr "_Wachtwoord..."
 
-#: ../src/ui.h:111
+#: ../src/ui.h:115
 msgid "Specify a password for this archive"
 msgstr "Geef een wachtwoord voor dit archief"
 
-#: ../src/ui.h:115
+#: ../src/ui.h:119
 msgid "Paste the clipboard"
 msgstr "Het klembord plakken"
 
-#: ../src/ui.h:119
+#: ../src/ui.h:123
 msgid "Show archive properties"
 msgstr "Archief-eigenschappen weergeven"
 
-#: ../src/ui.h:123
+#: ../src/ui.h:127
 msgid "Quit the application"
 msgstr "De toepassing afsluiten"
 
-#: ../src/ui.h:127
+#: ../src/ui.h:131
 msgid "Reload current archive"
 msgstr "Huidige archief herladen"
 
-#: ../src/ui.h:130
+#: ../src/ui.h:134
 msgid "_Rename..."
 msgstr "_Hernoemen..."
 
-#: ../src/ui.h:131
+#: ../src/ui.h:135
 msgid "Rename the selection"
 msgstr "De selectie hernoemen"
 
-#: ../src/ui.h:135
+#: ../src/ui.h:139
 msgid "Save the current archive with a different name"
 msgstr "Het huidige archief onder een andere naam opslaan"
 
-#: ../src/ui.h:138
+#: ../src/ui.h:142
 msgid "Select _All"
 msgstr "_Alles selecteren"
 
-#: ../src/ui.h:139
+#: ../src/ui.h:143
 msgid "Select all files"
 msgstr "Alle bestanden selecteren"
 
-#: ../src/ui.h:143
+#: ../src/ui.h:147
 msgid "Stop current operation"
 msgstr "Huidige actie stoppen"
 
-#: ../src/ui.h:146
+#: ../src/ui.h:150
 msgid "_Test Integrity"
 msgstr "_Test correctheid"
 
-#: ../src/ui.h:147
+#: ../src/ui.h:151
 msgid "Test whether the archive contains errors"
 msgstr "Archief testen op fouten"
 
-#: ../src/ui.h:151 ../src/ui.h:155
+#: ../src/ui.h:155 ../src/ui.h:159
 msgid "View the selected file"
 msgstr "Het geselecteerd bestand weergeven"
 
 #: ../src/ui.h:163
+msgid "Open the selected folder"
+msgstr "De geselecteerde map openen"
+
+#: ../src/ui.h:171
 msgid "_Toolbar"
 msgstr "_Werkbalk"
 
-#: ../src/ui.h:164
+#: ../src/ui.h:172
 msgid "View the main toolbar"
 msgstr "Werkbalk tonen"
 
-#: ../src/ui.h:168
+#: ../src/ui.h:176
 msgid "Stat_usbar"
 msgstr "Stat_usbalk"
 
-#: ../src/ui.h:169
+#: ../src/ui.h:177
 msgid "View the statusbar"
 msgstr "Statusbalk tonen"
 
-#: ../src/ui.h:173
+#: ../src/ui.h:181
 msgid "_Reversed Order"
 msgstr "_Volgorde omkeren"
 
-#: ../src/ui.h:174
+#: ../src/ui.h:182
 msgid "Reverse the list order"
 msgstr "Volgorde van de lijst omkeren"
 
-#: ../src/ui.h:183
+#: ../src/ui.h:191
 msgid "View All _Files"
 msgstr "_Alle bestanden weergeven"
 
-#: ../src/ui.h:186
+#: ../src/ui.h:194
 msgid "View as a F_older"
 msgstr "Weergeven als een _map"
 
-#: ../src/ui.h:194
+#: ../src/ui.h:202
 msgid "by _Name"
 msgstr "op _naam"
 
-#: ../src/ui.h:195
+#: ../src/ui.h:203
 msgid "Sort file list by name"
 msgstr "Bestandenlijst op naam sorteren"
 
-#: ../src/ui.h:197
+#: ../src/ui.h:205
 msgid "by _Size"
 msgstr "op _grootte"
 
-#: ../src/ui.h:198
+#: ../src/ui.h:206
 msgid "Sort file list by file size"
 msgstr "Bestandenlijst op grootte sorteren"
 
-#: ../src/ui.h:200
+#: ../src/ui.h:208
 msgid "by T_ype"
 msgstr "op _type"
 
-#: ../src/ui.h:201
+#: ../src/ui.h:209
 msgid "Sort file list by type"
 msgstr "Bestandenlijst op type sorteren"
 
-#: ../src/ui.h:203
+#: ../src/ui.h:211
 msgid "by _Date modified"
 msgstr "op _wijzigingsdatum"
 
-#: ../src/ui.h:204
+#: ../src/ui.h:212
 msgid "Sort file list by modification time"
 msgstr "Bestandenlijst op laatste wijzigingstijd sorteren"
 
-#: ../src/ui.h:206
+#: ../src/ui.h:214
 msgid "by _Location"
 msgstr "op l_ocatie"
 
-#: ../src/ui.h:207
+#: ../src/ui.h:215
 msgid "Sort file list by location"
 msgstr "Bestandenlijst sorteren op locatie"
 
-#: ../src/window.c:711
+#: ../src/window.c:745
 msgid "Folder"
 msgstr "Map"
 
-#: ../src/window.c:872
+#: ../src/window.c:902
 msgid "[read only]"
 msgstr "[alleen-lezen]"
 
-#: ../src/window.c:966
+#: ../src/window.c:996
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
 msgstr[0] "%d bestand (%s)"
 msgstr[1] "%d bestanden (%s)"
 
-#: ../src/window.c:971
+#: ../src/window.c:1001
 #, c-format
 msgid "%d file selected (%s)"
 msgid_plural "%d files selected (%s)"
 msgstr[0] "%d bestand geselecteerd (%s)"
 msgstr[1] "%d bestanden geselecteerd (%s)"
 
-#: ../src/window.c:1233
+#: ../src/window.c:1267
 msgid "Reading archive"
 msgstr "Bezig met lezen archief"
 
-#: ../src/window.c:1239
+#: ../src/window.c:1273
 msgid "Adding files to archive"
 msgstr "Bezig met het toevoegen van bestanden aan het archief"
 
-#: ../src/window.c:1242
+#: ../src/window.c:1276
 msgid "Extracting files from archive"
 msgstr "Bezig met bestanden uit het archief uitpakken"
 
-#: ../src/window.c:1245
+#: ../src/window.c:1279
 msgid "Testing archive"
 msgstr "Bezig met testen van het archief"
 
-#: ../src/window.c:1248
+#: ../src/window.c:1282
 msgid "Getting the file list"
 msgstr "Ophalen van bestandenlijst"
 
-#: ../src/window.c:1251
+#: ../src/window.c:1285
 msgid "Saving archive"
 msgstr "Opslaan van het archief"
 
-#: ../src/window.c:1429
+#: ../src/window.c:1465
 msgid "Archive:"
 msgstr "Archief:"
 
-#: ../src/window.c:1542
+#: ../src/window.c:1580
 msgid "wait please..."
 msgstr "even geduld a.u.b..."
 
-#: ../src/window.c:1617
+#: ../src/window.c:1659
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Kan de map ‘%s’ niet tonen"
 
-#: ../src/window.c:1676
+#: ../src/window.c:1724
 msgid ""
 "This archive is password protected.\n"
 "Please specify a password with the command: Edit->Password"
@@ -878,7 +887,7 @@ msgstr ""
 "Dit archief is beveiligd met een wachtwoord.\n"
 "Stel een wachtwoord in met de opdracht: Bewerken->Wachtwoord"
 
-#: ../src/window.c:1678
+#: ../src/window.c:1726
 msgid ""
 "The specified password is not valid, please specify a new password with the "
 "command: Edit->Password"
@@ -886,54 +895,55 @@ msgstr ""
 "Het ingestelde wachtwoord is niet goed, stel een nieuw wachtwoord in met de "
 "opdracht: Bewerken->Wachtwoord"
 
-#: ../src/window.c:1683 ../src/window.c:2480 ../src/window.c:5938
+#: ../src/window.c:1731 ../src/window.c:2571 ../src/window.c:2800
+#: ../src/window.c:6235
 msgid "Could not perform the operation"
 msgstr "Kon operatie niet uitvoeren"
 
-#: ../src/window.c:1708
+#: ../src/window.c:1759
 msgid "An error occurred while extracting files."
 msgstr "Er is een fout opgetreden tijdens het uitpakken van bestanden."
 
-#: ../src/window.c:1712
+#: ../src/window.c:1763
 msgid "An error occurred while loading the archive."
 msgstr "Er is een fout opgetreden tijdens het laden van het archief."
 
-#: ../src/window.c:1716
+#: ../src/window.c:1767
 msgid "An error occurred while deleting files from the archive."
 msgstr ""
 "Er is een fout opgetreden tijden het verwijderen van bestanden uit het "
 "archief."
 
-#: ../src/window.c:1720
+#: ../src/window.c:1771
 msgid "An error occurred while adding files to the archive."
 msgstr ""
 "Er is een fout opgetreden tijden het toevoegen van bestanden aan het archief."
 
-#: ../src/window.c:1724
+#: ../src/window.c:1775
 msgid "An error occurred while testing archive."
 msgstr "Er is een fout opgetreden tijdens het testen van het archief."
 
-#: ../src/window.c:1737
+#: ../src/window.c:1788
 msgid "Command not found."
 msgstr "Commando niet gevonden."
 
-#: ../src/window.c:1740
+#: ../src/window.c:1791
 msgid "Command exited abnormally."
 msgstr "Commando abnormaal afgesloten."
 
-#: ../src/window.c:1870
+#: ../src/window.c:1931
 msgid "Test Result"
 msgstr "Testresultaten"
 
-#: ../src/window.c:2257
+#: ../src/window.c:2348
 msgid "You don't have the right permissions."
 msgstr "U beschikt niet over juiste de rechten."
 
-#: ../src/window.c:2295
+#: ../src/window.c:2386
 msgid "You can't add an archive to itself."
 msgstr "U kunt een archief niet aan zichzelf toevoegen."
 
-#: ../src/window.c:2514
+#: ../src/window.c:2605
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -941,69 +951,69 @@ msgstr ""
 "Wilt u dit bestand aan het huidig archief toevoegen of het bestand openen "
 "als een nieuw archief?"
 
-#: ../src/window.c:2551
+#: ../src/window.c:2642
 msgid "Do you want to create a new archive with these files?"
 msgstr "Wilt u een nieuw archief aanmaken met deze bestanden?"
 
-#: ../src/window.c:2554
+#: ../src/window.c:2645
 msgid "Create _Archive"
 msgstr "_Nieuw archief aanmaken"
 
-#: ../src/window.c:2944
+#: ../src/window.c:3051
 msgid "Size"
 msgstr "Grootte"
 
-#: ../src/window.c:2945
+#: ../src/window.c:3052
 msgid "Type"
 msgstr "Type"
 
-#: ../src/window.c:2946
+#: ../src/window.c:3053
 msgid "Date Modified"
 msgstr "Wijzigingsdatum"
 
-#: ../src/window.c:2955
+#: ../src/window.c:3062
 msgid "Name"
 msgstr "Naam"
 
-#: ../src/window.c:3782
+#: ../src/window.c:3888
 msgid "Go to the previous visited location"
 msgstr "Naar vorige bezochte locatie gaan"
 
-#: ../src/window.c:3790
+#: ../src/window.c:3896
 msgid "Go to the next visited location"
 msgstr "Naar de volgende bezochte locatie gaan"
 
-#: ../src/window.c:3798
+#: ../src/window.c:3904
 msgid "Go up one level"
 msgstr "Eén niveau omhoog gaan"
 
-#: ../src/window.c:3806
+#: ../src/window.c:3912
 msgid "Go to the home location"
 msgstr "Naar persoonlijke map gaan"
 
-#: ../src/window.c:3921
+#: ../src/window.c:4027
 msgid "Open a recently used archive"
 msgstr "Open het recentst gebruikte archief"
 
-#: ../src/window.c:4364
+#: ../src/window.c:4493
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Kan ‘%s’ niet openen"
 
-#: ../src/window.c:4422
+#: ../src/window.c:4551
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Kan het archief ‘%s’ niet opslaan"
 
-#: ../src/window.c:5537
+#: ../src/window.c:5822
 msgid "The new name is void."
 msgstr "De nieuwe naam is leeg."
 
-#: ../src/window.c:5541
+#: ../src/window.c:5826
 msgid "The new name is equal to the old one."
 msgstr "De nieuwe naam is hetzelfde als de oude."
 
-#: ../src/window.c:5602
+#: ../src/window.c:5887
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1014,7 +1024,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5604
+#: ../src/window.c:5889
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1025,45 +1035,55 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5642
+#: ../src/window.c:5927
 msgid "Rename"
 msgstr "Hernoemen"
 
-#: ../src/window.c:5643
+#: ../src/window.c:5928
 msgid "New folder name"
 msgstr "Nieuw mapnaam"
 
-#: ../src/window.c:5643
+#: ../src/window.c:5928
 msgid "New file name"
 msgstr "Nieuwe bestandsnaam"
 
-#: ../src/window.c:5647
+#: ../src/window.c:5932
 msgid "_Rename"
 msgstr "_Hernoemen"
 
-#: ../src/window.c:5663 ../src/window.c:5692
+#: ../src/window.c:5948 ../src/window.c:5977
 msgid "Could not rename the folder"
 msgstr "Kan map niet hernoemen"
 
-#: ../src/window.c:5663 ../src/window.c:5692
+#: ../src/window.c:5948 ../src/window.c:5977
 msgid "Could not rename the file"
 msgstr "Kan het archief niet hernoemen"
 
-#: ../src/window.c:5766
+#: ../src/window.c:6149
 msgid "Paste Selection"
 msgstr "De selectie plakken"
 
-#: ../src/window.c:5771
+#: ../src/window.c:6150
+msgid "Destination folder"
+msgstr "Doelmap"
+
+#: ../src/window.c:6154
 msgid "_Paste"
 msgstr "_Plakken"
 
-#: ../src/window.c:6294
+#: ../src/window.c:6553
 msgid "Add files to an archive"
 msgstr "Voeg bestanden aan een archief toe"
 
-#: ../src/window.c:6325
+#: ../src/window.c:6599
 msgid "Extract archive"
 msgstr "Archief uitpakken"
+
+#~ msgid "Ex_tract in folder:"
+#~ msgstr "Uitpakken in _map:"
+
+#~ msgid "Add"
+#~ msgstr "Toevoegen"
 
 #~ msgid "    "
 #~ msgstr "    "
@@ -1073,6 +1093,3 @@ msgstr "Archief uitpakken"
 
 #~ msgid "Empty"
 #~ msgstr "Leeg"
-
-#~ msgid "_View File"
-#~ msgstr "Bestand weerge_ven"
