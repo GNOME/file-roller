@@ -1110,7 +1110,6 @@ _window_update_sensitivity (FRWindow *window)
 	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
 	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	set_sensitive (window, "Close", ! no_archive);
 	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->list_mode != WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->archive_new && ! running && ! compr_file && can_modify);
@@ -1128,7 +1127,7 @@ _window_update_sensitivity (FRWindow *window)
 	set_sensitive (window, "Password", ! running && (window->asked_for_password || (! no_archive && window->archive->command->propPassword)));
 	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->list_mode != WINDOW_LIST_MODE_FLAT) && (window->clipboard != NULL));
 	set_sensitive (window, "Properties", file_op);
-	set_sensitive (window, "Quit", !running || window->stoppable);
+	set_sensitive (window, "Close", !running || window->stoppable);
 	set_sensitive (window, "Reload", ! (no_archive || running));
 	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
 	set_sensitive (window, "SaveAs", ! no_archive && ! compr_file && ! running);

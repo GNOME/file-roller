@@ -665,18 +665,9 @@ void
 activate_action_close (GtkAction *action, 
 		       gpointer   data)
 {
-	window_archive_close ((FRWindow*) data);
-}
-
-
-void
-activate_action_quit (GtkAction *action, 
-		      gpointer   data)
-{
 	FRWindow *window = data;
 	window_close (window);
 }
-
 
 void
 activate_action_add_files (GtkAction *action, 

@@ -122,10 +122,6 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Show archive properties"),
 	  G_CALLBACK (activate_action_properties) },
-	{ "Quit", GTK_STOCK_QUIT,
-	  NULL, NULL,
-	  N_("Quit the application"),
-	  G_CALLBACK (activate_action_quit) },
 	{ "Reload", GTK_STOCK_REFRESH,
 	  NULL, "<control>R",
 	  N_("Reload current archive"),
@@ -234,7 +230,6 @@ static const gchar *ui_info =
 "      <menuitem action='Properties'/>"
 "      <separator/>"
 "      <menuitem action='Close'/>"
-"      <menuitem action='Quit'/>"
 "    </menu>"
 "    <menu action='EditMenu'>"
 "      <menuitem action='AddFiles'/>"
