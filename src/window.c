@@ -6922,16 +6922,6 @@ window_archive__open_add (FRWindow   *window,
 
 
 void
-window_archive__close (FRWindow   *window)
-{
-	window_batch_mode_add_action (window,
-				      FR_BATCH_ACTION_CLOSE,
-				      NULL,
-				      NULL);
-}
-
-
-void
 window_archive__quit (FRWindow   *window)
 {
 	window_batch_mode_add_action (window,

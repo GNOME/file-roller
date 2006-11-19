@@ -1,5 +1,12 @@
 2006-11-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.h: 
+	* src/window.c: removed unused function window_archive__close
+	
+	Fixes bug #371582 – Dead code in window.c
+	Patch by Björn Lindqvist	
+
+	* src/window.h: 
 	* src/window.c (window_fake_load): 
 	
 	disable fake load when the command cannot extract all the files (that is

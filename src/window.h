@@ -469,8 +469,6 @@ void       window_archive__open_add           (FRWindow      *window,
 					       const char    *archive,
 					       GList         *file_list);
 
-void       window_archive__close              (FRWindow      *window);
-
 void       window_archive__quit               (FRWindow      *window);
 
 
