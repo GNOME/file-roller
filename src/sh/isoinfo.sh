@@ -5,8 +5,6 @@ filename=$2
 JOLIET=true
 ROCK_RIDGE=true
 
-echo "isoinfo -d -i $filename"
-
 ISOINFO=`isoinfo -d -i $filename`
 if echo $ISOINFO | grep "NO Joliet present" >/dev/null 2>&1; then
         JOLIET=false  

@@ -1713,8 +1713,7 @@ fr_archive_extract (FRArchive  *archive,
 		GList *scan;
 
 		file_list = NULL;
-		scan = archive->command->file_list;
-		for (; scan; scan = scan->next) {
+		for (scan = archive->command->file_list; scan; scan = scan->next) {
 			FileData *fdata = scan->data;
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}

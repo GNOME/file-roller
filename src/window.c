@@ -3384,7 +3384,8 @@ window_fake_load (FRArchive *archive,
 
 	return (window->batch_mode 
 		&& ! (window->add_after_opening && window->update_dropped_files && ! archive->command->propAddCanUpdate)
-		&& ! (window->add_after_opening && ! window->update_dropped_files && ! archive->command->propAddCanReplace));
+		&& ! (window->add_after_opening && ! window->update_dropped_files && ! archive->command->propAddCanReplace)
+		&& archive->command->propCanExtractAll);
 }
 
 

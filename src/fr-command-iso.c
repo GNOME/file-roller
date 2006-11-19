@@ -203,26 +203,6 @@ fr_command_iso_extract (FRCommand  *comm,
 }
 
 
-static void
-fr_command_iso_handle_error (FRCommand   *comm, 
-			     FRProcError *error)
-{
-	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
-	
-	return;
-	
-	if (comm_iso->joliet && (error->type == 2)) { /* ERROR: Unable to find Joliet SVD */
-		/* Remove the -J -R options and start again */
-		fr_process_set_arg_at (comm->process, 
-				       comm->process->error_command, 
-				       1, 
-				       "");
-		comm->process->restart = TRUE;
-		comm_iso->joliet = FALSE;
-	}
-}
-
-
 static void 
 fr_command_iso_class_init (FRCommandIsoClass *class)
 {
@@ -234,9 +214,8 @@ fr_command_iso_class_init (FRCommandIsoClass *class)
 
 	gobject_class->finalize = fr_command_iso_finalize;
 
-        afc->list           = fr_command_iso_list;
-	afc->extract        = fr_command_iso_extract;
-	afc->handle_error   = fr_command_iso_handle_error;
+        afc->list    = fr_command_iso_list;
+	afc->extract = fr_command_iso_extract;
 }
 
 

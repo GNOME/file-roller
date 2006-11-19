@@ -1,3 +1,17 @@
+2006-11-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c (window_fake_load): 
+	
+	disable fake load when the command cannot extract all the files (that is
+	when propCanExtractAll is false).  This only happens with fr-command-iso.
+	
+	* src/fr-command-iso.c (fr_command_iso_extract): 
+	(fr_command_iso_class_init): removed unused error handling function.
+	* src/sh/isoinfo.sh: removed debug code.
+	
+	Fixed bug #376848 – [PATCH] ISO extraction does not work
+	Partial patch by Joe Marcus Clarke.
+
 2006-11-07  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.17.2 released ]
