@@ -4,5 +4,4 @@ icon_DATA = 				\
 	add-folder-to-archive.png	\
 	extract-archive.png		\
 	preview-file.png
-
 EXTRA_DIST = $(icon_DATA)		
