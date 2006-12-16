@@ -108,10 +108,10 @@ typedef struct {
 	FRAction         current_action;
 	gboolean         archive_present;
 	gboolean         archive_new;        /* A new archive has been created
-					      * but it doesn't contain any 
+					      * but it doesn't contain any
 					      * file yet.  The real file will
 					      * be created only when the user
-					      * adds some file to the 
+					      * adds some file to the
 					      * archive.*/
 
 	char *           archive_filename;
@@ -142,12 +142,12 @@ typedef struct {
 	char *           password;
 	FRCompression    compression;
 
-	guint            activity_timeout_handle;   /* activity timeout 
+	guint            activity_timeout_handle;   /* activity timeout
 						     * handle. */
 	gint             activity_ref;              /* when > 0 some activity
                                                      * is present. */
 
-	guint            update_timeout_handle;     /* update file list 
+	guint            update_timeout_handle;     /* update file list
 						     * timeout handle. */
 
 	VisitDirHandle  *vd_handle;
@@ -178,38 +178,28 @@ typedef struct {
 	GtkWidget        *recent_toolbar_menu;
 	GtkAction        *open_action;
 
-	/* drag data */
+	/* dragged files data */
 
-	GList *  drag_file_list;        /* the list of files we are 
+	char    *drag_destination_folder;
+	GError  *drag_error;
+	GList *  drag_file_list;        /* the list of files we are
 					 * dragging*/
-	GList *  drag_file_list_names;  /* the list of files (only the name 
-					 * without the path) of the
-					 * files we are dragging.  Used 
-					 * when dragging directories. */
-	char *   drag_temp_dir;         /* the temporary directory used to
-					 * extract the dragged files. */
-	GList *  drag_temp_dirs;        /* the list of temporary directories
-					 * used to extract dragged files.
-					 * These directories will be deleted
-					 * when the window is closed. */
-	gboolean dragging_dirs;         /* whether we are dragging directories
-					 * too .*/
+
+	/* dropped files data */
 
 	GList *  dropped_file_list;     /* the list of dropped files. */
 	gboolean add_after_creation;    /* whether we must add dropped files
 					 * after creating an archive. */
 	gboolean add_after_opening;     /* whether we must add dropped files
-					 * after opening an archive. Used in 
-					 * batch mode to avoid unnecessary 
+					 * after opening an archive. Used in
+					 * batch mode to avoid unnecessary
 					 * archive loading. */
 
-	gboolean adding_dropped_files;  /* whether we are adding dropped 
+	gboolean adding_dropped_files;  /* whether we are adding dropped
 					 * files. */
-	gboolean update_dropped_files;  /* the update flag of the add 
+	gboolean update_dropped_files;  /* the update flag of the add
 					 * operation.  */
 
-	gboolean extracting_dragged_files;
-	gboolean extracting_dragged_files_interrupted;
 	gboolean batch_adding_one_file;
 
 	/* progress dialog data */
@@ -247,19 +237,19 @@ void       window_close                     (FRWindow      *window);
 
 /* archive operations */
 
-gboolean   window_archive_new               (FRWindow      *window, 
+gboolean   window_archive_new               (FRWindow      *window,
 					     const char    *filename);
 
-gboolean   window_archive_open              (FRWindow      *window, 
+gboolean   window_archive_open              (FRWindow      *window,
 					     const char    *filename,
 					     GtkWindow     *parent);
 
-void       window_archive_save_as           (FRWindow      *window, 
+void       window_archive_save_as           (FRWindow      *window,
 					     const char    *filename);
 
 void       window_archive_reload            (FRWindow      *window);
 
-void       window_archive_rename            (FRWindow      *window, 
+void       window_archive_rename            (FRWindow      *window,
 					     const char    *filename);
 
 void       window_archive_add               (FRWindow      *window,
@@ -330,7 +320,7 @@ void       window_set_password              (FRWindow      *window,
 
 /**/
 
-void       window_go_to_location            (FRWindow       *window, 
+void       window_go_to_location            (FRWindow       *window,
 					     const char     *path);
 
 const char*window_get_current_location      (FRWindow       *window);
@@ -343,7 +333,7 @@ void       window_go_forward                (FRWindow       *window);
 
 void       window_current_folder_activated  (FRWindow       *window);
 
-void       window_set_list_mode             (FRWindow       *window, 
+void       window_set_list_mode             (FRWindow       *window,
 					     WindowListMode  list_mode);
 
 /**/
@@ -352,7 +342,7 @@ void       window_update_file_list          (FRWindow    *window);
 
 void       window_update_list_order         (FRWindow    *window);
 
-GList *    window_get_file_list_selection   (FRWindow    *window, 
+GList *    window_get_file_list_selection   (FRWindow    *window,
 					     gboolean     recursive,
 					     gboolean    *has_dirs);
 
@@ -382,20 +372,20 @@ void       window_stop_activity_mode        (FRWindow    *window);
 /**/
 
 void       window_view_last_output          (FRWindow *window,
-					     const char *title); 
+					     const char *title);
 
-void       window_view_file                 (FRWindow *window, 
+void       window_view_file                 (FRWindow *window,
 					     char     *file);
 
-void       window_open_files                (FRWindow *window, 
+void       window_open_files                (FRWindow *window,
 					     GList    *file_list,
 					     char     *command);
 
-void       window_open_files_with_application (FRWindow *window, 
+void       window_open_files_with_application (FRWindow *window,
 					       GList    *file_list,
 					       GnomeVFSMimeApplication *app);
 
-void       window_view_or_open_file         (FRWindow *window, 
+void       window_view_or_open_file         (FRWindow *window,
 					     char     *file);
 
 void       window_update_columns_visibility (FRWindow *window);
@@ -415,7 +405,7 @@ void       window_set_add_default_dir       (FRWindow *window,
 void       window_set_extract_default_dir   (FRWindow *window,
 					     char     *default_dir);
 
-void       window_push_message              (FRWindow   *window, 
+void       window_push_message              (FRWindow   *window,
 					     const char *msg);
 
 void       window_pop_message               (FRWindow   *window);
@@ -457,15 +447,15 @@ void       window_batch_mode_stop             (FRWindow      *window);
 
 void       window_batch_mode_resume           (FRWindow      *window);
 
-void       window_archive__open_extract       (FRWindow      *window, 
+void       window_archive__open_extract       (FRWindow      *window,
 					       const char    *filename,
 					       const char    *dest_dir);
 
-void       window_archive__open_extract_here  (FRWindow      *window, 
+void       window_archive__open_extract_here  (FRWindow      *window,
 					       const char    *filename,
 					       const char    *dest_dir);
 
-void       window_archive__open_add           (FRWindow      *window, 
+void       window_archive__open_add           (FRWindow      *window,
 					       const char    *archive,
 					       GList         *file_list);
 
@@ -477,7 +467,8 @@ void       window_archive__quit               (FRWindow      *window);
 void       window_convert_data_free           (FRWindow *window);
 
 gboolean   fr_window_file_list_drag_data_get  (FRWindow         *window,
-					       GList            *path_list,
-					       GtkSelectionData *selection_data);
+				   	       GdkDragContext   *context,
+				   	       GtkSelectionData *selection_data,
+				   	       GList            *path_list);
 
 #endif /* FR_WINDOW_H */

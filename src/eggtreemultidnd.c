@@ -1,4 +1,4 @@
-/* 
+/*
  * File-Roller
  *
  * Copyright (C) 2005 Free Software Foundation, Inc.
@@ -35,7 +35,7 @@
 #define EGG_TREE_MULTI_DND_STRING "EggTreeMultiDndString"
 
 static GtkTargetEntry target_table[] = {
-        { "text/uri-list", 0, 1 },
+        { "XdndDirectSave0", 0, 0 }
 };
 
 typedef struct
@@ -52,13 +52,13 @@ typedef struct
 
 
 GType
-egg_tree_multi_drag_source_get_type (void) 
+egg_tree_multi_drag_source_get_type (void)
 {
   static GType our_type = 0;
-  
-  if (!our_type) 
+
+  if (!our_type)
     {
-      static const GTypeInfo our_info = 
+      static const GTypeInfo our_info =
 	{
 	  sizeof (EggTreeMultiDragSourceIface), /* class_size */
 	  NULL,		/* base_init */
@@ -70,13 +70,13 @@ egg_tree_multi_drag_source_get_type (void)
 	  0,            /* n_preallocs */
 	  NULL
 	};
-      
-      our_type = g_type_register_static (G_TYPE_INTERFACE, 
-					 "EggTreeMultiDragSource", 
-					 &our_info, 
+
+      our_type = g_type_register_static (G_TYPE_INTERFACE,
+					 "EggTreeMultiDragSource",
+					 &our_info,
 					 0);
     }
-  
+
   return our_type;
 }
 
@@ -85,7 +85,7 @@ egg_tree_multi_drag_source_get_type (void)
  * egg_tree_multi_drag_source_row_draggable:
  * @drag_source: a #EggTreeMultiDragSource
  * @path: row on which user is initiating a drag
- * 
+ *
  * Asks the #EggTreeMultiDragSource whether a particular row can be used as
  * the source of a DND operation. If the source doesn't implement
  * this interface, the row is assumed draggable.
@@ -113,13 +113,13 @@ egg_tree_multi_drag_source_row_draggable (EggTreeMultiDragSource *drag_source,
  * egg_tree_multi_drag_source_drag_data_delete:
  * @drag_source: a #EggTreeMultiDragSource
  * @path: row that was being dragged
- * 
+ *
  * Asks the #EggTreeMultiDragSource to delete the row at @path, because
  * it was moved somewhere else via drag-and-drop. Returns %FALSE
  * if the deletion fails because @path no longer exists, or for
  * some model-specific reason. Should robustly handle a @path no
  * longer found in the model!
- * 
+ *
  * Return value: %TRUE if the row was successfully deleted
  **/
 gboolean
@@ -141,18 +141,19 @@ egg_tree_multi_drag_source_drag_data_delete (EggTreeMultiDragSource *drag_source
  * @drag_source: a #EggTreeMultiDragSource
  * @path: row that was dragged
  * @selection_data: a #EggSelectionData to fill with data from the dragged row
- * 
+ *
  * Asks the #EggTreeMultiDragSource to fill in @selection_data with a
  * representation of the row at @path. @selection_data->target gives
  * the required type of the data.  Should robustly handle a @path no
  * longer found in the model!
- * 
- * Return value: %TRUE if data of the required type was provided 
+ *
+ * Return value: %TRUE if data of the required type was provided
  **/
 gboolean
 egg_tree_multi_drag_source_drag_data_get (EggTreeMultiDragSource *drag_source,
-					  GList                  *path_list,
-					  GtkSelectionData       *selection_data)
+					  GdkDragContext         *context,
+					  GtkSelectionData       *selection_data,
+					  GList                  *path_list)
 {
   EggTreeMultiDragSourceIface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
 
@@ -161,7 +162,7 @@ egg_tree_multi_drag_source_drag_data_get (EggTreeMultiDragSource *drag_source,
   g_return_val_if_fail (path_list != NULL, FALSE);
   g_return_val_if_fail (selection_data != NULL, FALSE);
 
-  return (* iface->drag_data_get) (drag_source, path_list, selection_data);
+  return (* iface->drag_data_get) (drag_source, context, selection_data, path_list);
 }
 
 
@@ -172,10 +173,10 @@ stop_drag_check (GtkWidget *widget)
   GSList *l;
 
   priv_data = g_object_get_data (G_OBJECT (widget), EGG_TREE_MULTI_DND_STRING);
-  
+
   for (l = priv_data->event_list; l != NULL; l = l->next)
     gdk_event_free (l->data);
-  
+
   g_slist_free (priv_data->event_list);
   priv_data->event_list = NULL;
   priv_data->pending_event = FALSE;
@@ -195,9 +196,9 @@ egg_tree_multi_drag_button_release_event (GtkWidget      *widget,
 
   priv_data = g_object_get_data (G_OBJECT (widget), EGG_TREE_MULTI_DND_STRING);
 
-  for (l = priv_data->event_list; l != NULL; l = l->next) 
+  for (l = priv_data->event_list; l != NULL; l = l->next)
     gtk_propagate_event (widget, l->data);
-  
+
   stop_drag_check (widget);
 
   return FALSE;
@@ -245,7 +246,7 @@ get_context_data (GdkDragContext *context)
 }
 
 
-static void
+static gboolean
 egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
 				   GdkDragContext   *context,
 				   GtkSelectionData *selection_data,
@@ -259,23 +260,30 @@ egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
   tree_view = GTK_TREE_VIEW (widget);
   model = gtk_tree_view_get_model (tree_view);
   if (model == NULL)
-    return;
+    return FALSE;
+
+g_print ("==> [0]\n");
 
   path_list = get_context_data (context);
   if (path_list == NULL)
-    return;
+    return FALSE;
+
+g_print ("==> [1]\n");
 
   /* We can implement the GTK_TREE_MODEL_ROW target generically for
    * any model; for DragSource models there are some other targets
    * we also support.
    */
 
-  if (EGG_IS_TREE_MULTI_DRAG_SOURCE (model))
-    {
-      egg_tree_multi_drag_source_drag_data_get (EGG_TREE_MULTI_DRAG_SOURCE (model),
-						path_list,
-						selection_data);
-    }
+  if (! EGG_IS_TREE_MULTI_DRAG_SOURCE (model))
+    return FALSE;
+
+g_print ("==> [2]\n");
+
+  return egg_tree_multi_drag_source_drag_data_get (EGG_TREE_MULTI_DRAG_SOURCE (model),
+      						   context,
+						   selection_data,
+						   path_list);
 }
 
 
@@ -308,7 +316,7 @@ egg_tree_multi_drag_motion_event (GtkWidget      *widget,
       model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
       if (egg_tree_multi_drag_source_row_draggable (EGG_TREE_MULTI_DRAG_SOURCE (model), path_list))
 	{
-	  GtkTargetList *target_list = gtk_target_list_new (target_table, 
+	  GtkTargetList *target_list = gtk_target_list_new (target_table,
 							    G_N_ELEMENTS (target_table));
 
 	  context = gtk_drag_begin (widget,
@@ -355,22 +363,22 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
     {
       priv_data = g_new0 (EggTreeMultiDndData, 1);
       priv_data->pending_event = FALSE;
-      g_object_set_data (G_OBJECT (tree_view), 
-			 EGG_TREE_MULTI_DND_STRING, 
+      g_object_set_data (G_OBJECT (tree_view),
+			 EGG_TREE_MULTI_DND_STRING,
 			 priv_data);
     }
 
-  if (g_slist_find (priv_data->event_list, event)) 
+  if (g_slist_find (priv_data->event_list, event))
     return FALSE;
 
-  if (priv_data->pending_event) 
+  if (priv_data->pending_event)
     {
       /* save the event to be propagated in order */
-      priv_data->event_list = g_slist_append (priv_data->event_list, 
+      priv_data->event_list = g_slist_append (priv_data->event_list,
 					      gdk_event_copy ((GdkEvent*)event));
       return TRUE;
     }
-  
+
   if (event->type == GDK_2BUTTON_PRESS)
     return FALSE;
 
@@ -386,10 +394,10 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
       gboolean call_parent = (event->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK) ||
 			      !gtk_tree_selection_path_is_selected (selection, path) ||
 			      event->button != 1);
-      
+
       if (call_parent)
 	(GTK_WIDGET_GET_CLASS (tree_view))->button_press_event (widget, event);
-      
+
       if (gtk_tree_selection_path_is_selected (selection, path))
     {
       priv_data->pressed_button = event->button;
@@ -398,26 +406,26 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
 
       priv_data->pending_event = TRUE;
       if (!call_parent)
-	priv_data->event_list = g_slist_append (priv_data->event_list, 
+	priv_data->event_list = g_slist_append (priv_data->event_list,
 						gdk_event_copy ((GdkEvent*)event));
 
-      priv_data->motion_notify_handler = 
-	g_signal_connect (G_OBJECT (tree_view), 
-			  "motion_notify_event", 
+      priv_data->motion_notify_handler =
+	g_signal_connect (G_OBJECT (tree_view),
+			  "motion_notify_event",
 			  G_CALLBACK (egg_tree_multi_drag_motion_event),
 			  NULL);
-      priv_data->button_release_handler = 
-	g_signal_connect (G_OBJECT (tree_view), 
-			  "button_release_event", 
-			  G_CALLBACK (egg_tree_multi_drag_button_release_event), 
+      priv_data->button_release_handler =
+	g_signal_connect (G_OBJECT (tree_view),
+			  "button_release_event",
+			  G_CALLBACK (egg_tree_multi_drag_button_release_event),
 			  NULL);
 
-      if (priv_data->drag_data_get_handler == 0) 
+      if (priv_data->drag_data_get_handler == 0)
 	{
 	  priv_data->drag_data_get_handler =
-	    g_signal_connect (G_OBJECT (tree_view), 
-			      "drag_data_get", 
-			      G_CALLBACK (egg_tree_multi_drag_drag_data_get), 
+	    g_signal_connect (G_OBJECT (tree_view),
+			      "drag_data_get",
+			      G_CALLBACK (egg_tree_multi_drag_drag_data_get),
 			      NULL);
 	}
     }
@@ -426,7 +434,7 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
       /* We called the default handler so we don't let the default handler run */
       return TRUE;
     }
-  
+
   return FALSE;
 }
 
@@ -435,8 +443,8 @@ void
 egg_tree_multi_drag_add_drag_support (GtkTreeView *tree_view)
 {
   g_return_if_fail (GTK_IS_TREE_VIEW (tree_view));
-  g_signal_connect (G_OBJECT (tree_view), 
-		    "button_press_event", 
+  g_signal_connect (G_OBJECT (tree_view),
+		    "button_press_event",
 		    G_CALLBACK (egg_tree_multi_drag_button_press_event),
 		    NULL);
 }

@@ -48,9 +48,9 @@ gboolean            path_in_path                 (const char  *path_src,
 GnomeVFSFileSize    get_file_size                (const gchar *s);
 time_t              get_file_mtime               (const gchar *s);
 time_t              get_file_ctime               (const gchar *s);
-gboolean            file_copy                    (const gchar *from, 
+gboolean            file_copy                    (const gchar *from,
 						  const gchar *to);
-gboolean            file_move                    (const gchar *from, 
+gboolean            file_move                    (const gchar *from,
 						  const gchar *to);
 gint                file_in_path                 (const gchar *name);
 gboolean            ensure_dir_exists            (const gchar *a_path,
@@ -61,22 +61,23 @@ char *              dir_name_from_path           (const gchar *path);
 gchar *             remove_level_from_path       (const gchar *path);
 gchar *             remove_extension_from_path   (const gchar *path);
 gchar *             remove_ending_separator      (const gchar *path);
-gboolean            file_extension_is            (const char *filename, 
+gboolean            file_extension_is            (const char *filename,
 						  const char *ext);
 void                path_list_free               (GList *path_list);
 GList *             path_list_dup                (GList *path_list);
-gboolean            is_mime_type                 (const char* type, 
+gboolean            is_mime_type                 (const char* type,
 						  const char* pattern);
 G_CONST_RETURN char*get_mime_type                (const char  *filename);
 GnomeVFSFileSize    get_dest_free_space          (const char  *path);
 gboolean            rmdir_recursive              (const gchar *directory);
 char *              get_temp_work_dir            (void);
+char *              escape_uri                   (const char *uri);
 
 /* misc functions used to parse a command output lines. */
 
-gboolean            file_list__match_pattern     (const char *line, 
+gboolean            file_list__match_pattern     (const char *line,
 						  const char *pattern);
-int                 file_list__get_index_from_pattern (const char *line, 
+int                 file_list__get_index_from_pattern (const char *line,
 						       const char *pattern);
 char*               file_list__get_next_field    (const char *line,
 						  int         start_from,
@@ -87,5 +88,8 @@ char*               file_list__get_prev_field    (const char *line,
 gboolean            check_permissions            (const char *path,
 						  int         mode);
 gboolean 	    is_program_in_path		 (const char *filename);
+
+GnomeVFSURI *       new_uri_from_path            (const char *path);
+gboolean            uri_is_local                 (const char *uri);
 
 #endif /* FILE_UTILS_H */

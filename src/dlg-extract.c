@@ -118,14 +118,14 @@ extract_cb (GtkWidget   *w,
 						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
-			
+
 			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 			r = gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
 			g_free (msg);
-			
-			if (r != GTK_RESPONSE_YES) 
+
+			if (r != GTK_RESPONSE_YES)
 				do_not_extract = TRUE;
 		}
 
@@ -151,7 +151,7 @@ extract_cb (GtkWidget   *w,
 
 			return FALSE;
 		}
-	} 
+	}
 
 	if (do_not_extract) {
 		GtkWidget *d;
@@ -167,7 +167,7 @@ extract_cb (GtkWidget   *w,
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
-		if (data->window->batch_mode) 
+		if (data->window->batch_mode)
 			gtk_widget_destroy (data->dialog);
 
 		return FALSE;
@@ -175,13 +175,13 @@ extract_cb (GtkWidget   *w,
 
 	/* check extraction directory permissions. */
 
-	if (path_is_dir (extract_to_dir) 
-	    && access (extract_to_dir, R_OK | W_OK | X_OK) != 0) {
+	if (path_is_dir (extract_to_dir)
+	    && ! check_permissions (extract_to_dir, R_OK | W_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 		char      *message;
-		
-		utf8_path = g_filename_to_utf8 (extract_to_dir, -1, NULL, NULL, NULL);
+
+		utf8_path = g_filename_display_name (extract_to_dir);
 		message = g_strdup_printf (_("You don't have the right permissions to extract archives in the folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
@@ -232,7 +232,7 @@ extract_cb (GtkWidget   *w,
 
 	file_list = NULL;
 
-	if (selected_files) 
+	if (selected_files)
 		file_list = window_get_file_list_selection (window, TRUE, NULL);
 
 	else if (pattern_files) {
@@ -275,7 +275,7 @@ extract_cb (GtkWidget   *w,
 				overwrite,
 				junk_paths,
 				password);
-	
+
 	path_list_free (file_list);
 	g_free (extract_to_dir);
 	g_free (password);
@@ -298,16 +298,16 @@ file_sel_response_cb (GtkWidget    *widget,
 		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-extract-options");
 		return TRUE;
 	}
-	
-	if (response == GTK_RESPONSE_OK) 
+
+	if (response == GTK_RESPONSE_OK)
 		return extract_cb (widget, data);
-		
+
 	return FALSE;
 }
-	
+
 
 static void
-files_entry_changed_cb (GtkWidget  *widget, 
+files_entry_changed_cb (GtkWidget  *widget,
 			DialogData *data)
 {
 	if (! GTK_TOGGLE_BUTTON (data->e_files_radiobutton)->active)
@@ -354,7 +354,7 @@ create_extra_widget (DialogData *data)
 	GtkWidget *label48;
 	GtkWidget *vbox15;
 	GtkWidget *label31;
-	
+
 	vbox1 = gtk_vbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 0);
 
@@ -395,21 +395,21 @@ create_extra_widget (DialogData *data)
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_tooltips_set_tip (data->tooltips, data->e_files_entry, _("example: *.txt; *.doc"), NULL);
 	gtk_entry_set_activates_default (GTK_ENTRY (data->e_files_entry), TRUE);
-	
+
 	data->e_all_radiobutton = gtk_radio_button_new_with_mnemonic (NULL, _("_All files"));
 	gtk_table_attach (GTK_TABLE (table1), data->e_all_radiobutton, 0, 2, 0, 1,
 			  (GtkAttachOptions) (GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_radio_button_set_group (GTK_RADIO_BUTTON (data->e_all_radiobutton), e_files_radiobutton_group);
 	e_files_radiobutton_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (data->e_all_radiobutton));
-	
+
 	data->e_selected_radiobutton = gtk_radio_button_new_with_mnemonic (NULL, _("_Selected files"));
 	gtk_table_attach (GTK_TABLE (table1), data->e_selected_radiobutton, 0, 2, 1, 2,
 			  (GtkAttachOptions) (GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_radio_button_set_group (GTK_RADIO_BUTTON (data->e_selected_radiobutton), e_files_radiobutton_group);
 	e_files_radiobutton_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (data->e_selected_radiobutton));
-	
+
 	vbox20 = gtk_vbox_new (FALSE, 6);
 	gtk_box_pack_start (GTK_BOX (hbox28), vbox20, TRUE, TRUE, 0);
 
@@ -429,7 +429,7 @@ create_extra_widget (DialogData *data)
 
 	vbox15 = gtk_vbox_new (FALSE, 6);
 	gtk_box_pack_start (GTK_BOX (hbox30), vbox15, TRUE, TRUE, 0);
-	
+
 	data->e_recreate_dir_checkbutton = gtk_check_button_new_with_mnemonic (_("R_e-create folders"));
 	gtk_box_pack_start (GTK_BOX (vbox15), data->e_recreate_dir_checkbutton, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_recreate_dir_checkbutton), TRUE);
@@ -437,25 +437,25 @@ create_extra_widget (DialogData *data)
 	data->e_overwrite_checkbutton = gtk_check_button_new_with_mnemonic (_("Over_write existing files"));
 	gtk_box_pack_start (GTK_BOX (vbox15), data->e_overwrite_checkbutton, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton), TRUE);
-			
+
 	data->e_not_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("Do not e_xtract older files"));
 	gtk_box_pack_start (GTK_BOX (vbox15), data->e_not_newer_checkbutton, FALSE, FALSE, 0);
-	
+
 	data->e_password_hbox = gtk_hbox_new (FALSE, 5);
 	gtk_box_pack_start (GTK_BOX (vbox15), data->e_password_hbox, TRUE, TRUE, 0);
-	
+
 	label31 = gtk_label_new_with_mnemonic (_("_Password:"));
 	gtk_box_pack_start (GTK_BOX (data->e_password_hbox), label31, FALSE, FALSE, 0);
 	gtk_label_set_justify (GTK_LABEL (label31), GTK_JUSTIFY_LEFT);
-	
+
 	data->e_password_entry = gtk_entry_new ();
 	gtk_box_pack_start (GTK_BOX (data->e_password_hbox), data->e_password_entry, TRUE, TRUE, 0);
 	gtk_entry_set_activates_default (GTK_ENTRY (data->e_password_entry), TRUE);
 	gtk_entry_set_visibility (GTK_ENTRY (data->e_password_entry), FALSE);
-	
+
 	data->e_view_folder_checkbutton = gtk_check_button_new_with_mnemonic (_("_Open destination folder after extraction"));
 	gtk_box_pack_start (GTK_BOX (vbox1), data->e_view_folder_checkbutton, FALSE, FALSE, 0);
-	
+
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label31), data->e_password_entry);
 
 	gtk_widget_show_all (vbox1);
@@ -471,7 +471,7 @@ dlg_extract (GtkWidget *widget,
 	FRWindow   *window = callback_data;
         DialogData *data;
 	GtkWidget  *file_sel;
-	
+
         data = g_new0 (DialogData, 1);
 
         data->window = window;
@@ -481,7 +481,7 @@ dlg_extract (GtkWidget *widget,
 	g_object_ref (G_OBJECT (data->tooltips));
 	gtk_object_sink (GTK_OBJECT (data->tooltips));
 
-	data->dialog = file_sel = 
+	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Extract"),
 					     GTK_WINDOW (data->window->app),
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
@@ -489,9 +489,9 @@ dlg_extract (GtkWidget *widget,
 					     FR_STOCK_EXTRACT, GTK_RESPONSE_OK,
 					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
-	
+
 	gtk_window_set_default_size (GTK_WINDOW (file_sel), 530, 510);
-					     
+
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
@@ -506,7 +506,7 @@ dlg_extract (GtkWidget *widget,
 			folder = g_get_home_dir ();
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), folder);
 	}
-		
+
 	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton), TRUE);
 	else {
@@ -518,7 +518,7 @@ dlg_extract (GtkWidget *widget,
 		gtk_widget_set_sensitive (data->e_password_hbox, TRUE);
 		if (window->password != NULL)
 			_gtk_entry_set_locale_text (GTK_ENTRY (data->e_password_entry), window->password);
-	} else 
+	} else
 		gtk_widget_set_sensitive (data->e_password_hbox, FALSE);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));
@@ -529,12 +529,12 @@ dlg_extract (GtkWidget *widget,
 		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton), TRUE);
 		gtk_widget_set_sensitive (data->e_not_newer_checkbutton, FALSE);
 	}
-	
+
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_recreate_dir_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_RECREATE_FOLDERS, TRUE));
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog), 
+	g_signal_connect (G_OBJECT (data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
@@ -544,11 +544,11 @@ dlg_extract (GtkWidget *widget,
 			  G_CALLBACK (file_sel_response_cb),
 			  data);
 
-	g_signal_connect (G_OBJECT (data->e_overwrite_checkbutton), 
+	g_signal_connect (G_OBJECT (data->e_overwrite_checkbutton),
 			  "toggled",
 			  G_CALLBACK (overwrite_toggled_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->e_files_entry), 
+	g_signal_connect (G_OBJECT (data->e_files_entry),
 			  "changed",
 			  G_CALLBACK (files_entry_changed_cb),
 			  data);
@@ -556,5 +556,5 @@ dlg_extract (GtkWidget *widget,
 	/* Run dialog. */
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
-	gtk_widget_show (file_sel);	
+	gtk_widget_show (file_sel);
 }

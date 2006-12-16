@@ -1,5 +1,19 @@
 2006-12-16  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/dlg-extract.c:
+	* src/eggtreemultidnd.h:
+	* src/file-utils.c:
+	* src/eggtreemultidnd.c:
+	* src/file-list.c:
+	* src/fr-list-model.c:
+	* src/file-utils.h:
+	* src/window.h:
+	* src/window.c:
+
+	Use the XDS protocol to extract dragged files.
+	Fixes bug #102501 – Drag-and-drop extract operation should run instantly in
+	background.
+
 	* src/window.c (window_archive_extract__common): exec move-here.sh only
 	when performing a extract-here operation (bug #385904).
 	Patch by Jens Granseuer.

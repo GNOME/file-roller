@@ -30,7 +30,7 @@ static GtkListStoreClass *parent_class;
 
 
 static gboolean
-fr_list_model_multi_row_draggable (EggTreeMultiDragSource *drag_source, 
+fr_list_model_multi_row_draggable (EggTreeMultiDragSource *drag_source,
 				   GList                  *path_list)
 {
 	FRWindow     *window;
@@ -51,10 +51,10 @@ fr_list_model_multi_row_draggable (EggTreeMultiDragSource *drag_source,
 		path = gtk_tree_row_reference_get_path (reference);
 		if (path == NULL)
 			continue;
-		
+
 		if (! gtk_tree_model_get_iter (model, &iter, path))
 			continue;
-		
+
 		gtk_tree_model_get (model, &iter,
 				    COLUMN_FILE_DATA, &fdata,
 				    -1);
@@ -68,9 +68,10 @@ fr_list_model_multi_row_draggable (EggTreeMultiDragSource *drag_source,
 
 
 static gboolean
-fr_list_model_multi_drag_data_get (EggTreeMultiDragSource *drag_source, 
-				   GList                  *path_list, 
-				   GtkSelectionData       *selection_data)
+fr_list_model_multi_drag_data_get (EggTreeMultiDragSource *drag_source,
+				   GdkDragContext         *context,
+				   GtkSelectionData       *selection_data,
+				   GList                  *path_list)
 {
 	FRWindow *window;
 
@@ -78,13 +79,14 @@ fr_list_model_multi_drag_data_get (EggTreeMultiDragSource *drag_source,
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	return fr_window_file_list_drag_data_get (window,
-						  path_list,
-						  selection_data);
+						  context,
+						  selection_data,
+						  path_list);
 }
 
 
 static gboolean
-fr_list_model_multi_drag_data_delete (EggTreeMultiDragSource *drag_source, 
+fr_list_model_multi_drag_data_delete (EggTreeMultiDragSource *drag_source,
 				      GList                  *path_list)
 {
 	return TRUE;
@@ -112,7 +114,7 @@ fr_list_model_class_init (FRListModelClass *klass)
 
 	object_class = (GObjectClass *)klass;
 	parent_class = g_type_class_peek_parent (klass);
-	
+
 	object_class->finalize = fr_list_model_finalize;
 }
 
@@ -150,13 +152,13 @@ fr_list_model_get_type (void)
 			NULL,
 			NULL
 		};
-		
+
 		object_type = g_type_register_static (GTK_TYPE_LIST_STORE, "FRListModel", &object_info, 0);
 		g_type_add_interface_static (object_type,
 					     EGG_TYPE_TREE_MULTI_DRAG_SOURCE,
 					     &multi_drag_source_info);
 	}
-	
+
 	return object_type;
 }
 
@@ -181,6 +183,6 @@ fr_list_model_new (int n_columns, ...)
 
 	gtk_list_store_set_column_types (retval, n_columns, types);
 	g_free (types);
-	
-	return retval;	
+
+	return retval;
 }

@@ -47,6 +47,7 @@
 #include "eggtreemultidnd.h"
 #include "fr-list-model.h"
 #include "fr-archive.h"
+#include "fr-error.h"
 #include "fr-stock.h"
 #include "file-data.h"
 #include "file-utils.h"
@@ -88,6 +89,13 @@
 static GHashTable     *pixbuf_hash = NULL;
 static GnomeIconTheme *icon_theme = NULL;
 static int             icon_size = 0;
+
+#define XDS_FILENAME "xds.txt"
+#define MAX_XDS_ATOM_VAL_LEN 4096
+#define XDS_ATOM  gdk_atom_intern  ("XdndDirectSave0", FALSE)
+#define TEXT_ATOM gdk_atom_intern  ("text/plain", FALSE)
+#define OCTET_ATOM gdk_atom_intern ("application/octet-stream", FALSE)
+
 
 static GtkTargetEntry target_table[] = {
         { "text/uri-list", 0, 1 },
@@ -1313,6 +1321,9 @@ window_message_cb  (FRCommand  *command,
 		    const char *msg,
 		    FRWindow   *window)
 {
+	if (window->progress_dialog == NULL)
+		return TRUE;
+
 	if (msg != NULL) {
 		while (*msg == ' ')
 			msg++;
@@ -1394,11 +1405,8 @@ open_progress_dialog (FRWindow *window)
 	GtkWidget *lbl;
 
 	if (! window->batch_mode) {
-		if (window->extracting_dragged_files) {
-			gtk_widget_show (window->progress_bar);
-			return;
-		} else
-			gtk_widget_hide (window->progress_bar);
+		gtk_widget_show (window->progress_bar);
+		return;
 	}
 
 	if (window->hide_progress_timeout != 0) {
@@ -1710,35 +1718,7 @@ handle_errors (FRWindow    *window,
 	       FRProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_ASK_PASSWORD) {
-		if (!window->extracting_dragged_files)
-			ask_password (window);
-		else {
-			GtkWidget *dialog;
-			char      *msg;
-
-			window->asked_for_password = TRUE;
-			set_sensitive (window, "Password", TRUE);
-
-			if (window->password == NULL)
-				msg = _("This archive is password protected.\nPlease specify a password with the command: Edit->Password");
-			else
-				msg = _("The specified password is not valid, please specify a new password with the command: Edit->Password");
-
-			dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-							  0,
-							  GTK_STOCK_DIALOG_WARNING,
-							  _("Could not perform the operation"),
-							  msg,
-							  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-							  NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-			g_signal_connect (dialog,
-					  "response",
-					  G_CALLBACK (gtk_widget_destroy),
-					  NULL);
-			gtk_widget_show (dialog);
-		}
-
+		ask_password (window);
 		return FALSE;
 
 	} else if (error->type == FR_PROC_ERROR_STOPPED) {
@@ -1931,9 +1911,6 @@ _action_performed (FRArchive   *archive,
 		return;
 
 	case FR_ACTION_EXTRACT:
-		if (window->extracting_dragged_files)
-			window->extracting_dragged_files = FALSE;
-
 		if (error->type != FR_PROC_ERROR_NONE) {
 			if (window->convert_data.converting) {
 				rmdir_recursive (window->convert_data.temp_dir);
@@ -2668,56 +2645,6 @@ window_drag_data_received  (GtkWidget          *widget,
 }
 
 
-static gchar **
-make_uris (GList *list)
-{
-	gchar **uris;
-	int     i, l;
-	GList  *scan;
-
-	if (list == NULL)
-		return NULL;
-
-	l = g_list_length (list);
-	uris = g_new (char*, l + 1);
-	for (i = 0, scan = list; scan; scan = scan->next)
-		uris[i++] = gnome_vfs_escape_host_and_path_string (scan->data);
-	uris[i] = NULL;
-
-	return uris;
-}
-
-
-static void
-add_selected_name (GtkTreeModel *model,
-		   GtkTreePath  *path,
-		   GtkTreeIter  *iter,
-		   gpointer      data)
-{
-	GList    **list = data;
-	FileData  *fdata;
-
-        gtk_tree_model_get (model, iter,
-                            COLUMN_FILE_DATA, &fdata,
-                            -1);
-	*list = g_list_prepend (*list, g_strdup (fdata->list_name));
-}
-
-
-static GList *
-_get_selection_as_names (FRWindow *window)
-{
-	GtkTreeSelection *selection;
-	GList            *list = NULL;
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view));
-	if (selection == NULL)
-		return NULL;
-	gtk_tree_selection_selected_foreach (selection, add_selected_name, &list);
-	return g_list_reverse (list);
-}
-
-
 static gboolean
 file_list_drag_begin (GtkWidget          *widget,
 		      GdkDragContext     *context,
@@ -2729,6 +2656,15 @@ file_list_drag_begin (GtkWidget          *widget,
 
 	if (window->activity_ref > 0)
 		return FALSE;
+
+	g_free (window->drag_destination_folder);
+	window->drag_destination_folder = NULL;
+
+	gdk_property_change (context->source_window,
+			     XDS_ATOM, TEXT_ATOM,
+			     8, GDK_PROP_MODE_REPLACE,
+			     (guchar *) XDS_FILENAME,
+			     strlen (XDS_FILENAME));
 
 	return TRUE;
 }
@@ -2743,30 +2679,92 @@ file_list_drag_end (GtkWidget      *widget,
 
 	debug (DEBUG_INFO, "::DragEnd -->\n");
 
-	if (window->extracting_dragged_files)
-		window->extracting_dragged_files_interrupted = TRUE;
+	gdk_property_delete (context->source_window, XDS_ATOM);
 
-	if (window->drag_file_list != NULL) {
+	if (window->drag_error != NULL) {
+		_gtk_error_dialog_run (GTK_WINDOW (window->app),
+				       _("Extraction not performed"),
+				       "%s",
+				       window->drag_error->message);
+		g_clear_error (&window->drag_error);
+	}
+	else if (window->drag_destination_folder != NULL) {
+		window_archive_extract (window,
+					window->drag_file_list,
+					window->drag_destination_folder,
+					window_get_current_location (window),
+					FALSE,
+					TRUE,
+					FALSE,
+					window->password);
 		path_list_free (window->drag_file_list);
 		window->drag_file_list = NULL;
-	}
-
-	if (window->drag_file_list_names != NULL) {
-		path_list_free (window->drag_file_list_names);
-		window->drag_file_list_names = NULL;
 	}
 
 	debug (DEBUG_INFO, "::DragEnd <--\n");
 }
 
 
+/* The following three functions taken from bugzilla
+ * (http://bugzilla.gnome.org/attachment.cgi?id=49362&action=view)
+ * Author: Christian Neumair
+ * Copyright: 2005 Free Software Foundation, Inc
+ * License: GPL */
+static char *
+get_xds_atom_value (GdkDragContext *context)
+{
+	char *ret;
+
+	g_return_val_if_fail (context != NULL, NULL);
+	g_return_val_if_fail (context->source_window != NULL, NULL);
+
+	gdk_property_get (context->source_window,
+			  XDS_ATOM, TEXT_ATOM,
+			  0, MAX_XDS_ATOM_VAL_LEN,
+			  FALSE, NULL, NULL, NULL,
+			  (unsigned char **) &ret);
+
+	return ret;
+}
+
+
+static gboolean
+context_offers_target (GdkDragContext *context,
+		       GdkAtom target)
+{
+	return (g_list_find (context->targets, target) != NULL);
+}
+
+
+static gboolean
+nautilus_xds_dnd_is_valid_xds_context (GdkDragContext *context)
+{
+	char *tmp;
+	gboolean ret;
+
+	g_return_val_if_fail (context != NULL, FALSE);
+
+	tmp = NULL;
+	if (context_offers_target (context, XDS_ATOM)) {
+		tmp = get_xds_atom_value (context);
+	}
+
+	ret = (tmp != NULL);
+	g_free (tmp);
+
+	return ret;
+}
+
+
 gboolean
 fr_window_file_list_drag_data_get (FRWindow         *window,
-				   GList            *path_list,
-				   GtkSelectionData *selection_data)
+				   GdkDragContext   *context,
+				   GtkSelectionData *selection_data,
+				   GList            *path_list)
 {
-	GList  *list, *scan;
-	char  **uris;
+	char     *destination;
+	char     *destination_folder;
+	char     *destination_folder_display_name;
 
 	debug (DEBUG_INFO, "::DragDataGet -->\n");
 
@@ -2778,100 +2776,41 @@ fr_window_file_list_drag_data_get (FRWindow         *window,
 	if (window->activity_ref > 0)
 		return FALSE;
 
-	if (window->drag_file_list == NULL) {
-		window->drag_file_list = window_get_file_list_from_path_list (window, path_list, & (window->dragging_dirs));
-
-		if (window->drag_file_list == NULL)
-			return FALSE;
-
-		if (window->dragging_dirs)
-			window->drag_file_list_names = _get_selection_as_names (window);
-
-		if (window->drag_file_list != NULL) {
-			window->drag_temp_dir = get_temp_work_dir ();
-			if (window->drag_temp_dir == NULL) {
-				GtkWidget *d;
-				window_stop (window);
-				d = _gtk_error_dialog_new (GTK_WINDOW (window->app),
-							   GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                   	   NULL,
-                                                   	   "%s\n%s",
-                                                   	   _("Could not perform the operation"),
-                                                   	   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
-                                g_signal_connect (d,
-                                		  "response",
-                                  		  G_CALLBACK (gtk_widget_destroy),
-                                  		  NULL);
-                                gtk_widget_show (d);
-				return FALSE;
-			}
-			window->drag_temp_dirs = g_list_prepend (window->drag_temp_dirs, window->drag_temp_dir);
-
-			window->extracting_dragged_files = TRUE;
-			window->extracting_dragged_files_interrupted = FALSE;
-
-			fr_process_clear (window->archive->process);
-			fr_archive_extract (window->archive,
-					    window->drag_file_list,
-					    window->drag_temp_dir,
-					    NULL,
-					    FALSE,
-					    TRUE,
-					    FALSE,
-					    window->password);
-			fr_process_start (window->archive->process);
-		}
-
-		/* wait for extracion completion... */
-
-		while (window->extracting_dragged_files
-		       && ! window->extracting_dragged_files_interrupted)
-			while (window->extracting_dragged_files
-			       && ! window->extracting_dragged_files_interrupted
-			       && gtk_events_pending ())
-				gtk_main_iteration ();
-
-		debug (DEBUG_INFO, "::DragDataGet -[step 2]-->\n");
-
-		if (window->extracting_dragged_files_interrupted) {
-			window_stop (window);
-			return FALSE;
-		}
-	}
-
-	if ((window->drag_file_list == NULL)
-	    && (window->drag_file_list_names == NULL))
+	if (! nautilus_xds_dnd_is_valid_xds_context (context))
 		return FALSE;
 
-	/**/
+	destination = get_xds_atom_value (context);
+	g_return_val_if_fail (destination != NULL, FALSE);
 
-	list = NULL;
-	if (! window->dragging_dirs)
-		for (scan = window->drag_file_list; scan; scan = scan->next) {
-			char *url;
-			url = g_strconcat (window->drag_temp_dir,
-					   "/",
-					   scan->data,
-					   NULL);
-			list = g_list_prepend (list, url);
-		}
-	else
-		for (scan = window->drag_file_list_names; scan; scan = scan->next) {
-			char *url;
-			url = g_strconcat (window->drag_temp_dir,
-					   window_get_current_location (window),
-					   scan->data,
-					   NULL);
-			list = g_list_prepend (list, url);
-		}
+	destination_folder = remove_level_from_path (destination);
+	g_free (destination);
 
-	uris = make_uris (list);
-	if (uris != NULL) {
-		gtk_selection_data_set_uris (selection_data, uris);
-		g_strfreev (uris);
+	/* check whether the extraction can be performed in the destination
+	 * folder */
+
+	g_clear_error (&window->drag_error);
+	destination_folder_display_name = g_filename_display_name (destination_folder);
+
+	if (! check_permissions (destination_folder, R_OK | W_OK | X_OK))
+		window->drag_error = g_error_new (FR_ERROR, 0, _("You don't have the right permissions to extract archives in the folder \"%s\""), destination_folder_display_name);
+
+	else if (! uri_is_local (destination_folder))
+		window->drag_error = g_error_new (FR_ERROR, 0, _("Cannot extract archives in a remote folder \"%s\""), destination_folder_display_name);
+
+	g_free (destination_folder_display_name);
+
+	if (window->drag_error == NULL) {
+		g_free (window->drag_destination_folder);
+		window->drag_destination_folder = gnome_vfs_get_local_path_from_uri (destination_folder);
+		path_list_free (window->drag_file_list);
+		window->drag_file_list = window_get_file_list_from_path_list (window, path_list, NULL);
 	}
 
-	path_list_free (list);
+	g_free (destination_folder);
+
+	/* sends back the response */
+
+	gtk_selection_data_set (selection_data, selection_data->target, 8, (guchar *) ((window->drag_error == NULL) ? "S" : "E"), 1);
 
 	debug (DEBUG_INFO, "::DragDataGet <--\n");
 
@@ -3350,7 +3289,8 @@ window_progress_cb (FRCommand  *command,
 
 	else {
 		window->progress_pulse = FALSE;
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->pd_progress_bar), CLAMP (fraction, 0.0, 1.0));
+		if (window->progress_dialog != NULL)
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->pd_progress_bar), CLAMP (fraction, 0.0, 1.0));
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->progress_bar), CLAMP (fraction, 0.0, 1.0));
 	}
 
@@ -3732,17 +3672,14 @@ window_new (void)
 	window->archive_new = FALSE;
 	window->archive_filename = NULL;
 
-	window->drag_temp_dir = NULL;
-	window->drag_temp_dirs = NULL;
+	window->drag_destination_folder = NULL;
+	window->drag_error = NULL;
 	window->drag_file_list = NULL;
-	window->drag_file_list_names = NULL;
 
 	window->dropped_file_list = NULL;
 	window->add_after_creation = FALSE;
 	window->add_after_opening = FALSE;
 	window->adding_dropped_files = FALSE;
-	window->extracting_dragged_files = FALSE;
-	window->extracting_dragged_files_interrupted = FALSE;
 
 	window->batch_mode = FALSE;
 	window->batch_action_list = NULL;
@@ -4159,29 +4096,6 @@ _window_remove_notifications (FRWindow *window)
 
 
 static void
-_window_remove_drag_temp_dirs (FRWindow *window)
-{
-	GList *scan;
-
-	for (scan = window->drag_temp_dirs; scan; scan = scan->next)
-		if (path_is_dir (scan->data)) {
-			char *command;
-
-			command = g_strconcat ("rm -rf ",
-					       scan->data,
-					       NULL);
-			gnome_execute_shell (g_get_tmp_dir (), command);
-			g_free (command);
-		}
-
-	if (window->drag_temp_dirs != NULL) {
-		path_list_free (window->drag_temp_dirs);
-		window->drag_temp_dirs = NULL;
-	}
-}
-
-
-static void
 _window_free_batch_data (FRWindow *window)
 {
 	GList *scan;
@@ -4319,19 +4233,12 @@ window_close (FRWindow *window)
 
 	_window_clipboard_clear (window);
 
-	if (window->drag_file_list != NULL)
-		path_list_free (window->drag_file_list);
-	_window_remove_drag_temp_dirs (window);
+	g_clear_error (&window->drag_error);
+	path_list_free (window->drag_file_list);
+	window->drag_file_list = NULL;
 
-	if (window->dropped_file_list != NULL) {
-		path_list_free (window->dropped_file_list);
-		window->dropped_file_list = NULL;
-	}
-
-	if (window->drag_file_list_names != NULL) {
-		path_list_free (window->drag_file_list_names);
-		window->drag_file_list_names = NULL;
-	}
+	path_list_free (window->dropped_file_list);
+	window->dropped_file_list = NULL;
 
 	if (window->file_popup_menu != NULL) {
 		gtk_widget_destroy (window->file_popup_menu);
@@ -5083,7 +4990,6 @@ window_archive_close (FRWindow *window)
 
 	_window_clipboard_clear (window);
 	window_set_password (window, NULL);
-	_window_remove_drag_temp_dirs (window);
 
 	window->archive_new = FALSE;
 	window->archive_present = FALSE;
