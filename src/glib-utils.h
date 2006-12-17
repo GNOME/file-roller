@@ -23,32 +23,35 @@
 #ifndef _GLIB_UTILS_H
 #define _GLIB_UTILS_H
 
+#include <time.h>
+
 gboolean            strchrs                      (const char *str,
 						  const char *chars);
 char *              str_substitute               (const char *str,
 						  const char *from_str,
 						  const char *to_str);
 int                 strcmp_null_tollerant        (const char *s1, const char *s2);
-char*               escape_str_common            (const char *str, 
+char*               escape_str_common            (const char *str,
 						  const char *meta_chars,
 						  const char  prefix,
 						  const char  postfix);
-char*               escape_str                   (const char  *str, 
+char*               escape_str                   (const char  *str,
 						  const char  *meta_chars);
 char*               unescape_str                 (const char  *str);
 gchar *             shell_escape                 (const gchar *filename);
-gboolean            match_patterns               (char       **patterns, 
+gboolean            match_patterns               (char       **patterns,
 						  const char  *string,
 						  int          flags);
 char **             search_util_get_patterns     (const char  *pattern_string);
 char *              _g_strdup_with_max_size      (const char *s,
 						  int         max_size);
 const char *        eat_spaces                   (const char *line);
-char **             split_line                   (const char *line, 
+char **             split_line                   (const char *line,
 						  int   n_fields);
 const char *        get_last_field               (const char *line,
 						  int         last_field);
 int                 n_fields                     (char      **str_array);
+char *              get_time_string              (time_t      time);
 
 /**/
 

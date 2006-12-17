@@ -463,25 +463,6 @@ get_parent_dir (const char *current_dir)
 static void _window_update_statusbar_list_info (FRWindow *window);
 
 
-#define MAX_S_TIME_LEN 128
-
-static char *
-get_time_string (time_t time)
-{
-	struct tm   *tm;
-	char         s_time[MAX_S_TIME_LEN];
-	char        *time_utf8;
-
-	tm = localtime (& time);
-	strftime (s_time, MAX_S_TIME_LEN - 1, _("%d %B %Y, %H:%M"), tm);
-	time_utf8 = g_locale_to_utf8 (s_time, -1, NULL, NULL, NULL);
-
-	return time_utf8;
-}
-
-#undef MAX_S_TIME_LEN
-
-
 /* taken from egg-recent-util.c */
 static GdkPixbuf *
 scale_icon (GdkPixbuf *pixbuf,

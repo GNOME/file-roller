@@ -27,6 +27,7 @@
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include "glib-utils.h"
 #include "file-utils.h"
 #include "gtk-utils.h"
 #include "window.h"
@@ -87,13 +88,10 @@ dlg_prop (FRWindow *window)
 	GtkWidget        *label;
 	char             *s;
 	GnomeVFSFileSize  size, uncompressed_size;
-	struct tm        *tm;
-	time_t            timer;
-	char              time_txt[50];
 	char             *utf8_name;
 	char             *title_txt;
 	double            ratio;
-	
+
         data = g_new (DialogData, 1);
 
 	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
@@ -109,13 +107,13 @@ dlg_prop (FRWindow *window)
 	help_button = glade_xml_get_widget (data->gui, "p_help_button");
 
 	/* Set widgets data. */
-	
+
 	label_label = glade_xml_get_widget (data->gui, "p_path_label_label");
 	set_label (label_label, _("Path:"));
 
 	label = glade_xml_get_widget (data->gui, "p_path_label");
 	/* note: window->archive_filename is unescaped. */
-	s = remove_level_from_path (window->archive_filename); 
+	s = remove_level_from_path (window->archive_filename);
 	utf8_name = g_filename_display_name (s);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 	g_free (utf8_name);
@@ -142,11 +140,7 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Modified on:"));
 
 	label = glade_xml_get_widget (data->gui, "p_date_label");
-
-	timer = get_file_mtime (window->archive->filename);
-	tm = localtime (&timer);
-	strftime (time_txt, 50, _("%d %B %Y, %H:%M"), tm);
-	s = g_locale_to_utf8 (time_txt, -1, 0, 0, 0);
+	s = get_time_string (get_file_mtime (window->archive->filename));
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
@@ -187,7 +181,7 @@ dlg_prop (FRWindow *window)
 
 	label = glade_xml_get_widget (data->gui, "p_cratio_label");
 
-	if (uncompressed_size != 0) 
+	if (uncompressed_size != 0)
 		ratio = (double) uncompressed_size / size;
 	else
 		ratio = 0.0;
@@ -207,22 +201,22 @@ dlg_prop (FRWindow *window)
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog), 
+	g_signal_connect (G_OBJECT (data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect_swapped (G_OBJECT (ok_button), 
+	g_signal_connect_swapped (G_OBJECT (ok_button),
 				  "clicked",
 				  G_CALLBACK (gtk_widget_destroy),
 				  G_OBJECT (data->dialog));
-	g_signal_connect (G_OBJECT (help_button), 
+	g_signal_connect (G_OBJECT (help_button),
 			  "clicked",
 			  G_CALLBACK (help_cb),
 			  G_OBJECT (data));
 
 	/* Run dialog. */
 
-	gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
+	gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
 				      GTK_WINDOW (window->app));
         gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
 

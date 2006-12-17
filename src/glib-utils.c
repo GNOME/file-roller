@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include "glib-utils.h"
@@ -91,7 +92,7 @@ strcmp_null_tollerant (const char *s1, const char *s2)
 
 /* counts how many characters to escape in @str. */
 static int
-count_chars_to_escape (const char *str, 
+count_chars_to_escape (const char *str,
 		       const char *meta_chars)
 {
 	int         meta_chars_n = strlen (meta_chars);
@@ -100,7 +101,7 @@ count_chars_to_escape (const char *str,
 
 	for (s = str; *s != 0; s++) {
 		int i;
-		for (i = 0; i < meta_chars_n; i++) 
+		for (i = 0; i < meta_chars_n; i++)
 			if (*s == meta_chars[i]) {
 				n++;
 				break;
@@ -111,7 +112,7 @@ count_chars_to_escape (const char *str,
 
 
 char*
-escape_str_common (const char *str, 
+escape_str_common (const char *str,
 		   const char *meta_chars,
 		   const char  prefix,
 		   const char  postfix)
@@ -122,7 +123,7 @@ escape_str_common (const char *str,
 	const char *s;
 	char       *t;
 
-	if (str == NULL) 
+	if (str == NULL)
 		return NULL;
 
 	if (prefix)
@@ -153,7 +154,7 @@ escape_str_common (const char *str,
 
 /* escape with backslash the string @str. */
 char*
-escape_str (const char *str, 
+escape_str (const char *str,
 	    const char *meta_chars)
 {
 	return escape_str_common (str, meta_chars, '\\', 0);
@@ -228,15 +229,15 @@ g_utf8_strsplit (const char *string,
 	g_return_val_if_fail (string != NULL, NULL);
 	g_return_val_if_fail (delimiter != NULL, NULL);
 	g_return_val_if_fail (delimiter[0] != '\0', NULL);
-	
+
 	if (max_tokens < 1)
 		max_tokens = G_MAXINT;
-	
+
 	remainder = string;
 	s = g_utf8_strstr (remainder, delimiter);
 	if (s != NULL) {
 		gsize delimiter_size = strlen (delimiter);
-		
+
 		while (--max_tokens && (s != NULL)) {
 			gsize  size = s - remainder;
 			char  *new_string;
@@ -255,15 +256,15 @@ g_utf8_strsplit (const char *string,
 		n++;
 		string_list = g_slist_prepend (string_list, g_strdup (remainder));
 	}
-	
+
 	str_array = g_new (char*, n + 1);
-	
+
 	str_array[n--] = NULL;
 	for (slist = string_list; slist; slist = slist->next)
 		str_array[n--] = slist->data;
-	
+
 	g_slist_free (string_list);
-	
+
 	return str_array;
 }
 
@@ -275,7 +276,7 @@ g_utf8_strchug (char *string)
 	gunichar  c;
 
 	g_return_val_if_fail (string != NULL, NULL);
-	
+
 	scan = string;
 	c = g_utf8_get_char (scan);
 	while (g_unichar_isspace (c)) {
@@ -284,7 +285,7 @@ g_utf8_strchug (char *string)
 	}
 
 	g_memmove (string, scan, strlen (scan) + 1);
-	
+
 	return string;
 }
 
@@ -294,9 +295,9 @@ g_utf8_strchomp (char *string)
 {
 	char   *scan;
 	gsize   len;
- 
+
 	g_return_val_if_fail (string != NULL, NULL);
-	
+
 	len = g_utf8_strlen (string, -1);
 
 	if (len == 0)
@@ -312,25 +313,25 @@ g_utf8_strchomp (char *string)
 			break;
 		scan = g_utf8_find_prev_char (string, scan);
 	}
-	
+
 	return string;
 }
 
 
 gboolean
-match_patterns (char       **patterns, 
+match_patterns (char       **patterns,
 		const char  *string,
 		int          flags)
 {
 	int i;
 	int result;
-       
+
 	if (patterns[0] == NULL)
 		return TRUE;
-	
+
 	if (string == NULL)
 		return FALSE;
-	
+
 	result = FNM_NOMATCH;
 	i = 0;
 	while ((result != 0) && (patterns[i] != NULL)) {
@@ -350,11 +351,11 @@ search_util_get_patterns (const char *pattern_string)
 {
 	char **patterns;
 	int    i;
-	
+
 	patterns = g_utf8_strsplit (pattern_string, ";", MAX_PATTERNS);
-	for (i = 0; patterns[i] != NULL; i++) 
+	for (i = 0; patterns[i] != NULL; i++)
 		patterns[i] = g_utf8_strstrip (patterns[i]);
-	
+
 	return patterns;
 }
 
@@ -399,7 +400,7 @@ eat_spaces (const char *line)
 
 
 char **
-split_line (const char *line, 
+split_line (const char *line,
 	    int         n_fields)
 {
 	char       **fields;
@@ -475,7 +476,7 @@ debug (const char *file,
 	char    *str;
 
 	g_return_if_fail (format != NULL);
-	
+
 	va_start (args, format);
 	str = g_strdup_vprintf (format, args);
 	va_end (args);
@@ -485,4 +486,27 @@ debug (const char *file,
 	g_free (str);
 #else /* ! DEBUG */
 #endif
+}
+
+
+char *
+get_time_string (time_t time)
+{
+	struct tm *tm;
+	GDate     *date;
+	char       date_txt[50];
+	char       time_txt[50];
+	char      *s = NULL;
+
+	tm = localtime (&time);
+	date = g_date_new_dmy (tm->tm_mday, tm->tm_mon + 1, 1900 + tm->tm_year);
+	g_date_strftime (date_txt,
+			 50,
+                         _("%d %B %Y"),
+                         date);
+	strftime (time_txt, 50, "%H:%M", tm);
+	s = g_strconcat (date_txt, ", ", time_txt, NULL);
+	g_date_free (date);
+
+	return s;
 }
