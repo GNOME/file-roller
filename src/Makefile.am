@@ -23,9 +23,9 @@ INCLUDES =						\
         -DFR_SYSCONFDIR=\"$(sysconfdir)\"   		\
         -DFR_DATADIR=\"$(datadir)\"     	    	\
         -DFR_LIBDIR=\"$(libdir)\"  	         	\
+        -DPKG_DATA_DIR=\"$(pkgdatadir)\"                \
 	-DPIXMAPSDIR=\""$(datadir)/pixmaps"\"		\
 	-DGLADEDIR=\""$(gladedir)"\" 			\
-	-DICONDIR=\""$(datadir)/file-roller/icons"\"	\
 	-DPRIVEXECDIR=\""$(libexecdir)/file-roller/"\"	\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)

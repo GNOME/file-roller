@@ -72,7 +72,7 @@ FRFileTypeDescription file_type_desc[] = {
 	{ FR_FILE_TYPE_BZIP,         ".bz",      "application/x-bzip", NULL },
 	{ FR_FILE_TYPE_BZIP2,        ".bz2",     "application/x-bzip", NULL },
 	{ FR_FILE_TYPE_COMPRESS,     ".Z",       "application/x-compress", NULL },
-	{ FR_FILE_TYPE_CPIO,         ".cpio",    "application/x-cpio", NULL },	
+	{ FR_FILE_TYPE_CPIO,         ".cpio",    "application/x-cpio", NULL },
 	{ FR_FILE_TYPE_DEB,          ".deb",     "application/x-deb", NULL },
 	{ FR_FILE_TYPE_ISO,          ".iso",     "application/x-cd-image", NULL },
 	{ FR_FILE_TYPE_EAR,          ".ear",     "application/x-ear", N_("Ear (.ear)") },
@@ -114,7 +114,7 @@ FRCommandDescription command_desc[] = {
 	{ "arj",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_ARJ },
 	{ "bzip2",      TRUE,  FALSE, FALSE, FR_FILE_TYPE_BZIP },
 	{ "compress",   TRUE,  TRUE,  FALSE, FR_FILE_TYPE_COMPRESS },
-	{ "cpio",       TRUE,  FALSE, FALSE, FR_FILE_TYPE_CPIO },	
+	{ "cpio",       TRUE,  FALSE, FALSE, FR_FILE_TYPE_CPIO },
 	{ "isoinfo",    TRUE,  FALSE, TRUE,  FR_FILE_TYPE_ISO },
 	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_EAR },
 	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_JAR },
@@ -167,10 +167,10 @@ static const GOptionEntry options[] = {
 	  N_("Create destination folder without asking confirmation"),
 	  NULL },
 
-	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining_args, 
-	  NULL, 
+	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining_args,
+	  NULL,
 	  NULL },
- 
+
 	{ NULL }
 };
 
@@ -195,7 +195,7 @@ startup_cb (gpointer data)
 }
 
 
-int 
+int
 main (int argc, char **argv)
 {
 	GnomeProgram *program;
@@ -223,7 +223,10 @@ main (int argc, char **argv)
 	g_set_application_name (_("File Roller"));
 	gtk_window_set_default_icon_name ("file-roller");
 
-	if (! gnome_vfs_init ()) 
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
+
+	if (! gnome_vfs_init ())
                 g_error ("Cannot initialize the Virtual File System.");
 
 	glade_init ();
@@ -239,7 +242,7 @@ main (int argc, char **argv)
 /* Initialize application data. */
 
 
-static void 
+static void
 initialize_data (void)
 {
 	eel_gconf_monitor_add ("/apps/file-roller");
@@ -253,20 +256,20 @@ initialize_data (void)
 
 /* Free application data. */
 
-void 
+void
 viewer_done (ViewerData *vdata)
 {
-	if ((vdata->temp_dir != NULL) 
+	if ((vdata->temp_dir != NULL)
 	    && path_is_dir (vdata->temp_dir)) {
 		char *argv[4];
-		
+
 		argv[0] = "rm";
 		argv[1] = "-rf";
 		argv[2] = vdata->temp_dir;
 		argv[3] = NULL;
-		g_spawn_sync (g_get_tmp_dir (), argv, NULL, 
-			      G_SPAWN_SEARCH_PATH, 
-			      NULL, NULL, 
+		g_spawn_sync (g_get_tmp_dir (), argv, NULL,
+			      G_SPAWN_SEARCH_PATH,
+			      NULL, NULL,
 			      NULL, NULL, NULL,
 			      NULL);
 	}
@@ -274,7 +277,7 @@ viewer_done (ViewerData *vdata)
 	g_free (vdata->filename);
 	g_free (vdata->e_filename);
 	g_free (vdata->temp_dir);
-	if (vdata->process != NULL) 
+	if (vdata->process != NULL)
 		g_object_unref (vdata->process);
 
 	viewer_list = g_list_remove (viewer_list, vdata);
@@ -282,20 +285,20 @@ viewer_done (ViewerData *vdata)
 }
 
 
-void 
+void
 command_done (CommandData *cdata)
 {
-	if ((cdata->temp_dir != NULL) 
+	if ((cdata->temp_dir != NULL)
 	    && path_is_dir (cdata->temp_dir)) {
 		char *argv[4];
-		
+
 		argv[0] = "rm";
 		argv[1] = "-rf";
 		argv[2] = cdata->temp_dir;
 		argv[3] = NULL;
-		g_spawn_sync (g_get_tmp_dir (), argv, NULL, 
-			      G_SPAWN_SEARCH_PATH, 
-			      NULL, NULL, 
+		g_spawn_sync (g_get_tmp_dir (), argv, NULL,
+			      G_SPAWN_SEARCH_PATH,
+			      NULL, NULL,
 			      NULL, NULL, NULL,
 			      NULL);
 	}
@@ -304,7 +307,7 @@ command_done (CommandData *cdata)
 	gnome_vfs_mime_application_free (cdata->app);
 	path_list_free (cdata->file_list);
 	g_free (cdata->temp_dir);
-	if (cdata->process != NULL) 
+	if (cdata->process != NULL)
 		g_object_unref (cdata->process);
 
 	command_list = g_list_remove (command_list, cdata);
@@ -312,7 +315,7 @@ command_done (CommandData *cdata)
 }
 
 
-static void 
+static void
 release_data ()
 {
 	g_hash_table_destroy (programs_cache);
@@ -348,7 +351,7 @@ get_path_from_url (char *url)
 	gnome_vfs_uri_unref (uri);
 	path = gnome_vfs_unescape_string (escaped, NULL);
 	g_free (escaped);
-	
+
 	return path;
 }
 
@@ -374,7 +377,7 @@ migrate_dir_from_to (const char *from_dir,
                 g_free (e1);
                 g_free (e2);
 
-                g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);  
+                g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
                 g_free (line);
         }
 
@@ -404,7 +407,7 @@ migrate_file_from_to (const char *from_file,
                 g_free (e1);
                 g_free (e2);
 
-                g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);  
+                g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
                 g_free (line);
         }
 
@@ -424,7 +427,7 @@ migrate_to_new_directories (void)
 }
 
 
-static void 
+static void
 compute_supported_archive_types (void)
 {
 	int i, j;
@@ -433,14 +436,14 @@ compute_supported_archive_types (void)
 	for (i = 0; i < G_N_ELEMENTS (command_desc); i++) {
 		FRCommandDescription com = command_desc[i];
 
-		if (!is_program_in_path (com.command)) 
+		if (!is_program_in_path (com.command))
 			continue;
 
-		if (strcmp (com.command, "tar") == 0) 
+		if (strcmp (com.command, "tar") == 0)
 			for (j = 0; j < G_N_ELEMENTS (tar_command_desc); j++) {
 				FRCommandDescription com2 = tar_command_desc[j];
-				
-				if (!is_program_in_path (com2.command)) 
+
+				if (!is_program_in_path (com2.command))
 					continue;
 				open_type[o_i++] = com2.file_type;
 				save_type[s_i++] = com2.file_type;
@@ -461,7 +464,7 @@ compute_supported_archive_types (void)
 }
 
 
-static void 
+static void
 prepare_app (void)
 {
 	char *path;
@@ -497,7 +500,7 @@ prepare_app (void)
 		window = window_new ();
 		gtk_widget_show (window->app);
 		return;
-	} 
+	}
 
 	default_dir = get_path_from_url (default_url);
 
@@ -508,8 +511,8 @@ prepare_app (void)
 			char *current_dir = g_get_current_dir ();
 			char *full_path;
 
-			full_path = g_build_filename (current_dir, 
-						      extract_to, 
+			full_path = g_build_filename (current_dir,
+						      extract_to,
 						      NULL);
 			extract_to_path = get_path_from_url (full_path);
 
@@ -529,16 +532,16 @@ prepare_app (void)
 		window = window_new ();
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir, TRUE);
-		
+
 		while ((filename = remaining_args[i++]) != NULL) {
 			char *path;
-			
+
 			if (! g_path_is_absolute (filename)) {
 				char *current_dir;
 				current_dir = g_get_current_dir ();
-				path = g_strconcat (current_dir, 
-						    "/", 
-						    filename, 
+				path = g_strconcat (current_dir,
+						    "/",
+						    filename,
 						    NULL);
 				g_free (current_dir);
 			} else
@@ -546,30 +549,30 @@ prepare_app (void)
 			file_list = g_list_prepend (file_list, path);
 		}
 		file_list = g_list_reverse (file_list);
-		
+
 		window_archive__open_add (window, add_to_path, file_list);
 		window_archive__quit (window);
 		window_batch_mode_start (window);
 
-	} else if ((extract_to != NULL) 
-		   || (extract == 1) 
+	} else if ((extract_to != NULL)
+		   || (extract == 1)
 		   || (extract_here == 1)) { /* Extract all archives. */
 		FRWindow   *window;
 		const char *archive;
 		int         i = 0;
-		
+
 		window = window_new ();
 		if (default_dir != NULL)
 			window_set_default_dir (window, default_dir, TRUE);
 
 		while ((archive = remaining_args[i++]) != NULL) {
-			if (extract_here == 1) 
-				window_archive__open_extract_here (window, 
-								   archive, 
+			if (extract_here == 1)
+				window_archive__open_extract_here (window,
+								   archive,
 								   extract_to_path);
 			else
-				window_archive__open_extract (window, 
-							      archive, 
+				window_archive__open_extract (window,
+							      archive,
 							      extract_to_path);
 		}
 		window_archive__quit (window);
@@ -577,17 +580,17 @@ prepare_app (void)
 
 	} else { /* Open each archive in a window */
 		const char *archive;
-		
+
 		int i = 0;
 		while ((archive = remaining_args[i++]) != NULL) {
 			FRWindow *window;
-			
+
 			window = window_new ();
 			gtk_widget_show (window->app);
 			window_archive_open (window, archive, GTK_WINDOW (window->app));
 		}
 	}
-	
+
 	g_free (default_dir);
 	g_free (add_to_path);
         g_free (extract_to_path);
@@ -620,7 +623,7 @@ save_session (GnomeClient *client)
 
 		key = g_strdup_printf ("Session/archive%d", i);
 
-		if ((window->archive == NULL) 
+		if ((window->archive == NULL)
 		    || (window->archive->filename == NULL))
 			gnome_config_set_string (key, "");
 		else
@@ -666,7 +669,7 @@ client_save_yourself_cb (GnomeClient *client,
 
 	argv[0] = (char *) program_argv0;
 	argv[1] = NULL; /* "--debug-session"; */
-	
+
 	gnome_client_set_clone_command (client, 1, argv);
 	gnome_client_set_restart_command (client, 1, argv);
 
@@ -708,7 +711,7 @@ gboolean
 session_is_restored (void)
 {
 	gboolean restored;
-	
+
 	if (! master_client)
 		return FALSE;
 
@@ -722,7 +725,7 @@ gboolean
 load_session (void)
 {
 	int i, n;
-	
+
 	gnome_config_push_prefix (gnome_client_get_config_prefix (master_client));
 
 	n = gnome_config_get_int ("Session/archives");
