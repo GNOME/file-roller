@@ -1,5 +1,19 @@
 2006-12-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/window.c:
+	(window_archive_save_as):
+	* src/fr-command-iso.c (fr_command_iso_extract):
+	(fr_command_iso_list):
+	* src/sh/isoinfo.sh: fixed extraction of iso files when the file itself or
+	the files contained in the iso have spaces in the name.
+
+	Fixed bug #374478 – crash in Archive Manager: using archive
+	manager to...
+
+	* src/main.c: exe files cannot be saved.
+
+	* src/fr-process.c (start_current_command): only append non-null args
+
 	* src/fr-command-tar.c:
 
 	Fixed bug #384499 – File-roller does not handle filenames starting with

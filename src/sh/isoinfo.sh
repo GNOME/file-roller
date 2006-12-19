@@ -5,9 +5,9 @@ filename=$2
 JOLIET=true
 ROCK_RIDGE=true
 
-ISOINFO=`isoinfo -d -i $filename`
+ISOINFO=`isoinfo -d -i "$filename"`
 if echo $ISOINFO | grep "NO Joliet present" >/dev/null 2>&1; then
-        JOLIET=false  
+        JOLIET=false
 fi
 if echo $ISOINFO | grep "NO Rock Ridge present" >/dev/null 2>&1; then
         ROCK_RIDGE=false
@@ -21,4 +21,9 @@ if test $ROCK_RIDGE = true; then
   iso_extensions="$iso_extensions -R"
 fi
 
-isoinfo $iso_extensions $*
+if test "x$3" = x-x; then
+  file_to_extract=$4
+  isoinfo $iso_extensions -i "$filename" -x "$file_to_extract"
+else
+  isoinfo $iso_extensions -i "$filename" -l
+fi

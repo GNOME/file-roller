@@ -194,7 +194,7 @@ fr_process_init (FRProcess *fr_proc)
 }
 
 
-FRProcess * 
+FRProcess *
 fr_process_new ()
 {
 	return FR_PROCESS (g_object_new (FR_TYPE_PROCESS, NULL));
@@ -244,7 +244,7 @@ fr_process_finalize (GObject *object)
 
 
 void
-fr_process_begin_command (FRProcess  *fr_proc, 
+fr_process_begin_command (FRProcess  *fr_proc,
 			  const char *arg)
 {
 	FRCommandInfo * c_info;
@@ -260,7 +260,7 @@ fr_process_begin_command (FRProcess  *fr_proc,
 
 
 void
-fr_process_begin_command_at (FRProcess  *fr_proc, 
+fr_process_begin_command_at (FRProcess  *fr_proc,
 			     const char *arg,
 			     int         index)
 {
@@ -283,7 +283,7 @@ fr_process_begin_command_at (FRProcess  *fr_proc,
 
 
 void
-fr_process_set_working_dir (FRProcess  *fr_proc, 
+fr_process_set_working_dir (FRProcess  *fr_proc,
 			    const char *dir)
 {
 	FRCommandInfo *c_info;
@@ -298,7 +298,7 @@ fr_process_set_working_dir (FRProcess  *fr_proc,
 
 
 void
-fr_process_set_sticky (FRProcess *fr_proc, 
+fr_process_set_sticky (FRProcess *fr_proc,
 		       gboolean   sticky)
 {
 	FRCommandInfo *c_info;
@@ -311,7 +311,7 @@ fr_process_set_sticky (FRProcess *fr_proc,
 
 
 void
-fr_process_set_ignore_error (FRProcess *fr_proc, 
+fr_process_set_ignore_error (FRProcess *fr_proc,
 			     gboolean   ignore_error)
 {
 	FRCommandInfo *c_info;
@@ -324,7 +324,7 @@ fr_process_set_ignore_error (FRProcess *fr_proc,
 
 
 void
-fr_process_add_arg (FRProcess  *fr_proc, 
+fr_process_add_arg (FRProcess  *fr_proc,
 		    const char *arg)
 {
 	FRCommandInfo *c_info;
@@ -337,7 +337,7 @@ fr_process_add_arg (FRProcess  *fr_proc,
 
 
 void
-fr_process_set_arg_at (FRProcess  *fr_proc, 
+fr_process_set_arg_at (FRProcess  *fr_proc,
 		       int         n_comm,
 		       int         n_arg,
 		       const char *arg_value)
@@ -350,14 +350,14 @@ fr_process_set_arg_at (FRProcess  *fr_proc,
 	c_info = g_ptr_array_index (fr_proc->comm, n_comm);
 	arg = g_list_nth (c_info->args, n_arg);
 	g_return_if_fail (arg != NULL);
-	
+
 	g_free (arg->data);
 	arg->data = g_strdup (arg_value);
 }
 
 
 void
-fr_process_set_begin_func (FRProcess    *fr_proc, 
+fr_process_set_begin_func (FRProcess    *fr_proc,
 			   ProcFunc      func,
 			   gpointer      func_data)
 {
@@ -372,7 +372,7 @@ fr_process_set_begin_func (FRProcess    *fr_proc,
 
 
 void
-fr_process_set_end_func (FRProcess    *fr_proc, 
+fr_process_set_end_func (FRProcess    *fr_proc,
 			 ProcFunc      func,
 			 gpointer      func_data)
 {
@@ -387,7 +387,7 @@ fr_process_set_end_func (FRProcess    *fr_proc,
 
 
 void
-fr_process_set_continue_func (FRProcess    *fr_proc, 
+fr_process_set_continue_func (FRProcess    *fr_proc,
 			      ContinueFunc  func,
 			      gpointer      func_data)
 {
@@ -431,7 +431,7 @@ fr_process_clear (FRProcess *fr_proc)
 		g_ptr_array_index (fr_proc->comm, i) = NULL;
 	}
 
-	for (i = 0; i <= fr_proc->n_comm; i++) 
+	for (i = 0; i <= fr_proc->n_comm; i++)
 		g_ptr_array_remove_index_fast (fr_proc->comm, 0);
 
 	fr_proc->n_comm = -1;
@@ -440,7 +440,7 @@ fr_process_clear (FRProcess *fr_proc)
 
 
 void
-fr_process_set_out_line_func (FRProcess    *fr_proc, 
+fr_process_set_out_line_func (FRProcess    *fr_proc,
 			      ProcLineFunc  func,
 			      gpointer      data)
 {
@@ -451,7 +451,7 @@ fr_process_set_out_line_func (FRProcess    *fr_proc,
 
 
 void
-fr_process_set_err_line_func (FRProcess    *fr_proc, 
+fr_process_set_err_line_func (FRProcess    *fr_proc,
 			      ProcLineFunc  func,
 			      gpointer      data)
 {
@@ -468,8 +468,8 @@ process_output (FRProcess *fr_proc)
 	char *line, *eol;
 
  again:
-	n = read (fr_proc->output_fd, 
-		  fr_proc->o_buffer + fr_proc->o_not_processed, 
+	n = read (fr_proc->output_fd,
+		  fr_proc->o_buffer + fr_proc->o_not_processed,
 		  BUFFER_SIZE - fr_proc->o_not_processed);
 
 	if ((n < 0) && (errno == EINTR))
@@ -483,15 +483,15 @@ process_output (FRProcess *fr_proc)
 	line = fr_proc->o_buffer;
 	while (*line != 0) {
 		eol = strchr (line, '\n');
-		
+
 		if (eol != NULL)
 			*(eol++) = 0;
 		else if (n == 0) /* EOF on file descriptor */
 			eol = line + strlen (line);
-		else 
+		else
 			break;
 
-		fr_proc->raw_output = g_list_prepend (fr_proc->raw_output, 
+		fr_proc->raw_output = g_list_prepend (fr_proc->raw_output,
 						      g_strdup (line));
 
 		if (fr_proc->o_proc_line_func != NULL) {
@@ -501,7 +501,7 @@ process_output (FRProcess *fr_proc)
 
 		line = eol;
 	}
-	
+
 	/* shift unprocessed text to the beginning. */
 
 	fr_proc->o_not_processed = strlen (line);
@@ -519,8 +519,8 @@ process_error (FRProcess *fr_proc)
 	char *line, *eol;
 
  again:
-	n = read (fr_proc->error_fd, 
-		  fr_proc->e_buffer + fr_proc->e_not_processed, 
+	n = read (fr_proc->error_fd,
+		  fr_proc->e_buffer + fr_proc->e_not_processed,
 		  BUFFER_SIZE - fr_proc->e_not_processed);
 
 	if ((n < 0) && (errno == EINTR))
@@ -534,15 +534,15 @@ process_error (FRProcess *fr_proc)
 	line = fr_proc->e_buffer;
 	while (*line != 0) {
 		eol = strchr (line, '\n');
-		
+
 		if (eol != NULL)
 			*(eol++) = 0;
 		else if (n == 0) /* EOF on file descriptor */
 			eol = line + strlen (line);
-		else 
+		else
 			break;
 
-		fr_proc->raw_error = g_list_prepend (fr_proc->raw_error, 
+		fr_proc->raw_error = g_list_prepend (fr_proc->raw_error,
 						     g_strdup (line));
 
 		if (fr_proc->e_proc_line_func != NULL) {
@@ -552,7 +552,7 @@ process_error (FRProcess *fr_proc)
 
 		line = eol;
 	}
-	
+
 	/* shift unprocessed text to the beginning. */
 
 	fr_proc->e_not_processed = strlen (line);
@@ -586,39 +586,40 @@ start_current_command (FRProcess *fr_proc)
 	int             i = 0;
 
 	debug (DEBUG_INFO, "%d/%d) ", fr_proc->current_command, fr_proc->n_comm);
-	
-	c_info = g_ptr_array_index (fr_proc->comm, 
+
+	c_info = g_ptr_array_index (fr_proc->comm,
 				    fr_proc->current_command);
 	arg_list = c_info->args;
 	dir = c_info->dir;
 
-	if (dir != NULL) 
-		debug (DEBUG_INFO, "cd %s\n", dir); 
-	
+	if (dir != NULL)
+		debug (DEBUG_INFO, "cd %s\n", dir);
+
 	command = NULL;
-	
+
 	argv = g_new (char *, 4);
 	argv[i++] = "/bin/sh";
 	argv[i++] = "-c";
 
 	command = g_string_new ("");
 	for (scan = arg_list; scan; scan = scan->next) {
-		g_string_append (command, scan->data);
+		if (scan->data != NULL)
+			g_string_append (command, scan->data);
 		if (scan->next != NULL)
 			g_string_append_c (command, ' ');
 	}
-	
+
 	argv[i++] = command->str;
 	argv[i] = NULL;
 
 #ifdef DEBUG
 	{
 		int j;
-		
+
 		g_print ("/bin/sh ");
 		for (j = 0; j < i; j++)
 			g_print ("%s ", argv[j]);
-		g_print ("\n"); 
+		g_print ("\n");
 	}
 #endif
 
@@ -629,7 +630,7 @@ start_current_command (FRProcess *fr_proc)
 					argv,
 					NULL,
 					(G_SPAWN_LEAVE_DESCRIPTORS_OPEN
-					 | G_SPAWN_SEARCH_PATH 
+					 | G_SPAWN_SEARCH_PATH
 					 | G_SPAWN_DO_NOT_REAP_CHILD),
 					child_setup,
 					fr_proc,
@@ -639,7 +640,7 @@ start_current_command (FRProcess *fr_proc)
 					&fr_proc->error_fd,
 					&fr_proc->error.gerror)) {
 		fr_proc->error.type = FR_PROC_ERROR_SPAWN;
-		g_signal_emit (G_OBJECT (fr_proc), 
+		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[DONE],
 			       0,
 			       &fr_proc->error);
@@ -658,14 +659,14 @@ start_current_command (FRProcess *fr_proc)
 
 	fr_proc->o_not_processed = 0;
 	fr_proc->e_not_processed = 0;
-	fr_proc->log_timeout = g_timeout_add (REFRESH_RATE, 
+	fr_proc->log_timeout = g_timeout_add (REFRESH_RATE,
 					      check_child,
 					      fr_proc);
 }
 
 
 static gboolean
-command_is_sticky (FRProcess *fr_proc, 
+command_is_sticky (FRProcess *fr_proc,
 		   int        i)
 {
 	FRCommandInfo *c_info;
@@ -676,7 +677,7 @@ command_is_sticky (FRProcess *fr_proc,
 
 static void
 allow_sticky_processes_only (FRProcess *fr_proc,
-			     gboolean   emit_signal) 
+			     gboolean   emit_signal)
 {
 	if (! fr_proc->sticky_only) {
 		/* Remember the first error. */
@@ -687,10 +688,10 @@ allow_sticky_processes_only (FRProcess *fr_proc,
 		if (fr_proc->error.gerror != NULL)
 			fr_proc->first_error.gerror = g_error_copy (fr_proc->error.gerror);
 	}
-	
+
 	fr_proc->sticky_only = TRUE;
 	if (emit_signal)
-		g_signal_emit (G_OBJECT (fr_proc), 
+		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[STICKY_ONLY],
 			       0);
 }
@@ -709,7 +710,7 @@ check_child (gpointer data)
 
 	/* Remove check. */
 
-	g_source_remove (fr_proc->log_timeout);	
+	g_source_remove (fr_proc->log_timeout);
 	fr_proc->log_timeout = 0;
 
 	process_output (fr_proc);
@@ -718,7 +719,7 @@ check_child (gpointer data)
 	pid = waitpid (fr_proc->command_pid, &status, WNOHANG);
 	if (pid != fr_proc->command_pid) {
 		/* Add check again. */
-		fr_proc->log_timeout = g_timeout_add (REFRESH_RATE, 
+		fr_proc->log_timeout = g_timeout_add (REFRESH_RATE,
 						      check_child,
 						      fr_proc);
 		return FALSE;
@@ -732,7 +733,7 @@ check_child (gpointer data)
 		if (WIFEXITED (status)) {
 			if (WEXITSTATUS (status) == 0)
 				fr_proc->error.type = FR_PROC_ERROR_NONE;
-			else if (WEXITSTATUS (status) == 255) 
+			else if (WEXITSTATUS (status) == 255)
 				fr_proc->error.type = FR_PROC_ERROR_COMMAND_NOT_FOUND;
 			else {
 				fr_proc->error.type = FR_PROC_ERROR_GENERIC;
@@ -768,14 +769,14 @@ check_child (gpointer data)
 
 	/* Execute next command. */
 	if (continue_process) {
-		if (fr_proc->error.type != FR_PROC_ERROR_NONE) 
+		if (fr_proc->error.type != FR_PROC_ERROR_NONE)
 			allow_sticky_processes_only (fr_proc, TRUE);
-		
+
 		if (fr_proc->sticky_only) {
 			do {
 				fr_proc->current_command++;
 			} while ((fr_proc->current_command <= fr_proc->n_comm)
-				 && ! command_is_sticky (fr_proc, 
+				 && ! command_is_sticky (fr_proc,
 							 fr_proc->current_command));
 		} else
 			fr_proc->current_command++;
@@ -807,7 +808,7 @@ check_child (gpointer data)
 			fr_proc->error.gerror = g_error_copy (fr_proc->first_error.gerror);
 	}
 
-	g_signal_emit (G_OBJECT (fr_proc), 
+	g_signal_emit (G_OBJECT (fr_proc),
 		       fr_process_signals[DONE],
 		       0,
 		       &fr_proc->error);
@@ -846,7 +847,7 @@ fr_process_start (FRProcess *fr_proc)
 	}
 
 	if (!fr_proc->restart)
-		g_signal_emit (G_OBJECT (fr_proc), 
+		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[START],
 			       0);
 
@@ -858,7 +859,7 @@ fr_process_start (FRProcess *fr_proc)
 
 	if (fr_proc->n_comm == -1) {
 		fr_proc->running = FALSE;
-		g_signal_emit (G_OBJECT (fr_proc), 
+		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[DONE],
 			       0,
 			       &fr_proc->error);
@@ -885,10 +886,10 @@ _fr_process_stop (FRProcess *fr_proc,
 	fr_proc->stopping = TRUE;
 	fr_proc->error.type = FR_PROC_ERROR_STOPPED;
 
-	if (command_is_sticky (fr_proc, fr_proc->current_command)) 
+	if (command_is_sticky (fr_proc, fr_proc->current_command))
 		allow_sticky_processes_only (fr_proc, emit_signal);
 
-	else if (fr_proc->term_on_stop) 
+	else if (fr_proc->term_on_stop)
 		kill (fr_proc->command_pid, SIGTERM);
 
 	else {
@@ -896,7 +897,7 @@ _fr_process_stop (FRProcess *fr_proc,
 			g_source_remove (fr_proc->log_timeout);
 			fr_proc->log_timeout = 0;
 		}
-		
+
 		fr_proc->command_pid = 0;
 
 		close (fr_proc->output_fd);
@@ -904,11 +905,11 @@ _fr_process_stop (FRProcess *fr_proc,
 
 		fr_proc->output_fd = 0;
 		fr_proc->error_fd = 0;
-		
+
 		fr_proc->running = FALSE;
 
 		if (emit_signal)
-			g_signal_emit (G_OBJECT (fr_proc), 
+			g_signal_emit (G_OBJECT (fr_proc),
 				       fr_process_signals[DONE],
 				       0,
 				       &fr_proc->error);

@@ -45,11 +45,11 @@ static FRCommandClass *parent_class = NULL;
 
 
 static time_t
-mktime_from_string (char *month, 
+mktime_from_string (char *month,
 		    char *mday,
 		    char *year)
 {
-	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	struct tm     tm = {0, };
 
@@ -69,7 +69,7 @@ mktime_from_string (char *month,
 
 
 static void
-list__process_line (char     *line, 
+list__process_line (char     *line,
 		    gpointer  data)
 {
 	FileData      *fdata;
@@ -77,7 +77,7 @@ list__process_line (char     *line,
 	FRCommandIso  *comm_iso = FR_COMMAND_ISO (comm);
 	char         **fields;
 	const char    *name_field;
-	
+
 	g_return_if_fail (line != NULL);
 
 	if (line[0] == 'd') /* Ignore directories. */
@@ -86,17 +86,17 @@ list__process_line (char     *line,
 	if (line[0] == 'D') {
 		g_free (comm_iso->cur_path);
 		comm_iso->cur_path = g_strdup (get_last_field (line, 4));
-		
+
 	} else if (line[0] == '-') { /* Is file */
 		const char *last_field, *first_bracket;
 
 		fdata = file_data_new ();
-		
+
 		fields = split_line (line, 8);
 		fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
 		fdata->modified = mktime_from_string (fields[5], fields[6], fields[7]);
 		g_strfreev (fields);
-		
+
 		/* Full path */
 
 		last_field = get_last_field (line, 9);
@@ -105,20 +105,20 @@ list__process_line (char     *line,
 			file_data_free (fdata);
 			return;
 		}
-			
+
 		name_field = eat_spaces (first_bracket + 1);
-		if ((name_field == NULL) 
+		if ((name_field == NULL)
 		    || (strcmp (name_field, ".") == 0)
 		    || (strcmp (name_field, "..") == 0)) {
 			file_data_free (fdata);
 			return;
 		}
 
-		if (comm_iso->cur_path[0] != '/') 
+		if (comm_iso->cur_path[0] != '/')
 			fdata->full_path = g_strstrip (g_strconcat ("/", comm_iso->cur_path, name_field, NULL));
-		else 
+		else
 			fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
-		fdata->original_path = fdata->full_path + 1;
+		fdata->original_path = fdata->full_path;
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
 
@@ -132,20 +132,25 @@ fr_command_iso_list (FRCommand  *comm,
 		     const char *password)
 {
 	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
-	
+	char         *e_filename;
+
 	g_free (comm_iso->cur_path);
 	comm_iso->cur_path = NULL;
-	
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
 				      comm);
 
+	e_filename = g_shell_quote (comm->filename);
+
 	fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
 	fr_process_add_arg (comm->process, "-i");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, e_filename);
 	fr_process_add_arg (comm->process, "-l");
 	fr_process_end_command (comm->process);
-	
+
+	g_free (e_filename);
+
 	fr_process_start (comm->process);
 }
 
@@ -160,24 +165,26 @@ fr_command_iso_extract (FRCommand  *comm,
 			const char *password)
 {
 	char  *e_dest_dir;
+	char  *e_archive_filename;
 	GList *scan;
 
 	e_dest_dir = fr_command_escape (comm, dest_dir);
+	e_archive_filename = g_shell_quote (comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char       *path = scan->data;
 		const char *filename;
                 char       *file_dir, *e_temp_dest_dir = NULL, *temp_dest_dir = NULL;
-	
+
 		filename = file_name_from_path (path);
 		file_dir = remove_level_from_path (path);
-		if ((file_dir != NULL) && (strcmp (file_dir, "/") != 0)) 
+		if ((file_dir != NULL) && (strcmp (file_dir, "/") != 0))
 			e_temp_dest_dir = g_build_filename (e_dest_dir, file_dir, NULL);
-		 else 
+		 else
 			e_temp_dest_dir = g_strdup (e_dest_dir);
 		g_free (file_dir);
-		
-		if (e_temp_dest_dir == NULL) 
+
+		if (e_temp_dest_dir == NULL)
 			continue;
 
 		temp_dest_dir = unescape_str (e_temp_dest_dir);
@@ -186,24 +193,25 @@ fr_command_iso_extract (FRCommand  *comm,
 		fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
 		fr_process_add_arg (comm->process, "-i");
-		fr_process_add_arg (comm->process, comm->e_filename);
+		fr_process_add_arg (comm->process, e_archive_filename);
 		fr_process_add_arg (comm->process, "-x");
 		fr_process_add_arg (comm->process, path);
 		fr_process_add_arg (comm->process, ">");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
-	
+
 		g_free (e_temp_dest_dir);
 		g_free (temp_dest_dir);
 	}
 
 	g_free (e_dest_dir);
+	g_free (e_archive_filename);
 
 	fr_process_start (comm->process);
 }
 
 
-static void 
+static void
 fr_command_iso_class_init (FRCommandIsoClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -219,7 +227,7 @@ fr_command_iso_class_init (FRCommandIsoClass *class)
 }
 
 
-static void 
+static void
 fr_command_iso_init (FRCommand *comm)
 {
 	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
@@ -228,7 +236,7 @@ fr_command_iso_init (FRCommand *comm)
 
 	comm_iso->cur_path = NULL;
 	comm_iso->joliet = TRUE;
-	
+
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
@@ -241,11 +249,11 @@ fr_command_iso_init (FRCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_iso_finalize (GObject *object)
 {
 	FRCommandIso *comm_iso;
-	
+
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_ISO (object));
 

@@ -119,7 +119,7 @@ FRCommandDescription command_desc[] = {
 	{ "isoinfo",    TRUE,  FALSE, TRUE,  FR_FILE_TYPE_ISO },
 	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_EAR },
 	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_JAR },
-	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_EXE },
+	{ "zip",        TRUE,  FALSE,  TRUE,  FR_FILE_TYPE_EXE },
 	{ "lha",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_LHA },
 	{ "lzop",       TRUE,  TRUE,  FALSE, FR_FILE_TYPE_LZOP },
 	{ "rpm2cpio",   TRUE,  FALSE, TRUE,  FR_FILE_TYPE_RPM },

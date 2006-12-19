@@ -4487,19 +4487,17 @@ window_archive_save_as (FRWindow      *window,
 			  window);
 
 	window->convert_data.converting = TRUE;
-
-	fr_process_clear (window->archive->process);
-
 	window->convert_data.temp_dir = get_temp_work_dir ();
 
-	fr_command_extract (window->archive->command,
-			    NULL,
-			    window->convert_data.temp_dir,
-			    TRUE,
+	fr_process_clear (window->archive->process);
+	fr_archive_extract (window->archive,
+		     	    NULL,
+		    	    window->convert_data.temp_dir,
+		    	    NULL,
+		    	    TRUE,
 			    FALSE,
 			    FALSE,
 			    window->password);
-
 	fr_process_start (window->archive->process);
 }
 
