@@ -76,7 +76,7 @@ FRFileTypeDescription file_type_desc[] = {
 	{ FR_FILE_TYPE_DEB,          ".deb",     "application/x-deb", NULL },
 	{ FR_FILE_TYPE_ISO,          ".iso",     "application/x-cd-image", NULL },
 	{ FR_FILE_TYPE_EAR,          ".ear",     "application/x-ear", N_("Ear (.ear)") },
-	{ FR_FILE_TYPE_EXE,          ".exe",     "application/octet-stream", N_("Self-extracting zip (.exe)") },
+	{ FR_FILE_TYPE_EXE,          ".exe",     "application/x-ms-dos-executable", N_("Self-extracting zip (.exe)") },
 	{ FR_FILE_TYPE_GZIP,         ".gz",      "application/x-gzip", NULL},
 	{ FR_FILE_TYPE_JAR,          ".jar",     "application/x-jar", N_("Jar (.jar)")},
 	{ FR_FILE_TYPE_LHA,          ".lzh",     "application/x-lha", N_("Lha (.lzh)") },
