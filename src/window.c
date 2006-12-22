@@ -5972,7 +5972,10 @@ window_paste_selection_to (FRWindow   *window,
 		const char *old_name = (char*) scan->data;
 		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->clipboard_current_dir) - 1, NULL);
 
-		if (strcmp (old_name, new_name) != 0) {
+		/* skip folders */
+
+		if ((strcmp (old_name, new_name) != 0)
+		    && (old_name[strlen (old_name) - 1] != '/')) {
 			char *e_old_name = shell_escape (old_name);
 			char *e_new_name = shell_escape (new_name);
 			fr_process_begin_command (archive->process, "mv");
@@ -5984,6 +5987,7 @@ window_paste_selection_to (FRWindow   *window,
 			g_free (e_old_name);
 			g_free (e_new_name);
 		}
+
 		new_file_list = g_list_prepend (new_file_list, new_name);
 	}
 
