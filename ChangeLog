@@ -1,29 +1,36 @@
+2007-01-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	[ File Roller 2.16.3 released ]
+
+	* NEWS:
+	* configure.in: updated for version 2.16.3
+
 2006-11-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.16.2 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated for version 2.16.2
 
 2006-10-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.16.1 released ]
-	
-	* configure.in: 
+
+	* configure.in:
 	* NEWS: updated for version 2.16.1
 
 2006-09-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.16.0 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated for version 2.16.0
 
 2006-08-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.15.93 released ]
-		
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated for version 2.15.93
 
 2006-08-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -39,105 +46,105 @@
 	* src/file-data.c (file_data_get_mime_type): use ->mime_type
 	instead of ->type
 
-	* src/file-utils.h: 
-	* src/file-utils.c (get_mime_type): 
+	* src/file-utils.h:
+	* src/file-utils.c (get_mime_type):
 
 	new function to get the mime type from the filename.
 
-	* src/file-data.c (file_data_update_mime_type): 
-	* src/dlg-open-with.c (dlg_open_with): 
-	
+	* src/file-data.c (file_data_update_mime_type):
+	* src/dlg-open-with.c (dlg_open_with):
+
 	use get_mime_type.
-	
-	* src/window.c (update_file_list_idle): 
+
+	* src/window.c (update_file_list_idle):
 
 	compute the mime type when creating the file list.
 
-	* src/fr-command-7z.c (list__process_line): 
-	* src/fr-command-ar.c (process_line): 
-	* src/fr-command-arj.c (list__process_line): 
-	* src/fr-command-cfile.c (fr_command_cfile_list): 
-	* src/fr-command-iso.c (list__process_line): 
-	* src/fr-command-lha.c (process_line): 
-	* src/fr-command-rar.c (process_line): 
-	* src/fr-command-rpm.c (list__process_line): 
-	* src/fr-command-tar.c (process_line): 
-	* src/fr-command-unstuff.c (process_line): 
-	* src/fr-command-zip.c (list__process_line): 
-	* src/fr-command-zoo.c (process_zoo_line): 
+	* src/fr-command-7z.c (list__process_line):
+	* src/fr-command-ar.c (process_line):
+	* src/fr-command-arj.c (list__process_line):
+	* src/fr-command-cfile.c (fr_command_cfile_list):
+	* src/fr-command-iso.c (list__process_line):
+	* src/fr-command-lha.c (process_line):
+	* src/fr-command-rar.c (process_line):
+	* src/fr-command-rpm.c (list__process_line):
+	* src/fr-command-tar.c (process_line):
+	* src/fr-command-unstuff.c (process_line):
+	* src/fr-command-zip.c (list__process_line):
+	* src/fr-command-zoo.c (process_zoo_line):
 
 	do not compute the mime type in the process line functions.
 
 	Fixed bug #349095: Filetypes seriously screwed up in .zip files
-	
+
 2006-08-15  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.in: Fix intltool req.
 
 2006-08-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* data/Makefile.am: add the .desktop.in file to EXTRA_DIST and 
+	* data/Makefile.am: add the .desktop.in file to EXTRA_DIST and
 	DISTCLEANFILES.
-	
-	* configure.in: 
-	* data/file-roller.desktop.in.in (X-GNOME-Bugzilla-Version): 
-	* data/Makefile.am: 
+
+	* configure.in:
+	* data/file-roller.desktop.in.in (X-GNOME-Bugzilla-Version):
+	* data/Makefile.am:
 
 	Added X-GNOME-Bugzilla-Version field to the .desktop file.
-	
-	* src/fr-command.c: 
-	* src/fr-command.h: 
+
+	* src/fr-command.c:
+	* src/fr-command.h:
 	* src/fr-command-*.c: added a password to the list method.
 
-	* src/dlg-password.h: 
-	* src/dlg-password.c: 
-	* src/window.h: 
-	* src/window.c: prompt for the password when an archive is encrypted 
-	instead of simply displaying a warning on how to spicify a password; 
+	* src/dlg-password.h:
+	* src/dlg-password.c:
+	* src/window.h:
+	* src/window.c: prompt for the password when an archive is encrypted
+	instead of simply displaying a warning on how to spicify a password;
 	do not use the encrypted emblem for folders.
 
 2006-08-08  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.15.92 released ]
-	
-	* configure.in: 
+
+	* configure.in:
 	* NEWS: updated for 2.15.92
 
 	* src/window.c (window_init_recent_chooser): removed add_filter
-	* src/glib-utils.c (shell_escape): 
+	* src/glib-utils.c (shell_escape):
 	* src/fr-command-tar.c (fr_command_tar_escape): escape < and > as well.
 
 2006-08-07  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.15.91 released ]
 
-	* configure.in: 
+	* configure.in:
 	* NEWS: update for 2.15.91
-	
+
 2006-07-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/glib-utils.c (shell_escape): implement shell_escape with 
+	* src/glib-utils.c (shell_escape): implement shell_escape with
 	g_shell_quote
 
 	Fixed bug #343739 – Seems to not escape file names correctly.
-	
+
 	* src/fr-command-tar.c (fr_command_tar_add)
 	(fr_command_tar_extract): add p option to preserve permissions.
 
 	Fixes bug #340050 – tar permissions are not preserved.
 
-	* nautilus/nautilus-fileroller.c: 
+	* nautilus/nautilus-fileroller.c:
 
-	Fixed bug #339913 – "create archive" option does not work on some 
+	Fixed bug #339913 – "create archive" option does not work on some
 	filenames.
 	Patch by Vassilis Pandis.
 
-	* src/main.c (prepare_app): 
+	* src/main.c (prepare_app):
 
 	Fixed bug #347624 – fix build with gcc 2.95
 	Patch by Jens Granseuer
 
-	* src/window.c (_window_update_sensitivity): 
+	* src/window.c (_window_update_sensitivity):
 
 	Fixed bug #347416 – RecentFilesMenu - OpenRecentMenu converting
 	Patch by Rene Vahtel
@@ -146,49 +153,49 @@
 
 	[ File Roller 2.15.90 released ]
 
-	* configure.in: 	
+	* configure.in:
 	* NEWS: updated for 2.15.90
 
 2006-07-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.15.1 released ]	
-	
+	[ File Roller 2.15.1 released ]
+
 	* NEWS: updated for 2.15.1
 
 2006-07-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/main.h: 
-	* src/dlg-add-files.c: 
-	* src/dlg-add-folder.c: 
-	* src/gtk-utils.h: 
+	* src/main.h:
+	* src/dlg-add-files.c:
+	* src/dlg-add-folder.c:
+	* src/gtk-utils.h:
 
         Include <glib/gi18n.h>
 
-	* src/Makefile.am: 
+	* src/Makefile.am:
 	* src/recent-files/*: removed
-	* src/window.h: 
-	* src/window.c: 
-	* src/ui.h: 
+	* src/window.h:
+	* src/window.c:
+	* src/ui.h:
 
 	Use GtkRecent instead of EggRecent.
-	
+
 	* configure.in: require gtk 2.10 for GtkRecent
 
 2006-07-09  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* data/file-roller.schemas: 
-	* src/preferences.h (PREF_UI_WINDOW_WIDTH): 
-	* src/window.c (window_close): 
+	* data/file-roller.schemas:
+	* src/preferences.h (PREF_UI_WINDOW_WIDTH):
+	* src/window.c (window_close):
 
-	Fixed bug #345052 – file roller should remember the size of the window 
+	Fixed bug #345052 – file roller should remember the size of the window
 	when it closes.
 
-	* src/ui.h: 
+	* src/ui.h:
 
 	Fixed bug #345278 – File operations on the Edit menu should be moved to
 	the Archive menu.
 
-	* src/window.c (key_press_cb): 
+	* src/window.c (key_press_cb):
 
 	Fixed bug #342251 – backspace does not go up a directory (ala Nautilus)
 	Patch by Richard Quirk.
@@ -200,44 +207,44 @@
 
 2006-06-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/main.c: 
+	* src/main.c:
 
 	Fixed bug #336078 - [PATCH] Convert from popt to GOption
-	Patch by Ruben Vermeersch 
+	Patch by Ruben Vermeersch
 
-	* src/fr-archive.c (NCARGS): 
-	* nautilus/Makefile.am (libnautilus_fileroller_la_LDFLAGS): 
+	* src/fr-archive.c (NCARGS):
+	* nautilus/Makefile.am (libnautilus_fileroller_la_LDFLAGS):
 
 	Fixed bug #317782 - file-roller Cygwin build fixes
 	Patch by Cygwin Ports maintainer
 
-	* src/window.c (get_icon): 
-	* src/fr-command-zip.c (fr_command_zip_list, list__process_line): 
-	* src/fr-command-arj.c (list__process_line): 
-	* src/file-data.c (file_data_copy): 
-	* src/file-data.h: 
+	* src/window.c (get_icon):
+	* src/fr-command-zip.c (fr_command_zip_list, list__process_line):
+	* src/fr-command-arj.c (list__process_line):
+	* src/file-data.c (file_data_copy):
+	* src/file-data.h:
 
-	Fixed bug #152039 - Password Protected Files must be displayed 
+	Fixed bug #152039 - Password Protected Files must be displayed
 	differently
 	Patch by Sven Rech
 
 	* configure.in: set version to 2.15.1
-	
+
 2006-05-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.14.3 released ]
-	
-	* configure.in: 
+
+	* configure.in:
 	* NEWS: updated for 2.14.3
 
 2006-04-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/dlg-open-with.c (delete_recent_cb): 
+	* src/dlg-open-with.c (delete_recent_cb):
 
 	Fixed bug #338944 - Open Files..., can't delete programs
 
 2006-04-15  Brian Pepple  <bdpepple@gmail.com>
- 
+
  	* configure.in: Update to conform with new handling
  	for po/LINGUAS.  Refer to
  	http://live.gnome.org/GnomeGoals/PoLinguas
@@ -245,8 +252,8 @@
 2006-04-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.14.2 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated for 2.14.2
 
 2006-04-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -257,7 +264,7 @@
 2006-04-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.14.1 released ]
-	
+
 	* NEWS: updated.
 
 	* src/fr-process.c (check_child): really ignore errors when
@@ -266,16 +273,16 @@
 	Fixes bug #337331 - Cut/Paste same file results in loss of file.
 
 2006-04-09  Brian Pepple  <bdpepple@ameritech.net>
- 
+
 	* po/LINGUAS: New file listing all supported languages.
- 
+
 	* configure.in: Use po/LINGUAS instead of including all languages
 	directly in this file. See the wiki for more information:
 	http://live.gnome.org/GnomeGoals/PoLinguas
 
 2006-04-09  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command-arj.c (fr_command_arj_handle_error): 
+	* src/fr-command-arj.c (fr_command_arj_handle_error):
 
 	Fixed bug #337784 - password protected arj files.  Patch by Sven Rech.
 
@@ -284,7 +291,7 @@
 	* src/eggtreemultidnd.c: applied patch by Yann Rouillard, from
 	bug #119513.
 
-	Fixes bug #337754 - Drag and Drop extraction only works when source 
+	Fixes bug #337754 - Drag and Drop extraction only works when source
 	already has focus.
 
 2006-04-08  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -304,7 +311,7 @@
 	Fixes bug #335368 - Crash when opening large 7z-archive.
 	Fixes buf #326193 - file-roller creates empty 7zip archives.
 
-	* src/eggtreemultidnd.c (egg_tree_multi_drag_motion_event): 
+	* src/eggtreemultidnd.c (egg_tree_multi_drag_motion_event):
 
 	Use GDK_ACTION_MOVE instead of GDK_ACTION_COPY
 	Fixes bug #335659 - File Roller should move not copy files.
@@ -320,35 +327,35 @@
 
 	* configure.in: set version to 2.14.1
 
-	* src/gtk-utils.h (show_help_dialog): 
-	* src/gtk-utils.c: 
-	* src/dlg-prop.c: 
-	* src/dlg-extract.c: 
-	* src/dlg-add-folder.c (file_sel_response_cb): 
-	* src/dlg-add-files.c (file_sel_response_cb): 
-	* src/actions.c (new_file_response_cb): 
-	* help/C/file-roller.xml: 
-	* data/glade/file-roller.glade: 
+	* src/gtk-utils.h (show_help_dialog):
+	* src/gtk-utils.c:
+	* src/dlg-prop.c:
+	* src/dlg-extract.c:
+	* src/dlg-add-folder.c (file_sel_response_cb):
+	* src/dlg-add-files.c (file_sel_response_cb):
+	* src/actions.c (new_file_response_cb):
+	* help/C/file-roller.xml:
+	* data/glade/file-roller.glade:
 
 	Added help button to all the dialogs.
-	Fixed bug #336632 - Help for Extract Dialog pointing to incorrect 
+	Fixed bug #336632 - Help for Extract Dialog pointing to incorrect
 	location.
-	
-	* src/window.c (window_open_files__extract_done_cb): do not 
+
+	* src/window.c (window_open_files__extract_done_cb): do not
 	escape the path here.
 	* src/fr-command-tar.c (fr_command_tar_escape): double escape \
 	* src/fr-command-zip.c (zip_escape): escape \
 
 	Fixes bug #336908 - backshalshes not supported in paths
-	
+
 2006-04-01  Brian Pepple  <bdpepple@ameritech.net>
- 
- 	* configure.in: 
- 	* src/actions.c (activate_action_about): 
- 	* src/main.c: 
- 	* data/file-roller.desktop.in (Icon): 
- 	* data/Makefile.am (install-data-hook): 
- 
+
+ 	* configure.in:
+ 	* src/actions.c (activate_action_about):
+ 	* src/main.c:
+ 	* data/file-roller.desktop.in (Icon):
+ 	* data/Makefile.am (install-data-hook):
+
  	Install theme-friendly icons, and simplify about dialog.
 
 2006-04-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -357,24 +364,24 @@
 	the password when trying to open a password protected rar
 	archive.  Patch by Sven Rech.
 
-	* autogen.sh (REQUIRED_AUTOMAKE_VERSION): set 
+	* autogen.sh (REQUIRED_AUTOMAKE_VERSION): set
 	USE_COMMON_DOC_BUILD to yes. Requires automake 1.8 (#332800).
-	
+
 2006-03-22  Tommi Vainikainen  <thv@iki.fi>
 
 	* configure.in (ALL_LINGUAS): Added Dzongkha (dz).
 
 2006-03-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/actions.c (activate_action_about): 
+	* src/actions.c (activate_action_about):
 
 	Fixed bug #335035 - mistake in file-roller's License.
 
 2006-03-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.14.0 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated
 
 2006-03-04  Jérémy Ar Floc'h  <jeremy.lefloch@gmail.com>
@@ -393,55 +400,55 @@
 2006-02-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.13.92 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated
 
 2006-02-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* nautilus/nautilus-fileroller.c: 
+	* nautilus/nautilus-fileroller.c:
 
-	Fixed bug #331601 – Nautilus doesn't display the "Extract here" menu 
+	Fixed bug #331601 – Nautilus doesn't display the "Extract here" menu
 	option for files which have a ".ps.gz"
 	Patch by Sebastien Bacher
 
 2006-02-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.13.91 released ]
-	
-	* configure.in: 
+
+	* configure.in:
 	* NEWS: updated.
 
 2006-02-12  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* data/file-roller.desktop.in (MimeType): 
+	* data/file-roller.desktop.in (MimeType):
 
 	Fixed bug #330315 - ps.gz files not associated.
 	Patch by Christopher Aillon.
 
-	* src/dlg-extract.c (create_extra_widget): 
+	* src/dlg-extract.c (create_extra_widget):
 
 	Fixed bug #328942 - Don't translate empty strings
 
 2006-01-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.13.90 released ]
-	
-	* configure.in: 
+
+	* configure.in:
 	* NEWS: updated
 
 2006-01-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* data/file-roller.keys: removed
 	* data/file-roller.mime: removed
-	* data/Makefile.am (SUBDIRS): 
-	
-	Fixed bug #328473 – should not distribute pre-gnome-2.8 mime files 
+	* data/Makefile.am (SUBDIRS):
+
+	Fixed bug #328473 – should not distribute pre-gnome-2.8 mime files
 	(patch attached).  Patch by Stephane LOEUILLET.
 
 2006-01-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (window_archive_extract__common): 
+	* src/window.c (window_archive_extract__common):
 	* src/file-utils.c (dir_contains_one_object): reset window->extract_here_dir
 	when not porforming an extract_here action.
 
@@ -457,27 +464,27 @@
 
 	[ File Roller 2.13.4 released ]
 
-	* configure.in: 
-	* NEWS: 
+	* configure.in:
+	* NEWS:
 
 	updated for 2.13.4
 
 2006-01-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* data/file-roller.desktop.in (Categories): 
+	* data/file-roller.desktop.in (Categories):
 
 	Fixed bug #139912 - file roller is not a "system tool".
 
-	* nautilus/nautilus-fileroller.c (extract_here_callback): 
-	* src/file-utils.h: 
-	* src/window.h: 
-	* src/main.c (prepare_app): 
-	* src/fr-process.h (fr_process_stop): 
-	* src/fr-process.c: 
-	* src/file-utils.c: 
-	* src/window.c (window_archive_extract__common): 
+	* nautilus/nautilus-fileroller.c (extract_here_callback):
+	* src/file-utils.h:
+	* src/window.h:
+	* src/main.c (prepare_app):
+	* src/fr-process.h (fr_process_stop):
+	* src/fr-process.c:
+	* src/file-utils.c:
+	* src/window.c (window_archive_extract__common):
 
-	Fixed bug #168388 - file roller shouldn't create an ARCHIVE_FILES 
+	Fixed bug #168388 - file roller shouldn't create an ARCHIVE_FILES
 	folder if the archive only have one root folder
 
 2006-01-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -501,8 +508,8 @@
 2006-01-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.13.3 released ]
-	
-	* configure.in: 
+
+	* configure.in:
 	* NEWS: updated for 2.13.3
 
 2005-12-29  Abel Cheung  <maddog@linuxhall.org>
@@ -512,7 +519,7 @@
 2005-12-12  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.13.2 released ]
-	
+
 	* NEWS: updated.
 
 2005-12-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -528,20 +535,20 @@
 
 2005-12-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-list-model.c (fr_list_model_multi_row_draggable): 
-	
+	* src/fr-list-model.c (fr_list_model_multi_row_draggable):
+
 	Implemented fr_list_model_multi_row_draggable. Removed unused code.
 
 	* src/gtk-utils.c (get_folder_pixbuf_size_for_list)
 	(create_pixbuf): new functions
-	* src/dlg-open-with.c (dlg_open_with): 
+	* src/dlg-open-with.c (dlg_open_with):
 
 	added icons to the applications list.
 
-	* src/eggtreemultidnd.c: 
+	* src/eggtreemultidnd.c:
 	* src/window.c:
 	* src/window.h:
-	
+
 	first attempt to fix multi file dnd (#315069)
 
 	* src/glib-utils.c:
@@ -554,7 +561,7 @@
 	* src/main.c:
 	* src/dlg-batch-add.c:
 	* src/bookmarks.c:
-	
+
 	moved some functions to glib-utils.c; added a debug function to get rid
 	of too many #ifdefs.
 
@@ -562,19 +569,19 @@
 
 	* src/fr-process.c (REFRESH_RATE): set to 20
 
-	* src/fr-command-zip.c (add_password_arg): 
+	* src/fr-command-zip.c (add_password_arg):
 	* src/fr-command-rar.c (add_password_arg): escape other special
-	characters as well.  
+	characters as well.
 
 	Fixes bug #323534: Passwords improperly escaped for zip files
-	
+
 2005-12-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.h: 
+	* src/window.h:
 	* src/window.c (open_progress_dialog): do not open a progress dialog
 	when dragging files, use a progressbar in the statusbar instead.
 
-	* src/fr-command-tar.c (process_line__generic): 
+	* src/fr-command-tar.c (process_line__generic):
 	* src/fr-command-zip.c (process_line__common): use n_files+1 to avoid
 	a 100% progress bar when the operation is not finished yet.
 
@@ -588,34 +595,34 @@
 	(open_progress_dialog): use Archive instead of Name in the progress
 	dialog.
 
-	Fixed bug #311821: ascending and descending indicators are opposite 
+	Fixed bug #311821: ascending and descending indicators are opposite
 	from expected.  Removed the default sort function.
 
-	* data/glade/file-roller-extract.glade: 
+	* data/glade/file-roller-extract.glade:
 
 	Fixed bug #317423: Conflicting mnemonic in "Extract" dialog.
 
-	* src/dlg-extract.c (extract_cb): 
+	* src/dlg-extract.c (extract_cb):
 
 	Fixed bug #323068: file-roller fails in chosing extract-to directory
 
 	* src/actions.c (is_supported_extension, get_full_path)
-	(new_file_response_cb, filetype_combobox_changed_cb): 
+	(new_file_response_cb, filetype_combobox_changed_cb):
 
 	Fixed bug #322197: Improve Naming Filename when create new Archive file
 
 2005-11-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* nautilus/nautilus-fileroller.c: 
-	* data/file-roller.mime: 
-	* data/file-roller.keys: 
+	* nautilus/nautilus-fileroller.c:
+	* data/file-roller.mime:
+	* data/file-roller.keys:
 	* data/file-roller.desktop.in: fixed 7zip mime type.
 
 	* src/fr-command-*.c:
 	* src/fr-archive.c (fr_archive_load): make archive read only is zip
 	is not present.
 
-	* src/fr-command-zip.c (fr_command_zip_new): 
+	* src/fr-command-zip.c (fr_command_zip_new):
 
 	Fixed bug #316564: needs unzip AND zip.
 
@@ -623,14 +630,14 @@
 
 	* src/dlg-add-folder.c (add_folder_cb): remove unused var.
 
-	* src/typedefs.h: 
-	* src/main.h: 
-	* src/main.c: 
-	* src/actions.c (is_supported_extension): 
-	* src/dlg-batch-add.c: 
-	* data/glade/file-roller.glade: 
+	* src/typedefs.h:
+	* src/main.h:
+	* src/main.c:
+	* src/actions.c (is_supported_extension):
+	* src/dlg-batch-add.c:
+	* data/glade/file-roller.glade:
 
-	Simplify the add dialog populating the file type combobox with the 
+	Simplify the add dialog populating the file type combobox with the
 	extensions instead of the descriptions.
 
 2005-11-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -649,22 +656,22 @@
 	* src/window.c (open_progress_dialog): use a Cancel button in
 	the progress dialog.
 
-	* src/recent-files/*: 
+	* src/recent-files/*:
 
 	Updated from libegg.
-	
-	* src/window.h: 
-	* src/window.c: 
-	* src/fr-archive.h: 
-	* src/fr-archive.c (MAX_CHUNK_LEN): use NCARGS * 2 / 3 as max command 
+
+	* src/window.h:
+	* src/window.c:
+	* src/fr-archive.h:
+	* src/fr-archive.c (MAX_CHUNK_LEN): use NCARGS * 2 / 3 as max command
 	line length.
 	(fr_archive_add_items): new function.
 	(fr_archive_set_add_is_stoppable_func): new function.
-	* src/file-utils.h (strcmp_null_tollerant): 
+	* src/file-utils.h (strcmp_null_tollerant):
 	* src/file-utils.c (strcmp_null_tollerant): new function.
-	* src/file-list.h: 
+	* src/file-list.h:
 	* src/file-list.c (visit_dir_async)
-	(get_directory_file_list_async): 
+	(get_directory_file_list_async):
 	* src/dlg-add-files.c:
 
 	Set progress dialog display delay to 1 second.  More HIG compliant
@@ -673,12 +680,12 @@
 
 	* src/fr-command.h: added FR_ACTION_NONE and FR_ACTION_SAVE.
 
-	* src/fr-command-tar.h: 
-	* src/fr-command-tar.c (process_line__generic): 
+	* src/fr-command-tar.h:
+	* src/fr-command-tar.c (process_line__generic):
 
-	Emit the MESSAGE signal	every ACTIVITY_DELAY msecs instead of emitting 
+	Emit the MESSAGE signal	every ACTIVITY_DELAY msecs instead of emitting
 	it for every output line.
-	
+
 	* data/glade/file-roller-extract.glade: Fixed dialog border size.
 
 2005-11-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -692,7 +699,7 @@
 	* component/*: removed files from CVS too.
 
 2005-11-02  Christopher Aillon  <caillon@redhat.com>
-	
+
 	* data/file-roller.desktop.in (MimeType): Add 7zip
 
 2005-10-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -701,32 +708,32 @@
 
 	* Makefile.am:
 	* configure.in:
-	* component/*: 
+	* component/*:
 
 	Removed bonobo component.
-	
-	* src/file-data.h: 
-	* src/fr-command-zoo.c (process_zoo_line): 
-	* src/fr-command-zip.c (list__process_line): 
-	* src/fr-command-unstuff.c (process_line): 
-	* src/fr-command-tar.c (process_line): 
-	* src/fr-command-rpm.c (list__process_line): 
-	* src/fr-command-rar.c (process_line): 
-	* src/fr-command-lha.c (process_line): 
-	* src/fr-command-iso.c (list__process_line): 
-	* src/fr-command-cfile.c (list__process_line): 
-	* src/fr-command-arj.c (list__process_line): 
-	* src/fr-command-ar.c (process_line): 
-	* src/fr-command-7z.c (list__process_line): 
 
-	Fixes bug #319600: compilation under AIX 5.1 aborts with ".atoll 
+	* src/file-data.h:
+	* src/fr-command-zoo.c (process_zoo_line):
+	* src/fr-command-zip.c (list__process_line):
+	* src/fr-command-unstuff.c (process_line):
+	* src/fr-command-tar.c (process_line):
+	* src/fr-command-rpm.c (list__process_line):
+	* src/fr-command-rar.c (process_line):
+	* src/fr-command-lha.c (process_line):
+	* src/fr-command-iso.c (list__process_line):
+	* src/fr-command-cfile.c (list__process_line):
+	* src/fr-command-arj.c (list__process_line):
+	* src/fr-command-ar.c (process_line):
+	* src/fr-command-7z.c (list__process_line):
+
+	Fixes bug #319600: compilation under AIX 5.1 aborts with ".atoll
 	not found".
-	
+
 2005-10-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-tar.c (fr_command_tar_escape): escape $
 
-	Fixes bug #319343: file-roller won't let me delete files from an 
+	Fixes bug #319343: file-roller won't let me delete files from an
 	archive which contain a dollar sign ($)
 
 2005-10-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -744,13 +751,13 @@
 2005-08-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.11.92 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated for 2.11.92
 
 2005-08-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (file_list_drag_data_get): use 
+	* src/window.c (file_list_drag_data_get): use
 	gtk_selection_data_set_uris to set the contents os the selection.
 	(window_drag_data_received): Do not allow DnD on the same window.
 	(get_file_list_from_uri_list): convert file: uris to local path.
@@ -758,8 +765,8 @@
 2005-08-08  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.11.91 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: update for version 2.11.91
 
 2005-08-05  Sunil Mohan Adapa  <sunil@atc.tcs.co.in>
@@ -769,73 +776,73 @@
 2005-08-05  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-iso.c (fr_command_iso_extract): unescape the directory
-	name before using it.  
-	
+	name before using it.
+
 	Fixes bug #311437: [breezy] can't extract a filename from a directory
 	with a space in it from ISO.
 
-	* src/file-utils.c (ensure_dir_exists): 
+	* src/file-utils.c (ensure_dir_exists):
 
 	Use gnome_vfs_make_directory instead of mkdir
 
 	* src/file-utils.c (unescape_str): new function.
-	
-	* configure.in: 
+
+	* configure.in:
 	* Makefile.am:
-	* .cvsignore: 
+	* .cvsignore:
 
 	Ported the help documents to gnome-doc-utils.
-	
+
 2005-08-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/actions.c (get_supported_archive_types): 
+	* src/actions.c (get_supported_archive_types):
 
 	Fixes bug #312243: wrong zoo and 7-zip extensions.
 	Patch by Claudio Bley.
 
 	* src/fr-command-rar.c (fr_command_rar_add)
-	(fr_command_rar_extract, fr_command_rar_test): 
+	(fr_command_rar_extract, fr_command_rar_test):
 
 	Fixes bug #312240: escape sequences in rar output.
 	Patch by Claudio Bley.
 
 	* src/fr-archive.c (fr_archive_extract): removed a blank line.
 
-	* src/fr-process.c (process_output, process_error): read output till 
+	* src/fr-process.c (process_output, process_error): read output till
 	the EOF is reached.
 	* src/gtk-utils.c (_gtk_error_dialog_new): use a shadow for the output
 	textarea.
 
-	Fixes bug #312246: FR does not read all pending output.  
+	Fixes bug #312246: FR does not read all pending output.
 	Patch by Claudio Bley.
-	
+
 2005-07-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.11.90 released ]	
-	
-	* configure.in: 
+	[ File Roller 2.11.90 released ]
+
+	* configure.in:
 	* NEWS: updated for 2.11.90
 
-	* src/fr-command-7z.c:  Applied second patch from bug report #310015. 
+	* src/fr-command-7z.c:  Applied second patch from bug report #310015.
 
 2005-07-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.h: 
-	* src/window.c: 
+	* src/window.h:
+	* src/window.c:
 
 	Fixed bug #105521: single click: list view should have mouse-over.
-	
+
 2005-07-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command-7z.c (list__process_line): 
-	* src/fr-command-rar.c (process_line): 
+	* src/fr-command-7z.c (list__process_line):
+	* src/fr-command-rar.c (process_line):
 
 	Fixes bug #310015: crash when listing 7-zip archive with 7za 4.x
 	Patch by  Claudio Bley.
-	
+
 2005-07-01  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.11.2 released ]	
+	[ File Roller 2.11.2 released ]
 
 2005-06-26  Ignacio Casal Quinteiro  <nacho.resa@gmail.com>
 
@@ -845,10 +852,10 @@
 
 	* data/glade/file-roller.glade
 
-	Properties dialog: align labels to left, allow window resizing, 
+	Properties dialog: align labels to left, allow window resizing,
 	ellipsize filename and path labels.
-	
-	* src/ui.h: 
+
+	* src/ui.h:
 	* src/actions.c
 	* src/actions.h
 	* src/window.c
@@ -856,7 +863,7 @@
 
 	Removed copy/move/rename/delete archive commands.  Put the recent files
 	items in the main menu instead of using a submenu.
-	
+
 	* src/recent-files/*: updated from libegg.
 
 2005-06-19  Fabio Bonelli <fbonelli@gmail.com>
@@ -866,7 +873,7 @@
 	long int size -> long long size
 
 	* src/fr-command-7z.c (list__process_line):
-	* src/fr-command-ar.c (process_line): 
+	* src/fr-command-ar.c (process_line):
 	* src/fr-command-arj.c (list__process_line):
 	* src/fr-command-cfile.c (list__process_line):
 	* src/fr-command-iso.c (list__process_line):
@@ -876,7 +883,7 @@
 	* src/fr-command-tar.c (process_line):
 	* src/fr-command-zip.c (list__process_line):
 	* src/fr-command-zoo.c (process_line):
-	
+
 	s/atol/atoll/
 
 	Fixes bug #142860: File-roller displays files larger
@@ -887,61 +894,61 @@
 	* .cvsignore: addef *.diff files
 
 2005-05-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
-	
+
 	[ File Roller 2.11.1 released ]
 
 2005-04-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* nautilus/nautilus-fileroller.c: 
-	(extract_here_callback): 
+	* nautilus/nautilus-fileroller.c:
+	(extract_here_callback):
 
-	Do not create a _FILES folder.  Bug #167261: "Extract Here" 
+	Do not create a _FILES folder.  Bug #167261: "Extract Here"
 	(Nautilus integration) not useful anymore (regression!)
-	
-	* src/window.c: 
-	* src/main.c: 
+
+	* src/window.c:
+	* src/main.c:
 
 	Allow to extract more archives at once.  Added a --extract-here
 	command line option.
-	
-	* src/fr-archive.c (fr_archive_load): disconnect the signals 
+
+	* src/fr-archive.c (fr_archive_load): disconnect the signals
 	callbacks before unreferencing the object.
 
 	* data/glade/file-roller.glade: center 'create archive' window.
 
 	* src/main.c (main): removed local pctx.
 
-	Fixed bug #162729: File Roller doesn't exit cleanly on invalid 
+	Fixed bug #162729: File Roller doesn't exit cleanly on invalid
 	archive extension.
-	
-	* src/dlg-prop.c (dlg_prop): 
-	* src/dlg-batch-add.c (add_clicked_cb): 
+
+	* src/dlg-prop.c (dlg_prop):
+	* src/dlg-batch-add.c (add_clicked_cb):
 	* src/dlg-add-folder.c (selection_changed_cb)
-	(file_sel_response_cb): 
+	(file_sel_response_cb):
 	* src/dlg-add-files.c (selection_changed_cb)
-	(file_sel_response_cb): 
-	* src/window.c: 
+	(file_sel_response_cb):
+	* src/window.c:
 
 	Use g_filename_display_name and g_filename_display_basename.
 
-	* src/fr-command-zip.c (process_line__common): 
-	* src/fr-process.c (process_error, process_output): 
+	* src/fr-command-zip.c (process_line__common):
+	* src/fr-process.c (process_error, process_output):
 
 	removed useless hacks.
 
 	* src/window.c (window_message_cb): ensure the string is not NULL.
 
 	Fixes bug #164894: crash on zip with incorrect filenames
-	
+
 2005-04-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/actions.c (activate_action_about): 
+	* src/actions.c (activate_action_about):
 	s/translator_credits/translator-credits/
 
-	Fixes bug #300956: Please use a hyphen instead of an underscore, i.e 
+	Fixes bug #300956: Please use a hyphen instead of an underscore, i.e
 	"translator-credits".
 
-	* src/fr-command-tar.c (begin_tar_command): 
+	* src/fr-command-tar.c (begin_tar_command):
 
 	Fixed bug #300895: Invalid read reported by valgrind.
 	Patch by Kjartan Maraas.
@@ -949,7 +956,7 @@
 2005-04-16  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-process.c (process_error, process_output): create a temp
-	variable t store the current line.  
+	variable t store the current line.
 	(process_output, process_error): Attemp to fix bug #164894.
 
 2005-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -959,62 +966,62 @@
 	(name_is_present): split the string to reuse an already present
 	phrase.  Allow the user to retype the name if an error occurs.
 
-	Fixed bug #168287: Rename file in archive can overwrite other 
+	Fixed bug #168287: Rename file in archive can overwrite other
 	existing files.
 
-	* data/glade/file-roller-extract.glade: 
+	* data/glade/file-roller-extract.glade:
 
-	Fixed bugs #300763 Non-English string? and #300764: String mismarked 
+	Fixed bugs #300763 Non-English string? and #300764: String mismarked
 	for translation?
 
-	* src/window.c: 
-	* src/ui.h: 
-	* src/preferences.c: 
-	* src/main.c: 
-	* src/gconf-utils.c: 
-	* src/fr-command-zip.c: 
-	* src/fr-command-tar.c: 
-	* src/fr-command-rpm.c: 
-	* src/fr-command-iso.c: 
-	* src/fr-command-7z.c: 
-	* src/fr-archive.c: 
-	* src/file-utils.c: 
-	* src/file-data.c: 
-	* src/dlg-prop.c: 
-	* src/dlg-password.c: 
-	* src/dlg-open-with.c: 
-	* src/dlg-extract.c: 
-	* src/dlg-delete.c: 
-	* src/dlg-add-folder.c: 
-	* src/dlg-batch-add.c: 
-	* src/dlg-add-files.c: 
-	* src/actions.c: 
+	* src/window.c:
+	* src/ui.h:
+	* src/preferences.c:
+	* src/main.c:
+	* src/gconf-utils.c:
+	* src/fr-command-zip.c:
+	* src/fr-command-tar.c:
+	* src/fr-command-rpm.c:
+	* src/fr-command-iso.c:
+	* src/fr-command-7z.c:
+	* src/fr-archive.c:
+	* src/file-utils.c:
+	* src/file-data.c:
+	* src/dlg-prop.c:
+	* src/dlg-password.c:
+	* src/dlg-open-with.c:
+	* src/dlg-extract.c:
+	* src/dlg-delete.c:
+	* src/dlg-add-folder.c:
+	* src/dlg-batch-add.c:
+	* src/dlg-add-files.c:
+	* src/actions.c:
 
 	Fixes bug #171618: header cleanup.  Patch by Kristof Vansant.
-	
+
 2005-04-06  Alan Horkan <horkana@tcd.ie>
 
-        * src/ui.h: Be nice to translators, allow stock labels 
-        (and keybindings where appropriate) to show through.  
+        * src/ui.h: Be nice to translators, allow stock labels
+        (and keybindings where appropriate) to show through.
         Should make translation work a little less painful.
-	
-	Fixes bug #172867: allow stock labels to show through, be nice to 
+
+	Fixes bug #172867: allow stock labels to show through, be nice to
 	translators
-	
+
 2005-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/dlg-add-files.c (GLADE_FILE): 
+	* src/dlg-add-files.c (GLADE_FILE):
 	* src/dlg-add-folder.c (GLADE_FILE, save_options_cb): restore
 	the selected folder.
 
-	* src/dlg-prop.c (PROP_GLADE_FILE): 
-	* src/dlg-password.c (PROP_GLADE_FILE): 
-	* src/dlg-open-with.c (GLADE_FILE): 
-	* src/dlg-delete.c (EXTRACT_GLADE_FILE): 
-	* src/dlg-batch-add.c (GLADE_FILE): 
+	* src/dlg-prop.c (PROP_GLADE_FILE):
+	* src/dlg-password.c (PROP_GLADE_FILE):
+	* src/dlg-open-with.c (GLADE_FILE):
+	* src/dlg-delete.c (EXTRACT_GLADE_FILE):
+	* src/dlg-batch-add.c (GLADE_FILE):
 
 	rename file_roller.glade to file-roller.glade
-	
+
 	* configure.in: set version to 2.11.0
 
 2005-04-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -1041,24 +1048,24 @@
 	Patch by Kjartan Maraas.
 
 2005-03-31  Paolo Bacchilega  <paobac@cvs.gnome.org>
-	
+
 	[ File Roller 2.10.1 released ]
 
 2005-03-31  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.h: 
-	* src/window.c (_window_update_sensitivity): 
+	* src/window.h:
+	* src/window.c (_window_update_sensitivity):
 
 	Fixed bug #172219: Select All and Deselect all doesnt work properly.
-	
-	* src/recent-files/egg-recent-view-uimanager.c 
-	(egg_recent_view_uimanager_clear): 
+
+	* src/recent-files/egg-recent-view-uimanager.c
+	(egg_recent_view_uimanager_clear):
 	call gtk_ui_manager_ensure_update after removing the action group.
 
 	* src/window.c (window_open_files__extract_done_cb): show an error
 	dialog if an error occurred.
 
-	* src/gtk-utils.h: 
+	* src/gtk-utils.h:
 	* src/gtk-utils.c (_gtk_error_dialog_run): new function
 
 2005-03-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -1070,22 +1077,22 @@
 
 2005-03-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/recent-files/egg-recent-view-uimanager.c 
-	(egg_recent_view_uimanager_set_list): ref the item after adding it to 
+	* src/recent-files/egg-recent-view-uimanager.c
+	(egg_recent_view_uimanager_set_list): ref the item after adding it to
 	the list.
 
 2005-03-22  Madhan Raj	<raj_madan@rediffmail.com>
 
-	* src/file-list.c (get_directory_file_list_async): Do not concatenate 
+	* src/file-list.c (get_directory_file_list_async): Do not concatenate
 	/ to the root dir.
 	(get_directory_file_list_cb): base_len be zero for root dir.
 
-	Fixes bug #171195: File-Roller will not tar up any subdirectories 
+	Fixes bug #171195: File-Roller will not tar up any subdirectories
 	directly under /
 
 2005-03-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (window_new): Fixed bug #170842: Toolbar buttons too 
+	* src/window.c (window_new): Fixed bug #170842: Toolbar buttons too
 	wide.
 
 2005-03-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -1099,27 +1106,27 @@
 
 	* src/window.c (progress_dialog_delete_event): return TRUE
 
-	Fixes bug #170329: Aborting File Add can sometimes crash the 
+	Fixes bug #170329: Aborting File Add can sometimes crash the
 	application.
-	
+
 	* src/window.c (window_open_files__extract_done_cb): store command
 	data to remove the temp dir before exiting.
 
 	* src/window.c (window_open_files__extract_done_cb)
-	(window_open_files_common): do not escape filenames with 
+	(window_open_files_common): do not escape filenames with
 	gnome_vfs_mime_application_launch.
 
-	Fixes bug #170258: file-roller can't open for preview files with a 
+	Fixes bug #170258: file-roller can't open for preview files with a
 	white space in filename.
 
 2005-03-11  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* nautilus/nautilus-fileroller.c (nautilus_fr_get_file_items): 
+	* nautilus/nautilus-fileroller.c (nautilus_fr_get_file_items):
 
-	Fixed bug #169818: Archive menu item to be disabled if no files are 
+	Fixed bug #169818: Archive menu item to be disabled if no files are
 	selected.
 
-	* src/window.c (file_button_release_cb, file_button_press_cb): 
+	* src/window.c (file_button_release_cb, file_button_press_cb):
 
 	do not activate the first row after reordering the list in single
 	click mode.
@@ -1127,8 +1134,8 @@
 2005-03-07  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.10.0 released ]
-	
-	* src/window.c (file_button_press_cb, file_button_release_cb): 
+
+	* src/window.c (file_button_press_cb, file_button_release_cb):
 
 	Added a fix in a comment.  To be uncommented when the code freeze is
 	over.
@@ -1139,9 +1146,9 @@
 
 2005-02-28  Maxim V. Dziumanenko <mvd@mylinux.com.ua>
 
-	* help/uk/file-roller-uk.omf: 
-	* help/uk/file-roller.xml: 
-	* help/uk/uk.po: 
+	* help/uk/file-roller-uk.omf:
+	* help/uk/file-roller.xml:
+	* help/uk/uk.po:
 	* help/uk/figures/file-roller_home.png:
 	* help/uk/figures/file-roller_leftarrow.png:
 	* help/uk/figures/file-roller_main_window.png:
@@ -1152,7 +1159,7 @@
 
 2005-02-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/actions.c (activate_action_new): 
+	* src/actions.c (activate_action_new):
 
 	Fixes bug #157698: Default new archive name as the first-added object.
 
@@ -1161,15 +1168,15 @@
 	options.
 	(fr_command_iso_handle_error): read iso files without Joliet info.
 
-	Fixes bug #144953: ISO reading assumes Joliet and Rock Ridge 
+	Fixes bug #144953: ISO reading assumes Joliet and Rock Ridge
         extensions.
-	
+
 2005-02-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c (display_progress_dialog): use gtk_widget_show instead of
 	gtk_window_present.
 
-	Fixes bug #168477: Create Archive should leave status window in the 
+	Fixes bug #168477: Create Archive should leave status window in the
 	background while creating multiple folder archives.
 
 2005-02-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -1183,15 +1190,15 @@
 2005-02-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/Makefile.am:
-	* src/mkdtemp.c: 
-	* src/mkdtemp.h: 
-	* configure.in: 
+	* src/mkdtemp.c:
+	* src/mkdtemp.h:
+	* configure.in:
 
 	Fixes bug #159952: file-roller compilation error.
 	Patch by Sandie Vanderme.
 
-	* src/main.c: 
-	* src/main.h: 
+	* src/main.c:
+	* src/main.h:
 	* src/file-utils.c (is_program_in_path): added a cache to store
 	utilities presence.
 
@@ -1205,9 +1212,9 @@
 2005-02-16  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/main.c:
-	* src/fr-command-zoo.c: 
-	* src/fr-command-zip.c: 
-	* src/fr-command-unstuff.c: 
+	* src/fr-command-zoo.c:
+	* src/fr-command-zip.c:
+	* src/fr-command-unstuff.c:
 	* src/fr-command-tar.c:
 	* src/fr-command-rpm.c:
 	* src/fr-command-rar.c:
@@ -1217,10 +1224,10 @@
 	* src/fr-command-arj.c:
 	* src/fr-command-ar.c:
 	* src/fr-command-7z.c:
-	* src/fr-archive.c: 
-	* src/file-utils.h: 
+	* src/fr-archive.c:
+	* src/file-utils.h:
 	* src/file-utils.c:
-	* src/actions.c: 
+	* src/actions.c:
 
 	Applied patch to fix bug #166658: Archives should only be processed
 	if command-line utility is present.
@@ -1237,23 +1244,23 @@
 2005-01-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.9.4 released ]
-	
-	* NEWS: 
+
+	* NEWS:
 	* configure.in: updated for 2.9.4
 
 2005-01-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c: fixed dnd when in single click mode.
-	
-	* src/window.c (window_new, is_single_click_policy, add_columns)
-	(file_button_press_cb): 
 
-	* src/window.h: 
-	* src/main.c (initialize_data): 
-	* src/preferences.h (PREF_NAUTILUS_CLICK_POLICY): 
+	* src/window.c (window_new, is_single_click_policy, add_columns)
+	(file_button_press_cb):
+
+	* src/window.h:
+	* src/main.c (initialize_data):
+	* src/preferences.h (PREF_NAUTILUS_CLICK_POLICY):
 
 	Fixed bug #100927: should use GNOME mouse click settings.
-	
+
 2005-01-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	[ File Roller 2.9.3 released ]
@@ -1266,19 +1273,19 @@
 
 2004-12-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command-rar.c (process_line): 
+	* src/fr-command-rar.c (process_line):
 
 	Fixes bug #162188: RAR archives' directories are not recognized properly
 
 2004-12-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (window_new): 
+	* src/window.c (window_new):
 
-	Fixed bug #132555: file-roller does not honor system-wide toolbar 
+	Fixed bug #132555: file-roller does not honor system-wide toolbar
 	setting.
 
 2004-12-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
-	
+
 	[ File Roller 2.9.2 released ]
 
 2004-12-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -1287,21 +1294,21 @@
 
 2004-12-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (_action_started): 
+	* src/window.c (_action_started):
 
 	Fixed bug #152129: Unnecessary call to _window_update_sensitivity()
 
-	* src/fr-archive.c (create_command_from_filename): 
+	* src/fr-archive.c (create_command_from_filename):
 
 	Fixed bug #154821: file-roller can't open archives with extension .lha
 	Patch by Volker Weber.
 
-	* src/file-utils.c: 
-	* src/file-utils.h: 
+	* src/file-utils.c:
+	* src/file-utils.h:
 
 	Fixed bug #154398: Remove some useless code.
 
-	* src/window.c (load_icon_file): 
+	* src/window.c (load_icon_file):
 
 	Fixed bug #154233: load_icon_file optimization.
 
@@ -1309,7 +1316,7 @@
 
 2004-12-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command-tar.c (mktime_from_string): 
+	* src/fr-command-tar.c (mktime_from_string):
 
 	Fixes bug #161141: Time of modifcation incorrect
 
@@ -1317,7 +1324,7 @@
 	to the archive.
 
 	* src/window.c (window_set_toolbar_visibility)
-	(window_set_statusbar_visibility): 
+	(window_set_statusbar_visibility):
 
 	Fixes bug #161147: View->Toolbars inconsistent across multiple instance.
 
@@ -1330,57 +1337,57 @@
 
 	* src/fr-command.c: removed unused function.
 
-	* src/fr-archive.h: 
-	* src/window.h: 
-	* src/window.c (window_archive__open_add): 
-	* src/fr-archive.c (create_command_from_filename): 
-	* src/dlg-batch-add.c (add_clicked_cb): 
-	* src/fr-command-cfile.c (fr_command_cfile_add): Added ability to 
-	create compressed files from the Nautilus context menu command.  
-	
-	Fixed bug #160617: "Create archive" context menu item does not support 
+	* src/fr-archive.h:
+	* src/window.h:
+	* src/window.c (window_archive__open_add):
+	* src/fr-archive.c (create_command_from_filename):
+	* src/dlg-batch-add.c (add_clicked_cb):
+	* src/fr-command-cfile.c (fr_command_cfile_add): Added ability to
+	create compressed files from the Nautilus context menu command.
+
+	Fixed bug #160617: "Create archive" context menu item does not support
 	single-file bz2 or gz
-	
-	* src/file_roller.glade: 
-	* src/dlg-batch-add.c (dlg_batch_add_files): Added ability to select a 
+
+	* src/file_roller.glade:
+	* src/dlg-batch-add.c (dlg_batch_add_files): Added ability to select a
 	destination folder.
-	
+
 	Fixed bug #160401: create archive doesn't work on read-only CD-ROM
-	
+
 	* src/file-utils.c (check_permissions): new function.
 
 2004-12-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command.c (fr_command_list): 
+	* src/fr-command.c (fr_command_list):
 
 	Do not emit start/done signals here.
 
-	* nautilus/nautilus-fileroller.c: 
+	* nautilus/nautilus-fileroller.c:
 
 	Use 'extract to...' if the archive location is write only.
 	Added more mime types.
-	
+
 
 2004-12-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c: removed ephy_ellipsized_label and use gtk_label.
 
-	* nautilus/nautilus-fileroller.c (add_callback): 
+	* nautilus/nautilus-fileroller.c (add_callback):
 	(nautilus_fr_get_file_items): removed code used for debugging.
 
 2004-12-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* nautilus/*:
-	* configure.in: 
+	* configure.in:
 
-	Started fixing bug #160221: No more "extract here" entry in Nautilus 
+	Started fixing bug #160221: No more "extract here" entry in Nautilus
 	context menu.
 
 2004-11-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* configure.in: requires gnome-vfs 2.9.0 now.
 
-	Fixes bug #159906: the configure.in should update its gnome-vfs 
+	Fixes bug #159906: the configure.in should update its gnome-vfs
 	requirement.
 
 2004-11-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -1389,17 +1396,17 @@
 
 2004-11-24  Dennis Cranston <dennis_cranston@yahoo.com>
 
-	* src/actions.c: (activiate_action_about):  Fix logo icon to 
+	* src/actions.c: (activiate_action_about):  Fix logo icon to
 	use the theme icon.
-	
+
 2004-11-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/file-utils.c: 
-	* src/dlg-open-with.c (dlg_open_with): 
-	* src/window.c (window_open_files__extract_done_cb): 
+	* src/file-utils.c:
+	* src/dlg-open-with.c (dlg_open_with):
+	* src/window.c (window_open_files__extract_done_cb):
 
 	Fixed bug #159464: Should not use deprecate mime API
-	
+
 2004-11-24  Dennis Cranston <dennis_cranston@yahoo.com>
 
 	* src/main.c: (initialize_data):  Set window icon with
@@ -1407,9 +1414,9 @@
 
 2004-11-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c: 
-	* src/dlg-extract.c: 
-	* src/dlg-add-folder.c: 
+	* src/window.c:
+	* src/dlg-extract.c:
+	* src/dlg-add-folder.c:
 
 	Fixes bug #159172: tooltips leaked.  Patch by Paolo Borelli.
 
@@ -1420,7 +1427,7 @@
 
 2004-11-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/file-utils.c (split_line, eat_spaces, get_last_field): 
+	* src/file-utils.c (split_line, eat_spaces, get_last_field):
 
 	Added more checks on NULL pointers.
 
@@ -1444,20 +1451,20 @@
 
 	* configure.in: updated required gtk version.
 
-	* src/ui.h: 
-	* src/window.c: 
-	* src/window.h: 
+	* src/ui.h:
+	* src/window.c:
+	* src/window.h:
 
 	Added a 'Open Recent' menu item on the toolbar.
 
 2004-11-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* help/*: Fixed bug #145162] .omf.out and omf_timestamp files should 
+	* help/*: Fixed bug #145162] .omf.out and omf_timestamp files should
 	not be in cvs.
 
 2004-11-01  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.9.0 released ]  
+	[ File Roller 2.9.0 released ]
 
 2004-10-28  Marco Pesenti Gritti  <marco@gnome.org>
 
@@ -1470,7 +1477,7 @@
 
 2004-10-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command-7z.c (fr_command_7z_begin_command): 
+	* src/fr-command-7z.c (fr_command_7z_begin_command):
 
 	prefer the '7za' command over '7z'
 
@@ -1484,24 +1491,24 @@
 
 2004-10-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* file-roller.keys: 
-	* file-roller.applications: 
-	* file-roller.mime: 
-	* src/fr-archive.c: 
-	* src/fr-command-7z.h: 
-	* src/fr-command-7z.c: 
+	* file-roller.keys:
+	* file-roller.applications:
+	* file-roller.mime:
+	* src/fr-archive.c:
+	* src/fr-command-7z.h:
+	* src/fr-command-7z.c:
 	(mktime_from_string): fixed date computation.
 
 	Added 7-zip archive support.
-	
+
 2004-10-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* file-roller.mime: added 7-zip mime type
 
 2004-10-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/file_roller.glade: 
-	* src/dlg-extract.c (create_extra_widget): 
+	* src/file_roller.glade:
+	* src/dlg-extract.c (create_extra_widget):
 
 	make the text invisivle for the password entries (#155728).
 
@@ -1527,9 +1534,9 @@
 	* src/window.c: open the "open with" dialog if the file type does not
 	have a registered application; get rid of the internal viewer.
 
-	Fixes bug #153837: Internal viewer vs. other application question is 
+	Fixes bug #153837: Internal viewer vs. other application question is
 	asked for files that internal viewer can't even handle.
-	
+
 2004-09-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-tar.c (fr_command_tar_escape): another attept to fix
@@ -1545,7 +1552,7 @@
 
 2004-09-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/file-utils.c (application_get_command): do not escape spaces 
+	* src/file-utils.c (application_get_command): do not escape spaces
 	here.
 
 	* src/window.c (window_new, update_file_list_idle, window_new): added
@@ -1559,27 +1566,27 @@
 
 	* src/file-utils.c (strchrs): check *c not c
 
-	* src/file_roller.glade: 
+	* src/file_roller.glade:
 	* src/dlg-batch-add.c (dlg_batch_add_files): make the WM give
 	focus to the 'create archive' dialog.
 	(add_clicked_cb): check whether to user entered a valid archive name.
 
-	Fixes bug #147137: nautilus context menu 'create archive' doesn't 
+	Fixes bug #147137: nautilus context menu 'create archive' doesn't
 	accept absolute paths.
 
-	* src/file-utils.h: 
-	* src/file-utils.c (escape_str_common): 
+	* src/file-utils.h:
+	* src/file-utils.c (escape_str_common):
 	(strchrs): new functions
 
-	* src/fr-command-tar.c (fr_command_tar_escape): 
+	* src/fr-command-tar.c (fr_command_tar_escape):
 
-	attempt to fix bug #153003: Does not properly extract files with 
+	attempt to fix bug #153003: Does not properly extract files with
 	special characters in their filenames from .tar.gz files
 
 2004-09-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (last_output_window__unrealize_cb) 
-	(window_view_last_output): 
+	* src/window.c (last_output_window__unrealize_cb)
+	(window_view_last_output):
 
 	Save and restore the 'Last output' dialog size.
 
@@ -1593,7 +1600,7 @@
 
 2004-09-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (update_file_list_idle): remove and restore the 
+	* src/window.c (update_file_list_idle): remove and restore the
 	timeout handle each time.
 
 	* src/file-utils.c (shell_escape): remove = and - from the characters
@@ -1603,36 +1610,36 @@
 
 	* src/preferences.h (PREF_DESKTOP_MENUBAR_DETACHABLE): fixed typo.
 
-	* src/dlg-viewer.c (dlg_viewer): 
-	* src/preferences.c (pref_util_restore_window_geometry) 
+	* src/dlg-viewer.c (dlg_viewer):
+	* src/preferences.c (pref_util_restore_window_geometry)
 	(pref_util_save_window_geometry): new functions.
 
 	Save and restore the viewer dialog size.
-	
-	* file-roller.mime: Fixed bug #152160: MIME type conflicts with 
+
+	* file-roller.mime: Fixed bug #152160: MIME type conflicts with
 	freedesktop.org
 
-	* src/fr-archive.c (NO_DOT_FILES, NO_BACKUP_FILES): 
-	* src/file-list.c (get_directory_file_list_async): 
+	* src/fr-archive.c (NO_DOT_FILES, NO_BACKUP_FILES):
+	* src/file-list.c (get_directory_file_list_async):
 
-	Fixed bug #153002: By adding directory to archive using file-roller, 
+	Fixed bug #153002: By adding directory to archive using file-roller,
 	hidden files do not get added.
-	
-	* src/fr-command-tar.c: 
-	* src/fr-archive.c: 
-	* src/fr-command.c: 
-	* src/fr-command.h: 
-	* src/fr-command-zip.c (fr_command_zip_add): 
 
-	Fixed bug #153003: file-roller: Does not properly extract files with 
+	* src/fr-command-tar.c:
+	* src/fr-archive.c:
+	* src/fr-command.c:
+	* src/fr-command.h:
+	* src/fr-command-zip.c (fr_command_zip_add):
+
+	Fixed bug #153003: file-roller: Does not properly extract files with
 	special characters in their filenames from .tar.gz files
 
 2004-09-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-ar.h:
 	* src/fr-command-ar.c: new files
-	* src/actions.c: 
-	* src/fr-archive.c: 
+	* src/actions.c:
+	* src/fr-archive.c:
 
 	Added AR/Debian archives support. (bug #152994: support for deb files)
 
@@ -1640,23 +1647,23 @@
 
 2004-09-16  Kaushal Kumar  <kaushal.kumar@wipro.com>
 
-	* src/window.c (get_file_list_from_url_list): Handle multiple 
-	drag and drop correctly. Accept all valid urls and ignore the 
+	* src/window.c (get_file_list_from_url_list): Handle multiple
+	drag and drop correctly. Accept all valid urls and ignore the
 	invalid ones. Fixes bug #152900.
- 
+
 2004-09-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.8.0 released ] 
+	[ File Roller 2.8.0 released ]
 
 2004-08-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/dlg-add-folder.c (add_folder_cb): set 'include subfolders'
-	active by default. 
+	active by default.
 
 2004-08-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
-	
-	[ File Roller 2.7.5 released ] 
-	
+
+	[ File Roller 2.7.5 released ]
+
 2004-08-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command.h (struct _FRCommand): s/uint/guint/
@@ -1665,36 +1672,36 @@
 
 2004-08-21  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/window.c (_window_history_add): Add locations visited using the 
+	* src/window.c (_window_history_add): Add locations visited using the
 	back button to the history list.
 
 	Fixed bug #150672: Back button is broken
 
 2004-08-20  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-archive.c (fr_archive_extract): 
-	* src/window.c (window_open_files): 
-	* src/fr-command-unstuff.c (fr_command_unstuff_list): 
-	* src/file-utils.c (get_temp_work_dir_name, get_temp_work_dir): 
+	* src/fr-archive.c (fr_archive_extract):
+	* src/window.c (window_open_files):
+	* src/fr-command-unstuff.c (fr_command_unstuff_list):
+	* src/file-utils.c (get_temp_work_dir_name, get_temp_work_dir):
 
 	Fixed bug #150329: File roller creates predictable /tmp directories
 
 2004-08-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/dlg-extract.c (file_sel_response_cb): 
-	* src/actions.c (new_file_response_cb, open_file_response_cb) 
-	(save_file_response_cb, copy_or_move_archive_response_cb): 
+	* src/dlg-extract.c (file_sel_response_cb):
+	* src/actions.c (new_file_response_cb, open_file_response_cb)
+	(save_file_response_cb, copy_or_move_archive_response_cb):
 
 	Check for GTK_RESPONSE_DELETE_EVENT
 
-	* src/dlg-add-files.c: 
+	* src/dlg-add-files.c:
 	* src/dlg-add-folder.c: Fixed bug #150327 and other issues.
 
 2004-08-17  Subrahmanyam Madduri <smadduri@novell.com>
 
-	* src/window.c: avoids crashing while DND of 'Home' icon into 
+	* src/window.c: avoids crashing while DND of 'Home' icon into
 	file-roller.
-	
+
 	Fixes BUG #150328
 
 2004-08-17  Mark McLoughlin  <mark@skynet.ie>
@@ -1710,7 +1717,7 @@
 
 2004-08-16  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.7.4 released ] 
+	[ File Roller 2.7.4 released ]
 
 2004-08-07  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -1729,7 +1736,7 @@
 
 2004-08-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.7.3 released ] 
+	[ File Roller 2.7.3 released ]
 
 2004-07-22  Ross Golder  <ross@golder.org>
 
@@ -1742,29 +1749,29 @@
 
 2004-07-19  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.7.2 released ] 
+	[ File Roller 2.7.2 released ]
 
 2004-07-18  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command-tar.c (begin_tar_command): fixed 
+	* src/fr-command-tar.c (begin_tar_command): fixed
 	bug #144041: [Solaris] gtar will not be in path
 
-	* src/window.c (open_progress_dialog): do no specify a parent 
+	* src/window.c (open_progress_dialog): do no specify a parent
 	window in batch mode.
-	(handle_errors): 
+	(handle_errors):
 	Do not display the "operation stopped" dialog (bug #144171).
 
-	* src/main.c (prepare_app): do not show the main window in batch 
+	* src/main.c (prepare_app): do not show the main window in batch
 	mode.
 
 2004-07-05  Kaushal Kumar  <kaushal.kumar.wipro.com>
 
-	* src/dlg-add-folder.c (file_sel_response_cb): Fixed a leak and the 
+	* src/dlg-add-folder.c (file_sel_response_cb): Fixed a leak and the
 	display of the error message.  Fixes bug #145440.
 
 2004-07-05  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.7.1 released ] 
+	[ File Roller 2.7.1 released ]
 
 2004-07-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -1778,9 +1785,9 @@
 
 2004-06-23  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/fr-command-iso.c (fr_command_iso_init): 
-	* src/fr-command.h (struct _FRCommand): 
-	* src/fr-command.c (fr_command_init): 
+	* src/fr-command-iso.c (fr_command_iso_init):
+	* src/fr-command.h (struct _FRCommand):
+	* src/fr-command.c (fr_command_init):
 	* src/fr-archive.c (fr_archive_extract): allow isoinfo to extract
 	all the files.
 
@@ -1788,7 +1795,7 @@
 
 	* src/main.c: (save_session), (load_session): Make file-roller
 	session aware even when no archive is opened. Fixes bug #144455.
-	
+
 2004-06-15  Bastien Nocera  <hadess@hadess.net>
 
 	* src/fr-archive.c: (find_file_in_archive): avoid crashes if there
@@ -1796,37 +1803,37 @@
 
 2004-06-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/actions.c (activate_action_open): added a comma before 
-	"application/x-cd-image". 
+	* src/actions.c (activate_action_open): added a comma before
+	"application/x-cd-image".
 
 	Fixes bug #144079 (iso is not listed as a archive in open dialog)
 
 2004-05-31  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.7.0 released ] 
+	[ File Roller 2.7.0 released ]
 
 2004-05-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* AUTHORS: 
+	* AUTHORS:
 	* src/actions.c (activate_action_about): updated email address
 
-	* src/window.c (display_progress_dialog): call gtk_widget_present 
+	* src/window.c (display_progress_dialog): call gtk_widget_present
         on the main window before displaying the progress dialog.
 
-	* src/fr-archive.c: 
-	* src/actions.c: 
-	* src/Makefile.am: 
-	* component/File_Roller_Component.server.in.in: 
+	* src/fr-archive.c:
+	* src/actions.c:
+	* src/Makefile.am:
+	* component/File_Roller_Component.server.in.in:
 	* src/fr-command-iso.h:
-	* src/fr-command-iso.c: 
+	* src/fr-command-iso.c:
 
 	Added ISO images support, bug #142316
 
 	Patch by Daniel Brodie (daniel@brodienet.com)
-	
+
 2004-05-19  Paolo Bacchilega  <paolo@localhost.localdomain>
 
-	* src/window.c (window_batch_mode_start): do not hide the main 
+	* src/window.c (window_batch_mode_start): do not hide the main
 	window in batch mode, this confuses the WM.
 
 2004-05-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
@@ -1834,14 +1841,14 @@
 	* src/actions.c:
 	* src/actions.h:
 	* src/ui.h:
-	* src/recent-files/egg-recent-view-uimanager.c: 
+	* src/recent-files/egg-recent-view-uimanager.c:
 	* src/recent-files/egg-recent-view-uimanager.h: new files
-	* src/window.c: 
+	* src/window.c:
 
 	Use the Gtk + UI Manager to handle the menubar and the toolbar.
 
 2004-04-21  Bastien Nocera  <hadess@hadess.net>
-	
+
 	* src/fr-command-cfile.c: (get_uncompressed_name_from_archive),
 	(list__process_line), (fr_command_cfile_extract):
 	for gzip compressed files, use the name saved in the archive header
@@ -1850,15 +1857,15 @@
 
 2004-04-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/dlg-batch-add.c (add_clicked_cb): 
-	* src/dlg-extract.c (dlg_extract): 
-	* src/menu-callbacks.c (manual_cb): 
-	* src/window.c (window_rename_selection): 
-	* src/dlg-add-files.c (add_files_cb): 
-	* src/dlg-add-folder.c (add_folder_cb): 
+	* src/dlg-batch-add.c (add_clicked_cb):
+	* src/dlg-extract.c (dlg_extract):
+	* src/menu-callbacks.c (manual_cb):
+	* src/window.c (window_rename_selection):
+	* src/dlg-add-files.c (add_files_cb):
+	* src/dlg-add-folder.c (add_folder_cb):
 
 	Fixes bug #139502: The Dialog Boxes do not have a default action.
-	Patch by sri_nathc AT yahoo DOT com 
+	Patch by sri_nathc AT yahoo DOT com
 
 2004-04-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -1867,23 +1874,23 @@
 
 2004-04-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/file_roller.glade: 
+	* src/file_roller.glade:
 	* src/dlg-prop.c (dlg_prop): Added compression ratio and content size.
 
 	* src/Makefile.am (glade_DATA): Removed file_roller_prop.glade
 
-	* src/window.h: 
-	* src/window.c (window_archive_extract): 
-	* src/fr-archive.h: 
+	* src/window.h:
+	* src/window.c (window_archive_extract):
+	* src/fr-archive.h:
 	* src/fr-archive.c (compute_base_path, compute_list_base_path)
-	(fr_archive_extract): 
+	(fr_archive_extract):
 
-	Fixed bug 140971: Unwanted behavior of File-Roller on reconstructing 
+	Fixed bug 140971: Unwanted behavior of File-Roller on reconstructing
 	directories.
-	
+
 2004-04-10  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/dlg-add-folder.c: 
+	* src/dlg-add-folder.c:
 	* src/dlg-add-files.c: new files.
 
 	* src/window.c (window_new): use FILE_POPUP_MENU_SIZE instead of
@@ -1900,10 +1907,10 @@
 	the options.
 
 	* src/file-list.c (get_directory_file_list_cb)
-	(get_wildcard_file_list_cb): 
-	* src/window.c (_window_get_current_dir_list): 
+	(get_wildcard_file_list_cb):
+	* src/window.c (_window_get_current_dir_list):
 	(_window_add_to_recent_list): use the function path_in_path.
-	
+
 	* src/file-utils.c (path_in_path): new function.
 
 2004-04-09  Guntupalli Karunakar  <karunakar@freedomink.org>
@@ -1912,11 +1919,11 @@
 
 2004-04-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* file-roller.applications: 
+	* file-roller.applications:
 
 	Fixes bug #135301: Update .applications to match shared-mime-info.
 
-	* src/window.c (get_time_string): 
+	* src/window.c (get_time_string):
 
 	Fixes bug #136506: Mark date specifier for translation.
 
@@ -1924,21 +1931,21 @@
 
 2004-03-13  Shakti Sen <shprasad@novell.com>
 
-	* src/main.c (prepare_app): Creating an absolute path for 
+	* src/main.c (prepare_app): Creating an absolute path for
 	file extraction from command line.
 
 	Fixes bug #136570.
-	
+
 2004-04-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/file-roller.schemas: recreate the folders by default.
 
 	Fix bug #138484: Option "Re-Create Folders" should be true by default.
 
-	* src/window.c (window_paste_selection): 
+	* src/window.c (window_paste_selection):
 	(rename_selection): Escape names.
 
-        Fix bug #138697: File-roller fails to properly handle filenames 
+        Fix bug #138697: File-roller fails to properly handle filenames
         containing whitespace.
 
 2004-03-30  Adam Weinberger  <adamw@gnome.org>
@@ -1948,24 +1955,24 @@
 2004-03-30  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.c (window_new, window_archive_open)
-	(_window_remove_from_recent_list, _action_performed): 
+	(_window_remove_from_recent_list, _action_performed):
 
-	Remove a file from the recent file list if the file could not be 
+	Remove a file from the recent file list if the file could not be
 	loaded.
 
 	Add RPM and Suffit to the recent file list mime types.
-	
-	* component/file-roller-component.c (impl_Bonobo_Listener_event): 
+
+	* component/file-roller-component.c (impl_Bonobo_Listener_event):
 	check whether cmd_option != NULL before adding to the command line.
 
-	* src/menu-callbacks.c (new_archive): Pass the add_after_creation 
+	* src/menu-callbacks.c (new_archive): Pass the add_after_creation
 	options to the new window.
-	
-	* src/window.c (window_drag_data_received): check whether the archive 
+
+	* src/window.c (window_drag_data_received): check whether the archive
 	can be modified before accepting the drop.
 	(get_icon): init variables to NULL.
 
-	Fix bug #138154 (File-Roller Crash when dropping a file dragged from 
+	Fix bug #138154 (File-Roller Crash when dropping a file dragged from
 	archive).
 
 	* src/fr-command-tar.c (tar_get_last_field): new function.
@@ -1975,7 +1982,7 @@
 
 2004-03-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.6.0 released ] 
+	[ File Roller 2.6.0 released ]
 
 2004-03-22  Guntupalli Karunakar  <karunakar@freedomink.org>
 
@@ -1987,20 +1994,20 @@
 
 2004-03-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.5.7 released ] 
+	[ File Roller 2.5.7 released ]
 
-	* src/fr-command-tar.c (process_line): use 
-	"%n%n%n%n-%n%n-%n%n %n%n:%n%n" instead of 
+	* src/fr-command-tar.c (process_line): use
+	"%n%n%n%n-%n%n-%n%n %n%n:%n%n" instead of
 	"%n%n%n%n-%n%n-%n%n %n%n:%n%n:%n%n".
 
-	Fix bug #137183 (Crash when opening tar-file when using 24 hour time 
+	Fix bug #137183 (Crash when opening tar-file when using 24 hour time
 	format).
 
 2004-03-15  Glynn Foster  <glynn.foster@sun.com>
 
 	* configure.in: Add localized online help.
 	* help/Makefile.am: Add to build.
-	* help/*: Add localized online user help for 
+	* help/*: Add localized online user help for
 	de, es, fr, it, ja, ko, sv, zh_TW, zh_HK, zh_CN
 
 2004-03-11  Breda McColgan  <breda.mccolgan@sun.com>
@@ -2011,7 +2018,7 @@
 
 2004-03-08  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	[ File Roller 2.5.6 released ] 
+	[ File Roller 2.5.6 released ]
 
 2004-03-07  Danilo Šegan  <dsegan@gmx.net>
 
@@ -2022,14 +2029,14 @@
 	* src/window.c (window_close): remove the recent view and the
 	notifications as soon as possible.
 
-	* component/File_Roller_Component.server.in.in: 
-	* file-roller.desktop.in: 
-	* src/dlg-batch-add.c (load_icon_file): 
-	* src/dlg-prop.c (dlg_prop): 
-	* src/file_roller.glade: 
+	* component/File_Roller_Component.server.in.in:
+	* file-roller.desktop.in:
+	* src/dlg-batch-add.c (load_icon_file):
+	* src/dlg-prop.c (dlg_prop):
+	* src/file_roller.glade:
 
 	Fix bug #135863 ("Zip" unfortunate terminology in file-roller).
-	
+
 2004-03-03  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/menu-callbacks.c (save_as_archive_cb, new_archive_cb): use the
@@ -2039,7 +2046,7 @@
 
 2004-03-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/menu-callbacks.c (new_archive_cb): use 
+	* src/menu-callbacks.c (new_archive_cb): use
 	ACTION_SAVE | CREATE_FOLDER action
 
 	* src/dlg-extract.c (dlg_extract): use the SELECT_FOLDER action
@@ -2052,7 +2059,7 @@
 
 2004-02-28  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/menu-callbacks.c (copy_or_move_archive): 
+	* src/menu-callbacks.c (copy_or_move_archive):
 	remove ..._set_folder_mode.
 
 Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
@@ -2062,7 +2069,7 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2004-02-24  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	[ File Roller 2.5.5 released ] 
+	[ File Roller 2.5.5 released ]
 
 2004-02-23  Breda McColgan  <breda.mccolgan@sun.com>
 
@@ -2081,17 +2088,17 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 	(new_archive_cb): add a filter for the "new archive" dialog
 	(open_archive_cb): simplify filter for the "open archive" dialog.
 
-	* src/dlg-extract.c (file_sel_response_cb): save the specified 
+	* src/dlg-extract.c (file_sel_response_cb): save the specified
 	password as the general password.
 
 	* src/window.c (progress_dialog_delete_event): new function
 	* src/window.c (open_progress_dialog): handle the delete_event event
 	for the progress dialog.
 
-	* src/fr-command-zip.c (add_password_arg): Add a always_specify 
+	* src/fr-command-zip.c (add_password_arg): Add a always_specify
 	parameter.
 	(fr_command_zip_extract, fr_command_zip_test): always use the password
-	on the command line so we get the right status if the user did not 
+	on the command line so we get the right status if the user did not
 	specify the password for a protected archive.
 	(fr_command_zip_add): do not specify the password on the command line
 	if the user did not enter a password.
@@ -2109,7 +2116,7 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2004-02-20  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/Makefile.am: Fix bug #133998 (schemas file must not be removed 
+	* src/Makefile.am: Fix bug #133998 (schemas file must not be removed
 	during distclean).
 
 	* src/fr-command-zoo.c (split_line_zoo): remove c++ style comments.
@@ -2121,8 +2128,8 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/window.c (drag_drop_add_file_list): exec the next batch
 	command when the list is NULL.
 
-	* src/dlg-batch-add.c (dlg_batch_add_files): 
-	* src/preferences.h (PREF_BATCH_ADD_DEFAULT_EXTENSION): 
+	* src/dlg-batch-add.c (dlg_batch_add_files):
+	* src/preferences.h (PREF_BATCH_ADD_DEFAULT_EXTENSION):
 	* src/file-roller.schemas: save and load the default extension.
 
 	* src/window.c (drag_drop_add_file_list): remove fr_process_clear
@@ -2132,9 +2139,9 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 	(fr_command_tar_add, fr_command_tar_delete)
 	(fr_command_tar_extract): use gtar if present, otherwise use tar.
 
-	* component/File_Roller_Component.server.in.in: 
-	* src/menu-callbacks.c (open_archive_cb): 
-	* src/window.c (window_new): 
+	* component/File_Roller_Component.server.in.in:
+	* src/menu-callbacks.c (open_archive_cb):
+	* src/window.c (window_new):
 	* file-roller.applications: added application/x-jar
 
 2004-02-16  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -2142,35 +2149,35 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/menu-callbacks.c (copy_or_move_archive_response_cb): remove the
 	double ;;
 
-	[ File Roller 2.5.4 released ] 
+	[ File Roller 2.5.4 released ]
 
 2004-02-14  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_archive_open): do not show the new window 
+	* src/window.c (window_archive_open): do not show the new window
 	until we are sure that the archive has been opened with success.
 
-	* src/fr-command-zip.c: 
-	* src/fr-command-rpm.c: 
-	* src/fr-archive.c: 
+	* src/fr-command-zip.c:
+	* src/fr-command-rpm.c:
+	* src/fr-archive.c:
 	* src/file-utils.c: include config.h as suggested by Christian Neumair
 	<chris@gnome-de.org>
 
 2004-02-08  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/fr-command-zoo.c (fr_command_zoo_get_type): 
-	* src/fr-command-zip.c (fr_command_zip_get_type): 
-	* src/fr-command-unstuff.c (fr_command_unstuff_get_type): 
-	* src/fr-command-tar.c (fr_command_tar_get_type): 
-	* src/fr-command-rpm.c (fr_command_rpm_get_type): 
-	* src/fr-command-rar.c (fr_command_rar_get_type): 
-	* src/fr-command-lha.c (fr_command_lha_get_type): 
-	* src/fr-command-cfile.c (fr_command_cfile_get_type): 
-	* src/fr-command-arj.c (fr_command_arj_get_type): 
-	* src/fr-command.c (fr_command_get_type): 
+	* src/fr-command-zoo.c (fr_command_zoo_get_type):
+	* src/fr-command-zip.c (fr_command_zip_get_type):
+	* src/fr-command-unstuff.c (fr_command_unstuff_get_type):
+	* src/fr-command-tar.c (fr_command_tar_get_type):
+	* src/fr-command-rpm.c (fr_command_rpm_get_type):
+	* src/fr-command-rar.c (fr_command_rar_get_type):
+	* src/fr-command-lha.c (fr_command_lha_get_type):
+	* src/fr-command-cfile.c (fr_command_cfile_get_type):
+	* src/fr-command-arj.c (fr_command_arj_get_type):
+	* src/fr-command.c (fr_command_get_type):
 
 	Use GType instead of guint.  Fixes segfaults on 64-bit architectures.
 	Patch by Aron Griffis <agriffis@gentoo.org>
-	
+
 2004-02-05  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/window.h: Add a FR_BATCH_ACTION_QUIT command.
@@ -2178,38 +2185,38 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 	(window_archive__quit): quit the program.
 	(window_archive__close): close the archive.
 
-	Allow to extract more archives at once with the "Extract Here" 
+	Allow to extract more archives at once with the "Extract Here"
 	command.
 
 2004-02-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/fr-command-tar.c (fr_command_tar_list, fr_command_tar_add)
-	(fr_command_tar_delete, fr_command_tar_extract): 
+	(fr_command_tar_delete, fr_command_tar_extract):
 
 	Fix bug #105739 (Can't open tar.gz files on Solaris).
 
 2004-02-03  Dennis Cranston <dennis_cranston at yahoo com>
 
-	* src/window.c (add_columns): 
+	* src/window.c (add_columns):
 
 	Fix bug #133358 (Small HIG fix for column header).
-	
+
 2004-01-31  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	[ File Roller 2.5.3 released ] 
+	[ File Roller 2.5.3 released ]
 
 2004-01-25  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-add.c (aod_apply_cb, load_options_cb, save_options_cb): 
+	* src/dlg-add.c (aod_apply_cb, load_options_cb, save_options_cb):
 
 	Simplify "Load Options" and "Save Options" dialogs.
 
 2004-01-24  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_set_list_mode): make the path column visible 
+	* src/window.c (window_set_list_mode): make the path column visible
 	only if the list mode is set to flat.
 
-	* src/menu-callbacks.c (save_as_archive_cb): 
+	* src/menu-callbacks.c (save_as_archive_cb):
 
 	Make the box content visible.
 
@@ -2218,7 +2225,7 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/window.c (window_new): restore the egg_recent_model_set_filter*
 	functions.
 
-	* help/C/file-roller.xml: 
+	* help/C/file-roller.xml:
 
 	Fix bug #131955 (Capitalization of WinZip in documentation).
 
@@ -2228,18 +2235,18 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2004-01-16  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* component/File_Roller_Component.server.in.in: 
+	* component/File_Roller_Component.server.in.in:
 
 	Change "Add to Archive" to "Zip Objects".
 
-	* src/file_roller.glade: 
-	* src/dlg-batch-add.c: 
+	* src/file_roller.glade:
+	* src/dlg-batch-add.c:
 
 	Simplify dialog.
 
 2004-01-15  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/menu-callbacks.c (manual_cb): use a close button in the 
+	* src/menu-callbacks.c (manual_cb): use a close button in the
 	error dialogs.
 
 	* src/window.c (window_archive_save_as): remove extra NULL argument.
@@ -2249,32 +2256,32 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2004-01-14  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	[ File Roller 2.5.2 released ] 
+	[ File Roller 2.5.2 released ]
 
 	* src/file_roller.glade: remove the extract dialog.
 	* src/dlg-extract.c: Fix the Extract dialog.
 
-	* src/window.c: 
-	* src/window.h: 
+	* src/window.c:
+	* src/window.h:
 	* src/dlg-add.c: (add_cb): remove offset.
 	(add_cb): use the fr_stock_add item.
 
 	Fix the Add dialog.
-	
+
 2004-01-13  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-prop.c (dlg_prop): 
+	* src/dlg-prop.c (dlg_prop):
 
 	Fix bug #131263.
 
-	* src/Makefile.am (file_roller_SOURCES): 
-	* src/menu.h: 
+	* src/Makefile.am (file_roller_SOURCES):
+	* src/menu.h:
 
 	Remove the preferences dialog. (bug #131254)
 
-	* file-roller.desktop.in: 
+	* file-roller.desktop.in:
 
-	Change name to "Zip Creator"; remove the GenericName entry; 
+	Change name to "Zip Creator"; remove the GenericName entry;
 	change category to System Utility. (bug #131247)
 
 2004-01-12  Jon K. Hellan  <hellan@acm.org>
@@ -2283,29 +2290,29 @@ Fri Feb 27 01:12:52 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2004-01-12  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_new): remove the egg_recent_model_filter 
+	* src/window.c (window_new): remove the egg_recent_model_filter
 	functions.
 
 2004-01-11  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/recent-files/egg-recent-model.c: 
-	* src/recent-files/egg-recent-model.h: 
-	* src/recent-files/egg-recent-item.c: 
-	* src/recent-files/egg-recent-item.h: 
-	* src/recent-files/egg-recent-view.c: 	
-	* src/recent-files/egg-recent-view.h: 	
-	* src/eggtreemultidnd.c: 
+	* src/recent-files/egg-recent-model.c:
+	* src/recent-files/egg-recent-model.h:
+	* src/recent-files/egg-recent-item.c:
+	* src/recent-files/egg-recent-item.h:
+	* src/recent-files/egg-recent-view.c:
+	* src/recent-files/egg-recent-view.h:
+	* src/eggtreemultidnd.c:
 	* src/eggtreemultidnd.h: updated from libegg
 
 	* src/menu-callbacks.c (open_archive_cb): add a filter.
 
-	* src/icons/Makefile.am: 
-	* src/fr-stock.c: 
-	* src/fr-stock.h: 
-	* src/window.c (window_new): 
+	* src/icons/Makefile.am:
+	* src/fr-stock.c:
+	* src/fr-stock.h:
+	* src/window.c (window_new):
 
 	Use the stock icon system for the Add, Extract and View commands.
-	
+
 Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/fr-command-unstuff.c (fr_command_unstuff_list): add missing
@@ -2316,15 +2323,15 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/fr-command-zip.c (add_password_arg): do not add the password arg
 	if the password is an empty string (bug #130693).
 
-	* src/menu-callbacks.c (new_archive): do no destroy the file selector 
+	* src/menu-callbacks.c (new_archive): do no destroy the file selector
 	if the archive was not created (bug #130637).
 
-	* src/window.c (window_archive_new): return TRUE if the archive was 
+	* src/window.c (window_archive_new): return TRUE if the archive was
 	created successfully, FALSE otherwise.
 
 2004-01-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (open_folder): use gnome_url_show instead of calling 
+	* src/window.c (open_folder): use gnome_url_show instead of calling
 	nautilus.
 
 	* src/fr-command-unstuff.c (fr_command_unstuff_list): fix bug #128748 (
@@ -2347,20 +2354,20 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-12-28  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	[ File Roller 2.5.1 released ] 
+	[ File Roller 2.5.1 released ]
 
 2003-12-22  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/fr-command-lha.c (split_line_lha): fix bug #129794 (file-roller 
+	* src/fr-command-lha.c (split_line_lha): fix bug #129794 (file-roller
 	2.4.1.1 crashes upon LZH file opening)
 
 2003-12-20  Arafat Medini <lumina@silverpen.de>
-                                                                               
+
         * ar.po: Added Arabic locale "ar" to ALL_LINGUAS
 
 2003-11-24  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	[ File Roller 2.5.0 released ] 
+	[ File Roller 2.5.0 released ]
 
 2003-11-22  Paolo Bacchilega  <paolo.bacch@tin.it>
 
@@ -2370,14 +2377,14 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-11-21  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/menu-callbacks.c (new_archive_cb): 
-	* src/window.c (window_archive_new): fix bug #21679 (patch by 
+	* src/menu-callbacks.c (new_archive_cb):
+	* src/window.c (window_archive_new): fix bug #21679 (patch by
 	shakti.sen@wipro.com).
 
 2003-11-20  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/window.c (rename_selection): fix new path computation.
-	(_window_clipboard_remove_file_list): remove files from the clipboard 
+	(_window_clipboard_remove_file_list): remove files from the clipboard
 	when deleted from the archive.
 
 2003-11-15  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -2388,45 +2395,45 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/fr-archive.c (add_with_wildcard__step2)
 	(add_directory__step2): Call done_func after fr_archive_add.
 
-	* src/file-utils.c: 
-	* src/dlg-delete.c: 
-	* src/dlg-add.c: 
+	* src/file-utils.c:
+	* src/dlg-delete.c:
+	* src/dlg-add.c:
 	* src/window.c: Implement file and folder renaming.
 
 2003-11-13  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/fr-archive.c: 
-	* src/window.c: 
-	* src/fr-command-rpm.c: 
-	* src/fr-command-rpm.c: added RPM support. 
+	* src/fr-archive.c:
+	* src/window.c:
+	* src/fr-command-rpm.c:
+	* src/fr-command-rpm.c: added RPM support.
 
 2003-11-12  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/menu-callbacks.c (quit_cb): exit closes only the current window 
+	* src/menu-callbacks.c (quit_cb): exit closes only the current window
 	instead of closing all the windows.
-	(new_archive): create a new window if the current one already has an 
+	(new_archive): create a new window if the current one already has an
 	archive opened.
 
 2003-11-11  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu.h: remove a separator.
 
-	* src/fr-command-tar.c (fr_command_tar_uncompress): always rename the 
-	archive to make sure that when uncompressed it does not overwrite 
+	* src/fr-command-tar.c (fr_command_tar_uncompress): always rename the
+	archive to make sure that when uncompressed it does not overwrite
 	another archive with the same name.
 
-	* src/dlg-add.c (open_file_ok_cb): 
-	* src/window.h: 
-	* src/window.c (window_new): added ability to go back and forward 
+	* src/dlg-add.c (open_file_ok_cb):
+	* src/window.h:
+	* src/window.c (window_new): added ability to go back and forward
 	in location history.
 
 2003-11-10  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (drag_drop_add_file_list) 
-	(window_archive_add_with_wildcard, window_archive_add_directory) 
+	* src/window.c (drag_drop_add_file_list)
+	(window_archive_add_with_wildcard, window_archive_add_directory)
 	(window_set_list_mode): set current dir to / when in flat view mode.
 
-	* src/dlg-add.c (open_file_ok_cb): 
+	* src/dlg-add.c (open_file_ok_cb):
 	* src/fr-archive.c (fr_archive_add, create_tmp_base_dir): add
 	files and folders to the current directory (bug #104816).
 
@@ -2435,21 +2442,21 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/menu.h: remove the "View->New Window" command.
 
-	* src/fr-command-unstuff.c: 
+	* src/fr-command-unstuff.c:
 	* src/fr-command-unstuff.h: added unstuff support. Patch by
-	Bastien Nocera. 
+	Bastien Nocera.
 
 	* component/File_Roller_Component.server.in.in: remove "Extract
 	To..."; add "Extract Here" (bug #125102)
 
 	* src/preferences.h:
 	* src/dlg-extract.c (dlg_extract): store extraction options (bug
-	#126129) 
+	#126129)
 
 	* src/file_roller.glade: make the labels selectable (bug #120593)
 
-	* src/typedefs.h: 
-	* src/fr-command-zip.c (fr_command_zip_handle_error): 
+	* src/typedefs.h:
+	* src/fr-command-zip.c (fr_command_zip_handle_error):
 	* src/window.c (handle_errors): capture the "incorrect password"
 	exception and ask the user to enter a new password.
 	(_window_update_statusbar_list_info): use ngettext.
@@ -2457,36 +2464,36 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	is not void.
 
 2003-11-10  Paolo Bacchilega  <paolo.bacch@tin.it>
-	
-	[ File Roller 2.4.2 released ] 
+
+	[ File Roller 2.4.2 released ]
 
 	* src/fr-command-zip.c (add_password_arg): escape the char " if
 	present in the password.
 
 2003-11-09  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/fr-command-zip.c (fr_command_zip_list, fr_command_zip_add) 
-	(fr_command_zip_delete, fr_command_zip_extract) 
+	* src/fr-command-zip.c (fr_command_zip_list, fr_command_zip_add)
+	(fr_command_zip_delete, fr_command_zip_extract)
 	(fr_command_zip_test): zip wildcards and non-option arguments not
 	escaped (bug #122486).  Patch from Claudio Bley.
 
-	* src/file-utils.h: 
+	* src/file-utils.h:
 	* src/file-utils.c (escape_str): new function
 	(shell_escape): use the above function.
 
-	* src/fr-command-zip.c (add_password_arg, fr_command_zip_add) 
+	* src/fr-command-zip.c (add_password_arg, fr_command_zip_add)
 	(fr_command_zip_extract, fr_command_zip_test): close the password
 	between "".
 
 2003-11-05  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* file-roller.mime: 
-	* file-roller.keys: 
+	* file-roller.mime:
+	* file-roller.keys:
 	* file-roller.applications: fix bug #125844 (MIME information
 	should differenciate between .zip and .jar)
 
-	* src/recent-files/Makefile.am: 
-	* configure.in: 
+	* src/recent-files/Makefile.am:
+	* configure.in:
 	* src/Makefile.am (DISABLE_DEPRECATED): disable deprecations by
 	default, added a --enable-deprecations option to enable them.
 
@@ -2503,8 +2510,8 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-10-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/fr-command-cfile.c (fr_command_cfile_extract): 
-	* src/window.c (file_list_drag_begin, window_archive_save_as) 
+	* src/fr-command-cfile.c (fr_command_cfile_extract):
+	* src/window.c (file_list_drag_begin, window_archive_save_as)
 	(window_view_file, window_open_files): use the function below.
 
 	* src/file-utils.c (get_temp_work_dir_name): make this function
@@ -2547,11 +2554,11 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	[ File Roller 2.3.6 released ]
 
 2003-08-31  Bastien Nocera  <hadess@hadess.net>
-	
+
 	* src/fr-command-rar.c (fr_command_rar_have_rar)
 	(fr_command_rar_list, fr_command_rar_extract): use "unrar"
 	instead of rar for extraction and listing when rar isn't available
-	
+
 2003-08-28  Taneem Ahmed  <taneem@bengalinux.org>
 
 	* configure.in: Added "bn" to ALL_LINGUAS.
@@ -2562,34 +2569,34 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-08-14  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.h: 
-	* src/window.c (file_list_drag_begin, file_list_drag_end) 
+	* src/window.h:
+	* src/window.c (file_list_drag_begin, file_list_drag_end)
 	(file_list_drag_data_get): start extracting in
 	file_list_drag_begin, and wait for extraction completion in
 	file_list_drag_end (bug #119829).
 
 2003-08-13  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-batch-add.c (dlg_batch_add_files): 
-	* src/dlg-extract.c (add_fav_cb): 
+	* src/dlg-batch-add.c (dlg_batch_add_files):
+	* src/dlg-extract.c (add_fav_cb):
 	* src/dlg-add.c (selection_entry_changed): use the
 	_get/set_filename_text functions.
 
 	* src/gtk-utils.h:
-	* src/gtk-utils.c (_gtk_entry_set_filename_text) 
-	(_gtk_entry_get_filename_text, _gtk_label_set_filename_text) 
+	* src/gtk-utils.c (_gtk_entry_set_filename_text)
+	(_gtk_entry_get_filename_text, _gtk_label_set_filename_text)
 	(_gtk_label_get_filename_text): new functions.
 
 	* Makefile.am (EXTRA_DIST): remove acinclude.m4
 
-	* src/window.c (update_file_list_idle): 
-	* src/menu-callbacks.c (rename_archive_cb): 
-	* src/dlg-batch-add.c (add_clicked_cb): 
-	* src/dlg-extract.c (update_bookmark_list): 
-	* src/dlg-prop.c (dlg_prop): 
-	* src/dlg-viewer.c (dlg_viewer): 
-	* src/file-list.c (filter_apply): 
-	* src/fr-archive.c (file_list_remove_from_pattern): 
+	* src/window.c (update_file_list_idle):
+	* src/menu-callbacks.c (rename_archive_cb):
+	* src/dlg-batch-add.c (add_clicked_cb):
+	* src/dlg-extract.c (update_bookmark_list):
+	* src/dlg-prop.c (dlg_prop):
+	* src/dlg-viewer.c (dlg_viewer):
+	* src/file-list.c (filter_apply):
+	* src/fr-archive.c (file_list_remove_from_pattern):
 	* src/dlg-add.c (open_file_ok_cb): use g_filename_to_utf8 /
 	g_filename_from_utf8 instead of g_locale_to_utf8 /
 	g_locale_from_utf8 where appropriate.
@@ -2604,13 +2611,13 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-08-09  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/preferences.c: 
-	* src/dlg-preferences.c: 
-	* src/window.c: 
-	* src/gconf-utils.h: 
-	* src/gconf-utils.c: 
+	* src/preferences.c:
+	* src/dlg-preferences.c:
+	* src/window.c:
+	* src/gconf-utils.h:
+	* src/gconf-utils.c:
 	* src/dlg-extract.c: always specify a default value when reading
-	gconf keys. 
+	gconf keys.
 
 	* src/fr-command-zip.c (mktime_from_string): fix bug #119269.
 
@@ -2633,7 +2640,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/dlg-preferences.c (dlg_preferences): remove the "recent
 	archives" option (bug #117512)
 
-	* src/window.h: 
+	* src/window.h:
 	* src/window.c (window_new, _window_update_sensitivity): make the
 	"last output" command insensitive if no output is available. (bug
 	#117513)
@@ -2666,7 +2673,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-07-06  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (_window_update_title): remove "File Roller" from the 
+	* src/window.c (_window_update_title): remove "File Roller" from the
 	title.
 
 2003-07-07  Nikos Charonitakis  <frolix68@yahoo.gr>
@@ -2716,8 +2723,8 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* help/C/file-roller.xml: updated for GNOME 2.2, not yet updated
 	for GNOME 2.3
 	* help/C/file-roller-C.omf: updated manual date and version number
-	* help/C/l10n.txt: new file added 
-	* help/C/figures/file-roller_main_window.png: new file added 
+	* help/C/l10n.txt: new file added
+	* help/C/figures/file-roller_main_window.png: new file added
 	* help/C/figures/fr-add-dialog.png: deleted
 	* help/C/figures/fr-extract.png: deleted
 	* help/C/figures/fr-mainwindow.png: deleted
@@ -2726,12 +2733,12 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 2003-06-12	Mohammad DAMT  <mdamt@bisnisweb.com>
 
 	* configure.in: Added "id" country code
-	* po/id.po: New Indonesian translation by Yuhanes Chandra 
+	* po/id.po: New Indonesian translation by Yuhanes Chandra
 	<yuhanes@cbn.net.id>
-	
+
 2003-06-08  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-preferences.c: 
+	* src/dlg-preferences.c:
 	* menu.h:
 	* fr-error.[ch]:
 	* fr-archive.[ch]:
@@ -2744,11 +2751,11 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* dlg-extract.c:
 	* dlg-preferences.c: make alert dialogs HIG compliant (bugs
 	#114578, #114581).
-	
+
 2003-05-29  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.h: 
-	* src/window.c (window_new, window_batch_mode_stop) 
+	* src/window.h:
+	* src/window.c (window_new, window_batch_mode_stop)
 	(window_archive__open_extract, window_archive__open_add): close
 	the window if in non interactive mode (bug #112594).
 
@@ -2778,17 +2785,17 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 2003-05-19  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	[ File Roller 2.3.2 released ]
-	
+
 	* src/file-utils.c (split_line, eat_spaces, get_last_field): new
 	functions.
-	* src/fr-command-rar.c (mktime_from_string): 
-	* src/fr-command-lha.c (process_line): 
-	* src/fr-command-zoo.c (process_zoo_line): 
-	* src/fr-command-zip.c (list__process_line): 
-	* src/fr-command-tar.c (process_line): 
+	* src/fr-command-rar.c (mktime_from_string):
+	* src/fr-command-lha.c (process_line):
+	* src/fr-command-zoo.c (process_zoo_line):
+	* src/fr-command-zip.c (list__process_line):
+	* src/fr-command-tar.c (process_line):
 	* src/fr-command-arj.c (list__process_line): use the global functions
 	instead of redefining them each time.
-	
+
 2003-05-18  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/file-utils.c (search_util_get_patterns): make this function
@@ -2796,7 +2803,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/fr-command-arj.c (fr_command_arj_extract): fix junk_paths option.
 
-	* src/utf8-fnmatch.c: 
+	* src/utf8-fnmatch.c:
 	* src/utf8-fnmatch.h: new files, added a utf8 compatible
         fnmatch function.
 	* src/file-utils.c (match_patterns): use utf8_fnmatch instead of
@@ -2810,12 +2817,12 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-05-17  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (open_progress_dialog, window_message_cb): 
+	* src/window.c (open_progress_dialog, window_message_cb):
 	* src/ephy-ellipsizing-label.c: use this widget to display
 	progress information.
 
-	* src/fr-command-zip.c (fr_command_zip_add) 
-	(fr_command_zip_delete): 
+	* src/fr-command-zip.c (fr_command_zip_add)
+	(fr_command_zip_delete):
 	(fr_command_zip_extract): make zip operations more verbose.
 
 	* src/fr-command-arj.c (fr_command_arj_list): added arj archives
@@ -2828,7 +2835,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-05-17  SamÃºel JÃ³n Gunnarsson  <sammi@techattack.nu>
 
-	* configure.in: Added "is" to ALL_LINGUAS. 
+	* configure.in: Added "is" to ALL_LINGUAS.
 
 2003-05-10  Paisa Seeluangsawat  <paisa@colorado.edu>
 
@@ -2856,13 +2863,13 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-04-06  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c: 
+	* src/window.c:
 	(window_batch_mode_start, window_batch_mode_stop): hide the main
 	window while in batch mode.
-	
-	* src/file-roller.schemas: 
-	* src/file_roller_prop.glade: 
-	* src/window.c: 
+
+	* src/file-roller.schemas:
+	* src/file_roller_prop.glade:
+	* src/window.c:
 	* src/dlg-preferences.c: remove the 'show name column' option, the
 	name must always be visible.
 
@@ -2881,7 +2888,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/dlg-batch-add.c (dlg_batch_add_files): display how many
 	folders and files the user is going to add.
 
-	* src/window.c (window_batch_mode_stop): 
+	* src/window.c (window_batch_mode_stop):
 	* src/window.h: removed the batch window, simply use the normal
 	window now that we have the progress dialog.
 
@@ -2893,7 +2900,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/window.c:
 	* src/window.h: added a progress dialog.
 
-	* src/fr-process.h: 
+	* src/fr-process.h:
 	* src/fr-process.c: added begin_func and end_func functions to be
 	called before and after a process execution. added sticky_only
 	signal.
@@ -2911,35 +2918,35 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/menu-callbacks.c (new_file_ok_cb): use tgz as default extension.
 
-	* src/window.c (window_convert_data_free) 
+	* src/window.c (window_convert_data_free)
 	(convert__action_performed, _action_performed, window_new): added
 	convert archive function.
 
-	* src/menu-callbacks.c (save_as_archive_cb, save_file_ok_cb): 
+	* src/menu-callbacks.c (save_as_archive_cb, save_file_ok_cb):
 
 	* src/file-utils.c (rmdir_recursive): new function
 
-	* file-roller.mime: 
+	* file-roller.mime:
 	* file-roller.keys: added zoo archive
 
-	* src/window.c (location_entry_key_press_event_cb) 
+	* src/window.c (location_entry_key_press_event_cb)
 	(_window_update_current_location, key_press_cb, window_new): use
 	a text entry instead of the option menu for the location.
 
 2003-03-29  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-add.c (open_file_ok_cb): 
-	* src/window.c (add_files_done_cb) 
-	(window_archive_add_with_wildcard, window_archive_add_directory) 
-	(drag_drop_add_file_list): 
-	* src/window.h: 
+	* src/dlg-add.c (open_file_ok_cb):
+	* src/window.c (add_files_done_cb)
+	(window_archive_add_with_wildcard, window_archive_add_directory)
+	(drag_drop_add_file_list):
+	* src/window.h:
 	* src/menu-callbacks.c (stop_cb): Allow to stop the "get file list"
 	operation.
-	
+
 2003-03-25  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	[ File Roller 2.3.0 released ]
-	
+
 2003-03-25  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/dlg-viewer.c (dlg_viewer, set_monospace_font): use the
@@ -2947,14 +2954,14 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-03-24  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/file-list.c (get_wildcard_file_list_async) 
-	(get_directory_file_list_async): 
+	* src/file-list.c (get_wildcard_file_list_async)
+	(get_directory_file_list_async):
 	* src/file-list.h: make get_wildcard_file_list and
 	get_directory_file_list asynchronous functions.
 
-	* src/window.c (add_directory_done_cb, drag_drop_add_file_list): 
+	* src/window.c (add_directory_done_cb, drag_drop_add_file_list):
 	* src/dlg-add.c (open_file_ok_cb): use the new functions.
-	
+
 2003-03-22  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/dlg-batch-add.c (add_clicked_cb): check whether the user
@@ -2969,13 +2976,13 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
         (fr_command_tar_extract): add --force-local option to handle
         filenames with a ':' char
 
-	* src/fr-command-rar.c (split_line): 
-	* src/fr-command-lha.c (split_line_lha): 
-	* src/fr-command-zip.c (split_line): 
+	* src/fr-command-rar.c (split_line):
+	* src/fr-command-lha.c (split_line_lha):
+	* src/fr-command-zip.c (split_line):
 	* src/fr-command-tar.c (split_line): fixed a stupid stupid stupid
 	stupid ... stupid bug.
 
-	* src/fr-command-cfile.c (fr_command_cfile_list) 
+	* src/fr-command-cfile.c (fr_command_cfile_list)
 	(list__process_line): fix bug #105827
 
 	* src/file_roller.glade: fix bug #107753
@@ -2986,7 +2993,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	aldug@astrolinux.com).
 
 2003-03-13  Paul Duffy  <dubhthach@frink.nuigalway.ie>
-        
+
 	* configure.in: Added "ga" to ALL_LINGUAS.
 
 2003-03-13  Christian Rose  <menthos@menthos.com>
@@ -3031,15 +3038,15 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/window.c (theme_changed_cb): handle theme_changed event.
         (window_new): allow svg themes (patch from gnome-2-2 branch).
 
-	* src/fr-command-zoo.c: 
-	* src/fr-command-zoo.h: 
-	* src/fr-archive.c: 
-	(create_command_from_mime_type): 
-	* src/Makefile.am (file_roller_SOURCES): 
+	* src/fr-command-zoo.c:
+	* src/fr-command-zoo.h:
+	* src/fr-archive.c:
+	(create_command_from_mime_type):
+	* src/Makefile.am (file_roller_SOURCES):
 
-	Added zoo archive support, patch from 
+	Added zoo archive support, patch from
 	Shaun McCance <shaunm@wolfram.com>.
-	
+
 2003-01-23  Stanislav Visnovsky  <visnovsky@nenya.ms.mff.cuni.cz>
 
 	* configure.in: Added "sk" to ALL_LINGUAS.
@@ -3050,8 +3057,8 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-01-22  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/Makefile.am (file_roller_LDADD): revert Thomas Vander Stichele 
-	commit, Thomas LIBOBJS is setted on systems that do not have the 
+	* src/Makefile.am (file_roller_LDADD): revert Thomas Vander Stichele
+	commit, Thomas LIBOBJS is setted on systems that do not have the
 	FNM_CASEFOLD constant defined (e.g. Solaris), if it does not build for
 	you use automake 1.7.2 and autoconf 2.57.
 
@@ -3142,7 +3149,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/fr-command-lha.c (process_line): use split_line_lha
 
 	* src/menu.h: use Archive instead of File
-	
+
 	* src/file_roller_prop.glade: changed some strings.
 
 2002-12-14  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -3155,7 +3162,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	[ File Roller 2.1.4 released ]
 
 2002-12-10  Paolo Bacchilega  <paolo.bacch@tin.it>
-	
+
 	* configure.in: removed the scripts sub-folder.
 	* file-roller.spec.in: removed the scripts installation.
 
@@ -3164,12 +3171,12 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/menu.h: reorder file operation commands.
 
 2002-12-09  Paolo Bacchilega  <paolo.bacch@tin.it>
-	
+
 	[ File Roller 2.1.3 released ]
 
 2002-12-09  Paolo Bacchilega  <paolo.bacch@tin.it>
-	
-	* src/fr-archive.c (fr_archive_utils__file_is_archive): do not return 
+
+	* src/fr-archive.c (fr_archive_utils__file_is_archive): do not return
 	always TRUE.
 
 	* src/window.c (window_archive_open): focus the list after loading an
@@ -3177,13 +3184,13 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/main.c: remove useless variable.
 
-	* src/window.c (_window_update_sensitivity): do not update 
+	* src/window.c (_window_update_sensitivity): do not update
 	sensitivity when in batch mode (bug #98736).
 
-	* component/file-roller-component.c (impl_Bonobo_Listener_event): 
+	* component/file-roller-component.c (impl_Bonobo_Listener_event):
 	support folders with strange names.
 
-	* src/dlg-batch-add.c (add_clicked_cb): ask whether to create the 
+	* src/dlg-batch-add.c (add_clicked_cb): ask whether to create the
 	destination folder if it does not exist.
 
 2002-12-07  Ole Laursen  <olau@hardworking.dk>
@@ -3197,35 +3204,35 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 2002-12-05  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/file_roller.glade: re-layout the 'Extact' dialog.
-	
-	* src/dlg-extract.c (dlg_extract): use 'Bookmarks' instead of 
+
+	* src/dlg-extract.c (dlg_extract): use 'Bookmarks' instead of
 	'Favourites'.
 
-	* src/main.c (migrate_to_new_directories, migrate_file_from_to) 
-	(migrate_dir_from_to): use .gnome2/file-roller as config dir, and 
+	* src/main.c (migrate_to_new_directories, migrate_file_from_to)
+	(migrate_dir_from_to): use .gnome2/file-roller as config dir, and
 	provide a migration from the old .file-roller dir.
 
 	* src/dlg-viewer.c (dlg_viewer): set the document filename as title.
 
-	* src/file_roller_prop.glade: use sentence capitalization in 
+	* src/file_roller_prop.glade: use sentence capitalization in
 	toggle buttons.
-	
-	* src/dlg-preferences.c (dlg_preferences): use 'Visible columns" as in 
+
+	* src/dlg-preferences.c (dlg_preferences): use 'Visible columns" as in
 	rhythmbox.
 
 2002-12-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/file_roller.glade: 
+	* src/file_roller.glade:
 	* src/menu-callbacks.c (new_archive_cb, about_cb): re-add Copyright
 
-	* src/window.c (window_archive_extract): 
-	* src/dlg-extract.c (ok_clicked_cb): 
-	* src/window.c (window_drag_data_received) 
-	(window_drag_data_received): 
-	* src/menu-callbacks.c (new_file_ok_cb, copy_archive_ok_cb) 
-	(rename_archive_cb, delete_archive_cb): 
-	* src/dlg-extract.c (ok_clicked_cb): 
-	* src/window.c (window_archive_extract): remove whitespace before 
+	* src/window.c (window_archive_extract):
+	* src/dlg-extract.c (ok_clicked_cb):
+	* src/window.c (window_drag_data_received)
+	(window_drag_data_received):
+	* src/menu-callbacks.c (new_file_ok_cb, copy_archive_ok_cb)
+	(rename_archive_cb, delete_archive_cb):
+	* src/dlg-extract.c (ok_clicked_cb):
+	* src/window.c (window_archive_extract): remove whitespace before
 	punctuation.
 
 2002-12-03  Christian Neumair  <chris@gnome-de.org>
@@ -3235,9 +3242,9 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-12-03  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_view_last_output): 
-	* src/gtk-utils.c (_gtk_message_dialog_new) 
-	(_gtk_request_dialog_run, _gtk_error_dialog_new): HIG compliant 
+	* src/window.c (window_view_last_output):
+	* src/gtk-utils.c (_gtk_message_dialog_new)
+	(_gtk_request_dialog_run, _gtk_error_dialog_new): HIG compliant
 	dialogs.
 
 	* src/typedefs.h: change config folder from $(HOME)/.file-roller to
@@ -3245,7 +3252,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-12-02  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/file_roller.glade: 
+	* src/file_roller.glade:
 	* src/file_roller_prop.glade: add default buttons.
 
 	* src/menu.h: added stock icon to the properties menu entry.
@@ -3254,28 +3261,28 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/menu-callbacks.c (new_archive_cb): remove the frame.
 
-	* src/window.c (window_update_file_list): display the file list when 
+	* src/window.c (window_update_file_list): display the file list when
 	a new archive is created.
 
 2002-11-30  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* file-roller.desktop.in: Add StartupNotify and X-GNOME-Bugzilla 
+	* file-roller.desktop.in: Add StartupNotify and X-GNOME-Bugzilla
 	entries.
 
-	* src/preferences.h (PREF_LIST_SORT_METHOD): 
-	* src/file-roller.schemas: 
-	* Makefile.am (SUBDIRS): 
-	* src/main.c: 
+	* src/preferences.h (PREF_LIST_SORT_METHOD):
+	* src/file-roller.schemas:
+	* Makefile.am (SUBDIRS):
+	* src/main.c:
 	* src/main.h: remove the scripts installation.
 
-	* src/eggtreemultidnd.c: 
-	* src/eggtreemultidnd.h: new files 
+	* src/eggtreemultidnd.c:
+	* src/eggtreemultidnd.h: new files
 	* src/window.c (window_new): add multi drag & drop support.
 
 2002-11-23  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* help/C/file-roller.xml: Fix an embarrasing typo.
-	
+
 2002-11-18  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/*.glade: make dialogs more HIG compliant.
@@ -3286,9 +3293,9 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	here not in glade.
 
 	* src/dlg-*.c: s/.glade2/.glade/
-	* src/*.glade2: 
+	* src/*.glade2:
 	* src/*.glade: change extension from .glade2 to .glade
-	
+
 2002-11-11  James Willcox  <jwillcox@gnome.org>
 
 	* Makefile.am:  add components to SUBDIRS
@@ -3312,7 +3319,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/menu.h: s/Information/Properties/
 
-	* src/dlg-add.c (add_cb): 
+	* src/dlg-add.c (add_cb):
 	* src/file_roller.glade2: change dialog titles.
 
 2002-11-01  Tivo LeedjÃ¯?Â½v  <toivo@linux.ee>
@@ -3324,22 +3331,22 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/fr-archive.c (create_command_from_sniffer): use a
 	personalized 'sniffer' to recognize supported archive formats with
 	exotic extensions (i.e. OpenOffice documents).
-	
+
 	* src/window.c (window_drag_data_received): use
 	fr_archive_utils__file_is_archive.
 
 	* src/fr-archive.c (fr_archive_utils__get_file_name_ext): rename
-	fr_archive_utils_get_file_name_ext as 
+	fr_archive_utils_get_file_name_ext as
 	fr_archive_utils__get_file_name_ext
 	(fr_archive_utils__file_is_archive): new function
 
-	* src/fr-archive.h: 
-	* src/menu-callbacks.c (rename_archive_cb): use 
+	* src/fr-archive.h:
+	* src/menu-callbacks.c (rename_archive_cb): use
 	fr_archive_utils__get_file_name_ext.
 
 2002-10-16  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/fr-process.h (BUFFER_SIZE): set buffer size to 16384. 
+	* src/fr-process.h (BUFFER_SIZE): set buffer size to 16384.
         * src/fr-process.c (REFRESH_RATE): set refresh rate to 10 millisecs.
 
         this makes loading much more faster (at least on my machine):
@@ -3349,7 +3356,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
         nautilus.tgz    1873      06''00     02''00
         evolution.tgz   3478      10''00     03''00
         gphoto2.tgz      592      02''10     00''97
-        
+
         please send me your benchmarks.
 
 2002-10-13  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -3361,9 +3368,9 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* configure.in: update required libraries versions.
 
 	* src/recent-files/*: import egg-recent files.
-	
+
 	* src/window.c (get_icon): use gnome_icon_lookup to get the icon.
-	(open_recent_cb, _window_add_to_recent, pref_history_len_changed) 
+	(open_recent_cb, _window_add_to_recent, pref_history_len_changed)
 	(window_new): use egg-recent.
 
 2002-10-08  Peteris Krisjanis <peteris.krisjanis@os.lv>
@@ -3380,7 +3387,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-09-30  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* help/ru/file-roller.xml: fixed some 'opening and ending tag 
+	* help/ru/file-roller.xml: fixed some 'opening and ending tag
 	mismatch' errors.
 
 	* src/window.c (window_archive_reload, window_archive_open): we
@@ -3406,13 +3413,13 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/window.c: added break; to default cases.
 
-	* src/toolbar.h: 
-	* src/menu.h: 
+	* src/toolbar.h:
+	* src/menu.h:
 	* src/window.h: removed trailing commans to increase portability.
 
 2002-09-19  Dmitry G. Mastrukov  <dmitry@taurussoft.org>
 
-	* help/ru/*: recoded Russian help to UTF-8 
+	* help/ru/*: recoded Russian help to UTF-8
 
 2002-09-17  Pablo Saratxaga  <pablo@mandrakesoft.com>
 
@@ -3436,7 +3443,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-09-03  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* configure.in (GETTEXT_PACKAGE): 
+	* configure.in (GETTEXT_PACKAGE):
 	* src/Makefile.am (install-data-local): install schemas only when
 	SCHEMAS_INSTALL is defined.
 
@@ -3460,7 +3467,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/window.c (get_compare_func_from_idx): do not let the column
 	index have invalid values.
 
-	* src/preferences.c (get_string_from_enum): 
+	* src/preferences.c (get_string_from_enum):
 	(get_enum_from_string): return the first value if input is invalid.
 
 2002-08-29  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -3477,18 +3484,18 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-08-27  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_close): remove notifications when closing the 
+	* src/window.c (window_close): remove notifications when closing the
 	window.
 
 	* src/file-roller.schemas: changed some keys
 
-	* src/menu-callbacks.c: 
-	* src/window.c: 
+	* src/menu-callbacks.c:
+	* src/window.c:
 	* src/window.h:
 	* src/preferences.c:
 	* src/preferences.h:
 	* src/dlg-preferences.c: Use gconf instead of gnome-config.
-	
+
 	* src/gconf-utils.c:
 	* src/gconf-utils.h: new files.
 
@@ -3499,63 +3506,63 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-08-24  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-add.c: 
-	* src/dlg-extract.c: 
-	* src/window.c: 
+	* src/dlg-add.c:
+	* src/dlg-extract.c:
+	* src/window.c:
 	* src/dlg-batch-add.c: fixed some locale-UTF8 translations bugs.
 
 2002-08-23  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-batch-add.c (add_clicked_cb): translate archive name to 
+	* src/dlg-batch-add.c (add_clicked_cb): translate archive name to
 	locale.
 
 	* src/window.c (key_press_cb): show popup menu when pressing SHIFT-F10.
 
 2002-08-21  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c: 
-	* src/window.h: 
-	* src/toolbar.h: 
-	* src/menu.h: Changed menu and toolbar to make it follow the HIG. 
+	* src/window.c:
+	* src/window.h:
+	* src/toolbar.h:
+	* src/menu.h: Changed menu and toolbar to make it follow the HIG.
 	Added "Deselect All", "View Toolbar", "View Statusbar" and "Reload"
 	commands.
 
-	* src/dlg-extract.c (ok_clicked_cb): 
+	* src/dlg-extract.c (ok_clicked_cb):
 	* src/window.c (_window_batch_start_current_action): when extracting
-	multiple archives let the user specify the destination folder only 
+	multiple archives let the user specify the destination folder only
 	once.
 	(_window_update_title): make the title follow the HIG.
 
 2002-08-20  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-batch-add.c: 
-	* src/dlg-extract.c: 
-	* src/window.c: 
-	* src/window.h: 
-	* src/main.c: added ability to extract multiple archives (fixed bug 
+	* src/dlg-batch-add.c:
+	* src/dlg-extract.c:
+	* src/window.c:
+	* src/window.h:
+	* src/main.c: added ability to extract multiple archives (fixed bug
 	#90849).
-	
-	* scripts/Extract_here: 
+
+	* scripts/Extract_here:
 	* scripts/Extract_to: these scripts can accept multiple arguments now.
 
 2002-08-19  Paolo Bacchilega  <paolo.bacch@tin.it>
-	
+
 	* src/file-data.c (file_data_get_type_description): new function.
-	
-	* src/window.c (sort_by_type): 
+
+	* src/window.c (sort_by_type):
 	(update_file_list_idle): use file_data_get_type_description.
 
 2002-08-16  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* help/C/file-roller.xml: remove the "install scripts" documentation.
 	* help/C/figures/fr-prefs.png: New screenshot.
-	* src/dlg-preferences.c (dlg_preferences): 
+	* src/dlg-preferences.c (dlg_preferences):
 	* src/main.c (initialize_data): remove the "install Nautilus scripts"
 	option.
 
 2002-08-13  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-add.c (open_file_ok_cb): check directory permissions 
+	* src/dlg-add.c (open_file_ok_cb): check directory permissions
 	before adding files.
 
 2002-08-12  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -3573,7 +3580,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* help/C/file-roller.xml: Document the compression level option.
 	* help/C/figures/fr-prefs.png: New screenshot.
-	
+
 2002-08-09  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/fr-command-cfile.c:
@@ -3590,10 +3597,10 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* file-roller.spec.in: file-roller-2.0.mo -> file-roller.mo
 
-	* src/file-list.c: 
-	* src/fnmatch.c: 
+	* src/file-list.c:
+	* src/fnmatch.c:
 	* src/fnmatch.h:
-	* configure.in: 
+	* configure.in:
 	* acinclude.m4: Added patch from Claudio Bley to cope with systems
 	that do not have FNM_CASEFOLD defined.
 
@@ -3602,7 +3609,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* configure.in (GETTEXT_PACKAGE): set GETTEXT_PACKAGE to file-roller,
 	bug #89641.
 
-	* src/fr-archive.c (fr_archive_new_file): 
+	* src/fr-archive.c (fr_archive_new_file):
 	* src/window.c (window_archive_new): Fixed bug #89664
 
 	* src/menu.h: Removed some ... in menu labels.
@@ -3613,7 +3620,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-07-27  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* configure.in (GNOME_VFS_REQUIRED): updated required libraries 
+	* configure.in (GNOME_VFS_REQUIRED): updated required libraries
 	version.
 
 	* src/dlg-viewer.c (dlg_viewer): do not let edit the text.
@@ -3640,14 +3647,14 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/main.c (install_scripts): New functions to install the nautilus
 	scripts.
-	* src/preferences.[ch]: New option to keep trace whether we need to 
+	* src/preferences.[ch]: New option to keep trace whether we need to
 	install the scripts.
-	
-	* scripts/Add_to_archive: 
-	* scripts/Extract_here: 
-	* scripts/Extract_in_a_subfolder: 
+
+	* scripts/Add_to_archive:
+	* scripts/Extract_here:
+	* scripts/Extract_in_a_subfolder:
 	* scripts/Extract_to: Fixed handling of paths with spaces.
-	
+
 2002-07-11  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/window.c (open_nautilus): Use g_spawn_command_line_async instead
@@ -3655,12 +3662,12 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-07-08  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_view_last_output): 
+	* src/window.c (window_view_last_output):
 	* src/misc.c (misc_error_dialog_new): Use bytes_written as text len.
 
 2002-07-06  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_close): destroy the tooltips when closing 
+	* src/window.c (window_close): destroy the tooltips when closing
 	the window.
 
 2002-07-05  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -3668,7 +3675,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* help/C/file-roller.xml: Updated documentation of the extraction
 	dialog.
 
-	* src/dlg-extract.c (dlg_extract): 
+	* src/dlg-extract.c (dlg_extract):
 	* src/dlg-preferences.c (dlg_preferences): Add the help button.
 
 	* src/fr-process.c (start_current_command): Free command string.
@@ -3676,29 +3683,29 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 2002-07-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/file_roller.glade2: reorganize the extraction dialog.
-	
-	* src/dlg-extract.c: 
-	* src/window.c (_action_performed): 
-	* src/preferences.c: Add an option to view the destination folder 
+
+	* src/dlg-extract.c:
+	* src/window.c (_action_performed):
+	* src/preferences.c: Add an option to view the destination folder
 	after the extraction.
 
 2002-07-02  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (window_view_file): 
-	(window_open_files): 
+	* src/window.c (window_view_file):
+	(window_open_files):
 	* src/fr-archive.c (fr_archive_extract): create the temp dirs with 0700
 	mode.
 
-	* src/window.c (file_list_drag_begin): 
-	(window_archive_extract): 
-	* src/dlg-extract.c (ok_clicked_cb): create destination dirs with 0755 
+	* src/window.c (file_list_drag_begin):
+	(window_archive_extract):
+	* src/dlg-extract.c (ok_clicked_cb): create destination dirs with 0755
 	mode.
 
-	* src/dlg-add.c (save_options_cb): 
+	* src/dlg-add.c (save_options_cb):
 	(load_options_cb): Create .file-roller dir with 0700 mode.
 
 	* src/file-utils.c (ensure_dir_exists): Add a mode parameter.
-	
+
 2002-06-30  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/misc.c (misc_error_dialog_new): set resizable to FALSE.
@@ -3707,35 +3714,35 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-06-28  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-open-with.c (app_activated_cb): 
+	* src/dlg-open-with.c (app_activated_cb):
 	(recent_activated_cb): Use row_activated signal to start command.
 
 2002-06-27  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/misc.c (misc_error_dialog_new): 
+	* src/misc.c (misc_error_dialog_new):
 	* src/window.c (window_view_last_output): convert to UTF-8 before
 	displaing output.
 
 2002-06-18  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/window.c (_window_update_sensitivity): make password item 
+	* src/window.c (_window_update_sensitivity): make password item
 	sensitive only when the command support passwords.
 	(get_file_list_from_url_list): unescape dropped files paths.
 
 	* src/menu.h: options menu re-arranged.
-	
+
 2002-06-17  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu.h: actions menu re-arranged.
 
-	* src/dlg-extract.c (ok_clicked_cb): Check directory existence and 
+	* src/dlg-extract.c (ok_clicked_cb): Check directory existence and
 	permissions here and do not close the dialog if an error occurred so
 	the user can re-type the directory without invoking the command again.
 
-	* src/window.c (open_files): 
-	* src/main.c (command_done): 
+	* src/window.c (open_files):
+	* src/main.c (command_done):
 	(release_data): remove temp dirs at exit, not when the external
-	applications are closed.	
+	applications are closed.
 
 	* src/fr-process.c (fr_process_finalize): do not emit signals when
 	finalizing the process.
@@ -3748,22 +3755,22 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/window.c (view_file): Use Nautilus as document viewer.  If the
 	file has no mime type or action associated use the internal viewer.
 
-	* src/dlg-viewer.h: 
+	* src/dlg-viewer.h:
 	* src/dlg-viewer.c: The internal viewer is now a simple text viewer.
 
-	* src/gnome-vfs-helpers.h: 
-	* src/gnome-vfs-helpers.c: Used by the internal viewer to load the 
+	* src/gnome-vfs-helpers.h:
+	* src/gnome-vfs-helpers.c: Used by the internal viewer to load the
 	document.
 
 2002-06-08  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* src/dlg-password.c: 
+	* src/dlg-password.c:
 	* src/dlg-password.h: New files.  Implement the password dialog.
 
-	* src/window.h: 
+	* src/window.h:
 	* src/window.c: Added a password variable.
-	
-	* src/fr-command.h: 
+
+	* src/fr-command.h:
 	* src/fr-command.h: Added a password argument to add and extract.
 
 	* src/fr-command-zip.c (fr_command_zip_test): Implement the test.
@@ -3778,13 +3785,13 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/fr-process.h: Added an error buffer.
 
-	* src/fr-process.c (start_current_command): uses 
+	* src/fr-process.c (start_current_command): uses
 	g_spawn_async_with_pipes.
 
 2002-06-05  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* help/*: Manual.
-	
+
 	* src/*.glade2
 	* src/dlg-add.c (add_cb): Added mnemonics to all dialogs.
 
@@ -3802,7 +3809,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-05-04  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* viewer/main.c (build_component_menu): Use a menu to show available 
+	* viewer/main.c (build_component_menu): Use a menu to show available
 	components.
 
 2002-05-03  Paolo Bacchilega  <paolo.bacch@tin.it>
@@ -3813,7 +3820,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-05-02  Paolo Bacchilega  <paolo.bacch@tin.it>
 
-	* scripts/: Added Extract_here and Extract_in_a_subfolder 
+	* scripts/: Added Extract_here and Extract_in_a_subfolder
 
 2002-04-29  Paolo Bacchilega  <paolo.bacch@tin.it>
 
@@ -3822,5 +3829,5 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 2002-04-26  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/menu.h: Added some keyboard shortcuts.
-	
+
 	* imported all files

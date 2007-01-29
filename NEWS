@@ -1,3 +1,7 @@
+version 2.16.3
+--------------
+	* Updated translations: sq, ar
+
 version 2.16.2
 --------------
 	* Updated translations: ar, et, gl, it, ja, pl, sv.
@@ -9,17 +13,17 @@ version 2.16.1
 
 version 2.16.0
 --------------
-	* Updated translations: ja, sv, or, zh_CN, ml, ca, mr, lv, de, mk, 
+	* Updated translations: ja, sv, or, zh_CN, ml, ca, mr, lv, de, mk,
 	  pt_BR, lt, pt, hu, mk, el, ta, bg, bn_IN, ro.
 
 version 2.15.93
 ---------------
-	* Prompt for the password when an archive is encrypted 
+	* Prompt for the password when an archive is encrypted
 	  instead of simply displaying a warning on how to spicify a password
 	* Do not use the encrypted emblem for folders.
 	* Added X-GNOME-Bugzilla-Version field to the .desktop file.
 	* Fixed bug #349095: Filetypes seriously screwed up in .zip files
-	* Fixes bug #153642: Temporary files are created on the current 
+	* Fixes bug #153642: Temporary files are created on the current
 	  directory
 
 version 2.15.92
@@ -44,15 +48,15 @@ version 2.15.90
 version 2.15.1
 --------------
 	* Migrated from EggRecent to GtkRecent.
-	* Fixed bug #345052 – file roller should remember the size of the 
+	* Fixed bug #345052 – file roller should remember the size of the
 	  window when it closes.
 	* Fixed bug #345278 – File operations on the Edit menu should be moved
 	  to the Archive menu.
-	* Fixed bug #342251 – backspace does not go up a directory (ala 
+	* Fixed bug #342251 – backspace does not go up a directory (ala
           Nautilus)
 	* Fixed bug #336078 - [PATCH] Convert from popt to GOption
 	* Fixed bug #317782 - file-roller Cygwin build fixes
-	* Fixed bug #152039 - Password Protected Files must be displayed 
+	* Fixed bug #152039 - Password Protected Files must be displayed
 	  differently.
 
 version 2.14.3
@@ -74,13 +78,13 @@ version 2.14.1
 	* Install theme-friendly icon.
 	* Fixed bug #335035 - mistake in file-roller's License.
 	* Fixed bug #336908 - backshalshes not supported in paths.
-	* Fixed bug #336632 - Help for Extract Dialog pointing to incorrect 
+	* Fixed bug #336632 - Help for Extract Dialog pointing to incorrect
           location.
         * Fixed bug #336854 - crash on twice unpacking to the same location.
         * Fixed bug #335659 - File Roller should move not copy files.
 	* Fixed bug #335368 - Crash when opening large 7z-archive.
 	* Fixed buf #326193 - file-roller creates empty 7zip archives.
-	* Fixed bug #337754 - Drag and Drop extraction only works when source 
+	* Fixed bug #337754 - Drag and Drop extraction only works when source
 	  already has focus.
 	* Fixed bug #337331 - Cut/Paste same file results in loss of file.
 
@@ -88,12 +92,12 @@ version 2.14.0
 --------------
 	* Added license button to the about dialog.
 	* New translations: Georgian (ka) and Breton (br).
-	* Updated translations: Ukrainian (uk), Welsh (cy), Hindi (hi), 
+	* Updated translations: Ukrainian (uk), Welsh (cy), Hindi (hi),
           Swedish (sv), et, Czech (cs), Italian (it), Romanian (ro).
 
 version 2.13.92
 ---------------
-	* Fixed bug #331601 – Nautilus doesn't display the "Extract here" menu 
+	* Fixed bug #331601 – Nautilus doesn't display the "Extract here" menu
 	  option for files which have a ".ps.gz"
 
 version 2.13.91
@@ -110,7 +114,7 @@ version 2.13.90
 version 2.13.4
 ---------------
 	* Fixed bug #139912 - file roller is not a "system tool".
-	* Fixed bug #168388 - file roller shouldn't create an ARCHIVE_FILES 
+	* Fixed bug #168388 - file roller shouldn't create an ARCHIVE_FILES
 	  folder if the archive only have one root folder
 	* Fixed bug #326810 - file-roller escaping issue with '#' by example.
 	* Removed obsolete .applications file.
@@ -121,35 +125,35 @@ version 2.13.3
 
 version 2.13.2
 ---------------
-	* Fixed bug #323713: "Save as" should default to current archive 
+	* Fixed bug #323713: "Save as" should default to current archive
 	  filename
-	* Fixed bug #315069: file-roller: drag 'n drop doesn't work for more 
+	* Fixed bug #315069: file-roller: drag 'n drop doesn't work for more
           than 1 file.
 	* Fixed bug #323534: Passwords improperly escaped for zip files
 	* Do not open a progress dialog	when dragging files, use a progressbar
 	  in the statusbar instead.
 	* Fixed bug #316364: Nautilus dependency should be optional
-	* Fixed bug #311821: ascending and descending indicators are opposite 
+	* Fixed bug #311821: ascending and descending indicators are opposite
 	  from expected.
 	* Fixed bug #317423: Conflicting mnemonic in "Extract" dialog.
 	* Fixed bug #323068: file-roller fails in chosing extract-to directory
-	* Fixed bug #322197: Improve Naming Filename when create new Archive 
+	* Fixed bug #322197: Improve Naming Filename when create new Archive
 	  file
 	* Fixed bug #316564: needs unzip AND zip.
-	* Simplified the add dialog populating the file type combobox with the 
+	* Simplified the add dialog populating the file type combobox with the
 	  extensions instead of the descriptions.
-	* Set progress dialog display delay to 1 second.  
-	* More HIG compliant progress dialog.  
-	* Use a single command execution to add many files and folders to an 
-	  archive to speed up the operation.  
+	* Set progress dialog display delay to 1 second.
+	* More HIG compliant progress dialog.
+	* Use a single command execution to add many files and folders to an
+	  archive to speed up the operation.
 	* Allow to stop creation of a new archive.
 	* Correctly associate fr to 7zip files.
 
 version 2.13.1
 ---------------
-	* Fixed bug #319600: compilation under AIX 5.1 aborts with ".atoll 
+	* Fixed bug #319600: compilation under AIX 5.1 aborts with ".atoll
 	  not found".
-	* Fixed bug #319343: file-roller won't let me delete files from an 
+	* Fixed bug #319343: file-roller won't let me delete files from an
 	  archive which contain a dollar sign ($).
 	* Removed the bonobo component.
 
@@ -178,13 +182,13 @@ version 2.11.90
 ---------------
 	* Fixed bug #105521: single click: list view should have mouse-over.
 	* Fixed bug #310015: crash when listing 7-zip archive with 7za 4.x
-	* Updated translations: de bg zh_TW gl sr sr@Latn gu ja fi 
+	* Updated translations: de bg zh_TW gl sr sr@Latn gu ja fi
 
 version 2.11.2
 --------------
-	* Removed copy/move/rename/delete archive commands.  
+	* Removed copy/move/rename/delete archive commands.
 	* The recent files items are in the Archive menu instead of a submenu.
-	* Changes in the properties dialog: align labels to left, allow window 
+	* Changes in the properties dialog: align labels to left, allow window
 	  resizing, ellipsize filename and path labels.
 	* Fixed bug #142860: File-roller displays files larger
 	  than 2GB as 2GB.
@@ -196,7 +200,7 @@ version 2.11.1
 	  command line option.
 	* Use g_filename_display_name and g_filename_display_basename when
           appropriate.
-	* Prevent renaming of files to silently overwrite other existing 
+	* Prevent renaming of files to silently overwrite other existing
           files (#168287).
 	* Header cleanup (#171618).
 	* Allow stock labels to show through, be nice to translators (#172867).
@@ -208,21 +212,21 @@ version 2.10.2
 
 version 2.10.1
 --------------
-	* Fixed bug #171195: File-Roller will not tar up any subdirectories 
+	* Fixed bug #171195: File-Roller will not tar up any subdirectories
 	  directly under /
 	* Fixed bug #170842: Toolbar buttons too wide.
-	* Fixed bug #170329: Aborting File Add can sometimes crash the 
+	* Fixed bug #170329: Aborting File Add can sometimes crash the
 	  application.
-	* Fixed bug #170258: file-roller can't open for preview files with a 
+	* Fixed bug #170258: file-roller can't open for preview files with a
 	  white space in filename.
-	* Fixed bug #169818: Archive menu item to be disabled if no files are 
+	* Fixed bug #169818: Archive menu item to be disabled if no files are
 	  selected.
 	* Fixed bug #172219: Select All and Deselect all doesnt work properly.
 	* Added ellipsize property to the list view.
 	* Do not activate the first row after reordering the list in single
 	  click mode.
 	* Fixed bug in recent files view.
-		  
+
 version 2.10.0
 --------------
 	* Updated translations: it, sr, sr@Latn, lt, hu.
@@ -230,12 +234,12 @@ version 2.10.0
 version 2.9.92
 --------------
 	* Fixed bug #157698: Default new archive name as the first-added object.
-	* Fixed bug #168477: Create Archive should leave status window in the 
+	* Fixed bug #168477: Create Archive should leave status window in the
 	  background while creating multiple folder archives.
 	* Fixed bug #159952: file-roller compilation error.
-	* Fixed bug #166658: Archives should only be processed if command-line 
+	* Fixed bug #166658: Archives should only be processed if command-line
 	  utility is present.
-	* Fixed bug #144953: ISO reading assumes Joliet and Rock Ridge 
+	* Fixed bug #144953: ISO reading assumes Joliet and Rock Ridge
           extensions.
 
 version 2.9.91
@@ -248,28 +252,28 @@ version 2.9.4
 
 version 2.9.3
 -------------
-	* Fixed bug #132555: file-roller does not honor system-wide toolbar 
+	* Fixed bug #132555: file-roller does not honor system-wide toolbar
 	  setting.
-	* Fixed bug #162188: RAR archives' directories are not recognized 
+	* Fixed bug #162188: RAR archives' directories are not recognized
           properly.
 	* Fixed bug #162324: Cannot drag files from gthumb to file-roller
 
 version 2.9.2
 -------------
 	* Fixed bug #152129: Unnecessary call to _window_update_sensitivity()
-	* Fixed bug #154821: file-roller can't open archives with extension 
+	* Fixed bug #154821: file-roller can't open archives with extension
           .lha
 	* Fixed bug #154398: Remove some useless code.
 	* Fixed bug #154233: load_icon_file optimization.
 	* Fixed bug #161141: Time of modifcation incorrect
-	* Fixed bug #161147: View->Toolbars inconsistent across multiple 
+	* Fixed bug #161147: View->Toolbars inconsistent across multiple
 	  instance.
-	* Fixed bug #160617: "Create archive" context menu item does not 
+	* Fixed bug #160617: "Create archive" context menu item does not
 	  support single-file bz2 or gz
 	* Fixed bug #160401: create archive doesn't work on read-only CD-ROM
-	* Fixed bug #159906: the configure.in should update its gnome-vfs 
+	* Fixed bug #159906: the configure.in should update its gnome-vfs
 	  requirement.
-	* Fixed bug #160221: No more "extract here" entry in Nautilus 
+	* Fixed bug #160221: No more "extract here" entry in Nautilus
  	  context menu.
 	* Use 'extract to...' if the archive location is write only.
 	* Fixed loading of rar archives with directories.
@@ -278,7 +282,7 @@ version 2.9.1
 -------------
         * Added a 'Open Recent' menu item on the toolbar.
 	* Added password support and testing to RAR archives.
-	* Fixed bug #145162] .omf.out and omf_timestamp files should not be in 
+	* Fixed bug #145162] .omf.out and omf_timestamp files should not be in
 	  cvs.
 	* Fixed bug #159172: tooltips leaked.
 	* Fixed bug #159464: Should not use deprecate mime API
@@ -302,7 +306,7 @@ version 2.7.5
 	* Fixed bug #150672: Back button is broken
 	* Fixed bug #150329: File roller creates predictable /tmp directories
 	* Fixed bug #150327: Adding a directory to archive hangs file roller
-	* Fixed BUG #150328: avoid crashing while DND of 'Home' icon into 
+	* Fixed BUG #150328: avoid crashing while DND of 'Home' icon into
  	  file-roller.
 	* Updated the recent-files sources from libegg.
 
@@ -323,7 +327,7 @@ version 2.7.2
 
 version 2.7.1
 -------------
-	* Fixed bug #144455: Make file-roller session aware even when no 
+	* Fixed bug #144455: Make file-roller session aware even when no
 	  archive is opened.
 	* Fixed bug #144079 (iso is not listed as a archive in open dialog)
 	* Hide the main window when in batch mode.
@@ -333,7 +337,7 @@ version 2.7.1
 version 2.7.0
 -------------
 	* Added read/extract support for ISO files. (bug #142316)
-	* Split the add dialog into two dialogs, one used to add files and the 
+	* Split the add dialog into two dialogs, one used to add files and the
 	  other one used to add folders.
 	* Ask the distination folder after pasting a selection, this allows
           the user to create new folders in the archive.
@@ -343,9 +347,9 @@ version 2.7.0
 version 2.6.1
 -------------
 	* Fixes reading of filenames with spaces in tar archives.
-	* Fixes bug #138154 (File-Roller Crash when dropping a file dragged 
+	* Fixes bug #138154 (File-Roller Crash when dropping a file dragged
 	  from archive).
-	* Remove a file from the recent file list if the file could not be 
+	* Remove a file from the recent file list if the file could not be
 	  loaded.
 	* Add RPM and Stuffit to the recent file list mime types.
 
@@ -355,10 +359,10 @@ version 2.6.0
 
 version 2.5.7
 -------------
-	* Fixed bug #137183 (Crash when opening tar-file when using 24 hour 
+	* Fixed bug #137183 (Crash when opening tar-file when using 24 hour
 	  time format).
 	* Updated manual.
-	* Added localized manuals for de, es, fr, it, ja, ko, sv, 
+	* Added localized manuals for de, es, fr, it, ja, ko, sv,
 	  zh_TW, zh_HK, zh_CN.
 
 version 2.5.6
@@ -382,10 +386,10 @@ version 2.5.4
 -------------
 	* Fix bug #105739 (Can't open tar.gz files on Solaris).
 	* Fix bug #133358 (Small HIG fix for column header).
-	* Allow to extract more archives at once with the "Extract Here" 
+	* Allow to extract more archives at once with the "Extract Here"
 	  command.
 	* Use GType instead of guint.  Fixes segfaults on 64-bit architectures.
-	* Do not show the new window until we are sure that the archive 
+	* Do not show the new window until we are sure that the archive
           has been opened with success.
 
 version 2.5.3
@@ -425,14 +429,14 @@ version 2.5.0
 	* Added Cut/Copy/Paste operations.
  	* Add files and folders to the current directory.
 	* Added ability to go back and forward in location history.
-        * Open the archive in a new window if the current window already has 
+        * Open the archive in a new window if the current window already has
           an archive opened.
-	* Exit closes only the current window instead of closing all the 
+	* Exit closes only the current window instead of closing all the
           windows.
-	* Zip archives: ask to enter a password if the archive is password 
+	* Zip archives: ask to enter a password if the archive is password
           protected.
 	* Remember extraction dialog options.
-        * Substitute "Extract To.." with "Extract Here" in the Nautilus 
+        * Substitute "Extract To.." with "Extract Here" in the Nautilus
           context menu.
 
 version 2.4.2
@@ -443,13 +447,13 @@ version 2.4.2
 
 version 2.4.1
 -------------
-	* Fixed bug that prevented the user to view the content of a 
+	* Fixed bug that prevented the user to view the content of a
           compressed file.
 
 version 2.4.0
 -------------
 	* Updated recent files stuff from libegg.
-	
+
 version 2.3.6
 -------------
 	* Use unrar if rar is not available.
@@ -467,14 +471,14 @@ version 2.3.3
 -------------
 	* Updated manual.
 	* Make dialogs more HIG compliant.
-	* Removed "Extract Here" and "Extract in a Folder" from the 
+	* Removed "Extract Here" and "Extract in a Folder" from the
 	  Nautilus context menu.
 	* Minor bugfixes.
 
 version 2.3.2
 -------------
 	* Added ARJ archives support.
-	* The delete operation move the archive to the trash instead of 
+	* The delete operation move the archive to the trash instead of
           deleting it from the disk.
 
 version 2.3.1
@@ -501,7 +505,7 @@ version 2.3.0
 -------------
 	* Added ZOO archives support.
 	* Read folders asynchronously.
-	* Display a better error message when the user forgets to specify 
+	* Display a better error message when the user forgets to specify
           the archive name in the "add to archive" dialog.
 	* Handle tar archives with a ':' in the path.
 
@@ -539,7 +543,7 @@ version 2.1.1
 
 version 2.1.0
 -------------
-	* Do not read the archive in non-interative mode, this speeds up 
+	* Do not read the archive in non-interative mode, this speeds up
 	  extraction with Nautilus scripts.
 	* Fixed russian manual.
 
@@ -551,8 +555,8 @@ version 2.0.1
 -------------
 	* Added a compression level option.
 	* Added ability to extract multiple archives from command line.
-	* Removed the "install Nautilus scripts" option, now simply install 
-	  scripts the first time you start File Roller. 
+	* Removed the "install Nautilus scripts" option, now simply install
+	  scripts the first time you start File Roller.
 	* Added ability to hide toolbar and statusbar.
 	* Re-arranged menus.
 	* Recent archives are shown in a submenu.
@@ -587,17 +591,17 @@ version 1.107
 
 version 1.106
 -------------
-        * the user can specify files to exclude when adding files with 
+        * the user can specify files to exclude when adding files with
           the wildcard.
         * the user can save and load add dialog options.
-        * ask whether to overwrite the file when copying, moving or renaming 
+        * ask whether to overwrite the file when copying, moving or renaming
           an archive.
         * added ability to rename compressed files.
 
 version 1.105
 -------------
 	* The document viewer shows the components list in a submenu.
-	* bugfixes. 
+	* bugfixes.
 
 version 1.104
 -------------
@@ -620,7 +624,7 @@ version 0.8
 	* added support for single files compressed with gzip, bzip, bzip2,
 	  compress, lzop.
 	* non-interactive mode to automatically add files to archives.
-	* added two Nautilus scripts to extract archives and add files to 
+	* added two Nautilus scripts to extract archives and add files to
 	  archives.
 	* use the MIME database to decide whether to use the viewer or
 	  the associated application when double-clicking on a file, or
@@ -638,7 +642,7 @@ version 0.6
 -----------
 	* non-interactive mode to automatically extract archives.
 	* can open multiple files at command line.
-	* works faster when adding and removing a lot of files from 
+	* works faster when adding and removing a lot of files from
 	  compressed tar archives.
 	* works better when files in archives have strange characters.
 	* fixed a bug when adding files with wildcard.
@@ -655,7 +659,7 @@ version 0.5
 
 version 0.4
 -----------
-	* added support for multiple windows. 
+	* added support for multiple windows.
 	* fixed some bugs concerning old versions of tar.
 
 version 0.3
