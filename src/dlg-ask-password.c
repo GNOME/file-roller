@@ -31,7 +31,7 @@
 #include "window.h"
 
 
-#define PROP_GLADE_FILE "file-roller.glade"
+#define PROP_GLADE_FILE "ask-password.glade"
 
 
 typedef struct {
@@ -53,9 +53,9 @@ destroy_cb (GtkWidget  *widget,
 
 
 static void
-response_cb (GtkWidget  *dialog,
-	     int         response_id,
-	     DialogData *data)
+ask_password__response_cb (GtkWidget  *dialog,
+			   int         response_id,
+			   DialogData *data)
 {
 	char *password;
 
@@ -64,8 +64,17 @@ response_cb (GtkWidget  *dialog,
 		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
 		window_set_password (data->window, password);
 		g_free (password);
+		if (data->window->batch_mode)
+			window_batch_mode_resume (data->window);
+		else
+			window_restart_current_action (data->window);
 		break;
+
 	default:
+		if (data->window->batch_mode)
+			window_close (data->window);
+		else
+			window_current_action_description_reset (data->window);
 		break;
 	}
 
@@ -74,11 +83,11 @@ response_cb (GtkWidget  *dialog,
 
 
 void
-dlg_password (GtkWidget *widget,
-	      gpointer   callback_data)
+dlg_ask_password (FRWindow *window)
 {
-	FRWindow   *window = callback_data;
         DialogData *data;
+	GtkWidget  *label;
+	char       *text;
 
         data = g_new0 (DialogData, 1);
 	data->window = window;
@@ -93,8 +102,13 @@ dlg_password (GtkWidget *widget,
         data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
 	data->pw_password_entry = glade_xml_get_widget (data->gui, "pw_password_entry");
 
+	label = glade_xml_get_widget (data->gui, "pw_password_label");
+
 	/* Set widgets data. */
 
+	text = g_strdup_printf (_("Enter the password for the archive '%s'."), g_filename_display_basename (window->archive_filename));
+	gtk_label_set_label (GTK_LABEL (label), text);
+	g_free (text);
 	if (window->password != NULL)
 		_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry), window->password);
 
@@ -107,7 +121,7 @@ dlg_password (GtkWidget *widget,
 
 	g_signal_connect (G_OBJECT (data->dialog),
 			  "response",
-			  G_CALLBACK (response_cb),
+			  G_CALLBACK (ask_password__response_cb),
 			  data);
 
 	/* Run dialog. */

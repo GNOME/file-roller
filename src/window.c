@@ -43,7 +43,7 @@
 #include "dlg-delete.h"
 #include "dlg-extract.h"
 #include "dlg-open-with.h"
-#include "dlg-password.h"
+#include "dlg-ask-password.h"
 #include "eggtreemultidnd.h"
 #include "fr-list-model.h"
 #include "fr-archive.h"
@@ -1699,7 +1699,7 @@ handle_errors (FRWindow    *window,
 	       FRProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_ASK_PASSWORD) {
-		ask_password (window);
+		dlg_ask_password (window);
 		return FALSE;
 
 	} else if (error->type == FR_PROC_ERROR_STOPPED) {

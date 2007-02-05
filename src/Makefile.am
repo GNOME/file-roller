@@ -43,6 +43,8 @@ file_roller_SOURCES = 			\
 	dlg-add-files.h			\
 	dlg-add-folder.c		\
 	dlg-add-folder.h		\
+	dlg-ask-password.c		\
+	dlg-ask-password.h		\
 	dlg-batch-add.c			\
 	dlg-batch-add.h			\
 	dlg-delete.c			\
