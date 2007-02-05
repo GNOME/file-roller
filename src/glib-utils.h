@@ -46,6 +46,7 @@ char **             search_util_get_patterns     (const char  *pattern_string);
 char *              _g_strdup_with_max_size      (const char *s,
 						  int         max_size);
 const char *        eat_spaces                   (const char *line);
+const char *        eat_void_chars               (const char *line);
 char **             split_line                   (const char *line,
 						  int   n_fields);
 const char *        get_last_field               (const char *line,

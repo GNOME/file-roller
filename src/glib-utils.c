@@ -399,6 +399,17 @@ eat_spaces (const char *line)
 }
 
 
+const char *
+eat_void_chars (const char *line)
+{
+	if (line == NULL)
+		return NULL;
+	while (((*line == ' ') || (*line == '\t')) && (*line != 0))
+		line++;
+	return line;
+}
+
+
 char **
 split_line (const char *line,
 	    int         n_fields)
