@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-15 14:58+0700\n"
-"PO-Revision-Date: 2007-01-15 15:04+0700\n"
+"POT-Creation-Date: 2007-02-06 22:58+0700\n"
+"PO-Revision-Date: 2007-02-06 23:00+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n@opentle.org>\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,8 @@ msgstr "แฟ้ม_จัดเก็บ:"
 msgid "_Files:"
 msgstr "แ_ฟ้ม:"
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:447
+#: ../data/glade/file-roller.glade.h:16 ../data/glade/ask-password.glade.h:2
+#: ../src/dlg-extract.c:447
 msgid "_Password:"
 msgstr "_รหัสผ่าน:"
 
@@ -107,6 +108,10 @@ msgstr "แฟ้มที่เลื_อก"
 #: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
 msgstr "ตัวอย่างเช่น *.txt; *.doc"
+
+#: ../data/glade/ask-password.glade.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">ต้องใช้รหัสผ่าน</span>"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1 ../src/gtk-utils.c:391
@@ -287,6 +292,12 @@ msgstr "บันทึกตัวเลือก"
 msgid "Options Name:"
 msgstr "ชื่อตัวเลือก:"
 
+#. Set widgets data.
+#: ../src/dlg-ask-password.c:109
+#, c-format
+msgid "Enter the password for the archive '%s'."
+msgstr "กรุณาป้อนรหัสผ่านสำหรับแฟ้มจัดเก็บ '%s'"
+
 #: ../src/dlg-batch-add.c:144 ../src/window.c:5717
 #, c-format
 msgid ""
@@ -462,7 +473,7 @@ msgstr "แ_ตกออก"
 msgid "_View File"
 msgstr "แ_สดงแฟ้ม"
 
-#: ../src/glib-utils.c:505
+#: ../src/glib-utils.c:516
 msgid "%d %B %Y"
 msgstr "%d %B %Ey"
 
