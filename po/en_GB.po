@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-29 07:16+0000\n"
-"PO-Revision-Date: 2006-12-29 07:16-0000\n"
+"POT-Creation-Date: 2007-02-09 11:56+0000\n"
+"PO-Revision-Date: 2007-02-09 11:56-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,6 +82,7 @@ msgid "_Files:"
 msgstr "_Files:"
 
 #: ../data/glade/file-roller.glade.h:16
+#: ../data/glade/ask-password.glade.h:2
 #: ../src/dlg-extract.c:447
 msgid "_Password:"
 msgstr "_Password:"
@@ -95,6 +96,10 @@ msgstr "_Selected files"
 #: ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
 msgstr "example: *.txt; *.doc"
+
+#: ../data/glade/ask-password.glade.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">Password required</span>"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1
@@ -301,6 +306,12 @@ msgstr "Save Options"
 msgid "Options Name:"
 msgstr "Options Name:"
 
+#. Set widgets data.
+#: ../src/dlg-ask-password.c:109
+#, c-format
+msgid "Enter the password for the archive '%s'."
+msgstr "Enter the password for the archive '%s'."
+
 #: ../src/dlg-batch-add.c:144
 #: ../src/window.c:5717
 #, c-format
@@ -491,7 +502,7 @@ msgstr "_Extract"
 msgid "_View File"
 msgstr "_View File"
 
-#: ../src/glib-utils.c:505
+#: ../src/glib-utils.c:516
 msgid "%d %B %Y"
 msgstr "%d %B %Y"
 
