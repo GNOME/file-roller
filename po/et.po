@@ -2,7 +2,7 @@
 # Estonian translation of File-roller.
 #
 # Copyright (C) 2002-2006 Free Software Foundation, Inc.
-# Copyright (C) 2007, The GNOME Project.
+# Copyright (C) 2007 The GNOME Project.
 # This file is distributed under the same license as the file-roller package.
 #
 # Ilmar Kerm <ikerm@hot.ee>, 2002.
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-02 04:05+0000\n"
-"PO-Revision-Date: 2007-01-07 12:19+0200\n"
+"POT-Creation-Date: 2007-02-12 16:54+0000\n"
+"PO-Revision-Date: 2007-02-13 09:41+0200\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -90,7 +90,8 @@ msgstr "_Arhiiv:"
 msgid "_Files:"
 msgstr "_Failid:"
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:447
+#: ../data/glade/file-roller.glade.h:16 ../data/glade/ask-password.glade.h:2
+#: ../src/dlg-extract.c:447
 msgid "_Password:"
 msgstr "_Salasõna:"
 
@@ -101,6 +102,10 @@ msgstr "_Valitud failid"
 #: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
 msgstr "näide: *.txt; *.doc"
+
+#: ../data/glade/ask-password.glade.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">Vaja on salasõna</span>"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1 ../src/gtk-utils.c:391
@@ -277,6 +282,12 @@ msgstr "Salvesta valikud"
 msgid "Options Name:"
 msgstr "Valikute nimi:"
 
+#. Set widgets data.
+#: ../src/dlg-ask-password.c:109
+#, c-format
+msgid "Enter the password for the archive '%s'."
+msgstr "Parooli määramine selle arhiivi '%s' jaoks."
+
 #: ../src/dlg-batch-add.c:144 ../src/window.c:5717
 #, c-format
 msgid ""
@@ -351,7 +362,7 @@ msgid "Actions"
 msgstr "Tegevused"
 
 #: ../src/dlg-extract.c:433
-msgid "R_e-create folders"
+msgid "Re-crea_te folders"
 msgstr "Kataloogid l_uuakse uuesti"
 
 #: ../src/dlg-extract.c:437
@@ -451,7 +462,7 @@ msgstr "_Paki lahti"
 msgid "_View File"
 msgstr "_Vaata faili"
 
-#: ../src/glib-utils.c:505
+#: ../src/glib-utils.c:516
 msgid "%d %B %Y"
 msgstr "%d. %B %Y"
 
