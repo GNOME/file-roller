@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-05 23:43+0200\n"
-"PO-Revision-Date: 2007-01-05 23:45+0200\n"
+"POT-Creation-Date: 2007-02-22 00:21+0200\n"
+"PO-Revision-Date: 2007-02-22 00:03+0200\n"
 "Last-Translator: Vladimir Petkov <vpetkov@i-space.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
@@ -24,9 +24,9 @@ msgid ""
 "current archive, and to decrypt files you extract from the current archive. "
 "When the archive is closed the password will be deleted.</i>"
 msgstr ""
-"<i><b>Забележка:</b> паролата ще бъде използвана да се криптират файлове, "
-"които вие добавяте към текущия архив и да декодирате такива, които "
-"разархивирате. Когато архива бива затворен паролата ще бъде изтрита.</i>"
+"<i><b>Забележка:</b> паролата ще бъде използвана, за да се криптират "
+"файлове, които вие добавяте към текущия архив и да декодирате такива, които "
+"разархивирате. Когато архивът бива затворен, паролата ще бъде изтрита.</i>"
 
 #: ../data/glade/file-roller.glade.h:2
 msgid "A_vailable application:"
@@ -46,7 +46,7 @@ msgstr "Изтриване"
 
 #: ../data/glade/file-roller.glade.h:6
 msgid "Load Options"
-msgstr "Опции на зареждането"
+msgstr "Настройки на зареждането"
 
 #: ../data/glade/file-roller.glade.h:7 ../src/window.c:2973
 msgid "Location"
@@ -85,7 +85,8 @@ msgstr "_Архив:"
 msgid "_Files:"
 msgstr "_Файлове:"
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:447
+#: ../data/glade/file-roller.glade.h:16 ../data/glade/ask-password.glade.h:2
+#: ../src/dlg-extract.c:447
 msgid "_Password:"
 msgstr "_Парола:"
 
@@ -95,7 +96,11 @@ msgstr "_Избрани файлове"
 
 #: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
-msgstr "(пример: *.txt; *.doc)"
+msgstr "(напр.: *.txt; *.doc)"
+
+#: ../data/glade/ask-password.glade.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">Изисква се парола</span>"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1 ../src/gtk-utils.c:391
@@ -232,7 +237,7 @@ msgstr "Добавяне на файлове"
 
 #: ../src/dlg-add-files.c:199 ../src/dlg-add-folder.c:331
 msgid "_Add only if newer"
-msgstr "Добавяне само ако са по-нови"
+msgstr "Добавяне, ако са по-_нови"
 
 #: ../src/dlg-add-folder.c:317
 msgid "Add a Folder"
@@ -240,11 +245,11 @@ msgstr "Добавяне на папка"
 
 #: ../src/dlg-add-folder.c:332
 msgid "_Include subfolders"
-msgstr "_Включително поддиректории"
+msgstr "_Включително подпапки"
 
 #: ../src/dlg-add-folder.c:333
 msgid "Exclude folders that are symbolic lin_ks"
-msgstr "С изключение на директориите, които са препратки"
+msgstr "С _изключение на папките, които са символни връзки"
 
 #: ../src/dlg-add-folder.c:336 ../src/dlg-add-folder.c:341
 msgid "example: *.o; *.bak"
@@ -252,19 +257,19 @@ msgstr "(пример: *.txt; *.doc)"
 
 #: ../src/dlg-add-folder.c:337
 msgid "_Include files:"
-msgstr "Включително файлове:"
+msgstr "_Включително файлове:"
 
 #: ../src/dlg-add-folder.c:342
 msgid "E_xclude files:"
-msgstr "С изключение на файлове (.*)"
+msgstr "С _изключение на файлове (.*)"
 
 #: ../src/dlg-add-folder.c:345
 msgid "_Load Options"
-msgstr "Настройки за зареждане"
+msgstr "_Настройки за зареждане"
 
 #: ../src/dlg-add-folder.c:346
 msgid "Sa_ve Options"
-msgstr "Настройки за запазване"
+msgstr "Настройки за _запазване"
 
 #: ../src/dlg-add-folder.c:794
 msgid "Save Options"
@@ -274,6 +279,12 @@ msgstr "Настройки за запазване"
 msgid "Options Name:"
 msgstr "Име на настройката:"
 
+#. Set widgets data.
+#: ../src/dlg-ask-password.c:109
+#, c-format
+msgid "Enter the password for the archive '%s'."
+msgstr "Въведете паролата за архива „%s“."
+
 #: ../src/dlg-batch-add.c:144 ../src/window.c:5717
 #, c-format
 msgid ""
@@ -281,7 +292,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Името „%s“ не е валидно, защото не съдържа знаците: %s\n"
+"Името „%s“ не е валидно, защото съдържа знаците: %s\n"
 "\n"
 "%s"
 
@@ -349,7 +360,7 @@ msgid "Actions"
 msgstr "Действия"
 
 #: ../src/dlg-extract.c:433
-msgid "R_e-create folders"
+msgid "Re-crea_te folders"
 msgstr "_Пресъздаване на папките"
 
 #: ../src/dlg-extract.c:437
@@ -449,7 +460,7 @@ msgstr "_Разархивиране"
 msgid "_View File"
 msgstr "_Преглед на файл"
 
-#: ../src/glib-utils.c:505
+#: ../src/glib-utils.c:516
 msgid "%d %B %Y"
 msgstr "%d %B %Y"
 
@@ -553,7 +564,8 @@ msgstr "ПАПКА"
 
 #: ../src/main.c:157
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "Разархивиране на архиви, питайки в коя папка и спиране на програмата"
+msgstr ""
+"Разархивиране на архиви, питайки за целевата папка и спиране на програмата"
 
 #: ../src/main.c:161
 msgid ""
@@ -569,7 +581,7 @@ msgstr "Папка по подразбиране за командите „--ad
 
 #: ../src/main.c:169
 msgid "Create destination folder without asking confirmation"
-msgstr "Създаване на папката за файловете без да се иска потвърждение"
+msgstr "Създаване на папката за файловете, без да се иска потвърждение"
 
 #: ../src/main.c:225
 msgid "File Roller"
@@ -649,7 +661,7 @@ msgstr "Изтриване на избраното от архива"
 
 #: ../src/ui.h:82
 msgid "Dese_lect All"
-msgstr "Отмяна на избора на всичко"
+msgstr "_Отмяна на избора на всичко"
 
 #: ../src/ui.h:83
 msgid "Deselect all files"
@@ -936,7 +948,7 @@ msgstr "Искате ли да създадете нов архив с тези 
 
 #: ../src/window.c:2602
 msgid "Create _Archive"
-msgstr "Създаване на нов архив"
+msgstr "Създаване на _архив"
 
 #: ../src/window.c:2779
 #, c-format
