@@ -1,17 +1,17 @@
 # Chinese (Taiwan) translation of file-roller.
-# Copyright (C) 2002-05 Free Software Foundation, Inc.
+# Copyright (C) 2002, 03, 04, 05, 06, 07 Free Software Foundation, Inc.
 # Ben Wu <hpwu@redhat.com>, 2002-2003.
-# Woodman Tuen <wmtuen@gmail.com>, 2004-2005.
+# Woodman Tuen <wmtuen@gmail.com>, 2004-2007.
 # 
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller 2.15.90\n"
+"Project-Id-Version: file-roller 2.17.91\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-02 05:41+0200\n"
-"PO-Revision-Date: 2006-07-25 03:37+0800\n"
+"POT-Creation-Date: 2007-02-21 20:32+0800\n"
+"PO-Revision-Date: 2007-02-21 02:19+0800\n"
 "Last-Translator: Woodman Tuen <wmtuen@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) <community@linuxhall.org>\n"
+"Language-Team: Chinese/Traditional <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -46,12 +46,12 @@ msgstr "刪除"
 msgid "Load Options"
 msgstr "載入選項"
 
-#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2947
+#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2973
 msgid "Location"
 msgstr "位置"
 
 #. current location
-#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3825
+#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3849
 msgid "Location:"
 msgstr "位置："
 
@@ -67,7 +67,7 @@ msgstr "密碼"
 msgid "R_ecent applications:"
 msgstr "最近使用的程式(_E)："
 
-#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:393
+#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:399
 msgid "_All files"
 msgstr "所有檔案(_A)"
 
@@ -79,41 +79,34 @@ msgstr "應用程式(_A)："
 msgid "_Archive:"
 msgstr "壓縮檔(_F)："
 
-#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:379
+#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:385
 msgid "_Files:"
 msgstr "檔案(_F)："
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:441
+#: ../data/glade/file-roller.glade.h:16 ../data/glade/ask-password.glade.h:2
+#: ../src/dlg-extract.c:447
 msgid "_Password:"
 msgstr "密碼(_P)："
 
-#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:400
+#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:406
 msgid "_Selected files"
 msgstr "已選檔案(_S)"
 
-#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:390
+#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
 msgstr "例如：*.txt; *.doc"
 
-#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5767
-msgid "Destination folder"
-msgstr "目的地資料夾"
-
-#: ../data/glade/file-roller-extract.glade.h:2
-msgid "Ex_tract in folder:"
-msgstr "在資料夾中解壓(_T)："
-
-#: ../data/glade/file-roller-extract.glade.h:3 ../src/ui.h:86
-msgid "Extract"
-msgstr "解開"
+#: ../data/glade/ask-password.glade.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\"·size=\"larger\">需要密碼</span>"
 
 #. Create the application.
-#: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:391 ../src/main.c:210
-#: ../src/window.c:864 ../src/window.c:3526
+#: ../data/file-roller.desktop.in.in.h:1 ../src/gtk-utils.c:391
+#: ../src/main.c:218 ../src/window.c:883 ../src/window.c:3547
 msgid "Archive Manager"
 msgstr "壓縮檔管理員"
 
-#: ../data/file-roller.desktop.in.h:2 ../src/main.c:202
+#: ../data/file-roller.desktop.in.in.h:2 ../src/main.c:210
 msgid "Create and modify an archive"
 msgstr "建立及更改壓縮檔"
 
@@ -144,7 +137,7 @@ msgstr "建立一個新的壓縮檔包含已選的物件"
 #: ../src/actions.c:161 ../src/actions.c:181 ../src/actions.c:222
 #: ../src/dlg-batch-add.c:130 ../src/dlg-batch-add.c:149
 #: ../src/dlg-batch-add.c:172 ../src/dlg-batch-add.c:223
-#: ../src/dlg-batch-add.c:270 ../src/window.c:4272
+#: ../src/dlg-batch-add.c:270 ../src/window.c:4291
 msgid "Could not create the archive"
 msgstr "無法建立壓縮檔"
 
@@ -156,8 +149,8 @@ msgstr "您必須指定壓縮檔的名稱。"
 msgid "You don't have permission to create an archive in this folder"
 msgstr "您沒有足夠的權限在這個資料夾中建立壓縮檔"
 
-#: ../src/actions.c:223 ../src/fr-archive.c:740 ../src/window.c:4273
-#: ../src/window.c:4429
+#: ../src/actions.c:223 ../src/fr-archive.c:772 ../src/window.c:4292
+#: ../src/window.c:4446
 msgid "Archive type not supported."
 msgstr "不支援這種壓縮類型。"
 
@@ -178,7 +171,7 @@ msgid "New"
 msgstr "新增"
 
 #: ../src/actions.c:386 ../src/actions.c:497 ../src/actions.c:594
-#: ../src/window.c:3479
+#: ../src/window.c:3507
 msgid "All archives"
 msgstr "所有壓縮檔"
 
@@ -194,7 +187,7 @@ msgstr "壓縮檔類型："
 msgid "Automatic"
 msgstr "自動"
 
-#: ../src/actions.c:485 ../src/window.c:3923
+#: ../src/actions.c:485 ../src/window.c:3947
 msgid "Open"
 msgstr "開啟"
 
@@ -202,7 +195,7 @@ msgstr "開啟"
 msgid "Save"
 msgstr "儲存"
 
-#: ../src/actions.c:847 ../src/window.c:5319
+#: ../src/actions.c:847 ../src/window.c:5434
 msgid "Last Output"
 msgstr "上一個輸出訊息"
 
@@ -221,8 +214,8 @@ msgstr ""
 "以下地址，GNOME 翻譯團隊會盡快回覆您：\n"
 "community@linuxhall.org\n"
 "\n"
-"Woodman Tuen <wmtuen@gmail.com>, 2004-2005\n"
-"Ben Wu <hpwu@redhat.com>, 2002-2003"
+"Woodman Tuen <wmtuen@gmail.com>, 2004-07\n"
+"Ben Wu <hpwu@redhat.com>, 2002-03"
 
 #: ../src/dlg-add-files.c:91 ../src/dlg-add-files.c:153
 #: ../src/dlg-add-folder.c:123 ../src/dlg-add-folder.c:252
@@ -232,15 +225,15 @@ msgstr "您沒有足夠的權限讀取資料夾“%s”中的檔案"
 
 #: ../src/dlg-add-files.c:97 ../src/dlg-add-files.c:159
 #: ../src/dlg-add-folder.c:129 ../src/dlg-add-folder.c:258
-#: ../src/window.c:2256 ../src/window.c:2294
+#: ../src/window.c:2304 ../src/window.c:2342
 msgid "Could not add the files to the archive"
 msgstr "無法將檔案加入至壓縮檔中"
 
-#: ../src/dlg-add-files.c:185
+#: ../src/dlg-add-files.c:185 ../src/ui.h:50
 msgid "Add Files"
 msgstr "加入檔案"
 
-#: ../src/dlg-add-files.c:196 ../src/dlg-add-folder.c:328
+#: ../src/dlg-add-files.c:199 ../src/dlg-add-folder.c:331
 msgid "_Add only if newer"
 msgstr "只加入較新的(_A)"
 
@@ -248,43 +241,49 @@ msgstr "只加入較新的(_A)"
 msgid "Add a Folder"
 msgstr "加入資料夾"
 
-#: ../src/dlg-add-folder.c:329
+#: ../src/dlg-add-folder.c:332
 msgid "_Include subfolders"
 msgstr "包括子目錄(_I)"
 
-#: ../src/dlg-add-folder.c:330
+#: ../src/dlg-add-folder.c:333
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "不包括是符號連結的資料夾(_K)"
 
-#: ../src/dlg-add-folder.c:333 ../src/dlg-add-folder.c:338
+#: ../src/dlg-add-folder.c:336 ../src/dlg-add-folder.c:341
 msgid "example: *.o; *.bak"
 msgstr "例如： *.o; *.bak"
 
-#: ../src/dlg-add-folder.c:334
+#: ../src/dlg-add-folder.c:337
 msgid "_Include files:"
 msgstr "包括檔案(_I)："
 
-#: ../src/dlg-add-folder.c:339
+#: ../src/dlg-add-folder.c:342
 msgid "E_xclude files:"
 msgstr "不包括檔案(_X)："
 
-#: ../src/dlg-add-folder.c:342
+#: ../src/dlg-add-folder.c:345
 msgid "_Load Options"
 msgstr "載入選項(_L)"
 
-#: ../src/dlg-add-folder.c:343
+#: ../src/dlg-add-folder.c:346
 msgid "Sa_ve Options"
 msgstr "儲存選項(_V)"
 
-#: ../src/dlg-add-folder.c:790
+#: ../src/dlg-add-folder.c:794
 msgid "Save Options"
 msgstr "儲存選項"
 
-#: ../src/dlg-add-folder.c:791
+#: ../src/dlg-add-folder.c:795
 msgid "Options Name:"
 msgstr "選項名稱："
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5545
+#. Set widgets data.
+#: ../src/dlg-ask-password.c:109
+#, c-format
+msgid "Enter the password for the archive '%s'."
+msgstr "輸入此壓縮檔的密碼‘%s’。"
+
+#: ../src/dlg-batch-add.c:144 ../src/window.c:5717
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -295,8 +294,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5537 ../src/window.c:5541
-#: ../src/window.c:5545 ../src/window.c:5602 ../src/window.c:5604
+#: ../src/dlg-batch-add.c:144 ../src/window.c:5709 ../src/window.c:5713
+#: ../src/window.c:5717 ../src/window.c:5774 ../src/window.c:5776
 msgid "Please use a different name."
 msgstr "請使用其它的名字。"
 
@@ -306,7 +305,7 @@ msgid ""
 "folder."
 msgstr "您沒有足夠的權限在目的地資料夾中建立壓縮檔。"
 
-#: ../src/dlg-batch-add.c:192 ../src/dlg-extract.c:126 ../src/window.c:4711
+#: ../src/dlg-batch-add.c:192 ../src/dlg-extract.c:110 ../src/window.c:4807
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -317,11 +316,11 @@ msgstr ""
 "\n"
 "您想要建立它嗎？"
 
-#: ../src/dlg-batch-add.c:201 ../src/dlg-extract.c:135 ../src/window.c:4720
+#: ../src/dlg-batch-add.c:201 ../src/dlg-extract.c:119 ../src/window.c:4816
 msgid "Create _Folder"
 msgstr "建立資料夾(_F)"
 
-#: ../src/dlg-batch-add.c:219 ../src/dlg-extract.c:154 ../src/window.c:4739
+#: ../src/dlg-batch-add.c:219 ../src/dlg-extract.c:138 ../src/window.c:4835
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "無法建立目的地資料夾：%s。"
@@ -338,234 +337,246 @@ msgstr "壓縮檔已經存在，您要覆寫它嗎？"
 msgid "_Overwrite"
 msgstr "覆寫(_O)"
 
-#: ../src/dlg-extract.c:158 ../src/dlg-extract.c:178 ../src/dlg-extract.c:206
-#: ../src/window.c:4743 ../src/window.c:4763
+#: ../src/dlg-extract.c:142 ../src/dlg-extract.c:162 ../src/dlg-extract.c:190
+#: ../src/window.c:2667 ../src/window.c:4839 ../src/window.c:4859
 msgid "Extraction not performed"
 msgstr "未進行解壓縮"
 
-#: ../src/dlg-extract.c:201
+#: ../src/dlg-extract.c:185 ../src/window.c:2776
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "您並沒有足夠的權限在資料夾“%s”中將壓縮檔解壓"
 
-#: ../src/dlg-extract.c:362
+#: ../src/dlg-extract.c:368
 msgid "Files"
 msgstr "檔案"
 
-#: ../src/dlg-extract.c:411
+#: ../src/dlg-extract.c:417
 msgid "Actions"
 msgstr "動作"
 
-#: ../src/dlg-extract.c:427
-msgid "R_e-create folders"
+#: ../src/dlg-extract.c:433
+msgid "Re-crea_te folders"
 msgstr "重新建立資料夾(_E)"
 
-#: ../src/dlg-extract.c:431
+#: ../src/dlg-extract.c:437
 msgid "Over_write existing files"
 msgstr "覆寫既有的檔案(_W)"
 
-#: ../src/dlg-extract.c:435
+#: ../src/dlg-extract.c:441
 msgid "Do not e_xtract older files"
 msgstr "不解開較舊的檔案(_X)"
 
-#: ../src/dlg-extract.c:450
+#: ../src/dlg-extract.c:456
 msgid "_Open destination folder after extraction"
 msgstr "在解開後開啟目的地資料夾(_O)"
 
-#: ../src/dlg-prop.c:114
+#: ../src/dlg-extract.c:485 ../src/ui.h:90
+msgid "Extract"
+msgstr "解開"
+
+#: ../src/dlg-prop.c:112
 msgid "Path:"
 msgstr "路徑："
 
-#: ../src/dlg-prop.c:127
+#: ../src/dlg-prop.c:125
 msgid "Name:"
 msgstr "名稱："
 
-#: ../src/dlg-prop.c:133
+#: ../src/dlg-prop.c:131
 #, c-format
 msgid "%s Properties"
 msgstr "%s 的屬性"
 
-#: ../src/dlg-prop.c:142
+#: ../src/dlg-prop.c:140
 msgid "Modified on:"
 msgstr "修改日期："
 
-#: ../src/dlg-prop.c:148 ../src/window.c:428
-msgid "%d %B %Y, %H:%M"
-msgstr "%Y年%m月%d日 %H:%M"
-
-#: ../src/dlg-prop.c:156
+#: ../src/dlg-prop.c:150
 msgid "Archive size:"
 msgstr "壓縮檔大小："
 
-#: ../src/dlg-prop.c:167
+#: ../src/dlg-prop.c:161
 msgid "Content size:"
 msgstr "內容大小："
 
-#: ../src/dlg-prop.c:186
+#: ../src/dlg-prop.c:180
 msgid "Compression ratio:"
 msgstr "壓縮率："
 
-#: ../src/dlg-prop.c:201
+#: ../src/dlg-prop.c:195
 msgid "Number of files:"
 msgstr "檔案數目："
 
-#: ../src/file-data.c:28
+#: ../src/file-data.c:29
 msgid "Unknown type"
 msgstr "未知的類型"
 
-#: ../src/file-data.c:29
+#: ../src/file-data.c:30
 msgid "Symbolic link"
 msgstr "符號連結"
 
-#: ../src/fr-archive.c:714
+#: ../src/fr-archive.c:745
 msgid "The file does not exist."
 msgstr "檔案不存在。"
 
-#: ../src/fr-command-tar.c:289
+#: ../src/fr-command-tar.c:290
 msgid "Adding file: "
 msgstr "正在加入檔案："
 
-#: ../src/fr-command-tar.c:336
+#: ../src/fr-command-tar.c:339
 msgid "Removing file: "
 msgstr "正在移除檔案："
 
-#: ../src/fr-command-tar.c:345 ../src/window.c:1236
+#: ../src/fr-command-tar.c:348 ../src/window.c:1258
 msgid "Deleting files from archive"
 msgstr "在壓縮檔中刪除檔案"
 
-#: ../src/fr-command-tar.c:378
+#: ../src/fr-command-tar.c:382
 msgid "Extracting file: "
 msgstr "正在解開檔案："
 
-#: ../src/fr-command-tar.c:424
+#: ../src/fr-command-tar.c:429
 msgid "Recompressing archive"
 msgstr "重新壓縮檔案"
 
-#: ../src/fr-command-tar.c:558
+#: ../src/fr-command-tar.c:563
 msgid "Decompressing archive"
 msgstr "解壓檔案"
 
-#: ../src/fr-stock.c:44
+#: ../src/fr-stock.c:42 ../src/fr-stock.c:43
 msgid "_Add"
 msgstr "加入(_A)"
 
-#: ../src/fr-stock.c:45
+#: ../src/fr-stock.c:44
 msgid "_Extract"
 msgstr "解開(_E)"
 
-#: ../src/fr-stock.c:46 ../src/ui.h:36 ../src/ui.h:150 ../src/ui.h:154
-msgid "_View"
-msgstr "顯示(_V)"
+#: ../src/fr-stock.c:45
+msgid "_View File"
+msgstr "顯示檔案(_V)"
+
+#: ../src/glib-utils.c:516
+msgid "%d %B %Y"
+msgstr "%Y年%m月%d日"
 
 #. Button
 #: ../src/gtk-utils.c:422
 msgid "Command _Line Output"
 msgstr "命令列輸出(_L)"
 
-#: ../src/main.c:68
+#: ../src/main.c:69
+msgid "Ace (.ace)"
+msgstr "Ace 格式 (.ace)"
+
+#: ../src/main.c:70
 msgid "Ar (.ar)"
 msgstr "Ar 格式 (.ar)"
 
-#: ../src/main.c:70
+#: ../src/main.c:71
 msgid "Arj (.arj)"
 msgstr "Arj 格式 (.arj)"
 
-#: ../src/main.c:75
+#: ../src/main.c:78
 msgid "Ear (.ear)"
 msgstr "Ear 格式 (.ear)"
 
-#: ../src/main.c:77
+#: ../src/main.c:79
+msgid "Self-extracting zip (.exe)"
+msgstr "自動解壓縮 zip 檔 (.exe)"
+
+#: ../src/main.c:81
 msgid "Jar (.jar)"
 msgstr "Jar 格式 (.jar)"
 
-#: ../src/main.c:78
+#: ../src/main.c:82
 msgid "Lha (.lzh)"
 msgstr "Lha 格式 (.lzh)"
 
-#: ../src/main.c:80
+#: ../src/main.c:84
 msgid "Rar (.rar)"
 msgstr "Rar 格式 (.rar)"
 
-#: ../src/main.c:82
+#: ../src/main.c:86
 msgid "Tar uncompressed (.tar)"
 msgstr "未壓縮的 Tar 格式 (.tar)"
 
-#: ../src/main.c:83
+#: ../src/main.c:87
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "使用 bzip 壓縮的 Tar 檔案 (.tar.bz)"
 
-#: ../src/main.c:84
+#: ../src/main.c:88
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "使用 bzip2 壓縮的 Tar 檔案 (.tar.bz2)"
 
-#: ../src/main.c:85
+#: ../src/main.c:89
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "使用 gzip 壓縮的 Tar 檔案 (.tar.gz)"
 
-#: ../src/main.c:86
+#: ../src/main.c:90
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "使用 lzop 壓縮的 Tar 檔案 (.tar.lzo)"
 
-#: ../src/main.c:87
+#: ../src/main.c:91
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "使用 compress 壓縮的 Tar 檔案 (.tar.Z)"
 
-#: ../src/main.c:89
+#: ../src/main.c:93
 msgid "War (.war)"
 msgstr "War 格式 (.war)"
 
-#: ../src/main.c:90
+#: ../src/main.c:94
 msgid "Zip (.zip)"
 msgstr "Zip 格式 (.zip)"
 
-#: ../src/main.c:91
+#: ../src/main.c:95
 msgid "Zoo (.zoo)"
 msgstr "Zoo 格式 (.zoo)"
 
-#: ../src/main.c:92
+#: ../src/main.c:96
 msgid "7-Zip (.7z)"
 msgstr "7-Zip 格式 (.7z)"
 
-#: ../src/main.c:137
+#: ../src/main.c:145
 msgid "Add files to the specified archive and quit the program"
 msgstr "將檔案加入到指定的壓縮檔，然後離開程式"
 
-#: ../src/main.c:138
+#: ../src/main.c:146
 msgid "ARCHIVE"
 msgstr "壓縮檔"
 
-#: ../src/main.c:141
+#: ../src/main.c:149
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "加入檔案並詢問壓縮檔的名稱，然後離開程式"
 
-#: ../src/main.c:145
+#: ../src/main.c:153
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "解開壓縮檔到指定的資料夾，然後離開程式"
 
-#: ../src/main.c:146 ../src/main.c:158
+#: ../src/main.c:154 ../src/main.c:166
 msgid "FOLDER"
 msgstr "資料夾"
 
-#: ../src/main.c:149
+#: ../src/main.c:157
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "解開壓縮檔並詢問目的地資料夾，然後離開程式"
 
-#: ../src/main.c:153
+#: ../src/main.c:161
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
 msgstr "以壓縮檔的名稱作為目的地資料夾的名稱來解開壓縮檔，然後離開程式"
 
-#: ../src/main.c:157
+#: ../src/main.c:165
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "'--add' 與 '--extract' 選項所使用的預設資料夾"
 
-#: ../src/main.c:161
+#: ../src/main.c:169
 msgid "Create destination folder without asking confirmation"
 msgstr "無需確認便建立目的地資料夾"
 
-#: ../src/main.c:217
+#: ../src/main.c:225
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -577,6 +588,10 @@ msgstr "檔案(_F)"
 #: ../src/ui.h:35
 msgid "_Edit"
 msgstr "編輯(_E)"
+
+#: ../src/ui.h:36
+msgid "_View"
+msgstr "顯示(_V)"
 
 #: ../src/ui.h:37
 msgid "_Help"
@@ -602,97 +617,97 @@ msgstr "加入檔案(_A)..."
 msgid "Add files to the archive"
 msgstr "將檔案加入到壓縮檔"
 
-#: ../src/ui.h:50
-msgid "Add"
-msgstr "加入"
-
 #: ../src/ui.h:54
 msgid "Add a _Folder..."
 msgstr "加入資料夾(_F)..."
 
-#: ../src/ui.h:55
+#: ../src/ui.h:55 ../src/ui.h:59
 msgid "Add a folder to the archive"
 msgstr "在壓縮檔中加入資料夾"
 
-#: ../src/ui.h:59
+#: ../src/ui.h:58
+msgid "Add Folder"
+msgstr "加入資料夾"
+
+#: ../src/ui.h:63
 msgid "Close the current archive"
 msgstr "關閉目前的壓縮檔"
 
-#: ../src/ui.h:63
+#: ../src/ui.h:66
+msgid "Contents"
+msgstr "內容"
+
+#: ../src/ui.h:67
 msgid "Display the File Roller Manual"
 msgstr "顯示 File Roller 的說明文件"
 
-#: ../src/ui.h:67
+#: ../src/ui.h:71
 msgid "Copy the selection"
 msgstr "將已選的複製"
 
-#: ../src/ui.h:71
+#: ../src/ui.h:75
 msgid "Cut the selection"
 msgstr "將已選的剪下"
 
-#: ../src/ui.h:75
+#: ../src/ui.h:79
 msgid "Delete the selection from the archive"
 msgstr "從壓縮檔中將已選的刪除"
 
-#: ../src/ui.h:78
+#: ../src/ui.h:82
 msgid "Dese_lect All"
 msgstr "全部不選(_L)"
 
-#: ../src/ui.h:79
+#: ../src/ui.h:83
 msgid "Deselect all files"
 msgstr "取消選取檔案"
 
-#: ../src/ui.h:82
+#: ../src/ui.h:86
 msgid "_Extract..."
 msgstr "解壓至(_E)..."
 
-#: ../src/ui.h:83 ../src/ui.h:87
+#: ../src/ui.h:87 ../src/ui.h:91
 msgid "Extract files from the archive"
 msgstr "從壓縮檔中解開檔案"
 
-#: ../src/ui.h:90
+#: ../src/ui.h:94
 msgid "_Last Output"
 msgstr "上一個輸出訊息(_L)"
 
-#: ../src/ui.h:91
+#: ../src/ui.h:95
 msgid "View the output produced by the last executed command"
 msgstr "顯示上一個已執行命令所產生的輸出訊息"
 
-#: ../src/ui.h:95
+#: ../src/ui.h:99
 msgid "Create a new archive"
 msgstr "建立新的壓縮檔"
 
-#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3920 ../src/window.c:3923
+#: ../src/ui.h:103 ../src/ui.h:107 ../src/window.c:3944 ../src/window.c:3947
 msgid "Open archive"
 msgstr "開啟壓縮檔"
 
-#: ../src/ui.h:106
+#: ../src/ui.h:110
 msgid "Op_en With..."
 msgstr "以其它程式開啟(_E)..."
 
-#: ../src/ui.h:107
+#: ../src/ui.h:111
 msgid "Open selected files with an application"
 msgstr "使用其它程式開啟已選取的檔案"
 
-#: ../src/ui.h:110
+#: ../src/ui.h:114
 msgid "Pass_word..."
 msgstr "密碼(_W)..."
 
-#: ../src/ui.h:111
+#: ../src/ui.h:115
 msgid "Specify a password for this archive"
 msgstr "指定這壓縮檔的密碼"
 
-#: ../src/ui.h:115
+#: ../src/ui.h:119
 msgid "Paste the clipboard"
 msgstr "貼到剪貼板"
 
-#: ../src/ui.h:119
+#: ../src/ui.h:123
 msgid "Show archive properties"
 msgstr "顯示壓縮檔的屬性"
-
-#: ../src/ui.h:123
-msgid "Quit the application"
-msgstr "離開程式"
 
 #: ../src/ui.h:127
 msgid "Reload current archive"
@@ -734,262 +749,257 @@ msgstr "測試壓縮檔是否含有錯誤"
 msgid "View the selected file"
 msgstr "顯示已選的檔案"
 
-#: ../src/ui.h:163
+#: ../src/ui.h:159
+msgid "Open the selected folder"
+msgstr "顯示已選的資料夾"
+
+#: ../src/ui.h:167
 msgid "_Toolbar"
 msgstr "工具列(_T)"
 
-#: ../src/ui.h:164
+#: ../src/ui.h:168
 msgid "View the main toolbar"
 msgstr "顯示主工具列"
 
-#: ../src/ui.h:168
+#: ../src/ui.h:172
 msgid "Stat_usbar"
 msgstr "狀態列(_U)"
 
-#: ../src/ui.h:169
+#: ../src/ui.h:173
 msgid "View the statusbar"
 msgstr "顯示狀態列"
 
-#: ../src/ui.h:173
+#: ../src/ui.h:177
 msgid "_Reversed Order"
 msgstr "相反次序(_R)"
 
-#: ../src/ui.h:174
+#: ../src/ui.h:178
 msgid "Reverse the list order"
 msgstr "清單以相反次序排列"
 
-#: ../src/ui.h:183
+#: ../src/ui.h:187
 msgid "View All _Files"
 msgstr "顯示所有檔案(_F)"
 
-#: ../src/ui.h:186
+#: ../src/ui.h:190
 msgid "View as a F_older"
 msgstr "以資料夾方式顯示(_O)"
 
-#: ../src/ui.h:194
+#: ../src/ui.h:198
 msgid "by _Name"
 msgstr "依名稱(_N)"
 
-#: ../src/ui.h:195
+#: ../src/ui.h:199
 msgid "Sort file list by name"
 msgstr "依名稱排列檔案清單"
 
-#: ../src/ui.h:197
+#: ../src/ui.h:201
 msgid "by _Size"
 msgstr "依大小(_S)"
 
-#: ../src/ui.h:198
+#: ../src/ui.h:202
 msgid "Sort file list by file size"
 msgstr "依檔案大小排列檔案清單"
 
-#: ../src/ui.h:200
+#: ../src/ui.h:204
 msgid "by T_ype"
 msgstr "依類型(_Y)"
 
-#: ../src/ui.h:201
+#: ../src/ui.h:205
 msgid "Sort file list by type"
 msgstr "依類型排列檔案清單"
 
-#: ../src/ui.h:203
+#: ../src/ui.h:207
 msgid "by _Date modified"
 msgstr "依修改日期(_D)"
 
-#: ../src/ui.h:204
+#: ../src/ui.h:208
 msgid "Sort file list by modification time"
 msgstr "依修改時間排列檔案清單"
 
-#: ../src/ui.h:206
+#: ../src/ui.h:210
 msgid "by _Location"
 msgstr "依位置(_L)"
 
-#: ../src/ui.h:207
+#: ../src/ui.h:211
 msgid "Sort file list by location"
 msgstr "依路徑排列檔案清單"
 
-#: ../src/window.c:711
+#: ../src/window.c:734
 msgid "Folder"
 msgstr "資料夾"
 
-#: ../src/window.c:872
+#: ../src/window.c:891
 msgid "[read only]"
 msgstr "[唯讀]"
 
-#: ../src/window.c:966
+#: ../src/window.c:985
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
 msgstr[0] "%d 個檔案 (%s)"
 
-#: ../src/window.c:971
+#: ../src/window.c:990
 #, c-format
 msgid "%d file selected (%s)"
 msgid_plural "%d files selected (%s)"
 msgstr[0] "已選取 %d 個檔案 (%s)"
 
-#: ../src/window.c:1233
+#: ../src/window.c:1255
 msgid "Reading archive"
 msgstr "正在讀取壓縮檔"
 
-#: ../src/window.c:1239
+#: ../src/window.c:1261
 msgid "Adding files to archive"
 msgstr "將檔案加入到壓縮檔中"
 
-#: ../src/window.c:1242
+#: ../src/window.c:1264
 msgid "Extracting files from archive"
 msgstr "正在從壓縮檔中解開檔案"
 
-#: ../src/window.c:1245
+#: ../src/window.c:1267
 msgid "Testing archive"
 msgstr "正在測試壓縮檔"
 
-#: ../src/window.c:1248
+#: ../src/window.c:1270
 msgid "Getting the file list"
 msgstr "取得檔案清單"
 
-#: ../src/window.c:1251
+#: ../src/window.c:1273
 msgid "Saving archive"
 msgstr "正在儲存壓縮檔"
 
-#: ../src/window.c:1429
+#: ../src/window.c:1453
 msgid "Archive:"
 msgstr "壓縮檔："
 
-#: ../src/window.c:1542
+#: ../src/window.c:1568
 msgid "wait please..."
 msgstr "請稍候..."
 
-#: ../src/window.c:1617
+#: ../src/window.c:1647
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "資料夾無法顯示“%s”"
 
-#: ../src/window.c:1676
-msgid ""
-"This archive is password protected.\n"
-"Please specify a password with the command: Edit->Password"
-msgstr ""
-"這壓縮檔受密碼保護。\n"
-"請在選單中點選「編輯」→「密碼」，然後輸入密碼。"
-
-#: ../src/window.c:1678
-msgid ""
-"The specified password is not valid, please specify a new password with the "
-"command: Edit->Password"
-msgstr "所指定的密碼無效，請在選單中點選「編輯」→「密碼」，然後輸入密碼"
-
-#: ../src/window.c:1683 ../src/window.c:2480 ../src/window.c:5938
-msgid "Could not perform the operation"
-msgstr "操作無法進行"
-
-#: ../src/window.c:1708
+#: ../src/window.c:1719
 msgid "An error occurred while extracting files."
 msgstr "解開檔案時發生錯誤。"
 
-#: ../src/window.c:1712
+#: ../src/window.c:1723
 msgid "An error occurred while loading the archive."
 msgstr "載入壓縮檔時發生錯誤。"
 
-#: ../src/window.c:1716
+#: ../src/window.c:1727
 msgid "An error occurred while deleting files from the archive."
 msgstr "在壓縮檔中刪除檔案時發生錯誤。"
 
-#: ../src/window.c:1720
+#: ../src/window.c:1731
 msgid "An error occurred while adding files to the archive."
 msgstr "將檔案加入到壓縮檔時發生錯誤。"
 
-#: ../src/window.c:1724
+#: ../src/window.c:1735
 msgid "An error occurred while testing archive."
 msgstr "測試壓縮檔時發生錯誤。"
 
-#: ../src/window.c:1737
+#: ../src/window.c:1748
 msgid "Command not found."
 msgstr "找不到指令。"
 
-#: ../src/window.c:1740
+#: ../src/window.c:1751
 msgid "Command exited abnormally."
 msgstr "指令異常地結束。"
 
-#: ../src/window.c:1870
+#: ../src/window.c:1891
 msgid "Test Result"
 msgstr "測試結果"
 
-#: ../src/window.c:2257
+#: ../src/window.c:2305
 msgid "You don't have the right permissions."
 msgstr "您沒有足夠的權限。"
 
-#: ../src/window.c:2295
+#: ../src/window.c:2343
 msgid "You can't add an archive to itself."
 msgstr "您無法將壓縮檔加入壓縮檔自身。"
 
-#: ../src/window.c:2514
+#: ../src/window.c:2528 ../src/window.c:6126
+msgid "Could not perform the operation"
+msgstr "操作無法進行"
+
+#: ../src/window.c:2562
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "您想要將這檔案加入到目前的壓縮檔中，還是開啟一個新的壓縮檔？"
 
-#: ../src/window.c:2551
+#: ../src/window.c:2599
 msgid "Do you want to create a new archive with these files?"
 msgstr "您想要為這些檔案建立一個新的壓縮檔嗎？"
 
-#: ../src/window.c:2554
+#: ../src/window.c:2602
 msgid "Create _Archive"
 msgstr "建立壓縮檔(_A)"
 
-#: ../src/window.c:2944
+#: ../src/window.c:2779
+#, c-format
+msgid "Cannot extract archives in a remote folder \"%s\""
+msgstr "在遠端資料夾“%s”中無法將壓縮檔解壓"
+
+#: ../src/window.c:2970
 msgid "Size"
 msgstr "大小"
 
-#: ../src/window.c:2945
+#: ../src/window.c:2971
 msgid "Type"
 msgstr "類型"
 
-#: ../src/window.c:2946
+#: ../src/window.c:2972
 msgid "Date Modified"
 msgstr "修改日期"
 
-#: ../src/window.c:2955
+#: ../src/window.c:2981
 msgid "Name"
 msgstr "名稱"
 
-#: ../src/window.c:3782
+#: ../src/window.c:3806
 msgid "Go to the previous visited location"
 msgstr "回到上一個曾經瀏覽的位置"
 
-#: ../src/window.c:3790
+#: ../src/window.c:3814
 msgid "Go to the next visited location"
 msgstr "前住下一個曾經瀏覽的位置"
 
-#: ../src/window.c:3798
+#: ../src/window.c:3822
 msgid "Go up one level"
 msgstr "上一層"
 
-#: ../src/window.c:3806
+#: ../src/window.c:3830
 msgid "Go to the home location"
 msgstr "回到個人資料夾"
 
-#: ../src/window.c:3921
+#: ../src/window.c:3945
 msgid "Open a recently used archive"
 msgstr "開啟最近使用的壓縮檔"
 
-#: ../src/window.c:4364
+#: ../src/window.c:4381
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "無法開啟“%s”"
 
-#: ../src/window.c:4422
+#: ../src/window.c:4439
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "無法儲存壓縮檔“%s”"
 
-#: ../src/window.c:5537
+#: ../src/window.c:5709
 msgid "The new name is void."
 msgstr "新檔名是空的。"
 
-#: ../src/window.c:5541
+#: ../src/window.c:5713
 msgid "The new name is equal to the old one."
 msgstr "新舊檔案名稱相同。"
 
-#: ../src/window.c:5602
+#: ../src/window.c:5774
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1000,7 +1010,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5604
+#: ../src/window.c:5776
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1011,45 +1021,70 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5642
+#: ../src/window.c:5814
 msgid "Rename"
 msgstr "重新命名"
 
-#: ../src/window.c:5643
+#: ../src/window.c:5815
 msgid "New folder name"
 msgstr "新的資料夾名稱"
 
-#: ../src/window.c:5643
+#: ../src/window.c:5815
 msgid "New file name"
 msgstr "新的檔案名稱"
 
-#: ../src/window.c:5647
+#: ../src/window.c:5819
 msgid "_Rename"
 msgstr "重新命名(_R)"
 
-#: ../src/window.c:5663 ../src/window.c:5692
+#: ../src/window.c:5835 ../src/window.c:5864
 msgid "Could not rename the folder"
 msgstr "資料夾無法重新命名"
 
-#: ../src/window.c:5663 ../src/window.c:5692
+#: ../src/window.c:5835 ../src/window.c:5864
 msgid "Could not rename the file"
 msgstr "檔案無法重新命名"
 
-#: ../src/window.c:5766
+#: ../src/window.c:6040
 msgid "Paste Selection"
 msgstr "將已選的貼上"
 
-#: ../src/window.c:5771
+#: ../src/window.c:6041
+msgid "Destination folder"
+msgstr "目的地資料夾"
+
+#: ../src/window.c:6045
 msgid "_Paste"
 msgstr "貼上(_P)"
 
-#: ../src/window.c:6294
+#: ../src/window.c:6444
 msgid "Add files to an archive"
 msgstr "將檔案加入到壓縮檔中"
 
-#: ../src/window.c:6325
+#: ../src/window.c:6490
 msgid "Extract archive"
 msgstr "解開壓縮檔"
+
+#~ msgid "Ex_tract in folder:"
+#~ msgstr "在資料夾中解壓(_T)："
+
+#~ msgid "Add"
+#~ msgstr "加入"
+
+#~ msgid "Quit the application"
+#~ msgstr "離開程式"
+
+#~ msgid ""
+#~ "This archive is password protected.\n"
+#~ "Please specify a password with the command: Edit->Password"
+#~ msgstr ""
+#~ "這壓縮檔受密碼保護。\n"
+#~ "請在選單中點選「編輯」→「密碼」，然後輸入密碼。"
+
+#~ msgid ""
+#~ "The specified password is not valid, please specify a new password with "
+#~ "the command: Edit->Password"
+#~ msgstr "所指定的密碼無效，請在選單中點選「編輯」→「密碼」，然後輸入密碼"
 
 #~ msgid "    "
 #~ msgstr "    "
@@ -1059,6 +1094,3 @@ msgstr "解開壓縮檔"
 
 #~ msgid "Empty"
 #~ msgstr "空白"
-
-#~ msgid "_View File"
-#~ msgstr "顯示檔案(_V)"
