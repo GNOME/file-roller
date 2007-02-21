@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller 2.7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-12 12:01+0100\n"
-"PO-Revision-Date: 2007-01-12 12:04+0100\n"
+"POT-Creation-Date: 2007-02-21 12:32+0100\n"
+"PO-Revision-Date: 2007-02-21 12:33+0100\n"
 "Last-Translator: Hendrik Richter <hendrikr@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -86,7 +86,8 @@ msgstr "_Archiv:"
 msgid "_Files:"
 msgstr "_Dateien:"
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:447
+#: ../data/glade/file-roller.glade.h:16 ../data/glade/ask-password.glade.h:2
+#: ../src/dlg-extract.c:447
 msgid "_Password:"
 msgstr "_Passwort:"
 
@@ -97,6 +98,10 @@ msgstr "_Gewählte Dateien"
 #: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
 msgstr "Beispiel: *.txt; *.doc"
+
+#: ../data/glade/ask-password.glade.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">Passwort benötigt</span>"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1 ../src/gtk-utils.c:391
@@ -275,6 +280,12 @@ msgstr "Optionen speichern"
 msgid "Options Name:"
 msgstr "Optionsname:"
 
+#. Set widgets data.
+#: ../src/dlg-ask-password.c:109
+#, c-format
+msgid "Enter the password for the archive '%s'."
+msgstr "Geben Sie das Passwort für das Archiv »%s« ein."
+
 #: ../src/dlg-batch-add.c:144 ../src/window.c:5717
 #, c-format
 msgid ""
@@ -353,7 +364,7 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #: ../src/dlg-extract.c:433
-msgid "R_e-create folders"
+msgid "Re-crea_te folders"
 msgstr "Ordner _neu anlegen"
 
 #: ../src/dlg-extract.c:437
@@ -453,7 +464,7 @@ msgstr "_Entpacken"
 msgid "_View File"
 msgstr "Da_tei anzeigen"
 
-#: ../src/glib-utils.c:505
+#: ../src/glib-utils.c:516
 msgid "%d %B %Y"
 msgstr "%d %B %Y"
 
