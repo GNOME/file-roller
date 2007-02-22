@@ -5,14 +5,15 @@
 # Gustavo Noronha Silva <kov@debian.org>, 2004.
 # Goedson Teixeira Paixão <goedson@debian.org>, 2004.
 # Afonso Celso Medina <medina@maua.br>, 2005.
+# Og Maciel <ogmaciel@ubuntu.com>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-03 12:12-0200\n"
-"PO-Revision-Date: 2007-01-03 12:26-0200\n"
-"Last-Translator: Guilherme de S. Pastore <gpastore@gnome.org>\n"
+"POT-Creation-Date: 2007-02-21 23:17-0300\n"
+"PO-Revision-Date: 2007-02-21 23:45-0300\n"
+"Last-Translator: Og Maciel <ogmaciel@ubuntu.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-l10n-br@listas.cipsga.org.br>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,11 +69,11 @@ msgstr "Senha"
 
 #: ../data/glade/file-roller.glade.h:11
 msgid "R_ecent applications:"
-msgstr "Aplicações R_ecentes:"
+msgstr "Aplicações r_ecentes:"
 
 #: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:399
 msgid "_All files"
-msgstr "_Todos os Arquivos"
+msgstr "_Todos os arquivos"
 
 #: ../data/glade/file-roller.glade.h:13
 msgid "_Application:"
@@ -84,11 +85,12 @@ msgstr "_Pacote:"
 
 #: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:385
 msgid "_Files:"
-msgstr "_Arquivos:"
+msgstr "Arqui_vos:"
 
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:447
+#: ../data/glade/file-roller.glade.h:16 ../data/glade/ask-password.glade.h:2
+#: ../src/dlg-extract.c:447
 msgid "_Password:"
-msgstr "_Senha:"
+msgstr "Sen_ha:"
 
 #: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:406
 msgid "_Selected files"
@@ -97,6 +99,10 @@ msgstr "Arquivos _selecionados"
 #: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:396
 msgid "example: *.txt; *.doc"
 msgstr "exemplo: *.txt; *.doc"
+
+#: ../data/glade/ask-password.glade.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">Senha requerida</span>"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1 ../src/gtk-utils.c:391
@@ -122,7 +128,7 @@ msgstr "Extrair Para..."
 
 #: ../nautilus/nautilus-fileroller.c:280
 msgid "Extract the selected archive"
-msgstr "Extrair o arquivo selecionado do pacote"
+msgstr "Extrair o pacote selecionado"
 
 #: ../nautilus/nautilus-fileroller.c:299
 msgid "Create Archive..."
@@ -145,12 +151,12 @@ msgstr "Você deve especificar um nome para o pacote."
 
 #: ../src/actions.c:182
 msgid "You don't have permission to create an archive in this folder"
-msgstr "Você não permissão para criar um pacote nesta pasta"
+msgstr "Você não possui permissão para criar um pacote nesta pasta"
 
 #: ../src/actions.c:223 ../src/fr-archive.c:772 ../src/window.c:4292
 #: ../src/window.c:4446
 msgid "Archive type not supported."
-msgstr "Tipo de arquivo não suportado."
+msgstr "Tipo de pacote sem suporte."
 
 #: ../src/actions.c:236
 msgid "The archive already exists.  Do you want to overwrite it?"
@@ -212,13 +218,15 @@ msgstr ""
 "David Barzilay <barzilay@redhat.com>\n"
 "Gustavo Noronha Silva <kov@debian.org>\n"
 "Goedson Teixeira Paixão <goedson@debian.org>\n"
-"Afonso Celso Medina <medina@maua.br>"
+"Afonso Celso Medina <medina@maua.br>\n"
+"Og Maciel <ogmaciel@ubuntu.com>"
 
 #: ../src/dlg-add-files.c:91 ../src/dlg-add-files.c:153
 #: ../src/dlg-add-folder.c:123 ../src/dlg-add-folder.c:252
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Você não tem as permissões corretas para ler arquivos na pasta \"%s\""
+msgstr ""
+"Você não possui as permissões corretas para ler arquivos na pasta \"%s\""
 
 #: ../src/dlg-add-files.c:97 ../src/dlg-add-files.c:159
 #: ../src/dlg-add-folder.c:129 ../src/dlg-add-folder.c:258
@@ -236,7 +244,7 @@ msgstr "A_dicionar apenas se for mais novo"
 
 #: ../src/dlg-add-folder.c:317
 msgid "Add a Folder"
-msgstr "Adicionar uma Pastas"
+msgstr "Adicionar uma Pasta"
 
 #: ../src/dlg-add-folder.c:332
 msgid "_Include subfolders"
@@ -256,7 +264,7 @@ msgstr "_Incluir arquivos:"
 
 #: ../src/dlg-add-folder.c:342
 msgid "E_xclude files:"
-msgstr "I_gnorar arquivos:"
+msgstr "E_xcluir arquivos:"
 
 #: ../src/dlg-add-folder.c:345
 msgid "_Load Options"
@@ -272,7 +280,13 @@ msgstr "Salvar Opções"
 
 #: ../src/dlg-add-folder.c:795
 msgid "Options Name:"
-msgstr "Nome das Opções: "
+msgstr "Nome das Opções:"
+
+#. Set widgets data.
+#: ../src/dlg-ask-password.c:109
+#, c-format
+msgid "Enter the password for the archive '%s'."
+msgstr "Digite a senha para o pacote \"%s\"."
 
 #: ../src/dlg-batch-add.c:144 ../src/window.c:5717
 #, c-format
@@ -320,7 +334,7 @@ msgstr "Não foi possível criar a pasta de destino: %s."
 
 #: ../src/dlg-batch-add.c:243
 msgid "Archive not created"
-msgstr "O pacote não foi criado."
+msgstr "O pacote não foi criado"
 
 #: ../src/dlg-batch-add.c:296
 msgid "The archive is already present.  Do you want to overwrite it?"
@@ -340,7 +354,7 @@ msgstr "Extração não realizada"
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr ""
-"Você não tem as permissões corretas para extrair pacotes na pasta \"%s\""
+"Você não possui as permissões corretas para extrair pacotes na pasta \"%s\""
 
 #: ../src/dlg-extract.c:368
 msgid "Files"
@@ -351,20 +365,20 @@ msgid "Actions"
 msgstr "Ações"
 
 #: ../src/dlg-extract.c:433
-msgid "R_e-create folders"
-msgstr "R_ecriar pastas"
+msgid "Re-crea_te folders"
+msgstr "Recriar pas_tas"
 
 #: ../src/dlg-extract.c:437
 msgid "Over_write existing files"
-msgstr "Sobrescrever arquivos existentes"
+msgstr "S_obrescrever arquivos existentes"
 
 #: ../src/dlg-extract.c:441
 msgid "Do not e_xtract older files"
-msgstr "Não e_xtrair arquivos mais antigos"
+msgstr "_Não extrair arquivos mais antigos"
 
 #: ../src/dlg-extract.c:456
 msgid "_Open destination folder after extraction"
-msgstr "_Abrir pasta de destino após extração"
+msgstr "Abrir pasta de _destino após extração"
 
 #: ../src/dlg-extract.c:485 ../src/ui.h:90
 msgid "Extract"
@@ -397,7 +411,7 @@ msgstr "Tamanho do conteúdo:"
 
 #: ../src/dlg-prop.c:180
 msgid "Compression ratio:"
-msgstr "Razão de compressão:"
+msgstr "Taxa de compressão:"
 
 #: ../src/dlg-prop.c:195
 msgid "Number of files:"
@@ -409,7 +423,7 @@ msgstr "Tipo desconhecido"
 
 #: ../src/file-data.c:30
 msgid "Symbolic link"
-msgstr "Ligação simbólica"
+msgstr "Link simbólico"
 
 #: ../src/fr-archive.c:745
 msgid "The file does not exist."
@@ -425,7 +439,7 @@ msgstr "Removendo arquivo: "
 
 #: ../src/fr-command-tar.c:348 ../src/window.c:1258
 msgid "Deleting files from archive"
-msgstr "Exluindo arquivos do pacote"
+msgstr "Excluindo arquivos do pacote"
 
 #: ../src/fr-command-tar.c:382
 msgid "Extracting file: "
@@ -441,7 +455,7 @@ msgstr "Descomprimindo pacote"
 
 #: ../src/fr-stock.c:42 ../src/fr-stock.c:43
 msgid "_Add"
-msgstr "A_dicionar"
+msgstr "_Adicionar"
 
 #: ../src/fr-stock.c:44
 msgid "_Extract"
@@ -449,9 +463,9 @@ msgstr "_Extrair"
 
 #: ../src/fr-stock.c:45
 msgid "_View File"
-msgstr "_Visualizar Arquivo"
+msgstr "_Ver Arquivo"
 
-#: ../src/glib-utils.c:505
+#: ../src/glib-utils.c:516
 msgid "%d %B %Y"
 msgstr "%d %B %Y"
 
@@ -474,7 +488,7 @@ msgstr "Arj (.arj)"
 
 #: ../src/main.c:78
 msgid "Ear (.ear)"
-msgstr "Aplicação J2EE (.ear)"
+msgstr "Ear (.ear)"
 
 #: ../src/main.c:79
 msgid "Self-extracting zip (.exe)"
@@ -482,7 +496,7 @@ msgstr "Arquivo zip autodescompactável (.exe)"
 
 #: ../src/main.c:81
 msgid "Jar (.jar)"
-msgstr "Pacote Java (.jar)"
+msgstr "Jar (.jar)"
 
 #: ../src/main.c:82
 msgid "Lha (.lzh)"
@@ -518,7 +532,7 @@ msgstr "Tar compactado com compress (.tar.Z)"
 
 #: ../src/main.c:93
 msgid "War (.war)"
-msgstr "Aplicação Web (.war)"
+msgstr "War (.war)"
 
 #: ../src/main.c:94
 msgid "Zip (.zip)"
@@ -546,7 +560,7 @@ msgstr "Adiciona arquivos perguntando o nome do pacote e sai do programa"
 
 #: ../src/main.c:153
 msgid "Extract archives to the specified folder and quit the program"
-msgstr "Extrai os pacotes para a pasta especificada e termina o programa"
+msgstr "Extrai os pacotes para a pasta especificada e sai do programa"
 
 #: ../src/main.c:154 ../src/main.c:166
 msgid "FOLDER"
@@ -561,12 +575,12 @@ msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
 msgstr ""
-"Extrai pacotes usando o nome do arquivo como pasta de destino e sai do "
+"Extrai pacotes usando o nome do pacote como pasta de destino e sai do "
 "programa"
 
 #: ../src/main.c:165
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "Pasta padrão para usar para os comandos '--add' e '--extract'"
+msgstr "Pasta padrão para usar para os comandos \"--add\" e \"--extract\""
 
 #: ../src/main.c:169
 msgid "Create destination folder without asking confirmation"
@@ -586,7 +600,7 @@ msgstr "_Editar"
 
 #: ../src/ui.h:36
 msgid "_View"
-msgstr "_Visualizar"
+msgstr "_Ver"
 
 #: ../src/ui.h:37
 msgid "_Help"
@@ -614,7 +628,7 @@ msgstr "Adiciona arquivos ao pacote"
 
 #: ../src/ui.h:54
 msgid "Add a _Folder..."
-msgstr "Adicionar uma Pasta..."
+msgstr "Adicionar uma _Pasta..."
 
 #: ../src/ui.h:55 ../src/ui.h:59
 msgid "Add a folder to the archive"
@@ -650,11 +664,11 @@ msgstr "Excluir seleção do pacote"
 
 #: ../src/ui.h:82
 msgid "Dese_lect All"
-msgstr "Desse_lecionar Tudo"
+msgstr "Des_marcar Tudo"
 
 #: ../src/ui.h:83
 msgid "Deselect all files"
-msgstr "Desseleciona todos os arquivos"
+msgstr "Desmarca todos os arquivos"
 
 #: ../src/ui.h:86
 msgid "_Extract..."
@@ -666,7 +680,7 @@ msgstr "Extrair arquivos do pacote"
 
 #: ../src/ui.h:94
 msgid "_Last Output"
-msgstr "_Última Saída"
+msgstr "Última _Saída"
 
 #: ../src/ui.h:95
 msgid "View the output produced by the last executed command"
@@ -738,11 +752,11 @@ msgstr "_Testar integridade"
 
 #: ../src/ui.h:147
 msgid "Test whether the archive contains errors"
-msgstr "Testar se exitem erros no pacote"
+msgstr "Testa se exitem erros no pacote"
 
 #: ../src/ui.h:151 ../src/ui.h:155
 msgid "View the selected file"
-msgstr "Visualizar arquivo selecionado"
+msgstr "Ver o arquivo selecionado"
 
 #: ../src/ui.h:159
 msgid "Open the selected folder"
@@ -750,7 +764,7 @@ msgstr "Abrir a pasta selecionada"
 
 #: ../src/ui.h:167
 msgid "_Toolbar"
-msgstr "Barra de Ferramen_tas"
+msgstr "Barra de _Ferramentas"
 
 #: ../src/ui.h:168
 msgid "View the main toolbar"
@@ -758,11 +772,11 @@ msgstr "Ver a barra de ferramentas principal"
 
 #: ../src/ui.h:172
 msgid "Stat_usbar"
-msgstr "Barra de Stat_us"
+msgstr "_Barra de Estado"
 
 #: ../src/ui.h:173
 msgid "View the statusbar"
-msgstr "Ver a barra de status"
+msgstr "Ver a barra de estado"
 
 #: ../src/ui.h:177
 msgid "_Reversed Order"
@@ -774,11 +788,11 @@ msgstr "Inverte a ordem da lista de arquivos"
 
 #: ../src/ui.h:187
 msgid "View All _Files"
-msgstr "Visualizar Todos os _Arquivos"
+msgstr "Ver Todos os _Arquivos"
 
 #: ../src/ui.h:190
 msgid "View as a F_older"
-msgstr "Visualizar como _Pasta"
+msgstr "Ver Como uma Pas_ta"
 
 #: ../src/ui.h:198
 msgid "by _Name"
@@ -828,6 +842,7 @@ msgstr "Pasta"
 msgid "[read only]"
 msgstr "[somente leitura]"
 
+#: ../src/window.c:985
 #, c-format
 msgid "%d file (%s)"
 msgid_plural "%d files (%s)"
@@ -884,7 +899,7 @@ msgstr "Ocorreu um erro ao extrair os arquivos."
 
 #: ../src/window.c:1723
 msgid "An error occurred while loading the archive."
-msgstr "Ocorreu um erro ao abrir o pacote."
+msgstr "Ocorreu um erro ao carregar o pacote."
 
 #: ../src/window.c:1727
 msgid "An error occurred while deleting files from the archive."
@@ -912,7 +927,7 @@ msgstr "Resultado do Teste"
 
 #: ../src/window.c:2305
 msgid "You don't have the right permissions."
-msgstr "Você não tem as permissões corretas."
+msgstr "Você não possui as permissões corretas."
 
 #: ../src/window.c:2343
 msgid "You can't add an archive to itself."
@@ -941,7 +956,7 @@ msgstr "Criar _Pacote"
 #: ../src/window.c:2779
 #, c-format
 msgid "Cannot extract archives in a remote folder \"%s\""
-msgstr "Impossível extrair arquivos em uma pasta remota \"%s\""
+msgstr "Não é possível extrair arquivos em uma pasta remota \"%s\""
 
 #: ../src/window.c:2970
 msgid "Size"
@@ -953,7 +968,7 @@ msgstr "Tipo"
 
 #: ../src/window.c:2972
 msgid "Date Modified"
-msgstr "Data de modificação"
+msgstr "Data de Modificação"
 
 #: ../src/window.c:2981
 msgid "Name"
@@ -991,7 +1006,7 @@ msgstr "Não foi possível salvar o pacote \"%s\""
 
 #: ../src/window.c:5709
 msgid "The new name is void."
-msgstr "O novo nome é vazio."
+msgstr "O novo nome está vazio."
 
 #: ../src/window.c:5713
 msgid "The new name is equal to the old one."
@@ -1045,7 +1060,7 @@ msgstr "Não foi possível renomear o arquivo"
 
 #: ../src/window.c:6040
 msgid "Paste Selection"
-msgstr "Colar seleção"
+msgstr "Colar Seleção"
 
 #: ../src/window.c:6041
 msgid "Destination folder"
@@ -1053,7 +1068,7 @@ msgstr "Pasta de destino"
 
 #: ../src/window.c:6045
 msgid "_Paste"
-msgstr "Colar"
+msgstr "_Colar"
 
 #: ../src/window.c:6444
 msgid "Add files to an archive"
@@ -1090,7 +1105,7 @@ msgstr "Extrair pacote"
 #~ msgstr "    "
 
 #~ msgid "Open '%s'"
-#~ msgstr "Abrir '%s'"
+#~ msgstr "Abrir \"%s\""
 
 #~ msgid "Empty"
 #~ msgstr "Vazio"
