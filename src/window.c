@@ -355,8 +355,15 @@ compute_file_list_name (FRWindow   *window,
 
 	scan = fdata->full_path + current_dir_len;
 	end = strchr (scan, '/');
-	if (end != NULL) { /* folder */
-		char *dir_name = g_strndup (scan, end - scan);
+	if ((end == NULL) && ! fdata->dir) /* file */
+		fdata->list_name = g_strdup (scan);
+	else { /* folder */
+		char *dir_name;
+
+		if (end != NULL)
+			dir_name = g_strndup (scan, end - scan);
+		else
+			dir_name = g_strdup (scan);
 
 		/* avoid to insert duplicated folders */
 		if (g_hash_table_lookup (names_hash, dir_name) != NULL) {
@@ -370,8 +377,6 @@ compute_file_list_name (FRWindow   *window,
 
 		fdata->list_name = dir_name;
 	}
-	else  /* file */
-		fdata->list_name = g_strdup (scan);
 }
 
 
@@ -785,7 +790,6 @@ update_file_list_idle (gpointer callback_data)
 }
 
 
-
 void
 window_update_file_list (FRWindow *window)
 {
