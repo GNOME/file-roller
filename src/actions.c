@@ -27,7 +27,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <libgnome/gnome-help.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 #include "actions.h"
 #include "dlg-add-files.h"
 #include "dlg-add-folder.h"

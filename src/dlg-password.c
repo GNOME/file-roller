@@ -25,8 +25,6 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs-types.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 #include "gtk-utils.h"
 #include "window.h"
 

@@ -25,7 +25,6 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 #include "glib-utils.h"
 #include "utf8-fnmatch.h"
 

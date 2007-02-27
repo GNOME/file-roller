@@ -26,8 +26,6 @@
 #include <unistd.h>
 
 #include <glib.h>
-#include <libgnomevfs/gnome-vfs-types.h>
-#include <libgnomevfs/gnome-vfs-mime.h>
 
 #include "file-data.h"
 #include "file-utils.h"
