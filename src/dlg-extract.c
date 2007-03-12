@@ -63,7 +63,7 @@ typedef struct {
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
-            DialogData *data)
+	    DialogData *data)
 {
 	if (! data->extract_clicked) {
 		window_pop_message (data->window);
@@ -469,12 +469,12 @@ dlg_extract (GtkWidget *widget,
 	     gpointer   callback_data)
 {
 	FRWindow   *window = callback_data;
-        DialogData *data;
+	DialogData *data;
 	GtkWidget  *file_sel;
 
-        data = g_new0 (DialogData, 1);
+	data = g_new0 (DialogData, 1);
 
-        data->window = window;
+	data->window = window;
 	data->extract_clicked = FALSE;
 
 	data->tooltips = gtk_tooltips_new ();
@@ -504,7 +504,7 @@ dlg_extract (GtkWidget *widget,
 		const char *folder = window->extract_default_dir;
 		if (dir_is_temp_dir (folder))
 			folder = g_get_home_dir ();
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), folder);
+		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (file_sel), folder);
 	}
 
 	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)

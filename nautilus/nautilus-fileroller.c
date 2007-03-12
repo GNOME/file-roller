@@ -50,14 +50,14 @@ extract_to_callback (NautilusMenuItem *item,
 
 	uri = nautilus_file_info_get_uri (file);
 	path = gnome_vfs_get_local_path_from_uri (uri);
-	default_dir = g_strconcat ("file://", 
+	default_dir = g_strconcat ("file://",
 				   g_get_home_dir (), 
 				   "/",
 				   "Desktop", 
 				   NULL);
 	cmd = g_string_new ("file-roller");
-	g_string_append_printf (cmd, 
-				" --default-dir=%s --extract %s", 
+	g_string_append_printf (cmd,
+				" --default-dir=%s --extract %s",
 				g_shell_quote (default_dir),
 				g_shell_quote (path));
 
@@ -99,7 +99,7 @@ extract_here_callback (NautilusMenuItem *item,
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
-		
+
 		uri = nautilus_file_info_get_uri (file);
 		path = gnome_vfs_get_local_path_from_uri (uri);
 
@@ -140,7 +140,7 @@ add_callback (NautilusMenuItem *item,
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
-		
+
 		uri = nautilus_file_info_get_uri (file);
 		path = gnome_vfs_get_local_path_from_uri (uri);
 
@@ -153,7 +153,7 @@ add_callback (NautilusMenuItem *item,
 	g_spawn_command_line_async (cmd->str, NULL);
 
 	g_string_free (cmd, TRUE);
-}	 
+}
 
 
 static char *mime_types[] = {
@@ -215,7 +215,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 	if (files == NULL)
 		return NULL;
-	
+
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
 		char             *scheme;
@@ -260,12 +260,12 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		item = nautilus_menu_item_new ("NautilusFr::extract_here",
 					       _("Extract Here"),
 					       _("Extract the selected archive in the current position"),
-					       NULL);
-		g_signal_connect (item, 
+					       "drive-harddisk");
+		g_signal_connect (item,
 				  "activate",
 				  G_CALLBACK (extract_here_callback),
 				  provider);
-		g_object_set_data_full (G_OBJECT (item), 
+		g_object_set_data_full (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files),
 					(GDestroyNotify) nautilus_file_info_list_free);
@@ -278,19 +278,19 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		item = nautilus_menu_item_new ("NautilusFr::extract_to",
 					       _("Extract To..."),
 					       _("Extract the selected archive"),
-					       NULL);
-		g_signal_connect (item, 
+					       "drive-harddisk");
+		g_signal_connect (item,
 				  "activate",
 				  G_CALLBACK (extract_to_callback),
 				  provider);
-		g_object_set_data_full (G_OBJECT (item), 
+		g_object_set_data_full (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files),
 					(GDestroyNotify) nautilus_file_info_list_free);
 
 		items = g_list_append (items, item);
 
-	} 
+	}
 
 	if (! one_archive) {
 		NautilusMenuItem *item;
@@ -298,12 +298,12 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		item = nautilus_menu_item_new ("NautilusFr::add",
 					       _("Create Archive..."),
 					       _("Create an archive with the selected objects"),
-					       NULL);
-		g_signal_connect (item, 
+					       "gnome-mime-application-x-archive");
+		g_signal_connect (item,
 				  "activate",
 				  G_CALLBACK (add_callback),
 				  provider);
-		g_object_set_data_full (G_OBJECT (item), 
+		g_object_set_data_full (G_OBJECT (item),
 					"files",
 					nautilus_file_info_list_copy (files),
 					(GDestroyNotify) nautilus_file_info_list_free);
@@ -315,14 +315,14 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 }
 
 
-static void 
+static void
 nautilus_fr_menu_provider_iface_init (NautilusMenuProviderIface *iface)
 {
 	iface->get_file_items = nautilus_fr_get_file_items;
 }
 
 
-static void 
+static void
 nautilus_fr_instance_init (NautilusFr *fr)
 {
 }
@@ -339,7 +339,7 @@ static GType fr_type = 0;
 
 
 GType
-nautilus_fr_get_type (void) 
+nautilus_fr_get_type (void)
 {
 	return fr_type;
 }
@@ -353,7 +353,7 @@ nautilus_fr_register_type (GTypeModule *module)
 		(GBaseInitFunc) NULL,
 		(GBaseFinalizeFunc) NULL,
 		(GClassInitFunc) nautilus_fr_class_init,
-		NULL, 
+		NULL,
 		NULL,
 		sizeof (NautilusFr),
 		0,

@@ -1,8 +1,15 @@
+2007-03-12  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	[ File Roller 2.18.0 released ]
+
+	* configure.in:
+	* NEWS: updated for 2.18.0
+
 2007-03-07  Christian Kirbach  <Christian.Kirbach@googlemail.com>
 
-       * data/file-roller.desktop.in.in:
+	* data/file-roller.desktop.in.in:
 
-       "Application" is not a valid category in the freedesktop specification.
+	"Application" is not a valid category in the freedesktop specification.
 
 2007-02-28  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -615,7 +622,7 @@
 	* src/dlg-add-folder.c:
 	* src/gtk-utils.h:
 
-        Include <glib/gi18n.h>
+	Include <glib/gi18n.h>
 
 	* src/Makefile.am:
 	* src/recent-files/*: removed
@@ -841,7 +848,7 @@
 
 2006-03-01  Vladimer Sichinava <vlsichinava@gmail.com>
 
-        * configure.in: Added ka (Georgian) to ALL_LINGUAS
+	* configure.in: Added ka (Georgian) to ALL_LINGUAS
 
 2006-02-27  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -1447,9 +1454,9 @@
 
 2005-04-06  Alan Horkan <horkana@tcd.ie>
 
-        * src/ui.h: Be nice to translators, allow stock labels
-        (and keybindings where appropriate) to show through.
-        Should make translation work a little less painful.
+	* src/ui.h: Be nice to translators, allow stock labels
+	(and keybindings where appropriate) to show through.
+	Should make translation work a little less painful.
 
 	Fixes bug #172867: allow stock labels to show through, be nice to
 	translators
@@ -1485,7 +1492,7 @@
 
 2005-03-31  Steve Murphy  <murf@e-tools.com>
 
-        * configure.in: Added "rw" to ALL_LINGUAS.
+	* configure.in: Added "rw" to ALL_LINGUAS.
 
 2005-03-31  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -1615,7 +1622,7 @@
 	(fr_command_iso_handle_error): read iso files without Joliet info.
 
 	Fixes bug #144953: ISO reading assumes Joliet and Rock Ridge
-        extensions.
+	extensions.
 
 2005-02-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -2264,7 +2271,7 @@
 	* src/actions.c (activate_action_about): updated email address
 
 	* src/window.c (display_progress_dialog): call gtk_widget_present
-        on the main window before displaying the progress dialog.
+	on the main window before displaying the progress dialog.
 
 	* src/fr-archive.c:
 	* src/actions.c:
@@ -2361,7 +2368,7 @@
 
 2004-04-09  Guntupalli Karunakar  <karunakar@freedomink.org>
 
-        * configure.in: Added "gu" (Gujarati) to ALL_LINGUAS.
+	* configure.in: Added "gu" (Gujarati) to ALL_LINGUAS.
 
 2004-04-02  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
@@ -2391,8 +2398,8 @@
 	* src/window.c (window_paste_selection):
 	(rename_selection): Escape names.
 
-        Fix bug #138697: File-roller fails to properly handle filenames
-        containing whitespace.
+	Fix bug #138697: File-roller fails to properly handle filenames
+	containing whitespace.
 
 2004-03-30  Adam Weinberger  <adamw@gnome.org>
 
@@ -2432,7 +2439,7 @@
 
 2004-03-22  Guntupalli Karunakar  <karunakar@freedomink.org>
 
-        * configure.in: Added "pa" (Punjabi) to ALL_LINGUAS.
+	* configure.in: Added "pa" (Punjabi) to ALL_LINGUAS.
 
 2004-03-17  Gareth Owen  <gowen72@yahoo.com>
 
@@ -2796,7 +2803,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2004-01-03  Robert Sedak  <robert.sedak@sk.htnet.hr>
 
-        * configure.in: Added "hr" in ALL_LINGUAS.
+	* configure.in: Added "hr" in ALL_LINGUAS.
 
 2003-12-28  Paolo Bacchilega  <paolo.bacch@tin.it>
 
@@ -2809,7 +2816,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-12-20  Arafat Medini <lumina@silverpen.de>
 
-        * ar.po: Added Arabic locale "ar" to ALL_LINGUAS
+	* ar.po: Added Arabic locale "ar" to ALL_LINGUAS
 
 2003-11-24  Paolo Bacchilega  <paolo.bacch@tin.it>
 
@@ -3251,7 +3258,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 	* src/utf8-fnmatch.c:
 	* src/utf8-fnmatch.h: new files, added a utf8 compatible
-        fnmatch function.
+	fnmatch function.
 	* src/file-utils.c (match_patterns): use utf8_fnmatch instead of
 	fnmatch.
 	* src/fnmatch.[ch]: deleted.
@@ -3285,11 +3292,11 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-05-10  Paisa Seeluangsawat  <paisa@colorado.edu>
 
-        * configure.in: Added Thai (th) to ALL_LINGUAS.
+	* configure.in: Added Thai (th) to ALL_LINGUAS.
 
 2003-05-06  Duarte Loreto <happyguy_pt@hotmail.com>
 
-        * configure.in: Added Portuguese (pt) to ALL_LINGUAS.
+	* configure.in: Added Portuguese (pt) to ALL_LINGUAS.
 
 2003-05-06  Danilo Å egan  <dsegan@gmx.net>
 
@@ -3418,9 +3425,9 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 	* src/file-utils.c: add ':' to the chars to escape.
 
 	* src/fr-command-tar.c (fr_command_tar_list, fr_command_tar_list)
-        (fr_command_tar_add, fr_command_tar_delete)
-        (fr_command_tar_extract): add --force-local option to handle
-        filenames with a ':' char
+	(fr_command_tar_add, fr_command_tar_delete)
+	(fr_command_tar_extract): add --force-local option to handle
+	filenames with a ':' char
 
 	* src/fr-command-rar.c (split_line):
 	* src/fr-command-lha.c (split_line_lha):
@@ -3482,7 +3489,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 2003-01-30  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/window.c (theme_changed_cb): handle theme_changed event.
-        (window_new): allow svg themes (patch from gnome-2-2 branch).
+	(window_new): allow svg themes (patch from gnome-2-2 branch).
 
 	* src/fr-command-zoo.c:
 	* src/fr-command-zoo.h:
@@ -3514,7 +3521,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2003-01-22  Thomas Vander Stichele <thomas at apestaart dot org>
 
-        * src/Makefile.am: remove LIBOBJS, nothing sets it
+	* src/Makefile.am: remove LIBOBJS, nothing sets it
 
 2003-01-20  Paolo Bacchilega  <paolo.bacch@tin.it>
 
@@ -3793,17 +3800,17 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 2002-10-16  Paolo Bacchilega  <paolo.bacch@tin.it>
 
 	* src/fr-process.h (BUFFER_SIZE): set buffer size to 16384.
-        * src/fr-process.c (REFRESH_RATE): set refresh rate to 10 millisecs.
+	* src/fr-process.c (REFRESH_RATE): set refresh rate to 10 millisecs.
 
-        this makes loading much more faster (at least on my machine):
+	this makes loading much more faster (at least on my machine):
 
-        archive         files     before     after
-        -------------------------------------------
-        nautilus.tgz    1873      06''00     02''00
-        evolution.tgz   3478      10''00     03''00
-        gphoto2.tgz      592      02''10     00''97
+	archive         files     before     after
+	-------------------------------------------
+	nautilus.tgz    1873      06''00     02''00
+	evolution.tgz   3478      10''00     03''00
+	gphoto2.tgz      592      02''10     00''97
 
-        please send me your benchmarks.
+	please send me your benchmarks.
 
 2002-10-13  Paolo Bacchilega  <paolo.bacch@tin.it>
 
@@ -3885,7 +3892,7 @@ Wed Jan  7 01:41:32 2004  Jonathan Blandford  <jrb@gnome.org>
 
 2002-09-10 Hasbullah Bin Pit <sebol@ikhlas.com>
 
-        * configure.in: Added ms at ALL_LINGUAS.
+	* configure.in: Added ms at ALL_LINGUAS.
 
 2002-09-03  Paolo Bacchilega  <paolo.bacch@tin.it>
 

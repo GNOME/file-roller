@@ -1,3 +1,10 @@
+version 2.18.0
+--------------
+	* Use standard password blank character instead of stars (#407461)
+	* Removed Application from the .desktop categories.
+	* Updated translations: zh_CN, lt, gu, mg, sl, ku, sr, bn_IN, ca,
+	  nl, hu, ru, ro.
+
 version 2.17.92
 ---------------
 	* Fixed bug #409433 – Feisty Herd4: File-Roller shows directory
@@ -118,7 +125,7 @@ version 2.15.1
 	* Fixed bug #345278 – File operations on the Edit menu should be moved
 	  to the Archive menu.
 	* Fixed bug #342251 – backspace does not go up a directory (ala
-          Nautilus)
+	  Nautilus)
 	* Fixed bug #336078 - [PATCH] Convert from popt to GOption
 	* Fixed bug #317782 - file-roller Cygwin build fixes
 	* Fixed bug #152039 - Password Protected Files must be displayed
@@ -138,15 +145,15 @@ version 2.14.1
 --------------
 	* Ask for the password when trying to open a password protected rar
 	  or arj archive.
-        * Updated the user's guide.
+	* Updated the user's guide.
 	* Added help button to all the dialogs.
 	* Install theme-friendly icon.
 	* Fixed bug #335035 - mistake in file-roller's License.
 	* Fixed bug #336908 - backshalshes not supported in paths.
 	* Fixed bug #336632 - Help for Extract Dialog pointing to incorrect
-          location.
-        * Fixed bug #336854 - crash on twice unpacking to the same location.
-        * Fixed bug #335659 - File Roller should move not copy files.
+	  location.
+	* Fixed bug #336854 - crash on twice unpacking to the same location.
+	* Fixed bug #335659 - File Roller should move not copy files.
 	* Fixed bug #335368 - Crash when opening large 7z-archive.
 	* Fixed buf #326193 - file-roller creates empty 7zip archives.
 	* Fixed bug #337754 - Drag and Drop extraction only works when source
@@ -158,7 +165,7 @@ version 2.14.0
 	* Added license button to the about dialog.
 	* New translations: Georgian (ka) and Breton (br).
 	* Updated translations: Ukrainian (uk), Welsh (cy), Hindi (hi),
-          Swedish (sv), et, Czech (cs), Italian (it), Romanian (ro).
+	  Swedish (sv), et, Czech (cs), Italian (it), Romanian (ro).
 
 version 2.13.92
 ---------------
@@ -193,7 +200,7 @@ version 2.13.2
 	* Fixed bug #323713: "Save as" should default to current archive
 	  filename
 	* Fixed bug #315069: file-roller: drag 'n drop doesn't work for more
-          than 1 file.
+	  than 1 file.
 	* Fixed bug #323534: Passwords improperly escaped for zip files
 	* Do not open a progress dialog	when dragging files, use a progressbar
 	  in the statusbar instead.
@@ -264,9 +271,9 @@ version 2.11.1
 	* Allow to extract more archives at once.  Added an --extract-here
 	  command line option.
 	* Use g_filename_display_name and g_filename_display_basename when
-          appropriate.
+	  appropriate.
 	* Prevent renaming of files to silently overwrite other existing
-          files (#168287).
+	  files (#168287).
 	* Header cleanup (#171618).
 	* Allow stock labels to show through, be nice to translators (#172867).
 
@@ -305,7 +312,7 @@ version 2.9.92
 	* Fixed bug #166658: Archives should only be processed if command-line
 	  utility is present.
 	* Fixed bug #144953: ISO reading assumes Joliet and Rock Ridge
-          extensions.
+	  extensions.
 
 version 2.9.91
 --------------
@@ -320,14 +327,14 @@ version 2.9.3
 	* Fixed bug #132555: file-roller does not honor system-wide toolbar
 	  setting.
 	* Fixed bug #162188: RAR archives' directories are not recognized
-          properly.
+	  properly.
 	* Fixed bug #162324: Cannot drag files from gthumb to file-roller
 
 version 2.9.2
 -------------
 	* Fixed bug #152129: Unnecessary call to _window_update_sensitivity()
 	* Fixed bug #154821: file-roller can't open archives with extension
-          .lha
+	  .lha
 	* Fixed bug #154398: Remove some useless code.
 	* Fixed bug #154233: load_icon_file optimization.
 	* Fixed bug #161141: Time of modifcation incorrect
@@ -345,7 +352,7 @@ version 2.9.2
 
 version 2.9.1
 -------------
-        * Added a 'Open Recent' menu item on the toolbar.
+	* Added a 'Open Recent' menu item on the toolbar.
 	* Added password support and testing to RAR archives.
 	* Fixed bug #145162] .omf.out and omf_timestamp files should not be in
 	  cvs.
@@ -405,7 +412,7 @@ version 2.7.0
 	* Split the add dialog into two dialogs, one used to add files and the
 	  other one used to add folders.
 	* Ask the distination folder after pasting a selection, this allows
-          the user to create new folders in the archive.
+	  the user to create new folders in the archive.
 	* Added content size and compression ratio in the properties dialog.
 	* Extract selection without creating the whole path. (bug #140971)
 
@@ -438,10 +445,10 @@ version 2.5.6
 version 2.5.5
 -------------
 	* Use gtar if present, otherwise use tar.
-        * Fix the "Zip Objects" command.
+	* Fix the "Zip Objects" command.
 	* Remove C++ style comments.
 	* Fix bug #133998 (schemas file must not be removed during distclean).
-        * Updated manual.
+	* Updated manual.
 	* Fix the password protected detection code.
 	* Handle the delete_event event for the progress dialog.
 	* Add a filter for the "save archive" and "new archive" dialogs,
@@ -455,7 +462,7 @@ version 2.5.4
 	  command.
 	* Use GType instead of guint.  Fixes segfaults on 64-bit architectures.
 	* Do not show the new window until we are sure that the archive
-          has been opened with success.
+	  has been opened with success.
 
 version 2.5.3
 -------------
@@ -464,7 +471,7 @@ version 2.5.3
 	* Make the path column visible only if the list mode is set to flat.
 	* Fix the "Save as" dialog.
 	* Updated the recent-files stuff from libegg.
-        * Changed Nautilus context menu item to "Zip Objects" and simplied
+	* Changed Nautilus context menu item to "Zip Objects" and simplied
 	  the dialog.
 	* Always use a close button in the error dialogs.
 
@@ -474,14 +481,14 @@ version 2.5.2
 	* Use gnome_url_show instead of calling nautilus explicitly.
 	* Do not use mkdtemp which does not exist on Solaris9.
 	* Do not destroy the file selector if the archive was not created
-          successfully.
+	  successfully.
 	* Do not add the password argument if the password is an empty string.
 	* Use the stock system for the commands Add, Extract and View.
-        * Updated the egg_recent stuff.
+	* Updated the egg_recent stuff.
 	* Changed name to "Zip Creator" and category to System Utility.
-        * The preferences dialog has been removed.
-        * The add dialog has been simplyfied.
-        * The extract dialog is a GtkFileChooser in folder mode now.
+	* The preferences dialog has been removed.
+	* The add dialog has been simplyfied.
+	* The extract dialog is a GtkFileChooser in folder mode now.
 
 version 2.5.1
 -------------
@@ -489,20 +496,20 @@ version 2.5.1
 
 version 2.5.0
 -------------
-        * Added unstuff and RPM support.
+	* Added unstuff and RPM support.
 	* Added ability to rename files and folders.
 	* Added Cut/Copy/Paste operations.
  	* Add files and folders to the current directory.
 	* Added ability to go back and forward in location history.
-        * Open the archive in a new window if the current window already has
-          an archive opened.
+	* Open the archive in a new window if the current window already has
+	  an archive opened.
 	* Exit closes only the current window instead of closing all the
-          windows.
+	  windows.
 	* Zip archives: ask to enter a password if the archive is password
-          protected.
+	  protected.
 	* Remember extraction dialog options.
-        * Substitute "Extract To.." with "Extract Here" in the Nautilus
-          context menu.
+	* Substitute "Extract To.." with "Extract Here" in the Nautilus
+	  context menu.
 
 version 2.4.2
 -------------
@@ -513,7 +520,7 @@ version 2.4.2
 version 2.4.1
 -------------
 	* Fixed bug that prevented the user to view the content of a
-          compressed file.
+	  compressed file.
 
 version 2.4.0
 -------------
@@ -544,23 +551,23 @@ version 2.3.2
 -------------
 	* Added ARJ archives support.
 	* The delete operation move the archive to the trash instead of
-          deleting it from the disk.
+	  deleting it from the disk.
 
 version 2.3.1
 -------------
 	* Added ability to convert archives.
 	* Popup a progress dialog when a long operation is underway,
-          instead of using a progress bar in the status bar.
-        * Give more detailed information about the current operation (only
-          for tar archives at the moment).
+	  instead of using a progress bar in the status bar.
+	* Give more detailed information about the current operation (only
+	  for tar archives at the moment).
 	* When creating new archives, if the user does not specify the
-          extension, use 'tgz' as default instead of giving an 'archive
-          type not supported' error.
+	  extension, use 'tgz' as default instead of giving an 'archive
+	  type not supported' error.
 	* Associate File Roller to the zoo archive format.
 	* Use a text entry instead of the option menu for the location.
 	* Do not allow dangerous operations, that is operations that if stopped
-          can cause the lost of the archive, such as adding and
-          removing files, to be stopped.
+	  can cause the lost of the archive, such as adding and
+	  removing files, to be stopped.
 	* Allow to stop folders reading.
 	* Added ability to test zoo archives.
 	* New toolbar icons.
@@ -571,7 +578,7 @@ version 2.3.0
 	* Added ZOO archives support.
 	* Read folders asynchronously.
 	* Display a better error message when the user forgets to specify
-          the archive name in the "add to archive" dialog.
+	  the archive name in the "add to archive" dialog.
 	* Handle tar archives with a ':' in the path.
 
 version 2.2.0
@@ -627,7 +634,7 @@ version 2.0.1
 	* Recent archives are shown in a submenu.
 	* Uses gconf instead of gnome-config.
 	* Builds on systems that do not have the FNM_CASEFOLD constant
-          defined (e.g. Solaris).
+	  defined (e.g. Solaris).
 
 version 2.0.0
 -------------
@@ -656,12 +663,12 @@ version 1.107
 
 version 1.106
 -------------
-        * the user can specify files to exclude when adding files with
-          the wildcard.
-        * the user can save and load add dialog options.
-        * ask whether to overwrite the file when copying, moving or renaming
-          an archive.
-        * added ability to rename compressed files.
+	* the user can specify files to exclude when adding files with
+	  the wildcard.
+	* the user can save and load add dialog options.
+	* ask whether to overwrite the file when copying, moving or renaming
+	  an archive.
+	* added ability to rename compressed files.
 
 version 1.105
 -------------
