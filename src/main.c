@@ -217,19 +217,19 @@ main (int argc, char **argv)
 				      GNOME_PARAM_GOPTION_CONTEXT, context,
 				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Archive Manager"),
 				      GNOME_PARAM_APP_PREFIX, FR_PREFIX,
-                                      GNOME_PARAM_APP_SYSCONFDIR, FR_SYSCONFDIR,
-                                      GNOME_PARAM_APP_DATADIR, FR_DATADIR,
-                                      GNOME_PARAM_APP_LIBDIR, FR_LIBDIR,
+				      GNOME_PARAM_APP_SYSCONFDIR, FR_SYSCONFDIR,
+				      GNOME_PARAM_APP_DATADIR, FR_DATADIR,
+				      GNOME_PARAM_APP_LIBDIR, FR_LIBDIR,
 				      NULL);
 
 	g_set_application_name (_("File Roller"));
 	gtk_window_set_default_icon_name ("file-roller");
 
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
+					   PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
 
 	if (! gnome_vfs_init ())
-                g_error ("Cannot initialize the Virtual File System.");
+		g_error ("Cannot initialize the Virtual File System.");
 
 	glade_init ();
 	fr_stock_init ();
@@ -360,61 +360,61 @@ get_path_from_url (char *url)
 
 static void
 migrate_dir_from_to (const char *from_dir,
-                     const char *to_dir)
+		     const char *to_dir)
 {
-        char *from_path;
-        char *to_path;
+	char *from_path;
+	char *to_path;
 
-        from_path = get_home_relative_dir (from_dir);
-        to_path = get_home_relative_dir (to_dir);
+	from_path = get_home_relative_dir (from_dir);
+	to_path = get_home_relative_dir (to_dir);
 
-        if (path_is_dir (from_path) && ! path_is_dir (to_path)) {
-                char *line;
-                char *e1;
-                char *e2;
+	if (path_is_dir (from_path) && ! path_is_dir (to_path)) {
+		char *line;
+		char *e1;
+		char *e2;
 
-                e1 = shell_escape (from_path);
-                e2 = shell_escape (to_path);
-                line = g_strdup_printf ("mv -f %s %s", e1, e2);
-                g_free (e1);
-                g_free (e2);
+		e1 = shell_escape (from_path);
+		e2 = shell_escape (to_path);
+		line = g_strdup_printf ("mv -f %s %s", e1, e2);
+		g_free (e1);
+		g_free (e2);
 
-                g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
-                g_free (line);
-        }
+		g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
+		g_free (line);
+	}
 
-        g_free (from_path);
-        g_free (to_path);
+	g_free (from_path);
+	g_free (to_path);
 }
 
 
 static void
 migrate_file_from_to (const char *from_file,
-                      const char *to_file)
+		      const char *to_file)
 {
-        char *from_path;
-        char *to_path;
+	char *from_path;
+	char *to_path;
 
-        from_path = get_home_relative_dir (from_file);
-        to_path = get_home_relative_dir (to_file);
+	from_path = get_home_relative_dir (from_file);
+	to_path = get_home_relative_dir (to_file);
 
-        if (path_is_file (from_path) && ! path_is_file (to_path)) {
-                char *line;
-                char *e1;
-                char *e2;
+	if (path_is_file (from_path) && ! path_is_file (to_path)) {
+		char *line;
+		char *e1;
+		char *e2;
 
-                e1 = shell_escape (from_path);
-                e2 = shell_escape (to_path);
-                line = g_strdup_printf ("mv -f %s %s", e1, e2);
-                g_free (e1);
-                g_free (e2);
+		e1 = shell_escape (from_path);
+		e2 = shell_escape (to_path);
+		line = g_strdup_printf ("mv -f %s %s", e1, e2);
+		g_free (e1);
+		g_free (e2);
 
-                g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
-                g_free (line);
-        }
+		g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
+		g_free (line);
+	}
 
-        g_free (from_path);
-        g_free (to_path);
+	g_free (from_path);
+	g_free (to_path);
 }
 
 
@@ -423,7 +423,7 @@ migrate_to_new_directories (void)
 {
 	migrate_dir_from_to  (OLD_RC_OPTIONS_DIR, RC_OPTIONS_DIR);
 	migrate_file_from_to (OLD_RC_BOOKMARKS_FILE, RC_BOOKMARKS_FILE);
-        migrate_file_from_to (OLD_RC_RECENT_FILE, RC_RECENT_FILE);
+	migrate_file_from_to (OLD_RC_RECENT_FILE, RC_RECENT_FILE);
 
 	eel_gconf_set_boolean (PREF_MIGRATE_DIRECTORIES, FALSE);
 }
@@ -472,7 +472,7 @@ prepare_app (void)
 	char *path;
 	char *default_dir;
 	char *extract_to_path = NULL;
-        char *add_to_path = NULL;
+	char *add_to_path = NULL;
 
 	/* create the config dir if necessary. */
 
@@ -486,7 +486,7 @@ prepare_app (void)
 	g_free (path);
 
 	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
-                migrate_to_new_directories ();
+		migrate_to_new_directories ();
 
 	compute_supported_archive_types();
 
@@ -523,7 +523,7 @@ prepare_app (void)
 		}
 	}
 
-        add_to_path = get_path_from_url (add_to);
+	add_to_path = get_path_from_url (add_to);
 
 	if ((add_to != NULL) || (add == 1)) { /* Add files to an archive */
 		FRWindow    *window;
@@ -595,7 +595,7 @@ prepare_app (void)
 
 	g_free (default_dir);
 	g_free (add_to_path);
-        g_free (extract_to_path);
+	g_free (extract_to_path);
 }
 
 
@@ -626,10 +626,10 @@ save_session (GnomeClient *client)
 		key = g_strdup_printf ("Session/archive%d", i);
 
 		if ((window->archive == NULL)
-		    || (window->archive->filename == NULL))
+		    || (window->archive->uri == NULL))
 			gnome_config_set_string (key, "");
 		else
-			gnome_config_set_string (key, window->archive->filename);
+			gnome_config_set_string (key, window->archive->uri);
 		g_free (key);
 
 		i++;

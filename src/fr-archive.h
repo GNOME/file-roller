@@ -41,26 +41,26 @@ typedef struct _FRArchiveClass  FRArchiveClass;
 typedef gboolean (*FakeLoadFunc) (FRArchive *archive, gpointer data);
 
 struct _FRArchive {
-        GObject  __parent;
+	GObject  __parent;
 
-	char      *filename;             /* The archive filename. */
-	FRCommand *command;
-	FRProcess *process;
-
-	gboolean   is_compressed_file;   /* Whether the file is an archive
-					  * or a compressed file. */
-	gboolean   read_only;            /* Whether archive is read-only
-					  * or not. */
-	gboolean   can_create_compressed_file;
-
-	FakeLoadFunc fake_load_func;     /* If returns TRUE, archives are not read when
-					  * fr_archive_load is invoked, used
-					  * in batch mode. */
-	gpointer     fake_load_data;
-
-	FakeLoadFunc add_is_stoppable_func; /* Returns whether the add operation is 
-					     * stoppable. */
-	gpointer     add_is_stoppable_data;
+	char           *uri;
+	gboolean        is_remote;
+	char           *local_filename;
+	FRCommand      *command;
+	FRProcess      *process;
+	FRProcError     error;
+	gboolean        is_compressed_file;            /* Whether the file is an archive
+							* or a compressed file. */
+	gboolean        read_only;                     /* Whether archive is read-only
+							* or not. */
+	gboolean        can_create_compressed_file;
+	FakeLoadFunc    fake_load_func;                /* If returns TRUE, archives are not read when
+							* fr_archive_load is invoked, used
+							* in batch mode. */
+	gpointer        fake_load_data;
+	FakeLoadFunc    add_is_stoppable_func;         /* Returns whether the add operation is
+							* stoppable. */
+	gpointer        add_is_stoppable_data;
 };
 
 struct _FRArchiveClass {
@@ -70,50 +70,37 @@ struct _FRArchiveClass {
 
 	void (*start)     (FRArchive   *archive,
 			   FRAction     action); 
-
 	void (*done)      (FRArchive   *archive,
 			   FRAction     action, 
 			   FRProcError *error);
-
-        void (*progress)  (FRArchive   *archive,
+	void (*progress)  (FRArchive   *archive,
 			   double       fraction);
-
-        void (*message)   (FRArchive   *archive,
+	void (*message)   (FRArchive   *archive,
 			   const char  *msg);
-
-	void (*stoppable) (FRArchive *archive,
-			   gboolean   value);
+	void (*stoppable) (FRArchive   *archive,
+			   gboolean     value);
 };
 
 GType            fr_archive_get_type           (void);
-
 FRArchive *      fr_archive_new                (void);
-
 void             fr_archive_free               (FRArchive     *archive);
-
 gboolean         fr_archive_new_file           (FRArchive     *archive,
-						const char    *filename);
-
+						const char    *uri);
 gboolean         fr_archive_load               (FRArchive     *archive,
-						const char    *filename,
-						const char    *password,
-						GError       **gerror);
-
+						const char    *uri,
+						const char    *password);
 void             fr_archive_reload             (FRArchive     *archive,
 						const char    *password);
-
 void             fr_archive_rename             (FRArchive     *archive,
-						const char    *filename);
-
-void             fr_archive_add                (FRArchive     *archive, 
+						const char    *new_uri);
+void             fr_archive_add                (FRArchive     *archive,
 						GList         *file_list,
 						const char    *base_dir,
 						const char    *dest_dir,
 						gboolean       update,
 						const char    *password,
 						FRCompression  compression);
-
-VisitDirHandle * fr_archive_add_with_wildcard  (FRArchive     *archive, 
+VisitDirHandle * fr_archive_add_with_wildcard  (FRArchive     *archive,
 						const char    *include_files,
 						const char    *exclude_files,
 						const char    *base_dir,
@@ -125,8 +112,7 @@ VisitDirHandle * fr_archive_add_with_wildcard  (FRArchive     *archive,
 						FRCompression  compression,
 						DoneFunc       done_func,
 						gpointer       done_data);
-
-VisitDirHandle * fr_archive_add_directory      (FRArchive     *archive, 
+VisitDirHandle * fr_archive_add_directory      (FRArchive     *archive,
 						const char    *directory,
 						const char    *base_dir,
 						const char    *dest_dir,
@@ -135,8 +121,7 @@ VisitDirHandle * fr_archive_add_directory      (FRArchive     *archive,
 						FRCompression  compression,
 						DoneFunc       done_func,
 						gpointer       done_data);
-
-VisitDirHandle * fr_archive_add_items          (FRArchive     *archive, 
+VisitDirHandle * fr_archive_add_items          (FRArchive     *archive,
 						GList         *item_list,
 						const char    *base_dir,
 						const char    *dest_dir,
@@ -145,12 +130,9 @@ VisitDirHandle * fr_archive_add_items          (FRArchive     *archive,
 						FRCompression  compression,
 						DoneFunc       done_func,
 						gpointer       done_data);
-
-
 void             fr_archive_remove             (FRArchive     *archive,
 						GList         *file_list,
 						FRCompression  compression);
-
 void             fr_archive_extract            (FRArchive     *archive,
 						GList         *file_list,
 						const char    *dest_dir,
@@ -159,27 +141,22 @@ void             fr_archive_extract            (FRArchive     *archive,
 						gboolean       overwrite,
 						gboolean       junk_path,
 						const char    *password);
-
 void             fr_archive_test               (FRArchive     *archive,
 						const char    *password);
-
 void             fr_archive_set_fake_load_func (FRArchive     *archive,
 						FakeLoadFunc   func,
 						gpointer       data);
-
 gboolean         fr_archive_fake_load          (FRArchive     *archive);
-
-void             fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
-						       FakeLoadFunc   func,
-						       gpointer       data);
-
+void             fr_archive_set_add_is_stoppable_func
+					       (FRArchive     *archive,
+						FakeLoadFunc   func,
+						gpointer       data);
 void             fr_archive_stoppable          (FRArchive     *archive,
 						gboolean       stoppable);
 
-
 /* utils */
 
-G_CONST_RETURN char *     fr_archive_utils__get_file_name_ext (const char *filename);
-gboolean                  fr_archive_utils__file_is_archive (const char *filename);
+G_CONST_RETURN char * fr_archive_utils__get_file_name_ext (const char *filename);
+gboolean              fr_archive_utils__file_is_archive   (const char *filename);
 
 #endif /* ARCHIVE_H */

@@ -61,7 +61,7 @@
 
 #define g_signal_handlers_disconnect_by_data(instance, data) \
     g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
-                                          0, 0, NULL, NULL, (data))
+					  0, 0, NULL, NULL, (data))
 
 #define MAX_CHUNK_LEN (NCARGS * 2 / 3) /* Max command line length */
 #define UNKNOWN_TYPE "application/octet-stream"
@@ -91,10 +91,10 @@ static void fr_archive_finalize   (GObject *object);
 GType
 fr_archive_get_type (void)
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                static const GTypeInfo type_info = {
+	if (! type) {
+		static const GTypeInfo type_info = {
 			sizeof (FRArchiveClass),
 			NULL,
 			NULL,
@@ -110,21 +110,21 @@ fr_archive_get_type (void)
 					       "FRArchive",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 
 static void
 fr_archive_class_init (FRArchiveClass *class)
 {
-        GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 
 	fr_archive_signals[START] =
-                g_signal_new ("start",
+		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FRArchiveClass, start),
@@ -133,7 +133,7 @@ fr_archive_class_init (FRArchiveClass *class)
 			      G_TYPE_NONE,
 			      1, G_TYPE_INT);
 	fr_archive_signals[DONE] =
-                g_signal_new ("done",
+		g_signal_new ("done",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FRArchiveClass, done),
@@ -161,7 +161,7 @@ fr_archive_class_init (FRArchiveClass *class)
 			      G_TYPE_NONE, 1,
 			      G_TYPE_STRING);
 	fr_archive_signals[STOPPABLE] =
-                g_signal_new ("stoppable",
+		g_signal_new ("stoppable",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FRArchiveClass, stoppable),
@@ -211,7 +211,9 @@ archive_sticky_only_cb (FRProcess *process,
 static void
 fr_archive_init (FRArchive *archive)
 {
-	archive->filename = NULL;
+	archive->uri = NULL;
+	archive->local_filename = NULL;
+	archive->is_remote = FALSE;
 	archive->command = NULL;
 	archive->is_compressed_file = FALSE;
 	archive->can_create_compressed_file = FALSE;
@@ -243,12 +245,12 @@ fr_archive_finalize (GObject *object)
 	FRArchive *archive;
 
 	g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_ARCHIVE (object));
+	g_return_if_fail (FR_IS_ARCHIVE (object));
 
 	archive = FR_ARCHIVE (object);
 
-	if (archive->filename != NULL)
-		g_free (archive->filename);
+	g_free (archive->uri);
+	g_free (archive->local_filename);
 
 	if (archive->command != NULL)
 		g_object_unref (archive->command);
@@ -257,8 +259,8 @@ fr_archive_finalize (GObject *object)
 
 	/* Chain up */
 
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-                G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (parent_class)->finalize)
+		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 
@@ -317,7 +319,7 @@ create_command_from_mime_type (FRArchive  *archive,
 						      filename);
 	} else if (is_mime_type (mime_type, "application/x-cpio")) {
 		archive->command = fr_command_cpio_new (archive->process,
-						        filename);
+							filename);
 	} else
 		return FALSE;
 
@@ -377,10 +379,10 @@ get_mime_type_from_sniffer (const char *filename)
 	file = fopen (filename, "rb");
 
 	if (file == NULL)
-                return NULL;
+		return NULL;
 
-        if (file_extension_is (filename, ".jar"))
-        	return NULL;
+	if (file_extension_is (filename, ".jar"))
+		return NULL;
 
 	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, file);
 	buffer[n] = 0;
@@ -536,7 +538,7 @@ create_command_from_filename (FRArchive  *archive,
 
 		if (file_extension_is (filename, ".cpio")) {
 			archive->command = fr_command_cpio_new (archive->process,
-							        filename);
+								filename);
 			return (archive->command != NULL);
 		}
 	}
@@ -601,6 +603,9 @@ action_performed (FRCommand   *command,
 	char *s_action = NULL;
 
 	switch (action) {
+	case FR_ACTION_LOAD:
+		s_action = "Load";
+		break;
 	case FR_ACTION_LIST:
 		s_action = "List";
 		break;
@@ -663,15 +668,15 @@ archive_message_cb  (FRCommand  *command,
 /* filename must not be escaped. */
 gboolean
 fr_archive_new_file (FRArchive  *archive,
-		     const char *filename)
+		     const char *uri)
 {
 	FRCommand *tmp_command;
 
-	if (filename == NULL)
+	if (uri == NULL)
 		return FALSE;
 
 	tmp_command = archive->command;
-	if (! create_command_from_filename (archive, filename, FALSE)) {
+	if (! create_command_from_filename (archive, uri, FALSE)) {
 		archive->command = tmp_command;
 		return FALSE;
 	}
@@ -681,9 +686,8 @@ fr_archive_new_file (FRArchive  *archive,
 
 	archive->read_only = FALSE;
 
-	if (archive->filename != NULL)
-		g_free (archive->filename);
-	archive->filename = g_strdup (filename);
+	g_free (archive->uri);
+	archive->uri = g_strdup (uri);
 
 	g_signal_connect (G_OBJECT (archive->command),
 			  "start",
@@ -726,52 +730,63 @@ fr_archive_fake_load (FRArchive *archive)
 }
 
 
-/* filename must not be escaped. */
-gboolean
-fr_archive_load (FRArchive   *archive,
-		 const char  *filename,
-		 const char  *password,
-		 GError     **gerror)
+/* -- fr_archive_load -- */
+
+
+static void
+fr_archive_load__error (FRArchive  *archive,
+			const char *message)
+{
+	archive->error.type = FR_PROC_ERROR_GENERIC;
+	archive->error.status = 0;
+	g_clear_error (&archive->error.gerror);
+	archive->error.gerror = g_error_new (fr_error_quark (),
+					     0,
+					     message);
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[DONE],
+		       0,
+		       FR_ACTION_LOAD,
+		       &archive->error);	
+}
+
+
+static void
+fr_archive_load__step2 (FRArchive      *archive,
+		 	char           *uri,
+		 	char           *password,
+		 	GnomeVFSResult  result)
 {
 	FRCommand  *tmp_command;
 	const char *mime_type = NULL;
 
-	g_return_val_if_fail (archive != NULL, FALSE);
-
-	if (access (filename, F_OK) != 0) { /* file must exists. */
-		if (gerror != NULL)
-			*gerror = g_error_new (fr_error_quark (),
-					       0,
-					       _("The file does not exist."));
-		return FALSE;
+	if (result != GNOME_VFS_OK) {
+		fr_archive_load__error (archive, _("The file does not exist."));
+		return;
 	}
 
-	archive->read_only = access (filename, W_OK) != 0;
+	archive->read_only = ! check_permissions (uri, W_OK);
 
-	if (archive->filename != filename) {
-		if (archive->filename != NULL)
-			g_free (archive->filename);
-		archive->filename = g_strdup (filename);
+	if (archive->uri != uri) {
+		g_free (archive->uri);
+		archive->uri = g_strdup (uri);
 	}
 
 	tmp_command = archive->command;
 
 	/* prefer mime-magic */
 
-	mime_type = get_mime_type_from_sniffer (filename);
+	mime_type = get_mime_type_from_sniffer (archive->local_filename);
+
 	if (mime_type == NULL)
-		mime_type = get_mime_type_from_content (filename);
+		mime_type = get_mime_type_from_content (archive->local_filename);
 
 	if ((mime_type == NULL)
-	    || ! create_command_from_mime_type (archive, filename, mime_type))
-		if (! create_command_from_filename (archive, filename, TRUE)) {
+	    || ! create_command_from_mime_type (archive, archive->local_filename, mime_type))
+		if (! create_command_from_filename (archive, archive->local_filename, TRUE)) {
 			archive->command = tmp_command;
-			if (gerror != NULL)
-				*gerror = g_error_new (fr_error_quark (),
-						       0,
-						       _("Archive type not supported."));
-
-                        return FALSE;
+			fr_archive_load__error (archive, _("Archive type not supported."));
+			return;
 		}
 
 	if (tmp_command != NULL) {
@@ -780,7 +795,7 @@ fr_archive_load (FRArchive   *archive,
 	}
 
 	if ((archive->command->file_type == FR_FILE_TYPE_ZIP)
-	    && (!is_program_in_path ("zip")))
+	    && (! is_program_in_path ("zip")))
 		archive->read_only = TRUE;
 
 	g_signal_connect (G_OBJECT (archive->command),
@@ -803,9 +818,130 @@ fr_archive_load (FRArchive   *archive,
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
 
+	archive->error.type = FR_PROC_ERROR_NONE;
+	archive->error.status = 0;
+	g_clear_error (&archive->error.gerror);
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[DONE],
+		       0,
+		       FR_ACTION_LOAD,
+		       &archive->error);
+
+	/**/
+
 	fr_process_clear (archive->process);
 	fr_command_list (archive->command, password);
 	fr_process_start (archive->process);
+
+	g_free (uri);
+	g_free (password);
+}
+
+
+typedef struct {
+	FRArchive      *archive;
+	char           *uri;
+	char           *password;
+	GnomeVFSResult  result;
+} XferData;
+
+
+static gint
+copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
+				     GnomeVFSXferProgressInfo *info,
+				     gpointer                  user_data)
+{
+	XferData *xfer_data = user_data;
+
+	if (info->status != GNOME_VFS_XFER_PROGRESS_STATUS_OK) {
+		xfer_data->result = info->vfs_status;
+		return FALSE;
+
+	} else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
+		fr_archive_load__step2 (xfer_data->archive,
+					xfer_data->uri,
+					xfer_data->password,
+					xfer_data->result);
+		g_free (xfer_data);
+	}
+
+	return TRUE;
+}
+
+
+static void
+fr_archive_copy_remote_file (FRArchive  *archive,
+		 	     const char *remote_uri,
+		 	     const char *local_filename,
+		 	     const char *password)
+{
+	GnomeVFSAsyncHandle *handle; /* FIXME: add the handle to the archive and allow to cancel the operation */
+	XferData            *xfer_data;
+	GnomeVFSURI         *source_uri, *target_uri;
+	GList               *source_uri_list, *target_uri_list;
+	GnomeVFSResult       result;
+
+	source_uri = gnome_vfs_uri_new (remote_uri);
+	target_uri = gnome_vfs_uri_new (local_filename);
+
+	source_uri_list = g_list_append (NULL, source_uri);
+	target_uri_list = g_list_append (NULL, target_uri);
+
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = archive;
+	xfer_data->uri = g_strdup (remote_uri);
+	if (password != NULL)
+		xfer_data->password = g_strdup (password);
+
+	result = gnome_vfs_async_xfer (&handle,
+				       source_uri_list,
+				       target_uri_list,
+				       GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				       GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				       GNOME_VFS_XFER_OVERWRITE_MODE_ABORT,
+				       GNOME_VFS_PRIORITY_DEFAULT,
+				       copy_remote_file_progress_update_cb, xfer_data,
+				       NULL, NULL);
+
+	gnome_vfs_uri_list_free (source_uri_list);
+	gnome_vfs_uri_list_free (target_uri_list);
+}
+
+
+static char *
+get_local_temp_uri (const char *remote_uri)
+{
+	/* FIXME: find a good temporary dir */
+	return g_strconcat (g_get_home_dir (),
+			    "/Desktop/",
+			    file_name_from_path (remote_uri),
+			    NULL);
+}
+
+
+/* filename must not be escaped. */
+gboolean
+fr_archive_load (FRArchive  *archive,
+		 const char *uri,
+		 const char *password)
+{
+	g_return_val_if_fail (archive != NULL, FALSE);
+
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[START],
+		       0,
+		       FR_ACTION_LOAD);
+
+	g_free (archive->local_filename);
+
+	if (uri_is_local (uri)) {
+		archive->local_filename = get_local_path_from_uri (uri);
+		fr_archive_load__step2 (archive, g_strdup (uri), g_strdup (password), GNOME_VFS_OK);
+	}
+	else {
+		archive->local_filename = get_local_temp_uri (uri);
+		fr_archive_copy_remote_file (archive, uri, archive->local_filename, password);
+	}
 
 	return TRUE;
 }
@@ -816,7 +952,7 @@ fr_archive_reload (FRArchive  *archive,
 		   const char *password)
 {
 	g_return_if_fail (archive != NULL);
-	g_return_if_fail (archive->filename != NULL);
+	g_return_if_fail (archive->uri != NULL);
 
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
@@ -838,12 +974,11 @@ fr_archive_rename (FRArchive  *archive,
 		/* If the archive is a compressed file we have to reload it,
 		 * because in this case the 'content' of the archive changes
 		 * too. */
-		fr_archive_load (archive, filename, NULL, NULL);
+		fr_archive_load (archive, filename, NULL);
 
 	else {
-		if (archive->filename != NULL)
-			g_free (archive->filename);
-		archive->filename = g_strdup (filename);
+		g_free (archive->uri);
+		archive->uri = g_strdup (filename);
 
 		fr_command_set_filename (archive->command, filename);
 	}
@@ -1188,7 +1323,7 @@ file_list_remove_from_pattern (GList      **list,
 
 typedef struct {
 	FRArchive     *archive;
-        char          *exclude_files;
+	char          *exclude_files;
 	char          *base_dir;
 	char          *dest_dir;
 	gboolean       update;

@@ -36,10 +36,10 @@
 
 
 typedef enum {
-        GNOME_VFS_DIRECTORY_FILTER_DEFAULT = 0,
-        GNOME_VFS_DIRECTORY_FILTER_NODOTFILES = 1 << 1,
-        GNOME_VFS_DIRECTORY_FILTER_IGNORECASE = 1 << 2,
-        GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES = 1 << 3
+	GNOME_VFS_DIRECTORY_FILTER_DEFAULT = 0,
+	GNOME_VFS_DIRECTORY_FILTER_NODOTFILES = 1 << 1,
+	GNOME_VFS_DIRECTORY_FILTER_IGNORECASE = 1 << 2,
+	GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES = 1 << 3
 } GnomeVFSDirectoryFilterOptions;
 
 typedef struct {
@@ -56,16 +56,16 @@ filter_new (const gchar                    *pattern,
 {
 	Filter *filter;
 
-        filter = g_new (Filter, 1);
+	filter = g_new (Filter, 1);
 
 	filter->pattern = g_strdup (pattern);
-        filter->patterns = search_util_get_patterns (pattern);
-        filter->fnmatch_flags = 0;
+	filter->patterns = search_util_get_patterns (pattern);
+	filter->fnmatch_flags = 0;
 	filter->options = options;
-        if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
-                filter->fnmatch_flags |= FNM_CASEFOLD;
+	if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
+		filter->fnmatch_flags |= FNM_CASEFOLD;
 
-        return filter;
+	return filter;
 }
 
 
@@ -74,20 +74,20 @@ filter_set_options (Filter                         *filter,
 		    GnomeVFSDirectoryFilterOptions  options)
 {
 	filter->options = options;
-        if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
-                filter->fnmatch_flags |= FNM_CASEFOLD;
+	if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
+		filter->fnmatch_flags |= FNM_CASEFOLD;
 }
 
 
 static void
 filter_destroy (Filter *filter)
 {
-        g_return_if_fail (filter != NULL);
+	g_return_if_fail (filter != NULL);
 
 	g_free (filter->pattern);
 	if (filter->patterns != NULL)
 		g_strfreev (filter->patterns);
-        g_free (filter);
+	g_free (filter);
 }
 
 
@@ -99,8 +99,8 @@ filter_apply (Filter     *filter,
 	char       *utf8_name;
 	gboolean    retval;
 
-        g_return_val_if_fail (filter != NULL, FALSE);
-        g_return_val_if_fail (name != NULL, FALSE);
+	g_return_val_if_fail (filter != NULL, FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
 
 	file_name = file_name_from_path (name);
 
@@ -116,7 +116,7 @@ filter_apply (Filter     *filter,
 	retval = match_patterns (filter->patterns, utf8_name, filter->fnmatch_flags);
 	g_free (utf8_name);
 
-        return retval;
+	return retval;
 }
 
 
@@ -247,7 +247,7 @@ get_wildcard_file_list (const char  *directory,
 	GList                          *list = NULL;
 
 	if ((directory == NULL) || (filter_pattern == NULL))
-                return NULL;
+		return NULL;
 
 	data = wc_search_data_new (directory);
 
@@ -720,7 +720,7 @@ same_fs (const char *path1,
 	result = gnome_vfs_check_same_fs_uris (uri1, uri2, &same);
 
 	gnome_vfs_uri_unref (uri1);
-        gnome_vfs_uri_unref (uri2);
+	gnome_vfs_uri_unref (uri2);
 
 	return (result == GNOME_VFS_OK) && same;
 }
@@ -1112,7 +1112,7 @@ get_directory_file_list_async (const char       *directory,
 	gfl_data->done_data = done_data;
 
 	if (strcmp (base_dir, "/") == 0)
-        	path = g_strconcat (base_dir, directory, NULL);
+		path = g_strconcat (base_dir, directory, NULL);
 	else
 		path = g_strconcat (base_dir, "/", directory, NULL);
 
@@ -1200,7 +1200,7 @@ visit_current_dir (GetFileListData *gfl_data)
 
 	directory = file_name_from_path ((char*) gfl_data->current_dir->data);
 	if (strcmp (gfl_data->base_dir, "/") == 0)
-        	path = g_strconcat (gfl_data->base_dir, directory, NULL);
+		path = g_strconcat (gfl_data->base_dir, directory, NULL);
 	else
 		path = g_strconcat (gfl_data->base_dir, "/", directory, NULL);
 
@@ -1259,44 +1259,4 @@ get_items_file_list_async (GList            *item_list,
 	gfl_data->handle = g_new0 (VisitDirHandle, 1);
 
 	return visit_current_dir (gfl_data);
-}
-
-
-GnomeVFSURI *
-new_uri_from_path (const char *path)
-{
-        char        *escaped;
-        char        *uri_txt;
-        GnomeVFSURI *uri;
-
-        escaped = escape_uri (path);
-        if (escaped[0] == '/')
-                uri_txt = g_strconcat ("file://", escaped, NULL);
-        else
-                uri_txt = g_strdup (escaped);
-
-        uri = gnome_vfs_uri_new (uri_txt);
-
-        g_free (uri_txt);
-        g_free (escaped);
-
-        g_return_val_if_fail (uri != NULL, NULL);
-
-        return uri;
-}
-
-
-gboolean
-uri_is_local (const char *uri)
-{
-	GnomeVFSURI *vfs_uri;
-	gboolean     is_local;
-
-	vfs_uri = new_uri_from_path (uri);
-	g_return_val_if_fail (vfs_uri != NULL, FALSE);
-
-	is_local = gnome_vfs_uri_is_local (vfs_uri);
-	gnome_vfs_uri_unref (vfs_uri);
-
-	return is_local;
 }

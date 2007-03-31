@@ -43,10 +43,10 @@ typedef struct {
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
-            DialogData *data)
+	    DialogData *data)
 {
 	g_object_unref (G_OBJECT (data->gui));
-        g_free (data);
+	g_free (data);
 }
 
 
@@ -80,7 +80,7 @@ help_cb (GtkWidget   *w,
 void
 dlg_prop (FRWindow *window)
 {
-        DialogData       *data;
+	DialogData       *data;
 	GtkWidget        *ok_button;
 	GtkWidget        *help_button;
 	GtkWidget        *label_label;
@@ -91,17 +91,17 @@ dlg_prop (FRWindow *window)
 	char             *title_txt;
 	double            ratio;
 
-        data = g_new (DialogData, 1);
+	data = g_new (DialogData, 1);
 
 	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-                g_warning ("Could not find " PROP_GLADE_FILE "\n");
-                return;
-        }
+		g_warning ("Could not find " PROP_GLADE_FILE "\n");
+		return;
+	}
 
-        /* Get the widgets. */
+	/* Get the widgets. */
 
-        data->dialog = glade_xml_get_widget (data->gui, "prop_dialog");
+	data->dialog = glade_xml_get_widget (data->gui, "prop_dialog");
 	ok_button = glade_xml_get_widget (data->gui, "p_ok_button");
 	help_button = glade_xml_get_widget (data->gui, "p_help_button");
 
@@ -139,7 +139,7 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Modified on:"));
 
 	label = glade_xml_get_widget (data->gui, "p_date_label");
-	s = get_time_string (get_file_mtime (window->archive->filename));
+	s = get_time_string (get_file_mtime (window->archive->uri));
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
@@ -217,7 +217,7 @@ dlg_prop (FRWindow *window)
 
 	gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
 				      GTK_WINDOW (window->app));
-        gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
+	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 
 	gtk_widget_show (data->dialog);
 }

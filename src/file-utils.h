@@ -32,10 +32,10 @@
 #define FILENAME_MAX_LENGTH 30 /* FIXME: find out the best value */
 
 #define get_home_relative_dir(x)        \
-        g_strconcat (g_get_home_dir (), \
-                     "/",               \
-                     (x),               \
-                     NULL)
+	g_strconcat (g_get_home_dir (), \
+		     "/",               \
+		     (x),               \
+		     NULL)
 
 gboolean            path_is_file                 (const gchar *s);
 gboolean            path_exists                  (const gchar *s);
@@ -89,7 +89,14 @@ gboolean            check_permissions            (const char *path,
 						  int         mode);
 gboolean 	    is_program_in_path		 (const char *filename);
 
+/* URI/Path utils */
+
 GnomeVFSURI *       new_uri_from_path            (const char *path);
+char *              get_local_path_from_uri      (const char *uri);
+gboolean            uri_has_scheme               (const char *uri);
 gboolean            uri_is_local                 (const char *uri);
+const char *        remove_host_from_uri         (const char *uri);
+char *              get_uri_host                 (const char *uri);
+char *              get_uri_from_path            (const char *path);
 
 #endif /* FILE_UTILS_H */

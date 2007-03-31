@@ -418,50 +418,50 @@ dir_name_from_path (const gchar *path)
 gchar *
 remove_level_from_path (const gchar *path)
 {
-        int         p;
-        const char *ptr = path;
-        char       *new_path;
+	int         p;
+	const char *ptr = path;
+	char       *new_path;
 
-        if (! path)
-                return NULL;
+	if (! path)
+		return NULL;
 
-        p = strlen (path) - 1;
-        if (p < 0)
-                return NULL;
+	p = strlen (path) - 1;
+	if (p < 0)
+		return NULL;
 
-        while ((p > 0) && (ptr[p] != '/'))
-                p--;
-        if ((p == 0) && (ptr[p] == '/'))
-                p++;
-        new_path = g_strndup (path, (guint)p);
+	while ((p > 0) && (ptr[p] != '/'))
+		p--;
+	if ((p == 0) && (ptr[p] == '/'))
+		p++;
+	new_path = g_strndup (path, (guint)p);
 
-        return new_path;
+	return new_path;
 }
 
 
 gchar *
 remove_extension_from_path (const gchar *path)
 {
-        int         len;
-        int         p;
-        const char *ptr = path;
-        char       *new_path;
+	int         len;
+	int         p;
+	const char *ptr = path;
+	char       *new_path;
 
-        if (! path)
-                return NULL;
+	if (! path)
+		return NULL;
 
-        len = strlen (path);
-        if (len == 1)
-                return g_strdup (path);
+	len = strlen (path);
+	if (len == 1)
+		return g_strdup (path);
 
-        p = len - 1;
-        while ((p > 0) && (ptr[p] != '.'))
-                p--;
-        if (p == 0)
-                p = len;
-        new_path = g_strndup (path, (guint) p);
+	p = len - 1;
+	while ((p > 0) && (ptr[p] != '.'))
+		p--;
+	if (p == 0)
+		p = len;
+	new_path = g_strndup (path, (guint) p);
 
-        return new_path;
+	return new_path;
 }
 
 
@@ -880,7 +880,7 @@ check_permissions (const char *path,
 gboolean
 is_program_in_path (const char *filename)
 {
-        char *str;
+	char *str;
 	char *value;
 	int   result = FALSE;
 
@@ -890,15 +890,109 @@ is_program_in_path (const char *filename)
 		return result;
 	}
 
-        str = g_find_program_in_path (filename);
-        if (str != NULL) {
-                g_free (str);
+	str = g_find_program_in_path (filename);
+	if (str != NULL) {
+		g_free (str);
 		result = TRUE;
-        }
+	}
 
 	g_hash_table_insert (programs_cache,
 			     g_strdup (filename),
 			     result ? "1" : "0");
 
-        return result;
+	return result;
+}
+
+GnomeVFSURI *
+new_uri_from_path (const char *path)
+{
+	char        *escaped;
+	char        *uri_txt;
+	GnomeVFSURI *uri;
+
+	escaped = escape_uri (path);
+	if (escaped[0] == '/')
+		uri_txt = g_strconcat ("file://", escaped, NULL);
+	else
+		uri_txt = g_strdup (escaped);
+
+	uri = gnome_vfs_uri_new (uri_txt);
+
+	g_free (uri_txt);
+	g_free (escaped);
+
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	return uri;
+}
+
+
+char *
+get_local_path_from_uri (const char *uri)
+{
+	return gnome_vfs_unescape_string (remove_host_from_uri (uri), NULL);
+}
+
+
+gboolean
+uri_has_scheme (const char *uri)
+{
+	return strstr (uri, "://") != NULL;
+}
+
+
+gboolean
+uri_is_local (const char *uri)
+{
+	GnomeVFSURI *vfs_uri;
+	gboolean     is_local;
+
+	vfs_uri = new_uri_from_path (uri);
+	g_return_val_if_fail (vfs_uri != NULL, FALSE);
+
+	is_local = gnome_vfs_uri_is_local (vfs_uri);
+	gnome_vfs_uri_unref (vfs_uri);
+
+	return is_local;
+}
+
+
+const char *
+remove_host_from_uri (const char *uri)
+{
+	const char *idx;
+
+	idx = strstr (uri, "://");
+	if (idx == NULL)
+		return uri;
+	idx = strstr (idx + 3, "/");
+	if (idx == NULL)
+		return NULL;
+	return idx;
+}
+
+
+char *
+get_uri_host (const char *uri)
+{
+	const char *idx;
+
+	idx = strstr (uri, "://");
+	if (idx == NULL)
+		return NULL;
+	idx = strstr (idx + 3, "/");
+	if (idx == NULL)
+		return NULL;
+	return g_strndup (uri, (idx - uri));
+}
+
+
+char *
+get_uri_from_path (const char *path)
+{
+	if (path == NULL)
+		return NULL;
+	if ((path == "") || (path[0] == '/'))
+		return g_strconcat ("file://", path, NULL);
+	return g_strdup (path);
 }

@@ -39,18 +39,20 @@ typedef struct _FRCommandClass  FRCommandClass;
 
 typedef enum {
 	FR_ACTION_NONE,
+	FR_ACTION_LOAD,
 	FR_ACTION_LIST,
 	FR_ACTION_ADD,
 	FR_ACTION_DELETE,
 	FR_ACTION_EXTRACT,
 	FR_ACTION_TEST,
 	FR_ACTION_GET_LIST,
+	FR_ACTION_CREATE,
 	FR_ACTION_SAVE
 } FRAction;
 
 struct _FRCommand
 {
-        GObject  __parent;
+	GObject  __parent;
 
 	FRFileType  file_type;
 	GList      *file_list;       /* FileData elements */
@@ -77,19 +79,19 @@ struct _FRCommand
 
 	/*<private>*/
 
-	FRProcess *process;      /* the process object used to execute 
+	FRProcess *process;      /* the process object used to execute
 				  * commands. */
 	FRAction   action;       /* current action. */
 	char      *filename;     /* archive filename. */
 	char      *e_filename;   /* escaped archive filename. */
 
-	gboolean   fake_load;    /* if TRUE does nothing when the list 
+	gboolean   fake_load;    /* if TRUE does nothing when the list
 				  * operation is invoked. */
 };
 
 struct _FRCommandClass
 {
-        GObjectClass __parent_class;
+	GObjectClass __parent_class;
 
 	/*<virtual functions>*/
 
@@ -137,10 +139,10 @@ struct _FRCommandClass
 				       FRAction     action,
 				       FRProcError *error);
 
-        void        (*progress)       (FRCommand   *comm,
+	void        (*progress)       (FRCommand   *comm,
 				       double       fraction);
 
-        void        (*message)        (FRCommand   *comm,
+	void        (*message)        (FRCommand   *comm,
 				       const char  *msg);
 };
 
