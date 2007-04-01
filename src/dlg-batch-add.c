@@ -70,7 +70,7 @@ typedef struct {
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
-            DialogData *data)
+	    DialogData *data)
 {
 	if (! data->add_clicked) {
 		window_pop_message (data->window);
@@ -78,7 +78,7 @@ destroy_cb (GtkWidget  *widget,
 	}
 
 	g_object_unref (data->gui);
-        g_free (data);
+	g_free (data);
 }
 
 
@@ -101,10 +101,10 @@ get_ext (DialogData *data)
 
 /* called when the "add" button is pressed. */
 static void
-add_clicked_cb (GtkWidget  *widget, 
+add_clicked_cb (GtkWidget  *widget,
 		DialogData *data)
 {
-	FRWindow   *window = data->window; 
+	FRWindow   *window = data->window;
 	char       *archive_name;
 	char       *archive_dir;
 	char       *archive_file;
@@ -137,7 +137,7 @@ add_clicked_cb (GtkWidget  *widget,
 		g_free (archive_name);
 
 		return;
-		
+
 	} else if (strchrs (archive_name, BAD_CHARS)) {
 		GtkWidget  *d;
 		char       *utf8_name = g_filename_display_name (archive_name);
@@ -158,7 +158,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 		return;
 	}
-	
+
 	/* Check directory existence. */
 
 	archive_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton));
@@ -200,7 +200,7 @@ add_clicked_cb (GtkWidget  *widget,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Create _Folder"), GTK_RESPONSE_YES,
 					     NULL);
-			
+
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -279,7 +279,7 @@ add_clicked_cb (GtkWidget  *widget,
 		g_free (archive_file);
 		return;
 	}
-	
+
 	if (path_is_file (archive_file)
 	    && ((strcmp (archive_ext, ".gz") == 0)
 		|| (strcmp (archive_ext, ".z") == 0)
@@ -289,7 +289,7 @@ add_clicked_cb (GtkWidget  *widget,
 		|| (strcmp (archive_ext, ".lzo") == 0))) {
 		GtkWidget *d;
 		int        r;
-		
+
 		d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_QUESTION,
@@ -298,11 +298,11 @@ add_clicked_cb (GtkWidget  *widget,
 					     GTK_STOCK_NO, GTK_RESPONSE_NO,
 					     _("_Overwrite"), GTK_RESPONSE_YES,
 					     NULL);
-			
+
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-			
+
 		if (r == GTK_RESPONSE_YES)
 			gnome_vfs_unlink (archive_file);
 		else {
@@ -312,7 +312,7 @@ add_clicked_cb (GtkWidget  *widget,
 			return;
 		}
 	}
-		
+
 	if (! path_is_file (archive_file)) {
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
@@ -322,7 +322,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 	} else {
 		window->add_after_opening = TRUE;
-		
+
 		window_batch_mode_add_next_action (window,
 						   FR_BATCH_ACTION_ADD,
 						   path_list_dup (data->file_list),
@@ -344,14 +344,14 @@ scale_icon (GdkPixbuf *pixbuf,
 	    double    *scale)
 {
 	guint width, height;
-	
+
 	width = gdk_pixbuf_get_width (pixbuf);
 	height = gdk_pixbuf_get_height (pixbuf);
-	
+
 	width = floor (width * *scale + 0.5);
 	height = floor (height * *scale + 0.5);
-	
-        return gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
+
+	return gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
 }
 
 
@@ -362,11 +362,11 @@ load_icon_file (char          *filename,
 		guint          nominal_size)
 {
 	GdkPixbuf *pixbuf, *scaled_pixbuf;
-        guint      width, height, size;
-        double     scale;
-	
+	guint      width, height, size;
+	double     scale;
+
 	pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-	
+
 	if (pixbuf == NULL) {
 		return NULL;
 	}
@@ -382,7 +382,7 @@ load_icon_file (char          *filename,
 			base_size = nominal_size;
 		}
 
-	} 
+	}
 
 	if (base_size != nominal_size) {
 		scale = (double) nominal_size / base_size;
@@ -391,7 +391,7 @@ load_icon_file (char          *filename,
 		pixbuf = scaled_pixbuf;
 	}
 
-        return pixbuf;
+	return pixbuf;
 }
 
 
@@ -424,14 +424,14 @@ get_pixbuf_from_mime_type (const char *mime_type,
 		const GnomeIconData *icon_data;
 		int                  base_size;
 
-		icon_path = gnome_icon_theme_lookup_icon (icon_theme, 
+		icon_path = gnome_icon_theme_lookup_icon (icon_theme,
 							  icon_name,
 							  icon_size,
 							  &icon_data,
 							  &base_size);
 
 		if (icon_path != NULL) {
-			icon = load_icon_file (icon_path, 
+			icon = load_icon_file (icon_path,
 					       base_size, 
 					       icon_size);
 			g_free (icon_path);
@@ -440,7 +440,7 @@ get_pixbuf_from_mime_type (const char *mime_type,
 
 	g_free (icon_name);
 	g_object_unref (icon_theme);
-	
+
 	return icon;
 }
 
@@ -496,7 +496,7 @@ void
 dlg_batch_add_files (FRWindow *window,
 		     GList    *file_list)
 {
-        DialogData *data;
+	DialogData *data;
 	GtkWidget  *cancel_button;
 	GtkWidget  *add_button;
 	GtkWidget  *a_archive_type_box;
@@ -510,9 +510,9 @@ dlg_batch_add_files (FRWindow *window,
 	if (file_list == NULL)
 		return;
 
-        data = g_new0 (DialogData, 1);
+	data = g_new0 (DialogData, 1);
 
-        data->window = window;
+	data->window = window;
 	data->file_list = file_list;
 	data->add_clicked = FALSE;
 
@@ -520,13 +520,13 @@ dlg_batch_add_files (FRWindow *window,
 
 	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-                g_warning ("Could not find " GLADE_FILE "\n");
-                return;
-        }
+		g_warning ("Could not find " GLADE_FILE "\n");
+		return;
+	}
 
-        /* Get the widgets. */
+	/* Get the widgets. */
 
-        data->dialog = glade_xml_get_widget (data->gui, "batch_add_files_dialog");
+	data->dialog = glade_xml_get_widget (data->gui, "batch_add_files_dialog");
 	data->a_add_to_entry = glade_xml_get_widget (data->gui, "a_add_to_entry");
 	data->a_location_filechooserbutton = glade_xml_get_widget (data->gui, "a_location_filechooserbutton");
 
@@ -555,9 +555,9 @@ dlg_batch_add_files (FRWindow *window,
 	g_free (automatic_name);
 
 	if (check_permissions (parent, R_OK|W_OK|X_OK))
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), parent);
+		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), parent);
 	else
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), g_get_home_dir());
+		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), get_home_uri ());
 	g_free (parent);
 
 	/* archive type combobox */
@@ -569,7 +569,7 @@ dlg_batch_add_files (FRWindow *window,
 		save_type_list = save_type;
 
 	for (i = 0; save_type_list[i] != FR_FILE_TYPE_NULL; i++) {
-		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box), 
+		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box),
 					   file_type_desc[save_type_list[i]].ext);
 	}
 
@@ -578,7 +578,7 @@ dlg_batch_add_files (FRWindow *window,
 
 	/* Set the signals handlers. */
 
-        g_signal_connect (G_OBJECT (data->dialog), 
+	g_signal_connect (G_OBJECT (data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
@@ -586,11 +586,11 @@ dlg_batch_add_files (FRWindow *window,
 				  "clicked",
 				  G_CALLBACK (gtk_widget_destroy),
 				  G_OBJECT (data->dialog));
-	g_signal_connect (G_OBJECT (add_button), 
+	g_signal_connect (G_OBJECT (add_button),
 			  "clicked",
 			  G_CALLBACK (add_clicked_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->a_archive_type_combo_box), 
+	g_signal_connect (G_OBJECT (data->a_archive_type_combo_box),
 			  "changed",
 			  G_CALLBACK (archive_type_combo_box_changed_cb),
 			  data);
@@ -605,7 +605,7 @@ dlg_batch_add_files (FRWindow *window,
 	gtk_editable_select_region (GTK_EDITABLE (data->a_add_to_entry),
 				    0, -1);
 
-	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE); 
+	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE);
 
 	gtk_window_present (GTK_WINDOW (data->dialog));
 }

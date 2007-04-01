@@ -33,10 +33,10 @@
 
 enum {
 	START,
-        DONE,
+	DONE,
 	PROGRESS,
 	MESSAGE,
-        LAST_SIGNAL
+	LAST_SIGNAL
 };
 
 static GObjectClass *parent_class = NULL;
@@ -50,10 +50,10 @@ static void fr_command_finalize    (GObject *object);
 GType
 fr_command_get_type ()
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
+	if (! type) {
+		GTypeInfo type_info = {
 			sizeof (FRCommandClass),
 			NULL,
 			NULL,
@@ -71,7 +71,7 @@ fr_command_get_type ()
 					       0);
 	}
 
-        return type;
+	return type;
 }
 
 
@@ -141,21 +141,21 @@ base_fr_command_escape (FRCommand     *comm,
 
 
 static void
-base_fr_command_handle_error (FRCommand *comm, 
+base_fr_command_handle_error (FRCommand *comm,
 			      FRProcError *error)
 {
 }
 
 
-static void 
+static void
 fr_command_class_init (FRCommandClass *class)
 {
-        GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 
 	fr_command_signals[START] =
-                g_signal_new ("start",
+		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FRCommandClass, start),
@@ -192,7 +192,7 @@ fr_command_class_init (FRCommandClass *class)
 			      G_TYPE_NONE, 1,
 			      G_TYPE_STRING);
 
-        gobject_class->finalize = fr_command_finalize;
+	gobject_class->finalize = fr_command_finalize;
 
 	class->list           = base_fr_command_list;
 	class->add            = base_fr_command_add;
@@ -213,7 +213,7 @@ fr_command_class_init (FRCommandClass *class)
 }
 
 
-static void 
+static void
 fr_command_init (FRCommand *comm)
 {
 	comm->filename = NULL;
@@ -234,19 +234,19 @@ fr_command_init (FRCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_start (FRProcess *process,
 		  gpointer   data)
 {
 	FRCommand *comm = FR_COMMAND (data);
-	g_signal_emit (G_OBJECT (comm), 
+	g_signal_emit (G_OBJECT (comm),
 		       fr_command_signals[START], 
 		       0,
 		       comm->action);
 }
 
 
-static void 
+static void
 fr_command_done (FRProcess   *process,
 		 FRProcError *error, 
 		 gpointer     data)
@@ -254,7 +254,7 @@ fr_command_done (FRProcess   *process,
 	FRCommand *comm = FR_COMMAND (data);
 
 	comm->process->restart = FALSE;
-	if (error->type != FR_PROC_ERROR_NONE) 
+	if (error->type != FR_PROC_ERROR_NONE)
 		fr_command_handle_error (comm, error);
 
 	if (comm->process->restart)
@@ -277,25 +277,25 @@ fr_command_construct (FRCommand  *comm,
 
 	g_object_ref (G_OBJECT (process));
 	comm->process = process;
-	g_signal_connect (G_OBJECT (comm->process), 
+	g_signal_connect (G_OBJECT (comm->process),
 			  "start",
 			  G_CALLBACK (fr_command_start),
 			  comm);
-	g_signal_connect (G_OBJECT (comm->process), 
+	g_signal_connect (G_OBJECT (comm->process),
 			  "done",
 			  G_CALLBACK (fr_command_done),
 			  comm);
 }
 
 
-static void 
+static void
 fr_command_finalize (GObject *object)
 {
-        FRCommand* comm;
+	FRCommand* comm;
 
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND (object));
-  
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND (object));
+
 	comm = FR_COMMAND (object);
 
 	if (comm->filename != NULL)
@@ -305,13 +305,13 @@ fr_command_finalize (GObject *object)
 		g_free (comm->e_filename);
 
 	if (comm->file_list != NULL) {
-		g_list_foreach (comm->file_list, 
-				(GFunc) file_data_free, 
+		g_list_foreach (comm->file_list,
+				(GFunc) file_data_free,
 				NULL);
 		g_list_free (comm->file_list);
 	}
 
-	g_signal_handlers_disconnect_matched (G_OBJECT (comm->process), 
+	g_signal_handlers_disconnect_matched (G_OBJECT (comm->process),
 					      G_SIGNAL_MATCH_DATA, 
 					      0, 
 					      0, NULL, 
@@ -320,13 +320,13 @@ fr_command_finalize (GObject *object)
 	g_object_unref (G_OBJECT (comm->process));
 
 	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
+	if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 
 void
-fr_command_set_filename (FRCommand *comm,
+fr_command_set_filename (FRCommand  *comm,
 			 const char *filename)
 {
 	g_return_if_fail (FR_IS_COMMAND (comm));
@@ -340,12 +340,12 @@ fr_command_set_filename (FRCommand *comm,
 	if (! g_path_is_absolute (filename)) {
 		char *current_dir;
 		current_dir = g_get_current_dir ();
-		comm->filename = g_strconcat (current_dir, 
+		comm->filename = g_strconcat (current_dir,
 					      "/", 
 					      filename, 
 					      NULL);
 		g_free (current_dir);
-	} else 
+	} else
 		comm->filename = g_strdup (filename);
 
 	comm->e_filename = shell_escape (comm->filename);
@@ -373,7 +373,7 @@ fr_command_list (FRCommand  *comm,
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
-	if (!comm->fake_load) 
+	if (!comm->fake_load)
 		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm, password);
 }
 
@@ -391,7 +391,7 @@ fr_command_add (FRCommand     *comm,
 	comm->action = FR_ACTION_ADD;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->add (comm, 
+	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->add (comm,
 						     file_list,
 						     base_dir,
 						     update,
@@ -427,7 +427,7 @@ fr_command_extract (FRCommand  *comm,
 	comm->action = FR_ACTION_EXTRACT;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->extract (comm, 
+	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->extract (comm,
 							 file_list, 
 							 dest_dir,
 							 overwrite,
@@ -475,7 +475,7 @@ fr_command_escape (FRCommand     *comm,
 }
 
 
-/* fraction == -1 means : I don't known how much time the current operation 
+/* fraction == -1 means : I don't known how much time the current operation
  *                        will take, the dialog will display this info pulsing 
  *                        the progress bar. 
  * fraction in [0.0, 1.0] means the amount of work, in percentage, 
@@ -485,7 +485,7 @@ void
 fr_command_progress (FRCommand     *comm,
 		     double         fraction)
 {
-	g_signal_emit (G_OBJECT (comm), 
+	g_signal_emit (G_OBJECT (comm),
 		       fr_command_signals[PROGRESS], 
 		       0,
 		       fraction);
@@ -496,7 +496,7 @@ void
 fr_command_message (FRCommand     *comm,
 		    const char    *msg)
 {
-	g_signal_emit (G_OBJECT (comm), 
+	g_signal_emit (G_OBJECT (comm),
 		       fr_command_signals[MESSAGE], 
 		       0,
 		       msg);

@@ -46,6 +46,7 @@ struct _FRArchive {
 	char           *uri;
 	gboolean        is_remote;
 	char           *local_filename;
+	char           *mime_type;
 	FRCommand      *command;
 	FRProcess      *process;
 	FRProcError     error;

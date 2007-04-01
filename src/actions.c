@@ -114,7 +114,7 @@ get_full_path (GtkWidget *file_sel)
 	int          idx;
 
 	combo_box = g_object_get_data (G_OBJECT (file_sel), "fr_combo_box");
-	path = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
+	path = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
 
 	if ((path == NULL) || (*path == 0))
 		return NULL;
@@ -164,11 +164,12 @@ get_archive_filename_from_selector (FRWindow  *window,
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+
 		return NULL;
 	}
 
 	dir = remove_level_from_path (path);
-	if (access (dir, R_OK | W_OK | X_OK) != 0) {
+	if (! check_permissions (dir, R_OK | W_OK | X_OK)) {
 		GtkWidget *dialog;
 
 		g_free (dir);
@@ -309,7 +310,7 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	if (idx < 0)
 		return;
 
-	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (file_sel));
+	filename = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
 	if (filename == NULL)
 		return;
 
@@ -343,18 +344,16 @@ activate_action_new (GtkAction *action,
 	GtkFileFilter *filter;
 	int            i;
 
-	file_sel = gtk_file_chooser_dialog_new (
-			_("New"),
-			GTK_WINDOW (window->app),
-			GTK_FILE_CHOOSER_ACTION_SAVE,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_NEW, GTK_RESPONSE_OK,
-			GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-			NULL);
+	file_sel = gtk_file_chooser_dialog_new (_("New"),
+						GTK_WINDOW (window->app),
+						GTK_FILE_CHOOSER_ACTION_SAVE,
+						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						GTK_STOCK_NEW, GTK_RESPONSE_OK,
+						GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+						NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
-					     window->open_default_dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
 
 	if (window->add_after_creation && (window->dropped_file_list != NULL)) {
 		char       *first_item = (char*) window->dropped_file_list->data;
@@ -367,10 +366,11 @@ activate_action_new (GtkAction *action,
 			name = file_name_from_path (first_item);
 
 		if (folder != NULL)
-			gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel), folder);
+			gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), folder);
 
 		if (name != NULL) {
 			char *ext, *name_ext;
+
 			ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, ".tgz");
 			name_ext = g_strconcat (name, ext, NULL);
 			gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), name_ext);
@@ -488,8 +488,7 @@ activate_action_open (GtkAction *action,
 						NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
-					     window->open_default_dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
@@ -553,11 +552,12 @@ save_file_response_cb (GtkWidget *w,
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
 	path = get_archive_filename_from_selector (window, file_sel);
-	if (path != NULL) {
-		window_archive_save_as (window, path);
-		gtk_widget_destroy (file_sel);
-		g_free (path);
-	}
+	if (path == NULL)
+		return;
+
+	window_archive_save_as (window, path);
+	gtk_widget_destroy (file_sel);
+	g_free (path);
 }
 
 
@@ -572,18 +572,16 @@ activate_action_save_as (GtkAction *action,
 	GtkFileFilter *filter;
 	int            i;
 
-	file_sel = gtk_file_chooser_dialog_new (
-			_("Save"),
-			GTK_WINDOW (window->app),
-			GTK_FILE_CHOOSER_ACTION_SAVE,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_SAVE, GTK_RESPONSE_OK,
-			GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-			NULL);
-
+	file_sel = gtk_file_chooser_dialog_new (_("Save"),
+						GTK_WINDOW (window->app),
+						GTK_FILE_CHOOSER_ACTION_SAVE,
+						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+						GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+						NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (file_sel),
-					     window->open_default_dir);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
 
 	if (window->archive_filename != NULL)
 		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), file_name_from_path (window->archive_filename));

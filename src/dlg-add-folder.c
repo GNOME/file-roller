@@ -73,7 +73,7 @@ static gboolean
 utf8_only_spaces (const char *text)
 {
 	const char *scan;
-	
+
 	if (text == NULL)
 		return TRUE;
 
@@ -113,7 +113,7 @@ file_sel_response_cb (GtkWidget    *widget,
 
 	/* check folder permissions. */
 
-	if (path_is_dir (current_folder) 
+	if (path_is_dir (current_folder)
 	    && access (current_folder, R_OK | X_OK) != 0) {
 		GtkWidget *d;
 		char      *utf8_path;
@@ -168,7 +168,7 @@ file_sel_response_cb (GtkWidget    *widget,
 					 window_get_current_location (window),
 					 file_name_from_path (folder),
 					 NULL);
-		
+
 		window_archive_add_with_wildcard (window,
 						  include_files,
 						  exclude_files,
@@ -210,11 +210,11 @@ update_sensitivity (DialogData *data)
 		gboolean    exclude_wildcard;
 
 		files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
-		include_wildcard = ((g_utf8_strchr (files, -1, '*') != NULL) 
+		include_wildcard = ((g_utf8_strchr (files, -1, '*') != NULL)
 				    || (g_utf8_strchr (files, -1, '?') != NULL));
 
 		files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
-		exclude_wildcard = ((g_utf8_strchr (files, -1, '*') != NULL) 
+		exclude_wildcard = ((g_utf8_strchr (files, -1, '*') != NULL)
 				    || (g_utf8_strchr (files, -1, '?') != NULL));
 		wildcard_specified = include_wildcard || exclude_wildcard;
 	}
@@ -232,46 +232,46 @@ update_sensitivity (DialogData *data)
 
 
 static void
-selection_changed_cb (GtkWidget  *file_sel, 
+selection_changed_cb (GtkWidget  *file_sel,
 		      DialogData *data)
 {
 	FRWindow   *window = data->window;
 	char       *current_folder;
 
-        current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (file_sel));
+	current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (file_sel));
 
-        /* check folder permissions. */
-                                                                                                
-        if (path_is_dir (current_folder)
-            && access (current_folder, R_OK | X_OK) != 0) {
-                GtkWidget *d;
-                char      *utf8_path;
-                char      *message;
-		
-                utf8_path = g_filename_display_name (current_folder);
-                message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
-                g_free (utf8_path);
-		
-                d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-                                             GTK_DIALOG_MODAL,
-                                             GTK_STOCK_DIALOG_ERROR,
-                                             _("Could not add the files to the archive"),
-                                             message,
-                                             GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-                                             NULL);
-                gtk_dialog_run (GTK_DIALOG (d));
-                gtk_widget_destroy (GTK_WIDGET (d));
-                g_free (message);
-		
-                g_free (current_folder);
-        }
+	/* check folder permissions. */
+
+	if (path_is_dir (current_folder)
+	    && access (current_folder, R_OK | X_OK) != 0) {
+		GtkWidget *d;
+		char      *utf8_path;
+		char      *message;
+
+		utf8_path = g_filename_display_name (current_folder);
+		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
+		g_free (utf8_path);
+
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_MODAL,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not add the files to the archive"),
+					     message,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+					     NULL);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (message);
+
+		g_free (current_folder);
+	}
 
 	update_sensitivity (data);
 }
 
 
 static void
-wildcard_entry_changed_cb (GtkWidget  *file_sel, 
+wildcard_entry_changed_cb (GtkWidget  *file_sel,
 			   DialogData *data)
 {
 	update_sensitivity (data);
@@ -279,7 +279,7 @@ wildcard_entry_changed_cb (GtkWidget  *file_sel,
 
 
 static int
-include_subfold_toggled_cb (GtkWidget *widget, 
+include_subfold_toggled_cb (GtkWidget *widget,
 			    gpointer   callback_data)
 {
 	DialogData *data = callback_data;
@@ -295,15 +295,14 @@ static void save_options_cb (GtkWidget *w, DialogData *data);
 
 /* create the "add" dialog. */
 void
-add_folder_cb (GtkWidget *widget, 
+add_folder_cb (GtkWidget *widget,
 	       void      *callback_data)
 {
 	GtkWidget   *file_sel;
 	DialogData  *data;
-	gchar       *dir;
 	GtkWidget   *main_box;
 	GtkWidget   *vbox;
-	GtkWidget   *table;	
+	GtkWidget   *table;
 
 	data = g_new0 (DialogData, 1);
 
@@ -313,7 +312,7 @@ add_folder_cb (GtkWidget *widget,
 	g_object_ref (G_OBJECT (data->tooltips));
 	gtk_object_sink (GTK_OBJECT (data->tooltips));
 
-	data->dialog = file_sel = 
+	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Add a Folder"),
 					     GTK_WINDOW (data->window->app),
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
@@ -321,9 +320,9 @@ add_folder_cb (GtkWidget *widget,
 					     FR_STOCK_ADD_FOLDER, GTK_RESPONSE_OK,
 					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
-	
+
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 510);
-					     
+
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
@@ -353,7 +352,7 @@ add_folder_cb (GtkWidget *widget,
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, TRUE, TRUE, 0);
 
-	gtk_box_pack_start (GTK_BOX (vbox), data->add_if_newer_checkbutton, 
+	gtk_box_pack_start (GTK_BOX (vbox), data->add_if_newer_checkbutton,
 			    TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), data->include_subfold_checkbutton,
 			    TRUE, TRUE, 0);
@@ -366,7 +365,7 @@ add_folder_cb (GtkWidget *widget,
 	gtk_box_pack_start (GTK_BOX (vbox), table,
 			    TRUE, TRUE, 0);
 
-	gtk_table_attach (GTK_TABLE (table), 
+	gtk_table_attach (GTK_TABLE (table),
 			  data->include_files_label,
 			  0, 1,
 			  0, 1,
@@ -378,7 +377,7 @@ add_folder_cb (GtkWidget *widget,
 			  0, 1,
 			  GTK_FILL|GTK_EXPAND, 0,
 			  0, 0);
-	gtk_table_attach (GTK_TABLE (table), 
+	gtk_table_attach (GTK_TABLE (table),
 			  data->exclude_files_label,
 			  0, 1,
 			  1, 2,
@@ -392,30 +391,26 @@ add_folder_cb (GtkWidget *widget,
 			  0, 0);
 
 	/**/
-	
+
 	vbox = gtk_vbox_new (FALSE, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, FALSE, FALSE, 0);
-	
+
 	gtk_box_pack_start (GTK_BOX (vbox), data->load_button,
 			    FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), data->save_button,
 			    FALSE, FALSE, 0);
 
 	gtk_widget_show_all (main_box);
-	
+
 	/* set data */
 
-	dir = g_strconcat (data->window->add_default_dir, "/", "*", NULL);
-	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (file_sel), dir);
-	g_free (dir);
-
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), data->window->add_default_dir);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), TRUE);
-
 	update_sensitivity (data);
 
 	/* signals */
-	
+
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
 			  G_CALLBACK (open_file_destroy_cb),
@@ -426,20 +421,20 @@ add_folder_cb (GtkWidget *widget,
 			  G_CALLBACK (file_sel_response_cb),
 			  data);
 
-	g_signal_connect (G_OBJECT (file_sel), 
+	g_signal_connect (G_OBJECT (file_sel),
 			  "selection-changed",
 			  G_CALLBACK (selection_changed_cb),
 			  data);
 
-	g_signal_connect (G_OBJECT (data->include_files_entry), 
+	g_signal_connect (G_OBJECT (data->include_files_entry),
 			  "changed",
 			  G_CALLBACK (wildcard_entry_changed_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->exclude_files_entry), 
+	g_signal_connect (G_OBJECT (data->exclude_files_entry),
 			  "changed",
 			  G_CALLBACK (wildcard_entry_changed_cb),
 			  data);
-	
+
 	g_signal_connect (G_OBJECT (data->include_subfold_checkbutton),
 			  "toggled", 
 			  G_CALLBACK (include_subfold_toggled_cb),
@@ -449,7 +444,7 @@ add_folder_cb (GtkWidget *widget,
 			  "clicked",
 			  G_CALLBACK (load_options_cb), 
 			  data);
-	
+
 	g_signal_connect (G_OBJECT (data->save_button),
 			  "clicked",
 			  G_CALLBACK (save_options_cb), 
@@ -484,11 +479,11 @@ config_get_bool (const char *config_file,
 {
 	char     *path;
 	gboolean  value;
-	
+
 	path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
 	value = gnome_config_get_bool (path);
 	g_free (path);
-	
+
 	return value;
 }
 
@@ -499,11 +494,11 @@ config_get_string (const char *config_file,
 {
 	char *path;
 	char *value;
-	
+
 	path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
 	value = gnome_config_get_string (path);
 	g_free (path);
-	
+
 	return value;
 }
 
@@ -526,7 +521,7 @@ aod_apply_cb (GtkWidget *widget,
 	gboolean               no_symlinks;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (aod_data->aod_treeview));
-	if (! gtk_tree_selection_get_selected (selection, NULL, &iter)) 
+	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
 		return;
 
 	gtk_tree_model_get (aod_data->aod_model, &iter,
@@ -537,7 +532,7 @@ aod_apply_cb (GtkWidget *widget,
 	data->last_options = g_strdup (file_name_from_path (file_path));
 
 	/* Load options. */
-	
+
 	base_dir = config_get_string (file_path, "base_dir");
 	filename = config_get_string (file_path, "filename");
 	include_files = config_get_string (file_path, "include_files");
@@ -550,13 +545,16 @@ aod_apply_cb (GtkWidget *widget,
 
 	/* Sync widgets with options. */
 
-	if (base_dir != NULL) { 
-		if ((filename != NULL) && (strcmp (filename, base_dir) != 0)) 
+	if (base_dir != NULL) {
+		if ((filename != NULL) && (strcmp (filename, base_dir) != 0))
 			gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (data->dialog), filename);
-		else
-			gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (data->dialog), base_dir);
+		else {
+			char *uri = get_uri_from_path (base_dir);
+			gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->dialog), uri);
+			g_free (uri);
+		}
 	}
-		
+
 	if (include_files != NULL)
 		gtk_entry_set_text (GTK_ENTRY (data->include_files_entry), include_files);
 	if (exclude_files != NULL)
@@ -564,7 +562,7 @@ aod_apply_cb (GtkWidget *widget,
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton), update);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), recursive);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->exclude_symlinks), no_symlinks);
-	
+
 	g_free (base_dir);
 	g_free (filename);
 	g_free (include_files);
@@ -578,9 +576,9 @@ aod_apply_cb (GtkWidget *widget,
 
 static void
 aod_activated_cb (GtkTreeView       *tree_view,
-                  GtkTreePath       *path,
-                  GtkTreeViewColumn *column,
-                  gpointer           callback_data)
+		  GtkTreePath       *path,
+		  GtkTreeViewColumn *column,
+		  gpointer           callback_data)
 {
 	aod_apply_cb (NULL, callback_data);
 }
@@ -593,13 +591,13 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 	char           *options_dir;
 	GnomeVFSResult  result;
 	GList          *list = NULL;
-	
+
 	gtk_list_store_clear (list_store);
 
 	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
 	ensure_dir_exists (options_dir, 0700);
-	
-	result = gnome_vfs_directory_list_load (&list, 
+
+	result = gnome_vfs_directory_list_load (&list,
 						options_dir,
 						GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
 
@@ -614,7 +612,7 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 			if ((strcmp (file_info->name, ".") == 0)
 			    || (strcmp (file_info->name, "..") == 0))
 				continue;
-			
+
 			full_path = g_build_filename (options_dir,
 						      file_info->name,
 						      NULL);
@@ -627,7 +625,7 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 			g_free (full_path);
 		}
 	}
-	
+
 	gnome_vfs_file_info_list_free (list);
 	g_free (options_dir);
 }
@@ -655,7 +653,7 @@ aod_remove_cb (GtkWidget             *widget,
 }
 
 
-static void 
+static void
 load_options_cb (GtkWidget  *w,
 		 DialogData *data)
 {
@@ -670,11 +668,11 @@ load_options_cb (GtkWidget  *w,
 
 	aod_data->data = data;
 	aod_data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-        if (! aod_data->gui) {
-                g_warning ("Could not find " GLADE_FILE "\n");
+	if (! aod_data->gui) {
+		g_warning ("Could not find " GLADE_FILE "\n");
 		g_free (aod_data);
-                return;
-        }
+		return;
+	}
 
 	/* Get the widgets. */
 
@@ -687,34 +685,34 @@ load_options_cb (GtkWidget  *w,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (aod_data->dialog), 
+	g_signal_connect (G_OBJECT (aod_data->dialog),
 			  "destroy",
 			  G_CALLBACK (aod_destroy_cb),
 			  aod_data);
 	g_signal_connect (G_OBJECT (aod_data->aod_treeview),
-                          "row_activated",
-                          G_CALLBACK (aod_activated_cb),
-                          aod_data);
-	g_signal_connect_swapped (G_OBJECT (cancel_button), 
+			  "row_activated",
+			  G_CALLBACK (aod_activated_cb),
+			  aod_data);
+	g_signal_connect_swapped (G_OBJECT (cancel_button),
 				  "clicked",
 				  G_CALLBACK (gtk_widget_destroy),
 				  G_OBJECT (aod_data->dialog));
-	g_signal_connect (G_OBJECT (ok_button), 
+	g_signal_connect (G_OBJECT (ok_button),
 			  "clicked",
 			  G_CALLBACK (aod_apply_cb),
 			  aod_data);
-	g_signal_connect (G_OBJECT (remove_button), 
+	g_signal_connect (G_OBJECT (remove_button),
 			  "clicked",
 			  G_CALLBACK (aod_remove_cb),
 			  aod_data);
 
 	/* Set data. */
 
-	aod_data->aod_model = GTK_TREE_MODEL (gtk_list_store_new (2, 
+	aod_data->aod_model = GTK_TREE_MODEL (gtk_list_store_new (2,
 								  G_TYPE_STRING,
 								  G_TYPE_STRING));
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (aod_data->aod_model),
-                                              0,
+					      0,
 					      GTK_SORT_ASCENDING);
 	gtk_tree_view_set_model (GTK_TREE_VIEW (aod_data->aod_treeview),
 				 aod_data->aod_model);
@@ -730,12 +728,12 @@ load_options_cb (GtkWidget  *w,
 	gtk_tree_view_column_set_sort_column_id (column, 0);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (aod_data->aod_treeview),
 				     column);
-	
+
 	aod_update_option_list (aod_data);
 
 	/* Run */
 
-	gtk_window_set_transient_for (GTK_WINDOW (aod_data->dialog), 
+	gtk_window_set_transient_for (GTK_WINDOW (aod_data->dialog),
 				      GTK_WINDOW (data->dialog));
 	gtk_window_set_modal (GTK_WINDOW (aod_data->dialog), TRUE);
 	gtk_widget_show (aod_data->dialog);
@@ -748,7 +746,7 @@ config_set_bool (const char *config_file,
 		 gboolean    value)
 {
        char *path;
-       
+
        path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
        gnome_config_set_bool (path, value);
 
@@ -762,7 +760,7 @@ config_set_string (const char *config_file,
 		   const char *value)
 {
 	char *path;
-	
+
 	path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
 	gnome_config_set_string (path, value);
 
@@ -770,7 +768,7 @@ config_set_string (const char *config_file,
 }
 
 
-static void 
+static void
 save_options_cb (GtkWidget  *w,
 		 DialogData *data)
 {
@@ -798,14 +796,14 @@ save_options_cb (GtkWidget  *w,
 			GTK_STOCK_CANCEL,
 			GTK_STOCK_SAVE);
 
-	if (opt_filename == NULL) 
+	if (opt_filename == NULL)
 		return;
 
 	opt_file_path = g_build_filename (options_dir, opt_filename, NULL);
 	g_free (opt_filename);
 
 	/* Get options. */
-	
+
 	base_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (data->dialog));
 	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->dialog));
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));
@@ -819,9 +817,9 @@ save_options_cb (GtkWidget  *w,
 	exclude_files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
 	if (utf8_only_spaces (exclude_files))
 		exclude_files = NULL;
-	
+
 	/* Save options. */
-	
+
 	config_set_string (opt_file_path, "base_dir", base_dir);
 	config_set_string (opt_file_path, "filename", filename);
 	config_set_string (opt_file_path, "include_files", include_files);
@@ -835,7 +833,7 @@ save_options_cb (GtkWidget  *w,
 	data->last_options = g_strdup (file_name_from_path (opt_file_path));
 
 	/**/
-	
+
 	g_free (base_dir);
 	g_free (filename);
 	g_free (opt_file_path);

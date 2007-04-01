@@ -211,7 +211,7 @@ dlg_prop (FRWindow *window)
 	g_signal_connect (G_OBJECT (help_button),
 			  "clicked",
 			  G_CALLBACK (help_cb),
-			  G_OBJECT (data));
+			  data);
 
 	/* Run dialog. */
 

@@ -214,18 +214,17 @@ path_in_path (const char  *path_src,
 
 
 GnomeVFSFileSize
-get_file_size (const gchar *path)
+get_file_size (const char *uri)
 {
 	GnomeVFSFileInfo *info;
-	GnomeVFSResult result;
-	GnomeVFSFileSize size;
-	gchar *escaped;
+	GnomeVFSResult    result;
+	GnomeVFSFileSize  size;
 
-	if (! path || ! *path) return 0;
+	if ((uri == NULL) || (*uri == '\0'))
+		return 0;
 
 	info = gnome_vfs_file_info_new ();
-	escaped = gnome_vfs_escape_path_string (path);
-	result = gnome_vfs_get_file_info (escaped,
+	result = gnome_vfs_get_file_info (uri,
 					  info,
 					  (GNOME_VFS_FILE_INFO_DEFAULT
 					   | GNOME_VFS_FILE_INFO_FOLLOW_LINKS));
@@ -233,7 +232,6 @@ get_file_size (const gchar *path)
 	if (result == GNOME_VFS_OK)
 		size = info->size;
 
-	g_free (escaped);
 	gnome_vfs_file_info_unref (info);
 
 	return size;
@@ -241,18 +239,17 @@ get_file_size (const gchar *path)
 
 
 time_t
-get_file_mtime (const gchar *path)
+get_file_mtime (const char *uri)
 {
 	GnomeVFSFileInfo *info;
-	GnomeVFSResult result;
-	gchar *escaped;
-	time_t mtime;
+	GnomeVFSResult    result;
+	time_t            mtime;
 
-	if (! path || ! *path) return 0;
+	if ((uri == NULL) || (*uri == '\0'))
+		return 0;
 
 	info = gnome_vfs_file_info_new ();
-	escaped = gnome_vfs_escape_path_string (path);
-	result = gnome_vfs_get_file_info (escaped,
+	result = gnome_vfs_get_file_info (uri,
 					  info,
 					  (GNOME_VFS_FILE_INFO_DEFAULT
 					   | GNOME_VFS_FILE_INFO_FOLLOW_LINKS));
@@ -260,7 +257,6 @@ get_file_mtime (const gchar *path)
 	if (result == GNOME_VFS_OK)
 		mtime = info->mtime;
 
-	g_free (escaped);
 	gnome_vfs_file_info_unref (info);
 
 	return mtime;
@@ -268,18 +264,17 @@ get_file_mtime (const gchar *path)
 
 
 time_t
-get_file_ctime (const gchar *path)
+get_file_ctime (const char *uri)
 {
 	GnomeVFSFileInfo *info;
-	GnomeVFSResult result;
-	gchar *escaped;
-	time_t ctime;
+	GnomeVFSResult    result;
+	time_t            ctime;
 
-	if (! path || ! *path) return 0;
+	if ((uri == NULL) || (*uri == '\0'))
+		return 0;
 
 	info = gnome_vfs_file_info_new ();
-	escaped = gnome_vfs_escape_path_string (path);
-	result = gnome_vfs_get_file_info (escaped,
+	result = gnome_vfs_get_file_info (uri,
 					  info,
 					  (GNOME_VFS_FILE_INFO_DEFAULT
 					   | GNOME_VFS_FILE_INFO_FOLLOW_LINKS));
@@ -287,7 +282,6 @@ get_file_ctime (const gchar *path)
 	if (result == GNOME_VFS_OK)
 		ctime = info->ctime;
 
-	g_free (escaped);
 	gnome_vfs_file_info_unref (info);
 
 	return ctime;
@@ -845,33 +839,32 @@ escape_uri (const char *uri)
 
 
 gboolean
-check_permissions (const char *path,
+check_permissions (const char *uri,
 		   int         mode)
 {
 	GnomeVFSFileInfo *info;
 	GnomeVFSResult    vfs_result;
-	char             *escaped;
+	gboolean          result = TRUE;
 
 	info = gnome_vfs_file_info_new ();
-	escaped = escape_uri (path);
-	vfs_result = gnome_vfs_get_file_info (escaped,
+	vfs_result = gnome_vfs_get_file_info (uri,
 					      info,
-					      (GNOME_VFS_FILE_INFO_DEFAULT
-					       | GNOME_VFS_FILE_INFO_FOLLOW_LINKS
+					      (GNOME_VFS_FILE_INFO_FOLLOW_LINKS
 					       | GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS));
-	g_free (escaped);
 
 	if (vfs_result != GNOME_VFS_OK)
-		return FALSE;
+		result = FALSE;
 
-	if ((mode & R_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_READABLE))
-		return FALSE;
+	else if ((mode & R_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_READABLE))
+		result = FALSE;
 
-	if ((mode & W_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE))
-		return FALSE;
+	else if ((mode & W_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE))
+		result = FALSE;
 
-	if ((mode & X_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE))
-		return FALSE;
+	else if ((mode & X_OK) && ! (info->permissions & GNOME_VFS_PERM_ACCESS_EXECUTABLE))
+		result = FALSE;
+
+	gnome_vfs_file_info_unref (info);
 
 	return TRUE;
 }
@@ -903,25 +896,46 @@ is_program_in_path (const char *filename)
 	return result;
 }
 
+
+const char *
+get_home_uri (void)
+{
+	static char *home_uri = NULL;
+	if (home_uri == NULL)
+		home_uri = g_strconcat ("file://", g_get_home_dir (), NULL);
+	return home_uri;
+}
+
+
 GnomeVFSURI *
 new_uri_from_path (const char *path)
 {
-	char        *escaped;
 	char        *uri_txt;
 	GnomeVFSURI *uri;
 
-	escaped = escape_uri (path);
-	if (escaped[0] == '/')
-		uri_txt = g_strconcat ("file://", escaped, NULL);
-	else
-		uri_txt = g_strdup (escaped);
-
+	uri_txt = get_uri_from_local_path (path);
 	uri = gnome_vfs_uri_new (uri_txt);
-
 	g_free (uri_txt);
-	g_free (escaped);
 
 	g_return_val_if_fail (uri != NULL, NULL);
+
+	return uri;
+}
+
+
+char *
+get_uri_from_local_path (const char *local_path)
+{
+	char *escaped;
+	char *uri;
+
+	escaped = escape_uri (local_path);
+	if (escaped[0] == '/') {
+		uri = g_strconcat ("file://", escaped, NULL);
+		g_free (escaped);
+	}
+	else
+		uri = escaped;
 
 	return uri;
 }

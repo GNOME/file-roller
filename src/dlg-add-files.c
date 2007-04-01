@@ -77,7 +77,7 @@ file_sel_response_cb (GtkWidget      *widget,
 
 	/* check folder permissions. */
 
-	if (path_is_dir (current_folder) 
+	if (path_is_dir (current_folder)
 	    && access (current_folder, R_OK | X_OK) != 0) {
 		GtkWidget *d;
 		char      *utf8_path;
@@ -114,7 +114,7 @@ file_sel_response_cb (GtkWidget      *widget,
 		item_list = g_list_prepend (item_list, path);
 	}
 
-	if (item_list != NULL) 
+	if (item_list != NULL)
 		window_archive_add_dropped_items (window, item_list, update);
 
 	g_list_free (item_list);
@@ -129,55 +129,55 @@ file_sel_response_cb (GtkWidget      *widget,
 
 
 static void
-selection_changed_cb (GtkWidget  *file_sel, 
+selection_changed_cb (GtkWidget  *file_sel,
  		      DialogData *data)
 {
 	FRWindow   *window = data->window;
 	char       *current_folder;
 
-        current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (file_sel));
+	current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (file_sel));
 
-        /* check folder permissions. */
-                                                                                                
-        if (path_is_dir (current_folder)
-            && access (current_folder, R_OK | X_OK) != 0) {
-                GtkWidget *d;
-                char      *utf8_path;
-                char      *message;
-		
-                utf8_path = g_filename_display_name (current_folder);
-                message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
-                g_free (utf8_path);
-		
-                d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
-                                             GTK_DIALOG_MODAL,
-                                             GTK_STOCK_DIALOG_ERROR,
-                                             _("Could not add the files to the archive"),
-                                             message,
-                                             GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-                                             NULL);
-                gtk_dialog_run (GTK_DIALOG (d));
-                gtk_widget_destroy (GTK_WIDGET (d));
-                g_free (message);
-		
-                g_free (current_folder);
-        }
+	/* check folder permissions. */
+
+	if (path_is_dir (current_folder)
+	    && access (current_folder, R_OK | X_OK) != 0) {
+		GtkWidget *d;
+		char      *utf8_path;
+		char      *message;
+
+		utf8_path = g_filename_display_name (current_folder);
+		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
+		g_free (utf8_path);
+
+		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+					     GTK_DIALOG_MODAL,
+					     GTK_STOCK_DIALOG_ERROR,
+					     _("Could not add the files to the archive"),
+					     message,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+					     NULL);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		g_free (message);
+
+		g_free (current_folder);
+	}
 }
 
 
 /* create the "add" dialog. */
 void
-add_files_cb (GtkWidget *widget, 
+add_files_cb (GtkWidget *widget,
 	      void      *callback_data)
 {
 	GtkWidget   *file_sel;
 	DialogData  *data;
 	char        *dir;
 	GtkWidget   *main_box;
- 
+
 	data = g_new0 (DialogData, 1);
 	data->window = callback_data;
-	data->dialog = file_sel = 
+	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Add Files"),
 					     GTK_WINDOW (data->window->app),
 					     GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -185,9 +185,9 @@ add_files_cb (GtkWidget *widget,
 					     FR_STOCK_ADD_FILES, GTK_RESPONSE_OK,
 					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
-					     
+
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 450);
-					     
+
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
@@ -198,19 +198,19 @@ add_files_cb (GtkWidget *widget,
 	gtk_container_set_border_width (GTK_CONTAINER (main_box), 0);
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), main_box);
 
-	gtk_box_pack_start (GTK_BOX (main_box), data->add_if_newer_checkbutton, 
+	gtk_box_pack_start (GTK_BOX (main_box), data->add_if_newer_checkbutton,
 			    TRUE, TRUE, 0);
 
 	gtk_widget_show_all (main_box);
-	
+
 	/* set data */
 
 	dir = g_strconcat (data->window->add_default_dir, "/", "*", NULL);
-	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (file_sel), dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), dir);
 	g_free (dir);
 
 	/* signals */
-	
+
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
 			  G_CALLBACK (open_file_destroy_cb),
@@ -221,7 +221,7 @@ add_files_cb (GtkWidget *widget,
 			  G_CALLBACK (file_sel_response_cb),
 			  data);
 
-	g_signal_connect (G_OBJECT (file_sel), 
+	g_signal_connect (G_OBJECT (file_sel),
 			  "selection-changed",
 			  G_CALLBACK (selection_changed_cb),
 			  data);

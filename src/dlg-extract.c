@@ -471,6 +471,7 @@ dlg_extract (GtkWidget *widget,
 	FRWindow   *window = callback_data;
 	DialogData *data;
 	GtkWidget  *file_sel;
+	const char *folder = NULL;
 
 	data = g_new0 (DialogData, 1);
 
@@ -501,11 +502,13 @@ dlg_extract (GtkWidget *widget,
 	/* Set widgets data. */
 
 	if (window->extract_default_dir != NULL) {
-		const char *folder = window->extract_default_dir;
-		if (dir_is_temp_dir (folder))
-			folder = g_get_home_dir ();
-		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (file_sel), folder);
+		folder = window->extract_default_dir;
+		if (dir_is_temp_dir (folder) || ! uri_is_local (folder))
+			folder = get_home_uri ();
 	}
+	else
+		folder = get_home_uri ();
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), folder);
 
 	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton), TRUE);

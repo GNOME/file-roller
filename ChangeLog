@@ -1,3 +1,22 @@
+2007-04-01  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/actions.c:
+	* src/dlg-add-files.c:
+	* src/dlg-add-folder.c:
+	* src/dlg-batch-add.c:
+	* src/dlg-extract.c:
+	* src/dlg-prop.c:
+	* src/file-utils.c:
+	* src/file-utils.h:
+	* src/fr-archive.c:
+	* src/fr-archive.h:
+	* src/fr-command.c:
+	* src/window.c:
+
+	Started support for saving remote archives.
+
+	* data/file-roller.desktop.in.in: use %U instead of %F
+
 2007-03-31  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/actions.c:
@@ -11,7 +30,8 @@
 	* src/main.c:
 	* src/window.c:
 
-	Started support for loading remote files.  Still a lot of work to be done.
+	Started support for loading remote files.
+	Still a lot of work to be done.
 
 	* configure.in: changed version to 2.19.0
 

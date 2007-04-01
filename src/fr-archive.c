@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2007 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 #include "file-data.h"
 #include "file-list.h"
 #include "file-utils.h"
@@ -58,6 +59,16 @@
 #ifndef NCARGS
 #define NCARGS _POSIX_ARG_MAX
 #endif
+
+
+typedef struct {
+	FRArchive      *archive;
+	char           *uri;
+	char           *password;
+	FRAction        action;
+	GnomeVFSResult  result;
+} XferData;
+
 
 #define g_signal_handlers_disconnect_by_data(instance, data) \
     g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
@@ -239,6 +250,48 @@ fr_archive_new (void)
 }
 
 
+static char *
+get_local_temp_uri (const char *remote_uri)
+{
+	/* FIXME: find a good temporary dir */
+	return g_strconcat (g_get_home_dir (),
+			    "/Desktop/",
+			    file_name_from_path (remote_uri),
+			    NULL);
+}
+
+
+static void
+fr_archive_set_uri (FRArchive  *archive,
+		    const char *uri)
+{
+	if (archive->local_filename != NULL) {
+		char *uri;
+
+		uri = get_uri_from_local_path (archive->local_filename);
+		gnome_vfs_unlink (uri);
+		g_free (uri);
+	}
+
+	g_free (archive->uri);
+	g_free (archive->local_filename);
+	g_free (archive->mime_type);
+
+	archive->uri = NULL;
+	archive->local_filename = NULL;
+	archive->mime_type = NULL;
+
+	if (uri == NULL)
+		return;
+
+	archive->uri = g_strdup (uri);
+	if (uri_is_local (uri))
+		archive->local_filename = get_local_path_from_uri (uri);
+	else
+		archive->local_filename = get_local_temp_uri (uri);
+}
+
+
 static void
 fr_archive_finalize (GObject *object)
 {
@@ -249,8 +302,7 @@ fr_archive_finalize (GObject *object)
 
 	archive = FR_ARCHIVE (object);
 
-	g_free (archive->uri);
-	g_free (archive->local_filename);
+	fr_archive_set_uri (archive, NULL);
 
 	if (archive->command != NULL)
 		g_object_unref (archive->command);
@@ -593,6 +645,95 @@ action_started (FRCommand *command,
 }
 
 
+/* -- fr_archive_copy_to_remote_location -- */
+
+
+static void
+fr_archive_copy_to_remote_location__step2 (FRArchive      *archive,
+					   FRAction        action,
+					   GnomeVFSResult  result)
+{
+	archive->error.type = FR_PROC_ERROR_NONE;
+	archive->error.status = 0;
+	g_clear_error (&archive->error.gerror);
+
+	if (result != GNOME_VFS_OK) {
+		archive->error.type = FR_PROC_ERROR_GENERIC;
+		archive->error.gerror = g_error_new (fr_error_quark (),
+						     0,
+						     gnome_vfs_result_to_string (result));
+	}
+
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[DONE],
+		       0,
+		       action,
+		       &archive->error);
+}
+
+
+static gint
+copy_to_remote_location_progress_update_cb (GnomeVFSAsyncHandle      *handle,
+					    GnomeVFSXferProgressInfo *info,
+					    gpointer                  user_data)
+{
+	XferData *xfer_data = user_data;
+
+	if (info->status != GNOME_VFS_XFER_PROGRESS_STATUS_OK) {
+		xfer_data->result = info->vfs_status;
+		return FALSE;
+	}
+	else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
+		fr_archive_copy_to_remote_location__step2 (xfer_data->archive, xfer_data->action, xfer_data->result);
+		g_free (xfer_data);
+	}
+	else if ((info->phase == GNOME_VFS_XFER_PHASE_COPYING)
+		 || (info->phase == GNOME_VFS_XFER_PHASE_MOVING))
+		g_signal_emit (G_OBJECT (xfer_data->archive),
+			       fr_archive_signals[PROGRESS],
+			       0,
+			       info->total_bytes_copied / info->bytes_total);
+
+	return TRUE;
+}
+
+
+static void
+fr_archive_copy_to_remote_location (FRArchive  *archive,
+				    FRAction    action)
+{
+	GnomeVFSAsyncHandle *handle; /* FIXME: add the handle to the archive and allow to cancel the operation */
+	GnomeVFSURI         *source_uri, *target_uri;
+	GList               *source_uri_list, *target_uri_list;
+	XferData            *xfer_data;
+	GnomeVFSResult       result;
+
+	source_uri = gnome_vfs_uri_new (archive->local_filename);
+	target_uri = gnome_vfs_uri_new (archive->uri);
+
+	source_uri_list = g_list_append (NULL, source_uri);
+	target_uri_list = g_list_append (NULL, target_uri);
+
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = archive;
+	xfer_data->result = GNOME_VFS_OK;
+	xfer_data->action = action;
+
+	result = gnome_vfs_async_xfer (&handle,
+				       source_uri_list,
+				       target_uri_list,
+				       GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				       GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				       GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				       GNOME_VFS_PRIORITY_DEFAULT,
+				       copy_to_remote_location_progress_update_cb, xfer_data,
+				       NULL, NULL);
+
+	gnome_vfs_uri_list_free (source_uri_list);
+	gnome_vfs_uri_list_free (target_uri_list);
+}
+
+
 static void
 action_performed (FRCommand   *command,
 		  FRAction     action,
@@ -630,6 +771,12 @@ action_performed (FRCommand   *command,
 	}
 	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", s_action);
 #endif
+
+	if (((action == FR_ACTION_ADD) || (action == FR_ACTION_DELETE))
+	    && ! uri_is_local (archive->uri)) {
+		fr_archive_copy_to_remote_location (archive, action);
+		return;
+	}
 
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[DONE],
@@ -675,8 +822,10 @@ fr_archive_new_file (FRArchive  *archive,
 	if (uri == NULL)
 		return FALSE;
 
+	fr_archive_set_uri (archive, uri);
+
 	tmp_command = archive->command;
-	if (! create_command_from_filename (archive, uri, FALSE)) {
+	if (! create_command_from_filename (archive, archive->local_filename, FALSE)) {
 		archive->command = tmp_command;
 		return FALSE;
 	}
@@ -685,9 +834,6 @@ fr_archive_new_file (FRArchive  *archive,
 		g_object_unref (G_OBJECT (tmp_command));
 
 	archive->read_only = FALSE;
-
-	g_free (archive->uri);
-	archive->uri = g_strdup (uri);
 
 	g_signal_connect (G_OBJECT (archive->command),
 			  "start",
@@ -752,10 +898,10 @@ fr_archive_load__error (FRArchive  *archive,
 
 
 static void
-fr_archive_load__step2 (FRArchive      *archive,
-		 	char           *uri,
-		 	char           *password,
-		 	GnomeVFSResult  result)
+fr_archive_copy_remote_file__step2 (FRArchive      *archive,
+				    char           *uri,
+				    char           *password,
+				    GnomeVFSResult  result)
 {
 	FRCommand  *tmp_command;
 	const char *mime_type = NULL;
@@ -765,22 +911,15 @@ fr_archive_load__step2 (FRArchive      *archive,
 		return;
 	}
 
-	archive->read_only = ! check_permissions (uri, W_OK);
+	archive->read_only = FALSE; /*! check_permissions (uri, W_OK); FIXME: does not work with remote uris */
 
-	if (archive->uri != uri) {
-		g_free (archive->uri);
-		archive->uri = g_strdup (uri);
-	}
+	/* find mime type */
 
 	tmp_command = archive->command;
 
-	/* prefer mime-magic */
-
 	mime_type = get_mime_type_from_sniffer (archive->local_filename);
-
 	if (mime_type == NULL)
 		mime_type = get_mime_type_from_content (archive->local_filename);
-
 	if ((mime_type == NULL)
 	    || ! create_command_from_mime_type (archive, archive->local_filename, mime_type))
 		if (! create_command_from_filename (archive, archive->local_filename, TRUE)) {
@@ -788,6 +927,9 @@ fr_archive_load__step2 (FRArchive      *archive,
 			fr_archive_load__error (archive, _("Archive type not supported."));
 			return;
 		}
+
+	g_free (archive->mime_type);
+	archive->mime_type = g_strdup (mime_type);
 
 	if (tmp_command != NULL) {
 		g_signal_handlers_disconnect_by_data (tmp_command, archive);
@@ -827,23 +969,15 @@ fr_archive_load__step2 (FRArchive      *archive,
 		       FR_ACTION_LOAD,
 		       &archive->error);
 
+	g_free (uri);
+	g_free (password);
+
 	/**/
 
 	fr_process_clear (archive->process);
 	fr_command_list (archive->command, password);
 	fr_process_start (archive->process);
-
-	g_free (uri);
-	g_free (password);
 }
-
-
-typedef struct {
-	FRArchive      *archive;
-	char           *uri;
-	char           *password;
-	GnomeVFSResult  result;
-} XferData;
 
 
 static gint
@@ -858,7 +992,7 @@ copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 		return FALSE;
 
 	} else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
-		fr_archive_load__step2 (xfer_data->archive,
+		fr_archive_copy_remote_file__step2 (xfer_data->archive,
 					xfer_data->uri,
 					xfer_data->password,
 					xfer_data->result);
@@ -877,12 +1011,24 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 {
 	GnomeVFSAsyncHandle *handle; /* FIXME: add the handle to the archive and allow to cancel the operation */
 	XferData            *xfer_data;
+	char                *local_uri;
 	GnomeVFSURI         *source_uri, *target_uri;
 	GList               *source_uri_list, *target_uri_list;
 	GnomeVFSResult       result;
 
+	local_uri = get_uri_from_local_path (local_filename);
+
 	source_uri = gnome_vfs_uri_new (remote_uri);
-	target_uri = gnome_vfs_uri_new (local_filename);
+	target_uri = gnome_vfs_uri_new (local_uri);
+
+	g_free (local_uri);
+
+	if (gnome_vfs_uri_equal (source_uri, target_uri)) {
+		gnome_vfs_uri_unref (source_uri);
+		gnome_vfs_uri_unref (target_uri);
+		fr_archive_copy_remote_file__step2 (archive, g_strdup (remote_uri), g_strdup (password), GNOME_VFS_OK);
+		return;
+	}
 
 	source_uri_list = g_list_append (NULL, source_uri);
 	target_uri_list = g_list_append (NULL, target_uri);
@@ -892,6 +1038,7 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 	xfer_data->uri = g_strdup (remote_uri);
 	if (password != NULL)
 		xfer_data->password = g_strdup (password);
+	xfer_data->result = GNOME_VFS_OK;
 
 	result = gnome_vfs_async_xfer (&handle,
 				       source_uri_list,
@@ -908,17 +1055,6 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 }
 
 
-static char *
-get_local_temp_uri (const char *remote_uri)
-{
-	/* FIXME: find a good temporary dir */
-	return g_strconcat (g_get_home_dir (),
-			    "/Desktop/",
-			    file_name_from_path (remote_uri),
-			    NULL);
-}
-
-
 /* filename must not be escaped. */
 gboolean
 fr_archive_load (FRArchive  *archive,
@@ -932,16 +1068,8 @@ fr_archive_load (FRArchive  *archive,
 		       0,
 		       FR_ACTION_LOAD);
 
-	g_free (archive->local_filename);
-
-	if (uri_is_local (uri)) {
-		archive->local_filename = get_local_path_from_uri (uri);
-		fr_archive_load__step2 (archive, g_strdup (uri), g_strdup (password), GNOME_VFS_OK);
-	}
-	else {
-		archive->local_filename = get_local_temp_uri (uri);
-		fr_archive_copy_remote_file (archive, uri, archive->local_filename, password);
-	}
+	fr_archive_set_uri (archive, uri);
+	fr_archive_copy_remote_file (archive, uri, archive->local_filename, password);
 
 	return TRUE;
 }
