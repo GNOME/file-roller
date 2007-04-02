@@ -265,7 +265,7 @@ static void
 fr_archive_set_uri (FRArchive  *archive,
 		    const char *uri)
 {
-	if (archive->local_filename != NULL) {
+	if ((archive->local_filename != NULL) && archive->is_remote) {
 		char *uri;
 
 		uri = get_uri_from_local_path (archive->local_filename);
@@ -285,10 +285,12 @@ fr_archive_set_uri (FRArchive  *archive,
 		return;
 
 	archive->uri = g_strdup (uri);
-	if (uri_is_local (uri))
-		archive->local_filename = get_local_path_from_uri (uri);
-	else
+
+	archive->is_remote = ! uri_is_local (uri);
+	if (archive->is_remote)
 		archive->local_filename = get_local_temp_uri (uri);
+	else
+		archive->local_filename = get_local_path_from_uri (uri);
 }
 
 
@@ -787,9 +789,9 @@ action_performed (FRCommand   *command,
 
 
 static gboolean
-archive_progress_cb (FRCommand  *command,
-		     double      fraction,
-		     FRArchive  *archive)
+archive_progress_cb (FRCommand *command,
+		     double     fraction,
+		     FRArchive *archive)
 {
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[PROGRESS],
@@ -1179,7 +1181,7 @@ find_file_in_archive (FRArchive *archive,
 }
 
 
-static void _archive_remove (FRArchive *archive, GList *file_list);
+static void archive_remove (FRArchive *archive, GList *file_list);
 
 
 static GList *
@@ -1356,7 +1358,7 @@ fr_archive_add (FRArchive     *archive,
 		/* delete */
 
 		if (del_list != NULL) {
-			_archive_remove (archive, del_list);
+			archive_remove (archive, del_list);
 			fr_process_set_ignore_error (archive->process, TRUE);
 			g_list_free (del_list);
 		}
@@ -1661,8 +1663,8 @@ fr_archive_add_items (FRArchive     *archive,
 
 /* Note: all paths unescaped. */
 static void
-_archive_remove (FRArchive *archive,
-		 GList     *file_list)
+archive_remove (FRArchive *archive,
+		GList     *file_list)
 {
 	gboolean  file_list_created = FALSE;
 	GList    *e_file_list;
@@ -1722,7 +1724,7 @@ fr_archive_remove (FRArchive     *archive,
 	fr_archive_stoppable (archive, FALSE);
 
 	fr_command_uncompress (archive->command);
-	_archive_remove (archive, file_list);
+	archive_remove (archive, file_list);
 	fr_command_recompress (archive->command, compression);
 }
 

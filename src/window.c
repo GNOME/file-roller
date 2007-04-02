@@ -3526,15 +3526,10 @@ recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
 				  FRWindow         *window)
 {
 	char *uri;
-	char *path;
 
 	uri = gtk_recent_chooser_get_current_uri (chooser);
-	path = gnome_vfs_get_local_path_from_uri (uri);
-
-	window_archive_open (window, path, GTK_WINDOW (window->app));
-
+	window_archive_open (window, uri, GTK_WINDOW (window->app));
 	g_free (uri);
-	g_free (path);
 }
 
 
@@ -3549,6 +3544,7 @@ window_init_recent_chooser (FRWindow         *window,
 
 	gtk_recent_chooser_set_local_only (chooser, FALSE);
 	gtk_recent_chooser_set_limit (chooser, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
+	gtk_recent_chooser_set_show_not_found (chooser, TRUE);
 
 	g_signal_connect (G_OBJECT (chooser),
 			  "item_activated",
@@ -3562,7 +3558,7 @@ window_init_recent_chooser (FRWindow         *window,
 	for (i = 0; open_type[i] != FR_FILE_TYPE_NULL; i++)
 		gtk_recent_filter_add_mime_type (filter, file_type_desc[open_type[i]].mime_type);
 	gtk_recent_filter_add_application (filter, "File Roller");
-	gtk_recent_chooser_set_filter (chooser, filter);
+	gtk_recent_chooser_add_filter (chooser, filter);
 }
 
 
