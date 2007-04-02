@@ -62,6 +62,8 @@ struct _FRArchive {
 	FakeLoadFunc    add_is_stoppable_func;         /* Returns whether the add operation is
 							* stoppable. */
 	gpointer        add_is_stoppable_data;
+
+	GnomeVFSAsyncHandle *xfer_handle;
 };
 
 struct _FRArchiveClass {
@@ -154,6 +156,7 @@ void             fr_archive_set_add_is_stoppable_func
 						gpointer       data);
 void             fr_archive_stoppable          (FRArchive     *archive,
 						gboolean       stoppable);
+void             fr_archive_stop	       (FRArchive     *archive);
 
 /* utils */
 

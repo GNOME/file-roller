@@ -2291,8 +2291,10 @@ get_file_list_from_uri_list (char *uri_list)
 		return NULL;
 
 	uris = gnome_vfs_uri_list_parse (uri_list);
-	for (scan = uris; scan; scan = g_list_next (scan))
-		list = g_list_prepend (list, gnome_vfs_uri_to_string (scan->data, GNOME_VFS_URI_HIDE_NONE));
+	for (scan = uris; scan; scan = g_list_next (scan)) {
+		char *uri = gnome_vfs_uri_to_string (scan->data, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
+		list = g_list_prepend (list, uri);
+	}
 	gnome_vfs_uri_list_free (uris);
 
 	return g_list_reverse (list);
@@ -2385,7 +2387,7 @@ drag_drop_add_file_list (FRWindow *window)
 	}
 
 	for (scan = list; scan; scan = scan->next) {
-		if (strcmp (scan->data, window->archive_filename) == 0) {
+		if (uricmp (scan->data, window->archive_filename) == 0) {
 			GtkWidget *dialog;
 
 			window->adding_dropped_files = FALSE;
@@ -4993,7 +4995,7 @@ window_stop__step2 (gpointer data)
 	FRWindow *window = data;
 
 	if (window->activity_ref > 0)
-		fr_process_stop (window->archive->process);
+		fr_archive_stop (window->archive);
 }
 
 

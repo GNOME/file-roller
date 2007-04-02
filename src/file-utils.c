@@ -564,20 +564,15 @@ path_list_dup (GList *path_list)
 
 
 GnomeVFSFileSize
-get_dest_free_space (const char  *path)
+get_dest_free_space (const char *uri)
 {
-	char             *escaped;
-	GnomeVFSURI      *uri;
+	GnomeVFSURI      *vfs_uri;
 	GnomeVFSResult    result;
 	GnomeVFSFileSize  ret_val;
 
-	escaped = gnome_vfs_escape_path_string (path);
-	uri = gnome_vfs_uri_new (escaped);
-	g_free (escaped);
-
-	result = gnome_vfs_get_volume_free_space (uri, &ret_val);
-
-	gnome_vfs_uri_unref (uri);
+	vfs_uri = gnome_vfs_uri_new (uri);
+	result = gnome_vfs_get_volume_free_space (vfs_uri, &ret_val);
+	gnome_vfs_uri_unref (vfs_uri);
 
 	if (result != GNOME_VFS_OK)
 		return (GnomeVFSFileSize) 0;
@@ -1009,4 +1004,23 @@ get_uri_from_path (const char *path)
 	if ((path == "") || (path[0] == '/'))
 		return g_strconcat ("file://", path, NULL);
 	return g_strdup (path);
+}
+
+
+int
+uricmp (const char *path1,
+	const char *path2)
+{
+	char *uri1, *uri2;
+	int   result;
+
+	uri1 = get_uri_from_path (path1);
+	uri2 = get_uri_from_path (path2);
+
+	result = strcmp_null_tollerant (uri1, uri2);
+
+	g_free (uri1);
+	g_free (uri2);
+
+	return result;
 }

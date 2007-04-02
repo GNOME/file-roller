@@ -100,5 +100,7 @@ gboolean            uri_is_local                 (const char *uri);
 const char *        remove_host_from_uri         (const char *uri);
 char *              get_uri_host                 (const char *uri);
 char *              get_uri_from_path            (const char *path);
+int                 uricmp                       (const char *path1,
+						  const char *path2);
 
 #endif /* FILE_UTILS_H */
