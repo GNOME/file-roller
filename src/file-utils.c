@@ -712,7 +712,7 @@ get_temp_work_dir (void)
 
 	if ((result == NULL) || (*result == '\0')) {
 		g_free (template);
-		template = NULL;
+		result = NULL;
 	}
 
 	return result;
