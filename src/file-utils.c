@@ -683,6 +683,8 @@ get_temp_work_dir (void)
 	char             *template;
 	char             *result = NULL;
 
+	/* find the folder with more free space. */
+
 	for (i = 0; try_folder[i] != NULL; i++) {
 		const char       *folder;
 		char             *uri;
