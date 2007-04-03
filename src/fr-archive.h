@@ -35,35 +35,29 @@
 #define FR_IS_ARCHIVE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_ARCHIVE))
 #define FR_ARCHIVE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_ARCHIVE, FRArchiveClass))
 
-typedef struct _FRArchive       FRArchive;
-typedef struct _FRArchiveClass  FRArchiveClass;
+typedef struct _FRArchive         FRArchive;
+typedef struct _FRArchiveClass    FRArchiveClass;
+typedef struct _FRArchivePrivData FRArchivePrivData;
 
 typedef gboolean (*FakeLoadFunc) (FRArchive *archive, gpointer data);
 
 struct _FRArchive {
 	GObject  __parent;
 
-	char           *uri;
-	gboolean        is_remote;
-	char           *local_filename;
-	char           *mime_type;
-	FRCommand      *command;
-	FRProcess      *process;
-	FRProcError     error;
-	gboolean        is_compressed_file;            /* Whether the file is an archive
-							* or a compressed file. */
-	gboolean        read_only;                     /* Whether archive is read-only
-							* or not. */
-	gboolean        can_create_compressed_file;
-	FakeLoadFunc    fake_load_func;                /* If returns TRUE, archives are not read when
-							* fr_archive_load is invoked, used
-							* in batch mode. */
-	gpointer        fake_load_data;
-	FakeLoadFunc    add_is_stoppable_func;         /* Returns whether the add operation is
-							* stoppable. */
-	gpointer        add_is_stoppable_data;
+	char              *uri;
+	gboolean           is_remote;
+	char              *local_filename;
+	char              *mime_type;
+	FRCommand         *command;
+	FRProcess         *process;
+	FRProcError        error;
+	gboolean           can_create_compressed_file;
+	gboolean           is_compressed_file;    /* Whether the file is an archive
+						   * or a compressed file. */
+	gboolean           read_only;             /* Whether archive is read-only
+						   * or not. */
 
-	GnomeVFSAsyncHandle *xfer_handle;
+	FRArchivePrivData *priv;
 };
 
 struct _FRArchiveClass {

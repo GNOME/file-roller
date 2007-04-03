@@ -676,11 +676,44 @@ rmdir_recursive (const gchar *directory)
 char *
 get_temp_work_dir (void)
 {
-	char temp_dir_template[] = "/tmp/fr-XXXXXX";
-	if (mkdtemp (temp_dir_template) == NULL)
-		return NULL;
-	else
-		return g_strdup (temp_dir_template);
+	const char       *try_folder[] = { "~", "tmp", NULL };
+	GnomeVFSFileSize  max_size = 0;
+	char             *best_folder = NULL;
+	int               i;
+	char             *template;
+	char             *result = NULL;
+
+	for (i = 0; try_folder[i] != NULL; i++) {
+		const char       *folder;
+		char             *uri;
+		GnomeVFSFileSize  size;
+
+		folder = try_folder[i];
+		if (strcmp (folder, "~") == 0)
+			folder = g_get_home_dir ();
+		else if (strcmp (folder, "tmp") == 0)
+			folder = g_get_tmp_dir ();
+
+		uri = g_strconcat ("file://", folder, NULL);
+		size = get_dest_free_space (uri);
+		if (max_size < size) {
+			max_size = size;
+			g_free (best_folder);
+			best_folder = uri;
+		}
+		else
+			g_free (uri);
+	}
+
+	template = g_strconcat (best_folder + strlen ("file://"), "/.fr-XXXXXX", NULL);
+	result = mkdtemp (template);
+
+	if ((result == NULL) || (*result == '\0')) {
+		g_free (template);
+		template = NULL;
+	}
+
+	return result;
 }
 
 

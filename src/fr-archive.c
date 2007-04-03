@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/param.h>
 
 #include <glib.h>
@@ -59,6 +60,18 @@
 #ifndef NCARGS
 #define NCARGS _POSIX_ARG_MAX
 #endif
+
+
+struct _FRArchivePrivData {
+	FakeLoadFunc         fake_load_func;                /* If returns TRUE, archives are not read when
+							     * fr_archive_load is invoked, used
+							     * in batch mode. */
+	gpointer             fake_load_data;
+	FakeLoadFunc         add_is_stoppable_func;         /* Returns whether the add operation is
+							     * stoppable. */
+	gpointer             add_is_stoppable_data;
+	GnomeVFSAsyncHandle *xfer_handle;
+};
 
 
 typedef struct {
@@ -206,9 +219,9 @@ fr_archive_stop (FRArchive *archive)
 	if (archive->process != NULL)
 		fr_process_stop (archive->process);
 
-	if (archive->xfer_handle != NULL) {
-		gnome_vfs_async_cancel (archive->xfer_handle);
-		archive->xfer_handle = NULL;
+	if (archive->priv->xfer_handle != NULL) {
+		gnome_vfs_async_cancel (archive->priv->xfer_handle);
+		archive->priv->xfer_handle = NULL;
 	}
 }
 
@@ -216,8 +229,8 @@ fr_archive_stop (FRArchive *archive)
 static gboolean
 fr_archive_add_is_stoppable (FRArchive *archive)
 {
-	if (archive->add_is_stoppable_func != NULL)
-		return (*archive->add_is_stoppable_func) (archive, archive->add_is_stoppable_data);
+	if (archive->priv->add_is_stoppable_func != NULL)
+		return (*archive->priv->add_is_stoppable_func) (archive, archive->priv->add_is_stoppable_data);
 	else
 		return FALSE;
 }
@@ -242,11 +255,11 @@ fr_archive_init (FRArchive *archive)
 	archive->is_compressed_file = FALSE;
 	archive->can_create_compressed_file = FALSE;
 
-	archive->fake_load_func = NULL;
-	archive->fake_load_data = NULL;
-
-	archive->add_is_stoppable_func = NULL;
-	archive->add_is_stoppable_data = NULL;
+	archive->priv = g_new0 (FRArchivePrivData, 1);
+	archive->priv->fake_load_func = NULL;
+	archive->priv->fake_load_data = NULL;
+	archive->priv->add_is_stoppable_func = NULL;
+	archive->priv->add_is_stoppable_data = NULL;
 
 	archive->process = fr_process_new ();
 	g_signal_connect (G_OBJECT (archive->process),
@@ -264,13 +277,19 @@ fr_archive_new (void)
 
 
 static char *
-get_local_temp_uri (const char *remote_uri)
+get_temp_local_filename (const char *remote_uri)
 {
-	/* FIXME: find a good temporary dir */
-	return g_strconcat (g_get_home_dir (),
-			    "/Desktop/",
-			    file_name_from_path (remote_uri),
-			    NULL);
+	char *dir;
+	char *result;
+
+	dir = get_temp_work_dir ();
+	if (dir == NULL)
+		return NULL;
+
+	result = g_build_filename (dir, file_name_from_path (remote_uri), NULL);
+	g_free (dir);
+
+	return result;
 }
 
 
@@ -279,11 +298,17 @@ fr_archive_set_uri (FRArchive  *archive,
 		    const char *uri)
 {
 	if ((archive->local_filename != NULL) && archive->is_remote) {
-		char *uri;
+		char *file_uri;
+		char *folder_uri;
 
-		uri = get_uri_from_local_path (archive->local_filename);
-		gnome_vfs_unlink (uri);
-		g_free (uri);
+		file_uri = get_uri_from_local_path (archive->local_filename);
+		gnome_vfs_unlink (file_uri);
+
+		folder_uri = remove_level_from_path (file_uri);
+		gnome_vfs_remove_directory (folder_uri);
+
+		g_free (file_uri);
+		g_free (folder_uri);
 	}
 
 	if (uri != archive->uri) {
@@ -305,7 +330,7 @@ fr_archive_set_uri (FRArchive  *archive,
 
 	archive->is_remote = ! uri_is_local (uri);
 	if (archive->is_remote)
-		archive->local_filename = get_local_temp_uri (uri);
+		archive->local_filename = get_temp_local_filename (uri);
 	else
 		archive->local_filename = get_local_path_from_uri (uri);
 }
@@ -322,11 +347,10 @@ fr_archive_finalize (GObject *object)
 	archive = FR_ARCHIVE (object);
 
 	fr_archive_set_uri (archive, NULL);
-
 	if (archive->command != NULL)
 		g_object_unref (archive->command);
-
 	g_object_unref (archive->process);
+	g_free (archive->priv);
 
 	/* Chain up */
 
@@ -672,7 +696,7 @@ fr_archive_copy__error (FRArchive      *archive,
 			FRAction        action,
 			GnomeVFSResult  result)
 {
-	archive->xfer_handle = NULL;
+	archive->priv->xfer_handle = NULL;
 
 	archive->error.type = FR_PROC_ERROR_NONE;
 	archive->error.status = 0;
@@ -737,8 +761,8 @@ fr_archive_copy_to_remote_location (FRArchive  *archive,
 	XferData       *xfer_data;
 	GnomeVFSResult  result;
 
-	if (archive->xfer_handle != NULL)
-		gnome_vfs_async_cancel (archive->xfer_handle);
+	if (archive->priv->xfer_handle != NULL)
+		gnome_vfs_async_cancel (archive->priv->xfer_handle);
 
 	source_uri = gnome_vfs_uri_new (archive->local_filename);
 	target_uri = gnome_vfs_uri_new (archive->uri);
@@ -751,7 +775,7 @@ fr_archive_copy_to_remote_location (FRArchive  *archive,
 	xfer_data->result = GNOME_VFS_OK;
 	xfer_data->action = action;
 
-	result = gnome_vfs_async_xfer (&archive->xfer_handle,
+	result = gnome_vfs_async_xfer (&archive->priv->xfer_handle,
 				       source_uri_list,
 				       target_uri_list,
 				       GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
@@ -896,16 +920,16 @@ fr_archive_set_fake_load_func (FRArchive    *archive,
 			       FakeLoadFunc  func,
 			       gpointer      data)
 {
-	archive->fake_load_func = func;
-	archive->fake_load_data = data;
+	archive->priv->fake_load_func = func;
+	archive->priv->fake_load_data = data;
 }
 
 
 gboolean
 fr_archive_fake_load (FRArchive *archive)
 {
-	if (archive->fake_load_func != NULL)
-		return (*archive->fake_load_func) (archive, archive->fake_load_data);
+	if (archive->priv->fake_load_func != NULL)
+		return (*archive->priv->fake_load_func) (archive, archive->priv->fake_load_data);
 	else
 		return FALSE;
 }
@@ -918,7 +942,7 @@ static void
 fr_archive_load__error (FRArchive  *archive,
 			const char *message)
 {
-	archive->xfer_handle = NULL;
+	archive->priv->xfer_handle = NULL;
 
 	archive->error.type = FR_PROC_ERROR_GENERIC;
 	archive->error.status = 0;
@@ -943,7 +967,7 @@ fr_archive_copy_remote_file__step2 (FRArchive      *archive,
 	FRCommand  *tmp_command;
 	const char *mime_type = NULL;
 
-	archive->xfer_handle = NULL;
+	archive->priv->xfer_handle = NULL;
 	if (result != GNOME_VFS_OK) {
 		fr_archive_load__error (archive, _("The file does not exist."));
 		return;
@@ -1053,9 +1077,9 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 	GList          *source_uri_list, *target_uri_list;
 	GnomeVFSResult  result;
 
-	if (archive->xfer_handle != NULL) {
-		gnome_vfs_async_cancel (archive->xfer_handle);
-		archive->xfer_handle = NULL;
+	if (archive->priv->xfer_handle != NULL) {
+		gnome_vfs_async_cancel (archive->priv->xfer_handle);
+		archive->priv->xfer_handle = NULL;
 	}
 
 	if (! archive->is_remote) {
@@ -1086,7 +1110,7 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 		xfer_data->password = g_strdup (password);
 	xfer_data->result = GNOME_VFS_OK;
 
-	result = gnome_vfs_async_xfer (&archive->xfer_handle,
+	result = gnome_vfs_async_xfer (&archive->priv->xfer_handle,
 				       source_uri_list,
 				       target_uri_list,
 				       GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
@@ -1305,8 +1329,8 @@ fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
 				      FakeLoadFunc   func,
 				      gpointer       data)
 {
-	archive->add_is_stoppable_func = func;
-	archive->add_is_stoppable_data = data;
+	archive->priv->add_is_stoppable_func = func;
+	archive->priv->add_is_stoppable_data = data;
 }
 
 
