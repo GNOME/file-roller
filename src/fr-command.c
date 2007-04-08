@@ -369,7 +369,7 @@ fr_command_list (FRCommand  *comm,
 		comm->file_list = NULL;
 	}
 
-	comm->action = FR_ACTION_LIST;
+	comm->action = FR_ACTION_LISTING_CONTENT;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
@@ -388,7 +388,7 @@ fr_command_add (FRCommand     *comm,
 {
 	fr_command_progress (comm, -1.0);
 
-	comm->action = FR_ACTION_ADD;
+	comm->action = FR_ACTION_ADDING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->add (comm,
@@ -406,7 +406,7 @@ fr_command_delete (FRCommand *comm,
 {
 	fr_command_progress (comm, -1.0);
 
-	comm->action = FR_ACTION_DELETE;
+	comm->action = FR_ACTION_DELETING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->delete (comm, file_list);
@@ -424,7 +424,7 @@ fr_command_extract (FRCommand  *comm,
 {
 	fr_command_progress (comm, -1.0);
 
-	comm->action = FR_ACTION_EXTRACT;
+	comm->action = FR_ACTION_EXTRACTING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->extract (comm,
@@ -443,7 +443,7 @@ fr_command_test (FRCommand   *comm,
 {
 	fr_command_progress (comm, -1.0);
 
-	comm->action = FR_ACTION_TEST;
+	comm->action = FR_ACTION_TESTING_ARCHIVE;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->test (comm, password);

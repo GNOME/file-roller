@@ -1255,31 +1255,31 @@ get_message_from_action (FRAction action)
 	char *message = "";
 
 	switch (action) {
-	case FR_ACTION_LOAD:
+	case FR_ACTION_LOADING_ARCHIVE:
 		message = _("Loading archive");
 		break;
-	case FR_ACTION_LIST:
+	case FR_ACTION_LISTING_CONTENT:
 		message = _("Reading archive");
 		break;
-	case FR_ACTION_DELETE:
+	case FR_ACTION_DELETING_FILES:
 		message = _("Deleting files from archive");
 		break;
-	case FR_ACTION_ADD:
+	case FR_ACTION_ADDING_FILES:
 		message = _("Adding files to archive");
 		break;
-	case FR_ACTION_EXTRACT:
+	case FR_ACTION_EXTRACTING_FILES:
 		message = _("Extracting files from archive");
 		break;
-	case FR_ACTION_TEST:
+	case FR_ACTION_TESTING_ARCHIVE:
 		message = _("Testing archive");
 		break;
-	case FR_ACTION_GET_LIST:
+	case FR_ACTION_GETTING_FILE_LIST:
 		message = _("Getting the file list");
 		break;
-	case FR_ACTION_CREATE:
+	case FR_ACTION_CREATING_ARCHIVE:
 		message = _("Creating archive");
 		break;
-	case FR_ACTION_SAVE:
+	case FR_ACTION_SAVING_REMOTE_ARCHIVE:
 		message = _("Saving archive");
 		break;
 	default:
@@ -1340,8 +1340,8 @@ window_message_cb  (FRCommand  *command,
 	}
 
 	if (window->convert_data.converting) {
-		if (window->pd_last_action != FR_ACTION_CREATE)
-			progress_dialog__set_last_action (window, FR_ACTION_CREATE);
+		if (window->pd_last_action != FR_ACTION_CREATING_ARCHIVE)
+			progress_dialog__set_last_action (window, FR_ACTION_CREATING_ARCHIVE);
 	} else if (window->pd_last_action != window->current_action)
 		progress_dialog__set_last_action (window, window->current_action);
 
@@ -1548,32 +1548,8 @@ action_started (FRArchive *archive,
 	window_start_activity_mode (window);
 
 #ifdef DEBUG
-	switch (action) {
-	case FR_ACTION_LOAD:
-		g_print ("Load");
-		break;
-	case FR_ACTION_LIST:
-		g_print ("List");
-		break;
-	case FR_ACTION_DELETE:
-		g_print ("Delete");
-		break;
-	case FR_ACTION_ADD:
-		g_print ("Add");
-		break;
-	case FR_ACTION_EXTRACT:
-		g_print ("Extract");
-		break;
-	case FR_ACTION_TEST:
-		g_print ("Test");
-		break;
-	case FR_ACTION_GET_LIST:
-		g_print ("Get list");
-		break;
-	default:
-		break;
-	}
-	debug (DEBUG_INFO, " [START]\n");
+	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
+	debug (DEBUG_INFO, "%s [START] (FR::Window)\n", action_names[action]);
 #endif
 
 	message = get_message_from_action (action);
@@ -1690,21 +1666,6 @@ window_convert_data_free (FRWindow *window)
 }
 
 
-static void
-convert__get_files_done_cb (gpointer data)
-{
-	FRWindow *window = data;
-
-	window_pop_message (window);
-	window_stop_activity_mode (window);
-
-	visit_dir_handle_free (window->vd_handle);
-	window->vd_handle = NULL;
-
-	fr_process_start (window->convert_data.new_archive->process);
-}
-
-
 static gboolean
 handle_errors (FRWindow    *window,
 	       FRArchive   *archive,
@@ -1724,32 +1685,35 @@ handle_errors (FRWindow    *window,
 		GtkWidget *dialog;
 		FRProcess *process = archive->process;
 
-		if (action == FR_ACTION_LIST)
+		if ((action == FR_ACTION_LISTING_CONTENT) || (action == FR_ACTION_LOADING_ARCHIVE))
 			window_archive_close (window);
 
 		switch (action) {
-		case FR_ACTION_EXTRACT:
+		case FR_ACTION_EXTRACTING_FILES:
 			msg = _("An error occurred while extracting files.");
 			break;
 
-		case FR_ACTION_LOAD:
-		case FR_ACTION_LIST:
+		case FR_ACTION_LOADING_ARCHIVE:
+			return FALSE;
+			break;
+
+		case FR_ACTION_LISTING_CONTENT:
 			msg = _("An error occurred while loading the archive.");
 			break;
 
-		case FR_ACTION_DELETE:
+		case FR_ACTION_DELETING_FILES:
 			msg = _("An error occurred while deleting files from the archive.");
 			break;
 
-		case FR_ACTION_ADD:
+		case FR_ACTION_ADDING_FILES:
 			msg = _("An error occurred while adding files to the archive.");
 			break;
 
-		case FR_ACTION_TEST:
+		case FR_ACTION_TESTING_ARCHIVE:
 			msg = _("An error occurred while testing archive.");
 			break;
 
-		case FR_ACTION_GET_LIST:
+		case FR_ACTION_GETTING_FILE_LIST:
 			/* FIXME */
 			break;
 
@@ -1825,6 +1789,11 @@ action_performed (FRArchive   *archive,
 	char     *archive_dir;
 	gboolean  temp_dir;
 
+#ifdef DEBUG
+	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
+	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
+#endif
+
 	window_stop_activity_mode (window);
 	window_pop_message (window);
 	close_progress_dialog (window);
@@ -1832,7 +1801,7 @@ action_performed (FRArchive   *archive,
 	continue_batch = handle_errors (window, archive, action, error);
 
 	switch (action) {
-	case FR_ACTION_LOAD:
+	case FR_ACTION_LOADING_ARCHIVE:
 		window->add_after_opening = FALSE;
 		if (error->type != FR_PROC_ERROR_NONE) {
 			GtkWidget *dialog;
@@ -1877,7 +1846,7 @@ action_performed (FRArchive   *archive,
 		}
 		break;
 
-	case FR_ACTION_LIST:
+	case FR_ACTION_LISTING_CONTENT:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			window_remove_from_recent_list (window, window->archive_filename);
 			window_archive_close (window);
@@ -1912,11 +1881,11 @@ action_performed (FRArchive   *archive,
 		gtk_window_present (GTK_WINDOW (window->app));
 		break;
 
-	case FR_ACTION_DELETE:
+	case FR_ACTION_DELETING_FILES:
 		window_archive_reload (window);
 		return;
 
-	case FR_ACTION_ADD:
+	case FR_ACTION_ADDING_FILES:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			window_archive_reload (window);
 			break;
@@ -1944,14 +1913,14 @@ action_performed (FRArchive   *archive,
 		}
 		break;
 
-	case FR_ACTION_TEST:
+	case FR_ACTION_TESTING_ARCHIVE:
 		if (error->type != FR_PROC_ERROR_NONE)
 			break;
 
 		window_view_last_output (window, _("Test Result"));
 		return;
 
-	case FR_ACTION_EXTRACT:
+	case FR_ACTION_EXTRACTING_FILES:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			if (window->convert_data.converting) {
 				rmdir_recursive (window->convert_data.temp_dir);
@@ -1962,10 +1931,7 @@ action_performed (FRArchive   *archive,
 		}
 
 		if (window->convert_data.converting) {
-			action_started (window->archive, FR_ACTION_GET_LIST, window);
-
-			fr_process_clear (window->convert_data.new_archive->process);
-			window->vd_handle = fr_archive_add_with_wildcard (
+			fr_archive_add_with_wildcard (
 				  window->convert_data.new_archive,
 				  "*",
 				  NULL,
@@ -1975,9 +1941,7 @@ action_performed (FRArchive   *archive,
 				  TRUE,
 				  FALSE,
 				  window->password,
-				  window->compression,
-				  convert__get_files_done_cb,
-				  window);
+				  window->compression);
 		}
 		else if (window->view_folder_after_extraction) {
 			open_folder (GTK_WINDOW (window->app), window->folder_to_view);
@@ -3544,6 +3508,13 @@ window_init_recent_chooser (FRWindow         *window,
 
 	g_return_if_fail (chooser != NULL);
 
+	filter = gtk_recent_filter_new ();
+	gtk_recent_filter_set_name (filter, _("All archives"));
+	for (i = 0; open_type[i] != FR_FILE_TYPE_NULL; i++)
+		gtk_recent_filter_add_mime_type (filter, file_type_desc[open_type[i]].mime_type);
+	gtk_recent_filter_add_application (filter, "File Roller");
+	gtk_recent_chooser_add_filter (chooser, filter);
+
 	gtk_recent_chooser_set_local_only (chooser, FALSE);
 	gtk_recent_chooser_set_limit (chooser, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
 	gtk_recent_chooser_set_show_not_found (chooser, TRUE);
@@ -3552,15 +3523,6 @@ window_init_recent_chooser (FRWindow         *window,
 			  "item_activated",
 			  G_CALLBACK (recent_chooser_item_activated_cb),
 			  window);
-
-	/* filter */
-
-	filter = gtk_recent_filter_new ();
-	gtk_recent_filter_set_name (filter, _("All archives"));
-	for (i = 0; open_type[i] != FR_FILE_TYPE_NULL; i++)
-		gtk_recent_filter_add_mime_type (filter, file_type_desc[open_type[i]].mime_type);
-	gtk_recent_filter_add_application (filter, "File Roller");
-	gtk_recent_chooser_add_filter (chooser, filter);
 }
 
 
@@ -3698,7 +3660,6 @@ window_new (void)
 
 	window->activity_ref = 0;
 	window->activity_timeout_handle = 0;
-	window->vd_handle = NULL;
 
 	window->update_timeout_handle = 0;
 
@@ -3982,6 +3943,7 @@ window_new (void)
 	window->recent_manager = gtk_recent_manager_get_default ();
 
 	window->recent_chooser_menu = gtk_recent_chooser_menu_new_for_manager (window->recent_manager);
+	gtk_recent_chooser_set_sort_type (GTK_RECENT_CHOOSER (window->recent_chooser_menu), GTK_RECENT_SORT_MRU);
 	window_init_recent_chooser (window, GTK_RECENT_CHOOSER (window->recent_chooser_menu));
 	menu_item = gtk_ui_manager_get_widget (ui, "/MenuBar/Archive/OpenRecentMenu");
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), window->recent_chooser_menu);
@@ -4242,11 +4204,6 @@ window_close (FRWindow *window)
 	if (window->theme_changed_handler_id != 0)
 		g_signal_handler_disconnect (icon_theme,
 					     window->theme_changed_handler_id);
-
-	if (window->vd_handle != NULL) {
-		visit_dir_async_interrupt (window->vd_handle, NULL, NULL);
-		window->vd_handle = NULL;
-	}
 
 	window_history_clear (window);
 
@@ -4556,30 +4513,13 @@ window_archive_add (FRWindow      *window,
 		    const char    *password,
 		    FRCompression  compression)
 {
-	fr_process_clear (window->archive->process);
-	fr_archive_add (window->archive,
-			file_list,
-			base_dir,
-			dest_dir,
-			update,
-			password,
-			compression);
-	fr_process_start (window->archive->process);
-}
-
-
-static void
-add_files_done_cb (gpointer data)
-{
-	FRWindow *window = data;
-
-	window_pop_message (window);
-	window_stop_activity_mode (window);
-
-	visit_dir_handle_free (window->vd_handle);
-	window->vd_handle = NULL;
-
-	fr_process_start (window->archive->process);
+	fr_archive_add_files (window->archive,
+			      file_list,
+			      base_dir,
+			      dest_dir,
+			      update,
+			      password,
+			      compression);
 }
 
 
@@ -4595,27 +4535,16 @@ window_archive_add_with_wildcard (FRWindow      *window,
 				  const char    *password,
 				  FRCompression  compression)
 {
-	const char *real_dest_dir;
-
-	g_return_if_fail (window->vd_handle == NULL);
-
-	action_started (window->archive, FR_ACTION_GET_LIST, window);
-
-	real_dest_dir = (dest_dir == NULL)? window_get_current_location (window): dest_dir;
-
-	fr_process_clear (window->archive->process);
-	window->vd_handle = fr_archive_add_with_wildcard (window->archive,
-							  include_files,
-							  exclude_files,
-							  base_dir,
-							  real_dest_dir,
-							  update,
-							  recursive,
-							  follow_links,
-							  password,
-							  compression,
-							  add_files_done_cb,
-							  window);
+	fr_archive_add_with_wildcard (window->archive,
+				      include_files,
+				      exclude_files,
+				      base_dir,
+				      (dest_dir == NULL)? window_get_current_location (window): dest_dir,
+				      update,
+				      recursive,
+				      follow_links,
+				      password,
+				      compression);
 }
 
 
@@ -4628,24 +4557,13 @@ window_archive_add_directory (FRWindow      *window,
 			      const char    *password,
 			      FRCompression  compression)
 {
-	const char *real_dest_dir;
-
-	g_return_if_fail (window->vd_handle == NULL);
-
-	action_started (window->archive, FR_ACTION_GET_LIST, window);
-
-	real_dest_dir = (dest_dir == NULL)? window_get_current_location (window): dest_dir;
-
-	fr_process_clear (window->archive->process);
-	window->vd_handle = fr_archive_add_directory (window->archive,
-						      directory,
-						      base_dir,
-						      real_dest_dir,
-						      update,
-						      password,
-						      compression,
-						      add_files_done_cb,
-						      window);
+	fr_archive_add_directory (window->archive,
+				  directory,
+				  base_dir,
+				  (dest_dir == NULL)? window_get_current_location (window): dest_dir,
+				  update,
+				  password,
+				  compression);
 }
 
 
@@ -4658,31 +4576,20 @@ window_archive_add_items (FRWindow      *window,
 			  const char    *password,
 			  FRCompression  compression)
 {
-	const char *real_dest_dir;
-
-	g_return_if_fail (window->vd_handle == NULL);
-
-	action_started (window->archive, FR_ACTION_GET_LIST, window);
-
-	real_dest_dir = (dest_dir == NULL)? window_get_current_location (window): dest_dir;
-
-	fr_process_clear (window->archive->process);
-	window->vd_handle = fr_archive_add_items (window->archive,
-						  item_list,
-						  base_dir,
-						  real_dest_dir,
-						  update,
-						  password,
-						  compression,
-						  add_files_done_cb,
-						  window);
+	fr_archive_add_items (window->archive,
+			      item_list,
+			      base_dir,
+			      (dest_dir == NULL)? window_get_current_location (window): dest_dir,
+			      update,
+			      password,
+			      compression);
 }
 
 
 void
-window_archive_add_dropped_items (FRWindow      *window,
-				  GList         *item_list,
-				  gboolean       update)
+window_archive_add_dropped_items (FRWindow *window,
+				  GList    *item_list,
+				  gboolean  update)
 {
 	window->dropped_file_list = path_list_dup (item_list);
 	window->update_dropped_files = update;
@@ -4989,35 +4896,15 @@ window_archive_close (FRWindow *window)
 }
 
 
-static void
-window_stop__step2 (gpointer data)
-{
-	FRWindow *window = data;
-
-	if (window->activity_ref > 0)
-		fr_archive_stop (window->archive);
-}
-
-
 void
 window_stop (FRWindow *window)
 {
 	if (! window->stoppable)
 		return;
-
-	if (window->vd_handle != NULL) {
-		visit_dir_async_interrupt (window->vd_handle,
-					   window_stop__step2,
-					   window);
-		window->vd_handle = NULL;
-		window_pop_message (window);
-		window_stop_activity_mode (window);
-
-		if (window->convert_data.converting)
-			window_convert_data_free (window);
-
-	} else
-		window_stop__step2 (window);
+	if (window->activity_ref > 0)
+		fr_archive_stop (window->archive);
+	if (window->convert_data.converting)
+		window_convert_data_free (window);
 }
 
 
@@ -5987,12 +5874,14 @@ window_paste_selection_to (FRWindow   *window,
 		    && (old_name[strlen (old_name) - 1] != '/')) {
 			char *e_old_name = shell_escape (old_name);
 			char *e_new_name = shell_escape (new_name);
+
 			fr_process_begin_command (archive->process, "mv");
 			fr_process_set_working_dir (archive->process, tmp_dir);
 			fr_process_add_arg (archive->process, "-f");
 			fr_process_add_arg (archive->process, e_old_name);
 			fr_process_add_arg (archive->process, e_new_name);
 			fr_process_end_command (archive->process);
+
 			g_free (e_old_name);
 			g_free (e_new_name);
 		}

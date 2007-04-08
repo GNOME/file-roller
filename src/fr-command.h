@@ -39,15 +39,21 @@ typedef struct _FRCommandClass  FRCommandClass;
 
 typedef enum {
 	FR_ACTION_NONE,
-	FR_ACTION_LOAD,
-	FR_ACTION_LIST,
-	FR_ACTION_ADD,
-	FR_ACTION_DELETE,
-	FR_ACTION_EXTRACT,
-	FR_ACTION_TEST,
-	FR_ACTION_GET_LIST,
-	FR_ACTION_CREATE,
-	FR_ACTION_SAVE
+	FR_ACTION_LOADING_ARCHIVE,            /* loading the archive from a remote location */
+	FR_ACTION_LISTING_CONTENT,            /* listing the content of the archive */
+	FR_ACTION_DELETING_FILES,             /* deleting files from the archive */
+	FR_ACTION_TESTING_ARCHIVE,            /* testing the archive integrity */
+	FR_ACTION_GETTING_FILE_LIST,          /* getting the file list (when fr_archive_add_with_wildcard or
+						 fr_archive_add_directory are used, we need to scan a directory
+						 and collect the files to add to the archive, this
+						 may require some time to complete, so the operation
+						 is asynchronous) */
+	FR_ACTION_COPYING_FILES_FROM_REMOTE,  /* copying files from a remote location */
+	FR_ACTION_ADDING_FILES,               /* adding files to an archive */
+	FR_ACTION_EXTRACTING_FILES,           /* extracting files */
+	FR_ACTION_COPYING_FILES_TO_REMOTE,    /* copying files to a remote location */
+	FR_ACTION_CREATING_ARCHIVE,           /* creating the archive */
+	FR_ACTION_SAVING_REMOTE_ARCHIVE       /* copying the archive to a remote location */
 } FRAction;
 
 struct _FRCommand

@@ -71,6 +71,7 @@ struct _FRArchivePrivData {
 							     * stoppable. */
 	gpointer             add_is_stoppable_data;
 	GnomeVFSAsyncHandle *xfer_handle;
+	VisitDirHandle      *vd_handle;
 };
 
 
@@ -213,6 +214,23 @@ fr_archive_stoppable (FRArchive *archive,
 }
 
 
+static void
+fr_archive_action_completed (FRArchive       *archive,
+			     FRAction         action,
+			     FRProcErrorType  error_type)
+{
+	archive->error.type = error_type;
+	archive->error.status = 0;
+	g_clear_error (&archive->error.gerror);
+
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[DONE],
+		       0,
+		       action,
+		       &archive->error);
+}
+
+
 void
 fr_archive_stop (FRArchive *archive)
 {
@@ -222,6 +240,13 @@ fr_archive_stop (FRArchive *archive)
 	if (archive->priv->xfer_handle != NULL) {
 		gnome_vfs_async_cancel (archive->priv->xfer_handle);
 		archive->priv->xfer_handle = NULL;
+	}
+
+	if (archive->priv->vd_handle != NULL) {
+		visit_dir_async_interrupt (archive->priv->vd_handle, NULL, NULL);
+		archive->priv->vd_handle = NULL;
+
+		fr_archive_action_completed (archive, FR_ACTION_GETTING_FILE_LIST, FR_PROC_ERROR_STOPPED);
 	}
 }
 
@@ -680,7 +705,11 @@ action_started (FRCommand *command,
 		FRAction   action,
 		FRArchive *archive)
 {
-	debug (DEBUG_INFO, "FRArchive::action_started: %d\n", action);
+#ifdef DEBUG
+	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
+	debug (DEBUG_INFO, "%s [START] (FR::Archive)\n", action_names[action]);
+#endif
+
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[START],
 		       0,
@@ -800,38 +829,11 @@ action_performed (FRCommand   *command,
 		  FRArchive   *archive)
 {
 #ifdef DEBUG
-	char *s_action = NULL;
-
-	switch (action) {
-	case FR_ACTION_LOAD:
-		s_action = "Load";
-		break;
-	case FR_ACTION_LIST:
-		s_action = "List";
-		break;
-	case FR_ACTION_ADD:
-		s_action = "Add";
-		break;
-	case FR_ACTION_DELETE:
-		s_action = "Delete";
-		break;
-	case FR_ACTION_EXTRACT:
-		s_action = "Extract";
-		break;
-	case FR_ACTION_TEST:
-		s_action = "Test";
-		break;
-	case FR_ACTION_GET_LIST:
-		s_action = "Get list";
-		break;
-	default:
-		s_action = "";
-		break;
-	}
-	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", s_action);
+	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
+	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", action_names[action]);
 #endif
 
-	if (((action == FR_ACTION_ADD) || (action == FR_ACTION_DELETE))
+	if (((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_DELETING_FILES))
 	    && ! uri_is_local (archive->uri)) {
 		fr_archive_copy_to_remote_location (archive, action);
 		return;
@@ -953,7 +955,7 @@ fr_archive_load__error (FRArchive  *archive,
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[DONE],
 		       0,
-		       FR_ACTION_LOAD,
+		       FR_ACTION_LOADING_ARCHIVE,
 		       &archive->error);	
 }
 
@@ -965,13 +967,22 @@ fr_archive_copy_remote_file__step2 (FRArchive      *archive,
 				    GnomeVFSResult  result)
 {
 	FRCommand  *tmp_command;
+	char       *local_uri= NULL;
 	const char *mime_type = NULL;
 
 	archive->priv->xfer_handle = NULL;
 	if (result != GNOME_VFS_OK) {
-		fr_archive_load__error (archive, _("The file does not exist."));
+		fr_archive_load__error (archive, gnome_vfs_result_to_string (result));
 		return;
 	}
+
+	local_uri = get_uri_from_local_path (archive->local_filename);
+	if (! path_is_file (local_uri)) {
+		g_free (local_uri);
+		fr_archive_load__error (archive, gnome_vfs_result_to_string (GNOME_VFS_ERROR_ACCESS_DENIED));
+		return;
+	}
+	g_free (local_uri);
 
 	archive->read_only = ! check_permissions (uri, W_OK);
 
@@ -1022,14 +1033,7 @@ fr_archive_copy_remote_file__step2 (FRArchive      *archive,
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
 
-	archive->error.type = FR_PROC_ERROR_NONE;
-	archive->error.status = 0;
-	g_clear_error (&archive->error.gerror);
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[DONE],
-		       0,
-		       FR_ACTION_LOAD,
-		       &archive->error);
+	fr_archive_action_completed (archive, FR_ACTION_LOADING_ARCHIVE, FR_PROC_ERROR_NONE);
 
 	g_free (uri);
 	g_free (password);
@@ -1139,7 +1143,7 @@ fr_archive_load (FRArchive  *archive,
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[START],
 		       0,
-		       FR_ACTION_LOAD);
+		       FR_ACTION_LOADING_ARCHIVE);
 
 	fr_archive_set_uri (archive, uri);
 	fr_archive_copy_remote_file (archive, uri, archive->local_filename, password);
@@ -1400,7 +1404,7 @@ fr_archive_add (FRArchive     *archive,
 		archive->process->error.type = FR_PROC_ERROR_NONE;
 		g_signal_emit_by_name (G_OBJECT (archive->process),
 				       "done",
-				       FR_ACTION_ADD,
+				       FR_ACTION_ADDING_FILES,
 				       &archive->process->error);
 		return;
 	}
@@ -1483,6 +1487,28 @@ fr_archive_add (FRArchive     *archive,
 }
 
 
+/* Note: all paths unescaped. */
+void
+fr_archive_add_files (FRArchive     *archive,
+		      GList         *file_list,
+		      const char    *base_dir,
+		      const char    *dest_dir,
+		      gboolean       update,
+		      const char    *password,
+		      FRCompression  compression)
+{
+	fr_process_clear (archive->process);
+	fr_archive_add (archive,
+			file_list,
+			base_dir,
+			dest_dir,
+			update,
+			password,
+			compression);
+	fr_process_start (archive->process);
+}
+
+
 static void
 file_list_remove_from_pattern (GList      **list,
 			       const char  *pattern)
@@ -1528,38 +1554,52 @@ typedef struct {
 	gboolean       update;
 	char          *password;
 	FRCompression  compression;
-	DoneFunc       done_func;
-	gpointer       done_data;
 } AddWithWildcardData;
 
 
 static void
-add_with_wildcard__step2 (GList *file_list, gpointer data)
+add_with_wildcard_data_free (AddWithWildcardData *aww_data)
 {
-	AddWithWildcardData *aww_data = data;
-
-	file_list_remove_from_pattern (&file_list, aww_data->exclude_files);
-
-	fr_archive_add (aww_data->archive,
-			file_list,
-			aww_data->base_dir,
-			aww_data->dest_dir,
-			aww_data->update,
-			aww_data->password,
-			aww_data->compression);
-	path_list_free (file_list);
-
-	if (aww_data->done_func)
-		aww_data->done_func (aww_data->done_data);
-
 	g_free (aww_data->base_dir);
 	g_free (aww_data->password);
 	g_free (aww_data->exclude_files);
+	g_free (aww_data);
+}
+
+
+static void
+add_with_wildcard__step2 (GList    *file_list,
+			  gpointer  data)
+{
+	AddWithWildcardData *aww_data = data;
+	FRArchive           *archive = aww_data->archive;
+
+	fr_archive_action_completed (archive, FR_ACTION_GETTING_FILE_LIST, FR_PROC_ERROR_NONE);
+	visit_dir_handle_free (archive->priv->vd_handle);
+	archive->priv->vd_handle = NULL;
+
+	if (file_list != NULL) {
+		file_list_remove_from_pattern (&file_list, aww_data->exclude_files);
+		fr_archive_add (aww_data->archive,
+				file_list,
+				aww_data->base_dir,
+				aww_data->dest_dir,
+				aww_data->update,
+				aww_data->password,
+				aww_data->compression);
+		path_list_free (file_list);
+	}
+
+	add_with_wildcard_data_free (aww_data);
+
+	/**/
+
+	fr_process_start (archive->process);
 }
 
 
 /* Note: all paths unescaped. */
-VisitDirHandle *
+void
 fr_archive_add_with_wildcard (FRArchive     *archive,
 			      const char    *include_files,
 			      const char    *exclude_files,
@@ -1569,15 +1609,14 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 			      gboolean       recursive,
 			      gboolean       follow_links,
 			      const char    *password,
-			      FRCompression  compression,
-			      DoneFunc       done_func,
-			      gpointer       done_data)
+			      FRCompression  compression)
 {
 	AddWithWildcardData *aww_data;
 
-	if (archive->read_only)
-		return NULL;
+	g_return_if_fail (archive->priv->vd_handle == NULL);
+	g_return_if_fail (! archive->read_only);
 
+	fr_process_clear (archive->process);
 	fr_archive_stoppable (archive, TRUE);
 
 	aww_data = g_new0 (AddWithWildcardData, 1);
@@ -1588,20 +1627,24 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 	aww_data->password = g_strdup (password);
 	aww_data->compression = compression;
 	aww_data->exclude_files = g_strdup (exclude_files);
-	aww_data->done_func = done_func;
-	aww_data->done_data = done_data;
 
-	return get_wildcard_file_list_async (base_dir,
-					     include_files,
-					     recursive,
-					     follow_links,
-					     SAME_FS,
-					     NO_BACKUP_FILES,
-					     NO_DOT_FILES,
-					     IGNORE_CASE,
-					     archive->command->propAddCanStoreFolders,
-					     add_with_wildcard__step2,
-					     aww_data);
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[START],
+		       0,
+		       FR_ACTION_GETTING_FILE_LIST);
+
+	archive->priv->vd_handle = get_wildcard_file_list_async (
+					base_dir,
+					include_files,
+					recursive,
+					follow_links,
+					SAME_FS,
+					NO_BACKUP_FILES,
+					NO_DOT_FILES,
+					IGNORE_CASE,
+					archive->command->propAddCanStoreFolders,
+					add_with_wildcard__step2,
+					aww_data);
 }
 
 
@@ -1616,15 +1659,29 @@ typedef struct {
 	gboolean       update;
 	char          *password;
 	FRCompression  compression;
-	DoneFunc       done_func;
-	gpointer       done_data;
 } AddDirectoryData;
 
 
 static void
-add_directory__step2 (GList *file_list, gpointer data)
+add_directory_data_free (AddDirectoryData *ad_data)
+{
+	path_list_free (ad_data->dir_list);
+	g_free (ad_data->base_dir);
+	g_free (ad_data->password);
+	g_free (ad_data);
+}
+
+
+static void
+add_directory__step2 (GList    *file_list,
+		      gpointer  data)
 {
 	AddDirectoryData *ad_data = data;
+	FRArchive        *archive = ad_data->archive;
+
+	fr_archive_action_completed (archive, FR_ACTION_GETTING_FILE_LIST, FR_PROC_ERROR_NONE);
+	visit_dir_handle_free (archive->priv->vd_handle);
+	archive->priv->vd_handle = NULL;
 
 	if (file_list != NULL) {
 		fr_archive_add (ad_data->archive,
@@ -1637,36 +1694,31 @@ add_directory__step2 (GList *file_list, gpointer data)
 		path_list_free (file_list);
 	}
 
-	if (ad_data->done_func)
-		ad_data->done_func (ad_data->done_data);
+	add_directory_data_free (ad_data);
 
 	/**/
 
-	path_list_free (ad_data->dir_list);
-	g_free (ad_data->base_dir);
-	g_free (ad_data->password);
-	g_free (ad_data);
+	fr_process_start (archive->process);
 }
 
 
 /* Note: all paths unescaped. */
-VisitDirHandle *
+void
 fr_archive_add_directory (FRArchive     *archive,
 			  const char    *directory,
 			  const char    *base_dir,
 			  const char    *dest_dir,
 			  gboolean       update,
 			  const char    *password,
-			  FRCompression  compression,
-			  DoneFunc       done_func,
-			  gpointer       done_data)
+			  FRCompression  compression)
 
 {
 	AddDirectoryData *ad_data;
 
-	if (archive->read_only)
-		return NULL;
+	g_return_if_fail (archive->priv->vd_handle == NULL);
+	g_return_if_fail (! archive->read_only);
 
+	fr_process_clear (archive->process);
 	fr_archive_stoppable (archive, TRUE);
 
 	ad_data = g_new0 (AddDirectoryData, 1);
@@ -1677,10 +1729,14 @@ fr_archive_add_directory (FRArchive     *archive,
 	ad_data->update = update;
 	ad_data->password = g_strdup (password);
 	ad_data->compression = compression;
-	ad_data->done_func = done_func;
-	ad_data->done_data = done_data;
 
-	return get_items_file_list_async (ad_data->dir_list,
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[START],
+		       0,
+		       FR_ACTION_GETTING_FILE_LIST);
+
+	archive->priv->vd_handle = get_items_file_list_async (
+					  ad_data->dir_list,
 					  base_dir,
 					  archive->command->propAddCanStoreFolders,
 					  add_directory__step2,
@@ -1689,23 +1745,22 @@ fr_archive_add_directory (FRArchive     *archive,
 
 
 /* Note: all paths unescaped. */
-VisitDirHandle *
+void
 fr_archive_add_items (FRArchive     *archive,
 		      GList         *item_list,
 		      const char    *base_dir,
 		      const char    *dest_dir,
 		      gboolean       update,
 		      const char    *password,
-		      FRCompression  compression,
-		      DoneFunc       done_func,
-		      gpointer       done_data)
+		      FRCompression  compression)
 
 {
 	AddDirectoryData *ad_data;
 
-	if (archive->read_only)
-		return NULL;
+	g_return_if_fail (archive->priv->vd_handle == NULL);
+	g_return_if_fail (! archive->read_only);
 
+	fr_process_clear (archive->process);
 	fr_archive_stoppable (archive, TRUE);
 
 	ad_data = g_new0 (AddDirectoryData, 1);
@@ -1716,10 +1771,14 @@ fr_archive_add_items (FRArchive     *archive,
 	ad_data->update = update;
 	ad_data->password = g_strdup (password);
 	ad_data->compression = compression;
-	ad_data->done_func = done_func;
-	ad_data->done_data = done_data;
 
-	return get_items_file_list_async (ad_data->dir_list,
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[START],
+		       0,
+		       FR_ACTION_GETTING_FILE_LIST);
+
+	archive->priv->vd_handle = get_items_file_list_async (
+					  ad_data->dir_list,
 					  base_dir,
 					  archive->command->propAddCanStoreFolders,
 					  add_directory__step2,

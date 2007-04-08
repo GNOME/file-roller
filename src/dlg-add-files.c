@@ -172,7 +172,6 @@ add_files_cb (GtkWidget *widget,
 {
 	GtkWidget   *file_sel;
 	DialogData  *data;
-	char        *dir;
 	GtkWidget   *main_box;
 
 	data = g_new0 (DialogData, 1);
@@ -205,9 +204,7 @@ add_files_cb (GtkWidget *widget,
 
 	/* set data */
 
-	dir = g_strconcat (data->window->add_default_dir, "/", "*", NULL);
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), dir);
-	g_free (dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), data->window->add_default_dir);
 
 	/* signals */
 

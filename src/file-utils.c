@@ -77,18 +77,17 @@ path_exists (const gchar *path)
 
 
 gboolean
-path_is_file (const gchar *path)
+path_is_file (const char *uri)
 {
 	GnomeVFSFileInfo *info;
-	GnomeVFSResult result;
-	gboolean is_file;
-	gchar *escaped;
+	GnomeVFSResult    result;
+	gboolean          is_file;
 
-	if (! path || ! *path) return FALSE;
+	if (! uri || ! *uri)
+		return FALSE;
 
 	info = gnome_vfs_file_info_new ();
-	escaped = gnome_vfs_escape_path_string (path);
-	result = gnome_vfs_get_file_info (escaped,
+	result = gnome_vfs_get_file_info (uri,
 					  info,
 					  (GNOME_VFS_FILE_INFO_DEFAULT
 					   | GNOME_VFS_FILE_INFO_FOLLOW_LINKS));
@@ -96,7 +95,6 @@ path_is_file (const gchar *path)
 	if (result == GNOME_VFS_OK)
 		is_file = (info->type == GNOME_VFS_FILE_TYPE_REGULAR);
 
-	g_free (escaped);
 	gnome_vfs_file_info_unref (info);
 
 	return is_file;
@@ -104,18 +102,17 @@ path_is_file (const gchar *path)
 
 
 gboolean
-path_is_dir (const gchar *path)
+path_is_dir (const char *uri)
 {
 	GnomeVFSFileInfo *info;
-	GnomeVFSResult result;
-	gboolean is_dir;
-	gchar *escaped;
+	GnomeVFSResult    result;
+	gboolean          is_dir;
 
-	if (! path || ! *path) return FALSE;
+	if (! uri || ! *uri)
+		return FALSE;
 
 	info = gnome_vfs_file_info_new ();
-	escaped = gnome_vfs_escape_path_string (path);
-	result = gnome_vfs_get_file_info (escaped,
+	result = gnome_vfs_get_file_info (uri,
 					  info,
 					  (GNOME_VFS_FILE_INFO_DEFAULT
 					   | GNOME_VFS_FILE_INFO_FOLLOW_LINKS));
@@ -123,7 +120,6 @@ path_is_dir (const gchar *path)
 	if (result == GNOME_VFS_OK)
 		is_dir = (info->type == GNOME_VFS_FILE_TYPE_DIRECTORY);
 
-	g_free (escaped);
 	gnome_vfs_file_info_unref (info);
 
 	return is_dir;

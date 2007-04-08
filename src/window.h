@@ -78,7 +78,7 @@ typedef enum {
 } FRClipboardOp;
 
 typedef struct {
-        GtkWidget *      app;
+	GtkWidget *      app;
 	GtkWidget *      list_view;
 	GtkListStore *   list_store;
 	GtkWidget *      toolbar;
@@ -145,12 +145,10 @@ typedef struct {
 	guint            activity_timeout_handle;   /* activity timeout
 						     * handle. */
 	gint             activity_ref;              /* when > 0 some activity
-                                                     * is present. */
+						     * is present. */
 
 	guint            update_timeout_handle;     /* update file list
 						     * timeout handle. */
-
-	VisitDirHandle  *vd_handle;
 
 	FRConvertData    convert_data;
 
@@ -467,8 +465,8 @@ void       window_archive__quit               (FRWindow      *window);
 void       window_convert_data_free           (FRWindow *window);
 
 gboolean   fr_window_file_list_drag_data_get  (FRWindow         *window,
-				   	       GdkDragContext   *context,
-				   	       GtkSelectionData *selection_data,
-				   	       GList            *path_list);
+						  GdkDragContext   *context,
+						  GtkSelectionData *selection_data,
+						  GList            *path_list);
 
 #endif /* FR_WINDOW_H */

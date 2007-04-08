@@ -488,7 +488,7 @@ prepare_app (void)
 	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
 		migrate_to_new_directories ();
 
-	compute_supported_archive_types();
+	compute_supported_archive_types ();
 
 	if (session_is_restored ()) {
 		load_session ();

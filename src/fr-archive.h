@@ -97,7 +97,14 @@ void             fr_archive_add                (FRArchive     *archive,
 						gboolean       update,
 						const char    *password,
 						FRCompression  compression);
-VisitDirHandle * fr_archive_add_with_wildcard  (FRArchive     *archive,
+void             fr_archive_add_files          (FRArchive     *archive,
+						GList         *file_list,
+						const char    *base_dir,
+						const char    *dest_dir,
+						gboolean       update,
+						const char    *password,
+						FRCompression  compression);
+void             fr_archive_add_with_wildcard  (FRArchive     *archive,
 						const char    *include_files,
 						const char    *exclude_files,
 						const char    *base_dir,
@@ -106,27 +113,21 @@ VisitDirHandle * fr_archive_add_with_wildcard  (FRArchive     *archive,
 						gboolean       recursive,
 						gboolean       follow_links,
 						const char    *password,
-						FRCompression  compression,
-						DoneFunc       done_func,
-						gpointer       done_data);
-VisitDirHandle * fr_archive_add_directory      (FRArchive     *archive,
+						FRCompression  compression);
+void             fr_archive_add_directory      (FRArchive     *archive,
 						const char    *directory,
 						const char    *base_dir,
 						const char    *dest_dir,
 						gboolean       update,
 						const char    *password,
-						FRCompression  compression,
-						DoneFunc       done_func,
-						gpointer       done_data);
-VisitDirHandle * fr_archive_add_items          (FRArchive     *archive,
+						FRCompression  compression);
+void             fr_archive_add_items          (FRArchive     *archive,
 						GList         *item_list,
 						const char    *base_dir,
 						const char    *dest_dir,
 						gboolean       update,
 						const char    *password,
-						FRCompression  compression,
-						DoneFunc       done_func,
-						gpointer       done_data);
+						FRCompression  compression);
 void             fr_archive_remove             (FRArchive     *archive,
 						GList         *file_list,
 						FRCompression  compression);
