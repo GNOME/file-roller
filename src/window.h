@@ -237,27 +237,17 @@ void       window_close                     (FRWindow      *window);
 
 gboolean   window_archive_new               (FRWindow      *window,
 					     const char    *filename);
-
 gboolean   window_archive_open              (FRWindow      *window,
 					     const char    *filename,
 					     GtkWindow     *parent);
-
 void       window_archive_save_as           (FRWindow      *window,
 					     const char    *filename);
-
 void       window_archive_reload            (FRWindow      *window);
-
 void       window_archive_rename            (FRWindow      *window,
 					     const char    *filename);
-
-void       window_archive_add               (FRWindow      *window,
-					     GList         *file_list,
-					     const char    *base_dir,
-					     const char    *dest_dir,
-					     gboolean       update,
-					     const char    *password,
-					     FRCompression  compression);
-
+void       window_archive_add_files         (FRWindow      *window,
+			  		     GList         *file_list,
+					     gboolean       update);
 void       window_archive_add_with_wildcard (FRWindow      *window,
 					     const char    *include_files,
 					     const char    *exclude_files,
@@ -268,7 +258,6 @@ void       window_archive_add_with_wildcard (FRWindow      *window,
 					     gboolean       follow_links,
 					     const char    *password,
 					     FRCompression  compression);
-
 void       window_archive_add_directory     (FRWindow      *window,
 					     const char    *directory,
 					     const char    *base_dir,
@@ -276,7 +265,6 @@ void       window_archive_add_directory     (FRWindow      *window,
 					     gboolean       update,
 					     const char    *password,
 					     FRCompression  compression);
-
 void       window_archive_add_items         (FRWindow      *window,
 					     GList         *dir_list,
 					     const char    *base_dir,
@@ -284,15 +272,12 @@ void       window_archive_add_items         (FRWindow      *window,
 					     gboolean       update,
 					     const char    *password,
 					     FRCompression  compression);
-
 void       window_archive_add_dropped_items (FRWindow      *window,
 					     GList         *item_list,
 					     gboolean       update);
-
 void       window_archive_remove            (FRWindow      *window,
 					     GList         *file_list,
 					     FRCompression  compression);
-
 void       window_archive_extract           (FRWindow      *window,
 					     GList         *file_list,
 					     const char    *extract_to_dir,
@@ -301,7 +286,6 @@ void       window_archive_extract           (FRWindow      *window,
 					     gboolean       overwrite,
 					     gboolean       junk_paths,
 					     const char    *password);
-
 void       window_archive_extract_here      (FRWindow      *window,
 					     GList         *file_list,
 					     const char    *extract_to_dir,
@@ -310,9 +294,7 @@ void       window_archive_extract_here      (FRWindow      *window,
 					     gboolean       overwrite,
 					     gboolean       junk_paths,
 					     const char    *password);
-
 void       window_archive_close             (FRWindow      *window);
-
 void       window_set_password              (FRWindow      *window,
 					     const char    *password);
 
@@ -320,97 +302,67 @@ void       window_set_password              (FRWindow      *window,
 
 void       window_go_to_location            (FRWindow       *window,
 					     const char     *path);
-
 const char*window_get_current_location      (FRWindow       *window);
-
 void       window_go_up_one_level           (FRWindow       *window);
-
 void       window_go_back                   (FRWindow       *window);
-
 void       window_go_forward                (FRWindow       *window);
-
 void       window_current_folder_activated  (FRWindow       *window);
-
 void       window_set_list_mode             (FRWindow       *window,
 					     WindowListMode  list_mode);
 
 /**/
 
 void       window_update_file_list          (FRWindow    *window);
-
 void       window_update_list_order         (FRWindow    *window);
-
 GList *    window_get_file_list_selection   (FRWindow    *window,
 					     gboolean     recursive,
 					     gboolean    *has_dirs);
-
 GList *    window_get_file_list_from_path_list (FRWindow *window,
 						GList    *path_list,
 						gboolean *has_dirs);
-
 GList *    window_get_file_list_pattern     (FRWindow    *window,
 					     const char  *pattern);
-
 void       window_rename_selection          (FRWindow    *window);
-
 void       window_cut_selection             (FRWindow    *window);
-
 void       window_copy_selection            (FRWindow    *window);
-
 void       window_paste_selection           (FRWindow    *window);
 
 /**/
 
 void       window_stop                      (FRWindow    *window);
-
 void       window_start_activity_mode       (FRWindow    *window);
-
 void       window_stop_activity_mode        (FRWindow    *window);
 
 /**/
 
 void       window_view_last_output          (FRWindow *window,
 					     const char *title);
-
 void       window_view_file                 (FRWindow *window,
 					     char     *file);
-
 void       window_open_files                (FRWindow *window,
 					     GList    *file_list,
 					     char     *command);
-
 void       window_open_files_with_application (FRWindow *window,
 					       GList    *file_list,
 					       GnomeVFSMimeApplication *app);
-
 void       window_view_or_open_file         (FRWindow *window,
 					     char     *file);
-
 void       window_update_columns_visibility (FRWindow *window);
-
 void       window_update_history_list       (FRWindow *window);
-
 void       window_set_default_dir           (FRWindow *window,
 					     char     *default_dir,
 					     gboolean  freeze);
-
 void       window_set_open_default_dir      (FRWindow *window,
 					     char     *default_dir);
-
 void       window_set_add_default_dir       (FRWindow *window,
 					     char     *default_dir);
-
 void       window_set_extract_default_dir   (FRWindow *window,
 					     char     *default_dir);
-
 void       window_push_message              (FRWindow   *window,
 					     const char *msg);
-
 void       window_pop_message               (FRWindow   *window);
-
 void       window_set_toolbar_visibility    (FRWindow   *window,
 					     gboolean    value);
-
 void       window_set_statusbar_visibility  (FRWindow   *window,
 					     gboolean    value);
 
@@ -420,50 +372,38 @@ void       window_current_action_description_set   (FRWindow      *window,
 						    FRBatchAction  action,
 						    void          *data,
 						    GFreeFunc      free_func);
-
 void       window_current_action_description_reset (FRWindow      *window);
-
 void       window_restart_current_action           (FRWindow      *window);
 
 /* batch mode procedures. */
 
 void       window_batch_mode_clear            (FRWindow      *window);
-
 void       window_batch_mode_add_action       (FRWindow      *window,
 					       FRBatchAction  action,
 					       void          *data,
 					       GFreeFunc      free_func);
-
 void       window_batch_mode_add_next_action  (FRWindow      *window,
 					       FRBatchAction  action,
 					       void          *data,
 					       GFreeFunc      free_func);
-
 void       window_batch_mode_start            (FRWindow      *window);
-
 void       window_batch_mode_stop             (FRWindow      *window);
-
 void       window_batch_mode_resume           (FRWindow      *window);
-
 void       window_archive__open_extract       (FRWindow      *window,
 					       const char    *filename,
 					       const char    *dest_dir);
-
 void       window_archive__open_extract_here  (FRWindow      *window,
 					       const char    *filename,
 					       const char    *dest_dir);
-
 void       window_archive__open_add           (FRWindow      *window,
 					       const char    *archive,
 					       GList         *file_list);
-
 void       window_archive__quit               (FRWindow      *window);
 
 
 /**/
 
 void       window_convert_data_free           (FRWindow *window);
-
 gboolean   fr_window_file_list_drag_data_get  (FRWindow         *window,
 						  GdkDragContext   *context,
 						  GtkSelectionData *selection_data,

@@ -81,7 +81,29 @@ typedef struct {
 	char           *password;
 	FRAction        action;
 	GnomeVFSResult  result;
+	GList          *file_list;
+	char           *base_uri;
+	char           *dest_dir;
+	gboolean        update;
+	FRCompression   compression;
+	char           *tmp_dir;
 } XferData;
+
+
+static void
+xfer_data_free (XferData *data)
+{
+	if (data == NULL)
+		return;
+
+	g_free (data->uri);
+	g_free (data->password);
+	path_list_free (data->file_list);
+	g_free (data->base_uri);
+	g_free (data->dest_dir);
+	g_free (data->tmp_dir);
+	g_free (data);
+}
 
 
 #define g_signal_handlers_disconnect_by_data(instance, data) \
@@ -768,7 +790,7 @@ copy_to_remote_location_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 	}
 	else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
 		fr_archive_copy_to_remote_location__step2 (xfer_data->archive, xfer_data->action, xfer_data->result);
-		g_free (xfer_data);
+		xfer_data_free (xfer_data);
 	}
 	else if ((info->phase == GNOME_VFS_XFER_PHASE_COPYING)
 		 || (info->phase == GNOME_VFS_XFER_PHASE_MOVING))
@@ -817,8 +839,10 @@ fr_archive_copy_to_remote_location (FRArchive  *archive,
 	gnome_vfs_uri_list_free (source_uri_list);
 	gnome_vfs_uri_list_free (target_uri_list);
 
-	if (result != GNOME_VFS_OK)
+	if (result != GNOME_VFS_OK) {
 		fr_archive_copy__error (archive, action, result);
+		xfer_data_free (xfer_data);
+	}
 }
 
 
@@ -834,6 +858,7 @@ action_performed (FRCommand   *command,
 #endif
 
 	if (((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_DELETING_FILES))
+	    && (error->type == FR_PROC_ERROR_NONE)
 	    && ! uri_is_local (archive->uri)) {
 		fr_archive_copy_to_remote_location (archive, action);
 		return;
@@ -875,8 +900,8 @@ archive_message_cb  (FRCommand  *command,
 
 /* filename must not be escaped. */
 gboolean
-fr_archive_new_file (FRArchive  *archive,
-		     const char *uri)
+fr_archive_create (FRArchive  *archive,
+		   const char *uri)
 {
 	FRCommand *tmp_command;
 
@@ -1035,9 +1060,6 @@ fr_archive_copy_remote_file__step2 (FRArchive      *archive,
 
 	fr_archive_action_completed (archive, FR_ACTION_LOADING_ARCHIVE, FR_PROC_ERROR_NONE);
 
-	g_free (uri);
-	g_free (password);
-
 	/**/
 
 	fr_process_clear (archive->process);
@@ -1062,7 +1084,7 @@ copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 						    xfer_data->uri,
 						    xfer_data->password,
 						    xfer_data->result);
-		g_free (xfer_data);
+		xfer_data_free (xfer_data);
 	}
 
 	return TRUE;
@@ -1127,8 +1149,10 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 	gnome_vfs_uri_list_free (source_uri_list);
 	gnome_vfs_uri_list_free (target_uri_list);
 
-	if (result != GNOME_VFS_OK)
+	if (result != GNOME_VFS_OK) {
 		fr_archive_load__error (archive, gnome_vfs_result_to_string (result));
+		xfer_data_free (xfer_data);
+	}
 }
 
 
@@ -1361,6 +1385,8 @@ fr_archive_add (FRArchive     *archive,
 	if (archive->read_only)
 		return;
 
+	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
+
 	tmp_base_dir = g_strdup (base_dir);
 
 	if ((dest_dir != NULL) && (*dest_dir != '\0') && (strcmp (dest_dir, "/") != 0)) {
@@ -1381,13 +1407,12 @@ fr_archive_add (FRArchive     *archive,
 	} else
 		new_file_list = file_list;
 
-	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
-
 	/* if the command cannot update,  get the list of files that are
 	 * newer than the ones in the archive. */
 
 	if (update && ! archive->command->propAddCanUpdate) {
 		GList *tmp_file_list = new_file_list;
+
 		new_file_list = newer_files_only (archive, tmp_file_list, tmp_base_dir);
 		if (new_file_list_created)
 			path_list_free (tmp_file_list);
@@ -1481,9 +1506,170 @@ fr_archive_add (FRArchive     *archive,
 		fr_process_add_arg (archive->process, "-rf");
 		fr_process_add_arg (archive->process, tmp_base_dir);
 		fr_process_end_command (archive->process);
-
 	}
+
 	g_free (tmp_base_dir);
+}
+
+
+/* Note: all paths unescaped. */
+static void
+fr_archive_add_local_files (FRArchive     *archive,
+			    GList         *file_list,
+			    const char    *base_dir,
+			    const char    *dest_dir,
+			    gboolean       update,
+			    const char    *password,
+			    FRCompression  compression)
+{
+	fr_archive_stoppable (archive, TRUE);
+	fr_process_clear (archive->process);
+	fr_archive_add (archive,
+			file_list,
+			base_dir,
+			dest_dir,
+			update,
+			password,
+			compression);
+	fr_process_start (archive->process);
+}
+
+
+static void
+copy_remote_files__step2 (XferData *xfer_data)
+{
+	FRArchive *archive = xfer_data->archive;
+
+	if (xfer_data->result != GNOME_VFS_OK) {
+		archive->error.type = FR_PROC_ERROR_GENERIC;
+		archive->error.gerror = g_error_new (fr_error_quark (),
+						     0,
+						     gnome_vfs_result_to_string (xfer_data->result));
+		g_signal_emit (G_OBJECT (archive),
+			       fr_archive_signals[DONE],
+			       0,
+			       FR_ACTION_COPYING_FILES_FROM_REMOTE,
+			       &archive->error);
+
+		return;
+	}
+
+	archive->error.type = FR_PROC_ERROR_NONE;
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[DONE],
+		       0,
+		       FR_ACTION_COPYING_FILES_FROM_REMOTE,
+		       &archive->error);
+
+	fr_archive_add_local_files (xfer_data->archive,
+				    xfer_data->file_list,
+				    xfer_data->tmp_dir,
+				    xfer_data->dest_dir,
+				    FALSE,
+				    xfer_data->password,
+				    xfer_data->compression);
+}
+
+
+static gint
+copy_remote_files_progress_update_cb (GnomeVFSAsyncHandle      *handle,
+				      GnomeVFSXferProgressInfo *info,
+				      gpointer                  user_data)
+{
+	XferData *xfer_data = user_data;
+
+	if (info->status != GNOME_VFS_XFER_PROGRESS_STATUS_OK) {
+		xfer_data->result = info->vfs_status;
+		return FALSE;
+	}
+	else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
+		copy_remote_files__step2 (xfer_data);
+		xfer_data_free (xfer_data);
+	}
+
+	return TRUE;
+}
+
+
+static void
+copy_remote_files (FRArchive     *archive,
+		   GList         *file_list,
+		   const char    *base_uri,
+		   const char    *dest_dir,
+		   gboolean       update,
+		   const char    *password,
+		   FRCompression  compression,
+		   const char    *tmp_dir)
+{
+	GList          *source_uri_list = NULL;
+	GList          *target_uri_list = NULL;
+	GnomeVFSURI    *source_uri;
+	GnomeVFSURI    *target_uri;
+	GList          *scan;
+	XferData       *xfer_data;
+	GnomeVFSResult  result;
+
+	if (archive->priv->xfer_handle != NULL)
+		gnome_vfs_async_cancel (archive->priv->xfer_handle);
+
+	for (scan = file_list; scan; scan = scan->next) {
+		char *partial_filename = scan->data;
+		char *remote_uri;
+		char *local_uri;
+
+		remote_uri = g_strconcat (base_uri, "/", partial_filename, NULL);
+		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
+
+		source_uri = gnome_vfs_uri_new (remote_uri);
+		target_uri = gnome_vfs_uri_new (local_uri);
+
+		source_uri_list = g_list_append (source_uri_list, source_uri);
+		target_uri_list = g_list_append (target_uri_list, target_uri);
+	}
+
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = archive;
+	xfer_data->file_list = path_list_dup (file_list);
+	xfer_data->base_uri = g_strdup (base_uri);
+	xfer_data->dest_dir = g_strdup (dest_dir);
+	xfer_data->update = update;
+	xfer_data->dest_dir = g_strdup (dest_dir);
+	xfer_data->password = g_strdup (password);
+	xfer_data->compression = compression;
+	xfer_data->tmp_dir = g_strdup (tmp_dir);
+	xfer_data->result = GNOME_VFS_OK;
+
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[START],
+		       0,
+		       FR_ACTION_COPYING_FILES_FROM_REMOTE);
+
+	result = gnome_vfs_async_xfer (&archive->priv->xfer_handle,
+				       source_uri_list,
+				       target_uri_list,
+				       GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				       GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				       GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				       GNOME_VFS_PRIORITY_DEFAULT,
+				       copy_remote_files_progress_update_cb, xfer_data,
+				       NULL, NULL);
+
+	if (result != GNOME_VFS_OK) {
+		archive->error.type = FR_PROC_ERROR_GENERIC;
+		archive->error.gerror = g_error_new (fr_error_quark (),
+						     0,
+						     gnome_vfs_result_to_string (result));
+		g_signal_emit (G_OBJECT (archive),
+			       fr_archive_signals[DONE],
+			       0,
+			       FR_ACTION_COPYING_FILES_FROM_REMOTE,
+			       &archive->error);
+
+		xfer_data_free (xfer_data);
+	}
+
+	gnome_vfs_uri_list_free (source_uri_list);
+	gnome_vfs_uri_list_free (target_uri_list);
 }
 
 
@@ -1497,15 +1683,28 @@ fr_archive_add_files (FRArchive     *archive,
 		      const char    *password,
 		      FRCompression  compression)
 {
-	fr_process_clear (archive->process);
-	fr_archive_add (archive,
-			file_list,
-			base_dir,
-			dest_dir,
-			update,
-			password,
-			compression);
-	fr_process_start (archive->process);
+	if (uri_is_local (base_dir))
+		fr_archive_add_local_files (archive,
+					    file_list, 
+					    base_dir, 
+					    dest_dir, 
+					    update, 
+					    password, 
+					    compression);
+	else {
+		char *tmp_dir;
+
+		tmp_dir = get_temp_work_dir ();
+		copy_remote_files (archive,
+				   file_list, 
+				   base_dir, 
+				   dest_dir, 
+				   update, 
+				   password, 
+				   compression,
+				   tmp_dir);
+		g_free (tmp_dir);
+	}
 }
 
 
@@ -1580,21 +1779,17 @@ add_with_wildcard__step2 (GList    *file_list,
 
 	if (file_list != NULL) {
 		file_list_remove_from_pattern (&file_list, aww_data->exclude_files);
-		fr_archive_add (aww_data->archive,
-				file_list,
-				aww_data->base_dir,
-				aww_data->dest_dir,
-				aww_data->update,
-				aww_data->password,
-				aww_data->compression);
+		fr_archive_add_files (aww_data->archive,
+				      file_list,
+				      aww_data->base_dir,
+				      aww_data->dest_dir,
+				      aww_data->update,
+				      aww_data->password,
+				      aww_data->compression);
 		path_list_free (file_list);
 	}
 
 	add_with_wildcard_data_free (aww_data);
-
-	/**/
-
-	fr_process_start (archive->process);
 }
 
 
@@ -1615,9 +1810,6 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 
 	g_return_if_fail (archive->priv->vd_handle == NULL);
 	g_return_if_fail (! archive->read_only);
-
-	fr_process_clear (archive->process);
-	fr_archive_stoppable (archive, TRUE);
 
 	aww_data = g_new0 (AddWithWildcardData, 1);
 	aww_data->archive = archive;
@@ -1684,21 +1876,17 @@ add_directory__step2 (GList    *file_list,
 	archive->priv->vd_handle = NULL;
 
 	if (file_list != NULL) {
-		fr_archive_add (ad_data->archive,
-				file_list,
-				ad_data->base_dir,
-				ad_data->dest_dir,
-				ad_data->update,
-				ad_data->password,
-				ad_data->compression);
+		fr_archive_add_files (ad_data->archive,
+				      file_list,
+				      ad_data->base_dir,
+				      ad_data->dest_dir,
+				      ad_data->update,
+				      ad_data->password,
+				      ad_data->compression);
 		path_list_free (file_list);
 	}
 
 	add_directory_data_free (ad_data);
-
-	/**/
-
-	fr_process_start (archive->process);
 }
 
 
@@ -1718,9 +1906,6 @@ fr_archive_add_directory (FRArchive     *archive,
 	g_return_if_fail (archive->priv->vd_handle == NULL);
 	g_return_if_fail (! archive->read_only);
 
-	fr_process_clear (archive->process);
-	fr_archive_stoppable (archive, TRUE);
-
 	ad_data = g_new0 (AddDirectoryData, 1);
 	ad_data->archive = archive;
 	ad_data->dir_list = g_list_prepend (NULL, g_strdup (directory));
@@ -1736,11 +1921,11 @@ fr_archive_add_directory (FRArchive     *archive,
 		       FR_ACTION_GETTING_FILE_LIST);
 
 	archive->priv->vd_handle = get_items_file_list_async (
-					  ad_data->dir_list,
-					  base_dir,
-					  archive->command->propAddCanStoreFolders,
-					  add_directory__step2,
-					  ad_data);
+					ad_data->dir_list,
+					base_dir,
+					archive->command->propAddCanStoreFolders,
+					add_directory__step2,
+					ad_data);
 }
 
 
@@ -1760,9 +1945,6 @@ fr_archive_add_items (FRArchive     *archive,
 	g_return_if_fail (archive->priv->vd_handle == NULL);
 	g_return_if_fail (! archive->read_only);
 
-	fr_process_clear (archive->process);
-	fr_archive_stoppable (archive, TRUE);
-
 	ad_data = g_new0 (AddDirectoryData, 1);
 	ad_data->archive = archive;
 	ad_data->dir_list = path_list_dup (item_list);
@@ -1778,11 +1960,11 @@ fr_archive_add_items (FRArchive     *archive,
 		       FR_ACTION_GETTING_FILE_LIST);
 
 	archive->priv->vd_handle = get_items_file_list_async (
-					  ad_data->dir_list,
-					  base_dir,
-					  archive->command->propAddCanStoreFolders,
-					  add_directory__step2,
-					  ad_data);
+					ad_data->dir_list,
+					base_dir,
+					archive->command->propAddCanStoreFolders,
+					add_directory__step2,
+					ad_data);
 }
 
 

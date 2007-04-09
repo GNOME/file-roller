@@ -1801,6 +1801,8 @@ action_performed (FRArchive   *archive,
 	continue_batch = handle_errors (window, archive, action, error);
 
 	switch (action) {
+	case FR_ACTION_COPYING_FILES_FROM_REMOTE:
+		return;
 	case FR_ACTION_LOADING_ARCHIVE:
 		window->add_after_opening = FALSE;
 		if (error->type != FR_PROC_ERROR_NONE) {
@@ -2427,7 +2429,7 @@ drag_drop_add_file_list (FRWindow *window)
 		return;
 	}
 
-	/* if all files are in the same directory call fr_archive_add once. */
+	/* if all files are in the same directory call fr_archive_add_files. */
 
 	if (all_files_in_same_dir (list)) {
 		char  *first_basedir;
@@ -2438,15 +2440,13 @@ drag_drop_add_file_list (FRWindow *window)
 		for (scan = list; scan; scan = scan->next)
 			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
 
-		fr_process_clear (archive->process);
-		fr_archive_add (archive,
-				only_names_list,
-				first_basedir,
-				window_get_current_location (window),
-				window->update_dropped_files,
-				window->password,
-				window->compression);
-		fr_process_start (archive->process);
+		fr_archive_add_files (archive,
+				      only_names_list,
+				      first_basedir,
+				      window_get_current_location (window),
+				      window->update_dropped_files,
+				      window->password,
+				      window->compression);
 
 		g_list_free (only_names_list);
 		g_free (first_basedir);
@@ -4291,7 +4291,7 @@ window_archive_new (FRWindow   *window,
 {
 	g_return_val_if_fail (window != NULL, FALSE);
 
-	if (! fr_archive_new_file (window->archive, filename)) {
+	if (! fr_archive_create (window->archive, filename)) {
 		GtkWidget *dialog;
 		GtkWindow *file_sel = g_object_get_data (G_OBJECT (window->app), "fr_file_sel");
 
@@ -4396,7 +4396,7 @@ window_archive_save_as (FRWindow   *window,
 	/* create the new archive */
 
 	window->convert_data.new_archive = fr_archive_new ();
-	if (! fr_archive_new_file (window->convert_data.new_archive, filename)) {
+	if (! fr_archive_create (window->convert_data.new_archive, filename)) {
 		GtkWidget *dialog;
 		char      *utf8_name;
 		char      *message;
@@ -4505,21 +4505,39 @@ window_archive_rename (FRWindow   *window,
 
 
 void
-window_archive_add (FRWindow      *window,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    const char    *dest_dir,
-		    gboolean       update,
-		    const char    *password,
-		    FRCompression  compression)
+window_archive_add_files (FRWindow *window,
+			  GList    *file_list,
+			  gboolean  update)
 {
+	GList *files = NULL;
+	GList *scan;
+	char  *base_dir;
+	int    base_len;
+
+	base_dir = remove_level_from_path (file_list->data);
+
+	base_len = 0;
+	if (strcmp (base_dir, "/") != 0)
+		base_len = strlen (base_dir);
+
+	for (scan = file_list; scan; scan = scan->next) {
+		char *path = scan->data;
+		char *rel_path;
+
+		rel_path = g_strdup (path + base_len + 1);
+		files = g_list_prepend (files, rel_path);
+	}
+
 	fr_archive_add_files (window->archive,
-			      file_list,
+			      files,
 			      base_dir,
-			      dest_dir,
+			      window_get_current_location (window),
 			      update,
-			      password,
-			      compression);
+			      window->password,
+			      window->compression);
+
+	path_list_free (files);
+	g_free (base_dir);
 }
 
 

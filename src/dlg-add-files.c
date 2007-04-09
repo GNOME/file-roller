@@ -73,12 +73,12 @@ file_sel_response_cb (GtkWidget      *widget,
 		return TRUE;
 	}
 
-	current_folder = gtk_file_chooser_get_current_folder (file_sel);
+	current_folder = gtk_file_chooser_get_current_folder_uri (file_sel);
 
 	/* check folder permissions. */
 
 	if (path_is_dir (current_folder)
-	    && access (current_folder, R_OK | X_OK) != 0) {
+	    && ! check_permissions (current_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 		char      *message;
@@ -108,14 +108,14 @@ file_sel_response_cb (GtkWidget      *widget,
 
 	/**/
 
-	selections = gtk_file_chooser_get_filenames (file_sel);
+	selections = gtk_file_chooser_get_uris (file_sel);
 	for (iter = selections; iter != NULL; iter = iter->next) {
 		char *path = iter->data;
 		item_list = g_list_prepend (item_list, path);
 	}
 
 	if (item_list != NULL)
-		window_archive_add_dropped_items (window, item_list, update);
+		window_archive_add_files (window, item_list, update);
 
 	g_list_free (item_list);
 	g_slist_foreach (selections, (GFunc) g_free, NULL);
@@ -188,7 +188,7 @@ add_files_cb (GtkWidget *widget,
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 450);
 
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), TRUE);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 
 	data->add_if_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("_Add only if newer"));
