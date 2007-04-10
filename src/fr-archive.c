@@ -1683,14 +1683,18 @@ fr_archive_add_files (FRArchive     *archive,
 		      const char    *password,
 		      FRCompression  compression)
 {
-	if (uri_is_local (base_dir))
+	if (uri_is_local (base_dir)) {
+		char *local_dir = get_local_path_from_uri (base_dir);
+
 		fr_archive_add_local_files (archive,
 					    file_list, 
-					    base_dir, 
+					    local_dir, 
 					    dest_dir, 
 					    update, 
 					    password, 
 					    compression);
+		g_free (local_dir);
+	}
 	else {
 		char *tmp_dir;
 

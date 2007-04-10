@@ -1571,7 +1571,7 @@ window_add_to_recent_list (FRWindow *window,
 {
 	char          *tmp;
 	char          *uri;
-	GtkRecentData *recent_data;
+
 
 	if (window->batch_mode)
 		return;
@@ -1589,20 +1589,27 @@ window_add_to_recent_list (FRWindow *window,
 
 	uri = get_uri_from_path (filename);
 
-	recent_data = g_new0 (GtkRecentData, 1);
-	recent_data->mime_type = window->archive->mime_type;
-	recent_data->app_name = "File Roller";
-	recent_data->app_exec = "file-roller";
-	gtk_recent_manager_add_full (window->recent_manager, uri, recent_data);
+	if (window->archive->mime_type != NULL) {
+		GtkRecentData *recent_data;
+
+		recent_data = g_new0 (GtkRecentData, 1);
+		recent_data->mime_type = window->archive->mime_type;
+		recent_data->app_name = "File Roller";
+		recent_data->app_exec = "file-roller";
+		gtk_recent_manager_add_full (window->recent_manager, uri, recent_data);
+
+		g_free (recent_data);
+	}
+	else
+		gtk_recent_manager_add_item (window->recent_manager, uri);
 
 	g_free (uri);
-	g_free (recent_data);
 }
 
 
 static void
 window_remove_from_recent_list (FRWindow *window,
-				 char     *filename)
+				char     *filename)
 {
 	char *uri;
 

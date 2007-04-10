@@ -353,6 +353,7 @@ activate_action_new (GtkAction *action,
 						NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
 
 	if (window->add_after_creation && (window->dropped_file_list != NULL)) {
