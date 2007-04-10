@@ -2248,7 +2248,7 @@ file_leave_notify_callback (GtkWidget *widget,
 
 
 static GList *
-get_file_list_from_uri_list (char *uri_list)
+get_uri_list_from_selection_data (char *uri_list)
 {
 	GList *uris = NULL, *scan;
 	GList *list = NULL;
@@ -2258,7 +2258,7 @@ get_file_list_from_uri_list (char *uri_list)
 
 	uris = gnome_vfs_uri_list_parse (uri_list);
 	for (scan = uris; scan; scan = g_list_next (scan)) {
-		char *uri = gnome_vfs_uri_to_string (scan->data, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
+		char *uri = gnome_vfs_uri_to_string (scan->data, GNOME_VFS_URI_HIDE_NONE);
 		list = g_list_prepend (list, uri);
 	}
 	gnome_vfs_uri_list_free (uris);
@@ -2538,7 +2538,7 @@ window_drag_data_received  (GtkWidget          *widget,
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
-	list = get_file_list_from_uri_list ((char*)data->data);
+	list = get_uri_list_from_selection_data ((char*)data->data);
 	if (list == NULL) {
 		GtkWidget *dlg;
 		dlg = _gtk_message_dialog_new (GTK_WINDOW (window->app),

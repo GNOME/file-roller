@@ -195,56 +195,17 @@ file_sel_response_cb (GtkWidget    *widget,
 
 
 static void
-update_sensitivity (DialogData *data)
-{
-	GSList   *selections;
-	gboolean  can_add_wildcard, wildcard_specified = FALSE;
-
-return;
-
-	selections = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (data->dialog));
-	can_add_wildcard = (selections != NULL);
-
-	if (can_add_wildcard) {
-		const char *files;
-		gboolean    include_wildcard;
-		gboolean    exclude_wildcard;
-
-		files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
-		include_wildcard = ((g_utf8_strchr (files, -1, '*') != NULL)
-				    || (g_utf8_strchr (files, -1, '?') != NULL));
-
-		files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
-		exclude_wildcard = ((g_utf8_strchr (files, -1, '*') != NULL)
-				    || (g_utf8_strchr (files, -1, '?') != NULL));
-		wildcard_specified = include_wildcard || exclude_wildcard;
-	}
-
-	gtk_widget_set_sensitive (data->include_files_entry, can_add_wildcard);
-	gtk_widget_set_sensitive (data->exclude_files_entry, can_add_wildcard);
-	gtk_widget_set_sensitive (data->include_files_label, can_add_wildcard);
-	gtk_widget_set_sensitive (data->exclude_files_label, can_add_wildcard);
-	gtk_widget_set_sensitive (data->include_subfold_checkbutton, can_add_wildcard);
-	gtk_widget_set_sensitive (data->exclude_symlinks, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton)) && can_add_wildcard);
-
-	g_slist_foreach (selections, (GFunc) g_free, FALSE);
-	g_slist_free (selections);
-}
-
-
-static void
 selection_changed_cb (GtkWidget  *file_sel,
 		      DialogData *data)
 {
-	FRWindow   *window = data->window;
-	char       *current_folder;
+	FRWindow *window = data->window;
+	char     *current_folder;
 
 	current_folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (file_sel));
 
 	/* check folder permissions. */
 
-	if (path_is_dir (current_folder)
-	    && ! check_permissions (current_folder, R_OK | X_OK)) {
+	if (path_is_dir (current_folder) && ! check_permissions (current_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 		char      *message;
@@ -266,16 +227,6 @@ selection_changed_cb (GtkWidget  *file_sel,
 
 		g_free (current_folder);
 	}
-
-	update_sensitivity (data);
-}
-
-
-static void
-wildcard_entry_changed_cb (GtkWidget  *file_sel,
-			   DialogData *data)
-{
-	update_sensitivity (data);
 }
 
 
@@ -284,8 +235,10 @@ include_subfold_toggled_cb (GtkWidget *widget,
 			    gpointer   callback_data)
 {
 	DialogData *data = callback_data;
+	
 	gtk_widget_set_sensitive (data->exclude_symlinks,
 				  GTK_TOGGLE_BUTTON (widget)->active);
+
 	return FALSE;
 }
 
@@ -408,7 +361,6 @@ add_folder_cb (GtkWidget *widget,
 
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), data->window->add_default_dir);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), TRUE);
-	update_sensitivity (data);
 
 	/* signals */
 
@@ -425,15 +377,6 @@ add_folder_cb (GtkWidget *widget,
 	g_signal_connect (G_OBJECT (file_sel),
 			  "selection-changed",
 			  G_CALLBACK (selection_changed_cb),
-			  data);
-
-	g_signal_connect (G_OBJECT (data->include_files_entry),
-			  "changed",
-			  G_CALLBACK (wildcard_entry_changed_cb),
-			  data);
-	g_signal_connect (G_OBJECT (data->exclude_files_entry),
-			  "changed",
-			  G_CALLBACK (wildcard_entry_changed_cb),
 			  data);
 
 	g_signal_connect (G_OBJECT (data->include_subfold_checkbutton),
