@@ -552,7 +552,7 @@ directory_load_cb (GnomeVFSAsyncHandle *handle,
 		switch (info->type) {
 		case GNOME_VFS_FILE_TYPE_REGULAR:
 			full_uri = gnome_vfs_uri_append_file_name (pli->uri, info->name);
-			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
+			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_NONE);
 			unesc_uri = gnome_vfs_unescape_string (str_uri, NULL);
 
 			pli->files = g_list_prepend (pli->files, unesc_uri);
@@ -564,7 +564,7 @@ directory_load_cb (GnomeVFSAsyncHandle *handle,
 				break;
 
 			full_uri = gnome_vfs_uri_append_path (pli->uri, info->name);
-			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
+			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_NONE);
 			unesc_uri = gnome_vfs_unescape_string (str_uri, NULL);
 
 			pli->dirs = g_list_prepend (pli->dirs,  unesc_uri);
@@ -600,15 +600,10 @@ path_list_async_new (const char       *uri,
 {
 	GnomeVFSAsyncHandle *handle = NULL;
 	PathListData        *pli;
-	char                *escaped;
 	PathListHandle      *pl_handle;
 
 	pli = path_list_data_new ();
-
-	escaped = gnome_vfs_escape_path_string (uri);
-	pli->uri = gnome_vfs_uri_new (escaped);
-	g_free (escaped);
-
+	pli->uri = gnome_vfs_uri_new (uri);
 	pli->done_func = f;
 	pli->done_data = data;
 

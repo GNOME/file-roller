@@ -132,15 +132,15 @@ static void
 selection_changed_cb (GtkWidget  *file_sel,
  		      DialogData *data)
 {
-	FRWindow   *window = data->window;
-	char       *current_folder;
+	FRWindow *window = data->window;
+	char     *current_folder;
 
-	current_folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (file_sel));
+	current_folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (file_sel));
 
 	/* check folder permissions. */
 
 	if (path_is_dir (current_folder)
-	    && access (current_folder, R_OK | X_OK) != 0) {
+	    && ! check_permissions (current_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 		char      *message;
