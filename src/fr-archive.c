@@ -986,13 +986,12 @@ fr_archive_load__error (FRArchive  *archive,
 
 
 static void
-fr_archive_copy_remote_file__step2 (FRArchive      *archive,
-				    char           *uri,
-				    char           *password,
-				    GnomeVFSResult  result)
+copy_remote_file__step2 (FRArchive      *archive,
+			 char           *uri,
+			 char           *password,
+			 GnomeVFSResult  result)
 {
 	FRCommand  *tmp_command;
-	char       *local_uri= NULL;
 	const char *mime_type = NULL;
 
 	archive->priv->xfer_handle = NULL;
@@ -1000,14 +999,6 @@ fr_archive_copy_remote_file__step2 (FRArchive      *archive,
 		fr_archive_load__error (archive, gnome_vfs_result_to_string (result));
 		return;
 	}
-
-	local_uri = get_uri_from_local_path (archive->local_filename);
-	if (! path_is_file (local_uri)) {
-		g_free (local_uri);
-		fr_archive_load__error (archive, gnome_vfs_result_to_string (GNOME_VFS_ERROR_ACCESS_DENIED));
-		return;
-	}
-	g_free (local_uri);
 
 	archive->read_only = ! check_permissions (uri, W_OK);
 
@@ -1080,10 +1071,10 @@ copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 		return FALSE;
 	}
 	else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
-		fr_archive_copy_remote_file__step2 (xfer_data->archive,
-						    xfer_data->uri,
-						    xfer_data->password,
-						    xfer_data->result);
+		copy_remote_file__step2 (xfer_data->archive,
+					 xfer_data->uri,
+					 xfer_data->password,
+					 xfer_data->result);
 		xfer_data_free (xfer_data);
 	}
 
@@ -1092,10 +1083,10 @@ copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 
 
 static void
-fr_archive_copy_remote_file (FRArchive  *archive,
-		 	     const char *remote_uri,
-		 	     const char *local_filename,
-		 	     const char *password)
+copy_remote_file (FRArchive  *archive,
+		  const char *remote_uri,
+		  const char *local_filename,
+		  const char *password)
 {
 	XferData       *xfer_data;
 	char           *local_uri;
@@ -1108,8 +1099,13 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 		archive->priv->xfer_handle = NULL;
 	}
 
+	if (! path_is_file (remote_uri)) {
+		fr_archive_load__error (archive, gnome_vfs_result_to_string (GNOME_VFS_ERROR_NOT_FOUND));
+		return;
+	}
+
 	if (! archive->is_remote) {
-		fr_archive_copy_remote_file__step2 (archive, g_strdup (remote_uri), g_strdup (password), GNOME_VFS_OK);
+		copy_remote_file__step2 (archive, g_strdup (remote_uri), g_strdup (password), GNOME_VFS_OK);
 		return;
 	}
 
@@ -1122,7 +1118,7 @@ fr_archive_copy_remote_file (FRArchive  *archive,
 	if (gnome_vfs_uri_equal (source_uri, target_uri)) {
 		gnome_vfs_uri_unref (source_uri);
 		gnome_vfs_uri_unref (target_uri);
-		fr_archive_copy_remote_file__step2 (archive, g_strdup (remote_uri), g_strdup (password), GNOME_VFS_OK);
+		copy_remote_file__step2 (archive, g_strdup (remote_uri), g_strdup (password), GNOME_VFS_OK);
 		return;
 	}
 
@@ -1170,7 +1166,7 @@ fr_archive_load (FRArchive  *archive,
 		       FR_ACTION_LOADING_ARCHIVE);
 
 	fr_archive_set_uri (archive, uri);
-	fr_archive_copy_remote_file (archive, uri, archive->local_filename, password);
+	copy_remote_file (archive, uri, archive->local_filename, password);
 
 	return TRUE;
 }
