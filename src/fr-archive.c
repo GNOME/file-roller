@@ -72,6 +72,7 @@ struct _FRArchivePrivData {
 	gpointer             add_is_stoppable_data;
 	GnomeVFSAsyncHandle *xfer_handle;
 	VisitDirHandle      *vd_handle;
+	char                *temp_dir;
 };
 
 
@@ -384,6 +385,17 @@ fr_archive_set_uri (FRArchive  *archive,
 
 
 static void
+fr_archive_remove_temp_work_dir (FRArchive *archive)
+{
+	if (archive->priv->temp_dir == NULL)
+		return;
+	rmdir_recursive (archive->priv->temp_dir);
+	g_free (archive->priv->temp_dir);
+	archive->priv->temp_dir = NULL;
+}
+
+
+static void
 fr_archive_finalize (GObject *object)
 {
 	FRArchive *archive;
@@ -394,6 +406,7 @@ fr_archive_finalize (GObject *object)
 	archive = FR_ARCHIVE (object);
 
 	fr_archive_set_uri (archive, NULL);
+	fr_archive_remove_temp_work_dir (archive);
 	if (archive->command != NULL)
 		g_object_unref (archive->command);
 	g_object_unref (archive->process);
@@ -856,6 +869,9 @@ action_performed (FRCommand   *command,
 	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
 	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", action_names[action]);
 #endif
+
+	if ((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_COPYING_FILES_TO_REMOTE))
+		fr_archive_remove_temp_work_dir (archive);
 
 	if (((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_DELETING_FILES))
 	    && (error->type == FR_PROC_ERROR_NONE)
@@ -1669,6 +1685,15 @@ copy_remote_files (FRArchive     *archive,
 }
 
 
+static char *
+fr_archive_get_temp_work_dir (FRArchive *archive)
+{
+	fr_archive_remove_temp_work_dir (archive);
+	archive->priv->temp_dir = get_temp_work_dir ();
+	return archive->priv->temp_dir;
+}
+
+
 /* Note: all paths unescaped. */
 void
 fr_archive_add_files (FRArchive     *archive,
@@ -1691,10 +1716,7 @@ fr_archive_add_files (FRArchive     *archive,
 					    compression);
 		g_free (local_dir);
 	}
-	else {
-		char *tmp_dir;
-
-		tmp_dir = get_temp_work_dir ();
+	else
 		copy_remote_files (archive,
 				   file_list, 
 				   base_dir, 
@@ -1702,9 +1724,7 @@ fr_archive_add_files (FRArchive     *archive,
 				   update, 
 				   password, 
 				   compression,
-				   tmp_dir);
-		g_free (tmp_dir);
-	}
+				   fr_archive_get_temp_work_dir (archive));
 }
 
 

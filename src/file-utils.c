@@ -633,7 +633,7 @@ path_list_new (const char  *path,
 
 
 gboolean
-rmdir_recursive (const gchar *directory)
+rmdir_recursive (const char *directory)
 {
 	GList    *files, *dirs;
 	GList    *scan;
