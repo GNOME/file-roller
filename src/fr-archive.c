@@ -62,6 +62,60 @@
 #endif
 
 
+/* -- DroppedItemsData -- */
+
+
+typedef struct {
+	FRArchive     *archive;
+	GList         *item_list;
+	char          *base_dir;
+	char          *dest_dir;
+	gboolean       update;
+	char          *password;
+	FRCompression  compression;
+} DroppedItemsData;
+
+
+static DroppedItemsData *
+dropped_items_data_new (FRArchive     *archive,
+			GList         *item_list,
+			const char    *base_dir,
+			const char    *dest_dir,
+			gboolean       update,
+			const char    *password,
+			FRCompression  compression)
+{
+	DroppedItemsData *data;
+
+	data = g_new0 (DroppedItemsData, 1);
+	data->archive = archive;
+	data->item_list = path_list_dup (item_list);
+	if (base_dir != NULL)
+		data->base_dir = g_strdup (base_dir);
+	if (dest_dir != NULL)
+		data->dest_dir = g_strdup (dest_dir);
+	data->update = update;
+	if (password != NULL)
+		data->password = g_strdup (password);
+	data->compression = compression;
+
+	return data;
+}
+
+
+static void
+dropped_items_data_free (DroppedItemsData *data)
+{
+	if (data == NULL)
+		return;
+	path_list_free (data->item_list);
+	g_free (data->base_dir);
+	g_free (data->dest_dir);
+	g_free (data->password);
+	g_free (data);
+}
+
+
 struct _FRArchivePrivData {
 	FakeLoadFunc         fake_load_func;                /* If returns TRUE, archives are not read when
 							     * fr_archive_load is invoked, used
@@ -73,6 +127,8 @@ struct _FRArchivePrivData {
 	GnomeVFSAsyncHandle *xfer_handle;
 	VisitDirHandle      *vd_handle;
 	char                *temp_dir;
+	gboolean             continue_adding_dropped_items;
+	DroppedItemsData    *dropped_items_data;
 };
 
 
@@ -240,12 +296,16 @@ fr_archive_stoppable (FRArchive *archive,
 static void
 fr_archive_action_completed (FRArchive       *archive,
 			     FRAction         action,
-			     FRProcErrorType  error_type)
+			     FRProcErrorType  error_type,
+			     const char      *error_details)
 {
 	archive->error.type = error_type;
 	archive->error.status = 0;
 	g_clear_error (&archive->error.gerror);
-
+	if (error_details != NULL)
+		archive->error.gerror = g_error_new (fr_error_quark (),
+						     0,
+						     error_details);
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[DONE],
 		       0,
@@ -269,7 +329,10 @@ fr_archive_stop (FRArchive *archive)
 		visit_dir_async_interrupt (archive->priv->vd_handle, NULL, NULL);
 		archive->priv->vd_handle = NULL;
 
-		fr_archive_action_completed (archive, FR_ACTION_GETTING_FILE_LIST, FR_PROC_ERROR_STOPPED);
+		fr_archive_action_completed (archive,
+					     FR_ACTION_GETTING_FILE_LIST, 
+					     FR_PROC_ERROR_STOPPED,
+					     NULL);
 	}
 }
 
@@ -410,6 +473,10 @@ fr_archive_finalize (GObject *object)
 	if (archive->command != NULL)
 		g_object_unref (archive->command);
 	g_object_unref (archive->process);
+	if (archive->priv->dropped_items_data != NULL) {
+		dropped_items_data_free (archive->priv->dropped_items_data);
+		archive->priv->dropped_items_data = NULL;
+	}
 	g_free (archive->priv);
 
 	/* Chain up */
@@ -760,24 +827,17 @@ fr_archive_copy__error (FRArchive      *archive,
 			FRAction        action,
 			GnomeVFSResult  result)
 {
+	FRProcErrorType  error_type;
+	const char      *details = NULL;
+
 	archive->priv->xfer_handle = NULL;
 
-	archive->error.type = FR_PROC_ERROR_NONE;
-	archive->error.status = 0;
-	g_clear_error (&archive->error.gerror);
-
+	error_type = FR_PROC_ERROR_NONE;
 	if (result != GNOME_VFS_OK) {
-		archive->error.type = FR_PROC_ERROR_GENERIC;
-		archive->error.gerror = g_error_new (fr_error_quark (),
-						     0,
-						     gnome_vfs_result_to_string (result));
+		error_type = FR_PROC_ERROR_GENERIC;
+		details = gnome_vfs_result_to_string (result);
 	}
-
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[DONE],
-		       0,
-		       action,
-		       &archive->error);
+	fr_archive_action_completed (archive, action, error_type, details);
 }
 
 
@@ -859,6 +919,9 @@ fr_archive_copy_to_remote_location (FRArchive  *archive,
 }
 
 
+static void add_dropped_items (DroppedItemsData *data);
+
+
 static void
 action_performed (FRCommand   *command,
 		  FRAction     action,
@@ -872,6 +935,17 @@ action_performed (FRCommand   *command,
 
 	if ((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_COPYING_FILES_TO_REMOTE))
 		fr_archive_remove_temp_work_dir (archive);
+
+	if (action == FR_ACTION_ADDING_FILES) {
+		if (archive->priv->continue_adding_dropped_items) {
+			add_dropped_items (archive->priv->dropped_items_data);
+			return;
+		}
+		if (archive->priv->dropped_items_data != NULL) {
+			dropped_items_data_free (archive->priv->dropped_items_data);
+			archive->priv->dropped_items_data = NULL;
+		}
+	}
 
 	if (((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_DELETING_FILES))
 	    && (error->type == FR_PROC_ERROR_NONE)
@@ -986,18 +1060,10 @@ fr_archive_load__error (FRArchive  *archive,
 			const char *message)
 {
 	archive->priv->xfer_handle = NULL;
-
-	archive->error.type = FR_PROC_ERROR_GENERIC;
-	archive->error.status = 0;
-	g_clear_error (&archive->error.gerror);
-	archive->error.gerror = g_error_new (fr_error_quark (),
-					     0,
-					     message);
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[DONE],
-		       0,
-		       FR_ACTION_LOADING_ARCHIVE,
-		       &archive->error);	
+	fr_archive_action_completed (archive,
+				     FR_ACTION_LOADING_ARCHIVE, 
+				     FR_PROC_ERROR_GENERIC, 
+				     message);
 }
 
 
@@ -1065,7 +1131,10 @@ copy_remote_file__step2 (FRArchive      *archive,
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
 
-	fr_archive_action_completed (archive, FR_ACTION_LOADING_ARCHIVE, FR_PROC_ERROR_NONE);
+	fr_archive_action_completed (archive,
+				     FR_ACTION_LOADING_ARCHIVE, 
+				     FR_PROC_ERROR_NONE, 
+				     NULL);
 
 	/**/
 
@@ -1374,6 +1443,21 @@ fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
 }
 
 
+static GList *
+convert_to_local_file_list (GList *file_list)
+{
+	GList *local_file_list = NULL;
+	GList *scan;
+
+	for (scan = file_list; scan; scan = scan->next) {
+		char *filename = scan->data;
+		local_file_list = g_list_prepend (local_file_list, get_local_path_from_uri (filename));
+	}
+
+	return local_file_list;
+}
+
+
 /* Note: all paths unescaped. */
 void
 fr_archive_add (FRArchive     *archive,
@@ -1386,7 +1470,6 @@ fr_archive_add (FRArchive     *archive,
 {
 	GList    *new_file_list = NULL;
 	gboolean  base_dir_created = FALSE;
-	gboolean  new_file_list_created = FALSE;
 	GList    *e_file_list;
 	GList    *scan;
 	char     *tmp_base_dir = NULL;
@@ -1399,6 +1482,7 @@ fr_archive_add (FRArchive     *archive,
 
 	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
 
+	file_list = convert_to_local_file_list (file_list);
 	tmp_base_dir = g_strdup (base_dir);
 
 	if ((dest_dir != NULL) && (*dest_dir != '\0') && (strcmp (dest_dir, "/") != 0)) {
@@ -1410,25 +1494,25 @@ fr_archive_add (FRArchive     *archive,
 		if (dest_dir[0] == G_DIR_SEPARATOR)
 			rel_dest_dir = dest_dir + 1;
 
-		new_file_list_created = TRUE;
 		new_file_list = NULL;
 		for (scan = file_list; scan != NULL; scan = scan->next) {
 			char *filename = scan->data;
 			new_file_list = g_list_prepend (new_file_list, g_build_filename (rel_dest_dir, filename, NULL));
 		}
-	} else
+		path_list_free (file_list);
+	}
+	else
 		new_file_list = file_list;
 
 	/* if the command cannot update,  get the list of files that are
 	 * newer than the ones in the archive. */
 
 	if (update && ! archive->command->propAddCanUpdate) {
-		GList *tmp_file_list = new_file_list;
+		GList *tmp_file_list;
 
+		tmp_file_list = new_file_list;
 		new_file_list = newer_files_only (archive, tmp_file_list, tmp_base_dir);
-		if (new_file_list_created)
-			path_list_free (tmp_file_list);
-		new_file_list_created = TRUE;
+		path_list_free (tmp_file_list);
 	}
 
 	if (new_file_list == NULL) {
@@ -1506,8 +1590,7 @@ fr_archive_add (FRArchive     *archive,
 	}
 
 	path_list_free (e_file_list);
-	if (new_file_list_created)
-		g_list_free (new_file_list);
+	g_list_free (new_file_list);
 
 	fr_command_recompress (archive->command, compression);
 
@@ -1553,25 +1636,17 @@ copy_remote_files__step2 (XferData *xfer_data)
 	FRArchive *archive = xfer_data->archive;
 
 	if (xfer_data->result != GNOME_VFS_OK) {
-		archive->error.type = FR_PROC_ERROR_GENERIC;
-		archive->error.gerror = g_error_new (fr_error_quark (),
-						     0,
-						     gnome_vfs_result_to_string (xfer_data->result));
-		g_signal_emit (G_OBJECT (archive),
-			       fr_archive_signals[DONE],
-			       0,
-			       FR_ACTION_COPYING_FILES_FROM_REMOTE,
-			       &archive->error);
-
+		fr_archive_action_completed (archive,
+					     FR_ACTION_COPYING_FILES_FROM_REMOTE,
+					     FR_PROC_ERROR_GENERIC,
+					     gnome_vfs_result_to_string (xfer_data->result));
 		return;
 	}
 
-	archive->error.type = FR_PROC_ERROR_NONE;
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[DONE],
-		       0,
-		       FR_ACTION_COPYING_FILES_FROM_REMOTE,
-		       &archive->error);
+	fr_archive_action_completed (archive,
+				     FR_ACTION_COPYING_FILES_FROM_REMOTE,
+				     FR_PROC_ERROR_NONE,
+				     NULL);
 
 	fr_archive_add_local_files (xfer_data->archive,
 				    xfer_data->file_list,
@@ -1632,6 +1707,20 @@ copy_remote_files (FRArchive     *archive,
 		remote_uri = g_strconcat (base_uri, "/", partial_filename, NULL);
 		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
 
+		result = make_tree (local_uri);
+		if (result != GNOME_VFS_OK) {
+			g_free (remote_uri);
+			g_free (local_uri);
+			gnome_vfs_uri_list_free (source_uri_list);
+			gnome_vfs_uri_list_free (target_uri_list);
+
+			fr_archive_action_completed (archive,
+						     FR_ACTION_COPYING_FILES_FROM_REMOTE,
+						     FR_PROC_ERROR_GENERIC,
+						     gnome_vfs_result_to_string (result));
+			return;
+		}
+
 		source_uri = gnome_vfs_uri_new (remote_uri);
 		target_uri = gnome_vfs_uri_new (local_uri);
 
@@ -1667,16 +1756,10 @@ copy_remote_files (FRArchive     *archive,
 				       NULL, NULL);
 
 	if (result != GNOME_VFS_OK) {
-		archive->error.type = FR_PROC_ERROR_GENERIC;
-		archive->error.gerror = g_error_new (fr_error_quark (),
-						     0,
-						     gnome_vfs_result_to_string (result));
-		g_signal_emit (G_OBJECT (archive),
-			       fr_archive_signals[DONE],
-			       0,
-			       FR_ACTION_COPYING_FILES_FROM_REMOTE,
-			       &archive->error);
-
+		fr_archive_action_completed (archive,
+					     FR_ACTION_COPYING_FILES_FROM_REMOTE,
+					     FR_PROC_ERROR_GENERIC,
+					     gnome_vfs_result_to_string (result));
 		xfer_data_free (xfer_data);
 	}
 
@@ -1793,7 +1876,10 @@ add_with_wildcard__step2 (GList    *file_list,
 	AddWithWildcardData *aww_data = data;
 	FRArchive           *archive = aww_data->archive;
 
-	fr_archive_action_completed (archive, FR_ACTION_GETTING_FILE_LIST, FR_PROC_ERROR_NONE);
+	fr_archive_action_completed (archive,
+				     FR_ACTION_GETTING_FILE_LIST, 
+				     FR_PROC_ERROR_NONE,
+				     NULL);
 	visit_dir_handle_free (archive->priv->vd_handle);
 	archive->priv->vd_handle = NULL;
 
@@ -1891,7 +1977,10 @@ add_directory__step2 (GList    *file_list,
 	AddDirectoryData *ad_data = data;
 	FRArchive        *archive = ad_data->archive;
 
-	fr_archive_action_completed (archive, FR_ACTION_GETTING_FILE_LIST, FR_PROC_ERROR_NONE);
+	fr_archive_action_completed (archive,
+				     FR_ACTION_GETTING_FILE_LIST, 
+				     FR_PROC_ERROR_NONE,
+				     NULL);
 	visit_dir_handle_free (archive->priv->vd_handle);
 	archive->priv->vd_handle = NULL;
 
@@ -1985,6 +2074,211 @@ fr_archive_add_items (FRArchive     *archive,
 					archive->command->propAddCanStoreFolders,
 					add_directory__step2,
 					ad_data);
+}
+
+
+/* -- fr_archive_add_dropped_items -- */
+
+
+static gboolean
+all_files_in_same_dir (GList *list)
+{
+	gboolean  same_dir = TRUE;
+	char     *first_basedir;
+	GList    *scan;
+
+	if (list == NULL)
+		return FALSE;
+
+	first_basedir = remove_level_from_path (list->data);
+	if (first_basedir == NULL)
+		return TRUE;
+
+	for (scan = list->next; scan; scan = scan->next) {
+		char *path = scan->data;
+		char *basedir;
+
+		basedir = remove_level_from_path (path);
+		if (basedir == NULL) {
+			same_dir = FALSE;
+			break;
+		}
+
+		if (strcmp (first_basedir, basedir) != 0) {
+			same_dir = FALSE;
+			g_free (basedir);
+			break;
+		}
+		g_free (basedir);
+	}
+	g_free (first_basedir);
+
+	return same_dir;
+}
+
+
+static void
+add_dropped_items (DroppedItemsData *data)
+{
+	FRArchive *archive = data->archive;
+	GList     *list = data->item_list;
+	GList     *scan;
+
+	if (list == NULL) {
+		dropped_items_data_free (archive->priv->dropped_items_data);
+		archive->priv->dropped_items_data = NULL;
+		fr_archive_action_completed (archive,
+					     FR_ACTION_ADDING_FILES,
+					     FR_PROC_ERROR_NONE,
+					     NULL);
+		return;
+	}
+
+	/* if all files/dirs are in the same directory call fr_archive_add_items... */
+
+	if (all_files_in_same_dir (list)) {
+		char *first_base_dir;
+
+		first_base_dir = remove_level_from_path (list->data);
+		fr_archive_add_items (data->archive,
+				      list,
+				      first_base_dir,
+				      NULL,
+				      data->update,
+				      data->password,
+				      data->compression);
+		g_free (first_base_dir);
+
+		dropped_items_data_free (archive->priv->dropped_items_data);
+		archive->priv->dropped_items_data = NULL;
+
+		return;
+	}
+
+	/* ...else add a directory at a time. */
+
+	for (scan = list; scan; scan = scan->next) {
+		char *path = scan->data;
+		char *base_dir;
+
+		if (! path_is_dir (path))
+			continue;
+
+		data->item_list = g_list_remove_link (list, scan);
+		if (data->item_list != NULL)
+			archive->priv->continue_adding_dropped_items = TRUE;
+		base_dir = remove_level_from_path (path);
+
+		fr_archive_add_directory (archive,
+					  file_name_from_path (path),
+					  base_dir,
+					  NULL,
+					  data->update,
+					  data->password,
+					  data->compression);
+
+		g_free (base_dir);
+		g_free (path);
+
+		return;
+	}
+
+	/* if all files are in the same directory call fr_archive_add_files. */
+
+	if (all_files_in_same_dir (list)) {
+		char  *first_basedir;
+		GList *only_names_list = NULL;
+
+		first_basedir = remove_level_from_path (list->data);
+
+		for (scan = list; scan; scan = scan->next)
+			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
+
+		fr_archive_add_files (archive,
+				      only_names_list,
+				      first_basedir,
+				      data->base_dir,
+				      data->update,
+				      data->password,
+				      data->compression);
+
+		g_list_free (only_names_list);
+		g_free (first_basedir);
+
+		return;
+	}
+
+	/* ...else call fr_command_add for each file.  This is needed to add
+	 * files without path info. FIXME: doesn't work with remote files. */
+
+	fr_archive_stoppable (archive, FALSE);
+
+	fr_process_clear (archive->process);
+	fr_command_uncompress (archive->command);
+	for (scan = list; scan; scan = scan->next) {
+		char  *fullpath = scan->data;
+		char  *basedir;
+		GList *singleton;
+
+		basedir = remove_level_from_path (fullpath);
+		singleton = g_list_prepend (NULL, shell_escape (file_name_from_path (fullpath)));
+		fr_command_add (archive->command,
+				singleton,
+				basedir,
+				data->update,
+				data->password,
+				data->compression);
+		path_list_free (singleton);
+		g_free (basedir);
+	}
+	fr_command_recompress (archive->command, data->compression);
+	fr_process_start (archive->process);
+
+	path_list_free (data->item_list);
+	data->item_list = NULL;
+}
+
+
+void
+fr_archive_add_dropped_items (FRArchive     *archive,
+			      GList         *item_list,
+			      const char    *base_dir,
+			      const char    *dest_dir,
+			      gboolean       update,
+			      const char    *password,
+			      FRCompression  compression)
+{
+	if (archive->read_only) {
+		fr_archive_action_completed (archive,
+					     FR_ACTION_ADDING_FILES, 
+					     FR_PROC_ERROR_GENERIC, 
+					     _("You don't have the right permissions."));
+		return;
+	}
+
+/* FIXME: make this check for the add actions
+	for (scan = item_list; scan; scan = scan->next) {
+		if (uricmp (scan->data, archive->uri) == 0) {
+			fr_archive_action_completed (archive,
+						     FR_ACTION_ADDING_FILES,
+						     FR_PROC_ERROR_GENERIC,
+						     _("You can't add an archive to itself."));
+			return;
+		}
+	}
+*/
+
+	if (archive->priv->dropped_items_data != NULL)
+		dropped_items_data_free (archive->priv->dropped_items_data);
+	archive->priv->dropped_items_data = dropped_items_data_new (
+						archive,
+				       		item_list,
+				       		base_dir,
+				       		dest_dir,
+				       		update,
+				       		password,
+				       		compression);
+	add_dropped_items (archive->priv->dropped_items_data);
 }
 
 

@@ -503,7 +503,7 @@ dlg_extract (GtkWidget *widget,
 
 	if (window->extract_default_dir != NULL) {
 		folder = window->extract_default_dir;
-		if (dir_is_temp_dir (folder) || ! uri_is_local (folder))
+		if (is_temp_work_dir (folder) || ! uri_is_local (folder))
 			folder = get_home_uri ();
 	}
 	else

@@ -53,9 +53,9 @@ struct _FRArchive {
 	FRProcError  error;
 	gboolean     can_create_compressed_file;
 	gboolean     is_compressed_file;         /* Whether the file is an archive
-					          * or a compressed file. */
+						  * or a compressed file. */
 	gboolean     read_only;                  /* Whether archive is read-only
-					          * or not. */
+						  * or not. */
 
 	FRArchivePrivData *priv;
 };
@@ -81,8 +81,8 @@ struct _FRArchiveClass {
 GType       fr_archive_get_type                  (void);
 FRArchive * fr_archive_new                       (void);
 void        fr_archive_set_fake_load_func        (FRArchive     *archive,
-					          FakeLoadFunc   func,
-					          gpointer       data);
+						  FakeLoadFunc   func,
+						  gpointer       data);
 gboolean    fr_archive_fake_load                 (FRArchive     *archive);
 void        fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
 						  FakeLoadFunc   func,
@@ -94,71 +94,78 @@ void        fr_archive_stop	                 (FRArchive     *archive);
 /**/
 
 gboolean    fr_archive_create                    (FRArchive     *archive,
-					          const char    *uri);
+						  const char    *uri);
 gboolean    fr_archive_load                      (FRArchive     *archive,
-					          const char    *uri,
-					          const char    *password);
+						  const char    *uri,
+						  const char    *password);
 void        fr_archive_reload                    (FRArchive     *archive,
-					          const char    *password);
+						  const char    *password);
 void        fr_archive_rename                    (FRArchive     *archive,
-					          const char    *new_uri);
+						  const char    *new_uri);
 
 /**/
 
 void        fr_archive_add                       (FRArchive     *archive,
-					          GList         *file_list,
-					          const char    *base_dir,
-					          const char    *dest_dir,
-					          gboolean       update,
-					          const char    *password,
-					          FRCompression  compression);
+						  GList         *file_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
 void        fr_archive_remove                    (FRArchive     *archive,
-					          GList         *file_list,
-					          FRCompression  compression);
+						  GList         *file_list,
+						  FRCompression  compression);
 void        fr_archive_extract                   (FRArchive     *archive,
-					          GList         *file_list,
-					          const char    *dest_dir,
-					          const char    *base_dir,
-					          gboolean       skip_older,
-					          gboolean       overwrite,
-					          gboolean       junk_path,
-					          const char    *password);
+						  GList         *file_list,
+						  const char    *dest_dir,
+						  const char    *base_dir,
+						  gboolean       skip_older,
+						  gboolean       overwrite,
+						  gboolean       junk_path,
+						  const char    *password);
 
 /**/
-					          					          
+
 void        fr_archive_add_files                 (FRArchive     *archive,
-					          GList         *file_list,
-					          const char    *base_dir,
-					          const char    *dest_dir,
-					          gboolean       update,
-					          const char    *password,
-					          FRCompression  compression);
+						  GList         *file_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
 void        fr_archive_add_with_wildcard         (FRArchive     *archive,
-					          const char    *include_files,
-					          const char    *exclude_files,
-					          const char    *base_dir,
-					          const char    *dest_dir,
-					          gboolean       update,
-					          gboolean       recursive,
-					          gboolean       follow_links,
-					          const char    *password,
-					          FRCompression  compression);
+						  const char    *include_files,
+						  const char    *exclude_files,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  gboolean       recursive,
+						  gboolean       follow_links,
+						  const char    *password,
+						  FRCompression  compression);
 void        fr_archive_add_directory             (FRArchive     *archive,
-					          const char    *directory,
-					          const char    *base_dir,
-					          const char    *dest_dir,
-					          gboolean       update,
-					          const char    *password,
-					          FRCompression  compression);
+						  const char    *directory,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
 void        fr_archive_add_items                 (FRArchive     *archive,
-					          GList         *item_list,
-					          const char    *base_dir,
-					          const char    *dest_dir,
-					          gboolean       update,
-					          const char    *password,
-					          FRCompression  compression);
+						  GList         *item_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
+void        fr_archive_add_dropped_items         (FRArchive     *archive,
+						  GList         *item_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
 void        fr_archive_test                      (FRArchive     *archive,
-					          const char    *password);
+						  const char    *password);
 
 /* utils */
 

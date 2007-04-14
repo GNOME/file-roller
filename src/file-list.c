@@ -547,28 +547,20 @@ directory_load_cb (GnomeVFSAsyncHandle *handle,
 		GnomeVFSFileInfo *info     = node->data;
 		GnomeVFSURI      *full_uri = NULL;
 		char             *str_uri;
-		char             *unesc_uri;
 
 		switch (info->type) {
 		case GNOME_VFS_FILE_TYPE_REGULAR:
 			full_uri = gnome_vfs_uri_append_file_name (pli->uri, info->name);
 			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_NONE);
-			unesc_uri = gnome_vfs_unescape_string (str_uri, NULL);
-
-			pli->files = g_list_prepend (pli->files, unesc_uri);
-			g_free (str_uri);
+			pli->files = g_list_prepend (pli->files, str_uri);
 			break;
 
 		case GNOME_VFS_FILE_TYPE_DIRECTORY:
 			if (SPECIAL_DIR (info->name))
 				break;
-
 			full_uri = gnome_vfs_uri_append_path (pli->uri, info->name);
 			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_NONE);
-			unesc_uri = gnome_vfs_unescape_string (str_uri, NULL);
-
-			pli->dirs = g_list_prepend (pli->dirs,  unesc_uri);
-			g_free (str_uri);
+			pli->dirs = g_list_prepend (pli->dirs,  str_uri);
 			break;
 
 		default:
@@ -579,8 +571,7 @@ directory_load_cb (GnomeVFSAsyncHandle *handle,
 			gnome_vfs_uri_unref (full_uri);
 	}
 
-	if ((result == GNOME_VFS_ERROR_EOF)
-	    || (result != GNOME_VFS_OK)) {
+	if ((result == GNOME_VFS_ERROR_EOF) || (result != GNOME_VFS_OK)) {
 		if (pli->done_func)
 			/* pli must be deallocated in pli->done_func */
 			pli->done_func (pli, pli->done_data);
@@ -1242,7 +1233,8 @@ get_items_file_list_async (GList            *item_list,
 		if (path_is_file (path)) {
 			char *rel_path = g_strdup (path + base_len + 1);
 			gfl_data->files = g_list_prepend (gfl_data->files, rel_path);
-		} else if (path_is_dir (path))
+		}
+		else if (path_is_dir (path))
 			gfl_data->dir_list = g_list_prepend (gfl_data->dir_list, g_strdup (path));
 	}
 

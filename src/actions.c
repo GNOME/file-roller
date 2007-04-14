@@ -57,7 +57,7 @@ new_file_destroy_cb (GtkWidget *w,
 static void
 new_archive (GtkWidget *file_sel,
 	     FRWindow  *window, 
-	     gchar     *path)
+	     char      *path)
 {
 	FRWindow *archive_window;
 	gboolean  new_window;
@@ -71,18 +71,21 @@ new_archive (GtkWidget *file_sel,
 
 	/* Pass the add_after_creation options to the new window. */
 	if (archive_window != window) {
+		/* FIXME: use batch actions
 		archive_window->add_after_creation = window->add_after_creation;
 		if (archive_window->add_after_creation) {
 			archive_window->dropped_file_list = window->dropped_file_list;
 			window->dropped_file_list = NULL;
 		}
 		window->add_after_creation = FALSE;
+		*/
 	}
 
 	if (window_archive_new (archive_window, path)) {
 		gtk_window_present (GTK_WINDOW (archive_window->app));
 		gtk_widget_destroy (file_sel);
-	} else if (new_window)
+	}
+	else if (new_window)
 		window_close (archive_window);
 }
 
@@ -356,6 +359,7 @@ activate_action_new (GtkAction *action,
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
 
+/* FIXME
 	if (window->add_after_creation && (window->dropped_file_list != NULL)) {
 		char       *first_item = (char*) window->dropped_file_list->data;
 		char       *folder = remove_level_from_path (first_item);
@@ -381,7 +385,7 @@ activate_action_new (GtkAction *action,
 
 		g_free (folder);
 	}
-
+*/
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
 	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)

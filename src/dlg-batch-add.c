@@ -116,7 +116,9 @@ add_clicked_cb (GtkWidget  *widget,
 
 	/* Collect data */
 
-	window->update_dropped_files = UPDATE_DROPPED_FILES;
+/* FIXME
+  	window->update_dropped_files = UPDATE_DROPPED_FILES; 
+  	*/
 	archive_name = g_filename_from_utf8 (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)), -1, NULL, NULL, NULL);
 
 	/* check whether the user entered a valid archive name. */
@@ -314,14 +316,17 @@ add_clicked_cb (GtkWidget  *widget,
 	}
 
 	if (! path_is_file (archive_file)) {
+		/* FIXME: use batch actions
 		if (window->dropped_file_list != NULL)
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup (data->file_list);
 		window->add_after_creation = TRUE;
 		window_archive_new (window, archive_file);
+		*/
 
 	} else {
-		window->add_after_opening = TRUE;
+		/* FIXME: use match action to add after opening
+		window->add_after_opening = TRUE; */
 
 		window_batch_mode_add_next_action (window,
 						   FR_BATCH_ACTION_ADD,

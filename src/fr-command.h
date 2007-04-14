@@ -39,6 +39,7 @@ typedef struct _FRCommandClass  FRCommandClass;
 
 typedef enum {
 	FR_ACTION_NONE,
+	FR_ACTION_CREATING_NEW_ARCHIVE,
 	FR_ACTION_LOADING_ARCHIVE,            /* loading the archive from a remote location */
 	FR_ACTION_LISTING_CONTENT,            /* listing the content of the archive */
 	FR_ACTION_DELETING_FILES,             /* deleting files from the archive */

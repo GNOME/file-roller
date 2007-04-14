@@ -183,13 +183,6 @@ dir_contains_one_object (const char *path)
 }
 
 
-gboolean
-dir_is_temp_dir (const char *dir) {
-	const char *tmp_dir = g_get_tmp_dir ();
-	return (strncmp (dir, tmp_dir, strlen (tmp_dir)) == 0);
-}
-
-
 /* Check whether the path_src is contained in path_dest */
 gboolean
 path_in_path (const char  *path_src,
@@ -412,7 +405,7 @@ remove_level_from_path (const gchar *path)
 	const char *ptr = path;
 	char       *new_path;
 
-	if (! path)
+	if (path == NULL)
 		return NULL;
 
 	p = strlen (path) - 1;
@@ -539,10 +532,10 @@ get_mime_type (const char  *filename)
 void
 path_list_free (GList *path_list)
 {
-	if (path_list != NULL) {
-		g_list_foreach (path_list, (GFunc) g_free, NULL);
-		g_list_free (path_list);
-	}
+	if (path_list == NULL)
+		return;
+	g_list_foreach (path_list, (GFunc) g_free, NULL);
+	g_list_free (path_list);
 }
 
 
@@ -669,10 +662,75 @@ rmdir_recursive (const char *directory)
 }
 
 
+GnomeVFSResult
+make_tree (const char *uri)
+{
+	char  *root;
+	char **parts;
+	char  *parent;
+	int    i;
+
+	root = get_uri_host (uri);
+	if ((uricmp (root, uri) == 0) || (strlen (uri) <= strlen (root) + 1)) {
+		g_free (root);
+		return GNOME_VFS_OK;
+	}
+
+	parts = g_strsplit (uri + strlen (root) + 1, "/", -1);
+	if ((parts == NULL) || (parts[0] == NULL) || (parts[1] == NULL)) {
+		if (parts != NULL)
+			g_strfreev (parts);
+		g_free (root);
+		return GNOME_VFS_OK;
+	}
+
+	parent = g_strdup (root);
+	for (i = 0; parts[i + 1] != NULL; i++) {
+		char           *tmp;
+		GnomeVFSResult  result;
+
+		tmp = g_strconcat (parent, "/", parts[i], NULL);
+		g_free (parent);
+		parent = tmp;
+
+		result = gnome_vfs_make_directory (parent, 0755);
+		if ((result != GNOME_VFS_OK) && (result != GNOME_VFS_ERROR_FILE_EXISTS)) {
+			g_free (parent);
+			g_strfreev (parts);
+			g_free (root);
+			return result;
+		}
+	}
+
+	g_free (parent);
+	g_strfreev (parts);
+	g_free (root);
+
+	return GNOME_VFS_OK;
+}
+
+
+static const char *try_folder[] = { "~", "tmp", NULL };
+
+
+static const char *
+get_folder_from_try_folder_list (int n)
+{
+	const char *folder;
+
+	folder = try_folder[n];
+	if (strcmp (folder, "~") == 0)
+		folder = g_get_home_dir ();
+	else if (strcmp (folder, "tmp") == 0)
+		folder = g_get_tmp_dir ();
+
+	return folder;
+}
+
+
 char *
 get_temp_work_dir (void)
 {
-	const char       *try_folder[] = { "~", "tmp", NULL };
 	GnomeVFSFileSize  max_size = 0;
 	char             *best_folder = NULL;
 	int               i;
@@ -686,13 +744,9 @@ get_temp_work_dir (void)
 		char             *uri;
 		GnomeVFSFileSize  size;
 
-		folder = try_folder[i];
-		if (strcmp (folder, "~") == 0)
-			folder = g_get_home_dir ();
-		else if (strcmp (folder, "tmp") == 0)
-			folder = g_get_tmp_dir ();
-
+		folder = get_folder_from_try_folder_list (i);
 		uri = g_strconcat ("file://", folder, NULL);
+
 		size = get_dest_free_space (uri);
 		if (max_size < size) {
 			max_size = size;
@@ -712,6 +766,25 @@ get_temp_work_dir (void)
 	}
 
 	return result;
+}
+
+
+gboolean
+is_temp_work_dir (const char *dir) {
+	int i;
+
+	if (strncmp (dir, "file://", 7) == 0)
+		dir = dir + 7;
+
+	for (i = 0; try_folder[i] != NULL; i++) {
+		const char *folder;
+
+		folder = get_folder_from_try_folder_list (i);
+		if (strncmp (dir, folder, strlen (folder)) == 0)
+			return TRUE;
+	}
+
+	return FALSE;
 }
 
 
@@ -1024,6 +1097,22 @@ get_uri_host (const char *uri)
 	if (idx == NULL)
 		return NULL;
 	return g_strndup (uri, (idx - uri));
+}
+
+
+char *
+get_uri_root (const char *uri)
+{
+	char *host;
+	char *root;
+
+	host = get_uri_host (uri);
+	if (host == NULL)
+		return NULL;
+	root = g_strconcat (host, "/", NULL);
+	g_free (host);
+
+	return root;
 }
 
 

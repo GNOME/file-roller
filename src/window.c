@@ -1622,7 +1622,6 @@ window_remove_from_recent_list (FRWindow *window,
 }
 
 
-static void drag_drop_add_file_list            (FRWindow *window);
 static void window_batch_start_current_action (FRWindow *window);
 
 
@@ -1739,15 +1738,17 @@ handle_errors (FRWindow    *window,
 			details = error->gerror->message;
 			break;
 		default:
-		case FR_PROC_ERROR_GENERIC:
-			details = NULL;
+			if (error->gerror != NULL)
+				details = error->gerror->message;
+			else
+				details = NULL;
 			break;
 		}
 
 		dialog = _gtk_error_dialog_new (GTK_WINDOW (window->app),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						(process->raw_error != NULL) ? process->raw_error : process->raw_output,
-						details ? "%s\n%s" : "%s",
+						(details != NULL) ? "%s\n%s" : "%s",
 						msg,
 						details);
 		g_signal_connect (dialog,
@@ -1777,6 +1778,7 @@ convert__action_performed (FRArchive   *archive,
 	close_progress_dialog (window);
 
 	handle_errors (window, archive, action, error);
+
 	rmdir_recursive (window->convert_data.temp_dir);
 	window_convert_data_free (window);
 
@@ -1808,10 +1810,8 @@ action_performed (FRArchive   *archive,
 	continue_batch = handle_errors (window, archive, action, error);
 
 	switch (action) {
-	case FR_ACTION_COPYING_FILES_FROM_REMOTE:
-		return;
 	case FR_ACTION_LOADING_ARCHIVE:
-		window->add_after_opening = FALSE;
+		/* window->add_after_opening = FALSE; -- FIXME: delete */
 		if (error->type != FR_PROC_ERROR_NONE) {
 			GtkWidget *dialog;
 			char      *utf8_name, *message;
@@ -1838,21 +1838,20 @@ action_performed (FRArchive   *archive,
 
 			window_remove_from_recent_list (window, window->archive_filename);
 
-			/*if (new_window_created)
+			/*if (new_window_created)  FIXME
 				window_close (window);*/
 
 			if (window->batch_mode) {
 				window_archive_close (window);
-				window_update_sensitivity (window);
-				window_update_statusbar_list_info (window);
 				window_batch_mode_stop (window);
 			}
 		}
 		else {
 			window_add_to_recent_list (window, window->archive_filename);
-			/*if (new_window_created && ! window->non_interactive)
+			/*if (new_window_created && ! window->non_interactive)  FIXME
 				gtk_widget_show (window->app);*/
 		}
+		continue_batch = FALSE;
 		break;
 
 	case FR_ACTION_LISTING_CONTENT:
@@ -1863,7 +1862,7 @@ action_performed (FRArchive   *archive,
 		}
 
 		archive_dir = remove_level_from_path (window->archive_filename);
-		temp_dir = dir_is_temp_dir (archive_dir);
+		temp_dir = is_temp_work_dir (archive_dir);
 		if (! window->archive_present) {
 			window->archive_present = TRUE;
 
@@ -1873,7 +1872,7 @@ action_performed (FRArchive   *archive,
 			if (! temp_dir) {
 				window_set_open_default_dir (window, archive_dir);
 				window_set_add_default_dir (window, archive_dir);
-				if (!window->freeze_default_dir)
+				if (! window->freeze_default_dir)
 					window_set_extract_default_dir (window, archive_dir);
 			}
 
@@ -1884,9 +1883,9 @@ action_performed (FRArchive   *archive,
 		if (! temp_dir)
 			window_add_to_recent_list (window, window->archive_filename);
 
-		window_update_file_list (window);
 		window_update_title (window);
 		window_update_current_location (window);
+		window_update_file_list (window);
 		gtk_window_present (GTK_WINDOW (window->app));
 		break;
 
@@ -1897,7 +1896,7 @@ action_performed (FRArchive   *archive,
 	case FR_ACTION_ADDING_FILES:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			window_archive_reload (window);
-			break;
+			return;
 		}
 
 		if (window->archive_new) {
@@ -1907,26 +1906,16 @@ action_performed (FRArchive   *archive,
 			window_add_to_recent_list (window, window->archive_filename);
 		}
 
-		if (window->adding_dropped_files) {
-			/* continue adding dropped files. */
-			drag_drop_add_file_list (window);
+		window_add_to_recent_list (window, window->archive_filename);
+		if (! window->batch_mode) {
+			window_archive_reload (window);
 			return;
-
-		} else {
-			window_add_to_recent_list (window, window->archive_filename);
-
-			if (! window->batch_mode) {
-				window_archive_reload (window);
-				return;
-			}
 		}
 		break;
 
 	case FR_ACTION_TESTING_ARCHIVE:
-		if (error->type != FR_PROC_ERROR_NONE)
-			break;
-
-		window_view_last_output (window, _("Test Result"));
+		if (error->type == FR_PROC_ERROR_NONE)
+			window_view_last_output (window, _("Test Result"));
 		return;
 
 	case FR_ACTION_EXTRACTING_FILES:
@@ -1962,7 +1951,7 @@ action_performed (FRArchive   *archive,
 		break;
 	}
 
-	if (! window->batch_mode) {
+	if (window->batch_action == NULL) {
 		window_update_sensitivity (window);
 		window_update_statusbar_list_info (window);
 	}
@@ -1971,7 +1960,7 @@ action_performed (FRArchive   *archive,
 		if (error->type != FR_PROC_ERROR_NONE)
 			window_batch_mode_stop (window);
 
-		else if (window->batch_mode) {
+		else if (window->batch_action != NULL) {
 			window->batch_action = g_list_next (window->batch_action);
 			window_batch_start_current_action (window);
 		}
@@ -2275,224 +2264,6 @@ get_uri_list_from_selection_data (char *uri_list)
 
 
 static gboolean
-all_files_in_same_dir (GList *list)
-{
-	gboolean  same_dir = TRUE;
-	char     *first_basedir;
-	GList    *scan;
-
-	if (list == NULL)
-		return FALSE;
-
-	first_basedir = remove_level_from_path (list->data);
-	if (first_basedir == NULL)
-		return TRUE;
-
-	for (scan = list->next; scan; scan = scan->next) {
-		char *path = scan->data;
-		char *basedir;
-
-		basedir = remove_level_from_path (path);
-		if (basedir == NULL) {
-			same_dir = FALSE;
-			break;
-		}
-
-		if (strcmp (first_basedir, basedir) != 0) {
-			same_dir = FALSE;
-			g_free (basedir);
-			break;
-		}
-		g_free (basedir);
-	}
-	g_free (first_basedir);
-
-	return same_dir;
-}
-
-
-static void
-drag_drop_add_file_list (FRWindow *window)
-{
-	GList     *list = window->dropped_file_list;
-	FRArchive *archive = window->archive;
-	GList     *scan;
-
-	if (window->activity_ref > 0)
-		return;
-
-	/**/
-
-	if (window->archive->read_only) {
-		GtkWidget *dialog;
-
-		dialog = _gtk_message_dialog_new (NULL,
-						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not add the files to the archive"),
-						  _("You don't have the right permissions."),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-		window->adding_dropped_files = FALSE;
-
-		if (window->batch_mode) {
-			window_archive_close (window);
-			window_update_sensitivity (window);
-			window_update_statusbar_list_info (window);
-			window_batch_mode_stop (window);
-		}
-
-		return;
-	}
-
-	if (list == NULL) {
-		window->adding_dropped_files = FALSE;
-		if (! window->batch_mode)
-			window_archive_reload (window);
-		else {
-			window->batch_action = g_list_next (window->batch_action);
-			window_batch_start_current_action (window);
-		}
-		return;
-	}
-
-	for (scan = list; scan; scan = scan->next) {
-		if (uricmp (scan->data, window->archive_filename) == 0) {
-			GtkWidget *dialog;
-
-			window->adding_dropped_files = FALSE;
-			dialog = _gtk_message_dialog_new (NULL,
-							  GTK_DIALOG_DESTROY_WITH_PARENT,
-							  GTK_STOCK_DIALOG_ERROR,
-							  _("Could not add the files to the archive"),
-							  _("You can't add an archive to itself."),
-							  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-							  NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-			gtk_dialog_run (GTK_DIALOG (dialog));
-			gtk_widget_destroy (GTK_WIDGET (dialog));
-
-			if (window->batch_mode) {
-				window_archive_close (window);
-				window_update_sensitivity (window);
-				window_update_statusbar_list_info (window);
-				window_batch_mode_stop (window);
-			}
-
-			return;
-		}
-	}
-
-	/* add directories. */
-
-	/* if all files/dirs are in the same directory call window_archive_add_items... */
-
-	if (all_files_in_same_dir (list)) {
-		char *first_base_dir;
-
-		window->dropped_file_list = NULL;
-
-		first_base_dir = remove_level_from_path (list->data);
-		window_archive_add_items (window,
-					  list,
-					  first_base_dir,
-					  NULL,
-					  window->update_dropped_files,
-					  window->password,
-					  window->compression);
-
-		path_list_free (list);
-		g_free (first_base_dir);
-
-		return;
-	}
-
-	/* ...else add a directory at a time. */
-
-	for (scan = list; scan; scan = scan->next) {
-		char *path = scan->data;
-		char *base_dir;
-
-		if (! path_is_dir (path))
-			continue;
-
-		window->dropped_file_list = g_list_remove_link (list, scan);
-		window->adding_dropped_files = TRUE;
-		base_dir = remove_level_from_path (path);
-
-		window_archive_add_directory (window,
-					      file_name_from_path (path),
-					      base_dir,
-					      NULL,
-					      window->update_dropped_files,
-					      window->password,
-					      window->compression);
-
-		g_free (base_dir);
-		g_free (path);
-		return;
-	}
-
-	/* if all files are in the same directory call fr_archive_add_files. */
-
-	if (all_files_in_same_dir (list)) {
-		char  *first_basedir;
-		GList *only_names_list = NULL;
-
-		first_basedir = remove_level_from_path (list->data);
-
-		for (scan = list; scan; scan = scan->next)
-			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
-
-		fr_archive_add_files (archive,
-				      only_names_list,
-				      first_basedir,
-				      window_get_current_location (window),
-				      window->update_dropped_files,
-				      window->password,
-				      window->compression);
-
-		g_list_free (only_names_list);
-		g_free (first_basedir);
-
-		return;
-	}
-
-	/* ...else call fr_command_add for each file.  This is needed to add
-	 * files without path info. */
-
-	fr_archive_stoppable (archive, FALSE);
-
-	fr_process_clear (archive->process);
-	fr_command_uncompress (archive->command);
-	for (scan = list; scan; scan = scan->next) {
-		char  *fullpath = scan->data;
-		char  *basedir;
-		GList *singleton;
-
-		basedir = remove_level_from_path (fullpath);
-		singleton = g_list_prepend (NULL, shell_escape (file_name_from_path (fullpath)));
-		fr_command_add (archive->command,
-				singleton,
-				basedir,
-				window->update_dropped_files,
-				window->password,
-				window->compression);
-		path_list_free (singleton);
-		g_free (basedir);
-	}
-	fr_command_recompress (archive->command, window->compression);
-	fr_process_start (archive->process);
-
-	path_list_free (window->dropped_file_list);
-	window->dropped_file_list = NULL;
-}
-
-
-static gboolean
 window_drag_motion (GtkWidget      *widget,
 		    GdkDragContext *drag_context,
 		    gint            x,
@@ -2561,11 +2332,6 @@ window_drag_data_received  (GtkWidget          *widget,
  		return;
 	}
 
-	if (window->dropped_file_list != NULL)
-		path_list_free (window->dropped_file_list);
-	window->dropped_file_list = list;
-	window->update_dropped_files = FALSE;
-
 	one_file = (list->next == NULL);
 	if (one_file)
 		is_an_archive = fr_archive_utils__file_is_archive (list->data);
@@ -2597,22 +2363,15 @@ window_drag_data_received  (GtkWidget          *widget,
 			r = gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
-			if (r == 0) { /* Add */
-				/* this way we do not free the list saved in
-				 * window->dropped_file_list. */
-				list = NULL;
-				drag_drop_add_file_list (window);
-
-			} else if (r == 1) { /* Open */
+			if (r == 0)  /* Add */
+				window_archive_add_dropped_items (window, list, FALSE);
+			else if (r == 1)  /* Open */
 				window_archive_open (window, list->data, GTK_WINDOW (window->app));
-			}
- 		} else {
-			/* this way we do not free the list saved in
-			 * window->dropped_file_list. */
-			list = NULL;
-			drag_drop_add_file_list (window);
-		}
-	} else {
+ 		} 
+ 		else 
+			window_archive_add_dropped_items (window, list, FALSE);
+	}
+	else {
 		if (one_file && is_an_archive)
 			window_archive_open (window, list->data, GTK_WINDOW (window->app));
 		else {
@@ -2633,20 +2392,17 @@ window_drag_data_received  (GtkWidget          *widget,
 			gtk_widget_destroy (GTK_WIDGET (d));
 
 			if (r == GTK_RESPONSE_YES) {
-				window->add_after_creation = TRUE;
-
-				/* this way we do not free the list saved in
-				 * window->dropped_file_list. */
-				list = NULL;
+				window_batch_mode_clear (window);
+				window_batch_mode_add_action (window,
+							      FR_BATCH_ACTION_ADD,
+							      list,
+							      NULL);
 				activate_action_new (NULL, window);
 			}
 		}
 	}
 
-	if (list != NULL) {
-		path_list_free (list);
-		window->dropped_file_list = NULL;
-	}
+	path_list_free (list);
 
 	debug (DEBUG_INFO, "::DragDataReceived <--\n");
 }
@@ -3327,12 +3083,15 @@ static gboolean
 window_fake_load (FRArchive *archive,
 		  gpointer   data)
 {
-	FRWindow *window = data;
+/*	FRWindow *window = data;*/
 
+	return FALSE;
+/* FIXME:
 	return (window->batch_mode
 		&& ! (window->add_after_opening && window->update_dropped_files && ! archive->command->propAddCanUpdate)
 		&& ! (window->add_after_opening && ! window->update_dropped_files && ! archive->command->propAddCanReplace)
 		&& archive->command->propCanExtractAll);
+		*/
 }
 
 
@@ -3678,10 +3437,7 @@ window_new (void)
 	window->drag_error = NULL;
 	window->drag_file_list = NULL;
 
-	window->dropped_file_list = NULL;
-	window->add_after_creation = FALSE;
-	window->add_after_opening = FALSE;
-	window->adding_dropped_files = FALSE;
+	/* window->add_after_opening = FALSE;  -- FIXME: delete */
 
 	window->batch_mode = FALSE;
 	window->batch_action_list = NULL;
@@ -4235,9 +3991,6 @@ window_close (FRWindow *window)
 	path_list_free (window->drag_file_list);
 	window->drag_file_list = NULL;
 
-	path_list_free (window->dropped_file_list);
-	window->dropped_file_list = NULL;
-
 	if (window->file_popup_menu != NULL) {
 		gtk_widget_destroy (window->file_popup_menu);
 		window->file_popup_menu = NULL;
@@ -4313,6 +4066,8 @@ window_archive_new (FRWindow   *window,
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
+		/* FIXME: emit signal DONE with error for action: FR_ACTION_CREATING_NEW_ARCHIVE */
+
 		if (window->batch_mode) {
 			window_archive_close (window);
 			window_update_sensitivity (window);
@@ -4320,10 +4075,10 @@ window_archive_new (FRWindow   *window,
 			window_batch_mode_stop (window);
 		}
 
-		window->add_after_creation = FALSE;
-
 		return FALSE;
 	}
+
+	/* FIXME: emit signal DONE for action: FR_ACTION_CREATING_ARCHIVE */
 
 	window_history_clear (window);
 	window_history_add (window, "/");
@@ -4340,10 +4095,12 @@ window_archive_new (FRWindow   *window,
 	window_update_sensitivity (window);
 	window_update_current_location (window);
 
+/* FIXME: add a batch action to implement this.
 	if (window->add_after_creation) {
 		window->add_after_creation = FALSE;
 		drag_drop_add_file_list (window);
 	}
+*/
 
 	return TRUE;
 }
@@ -4616,9 +4373,13 @@ window_archive_add_dropped_items (FRWindow *window,
 				  GList    *item_list,
 				  gboolean  update)
 {
-	window->dropped_file_list = path_list_dup (item_list);
-	window->update_dropped_files = update;
-	drag_drop_add_file_list (window);
+	fr_archive_add_dropped_items (window->archive,
+				      item_list,
+				      window_get_current_location (window),
+				      window_get_current_location (window),
+				      update,
+				      window->password,
+				      window->compression);
 }
 
 
@@ -6335,14 +6096,15 @@ window_exec_action (FRWindow                 *window,
 
 		adata = (OpenAndAddData *) action->data;
 		if (! path_is_file (adata->archive_name)) {
+			/*
 			if (window->dropped_file_list != NULL)
 				path_list_free (window->dropped_file_list);
 			window->dropped_file_list = path_list_dup (adata->file_list);
-			window->add_after_creation = TRUE;
+			*/
 			window_archive_new (window, adata->archive_name);
-
-		} else {
-			window->add_after_opening = TRUE;
+		}
+		else {
+			/*window->add_after_opening = TRUE;  -- FIXME: delete */
 			window_batch_mode_add_next_action (window,
 							   FR_BATCH_ACTION_ADD,
 							   path_list_dup (adata->file_list),
@@ -6353,12 +6115,7 @@ window_exec_action (FRWindow                 *window,
 
 	case FR_BATCH_ACTION_ADD:
 		debug (DEBUG_INFO, "[BATCH] Add\n");
-
-		if (window->dropped_file_list != NULL)
-			path_list_free (window->dropped_file_list);
-		window->dropped_file_list = path_list_dup ((GList*) action->data);
-
-		drag_drop_add_file_list (window);
+		window_archive_add_dropped_items (window, (GList*) action->data, FALSE);
 		break;
 
 	case FR_BATCH_ACTION_ADD_INTERACT:
@@ -6554,7 +6311,7 @@ window_batch_mode_add_next_action (FRWindow      *window,
 	list = window->batch_action_list;
 	current = window->batch_action;
 
-	/* insert after current */
+	/* insert after the current action */
 
 	if (current == NULL)
 		list = g_list_prepend (list, a_desc);
@@ -6691,7 +6448,8 @@ window_archive__open_extract (FRWindow   *window,
 					      FR_BATCH_ACTION_EXTRACT,
 					      extract_to_data_new (dest_dir),
 					      (GFreeFunc) extract_data_free);
-	} else
+	}
+	else
 		window_batch_mode_add_action (window,
 					      FR_BATCH_ACTION_EXTRACT_INTERACT,
 					      NULL,
@@ -6722,7 +6480,8 @@ window_archive__open_add (FRWindow   *window,
 					      FR_BATCH_ACTION_OPEN_AND_ADD,
 					      adata,
 					      (GFreeFunc) open_and_add_data_free);
-	} else
+	}
+	else
 		window_batch_mode_add_action (window,
 					      FR_BATCH_ACTION_ADD_INTERACT,
 					      file_list,

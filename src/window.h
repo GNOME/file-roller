@@ -160,12 +160,6 @@ typedef struct {
 
 	GtkActionGroup  *actions;
 
-	/*
-	EggRecentViewGtk *recent_view_menu;
-	EggRecentViewGtk *recent_view_toolbar;
-	EggRecentModel   *recent_model;
-	*/
-
 	GtkRecentManager *recent_manager;
 	GtkWidget        *recent_chooser_menu;
 	GtkWidget        *recent_chooser_toolbar;
@@ -185,18 +179,10 @@ typedef struct {
 
 	/* dropped files data */
 
-	GList *  dropped_file_list;     /* the list of dropped files. */
-	gboolean add_after_creation;    /* whether we must add dropped files
-					 * after creating an archive. */
-	gboolean add_after_opening;     /* whether we must add dropped files
+	/*gboolean add_after_opening;*/     /* whether we must add dropped files
 					 * after opening an archive. Used in
 					 * batch mode to avoid unnecessary
 					 * archive loading. */
-
-	gboolean adding_dropped_files;  /* whether we are adding dropped
-					 * files. */
-	gboolean update_dropped_files;  /* the update flag of the add
-					 * operation.  */
 
 	gboolean batch_adding_one_file;
 
