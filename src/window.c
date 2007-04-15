@@ -1774,9 +1774,18 @@ convert__action_performed (FRArchive   *archive,
 {
 	FRWindow *window = data;
 
-	window_stop_activity_mode (window);
-	window_pop_message (window);
-	close_progress_dialog (window);
+#ifdef DEBUG
+	debug (DEBUG_INFO, "%s [CONVERT::DONE] (FR::Window)\n", action_names[action]);
+#endif
+
+	if ((action == FR_ACTION_GETTING_FILE_LIST) || (action == FR_ACTION_ADDING_FILES)) {
+		window_stop_activity_mode (window);
+		window_pop_message (window);
+		close_progress_dialog (window);
+	}
+
+	if (action != FR_ACTION_ADDING_FILES)
+		return;
 
 	handle_errors (window, archive, action, error);
 

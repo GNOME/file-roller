@@ -885,7 +885,7 @@ visit_dir_async (VisitDirHandle   *handle,
 
 	vdd = g_new0 (VisitDirData, 1);
 	vdd->base_dir = g_strdup (directory);
-	vdd->directory = g_strdup (directory);
+	vdd->directory = get_uri_from_path (directory);
 	vdd->recursive = recursive;
 	vdd->include_directories = include_directories;
 	vdd->follow_links = follow_links;
@@ -913,7 +913,7 @@ visit_dir_async (VisitDirHandle   *handle,
 		handle = g_new0 (VisitDirHandle, 1);
 	handle->vdd_data = vdd;
 
-	_visit_dir_async (directory, vdd);
+	_visit_dir_async (vdd->directory, vdd);
 
 	return handle;
 }
@@ -1022,7 +1022,7 @@ get_wildcard_file_list_async  (const char       *directory,
 
 	gfl_data = g_new0 (GetFileListData, 1);
 
-	gfl_data->directory = g_strdup (directory);
+	gfl_data->directory = get_uri_from_path (directory);
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 
