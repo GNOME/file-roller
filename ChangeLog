@@ -1,5 +1,10 @@
 2007-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-archive.c (fr_archive_extract): extract if the file_list is NULL
+	and propCanExtractAll is true.
+
+2007-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
 	* src/file-utils.c (path_in_path): make it work even when a dirstocy
 	ends with a separator.
 	* src/fr-archive.c (file_is_in_subfolder_of): use path_in_path

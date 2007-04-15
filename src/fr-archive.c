@@ -2707,10 +2707,10 @@ fr_archive_extract (FRArchive  *archive,
 	    && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
 	    && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
 	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) {
-		gboolean free_filtered_list = FALSE;
+		gboolean created_filtered_list = FALSE;
 
 		if (archive_type_has_issues_extracting_non_empty_folders (archive)) {
-			free_filtered_list = TRUE;
+			created_filtered_list = TRUE;
 			filtered = NULL;
 			for (scan = file_list; scan; scan = scan->next) {
 				FileData *fdata;
@@ -2730,7 +2730,7 @@ fr_archive_extract (FRArchive  *archive,
 		else
 			filtered = file_list;
 
-		if (filtered != NULL) {
+		if (! (created_filtered_list && (filtered == NULL))) {
 			e_filtered = escape_file_list (archive->command, filtered);
 			extract_in_chunks (archive->command,
 					   e_filtered,
@@ -2739,12 +2739,11 @@ fr_archive_extract (FRArchive  *archive,
 					   skip_older,
 					   junk_paths,
 					   password);
-
 			path_list_free (e_filtered);
-
-			if (free_filtered_list)
-				g_list_free (filtered);
 		}
+
+		if (created_filtered_list && (filtered != NULL))
+			g_list_free (filtered);
 
 		if (file_list_created)
 			path_list_free (file_list);
