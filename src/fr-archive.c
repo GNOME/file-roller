@@ -2689,17 +2689,42 @@ fr_archive_extract (FRArchive  *archive,
 	    && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
 	    && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
 	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) {
-		GList *e_file_list;
 
-		e_file_list = escape_file_list (archive->command, file_list);
-		extract_in_chunks (archive->command,
-				   e_file_list,
-				   dest_dir,
-				   overwrite,
-				   skip_older,
-				   junk_paths,
-				   password);
-		path_list_free (e_file_list);
+		filtered = NULL;
+		for (scan = file_list; scan; scan = scan->next) {
+			FileData   *fdata;
+			char       *arch_filename = scan->data;
+
+			fdata = find_file_in_archive (archive, arch_filename);
+
+			if (fdata == NULL)
+				continue;
+
+			if (((archive->command->file_type == FR_FILE_TYPE_TAR)
+			     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
+			     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
+			     || (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
+			     || (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
+			     || (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS))
+			    && fdata->dir)
+			       continue;
+
+			filtered = g_list_prepend (filtered, fdata->original_path);
+		}
+
+		if (filtered != NULL) {
+			e_filtered = escape_file_list (archive->command, filtered);
+			extract_in_chunks (archive->command,
+					   e_filtered,
+					   dest_dir,
+					   overwrite,
+					   skip_older,
+					   junk_paths,
+					   password);
+
+			path_list_free (e_filtered);
+			g_list_free (filtered);
+		}
 
 		if (file_list_created)
 			path_list_free (file_list);
