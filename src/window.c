@@ -5739,7 +5739,7 @@ window_paste_selection (FRWindow *window)
 					       utf8_old_path,
 					       1024,
 					       GTK_STOCK_CANCEL,
-					       _("_Paste"));
+					       GTK_STOCK_PASTE);
 	g_free (utf8_old_path);
 	if (utf8_path == NULL)
 		return;

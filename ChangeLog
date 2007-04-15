@@ -1,5 +1,11 @@
 2007-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* data/glade/file-roller.glade: use GTK_STOCK_DELETE in the delete dialog.
+	* src/window.c (window_paste_selection): use GTK_STOCK_PASTE instead
+	of GTK_STOCK_OK.
+
+2007-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
 	* src/window.c: wait for the _ADDING_FILES action to terminate.
 	* src/file-list.c (visit_dir_async, get_wildcard_file_list_async):
 	make sure the disrectory is a uri using get_uri_from_path.
