@@ -1,5 +1,11 @@
 2007-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/file-utils.c (path_in_path): make it work even when a dirstocy
+	ends with a separator.
+	* src/fr-archive.c (file_is_in_subfolder_of): use path_in_path
+	* src/fr-archive.c (fr_archive_extract): better code to check whether
+	a folder should not be extracted.
+
 	* src/fr-archive.c (fr_archive_extract): do not extract the folders when
 	using tar archives.
 

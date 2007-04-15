@@ -185,20 +185,33 @@ dir_contains_one_object (const char *path)
 
 /* Check whether the path_src is contained in path_dest */
 gboolean
-path_in_path (const char  *path_src,
-	      const char  *path_dest)
+path_in_path (const char *dirname,
+	      const char *filename)
 {
-	int path_src_l, path_dest_l;
+	int dirname_l, filename_l, separator_position;
 
-	if ((path_src == NULL) || (path_dest == NULL))
+	if ((dirname == NULL) || (filename == NULL))
 		return FALSE;
 
-	path_src_l = strlen (path_src);
-	path_dest_l = strlen (path_dest);
+	dirname_l = strlen (dirname);
+	filename_l = strlen (filename);
 
-	return ((path_dest_l > path_src_l)
-		&& (strncmp (path_src, path_dest, path_src_l) == 0)
-		&& ((path_src_l == 1) || (path_dest[path_src_l] == '/')));
+	if ((dirname_l == filename_l + 1)
+	     && (dirname[dirname_l - 1] == '/'))
+		return FALSE;
+
+	if ((filename_l == dirname_l + 1)
+	     && (filename[filename_l - 1] == '/'))
+		return FALSE;
+
+	if (dirname[dirname_l - 1] == '/')
+		separator_position = dirname_l - 1;
+	else
+		separator_position = dirname_l;
+
+	return ((filename_l > dirname_l)
+		&& (strncmp (dirname, filename, dirname_l) == 0)
+		&& (filename[separator_position] == '/'));
 }
 
 

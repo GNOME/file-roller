@@ -2302,30 +2302,19 @@ static gboolean
 file_is_in_subfolder_of (const char *filename,
 			 GList      *folder_list)
 {
-	gboolean  is_subfolder = FALSE;
-	int       filename_len;
-	GList    *scan;
+	GList *scan;
 
 	if (filename == NULL)
 		return FALSE;
 
-	filename_len = strlen (filename);
-
 	for (scan = folder_list; scan; scan = scan->next) {
 		char *folder_in_list = (char*) scan->data;
-		int   folder_in_list_len;
 
-		folder_in_list_len = strlen (folder_in_list);
-		if (filename_len <= folder_in_list_len)
-			continue;
-
-		if (strncmp (filename, folder_in_list, folder_in_list_len) == 0) {
-			is_subfolder = TRUE;
-			break;
-		}
+		if (path_in_path (folder_in_list, filename))
+			return TRUE;
 	}
 
-	return is_subfolder;
+	return FALSE;
 }
 
 
@@ -2641,6 +2630,35 @@ compute_list_base_path (const char *base_dir,
 }
 
 
+static gboolean
+archive_type_has_issues_extracting_non_empty_folders (FRArchive *archive)
+{
+	return ((archive->command->file_type == FR_FILE_TYPE_TAR)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS));
+}
+
+
+static gboolean
+file_list_contains_files_in_this_dir (GList      *file_list,
+				      const char *dirname)
+{
+	GList *scan;
+
+	for (scan = file_list; scan; scan = scan->next) {
+		char *filename = scan->data;
+
+		if (path_in_path (dirname, filename))
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 /* Note : All paths unescaped.
  * Note2: Do not escape dest_dir it will escaped in fr_command_extract if
  *        needed. */
@@ -2689,28 +2707,28 @@ fr_archive_extract (FRArchive  *archive,
 	    && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
 	    && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
 	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) {
+		gboolean free_filtered_list = FALSE;
 
-		filtered = NULL;
-		for (scan = file_list; scan; scan = scan->next) {
-			FileData   *fdata;
-			char       *arch_filename = scan->data;
+		if (archive_type_has_issues_extracting_non_empty_folders (archive)) {
+			free_filtered_list = TRUE;
+			filtered = NULL;
+			for (scan = file_list; scan; scan = scan->next) {
+				FileData *fdata;
+				char     *archive_list_filename = scan->data;
 
-			fdata = find_file_in_archive (archive, arch_filename);
+				fdata = find_file_in_archive (archive, archive_list_filename);
 
-			if (fdata == NULL)
-				continue;
+				if (fdata == NULL)
+					continue;
 
-			if (((archive->command->file_type == FR_FILE_TYPE_TAR)
-			     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
-			     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
-			     || (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
-			     || (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
-			     || (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS))
-			    && fdata->dir)
-			       continue;
+				if (fdata->dir && file_list_contains_files_in_this_dir (file_list, archive_list_filename))
+					continue;
 
-			filtered = g_list_prepend (filtered, fdata->original_path);
+				filtered = g_list_prepend (filtered, fdata->original_path);
+			}
 		}
+		else
+			filtered = file_list;
 
 		if (filtered != NULL) {
 			e_filtered = escape_file_list (archive->command, filtered);
@@ -2723,7 +2741,9 @@ fr_archive_extract (FRArchive  *archive,
 					   password);
 
 			path_list_free (e_filtered);
-			g_list_free (filtered);
+
+			if (free_filtered_list)
+				g_list_free (filtered);
 		}
 
 		if (file_list_created)
@@ -2753,30 +2773,26 @@ fr_archive_extract (FRArchive  *archive,
 	filtered = NULL;
 	for (scan = file_list; scan; scan = scan->next) {
 		FileData   *fdata;
-		char       *arch_filename = scan->data;
+		char       *archive_list_filename = scan->data;
 		char        dest_filename[4096];
 		const char *filename;
 
-		fdata = find_file_in_archive (archive, arch_filename);
+		fdata = find_file_in_archive (archive, archive_list_filename);
 
 		if (fdata == NULL)
 			continue;
 
-		if (((archive->command->file_type == FR_FILE_TYPE_TAR)
-		     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
-		     || (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
-		     || (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
-		     || (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
-		     || (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS))
-		    && fdata->dir)
+		if (archive_type_has_issues_extracting_non_empty_folders (archive)
+		    && fdata->dir
+		    && file_list_contains_files_in_this_dir (file_list, archive_list_filename))
 			continue;
 
 		/* get the destination file path. */
 
 		if (! junk_paths)
-			filename = arch_filename;
+			filename = archive_list_filename;
 		else
-			filename = file_name_from_path (arch_filename);
+			filename = file_name_from_path (archive_list_filename);
 
 		if ((dest_dir[strlen (dest_dir) - 1] == '/')
 		    || (filename[0] == '/'))
