@@ -90,6 +90,10 @@ void        fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
 void        fr_archive_stoppable                 (FRArchive     *archive,
 						  gboolean       stoppable);
 void        fr_archive_stop	                 (FRArchive     *archive);
+void        fr_archive_action_completed          (FRArchive       *archive,
+						  FRAction         action,
+						  FRProcErrorType  error_type,
+						  const char      *error_details);
 
 /**/
 

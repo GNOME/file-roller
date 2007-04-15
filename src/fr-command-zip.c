@@ -55,9 +55,9 @@ mktime_from_string (char *datetime_s)
 	char      *year;
 	char      *month;
 	char      *day;
-        char      *hour;
-        char      *min;
-        char      *sec;
+	char      *hour;
+	char      *min;
+	char      *sec;
 
 	/* date */
 
@@ -102,7 +102,7 @@ fr_command_zip_escape (FRCommand     *comm,
 	g_free (estr);
 
 	return estr2;
-	
+
 }
 
 
@@ -116,9 +116,9 @@ zip_escape (const char *str)
 static char*
 prepend_path_separator (const char *str)
 {
-	if (*str == '-' || g_str_has_prefix (str, "\\-")) 
+	if (*str == '-' || g_str_has_prefix (str, "\\-"))
 		return g_strconcat (".", G_DIR_SEPARATOR_S, str, NULL);
-	else 
+	else
 		return g_strdup (str);
 }
 
@@ -131,13 +131,13 @@ prepend_path_separator_zip_escape (const char *str)
 	tmp2 = prepend_path_separator (str);
 	tmp1 = zip_escape (tmp2);
 	g_free (tmp2);
-	
+
 	return tmp1;
 }
 
 
 static void
-list__process_line (char     *line, 
+list__process_line (char     *line,
 		    gpointer  data)
 {
 	FileData    *fdata;
@@ -199,8 +199,8 @@ list__process_line (char     *line,
 	else
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
-	
-	
+
+
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
@@ -209,7 +209,7 @@ list__process_line (char     *line,
 
 
 static void
-add_filename_arg (FRCommand *comm) 
+add_filename_arg (FRCommand *comm)
 {
 	char *temp = prepend_path_separator (comm->e_filename);
 	fr_process_add_arg (comm->process, temp);
@@ -247,7 +247,7 @@ fr_command_zip_list (FRCommand  *comm,
 {
 	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
 				      comm);
 
@@ -260,7 +260,7 @@ fr_command_zip_list (FRCommand  *comm,
 
 
 static void
-process_line__common (char     *line, 
+process_line__common (char     *line,
 		      gpointer  data)
 {
 	FRCommand  *comm = FR_COMMAND (data);
@@ -287,13 +287,13 @@ fr_command_zip_add (FRCommand     *comm,
 {
 	GList *scan;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line__common,
 				      comm);
 
 	fr_process_begin_command (comm->process, "zip");
 
-	if (base_dir != NULL) 
+	if (base_dir != NULL)
 		fr_process_set_working_dir (comm->process, base_dir);
 
 	/* preserve links. */
@@ -333,7 +333,7 @@ fr_command_zip_delete (FRCommand *comm,
 {
 	GList *scan;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line__common,
 				      comm);
 
@@ -362,12 +362,12 @@ fr_command_zip_extract (FRCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line__common,
 				      comm);
 
 	fr_process_begin_command (comm->process, "unzip");
-	
+
 	if (dest_dir != NULL) {
 		char *e_dest_dir = fr_command_escape (comm, dest_dir);
 		fr_process_add_arg (comm->process, "-d");
@@ -413,10 +413,10 @@ fr_command_zip_test (FRCommand   *comm,
 
 
 static void
-fr_command_zip_handle_error (FRCommand   *comm, 
+fr_command_zip_handle_error (FRCommand   *comm,
 			     FRProcError *error)
 {
-	if (error->type == FR_PROC_ERROR_GENERIC) {
+	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
 		if (error->status <= 1)
 			error->type = FR_PROC_ERROR_NONE;
 		else if ((error->status == 82) || (error->status == 5))
@@ -425,18 +425,18 @@ fr_command_zip_handle_error (FRCommand   *comm,
 }
 
 
-static void 
+static void
 fr_command_zip_class_init (FRCommandZipClass *class)
 {
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
+	FRCommandClass *afc;
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 	afc = (FRCommandClass*) class;
 
 	gobject_class->finalize = fr_command_zip_finalize;
 
-        afc->list           = fr_command_zip_list;
+	afc->list           = fr_command_zip_list;
 	afc->add            = fr_command_zip_add;
 	afc->delete         = fr_command_zip_delete;
 	afc->extract        = fr_command_zip_extract;
@@ -446,14 +446,14 @@ fr_command_zip_class_init (FRCommandZipClass *class)
 	afc->escape         = fr_command_zip_escape;
 }
 
- 
-static void 
+
+static void
 fr_command_zip_init (FRCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_ZIP;
 
-	comm->propAddCanUpdate             = TRUE; 
-	comm->propAddCanReplace            = TRUE; 
+	comm->propAddCanUpdate             = TRUE;
+	comm->propAddCanReplace            = TRUE;
 	comm->propExtractCanAvoidOverwrite = TRUE;
 	comm->propExtractCanSkipOlder      = TRUE;
 	comm->propExtractCanJunkPaths      = TRUE;
@@ -464,14 +464,14 @@ fr_command_zip_init (FRCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_zip_finalize (GObject *object)
 {
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_ZIP (object));
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND_ZIP (object));
 
 	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
+	if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -479,10 +479,10 @@ fr_command_zip_finalize (GObject *object)
 GType
 fr_command_zip_get_type ()
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
+	if (! type) {
+		GTypeInfo type_info = {
 			sizeof (FRCommandZipClass),
 			NULL,
 			NULL,
@@ -498,9 +498,9 @@ fr_command_zip_get_type ()
 					       "FRCommandZip",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 

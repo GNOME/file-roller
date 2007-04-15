@@ -157,6 +157,7 @@ file_sel_response_cb (GtkWidget    *widget,
 		const char *folder = (char*) item_list->data;
 		const char *include_files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
 		const char *exclude_files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
+		char       *dest_uri;
 		char       *dest_dir;
 
 		if (utf8_only_spaces (include_files))
@@ -164,10 +165,11 @@ file_sel_response_cb (GtkWidget    *widget,
 		if (utf8_only_spaces (exclude_files))
 			exclude_files = NULL;
 
-		dest_dir = g_build_path (G_DIR_SEPARATOR_S,
+		dest_uri = g_build_path (G_DIR_SEPARATOR_S,
 					 window_get_current_location (window),
 					 file_name_from_path (folder),
 					 NULL);
+		dest_dir = get_local_path_from_uri (dest_uri);
 
 		window_archive_add_with_wildcard (window,
 						  include_files,
@@ -181,6 +183,7 @@ file_sel_response_cb (GtkWidget    *widget,
 						  window->compression);
 
 		g_free (dest_dir);
+		g_free (dest_uri);
 	}
 
 	g_list_free (item_list);
@@ -235,7 +238,7 @@ include_subfold_toggled_cb (GtkWidget *widget,
 			    gpointer   callback_data)
 {
 	DialogData *data = callback_data;
-	
+
 	gtk_widget_set_sensitive (data->exclude_symlinks,
 				  GTK_TOGGLE_BUTTON (widget)->active);
 

@@ -90,10 +90,10 @@ fr_command_info_free (FRCommandInfo * c_info)
 GType
 fr_process_get_type (void)
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
+	if (! type) {
+		GTypeInfo type_info = {
 			sizeof (FRProcessClass),
 			NULL,
 			NULL,
@@ -103,24 +103,24 @@ fr_process_get_type (void)
 			sizeof (FRProcess),
 			0,
 			(GInstanceInitFunc) fr_process_init
-                };
+		};
 
 		type = g_type_register_static (G_TYPE_OBJECT,
 					       "FRProcess",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 
 static void
 fr_process_class_init (FRProcessClass *class)
 {
-        GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 
 	fr_process_signals[START] =
 		g_signal_new ("start",
@@ -150,8 +150,8 @@ fr_process_class_init (FRProcessClass *class)
 
 	gobject_class->finalize = fr_process_finalize;
 
-        class->start = NULL;
-        class->done  = NULL;
+	class->start = NULL;
+	class->done  = NULL;
 }
 
 
@@ -210,7 +210,7 @@ fr_process_finalize (GObject *object)
 	FRProcess *fr_proc;
 
 	g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_PROCESS (object));
+	g_return_if_fail (FR_IS_PROCESS (object));
 
 	fr_proc = FR_PROCESS (object);
 
@@ -238,7 +238,7 @@ fr_process_finalize (GObject *object)
 
 	/* Chain up */
 
-        if (G_OBJECT_CLASS (parent_class)->finalize)
+	if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -728,18 +728,19 @@ check_child (gpointer data)
 	if (c_info->ignore_error) {
 		fr_proc->error.type = FR_PROC_ERROR_NONE;
 		debug (DEBUG_INFO, "[ignore error]\n");
-
-	} else if (fr_proc->error.type != FR_PROC_ERROR_STOPPED) {
+	}
+	else if (fr_proc->error.type != FR_PROC_ERROR_STOPPED) {
 		if (WIFEXITED (status)) {
 			if (WEXITSTATUS (status) == 0)
 				fr_proc->error.type = FR_PROC_ERROR_NONE;
 			else if (WEXITSTATUS (status) == 255)
 				fr_proc->error.type = FR_PROC_ERROR_COMMAND_NOT_FOUND;
 			else {
-				fr_proc->error.type = FR_PROC_ERROR_GENERIC;
+				fr_proc->error.type = FR_PROC_ERROR_COMMAND_ERROR;
 				fr_proc->error.status = WEXITSTATUS (status);
 			}
-		} else
+		}
+		else
 			fr_proc->error.type = FR_PROC_ERROR_EXITED_ABNORMALLY;
 	}
 

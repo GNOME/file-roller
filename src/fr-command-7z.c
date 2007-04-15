@@ -46,7 +46,7 @@ static FRCommandClass *parent_class = NULL;
 
 
 static time_t
-mktime_from_string (char *date_s, 
+mktime_from_string (char *date_s,
 		    char *time_s)
 {
 	struct tm   tm = {0, };
@@ -85,7 +85,7 @@ static void
 change_to_unix_dir_separator (char *path)
 {
 	char *c;
-	
+
 	for (c = path; *c != 0; c++)
 		if ((*c == '\\') && (*(c+1) != '\\'))
 			*c = '/';
@@ -100,7 +100,7 @@ to_dos (const char *path)
 */
 
 static int
-str_rfind (const char *str, 
+str_rfind (const char *str,
 	   int         c)
 {
 	char *tmp = strrchr (str, c);
@@ -109,7 +109,7 @@ str_rfind (const char *str,
 
 
 static void
-list__process_line (char     *line, 
+list__process_line (char     *line,
 		    gpointer  data)
 {
 	FRCommand   *comm = FR_COMMAND (data);
@@ -150,13 +150,13 @@ list__process_line (char     *line,
 	}
 
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
-	fdata->modified = mktime_from_string (fields[0], fields[1]); 
+	fdata->modified = mktime_from_string (fields[0], fields[1]);
 	g_strfreev (fields);
 
 	name_field = g_strdup (line + p7z_comm->name_index);
 
 	/*change_to_unix_dir_separator (name_field);*/
-	
+
 	if (*name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
 		fdata->original_path = fdata->full_path;
@@ -167,7 +167,7 @@ list__process_line (char     *line,
 	g_free (name_field);
 
 	fdata->link = NULL;
-		
+
 	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
 
@@ -191,7 +191,7 @@ static void
 fr_command_7z_list (FRCommand  *comm,
 		    const char *password)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
 				      comm);
 
@@ -217,7 +217,7 @@ fr_command_7z_add (FRCommand     *comm,
 
 	fr_command_7z_begin_command (comm);
 
-	if (base_dir != NULL) { 
+	if (base_dir != NULL) {
 		char *working_dir;
 		fr_process_set_working_dir (comm->process, base_dir);
 		working_dir = g_strconcat ("-w", base_dir, NULL);
@@ -298,7 +298,7 @@ fr_command_7z_extract (FRCommand  *comm,
 
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-	
+
 	if (dest_dir != NULL) {
 		char *e_dest_dir = fr_command_escape (comm, dest_dir);
 		char *opt = g_strconcat ("-o", e_dest_dir, NULL);
@@ -332,28 +332,28 @@ fr_command_7z_test (FRCommand   *comm,
 
 
 static void
-fr_command_7z_handle_error (FRCommand   *comm, 
+fr_command_7z_handle_error (FRCommand   *comm,
 			    FRProcError *error)
 {
-	if (error->type == FR_PROC_ERROR_GENERIC) {
+	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
 		if (error->status <= 1)
 			error->type = FR_PROC_ERROR_NONE;
 	}
 }
 
 
-static void 
+static void
 fr_command_7z_class_init (FRCommand7zClass *class)
 {
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
+	FRCommandClass *afc;
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 	afc = (FRCommandClass*) class;
 
 	gobject_class->finalize = fr_command_7z_finalize;
 
-        afc->list           = fr_command_7z_list;
+	afc->list           = fr_command_7z_list;
 	afc->add            = fr_command_7z_add;
 	afc->delete         = fr_command_7z_delete;
 	afc->extract        = fr_command_7z_extract;
@@ -361,14 +361,14 @@ fr_command_7z_class_init (FRCommand7zClass *class)
 	afc->handle_error   = fr_command_7z_handle_error;
 }
 
- 
-static void 
+
+static void
 fr_command_7z_init (FRCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_7ZIP;
 
-	comm->propAddCanUpdate             = TRUE; 
-	comm->propAddCanReplace            = TRUE; 
+	comm->propAddCanUpdate             = TRUE;
+	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
@@ -378,14 +378,14 @@ fr_command_7z_init (FRCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_7z_finalize (GObject *object)
 {
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_7Z (object));
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND_7Z (object));
 
 	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
+	if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -393,10 +393,10 @@ fr_command_7z_finalize (GObject *object)
 GType
 fr_command_7z_get_type ()
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
+	if (! type) {
+		GTypeInfo type_info = {
 			sizeof (FRCommand7zClass),
 			NULL,
 			NULL,
@@ -412,9 +412,9 @@ fr_command_7z_get_type ()
 					       "FRCommand7z",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 
@@ -424,7 +424,7 @@ fr_command_7z_new (FRProcess  *process,
 {
 	FRCommand *comm;
 
-	if (! is_program_in_path("7za") 
+	if (! is_program_in_path("7za")
 	    && ! is_program_in_path("7zr")
 	    && ! is_program_in_path("7z")) { 
 		return NULL;

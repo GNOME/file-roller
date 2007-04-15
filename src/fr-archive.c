@@ -293,27 +293,6 @@ fr_archive_stoppable (FRArchive *archive,
 }
 
 
-static void
-fr_archive_action_completed (FRArchive       *archive,
-			     FRAction         action,
-			     FRProcErrorType  error_type,
-			     const char      *error_details)
-{
-	archive->error.type = error_type;
-	archive->error.status = 0;
-	g_clear_error (&archive->error.gerror);
-	if (error_details != NULL)
-		archive->error.gerror = g_error_new (fr_error_quark (),
-						     0,
-						     error_details);
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[DONE],
-		       0,
-		       action,
-		       &archive->error);
-}
-
-
 void
 fr_archive_stop (FRArchive *archive)
 {
@@ -334,6 +313,27 @@ fr_archive_stop (FRArchive *archive)
 					     FR_PROC_ERROR_STOPPED,
 					     NULL);
 	}
+}
+
+
+void
+fr_archive_action_completed (FRArchive       *archive,
+			     FRAction         action,
+			     FRProcErrorType  error_type,
+			     const char      *error_details)
+{
+	archive->error.type = error_type;
+	archive->error.status = 0;
+	g_clear_error (&archive->error.gerror);
+	if (error_details != NULL)
+		archive->error.gerror = g_error_new (fr_error_quark (),
+						     0,
+						     error_details);
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[DONE],
+		       0,
+		       action,
+		       &archive->error);
 }
 
 
@@ -808,7 +808,6 @@ action_started (FRCommand *command,
 		FRArchive *archive)
 {
 #ifdef DEBUG
-	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
 	debug (DEBUG_INFO, "%s [START] (FR::Archive)\n", action_names[action]);
 #endif
 
@@ -929,7 +928,6 @@ action_performed (FRCommand   *command,
 		  FRArchive   *archive)
 {
 #ifdef DEBUG
-	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
 	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", action_names[action]);
 #endif
 
@@ -1695,38 +1693,53 @@ copy_remote_files (FRArchive     *archive,
 	GList          *scan;
 	XferData       *xfer_data;
 	GnomeVFSResult  result;
+	GHashTable     *created_folders;
 
 	if (archive->priv->xfer_handle != NULL)
 		gnome_vfs_async_cancel (archive->priv->xfer_handle);
+
+	created_folders = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, NULL);
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *partial_filename = scan->data;
 		char *remote_uri;
 		char *local_uri;
+		char *local_folder_uri;
 
-		remote_uri = g_strconcat (base_uri, "/", partial_filename, NULL);
 		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
 
-		result = make_tree (local_uri);
-		if (result != GNOME_VFS_OK) {
-			g_free (remote_uri);
-			g_free (local_uri);
-			gnome_vfs_uri_list_free (source_uri_list);
-			gnome_vfs_uri_list_free (target_uri_list);
+		local_folder_uri = remove_level_from_path (local_uri);
+		if (g_hash_table_lookup (created_folders, local_folder_uri) == NULL) {
+			result = make_tree (local_uri);
+			if (result != GNOME_VFS_OK) {
+				g_free (local_folder_uri);
+				g_free (local_uri);
+				gnome_vfs_uri_list_free (source_uri_list);
+				gnome_vfs_uri_list_free (target_uri_list);
+				g_hash_table_destroy (created_folders);
 
-			fr_archive_action_completed (archive,
-						     FR_ACTION_COPYING_FILES_FROM_REMOTE,
-						     FR_PROC_ERROR_GENERIC,
-						     gnome_vfs_result_to_string (result));
-			return;
+				fr_archive_action_completed (archive,
+							     FR_ACTION_COPYING_FILES_FROM_REMOTE,
+							     FR_PROC_ERROR_GENERIC,
+							     gnome_vfs_result_to_string (result));
+				return;
+			}
+
+			g_hash_table_insert (created_folders, local_folder_uri, GINT_TO_POINTER (1));
 		}
+		else
+			g_free (local_folder_uri);
 
-		source_uri = gnome_vfs_uri_new (remote_uri);
 		target_uri = gnome_vfs_uri_new (local_uri);
+
+		remote_uri = g_strconcat (base_uri, "/", partial_filename, NULL);
+		source_uri = gnome_vfs_uri_new (remote_uri);
 
 		source_uri_list = g_list_append (source_uri_list, source_uri);
 		target_uri_list = g_list_append (target_uri_list, target_uri);
 	}
+
+	g_hash_table_destroy (created_folders);
 
 	xfer_data = g_new0 (XferData, 1);
 	xfer_data->archive = archive;
@@ -2256,7 +2269,7 @@ fr_archive_add_dropped_items (FRArchive     *archive,
 		return;
 	}
 
-/* FIXME: make this check for the add actions
+/* FIXME: make this check for all the add actions
 	for (scan = item_list; scan; scan = scan->next) {
 		if (uricmp (scan->data, archive->uri) == 0) {
 			fr_archive_action_completed (archive,
@@ -2285,14 +2298,47 @@ fr_archive_add_dropped_items (FRArchive     *archive,
 /* -- remove -- */
 
 
+static gboolean
+file_is_in_subfolder_of (const char *filename,
+			 GList      *folder_list)
+{
+	gboolean  is_subfolder = FALSE;
+	int       filename_len;
+	GList    *scan;
+
+	if (filename == NULL)
+		return FALSE;
+
+	filename_len = strlen (filename);
+
+	for (scan = folder_list; scan; scan = scan->next) {
+		char *folder_in_list = (char*) scan->data;
+		int   folder_in_list_len;
+
+		folder_in_list_len = strlen (folder_in_list);
+		if (filename_len <= folder_in_list_len)
+			continue;
+
+		if (strncmp (filename, folder_in_list, folder_in_list_len) == 0) {
+			is_subfolder = TRUE;
+			break;
+		}
+	}
+
+	return is_subfolder;
+}
+
+
 /* Note: all paths unescaped. */
 static void
 archive_remove (FRArchive *archive,
 		GList     *file_list)
 {
 	gboolean  file_list_created = FALSE;
+	GList    *tmp_file_list;
 	GList    *e_file_list;
 	GList    *scan;
+	GList    *folders_to_remove;
 
 	/* file_list == NULL means delete all files in archive. */
 
@@ -2304,9 +2350,35 @@ archive_remove (FRArchive *archive,
 		file_list_created = TRUE;
 	}
 
-	e_file_list = escape_file_list (archive->command, file_list);
-	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
+	/* remove from the list the files in folders to be removed. */
 
+	folders_to_remove = NULL;
+	for (scan = file_list; scan != NULL; scan = scan->next) {
+		char *path = scan->data;
+
+		if (path[strlen (path) - 1] == '/')
+			folders_to_remove = g_list_prepend (folders_to_remove, path);
+	}
+
+	tmp_file_list = NULL;
+	for (scan = file_list; scan != NULL; scan = scan->next) {
+		char *path = scan->data;
+
+		if (! file_is_in_subfolder_of (path, folders_to_remove))
+			tmp_file_list = g_list_prepend (tmp_file_list, path);
+	}
+
+	g_list_free (folders_to_remove);
+	if (file_list_created)
+		g_list_free (file_list);
+
+	/* shell-escape the file list, and split in chunks to avoid
+	 * command line overflow */
+
+	e_file_list = escape_file_list (archive->command, tmp_file_list);
+	g_list_free (tmp_file_list);
+
+	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
 	for (scan = e_file_list; scan != NULL; ) {
 		GList *prev = scan->prev;
 		GList *chunk_list;
@@ -2327,9 +2399,6 @@ archive_remove (FRArchive *archive,
 		fr_command_delete (archive->command, chunk_list);
 		prev->next = scan;
 	}
-
-	if (file_list_created)
-		g_list_free (file_list);
 	path_list_free (e_file_list);
 }
 

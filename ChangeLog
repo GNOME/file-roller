@@ -1,3 +1,24 @@
+2007-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/window.c:
+	* src/typedefs.h:
+	* src/gtk-utils.c:
+	* src/fr-process.c:
+	* src/fr-command-zip.c:
+	* src/fr-command-unstuff.c:
+	* src/fr-command-rar.c:
+	* src/fr-command-arj.c:
+	* src/fr-command-7z.c:
+	* src/fr-command.h:
+	* src/fr-command.c:
+	* src/fr-archive.h:
+	* src/fr-archive.c:
+	* src/dlg-add-folder.c (file_sel_response_cb): unescape the dest_dir
+	before calling add_with_wildcard.
+	Renamed FR_PROC_ERROR_GENERIC as FR_PROC_ERROR_COMMAND_ERROR, use
+	FR_PROC_ERROR_GENERIC for vfs errores.
+	Fixed archive_remove when removing folders from the archive.
+
 2007-04-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/window.h:

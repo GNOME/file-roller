@@ -1255,6 +1255,9 @@ get_message_from_action (FRAction action)
 	char *message = "";
 
 	switch (action) {
+	case FR_ACTION_CREATING_NEW_ARCHIVE:
+		message = _("Creating archive");
+		break;
 	case FR_ACTION_LOADING_ARCHIVE:
 		message = _("Loading archive");
 		break;
@@ -1264,17 +1267,23 @@ get_message_from_action (FRAction action)
 	case FR_ACTION_DELETING_FILES:
 		message = _("Deleting files from archive");
 		break;
+	case FR_ACTION_TESTING_ARCHIVE:
+		message = _("Testing archive");
+		break;
+	case FR_ACTION_GETTING_FILE_LIST:
+		message = _("Getting the file list");
+		break;
+	case FR_ACTION_COPYING_FILES_FROM_REMOTE:
+		message = _("Copying the file list");
+		break;
 	case FR_ACTION_ADDING_FILES:
 		message = _("Adding files to archive");
 		break;
 	case FR_ACTION_EXTRACTING_FILES:
 		message = _("Extracting files from archive");
 		break;
-	case FR_ACTION_TESTING_ARCHIVE:
-		message = _("Testing archive");
-		break;
-	case FR_ACTION_GETTING_FILE_LIST:
-		message = _("Getting the file list");
+	case FR_ACTION_COPYING_FILES_TO_REMOTE:
+		message = _("Copying the file list");
 		break;
 	case FR_ACTION_CREATING_ARCHIVE:
 		message = _("Creating archive");
@@ -1324,7 +1333,8 @@ window_message_cb  (FRCommand  *command,
 
 	if (msg == NULL) {
 		gtk_label_set_text (GTK_LABEL (window->pd_message), "");
-	} else {
+	}
+	else {
 		char *utf8_msg;
 
 		if (! g_utf8_validate (msg, -1, NULL))
@@ -1342,7 +1352,8 @@ window_message_cb  (FRCommand  *command,
 	if (window->convert_data.converting) {
 		if (window->pd_last_action != FR_ACTION_CREATING_ARCHIVE)
 			progress_dialog__set_last_action (window, FR_ACTION_CREATING_ARCHIVE);
-	} else if (window->pd_last_action != window->current_action)
+	}
+	else if (window->pd_last_action != window->current_action)
 		progress_dialog__set_last_action (window, window->current_action);
 
 	if (strcmp_null_tollerant (window->pd_last_archive, window->archive_filename) != 0) {
@@ -1350,7 +1361,8 @@ window_message_cb  (FRCommand  *command,
 		if (window->archive_filename == NULL) {
 			window->pd_last_archive = NULL;
 			gtk_label_set_text (GTK_LABEL (window->pd_archive), "");
-		} else {
+		}
+		else {
 			char *filename;
 			window->pd_last_archive = g_strdup (window->archive_filename);
 			filename = g_filename_display_basename (window->pd_last_archive);
@@ -1548,7 +1560,6 @@ action_started (FRArchive *archive,
 	window_start_activity_mode (window);
 
 #ifdef DEBUG
-	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
 	debug (DEBUG_INFO, "%s [START] (FR::Window)\n", action_names[action]);
 #endif
 
@@ -1567,25 +1578,15 @@ action_started (FRArchive *archive,
 
 static void
 window_add_to_recent_list (FRWindow *window,
-			    char     *filename)
+			   char     *filename)
 {
-	char          *tmp;
-	char          *uri;
-
+	char *uri;
 
 	if (window->batch_mode)
 		return;
 
-	/* avoid adding temporary archives to the list. FIXME: doesn't work with uris */
-
-	tmp = g_strconcat (g_get_tmp_dir (), "/fr-", NULL);
-	if (strncmp (tmp, filename, strlen (tmp)) == 0) {
-		g_free (tmp);
+	if (is_temp_work_dir (filename))
 		return;
-	}
-	g_free (tmp);
-
-	/**/
 
 	uri = get_uri_from_path (filename);
 
@@ -1690,6 +1691,7 @@ handle_errors (FRWindow    *window,
 		char      *details = NULL;
 		GtkWidget *dialog;
 		FRProcess *process = archive->process;
+		GList     *output = NULL;
 
 		if ((action == FR_ACTION_LISTING_CONTENT) || (action == FR_ACTION_LOADING_ARCHIVE))
 			window_archive_close (window);
@@ -1719,10 +1721,6 @@ handle_errors (FRWindow    *window,
 			msg = _("An error occurred while testing archive.");
 			break;
 
-		case FR_ACTION_GETTING_FILE_LIST:
-			/* FIXME */
-			break;
-
 		default:
 			break;
 		}
@@ -1745,9 +1743,12 @@ handle_errors (FRWindow    *window,
 			break;
 		}
 
+		if (error->type != FR_PROC_ERROR_GENERIC)
+			output = (process->raw_error != NULL) ? process->raw_error : process->raw_output;
+
 		dialog = _gtk_error_dialog_new (GTK_WINDOW (window->app),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
-						(process->raw_error != NULL) ? process->raw_error : process->raw_output,
+						output,
 						(details != NULL) ? "%s\n%s" : "%s",
 						msg,
 						details);
@@ -1799,7 +1800,6 @@ action_performed (FRArchive   *archive,
 	gboolean  temp_dir;
 
 #ifdef DEBUG
-	char *action_names[] = { "NONE", "LOADING_ARCHIVE", "LISTING_CONTENT", "DELETING_FILES", "TESTING_ARCHIVE", "GETTING_FILE_LIST", "COPYING_FILES_FROM_REMOTE", "ADDING_FILES", "EXTRACTING_FILES", "COPYING_FILES_TO_REMOTE", "CREATING_ARCHIVE", "SAVING_REMOTE_ARCHIVE" };
 	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
 #endif
 
@@ -1811,7 +1811,6 @@ action_performed (FRArchive   *archive,
 
 	switch (action) {
 	case FR_ACTION_LOADING_ARCHIVE:
-		/* window->add_after_opening = FALSE; -- FIXME: delete */
 		if (error->type != FR_PROC_ERROR_NONE) {
 			GtkWidget *dialog;
 			char      *utf8_name, *message;
@@ -1948,6 +1947,7 @@ action_performed (FRArchive   *archive,
 		break;
 
 	default:
+		continue_batch = FALSE;
 		break;
 	}
 
@@ -4066,14 +4066,18 @@ window_archive_new (FRWindow   *window,
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
-		/* FIXME: emit signal DONE with error for action: FR_ACTION_CREATING_NEW_ARCHIVE */
+		fr_archive_action_completed (window->archive,
+					     FR_ACTION_CREATING_NEW_ARCHIVE,
+					     FR_PROC_ERROR_GENERIC,
+					     _("Archive type not supported."));
 
+		/* FIXME: emit signal DONE with error for action: FR_ACTION_CREATING_NEW_ARCHIVE
 		if (window->batch_mode) {
 			window_archive_close (window);
 			window_update_sensitivity (window);
 			window_update_statusbar_list_info (window);
 			window_batch_mode_stop (window);
-		}
+		}*/
 
 		return FALSE;
 	}

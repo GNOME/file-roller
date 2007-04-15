@@ -44,7 +44,7 @@ static FRCommandClass *parent_class = NULL;
 /* -- list -- */
 
 static time_t
-mktime_from_string (char *date_s, 
+mktime_from_string (char *date_s,
 		    char *time_s)
 {
 	struct tm   tm = {0, };
@@ -84,7 +84,7 @@ mktime_from_string (char *date_s,
 
 
 static void
-list__process_line (char     *line, 
+list__process_line (char     *line,
 		    gpointer  data)
 {
 	FRCommand     *comm = FR_COMMAND (data);
@@ -116,7 +116,7 @@ list__process_line (char     *line,
 		arj_comm->fdata = fdata = file_data_new ();
 
 		name_field = get_last_field (line, 2);
-		
+
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
 			fdata->original_path = fdata->full_path;
@@ -124,9 +124,9 @@ list__process_line (char     *line,
 			fdata->full_path = g_strconcat ("/", name_field, NULL);
 			fdata->original_path = fdata->full_path + 1;
 		}
-		
+
 		fdata->link = NULL;
-		
+
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
 
@@ -137,13 +137,13 @@ list__process_line (char     *line,
 		fdata = arj_comm->fdata;
 
 		/* read file info. */
-		
+
 		fields = split_line (line, 10);
 		fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
-		fdata->modified = mktime_from_string (fields[5], fields[6]); 
+		fdata->modified = mktime_from_string (fields[5], fields[6]);
 		fdata->encrypted = (g_ascii_strcasecmp (fields[9], "11") == 0);
 		g_strfreev (fields);
-		
+
 		if (*fdata->name == 0)
 			file_data_free (fdata);
 		else
@@ -159,7 +159,7 @@ static void
 fr_command_arj_list (FRCommand  *comm,
 		     const char *password)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
 				      comm);
 
@@ -186,8 +186,8 @@ fr_command_arj_add (FRCommand     *comm,
 	fr_process_begin_command (comm->process, "arj");
 
 	fr_process_add_arg (comm->process, "a");
-	
-	if (base_dir != NULL) 
+
+	if (base_dir != NULL)
 		fr_process_set_working_dir (comm->process, base_dir);
 
 	if (update)
@@ -216,7 +216,7 @@ fr_command_arj_add (FRCommand     *comm,
 
 	fr_process_add_arg (comm->process, comm->e_filename);
 
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, (gchar*) scan->data);
 
 	fr_process_end_command (comm->process);
@@ -316,30 +316,30 @@ fr_command_arj_test (FRCommand   *comm,
 
 
 static void
-fr_command_arj_handle_error (FRCommand   *comm, 
+fr_command_arj_handle_error (FRCommand   *comm,
 			     FRProcError *error)
 {
-	if (error->type == FR_PROC_ERROR_GENERIC) {
+	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
  		if (error->status <= 1)
  			error->type = FR_PROC_ERROR_NONE;
-		else if (error->status == 3) 
+		else if (error->status == 3)
  			error->type = FR_PROC_ERROR_ASK_PASSWORD;
  	}
 }
 
 
-static void 
+static void
 fr_command_arj_class_init (FRCommandArjClass *class)
 {
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
+	FRCommandClass *afc;
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 	afc = (FRCommandClass*) class;
 
 	gobject_class->finalize = fr_command_arj_finalize;
 
-        afc->list           = fr_command_arj_list;
+	afc->list           = fr_command_arj_list;
 	afc->add            = fr_command_arj_add;
 	afc->delete         = fr_command_arj_delete;
 	afc->extract        = fr_command_arj_extract;
@@ -347,13 +347,13 @@ fr_command_arj_class_init (FRCommandArjClass *class)
 	afc->handle_error   = fr_command_arj_handle_error;
 }
 
- 
-static void 
+
+static void
 fr_command_arj_init (FRCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_ARJ;
 
-	comm->propAddCanUpdate             = TRUE; 
+	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = FALSE;
 	comm->propExtractCanAvoidOverwrite = TRUE;
@@ -367,14 +367,14 @@ fr_command_arj_init (FRCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_arj_finalize (GObject *object)
 {
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_ARJ (object));
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND_ARJ (object));
 
 	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
+	if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -382,10 +382,10 @@ fr_command_arj_finalize (GObject *object)
 GType
 fr_command_arj_get_type ()
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
+	if (! type) {
+		GTypeInfo type_info = {
 			sizeof (FRCommandArjClass),
 			NULL,
 			NULL,
@@ -401,9 +401,9 @@ fr_command_arj_get_type ()
 					       "FRCommandArj",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 

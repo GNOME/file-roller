@@ -101,10 +101,10 @@ unstuff_is_shit_with_filenames (const char *orig)
 
 	return filename;
 }
-	
-	
+
+
 static void
-process_line (char     *line, 
+process_line (char     *line,
 	      gpointer  data)
 {
 	FRCommand        *comm = FR_COMMAND (data);
@@ -187,7 +187,7 @@ fr_command_unstuff_list (FRCommand  *comm,
 	char *filename;
 	char *path_dots;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line,
 				      comm);
 
@@ -257,35 +257,35 @@ fr_command_unstuff_extract (FRCommand  *comm,
 
 
 static void
-fr_command_unstuff_handle_error (FRCommand   *comm, 
+fr_command_unstuff_handle_error (FRCommand   *comm,
 			     FRProcError *error)
 {
-	if ((error->type == FR_PROC_ERROR_GENERIC) 
+	if ((error->type == FR_PROC_ERROR_COMMAND_ERROR)
 	    && (error->status <= 1))
 		error->type = FR_PROC_ERROR_NONE;
 }
 
 
-static void 
+static void
 fr_command_unstuff_class_init (FRCommandUnstuffClass *class)
 {
-        GObjectClass *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	FRCommandClass *afc;
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 	afc = (FRCommandClass*) class;
 
 	gobject_class->finalize = fr_command_unstuff_finalize;
 
-        afc->list         = fr_command_unstuff_list;
+	afc->list         = fr_command_unstuff_list;
 	afc->add          = NULL;
 	afc->delete       = NULL;
 	afc->extract      = fr_command_unstuff_extract;
 	afc->handle_error = fr_command_unstuff_handle_error;
 }
 
- 
-static void 
+
+static void
 fr_command_unstuff_init (FRCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_STUFFIT;
@@ -301,12 +301,12 @@ fr_command_unstuff_init (FRCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_unstuff_finalize (GObject *object)
 {
 	FRCommandUnstuff *unstuff_comm = FR_COMMAND_UNSTUFF (object);
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_UNSTUFF (object));
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND_UNSTUFF (object));
 
 	if (unstuff_comm->target_dir != NULL) {
 		recursive_rmdir (unstuff_comm->target_dir);
@@ -314,7 +314,7 @@ fr_command_unstuff_finalize (GObject *object)
 	}
 
 	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
+	if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -322,10 +322,10 @@ fr_command_unstuff_finalize (GObject *object)
 GType
 fr_command_unstuff_get_type ()
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
+	if (! type) {
+		GTypeInfo type_info = {
 			sizeof (FRCommandUnstuffClass),
 			NULL,
 			NULL,
@@ -341,9 +341,9 @@ fr_command_unstuff_get_type ()
 					       "FRCommandUnstuff",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 

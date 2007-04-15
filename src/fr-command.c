@@ -46,6 +46,19 @@ static void fr_command_class_init  (FRCommandClass *class);
 static void fr_command_init        (FRCommand *afile);
 static void fr_command_finalize    (GObject *object);
 
+char *action_names[] = { "NONE",
+			 "CREATING_NEW_ARCHIVE", 
+			 "LOADING_ARCHIVE", 
+			 "LISTING_CONTENT", 
+			 "DELETING_FILES", 
+			 "TESTING_ARCHIVE", 
+			 "GETTING_FILE_LIST", 
+			 "COPYING_FILES_FROM_REMOTE", 
+			 "ADDING_FILES", 
+			 "EXTRACTING_FILES", 
+			 "COPYING_FILES_TO_REMOTE", 
+			 "CREATING_ARCHIVE", 
+			 "SAVING_REMOTE_ARCHIVE" };
 
 GType
 fr_command_get_type ()

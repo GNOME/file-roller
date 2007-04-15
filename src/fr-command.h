@@ -57,6 +57,10 @@ typedef enum {
 	FR_ACTION_SAVING_REMOTE_ARCHIVE       /* copying the archive to a remote location */
 } FRAction;
 
+#ifdef DEBUG
+extern char *action_names[];
+#endif
+
 struct _FRCommand
 {
 	GObject  __parent;
