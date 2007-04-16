@@ -183,7 +183,7 @@ dir_contains_one_object (const char *path)
 }
 
 
-/* Check whether the path_src is contained in path_dest */
+/* Check whether the dirname is contained in filename */
 gboolean
 path_in_path (const char *dirname,
 	      const char *filename)
