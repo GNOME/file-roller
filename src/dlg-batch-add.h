@@ -23,11 +23,9 @@
 #ifndef DLG_BATCH_ADD_H
 #define DLG_BATCH_ADD_H
 
+#include "fr-window.h"
 
-#include "window.h"
-
-
-void dlg_batch_add_files (FRWindow *window,
-			  GList * file_list);
+void dlg_batch_add_files (FrWindow *window,
+			  GList    *file_list);
 
 #endif /* DLG_BATCH_ADD_H */

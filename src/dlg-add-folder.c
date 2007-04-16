@@ -34,7 +34,7 @@
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include "file-utils.h"
 #include "fr-stock.h"
-#include "window.h"
+#include "fr-window.h"
 #include "gtk-utils.h"
 
 
@@ -42,7 +42,7 @@
 
 
 typedef struct {
-	FRWindow    *window;
+	FrWindow    *window;
 	GtkTooltips *tooltips;
 	GtkWidget   *dialog;
 	GtkWidget   *include_subfold_checkbutton;
@@ -93,7 +93,7 @@ file_sel_response_cb (GtkWidget    *widget,
 		      DialogData   *data)
 {
 	GtkFileChooser *file_sel = GTK_FILE_CHOOSER (widget);
-	FRWindow       *window = data->window;
+	FrWindow       *window = data->window;
 	char           *current_folder;
 	gboolean        update, recursive, follow_links;
 	GSList         *selections, *iter;
@@ -123,7 +123,7 @@ file_sel_response_cb (GtkWidget    *widget,
 		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not add the files to the archive"),
@@ -139,7 +139,7 @@ file_sel_response_cb (GtkWidget    *widget,
 		return FALSE;
 	}
 
-	window_set_add_default_dir (window, current_folder);
+	fr_window_set_add_default_dir (window, current_folder);
 
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));
 	recursive = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton));
@@ -166,21 +166,19 @@ file_sel_response_cb (GtkWidget    *widget,
 			exclude_files = NULL;
 
 		dest_uri = g_build_path (G_DIR_SEPARATOR_S,
-					 window_get_current_location (window),
+					 fr_window_get_current_location (window),
 					 file_name_from_path (folder),
 					 NULL);
 		dest_dir = get_local_path_from_uri (dest_uri);
 
-		window_archive_add_with_wildcard (window,
-						  include_files,
-						  exclude_files,
-						  folder,
-						  dest_dir,
-						  update,
-						  recursive,
-						  follow_links,
-						  window->password,
-						  window->compression);
+		fr_window_archive_add_with_wildcard (window,
+						     include_files,
+						     exclude_files,
+						     folder,
+						     dest_dir,
+						     update,
+						     recursive,
+						     follow_links);
 
 		g_free (dest_dir);
 		g_free (dest_uri);
@@ -201,7 +199,7 @@ static void
 selection_changed_cb (GtkWidget  *file_sel,
 		      DialogData *data)
 {
-	FRWindow *window = data->window;
+	FrWindow *window = data->window;
 	char     *current_folder;
 
 	current_folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (file_sel));
@@ -217,7 +215,7 @@ selection_changed_cb (GtkWidget  *file_sel,
 		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not add the files to the archive"),
@@ -271,7 +269,7 @@ add_folder_cb (GtkWidget *widget,
 
 	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Add a Folder"),
-					     GTK_WINDOW (data->window->app),
+					     GTK_WINDOW (data->window),
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     FR_STOCK_ADD_FOLDER, GTK_RESPONSE_OK,
@@ -362,7 +360,7 @@ add_folder_cb (GtkWidget *widget,
 
 	/* set data */
 
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), data->window->add_default_dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_add_default_dir (data->window));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), TRUE);
 
 	/* signals */

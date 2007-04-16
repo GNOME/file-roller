@@ -24,11 +24,9 @@
 #define DLG_OPEN_WITH_H
 
 #include <gtk/gtkwidget.h>
-#include "window.h"
+#include "fr-window.h"
 
-void  open_with_cb (GtkWidget *widget, void *data);
-
-void  dlg_open_with (FRWindow *window, GList *file_list);
-
+void  open_with_cb  (GtkWidget *widget, void *data);
+void  dlg_open_with (FrWindow *window, GList *file_list);
 
 #endif /* DLG_OPEN_WITH_H */

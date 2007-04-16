@@ -23,11 +23,9 @@
 #ifndef DLG_PASSWORD_H
 #define DLG_PASSWORD_H
 
-#include "window.h"
-
+#include "fr-window.h"
 
 void dlg_password (GtkWidget *widget,
 		   gpointer   callback_data);
-
 
 #endif /* DLG_PASSWORD_H */

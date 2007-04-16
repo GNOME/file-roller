@@ -31,13 +31,13 @@
 #include "fr-stock.h"
 #include "main.h"
 #include "gtk-utils.h"
-#include "window.h"
+#include "fr-window.h"
 #include "typedefs.h"
 #include "gconf-utils.h"
 
 
 typedef struct {
-	FRWindow     *window;
+	FrWindow     *window;
 
 	GtkWidget    *dialog;
 
@@ -66,8 +66,8 @@ destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
 	if (! data->extract_clicked) {
-		window_pop_message (data->window);
-		window_batch_mode_stop (data->window);
+		fr_window_pop_message (data->window);
+		fr_window_batch_mode_stop (data->window);
 	}
 
 	g_object_unref (data->tooltips);
@@ -79,7 +79,7 @@ static int
 extract_cb (GtkWidget   *w,
 	    DialogData  *data)
 {
-	FRWindow   *window = data->window;
+	FrWindow   *window = data->window;
 	gboolean    do_not_extract = FALSE;
 	char       *extract_to_dir;
 	gboolean    overwrite;
@@ -100,7 +100,7 @@ extract_cb (GtkWidget   *w,
 	/* check directory existence. */
 
 	if (! path_is_dir (extract_to_dir)) {
-		if (! force_directory_creation) {
+		if (! ForceDirectoryCreation) {
 			GtkWidget *d;
 			int        r;
 			char      *folder_name;
@@ -136,7 +136,7 @@ extract_cb (GtkWidget   *w,
 
 			error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
 			message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
-			d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+			d = _gtk_message_dialog_new (GTK_WINDOW (window),
 						     GTK_DIALOG_DESTROY_WITH_PARENT,
 						     GTK_STOCK_DIALOG_ERROR,
 						     _("Extraction not performed"),
@@ -156,7 +156,7 @@ extract_cb (GtkWidget   *w,
 	if (do_not_extract) {
 		GtkWidget *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Extraction not performed"),
@@ -167,7 +167,7 @@ extract_cb (GtkWidget   *w,
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
-		if (data->window->batch_mode)
+		if (fr_window_is_batch_mode (data->window))
 			gtk_widget_destroy (data->dialog);
 
 		return FALSE;
@@ -184,7 +184,7 @@ extract_cb (GtkWidget   *w,
 		utf8_path = g_filename_display_name (extract_to_dir);
 		message = g_strdup_printf (_("You don't have the right permissions to extract archives in the folder \"%s\""), utf8_path);
 		g_free (utf8_path);
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Extraction not performed"),
@@ -201,9 +201,7 @@ extract_cb (GtkWidget   *w,
 		return FALSE;
 	}
 
-	window_set_extract_default_dir (window, extract_to_dir);
-	if (window->batch_mode)
-		window->extract_interact_use_default_dir = TRUE;
+	fr_window_set_extract_default_dir (window, extract_to_dir, TRUE);
 
 	overwrite = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton));
 	skip_newer = !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton)) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));
@@ -223,7 +221,8 @@ extract_cb (GtkWidget   *w,
 			g_free (password);
 			password = NULL;
 		}
-	} else
+	}
+	else
 		password = NULL;
 
 	eel_gconf_set_boolean (PREF_EXTRACT_VIEW_FOLDER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton)));
@@ -233,12 +232,13 @@ extract_cb (GtkWidget   *w,
 	file_list = NULL;
 
 	if (selected_files)
-		file_list = window_get_file_list_selection (window, TRUE, NULL);
+		file_list = fr_window_get_file_list_selection (window, TRUE, NULL);
 
 	else if (pattern_files) {
 		const char *pattern;
+
 		pattern = gtk_entry_get_text (GTK_ENTRY (data->e_files_entry));
-		file_list = window_get_file_list_pattern (window, pattern);
+		file_list = fr_window_get_file_list_pattern (window, pattern);
 		if (file_list == NULL) {
 			gtk_widget_destroy (data->dialog);
 			g_free (extract_to_dir);
@@ -253,21 +253,15 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
-	if (eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE)) {
-		window->view_folder_after_extraction = TRUE;
-		g_free (window->folder_to_view);
-		window->folder_to_view = g_strdup (extract_to_dir);
-	}
+	if (eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE))
+		fr_window_view_folder_after_extract (window, extract_to_dir);
 
-	if (password != NULL) {
-		g_free (window->password);
-		window->password = g_strdup (password);
-	}
+	fr_window_set_password (window, password);
 
 	if (selected_files)
-		base_dir = window_get_current_location (window);
+		base_dir = fr_window_get_current_location (window);
 
-	window_archive_extract (window,
+	fr_window_archive_extract (window,
 				file_list,
 				extract_to_dir,
 				base_dir,
@@ -468,10 +462,9 @@ void
 dlg_extract (GtkWidget *widget,
 	     gpointer   callback_data)
 {
-	FRWindow   *window = callback_data;
+	FrWindow   *window = callback_data;
 	DialogData *data;
 	GtkWidget  *file_sel;
-	const char *folder = NULL;
 
 	data = g_new0 (DialogData, 1);
 
@@ -484,7 +477,7 @@ dlg_extract (GtkWidget *widget,
 
 	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Extract"),
-					     GTK_WINDOW (data->window->app),
+					     GTK_WINDOW (data->window),
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     FR_STOCK_EXTRACT, GTK_RESPONSE_OK,
@@ -501,16 +494,9 @@ dlg_extract (GtkWidget *widget,
 
 	/* Set widgets data. */
 
-	if (window->extract_default_dir != NULL) {
-		folder = window->extract_default_dir;
-		if (is_temp_work_dir (folder) || ! uri_is_local (folder))
-			folder = get_home_uri ();
-	}
-	else
-		folder = get_home_uri ();
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), folder);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_extract_default_dir (window));
 
-	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
+	if (fr_window_get_n_selected_files (window) > 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton), TRUE);
 	else {
 		gtk_widget_set_sensitive (data->e_selected_radiobutton, FALSE);
@@ -519,9 +505,9 @@ dlg_extract (GtkWidget *widget,
 
 	if (window->archive->command->propPassword) {
 		gtk_widget_set_sensitive (data->e_password_hbox, TRUE);
-		if (window->password != NULL)
-			_gtk_entry_set_locale_text (GTK_ENTRY (data->e_password_entry), window->password);
-	} else
+		_gtk_entry_set_locale_text (GTK_ENTRY (data->e_password_entry), fr_window_get_password (window));
+	}
+	else
 		gtk_widget_set_sensitive (data->e_password_hbox, FALSE);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));

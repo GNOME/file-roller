@@ -36,7 +36,7 @@
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "gconf-utils.h"
-#include "window.h"
+#include "fr-window.h"
 #include "typedefs.h"
 #include "gtk-utils.h"
 #include "glib-utils.h"
@@ -51,7 +51,7 @@
 #define BAD_CHARS "/\\*"
 
 typedef struct {
-	FRWindow   *window;
+	FrWindow   *window;
 	GladeXML   *gui;
 
 	GtkWidget  *dialog;
@@ -73,8 +73,8 @@ destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
 	if (! data->add_clicked) {
-		window_pop_message (data->window);
-		window_batch_mode_stop (data->window);
+		fr_window_pop_message (data->window);
+		fr_window_batch_mode_stop (data->window);
 	}
 
 	g_object_unref (data->gui);
@@ -104,7 +104,7 @@ static void
 add_clicked_cb (GtkWidget  *widget,
 		DialogData *data)
 {
-	FRWindow   *window = data->window;
+	FrWindow   *window = data->window;
 	char       *archive_name;
 	char       *archive_dir;
 	char       *archive_file;
@@ -126,7 +126,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if (*archive_name == '\0') {
 		GtkWidget  *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not create the archive"),
@@ -139,13 +139,13 @@ add_clicked_cb (GtkWidget  *widget,
 		g_free (archive_name);
 
 		return;
-
-	} else if (strchrs (archive_name, BAD_CHARS)) {
+	}
+	else if (strchrs (archive_name, BAD_CHARS)) {
 		GtkWidget  *d;
 		char       *utf8_name = g_filename_display_name (archive_name);
 		char       *reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_name, BAD_CHARS, _("Please use a different name."));
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not create the archive"),
@@ -168,7 +168,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if (! check_permissions (archive_dir, R_OK|W_OK|X_OK)) {
 		GtkWidget  *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not create the archive"),
@@ -219,7 +219,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 		error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
 		message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not create the archive"),
@@ -239,7 +239,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if (do_not_add) {
 		GtkWidget *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Archive not created"),
@@ -266,7 +266,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if (path_is_dir (archive_file)) {
 		GtkWidget  *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not create the archive"),
@@ -321,18 +321,18 @@ add_clicked_cb (GtkWidget  *widget,
 			path_list_free (window->dropped_file_list);
 		window->dropped_file_list = path_list_dup (data->file_list);
 		window->add_after_creation = TRUE;
-		window_archive_new (window, archive_file);
+		fr_window_archive_new (window, archive_file);
 		*/
 
 	} else {
-		/* FIXME: use match action to add after opening
+		/* FIXME: use batch action to add after opening
 		window->add_after_opening = TRUE; */
 
-		window_batch_mode_add_next_action (window,
+		fr_window_batch_mode_add_next_action (window,
 						   FR_BATCH_ACTION_ADD,
 						   path_list_dup (data->file_list),
 						   (GFreeFunc) path_list_free);
-		window_archive_open (window, archive_file, GTK_WINDOW (window->app));
+		fr_window_archive_open (window, archive_file, GTK_WINDOW (window));
 	}
 
 	g_free (archive_name);
@@ -498,7 +498,7 @@ update_archive_type_combo_box_from_ext (DialogData  *data,
 
 
 void
-dlg_batch_add_files (FRWindow *window,
+dlg_batch_add_files (FrWindow *window,
 		     GList    *file_list)
 {
 	DialogData *data;

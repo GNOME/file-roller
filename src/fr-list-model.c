@@ -23,7 +23,7 @@
 #include <config.h>
 #include "eggtreemultidnd.h"
 #include "fr-list-model.h"
-#include "window.h"
+#include "fr-window.h"
 
 
 static GtkListStoreClass *parent_class;
@@ -33,14 +33,14 @@ static gboolean
 fr_list_model_multi_row_draggable (EggTreeMultiDragSource *drag_source,
 				   GList                  *path_list)
 {
-	FRWindow     *window;
+	FrWindow     *window;
 	GtkTreeModel *model;
 	GList        *scan;
 
-	window = g_object_get_data (G_OBJECT (drag_source), "FRWindow");
+	window = g_object_get_data (G_OBJECT (drag_source), "FrWindow");
 	g_return_val_if_fail (window != NULL, FALSE);
 
-	model = GTK_TREE_MODEL (window->list_store);
+	model = GTK_TREE_MODEL (fr_window_get_list_store (window));
 
 	for (scan = path_list; scan; scan = scan->next) {
 		GtkTreeRowReference *reference = scan->data;
@@ -73,9 +73,9 @@ fr_list_model_multi_drag_data_get (EggTreeMultiDragSource *drag_source,
 				   GtkSelectionData       *selection_data,
 				   GList                  *path_list)
 {
-	FRWindow *window;
+	FrWindow *window;
 
-	window = g_object_get_data (G_OBJECT (drag_source), "FRWindow");
+	window = g_object_get_data (G_OBJECT (drag_source), "FrWindow");
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	return fr_window_file_list_drag_data_get (window,

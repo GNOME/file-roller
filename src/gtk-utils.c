@@ -537,6 +537,9 @@ _gtk_entry_set_locale_text (GtkEntry   *entry,
 {
 	char *utf8_text;
 
+	if (text == NULL)
+		return;
+
 	utf8_text = g_locale_to_utf8 (text, -1, NULL, NULL, NULL);
 	if (utf8_text != NULL)
 		gtk_entry_set_text (entry, utf8_text);

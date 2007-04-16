@@ -185,10 +185,10 @@ static guint n_action_toggle_entries = G_N_ELEMENTS (action_toggle_entries);
 static GtkRadioActionEntry view_as_entries[] = {
 	{ "ViewAllFiles", NULL,
 	  N_("View All _Files"), NULL,
-	  " ", WINDOW_LIST_MODE_FLAT },
+	  " ", FR_WINDOW_LIST_MODE_FLAT },
 	{ "ViewAsFolder", NULL,
 	  N_("View as a F_older"), NULL,
-	  " ", WINDOW_LIST_MODE_AS_DIR },
+	  " ", FR_WINDOW_LIST_MODE_AS_DIR },
 };
 static guint n_view_as_entries = G_N_ELEMENTS (view_as_entries);
 
@@ -196,19 +196,19 @@ static guint n_view_as_entries = G_N_ELEMENTS (view_as_entries);
 static GtkRadioActionEntry sort_by_entries[] = {
 	{ "SortByName", NULL,
 	  N_("by _Name"), NULL,
-	  N_("Sort file list by name"), WINDOW_SORT_BY_NAME },
+	  N_("Sort file list by name"), FR_WINDOW_SORT_BY_NAME },
 	{ "SortBySize", NULL,
 	  N_("by _Size"), NULL,
-	  N_("Sort file list by file size"), WINDOW_SORT_BY_SIZE },
+	  N_("Sort file list by file size"), FR_WINDOW_SORT_BY_SIZE },
 	{ "SortByType", NULL,
 	  N_("by T_ype"), NULL,
-	  N_("Sort file list by type"), WINDOW_SORT_BY_TYPE },
+	  N_("Sort file list by type"), FR_WINDOW_SORT_BY_TYPE },
 	{ "SortByDate", NULL,
 	  N_("by _Date modified"), NULL,
-	  N_("Sort file list by modification time"), WINDOW_SORT_BY_TIME },
+	  N_("Sort file list by modification time"), FR_WINDOW_SORT_BY_TIME },
 	{ "SortByLocation", NULL,
 	  N_("by _Location"), NULL,
-	  N_("Sort file list by location"), WINDOW_SORT_BY_PATH },
+	  N_("Sort file list by location"), FR_WINDOW_SORT_BY_PATH },
 };
 static guint n_sort_by_entries = G_N_ELEMENTS (sort_by_entries);
 

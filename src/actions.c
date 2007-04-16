@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <libgnome/gnome-help.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 #include "actions.h"
 #include "dlg-add-files.h"
 #include "dlg-add-folder.h"
@@ -34,14 +35,15 @@
 #include "dlg-delete.h"
 #include "dlg-open-with.h"
 #include "dlg-password.h"
+#include "dlg-prop.h"
 #include "main.h"
 #include "gtk-utils.h"
-#include "window.h"
+#include "fr-window.h"
 #include "file-utils.h"
 #include "fr-process.h"
 #include "gconf-utils.h"
 #include "glib-utils.h"
-#include "dlg-prop.h"
+
 
 
 /* -- new archive -- */
@@ -56,21 +58,21 @@ new_file_destroy_cb (GtkWidget *w,
 
 static void
 new_archive (GtkWidget *file_sel,
-	     FRWindow  *window, 
+	     FrWindow  *window, 
 	     char      *path)
 {
-	FRWindow *archive_window;
-	gboolean  new_window;
+	GtkWidget *archive_window;
+	gboolean   new_window;
 
-	new_window = window->archive_present;
+	new_window = fr_window_archive_is_present (window);
 
 	if (new_window)
-		archive_window = window_new ();
+		archive_window = fr_window_new ();
 	else
-		archive_window = window;
+		archive_window = (GtkWidget *) window;
 
 	/* Pass the add_after_creation options to the new window. */
-	if (archive_window != window) {
+	if (archive_window != (GtkWidget *) window) {
 		/* FIXME: use batch actions
 		archive_window->add_after_creation = window->add_after_creation;
 		if (archive_window->add_after_creation) {
@@ -81,12 +83,12 @@ new_archive (GtkWidget *file_sel,
 		*/
 	}
 
-	if (window_archive_new (archive_window, path)) {
-		gtk_window_present (GTK_WINDOW (archive_window->app));
+	if (fr_window_archive_new (FR_WINDOW (archive_window), path)) {
+		gtk_window_present (GTK_WINDOW (archive_window));
 		gtk_widget_destroy (file_sel);
 	}
 	else if (new_window)
-		window_close (archive_window);
+		gtk_widget_destroy (archive_window);
 }
 
 
@@ -145,7 +147,7 @@ get_full_path (GtkWidget *file_sel)
 
 
 static char *
-get_archive_filename_from_selector (FRWindow  *window,
+get_archive_filename_from_selector (FrWindow  *window,
 				    GtkWidget *file_sel)
 {
 	char *path = NULL;
@@ -215,10 +217,11 @@ get_archive_filename_from_selector (FRWindow  *window,
 	debug (DEBUG_INFO, "create/save %s\n", path);
 
 	if (path_is_file (path)) {
-		GtkWidget *dialog;
-		int        r;
+		GtkWidget      *dialog;
+		int             r;
+		GnomeVFSResult  result;
 
-		if (!is_supported_extension (file_sel, path)) {
+		if (! is_supported_extension (file_sel, path)) {
 			dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_ERROR,
@@ -251,13 +254,14 @@ get_archive_filename_from_selector (FRWindow  *window,
 			return NULL;
 		}
 
-		if (unlink (path) != 0) {
+		result = gnome_vfs_unlink (path);
+		if (result != GNOME_VFS_OK) {
 			GtkWidget *dialog;
 			dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
 							  GTK_DIALOG_DESTROY_WITH_PARENT,
 							  GTK_STOCK_DIALOG_ERROR,
 							  _("Could not delete the old archive."),
-							  NULL,
+							  gnome_vfs_result_to_string (result),
 							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
 							  NULL);
 			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
@@ -277,7 +281,7 @@ new_file_response_cb (GtkWidget *w,
 		      int        response,
 		      GtkWidget *file_sel)
 {
-	FRWindow *window;
+	FrWindow *window;
 	char     *path;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
@@ -340,7 +344,7 @@ void
 activate_action_new (GtkAction *action,
 		     gpointer   data)
 {
-	FRWindow      *window = data;
+	FrWindow      *window = data;
 	GtkWidget     *file_sel;
 	GtkWidget     *hbox;
 	GtkWidget     *combo_box;
@@ -348,7 +352,7 @@ activate_action_new (GtkAction *action,
 	int            i;
 
 	file_sel = gtk_file_chooser_dialog_new (_("New"),
-						GTK_WINDOW (window->app),
+						GTK_WINDOW (window),
 						GTK_FILE_CHOOSER_ACTION_SAVE,
 						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						GTK_STOCK_NEW, GTK_RESPONSE_OK,
@@ -357,7 +361,7 @@ activate_action_new (GtkAction *action,
 
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
 
 /* FIXME
 	if (window->add_after_creation && (window->dropped_file_list != NULL)) {
@@ -420,7 +424,7 @@ activate_action_new (GtkAction *action,
 
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
 	g_object_set_data (G_OBJECT (file_sel), "fr_combo_box", combo_box);
-	g_object_set_data (G_OBJECT (window->app), "fr_file_sel", file_sel);
+	g_object_set_data (G_OBJECT (window), "fr_file_sel", file_sel);
 
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response", 
@@ -455,7 +459,7 @@ open_file_response_cb (GtkWidget *w,
 		       int        response,
 		       GtkWidget *file_sel)
 {
-	FRWindow *window = NULL;
+	FrWindow *window = NULL;
 	char     *uri;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
@@ -469,7 +473,7 @@ open_file_response_cb (GtkWidget *w,
 	if (uri == NULL)
 		return;
 
-	if (window_archive_open (window, uri, GTK_WINDOW (file_sel)))
+	if (fr_window_archive_open (window, uri, GTK_WINDOW (file_sel)))
 		gtk_widget_destroy (file_sel);
 
 	g_free (uri);
@@ -481,19 +485,19 @@ activate_action_open (GtkAction *action,
 		      gpointer   data)
 {
 	GtkWidget     *file_sel;
-	FRWindow      *window = data;
+	FrWindow      *window = data;
 	GtkFileFilter *filter;
 	int            i;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Open"),
-						GTK_WINDOW (window->app),
+						GTK_WINDOW (window),
 						GTK_FILE_CHOOSER_ACTION_OPEN,
 						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						GTK_STOCK_OPEN, GTK_RESPONSE_OK,
 						NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
@@ -541,7 +545,7 @@ save_file_response_cb (GtkWidget *w,
 		       gint       response,
 		       GtkWidget *file_sel)
 {
-	FRWindow *window;
+	FrWindow *window;
 	char     *path;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
@@ -560,7 +564,7 @@ save_file_response_cb (GtkWidget *w,
 	if (path == NULL)
 		return;
 
-	window_archive_save_as (window, path);
+	fr_window_archive_save_as (window, path);
 	gtk_widget_destroy (file_sel);
 	g_free (path);
 }
@@ -570,7 +574,7 @@ void
 activate_action_save_as (GtkAction *action,
 			 gpointer   data)
 {
-	FRWindow      *window = data;
+	FrWindow      *window = data;
 	GtkWidget     *file_sel;
 	GtkWidget     *hbox;
 	GtkWidget     *combo_box;
@@ -578,7 +582,7 @@ activate_action_save_as (GtkAction *action,
 	int            i;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Save"),
-						GTK_WINDOW (window->app),
+						GTK_WINDOW (window),
 						GTK_FILE_CHOOSER_ACTION_SAVE,
 						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 						GTK_STOCK_SAVE, GTK_RESPONSE_OK,
@@ -586,10 +590,10 @@ activate_action_save_as (GtkAction *action,
 						NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), window->open_default_dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
 
-	if (window->archive_filename != NULL)
-		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), file_name_from_path (window->archive_filename));
+	if (fr_window_get_archive_uri (window))
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), file_name_from_path (fr_window_get_archive_uri (window)));
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
@@ -648,8 +652,9 @@ void
 activate_action_test_archive (GtkAction *action,
 			      gpointer   data)
 {
-	FRWindow *window = data;
-	fr_archive_test (window->archive, window->password);
+	FrWindow *window = data;
+
+	fr_archive_test (window->archive, fr_window_get_password (window));
 }
 
 
@@ -657,7 +662,8 @@ void
 activate_action_properties (GtkAction *action,
 			    gpointer   data)
 {
-	FRWindow *window = data;
+	FrWindow *window = data;
+
 	dlg_prop (window);
 }
 
@@ -666,8 +672,9 @@ void
 activate_action_close (GtkAction *action,
 		       gpointer   data)
 {
-	FRWindow *window = data;
-	window_close (window);
+	FrWindow *window = data;
+
+	gtk_widget_destroy (GTK_WIDGET (window));
 }
 
 void
@@ -698,7 +705,7 @@ void
 activate_action_copy (GtkAction *action,
 		      gpointer   data)
 {
-	window_copy_selection ((FRWindow*) data);
+	fr_window_copy_selection ((FrWindow*) data);
 }
 
 
@@ -706,7 +713,7 @@ void
 activate_action_cut (GtkAction *action,
 		     gpointer   data)
 {
-	window_cut_selection ((FRWindow*) data);
+	fr_window_cut_selection ((FrWindow*) data);
 }
 
 
@@ -714,7 +721,7 @@ void
 activate_action_paste (GtkAction *action,
 		       gpointer   data)
 {
-	window_paste_selection ((FRWindow*) data);
+	fr_window_paste_selection ((FrWindow*) data);
 }
 
 
@@ -722,7 +729,7 @@ void
 activate_action_rename (GtkAction *action,
 			gpointer   data)
 {
-	window_rename_selection ((FRWindow*) data);
+	fr_window_rename_selection ((FrWindow*) data);
 }
 
 
@@ -738,8 +745,9 @@ void
 activate_action_select_all (GtkAction *action,
 			    gpointer   data)
 {
-	FRWindow *window = data;
-	gtk_tree_selection_select_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+	FrWindow *window = data;
+
+	fr_window_select_all (window);
 }
 
 
@@ -747,8 +755,9 @@ void
 activate_action_deselect_all (GtkAction *action,
 			      gpointer   data)
 {
-	FRWindow *window = data;
-	gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view)));
+	FrWindow *window = data;
+
+	fr_window_unselect_all (window);
 }
 
 
@@ -756,7 +765,7 @@ void
 activate_action_open_with (GtkAction *action,
 			   gpointer   data)
 {
-	open_with_cb (NULL, (FRWindow*) data);
+	open_with_cb (NULL, (FrWindow*) data);
 }
 
 
@@ -764,13 +773,13 @@ void
 activate_action_view_or_open (GtkAction *action,
 			      gpointer   data)
 {
-	FRWindow *window = data;
+	FrWindow *window = data;
 	GList    *file_list;
 
-	file_list = window_get_file_list_selection (window, FALSE, NULL);
+	file_list = fr_window_get_file_list_selection (window, FALSE, NULL);
 	if (file_list == NULL)
 		return;
-	window_view_or_open_file (window, (char*) file_list->data);
+	fr_window_view_or_open_file (window, (char*) file_list->data);
 	path_list_free (file_list);
 }
 
@@ -779,8 +788,8 @@ void
 activate_action_open_folder (GtkAction *action,
 			     gpointer   data)
 {
-	FRWindow *window = data;
-	window_current_folder_activated (window);
+	FrWindow *window = data;
+	fr_window_current_folder_activated (window);
 }
 
 
@@ -788,7 +797,7 @@ void
 activate_action_password (GtkAction *action,
 			  gpointer   data)
 {
-	dlg_password (NULL, (FRWindow*) data);
+	dlg_password (NULL, (FrWindow*) data);
 }
 
 
@@ -812,8 +821,8 @@ void
 activate_action_stop (GtkAction *action,
 		      gpointer   data)
 {
-	FRWindow *window = data;
-	window_stop (window);
+	FrWindow *window = data;
+	fr_window_stop (window);
 }
 
 
@@ -821,9 +830,9 @@ void
 activate_action_reload (GtkAction *action,
 			gpointer   data)
 {
-	FRWindow *window = data;
-	if (window->activity_ref == 0)
-		window_archive_reload (window);
+	FrWindow *window = data;
+
+	fr_window_archive_reload (window);
 }
 
 
@@ -831,12 +840,9 @@ void
 activate_action_sort_reverse_order (GtkAction *action,
 				    gpointer   data)
 {
-	FRWindow *window = data;
-	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
-		window->sort_type = GTK_SORT_DESCENDING;
-	else
-		window->sort_type = GTK_SORT_ASCENDING;
-	window_update_list_order (window);
+	FrWindow *window = data;
+
+	fr_window_set_sort_type (window, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)) ? GTK_SORT_DESCENDING : GTK_SORT_ASCENDING);
 }
 
 
@@ -844,8 +850,8 @@ void
 activate_action_last_output (GtkAction *action,
 			     gpointer   data)
 {
-	FRWindow *window = data;
-	window_view_last_output (window, _("Last Output"));
+	FrWindow *window = data;
+	fr_window_view_last_output (window, _("Last Output"));
 }
 
 
@@ -853,7 +859,7 @@ void
 activate_action_manual (GtkAction *action,
 			gpointer   data)
 {
-	FRWindow *window = data;
+	FrWindow *window = data;
 	GError   *err;
 
 	err = NULL;
@@ -862,7 +868,7 @@ activate_action_manual (GtkAction *action,
 	if (err != NULL) {
 		GtkWidget *dialog;
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
 						  GTK_DIALOG_DESTROY_WITH_PARENT, 
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not display help"),
@@ -887,7 +893,7 @@ void
 activate_action_about (GtkAction *action,
 		       gpointer   data)
 {
-	FRWindow         *window = data;
+	FrWindow         *window = data;
 
 	char *license_text;
 
@@ -918,7 +924,7 @@ activate_action_about (GtkAction *action,
 	license_text = g_strconcat (license[0], "\n\n", license[1], "\n\n",
 				    license[2], "\n\n", NULL);
 
-	gtk_show_about_dialog (GTK_WINDOW (window->app),
+	gtk_show_about_dialog (GTK_WINDOW (window),
 			       "version", VERSION,
 			       "copyright", "Copyright \xc2\xa9 2001-2006 Free Software Foundation, Inc.",
 			       "comments", _("An archive manager for GNOME."),

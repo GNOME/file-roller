@@ -32,21 +32,18 @@
 #define OLD_RC_RECENT_FILE      ".file-roller/recents"
 #define OLD_RC_OPTIONS_DIR      ".file-roller/options"
 
+typedef enum {
+	FR_WINDOW_SORT_BY_NAME = 0,
+	FR_WINDOW_SORT_BY_SIZE = 1,
+	FR_WINDOW_SORT_BY_TYPE = 2,
+	FR_WINDOW_SORT_BY_TIME = 3,
+	FR_WINDOW_SORT_BY_PATH = 4
+} FRWindowSortMethod;
 
 typedef enum {
-	WINDOW_SORT_BY_NAME = 0,
-	WINDOW_SORT_BY_SIZE = 1,
-	WINDOW_SORT_BY_TYPE = 2,
-	WINDOW_SORT_BY_TIME = 3,
-	WINDOW_SORT_BY_PATH = 4
-} WindowSortMethod;
-
-
-typedef enum {
-	WINDOW_LIST_MODE_FLAT,
-	WINDOW_LIST_MODE_AS_DIR
-} WindowListMode;
-
+	FR_WINDOW_LIST_MODE_FLAT,
+	FR_WINDOW_LIST_MODE_AS_DIR
+} FRWindowListMode;
 
 typedef enum {
 	FR_COMPRESS_PROGRAM_NONE,
@@ -57,14 +54,12 @@ typedef enum {
 	FR_COMPRESS_PROGRAM_LZOP
 } FRCompressProgram;
 
-
 typedef enum {
 	FR_COMPRESSION_VERY_FAST,
 	FR_COMPRESSION_FAST,
 	FR_COMPRESSION_NORMAL,
 	FR_COMPRESSION_MAXIMUM
 } FRCompression;
-
 
 typedef enum {
 	FR_PROC_ERROR_NONE,
@@ -77,13 +72,11 @@ typedef enum {
 	FR_PROC_ERROR_ASK_PASSWORD
 } FRProcErrorType;
 
-
 typedef struct {
 	FRProcErrorType  type;
 	int              status;
 	GError          *gerror;
 } FRProcError;
-
 
 typedef enum {
 	FR_FILE_TYPE_ACE,
@@ -117,14 +110,12 @@ typedef enum {
 	FR_FILE_TYPE_NULL
 } FRFileType;
 
-
 typedef struct {
 	FRFileType  id;
 	char       *ext;
 	char       *mime_type;
 	char       *name;
 } FRFileTypeDescription;
-
 
 typedef struct {
 	char       *command;
@@ -133,7 +124,6 @@ typedef struct {
 	gboolean    support_many_files;
 	FRFileType  file_type;
 } FRCommandDescription;
-
 
 #endif /* TYPEDEFS_H */
 

@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include "gtk-utils.h"
-#include "window.h"
+#include "fr-window.h"
 
 
 #define PROP_GLADE_FILE "file-roller.glade"
@@ -34,7 +34,7 @@
 
 typedef struct {
 	GladeXML  *gui;
-	FRWindow  *window;
+	FrWindow  *window;
 	GtkWidget *dialog;
 	GtkWidget *pw_password_entry;
 } DialogData;
@@ -43,10 +43,10 @@ typedef struct {
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
-            DialogData *data)
+	    DialogData *data)
 {
 	g_object_unref (data->gui);
-        g_free (data);
+	g_free (data);
 }
 
 
@@ -60,7 +60,7 @@ response_cb (GtkWidget  *dialog,
 	switch (response_id) {
 	case GTK_RESPONSE_OK:
 		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
-		window_set_password (data->window, password);
+		fr_window_set_password (data->window, password);
 		g_free (password);
 		break;
 	default:
@@ -75,26 +75,25 @@ void
 dlg_password (GtkWidget *widget,
 	      gpointer   callback_data)
 {
-	FRWindow   *window = callback_data;
-        DialogData *data;
+	FrWindow   *window = callback_data;
+	DialogData *data;
 
-        data = g_new0 (DialogData, 1);
+	data = g_new0 (DialogData, 1);
 	data->window = window;
 	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-                g_warning ("Could not find " PROP_GLADE_FILE "\n");
-                return;
-        }
+		g_warning ("Could not find " PROP_GLADE_FILE "\n");
+		return;
+	}
 
-        /* Get the widgets. */
+	/* Get the widgets. */
 
-        data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
+	data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
 	data->pw_password_entry = glade_xml_get_widget (data->gui, "pw_password_entry");
 
 	/* Set widgets data. */
 
-	if (window->password != NULL)
-		_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry), window->password);
+	_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry), fr_window_get_password (window));
 
 	/* Set the signals handlers. */
 
@@ -111,10 +110,10 @@ dlg_password (GtkWidget *widget,
 	/* Run dialog. */
 
 	gtk_widget_grab_focus (data->pw_password_entry);
-	if (GTK_WIDGET_REALIZED (window->app))
+	if (GTK_WIDGET_REALIZED (window))
 		gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
-					      GTK_WINDOW (window->app));
-        gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
+					      GTK_WINDOW (window));
+	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 
 	gtk_widget_show (data->dialog);
 }

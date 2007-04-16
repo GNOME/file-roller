@@ -107,6 +107,8 @@ file_roller_SOURCES = 			\
 	fr-stock.h			\
 	fr-process.c			\
 	fr-process.h			\
+	fr-window.c			\
+	fr-window.h			\
 	gconf-utils.c			\
 	gconf-utils.h			\
 	glib-utils.c			\
@@ -125,8 +127,6 @@ file_roller_SOURCES = 			\
 	ui.h				\
 	utf8-fnmatch.c			\
 	utf8-fnmatch.h			\
-	window.h			\
-	window.c			\
 	$(MKDTEMP_FILES)		\
 	$(BUILT_SOURCES)
 

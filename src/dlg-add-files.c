@@ -29,7 +29,7 @@
 #include <glade/glade.h>
 #include "file-utils.h"
 #include "fr-stock.h"
-#include "window.h"
+#include "fr-window.h"
 #include "gtk-utils.h"
 
 
@@ -37,7 +37,7 @@
 
 
 typedef struct {
-	FRWindow  *window;
+	FrWindow  *window;
 	GtkWidget *dialog;
 	GtkWidget *add_if_newer_checkbutton;
 } DialogData;
@@ -57,7 +57,7 @@ file_sel_response_cb (GtkWidget      *widget,
 		      DialogData     *data)
 {
 	GtkFileChooser *file_sel = GTK_FILE_CHOOSER (widget);
-	FRWindow       *window = data->window;
+	FrWindow       *window = data->window;
 	char           *current_folder;
 	gboolean        update;
 	GSList         *selections, *iter;
@@ -87,7 +87,7 @@ file_sel_response_cb (GtkWidget      *widget,
 		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not add the files to the archive"),
@@ -102,7 +102,7 @@ file_sel_response_cb (GtkWidget      *widget,
 		return FALSE;
 	}
 
-	window_set_add_default_dir (window, current_folder);
+	fr_window_set_add_default_dir (window, current_folder);
 
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));
 
@@ -115,7 +115,7 @@ file_sel_response_cb (GtkWidget      *widget,
 	}
 
 	if (item_list != NULL)
-		window_archive_add_files (window, item_list, update);
+		fr_window_archive_add_files (window, item_list, update);
 
 	g_list_free (item_list);
 	g_slist_foreach (selections, (GFunc) g_free, NULL);
@@ -132,7 +132,7 @@ static void
 selection_changed_cb (GtkWidget  *file_sel,
  		      DialogData *data)
 {
-	FRWindow *window = data->window;
+	FrWindow *window = data->window;
 	char     *current_folder;
 
 	current_folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (file_sel));
@@ -149,7 +149,7 @@ selection_changed_cb (GtkWidget  *file_sel,
 		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
 		g_free (utf8_path);
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window->app),
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_MODAL,
 					     GTK_STOCK_DIALOG_ERROR,
 					     _("Could not add the files to the archive"),
@@ -170,15 +170,15 @@ void
 add_files_cb (GtkWidget *widget,
 	      void      *callback_data)
 {
-	GtkWidget   *file_sel;
-	DialogData  *data;
-	GtkWidget   *main_box;
+	GtkWidget  *file_sel;
+	DialogData *data;
+	GtkWidget  *main_box;
 
 	data = g_new0 (DialogData, 1);
 	data->window = callback_data;
 	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Add Files"),
-					     GTK_WINDOW (data->window->app),
+					     GTK_WINDOW (data->window),
 					     GTK_FILE_CHOOSER_ACTION_OPEN,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     FR_STOCK_ADD_FILES, GTK_RESPONSE_OK,
@@ -204,7 +204,7 @@ add_files_cb (GtkWidget *widget,
 
 	/* set data */
 
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), data->window->add_default_dir);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_add_default_dir (data->window));
 
 	/* signals */
 

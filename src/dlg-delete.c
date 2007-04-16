@@ -23,7 +23,7 @@
 #include <config.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "window.h"
+#include "fr-window.h"
 #include "gtk-utils.h"
 
 
@@ -31,7 +31,7 @@
 
 
 typedef struct {
-	FRWindow  *window;
+	FrWindow  *window;
 	GladeXML  *gui;
 
 	GtkWidget *dialog;
@@ -45,21 +45,21 @@ typedef struct {
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
-            DialogData *data)
+	    DialogData *data)
 {
-        g_object_unref (G_OBJECT (data->gui));
-        g_free (data);
+	g_object_unref (G_OBJECT (data->gui));
+	g_free (data);
 }
 
 
 /* called when the "ok" button is pressed. */
 static void
-ok_clicked_cb (GtkWidget  *widget, 
+ok_clicked_cb (GtkWidget  *widget,
 	       DialogData *data)
 {
 	gboolean  selected_files;
 	gboolean  pattern_files;
-	FRWindow *window = data->window;
+	FrWindow *window = data->window;
 	GList    *file_list = NULL;
 	gboolean  do_not_remove_if_null = FALSE;
 
@@ -68,13 +68,13 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	/* create the file list. */
 
-	if (selected_files) 
-		file_list = window_get_file_list_selection (window, TRUE, NULL);
+	if (selected_files)
+		file_list = fr_window_get_file_list_selection (window, TRUE, NULL);
 	else if (pattern_files) {
 		const char *pattern;
 		pattern = gtk_entry_get_text (GTK_ENTRY (data->d_files_entry));
-		file_list = window_get_file_list_pattern (window, pattern);
-		if (file_list == NULL) 
+		file_list = fr_window_get_file_list_pattern (window, pattern);
+		if (file_list == NULL)
 			do_not_remove_if_null = TRUE;
 	}
 
@@ -85,7 +85,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	/* remove ! */
 
 	if (! do_not_remove_if_null || (file_list != NULL))
-		window_archive_remove (window, file_list, window->compression);
+		fr_window_archive_remove (window, file_list, fr_window_get_compression (window));
 
 	if (file_list != NULL) {
 		g_list_foreach (file_list, (GFunc) g_free, NULL);
@@ -95,7 +95,7 @@ ok_clicked_cb (GtkWidget  *widget,
 
 
 static void
-entry_changed_cb (GtkWidget  *widget, 
+entry_changed_cb (GtkWidget  *widget,
 		  DialogData *data)
 {
 	if (! GTK_TOGGLE_BUTTON (data->d_files_radio)->active)
@@ -107,24 +107,24 @@ void
 dlg_delete (GtkWidget *widget,
 	    gpointer   callback_data)
 {
-        DialogData *data;
-	FRWindow   *window = callback_data;
+	DialogData *data;
+	FrWindow   *window = callback_data;
 	GtkWidget  *cancel_button;
 	GtkWidget  *ok_button;
 
-        data = g_new (DialogData, 1);
+	data = g_new (DialogData, 1);
 
-        data->window = window;
+	data->window = window;
 
 	data->gui = glade_xml_new (GLADEDIR "/" EXTRACT_GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-                g_warning ("Could not find " EXTRACT_GLADE_FILE "\n");
-                return;
-        }
+		g_warning ("Could not find " EXTRACT_GLADE_FILE "\n");
+		return;
+	}
 
-        /* Get the widgets. */
+	/* Get the widgets. */
 
-        data->dialog = glade_xml_get_widget (data->gui, "delete_dialog");
+	data->dialog = glade_xml_get_widget (data->gui, "delete_dialog");
 	data->d_all_files_radio = glade_xml_get_widget (data->gui, "d_all_files_radio");
 	data->d_selected_files_radio = glade_xml_get_widget (data->gui, "d_selected_files_radio");
 	data->d_files_radio = glade_xml_get_widget (data->gui, "d_files_radio");
@@ -135,7 +135,7 @@ dlg_delete (GtkWidget *widget,
 
 	/* Set widgets data. */
 
-	if (_gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->list_view))) > 0)
+	if (fr_window_get_n_selected_files (window) > 0)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio), TRUE);
 	else {
 		gtk_widget_set_sensitive (data->d_selected_files_radio, FALSE);
@@ -144,28 +144,28 @@ dlg_delete (GtkWidget *widget,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog), 
+	g_signal_connect (G_OBJECT (data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect_swapped (G_OBJECT (cancel_button), 
+	g_signal_connect_swapped (G_OBJECT (cancel_button),
 				  "clicked",
 				  G_CALLBACK (gtk_widget_destroy),
 				  G_OBJECT (data->dialog));
-	g_signal_connect (G_OBJECT (ok_button), 
+	g_signal_connect (G_OBJECT (ok_button),
 			  "clicked",
 			  G_CALLBACK (ok_clicked_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->d_files_entry), 
+	g_signal_connect (G_OBJECT (data->d_files_entry),
 			  "changed",
 			  G_CALLBACK (entry_changed_cb),
 			  data);
 
 	/* Run dialog. */
 
-        gtk_window_set_transient_for (GTK_WINDOW (data->dialog), 
-				      GTK_WINDOW (window->app));
-        gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
+	gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
+				      GTK_WINDOW (window));
+	gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
 
 	gtk_widget_show (data->dialog);
 }

@@ -27,7 +27,7 @@
 #include "main.h"
 #include "file-utils.h"
 #include "gconf-utils.h"
-#include "window.h"
+#include "fr-window.h"
 
 
 #define DIALOG_PREFIX "/apps/file-roller/dialogs/"
@@ -46,14 +46,14 @@ get_enum_from_string (EnumStringTable *table,
 	int i;
 
 	/* return the first value if s_value is invalid */
-	
+
 	if (s_value == NULL)
-		return table[0].i_value; 
+		return table[0].i_value;
 
 	for (i = 0; table[i].s_value != NULL; i++)
 		if (strcmp (s_value, table[i].s_value) == 0)
 			return table[i].i_value;
-	
+
 	return table[0].i_value;
 }
 
@@ -67,7 +67,7 @@ get_string_from_enum (EnumStringTable *table,
 	for (i = 0; table[i].s_value != NULL; i++)
 		if (i_value == table[i].i_value)
 			return table[i].s_value;
-	
+
 	/* return the first value if i_value is invalid */
 
 	return table[0].s_value;
@@ -78,11 +78,11 @@ get_string_from_enum (EnumStringTable *table,
 
 
 static EnumStringTable sort_method_table [] = {
-	{ WINDOW_SORT_BY_NAME, "name" },
-	{ WINDOW_SORT_BY_SIZE, "size" },
-        { WINDOW_SORT_BY_TYPE, "type" },
-        { WINDOW_SORT_BY_TIME, "time" },
-        { WINDOW_SORT_BY_PATH, "path" },
+	{ FR_WINDOW_SORT_BY_NAME, "name" },
+	{ FR_WINDOW_SORT_BY_SIZE, "size" },
+	{ FR_WINDOW_SORT_BY_TYPE, "type" },
+	{ FR_WINDOW_SORT_BY_TIME, "time" },
+	{ FR_WINDOW_SORT_BY_PATH, "path" },
 	{ 0, NULL }
 };
 
@@ -93,8 +93,8 @@ static EnumStringTable sort_type_table [] = {
 };
 
 static EnumStringTable list_mode_table [] = {
-	{ WINDOW_LIST_MODE_FLAT, "all_files" },
-	{ WINDOW_LIST_MODE_AS_DIR, "as_folder" },
+	{ FR_WINDOW_LIST_MODE_FLAT, "all_files" },
+	{ FR_WINDOW_LIST_MODE_AS_DIR, "as_folder" },
 	{ 0, NULL }
 };
 
@@ -110,8 +110,8 @@ static EnumStringTable compression_level_table [] = {
 /* --------------- */
 
 
-WindowSortMethod
-preferences_get_sort_method ()
+FRWindowSortMethod
+preferences_get_sort_method (void)
 {
 	char *s_value;
 	int   i_value;
@@ -120,12 +120,12 @@ preferences_get_sort_method ()
 	i_value = get_enum_from_string (sort_method_table, s_value);
 	g_free (s_value);
 
-	return (WindowSortMethod) i_value;
+	return (FRWindowSortMethod) i_value;
 }
 
 
 void
-preferences_set_sort_method (WindowSortMethod i_value)
+preferences_set_sort_method (FRWindowSortMethod i_value)
 {
 	char *s_value;
 
@@ -135,7 +135,7 @@ preferences_set_sort_method (WindowSortMethod i_value)
 
 
 GtkSortType
-preferences_get_sort_type ()
+preferences_get_sort_type (void)
 {
 	char *s_value;
 	int   i_value;
@@ -158,8 +158,8 @@ preferences_set_sort_type (GtkSortType i_value)
 }
 
 
-WindowListMode
-preferences_get_list_mode ()
+FRWindowListMode
+preferences_get_list_mode (void)
 {
 	char *s_value;
 	int   i_value;
@@ -168,12 +168,12 @@ preferences_get_list_mode ()
 	i_value = get_enum_from_string (list_mode_table, s_value);
 	g_free (s_value);
 
-	return (WindowListMode) i_value;
+	return (FRWindowListMode) i_value;
 }
 
 
 void
-preferences_set_list_mode (WindowListMode i_value)
+preferences_set_list_mode (FRWindowListMode i_value)
 {
 	char *s_value;
 
@@ -183,7 +183,7 @@ preferences_set_list_mode (WindowListMode i_value)
 
 
 FRCompression
-preferences_get_compression_level ()
+preferences_get_compression_level (void)
 {
 	char *s_value;
 	int   i_value;
@@ -207,7 +207,7 @@ preferences_set_compression_level (FRCompression i_value)
 
 
 static void
-set_dialog_property_int (const char *dialog, 
+set_dialog_property_int (const char *dialog,
 			 const char *property, 
 			 int         value)
 {
@@ -226,17 +226,17 @@ pref_util_save_window_geometry (GtkWindow  *window,
 	int x, y, width, height;
 
 	gtk_window_get_position (window, &x, &y);
-	set_dialog_property_int (dialog, "x", x); 
-	set_dialog_property_int (dialog, "y", y); 
+	set_dialog_property_int (dialog, "x", x);
+	set_dialog_property_int (dialog, "y", y);
 
 	gtk_window_get_size (window, &width, &height);
-	set_dialog_property_int (dialog, "width", width); 
-	set_dialog_property_int (dialog, "height", height); 
+	set_dialog_property_int (dialog, "width", width);
+	set_dialog_property_int (dialog, "height", height);
 }
 
 
 static int
-get_dialog_property_int (const char *dialog, 
+get_dialog_property_int (const char *dialog,
 			 const char *property)
 {
 	char *key;
@@ -261,7 +261,7 @@ pref_util_restore_window_geometry (GtkWindow  *window,
 	width = get_dialog_property_int (dialog, "width");
 	height = get_dialog_property_int (dialog, "height");
 
-	if (width != -1 && height != 1) 
+	if (width != -1 && height != 1)
 		gtk_window_set_default_size (window, width, height);
 
 	gtk_window_present (window);

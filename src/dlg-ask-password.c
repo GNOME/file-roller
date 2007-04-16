@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include "gtk-utils.h"
-#include "window.h"
+#include "fr-window.h"
 
 
 #define PROP_GLADE_FILE "ask-password.glade"
@@ -34,7 +34,7 @@
 
 typedef struct {
 	GladeXML  *gui;
-	FRWindow  *window;
+	FrWindow  *window;
 	GtkWidget *dialog;
 	GtkWidget *pw_password_entry;
 } DialogData;
@@ -43,10 +43,10 @@ typedef struct {
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
-            DialogData *data)
+	    DialogData *data)
 {
 	g_object_unref (data->gui);
-        g_free (data);
+	g_free (data);
 }
 
 
@@ -60,19 +60,19 @@ ask_password__response_cb (GtkWidget  *dialog,
 	switch (response_id) {
 	case GTK_RESPONSE_OK:
 		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
-		window_set_password (data->window, password);
+		fr_window_set_password (data->window, password);
 		g_free (password);
-		if (data->window->batch_mode)
-			window_batch_mode_resume (data->window);
+		if (fr_window_is_batch_mode (data->window))
+			fr_window_batch_mode_resume (data->window);
 		else
-			window_restart_current_action (data->window);
+			fr_window_restart_current_action (data->window);
 		break;
 
 	default:
-		if (data->window->batch_mode)
-			window_close (data->window);
+		if (fr_window_is_batch_mode (data->window))
+			gtk_widget_destroy (GTK_WIDGET (data->window));
 		else
-			window_current_action_description_reset (data->window);
+			fr_window_current_action_description_reset (data->window);
 		break;
 	}
 
@@ -81,34 +81,35 @@ ask_password__response_cb (GtkWidget  *dialog,
 
 
 void
-dlg_ask_password (FRWindow *window)
+dlg_ask_password (FrWindow *window)
 {
-        DialogData *data;
+	DialogData *data;
 	GtkWidget  *label;
 	char       *text;
 
-        data = g_new0 (DialogData, 1);
+	data = g_new0 (DialogData, 1);
 	data->window = window;
 	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-                g_warning ("Could not find " PROP_GLADE_FILE "\n");
-                return;
-        }
+		g_warning ("Could not find " PROP_GLADE_FILE "\n");
+		return;
+	}
 
-        /* Get the widgets. */
+	/* Get the widgets. */
 
-        data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
+	data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
 	data->pw_password_entry = glade_xml_get_widget (data->gui, "pw_password_entry");
 
 	label = glade_xml_get_widget (data->gui, "pw_password_label");
 
 	/* Set widgets data. */
 
-	text = g_strdup_printf (_("Enter the password for the archive '%s'."), g_filename_display_basename (window->archive_filename));
+	text = g_strdup_printf (_("Enter the password for the archive '%s'."), g_filename_display_basename (fr_window_get_archive_uri (window)));
 	gtk_label_set_label (GTK_LABEL (label), text);
 	g_free (text);
-	if (window->password != NULL)
-		_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry), window->password);
+	if (fr_window_get_password (window) != NULL)
+		_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry),
+					    fr_window_get_password (window));
 
 	/* Set the signals handlers. */
 
@@ -125,10 +126,10 @@ dlg_ask_password (FRWindow *window)
 	/* Run dialog. */
 
 	gtk_widget_grab_focus (data->pw_password_entry);
-	if (GTK_WIDGET_REALIZED (window->app))
+	if (GTK_WIDGET_REALIZED (window))
 		gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
-					      GTK_WINDOW (window->app));
-        gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
+					      GTK_WINDOW (window));
+	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 
 	gtk_widget_show (data->dialog);
 }

@@ -29,11 +29,11 @@
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "preferences.h"
 #include "fr-process.h"
-#include "window.h"
+#include "fr-window.h"
 
 
 typedef struct {
-	FRWindow  *window;
+	FrWindow  *window;
 	FRProcess *process;
 	char      *filename;
 	char      *e_filename;
@@ -41,7 +41,7 @@ typedef struct {
 } ViewerData;
 
 typedef struct {
-	FRWindow           *window;
+	FrWindow           *window;
 	FRProcess          *process;
 	char               *command;
 	GnomeVFSMimeApplication *app;
@@ -54,11 +54,11 @@ void  viewer_done      (ViewerData  *vdata);
 void  command_done     (CommandData *cdata);
 
 
-extern GList       *window_list;
-extern GList       *viewer_list;
-extern GList       *command_list;
-extern gint         force_directory_creation;
-extern GHashTable  *programs_cache;
+extern GList       *WindowList;
+extern GList       *ViewerList;
+extern GList       *CommandList;
+extern gint         ForceDirectoryCreation;
+extern GHashTable  *ProgramsCache;
 
 extern FRFileTypeDescription file_type_desc[];
 extern FRFileType single_file_save_type[]; /* File types that can be saved when

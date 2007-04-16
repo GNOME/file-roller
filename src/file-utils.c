@@ -989,7 +989,7 @@ is_program_in_path (const char *filename)
 	char *value;
 	int   result = FALSE;
 
-	value = g_hash_table_lookup (programs_cache, filename);
+	value = g_hash_table_lookup (ProgramsCache, filename);
 	if (value != NULL) {
 		result = (strcmp (value, "1") == 0);
 		return result;
@@ -1001,7 +1001,7 @@ is_program_in_path (const char *filename)
 		result = TRUE;
 	}
 
-	g_hash_table_insert (programs_cache,
+	g_hash_table_insert (ProgramsCache,
 			     g_strdup (filename),
 			     result ? "1" : "0");
 

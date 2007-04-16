@@ -66,7 +66,7 @@
 
 
 typedef struct {
-	FRArchive     *archive;
+	FrArchive     *archive;
 	GList         *item_list;
 	char          *base_dir;
 	char          *dest_dir;
@@ -77,7 +77,7 @@ typedef struct {
 
 
 static DroppedItemsData *
-dropped_items_data_new (FRArchive     *archive,
+dropped_items_data_new (FrArchive     *archive,
 			GList         *item_list,
 			const char    *base_dir,
 			const char    *dest_dir,
@@ -133,7 +133,7 @@ struct _FRArchivePrivData {
 
 
 typedef struct {
-	FRArchive      *archive;
+	FrArchive      *archive;
 	char           *uri;
 	char           *password;
 	FRAction        action;
@@ -187,8 +187,8 @@ enum {
 static GObjectClass *parent_class;
 static guint fr_archive_signals[LAST_SIGNAL] = { 0 };
 
-static void fr_archive_class_init (FRArchiveClass *class);
-static void fr_archive_init       (FRArchive *archive);
+static void fr_archive_class_init (FrArchiveClass *class);
+static void fr_archive_init       (FrArchive *archive);
 static void fr_archive_finalize   (GObject *object);
 
 
@@ -199,19 +199,19 @@ fr_archive_get_type (void)
 
 	if (! type) {
 		static const GTypeInfo type_info = {
-			sizeof (FRArchiveClass),
+			sizeof (FrArchiveClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_archive_class_init,
 			NULL,
 			NULL,
-			sizeof (FRArchive),
+			sizeof (FrArchive),
 			0,
 			(GInstanceInitFunc) fr_archive_init
 		};
 
 		type = g_type_register_static (G_TYPE_OBJECT,
-					       "FRArchive",
+					       "FrArchive",
 					       &type_info,
 					       0);
 	}
@@ -221,7 +221,7 @@ fr_archive_get_type (void)
 
 
 static void
-fr_archive_class_init (FRArchiveClass *class)
+fr_archive_class_init (FrArchiveClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
@@ -231,7 +231,7 @@ fr_archive_class_init (FRArchiveClass *class)
 		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRArchiveClass, start),
+			      G_STRUCT_OFFSET (FrArchiveClass, start),
 			      NULL, NULL,
 			      fr_marshal_VOID__INT,
 			      G_TYPE_NONE,
@@ -240,7 +240,7 @@ fr_archive_class_init (FRArchiveClass *class)
 		g_signal_new ("done",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRArchiveClass, done),
+			      G_STRUCT_OFFSET (FrArchiveClass, done),
 			      NULL, NULL,
 			      fr_marshal_VOID__INT_POINTER,
 			      G_TYPE_NONE, 2,
@@ -250,7 +250,7 @@ fr_archive_class_init (FRArchiveClass *class)
 		g_signal_new ("progress",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRArchiveClass, progress),
+			      G_STRUCT_OFFSET (FrArchiveClass, progress),
 			      NULL, NULL,
 			      fr_marshal_VOID__DOUBLE,
 			      G_TYPE_NONE, 1,
@@ -259,7 +259,7 @@ fr_archive_class_init (FRArchiveClass *class)
 		g_signal_new ("message",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRArchiveClass, message),
+			      G_STRUCT_OFFSET (FrArchiveClass, message),
 			      NULL, NULL,
 			      fr_marshal_VOID__STRING,
 			      G_TYPE_NONE, 1,
@@ -268,7 +268,7 @@ fr_archive_class_init (FRArchiveClass *class)
 		g_signal_new ("stoppable",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRArchiveClass, stoppable),
+			      G_STRUCT_OFFSET (FrArchiveClass, stoppable),
 			      NULL, NULL,
 			      fr_marshal_VOID__BOOL,
 			      G_TYPE_NONE,
@@ -283,7 +283,7 @@ fr_archive_class_init (FRArchiveClass *class)
 
 
 void
-fr_archive_stoppable (FRArchive *archive,
+fr_archive_stoppable (FrArchive *archive,
 		      gboolean   stoppable)
 {
 	g_signal_emit (G_OBJECT (archive),
@@ -294,7 +294,7 @@ fr_archive_stoppable (FRArchive *archive,
 
 
 void
-fr_archive_stop (FRArchive *archive)
+fr_archive_stop (FrArchive *archive)
 {
 	if (archive->process != NULL)
 		fr_process_stop (archive->process);
@@ -317,7 +317,7 @@ fr_archive_stop (FRArchive *archive)
 
 
 void
-fr_archive_action_completed (FRArchive       *archive,
+fr_archive_action_completed (FrArchive       *archive,
 			     FRAction         action,
 			     FRProcErrorType  error_type,
 			     const char      *error_details)
@@ -338,7 +338,7 @@ fr_archive_action_completed (FRArchive       *archive,
 
 
 static gboolean
-fr_archive_add_is_stoppable (FRArchive *archive)
+fr_archive_add_is_stoppable (FrArchive *archive)
 {
 	if (archive->priv->add_is_stoppable_func != NULL)
 		return (*archive->priv->add_is_stoppable_func) (archive, archive->priv->add_is_stoppable_data);
@@ -349,7 +349,7 @@ fr_archive_add_is_stoppable (FRArchive *archive)
 
 static gboolean
 archive_sticky_only_cb (FRProcess *process,
-			FRArchive *archive)
+			FrArchive *archive)
 {
 	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
 	return TRUE;
@@ -357,7 +357,7 @@ archive_sticky_only_cb (FRProcess *process,
 
 
 static void
-fr_archive_init (FRArchive *archive)
+fr_archive_init (FrArchive *archive)
 {
 	archive->uri = NULL;
 	archive->local_filename = NULL;
@@ -366,7 +366,7 @@ fr_archive_init (FRArchive *archive)
 	archive->is_compressed_file = FALSE;
 	archive->can_create_compressed_file = FALSE;
 
-	archive->priv = g_new0 (FRArchivePrivData, 1);
+	archive->priv = g_new0 (FrArchivePrivData, 1);
 	archive->priv->fake_load_func = NULL;
 	archive->priv->fake_load_data = NULL;
 	archive->priv->add_is_stoppable_func = NULL;
@@ -380,7 +380,7 @@ fr_archive_init (FRArchive *archive)
 }
 
 
-FRArchive *
+FrArchive *
 fr_archive_new (void)
 {
 	return FR_ARCHIVE (g_object_new (FR_TYPE_ARCHIVE, NULL));
@@ -405,7 +405,7 @@ get_temp_local_filename (const char *remote_uri)
 
 
 static void
-fr_archive_set_uri (FRArchive  *archive,
+fr_archive_set_uri (FrArchive  *archive,
 		    const char *uri)
 {
 	if ((archive->local_filename != NULL) && archive->is_remote) {
@@ -448,7 +448,7 @@ fr_archive_set_uri (FRArchive  *archive,
 
 
 static void
-fr_archive_remove_temp_work_dir (FRArchive *archive)
+fr_archive_remove_temp_work_dir (FrArchive *archive)
 {
 	if (archive->priv->temp_dir == NULL)
 		return;
@@ -461,7 +461,7 @@ fr_archive_remove_temp_work_dir (FRArchive *archive)
 static void
 fr_archive_finalize (GObject *object)
 {
-	FRArchive *archive;
+	FrArchive *archive;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_ARCHIVE (object));
@@ -488,7 +488,7 @@ fr_archive_finalize (GObject *object)
 
 /* filename must not be escaped. */
 static gboolean
-create_command_from_mime_type (FRArchive  *archive,
+create_command_from_mime_type (FrArchive  *archive,
 			       const char *filename,
 			       const char *mime_type)
 {
@@ -625,7 +625,7 @@ get_mime_type_from_sniffer (const char *filename)
 
 /* filename must not be escaped. */
 static gboolean
-create_command_from_filename (FRArchive  *archive,
+create_command_from_filename (FrArchive  *archive,
 			      const char *filename,
 			      gboolean    loading)
 {
@@ -805,7 +805,7 @@ create_command_from_filename (FRArchive  *archive,
 static void
 action_started (FRCommand *command,
 		FRAction   action,
-		FRArchive *archive)
+		FrArchive *archive)
 {
 #ifdef DEBUG
 	debug (DEBUG_INFO, "%s [START] (FR::Archive)\n", action_names[action]);
@@ -822,7 +822,7 @@ action_started (FRCommand *command,
 
 
 static void
-fr_archive_copy__error (FRArchive      *archive,
+fr_archive_copy__error (FrArchive      *archive,
 			FRAction        action,
 			GnomeVFSResult  result)
 {
@@ -841,7 +841,7 @@ fr_archive_copy__error (FRArchive      *archive,
 
 
 static void
-fr_archive_copy_to_remote_location__step2 (FRArchive      *archive,
+fr_archive_copy_to_remote_location__step2 (FrArchive      *archive,
 					   FRAction        action,
 					   GnomeVFSResult  result)
 {
@@ -876,7 +876,7 @@ copy_to_remote_location_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 
 
 static void
-fr_archive_copy_to_remote_location (FRArchive  *archive,
+fr_archive_copy_to_remote_location (FrArchive  *archive,
 				    FRAction    action)
 {
 	GnomeVFSURI    *source_uri, *target_uri;
@@ -925,7 +925,7 @@ static void
 action_performed (FRCommand   *command,
 		  FRAction     action,
 		  FRProcError *error,
-		  FRArchive   *archive)
+		  FrArchive   *archive)
 {
 #ifdef DEBUG
 	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", action_names[action]);
@@ -963,7 +963,7 @@ action_performed (FRCommand   *command,
 static gboolean
 archive_progress_cb (FRCommand *command,
 		     double     fraction,
-		     FRArchive *archive)
+		     FrArchive *archive)
 {
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[PROGRESS],
@@ -976,7 +976,7 @@ archive_progress_cb (FRCommand *command,
 static gboolean
 archive_message_cb  (FRCommand  *command,
 		     const char *msg,
-		     FRArchive  *archive)
+		     FrArchive  *archive)
 {
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[MESSAGE],
@@ -988,7 +988,7 @@ archive_message_cb  (FRCommand  *command,
 
 /* filename must not be escaped. */
 gboolean
-fr_archive_create (FRArchive  *archive,
+fr_archive_create (FrArchive  *archive,
 		   const char *uri)
 {
 	FRCommand *tmp_command;
@@ -1031,7 +1031,7 @@ fr_archive_create (FRArchive  *archive,
 
 
 void
-fr_archive_set_fake_load_func (FRArchive    *archive,
+fr_archive_set_fake_load_func (FrArchive    *archive,
 			       FakeLoadFunc  func,
 			       gpointer      data)
 {
@@ -1041,7 +1041,7 @@ fr_archive_set_fake_load_func (FRArchive    *archive,
 
 
 gboolean
-fr_archive_fake_load (FRArchive *archive)
+fr_archive_fake_load (FrArchive *archive)
 {
 	if (archive->priv->fake_load_func != NULL)
 		return (*archive->priv->fake_load_func) (archive, archive->priv->fake_load_data);
@@ -1054,7 +1054,7 @@ fr_archive_fake_load (FRArchive *archive)
 
 
 static void
-fr_archive_load__error (FRArchive  *archive,
+fr_archive_load__error (FrArchive  *archive,
 			const char *message)
 {
 	archive->priv->xfer_handle = NULL;
@@ -1066,7 +1066,7 @@ fr_archive_load__error (FRArchive  *archive,
 
 
 static void
-copy_remote_file__step2 (FRArchive      *archive,
+copy_remote_file__step2 (FrArchive      *archive,
 			 char           *uri,
 			 char           *password,
 			 GnomeVFSResult  result)
@@ -1166,7 +1166,7 @@ copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 
 
 static void
-copy_remote_file (FRArchive  *archive,
+copy_remote_file (FrArchive  *archive,
 		  const char *remote_uri,
 		  const char *local_filename,
 		  const char *password)
@@ -1237,7 +1237,7 @@ copy_remote_file (FRArchive  *archive,
 
 /* filename must not be escaped. */
 gboolean
-fr_archive_load (FRArchive  *archive,
+fr_archive_load (FrArchive  *archive,
 		 const char *uri,
 		 const char *password)
 {
@@ -1256,7 +1256,7 @@ fr_archive_load (FRArchive  *archive,
 
 
 void
-fr_archive_reload (FRArchive  *archive,
+fr_archive_reload (FrArchive  *archive,
 		   const char *password)
 {
 	g_return_if_fail (archive != NULL);
@@ -1271,7 +1271,7 @@ fr_archive_reload (FRArchive  *archive,
 
 /* filename must not be escaped. */
 void
-fr_archive_rename (FRArchive  *archive,
+fr_archive_rename (FrArchive  *archive,
 		   const char *filename)
 {
 	g_return_if_fail (archive != NULL);
@@ -1340,7 +1340,7 @@ create_tmp_base_dir (const char *base_dir,
 
 /* Note: all paths unescaped. */
 static FileData *
-find_file_in_archive (FRArchive *archive,
+find_file_in_archive (FrArchive *archive,
 		      char      *path)
 {
 	GList *scan;
@@ -1357,7 +1357,7 @@ find_file_in_archive (FRArchive *archive,
 }
 
 
-static void archive_remove (FRArchive *archive, GList *file_list);
+static void archive_remove (FrArchive *archive, GList *file_list);
 
 
 static GList *
@@ -1396,7 +1396,7 @@ shell_escape_file_list (FRCommand *command,
 
 /* Note: all paths unescaped. */
 static GList *
-newer_files_only (FRArchive  *archive,
+newer_files_only (FrArchive  *archive,
 		  GList      *file_list,
 		  const char *base_dir)
 {
@@ -1432,7 +1432,7 @@ newer_files_only (FRArchive  *archive,
 
 
 void
-fr_archive_set_add_is_stoppable_func (FRArchive     *archive,
+fr_archive_set_add_is_stoppable_func (FrArchive     *archive,
 				      FakeLoadFunc   func,
 				      gpointer       data)
 {
@@ -1458,7 +1458,7 @@ convert_to_local_file_list (GList *file_list)
 
 /* Note: all paths unescaped. */
 void
-fr_archive_add (FRArchive     *archive,
+fr_archive_add (FrArchive     *archive,
 		GList         *file_list,
 		const char    *base_dir,
 		const char    *dest_dir,
@@ -1607,7 +1607,7 @@ fr_archive_add (FRArchive     *archive,
 
 /* Note: all paths unescaped. */
 static void
-fr_archive_add_local_files (FRArchive     *archive,
+fr_archive_add_local_files (FrArchive     *archive,
 			    GList         *file_list,
 			    const char    *base_dir,
 			    const char    *dest_dir,
@@ -1631,7 +1631,7 @@ fr_archive_add_local_files (FRArchive     *archive,
 static void
 copy_remote_files__step2 (XferData *xfer_data)
 {
-	FRArchive *archive = xfer_data->archive;
+	FrArchive *archive = xfer_data->archive;
 
 	if (xfer_data->result != GNOME_VFS_OK) {
 		fr_archive_action_completed (archive,
@@ -1677,7 +1677,7 @@ copy_remote_files_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 
 
 static void
-copy_remote_files (FRArchive     *archive,
+copy_remote_files (FrArchive     *archive,
 		   GList         *file_list,
 		   const char    *base_uri,
 		   const char    *dest_dir,
@@ -1782,7 +1782,7 @@ copy_remote_files (FRArchive     *archive,
 
 
 static char *
-fr_archive_get_temp_work_dir (FRArchive *archive)
+fr_archive_get_temp_work_dir (FrArchive *archive)
 {
 	fr_archive_remove_temp_work_dir (archive);
 	archive->priv->temp_dir = get_temp_work_dir ();
@@ -1792,7 +1792,7 @@ fr_archive_get_temp_work_dir (FRArchive *archive)
 
 /* Note: all paths unescaped. */
 void
-fr_archive_add_files (FRArchive     *archive,
+fr_archive_add_files (FrArchive     *archive,
 		      GList         *file_list,
 		      const char    *base_dir,
 		      const char    *dest_dir,
@@ -1862,7 +1862,7 @@ file_list_remove_from_pattern (GList      **list,
 
 
 typedef struct {
-	FRArchive     *archive;
+	FrArchive     *archive;
 	char          *exclude_files;
 	char          *base_dir;
 	char          *dest_dir;
@@ -1887,7 +1887,7 @@ add_with_wildcard__step2 (GList    *file_list,
 			  gpointer  data)
 {
 	AddWithWildcardData *aww_data = data;
-	FRArchive           *archive = aww_data->archive;
+	FrArchive           *archive = aww_data->archive;
 
 	fr_archive_action_completed (archive,
 				     FR_ACTION_GETTING_FILE_LIST, 
@@ -1914,7 +1914,7 @@ add_with_wildcard__step2 (GList    *file_list,
 
 /* Note: all paths unescaped. */
 void
-fr_archive_add_with_wildcard (FRArchive     *archive,
+fr_archive_add_with_wildcard (FrArchive     *archive,
 			      const char    *include_files,
 			      const char    *exclude_files,
 			      const char    *base_dir,
@@ -1963,7 +1963,7 @@ fr_archive_add_with_wildcard (FRArchive     *archive,
 
 
 typedef struct {
-	FRArchive     *archive;
+	FrArchive     *archive;
 	GList         *dir_list;
 	char          *base_dir;
 	char          *dest_dir;
@@ -1988,7 +1988,7 @@ add_directory__step2 (GList    *file_list,
 		      gpointer  data)
 {
 	AddDirectoryData *ad_data = data;
-	FRArchive        *archive = ad_data->archive;
+	FrArchive        *archive = ad_data->archive;
 
 	fr_archive_action_completed (archive,
 				     FR_ACTION_GETTING_FILE_LIST, 
@@ -2014,7 +2014,7 @@ add_directory__step2 (GList    *file_list,
 
 /* Note: all paths unescaped. */
 void
-fr_archive_add_directory (FRArchive     *archive,
+fr_archive_add_directory (FrArchive     *archive,
 			  const char    *directory,
 			  const char    *base_dir,
 			  const char    *dest_dir,
@@ -2053,7 +2053,7 @@ fr_archive_add_directory (FRArchive     *archive,
 
 /* Note: all paths unescaped. */
 void
-fr_archive_add_items (FRArchive     *archive,
+fr_archive_add_items (FrArchive     *archive,
 		      GList         *item_list,
 		      const char    *base_dir,
 		      const char    *dest_dir,
@@ -2133,7 +2133,7 @@ all_files_in_same_dir (GList *list)
 static void
 add_dropped_items (DroppedItemsData *data)
 {
-	FRArchive *archive = data->archive;
+	FrArchive *archive = data->archive;
 	GList     *list = data->item_list;
 	GList     *scan;
 
@@ -2253,7 +2253,7 @@ add_dropped_items (DroppedItemsData *data)
 
 
 void
-fr_archive_add_dropped_items (FRArchive     *archive,
+fr_archive_add_dropped_items (FrArchive     *archive,
 			      GList         *item_list,
 			      const char    *base_dir,
 			      const char    *dest_dir,
@@ -2320,7 +2320,7 @@ file_is_in_subfolder_of (const char *filename,
 
 /* Note: all paths unescaped. */
 static void
-archive_remove (FRArchive *archive,
+archive_remove (FrArchive *archive,
 		GList     *file_list)
 {
 	gboolean  file_list_created = FALSE;
@@ -2394,7 +2394,7 @@ archive_remove (FRArchive *archive,
 
 /* Note: all paths unescaped. */
 void
-fr_archive_remove (FRArchive     *archive,
+fr_archive_remove (FrArchive     *archive,
 		   GList         *file_list,
 		   FRCompression  compression)
 {
@@ -2416,7 +2416,7 @@ fr_archive_remove (FRArchive     *archive,
 
 /* Note: all paths escaped, source_dir and dest_dir escaped. */
 static void
-move_files_to_dir (FRArchive  *archive,
+move_files_to_dir (FrArchive  *archive,
 		   GList      *file_list,
 		   const char *source_dir,
 		   const char *dest_dir)
@@ -2445,7 +2445,7 @@ move_files_to_dir (FRArchive  *archive,
 
 /* Note: all paths unescaped, temp_dir and dest_dir unescaped. */
 static void
-move_files_in_chunks (FRArchive  *archive,
+move_files_in_chunks (FrArchive  *archive,
 		      GList      *file_list,
 		      const char *temp_dir,
 		      const char *dest_dir)
@@ -2631,7 +2631,7 @@ compute_list_base_path (const char *base_dir,
 
 
 static gboolean
-archive_type_has_issues_extracting_non_empty_folders (FRArchive *archive)
+archive_type_has_issues_extracting_non_empty_folders (FrArchive *archive)
 {
 	return ((archive->command->file_type == FR_FILE_TYPE_TAR)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
@@ -2663,7 +2663,7 @@ file_list_contains_files_in_this_dir (GList      *file_list,
  * Note2: Do not escape dest_dir it will escaped in fr_command_extract if
  *        needed. */
 void
-fr_archive_extract (FRArchive  *archive,
+fr_archive_extract (FrArchive  *archive,
 		    GList      *file_list,
 		    const char *dest_dir,
 		    const char *base_dir,
@@ -2881,7 +2881,7 @@ fr_archive_extract (FRArchive  *archive,
 
 
 void
-fr_archive_test (FRArchive  *archive,
+fr_archive_test (FrArchive  *archive,
 		 const char *password)
 {
 	fr_archive_stoppable (archive, TRUE);

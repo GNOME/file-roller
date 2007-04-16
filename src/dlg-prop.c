@@ -29,7 +29,7 @@
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gtk-utils.h"
-#include "window.h"
+#include "fr-window.h"
 
 #define PROP_GLADE_FILE "file-roller.glade"
 
@@ -78,7 +78,7 @@ help_cb (GtkWidget   *w,
 
 
 void
-dlg_prop (FRWindow *window)
+dlg_prop (FrWindow *window)
 {
 	DialogData       *data;
 	GtkWidget        *ok_button;
@@ -112,7 +112,7 @@ dlg_prop (FRWindow *window)
 
 	label = glade_xml_get_widget (data->gui, "p_path_label");
 	/* note: window->archive_filename is unescaped. */
-	s = remove_level_from_path (window->archive_filename);
+	s = remove_level_from_path (fr_window_get_archive_uri (window));
 	utf8_name = g_filename_display_name (s);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 	g_free (utf8_name);
@@ -124,7 +124,7 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Name:"));
 
 	label = glade_xml_get_widget (data->gui, "p_name_label");
-	utf8_name = g_filename_display_basename (window->archive_filename);
+	utf8_name = g_filename_display_basename (fr_window_get_archive_uri (window));
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
 	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);
@@ -139,7 +139,7 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Modified on:"));
 
 	label = glade_xml_get_widget (data->gui, "p_date_label");
-	s = get_time_string (get_file_mtime (window->archive->uri));
+	s = get_time_string (get_file_mtime (fr_window_get_archive_uri (window)));
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
@@ -149,7 +149,7 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Archive size:"));
 
 	label = glade_xml_get_widget (data->gui, "p_size_label");
-	size = get_file_size (window->archive_filename);
+	size = get_file_size (fr_window_get_archive_uri (window));
 	s = gnome_vfs_format_file_size_for_display (size);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
@@ -160,7 +160,7 @@ dlg_prop (FRWindow *window)
 	set_label (label_label, _("Content size:"));
 
 	uncompressed_size = 0;
-	if (window->archive_present) {
+	if (fr_window_archive_is_present (window)) {
 		GList *scan = window->archive->command->file_list;
 		for (; scan; scan = scan->next) {
 			FileData *fd = scan->data;
@@ -216,7 +216,7 @@ dlg_prop (FRWindow *window)
 	/* Run dialog. */
 
 	gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
-				      GTK_WINDOW (window->app));
+				      GTK_WINDOW (window));
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 
 	gtk_widget_show (data->dialog);

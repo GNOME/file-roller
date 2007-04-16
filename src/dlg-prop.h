@@ -23,9 +23,8 @@
 #ifndef DLG_PROP_H
 #define DLG_PROP_H
 
-#include "window.h"
+#include "fr-window.h"
 
-void dlg_prop (FRWindow *window);
-
+void dlg_prop (FrWindow *window);
 
 #endif /* DLG_DELETE_H */

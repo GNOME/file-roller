@@ -23,14 +23,9 @@
 #ifndef DLG_EXTRACT_H
 #define DLG_EXTRACT_H
 
-
 #include "fr-archive.h"
-#include "window.h"
+#include "fr-window.h"
 
-
-/* popup the extract dialog. */
-void dlg_extract           (GtkWidget *widget, 
-			    gpointer data);
-
+void dlg_extract (GtkWidget *widget, gpointer data);
 
 #endif /* DLG_EXTRACT_H */

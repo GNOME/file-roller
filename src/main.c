@@ -33,7 +33,7 @@
 #include "fr-process.h"
 #include "fr-stock.h"
 #include "gconf-utils.h"
-#include "window.h"
+#include "fr-window.h"
 #include "typedefs.h"
 #include "preferences.h"
 #include "file-data.h"
@@ -47,11 +47,11 @@ static void     init_session        (char **argv);
 static gboolean session_is_restored (void);
 static gboolean load_session        (void);
 
-GList        *window_list = NULL;
-GList        *viewer_list = NULL;
-GList        *command_list = NULL;
-gint          force_directory_creation;
-GHashTable   *programs_cache = NULL;
+GList        *WindowList = NULL;
+GList        *ViewerList = NULL;
+GList        *CommandList = NULL;
+gint          ForceDirectoryCreation;
+GHashTable   *ProgramsCache = NULL;
 
 static gchar **remaining_args;
 
@@ -162,7 +162,7 @@ static const GOptionEntry options[] = {
 	  N_("Default folder to use for the '--add' and '--extract' commands"),
 	  N_("FOLDER") },
 
-	{ "force", '\0', 0, G_OPTION_ARG_NONE, &force_directory_creation,
+	{ "force", '\0', 0, G_OPTION_ARG_NONE, &ForceDirectoryCreation,
 	  N_("Create destination folder without asking confirmation"),
 	  NULL },
 
@@ -248,7 +248,7 @@ initialize_data (void)
 	eel_gconf_monitor_add ("/apps/file-roller");
 	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
 
-	programs_cache = g_hash_table_new_full (g_str_hash,
+	ProgramsCache = g_hash_table_new_full (g_str_hash,
 						g_str_equal,
 						g_free,
 						NULL);
@@ -280,7 +280,7 @@ viewer_done (ViewerData *vdata)
 	if (vdata->process != NULL)
 		g_object_unref (vdata->process);
 
-	viewer_list = g_list_remove (viewer_list, vdata);
+	ViewerList = g_list_remove (ViewerList, vdata);
 	g_free (vdata);
 }
 
@@ -310,7 +310,7 @@ command_done (CommandData *cdata)
 	if (cdata->process != NULL)
 		g_object_unref (cdata->process);
 
-	command_list = g_list_remove (command_list, cdata);
+	CommandList = g_list_remove (CommandList, cdata);
 	g_free (cdata);
 }
 
@@ -318,18 +318,18 @@ command_done (CommandData *cdata)
 static void
 release_data ()
 {
-	g_hash_table_destroy (programs_cache);
+	g_hash_table_destroy (ProgramsCache);
 	file_data_release_data ();
 
 	eel_global_client_free ();
 
-	while (viewer_list != NULL) {
-		ViewerData *vdata = viewer_list->data;
+	while (ViewerList != NULL) {
+		ViewerData *vdata = ViewerList->data;
 		viewer_done (vdata);
 	}
 
-	while (command_list != NULL) {
-		CommandData *cdata = command_list->data;
+	while (CommandList != NULL) {
+		CommandData *cdata = CommandList->data;
 		command_done (cdata);
 	}
 }
@@ -496,9 +496,7 @@ prepare_app (void)
 	/**/
 
 	if (remaining_args == NULL) { /* No archive specified. */
-		FRWindow *window;
-		window = window_new ();
-		gtk_widget_show (window->app);
+		gtk_widget_show (fr_window_new ());
 		return;
 	}
 
@@ -524,14 +522,14 @@ prepare_app (void)
 	add_to_path = get_path_from_url (add_to);
 
 	if ((add_to != NULL) || (add == 1)) { /* Add files to an archive */
-		FRWindow    *window;
+		GtkWidget   *window;
 		GList       *file_list = NULL;
 		const char  *filename;
 		int          i = 0;
 
-		window = window_new ();
+		window = fr_window_new ();
 		if (default_dir != NULL)
-			window_set_default_dir (window, default_dir, TRUE);
+			fr_window_set_default_dir (FR_WINDOW (window), default_dir, TRUE);
 
 		while ((filename = remaining_args[i++]) != NULL) {
 			char *path;
@@ -550,44 +548,44 @@ prepare_app (void)
 		}
 		file_list = g_list_reverse (file_list);
 
-		window_archive__open_add (window, add_to_path, file_list);
-		window_archive__quit (window);
-		window_batch_mode_start (window);
+		fr_window_archive__open_add (FR_WINDOW (window), add_to_path, file_list);
+		fr_window_archive__quit (FR_WINDOW (window));
+		fr_window_batch_mode_start (FR_WINDOW (window));
 
 	} else if ((extract_to != NULL)
 		   || (extract == 1)
 		   || (extract_here == 1)) { /* Extract all archives. */
-		FRWindow   *window;
+		GtkWidget  *window;
 		const char *archive;
 		int         i = 0;
 
-		window = window_new ();
+		window = fr_window_new ();
 		if (default_dir != NULL)
-			window_set_default_dir (window, default_dir, TRUE);
+			fr_window_set_default_dir (FR_WINDOW (window), default_dir, TRUE);
 
 		while ((archive = remaining_args[i++]) != NULL) {
 			if (extract_here == 1)
-				window_archive__open_extract_here (window,
-								   archive,
-								   extract_to_path);
+				fr_window_archive__open_extract_here (FR_WINDOW (window),
+								      archive,
+								      extract_to_path);
 			else
-				window_archive__open_extract (window,
-							      archive,
-							      extract_to_path);
+				fr_window_archive__open_extract (FR_WINDOW (window),
+								 archive,
+								 extract_to_path);
 		}
-		window_archive__quit (window);
-		window_batch_mode_start (window);
+		fr_window_archive__quit (FR_WINDOW (window));
+		fr_window_batch_mode_start (FR_WINDOW (window));
 
 	} else { /* Open each archive in a window */
 		const char *archive;
 
 		int i = 0;
 		while ((archive = remaining_args[i++]) != NULL) {
-			FRWindow *window;
+			GtkWidget *window;
 
-			window = window_new ();
-			gtk_widget_show (window->app);
-			window_archive_open (window, archive, GTK_WINDOW (window->app));
+			window = fr_window_new ();
+			gtk_widget_show (window);
+			fr_window_archive_open (FR_WINDOW (window), archive, GTK_WINDOW (window));
 		}
 	}
 
@@ -597,7 +595,7 @@ prepare_app (void)
 }
 
 
- /* SM support */
+/* SM support */
 
 
 /* The master client we use for SM */
@@ -617,14 +615,13 @@ save_session (GnomeClient *client)
 	prefix = gnome_client_get_config_prefix (client);
 	gnome_config_push_prefix (prefix);
 
-	for (scan = window_list; scan; scan = scan->next) {
-		FRWindow *window = scan->data;
+	for (scan = WindowList; scan; scan = scan->next) {
+		FrWindow *window = scan->data;
 		char     *key;
 
 		key = g_strdup_printf ("Session/archive%d", i);
 
-		if ((window->archive == NULL)
-		    || (window->archive->uri == NULL))
+		if ((window->archive == NULL) || (window->archive->uri == NULL))
 			gnome_config_set_string (key, "");
 		else
 			gnome_config_set_string (key, window->archive->uri);
@@ -730,18 +727,18 @@ load_session (void)
 
 	n = gnome_config_get_int ("Session/archives");
 	for (i = 0; i < n; i++) {
-		FRWindow *window;
-		char     *key;
-		char     *filename;
+		GtkWidget *window;
+		char      *key;
+		char      *filename;
 
 		key = g_strdup_printf ("Session/archive%d", i);
 		filename = gnome_config_get_string (key);
 		g_free (key);
 
-		window = window_new ();
-		gtk_widget_show (window->app);
+		window = fr_window_new ();
+		gtk_widget_show (window);
 		if (strlen (filename) != 0)
-			window_archive_open (window, filename, GTK_WINDOW (window->app));
+			fr_window_archive_open (FR_WINDOW (window), filename, GTK_WINDOW (window));
 
 		g_free (filename);
 	}

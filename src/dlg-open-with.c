@@ -32,7 +32,7 @@
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "main.h"
-#include "window.h"
+#include "fr-window.h"
 
 
 #define GLADE_FILE "file-roller.glade"
@@ -41,7 +41,7 @@
 enum { ICON_COLUMN, TEXT_COLUMN, DATA_COLUMN, N_COLUMNS };
 
 typedef struct {
-	FRWindow     *window;
+	FrWindow     *window;
 	GladeXML     *gui;
 
 	GtkWidget    *dialog;
@@ -64,7 +64,7 @@ static void
 open_with__destroy_cb (GtkWidget  *widget,
 		       DialogData *data)
 {
-        g_object_unref (G_OBJECT (data->gui));
+	g_object_unref (G_OBJECT (data->gui));
 
 	if (data->app_list)
 		gnome_vfs_mime_application_list_free (data->app_list);
@@ -92,7 +92,7 @@ open_cb (GtkWidget *widget,
 	for (scan = data->app_list; scan; scan = scan->next) {
 		GnomeVFSMimeApplication *app = scan->data;
 		if (strcmp (gnome_vfs_mime_application_get_exec (app), application) == 0) {
-			window_open_files_with_application (data->window, data->file_list, app);
+			fr_window_open_files_with_application (data->window, data->file_list, app);
 			gtk_widget_destroy (data->dialog);
 			return;
 		}
@@ -121,7 +121,7 @@ open_cb (GtkWidget *widget,
 	/* exec the application */
 
 	if (command != NULL) {
-		window_open_files (data->window, data->file_list, command);
+		fr_window_open_files (data->window, data->file_list, command);
 		g_free (command);
 	}
 
@@ -135,7 +135,7 @@ app_list_selection_changed_cb (GtkTreeSelection *selection,
 {
 	DialogData              *data = p;
 	GtkTreeIter              iter;
-        GnomeVFSMimeApplication *app;
+	GnomeVFSMimeApplication *app;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_app_tree_view));
 	if (selection == NULL)
@@ -144,20 +144,20 @@ app_list_selection_changed_cb (GtkTreeSelection *selection,
 	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
 		return;
 
-        gtk_tree_model_get (data->app_model, &iter,
-                            DATA_COLUMN, &app,
-                            -1);
+	gtk_tree_model_get (data->app_model, &iter,
+			    DATA_COLUMN, &app,
+			    -1);
 	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), gnome_vfs_mime_application_get_exec (app));
 }
 
 
 static void
 app_activated_cb (GtkTreeView       *tree_view,
-                  GtkTreePath       *path,
-                  GtkTreeViewColumn *column,
-                  gpointer           callback_data)
+		  GtkTreePath       *path,
+		  GtkTreeViewColumn *column,
+		  gpointer           callback_data)
 {
-        DialogData              *data = callback_data;
+	DialogData              *data = callback_data;
 	GtkTreeIter              iter;
 	GnomeVFSMimeApplication *app;
 
@@ -190,10 +190,10 @@ recent_list_selection_changed_cb (GtkTreeSelection *selection,
 		return;
 
 	gtk_tree_model_get (data->recent_model, &iter,
-                            0, &editor,
-                            -1);
+			    0, &editor,
+			    -1);
 	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), editor);
-        g_free (editor);
+	g_free (editor);
 }
 
 
@@ -203,7 +203,7 @@ recent_activated_cb (GtkTreeView       *tree_view,
 		     GtkTreeViewColumn *column,
 		     gpointer           callback_data)
 {
-        DialogData   *data = callback_data;
+	DialogData   *data = callback_data;
 	GtkTreeIter   iter;
 	char         *editor;
 
@@ -222,7 +222,7 @@ recent_activated_cb (GtkTreeView       *tree_view,
 
 static void
 app_entry__changed_cb (GtkEditable *editable,
-                       gpointer     user_data)
+		       gpointer     user_data)
 {
 	DialogData *data = user_data;
 	const char *text;
@@ -272,7 +272,7 @@ delete_recent_cb (GtkWidget *widget,
 
 /* create the "open with" dialog. */
 void
-dlg_open_with (FRWindow *window,
+dlg_open_with (FrWindow *window,
 	       GList    *file_list)
 {
 	DialogData              *data;
@@ -294,10 +294,10 @@ dlg_open_with (FRWindow *window,
 	data->file_list = path_list_dup (file_list);
 	data->window = window;
 	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-        if (! data->gui) {
-                g_warning ("Could not find " GLADE_FILE "\n");
-                return;
-        }
+	if (! data->gui) {
+		g_warning ("Could not find " GLADE_FILE "\n");
+		return;
+	}
 
 	/* Get the widgets. */
 
@@ -324,22 +324,22 @@ dlg_open_with (FRWindow *window,
 			  data);
 
 	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_app_tree_view))),
-                          "changed",
-                          G_CALLBACK (app_list_selection_changed_cb),
-                          data);
+			  "changed",
+			  G_CALLBACK (app_list_selection_changed_cb),
+			  data);
 	g_signal_connect (G_OBJECT (data->o_app_tree_view),
-                          "row_activated",
-                          G_CALLBACK (app_activated_cb),
-                          data);
+			  "row_activated",
+			  G_CALLBACK (app_activated_cb),
+			  data);
 
 	g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view))),
-                          "changed",
-                          G_CALLBACK (recent_list_selection_changed_cb),
-                          data);
+			  "changed",
+			  G_CALLBACK (recent_list_selection_changed_cb),
+			  data);
 	g_signal_connect (G_OBJECT (data->o_recent_tree_view),
-                          "row_activated",
-                          G_CALLBACK (recent_activated_cb),
-                          data);
+			  "row_activated",
+			  G_CALLBACK (recent_activated_cb),
+			  data);
 
 	g_signal_connect (G_OBJECT (data->ok_button),
 			  "clicked",
@@ -374,7 +374,7 @@ dlg_open_with (FRWindow *window,
 							      G_TYPE_POINTER));
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (data->app_model),
-                                              TEXT_COLUMN,
+					      TEXT_COLUMN,
 					      GTK_SORT_ASCENDING);
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (data->o_app_tree_view),
@@ -429,11 +429,11 @@ dlg_open_with (FRWindow *window,
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column,
-                                         renderer,
-                                         TRUE);
-        gtk_tree_view_column_set_attributes (column, renderer,
-                                             "text", TEXT_COLUMN,
-                                             NULL);
+					 renderer,
+					 TRUE);
+	gtk_tree_view_column_set_attributes (column, renderer,
+					     "text", TEXT_COLUMN,
+					     NULL);
 
 	gtk_tree_view_append_column (GTK_TREE_VIEW (data->o_app_tree_view),
 				     column);
@@ -473,7 +473,7 @@ dlg_open_with (FRWindow *window,
 
 	/* Run dialog. */
 	gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
-				      GTK_WINDOW (window->app));
+				      GTK_WINDOW (window));
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 	gtk_widget_show_all (data->dialog);
 }
@@ -483,10 +483,10 @@ void
 open_with_cb (GtkWidget *widget,
 	      void      *callback_data)
 {
-	FRWindow *window = callback_data;
+	FrWindow *window = callback_data;
 	GList    *file_list;
 
-	file_list = window_get_file_list_selection (window, FALSE, NULL);
+	file_list = fr_window_get_file_list_selection (window, FALSE, NULL);
 	if (file_list == NULL)
 		return;
 

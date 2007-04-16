@@ -23,10 +23,10 @@
 #ifndef DLG_PASSWORD_H
 #define DLG_PASSWORD_H
 
-#include "window.h"
+#include "fr-window.h"
 
 
-void dlg_ask_password (FRWindow  *window);
+void dlg_ask_password (FrWindow  *window);
 
 
 #endif /* DLG_PASSWORD_H */
