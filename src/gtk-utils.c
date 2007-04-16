@@ -392,6 +392,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 					      GTK_STOCK_OK, GTK_RESPONSE_OK,
 					      NULL);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);

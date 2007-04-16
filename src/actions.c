@@ -45,15 +45,7 @@
 #include "glib-utils.h"
 
 
-
 /* -- new archive -- */
-
-
-static void
-new_file_destroy_cb (GtkWidget *w,
-		     GtkWidget *file_sel)
-{
-}
 
 
 static void
@@ -65,7 +57,6 @@ new_archive (GtkWidget *file_sel,
 	gboolean   new_window;
 
 	new_window = fr_window_archive_is_present (window);
-
 	if (new_window)
 		archive_window = fr_window_new ();
 	else
@@ -84,8 +75,8 @@ new_archive (GtkWidget *file_sel,
 	}
 
 	if (fr_window_archive_new (FR_WINDOW (archive_window), path)) {
-		gtk_window_present (GTK_WINDOW (archive_window));
 		gtk_widget_destroy (file_sel);
+		gtk_window_present (GTK_WINDOW (archive_window));
 	}
 	else if (new_window)
 		gtk_widget_destroy (archive_window);
@@ -159,14 +150,11 @@ get_archive_filename_from_selector (FrWindow  *window,
 
 		g_free (path);
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
-						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not create the archive"),
-						  _("You have to specify an archive name."),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+						GTK_DIALOG_DESTROY_WITH_PARENT,
+						NULL,
+						_("Could not create the archive"),
+						_("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
@@ -180,15 +168,11 @@ get_archive_filename_from_selector (FrWindow  *window,
 		g_free (dir);
 		g_free (path);
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
-						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not create the archive"),
-						  _("You don't have permission to create an archive in this folder"),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-						  NULL);
-
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+						GTK_DIALOG_DESTROY_WITH_PARENT,
+						NULL,
+						_("Could not create the archive"),
+						_("You don't have permission to create an archive in this folder"));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return NULL;
@@ -222,17 +206,15 @@ get_archive_filename_from_selector (FrWindow  *window,
 		GnomeVFSResult  result;
 
 		if (! is_supported_extension (file_sel, path)) {
-			dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
-						  GTK_DIALOG_MODAL,
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not create the archive"),
-						  _("Archive type not supported."),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-						  NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
+			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+							GTK_DIALOG_MODAL,
+							NULL,
+							_("Could not create the archive"),
+							_("Archive type not supported."));
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_free (path);
+
 			return NULL;
 		}
 
@@ -257,14 +239,11 @@ get_archive_filename_from_selector (FrWindow  *window,
 		result = gnome_vfs_unlink (path);
 		if (result != GNOME_VFS_OK) {
 			GtkWidget *dialog;
-			dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
-							  GTK_DIALOG_DESTROY_WITH_PARENT,
-							  GTK_STOCK_DIALOG_ERROR,
-							  _("Could not delete the old archive."),
-							  gnome_vfs_result_to_string (result),
-							  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-							  NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+							GTK_DIALOG_DESTROY_WITH_PARENT,
+							NULL,
+							_("Could not delete the old archive."),
+							gnome_vfs_result_to_string (result));
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_free (path);
@@ -430,10 +409,6 @@ activate_action_new (GtkAction *action,
 			  "response", 
 			  G_CALLBACK (new_file_response_cb), 
 			  file_sel);
-	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy", 
-			  G_CALLBACK (new_file_destroy_cb),
-			  file_sel);
 	g_signal_connect (G_OBJECT (combo_box),
 			  "changed", 
 			  G_CALLBACK (filetype_combobox_changed_cb),
@@ -453,8 +428,8 @@ window_archive_loaded_cb (FrWindow  *window,
 			  GtkWidget *file_sel)
 {
 	if (success) {
-		gtk_widget_destroy (file_sel);
 		g_signal_handlers_disconnect_by_data (window, file_sel);
+		gtk_widget_destroy (file_sel);
 	}
 	else {
 		FrWindow *original_window =  g_object_get_data (G_OBJECT (file_sel), "fr_window");
@@ -876,20 +851,14 @@ activate_action_manual (GtkAction *action,
 	if (err != NULL) {
 		GtkWidget *dialog;
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
-						  GTK_DIALOG_DESTROY_WITH_PARENT, 
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not display help"),
-						  err->message,
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (window),
+						GTK_DIALOG_DESTROY_WITH_PARENT,
+						NULL,
+						_("Could not display help"),
+						err->message);
 		g_signal_connect (G_OBJECT (dialog), "response",
 				  G_CALLBACK (gtk_widget_destroy),
 				  NULL);
-
-		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-
 		gtk_widget_show (dialog);
 
 		g_error_free (err);

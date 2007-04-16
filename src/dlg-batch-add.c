@@ -126,14 +126,11 @@ add_clicked_cb (GtkWidget  *widget,
 	if (*archive_name == '\0') {
 		GtkWidget  *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
-					     _("You have to specify an archive name."),
-					     GTK_STOCK_OK, GTK_RESPONSE_OK,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Could not create the archive"),
+					   _("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 		g_free (archive_name);
@@ -143,19 +140,19 @@ add_clicked_cb (GtkWidget  *widget,
 	else if (strchrs (archive_name, BAD_CHARS)) {
 		GtkWidget  *d;
 		char       *utf8_name = g_filename_display_name (archive_name);
-		char       *reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_name, BAD_CHARS, _("Please use a different name."));
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
-					     reason,
-					     GTK_STOCK_OK, GTK_RESPONSE_OK,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Could not create the archive"),
+					   _("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), 
+					   utf8_name, 
+					   BAD_CHARS, 
+					   _("Please use a different name."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (reason);
+
+		g_free (utf8_name);
 		g_free (archive_name);
 
 		return;
@@ -168,17 +165,14 @@ add_clicked_cb (GtkWidget  *widget,
 	if (! check_permissions (archive_dir, R_OK|W_OK|X_OK)) {
 		GtkWidget  *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
-					     _("You don't have the right permissions to create an archive in the destination folder."),
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
-
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Could not create the archive"),
+					   _("You don't have the right permissions to create an archive in the destination folder."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+
 		g_free (archive_dir);
 		g_free (archive_name);
 		return;
@@ -214,23 +208,16 @@ add_clicked_cb (GtkWidget  *widget,
 
 	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755)) {
 		GtkWidget  *d;
-		const char *error;
-		char       *message;
 
-		error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
-		message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
-					     message,
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
-		g_free (message);
-
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Could not create the archive"),
+					   _("Could not create the destination folder: %s."),
+					   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+
 		g_free (archive_dir);
 		g_free (archive_name);
 		return;
@@ -239,18 +226,17 @@ add_clicked_cb (GtkWidget  *widget,
 	if (do_not_add) {
 		GtkWidget *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Archive not created"),
-					     NULL,
-					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Archive not created"),
+					   NULL);
 		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+
 		g_free (archive_dir);
 		g_free (archive_name);
-		gtk_widget_destroy (GTK_WIDGET (d));
+
 		return;
 	}
 
@@ -266,19 +252,18 @@ add_clicked_cb (GtkWidget  *widget,
 	if (path_is_dir (archive_file)) {
 		GtkWidget  *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not create the archive"),
-					     _("You have to specify an archive name."),
-					     GTK_STOCK_OK, GTK_RESPONSE_OK,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Could not create the archive"),
+					   _("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
+
 		g_free (archive_name);
 		g_free (archive_dir);
 		g_free (archive_file);
+
 		return;
 	}
 

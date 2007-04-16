@@ -2109,18 +2109,16 @@ open_folder (GtkWindow  *parent,
 		utf8_name = g_filename_display_name (folder);
 		message = g_strdup_printf (_("Could not display the folder \"%s\""), utf8_name);
 		g_free (utf8_name);
-		d = _gtk_message_dialog_new (parent,
-					     GTK_DIALOG_MODAL,
-					     GTK_STOCK_DIALOG_ERROR,
-					     message,
-					     err->message,
-					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-					     NULL);
-		g_free (message);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
 
+		d = _gtk_error_dialog_new (parent,
+					   GTK_DIALOG_MODAL,
+					   NULL,
+					   message,
+					   err->message);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (d);
+
+		g_free (message);
 		g_clear_error (&err);
 	}
 	g_free (uri);
@@ -2178,6 +2176,11 @@ handle_errors (FrWindow    *window,
 			fr_window_archive_close (window);
 
 		switch (action) {
+		case FR_ACTION_CREATING_NEW_ARCHIVE:
+			dialog_parent = window->priv->load_error_parent_window;
+			msg = _("Could not create the archive");
+			break;
+
 		case FR_ACTION_EXTRACTING_FILES:
 			msg = _("An error occurred while extracting files.");
 			break;
@@ -2824,17 +2827,16 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 
 	list = get_uri_list_from_selection_data ((char*)data->data);
 	if (list == NULL) {
-		GtkWidget *dlg;
-		dlg = _gtk_message_dialog_new (GTK_WINDOW (window),
-					       GTK_DIALOG_MODAL,
-					       GTK_STOCK_DIALOG_ERROR,
-					       _("Could not perform the operation"),
-					       NULL,
-					       GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-					       NULL);
-		gtk_widget_show(dlg);
-		gtk_dialog_run(GTK_DIALOG(dlg));
-		gtk_widget_destroy(dlg);
+		GtkWidget *d;
+
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_MODAL,
+					   NULL,
+					   _("Could not perform the operation"),
+					   NULL);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy(d);
+
  		return;
 	}
 
@@ -4358,7 +4360,7 @@ fr_window_new (void)
 	window = g_object_new (FR_TYPE_WINDOW, NULL);
 	fr_window_construct ((FrWindow*) window);
 
-	return (GtkWidget *) window;
+	return window;
 }
 
 
@@ -4369,20 +4371,9 @@ fr_window_archive_new (FrWindow   *window,
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	if (! fr_archive_create (window->archive, uri)) {
-		GtkWidget *dialog;
 		GtkWindow *file_sel = g_object_get_data (G_OBJECT (window), "fr_file_sel");
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
-						  GTK_DIALOG_MODAL,
-						  GTK_STOCK_DIALOG_ERROR,
-						  _("Could not create the archive"),
-						  _("Archive type not supported."),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-						  NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-
+		window->priv->load_error_parent_window = file_sel;
 		fr_archive_action_completed (window->archive,
 					     FR_ACTION_CREATING_NEW_ARCHIVE,
 					     FR_PROC_ERROR_GENERIC,
@@ -4523,7 +4514,7 @@ fr_window_archive_save_as (FrWindow   *window,
 
 	window->priv->convert_data.new_archive = fr_archive_new ();
 	if (! fr_archive_create (window->priv->convert_data.new_archive, uri)) {
-		GtkWidget *dialog;
+		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
 
@@ -4531,18 +4522,15 @@ fr_window_archive_save_as (FrWindow   *window,
 		message = g_strdup_printf (_("Could not save the archive \"%s\""), file_name_from_path (uri));
 		g_free (utf8_name);
 
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
-						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_DIALOG_ERROR,
-						  message,
-						  _("Archive type not supported."),
-						  GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-						  NULL);
-		g_free (message);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   message,
+					   _("Archive type not supported."));
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (d);
 
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		g_free (message);
 
 		g_object_unref (window->priv->convert_data.new_archive);
 		window->priv->convert_data.new_archive = NULL;
@@ -4894,21 +4882,13 @@ fr_window_archive_extract__common (FrWindow   *window,
 
 		if (! do_not_extract && ! ensure_dir_exists (edata->extract_to_dir, 0755)) {
 			GtkWidget  *d;
-			const char *error;
-			char       *message;
 
-			error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
-			message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
-			d = _gtk_message_dialog_new (GTK_WINDOW (window),
-						     GTK_DIALOG_MODAL,
-						     GTK_STOCK_DIALOG_ERROR,
-						     _("Extraction not performed"),
-						     message,
-						     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-						     NULL);
-			g_free (message);
-			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
-
+			d = _gtk_error_dialog_new (GTK_WINDOW (window),
+						   GTK_DIALOG_MODAL,
+						   NULL,
+						   _("Extraction not performed"),
+						   _("Could not create the destination folder: %s."),
+						   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -4921,7 +4901,7 @@ fr_window_archive_extract__common (FrWindow   *window,
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_MODAL,
-					     GTK_STOCK_DIALOG_ERROR,
+					     GTK_STOCK_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
 					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
@@ -5871,20 +5851,17 @@ fr_window_rename_selection (FrWindow *window)
 		char      *utf8_name = g_filename_display_name (new_name);
 		GtkWidget *dlg;
 
-		dlg = _gtk_message_dialog_new (GTK_WINDOW (window),
-					       GTK_DIALOG_DESTROY_WITH_PARENT,
-					       GTK_STOCK_DIALOG_ERROR,
-					       (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
-					       reason,
-					       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-					       NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_OK);
+		dlg = _gtk_error_dialog_new (GTK_WINDOW (window),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     NULL,
+					     (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
+					     reason);
+		gtk_dialog_run (GTK_DIALOG (dlg));
+		gtk_widget_destroy (dlg);
+
 		g_free (reason);
 		g_free (utf8_name);
 		g_free (new_name);
-
-		gtk_dialog_run (GTK_DIALOG (dlg));
-		gtk_widget_destroy (dlg);
 
 		goto retry__rename_selection;
 	}

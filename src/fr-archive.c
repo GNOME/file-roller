@@ -1161,6 +1161,21 @@ copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 }
 
 
+static gboolean
+copy_remote_file_cb (gpointer user_data)
+{
+	XferData *xfer_data = user_data;
+
+	copy_remote_file__step2 (xfer_data->archive,
+				 xfer_data->uri,
+				 xfer_data->password,
+				 xfer_data->result);
+	xfer_data_free (xfer_data);
+
+	return FALSE;
+}
+
+
 static void
 copy_remote_file (FrArchive  *archive,
 		  const char *remote_uri,
@@ -1183,8 +1198,15 @@ copy_remote_file (FrArchive  *archive,
 		return;
 	}
 
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = archive;
+	xfer_data->uri = g_strdup (remote_uri);
+	if (password != NULL)
+		xfer_data->password = g_strdup (password);
+	xfer_data->result = GNOME_VFS_OK;
+
 	if (! archive->is_remote) {
-		copy_remote_file__step2 (archive, g_strdup (remote_uri), g_strdup (password), GNOME_VFS_OK);
+		g_idle_add (copy_remote_file_cb, xfer_data);
 		return;
 	}
 
@@ -1203,13 +1225,6 @@ copy_remote_file (FrArchive  *archive,
 
 	source_uri_list = g_list_append (NULL, source_uri);
 	target_uri_list = g_list_append (NULL, target_uri);
-
-	xfer_data = g_new0 (XferData, 1);
-	xfer_data->archive = archive;
-	xfer_data->uri = g_strdup (remote_uri);
-	if (password != NULL)
-		xfer_data->password = g_strdup (password);
-	xfer_data->result = GNOME_VFS_OK;
 
 	result = gnome_vfs_async_xfer (&archive->priv->xfer_handle,
 				       source_uri_list,

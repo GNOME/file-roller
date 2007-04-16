@@ -117,23 +117,19 @@ file_sel_response_cb (GtkWidget    *widget,
 	    && ! check_permissions (current_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
-		char      *message;
 
 		utf8_path = g_filename_display_name (current_folder);
-		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
-		g_free (utf8_path);
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_MODAL,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not add the files to the archive"),
-					     message,
-					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-					     NULL);
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_MODAL,
+					   NULL,
+					   _("Could not add the files to the archive"),
+					   _("You don't have the right permissions to read files from folder \"%s\""), 
+					   utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (message);
 
+		g_free (utf8_path);
 		g_free (current_folder);
 
 		return FALSE;
@@ -209,23 +205,19 @@ selection_changed_cb (GtkWidget  *file_sel,
 	if (path_is_dir (current_folder) && ! check_permissions (current_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
-		char      *message;
 
 		utf8_path = g_filename_display_name (current_folder);
-		message = g_strdup_printf (_("You don't have the right permissions to read files from folder \"%s\""), utf8_path);
-		g_free (utf8_path);
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_MODAL,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Could not add the files to the archive"),
-					     message,
-					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-					     NULL);
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_MODAL,
+					   NULL,
+					   _("Could not add the files to the archive"),
+					   _("You don't have the right permissions to read files from folder \"%s\""), 
+					   utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-		g_free (message);
 
+		g_free (utf8_path);
 		g_free (current_folder);
 	}
 }

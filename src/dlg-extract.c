@@ -131,23 +131,19 @@ extract_cb (GtkWidget   *w,
 
 		if (! do_not_extract && ! ensure_dir_exists (extract_to_dir, 0755)) {
 			GtkWidget  *d;
-			const char *error;
 			char       *message;
 
-			error = gnome_vfs_result_to_string (gnome_vfs_result_from_errno ());
-			message = g_strdup_printf (_("Could not create the destination folder: %s."), error);
-			d = _gtk_message_dialog_new (GTK_WINDOW (window),
-						     GTK_DIALOG_DESTROY_WITH_PARENT,
-						     GTK_STOCK_DIALOG_ERROR,
-						     _("Extraction not performed"),
-						     message,
-						     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
-						     NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
-			g_free (message);
+			message = g_strdup_printf (_("Could not create the destination folder: %s."), gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
 
+			d = _gtk_error_dialog_new (GTK_WINDOW (window),
+						   GTK_DIALOG_DESTROY_WITH_PARENT,
+						   NULL,
+						   _("Extraction not performed"),
+						   message);
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
+
+			g_free (message);
 
 			return FALSE;
 		}
@@ -158,7 +154,7 @@ extract_cb (GtkWidget   *w,
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
+					     GTK_STOCK_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
 					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
@@ -179,23 +175,19 @@ extract_cb (GtkWidget   *w,
 	    && ! check_permissions (extract_to_dir, R_OK | W_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
-		char      *message;
 
 		utf8_path = g_filename_display_name (extract_to_dir);
-		message = g_strdup_printf (_("You don't have the right permissions to extract archives in the folder \"%s\""), utf8_path);
-		g_free (utf8_path);
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_ERROR,
-					     _("Extraction not performed"),
-					     message,
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
-					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
-		g_free (message);
+
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   _("Extraction not performed"),
+					   _("You don't have the right permissions to extract archives in the folder \"%s\""), 
+					   utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
+		g_free (utf8_path);
 		g_free (extract_to_dir);
 
 		return FALSE;
