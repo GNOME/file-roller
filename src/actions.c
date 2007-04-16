@@ -448,9 +448,19 @@ activate_action_new (GtkAction *action,
 
 
 static void
-open_file_destroy_cb (GtkWidget *w,
-		      GtkWidget *file_sel)
+window_archive_loaded_cb (FrWindow  *window,
+			  gboolean   success,
+			  GtkWidget *file_sel)
 {
+	if (success) {
+		gtk_widget_destroy (file_sel);
+		g_signal_handlers_disconnect_by_data (window, file_sel);
+	}
+	else {
+		FrWindow *original_window =  g_object_get_data (G_OBJECT (file_sel), "fr_window");
+		if (window != original_window)
+			gtk_widget_destroy (GTK_WIDGET (window));
+	}
 }
 
 
@@ -468,13 +478,16 @@ open_file_response_cb (GtkWidget *w,
 	}
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
-
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
-	if (uri == NULL)
+
+	if ((window == NULL) || (uri == NULL))
 		return;
 
-	if (fr_window_archive_open (window, uri, GTK_WINDOW (file_sel)))
-		gtk_widget_destroy (file_sel);
+	window = fr_window_archive_open (window, uri, GTK_WINDOW (file_sel));
+	g_signal_connect (G_OBJECT (window),
+			  "archive_loaded", 
+			  G_CALLBACK (window_archive_loaded_cb),
+			  file_sel);
 
 	g_free (uri);
 }
@@ -518,12 +531,7 @@ activate_action_open (GtkAction *action,
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response", 
 			  G_CALLBACK (open_file_response_cb), 
-			  file_sel);
-
-	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy", 
-			  G_CALLBACK (open_file_destroy_cb),
-			  file_sel);
+			  file_sel); 
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 	gtk_widget_show (file_sel);

@@ -364,7 +364,8 @@ GtkWidget*
 _gtk_error_dialog_new (GtkWindow        *parent,
 		       GtkDialogFlags    flags,
 		       GList            *row_output,
-		       const char       *format,
+		       const char       *primary_text,
+		       const char       *secondary_text,
 		       ...)
 {
 	GtkWidget     *dialog;
@@ -373,26 +374,22 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	GtkWidget     *hbox;
 	GtkWidget     *vbox;
 	GtkWidget     *text_view;
-	GtkWidget     *scrolled;
+	GtkWidget     *scrolled = NULL;
 	GtkWidget     *button;
 	GtkTextBuffer *text_buf;
 	GtkTextIter    iter;
-	GtkStockItem   item;
-	char          *title;
 	char          *stock_id;
 	GList         *scan;
-	char          *message;
+	char          *escaped_message, *markup_text;
 	va_list        args;
 	gboolean       view_output = (row_output != NULL);
 
 	stock_id = GTK_STOCK_DIALOG_ERROR;
-	if (gtk_stock_lookup (stock_id, &item))
-		title = item.label;
-	else
-		title = _("Archive Manager");
 
-	dialog = gtk_dialog_new_with_buttons (title, parent, flags,
-					      GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
+	dialog = gtk_dialog_new_with_buttons ("",
+					      parent, 
+					      flags,
+					      GTK_STOCK_OK, GTK_RESPONSE_OK,
 					      NULL);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 
@@ -408,15 +405,32 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_DIALOG);
 	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
 
-	va_start (args, format);
-	message = g_strdup_vprintf (format, args);
-	va_end (args);
-
-	label = gtk_label_new (message);
+	label = gtk_label_new ("");
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
 
-	g_free (message);
+	escaped_message = g_markup_escape_text (primary_text, -1);
+	if (secondary_text != NULL) {
+		char *secondary_message;
+		char *escaped_secondary_message;
+
+		va_start (args, secondary_text);
+		secondary_message = g_strdup_vprintf (secondary_text, args);
+		va_end (args);
+		escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
+
+		markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
+					       escaped_message,
+					       escaped_secondary_message);
+
+		g_free (escaped_secondary_message);
+		g_free (secondary_message);
+	}
+	else
+		markup_text = g_strdup (escaped_message);
+	gtk_label_set_markup (GTK_LABEL (label), markup_text);
+	g_free (markup_text);
+	g_free (escaped_message);
 
 	if (view_output) {
 		/* Button */
@@ -476,25 +490,24 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 		gtk_box_pack_start (GTK_BOX (vbox), hbox,
 				    TRUE, TRUE, 0);
 
-
 		gtk_container_add (GTK_CONTAINER (scrolled), text_view);
 		gtk_box_pack_start (GTK_BOX (vbox), scrolled,
 				    FALSE, FALSE, 0);
+
+		g_signal_connect_swapped (G_OBJECT (button),
+					  "clicked", 
+					  G_CALLBACK (toggle_visibility), 
+					  scrolled);				    
 	}
 
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
 			    vbox,
 			    FALSE, FALSE, 0);
 
-	/* signals */
-
-	g_signal_connect_swapped (G_OBJECT (button),
-				  "clicked", 
-				  G_CALLBACK (toggle_visibility), 
-				  scrolled);
-
 	gtk_widget_show_all (vbox);
-	gtk_widget_hide (scrolled);
+
+	if (scrolled != NULL)
+		gtk_widget_hide (scrolled);
 
 	return dialog;
 }

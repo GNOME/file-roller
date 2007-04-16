@@ -45,6 +45,7 @@
 #include "dlg-open-with.h"
 #include "dlg-ask-password.h"
 #include "eggtreemultidnd.h"
+#include "fr-marshal.h"
 #include "fr-list-model.h"
 #include "fr-archive.h"
 #include "fr-error.h"
@@ -104,9 +105,13 @@ static GtkTargetEntry target_table[] = {
 
 /**/
 
+enum {
+	ARCHIVE_LOADED,
+	LAST_SIGNAL
+};
 
 static GnomeAppClass *parent_class = NULL;
-
+static guint fr_window_signals[LAST_SIGNAL] = { 0 };
 
 struct _FrWindowPrivateData {
 	GtkWidget *      list_view;
@@ -241,6 +246,8 @@ struct _FrWindowPrivateData {
 	gboolean   non_interactive;
 	char      *extract_here_dir;
 	gboolean   extract_interact_use_default_dir;
+
+	GtkWindow *load_error_parent_window;
 };
 
 
@@ -493,6 +500,16 @@ fr_window_class_init (FrWindowClass *class)
 	GtkWidgetClass *widget_class;
 
 	parent_class = g_type_class_peek_parent (class);
+
+	fr_window_signals[ARCHIVE_LOADED] =
+		g_signal_new ("archive-loaded",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
+			      NULL, NULL,
+			      fr_marshal_VOID__INT,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_INT);
 
 	gobject_class = (GObjectClass*) class;
 	gobject_class->finalize = fr_window_finalize;
@@ -2123,6 +2140,18 @@ fr_window_convert_data_free (FrWindow *window)
 }
 
 
+static void
+error_dialog_response_cb (GtkDialog *dialog,
+			  gint       arg1,
+			  gpointer   user_data)
+{
+	GtkWindow *dialog_parent = user_data;
+
+	gtk_window_set_modal (dialog_parent, TRUE);
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+
 static gboolean
 handle_errors (FrWindow    *window,
 	       FrArchive   *archive,
@@ -2138,7 +2167,9 @@ handle_errors (FrWindow    *window,
 	}
 	else if (error->type != FR_PROC_ERROR_NONE) {
 		char      *msg = NULL;
+		char      *utf8_name;
 		char      *details = NULL;
+		GtkWindow *dialog_parent = (GtkWindow *) window;
 		GtkWidget *dialog;
 		FrProcess *process = archive->process;
 		GList     *output = NULL;
@@ -2152,7 +2183,10 @@ handle_errors (FrWindow    *window,
 			break;
 
 		case FR_ACTION_LOADING_ARCHIVE:
-			return FALSE;
+			dialog_parent = window->priv->load_error_parent_window;
+			utf8_name = g_filename_display_basename (window->priv->archive_uri);
+			msg = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
+			g_free (utf8_name);
 			break;
 
 		case FR_ACTION_LISTING_CONTENT:
@@ -2196,17 +2230,18 @@ handle_errors (FrWindow    *window,
 		if (error->type != FR_PROC_ERROR_GENERIC)
 			output = (process->raw_error != NULL) ? process->raw_error : process->raw_output;
 
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (window),
-						GTK_DIALOG_DESTROY_WITH_PARENT,
+		gtk_window_set_modal (dialog_parent, FALSE);
+		dialog = _gtk_error_dialog_new (dialog_parent,
+						0,
 						output,
-						(details != NULL) ? "%s\n%s" : "%s",
 						msg,
 						details);
 		g_signal_connect (dialog,
 				  "response",
-				  (window->priv->batch_mode) ? G_CALLBACK (gtk_main_quit) : G_CALLBACK (gtk_widget_destroy),
-				  NULL);
+				  (window->priv->batch_mode) ? G_CALLBACK (gtk_main_quit) : G_CALLBACK (error_dialog_response_cb),
+				  dialog_parent);
 
+		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 		gtk_widget_show (dialog);
 
 		return FALSE;
@@ -2274,34 +2309,7 @@ action_performed (FrArchive   *archive,
 	switch (action) {
 	case FR_ACTION_LOADING_ARCHIVE:
 		if (error->type != FR_PROC_ERROR_NONE) {
-			GtkWidget *dialog;
-			char      *utf8_name, *message;
-			char      *reason;
-
-			utf8_name = g_filename_display_basename (window->priv->archive_uri);
-			message = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
-			g_free (utf8_name);
-
-			reason = error->gerror != NULL ? error->gerror->message : "";
-
-			dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
-							  GTK_DIALOG_DESTROY_WITH_PARENT,
-							  GTK_STOCK_DIALOG_ERROR,
-							  message,
-							  reason,
-						  	  GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
-						   	  NULL);
-			gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
-			gtk_dialog_run (GTK_DIALOG (dialog));
-			gtk_widget_destroy (GTK_WIDGET (dialog));
-
-			g_free (message);
-
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
-
-			/*if (new_window_created)  FIXME
-				gtk_widget_destroy (GTK_WIDGET (window));*/
-
 			if (window->priv->batch_mode) {
 				fr_window_archive_close (window);
 				fr_window_batch_mode_stop (window);
@@ -2309,10 +2317,15 @@ action_performed (FrArchive   *archive,
 		}
 		else {
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
-			/*if (new_window_created && ! window->priv->non_interactive)  FIXME
-				gtk_widget_show (window);*/
+			if (! window->priv->non_interactive)
+				gtk_window_present (GTK_WINDOW (window));
 		}
 		continue_batch = FALSE;
+
+		g_signal_emit (G_OBJECT (window),
+			       fr_window_signals[ARCHIVE_LOADED],
+			       0,
+			       error->type == FR_PROC_ERROR_NONE);
 		break;
 
 	case FR_ACTION_LISTING_CONTENT:
@@ -4334,10 +4347,6 @@ fr_window_construct (FrWindow *window)
 	/* Give focus to the list. */
 
 	gtk_widget_grab_focus (window->priv->list_view);
-
-	/* Add the window to the window list. */
-
-	WindowList = g_list_prepend (WindowList, window);
 }
 
 
@@ -4418,20 +4427,18 @@ fr_window_archive_new (FrWindow   *window,
 }
 
 
-gboolean
+FrWindow *
 fr_window_archive_open (FrWindow   *current_window,
 			const char *uri,
 			GtkWindow  *parent)
 {
-	FrWindow *window = NULL;
+	FrWindow *window = current_window;
 	gboolean  new_window_created = FALSE;
 
 	if (current_window->priv->archive_present) {
 		new_window_created = TRUE;
 		window = (FrWindow *) fr_window_new ();
 	}
-	else
-		window = current_window;
 
 	g_return_val_if_fail (window != NULL, FALSE);
 
@@ -4448,15 +4455,16 @@ fr_window_archive_open (FrWindow   *current_window,
 
 	window->priv->archive_present = FALSE;
 	window->priv->give_focus_to_the_list = TRUE;
+	window->priv->load_error_parent_window = parent;
 
 	fr_window_current_action_description_set (window,
-					       FR_BATCH_ACTION_OPEN, 
-					       g_strdup (window->priv->archive_uri), 
-					       (GFreeFunc) g_free);
+						  FR_BATCH_ACTION_OPEN,
+						  g_strdup (window->priv->archive_uri),
+						  (GFreeFunc) g_free);
 
 	fr_archive_load (window->archive, window->priv->archive_uri, window->priv->password);
 
-	return TRUE; /* FIXME */
+	return window;
 }
 
 

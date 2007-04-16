@@ -105,7 +105,8 @@ struct _FrWindowClass
 
 	/*<signals>*/
 
-	void (*archive_opened) (FrWindow *window);
+	void (*archive_loaded) (FrWindow *window,
+				gboolean  success);
 };
 
 GType       fr_window_get_type                  (void);
@@ -115,7 +116,7 @@ GtkWidget * fr_window_new                       (void);
 
 gboolean    fr_window_archive_new               (FrWindow      *window,
 						 const char    *uri);
-gboolean    fr_window_archive_open              (FrWindow      *window,
+FrWindow *  fr_window_archive_open              (FrWindow      *window,
 						 const char    *uri,
 						 GtkWindow     *parent);
 void        fr_window_archive_close             (FrWindow      *window);

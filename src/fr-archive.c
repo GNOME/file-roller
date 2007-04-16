@@ -163,10 +163,6 @@ xfer_data_free (XferData *data)
 }
 
 
-#define g_signal_handlers_disconnect_by_data(instance, data) \
-    g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
-					  0, 0, NULL, NULL, (data))
-
 #define MAX_CHUNK_LEN (NCARGS * 2 / 3) /* Max command line length */
 #define UNKNOWN_TYPE "application/octet-stream"
 #define SAME_FS (FALSE)

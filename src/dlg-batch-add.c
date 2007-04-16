@@ -329,9 +329,9 @@ add_clicked_cb (GtkWidget  *widget,
 		window->add_after_opening = TRUE; */
 
 		fr_window_batch_mode_add_next_action (window,
-						   FR_BATCH_ACTION_ADD,
-						   path_list_dup (data->file_list),
-						   (GFreeFunc) path_list_free);
+						      FR_BATCH_ACTION_ADD,
+						      path_list_dup (data->file_list),
+						      (GFreeFunc) path_list_free);
 		fr_window_archive_open (window, archive_file, GTK_WINDOW (window));
 	}
 

@@ -25,6 +25,10 @@
 
 #include <time.h>
 
+#define g_signal_handlers_disconnect_by_data(instance, data) \
+    g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
+					  0, 0, NULL, NULL, (data))
+
 gboolean            strchrs                      (const char *str,
 						  const char *chars);
 char *              str_substitute               (const char *str,
