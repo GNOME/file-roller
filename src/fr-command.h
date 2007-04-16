@@ -28,14 +28,14 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND            (fr_command_get_type ())
-#define FR_COMMAND(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND, FRCommand))
-#define FR_COMMAND_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND, FRCommandClass))
+#define FR_COMMAND(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND, FrCommand))
+#define FR_COMMAND_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND, FrCommandClass))
 #define FR_IS_COMMAND(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND))
 #define FR_IS_COMMAND_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND))
-#define FR_COMMAND_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND, FRCommandClass))
+#define FR_COMMAND_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND, FrCommandClass))
 
-typedef struct _FRCommand       FRCommand;
-typedef struct _FRCommandClass  FRCommandClass;
+typedef struct _FrCommand       FrCommand;
+typedef struct _FrCommandClass  FrCommandClass;
 
 typedef enum {
 	FR_ACTION_NONE,
@@ -61,7 +61,7 @@ typedef enum {
 extern char *action_names[];
 #endif
 
-struct _FRCommand
+struct _FrCommand
 {
 	GObject  __parent;
 
@@ -90,7 +90,7 @@ struct _FRCommand
 
 	/*<private>*/
 
-	FRProcess *process;      /* the process object used to execute
+	FrProcess *process;      /* the process object used to execute
 				  * commands. */
 	FRAction   action;       /* current action. */
 	char      *filename;     /* archive filename. */
@@ -100,26 +100,26 @@ struct _FRCommand
 				  * operation is invoked. */
 };
 
-struct _FRCommandClass
+struct _FrCommandClass
 {
 	GObjectClass __parent_class;
 
 	/*<virtual functions>*/
 
-	void        (*list)           (FRCommand     *comm,
+	void        (*list)           (FrCommand     *comm,
 				       const char    *password);
 
-	void        (*add)            (FRCommand     *comm,
+	void        (*add)            (FrCommand     *comm,
 				       GList         *file_list,
 				       const char    *base_dir,
 				       gboolean       update,
 				       const char    *password,
 				       FRCompression  compression); 
 
-	void        (*delete)         (FRCommand     *comm,
+	void        (*delete)         (FrCommand     *comm,
 				       GList         *file_list); 
 
-	void        (*extract)        (FRCommand     *comm,
+	void        (*extract)        (FrCommand     *comm,
 				       GList         *file_list,
 				       const char    *dest_dir,
 				       gboolean       overwrite,
@@ -127,59 +127,59 @@ struct _FRCommandClass
 				       gboolean       junk_paths,
 				       const char    *password);
 
-	void        (*test)           (FRCommand     *comm,
+	void        (*test)           (FrCommand     *comm,
 				       const char    *password);
 
-	void        (*uncompress)     (FRCommand     *comm);
+	void        (*uncompress)     (FrCommand     *comm);
 
-	void        (*recompress)     (FRCommand     *comm,
+	void        (*recompress)     (FrCommand     *comm,
 				       FRCompression  compression);
 
-	void        (*handle_error)   (FRCommand     *comm,
+	void        (*handle_error)   (FrCommand     *comm,
 				       FRProcError   *error);
 
-	char *      (*escape)         (FRCommand     *comm,
+	char *      (*escape)         (FrCommand     *comm,
 				       const char    *str);
 
 	/*<signals>*/
 
-	void        (*start)          (FRCommand   *comm,
+	void        (*start)          (FrCommand   *comm,
 				       FRAction     action); 
 
-	void        (*done)           (FRCommand   *comm,
+	void        (*done)           (FrCommand   *comm,
 				       FRAction     action,
 				       FRProcError *error);
 
-	void        (*progress)       (FRCommand   *comm,
+	void        (*progress)       (FrCommand   *comm,
 				       double       fraction);
 
-	void        (*message)        (FRCommand   *comm,
+	void        (*message)        (FrCommand   *comm,
 				       const char  *msg);
 };
 
 GType          fr_command_get_type           (void);
 
-void           fr_command_construct          (FRCommand     *comm,
-					      FRProcess     *process,
+void           fr_command_construct          (FrCommand     *comm,
+					      FrProcess     *process,
 					      const char    *filename);
 
-void           fr_command_set_filename       (FRCommand     *comm,
+void           fr_command_set_filename       (FrCommand     *comm,
 					      const char    *filename);
 
-void           fr_command_list               (FRCommand     *comm,
+void           fr_command_list               (FrCommand     *comm,
 					      const char    *password);
 
-void           fr_command_add                (FRCommand     *comm,
+void           fr_command_add                (FrCommand     *comm,
 					      GList         *file_list,
 					      const char    *base_dir,
 					      gboolean       update,
 					      const char    *password,
 					      FRCompression  compression); 
 
-void           fr_command_delete             (FRCommand     *comm,
+void           fr_command_delete             (FrCommand     *comm,
 					      GList         *file_list); 
 
-void           fr_command_extract            (FRCommand     *comm,
+void           fr_command_extract            (FrCommand     *comm,
 					      GList         *file_list,
 					      const char    *dest_dir,
 					      gboolean       overwrite,
@@ -187,31 +187,31 @@ void           fr_command_extract            (FRCommand     *comm,
 					      gboolean       junk_paths,
 					      const char    *password);
 
-void           fr_command_test               (FRCommand     *comm,
+void           fr_command_test               (FrCommand     *comm,
 					      const char    *password);
 
-void           fr_command_uncompress         (FRCommand     *comm);
+void           fr_command_uncompress         (FrCommand     *comm);
 
-void           fr_command_recompress         (FRCommand     *comm,
+void           fr_command_recompress         (FrCommand     *comm,
 					      FRCompression  compression);
 
-char *         fr_command_escape             (FRCommand     *comm,
+char *         fr_command_escape             (FrCommand     *comm,
 					      const char    *str);
 
 /* protected functions */
 
-void           fr_command_progress           (FRCommand     *comm,
+void           fr_command_progress           (FrCommand     *comm,
 					      double         fraction);
 
-void           fr_command_message            (FRCommand     *comm,
+void           fr_command_message            (FrCommand     *comm,
 					      const char    *msg);
 
-void           fr_command_set_n_files        (FRCommand     *comm,
+void           fr_command_set_n_files        (FrCommand     *comm,
 					      int            n_files);
 
 /* private functions */
 
-void           fr_command_handle_error       (FRCommand     *comm,
+void           fr_command_handle_error       (FrCommand     *comm,
 					      FRProcError   *error);
 
 #endif /* FR_COMMAND_H */

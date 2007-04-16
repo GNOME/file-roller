@@ -27,27 +27,27 @@
 #include "fr-command-zip.h"
 
 #define FR_TYPE_COMMAND_JAR            (fr_command_jar_get_type ())
-#define FR_COMMAND_JAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_JAR, FRCommandJar))
-#define FR_COMMAND_JAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_JAR, FRCommandJarClass))
+#define FR_COMMAND_JAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_JAR, FrCommandJar))
+#define FR_COMMAND_JAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_JAR, FrCommandJarClass))
 #define FR_IS_COMMAND_JAR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_JAR))
 #define FR_IS_COMMAND_JAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_JAR))
-#define FR_COMMAND_JAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_JAR, FRCommandJarClass))
+#define FR_COMMAND_JAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_JAR, FrCommandJarClass))
 
-typedef struct _FRCommandJar       FRCommandJar;
-typedef struct _FRCommandJarClass  FRCommandJarClass;
+typedef struct _FrCommandJar       FrCommandJar;
+typedef struct _FrCommandJarClass  FrCommandJarClass;
 
-struct _FRCommandJar
+struct _FrCommandJar
 {
-	FRCommandZip  __parent;
+	FrCommandZip  __parent;
 };
 
-struct _FRCommandJarClass
+struct _FrCommandJarClass
 {
-	FRCommandZipClass __parent_class;
+	FrCommandZipClass __parent_class;
 };
 
 GType        fr_command_jar_get_type        (void);
-FRCommand*   fr_command_jar_new             (FRProcess  *process,
+FrCommand*   fr_command_jar_new             (FrProcess  *process,
 					     const char *filename);
 
 #endif /* FR_COMMAND_JAR_H */

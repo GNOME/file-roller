@@ -33,13 +33,13 @@
 #include "fr-command.h"
 #include "fr-command-iso.h"
 
-static void fr_command_iso_class_init  (FRCommandIsoClass *class);
-static void fr_command_iso_init           (FRCommand         *afile);
-static void fr_command_iso_finalize     (GObject           *object);
+static void fr_command_iso_class_init  (FrCommandIsoClass *class);
+static void fr_command_iso_init        (FrCommand         *afile);
+static void fr_command_iso_finalize    (GObject           *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 static time_t
@@ -71,8 +71,8 @@ list__process_line (char     *line,
 		    gpointer  data)
 {
 	FileData      *fdata;
-	FRCommand     *comm = FR_COMMAND (data);
-	FRCommandIso  *comm_iso = FR_COMMAND_ISO (comm);
+	FrCommand     *comm = FR_COMMAND (data);
+	FrCommandIso  *comm_iso = FR_COMMAND_ISO (comm);
 	char         **fields;
 	const char    *name_field;
 
@@ -126,10 +126,10 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_iso_list (FRCommand  *comm,
+fr_command_iso_list (FrCommand  *comm,
 		     const char *password)
 {
-	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
+	FrCommandIso *comm_iso = FR_COMMAND_ISO (comm);
 	char         *e_filename;
 
 	g_free (comm_iso->cur_path);
@@ -154,7 +154,7 @@ fr_command_iso_list (FRCommand  *comm,
 
 
 static void
-fr_command_iso_extract (FRCommand  *comm,
+fr_command_iso_extract (FrCommand  *comm,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -172,7 +172,7 @@ fr_command_iso_extract (FRCommand  *comm,
 	for (scan = file_list; scan; scan = scan->next) {
 		char       *path = scan->data;
 		const char *filename;
-                char       *file_dir, *e_temp_dest_dir = NULL, *temp_dest_dir = NULL;
+		char       *file_dir, *e_temp_dest_dir = NULL, *temp_dest_dir = NULL;
 
 		filename = file_name_from_path (path);
 		file_dir = remove_level_from_path (path);
@@ -210,25 +210,25 @@ fr_command_iso_extract (FRCommand  *comm,
 
 
 static void
-fr_command_iso_class_init (FRCommandIsoClass *class)
+fr_command_iso_class_init (FrCommandIsoClass *class)
 {
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
+	FrCommandClass *afc;
 
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	parent_class = g_type_class_peek_parent (class);
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_iso_finalize;
 
-        afc->list    = fr_command_iso_list;
+	afc->list    = fr_command_iso_list;
 	afc->extract = fr_command_iso_extract;
 }
 
 
 static void
-fr_command_iso_init (FRCommand *comm)
+fr_command_iso_init (FrCommand *comm)
 {
-	FRCommandIso *comm_iso = FR_COMMAND_ISO (comm);
+	FrCommandIso *comm_iso = FR_COMMAND_ISO (comm);
 
 	comm->file_type = FR_FILE_TYPE_ISO;
 
@@ -250,10 +250,10 @@ fr_command_iso_init (FRCommand *comm)
 static void
 fr_command_iso_finalize (GObject *object)
 {
-	FRCommandIso *comm_iso;
+	FrCommandIso *comm_iso;
 
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_ISO (object));
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND_ISO (object));
 
 	comm_iso = FR_COMMAND_ISO (object);
 
@@ -261,7 +261,7 @@ fr_command_iso_finalize (GObject *object)
 	comm_iso->cur_path = NULL;
 
 	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
+	if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -269,17 +269,17 @@ fr_command_iso_finalize (GObject *object)
 GType
 fr_command_iso_get_type ()
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FRCommandIsoClass),
+	if (! type) {
+		GTypeInfo type_info = {
+			sizeof (FrCommandIsoClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_iso_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandIso),
+			sizeof (FrCommandIso),
 			0,
 			(GInstanceInitFunc) fr_command_iso_init
 		};
@@ -288,17 +288,17 @@ fr_command_iso_get_type ()
 					       "FRCommandIso",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 
-FRCommand *
-fr_command_iso_new (FRProcess  *process,
+FrCommand *
+fr_command_iso_new (FrProcess  *process,
 		    const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if (! is_program_in_path ("isoinfo")) {
 		return NULL;

@@ -40,13 +40,13 @@
 
 #define ACTIVITY_DELAY 20
 
-static void fr_command_tar_class_init  (FRCommandTarClass *class);
-static void fr_command_tar_init        (FRCommand         *afile);
+static void fr_command_tar_class_init  (FrCommandTarClass *class);
+static void fr_command_tar_init        (FrCommand         *afile);
 static void fr_command_tar_finalize    (GObject           *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 /* -- list -- */
@@ -123,7 +123,7 @@ process_line (char     *line,
 	      gpointer  data)
 {
 	FileData    *fdata;
-	FRCommand   *comm = FR_COMMAND (data);
+	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	int          date_idx;
 	char        *field_date, *field_time, *field_size, *field_name;
@@ -185,9 +185,9 @@ process_line (char     *line,
 
 
 static void
-add_compress_arg (FRCommand *comm)
+add_compress_arg (FrCommand *comm)
 {
-	FRCommandTar *comm_tar = FR_COMMAND_TAR (comm);
+	FrCommandTar *comm_tar = FR_COMMAND_TAR (comm);
 
 	switch (comm_tar->compress_prog) {
 	case FR_COMPRESS_PROGRAM_NONE:
@@ -219,7 +219,7 @@ add_compress_arg (FRCommand *comm)
 
 
 static void
-begin_tar_command (FRCommand *comm)
+begin_tar_command (FrCommand *comm)
 {
 	char *command = NULL;
 
@@ -239,7 +239,7 @@ begin_tar_command (FRCommand *comm)
 
 
 static void
-fr_command_tar_list (FRCommand  *comm,
+fr_command_tar_list (FrCommand  *comm,
 		     const char *password)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
@@ -261,7 +261,7 @@ process_line__generic (char     *line,
 		       gpointer  data,
 		       char     *action_msg)
 {
-	FRCommand *comm = FR_COMMAND (data);
+	FrCommand *comm = FR_COMMAND (data);
 	char      *msg;
 
 	if (line == NULL)
@@ -290,14 +290,14 @@ process_line__add (char     *line,
 
 
 static void
-fr_command_tar_add (FRCommand     *comm,
+fr_command_tar_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
 		    FRCompression  compression)
 {
-	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
+	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	GList        *scan;
 
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
@@ -341,17 +341,17 @@ process_line__delete (char     *line,
 static void
 begin_func__delete (gpointer data)
 {
-	FRCommand *comm = data;
+	FrCommand *comm = data;
 	fr_command_progress (comm, -1.0);
 	fr_command_message (comm, _("Deleting files from archive"));
 }
 
 
 static void
-fr_command_tar_delete (FRCommand *comm,
+fr_command_tar_delete (FrCommand *comm,
 		       GList     *file_list)
 {
-	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
+	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	GList        *scan;
 
 	fr_process_set_out_line_func (comm->process,
@@ -382,7 +382,7 @@ process_line__extract (char     *line,
 
 
 static void
-fr_command_tar_extract (FRCommand  *comm,
+fr_command_tar_extract (FrCommand  *comm,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -422,17 +422,17 @@ fr_command_tar_extract (FRCommand  *comm,
 static void
 begin_func__recompress (gpointer data)
 {
-	FRCommand *comm = data;
+	FrCommand *comm = data;
 	fr_command_progress (comm, -1.0);
 	fr_command_message (comm, _("Recompressing archive"));
 }
 
 
 static void
-fr_command_tar_recompress (FRCommand     *comm,
+fr_command_tar_recompress (FrCommand     *comm,
 			   FRCompression  compression)
 {
-	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
+	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	char         *new_name = NULL;
 
 	switch (c_tar->compress_prog) {
@@ -556,14 +556,14 @@ fr_command_tar_recompress (FRCommand     *comm,
 static void
 begin_func__uncompress (gpointer data)
 {
-	FRCommand *comm = data;
+	FrCommand *comm = data;
 	fr_command_progress (comm, -1.0);
 	fr_command_message (comm, _("Decompressing archive"));
 }
 
 
 static char *
-get_uncompressed_name (FRCommandTar *c_tar,
+get_uncompressed_name (FrCommandTar *c_tar,
 		       const char   *e_filename)
 {
 	char *new_name = g_strdup (e_filename);
@@ -632,7 +632,7 @@ get_uncompressed_name (FRCommandTar *c_tar,
 
 
 static char *
-get_temp_name (FRCommandTar *c_tar,
+get_temp_name (FrCommandTar *c_tar,
 	       const char   *filepath)
 {
 	char       *dirname = remove_level_from_path (filepath);
@@ -669,9 +669,9 @@ get_temp_name (FRCommandTar *c_tar,
 
 
 static void
-fr_command_tar_uncompress (FRCommand *comm)
+fr_command_tar_uncompress (FrCommand *comm)
 {
-	FRCommandTar *c_tar = FR_COMMAND_TAR (comm);
+	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	char         *tmp_name;
 
 	if (c_tar->uncomp_filename != NULL) {
@@ -757,7 +757,7 @@ fr_command_tar_uncompress (FRCommand *comm)
 
 
 static char *
-fr_command_tar_escape (FRCommand     *comm,
+fr_command_tar_escape (FrCommand     *comm,
 		       const char    *str)
 {
 	char *estr;
@@ -776,13 +776,13 @@ fr_command_tar_escape (FRCommand     *comm,
 
 
 static void
-fr_command_tar_class_init (FRCommandTarClass *class)
+fr_command_tar_class_init (FrCommandTarClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+        FrCommandClass *afc;
 
         parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_tar_finalize;
 
@@ -799,9 +799,9 @@ fr_command_tar_class_init (FRCommandTarClass *class)
 
 
 static void
-fr_command_tar_init (FRCommand *comm)
+fr_command_tar_init (FrCommand *comm)
 {
-	FRCommandTar *comm_tar = (FRCommandTar*) comm;
+	FrCommandTar *comm_tar = (FrCommandTar*) comm;
 
 	comm->file_type = FR_FILE_TYPE_TAR;
 
@@ -822,7 +822,7 @@ fr_command_tar_init (FRCommand *comm)
 static void
 fr_command_tar_finalize (GObject *object)
 {
-	FRCommandTar *comm_tar;
+	FrCommandTar *comm_tar;
 
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_TAR (object));
@@ -852,13 +852,13 @@ fr_command_tar_get_type ()
 
         if (! type) {
                 GTypeInfo type_info = {
-			sizeof (FRCommandTarClass),
+			sizeof (FrCommandTarClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_tar_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandTar),
+			sizeof (FrCommandTar),
 			0,
 			(GInstanceInitFunc) fr_command_tar_init
 		};
@@ -873,12 +873,12 @@ fr_command_tar_get_type ()
 }
 
 
-FRCommand *
-fr_command_tar_new (FRProcess         *process,
+FrCommand *
+fr_command_tar_new (FrProcess         *process,
 		    const char        *filename,
 		    FRCompressProgram  prog)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	/* In solaris gtar is present under /usr/sfw/bin */
 

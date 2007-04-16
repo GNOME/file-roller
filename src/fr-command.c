@@ -42,8 +42,8 @@ enum {
 static GObjectClass *parent_class = NULL;
 static guint fr_command_signals[LAST_SIGNAL] = { 0 };
 
-static void fr_command_class_init  (FRCommandClass *class);
-static void fr_command_init        (FRCommand *afile);
+static void fr_command_class_init  (FrCommandClass *class);
+static void fr_command_init        (FrCommand *afile);
 static void fr_command_finalize    (GObject *object);
 
 char *action_names[] = { "NONE",
@@ -67,13 +67,13 @@ fr_command_get_type ()
 
 	if (! type) {
 		GTypeInfo type_info = {
-			sizeof (FRCommandClass),
+			sizeof (FrCommandClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommand),
+			sizeof (FrCommand),
 			0,
 			(GInstanceInitFunc) fr_command_init
 		};
@@ -89,14 +89,14 @@ fr_command_get_type ()
 
 
 static void
-base_fr_command_list (FRCommand  *comm,
+base_fr_command_list (FrCommand  *comm,
 		      const char *password)
 {
 }
 
 
 static void
-base_fr_command_add (FRCommand     *comm,
+base_fr_command_add (FrCommand     *comm,
 		     GList         *file_list,
 		     const char    *base_dir,
 		     gboolean       update,
@@ -107,14 +107,14 @@ base_fr_command_add (FRCommand     *comm,
 
 
 static void
-base_fr_command_delete (FRCommand *comm,
+base_fr_command_delete (FrCommand *comm,
 			GList     *file_list)
 {
 }
 
 
 static void
-base_fr_command_extract (FRCommand  *comm,
+base_fr_command_extract (FrCommand  *comm,
 			 GList      *file_list,
 			 const char *dest_dir,
 			 gboolean    overwrite,
@@ -126,27 +126,27 @@ base_fr_command_extract (FRCommand  *comm,
 
 
 static void
-base_fr_command_test (FRCommand   *comm,
+base_fr_command_test (FrCommand   *comm,
 		      const char  *password)
 {
 }
 
 
 static void
-base_fr_command_uncompress (FRCommand *comm)
+base_fr_command_uncompress (FrCommand *comm)
 {
 }
 
 
 static void
-base_fr_command_recompress (FRCommand     *comm,
+base_fr_command_recompress (FrCommand     *comm,
 			    FRCompression  compression)
 {
 }
 
 
 char *
-base_fr_command_escape (FRCommand     *comm,
+base_fr_command_escape (FrCommand     *comm,
 			const char    *str)
 {
 	return shell_escape (str);
@@ -154,14 +154,14 @@ base_fr_command_escape (FRCommand     *comm,
 
 
 static void
-base_fr_command_handle_error (FRCommand *comm,
+base_fr_command_handle_error (FrCommand *comm,
 			      FRProcError *error)
 {
 }
 
 
 static void
-fr_command_class_init (FRCommandClass *class)
+fr_command_class_init (FrCommandClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
@@ -171,7 +171,7 @@ fr_command_class_init (FRCommandClass *class)
 		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRCommandClass, start),
+			      G_STRUCT_OFFSET (FrCommandClass, start),
 			      NULL, NULL,
 			      fr_marshal_VOID__INT,
 			      G_TYPE_NONE, 
@@ -180,7 +180,7 @@ fr_command_class_init (FRCommandClass *class)
 		g_signal_new ("done",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRCommandClass, done),
+			      G_STRUCT_OFFSET (FrCommandClass, done),
 			      NULL, NULL,
 			      fr_marshal_VOID__INT_POINTER,
 			      G_TYPE_NONE, 2,
@@ -190,7 +190,7 @@ fr_command_class_init (FRCommandClass *class)
 		g_signal_new ("progress",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRCommandClass, progress),
+			      G_STRUCT_OFFSET (FrCommandClass, progress),
 			      NULL, NULL,
 			      fr_marshal_VOID__DOUBLE,
 			      G_TYPE_NONE, 1,
@@ -199,7 +199,7 @@ fr_command_class_init (FRCommandClass *class)
 		g_signal_new ("message",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRCommandClass, message),
+			      G_STRUCT_OFFSET (FrCommandClass, message),
 			      NULL, NULL,
 			      fr_marshal_VOID__STRING,
 			      G_TYPE_NONE, 1,
@@ -227,7 +227,7 @@ fr_command_class_init (FRCommandClass *class)
 
 
 static void
-fr_command_init (FRCommand *comm)
+fr_command_init (FrCommand *comm)
 {
 	comm->filename = NULL;
 	comm->e_filename = NULL;
@@ -248,10 +248,10 @@ fr_command_init (FRCommand *comm)
 
 
 static void
-fr_command_start (FRProcess *process,
+fr_command_start (FrProcess *process,
 		  gpointer   data)
 {
-	FRCommand *comm = FR_COMMAND (data);
+	FrCommand *comm = FR_COMMAND (data);
 	g_signal_emit (G_OBJECT (comm),
 		       fr_command_signals[START], 
 		       0,
@@ -260,11 +260,11 @@ fr_command_start (FRProcess *process,
 
 
 static void
-fr_command_done (FRProcess   *process,
+fr_command_done (FrProcess   *process,
 		 FRProcError *error, 
 		 gpointer     data)
 {
-	FRCommand *comm = FR_COMMAND (data);
+	FrCommand *comm = FR_COMMAND (data);
 
 	comm->process->restart = FALSE;
 	if (error->type != FR_PROC_ERROR_NONE)
@@ -282,8 +282,8 @@ fr_command_done (FRProcess   *process,
 
 
 void
-fr_command_construct (FRCommand  *comm,
-		      FRProcess  *process,
+fr_command_construct (FrCommand  *comm,
+		      FrProcess  *process,
 		      const char *fr_command_name)
 {
 	fr_command_set_filename (comm, fr_command_name);
@@ -304,7 +304,7 @@ fr_command_construct (FRCommand  *comm,
 static void
 fr_command_finalize (GObject *object)
 {
-	FRCommand* comm;
+	FrCommand* comm;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND (object));
@@ -339,7 +339,7 @@ fr_command_finalize (GObject *object)
 
 
 void
-fr_command_set_filename (FRCommand  *comm,
+fr_command_set_filename (FrCommand  *comm,
 			 const char *filename)
 {
 	g_return_if_fail (FR_IS_COMMAND (comm));
@@ -369,7 +369,7 @@ fr_command_set_filename (FRCommand  *comm,
 
 
 void
-fr_command_list (FRCommand  *comm,
+fr_command_list (FrCommand  *comm,
 		 const char *password)
 {
 	g_return_if_fail (FR_IS_COMMAND (comm));
@@ -392,7 +392,7 @@ fr_command_list (FRCommand  *comm,
 
 
 void
-fr_command_add (FRCommand     *comm,
+fr_command_add (FrCommand     *comm,
 		GList         *file_list,
 		const char    *base_dir,
 		gboolean       update,
@@ -414,7 +414,7 @@ fr_command_add (FRCommand     *comm,
 
 
 void
-fr_command_delete (FRCommand *comm,
+fr_command_delete (FrCommand *comm,
 		   GList *file_list)
 {
 	fr_command_progress (comm, -1.0);
@@ -427,7 +427,7 @@ fr_command_delete (FRCommand *comm,
 
 
 void
-fr_command_extract (FRCommand  *comm,
+fr_command_extract (FrCommand  *comm,
 		    GList      *file_list,
 		    const char *dest_dir,
 		    gboolean    overwrite,
@@ -451,7 +451,7 @@ fr_command_extract (FRCommand  *comm,
 
 
 void
-fr_command_test (FRCommand   *comm,
+fr_command_test (FrCommand   *comm,
 		 const char  *password)
 {
 	fr_command_progress (comm, -1.0);
@@ -464,7 +464,7 @@ fr_command_test (FRCommand   *comm,
 
 
 void
-fr_command_uncompress (FRCommand *comm)
+fr_command_uncompress (FrCommand *comm)
 {
 	fr_command_progress (comm, -1.0);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->uncompress (comm);
@@ -472,7 +472,7 @@ fr_command_uncompress (FRCommand *comm)
 
 
 void
-fr_command_recompress (FRCommand     *comm,
+fr_command_recompress (FrCommand     *comm,
 		       FRCompression  compression)
 {
 	fr_command_progress (comm, -1.0);
@@ -481,7 +481,7 @@ fr_command_recompress (FRCommand     *comm,
 
 
 char *
-fr_command_escape (FRCommand     *comm,
+fr_command_escape (FrCommand     *comm,
 		   const char    *str)
 {
 	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->escape (comm, str);
@@ -495,7 +495,7 @@ fr_command_escape (FRCommand     *comm,
  *                        accomplished. 
  */
 void
-fr_command_progress (FRCommand     *comm,
+fr_command_progress (FrCommand     *comm,
 		     double         fraction)
 {
 	g_signal_emit (G_OBJECT (comm),
@@ -506,7 +506,7 @@ fr_command_progress (FRCommand     *comm,
 
 
 void
-fr_command_message (FRCommand     *comm,
+fr_command_message (FrCommand     *comm,
 		    const char    *msg)
 {
 	g_signal_emit (G_OBJECT (comm),
@@ -517,7 +517,7 @@ fr_command_message (FRCommand     *comm,
 
 
 void
-fr_command_set_n_files (FRCommand     *comm,
+fr_command_set_n_files (FrCommand     *comm,
 			int            n_files)
 {
 	comm->n_files = n_files;
@@ -526,7 +526,7 @@ fr_command_set_n_files (FRCommand     *comm,
 
 
 void
-fr_command_handle_error (FRCommand *comm,
+fr_command_handle_error (FrCommand *comm,
 			 FRProcError *error)
 {
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->handle_error (comm, error);

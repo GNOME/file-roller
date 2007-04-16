@@ -28,29 +28,29 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_7Z            (fr_command_7z_get_type ())
-#define FR_COMMAND_7Z(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_7Z, FRCommand7z))
-#define FR_COMMAND_7Z_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_7Z, FRCommand7zClass))
+#define FR_COMMAND_7Z(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_7Z, FrCommand7z))
+#define FR_COMMAND_7Z_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_7Z, FrCommand7zClass))
 #define FR_IS_COMMAND_7Z(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_7Z))
 #define FR_IS_COMMAND_7Z_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_7Z))
-#define FR_COMMAND_7Z_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_7Z, FRCommand7zClass))
+#define FR_COMMAND_7Z_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_7Z, FrCommand7zClass))
 
-typedef struct _FRCommand7z       FRCommand7z;
-typedef struct _FRCommand7zClass  FRCommand7zClass;
+typedef struct _FrCommand7z       FrCommand7z;
+typedef struct _FrCommand7zClass  FrCommand7zClass;
 
-struct _FRCommand7z
+struct _FrCommand7z
 {
-	FRCommand __parent;
+	FrCommand __parent;
 	gboolean  list_started;
 	int       name_index;
 };
 
-struct _FRCommand7zClass
+struct _FrCommand7zClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_7z_get_type        (void);
-FRCommand*   fr_command_7z_new             (FRProcess *process,
+FrCommand*   fr_command_7z_new             (FrProcess *process,
 					    const char *filename);
 
 #endif /* FR_COMMAND_7Z_H */

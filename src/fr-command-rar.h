@@ -29,31 +29,31 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_RAR            (fr_command_rar_get_type ())
-#define FR_COMMAND_RAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_RAR, FRCommandRar))
-#define FR_COMMAND_RAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_RAR, FRCommandRarClass))
+#define FR_COMMAND_RAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_RAR, FrCommandRar))
+#define FR_COMMAND_RAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_RAR, FrCommandRarClass))
 #define FR_IS_COMMAND_RAR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_RAR))
 #define FR_IS_COMMAND_RAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_RAR))
-#define FR_COMMAND_RAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_RAR, FRCommandRarClass))
+#define FR_COMMAND_RAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_RAR, FrCommandRarClass))
 
-typedef struct _FRCommandRar       FRCommandRar;
-typedef struct _FRCommandRarClass  FRCommandRarClass;
+typedef struct _FrCommandRar       FrCommandRar;
+typedef struct _FrCommandRarClass  FrCommandRarClass;
 
-struct _FRCommandRar
+struct _FrCommandRar
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 
 	gboolean list_started;
 	gboolean odd_line;
 	FileData *fdata;
 };
 
-struct _FRCommandRarClass
+struct _FrCommandRarClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_rar_get_type        (void);
-FRCommand*   fr_command_rar_new             (FRProcess *process,
+FrCommand*   fr_command_rar_new             (FrProcess *process,
 					     const char *filename);
 
 #endif /* FR_COMMAND_RAR_H */

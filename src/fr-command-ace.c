@@ -32,13 +32,13 @@
 #include "fr-command.h"
 #include "fr-command-ace.h"
 
-static void fr_command_ace_class_init  (FRCommandAceClass *class);
-static void fr_command_ace_init        (FRCommand        *afile);
+static void fr_command_ace_class_init  (FrCommandAceClass *class);
+static void fr_command_ace_init        (FrCommand        *afile);
 static void fr_command_ace_finalize    (GObject          *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 /* -- list -- */
@@ -89,8 +89,8 @@ process_line (char     *line,
 	      gpointer  data)
 {
 	FileData      *fdata;
-	FRCommandAce  *ace_comm = FR_COMMAND_ACE (data);
-	FRCommand     *comm = FR_COMMAND (data);
+	FrCommandAce  *ace_comm = FR_COMMAND_ACE (data);
+	FrCommand     *comm = FR_COMMAND (data);
 	char         **fields;
 	char          *field_name;
 
@@ -138,7 +138,7 @@ process_line (char     *line,
 
 
 static void
-fr_command_ace_list (FRCommand  *comm,
+fr_command_ace_list (FrCommand  *comm,
 		    const char *password)
 {
 	FR_COMMAND_ACE (comm)->list_started = FALSE;
@@ -156,7 +156,7 @@ fr_command_ace_list (FRCommand  *comm,
 
 
 static void
-fr_command_ace_extract (FRCommand   *comm,
+fr_command_ace_extract (FrCommand   *comm,
 			GList       *file_list,
 			const char *dest_dir,
 			gboolean     overwrite,
@@ -185,7 +185,7 @@ fr_command_ace_extract (FRCommand   *comm,
 
 
 static void
-fr_command_ace_test (FRCommand   *comm,
+fr_command_ace_test (FrCommand   *comm,
                      const char  *password)
 {
         fr_process_begin_command (comm->process, "unace");
@@ -196,7 +196,7 @@ fr_command_ace_test (FRCommand   *comm,
 
 
 static void
-fr_command_ace_handle_error (FRCommand   *comm, 
+fr_command_ace_handle_error (FrCommand   *comm, 
 			     FRProcError *error)
 {
 	/* FIXME */
@@ -204,13 +204,13 @@ fr_command_ace_handle_error (FRCommand   *comm,
 
 
 static void 
-fr_command_ace_class_init (FRCommandAceClass *class)
+fr_command_ace_class_init (FrCommandAceClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+        FrCommandClass *afc;
 
         parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_ace_finalize;
 
@@ -222,7 +222,7 @@ fr_command_ace_class_init (FRCommandAceClass *class)
 
  
 static void 
-fr_command_ace_init (FRCommand *comm)
+fr_command_ace_init (FrCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_ACE;
 
@@ -256,13 +256,13 @@ fr_command_ace_get_type ()
 
         if (! type) {
                 GTypeInfo type_info = {
-			sizeof (FRCommandAceClass),
+			sizeof (FrCommandAceClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_ace_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandAce),
+			sizeof (FrCommandAce),
 			0,
 			(GInstanceInitFunc) fr_command_ace_init
 		};
@@ -277,11 +277,11 @@ fr_command_ace_get_type ()
 }
 
 
-FRCommand *
-fr_command_ace_new (FRProcess  *process,
+FrCommand *
+fr_command_ace_new (FrProcess  *process,
 		    const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if(! is_program_in_path ("unace")) 
 		return NULL;

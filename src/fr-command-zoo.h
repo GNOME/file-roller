@@ -29,27 +29,27 @@
 #include "typedefs.h"
 
 #define FR_TYPE_COMMAND_ZOO            (fr_command_zoo_get_type ())
-#define FR_COMMAND_ZOO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ZOO, FRCommandZoo))
-#define FR_COMMAND_ZOO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ZOO, FRCommandZooClass))
+#define FR_COMMAND_ZOO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ZOO, FrCommandZoo))
+#define FR_COMMAND_ZOO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ZOO, FrCommandZooClass))
 #define FR_IS_COMMAND_ZOO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_ZOO))
 #define FR_IS_COMMAND_ZOO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ZOO))
-#define FR_COMMAND_ZOO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ZOO, FRCommandZooClass))
+#define FR_COMMAND_ZOO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ZOO, FrCommandZooClass))
 
-typedef struct _FRCommandZoo       FRCommandZoo;
-typedef struct _FRCommandZooClass  FRCommandZooClass;
+typedef struct _FrCommandZoo       FrCommandZoo;
+typedef struct _FrCommandZooClass  FrCommandZooClass;
 
-struct _FRCommandZoo
+struct _FrCommandZoo
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 };
 
-struct _FRCommandZooClass
+struct _FrCommandZooClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_zoo_get_type        (void);
-FRCommand*   fr_command_zoo_new             (FRProcess *process,
+FrCommand*   fr_command_zoo_new             (FrProcess *process,
 					     const char *filename);
 
 #endif /* FR_COMMAND_ZOO_H */

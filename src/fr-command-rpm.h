@@ -28,28 +28,28 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_RPM            (fr_command_rpm_get_type ())
-#define FR_COMMAND_RPM(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_RPM, FRCommandRpm))
-#define FR_COMMAND_RPM_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_RPM, FRCommandRpmClass))
+#define FR_COMMAND_RPM(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_RPM, FrCommandRpm))
+#define FR_COMMAND_RPM_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_RPM, FrCommandRpmClass))
 #define FR_IS_COMMAND_RPM(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_RPM))
 #define FR_IS_COMMAND_RPM_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_RPM))
-#define FR_COMMAND_RPM_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_RPM, FRCommandRpmClass))
+#define FR_COMMAND_RPM_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_RPM, FrCommandRpmClass))
 
-typedef struct _FRCommandRpm       FRCommandRpm;
-typedef struct _FRCommandRpmClass  FRCommandRpmClass;
+typedef struct _FrCommandRpm       FrCommandRpm;
+typedef struct _FrCommandRpmClass  FrCommandRpmClass;
 
-struct _FRCommandRpm
+struct _FrCommandRpm
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 	gboolean   is_empty;
 };
 
-struct _FRCommandRpmClass
+struct _FrCommandRpmClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_rpm_get_type        (void);
-FRCommand*   fr_command_rpm_new             (FRProcess *process,
+FrCommand*   fr_command_rpm_new             (FrProcess *process,
 					     const char *filename);
 
 #endif /* FR_COMMAND_RPM_H */

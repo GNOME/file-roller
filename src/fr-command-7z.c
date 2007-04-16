@@ -33,13 +33,13 @@
 #include "fr-command.h"
 #include "fr-command-7z.h"
 
-static void fr_command_7z_class_init  (FRCommand7zClass *class);
-static void fr_command_7z_init        (FRCommand         *afile);
+static void fr_command_7z_class_init  (FrCommand7zClass *class);
+static void fr_command_7z_init        (FrCommand         *afile);
 static void fr_command_7z_finalize    (GObject           *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 /* -- list -- */
@@ -112,8 +112,8 @@ static void
 list__process_line (char     *line,
 		    gpointer  data)
 {
-	FRCommand   *comm = FR_COMMAND (data);
-	FRCommand7z *p7z_comm = FR_COMMAND_7Z (comm);
+	FrCommand   *comm = FR_COMMAND (data);
+	FrCommand7z *p7z_comm = FR_COMMAND_7Z (comm);
 	FileData    *fdata;
 	char        *name_field;
 	char       **fields;
@@ -176,7 +176,7 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_7z_begin_command (FRCommand *comm)
+fr_command_7z_begin_command (FrCommand *comm)
 {
 	if (is_program_in_path ("7za"))
 		fr_process_begin_command (comm->process, "7za");
@@ -188,7 +188,7 @@ fr_command_7z_begin_command (FRCommand *comm)
 
 
 static void
-fr_command_7z_list (FRCommand  *comm,
+fr_command_7z_list (FrCommand  *comm,
 		    const char *password)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
@@ -206,7 +206,7 @@ fr_command_7z_list (FRCommand  *comm,
 
 
 static void
-fr_command_7z_add (FRCommand     *comm,
+fr_command_7z_add (FrCommand     *comm,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
@@ -257,7 +257,7 @@ fr_command_7z_add (FRCommand     *comm,
 
 
 static void
-fr_command_7z_delete (FRCommand *comm,
+fr_command_7z_delete (FrCommand *comm,
 		      GList     *file_list)
 {
 	GList *scan;
@@ -279,7 +279,7 @@ fr_command_7z_delete (FRCommand *comm,
 
 
 static void
-fr_command_7z_extract (FRCommand  *comm,
+fr_command_7z_extract (FrCommand  *comm,
 		       GList      *file_list,
 		       const char *dest_dir,
 		       gboolean    overwrite,
@@ -319,7 +319,7 @@ fr_command_7z_extract (FRCommand  *comm,
 
 
 static void
-fr_command_7z_test (FRCommand   *comm,
+fr_command_7z_test (FrCommand   *comm,
 		    const char  *password)
 {
 	fr_command_7z_begin_command (comm);
@@ -332,7 +332,7 @@ fr_command_7z_test (FRCommand   *comm,
 
 
 static void
-fr_command_7z_handle_error (FRCommand   *comm,
+fr_command_7z_handle_error (FrCommand   *comm,
 			    FRProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
@@ -343,13 +343,13 @@ fr_command_7z_handle_error (FRCommand   *comm,
 
 
 static void
-fr_command_7z_class_init (FRCommand7zClass *class)
+fr_command_7z_class_init (FrCommand7zClass *class)
 {
 	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-	FRCommandClass *afc;
+	FrCommandClass *afc;
 
 	parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_7z_finalize;
 
@@ -363,7 +363,7 @@ fr_command_7z_class_init (FRCommand7zClass *class)
 
 
 static void
-fr_command_7z_init (FRCommand *comm)
+fr_command_7z_init (FrCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_7ZIP;
 
@@ -397,13 +397,13 @@ fr_command_7z_get_type ()
 
 	if (! type) {
 		GTypeInfo type_info = {
-			sizeof (FRCommand7zClass),
+			sizeof (FrCommand7zClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_7z_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommand7z),
+			sizeof (FrCommand7z),
 			0,
 			(GInstanceInitFunc) fr_command_7z_init
 		};
@@ -418,11 +418,11 @@ fr_command_7z_get_type ()
 }
 
 
-FRCommand *
-fr_command_7z_new (FRProcess  *process,
+FrCommand *
+fr_command_7z_new (FrProcess  *process,
 		   const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if (! is_program_in_path("7za")
 	    && ! is_program_in_path("7zr")

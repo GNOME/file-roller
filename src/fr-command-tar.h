@@ -29,18 +29,18 @@
 #include "typedefs.h"
 
 #define FR_TYPE_COMMAND_TAR            (fr_command_tar_get_type ())
-#define FR_COMMAND_TAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_TAR, FRCommandTar))
-#define FR_COMMAND_TAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_TAR, FRCommandTarClass))
+#define FR_COMMAND_TAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_TAR, FrCommandTar))
+#define FR_COMMAND_TAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_TAR, FrCommandTarClass))
 #define FR_IS_COMMAND_TAR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_TAR))
 #define FR_IS_COMMAND_TAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_TAR))
-#define FR_COMMAND_TAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_TAR, FRCommandTarClass))
+#define FR_COMMAND_TAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_TAR, FrCommandTarClass))
 
-typedef struct _FRCommandTar       FRCommandTar;
-typedef struct _FRCommandTarClass  FRCommandTarClass;
+typedef struct _FrCommandTar       FrCommandTar;
+typedef struct _FrCommandTarClass  FrCommandTarClass;
 
-struct _FRCommandTar
+struct _FrCommandTar
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 
 	/*<private>*/
 
@@ -51,13 +51,13 @@ struct _FRCommandTar
 	char              *msg;
 };
 
-struct _FRCommandTarClass
+struct _FrCommandTarClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_tar_get_type        (void);
-FRCommand*   fr_command_tar_new             (FRProcess *process,
+FrCommand*   fr_command_tar_new             (FrProcess *process,
 					     const char *filename,
 					     FRCompressProgram prog);
 

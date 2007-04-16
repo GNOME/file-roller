@@ -35,13 +35,13 @@
 
 #define EMPTY_ARCHIVE_WARNING        "Empty zipfile."
 
-static void fr_command_zip_class_init  (FRCommandZipClass *class);
-static void fr_command_zip_init        (FRCommand         *afile);
+static void fr_command_zip_class_init  (FrCommandZipClass *class);
+static void fr_command_zip_init        (FrCommand         *afile);
 static void fr_command_zip_finalize    (GObject           *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 /* -- list -- */
@@ -90,7 +90,7 @@ mktime_from_string (char *datetime_s)
 
 
 static char *
-fr_command_zip_escape (FRCommand     *comm,
+fr_command_zip_escape (FrCommand     *comm,
 		       const char    *str)
 {
 	char *estr;
@@ -141,7 +141,7 @@ list__process_line (char     *line,
 		    gpointer  data)
 {
 	FileData    *fdata;
-	FRCommand   *comm = FR_COMMAND (data);
+	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	const char  *name_field;
 	gint         line_l;
@@ -209,7 +209,7 @@ list__process_line (char     *line,
 
 
 static void
-add_filename_arg (FRCommand *comm)
+add_filename_arg (FrCommand *comm)
 {
 	char *temp = prepend_path_separator (comm->e_filename);
 	fr_process_add_arg (comm->process, temp);
@@ -218,7 +218,7 @@ add_filename_arg (FRCommand *comm)
 
 
 static void
-add_password_arg (FRCommand     *comm,
+add_password_arg (FrCommand     *comm,
 		  const char    *password,
 		  gboolean       always_specify)
 {
@@ -242,7 +242,7 @@ add_password_arg (FRCommand     *comm,
 
 
 static void
-fr_command_zip_list (FRCommand  *comm,
+fr_command_zip_list (FrCommand  *comm,
 		     const char *password)
 {
 	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
@@ -263,7 +263,7 @@ static void
 process_line__common (char     *line,
 		      gpointer  data)
 {
-	FRCommand  *comm = FR_COMMAND (data);
+	FrCommand  *comm = FR_COMMAND (data);
 
 	if (line == NULL)
 		return;
@@ -278,7 +278,7 @@ process_line__common (char     *line,
 
 
 static void
-fr_command_zip_add (FRCommand     *comm,
+fr_command_zip_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
@@ -328,7 +328,7 @@ fr_command_zip_add (FRCommand     *comm,
 
 
 static void
-fr_command_zip_delete (FRCommand *comm,
+fr_command_zip_delete (FrCommand *comm,
 		       GList     *file_list)
 {
 	GList *scan;
@@ -352,7 +352,7 @@ fr_command_zip_delete (FRCommand *comm,
 
 
 static void
-fr_command_zip_extract (FRCommand  *comm,
+fr_command_zip_extract (FrCommand  *comm,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -401,7 +401,7 @@ fr_command_zip_extract (FRCommand  *comm,
 
 
 static void
-fr_command_zip_test (FRCommand   *comm,
+fr_command_zip_test (FrCommand   *comm,
 		     const char  *password)
 {
 	fr_process_begin_command (comm->process, "unzip");
@@ -413,7 +413,7 @@ fr_command_zip_test (FRCommand   *comm,
 
 
 static void
-fr_command_zip_handle_error (FRCommand   *comm,
+fr_command_zip_handle_error (FrCommand   *comm,
 			     FRProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
@@ -426,13 +426,13 @@ fr_command_zip_handle_error (FRCommand   *comm,
 
 
 static void
-fr_command_zip_class_init (FRCommandZipClass *class)
+fr_command_zip_class_init (FrCommandZipClass *class)
 {
 	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-	FRCommandClass *afc;
+	FrCommandClass *afc;
 
 	parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_zip_finalize;
 
@@ -448,7 +448,7 @@ fr_command_zip_class_init (FRCommandZipClass *class)
 
 
 static void
-fr_command_zip_init (FRCommand *comm)
+fr_command_zip_init (FrCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_ZIP;
 
@@ -483,13 +483,13 @@ fr_command_zip_get_type ()
 
 	if (! type) {
 		GTypeInfo type_info = {
-			sizeof (FRCommandZipClass),
+			sizeof (FrCommandZipClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_zip_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandZip),
+			sizeof (FrCommandZip),
 			0,
 			(GInstanceInitFunc) fr_command_zip_init
 		};
@@ -504,11 +504,11 @@ fr_command_zip_get_type ()
 }
 
 
-FRCommand *
-fr_command_zip_new (FRProcess  *process,
+FrCommand *
+fr_command_zip_new (FrProcess  *process,
 		    const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if (!is_program_in_path ("zip") &&
 	    !is_program_in_path ("unzip")) {

@@ -32,13 +32,13 @@
 #include "fr-command.h"
 #include "fr-command-rar.h"
 
-static void fr_command_rar_class_init  (FRCommandRarClass *class);
-static void fr_command_rar_init        (FRCommand         *afile);
+static void fr_command_rar_class_init  (FrCommandRarClass *class);
+static void fr_command_rar_init        (FrCommand         *afile);
 static void fr_command_rar_finalize    (GObject           *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 static gboolean
@@ -89,8 +89,8 @@ static void
 process_line (char     *line,
 	      gpointer  data)
 {
-	FRCommand     *comm = FR_COMMAND (data);
-	FRCommandRar  *rar_comm = FR_COMMAND_RAR (comm);
+	FrCommand     *comm = FR_COMMAND (data);
+	FrCommandRar  *rar_comm = FR_COMMAND_RAR (comm);
 	char         **fields;
 	const char    *name_field;
 	gboolean       encrypted;      /* unused */
@@ -172,7 +172,7 @@ process_line (char     *line,
 
 
 static void
-add_password_arg (FRCommand	*comm,
+add_password_arg (FrCommand	*comm,
 		  const char	*password,
 		  gboolean	disable_query)
 {
@@ -194,7 +194,7 @@ add_password_arg (FRCommand	*comm,
 
 
 static void
-fr_command_rar_list (FRCommand  *comm,
+fr_command_rar_list (FrCommand  *comm,
 		     const char *password)
 {
 	FR_COMMAND_RAR (comm)->list_started = FALSE;
@@ -222,7 +222,7 @@ fr_command_rar_list (FRCommand  *comm,
 
 
 static void
-fr_command_rar_add (FRCommand     *comm,
+fr_command_rar_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
@@ -270,7 +270,7 @@ fr_command_rar_add (FRCommand     *comm,
 
 
 static void
-fr_command_rar_delete (FRCommand *comm,
+fr_command_rar_delete (FrCommand *comm,
 		       GList     *file_list)
 {
 	GList *scan;
@@ -290,7 +290,7 @@ fr_command_rar_delete (FRCommand *comm,
 
 
 static void
-fr_command_rar_extract (FRCommand  *comm,
+fr_command_rar_extract (FrCommand  *comm,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -342,7 +342,7 @@ fr_command_rar_extract (FRCommand  *comm,
 
 
 static void
-fr_command_rar_test (FRCommand   *comm,
+fr_command_rar_test (FrCommand   *comm,
 		     const char  *password)
 {
 	if (have_rar ())
@@ -366,7 +366,7 @@ fr_command_rar_test (FRCommand   *comm,
 
 
 static void
-fr_command_rar_handle_error (FRCommand   *comm,
+fr_command_rar_handle_error (FrCommand   *comm,
 			     FRProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
@@ -379,13 +379,13 @@ fr_command_rar_handle_error (FRCommand   *comm,
 
 
 static void
-fr_command_rar_class_init (FRCommandRarClass *class)
+fr_command_rar_class_init (FrCommandRarClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
-	FRCommandClass *afc;
+	FrCommandClass *afc;
 
 	parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_rar_finalize;
 
@@ -399,7 +399,7 @@ fr_command_rar_class_init (FRCommandRarClass *class)
 
 
 static void
-fr_command_rar_init (FRCommand *comm)
+fr_command_rar_init (FrCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_RAR;
 
@@ -433,13 +433,13 @@ fr_command_rar_get_type ()
 
 	if (! type) {
 		GTypeInfo type_info = {
-			sizeof (FRCommandRarClass),
+			sizeof (FrCommandRarClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_rar_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandRar),
+			sizeof (FrCommandRar),
 			0,
 			(GInstanceInitFunc) fr_command_rar_init
 		};
@@ -454,11 +454,11 @@ fr_command_rar_get_type ()
 }
 
 
-FRCommand *
-fr_command_rar_new (FRProcess  *process,
+FrCommand *
+fr_command_rar_new (FrProcess  *process,
 		    const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if ((!is_program_in_path("rar")) && (!is_program_in_path("unrar")))
 		return NULL;

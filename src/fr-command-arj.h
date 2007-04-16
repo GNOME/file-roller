@@ -28,31 +28,31 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_ARJ            (fr_command_arj_get_type ())
-#define FR_COMMAND_ARJ(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ARJ, FRCommandArj))
-#define FR_COMMAND_ARJ_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ARJ, FRCommandArjClass))
+#define FR_COMMAND_ARJ(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ARJ, FrCommandArj))
+#define FR_COMMAND_ARJ_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ARJ, FrCommandArjClass))
 #define FR_IS_COMMAND_ARJ(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_ARJ))
 #define FR_IS_COMMAND_ARJ_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ARJ))
-#define FR_COMMAND_ARJ_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ARJ, FRCommandArjClass))
+#define FR_COMMAND_ARJ_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ARJ, FrCommandArjClass))
 
-typedef struct _FRCommandArj       FRCommandArj;
-typedef struct _FRCommandArjClass  FRCommandArjClass;
+typedef struct _FrCommandArj       FrCommandArj;
+typedef struct _FrCommandArjClass  FrCommandArjClass;
 
-struct _FRCommandArj
+struct _FrCommandArj
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 
 	gboolean  list_started;
 	int       line_no;
 	FileData *fdata;
 };
 
-struct _FRCommandArjClass
+struct _FrCommandArjClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_arj_get_type        (void);
-FRCommand*   fr_command_arj_new             (FRProcess  *process,
+FrCommand*   fr_command_arj_new             (FrProcess  *process,
 					     const char *filename);
 
 #endif /* FR_COMMAND_ARJ_H */

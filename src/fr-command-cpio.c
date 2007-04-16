@@ -33,13 +33,13 @@
 #include "fr-command.h"
 #include "fr-command-cpio.h"
 
-static void fr_command_cpio_class_init  (FRCommandCpioClass *class);
-static void fr_command_cpio_init        (FRCommand         *afile);
+static void fr_command_cpio_class_init  (FrCommandCpioClass *class);
+static void fr_command_cpio_init        (FrCommand         *afile);
 static void fr_command_cpio_finalize    (GObject           *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 /* -- list -- */
@@ -87,7 +87,7 @@ list__process_line (char     *line,
 		    gpointer  data)
 {
 	FileData    *fdata;
-	FRCommand   *comm = FR_COMMAND (data);
+	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	const char  *name_field;
 
@@ -144,7 +144,7 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_cpio_list (FRCommand  *comm,
+fr_command_cpio_list (FrCommand  *comm,
 		      const char *password)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
@@ -159,7 +159,7 @@ fr_command_cpio_list (FRCommand  *comm,
 
 
 static void
-fr_command_cpio_extract (FRCommand  *comm,
+fr_command_cpio_extract (FrCommand  *comm,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -184,13 +184,13 @@ fr_command_cpio_extract (FRCommand  *comm,
 
 
 static void 
-fr_command_cpio_class_init (FRCommandCpioClass *class)
+fr_command_cpio_class_init (FrCommandCpioClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+        FrCommandClass *afc;
 
         parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_cpio_finalize;
 
@@ -200,7 +200,7 @@ fr_command_cpio_class_init (FRCommandCpioClass *class)
 
  
 static void 
-fr_command_cpio_init (FRCommand *comm)
+fr_command_cpio_init (FrCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_CPIO;
 
@@ -235,13 +235,13 @@ fr_command_cpio_get_type ()
 
         if (! type) {
                 GTypeInfo type_info = {
-			sizeof (FRCommandCpioClass),
+			sizeof (FrCommandCpioClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_cpio_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandCpio),
+			sizeof (FrCommandCpio),
 			0,
 			(GInstanceInitFunc) fr_command_cpio_init
 		};
@@ -256,11 +256,11 @@ fr_command_cpio_get_type ()
 }
 
 
-FRCommand *
-fr_command_cpio_new (FRProcess  *process,
+FrCommand *
+fr_command_cpio_new (FrProcess  *process,
 		    const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if (!is_program_in_path("cpio")) {
 		return NULL;

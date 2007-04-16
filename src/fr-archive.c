@@ -348,7 +348,7 @@ fr_archive_add_is_stoppable (FrArchive *archive)
 
 
 static gboolean
-archive_sticky_only_cb (FRProcess *process,
+archive_sticky_only_cb (FrProcess *process,
 			FrArchive *archive)
 {
 	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
@@ -803,7 +803,7 @@ create_command_from_filename (FrArchive  *archive,
 
 
 static void
-action_started (FRCommand *command,
+action_started (FrCommand *command,
 		FRAction   action,
 		FrArchive *archive)
 {
@@ -922,7 +922,7 @@ static void add_dropped_items (DroppedItemsData *data);
 
 
 static void
-action_performed (FRCommand   *command,
+action_performed (FrCommand   *command,
 		  FRAction     action,
 		  FRProcError *error,
 		  FrArchive   *archive)
@@ -961,7 +961,7 @@ action_performed (FRCommand   *command,
 
 
 static gboolean
-archive_progress_cb (FRCommand *command,
+archive_progress_cb (FrCommand *command,
 		     double     fraction,
 		     FrArchive *archive)
 {
@@ -974,7 +974,7 @@ archive_progress_cb (FRCommand *command,
 
 
 static gboolean
-archive_message_cb  (FRCommand  *command,
+archive_message_cb  (FrCommand  *command,
 		     const char *msg,
 		     FrArchive  *archive)
 {
@@ -991,7 +991,7 @@ gboolean
 fr_archive_create (FrArchive  *archive,
 		   const char *uri)
 {
-	FRCommand *tmp_command;
+	FrCommand *tmp_command;
 
 	if (uri == NULL)
 		return FALSE;
@@ -1071,7 +1071,7 @@ copy_remote_file__step2 (FrArchive      *archive,
 			 char           *password,
 			 GnomeVFSResult  result)
 {
-	FRCommand  *tmp_command;
+	FrCommand  *tmp_command;
 	const char *mime_type = NULL;
 
 	archive->priv->xfer_handle = NULL;
@@ -1361,7 +1361,7 @@ static void archive_remove (FrArchive *archive, GList *file_list);
 
 
 static GList *
-escape_file_list (FRCommand *command,
+escape_file_list (FrCommand *command,
 		  GList     *file_list)
 {
 	GList *e_file_list = NULL;
@@ -1378,7 +1378,7 @@ escape_file_list (FRCommand *command,
 
 
 static GList *
-shell_escape_file_list (FRCommand *command,
+shell_escape_file_list (FrCommand *command,
 			GList     *file_list)
 {
 	GList *e_file_list = NULL;
@@ -2490,7 +2490,7 @@ move_files_in_chunks (FrArchive  *archive,
 
 /* Note: all paths escaped, dest_dir unescaped. */
 static void
-extract_in_chunks (FRCommand  *command,
+extract_in_chunks (FrCommand  *command,
 		   GList      *file_list,
 		   const char *dest_dir,
 		   gboolean    overwrite,

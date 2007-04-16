@@ -28,18 +28,18 @@
 #include "typedefs.h"
 
 #define FR_TYPE_COMMAND_CFILE            (fr_command_cfile_get_type ())
-#define FR_COMMAND_CFILE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_CFILE, FRCommandCFile))
-#define FR_COMMAND_CFILE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_CFILE, FRCommandCFileClass))
+#define FR_COMMAND_CFILE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_CFILE, FrCommandCFile))
+#define FR_COMMAND_CFILE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_CFILE, FrCommandCFileClass))
 #define FR_IS_COMMAND_CFILE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_CFILE))
 #define FR_IS_COMMAND_CFILE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_CFILE))
-#define FR_COMMAND_CFILE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_CFILE, FRCommandCFileClass))
+#define FR_COMMAND_CFILE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_CFILE, FrCommandCFileClass))
 
-typedef struct _FRCommandCFile       FRCommandCFile;
-typedef struct _FRCommandCFileClass  FRCommandCFileClass;
+typedef struct _FrCommandCFile       FrCommandCFile;
+typedef struct _FrCommandCFileClass  FrCommandCFileClass;
 
-struct _FRCommandCFile
+struct _FrCommandCFile
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 
 	/*<private>*/
 
@@ -47,13 +47,13 @@ struct _FRCommandCFile
 	FRProcError error;
 };
 
-struct _FRCommandCFileClass
+struct _FrCommandCFileClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_cfile_get_type   (void);
-FRCommand*   fr_command_cfile_new        (FRProcess *process,
+FrCommand*   fr_command_cfile_new        (FrProcess *process,
 					  const char *filename,
 					  FRCompressProgram prog);
 

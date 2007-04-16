@@ -46,8 +46,8 @@ enum {
 static GObjectClass *parent_class;
 static guint fr_process_signals[LAST_SIGNAL] = { 0 };
 
-static void fr_process_class_init (FRProcessClass *class);
-static void fr_process_init       (FRProcess      *fr_proc);
+static void fr_process_class_init (FrProcessClass *class);
+static void fr_process_init       (FrProcess      *fr_proc);
 static void fr_process_finalize   (GObject        *object);
 
 
@@ -94,13 +94,13 @@ fr_process_get_type (void)
 
 	if (! type) {
 		GTypeInfo type_info = {
-			sizeof (FRProcessClass),
+			sizeof (FrProcessClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_process_class_init,
 			NULL,
 			NULL,
-			sizeof (FRProcess),
+			sizeof (FrProcess),
 			0,
 			(GInstanceInitFunc) fr_process_init
 		};
@@ -116,7 +116,7 @@ fr_process_get_type (void)
 
 
 static void
-fr_process_class_init (FRProcessClass *class)
+fr_process_class_init (FrProcessClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
@@ -126,7 +126,7 @@ fr_process_class_init (FRProcessClass *class)
 		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRProcessClass, start),
+			      G_STRUCT_OFFSET (FrProcessClass, start),
 			      NULL, NULL,
 			      fr_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
@@ -134,7 +134,7 @@ fr_process_class_init (FRProcessClass *class)
 		g_signal_new ("done",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRProcessClass, done),
+			      G_STRUCT_OFFSET (FrProcessClass, done),
 			      NULL, NULL,
 			      fr_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1,
@@ -143,7 +143,7 @@ fr_process_class_init (FRProcessClass *class)
 		g_signal_new ("sticky_only",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FRProcessClass, sticky_only),
+			      G_STRUCT_OFFSET (FrProcessClass, sticky_only),
 			      NULL, NULL,
 			      fr_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
@@ -156,7 +156,7 @@ fr_process_class_init (FRProcessClass *class)
 
 
 static void
-fr_process_init (FRProcess *fr_proc)
+fr_process_init (FrProcess *fr_proc)
 {
 	fr_proc->term_on_stop = TRUE;
 
@@ -194,20 +194,20 @@ fr_process_init (FRProcess *fr_proc)
 }
 
 
-FRProcess *
+FrProcess *
 fr_process_new ()
 {
 	return FR_PROCESS (g_object_new (FR_TYPE_PROCESS, NULL));
 }
 
 
-static void _fr_process_stop (FRProcess *fr_proc, gboolean emit_signal);
+static void _fr_process_stop (FrProcess *fr_proc, gboolean emit_signal);
 
 
 static void
 fr_process_finalize (GObject *object)
 {
-	FRProcess *fr_proc;
+	FrProcess *fr_proc;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_PROCESS (object));
@@ -244,7 +244,7 @@ fr_process_finalize (GObject *object)
 
 
 void
-fr_process_begin_command (FRProcess  *fr_proc,
+fr_process_begin_command (FrProcess  *fr_proc,
 			  const char *arg)
 {
 	FRCommandInfo * c_info;
@@ -260,7 +260,7 @@ fr_process_begin_command (FRProcess  *fr_proc,
 
 
 void
-fr_process_begin_command_at (FRProcess  *fr_proc,
+fr_process_begin_command_at (FrProcess  *fr_proc,
 			     const char *arg,
 			     int         index)
 {
@@ -283,7 +283,7 @@ fr_process_begin_command_at (FRProcess  *fr_proc,
 
 
 void
-fr_process_set_working_dir (FRProcess  *fr_proc,
+fr_process_set_working_dir (FrProcess  *fr_proc,
 			    const char *dir)
 {
 	FRCommandInfo *c_info;
@@ -298,7 +298,7 @@ fr_process_set_working_dir (FRProcess  *fr_proc,
 
 
 void
-fr_process_set_sticky (FRProcess *fr_proc,
+fr_process_set_sticky (FrProcess *fr_proc,
 		       gboolean   sticky)
 {
 	FRCommandInfo *c_info;
@@ -311,7 +311,7 @@ fr_process_set_sticky (FRProcess *fr_proc,
 
 
 void
-fr_process_set_ignore_error (FRProcess *fr_proc,
+fr_process_set_ignore_error (FrProcess *fr_proc,
 			     gboolean   ignore_error)
 {
 	FRCommandInfo *c_info;
@@ -324,7 +324,7 @@ fr_process_set_ignore_error (FRProcess *fr_proc,
 
 
 void
-fr_process_add_arg (FRProcess  *fr_proc,
+fr_process_add_arg (FrProcess  *fr_proc,
 		    const char *arg)
 {
 	FRCommandInfo *c_info;
@@ -337,7 +337,7 @@ fr_process_add_arg (FRProcess  *fr_proc,
 
 
 void
-fr_process_set_arg_at (FRProcess  *fr_proc,
+fr_process_set_arg_at (FrProcess  *fr_proc,
 		       int         n_comm,
 		       int         n_arg,
 		       const char *arg_value)
@@ -357,7 +357,7 @@ fr_process_set_arg_at (FRProcess  *fr_proc,
 
 
 void
-fr_process_set_begin_func (FRProcess    *fr_proc,
+fr_process_set_begin_func (FrProcess    *fr_proc,
 			   ProcFunc      func,
 			   gpointer      func_data)
 {
@@ -372,7 +372,7 @@ fr_process_set_begin_func (FRProcess    *fr_proc,
 
 
 void
-fr_process_set_end_func (FRProcess    *fr_proc,
+fr_process_set_end_func (FrProcess    *fr_proc,
 			 ProcFunc      func,
 			 gpointer      func_data)
 {
@@ -387,7 +387,7 @@ fr_process_set_end_func (FRProcess    *fr_proc,
 
 
 void
-fr_process_set_continue_func (FRProcess    *fr_proc,
+fr_process_set_continue_func (FrProcess    *fr_proc,
 			      ContinueFunc  func,
 			      gpointer      func_data)
 {
@@ -405,7 +405,7 @@ fr_process_set_continue_func (FRProcess    *fr_proc,
 
 
 void
-fr_process_end_command (FRProcess *fr_proc)
+fr_process_end_command (FrProcess *fr_proc)
 {
 	FRCommandInfo *c_info;
 
@@ -417,7 +417,7 @@ fr_process_end_command (FRProcess *fr_proc)
 
 
 void
-fr_process_clear (FRProcess *fr_proc)
+fr_process_clear (FrProcess *fr_proc)
 {
 	gint i;
 
@@ -440,7 +440,7 @@ fr_process_clear (FRProcess *fr_proc)
 
 
 void
-fr_process_set_out_line_func (FRProcess    *fr_proc,
+fr_process_set_out_line_func (FrProcess    *fr_proc,
 			      ProcLineFunc  func,
 			      gpointer      data)
 {
@@ -451,7 +451,7 @@ fr_process_set_out_line_func (FRProcess    *fr_proc,
 
 
 void
-fr_process_set_err_line_func (FRProcess    *fr_proc,
+fr_process_set_err_line_func (FrProcess    *fr_proc,
 			      ProcLineFunc  func,
 			      gpointer      data)
 {
@@ -462,7 +462,7 @@ fr_process_set_err_line_func (FRProcess    *fr_proc,
 
 
 static gboolean
-process_output (FRProcess *fr_proc)
+process_output (FrProcess *fr_proc)
 {
 	int   n, i;
 	char *line, *eol;
@@ -513,7 +513,7 @@ process_output (FRProcess *fr_proc)
 
 
 static gboolean
-process_error (FRProcess *fr_proc)
+process_error (FrProcess *fr_proc)
 {
 	int   n, i;
 	char *line, *eol;
@@ -568,7 +568,7 @@ static gboolean check_child (gpointer data);
 
 static void child_setup (gpointer user_data)
 {
-	FRProcess *fr_proc = user_data;
+	FrProcess *fr_proc = user_data;
 
 	if (fr_proc->use_standard_locale)
 		putenv ("LC_ALL=C");
@@ -576,7 +576,7 @@ static void child_setup (gpointer user_data)
 
 
 static void
-start_current_command (FRProcess *fr_proc)
+start_current_command (FrProcess *fr_proc)
 {
 	FRCommandInfo  *c_info;
 	GList          *arg_list, *scan;
@@ -666,7 +666,7 @@ start_current_command (FRProcess *fr_proc)
 
 
 static gboolean
-command_is_sticky (FRProcess *fr_proc,
+command_is_sticky (FrProcess *fr_proc,
 		   int        i)
 {
 	FRCommandInfo *c_info;
@@ -676,7 +676,7 @@ command_is_sticky (FRProcess *fr_proc,
 
 
 static void
-allow_sticky_processes_only (FRProcess *fr_proc,
+allow_sticky_processes_only (FrProcess *fr_proc,
 			     gboolean   emit_signal)
 {
 	if (! fr_proc->sticky_only) {
@@ -700,7 +700,7 @@ allow_sticky_processes_only (FRProcess *fr_proc,
 static gint
 check_child (gpointer data)
 {
-	FRProcess      *fr_proc = data;
+	FrProcess      *fr_proc = data;
 	FRCommandInfo  *c_info;
 	pid_t           pid;
 	int             status;
@@ -819,7 +819,7 @@ check_child (gpointer data)
 
 
 void
-fr_process_use_standard_locale (FRProcess *fr_proc,
+fr_process_use_standard_locale (FrProcess *fr_proc,
 				gboolean   use_stand_locale)
 {
 	g_return_if_fail (fr_proc != NULL);
@@ -828,7 +828,7 @@ fr_process_use_standard_locale (FRProcess *fr_proc,
 
 
 void
-fr_process_start (FRProcess *fr_proc)
+fr_process_start (FrProcess *fr_proc)
 {
 	g_return_if_fail (fr_proc != NULL);
 
@@ -873,7 +873,7 @@ fr_process_start (FRProcess *fr_proc)
 
 
 static void
-_fr_process_stop (FRProcess *fr_proc,
+_fr_process_stop (FrProcess *fr_proc,
 		  gboolean   emit_signal)
 {
 	g_return_if_fail (fr_proc != NULL);
@@ -919,7 +919,7 @@ _fr_process_stop (FRProcess *fr_proc,
 
 
 void
-fr_process_stop (FRProcess *fr_proc)
+fr_process_stop (FrProcess *fr_proc)
 {
 	_fr_process_stop (fr_proc, TRUE);
 }

@@ -31,13 +31,13 @@
 #include "fr-command.h"
 #include "fr-command-ar.h"
 
-static void fr_command_ar_class_init  (FRCommandArClass *class);
-static void fr_command_ar_init        (FRCommand        *afile);
+static void fr_command_ar_class_init  (FrCommandArClass *class);
+static void fr_command_ar_init        (FrCommand        *afile);
 static void fr_command_ar_finalize    (GObject          *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 /* -- list -- */
@@ -119,7 +119,7 @@ process_line (char     *line,
 	      gpointer  data)
 {
 	FileData    *fdata;
-	FRCommand   *comm = FR_COMMAND (data);
+	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	int          date_idx;
 	char        *field_month, *field_day, *field_time, *field_year;
@@ -187,7 +187,7 @@ process_line (char     *line,
 
 
 static void
-fr_command_ar_list (FRCommand  *comm,
+fr_command_ar_list (FrCommand  *comm,
 		    const char *password)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
@@ -203,7 +203,7 @@ fr_command_ar_list (FRCommand  *comm,
 
 
 static void
-fr_command_ar_add (FRCommand     *comm,
+fr_command_ar_add (FrCommand     *comm,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
@@ -232,7 +232,7 @@ fr_command_ar_add (FRCommand     *comm,
 
 
 static void
-fr_command_ar_delete (FRCommand *comm,
+fr_command_ar_delete (FrCommand *comm,
 		      GList     *file_list)
 {
 	GList *scan;
@@ -249,7 +249,7 @@ fr_command_ar_delete (FRCommand *comm,
 
 
 static void
-fr_command_ar_extract (FRCommand  *comm,
+fr_command_ar_extract (FrCommand  *comm,
 		       GList      *file_list,
 		       const char *dest_dir,
 		       gboolean    overwrite,
@@ -275,7 +275,7 @@ fr_command_ar_extract (FRCommand  *comm,
 
 
 static void
-fr_command_ar_handle_error (FRCommand   *comm, 
+fr_command_ar_handle_error (FrCommand   *comm, 
 			    FRProcError *error)
 {
 	/* FIXME */
@@ -283,13 +283,13 @@ fr_command_ar_handle_error (FRCommand   *comm,
 
 
 static void 
-fr_command_ar_class_init (FRCommandArClass *class)
+fr_command_ar_class_init (FrCommandArClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+        FrCommandClass *afc;
 
         parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_ar_finalize;
 
@@ -302,7 +302,7 @@ fr_command_ar_class_init (FRCommandArClass *class)
 
  
 static void 
-fr_command_ar_init (FRCommand *comm)
+fr_command_ar_init (FrCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_AR;
 
@@ -337,13 +337,13 @@ fr_command_ar_get_type ()
 
         if (! type) {
                 GTypeInfo type_info = {
-			sizeof (FRCommandArClass),
+			sizeof (FrCommandArClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_ar_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandAr),
+			sizeof (FrCommandAr),
 			0,
 			(GInstanceInitFunc) fr_command_ar_init
 		};
@@ -358,11 +358,11 @@ fr_command_ar_get_type ()
 }
 
 
-FRCommand *
-fr_command_ar_new (FRProcess  *process,
+FrCommand *
+fr_command_ar_new (FrProcess  *process,
 		   const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if(! is_program_in_path ("ar")) 
 		return NULL;

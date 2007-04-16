@@ -34,7 +34,7 @@
 
 typedef struct {
 	FrWindow  *window;
-	FRProcess *process;
+	FrProcess *process;
 	char      *filename;
 	char      *e_filename;
 	char      *temp_dir;
@@ -42,7 +42,7 @@ typedef struct {
 
 typedef struct {
 	FrWindow           *window;
-	FRProcess          *process;
+	FrProcess          *process;
 	char               *command;
 	GnomeVFSMimeApplication *app;
 	GList              *file_list;

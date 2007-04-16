@@ -28,27 +28,27 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_AR            (fr_command_ar_get_type ())
-#define FR_COMMAND_AR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_AR, FRCommandAr))
-#define FR_COMMAND_AR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_AR, FRCommandArClass))
+#define FR_COMMAND_AR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_AR, FrCommandAr))
+#define FR_COMMAND_AR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_AR, FrCommandArClass))
 #define FR_IS_COMMAND_AR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_AR))
 #define FR_IS_COMMAND_AR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_AR))
-#define FR_COMMAND_AR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_AR, FRCommandArClass))
+#define FR_COMMAND_AR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_AR, FrCommandArClass))
 
-typedef struct _FRCommandAr       FRCommandAr;
-typedef struct _FRCommandArClass  FRCommandArClass;
+typedef struct _FrCommandAr       FrCommandAr;
+typedef struct _FrCommandArClass  FrCommandArClass;
 
-struct _FRCommandAr
+struct _FrCommandAr
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 };
 
-struct _FRCommandArClass
+struct _FrCommandArClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_ar_get_type        (void);
-FRCommand*   fr_command_ar_new             (FRProcess  *process,
+FrCommand*   fr_command_ar_new             (FrProcess  *process,
 					    const char *filename);
 
 #endif /* FR_COMMAND_AR_H */

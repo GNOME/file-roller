@@ -32,13 +32,13 @@
 #include "fr-command.h"
 #include "fr-command-unstuff.h"
 
-static void fr_command_unstuff_class_init  (FRCommandUnstuffClass *class);
-static void fr_command_unstuff_init        (FRCommand         *afile);
+static void fr_command_unstuff_class_init  (FrCommandUnstuffClass *class);
+static void fr_command_unstuff_init        (FrCommand         *afile);
 static void fr_command_unstuff_finalize    (GObject           *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 /* recursive rmdir to remove the left-overs from unstuff */
 static void
@@ -107,8 +107,8 @@ static void
 process_line (char     *line,
 	      gpointer  data)
 {
-	FRCommand        *comm = FR_COMMAND (data);
-	FRCommandUnstuff *unstuff_comm = FR_COMMAND_UNSTUFF (comm);
+	FrCommand        *comm = FR_COMMAND (data);
+	FrCommandUnstuff *unstuff_comm = FR_COMMAND_UNSTUFF (comm);
 	const char       *str_start;
 	char             *filename, *real_filename;
 	int               i;
@@ -180,7 +180,7 @@ process_line (char     *line,
 
 
 static void
-fr_command_unstuff_list (FRCommand  *comm,
+fr_command_unstuff_list (FrCommand  *comm,
 			 const char *password)
 {
 	char *arg, *path;
@@ -213,7 +213,7 @@ fr_command_unstuff_list (FRCommand  *comm,
 
 
 static void
-fr_command_unstuff_extract (FRCommand  *comm,
+fr_command_unstuff_extract (FrCommand  *comm,
 			    GList      *file_list,
 			    const char *dest_dir,
 			    gboolean    overwrite,
@@ -257,7 +257,7 @@ fr_command_unstuff_extract (FRCommand  *comm,
 
 
 static void
-fr_command_unstuff_handle_error (FRCommand   *comm,
+fr_command_unstuff_handle_error (FrCommand   *comm,
 			     FRProcError *error)
 {
 	if ((error->type == FR_PROC_ERROR_COMMAND_ERROR)
@@ -267,13 +267,13 @@ fr_command_unstuff_handle_error (FRCommand   *comm,
 
 
 static void
-fr_command_unstuff_class_init (FRCommandUnstuffClass *class)
+fr_command_unstuff_class_init (FrCommandUnstuffClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
-	FRCommandClass *afc;
+	FrCommandClass *afc;
 
 	parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
 	gobject_class->finalize = fr_command_unstuff_finalize;
 
@@ -286,7 +286,7 @@ fr_command_unstuff_class_init (FRCommandUnstuffClass *class)
 
 
 static void
-fr_command_unstuff_init (FRCommand *comm)
+fr_command_unstuff_init (FrCommand *comm)
 {
 	comm->file_type = FR_FILE_TYPE_STUFFIT;
 
@@ -304,7 +304,7 @@ fr_command_unstuff_init (FRCommand *comm)
 static void
 fr_command_unstuff_finalize (GObject *object)
 {
-	FRCommandUnstuff *unstuff_comm = FR_COMMAND_UNSTUFF (object);
+	FrCommandUnstuff *unstuff_comm = FR_COMMAND_UNSTUFF (object);
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_UNSTUFF (object));
 
@@ -326,13 +326,13 @@ fr_command_unstuff_get_type ()
 
 	if (! type) {
 		GTypeInfo type_info = {
-			sizeof (FRCommandUnstuffClass),
+			sizeof (FrCommandUnstuffClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_unstuff_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandUnstuff),
+			sizeof (FrCommandUnstuff),
 			0,
 			(GInstanceInitFunc) fr_command_unstuff_init
 		};
@@ -347,11 +347,11 @@ fr_command_unstuff_get_type ()
 }
 
 
-FRCommand *
-fr_command_unstuff_new (FRProcess  *process,
+FrCommand *
+fr_command_unstuff_new (FrProcess  *process,
 		    const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if (!is_program_in_path("unstuff")) {
 		return NULL;

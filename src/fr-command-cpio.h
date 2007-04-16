@@ -28,28 +28,28 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_CPIO            (fr_command_cpio_get_type ())
-#define FR_COMMAND_CPIO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_CPIO, FRCommandCpio))
-#define FR_COMMAND_CPIO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_CPIO, FRCommandCpioClass))
+#define FR_COMMAND_CPIO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_CPIO, FrCommandCpio))
+#define FR_COMMAND_CPIO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_CPIO, FrCommandCpioClass))
 #define FR_IS_COMMAND_CPIO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_CPIO))
 #define FR_IS_COMMAND_CPIO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_CPIO))
-#define FR_COMMAND_CPIO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_CPIO, FRCommandCpioClass))
+#define FR_COMMAND_CPIO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_CPIO, FrCommandCpioClass))
 
-typedef struct _FRCommandCpio       FRCommandCpio;
-typedef struct _FRCommandCpioClass  FRCommandCpioClass;
+typedef struct _FrCommandCpio       FrCommandCpio;
+typedef struct _FrCommandCpioClass  FrCommandCpioClass;
 
-struct _FRCommandCpio
+struct _FrCommandCpio
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 	gboolean   is_empty;
 };
 
-struct _FRCommandCpioClass
+struct _FrCommandCpioClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_cpio_get_type        (void);
-FRCommand*   fr_command_cpio_new             (FRProcess *process,
+FrCommand*   fr_command_cpio_new             (FrProcess *process,
 					      const char *filename);
 
 #endif /* FR_COMMAND_CPIO_H */

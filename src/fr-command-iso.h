@@ -28,29 +28,29 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_ISO            (fr_command_iso_get_type ())
-#define FR_COMMAND_ISO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ISO, FRCommandIso))
-#define FR_COMMAND_ISO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ISO, FRCommandIsoClass))
+#define FR_COMMAND_ISO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ISO, FrCommandIso))
+#define FR_COMMAND_ISO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ISO, FrCommandIsoClass))
 #define FR_IS_COMMAND_ISO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_ISO))
 #define FR_IS_COMMAND_ISO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ISO))
-#define FR_COMMAND_ISO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ISO, FRCommandIsoClass))
+#define FR_COMMAND_ISO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ISO, FrCommandIsoClass))
 
-typedef struct _FRCommandIso       FRCommandIso;
-typedef struct _FRCommandIsoClass  FRCommandIsoClass;
+typedef struct _FrCommandIso       FrCommandIso;
+typedef struct _FrCommandIsoClass  FrCommandIsoClass;
 
-struct _FRCommandIso
+struct _FrCommandIso
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 	char      *cur_path;
 	gboolean   joliet;
 };
 
-struct _FRCommandIsoClass
+struct _FrCommandIsoClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_iso_get_type        (void);
-FRCommand*   fr_command_iso_new             (FRProcess *process,
+FrCommand*   fr_command_iso_new             (FrProcess *process,
 					     const char *filename);
 
 #endif /* FR_COMMAND_ISO_H */

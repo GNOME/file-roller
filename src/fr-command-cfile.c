@@ -35,20 +35,20 @@
 #include "fr-command.h"
 #include "fr-command-cfile.h"
 
-static void fr_command_cfile_class_init  (FRCommandCFileClass *class);
-static void fr_command_cfile_init        (FRCommand           *afile);
+static void fr_command_cfile_class_init  (FrCommandCFileClass *class);
+static void fr_command_cfile_init        (FrCommand           *afile);
 static void fr_command_cfile_finalize    (GObject             *object);
 
 /* Parent Class */
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 static char *
-get_uncompressed_name_from_archive (FRCommand  *comm, 
+get_uncompressed_name_from_archive (FrCommand  *comm, 
 				    const char *e_filename)
 {
-	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
+	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
 	int             fd;
 	char            buffer[11];
 	char           *filename = NULL;
@@ -106,7 +106,7 @@ static void
 list__process_line (char     *line, 
 		    gpointer  data)
 {
-	FRCommand  *comm = FR_COMMAND (data);
+	FrCommand  *comm = FR_COMMAND (data);
 	FileData   *fdata;
 	char      **fields;
 	char       *filename;
@@ -144,10 +144,10 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_cfile_list (FRCommand  *comm,
+fr_command_cfile_list (FrCommand  *comm,
 		       const char *password)
 {
-	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
+	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
 
 	if (comm_cfile->compress_prog == FR_COMPRESS_PROGRAM_GZIP) {
 		/* gzip let us known the uncompressed size */
@@ -203,14 +203,14 @@ fr_command_cfile_list (FRCommand  *comm,
 
 
 static void
-fr_command_cfile_add (FRCommand     *comm,
+fr_command_cfile_add (FrCommand     *comm,
 		      GList         *file_list,
 		      const char    *base_dir,
 		      gboolean       update,
 		      const char    *password,
 		      FRCompression  compression)
 {
-	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
+	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
 	const char     *filename;
 	char           *temp_dir;
 	char           *e_temp_dir;
@@ -306,7 +306,7 @@ fr_command_cfile_add (FRCommand     *comm,
 
 
 static void
-fr_command_cfile_delete (FRCommand *comm,
+fr_command_cfile_delete (FrCommand *comm,
 			 GList     *file_list)
 {
 	/* never called */
@@ -314,7 +314,7 @@ fr_command_cfile_delete (FRCommand *comm,
 
 
 static void
-fr_command_cfile_extract (FRCommand  *comm,
+fr_command_cfile_extract (FrCommand  *comm,
 			  GList      *file_list,
 			  const char *dest_dir,
 			  gboolean    overwrite,
@@ -322,7 +322,7 @@ fr_command_cfile_extract (FRCommand  *comm,
 			  gboolean    junk_paths,
 			  const char *password)
 {
-	FRCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
+	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
 	char           *temp_dir;
 	char           *e_temp_dir;
 	char           *dest_file;
@@ -442,13 +442,13 @@ fr_command_cfile_extract (FRCommand  *comm,
 
 
 static void 
-fr_command_cfile_class_init (FRCommandCFileClass *class)
+fr_command_cfile_class_init (FrCommandCFileClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FRCommandClass *afc;
+        FrCommandClass *afc;
 
         parent_class = g_type_class_peek_parent (class);
-	afc = (FRCommandClass*) class;
+	afc = (FrCommandClass*) class;
 
         gobject_class->finalize = fr_command_cfile_finalize;
 
@@ -460,7 +460,7 @@ fr_command_cfile_class_init (FRCommandCFileClass *class)
 
  
 static void 
-fr_command_cfile_init (FRCommand *comm)
+fr_command_cfile_init (FrCommand *comm)
 {
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE; 
@@ -475,7 +475,7 @@ fr_command_cfile_init (FRCommand *comm)
 static void 
 fr_command_cfile_finalize (GObject *object)
 {
-	FRCommandCFile *comm_tar;
+	FrCommandCFile *comm_tar;
 
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_CFILE (object));
@@ -495,13 +495,13 @@ fr_command_cfile_get_type ()
 
         if (! type) {
                 GTypeInfo type_info = {
-			sizeof (FRCommandCFileClass),
+			sizeof (FrCommandCFileClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_cfile_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandCFile),
+			sizeof (FrCommandCFile),
 			0,
 			(GInstanceInitFunc) fr_command_cfile_init
 		};
@@ -516,12 +516,12 @@ fr_command_cfile_get_type ()
 }
 
 
-FRCommand *
-fr_command_cfile_new (FRProcess         *process,
+FrCommand *
+fr_command_cfile_new (FrProcess         *process,
 		      const char        *filename,
 		      FRCompressProgram  prog)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	if ((prog == FR_COMPRESS_PROGRAM_GZIP) &&
 	    (!is_program_in_path("gzip"))) {

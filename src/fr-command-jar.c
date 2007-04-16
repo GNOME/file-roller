@@ -38,23 +38,23 @@ typedef struct {
 } JarData;
 
 
-static void fr_command_jar_class_init  (FRCommandJarClass *class);
-static void fr_command_jar_init        (FRCommand         *afile);
+static void fr_command_jar_class_init  (FrCommandJarClass *class);
+static void fr_command_jar_init        (FrCommand         *afile);
 static void fr_command_jar_finalize    (GObject           *object);
 
 
-static FRCommandClass *parent_class = NULL;
+static FrCommandClass *parent_class = NULL;
 
 
 static void
-fr_command_jar_add (FRCommand     *comm,
+fr_command_jar_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
 		    FRCompression  compression)
 {
-	FRProcess *proc = comm->process;
+	FrProcess *proc = comm->process;
 	GList     *zip_list = NULL, *jardata_list = NULL, *jar_list = NULL;
 	GList     *scan;
 	char      *tmp_dir;
@@ -149,10 +149,10 @@ fr_command_jar_add (FRCommand     *comm,
 
 
 static void 
-fr_command_jar_class_init (FRCommandJarClass *class)
+fr_command_jar_class_init (FrCommandJarClass *class)
 {
 	GObjectClass   *gobject_class = G_OBJECT_CLASS(class);
-	FRCommandClass *afc = FR_COMMAND_CLASS (class);
+	FrCommandClass *afc = FR_COMMAND_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
 	
@@ -162,7 +162,7 @@ fr_command_jar_class_init (FRCommandJarClass *class)
 
  
 static void 
-fr_command_jar_init (FRCommand *comm)
+fr_command_jar_init (FrCommand *comm)
 {
 }
 
@@ -186,13 +186,13 @@ fr_command_jar_get_type ()
 
         if (! type) {
                 GTypeInfo type_info = {
-			sizeof (FRCommandJarClass),
+			sizeof (FrCommandJarClass),
 			NULL,
 			NULL,
 			(GClassInitFunc) fr_command_jar_class_init,
 			NULL,
 			NULL,
-			sizeof (FRCommandJar),
+			sizeof (FrCommandJar),
 			0,
 			(GInstanceInitFunc) fr_command_jar_init
 		};
@@ -207,11 +207,11 @@ fr_command_jar_get_type ()
 }
 
 
-FRCommand *
-fr_command_jar_new (FRProcess  *process,
+FrCommand *
+fr_command_jar_new (FrProcess  *process,
 		    const char *filename)
 {
-	FRCommand *comm;
+	FrCommand *comm;
 
 	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_JAR, NULL));
 	fr_command_construct (comm, process, filename);

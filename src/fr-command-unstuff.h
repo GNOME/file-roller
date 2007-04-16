@@ -29,29 +29,29 @@
 #include "fr-process.h"
 
 #define FR_TYPE_COMMAND_UNSTUFF            (fr_command_unstuff_get_type ())
-#define FR_COMMAND_UNSTUFF(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_UNSTUFF, FRCommandUnstuff))
-#define FR_COMMAND_UNSTUFF_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_UNSTUFF, FRCommandUnstuffClass))
+#define FR_COMMAND_UNSTUFF(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuff))
+#define FR_COMMAND_UNSTUFF_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuffClass))
 #define FR_IS_COMMAND_UNSTUFF(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_UNSTUFF))
 #define FR_IS_COMMAND_UNSTUFF_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_UNSTUFF))
-#define FR_COMMAND_UNSTUFF_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_UNSTUFF, FRCommandUnstuffClass))
+#define FR_COMMAND_UNSTUFF_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuffClass))
 
-typedef struct _FRCommandUnstuff       FRCommandUnstuff;
-typedef struct _FRCommandUnstuffClass  FRCommandUnstuffClass;
+typedef struct _FrCommandUnstuff       FrCommandUnstuff;
+typedef struct _FrCommandUnstuffClass  FrCommandUnstuffClass;
 
-struct _FRCommandUnstuff
+struct _FrCommandUnstuff
 {
-	FRCommand  __parent;
+	FrCommand  __parent;
 
 	char      *target_dir;
 };
 
-struct _FRCommandUnstuffClass
+struct _FrCommandUnstuffClass
 {
-	FRCommandClass __parent_class;
+	FrCommandClass __parent_class;
 };
 
 GType        fr_command_unstuff_get_type        (void);
-FRCommand*   fr_command_unstuff_new             (FRProcess *process,
+FrCommand*   fr_command_unstuff_new             (FrProcess *process,
 					         const char *filename);
 
 #endif /* FR_COMMAND_UNSTUFF_H */

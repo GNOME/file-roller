@@ -48,8 +48,8 @@ struct _FrArchive {
 	gboolean     is_remote;
 	char        *local_filename;
 	char        *mime_type;
-	FRCommand   *command;
-	FRProcess   *process;
+	FrCommand   *command;
+	FrProcess   *process;
 	FRProcError  error;
 	gboolean     can_create_compressed_file;
 	gboolean     is_compressed_file;         /* Whether the file is an archive

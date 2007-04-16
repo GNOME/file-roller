@@ -1767,7 +1767,7 @@ progress_dialog__set_last_action (FrWindow *window,
 
 
 static gboolean
-fr_window_message_cb (FRCommand  *command,
+fr_window_message_cb (FrCommand  *command,
 		      const char *msg,
 		      FrWindow   *window)
 {
@@ -2140,7 +2140,7 @@ handle_errors (FrWindow    *window,
 		char      *msg = NULL;
 		char      *details = NULL;
 		GtkWidget *dialog;
-		FRProcess *process = archive->process;
+		FrProcess *process = archive->process;
 		GList     *output = NULL;
 
 		if ((action == FR_ACTION_LISTING_CONTENT) || (action == FR_ACTION_LOADING_ARCHIVE))
@@ -3549,7 +3549,7 @@ theme_changed_cb (GnomeIconTheme *theme, FrWindow *window)
 
 
 static gboolean
-fr_window_progress_cb (FRCommand  *command,
+fr_window_progress_cb (FrCommand  *command,
 		       double      fraction,
 		       FrWindow   *window)
 {
@@ -3570,7 +3570,7 @@ fr_window_progress_cb (FRCommand  *command,
 
 
 static gboolean
-fr_window_stoppable_cb (FRCommand  *command,
+fr_window_stoppable_cb (FrCommand  *command,
 			gboolean    stoppable,
 			FrWindow   *window)
 {
@@ -6125,7 +6125,7 @@ fr_window_open_files__extract_done_cb (FrArchive   *archive,
 	}
 
 	if (cdata->command != NULL) {
-		FRProcess  *proc;
+		FrProcess  *proc;
 		GList      *scan;
 
 		proc = fr_process_new ();

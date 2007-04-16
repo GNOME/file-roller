@@ -29,14 +29,14 @@
 #include "typedefs.h"
 
 #define FR_TYPE_PROCESS            (fr_process_get_type ())
-#define FR_PROCESS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_PROCESS, FRProcess))
-#define FR_PROCESS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_PROCESS, FRProcessClass))
+#define FR_PROCESS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_PROCESS, FrProcess))
+#define FR_PROCESS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_PROCESS, FrProcessClass))
 #define FR_IS_PROCESS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_PROCESS))
 #define FR_IS_PROCESS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_PROCESS))
-#define FR_PROCESS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_PROCESS, FRProcessClass))
+#define FR_PROCESS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_PROCESS, FrProcessClass))
 
-typedef struct _FRProcess       FRProcess;
-typedef struct _FRProcessClass  FRProcessClass;
+typedef struct _FrProcess       FrProcess;
+typedef struct _FrProcessClass  FrProcessClass;
 
 #define BUFFER_SIZE 16384
 
@@ -65,7 +65,7 @@ typedef struct {
 } FRCommandInfo;
 
 
-struct _FRProcess {
+struct _FrProcess {
 	GObject  __parent;
 
 	/*< public >*/
@@ -118,58 +118,58 @@ struct _FRProcess {
 };
 
 
-struct _FRProcessClass {
+struct _FrProcessClass {
 	GObjectClass __parent_class;
 
 	/* -- Signals -- */
 
-	void (* start)         (FRProcess   *fr_proc);
-	void (* done)          (FRProcess   *fr_proc,
+	void (* start)         (FrProcess   *fr_proc);
+	void (* done)          (FrProcess   *fr_proc,
 				FRProcError *error);
-	void (* sticky_only)   (FRProcess   *fr_proc);
+	void (* sticky_only)   (FrProcess   *fr_proc);
 };
 
 
 GType       fr_process_get_type             (void);
-FRProcess * fr_process_new                  (void);
-void        fr_process_clear                (FRProcess    *fr_proc);
-void        fr_process_begin_command        (FRProcess    *fr_proc, 
+FrProcess * fr_process_new                  (void);
+void        fr_process_clear                (FrProcess    *fr_proc);
+void        fr_process_begin_command        (FrProcess    *fr_proc, 
 					     const char   *arg);
-void        fr_process_begin_command_at     (FRProcess    *fr_proc, 
+void        fr_process_begin_command_at     (FrProcess    *fr_proc, 
 					     const char   *arg,
 					     int           index);
-void        fr_process_add_arg              (FRProcess    *fr_proc, 
+void        fr_process_add_arg              (FrProcess    *fr_proc, 
 					     const char   *arg);
-void        fr_process_set_arg_at           (FRProcess    *fr_proc, 
+void        fr_process_set_arg_at           (FrProcess    *fr_proc, 
 					     int           n_comm,
 					     int           n_arg,
 					     const char   *arg);
-void        fr_process_set_begin_func       (FRProcess    *fr_proc, 
+void        fr_process_set_begin_func       (FrProcess    *fr_proc, 
 					     ProcFunc      func,
 					     gpointer      func_data);
-void        fr_process_set_end_func         (FRProcess    *fr_proc, 
+void        fr_process_set_end_func         (FrProcess    *fr_proc, 
 					     ProcFunc      func,
 					     gpointer      func_data);
-void        fr_process_set_continue_func    (FRProcess    *fr_proc, 
+void        fr_process_set_continue_func    (FrProcess    *fr_proc, 
 					     ContinueFunc  func,
 					     gpointer      func_data);
-void        fr_process_end_command          (FRProcess    *fr_proc);
-void        fr_process_set_working_dir      (FRProcess    *fr_proc, 
+void        fr_process_end_command          (FrProcess    *fr_proc);
+void        fr_process_set_working_dir      (FrProcess    *fr_proc, 
 					     const char   *arg);
-void        fr_process_set_sticky           (FRProcess    *fr_proc, 
+void        fr_process_set_sticky           (FrProcess    *fr_proc, 
 					     gboolean      sticky);
-void        fr_process_set_ignore_error     (FRProcess    *fr_proc, 
+void        fr_process_set_ignore_error     (FrProcess    *fr_proc, 
 					     gboolean      ignore_error);
-void        fr_process_use_standard_locale  (FRProcess    *fr_proc,
+void        fr_process_use_standard_locale  (FrProcess    *fr_proc,
 					     gboolean      use_stand_locale);
-void        fr_process_set_out_line_func    (FRProcess    *fr_proc, 
+void        fr_process_set_out_line_func    (FrProcess    *fr_proc, 
 					     ProcLineFunc  func,
 					     gpointer      func_data);
-void        fr_process_set_err_line_func    (FRProcess    *fr_proc, 
+void        fr_process_set_err_line_func    (FrProcess    *fr_proc, 
 					     ProcLineFunc  func,
 					     gpointer      func_data);
-void        fr_process_start                (FRProcess    *fr_proc);
-void        fr_process_stop                 (FRProcess    *fr_proc);
+void        fr_process_start                (FrProcess    *fr_proc);
+void        fr_process_stop                 (FrProcess    *fr_proc);
 
 
 #endif /* FR_PROCESS_H */
