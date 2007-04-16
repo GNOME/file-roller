@@ -61,7 +61,7 @@
 
 #define g_signal_handlers_disconnect_by_data(instance, data) \
     g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
-                                          0, 0, NULL, NULL, (data))
+					  0, 0, NULL, NULL, (data))
 
 #define MAX_CHUNK_LEN (NCARGS * 2 / 3) /* Max command line length */
 #define UNKNOWN_TYPE "application/octet-stream"
@@ -91,10 +91,10 @@ static void fr_archive_finalize   (GObject *object);
 GType
 fr_archive_get_type (void)
 {
-        static GType type = 0;
+	static GType type = 0;
 
-        if (! type) {
-                static const GTypeInfo type_info = {
+	if (! type) {
+		static const GTypeInfo type_info = {
 			sizeof (FRArchiveClass),
 			NULL,
 			NULL,
@@ -110,21 +110,21 @@ fr_archive_get_type (void)
 					       "FRArchive",
 					       &type_info,
 					       0);
-        }
+	}
 
-        return type;
+	return type;
 }
 
 
 static void
 fr_archive_class_init (FRArchiveClass *class)
 {
-        GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
-        parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (class);
 
 	fr_archive_signals[START] =
-                g_signal_new ("start",
+		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FRArchiveClass, start),
@@ -133,7 +133,7 @@ fr_archive_class_init (FRArchiveClass *class)
 			      G_TYPE_NONE,
 			      1, G_TYPE_INT);
 	fr_archive_signals[DONE] =
-                g_signal_new ("done",
+		g_signal_new ("done",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FRArchiveClass, done),
@@ -161,7 +161,7 @@ fr_archive_class_init (FRArchiveClass *class)
 			      G_TYPE_NONE, 1,
 			      G_TYPE_STRING);
 	fr_archive_signals[STOPPABLE] =
-                g_signal_new ("stoppable",
+		g_signal_new ("stoppable",
 			      G_TYPE_FROM_CLASS (class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FRArchiveClass, stoppable),
@@ -243,7 +243,7 @@ fr_archive_finalize (GObject *object)
 	FRArchive *archive;
 
 	g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_ARCHIVE (object));
+	g_return_if_fail (FR_IS_ARCHIVE (object));
 
 	archive = FR_ARCHIVE (object);
 
@@ -257,8 +257,8 @@ fr_archive_finalize (GObject *object)
 
 	/* Chain up */
 
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-                G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (parent_class)->finalize)
+		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 
@@ -317,7 +317,7 @@ create_command_from_mime_type (FRArchive  *archive,
 						      filename);
 	} else if (is_mime_type (mime_type, "application/x-cpio")) {
 		archive->command = fr_command_cpio_new (archive->process,
-						        filename);
+							filename);
 	} else
 		return FALSE;
 
@@ -377,10 +377,10 @@ get_mime_type_from_sniffer (const char *filename)
 	file = fopen (filename, "rb");
 
 	if (file == NULL)
-                return NULL;
+		return NULL;
 
-        if (file_extension_is (filename, ".jar"))
-        	return NULL;
+	if (file_extension_is (filename, ".jar"))
+		return NULL;
 
 	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, file);
 	buffer[n] = 0;
@@ -536,7 +536,7 @@ create_command_from_filename (FRArchive  *archive,
 
 		if (file_extension_is (filename, ".cpio")) {
 			archive->command = fr_command_cpio_new (archive->process,
-							        filename);
+								filename);
 			return (archive->command != NULL);
 		}
 	}
@@ -771,7 +771,7 @@ fr_archive_load (FRArchive   *archive,
 						       0,
 						       _("Archive type not supported."));
 
-                        return FALSE;
+			return FALSE;
 		}
 
 	if (tmp_command != NULL) {
@@ -1188,7 +1188,7 @@ file_list_remove_from_pattern (GList      **list,
 
 typedef struct {
 	FRArchive     *archive;
-        char          *exclude_files;
+	char          *exclude_files;
 	char          *base_dir;
 	char          *dest_dir;
 	gboolean       update;
@@ -1396,14 +1396,36 @@ fr_archive_add_items (FRArchive     *archive,
 /* -- remove -- */
 
 
+static gboolean
+file_is_in_subfolder_of (const char *filename,
+			 GList      *folder_list)
+{
+	GList *scan;
+
+	if (filename == NULL)
+		return FALSE;
+
+	for (scan = folder_list; scan; scan = scan->next) {
+		char *folder_in_list = (char*) scan->data;
+
+		if (path_in_path (folder_in_list, filename))
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 /* Note: all paths unescaped. */
 static void
 _archive_remove (FRArchive *archive,
 		 GList     *file_list)
 {
 	gboolean  file_list_created = FALSE;
+	GList    *tmp_file_list;
 	GList    *e_file_list;
 	GList    *scan;
+	GList    *folders_to_remove;
 
 	/* file_list == NULL means delete all files in archive. */
 
@@ -1415,9 +1437,35 @@ _archive_remove (FRArchive *archive,
 		file_list_created = TRUE;
 	}
 
-	e_file_list = escape_file_list (archive->command, file_list);
-	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
+	/* remove from the list the files in folders to be removed. */
 
+	folders_to_remove = NULL;
+	for (scan = file_list; scan != NULL; scan = scan->next) {
+		char *path = scan->data;
+
+		if (path[strlen (path) - 1] == '/')
+			folders_to_remove = g_list_prepend (folders_to_remove, path);
+	}
+
+	tmp_file_list = NULL;
+	for (scan = file_list; scan != NULL; scan = scan->next) {
+		char *path = scan->data;
+
+		if (! file_is_in_subfolder_of (path, folders_to_remove))
+			tmp_file_list = g_list_prepend (tmp_file_list, path);
+	}
+
+	g_list_free (folders_to_remove);
+	if (file_list_created)
+		g_list_free (file_list);
+
+	/* shell-escape the file list, and split in chunks to avoid
+	 * command line overflow */
+
+	e_file_list = escape_file_list (archive->command, tmp_file_list);
+	g_list_free (tmp_file_list);
+
+	fr_command_set_n_files (archive->command, g_list_length (e_file_list));
 	for (scan = e_file_list; scan != NULL; ) {
 		GList *prev = scan->prev;
 		GList *chunk_list;
@@ -1438,9 +1486,6 @@ _archive_remove (FRArchive *archive,
 		fr_command_delete (archive->command, chunk_list);
 		prev->next = scan;
 	}
-
-	if (file_list_created)
-		g_list_free (file_list);
 	path_list_free (e_file_list);
 }
 
