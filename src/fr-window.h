@@ -58,13 +58,13 @@ typedef enum {
 	FR_BATCH_ACTION_CLOSE,
 	FR_BATCH_ACTION_QUIT,
 	FR_BATCH_ACTIONS
-} FRBatchAction;
+} FRBatchActionType;
 
 typedef struct {
-	FRBatchAction   action;
-	void *          data;
-	GFreeFunc       free_func;
-} FRBatchActionDescription;
+	FRBatchActionType type;
+	void *            data;
+	GFreeFunc         free_func;
+} FRBatchAction;
 
 typedef struct {
 	guint      converting : 1;
@@ -176,10 +176,9 @@ void        fr_window_archive_extract_here      (FrWindow      *window,
 void        fr_window_set_password              (FrWindow      *window,
 						 const char    *password);
 const char *fr_window_get_password              (FrWindow      *window);
-FRCompression
-	    fr_window_get_compression           (FrWindow      *window);
-/* FIXME */void       fr_window_view_folder_after_extract  (FrWindow       *window,
-					 	 const char     *folder);
+FRCompression fr_window_get_compression 	(FrWindow      *window);
+void        fr_window_view_folder_after_extract (FrWindow      *window,
+					 	 const char    *folder);
 
 /**/
 
@@ -222,9 +221,9 @@ void       fr_window_paste_selection              (FrWindow    *window);
 
 /**/
 
-void       fr_window_stop                      (FrWindow    *window);
-void       fr_window_start_activity_mode       (FrWindow    *window);
-void       fr_window_stop_activity_mode        (FrWindow    *window);
+void       fr_window_stop                         (FrWindow    *window);
+void       fr_window_start_activity_mode          (FrWindow    *window);
+void       fr_window_stop_activity_mode           (FrWindow    *window);
 
 /**/
 
@@ -263,41 +262,31 @@ void        fr_window_set_toolbar_visibility      (FrWindow   *window,
 void        fr_window_set_statusbar_visibility    (FrWindow   *window,
 						   gboolean    value);
 
-/**/
-
-void       fr_window_current_action_description_set   (FrWindow      *window,
-						       FRBatchAction  action,
-						       void          *data,
-						       GFreeFunc      free_func);
-void       fr_window_current_action_description_reset (FrWindow      *window);
-void       fr_window_restart_current_action           (FrWindow      *window);
-
 /* batch mode procedures. */
 
-void       fr_window_batch_mode_clear            (FrWindow      *window);
-void       fr_window_batch_mode_add_action       (FrWindow      *window,
-						  FRBatchAction  action,
-						  void          *data,
-						  GFreeFunc      free_func);
-void       fr_window_batch_mode_add_next_action  (FrWindow      *window,
-						  FRBatchAction  action,
-						  void          *data,
-						  GFreeFunc      free_func);
-void       fr_window_batch_mode_start            (FrWindow      *window);
-void       fr_window_batch_mode_stop             (FrWindow      *window);
-void       fr_window_batch_mode_resume           (FrWindow      *window);
-gboolean   fr_window_is_batch_mode               (FrWindow      *window);
-void       fr_window_archive__open_extract       (FrWindow      *window,
-						  const char    *filename,
-						  const char    *dest_dir);
-void       fr_window_archive__open_extract_here  (FrWindow      *window,
-						  const char    *filename,
-						  const char    *dest_dir);
-void       fr_window_archive__open_add           (FrWindow      *window,
-						  const char    *archive,
-						  GList         *file_list);
-void       fr_window_archive__quit               (FrWindow      *window);
-
+void       fr_window_set_current_batch_action     (FrWindow      *window,
+						   FRBatchActionType  action,
+						   void          *data,
+						   GFreeFunc      free_func);
+void       fr_window_reset_current_batch_action   (FrWindow      *window);
+void       fr_window_restart_current_batch_action (FrWindow      *window);
+void       fr_window_append_batch_action          (FrWindow      *window,
+						   FRBatchActionType  action,
+						   void          *data,
+						   GFreeFunc      free_func);
+void       fr_window_start_batch                  (FrWindow      *window);
+void       fr_window_stop_batch                   (FrWindow      *window);
+void       fr_window_resume_batch                 (FrWindow      *window);
+gboolean   fr_window_is_batch_mode                (FrWindow      *window);
+void       fr_window_set_batch__extract           (FrWindow      *window,
+						   const char    *filename,
+						   const char    *dest_dir);
+void       fr_window_set_batch__extract_here      (FrWindow      *window,
+						   const char    *filename,
+						   const char    *dest_dir);
+void       fr_window_set_batch__add               (FrWindow      *window,
+						   const char    *archive,
+						   GList         *file_list);
 
 /**/
 

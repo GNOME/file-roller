@@ -63,16 +63,16 @@ ask_password__response_cb (GtkWidget  *dialog,
 		fr_window_set_password (data->window, password);
 		g_free (password);
 		if (fr_window_is_batch_mode (data->window))
-			fr_window_batch_mode_resume (data->window);
+			fr_window_resume_batch (data->window);
 		else
-			fr_window_restart_current_action (data->window);
+			fr_window_restart_current_batch_action (data->window);
 		break;
 
 	default:
 		if (fr_window_is_batch_mode (data->window))
 			gtk_widget_destroy (GTK_WIDGET (data->window));
 		else
-			fr_window_current_action_description_reset (data->window);
+			fr_window_reset_current_batch_action (data->window);
 		break;
 	}
 

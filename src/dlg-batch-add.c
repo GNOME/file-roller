@@ -73,7 +73,7 @@ destroy_cb (GtkWidget  *widget,
 {
 	if (! data->add_clicked) {
 		fr_window_pop_message (data->window);
-		fr_window_batch_mode_stop (data->window);
+		fr_window_stop_batch (data->window);
 	}
 
 	g_object_unref (data->gui);

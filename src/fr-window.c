@@ -161,7 +161,7 @@ struct _FrWindowPrivateData {
 	gboolean         view_folder_after_extraction;
 	char *           folder_to_view;
 
-	FRBatchActionDescription current_action_desc;
+	FRBatchAction    current_action_desc;
 
 	gboolean         give_focus_to_the_list;
 	gboolean         single_click;
@@ -264,7 +264,7 @@ fr_window_free_batch_data (FrWindow *window)
 	GList *scan;
 
 	for (scan = window->priv->batch_action_list; scan; scan = scan->next) {
-		FRBatchActionDescription *adata = scan->data;
+		FRBatchAction *adata = scan->data;
 
 		if ((adata->data != NULL) && (adata->free_func != NULL))
 			(*adata->free_func) (adata->data);
@@ -425,7 +425,7 @@ fr_window_free_private_data (FrWindow *window)
 	}
 
 	fr_window_free_batch_data (window);
-	fr_window_current_action_description_reset (window);
+	fr_window_reset_current_batch_action (window);
 
 	g_free (priv->pd_last_archive);
 	g_free (priv->extract_here_dir);
@@ -2085,9 +2085,6 @@ fr_window_remove_from_recent_list (FrWindow *window,
 }
 
 
-static void fr_window_batch_start_current_action (FrWindow *window);
-
-
 static void
 open_folder (GtkWindow  *parent,
 	     const char *folder)
@@ -2280,7 +2277,7 @@ convert__action_performed (FrArchive   *archive,
 }
 
 
-static void fr_window_batch_start_current_action (FrWindow *window);
+static void fr_window_exec_next_batch_action (FrWindow *window);
 
 
 static void
@@ -2320,7 +2317,7 @@ action_performed (FrArchive   *archive,
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
 			if (window->priv->batch_mode) {
 				fr_window_archive_close (window);
-				fr_window_batch_mode_stop (window);
+				fr_window_stop_batch (window);
 			}
 		}
 		else {
@@ -2441,12 +2438,9 @@ action_performed (FrArchive   *archive,
 
 	if (continue_batch) {
 		if (error->type != FR_PROC_ERROR_NONE)
-			fr_window_batch_mode_stop (window);
-
-		else if (window->priv->batch_action != NULL) {
-			window->priv->batch_action = g_list_next (window->priv->batch_action);
-			fr_window_batch_start_current_action (window);
-		}
+			fr_window_stop_batch (window);
+		else
+			fr_window_exec_next_batch_action (window);
 	}
 }
 
@@ -2905,8 +2899,8 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 			gtk_widget_destroy (GTK_WIDGET (d));
 
 			if (r == GTK_RESPONSE_YES) {
-				fr_window_batch_mode_clear (window);
-				fr_window_batch_mode_add_action (window,
+				fr_window_free_batch_data (window);
+				fr_window_append_batch_action (window,
 								 FR_BATCH_ACTION_ADD,
 								 list,
 								 NULL);
@@ -3622,14 +3616,14 @@ fr_window_fake_load (FrArchive *archive,
 	/* Check whether there is an ADD or EXTRACT action in the batch list. */
 
 	for (scan = window->priv->batch_action; scan; scan = scan->next) {
-		FRBatchActionDescription *action;
+		FRBatchAction *action;
 
-		action = (FRBatchActionDescription *) scan->data;
-		if (action->action == FR_BATCH_ACTION_ADD) {
+		action = (FRBatchAction *) scan->data;
+		if (action->type == FR_BATCH_ACTION_ADD) {
 			add_after_opening = TRUE;
 			break;
 		}
-		if (action->action == FR_BATCH_ACTION_EXTRACT) {
+		if (action->type == FR_BATCH_ACTION_EXTRACT) {
 			extract_after_opening = TRUE;
 			break;
 		}
@@ -4006,7 +4000,7 @@ fr_window_construct (FrWindow *window)
 
 	window->priv->current_view_length = 0;
 
-	window->priv->current_action_desc.action = FR_BATCH_ACTION_NONE;
+	window->priv->current_action_desc.type = FR_BATCH_ACTION_NONE;
 	window->priv->current_action_desc.data = NULL;
 	window->priv->current_action_desc.free_func = NULL;
 
@@ -4455,7 +4449,7 @@ fr_window_archive_open (FrWindow   *current_window,
 	window->priv->give_focus_to_the_list = TRUE;
 	window->priv->load_error_parent_window = parent;
 
-	fr_window_current_action_description_set (window,
+	fr_window_set_current_batch_action (window,
 						  FR_BATCH_ACTION_LOAD,
 						  g_strdup (window->priv->archive_uri),
 						  (GFreeFunc) g_free);
@@ -4547,10 +4541,10 @@ fr_window_archive_save_as (FrWindow   *window,
 
 	g_return_if_fail (window->priv->convert_data.new_archive->command != NULL);
 
-	fr_window_current_action_description_set (window,
-					       FR_BATCH_ACTION_SAVE_AS,
-					       g_strdup (uri),
-					       (GFreeFunc) g_free);
+	fr_window_set_current_batch_action (window,
+						  FR_BATCH_ACTION_SAVE_AS,
+						  g_strdup (uri),
+						  (GFreeFunc) g_free);
 
 	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
 			  "start",
@@ -4852,7 +4846,7 @@ fr_window_archive_extract__common (FrWindow   *window,
 				  password,
 				  extract_here);
 
-	fr_window_current_action_description_set (window,
+	fr_window_set_current_batch_action (window,
 						  FR_BATCH_ACTION_EXTRACT,
 						  edata,
 						  (GFreeFunc) extract_data_free);
@@ -4917,7 +4911,7 @@ fr_window_archive_extract__common (FrWindow   *window,
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
-		fr_window_batch_mode_stop (window);
+		fr_window_stop_batch (window);
 		return;
 	}
 
@@ -5614,7 +5608,7 @@ rename_selection (FrWindow   *window,
 				 new_name,
 				 is_dir,
 				 current_dir);
-	fr_window_current_action_description_set (window,
+	fr_window_set_current_batch_action (window,
 						  FR_BATCH_ACTION_RENAME,
 						  rdata,
 						  (GFreeFunc) rename_data_free);
@@ -6082,7 +6076,7 @@ fr_window_paste_selection (FrWindow *window)
 		current_dir = g_strdup (destination);
 	g_free (destination);
 
-	fr_window_current_action_description_set (window,
+	fr_window_set_current_batch_action (window,
 						  FR_BATCH_ACTION_PASTE,
 						  g_strdup (current_dir),
 						  (GFreeFunc) g_free);
@@ -6210,7 +6204,7 @@ fr_window_open_files_common (FrWindow                *window,
 	g_return_if_fail (window != NULL);
 
 	vdata = view_data_new (file_list, command, app);
-	fr_window_current_action_description_set (window,
+	fr_window_set_current_batch_action (window,
 						  FR_BATCH_ACTION_VIEW,
 						  vdata,
 						  (GFreeFunc) view_data_free);
@@ -6441,18 +6435,21 @@ fr_window_set_statusbar_visibility  (FrWindow *window,
 }
 
 
-/**/
+/* -- batch mode procedures -- */
+
+
+static void fr_window_exec_current_batch_action (FrWindow *window);
 
 
 static void
-fr_window_exec_action (FrWindow                 *window,
-		       FRBatchActionDescription *action)
+fr_window_exec_batch_action (FrWindow      *window,
+			     FRBatchAction *action)
 {
 	ExtractData *edata;
 	RenameData  *rdata;
 	ViewData    *vdata;
 
-	switch (action->action) {
+	switch (action->type) {
 	case FR_BATCH_ACTION_LOAD:
 		debug (DEBUG_INFO, "[BATCH] LOAD\n");
 
@@ -6562,7 +6559,7 @@ fr_window_exec_action (FrWindow                 *window,
 		fr_window_archive_close (window);
 
 		window->priv->batch_action = g_list_next (window->priv->batch_action);
-		fr_window_batch_start_current_action (window);
+		fr_window_exec_current_batch_action (window);
 		break;
 
 	case FR_BATCH_ACTION_QUIT:
@@ -6578,65 +6575,53 @@ fr_window_exec_action (FrWindow                 *window,
 
 
 void
-fr_window_restart_current_action (FrWindow *window)
+fr_window_reset_current_batch_action (FrWindow *window)
 {
-	fr_window_exec_action (window, &window->priv->current_action_desc);
-}
-
-
-void
-fr_window_current_action_description_reset (FrWindow *window)
-{
-	FRBatchActionDescription *adata = &window->priv->current_action_desc;
+	FRBatchAction *adata = &window->priv->current_action_desc;
 
 	if ((adata->data != NULL) && (adata->free_func != NULL))
 		(*adata->free_func) (adata->data);
-	adata->action = FR_BATCH_ACTION_NONE;
+	adata->type = FR_BATCH_ACTION_NONE;
 	adata->data = NULL;
 	adata->free_func = NULL;
 }
 
 
 void
-fr_window_current_action_description_set (FrWindow      *window,
-					  FRBatchAction  action,
-					  void          *data,
-					  GFreeFunc      free_func)
+fr_window_set_current_batch_action (FrWindow          *window,
+				    FRBatchActionType  action,
+				    void              *data,
+				    GFreeFunc          free_func)
 {
-	FRBatchActionDescription *adata = &window->priv->current_action_desc;
+	FRBatchAction *adata = &window->priv->current_action_desc;
 
-	fr_window_current_action_description_reset (window);
+	fr_window_reset_current_batch_action (window);
 
-	adata->action    = action;
-	adata->data      = data;
+	adata->type = action;
+	adata->data = data;
 	adata->free_func = free_func;
 }
 
 
-/* -- batch mode procedures -- */
-
-
 void
-fr_window_batch_mode_clear (FrWindow *window)
+fr_window_restart_current_batch_action (FrWindow *window)
 {
-	g_return_if_fail (window != NULL);
-
-	fr_window_free_batch_data (window);
+	fr_window_exec_batch_action (window, &window->priv->current_action_desc);
 }
 
 
 void
-fr_window_batch_mode_add_action (FrWindow      *window,
-				 FRBatchAction  action,
-				 void          *data,
-				 GFreeFunc      free_func)
+fr_window_append_batch_action (FrWindow          *window,
+			       FRBatchActionType  action,
+			       void              *data,
+			       GFreeFunc          free_func)
 {
-	FRBatchActionDescription *a_desc;
+	FRBatchAction *a_desc;
 
 	g_return_if_fail (window != NULL);
 
-	a_desc = g_new0 (FRBatchActionDescription, 1);
-	a_desc->action = action;
+	a_desc = g_new0 (FRBatchAction, 1);
+	a_desc->type = action;
 	a_desc->data = data;
 	a_desc->free_func = free_func;
 
@@ -6644,63 +6629,33 @@ fr_window_batch_mode_add_action (FrWindow      *window,
 }
 
 
-void
-fr_window_batch_mode_add_next_action (FrWindow      *window,
-				      FRBatchAction  action,
-				      void          *data,
-				      GFreeFunc      free_func)
-{
-	FRBatchActionDescription *a_desc;
-	GList                    *list, *current;
-
-	g_return_if_fail (window != NULL);
-
-	a_desc = g_new0 (FRBatchActionDescription, 1);
-	a_desc->action = action;
-	a_desc->data = data;
-	a_desc->free_func = free_func;
-
-	list = window->priv->batch_action_list;
-	current = window->priv->batch_action;
-
-	/* insert after the current action */
-
-	if (current == NULL)
-		list = g_list_prepend (list, a_desc);
-
-	else if (current->next == NULL)
-		list = g_list_append (list, a_desc);
-
-	else {
-		GList *node;
-
-		node = g_list_prepend (NULL, a_desc);
-		node->next = current->next;
-		node->next->prev = node;
-		node->prev = current;
-		current->next = node;
-	}
-
-	window->priv->batch_action_list = list;
-}
-
-
 static void
-fr_window_batch_start_current_action (FrWindow *window)
+fr_window_exec_current_batch_action (FrWindow *window)
 {
-	FRBatchActionDescription *action;
+	FRBatchAction *action;
 
 	if (window->priv->batch_action == NULL) {
 		window->priv->batch_mode = FALSE;
 		return;
 	}
-	action = (FRBatchActionDescription *) window->priv->batch_action->data;
-	fr_window_exec_action (window, action);
+	action = (FRBatchAction *) window->priv->batch_action->data;
+	fr_window_exec_batch_action (window, action);
+}
+
+
+static void
+fr_window_exec_next_batch_action (FrWindow *window)
+{
+	if (window->priv->batch_action == NULL)
+		return;
+
+	window->priv->batch_action = g_list_next (window->priv->batch_action);
+	fr_window_exec_current_batch_action (window);
 }
 
 
 void
-fr_window_batch_mode_start (FrWindow *window)
+fr_window_start_batch (FrWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
@@ -6713,12 +6668,13 @@ fr_window_batch_mode_start (FrWindow *window)
 	window->priv->batch_mode = TRUE;
 	window->priv->batch_action = window->priv->batch_action_list;
 	window->archive->can_create_compressed_file = window->priv->batch_adding_one_file;
-	fr_window_batch_start_current_action (window);
+
+	fr_window_exec_current_batch_action (window);
 }
 
 
 void
-fr_window_batch_mode_stop (FrWindow *window)
+fr_window_stop_batch (FrWindow *window)
 {
 	if (! window->priv->batch_mode)
 		return;
@@ -6737,9 +6693,9 @@ fr_window_batch_mode_stop (FrWindow *window)
 
 
 void
-fr_window_batch_mode_resume (FrWindow *window)
+fr_window_resume_batch (FrWindow *window)
 {
-	fr_window_batch_start_current_action (window);
+	fr_window_exec_current_batch_action (window);
 }
 
 
@@ -6751,98 +6707,103 @@ fr_window_is_batch_mode (FrWindow *window)
 
 
 void
-fr_window_archive__open_extract_here (FrWindow   *window,
-				      const char *filename,
-				      const char *dest_dir)
+fr_window_set_batch__extract_here (FrWindow   *window,
+				   const char *filename,
+				   const char *dest_dir)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (filename != NULL);
 	g_return_if_fail (dest_dir != NULL);
 
+	fr_window_free_batch_data (window);
 	window->priv->non_interactive = TRUE;
 
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_LOAD,
-					 g_strdup (filename),
-					 (GFreeFunc) g_free);
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_EXTRACT_HERE,
-					 extract_to_data_new (dest_dir),
-					 (GFreeFunc) extract_data_free);
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_CLOSE,
-					 NULL,
-					 NULL);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_LOAD,
+				       g_strdup (filename),
+				       (GFreeFunc) g_free);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_EXTRACT_HERE,
+				       extract_to_data_new (dest_dir),
+				       (GFreeFunc) extract_data_free);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_CLOSE,
+				       NULL,
+				       NULL);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_QUIT,
+				       NULL,
+				       NULL);				       
 }
 
 
 void
-fr_window_archive__open_extract (FrWindow   *window,
-				 const char *filename,
-				 const char *dest_dir)
+fr_window_set_batch__extract (FrWindow   *window,
+			      const char *filename,
+			      const char *dest_dir)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (filename != NULL);
 
+	fr_window_free_batch_data (window);
 	window->priv->non_interactive = TRUE;
 
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_LOAD,
-					 g_strdup (filename),
-					 (GFreeFunc) g_free);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_LOAD,
+				       g_strdup (filename),
+				       (GFreeFunc) g_free);
 
 	if (dest_dir != NULL)
-		fr_window_batch_mode_add_action (window,
-						 FR_BATCH_ACTION_EXTRACT,
-						 extract_to_data_new (dest_dir),
-						 (GFreeFunc) extract_data_free);
+		fr_window_append_batch_action (window,
+					       FR_BATCH_ACTION_EXTRACT,
+					       extract_to_data_new (dest_dir),
+					       (GFreeFunc) extract_data_free);
 	else
-		fr_window_batch_mode_add_action (window,
-						 FR_BATCH_ACTION_EXTRACT_INTERACT,
-						 NULL,
-						 NULL);
+		fr_window_append_batch_action (window,
+					       FR_BATCH_ACTION_EXTRACT_INTERACT,
+					       NULL,
+					       NULL);
 
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_CLOSE,
-					 NULL,
-					 NULL);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_CLOSE,
+				       NULL,
+				       NULL);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_QUIT,
+				       NULL,
+				       NULL);
 }
 
 
 void
-fr_window_archive__open_add (FrWindow   *window,
-			     const char *archive,
-			     GList      *file_list)
+fr_window_set_batch__add (FrWindow   *window,
+			  const char *archive,
+			  GList      *file_list)
 {
+	fr_window_free_batch_data (window);
 	window->priv->non_interactive = TRUE;
 	window->priv->batch_adding_one_file = (file_list->next == NULL) && (path_is_file (file_list->data));
 
 	if (archive != NULL)
-		fr_window_batch_mode_add_action (window,
-						 FR_BATCH_ACTION_LOAD,
-						 g_strdup (archive),
-						 (GFreeFunc) g_free);
+		fr_window_append_batch_action (window,
+					       FR_BATCH_ACTION_LOAD,
+					       g_strdup (archive),
+					       (GFreeFunc) g_free);
 	else
-		fr_window_batch_mode_add_action (window,
-						 FR_BATCH_ACTION_OPEN,
-						 file_list,
-						 NULL);
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_ADD,
-					 file_list,
-					 NULL);
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_CLOSE,
-					 NULL,
-					 NULL);
-}
-
-
-void
-fr_window_archive__quit (FrWindow *window)
-{
-	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_QUIT,
-					 NULL,
-					 NULL);
+		fr_window_append_batch_action (window,
+					       FR_BATCH_ACTION_OPEN,
+					       file_list,
+					       NULL);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_ADD,
+				       file_list,
+				       NULL);
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_CLOSE,
+				       NULL,
+				       NULL);				 
+	fr_window_append_batch_action (window,
+				       FR_BATCH_ACTION_QUIT,
+				       NULL,
+				       NULL);
 }

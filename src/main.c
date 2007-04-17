@@ -491,7 +491,6 @@ static void
 prepare_app (void)
 {
 	char *path;
-	char *default_dir;
 	char *extract_to_path = NULL;
 	char *add_to_path = NULL;
 
@@ -523,8 +522,6 @@ prepare_app (void)
 		return;
 	}
 
-	default_dir = get_path_from_url (default_url);
-
 	if (extract_to != NULL)
 		extract_to_path = get_uri_from_command_line (extract_to);
 
@@ -537,40 +534,38 @@ prepare_app (void)
 		int          i = 0;
 
 		window = fr_window_new ();
-		if (default_dir != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), default_dir, TRUE);
+		if (default_url != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_url, TRUE);
 
 		while ((filename = remaining_args[i++]) != NULL)
 			file_list = g_list_prepend (file_list, get_uri_from_command_line (filename));
 		file_list = g_list_reverse (file_list);
 
-		fr_window_archive__open_add (FR_WINDOW (window), add_to_path, file_list);
-		fr_window_archive__quit (FR_WINDOW (window));
-		fr_window_batch_mode_start (FR_WINDOW (window));
+		fr_window_set_batch__add (FR_WINDOW (window), add_to_path, file_list);
+		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else if ((extract_to != NULL)
-		   || (extract == 1)
-		   || (extract_here == 1)) { /* Extract all archives. */
+		  || (extract == 1)
+		  || (extract_here == 1)) { /* Extract all archives. */
 		GtkWidget  *window;
 		const char *archive;
 		int         i = 0;
 
 		window = fr_window_new ();
-		if (default_dir != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), default_dir, TRUE);
+		if (default_url != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_url, TRUE);
 
 		while ((archive = remaining_args[i++]) != NULL) {
 			if (extract_here == 1)
-				fr_window_archive__open_extract_here (FR_WINDOW (window),
-								      archive,
-								      extract_to_path);
+				fr_window_set_batch__extract_here (FR_WINDOW (window),
+								   archive,
+								   extract_to_path);
 			else
-				fr_window_archive__open_extract (FR_WINDOW (window),
-								 archive,
-								 extract_to_path);
+				fr_window_set_batch__extract (FR_WINDOW (window),
+							      archive,
+							      extract_to_path);
 		}
-		fr_window_archive__quit (FR_WINDOW (window));
-		fr_window_batch_mode_start (FR_WINDOW (window));
+		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else { /* Open each archive in a window */
 		const char *archive;
@@ -585,7 +580,6 @@ prepare_app (void)
 		}
 	}
 
-	g_free (default_dir);
 	g_free (add_to_path);
 	g_free (extract_to_path);
 }
