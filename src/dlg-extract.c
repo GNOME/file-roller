@@ -157,9 +157,9 @@ extract_cb (GtkWidget   *w,
 					     GTK_STOCK_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
-					     GTK_STOCK_OK, GTK_RESPONSE_CANCEL,
+					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 

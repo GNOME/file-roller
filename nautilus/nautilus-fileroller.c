@@ -42,24 +42,19 @@ extract_to_callback (NautilusMenuItem *item,
 {
 	GList            *files;
 	NautilusFileInfo *file;
-	char             *uri, *path, *default_dir;
+	char             *uri, *default_dir;
 	GString          *cmd;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = files->data;
 
 	uri = nautilus_file_info_get_uri (file);
-	path = gnome_vfs_get_local_path_from_uri (uri);
-	default_dir = g_strconcat ("file://",
-				   g_get_home_dir (), 
-				   "/",
-				   "Desktop", 
-				   NULL);
+	default_dir = g_strconcat ("file://", g_get_home_dir (), "/", "Desktop", NULL);
 	cmd = g_string_new ("file-roller");
 	g_string_append_printf (cmd,
 				" --default-dir=%s --extract %s",
 				g_shell_quote (default_dir),
-				g_shell_quote (path));
+				g_shell_quote (uri));
 
 #ifdef DEBUG
 	g_print ("EXEC: %s\n", cmd->str);
@@ -69,7 +64,6 @@ extract_to_callback (NautilusMenuItem *item,
 
 	g_string_free (cmd, TRUE);
 	g_free (default_dir);
-	g_free (path);
 	g_free (uri);
 }
 
@@ -80,32 +74,26 @@ extract_here_callback (NautilusMenuItem *item,
 {
 	GList            *files, *scan;
 	NautilusFileInfo *file;
-	char             *uri, *path, *dir;
+	char             *uri, *dir;
 	GString          *cmd;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = files->data;
 
 	uri = nautilus_file_info_get_uri (file);
-	path = gnome_vfs_get_local_path_from_uri (uri);
-	dir = g_path_get_dirname (path);
+	dir = g_path_get_dirname (uri);
 
 	cmd = g_string_new ("file-roller");
 	g_string_append_printf (cmd," --extract-to=%s --extract-here", g_shell_quote (dir));
 
 	g_free (dir);
-	g_free (path);
 	g_free (uri);
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
 
 		uri = nautilus_file_info_get_uri (file);
-		path = gnome_vfs_get_local_path_from_uri (uri);
-
-		g_string_append_printf (cmd, " %s", g_shell_quote (path));
-
-		g_free (path);
+		g_string_append_printf (cmd, " %s", g_shell_quote (uri));
 		g_free (uri);
 	}
 
@@ -121,32 +109,26 @@ add_callback (NautilusMenuItem *item,
 {
 	GList            *files, *scan;
 	NautilusFileInfo *file;
-	char             *uri, *path, *dir;
+	char             *uri, *dir;
 	GString          *cmd;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = files->data;
 
 	uri = nautilus_file_info_get_uri (file);
-	path = gnome_vfs_get_local_path_from_uri (uri);
-	dir = g_path_get_dirname (path);
+	dir = g_path_get_dirname (uri);
 
 	cmd = g_string_new ("file-roller");
 	g_string_append_printf (cmd," --default-dir=%s --add", g_shell_quote (dir));
 
 	g_free (dir);
-	g_free (path);
 	g_free (uri);
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
 
 		uri = nautilus_file_info_get_uri (file);
-		path = gnome_vfs_get_local_path_from_uri (uri);
-
-		g_string_append_printf (cmd, " %s", g_shell_quote (path));
-
-		g_free (path);
+		g_string_append_printf (cmd, " %s", g_shell_quote (uri));
 		g_free (uri);
 	}
 

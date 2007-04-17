@@ -2272,6 +2272,8 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 			      const char    *password,
 			      FRCompression  compression)
 {
+	GList *scan;
+
 	if (archive->read_only) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_ADDING_FILES, 
@@ -2280,8 +2282,8 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 		return;
 	}
 
-/* FIXME: make this check for all the add actions
-	for (scan = item_list; scan; scan = scan->next) {
+	/* FIXME: make this check for all the add actions */
+	for (scan = item_list; scan; scan = scan->next)
 		if (uricmp (scan->data, archive->uri) == 0) {
 			fr_archive_action_completed (archive,
 						     FR_ACTION_ADDING_FILES,
@@ -2289,8 +2291,6 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 						     _("You can't add an archive to itself."));
 			return;
 		}
-	}
-*/
 
 	if (archive->priv->dropped_items_data != NULL)
 		dropped_items_data_free (archive->priv->dropped_items_data);
@@ -2676,13 +2676,14 @@ file_list_contains_files_in_this_dir (GList      *file_list,
 void
 fr_archive_extract (FrArchive  *archive,
 		    GList      *file_list,
-		    const char *dest_dir,
+		    const char *destination,
 		    const char *base_dir,
 		    gboolean    skip_older,
 		    gboolean    overwrite,
 		    gboolean    junk_paths,
 		    const char *password)
 {
+	char     *dest_dir;
 	GList    *filtered, *e_filtered;
 	GList    *scan;
 	gboolean  extract_all;
@@ -2691,6 +2692,8 @@ fr_archive_extract (FrArchive  *archive,
 	gboolean  file_list_created = FALSE;
 
 	g_return_if_fail (archive != NULL);
+
+	dest_dir = get_local_path_from_uri (destination);
 
 	fr_archive_stoppable (archive, TRUE);
 
@@ -2720,7 +2723,7 @@ fr_archive_extract (FrArchive  *archive,
 	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) {
 		gboolean created_filtered_list = FALSE;
 
-		if (archive_type_has_issues_extracting_non_empty_folders (archive)) {
+		if (! extract_all && archive_type_has_issues_extracting_non_empty_folders (archive)) {
 			created_filtered_list = TRUE;
 			filtered = NULL;
 			for (scan = file_list; scan; scan = scan->next) {
@@ -2831,6 +2834,8 @@ fr_archive_extract (FrArchive  *archive,
 	if (filtered == NULL) {
 		/* all files got filtered, do nothing. */
 		debug (DEBUG_INFO, "All files got filtered, nothing to do.\n");
+
+		g_free (dest_dir);
 		if (extract_all)
 			path_list_free (file_list);
 		return;
@@ -2872,7 +2877,8 @@ fr_archive_extract (FrArchive  *archive,
 		g_free (e_temp_dir);
 
 		g_free (temp_dir);
-	} else
+	}
+	else
 		extract_in_chunks (archive->command,
 				   e_filtered,
 				   dest_dir,
@@ -2884,10 +2890,9 @@ fr_archive_extract (FrArchive  *archive,
 	path_list_free (e_filtered);
 	if (filtered != NULL)
 		g_list_free (filtered);
-
 	if (file_list_created)
-		/* the list has been created in this function. */
 		path_list_free (file_list);
+	g_free (dest_dir);
 }
 
 

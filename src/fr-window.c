@@ -211,15 +211,6 @@ struct _FrWindowPrivateData {
 	GList *  drag_file_list;        /* the list of files we are
 					 * dragging*/
 
-	/* dropped files data */
-
-	/*gboolean add_after_opening;*/     /* whether we must add dropped files
-					 * after opening an archive. Used in
-					 * batch mode to avoid unnecessary
-					 * archive loading. */
-
-	gboolean batch_adding_one_file;
-
 	/* progress dialog data */
 
 	GtkWidget *progress_dialog;
@@ -246,6 +237,8 @@ struct _FrWindowPrivateData {
 	gboolean   non_interactive;
 	char      *extract_here_dir;
 	gboolean   extract_interact_use_default_dir;
+	gboolean   update_dropped_files;
+	gboolean   batch_adding_one_file;
 
 	GtkWindow *load_error_parent_window;
 };
@@ -523,6 +516,8 @@ static void
 fr_window_init (FrWindow *window)
 {
 	window->priv = g_new0 (FrWindowPrivateData, 1);
+	window->priv->update_dropped_files = FALSE;
+
 	WindowList = g_list_prepend (WindowList, window);
 }
 
@@ -2310,6 +2305,16 @@ action_performed (FrArchive   *archive,
 	continue_batch = handle_errors (window, archive, action, error);
 
 	switch (action) {
+	case FR_ACTION_CREATING_NEW_ARCHIVE:
+	case FR_ACTION_CREATING_ARCHIVE:
+		fr_window_history_clear (window);
+		fr_window_history_add (window, "/");
+		fr_window_update_file_list (window);
+		fr_window_update_title (window);
+		fr_window_update_sensitivity (window);
+		fr_window_update_current_location (window);
+		break;
+
 	case FR_ACTION_LOADING_ARCHIVE:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
@@ -3603,15 +3608,40 @@ static gboolean
 fr_window_fake_load (FrArchive *archive,
 		     gpointer   data)
 {
-/*	FrWindow *window = data;*/
+	FrWindow *window = data;
+	gboolean  add_after_opening = FALSE;
+	gboolean  extract_after_opening = FALSE;
+	GList    *scan;
 
-	return FALSE;
-/* FIXME:
+	/* fake loads are used only in batch mode to avoid unnecessary
+	 * archive loadings. */
+
+	if (! window->priv->batch_mode)
+		return FALSE;
+
+	/* Check whether there is an ADD or EXTRACT action in the batch list. */
+
+	for (scan = window->priv->batch_action; scan; scan = scan->next) {
+		FRBatchActionDescription *action;
+
+		action = (FRBatchActionDescription *) scan->data;
+		if (action->action == FR_BATCH_ACTION_ADD) {
+			add_after_opening = TRUE;
+			break;
+		}
+		if (action->action == FR_BATCH_ACTION_EXTRACT) {
+			extract_after_opening = TRUE;
+			break;
+		}
+	}
+
+	/* use fake load when in batch mode and the archive type supports all
+	 * of the required features */
+
 	return (window->priv->batch_mode
-		&& ! (window->priv->add_after_opening && window->priv->update_dropped_files && ! archive->command->propAddCanUpdate)
-		&& ! (window->priv->add_after_opening && ! window->priv->update_dropped_files && ! archive->command->propAddCanReplace)
-		&& archive->command->propCanExtractAll);
-		*/
+		&& ! (add_after_opening && window->priv->update_dropped_files && ! archive->command->propAddCanUpdate)
+		&& ! (add_after_opening && ! window->priv->update_dropped_files && ! archive->command->propAddCanReplace)
+		&& ! (extract_after_opening && !archive->command->propCanExtractAll));
 }
 
 
@@ -3954,8 +3984,6 @@ fr_window_construct (FrWindow *window)
 	window->priv->drag_destination_folder = NULL;
 	window->priv->drag_error = NULL;
 	window->priv->drag_file_list = NULL;
-
-	/* window->priv->add_after_opening = FALSE;  -- FIXME: delete */
 
 	window->priv->batch_mode = FALSE;
 	window->priv->batch_action_list = NULL;
@@ -4379,40 +4407,19 @@ fr_window_archive_new (FrWindow   *window,
 					     FR_PROC_ERROR_GENERIC,
 					     _("Archive type not supported."));
 
-		/* FIXME: emit signal DONE with error for action: FR_ACTION_CREATING_NEW_ARCHIVE
-		if (window->priv->batch_mode) {
-			fr_window_archive_close (window);
-			fr_window_update_sensitivity (window);
-			fr_window_update_statusbar_list_info (window);
-			fr_window_batch_mode_stop (window);
-		}*/
-
 		return FALSE;
 	}
-
-	/* FIXME: emit signal DONE for action: FR_ACTION_CREATING_ARCHIVE */
-
-	fr_window_history_clear (window);
-	fr_window_history_add (window, "/");
 
 	if (window->priv->archive_uri != NULL)
 		g_free (window->priv->archive_uri);
 	window->priv->archive_uri = g_strdup (uri);
-
 	window->priv->archive_present = TRUE;
 	window->priv->archive_new = TRUE;
 
-	fr_window_update_file_list (window);
-	fr_window_update_title (window);
-	fr_window_update_sensitivity (window);
-	fr_window_update_current_location (window);
-
-/* FIXME: add a batch action to implement this.
-	if (window->priv->add_after_creation) {
-		window->priv->add_after_creation = FALSE;
-		drag_drop_add_file_list (window);
-	}
-*/
+	fr_archive_action_completed (window->archive,
+				     FR_ACTION_CREATING_NEW_ARCHIVE,
+				     FR_PROC_ERROR_NONE,
+				     NULL);
 
 	return TRUE;
 }
@@ -4449,7 +4456,7 @@ fr_window_archive_open (FrWindow   *current_window,
 	window->priv->load_error_parent_window = parent;
 
 	fr_window_current_action_description_set (window,
-						  FR_BATCH_ACTION_OPEN,
+						  FR_BATCH_ACTION_LOAD,
 						  g_strdup (window->priv->archive_uri),
 						  (GFreeFunc) g_free);
 
@@ -4904,9 +4911,9 @@ fr_window_archive_extract__common (FrWindow   *window,
 					     GTK_STOCK_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
-					     GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CANCEL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -4919,8 +4926,8 @@ fr_window_archive_extract__common (FrWindow   *window,
 	if (extract_here) {
 		g_free (window->priv->extract_here_dir);
 		window->priv->extract_here_dir = g_strconcat (window->priv->archive_uri,
-							"_FILES",
-							NULL);
+							      "_FILES",
+							      NULL);
 		ensure_dir_exists (window->priv->extract_here_dir, 0755);
 		dest_dir = window->priv->extract_here_dir;
 	}
@@ -6437,64 +6444,39 @@ fr_window_set_statusbar_visibility  (FrWindow *window,
 /**/
 
 
-typedef struct {
-	char  *archive_name;
-	GList *file_list;
-} OpenAndAddData;
-
-
 static void
 fr_window_exec_action (FrWindow                 *window,
 		       FRBatchActionDescription *action)
 {
-	OpenAndAddData *adata;
-	ExtractData    *edata;
-	RenameData     *rdata;
-	ViewData       *vdata;
+	ExtractData *edata;
+	RenameData  *rdata;
+	ViewData    *vdata;
 
 	switch (action->action) {
-	case FR_BATCH_ACTION_OPEN:
-		debug (DEBUG_INFO, "[BATCH] Open\n");
+	case FR_BATCH_ACTION_LOAD:
+		debug (DEBUG_INFO, "[BATCH] LOAD\n");
 
-		fr_window_archive_open (window, (char*) action->data, GTK_WINDOW (window));
-		break;
-
-	case FR_BATCH_ACTION_OPEN_AND_ADD:
-		debug (DEBUG_INFO, "[BATCH] Open & Add\n");
-
-		adata = (OpenAndAddData *) action->data;
-		if (! path_is_file (adata->archive_name)) {
-			/*
-			if (window->priv->dropped_file_list != NULL)
-				path_list_free (window->priv->dropped_file_list);
-			window->priv->dropped_file_list = path_list_dup (adata->file_list);
-			*/
-			fr_window_archive_new (window, adata->archive_name);
-		}
-		else {
-			/*window->priv->add_after_opening = TRUE;  -- FIXME: delete */
-			fr_window_batch_mode_add_next_action (window,
-							      FR_BATCH_ACTION_ADD,
-							      path_list_dup (adata->file_list),
-							      (GFreeFunc) path_list_free);
-			fr_window_archive_open (window, adata->archive_name, GTK_WINDOW (window));
-		}
+		if (! path_is_file ((char*) action->data))
+			fr_window_archive_new (window, (char*) action->data);
+		else
+			fr_window_archive_open (window, (char*) action->data, GTK_WINDOW (window));
 		break;
 
 	case FR_BATCH_ACTION_ADD:
-		debug (DEBUG_INFO, "[BATCH] Add\n");
+		debug (DEBUG_INFO, "[BATCH] ADD\n");
+
 		fr_window_archive_add_dropped_items (window, (GList*) action->data, FALSE);
 		break;
 
-	case FR_BATCH_ACTION_ADD_INTERACT:
-		debug (DEBUG_INFO, "[BATCH] Add interactive\n");
+	case FR_BATCH_ACTION_OPEN:
+		debug (DEBUG_INFO, "[BATCH] OPEN\n");
 
 		fr_window_push_message (window, _("Add files to an archive"));
 		dlg_batch_add_files (window, (GList*) action->data);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT:
-		debug (DEBUG_INFO, "[BATCH] Extract\n");
+		debug (DEBUG_INFO, "[BATCH] EXTRACT\n");
 
 		edata = action->data;
 		fr_window_archive_extract (window,
@@ -6508,7 +6490,7 @@ fr_window_exec_action (FrWindow                 *window,
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_HERE:
-		debug (DEBUG_INFO, "[BATCH] Extract here\n");
+		debug (DEBUG_INFO, "[BATCH] EXTRACT HERE\n");
 
 		edata = action->data;
 		fr_window_archive_extract_here (window,
@@ -6522,7 +6504,7 @@ fr_window_exec_action (FrWindow                 *window,
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
-		debug (DEBUG_INFO, "[BATCH] Extract interactive\n");
+		debug (DEBUG_INFO, "[BATCH] EXTRACT_INTERACT\n");
 
 		if (window->priv->extract_interact_use_default_dir
 		    && (window->priv->extract_default_dir != NULL))
@@ -6541,7 +6523,7 @@ fr_window_exec_action (FrWindow                 *window,
 		break;
 
 	case FR_BATCH_ACTION_RENAME:
-		debug (DEBUG_INFO, "[BATCH] Rename\n");
+		debug (DEBUG_INFO, "[BATCH] RENAME\n");
 
 		rdata = action->data;
 		rename_selection (window,
@@ -6553,12 +6535,13 @@ fr_window_exec_action (FrWindow                 *window,
 		break;
 
 	case FR_BATCH_ACTION_PASTE:
-		debug (DEBUG_INFO, "[BATCH] Paste\n");
+		debug (DEBUG_INFO, "[BATCH] PASTE\n");
+
 		fr_window_paste_selection_to (window, (char*) action->data);
 		break;
 
 	case FR_BATCH_ACTION_VIEW:
-		debug (DEBUG_INFO, "[BATCH] View\n");
+		debug (DEBUG_INFO, "[BATCH] VIEW\n");
 
 		vdata = action->data;
 		fr_window_open_files_common (window,
@@ -6568,21 +6551,22 @@ fr_window_exec_action (FrWindow                 *window,
 		break;
 
 	case FR_BATCH_ACTION_SAVE_AS:
-		debug (DEBUG_INFO, "[BATCH] Save as\n");
+		debug (DEBUG_INFO, "[BATCH] SAVE_AS\n");
 
 		fr_window_archive_save_as (window, (char*) action->data);
 		break;
 
 	case FR_BATCH_ACTION_CLOSE:
-		debug (DEBUG_INFO, "[BATCH] Close\n");
+		debug (DEBUG_INFO, "[BATCH] CLOSE\n");
 
 		fr_window_archive_close (window);
+
 		window->priv->batch_action = g_list_next (window->priv->batch_action);
 		fr_window_batch_start_current_action (window);
 		break;
 
 	case FR_BATCH_ACTION_QUIT:
-		debug (DEBUG_INFO, "[BATCH] Quit\n");
+		debug (DEBUG_INFO, "[BATCH] QUIT\n");
 
 		gtk_widget_destroy (GTK_WIDGET (window));
 		break;
@@ -6778,7 +6762,7 @@ fr_window_archive__open_extract_here (FrWindow   *window,
 	window->priv->non_interactive = TRUE;
 
 	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_OPEN,
+					 FR_BATCH_ACTION_LOAD,
 					 g_strdup (filename),
 					 (GFreeFunc) g_free);
 	fr_window_batch_mode_add_action (window,
@@ -6803,9 +6787,10 @@ fr_window_archive__open_extract (FrWindow   *window,
 	window->priv->non_interactive = TRUE;
 
 	fr_window_batch_mode_add_action (window,
-					 FR_BATCH_ACTION_OPEN,
+					 FR_BATCH_ACTION_LOAD,
 					 g_strdup (filename),
 					 (GFreeFunc) g_free);
+
 	if (dest_dir != NULL)
 		fr_window_batch_mode_add_action (window,
 						 FR_BATCH_ACTION_EXTRACT,
@@ -6825,18 +6810,6 @@ fr_window_archive__open_extract (FrWindow   *window,
 
 
 void
-open_and_add_data_free (OpenAndAddData *adata)
-{
-	if (adata == NULL)
-		return;
-
-	if (adata->archive_name != NULL)
-		g_free (adata->archive_name);
-	g_free (adata);
-}
-
-
-void
 fr_window_archive__open_add (FrWindow   *window,
 			     const char *archive,
 			     GList      *file_list)
@@ -6844,22 +6817,20 @@ fr_window_archive__open_add (FrWindow   *window,
 	window->priv->non_interactive = TRUE;
 	window->priv->batch_adding_one_file = (file_list->next == NULL) && (path_is_file (file_list->data));
 
-	if (archive != NULL) {
-		OpenAndAddData *adata;
-
-		adata = g_new (OpenAndAddData, 1);
-		adata->archive_name = g_strdup (archive);
-		adata->file_list = file_list;
+	if (archive != NULL)
 		fr_window_batch_mode_add_action (window,
-						 FR_BATCH_ACTION_OPEN_AND_ADD,
-						 adata,
-						 (GFreeFunc) open_and_add_data_free);
-	}
+						 FR_BATCH_ACTION_LOAD,
+						 g_strdup (archive),
+						 (GFreeFunc) g_free);
 	else
 		fr_window_batch_mode_add_action (window,
-						 FR_BATCH_ACTION_ADD_INTERACT,
+						 FR_BATCH_ACTION_OPEN,
 						 file_list,
 						 NULL);
+	fr_window_batch_mode_add_action (window,
+					 FR_BATCH_ACTION_ADD,
+					 file_list,
+					 NULL);
 	fr_window_batch_mode_add_action (window,
 					 FR_BATCH_ACTION_CLOSE,
 					 NULL,

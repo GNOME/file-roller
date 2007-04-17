@@ -51,30 +51,18 @@
 static void
 new_archive (GtkWidget *file_sel,
 	     FrWindow  *window, 
-	     char      *path)
+	     char      *uri)
 {
 	GtkWidget *archive_window;
 	gboolean   new_window;
 
-	new_window = fr_window_archive_is_present (window);
+	new_window = fr_window_archive_is_present (window) && ! fr_window_is_batch_mode (window);
 	if (new_window)
 		archive_window = fr_window_new ();
 	else
 		archive_window = (GtkWidget *) window;
 
-	/* Pass the add_after_creation options to the new window. */
-	if (archive_window != (GtkWidget *) window) {
-		/* FIXME: use batch actions
-		archive_window->add_after_creation = window->add_after_creation;
-		if (archive_window->add_after_creation) {
-			archive_window->dropped_file_list = window->dropped_file_list;
-			window->dropped_file_list = NULL;
-		}
-		window->add_after_creation = FALSE;
-		*/
-	}
-
-	if (fr_window_archive_new (FR_WINDOW (archive_window), path)) {
+	if (fr_window_archive_new (FR_WINDOW (archive_window), uri)) {
 		gtk_widget_destroy (file_sel);
 		gtk_window_present (GTK_WINDOW (archive_window));
 	}

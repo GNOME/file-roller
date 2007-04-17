@@ -464,6 +464,29 @@ compute_supported_archive_types (void)
 }
 
 
+static char *
+get_uri_from_command_line (const char *path)
+{
+	char *current_dir;
+	char *full_path;
+	char *uri;
+
+	if (uri_has_scheme (path) || g_path_is_absolute (path))
+		return g_strdup (path);
+
+	current_dir = g_get_current_dir ();
+	full_path = g_build_filename (current_dir,
+				      path,
+				      NULL);
+	uri = get_uri_from_path (full_path);
+
+	g_free (current_dir);
+	g_free (full_path);
+
+	return uri;
+}
+
+
 static void
 prepare_app (void)
 {
@@ -502,22 +525,8 @@ prepare_app (void)
 
 	default_dir = get_path_from_url (default_url);
 
-	if (extract_to != NULL) {
-		if (g_path_is_absolute (extract_to))
-			extract_to_path = get_path_from_url (extract_to);
-		else {
-			char *current_dir = g_get_current_dir ();
-			char *full_path;
-
-			full_path = g_build_filename (current_dir,
-						      extract_to,
-						      NULL);
-			extract_to_path = get_path_from_url (full_path);
-
-			g_free (current_dir);
-			g_free (full_path);
-		}
-	}
+	if (extract_to != NULL)
+		extract_to_path = get_uri_from_command_line (extract_to);
 
 	add_to_path = get_path_from_url (add_to);
 
@@ -531,28 +540,15 @@ prepare_app (void)
 		if (default_dir != NULL)
 			fr_window_set_default_dir (FR_WINDOW (window), default_dir, TRUE);
 
-		while ((filename = remaining_args[i++]) != NULL) {
-			char *path;
-
-			if (! g_path_is_absolute (filename)) {
-				char *current_dir;
-				current_dir = g_get_current_dir ();
-				path = g_strconcat (current_dir,
-						    "/",
-						    filename,
-						    NULL);
-				g_free (current_dir);
-			} else
-				path = g_strdup (filename);
-			file_list = g_list_prepend (file_list, path);
-		}
+		while ((filename = remaining_args[i++]) != NULL)
+			file_list = g_list_prepend (file_list, get_uri_from_command_line (filename));
 		file_list = g_list_reverse (file_list);
 
 		fr_window_archive__open_add (FR_WINDOW (window), add_to_path, file_list);
 		fr_window_archive__quit (FR_WINDOW (window));
 		fr_window_batch_mode_start (FR_WINDOW (window));
-
-	} else if ((extract_to != NULL)
+	}
+	else if ((extract_to != NULL)
 		   || (extract == 1)
 		   || (extract_here == 1)) { /* Extract all archives. */
 		GtkWidget  *window;
@@ -575,8 +571,8 @@ prepare_app (void)
 		}
 		fr_window_archive__quit (FR_WINDOW (window));
 		fr_window_batch_mode_start (FR_WINDOW (window));
-
-	} else { /* Open each archive in a window */
+	}
+	else { /* Open each archive in a window */
 		const char *archive;
 
 		int i = 0;

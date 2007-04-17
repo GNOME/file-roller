@@ -45,7 +45,6 @@
 
 
 #define GLADE_FILE "file-roller.glade"
-#define UPDATE_DROPPED_FILES (FALSE)
 #define ARCHIVE_ICON_SIZE (48)
 #define DEFAULT_EXTENSION ".tar.gz"
 #define BAD_CHARS "/\\*"
@@ -116,15 +115,12 @@ add_clicked_cb (GtkWidget  *widget,
 
 	/* Collect data */
 
-/* FIXME
-  	window->update_dropped_files = UPDATE_DROPPED_FILES; 
-  	*/
 	archive_name = g_filename_from_utf8 (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)), -1, NULL, NULL, NULL);
 
-	/* check whether the user entered a valid archive name. */
+	/* Check whether the user entered a valid archive name. */
 
 	if (*archive_name == '\0') {
-		GtkWidget  *d;
+		GtkWidget *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -138,8 +134,8 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 	else if (strchrs (archive_name, BAD_CHARS)) {
-		GtkWidget  *d;
-		char       *utf8_name = g_filename_display_name (archive_name);
+		GtkWidget *d;
+		char      *utf8_name = g_filename_display_name (archive_name);
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -226,11 +222,14 @@ add_clicked_cb (GtkWidget  *widget,
 	if (do_not_add) {
 		GtkWidget *d;
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
-					   GTK_DIALOG_DESTROY_WITH_PARENT,
-					   NULL,
-					   _("Archive not created"),
-					   NULL);
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_WARNING,
+					     _("Archive not created"),
+					     NULL,
+					     GTK_STOCK_OK, GTK_RESPONSE_OK,
+					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
@@ -300,31 +299,16 @@ add_clicked_cb (GtkWidget  *widget,
 		}
 	}
 
-	if (! path_is_file (archive_file)) {
-		/* FIXME: use batch actions
-		if (window->dropped_file_list != NULL)
-			path_list_free (window->dropped_file_list);
-		window->dropped_file_list = path_list_dup (data->file_list);
-		window->add_after_creation = TRUE;
+	gtk_widget_destroy (data->dialog);
+
+	if (! path_is_file (archive_file))
 		fr_window_archive_new (window, archive_file);
-		*/
-
-	} else {
-		/* FIXME: use batch action to add after opening
-		window->add_after_opening = TRUE; */
-
-		fr_window_batch_mode_add_next_action (window,
-						      FR_BATCH_ACTION_ADD,
-						      path_list_dup (data->file_list),
-						      (GFreeFunc) path_list_free);
+	else
 		fr_window_archive_open (window, archive_file, GTK_WINDOW (window));
-	}
 
 	g_free (archive_name);
 	g_free (archive_dir);
 	g_free (archive_file);
-
-	gtk_widget_destroy (data->dialog);
 }
 
 
@@ -367,11 +351,11 @@ load_icon_file (char          *filename,
 		size = MAX (width, height);
 		if (size > nominal_size) {
 			base_size = size;
-		} else {
+		}
+		else {
 			/* Don't scale up small icons */
 			base_size = nominal_size;
 		}
-
 	}
 
 	if (base_size != nominal_size) {
@@ -471,12 +455,11 @@ update_archive_type_combo_box_from_ext (DialogData  *data,
 	else
 		save_type_list =  save_type;
 
-	for (i = 0; save_type_list[i] != FR_FILE_TYPE_NULL; i++) {
+	for (i = 0; save_type_list[i] != FR_FILE_TYPE_NULL; i++)
 		if (strcmp (ext, file_type_desc[save_type_list[i]].ext) == 0) {
 			idx = i;
 			break;
 		}
-	}
 
 	gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), idx);
 }
@@ -502,17 +485,16 @@ dlg_batch_add_files (FrWindow *window,
 
 	data = g_new0 (DialogData, 1);
 
-	data->window = window;
-	data->file_list = file_list;
-	data->add_clicked = FALSE;
-
-	data->single_file = ((file_list->next == NULL) && path_is_file ((char*) file_list->data));
-
 	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (!data->gui) {
+	if (data->gui == NULL) {
 		g_warning ("Could not find " GLADE_FILE "\n");
 		return;
 	}
+
+	data->window = window;
+	data->file_list = file_list;
+	data->single_file = ((file_list->next == NULL) && path_is_file ((char*) file_list->data));
+	data->add_clicked = FALSE;
 
 	/* Get the widgets. */
 
@@ -596,6 +578,5 @@ dlg_batch_add_files (FrWindow *window,
 				    0, -1);
 
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE);
-
 	gtk_window_present (GTK_WINDOW (data->dialog));
 }
