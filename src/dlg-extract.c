@@ -95,7 +95,7 @@ extract_cb (GtkWidget   *w,
 
 	/* collect extraction options. */
 
-	extract_to_dir = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->dialog));
+	extract_to_dir = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
 
 	/* check directory existence. */
 
@@ -254,13 +254,13 @@ extract_cb (GtkWidget   *w,
 		base_dir = fr_window_get_current_location (window);
 
 	fr_window_archive_extract (window,
-				file_list,
-				extract_to_dir,
-				base_dir,
-				skip_newer,
-				overwrite,
-				junk_paths,
-				password);
+				   file_list,
+				   extract_to_dir,
+				   base_dir,
+				   skip_newer,
+				   overwrite,
+				   junk_paths,
+				   password);
 
 	path_list_free (file_list);
 	g_free (extract_to_dir);
@@ -479,7 +479,7 @@ dlg_extract (GtkWidget *widget,
 	gtk_window_set_default_size (GTK_WINDOW (file_sel), 530, 510);
 
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), TRUE);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), create_extra_widget (data));

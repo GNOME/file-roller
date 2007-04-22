@@ -1,3 +1,12 @@
+2007-04-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-window.c:
+	* src/fr-command.h:
+	* src/fr-archive.c:
+	* src/dlg-extract.c:
+
+	started support for extracting files to remote locations.
+
 2007-04-17  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/dlg-ask-password.c:
@@ -112,7 +121,7 @@
 
 2007-04-15  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
-	* src/file-utils.c (path_in_path): make it work even when a dirstocy
+	* src/file-utils.c (path_in_path): make it work even when a directory
 	ends with a separator.
 	* src/fr-archive.c (file_is_in_subfolder_of): use path_in_path
 	* src/fr-archive.c (fr_archive_extract): better code to check whether

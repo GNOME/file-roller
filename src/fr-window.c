@@ -278,9 +278,9 @@ fr_window_free_batch_data (FrWindow *window)
 
 
 static void
-gh_unref_pixbuf (gpointer  key,
-		 gpointer  value,
-		 gpointer  user_data)
+gh_unref_pixbuf (gpointer key,
+		 gpointer value,
+		 gpointer user_data)
 {
 	g_object_unref (value);
 }
@@ -620,8 +620,8 @@ fr_window_history_print (FrWindow *window)
 static GList *
 fr_window_get_current_dir_list (FrWindow *window)
 {
-	GList      *dir_list = NULL;
-	GList      *scan;
+	GList *dir_list = NULL;
+	GList *scan;
 
 	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
@@ -751,13 +751,10 @@ sort_by_path (gconstpointer  ptr1,
 }
 
 
-#define COMPARE_FUNC_NUM 5
-
-
 static GCompareFunc
 get_compare_func_from_idx (int column_index)
 {
-	static GCompareFunc compare_funcs[COMPARE_FUNC_NUM] = {
+	static GCompareFunc compare_funcs[] = {
 		sort_by_name,
 		sort_by_type,
 		sort_by_size,
@@ -765,7 +762,7 @@ get_compare_func_from_idx (int column_index)
 		sort_by_path
 	};
 
-	column_index = CLAMP (column_index, 0, COMPARE_FUNC_NUM - 1);
+	column_index = CLAMP (column_index, 0, G_N_ELEMENTS (compare_funcs) - 1);
 
 	return compare_funcs [column_index];
 }
@@ -1128,7 +1125,6 @@ add_selected_fd (GtkTreeModel *model,
 	gtk_tree_model_get (model, iter,
 			    COLUMN_FILE_DATA, &fdata,
 			    -1);
-
 	if (! fdata->list_dir)
 		*list = g_list_prepend (*list, fdata);
 }
@@ -1481,7 +1477,6 @@ check_whether_has_a_dir (GtkTreeModel *model,
 	gtk_tree_model_get (model, iter,
 			    COLUMN_FILE_DATA, &fdata,
 			    -1);
-
 	if (file_data_is_dir (fdata))
 		*has_a_dir = TRUE;
 }
@@ -2729,8 +2724,8 @@ file_leave_notify_callback (GtkWidget *widget,
 			    GdkEventCrossing *event,
 			    gpointer user_data)
 {
-	FrWindow *window = user_data;
-	GtkTreeIter iter;
+	FrWindow    *window = user_data;
+	GtkTreeIter  iter;
 
 	if (window->priv->single_click && (window->priv->hover_path != NULL)) {
 		gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
@@ -3032,9 +3027,9 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 				   GtkSelectionData *selection_data,
 				   GList            *path_list)
 {
-	char     *destination;
-	char     *destination_folder;
-	char     *destination_folder_display_name;
+	char *destination;
+	char *destination_folder;
+	char *destination_folder_display_name;
 
 	debug (DEBUG_INFO, "::DragDataGet -->\n");
 
@@ -4450,9 +4445,9 @@ fr_window_archive_open (FrWindow   *current_window,
 	window->priv->load_error_parent_window = parent;
 
 	fr_window_set_current_batch_action (window,
-						  FR_BATCH_ACTION_LOAD,
-						  g_strdup (window->priv->archive_uri),
-						  (GFreeFunc) g_free);
+					    FR_BATCH_ACTION_LOAD,
+					    g_strdup (window->priv->archive_uri),
+					    (GFreeFunc) g_free);
 
 	fr_archive_load (window->archive, window->priv->archive_uri, window->priv->password);
 
@@ -4847,9 +4842,9 @@ fr_window_archive_extract__common (FrWindow   *window,
 				  extract_here);
 
 	fr_window_set_current_batch_action (window,
-						  FR_BATCH_ACTION_EXTRACT,
-						  edata,
-						  (GFreeFunc) extract_data_free);
+					    FR_BATCH_ACTION_EXTRACT,
+					    edata,
+					    (GFreeFunc) extract_data_free);
 
 	if (! path_is_dir (edata->extract_to_dir)) {
 		if (! ForceDirectoryCreation) {
@@ -4947,7 +4942,7 @@ fr_window_archive_extract__common (FrWindow   *window,
 	}
 
 	/* when using extract_here, move the singleton to the parent dir and
-	 * remove the _FILES dir */
+	 * remove the _FILES dir. FIXME: implement this in fr-archive */
 	if (extract_here) {
 		fr_process_begin_command (window->archive->process, "sh " PRIVEXECDIR "move-here.sh");
 		e_arg = shell_escape (window->priv->extract_here_dir);
@@ -6129,8 +6124,8 @@ fr_window_open_files__extract_done_cb (FrArchive   *archive,
 
 		CommandList = g_list_prepend (CommandList, cdata);
 		fr_process_start (proc);
-
-	} else if (cdata->app != NULL) {
+	}
+	else if (cdata->app != NULL) {
 		GList *uris = NULL, *scan;
 		GnomeVFSResult result;
 
@@ -6205,9 +6200,9 @@ fr_window_open_files_common (FrWindow                *window,
 
 	vdata = view_data_new (file_list, command, app);
 	fr_window_set_current_batch_action (window,
-						  FR_BATCH_ACTION_VIEW,
-						  vdata,
-						  (GFreeFunc) view_data_free);
+					    FR_BATCH_ACTION_VIEW,
+					    vdata,
+					    (GFreeFunc) view_data_free);
 
 	cdata = g_new0 (CommandData, 1);
 	cdata->window = window;

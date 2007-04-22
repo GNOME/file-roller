@@ -49,11 +49,11 @@ typedef enum {
 						 and collect the files to add to the archive, this
 						 may require some time to complete, so the operation
 						 is asynchronous) */
-	FR_ACTION_COPYING_FILES_FROM_REMOTE,  /* copying files from a remote location */
+	FR_ACTION_COPYING_FILES_FROM_REMOTE,  /* copying files to be added to the archive from a remote location */
 	FR_ACTION_ADDING_FILES,               /* adding files to an archive */
 	FR_ACTION_EXTRACTING_FILES,           /* extracting files */
-	FR_ACTION_COPYING_FILES_TO_REMOTE,    /* copying files to a remote location */
-	FR_ACTION_CREATING_ARCHIVE,           /* creating the archive */
+	FR_ACTION_COPYING_FILES_TO_REMOTE,    /* copying extracted files to a remote location */
+	FR_ACTION_CREATING_ARCHIVE,           /* creating a local archive */
 	FR_ACTION_SAVING_REMOTE_ARCHIVE       /* copying the archive to a remote location */
 } FRAction;
 
