@@ -41,7 +41,8 @@ gboolean            path_is_file                 (const gchar *s);
 gboolean            path_exists                  (const gchar *s);
 gboolean            path_is_dir                  (const gchar *s);
 gboolean            dir_is_empty                 (const gchar *s);
-gboolean            dir_contains_one_object      (const char  *path);
+gboolean            dir_contains_one_object      (const char  *uri);
+char *              get_directory_content_if_unique (const char  *uri);
 gboolean            path_in_path                 (const char  *path_src,
 						  const char  *path_dest);
 GnomeVFSFileSize    get_file_size                (const gchar *s);

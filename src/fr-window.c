@@ -2084,11 +2084,9 @@ static void
 open_folder (GtkWindow  *parent,
 	     const char *folder)
 {
-	char   *uri;
 	GError *err = NULL;
 
-	uri = g_strconcat ("file://", folder, NULL);
-	if (! gnome_url_show (uri, &err)) {
+	if (! gnome_url_show (folder, &err)) {
 		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
@@ -2108,7 +2106,6 @@ open_folder (GtkWindow  *parent,
 		g_free (message);
 		g_clear_error (&err);
 	}
-	g_free (uri);
 }
 
 
@@ -2132,7 +2129,8 @@ error_dialog_response_cb (GtkDialog *dialog,
 {
 	GtkWindow *dialog_parent = user_data;
 
-	gtk_window_set_modal (dialog_parent, TRUE);
+	if (dialog_parent != NULL)
+		gtk_window_set_modal (dialog_parent, TRUE);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
@@ -2154,10 +2152,15 @@ handle_errors (FrWindow    *window,
 		char      *msg = NULL;
 		char      *utf8_name;
 		char      *details = NULL;
-		GtkWindow *dialog_parent = (GtkWindow *) window;
+		GtkWindow *dialog_parent;
 		GtkWidget *dialog;
 		FrProcess *process = archive->process;
 		GList     *output = NULL;
+
+		if (window->priv->batch_mode)
+			dialog_parent = NULL;
+		else
+			dialog_parent = (GtkWindow *) window;
 
 		if ((action == FR_ACTION_LISTING_CONTENT) || (action == FR_ACTION_LOADING_ARCHIVE))
 			fr_window_archive_close (window);
@@ -2220,7 +2223,8 @@ handle_errors (FrWindow    *window,
 		if (error->type != FR_PROC_ERROR_GENERIC)
 			output = (process->raw_error != NULL) ? process->raw_error : process->raw_output;
 
-		gtk_window_set_modal (dialog_parent, FALSE);
+		if (dialog_parent != NULL)
+			gtk_window_set_modal (dialog_parent, FALSE);
 		dialog = _gtk_error_dialog_new (dialog_parent,
 						0,
 						output,
@@ -2360,7 +2364,8 @@ action_performed (FrArchive   *archive,
 		fr_window_update_title (window);
 		fr_window_update_current_location (window);
 		fr_window_update_file_list (window);
-		gtk_window_present (GTK_WINDOW (window));
+		if (! window->priv->non_interactive)
+			gtk_window_present (GTK_WINDOW (window));
 		break;
 
 	case FR_ACTION_DELETING_FILES:
@@ -4816,21 +4821,51 @@ extract_data_free (ExtractData *edata)
 }
 
 
-static void
-fr_window_archive_extract__common (FrWindow   *window,
-				   GList      *file_list,
-				   const char *extract_to_dir,
-				   const char *base_dir,
-				   gboolean    skip_older,
-				   gboolean    overwrite,
-				   gboolean    junk_paths,
-				   const char *password,
-				   gboolean    extract_here)
+void
+fr_window_archive_extract_here (FrWindow   *window,
+				gboolean    skip_older,
+				gboolean    overwrite,
+				gboolean    junk_paths,
+				const char *password)
 {
-	gboolean     do_not_extract = FALSE;
-	char        *e_arg;
-	const char  *dest_dir;
 	ExtractData *edata;
+		
+	edata = extract_data_new (NULL,
+				  NULL,
+				  NULL,
+				  skip_older,
+				  overwrite,
+				  junk_paths,
+				  password,
+				  TRUE);
+
+	fr_window_set_current_batch_action (window,
+					    FR_BATCH_ACTION_EXTRACT,
+					    edata,
+					    (GFreeFunc) extract_data_free);
+					    	
+	fr_process_clear (window->archive->process);
+	if (fr_archive_extract_here (window->archive,
+			             edata->skip_older,
+			             edata->overwrite,
+			             edata->junk_paths,
+			             edata->password))
+		fr_process_start (window->archive->process);
+}
+
+
+void
+fr_window_archive_extract (FrWindow   *window,
+			   GList      *file_list,
+			   const char *extract_to_dir,
+			   const char *base_dir,
+			   gboolean    skip_older,
+			   gboolean    overwrite,
+			   gboolean    junk_paths,
+			   const char *password)
+{
+	ExtractData *edata;
+	gboolean     do_not_extract = FALSE;
 
 	edata = extract_data_new (file_list,
 				  extract_to_dir,
@@ -4839,7 +4874,7 @@ fr_window_archive_extract__common (FrWindow   *window,
 				  overwrite,
 				  junk_paths,
 				  password,
-				  extract_here);
+				  FALSE);
 
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_EXTRACT,
@@ -4887,6 +4922,8 @@ fr_window_archive_extract__common (FrWindow   *window,
 						   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
+			
+			fr_window_stop_batch (window);
 
 			return;
 		}
@@ -4905,100 +4942,24 @@ fr_window_archive_extract__common (FrWindow   *window,
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
-
+		
 		fr_window_stop_batch (window);
+
 		return;
 	}
 
 	fr_process_clear (window->archive->process);
 
-	if (extract_here) {
-		g_free (window->priv->extract_here_dir);
-		window->priv->extract_here_dir = g_strconcat (window->priv->archive_uri,
-							      "_FILES",
-							      NULL);
-		ensure_dir_exists (window->priv->extract_here_dir, 0755);
-		dest_dir = window->priv->extract_here_dir;
-	}
-	else {
-		g_free (window->priv->extract_here_dir);
-		window->priv->extract_here_dir = NULL;
-		dest_dir = edata->extract_to_dir;
-	}
-
 	fr_archive_extract (window->archive,
 			    edata->file_list,
-			    dest_dir,
+			    edata->extract_to_dir,
 			    edata->base_dir,
 			    edata->skip_older,
 			    edata->overwrite,
 			    edata->junk_paths,
 			    edata->password);
-
-	/* no file to extract */
-	if (window->archive->process->n_comm < 0) {
-		fr_process_start (window->archive->process);
-		return;
-	}
-
-	/* when using extract_here, move the singleton to the parent dir and
-	 * remove the _FILES dir. FIXME: implement this in fr-archive */
-	if (extract_here) {
-		fr_process_begin_command (window->archive->process, "sh " PRIVEXECDIR "move-here.sh");
-		e_arg = shell_escape (window->priv->extract_here_dir);
-		fr_process_add_arg (window->archive->process, e_arg);
-		g_free (e_arg);
-		e_arg = shell_escape (edata->extract_to_dir);
-		fr_process_add_arg (window->archive->process, e_arg);
-		g_free (e_arg);
-		fr_process_end_command (window->archive->process);
-	}
-
+				    
 	fr_process_start (window->archive->process);
-}
-
-
-void
-fr_window_archive_extract_here (FrWindow   *window,
-				GList      *file_list,
-				const char *extract_to_dir,
-				const char *base_dir,
-				gboolean    skip_older,
-				gboolean    overwrite,
-				gboolean    junk_paths,
-				const char *password)
-{
-	fr_window_archive_extract__common (window,
-					   file_list,
-					   extract_to_dir,
-					   base_dir,
-					   skip_older,
-					   overwrite,
-					   junk_paths,
-					   password,
-					   TRUE);
-}
-
-
-void
-fr_window_archive_extract (FrWindow   *window,
-			   GList      *file_list,
-			   const char *extract_to_dir,
-			   const char *base_dir,
-			   gboolean    skip_older,
-			   gboolean    overwrite,
-			   gboolean    junk_paths,
-			   const char *password)
-{
-	fr_window_archive_extract__common (window,
-					   file_list,
-					   extract_to_dir,
-					   base_dir,
-					   skip_older,
-					   overwrite,
-					   junk_paths,
-					   password,
-					   FALSE);
 }
 
 
@@ -6486,9 +6447,6 @@ fr_window_exec_batch_action (FrWindow      *window,
 
 		edata = action->data;
 		fr_window_archive_extract_here (window,
-						NULL,
-						edata->extract_to_dir,
-						NULL,
 						FALSE,
 						TRUE,
 						FALSE,

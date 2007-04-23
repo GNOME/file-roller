@@ -49,7 +49,8 @@ extract_to_callback (NautilusMenuItem *item,
 	file = files->data;
 
 	uri = nautilus_file_info_get_uri (file);
-	default_dir = g_strconcat ("file://", g_get_home_dir (), "/", "Desktop", NULL);
+	default_dir = nautilus_file_info_get_parent_uri (file);
+	
 	cmd = g_string_new ("file-roller");
 	g_string_append_printf (cmd,
 				" --default-dir=%s --extract %s",
@@ -74,30 +75,33 @@ extract_here_callback (NautilusMenuItem *item,
 {
 	GList            *files, *scan;
 	NautilusFileInfo *file;
-	char             *uri, *dir;
+	char             *dir;
 	GString          *cmd;
 
 	files = g_object_get_data (G_OBJECT (item), "files");
 	file = files->data;
 
-	uri = nautilus_file_info_get_uri (file);
-	dir = g_path_get_dirname (uri);
+	dir = nautilus_file_info_get_parent_uri (file);
 
 	cmd = g_string_new ("file-roller");
 	g_string_append_printf (cmd," --extract-to=%s --extract-here", g_shell_quote (dir));
 
 	g_free (dir);
-	g_free (uri);
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
-
+		char             *uri;
+		
 		uri = nautilus_file_info_get_uri (file);
 		g_string_append_printf (cmd, " %s", g_shell_quote (uri));
 		g_free (uri);
 	}
 
 	g_spawn_command_line_async (cmd->str, NULL);
+
+#ifdef DEBUG
+	g_print ("EXEC: %s\n", cmd->str);
+#endif
 
 	g_string_free (cmd, TRUE);
 }
@@ -194,21 +198,11 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	gboolean  one_archive = FALSE;
 	gboolean  all_archives = TRUE;
 
-
 	if (files == NULL)
 		return NULL;
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
-		char             *scheme;
-		gboolean          local;
-
-		scheme = nautilus_file_info_get_uri_scheme (file);
-		local = strncmp (scheme, "file", 4) == 0;
-		g_free (scheme);
-
-		if (!local)
-			return NULL;
 
 		if (all_archives && ! is_archive (file))
 			all_archives = FALSE;
@@ -221,11 +215,14 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 			parent_uri = nautilus_file_info_get_parent_uri (file);
 			info = gnome_vfs_file_info_new ();
+			
 			result = gnome_vfs_get_file_info (parent_uri,
 							  info,
-							  GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS);
-			if (result == GNOME_VFS_OK)
-				can_write = (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE) != 0;
+							  (GNOME_VFS_FILE_INFO_FOLLOW_LINKS
+					                   | GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS));
+			if ((result == GNOME_VFS_OK) && (info->valid_fields & GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS))
+				can_write = (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE) || (info->permissions & GNOME_VFS_PERM_USER_WRITE);
+				
 			gnome_vfs_file_info_unref (info);
 			g_free (parent_uri);
 		}
@@ -253,8 +250,8 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 					(GDestroyNotify) nautilus_file_info_list_free);
 
 		items = g_list_append (items, item);
-
-	} else if (all_archives && ! can_write) {
+	} 
+	else if (all_archives && ! can_write) {
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_to",

@@ -1,3 +1,21 @@
+2007-04-24  paolo  <paolo@terra>
+
+	* src/main.c: 
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* src/fr-archive.h: 
+	* src/fr-archive.c: 
+	* src/sh/move-here.sh: deleted.
+	* src/sh/Makefile.am: removed move-here.sh
+	* src/file-utils.h: 
+	* src/file-utils.c: 
+	
+	Implement the extract here command in fr-archive instead of
+	using a shell script.  Allow to use extract_here for remote 
+	archives.
+	
+	* nautilus/nautilus-fileroller.c: allow to extract remote archives.
+	
 2007-04-22  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-window.c:

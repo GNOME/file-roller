@@ -127,6 +127,11 @@ void        fr_archive_extract                   (FrArchive     *archive,
 						  gboolean       overwrite,
 						  gboolean       junk_path,
 						  const char    *password);
+gboolean    fr_archive_extract_here              (FrArchive     *archive,
+						  gboolean       skip_older,
+						  gboolean       overwrite,
+						  gboolean       junk_path,
+						  const char    *password);
 
 /**/
 

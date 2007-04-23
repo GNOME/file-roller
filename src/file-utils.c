@@ -154,32 +154,59 @@ dir_is_empty (const char *path)
 
 
 gboolean
-dir_contains_one_object (const char *path)
+dir_contains_one_object (const char *uri)
 {
-	DIR *dp;
-	int  n;
-
-	if (path == NULL)
+	GnomeVFSDirectoryHandle *handle;
+	GnomeVFSResult           result;
+	int                      n;
+	GnomeVFSFileInfo         info;
+	
+	result = gnome_vfs_directory_open (&handle, uri, GNOME_VFS_FILE_INFO_DEFAULT);
+	if (result != GNOME_VFS_OK)
 		return FALSE;
-
-	if (strcmp (path, "/") == 0)
-		return FALSE;
-
-	dp = opendir (path);
-	if (dp == NULL)
-		return FALSE;
-
+		
 	n = 0;
-	while (readdir (dp) != NULL) {
-		n++;
-		if (n > 3) {
-			closedir (dp);
-			return FALSE;
-		}
+	while (gnome_vfs_directory_read_next (handle, &info) == GNOME_VFS_OK) {
+		if ((strcmp (info.name, ".") == 0) || (strcmp (info.name, "..") == 0))
+			continue;
+		if (++n > 1) 
+			break;
 	}
-	closedir (dp);
 
-	return TRUE;
+	gnome_vfs_directory_close (handle);
+	
+	return (n == 1);
+}
+
+
+char *
+get_directory_content_if_unique (const char  *uri)
+{
+	GnomeVFSDirectoryHandle *handle;
+	GnomeVFSResult           result;
+	GnomeVFSFileInfo        *info;
+	char                    *content_uri = NULL;
+	
+	result = gnome_vfs_directory_open (&handle, uri, GNOME_VFS_FILE_INFO_DEFAULT);
+	if (result != GNOME_VFS_OK)
+		return NULL;
+	
+	info = gnome_vfs_file_info_new ();
+	while (gnome_vfs_directory_read_next (handle, info) == GNOME_VFS_OK) {
+		if ((strcmp (info->name, ".") == 0) || (strcmp (info->name, "..") == 0))
+			continue;
+		if (content_uri != NULL) {
+			g_free (content_uri);
+			content_uri = NULL;
+		}
+		else
+			content_uri = g_strconcat (uri, "/", info->name, NULL);
+		break;
+	}
+	gnome_vfs_file_info_unref (info);
+	gnome_vfs_directory_close (handle);
+	
+	return content_uri;	
 }
 
 

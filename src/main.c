@@ -336,25 +336,6 @@ release_data ()
 
 /* Create the windows. */
 
-static char *
-get_path_from_url (char *url)
-{
-	GnomeVFSURI *uri;
-	char        *path;
-	char        *escaped;
-
-	if (url == NULL)
-		return NULL;
-
-	uri = gnome_vfs_uri_new (url);
-	escaped = gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_TOPLEVEL_METHOD);
-	gnome_vfs_uri_unref (uri);
-	path = gnome_vfs_unescape_string (escaped, NULL);
-	g_free (escaped);
-
-	return path;
-}
-
 
 static void
 migrate_dir_from_to (const char *from_dir,
@@ -525,7 +506,8 @@ prepare_app (void)
 	if (extract_to != NULL)
 		extract_to_path = get_uri_from_command_line (extract_to);
 
-	add_to_path = get_path_from_url (add_to);
+	if (add_to != NULL)
+		add_to_path = get_uri_from_command_line (add_to);
 
 	if ((add_to != NULL) || (add == 1)) { /* Add files to an archive */
 		GtkWidget   *window;

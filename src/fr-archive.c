@@ -132,6 +132,8 @@ struct _FRArchivePrivData {
 
 	char                *temp_extraction_dir;
 	char                *extraction_destination;
+	gboolean             remote_extraction;
+	gboolean             extract_here;
 };
 
 
@@ -873,7 +875,7 @@ copy_to_remote_location_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 		g_signal_emit (G_OBJECT (xfer_data->archive),
 			       fr_archive_signals[PROGRESS],
 			       0,
-			       info->total_bytes_copied / info->bytes_total);
+			       (double) info->total_bytes_copied / info->bytes_total);
 
 	return TRUE;
 }
@@ -926,18 +928,54 @@ copy_to_remote_location (FrArchive  *archive,
 
 
 static void
+move_here (FrArchive *archive) 
+{
+	char *content_uri;
+	char *parent;
+	char *parent_parent;
+	char *new_uri;
+	
+	content_uri = get_directory_content_if_unique (archive->priv->extraction_destination);
+	if (content_uri == NULL)
+		return;	
+		
+	parent = remove_level_from_path (content_uri);
+	parent_parent = remove_level_from_path (parent);
+	new_uri = g_strconcat (parent_parent, "/", file_name_from_path (content_uri), NULL);
+	
+	gnome_vfs_move (content_uri, new_uri, FALSE);
+	gnome_vfs_remove_directory (parent);
+	
+	g_free (parent_parent);
+	g_free (parent);
+	g_free (new_uri);
+	g_free (content_uri);
+}
+
+
+static void
 copy_extracted_files_to_destination__step2 (XferData *xfer_data)
 {
+	FrArchive *archive = xfer_data->archive;
+	
+	rmdir_recursive (archive->priv->temp_extraction_dir);
+	g_free (archive->priv->temp_extraction_dir);
+	archive->priv->temp_extraction_dir = NULL;
+	
 	if (xfer_data->result != GNOME_VFS_OK)
-		fr_archive_action_completed (xfer_data->archive,
+		fr_archive_action_completed (archive,
 					     FR_ACTION_EXTRACTING_FILES,
 					     FR_PROC_ERROR_GENERIC,
 					     gnome_vfs_result_to_string (xfer_data->result));
-	else
-		fr_archive_action_completed (xfer_data->archive,
+	else {
+		if (archive->priv->extract_here)
+			move_here (archive); 
+		fr_archive_action_completed (archive,
 					     FR_ACTION_EXTRACTING_FILES,
 					     FR_PROC_ERROR_NONE,
 					     NULL);
+	}
+						   
 	xfer_data_free (xfer_data);
 }
 
@@ -955,6 +993,12 @@ copy_extracted_files_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 	}
 	else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED)
 		copy_extracted_files_to_destination__step2 (xfer_data);
+	else if ((info->phase == GNOME_VFS_XFER_PHASE_COPYING)
+		 || (info->phase == GNOME_VFS_XFER_PHASE_MOVING))
+		g_signal_emit (G_OBJECT (xfer_data->archive),
+			       fr_archive_signals[PROGRESS],
+			       0,
+			       (double) info->total_bytes_copied / info->bytes_total);
 
 	return TRUE;
 }
@@ -1024,10 +1068,8 @@ action_performed (FrCommand   *command,
 	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", action_names[action]);
 #endif
 
-	if ((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_COPYING_FILES_TO_REMOTE))
-		fr_archive_remove_temp_work_dir (archive);
-
 	if (action == FR_ACTION_ADDING_FILES) {
+		fr_archive_remove_temp_work_dir (archive);
 		if (archive->priv->continue_adding_dropped_items) {
 			add_dropped_items (archive->priv->dropped_items_data);
 			return;
@@ -1045,8 +1087,13 @@ action_performed (FrCommand   *command,
 		return;
 	}
 
-	if ((action == FR_ACTION_EXTRACTING_FILES) && (archive->priv->extraction_destination != NULL)) {
-		copy_extracted_files_to_destination (archive);
+	if (action == FR_ACTION_EXTRACTING_FILES) {
+		if  (archive->priv->remote_extraction) {
+			copy_extracted_files_to_destination (archive);
+			return;
+		}
+		else if (archive->priv->extract_here)
+			move_here (archive); 
 	}
 
 	g_signal_emit (G_OBJECT (archive),
@@ -1257,7 +1304,13 @@ copy_remote_file_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 					 xfer_data->result);
 		xfer_data_free (xfer_data);
 	}
-
+	else if ((info->phase == GNOME_VFS_XFER_PHASE_COPYING)
+		 || (info->phase == GNOME_VFS_XFER_PHASE_MOVING))
+		g_signal_emit (G_OBJECT (xfer_data->archive),
+			       fr_archive_signals[PROGRESS],
+			       0,
+			       (double) info->total_bytes_copied / info->bytes_total);
+			       
 	return TRUE;
 }
 
@@ -1783,7 +1836,13 @@ copy_remote_files_progress_update_cb (GnomeVFSAsyncHandle      *handle,
 		copy_remote_files__step2 (xfer_data);
 		xfer_data_free (xfer_data);
 	}
-
+	else if ((info->phase == GNOME_VFS_XFER_PHASE_COPYING)
+		 || (info->phase == GNOME_VFS_XFER_PHASE_MOVING))
+		g_signal_emit (G_OBJECT (xfer_data->archive),
+			       fr_archive_signals[PROGRESS],
+			       0,
+			       (double) info->total_bytes_copied / info->bytes_total);
+			       
 	return TRUE;
 }
 
@@ -3008,24 +3067,15 @@ fr_archive_extract (FrArchive  *archive,
 		    const char *password)
 {
 	g_free (archive->priv->extraction_destination);
-	archive->priv->extraction_destination = NULL;
-
+	archive->priv->extraction_destination = g_strdup (destination);
+	
 	g_free (archive->priv->temp_extraction_dir);
 	archive->priv->temp_extraction_dir = NULL;
 
-	if (uri_is_local (destination))
-		fr_archive_extract_to_local (archive,
-					     file_list,
-					     destination,
-					     base_dir,
-					     skip_older,
-					     overwrite,
-					     junk_paths,
-					     password);
-	else {
-		archive->priv->extraction_destination = g_strdup (destination);
-		archive->priv->temp_extraction_dir = get_temp_work_dir ();
+	archive->priv->remote_extraction = ! uri_is_local (destination);
 
+	if (archive->priv->remote_extraction) {
+ 		archive->priv->temp_extraction_dir = get_temp_work_dir ();
 		fr_archive_extract_to_local (archive,
 				  	     file_list,
 				  	     archive->priv->temp_extraction_dir,
@@ -3035,7 +3085,71 @@ fr_archive_extract (FrArchive  *archive,
 				  	     junk_paths,
 				  	     password);
 	}
+	else
+		fr_archive_extract_to_local (archive,
+					     file_list,
+					     destination,
+					     base_dir,
+					     skip_older,
+					     overwrite,
+					     junk_paths,
+					     password);
 }
+
+
+static char *
+get_extract_here_destination (const char     *uri,
+			      GnomeVFSResult *result)
+{
+	char *destination;
+	
+	/* FIXME: find a better destination. */
+	
+	destination = g_strconcat (uri, "_FILES", NULL); 
+	*result = gnome_vfs_make_directory (destination, 0700);
+	
+	if (*result != GNOME_VFS_OK) {
+		g_free (destination);
+		destination = NULL;
+	}
+	
+	return destination;
+}
+
+
+gboolean
+fr_archive_extract_here (FrArchive  *archive,
+			 gboolean    skip_older,
+			 gboolean    overwrite,
+			 gboolean    junk_path,
+			 const char *password)
+{
+	GnomeVFSResult  result;
+	char           *destination;
+	
+	destination = get_extract_here_destination (archive->uri, &result);
+	if (result != GNOME_VFS_OK) {
+		fr_archive_action_completed (archive,
+					     FR_ACTION_EXTRACTING_FILES,
+					     FR_PROC_ERROR_GENERIC,
+					     gnome_vfs_result_to_string (result));
+		return FALSE;
+	}
+	
+	archive->priv->extract_here = TRUE;
+	fr_archive_extract (archive,
+			    NULL,
+			    destination,
+			    NULL,
+			    skip_older,
+			    overwrite,
+			    junk_path,
+			    password);
+
+	g_free (destination);
+	
+	return TRUE;			    
+}			 
 
 
 void
