@@ -1190,7 +1190,7 @@ visit_current_dir (GetFileListData *gfl_data)
 			 TRUE,
 			 TRUE,
 			 TRUE,
-			 FALSE,
+			 TRUE,
 			 FALSE,
 			 FALSE,
 			 gfl_data->include_directories,

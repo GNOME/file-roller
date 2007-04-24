@@ -170,7 +170,7 @@ struct _FrWindowPrivateData {
 	FRWindowSortMethod sort_method;
 	GtkSortType      sort_type;
 
-	FRWindowListMode   list_mode;
+	FRWindowListMode list_mode;
 	GList *          history;
 	GList *          history_current;
 	char *           password;
@@ -625,6 +625,7 @@ fr_window_get_current_dir_list (FrWindow *window)
 
 	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
 		FileData *fdata = scan->data;
+		
 		if (fdata->list_name == NULL)
 			continue;
 		dir_list = g_list_prepend (dir_list, fdata);
@@ -1170,12 +1171,16 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 	tot_size = 0;
 
 	if (window->priv->archive_present) {
-		scan = window->archive->command->file_list;
-		for (; scan; scan = scan->next) {
+		GList *dir_list = fr_window_get_current_dir_list (window);
+		
+		for (scan = dir_list; scan; scan = scan->next) {
 			FileData *fd = scan->data;
+			
 			tot_n++;
 			tot_size += fd->size;
 		}
+		
+		g_list_free (dir_list);
 	}
 
 	sel_n = 0;
@@ -1185,6 +1190,7 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 		selection = get_selection_as_fd (window);
 		for (scan = selection; scan; scan = scan->next) {
 			FileData *fd = scan->data;
+			
 			sel_n++;
 			sel_size += fd->size;
 		}
@@ -1197,12 +1203,12 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 	if (tot_n == 0)
 		archive_info = g_strdup ("");
 	else
-		archive_info = g_strdup_printf (ngettext ("%d file (%s)", "%d files (%s)", tot_n), tot_n, size_txt);
+		archive_info = g_strdup_printf (ngettext ("%d object (%s)", "%d objects (%s)", tot_n), tot_n, size_txt);
 
 	if (sel_n == 0)
 		selected_info = g_strdup ("");
 	else
-		selected_info = g_strdup_printf (ngettext ("%d file selected (%s)", "%d files selected (%s)", sel_n), sel_n, sel_size_txt);
+		selected_info = g_strdup_printf (ngettext ("%d object selected (%s)", "%d objects selected (%s)", sel_n), sel_n, sel_size_txt);
 
 	info = g_strconcat (archive_info,
 			    ((sel_n == 0) ? NULL : ", "),
