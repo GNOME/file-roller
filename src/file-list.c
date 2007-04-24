@@ -690,18 +690,12 @@ static gboolean
 same_fs (const char *path1,
 	 const char *path2)
 {
-	char           *escaped;
 	GnomeVFSURI    *uri1, *uri2;
 	GnomeVFSResult  result;
 	gboolean        same;
 
-	escaped = gnome_vfs_escape_path_string (path1);
-	uri1 = gnome_vfs_uri_new (escaped);
-	g_free (escaped);
-
-	escaped = gnome_vfs_escape_path_string (path2);
-	uri2 = gnome_vfs_uri_new (escaped);
-	g_free (escaped);
+	uri1 = gnome_vfs_uri_new (path1);
+	uri2 = gnome_vfs_uri_new (path2);
 
 	result = gnome_vfs_check_same_fs_uris (uri1, uri2, &same);
 

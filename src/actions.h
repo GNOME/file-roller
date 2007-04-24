@@ -24,67 +24,41 @@
 #define ACTIONS_H
 
 #include <gtk/gtkaction.h>
+#include "fr-window.h"
 
+void show_new_archive_dialog (FrWindow *window, const char *archive_name);
 
 void activate_action_new (GtkAction *action, gpointer data);
-
 void activate_action_open (GtkAction *action, gpointer data);
-
 void activate_action_save_as (GtkAction *action, gpointer data);
-
 void activate_action_test_archive (GtkAction *action, gpointer data);
-
 void activate_action_properties (GtkAction *action, gpointer data);
-
 void activate_action_close (GtkAction *action, gpointer data);
-
 void activate_action_quit (GtkAction *action, gpointer data);
 
-
 void activate_action_add_files (GtkAction *action, gpointer data);
-
 void activate_action_add_folder (GtkAction *action, gpointer data);
-
 void activate_action_extract (GtkAction *action, gpointer data);
-
 void activate_action_copy (GtkAction *action, gpointer data);
-
 void activate_action_cut (GtkAction *action, gpointer data);
-
 void activate_action_paste (GtkAction *action, gpointer data);
-
 void activate_action_rename (GtkAction *action, gpointer data);
-
 void activate_action_delete (GtkAction *action, gpointer data);
-
 void activate_action_select_all (GtkAction *action, gpointer data);
-
 void activate_action_deselect_all (GtkAction *action, gpointer data);
-
 void activate_action_open_with (GtkAction *action, gpointer data);
-
 void activate_action_view_or_open (GtkAction *action, gpointer data);
-
 void activate_action_open_folder (GtkAction *action, gpointer data);
-
 void activate_action_password (GtkAction *action, gpointer data);
 
-
 void activate_action_view_toolbar (GtkAction *action, gpointer data);
-
 void activate_action_view_statusbar (GtkAction *action, gpointer data);
-
 void activate_action_stop (GtkAction *action, gpointer data);
-
 void activate_action_reload (GtkAction *action, gpointer data);
-
 void activate_action_sort_reverse_order (GtkAction *action, gpointer data);
-
 void activate_action_last_output (GtkAction *action, gpointer data);
 
-
 void activate_action_manual (GtkAction *action, gpointer data);
-
 void activate_action_about (GtkAction *action, gpointer data);
 
 

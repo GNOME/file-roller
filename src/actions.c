@@ -64,7 +64,8 @@ new_archive (GtkWidget *file_sel,
 
 	if (fr_window_archive_new (FR_WINDOW (archive_window), uri)) {
 		gtk_widget_destroy (file_sel);
-		gtk_window_present (GTK_WINDOW (archive_window));
+		if (! fr_window_is_batch_mode (FR_WINDOW (archive_window)))
+			gtk_window_present (GTK_WINDOW (archive_window));
 	}
 	else if (new_window)
 		gtk_widget_destroy (archive_window);
@@ -251,7 +252,13 @@ new_file_response_cb (GtkWidget *w,
 	FrWindow *window;
 	char     *path;
 
+	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
+
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+		fr_archive_action_completed (window->archive,
+					     FR_ACTION_CREATING_NEW_ARCHIVE,
+					     FR_PROC_ERROR_STOPPED,
+					     NULL);
 		gtk_widget_destroy (file_sel);
 		return;
 	}
@@ -260,8 +267,6 @@ new_file_response_cb (GtkWidget *w,
 		show_help_dialog (GTK_WINDOW (file_sel), "file-roller-create");
 		return;
 	}
-
-	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
 
 	path = get_archive_filename_from_selector (window, file_sel);
 	if (path != NULL) {
@@ -308,10 +313,9 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 
 
 void
-activate_action_new (GtkAction *action,
-		     gpointer   data)
+show_new_archive_dialog (FrWindow  *window,
+			 const char *archive_name)
 {
-	FrWindow      *window = data;
 	GtkWidget     *file_sel;
 	GtkWidget     *hbox;
 	GtkWidget     *combo_box;
@@ -330,33 +334,16 @@ activate_action_new (GtkAction *action,
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
 
-/* FIXME
-	if (window->add_after_creation && (window->dropped_file_list != NULL)) {
-		char       *first_item = (char*) window->dropped_file_list->data;
-		char       *folder = remove_level_from_path (first_item);
-		const char *name = NULL;
+	if (archive_name != NULL) {
+		char *ext, *name_ext;
 
-		if (window->dropped_file_list->next != NULL)
-			name = file_name_from_path (folder);
-		else
-			name = file_name_from_path (first_item);
-
-		if (folder != NULL)
-			gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), folder);
-
-		if (name != NULL) {
-			char *ext, *name_ext;
-
-			ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, ".tgz");
-			name_ext = g_strconcat (name, ext, NULL);
-			gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), name_ext);
-			g_free (name_ext);
-			g_free (ext);
-		}
-
-		g_free (folder);
+		ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, ".tgz");
+		name_ext = g_strconcat (archive_name, ext, NULL);
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), name_ext);
+		g_free (name_ext);
+		g_free (ext);
 	}
-*/
+
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
 	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)
@@ -404,6 +391,14 @@ activate_action_new (GtkAction *action,
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
 	gtk_widget_show_all (file_sel);
+}
+
+
+void
+activate_action_new (GtkAction *action,
+		     gpointer   data)
+{
+	show_new_archive_dialog ((FrWindow*)data, NULL);
 }
 
 
