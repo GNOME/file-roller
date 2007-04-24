@@ -1157,8 +1157,7 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 	int               tot_n, sel_n;
 	GnomeVFSFileSize  tot_size, sel_size;
 	GList            *scan;
-	GList            *selection;
-
+	
 	if (window == NULL)
 		return;
 
@@ -1177,9 +1176,9 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 			FileData *fd = scan->data;
 			
 			tot_n++;
-			tot_size += fd->size;
+			if (! file_data_is_dir (fd)) 
+				tot_size += fd->size;
 		}
-		
 		g_list_free (dir_list);
 	}
 
@@ -1187,12 +1186,14 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 	sel_size = 0;
 
 	if (window->priv->archive_present) {
-		selection = get_selection_as_fd (window);
+		GList *selection = get_selection_as_fd (window);
+		
 		for (scan = selection; scan; scan = scan->next) {
 			FileData *fd = scan->data;
 			
 			sel_n++;
-			sel_size += fd->size;
+			if (! file_data_is_dir (fd)) 
+				sel_size += fd->size;
 		}
 		g_list_free (selection);
 	}
