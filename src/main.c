@@ -210,7 +210,8 @@ main (int argc, char **argv)
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 
 	program = gnome_program_init ("file-roller", VERSION,
-				      LIBGNOMEUI_MODULE, argc, argv,
+				      LIBGNOMEUI_MODULE, 
+				      argc, argv,
 				      GNOME_PARAM_GOPTION_CONTEXT, context,
 				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Archive Manager"),
 				      GNOME_PARAM_APP_PREFIX, FR_PREFIX,
@@ -225,8 +226,10 @@ main (int argc, char **argv)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
 
+/*
 	if (! gnome_vfs_init ())
 		g_error ("Cannot initialize the Virtual File System.");
+*/
 
 	gnome_authentication_manager_init ();
 	glade_init ();
@@ -555,10 +558,14 @@ prepare_app (void)
 		int i = 0;
 		while ((archive = remaining_args[i++]) != NULL) {
 			GtkWidget *window;
-
+			char      *uri;
+			
 			window = fr_window_new ();
 			gtk_widget_show (window);
-			fr_window_archive_open (FR_WINDOW (window), archive, GTK_WINDOW (window));
+			
+			uri = gnome_vfs_make_uri_from_shell_arg (archive);
+			fr_window_archive_open (FR_WINDOW (window), uri, GTK_WINDOW (window));
+			g_free (uri);
 		}
 	}
 

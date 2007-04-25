@@ -1,3 +1,21 @@
+2007-04-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/main.c (prepare_app): use gnome_vfs_make_uri_from_shell_arg
+	to open archives.
+	
+	* src/fr-window.c (fr_window_update_title): unescape the uri in the 
+	window title. 
+	(error_dialog_response_cb): do not set to modal the main window.
+	
+	* src/fr-command-zip.c: 
+	* src/fr-command-rar.c: better way to find out whether the archive 
+	requires a password.
+	
+	* src/fr-archive.c: make sure the extract_here destination is unique.
+	* src/file-utils.c: 
+	* src/dlg-prop.c: unescape the uri
+	* data/file-roller.desktop.in.in: added TryExec entry
+
 2007-04-24  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-window.c (fr_window_update_statusbar_list_info): ignore 

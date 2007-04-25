@@ -1068,32 +1068,52 @@ action_performed (FrCommand   *command,
 	debug (DEBUG_INFO, "%s [DONE] (FR::Archive)\n", action_names[action]);
 #endif
 
-	if (action == FR_ACTION_ADDING_FILES) {
-		fr_archive_remove_temp_work_dir (archive);
-		if (archive->priv->continue_adding_dropped_items) {
-			add_dropped_items (archive->priv->dropped_items_data);
+	switch (action) {
+	case FR_ACTION_DELETING_FILES:
+		if (error->type == FR_PROC_ERROR_NONE) {
+			copy_to_remote_location (archive, action);
 			return;
 		}
-		if (archive->priv->dropped_items_data != NULL) {
-			dropped_items_data_free (archive->priv->dropped_items_data);
-			archive->priv->dropped_items_data = NULL;
+		break;
+		
+	case FR_ACTION_ADDING_FILES:
+		if (error->type == FR_PROC_ERROR_NONE) {
+			fr_archive_remove_temp_work_dir (archive);
+			if (archive->priv->continue_adding_dropped_items) {
+				add_dropped_items (archive->priv->dropped_items_data);
+				return;
+			}
+			if (archive->priv->dropped_items_data != NULL) {
+				dropped_items_data_free (archive->priv->dropped_items_data);
+				archive->priv->dropped_items_data = NULL;
+			}
+			if (! uri_is_local (archive->uri)) {
+				copy_to_remote_location (archive, action);
+				return;
+			}
 		}
-	}
-
-	if (((action == FR_ACTION_ADDING_FILES) || (action == FR_ACTION_DELETING_FILES))
-	    && (error->type == FR_PROC_ERROR_NONE)
-	    && ! uri_is_local (archive->uri)) {
-		copy_to_remote_location (archive, action);
-		return;
-	}
-
-	if (action == FR_ACTION_EXTRACTING_FILES) {
-		if  (archive->priv->remote_extraction) {
-			copy_extracted_files_to_destination (archive);
-			return;
+		break;
+		
+	case FR_ACTION_EXTRACTING_FILES:
+		if (error->type == FR_PROC_ERROR_NONE) {
+			if  (archive->priv->remote_extraction) {
+				copy_extracted_files_to_destination (archive);
+				return;
+			}
+			else if (archive->priv->extract_here)
+				move_here (archive); 
 		}
-		else if (archive->priv->extract_here)
-			move_here (archive); 
+		else {
+			/* FIXME
+			if (archive->priv->extract_here)
+				rmdir_recursive (archive->priv->extraction_destination);
+			*/
+		}	
+		break;
+		
+	default:
+		/* nothing */
+		break;
 	}
 
 	g_signal_emit (G_OBJECT (archive),
@@ -3085,7 +3105,7 @@ fr_archive_extract (FrArchive  *archive,
 				  	     junk_paths,
 				  	     password);
 	}
-	else
+	else 
 		fr_archive_extract_to_local (archive,
 					     file_list,
 					     destination,
@@ -3101,12 +3121,20 @@ static char *
 get_extract_here_destination (const char     *uri,
 			      GnomeVFSResult *result)
 {
-	char *destination;
+	char *destination = NULL;
+	int   n = 1;
 	
 	/* FIXME: find a better destination. */
 	
-	destination = g_strconcat (uri, "_FILES", NULL); 
-	*result = gnome_vfs_make_directory (destination, 0700);
+	do {
+		g_free (destination);
+		if (n == 1)
+			destination = g_strconcat (uri, "_FILES", NULL);
+		else
+			destination = g_strdup_printf ("%s_FILES%%20(%d)", uri, n);
+		*result = gnome_vfs_make_directory (destination, 0700);
+		n++;
+	} while (*result == GNOME_VFS_ERROR_FILE_EXISTS);
 	
 	if (*result != GNOME_VFS_OK) {
 		g_free (destination);

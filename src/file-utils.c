@@ -958,7 +958,8 @@ escape_uri (const char *uri)
 	if (start != NULL) {
 		uri_no_method = start + strlen ("://");
 		method = g_strndup (uri, start - uri);
-	} else {
+	} 
+	else {
 		uri_no_method = uri;
 		method = NULL;
 	}

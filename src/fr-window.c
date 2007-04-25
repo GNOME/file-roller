@@ -1460,7 +1460,7 @@ fr_window_update_title (FrWindow *window)
 		char     *title;
 		char     *utf8_name;
 
-		utf8_name = g_filename_display_basename (window->priv->archive_uri);
+		utf8_name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
 		title = g_strdup_printf ("%s %s",
 					 utf8_name,
 					 window->archive->read_only ? _("[read only]") : "");
@@ -2136,7 +2136,7 @@ error_dialog_response_cb (GtkDialog *dialog,
 {
 	GtkWindow *dialog_parent = user_data;
 
-	if (dialog_parent != NULL)
+	if ((dialog_parent != NULL) && (gtk_widget_get_toplevel (GTK_WIDGET (dialog_parent)) != (GtkWidget*) dialog_parent))
 		gtk_window_set_modal (dialog_parent, TRUE);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
