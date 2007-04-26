@@ -2275,7 +2275,7 @@ convert__action_performed (FrArchive   *archive,
 
 	handle_errors (window, archive, action, error);
 
-	rmdir_recursive (window->priv->convert_data.temp_dir);
+	remove_local_directory (window->priv->convert_data.temp_dir);
 	fr_window_convert_data_free (window);
 
 	fr_window_update_sensitivity (window);
@@ -2409,7 +2409,7 @@ action_performed (FrArchive   *archive,
 	case FR_ACTION_EXTRACTING_FILES:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			if (window->priv->convert_data.converting) {
-				rmdir_recursive (window->priv->convert_data.temp_dir);
+				remove_local_directory (window->priv->convert_data.temp_dir);
 				fr_window_convert_data_free (window);
 			}
 			window->priv->view_folder_after_extraction = FALSE;

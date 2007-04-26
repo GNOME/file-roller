@@ -1,3 +1,17 @@
+2007-04-26  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/fr-archive.c: remove the temp extraction dir if an
+	error occurs during extraction.  Rename the extraction directory using
+	a " (n)" suffix if the destination already exists.
+	
+	* src/file-utils.h: 
+	* src/file-utils.c: 
+	* src/file-list.c: added functions uri_exists, remove_directory, 
+	remove_local_directory.
+
+	* src/fr-window.c: use the function remove_local_directory instead of
+	rmdir_recursive.
+
 2007-04-25  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/main.c (prepare_app): use gnome_vfs_make_uri_from_shell_arg

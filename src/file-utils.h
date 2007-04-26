@@ -39,6 +39,7 @@
 
 gboolean            path_is_file                 (const gchar *s);
 gboolean            path_exists                  (const gchar *s);
+gboolean            uri_exists                   (const char  *uri);
 gboolean            path_is_dir                  (const gchar *s);
 gboolean            dir_is_empty                 (const gchar *s);
 gboolean            dir_contains_one_object      (const char  *uri);
@@ -69,7 +70,8 @@ gboolean            is_mime_type                 (const char* type,
 						  const char* pattern);
 G_CONST_RETURN char*get_mime_type                (const char  *filename);
 GnomeVFSFileSize    get_dest_free_space          (const char  *path);
-gboolean            rmdir_recursive              (const char  *directory);
+gboolean            remove_directory             (const char  *uri);
+gboolean            remove_local_directory       (const char  *directory);
 GnomeVFSResult      make_tree                    (const char  *uri);
 char *              get_temp_work_dir            (void);
 gboolean            is_temp_work_dir             (const char *dir);

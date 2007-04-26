@@ -77,6 +77,29 @@ path_exists (const gchar *path)
 
 
 gboolean
+uri_exists (const char  *uri)
+{
+	GnomeVFSFileInfo *info;
+	GnomeVFSResult    result;
+	gboolean          exists;
+
+	if (uri == NULL) 
+		return FALSE;
+
+	info = gnome_vfs_file_info_new ();
+	result = gnome_vfs_get_file_info (uri,
+					  info,
+					  GNOME_VFS_FILE_INFO_DEFAULT);
+
+	exists = (result == GNOME_VFS_OK);
+
+	gnome_vfs_file_info_unref (info);
+
+	return exists;	
+}
+
+
+gboolean
 path_is_file (const char *uri)
 {
 	GnomeVFSFileInfo *info;
@@ -614,91 +637,110 @@ get_dest_free_space (const char *uri)
 
 
 static gboolean
-path_list_new (const char  *path,
-	       GList      **files,
-	       GList      **dirs)
+get_directory_content (const char  *uri,
+	       	       GList      **files,
+	               GList      **dirs)
 {
-	DIR *dp;
-	struct dirent *dir;
-	struct stat stat_buf;
-	GList *f_list = NULL;
-	GList *d_list = NULL;
+	GnomeVFSDirectoryHandle *h;
+	GnomeVFSResult           result;
+	GnomeVFSFileInfo        *info;
+	GList                   *f_list = NULL;
+	GList                   *d_list = NULL;
+		
+	if (dirs) 
+		*dirs = NULL;
+	if (files) 
+		*files = NULL;
 
-	dp = opendir (path);
-	if (dp == NULL) return FALSE;
+	result = gnome_vfs_directory_open (&h, uri, GNOME_VFS_FILE_INFO_DEFAULT);
+	if (result != GNOME_VFS_OK)
+		return FALSE;	
 
-	while ((dir = readdir (dp)) != NULL) {
-		gchar *name;
-		gchar *filepath;
-
-		/* Skip removed files */
-		if (dir->d_ino == 0)
-			continue;
-
-		name = dir->d_name;
-		if (strcmp (path, "/") == 0)
-			filepath = g_strconcat (path, name, NULL);
-		else
-			filepath = g_strconcat (path, "/", name, NULL);
-
-		if (stat (filepath, &stat_buf) >= 0) {
-			if (dirs
-			    && S_ISDIR (stat_buf.st_mode)
-			    && ! SPECIAL_DIR (name))
-			{
-				d_list = g_list_prepend (d_list, filepath);
-				filepath = NULL;
-			} else if (files && S_ISREG (stat_buf.st_mode)) {
-				f_list = g_list_prepend (f_list, filepath);
-				filepath = NULL;
+	info = gnome_vfs_file_info_new ();
+	
+	while ((result = gnome_vfs_directory_read_next (h, info)) == GNOME_VFS_OK) {
+		char *entry_uri;
+		char *e_name;
+		
+		e_name = gnome_vfs_escape_string (info->name);
+		entry_uri = g_strconcat (uri, "/", e_name, NULL);
+		g_free (e_name);
+		
+		if (info->type == GNOME_VFS_FILE_TYPE_DIRECTORY) {
+			if (! SPECIAL_DIR (info->name)) {
+				d_list = g_list_prepend (d_list, entry_uri);
+				entry_uri = NULL;
 			}
 		}
-
-		if (filepath) g_free (filepath);
+		else if (info->type == GNOME_VFS_FILE_TYPE_REGULAR) {
+			f_list = g_list_prepend (f_list, entry_uri);
+			entry_uri = NULL;
+		}
+		
+		g_free (entry_uri);	
 	}
-	closedir (dp);
-
-	if (dirs) *dirs = g_list_reverse (d_list);
-	if (files) *files = g_list_reverse (f_list);
+	
+	gnome_vfs_file_info_unref (info);
+	gnome_vfs_directory_close (h);
+	
+	if (dirs) 
+		*dirs = g_list_reverse (d_list);
+	if (files) 
+		*files = g_list_reverse (f_list);
 
 	return TRUE;
 }
 
 
 gboolean
-rmdir_recursive (const char *directory)
+remove_directory (const char *uri)
 {
-	GList    *files, *dirs;
-	GList    *scan;
-	gboolean  error = FALSE;
+	GList          *files, *dirs;
+	GList          *scan;
+	gboolean        error = FALSE;
+	GnomeVFSResult  result;
 
-	if (! path_is_dir (directory))
+	if (! get_directory_content (uri, &files, &dirs))
 		return FALSE;
-
-	path_list_new (directory, &files, &dirs);
 
 	for (scan = files; scan; scan = scan->next) {
 		char *file = scan->data;
-		if ((unlink (file) < 0)) {
-			g_warning ("Cannot delete %s\n", file);
+		
+		result = gnome_vfs_unlink (file);
+		if (result != GNOME_VFS_OK) {
+			g_warning ("Cannot delete %s: %s\n", file, gnome_vfs_result_to_string (result));
 			error = TRUE;
 		}
 	}
-	path_list_free (files);
 
-	for (scan = dirs; scan; scan = scan->next) {
-		char *sub_dir = scan->data;
-		if (rmdir_recursive (sub_dir) == FALSE)
+	for (scan = dirs; scan; scan = scan->next) 
+		if (! remove_directory ((char*) scan->data))
 			error = TRUE;
-		if (rmdir (sub_dir) == 0)
-			error = TRUE;
-	}
+	
+	path_list_free (files);
 	path_list_free (dirs);
 
-	if (rmdir (directory) == 0)
+	result = gnome_vfs_remove_directory (uri);
+	if (result != GNOME_VFS_OK) {
+		g_warning ("Cannot delete %s: %s\n", uri, gnome_vfs_result_to_string (result));
 		error = TRUE;
+	}
 
-	return !error;
+	return ! error;
+}
+
+
+gboolean
+remove_local_directory (const char *path)
+{
+	char     *uri;
+	gboolean  result;
+	
+	uri = get_uri_from_local_path (path);
+	result = remove_directory (uri);
+	g_free (uri);
+	
+	return result;
 }
 
 

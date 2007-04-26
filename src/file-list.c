@@ -435,8 +435,8 @@ get_directory_file_list (const char *directory,
 
 
 typedef struct _PathListData PathListData;
-
 typedef void (*PathListDoneFunc) (PathListData *dld, gpointer data);
+
 
 struct _PathListData {
 	GnomeVFSURI      *uri;
@@ -450,22 +450,20 @@ struct _PathListData {
 	gboolean          interrupted;
 };
 
+
 typedef struct {
 	GnomeVFSAsyncHandle *vfs_handle;
 	PathListData *pli_data;
 } PathListHandle;
 
+
 PathListData *      path_list_data_new           ();
-
 void                path_list_data_free          (PathListData     *dli);
-
 void                path_list_handle_free        (PathListHandle   *handle);
-
 PathListHandle *    path_list_async_new          (const char       *uri,
 						  gboolean          follow_links,
 						  PathListDoneFunc  f,
 						  gpointer          data);
-
 void                path_list_async_interrupt    (PathListHandle   *handle,
 						  DoneFunc          f,
 						  gpointer          data);

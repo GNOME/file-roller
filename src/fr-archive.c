@@ -456,7 +456,7 @@ fr_archive_remove_temp_work_dir (FrArchive *archive)
 {
 	if (archive->priv->temp_dir == NULL)
 		return;
-	rmdir_recursive (archive->priv->temp_dir);
+	remove_local_directory (archive->priv->temp_dir);
 	g_free (archive->priv->temp_dir);
 	archive->priv->temp_dir = NULL;
 }
@@ -933,7 +933,8 @@ move_here (FrArchive *archive)
 	char *content_uri;
 	char *parent;
 	char *parent_parent;
-	char *new_uri;
+	char *new_uri = NULL;
+	int   n = 1;
 	
 	content_uri = get_directory_content_if_unique (archive->priv->extraction_destination);
 	if (content_uri == NULL)
@@ -941,7 +942,15 @@ move_here (FrArchive *archive)
 		
 	parent = remove_level_from_path (content_uri);
 	parent_parent = remove_level_from_path (parent);
-	new_uri = g_strconcat (parent_parent, "/", file_name_from_path (content_uri), NULL);
+	
+	do {
+		g_free (new_uri);
+		if (n == 1)
+			new_uri = g_strconcat (parent_parent, "/", file_name_from_path (content_uri), NULL);
+		else
+			new_uri = g_strdup_printf ("%s/%s%%20(%d)", parent_parent, file_name_from_path (content_uri), n);
+		n++;
+	} while (uri_exists (new_uri));
 	
 	gnome_vfs_move (content_uri, new_uri, FALSE);
 	gnome_vfs_remove_directory (parent);
@@ -958,7 +967,7 @@ copy_extracted_files_to_destination__step2 (XferData *xfer_data)
 {
 	FrArchive *archive = xfer_data->archive;
 	
-	rmdir_recursive (archive->priv->temp_extraction_dir);
+	remove_local_directory (archive->priv->temp_extraction_dir);
 	g_free (archive->priv->temp_extraction_dir);
 	archive->priv->temp_extraction_dir = NULL;
 	
@@ -1104,10 +1113,26 @@ action_performed (FrCommand   *command,
 				move_here (archive); 
 		}
 		else {
-			/* FIXME
-			if (archive->priv->extract_here)
-				rmdir_recursive (archive->priv->extraction_destination);
-			*/
+			/* if an error occurred during extraction remove the 
+			 * temp extraction dir, if used. */
+			
+			if ((archive->priv->remote_extraction) && (archive->priv->temp_extraction_dir != NULL)) {
+				remove_local_directory (archive->priv->temp_extraction_dir);
+				g_free (archive->priv->temp_extraction_dir);
+				archive->priv->temp_extraction_dir = NULL;
+			}
+			
+			if (archive->priv->extract_here) {
+				char *local_path;
+				
+				/* the extraction destination is local
+			 	 * however it's an uri so we need to translate
+			 	 * it to a local path. */
+				local_path = get_local_path_from_uri (archive->priv->extraction_destination);				
+				remove_local_directory (local_path);
+				
+				g_free (local_path);
+			}
 		}	
 		break;
 		
@@ -1702,7 +1727,7 @@ fr_archive_add (FrArchive     *archive,
 		debug (DEBUG_INFO, "nothing to update.\n");
 
 		if (base_dir_created)
-			rmdir_recursive (tmp_base_dir);
+			remove_local_directory (tmp_base_dir);
 		g_free (tmp_base_dir);
 
 		archive->process->error.type = FR_PROC_ERROR_NONE;
