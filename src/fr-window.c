@@ -430,15 +430,6 @@ fr_window_free_private_data (FrWindow *window)
 	g_free (priv->pd_last_archive);
 	g_free (priv->extract_here_dir);
 
-	/* save preferences. FIXME: save this before destroying the window. */
-
-	if (GTK_WIDGET_REALIZED (window)) {
-		int width, height;
-		gdk_drawable_get_size (GTK_WIDGET (window)->window, &width, &height);
-		eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
-		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
-	}
-
 	preferences_set_sort_method (priv->sort_method);
 	preferences_set_sort_type (priv->sort_type);
 	preferences_set_list_mode (priv->list_mode);
@@ -477,12 +468,17 @@ fr_window_finalize (GObject *object)
 }
 
 
-static gboolean
-fr_window_delete_event (GtkWidget   *widget,
-			GdkEventAny *event)
+void
+fr_window_close (FrWindow *window)
 {
-	gtk_widget_destroy (widget);
-	return TRUE;
+	if (GTK_WIDGET_REALIZED (window)) {
+		int width, height;
+		
+		gdk_drawable_get_size (GTK_WIDGET (window)->window, &width, &height);
+		eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
+		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
+	}
+	gtk_widget_destroy (GTK_WIDGET (window));
 }
 
 
@@ -508,7 +504,6 @@ fr_window_class_init (FrWindowClass *class)
 	gobject_class->finalize = fr_window_finalize;
 
 	widget_class = (GtkWidgetClass*) class;
-	widget_class->delete_event = fr_window_delete_event;
 }
 
 
@@ -3223,7 +3218,7 @@ fr_window_delete_event_cb (GtkWidget *caller,
 			   GdkEvent  *event,
 			   FrWindow  *window)
 {
-	gtk_widget_destroy (GTK_WIDGET (window));
+	fr_window_close (window);
 }
 
 

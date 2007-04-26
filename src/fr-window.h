@@ -110,6 +110,7 @@ struct _FrWindowClass
 
 GType       fr_window_get_type                  (void);
 GtkWidget * fr_window_new                       (void);
+void        fr_window_close                     (FrWindow *window);
 
 /* archive operations */
 

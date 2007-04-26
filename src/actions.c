@@ -640,8 +640,9 @@ activate_action_close (GtkAction *action,
 {
 	FrWindow *window = data;
 
-	gtk_widget_destroy (GTK_WIDGET (window));
+	fr_window_close (window);
 }
+
 
 void
 activate_action_add_files (GtkAction *action,
