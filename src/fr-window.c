@@ -4981,6 +4981,18 @@ fr_window_archive_extract (FrWindow   *window,
 
 
 void
+fr_window_archive_test (FrWindow *window)
+{
+	fr_window_set_current_batch_action (window,
+					    FR_BATCH_ACTION_TEST,
+					    NULL,
+					    NULL);
+					    
+	fr_archive_test (window->archive, window->priv->password);
+}
+
+
+void
 fr_window_set_password (FrWindow   *window,
 			const char *password)
 {
@@ -6523,6 +6535,12 @@ fr_window_exec_batch_action (FrWindow      *window,
 		debug (DEBUG_INFO, "[BATCH] SAVE_AS\n");
 
 		fr_window_archive_save_as (window, (char*) action->data);
+		break;
+
+	case FR_BATCH_ACTION_TEST:
+		debug (DEBUG_INFO, "[BATCH] TEST\n");
+		
+		fr_window_archive_test (window);
 		break;
 
 	case FR_BATCH_ACTION_CLOSE:

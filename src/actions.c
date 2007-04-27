@@ -620,7 +620,7 @@ activate_action_test_archive (GtkAction *action,
 {
 	FrWindow *window = data;
 
-	fr_archive_test (window->archive, fr_window_get_password (window));
+	fr_window_archive_test (window);
 }
 
 
