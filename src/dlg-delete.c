@@ -72,6 +72,7 @@ ok_clicked_cb (GtkWidget  *widget,
 		file_list = fr_window_get_file_list_selection (window, TRUE, NULL);
 	else if (pattern_files) {
 		const char *pattern;
+		
 		pattern = gtk_entry_get_text (GTK_ENTRY (data->d_files_entry));
 		file_list = fr_window_get_file_list_pattern (window, pattern);
 		if (file_list == NULL)

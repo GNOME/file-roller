@@ -31,6 +31,7 @@
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include "file-data.h"
 #include "file-list.h"
 #include "file-utils.h"
@@ -395,14 +396,18 @@ static char *
 get_temp_local_filename (const char *remote_uri)
 {
 	char *dir;
+	char *name;
 	char *result;
 
 	dir = get_temp_work_dir ();
 	if (dir == NULL)
 		return NULL;
 
-	result = g_build_filename (dir, file_name_from_path (remote_uri), NULL);
+	name = gnome_vfs_unescape_string (file_name_from_path (remote_uri), "");
+	result = g_build_filename (dir, name, NULL);
+	
 	g_free (dir);
+	g_free (name);
 
 	return result;
 }
@@ -885,6 +890,7 @@ static void
 copy_to_remote_location (FrArchive  *archive,
 			 FRAction    action)
 {
+	char           *uri;
 	GnomeVFSURI    *source_uri, *target_uri;
 	GList          *source_uri_list, *target_uri_list;
 	XferData       *xfer_data;
@@ -893,7 +899,10 @@ copy_to_remote_location (FrArchive  *archive,
 	if (archive->priv->xfer_handle != NULL)
 		gnome_vfs_async_cancel (archive->priv->xfer_handle);
 
-	source_uri = gnome_vfs_uri_new (archive->local_filename);
+	uri = get_uri_from_local_path (archive->local_filename);
+	source_uri = gnome_vfs_uri_new (uri);
+	g_free (uri);
+	
 	target_uri = gnome_vfs_uri_new (archive->uri);
 
 	source_uri_list = g_list_append (NULL, source_uri);
@@ -2559,12 +2568,13 @@ archive_remove (FrArchive *archive,
 	if (file_list == NULL) {
 		for (scan = archive->command->file_list; scan != NULL; scan = scan->next) {
 			FileData *fdata = (FileData*) scan->data;
+
 			file_list = g_list_prepend (file_list, fdata->original_path);
 		}
 		file_list_created = TRUE;
 	}
 
-	/* remove from the list the files in folders to be removed. */
+	/* remove from the list the files inside folders to be removed. */
 
 	folders_to_remove = NULL;
 	for (scan = file_list; scan != NULL; scan = scan->next) {

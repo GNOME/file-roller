@@ -49,6 +49,7 @@ typedef struct {
 	/* Private data */
 
 	guint       mime_type;
+	gboolean    free_original_path;
 } FileData;
 
 #define FR_TYPE_FILE_DATA (file_data_get_type ())

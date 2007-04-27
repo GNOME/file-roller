@@ -124,15 +124,16 @@ process_line (char     *line,
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
 			fdata->original_path = fdata->full_path;
-		} else {
+		} 
+		else {
 			fdata->full_path = g_strconcat ("/", name_field, NULL);
 			fdata->original_path = fdata->full_path + 1;
 		}
 
 		fdata->link = NULL;
 		fdata->path = remove_level_from_path (fdata->full_path);
-
-	} else {
+	} 
+	else {
 		FileData *fdata;
 
 		fdata = rar_comm->fdata;
@@ -145,20 +146,20 @@ process_line (char     *line,
 		fdata->modified = mktime_from_string (fields[3], fields[4]);
 
 		if ((fields[5][1] == 'D') || (fields[5][0] == 'd')) {
-			gboolean  original_is_full = fdata->original_path == fdata->full_path;
-			char     *path = fdata->full_path;
-
-			fdata->full_path = g_strconcat (path, "/", NULL);
-			if (original_is_full)
-				fdata->original_path = fdata->full_path;
-			else
-				fdata->original_path = fdata->full_path + 1;
+			char *tmp;
+			
+			tmp = fdata->full_path;
+			fdata->full_path = g_strconcat (fdata->full_path, "/", NULL);
+			
+			fdata->original_path = g_strdup (fdata->original_path);
+			fdata->free_original_path = TRUE;
+			
+			g_free (tmp);
+			
 			fdata->name =  dir_name_from_path (fdata->full_path);
-
 			fdata->dir = TRUE;
-
-			g_free (path);
-		} else
+		} 
+		else
 			fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 
 		comm->file_list = g_list_prepend (comm->file_list, fdata);

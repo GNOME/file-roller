@@ -40,6 +40,7 @@ file_data_new ()
 
 	fdata = g_new0 (FileData, 1);
 	fdata->mime_type = 0;
+	fdata->free_original_path = FALSE;
 
 	if (mime_type_hash == NULL)
 		mime_type_hash = g_hash_table_new_full (g_int_hash, 
@@ -62,6 +63,8 @@ file_data_release_data (void)
 void
 file_data_free (FileData *fdata)
 {
+	if (fdata->free_original_path)
+		g_free (fdata->original_path);
 	g_free (fdata->full_path);
 	g_free (fdata->name);
 	g_free (fdata->path);
@@ -79,6 +82,8 @@ file_data_copy (FileData *src)
 	fdata = g_new0 (FileData, 1);
 
 	fdata->original_path = g_strdup (src->original_path);
+	fdata->free_original_path = TRUE;
+	
 	fdata->full_path = g_strdup (src->full_path);
 	fdata->link = g_strdup (src->link);
 	fdata->size = src->size;
