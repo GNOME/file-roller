@@ -3248,11 +3248,11 @@ add_columns (FrWindow    *window,
 	/* emblem */						 
 						 
 	renderer = gtk_cell_renderer_pixbuf_new ();
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_pack_end (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer,
 					     "pixbuf", COLUMN_EMBLEM,
 					     NULL);
-	
+
 	/* icon */
 	
 	renderer = gtk_cell_renderer_pixbuf_new ();

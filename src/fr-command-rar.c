@@ -93,7 +93,6 @@ process_line (char     *line,
 	FrCommandRar  *rar_comm = FR_COMMAND_RAR (comm);
 	char         **fields;
 	const char    *name_field;
-	gboolean       encrypted;      /* unused */
 
 	g_return_if_fail (line != NULL);
 
@@ -117,7 +116,7 @@ process_line (char     *line,
 
 		/* read file name. */
 
-		encrypted = (line[0] == '*') ? TRUE : FALSE;
+		fdata->encrypted = (line[0] == '*') ? TRUE : FALSE;
 
 		name_field = line + 1;
 
