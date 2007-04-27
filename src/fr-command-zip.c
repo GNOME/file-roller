@@ -158,8 +158,7 @@ list__process_line (char     *line,
 	if (line_l == 0)
 		return;
 
-	if (strcmp (line,
-		    EMPTY_ARCHIVE_WARNING) == 0) {
+	if (strcmp (line, EMPTY_ARCHIVE_WARNING) == 0) {
 		FR_COMMAND_ZIP (comm)->is_empty = TRUE;
 		return;
 	}
@@ -199,7 +198,6 @@ list__process_line (char     *line,
 	else
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
-
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);

@@ -28,9 +28,7 @@
 #include <gdk/gdkcursor.h>
 #include <gdk/gdkkeysyms.h>
 #include <libgnomeui/gnome-app.h>
-#include <libgnomeui/gnome-window-icon.h>
 #include <libgnomeui/gnome-icon-lookup.h>
-#include <libgnomeui/gnome-icon-theme.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
@@ -88,7 +86,7 @@
 #define BAD_CHARS "/\\*"
 
 static GHashTable     *pixbuf_hash = NULL;
-static GnomeIconTheme *icon_theme = NULL;
+static GtkIconTheme   *icon_theme = NULL;
 static int             icon_size = 0;
 
 #define XDS_FILENAME "xds.txt"
@@ -383,8 +381,7 @@ fr_window_free_private_data (FrWindow *window)
 	}
 
 	if (priv->theme_changed_handler_id != 0)
-		g_signal_handler_disconnect (icon_theme,
-					     priv->theme_changed_handler_id);
+		g_signal_handler_disconnect (icon_theme, priv->theme_changed_handler_id);
 
 	fr_window_history_clear (window);
 
@@ -459,9 +456,6 @@ fr_window_finalize (GObject *object)
 					      NULL);
 			g_hash_table_destroy (pixbuf_hash);
 		}
-
-		if (icon_theme != NULL)
-			g_object_unref (icon_theme);
 
 		gtk_main_quit ();
 	}
@@ -906,78 +900,14 @@ get_parent_dir (const char *current_dir)
 static void fr_window_update_statusbar_list_info (FrWindow *window);
 
 
-/* taken from egg-recent-util.c */
-static GdkPixbuf *
-scale_icon (GdkPixbuf *pixbuf,
-	    double    *scale)
-{
-	guint width, height;
-
-	width = gdk_pixbuf_get_width (pixbuf);
-	height = gdk_pixbuf_get_height (pixbuf);
-
-	width = floor (width * *scale + 0.5);
-	height = floor (height * *scale + 0.5);
-
-	return gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
-}
-
-
-/* taken from egg-recent-util.c */
-static GdkPixbuf *
-load_icon_file (char  *filename,
-		guint  nominal_size)
-{
-	GdkPixbuf *pixbuf, *scaled_pixbuf;
-	guint      width, height, size;
-
-
-	pixbuf = gdk_pixbuf_new_from_file_at_size (filename, nominal_size, nominal_size, NULL);
-
-	if (pixbuf == NULL) {
-		return NULL;
-	}
-
-	width = gdk_pixbuf_get_width (pixbuf);
-	height = gdk_pixbuf_get_height (pixbuf);
-	size = MAX (width, height);
-	if (size > nominal_size) {
-		double scale = (double) size / nominal_size;
-		scaled_pixbuf = scale_icon (pixbuf, &scale);
-		g_object_unref (pixbuf);
-		pixbuf = scaled_pixbuf;
-	}
-
-	return pixbuf;
-}
-
-
 static GdkPixbuf *
 get_icon (GtkWidget *widget,
 	  FileData  *fdata)
 {
 	GdkPixbuf   *pixbuf = NULL;
 	char        *icon_name = NULL;
-	char        *icon_path = NULL;
+	gboolean     free_icon_name = FALSE;
 	const char  *mime_type;
-
-
-       	/* If the file is encrypted, we show a proper emblem */
-
-	if (! file_data_is_dir (fdata) && fdata->encrypted) {
-		const GnomeIconData *icon_data;
-		int                  base_size;
-		char                *emblem_path;
-
-		emblem_path = gnome_icon_theme_lookup_icon (icon_theme,
-							    "emblem-nowrite",
-							    icon_size,
-							    &icon_data,
-							    &base_size);
-		if (emblem_path != NULL)
-			pixbuf = load_icon_file (emblem_path, icon_size);
-		return pixbuf;
-	}
 
 	if (file_data_is_dir (fdata))
 		mime_type = MIME_TYPE_DIRECTORY;
@@ -993,51 +923,70 @@ get_icon (GtkWidget *widget,
 	}
 
 	if (file_data_is_dir (fdata))
-		icon_name = g_strdup (ICON_TYPE_DIRECTORY);
+		icon_name = ICON_TYPE_DIRECTORY;
 	else if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS, TRUE))
-		icon_name = g_strdup (ICON_TYPE_REGULAR);
-	else
-		icon_name = gnome_icon_lookup (icon_theme,
-					       NULL,
-					       NULL,
-					       NULL,
-					       NULL,
-					       mime_type,
-					       GNOME_ICON_LOOKUP_FLAGS_NONE,
-					       NULL);
-
-	if (icon_name == NULL) {
-		return NULL;
-	}
+		icon_name = ICON_TYPE_REGULAR;
 	else {
-		const GnomeIconData *icon_data;
-		int   base_size;
-
-		icon_path = gnome_icon_theme_lookup_icon (icon_theme,
-							  icon_name,
-							  icon_size,
-							  &icon_data,
-							  &base_size);
-
-		if (icon_path == NULL) {
-			return NULL;
-		}
-		else {
-			/* ...else load the file from disk. */
-			pixbuf = load_icon_file (icon_path, icon_size);
-
-			if (pixbuf == NULL) {
-				return NULL;
-			}
-		}
+		icon_name = gnome_icon_lookup (icon_theme,
+	                                       NULL,
+	                                       NULL,
+	                                       NULL,
+	                                       NULL,
+        	                               mime_type,
+                	                       GNOME_ICON_LOOKUP_FLAGS_NONE,
+                        	               NULL);
+		free_icon_name = TRUE;
 	}
+	
+	pixbuf = gtk_icon_theme_load_icon (icon_theme,
+					   icon_name,
+					   icon_size,
+					   0,
+					   NULL);
+						
+	if (free_icon_name)
+		g_free (icon_name);						
+						
+	if (pixbuf == NULL)
+		return NULL;
 
+	pixbuf = gdk_pixbuf_copy (pixbuf);
 	g_hash_table_insert (pixbuf_hash, (gpointer) mime_type, pixbuf);
-	g_object_ref (pixbuf);
+	g_object_ref (G_OBJECT (pixbuf));
 
-	g_free (icon_path);
-	g_free (icon_name);
+	return pixbuf;
+}
 
+
+static GdkPixbuf *
+get_emblem (GtkWidget *widget,
+	    FileData  *fdata)
+{
+	GdkPixbuf *pixbuf = NULL;
+
+	if (! fdata->encrypted)
+		return NULL;
+
+	/* encrypted */
+
+	pixbuf = g_hash_table_lookup (pixbuf_hash, "emblem-nowrite");
+	if (pixbuf != NULL) {
+		g_object_ref (G_OBJECT (pixbuf));
+		return pixbuf;
+	}
+	
+	pixbuf = gtk_icon_theme_load_icon (icon_theme,
+					   "emblem-nowrite",
+					   icon_size,
+					   0,
+					   NULL);
+	if (pixbuf == NULL)
+		return NULL;
+		
+	pixbuf = gdk_pixbuf_copy (pixbuf);
+	g_hash_table_insert (pixbuf_hash, (gpointer) "emblem-nowrite", pixbuf);
+	g_object_ref (G_OBJECT (pixbuf));
+	
 	return pixbuf;
 }
 
@@ -1278,15 +1227,18 @@ update_file_list_idle (gpointer callback_data)
 	for (scan = file_list; scan; scan = scan->next) {
 		FileData    *fdata = scan->data;
 		GtkTreeIter  iter;
-		GdkPixbuf   *pixbuf;
+		GdkPixbuf   *icon, *emblem;
 		char        *utf8_name;
 
 		if (fdata->list_name == NULL)
 			continue;
 
-		pixbuf = get_icon (GTK_WIDGET (window), fdata);
-		utf8_name = g_filename_display_name (fdata->list_name);
 		gtk_list_store_prepend (window->priv->list_store, &iter);
+
+		icon = get_icon (GTK_WIDGET (window), fdata);
+		utf8_name = g_filename_display_name (fdata->list_name);
+		emblem = get_emblem (GTK_WIDGET (window), fdata); 
+				
 		if (file_data_is_dir (fdata)) {
 			char *utf8_path;
 			char *tmp;
@@ -1300,8 +1252,9 @@ update_file_list_idle (gpointer callback_data)
 
 			gtk_list_store_set (window->priv->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
-					    COLUMN_ICON, pixbuf,
+					    COLUMN_ICON, icon,
 					    COLUMN_NAME, utf8_name,
+					    COLUMN_EMBLEM, emblem,
 					    COLUMN_TYPE, _("Folder"),
 					    COLUMN_SIZE, "",
 					    COLUMN_TIME, "",
@@ -1323,8 +1276,9 @@ update_file_list_idle (gpointer callback_data)
 
 			gtk_list_store_set (window->priv->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
-					    COLUMN_ICON, pixbuf,
+					    COLUMN_ICON, icon,
 					    COLUMN_NAME, utf8_name,
+					    COLUMN_EMBLEM, emblem,
 					    COLUMN_TYPE, desc,
 					    COLUMN_SIZE, s_size,
 					    COLUMN_TIME, s_time,
@@ -1335,7 +1289,10 @@ update_file_list_idle (gpointer callback_data)
 			g_free (s_time);
 		}
 		g_free (utf8_name);
-		g_object_unref (pixbuf);
+		if (icon != NULL)
+			g_object_unref (icon);
+		if (emblem != NULL)
+			g_object_unref (emblem);
 	}
 
 	if (gtk_events_pending ())
@@ -3283,15 +3240,28 @@ add_columns (FrWindow    *window,
 	GValue             value = { 0, };
 	int                i, j;
 
-	/* The Name column. */
+	/* First column. */
+
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_title (column, _("Name"));
 
+	/* emblem */						 
+						 
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes (column, renderer,
+					     "pixbuf", COLUMN_EMBLEM,
+					     NULL);
+	
+	/* icon */
+	
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer,
 					     "pixbuf", COLUMN_ICON,
 					     NULL);
+
+	/* name */
 
 	window->priv->name_renderer = renderer = gtk_cell_renderer_text_new ();
 
@@ -3315,10 +3285,12 @@ add_columns (FrWindow    *window,
 	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
 	gtk_tree_view_column_set_cell_data_func (column, renderer,
 						 (GtkTreeCellDataFunc) filename_cell_data_func,
-						 window, NULL);
+						 window, NULL);				
+						 
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
 	/* Other columns */
+	
 	for (j = 0, i = COLUMN_SIZE; i < NUMBER_OF_COLUMNS; i++, j++) {
 		GValue  value = { 0, };
 
@@ -3878,10 +3850,8 @@ fr_window_construct (FrWindow *window)
 	if (pixbuf_hash == NULL)
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
-	if (icon_theme == NULL) {
-		icon_theme = gnome_icon_theme_new ();
-		gnome_icon_theme_set_allow_svg (icon_theme, TRUE);
-	}
+	if (icon_theme == NULL) 
+		icon_theme = gtk_icon_theme_get_default ();
 
 	/* Create the application. */
 
@@ -4028,13 +3998,14 @@ fr_window_construct (FrWindow *window)
 	/* * File list. */
 
 	window->priv->list_store = fr_list_model_new (NUMBER_OF_COLUMNS,
-						G_TYPE_POINTER,
-						GDK_TYPE_PIXBUF,
-						G_TYPE_STRING,
-						G_TYPE_STRING,
-						G_TYPE_STRING,
-						G_TYPE_STRING,
-						G_TYPE_STRING);
+						      G_TYPE_POINTER,
+						      GDK_TYPE_PIXBUF,
+						      G_TYPE_STRING,
+						      GDK_TYPE_PIXBUF,
+						      G_TYPE_STRING,
+						      G_TYPE_STRING,
+						      G_TYPE_STRING,
+						      G_TYPE_STRING);
 	g_object_set_data (G_OBJECT (window->priv->list_store), "FrWindow", window);
 	window->priv->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->priv->list_store));
 

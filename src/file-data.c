@@ -126,7 +126,6 @@ file_data_update_mime_type (FileData *fdata)
 	}
 
 	fdata->mime_type = g_str_hash ((gconstpointer) mime_type);
-
 	if (g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type) == NULL)
 		g_hash_table_insert (mime_type_hash, (gpointer) &fdata->mime_type, g_strdup (mime_type));
 }
