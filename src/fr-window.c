@@ -1452,17 +1452,17 @@ fr_window_update_title (FrWindow *window)
 	if (! window->priv->archive_present)
 		gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
 	else {
-		char     *title;
-		char     *utf8_name;
+		char *title;
+		char *name;
 
-		utf8_name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
+		name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
 		title = g_strdup_printf ("%s %s",
-					 utf8_name,
+					 name,
 					 window->archive->read_only ? _("[read only]") : "");
 
 		gtk_window_set_title (GTK_WINDOW (window), title);
 		g_free (title);
-		g_free (utf8_name);
+		g_free (name);
 	}
 }
 
@@ -1677,8 +1677,8 @@ close_progress_dialog (FrWindow *window)
 
 	if (window->priv->progress_dialog != NULL)
 		window->priv->hide_progress_timeout = g_timeout_add (HIDE_PROGRESS_TIMEOUT_MSECS,
-							       real_close_progress_dialog,
-							       window);
+								     real_close_progress_dialog,
+								     window);
 }
 
 
@@ -1822,11 +1822,13 @@ fr_window_message_cb (FrCommand  *command,
 			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), "");
 		}
 		else {
-			char *filename;
+			char *name;
+			
 			window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
-			filename = g_filename_display_basename (window->priv->pd_last_archive);
-			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), filename);
-			g_free (filename);
+
+			name = gnome_vfs_unescape_string_for_display (file_name_from_path (window->priv->archive_uri));
+			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), name);
+			g_free (name);
 		}
 	}
 
@@ -2037,17 +2039,13 @@ action_started (FrArchive *archive,
 
 static void
 fr_window_add_to_recent_list (FrWindow *window,
-			      char     *filename)
+			      char     *uri)
 {
-	char *uri;
-
 	if (window->priv->batch_mode)
 		return;
 
-	if (is_temp_work_dir (filename))
+	if (is_temp_work_dir (uri))
 		return;
-
-	uri = get_uri_from_path (filename);
 
 	if (window->archive->mime_type != NULL) {
 		GtkRecentData *recent_data;
@@ -2062,8 +2060,6 @@ fr_window_add_to_recent_list (FrWindow *window,
 	}
 	else
 		gtk_recent_manager_add_item (window->priv->recent_manager, uri);
-
-	g_free (uri);
 }
 
 
@@ -5404,7 +5400,8 @@ fr_window_stop_activity_mode (FrWindow *window)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), 0.0);
 
 	if (! window->priv->batch_mode) {
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), 0.0);
+		if (window->priv->progress_bar != NULL)
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), 0.0);
 		fr_window_update_sensitivity (window);
 	}
 }

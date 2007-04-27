@@ -25,6 +25,8 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
+#include "file-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
 
@@ -86,6 +88,7 @@ dlg_ask_password (FrWindow *window)
 	DialogData *data;
 	GtkWidget  *label;
 	char       *text;
+	char       *name;
 
 	data = g_new0 (DialogData, 1);
 	data->window = window;
@@ -104,9 +107,12 @@ dlg_ask_password (FrWindow *window)
 
 	/* Set widgets data. */
 
-	text = g_strdup_printf (_("Enter the password for the archive '%s'."), g_filename_display_basename (fr_window_get_archive_uri (window)));
+	name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
+	text = g_strdup_printf (_("Enter the password for the archive '%s'."), name);
 	gtk_label_set_label (GTK_LABEL (label), text);
 	g_free (text);
+	g_free (name);
+	
 	if (fr_window_get_password (window) != NULL)
 		_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry),
 					    fr_window_get_password (window));

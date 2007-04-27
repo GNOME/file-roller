@@ -857,6 +857,8 @@ is_temp_work_dir (const char *dir) {
 
 	if (strncmp (dir, "file://", 7) == 0)
 		dir = dir + 7;
+	else if (dir[0] != '/')
+		return FALSE;
 
 	for (i = 0; try_folder[i] != NULL; i++) {
 		const char *folder;

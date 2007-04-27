@@ -971,6 +971,11 @@ copy_extracted_files_to_destination__step2 (XferData *xfer_data)
 	g_free (archive->priv->temp_extraction_dir);
 	archive->priv->temp_extraction_dir = NULL;
 	
+	fr_archive_action_completed (archive,
+				     FR_ACTION_COPYING_FILES_TO_REMOTE,
+				     FR_PROC_ERROR_NONE,
+				     NULL);
+	
 	if (xfer_data->result != GNOME_VFS_OK)
 		fr_archive_action_completed (archive,
 					     FR_ACTION_EXTRACTING_FILES,
@@ -1052,6 +1057,10 @@ copy_extracted_files_to_destination (FrArchive *archive)
 				       NULL, NULL);
 
 	if (result != GNOME_VFS_OK) {
+		fr_archive_action_completed (archive,
+					     FR_ACTION_COPYING_FILES_TO_REMOTE,
+					     FR_PROC_ERROR_NONE,
+					     NULL);
 		fr_archive_action_completed (archive,
 					     FR_ACTION_EXTRACTING_FILES,
 					     FR_PROC_ERROR_GENERIC,
