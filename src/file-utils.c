@@ -221,10 +221,10 @@ get_directory_content_if_unique (const char  *uri)
 		if (content_uri != NULL) {
 			g_free (content_uri);
 			content_uri = NULL;
+			break;
 		}
 		else
 			content_uri = g_strconcat (uri, "/", info->name, NULL);
-		break;
 	}
 	gnome_vfs_file_info_unref (info);
 	gnome_vfs_directory_close (handle);

@@ -1821,10 +1821,6 @@ display_progress_dialog (gpointer data)
 static void
 open_progress_dialog (FrWindow *window)
 {
-	GtkDialog *d;
-	GtkWidget *vbox;
-	GtkWidget *lbl;
-
 	if (! window->priv->batch_mode) {
 		gtk_widget_show (window->priv->progress_bar);
 		return;
@@ -1840,9 +1836,11 @@ open_progress_dialog (FrWindow *window)
 
 	if (window->priv->progress_dialog == NULL) {
 		GtkWindow     *parent;
+		GtkDialog     *d;
+		GtkWidget     *vbox;
+		GtkWidget     *lbl;
 		const char    *title;
 		char          *markup;
-		char          *filename;
 		PangoAttrList *attr_list;
 
 		if (window->priv->batch_mode)
@@ -1860,11 +1858,13 @@ open_progress_dialog (FrWindow *window)
 						       NULL);
 		d = GTK_DIALOG (window->priv->progress_dialog);
 		gtk_dialog_set_has_separator (d, FALSE);
-		gtk_window_set_resizable (GTK_WINDOW (d), FALSE);
+		gtk_window_set_resizable (GTK_WINDOW (d), TRUE);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 
+		/* Main */
+		
 		vbox = gtk_vbox_new (FALSE, 5);
-		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
+		gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
 		gtk_box_pack_start (GTK_BOX (d->vbox), vbox, FALSE, FALSE, 10);
 
 		/* action label */
@@ -1885,6 +1885,7 @@ open_progress_dialog (FrWindow *window)
 		window->priv->pd_last_archive = NULL;
 		if (window->priv->archive_uri != NULL) {
 			GtkWidget *hbox;
+			char      *name;
 
 			hbox = gtk_hbox_new (FALSE, 6);
 			gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 6);
@@ -1896,9 +1897,9 @@ open_progress_dialog (FrWindow *window)
 			gtk_box_pack_start (GTK_BOX (hbox), lbl, FALSE, FALSE, 0);
 
 			window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
-			filename = g_filename_display_basename (window->priv->pd_last_archive);
-			lbl = window->priv->pd_archive = gtk_label_new (filename);
-			g_free (filename);
+			name = gnome_vfs_unescape_string_for_display (file_name_from_path (window->priv->pd_last_archive));
+			lbl = window->priv->pd_archive = gtk_label_new (name);
+			g_free (name);
 
 			gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
 			gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
@@ -1941,8 +1942,8 @@ open_progress_dialog (FrWindow *window)
 	}
 
 	window->priv->progress_timeout = g_timeout_add (PROGRESS_TIMEOUT_MSECS,
-						  display_progress_dialog,
-						  window);
+						        display_progress_dialog,
+						        window);
 }
 
 
@@ -3821,7 +3822,8 @@ fr_window_init_recent_chooser (FrWindow         *window,
 	gtk_recent_chooser_set_local_only (chooser, FALSE);
 	gtk_recent_chooser_set_limit (chooser, eel_gconf_get_integer (PREF_UI_HISTORY_LEN, MAX_HISTORY_LEN));
 	gtk_recent_chooser_set_show_not_found (chooser, TRUE);
-
+	gtk_recent_chooser_set_sort_type (chooser, GTK_RECENT_SORT_MRU);
+	 
 	g_signal_connect (G_OBJECT (chooser),
 			  "item_activated",
 			  G_CALLBACK (recent_chooser_item_activated_cb),
@@ -4425,10 +4427,22 @@ fr_window_archive_open (FrWindow   *current_window,
 	fr_window_archive_close (window);
 
 	g_free (window->priv->archive_uri);
-	if (! uri_has_scheme (uri) && ! g_path_is_absolute (uri)) {
-		char *current_dir = g_get_current_dir ();
-		window->priv->archive_uri = g_strconcat (current_dir, "/", uri, NULL);
-		g_free (current_dir);
+	if (! uri_has_scheme (uri)) {
+		char *path;
+		
+		if (! g_path_is_absolute (uri)) {
+			char *current_dir;
+			
+			current_dir = g_get_current_dir ();
+			path = g_strconcat (current_dir, "/", uri, NULL);
+			g_free (current_dir);
+		}
+		else 
+			path = g_strdup (uri);
+		
+		window->priv->archive_uri = get_uri_from_local_path (path);
+		 
+		g_free (path);
 	}
 	else
 		window->priv->archive_uri = g_strdup (uri);

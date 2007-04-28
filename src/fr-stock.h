@@ -23,6 +23,7 @@
 #ifndef FR_STOCK_H
 #define FR_STOCK_H
 
+#define FR_STOCK_CREATE_ARCHIVE "create-archive"
 #define FR_STOCK_ADD_FILES  "add-files-to-archive"
 #define FR_STOCK_ADD_FOLDER "add-folder-to-archive"
 #define FR_STOCK_EXTRACT    "extract-archive"

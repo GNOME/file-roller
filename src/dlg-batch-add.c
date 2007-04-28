@@ -510,6 +510,9 @@ dlg_batch_add_files (FrWindow *window,
 
 	/* Set widgets data. */
 
+	gtk_button_set_use_stock (GTK_BUTTON (add_button), TRUE);
+	gtk_button_set_label (GTK_BUTTON (add_button), FR_STOCK_CREATE_ARCHIVE);
+	
 	first_filename = (char*) file_list->data;
 	parent = remove_level_from_path (first_filename);
 

@@ -32,13 +32,15 @@ static const  struct {
         char *stock_id;
         char *icon;
 } stock_icons [] = {
-        { FR_STOCK_ADD_FILES,  "add-files-to-archive" },
+	{ FR_STOCK_CREATE_ARCHIVE, "add-files-to-archive" },
+        { FR_STOCK_ADD_FILES, "add-files-to-archive" },
         { FR_STOCK_ADD_FOLDER, "add-folder-to-archive" },
-        { FR_STOCK_EXTRACT,    "extract-archive" },
-        { FR_STOCK_VIEW,       "preview-file" }
+        { FR_STOCK_EXTRACT, "extract-archive" },
+        { FR_STOCK_VIEW, "preview-file" }
 };
 
 static const GtkStockItem stock_items [] = {
+	{ FR_STOCK_CREATE_ARCHIVE, N_("C_reate"), 0, 0, GETTEXT_PACKAGE },
 	{ FR_STOCK_ADD_FILES, N_("_Add"), 0, 0, GETTEXT_PACKAGE },
 	{ FR_STOCK_ADD_FOLDER, N_("_Add"), 0, 0, GETTEXT_PACKAGE },	
 	{ FR_STOCK_EXTRACT, N_("_Extract"), 0, 0, GETTEXT_PACKAGE },
