@@ -265,6 +265,7 @@ void        fr_window_set_statusbar_visibility    (FrWindow   *window,
 
 /* batch mode procedures. */
 
+void       fr_window_new_batch                    (FrWindow      *window);
 void       fr_window_set_current_batch_action     (FrWindow      *window,
 						   FRBatchActionType  action,
 						   void          *data,

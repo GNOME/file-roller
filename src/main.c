@@ -526,7 +526,12 @@ prepare_app (void)
 			file_list = g_list_prepend (file_list, get_uri_from_command_line (filename));
 		file_list = g_list_reverse (file_list);
 
+		fr_window_new_batch (FR_WINDOW (window));
 		fr_window_set_batch__add (FR_WINDOW (window), add_to_path, file_list);
+		fr_window_append_batch_action (FR_WINDOW (window),
+					       FR_BATCH_ACTION_QUIT,
+					       NULL,
+					       NULL);
 		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else if ((extract_to != NULL)
@@ -540,6 +545,7 @@ prepare_app (void)
 		if (default_url != NULL)
 			fr_window_set_default_dir (FR_WINDOW (window), default_url, TRUE);
 
+		fr_window_new_batch (FR_WINDOW (window));
 		while ((archive = remaining_args[i++]) != NULL) {
 			if (extract_here == 1)
 				fr_window_set_batch__extract_here (FR_WINDOW (window),
@@ -550,6 +556,10 @@ prepare_app (void)
 							      archive,
 							      extract_to_path);
 		}
+		fr_window_append_batch_action (FR_WINDOW (window),
+					       FR_BATCH_ACTION_QUIT,
+					       NULL,
+					       NULL);
 		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else { /* Open each archive in a window */

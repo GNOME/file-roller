@@ -6680,6 +6680,14 @@ fr_window_is_batch_mode (FrWindow *window)
 
 
 void
+fr_window_new_batch (FrWindow *window)
+{
+	fr_window_free_batch_data (window);
+	window->priv->non_interactive = TRUE;
+}
+
+
+void
 fr_window_set_batch__extract_here (FrWindow   *window,
 				   const char *filename,
 				   const char *dest_dir)
@@ -6687,9 +6695,6 @@ fr_window_set_batch__extract_here (FrWindow   *window,
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (filename != NULL);
 	g_return_if_fail (dest_dir != NULL);
-
-	fr_window_free_batch_data (window);
-	window->priv->non_interactive = TRUE;
 
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_LOAD,
@@ -6702,11 +6707,7 @@ fr_window_set_batch__extract_here (FrWindow   *window,
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_CLOSE,
 				       NULL,
-				       NULL);
-	fr_window_append_batch_action (window,
-				       FR_BATCH_ACTION_QUIT,
-				       NULL,
-				       NULL);				       
+				       NULL);			       
 }
 
 
@@ -6718,14 +6719,10 @@ fr_window_set_batch__extract (FrWindow   *window,
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (filename != NULL);
 
-	fr_window_free_batch_data (window);
-	window->priv->non_interactive = TRUE;
-
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_LOAD,
 				       g_strdup (filename),
 				       (GFreeFunc) g_free);
-
 	if (dest_dir != NULL)
 		fr_window_append_batch_action (window,
 					       FR_BATCH_ACTION_EXTRACT,
@@ -6736,13 +6733,8 @@ fr_window_set_batch__extract (FrWindow   *window,
 					       FR_BATCH_ACTION_EXTRACT_INTERACT,
 					       NULL,
 					       NULL);
-
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_CLOSE,
-				       NULL,
-				       NULL);
-	fr_window_append_batch_action (window,
-				       FR_BATCH_ACTION_QUIT,
 				       NULL,
 				       NULL);
 }
@@ -6753,8 +6745,6 @@ fr_window_set_batch__add (FrWindow   *window,
 			  const char *archive,
 			  GList      *file_list)
 {
-	fr_window_free_batch_data (window);
-	window->priv->non_interactive = TRUE;
 	window->priv->batch_adding_one_file = (file_list->next == NULL) && (path_is_file (file_list->data));
 
 	if (archive != NULL)
@@ -6773,10 +6763,6 @@ fr_window_set_batch__add (FrWindow   *window,
 				       NULL);
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_CLOSE,
-				       NULL,
-				       NULL);				 
-	fr_window_append_batch_action (window,
-				       FR_BATCH_ACTION_QUIT,
 				       NULL,
 				       NULL);
 }
