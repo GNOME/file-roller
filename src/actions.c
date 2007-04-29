@@ -854,20 +854,15 @@ void
 activate_action_about (GtkAction *action,
 		       gpointer   data)
 {
-	FrWindow         *window = data;
-
-	char *license_text;
-
-	const char       *authors[] = {
+	FrWindow *window = data;
+	const char *authors[] = {
 		"Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL
 	};
-
-	const char       *documenters [] = {
+	const char *documenters [] = {
 		"Alexander Kirillov",
 		"Breda McColgan",
 		NULL
 	};
-
 	const char *license[] = {
 		N_("File Roller is free software; you can redistribute it and/or modify "
 		"it under the terms of the GNU General Public License as published by "
@@ -881,7 +876,8 @@ activate_action_about (GtkAction *action,
 		"along with File Roller; if not, write to the Free Software Foundation, Inc., "
 		"51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA")
 	};
-
+	char *license_text;
+	
 	license_text =  g_strjoin ("\n\n", _(license[0]), _(license[1]), _(license[2]), NULL);
 
 	gtk_show_about_dialog (GTK_WINDOW (window),
