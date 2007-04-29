@@ -245,9 +245,7 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
-	if (eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE))
-		fr_window_view_folder_after_extract (window, extract_to_dir);
-
+	fr_window_view_folder_after_extract (window, eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));
 	fr_window_set_password (window, password);
 
 	if (selected_files)

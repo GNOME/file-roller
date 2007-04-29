@@ -942,31 +942,43 @@ move_here (FrArchive *archive)
 	char *content_uri;
 	char *parent;
 	char *parent_parent;
-	char *new_uri = NULL;
-	int   n = 1;
+	char *new_content_uri;
 	
 	content_uri = get_directory_content_if_unique (archive->priv->extraction_destination);
 	if (content_uri == NULL)
 		return;	
-		
+
 	parent = remove_level_from_path (content_uri);
+		
+	if (uricmp (parent, archive->priv->extraction_destination) == 0) {
+		char *new_uri;
+		
+		new_uri = get_new_uri_from_uri (archive->priv->extraction_destination); 
+		gnome_vfs_move (archive->priv->extraction_destination, new_uri, FALSE);
+		
+		g_free (archive->priv->extraction_destination);
+		archive->priv->extraction_destination = new_uri;
+
+		g_free (parent);
+		
+		content_uri = get_directory_content_if_unique (archive->priv->extraction_destination);
+		if (content_uri == NULL)
+			return;	
+
+		parent = remove_level_from_path (content_uri);
+	}
+
 	parent_parent = remove_level_from_path (parent);
+	new_content_uri = get_new_uri (parent_parent, file_name_from_path (content_uri));
 	
-	do {
-		g_free (new_uri);
-		if (n == 1)
-			new_uri = g_strconcat (parent_parent, "/", file_name_from_path (content_uri), NULL);
-		else
-			new_uri = g_strdup_printf ("%s/%s%%20(%d)", parent_parent, file_name_from_path (content_uri), n);
-		n++;
-	} while (uri_exists (new_uri));
-	
-	gnome_vfs_move (content_uri, new_uri, FALSE);
+	gnome_vfs_move (content_uri, new_content_uri, FALSE);
 	gnome_vfs_remove_directory (parent);
+	
+	g_free (archive->priv->extraction_destination);
+	archive->priv->extraction_destination = new_content_uri;
 	
 	g_free (parent_parent);
 	g_free (parent);
-	g_free (new_uri);
 	g_free (content_uri);
 }
 
@@ -3162,23 +3174,54 @@ fr_archive_extract (FrArchive  *archive,
 
 
 static char *
+get_desired_destination_from_archive_uri (const char *uri)
+{
+	const char *name, *ext;
+	char       *base_name, *new_name;
+	char       *desired_destination = NULL;
+	
+	base_name = remove_level_from_path (uri);
+
+	name = file_name_from_path (uri);
+	ext = fr_archive_utils__get_file_name_ext (name);
+	if (ext == NULL)
+		/* if no extension is present add a suffix to the name... */
+		new_name = g_strconcat (name, "_FILES", NULL);
+	else 
+		/* ...else use the name without the extension */
+		new_name = g_strndup (name, strlen (name) - strlen (ext)); 
+	
+	/* add a dot to temporary hide the destination */
+	desired_destination = g_strconcat (base_name, "/", new_name, NULL);
+	
+	g_free (base_name);
+	g_free (new_name);
+	
+	return desired_destination;
+}
+
+
+static char *
 get_extract_here_destination (const char     *uri,
 			      GnomeVFSResult *result)
 {
+	char *desired_destination;
 	char *destination = NULL;
 	int   n = 1;
 	
-	/* FIXME: find a better destination. */
+	desired_destination = get_desired_destination_from_archive_uri (uri);
 	
 	do {
 		g_free (destination);
 		if (n == 1)
-			destination = g_strconcat (uri, "_FILES", NULL);
+			destination = g_strdup (desired_destination);
 		else
-			destination = g_strdup_printf ("%s_FILES%%20(%d)", uri, n);
+			destination = g_strdup_printf ("%s%%20(%d)", desired_destination, n);
 		*result = gnome_vfs_make_directory (destination, 0700);
 		n++;
 	} while (*result == GNOME_VFS_ERROR_FILE_EXISTS);
+	
+	g_free (desired_destination);
 	
 	if (*result != GNOME_VFS_OK) {
 		g_free (destination);
@@ -3222,6 +3265,13 @@ fr_archive_extract_here (FrArchive  *archive,
 	
 	return TRUE;			    
 }			 
+
+
+const char *
+fr_archive_get_last_extraction_destination (FrArchive *archive)
+{
+	return archive->priv->extraction_destination;
+}
 
 
 void

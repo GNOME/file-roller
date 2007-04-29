@@ -132,6 +132,7 @@ gboolean    fr_archive_extract_here              (FrArchive     *archive,
 						  gboolean       overwrite,
 						  gboolean       junk_path,
 						  const char    *password);
+const char *fr_archive_get_last_extraction_destination (FrArchive *archive);
 
 /**/
 

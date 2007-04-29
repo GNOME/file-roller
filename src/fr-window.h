@@ -179,7 +179,7 @@ void        fr_window_set_password              (FrWindow      *window,
 const char *fr_window_get_password              (FrWindow      *window);
 FRCompression fr_window_get_compression 	(FrWindow      *window);
 void        fr_window_view_folder_after_extract (FrWindow      *window,
-					 	 const char    *folder);
+					 	 gboolean       view);
 
 /**/
 

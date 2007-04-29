@@ -101,6 +101,18 @@ static GtkTargetEntry target_table[] = {
 };
 
 
+typedef struct {
+	GList    *file_list;
+	char     *extract_to_dir;
+	char     *base_dir;
+	gboolean  skip_older;
+	gboolean  overwrite;
+	gboolean  junk_paths;
+	char     *password;
+	gboolean  extract_here;
+} ExtractData;
+
+
 /**/
 
 enum {
@@ -157,7 +169,6 @@ struct _FrWindowPrivateData {
 	gboolean         asked_for_password;
 
 	gboolean         view_folder_after_extraction;
-	char *           folder_to_view;
 
 	FRBatchAction    current_batch_action;
 
@@ -414,11 +425,6 @@ fr_window_free_private_data (FrWindow *window)
 	if (priv->folder_popup_menu != NULL) {
 		gtk_widget_destroy (priv->folder_popup_menu);
 		priv->folder_popup_menu = NULL;
-	}
-
-	if (priv->folder_to_view != NULL) {
-		g_free (priv->folder_to_view);
-		priv->folder_to_view = NULL;
 	}
 
 	fr_window_free_batch_data (window);
@@ -2042,6 +2048,9 @@ open_folder (GtkWindow  *parent,
 {
 	GError *err = NULL;
 
+	if (folder == NULL)
+		return;
+
 	if (! gnome_url_show (folder, &err)) {
 		GtkWidget *d;
 		char      *utf8_name;
@@ -2232,6 +2241,18 @@ convert__action_performed (FrArchive   *archive,
 }
 
 
+static gboolean
+view_extraction_destination_folder (gpointer data)
+{
+	FrWindow *window = data;
+	
+	open_folder (GTK_WINDOW (window), fr_archive_get_last_extraction_destination (window->archive));
+	window->priv->view_folder_after_extraction = FALSE;
+	
+	return FALSE;
+}
+
+
 static void fr_window_exec_next_batch_action (FrWindow *window);
 
 
@@ -2379,8 +2400,12 @@ action_performed (FrArchive   *archive,
 				  window->priv->compression);
 		}
 		else if (window->priv->view_folder_after_extraction) {
-			open_folder (GTK_WINDOW (window), window->priv->folder_to_view);
-			window->priv->view_folder_after_extraction = FALSE;
+			if (window->priv->batch_mode) {
+				g_usleep (G_USEC_PER_SEC);
+				view_extraction_destination_folder (window);
+			}
+			else
+				g_timeout_add (500, view_extraction_destination_folder, window);
 		}
 		break;
 
@@ -3951,7 +3976,6 @@ fr_window_construct (FrWindow *window)
 	window->priv->add_default_dir = g_strdup (get_home_uri ());
 	window->priv->extract_default_dir = g_strdup (get_home_uri ());
 	window->priv->view_folder_after_extraction = FALSE;
-	window->priv->folder_to_view = NULL;
 
 	window->priv->give_focus_to_the_list = FALSE;
 
@@ -4754,18 +4778,6 @@ fr_window_archive_remove (FrWindow      *window,
 /* -- window_archive_extract -- */
 
 
-typedef struct {
-	GList    *file_list;
-	char     *extract_to_dir;
-	char     *base_dir;
-	gboolean  skip_older;
-	gboolean  overwrite;
-	gboolean  junk_paths;
-	char     *password;
-	gboolean  extract_here;
-} ExtractData;
-
-
 static ExtractData*
 extract_data_new (GList      *file_list,
 		  const char *extract_to_dir,
@@ -5010,12 +5022,10 @@ fr_window_get_compression (FrWindow *window)
 
 
 void
-fr_window_view_folder_after_extract (FrWindow   *window,
-				     const char *folder)
+fr_window_view_folder_after_extract (FrWindow *window,
+				     gboolean  view)
 {
-	window->priv->view_folder_after_extraction = TRUE;
-	g_free (window->priv->folder_to_view);
-	window->priv->folder_to_view = g_strdup (folder);
+	window->priv->view_folder_after_extraction = view;
 }
 
 

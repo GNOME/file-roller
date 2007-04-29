@@ -107,5 +107,8 @@ char *              get_uri_root                 (const char *uri);
 char *              get_uri_from_path            (const char *path);
 int                 uricmp                       (const char *path1,
 						  const char *path2);
+char *              get_new_uri                  (const char *folder,
+	     					  const char *name);
+char *              get_new_uri_from_uri         (const char *uri);
 
 #endif /* FILE_UTILS_H */

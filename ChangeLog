@@ -1,3 +1,27 @@
+2007-04-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/main.c: view the destination folder after performing an
+	extract_here operation if the corrisponding gconf key is active.
+	
+	* src/fr-window.h: code style.
+	
+	* src/fr-archive.c: when performing an extract_here action
+	add the _FILES suffix to the destination folder only when no extension
+	is present in the archive name, otherwise use the archive name without
+	the extension.
+	
+	* src/file-utils.h: 
+	* src/file-utils.c: added functions get_new_uri, get_new_uri_from_uri.
+
+	* src/fr-window.c: when in batch mode, sleep a second before viewing
+	the destination folder to give time to Nautilus to view the new folder.
+	Add a timeout if not in batch mode.
+	
+	* src/fr-archive.c: 
+	* src/fr-archive.h: 	
+	* src/dlg-extract.c: the folder to view after extraction is computed
+	in fr-archive.c
+
 2007-04-28  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/main.c: 
@@ -8,7 +32,6 @@
 	
 	* src/fr-window.c: make the progress dialog resizable, unescape the
 	archive name.
-	
 
 	* src/file-utils.c (get_directory_content_if_unique):  fixed broken logic
 

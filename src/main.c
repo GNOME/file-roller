@@ -560,6 +560,12 @@ prepare_app (void)
 					       FR_BATCH_ACTION_QUIT,
 					       NULL,
 					       NULL);
+
+		if (eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE))
+			/* open the destination folder only if we are 
+			 * extracting a single archive. */					       
+			fr_window_view_folder_after_extract (FR_WINDOW (window), (i - 1 == 1));
+					       
 		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else { /* Open each archive in a window */

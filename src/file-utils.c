@@ -1229,3 +1229,37 @@ uricmp (const char *path1,
 
 	return result;
 }
+
+
+char *
+get_new_uri (const char *folder,
+	     const char *name)
+{
+	char *new_uri = NULL;
+	int   n = 1;
+	
+	do {
+		g_free (new_uri);
+		if (n == 1)
+			new_uri = g_strconcat (folder, "/", name, NULL);
+		else
+			new_uri = g_strdup_printf ("%s/%s%%20(%d)", folder, name, n);
+		n++;
+	} while (uri_exists (new_uri));
+	
+	return new_uri;	
+}
+
+
+char *
+get_new_uri_from_uri (const char *uri)
+{
+	char *base_uri;
+	char *new_uri;
+	
+	base_uri = remove_level_from_path (uri);
+	new_uri = get_new_uri (base_uri, file_name_from_path (uri));
+	g_free (base_uri);
+	
+	return new_uri;
+}
