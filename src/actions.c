@@ -869,25 +869,24 @@ activate_action_about (GtkAction *action,
 	};
 
 	const char *license[] = {
-		"File Roller is free software; you can redistribute it and/or modify "
+		N_("File Roller is free software; you can redistribute it and/or modify "
 		"it under the terms of the GNU General Public License as published by "
 		"the Free Software Foundation; either version 2 of the License, or "
-		"(at your option) any later version.",
-		"File Roller is distributed in the hope that it will be useful, "
+		"(at your option) any later version."),
+		N_("File Roller is distributed in the hope that it will be useful, "
 		"but WITHOUT ANY WARRANTY; without even the implied warranty of "
 		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-		"GNU General Public License for more details.",
-		"You should have received a copy of the GNU General Public License "
-		"along with Nautilus; if not, write to the Free Software Foundation, Inc., "
-		"51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
+		"GNU General Public License for more details."),
+		N_("You should have received a copy of the GNU General Public License "
+		"along with File Roller; if not, write to the Free Software Foundation, Inc., "
+		"51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"))
 	};
 
-	license_text = g_strconcat (license[0], "\n\n", license[1], "\n\n",
-				    license[2], "\n\n", NULL);
+	license_text =  g_strjoin ("\n\n", _(license[0]), _(license[1]), _(license[2]), NULL);
 
 	gtk_show_about_dialog (GTK_WINDOW (window),
 			       "version", VERSION,
-			       "copyright", "Copyright \xc2\xa9 2001-2006 Free Software Foundation, Inc.",
+			       "copyright", _("Copyright \xc2\xa9 2001-2007 Free Software Foundation, Inc."),
 			       "comments", _("An archive manager for GNOME."),
 			       "authors", authors,
 			       "documenters", documenters,
