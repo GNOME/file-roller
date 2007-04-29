@@ -32,6 +32,7 @@
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 
 #include "file-utils.h"
 #include "fr-stock.h"
@@ -242,10 +243,11 @@ add_clicked_cb (GtkWidget  *widget,
 	/**/
 
 	archive_ext = get_ext (data);
-	tmp = archive_name;
+	tmp = gnome_vfs_escape_string (archive_name);
+	g_free (archive_name);
 	archive_name = g_strconcat (tmp, archive_ext, NULL);
 	g_free (tmp);
-	archive_file = g_build_filename (archive_dir, archive_name, NULL);
+	archive_file = g_strconcat (archive_dir, "/", archive_name, NULL);
 	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, archive_ext);
 
 	if (path_is_dir (archive_file)) {
@@ -266,13 +268,7 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
-	if (path_is_file (archive_file)
-	    && ((strcmp (archive_ext, ".gz") == 0)
-		|| (strcmp (archive_ext, ".z") == 0)
-		|| (strcmp (archive_ext, ".Z") == 0)
-		|| (strcmp (archive_ext, ".bz") == 0)
-		|| (strcmp (archive_ext, ".bz2") == 0)
-		|| (strcmp (archive_ext, ".lzo") == 0))) {
+	if (path_is_file (archive_file)) {
 		GtkWidget *d;
 		int        r;
 
