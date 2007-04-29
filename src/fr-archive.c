@@ -1152,17 +1152,8 @@ action_performed (FrCommand   *command,
 				archive->priv->temp_extraction_dir = NULL;
 			}
 			
-			if (archive->priv->extract_here) {
-				char *local_path;
-				
-				/* the extraction destination is local
-			 	 * however it's an uri so we need to translate
-			 	 * it to a local path. */
-				local_path = get_local_path_from_uri (archive->priv->extraction_destination);				
-				remove_local_directory (local_path);
-				
-				g_free (local_path);
-			}
+			if (archive->priv->extract_here) 
+				remove_directory (archive->priv->extraction_destination);
 		}	
 		break;
 		

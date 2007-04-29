@@ -2277,6 +2277,9 @@ action_performed (FrArchive   *archive,
 
 	continue_batch = handle_errors (window, archive, action, error);
 
+	if (error->type == FR_PROC_ERROR_ASK_PASSWORD)
+		return;
+
 	switch (action) {
 	case FR_ACTION_CREATING_NEW_ARCHIVE:
 	case FR_ACTION_CREATING_ARCHIVE:
