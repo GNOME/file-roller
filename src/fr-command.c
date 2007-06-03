@@ -252,6 +252,7 @@ fr_command_start (FrProcess *process,
 		  gpointer   data)
 {
 	FrCommand *comm = FR_COMMAND (data);
+	
 	g_signal_emit (G_OBJECT (comm),
 		       fr_command_signals[START], 
 		       0,
@@ -385,7 +386,7 @@ fr_command_list (FrCommand  *comm,
 	comm->action = FR_ACTION_LISTING_CONTENT;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-
+	
 	if (!comm->fake_load)
 		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm, password);
 }
@@ -404,6 +405,7 @@ fr_command_add (FrCommand     *comm,
 	comm->action = FR_ACTION_ADDING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
+	
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->add (comm,
 						     file_list,
 						     base_dir,
@@ -422,6 +424,7 @@ fr_command_delete (FrCommand *comm,
 	comm->action = FR_ACTION_DELETING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
+	
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->delete (comm, file_list);
 }
 
@@ -440,6 +443,7 @@ fr_command_extract (FrCommand  *comm,
 	comm->action = FR_ACTION_EXTRACTING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
+	
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->extract (comm,
 							 file_list, 
 							 dest_dir,
@@ -459,6 +463,7 @@ fr_command_test (FrCommand   *comm,
 	comm->action = FR_ACTION_TESTING_ARCHIVE;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
+	
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->test (comm, password);
 }
 
@@ -475,7 +480,7 @@ void
 fr_command_recompress (FrCommand     *comm,
 		       FRCompression  compression)
 {
-	fr_command_progress (comm, -1.0);
+	fr_command_progress (comm, -1.0);	
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
 }
 

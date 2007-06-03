@@ -62,23 +62,6 @@ typedef enum {
 	FR_BATCH_ACTIONS
 } FRBatchActionType;
 
-typedef struct {
-	FRBatchActionType type;
-	void *            data;
-	GFreeFunc         free_func;
-} FRBatchAction;
-
-typedef struct {
-	guint      converting : 1;
-	char      *temp_dir;
-	FrArchive *new_archive;
-} FRConvertData;
-
-typedef enum {
-	FR_CLIPBOARD_OP_CUT,
-	FR_CLIPBOARD_OP_COPY
-} FRClipboardOp;
-
 /* -- FrWindow -- */
 
 #define FR_TYPE_WINDOW              (fr_window_get_type ())

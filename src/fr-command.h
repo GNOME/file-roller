@@ -108,17 +108,14 @@ struct _FrCommandClass
 
 	void        (*list)           (FrCommand     *comm,
 				       const char    *password);
-
 	void        (*add)            (FrCommand     *comm,
 				       GList         *file_list,
 				       const char    *base_dir,
 				       gboolean       update,
 				       const char    *password,
 				       FRCompression  compression); 
-
 	void        (*delete)         (FrCommand     *comm,
 				       GList         *file_list); 
-
 	void        (*extract)        (FrCommand     *comm,
 				       GList         *file_list,
 				       const char    *dest_dir,
@@ -126,18 +123,13 @@ struct _FrCommandClass
 				       gboolean       skip_older,
 				       gboolean       junk_paths,
 				       const char    *password);
-
 	void        (*test)           (FrCommand     *comm,
 				       const char    *password);
-
 	void        (*uncompress)     (FrCommand     *comm);
-
 	void        (*recompress)     (FrCommand     *comm,
 				       FRCompression  compression);
-
 	void        (*handle_error)   (FrCommand     *comm,
 				       FRProcError   *error);
-
 	char *      (*escape)         (FrCommand     *comm,
 				       const char    *str);
 
@@ -145,40 +137,31 @@ struct _FrCommandClass
 
 	void        (*start)          (FrCommand   *comm,
 				       FRAction     action); 
-
 	void        (*done)           (FrCommand   *comm,
 				       FRAction     action,
 				       FRProcError *error);
-
 	void        (*progress)       (FrCommand   *comm,
 				       double       fraction);
-
 	void        (*message)        (FrCommand   *comm,
 				       const char  *msg);
 };
 
 GType          fr_command_get_type           (void);
-
 void           fr_command_construct          (FrCommand     *comm,
 					      FrProcess     *process,
 					      const char    *filename);
-
 void           fr_command_set_filename       (FrCommand     *comm,
 					      const char    *filename);
-
 void           fr_command_list               (FrCommand     *comm,
 					      const char    *password);
-
 void           fr_command_add                (FrCommand     *comm,
 					      GList         *file_list,
 					      const char    *base_dir,
 					      gboolean       update,
 					      const char    *password,
 					      FRCompression  compression); 
-
 void           fr_command_delete             (FrCommand     *comm,
 					      GList         *file_list); 
-
 void           fr_command_extract            (FrCommand     *comm,
 					      GList         *file_list,
 					      const char    *dest_dir,
@@ -186,15 +169,11 @@ void           fr_command_extract            (FrCommand     *comm,
 					      gboolean       skip_older,
 					      gboolean       junk_paths,
 					      const char    *password);
-
 void           fr_command_test               (FrCommand     *comm,
 					      const char    *password);
-
 void           fr_command_uncompress         (FrCommand     *comm);
-
 void           fr_command_recompress         (FrCommand     *comm,
 					      FRCompression  compression);
-
 char *         fr_command_escape             (FrCommand     *comm,
 					      const char    *str);
 
@@ -202,10 +181,8 @@ char *         fr_command_escape             (FrCommand     *comm,
 
 void           fr_command_progress           (FrCommand     *comm,
 					      double         fraction);
-
 void           fr_command_message            (FrCommand     *comm,
 					      const char    *msg);
-
 void           fr_command_set_n_files        (FrCommand     *comm,
 					      int            n_files);
 

@@ -1281,19 +1281,12 @@ fr_archive_load__error (FrArchive  *archive,
 
 
 static void
-copy_remote_file__step2 (FrArchive      *archive,
-			 char           *uri,
-			 char           *password,
-			 GnomeVFSResult  result)
+local_local_archive (FrArchive  *archive,
+		     const char *uri,
+		     const char *password)
 {
 	FrCommand  *tmp_command;
 	const char *mime_type = NULL;
-
-	archive->priv->xfer_handle = NULL;
-	if (result != GNOME_VFS_OK) {
-		fr_archive_load__error (archive, gnome_vfs_result_to_string (result));
-		return;
-	}
 
 	archive->read_only = ! check_permissions (uri, W_OK);
 
@@ -1353,7 +1346,21 @@ copy_remote_file__step2 (FrArchive      *archive,
 
 	fr_process_clear (archive->process);
 	fr_command_list (archive->command, password);
-	fr_process_start (archive->process);
+	fr_process_start (archive->process);	
+}
+
+
+static void
+copy_remote_file__step2 (FrArchive      *archive,
+			 char           *uri,
+			 char           *password,
+			 GnomeVFSResult  result)
+{
+	archive->priv->xfer_handle = NULL;
+	if (result != GNOME_VFS_OK) 
+		fr_archive_load__error (archive, gnome_vfs_result_to_string (result));
+	else
+		local_local_archive (archive, uri, password);
 }
 
 
@@ -1488,6 +1495,25 @@ fr_archive_load (FrArchive  *archive,
 	copy_remote_file (archive, uri, archive->local_filename, password);
 
 	return TRUE;
+}
+
+
+gboolean
+fr_archive_load_local (FrArchive  *archive,
+		       const char *uri,
+		       const char *password)
+{
+	g_return_val_if_fail (archive != NULL, FALSE);
+
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[START],
+		       0,
+		       FR_ACTION_LOADING_ARCHIVE);
+
+	fr_archive_set_uri (archive, uri);
+	local_local_archive (archive, uri, password);
+	
+	return TRUE;	
 }
 
 
@@ -2876,6 +2902,9 @@ compute_list_base_path (const char *base_dir,
 static gboolean
 archive_type_has_issues_extracting_non_empty_folders (FrArchive *archive)
 {
+	if (archive->command->file_list == NULL)
+		return FALSE;
+		
 	return ((archive->command->file_type == FR_FILE_TYPE_TAR)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)

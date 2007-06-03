@@ -67,6 +67,7 @@
 #define FILES_TO_PROCESS_AT_ONCE 500
 #define DISPLAY_TIMEOUT_INTERVAL_MSECS 300
 #define MAX_MESSAGE_LENGTH 50
+#define CHECK_CLIPBOARD_TIMEOUT 1000
 
 #define PROGRESS_DIALOG_WIDTH 300
 #define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
@@ -95,11 +96,33 @@ static int             icon_size = 0;
 #define TEXT_ATOM gdk_atom_intern  ("text/plain", FALSE)
 #define OCTET_ATOM gdk_atom_intern ("application/octet-stream", FALSE)
 
+#define FR_CLIPBOARD (gdk_atom_intern_static_string ("_FILE_ROLLER_SPECIAL_CLIPBOARD")) 
+#define FR_SPECIAL_URI_LIST (gdk_atom_intern_static_string ("application/file-roller-uri-list"))
+
+static GtkTargetEntry clipboard_targets[] = {
+	{ "application/file-roller-uri-list", 0, 1 }
+};
 
 static GtkTargetEntry target_table[] = {
 	{ "text/uri-list", 0, 1 },
 };
 
+typedef struct {
+	FRBatchActionType type;
+	void *            data;
+	GFreeFunc         free_func;
+} FRBatchAction;
+
+typedef struct {
+	guint      converting : 1;
+	char      *temp_dir;
+	FrArchive *new_archive;
+} FRConvertData;
+
+typedef enum {
+	FR_CLIPBOARD_OP_CUT,
+	FR_CLIPBOARD_OP_COPY
+} FRClipboardOp;
 
 typedef struct {
 	GList    *file_list;
@@ -111,6 +134,40 @@ typedef struct {
 	char     *password;
 	gboolean  extract_here;
 } ExtractData;
+
+/**/
+
+
+typedef struct {
+	char          *archive_filename;
+	char          *archive_password;
+	FRClipboardOp  op;
+	char          *base_dir;
+	GList         *files;
+	char          *tmp_dir;
+	char          *current_dir;
+} FrClipboardData;
+
+
+static FrClipboardData*
+fr_clipboard_data_new (void)
+{
+	return g_new0 (FrClipboardData, 1);
+}
+
+
+static void
+fr_clipboard_data_free (FrClipboardData *clipboard_data)
+{
+	g_free (clipboard_data->archive_filename);
+	g_free (clipboard_data->archive_password);
+	g_free (clipboard_data->base_dir);
+	g_free (clipboard_data->tmp_dir);
+	g_free (clipboard_data->current_dir);
+	g_list_foreach (clipboard_data->files, (GFunc) g_free, NULL);
+	g_list_free (clipboard_data->files);
+	g_free (clipboard_data);
+}
 
 
 /**/
@@ -197,10 +254,13 @@ struct _FrWindowPrivateData {
 
 	gboolean         stoppable;
 
+	FrClipboardData *clipboard_data;
 	GList           *clipboard;
 	guint            clipboard_op : 1;
 	char            *clipboard_current_dir;
-
+	FrArchive       *copy_from_archive;
+	guint            check_clipboard;
+	
 	GtkActionGroup  *actions;
 
 	GtkRecentManager *recent_manager;
@@ -303,6 +363,10 @@ fr_window_clipboard_clear (FrWindow *window)
 	window->priv->clipboard = NULL;
 	g_free (window->priv->clipboard_current_dir);
 	window->priv->clipboard_current_dir = NULL;
+	if (window->priv->clipboard_data != NULL) {
+		fr_clipboard_data_free (window->priv->clipboard_data);
+		window->priv->clipboard_data = NULL;
+	}
 }
 
 
@@ -408,11 +472,18 @@ fr_window_free_private_data (FrWindow *window)
 	if (priv->password != NULL)
 		g_free (priv->password);
 
-	g_object_unref (window->archive);
 	g_object_unref (priv->list_store);
 
 	fr_window_clipboard_clear (window);
-
+	if (priv->copy_from_archive != NULL) {
+		g_object_unref (priv->copy_from_archive);
+		priv->copy_from_archive = NULL;
+	}
+	if (priv->check_clipboard != 0) {
+		g_source_remove (priv->check_clipboard);
+		priv->check_clipboard = 0;
+	}
+	
 	g_clear_error (&priv->drag_error);
 	path_list_free (priv->drag_file_list);
 	priv->drag_file_list = NULL;
@@ -444,9 +515,13 @@ fr_window_finalize (GObject *object)
 {
 	FrWindow *window = FR_WINDOW (object);
 
+	if (window->archive != NULL) {
+		g_object_unref (window->archive);
+		window->archive = NULL;
+	}
+		
 	if (window->priv != NULL) {
 		fr_window_free_private_data (window);
-
 		g_free (window->priv);
 		window->priv = NULL;
 	}
@@ -1493,6 +1568,30 @@ set_sensitive (FrWindow   *window,
 }
 
 
+static gboolean
+check_clipboard_cb (gpointer data)
+{
+	FrWindow     *window = data;
+	GtkClipboard *clipboard;
+	gboolean      running;
+	gboolean      no_archive;
+	gboolean      can_modify;
+	gboolean      ro;
+	gboolean      compr_file;
+		
+	running    = window->priv->activity_ref > 0;
+	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
+	ro         = ! no_archive && window->archive->read_only;
+	can_modify        = (window->archive != NULL) && (window->archive->command != NULL) && window->archive->command->propCanModify;
+	compr_file = ! no_archive && window->archive->is_compressed_file;
+	
+	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
+	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT) && gtk_clipboard_wait_is_target_available (clipboard, FR_SPECIAL_URI_LIST));	
+	
+	return TRUE;
+}
+
+
 static void
 fr_window_update_sensitivity (FrWindow *window)
 {
@@ -1540,7 +1639,6 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "OpenSelection", file_op && sel_not_null && ! dir_selected);
 	set_sensitive (window, "OpenFolder", file_op && one_file_selected && dir_selected);
 	set_sensitive (window, "Password", ! running && (window->priv->asked_for_password || (! no_archive && window->archive->command->propPassword)));
-	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT) && (window->priv->clipboard != NULL));
 	set_sensitive (window, "Properties", file_op);
 	set_sensitive (window, "Close", !running || window->priv->stoppable);
 	set_sensitive (window, "Reload", ! (no_archive || running));
@@ -1560,10 +1658,12 @@ fr_window_update_sensitivity (FrWindow *window)
 
 	set_sensitive (window, "SelectAll", (window->priv->current_view_length > 0) && (window->priv->current_view_length != n_selected));
 	set_sensitive (window, "DeselectAll", n_selected > 0);
-
-	/* recents menu. */
-
 	set_sensitive (window, "OpenRecentMenu", ! running);
+	
+	/**/
+	
+	if (window->priv->check_clipboard == 0)
+		window->priv->check_clipboard = g_timeout_add (CHECK_CLIPBOARD_TIMEOUT, check_clipboard_cb, window);
 }
 
 
@@ -1992,9 +2092,9 @@ action_started (FrArchive *archive,
 	full_msg = g_strdup_printf ("%s, %s", message, _("wait please..."));
 	fr_window_push_message (window, full_msg);
 	open_progress_dialog (window);
-	if (window->archive->command != NULL) {
-		fr_command_progress (window->archive->command, -1.0);
-		fr_command_message (window->archive->command, message);
+	if (archive->command != NULL) {
+		fr_command_progress (archive->command, -1.0);
+		fr_command_message (archive->command, message);
 	}
 
 	g_free (full_msg);
@@ -4537,8 +4637,15 @@ fr_window_archive_save_as (FrWindow   *window,
 	g_return_if_fail (uri != NULL);
 	g_return_if_fail (window->archive != NULL);
 
-	g_return_if_fail (window->priv->convert_data.temp_dir == NULL);
-	g_return_if_fail (window->priv->convert_data.new_archive == NULL);
+	if (window->priv->convert_data.temp_dir != NULL) {
+		g_free (window->priv->convert_data.temp_dir);
+		window->priv->convert_data.temp_dir = NULL;
+	}
+	
+	if (window->priv->convert_data.new_archive != NULL) {
+		g_object_unref (window->priv->convert_data.new_archive);
+		window->priv->convert_data.new_archive = NULL;
+	}
 
 	/* create the new archive */
 
@@ -5889,29 +5996,246 @@ free_data__rename_selection:
 }
 
 
-void
-fr_window_cut_selection (FrWindow *window)
+static void
+fr_clipboard_get (GtkClipboard     *clipboard,
+                  GtkSelectionData *selection_data,
+                  guint             info,
+                  gpointer          user_data_or_owner)
 {
+	FrWindow *window = user_data_or_owner;
+	GString  *list;
+	GList    *scan;
+	
+	if (selection_data->target != FR_SPECIAL_URI_LIST)
+		return;
+	
+	list = g_string_new (NULL);
+	g_string_append (list, window->archive->local_filename);
+	g_string_append (list, "\r\n");
+	if (window->priv->password != NULL)
+		g_string_append (list, window->priv->password);
+	g_string_append (list, "\r\n");
+	g_string_append (list, (window->priv->clipboard_op == FR_CLIPBOARD_OP_COPY) ? "copy" : "cut");
+	g_string_append (list, "\r\n");
+	g_string_append (list, window->priv->clipboard_current_dir);
+	g_string_append (list, "\r\n");
+	for (scan = window->priv->clipboard; scan; scan = scan->next) {
+		g_string_append (list, scan->data);
+		g_string_append (list, "\r\n");
+	}
+	
+	gtk_selection_data_set (selection_data,
+				selection_data->target, 
+				8, 
+				(guchar *) list->str, 
+				strlen (list->str));
+
+	g_string_free (list, TRUE);
+}
+
+
+static void
+fr_clipboard_clear (GtkClipboard *clipboard,
+                    gpointer      user_data_or_owner)
+{
+	fr_window_clipboard_clear ((FrWindow *) user_data_or_owner);
+}
+
+
+static void
+fr_window_copy_or_cut_selection (FrWindow      *window,
+				 FRClipboardOp  op)
+{
+	GtkClipboard *clipboard;
+	
 	fr_window_clipboard_clear (window);
 
 	window->priv->clipboard = fr_window_get_file_list_selection (window, TRUE, NULL);
-	window->priv->clipboard_op = FR_CLIPBOARD_OP_CUT;
+	window->priv->clipboard_op = op;
 	window->priv->clipboard_current_dir = g_strdup (fr_window_get_current_location (window));
 
-	fr_window_update_sensitivity (window);
+	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
+	gtk_clipboard_set_with_owner (clipboard,
+				      clipboard_targets,
+				      G_N_ELEMENTS (clipboard_targets),
+				      fr_clipboard_get,
+				      fr_clipboard_clear,
+				      G_OBJECT (window));
+	
+	fr_window_update_sensitivity (window);	
 }
 
 
 void
 fr_window_copy_selection (FrWindow *window)
 {
-	fr_window_clipboard_clear (window);
+	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_COPY);
+}
 
-	window->priv->clipboard = fr_window_get_file_list_selection (window, TRUE, NULL);
-	window->priv->clipboard_op = FR_CLIPBOARD_OP_COPY;
-	window->priv->clipboard_current_dir = g_strdup (fr_window_get_current_location (window));
 
-	fr_window_update_sensitivity (window);
+void
+fr_window_cut_selection (FrWindow *window)
+{
+	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_CUT);
+}
+
+
+static FrClipboardData*
+get_clipboard_data_from_selection_data (const char *data)
+{
+	FrClipboardData  *clipboard_data;
+	char            **uris;
+	int               i;
+	
+	clipboard_data = fr_clipboard_data_new ();
+	
+	uris = g_strsplit (data, "\r\n", -1);
+	
+	g_print ("archive: %s\n", uris[0]);
+	g_print ("password: %s\n", uris[1]);
+	g_print ("op: %s\n", uris[2]);
+	g_print ("base_dir: %s\n", uris[3]);
+	g_print ("files:\n");
+	for (i = 4; uris[i] != NULL; i++)
+		g_print ("    %s\n", uris[i]);
+		
+	clipboard_data->archive_filename = g_strdup (uris[0]);
+	if (strcmp (uris[1], "") != 0)
+		clipboard_data->archive_password = g_strdup (uris[1]);
+	clipboard_data->op = (strcmp (uris[2], "copy") == 0) ? FR_CLIPBOARD_OP_COPY : FR_CLIPBOARD_OP_CUT;
+	clipboard_data->base_dir = g_strdup (uris[3]);
+	for (i = 4; uris[i] != NULL; i++)
+		if (uris[i][0] != '\0')
+			clipboard_data->files = g_list_prepend (clipboard_data->files, g_strdup (uris[i]));
+	clipboard_data->files = g_list_reverse (clipboard_data->files);
+	
+	g_strfreev (uris);
+	
+	return clipboard_data;
+}
+
+
+static gboolean
+always_fake_load (FrArchive *archive,
+	          gpointer   data)
+{
+	return TRUE;
+}
+
+
+static void 
+add_pasted_files (FrWindow *window)
+{
+	const char *current_dir_relative = window->priv->clipboard_data->current_dir + 1;
+	GList      *scan;
+	char       *e_tmp_dir;
+	GList      *new_file_list = NULL;
+		
+	fr_process_clear (window->archive->process);
+	for (scan = window->priv->clipboard_data->files; scan; scan = scan->next) {
+		const char *old_name = (char*) scan->data;
+		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->priv->clipboard_data->base_dir) - 1, NULL);
+
+		/* skip folders */
+
+		if ((strcmp (old_name, new_name) != 0)
+		    && (old_name[strlen (old_name) - 1] != '/')) {
+			char *e_old_name = shell_escape (old_name);
+			char *e_new_name = shell_escape (new_name);
+
+			fr_process_begin_command (window->archive->process, "mv");
+			fr_process_set_working_dir (window->archive->process, window->priv->clipboard_data->tmp_dir);
+			fr_process_add_arg (window->archive->process, "-f");
+			fr_process_add_arg (window->archive->process, e_old_name);
+			fr_process_add_arg (window->archive->process, e_new_name);
+			fr_process_end_command (window->archive->process);
+
+			g_free (e_old_name);
+			g_free (e_new_name);
+		}
+
+		new_file_list = g_list_prepend (new_file_list, new_name);
+	}
+
+	fr_archive_add (window->archive,
+			new_file_list,
+			window->priv->clipboard_data->tmp_dir,
+			NULL,
+			FALSE,
+			window->priv->password,
+			window->priv->compression);
+
+	path_list_free (new_file_list);
+
+	/* remove the tmp dir */
+
+	e_tmp_dir = shell_escape (window->priv->clipboard_data->tmp_dir);
+	fr_process_begin_command (window->archive->process, "rm");
+	fr_process_set_working_dir (window->archive->process, g_get_tmp_dir ());
+	fr_process_set_sticky (window->archive->process, TRUE);
+	fr_process_add_arg (window->archive->process, "-rf");
+	fr_process_add_arg (window->archive->process, e_tmp_dir);
+	fr_process_end_command (window->archive->process);
+	g_free (e_tmp_dir);
+	
+	fr_process_start (window->archive->process);
+}
+
+
+static void
+copy_from_archive_action_performed_cb (FrArchive   *archive,
+		  	   	       FRAction     action,
+		  	   	       FRProcError *error,
+		  	   	       gpointer     data)
+{
+	FrWindow *window = data;
+	gboolean  continue_batch = FALSE;
+
+#ifdef DEBUG
+	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
+#endif
+
+	fr_window_stop_activity_mode (window);
+	fr_window_pop_message (window);
+	close_progress_dialog (window);
+
+	continue_batch = handle_errors (window, archive, action, error);
+
+	if (error->type == FR_PROC_ERROR_ASK_PASSWORD)
+		return;
+	
+	switch (action) {
+	case FR_ACTION_LISTING_CONTENT:
+		fr_process_clear (window->priv->copy_from_archive->process);
+		fr_archive_extract (window->priv->copy_from_archive,
+				    window->priv->clipboard_data->files,
+				    window->priv->clipboard_data->tmp_dir,
+				    NULL,
+				    FALSE,
+				    TRUE,
+				    FALSE,
+				    window->priv->clipboard_data->archive_password);
+		fr_process_start (window->priv->copy_from_archive->process);
+		break;
+		
+	case FR_ACTION_EXTRACTING_FILES:			    
+		if (window->priv->clipboard_data->op == FR_CLIPBOARD_OP_CUT) {
+			fr_process_clear (window->priv->copy_from_archive->process);
+			fr_archive_remove (window->priv->copy_from_archive,
+					   window->priv->clipboard_data->files,
+					   window->priv->compression);
+			fr_process_start (window->priv->copy_from_archive->process);
+		} else
+			add_pasted_files (window);
+		break;
+		
+	case FR_ACTION_DELETING_FILES:
+		add_pasted_files (window);
+		break;
+		
+	default:
+		break;
+	}
 }
 
 
@@ -5919,26 +6243,37 @@ static void
 fr_window_paste_selection_to (FrWindow   *window,
 			      const char *current_dir)
 {
-	FrArchive  *archive = window->archive;
-	const char *current_dir_relative = current_dir + 1;
-	GList      *scan;
-	char       *tmp_dir, *e_tmp_dir;
-	GHashTable *created_dirs;
-	GList      *new_file_list = NULL;
-
+	const char        *current_dir_relative = current_dir + 1;
+	GHashTable        *created_dirs;
+	GList             *scan;
+	GtkClipboard      *clipboard;
+	GtkSelectionData  *selection_data;       
+	gboolean           same_archive;
+	
+	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
+	selection_data = gtk_clipboard_wait_for_contents (clipboard, FR_SPECIAL_URI_LIST);
+	if (selection_data == NULL)
+		return;
+	if (window->priv->clipboard_data != NULL)
+		fr_clipboard_data_free (window->priv->clipboard_data);
+	window->priv->clipboard_data = get_clipboard_data_from_selection_data ((char*) selection_data->data);
+	gtk_selection_data_free (selection_data);
+	
 	/**/
 
-	tmp_dir = get_temp_work_dir ();
-	e_tmp_dir = shell_escape (tmp_dir);
+	same_archive = strcmp (window->priv->clipboard_data->archive_filename, window->archive->local_filename) == 0;
+
+	window->priv->clipboard_data->current_dir = g_strdup (current_dir);
+	window->priv->clipboard_data->tmp_dir = get_temp_work_dir ();
 
 	created_dirs = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-	for (scan = window->priv->clipboard; scan; scan = scan->next) {
+	for (scan = window->priv->clipboard_data->files; scan; scan = scan->next) {
 		const char *old_name = (char*) scan->data;
-		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->priv->clipboard_current_dir) - 1, NULL);
+		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->priv->clipboard_data->base_dir) - 1, NULL);
 		char       *dir = remove_level_from_path (new_name);
 
 		if (g_hash_table_lookup (created_dirs, dir) == NULL) {
-			char *dir_path = g_build_filename (tmp_dir, dir, NULL);
+			char *dir_path = g_build_filename (window->priv->clipboard_data->tmp_dir, dir, NULL);
 
 			debug (DEBUG_INFO, "mktree %s\n", dir_path);
 
@@ -5954,75 +6289,34 @@ fr_window_paste_selection_to (FrWindow   *window,
 
 	/**/
 
-	fr_process_clear (archive->process);
-	fr_archive_extract (archive,
-			    window->priv->clipboard,
-			    tmp_dir,
-			    NULL,
-			    FALSE,
-			    TRUE,
-			    FALSE,
-			    window->priv->password);
-	if (window->priv->clipboard_op == FR_CLIPBOARD_OP_CUT)
-		fr_archive_remove (archive,
-				   window->priv->clipboard,
-				   window->priv->compression);
-
-	/**/
-
-	for (scan = window->priv->clipboard; scan; scan = scan->next) {
-		const char *old_name = (char*) scan->data;
-		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (window->priv->clipboard_current_dir) - 1, NULL);
-
-		/* skip folders */
-
-		if ((strcmp (old_name, new_name) != 0)
-		    && (old_name[strlen (old_name) - 1] != '/')) {
-			char *e_old_name = shell_escape (old_name);
-			char *e_new_name = shell_escape (new_name);
-
-			fr_process_begin_command (archive->process, "mv");
-			fr_process_set_working_dir (archive->process, tmp_dir);
-			fr_process_add_arg (archive->process, "-f");
-			fr_process_add_arg (archive->process, e_old_name);
-			fr_process_add_arg (archive->process, e_new_name);
-			fr_process_end_command (archive->process);
-
-			g_free (e_old_name);
-			g_free (e_new_name);
-		}
-
-		new_file_list = g_list_prepend (new_file_list, new_name);
+	if (window->priv->copy_from_archive == NULL) {
+		window->priv->copy_from_archive = fr_archive_new ();
+		g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+				  "start",
+				  G_CALLBACK (action_started),
+				  window);
+		g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+				  "done",
+				  G_CALLBACK (copy_from_archive_action_performed_cb),
+				  window);
+		g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+				  "progress",
+				  G_CALLBACK (fr_window_progress_cb),
+				  window);
+		g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+				  "message",
+				  G_CALLBACK (fr_window_message_cb),
+				  window);
+		g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+				  "stoppable",
+				  G_CALLBACK (fr_window_stoppable_cb),
+				  window);
+		fr_archive_set_fake_load_func (window->priv->copy_from_archive, always_fake_load, NULL);
 	}
 
-	fr_archive_add (archive,
-			new_file_list,
-			tmp_dir,
-			NULL,
-			FALSE,
-			window->priv->password,
-			window->priv->compression);
-
-	path_list_free (new_file_list);
-
-	/* remove the tmp dir */
-
-	fr_process_begin_command (archive->process, "rm");
-	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
-	fr_process_set_sticky (archive->process, TRUE);
-	fr_process_add_arg (archive->process, "-rf");
-	fr_process_add_arg (archive->process, e_tmp_dir);
-	fr_process_end_command (archive->process);
-
-	fr_process_start (archive->process);
-
-	g_free (tmp_dir);
-	g_free (e_tmp_dir);
-
-	/**/
-
-	if (window->priv->clipboard_op == FR_CLIPBOARD_OP_CUT)
-		fr_window_clipboard_clear (window);
+	fr_archive_load_local (window->priv->copy_from_archive,
+		               window->priv->clipboard_data->archive_filename,
+			       window->priv->clipboard_data->archive_password);
 }
 
 
@@ -6032,8 +6326,7 @@ fr_window_paste_selection (FrWindow *window)
 	char *utf8_path, *utf8_old_path, *destination;
 	char *current_dir;
 
-	if ((window->priv->clipboard == NULL)
-	    || (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT))
+	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT)
 		return;
 
 	/**/

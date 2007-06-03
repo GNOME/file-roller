@@ -52,7 +52,7 @@ static void fr_process_finalize   (GObject        *object);
 
 
 static FRCommandInfo *
-fr_command_info_new ()
+fr_command_info_new (void)
 {
 	FRCommandInfo *c_info;
 
@@ -253,7 +253,9 @@ fr_process_begin_command (FrProcess  *fr_proc,
 
 	c_info = fr_command_info_new ();
 	c_info->args = g_list_prepend (NULL, g_strdup (arg));
+	
 	g_ptr_array_add (fr_proc->comm, c_info);
+	
 	fr_proc->n_comm++;
 	fr_proc->current_comm = fr_proc->n_comm;
 }
@@ -278,6 +280,7 @@ fr_process_begin_command_at (FrProcess  *fr_proc,
 
 	c_info = fr_command_info_new ();
 	c_info->args = g_list_prepend (NULL, g_strdup (arg));
+	
 	g_ptr_array_index (fr_proc->comm, index) = c_info;
 }
 
@@ -587,8 +590,8 @@ start_current_command (FrProcess *fr_proc)
 
 	debug (DEBUG_INFO, "%d/%d) ", fr_proc->current_command, fr_proc->n_comm);
 
-	c_info = g_ptr_array_index (fr_proc->comm,
-				    fr_proc->current_command);
+	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_command);
+	
 	arg_list = c_info->args;
 	dir = c_info->dir;
 
@@ -690,7 +693,7 @@ allow_sticky_processes_only (FrProcess *fr_proc,
 	}
 
 	fr_proc->sticky_only = TRUE;
-	if (emit_signal)
+	if (emit_signal) 
 		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[STICKY_ONLY],
 			       0);
@@ -789,7 +792,7 @@ check_child (gpointer data)
 	}
 
 	/* Done */
-
+	
 	fr_proc->current_command = -1;
 
 	if (fr_proc->raw_output != NULL)
@@ -847,14 +850,14 @@ fr_process_start (FrProcess *fr_proc)
 		fr_proc->raw_error = NULL;
 	}
 
+	fr_proc->sticky_only = FALSE;
+	fr_proc->current_command = 0;
+	fr_proc->error.type = FR_PROC_ERROR_NONE;
+
 	if (!fr_proc->restart)
 		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[START],
 			       0);
-
-	fr_proc->sticky_only = FALSE;
-	fr_proc->current_command = 0;
-	fr_proc->error.type = FR_PROC_ERROR_NONE;
 
 	fr_proc->stopping = FALSE;
 
@@ -864,8 +867,8 @@ fr_process_start (FrProcess *fr_proc)
 			       fr_process_signals[DONE],
 			       0,
 			       &fr_proc->error);
-
-	} else {
+	} 
+	else {
 		fr_proc->running = TRUE;
 		start_current_command (fr_proc);
 	}
