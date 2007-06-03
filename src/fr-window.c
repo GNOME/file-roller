@@ -240,6 +240,7 @@ struct _FrWindowPrivateData {
 	GList *          history;
 	GList *          history_current;
 	char *           password;
+	char *           password_for_paste;
 	FRCompression    compression;
 
 	guint            activity_timeout_handle;   /* activity timeout
@@ -471,7 +472,9 @@ fr_window_free_private_data (FrWindow *window)
 
 	if (priv->password != NULL)
 		g_free (priv->password);
-
+	if (priv->password_for_paste != NULL)
+		g_free (priv->password_for_paste);
+		
 	g_object_unref (priv->list_store);
 
 	fr_window_clipboard_clear (window);
@@ -4620,6 +4623,18 @@ fr_window_get_archive_uri (FrWindow *window)
 }
 
 
+const char *
+fr_window_get_paste_archive_uri (FrWindow *window)
+{
+	g_return_val_if_fail (window != NULL, NULL);
+
+	if (window->priv->clipboard_data != NULL)
+		return window->priv->clipboard_data->archive_filename;
+	else
+		return NULL;
+}
+
+
 gboolean
 fr_window_archive_is_present (FrWindow *window)
 {
@@ -5114,6 +5129,20 @@ fr_window_set_password (FrWindow   *window,
 		window->priv->password = g_strdup (password);
 }
 
+void
+fr_window_set_password_for_paste (FrWindow   *window,
+				  const char *password)
+{
+	g_return_if_fail (window != NULL);
+
+	if (window->priv->password_for_paste != NULL) {
+		g_free (window->priv->password_for_paste);
+		window->priv->password_for_paste = NULL;
+	}
+
+	if ((password != NULL) && (password[0] != '\0'))
+		window->priv->password_for_paste = g_strdup (password);
+}
 
 const char *
 fr_window_get_password (FrWindow *window)
@@ -6081,7 +6110,8 @@ fr_window_cut_selection (FrWindow *window)
 
 
 static FrClipboardData*
-get_clipboard_data_from_selection_data (const char *data)
+get_clipboard_data_from_selection_data (FrWindow   *window,
+					const char *data)
 {
 	FrClipboardData  *clipboard_data;
 	char            **uris;
@@ -6100,7 +6130,9 @@ get_clipboard_data_from_selection_data (const char *data)
 		g_print ("    %s\n", uris[i]);
 		
 	clipboard_data->archive_filename = g_strdup (uris[0]);
-	if (strcmp (uris[1], "") != 0)
+	if (window->priv->password_for_paste != NULL)
+		clipboard_data->archive_password = g_strdup (window->priv->password_for_paste);
+	else if (strcmp (uris[1], "") != 0)
 		clipboard_data->archive_password = g_strdup (uris[1]);
 	clipboard_data->op = (strcmp (uris[2], "copy") == 0) ? FR_CLIPBOARD_OP_COPY : FR_CLIPBOARD_OP_CUT;
 	clipboard_data->base_dir = g_strdup (uris[3]);
@@ -6130,7 +6162,12 @@ add_pasted_files (FrWindow *window)
 	GList      *scan;
 	char       *e_tmp_dir;
 	GList      *new_file_list = NULL;
-		
+	
+	if (window->priv->password_for_paste != NULL) {
+		g_free (window->priv->password_for_paste);
+		window->priv->password_for_paste = NULL;
+	}
+	
 	fr_process_clear (window->archive->process);
 	for (scan = window->priv->clipboard_data->files; scan; scan = scan->next) {
 		const char *old_name = (char*) scan->data;
@@ -6199,9 +6236,14 @@ copy_from_archive_action_performed_cb (FrArchive   *archive,
 	fr_window_pop_message (window);
 	close_progress_dialog (window);
 
+	if (error->type == FR_PROC_ERROR_ASK_PASSWORD) {
+		dlg_ask_password_for_paste_operation (window);
+		return;
+	}
+
 	continue_batch = handle_errors (window, archive, action, error);
 
-	if (error->type == FR_PROC_ERROR_ASK_PASSWORD)
+	if (error->type != FR_PROC_ERROR_NONE)
 		return;
 	
 	switch (action) {
@@ -6256,7 +6298,7 @@ fr_window_paste_selection_to (FrWindow   *window,
 		return;
 	if (window->priv->clipboard_data != NULL)
 		fr_clipboard_data_free (window->priv->clipboard_data);
-	window->priv->clipboard_data = get_clipboard_data_from_selection_data ((char*) selection_data->data);
+	window->priv->clipboard_data = get_clipboard_data_from_selection_data (window, (char*) selection_data->data);
 	gtk_selection_data_free (selection_data);
 	
 	/**/

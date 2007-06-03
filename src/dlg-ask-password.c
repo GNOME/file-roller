@@ -33,12 +33,17 @@
 
 #define PROP_GLADE_FILE "ask-password.glade"
 
+typedef enum {
+	FR_PASSWORD_TYPE_MAIN,
+	FR_PASSWORD_TYPE_PASTE_FROM
+} FrPasswordType;
 
 typedef struct {
-	GladeXML  *gui;
-	FrWindow  *window;
-	GtkWidget *dialog;
-	GtkWidget *pw_password_entry;
+	GladeXML       *gui;
+	FrWindow       *window;
+	FrPasswordType  pwd_type;
+	GtkWidget      *dialog;
+	GtkWidget      *pw_password_entry;
 } DialogData;
 
 
@@ -62,7 +67,10 @@ ask_password__response_cb (GtkWidget  *dialog,
 	switch (response_id) {
 	case GTK_RESPONSE_OK:
 		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
-		fr_window_set_password (data->window, password);
+		if (data->pwd_type == FR_PASSWORD_TYPE_MAIN)
+			fr_window_set_password (data->window, password);
+		else if (data->pwd_type == FR_PASSWORD_TYPE_PASTE_FROM)
+			fr_window_set_password_for_paste (data->window, password);
 		g_free (password);
 		if (fr_window_is_batch_mode (data->window))
 			fr_window_resume_batch (data->window);
@@ -82,8 +90,9 @@ ask_password__response_cb (GtkWidget  *dialog,
 }
 
 
-void
-dlg_ask_password (FrWindow *window)
+static void
+dlg_ask_password__common (FrWindow       *window,
+			  FrPasswordType  pwd_type)
 {
 	DialogData *data;
 	GtkWidget  *label;
@@ -92,6 +101,7 @@ dlg_ask_password (FrWindow *window)
 
 	data = g_new0 (DialogData, 1);
 	data->window = window;
+	data->pwd_type = pwd_type;
 	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
 		g_warning ("Could not find " PROP_GLADE_FILE "\n");
@@ -107,7 +117,10 @@ dlg_ask_password (FrWindow *window)
 
 	/* Set widgets data. */
 
-	name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
+	if (data->pwd_type == FR_PASSWORD_TYPE_MAIN)
+		name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
+	else if (data->pwd_type == FR_PASSWORD_TYPE_PASTE_FROM)
+		name = g_filename_display_basename (fr_window_get_paste_archive_uri (window));
 	text = g_strdup_printf (_("Enter the password for the archive '%s'."), name);
 	gtk_label_set_label (GTK_LABEL (label), text);
 	g_free (text);
@@ -138,4 +151,18 @@ dlg_ask_password (FrWindow *window)
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
 
 	gtk_widget_show (data->dialog);
+}
+
+
+void
+dlg_ask_password (FrWindow *window)
+{
+	dlg_ask_password__common (window, FR_PASSWORD_TYPE_MAIN);
+}
+
+
+void 
+dlg_ask_password_for_paste_operation (FrWindow *window)
+{
+	dlg_ask_password__common (window, FR_PASSWORD_TYPE_PASTE_FROM);
 }

@@ -106,6 +106,7 @@ FrWindow *  fr_window_archive_open              (FrWindow      *window,
 						 GtkWindow     *parent);
 void        fr_window_archive_close             (FrWindow      *window);
 const char *fr_window_get_archive_uri           (FrWindow      *window);
+const char *fr_window_get_paste_archive_uri     (FrWindow      *window);
 gboolean    fr_window_archive_is_present        (FrWindow      *window);
 void        fr_window_archive_save_as           (FrWindow      *window,
 						 const char    *filename);
@@ -159,6 +160,8 @@ void        fr_window_archive_extract_here      (FrWindow      *window,
 void        fr_window_archive_test	        (FrWindow      *window);					 
 void        fr_window_set_password              (FrWindow      *window,
 						 const char    *password);
+void        fr_window_set_password_for_paste    (FrWindow      *window,
+					         const char    *password);						 
 const char *fr_window_get_password              (FrWindow      *window);
 FRCompression fr_window_get_compression 	(FrWindow      *window);
 void        fr_window_view_folder_after_extract (FrWindow      *window,
