@@ -107,11 +107,16 @@ split_line_lha (char *line)
 		fields[i++] = g_strdup ("");
 		fields[i++] = g_strdup ("");
 		line += strlen ("[MS-DOS]");
-
-	} else if (strncmp (line, "[generic]", 9) == 0) {
+	} 
+	else if (strncmp (line, "[generic]", 9) == 0) {
 		fields[i++] = g_strdup ("");
 		fields[i++] = g_strdup ("");
 		line += strlen ("[generic]");
+	} 
+	else if (strncmp (line, "[unknown]", 9) == 0) {
+		fields[i++] = g_strdup ("");
+		fields[i++] = g_strdup ("");
+		line += strlen ("[unknown]");
 	}
 
 	scan = eat_spaces (line);
@@ -138,6 +143,9 @@ get_last_field_lha (char *line)
 		n--;
 
 	if (strncmp (line, "[generic]", 9) == 0) 
+		n--;
+
+	if (strncmp (line, "[unknown]", 9) == 0) 
 		n--;
 
 	field = eat_spaces (line);
@@ -174,7 +182,7 @@ process_line (char     *line,
 
 	name_field = get_last_field_lha (line);
 
-	if (*name_field == '/') {
+	if (name_field && *name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
 		fdata->original_path = fdata->full_path;
 	} else {
