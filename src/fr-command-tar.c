@@ -248,6 +248,7 @@ fr_command_tar_list (FrCommand  *comm,
 
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-tvf");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	add_compress_arg (comm);
@@ -307,9 +308,10 @@ fr_command_tar_add (FrCommand     *comm,
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "--no-recursion");
+	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-p");
-
+		
 	if (base_dir != NULL) {
 		char *e_base_dir = shell_escape (base_dir);
 		fr_process_add_arg (comm->process, "-C");
@@ -361,6 +363,7 @@ fr_command_tar_delete (FrCommand *comm,
 	begin_tar_command (comm);
 	fr_process_set_begin_func (comm->process, begin_func__delete, comm);
 	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "--delete");
 	fr_process_add_arg (comm->process, "-f");
@@ -398,8 +401,10 @@ fr_command_tar_extract (FrCommand  *comm,
 
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
+	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-p");
+		
 	fr_process_add_arg (comm->process, "-xf");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	add_compress_arg (comm);
@@ -410,7 +415,7 @@ fr_command_tar_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, e_dest_dir);
 		g_free (e_dest_dir);
 	}
-
+	
 	fr_process_add_arg (comm->process, "--");
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
@@ -762,16 +767,13 @@ fr_command_tar_escape (FrCommand     *comm,
 {
 	char *estr;
 	char *estr2;
-	char *estr3;
 
         estr = escape_str (str, "\\");
         estr2 = escape_str (estr, "\\$?*'`& !|()@#:;<>");
-        estr3 = escape_str_common (estr2, "[]", '[', ']');
 
 	g_free (estr);
-	g_free (estr2);
 
-	return estr3;
+	return estr2;
 }
 
 

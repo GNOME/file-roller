@@ -1,5 +1,17 @@
 2007-06-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-command-tar.c (fr_command_tar_escape): 
+	(fr_command_tar_delete): 
+	(fr_command_tar_extract): 
+	(fr_command_tar_add): 
+	(fr_command_tar_list): Added a --no-wildcards argument to all the 
+	commands, and removed the escape of [] in fr_command_tar_escape.
+	
+	Fixes bug #440662 – extraction of files with special characters only 
+	when in directory.
+	
+2007-06-04  Paolo Bacchilega  <paobac@cvs.gnome.org>	
+	
 	* src/glib-utils.c (get_time_string): 
 
 	Fixed bug #402760 – "modified time" column is displayed blank in
