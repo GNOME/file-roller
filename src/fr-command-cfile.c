@@ -233,6 +233,7 @@ fr_command_cfile_add (FrCommand     *comm,
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_set_working_dir (comm->process, base_dir);
 	fr_process_add_arg (comm->process, "-f");
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, filename);
 	fr_process_add_arg (comm->process, temp_file);
 	fr_process_end_command (comm->process);
@@ -246,6 +247,7 @@ fr_command_cfile_add (FrCommand     *comm,
 	case FR_COMPRESS_PROGRAM_GZIP:
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 		break;
@@ -253,6 +255,7 @@ fr_command_cfile_add (FrCommand     *comm,
 	case FR_COMPRESS_PROGRAM_BZIP:
 		fr_process_begin_command (comm->process, "bzip");
 		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 		break;
@@ -260,6 +263,7 @@ fr_command_cfile_add (FrCommand     *comm,
 	case FR_COMPRESS_PROGRAM_BZIP2:
 		fr_process_begin_command (comm->process, "bzip2");
 		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 		break;
@@ -268,6 +272,7 @@ fr_command_cfile_add (FrCommand     *comm,
 		fr_process_begin_command (comm->process, "compress");
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 		break;
@@ -277,6 +282,7 @@ fr_command_cfile_add (FrCommand     *comm,
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-fU");
 		fr_process_add_arg (comm->process, "--no-stdin");
+		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 		break;
@@ -287,6 +293,7 @@ fr_command_cfile_add (FrCommand     *comm,
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_set_working_dir (comm->process, e_temp_dir);
 	fr_process_add_arg (comm->process, "-f");
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, "*");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
@@ -296,6 +303,7 @@ fr_command_cfile_add (FrCommand     *comm,
 	fr_process_begin_command (comm->process, "rm");
 	fr_process_set_sticky (comm->process, TRUE);
 	fr_process_add_arg (comm->process, "-rf");
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, e_temp_dir);
 	fr_process_end_command (comm->process);
 
