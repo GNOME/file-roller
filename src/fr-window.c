@@ -556,6 +556,12 @@ fr_window_close (FrWindow *window)
 		eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
 		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
 	}
+	
+	if (window->priv->check_clipboard != 0) {
+		g_source_remove (window->priv->check_clipboard);
+		window->priv->check_clipboard = 0;
+	}
+	
 	gtk_widget_destroy (GTK_WIDGET (window));
 }
 

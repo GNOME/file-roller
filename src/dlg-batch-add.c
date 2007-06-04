@@ -439,12 +439,12 @@ dlg_batch_add_files (FrWindow *window,
 	parent = remove_level_from_path (first_filename);
 
 	if (file_list->next == NULL)
-		automatic_name = g_strdup (file_name_from_path ((char*) file_list->data));
+		automatic_name = gnome_vfs_unescape_string (file_name_from_path ((char*) file_list->data), "");
 	else {
-		automatic_name = g_strdup (file_name_from_path (parent));
+		automatic_name = gnome_vfs_unescape_string (file_name_from_path (parent), "");
 		if ((automatic_name == NULL) || (automatic_name[0] == '\0')) {
 			g_free (automatic_name);
-			automatic_name = g_strdup (file_name_from_path (first_filename));
+			automatic_name = gnome_vfs_unescape_string (file_name_from_path (first_filename), "");
 		}
 	}
 

@@ -1,5 +1,17 @@
 2007-06-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-window.c: removed the clipboard check before destroying 
+	the window.
+
+	* src/main.c: escape local paths	
+	* src/glib-utils.c: escape # in filenames.
+	* src/dlg-batch-add.c: unescape the filename in the text entry.
+	
+	Fixes bug #439154 – file-roller: fails to create archives from 
+	files starting with '#'
+	
+2007-06-04  Paolo Bacchilega  <paobac@cvs.gnome.org>	
+	
 	* src/fr-command-tar.c (fr_command_tar_escape): 
 	(fr_command_tar_delete): 
 	(fr_command_tar_extract): 

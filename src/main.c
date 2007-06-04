@@ -451,20 +451,25 @@ compute_supported_archive_types (void)
 static char *
 get_uri_from_command_line (const char *path)
 {
-	char *current_dir;
 	char *full_path;
 	char *uri;
 
-	if (uri_has_scheme (path) || g_path_is_absolute (path))
+	if (uri_has_scheme (path))
 		return g_strdup (path);
 
-	current_dir = g_get_current_dir ();
-	full_path = g_build_filename (current_dir,
-				      path,
-				      NULL);
-	uri = get_uri_from_path (full_path);
+	if (g_path_is_absolute (path))
+		full_path = g_strdup (path);
+	else {
+		char *current_dir;
+		
+		current_dir = g_get_current_dir ();
+		full_path = g_build_filename (current_dir,
+					      path,
+					      NULL);
+		g_free (current_dir);
+	}
 
-	g_free (current_dir);
+	uri = get_uri_from_local_path (full_path);
 	g_free (full_path);
 
 	return uri;
