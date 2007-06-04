@@ -503,20 +503,15 @@ char *
 get_time_string (time_t time)
 {
 	struct tm *tm;
-	GDate     *date;
-	char       date_txt[50];
-	char       time_txt[50];
-	char      *s = NULL;
+	char       s_time[256];
+	char      *locale_format = NULL;
+	char      *time_utf8;
 
 	tm = localtime (&time);
-	date = g_date_new_dmy (tm->tm_mday, tm->tm_mon + 1, 1900 + tm->tm_year);
-	g_date_strftime (date_txt,
-			 50,
-                         _("%d %B %Y"),
-                         date);
-	strftime (time_txt, 50, "%H:%M", tm);
-	s = g_strconcat (date_txt, ", ", time_txt, NULL);
-	g_date_free (date);
+	locale_format = g_locale_from_utf8 (_("%d %B %Y, %H:%M"), -1, NULL, NULL, NULL);
+	strftime (s_time, sizeof (s_time) - 1, locale_format, tm);
+	g_free (locale_format);
+	time_utf8 = g_locale_to_utf8 (s_time, -1, NULL, NULL, NULL);
 
-	return s;
+	return time_utf8;
 }
