@@ -26,7 +26,6 @@
 #include <unistd.h>
 
 #include <gtk/gtk.h>
-#include <libgnomeui/gnome-icon-theme.h>
 #include <libgnomeui/gnome-icon-lookup.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs-types.h>
@@ -308,77 +307,18 @@ add_clicked_cb (GtkWidget  *widget,
 }
 
 
-/* taken from egg-recent-util.c */
-static GdkPixbuf *
-scale_icon (GdkPixbuf *pixbuf,
-	    double    *scale)
-{
-	guint width, height;
-
-	width = gdk_pixbuf_get_width (pixbuf);
-	height = gdk_pixbuf_get_height (pixbuf);
-
-	width = floor (width * *scale + 0.5);
-	height = floor (height * *scale + 0.5);
-
-	return gdk_pixbuf_scale_simple (pixbuf, width, height, GDK_INTERP_BILINEAR);
-}
-
-
-/* taken from egg-recent-util.c */
-static GdkPixbuf *
-load_icon_file (char          *filename,
-		guint          base_size,
-		guint          nominal_size)
-{
-	GdkPixbuf *pixbuf, *scaled_pixbuf;
-	guint      width, height, size;
-	double     scale;
-
-	pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-
-	if (pixbuf == NULL) {
-		return NULL;
-	}
-
-	if (base_size == 0) {
-		width = gdk_pixbuf_get_width (pixbuf);
-		height = gdk_pixbuf_get_height (pixbuf);
-		size = MAX (width, height);
-		if (size > nominal_size) {
-			base_size = size;
-		}
-		else {
-			/* Don't scale up small icons */
-			base_size = nominal_size;
-		}
-	}
-
-	if (base_size != nominal_size) {
-		scale = (double) nominal_size / base_size;
-		scaled_pixbuf = scale_icon (pixbuf, &scale);
-		g_object_unref (pixbuf);
-		pixbuf = scaled_pixbuf;
-	}
-
-	return pixbuf;
-}
-
-
 static GdkPixbuf *
 get_pixbuf_from_mime_type (const char *mime_type,
 			   int         icon_size)
 {
-	GnomeIconTheme *icon_theme;
-	char           *icon_name = NULL;
-	GdkPixbuf      *icon = NULL;
+	GtkIconTheme *icon_theme;
+	char         *icon_name = NULL;
+	GdkPixbuf    *icon = NULL;
 
-	icon_theme = gnome_icon_theme_new ();
+	icon_theme = gtk_icon_theme_get_default ();
 
 	if (icon_theme == NULL)
 		return NULL;
-
-	gnome_icon_theme_set_allow_svg (icon_theme, TRUE);
 
 	icon_name = gnome_icon_lookup (icon_theme,
 				       NULL,
@@ -389,28 +329,14 @@ get_pixbuf_from_mime_type (const char *mime_type,
 				       GNOME_ICON_LOOKUP_FLAGS_NONE,
 				       NULL);
 
-	if (icon_name != NULL) {
-		char                *icon_path = NULL;
-		const GnomeIconData *icon_data;
-		int                  base_size;
-
-		icon_path = gnome_icon_theme_lookup_icon (icon_theme,
-							  icon_name,
-							  icon_size,
-							  &icon_data,
-							  &base_size);
-
-		if (icon_path != NULL) {
-			icon = load_icon_file (icon_path,
-					       base_size, 
-					       icon_size);
-			g_free (icon_path);
-		}
-	}
+	if (icon_name != NULL) 
+		icon = gtk_icon_theme_load_icon (icon_theme,
+						 icon_name,
+						 icon_size,
+						 0,
+						 NULL);
 
 	g_free (icon_name);
-	g_object_unref (icon_theme);
-
 	return icon;
 }
 

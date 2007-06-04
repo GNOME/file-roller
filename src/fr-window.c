@@ -3661,7 +3661,7 @@ pref_use_mime_icons_changed (GConfClient *client,
 
 
 static void
-theme_changed_cb (GnomeIconTheme *theme, FrWindow *window)
+theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 {
 	int icon_width, icon_height;
 
