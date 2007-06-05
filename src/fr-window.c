@@ -3232,7 +3232,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	if (window->priv->activity_ref > 0)
 		return FALSE;
 
-	if (context_offers_target (context, XFR_ATOM)) {
+	if (selection_data->target == XFR_ATOM) {
 		FrClipboardData *tmp;
 		char            *data;
 		
