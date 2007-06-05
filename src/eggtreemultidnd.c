@@ -35,7 +35,8 @@
 #define EGG_TREE_MULTI_DND_STRING "EggTreeMultiDndString"
 
 static GtkTargetEntry target_table[] = {
-        { "XdndDirectSave0", 0, 0 }
+        { "XdndDirectSave0", 0, 0 },
+        { "XdndFileRoller0", 0, 1 }
 };
 
 typedef struct
@@ -262,13 +263,9 @@ egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
   if (model == NULL)
     return FALSE;
 
-g_print ("==> [0]\n");
-
   path_list = get_context_data (context);
   if (path_list == NULL)
     return FALSE;
-
-g_print ("==> [1]\n");
 
   /* We can implement the GTK_TREE_MODEL_ROW target generically for
    * any model; for DragSource models there are some other targets
@@ -277,8 +274,6 @@ g_print ("==> [1]\n");
 
   if (! EGG_IS_TREE_MULTI_DRAG_SOURCE (model))
     return FALSE;
-
-g_print ("==> [2]\n");
 
   return egg_tree_multi_drag_source_drag_data_get (EGG_TREE_MULTI_DRAG_SOURCE (model),
       						   context,
@@ -321,7 +316,7 @@ egg_tree_multi_drag_motion_event (GtkWidget      *widget,
 
 	  context = gtk_drag_begin (widget,
 				    target_list,
-				    GDK_ACTION_MOVE,
+				    GDK_ACTION_COPY,
 				    priv_data->pressed_button,
 				    (GdkEvent*)event);
 	  set_context_data (context, path_list);
