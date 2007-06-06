@@ -2229,6 +2229,7 @@ handle_errors (FrWindow    *window,
 	}
 	else if (error->type != FR_PROC_ERROR_NONE) {
 		char      *msg = NULL;
+		char      *unescaped_uri = NULL;		
 		char      *utf8_name;
 		char      *details = NULL;
 		GtkWindow *dialog_parent;
@@ -2256,7 +2257,9 @@ handle_errors (FrWindow    *window,
 
 		case FR_ACTION_LOADING_ARCHIVE:
 			dialog_parent = window->priv->load_error_parent_window;
-			utf8_name = g_filename_display_basename (window->priv->archive_uri);
+			unescaped_uri = gnome_vfs_format_uri_for_display (window->priv->archive_uri);
+			utf8_name = g_filename_display_basename (unescaped_uri);
+			g_free (unescaped_uri);
 			msg = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
 			g_free (utf8_name);
 			break;
@@ -4767,11 +4770,14 @@ fr_window_archive_save_as (FrWindow   *window,
 	window->priv->convert_data.new_archive = fr_archive_new ();
 	if (! fr_archive_create (window->priv->convert_data.new_archive, uri)) {
 		GtkWidget *d;
+		char      *unescaped_uri = NULL;		
 		char      *utf8_name;
 		char      *message;
 
-		utf8_name = g_filename_display_basename (uri);
-		message = g_strdup_printf (_("Could not save the archive \"%s\""), file_name_from_path (uri));
+		unescaped_uri = gnome_vfs_format_uri_for_display (uri);
+		utf8_name = g_filename_display_basename (unescaped_uri);
+		g_free (unescaped_uri);
+		message = g_strdup_printf (_("Could not save the archive \"%s\""), utf8_name);
 		g_free (utf8_name);
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),

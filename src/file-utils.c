@@ -415,8 +415,8 @@ file_is_hidden (const gchar *name)
 G_CONST_RETURN gchar *
 file_name_from_path (const gchar *file_name)
 {
-	register gssize base;
-	register gssize last_char;
+	register char   *base;
+	register gssize  last_char;
 
 	if (file_name == NULL)
 		return NULL;
@@ -429,11 +429,11 @@ file_name_from_path (const gchar *file_name)
 	if (file_name [last_char] == G_DIR_SEPARATOR)
 		return "";
 
-	base = last_char;
-	while ((base >= 0) && (file_name [base] != G_DIR_SEPARATOR))
-		base--;
+	base = g_utf8_strrchr (file_name, -1, G_DIR_SEPARATOR);
+	if (! base)
+		return file_name;
 
-	return file_name + base + 1;
+	return base + 1;
 }
 
 

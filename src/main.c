@@ -574,18 +574,25 @@ prepare_app (void)
 		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else { /* Open each archive in a window */
-		const char *archive;
+		const char *utf8_archive = NULL;
+		char       *locale_archive = NULL;
 
 		int i = 0;
-		while ((archive = remaining_args[i++]) != NULL) {
+		while ((utf8_archive = remaining_args[i++]) != NULL) {
 			GtkWidget *window;
 			char      *uri;
 			
 			window = fr_window_new ();
 			gtk_widget_show (window);
 			
-			uri = gnome_vfs_make_uri_from_shell_arg (archive);
+			locale_archive = g_filename_from_utf8 (utf8_archive, -1, NULL, NULL, NULL);
+			if (locale_archive == NULL)
+				locale_archive = g_strdup (utf8_archive);
+			uri = gnome_vfs_make_uri_from_shell_arg (locale_archive);
+			g_free (locale_archive);
+
 			fr_window_archive_open (FR_WINDOW (window), uri, GTK_WINDOW (window));
+
 			g_free (uri);
 		}
 	}

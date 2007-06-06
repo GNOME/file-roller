@@ -1,3 +1,13 @@
+2007-06-06  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* src/main.c (prepare_app): 
+	* src/file-utils.c (file_name_from_path): 
+	* src/actions.c (activate_action_save_as): 
+
+	Fixed bug #402756 – Can not open a file whose name is in 
+	non-ascii encoding.
+	Patch by Takao Fujiwara.
+
 2007-06-05  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-window.c (fr_window_file_list_drag_data_get): 

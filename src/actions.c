@@ -28,6 +28,7 @@
 #include <fcntl.h>
 #include <libgnome/gnome-help.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include "actions.h"
 #include "dlg-add-files.h"
 #include "dlg-add-folder.h"
@@ -283,19 +284,24 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	int         idx;
 	const char *filename;
 	const char *ext, *newext;
+	char       *escaped_uri;
+	char       *unescaped_uri;	
 	char       *new_filename, *filename_noext;
 
 	idx = gtk_combo_box_get_active (combo_box) - 1;
 	if (idx < 0)
 		return;
 
-	filename = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
-	if (filename == NULL)
+	escaped_uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
+	if (escaped_uri == NULL)
 		return;
 
-	filename = file_name_from_path (filename);
-	if (filename == NULL)
+	unescaped_uri = gnome_vfs_format_uri_for_display (escaped_uri);
+	filename = file_name_from_path (unescaped_uri);
+	if (filename == NULL) {
+		g_free (unescaped_uri);
 		return;
+	}
 
 	ext = fr_archive_utils__get_file_name_ext (filename);
 	if (ext == NULL)
@@ -309,6 +315,7 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 
 	g_free (new_filename);
 	g_free (filename_noext);
+	g_free (unescaped_uri);
 }
 
 
@@ -546,6 +553,8 @@ activate_action_save_as (GtkAction *action,
 	GtkWidget     *combo_box;
 	GtkFileFilter *filter;
 	int            i;
+	const char    *escaped_uri = NULL;
+	char          *unescaped_uri = NULL;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Save"),
 						GTK_WINDOW (window),
@@ -558,8 +567,12 @@ activate_action_save_as (GtkAction *action,
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
 
-	if (fr_window_get_archive_uri (window))
-		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), file_name_from_path (fr_window_get_archive_uri (window)));
+	if (fr_window_get_archive_uri (window)) {
+		escaped_uri = fr_window_get_archive_uri (window);
+		unescaped_uri = gnome_vfs_format_uri_for_display (escaped_uri);
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), file_name_from_path (unescaped_uri));
+		g_free (unescaped_uri);
+	}
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
