@@ -80,6 +80,7 @@
 #define DEF_WIN_HEIGHT 480
 
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
+#define MIME_TYPE_ARCHIVE "application/x-archive"
 #define ICON_TYPE_DIRECTORY "gnome-fs-directory"
 #define ICON_TYPE_REGULAR   "gnome-fs-regular"
 #define ICON_GTK_SIZE GTK_ICON_SIZE_LARGE_TOOLBAR
@@ -189,6 +190,8 @@ static guint fr_window_signals[LAST_SIGNAL] = { 0 };
 struct _FrWindowPrivateData {
 	GtkWidget *      list_view;
 	GtkListStore *   list_store;
+	GtkWidget *      tree_view;
+	GtkTreeStore *   tree_store;
 	GtkWidget *      toolbar;
 	GtkWidget *      statusbar;
 	GtkWidget *      progress_bar;
@@ -199,8 +202,9 @@ struct _FrWindowPrivateData {
 	GtkWidget *      home_button;
 	GtkWidget *      back_button;
 	GtkWidget *      fwd_button;
-	GtkCellRenderer *name_renderer;
-	GtkTreePath     *hover_path;
+	GtkWidget       *sidepane;
+	GtkTreePath     *tree_hover_path;
+	GtkTreePath     *list_hover_path;
 
 	gint             current_view_length;
 
@@ -242,6 +246,7 @@ struct _FrWindowPrivateData {
 	FRWindowSortMethod sort_method;
 	GtkSortType      sort_type;
 
+	gboolean         view_folders;
 	FRWindowListMode list_mode;
 	GList *          history;
 	GList *          history_current;
@@ -996,6 +1001,44 @@ static void fr_window_update_statusbar_list_info (FrWindow *window);
 
 
 static GdkPixbuf *
+get_mime_type_icon (const char *mime_type)
+{
+	GdkPixbuf *pixbuf = NULL;
+	char      *icon_name = NULL;
+	
+	pixbuf = g_hash_table_lookup (pixbuf_hash, mime_type);
+	if (pixbuf != NULL) {
+		g_object_ref (G_OBJECT (pixbuf));
+		return pixbuf;
+	}
+
+	icon_name = gnome_icon_lookup (icon_theme,
+                                       NULL,
+                                       NULL,
+                                       NULL,
+                                       NULL,
+       	                               mime_type,
+               	                       GNOME_ICON_LOOKUP_FLAGS_NONE,
+                       	               NULL);
+	pixbuf = gtk_icon_theme_load_icon (icon_theme,
+					   icon_name,
+					   icon_size,
+					   0,
+					   NULL);
+	g_free (icon_name);						
+						
+	if (pixbuf == NULL)
+		return NULL;
+
+	pixbuf = gdk_pixbuf_copy (pixbuf);
+	g_hash_table_insert (pixbuf_hash, (gpointer) mime_type, pixbuf);
+	g_object_ref (G_OBJECT (pixbuf));
+
+	return pixbuf;
+}
+
+
+static GdkPixbuf *
 get_icon (GtkWidget *widget,
 	  FileData  *fdata)
 {
@@ -1390,8 +1433,10 @@ update_file_list_idle (gpointer callback_data)
 			g_object_unref (emblem);
 	}
 
+	/*
 	if (gtk_events_pending ())
 		gtk_main_iteration_do (TRUE);
+	*/
 
 	g_list_free (file_list);
 
@@ -1408,6 +1453,134 @@ update_file_list_idle (gpointer callback_data)
 }
 
 
+static int
+path_compare (gconstpointer a,
+              gconstpointer b)
+{
+	char *path_a = *((char**) a);
+	char *path_b = *((char**) b);
+	
+	return strcmp (path_a, path_b);
+}
+
+
+void
+fr_window_update_dir_tree (FrWindow *window)
+{
+	GArray      *dirs;
+	GHashTable  *dir_cache;
+	GList       *scan;
+	int          i;
+	GdkPixbuf   *icon;
+	
+	gtk_tree_store_clear (window->priv->tree_store);
+
+	if (! window->priv->view_folders || 
+	    ! window->priv->archive_present 
+	    || (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT)) {
+		gtk_widget_set_sensitive (window->priv->tree_view, FALSE);
+		gtk_widget_hide (window->priv->sidepane);
+		return;
+	}
+	else { 
+		gtk_widget_set_sensitive (window->priv->tree_view, TRUE);
+		if (! GTK_WIDGET_VISIBLE (window->priv->sidepane))
+			gtk_widget_show_all (window->priv->sidepane);
+	}
+
+	if (GTK_WIDGET_REALIZED (window->priv->tree_view)) 
+		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->tree_view), 0, 0);
+	
+	/**/
+	
+	dirs = g_array_sized_new (FALSE, FALSE, sizeof (char*), 128);
+
+	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, NULL);
+	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
+		FileData *fdata = scan->data;
+		char     *dir;
+		
+		if (fdata->dir)
+			dir = remove_ending_separator (fdata->full_path);
+		else 
+			dir = remove_level_from_path (fdata->full_path);
+
+		while ((dir != NULL) && (strcmp (dir, "/") != 0)) {
+			char *new_dir;
+			
+			if (g_hash_table_lookup (dir_cache, dir) != NULL) 
+				break;
+
+			new_dir = dir;
+			g_array_append_val (dirs, new_dir);
+			g_hash_table_replace (dir_cache, new_dir, "1");
+			
+			dir = remove_level_from_path (new_dir);
+		}
+		
+		g_free (dir);
+	}	
+	g_hash_table_destroy (dir_cache);
+	
+	g_array_sort (dirs, path_compare);
+	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) gtk_tree_path_free);
+		
+	/**/
+
+	icon = get_mime_type_icon (MIME_TYPE_ARCHIVE);
+	{
+		GtkTreeIter  node;
+		char        *name;
+		
+		name = g_filename_display_basename (window->archive->uri);
+		
+		gtk_tree_store_append (window->priv->tree_store, &node, NULL);
+		gtk_tree_store_set (window->priv->tree_store, &node,
+				    TREE_COLUMN_ICON, icon,
+				    TREE_COLUMN_NAME, name, 
+				    TREE_COLUMN_PATH, "/",
+				    -1);
+		g_free (name);
+		
+		g_hash_table_replace (dir_cache, "/", gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &node));
+	}
+	g_object_unref (icon);
+	
+	/**/
+	
+	icon = get_mime_type_icon (MIME_TYPE_DIRECTORY);
+	for (i = 0; i < dirs->len; i++) {
+		char        *dir = g_array_index (dirs, char*, i);
+		char        *parent_dir;
+		GtkTreePath *parent_path;
+		GtkTreeIter  parent;
+		GtkTreeIter  node;
+			
+		parent_dir = remove_level_from_path (dir);
+		if (parent_dir == NULL)	
+			continue;
+			
+		parent_path = g_hash_table_lookup (dir_cache, parent_dir);
+		gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->tree_store),
+					 &parent,
+					 parent_path);
+		gtk_tree_store_append (window->priv->tree_store, &node, &parent);
+		gtk_tree_store_set (window->priv->tree_store, &node,
+				    TREE_COLUMN_ICON, icon,
+				    TREE_COLUMN_NAME, file_name_from_path (dir), 
+				    TREE_COLUMN_PATH, dir,
+				    -1);
+		g_hash_table_replace (dir_cache, dir, gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &node));		    
+
+		g_free (parent_dir);
+	}
+	g_hash_table_destroy (dir_cache);
+	g_object_unref (icon);
+			
+	g_array_free (dirs, TRUE);
+}
+
+
 void
 fr_window_update_file_list (FrWindow *window)
 {
@@ -1415,11 +1588,12 @@ fr_window_update_file_list (FrWindow *window)
 	GList      *file_list;
 	UpdateData *udata;
 
-	if (GTK_WIDGET_REALIZED (window->priv->list_view))
+	if (GTK_WIDGET_REALIZED (window->priv->list_view)) 
 		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->list_view), 0, 0);
 
+	gtk_list_store_clear (window->priv->list_store);
+
 	if (! window->priv->archive_present || window->priv->archive_new) {
-		gtk_list_store_clear (window->priv->list_store);
 		window->priv->current_view_length = 0;
 
 		if (window->priv->archive_new) {
@@ -1433,17 +1607,18 @@ fr_window_update_file_list (FrWindow *window)
 
 		return;
 	}
-	else
+	else { 
 		gtk_widget_set_sensitive (window->priv->list_view, TRUE);
+		if (! GTK_WIDGET_VISIBLE (window->priv->list_view))
+			gtk_widget_show_all (window->priv->list_view->parent);
+	}
 
 	if (window->priv->give_focus_to_the_list) {
 		gtk_widget_grab_focus (window->priv->list_view);
 		window->priv->give_focus_to_the_list = FALSE;
 	}
 
-	gtk_list_store_clear (window->priv->list_store);
-	if (! GTK_WIDGET_VISIBLE (window->priv->list_view))
-		gtk_widget_show_all (window->priv->list_view->parent);
+	/**/
 
 	fr_window_start_activity_mode (window);
 
@@ -1469,11 +1644,10 @@ fr_window_update_file_list (FrWindow *window)
 
 		fr_window_compute_list_names (window, window->archive->command->file_list);
 		dir_list = fr_window_get_current_dir_list (window);
-
-		g_free (current_dir);
-
 		fr_window_sort_file_list (window, &dir_list);
 		file_list = dir_list;
+
+		g_free (current_dir);
 	}
 
 	window->priv->current_view_length = g_list_length (file_list);
@@ -1695,11 +1869,52 @@ location_entry_key_press_event_cb (GtkWidget   *widget,
 }
 
 
+static gboolean
+get_tree_iter_from_path (FrWindow    *window,
+			 const char  *path,
+			 GtkTreeIter *parent,
+			 GtkTreeIter *iter)
+{
+	gboolean    result = FALSE;
+	
+	if (! gtk_tree_model_iter_children (GTK_TREE_MODEL (window->priv->tree_store), iter, parent))
+		return FALSE;
+
+	do {
+		GtkTreeIter  tmp;
+		char        *iter_path;
+
+		if (get_tree_iter_from_path (window, path, iter, &tmp)) {
+			*iter = tmp;
+			return TRUE;
+		}
+		
+		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->tree_store),
+				    iter,
+				    TREE_COLUMN_PATH, &iter_path,
+				    -1);
+				    
+g_print ("%s <==> %s\n", path, iter_path);				    
+				    
+		if ((iter_path != NULL) && (strcmp (path, iter_path) == 0)) {
+			result = TRUE;
+			g_free (iter_path);
+			break;
+		}				    
+		g_free (iter_path);
+	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (window->priv->tree_store), iter));
+	
+	return result;
+}
+
+
 static void
 fr_window_update_current_location (FrWindow *window)
 {
 	const char *current_dir = fr_window_get_current_location (window);
-
+	char       *path;
+	GtkTreeIter iter;
+	
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
 		gtk_widget_hide (window->priv->location_bar);
 		return;
@@ -1718,6 +1933,20 @@ fr_window_update_current_location (FrWindow *window)
 #if 0
 	fr_window_history_print (window);
 #endif
+
+	path = remove_ending_separator (current_dir);
+	if (get_tree_iter_from_path (window, path, NULL, &iter)) {
+		GtkTreeSelection *selection;
+		GtkTreePath      *t_path;
+		
+		t_path = gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &iter);
+		gtk_tree_view_expand_to_path (GTK_TREE_VIEW (window->priv->tree_view), t_path);
+		gtk_tree_path_free (t_path);
+		
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+		gtk_tree_selection_select_iter (selection, &iter);
+	}
+	g_free (path);
 }
 
 
@@ -2404,6 +2633,7 @@ action_performed (FrArchive   *archive,
 			fr_window_history_clear (window);
 			fr_window_history_add (window, "/");
 			fr_window_update_file_list (window);
+			fr_window_update_dir_tree (window);
 			fr_window_update_title (window);
 			fr_window_update_sensitivity (window);
 			fr_window_update_current_location (window);
@@ -2463,6 +2693,7 @@ action_performed (FrArchive   *archive,
 		fr_window_update_title (window);
 		fr_window_update_current_location (window);
 		fr_window_update_file_list (window);
+		fr_window_update_dir_tree (window);
 		if (! window->priv->non_interactive)
 			gtk_window_present (GTK_WINDOW (window));
 		break;
@@ -2788,14 +3019,14 @@ file_motion_notify_callback (GtkWidget *widget,
 	if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->priv->list_view)))
 		return FALSE;
 
-	last_hover_path = window->priv->hover_path;
+	last_hover_path = window->priv->list_hover_path;
 
 	gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
 				       event->x, event->y,
-				       &window->priv->hover_path,
+				       &window->priv->list_hover_path,
 				       NULL, NULL, NULL);
 
-	if (window->priv->hover_path != NULL)
+	if (window->priv->list_hover_path != NULL)
 		cursor = gdk_cursor_new (GDK_HAND2);
 	else
 		cursor = NULL;
@@ -2803,9 +3034,9 @@ file_motion_notify_callback (GtkWidget *widget,
 	gdk_window_set_cursor (event->window, cursor);
 
 	/* only redraw if the hover row has changed */
-	if (!(last_hover_path == NULL && window->priv->hover_path == NULL) &&
-	    (!(last_hover_path != NULL && window->priv->hover_path != NULL) ||
-	     gtk_tree_path_compare (last_hover_path, window->priv->hover_path))) {
+	if (!(last_hover_path == NULL && window->priv->list_hover_path == NULL) &&
+	    (!(last_hover_path != NULL && window->priv->list_hover_path != NULL) ||
+	     gtk_tree_path_compare (last_hover_path, window->priv->list_hover_path))) {
 		if (last_hover_path) {
 			gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
 						 &iter, last_hover_path);
@@ -2813,11 +3044,11 @@ file_motion_notify_callback (GtkWidget *widget,
 						    last_hover_path, &iter);
 		}
 
-		if (window->priv->hover_path) {
+		if (window->priv->list_hover_path) {
 			gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
-						 &iter, window->priv->hover_path);
+						 &iter, window->priv->list_hover_path);
 			gtk_tree_model_row_changed (GTK_TREE_MODEL (window->priv->list_store),
-						    window->priv->hover_path, &iter);
+						    window->priv->list_hover_path, &iter);
 		}
 	}
 
@@ -2835,16 +3066,16 @@ file_leave_notify_callback (GtkWidget *widget,
 	FrWindow    *window = user_data;
 	GtkTreeIter  iter;
 
-	if (window->priv->single_click && (window->priv->hover_path != NULL)) {
+	if (window->priv->single_click && (window->priv->list_hover_path != NULL)) {
 		gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
 					 &iter,
-					 window->priv->hover_path);
+					 window->priv->list_hover_path);
 		gtk_tree_model_row_changed (GTK_TREE_MODEL (window->priv->list_store),
-					    window->priv->hover_path,
+					    window->priv->list_hover_path,
 					    &iter);
 
-		gtk_tree_path_free (window->priv->hover_path);
-		window->priv->hover_path = NULL;
+		gtk_tree_path_free (window->priv->list_hover_path);
+		window->priv->list_hover_path = NULL;
 	}
 
 	return FALSE;
@@ -3387,6 +3618,28 @@ key_press_cb (GtkWidget   *widget,
 
 
 static gboolean
+dir_tree_selection_changed_cb (GtkTreeSelection *selection,
+			       gpointer          user_data)
+{
+	FrWindow    *window = user_data;
+	GtkTreeIter  iter;
+	
+	if (gtk_tree_selection_get_selected (selection, NULL, &iter)) {
+		char *path;
+		
+		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->tree_store),
+				    &iter,
+				    TREE_COLUMN_PATH, &path,
+				    -1);
+		fr_window_go_to_location (window, path);
+		g_free (path);
+	}
+
+	return FALSE;
+}
+
+
+static gboolean
 selection_changed_cb (GtkTreeSelection *selection,
 		      gpointer          user_data)
 {
@@ -3440,8 +3693,8 @@ filename_cell_data_func (GtkTreeViewColumn *column,
 	if (window->priv->single_click) {
 		path = gtk_tree_model_get_path (model, iter);
 
-		if ((window->priv->hover_path == NULL)
-		    || gtk_tree_path_compare (path, window->priv->hover_path))
+		if ((window->priv->list_hover_path == NULL)
+		    || gtk_tree_path_compare (path, window->priv->list_hover_path))
 			underline = PANGO_UNDERLINE_NONE;
 		else
 			underline = PANGO_UNDERLINE_SINGLE;
@@ -3461,8 +3714,55 @@ filename_cell_data_func (GtkTreeViewColumn *column,
 
 
 static void
-add_columns (FrWindow    *window,
-	     GtkTreeView *treeview)
+add_dir_tree_columns (FrWindow    *window,
+		      GtkTreeView *treeview)
+{
+	GtkCellRenderer   *renderer;
+	GtkTreeViewColumn *column;
+	GValue             value = { 0, };
+
+	/* First column. */
+
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_title (column, _("Folders"));
+
+	/* icon */
+	
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes (column, renderer,
+					     "pixbuf", TREE_COLUMN_ICON,
+					     NULL);
+
+	/* name */
+
+	renderer = gtk_cell_renderer_text_new ();
+
+	g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
+	g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
+	g_object_set_property (G_OBJECT (renderer), "ellipsize", &value);
+	g_value_unset (&value);
+
+	gtk_tree_view_column_pack_start (column,
+					 renderer,
+					 TRUE);
+	gtk_tree_view_column_set_attributes (column, renderer,
+					     "text", TREE_COLUMN_NAME,
+					     NULL);
+
+	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_column_set_sort_column_id (column, TREE_COLUMN_NAME);
+	gtk_tree_view_column_set_cell_data_func (column, renderer,
+						 (GtkTreeCellDataFunc) filename_cell_data_func,
+						 window, NULL);				
+						 
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+}
+
+
+static void
+add_file_list_columns (FrWindow    *window,
+		       GtkTreeView *treeview)
 {
 	static char       *titles[] = {N_("Size"),
 				       N_("Type"),
@@ -3496,9 +3796,9 @@ add_columns (FrWindow    *window,
 
 	/* name */
 
-	window->priv->name_renderer = renderer = gtk_cell_renderer_text_new ();
-
 	window->priv->single_click = is_single_click_policy ();
+
+	renderer = gtk_cell_renderer_text_new ();
 
 	g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
 	g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
@@ -3649,15 +3949,13 @@ static gboolean
 fr_window_show_cb (GtkWidget *widget,
 		   FrWindow  *window)
 {
-	gboolean view_foobar;
-
 	fr_window_update_current_location (window);
 
-	view_foobar = eel_gconf_get_boolean (PREF_UI_TOOLBAR, TRUE);
-	set_active (window, "ViewToolbar", view_foobar);
-
-	view_foobar = eel_gconf_get_boolean (PREF_UI_STATUSBAR, TRUE);
-	set_active (window, "ViewStatusbar", view_foobar);
+	set_active (window, "ViewToolbar", eel_gconf_get_boolean (PREF_UI_TOOLBAR, TRUE));
+	set_active (window, "ViewStatusbar", eel_gconf_get_boolean (PREF_UI_STATUSBAR, TRUE));
+	
+	window->priv->view_folders = eel_gconf_get_boolean (PREF_UI_FOLDERS, FALSE);
+	set_active (window, "ViewFolders", window->priv->view_folders);	
 
 	return TRUE;
 }
@@ -3702,6 +4000,18 @@ pref_view_statusbar_changed (GConfClient *client,
 	FrWindow *window = user_data;
 
 	fr_window_set_statusbar_visibility (window, gconf_value_get_bool (gconf_entry_get_value (entry)));
+}
+
+
+static void
+pref_view_folders_changed (GConfClient *client,
+		           guint        cnxn_id,
+			   GConfEntry  *entry,
+			   gpointer     user_data)
+{
+	FrWindow *window = user_data;
+
+	fr_window_set_folders_visibility (window, gconf_value_get_bool (gconf_entry_get_value (entry)));
 }
 
 
@@ -3758,6 +4068,7 @@ pref_use_mime_icons_changed (GConfClient *client,
 	}
 
 	fr_window_update_file_list (window);
+	fr_window_update_dir_tree (window);
 }
 
 
@@ -3781,6 +4092,7 @@ theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 	}
 
 	fr_window_update_file_list (window);
+	fr_window_update_dir_tree (window);
 }
 
 
@@ -4064,12 +4376,26 @@ fr_window_init_recent_chooser (FrWindow         *window,
 
 
 static void
+close_sidepane_button_clicked_cb (GtkButton *button,
+				  FrWindow  *window)
+{
+	fr_window_set_folders_visibility (window, FALSE);
+}
+
+
+static void
 fr_window_construct (FrWindow *window)
 {
 	GtkWidget        *toolbar;
-	GtkWidget        *scrolled_window;
+	GtkWidget        *list_scrolled_window;
 	GtkWidget        *vbox;
 	GtkWidget        *location_box;
+	GtkWidget        *paned;
+	GtkWidget        *tree_scrolled_window;
+	GtkWidget        *sidepane_title;
+	GtkWidget        *sidepane_title_box;
+	GtkWidget        *sidepane_title_label;
+	GtkWidget        *close_sidepane_button;
 	GtkTreeSelection *selection;
 	int               i;
 	int               icon_width, icon_height;
@@ -4225,7 +4551,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->current_batch_action.free_func = NULL;
 
 	window->priv->pd_last_archive = NULL;
-
+	
 	/* Create the widgets. */
 
 	/* * File list. */
@@ -4243,7 +4569,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->priv->list_store));
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (window->priv->list_view), TRUE);
-	add_columns (window, GTK_TREE_VIEW (window->priv->list_view));
+	add_file_list_columns (window, GTK_TREE_VIEW (window->priv->list_view));
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (window->priv->list_view),
 					 TRUE);
 	gtk_tree_view_set_search_column (GTK_TREE_VIEW (window->priv->list_view),
@@ -4314,11 +4640,11 @@ fr_window_construct (FrWindow *window)
 
 	egg_tree_multi_drag_add_drag_support (GTK_TREE_VIEW (window->priv->list_view));
 
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+	list_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (list_scrolled_window),
 					GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (scrolled_window), window->priv->list_view);
+	gtk_container_add (GTK_CONTAINER (list_scrolled_window), window->priv->list_view);
 
 	/* * Location bar. */
 
@@ -4399,8 +4725,65 @@ fr_window_construct (FrWindow *window)
 
 	gtk_widget_show_all (window->priv->location_bar);
 
-	gnome_app_set_contents (GNOME_APP (window), scrolled_window);
-	gtk_widget_show_all (scrolled_window);
+	/* tree view */
+
+	window->priv->tree_store = gtk_tree_store_new (3,
+						       G_TYPE_STRING,
+						       GDK_TYPE_PIXBUF,
+						       G_TYPE_STRING);
+	window->priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->priv->tree_store));
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (window->priv->tree_view), FALSE);
+	add_dir_tree_columns (window, GTK_TREE_VIEW (window->priv->tree_view));
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+	g_signal_connect (selection,
+			  "changed",
+			  G_CALLBACK (dir_tree_selection_changed_cb),
+			  window);
+	
+	tree_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scrolled_window),
+					GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
+	gtk_container_add (GTK_CONTAINER (tree_scrolled_window), window->priv->tree_view);
+
+	/* side pane */
+
+	window->priv->sidepane = gtk_vbox_new (FALSE, 0);
+	
+	sidepane_title = gtk_frame_new (NULL);
+	gtk_frame_set_shadow_type (GTK_FRAME (sidepane_title), GTK_SHADOW_ETCHED_IN);
+	
+	sidepane_title_box = gtk_hbox_new (FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (sidepane_title_box), 2);
+	gtk_container_add (GTK_CONTAINER (sidepane_title), sidepane_title_box);	
+	sidepane_title_label = gtk_label_new (_("Folders"));
+	
+	gtk_misc_set_alignment (GTK_MISC (sidepane_title_label), 0.0, 0.5);
+	gtk_box_pack_start (GTK_BOX (sidepane_title_box), sidepane_title_label, TRUE, TRUE, 0);
+	
+	close_sidepane_button = gtk_button_new ();
+	gtk_container_add (GTK_CONTAINER (close_sidepane_button), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
+	gtk_button_set_relief (GTK_BUTTON (close_sidepane_button), GTK_RELIEF_NONE);
+	gtk_tooltips_set_tip (window->priv->tooltips, close_sidepane_button, _("Close the folders pane"), NULL);
+	g_signal_connect (close_sidepane_button,
+			  "clicked",
+			  G_CALLBACK (close_sidepane_button_clicked_cb),
+			  window);
+	gtk_box_pack_end (GTK_BOX (sidepane_title_box), close_sidepane_button, FALSE, FALSE, 0);
+
+	gtk_box_pack_start (GTK_BOX (window->priv->sidepane), sidepane_title, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (window->priv->sidepane), tree_scrolled_window, TRUE, TRUE, 0);
+
+	/* main content */
+
+	paned = gtk_hpaned_new ();
+	gtk_paned_pack1 (GTK_PANED (paned), window->priv->sidepane, TRUE, TRUE);
+	gtk_paned_pack2 (GTK_PANED (paned), list_scrolled_window, TRUE, TRUE);
+	gtk_paned_set_position (GTK_PANED (paned), 200);
+	gtk_widget_show_all (paned);
+	
+	gnome_app_set_contents (GNOME_APP (window), paned);
 
 	/* Build the menu and the toolbar. */
 
@@ -4544,6 +4927,7 @@ fr_window_construct (FrWindow *window)
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);
 	fr_window_update_file_list (window);
+	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 	fr_window_update_columns_visibility (window);
 
@@ -4562,6 +4946,10 @@ fr_window_construct (FrWindow *window)
 	window->priv->cnxn_id[i++] = eel_gconf_notification_add (
 					   PREF_UI_STATUSBAR,
 					   pref_view_statusbar_changed,
+					   window);
+	window->priv->cnxn_id[i++] = eel_gconf_notification_add (
+					   PREF_UI_FOLDERS,
+					   pref_view_folders_changed,
 					   window);
 	window->priv->cnxn_id[i++] = eel_gconf_notification_add (
 					   PREF_LIST_SHOW_TYPE,
@@ -4712,6 +5100,7 @@ fr_window_archive_close (FrWindow *window)
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);
 	fr_window_update_file_list (window);
+	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 	fr_window_update_statusbar_list_info (window);
 }
@@ -5377,6 +5766,7 @@ fr_window_set_list_mode (FrWindow         *window,
 	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT));
 
 	fr_window_update_file_list (window);
+	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 }
 
@@ -6827,6 +7217,19 @@ fr_window_set_statusbar_visibility  (FrWindow *window,
 		gtk_widget_hide (window->priv->statusbar);
 
 	set_active (window, "ViewStatusbar", visible);
+}
+
+
+void
+fr_window_set_folders_visibility (FrWindow   *window,
+				  gboolean    value)
+{
+	g_return_if_fail (window != NULL);
+
+	window->priv->view_folders = value;
+	fr_window_update_dir_tree (window);
+
+	set_active (window, "ViewFolders", window->priv->view_folders);	
 }
 
 

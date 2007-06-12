@@ -864,8 +864,9 @@ is_temp_work_dir (const char *dir) {
 		const char *folder;
 
 		folder = get_folder_from_try_folder_list (i);
-		if (strncmp (dir, folder, strlen (folder)) == 0)
-			return TRUE;
+		if (strncmp (dir, folder, strlen (folder)) == 0) 
+			if (strncmp (dir + strlen (folder), "/.fr-", 5) == 0)
+				return TRUE;
 	}
 
 	return FALSE;

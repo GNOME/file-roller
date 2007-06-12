@@ -798,6 +798,14 @@ activate_action_view_statusbar (GtkAction *action,
 
 
 void
+activate_action_view_folders (GtkAction *action,
+				gpointer   data)
+{
+	eel_gconf_set_boolean (PREF_UI_FOLDERS, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
+}
+
+
+void
 activate_action_stop (GtkAction *action,
 		      gpointer   data)
 {

@@ -30,7 +30,7 @@
 #include "file-list.h"
 #include "fr-archive.h"
 
-#define GCONF_NOTIFICATIONS 9
+#define GCONF_NOTIFICATIONS 10
 
 enum {
 	COLUMN_FILE_DATA,
@@ -42,6 +42,13 @@ enum {
 	COLUMN_TIME,
 	COLUMN_PATH,
 	NUMBER_OF_COLUMNS
+};
+
+enum {
+	TREE_COLUMN_PATH,
+	TREE_COLUMN_ICON,
+	TREE_COLUMN_NAME,
+	TREE_NUMBER_OF_COLUMNS
 };
 
 typedef enum {
@@ -247,6 +254,8 @@ void        fr_window_pop_message                 (FrWindow   *window);
 void        fr_window_set_toolbar_visibility      (FrWindow   *window,
 						   gboolean    value);
 void        fr_window_set_statusbar_visibility    (FrWindow   *window,
+						   gboolean    value);
+void        fr_window_set_folders_visibility      (FrWindow   *window,
 						   gboolean    value);
 
 /* batch mode procedures. */

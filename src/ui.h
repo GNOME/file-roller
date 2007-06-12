@@ -178,6 +178,11 @@ static GtkToggleActionEntry action_toggle_entries[] = {
 	  N_("Reverse the list order"),
 	  G_CALLBACK (activate_action_sort_reverse_order), 
 	  FALSE },
+	{ "ViewFolders", NULL,
+	  N_("_Folders"), NULL,
+	  N_("View the folders pane"),
+	  G_CALLBACK (activate_action_view_folders), 
+	  FALSE },
 };
 static guint n_action_toggle_entries = G_N_ELEMENTS (action_toggle_entries);
 
@@ -255,6 +260,8 @@ static const gchar *ui_info =
 "      <separator/>"
 "      <menuitem action='ViewAllFiles'/>"
 "      <menuitem action='ViewAsFolder'/>"
+"      <separator/>"
+"      <menuitem action='ViewFolders'/>"
 "      <separator/>"
 "      <menu action='ArrangeFilesMenu'>"
 "        <menuitem action='SortByName'/>"

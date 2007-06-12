@@ -42,6 +42,7 @@
 #define PREF_UI_HISTORY_LEN        "/apps/file-roller/ui/history_len"
 #define PREF_UI_TOOLBAR            "/apps/file-roller/ui/view_toolbar"
 #define PREF_UI_STATUSBAR          "/apps/file-roller/ui/view_statusbar"
+#define PREF_UI_FOLDERS            "/apps/file-roller/ui/view_folders"
 
 #define PREF_EDIT_EDITORS          "/apps/file-roller/general/editors"
 #define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/general/compression_level"

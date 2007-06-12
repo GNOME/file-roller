@@ -53,6 +53,7 @@ void activate_action_password (GtkAction *action, gpointer data);
 
 void activate_action_view_toolbar (GtkAction *action, gpointer data);
 void activate_action_view_statusbar (GtkAction *action, gpointer data);
+void activate_action_view_folders (GtkAction *action, gpointer data);
 void activate_action_stop (GtkAction *action, gpointer data);
 void activate_action_reload (GtkAction *action, gpointer data);
 void activate_action_sort_reverse_order (GtkAction *action, gpointer data);
