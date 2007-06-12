@@ -1464,6 +1464,85 @@ path_compare (gconstpointer a,
 }
 
 
+static gboolean
+get_tree_iter_from_path (FrWindow    *window,
+			 const char  *path,
+			 GtkTreeIter *parent,
+			 GtkTreeIter *iter)
+{
+	gboolean    result = FALSE;
+	
+	if (! gtk_tree_model_iter_children (GTK_TREE_MODEL (window->priv->tree_store), iter, parent))
+		return FALSE;
+
+	do {
+		GtkTreeIter  tmp;
+		char        *iter_path;
+
+		if (get_tree_iter_from_path (window, path, iter, &tmp)) {
+			*iter = tmp;
+			return TRUE;
+		}
+		
+		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->tree_store),
+				    iter,
+				    TREE_COLUMN_PATH, &iter_path,
+				    -1);			    
+				    
+		if ((iter_path != NULL) && (strcmp (path, iter_path) == 0)) {
+			result = TRUE;
+			g_free (iter_path);
+			break;
+		}				    
+		g_free (iter_path);
+	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (window->priv->tree_store), iter));
+	
+	return result;
+}
+
+
+static void
+fr_window_update_current_location (FrWindow *window)
+{
+	const char *current_dir = fr_window_get_current_location (window);
+	char       *path;
+	GtkTreeIter iter;
+	
+	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
+		gtk_widget_hide (window->priv->location_bar);
+		return;
+	}
+
+	gtk_widget_show (window->priv->location_bar);
+
+	gtk_entry_set_text (GTK_ENTRY (window->priv->location_entry), window->priv->archive_present? current_dir: "");
+	gtk_widget_set_sensitive (window->priv->home_button, window->priv->archive_present);
+	gtk_widget_set_sensitive (window->priv->up_button, window->priv->archive_present && (current_dir != NULL) && (strcmp (current_dir, "/") != 0));
+	gtk_widget_set_sensitive (window->priv->back_button, window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->next != NULL));
+	gtk_widget_set_sensitive (window->priv->fwd_button, window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
+	gtk_widget_set_sensitive (window->priv->location_entry, window->priv->archive_present);
+	gtk_widget_set_sensitive (window->priv->location_label, window->priv->archive_present);
+
+#if 0
+	fr_window_history_print (window);
+#endif
+
+	path = remove_ending_separator (current_dir);
+	if (get_tree_iter_from_path (window, path, NULL, &iter)) {
+		GtkTreeSelection *selection;
+		GtkTreePath      *t_path;
+		
+		t_path = gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &iter);
+		gtk_tree_view_expand_to_path (GTK_TREE_VIEW (window->priv->tree_view), t_path);
+		gtk_tree_path_free (t_path);
+		
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+		gtk_tree_selection_select_iter (selection, &iter);
+	}
+	g_free (path);
+}
+
+
 void
 fr_window_update_dir_tree (FrWindow *window)
 {
@@ -1578,6 +1657,8 @@ fr_window_update_dir_tree (FrWindow *window)
 	g_object_unref (icon);
 			
 	g_array_free (dirs, TRUE);
+	
+	fr_window_update_current_location (window);
 }
 
 
@@ -1866,85 +1947,6 @@ location_entry_key_press_event_cb (GtkWidget   *widget,
 		fr_window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (window->priv->location_entry)));
 
 	return FALSE;
-}
-
-
-static gboolean
-get_tree_iter_from_path (FrWindow    *window,
-			 const char  *path,
-			 GtkTreeIter *parent,
-			 GtkTreeIter *iter)
-{
-	gboolean    result = FALSE;
-	
-	if (! gtk_tree_model_iter_children (GTK_TREE_MODEL (window->priv->tree_store), iter, parent))
-		return FALSE;
-
-	do {
-		GtkTreeIter  tmp;
-		char        *iter_path;
-
-		if (get_tree_iter_from_path (window, path, iter, &tmp)) {
-			*iter = tmp;
-			return TRUE;
-		}
-		
-		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->tree_store),
-				    iter,
-				    TREE_COLUMN_PATH, &iter_path,
-				    -1);			    
-				    
-		if ((iter_path != NULL) && (strcmp (path, iter_path) == 0)) {
-			result = TRUE;
-			g_free (iter_path);
-			break;
-		}				    
-		g_free (iter_path);
-	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (window->priv->tree_store), iter));
-	
-	return result;
-}
-
-
-static void
-fr_window_update_current_location (FrWindow *window)
-{
-	const char *current_dir = fr_window_get_current_location (window);
-	char       *path;
-	GtkTreeIter iter;
-	
-	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
-		gtk_widget_hide (window->priv->location_bar);
-		return;
-	}
-
-	gtk_widget_show (window->priv->location_bar);
-
-	gtk_entry_set_text (GTK_ENTRY (window->priv->location_entry), window->priv->archive_present? current_dir: "");
-	gtk_widget_set_sensitive (window->priv->home_button, window->priv->archive_present);
-	gtk_widget_set_sensitive (window->priv->up_button, window->priv->archive_present && (current_dir != NULL) && (strcmp (current_dir, "/") != 0));
-	gtk_widget_set_sensitive (window->priv->back_button, window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->next != NULL));
-	gtk_widget_set_sensitive (window->priv->fwd_button, window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
-	gtk_widget_set_sensitive (window->priv->location_entry, window->priv->archive_present);
-	gtk_widget_set_sensitive (window->priv->location_label, window->priv->archive_present);
-
-#if 0
-	fr_window_history_print (window);
-#endif
-
-	path = remove_ending_separator (current_dir);
-	if (get_tree_iter_from_path (window, path, NULL, &iter)) {
-		GtkTreeSelection *selection;
-		GtkTreePath      *t_path;
-		
-		t_path = gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &iter);
-		gtk_tree_view_expand_to_path (GTK_TREE_VIEW (window->priv->tree_view), t_path);
-		gtk_tree_path_free (t_path);
-		
-		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
-		gtk_tree_selection_select_iter (selection, &iter);
-	}
-	g_free (path);
 }
 
 
