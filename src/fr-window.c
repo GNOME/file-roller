@@ -1892,9 +1892,7 @@ get_tree_iter_from_path (FrWindow    *window,
 		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->tree_store),
 				    iter,
 				    TREE_COLUMN_PATH, &iter_path,
-				    -1);
-				    
-g_print ("%s <==> %s\n", path, iter_path);				    
+				    -1);			    
 				    
 		if ((iter_path != NULL) && (strcmp (path, iter_path) == 0)) {
 			result = TRUE;
