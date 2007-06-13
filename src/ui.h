@@ -179,7 +179,7 @@ static GtkToggleActionEntry action_toggle_entries[] = {
 	  G_CALLBACK (activate_action_sort_reverse_order), 
 	  FALSE },
 	{ "ViewFolders", NULL,
-	  N_("_Folders"), NULL,
+	  N_("_Folders"), "F9",
 	  N_("View the folders pane"),
 	  G_CALLBACK (activate_action_view_folders), 
 	  FALSE },

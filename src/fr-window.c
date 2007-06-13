@@ -83,13 +83,16 @@
 #define MIME_TYPE_ARCHIVE "application/x-archive"
 #define ICON_TYPE_DIRECTORY "gnome-fs-directory"
 #define ICON_TYPE_REGULAR   "gnome-fs-regular"
-#define ICON_GTK_SIZE GTK_ICON_SIZE_LARGE_TOOLBAR
+#define FILE_LIST_ICON_SIZE GTK_ICON_SIZE_LARGE_TOOLBAR
+#define DIR_TREE_ICON_SIZE GTK_ICON_SIZE_MENU
 
 #define BAD_CHARS "/\\*"
 
 static GHashTable     *pixbuf_hash = NULL;
+static GHashTable     *tree_pixbuf_hash = NULL;
 static GtkIconTheme   *icon_theme = NULL;
-static int             icon_size = 0;
+static int             file_list_icon_size = 0;
+static int             dir_tree_icon_size = 0;
 
 #define XDS_FILENAME "xds.txt"
 #define MAX_XDS_ATOM_VAL_LEN 4096
@@ -550,6 +553,12 @@ fr_window_finalize (GObject *object)
 					      NULL);
 			g_hash_table_destroy (pixbuf_hash);
 		}
+		if (tree_pixbuf_hash != NULL) {
+			g_hash_table_foreach (tree_pixbuf_hash,
+					      gh_unref_pixbuf,
+					      NULL);
+			g_hash_table_destroy (tree_pixbuf_hash);
+		}
 
 		gtk_main_quit ();
 	}
@@ -1006,23 +1015,26 @@ get_mime_type_icon (const char *mime_type)
 	GdkPixbuf *pixbuf = NULL;
 	char      *icon_name = NULL;
 	
-	pixbuf = g_hash_table_lookup (pixbuf_hash, mime_type);
+	pixbuf = g_hash_table_lookup (tree_pixbuf_hash, mime_type);
 	if (pixbuf != NULL) {
 		g_object_ref (G_OBJECT (pixbuf));
 		return pixbuf;
 	}
 
-	icon_name = gnome_icon_lookup (icon_theme,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-                                       NULL,
-       	                               mime_type,
-               	                       GNOME_ICON_LOOKUP_FLAGS_NONE,
-                       	               NULL);
+	if (strcmp (mime_type, MIME_TYPE_DIRECTORY) == 0)
+		icon_name = g_strdup (ICON_TYPE_DIRECTORY);
+	else
+		icon_name = gnome_icon_lookup (icon_theme,
+                	                       NULL,
+	                                       NULL,
+        	                               NULL,
+                	                       NULL,
+       	                	               mime_type,
+               	                	       GNOME_ICON_LOOKUP_FLAGS_NONE,
+	                       	               NULL);
 	pixbuf = gtk_icon_theme_load_icon (icon_theme,
 					   icon_name,
-					   icon_size,
+					   dir_tree_icon_size,
 					   0,
 					   NULL);
 	g_free (icon_name);						
@@ -1031,7 +1043,7 @@ get_mime_type_icon (const char *mime_type)
 		return NULL;
 
 	pixbuf = gdk_pixbuf_copy (pixbuf);
-	g_hash_table_insert (pixbuf_hash, (gpointer) mime_type, pixbuf);
+	g_hash_table_insert (tree_pixbuf_hash, (gpointer) mime_type, pixbuf);
 	g_object_ref (G_OBJECT (pixbuf));
 
 	return pixbuf;
@@ -1078,7 +1090,7 @@ get_icon (GtkWidget *widget,
 	
 	pixbuf = gtk_icon_theme_load_icon (icon_theme,
 					   icon_name,
-					   icon_size,
+					   file_list_icon_size,
 					   0,
 					   NULL);
 						
@@ -1115,7 +1127,7 @@ get_emblem (GtkWidget *widget,
 	
 	pixbuf = gtk_icon_theme_load_icon (icon_theme,
 					   "emblem-nowrite",
-					   icon_size,
+					   file_list_icon_size,
 					   0,
 					   NULL);
 	if (pixbuf == NULL)
@@ -4066,6 +4078,13 @@ pref_use_mime_icons_changed (GConfClient *client,
 		g_hash_table_destroy (pixbuf_hash);
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	}
+	if (tree_pixbuf_hash != NULL) {
+		g_hash_table_foreach (tree_pixbuf_hash,
+				      gh_unref_pixbuf,
+				      NULL);
+		g_hash_table_destroy (tree_pixbuf_hash);
+		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	}
 
 	fr_window_update_file_list (window);
 	fr_window_update_dir_tree (window);
@@ -4078,10 +4097,14 @@ theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 	int icon_width, icon_height;
 
 	gtk_icon_size_lookup_for_settings (gtk_widget_get_settings (GTK_WIDGET (window)),
-					   ICON_GTK_SIZE,
+					   FILE_LIST_ICON_SIZE,
 					   &icon_width, &icon_height);
+	file_list_icon_size = MAX (icon_width, icon_height);
 
-	icon_size = MAX (icon_width, icon_height);
+	gtk_icon_size_lookup_for_settings (gtk_widget_get_settings (GTK_WIDGET (window)),
+					   DIR_TREE_ICON_SIZE,
+					   &icon_width, &icon_height);
+	dir_tree_icon_size = MAX (icon_width, icon_height);
 
 	if (pixbuf_hash != NULL) {
 		g_hash_table_foreach (pixbuf_hash,
@@ -4090,7 +4113,14 @@ theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 		g_hash_table_destroy (pixbuf_hash);
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	}
-
+	if (tree_pixbuf_hash != NULL) {
+		g_hash_table_foreach (tree_pixbuf_hash,
+				      gh_unref_pixbuf,
+				      NULL);
+		g_hash_table_destroy (tree_pixbuf_hash);
+		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	}
+	
 	fr_window_update_file_list (window);
 	fr_window_update_dir_tree (window);
 }
@@ -4409,6 +4439,8 @@ fr_window_construct (FrWindow *window)
 
 	if (pixbuf_hash == NULL)
 		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	if (tree_pixbuf_hash == NULL)
+		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
 	if (icon_theme == NULL) 
 		icon_theme = gtk_icon_theme_get_default ();
@@ -4435,10 +4467,14 @@ fr_window_construct (FrWindow *window)
 				  window);
 
 	gtk_icon_size_lookup_for_settings (gtk_widget_get_settings (GTK_WIDGET (window)),
-					   ICON_GTK_SIZE,
+					   FILE_LIST_ICON_SIZE,
 					   &icon_width, &icon_height);
+	file_list_icon_size = MAX (icon_width, icon_height);
 
-	icon_size = MAX (icon_width, icon_height);
+	gtk_icon_size_lookup_for_settings (gtk_widget_get_settings (GTK_WIDGET (window)),
+					   DIR_TREE_ICON_SIZE,
+					   &icon_width, &icon_height);
+	dir_tree_icon_size = MAX (icon_width, icon_height);
 
 	gtk_window_set_default_size (GTK_WINDOW (window),
 				     eel_gconf_get_integer (PREF_UI_WINDOW_WIDTH, DEF_WIN_WIDTH),
