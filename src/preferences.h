@@ -39,6 +39,7 @@
 
 #define PREF_UI_WINDOW_WIDTH       "/apps/file-roller/ui/window_width"
 #define PREF_UI_WINDOW_HEIGHT      "/apps/file-roller/ui/window_height"
+#define PREF_UI_SIDEBAR_WIDTH      "/apps/file-roller/ui/sidebar_width"
 #define PREF_UI_HISTORY_LEN        "/apps/file-roller/ui/history_len"
 #define PREF_UI_TOOLBAR            "/apps/file-roller/ui/view_toolbar"
 #define PREF_UI_STATUSBAR          "/apps/file-roller/ui/view_statusbar"

@@ -189,10 +189,10 @@ static guint n_action_toggle_entries = G_N_ELEMENTS (action_toggle_entries);
 
 static GtkRadioActionEntry view_as_entries[] = {
 	{ "ViewAllFiles", NULL,
-	  N_("View All _Files"), NULL,
+	  N_("View All _Files"), "<control>1",
 	  " ", FR_WINDOW_LIST_MODE_FLAT },
 	{ "ViewAsFolder", NULL,
-	  N_("View as a F_older"), NULL,
+	  N_("View as a F_older"), "<control>2",
 	  " ", FR_WINDOW_LIST_MODE_AS_DIR },
 };
 static guint n_view_as_entries = G_N_ELEMENTS (view_as_entries);
@@ -252,15 +252,11 @@ static const gchar *ui_info =
 "      <menuitem action='Password'/>"
 "    </menu>"
 "    <menu action='ViewMenu'>"
-"      <menuitem action='ViewToolbar'/>"
-"      <menuitem action='ViewStatusbar'/>"
-"      <separator/>"
 "      <menuitem action='Stop'/>"
 "      <menuitem action='Reload'/>"
 "      <separator/>"
-"      <menuitem action='ViewAllFiles'/>"
-"      <menuitem action='ViewAsFolder'/>"
-"      <separator/>"
+"      <menuitem action='ViewToolbar'/>"
+"      <menuitem action='ViewStatusbar'/>"
 "      <menuitem action='ViewFolders'/>"
 "      <separator/>"
 "      <menu action='ArrangeFilesMenu'>"
@@ -272,6 +268,9 @@ static const gchar *ui_info =
 "        <separator/>"
 "        <menuitem action='SortReverseOrder'/>"
 "      </menu>"
+"      <separator/>"
+"      <menuitem action='ViewAllFiles'/>"
+"      <menuitem action='ViewAsFolder'/>" 
 "      <separator/>"
 "      <menuitem action='LastOutput'/>"
 "    </menu>"

@@ -78,6 +78,7 @@
 
 #define DEF_WIN_WIDTH 600
 #define DEF_WIN_HEIGHT 480
+#define DEF_SIDEBAR_WIDTH 200
 
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
 #define MIME_TYPE_ARCHIVE "application/x-archive"
@@ -205,6 +206,7 @@ struct _FrWindowPrivateData {
 	GtkWidget *      home_button;
 	GtkWidget *      back_button;
 	GtkWidget *      fwd_button;
+	GtkWidget       *paned;
 	GtkWidget       *sidepane;
 	GtkTreePath     *tree_hover_path;
 	GtkTreePath     *list_hover_path;
@@ -574,6 +576,8 @@ fr_window_close (FrWindow *window)
 		gdk_drawable_get_size (GTK_WIDGET (window)->window, &width, &height);
 		eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
 		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
+		
+		eel_gconf_set_integer (PREF_UI_SIDEBAR_WIDTH, gtk_paned_get_position (GTK_PANED (window->priv->paned)));
 	}
 	
 	if (window->priv->check_clipboard != 0) {
@@ -4417,7 +4421,6 @@ fr_window_construct (FrWindow *window)
 	GtkWidget        *list_scrolled_window;
 	GtkWidget        *vbox;
 	GtkWidget        *location_box;
-	GtkWidget        *paned;
 	GtkWidget        *tree_scrolled_window;
 	GtkWidget        *sidepane_title;
 	GtkWidget        *sidepane_title_box;
@@ -4810,13 +4813,13 @@ fr_window_construct (FrWindow *window)
 
 	/* main content */
 
-	paned = gtk_hpaned_new ();
-	gtk_paned_pack1 (GTK_PANED (paned), window->priv->sidepane, TRUE, TRUE);
-	gtk_paned_pack2 (GTK_PANED (paned), list_scrolled_window, TRUE, TRUE);
-	gtk_paned_set_position (GTK_PANED (paned), 200);
-	gtk_widget_show_all (paned);
+	window->priv->paned = gtk_hpaned_new ();
+	gtk_paned_pack1 (GTK_PANED (window->priv->paned), window->priv->sidepane, TRUE, TRUE);
+	gtk_paned_pack2 (GTK_PANED (window->priv->paned), list_scrolled_window, TRUE, TRUE);
+	gtk_paned_set_position (GTK_PANED (window->priv->paned), eel_gconf_get_integer (PREF_UI_SIDEBAR_WIDTH, DEF_SIDEBAR_WIDTH));
+	gtk_widget_show_all (window->priv->paned);
 	
-	gnome_app_set_contents (GNOME_APP (window), paned);
+	gnome_app_set_contents (GNOME_APP (window), window->priv->paned);
 
 	/* Build the menu and the toolbar. */
 
