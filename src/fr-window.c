@@ -3764,9 +3764,6 @@ add_dir_tree_columns (FrWindow    *window,
 
 	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_set_sort_column_id (column, TREE_COLUMN_NAME);
-	gtk_tree_view_column_set_cell_data_func (column, renderer,
-						 (GtkTreeCellDataFunc) filename_cell_data_func,
-						 window, NULL);				
 						 
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 }
