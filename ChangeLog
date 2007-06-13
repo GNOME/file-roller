@@ -1,5 +1,10 @@
 2007-06-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-window.c (fr_window_close): destroy the window in a idle 
+	callback to be sure the clicpboard check has been removed.
+
+2007-06-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
 	* src/ui.h: view menu reorganized.
 	
 	* src/preferences.h: 

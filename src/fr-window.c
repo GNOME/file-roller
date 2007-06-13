@@ -67,7 +67,7 @@
 #define FILES_TO_PROCESS_AT_ONCE 500
 #define DISPLAY_TIMEOUT_INTERVAL_MSECS 300
 #define MAX_MESSAGE_LENGTH 50
-#define CHECK_CLIPBOARD_TIMEOUT 1000
+#define CHECK_CLIPBOARD_TIMEOUT 500
 
 #define PROGRESS_DIALOG_WIDTH 300
 #define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
@@ -567,9 +567,22 @@ fr_window_finalize (GObject *object)
 }
 
 
+static gboolean
+close__step2 (gpointer data)
+{
+	gtk_widget_destroy (GTK_WIDGET (data));
+	return FALSE;
+}
+
+
 void
 fr_window_close (FrWindow *window)
 {
+	if (window->priv->check_clipboard != 0) {
+		g_source_remove (window->priv->check_clipboard);
+		window->priv->check_clipboard = 0;
+	}
+	
 	if (GTK_WIDGET_REALIZED (window)) {
 		int width, height;
 		
@@ -580,12 +593,7 @@ fr_window_close (FrWindow *window)
 		eel_gconf_set_integer (PREF_UI_SIDEBAR_WIDTH, gtk_paned_get_position (GTK_PANED (window->priv->paned)));
 	}
 	
-	if (window->priv->check_clipboard != 0) {
-		g_source_remove (window->priv->check_clipboard);
-		window->priv->check_clipboard = 0;
-	}
-	
-	gtk_widget_destroy (GTK_WIDGET (window));
+	g_idle_add (close__step2, window);
 }
 
 
@@ -1863,11 +1871,11 @@ check_clipboard_cb (gpointer data)
 	gboolean      can_modify;
 	gboolean      ro;
 	gboolean      compr_file;
-		
+	
 	running    = window->priv->activity_ref > 0;
 	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
 	ro         = ! no_archive && window->archive->read_only;
-	can_modify        = (window->archive != NULL) && (window->archive->command != NULL) && window->archive->command->propCanModify;
+	can_modify = (window->archive != NULL) && (window->archive->command != NULL) && window->archive->command->propCanModify;
 	compr_file = ! no_archive && window->archive->is_compressed_file;
 	
 	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
