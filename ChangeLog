@@ -1,5 +1,10 @@
 2007-06-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-command-tar.c (fr_command_tar_recompress): do not rename
+	the archive when creating a temp filename.
+
+2007-06-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
+	
 	* src/fr-window.c (fr_window_close): destroy the window in a idle 
 	callback to be sure the clicpboard check has been removed.
 

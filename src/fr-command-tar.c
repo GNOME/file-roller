@@ -542,6 +542,8 @@ fr_command_tar_recompress (FrCommand     *comm,
 	}
 
 	if (c_tar->name_modified) {
+		char *tmp_dir;
+		
 		/* Restore original name. */
 
 		fr_process_begin_command (comm->process, "mv");
@@ -550,6 +552,16 @@ fr_command_tar_recompress (FrCommand     *comm,
 		fr_process_add_arg (comm->process, new_name);
 		fr_process_add_arg (comm->process, comm->e_filename);
 		fr_process_end_command (comm->process);
+		
+		tmp_dir = remove_level_from_path (new_name);
+		
+		fr_process_begin_command (comm->process, "rm");
+		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_add_arg (comm->process, "-fr");
+		fr_process_add_arg (comm->process, tmp_dir);
+		fr_process_end_command (comm->process);
+		
+		g_free (tmp_dir);
 	}
 
 	g_free (new_name);
@@ -640,34 +652,18 @@ static char *
 get_temp_name (FrCommandTar *c_tar,
 	       const char   *filepath)
 {
-	char       *dirname = remove_level_from_path (filepath);
-	const char *filename = file_name_from_path (filepath);
-	char       *temp_name = NULL;
-	char       *e_temp_name = NULL;
-	char       *uncomp_temp_name = NULL;
-	static int  count = 0;
-	int         try = 0;
+	char *dirname = remove_level_from_path (filepath);
+	char *template;	
+	char *result = NULL;
+	char *temp_name = NULL;
+	char *e_temp_name = NULL;
 
-	do {
-		char *tmp_file_name;
-		g_free (temp_name);
-		g_free (uncomp_temp_name);
-		tmp_file_name = g_strdup_printf (".fr.%d.%d.%s",
-						 getpid (),
-						 count++,
-						 filename);
-		temp_name = g_build_filename (dirname, tmp_file_name, NULL);
-		g_free (tmp_file_name);
-		uncomp_temp_name = get_uncompressed_name (c_tar, temp_name);
-	} while ((path_is_file (temp_name)
-		  || path_is_file (uncomp_temp_name))
-		 && (try++ < MAX_TRIES));
-
-	g_free (uncomp_temp_name);
-	g_free (dirname);
-
+	template = g_strconcat (dirname, "/.fr-XXXXXX", NULL);
+	result = mkdtemp (template);
+	temp_name = g_build_filename (result, file_name_from_path (filepath), NULL);
 	e_temp_name = shell_escape (temp_name);
 	g_free (temp_name);
+	g_free (template);
 
 	return e_temp_name;
 }
