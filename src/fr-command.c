@@ -31,6 +31,8 @@
 #include "fr-command.h"
 #include "fr-marshal.h"
 
+#define INITIAL_SIZE 256
+
 enum {
 	START,
 	DONE,
@@ -229,9 +231,10 @@ fr_command_class_init (FrCommandClass *class)
 static void
 fr_command_init (FrCommand *comm)
 {
+	comm->files = g_ptr_array_sized_new (INITIAL_SIZE);
+	
 	comm->filename = NULL;
 	comm->e_filename = NULL;
-	comm->file_list = NULL;
 	comm->fake_load = FALSE;
 
 	comm->propCanModify = TRUE;
@@ -318,12 +321,8 @@ fr_command_finalize (GObject *object)
 	if (comm->e_filename != NULL)
 		g_free (comm->e_filename);
 
-	if (comm->file_list != NULL) {
-		g_list_foreach (comm->file_list,
-				(GFunc) file_data_free,
-				NULL);
-		g_list_free (comm->file_list);
-	}
+	if (comm->files != NULL) 
+		g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
 
 	g_signal_handlers_disconnect_matched (G_OBJECT (comm->process),
 					      G_SIGNAL_MATCH_DATA, 
@@ -377,10 +376,9 @@ fr_command_list (FrCommand  *comm,
 
 	fr_command_progress (comm, -1.0);
 
-	if (comm->file_list != NULL) {
-		g_list_foreach (comm->file_list, (GFunc) file_data_free, NULL);
-		g_list_free (comm->file_list);
-		comm->file_list = NULL;
+	if (comm->files != NULL) {
+		g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
+		comm->files = g_ptr_array_sized_new (INITIAL_SIZE);
 	}
 
 	comm->action = FR_ACTION_LISTING_CONTENT;
@@ -500,8 +498,8 @@ fr_command_escape (FrCommand     *comm,
  *                        accomplished. 
  */
 void
-fr_command_progress (FrCommand     *comm,
-		     double         fraction)
+fr_command_progress (FrCommand *comm,
+		     double     fraction)
 {
 	g_signal_emit (G_OBJECT (comm),
 		       fr_command_signals[PROGRESS], 
@@ -511,8 +509,8 @@ fr_command_progress (FrCommand     *comm,
 
 
 void
-fr_command_message (FrCommand     *comm,
-		    const char    *msg)
+fr_command_message (FrCommand  *comm,
+		    const char *msg)
 {
 	g_signal_emit (G_OBJECT (comm),
 		       fr_command_signals[MESSAGE], 
@@ -522,11 +520,19 @@ fr_command_message (FrCommand     *comm,
 
 
 void
-fr_command_set_n_files (FrCommand     *comm,
-			int            n_files)
+fr_command_set_n_files (FrCommand *comm,
+			int        n_files)
 {
 	comm->n_files = n_files;
 	comm->n_file = 0;
+}
+
+
+void
+fr_command_add_file (FrCommand *comm,
+		     FileData  *fdata)
+{
+	g_ptr_array_add (comm->files, fdata);
 }
 
 

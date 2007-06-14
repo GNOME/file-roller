@@ -34,14 +34,15 @@ static GHashTable *mime_type_hash = NULL;
 
 
 FileData *
-file_data_new ()
+file_data_new (void)
 {
 	FileData *fdata;
 
 	fdata = g_new0 (FileData, 1);
 	fdata->mime_type = 0;
 	fdata->free_original_path = FALSE;
-
+	fdata->dir_size = 0;
+	
 	if (mime_type_hash == NULL)
 		mime_type_hash = g_hash_table_new_full (g_int_hash, 
 							g_int_equal,
@@ -93,6 +94,7 @@ file_data_copy (FileData *src)
 	fdata->mime_type = src->mime_type;
 	fdata->encrypted = src->encrypted;
 	fdata->dir = src->dir;
+	fdata->dir_size = src->dir_size;
 
 	fdata->list_dir = src->list_dir;
 	fdata->list_name = g_strdup (src->list_name);

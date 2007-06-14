@@ -43,6 +43,7 @@ struct _FrCommandUnstuff
 	FrCommand  __parent;
 
 	char      *target_dir;
+	FileData  *fdata;
 };
 
 struct _FrCommandUnstuffClass

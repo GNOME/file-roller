@@ -161,9 +161,10 @@ dlg_prop (FrWindow *window)
 
 	uncompressed_size = 0;
 	if (fr_window_archive_is_present (window)) {
-		GList *scan = window->archive->command->file_list;
-		for (; scan; scan = scan->next) {
-			FileData *fd = scan->data;
+		int i;
+		
+		for (i = 0; i < window->archive->command->files->len; i++) {
+			FileData *fd = g_ptr_array_index (window->archive->command->files, i);
 			uncompressed_size += fd->size;
 		}
 	}
@@ -194,7 +195,7 @@ dlg_prop (FrWindow *window)
 	set_label (label_label, _("Number of files:"));
 
 	label = glade_xml_get_widget (data->gui, "p_files_label");
-	s = g_strdup_printf ("%d", g_list_length (window->archive->command->file_list));
+	s = g_strdup_printf ("%d", window->archive->command->files->len);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 

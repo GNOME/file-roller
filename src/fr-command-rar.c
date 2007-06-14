@@ -161,7 +161,7 @@ process_line (char     *line,
 		else
 			fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 
-		comm->file_list = g_list_prepend (comm->file_list, fdata);
+		fr_command_add_file (comm, fdata);
 		rar_comm->fdata = NULL;
 
 		g_strfreev (fields);

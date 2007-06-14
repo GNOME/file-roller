@@ -127,10 +127,9 @@ process_line (char     *line,
 		else
 			size = g_ascii_strtoull (ssize, NULL, 10);
 
-		if (comm->file_list != NULL) {
-			fdata = (FileData *) comm->file_list->data;
-			fdata->size = size;
-		}
+		if (unstuff_comm->fdata != NULL) 
+			unstuff_comm->fdata->size = size;
+
 		return;
 	}
 
@@ -172,7 +171,8 @@ process_line (char     *line,
 	fdata->size = 0;
 	fdata->modified = time (NULL);
 
-	comm->file_list = g_list_prepend (comm->file_list, fdata);
+	unstuff_comm->fdata = fdata;
+	fr_command_add_file (comm, fdata);
 
 	unlink (real_filename);
 	g_free (real_filename);

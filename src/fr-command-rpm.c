@@ -139,7 +139,7 @@ list__process_line (char     *line,
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else 
-		comm->file_list = g_list_prepend (comm->file_list, fdata);
+		fr_command_add_file (comm, fdata);
 }
 
 

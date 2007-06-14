@@ -38,6 +38,7 @@ typedef struct {
 	char       *path;             /* The directory. */
 	gboolean    encrypted;        /* Whether the file is encrypted. */
 	gboolean    dir;              /* Whether this is a directory listed in the archive */
+	guint64     dir_size;
 	
 	/* Additional data. */
 

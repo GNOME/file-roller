@@ -64,8 +64,6 @@
 #define MAX_HISTORY_LEN 5
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
-#define FILES_TO_PROCESS_AT_ONCE 500
-#define DISPLAY_TIMEOUT_INTERVAL_MSECS 300
 #define MAX_MESSAGE_LENGTH 50
 #define CHECK_CLIPBOARD_TIMEOUT 500
 
@@ -251,6 +249,8 @@ struct _FrWindowPrivateData {
 	FRWindowSortMethod sort_method;
 	GtkSortType      sort_type;
 
+	char *           last_location;
+
 	gboolean         view_folders;
 	FRWindowListMode list_mode;
 	GList *          history;
@@ -274,11 +274,6 @@ struct _FrWindowPrivateData {
 	FrClipboardData *clipboard_data;
 	FrClipboardData *copy_data;
 	
-	/*
-	GList           *clipboard;
-	guint            clipboard_op : 1;
-	char            *clipboard_current_dir;
-	*/
 	FrArchive       *copy_from_archive;
 	guint            check_clipboard;
 	
@@ -516,6 +511,8 @@ fr_window_free_private_data (FrWindow *window)
 		priv->folder_popup_menu = NULL;
 	}
 
+	g_free (window->priv->last_location);
+
 	fr_window_free_batch_data (window);
 	fr_window_reset_current_batch_action (window);
 
@@ -727,21 +724,23 @@ fr_window_history_print (FrWindow *window)
 /* -- window_update_file_list -- */
 
 
-static GList *
+static GPtrArray *
 fr_window_get_current_dir_list (FrWindow *window)
 {
-	GList *dir_list = NULL;
-	GList *scan;
-
-	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
-		FileData *fdata = scan->data;
+	GPtrArray *files;
+	int        i;
+	
+	files = g_ptr_array_sized_new (128);
+	
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
 		
 		if (fdata->list_name == NULL)
 			continue;
-		dir_list = g_list_prepend (dir_list, fdata);
+		g_ptr_array_add (files, fdata);
 	}
 
-	return g_list_reverse (dir_list);
+	return files;
 }
 
 
@@ -749,7 +748,8 @@ static gint
 sort_by_name (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
+	const FileData *fdata1 = *((FileData **) ptr1);
+	const FileData *fdata2 = *((FileData **) ptr2);
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -766,7 +766,8 @@ static gint
 sort_by_size (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
+	const FileData *fdata1 = *((FileData **) ptr1);
+	const FileData *fdata2 = *((FileData **) ptr2);
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -790,7 +791,8 @@ static gint
 sort_by_type (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
+	const FileData *fdata1 = *((FileData **) ptr1);
+	const FileData *fdata2 = *((FileData **) ptr2);
 	int             result;
 	const char     *desc1, *desc2;
 
@@ -818,7 +820,8 @@ static gint
 sort_by_time (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
+	const FileData *fdata1 = *((FileData **) ptr1);
+	const FileData *fdata2 = *((FileData **) ptr2);
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -842,7 +845,8 @@ static gint
 sort_by_path (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = ptr1, *fdata2 = ptr2;
+	const FileData *fdata1 = *((FileData **) ptr1);
+	const FileData *fdata2 = *((FileData **) ptr2);
 	int             result;
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
@@ -854,6 +858,8 @@ sort_by_path (gconstpointer  ptr1,
 	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
 		return sort_by_name (ptr1, ptr2);
 
+	/* 2 files */
+	
 	result = strcasecmp (fdata1->path, fdata2->path);
 	if (result == 0)
 		return sort_by_name (ptr1, ptr2);
@@ -862,20 +868,41 @@ sort_by_path (gconstpointer  ptr1,
 }
 
 
-static GCompareFunc
-get_compare_func_from_idx (int column_index)
+static gint
+sort_by_full_path (gconstpointer  ptr1,
+	           gconstpointer  ptr2)
 {
-	static GCompareFunc compare_funcs[] = {
-		sort_by_name,
-		sort_by_type,
-		sort_by_size,
-		sort_by_time,
-		sort_by_path
-	};
+	const FileData *fdata1 = *((FileData **) ptr1);
+	const FileData *fdata2 = *((FileData **) ptr2);
 
-	column_index = CLAMP (column_index, 0, G_N_ELEMENTS (compare_funcs) - 1);
+	return strcmp (fdata1->full_path, fdata2->full_path);
+}
 
-	return compare_funcs [column_index];
+
+static guint64
+get_dir_size (FrWindow   *window,
+	      const char *current_dir,
+	      const char *name)
+{
+	guint64  size;
+	char    *dirname;
+	int      dirname_l;
+	int      i;
+	
+	dirname = g_strconcat (current_dir, name, "/", NULL);
+	dirname_l = strlen (dirname);
+
+	size = 0;
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fd = g_ptr_array_index (window->archive->command->files, i);
+		
+		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
+			size += fd->size;
+	}
+
+	g_free (dirname);
+
+	return size;
 }
 
 
@@ -886,7 +913,6 @@ compute_file_list_name (FrWindow   *window,
 			int         current_dir_len,
 			GHashTable *names_hash)
 {
-
 	register char *scan, *end;
 
 	g_free (fdata->list_name);
@@ -895,6 +921,8 @@ compute_file_list_name (FrWindow   *window,
 
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
 		fdata->list_name = g_strdup (fdata->name);
+		if (fdata->dir)
+			fdata->dir_size = 0;
 		return;
 	}
 
@@ -923,29 +951,29 @@ compute_file_list_name (FrWindow   *window,
 		}
 		g_hash_table_insert (names_hash, dir_name, GINT_TO_POINTER (1));
 
-		if (! fdata->dir)
+		if ((end != NULL) && (*(end + 1) != '\0'))
 			fdata->list_dir = TRUE;
-
 		fdata->list_name = dir_name;
+		fdata->dir_size = get_dir_size (window, current_dir, dir_name);
 	}
 }
 
 
 static void
-fr_window_compute_list_names (FrWindow *window,
-			      GList    *file_list)
+fr_window_compute_list_names (FrWindow  *window,
+			      GPtrArray *files)
 {
 	const char *current_dir;
 	int         current_dir_len;
 	GHashTable *names_hash;
-	GList      *scan;
+	int         i;
 
 	current_dir = fr_window_get_current_location (window);
 	current_dir_len = strlen (current_dir);
 	names_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
-	for (scan = file_list; scan; scan = scan->next) {
-		FileData *fdata = scan->data;
+	for (i = 0; i < files->len; i++) {
+		FileData *fdata = g_ptr_array_index (files, i);
 		compute_file_list_name (window, fdata, current_dir, current_dir_len, names_hash);
 	}
 
@@ -957,8 +985,8 @@ static gboolean
 fr_window_dir_exists_in_archive (FrWindow   *window,
 				 const char *dir_name)
 {
-	int    dir_name_len;
-	GList *scan;
+	int dir_name_len;
+	int i;
 
 	if (dir_name == NULL)
 		return FALSE;
@@ -970,23 +998,13 @@ fr_window_dir_exists_in_archive (FrWindow   *window,
 	if (strcmp (dir_name, "/") == 0)
 		return TRUE;
 
-	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
-		FileData *fdata = scan->data;
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
 		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0)
 			return TRUE;
 	}
 
 	return FALSE;
-}
-
-
-static void
-fr_window_sort_file_list (FrWindow  *window,
-			  GList    **file_list)
-{
-	*file_list = g_list_sort (*file_list, get_compare_func_from_idx (window->priv->sort_method));
-	if (window->priv->sort_type == GTK_SORT_ASCENDING)
-		*file_list = g_list_reverse (*file_list);
 }
 
 
@@ -1276,16 +1294,19 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 	tot_size = 0;
 
 	if (window->priv->archive_present) {
-		GList *dir_list = fr_window_get_current_dir_list (window);
+		GPtrArray *files = fr_window_get_current_dir_list (window);
+		int        i;
 		
-		for (scan = dir_list; scan; scan = scan->next) {
-			FileData *fd = scan->data;
+		for (i = 0; i < files->len; i++) {
+			FileData *fd = g_ptr_array_index (files, i);
 			
 			tot_n++;
 			if (! file_data_is_dir (fd)) 
 				tot_size += fd->size;
+			else
+				tot_size += fd->dir_size;
 		}
-		g_list_free (dir_list);
+		g_ptr_array_free (files, TRUE);
 	}
 
 	sel_n = 0;
@@ -1332,62 +1353,18 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 }
 
 
-typedef struct {
-	FrWindow *window;
-	GList    *file_list;
-} UpdateData;
-
-
 static void
-update_data_free (gpointer callback_data)
+fr_window_populate_file_list (FrWindow  *window,
+			      GPtrArray *files)
 {
-	UpdateData *data = callback_data;
-	FrWindow   *window = data->window;
+	int i;
 
-	g_return_if_fail (data != NULL);
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+	 				      GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
+	 				      GTK_SORT_ASCENDING);
 
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store), get_column_from_sort_method (window->priv->sort_method), window->priv->sort_type);
-	gtk_tree_view_set_model (GTK_TREE_VIEW (window->priv->list_view),
-				 GTK_TREE_MODEL (window->priv->list_store));
-	fr_window_stop_activity_mode (window);
-	fr_window_update_statusbar_list_info (window);
-
-	if (data->file_list != NULL)
-		g_list_free (data->file_list);
-
-	g_free (data);
-}
-
-
-static gboolean
-update_file_list_idle (gpointer callback_data)
-{
-	UpdateData *data = callback_data;
-	FrWindow   *window = data->window;
-	GList      *file_list;
-	GList      *scan;
-	int         i;
-	int         n = FILES_TO_PROCESS_AT_ONCE;
-
-	if (window->priv->update_timeout_handle != 0) {
-		g_source_remove (window->priv->update_timeout_handle);
-		window->priv->update_timeout_handle = 0;
-	}
-
-	if (data->file_list == NULL) {
-		update_data_free (data);
-		return FALSE;
-	}
-
-	file_list = data->file_list;
-	for (i = 0, scan = file_list; (i < n) && scan->next; i++)
-		scan = scan->next;
-
-	data->file_list = scan->next;
-	scan->next = NULL;
-
-	for (scan = file_list; scan; scan = scan->next) {
-		FileData    *fdata = scan->data;
+	for (i = 0; i < files->len; i++) {
+		FileData    *fdata = g_ptr_array_index (files, i);
 		GtkTreeIter  iter;
 		GdkPixbuf   *icon, *emblem;
 		char        *utf8_name;
@@ -1395,7 +1372,7 @@ update_file_list_idle (gpointer callback_data)
 		if (fdata->list_name == NULL)
 			continue;
 
-		gtk_list_store_prepend (window->priv->list_store, &iter);
+		gtk_list_store_append (window->priv->list_store, &iter);
 
 		icon = get_icon (GTK_WIDGET (window), fdata);
 		utf8_name = g_filename_display_name (fdata->list_name);
@@ -1404,37 +1381,49 @@ update_file_list_idle (gpointer callback_data)
 		if (file_data_is_dir (fdata)) {
 			char *utf8_path;
 			char *tmp;
+			char *s_size;
+			char *s_time;
 
-			if (fdata->dir)
-				tmp = remove_level_from_path (fdata->path);
-			else
+			if (fdata->list_dir)
 				tmp = remove_ending_separator (fr_window_get_current_location (window));
+				
+			else
+				tmp = remove_level_from_path (fdata->path);
 			utf8_path = g_filename_display_name (tmp);
 			g_free (tmp);
 
+			s_size = gnome_vfs_format_file_size_for_display (fdata->dir_size);
+				
+			if (fdata->list_dir) 
+				s_time = g_strdup ("");
+			else
+				s_time = get_time_string (fdata->modified);
+			
 			gtk_list_store_set (window->priv->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
 					    COLUMN_ICON, icon,
 					    COLUMN_NAME, utf8_name,
 					    COLUMN_EMBLEM, emblem,
 					    COLUMN_TYPE, _("Folder"),
-					    COLUMN_SIZE, "",
-					    COLUMN_TIME, "",
+					    COLUMN_SIZE, s_size,
+					    COLUMN_TIME, s_time,
 					    COLUMN_PATH, utf8_path,
 					    -1);
 			g_free (utf8_path);
+			g_free (s_size);
+			g_free (s_time);
 		}
 		else {
+			char       *utf8_path;
 			char       *s_size;
 			char       *s_time;
 			const char *desc;
-			char       *utf8_path;
+
+			utf8_path = g_filename_display_name (fdata->path);
 
 			s_size = gnome_vfs_format_file_size_for_display (fdata->size);
 			s_time = get_time_string (fdata->modified);
 			desc = file_data_get_mime_type_description (fdata);
-
-			utf8_path = g_filename_display_name (fdata->path);
 
 			gtk_list_store_set (window->priv->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
@@ -1456,24 +1445,13 @@ update_file_list_idle (gpointer callback_data)
 		if (emblem != NULL)
 			g_object_unref (emblem);
 	}
-
-	/*
-	if (gtk_events_pending ())
-		gtk_main_iteration_do (TRUE);
-	*/
-
-	g_list_free (file_list);
-
-	if (data->file_list == NULL) {
-		update_data_free (data);
-		return FALSE;
-	}
-	else
-		window->priv->update_timeout_handle = g_timeout_add (DISPLAY_TIMEOUT_INTERVAL_MSECS,
-								     update_file_list_idle,
-								     data);
-
-	return FALSE;
+	
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store), 
+					      get_column_from_sort_method (window->priv->sort_method), 
+					      window->priv->sort_type);
+					      
+	fr_window_update_statusbar_list_info (window);
+	fr_window_stop_activity_mode (window);
 }
 
 
@@ -1570,16 +1548,15 @@ fr_window_update_current_location (FrWindow *window)
 void
 fr_window_update_dir_tree (FrWindow *window)
 {
-	GArray      *dirs;
-	GHashTable  *dir_cache;
-	GList       *scan;
-	int          i;
-	GdkPixbuf   *icon;
+	GPtrArray  *dirs;
+	GHashTable *dir_cache;
+	int         i;
+	GdkPixbuf  *icon;
 	
 	gtk_tree_store_clear (window->priv->tree_store);
 
-	if (! window->priv->view_folders || 
-	    ! window->priv->archive_present 
+	if (! window->priv->view_folders  
+	    || ! window->priv->archive_present 
 	    || (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT)) {
 		gtk_widget_set_sensitive (window->priv->tree_view, FALSE);
 		gtk_widget_hide (window->priv->sidepane);
@@ -1596,11 +1573,11 @@ fr_window_update_dir_tree (FrWindow *window)
 	
 	/**/
 	
-	dirs = g_array_sized_new (FALSE, FALSE, sizeof (char*), 128);
+	dirs = g_ptr_array_sized_new (128);
 
 	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, NULL);
-	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
-		FileData *fdata = scan->data;
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
 		char     *dir;
 		
 		if (fdata->dir)
@@ -1615,7 +1592,7 @@ fr_window_update_dir_tree (FrWindow *window)
 				break;
 
 			new_dir = dir;
-			g_array_append_val (dirs, new_dir);
+			g_ptr_array_add (dirs, new_dir);
 			g_hash_table_replace (dir_cache, new_dir, "1");
 			
 			dir = remove_level_from_path (new_dir);
@@ -1625,7 +1602,7 @@ fr_window_update_dir_tree (FrWindow *window)
 	}	
 	g_hash_table_destroy (dir_cache);
 	
-	g_array_sort (dirs, path_compare);
+	g_ptr_array_sort (dirs, path_compare);
 	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) gtk_tree_path_free);
 		
 	/**/
@@ -1653,7 +1630,7 @@ fr_window_update_dir_tree (FrWindow *window)
 	
 	icon = get_mime_type_icon (MIME_TYPE_DIRECTORY);
 	for (i = 0; i < dirs->len; i++) {
-		char        *dir = g_array_index (dirs, char*, i);
+		char        *dir = g_ptr_array_index (dirs, i);
 		char        *parent_dir;
 		GtkTreePath *parent_path;
 		GtkTreeIter  parent;
@@ -1680,7 +1657,7 @@ fr_window_update_dir_tree (FrWindow *window)
 	g_hash_table_destroy (dir_cache);
 	g_object_unref (icon);
 			
-	g_array_free (dirs, TRUE);
+	g_ptr_array_free (dirs, TRUE);
 	
 	fr_window_update_current_location (window);
 }
@@ -1689,9 +1666,8 @@ fr_window_update_dir_tree (FrWindow *window)
 void
 fr_window_update_file_list (FrWindow *window)
 {
-	GList      *dir_list = NULL;
-	GList      *file_list;
-	UpdateData *udata;
+	GPtrArray  *files;
+	gboolean    free_files = FALSE;
 
 	if (GTK_WIDGET_REALIZED (window->priv->list_view)) 
 		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->list_view), 0, 0);
@@ -1728,9 +1704,9 @@ fr_window_update_file_list (FrWindow *window)
 	fr_window_start_activity_mode (window);
 
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
-		fr_window_compute_list_names (window, window->archive->command->file_list);
-		fr_window_sort_file_list (window, &window->archive->command->file_list);
-		file_list = window->archive->command->file_list;
+		fr_window_compute_list_names (window, window->archive->command->files);
+		files = window->archive->command->files;
+		free_files = FALSE;
 	}
 	else {
 		char *current_dir = g_strdup (fr_window_get_current_location (window));
@@ -1746,27 +1722,22 @@ fr_window_update_file_list (FrWindow *window)
 
 			fr_window_history_add (window, current_dir);
 		}
-
-		fr_window_compute_list_names (window, window->archive->command->file_list);
-		dir_list = fr_window_get_current_dir_list (window);
-		fr_window_sort_file_list (window, &dir_list);
-		file_list = dir_list;
-
 		g_free (current_dir);
+		
+		g_ptr_array_sort (window->archive->command->files, sort_by_full_path);
+		fr_window_compute_list_names (window, window->archive->command->files);
+		files = fr_window_get_current_dir_list (window);
+		free_files = TRUE;
 	}
 
-	window->priv->current_view_length = g_list_length (file_list);
+	if (files != NULL)
+		window->priv->current_view_length = files->len;
+	else
+		window->priv->current_view_length = 0;
 
-	udata = g_new0 (UpdateData, 1);
-	udata->window = window;
-	udata->file_list = g_list_copy (file_list);
-
-	update_file_list_idle (udata);
-
-	if (dir_list != NULL)
-		g_list_free (dir_list);
-
-	fr_window_update_statusbar_list_info (window);
+	fr_window_populate_file_list (window, files);
+	if (free_files)
+		g_ptr_array_free (files, TRUE);	
 }
 
 
@@ -2715,9 +2686,8 @@ action_performed (FrArchive   *archive,
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
 
 		fr_window_update_title (window);
-		fr_window_update_current_location (window);
-		fr_window_update_file_list (window);
-		fr_window_update_dir_tree (window);
+		fr_window_go_to_location (window, "/");
+		fr_window_update_dir_tree (window);		
 		if (! window->priv->non_interactive)
 			gtk_window_present (GTK_WINDOW (window));
 		break;
@@ -2874,7 +2844,9 @@ row_activated_cb (GtkTreeView       *tree_view,
 			    COLUMN_FILE_DATA, &fdata,
 			    -1);
 
-	if (file_data_is_dir (fdata)) {
+	if (! file_data_is_dir (fdata)) 
+		fr_window_view_or_open_file (window, fdata->original_path);
+	else if (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR) {
 		char *new_dir;
 		new_dir = g_strconcat (fr_window_get_current_location (window),
 				       fdata->list_name,
@@ -2883,8 +2855,6 @@ row_activated_cb (GtkTreeView       *tree_view,
 		fr_window_go_to_location (window, new_dir);
 		g_free (new_dir);
 	}
-	else
-		fr_window_view_or_open_file (window, fdata->original_path);
 
 	return FALSE;
 }
@@ -3881,7 +3851,7 @@ name_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_name (fdata1, fdata2);
+	return sort_by_name (&fdata1, &fdata2);
 }
 
 
@@ -3896,7 +3866,7 @@ size_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_size (fdata1, fdata2);
+	return sort_by_size (&fdata1, &fdata2);
 }
 
 
@@ -3911,7 +3881,7 @@ type_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_type (fdata1, fdata2);
+	return sort_by_type (&fdata1, &fdata2);
 }
 
 
@@ -3926,7 +3896,7 @@ time_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_time (fdata1, fdata2);
+	return sort_by_time (&fdata1, &fdata2);
 }
 
 
@@ -3941,7 +3911,17 @@ path_column_sort_func (GtkTreeModel *model,
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_path (fdata1, fdata2);
+	return sort_by_path (&fdata1, &fdata2);
+}
+
+
+static int
+no_sort_column_sort_func (GtkTreeModel *model,
+		          GtkTreeIter  *a,
+		          GtkTreeIter  *b,
+		          gpointer      user_data)
+{
+	return -1;
 }
 
 
@@ -4622,22 +4602,22 @@ fr_window_construct (FrWindow *window)
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
 					 COLUMN_NAME, name_column_sort_func,
 					 NULL, NULL);
-
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
 					 COLUMN_SIZE, size_column_sort_func,
 					 NULL, NULL);
-
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
 					 COLUMN_TYPE, type_column_sort_func,
 					 NULL, NULL);
-
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
 					 COLUMN_TIME, time_column_sort_func,
 					 NULL, NULL);
-
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
 					 COLUMN_PATH, path_column_sort_func,
 					 NULL, NULL);
+
+	gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
+						 no_sort_column_sort_func,
+						 NULL, NULL);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
@@ -4822,7 +4802,7 @@ fr_window_construct (FrWindow *window)
 	/* main content */
 
 	window->priv->paned = gtk_hpaned_new ();
-	gtk_paned_pack1 (GTK_PANED (window->priv->paned), window->priv->sidepane, TRUE, TRUE);
+	gtk_paned_pack1 (GTK_PANED (window->priv->paned), window->priv->sidepane, FALSE, TRUE);
 	gtk_paned_pack2 (GTK_PANED (window->priv->paned), list_scrolled_window, TRUE, TRUE);
 	gtk_paned_set_position (GTK_PANED (window->priv->paned), eel_gconf_get_integer (PREF_UI_SIDEBAR_WIDTH, DEF_SIDEBAR_WIDTH));
 	gtk_widget_show_all (window->priv->paned);
@@ -5720,11 +5700,17 @@ fr_window_go_to_location (FrWindow   *window,
 		dir = g_strconcat (path, "/", NULL);
 	else
 		dir = g_strdup (path);
-	fr_window_history_add (window, dir);
-	g_free (dir);
 
-	fr_window_update_file_list (window);
-	fr_window_update_current_location (window);
+	if ((window->priv->last_location == NULL) || (strcmp (window->priv->last_location, dir) != 0)) {
+		g_free (window->priv->last_location);
+		window->priv->last_location = dir;
+
+		fr_window_history_add (window, dir);
+		fr_window_update_file_list (window);
+		fr_window_update_current_location (window);
+	}
+	else
+		g_free (dir);
 }
 
 
@@ -5823,7 +5809,7 @@ get_dir_list (FrWindow *window,
 	      FileData *fdata)
 {
 	GList *list;
-	GList *scan;
+	int    i;
 	char  *dirname;
 	int    dirname_l;
 
@@ -5834,8 +5820,8 @@ get_dir_list (FrWindow *window,
 	dirname_l = strlen (dirname);
 
 	list = NULL;
-	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
-		FileData *fd = scan->data;
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fd = g_ptr_array_index (window->archive->command->files, i);	
 
 		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
 			list = g_list_prepend (list, g_strdup (fd->original_path));
@@ -5955,16 +5941,16 @@ GList *
 fr_window_get_file_list_pattern (FrWindow    *window,
 				 const char  *pattern)
 {
-	GList  *list, *scan;
 	char  **patterns;
+	GList  *list;
+	int     i;
 
 	g_return_val_if_fail (window != NULL, NULL);
 
 	patterns = search_util_get_patterns (pattern);
-
 	list = NULL;
-	for (scan = window->archive->command->file_list; scan; scan = scan->next) {
-		FileData *fd = scan->data;
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fd = g_ptr_array_index (window->archive->command->files, i);
 		char     *utf8_name;
 
 		/* FIXME: only files in the current location ? */
@@ -5977,7 +5963,6 @@ fr_window_get_file_list_pattern (FrWindow    *window,
 			list = g_list_prepend (list, g_strdup (fd->original_path));
 		g_free (utf8_name);
 	}
-
 	if (patterns != NULL)
 		g_strfreev (patterns);
 
@@ -6435,7 +6420,7 @@ name_is_present (FrWindow    *window,
 		 char       **reason)
 {
 	gboolean  retval = FALSE;
-	GList    *file_list, *scan;
+	int       i;
 	char     *new_filename;
 	int       new_filename_l;
 
@@ -6443,11 +6428,10 @@ name_is_present (FrWindow    *window,
 
 	new_filename = g_build_filename (current_dir, new_name, NULL);
 	new_filename_l = strlen (new_filename);
-
-	file_list = window->archive->command->file_list;
-	for (scan = file_list; scan; scan = scan->next) {
-		FileData   *file_data = (FileData *) scan->data;
-		const char *filename = file_data->full_path;
+		
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData   *fdata = g_ptr_array_index (window->archive->command->files, i);
+		const char *filename = fdata->full_path;
 
 		if ((strncmp (filename, new_filename, new_filename_l) == 0)
 		    && ((filename[new_filename_l] == '\0')

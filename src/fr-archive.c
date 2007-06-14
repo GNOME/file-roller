@@ -1605,12 +1605,12 @@ static FileData *
 find_file_in_archive (FrArchive *archive,
 		      char      *path)
 {
-	GList *scan;
+	int i;
 
 	g_return_val_if_fail (path != NULL, NULL);
 
-	for (scan = archive->command->file_list; scan; scan = scan->next) {
-		FileData *fdata = scan->data;
+	for (i = 0; i < archive->command->files->len; i++) {
+		FileData *fdata = g_ptr_array_index (archive->command->files, i);
 		if (strcmp (path, fdata->original_path) == 0)
 			return fdata;
 	}
@@ -2600,11 +2600,13 @@ archive_remove (FrArchive *archive,
 	/* file_list == NULL means delete all files in archive. */
 
 	if (file_list == NULL) {
-		for (scan = archive->command->file_list; scan != NULL; scan = scan->next) {
-			FileData *fdata = (FileData*) scan->data;
+		int i;
 
+		for (i = 0; i < archive->command->files->len; i++) {
+			FileData *fdata = g_ptr_array_index (archive->command->files, i);
 			file_list = g_list_prepend (file_list, fdata->original_path);
 		}
+
 		file_list_created = TRUE;
 	}
 
@@ -2902,7 +2904,7 @@ compute_list_base_path (const char *base_dir,
 static gboolean
 archive_type_has_issues_extracting_non_empty_folders (FrArchive *archive)
 {
-	if (archive->command->file_list == NULL)
+	if ((archive->command->files == NULL) || (archive->command->files->len == 0))
 		return FALSE;
 		
 	return ((archive->command->file_type == FR_FILE_TYPE_TAR)
@@ -2963,14 +2965,13 @@ fr_archive_extract_to_local (FrArchive  *archive,
 
 	extract_all = (file_list == NULL);
 	if (extract_all && ! archive->command->propCanExtractAll) {
-		GList *scan;
-
+		int i;
+		
 		file_list = NULL;
-		for (scan = archive->command->file_list; scan; scan = scan->next) {
-			FileData *fdata = scan->data;
+		for (i = 0; i < archive->command->files->len; i++) {
+			FileData *fdata = g_ptr_array_index (archive->command->files, i);
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}
-
 		file_list_created = TRUE;
 	}
 
@@ -3033,11 +3034,11 @@ fr_archive_extract_to_local (FrArchive  *archive,
 				 && ! archive->command->propExtractCanJunkPaths)));
 
 	if (extract_all && ! file_list_created) {
-		GList *scan;
+		int i;
 
 		file_list = NULL;
-		for (scan = archive->command->file_list; scan; scan = scan->next) {
-			FileData *fdata = scan->data;
+		for (i = 0; i < archive->command->files->len; i++) {
+			FileData *fdata = g_ptr_array_index (archive->command->files, i);
 			file_list = g_list_prepend (file_list, g_strdup (fdata->original_path));
 		}
 

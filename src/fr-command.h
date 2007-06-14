@@ -66,38 +66,38 @@ struct _FrCommand
 	GObject  __parent;
 
 	FRFileType  file_type;
-	GList      *file_list;       /* FileData elements */
-
+	GPtrArray  *files;           /* Array of FileData* */
+	
 	/*<protected>*/
-
+	
 	/* properties the command supports. */
+	
+	guint       propCanModify : 1; 
+	guint       propAddCanUpdate : 1;
+	guint       propAddCanReplace : 1;
+	guint       propAddCanStoreFolders : 1;
+	guint       propExtractCanAvoidOverwrite : 1;
+	guint       propExtractCanSkipOlder : 1;
+	guint       propExtractCanJunkPaths : 1;
+	guint       propPassword : 1;
+	guint       propTest : 1;
+	guint       propCanExtractAll : 1;
 
-	guint propCanModify : 1;
-	guint propAddCanUpdate : 1;
-	guint propAddCanReplace : 1;
-	guint propAddCanStoreFolders : 1;
-	guint propExtractCanAvoidOverwrite : 1;
-	guint propExtractCanSkipOlder : 1;
-	guint propExtractCanJunkPaths : 1;
-	guint propPassword : 1;
-	guint propTest : 1;
-	guint propCanExtractAll : 1;
-
-	/* used by the progress signal */
-
-	int     n_file;
-	int     n_files;         /* used by the progress signal */
-
+	/* progress data */
+	
+	int         n_file;          
+	int         n_files;
+	
 	/*<private>*/
 
-	FrProcess *process;      /* the process object used to execute
-				  * commands. */
-	FRAction   action;       /* current action. */
-	char      *filename;     /* archive filename. */
-	char      *e_filename;   /* escaped archive filename. */
+	FrProcess  *process;         /* the process object used to execute
+				      * commands. */
+	FRAction    action;          /* current action. */
+	char       *filename;        /* archive filename. */
+	char       *e_filename;      /* escaped archive filename. */
 
-	gboolean   fake_load;    /* if TRUE does nothing when the list
-				  * operation is invoked. */
+	gboolean    fake_load;       /* if TRUE does nothing when the list
+				      * operation is invoked. */
 };
 
 struct _FrCommandClass
@@ -185,6 +185,8 @@ void           fr_command_message            (FrCommand     *comm,
 					      const char    *msg);
 void           fr_command_set_n_files        (FrCommand     *comm,
 					      int            n_files);
+void           fr_command_add_file           (FrCommand     *comm,
+					      FileData      *fdata);
 
 /* private functions */
 

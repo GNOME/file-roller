@@ -515,3 +515,44 @@ get_time_string (time_t time)
 
 	return time_utf8;
 }
+
+
+GPtrArray *
+g_ptr_array_copy (GPtrArray *array)
+{
+	GPtrArray *new_array;
+	
+	if (array == NULL)
+		return NULL;
+		
+	new_array = g_ptr_array_sized_new (array->len);
+	memcpy (new_array->pdata, array->pdata, array->len * sizeof (gpointer)); 
+	new_array->len = array->len;
+	
+	return new_array;
+}
+
+
+void
+g_ptr_array_free_full (GPtrArray *array,
+                       GFunc      free_func,
+                       gpointer   user_data)
+{
+	g_ptr_array_foreach (array, free_func, user_data);
+	g_ptr_array_free (array, TRUE);
+}
+
+
+void
+g_ptr_array_reverse (GPtrArray *array)
+{
+	int      i, j;
+	gpointer tmp;
+	
+	for (i = 0; i < array->len / 2; i++) {
+		j = array->len - i - 1;
+		tmp = g_ptr_array_index (array, i);
+		g_ptr_array_index (array, i) = g_ptr_array_index (array, j);
+		g_ptr_array_index (array, j) = tmp;
+	}
+}

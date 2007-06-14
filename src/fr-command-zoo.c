@@ -213,7 +213,7 @@ process_zoo_line (char     *line,
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
-		zoo_comm->file_list = g_list_prepend (zoo_comm->file_list, fdata);
+		fr_command_add_file (zoo_comm, fdata);
 }
 
 
