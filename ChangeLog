@@ -1,3 +1,8 @@
+2007-06-14  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
+	* many_files: use a GPtrArray, instead of a GList, to store 
+	the FileData list.  Populate the GtkTreeView in a single step.
+
 2007-06-13  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
 	* src/fr-command-tar.c (fr_command_tar_recompress): do not rename
