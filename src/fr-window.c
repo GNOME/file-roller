@@ -1619,6 +1619,7 @@ fr_window_update_dir_tree (FrWindow *window)
 				    TREE_COLUMN_ICON, icon,
 				    TREE_COLUMN_NAME, name, 
 				    TREE_COLUMN_PATH, "/",
+				    TREE_COLUMN_WEIGHT, PANGO_WEIGHT_BOLD,
 				    -1);
 		g_free (name);
 		
@@ -1649,6 +1650,7 @@ fr_window_update_dir_tree (FrWindow *window)
 				    TREE_COLUMN_ICON, icon,
 				    TREE_COLUMN_NAME, file_name_from_path (dir), 
 				    TREE_COLUMN_PATH, dir,
+				    TREE_COLUMN_WEIGHT, PANGO_WEIGHT_NORMAL,
 				    -1);
 		g_hash_table_replace (dir_cache, dir, gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &node));		    
 
@@ -3742,11 +3744,12 @@ add_dir_tree_columns (FrWindow    *window,
 					 TRUE);
 	gtk_tree_view_column_set_attributes (column, renderer,
 					     "text", TREE_COLUMN_NAME,
+					     "weight", TREE_COLUMN_WEIGHT,
 					     NULL);
 
 	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_set_sort_column_id (column, TREE_COLUMN_NAME);
-						 
+						 							 
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 }
 
@@ -4751,10 +4754,11 @@ fr_window_construct (FrWindow *window)
 
 	/* tree view */
 
-	window->priv->tree_store = gtk_tree_store_new (3,
+	window->priv->tree_store = gtk_tree_store_new (TREE_NUMBER_OF_COLUMNS,
 						       G_TYPE_STRING,
 						       GDK_TYPE_PIXBUF,
-						       G_TYPE_STRING);
+						       G_TYPE_STRING,
+						       PANGO_TYPE_WEIGHT);
 	window->priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->priv->tree_store));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (window->priv->tree_view), FALSE);
 	add_dir_tree_columns (window, GTK_TREE_VIEW (window->priv->tree_view));
