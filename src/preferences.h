@@ -36,6 +36,7 @@
 #define PREF_LIST_SHOW_TIME        "/apps/file-roller/listing/show_time"
 #define PREF_LIST_SHOW_PATH        "/apps/file-roller/listing/show_path"
 #define PREF_LIST_USE_MIME_ICONS   "/apps/file-roller/listing/use_mime_icons"
+#define PREF_NAME_COLUMN_WIDTH     "/apps/file-roller/listing/name_column_width"
 
 #define PREF_UI_WINDOW_WIDTH       "/apps/file-roller/ui/window_width"
 #define PREF_UI_WINDOW_HEIGHT      "/apps/file-roller/ui/window_height"

@@ -70,7 +70,7 @@
 #define PROGRESS_DIALOG_WIDTH 300
 #define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500 /* FIXME */
-#define NAME_COLUMN_WIDTH 250
+#define DEFAULT_NAME_COLUMN_WIDTH 250
 #define OTHER_COLUMNS_WIDTH 100
 #define RECENT_ITEM_MAX_WIDTH 25
 
@@ -208,7 +208,8 @@ struct _FrWindowPrivateData {
 	GtkWidget       *sidepane;
 	GtkTreePath     *tree_hover_path;
 	GtkTreePath     *list_hover_path;
-
+	GtkTreeViewColumn *filename_column;
+	
 	gint             current_view_length;
 
 	GtkTooltips     *tooltips;
@@ -588,6 +589,7 @@ fr_window_close (FrWindow *window)
 		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
 		
 		eel_gconf_set_integer (PREF_UI_SIDEBAR_WIDTH, gtk_paned_get_position (GTK_PANED (window->priv->paned)));
+		eel_gconf_set_integer (PREF_NAME_COLUMN_WIDTH, gtk_tree_view_column_get_width (window->priv->filename_column));
 	}
 	
 	g_idle_add (close__step2, window);
@@ -3769,7 +3771,7 @@ add_file_list_columns (FrWindow    *window,
 
 	/* First column. */
 
-	column = gtk_tree_view_column_new ();
+	window->priv->filename_column = column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_title (column, _("Name"));
 
 	/* emblem */						 
@@ -3807,7 +3809,7 @@ add_file_list_columns (FrWindow    *window,
 					     NULL);
 
 	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-	gtk_tree_view_column_set_fixed_width (column, NAME_COLUMN_WIDTH);
+	gtk_tree_view_column_set_fixed_width (column, eel_gconf_get_integer (PREF_NAME_COLUMN_WIDTH, DEFAULT_NAME_COLUMN_WIDTH));
 	gtk_tree_view_column_set_resizable (column, TRUE);
 	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
 	gtk_tree_view_column_set_cell_data_func (column, renderer,
