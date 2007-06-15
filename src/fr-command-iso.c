@@ -51,6 +51,8 @@ mktime_from_string (char *month,
 				   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	struct tm     tm = {0, };
 
+	tm.tm_isdst = -1;
+
 	if (month != NULL) {
 		int i;
 		for (i = 0; i < 12; i++)

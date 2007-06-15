@@ -53,6 +53,8 @@ mktime_from_string (char *time_s,
 	struct tm    tm = {0, };
 	char       **fields;
 
+	tm.tm_isdst = -1;
+
 	/* date */
 
 	if (month_s != NULL) {
@@ -65,7 +67,6 @@ mktime_from_string (char *time_s,
 	}
 	tm.tm_mday = atoi (day_s);
 	tm.tm_year = atoi (year_s) - 1900;
-
 
 	/* time */
 

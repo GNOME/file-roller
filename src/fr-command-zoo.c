@@ -53,6 +53,8 @@ mktime_from_string_zoo (char *mday_s,
 	char **fields;
 	int year;
 
+	tm.tm_isdst = -1;
+
 	/* This will break in 2075 */
 	year = atoi (year_s);
 	if (year >= 75) {

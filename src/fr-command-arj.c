@@ -49,6 +49,8 @@ mktime_from_string (char *date_s,
 {
 	struct tm   tm = {0, };
 	char      **fields;
+	
+	tm.tm_isdst = -1;
 
 	/* date */
 

@@ -51,6 +51,8 @@ mktime_from_string (char *date,
 	struct tm    tm = {0, };
 	char       **fields;
 
+	tm.tm_isdst = -1;
+
 	/* date */
 
 	fields = g_strsplit (date, ".", 3);

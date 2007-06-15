@@ -58,6 +58,8 @@ mktime_from_string (char *date_s,
 	struct tm   tm = {0, };
 	char      **fields;
 
+	tm.tm_isdst = -1;
+
 	/* date */
 
 	fields = g_strsplit (date_s, "-", 3);
@@ -83,7 +85,7 @@ mktime_from_string (char *date_s,
 		}
 	}
 	g_strfreev (fields);
-
+	
 	return mktime (&tm);
 }
 

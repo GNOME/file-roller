@@ -59,6 +59,8 @@ mktime_from_string (char *datetime_s)
 	char      *min;
 	char      *sec;
 
+	tm.tm_isdst = -1;
+
 	/* date */
 
 	date = datetime_s;
