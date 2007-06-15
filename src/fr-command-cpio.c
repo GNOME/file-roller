@@ -70,7 +70,7 @@ mktime_from_string (char *month,
 	        	time_t      now;
         		struct tm  *now_tm;
 
-	  		tm.tm_hour = atoi (fields[0]) - 1;
+	  		tm.tm_hour = atoi (fields[0]);
 	  		tm.tm_min = atoi (fields[1]);
 	  
 	  		now = time(NULL);

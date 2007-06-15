@@ -81,7 +81,7 @@ mktime_from_string (char *month,
 
 		fields = g_strsplit (time_or_year, ":", 2);
 		if (fields[0] != NULL) {
-			tm.tm_hour = atoi (fields[0]) - 1;
+			tm.tm_hour = atoi (fields[0]);
 			if (fields[1] != NULL) 
 				tm.tm_min = atoi (fields[1]);
 		}

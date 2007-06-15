@@ -80,7 +80,7 @@ mktime_from_string (char *datetime_s)
 	hour = g_strndup (time, 2);
 	min = g_strndup (time + 2, 2);
 	sec = g_strndup (time + 4, 2);
-	tm.tm_hour = atoi (hour) - 1;
+	tm.tm_hour = atoi (hour);
 	tm.tm_min = atoi (min);
 	tm.tm_sec = atoi (sec);
 	g_free(hour);
