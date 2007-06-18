@@ -52,7 +52,7 @@ AC_SUBST(FR_LIBS)
 NAUTILUS_CFLAGS=""
 NAUTILUS_LIBS=""
 build_nautilus_actions=no
-AC_ARG_ENABLE(nautilus_actions, AC_HELP_STRING([--disable-nautilus-actions],[dont't build the nautilus context menu actions]))
+AC_ARG_ENABLE(nautilus_actions, AC_HELP_STRING([--disable-nautilus-actions],[don't build the nautilus context menu actions]))
 
 if test x"$enable_nautilus_actions" != xno; then
 	if pkg-config --atleast-version=$NAUTILUS_REQUIRED libnautilus-extension; then

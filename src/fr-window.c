@@ -588,8 +588,13 @@ fr_window_close (FrWindow *window)
 		eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
 		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
 		
-		eel_gconf_set_integer (PREF_UI_SIDEBAR_WIDTH, gtk_paned_get_position (GTK_PANED (window->priv->paned)));
-		eel_gconf_set_integer (PREF_NAME_COLUMN_WIDTH, gtk_tree_view_column_get_width (window->priv->filename_column));
+		width = gtk_paned_get_position (GTK_PANED (window->priv->paned));
+		if (width > 0)
+			eel_gconf_set_integer (PREF_UI_SIDEBAR_WIDTH, width);
+		
+		width = gtk_tree_view_column_get_width (window->priv->filename_column);
+		if (width > 0)
+			eel_gconf_set_integer (PREF_NAME_COLUMN_WIDTH, width);
 	}
 	
 	g_idle_add (close__step2, window);
@@ -3767,7 +3772,7 @@ add_file_list_columns (FrWindow    *window,
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 	GValue             value = { 0, };
-	int                i, j;
+	int                i, j, w;
 
 	/* First column. */
 
@@ -3809,7 +3814,10 @@ add_file_list_columns (FrWindow    *window,
 					     NULL);
 
 	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-	gtk_tree_view_column_set_fixed_width (column, eel_gconf_get_integer (PREF_NAME_COLUMN_WIDTH, DEFAULT_NAME_COLUMN_WIDTH));
+	w = eel_gconf_get_integer (PREF_NAME_COLUMN_WIDTH, DEFAULT_NAME_COLUMN_WIDTH);
+	if (w <= 0)
+		w = DEFAULT_NAME_COLUMN_WIDTH;
+	gtk_tree_view_column_set_fixed_width (column, w);
 	gtk_tree_view_column_set_resizable (column, TRUE);
 	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
 	gtk_tree_view_column_set_cell_data_func (column, renderer,
