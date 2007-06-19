@@ -1619,7 +1619,7 @@ fr_window_update_dir_tree (FrWindow *window)
 		GtkTreeIter  node;
 		char        *name;
 		
-		name = g_filename_display_basename (window->archive->uri);
+		name = gnome_vfs_unescape_string_for_display (file_name_from_path (window->archive->uri));
 		
 		gtk_tree_store_append (window->priv->tree_store, &node, NULL);
 		gtk_tree_store_set (window->priv->tree_store, &node,
@@ -1628,9 +1628,9 @@ fr_window_update_dir_tree (FrWindow *window)
 				    TREE_COLUMN_PATH, "/",
 				    TREE_COLUMN_WEIGHT, PANGO_WEIGHT_BOLD,
 				    -1);
-		g_free (name);
-		
 		g_hash_table_replace (dir_cache, "/", gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &node));
+		
+		g_free (name);
 	}
 	g_object_unref (icon);
 	
