@@ -286,6 +286,7 @@ struct _FrWindowPrivateData {
 
 	GtkWidget        *file_popup_menu;
 	GtkWidget        *folder_popup_menu;
+	GtkWidget        *sidebar_folder_popup_menu;
 	GtkWidget        *mitem_recents_menu;
 	GtkWidget        *recent_toolbar_menu;
 	GtkAction        *open_action;
@@ -510,6 +511,11 @@ fr_window_free_private_data (FrWindow *window)
 	if (priv->folder_popup_menu != NULL) {
 		gtk_widget_destroy (priv->folder_popup_menu);
 		priv->folder_popup_menu = NULL;
+	}
+	
+	if (priv->sidebar_folder_popup_menu != NULL) {
+		gtk_widget_destroy (priv->sidebar_folder_popup_menu);
+		priv->sidebar_folder_popup_menu = NULL;
 	}
 
 	g_free (window->priv->last_location);
@@ -2782,6 +2788,56 @@ action_performed (FrArchive   *archive,
 }
 
 
+static int
+dir_tree_button_press_cb (GtkWidget      *widget,
+		          GdkEventButton *event,
+		          gpointer        data)
+{
+	FrWindow         *window = data;
+	GtkTreeSelection *selection;
+
+	if (event->window != gtk_tree_view_get_bin_window (GTK_TREE_VIEW (window->priv->tree_view)))
+		return FALSE;
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+	if (selection == NULL)
+		return FALSE;
+
+	if ((event->type == GDK_BUTTON_PRESS) && (event->button == 3)) {
+		GtkTreePath *path;
+		GtkTreeIter  iter;
+
+		if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (window->priv->tree_view),
+						   event->x, event->y,
+						   &path, NULL, NULL, NULL)) {
+
+			if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->tree_store), &iter, path)) {
+				gtk_tree_path_free (path);
+				return FALSE;
+			}
+			gtk_tree_path_free (path);
+
+			if (! gtk_tree_selection_iter_is_selected (selection, &iter)) {
+				gtk_tree_selection_unselect_all (selection);
+				gtk_tree_selection_select_iter (selection, &iter);
+			}
+			
+			gtk_menu_popup (GTK_MENU (window->priv->sidebar_folder_popup_menu),
+					NULL, NULL, NULL,
+					window,
+					event->button,
+					event->time);
+		}
+		else
+			gtk_tree_selection_unselect_all (selection);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 static FileData *
 fr_window_get_selected_folder (FrWindow *window)
 {
@@ -2816,7 +2872,8 @@ fr_window_get_selected_folder (FrWindow *window)
 
 
 void
-fr_window_current_folder_activated (FrWindow *window)
+fr_window_current_folder_activated (FrWindow *window,
+				   gboolean   from_sidebar)
 {
 	FileData *fdata;
 	char     *new_dir;
@@ -4773,6 +4830,11 @@ fr_window_construct (FrWindow *window)
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (window->priv->tree_view), FALSE);
 	add_dir_tree_columns (window, GTK_TREE_VIEW (window->priv->tree_view));
 
+	g_signal_connect (G_OBJECT (window->priv->tree_view),
+			  "button_press_event",
+			  G_CALLBACK (dir_tree_button_press_cb),
+			  window);
+
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
 	g_signal_connect (selection,
 			  "changed",
@@ -4946,6 +5008,7 @@ fr_window_construct (FrWindow *window)
 
 	window->priv->file_popup_menu = gtk_ui_manager_get_widget (ui, "/FilePopupMenu");
 	window->priv->folder_popup_menu = gtk_ui_manager_get_widget (ui, "/FolderPopupMenu");
+	window->priv->sidebar_folder_popup_menu = gtk_ui_manager_get_widget (ui, "/SidebarFolderPopupMenu");
 
 	/* Create the statusbar. */
 
@@ -6469,7 +6532,8 @@ name_is_present (FrWindow    *window,
 
 
 void
-fr_window_rename_selection (FrWindow *window)
+fr_window_rename_selection (FrWindow *window,
+			    gboolean  from_sidebar)
 {
 	GList    *selection, *selection_fd;
 	gboolean  has_dir;
@@ -6624,14 +6688,16 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 
 
 void
-fr_window_copy_selection (FrWindow *window)
+fr_window_copy_selection (FrWindow *window,
+			  gboolean  from_sidebar)
 {
 	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_COPY);
 }
 
 
 void
-fr_window_cut_selection (FrWindow *window)
+fr_window_cut_selection (FrWindow *window,
+			 gboolean  from_sidebar)
 {
 	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_CUT);
 }
@@ -6870,7 +6936,8 @@ fr_window_paste_selection_to (FrWindow   *window,
 
 
 void
-fr_window_paste_selection (FrWindow *window)
+fr_window_paste_selection (FrWindow *window,
+			   gboolean  from_sidebar)
 {
 	char *utf8_path, *utf8_old_path, *destination;
 	char *current_dir;

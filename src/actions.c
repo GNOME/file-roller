@@ -682,10 +682,18 @@ activate_action_extract (GtkAction *action,
 
 
 void
+activate_action_extract_folder_from_sidebar (GtkAction *action,
+			 		     gpointer   data)
+{
+	dlg_extract_folder_from_sidebar (NULL, data);
+}
+
+
+void
 activate_action_copy (GtkAction *action,
 		      gpointer   data)
 {
-	fr_window_copy_selection ((FrWindow*) data);
+	fr_window_copy_selection ((FrWindow*) data, FALSE);
 }
 
 
@@ -693,7 +701,7 @@ void
 activate_action_cut (GtkAction *action,
 		     gpointer   data)
 {
-	fr_window_cut_selection ((FrWindow*) data);
+	fr_window_cut_selection ((FrWindow*) data, FALSE);
 }
 
 
@@ -701,7 +709,7 @@ void
 activate_action_paste (GtkAction *action,
 		       gpointer   data)
 {
-	fr_window_paste_selection ((FrWindow*) data);
+	fr_window_paste_selection ((FrWindow*) data, FALSE);
 }
 
 
@@ -709,7 +717,7 @@ void
 activate_action_rename (GtkAction *action,
 			gpointer   data)
 {
-	fr_window_rename_selection ((FrWindow*) data);
+	fr_window_rename_selection ((FrWindow*) data, FALSE);
 }
 
 
@@ -718,6 +726,46 @@ activate_action_delete (GtkAction *action,
 			gpointer   data)
 {
 	dlg_delete (NULL, data);
+}
+
+
+void
+activate_action_copy_folder_from_sidebar (GtkAction *action,
+		      			  gpointer   data)
+{
+	fr_window_copy_selection ((FrWindow*) data, TRUE);
+}
+
+
+void
+activate_action_cut_folder_from_sidebar (GtkAction *action,
+		     			 gpointer   data)
+{
+	fr_window_cut_selection ((FrWindow*) data, TRUE);
+}
+
+
+void
+activate_action_paste_folder_from_sidebar (GtkAction *action,
+		       			   gpointer   data)
+{
+	fr_window_paste_selection ((FrWindow*) data, TRUE);
+}
+
+
+void
+activate_action_rename_folder_from_sidebar (GtkAction *action,
+					    gpointer   data)
+{
+	fr_window_rename_selection ((FrWindow*) data, TRUE);
+}
+
+
+void
+activate_action_delete_folder_from_sidebar (GtkAction *action,
+					    gpointer   data)
+{
+	dlg_delete_from_sidebar (NULL, data);
 }
 
 
@@ -769,7 +817,16 @@ activate_action_open_folder (GtkAction *action,
 			     gpointer   data)
 {
 	FrWindow *window = data;
-	fr_window_current_folder_activated (window);
+	fr_window_current_folder_activated (window, FALSE);
+}
+
+
+void
+activate_action_open_folder_from_sidebar (GtkAction *action,
+			                  gpointer   data)
+{
+	FrWindow *window = data;
+	fr_window_current_folder_activated (window, TRUE);
 }
 
 

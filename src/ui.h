@@ -66,18 +66,49 @@ static GtkActionEntry action_entries[] = {
 	  N_("Contents"), "F1",
 	  N_("Display the File Roller Manual"),
 	  G_CALLBACK (activate_action_manual) },
+	  
 	{ "Copy", GTK_STOCK_COPY,
 	  NULL, NULL,
 	  N_("Copy the selection"),
 	  G_CALLBACK (activate_action_copy) },
 	{ "Cut", GTK_STOCK_CUT,
 	  NULL, NULL,
-	  N_("Cut the selection"),
+	  N_("Cut the selection"),	  
 	  G_CALLBACK (activate_action_cut) },
+	{ "Paste", GTK_STOCK_PASTE,
+	  NULL, NULL,
+	  N_("Paste the clipboard"),
+	  G_CALLBACK (activate_action_paste) },	 
+	{ "Rename", NULL,
+	  N_("_Rename..."), "F2",
+	  N_("Rename the selection"),
+	  G_CALLBACK (activate_action_rename) },	   
 	{ "Delete", GTK_STOCK_DELETE,
 	  NULL, NULL,
 	  N_("Delete the selection from the archive"),
 	  G_CALLBACK (activate_action_delete) },
+	  
+	{ "CopyFolderFromSidebar", GTK_STOCK_COPY,
+	  NULL, NULL,
+	  N_("Copy the selection"),
+	  G_CALLBACK (activate_action_copy_folder_from_sidebar) },
+	{ "CutFolderFromSidebar", GTK_STOCK_CUT,
+	  NULL, NULL,
+	  N_("Cut the selection"),
+	  G_CALLBACK (activate_action_cut_folder_from_sidebar) },
+	{ "PasteFolderFromSidebar", GTK_STOCK_PASTE,
+	  NULL, NULL,
+	  N_("Paste the clipboard"),
+	  G_CALLBACK (activate_action_paste_folder_from_sidebar) },	 	
+	{ "RenameFolderFromSidebar", NULL,
+	  N_("_Rename..."), "F2",
+	  N_("Rename the selection"),
+	  G_CALLBACK (activate_action_rename_folder_from_sidebar) },	    
+	{ "DeleteFolderFromSidebar", GTK_STOCK_DELETE,
+	  NULL, NULL,
+	  N_("Delete the selection from the archive"),
+	  G_CALLBACK (activate_action_delete_folder_from_sidebar) },
+	  
 	{ "DeselectAll", NULL,
 	  N_("Dese_lect All"), NULL,
 	  N_("Deselect all files"),
@@ -86,6 +117,10 @@ static GtkActionEntry action_entries[] = {
 	  N_("_Extract..."), NULL,
 	  N_("Extract files from the archive"),
 	  G_CALLBACK (activate_action_extract) },
+	{ "ExtractFolderFromSidebar", FR_STOCK_EXTRACT,
+	  N_("_Extract..."), NULL,
+	  N_("Extract files from the archive"),
+	  G_CALLBACK (activate_action_extract_folder_from_sidebar) },
 	{ "Extract_Toolbar", FR_STOCK_EXTRACT,
 	  N_("Extract"), NULL,
 	  N_("Extract files from the archive"),
@@ -114,10 +149,6 @@ static GtkActionEntry action_entries[] = {
 	  N_("Pass_word..."), NULL,
 	  N_("Specify a password for this archive"),
 	  G_CALLBACK (activate_action_password) },
-	{ "Paste", GTK_STOCK_PASTE,
-	  NULL, NULL,
-	  N_("Paste the clipboard"),
-	  G_CALLBACK (activate_action_paste) },
 	{ "Properties", GTK_STOCK_PROPERTIES,
 	  NULL, NULL,
 	  N_("Show archive properties"),
@@ -126,10 +157,6 @@ static GtkActionEntry action_entries[] = {
 	  NULL, "<control>R",
 	  N_("Reload current archive"),
 	  G_CALLBACK (activate_action_reload) },
-	{ "Rename", NULL,
-	  N_("_Rename..."), "F2",
-	  N_("Rename the selection"),
-	  G_CALLBACK (activate_action_rename) },
 	{ "SaveAs", GTK_STOCK_SAVE_AS,
 	  NULL, NULL,
 	  N_("Save the current archive with a different name"),
@@ -158,6 +185,10 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Open the selected folder"),
 	  G_CALLBACK (activate_action_open_folder) },
+	{ "OpenFolderFromSidebar", GTK_STOCK_OPEN,
+	  NULL, NULL,
+	  N_("Open the selected folder"),
+	  G_CALLBACK (activate_action_open_folder_from_sidebar) },
 };
 static guint n_action_entries = G_N_ELEMENTS (action_entries);
 
@@ -316,7 +347,17 @@ static const gchar *ui_info =
 "    <menuitem action='AddFiles'/>"
 "    <menuitem action='AddFolder'/>"
 "  </popup>"
-
+"  <popup name='SidebarFolderPopupMenu'>"
+"    <menuitem action='OpenFolderFromSidebar'/>"
+"    <separator/>"
+"    <menuitem action='ExtractFolderFromSidebar'/>"
+"    <separator/>"
+"    <menuitem action='CutFolderFromSidebar'/>"
+"    <menuitem action='CopyFolderFromSidebar'/>"
+"    <menuitem action='PasteFolderFromSidebar'/>"
+"    <menuitem action='RenameFolderFromSidebar'/>"
+"    <menuitem action='DeleteFolderFromSidebar'/>"
+"  </popup>"
 "</ui>";
 
 

@@ -39,16 +39,26 @@ void activate_action_quit (GtkAction *action, gpointer data);
 void activate_action_add_files (GtkAction *action, gpointer data);
 void activate_action_add_folder (GtkAction *action, gpointer data);
 void activate_action_extract (GtkAction *action, gpointer data);
+void activate_action_extract_folder_from_sidebar (GtkAction *action, gpointer data);
+
 void activate_action_copy (GtkAction *action, gpointer data);
 void activate_action_cut (GtkAction *action, gpointer data);
 void activate_action_paste (GtkAction *action, gpointer data);
 void activate_action_rename (GtkAction *action, gpointer data);
 void activate_action_delete (GtkAction *action, gpointer data);
+
+void activate_action_copy_folder_from_sidebar (GtkAction *action, gpointer data);
+void activate_action_cut_folder_from_sidebar (GtkAction *action, gpointer data);
+void activate_action_paste_folder_from_sidebar (GtkAction *action, gpointer data);
+void activate_action_rename_folder_from_sidebar (GtkAction *action, gpointer data);
+void activate_action_delete_folder_from_sidebar (GtkAction *action, gpointer data);
+
 void activate_action_select_all (GtkAction *action, gpointer data);
 void activate_action_deselect_all (GtkAction *action, gpointer data);
 void activate_action_open_with (GtkAction *action, gpointer data);
 void activate_action_view_or_open (GtkAction *action, gpointer data);
 void activate_action_open_folder (GtkAction *action, gpointer data);
+void activate_action_open_folder_from_sidebar (GtkAction *action, gpointer data);
 void activate_action_password (GtkAction *action, gpointer data);
 
 void activate_action_view_toolbar (GtkAction *action, gpointer data);

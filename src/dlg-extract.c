@@ -537,3 +537,11 @@ dlg_extract (GtkWidget *widget,
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
 	gtk_widget_show (file_sel);
 }
+
+
+void
+dlg_extract_folder_from_sidebar (GtkWidget *widget,
+	     			 gpointer   callback_data)
+{
+	/* FIXME */
+}

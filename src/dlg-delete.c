@@ -170,3 +170,10 @@ dlg_delete (GtkWidget *widget,
 
 	gtk_widget_show (data->dialog);
 }
+
+
+void 
+dlg_delete_from_sidebar (GtkWidget *widget, 
+			 gpointer   data)
+{
+}

@@ -183,7 +183,8 @@ const char*fr_window_get_current_location       (FrWindow       *window);
 void       fr_window_go_up_one_level            (FrWindow       *window);
 void       fr_window_go_back                    (FrWindow       *window);
 void       fr_window_go_forward                 (FrWindow       *window);
-void       fr_window_current_folder_activated   (FrWindow       *window);
+void       fr_window_current_folder_activated   (FrWindow       *window,
+						 gboolean        from_sidebar);
 void       fr_window_set_list_mode              (FrWindow       *window,
 						 FRWindowListMode  list_mode);
 
@@ -209,10 +210,14 @@ void       fr_window_set_sort_type                (FrWindow    *window,
 
 /**/
 
-void       fr_window_rename_selection             (FrWindow    *window);
-void       fr_window_cut_selection                (FrWindow    *window);
-void       fr_window_copy_selection               (FrWindow    *window);
-void       fr_window_paste_selection              (FrWindow    *window);
+void       fr_window_rename_selection             (FrWindow    *window,
+						   gboolean     from_sidebar);
+void       fr_window_cut_selection                (FrWindow    *window,
+						   gboolean     from_sidebar);
+void       fr_window_copy_selection               (FrWindow    *window,
+						   gboolean     from_sidebar);
+void       fr_window_paste_selection              (FrWindow    *window,
+						   gboolean     from_sidebar);
 
 /**/
 
