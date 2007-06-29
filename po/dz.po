@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-18 03:30+0100\n"
-"PO-Revision-Date: 2007-06-05 23:06+0530\n"
+"POT-Creation-Date: 2007-06-14 03:37+0100\n"
+"PO-Revision-Date: 2007-06-21 00:24+0530\n"
 "Last-Translator: Tshewang Norbu <bumthap2006@hotmail.com>\n"
 "Language-Team: Dzongkha <pgeyleg@dit.gov.bt>\n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,7 @@ msgid "A_vailable application:"
 msgstr "འཐོབ་ཚུགས་པའི་གློག་རིམ།(_v)"
 
 #: ../data/glade/file-roller.glade.h:3
+#: ../src/fr-stock.c:43
 msgid "C_reate"
 msgstr "གསར་བསྐྲུན་འབད།(_r)"
 
@@ -44,13 +45,13 @@ msgid "Load Options"
 msgstr "གདམ་ཁ་ཚུ་ བཀལ་བཙུགས་འབད།"
 
 #: ../data/glade/file-roller.glade.h:7
-#: ../src/fr-window.c:3263
+#: ../src/fr-window.c:3791
 msgid "Location"
 msgstr "གནས་ཁོངས།"
 
 #. current location
 #: ../data/glade/file-roller.glade.h:8
-#: ../src/fr-window.c:4166
+#: ../src/fr-window.c:4757
 msgid "Location:"
 msgstr "གནས་ཁོངས:།"
 
@@ -67,7 +68,7 @@ msgid "R_ecent applications:"
 msgstr "ད་རིས་ཁམས་ཀྱི་གློག་རིམ།(_e)"
 
 #: ../data/glade/file-roller.glade.h:12
-#: ../src/dlg-extract.c:385
+#: ../src/dlg-extract.c:383
 msgid "_All files"
 msgstr "ཡིག་སྣོད་ཆ་མཉམ།(_A)"
 
@@ -80,23 +81,23 @@ msgid "_Archive:"
 msgstr "ཡིག་མཛོད:(_A)"
 
 #: ../data/glade/file-roller.glade.h:15
-#: ../src/dlg-extract.c:371
+#: ../src/dlg-extract.c:369
 msgid "_Files:"
 msgstr "ཡིག་སྣོད་ཚུ:(_F)"
 
 #: ../data/glade/file-roller.glade.h:16
 #: ../data/glade/ask-password.glade.h:2
-#: ../src/dlg-extract.c:433
+#: ../src/dlg-extract.c:431
 msgid "_Password:"
 msgstr "ཆོག་ཡིག(_P)"
 
 #: ../data/glade/file-roller.glade.h:17
-#: ../src/dlg-extract.c:392
+#: ../src/dlg-extract.c:390
 msgid "_Selected files"
 msgstr "སེལ་འཐུ་འབད་མི་ཡིག་སྣོད་ཚུ།(_S)"
 
 #: ../data/glade/file-roller.glade.h:18
-#: ../src/dlg-extract.c:382
+#: ../src/dlg-extract.c:380
 msgid "example: *.txt; *.doc"
 msgstr "དཔེར་བརྗོད་: *.ཊི་ཨེགསི་ཊི་;*.ཌོཀ།"
 
@@ -106,9 +107,9 @@ msgstr "<span weight=\"bold\" size=\"larger\">ཆོག་ཡིག་དགོ�
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1
-#: ../src/fr-window.c:1455
-#: ../src/fr-window.c:3871
-#: ../src/main.c:215
+#: ../src/fr-window.c:1784
+#: ../src/fr-window.c:4458
+#: ../src/main.c:216
 msgid "Archive Manager"
 msgstr "ཡིག་མཛོད་འཛིན་སྐྱོང་པ།"
 
@@ -117,122 +118,138 @@ msgstr "ཡིག་མཛོད་འཛིན་སྐྱོང་པ།"
 msgid "Create and modify an archive"
 msgstr "ཡིག་མཛོད་གསར་བསྐྲུན་འབད་ནི་དང་ ལེགས་བཅོས་འབད་ནི།"
 
-#: ../nautilus/nautilus-fileroller.c:243
+#: ../nautilus/nautilus-fileroller.c:240
 msgid "Extract Here"
 msgstr "ནཱ་ལུ་ཕྱིར་འདོན་འབད། "
 
-#: ../nautilus/nautilus-fileroller.c:244
+#: ../nautilus/nautilus-fileroller.c:241
 msgid "Extract the selected archive in the current position"
 msgstr "སེལ་འཐུ་འབད་མི་ ཡིག་མཛོད་དེ་ ད་ལྟོའི་གནས་ས་ལུ་ ཕྱིར་འདོན་འབད།"
 
-#: ../nautilus/nautilus-fileroller.c:261
+#: ../nautilus/nautilus-fileroller.c:258
 msgid "Extract To..."
 msgstr "ཕྱིར་འདོན་འབད་ས་..."
 
-#: ../nautilus/nautilus-fileroller.c:262
+#: ../nautilus/nautilus-fileroller.c:259
 msgid "Extract the selected archive"
 msgstr "སེལ་འཐུ་འབད་མི་ ཡིག་མཛོད་དེ་ ཕྱིར་འདོན་འབད།"
 
-#: ../nautilus/nautilus-fileroller.c:281
+#: ../nautilus/nautilus-fileroller.c:278
 msgid "Create Archive..."
 msgstr "ཡིག་མཛོད་གསར་བསྐྲུན་འབད་...།"
 
-#: ../nautilus/nautilus-fileroller.c:282
+#: ../nautilus/nautilus-fileroller.c:279
 msgid "Create an archive with the selected objects"
 msgstr "སེལ་འཐུ་འབད་མི་ དངོས་པོའི་ཐོག་ལས་ ཡིག་མཛོད་ཅིག་གསར་བསྐྲུན་འབད།"
 
-#: ../src/actions.c:144
-#: ../src/actions.c:162
-#: ../src/actions.c:200
+#: ../src/actions.c:146
+#: ../src/actions.c:164
+#: ../src/actions.c:202
 #: ../src/dlg-batch-add.c:128
 #: ../src/dlg-batch-add.c:143
 #: ../src/dlg-batch-add.c:167
 #: ../src/dlg-batch-add.c:211
-#: ../src/dlg-batch-add.c:257
-#: ../src/fr-window.c:2173
+#: ../src/dlg-batch-add.c:258
+#: ../src/fr-window.c:2504
 msgid "Could not create the archive"
 msgstr "ཡིག་མཛོད་གསར་བསྐྲུན་འབད་མ་ཚུགས།"
 
-#: ../src/actions.c:145
+#: ../src/actions.c:147
 #: ../src/dlg-batch-add.c:129
-#: ../src/dlg-batch-add.c:258
+#: ../src/dlg-batch-add.c:259
 msgid "You have to specify an archive name."
 msgstr "ཁྱོད་ཀྱིས་ ཡིག་མཛོད་ཀྱི་མིང་ཅིག་ གསལ་བཀོད་འབད་དགོ"
 
-#: ../src/actions.c:163
+#: ../src/actions.c:165
 msgid "You don't have permission to create an archive in this folder"
 msgstr "ཁྱོད་ལུ་ སྣོད་འཛིན་འདི་ནང་ ཡིག་མཛོད་ཅིག་ གསར་བསྐྲུན་འབད་ནིའི་ གནང་བ་མེད།"
 
-#: ../src/actions.c:201
-#: ../src/fr-archive.c:1092
-#: ../src/fr-window.c:4402
-#: ../src/fr-window.c:4530
+#: ../src/actions.c:203
+#: ../src/fr-archive.c:1304
+#: ../src/fr-window.c:5055
+#: ../src/fr-window.c:5220
 msgid "Archive type not supported."
 msgstr "ཡིག་མཛོད་ཀྱི་ དབྱེ་བ་འདི་ལུ་ རྒྱབ་བསྐྱོར་མིན་འདུག"
 
-#: ../src/actions.c:212
+#: ../src/actions.c:214
 msgid "The archive already exists.  Do you want to overwrite it?"
 msgstr "ཡིག་མཛོད་དེ་ ཧེ་མ་ལས་རང་འདུག ཁྱོད་ཀྱིས་འདི་ ཚབ་སྲུང་འབད་ནི་ཨིན་ན?"
 
-#: ../src/actions.c:215
+#: ../src/actions.c:217
 msgid "Overwrite"
 msgstr "ཚབ་སྲུང་འབད།"
 
-#: ../src/actions.c:233
+#: ../src/actions.c:235
 msgid "Could not delete the old archive."
 msgstr "ཡིག་མཛོད་རྙིངམ་དེ་ བཏོན་གཏང་མ་ཚུགས།"
 
-#: ../src/actions.c:321
+#: ../src/actions.c:332
 msgid "New"
 msgstr "གསརཔ།"
 
-#: ../src/actions.c:361
-#: ../src/actions.c:479
-#: ../src/actions.c:570
-#: ../src/fr-window.c:3826
+#: ../src/actions.c:355
+#: ../src/actions.c:481
+#: ../src/actions.c:578
+#: ../src/fr-window.c:4399
 msgid "All archives"
 msgstr "ཡིག་མཛོད་ཆ་མཉམ།"
 
-#: ../src/actions.c:368
-#: ../src/actions.c:486
-#: ../src/actions.c:577
+#: ../src/actions.c:362
+#: ../src/actions.c:488
+#: ../src/actions.c:585
 msgid "All files"
 msgstr "ཡིག་སྣོད་ཆ་མཉམ།"
 
-#: ../src/actions.c:378
-#: ../src/actions.c:585
+#: ../src/actions.c:372
+#: ../src/actions.c:593
 msgid "Archive type:"
 msgstr "ཡིག་མཛོད་ཀྱི་དབྱེ་བ།"
 
-#: ../src/actions.c:382
-#: ../src/actions.c:589
+#: ../src/actions.c:376
+#: ../src/actions.c:597
 msgid "Automatic"
 msgstr "རང་བཞིན་གྱི།"
 
-#: ../src/actions.c:468
-#: ../src/fr-window.c:4265
+#: ../src/actions.c:470
+#: ../src/fr-window.c:4913
 msgid "Open"
 msgstr "ཁ་ཕྱེ།"
 
-#: ../src/actions.c:555
+#: ../src/actions.c:559
 msgid "Save"
 msgstr "སྲུངས།"
 
-#: ../src/actions.c:825
-#: ../src/fr-window.c:5457
+#: ../src/actions.c:842
+#: ../src/fr-window.c:6118
 msgid "Last Output"
 msgstr "མཐའ་མཇུག་གི་ ཨའུཊི་པུཊི།"
 
-#: ../src/actions.c:845
+#: ../src/actions.c:862
 #: ../src/gtk-utils.c:810
 msgid "Could not display help"
 msgstr "གྲོགས་རམ་བཀྲམ་སྟོན་འབད་མ་ཚུགས།"
 
-#: ../src/actions.c:895
+#: ../src/actions.c:888
+msgid "File Roller is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
+msgstr "སྒྲིལ་ཤིང་ཡིག་སྣོད་འདི་རང་དབང་མཉེན་ཆས་ཨིན རང་དབང་མཉེན་ཆས་གཞི་མཚོ་གིས་དཔེ་བསྐྲུན་འབད་ཡོད་མི་བཟུམ ཇི་ཨེན་ཡུ་མི་མང་ཡོངས་ཁྱབ་ཆོག་ཐམ་གྱི་ཐ་སྙད་ཀྱི་འོག་ལུ་ཁྱོད་ཀྱིས་འདི་ལོག་བཀྲམ་ཡང་ན་ལེགས་བཅོས་འབད་  ཐོན་རིམ་༢་གྱི་ཆོག་ཐམ་ཡང་ན་གང་རུང་མཇུག་གི་ཐོན་རིམ།"
+
+#: ../src/actions.c:892
+msgid "File Roller is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
+msgstr "སྒྲིལ་ཤིང་ཡིག་སྣོད་འདི་ཕན་ཐོག་འོང་མནོ་སྟེ་བཀྲམ་སྤེལ་འབད་ཡོདཔ དེ་འབདཝ་ད་ཉེན་ལེན་གང་ཡང་མེད་པར་ ཚོང་འབྲེལ་ཡང་ན་བྱེ་བྲག་གི་གནད་དོན་ལུ་བཏུབ་པའི་བརྡ་སྟོན་མིན་འདུག།རྒྱས་བཤད་སྦེ་ཇི་ཨེན་ཡུ་མི་མང་ཡོངས་ཁྱབ་ཆོག་ཐམ་གནང་བལྟ་གནང་།"
+
+#: ../src/actions.c:896
+msgid "You should have received a copy of the GNU General Public License along with File Roller; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
+msgstr "སྒྲིལ་ཤིང་ཡིག་སྣོད་དང་གཅིག་ཁར་ཁྱོད་ཀྱིས་་ཇི་ཨེན་ཡུ་མི་མང་ཡོངས་ཁྱབ་ཆོག་ཐམ་གྱི་འདྲ་བཤུས་ཐོབ་དགོཔ་ཨིན གལ་སྲིད་མ་ཐོབ་པ་ཅིན རང་དབང་ཉེན་ཆས་གཞི་མཚོ་ལུ་འབྲི Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
+
+#: ../src/actions.c:906
+msgid "Copyright © 2001-2007 Free Software Foundation, Inc."
+msgstr "འདྲ་བཤུས་རང་དབང་ © 2001-2007 རང་དབང་ཉེན་ཆས་གཞི་མཚོ Inc."
+
+#: ../src/actions.c:907
 msgid "An archive manager for GNOME."
 msgstr "ཇི་ནོམ་གྱི་དོན་ལུ་ ཡིག་མཛོད་ཀྱི་ འཛིན་སྐྱོང་པ་ཅིག"
 
-#: ../src/actions.c:898
+#: ../src/actions.c:910
 msgid "translator-credits"
 msgstr "ཨའི་ཌི་ཨར་སི་གི་མ་དངུལ་རྒྱབ་སྐྱོར་ཐོག་ལས་ བརྡ་དོན་འཕྲུལ་རིག་ལས་ཁུངས་ནང་ སྐད་བསྒྱུར་འབད་ཡི། ཁ་གསལ་གྱི་དོན་ལུ་ འབྲེལ་བ་འཐབ་ས་: <pema_geyleg@druknet.bt><pgeyleg@dit.gov.bt>"
 
@@ -302,14 +319,13 @@ msgstr "གདམ་ཁ་ཚུ་སྲུངས།"
 msgid "Options Name:"
 msgstr "གདམ་ཁ་ཚུ་གི་མིང་།"
 
-#. Set widgets data.
-#: ../src/dlg-ask-password.c:107
+#: ../src/dlg-ask-password.c:124
 #, c-format
 msgid "Enter the password for the archive '%s'."
 msgstr "ཡིག་མཛོད་ '%s' དོན་ལུ་ཆོག་ཡིག་ཐོ་བཀོད་འབད།"
 
 #: ../src/dlg-batch-add.c:144
-#: ../src/fr-window.c:5740
+#: ../src/fr-window.c:6401
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -321,11 +337,11 @@ msgstr ""
 "%s"
 
 #: ../src/dlg-batch-add.c:147
-#: ../src/fr-window.c:5732
-#: ../src/fr-window.c:5736
-#: ../src/fr-window.c:5740
-#: ../src/fr-window.c:5797
-#: ../src/fr-window.c:5799
+#: ../src/fr-window.c:6393
+#: ../src/fr-window.c:6397
+#: ../src/fr-window.c:6401
+#: ../src/fr-window.c:6458
+#: ../src/fr-window.c:6460
 msgid "Please use a different name."
 msgstr "མིང་སོ་སོ་ཅིག་ ལག་ལེན་འཐབ།"
 
@@ -335,7 +351,7 @@ msgstr "ཁྱོད་ལུ་ འགྲོ་ཡུལ་སྣོད་འ�
 
 #: ../src/dlg-batch-add.c:184
 #: ../src/dlg-extract.c:110
-#: ../src/fr-window.c:4862
+#: ../src/fr-window.c:5570
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -348,13 +364,13 @@ msgstr ""
 
 #: ../src/dlg-batch-add.c:193
 #: ../src/dlg-extract.c:119
-#: ../src/fr-window.c:4871
+#: ../src/fr-window.c:5579
 msgid "Create _Folder"
 msgstr "སྣོད་འཛིན་གསར་བསྐྲུན་འབད།(_F)"
 
 #: ../src/dlg-batch-add.c:212
 #: ../src/dlg-extract.c:136
-#: ../src/fr-window.c:4891
+#: ../src/fr-window.c:5599
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "འགྲོ་ཡུལ་སྣོད་འཛིན་%s གསར་བསྐྲུན་འབད་མ་ཚུགས།"
@@ -363,54 +379,54 @@ msgstr "འགྲོ་ཡུལ་སྣོད་འཛིན་%s གསར་
 msgid "Archive not created"
 msgstr "ཡིག་མཛོད་གསར་བསྐྲུན་མ་འབད་བས།"
 
-#: ../src/dlg-batch-add.c:282
+#: ../src/dlg-batch-add.c:277
 msgid "The archive is already present.  Do you want to overwrite it?"
 msgstr "ཡིག་མཛོད་དེ་ ཧེ་མ་ལས་རང་འདུག ཁྱོད་ཀྱིས་ཚབ་སྲུང་འབད་ནི་ཨིན་ན?"
 
-#: ../src/dlg-batch-add.c:285
+#: ../src/dlg-batch-add.c:280
 msgid "_Overwrite"
 msgstr "ཚབ་སྲུང་འབད།(_O)"
 
 #: ../src/dlg-extract.c:141
 #: ../src/dlg-extract.c:158
 #: ../src/dlg-extract.c:184
-#: ../src/fr-window.c:2956
-#: ../src/fr-window.c:4890
-#: ../src/fr-window.c:4906
+#: ../src/fr-window.c:3374
+#: ../src/fr-window.c:5598
+#: ../src/fr-window.c:5616
 msgid "Extraction not performed"
 msgstr "ཕྱིར་འདོན་མ་འབད་བས།"
 
 #: ../src/dlg-extract.c:185
-#: ../src/fr-window.c:3065
+#: ../src/fr-window.c:3527
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "ཁྱོད་ལུ་ སྣོད་འཛིན་ \"%s\"ནང་ ཡིག་མཛོད་ཕྱིར་འདོན་འབད་ནིའི་ གནང་བ་བདེན་པ་མིན་འདུག"
 
-#: ../src/dlg-extract.c:354
+#: ../src/dlg-extract.c:352
 msgid "Files"
 msgstr "ཡིག་སྣོད་ཚུ།"
 
-#: ../src/dlg-extract.c:403
+#: ../src/dlg-extract.c:401
 msgid "Actions"
 msgstr "བྱ་བ་ཚུ།"
 
-#: ../src/dlg-extract.c:419
+#: ../src/dlg-extract.c:417
 msgid "Re-crea_te folders"
 msgstr "སྣོད་འཛིན་ཚུ་སླར་བསྐྲུན་འབད།(_t)"
 
-#: ../src/dlg-extract.c:423
+#: ../src/dlg-extract.c:421
 msgid "Over_write existing files"
 msgstr "ད་ལྟོ་ཡོད་མི་ ཡིག་སྣོད་ཚུ་ ཚབ་སྲུང་འབད།"
 
-#: ../src/dlg-extract.c:427
+#: ../src/dlg-extract.c:425
 msgid "Do not e_xtract older files"
 msgstr "སྣོད་འཛིན་རྙིངམ་ཚུ་ ཕྱིར་འདོན་མ་འབད།(_x)"
 
-#: ../src/dlg-extract.c:442
+#: ../src/dlg-extract.c:440
 msgid "_Open destination folder after extraction"
 msgstr "ཕྱིར་འདོན་འབད་ཞིནམ་ལས་ འགྲོ་ཡུལ་སྣོད་འཛིན་ཁ་ཕྱེ།(_O)"
 
-#: ../src/dlg-extract.c:471
+#: ../src/dlg-extract.c:469
 #: ../src/ui.h:90
 msgid "Extract"
 msgstr "ཕྱིར་འདོན་འབད།"
@@ -456,241 +472,250 @@ msgstr "མ་ཤེས་པའི་དབྱེ་བ།"
 msgid "Symbolic link"
 msgstr "མཚོན་རྟགས་ཀྱི་འབྲེལ་ལམ།"
 
-#: ../src/fr-archive.c:2281
+#: ../src/fr-archive.c:2538
 msgid "You don't have the right permissions."
 msgstr "ཁྱོད་ལུ་བདེན་པའི་གནང་བ་མིན་འདུག"
 
-#: ../src/fr-archive.c:2291
+#: ../src/fr-archive.c:2548
 msgid "You can't add an archive to itself."
 msgstr "ཁྱོད་ཀྱིས་ཡིག་མཛོད་ཅིག་ དེ་ཉིད་ལུ་ ཁ་སྐོང་བརྐྱབ་མི་ཚུགས།"
 
-#: ../src/fr-command-tar.c:288
+#: ../src/fr-command-tar.c:289
 msgid "Adding file: "
 msgstr "ཡིག་སྣོད་ཁ་སྐོང་རྐྱབ་དོ།"
 
-#: ../src/fr-command-tar.c:337
+#: ../src/fr-command-tar.c:339
 msgid "Removing file: "
 msgstr "ཡིག་སྣོད་རྩ་བསྐྲད་གཏང་དོ།"
 
-#: ../src/fr-command-tar.c:346
-#: ../src/fr-window.c:1730
+#: ../src/fr-command-tar.c:348
+#: ../src/fr-window.c:2057
 msgid "Deleting files from archive"
 msgstr "ཡིག་མཛོད་ནང་ལས་ ཡིག་སྣོད་ཚུ་ རྩ་བསྐྲད་གཏང་དོ།"
 
-#: ../src/fr-command-tar.c:380
+#: ../src/fr-command-tar.c:383
 msgid "Extracting file: "
 msgstr "ཡིག་སྣོད་ཕྱིར་འདོན་འབད་དོ།"
 
-#: ../src/fr-command-tar.c:427
+#: ../src/fr-command-tar.c:432
 msgid "Recompressing archive"
 msgstr "ཡིག་མཛོད་ སླར་ཨེབ་བཙུགས་འབད་དོ།"
 
-#: ../src/fr-command-tar.c:561
+#: ../src/fr-command-tar.c:578
 msgid "Decompressing archive"
 msgstr "ཡིག་མཛོད་ཨེབ་བཤོལ་འབད་དོ།"
 
-#: ../src/fr-stock.c:42
-#: ../src/fr-stock.c:43
+#: ../src/fr-stock.c:44
+#: ../src/fr-stock.c:45
 msgid "_Add"
 msgstr "ཁ་སྐོང་རྐྱབས།(_A)"
 
-#: ../src/fr-stock.c:44
+#: ../src/fr-stock.c:46
 msgid "_Extract"
 msgstr "ཕྱིར་འདོན་འབད།(_E"
 
-#: ../src/fr-stock.c:45
+#: ../src/fr-stock.c:47
 msgid "_View File"
 msgstr "ཡིག་སྣོད་སྣོད། (_V)"
 
-#: ../src/fr-window.c:1204
+#: ../src/fr-window.c:1313
 #, c-format
-msgid "%d file (%s)"
-msgid_plural "%d files (%s)"
+msgid "%d object (%s)"
+msgid_plural "%d objects (%s)"
 msgstr[0] "ཡིག་སྣོད་%d  (%s)"
-msgstr[1] "ཡིག་སྣོད་%d (%s)"
+msgstr[1] "ཡིག་སྣོད་ཚུ་%d (%s)"
 
-#: ../src/fr-window.c:1209
+#: ../src/fr-window.c:1318
 #, c-format
-msgid "%d file selected (%s)"
-msgid_plural "%d files selected (%s)"
-msgstr[0] "་ཡིག་སྣོད་%d སེལ་འཐུ་འབད་ཡི།(%s)"
+msgid "%d object selected (%s)"
+msgid_plural "%d objects selected (%s)"
+msgstr[0] "ཡིག་སྣོད་%d སེལ་འཐུ་འབད་ཡི(%s)"
 msgstr[1] "ཡིག་སྣོད་%d སེལ་འཐུ་འབད་ཡི།(%s)"
 
-#: ../src/fr-window.c:1307
+#: ../src/fr-window.c:1420
 msgid "Folder"
 msgstr "སྣོད་འཛིན།"
 
-#: ../src/fr-window.c:1463
+#: ../src/fr-window.c:1792
 msgid "[read only]"
 msgstr "(ལྷག་ནི་ཙམ)"
 
-#: ../src/fr-window.c:1721
-#: ../src/fr-window.c:1751
+#: ../src/fr-window.c:2048
+#: ../src/fr-window.c:2078
 msgid "Creating archive"
 msgstr "ཡིག་མཛོད་གསར་བསྐྲུན"
 
-#: ../src/fr-window.c:1724
+#: ../src/fr-window.c:2051
 msgid "Loading archive"
 msgstr "ཡིག་མཛོད་མངོན་གསལ་འབད་དོ"
 
-#: ../src/fr-window.c:1727
+#: ../src/fr-window.c:2054
 msgid "Reading archive"
 msgstr "ཡིག་མཛོད་ལྷག་དོ།"
 
-#: ../src/fr-window.c:1733
+#: ../src/fr-window.c:2060
 msgid "Testing archive"
 msgstr "ཡིག་མཛོད་བརྟག་ཞིབ་འབད་དོ།"
 
-#: ../src/fr-window.c:1736
+#: ../src/fr-window.c:2063
 msgid "Getting the file list"
 msgstr "ཡིག་སྣོད་ཐོ་ཡིག་ལེན་དོ།"
 
-#: ../src/fr-window.c:1739
-#: ../src/fr-window.c:1748
+#: ../src/fr-window.c:2066
+#: ../src/fr-window.c:2075
 msgid "Copying the file list"
 msgstr "ཡིག་སྣོད་ཐོ་ཡིག་འདར་བཤུས་འབད་དོ"
 
-#: ../src/fr-window.c:1742
+#: ../src/fr-window.c:2069
 msgid "Adding files to archive"
 msgstr "ཡིག་མཛོད་ལུ་ ཡིག་སྣོད་ཁ་སྐོང་རྐྱབ་དོ།"
 
-#: ../src/fr-window.c:1745
+#: ../src/fr-window.c:2072
 msgid "Extracting files from archive"
 msgstr "ཡིག་མཛོད་ནང་ལས་ ཡིག་སྣོད་ཚུ་ ཕྱིར་འདོན་འབད་དོ།"
 
-#: ../src/fr-window.c:1754
+#: ../src/fr-window.c:2081
 msgid "Saving archive"
 msgstr "ཡིག་མཛོད་སྲུང་དོ།"
 
-#: ../src/fr-window.c:1937
+#: ../src/fr-window.c:2267
 msgid "Archive:"
 msgstr "ཡིག་མཛོད་:"
 
-#: ../src/fr-window.c:2029
+#: ../src/fr-window.c:2359
 msgid "wait please..."
 msgstr "བསྒུག་སྡོད་གནང་..."
 
-#: ../src/fr-window.c:2102
+#: ../src/fr-window.c:2427
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "སྣོད་འཛིན་\"%s\"བཀྲམ་སྟོན་འབད་མ་ཚུགས།"
 
-#: ../src/fr-window.c:2177
+#: ../src/fr-window.c:2508
 msgid "An error occurred while extracting files."
 msgstr "ཡིག་སྣོད་ཚུ་ ཕྱིར་འདོན་འབད་བའི་སྐབས་ འཛོལ་བ་ཅིག་བྱུང་ནུག"
 
-#: ../src/fr-window.c:2183
+#: ../src/fr-window.c:2516
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "\"%s\"ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: ../src/fr-window.c:2188
+#: ../src/fr-window.c:2521
 msgid "An error occurred while loading the archive."
 msgstr "ཡིག་མཛོད་བཀལ་བཙུགས་འབད་བའི་སྐབས་ འཛོལ་བ་ཅིག་བྱུང་ནུག"
 
-#: ../src/fr-window.c:2192
+#: ../src/fr-window.c:2525
 msgid "An error occurred while deleting files from the archive."
 msgstr "ཡིག་མཛོད་ནང་ལས་ ཡིག་སྣོད་ཚུ་ བཏོན་བཏང་པའི་སྐབས་ འཛོལ་བ་ཅིག་བྱུང་ནུག"
 
-#: ../src/fr-window.c:2196
+#: ../src/fr-window.c:2529
 msgid "An error occurred while adding files to the archive."
 msgstr "ཡིག་མཛོད་ལུ་ ཡིག་སྣོད་ཚུ་ ཁ་སྐོང་རྐྱབ་པའི་སྐབས་ འཛོལ་བ་ཅིག་བྱུང་ནུག"
 
-#: ../src/fr-window.c:2200
+#: ../src/fr-window.c:2533
 msgid "An error occurred while testing archive."
 msgstr "ཡིག་མཛོད་བརྟག་ཞིབ་འབད་བའི་སྐབས་ འཛོལ་བ་ཅིག་བྱུང་ནུག"
 
-#: ../src/fr-window.c:2209
+#: ../src/fr-window.c:2542
 msgid "Command not found."
 msgstr "བརྡ་བཀོད་འཚོལ་མ་ཐོབ།"
 
-#: ../src/fr-window.c:2212
+#: ../src/fr-window.c:2545
 msgid "Command exited abnormally."
 msgstr "བརྡ་བཀོད་དེ་ ཨ་རྟག་དང་མ་འདྲཝ་སྦེ་ ཕྱིར་ཐོན་ཡར་སོ་ནུག"
 
-#: ../src/fr-window.c:2397
+#: ../src/fr-window.c:2751
 msgid "Test Result"
 msgstr "བརྟག་ཞིབ་གྲུབ་འབྲས།"
 
-#: ../src/fr-window.c:2834
-#: ../src/fr-window.c:6146
+#: ../src/fr-window.c:3235
+#: ../src/fr-window.c:6975
 msgid "Could not perform the operation"
 msgstr "བཀོལ་སྤྱོད་ལག་ལེན་འཐབ་མ་ཚུགས།"
 
-#: ../src/fr-window.c:2861
+#: ../src/fr-window.c:3262
 msgid "Do you want to add this file to the current archive or open it as a new archive?"
 msgstr "ཡིག་སྣོད་འདི་ ད་ལྟོའི་ཡིག་མཛོད་ལུ་ བསྡོམ་ནི་ཨིན་ན་ ཡིག་མཛོད་གསརཔ་ཅིག་སྦེ་ ཁ་ཕྱེ་ནི་ཨིན་ན?"
 
-#: ../src/fr-window.c:2891
+#: ../src/fr-window.c:3292
 msgid "Do you want to create a new archive with these files?"
 msgstr "ཁྱོད་ཀྱིས་ ཡིག་སྣོད་འདི་ཚུ་གིས་སྦེ་ ཡིག་མཛོད་གསརཔ་ཅིག་ གསར་བསྐྲུན་འབད་ནི་ཨིན་ན?"
 
-#: ../src/fr-window.c:2894
+#: ../src/fr-window.c:3295
 msgid "Create _Archive"
 msgstr "ཡིག་མཛོད་གསར་བསྐྲུན་འབད། (_A)"
 
-#: ../src/fr-window.c:3068
+#: ../src/fr-window.c:3530
 #, c-format
 msgid "Cannot extract archives in a remote folder \"%s\""
 msgstr "ཡིག་མཛོད་ཚུ་ ཐག་རིང་གི་སྣོད་འཛིན་\"%s\"ཅིག་ནང་ལུ་ ཕྱིར་འདོན་འབད་མི་ཚུགས་"
 
-#: ../src/fr-window.c:3260
+#: ../src/fr-window.c:3751
+#: ../src/fr-window.c:4804
+msgid "Folders"
+msgstr "སྣོད་འཛིན་ཚུ"
+
+#: ../src/fr-window.c:3788
 msgid "Size"
 msgstr "ཚད།"
 
-#: ../src/fr-window.c:3261
+#: ../src/fr-window.c:3789
 msgid "Type"
 msgstr "དབྱེ་བ།"
 
-#: ../src/fr-window.c:3262
+#: ../src/fr-window.c:3790
 msgid "Date Modified"
 msgstr "ལེགས་བཅོས་འབད་མི་ཚེས་གྲངས།"
 
-#: ../src/fr-window.c:3271
+#: ../src/fr-window.c:3800
 msgid "Name"
 msgstr "མིང་།"
 
-#: ../src/fr-window.c:4123
+#: ../src/fr-window.c:4714
 msgid "Go to the previous visited location"
 msgstr "ཧེ་མར་ ལྟ་སྤྱོད་འབད་མི་ གནས་ཁོངས་ལུ་འགྱོ།"
 
-#: ../src/fr-window.c:4131
+#: ../src/fr-window.c:4722
 msgid "Go to the next visited location"
 msgstr "དེ་གི་ཧེ་མར་ ལྟ་སྤྱོད་འབད་མི་ གནས་ཁོངས་ལུ་འགྱོ།"
 
-#: ../src/fr-window.c:4139
+#: ../src/fr-window.c:4730
 msgid "Go up one level"
 msgstr "གནས་རིམ་གཅིག་ཡར་འགྱོ།"
 
-#: ../src/fr-window.c:4147
+#: ../src/fr-window.c:4738
 msgid "Go to the home location"
 msgstr "ཁྱིམ་གྱི་གནས་ཁོངས་ལུ་འགྱོ"
 
-#: ../src/fr-window.c:4262
-#: ../src/fr-window.c:4265
+#: ../src/fr-window.c:4812
+msgid "Close the folders pane"
+msgstr "སྣོད་འཛིན་ཚུ་གི་པེན་ཁ་བསྡམས"
+
+#: ../src/fr-window.c:4910
+#: ../src/fr-window.c:4913
 #: ../src/ui.h:103
 #: ../src/ui.h:107
 msgid "Open archive"
 msgstr "ཡིག་མཛོད་ཁ་ཕྱེ།"
 
-#: ../src/fr-window.c:4263
+#: ../src/fr-window.c:4911
 msgid "Open a recently used archive"
 msgstr "ད་རིས་ཁམས་ ལག་ལེན་འཐབ་མི་ ཡིག་མཛོད་ཅིག་ཁ་ཕྱེ།"
 
-#: ../src/fr-window.c:4523
+#: ../src/fr-window.c:5213
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "ཡིག་མཛོད་\"%s\"བསྲུང་མ་ཚུགས།"
 
-#: ../src/fr-window.c:5732
+#: ../src/fr-window.c:6393
 msgid "The new name is void."
 msgstr "མིང་གསརཔ་དེ་ སྟོངམ་ཨིན་པས།"
 
-#: ../src/fr-window.c:5736
+#: ../src/fr-window.c:6397
 msgid "The new name is equal to the old one."
 msgstr "མིང་གསརཔ་དེ་ རྙིངམ་དེ་དང་འདྲ་མཉམ་ཨིན་པས།"
 
-#: ../src/fr-window.c:5797
+#: ../src/fr-window.c:6458
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -701,7 +726,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:5799
+#: ../src/fr-window.c:6460
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -712,51 +737,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:5837
+#: ../src/fr-window.c:6498
 msgid "Rename"
 msgstr "བསྐྱར་མིང་བཏགས།"
 
-#: ../src/fr-window.c:5838
+#: ../src/fr-window.c:6499
 msgid "New folder name"
 msgstr "སྣོད་འཛིན་གསར་པའི་མིང་།"
 
-#: ../src/fr-window.c:5838
+#: ../src/fr-window.c:6499
 msgid "New file name"
 msgstr "ཡིག་སྣོད་གསར་པའི་མིང་།"
 
-#: ../src/fr-window.c:5842
+#: ../src/fr-window.c:6503
 msgid "_Rename"
 msgstr "བསྐྱར་མིང་བཏགས།(_R)"
 
-#: ../src/fr-window.c:5858
-#: ../src/fr-window.c:5884
+#: ../src/fr-window.c:6519
+#: ../src/fr-window.c:6545
 msgid "Could not rename the folder"
 msgstr "སྣོད་འཛིན་ལུ་ བསྐྱར་མིང་བཏགས་མ་ཚུགས།"
 
-#: ../src/fr-window.c:5858
-#: ../src/fr-window.c:5884
+#: ../src/fr-window.c:6519
+#: ../src/fr-window.c:6545
 msgid "Could not rename the file"
 msgstr "ཡིག་སྣོད་དེ་ལུ་ བསྐྱར་མིང་བཏགས་མ་ཚུགས།"
 
-#: ../src/fr-window.c:6060
+#: ../src/fr-window.c:6889
 msgid "Paste Selection"
 msgstr "སེལ་འཐུ་སྦྱར།"
 
-#: ../src/fr-window.c:6061
+#: ../src/fr-window.c:6890
 msgid "Destination folder"
 msgstr "འགྲོ་ཡུལ་སྣོད་འཛིན།"
 
-#: ../src/fr-window.c:6471
+#: ../src/fr-window.c:7313
 msgid "Add files to an archive"
 msgstr "ཡིག་མཛོད་ལུ་ ཡིག་སྣོད་ཁ་སྐོང་རྐྱབས།"
 
-#: ../src/fr-window.c:6517
+#: ../src/fr-window.c:7356
 msgid "Extract archive"
 msgstr "ཡིག་མཛོད་ཕྱིར་འདོན་འབད།"
 
-#: ../src/glib-utils.c:515
-msgid "%d %B %Y"
-msgstr "%d %B %Y"
+#: ../src/glib-utils.c:511
+msgid "%d %B %Y, %H:%M"
+msgstr "%d %B %Y, %H:%M"
 
 #. Button
 #: ../src/gtk-utils.c:439
@@ -872,7 +897,7 @@ msgstr "‘--ཁ་སྐོང་བརྐྱབ་ནི་’ དང་ ‘--
 msgid "Create destination folder without asking confirmation"
 msgstr "ངེས་གཏན་མ་འདྲི་བར་ འགྲོ་ཡུལ་སྣོད་འཛིན་ གསར་བསྐྲུན་འབད"
 
-#: ../src/main.c:222
+#: ../src/main.c:223
 msgid "File Roller"
 msgstr "ཕ་ཡིལ་རོ་ལར་།"
 
@@ -1072,51 +1097,59 @@ msgstr "རིམ་ལོག་ཅན་གྱི་གོ་རིམ།(_R) "
 msgid "Reverse the list order"
 msgstr "ཐོ་ཡིག་གོ་རིམ་ རིམ་ལོག་འབད།"
 
-#: ../src/ui.h:187
+#: ../src/ui.h:182
+msgid "_Folders"
+msgstr "སྣོད་འཛིན་ཚུ(_F)"
+
+#: ../src/ui.h:183
+msgid "View the folders pane"
+msgstr "སྣོད་འཛིན་ཚུ་གི་པེན་གྱི་མཐོང་སྣང"
+
+#: ../src/ui.h:192
 msgid "View All _Files"
 msgstr "ཡིག་སྣོད་ཆ་མཉམ་སྟོན། (_F)"
 
-#: ../src/ui.h:190
+#: ../src/ui.h:195
 msgid "View as a F_older"
 msgstr "སྣོད་འཛིན་བཟུམ་ཅིག་སྦེ་སྟོན། (_o)"
 
-#: ../src/ui.h:198
+#: ../src/ui.h:203
 msgid "by _Name"
 msgstr "མིང་གི་སྒོ་ལས།(_N)"
 
-#: ../src/ui.h:199
+#: ../src/ui.h:204
 msgid "Sort file list by name"
 msgstr "མིང་གི་སྒོ་ལས་ ཡིག་སྣོད་ཐོ་ཡིག་ དབྱེ་སེལ་འབད།"
 
-#: ../src/ui.h:201
+#: ../src/ui.h:206
 msgid "by _Size"
 msgstr "ཚད་ཀྱི་སྒོ་ལས། (_S)"
 
-#: ../src/ui.h:202
+#: ../src/ui.h:207
 msgid "Sort file list by file size"
 msgstr "ཡིག་སྣོད་ཚད་ཀྱི་སྒོ་ལས་ ཡིག་སྣོད་ཐོ་ཡིག་ དབྱེ་སེལ་འབད།"
 
-#: ../src/ui.h:204
+#: ../src/ui.h:209
 msgid "by T_ype"
 msgstr "དབྱེ་བའི་སྒོ་་ལས། (_y)"
 
-#: ../src/ui.h:205
+#: ../src/ui.h:210
 msgid "Sort file list by type"
 msgstr "དབྱེ་བའི་སྒོ་ལས་ ཡིག་སྣོད་ཐོ་ཡིག་ དབྱེ་སེལ་འབད།"
 
-#: ../src/ui.h:207
+#: ../src/ui.h:212
 msgid "by _Date modified"
 msgstr "ཚེས་གྲངས་ཀྱི་སྒོ་ལས། (_D)"
 
-#: ../src/ui.h:208
+#: ../src/ui.h:213
 msgid "Sort file list by modification time"
 msgstr "ལེགས་བཅོས་དུས་ཚོད་སྒོ་ལས་ ཡིག་སྣོད་ཐོ་ཡིག་ དབྱེ་སེལ་འབད། "
 
-#: ../src/ui.h:210
+#: ../src/ui.h:215
 msgid "by _Location"
 msgstr "གནས་ཁོངས་ཀྱི་སྒོ་ལས། (_L)"
 
-#: ../src/ui.h:211
+#: ../src/ui.h:216
 msgid "Sort file list by location"
 msgstr "གནས་ཁོངས་ཀྱི་སྒོ་ལས་ ཡིག་སྣོད་ཐོ་ཡིག་ དབྱེ་སེལ་འབད།"
 
