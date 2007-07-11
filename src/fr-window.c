@@ -271,6 +271,7 @@ struct _FrWindowPrivateData {
 	FRConvertData    convert_data;
 
 	gboolean         stoppable;
+	gboolean         closing;
 
 	FrClipboardData *clipboard_data;
 	FrClipboardData *copy_data;
@@ -582,6 +583,8 @@ close__step2 (gpointer data)
 void
 fr_window_close (FrWindow *window)
 {
+	window->priv->closing = TRUE;
+	
 	if (window->priv->check_clipboard != 0) {
 		g_source_remove (window->priv->check_clipboard);
 		window->priv->check_clipboard = 0;
@@ -1945,7 +1948,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	
 	/**/
 	
-	if (window->priv->check_clipboard == 0)
+	if (! window->priv->closing && (window->priv->check_clipboard == 0))
 		window->priv->check_clipboard = g_timeout_add (CHECK_CLIPBOARD_TIMEOUT, check_clipboard_cb, window);
 }
 
