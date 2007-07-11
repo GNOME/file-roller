@@ -198,17 +198,15 @@ int
 main (int argc, char **argv)
 {
 	GnomeProgram *program;
-	gchar        *description;
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	description = g_strdup_printf ("- %s", _("Create and modify an archive"));
-	context = g_option_context_new (description);
-	g_free (description);
+	context = g_option_context_new (N_("- Create and modify an archive"));
+	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
-
+	
 	program = gnome_program_init ("file-roller", VERSION,
 				      LIBGNOMEUI_MODULE, 
 				      argc, argv,
