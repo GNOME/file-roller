@@ -788,8 +788,12 @@ sort_by_size (gconstpointer  ptr1,
 		else
 			return 1;
 	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
-		return sort_by_name (ptr1, ptr2);
+	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2)) {
+		if (fdata1->dir_size > fdata2->dir_size)
+			return 1;
+		else
+			return -1;
+	}
 
 	if (fdata1->size == fdata2->size)
 		return sort_by_name (ptr1, ptr2);
