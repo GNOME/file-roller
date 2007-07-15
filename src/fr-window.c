@@ -448,6 +448,8 @@ fr_window_history_clear (FrWindow *window)
 		path_list_free (window->priv->history);
 	window->priv->history = NULL;
 	window->priv->history_current = NULL;
+	g_free (window->priv->last_location);	
+	window->priv->last_location = NULL;
 }
 
 
@@ -1711,8 +1713,9 @@ fr_window_update_dir_tree (FrWindow *window)
 }
 
 
-void
-fr_window_update_file_list (FrWindow *window)
+static void
+fr_window_update_file_list (FrWindow *window,
+			    gboolean  update_view)
 {
 	GPtrArray  *files;
 	gboolean    free_files = FALSE;
@@ -1783,7 +1786,9 @@ fr_window_update_file_list (FrWindow *window)
 	else
 		window->priv->current_view_length = 0;
 
-	fr_window_populate_file_list (window, files);
+	if (update_view)
+		fr_window_populate_file_list (window, files);
+		
 	if (free_files)
 		g_ptr_array_free (files, TRUE);	
 }
@@ -2674,12 +2679,10 @@ action_performed (FrArchive   *archive,
 	case FR_ACTION_CREATING_ARCHIVE:
 		if (error->type != FR_PROC_ERROR_STOPPED) {
 			fr_window_history_clear (window);
-			fr_window_history_add (window, "/");
-			fr_window_update_file_list (window);
+			fr_window_go_to_location (window, "/");
 			fr_window_update_dir_tree (window);
 			fr_window_update_title (window);
 			fr_window_update_sensitivity (window);
-			fr_window_update_current_location (window);
 		}
 		break;
 
@@ -2734,6 +2737,7 @@ action_performed (FrArchive   *archive,
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
 
 		fr_window_update_title (window);
+		fr_window_history_clear (window);
 		fr_window_go_to_location (window, "/");
 		fr_window_update_dir_tree (window);		
 		if (! window->priv->non_interactive)
@@ -4178,7 +4182,7 @@ pref_use_mime_icons_changed (GConfClient *client,
 		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	}
 
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, FALSE);
 	fr_window_update_dir_tree (window);
 }
 
@@ -4213,7 +4217,7 @@ theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	}
 	
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, FALSE);
 	fr_window_update_dir_tree (window);
 }
 
@@ -5060,7 +5064,7 @@ fr_window_construct (FrWindow *window)
 
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, FALSE);
 	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 	fr_window_update_columns_visibility (window);
@@ -5233,7 +5237,7 @@ fr_window_archive_close (FrWindow *window)
 
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, FALSE);
 	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 	fr_window_update_statusbar_list_info (window);
@@ -5816,7 +5820,7 @@ fr_window_go_to_location (FrWindow   *window,
 		window->priv->last_location = dir;
 
 		fr_window_history_add (window, dir);
-		fr_window_update_file_list (window);
+		fr_window_update_file_list (window, TRUE);
 		fr_window_update_current_location (window);
 	}
 	else
@@ -5849,7 +5853,7 @@ fr_window_go_up_one_level (FrWindow *window)
 	fr_window_history_add (window, parent_dir);
 	g_free (parent_dir);
 
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, TRUE);
 	fr_window_update_current_location (window);
 }
 
@@ -5867,7 +5871,7 @@ fr_window_go_back (FrWindow *window)
 		return;
 	window->priv->history_current = window->priv->history_current->next;
 
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, TRUE);
 	fr_window_update_current_location (window);
 }
 
@@ -5885,7 +5889,7 @@ fr_window_go_forward (FrWindow *window)
 		return;
 	window->priv->history_current = window->priv->history_current->prev;
 
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, TRUE);
 	fr_window_update_current_location (window);
 }
 
@@ -5905,7 +5909,7 @@ fr_window_set_list_mode (FrWindow         *window,
 	preferences_set_list_mode (window->priv->list_mode);
 	eel_gconf_set_boolean (PREF_LIST_SHOW_PATH, (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT));
 
-	fr_window_update_file_list (window);
+	fr_window_update_file_list (window, TRUE);
 	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 }

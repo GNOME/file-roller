@@ -190,7 +190,6 @@ void       fr_window_set_list_mode              (FrWindow       *window,
 
 /**/
 
-void       fr_window_update_file_list             (FrWindow    *window);
 void       fr_window_update_list_order            (FrWindow    *window);
 GList *    fr_window_get_file_list_selection      (FrWindow    *window,
 						   gboolean     recursive,
