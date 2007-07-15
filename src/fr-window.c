@@ -3229,7 +3229,7 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 	int               i;
 	
 	clipboard_data = fr_clipboard_data_new ();
-	
+		
 	uris = g_strsplit (data, "\r\n", -1);
 		
 	clipboard_data->archive_filename = g_strdup (uris[0]);
@@ -3287,10 +3287,10 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 	if (data->target == XFR_ATOM) {
 		FrClipboardData *dnd_data;
 		
-		dnd_data = fr_clipboard_data_new ();
 		dnd_data = get_clipboard_data_from_selection_data (window, (char*) data->data);
-		dnd_data->current_dir = g_strdup (fr_window_get_current_location (window));
-		fr_window_paste_from_clipboard_data (window, dnd_data);		
+		dnd_data->current_dir = g_strdup (fr_window_get_current_location (window));		
+		fr_window_paste_from_clipboard_data (window, dnd_data);	
+			
 		return;
 	}
 
@@ -6706,8 +6706,8 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 	window->priv->copy_data = fr_clipboard_data_new ();
 	window->priv->copy_data->files = fr_window_get_file_list_selection (window, TRUE, NULL);
 	window->priv->copy_data->op = op;
-	window->priv->copy_data->current_dir = g_strdup (fr_window_get_current_location (window));
-
+	window->priv->copy_data->base_dir = g_strdup (fr_window_get_current_location (window));
+	
 	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
 	gtk_clipboard_set_with_owner (clipboard,
 				      clipboard_targets,
@@ -6957,22 +6957,20 @@ static void
 fr_window_paste_selection_to (FrWindow   *window,
 			      const char *current_dir)
 {
-	GtkClipboard      *clipboard;
-	GtkSelectionData  *selection_data;       
-	FrClipboardData   *paste_data;
+	GtkClipboard     *clipboard;
+	GtkSelectionData *selection_data;       
+	FrClipboardData  *paste_data;
 	
 	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
 	selection_data = gtk_clipboard_wait_for_contents (clipboard, FR_SPECIAL_URI_LIST);
 	if (selection_data == NULL)
 		return;
 
-	paste_data = fr_clipboard_data_new ();
 	paste_data = get_clipboard_data_from_selection_data (window, (char*) selection_data->data);
 	paste_data->current_dir = g_strdup (current_dir);
-	
-	gtk_selection_data_free (selection_data);
-	
 	fr_window_paste_from_clipboard_data (window, paste_data);
+	
+	gtk_selection_data_free (selection_data);	
 }
 
 
