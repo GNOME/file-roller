@@ -15,7 +15,6 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
@@ -141,10 +140,11 @@ typedef struct {
 } ExtractData;
 
 
-/**/
+/* -- FrClipboardData -- */
 
 
 typedef struct {
+	int            refs;
 	char          *archive_filename;
 	char          *archive_password;
 	FRClipboardOp  op;
@@ -158,16 +158,31 @@ typedef struct {
 static FrClipboardData*
 fr_clipboard_data_new (void)
 {
-	return g_new0 (FrClipboardData, 1);
+	FrClipboardData *data;
+	
+	data = g_new0 (FrClipboardData, 1);
+	data->refs = 1;
+	
+	return data;
 }
 
 
-static void
-fr_clipboard_data_free (FrClipboardData *clipboard_data)
+static FrClipboardData *
+fr_clipboard_data_ref (FrClipboardData *clipboard_data)
+{
+	clipboard_data->refs++;
+	return clipboard_data;
+}
+
+
+void
+fr_clipboard_data_unref (FrClipboardData *clipboard_data) 
 {
 	if (clipboard_data == NULL)
 		return;
-		
+	if (--clipboard_data->refs > 0)
+		return;
+	
 	g_free (clipboard_data->archive_filename);
 	g_free (clipboard_data->archive_password);
 	g_free (clipboard_data->base_dir);
@@ -175,7 +190,18 @@ fr_clipboard_data_free (FrClipboardData *clipboard_data)
 	g_free (clipboard_data->current_dir);
 	g_list_foreach (clipboard_data->files, (GFunc) g_free, NULL);
 	g_list_free (clipboard_data->files);
-	g_free (clipboard_data);
+	g_free (clipboard_data);	
+}
+
+
+void
+fr_clipboard_data_set_password (FrClipboardData *clipboard_data,
+			        const char      *password) 
+{
+	if (clipboard_data->archive_password != password)
+		g_free (clipboard_data->archive_password);
+	if (password != NULL)
+		clipboard_data->archive_password = g_strdup (password);
 }
 
 
@@ -384,7 +410,7 @@ fr_window_clipboard_remove_file_list (FrWindow *window,
 		return;
 
 	if (file_list == NULL) {
-		fr_clipboard_data_free (window->priv->copy_data);
+		fr_clipboard_data_unref	 (window->priv->copy_data);
 		window->priv->copy_data = NULL;
 		return;
 	}
@@ -409,7 +435,7 @@ fr_window_clipboard_remove_file_list (FrWindow *window,
 	}
 
 	if (window->priv->copy_data->files == NULL) {
-		fr_clipboard_data_free (window->priv->copy_data);
+		fr_clipboard_data_unref (window->priv->copy_data);
 		window->priv->copy_data = NULL;
 	}
 }
@@ -484,11 +510,11 @@ fr_window_free_private_data (FrWindow *window)
 	g_object_unref (priv->list_store);
 
 	if (window->priv->clipboard_data != NULL) {
-		fr_clipboard_data_free (window->priv->clipboard_data);
+		fr_clipboard_data_unref (window->priv->clipboard_data);
 		window->priv->clipboard_data = NULL;
 	}
 	if (window->priv->copy_data != NULL) {
-		fr_clipboard_data_free (window->priv->copy_data);
+		fr_clipboard_data_unref (window->priv->copy_data);
 		window->priv->copy_data = NULL;
 	}
 	if (priv->copy_from_archive != NULL) {
@@ -3545,7 +3571,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 		data = get_selection_data_from_clipboard_data (window, tmp);
 		gtk_selection_data_set (selection_data, XFR_ATOM, 8, (guchar *) data, strlen (data));
 		
-		fr_clipboard_data_free (tmp);
+		fr_clipboard_data_unref (tmp);
 		g_free (data);
 			
 		return TRUE;
@@ -5197,7 +5223,7 @@ fr_window_archive_close (FrWindow *window)
 	if (! window->priv->archive_new && ! window->priv->archive_present)
 		return;
 
-	fr_clipboard_data_free (window->priv->copy_data);
+	fr_clipboard_data_unref (window->priv->copy_data);
 	window->priv->copy_data = NULL;
 	
 	fr_window_set_password (window, NULL);
@@ -6663,7 +6689,7 @@ fr_clipboard_clear (GtkClipboard *clipboard,
 	FrWindow *window = user_data_or_owner;
 	
 	if (window->priv->copy_data != NULL) {
-		fr_clipboard_data_free (window->priv->copy_data);
+		fr_clipboard_data_unref (window->priv->copy_data);
 		window->priv->copy_data = NULL;
 	}
 }
@@ -6676,7 +6702,7 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 	GtkClipboard *clipboard;
 	
 	if (window->priv->copy_data != NULL)
-		fr_clipboard_data_free (window->priv->copy_data);
+		fr_clipboard_data_unref (window->priv->copy_data);
 	window->priv->copy_data = fr_clipboard_data_new ();
 	window->priv->copy_data->files = fr_window_get_file_list_selection (window, TRUE, NULL);
 	window->priv->copy_data->op = op;
@@ -6808,7 +6834,7 @@ copy_from_archive_action_performed_cb (FrArchive   *archive,
 	continue_batch = handle_errors (window, archive, action, error);
 
 	if (error->type != FR_PROC_ERROR_NONE) {
-		fr_clipboard_data_free (window->priv->clipboard_data);
+		fr_clipboard_data_unref (window->priv->clipboard_data);
 		window->priv->clipboard_data = NULL;
 		return;
 	}
@@ -6856,11 +6882,19 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 	const char *current_dir_relative;
 	GHashTable *created_dirs;
 	GList      *scan;    
+
+	if (window->priv->password_for_paste != NULL) 
+		fr_clipboard_data_set_password (data, window->priv->password_for_paste);
 	
 	if (window->priv->clipboard_data != data) {
-		fr_clipboard_data_free (window->priv->clipboard_data);
+		fr_clipboard_data_unref (window->priv->clipboard_data);
 		window->priv->clipboard_data = data;
 	}
+
+	fr_window_set_current_batch_action (window,
+					    FR_BATCH_ACTION_PASTE,
+					    fr_clipboard_data_ref (data),
+					    (GFreeFunc) fr_clipboard_data_unref);	
 	
 	current_dir_relative = data->current_dir + 1;
 	
@@ -6977,10 +7011,6 @@ fr_window_paste_selection (FrWindow *window,
 		current_dir = g_strdup (destination);
 	g_free (destination);
 
-	fr_window_set_current_batch_action (window,
-					    FR_BATCH_ACTION_PASTE,
-					    g_strdup (current_dir),
-					    (GFreeFunc) g_free);
 	fr_window_paste_selection_to (window, current_dir);
 
 	g_free (current_dir);
@@ -7445,9 +7475,9 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_PASTE:
 		debug (DEBUG_INFO, "[BATCH] PASTE\n");
 
-		fr_window_paste_selection_to (window, (char*) action->data);
+		fr_window_paste_from_clipboard_data (window, (FrClipboardData*) action->data);
 		break;
-
+		
 	case FR_BATCH_ACTION_VIEW:
 		debug (DEBUG_INFO, "[BATCH] VIEW\n");
 
