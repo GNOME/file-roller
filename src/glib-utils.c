@@ -508,6 +508,9 @@ get_time_string (time_t time)
 	char      *time_utf8;
 
 	tm = localtime (&time);
+	/* This is the time format used in the "Date Modified" column and
+	 * in the Properties dialog.  See the man page of strftime for an 
+	 * explanation of the values. */
 	locale_format = g_locale_from_utf8 (_("%d %B %Y, %H:%M"), -1, NULL, NULL, NULL);
 	strftime (s_time, sizeof (s_time) - 1, locale_format, tm);
 	g_free (locale_format);
