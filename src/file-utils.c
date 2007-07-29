@@ -48,6 +48,8 @@
 #endif
 
 #define BUF_SIZE 4096
+#define FILE_PREFIX    "file://"
+#define FILE_PREFIX_L  7
 
 
 gboolean
@@ -585,10 +587,104 @@ is_mime_type (const char* type, const char* pattern) {
 }
 
 
-G_CONST_RETURN char*
-get_mime_type (const char  *filename)
+GHashTable *static_strings = NULL;
+
+
+static const char *
+get_static_string (const char *s)
 {
-	return gnome_vfs_get_mime_type_for_name (filename);
+        const char *result;
+
+        if (s == NULL)
+                return NULL;
+
+        if (static_strings == NULL)
+                static_strings = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+
+        if (! g_hash_table_lookup_extended (static_strings, s, (gpointer*) &result, NULL)) {
+                result = g_strdup (s);
+                g_hash_table_insert (static_strings,
+                                     (gpointer) result,
+                                     GINT_TO_POINTER (1));
+        }
+
+        return result;
+}
+
+
+static const char *
+get_extension (const char *path)
+{
+        int         len;
+        int         p;
+        const char *ptr = path;
+
+        if (! path)
+                return NULL;
+
+        len = strlen (path);
+        if (len <= 1)
+                return NULL;
+
+        p = len - 1;
+        while ((p >= 0) && (ptr[p] != '.'))
+                p--;
+
+        if (p < 0)
+                return NULL;
+
+        return path + p;
+}
+
+
+static char*
+get_sample_name (const char *filename)
+{
+        const char *ext;
+
+        ext = get_extension (filename);
+        if (ext == NULL)
+                return NULL;
+
+        return g_strconcat ("a", get_extension (filename), NULL);
+}
+
+
+const char*
+get_file_mime_type (const char *filename,
+                    gboolean    fast_file_type)
+{
+	const char *result = NULL;
+	
+        if (filename == NULL)
+                return NULL;
+
+        if (fast_file_type) {
+                char *sample_name;
+                char *n1;
+
+                sample_name = get_sample_name (filename);
+                if (sample_name != NULL) {
+                        n1 = g_filename_to_utf8 (sample_name, -1, 0, 0, 0);
+                        if (n1 != NULL) {
+                                char *n2 = g_utf8_strdown (n1, -1);
+                                char *n3 = g_filename_from_utf8 (n2, -1, 0, 0, 0);
+                                if (n3 != NULL)
+                                        result = gnome_vfs_mime_type_from_name_or_default (file_name_from_path (n3), NULL);
+                                g_free (n3);
+                                g_free (n2);
+                                g_free (n1);
+                        }
+                        g_free (sample_name);
+                }
+        } 
+        else {
+                if (uri_scheme_is_file (filename))
+                        filename = get_file_path_from_uri (filename);
+                result = gnome_vfs_get_file_mime_type (filename, NULL, FALSE);
+        }
+
+        return get_static_string (result);
 }
 
 
@@ -1133,6 +1229,20 @@ get_local_path_from_uri (const char *uri)
 }
 
 
+const char *
+get_file_path_from_uri (const char *uri)
+{
+	if (uri == NULL)
+		return NULL;
+	if (uri_scheme_is_file (uri))
+		return uri + FILE_PREFIX_L;
+	else if (uri[0] == '/')
+		return uri;
+	else
+		return NULL;
+}
+
+
 gboolean
 uri_has_scheme (const char *uri)
 {
@@ -1153,6 +1263,18 @@ uri_is_local (const char *uri)
 	gnome_vfs_uri_unref (vfs_uri);
 
 	return is_local;
+}
+
+
+gboolean
+uri_scheme_is_file (const char *uri)
+{
+        if (uri == NULL)
+                return FALSE;
+        if (g_utf8_strlen (uri, -1) < FILE_PREFIX_L)
+                return FALSE;
+        return strncmp (uri, FILE_PREFIX, FILE_PREFIX_L) == 0;
+
 }
 
 

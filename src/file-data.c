@@ -120,7 +120,7 @@ file_data_update_mime_type (FileData *fdata)
 {
 	const char *mime_type;
 
-	mime_type = get_mime_type (fdata->full_path);
+	mime_type = get_file_mime_type (fdata->full_path, TRUE);
 
 	if (mime_type == NULL) {
 		fdata->mime_type = 0;

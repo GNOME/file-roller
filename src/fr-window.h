@@ -62,7 +62,7 @@ typedef enum {
 	FR_BATCH_ACTION_EXTRACT_INTERACT,
 	FR_BATCH_ACTION_RENAME,
 	FR_BATCH_ACTION_PASTE,
-	FR_BATCH_ACTION_VIEW,
+	FR_BATCH_ACTION_OPEN_FILES,
 	FR_BATCH_ACTION_SAVE_AS,
 	FR_BATCH_ACTION_TEST,
 	FR_BATCH_ACTION_CLOSE,
@@ -228,16 +228,16 @@ void       fr_window_stop_activity_mode           (FrWindow    *window);
 
 void        fr_window_view_last_output            (FrWindow   *window,
 						   const char *title);
-void        fr_window_view_file                   (FrWindow   *window,
-						   char       *file);
+
 void        fr_window_open_files                  (FrWindow   *window,
+						   GList      *file_list,
+						   gboolean    ask_application);
+void        fr_window_open_files_with_command     (FrWindow   *window,
 						   GList      *file_list,
 						   char       *command);
 void        fr_window_open_files_with_application (FrWindow   *window,
 						   GList      *file_list,
 						   GnomeVFSMimeApplication *app);
-void        fr_window_view_or_open_file           (FrWindow   *window,
-						   char       *file);
 void        fr_window_update_columns_visibility   (FrWindow   *window);
 void        fr_window_update_history_list         (FrWindow   *window);
 void        fr_window_set_default_dir             (FrWindow   *window,

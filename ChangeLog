@@ -1,5 +1,22 @@
 2007-07-29  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/main.c: 
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* src/file-utils.h: 
+	* src/file-utils.c: 
+	* src/file-data.c: 
+	* src/dlg-open-with.c: 
+	* src/actions.c: 
+	
+	Fixed bug #311674 – replace "View File" Dialog.  Actually the "Open with"
+	dialog still exists but it's used only if the mime type has no registered
+	application.  The big difference is that now the files are extracted 
+	before trying to get the mime type, so the mime type is calculated using
+	the content and the file name, and it is therefore more accurate.
+	
+2007-07-29  Paolo Bacchilega  <paobac@cvs.gnome.org>	
+	
 	* TODO: added some entries.
 
 	* src/glib-utils.c: added a comment to explaing the time format.

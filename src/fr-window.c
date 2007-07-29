@@ -2947,8 +2947,11 @@ row_activated_cb (GtkTreeView       *tree_view,
 			    COLUMN_FILE_DATA, &fdata,
 			    -1);
 
-	if (! file_data_is_dir (fdata)) 
-		fr_window_view_or_open_file (window, fdata->original_path);
+	if (! file_data_is_dir (fdata)) {
+		GList *list = g_list_prepend (NULL, fdata->original_path);
+		fr_window_open_files (window, list, FALSE);
+		g_list_free (list);
+	} 
 	else if (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR) {
 		char *new_dir;
 		new_dir = g_strconcat (fr_window_get_current_location (window),
@@ -7022,155 +7025,217 @@ fr_window_paste_selection (FrWindow *window,
 /* -- fr_window_open_files -- */
 
 
+void
+fr_window_open_files_with_command (FrWindow   *window,
+				   GList      *file_list,
+				   char       *command)
+{
+	CommandData *cdata;
+	GList       *scan;
+
+	/* The command data is used to unref the process on exit. */
+
+	cdata = g_new0 (CommandData, 1);
+	cdata->process = fr_process_new ();
+	fr_process_use_standard_locale (cdata->process, FALSE);
+	cdata->process->term_on_stop = FALSE;
+
+	fr_process_begin_command (cdata->process, command);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *filename = shell_escape (scan->data);
+		fr_process_add_arg (cdata->process, filename);
+		g_free (filename);
+	}
+	fr_process_end_command (cdata->process);
+
+	CommandList = g_list_prepend (CommandList, cdata);
+	fr_process_start (cdata->process);	
+}
+
+
+void
+fr_window_open_files_with_application (FrWindow                *window,
+				       GList                   *file_list,
+				       GnomeVFSMimeApplication *app)
+{
+	GList *uris = NULL, *scan;
+	GnomeVFSResult result;
+
+	for (scan = file_list; scan; scan = scan->next) {
+		char *filename = gnome_vfs_get_uri_from_local_path (scan->data);
+		uris = g_list_prepend (uris, filename);
+	}
+
+	result = gnome_vfs_mime_application_launch (app, uris);
+	if (result != GNOME_VFS_OK)
+		_gtk_error_dialog_run (GTK_WINDOW (window),
+				       _("Could not perform the operation"),
+				       "%s",
+				       gnome_vfs_result_to_string (result));
+
+	path_list_free (uris);	
+}
+
+
+typedef struct {
+	FrWindow    *window;
+	GList       *file_list;
+	gboolean     ask_application;
+	CommandData *cdata;
+} OpenFilesData;
+
+
+static OpenFilesData*
+open_files_data_new (FrWindow *window,
+		     GList    *file_list,
+		     gboolean  ask_application)
+
+{
+	OpenFilesData *odata;
+	GList         *scan;
+	
+	odata = g_new0 (OpenFilesData, 1);
+	odata->window = window;
+	odata->file_list = path_list_dup (file_list);
+	odata->ask_application = ask_application;
+	odata->cdata = g_new0 (CommandData, 1);
+	odata->cdata->temp_dir = get_temp_work_dir ();
+	odata->cdata->file_list = NULL;
+	for (scan = file_list; scan; scan = scan->next) {
+		char *file = scan->data;
+		char *filename;
+		
+		filename = g_strconcat (odata->cdata->temp_dir,
+					"/",
+					file,
+					NULL);
+		odata->cdata->file_list = g_list_prepend (odata->cdata->file_list, filename);
+	}
+	
+	/* Add to CommandList so the cdata is released on exit. */
+	CommandList = g_list_prepend (CommandList, odata->cdata);
+	
+	return odata;
+}
+
+
+static void
+open_files_data_free (OpenFilesData *odata)
+{
+	g_return_if_fail (odata != NULL);
+
+	path_list_free (odata->file_list);
+	g_free (odata);
+}
+
+
+static gboolean
+fr_window_open_extracted_files (OpenFilesData *odata)
+{
+	GList                   *file_list = odata->cdata->file_list;
+        gboolean                 result = FALSE;
+        const char              *first_file;
+        const char              *first_mime_type;
+        GnomeVFSMimeApplication *app;
+        GList                   *files_to_open = NULL;
+
+	g_return_val_if_fail (file_list != NULL, FALSE);
+
+        first_file = (char*) file_list->data;
+        if (first_file == NULL)
+                return FALSE;
+	
+	if (odata->ask_application) {
+        	dlg_open_with (odata->window, file_list);
+        	return FALSE;
+        }
+	
+	first_mime_type = get_file_mime_type (first_file, FALSE);
+        app = gnome_vfs_mime_get_default_application_for_uri (first_file, first_mime_type);
+        
+        if (app == NULL) {
+        	dlg_open_with (odata->window, file_list);
+        	return FALSE;
+        }
+        
+        files_to_open = g_list_append (files_to_open, (char*) first_file);
+        
+        if (app->can_open_multiple_files) {
+        	GList *scan;
+        	
+		for (scan = file_list->next; scan; scan = scan->next) {
+			const char *path = scan->data;
+			const char *mime_type;
+
+			mime_type = get_file_mime_type (path, FALSE);
+			if (mime_type == NULL)
+				continue;
+
+			if (strcmp (mime_type, first_mime_type) == 0)
+				files_to_open = g_list_append (files_to_open, (char*) path);
+			else {
+				GnomeVFSMimeApplication *app2;
+				
+				app2 = gnome_vfs_mime_get_default_application_for_uri (path, mime_type);
+				if (gnome_vfs_mime_application_equal (app, app2))
+					files_to_open = g_list_append (files_to_open, (char*) path);
+				gnome_vfs_mime_application_free (app2);
+			}
+		}
+        }
+
+	result = gnome_vfs_mime_application_launch (app, files_to_open) == GNOME_VFS_OK;
+	gnome_vfs_mime_application_free (app);
+	g_list_free (files_to_open);
+        
+	return result;
+}
+
+
 static void
 fr_window_open_files__extract_done_cb (FrArchive   *archive,
 				       FRAction     action,
 				       FRProcError *error,
 				       gpointer     callback_data)
 {
-	CommandData *cdata = callback_data;
+	OpenFilesData *odata = callback_data;
 
 	g_signal_handlers_disconnect_matched (G_OBJECT (archive),
 					      G_SIGNAL_MATCH_DATA,
 					      0,
 					      0, NULL,
 					      0,
-					      cdata);
+					      odata);
 
-	if (error->type != FR_PROC_ERROR_NONE) {
-		if (error->type != FR_PROC_ERROR_ASK_PASSWORD)
-			command_done (cdata);
+	if (error->type != FR_PROC_ERROR_NONE) 
 		return;
-	}
-
-	if (cdata->command != NULL) {
-		FrProcess  *proc;
-		GList      *scan;
-
-		proc = fr_process_new ();
-		fr_process_use_standard_locale (proc, FALSE);
-		proc->term_on_stop = FALSE;
-		cdata->process = proc;
-
-		fr_process_begin_command (proc, cdata->command);
-		for (scan = cdata->file_list; scan; scan = scan->next) {
-			char *filename = shell_escape (scan->data);
-			fr_process_add_arg (proc, filename);
-			g_free (filename);
-		}
-		fr_process_end_command (proc);
-
-		CommandList = g_list_prepend (CommandList, cdata);
-		fr_process_start (proc);
-	}
-	else if (cdata->app != NULL) {
-		GList *uris = NULL, *scan;
-		GnomeVFSResult result;
-
-		for (scan = cdata->file_list; scan; scan = scan->next) {
-			char *filename = gnome_vfs_get_uri_from_local_path (scan->data);
-			uris = g_list_prepend (uris, filename);
-		}
-
-		CommandList = g_list_prepend (CommandList, cdata);
-		result = gnome_vfs_mime_application_launch (cdata->app, uris);
-		if (result != GNOME_VFS_OK)
-			_gtk_error_dialog_run (GTK_WINDOW (cdata->window),
-					       _("Could not perform the operation"),
-					       "%s",
-					       gnome_vfs_result_to_string (result));
-
-		path_list_free (uris);
-	}
+	
+	fr_window_open_extracted_files (odata);
 }
 
 
-typedef struct {
-	GList                   *file_list;
-	char                    *command;
-	GnomeVFSMimeApplication *app;
-} ViewData;
-
-
-static ViewData*
-view_data_new (GList                   *file_list,
-	       char                    *command,
-	       GnomeVFSMimeApplication *app)
-
+void
+fr_window_open_files (FrWindow *window,
+		      GList    *file_list,
+		      gboolean  ask_application)
 {
-	ViewData *vdata;
-
-	vdata = g_new0 (ViewData, 1);
-	vdata->file_list = path_list_dup (file_list);
-	if (command != NULL)
-		vdata->command = g_strdup (command);
-	if (app != NULL)
-		vdata->app = gnome_vfs_mime_application_copy (app);
-
-	return vdata;
-}
-
-
-static void
-view_data_free (ViewData *vdata)
-{
-	g_return_if_fail (vdata != NULL);
-
-	path_list_free (vdata->file_list);
-	g_free (vdata->command);
-	gnome_vfs_mime_application_free (vdata->app);
-
-	g_free (vdata);
-}
-
-
-static void
-fr_window_open_files_common (FrWindow                *window,
-			     GList                   *file_list,
-			     char                    *command,
-			     GnomeVFSMimeApplication *app)
-{
-	CommandData *cdata;
-	GList       *scan;
-	ViewData    *vdata;
-
-	g_return_if_fail (window != NULL);
-
-	vdata = view_data_new (file_list, command, app);
+	OpenFilesData *odata;
+		
+	odata = open_files_data_new (window, file_list, ask_application);
 	fr_window_set_current_batch_action (window,
-					    FR_BATCH_ACTION_VIEW,
-					    vdata,
-					    (GFreeFunc) view_data_free);
-
-	cdata = g_new0 (CommandData, 1);
-	cdata->window = window;
-	cdata->process = NULL;
-	if (command != NULL)
-		cdata->command = g_strdup (vdata->command);
-	if (vdata->app != NULL)
-		cdata->app = gnome_vfs_mime_application_copy (vdata->app);
-	cdata->temp_dir = get_temp_work_dir ();
-
-	cdata->file_list = NULL;
-	for (scan = vdata->file_list; scan; scan = scan->next) {
-		char *file = scan->data;
-		char *filename;
-		filename = g_strconcat (cdata->temp_dir,
-					"/",
-					file,
-					NULL);
-		cdata->file_list = g_list_prepend (cdata->file_list, filename);
-	}
-
+					    FR_BATCH_ACTION_OPEN_FILES,
+					    odata,
+					    (GFreeFunc) open_files_data_free);
+					    
 	g_signal_connect (G_OBJECT (window->archive),
 			  "done",
 			  G_CALLBACK (fr_window_open_files__extract_done_cb),
-			  cdata);
+			  odata);
 
 	fr_process_clear (window->archive->process);
 	fr_archive_extract (window->archive,
-			    vdata->file_list,
-			    cdata->temp_dir,
+			    odata->file_list,
+			    odata->cdata->temp_dir,
 			    NULL,
 			    FALSE,
 			    TRUE,
@@ -7180,49 +7245,7 @@ fr_window_open_files_common (FrWindow                *window,
 }
 
 
-void
-fr_window_open_files (FrWindow *window,
-		      GList    *file_list,
-		      char     *command)
-{
-	fr_window_open_files_common (window, file_list, command, NULL);
-}
-
-
-void
-fr_window_open_files_with_application (FrWindow                *window,
-				       GList                   *file_list,
-				       GnomeVFSMimeApplication *app)
-{
-	fr_window_open_files_common (window, file_list, NULL, app);
-}
-
-
-void
-fr_window_view_or_open_file (FrWindow *window,
-			     char     *filename)
-{
-	const char              *mime_type = NULL;
-	GnomeVFSMimeApplication *application = NULL;
-	GList                   *file_list = NULL;
-
-	if (window->priv->activity_ref > 0)
-		return;
-
-	mime_type = get_mime_type (filename);
-	if ((mime_type != NULL) && (strcmp (mime_type, GNOME_VFS_MIME_TYPE_UNKNOWN) != 0))
-		application = gnome_vfs_mime_get_default_application (mime_type);
-	file_list = g_list_append (NULL, filename);
-
-	if (application != NULL)
-		fr_window_open_files_with_application (window, file_list, application);
-	else
-		dlg_open_with (window, file_list);
-
-	g_list_free (file_list);
-	if (application != NULL)
-		gnome_vfs_mime_application_free (application);
-}
+/**/
 
 
 void
@@ -7391,9 +7414,9 @@ static void
 fr_window_exec_batch_action (FrWindow      *window,
 			     FRBatchAction *action)
 {
-	ExtractData *edata;
-	RenameData  *rdata;
-	ViewData    *vdata;
+	ExtractData   *edata;
+	RenameData    *rdata;
+	OpenFilesData *odata;
 
 	switch (action->type) {
 	case FR_BATCH_ACTION_LOAD:
@@ -7480,14 +7503,11 @@ fr_window_exec_batch_action (FrWindow      *window,
 		fr_window_paste_from_clipboard_data (window, (FrClipboardData*) action->data);
 		break;
 		
-	case FR_BATCH_ACTION_VIEW:
-		debug (DEBUG_INFO, "[BATCH] VIEW\n");
+	case FR_BATCH_ACTION_OPEN_FILES:
+		debug (DEBUG_INFO, "[BATCH] OPEN FILES\n");
 
-		vdata = action->data;
-		fr_window_open_files_common (window,
-					     vdata->file_list,
-					     vdata->command,
-					     vdata->app);
+		odata = action->data;
+		fr_window_open_files (window, odata->file_list, odata->ask_application);
 		break;
 
 	case FR_BATCH_ACTION_SAVE_AS:

@@ -121,7 +121,7 @@ open_cb (GtkWidget *widget,
 	/* exec the application */
 
 	if (command != NULL) {
-		fr_window_open_files (data->window, data->file_list, command);
+		fr_window_open_files_with_command (data->window, data->file_list, command);
 		g_free (command);
 	}
 
@@ -363,7 +363,7 @@ dlg_open_with (FrWindow *window,
 		const char *mime_type;
 		const char *name = scan->data;
 
-		mime_type = get_mime_type (name);
+		mime_type = get_file_mime_type (name, FALSE);
 		if ((mime_type != NULL) && (strcmp (mime_type, GNOME_VFS_MIME_TYPE_UNKNOWN) != 0))
 			data->app_list = g_list_concat (data->app_list, gnome_vfs_mime_get_all_applications (mime_type));
 	}
@@ -490,6 +490,6 @@ open_with_cb (GtkWidget *widget,
 	if (file_list == NULL)
 		return;
 
-	dlg_open_with (window, file_list);
+	fr_window_open_files (window, file_list, TRUE);
 	path_list_free (file_list);
 }

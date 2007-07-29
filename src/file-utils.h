@@ -68,7 +68,8 @@ void                path_list_free               (GList *path_list);
 GList *             path_list_dup                (GList *path_list);
 gboolean            is_mime_type                 (const char* type,
 						  const char* pattern);
-G_CONST_RETURN char*get_mime_type                (const char  *filename);
+const char*         get_file_mime_type           (const char *filename,
+                    				  gboolean    fast_file_type);
 GnomeVFSFileSize    get_dest_free_space          (const char  *path);
 gboolean            remove_directory             (const char  *uri);
 gboolean            remove_local_directory       (const char  *directory);
@@ -99,8 +100,10 @@ const char *        get_home_uri                 (void);
 GnomeVFSURI *       new_uri_from_path            (const char *path);
 char *              get_uri_from_local_path      (const char *local_path);
 char *              get_local_path_from_uri      (const char *uri);
+const char *        get_file_path_from_uri       (const char *uri);
 gboolean            uri_has_scheme               (const char *uri);
 gboolean            uri_is_local                 (const char *uri);
+gboolean            uri_scheme_is_file           (const char *uri);
 const char *        remove_host_from_uri         (const char *uri);
 char *              get_uri_host                 (const char *uri);
 char *              get_uri_root                 (const char *uri);

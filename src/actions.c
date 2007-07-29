@@ -807,7 +807,7 @@ activate_action_view_or_open (GtkAction *action,
 	file_list = fr_window_get_file_list_selection (window, FALSE, NULL);
 	if (file_list == NULL)
 		return;
-	fr_window_view_or_open_file (window, (char*) file_list->data);
+	fr_window_open_files (window, file_list, FALSE);
 	path_list_free (file_list);
 }
 

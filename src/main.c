@@ -289,6 +289,9 @@ viewer_done (ViewerData *vdata)
 void
 command_done (CommandData *cdata)
 {
+	if (cdata == NULL)
+		return;
+		
 	if ((cdata->temp_dir != NULL)
 	    && path_is_dir (cdata->temp_dir)) {
 		char *argv[4];
