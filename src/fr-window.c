@@ -1271,10 +1271,10 @@ get_action_from_sort_method (FRWindowSortMethod sort_method)
 
 
 static void
-add_selected (GtkTreeModel *model,
-	      GtkTreePath  *path,
-	      GtkTreeIter  *iter,
-	      gpointer      data)
+add_selected_from_list_view (GtkTreeModel *model,
+	      		     GtkTreePath  *path,
+			     GtkTreeIter  *iter,
+			     gpointer      data)
 {
 	GList    **list = data;
 	FileData  *fdata;
@@ -1283,6 +1283,22 @@ add_selected (GtkTreeModel *model,
 			    COLUMN_FILE_DATA, &fdata,
 			    -1);
 	*list = g_list_prepend (*list, fdata);
+}
+
+
+static void
+add_selected_from_tree_view (GtkTreeModel *model,
+	      		     GtkTreePath  *path,
+			     GtkTreeIter  *iter,
+			     gpointer      data)
+{
+	GList **list = data;
+	char   *dir_path;
+
+	gtk_tree_model_get (model, iter,
+			    TREE_COLUMN_PATH, &dir_path,
+			    -1);
+	*list = g_list_prepend (*list, dir_path);
 }
 
 
@@ -2887,7 +2903,7 @@ fr_window_get_selected_folder (FrWindow *window)
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 	if (selection == NULL)
 		return NULL;
-	gtk_tree_selection_selected_foreach (selection, add_selected, &selections);
+	gtk_tree_selection_selected_foreach (selection, add_selected_from_list_view, &selections);
 
 	for (scan = selections; scan; scan = scan->next) {
 		FileData *fd = scan->data;
@@ -5922,31 +5938,45 @@ fr_window_set_list_mode (FrWindow         *window,
 
 
 static GList *
-get_dir_list (FrWindow *window,
-	      FileData *fdata)
+get_dir_list_from_path (FrWindow *window,
+	      		char     *path)
 {
-	GList *list;
-	int    i;
 	char  *dirname;
 	int    dirname_l;
+	GList *list = NULL;
+	int    i;
 
-	dirname = g_strconcat (fr_window_get_current_location (window),
-			       fdata->list_name,
-			       "/",
-			       NULL);
+	if (path[strlen (path) - 1] != '/')
+		dirname = g_strconcat (path, "/", NULL);
+	else
+		dirname = g_strdup (path);
 	dirname_l = strlen (dirname);
-
-	list = NULL;
 	for (i = 0; i < window->archive->command->files->len; i++) {
 		FileData *fd = g_ptr_array_index (window->archive->command->files, i);	
 
 		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
 			list = g_list_prepend (list, g_strdup (fd->original_path));
 	}
-
 	g_free (dirname);
-
+	
 	return g_list_reverse (list);
+}
+
+
+static GList *
+get_dir_list_from_file_data (FrWindow *window,
+	      		     FileData *fdata)
+{
+	char  *dirname;
+	GList *list;
+	
+	dirname = g_strconcat (fr_window_get_current_location (window),
+			       fdata->list_name,
+			       NULL);
+	list = get_dir_list_from_path (window, dirname);
+	g_free (dirname);
+	
+	return list;
 }
 
 
@@ -5966,7 +5996,7 @@ fr_window_get_file_list_selection (FrWindow *window,
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 	if (selection == NULL)
 		return NULL;
-	gtk_tree_selection_selected_foreach (selection, add_selected, &selections);
+	gtk_tree_selection_selected_foreach (selection, add_selected_from_list_view, &selections);
 
 	list = NULL;
 	for (scan = selections; scan; scan = scan->next) {
@@ -5980,7 +6010,7 @@ fr_window_get_file_list_selection (FrWindow *window,
 				*has_dirs = TRUE;
 
 			if (recursive)
-				list = g_list_concat (list, get_dir_list (window, fd));
+				list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
 		}
 		else
 			list = g_list_prepend (list, g_strdup (fd->original_path));
@@ -5988,7 +6018,45 @@ fr_window_get_file_list_selection (FrWindow *window,
 	if (selections)
 		g_list_free (selections);
 
-	return g_list_reverse (list);
+	return g_list_reverse (list);	
+}
+
+
+GList *
+fr_window_get_folder_tree_selection (FrWindow *window,
+				     gboolean  recursive,
+				     gboolean *has_dirs)
+{
+	GtkTreeSelection *tree_selection;
+	GList            *selections, *list, *scan;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	if (has_dirs != NULL)
+		*has_dirs = FALSE;
+
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+	if (tree_selection == NULL)
+		return NULL;
+
+	selections = NULL;
+	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
+	if (selections == NULL)
+		return NULL;
+
+	if (has_dirs != NULL)
+		*has_dirs = TRUE;
+
+	list = NULL;
+	for (scan = selections; scan; scan = scan->next) {
+		char *path = scan->data;
+
+		if (recursive)
+			list = g_list_concat (list, get_dir_list_from_path (window, path));
+	}
+	path_list_free (selections);
+
+	return g_list_reverse (list);	
 }
 
 
@@ -6041,7 +6109,7 @@ fr_window_get_file_list_from_path_list (FrWindow *window,
 		if (file_data_is_dir (fd)) {
 			if (has_dirs != NULL)
 				*has_dirs = TRUE;
-			list = g_list_concat (list, get_dir_list (window, fd));
+			list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
 		}
 		else
 			list = g_list_prepend (list, g_strdup (fd->original_path));
@@ -6702,18 +6770,65 @@ fr_clipboard_clear (GtkClipboard *clipboard,
 }
 
 
+static char *
+fr_window_get_selected_folder_in_tree_view (FrWindow *window)
+{
+	GtkTreeSelection *tree_selection;
+	GList            *selections;
+	char             *path = NULL;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+	if (tree_selection == NULL)
+		return NULL;
+		
+	selections = NULL;
+	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
+
+	if (selections != NULL) {
+		path = selections->data;
+		g_list_free (selections);
+	}
+
+	return path;
+}
+
+
 static void
 fr_window_copy_or_cut_selection (FrWindow      *window,
-				 FRClipboardOp  op)
+				 FRClipboardOp  op,
+			  	 gboolean       from_sidebar)
 {
+	GList        *files;
+	char         *base_dir;
 	GtkClipboard *clipboard;
+
+	if (from_sidebar) {
+		char *selected_folder;
+		char *parent_folder;
+		
+		files = fr_window_get_folder_tree_selection (window, TRUE, NULL);
+		selected_folder = fr_window_get_selected_folder_in_tree_view (window);
+		parent_folder = remove_level_from_path (selected_folder);
+		if (parent_folder == NULL)
+			base_dir = g_strdup ("/");
+		else
+			base_dir = g_strconcat (parent_folder, "/", NULL);
+		g_free (selected_folder);
+		g_free (parent_folder);
+	}
+	else {
+		files = fr_window_get_file_list_selection (window, TRUE, NULL);
+		base_dir = g_strdup (fr_window_get_current_location (window));
+	} 
 	
 	if (window->priv->copy_data != NULL)
 		fr_clipboard_data_unref (window->priv->copy_data);
 	window->priv->copy_data = fr_clipboard_data_new ();
-	window->priv->copy_data->files = fr_window_get_file_list_selection (window, TRUE, NULL);
+	window->priv->copy_data->files = files;
 	window->priv->copy_data->op = op;
-	window->priv->copy_data->base_dir = g_strdup (fr_window_get_current_location (window));
+	window->priv->copy_data->base_dir = base_dir;
 	
 	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
 	gtk_clipboard_set_with_owner (clipboard,
@@ -6731,7 +6846,7 @@ void
 fr_window_copy_selection (FrWindow *window,
 			  gboolean  from_sidebar)
 {
-	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_COPY);
+	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_COPY, from_sidebar);
 }
 
 
@@ -6739,7 +6854,7 @@ void
 fr_window_cut_selection (FrWindow *window,
 			 gboolean  from_sidebar)
 {
-	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_CUT);
+	fr_window_copy_or_cut_selection (window, FR_CLIPBOARD_OP_CUT, from_sidebar);
 }
 
 
@@ -6912,7 +7027,7 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (data->base_dir) - 1, NULL);
 		char       *dir = remove_level_from_path (new_name);
 
-		if (g_hash_table_lookup (created_dirs, dir) == NULL) {
+		if ((dir != NULL) && (g_hash_table_lookup (created_dirs, dir) == NULL)) {
 			char *dir_path = g_build_filename (data->tmp_dir, dir, NULL);
 
 			debug (DEBUG_INFO, "mktree %s\n", dir_path);

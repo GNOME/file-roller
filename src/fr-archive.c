@@ -2904,8 +2904,8 @@ compute_list_base_path (const char *base_dir,
 static gboolean
 archive_type_has_issues_extracting_non_empty_folders (FrArchive *archive)
 {
-	if ((archive->command->files == NULL) || (archive->command->files->len == 0))
-		return FALSE;
+	/*if ((archive->command->files == NULL) || (archive->command->files->len == 0))
+		return FALSE;  FIXME: test with extract_here */
 		
 	return ((archive->command->file_type == FR_FILE_TYPE_TAR)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
@@ -2930,6 +2930,35 @@ file_list_contains_files_in_this_dir (GList      *file_list,
 	}
 
 	return FALSE;
+}
+
+
+static GList*
+remove_files_contained_in_this_dir (GList      *file_list,
+				    const char *dirname, 
+				    gboolean   *changed)
+{
+	GList *scan;
+
+	*changed = FALSE;
+	
+	for (scan = file_list; scan; /* empty */) {
+		char *filename = scan->data;
+
+		if (path_in_path (dirname, filename)) {
+			GList *next = scan->next;
+			
+			file_list = g_list_remove_link (file_list, scan);
+			g_list_free (scan);
+			*changed = TRUE;
+			
+			scan = next;
+		}
+		else
+			scan = scan->next;
+	}
+	
+	return file_list;
 }
 
 
@@ -2987,20 +3016,15 @@ fr_archive_extract_to_local (FrArchive  *archive,
 
 		if (! extract_all && archive_type_has_issues_extracting_non_empty_folders (archive)) {
 			created_filtered_list = TRUE;
-			filtered = NULL;
-			for (scan = file_list; scan; scan = scan->next) {
-				FileData *fdata;
-				char     *archive_list_filename = scan->data;
-
-				fdata = find_file_in_archive (archive, archive_list_filename);
-
-				if (fdata == NULL)
-					continue;
-
-				if (fdata->dir && file_list_contains_files_in_this_dir (file_list, archive_list_filename))
-					continue;
-
-				filtered = g_list_prepend (filtered, fdata->original_path);
+			filtered = g_list_copy (file_list);
+			for (scan = filtered; scan; /* empty */) {  
+				gboolean changed = FALSE;
+				
+				filtered = remove_files_contained_in_this_dir (filtered, scan->data, &changed);
+				if (changed)
+					scan = filtered;
+				else
+					scan = scan->next;
 			}
 		}
 		else
@@ -3018,7 +3042,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 			path_list_free (e_filtered);
 		}
 
-		if (created_filtered_list && (filtered != NULL))
+		if (created_filtered_list)
 			g_list_free (filtered);
 
 		if (file_list_created)
