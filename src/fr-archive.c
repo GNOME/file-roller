@@ -3042,7 +3042,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 			path_list_free (e_filtered);
 		}
 
-		if (created_filtered_list)
+		if (created_filtered_list && (filtered != NULL))
 			g_list_free (filtered);
 
 		if (file_list_created)
