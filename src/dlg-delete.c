@@ -92,8 +92,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (! do_not_remove_if_null || (file_list != NULL))
 		fr_window_archive_remove (window, file_list, fr_window_get_compression (window));
 
-	if (file_list != NULL) 
-		path_list_free (file_list);
+	path_list_free (file_list);
 }
 
 
@@ -106,7 +105,7 @@ entry_changed_cb (GtkWidget  *widget,
 }
 
 
-void
+static void
 dlg_delete__common (FrWindow *window,
 	            GList    *selected_files)
 {

@@ -200,9 +200,12 @@ GList *    fr_window_get_file_list_from_path_list (FrWindow    *window,
 GList *    fr_window_get_file_list_pattern        (FrWindow    *window,
 						   const char  *pattern);
 int        fr_window_get_n_selected_files         (FrWindow    *window);
-GList *    fr_window_get_folder_tree_selection    (FrWindow *window,
-				     		   gboolean  recursive,
-				     		   gboolean *has_dirs);
+GList *    fr_window_get_folder_tree_selection    (FrWindow    *window,
+				     		   gboolean     recursive,
+				     		   gboolean    *has_dirs);
+GList *    fr_window_get_selection                (FrWindow    *window,
+		  	 			   gboolean     from_sidebar,
+		  	 			   char       **return_base_dir);				     		   
 GtkListStore *
 	   fr_window_get_list_store               (FrWindow    *window);
 void       fr_window_select_all                   (FrWindow    *window);

@@ -1,5 +1,15 @@
 2007-08-01  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* src/dlg-extract.c: 
+	* src/dlg-delete.c: 
+
+	Added the function fr_window_get_selection to get the current 
+	selection and the relative base_dir.  Use it to extract from the sidebar.
+
+2007-08-01  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
 	* src/fr-window.h: added fr_window_get_folder_tree_selection.
 	* src/fr-window.c: do not append a separator if it's laready present.
 	* src/dlg-delete.c: fixed delete from the sidebar context menu.

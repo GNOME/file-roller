@@ -6796,15 +6796,14 @@ fr_window_get_selected_folder_in_tree_view (FrWindow *window)
 }
 
 
-static void
-fr_window_copy_or_cut_selection (FrWindow      *window,
-				 FRClipboardOp  op,
-			  	 gboolean       from_sidebar)
+GList *
+fr_window_get_selection (FrWindow   *window,
+		  	 gboolean    from_sidebar,
+		  	 char      **return_base_dir)
 {
-	GList        *files;
-	char         *base_dir;
-	GtkClipboard *clipboard;
-
+	GList *files;
+	char  *base_dir;
+	
 	if (from_sidebar) {
 		char *selected_folder;
 		char *parent_folder;
@@ -6824,7 +6823,27 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 	else {
 		files = fr_window_get_file_list_selection (window, TRUE, NULL);
 		base_dir = g_strdup (fr_window_get_current_location (window));
-	} 
+	} 	
+	
+	if (return_base_dir)
+		*return_base_dir = base_dir;
+	else
+		g_free (base_dir);
+		
+	return files;
+}
+
+
+static void
+fr_window_copy_or_cut_selection (FrWindow      *window,
+				 FRClipboardOp  op,
+			  	 gboolean       from_sidebar)
+{
+	GList        *files;
+	char         *base_dir;
+	GtkClipboard *clipboard;
+
+	files = fr_window_get_selection (window, from_sidebar, &base_dir);
 	
 	if (window->priv->copy_data != NULL)
 		fr_clipboard_data_unref (window->priv->copy_data);

@@ -38,7 +38,9 @@
 
 typedef struct {
 	FrWindow     *window;
-
+	GList        *selected_files;
+	char         *base_dir_for_selection;
+	
 	GtkWidget    *dialog;
 
 	GtkWidget    *e_main_vbox;
@@ -69,7 +71,8 @@ destroy_cb (GtkWidget  *widget,
 		fr_window_pop_message (data->window);
 		fr_window_stop_batch (data->window);
 	}
-
+	path_list_free (data->selected_files);
+	g_free (data->base_dir_for_selection);
 	g_object_unref (data->tooltips);
 	g_free (data);
 }
@@ -89,7 +92,7 @@ extract_cb (GtkWidget   *w,
 	gboolean    junk_paths;
 	GList      *file_list;
 	char       *password;
-	const char *base_dir = NULL;
+	char       *base_dir = NULL;
 
 	data->extract_clicked = TRUE;
 
@@ -223,9 +226,10 @@ extract_cb (GtkWidget   *w,
 
 	file_list = NULL;
 
-	if (selected_files)
-		file_list = fr_window_get_file_list_selection (window, TRUE, NULL);
-
+	if (selected_files){
+		file_list = data->selected_files;
+		data->selected_files = NULL;       /* do not the list when destroying the dialog. */
+	} 
 	else if (pattern_files) {
 		const char *pattern;
 
@@ -239,6 +243,13 @@ extract_cb (GtkWidget   *w,
 		}
 	}
 
+	if (selected_files) {
+		base_dir = data->base_dir_for_selection;
+		data->base_dir_for_selection = NULL;
+	}
+	else
+		base_dir = NULL;
+
 	/* close the dialog. */
 
 	gtk_widget_destroy (data->dialog);
@@ -247,9 +258,6 @@ extract_cb (GtkWidget   *w,
 
 	fr_window_view_folder_after_extract (window, eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));
 	fr_window_set_password (window, password);
-
-	if (selected_files)
-		base_dir = fr_window_get_current_location (window);
 
 	fr_window_archive_extract (window,
 				   file_list,
@@ -262,6 +270,7 @@ extract_cb (GtkWidget   *w,
 
 	path_list_free (file_list);
 	g_free (extract_to_dir);
+	g_free (base_dir);
 	g_free (password);
 
 	return TRUE;
@@ -448,17 +457,19 @@ create_extra_widget (DialogData *data)
 }
 
 
-void
-dlg_extract (GtkWidget *widget,
-	     gpointer   callback_data)
+static void
+dlg_extract__common (FrWindow *window,
+	             GList    *selected_files,
+	             char     *base_dir_for_selection)
 {
-	FrWindow   *window = callback_data;
 	DialogData *data;
 	GtkWidget  *file_sel;
 
 	data = g_new0 (DialogData, 1);
 
 	data->window = window;
+	data->selected_files = selected_files;
+	data->base_dir_for_selection = base_dir_for_selection;
 	data->extract_clicked = FALSE;
 
 	data->tooltips = gtk_tooltips_new ();
@@ -486,7 +497,7 @@ dlg_extract (GtkWidget *widget,
 
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_extract_default_dir (window));
 
-	if (fr_window_get_n_selected_files (window) > 0)
+	if (data->selected_files != NULL)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton), TRUE);
 	else {
 		gtk_widget_set_sensitive (data->e_selected_radiobutton, FALSE);
@@ -540,8 +551,26 @@ dlg_extract (GtkWidget *widget,
 
 
 void
+dlg_extract (GtkWidget *widget,
+	     gpointer   callback_data)
+{
+	FrWindow *window = callback_data;
+	GList    *files;
+	char     *base_dir;
+	
+	files = fr_window_get_selection (window, FALSE, &base_dir);
+	dlg_extract__common (window, files, base_dir);
+}
+
+
+void
 dlg_extract_folder_from_sidebar (GtkWidget *widget,
 	     			 gpointer   callback_data)
 {
-	/* FIXME */
+	FrWindow *window = callback_data;
+	GList    *files;
+	char     *base_dir;
+	
+	files = fr_window_get_selection (window, TRUE, &base_dir);
+	dlg_extract__common (window, files, base_dir);
 }
