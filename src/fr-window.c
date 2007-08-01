@@ -1888,8 +1888,6 @@ set_active (FrWindow   *window,
 }
 
 
-
-
 static void
 set_sensitive (FrWindow   *window,
 	       const char *action_name,
@@ -1911,6 +1909,9 @@ check_clipboard_cb (gpointer data)
 	gboolean      can_modify;
 	gboolean      ro;
 	gboolean      compr_file;
+	
+	if (window->priv->closing)
+		return FALSE;
 	
 	running    = window->priv->activity_ref > 0;
 	no_archive = (window->archive == NULL) || ! window->priv->archive_present;

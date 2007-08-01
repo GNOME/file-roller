@@ -2586,18 +2586,33 @@ file_is_in_subfolder_of (const char *filename,
 }
 
 
+static gboolean
+archive_type_has_issues_deleting_non_empty_folders (FrArchive *archive)
+{
+	/*if ((archive->command->files == NULL) || (archive->command->files->len == 0))
+		return FALSE;  FIXME: test with extract_here */
+		
+	return ((archive->command->file_type == FR_FILE_TYPE_TAR)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS));
+}
+
+
 /* Note: all paths unescaped. */
 static void
 archive_remove (FrArchive *archive,
 		GList     *file_list)
 {
 	gboolean  file_list_created = FALSE;
-	GList    *tmp_file_list;
+	GList    *tmp_file_list = NULL;
+	gboolean  tmp_file_list_created = FALSE;
 	GList    *e_file_list;
 	GList    *scan;
-	GList    *folders_to_remove;
-
-	/* file_list == NULL means delete all files in archive. */
+	
+	/* file_list == NULL means delete all the files in the archive. */
 
 	if (file_list == NULL) {
 		int i;
@@ -2610,25 +2625,36 @@ archive_remove (FrArchive *archive,
 		file_list_created = TRUE;
 	}
 
-	/* remove from the list the files inside folders to be removed. */
+	if (archive_type_has_issues_deleting_non_empty_folders (archive)) {
+		GList *folders_to_remove;
+		
+		/* remove from the list the files contained in folders to be
+		 * removed. */
 
-	folders_to_remove = NULL;
-	for (scan = file_list; scan != NULL; scan = scan->next) {
-		char *path = scan->data;
+		folders_to_remove = NULL;
+		for (scan = file_list; scan != NULL; scan = scan->next) {
+			char *path = scan->data;
 
-		if (path[strlen (path) - 1] == '/')
-			folders_to_remove = g_list_prepend (folders_to_remove, path);
+			if (path[strlen (path) - 1] == '/')
+				folders_to_remove = g_list_prepend (folders_to_remove, path);
+		}
+
+		if (folders_to_remove != NULL) {
+			tmp_file_list = NULL;
+			for (scan = file_list; scan != NULL; scan = scan->next) {
+				char *path = scan->data;
+
+				if (! file_is_in_subfolder_of (path, folders_to_remove))
+					tmp_file_list = g_list_prepend (tmp_file_list, path);
+			}
+			tmp_file_list_created = TRUE;
+			g_list_free (folders_to_remove);
+		}
 	}
 
-	tmp_file_list = NULL;
-	for (scan = file_list; scan != NULL; scan = scan->next) {
-		char *path = scan->data;
-
-		if (! file_is_in_subfolder_of (path, folders_to_remove))
-			tmp_file_list = g_list_prepend (tmp_file_list, path);
-	}
-
-	g_list_free (folders_to_remove);
+	if (! tmp_file_list_created)
+		tmp_file_list = g_list_copy (file_list);
+			
 	if (file_list_created)
 		g_list_free (file_list);
 
