@@ -25,13 +25,14 @@
 #include <glade/glade.h>
 #include "fr-window.h"
 #include "gtk-utils.h"
-
+#include "file-utils.h"
 
 #define EXTRACT_GLADE_FILE "file-roller.glade"
 
 
 typedef struct {
 	FrWindow  *window;
+	GList     *selected_files;
 	GladeXML  *gui;
 
 	GtkWidget *dialog;
@@ -47,6 +48,7 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
+	path_list_free (data->selected_files);
 	g_object_unref (G_OBJECT (data->gui));
 	g_free (data);
 }
@@ -68,8 +70,10 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	/* create the file list. */
 
-	if (selected_files)
-		file_list = fr_window_get_file_list_selection (window, TRUE, NULL);
+	if (selected_files) {
+		file_list = data->selected_files;
+		data->selected_files = NULL;       /* do not the list when destroying the dialog. */
+	}
 	else if (pattern_files) {
 		const char *pattern;
 		
@@ -88,10 +92,8 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (! do_not_remove_if_null || (file_list != NULL))
 		fr_window_archive_remove (window, file_list, fr_window_get_compression (window));
 
-	if (file_list != NULL) {
-		g_list_foreach (file_list, (GFunc) g_free, NULL);
-		g_list_free (file_list);
-	}
+	if (file_list != NULL) 
+		path_list_free (file_list);
 }
 
 
@@ -105,18 +107,18 @@ entry_changed_cb (GtkWidget  *widget,
 
 
 void
-dlg_delete (GtkWidget *widget,
-	    gpointer   callback_data)
+dlg_delete__common (FrWindow *window,
+	            GList    *selected_files)
 {
 	DialogData *data;
-	FrWindow   *window = callback_data;
 	GtkWidget  *cancel_button;
 	GtkWidget  *ok_button;
 
 	data = g_new (DialogData, 1);
 
 	data->window = window;
-
+	data->selected_files = selected_files;
+	
 	data->gui = glade_xml_new (GLADEDIR "/" EXTRACT_GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
 		g_warning ("Could not find " EXTRACT_GLADE_FILE "\n");
@@ -136,7 +138,7 @@ dlg_delete (GtkWidget *widget,
 
 	/* Set widgets data. */
 
-	if (fr_window_get_n_selected_files (window) > 0)
+	if (data->selected_files != NULL)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio), TRUE);
 	else {
 		gtk_widget_set_sensitive (data->d_selected_files_radio, FALSE);
@@ -172,8 +174,21 @@ dlg_delete (GtkWidget *widget,
 }
 
 
+void
+dlg_delete (GtkWidget *widget,
+	    gpointer   callback_data)
+{
+	FrWindow *window = callback_data;
+	dlg_delete__common (window, 
+			    fr_window_get_file_list_selection (window, TRUE, NULL));
+}
+
+
 void 
 dlg_delete_from_sidebar (GtkWidget *widget, 
-			 gpointer   data)
+			 gpointer   callback_data)
 {
+	FrWindow *window = callback_data;
+	dlg_delete__common (window, 
+			    fr_window_get_folder_tree_selection (window, TRUE, NULL));
 }

@@ -6814,6 +6814,8 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 		parent_folder = remove_level_from_path (selected_folder);
 		if (parent_folder == NULL)
 			base_dir = g_strdup ("/");
+		else if (parent_folder[strlen (parent_folder) - 1] == '/')
+			base_dir = g_strdup (parent_folder);
 		else
 			base_dir = g_strconcat (parent_folder, "/", NULL);
 		g_free (selected_folder);

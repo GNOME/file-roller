@@ -1,5 +1,11 @@
 2007-08-01  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/fr-window.h: added fr_window_get_folder_tree_selection.
+	* src/fr-window.c: do not append a separator if it's laready present.
+	* src/dlg-delete.c: fixed delete from the sidebar context menu.
+
+2007-08-01  Paolo Bacchilega  <paobac@cvs.gnome.org>
+
 	* src/fr-archive.c (archive_remove): remove the files inside a folder
 	only if archive type has issue deleting non-empty folders.
 	* src/fr-window.c (check_clipboard_cb): return FALSE if closing is TRUE.
