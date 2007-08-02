@@ -704,21 +704,33 @@ fr_window_get_type (void)
 /* -- window history -- */
 
 
+#if 0
+static void
+fr_window_history_print (FrWindow *window)
+{
+	GList *list;
+
+	debug (DEBUG_INFO, "history:\n");
+	for (list = window->priv->history; list; list = list->next)
+		g_print ("\t%s %s\n",
+			 (char*) list->data,
+			 (list == window->priv->history_current)? "<-": "");
+	g_print ("\n");
+}
+#endif
+
+
 static void
 fr_window_history_add (FrWindow   *window,
 		       const char *path)
 {
-	if (window->priv->history != NULL) {
-		char *first_path = (char*) window->priv->history->data;
-		if (strcmp (first_path, path) == 0) {
-			window->priv->history_current = window->priv->history;
+	if ((window->priv->history != NULL) && (window->priv->history_current != NULL)) {
+		if (strcmp (window->priv->history_current->data, path) == 0)
 			return;
-		}
 
 		/* Add locations visited using the back button to the history
 		 * list. */
-		if ((window->priv->history_current != NULL)
-		    && (window->priv->history != window->priv->history_current)) {
+		if (window->priv->history != window->priv->history_current) {
 			GList *scan = window->priv->history->next;
 			while (scan != window->priv->history_current->next) {
 				window->priv->history = g_list_prepend (window->priv->history, g_strdup (scan->data));
@@ -747,22 +759,6 @@ fr_window_history_pop (FrWindow *window)
 	g_free (first->data);
 	g_list_free (first);
 }
-
-
-#if 0
-static void
-fr_window_history_print (FrWindow *window)
-{
-	GList *list;
-
-	debug (DEBUG_INFO, "history:\n");
-	for (list = window->priv->history; list; list = list->next)
-		debug (DEBUG_INFO, "\t%s %s\n",
-			 (char*) list->data,
-			 (list == window->priv->history_current)? "<-": "");
-	debug (DEBUG_INFO, "\n");
-}
-#endif
 
 
 /* -- window_update_file_list -- */
