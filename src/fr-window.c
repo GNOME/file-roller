@@ -2011,7 +2011,7 @@ location_entry_key_press_event_cb (GtkWidget   *widget,
 	if ((event->keyval == GDK_Return)
 	    || (event->keyval == GDK_KP_Enter)
 	    || (event->keyval == GDK_ISO_Enter))
-		fr_window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (window->priv->location_entry)));
+		fr_window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (window->priv->location_entry)), FALSE);
 
 	return FALSE;
 }
@@ -2698,7 +2698,7 @@ action_performed (FrArchive   *archive,
 	case FR_ACTION_CREATING_ARCHIVE:
 		if (error->type != FR_PROC_ERROR_STOPPED) {
 			fr_window_history_clear (window);
-			fr_window_go_to_location (window, "/");
+			fr_window_go_to_location (window, "/", TRUE);
 			fr_window_update_dir_tree (window);
 			fr_window_update_title (window);
 			fr_window_update_sensitivity (window);
@@ -2756,8 +2756,7 @@ action_performed (FrArchive   *archive,
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
 
 		fr_window_update_title (window);
-		fr_window_history_clear (window);
-		fr_window_go_to_location (window, "/");
+		fr_window_go_to_location (window, fr_window_get_current_location (window), TRUE);
 		fr_window_update_dir_tree (window);		
 		if (! window->priv->non_interactive)
 			gtk_window_present (GTK_WINDOW (window));
@@ -2895,33 +2894,28 @@ dir_tree_button_press_cb (GtkWidget      *widget,
 
 
 static FileData *
-fr_window_get_selected_folder (FrWindow *window)
+fr_window_get_selected_item_from_file_list (FrWindow *window)
 {
-	GtkTreeSelection *selection;
-	GList            *selections = NULL, *scan;
+	GtkTreeSelection *tree_selection;
+	GList            *selection;
 	FileData         *fdata = NULL;
 
 	g_return_val_if_fail (window != NULL, NULL);
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
-	if (selection == NULL)
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
+	if (tree_selection == NULL)
 		return NULL;
-	gtk_tree_selection_selected_foreach (selection, add_selected_from_list_view, &selections);
-
-	for (scan = selections; scan; scan = scan->next) {
-		FileData *fd = scan->data;
-		if ((fd != NULL) && file_data_is_dir (fd)) {
-			if (fdata != NULL) {
-				file_data_free (fdata);
-				fdata = NULL;
-				break;
-			}
-			fdata = file_data_copy (fd);
-		}
+	
+	selection = NULL;
+	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_list_view, &selection);
+	if ((selection == NULL) || (selection->next != NULL)) {
+		/* return NULL if the selection contains more than one entry. */
+		g_list_free (selection);
+		return NULL;
 	}
 
-	if (selections != NULL)
-		g_list_free (selections);
+	fdata = file_data_copy (selection->data);
+	g_list_free (selection);
 
 	return fdata;
 }
@@ -2934,16 +2928,20 @@ fr_window_current_folder_activated (FrWindow *window,
 	FileData *fdata;
 	char     *new_dir;
 
-	fdata = fr_window_get_selected_folder (window);
-	if (fdata == NULL)
+	fdata = fr_window_get_selected_item_from_file_list (window);
+	if ((fdata == NULL) || ! file_data_is_dir (fdata)) {
+		file_data_free (fdata);
 		return;
+	}
 
 	new_dir = g_strconcat (fr_window_get_current_location (window),
 			       fdata->list_name,
 			       "/",
 			       NULL);
-	fr_window_go_to_location (window, new_dir);
+	fr_window_go_to_location (window, new_dir, FALSE);
+	
 	g_free (new_dir);
+	file_data_free (fdata);
 }
 
 
@@ -2977,7 +2975,7 @@ row_activated_cb (GtkTreeView       *tree_view,
 				       fdata->list_name,
 				       "/",
 				       NULL);
-		fr_window_go_to_location (window, new_dir);
+		fr_window_go_to_location (window, new_dir, FALSE);
 		g_free (new_dir);
 	}
 
@@ -3723,7 +3721,7 @@ key_press_cb (GtkWidget   *widget,
 	case GDK_Home:
 	case GDK_KP_Home:
 		if (alt) {
-			fr_window_go_to_location (window, "/");
+			fr_window_go_to_location (window, "/", FALSE);
 			retval = TRUE;
 		}
 		break;
@@ -3750,7 +3748,7 @@ dir_tree_selection_changed_cb (GtkTreeSelection *selection,
 				    &iter,
 				    TREE_COLUMN_PATH, &path,
 				    -1);
-		fr_window_go_to_location (window, path);
+		fr_window_go_to_location (window, path, FALSE);
 		g_free (path);
 	}
 
@@ -4461,7 +4459,7 @@ void
 go_home_cb (GtkWidget *widget,
 	    void      *data)
 {
-	fr_window_go_to_location ((FrWindow*) data, "/");
+	fr_window_go_to_location ((FrWindow*) data, "/", FALSE);
 }
 
 
@@ -5253,7 +5251,8 @@ fr_window_archive_close (FrWindow *window)
 	window->priv->copy_data = NULL;
 	
 	fr_window_set_password (window, NULL);
-
+	fr_window_history_clear (window);
+	
 	window->priv->archive_new = FALSE;
 	window->priv->archive_present = FALSE;
 
@@ -5825,12 +5824,18 @@ fr_window_view_folder_after_extract (FrWindow *window,
 
 void
 fr_window_go_to_location (FrWindow   *window,
-			  const char *path)
+			  const char *path,
+			  gboolean    force_update)
 {
 	char *dir;
 
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (path != NULL);
+
+	if (force_update) {
+		g_free (window->priv->last_location);
+		window->priv->last_location = NULL;
+	}
 
 	if (path[strlen (path) - 1] != '/')
 		dir = g_strconcat (path, "/", NULL);
@@ -6453,7 +6458,10 @@ rename_selection (FrWindow   *window,
 	tmp_dir = get_temp_work_dir ();
 	e_tmp_dir = shell_escape (tmp_dir);
 
-	file_list = get_dir_list_from_path (window, rdata->path_to_rename);	
+	if (is_dir)
+		file_list = get_dir_list_from_path (window, rdata->path_to_rename);
+	else
+		file_list = g_list_append (NULL, g_strdup (rdata->path_to_rename));	
 	
 	fr_archive_extract (archive,
 			    file_list,
@@ -6587,30 +6595,6 @@ valid_name (const char  *new_name,
 }
 
 
-static char *
-get_first_level_dir (const char *path,
-		     const char *current_dir)
-{
-	const char *from_current;
-	const char *first_sep;
-
-	g_return_val_if_fail (path != NULL, NULL);
-	g_return_val_if_fail (current_dir != NULL, NULL);
-
-	from_current = path + strlen (current_dir);
-	if (current_dir[strlen (current_dir) - 1] != G_DIR_SEPARATOR)
-		from_current += 1;
-	if (path[0] != G_DIR_SEPARATOR)
-		from_current -= 1;
-	first_sep = strchr (from_current, G_DIR_SEPARATOR);
-
-	if (first_sep == NULL)
-		return g_strdup (from_current);
-	else
-		return g_strndup (from_current, first_sep - from_current);
-}
-
-
 static gboolean
 name_is_present (FrWindow    *window,
 		 const char  *current_dir,
@@ -6698,20 +6682,32 @@ fr_window_rename_selection (FrWindow *window,
 		renaming_dir = TRUE;
 	}
 	else {
-		GList *selection;
+		FileData *selected_item;
 		
-		selection = fr_window_get_file_list_selection (window, TRUE, &renaming_dir);
-		if (selection == NULL)
+		selected_item = fr_window_get_selected_item_from_file_list (window);
+		if (selected_item == NULL)
 			return;
 		
-		parent_dir = g_strdup (fr_window_get_current_location (window));
-		if (renaming_dir)
-			old_name = get_first_level_dir ((char*) selection->data, parent_dir);
-		else
-			old_name = g_strdup (file_name_from_path ((char*) selection->data));
-		path_to_rename = g_build_filename (parent_dir, old_name, NULL);
+		renaming_dir = file_data_is_dir (selected_item);
 		
-		path_list_free (selection);
+		if (renaming_dir && ! selected_item->dir) {
+			parent_dir = g_strdup (fr_window_get_current_location (window));
+			old_name = g_strdup (selected_item->list_name);
+			path_to_rename = g_build_filename (parent_dir, old_name, NULL);
+		}
+		else {
+			if (renaming_dir) {
+				path_to_rename = remove_ending_separator (selected_item->full_path);
+				parent_dir = remove_level_from_path (path_to_rename);
+			}
+			else {
+				path_to_rename = g_strdup (selected_item->original_path);
+				parent_dir = remove_level_from_path (selected_item->full_path);
+			}
+			old_name = g_strdup (selected_item->name);
+		}
+		
+		file_data_free (selected_item);
 	}
 	
  retry__rename_selection:

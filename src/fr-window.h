@@ -178,7 +178,8 @@ void        fr_window_view_folder_after_extract (FrWindow      *window,
 /**/
 
 void       fr_window_go_to_location             (FrWindow       *window,
-					 	 const char     *path);
+					 	 const char     *path,
+					 	 gboolean        force_update);
 const char*fr_window_get_current_location       (FrWindow       *window);
 void       fr_window_go_up_one_level            (FrWindow       *window);
 void       fr_window_go_back                    (FrWindow       *window);
