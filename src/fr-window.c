@@ -6390,8 +6390,8 @@ static RenameData*
 rename_data_new (const char *path_to_rename,
 		 const char *old_name,
 		 const char *new_name,
-		 gboolean    is_dir,
-		 const char *current_dir)
+		 const char *current_dir,
+		 gboolean    is_dir)
 {
 	RenameData *rdata;
 
@@ -6429,7 +6429,7 @@ rename_selection (FrWindow   *window,
 		  const char *old_name,
 		  const char *new_name,
 		  const char *current_dir,
-		  gboolean    is_dir,)
+		  gboolean    is_dir)
 {
 	GList      *file_list;
 	char       *tmp_dir;
@@ -6453,7 +6453,7 @@ rename_selection (FrWindow   *window,
 	tmp_dir = get_temp_work_dir ();
 	e_tmp_dir = shell_escape (tmp_dir);
 
-	file_list = g_list_append (NULL, rdata->path_to_rename);	
+	file_list = get_dir_list_from_path (window, rdata->path_to_rename);	
 	
 	fr_archive_extract (archive,
 			    file_list,
@@ -6539,7 +6539,7 @@ rename_selection (FrWindow   *window,
 			window->priv->compression);
 
 	path_list_free (new_file_list);
-	g_list_free (file_list);
+	path_list_free (file_list);
 	
 	/* remove the tmp dir */
 
@@ -6600,6 +6600,8 @@ get_first_level_dir (const char *path,
 	from_current = path + strlen (current_dir);
 	if (current_dir[strlen (current_dir) - 1] != G_DIR_SEPARATOR)
 		from_current += 1;
+	if (path[0] != G_DIR_SEPARATOR)
+		from_current -= 1;
 	first_sep = strchr (from_current, G_DIR_SEPARATOR);
 
 	if (first_sep == NULL)
@@ -6650,6 +6652,31 @@ name_is_present (FrWindow    *window,
 }
 
 
+static char *
+fr_window_get_selected_folder_in_tree_view (FrWindow *window)
+{
+	GtkTreeSelection *tree_selection;
+	GList            *selections;
+	char             *path = NULL;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+	if (tree_selection == NULL)
+		return NULL;
+		
+	selections = NULL;
+	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
+
+	if (selections != NULL) {
+		path = selections->data;
+		g_list_free (selections);
+	}
+
+	return path;
+}
+
+
 void
 fr_window_rename_selection (FrWindow *window,
 			    gboolean  from_sidebar)
@@ -6677,7 +6704,7 @@ fr_window_rename_selection (FrWindow *window,
 		if (selection == NULL)
 			return;
 		
-		parent_dir = fr_window_get_current_location (window);
+		parent_dir = g_strdup (fr_window_get_current_location (window));
 		if (renaming_dir)
 			old_name = get_first_level_dir ((char*) selection->data, parent_dir);
 		else
@@ -6746,7 +6773,6 @@ fr_window_rename_selection (FrWindow *window,
 
 		rename_selection (window, path_to_rename, old_name, new_name, parent_dir, renaming_dir);
 
-		g_free (current_dir);
 		g_free (new_name);
 	}
 
@@ -6788,31 +6814,6 @@ fr_clipboard_clear (GtkClipboard *clipboard,
 		fr_clipboard_data_unref (window->priv->copy_data);
 		window->priv->copy_data = NULL;
 	}
-}
-
-
-static char *
-fr_window_get_selected_folder_in_tree_view (FrWindow *window)
-{
-	GtkTreeSelection *tree_selection;
-	GList            *selections;
-	char             *path = NULL;
-
-	g_return_val_if_fail (window != NULL, NULL);
-
-	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
-	if (tree_selection == NULL)
-		return NULL;
-		
-	selections = NULL;
-	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
-
-	if (selections != NULL) {
-		path = selections->data;
-		g_list_free (selections);
-	}
-
-	return path;
 }
 
 
@@ -7650,8 +7651,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 				  rdata->path_to_rename,
 				  rdata->old_name,
 				  rdata->new_name,
-				  rdata->is_dir,
-				  rdata->current_dir);
+				  rdata->current_dir,
+				  rdata->is_dir);
 		break;
 
 	case FR_BATCH_ACTION_PASTE:
