@@ -316,7 +316,6 @@ static const gchar *ui_info =
 "    <separator/>"
 "    <toolitem action='AddFiles_Toolbar'/>"
 "    <toolitem action='AddFolder_Toolbar'/>"
-"    <toolitem action='ViewSelection_Toolbar'/>"
 "    <separator/>"
 "    <toolitem action='Stop'/>"
 "  </toolbar>"

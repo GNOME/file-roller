@@ -1994,6 +1994,8 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "DeselectAll", n_selected > 0);
 	set_sensitive (window, "OpenRecentMenu", ! running);
 	
+	set_sensitive (window, "ViewFolders", (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR));
+	
 	/**/
 	
 	if (! window->priv->closing && (window->priv->check_clipboard == 0))
@@ -6376,7 +6378,7 @@ fr_window_view_last_output (FrWindow   *window,
 
 
 typedef struct {
-	GList    *file_list;
+	char     *path_to_rename;
 	char     *old_name;
 	char     *new_name;
 	gboolean  is_dir;
@@ -6385,7 +6387,7 @@ typedef struct {
 
 
 static RenameData*
-rename_data_new (GList      *file_list,
+rename_data_new (const char *path_to_rename,
 		 const char *old_name,
 		 const char *new_name,
 		 gboolean    is_dir,
@@ -6394,7 +6396,7 @@ rename_data_new (GList      *file_list,
 	RenameData *rdata;
 
 	rdata = g_new0 (RenameData, 1);
-	rdata->file_list = path_list_dup (file_list);
+	rdata->path_to_rename = g_strdup (path_to_rename);
 	if (old_name != NULL)
 		rdata->old_name = g_strdup (old_name);
 	if (new_name != NULL)
@@ -6412,7 +6414,7 @@ rename_data_free (RenameData *rdata)
 {
 	g_return_if_fail (rdata != NULL);
 
-	path_list_free (rdata->file_list);
+	g_free (rdata->path_to_rename);
 	g_free (rdata->old_name);
 	g_free (rdata->new_name);
 	g_free (rdata->current_dir);
@@ -6423,23 +6425,24 @@ rename_data_free (RenameData *rdata)
 
 static void
 rename_selection (FrWindow   *window,
-		  GList      *file_list,
+		  const char *path_to_rename,
 		  const char *old_name,
 		  const char *new_name,
-		  gboolean    is_dir,
-		  const char *current_dir)
+		  const char *current_dir,
+		  gboolean    is_dir,)
 {
+	GList      *file_list;
 	char       *tmp_dir;
 	char       *e_tmp_dir;
 	FrArchive  *archive = window->archive;
 	GList      *scan, *new_file_list = NULL;
 	RenameData *rdata;
 
-	rdata = rename_data_new (file_list,
+	rdata = rename_data_new (path_to_rename,
 				 old_name,
 				 new_name,
-				 is_dir,
-				 current_dir);
+				 current_dir,
+				 is_dir);
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_RENAME,
 					    rdata,
@@ -6450,8 +6453,10 @@ rename_selection (FrWindow   *window,
 	tmp_dir = get_temp_work_dir ();
 	e_tmp_dir = shell_escape (tmp_dir);
 
+	file_list = g_list_append (NULL, rdata->path_to_rename);	
+	
 	fr_archive_extract (archive,
-			    rdata->file_list,
+			    file_list,
 			    tmp_dir,
 			    NULL,
 			    FALSE,
@@ -6460,10 +6465,10 @@ rename_selection (FrWindow   *window,
 			    window->priv->password);
 
 	fr_archive_remove (archive,
-			   rdata->file_list,
+			   file_list,
 			   window->priv->compression);
 
-	fr_window_clipboard_remove_file_list (window, rdata->file_list);
+	fr_window_clipboard_remove_file_list (window, file_list);
 
 	/* rename files. */
 
@@ -6489,7 +6494,7 @@ rename_selection (FrWindow   *window,
 		g_free (e_new_path);
 	}
 
-	for (scan = rdata->file_list; scan; scan = scan->next) {
+	for (scan = file_list; scan; scan = scan->next) {
 		const char *current_dir_relative = rdata->current_dir + 1;
 		const char *filename = (char*) scan->data;
 		char       *old_path = NULL, *common = NULL, *new_path = NULL;
@@ -6533,10 +6538,13 @@ rename_selection (FrWindow   *window,
 			window->priv->password,
 			window->priv->compression);
 
+	path_list_free (new_file_list);
+	g_list_free (file_list);
+	
 	/* remove the tmp dir */
 
 	fr_process_begin_command (archive->process, "rm");
-	fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+	fr_process_set_working_dir (archive->process, g_get_tmp_dir ());
 	fr_process_set_sticky (archive->process, TRUE);
 	fr_process_add_arg (archive->process, "-rf");
 	fr_process_add_arg (archive->process, e_tmp_dir);
@@ -6589,7 +6597,9 @@ get_first_level_dir (const char *path,
 	g_return_val_if_fail (path != NULL, NULL);
 	g_return_val_if_fail (current_dir != NULL, NULL);
 
-	from_current = path + strlen (current_dir) - 1;
+	from_current = path + strlen (current_dir);
+	if (current_dir[strlen (current_dir) - 1] != G_DIR_SEPARATOR)
+		from_current += 1;
 	first_sep = strchr (from_current, G_DIR_SEPARATOR);
 
 	if (first_sep == NULL)
@@ -6644,95 +6654,105 @@ void
 fr_window_rename_selection (FrWindow *window,
 			    gboolean  from_sidebar)
 {
-	GList    *selection, *selection_fd;
-	gboolean  has_dir;
-	char     *old_name, *utf8_old_name, *new_name, *utf8_new_name;
-	char     *reason = NULL;
-	char     *current_dir = NULL;
+	char     *path_to_rename;
+	char     *parent_dir;
+	char     *old_name;
+	gboolean  renaming_dir = FALSE;
+	char     *utf8_old_name;
+	char     *utf8_new_name;
+	
 
-	selection = fr_window_get_file_list_selection (window, TRUE, &has_dir);
-	if (selection == NULL)
-		return;
-
-	selection_fd = get_selection_as_fd (window);
-
-	if (has_dir)
-		old_name = get_first_level_dir ((char*) selection->data, fr_window_get_current_location (window));
-	else
-		old_name = g_strdup (file_name_from_path ((char*) selection->data));
-
+	if (from_sidebar) {
+		path_to_rename = fr_window_get_selected_folder_in_tree_view (window);
+		if (path_to_rename == NULL)
+			return;
+		parent_dir = remove_level_from_path (path_to_rename);
+		old_name = g_strdup (file_name_from_path (path_to_rename));
+		renaming_dir = TRUE;
+	}
+	else {
+		GList *selection;
+		
+		selection = fr_window_get_file_list_selection (window, TRUE, &renaming_dir);
+		if (selection == NULL)
+			return;
+		
+		parent_dir = fr_window_get_current_location (window);
+		if (renaming_dir)
+			old_name = get_first_level_dir ((char*) selection->data, parent_dir);
+		else
+			old_name = g_strdup (file_name_from_path ((char*) selection->data));
+		path_to_rename = g_build_filename (parent_dir, old_name, NULL);
+		
+		path_list_free (selection);
+	}
+	
  retry__rename_selection:
 	utf8_old_name = g_locale_to_utf8 (old_name, -1 ,0 ,0 ,0);
 	utf8_new_name = _gtk_request_dialog_run (GTK_WINDOW (window),
 						 (GTK_DIALOG_DESTROY_WITH_PARENT
 						  | GTK_DIALOG_MODAL),
 						 _("Rename"),
-						 (has_dir? _("New folder name"): _("New file name")),
+						 (renaming_dir ? _("New folder name") : _("New file name")),
 						 utf8_old_name,
 						 1024,
 						 GTK_STOCK_CANCEL,
 						 _("_Rename"));
 	g_free (utf8_old_name);
 
-	if (utf8_new_name == NULL)
-		goto free_data__rename_selection;
+	if (utf8_new_name != NULL) {
+		char *new_name;
+		char *reason = NULL;
+		
+		new_name = g_filename_from_utf8 (utf8_new_name, -1, 0, 0, 0);
+		g_free (utf8_new_name);
 
-	new_name = g_filename_from_utf8 (utf8_new_name, -1, 0, 0, 0);
-	g_free (utf8_new_name);
+		if (! valid_name (new_name, old_name, &reason)) {
+			char      *utf8_name = g_filename_display_name (new_name);
+			GtkWidget *dlg;
 
-	if (! valid_name (new_name, old_name, &reason)) {
-		char      *utf8_name = g_filename_display_name (new_name);
-		GtkWidget *dlg;
+			dlg = _gtk_error_dialog_new (GTK_WINDOW (window),
+						     GTK_DIALOG_DESTROY_WITH_PARENT,
+						     NULL,
+						     (renaming_dir ? _("Could not rename the folder") : _("Could not rename the file")),
+						     reason);
+			gtk_dialog_run (GTK_DIALOG (dlg));
+			gtk_widget_destroy (dlg);
 
-		dlg = _gtk_error_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     NULL,
-					     (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
-					     reason);
-		gtk_dialog_run (GTK_DIALOG (dlg));
-		gtk_widget_destroy (dlg);
+			g_free (reason);
+			g_free (utf8_name);
+			g_free (new_name);
 
-		g_free (reason);
-		g_free (utf8_name);
+			goto retry__rename_selection;
+		}
+
+		if (name_is_present (window, parent_dir, new_name, &reason)) {
+			GtkWidget *dlg;
+			int        r;
+
+			dlg = _gtk_message_dialog_new (GTK_WINDOW (window),
+						       GTK_DIALOG_MODAL,
+						       GTK_STOCK_DIALOG_QUESTION,
+						       (renaming_dir ? _("Could not rename the folder") : _("Could not rename the file")),
+						       reason,
+						       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
+						       NULL);
+			r = gtk_dialog_run (GTK_DIALOG (dlg));
+			gtk_widget_destroy (dlg);
+			g_free (reason);
+			g_free (new_name);
+			goto retry__rename_selection;
+		}
+
+		rename_selection (window, path_to_rename, old_name, new_name, parent_dir, renaming_dir);
+
+		g_free (current_dir);
 		g_free (new_name);
-
-		goto retry__rename_selection;
 	}
 
-	if (has_dir)
-		current_dir = g_strdup (fr_window_get_current_location (window));
-	else {
-		FileData *fd = (FileData*) selection_fd->data;
-		current_dir = g_strdup (fd->path);
-	}
-
-	if (name_is_present (window, current_dir, new_name, &reason)) {
-		GtkWidget *dlg;
-		int        r;
-
-		dlg = _gtk_message_dialog_new (GTK_WINDOW (window),
-					       GTK_DIALOG_MODAL,
-					       GTK_STOCK_DIALOG_QUESTION,
-					       (has_dir? _("Could not rename the folder"): _("Could not rename the file")),
-					       reason,
-					       GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
-					       NULL);
-		r = gtk_dialog_run (GTK_DIALOG (dlg));
-		gtk_widget_destroy (dlg);
-		g_free (reason);
-		g_free (new_name);
-		goto retry__rename_selection;
-	}
-
-	rename_selection (window, selection, old_name, new_name, has_dir, current_dir);
-
-	g_free (current_dir);
-	g_free (new_name);
-
-free_data__rename_selection:
 	g_free (old_name);
-	path_list_free (selection);
-	g_list_free (selection_fd);
+	g_free (parent_dir);
+	g_free (path_to_rename);
 }
 
 
@@ -7627,7 +7647,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 
 		rdata = action->data;
 		rename_selection (window,
-				  rdata->file_list,
+				  rdata->path_to_rename,
 				  rdata->old_name,
 				  rdata->new_name,
 				  rdata->is_dir,
