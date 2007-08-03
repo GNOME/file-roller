@@ -169,6 +169,7 @@ static char *mime_types[] = {
 	"application/x-cd-image",
 	"application/x-7z-compressed",
 	"application/x-gzpostscript",
+	"application/x-ms-dos-executable",
 	NULL
 };
 
