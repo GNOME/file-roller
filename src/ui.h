@@ -25,7 +25,6 @@
 
 
 #include <config.h>
-#include <gnome.h>
 #include "actions.h"
 #include "fr-stock.h"
 

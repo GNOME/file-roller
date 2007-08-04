@@ -21,7 +21,9 @@
  */
 
 #include <glib.h>
-#include <gnome.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
 
 #include "file-utils.h"
 #include "fr-command.h"
