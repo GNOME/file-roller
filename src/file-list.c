@@ -731,7 +731,8 @@ get_dir_list_from_file_list (VisitDirData *vdd,
 			if (g_hash_table_lookup (vdd->dirnames, dir) == NULL) {
 				g_hash_table_insert (vdd->dirnames, dir, GINT_TO_POINTER (1));
 				dir_list = g_list_prepend (dir_list, dir);
-			} else
+			} 
+			else
 				g_free (dir);
 
 			tmp = dir_name;
@@ -788,11 +789,12 @@ vd_path_list_done_cb (PathListData *pld,
 				g_free (path);
 
 				scan = next;
-			} else
+			} 
+			else
 				scan = scan->next;
 		}
 
-	if (vdd->include_directories)
+	if (vdd->include_directories) 
 		vdd->files = g_list_concat (get_dir_list_from_file_list (vdd, pld->files, FALSE), vdd->files);
 	vdd->files = g_list_concat (pld->files, vdd->files);
 	pld->files = NULL;
@@ -829,7 +831,8 @@ vd_path_list_done_cb (PathListData *pld,
 		if (! vdd->same_fs || same_fs (vdd->directory, sub_dir)) {
 			_visit_dir_async (sub_dir, vdd);
 			break;
-		} else {
+		} 
+		else {
 			g_free (sub_dir);
 			sub_dir = NULL;
 		}
@@ -839,8 +842,8 @@ vd_path_list_done_cb (PathListData *pld,
 		if (vdd->done_func)
 			(* vdd->done_func) (vdd->files, vdd->done_data);
 		visit_dir_data_free (vdd);
-
-	} else
+	} 
+	else
 		g_free (sub_dir);
 }
 
@@ -850,6 +853,7 @@ _visit_dir_async (const char   *dir,
 		  VisitDirData *vdd)
 {
 	PathListHandle *handle;
+	
 	handle = path_list_async_new (dir,
 				      vdd->follow_links,
 				      vd_path_list_done_cb,
@@ -904,6 +908,17 @@ visit_dir_async (VisitDirHandle   *handle,
 	if (handle == NULL)
 		handle = g_new0 (VisitDirHandle, 1);
 	handle->vdd_data = vdd;
+
+	if (include_directories) {
+		char *dir;
+		
+		/* Always include the base directory, this way empty base 
+		 * directories are added to the archive as well.  */
+		
+		dir = g_strdup (vdd->base_dir);
+		vdd->files = g_list_prepend (vdd->files, dir);
+		g_hash_table_insert (vdd->dirnames, dir, GINT_TO_POINTER (1));
+	}
 
 	_visit_dir_async (vdd->directory, vdd);
 

@@ -1,5 +1,13 @@
 2007-08-04  Paolo Bacchilega  <paobac@cvs.gnome.org>
 
+	* src/file-list.c (visit_dir_async): 
+	
+	Always include the base directory, this way empty base directories 
+	are added to the archive as well.
+	Fixes bug #463235 – Can't add an empty directory with --add option.
+	
+2007-08-04  Paolo Bacchilega  <paobac@cvs.gnome.org>	
+	
 	* src/ui.h: 
 	* src/fr-command-jar.c: 
 	* src/actions.c: 

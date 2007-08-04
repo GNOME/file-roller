@@ -472,6 +472,7 @@ fr_command_zip_init (FrCommand *comm)
 
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
+	comm->propAddCanStoreFolders       = TRUE;
 	comm->propExtractCanAvoidOverwrite = TRUE;
 	comm->propExtractCanSkipOlder      = TRUE;
 	comm->propExtractCanJunkPaths      = TRUE;
