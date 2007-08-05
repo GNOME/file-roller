@@ -1281,9 +1281,9 @@ fr_archive_load__error (FrArchive  *archive,
 
 
 static void
-local_local_archive (FrArchive  *archive,
-		     const char *uri,
-		     const char *password)
+load_local_archive (FrArchive  *archive,
+		    const char *uri,
+		    const char *password)
 {
 	FrCommand  *tmp_command;
 	const char *mime_type = NULL;
@@ -1360,7 +1360,7 @@ copy_remote_file__step2 (FrArchive      *archive,
 	if (result != GNOME_VFS_OK) 
 		fr_archive_load__error (archive, gnome_vfs_result_to_string (result));
 	else
-		local_local_archive (archive, uri, password);
+		load_local_archive (archive, uri, password);
 }
 
 
@@ -1511,7 +1511,7 @@ fr_archive_load_local (FrArchive  *archive,
 		       FR_ACTION_LOADING_ARCHIVE);
 
 	fr_archive_set_uri (archive, uri);
-	local_local_archive (archive, uri, password);
+	load_local_archive (archive, uri, password);
 	
 	return TRUE;	
 }
