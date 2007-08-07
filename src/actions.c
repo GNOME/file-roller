@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <libgnome/gnome-help.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include "actions.h"
@@ -904,26 +903,8 @@ activate_action_manual (GtkAction *action,
 			gpointer   data)
 {
 	FrWindow *window = data;
-	GError   *err;
 
-	err = NULL;
-	gnome_help_display ("file-roller", NULL, &err);
-
-	if (err != NULL) {
-		GtkWidget *dialog;
-
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (window),
-						GTK_DIALOG_DESTROY_WITH_PARENT,
-						NULL,
-						_("Could not display help"),
-						err->message);
-		g_signal_connect (G_OBJECT (dialog), "response",
-				  G_CALLBACK (gtk_widget_destroy),
-				  NULL);
-		gtk_widget_show (dialog);
-
-		g_error_free (err);
-	}
+	show_help_dialog (GTK_WINDOW (window) , NULL);
 }
 
 

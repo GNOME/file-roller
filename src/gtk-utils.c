@@ -794,12 +794,42 @@ get_folder_pixbuf_size_for_list (GtkWidget *widget)
 
 void
 show_help_dialog (GtkWindow  *parent,
-		  const char *section)
+		  const char *link_id)
 {
-	GError *err;
+	GError *err = NULL;
+	char *command;
+	const char *lang;
+	char *uri = NULL;
+	int i;
+	GdkScreen *gscreen;
 
-	err = NULL;
-	gnome_help_display ("file-roller", section, &err);
+	const char * const * langs = g_get_language_names ();
+
+	for (i = 0; langs[i]; i++) {
+		lang = langs[i];
+		if (strchr (lang, '.')) {
+			continue;
+		}
+
+		uri = g_build_filename(FR_DATADIR,
+				       "/gnome/help/file-roller/",
+					lang,
+				       "/file-roller.xml",
+					NULL);
+					
+		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
+                    break;
+		}
+	}
+	
+	if (link_id) {
+		command = g_strconcat ("gnome-open ghelp://", uri, "?", link_id, NULL);
+	} else {
+		command = g_strconcat ("gnome-open ghelp://", uri,  NULL);
+	}
+
+	gscreen = gdk_screen_get_default();
+	gdk_spawn_command_line_on_screen (gscreen, command, &err);
 
 	if (err != NULL) {
 		GtkWidget *dialog;

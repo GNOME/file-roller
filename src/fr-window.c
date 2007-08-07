@@ -26,7 +26,6 @@
 #include <glib/gi18n.h>
 #include <gdk/gdkcursor.h>
 #include <gdk/gdkkeysyms.h>
-#include <libgnomeui/gnome-app.h>
 #include <libgnomeui/gnome-icon-lookup.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
