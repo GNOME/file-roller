@@ -67,6 +67,8 @@
 
 #define PROGRESS_DIALOG_WIDTH 300
 #define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
+#define PROGRESS_BAR_HEIGHT 12
+
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500 /* FIXME */
 #define DEFAULT_NAME_COLUMN_WIDTH 250
 #define OTHER_COLUMNS_WIDTH 100
@@ -5071,7 +5073,15 @@ fr_window_construct (FrWindow *window)
 
 	window->priv->progress_bar = gtk_progress_bar_new ();
 	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->priv->progress_bar), ACTIVITY_PULSE_STEP);
-	gtk_box_pack_end (GTK_BOX (window->priv->statusbar), window->priv->progress_bar, FALSE, FALSE, 0);
+	gtk_widget_set_size_request (window->priv->progress_bar, -1, PROGRESS_BAR_HEIGHT);
+        {
+                GtkWidget *vbox;
+                
+                vbox = gtk_vbox_new (FALSE, 0);
+                gtk_box_pack_start (GTK_BOX (window->priv->statusbar), vbox, FALSE, FALSE, 0);
+                gtk_box_pack_start (GTK_BOX (vbox), window->priv->progress_bar, TRUE, FALSE, 0);
+                gtk_widget_show (vbox);
+        }
 	gnome_app_set_statusbar (GNOME_APP (window), window->priv->statusbar);
 	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->priv->statusbar), TRUE);
 
