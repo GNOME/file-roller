@@ -38,7 +38,7 @@
 #include "gtk-utils.h"
 
 
-#define GLADE_FILE "file-roller.glade"
+#define GLADE_FILE "add-options.glade"
 
 
 typedef struct {

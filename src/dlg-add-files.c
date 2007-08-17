@@ -33,9 +33,6 @@
 #include "gtk-utils.h"
 
 
-#define GLADE_FILE "file-roller.glade"
-
-
 typedef struct {
 	FrWindow  *window;
 	GtkWidget *dialog;

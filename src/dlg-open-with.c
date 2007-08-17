@@ -35,7 +35,7 @@
 #include "fr-window.h"
 
 
-#define GLADE_FILE "file-roller.glade"
+#define GLADE_FILE "open-with.glade"
 #define TEMP_DOCS  "temp_docs"
 
 enum { ICON_COLUMN, TEXT_COLUMN, DATA_COLUMN, N_COLUMNS };

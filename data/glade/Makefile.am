@@ -1,4 +1,11 @@
-glade_DATA = file-roller.glade ask-password.glade
 gladedir = $(datadir)/file-roller/glade
+glade_DATA = 			\
+	add-options.glade	\
+	batch-add-files.glade	\
+	batch-password.glade	\
+	delete.glade		\
+	open-with.glade		\
+	password.glade		\
+	properties.glade
 
 EXTRA_DIST = $(glade_DATA)

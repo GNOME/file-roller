@@ -31,7 +31,7 @@
 #include "gtk-utils.h"
 #include "fr-window.h"
 
-#define PROP_GLADE_FILE "file-roller.glade"
+#define GLADE_FILE "properties.glade"
 
 
 typedef struct {
@@ -93,9 +93,9 @@ dlg_prop (FrWindow *window)
 
 	data = g_new (DialogData, 1);
 
-	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
+	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-		g_warning ("Could not find " PROP_GLADE_FILE "\n");
+		g_warning ("Could not find " GLADE_FILE "\n");
 		return;
 	}
 

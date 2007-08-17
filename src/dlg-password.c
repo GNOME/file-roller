@@ -29,7 +29,7 @@
 #include "fr-window.h"
 
 
-#define PROP_GLADE_FILE "file-roller.glade"
+#define GLADE_FILE "password.glade"
 
 
 typedef struct {
@@ -80,9 +80,9 @@ dlg_password (GtkWidget *widget,
 
 	data = g_new0 (DialogData, 1);
 	data->window = window;
-	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
+	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-		g_warning ("Could not find " PROP_GLADE_FILE "\n");
+		g_warning ("Could not find " GLADE_FILE "\n");
 		return;
 	}
 

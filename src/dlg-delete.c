@@ -27,7 +27,7 @@
 #include "gtk-utils.h"
 #include "file-utils.h"
 
-#define EXTRACT_GLADE_FILE "file-roller.glade"
+#define GLADE_FILE "delete.glade"
 
 
 typedef struct {
@@ -118,9 +118,9 @@ dlg_delete__common (FrWindow *window,
 	data->window = window;
 	data->selected_files = selected_files;
 	
-	data->gui = glade_xml_new (GLADEDIR "/" EXTRACT_GLADE_FILE , NULL, NULL);
+	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
-		g_warning ("Could not find " EXTRACT_GLADE_FILE "\n");
+		g_warning ("Could not find " GLADE_FILE "\n");
 		return;
 	}
 

@@ -44,7 +44,7 @@
 #include "main.h"
 
 
-#define GLADE_FILE "file-roller.glade"
+#define GLADE_FILE "batch-add-files.glade"
 #define ARCHIVE_ICON_SIZE (48)
 #define DEFAULT_EXTENSION ".tar.gz"
 #define BAD_CHARS "/\\*"

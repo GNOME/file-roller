@@ -948,11 +948,6 @@ move_here (FrArchive *archive)
 	if (content_uri == NULL)
 		return;	
 
-	if (! path_is_dir (content_uri)) {
-		g_free (content_uri);
-		return;
-	}
-
 	parent = remove_level_from_path (content_uri);
 		
 	if (uricmp (parent, archive->priv->extraction_destination) == 0) {
