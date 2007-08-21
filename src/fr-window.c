@@ -5875,18 +5875,13 @@ fr_window_get_current_location (FrWindow *window)
 void
 fr_window_go_up_one_level (FrWindow *window)
 {
-	const char *current_dir;
-	char       *parent_dir;
+	char *parent_dir;
 
 	g_return_if_fail (window != NULL);
 
-	current_dir = fr_window_get_current_location (window);
-	parent_dir = get_parent_dir (current_dir);
-	fr_window_history_add (window, parent_dir);
+	parent_dir = get_parent_dir (fr_window_get_current_location (window));
+	fr_window_go_to_location (window, parent_dir, FALSE);
 	g_free (parent_dir);
-
-	fr_window_update_file_list (window, TRUE);
-	fr_window_update_current_location (window);
 }
 
 
@@ -5903,8 +5898,7 @@ fr_window_go_back (FrWindow *window)
 		return;
 	window->priv->history_current = window->priv->history_current->next;
 
-	fr_window_update_file_list (window, TRUE);
-	fr_window_update_current_location (window);
+	fr_window_go_to_location (window, window->priv->history_current->data, FALSE);
 }
 
 
@@ -5921,8 +5915,7 @@ fr_window_go_forward (FrWindow *window)
 		return;
 	window->priv->history_current = window->priv->history_current->prev;
 
-	fr_window_update_file_list (window, TRUE);
-	fr_window_update_current_location (window);
+	fr_window_go_to_location (window, window->priv->history_current->data, FALSE);
 }
 
 
