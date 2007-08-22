@@ -776,6 +776,17 @@ fr_command_tar_escape (FrCommand     *comm,
 
 
 static void
+fr_command_tar_handle_error (FrCommand   *comm,
+			     FRProcError *error)
+{
+	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
+		if (error->status <= 1)
+			error->type = FR_PROC_ERROR_NONE;
+	}
+}
+
+
+static void
 fr_command_tar_class_init (FrCommandTarClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -790,6 +801,7 @@ fr_command_tar_class_init (FrCommandTarClass *class)
 	afc->add          = fr_command_tar_add;
 	afc->delete       = fr_command_tar_delete;
 	afc->extract      = fr_command_tar_extract;
+	afc->handle_error = fr_command_tar_handle_error;
 
 	afc->recompress   = fr_command_tar_recompress;
 	afc->uncompress   = fr_command_tar_uncompress;

@@ -1,5 +1,8 @@
 2007-08-22  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-command-tar.c (fr_command_tar_handle_error): ignore non-fatal 
+	errors for the tar command (#469221).
+	
 	* src/fr-window.c (fr_window_current_folder_activated): do crash when
 	opening from the sidebar.
 	* src/file-data.c (file_data_free): check whether fdata is NULL.
