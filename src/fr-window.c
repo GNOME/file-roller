@@ -2918,27 +2918,60 @@ fr_window_get_selected_item_from_file_list (FrWindow *window)
 }
 
 
+static char *
+fr_window_get_selected_folder_in_tree_view (FrWindow *window)
+{
+	GtkTreeSelection *tree_selection;
+	GList            *selections;
+	char             *path = NULL;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+	if (tree_selection == NULL)
+		return NULL;
+		
+	selections = NULL;
+	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
+
+	if (selections != NULL) {
+		path = selections->data;
+		g_list_free (selections);
+	}
+
+	return path;
+}
+
+
 void
 fr_window_current_folder_activated (FrWindow *window,
 				   gboolean   from_sidebar)
 {
-	FileData *fdata;
-	char     *new_dir;
+	char *dir_path;
 
-	fdata = fr_window_get_selected_item_from_file_list (window);
-	if ((fdata == NULL) || ! file_data_is_dir (fdata)) {
+	if (! from_sidebar) {
+		FileData *fdata;
+		char     *dir_name;
+		
+		fdata = fr_window_get_selected_item_from_file_list (window);
+		if ((fdata == NULL) || ! file_data_is_dir (fdata)) {
+			file_data_free (fdata);
+			return;
+		}
+		dir_name = g_strdup (fdata->list_name);
+		dir_path = g_strconcat (fr_window_get_current_location (window),
+				        dir_name,
+				        "/",
+				        NULL);
+		g_free (dir_name);
 		file_data_free (fdata);
-		return;
 	}
-
-	new_dir = g_strconcat (fr_window_get_current_location (window),
-			       fdata->list_name,
-			       "/",
-			       NULL);
-	fr_window_go_to_location (window, new_dir, FALSE);
+	else 
+		dir_path = fr_window_get_selected_folder_in_tree_view (window);
 	
-	g_free (new_dir);
-	file_data_free (fdata);
+	fr_window_go_to_location (window, dir_path, FALSE);
+	
+	g_free (dir_path);
 }
 
 
@@ -6631,31 +6664,6 @@ name_is_present (FrWindow    *window,
 	g_free (new_filename);
 
 	return retval;
-}
-
-
-static char *
-fr_window_get_selected_folder_in_tree_view (FrWindow *window)
-{
-	GtkTreeSelection *tree_selection;
-	GList            *selections;
-	char             *path = NULL;
-
-	g_return_val_if_fail (window != NULL, NULL);
-
-	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
-	if (tree_selection == NULL)
-		return NULL;
-		
-	selections = NULL;
-	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
-
-	if (selections != NULL) {
-		path = selections->data;
-		g_list_free (selections);
-	}
-
-	return path;
 }
 
 

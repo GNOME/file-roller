@@ -64,6 +64,8 @@ file_data_release_data (void)
 void
 file_data_free (FileData *fdata)
 {
+	if (fdata == NULL)
+		return;
 	if (fdata->free_original_path)
 		g_free (fdata->original_path);
 	g_free (fdata->full_path);
