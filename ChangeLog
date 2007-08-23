@@ -1,5 +1,16 @@
 2007-08-23  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c: fixed fr_window_fake_load when the action type
+	is FR_BATCH_ACTION_EXTRACT_HERE or FR_BATCH_ACTION_EXTRACT_INTERACT.
+	
+	Fixed bug #469221 – extract a package on an NTFS partition doesn't 
+	work.
+	
+	* src/fr-command-iso.c: escape the temp directory because 
+	ensure_dir_exists takes an uri as input.
+	
+2007-08-23  Paolo Bacchilega  <paobac@svn.gnome.org>	
+	
 	* src/fr-archive.c (convert_to_local_file_list): do not add the file 
 	to the list if it's NULL.
 	* src/file-utils.c (remove_host_from_uri): do not return NULL if the

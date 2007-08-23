@@ -4333,7 +4333,9 @@ fr_window_fake_load (FrArchive *archive,
 			add_after_opening = TRUE;
 			break;
 		}
-		if (action->type == FR_BATCH_ACTION_EXTRACT) {
+		if ((action->type == FR_BATCH_ACTION_EXTRACT) 
+		    || (action->type == FR_BATCH_ACTION_EXTRACT_HERE)
+		    || (action->type == FR_BATCH_ACTION_EXTRACT_INTERACT)) {
 			extract_after_opening = TRUE;
 			break;
 		}
