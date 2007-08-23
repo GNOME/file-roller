@@ -1281,15 +1281,21 @@ uri_scheme_is_file (const char *uri)
 const char *
 remove_host_from_uri (const char *uri)
 {
-	const char *idx;
+        const char *idx, *sep;
 
-	idx = strstr (uri, "://");
-	if (idx == NULL)
-		return uri;
-	idx = strstr (idx + 3, "/");
-	if (idx == NULL)
-		return NULL;
-	return idx;
+        if (uri == NULL)
+                return NULL;
+
+        idx = strstr (uri, "://");
+        if (idx == NULL)
+                return uri;
+        idx += 3;
+        if (*idx == '\0')
+                return "/";
+        sep = strstr (idx, "/");
+        if (sep == NULL)
+                return idx;
+        return sep;
 }
 
 

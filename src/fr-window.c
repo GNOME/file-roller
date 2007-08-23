@@ -6473,7 +6473,8 @@ rename_selection (FrWindow   *window,
 	FrArchive  *archive = window->archive;
 	GList      *scan, *new_file_list = NULL;
 	RenameData *rdata;
-
+	char       *new_name_uri;
+	
 	rdata = rename_data_new (path_to_rename,
 				 old_name,
 				 new_name,
@@ -6533,6 +6534,8 @@ rename_selection (FrWindow   *window,
 		g_free (e_new_path);
 	}
 
+	new_name_uri = gnome_vfs_escape_string (rdata->new_name);
+
 	for (scan = file_list; scan; scan = scan->next) {
 		const char *current_dir_relative = rdata->current_dir + 1;
 		const char *filename = (char*) scan->data;
@@ -6560,14 +6563,15 @@ rename_selection (FrWindow   *window,
 			g_free (e_new_path);
 		}
 
-		new_file_list = g_list_prepend (new_file_list, g_build_filename (current_dir_relative, rdata->new_name, common, NULL));
+		new_file_list = g_list_prepend (new_file_list, g_build_filename (current_dir_relative, new_name_uri, common, NULL));
 
 		g_free (old_path);
 		g_free (common);
 		g_free (new_path);
 	}
-
 	new_file_list = g_list_reverse (new_file_list);
+	
+	g_free (new_name_uri);
 
 	fr_archive_add (archive,
 			new_file_list,

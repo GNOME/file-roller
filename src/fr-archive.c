@@ -1705,8 +1705,12 @@ convert_to_local_file_list (GList *file_list)
 	GList *scan;
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = scan->data;
-		local_file_list = g_list_prepend (local_file_list, get_local_path_from_uri (filename));
+		char *uri = scan->data;
+		char *local_filename;
+		
+		local_filename = get_local_path_from_uri (uri);
+		if (local_filename != NULL)
+			local_file_list = g_list_prepend (local_file_list, local_filename);
 	}
 
 	return local_file_list;

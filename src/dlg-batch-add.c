@@ -115,11 +115,11 @@ add_clicked_cb (GtkWidget  *widget,
 
 	/* Collect data */
 
-	archive_name = g_filename_from_utf8 (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)), -1, NULL, NULL, NULL);
+	archive_name = gnome_vfs_escape_string (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)));
 
 	/* Check whether the user entered a valid archive name. */
 
-	if (*archive_name == '\0') {
+	if ((archive_name == NULL) || (*archive_name == '\0')) {
 		GtkWidget *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -242,8 +242,7 @@ add_clicked_cb (GtkWidget  *widget,
 	/**/
 
 	archive_ext = get_ext (data);
-	tmp = gnome_vfs_escape_string (archive_name);
-	g_free (archive_name);
+	tmp = archive_name;
 	archive_name = g_strconcat (tmp, archive_ext, NULL);
 	g_free (tmp);
 	archive_file = g_strconcat (archive_dir, "/", archive_name, NULL);

@@ -676,23 +676,31 @@ fr_command_tar_uncompress (FrCommand *comm)
 {
 	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	char         *tmp_name;
-
+	gboolean      archive_exists;
+	
 	if (c_tar->uncomp_filename != NULL) {
 		g_free (c_tar->uncomp_filename);
 		c_tar->uncomp_filename = NULL;
 	}
 
+	{
+		char *uri = get_uri_from_local_path (comm->filename);
+		archive_exists = path_is_file (uri);
+		g_free (uri);
+	}
+
 	c_tar->name_modified = c_tar->compress_prog != FR_COMPRESS_PROGRAM_NONE;
 	if (c_tar->name_modified) {
 		tmp_name = get_temp_name (c_tar, comm->filename);
-		if (path_is_file (comm->filename)) {
+		if (archive_exists) {
 			fr_process_begin_command (comm->process, "mv");
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, comm->e_filename);
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
 		}
-	} else
+	} 
+	else
 		tmp_name = g_strdup (comm->e_filename);
 
 	switch (c_tar->compress_prog) {
@@ -700,7 +708,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		break;
 
 	case FR_COMPRESS_PROGRAM_GZIP:
-		if (path_is_file (comm->filename)) {
+		if (archive_exists) {
 			fr_process_begin_command (comm->process, "gzip");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
@@ -711,7 +719,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		break;
 
 	case FR_COMPRESS_PROGRAM_BZIP:
-		if (path_is_file (comm->filename)) {
+		if (archive_exists) {
 			fr_process_begin_command (comm->process, "bzip");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
@@ -722,7 +730,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		break;
 
 	case FR_COMPRESS_PROGRAM_BZIP2:
-		if (path_is_file (comm->filename)) {
+		if (archive_exists) {
 			fr_process_begin_command (comm->process, "bzip2");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
@@ -733,7 +741,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		break;
 
 	case FR_COMPRESS_PROGRAM_COMPRESS:
-		if (path_is_file (comm->filename)) {
+		if (archive_exists) {
 			fr_process_begin_command (comm->process, "uncompress");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
@@ -743,7 +751,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		break;
 
 	case FR_COMPRESS_PROGRAM_LZOP:
-		if (path_is_file (comm->filename)) {
+		if (archive_exists) {
 			fr_process_begin_command (comm->process, "lzop");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-dfU");
