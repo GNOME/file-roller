@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-13 03:52+0100\n"
+"POT-Creation-Date: 2007-07-11 10:07+0100\n"
 "PO-Revision-Date: 2007-06-20 12:37+0800\n"
 "Last-Translator: Funda Wang <fundawang@gmail.com>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -45,12 +45,12 @@ msgstr "删除"
 msgid "Load Options"
 msgstr "装入选项"
 
-#: ../data/glade/file-roller.glade.h:7 ../src/fr-window.c:3770
+#: ../data/glade/file-roller.glade.h:7 ../src/fr-window.c:3828
 msgid "Location"
 msgstr "位置"
 
 #. current location
-#: ../data/glade/file-roller.glade.h:8 ../src/fr-window.c:4713
+#: ../data/glade/file-roller.glade.h:8 ../src/fr-window.c:4807
 msgid "Location:"
 msgstr "位置："
 
@@ -100,12 +100,12 @@ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
 msgstr "<span weight=\"bold\" size=\"larger\">需要密码</span>"
 
 #. Create the application.
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1760
-#: ../src/fr-window.c:4418 ../src/main.c:216
+#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1770
+#: ../src/fr-window.c:4508 ../src/main.c:214
 msgid "Archive Manager"
 msgstr "归档管理器"
 
-#: ../data/file-roller.desktop.in.in.h:2 ../src/main.c:207
+#: ../data/file-roller.desktop.in.in.h:2
 msgid "Create and modify an archive"
 msgstr "创建并修改归档文件"
 
@@ -136,7 +136,7 @@ msgstr "创建包含选中对象的归档文件"
 #: ../src/actions.c:146 ../src/actions.c:164 ../src/actions.c:202
 #: ../src/dlg-batch-add.c:128 ../src/dlg-batch-add.c:143
 #: ../src/dlg-batch-add.c:167 ../src/dlg-batch-add.c:211
-#: ../src/dlg-batch-add.c:258 ../src/fr-window.c:2480
+#: ../src/dlg-batch-add.c:258 ../src/fr-window.c:2490
 msgid "Could not create the archive"
 msgstr "无法创建归档文件"
 
@@ -148,8 +148,8 @@ msgstr "您必须指定归档文件名称。"
 msgid "You don't have permission to create an archive in this folder"
 msgstr "您没有在此文件夹中创建归档文件的权限"
 
-#: ../src/actions.c:203 ../src/fr-archive.c:1304 ../src/fr-window.c:5011
-#: ../src/fr-window.c:5176
+#: ../src/actions.c:203 ../src/fr-archive.c:1304 ../src/fr-window.c:5112
+#: ../src/fr-window.c:5277
 msgid "Archive type not supported."
 msgstr "不支持的归档文件类型。"
 
@@ -170,7 +170,7 @@ msgid "New"
 msgstr "新建"
 
 #: ../src/actions.c:355 ../src/actions.c:481 ../src/actions.c:578
-#: ../src/fr-window.c:4360
+#: ../src/fr-window.c:4449
 msgid "All archives"
 msgstr "全部归档文件"
 
@@ -186,7 +186,7 @@ msgstr "归档文件类型："
 msgid "Automatic"
 msgstr "自动"
 
-#: ../src/actions.c:470 ../src/fr-window.c:4869
+#: ../src/actions.c:470 ../src/fr-window.c:4969
 msgid "Open"
 msgstr "打开"
 
@@ -194,15 +194,15 @@ msgstr "打开"
 msgid "Save"
 msgstr "保存"
 
-#: ../src/actions.c:842 ../src/fr-window.c:6074
+#: ../src/actions.c:899 ../src/fr-window.c:6180
 msgid "Last Output"
 msgstr "上次的输出"
 
-#: ../src/actions.c:862 ../src/gtk-utils.c:810
+#: ../src/actions.c:919 ../src/gtk-utils.c:810
 msgid "Could not display help"
 msgstr "无法显示帮助"
 
-#: ../src/actions.c:888
+#: ../src/actions.c:945
 msgid ""
 "File Roller is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -210,7 +210,7 @@ msgid ""
 "any later version."
 msgstr ""
 
-#: ../src/actions.c:892
+#: ../src/actions.c:949
 msgid ""
 "File Roller is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -218,22 +218,22 @@ msgid ""
 "more details."
 msgstr ""
 
-#: ../src/actions.c:896
+#: ../src/actions.c:953
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "File Roller; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
 msgstr ""
 
-#: ../src/actions.c:906
+#: ../src/actions.c:963
 msgid "Copyright © 2001-2007 Free Software Foundation, Inc."
 msgstr "版权 © 2001-2007 自由软件基金会"
 
-#: ../src/actions.c:907
+#: ../src/actions.c:964
 msgid "An archive manager for GNOME."
 msgstr "GNOME 的归档管理器。"
 
-#: ../src/actions.c:910
+#: ../src/actions.c:967
 msgid "translator-credits"
 msgstr "GNOME 简体中文翻译 <i18n-translation@lists.linux.net.cn>"
 
@@ -301,7 +301,7 @@ msgstr "选项名称："
 msgid "Enter the password for the archive '%s'."
 msgstr "输入归档文件“%s”的密码。"
 
-#: ../src/dlg-batch-add.c:144 ../src/fr-window.c:6357
+#: ../src/dlg-batch-add.c:144 ../src/fr-window.c:6463
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -312,8 +312,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:147 ../src/fr-window.c:6349 ../src/fr-window.c:6353
-#: ../src/fr-window.c:6357 ../src/fr-window.c:6414 ../src/fr-window.c:6416
+#: ../src/dlg-batch-add.c:147 ../src/fr-window.c:6455 ../src/fr-window.c:6459
+#: ../src/fr-window.c:6463 ../src/fr-window.c:6519 ../src/fr-window.c:6521
 msgid "Please use a different name."
 msgstr "请使用其它不同的文件名。"
 
@@ -323,7 +323,7 @@ msgid ""
 "folder."
 msgstr "您没有在目标文件夹中创建归档文件的权限。"
 
-#: ../src/dlg-batch-add.c:184 ../src/dlg-extract.c:110 ../src/fr-window.c:5526
+#: ../src/dlg-batch-add.c:184 ../src/dlg-extract.c:110 ../src/fr-window.c:5627
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -334,11 +334,11 @@ msgstr ""
 "\n"
 "您是否想要创建？"
 
-#: ../src/dlg-batch-add.c:193 ../src/dlg-extract.c:119 ../src/fr-window.c:5535
+#: ../src/dlg-batch-add.c:193 ../src/dlg-extract.c:119 ../src/fr-window.c:5636
 msgid "Create _Folder"
 msgstr "创建文件夹(_F)"
 
-#: ../src/dlg-batch-add.c:212 ../src/dlg-extract.c:136 ../src/fr-window.c:5555
+#: ../src/dlg-batch-add.c:212 ../src/dlg-extract.c:136 ../src/fr-window.c:5656
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "无法创建目的文件夹：%s。"
@@ -356,11 +356,11 @@ msgid "_Overwrite"
 msgstr "覆盖(_O)"
 
 #: ../src/dlg-extract.c:141 ../src/dlg-extract.c:158 ../src/dlg-extract.c:184
-#: ../src/fr-window.c:3350 ../src/fr-window.c:5554 ../src/fr-window.c:5572
+#: ../src/fr-window.c:3410 ../src/fr-window.c:5655 ../src/fr-window.c:5673
 msgid "Extraction not performed"
 msgstr "解压缩操作未执行"
 
-#: ../src/dlg-extract.c:185 ../src/fr-window.c:3503
+#: ../src/dlg-extract.c:185 ../src/fr-window.c:3563
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
@@ -390,7 +390,7 @@ msgstr "不解压缩旧文件(_X)"
 msgid "_Open destination folder after extraction"
 msgstr "解压缩后打开目的文件夹(_O)"
 
-#: ../src/dlg-extract.c:469 ../src/ui.h:90
+#: ../src/dlg-extract.c:469 ../src/ui.h:125
 msgid "Extract"
 msgstr "解压缩"
 
@@ -419,11 +419,11 @@ msgstr "归档文件大小："
 msgid "Content size:"
 msgstr "目录大小："
 
-#: ../src/dlg-prop.c:179
+#: ../src/dlg-prop.c:180
 msgid "Compression ratio:"
 msgstr "压缩率："
 
-#: ../src/dlg-prop.c:194
+#: ../src/dlg-prop.c:195
 msgid "Number of files:"
 msgstr "文件数："
 
@@ -443,27 +443,27 @@ msgstr "您没有正确的权限。"
 msgid "You can't add an archive to itself."
 msgstr "您无法将归档文件添加到其自身。"
 
-#: ../src/fr-command-tar.c:289
+#: ../src/fr-command-tar.c:291
 msgid "Adding file: "
 msgstr "添加文件："
 
-#: ../src/fr-command-tar.c:339
+#: ../src/fr-command-tar.c:341
 msgid "Removing file: "
 msgstr "删除文件："
 
-#: ../src/fr-command-tar.c:348 ../src/fr-window.c:2033
+#: ../src/fr-command-tar.c:350 ../src/fr-window.c:2043
 msgid "Deleting files from archive"
 msgstr "从归档文件中删除文件"
 
-#: ../src/fr-command-tar.c:383
+#: ../src/fr-command-tar.c:385
 msgid "Extracting file: "
 msgstr "归档文件："
 
-#: ../src/fr-command-tar.c:432
+#: ../src/fr-command-tar.c:434
 msgid "Recompressing archive"
 msgstr "重新归档文件"
 
-#: ../src/fr-command-tar.c:566
+#: ../src/fr-command-tar.c:580
 msgid "Decompressing archive"
 msgstr "解压缩文件"
 
@@ -479,198 +479,198 @@ msgstr "解压缩(_E)"
 msgid "_View File"
 msgstr "查看文件(_V)"
 
-#: ../src/fr-window.c:1289
+#: ../src/fr-window.c:1347
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "%d 个对象(%s)"
 
-#: ../src/fr-window.c:1294
+#: ../src/fr-window.c:1352
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "选中了 %d 个对象(%s)"
 
-#: ../src/fr-window.c:1396
+#: ../src/fr-window.c:1420
 msgid "Folder"
 msgstr "文件夹"
 
-#: ../src/fr-window.c:1768
+#: ../src/fr-window.c:1778
 msgid "[read only]"
 msgstr "[只读]"
 
-#: ../src/fr-window.c:2024 ../src/fr-window.c:2054
+#: ../src/fr-window.c:2034 ../src/fr-window.c:2064
 msgid "Creating archive"
 msgstr "创建归档文件"
 
-#: ../src/fr-window.c:2027
+#: ../src/fr-window.c:2037
 msgid "Loading archive"
 msgstr "装入归档文件"
 
-#: ../src/fr-window.c:2030
+#: ../src/fr-window.c:2040
 msgid "Reading archive"
 msgstr "读取归档文件"
 
-#: ../src/fr-window.c:2036
+#: ../src/fr-window.c:2046
 msgid "Testing archive"
 msgstr "测试归档文件"
 
-#: ../src/fr-window.c:2039
+#: ../src/fr-window.c:2049
 msgid "Getting the file list"
 msgstr "获取文件列表"
 
-#: ../src/fr-window.c:2042 ../src/fr-window.c:2051
+#: ../src/fr-window.c:2052 ../src/fr-window.c:2061
 msgid "Copying the file list"
 msgstr "复制文件列表"
 
-#: ../src/fr-window.c:2045
+#: ../src/fr-window.c:2055
 msgid "Adding files to archive"
 msgstr "将文件添加到归档文件"
 
-#: ../src/fr-window.c:2048
+#: ../src/fr-window.c:2058
 msgid "Extracting files from archive"
 msgstr "从归档文件中解压缩文件"
 
-#: ../src/fr-window.c:2057
+#: ../src/fr-window.c:2067
 msgid "Saving archive"
 msgstr "保存归档文件"
 
-#: ../src/fr-window.c:2243
+#: ../src/fr-window.c:2253
 msgid "Archive:"
 msgstr "归档文件："
 
-#: ../src/fr-window.c:2335
+#: ../src/fr-window.c:2345
 msgid "wait please..."
 msgstr "请稍候..."
 
-#: ../src/fr-window.c:2403
+#: ../src/fr-window.c:2413
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "无法显示文件夹“%s”"
 
-#: ../src/fr-window.c:2484
+#: ../src/fr-window.c:2494
 msgid "An error occurred while extracting files."
 msgstr "解压缩文件时发生了错误。"
 
-#: ../src/fr-window.c:2492
+#: ../src/fr-window.c:2502
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "无法打开“%s”"
 
-#: ../src/fr-window.c:2497
+#: ../src/fr-window.c:2507
 msgid "An error occurred while loading the archive."
 msgstr "装入归档文件时发生了错误。"
 
-#: ../src/fr-window.c:2501
+#: ../src/fr-window.c:2511
 msgid "An error occurred while deleting files from the archive."
 msgstr "从归档文件中删除文件时发生了错误。"
 
-#: ../src/fr-window.c:2505
+#: ../src/fr-window.c:2515
 msgid "An error occurred while adding files to the archive."
 msgstr "将文件添加到归档文件时发生了错误。"
 
-#: ../src/fr-window.c:2509
+#: ../src/fr-window.c:2519
 msgid "An error occurred while testing archive."
 msgstr "测试归档文件时发生了错误。"
 
-#: ../src/fr-window.c:2518
+#: ../src/fr-window.c:2528
 msgid "Command not found."
 msgstr "命令未找到。"
 
-#: ../src/fr-window.c:2521
+#: ../src/fr-window.c:2531
 msgid "Command exited abnormally."
 msgstr "命令异常退出。"
 
-#: ../src/fr-window.c:2727
+#: ../src/fr-window.c:2736
 msgid "Test Result"
 msgstr "测试结果。"
 
-#: ../src/fr-window.c:3211 ../src/fr-window.c:6931
+#: ../src/fr-window.c:3271 ../src/fr-window.c:7040
 msgid "Could not perform the operation"
 msgstr "无法执行这个操作"
 
-#: ../src/fr-window.c:3238
+#: ../src/fr-window.c:3298
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "您想要将此文件添加到当前归档文件还是打开为新归档文件？"
 
-#: ../src/fr-window.c:3268
+#: ../src/fr-window.c:3328
 msgid "Do you want to create a new archive with these files?"
 msgstr "您是否想要创建包含这些文件在内的新归档文件？"
 
-#: ../src/fr-window.c:3271
+#: ../src/fr-window.c:3331
 msgid "Create _Archive"
 msgstr "创建归档文件(_A)"
 
-#: ../src/fr-window.c:3506
+#: ../src/fr-window.c:3566
 #, c-format
 msgid "Cannot extract archives in a remote folder \"%s\""
 msgstr "无法将归档文件解压缩到远程文件夹“%s”中"
 
-#: ../src/fr-window.c:3727 ../src/fr-window.c:4760
+#: ../src/fr-window.c:3787 ../src/fr-window.c:4860
 msgid "Folders"
 msgstr "文件夹"
 
-#: ../src/fr-window.c:3767
+#: ../src/fr-window.c:3825
 msgid "Size"
 msgstr "大小"
 
-#: ../src/fr-window.c:3768
+#: ../src/fr-window.c:3826
 msgid "Type"
 msgstr "类型"
 
-#: ../src/fr-window.c:3769
+#: ../src/fr-window.c:3827
 msgid "Date Modified"
 msgstr "修改日期"
 
-#: ../src/fr-window.c:3779
+#: ../src/fr-window.c:3837
 msgid "Name"
 msgstr "名称"
 
-#: ../src/fr-window.c:4670
+#: ../src/fr-window.c:4764
 msgid "Go to the previous visited location"
 msgstr "转到上一次访问的位置"
 
-#: ../src/fr-window.c:4678
+#: ../src/fr-window.c:4772
 msgid "Go to the next visited location"
 msgstr "转到后一次访问的位置"
 
-#: ../src/fr-window.c:4686
+#: ../src/fr-window.c:4780
 msgid "Go up one level"
 msgstr "转到上一层"
 
-#: ../src/fr-window.c:4694
+#: ../src/fr-window.c:4788
 msgid "Go to the home location"
 msgstr "转到起始位置"
 
-#: ../src/fr-window.c:4768
+#: ../src/fr-window.c:4868
 msgid "Close the folders pane"
 msgstr "关闭文件夹面板"
 
-#: ../src/fr-window.c:4866 ../src/fr-window.c:4869 ../src/ui.h:103
-#: ../src/ui.h:107
+#: ../src/fr-window.c:4966 ../src/fr-window.c:4969 ../src/ui.h:138
+#: ../src/ui.h:142
 msgid "Open archive"
 msgstr "打开归档文件"
 
-#: ../src/fr-window.c:4867
+#: ../src/fr-window.c:4967
 msgid "Open a recently used archive"
 msgstr "打开最近使用的归档文件"
 
-#: ../src/fr-window.c:5169
+#: ../src/fr-window.c:5270
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "无法保存归档文件“%s”"
 
-#: ../src/fr-window.c:6349
+#: ../src/fr-window.c:6455
 msgid "The new name is void."
 msgstr "新文件名是空的。"
 
-#: ../src/fr-window.c:6353
+#: ../src/fr-window.c:6459
 msgid "The new name is equal to the old one."
 msgstr "新文件名与旧的相同。"
 
-#: ../src/fr-window.c:6414
+#: ../src/fr-window.c:6519
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -681,7 +681,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:6416
+#: ../src/fr-window.c:6521
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -692,43 +692,43 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:6454
+#: ../src/fr-window.c:6560
 msgid "Rename"
 msgstr "重命名"
 
-#: ../src/fr-window.c:6455
+#: ../src/fr-window.c:6561
 msgid "New folder name"
 msgstr "新文件夹名"
 
-#: ../src/fr-window.c:6455
+#: ../src/fr-window.c:6561
 msgid "New file name"
 msgstr "新文件名"
 
-#: ../src/fr-window.c:6459
+#: ../src/fr-window.c:6565
 msgid "_Rename"
 msgstr "重命名(_R)"
 
-#: ../src/fr-window.c:6475 ../src/fr-window.c:6501
+#: ../src/fr-window.c:6581 ../src/fr-window.c:6607
 msgid "Could not rename the folder"
 msgstr "无法重命名文件夹"
 
-#: ../src/fr-window.c:6475 ../src/fr-window.c:6501
+#: ../src/fr-window.c:6581 ../src/fr-window.c:6607
 msgid "Could not rename the file"
 msgstr "无法重命名文件"
 
-#: ../src/fr-window.c:6845
+#: ../src/fr-window.c:6954
 msgid "Paste Selection"
 msgstr "粘贴选中内容"
 
-#: ../src/fr-window.c:6846
+#: ../src/fr-window.c:6955
 msgid "Destination folder"
 msgstr "目的文件夹"
 
-#: ../src/fr-window.c:7269
+#: ../src/fr-window.c:7378
 msgid "Add files to an archive"
 msgstr "向归档文件中添加文件"
 
-#: ../src/fr-window.c:7312
+#: ../src/fr-window.c:7421
 msgid "Extract archive"
 msgstr "解压缩文件"
 
@@ -851,7 +851,11 @@ msgstr "“--add”和“--extract”命令所使用的默认文件夹"
 msgid "Create destination folder without asking confirmation"
 msgstr "不请求确认就创建目的文件夹"
 
-#: ../src/main.c:223
+#: ../src/main.c:206
+msgid "- Create and modify an archive"
+msgstr "- 创建并修改归档文件"
+
+#: ../src/main.c:221
 msgid "File Roller"
 msgstr "文件打包器"
 
@@ -915,191 +919,190 @@ msgstr "目录"
 msgid "Display the File Roller Manual"
 msgstr "显示文件打包器的手册"
 
-#: ../src/ui.h:71
+#: ../src/ui.h:72 ../src/ui.h:93
 msgid "Copy the selection"
 msgstr "复制选中内容"
 
-#: ../src/ui.h:75
+#: ../src/ui.h:76 ../src/ui.h:97
 msgid "Cut the selection"
 msgstr "剪切选中内容"
 
-#: ../src/ui.h:79
-msgid "Delete the selection from the archive"
-msgstr "从归档文件中删除选中内容"
-
-#: ../src/ui.h:82
-msgid "Dese_lect All"
-msgstr "全部不选(_L)"
-
-#: ../src/ui.h:83
-msgid "Deselect all files"
-msgstr "不选任何文件"
-
-#: ../src/ui.h:86
-msgid "_Extract..."
-msgstr "解压缩(_E)..."
-
-#: ../src/ui.h:87 ../src/ui.h:91
-msgid "Extract files from the archive"
-msgstr "从归档文件中解压缩文件"
-
-#: ../src/ui.h:94
-msgid "_Last Output"
-msgstr "上次输出(_L)"
-
-#: ../src/ui.h:95
-msgid "View the output produced by the last executed command"
-msgstr "查看上次执行的命令所生成的输出"
-
-#: ../src/ui.h:99
-msgid "Create a new archive"
-msgstr "创建新归档文件"
-
-#: ../src/ui.h:110
-msgid "Op_en With..."
-msgstr "打开方式(_E)..."
-
-#: ../src/ui.h:111
-msgid "Open selected files with an application"
-msgstr "用应用程序打开选中文件"
-
-#: ../src/ui.h:114
-msgid "Pass_word..."
-msgstr "密码(_W)..."
-
-#: ../src/ui.h:115
-msgid "Specify a password for this archive"
-msgstr "为此归档文件指定密码"
-
-#: ../src/ui.h:119
+#: ../src/ui.h:80 ../src/ui.h:101
 msgid "Paste the clipboard"
 msgstr "粘贴剪贴板中的内容"
 
-#: ../src/ui.h:123
-msgid "Show archive properties"
-msgstr "显示归档文件属性"
-
-#: ../src/ui.h:127
-msgid "Reload current archive"
-msgstr "重新装入当前归档文件"
-
-#: ../src/ui.h:130
+#: ../src/ui.h:83 ../src/ui.h:104
 msgid "_Rename..."
 msgstr "重命名(_R)..."
 
-#: ../src/ui.h:131
+#: ../src/ui.h:84 ../src/ui.h:105
 msgid "Rename the selection"
 msgstr "重命名选中内容"
 
-#: ../src/ui.h:135
+#: ../src/ui.h:88 ../src/ui.h:109
+msgid "Delete the selection from the archive"
+msgstr "从归档文件中删除选中内容"
+
+#: ../src/ui.h:113
+msgid "Dese_lect All"
+msgstr "全部不选(_L)"
+
+#: ../src/ui.h:114
+msgid "Deselect all files"
+msgstr "不选任何文件"
+
+#: ../src/ui.h:117 ../src/ui.h:121
+msgid "_Extract..."
+msgstr "解压缩(_E)..."
+
+#: ../src/ui.h:118 ../src/ui.h:122 ../src/ui.h:126
+msgid "Extract files from the archive"
+msgstr "从归档文件中解压缩文件"
+
+#: ../src/ui.h:129
+msgid "_Last Output"
+msgstr "上次输出(_L)"
+
+#: ../src/ui.h:130
+msgid "View the output produced by the last executed command"
+msgstr "查看上次执行的命令所生成的输出"
+
+#: ../src/ui.h:134
+msgid "Create a new archive"
+msgstr "创建新归档文件"
+
+#: ../src/ui.h:145
+msgid "Op_en With..."
+msgstr "打开方式(_E)..."
+
+#: ../src/ui.h:146
+msgid "Open selected files with an application"
+msgstr "用应用程序打开选中文件"
+
+#: ../src/ui.h:149
+msgid "Pass_word..."
+msgstr "密码(_W)..."
+
+#: ../src/ui.h:150
+msgid "Specify a password for this archive"
+msgstr "为此归档文件指定密码"
+
+#: ../src/ui.h:154
+msgid "Show archive properties"
+msgstr "显示归档文件属性"
+
+#: ../src/ui.h:158
+msgid "Reload current archive"
+msgstr "重新装入当前归档文件"
+
+#: ../src/ui.h:162
 msgid "Save the current archive with a different name"
 msgstr "将当前归档文件以不同的名称保存"
 
-#: ../src/ui.h:138
+#: ../src/ui.h:165
 msgid "Select _All"
 msgstr "全部选中(_A)"
 
-#: ../src/ui.h:139
+#: ../src/ui.h:166
 msgid "Select all files"
 msgstr "选中全部文件"
 
-#: ../src/ui.h:143
+#: ../src/ui.h:170
 msgid "Stop current operation"
 msgstr "停止当前操作"
 
-#: ../src/ui.h:146
+#: ../src/ui.h:173
 msgid "_Test Integrity"
 msgstr "测试完整性(_T)"
 
-#: ../src/ui.h:147
+#: ../src/ui.h:174
 msgid "Test whether the archive contains errors"
 msgstr "测试归档文件是否有错"
 
-#: ../src/ui.h:151 ../src/ui.h:155
+#: ../src/ui.h:178 ../src/ui.h:182
 msgid "View the selected file"
 msgstr "查看选中文件"
 
-#: ../src/ui.h:159
+#: ../src/ui.h:186 ../src/ui.h:190
 msgid "Open the selected folder"
 msgstr "打开选中文件夹"
 
-#: ../src/ui.h:167
+#: ../src/ui.h:198
 msgid "_Toolbar"
 msgstr "工具栏(_T)"
 
-#: ../src/ui.h:168
+#: ../src/ui.h:199
 msgid "View the main toolbar"
 msgstr "查看主工具栏"
 
-#: ../src/ui.h:172
+#: ../src/ui.h:203
 msgid "Stat_usbar"
 msgstr "状态栏(_U)"
 
-#: ../src/ui.h:173
+#: ../src/ui.h:204
 msgid "View the statusbar"
 msgstr "查看状态栏"
 
-#: ../src/ui.h:177
+#: ../src/ui.h:208
 msgid "_Reversed Order"
 msgstr "逆序排列(_R)"
 
-#: ../src/ui.h:178
+#: ../src/ui.h:209
 msgid "Reverse the list order"
 msgstr "列表逆序排列"
 
-#: ../src/ui.h:182
+#: ../src/ui.h:213
 msgid "_Folders"
 msgstr "文件夹(_F)"
 
-#: ../src/ui.h:183
+#: ../src/ui.h:214
 msgid "View the folders pane"
 msgstr "查看文件夹面板"
 
-#: ../src/ui.h:192
+#: ../src/ui.h:223
 msgid "View All _Files"
 msgstr "查看全部文件(_F)"
 
-#: ../src/ui.h:195
+#: ../src/ui.h:226
 msgid "View as a F_older"
 msgstr "以文件夹查看(_O)"
 
-#: ../src/ui.h:203
+#: ../src/ui.h:234
 msgid "by _Name"
 msgstr "按名称(_N)"
 
-#: ../src/ui.h:204
+#: ../src/ui.h:235
 msgid "Sort file list by name"
 msgstr "按名称排序文件列表"
 
-#: ../src/ui.h:206
+#: ../src/ui.h:237
 msgid "by _Size"
 msgstr "按大小(_S)"
 
-#: ../src/ui.h:207
+#: ../src/ui.h:238
 msgid "Sort file list by file size"
 msgstr "按文件大小排序文件列表"
 
-#: ../src/ui.h:209
+#: ../src/ui.h:240
 msgid "by T_ype"
 msgstr "按类型(_Y)"
 
-#: ../src/ui.h:210
+#: ../src/ui.h:241
 msgid "Sort file list by type"
 msgstr "按类型排序文件列表"
 
-#: ../src/ui.h:212
+#: ../src/ui.h:243
 msgid "by _Date modified"
 msgstr "按修改日期(_D)"
 
-#: ../src/ui.h:213
+#: ../src/ui.h:244
 msgid "Sort file list by modification time"
 msgstr "按修改时间排序文件列表"
 
-#: ../src/ui.h:215
+#: ../src/ui.h:246
 msgid "by _Location"
 msgstr "按位置(_L)"
 
-#: ../src/ui.h:216
+#: ../src/ui.h:247
 msgid "Sort file list by location"
 msgstr "按位置排序文件列表"
-
