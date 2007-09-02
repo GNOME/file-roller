@@ -143,32 +143,26 @@ list__process_line (char     *line,
 		return;
 	}
 
-	if (fields[2][0] == 'D') { /* skip directories */
-		g_strfreev (fields);
-		file_data_free (fdata);
-		return;
-	}
-
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
 	fdata->modified = mktime_from_string (fields[0], fields[1]);
+	fdata->dir = fields[2][0] == 'D';
 	g_strfreev (fields);
 
 	name_field = g_strdup (line + p7z_comm->name_index);
-
-	/*change_to_unix_dir_separator (name_field);*/
-
-	if (*name_field == '/') {
-		fdata->full_path = g_strdup (name_field);
-		fdata->original_path = fdata->full_path;
-	} else {
-		fdata->full_path = g_strconcat ("/", name_field, NULL);
-		fdata->original_path = fdata->full_path + 1;
-	}
+	fdata->free_original_path = TRUE;
+	fdata->original_path = g_strdup (name_field);
+	fdata->full_path = g_strconcat ((fdata->original_path[0] != '/') ? "/" : "", 
+					fdata->original_path,
+					(fdata->dir && (fdata->original_path[strlen (fdata->original_path - 1)] != '/')) ? "/" : "",
+					NULL);
 	g_free (name_field);
 
 	fdata->link = NULL;
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+	if (fdata->dir)
+		fdata->name = dir_name_from_path (fdata->full_path);
+	else
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
 
 	fr_command_add_file (comm, fdata);
@@ -188,6 +182,31 @@ fr_command_7z_begin_command (FrCommand *comm)
 
 
 static void
+add_password_arg (FrCommand     *comm,
+		  const char    *password,
+		  gboolean       always_specify)
+{
+	if (always_specify || ((password != NULL) && (*password != 0))) {
+		char *arg;
+		char *e_password;
+
+		fr_process_add_arg (comm->process, "-p");
+
+		e_password = escape_str (password, "\"*?[]'`()$!;");
+		if (e_password != NULL) {
+			arg = g_strconcat ("\"", e_password, "\"", NULL);
+			g_free (e_password);
+		} 
+		else
+			arg = g_strdup ("\"\"");
+
+		fr_process_add_arg (comm->process, arg);
+		g_free (arg);
+	}
+}
+
+
+static void
 fr_command_7z_list (FrCommand  *comm,
 		    const char *password)
 {
@@ -199,6 +218,7 @@ fr_command_7z_list (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "l");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
+	add_password_arg (comm, password, FALSE);
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
@@ -233,6 +253,7 @@ fr_command_7z_add (FrCommand     *comm,
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-l");
+	add_password_arg (comm, password, FALSE);
 
 	switch (compression) {
 	case FR_COMPRESSION_VERY_FAST:
@@ -298,7 +319,8 @@ fr_command_7z_extract (FrCommand  *comm,
 
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-
+	add_password_arg (comm, password, FALSE);
+	
 	if (dest_dir != NULL) {
 		char *e_dest_dir = fr_command_escape (comm, dest_dir);
 		char *opt = g_strconcat ("-o", e_dest_dir, NULL);
@@ -326,6 +348,7 @@ fr_command_7z_test (FrCommand   *comm,
 	fr_process_add_arg (comm->process, "t");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
+	add_password_arg (comm, password, FALSE);
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 }
@@ -369,11 +392,11 @@ fr_command_7z_init (FrCommand *comm)
 
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = FALSE;
+	comm->propAddCanStoreFolders       = TRUE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = FALSE;
+	comm->propPassword                 = TRUE;
 	comm->propTest                     = TRUE;
 }
 

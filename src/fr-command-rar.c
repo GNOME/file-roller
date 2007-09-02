@@ -157,7 +157,7 @@ process_line (char     *line,
 			
 			g_free (tmp);
 			
-			fdata->name =  dir_name_from_path (fdata->full_path);
+			fdata->name = dir_name_from_path (fdata->full_path);
 			fdata->dir = TRUE;
 		} 
 		else

@@ -442,8 +442,8 @@ file_name_from_path (const gchar *file_name)
 char *
 dir_name_from_path (const gchar *path)
 {
-	register  gssize base;
-	register  gssize last_char;
+	register gssize base;
+	register gssize last_char;
 
 	if (path == NULL)
 		return NULL;
