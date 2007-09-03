@@ -190,7 +190,8 @@ add_password_arg (FrCommand	*comm,
 
 		g_free (e_password);
 		g_free (arg);
-	} else if (disable_query)
+	} 
+	else if (disable_query)
 		fr_process_add_arg (comm->process, "-p-");
 }
 

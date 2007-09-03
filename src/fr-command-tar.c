@@ -406,6 +406,11 @@ fr_command_tar_extract (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-p");
+
+	if (! overwrite)
+		fr_process_add_arg (comm->process, "-k");
+	if (skip_older)
+		fr_process_add_arg (comm->process, "--keep-newer-files");
 		
 	fr_process_add_arg (comm->process, "-xf");
 	fr_process_add_arg (comm->process, comm->e_filename);
@@ -829,8 +834,8 @@ fr_command_tar_init (FrCommand *comm)
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = FALSE;
 	comm->propAddCanStoreFolders       = TRUE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
+	comm->propExtractCanAvoidOverwrite = TRUE;
+	comm->propExtractCanSkipOlder      = TRUE;
 	comm->propExtractCanJunkPaths      = FALSE;
 	comm->propPassword                 = FALSE;
 	comm->propTest                     = FALSE;
