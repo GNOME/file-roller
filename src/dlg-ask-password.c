@@ -31,7 +31,7 @@
 #include "fr-window.h"
 
 
-#define PROP_GLADE_FILE "ask-password.glade"
+#define PROP_GLADE_FILE "batch-password.glade"
 
 typedef enum {
 	FR_PASSWORD_TYPE_MAIN,
