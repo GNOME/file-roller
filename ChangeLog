@@ -1,3 +1,11 @@
+2007-09-09  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c: do not close thw window when an error dialog is
+	displayed in batch mode.
+	
+	Fixes bug #463968 – file-roller crashed with SIGSEGV in 
+	g_closure_invoke()
+
 2007-09-06  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/dlg-ask-password.c: 

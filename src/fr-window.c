@@ -356,6 +356,8 @@ struct _FrWindowPrivateData {
 	gboolean   batch_adding_one_file;
 
 	GtkWindow *load_error_parent_window;
+	gboolean   showing_error_dialog;
+	GtkWindow *error_dialog_parent;
 };
 
 
@@ -2218,7 +2220,7 @@ display_progress_dialog (gpointer data)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->priv->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   window->priv->stoppable);
-		if (! window->priv->batch_mode && ! window->priv->non_interactive)
+		if (! window->priv->non_interactive)
 			gtk_widget_show (GTK_WIDGET (window));
 
 		gtk_widget_show (window->priv->progress_dialog);
@@ -2499,13 +2501,36 @@ error_dialog_response_cb (GtkDialog *dialog,
 			  gint       arg1,
 			  gpointer   user_data)
 {
-	GtkWindow *dialog_parent = user_data;
+	FrWindow  *window = user_data;
+	GtkWindow *dialog_parent = window->priv->error_dialog_parent;
+
+	window->priv->showing_error_dialog = FALSE;
+	window->priv->error_dialog_parent = NULL;
 
 	if ((dialog_parent != NULL) && (gtk_widget_get_toplevel (GTK_WIDGET (dialog_parent)) != (GtkWidget*) dialog_parent))
 		gtk_window_set_modal (dialog_parent, TRUE);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
+
+static void
+fr_window_show_error_dialog (FrWindow  *window,
+			     GtkWidget *dialog,
+			     GtkWindow *dialog_parent)
+{
+	if (dialog_parent != NULL)
+		gtk_window_set_modal (dialog_parent, FALSE);
+	g_signal_connect (dialog,
+			  "response",
+			  (window->priv->batch_mode) ? G_CALLBACK (gtk_main_quit) : G_CALLBACK (error_dialog_response_cb),
+			  window);
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+	gtk_widget_show (dialog);
+	
+	window->priv->showing_error_dialog = TRUE;
+	window->priv->error_dialog_parent = dialog_parent;
+}
+			     
 
 static gboolean
 handle_errors (FrWindow    *window,
@@ -2598,20 +2623,12 @@ handle_errors (FrWindow    *window,
 		if (error->type != FR_PROC_ERROR_GENERIC)
 			output = (process->raw_error != NULL) ? process->raw_error : process->raw_output;
 
-		if (dialog_parent != NULL)
-			gtk_window_set_modal (dialog_parent, FALSE);
 		dialog = _gtk_error_dialog_new (dialog_parent,
 						0,
 						output,
 						msg,
 						details);
-		g_signal_connect (dialog,
-				  "response",
-				  (window->priv->batch_mode) ? G_CALLBACK (gtk_main_quit) : G_CALLBACK (error_dialog_response_cb),
-				  dialog_parent);
-
-		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-		gtk_widget_show (dialog);
+		fr_window_show_error_dialog (window, dialog, dialog_parent);
 
 		return FALSE;
 	}
@@ -2705,7 +2722,7 @@ action_performed (FrArchive   *archive,
 	case FR_ACTION_LOADING_ARCHIVE:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
-			if (window->priv->batch_mode) {
+			if (window->priv->non_interactive) {
 				fr_window_archive_close (window);
 				fr_window_stop_batch (window);
 			}
@@ -2755,7 +2772,7 @@ action_performed (FrArchive   *archive,
 		fr_window_update_title (window);
 		fr_window_go_to_location (window, fr_window_get_current_location (window), TRUE);
 		fr_window_update_dir_tree (window);		
-		if (! window->priv->non_interactive)
+		if (! window->priv->batch_mode && window->priv->non_interactive)
 			gtk_window_present (GTK_WINDOW (window));
 		break;
 
@@ -5748,14 +5765,12 @@ fr_window_archive_extract (FrWindow   *window,
 			GtkWidget  *d;
 
 			d = _gtk_error_dialog_new (GTK_WINDOW (window),
-						   GTK_DIALOG_MODAL,
+						   0,
 						   NULL,
 						   _("Extraction not performed"),
 						   _("Could not create the destination folder: %s."),
 						   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
-			gtk_dialog_run (GTK_DIALOG (d));
-			gtk_widget_destroy (GTK_WIDGET (d));
-			
+			fr_window_show_error_dialog (window, d, GTK_WINDOW (window));		
 			fr_window_stop_batch (window);
 
 			return;
@@ -5766,16 +5781,14 @@ fr_window_archive_extract (FrWindow   *window,
 		GtkWidget *d;
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window),
-					     GTK_DIALOG_MODAL,
+					     0,
 					     GTK_STOCK_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
 					     GTK_STOCK_OK, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-		
+		fr_window_show_error_dialog (window, d, GTK_WINDOW (window));
 		fr_window_stop_batch (window);
 
 		return;
@@ -7809,19 +7822,22 @@ fr_window_start_batch (FrWindow *window)
 void
 fr_window_stop_batch (FrWindow *window)
 {
-	if (! window->priv->batch_mode)
+	if (! window->priv->non_interactive)
 		return;
 
 	window->priv->extract_interact_use_default_dir = FALSE;
-	window->priv->batch_mode = FALSE;
 	window->archive->can_create_compressed_file = FALSE;
 
-	if (window->priv->non_interactive)
-		gtk_widget_destroy (GTK_WIDGET (window));
+	if (window->priv->batch_mode) {
+		if (! window->priv->showing_error_dialog)
+			gtk_widget_destroy (GTK_WIDGET (window));
+	}
 	else {
 		gtk_window_present (GTK_WINDOW (window));
 		fr_window_archive_close (window);
 	}
+
+	window->priv->batch_mode = FALSE;
 }
 
 
