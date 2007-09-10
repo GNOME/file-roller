@@ -1253,16 +1253,7 @@ uri_has_scheme (const char *uri)
 gboolean
 uri_is_local (const char *uri)
 {
-	GnomeVFSURI *vfs_uri;
-	gboolean     is_local;
-
-	vfs_uri = new_uri_from_path (uri);
-	g_return_val_if_fail (vfs_uri != NULL, FALSE);
-
-	is_local = gnome_vfs_uri_is_local (vfs_uri);
-	gnome_vfs_uri_unref (vfs_uri);
-
-	return is_local;
+	return (! uri_has_scheme (uri)) || uri_scheme_is_file (uri);
 }
 
 

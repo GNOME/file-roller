@@ -1,6 +1,12 @@
+2007-09-10  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/file-utils.c (uri_is_local): simply check the uri scheme to 
+	decide whether the uri is local or not instead of using 
+	gnome_vfs_uri_is_local, as suggested in bug #475296.
+
 2007-09-09  Paolo Bacchilega  <paobac@svn.gnome.org>
 
-	* src/fr-window.c: do not close thw window when an error dialog is
+	* src/fr-window.c: do not close the window when an error dialog is
 	displayed in batch mode.
 	
 	Fixes bug #463968 – file-roller crashed with SIGSEGV in 
