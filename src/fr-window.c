@@ -3666,9 +3666,6 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	if (! check_permissions (destination_folder, R_OK | W_OK | X_OK))
 		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("You don't have the right permissions to extract archives in the folder \"%s\""), destination_folder_display_name);
 
-	else if (! uri_is_local (destination_folder))
-		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("Cannot extract archives in a remote folder \"%s\""), destination_folder_display_name);
-
 	g_free (destination_folder_display_name);
 
 	if (window->priv->drag_error == NULL) {

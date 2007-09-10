@@ -1,5 +1,12 @@
 2007-09-10  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (fr_window_file_list_drag_data_get): removed old check
+	that prevented extraction to remote locations via DnD.
+	
+	Patch by Amos Brocco, from the launchpad bug #13199.
+
+2007-09-10  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/file-utils.c (uri_is_local): simply check the uri scheme to 
 	decide whether the uri is local or not instead of using 
 	gnome_vfs_uri_is_local, as suggested in bug #475296.
