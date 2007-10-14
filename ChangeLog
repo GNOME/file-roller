@@ -1,3 +1,11 @@
+2007-10-14  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c (fr_window_stop_batch): return after destroying the
+	main window.
+	
+	Fixes bug #482203 – file-roller crashed with SIGSEGV in 
+	fr_window_stop_batch()
+
 2007-09-17  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.20.0 released ]

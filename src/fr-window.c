@@ -7826,8 +7826,10 @@ fr_window_stop_batch (FrWindow *window)
 	window->archive->can_create_compressed_file = FALSE;
 
 	if (window->priv->batch_mode) {
-		if (! window->priv->showing_error_dialog)
+		if (! window->priv->showing_error_dialog) {
 			gtk_widget_destroy (GTK_WIDGET (window));
+			return;
+		}
 	}
 	else {
 		gtk_window_present (GTK_WINDOW (window));
