@@ -1,5 +1,10 @@
 2007-12-27  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/file-utils.c (get_uri_from_path): no need to use strcmp anyway.
+	* src/fr-command-arj.c (list__process_line): 
+	
+	Fixed bug #490891 – skips files when opening an old ARJ archive
+	
 	* src/file-utils.c (get_uri_from_path): 
 	
 	Fixed bug #504597 – Direct compare on string

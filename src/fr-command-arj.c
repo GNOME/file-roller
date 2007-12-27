@@ -107,13 +107,11 @@ list__process_line (char     *line,
 		return;
 	}
 
-	if (arj_comm->line_no == 4) {
-		arj_comm->line_no = 1;
-		return;
-
-	} else if (arj_comm->line_no == 1) { /* Read the filename. */
+	if (line[0] != ' ') { /* Read the filename. */
 		FileData   *fdata;
 		const char *name_field;
+
+		arj_comm->line_no = 1;
 
 		arj_comm->fdata = fdata = file_data_new ();
 
@@ -122,7 +120,8 @@ list__process_line (char     *line,
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
 			fdata->original_path = fdata->full_path;
-		} else {
+		} 
+		else {
 			fdata->full_path = g_strconcat ("/", name_field, NULL);
 			fdata->original_path = fdata->full_path + 1;
 		}
@@ -131,8 +130,8 @@ list__process_line (char     *line,
 
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
-
-	} else if (arj_comm->line_no == 2) { /* Read file size and date. */
+	} 
+	else if (arj_comm->line_no == 2) { /* Read file size and date. */
 		FileData  *fdata;
 		char     **fields;
 
@@ -143,7 +142,10 @@ list__process_line (char     *line,
 		fields = split_line (line, 10);
 		fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
 		fdata->modified = mktime_from_string (fields[5], fields[6]);
-		fdata->encrypted = (g_ascii_strcasecmp (fields[9], "11") == 0);
+		if (strcmp (fields[1], "MS-DOS") == 0)
+			fdata->encrypted = (g_ascii_strcasecmp (fields[7], "11") == 0);
+		else
+			fdata->encrypted = (g_ascii_strcasecmp (fields[9], "11") == 0);			
 		g_strfreev (fields);
 
 		if (*fdata->name == 0)
@@ -152,7 +154,7 @@ list__process_line (char     *line,
 			fr_command_add_file (comm, fdata);
 		arj_comm->fdata = NULL;
 	}
-
+		
 	arj_comm->line_no++;
 }
 
