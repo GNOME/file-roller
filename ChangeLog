@@ -1,5 +1,11 @@
 2007-12-27  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-command-tar.c (fr_command_tar_add): 
+	
+	Fixed bug #487012 – file-roller causes gnu tar >= 1.19 to give 
+	warnings when creating tar-archives
+	Patch by Jürg Billeter
+	
 	* src/file-utils.c (get_uri_from_path): no need to use strcmp anyway.
 	* src/fr-command-arj.c (list__process_line): 
 	
