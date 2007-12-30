@@ -107,6 +107,11 @@ AM_GCONF_SOURCE_2
 
 dnl ******************************
 
+NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
+AC_SUBST(NAUTILUS_EXTENSION_DIR)
+
+dnl ******************************
+
 AC_OUTPUT([
 Makefile
 file-roller.spec

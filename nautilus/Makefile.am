@@ -12,8 +12,7 @@ INCLUDES =						\
 	$(DISABLE_DEPRECATED)				\
 	$(NAUTILUS_CFLAGS)
 
-# FIXME: get this from the .pc file
-nautilus_extensiondir=$(libdir)/nautilus/extensions-1.0
+nautilus_extensiondir=$(NAUTILUS_EXTENSION_DIR)
 
 nautilus_extension_LTLIBRARIES=libnautilus-fileroller.la
 
