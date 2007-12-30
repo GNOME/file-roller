@@ -674,6 +674,14 @@ create_command_from_filename (FrArchive  *archive,
 		return (archive->command != NULL);
 	}
 
+	if (file_extension_is (filename, ".tar.lzma")
+	    || file_extension_is (filename, ".tzma")) {
+		archive->command = fr_command_tar_new (archive->process,
+						       filename,
+						       FR_COMPRESS_PROGRAM_LZMA);
+		return (archive->command != NULL);
+	}
+
 	if (file_extension_is (filename, ".tar.lzo")
 	    || file_extension_is (filename, ".tzo")) {
 		archive->command = fr_command_tar_new (archive->process,
@@ -759,6 +767,12 @@ create_command_from_filename (FrArchive  *archive,
 
 		if (file_extension_is (filename, ".bz2")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_BZIP2);
+			archive->is_compressed_file = TRUE;
+			return (archive->command != NULL);
+		}
+
+		if (file_extension_is (filename, ".lzma")) {
+			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_LZMA);
 			archive->is_compressed_file = TRUE;
 			return (archive->command != NULL);
 		}
@@ -2595,6 +2609,7 @@ archive_type_has_issues_deleting_non_empty_folders (FrArchive *archive)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_LZMA)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS));
 }
@@ -2936,6 +2951,7 @@ archive_type_has_issues_extracting_non_empty_folders (FrArchive *archive)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_BZ2)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_GZ)
+		|| (archive->command->file_type == FR_FILE_TYPE_TAR_LZMA)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_LZOP)
 		|| (archive->command->file_type == FR_FILE_TYPE_TAR_COMPRESS));
 }
@@ -3385,6 +3401,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 		".iso",
 		".jar",
 		".lzh",
+		".lzma",
 		".lzo",
 		".rar",
 		".rpm",
@@ -3393,6 +3410,7 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 		".tar.bz",
 		".tar.bz2",
 		".tar.gz",
+		".tar.lzma",
 		".tar.lzo",
 		".tar.Z",
 		".taz",

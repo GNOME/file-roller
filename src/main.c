@@ -77,6 +77,7 @@ FRFileTypeDescription file_type_desc[] = {
 	{ FR_FILE_TYPE_GZIP,         ".gz",      "application/x-gzip", NULL},
 	{ FR_FILE_TYPE_JAR,          ".jar",     "application/x-jar", N_("Jar (.jar)")},
 	{ FR_FILE_TYPE_LHA,          ".lzh",     "application/x-lha", N_("Lha (.lzh)") },
+	{ FR_FILE_TYPE_LZMA,         ".lzma",    "application/x-lzma", NULL },
 	{ FR_FILE_TYPE_LZOP,         ".lzo",     "application/x-lzop", NULL },
 	{ FR_FILE_TYPE_RAR,          ".rar",     "application/x-rar", N_("Rar (.rar)") },
 	{ FR_FILE_TYPE_RPM,          ".rpm",     "application/x-rpm", NULL },
@@ -84,6 +85,7 @@ FRFileTypeDescription file_type_desc[] = {
 	{ FR_FILE_TYPE_TAR_BZ,       ".tar.bz",  "application/x-bzip-compressed-tar", N_("Tar compressed with bzip (.tar.bz)") },
 	{ FR_FILE_TYPE_TAR_BZ2,      ".tar.bz2", "application/x-bzip-compressed-tar", N_("Tar compressed with bzip2 (.tar.bz2)") },
 	{ FR_FILE_TYPE_TAR_GZ,       ".tar.gz",  "application/x-compressed-tar", N_("Tar compressed with gzip (.tar.gz)") },
+	{ FR_FILE_TYPE_TAR_LZMA,     ".tar.lzma","application/x-lzma-compressed-tar", N_("Tar compressed with lzma (.tar.lzma)") },
 	{ FR_FILE_TYPE_TAR_LZOP,     ".tar.lzo", "application/x-lzop-compressed-tar", N_("Tar compressed with lzop (.tar.lzo)") },
 	{ FR_FILE_TYPE_TAR_COMPRESS, ".tar.Z",   "application/x-compressed-tar", N_("Tar compressed with compress (.tar.Z)") },
 	{ FR_FILE_TYPE_STUFFIT,      ".sit",     "application/x-stuffit", NULL },
@@ -118,6 +120,7 @@ FRCommandDescription command_desc[] = {
 	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_JAR },
 	{ "zip",        TRUE,  FALSE,  TRUE,  FR_FILE_TYPE_EXE },
 	{ "lha",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_LHA },
+	{ "lzma",       TRUE,  TRUE,  FALSE, FR_FILE_TYPE_LZMA },
 	{ "lzop",       TRUE,  TRUE,  FALSE, FR_FILE_TYPE_LZOP },
 	{ "rpm2cpio",   TRUE,  FALSE, TRUE,  FR_FILE_TYPE_RPM },
 	{ "uncompress", TRUE,  FALSE, FALSE, FR_FILE_TYPE_COMPRESS },
@@ -132,6 +135,7 @@ FRCommandDescription tar_command_desc[] = {
 	{ "gzip",      TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_TAR_GZ },
 	{ "bzip2",     TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_TAR_BZ2 },
 	{ "bzip",      FALSE, TRUE,  TRUE,  FR_FILE_TYPE_TAR_BZ },
+	{ "lzma",      TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_TAR_LZMA },
 	{ "lzop",      TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_TAR_LZOP },
 	{ "compress",  TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_TAR_COMPRESS }
 };

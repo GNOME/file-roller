@@ -212,6 +212,11 @@ add_compress_arg (FrCommand *comm)
 		fr_process_add_arg (comm->process, "-Z");
 		break;
 
+	case FR_COMPRESS_PROGRAM_LZMA:
+		fr_process_add_arg (comm->process,
+				    "--use-compress-program=lzma");
+		break;
+
 	case FR_COMPRESS_PROGRAM_LZOP:
 		fr_process_add_arg (comm->process,
 				    "--use-compress-program=lzop");
@@ -527,6 +532,27 @@ fr_command_tar_recompress (FrCommand     *comm,
 		new_name = g_strconcat (c_tar->uncomp_filename, ".Z", NULL);
 		break;
 
+	case FR_COMPRESS_PROGRAM_LZMA:
+		fr_process_begin_command (comm->process, "lzma");
+		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
+		switch (compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			fr_process_add_arg (comm->process, "-1"); break;
+		case FR_COMPRESSION_FAST:
+			fr_process_add_arg (comm->process, "-3"); break;
+		case FR_COMPRESSION_NORMAL:
+			fr_process_add_arg (comm->process, "-6"); break;
+		case FR_COMPRESSION_MAXIMUM:
+			fr_process_add_arg (comm->process, "-9"); break;
+		}
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+		fr_process_end_command (comm->process);
+
+		new_name = g_strconcat (c_tar->uncomp_filename, ".lzma", NULL);
+		break;
+
 	case FR_COMPRESS_PROGRAM_LZOP:
 		fr_process_begin_command (comm->process, "lzop");
 		fr_process_set_sticky (comm->process, TRUE);
@@ -637,6 +663,13 @@ get_uncompressed_name (FrCommandTar *c_tar,
 			new_name[l - 1] = 'r';
 		else if (file_extension_is (e_filename, ".tar.Z"))
 			new_name[l - 2] = 0;
+		break;
+
+	case FR_COMPRESS_PROGRAM_LZMA:
+		/* X.tar.lzma --> X.tar 
+		 * (There doesn't seem to be a shorthand suffix) */
+		if (file_extension_is (e_filename, ".tar.lzma"))
+			new_name[l - 5] = 0;
 		break;
 
 	case FR_COMPRESS_PROGRAM_LZOP:
@@ -752,6 +785,17 @@ fr_command_tar_uncompress (FrCommand *comm)
 			fr_process_begin_command (comm->process, "uncompress");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
+			fr_process_add_arg (comm->process, tmp_name);
+			fr_process_end_command (comm->process);
+		}
+		break;
+
+	case FR_COMPRESS_PROGRAM_LZMA:
+		if (archive_exists) {
+			fr_process_begin_command (comm->process, "lzma");
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
+			fr_process_add_arg (comm->process, "-f");
+			fr_process_add_arg (comm->process, "-d");
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
 		}
@@ -932,6 +976,11 @@ fr_command_tar_new (FrProcess         *process,
         if ((prog == FR_COMPRESS_PROGRAM_COMPRESS) &&
             ((!is_program_in_path("compress")) ||
              (!is_program_in_path("uncompress")))) {
+                return NULL;
+        }
+
+        if ((prog == FR_COMPRESS_PROGRAM_LZMA) &&
+            (!is_program_in_path("lzma"))) {
                 return NULL;
         }
 

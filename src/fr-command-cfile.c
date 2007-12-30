@@ -277,6 +277,14 @@ fr_command_cfile_add (FrCommand     *comm,
 		fr_process_end_command (comm->process);
 		break;
 
+	case FR_COMPRESS_PROGRAM_LZMA:
+		fr_process_begin_command (comm->process, "lzma");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "--");
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		break;
+
 	case FR_COMPRESS_PROGRAM_LZOP: /* FIXME: untested. */
 		fr_process_begin_command (comm->process, "lzop");
 		fr_process_set_working_dir (comm->process, temp_dir);
@@ -287,6 +295,7 @@ fr_command_cfile_add (FrCommand     *comm,
 		fr_process_end_command (comm->process);
 		break;
 	}
+
 
       	/* copy compressed file to the dest dir */
 
@@ -394,6 +403,14 @@ fr_command_cfile_extract (FrCommand  *comm,
 	case FR_COMPRESS_PROGRAM_COMPRESS: 
 		fr_process_begin_command (comm->process, "uncompress");
 		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, e_temp_file);
+		fr_process_end_command (comm->process);
+		break;
+
+	case FR_COMPRESS_PROGRAM_LZMA:
+		fr_process_begin_command (comm->process, "lzma");
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
 		break;
@@ -552,6 +569,11 @@ fr_command_cfile_new (FrProcess         *process,
 		return NULL;
 	}
 
+	if ((prog == FR_COMPRESS_PROGRAM_LZMA) &&
+	    (!is_program_in_path("lzma"))) {
+		return NULL;
+	}
+
 	if ((prog == FR_COMPRESS_PROGRAM_LZOP) &&
 	    (!is_program_in_path("lzop"))) {
 		return NULL;
@@ -569,6 +591,8 @@ fr_command_cfile_new (FrProcess         *process,
 		comm->file_type = FR_FILE_TYPE_BZIP2;
 	else if (prog == FR_COMPRESS_PROGRAM_COMPRESS)
 		comm->file_type = FR_FILE_TYPE_COMPRESS;
+	else if (prog == FR_COMPRESS_PROGRAM_LZMA)
+		comm->file_type = FR_FILE_TYPE_LZMA;
 	else if (prog == FR_COMPRESS_PROGRAM_LZOP)
 		comm->file_type = FR_FILE_TYPE_LZOP;
 
