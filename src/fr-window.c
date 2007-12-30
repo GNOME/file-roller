@@ -3723,8 +3723,8 @@ key_press_cb (GtkWidget   *widget,
 					window,
 					3,
 					GDK_CURRENT_TIME);
+			retval = TRUE;			
 		}
-		retval = TRUE;
 		break;
 
 	case GDK_Up:
