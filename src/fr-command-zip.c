@@ -167,7 +167,7 @@ list__process_line (char     *line,
 
 	/* ignore lines that do not describe a file or a
 	 * directory. */
-	if ((line[0] != 'd') && (line[0] != '-'))
+	if ((line[0] != '?') && (line[0] != 'd') && (line[0] != '-'))
 		return;
 
 	/**/

@@ -1,5 +1,12 @@
 2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-command-zip.c (list__process_line): do not ignore lines
+	starting with ?
+	
+	Fixes bug #499558 – File-roller is unable to expand some zip files
+
+2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* src/fr-window.c (key_press_cb): do not handle the delete key here
 	anymore.
 
