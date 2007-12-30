@@ -3710,12 +3710,6 @@ key_press_cb (GtkWidget   *widget,
 		retval = TRUE;
 		break;
 
-	case GDK_Delete:
-		if (window->priv->activity_ref == 0)
-			dlg_delete (NULL, window);
-		retval = TRUE;
-		break;
-
 	case GDK_F10:
 		if (event->state & GDK_SHIFT_MASK) {
 			GtkTreeSelection *selection;

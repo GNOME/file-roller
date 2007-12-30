@@ -1,5 +1,19 @@
 2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (key_press_cb): do not handle the delete key here
+	anymore.
+
+2007-12-05  Alex Kloss  <alexkloss@att.net>
+
+	* src/ui.h:	 Change mnemonics for "Open Recent", "Delete",
+	"Extract", "Open with", "Properties", and
+	"Select All" widgets.
+
+	Fixes bug #458399 – fix duplicated hotkeys, assign new hotkeys, add
+	some user-friendly features
+	
+2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* nautilus/nautilus-fileroller.c (extract_here_callback): do not append
 	anything after extract-here
 
