@@ -7864,12 +7864,10 @@ fr_window_new_batch (FrWindow *window)
 
 void
 fr_window_set_batch__extract_here (FrWindow   *window,
-				   const char *filename,
-				   const char *dest_dir)
+				   const char *filename)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (filename != NULL);
-	g_return_if_fail (dest_dir != NULL);
 
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_LOAD,
@@ -7877,7 +7875,7 @@ fr_window_set_batch__extract_here (FrWindow   *window,
 				       (GFreeFunc) g_free);
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_EXTRACT_HERE,
-				       extract_to_data_new (dest_dir),
+				       extract_to_data_new (NULL),
 				       (GFreeFunc) extract_data_free);
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_CLOSE,

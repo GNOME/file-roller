@@ -557,14 +557,17 @@ prepare_app (void)
 
 		fr_window_new_batch (FR_WINDOW (window));
 		while ((archive = remaining_args[i++]) != NULL) {
+			char *archive_uri;
+
+			archive_uri = get_uri_from_command_line (archive);
 			if (extract_here == 1)
 				fr_window_set_batch__extract_here (FR_WINDOW (window),
-								   archive,
-								   extract_to_path);
+								   archive_uri);
 			else
 				fr_window_set_batch__extract (FR_WINDOW (window),
-							      archive,
+							      archive_uri,
 							      extract_to_path);
+			g_free (archive_uri); 
 		}
 		fr_window_append_batch_action (FR_WINDOW (window),
 					       FR_BATCH_ACTION_QUIT,

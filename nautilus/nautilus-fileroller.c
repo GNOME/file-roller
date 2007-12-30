@@ -84,7 +84,7 @@ extract_here_callback (NautilusMenuItem *item,
 	dir = nautilus_file_info_get_parent_uri (file);
 
 	cmd = g_string_new ("file-roller");
-	g_string_append_printf (cmd," --extract-to=%s --extract-here", g_shell_quote (dir));
+	g_string_append_printf (cmd," --extract-here", g_shell_quote (dir));
 
 	g_free (dir);
 
@@ -164,6 +164,7 @@ static char *mime_types[] = {
 	"application/x-rpm",
 	"application/x-jar",
 	"application/x-java-archive",
+	"application/x-lzma",
 	"application/x-lzop",
 	"application/x-zoo",
 	"application/x-cd-image",

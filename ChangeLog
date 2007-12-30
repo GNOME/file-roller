@@ -1,5 +1,22 @@
 2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/main.c: 
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* nautilus/nautilus-fileroller.c: 
+	
+	No need to specify a destination folder when using the --extract-here 
+	option.
+	Fixes bug #475166 – Failed assertion when --extract-here is used 
+	without --extract-to
+	Patch by David Benjamin
+	
+2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* nautilus/nautilus-fileroller.c: added application/x-lzma
+
+2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* data/file-roller.desktop.in.in: added application/x-lzma
 
 2007-12-28  Ruben Vermeersch  <ruben@savanne.be>

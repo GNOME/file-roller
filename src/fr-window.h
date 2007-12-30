@@ -291,8 +291,7 @@ void       fr_window_set_batch__extract           (FrWindow      *window,
 						   const char    *filename,
 						   const char    *dest_dir);
 void       fr_window_set_batch__extract_here      (FrWindow      *window,
-						   const char    *filename,
-						   const char    *dest_dir);
+						   const char    *filename);
 void       fr_window_set_batch__add               (FrWindow      *window,
 						   const char    *archive,
 						   GList         *file_list);
