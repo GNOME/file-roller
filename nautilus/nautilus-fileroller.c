@@ -84,7 +84,7 @@ extract_here_callback (NautilusMenuItem *item,
 	dir = nautilus_file_info_get_parent_uri (file);
 
 	cmd = g_string_new ("file-roller");
-	g_string_append_printf (cmd," --extract-here", g_shell_quote (dir));
+	g_string_append_printf (cmd," --extract-here");
 
 	g_free (dir);
 
