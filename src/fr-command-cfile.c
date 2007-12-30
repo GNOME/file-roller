@@ -114,7 +114,8 @@ list__process_line (char     *line,
 	fdata = file_data_new ();
 
 	fields = split_line (line, 2);
-	fdata->size = g_ascii_strtoull (fields[1], NULL, 10);
+	if (strcmp (fields[1], "-1") != 0)
+		fdata->size = g_ascii_strtoull (fields[1], NULL, 10);
 	g_strfreev (fields);
 
 	if (fdata->size == 0)
@@ -162,8 +163,8 @@ fr_command_cfile_list (FrCommand  *comm,
 		fr_process_add_arg (comm->process, comm->e_filename);
 		fr_process_end_command (comm->process);
 		fr_process_start (comm->process);
-
-	} else {
+	} 
+	else {
 		/* ... other compressors do not support this feature so 
 		 * simply use the archive size, suboptimal but there is no 
 		 * alternative. */

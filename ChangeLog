@@ -1,5 +1,12 @@
 2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-command-cfile.c (list__process_line): check whether the file
+	size is not -1 before converting it to a integer.
+	
+	Fixes bug #499958 – file size displayed incorrectly on .Z file
+
+2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* src/fr-command-zip.c (list__process_line): do not ignore lines
 	starting with ?
 	
