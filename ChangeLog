@@ -1,3 +1,11 @@
+2008-01-01  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-tar.c (fr_command_tar_add): 
+	
+	Check for the existence of 'filename.tar.{bz2,gz}' and only if it 
+	doesn't exist it makes file-roller call tar with the '-cf' switch.
+	Fixes bug #487012.	Patch by Giacomo Perale
+
 2007-12-30  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/fr-window.c (key_press_cb): 
