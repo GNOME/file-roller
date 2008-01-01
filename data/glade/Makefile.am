@@ -6,6 +6,7 @@ glade_DATA = 			\
 	delete.glade		\
 	open-with.glade		\
 	password.glade		\
-	properties.glade
+	properties.glade	\
+	update.glade
 
 EXTRA_DIST = $(glade_DATA)

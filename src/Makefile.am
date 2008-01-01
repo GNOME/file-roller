@@ -57,6 +57,8 @@ file_roller_SOURCES = 			\
 	dlg-password.h			\
 	dlg-prop.c			\
 	dlg-prop.h			\
+	dlg-update.c			\
+	dlg-update.h			\
 	eggtreemultidnd.c		\
 	eggtreemultidnd.h		\
 	file-data.c			\

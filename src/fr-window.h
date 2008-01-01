@@ -304,4 +304,6 @@ gboolean   fr_window_file_list_drag_data_get (FrWindow         *window,
 					      GtkSelectionData *selection_data,
 					      GList            *path_list);
 
+void       fr_window_update_dialog_closed    (FrWindow *window); 
+
 #endif /* FR_WINDOW_H */

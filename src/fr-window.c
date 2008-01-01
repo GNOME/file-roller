@@ -40,6 +40,7 @@
 #include "dlg-extract.h"
 #include "dlg-open-with.h"
 #include "dlg-ask-password.h"
+#include "dlg-update.h"
 #include "eggtreemultidnd.h"
 #include "fr-marshal.h"
 #include "fr-list-model.h"
@@ -338,6 +339,10 @@ struct _FrWindowPrivateData {
 	guint      hide_progress_timeout;  /* Timeout to hide the progress dialog. */
 	FRAction   pd_last_action;
 	char      *pd_last_archive;
+
+	/* update dialog data */
+	
+	gpointer   update_dialog;
 
 	/* batch mode data */
 
@@ -7299,6 +7304,13 @@ open_files_data_free (OpenFilesData *odata)
 }
 
 
+void
+fr_window_update_dialog_closed (FrWindow *window) 
+{
+	window->priv->update_dialog = NULL;
+}
+
+
 static gboolean
 fr_window_open_extracted_files (OpenFilesData *odata)
 {
@@ -7341,8 +7353,9 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 			if (mime_type == NULL)
 				continue;
 
-			if (strcmp (mime_type, first_mime_type) == 0)
+			if (strcmp (mime_type, first_mime_type) == 0) {
 				files_to_open = g_list_append (files_to_open, (char*) path);
+			}
 			else {
 				GnomeVFSMimeApplication *app2;
 				
@@ -7355,8 +7368,17 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         }
 
 	result = gnome_vfs_mime_application_launch (app, files_to_open) == GNOME_VFS_OK;
-	gnome_vfs_mime_application_free (app);
-	g_list_free (files_to_open);
+        
+        { /* FIXME */
+        	FrWindow *window = odata->window;
+        	
+        	if (window->priv->update_dialog == NULL)
+        		window->priv->update_dialog = dlg_update (window, NULL);
+        	dlg_update_add_file_list (window->priv->update_dialog, files_to_open);
+        }
+        
+        gnome_vfs_mime_application_free (app);
+        g_list_free (files_to_open);
         
 	return result;
 }
@@ -7377,10 +7399,8 @@ fr_window_open_files__extract_done_cb (FrArchive   *archive,
 					      0,
 					      odata);
 
-	if (error->type != FR_PROC_ERROR_NONE) 
-		return;
-	
-	fr_window_open_extracted_files (odata);
+	if (error->type == FR_PROC_ERROR_NONE) 
+		fr_window_open_extracted_files (odata);
 }
 
 
