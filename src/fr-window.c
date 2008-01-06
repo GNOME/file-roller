@@ -2192,7 +2192,7 @@ fr_window_message_cb (FrCommand  *command,
 	else if (window->priv->pd_last_action != window->priv->action)
 		progress_dialog__set_last_action (window, window->priv->action);
 
-	if (strcmp_null_tollerant (window->priv->pd_last_archive, window->priv->archive_uri) != 0) {
+	if (strcmp_null_tolerant (window->priv->pd_last_archive, window->priv->archive_uri) != 0) {
 		g_free (window->priv->pd_last_archive);
 		if (window->priv->archive_uri == NULL) {
 			window->priv->pd_last_archive = NULL;

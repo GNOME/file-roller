@@ -113,7 +113,7 @@ get_full_path (GtkWidget *file_sel)
 	if (idx > 0) {
 		const char *path_ext = fr_archive_utils__get_file_name_ext (path);
 		char       *default_ext = file_type_desc[save_type[idx-1]].ext;
-		if (strcmp_null_tollerant (path_ext, default_ext) != 0) {
+		if (strcmp_null_tolerant (path_ext, default_ext) != 0) {
 			full_path = g_strconcat (path, default_ext, NULL);
 			g_free (path);
 		}

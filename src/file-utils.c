@@ -1342,7 +1342,7 @@ uricmp (const char *path1,
 	uri1 = get_uri_from_path (path1);
 	uri2 = get_uri_from_path (path2);
 
-	result = strcmp_null_tollerant (uri1, uri2);
+	result = strcmp_null_tolerant (uri1, uri2);
 
 	g_free (uri1);
 	g_free (uri2);
