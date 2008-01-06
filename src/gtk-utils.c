@@ -726,10 +726,12 @@ panel_find_icon (GtkIconTheme  *icon_theme,
 						icon_no_extension,
 						size,
 						0);
-	retval = g_strdup (gtk_icon_info_get_filename (icon_info));
-
+	if (icon_info != NULL) {
+		retval = g_strdup (gtk_icon_info_get_filename (icon_info));
+		gtk_icon_info_free (icon_info);
+	}
+	
 	g_free (icon_no_extension);
-	gtk_icon_info_free (icon_info);
 
 	return retval;
 }

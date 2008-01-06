@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2008 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001-2008 The Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,15 +20,29 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLG_UPDATE_H
-#define DLG_UPDATE_H
+#ifndef OPEN_FILE_H
+#define OPEN_FILE_H
 
-#include <gtk/gtkwidget.h>
-#include "fr-window.h"
-#include "open-file.h"
+#include <glib.h>
+#include <glib-object.h>
+#include <time.h>
+#include <libgnomevfs/gnome-vfs-monitor.h>
 
-gpointer  dlg_update          (FrWindow  *window);
-void      dlg_update_add_file (gpointer   dialog,
-			       OpenFile  *file);
+typedef struct {
+	char                  *path;
+	char                  *extracted_uri;
+	char                  *temp_dir;
+	time_t                 last_modified;
+	GnomeVFSMonitorHandle *monitor;
+} OpenFile;
 
-#endif /* DLG_UPDATE_H */
+#define FR_TYPE_OPEN_FILE (open_file_get_type ())
+
+GType       open_file_get_type (void);
+OpenFile *  open_file_new      (const char *path,
+			        const char *extracted_path,
+			        const char *temp_dir);
+OpenFile *  open_file_copy     (OpenFile   *src);
+void        open_file_free     (OpenFile   *ofile);
+
+#endif /* OPEN_FILE_H */

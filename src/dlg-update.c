@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include "dlg-update.h"
 #include "file-utils.h"
 #include "gconf-utils.h"
 #include "glib-utils.h"
@@ -64,7 +65,7 @@ dlg_update__destroy_cb (GtkWidget  *widget,
 	fr_window_update_dialog_closed (data->window);
 	g_object_unref (G_OBJECT (data->gui));
 	if (data->file_list != NULL)
-		path_list_free (data->file_list);
+		g_list_free (data->file_list);
 	g_free (data);
 }
 
@@ -80,14 +81,14 @@ get_selected_files (DialogData *data)
 		
 	do {
 		gboolean  is_selected;
-		char     *filename;
+		OpenFile *file;
 		
                 gtk_tree_model_get (data->list_model, &iter, 
                 		    IS_SELECTED_COLUMN, &is_selected,
-                		    DATA_COLUMN, &filename, 
+                		    DATA_COLUMN, &file, 
                 		    -1);
                 if (is_selected)
-                	selection = g_list_prepend (selection, filename);
+                	selection = g_list_prepend (selection, file);
 	} while (gtk_tree_model_iter_next (data->list_model, &iter));
 	
 	return g_list_reverse (selection);
@@ -103,9 +104,9 @@ update_cb (GtkWidget *widget,
 	int         n_files;
 	
 	selection = get_selected_files (data);
-	if (selection != NULL) {		
-		/* FIXME */
-	}
+	fr_window_update_files (data->window, selection);
+	if (selection != NULL)
+		g_list_free (selection);
 
 	n_files = g_list_length (data->file_list);
 	if (n_files == 1)
@@ -128,18 +129,18 @@ update_file_list (DialogData *data)
 	
 	gtk_list_store_clear (GTK_LIST_STORE (data->list_model));
 	for (scan = data->file_list; scan; scan = scan->next) {
-		char *utf8_name;
-		char *filename = scan->data;
+		char     *utf8_name;
+		OpenFile *file = scan->data;
 
 		gtk_list_store_append (GTK_LIST_STORE (data->list_model),
 				       &iter);
 				       
-		utf8_name = g_filename_display_name (file_name_from_path (filename));
+		utf8_name = g_filename_display_name (file_name_from_path (file->path));
 		gtk_list_store_set (GTK_LIST_STORE (data->list_model),
 				    &iter,
 				    IS_SELECTED_COLUMN, TRUE,
 				    NAME_COLUMN, utf8_name,
-				    DATA_COLUMN, filename,
+				    DATA_COLUMN, file,
 				    -1);
 		g_free (utf8_name);
 	}
@@ -147,11 +148,12 @@ update_file_list (DialogData *data)
 	/* update the labels */
 
 	if (n_files == 1) {
-		char *file_name, *archive_name, *label, *markup;
+		OpenFile *file = data->file_list->data;
+		char     *file_name, *archive_name, *label, *markup;
 		
 		/* primary text */
 		
-		file_name = gnome_vfs_unescape_string_for_display (file_name_from_path (data->file_list->data));
+		file_name = gnome_vfs_unescape_string_for_display (file_name_from_path (file->path));
 		archive_name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (data->window)));
 		label = g_markup_printf_escaped (_("Update the file \"%s\" in the archive \"%s\"?"), file_name, archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
@@ -249,8 +251,7 @@ is_selected_toggled (GtkCellRendererToggle *cell,
 
 
 gpointer
-dlg_update (FrWindow  *window, 
-	    GList     *file_list)
+dlg_update (FrWindow *window)
 {
 	DialogData        *data;
 	GtkWidget         *update_file_ok_button;
@@ -266,7 +267,7 @@ dlg_update (FrWindow  *window,
 		g_free (data);
 		return NULL;
 	}
-	data->file_list = path_list_dup (file_list);
+	data->file_list = NULL;
 	data->window = window;
 	
 	/* Get the widgets. */
@@ -356,24 +357,23 @@ dlg_update (FrWindow  *window,
 }
 
 
-void        
-dlg_update_set_file_list (gpointer  dialog,
-			  GList    *file_list)
-{
-	DialogData *data = dialog;
-	
-	path_list_free (data->file_list);
-	data->file_list = path_list_dup (file_list);
-	update_file_list (data);
-}
-
-
 void
-dlg_update_add_file_list (gpointer  dialog,
-			  GList    *file_list)
+dlg_update_add_file (gpointer  dialog,
+		     OpenFile *file)
 {
 	DialogData *data = dialog;
+	GList      *scan;
+
+	/* avoid duplicates */
 	
-	data->file_list = g_list_concat (data->file_list, path_list_dup (file_list));
+	for (scan = data->file_list; scan; scan = scan->next) {
+		OpenFile *test = scan->data;
+		if (uricmp (test->extracted_uri, file->extracted_uri) == 0) 
+			return;
+	}
+	
+	/**/
+	
+	data->file_list = g_list_append (data->file_list, file);
 	update_file_list (data);
 }

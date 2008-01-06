@@ -123,6 +123,8 @@ file_roller_SOURCES = 			\
 	java-utils.h			\
 	main.c				\
 	main.h				\
+	open-file.c			\
+	open-file.h			\
 	preferences.c			\
 	preferences.h			\
 	typedefs.h			\

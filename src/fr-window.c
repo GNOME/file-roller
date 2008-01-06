@@ -27,11 +27,13 @@
 #include <gdk/gdkcursor.h>
 #include <gdk/gdkkeysyms.h>
 #include <libgnomeui/gnome-icon-lookup.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-directory.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
-#include <libgnomevfs/gnome-vfs-directory.h>
+#include <libgnomevfs/gnome-vfs-monitor.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "actions.h"
@@ -54,6 +56,7 @@
 #include "main.h"
 #include "gtk-utils.h"
 #include "gconf-utils.h"
+#include "open-file.h"
 #include "typedefs.h"
 #include "ui.h"
 #include "utf8-fnmatch.h"
@@ -343,6 +346,7 @@ struct _FrWindowPrivateData {
 	/* update dialog data */
 	
 	gpointer   update_dialog;
+	GList     *open_files;
 
 	/* batch mode data */
 
@@ -462,6 +466,23 @@ fr_window_history_clear (FrWindow *window)
 
 
 static void
+fr_window_free_open_files (FrWindow *window)
+{
+	GList *scan;
+	
+	for (scan = window->priv->open_files; scan; scan = scan->next) {
+		OpenFile *file = scan->data;
+		
+		if (file->monitor != NULL) 
+			gnome_vfs_monitor_cancel (file->monitor);
+		open_file_free (file);
+	}
+	g_list_free (window->priv->open_files);
+	window->priv->open_files = NULL;
+}
+
+
+static void
 fr_window_free_private_data (FrWindow *window)
 {
 	FrWindowPrivateData *priv = window->priv;
@@ -503,19 +524,13 @@ fr_window_free_private_data (FrWindow *window)
 
 	fr_window_history_clear (window);
 
-	if (priv->open_default_dir != NULL)
-		g_free (priv->open_default_dir);
-	if (priv->add_default_dir != NULL)
-		g_free (priv->add_default_dir);
-	if (priv->extract_default_dir != NULL)
-		g_free (priv->extract_default_dir);
-	if (priv->archive_uri != NULL)
-		g_free (priv->archive_uri);
+	g_free (priv->open_default_dir);
+	g_free (priv->add_default_dir);
+	g_free (priv->extract_default_dir);
+	g_free (priv->archive_uri);
 
-	if (priv->password != NULL)
-		g_free (priv->password);
-	if (priv->password_for_paste != NULL)
-		g_free (priv->password_for_paste);
+	g_free (priv->password);
+	g_free (priv->password_for_paste);
 		
 	g_object_unref (priv->list_store);
 
@@ -535,6 +550,8 @@ fr_window_free_private_data (FrWindow *window)
 		g_source_remove (priv->check_clipboard);
 		priv->check_clipboard = 0;
 	}
+	
+	fr_window_free_open_files (window);
 	
 	g_clear_error (&priv->drag_error);
 	path_list_free (priv->drag_file_list);
@@ -7311,6 +7328,102 @@ fr_window_update_dialog_closed (FrWindow *window)
 }
 
 
+void
+fr_window_update_files (FrWindow *window,
+		        GList    *file_list)
+{
+	GList *scan;
+
+	fr_process_clear (window->archive->process);
+	
+	for (scan = file_list; scan; scan = scan->next) {
+		OpenFile *file = scan->data;
+		GList    *file_list;
+		
+		file_list = g_list_append (NULL, file->path);
+		fr_archive_add (window->archive,
+				file_list,
+				file->temp_dir,
+				"/",
+				FALSE,
+				window->priv->password,
+				window->priv->compression);
+		g_list_free (file_list);
+	}
+	
+	fr_process_start (window->archive->process);
+	
+	fr_window_free_open_files (window);
+}
+
+
+static void
+open_file_modified_cb (GnomeVFSMonitorHandle    *handle,
+		       const char               *monitor_uri,
+		       const char               *info_uri,
+		       GnomeVFSMonitorEventType  event_type,
+		       gpointer                  user_data)
+{
+	FrWindow *window = user_data;
+	OpenFile *file;
+	GList    *scan;
+		
+	if ((event_type != GNOME_VFS_MONITOR_EVENT_CHANGED) 
+	    && (event_type != GNOME_VFS_MONITOR_EVENT_CREATED))
+	{
+		return;
+	}
+
+	file = NULL;
+	for (scan = window->priv->open_files; scan; scan = scan->next) {
+		OpenFile *test = scan->data;
+		if (uricmp (test->extracted_uri, monitor_uri) == 0) {
+			file = test;
+			break;
+		}
+	}
+
+	g_return_if_fail (file != NULL);
+
+	if (window->priv->update_dialog == NULL)
+		window->priv->update_dialog = dlg_update (window);
+	dlg_update_add_file (window->priv->update_dialog, file);	
+}
+
+
+static void
+fr_window_monitor_open_file (FrWindow *window, 
+			     OpenFile *file)
+{	
+	window->priv->open_files = g_list_prepend (window->priv->open_files, file);
+	gnome_vfs_monitor_add (&(file->monitor),
+                               file->extracted_uri,
+			       GNOME_VFS_MONITOR_FILE,
+                               open_file_modified_cb,
+                               window);
+}
+
+
+static void
+monitor_extracted_files (OpenFilesData *odata)
+{
+	FrWindow *window = odata->window;
+	GList    *scan1, *scan2;
+	
+	for (scan1 = odata->file_list, scan2 = odata->cdata->file_list; 
+	     scan1 && scan2; 
+	     scan1 = scan1->next, scan2 = scan2->next) 
+	{
+		OpenFile   *ofile;
+		const char *file = scan1->data;
+		const char *extracted_path = scan2->data;
+		
+		ofile = open_file_new (file, extracted_path, odata->cdata->temp_dir);
+		fr_window_monitor_open_file (window, ofile);
+	}
+}
+
+
 static gboolean
 fr_window_open_extracted_files (OpenFilesData *odata)
 {
@@ -7326,6 +7439,8 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         first_file = (char*) file_list->data;
         if (first_file == NULL)
                 return FALSE;
+	
+	monitor_extracted_files (odata);
 	
 	if (odata->ask_application) {
         	dlg_open_with (odata->window, file_list);
@@ -7368,14 +7483,6 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         }
 
 	result = gnome_vfs_mime_application_launch (app, files_to_open) == GNOME_VFS_OK;
-        
-        { /* FIXME */
-        	FrWindow *window = odata->window;
-        	
-        	if (window->priv->update_dialog == NULL)
-        		window->priv->update_dialog = dlg_update (window, NULL);
-        	dlg_update_add_file_list (window->priv->update_dialog, files_to_open);
-        }
         
         gnome_vfs_mime_application_free (app);
         g_list_free (files_to_open);

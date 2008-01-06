@@ -41,12 +41,12 @@ typedef struct {
 } ViewerData;
 
 typedef struct {
-	FrWindow           *window;
-	FrProcess          *process;
-	char               *command;
+	FrWindow                *window;
+	FrProcess               *process;
+	char                    *command;
 	GnomeVFSMimeApplication *app;
-	GList              *file_list;
-	char               *temp_dir;
+	GList                   *file_list;
+	char                    *temp_dir;
 } CommandData;
 
 
