@@ -1,3 +1,31 @@
+version 2.21.1
+--------------
+
+	New features:
+
+	* Implemented the ability to update the files in an archive
+	  when the files are modified with an external application (#109767).
+	* Added support for lzma files, both normal files and tar-files 
+	  compressed by lzma (#502999).
+	
+	Bugfixes:
+	
+	* Fixed bug #487012: Check for the existence of 'filename.tar.{bz2,gz}'
+	  and only if it doesn't exist it makes file-roller call tar with 
+	  the '-cf' switch.
+	* Fixed bug #487079: Key F10 can not activate the main menu.
+	* Fixed bug #499958: file size displayed incorrectly on .Z file
+	* Fixed bug #499558: File-roller is unable to expand some zip files
+	* Fixed bug #458399: fix duplicated hotkeys, assign new hotkeys, add
+	  some user-friendly features
+	* Fixed bug #475166: Failed assertion when --extract-here is used 
+ 	  without --extract-to
+ 	* Fixed bug #505987: Nautilus extension directory changed to -2.0
+ 	* Fixed bug #487012: file-roller causes gnu tar >= 1.19 to give 
+	  warnings when creating tar-archives
+	* Fixed bug #490891: skips files when opening an old ARJ archive
+	* Fixed bug #504597: Direct compare on string
+
 version 2.20.2
 --------------
 	* Updated translations: Occitan (oc), Galician (gl), Arabic (ar), 
