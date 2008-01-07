@@ -57,6 +57,7 @@
 #include "gtk-utils.h"
 #include "gconf-utils.h"
 #include "open-file.h"
+#include "sexy-icon-entry.h"
 #include "typedefs.h"
 #include "ui.h"
 #include "utf8-fnmatch.h"
@@ -180,7 +181,7 @@ fr_clipboard_data_ref (FrClipboardData *clipboard_data)
 }
 
 
-void
+static void
 fr_clipboard_data_unref (FrClipboardData *clipboard_data) 
 {
 	if (clipboard_data == NULL)
@@ -199,7 +200,7 @@ fr_clipboard_data_unref (FrClipboardData *clipboard_data)
 }
 
 
-void
+static void
 fr_clipboard_data_set_password (FrClipboardData *clipboard_data,
 			        const char      *password) 
 {
@@ -231,6 +232,8 @@ struct _FrWindowPrivateData {
 	GtkWidget *      location_bar;
 	GtkWidget *      location_entry;
 	GtkWidget *      location_label;
+	GtkWidget *      filter_entry;
+	GtkWidget *      location_pane;
 	GtkWidget *      up_button;
 	GtkWidget *      home_button;
 	GtkWidget *      back_button;
@@ -975,6 +978,23 @@ get_dir_size (FrWindow   *window,
 }
 
 
+static gboolean
+file_data_respects_filter (FrWindow *window,
+			   FileData *fdata)
+{
+	const char *filter;
+
+	filter = gtk_entry_get_text (GTK_ENTRY (window->priv->filter_entry));
+	if ((fdata == NULL) || (filter == NULL) || (*filter == '\0'))
+		return TRUE;
+
+	if (fdata->dir || (fdata->name == NULL))
+		return FALSE;
+		
+	return strncasecmp (fdata->name, filter, strlen (filter)) == 0;
+}
+
+
 static void
 compute_file_list_name (FrWindow   *window,
 			FileData   *fdata,
@@ -987,6 +1007,9 @@ compute_file_list_name (FrWindow   *window,
 	g_free (fdata->list_name);
 	fdata->list_name = NULL;
 	fdata->list_dir = FALSE;
+
+	if (! file_data_respects_filter (window, fdata))
+		return;
 
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
 		fdata->list_name = g_strdup (fdata->name);
@@ -1609,6 +1632,7 @@ fr_window_update_current_location (FrWindow *window)
 	gtk_widget_set_sensitive (window->priv->fwd_button, window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
 	gtk_widget_set_sensitive (window->priv->location_entry, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->location_label, window->priv->archive_present);
+	gtk_widget_set_sensitive (window->priv->filter_entry, window->priv->archive_present);
 
 #if 0
 	fr_window_history_print (window);
@@ -1664,6 +1688,11 @@ fr_window_update_dir_tree (FrWindow *window)
 	for (i = 0; i < window->archive->command->files->len; i++) {
 		FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
 		char     *dir;
+		
+		if (gtk_entry_get_text (GTK_ENTRY (window->priv->filter_entry)) != NULL) {
+			if (! file_data_respects_filter (window, fdata))
+				continue;
+		}
 		
 		if (fdata->dir)
 			dir = remove_ending_separator (fdata->full_path);
@@ -2032,8 +2061,10 @@ location_entry_key_press_event_cb (GtkWidget   *widget,
 	if ((event->keyval == GDK_Return)
 	    || (event->keyval == GDK_KP_Enter)
 	    || (event->keyval == GDK_ISO_Enter))
+	{
 		fr_window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (window->priv->location_entry)), FALSE);
-
+	}
+	
 	return FALSE;
 }
 
@@ -3222,7 +3253,8 @@ file_motion_notify_callback (GtkWidget *widget,
 	/* only redraw if the hover row has changed */
 	if (!(last_hover_path == NULL && window->priv->list_hover_path == NULL) &&
 	    (!(last_hover_path != NULL && window->priv->list_hover_path != NULL) ||
-	     gtk_tree_path_compare (last_hover_path, window->priv->list_hover_path))) {
+	     gtk_tree_path_compare (last_hover_path, window->priv->list_hover_path))) 
+	{
 		if (last_hover_path) {
 			gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
 						 &iter, last_hover_path);
@@ -3722,6 +3754,9 @@ key_press_cb (GtkWidget   *widget,
 	gboolean  alt;
 
 	if (GTK_WIDGET_HAS_FOCUS (window->priv->location_entry))
+		return FALSE;
+		
+	if (GTK_WIDGET_HAS_FOCUS (window->priv->filter_entry))
 		return FALSE;
 
 	alt = (event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK;
@@ -4509,7 +4544,7 @@ sort_by_radio_action (GtkAction      *action,
 }
 
 
-void
+static void
 go_up_one_level_cb (GtkWidget *widget,
 		    void      *data)
 {
@@ -4517,7 +4552,7 @@ go_up_one_level_cb (GtkWidget *widget,
 }
 
 
-void
+static void
 go_home_cb (GtkWidget *widget,
 	    void      *data)
 {
@@ -4525,7 +4560,7 @@ go_home_cb (GtkWidget *widget,
 }
 
 
-void
+static void
 go_back_cb (GtkWidget *widget,
 	    void      *data)
 {
@@ -4533,7 +4568,7 @@ go_back_cb (GtkWidget *widget,
 }
 
 
-void
+static void
 go_forward_cb (GtkWidget *widget,
 	       void      *data)
 {
@@ -4588,6 +4623,29 @@ close_sidepane_button_clicked_cb (GtkButton *button,
 				  FrWindow  *window)
 {
 	fr_window_set_folders_visibility (window, FALSE);
+}
+
+
+static void
+filter_entry_activate_cb (GtkEntry *entry,
+                          FrWindow *window)
+{
+	fr_window_update_file_list (window, TRUE);
+	fr_window_update_dir_tree (window);
+}
+
+
+static void
+filter_entry_icon_released_cb (SexyIconEntry         *entry, 
+			       SexyIconEntryPosition  icon_pos,
+			       int                    button,
+			       gpointer               user_data)
+{
+	if ((button == 1) && (icon_pos == SEXY_ICON_ENTRY_SECONDARY)) {
+		FrWindow *window = FR_WINDOW (user_data);
+		fr_window_update_file_list (window, TRUE);
+		fr_window_update_dir_tree (window);
+	}
 }
 
 
@@ -4778,7 +4836,7 @@ fr_window_construct (FrWindow *window)
 						      G_TYPE_STRING,
 						      G_TYPE_STRING,
 						      G_TYPE_STRING);
-	g_object_set_data (G_OBJECT (window->priv->list_store), "FrWindow", window);
+	g_object_set_data (G_OBJECT (window->priv->list_store), "FrWindow", window);		
 	window->priv->list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (window->priv->list_store));
 
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (window->priv->list_view), TRUE);
@@ -4927,13 +4985,38 @@ fr_window_construct (FrWindow *window)
 	gtk_box_pack_start (GTK_BOX (location_box),
 			    window->priv->location_label, FALSE, FALSE, 5);
 
-	window->priv->location_entry = gtk_entry_new ();
+	window->priv->location_pane = gtk_hpaned_new ();
 	gtk_box_pack_start (GTK_BOX (location_box),
-			    window->priv->location_entry, TRUE, TRUE, 5);
+			    window->priv->location_pane, TRUE, TRUE, 5);
+
+	window->priv->location_entry = gtk_entry_new ();
+	gtk_paned_pack1 (GTK_PANED (window->priv->location_pane),
+			 window->priv->location_entry, TRUE, TRUE);
 
 	g_signal_connect (G_OBJECT (window->priv->location_entry),
 			  "key_press_event",
 			  G_CALLBACK (location_entry_key_press_event_cb),
+			  window);
+
+	/* search */
+	
+	window->priv->filter_entry = sexy_icon_entry_new ();
+	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (window->priv->filter_entry),
+				  SEXY_ICON_ENTRY_PRIMARY,
+				  GTK_IMAGE (gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU)));
+	sexy_icon_entry_add_clear_button (SEXY_ICON_ENTRY (window->priv->filter_entry));
+	
+	gtk_widget_set_size_request (window->priv->filter_entry, 130, -1);
+	gtk_paned_pack2 (GTK_PANED (window->priv->location_pane),
+			 window->priv->filter_entry, FALSE, FALSE);
+
+	g_signal_connect (G_OBJECT (window->priv->filter_entry),
+			  "activate",
+			  G_CALLBACK (filter_entry_activate_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->filter_entry),
+			  "icon_released",
+			  G_CALLBACK (filter_entry_icon_released_cb),
 			  window);
 
 	gtk_widget_show_all (window->priv->location_bar);
@@ -6229,10 +6312,10 @@ fr_window_get_n_selected_files (FrWindow *window)
 }
 
 
-GtkListStore *
+GtkTreeModel *
 fr_window_get_list_store (FrWindow *window)
 {
-	return window->priv->list_store;
+	return GTK_TREE_MODEL (window->priv->list_store);
 }
 
 

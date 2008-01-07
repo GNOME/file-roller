@@ -127,6 +127,8 @@ file_roller_SOURCES = 			\
 	open-file.h			\
 	preferences.c			\
 	preferences.h			\
+	sexy-icon-entry.c		\
+	sexy-icon-entry.h		\
 	typedefs.h			\
 	ui.h				\
 	utf8-fnmatch.c			\
