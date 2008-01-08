@@ -1,3 +1,14 @@
+2008-01-08  Wouter Bolsterlee  <wbolster@svn.gnome.org>
+
+	* configure.in:
+
+	Add gnome-vfs libs for the nautilus extension since
+	they're not automatically pulled in with Nautilus
+	anymore (Nautilus uses GIO now). The real fix would of
+	course be to convert the code to GIO, but this
+	workaround at least fixes the build for now. See also
+	bug #501542.
+
 2008-01-07  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.21.1 released ]
