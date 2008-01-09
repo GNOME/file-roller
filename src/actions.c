@@ -768,6 +768,16 @@ activate_action_delete_folder_from_sidebar (GtkAction *action,
 
 
 void
+activate_action_find (GtkAction *action, 
+		      gpointer   data)
+{
+	FrWindow *window = data;
+
+	fr_window_find (window);
+}
+
+
+void
 activate_action_select_all (GtkAction *action,
 			    gpointer   data)
 {

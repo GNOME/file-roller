@@ -40,7 +40,7 @@ fr_list_model_multi_row_draggable (EggTreeMultiDragSource *drag_source,
 	window = g_object_get_data (G_OBJECT (drag_source), "FrWindow");
 	g_return_val_if_fail (window != NULL, FALSE);
 
-	model = GTK_TREE_MODEL (fr_window_get_list_store (window));
+	model = fr_window_get_list_store (window);
 
 	for (scan = path_list; scan; scan = scan->next) {
 		GtkTreeRowReference *reference = scan->data;

@@ -124,6 +124,11 @@ static GtkActionEntry action_entries[] = {
 	  N_("Extract"), NULL,
 	  N_("Extract files from the archive"),
 	  G_CALLBACK (activate_action_extract) },
+	{ "Find", GTK_STOCK_FIND,
+	  NULL, NULL,
+	  NULL,
+	  G_CALLBACK (activate_action_find) },
+	  
 	{ "LastOutput", NULL,
 	  N_("_Last Output"), NULL,
 	  N_("View the output produced by the last executed command"),
@@ -278,6 +283,8 @@ static const gchar *ui_info =
 "      <separator/>"
 "      <menuitem action='SelectAll'/>"
 "      <menuitem action='DeselectAll'/>"
+"      <separator/>"
+"      <menuitem action='Find'/>"
 "      <separator/>"
 "      <menuitem action='Password'/>"
 "    </menu>"

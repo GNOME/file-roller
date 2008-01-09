@@ -53,6 +53,7 @@ void activate_action_paste_folder_from_sidebar (GtkAction *action, gpointer data
 void activate_action_rename_folder_from_sidebar (GtkAction *action, gpointer data);
 void activate_action_delete_folder_from_sidebar (GtkAction *action, gpointer data);
 
+void activate_action_find (GtkAction *action, gpointer data);
 void activate_action_select_all (GtkAction *action, gpointer data);
 void activate_action_deselect_all (GtkAction *action, gpointer data);
 void activate_action_open_with (GtkAction *action, gpointer data);
