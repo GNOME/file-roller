@@ -948,7 +948,8 @@ get_temp_work_dir (void)
 
 
 gboolean
-is_temp_work_dir (const char *dir) {
+is_temp_work_dir (const char *dir)
+{
 	int i;
 
 	if (strncmp (dir, "file://", 7) == 0)
@@ -966,6 +967,20 @@ is_temp_work_dir (const char *dir) {
 	}
 
 	return FALSE;
+}
+
+
+gboolean
+is_temp_dir (const char *dir)
+{
+	if (strncmp (dir, "file://", 7) == 0)
+		dir = dir + 7;
+	if (strcmp (g_get_tmp_dir (), dir) == 0)
+		return TRUE;
+	if (path_in_path (g_get_tmp_dir (), dir))
+		return TRUE;
+	else
+		return is_temp_work_dir (dir);
 }
 
 

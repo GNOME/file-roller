@@ -2491,7 +2491,7 @@ fr_window_add_to_recent_list (FrWindow *window,
 	if (window->priv->batch_mode)
 		return;
 
-	if (is_temp_work_dir (uri))
+	if (is_temp_dir (uri))
 		return;
 
 	if (window->archive->mime_type != NULL) {
@@ -2822,7 +2822,7 @@ action_performed (FrArchive   *archive,
 		}
 
 		archive_dir = remove_level_from_path (window->priv->archive_uri);
-		temp_dir = is_temp_work_dir (archive_dir);
+		temp_dir = is_temp_dir (archive_dir);
 		if (! window->priv->archive_present) {
 			window->priv->archive_present = TRUE;
 
@@ -7727,6 +7727,16 @@ fr_window_open_files (FrWindow *window,
 /**/
 
 
+static char*
+get_default_dir (const char *dir) 
+{
+	if (! is_temp_dir (dir))
+		return get_uri_from_path (dir);
+	else
+		return NULL;
+}
+
+
 void
 fr_window_set_open_default_dir (FrWindow   *window,
 				const char *default_dir)
@@ -7736,7 +7746,7 @@ fr_window_set_open_default_dir (FrWindow   *window,
 
 	if (window->priv->open_default_dir != NULL)
 		g_free (window->priv->open_default_dir);
-	window->priv->open_default_dir = get_uri_from_path (default_dir);
+	window->priv->open_default_dir = get_default_dir (default_dir);
 }
 
 
@@ -7759,7 +7769,7 @@ fr_window_set_add_default_dir (FrWindow   *window,
 
 	if (window->priv->add_default_dir != NULL)
 		g_free (window->priv->add_default_dir);
-	window->priv->add_default_dir = get_uri_from_path (default_dir);
+	window->priv->add_default_dir = get_default_dir (default_dir);
 }
 
 
@@ -7790,7 +7800,7 @@ fr_window_set_extract_default_dir (FrWindow   *window,
 
 	if (window->priv->extract_default_dir != NULL)
 		g_free (window->priv->extract_default_dir);
-	window->priv->extract_default_dir = get_uri_from_path (default_dir);
+	window->priv->extract_default_dir = get_default_dir (default_dir);
 }
 
 
