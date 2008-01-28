@@ -10,7 +10,8 @@ INCLUDES =						\
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
 	$(DISABLE_DEPRECATED)				\
-	$(NAUTILUS_CFLAGS)
+	$(NAUTILUS_CFLAGS)				\
+	$(FR_CFLAGS)
 
 nautilus_extensiondir=$(NAUTILUS_EXTENSION_DIR)
 
