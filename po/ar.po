@@ -1,27 +1,26 @@
 # translation of file-roller.HEAD.ar.po to Arabic
 # translation of file-roller.po to
-# Copyright (C) 2002,2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2002,2003, 2004, 2006, 2007, 2008 Free Software Foundation, Inc.
 #
 # Isam Bayazidi <bayazidi@arabeyes.org>, 2002.
 # Arafat Medini <lumina@silverpen.de>, 2003.
 # Abdulaziz Al-Arfaj <alarfaj0@yahoo.com>, 2004.
 # Djihed Afifi <djihed@gmail.com>, 2006.
-# Khaled Hosny <khaledhosny@eglug.org>, 2006, 2007.
+# Khaled Hosny <khaledhosny@eglug.org>, 2006, 2007, 2008.
 # Seba Barto <nanoosa@gmail.com>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD.ar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-31 08:07+0000\n"
-"PO-Revision-Date: 2007-08-28 20:17-0000\n"
-"Last-Translator: Sohaib Afifi <sohaibafifi@gmail.com>\n"
+"PO-Revision-Date: 2008-02-06 02:43+0200\n"
+"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : n>=3 && n<=10 ? 2 : "
-"3\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: ../data/glade/add-options.glade.h:1
 msgid "Load Options"
@@ -33,20 +32,20 @@ msgstr "أن_شئ"
 
 #: ../data/glade/batch-add-files.glade.h:2
 msgid "Create Archive"
-msgstr "أنشئ محفوظة"
+msgstr "أنشئ أرشيفا"
 
 #: ../data/glade/batch-add-files.glade.h:3 ../src/fr-window.c:4030
 msgid "Location"
-msgstr "الموقع"
+msgstr "المكان"
 
 #. current location
 #: ../data/glade/batch-add-files.glade.h:4 ../src/fr-window.c:5055
 msgid "Location:"
-msgstr "الموقع:"
+msgstr "المكان:"
 
 #: ../data/glade/batch-add-files.glade.h:5
 msgid "_Archive:"
-msgstr "_أرشيف:"
+msgstr "أ_رشيف:"
 
 #: ../data/glade/batch-password.glade.h:1
 msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
@@ -83,7 +82,7 @@ msgstr "التطبيق الم_توفر:"
 
 #: ../data/glade/open-with.glade.h:2
 msgid "Open Files"
-msgstr "افتح ملفات"
+msgstr "افتح الملفات"
 
 #: ../data/glade/open-with.glade.h:3
 msgid "R_ecent applications:"
@@ -99,8 +98,8 @@ msgid ""
 "current archive, and to decrypt files you extract from the current archive. "
 "When the archive is closed the password will be deleted.</i>"
 msgstr ""
-"<i><b>ملاحظة:</b> ستستعمل كلمة السر لتشفير الملفات التي ستضيفها للأرشيف "
-"الحالي، ولفك التشفير عند استخراج الملفات منها. عند اغلاق اﻷرشيف ستمحى كلمة "
+"<i><b>ملاحظة:</b> ستستعمل كلمة السر لتعمية الملفات التي ستضيفها للأرشيف "
+"الحالي، ولفك التعمية عند استخراج الملفات منها. عند اغلاق اﻷرشيف ستمحى كلمة "
 "السر</i>"
 
 #: ../data/glade/password.glade.h:2
@@ -109,7 +108,7 @@ msgstr "كلمة السر"
 
 #: ../data/glade/update.glade.h:1
 msgid "S_elect the files you want to update:"
-msgstr ""
+msgstr "ا_ختر الملفات التي تريد تحديثها:"
 
 #. secondary text
 #: ../data/glade/update.glade.h:2 ../src/dlg-update.c:181
@@ -120,21 +119,22 @@ msgid ""
 msgid_plural ""
 "There are %d files that have been modified with an external application. If "
 "you don't update the files in the archive, all of your changes will be lost."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "لم يُعدّل الملف ببرامج خارجية."
+msgstr[1] "لقد عُدّل الملف ببرنامج خارجي. إذا لم تُحدّث النسخة داخل الأرشيف ستُفقد كل تغييراتك."
+msgstr[2] "لقد عُدّل ملفين ببرنامج خارجي. إذا لم تُحدّث الملفات داخل الأرشيف ستُفقد كل تغييراتك."
+msgstr[3] "لقد عُدّل %Id ملفات ببرنامج خارجي. إذا لم تُحدّث الملفات داخل الأرشيف ستُفقد كل تغييراتك."
+msgstr[4] "لقد عُدّل %Id ملفًا ببرنامج خارجي. إذا لم تُحدّث الملفات داخل الأرشيف ستُفقد كل تغييراتك."
+msgstr[5] "لقد عُدّل %Id ملف ببرنامج خارجي. إذا لم تُحدّث الملفات داخل الأرشيف ستُفقد كل تغييراتك."
 
 #: ../data/glade/update.glade.h:3
-#, fuzzy
 msgid "_Update"
-msgstr "ا_لصق"
+msgstr "_حدّث"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1891
 #: ../src/fr-window.c:4756 ../src/main.c:218
 msgid "Archive Manager"
-msgstr "مدير الأرشيف"
+msgstr "مدير الأرشيفات"
 
 #: ../data/file-roller.desktop.in.in.h:2
 msgid "Create and modify an archive"
@@ -146,7 +146,7 @@ msgstr "استخرج هنا"
 
 #: ../nautilus/nautilus-fileroller.c:243
 msgid "Extract the selected archive in the current position"
-msgstr "استخرج اﻷرشيف المنتقى إلى المكان الحالي."
+msgstr "استخرج اﻷرشيف المختار إلى المكان الحالي."
 
 #: ../nautilus/nautilus-fileroller.c:260
 msgid "Extract To..."
@@ -154,7 +154,7 @@ msgstr "استخرج إلى..."
 
 #: ../nautilus/nautilus-fileroller.c:261
 msgid "Extract the selected archive"
-msgstr "استخرج الأرشيف المنتقى"
+msgstr "استخرج الأرشيف المختار"
 
 #: ../nautilus/nautilus-fileroller.c:280
 msgid "Create Archive..."
@@ -162,18 +162,18 @@ msgstr "أنشئ أرشيفا..."
 
 #: ../nautilus/nautilus-fileroller.c:281
 msgid "Create an archive with the selected objects"
-msgstr "أنشئ أرشيفا بالأشياء المنتقاة"
+msgstr "أنشئ أرشيفا بالعناصر المختارة"
 
 #: ../src/actions.c:144 ../src/actions.c:162 ../src/actions.c:200
 #: ../src/dlg-batch-add.c:128 ../src/dlg-batch-add.c:143
 #: ../src/dlg-batch-add.c:167 ../src/dlg-batch-add.c:211
 #: ../src/dlg-batch-add.c:257 ../src/fr-window.c:2643
 msgid "Could not create the archive"
-msgstr "لا يمكن إنشاء الأرشيف"
+msgstr "تعذّر إنشاء الأرشيف"
 
 #: ../src/actions.c:145 ../src/dlg-batch-add.c:129 ../src/dlg-batch-add.c:258
 msgid "You have to specify an archive name."
-msgstr "يجب تحديد إسم اﻷرشيف."
+msgstr "يجب تحديد اسم للأرشيف."
 
 #: ../src/actions.c:163
 msgid "You don't have permission to create an archive in this folder"
@@ -194,7 +194,7 @@ msgstr "اكتب فوقه"
 
 #: ../src/actions.c:233
 msgid "Could not delete the old archive."
-msgstr "لا يمكن محو الأرشيف القديم."
+msgstr "تعذّر محو الأرشيف القديم."
 
 #: ../src/actions.c:330
 msgid "New"
@@ -235,10 +235,7 @@ msgid ""
 "the terms of the GNU General Public License as published by the Free "
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
-msgstr ""
-"File Roller هو برنامج مجاني; بامكانك اعادة توزيعه و/أو تعديله تحت رخصة "
-"قوانين جنو العامة كما هو منشور عبر مؤسسة البرامج المجانية; إما اصدارة 2 من "
-"الرخصة أو (عند إختيارك) أي اصدارة لاحقة."
+msgstr "مدير الأرشيفات برنامج حر، يمكنك توزيعه و/أو تعديله حسب بنود رخصة جنو العمومية كما نشرتها مؤسسة البرمجيات الحرة، الإصدار الثاني أو أي إصدار أحدث (حسب رغبتك)."
 
 #: ../src/actions.c:939
 msgid ""
@@ -246,10 +243,7 @@ msgid ""
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
-msgstr ""
-"File Roller يتم توزيعه على أمل أن يكون مفيدا، لكنه يوزع من دون أي ضمانات، من "
-"دون حتى ضمان ضمني للشحن او لكي يناسب هدفا معينا. أنظر الى رخصة قوانين جنو "
-"العامة للمزيد من التفاصيل."
+msgstr "يوزع مدير الأرشيفات على أمل أن يكون مفيداً، ولكن دون أية ضمانات، بما في ذلك ضمانات قابلية البرنامج للتسويق أو الملاءمة لغرض معين. انظر نص رخصة جنو العمومية لمزيد من التفاصيل."
 
 #: ../src/actions.c:943
 msgid ""
@@ -257,28 +251,30 @@ msgid ""
 "File Roller; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
 msgstr ""
-"يجب أن تكون قد وصلتك نسخة من رخصة قوانين جنو العامة مع File Roller; إذا لم "
-"تصلك، أكتب الى مؤسسة البرامج المجانية على العنوان التالي:Free Software "
-"Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
+"من المفترض أنك تلقيت نسخة من رخصة جنو العمومية مع هذا البرنامج؛ إذا لم يحدث هذا فاكتب إلى:\n"
+"Free Software Foundation, Inc., 51 "
+"Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
 
 #: ../src/actions.c:953
 msgid "Copyright © 2001-2007 Free Software Foundation, Inc."
-msgstr "جميع الحقوق محفوظة © 2001-2007 Free Software Foundation, Inc."
+msgstr "جميع الحقوق محفوظة © 2001-2007 مؤسسة البرمجيات الحرّة."
 
 #: ../src/actions.c:954
 msgid "An archive manager for GNOME."
-msgstr "مدير اﻷرشيف لجنوم."
+msgstr "مدير أرشيفات لجنوم."
 
 #: ../src/actions.c:957
 msgid "translator-credits"
 msgstr ""
 "فريق عربآيز للترجمة http://www.arabeyes.org :\n"
-"جهاد عفيفي\t<djihed@gmail.com>سبأ برتو\t<nanoosa@gmail.com>"
+"جهاد عفيفي\t<djihed@gmail.com>\n"
+"سبأ برتو\t<nanoosa@gmail.com>\n"
+"خالد حسني\t<khaledhosny@eglug.org>"
 
 #: ../src/dlg-add-files.c:87 ../src/dlg-add-files.c:147
 #: ../src/dlg-add-folder.c:126 ../src/dlg-add-folder.c:214
 msgid "Could not add the files to the archive"
-msgstr "لا يمكن اضافة الملفات للأرشيف"
+msgstr "تعذّر إضافة الملفات للأرشيف"
 
 #: ../src/dlg-add-files.c:88 ../src/dlg-add-files.c:148
 #: ../src/dlg-add-folder.c:127 ../src/dlg-add-folder.c:215
@@ -288,15 +284,15 @@ msgstr "لا تملك التصاريح الكافية لقراءة الملفا�
 
 #: ../src/dlg-add-files.c:171 ../src/ui.h:49
 msgid "Add Files"
-msgstr "أضف ملفات"
+msgstr "ضِف ملفات"
 
 #: ../src/dlg-add-files.c:185 ../src/dlg-add-folder.c:277
 msgid "_Add only if newer"
-msgstr "أ_ضف فقط اذا كان احدث"
+msgstr "_ضِف فقط إذا كان أحدث"
 
 #: ../src/dlg-add-folder.c:263
 msgid "Add a Folder"
-msgstr "أضف مجلّد"
+msgstr "ضِف مجلّدا"
 
 #: ../src/dlg-add-folder.c:278
 msgid "_Include subfolders"
@@ -332,7 +328,7 @@ msgstr "احفظ الخيارات"
 
 #: ../src/dlg-add-folder.c:730
 msgid "Options Name:"
-msgstr "إسم الخيارات:"
+msgstr "اسم الخيارات:"
 
 #: ../src/dlg-ask-password.c:124
 #, c-format
@@ -346,7 +342,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"الإسم \"%s\" غير صالح بسبب احتواءه على الرموز: %s\n"
+"الاسم \"%s\" غير صالح بسبب احتواءه على الرموز: %s\n"
 "\n"
 "%s"
 
@@ -370,7 +366,7 @@ msgid ""
 msgstr ""
 "المجلّد المطلوب \"%s\" غير موجود.\n"
 "\n"
-" هل تريد انشاءه؟"
+" هل تريد إنشاءه؟"
 
 #: ../src/dlg-batch-add.c:193 ../src/dlg-extract.c:122 ../src/fr-window.c:5937
 msgid "Create _Folder"
@@ -379,11 +375,11 @@ msgstr "أنشئ _مجلّد"
 #: ../src/dlg-batch-add.c:212 ../src/dlg-extract.c:139 ../src/fr-window.c:5957
 #, c-format
 msgid "Could not create the destination folder: %s."
-msgstr "لا يمكن انشاء المجلّد المرسل اليه: %s."
+msgstr "تعذّر إنشاء المجلّد المرسل اليه: %s."
 
 #: ../src/dlg-batch-add.c:228
 msgid "Archive not created"
-msgstr "لم ينشأ اﻷرشيف"
+msgstr "لم يُنشأ اﻷرشيف"
 
 #: ../src/dlg-batch-add.c:276
 msgid "The archive is already present.  Do you want to overwrite it?"
@@ -391,7 +387,7 @@ msgstr "الأرشيف موجود. هل تريد الكتابة فوقه؟"
 
 #: ../src/dlg-batch-add.c:279
 msgid "_Overwrite"
-msgstr "أ_كتب فوقه"
+msgstr "ا_كتب فوقه"
 
 #: ../src/dlg-extract.c:144 ../src/dlg-extract.c:161 ../src/dlg-extract.c:187
 #: ../src/fr-window.c:3589 ../src/fr-window.c:5956 ../src/fr-window.c:5972
@@ -400,9 +396,8 @@ msgstr "لم يؤدّى الاستخراج"
 
 #: ../src/dlg-extract.c:188 ../src/fr-window.c:3742
 #, c-format
-msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "لا تملك الصلاحيات الكافية لاستخراج المحفوظات في المجلّد\"%s\""
+msgid "You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "لا تملك الصلاحيات الكافية لاستخراج الأرشيفات في المجلّد \"%s\""
 
 #: ../src/dlg-extract.c:361
 msgid "Files"
@@ -410,11 +405,11 @@ msgstr "ملفات"
 
 #: ../src/dlg-extract.c:410
 msgid "Actions"
-msgstr "أفعال"
+msgstr "إجراءات"
 
 #: ../src/dlg-extract.c:426
 msgid "Re-crea_te folders"
-msgstr "أ_عد انشاء المجلّدات"
+msgstr "أ_عد إنشاء المجلّدات"
 
 #: ../src/dlg-extract.c:430
 msgid "Over_write existing files"
@@ -426,7 +421,7 @@ msgstr "لا ت_ستخرج الملفات الأقدم"
 
 #: ../src/dlg-extract.c:449
 msgid "_Open destination folder after extraction"
-msgstr "ا_فتح المجلد المطلوب بعد الإستخراج"
+msgstr "ا_فتح المجلد المطلوب بعد الاستخراج"
 
 #: ../src/dlg-extract.c:480 ../src/ui.h:124
 msgid "Extract"
@@ -443,7 +438,7 @@ msgstr "الاسم:"
 #: ../src/dlg-prop.c:130
 #, c-format
 msgid "%s Properties"
-msgstr "%s خصائص"
+msgstr "خصائص %s"
 
 #: ../src/dlg-prop.c:139
 msgid "Modified on:"
@@ -466,14 +461,14 @@ msgid "Number of files:"
 msgstr "عدد الملفات:"
 
 #: ../src/dlg-update.c:158
-#, fuzzy, c-format
+#, c-format
 msgid "Update the file \"%s\" in the archive \"%s\"?"
-msgstr "لا يمكن اضافة الملفات للأرشيف"
+msgstr "أأحدّث الملف \"%s\" في الأرشيف \"%s\"؟ "
 
 #: ../src/dlg-update.c:172
-#, fuzzy, c-format
+#, c-format
 msgid "Update the files in the archive \"%s\"?"
-msgstr "لا يمكن اضافة الملفات للأرشيف"
+msgstr "أأحدّث الملفات في الأرشيف \"%s\"؟ "
 
 #: ../src/file-data.c:29
 msgid "Unknown type"
@@ -489,35 +484,35 @@ msgstr "لا تملك الصلاحيات الكافية."
 
 #: ../src/fr-archive.c:2561
 msgid "You can't add an archive to itself."
-msgstr "لا يمكنك اضافة أرشيف لنفسه."
+msgstr "لا يمكنك إضافة أرشيف لنفسه."
 
 #: ../src/fr-command-tar.c:296
 msgid "Adding file: "
-msgstr "جاري اضافة الملف: "
+msgstr "يجري إضافة الملف: "
 
 #: ../src/fr-command-tar.c:348
 msgid "Removing file: "
-msgstr "جاري إزالة الملف:"
+msgstr "يجري إزالة الملف:"
 
 #: ../src/fr-command-tar.c:357 ../src/fr-window.c:2173
 msgid "Deleting files from archive"
-msgstr "جاري حذف الملفات من الأرشيف"
+msgstr "يجري حذف الملفات من الأرشيف"
 
 #: ../src/fr-command-tar.c:392
 msgid "Extracting file: "
-msgstr "جاري استخراج الملفات: "
+msgstr "يجري استخراج الملفات: "
 
 #: ../src/fr-command-tar.c:446
 msgid "Recompressing archive"
-msgstr "جاري اعادة ضغط الأرشيف"
+msgstr "يجري إعادة ضغط الأرشيف"
 
 #: ../src/fr-command-tar.c:613
 msgid "Decompressing archive"
-msgstr "جاري فك ضغط الأرشيف"
+msgstr "يجري فك ضغط الأرشيف"
 
 #: ../src/fr-stock.c:44 ../src/fr-stock.c:45
 msgid "_Add"
-msgstr "أ_ضف"
+msgstr "_ضِف"
 
 #: ../src/fr-stock.c:46
 msgid "_Extract"
@@ -525,25 +520,29 @@ msgstr "ا_ستخرج"
 
 #: ../src/fr-stock.c:47
 msgid "_View File"
-msgstr "ا_عرض ملف"
+msgstr "ا_عرض الملف"
 
 #: ../src/fr-window.c:1445
-#, c-format
+#, fuzzy, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
-msgstr[0] "%d شئ (%s)"
-msgstr[1] "%d أشياء (%s)"
-msgstr[2] "%d أشياء (%s)"
-msgstr[3] "%d شئ (%s)"
+msgstr[0] "لا عناصر (%2$s)"
+msgstr[1] "عنصر واحد (%2$s)"
+msgstr[2] "عنصرين (%2$s)"
+msgstr[3] "%Id عناصر (%s)"
+msgstr[4] "%Id عنصرًا"
+msgstr[5] "%Id عنصر"
 
 #: ../src/fr-window.c:1450
-#, c-format
+#, fuzzy, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
-msgstr[0] "انتُقي %d ملفّ (%s)"
-msgstr[1] "انتُقيت %d ملفّات (%s)"
-msgstr[2] "انتُقيت %d ملفّات (%s)"
-msgstr[3] "انتُقي %d ملفّ (%s)"
+msgstr[0] "لم تُحدّد أي عناصر (%2$s)"
+msgstr[1] "حُدِّد عُنصُر واحد (%2$s)"
+msgstr[2] "حُدِّد عُنصرين (%2$s)"
+msgstr[3] "حُدِّدت %Id عناصر (%s)"
+msgstr[4] "حُدِّد %Id عنصرًا (%s)"
+msgstr[5] "حُدِّد %Id عنصر (%s)"
 
 #: ../src/fr-window.c:1518
 msgid "Folder"
@@ -555,39 +554,39 @@ msgstr "[للقراءة فقط]"
 
 #: ../src/fr-window.c:2164 ../src/fr-window.c:2194
 msgid "Creating archive"
-msgstr "جاري إنشاء الأرشيف"
+msgstr "يُنشئ الأرشيف"
 
 #: ../src/fr-window.c:2167
 msgid "Loading archive"
-msgstr "جاري تحميل الأرشيف"
+msgstr "يُحمّل الأرشيف"
 
 #: ../src/fr-window.c:2170
 msgid "Reading archive"
-msgstr "جاري قراءة الأرشيف"
+msgstr "يقرأ الأرشيف"
 
 #: ../src/fr-window.c:2176
 msgid "Testing archive"
-msgstr "جاري اختبار الأرشيف"
+msgstr "يختبر الأرشيف"
 
 #: ../src/fr-window.c:2179
 msgid "Getting the file list"
-msgstr "جاري تلقي قائمة الملفات"
+msgstr "يجلب قائمة الملفات"
 
 #: ../src/fr-window.c:2182 ../src/fr-window.c:2191
 msgid "Copying the file list"
-msgstr "جاري نسخ قائمة الملفات"
+msgstr "ينسخ قائمة الملفات"
 
 #: ../src/fr-window.c:2185
 msgid "Adding files to archive"
-msgstr "جاري إضافة الملفات للأرشيف"
+msgstr "يضيف الملفات للأرشيف"
 
 #: ../src/fr-window.c:2188
 msgid "Extracting files from archive"
-msgstr "جاري استخراج الملفات من الأرشيف"
+msgstr "يستخرج الملفات من الأرشيف"
 
 #: ../src/fr-window.c:2197
 msgid "Saving archive"
-msgstr "حفظ الأرشيف"
+msgstr "يحفظ الأرشيف"
 
 #: ../src/fr-window.c:2383
 msgid "Archive:"
@@ -595,25 +594,25 @@ msgstr "أرشيف:"
 
 #: ../src/fr-window.c:2475
 msgid "wait please..."
-msgstr "الرجاء الانتظار..."
+msgstr "رجاءً انتظر..."
 
 #: ../src/fr-window.c:2543
 #, c-format
 msgid "Could not display the folder \"%s\""
-msgstr "لا يمكن عرض المجلّد \"%s\""
+msgstr "تعذّر عرض المجلّد \"%s\""
 
 #: ../src/fr-window.c:2647
 msgid "An error occurred while extracting files."
-msgstr "حدث خطأ عند استخراج الملفات."
+msgstr "حدث خطأ أثناء استخراج الملفات."
 
 #: ../src/fr-window.c:2655
 #, c-format
 msgid "Could not open \"%s\""
-msgstr "لا يمكن فتح \"%s\""
+msgstr "تعذّر فتح \"%s\""
 
 #: ../src/fr-window.c:2660
 msgid "An error occurred while loading the archive."
-msgstr "حدث خطأ عند تحميل الأرشيف."
+msgstr "حدث خطأ أثناء تحميل الأرشيف."
 
 #: ../src/fr-window.c:2664
 msgid "An error occurred while deleting files from the archive."
@@ -625,11 +624,11 @@ msgstr "حدث خطأ أثناء إضافة الملفات للأرشيف"
 
 #: ../src/fr-window.c:2672
 msgid "An error occurred while testing archive."
-msgstr "حدث خطأ عند اختبار الأرشيف."
+msgstr "حدث خطأ أثناء اختبار الأرشيف."
 
 #: ../src/fr-window.c:2681
 msgid "Command not found."
-msgstr "لا يوجد الأمر."
+msgstr "لا وجود للأمر."
 
 #: ../src/fr-window.c:2684
 msgid "Command exited abnormally."
@@ -641,13 +640,13 @@ msgstr "نتيجة الاختبار"
 
 #: ../src/fr-window.c:3450 ../src/fr-window.c:7446
 msgid "Could not perform the operation"
-msgstr "لا يمكن القيام بالعملية"
+msgstr "تعذّر القيام بالعملية"
 
 #: ../src/fr-window.c:3477
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
-msgstr "هل تريد اضافة هذا الملف للأرشيف الحالي أم فتحه كأرشيف جديد؟"
+msgstr "هل تريد إضافة هذا الملف للأرشيف الحالي أم فتحه كأرشيف جديد؟"
 
 #: ../src/fr-window.c:3507
 msgid "Do you want to create a new archive with these files?"
@@ -655,7 +654,7 @@ msgstr "هل تريد إنشاء أرشيف جديد بهذه الملفّات؟
 
 #: ../src/fr-window.c:3510
 msgid "Create _Archive"
-msgstr "انشئ _أرشيف"
+msgstr "أنشئ أر_شيفا"
 
 #: ../src/fr-window.c:3989 ../src/fr-window.c:5152
 msgid "Folders"
@@ -695,7 +694,7 @@ msgstr "اذهب إلى المجلّد المنزلي"
 
 #: ../src/fr-window.c:5089
 msgid "Find:"
-msgstr ""
+msgstr "ابحث:"
 
 #: ../src/fr-window.c:5160
 msgid "Close the folders pane"
@@ -704,7 +703,7 @@ msgstr "أغلق لوحة المجلّدات"
 #: ../src/fr-window.c:5258 ../src/fr-window.c:5261 ../src/ui.h:142
 #: ../src/ui.h:146
 msgid "Open archive"
-msgstr "افتح أرشيف"
+msgstr "افتح أرشيفا"
 
 #: ../src/fr-window.c:5259
 msgid "Open a recently used archive"
@@ -713,15 +712,15 @@ msgstr "افتح آخر أرشيف تم استخدامه"
 #: ../src/fr-window.c:5571
 #, c-format
 msgid "Could not save the archive \"%s\""
-msgstr "لا يمكن حفظ الأرشيف \"%s\""
+msgstr "تعذّر حفظ الأرشيف \"%s\""
 
 #: ../src/fr-window.c:6825
 msgid "The new name is void."
-msgstr "الإسم الجديد فارغ."
+msgstr "الاسم الجديد فارغ."
 
 #: ../src/fr-window.c:6829
 msgid "The new name is equal to the old one."
-msgstr "الإسم الجديد مساو للإسم القديم."
+msgstr "الاسم الجديد مساو للاسم القديم."
 
 #: ../src/fr-window.c:6869
 #, c-format
@@ -730,8 +729,8 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"المجلّد الذي اسمه \"%s\" موجود مسبقا\n"
-".\n"
+"المجلّد الذي اسمه \"%s\" موجود مسبقا.\n"
+"\n"
 "%s"
 
 #: ../src/fr-window.c:6871
@@ -741,37 +740,37 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"الملف الذي اسمه \"%s\" موجود مسبقاً\n"
-".\n"
+"الملف الذي اسمه \"%s\" موجود مسبقاً.\n"
+"\n"
 "%s"
 
 #: ../src/fr-window.c:6938
 msgid "Rename"
-msgstr "أعِد التسمية"
+msgstr "غيّر الاسم"
 
 #: ../src/fr-window.c:6939
 msgid "New folder name"
-msgstr "اسم مجلّد جديد"
+msgstr "اسم المجلّد الجديد"
 
 #: ../src/fr-window.c:6939
 msgid "New file name"
-msgstr "اسم ملف جديد"
+msgstr "اسم الملف الجديد"
 
 #: ../src/fr-window.c:6943
 msgid "_Rename"
-msgstr "أ_عِد التسمية"
+msgstr "_غيّر الاسم"
 
 #: ../src/fr-window.c:6960 ../src/fr-window.c:6979
 msgid "Could not rename the folder"
-msgstr "لا يمكن اعادة تسمية المجلّد"
+msgstr "تعذّر تغيير اسم المجلّد"
 
 #: ../src/fr-window.c:6960 ../src/fr-window.c:6979
 msgid "Could not rename the file"
-msgstr "لا يمكن اعادة تسمية الملف"
+msgstr "تعذّر تغيير اسم الملف"
 
 #: ../src/fr-window.c:7374
 msgid "Paste Selection"
-msgstr "الصق المنتقى"
+msgstr "الصق المحدد"
 
 #: ../src/fr-window.c:7375
 msgid "Destination folder"
@@ -779,7 +778,7 @@ msgstr "المجلّد المطلوب"
 
 #: ../src/fr-window.c:7929
 msgid "Add files to an archive"
-msgstr "أضِف الملفات للأرشيف"
+msgstr "ضِف الملفات للأرشيف"
 
 #: ../src/fr-window.c:7972
 msgid "Extract archive"
@@ -790,16 +789,16 @@ msgstr "استخرج الأرشيف"
 #. * explanation of the values.
 #: ../src/glib-utils.c:514
 msgid "%d %B %Y, %H:%M"
-msgstr "%d %B %Y, %H:%M"
+msgstr "%Od %B %Y، %OI:%OM"
 
 #. Button
 #: ../src/gtk-utils.c:439
 msgid "Command _Line Output"
-msgstr "مخرج سطر الأو_امر"
+msgstr "خرْج _سطر الأوامر"
 
 #: ../src/gtk-utils.c:842
 msgid "Could not display help"
-msgstr "لا يمكن عرض المساعدة"
+msgstr "تعذّر عرض المساعدة"
 
 #: ../src/main.c:66
 msgid "Ace (.ace)"
@@ -819,7 +818,7 @@ msgstr "Ear (.ear)"
 
 #: ../src/main.c:76
 msgid "Self-extracting zip (.exe)"
-msgstr "zip ذاتي الإستخراج (.exe)"
+msgstr "‏zip ذاتي الاستخراج (.exe)"
 
 #: ../src/main.c:78
 msgid "Jar (.jar)"
@@ -835,32 +834,31 @@ msgstr "Rar (.rar)"
 
 #: ../src/main.c:84
 msgid "Tar uncompressed (.tar)"
-msgstr "Tar غير مضغوط (.tar)"
+msgstr "‏Tar غير مضغوط (.tar)"
 
 #: ../src/main.c:85
 msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "Tar مضغوط بـ bzip·(.tar.bz)"
+msgstr "‏Tar مضغوط بـ ‪bzip·(.tar.bz)‬"
 
 #: ../src/main.c:86
 msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "Tar مضغوط بـ bzip2 (.tar.bz2)"
+msgstr "‏Tar مضغوط بـ ‪bzip2 (.tar.bz2)‬"
 
 #: ../src/main.c:87
 msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "Tar مضغوط بـ gzip (.tar.gz)"
+msgstr "‏Tar مضغوط بـ ‪gzip (.tar.gz)‬"
 
 #: ../src/main.c:88
-#, fuzzy
 msgid "Tar compressed with lzma (.tar.lzma)"
-msgstr "Tar مضغوط بـ lzop·(.tar.lzo)"
+msgstr "‏Tar مضغوط بـ ‪lzma (.tar.lzma)‬"
 
 #: ../src/main.c:89
 msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "Tar مضغوط بـ lzop·(.tar.lzo)"
+msgstr "‏Tar مضغوط بـ ‪lzop·(.tar.lzo)‬"
 
 #: ../src/main.c:90
 msgid "Tar compressed with compress (.tar.Z)"
-msgstr "Tar مضغوط بـ compress·(.tar.Z)"
+msgstr "‏Tar مضغوط بـ ‪compress·(.tar.Z)‬"
 
 #: ../src/main.c:92
 msgid "War (.war)"
@@ -880,7 +878,7 @@ msgstr "7-Zip (.7z)"
 
 #: ../src/main.c:146
 msgid "Add files to the specified archive and quit the program"
-msgstr "أضف الملفات للأرشيف المحدّد ثم أنهي البرنامج"
+msgstr "ضِف الملفات للأرشيف المحدّد ثم أغلق البرنامج"
 
 #: ../src/main.c:147
 msgid "ARCHIVE"
@@ -888,53 +886,53 @@ msgstr "أرشيف"
 
 #: ../src/main.c:150
 msgid "Add files asking the name of the archive and quit the program"
-msgstr "أضف الملفات بالسؤال عن إسم الأرشيف ثم أنهي البرنامج"
+msgstr "ضِف الملفات بالسؤال عن اسم الأرشيف ثم أغلق البرنامج"
 
 #: ../src/main.c:154
 msgid "Extract archives to the specified folder and quit the program"
-msgstr "استخرج المحفوظات إلى المجلّد المخصص ثم أنهي البرنامج"
+msgstr "استخرج الأرشيفات إلى المجلّد المخصص ثم أغلق البرنامج"
 
 #: ../src/main.c:155 ../src/main.c:167
 msgid "FOLDER"
-msgstr "المجلّد"
+msgstr "مجلّد"
 
 #: ../src/main.c:158
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "استخرج الأرشيف بالسؤال عن المجلّد المطلوب ثم أنهي البرنامج"
+msgstr "استخرج الأرشيف بالسؤال عن المجلّد المطلوب ثم أغلق البرنامج"
 
 #: ../src/main.c:162
 msgid ""
 "Extract archives using the archive name as destination folder and quit the "
 "program"
-msgstr "استخرج الأرشيف باستخدام إسم اﻷرشيف كمجلّد مطلوب ثم أنهي البرنامج"
+msgstr "استخرج الأرشيف باستخدام اسم اﻷرشيف كمجلّد مطلوب ثم أغلق البرنامج"
 
 #: ../src/main.c:166
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "المجلد الإفتراضي للاستعمال لأوامر '--add' و '--extract'"
+msgstr "المجلد المبدئي للاستعمال لأوامر ‪'--add'‬ و ‪'--extract'‬"
 
 #: ../src/main.c:170
 msgid "Create destination folder without asking confirmation"
-msgstr "انشئ المجلّد المطلوب من غير السؤال عن تأكيد"
+msgstr "أنشئ المجلّد المطلوب من غير السؤال عن تأكيد"
 
 #: ../src/main.c:210
 msgid "- Create and modify an archive"
-msgstr "أنشئ و عدّل أرشيفا"
+msgstr "- أنشئ و عدّل أرشيفا"
 
 #: ../src/main.c:225
 msgid "File Roller"
-msgstr "File Roller"
+msgstr "ضاغط الملفات"
 
 #: ../src/ui.h:33
 msgid "_Archive"
-msgstr "_أرشيف"
+msgstr "أ_رشيف"
 
 #: ../src/ui.h:34
 msgid "_Edit"
-msgstr "_حرّر"
+msgstr "ت_حرير"
 
 #: ../src/ui.h:35
 msgid "_View"
-msgstr "ا_عرض"
+msgstr "_عرض"
 
 #: ../src/ui.h:36
 msgid "_Help"
@@ -945,37 +943,36 @@ msgid "_Arrange Files"
 msgstr "ر_تّب الملفات"
 
 #: ../src/ui.h:38
-#, fuzzy
 msgid "Open _Recent"
-msgstr "افتح ال_حديث"
+msgstr "افتح ملف _حديث"
 
 #: ../src/ui.h:42
 msgid "Information about the program"
-msgstr "معلومات حول البرنامج"
+msgstr "معلومات عنْ البرنامج"
 
 #: ../src/ui.h:45
 msgid "_Add Files..."
-msgstr "أ_ضِف ملفات..."
+msgstr "_ضِف ملفات..."
 
 #: ../src/ui.h:46 ../src/ui.h:50
 msgid "Add files to the archive"
-msgstr "أضِف الملفات للأرشيف"
+msgstr "ضِف الملفات للأرشيف"
 
 #: ../src/ui.h:53
 msgid "Add a _Folder..."
-msgstr "أضف _مجلّد..."
+msgstr "ضِف _مجلّدا..."
 
 #: ../src/ui.h:54 ../src/ui.h:58
 msgid "Add a folder to the archive"
-msgstr "أضف مجلّد إلى الأرشيف"
+msgstr "ضِف مجلّد إلى الأرشيف"
 
 #: ../src/ui.h:57
 msgid "Add Folder"
-msgstr "أضف مجلّد"
+msgstr "ضِف مجلّد"
 
 #: ../src/ui.h:62
 msgid "Close the current archive"
-msgstr "أغلق المحفوظة الحاليّة"
+msgstr "أغلق الأرشيف الحاليّ"
 
 #: ../src/ui.h:65
 msgid "Contents"
@@ -983,15 +980,15 @@ msgstr "المحتويات"
 
 #: ../src/ui.h:66
 msgid "Display the File Roller Manual"
-msgstr "اعرض دليل استخدام File Roller"
+msgstr "اعرض دليل استخدام ضاغط الملفات"
 
 #: ../src/ui.h:71 ../src/ui.h:92
 msgid "Copy the selection"
-msgstr "انسخ المنتقى"
+msgstr "انسخ المحدد"
 
 #: ../src/ui.h:75 ../src/ui.h:96
 msgid "Cut the selection"
-msgstr "قص المنتقى"
+msgstr "قص المحدد"
 
 #: ../src/ui.h:79 ../src/ui.h:100
 msgid "Paste the clipboard"
@@ -999,23 +996,23 @@ msgstr "الصق محتويات الحافظة"
 
 #: ../src/ui.h:82 ../src/ui.h:103
 msgid "_Rename..."
-msgstr "أ_عد التسمية..."
+msgstr "_غيّر الاسم..."
 
 #: ../src/ui.h:83 ../src/ui.h:104
 msgid "Rename the selection"
-msgstr "أعد تسمية المنتقى"
+msgstr "غيّر اسم المحدد"
 
 #: ../src/ui.h:87 ../src/ui.h:108
 msgid "Delete the selection from the archive"
-msgstr "احذف المنتقى من الأرشيف"
+msgstr "احذف المحدد من الأرشيف"
 
 #: ../src/ui.h:112
 msgid "Dese_lect All"
-msgstr "إلغي إخت_يار الكل"
+msgstr "الغِ اخت_يار الكل"
 
 #: ../src/ui.h:113
 msgid "Deselect all files"
-msgstr "إلغي إختيار جميع الملفات"
+msgstr "الغِ اختيار جميع الملفات"
 
 #: ../src/ui.h:116 ../src/ui.h:120
 msgid "_Extract..."
@@ -1035,20 +1032,19 @@ msgstr "اعرض المخرج الناتج من آخر أمر تم تنفيذه"
 
 #: ../src/ui.h:138
 msgid "Create a new archive"
-msgstr "انشئ أرشيف جديد"
+msgstr "أنشئ أرشيفا جديد"
 
 #: ../src/ui.h:149
-#, fuzzy
 msgid "_Open With..."
-msgstr "افتح ب..."
+msgstr "ا_فتح بـ..."
 
 #: ../src/ui.h:150
 msgid "Open selected files with an application"
-msgstr "افتح الملفات المنتقاة باستخدام تطبيق"
+msgstr "افتح الملفات المختارة باستخدام تطبيق"
 
 #: ../src/ui.h:153
 msgid "Pass_word..."
-msgstr "كلمة الس_ر..."
+msgstr "كلمة ال_سر..."
 
 #: ../src/ui.h:154
 msgid "Specify a password for this archive"
@@ -1067,7 +1063,6 @@ msgid "Save the current archive with a different name"
 msgstr "احفظ الأرشيف الحالي تحت اسمٍ مختلف"
 
 #: ../src/ui.h:169
-#, fuzzy
 msgid "_Select All"
 msgstr "اخت_ر الكل"
 
@@ -1085,15 +1080,15 @@ msgstr "ا_ختبر السلامة"
 
 #: ../src/ui.h:178
 msgid "Test whether the archive contains errors"
-msgstr "اختبر ما اذا كان الأرشيف يحتوي على أخطاء"
+msgstr "اختبر ما إذا كان الأرشيف يحتوي على أخطاء"
 
 #: ../src/ui.h:182 ../src/ui.h:186
 msgid "View the selected file"
-msgstr "اعرض الملف المنتقى"
+msgstr "اعرض الملف المختار"
 
 #: ../src/ui.h:190 ../src/ui.h:194
 msgid "Open the selected folder"
-msgstr "افتح المجلد المنتقى"
+msgstr "افتح المجلد المختار"
 
 #: ../src/ui.h:202
 msgid "_Toolbar"
@@ -1137,11 +1132,11 @@ msgstr "اعرض ك_مجلّد"
 
 #: ../src/ui.h:238
 msgid "by _Name"
-msgstr "حسب الإ_سم"
+msgstr "حسب الا_سم"
 
 #: ../src/ui.h:239
 msgid "Sort file list by name"
-msgstr "رتّب قائمة الملفات حسب الإسم"
+msgstr "رتّب قائمة الملفات حسب الاسم"
 
 #: ../src/ui.h:241
 msgid "by _Size"
@@ -1169,11 +1164,9 @@ msgstr "رتّب قائمة الملفات حسب تاريخ التعديل"
 
 #: ../src/ui.h:250
 msgid "by _Location"
-msgstr "حسب ال_موقع"
+msgstr "حسب ال_مكان"
 
 #: ../src/ui.h:251
 msgid "Sort file list by location"
-msgstr "رتّب قائمة الملفات حسب الموقع"
+msgstr "رتّب قائمة الملفات حسب مكانها"
 
-#~ msgid "Cannot extract archives in a remote folder \"%s\""
-#~ msgstr "لايمكن استخراج الأرشيف في مجلّد عن بعد \"%s\""
