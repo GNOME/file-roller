@@ -326,9 +326,7 @@ fr_command_tar_add (FrCommand     *comm,
 		g_free (e_base_dir);
 	}
 
-	if (! g_file_test (comm->filename, G_FILE_TEST_EXISTS))
-		fr_process_add_arg (comm->process, "-cf");
-	else if (update)
+	if (update)
 		fr_process_add_arg (comm->process, "-uf");
 	else
 		fr_process_add_arg (comm->process, "-rf");
