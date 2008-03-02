@@ -157,7 +157,12 @@ add_clicked_cb (GtkWidget  *widget,
 	/* Check directory existence. */
 
 	archive_dir = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (data->a_location_filechooserbutton));
-
+	if (archive_dir == NULL) {
+		g_free (archive_dir);
+		g_free (archive_name);
+		return;
+	}
+		
 	if (! check_permissions (archive_dir, R_OK|W_OK|X_OK)) {
 		GtkWidget  *d;
 
