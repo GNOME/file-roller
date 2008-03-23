@@ -122,7 +122,7 @@ match_regexps (GRegex     **regexps,
 			break;
 		}
 		
-	return matched
+	return matched;
 }
 
 
