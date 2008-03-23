@@ -103,12 +103,35 @@ filter_destroy (Filter *filter)
 
 
 static gboolean
+match_regexps (GRegex     **regexps,
+	       const char  *string)
+{
+	gboolean matched;
+	int      i;
+	
+	if ((regexps == NULL) || (regexps[0] == NULL))
+		return TRUE;
+
+	if (string == NULL)
+		return FALSE;
+	
+	matched = FALSE;
+	for (i = 0; regexps[i] != NULL; i++)
+		if (g_regex_match (regexps[i], string, 0, NULL)) {
+			matched = TRUE;
+			break;
+		}
+		
+	return matched
+}
+
+
+static gboolean
 filter_apply (Filter     *filter,
 	      const char *name)
 {
 	const char *file_name;
 	char       *utf8_name;
-	int         i;
 	gboolean    matched;
 
 	g_return_val_if_fail (filter != NULL, FALSE);
@@ -123,18 +146,9 @@ filter_apply (Filter     *filter,
 	if ((filter->options & FILTER_NOBACKUPFILES)
 	    && (file_name[strlen (file_name) - 1] == '~'))
 		return FALSE;
-
-	matched = TRUE;
+	
 	utf8_name = g_filename_to_utf8 (file_name, -1, NULL, NULL, NULL);
-	for (i = 0; filter->regexps[i] != NULL; i++)
-		if (! g_regex_match (filter->regexps[i],
-                                     utf8_name,
-                                     0,
-                                     NULL)) 
-		{
-			matched = FALSE;
-			break;
-		}
+	matched = match_regexps (filter->regexps, utf8_name);
 	g_free (utf8_name);
 
 	return matched;
