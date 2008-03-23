@@ -317,6 +317,9 @@ g_utf8_strchomp (char *string)
 }
 
 
+#define g_utf8_strstrip(string)    g_utf8_strchomp (g_utf8_strchug (string))
+
+
 gboolean
 match_patterns (char       **patterns,
 		const char  *string,
@@ -340,9 +343,6 @@ match_patterns (char       **patterns,
 
 	return (result == 0);
 }
-
-
-#define g_utf8_strstrip(string)    g_utf8_strchomp (g_utf8_strchug (string))
 
 
 char **

@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.52)
 
-AC_INIT(file-roller, 2.22.0)
+AC_INIT(file-roller, 2.23.0)
 AC_CONFIG_SRCDIR(src/main.c)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
@@ -19,18 +19,19 @@ dnl
 dnl ==========================================================================
 
 GLIB_REQUIRED=2.12.0
+GIO_REQUIRED=2.16.0
 GTK_REQUIRED=2.10.0
 LIBGNOME_REQUIRED=2.6.0
 LIBGNOMEUI_REQUIRED=2.6.0
-GNOME_VFS_REQUIRED=2.10.0
 LIBGLADE_REQUIRED=2.4.0
+GNOME_VFS_REQUIRED=2.22.0
 NAUTILUS_REQUIRED=2.10.0
 
 AC_SUBST(GLIB_REQUIRED)
+AC_SUBST(GIO_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
 AC_SUBST(LIBGNOME_REQUIRED)
 AC_SUBST(LIBGNOMEUI_REQUIRED)
-AC_SUBST(GNOME_VFS_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(NAUTILUS_REQUIRED)
 
@@ -39,6 +40,7 @@ dnl ===========================================================================
 PKG_CHECK_MODULES(FR,					\
 	glib-2.0 >= $GLIB_REQUIRED			\
 	gthread-2.0					\
+	gio-unix-2.0 >= $GIO_REQUIRED			\
 	gtk+-2.0 >= $GTK_REQUIRED			\
 	libgnome-2.0 >= $LIBGNOME_REQUIRED		\
 	libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED		\

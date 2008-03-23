@@ -31,6 +31,7 @@
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-async-ops.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include "file-data.h"
 #include "file-list.h"

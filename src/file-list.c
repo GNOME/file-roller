@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,13 +22,13 @@
 
 #include <string.h>
 #include <glib.h>
-#include <libgnomevfs/gnome-vfs.h>
+#include <gio/gio.h>
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "file-list.h"
-#include "utf8-fnmatch.h"
 
 
+#define N_FILES_PER_REQUEST 128
 #define SPECIAL_DIR(x) (! strcmp (x, "..") || ! strcmp (x, "."))
 
 
@@ -36,57 +36,68 @@
 
 
 typedef enum {
-	GNOME_VFS_DIRECTORY_FILTER_DEFAULT = 0,
-	GNOME_VFS_DIRECTORY_FILTER_NODOTFILES = 1 << 1,
-	GNOME_VFS_DIRECTORY_FILTER_IGNORECASE = 1 << 2,
-	GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES = 1 << 3
-} GnomeVFSDirectoryFilterOptions;
+	FILTER_DEFAULT = 0,
+	FILTER_NODOTFILES = 1 << 1,
+	FILTER_IGNORECASE = 1 << 2,
+	FILTER_NOBACKUPFILES = 1 << 3
+} FilterOptions;
+
 
 typedef struct {
-	char                            *pattern;
-	char                           **patterns;
-	int                              fnmatch_flags;
-	GnomeVFSDirectoryFilterOptions   options;
+	char           *pattern;
+	char          **patterns;
+	FilterOptions   options;
+	GRegex        **regexps;
 } Filter;
 
 
 static Filter *
-filter_new (const gchar                    *pattern,
-	    GnomeVFSDirectoryFilterOptions  options)
+filter_new (const char    *pattern,
+	    FilterOptions  options)
 {
-	Filter *filter;
-
+	Filter             *filter;
+	GRegexCompileFlags  flags;
+	int                 i;
+	
 	filter = g_new (Filter, 1);
 
 	filter->pattern = g_strdup (pattern);
 	filter->patterns = search_util_get_patterns (pattern);
-	filter->fnmatch_flags = 0;
 	filter->options = options;
-	if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
-		filter->fnmatch_flags |= FNM_CASEFOLD;
 
+	if (filter->options & FILTER_IGNORECASE)
+		flags = G_REGEX_CASELESS;
+	else
+		flags = 0;
+		
+	filter->regexps = g_new0 (GRegex*, n_fields (filter->patterns) + 1);
+	for (i = 0; filter->patterns[i] != NULL; i++) 
+		filter->regexps[i] = g_regex_new (filter->patterns[i],
+					          flags,
+					          G_REGEX_MATCH_NOTEMPTY,
+					          NULL);
+	filter->regexps[i] = NULL;
+	
 	return filter;
 }
 
 
 static void
-filter_set_options (Filter                         *filter,
-		    GnomeVFSDirectoryFilterOptions  options)
-{
-	filter->options = options;
-	if ((options & GNOME_VFS_DIRECTORY_FILTER_IGNORECASE) == GNOME_VFS_DIRECTORY_FILTER_IGNORECASE)
-		filter->fnmatch_flags |= FNM_CASEFOLD;
-}
-
-
-static void
 filter_destroy (Filter *filter)
-{
+{	
 	g_return_if_fail (filter != NULL);
 
 	g_free (filter->pattern);
 	if (filter->patterns != NULL)
 		g_strfreev (filter->patterns);
+	
+	if (filter->regexps != NULL) {
+		int i;
+		for (i = 0; filter->regexps[i] != NULL; i++)
+			 g_regex_unref (filter->regexps[i]);
+		g_free (filter->regexps);
+	}
+	
 	g_free (filter);
 }
 
@@ -97,337 +108,36 @@ filter_apply (Filter     *filter,
 {
 	const char *file_name;
 	char       *utf8_name;
-	gboolean    retval;
+	int         i;
+	gboolean    matched;
 
 	g_return_val_if_fail (filter != NULL, FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
 
 	file_name = file_name_from_path (name);
 
-	if ((filter->options & GNOME_VFS_DIRECTORY_FILTER_NODOTFILES)
+	if ((filter->options & FILTER_NODOTFILES)
 	    && ((file_name[0] == '.') || (strstr (file_name, "/.") != NULL)))
 		return FALSE;
 
-	if ((filter->options & GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES)
+	if ((filter->options & FILTER_NOBACKUPFILES)
 	    && (file_name[strlen (file_name) - 1] == '~'))
 		return FALSE;
 
+	matched = TRUE;
 	utf8_name = g_filename_to_utf8 (file_name, -1, NULL, NULL, NULL);
-	retval = match_patterns (filter->patterns, utf8_name, filter->fnmatch_flags);
+	for (i = 0; filter->regexps[i] != NULL; i++)
+		if (! g_regex_match (filter->regexps[i],
+                                     utf8_name,
+                                     0,
+                                     NULL)) 
+		{
+			matched = FALSE;
+			break;
+		}
 	g_free (utf8_name);
 
-	return retval;
-}
-
-
-static gboolean
-filter_apply_from_info (Filter           *filter,
-			GnomeVFSFileInfo *info)
-{
-	g_return_val_if_fail (info != NULL, FALSE);
-	return filter_apply (filter, info->name);
-}
-
-
-typedef struct {
-	gchar       *start_from;
-	GnomeVFSURI *uri;
-	GList       *files;
-	Filter      *filter;
-} WCSearchData;
-
-
-static WCSearchData *
-wc_search_data_new (const gchar *directory)
-{
-	WCSearchData *data;
-	gchar        *escaped;
-
-	data = g_new (WCSearchData, 1);
-
-	data->start_from = g_strdup (directory);
-
-	escaped = gnome_vfs_escape_path_string (directory);
-	data->uri = gnome_vfs_uri_new (escaped);
-	g_free (escaped);
-
-	data->files = NULL;
-	data->filter = NULL;
-
-	return data;
-}
-
-
-static void
-wc_search_data_free (WCSearchData *data)
-{
-	if (data == NULL)
-		return;
-
-	if (data->start_from) {
-		g_free (data->start_from);
-		data->start_from = NULL;
-	}
-
-	if (data->uri != NULL)
-		gnome_vfs_uri_unref (data->uri);
-
-	g_free (data);
-}
-
-
-static void
-wc_add_file (GnomeVFSFileInfo *info,
-	     WCSearchData     *data)
-{
-	if ((info->type != GNOME_VFS_FILE_TYPE_DIRECTORY)
-	    && filter_apply_from_info (data->filter, info))
-		data->files = g_list_prepend (data->files,
-					      g_strdup (info->name));
-}
-
-
-static gboolean
-wc_visit_cb (const gchar      *rel_path,
-	     GnomeVFSFileInfo *info,
-	     gboolean          recursing_will_loop,
-	     gpointer          callback_data,
-	     gboolean         *recurse)
-{
-	WCSearchData *data = callback_data;
-
-	if ((info->type != GNOME_VFS_FILE_TYPE_DIRECTORY)
-	    && filter_apply (data->filter, rel_path)) {
-		data->files = g_list_prepend (data->files,
-					      g_strdup (rel_path));
-	}
-
-	*recurse = ! recursing_will_loop;
-
-	return TRUE;
-}
-
-
-static gboolean
-pattern_present (char       **patterns,
-		 const char  *pattern)
-{
-	gboolean found = FALSE;
-	int      i;
-
-	if ((patterns == NULL) || (patterns[0] == NULL))
-		return FALSE;
-
-	if (pattern == NULL)
-		return FALSE;
-
-	for (i = 0; (patterns[i] != NULL) && !found; i++)
-		if (g_utf8_collate (patterns[i], pattern) == 0)
-			found = TRUE;
-
-	return found;
-}
-
-
-GList *
-get_wildcard_file_list (const char  *directory,
-			const char  *filter_pattern,
-			gboolean     recursive,
-			gboolean     follow_links,
-			gboolean     same_fs,
-			gboolean     no_backup_files,
-			gboolean     no_dot_files,
-			gboolean     ignorecase)
-{
-	WCSearchData                   *data;
-	GnomeVFSDirectoryFilterOptions  filter_options;
-	GnomeVFSResult                  result;
-	GnomeVFSFileInfoOptions         info_options;
-	GnomeVFSDirectoryVisitOptions   visit_options;
-	GList                          *list = NULL;
-
-	if ((directory == NULL) || (filter_pattern == NULL))
-		return NULL;
-
-	data = wc_search_data_new (directory);
-
-	/* file filter */
-
-	data->filter = filter_new (filter_pattern, GNOME_VFS_DIRECTORY_FILTER_DEFAULT);
-
-	filter_options = GNOME_VFS_DIRECTORY_FILTER_DEFAULT;
-	if (no_backup_files && !pattern_present (data->filter->patterns, "*~"))
-		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES;
-	if (no_dot_files && !pattern_present (data->filter->patterns, ".*"))
-		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NODOTFILES;
-	if (ignorecase)
-		filter_options |= GNOME_VFS_DIRECTORY_FILTER_IGNORECASE;
-	filter_set_options (data->filter, filter_options);
-
-	/* info options */
-
-	info_options = GNOME_VFS_FILE_INFO_DEFAULT;
-	if (follow_links)
-		info_options |= GNOME_VFS_FILE_INFO_FOLLOW_LINKS;
-
-	if (! recursive) { 	/* non recursive case */
-		GList *info_list;
-		result = gnome_vfs_directory_list_load (&info_list,
-							directory,
-							info_options);
-		if (result != GNOME_VFS_OK)
-			list = NULL;
-		else {
-			g_list_foreach (info_list, (GFunc) wc_add_file, data);
-			list = data->files;
-			gnome_vfs_file_info_list_free (info_list);
-		}
-	} else { 		/* recursive case */
-		/* visit options. */
-
-		visit_options =  GNOME_VFS_DIRECTORY_VISIT_LOOPCHECK;
-		if (same_fs)
-			visit_options |= GNOME_VFS_DIRECTORY_VISIT_SAMEFS;
-
-		result = gnome_vfs_directory_visit_uri (data->uri,
-							info_options,
-							visit_options,
-							wc_visit_cb,
-							data);
-		if (result != GNOME_VFS_OK) {
-			path_list_free (data->files);
-			list = NULL;
-		} else
-			list = data->files;
-	}
-
-	filter_destroy (data->filter);
-	wc_search_data_free (data);
-
-	return list;
-}
-
-
-/* -- get_directory_file_list -- */
-
-
-typedef struct {
-	gchar       *directory;
-	gchar       *base_dir;
-	GnomeVFSURI *uri;
-	GList       *files;
-	Filter      *filter;
-} DirSearchData;
-
-
-static DirSearchData *
-dir_search_data_new (const char *base_dir,
-		     const char *directory)
-{
-	DirSearchData *data;
-	char          *escaped;
-	char          *full_path;
-
-	data = g_new (DirSearchData, 1);
-
-	data->directory = g_strdup (directory);
-	data->base_dir = g_strdup (base_dir);
-
-	full_path = g_strconcat (base_dir, "/", directory, NULL);
-	escaped = gnome_vfs_escape_path_string (full_path);
-	data->uri = gnome_vfs_uri_new (escaped);
-	g_free (escaped);
-	g_free (full_path);
-
-	data->files = NULL;
-	data->filter = NULL;
-
-	return data;
-}
-
-
-static void
-dir_search_data_free (DirSearchData *data)
-{
-	if (data == NULL)
-		return;
-
-	if (data->directory) {
-		g_free (data->directory);
-		data->directory = NULL;
-	}
-
-	if (data->base_dir) {
-		g_free (data->base_dir);
-		data->base_dir = NULL;
-	}
-
-	if (data->uri != NULL)
-		gnome_vfs_uri_unref (data->uri);
-
-	g_free (data);
-}
-
-
-static gboolean
-dir_visit_cb (const gchar      *rel_path,
-	      GnomeVFSFileInfo *info,
-	      gboolean          recursing_will_loop,
-	      gpointer          callback_data,
-	      gboolean         *recurse)
-{
-	DirSearchData *data = callback_data;
-
-	if ((info->type != GNOME_VFS_FILE_TYPE_DIRECTORY)
-	    && filter_apply (data->filter, rel_path)) {
-		char *path = g_strconcat (data->directory,
-					  "/",
-					  rel_path,
-					  NULL);
-		data->files = g_list_prepend (data->files, path);
-	}
-
-	*recurse = ! recursing_will_loop;
-
-	return TRUE;
-}
-
-
-GList *
-get_directory_file_list (const char *directory,
-			 const char *base_dir)
-{
-	DirSearchData *                data;
-	GnomeVFSResult                 result;
-	GnomeVFSFileInfoOptions        info_options;
-	GnomeVFSDirectoryVisitOptions  visit_options;
-	GList *                        list = NULL;
-
-	data = dir_search_data_new (base_dir, directory);
-
-	/* file filter */
-
-	data->filter = filter_new ("*",
-				   (GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES
-				    | GNOME_VFS_DIRECTORY_FILTER_NODOTFILES));
-
-	/* options. */
-
-	info_options = GNOME_VFS_FILE_INFO_FOLLOW_LINKS;
-	visit_options = (GNOME_VFS_DIRECTORY_VISIT_LOOPCHECK
-			 | GNOME_VFS_DIRECTORY_VISIT_SAMEFS);
-
-	result = gnome_vfs_directory_visit_uri (data->uri,
-						info_options,
-						visit_options,
-						dir_visit_cb,
-						data);
-
-	filter_destroy (data->filter);
-	list = data->files;
-	dir_search_data_free (data);
-
-	return list;
+	return matched;
 }
 
 
@@ -439,188 +149,192 @@ typedef void (*PathListDoneFunc) (PathListData *dld, gpointer data);
 
 
 struct _PathListData {
-	GnomeVFSURI      *uri;
-	GnomeVFSResult    result;
+	GFile            *directory;
+	GCancellable     *cancellable;
+	GFileEnumerator  *enumerator;
+	GError           *error;
 	GList            *files;               /* char* items. */
 	GList            *dirs;                /* char* items. */
 	PathListDoneFunc  done_func;
 	gpointer          done_data;
+	gboolean          interrupted;
 	DoneFunc          interrupt_func;
 	gpointer          interrupt_data;
-	gboolean          interrupted;
 };
 
 
 typedef struct {
-	GnomeVFSAsyncHandle *vfs_handle;
-	PathListData *pli_data;
+	PathListData *pld;
 } PathListHandle;
 
 
-PathListData *      path_list_data_new           ();
-void                path_list_data_free          (PathListData     *dli);
-void                path_list_handle_free        (PathListHandle   *handle);
-PathListHandle *    path_list_async_new          (const char       *uri,
-						  gboolean          follow_links,
-						  PathListDoneFunc  f,
-						  gpointer          data);
-void                path_list_async_interrupt    (PathListHandle   *handle,
-						  DoneFunc          f,
-						  gpointer          data);
-
-
-PathListData *
-path_list_data_new ()
+static PathListData *
+path_list_data_new (void)
 {
-	PathListData *pli;
-
-	pli = g_new0 (PathListData, 1);
-
-	pli->uri = NULL;
-	pli->result = GNOME_VFS_OK;
-	pli->files = NULL;
-	pli->dirs = NULL;
-	pli->done_func = NULL;
-	pli->done_data = NULL;
-	pli->interrupt_func = NULL;
-	pli->interrupt_data = NULL;
-	pli->interrupted = FALSE;
-
-	return pli;
-}
-
-
-void
-path_list_data_free (PathListData *pli)
-{
-	g_return_if_fail (pli != NULL);
-
-	if (pli->uri != NULL)
-		gnome_vfs_uri_unref (pli->uri);
-
-	if (pli->files != NULL) {
-		g_list_foreach (pli->files, (GFunc) g_free, NULL);
-		g_list_free (pli->files);
-	}
-
-	if (pli->dirs != NULL) {
-		g_list_foreach (pli->dirs, (GFunc) g_free, NULL);
-		g_list_free (pli->dirs);
-	}
-
-	g_free (pli);
-}
-
-
-void
-path_list_handle_free (PathListHandle *handle)
-{
-	if (handle->pli_data != NULL)
-		path_list_data_free (handle->pli_data);
-	g_free (handle);
+	return (PathListData *) g_new0 (PathListData, 1);
 }
 
 
 static void
-directory_load_cb (GnomeVFSAsyncHandle *handle,
-		   GnomeVFSResult       result,
-		   GList               *list,
-		   guint                entries_read,
-		   gpointer             data)
+path_list_data_free (PathListData *pld)
 {
-	PathListData *pli;
-	GList        *node;
+	g_return_if_fail (pld != NULL);
 
-	pli = (PathListData *) data;
-	pli->result = result;
-
-	if (pli->interrupted) {
-		if (pli->interrupt_func)
-			pli->interrupt_func (pli->interrupt_data);
-		path_list_data_free (pli);
-		return;
-	}
-
-	for (node = list; node != NULL; node = node->next) {
-		GnomeVFSFileInfo *info     = node->data;
-		GnomeVFSURI      *full_uri = NULL;
-		char             *str_uri;
-
-		switch (info->type) {
-		case GNOME_VFS_FILE_TYPE_REGULAR:
-			full_uri = gnome_vfs_uri_append_file_name (pli->uri, info->name);
-			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_NONE);
-			pli->files = g_list_prepend (pli->files, str_uri);
-			break;
-
-		case GNOME_VFS_FILE_TYPE_DIRECTORY:
-			if (SPECIAL_DIR (info->name))
-				break;
-			full_uri = gnome_vfs_uri_append_path (pli->uri, info->name);
-			str_uri = gnome_vfs_uri_to_string (full_uri, GNOME_VFS_URI_HIDE_NONE);
-			pli->dirs = g_list_prepend (pli->dirs,  str_uri);
-			break;
-
-		default:
-			break;
-		}
-
-		if (full_uri != NULL)
-			gnome_vfs_uri_unref (full_uri);
-	}
-
-	if ((result == GNOME_VFS_ERROR_EOF) || (result != GNOME_VFS_OK)) {
-		if (pli->done_func)
-			/* pli must be deallocated in pli->done_func */
-			pli->done_func (pli, pli->done_data);
-		else
-			path_list_data_free (pli);
-
-		return;
-	}
+	if (pld->directory != NULL)
+		g_object_unref (pld->directory);
+	if (pld->cancellable != NULL)
+		g_object_unref (pld->cancellable);
+	if (pld->enumerator != NULL)
+		g_object_unref (pld->enumerator);
+	g_clear_error (&(pld->error));
+	path_list_free (pld->files);
+	path_list_free (pld->dirs);
+	g_free (pld);
 }
 
 
-PathListHandle *
+static void
+path_list_data_done (PathListData *pld)
+{
+	if (pld->interrupted) {
+		if (pld->interrupt_func) 
+			pld->interrupt_func (pld->interrupt_data);
+		path_list_data_free (pld);
+		return;
+	}
+	
+	if (pld->done_func) {
+		/* pld must be deallocated in the pld->done_func function if
+		 * the operation was not stopped with 
+		 * path_list_async_interrupt */
+		pld->done_func (pld, pld->done_data);
+		
+	}
+	else
+		path_list_data_free (pld);
+}
+
+
+static void
+path_list_handle_free (PathListHandle *handle)
+{
+	if (handle->pld != NULL)
+		path_list_data_free (handle->pld);
+	g_free (handle);
+}
+
+
+static void  
+path_list_async_next_files_ready (GObject      *source_object,
+			          GAsyncResult *result,
+			          gpointer      user_data)
+{
+	PathListData *pld = user_data;
+	GList        *files, *scan;
+	char         *directory_uri;
+	char         *name;
+
+	files = g_file_enumerator_next_files_finish (pld->enumerator,
+                                                     result,
+                                                     &(pld->error));
+	if (files == NULL) {
+		path_list_data_done (pld);
+		return;
+	}
+	
+	directory_uri = g_file_get_uri (pld->directory);	
+	for (scan = files; scan; scan = scan->next) {
+		GFileInfo *info = scan->data;
+		
+		g_print ("=0=> %s\n", g_file_info_get_name (info));
+		
+		switch (g_file_info_get_file_type (info)) {
+		case G_FILE_TYPE_REGULAR:
+			name = g_uri_escape_string (g_file_info_get_name (info), G_URI_RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT, FALSE);
+			pld->files = g_list_prepend (pld->files, g_strconcat (directory_uri, "/", name, NULL));
+			g_print ("   [F] \n");
+			break;
+		case G_FILE_TYPE_DIRECTORY:
+			name = g_uri_escape_string (g_file_info_get_name (info), G_URI_RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT, FALSE);
+			pld->dirs = g_list_prepend (pld->dirs, g_strconcat (directory_uri, "/", name, NULL));
+			g_print ("   [D] \n");
+			break;
+		default:
+			break;
+		}
+	}
+	g_free (directory_uri);
+	
+	g_file_enumerator_next_files_async (pld->enumerator,
+                                            N_FILES_PER_REQUEST,
+                                            G_PRIORITY_DEFAULT,
+                                            pld->cancellable,
+                                            path_list_async_next_files_ready,
+                                            pld);
+}
+
+
+static void  
+path_list_async_new_ready (GObject      *source_object,
+			   GAsyncResult *result,
+			   gpointer      user_data)
+{
+	PathListData *pld = user_data;
+	
+	pld->enumerator = g_file_enumerate_children_finish (pld->directory, result, &(pld->error));
+	if (pld->enumerator == NULL) {
+		path_list_data_done (pld);
+		return;
+	}
+	
+	g_file_enumerator_next_files_async (pld->enumerator,
+                                            N_FILES_PER_REQUEST,
+                                            G_PRIORITY_DEFAULT,
+                                            pld->cancellable,
+                                            path_list_async_next_files_ready,
+                                            pld);
+}
+
+
+static PathListHandle *
 path_list_async_new (const char       *uri,
 		     gboolean          follow_links,
 		     PathListDoneFunc  f,
 		     gpointer          data)
 {
-	GnomeVFSAsyncHandle *handle = NULL;
-	PathListData        *pli;
-	PathListHandle      *pl_handle;
-
-	pli = path_list_data_new ();
-	pli->uri = gnome_vfs_uri_new (uri);
-	pli->done_func = f;
-	pli->done_data = data;
-
-	gnome_vfs_async_load_directory_uri (
-		&handle,
-		pli->uri,
-		follow_links ? GNOME_VFS_FILE_INFO_FOLLOW_LINKS: GNOME_VFS_FILE_INFO_DEFAULT,
-		128 /* items_per_notification FIXME */,
-		GNOME_VFS_PRIORITY_DEFAULT,
-		directory_load_cb,
-		pli);
-
+	PathListData   *pld;
+	PathListHandle *pl_handle;
+	
+	pld = path_list_data_new ();
+	pld->directory = g_file_new_for_uri (uri); 
+	pld->done_func = f;
+	pld->done_data = data;
+	pld->cancellable = g_cancellable_new (); 
+	
+	g_file_enumerate_children_async (pld->directory,
+					 "standard::name,standard::type",
+					 G_FILE_QUERY_INFO_NONE,
+					 G_PRIORITY_DEFAULT,
+                                         pld->cancellable,
+					 path_list_async_new_ready,
+					 pld);
+					 
 	pl_handle = g_new (PathListHandle, 1);
-	pl_handle->vfs_handle = handle;
-	pl_handle->pli_data = pli;
-
+	pl_handle->pld = pld;
+	
 	return pl_handle;
 }
 
 
-void
+static void
 path_list_async_interrupt (PathListHandle   *handle,
 			   DoneFunc          f,
 			   gpointer          data)
 {
-	handle->pli_data->interrupted = TRUE;
-	handle->pli_data->interrupt_func = f;
-	handle->pli_data->interrupt_data = data;
+	g_cancellable_cancel (handle->pld->cancellable);
+	handle->pld->interrupted = TRUE;
+	handle->pld->interrupt_func = f;
+	handle->pld->interrupt_data = data;
 
 	g_free (handle);
 }
@@ -688,6 +402,10 @@ static gboolean
 same_fs (const char *path1,
 	 const char *path2)
 {
+	return TRUE;
+	
+	/* FIXME: reimplement using gio
+	 
 	GnomeVFSURI    *uri1, *uri2;
 	GnomeVFSResult  result;
 	gboolean        same;
@@ -701,6 +419,7 @@ same_fs (const char *path1,
 	gnome_vfs_uri_unref (uri2);
 
 	return (result == GNOME_VFS_OK) && same;
+	*/
 }
 
 
@@ -759,21 +478,23 @@ vd_path_list_done_cb (PathListData *pld,
 		if (vdd->interrupt_func)
 			vdd->interrupt_func (vdd->interrupt_data);
 		visit_dir_data_free (vdd);
-
+		path_list_data_free (pld);
 		return;
 	}
 
-	if (pld->result != GNOME_VFS_ERROR_EOF) {
-		char *path;
+	if (pld->error != NULL) {
+		char *uri, *name;
 
-		path = gnome_vfs_uri_to_string (pld->uri, GNOME_VFS_URI_HIDE_NONE);
-		g_warning ("Error reading directory %s.", path);
-		g_free (path);
+		uri = g_file_get_uri (pld->directory);
+		name = g_filename_display_name (uri);
+		g_warning ("Error reading directory %s: %s.", name, pld->error->message);
+		g_free (name);
+		g_free (uri);
 
 		if (vdd->done_func)
 			(* vdd->done_func) (vdd->files, vdd->done_data);
 		visit_dir_data_free (vdd);
-
+		path_list_data_free (pld);
 		return;
 	}
 
@@ -806,9 +527,8 @@ vd_path_list_done_cb (PathListData *pld,
 	if (! vdd->recursive) {
 		if (vdd->done_func)
 			(* vdd->done_func) (vdd->files, vdd->done_data);
-		path_list_data_free (pld);
 		visit_dir_data_free (vdd);
-
+		path_list_data_free (pld);
 		return;
 	}
 
@@ -820,7 +540,6 @@ vd_path_list_done_cb (PathListData *pld,
 		if (vdd->done_func)
 			(* vdd->done_func) (vdd->files, vdd->done_data);
 		visit_dir_data_free (vdd);
-
 		return;
 	}
 
@@ -876,8 +595,8 @@ visit_dir_async (VisitDirHandle   *handle,
 		 VisitDirDoneFunc  done_func,
 		 gpointer          done_data)
 {
-	VisitDirData                   *vdd;
-	GnomeVFSDirectoryFilterOptions  filter_options;
+	VisitDirData  *vdd;
+	FilterOptions  filter_options;
 
 	vdd = g_new0 (VisitDirData, 1);
 	vdd->base_dir = g_strdup (directory);
@@ -892,13 +611,13 @@ visit_dir_async (VisitDirHandle   *handle,
 
 	/* file filter */
 
-	filter_options = GNOME_VFS_DIRECTORY_FILTER_DEFAULT;
+	filter_options = FILTER_DEFAULT;
 	if (no_backup_files)
-		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NOBACKUPFILES;
+		filter_options |= FILTER_NOBACKUPFILES;
 	if (no_dot_files)
-		filter_options |= GNOME_VFS_DIRECTORY_FILTER_NODOTFILES;
+		filter_options |= FILTER_NODOTFILES;
 	if (ignorecase)
-		filter_options |= GNOME_VFS_DIRECTORY_FILTER_IGNORECASE;
+		filter_options |= FILTER_IGNORECASE;
 
 	if (filter_pattern != NULL)
 		vdd->filter = filter_new (filter_pattern, filter_options);
@@ -946,7 +665,7 @@ visit_dir_async_interrupt (VisitDirHandle   *handle,
 }
 
 
-
+/* -- get_file_list_data -- */
 
 
 typedef struct {
@@ -979,23 +698,28 @@ get_file_list_data_free (GetFileListData *gfl_data)
 }
 
 
-/* -- get_wildcard_file_list_async -- */
+/* -- get_wildcard_file_list_async & get_directory_file_list_async -- */
 
 
 static void
-get_wildcard_file_list_cb (GList *files, gpointer data)
+get_directory_file_list_cb (GList    *files, 
+			    gpointer  data)
 {
 	GetFileListData *gfl_data = data;
 	GList           *rel_files = NULL;
 
-	if (gfl_data->directory != NULL) {
+	if (gfl_data->base_dir != NULL) {
 		GList *scan;
-		int    base_len = strlen (gfl_data->directory);
+		int    base_len;
+
+		base_len = 0;
+		if (strcmp (gfl_data->base_dir, "/") != 0)
+			base_len = strlen (gfl_data->base_dir);
 
 		for (scan = files; scan; scan = scan->next) {
 			char *full_path = scan->data;
 
-			if (path_in_path (gfl_data->directory, full_path)) {
+			if (path_in_path (gfl_data->base_dir, full_path)) {
 				char *rel_path = g_strdup (full_path + base_len + 1);
 				rel_files = g_list_prepend (rel_files, rel_path);
 			}
@@ -1030,6 +754,7 @@ get_wildcard_file_list_async  (const char       *directory,
 	gfl_data = g_new0 (GetFileListData, 1);
 
 	gfl_data->directory = get_uri_from_path (directory);
+	gfl_data->base_dir = g_strdup (gfl_data->directory);
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 
@@ -1043,45 +768,8 @@ get_wildcard_file_list_async  (const char       *directory,
 				no_dot_files,
 				ignorecase,
 				include_directories,
-				get_wildcard_file_list_cb,
+				get_directory_file_list_cb,
 				gfl_data);
-}
-
-
-/* -- get_directory_file_list_async -- */
-
-
-static void
-get_directory_file_list_cb (GList *files, gpointer data)
-{
-	GetFileListData *gfl_data = data;
-	GList           *rel_files = NULL;
-
-	if (gfl_data->base_dir != NULL) {
-		GList *scan;
-		int    base_len;
-
-		base_len = 0;
-		if (strcmp (gfl_data->base_dir, "/") != 0)
-			base_len = strlen (gfl_data->base_dir);
-
-		for (scan = files; scan; scan = scan->next) {
-			char *full_path = scan->data;
-
-			if (strncmp (gfl_data->base_dir, full_path, base_len) == 0) {
-				char *rel_path = g_strdup (full_path + base_len + 1);
-				rel_files = g_list_prepend (rel_files, rel_path);
-			}
-		}
-	}
-
-	if (gfl_data->done_func)
-		/* rel_files must be deallocated in pli->done_func */
-		gfl_data->done_func (rel_files, gfl_data->done_data);
-	else
-		path_list_free (rel_files);
-
-	get_file_list_data_free (gfl_data);
 }
 
 
@@ -1100,7 +788,6 @@ get_directory_file_list_async (const char       *directory,
 
 	gfl_data->directory = g_strdup (directory);
 	gfl_data->base_dir  = g_strdup (base_dir);
-	gfl_data->include_directories = include_directories;
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 
@@ -1163,7 +850,7 @@ get_items_file_list_cb (GList *files, gpointer data)
 		for (scan = files; scan; scan = scan->next) {
 			char *full_path = scan->data;
 
-			if (strncmp (gfl_data->base_dir, full_path, base_len) == 0) {
+			if (path_in_path (gfl_data->base_dir, full_path)) {
 				char *rel_path = g_strdup (full_path + base_len + 1);
 				gfl_data->files = g_list_prepend (gfl_data->files, rel_path);
 			}

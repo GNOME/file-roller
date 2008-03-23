@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,24 +24,8 @@
 #define _FILE_LIST_H
 
 #include <glib.h>
-#include <libgnomevfs/gnome-vfs-file-size.h>
-#include <libgnomevfs/gnome-vfs-async-ops.h>
 
-
-typedef void (*DoneFunc)       (gpointer data);
-
-
-GList *   get_wildcard_file_list    (const char *directory, 
-				     const char *filter_pattern, 
-				     gboolean    recursive,
-				     gboolean    follow_links,
-				     gboolean    same_fs,
-				     gboolean    no_backup_files,
-				     gboolean    no_dot_files,
-				     gboolean    ignorecase);
-
-GList *   get_directory_file_list   (const char *directory,
-				     const char *base_dir); 
+typedef void (*DoneFunc) (gpointer data);
 
 typedef struct _VisitDirData   VisitDirData;
 typedef struct _VisitDirHandle VisitDirHandle;

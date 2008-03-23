@@ -1,3 +1,16 @@
+2008-03-23  Paolo Bacchilega  <paobac@svn.gnome.org>
+ 
+	* src/glib-utils.c: 
+	* src/fr-archive.c: 
+	* src/file-list.h: 
+	* src/file-list.c: 
+	* configure.in: changed version to 2.23.0, added gio dependency.
+	
+	Started the porting to GIO.  Ported the functions that traverse a 
+	directory strutture and collect the	files to be added to an archive.
+	
+	Started the porting from g_utf8_fnmatch to GRegexp as well.
+
 2008-03-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.22.0 released ]
