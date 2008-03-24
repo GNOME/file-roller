@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003, 2007 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2007, 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -3053,7 +3053,8 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	if (! use_base_dir
 	    && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
 	    && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
-	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) {
+	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) 
+	{
 		gboolean created_filtered_list = FALSE;
 
 		if (! extract_all && archive_type_has_issues_extracting_non_empty_folders (archive)) {
@@ -3442,12 +3443,10 @@ fr_archive_utils__file_is_archive (const char *filename)
 	const char *mime_type;
 
 	mime_type = get_mime_type_from_content (filename);
-
 	if (mime_type == NULL)
 		return FALSE;
 
 	mime_type = get_mime_type_from_sniffer (filename);
-
 	if (mime_type != NULL)
 		return TRUE;
 

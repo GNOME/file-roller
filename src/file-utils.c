@@ -1398,3 +1398,33 @@ get_new_uri_from_uri (const char *uri)
 	
 	return new_uri;
 }
+
+
+GList *
+gio_file_list_dup (GList *l)
+{
+	GList *r = NULL, *scan;
+	for (scan = l; scan; scan = scan->next)
+		r = g_list_prepend (r, g_file_dup ((GFile*)scan->data));
+	return g_list_reverse (r);
+}
+
+
+void
+gio_file_list_free (GList *l)
+{
+	GList *scan;
+	for (scan = l; scan; scan = scan->next)
+		g_object_unref (scan->data);
+	g_list_free (l);
+}
+
+
+GList *
+gio_file_list_new_from_uri_list (GList *uris) 
+{
+	GList *r = NULL, *scan;
+	for (scan = uris; scan; scan = scan->next)
+		r = g_list_prepend (r, g_file_new_for_uri ((char*)scan->data));
+	return g_list_reverse (r);
+}

@@ -24,6 +24,7 @@
 #define _FILE_LIST_H
 
 #include <glib.h>
+#include <gio/gio.h>
 
 typedef void (*DoneFunc) (gpointer data);
 
@@ -69,5 +70,45 @@ VisitDirHandle *    get_items_file_list_async       (GList            *item_list
 						     gboolean          include_directories,
 						     VisitDirDoneFunc  done_func,
 						     gpointer          done_data);
+
+/**/
+
+typedef void        (*FilesProgressCallback)     (goffset    current_file,
+                                                  goffset    total_files,
+                                                  GFile     *source,
+                                                  GFile     *destination,
+                                                  goffset    current_num_bytes,
+                                                  goffset    total_num_bytes,
+                                                  gpointer   user_data);
+typedef void        (*FilesDoneCallback)         (GError    *error,
+						  gpointer   user_data);
+						  
+void                gio_copy_files_async         (GList                 *sources,
+						  GList                 *destinations,
+						  GFileCopyFlags         flags,
+						  int                    io_priority,
+						  GCancellable          *cancellable,
+						  FilesProgressCallback  progress_callback,
+						  gpointer               progress_callback_data,
+						  FilesDoneCallback      callback,
+						  gpointer               user_data);
+void                gio_copy_uris_async          (GList                 *sources,
+						  GList                 *destinations,
+						  GFileCopyFlags         flags,
+						  int                    io_priority,
+						  GCancellable          *cancellable,
+						  FilesProgressCallback  progress_callback,
+						  gpointer               progress_callback_data,
+						  FilesDoneCallback      callback,
+						  gpointer               user_data);		  
+void                gio_copy_directory_async     (GFile                 *source,
+						  GFile                 *destination,
+						  GFileCopyFlags         flags,
+						  int                    io_priority,
+						  GCancellable          *cancellable,
+						  FilesProgressCallback  progress_callback,
+						  gpointer               progress_callback_data,
+						  FilesDoneCallback      callback,
+						  gpointer               user_data);
 
 #endif /* _FILE_LIST_H */

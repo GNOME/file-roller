@@ -25,6 +25,7 @@
 
 #include <sys/types.h>
 #include <time.h>
+#include <gio/gio.h>
 #include <libgnomevfs/gnome-vfs-file-size.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 
@@ -114,5 +115,9 @@ int                 uricmp                       (const char *path1,
 char *              get_new_uri                  (const char *folder,
 	     					  const char *name);
 char *              get_new_uri_from_uri         (const char *uri);
+
+GList *             gio_file_list_dup               (GList *l);
+void                gio_file_list_free              (GList *l);
+GList *             gio_file_list_new_from_uri_list (GList *uris);
 
 #endif /* FILE_UTILS_H */

@@ -260,18 +260,14 @@ path_list_async_next_files_ready (GObject      *source_object,
 	for (scan = files; scan; scan = scan->next) {
 		GFileInfo *info = scan->data;
 		
-		g_print ("=0=> %s\n", g_file_info_get_name (info));
-		
 		switch (g_file_info_get_file_type (info)) {
 		case G_FILE_TYPE_REGULAR:
 			name = g_uri_escape_string (g_file_info_get_name (info), G_URI_RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT, FALSE);
 			pld->files = g_list_prepend (pld->files, g_strconcat (directory_uri, "/", name, NULL));
-			g_print ("   [F] \n");
 			break;
 		case G_FILE_TYPE_DIRECTORY:
 			name = g_uri_escape_string (g_file_info_get_name (info), G_URI_RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT, FALSE);
 			pld->dirs = g_list_prepend (pld->dirs, g_strconcat (directory_uri, "/", name, NULL));
-			g_print ("   [D] \n");
 			break;
 		default:
 			break;
@@ -954,4 +950,282 @@ get_items_file_list_async (GList            *item_list,
 	gfl_data->handle = g_new0 (VisitDirHandle, 1);
 
 	return visit_current_dir (gfl_data);
+}
+
+
+/**/
+
+
+typedef struct {
+	GList                 *sources;
+	GList                 *destinations;
+	GFileCopyFlags         flags;
+	int                    io_priority;
+	GCancellable          *cancellable;
+	FilesProgressCallback  progress_callback;
+	gpointer               progress_callback_data;
+	FilesDoneCallback      callback;
+	gpointer               user_data;
+	
+	GList                 *source;
+	GList                 *destination;
+	int                    n_file;
+	int                    tot_files;
+} GIOCopyFilesData;
+
+
+static GIOCopyFilesData*
+gio_copy_files_data_new (GList                 *sources,
+		         GList                 *destinations,
+		         GFileCopyFlags         flags,
+		         int                    io_priority,
+		         GCancellable          *cancellable,
+		         FilesProgressCallback  progress_callback,
+		         gpointer               progress_callback_data,
+		         FilesDoneCallback      callback,
+		         gpointer               user_data)
+{
+	GIOCopyFilesData *cfd;
+	
+	cfd = g_new0 (GIOCopyFilesData, 1);
+	cfd->sources = gio_file_list_dup (sources);
+	cfd->destinations = gio_file_list_dup (destinations);
+	cfd->flags = flags;
+	cfd->io_priority = io_priority;
+	cfd->cancellable = cancellable;
+	cfd->progress_callback = progress_callback;
+	cfd->progress_callback_data = progress_callback_data;
+	cfd->callback = callback;
+	cfd->user_data = user_data;
+	
+	cfd->source = cfd->sources;
+	cfd->destination = cfd->destinations;
+	cfd->n_file = 1;
+	cfd->tot_files = g_list_length (cfd->sources);
+	
+	return cfd;
+}
+
+
+static void
+gio_copy_files_data_free (GIOCopyFilesData *cfd)
+{
+	if (cfd == NULL)
+		return;
+	gio_file_list_free (cfd->sources);
+	gio_file_list_free (cfd->destinations);
+	g_free (cfd);
+}
+
+
+static void gio_copy_current_file (GIOCopyFilesData *cfd);
+
+
+static void
+gio_copy_next_file (GIOCopyFilesData *cfd)
+{
+	cfd->source = g_list_next (cfd->source);
+	cfd->destination = g_list_next (cfd->destination);
+	cfd->n_file++;
+	
+	gio_copy_current_file (cfd);
+}
+
+
+static void
+gio_copy_files_ready_cb (GObject      *source_object,
+                         GAsyncResult *result,
+                         gpointer      user_data)
+{
+	GIOCopyFilesData *cfd = user_data;
+	GFile            *source = cfd->source->data;
+	GError           *error;
+	
+	if (! g_file_copy_finish (source, result, &error)) {
+		if (cfd->callback)
+			cfd->callback (error, cfd->user_data);
+		g_clear_error (&error);
+		gio_copy_files_data_free (cfd);
+		return;
+	}
+	
+	gio_copy_next_file (cfd);
+}
+
+
+static void
+gio_copy_files_progess_cb (goffset  current_num_bytes,
+                           goffset  total_num_bytes,
+                           gpointer user_data)
+{
+	GIOCopyFilesData *cfd = user_data;
+	
+	if (cfd->progress_callback)
+		cfd->progress_callback (cfd->n_file,
+                                        cfd->tot_files,
+                                        (GFile*) cfd->source->data,
+                                        (GFile*) cfd->destination->data,
+                                        current_num_bytes,
+                                        total_num_bytes,
+                                        cfd->progress_callback_data);
+}
+
+
+static void
+gio_copy_current_file (GIOCopyFilesData *cfd)
+{
+	if ((cfd->source == NULL) || (cfd->destination == NULL)) {
+		if (cfd->callback)
+			cfd->callback (NULL, cfd->user_data);
+		gio_copy_files_data_free (cfd);
+		return;
+	}
+	
+	g_file_copy_async ((GFile*) cfd->source->data,
+			   (GFile*) cfd->destination->data,
+			   cfd->flags,
+			   cfd->io_priority,
+			   cfd->cancellable,
+			   gio_copy_files_progess_cb,
+			   cfd,
+			   gio_copy_files_ready_cb,
+			   cfd);
+}
+
+
+void
+gio_copy_files_async (GList                 *sources,
+		      GList                 *destinations,
+		      GFileCopyFlags         flags,
+		      int                    io_priority,
+		      GCancellable          *cancellable,
+		      FilesProgressCallback  progress_callback,
+		      gpointer               progress_callback_data,
+		      FilesDoneCallback      callback,
+		      gpointer               user_data)
+{
+	GIOCopyFilesData *cfd;
+	
+	cfd = gio_copy_files_data_new (sources, 
+				       destinations, 
+				       flags, 
+				       io_priority, 
+				       cancellable, 
+				       progress_callback, 
+				       progress_callback_data, 
+				       callback, 
+				       user_data);
+	gio_copy_current_file (cfd);
+}
+
+
+void
+gio_copy_uris_async (GList                 *sources,
+		     GList                 *destinations,
+		     GFileCopyFlags         flags,
+		     int                    io_priority,
+		     GCancellable          *cancellable,
+		     FilesProgressCallback  progress_callback,
+		     gpointer               progress_callback_data,
+		     FilesDoneCallback      callback,
+		     gpointer               user_data)
+{
+	GList *source_files, *destination_files;
+	
+	source_files = gio_file_list_new_from_uri_list (sources);
+	destination_files = gio_file_list_new_from_uri_list (destinations);
+	
+	gio_copy_files_async (source_files, 
+			      destination_files, 
+			      flags, 
+			      io_priority, 
+			      cancellable, 
+			      progress_callback, 
+			      progress_callback_data, 
+			      callback, 
+			      user_data);
+	
+	gio_file_list_free (source_files);
+	gio_file_list_free (destination_files);
+}
+
+
+typedef struct {
+	GFile                 *source;
+	GFile                 *destination;
+	GFileCopyFlags         flags;
+	int                    io_priority;
+	GCancellable          *cancellable;
+	FilesProgressCallback  progress_callback;
+	gpointer               progress_callback_data;
+	FilesDoneCallback      callback;
+	gpointer               user_data;
+	
+	char                  *directory;		  
+	VisitDirHandle        *vdh;
+} GIOCopyDirectoryData;
+
+
+static void
+gio_copy_directory_done_cb (GList    *files,
+			    gpointer  user_data) 
+{
+	GIOCopyDirectoryData *cdd = user_data;
+	GList                *sources = NULL, *destinations = NULL, *scan;
+	char                 *source, *destination;
+	
+	source = g_file_get_uri (cdd->source);
+	destination = g_file_get_uri (cdd->destination);
+	for (scan = files; scan; scan = scan->next) {
+		sources = g_list_prepend (sources, g_strconcat (source, "/", (char*)scan->data, NULL));
+		destinations = g_list_prepend (destinations, g_strconcat (destination, "/", (char*)scan->data, NULL));
+	}
+	g_object_unref (source);
+	g_object_unref (destination);
+	
+	gio_copy_uris_async (sources, 
+			     destinations, 
+			     cdd->flags, 
+			     cdd->io_priority, 
+			     cdd->cancellable, 
+			     cdd->progress_callback, 
+			     cdd->progress_callback_data, 
+			     cdd->callback, 
+			     cdd->user_data);
+			     
+	path_list_free (sources);
+	path_list_free (destinations);
+}
+
+
+void 
+gio_copy_directory_async (GFile                 *source,
+		   	  GFile                 *destination,
+			  GFileCopyFlags         flags,
+			  int                    io_priority,
+			  GCancellable          *cancellable,
+			  FilesProgressCallback  progress_callback,
+			  gpointer               progress_callback_data,
+			  FilesDoneCallback      callback,
+			  gpointer               user_data)
+{
+	GIOCopyDirectoryData *cdd;
+	
+	cdd = g_new0 (GIOCopyDirectoryData, 1);
+	cdd->source = g_file_dup (source);
+	cdd->destination = g_file_dup (destination);
+	cdd->flags = flags;
+	cdd->io_priority = io_priority;
+	cdd->cancellable = cancellable;
+	cdd->progress_callback = progress_callback;
+	cdd->progress_callback_data = progress_callback_data;
+	cdd->callback = callback;
+	cdd->user_data = user_data;
+	
+	cdd->directory = g_file_get_uri (cdd->source);
+	cdd->vdh = get_directory_file_list_async (cdd->directory,
+						  cdd->directory,
+						  TRUE,
+						  gio_copy_directory_done_cb,
+						  cdd);
 }
