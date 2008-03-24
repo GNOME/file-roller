@@ -2122,8 +2122,7 @@ file_list_remove_from_pattern (GList      **list,
 		char *path = scan->data;
 		char *utf8_name;
 
-		utf8_name = g_filename_to_utf8 (file_name_from_path (path),
-						-1, NULL, NULL, NULL);
+		utf8_name = g_filename_to_utf8 (file_name_from_path (path), -1, NULL, NULL, NULL);
 
 		if (match_patterns (patterns, utf8_name, 0)) {
 			*list = g_list_remove_link (*list, scan);
@@ -2166,11 +2165,21 @@ add_with_wildcard_data_free (AddWithWildcardData *aww_data)
 
 static void
 add_with_wildcard__step2 (GList    *file_list,
+			  GList    *dirs_list,
+			  GError   *error,
 			  gpointer  data)
 {
 	AddWithWildcardData *aww_data = data;
 	FrArchive           *archive = aww_data->archive;
 
+	if (error != NULL) {
+		fr_archive_action_completed (archive,
+					     FR_ACTION_GETTING_FILE_LIST, 
+					     FR_PROC_ERROR_GENERIC,
+					     error->message);
+		return;
+	}
+	
 	fr_archive_action_completed (archive,
 				     FR_ACTION_GETTING_FILE_LIST, 
 				     FR_PROC_ERROR_NONE,
@@ -2235,7 +2244,6 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 					NO_BACKUP_FILES,
 					NO_DOT_FILES,
 					IGNORE_CASE,
-					archive->command->propAddCanStoreFolders,
 					add_with_wildcard__step2,
 					aww_data);
 }
@@ -2267,18 +2275,31 @@ add_directory_data_free (AddDirectoryData *ad_data)
 
 static void
 add_directory__step2 (GList    *file_list,
+		      GList    *dir_list,
+		      GError   *error,
 		      gpointer  data)
 {
 	AddDirectoryData *ad_data = data;
 	FrArchive        *archive = ad_data->archive;
 
+	visit_dir_handle_free (archive->priv->vd_handle);
+	archive->priv->vd_handle = NULL;
+
+	if (error != NULL) {
+		fr_archive_action_completed (archive,
+					     FR_ACTION_GETTING_FILE_LIST,
+					     FR_PROC_ERROR_GENERIC,
+					     error->message);
+		return;
+	}
+
 	fr_archive_action_completed (archive,
 				     FR_ACTION_GETTING_FILE_LIST, 
 				     FR_PROC_ERROR_NONE,
 				     NULL);
-	visit_dir_handle_free (archive->priv->vd_handle);
-	archive->priv->vd_handle = NULL;
 
+	if (archive->command->propAddCanStoreFolders)
+		file_list = g_list_concat (file_list, dir_list);
 	if (file_list != NULL) {
 		fr_archive_add_files (ad_data->archive,
 				      file_list,
@@ -2327,7 +2348,6 @@ fr_archive_add_directory (FrArchive     *archive,
 	archive->priv->vd_handle = get_items_file_list_async (
 					ad_data->dir_list,
 					base_dir,
-					archive->command->propAddCanStoreFolders,
 					add_directory__step2,
 					ad_data);
 }
@@ -2366,7 +2386,6 @@ fr_archive_add_items (FrArchive     *archive,
 	archive->priv->vd_handle = get_items_file_list_async (
 					ad_data->dir_list,
 					base_dir,
-					archive->command->propAddCanStoreFolders,
 					add_directory__step2,
 					ad_data);
 }

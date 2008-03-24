@@ -232,6 +232,8 @@ path_list_data_done (PathListData *pld)
 static void
 path_list_handle_free (PathListHandle *handle)
 {
+	if (handle == NULL)
+		return;
 	if (handle->pld != NULL)
 		path_list_data_free (handle->pld);
 	g_free (handle);
@@ -359,18 +361,19 @@ struct _VisitDirData {
 	gboolean          recursive;
 	gboolean          follow_links;
 	gboolean          same_fs;
-	gboolean          include_directories;
 	VisitDirDoneFunc  done_func;
 	gpointer          done_data;
 	DoneFunc          interrupt_func;
 	gpointer          interrupt_data;
 	gboolean          interrupted;
+	PathListHandle   *handle;
 
 	GList            *dirs;
 	GList            *files;
 
 	/* private */
 
+	GList            *scan_dirs;
 	Filter           *filter;
 	GHashTable       *dirnames;
 };
@@ -389,18 +392,15 @@ visit_dir_data_free (VisitDirData *vdd)
 
 	g_free (vdd->base_dir);
 	g_free (vdd->directory);
-
 	if (vdd->dirs != NULL)
 		path_list_free (vdd->dirs);
 	if (vdd->files != NULL)
 		path_list_free (vdd->files);
-
 	if (vdd->filter)
 		filter_destroy (vdd->filter);
-
 	if (vdd->dirnames)
 		g_hash_table_destroy (vdd->dirnames);
-
+	path_list_handle_free (vdd->handle);
 	g_free (vdd);
 }
 
@@ -481,7 +481,7 @@ vd_path_list_done_cb (PathListData *pld,
 		      gpointer      data)
 {
 	VisitDirData *vdd = data;
-	GList        *scan;
+	GList        *scan, *new_dirs;
 	char         *sub_dir = NULL;
 
 	if (vdd->interrupted) {
@@ -502,20 +502,25 @@ vd_path_list_done_cb (PathListData *pld,
 		g_free (uri);
 
 		if (vdd->done_func)
-			(* vdd->done_func) (vdd->files, vdd->done_data);
+			(* vdd->done_func) (NULL, NULL, pld->error, vdd->done_data);
 		visit_dir_data_free (vdd);
 		path_list_data_free (pld);
 		return;
 	}
 
-	if (vdd->filter != NULL)
-		for (scan = pld->files; scan; ) {
+	vdd->scan_dirs = g_list_concat (vdd->scan_dirs, path_list_dup (pld->dirs)); 
+
+	vdd->files = pld->files;
+	pld->files = NULL;
+
+	if (vdd->filter != NULL) {
+		for (scan = vdd->files; scan; ) {
 			char *path = scan->data;
 
 			if (! filter_apply (vdd->filter, path)) {
 				GList *next = scan->next;
 
-				pld->files = g_list_remove_link (pld->files, scan);
+				vdd->files = g_list_remove_link (vdd->files, scan);
 				g_list_free (scan);
 				g_free (path);
 
@@ -524,56 +529,55 @@ vd_path_list_done_cb (PathListData *pld,
 			else
 				scan = scan->next;
 		}
+		new_dirs = get_dir_list_from_file_list (vdd, vdd->files, FALSE);
+	}
+	else {
+		new_dirs = pld->dirs;
+		pld->dirs = NULL;
+	}
 
-	if (vdd->include_directories) 
-		vdd->files = g_list_concat (get_dir_list_from_file_list (vdd, pld->files, FALSE), vdd->files);
-	vdd->files = g_list_concat (pld->files, vdd->files);
-	pld->files = NULL;
-
-	if (vdd->include_directories)
-		if (strcmp (vdd->filter->pattern, "*") == 0)
-			vdd->files = g_list_concat (get_dir_list_from_file_list (vdd, pld->dirs, TRUE), vdd->files);
+	vdd->dirs = g_list_concat (vdd->dirs, new_dirs);
+	if (strcmp (vdd->filter->pattern, "*") == 0)
+		vdd->dirs = g_list_concat (vdd->dirs, get_dir_list_from_file_list (vdd, vdd->dirs, TRUE));
 
 	if (! vdd->recursive) {
 		if (vdd->done_func)
-			(* vdd->done_func) (vdd->files, vdd->done_data);
+			(* vdd->done_func) (vdd->files, vdd->dirs, NULL, vdd->done_data);
 		visit_dir_data_free (vdd);
 		path_list_data_free (pld);
 		return;
 	}
-
-	vdd->dirs = g_list_concat (pld->dirs, vdd->dirs);
-	pld->dirs = NULL;
+	
 	path_list_data_free (pld);
 
-	if (vdd->dirs == NULL) {
+	if (vdd->scan_dirs == NULL) {
 		if (vdd->done_func)
-			(* vdd->done_func) (vdd->files, vdd->done_data);
+			(* vdd->done_func) (vdd->files, vdd->dirs, NULL, vdd->done_data);
 		visit_dir_data_free (vdd);
 		return;
 	}
 
-	while ((scan = vdd->dirs) != NULL) {
+	while ((scan = vdd->scan_dirs) != NULL) {	
 		sub_dir = (char*) scan->data;
-		vdd->dirs = g_list_remove_link (vdd->dirs, scan);
-
-		if (! vdd->same_fs || same_fs (vdd->directory, sub_dir)) {
-			_visit_dir_async (sub_dir, vdd);
-			break;
-		} 
-		else {
+		vdd->scan_dirs = g_list_remove_link (vdd->scan_dirs, scan);
+		g_list_free (scan);
+		
+		if (vdd->same_fs && ! same_fs (vdd->directory, sub_dir)) {
 			g_free (sub_dir);
-			sub_dir = NULL;
+			sub_dir = NULL;	
+			break;
 		}
 	}
 
 	if (sub_dir == NULL) {
 		if (vdd->done_func)
-			(* vdd->done_func) (vdd->files, vdd->done_data);
+			(* vdd->done_func) (vdd->files, vdd->dirs, NULL, vdd->done_data);
 		visit_dir_data_free (vdd);
+		return;
 	} 
-	else
-		g_free (sub_dir);
+
+	_visit_dir_async (sub_dir, vdd);
+	g_free (sub_dir);
 }
 
 
@@ -581,13 +585,11 @@ static void
 _visit_dir_async (const char   *dir,
 		  VisitDirData *vdd)
 {
-	PathListHandle *handle;
-	
-	handle = path_list_async_new (dir,
-				      vdd->follow_links,
-				      vd_path_list_done_cb,
-				      vdd);
-	g_free (handle);
+	path_list_handle_free (vdd->handle);
+	vdd->handle = path_list_async_new (dir,
+				      	   vdd->follow_links,
+				      	   vd_path_list_done_cb,
+				      	   vdd);
 }
 
 
@@ -601,18 +603,17 @@ visit_dir_async (VisitDirHandle   *handle,
 		 gboolean          no_backup_files,
 		 gboolean          no_dot_files,
 		 gboolean          ignorecase,
-		 gboolean          include_directories,
 		 VisitDirDoneFunc  done_func,
 		 gpointer          done_data)
 {
 	VisitDirData  *vdd;
 	FilterOptions  filter_options;
-
+	char          *dir;
+	
 	vdd = g_new0 (VisitDirData, 1);
 	vdd->base_dir = g_strdup (directory);
 	vdd->directory = get_uri_from_path (directory);
 	vdd->recursive = recursive;
-	vdd->include_directories = include_directories;
 	vdd->follow_links = follow_links;
 	vdd->same_fs = same_fs;
 	vdd->done_func = done_func;
@@ -637,17 +638,13 @@ visit_dir_async (VisitDirHandle   *handle,
 	if (handle == NULL)
 		handle = g_new0 (VisitDirHandle, 1);
 	handle->vdd_data = vdd;
-
-	if (include_directories) {
-		char *dir;
+	
+	/* Always include the base directory, this way empty base 
+	 * directories are added to the archive as well.  */
 		
-		/* Always include the base directory, this way empty base 
-		 * directories are added to the archive as well.  */
-		
-		dir = g_strdup (vdd->base_dir);
-		vdd->files = g_list_prepend (vdd->files, dir);
-		g_hash_table_insert (vdd->dirnames, dir, GINT_TO_POINTER (1));
-	}
+	dir = g_strdup (vdd->base_dir);
+	vdd->dirs = g_list_prepend (vdd->dirs, dir);
+	g_hash_table_insert (vdd->dirnames, dir, GINT_TO_POINTER (1));
 
 	_visit_dir_async (vdd->directory, vdd);
 
@@ -662,6 +659,17 @@ visit_dir_handle_free (VisitDirHandle   *handle)
 }
 
 
+static void
+visit_dir_async_interrupted (gpointer user_data)
+{
+	VisitDirData *vdd = user_data;
+	
+	if (vdd->interrupt_func)
+		vdd->interrupt_func (vdd->interrupt_data);
+	visit_dir_data_free (vdd);
+}
+
+
 void
 visit_dir_async_interrupt (VisitDirHandle   *handle,
 			   DoneFunc          f,
@@ -670,7 +678,9 @@ visit_dir_async_interrupt (VisitDirHandle   *handle,
 	handle->vdd_data->interrupt_func = f;
 	handle->vdd_data->interrupt_data = data;
 	handle->vdd_data->interrupted = TRUE;
-
+	path_list_async_interrupt (handle->vdd_data->handle, 
+				   visit_dir_async_interrupted, 
+				   handle->vdd_data);
 	visit_dir_handle_free (handle);
 }
 
@@ -682,11 +692,11 @@ typedef struct {
 	GList             *dir_list;
 	GList             *current_dir;
 	GList             *files;
+	GList             *dirs;
 	VisitDirHandle    *handle;
 
 	char              *directory;
 	char              *base_dir;
-	gboolean           include_directories;
 	VisitDirDoneFunc   done_func;
 	gpointer           done_data;
 
@@ -701,6 +711,8 @@ get_file_list_data_free (GetFileListData *gfl_data)
 	if (gfl_data == NULL)
 		return;
 
+	path_list_free (gfl_data->files);
+	path_list_free (gfl_data->dirs);
 	path_list_free (gfl_data->dir_list);
 	g_free (gfl_data->directory);
 	g_free (gfl_data->base_dir);
@@ -711,37 +723,58 @@ get_file_list_data_free (GetFileListData *gfl_data)
 /* -- get_wildcard_file_list_async & get_directory_file_list_async -- */
 
 
+static GList*
+get_relative_file_list (GList      *rel_list,
+			GList      *file_list,
+			const char *base_dir)
+{
+	GList *scan;
+	int    base_len;
+
+	if (base_dir == NULL)
+		return NULL;
+		
+	base_len = 0;
+	if (strcmp (base_dir, "/") != 0)
+		base_len = strlen (base_dir);
+		
+	for (scan = file_list; scan; scan = scan->next) {
+		char *full_path = scan->data;
+		if (path_in_path (base_dir, full_path)) {
+			char *rel_path = g_strdup (full_path + base_len + 1);
+			rel_list = g_list_prepend (rel_list, rel_path);
+		}
+	}
+	
+	return rel_list;
+}
+
+
 static void
 get_directory_file_list_cb (GList    *files, 
+			    GList    *dirs,
+			    GError   *error,
 			    gpointer  data)
 {
 	GetFileListData *gfl_data = data;
-	GList           *rel_files = NULL;
-
-	if (gfl_data->base_dir != NULL) {
-		GList *scan;
-		int    base_len;
-
-		base_len = 0;
-		if (strcmp (gfl_data->base_dir, "/") != 0)
-			base_len = strlen (gfl_data->base_dir);
-
-		for (scan = files; scan; scan = scan->next) {
-			char *full_path = scan->data;
-
-			if (path_in_path (gfl_data->base_dir, full_path)) {
-				char *rel_path = g_strdup (full_path + base_len + 1);
-				rel_files = g_list_prepend (rel_files, rel_path);
-			}
+	
+	if (gfl_data->done_func != NULL) {
+		if (error == NULL) {
+			GList *rel_files, *rel_dirs;
+			
+			rel_files = get_relative_file_list (NULL, files, gfl_data->base_dir);
+			rel_dirs = get_relative_file_list (NULL, dirs, gfl_data->base_dir);
+		
+			/* rel_files/rel_dirs must be deallocated in pli->done_func */
+			gfl_data->done_func (rel_files, rel_dirs, NULL, gfl_data->done_data);
+		}
+		else {
+			gfl_data->done_func (NULL, NULL, error, gfl_data->done_data);
 		}
 	}
 
-	if (gfl_data->done_func)
-		/* rel_files must be deallocated in pli->done_func */
-		gfl_data->done_func (rel_files, gfl_data->done_data);
-	else
-		path_list_free (rel_files);
-
+	path_list_free (files);
+	path_list_free (dirs);
 	get_file_list_data_free (gfl_data);
 }
 
@@ -755,7 +788,6 @@ get_wildcard_file_list_async  (const char       *directory,
 			       gboolean          no_backup_files,
 			       gboolean          no_dot_files,
 			       gboolean          ignorecase,
-			       gboolean          include_directories,
 			       VisitDirDoneFunc  done_func,
 			       gpointer          done_data)
 {
@@ -777,7 +809,6 @@ get_wildcard_file_list_async  (const char       *directory,
 				no_backup_files,
 				no_dot_files,
 				ignorecase,
-				include_directories,
 				get_directory_file_list_cb,
 				gfl_data);
 }
@@ -786,7 +817,6 @@ get_wildcard_file_list_async  (const char       *directory,
 VisitDirHandle *
 get_directory_file_list_async (const char       *directory,
 			       const char       *base_dir,
-			       gboolean          include_directories,
 			       VisitDirDoneFunc  done_func,
 			       gpointer          done_data)
 {
@@ -815,7 +845,6 @@ get_directory_file_list_async (const char       *directory,
 				  FALSE,
 				  FALSE,
 				  FALSE,
-				  include_directories,
 				  get_directory_file_list_cb,
 				  gfl_data);
 	g_free (path);
@@ -845,9 +874,21 @@ visit_current_dir_idle_cb (gpointer data)
 
 
 static void
-get_items_file_list_cb (GList *files, gpointer data)
+get_items_file_list_cb (GList    *files,
+			GList    *dirs,
+			GError   *error,
+			gpointer  data)
 {
 	GetFileListData *gfl_data = data;
+
+	if (error != NULL) {
+		if (gfl_data->done_func)
+			gfl_data->done_func (NULL, NULL, error, gfl_data->done_data);
+		path_list_free (files);
+		path_list_free (dirs);
+		get_file_list_data_free (gfl_data);
+		return;
+	}
 
 	if (gfl_data->base_dir != NULL) {
 		GList *scan;
@@ -879,11 +920,12 @@ visit_current_dir (GetFileListData *gfl_data)
 	char       *path;
 
 	if (gfl_data->current_dir == NULL) {
-		if (gfl_data->done_func)
-			/* gfl_data->files must be deallocated in gfl_data->done_func */
-			gfl_data->done_func (gfl_data->files, gfl_data->done_data);
-		else
-			path_list_free (gfl_data->files);
+		if (gfl_data->done_func) {
+			/* gfl_data->files/gfl_data->dirs must be deallocated in gfl_data->done_func */
+			gfl_data->done_func (gfl_data->files, gfl_data->dirs, NULL, gfl_data->done_data);
+			gfl_data->files = NULL;
+			gfl_data->dirs = NULL;
+		}
 		get_file_list_data_free (gfl_data);
 		return NULL;
 	}
@@ -903,7 +945,6 @@ visit_current_dir (GetFileListData *gfl_data)
 			 TRUE,
 			 FALSE,
 			 FALSE,
-			 gfl_data->include_directories,
 			 get_items_file_list_cb,
 			 gfl_data);
 	g_free (path);
@@ -915,7 +956,6 @@ visit_current_dir (GetFileListData *gfl_data)
 VisitDirHandle *
 get_items_file_list_async (GList            *item_list,
 			   const char       *base_dir,
-			   gboolean          include_directories,
 			   VisitDirDoneFunc  done_func,
 			   gpointer          done_data)
 {
@@ -944,7 +984,6 @@ get_items_file_list_async (GList            *item_list,
 
 	gfl_data->current_dir = gfl_data->dir_list;
 	gfl_data->base_dir = g_strdup (base_dir);
-	gfl_data->include_directories = include_directories;
 	gfl_data->done_func = done_func;
 	gfl_data->done_data = done_data;
 	gfl_data->handle = g_new0 (VisitDirHandle, 1);
@@ -1167,12 +1206,37 @@ typedef struct {
 
 
 static void
+gio_copy_directory_data_free (GIOCopyDirectoryData *cdd)
+{
+	if (cdd == NULL)
+		return;
+	g_object_unref (cdd->source);
+	g_object_unref (cdd->destination);
+	g_object_unref (cdd->cancellable);
+	g_free (cdd->directory);
+	visit_dir_handle_free (cdd->vdh);
+	g_free (cdd);
+}
+
+
+static void
 gio_copy_directory_done_cb (GList    *files,
+			    GList    *dirs,
+			    GError   *error,
 			    gpointer  user_data) 
 {
 	GIOCopyDirectoryData *cdd = user_data;
 	GList                *sources = NULL, *destinations = NULL, *scan;
 	char                 *source, *destination;
+	
+	if (error != NULL) {
+		if (cdd->callback)
+			cdd->callback (error, cdd->user_data);
+		gio_copy_directory_data_free (cdd);
+		return;
+	}
+	
+	/* FIXME: create the directories (dirs) */
 	
 	source = g_file_get_uri (cdd->source);
 	destination = g_file_get_uri (cdd->destination);
@@ -1195,6 +1259,7 @@ gio_copy_directory_done_cb (GList    *files,
 			     
 	path_list_free (sources);
 	path_list_free (destinations);
+	gio_copy_directory_data_free (cdd);
 }
 
 
@@ -1225,7 +1290,6 @@ gio_copy_directory_async (GFile                 *source,
 	cdd->directory = g_file_get_uri (cdd->source);
 	cdd->vdh = get_directory_file_list_async (cdd->directory,
 						  cdd->directory,
-						  TRUE,
 						  gio_copy_directory_done_cb,
 						  cdd);
 }

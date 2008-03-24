@@ -31,7 +31,7 @@ typedef void (*DoneFunc) (gpointer data);
 typedef struct _VisitDirData   VisitDirData;
 typedef struct _VisitDirHandle VisitDirHandle;
 
-typedef void (*VisitDirDoneFunc) (GList *files, gpointer data);
+typedef void (*VisitDirDoneFunc) (GList *files, GList *dirs, GError *error, gpointer data);
 
 void                visit_dir_handle_free           (VisitDirHandle   *handle);
 VisitDirHandle *    visit_dir_async                 (VisitDirHandle   *handle,
@@ -43,7 +43,6 @@ VisitDirHandle *    visit_dir_async                 (VisitDirHandle   *handle,
 						     gboolean          no_backup_files,
 						     gboolean          no_dot_files,
 						     gboolean          ignorecase,
-						     gboolean          include_directories,
 						     VisitDirDoneFunc  done_func,
 						     gpointer          done_data);
 void                visit_dir_async_interrupt       (VisitDirHandle   *handle,
@@ -57,17 +56,14 @@ VisitDirHandle *    get_wildcard_file_list_async    (const char       *directory
 						     gboolean          no_backup_files,
 						     gboolean          no_dot_files,
 						     gboolean          ignorecase,
-						     gboolean          include_directories,
 						     VisitDirDoneFunc  done_func,
 						     gpointer          done_data);
 VisitDirHandle *    get_directory_file_list_async   (const char       *directory,
 						     const char       *base_dir,
-						     gboolean          include_directories,
 						     VisitDirDoneFunc  done_func,
 						     gpointer          done_data); 
 VisitDirHandle *    get_items_file_list_async       (GList            *item_list,
 						     const char       *base_dir,
-						     gboolean          include_directories,
 						     VisitDirDoneFunc  done_func,
 						     gpointer          done_data);
 
