@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003, 2008 Free Software Foundation, Inc.
+ *  Copyright (C) 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -921,6 +921,38 @@ g_copy_files_async (GList                 *sources,
 
 
 void
+g_copy_file_async (GFile                 *source,
+		   GFile                 *destination,
+		   GFileCopyFlags         flags,
+		   int                    io_priority,
+		   GCancellable          *cancellable,
+		   CopyProgressCallback   progress_callback,
+		   gpointer               progress_callback_data,
+		   CopyDoneCallback       callback,
+		   gpointer               user_data)
+{
+	GList *source_files;
+	GList *source_files;
+	
+	source_files = g_list_append (NULL, (gpointer)source);
+	source_files = g_list_append (NULL, (gpointer)destination);
+	
+	g_copy_files_async (source_files, 
+			    destination_files, 
+			    flags, 
+			    io_priority, 
+			    cancellable, 
+			    progress_callback, 
+			    progress_callback_data, 
+			    callback, 
+			    user_data);
+				   
+	gio_file_list_free (source_files);
+	gio_file_list_free (destination_files);
+}
+
+
+void
 g_copy_uris_async (GList                 *sources,
 		   GList                 *destinations,
 		   GFileCopyFlags         flags,
@@ -948,6 +980,38 @@ g_copy_uris_async (GList                 *sources,
 	
 	gio_file_list_free (source_files);
 	gio_file_list_free (destination_files);
+}
+
+
+void
+g_copy_uri_async (const char            *source,
+		  const char            *destination,
+		  GFileCopyFlags         flags,
+		  int                    io_priority,
+		  GCancellable          *cancellable,
+		  CopyProgressCallback   progress_callback,
+		  gpointer               progress_callback_data,
+		  CopyDoneCallback       callback,
+		  gpointer               user_data)
+{
+	GList *source_list;
+	GList *destination_list;
+	
+	source_list = g_list_append (NULL, (gpointer)source);
+	destination_list = g_list_append (NULL, (gpointer)destination);
+	
+	g_copy_uris_async (source_list,
+			   destination_list,
+			   flags,
+			   io_priority,
+			   cancellable,
+			   progress_callback,
+			   progress_callback_data,
+			   callback,
+			   user_data);
+			   
+	g_list_free (source_list);
+	g_list_free (destination_list);
 }
 
 

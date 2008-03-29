@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003, 2008 Free Software Foundation, Inc.
+ *  Copyright (C) 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ void   g_list_items_async            (GList                 *items,
 				      gpointer               done_data);
 				      
 /* asynchronous recursive copy functions */				      
-				      				  
+
 void   g_copy_files_async            (GList                 *sources,
 				      GList                 *destinations,
 				      GFileCopyFlags         flags,
@@ -91,6 +91,24 @@ void   g_copy_files_async            (GList                 *sources,
 				      gpointer               user_data);
 void   g_copy_uris_async             (GList                 *sources,
 				      GList                 *destinations,
+				      GFileCopyFlags         flags,
+				      int                    io_priority,
+				      GCancellable          *cancellable,
+				      CopyProgressCallback   progress_callback,
+				      gpointer               progress_callback_data,
+				      CopyDoneCallback       callback,
+				      gpointer               user_data);
+void   g_copy_file_async             (GFile                 *source,
+				      GFile                 *destination,
+				      GFileCopyFlags         flags,
+				      int                    io_priority,
+				      GCancellable          *cancellable,
+				      CopyProgressCallback   progress_callback,
+				      gpointer               progress_callback_data,
+				      CopyDoneCallback       callback,
+				      gpointer               user_data);
+void   g_copy_uri_async              (const char            *source,
+				      const char            *destination,
 				      GFileCopyFlags         flags,
 				      int                    io_priority,
 				      GCancellable          *cancellable,
