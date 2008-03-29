@@ -161,7 +161,7 @@ filter_matches (Filter     *filter,
 static gboolean
 filter_empty (Filter *filter)
 {
-	return ((filter->pattern == NULL) || (strcmp (filter->pattern, "*") == 0))
+	return ((filter->pattern == NULL) || (strcmp (filter->pattern, "*") == 0));
 }
 
 
@@ -279,7 +279,7 @@ for_each_child_next_files_ready (GObject      *source_object,
 				g_free (sub_directory);
 		}
 		
-		fec->for_each_func (uri, child_info, fec->user_data);
+		fec->for_each_file_func (uri, child_info, fec->user_data);
 		
 		g_free (uri);		
 		g_free (name);
@@ -339,7 +339,29 @@ for_each_child_start (ForEachChildData *fec,
 					 fec);
 }
 
-
+/**
+ * g_directory_foreach_child:
+ * @directory: 
+ * @recursive: Whether to traverse the @directory recursively.
+ * @follow_links: Whether to dereference the symbolic links.
+ * @cancellable: An optional @GCancellable object, used to cancel the process. 
+ * @start_dir_func: the function called for each sub-directory, or %NULL if
+ *   not needed.
+ * @for_each_file_func: the function called for each file.  Can't be %NULL.
+ * @done_func: the function called at the end of the traversing process.  
+ *   Can't be %NULL.
+ * @user_data: data to pass to @done_func
+ *
+ * Traverse the @directory's filesystem structure calling the 
+ * @for_each_file_func function for each file in the directory; the
+ * @start_dir_func function on each directory before it's going to be 
+ * traversed, this includes @directory too; the @done_func function is 
+ * called at the end of the process.
+ * Some traversing options are available: if @recursive is TRUE the
+ * directory is traversed recursively; if @follow_links is TRUE, symbolic 
+ * links are dereferenced, otherwise they are returned as links.
+ * Each callback uses the same @user_data additional parameter.
+ */
 void
 g_directory_foreach_child (const char           *directory,
 			   gboolean              recursive,
@@ -359,9 +381,9 @@ g_directory_foreach_child (const char           *directory,
 	fec->base_directory = g_strdup (directory);
 	fec->recursive = recursive;
 	fec->follow_links = follow_links;
-	fev->cancellable = cancellable;
+	fec->cancellable = cancellable;
 	fec->start_dir_func = start_dir_func;
-	fec->for_file_each_func = for_each_file_func;
+	fec->for_each_file_func = for_each_file_func;
 	fec->done_func = done_func;
 	fec->user_data = user_data;
 	fec->already_visited = g_hash_table_new_full (g_str_hash, 
@@ -379,16 +401,13 @@ g_directory_foreach_child (const char           *directory,
 typedef struct {
 	GList             *files;
 	GList             *dirs;
-	VisitDirHandle    *handle;
-
 	char              *directory;
 	char              *base_dir;
-	VisitDirDoneFunc   done_func;
+	GCancellable      *cancellable;
+	ListReadyCallback  done_func;
 	gpointer           done_data;
-
 	GList             *to_visit;
 	GList             *current_dir;
-
 	Filter            *include_filter;
 	Filter            *exclude_filter;
 	guint              visit_timeout;
@@ -494,6 +513,7 @@ get_file_list_done (GError   *error,
 	GetFileListData *gfl = user_data;
 	GHashTable      *h_dirs;
 	char            *dir;
+	GList           *scan;
 	
 	gfl->files = g_list_reverse (gfl->files);
 	gfl->dirs = g_list_reverse (gfl->dirs);
@@ -546,7 +566,7 @@ get_file_list_done (GError   *error,
 		gfl->done_func (NULL, NULL, error, gfl->done_data);
 	
 	g_hash_table_destroy (h_dirs);
-	get_file_list_data_free (gfl_data);
+	get_file_list_data_free (gfl);
 }
 
 
@@ -561,7 +581,7 @@ get_file_list_for_each_file (const char *uri,
 	case G_FILE_TYPE_DIRECTORY:
 		gfl->dirs = g_list_prepend (gfl->dirs, g_strdup (uri));
 		break;
-	case G_FILE_TYPE_DIRECTORY:
+	case G_FILE_TYPE_REGULAR:
 		if (filter_matches (gfl->include_filter, uri)) 
 			if ((gfl->exclude_filter->pattern == NULL) || ! filter_matches (gfl->exclude_filter, uri))		
 				gfl->files = g_list_prepend (gfl->files, g_strdup (uri));
@@ -675,7 +695,7 @@ get_items_for_current_dir (GetFileListData *gfl)
 			gfl->dirs = NULL;
 		}
 		get_file_list_data_free (gfl);
-		return NULL;
+		return;
 	}
 
 	directory_name = file_name_from_path ((char*) gfl->current_dir->data);
@@ -684,31 +704,29 @@ get_items_for_current_dir (GetFileListData *gfl)
 	else
 		directory_uri = g_strconcat (gfl->base_dir, "/", directory_name, NULL);
 
-	g_directory_list_async (directory_uri,
-			   	gfl->base_dir,
-				TRUE,
-				gfl->cancellable,
-			   	get_items_for_current_dir_done,
-			   	gfl);
+	g_directory_list_all_async (directory_uri,
+			   	    gfl->base_dir,
+				    TRUE,
+				    gfl->cancellable,
+			   	    get_items_for_current_dir_done,
+			   	    gfl);
 
 	g_free (directory_uri);
-
-	return gfl->handle;
 }
 
 
 void
-g_list_items_async (GList            *items,
-		    const char       *base_dir,
-		    GCancellable     *cancellable,
-		    VisitDirDoneFunc  done_func,
-		    gpointer          done_data)
+g_list_items_async (GList             *items,
+		    const char        *base_dir,
+		    GCancellable      *cancellable,
+		    ListReadyCallback  done_func,
+		    gpointer           done_data)
 {
 	GetFileListData *gfl;
 	int              base_len;
 	GList           *scan;
 
-	g_return_val_if_fail (base_dir != NULL, NULL);
+	g_return_if_fail (base_dir != NULL);
 
 	gfl = g_new0 (GetFileListData, 1);
 	gfl->base_dir = g_strdup (base_dir);
@@ -745,9 +763,9 @@ typedef struct {
 	GFileCopyFlags         flags;
 	int                    io_priority;
 	GCancellable          *cancellable;
-	FilesProgressCallback  progress_callback;
+	CopyProgressCallback   progress_callback;
 	gpointer               progress_callback_data;
-	FilesDoneCallback      callback;
+	CopyDoneCallback       callback;
 	gpointer               user_data;
 	
 	GList                 *source;
@@ -763,9 +781,9 @@ copy_files_data_new (GList                 *sources,
 		     GFileCopyFlags         flags,
 		     int                    io_priority,
 		     GCancellable          *cancellable,
-		     FilesProgressCallback  progress_callback,
+		     CopyProgressCallback   progress_callback,
 		     gpointer               progress_callback_data,
-		     FilesDoneCallback      callback,
+		     CopyDoneCallback       callback,
 		     gpointer               user_data)
 {
 	CopyFilesData *cfd;
@@ -882,9 +900,9 @@ g_copy_files_async (GList                 *sources,
 		    GFileCopyFlags         flags,
 		    int                    io_priority,
 		    GCancellable          *cancellable,
-		    FilesProgressCallback  progress_callback,
+		    CopyProgressCallback   progress_callback,
 		    gpointer               progress_callback_data,
-		    FilesDoneCallback      callback,
+		    CopyDoneCallback       callback,
 		    gpointer               user_data)
 {
 	CopyFilesData *cfd;
@@ -908,9 +926,9 @@ g_copy_uris_async (GList                 *sources,
 		   GFileCopyFlags         flags,
 		   int                    io_priority,
 		   GCancellable          *cancellable,
-		   FilesProgressCallback  progress_callback,
+		   CopyProgressCallback   progress_callback,
 		   gpointer               progress_callback_data,
-		   FilesDoneCallback      callback,
+		   CopyDoneCallback       callback,
 		   gpointer               user_data)
 {
 	GList *source_files, *destination_files;
@@ -1028,14 +1046,14 @@ static GFile *
 get_destination_for_uri (DirectoryCopyData *dcd, 
 		         const char        *uri)
 {	
-	char  *uri;
-	GFile *file;
+	char  *destination_uri;
+	GFile *destination_file;
 
-	uri = g_strconcat (dcd->destination_uri, "/", uri + strlen (dcd->source_uri) + 1, NULL);
-	file = g_file_new_for_uri (uri);
-	g_free (uri);
+	destination_uri = g_strconcat (dcd->destination_uri, "/", uri + strlen (dcd->source_uri) + 1, NULL);
+	destination_file = g_file_new_for_uri (destination_uri);
+	g_free (destination_uri);
 
-	return file;
+	return destination_file;
 }
 
 
@@ -1150,6 +1168,8 @@ g_directory_copy_for_each_file (const char *uri,
 				GFileInfo  *info, 
 				gpointer    user_data)
 {
+	DirectoryCopyData *dcd = user_data;
+	 
 	dcd->to_copy = g_list_prepend (dcd->to_copy, child_data_new (uri, g_file_info_get_file_type (info)));
 	dcd->tot_files++;
 }
@@ -1160,6 +1180,8 @@ g_directory_copy_start_dir (const char  *uri,
 			    GError     **error,
 			    gpointer     user_data)
 {	
+	DirectoryCopyData *dcd = user_data;
+	
 	dcd->to_copy = g_list_prepend (dcd->to_copy, child_data_new (uri, G_FILE_TYPE_DIRECTORY));
 	return TRUE;
 }
@@ -1171,9 +1193,9 @@ g_directory_copy_async (GFile                 *source,
 			GFileCopyFlags         flags,
 			int                    io_priority,
 			GCancellable          *cancellable,
-			FilesProgressCallback  progress_callback,
+			CopyProgressCallback   progress_callback,
 			gpointer               progress_callback_data,
-			FilesDoneCallback      callback,
+			CopyDoneCallback       callback,
 			gpointer               user_data)
 {
 	DirectoryCopyData *dcd;
@@ -1193,15 +1215,14 @@ g_directory_copy_async (GFile                 *source,
 	dcd->destination_uri = g_file_get_uri (dcd->destination);	
 	
 	dcd->to_copy = g_list_prepend (NULL, child_data_new (dcd->source_uri, G_FILE_TYPE_DIRECTORY));
-	dcd->n_nodes = 1;
 	
-	for_each_children (dcd->source,
-			   TRUE,
-			   TRUE,
-			   cancellable,
-			   g_directory_copy_start_dir,
-			   g_directory_copy_for_each_file,
-			   g_directory_copy_list_ready,
-			   dcd);
+	g_directory_foreach_child (dcd->source_uri,
+			           TRUE,
+			           TRUE,
+			           dcd->cancellable,
+			           g_directory_copy_start_dir,
+			           g_directory_copy_for_each_file,
+			           g_directory_copy_list_ready,
+			           dcd);
 }
 

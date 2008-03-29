@@ -72,12 +72,6 @@ void   g_directory_list_async        (const char            *directory,
 				      GCancellable          *cancellable,
 				      ListReadyCallback      done_func,
 				      gpointer               done_data);
-#define g_directory_list_all_async   (directory, \ 
-				      base_dir, \ 
-				      recursive, \
-				      cancellable, \
-				      done_func, \
-				      done_data)             g_directory_list_async ((directory), (base_dir), (recursive), TRUE, FALSE, FALSE, NULL, NULL, FALSE, (cancellable), (done_func), (done_data))
 void   g_list_items_async            (GList                 *items,
 				      const char            *base_dir,
 				      GCancellable          *cancellable,
@@ -113,6 +107,26 @@ void   g_directory_copy_async        (GFile                 *source,
 				      gpointer               progress_callback_data,
 				      CopyDoneCallback       callback,
 				      gpointer               user_data);
+
+/* convenience macros */
+/**
+ * g_directory_list_all_async:
+ * @directory: 
+ * @base_dir: 
+ * @recursive:
+ * @cancellable:
+ * @done_func:
+ * @done_data:
+ * 
+ * Inserts a #GNode as the last child of the given parent.
+ *
+ */
+#define g_directory_list_all_async(directory, \
+				   base_dir, \
+				   recursive, \
+				   cancellable, \
+				   done_func, \
+				   done_data)	g_directory_list_async ((directory), (base_dir), (recursive), TRUE, FALSE, FALSE, NULL, NULL, FALSE, (cancellable), (done_func), (done_data))
 
 #endif /* _GIO_UTILS_H */
 

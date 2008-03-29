@@ -113,6 +113,8 @@ file_roller_SOURCES = 			\
 	fr-window.h			\
 	gconf-utils.c			\
 	gconf-utils.h			\
+	gio-utils.c			\
+	gio-utils.h			\
 	glib-utils.c			\
 	glib-utils.h			\
 	gnome-vfs-helpers.c		\
