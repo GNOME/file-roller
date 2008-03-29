@@ -63,8 +63,6 @@ file_roller_SOURCES = 			\
 	eggtreemultidnd.h		\
 	file-data.c			\
 	file-data.h			\
-	file-list.c			\
-	file-list.h			\
 	file-utils.c			\
 	file-utils.h			\
 	fr-archive.c			\

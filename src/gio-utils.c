@@ -182,7 +182,6 @@ typedef struct {
 	GFile                *current;
 	GHashTable           *already_visited;
 	GList                *to_visit;
-	Filter               *filter;
 	GCancellable         *cancellable;
 	GFileEnumerator      *enumerator;
 	GError               *error;	
@@ -202,8 +201,6 @@ for_each_child_data_free (ForEachChildData *fec)
 		g_hash_table_destroy (fec->already_visited);
 	if (fec->to_visit != NULL)
 		path_list_free (fec->to_visit);
-	if (fec->filter)
-		filter_destroy (fec->filter);
 	if (fec->error != NULL)
 		g_error_free (fec->error);
 	g_free (fec);
@@ -525,7 +522,9 @@ get_file_list_done (GError   *error,
 
 	/* Always include the base directory, this way empty base 
  	 * directories are added to the archive as well.  */
-		 
+	
+	h_dirs = g_hash_table_new (g_str_hash, g_str_equal);
+	
 	dir = g_strdup (gfl->base_dir);
 	gfl->dirs = g_list_prepend (gfl->dirs, dir);
 	g_hash_table_insert (h_dirs, dir, GINT_TO_POINTER (1));
@@ -749,7 +748,8 @@ g_list_items_async (GList             *items,
 			gfl->files = g_list_prepend (gfl->files, rel_path);
 		}
 	}
-		
+	
+	gfl->current_dir = gfl->to_visit;
 	get_items_for_current_dir (gfl);
 }
 
@@ -956,19 +956,19 @@ g_copy_uris_async (GList                 *sources,
 
 typedef struct {
 	char      *uri;
-	GFileType  type;
+	GFileInfo *info;
 } ChildData;
 
 
 static ChildData*
 child_data_new (const char *uri,
-		GFileType   type)
+		GFileInfo  *info)
 {
 	ChildData *data;
 	
 	data = g_new0 (ChildData, 1);
 	data->uri = g_strdup (uri);
-	data->type = type;
+	data->info = g_file_info_dup (info);
 	
 	return data;
 }
@@ -980,6 +980,7 @@ child_data_free (ChildData *child)
 	if (child == NULL)
 		return;
 	g_free (child->uri);
+	g_object_unref (child->info);
 	g_free (child);
 }
 
@@ -1118,10 +1119,17 @@ g_directory_copy_current_child (DirectoryCopyData *dcd)
 
 	child = dcd->current->data;
 	dcd->current_destination = get_destination_for_uri (dcd, child->uri);
-	switch (child->type) {
+	switch (g_file_info_get_file_type (child->info)) {
 	case G_FILE_TYPE_DIRECTORY:	
 		/* FIXME: how to make a directory asynchronously ? */
 		if (! g_file_make_directory (destination, dcd->cancellable, &(dcd->error))) {
+			g_directory_copy_done (dcd, dcd->error);
+			return;
+		}
+		break;
+	case G_FILE_TYPE_SYMBOLIC_LINK:
+		/* FIXME: how to make a link asynchronously ? */
+		if (! g_file_make_symbolic_link (destination, g_file_info_get_symlink_target (child->info), dcd->cancellable, &(dcd->error))) {
 			g_directory_copy_done (dcd, dcd->error);
 			return;
 		}
@@ -1170,7 +1178,7 @@ g_directory_copy_for_each_file (const char *uri,
 {
 	DirectoryCopyData *dcd = user_data;
 	 
-	dcd->to_copy = g_list_prepend (dcd->to_copy, child_data_new (uri, g_file_info_get_file_type (info)));
+	dcd->to_copy = g_list_prepend (dcd->to_copy, child_data_new (uri, info));
 	dcd->tot_files++;
 }
 
@@ -1181,8 +1189,13 @@ g_directory_copy_start_dir (const char  *uri,
 			    gpointer     user_data)
 {	
 	DirectoryCopyData *dcd = user_data;
+	GFileInfo         *info;
 	
-	dcd->to_copy = g_list_prepend (dcd->to_copy, child_data_new (uri, G_FILE_TYPE_DIRECTORY));
+	info = g_file_info_new ();
+	g_file_info_set_file_type (info, G_FILE_TYPE_DIRECTORY);
+	dcd->to_copy = g_list_prepend (dcd->to_copy, child_data_new (uri, info));
+	g_object_unref (info);
+	
 	return TRUE;
 }
 
@@ -1199,6 +1212,7 @@ g_directory_copy_async (GFile                 *source,
 			gpointer               user_data)
 {
 	DirectoryCopyData *dcd;
+	GFileInfo         *info;
 	
 	dcd = g_new0 (DirectoryCopyData, 1);
 	dcd->source = g_file_dup (source);
@@ -1214,7 +1228,10 @@ g_directory_copy_async (GFile                 *source,
 	dcd->source_uri = g_file_get_uri (dcd->source);
 	dcd->destination_uri = g_file_get_uri (dcd->destination);	
 	
-	dcd->to_copy = g_list_prepend (NULL, child_data_new (dcd->source_uri, G_FILE_TYPE_DIRECTORY));
+	info = g_file_info_new ();
+	g_file_info_set_file_type (info, G_FILE_TYPE_DIRECTORY);
+	dcd->to_copy = g_list_prepend (NULL, child_data_new (dcd->source_uri, info));
+	g_object_unref (info);
 	
 	g_directory_foreach_child (dcd->source_uri,
 			           TRUE,
@@ -1225,4 +1242,3 @@ g_directory_copy_async (GFile                 *source,
 			           g_directory_copy_list_ready,
 			           dcd);
 }
-

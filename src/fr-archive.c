@@ -33,10 +33,10 @@
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomevfs/gnome-vfs-async-ops.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
-#include "file-data.h"
-#include "file-list.h"
-#include "file-utils.h"
 #include "glib-utils.h"
+#include "file-utils.h"
+#include "gio-utils.h"
+#include "file-data.h"
 #include "fr-archive.h"
 #include "fr-command.h"
 #include "fr-command-ace.h"
@@ -127,7 +127,9 @@ struct _FRArchivePrivData {
 							     * stoppable. */
 	gpointer             add_is_stoppable_data;
 	GnomeVFSAsyncHandle *xfer_handle;
-	VisitDirHandle      *vd_handle;
+/* FIXME
+  	VisitDirHandle      *vd_handle; */
+  	GCancellable        *cancellable;
 	char                *temp_dir;
 	gboolean             continue_adding_dropped_items;
 	DroppedItemsData    *dropped_items_data;
@@ -307,6 +309,7 @@ fr_archive_stop (FrArchive *archive)
 		archive->priv->xfer_handle = NULL;
 	}
 
+/*FIXME
 	if (archive->priv->vd_handle != NULL) {
 		visit_dir_async_interrupt (archive->priv->vd_handle, NULL, NULL);
 		archive->priv->vd_handle = NULL;
@@ -316,6 +319,10 @@ fr_archive_stop (FrArchive *archive)
 					     FR_PROC_ERROR_STOPPED,
 					     NULL);
 	}
+*/
+	
+	if (! g_cancellable_is_cancelled (archive->priv->cancellable)) 
+		g_cancellable_cancel (archive->priv->cancellable);
 }
 
 
@@ -377,7 +384,8 @@ fr_archive_init (FrArchive *archive)
 
 	archive->priv->extraction_destination = NULL;
 	archive->priv->temp_extraction_dir = NULL;
-
+	archive->priv->cancellable = g_cancellable_new ();
+	
 	archive->process = fr_process_new ();
 	g_signal_connect (G_OBJECT (archive->process),
 			  "sticky_only",
@@ -2106,46 +2114,12 @@ fr_archive_add_files (FrArchive     *archive,
 }
 
 
-static void
-file_list_remove_from_pattern (GList      **list,
-			       const char  *pattern)
-{
-	char  **patterns;
-	GList  *scan;
-
-	if (pattern == NULL)
-		return;
-
-	patterns = search_util_get_patterns (pattern);
-
-	for (scan = *list; scan;) {
-		char *path = scan->data;
-		char *utf8_name;
-
-		utf8_name = g_filename_to_utf8 (file_name_from_path (path), -1, NULL, NULL, NULL);
-
-		if (match_patterns (patterns, utf8_name, 0)) {
-			*list = g_list_remove_link (*list, scan);
-			g_free (scan->data);
-			g_list_free (scan);
-			scan = *list;
-		} else
-			scan = scan->next;
-
-		g_free (utf8_name);
-	}
-
-	g_strfreev (patterns);
-}
-
-
 /* -- add with wildcard -- */
 
 
 typedef struct {
 	FrArchive     *archive;
-	char          *exclude_files;
-	char          *base_dir;
+	char          *source_dir;
 	char          *dest_dir;
 	gboolean       update;
 	char          *password;
@@ -2156,9 +2130,9 @@ typedef struct {
 static void
 add_with_wildcard_data_free (AddWithWildcardData *aww_data)
 {
-	g_free (aww_data->base_dir);
+	g_free (aww_data->source_dir);
+	g_free (aww_data->dest_dir);
 	g_free (aww_data->password);
-	g_free (aww_data->exclude_files);
 	g_free (aww_data);
 }
 
@@ -2175,7 +2149,7 @@ add_with_wildcard__step2 (GList    *file_list,
 	if (error != NULL) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_GETTING_FILE_LIST, 
-					     FR_PROC_ERROR_GENERIC,
+					     (g_error_matches (error, G_FILE_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC),
 					     error->message);
 		return;
 	}
@@ -2184,14 +2158,16 @@ add_with_wildcard__step2 (GList    *file_list,
 				     FR_ACTION_GETTING_FILE_LIST, 
 				     FR_PROC_ERROR_NONE,
 				     NULL);
+
+/* FIXME
 	visit_dir_handle_free (archive->priv->vd_handle);
 	archive->priv->vd_handle = NULL;
+*/
 
 	if (file_list != NULL) {
-		file_list_remove_from_pattern (&file_list, aww_data->exclude_files);
 		fr_archive_add_files (aww_data->archive,
 				      file_list,
-				      aww_data->base_dir,
+				      aww_data->source_dir,
 				      aww_data->dest_dir,
 				      aww_data->update,
 				      aww_data->password,
@@ -2208,7 +2184,7 @@ void
 fr_archive_add_with_wildcard (FrArchive     *archive,
 			      const char    *include_files,
 			      const char    *exclude_files,
-			      const char    *base_dir,
+			      const char    *source_dir,
 			      const char    *dest_dir,
 			      gboolean       update,
 			      gboolean       recursive,
@@ -2218,25 +2194,25 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 {
 	AddWithWildcardData *aww_data;
 
-	g_return_if_fail (archive->priv->vd_handle == NULL);
+	/* FIXME: g_return_if_fail (archive->priv->vd_handle == NULL); */
 	g_return_if_fail (! archive->read_only);
 
 	aww_data = g_new0 (AddWithWildcardData, 1);
 	aww_data->archive = archive;
-	aww_data->base_dir = g_strdup (base_dir);
+	aww_data->source_dir = g_strdup (source_dir);
 	aww_data->dest_dir = g_strdup (dest_dir);
 	aww_data->update = update;
 	aww_data->password = g_strdup (password);
 	aww_data->compression = compression;
-	aww_data->exclude_files = g_strdup (exclude_files);
 
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[START],
 		       0,
 		       FR_ACTION_GETTING_FILE_LIST);
 
+/*
 	archive->priv->vd_handle = get_wildcard_file_list_async (
-					base_dir,
+					source_dir,
 					include_files,
 					recursive,
 					follow_links,
@@ -2246,6 +2222,20 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 					IGNORE_CASE,
 					add_with_wildcard__step2,
 					aww_data);
+*/
+					
+	g_directory_list_async (source_dir, 
+				NULL,
+				recursive,
+				follow_links,
+				NO_BACKUP_FILES,
+				NO_DOT_FILES,
+				include_files,
+				exclude_files,
+				IGNORE_CASE,
+				archive->priv->cancellable,
+				add_with_wildcard__step2,
+				aww_data);
 }
 
 
@@ -2254,7 +2244,6 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 
 typedef struct {
 	FrArchive     *archive;
-	GList         *dir_list;
 	char          *base_dir;
 	char          *dest_dir;
 	gboolean       update;
@@ -2266,8 +2255,8 @@ typedef struct {
 static void
 add_directory_data_free (AddDirectoryData *ad_data)
 {
-	path_list_free (ad_data->dir_list);
 	g_free (ad_data->base_dir);
+	g_free (ad_data->dest_dir);
 	g_free (ad_data->password);
 	g_free (ad_data);
 }
@@ -2282,13 +2271,15 @@ add_directory__step2 (GList    *file_list,
 	AddDirectoryData *ad_data = data;
 	FrArchive        *archive = ad_data->archive;
 
+/* FIXME:
 	visit_dir_handle_free (archive->priv->vd_handle);
 	archive->priv->vd_handle = NULL;
+*/
 
 	if (error != NULL) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_GETTING_FILE_LIST,
-					     FR_PROC_ERROR_GENERIC,
+					     (g_error_matches (error, G_FILE_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC),
 					     error->message);
 		return;
 	}
@@ -2298,8 +2289,11 @@ add_directory__step2 (GList    *file_list,
 				     FR_PROC_ERROR_NONE,
 				     NULL);
 
-	if (archive->command->propAddCanStoreFolders)
+	if (archive->command->propAddCanStoreFolders) 
 		file_list = g_list_concat (file_list, dir_list);
+	else
+		path_list_free (dir_list);
+		
 	if (file_list != NULL) {
 		fr_archive_add_files (ad_data->archive,
 				      file_list,
@@ -2328,12 +2322,12 @@ fr_archive_add_directory (FrArchive     *archive,
 {
 	AddDirectoryData *ad_data;
 
-	g_return_if_fail (archive->priv->vd_handle == NULL);
+/* FIXME
+  	g_return_if_fail (archive->priv->vd_handle == NULL); */
 	g_return_if_fail (! archive->read_only);
 
 	ad_data = g_new0 (AddDirectoryData, 1);
 	ad_data->archive = archive;
-	ad_data->dir_list = g_list_prepend (NULL, g_strdup (directory));
 	ad_data->base_dir = g_strdup (base_dir);
 	ad_data->dest_dir = g_strdup (dest_dir);
 	ad_data->update = update;
@@ -2345,11 +2339,20 @@ fr_archive_add_directory (FrArchive     *archive,
 		       0,
 		       FR_ACTION_GETTING_FILE_LIST);
 
+/* FIXME:
 	archive->priv->vd_handle = get_items_file_list_async (
 					ad_data->dir_list,
 					base_dir,
 					add_directory__step2,
 					ad_data);
+*/
+			    
+	g_directory_list_all_async (directory, 
+				    base_dir,
+				    TRUE,
+				    archive->priv->cancellable,
+				    add_directory__step2,
+				    ad_data);
 }
 
 
@@ -2366,12 +2369,12 @@ fr_archive_add_items (FrArchive     *archive,
 {
 	AddDirectoryData *ad_data;
 
-	g_return_if_fail (archive->priv->vd_handle == NULL);
+/* FIXME
+ 	g_return_if_fail (archive->priv->vd_handle == NULL); */
 	g_return_if_fail (! archive->read_only);
 
 	ad_data = g_new0 (AddDirectoryData, 1);
 	ad_data->archive = archive;
-	ad_data->dir_list = path_list_dup (item_list);
 	ad_data->base_dir = g_strdup (base_dir);
 	ad_data->dest_dir = g_strdup (dest_dir);
 	ad_data->update = update;
@@ -2383,11 +2386,19 @@ fr_archive_add_items (FrArchive     *archive,
 		       0,
 		       FR_ACTION_GETTING_FILE_LIST);
 
+/* FIXME:
 	archive->priv->vd_handle = get_items_file_list_async (
 					ad_data->dir_list,
 					base_dir,
 					add_directory__step2,
 					ad_data);
+*/
+				
+	g_list_items_async (item_list,
+			    base_dir,
+			    archive->priv->cancellable,
+			    add_directory__step2,
+			    ad_data);
 }
 
 

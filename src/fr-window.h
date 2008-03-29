@@ -27,7 +27,6 @@
 #include <libgnomeui/libgnomeui.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "typedefs.h"
-#include "file-list.h"
 #include "fr-archive.h"
 
 #define GCONF_NOTIFICATIONS 10

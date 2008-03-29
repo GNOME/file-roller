@@ -26,7 +26,6 @@
 #include <glib.h>
 #include "fr-process.h"
 #include "fr-command.h"
-#include "file-list.h"
 
 #define FR_TYPE_ARCHIVE            (fr_archive_get_type ())
 #define FR_ARCHIVE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_ARCHIVE, FrArchive))
