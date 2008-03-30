@@ -1754,18 +1754,17 @@ copy_remote_files_done (GError   *error,
 {
 	XferData *xfer_data = user_data;
 	
-	fr_archive_copy_done (archive, FR_ACTION_COPYING_FILES_FROM_REMOTE, error);
+	fr_archive_copy_done (xfer_data->archive, FR_ACTION_COPYING_FILES_FROM_REMOTE, error);
 	
-	if (error != NULL)
-		return;	
-		
-	fr_archive_add_local_files (xfer_data->archive,
-				    xfer_data->file_list,
-				    xfer_data->tmp_dir,
-				    xfer_data->dest_dir,
-				    FALSE,
-				    xfer_data->password,
-				    xfer_data->compression);
+	if (error == NULL) 		
+		fr_archive_add_local_files (xfer_data->archive,
+					    xfer_data->file_list,
+					    xfer_data->tmp_dir,
+					    xfer_data->dest_dir,
+					    FALSE,
+					    xfer_data->password,
+					    xfer_data->compression);
+	xfer_data_free (xfer_data);
 }
 
 
@@ -1783,7 +1782,7 @@ copy_remote_files_progress (goffset   current_file,
 	g_signal_emit (G_OBJECT (xfer_data->archive),
 		       fr_archive_signals[PROGRESS],
 		       0,
-		       (double) current_file / total_files + 1);
+		       (double) current_file / (total_files + 1));
 }
 
 
@@ -1800,18 +1799,19 @@ copy_remote_files (FrArchive     *archive,
 	GList      *sources = NULL, *destinations = NULL;
 	GHashTable *created_folders;
 	GList      *scan;
+	XferData   *xfer_data;
 	
 	created_folders = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, NULL);
 	for (scan = file_list; scan; scan = scan->next) {
 		char  *partial_filename = scan->data;
 		char  *local_uri;
 		char  *local_folder_uri;
+		char  *remote_uri;
 		
 		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
-
 		local_folder_uri = remove_level_from_path (local_uri);
 		if (g_hash_table_lookup (created_folders, local_folder_uri) == NULL) {
-			result = make_tree (local_uri);
+			GnomeVFSResult result = make_tree (local_uri);
 			if (result != GNOME_VFS_OK) {
 				g_free (local_folder_uri);
 				g_free (local_uri);
@@ -2024,7 +2024,7 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 */
 					
 	g_directory_list_async (source_dir, 
-				NULL,
+				source_dir,
 				recursive,
 				follow_links,
 				NO_BACKUP_FILES,

@@ -200,7 +200,7 @@ for_each_child_data_free (ForEachChildData *fec)
 	if (fec->already_visited)
 		g_hash_table_destroy (fec->already_visited);
 	if (fec->to_visit != NULL)
-		path_list_free (fec->to_visit);
+		g_list_free (fec->to_visit);
 	if (fec->error != NULL)
 		g_error_free (fec->error);
 	g_free (fec);
@@ -263,17 +263,15 @@ for_each_child_next_files_ready (GObject      *source_object,
 		uri = g_strconcat (current_directory, "/", name, NULL);
 
 		if (g_file_info_get_file_type (child_info) == G_FILE_TYPE_DIRECTORY) {
-			char *sub_directory;
-			
 			/* avoid to visit a directory more than ones */
 
-			sub_directory = g_strdup (uri);
-			if (g_hash_table_lookup (fec->already_visited, sub_directory) == NULL) {				
+			if (g_hash_table_lookup (fec->already_visited, uri) == NULL) {
+				char *sub_directory;	
+				
+				sub_directory = g_strdup (uri);
 				g_hash_table_insert (fec->already_visited, sub_directory, GINT_TO_POINTER (1));
 				fec->to_visit = g_list_append (fec->to_visit, sub_directory);
 			}
-			else
-				g_free (sub_directory);
 		}
 		
 		fec->for_each_file_func (uri, child_info, fec->user_data);
@@ -466,8 +464,11 @@ get_dir_list_from_file_list (GHashTable *h_dirs,
 {
 	GList *scan;
 	GList *dir_list = NULL;
-	int    base_dir_len = strlen (base_dir);
+	int    base_dir_len;
 	
+	if (base_dir == NULL)
+		base_dir = "";
+	base_dir_len = strlen (base_dir);
 	for (scan = files; scan; scan = scan->next) {
 		char *filename = scan->data;
 		char *dir_name;
@@ -509,7 +510,6 @@ get_file_list_done (GError   *error,
 {
 	GetFileListData *gfl = user_data;
 	GHashTable      *h_dirs;
-	char            *dir;
 	GList           *scan;
 	
 	gfl->files = g_list_reverse (gfl->files);
@@ -520,20 +520,23 @@ get_file_list_done (GError   *error,
 		gfl->dirs = NULL;
 	}
 
+	h_dirs = g_hash_table_new (g_str_hash, g_str_equal);
+
 	/* Always include the base directory, this way empty base 
  	 * directories are added to the archive as well.  */
 	
-	h_dirs = g_hash_table_new (g_str_hash, g_str_equal);
-	
-	dir = g_strdup (gfl->base_dir);
-	gfl->dirs = g_list_prepend (gfl->dirs, dir);
-	g_hash_table_insert (h_dirs, dir, GINT_TO_POINTER (1));
+	if (gfl->base_dir != NULL) {
+		char *dir;
+		
+		dir = g_strdup (gfl->base_dir);
+		gfl->dirs = g_list_prepend (gfl->dirs, dir);
+		g_hash_table_insert (h_dirs, dir, GINT_TO_POINTER (1));
+	}
 	
 	/* Add all the parent directories in gfl->files/gfl->dirs to the 
 	 * gfl->dirs list, the hash table is used to avoid duplicated 
 	 * entries. */
 	
-	h_dirs = g_hash_table_new (g_str_hash, g_str_equal);
 	for (scan = gfl->dirs; scan; scan = scan->next)
 		g_hash_table_insert (h_dirs, (char*)scan->data, GINT_TO_POINTER (1));
 	
@@ -592,7 +595,7 @@ get_file_list_for_each_file (const char *uri,
 
 
 void
-g_directory_list_async (const char            *directory, 
+g_directory_list_async (const char           *directory, 
 		       const char            *base_dir,
 		       gboolean               recursive,
 		       gboolean               follow_links,
@@ -932,10 +935,10 @@ g_copy_file_async (GFile                 *source,
 		   gpointer               user_data)
 {
 	GList *source_files;
-	GList *source_files;
+	GList *destination_files;
 	
 	source_files = g_list_append (NULL, (gpointer)source);
-	source_files = g_list_append (NULL, (gpointer)destination);
+	destination_files = g_list_append (NULL, (gpointer)destination);
 	
 	g_copy_files_async (source_files, 
 			    destination_files, 
@@ -1050,8 +1053,8 @@ child_data_free (ChildData *child)
 
 
 typedef struct {
-	GFile                 *source;
-	GFile                 *destination;
+	char                  *source;
+	char                  *destination;
 	GFileCopyFlags         flags;
 	int                    io_priority;
 	GCancellable          *cancellable;
@@ -1061,8 +1064,6 @@ typedef struct {
 	gpointer               user_data;
 	GError                *error;
 	
-	char                  *source_uri;
-	char                  *destination_uri;
 	GList                 *to_copy;
 	GList                 *current;
 	GFile                 *current_source;
@@ -1076,11 +1077,9 @@ directory_copy_data_free (DirectoryCopyData *dcd)
 {
 	if (dcd == NULL)
 		return;
-	g_object_unref (dcd->source);
-	g_object_unref (dcd->destination);
-	g_object_unref (dcd->cancellable);
-	g_free (dcd->source_uri);
-	g_free (dcd->destination_uri);
+	
+	g_free (dcd->source);
+	g_free (dcd->destination);
 	if (dcd->current_source != NULL) {
 		g_object_unref (dcd->current_source);
 		dcd->current_source = NULL;
@@ -1091,6 +1090,7 @@ directory_copy_data_free (DirectoryCopyData *dcd)
 	}
 	g_list_foreach (dcd->to_copy, (GFunc) child_data_free, NULL);
 	g_list_free (dcd->to_copy);
+	g_object_unref (dcd->cancellable);
 	g_free (dcd);
 }
 
@@ -1114,7 +1114,7 @@ get_destination_for_uri (DirectoryCopyData *dcd,
 	char  *destination_uri;
 	GFile *destination_file;
 
-	destination_uri = g_strconcat (dcd->destination_uri, "/", uri + strlen (dcd->source_uri) + 1, NULL);
+	destination_uri = g_strconcat (dcd->destination, "/", uri + strlen (dcd->source) + 1, NULL);
 	destination_file = g_file_new_for_uri (destination_uri);
 	g_free (destination_uri);
 
@@ -1265,8 +1265,8 @@ g_directory_copy_start_dir (const char  *uri,
 
 
 void
-g_directory_copy_async (GFile                 *source,
-		   	GFile                 *destination,
+g_directory_copy_async (const char            *source,
+			const char            *destination,
 			GFileCopyFlags         flags,
 			int                    io_priority,
 			GCancellable          *cancellable,
@@ -1279,25 +1279,22 @@ g_directory_copy_async (GFile                 *source,
 	GFileInfo         *info;
 	
 	dcd = g_new0 (DirectoryCopyData, 1);
-	dcd->source = g_file_dup (source);
-	dcd->destination = g_file_dup (destination);
+	dcd->source = g_strdup (source);
+	dcd->destination = g_strdup (destination);
 	dcd->flags = flags;
 	dcd->io_priority = io_priority;
 	dcd->cancellable = cancellable;
 	dcd->progress_callback = progress_callback;
 	dcd->progress_callback_data = progress_callback_data;
 	dcd->callback = callback;
-	dcd->user_data = user_data;
-		
-	dcd->source_uri = g_file_get_uri (dcd->source);
-	dcd->destination_uri = g_file_get_uri (dcd->destination);	
+	dcd->user_data = user_data;	
 	
 	info = g_file_info_new ();
 	g_file_info_set_file_type (info, G_FILE_TYPE_DIRECTORY);
-	dcd->to_copy = g_list_prepend (NULL, child_data_new (dcd->source_uri, info));
+	dcd->to_copy = g_list_prepend (NULL, child_data_new (dcd->source, info));
 	g_object_unref (info);
 	
-	g_directory_foreach_child (dcd->source_uri,
+	g_directory_foreach_child (dcd->source,
 			           TRUE,
 			           TRUE,
 			           dcd->cancellable,
