@@ -126,9 +126,6 @@ struct _FRArchivePrivData {
 	FakeLoadFunc         add_is_stoppable_func;         /* Returns whether the add operation is
 							     * stoppable. */
 	gpointer             add_is_stoppable_data;
-	GnomeVFSAsyncHandle *xfer_handle;
-/* FIXME
-  	VisitDirHandle      *vd_handle; */
   	GCancellable        *cancellable;
 	char                *temp_dir;
 	gboolean             continue_adding_dropped_items;
@@ -302,25 +299,10 @@ fr_archive_stoppable (FrArchive *archive,
 void
 fr_archive_stop (FrArchive *archive)
 {
-	if (archive->process != NULL)
+	if (archive->process != NULL) {
 		fr_process_stop (archive->process);
-
-	if (archive->priv->xfer_handle != NULL) {
-		gnome_vfs_async_cancel (archive->priv->xfer_handle);
-		archive->priv->xfer_handle = NULL;
+		return;
 	}
-
-/*FIXME
-	if (archive->priv->vd_handle != NULL) {
-		visit_dir_async_interrupt (archive->priv->vd_handle, NULL, NULL);
-		archive->priv->vd_handle = NULL;
-
-		fr_archive_action_completed (archive,
-					     FR_ACTION_GETTING_FILE_LIST, 
-					     FR_PROC_ERROR_STOPPED,
-					     NULL);
-	}
-*/
 	
 	if (! g_cancellable_is_cancelled (archive->priv->cancellable)) 
 		g_cancellable_cancel (archive->priv->cancellable);
@@ -854,25 +836,6 @@ action_started (FrCommand *command,
 
 
 /* -- copy_to_remote_location -- */
-
-
-static void
-fr_archive_copy__error (FrArchive      *archive,
-			FRAction        action,
-			GnomeVFSResult  result)
-{
-	FRProcErrorType  error_type;
-	const char      *details = NULL;
-
-	archive->priv->xfer_handle = NULL;
-
-	error_type = FR_PROC_ERROR_NONE;
-	if (result != GNOME_VFS_OK) {
-		error_type = FR_PROC_ERROR_GENERIC;
-		details = gnome_vfs_result_to_string (result);
-	}
-	fr_archive_action_completed (archive, action, error_type, details);
-}
 
 
 static void
@@ -1786,23 +1749,16 @@ fr_archive_add_local_files (FrArchive     *archive,
 
 
 static void
-copy_remote_files__step2 (XferData *xfer_data)
+copy_remote_files_done (GError   *error,
+			gpointer  user_data)
 {
-	FrArchive *archive = xfer_data->archive;
-
-	if (xfer_data->result != GNOME_VFS_OK) {
-		fr_archive_action_completed (archive,
-					     FR_ACTION_COPYING_FILES_FROM_REMOTE,
-					     FR_PROC_ERROR_GENERIC,
-					     gnome_vfs_result_to_string (xfer_data->result));
-		return;
-	}
-
-	fr_archive_action_completed (archive,
-				     FR_ACTION_COPYING_FILES_FROM_REMOTE,
-				     FR_PROC_ERROR_NONE,
-				     NULL);
-
+	XferData *xfer_data = user_data;
+	
+	fr_archive_copy_done (archive, FR_ACTION_COPYING_FILES_FROM_REMOTE, error);
+	
+	if (error != NULL)
+		return;	
+		
 	fr_archive_add_local_files (xfer_data->archive,
 				    xfer_data->file_list,
 				    xfer_data->tmp_dir,
@@ -1813,29 +1769,21 @@ copy_remote_files__step2 (XferData *xfer_data)
 }
 
 
-static gint
-copy_remote_files_progress_update_cb (GnomeVFSAsyncHandle      *handle,
-				      GnomeVFSXferProgressInfo *info,
-				      gpointer                  user_data)
+static void 
+copy_remote_files_progress (goffset   current_file,
+                            goffset   total_files,
+                            GFile    *source,
+                            GFile    *destination,
+                            goffset   current_num_bytes,
+                            goffset   total_num_bytes,
+                            gpointer  user_data)
 {
 	XferData *xfer_data = user_data;
-
-	if (info->status != GNOME_VFS_XFER_PROGRESS_STATUS_OK) {
-		xfer_data->result = info->vfs_status;
-		return FALSE;
-	}
-	else if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
-		copy_remote_files__step2 (xfer_data);
-		xfer_data_free (xfer_data);
-	}
-	else if ((info->phase == GNOME_VFS_XFER_PHASE_COPYING)
-		 || (info->phase == GNOME_VFS_XFER_PHASE_MOVING))
-		g_signal_emit (G_OBJECT (xfer_data->archive),
-			       fr_archive_signals[PROGRESS],
-			       0,
-			       (double) info->total_bytes_copied / info->bytes_total);
-			       
-	return TRUE;
+	
+	g_signal_emit (G_OBJECT (xfer_data->archive),
+		       fr_archive_signals[PROGRESS],
+		       0,
+		       (double) current_file / total_files + 1);
 }
 
 
@@ -1849,26 +1797,16 @@ copy_remote_files (FrArchive     *archive,
 		   FRCompression  compression,
 		   const char    *tmp_dir)
 {
-	GList          *source_uri_list = NULL;
-	GList          *target_uri_list = NULL;
-	GnomeVFSURI    *source_uri;
-	GnomeVFSURI    *target_uri;
-	GList          *scan;
-	XferData       *xfer_data;
-	GnomeVFSResult  result;
-	GHashTable     *created_folders;
-
-	if (archive->priv->xfer_handle != NULL)
-		gnome_vfs_async_cancel (archive->priv->xfer_handle);
-
+	GList      *sources = NULL, *destinations = NULL;
+	GHashTable *created_folders;
+	GList      *scan;
+	
 	created_folders = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, NULL);
-
 	for (scan = file_list; scan; scan = scan->next) {
-		char *partial_filename = scan->data;
-		char *remote_uri;
-		char *local_uri;
-		char *local_folder_uri;
-
+		char  *partial_filename = scan->data;
+		char  *local_uri;
+		char  *local_folder_uri;
+		
 		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
 
 		local_folder_uri = remove_level_from_path (local_uri);
@@ -1877,8 +1815,8 @@ copy_remote_files (FrArchive     *archive,
 			if (result != GNOME_VFS_OK) {
 				g_free (local_folder_uri);
 				g_free (local_uri);
-				gnome_vfs_uri_list_free (source_uri_list);
-				gnome_vfs_uri_list_free (target_uri_list);
+				gio_file_list_free (sources);
+				gio_file_list_free (destinations);
 				g_hash_table_destroy (created_folders);
 
 				fr_archive_action_completed (archive,
@@ -1893,15 +1831,13 @@ copy_remote_files (FrArchive     *archive,
 		else
 			g_free (local_folder_uri);
 
-		target_uri = gnome_vfs_uri_new (local_uri);
-
 		remote_uri = g_strconcat (base_uri, "/", partial_filename, NULL);
-		source_uri = gnome_vfs_uri_new (remote_uri);
+		sources = g_list_append (sources, g_file_new_for_uri (remote_uri));
+		g_free (remote_uri);
 
-		source_uri_list = g_list_append (source_uri_list, source_uri);
-		target_uri_list = g_list_append (target_uri_list, target_uri);
+		destinations = g_list_append (destinations, g_file_new_for_uri (local_uri));
+		g_free (local_uri);
 	}
-
 	g_hash_table_destroy (created_folders);
 
 	xfer_data = g_new0 (XferData, 1);
@@ -1914,37 +1850,24 @@ copy_remote_files (FrArchive     *archive,
 	xfer_data->password = g_strdup (password);
 	xfer_data->compression = compression;
 	xfer_data->tmp_dir = g_strdup (tmp_dir);
-	xfer_data->result = GNOME_VFS_OK;
 
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[START],
 		       0,
 		       FR_ACTION_COPYING_FILES_FROM_REMOTE);
-
-	result = gnome_vfs_async_xfer (&archive->priv->xfer_handle,
-				       source_uri_list,
-				       target_uri_list,
-				       GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
-				       GNOME_VFS_XFER_ERROR_MODE_ABORT,
-				       GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
-				       GNOME_VFS_PRIORITY_DEFAULT,
-				       copy_remote_files_progress_update_cb, xfer_data,
-				       NULL, NULL);
-
-	if (result != GNOME_VFS_OK) {
-		fr_archive_action_completed (archive,
-					     FR_ACTION_COPYING_FILES_FROM_REMOTE,
-					     FR_PROC_ERROR_GENERIC,
-					     gnome_vfs_result_to_string (result));
-		xfer_data_free (xfer_data);
-	}
-
-	gnome_vfs_uri_list_free (source_uri_list);
-	gnome_vfs_uri_list_free (target_uri_list);
 	
-	/**/
+	g_copy_files_async (sources,
+			    destinations,
+			    G_FILE_COPY_OVERWRITE,
+			    G_PRIORITY_DEFAULT,
+			    archive->priv->cancellable,
+			    copy_remote_files_progress,
+			    xfer_data,
+			    copy_remote_files_done,
+			    xfer_data);
 	
-	
+	gio_file_list_free (sources);
+	gio_file_list_free (destinations);
 }
 
 
@@ -1969,7 +1892,6 @@ fr_archive_add_files (FrArchive     *archive,
 {
 	if (uri_is_local (base_dir)) {
 		char *local_dir = get_local_path_from_uri (base_dir);
-
 		fr_archive_add_local_files (archive,
 					    file_list, 
 					    local_dir, 

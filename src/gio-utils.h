@@ -78,7 +78,7 @@ void   g_list_items_async            (GList                 *items,
 				      ListReadyCallback      done_func,
 				      gpointer               done_data);
 				      
-/* asynchronous recursive copy functions */				      
+/* asynchronous copy functions */				      
 
 void   g_copy_files_async            (GList                 *sources,
 				      GList                 *destinations,
