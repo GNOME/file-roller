@@ -24,9 +24,7 @@
 #include <config.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnomevfs/gnome-vfs-file-info.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
+#include <gio/gio.h>
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
@@ -209,23 +207,21 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		if (all_archives && ! is_archive (file))
 			all_archives = FALSE;
 
-
 		if (can_write) {
-			char             *parent_uri;
-			GnomeVFSFileInfo *info;
-			GnomeVFSResult    result;
+			char      *parent_uri;
+			GFile     *parent;
+			GFileInfo *info;
 
 			parent_uri = nautilus_file_info_get_parent_uri (file);
-			info = gnome_vfs_file_info_new ();
+			parent =  g_file_new_for_uri (parent_uri);
 			
-			result = gnome_vfs_get_file_info (parent_uri,
-							  info,
-							  (GNOME_VFS_FILE_INFO_FOLLOW_LINKS
-					                   | GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS));
-			if ((result == GNOME_VFS_OK) && (info->valid_fields & GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS))
-				can_write = (info->permissions & GNOME_VFS_PERM_ACCESS_WRITABLE) || (info->permissions & GNOME_VFS_PERM_USER_WRITE);
-				
-			gnome_vfs_file_info_unref (info);
+			info = g_file_query_info (parent, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE, 0, NULL, NULL);
+			if (info != NULL) { 
+				can_write = g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE);
+				g_object_unref (info);
+			}
+			
+			g_object_unref (parent);
 			g_free (parent_uri);
 		}
 	}

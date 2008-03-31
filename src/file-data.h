@@ -31,14 +31,14 @@ typedef struct {
 	char       *original_path;    /* path read from command line. */
 	char       *full_path;        /* "/" + original_path. */
 	char       *link;
-	guint64     size;
+	goffset     size;
 	time_t      modified;
 
 	char       *name;             /* The file name. */
 	char       *path;             /* The directory. */
 	gboolean    encrypted;        /* Whether the file is encrypted. */
 	gboolean    dir;              /* Whether this is a directory listed in the archive */
-	guint64     dir_size;
+	goffset     dir_size;
 	
 	/* Additional data. */
 

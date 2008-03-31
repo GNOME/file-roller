@@ -29,10 +29,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <libgnomevfs/gnome-vfs-mime.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
-#include <libgnomevfs/gnome-vfs-async-ops.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
+#include <gio/gio.h>
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gio-utils.h"
@@ -410,17 +407,29 @@ fr_archive_set_uri (FrArchive  *archive,
 		    const char *uri)
 {
 	if ((archive->local_filename != NULL) && archive->is_remote) {
-		char *file_uri;
-		char *folder_uri;
+		GFile  *file, *folder;
+		GError *err = NULL;
 
-		file_uri = get_uri_from_local_path (archive->local_filename);
-		gnome_vfs_unlink (file_uri);
-
-		folder_uri = remove_level_from_path (file_uri);
-		gnome_vfs_remove_directory (folder_uri);
-
-		g_free (file_uri);
-		g_free (folder_uri);
+		file = g_file_new_for_path (archive->local_filename);
+		g_file_delete (file, NULL, &err);
+		if (err != NULL) {
+			g_warning ("Failed to delete file %s: %s",
+				   archive->local_filename,
+				   err->message);
+			g_clear_error (&err);
+		}
+		
+		folder = g_file_get_parent (file);
+		g_file_delete (folder, NULL, &err);
+		if (err != NULL) {
+			g_warning ("Failed to delete parent folder of %s: %s",
+				   archive->local_filename,
+				   err->message);
+			g_clear_error (&err);
+		}
+		
+		g_object_unref (folder);
+		g_object_unref (file);
 	}
 
 	if (uri != archive->uri) {
@@ -2981,13 +2990,13 @@ fr_archive_extract_to_local (FrArchive  *archive,
 
 		if (! archive->command->propExtractCanSkipOlder
 		    && skip_older
-		    && path_exists (dest_filename)
+		    && g_file_test (dest_filename, G_FILE_TEST_EXISTS)
 		    && (fdata->modified < get_file_mtime (dest_filename)))
 			continue;
 
 		if (! archive->command->propExtractCanAvoidOverwrite
 		    && ! overwrite
-		    && path_exists (dest_filename))
+		    && g_file_test (dest_filename, G_FILE_TEST_EXISTS))
 			continue;
 
 		filtered = g_list_prepend (filtered, fdata->original_path);

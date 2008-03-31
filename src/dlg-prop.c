@@ -86,7 +86,7 @@ dlg_prop (FrWindow *window)
 	GtkWidget        *label_label;
 	GtkWidget        *label;
 	char             *s;
-	GnomeVFSFileSize  size, uncompressed_size;
+	goffset           size, uncompressed_size;
 	char             *utf8_name;
 	char             *title_txt;
 	double            ratio;
@@ -150,7 +150,7 @@ dlg_prop (FrWindow *window)
 
 	label = glade_xml_get_widget (data->gui, "p_size_label");
 	size = get_file_size (fr_window_get_archive_uri (window));
-	s = gnome_vfs_format_file_size_for_display (size);
+	s = g_format_size_for_display (size);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
@@ -170,7 +170,7 @@ dlg_prop (FrWindow *window)
 	}
 
 	label = glade_xml_get_widget (data->gui, "p_uncomp_size_label");
-	s = gnome_vfs_format_file_size_for_display (uncompressed_size);
+	s = g_format_size_for_display (uncompressed_size);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 

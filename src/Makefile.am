@@ -115,8 +115,6 @@ file_roller_SOURCES = 			\
 	gio-utils.h			\
 	glib-utils.c			\
 	glib-utils.h			\
-	gnome-vfs-helpers.c		\
-	gnome-vfs-helpers.h		\
 	gtk-utils.c			\
 	gtk-utils.h			\
 	java-utils.c			\

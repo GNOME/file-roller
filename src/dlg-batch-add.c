@@ -28,10 +28,7 @@
 #include <gtk/gtk.h>
 #include <libgnomeui/gnome-icon-lookup.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs-types.h>
-#include <libgnomevfs/gnome-vfs-mime.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
+#include <gio.h>
 
 #include "file-utils.h"
 #include "fr-stock.h"
@@ -288,8 +285,21 @@ add_clicked_cb (GtkWidget  *widget,
 		r = gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
-		if (r == GTK_RESPONSE_YES)
-			gnome_vfs_unlink (archive_file);
+		if (r == GTK_RESPONSE_YES) {
+			GFile  *file;
+			GError *err = NULL;
+
+			/* FIXME: convert this code in a function in file-utils.c */
+			file = g_file_new_for_uri (archive_file);
+			g_file_delete (file, NULL, &err);
+			if (err != NULL) {
+				g_warning ("Failed to delete file %s: %s", 
+					   archive_file, 
+					   err->message);
+				g_clear_error (&err);
+			}
+			g_object_unref (file);
+		}
 		else {
 			g_free (archive_name);
 			g_free (archive_dir);

@@ -39,7 +39,6 @@
 		     NULL)
 
 gboolean            path_is_file                 (const gchar *s);
-gboolean            path_exists                  (const gchar *s);
 gboolean            uri_exists                   (const char  *uri);
 gboolean            path_is_dir                  (const gchar *s);
 gboolean            dir_is_empty                 (const gchar *s);
@@ -47,7 +46,7 @@ gboolean            dir_contains_one_object      (const char  *uri);
 char *              get_directory_content_if_unique (const char  *uri);
 gboolean            path_in_path                 (const char  *path_src,
 						  const char  *path_dest);
-GnomeVFSFileSize    get_file_size                (const gchar *s);
+goffset             get_file_size                (const char *uri);
 time_t              get_file_mtime               (const gchar *s);
 time_t              get_file_ctime               (const gchar *s);
 gboolean            file_copy                    (const gchar *from,
@@ -71,7 +70,7 @@ gboolean            is_mime_type                 (const char* type,
 						  const char* pattern);
 const char*         get_file_mime_type           (const char *filename,
                     				  gboolean    fast_file_type);
-GnomeVFSFileSize    get_dest_free_space          (const char  *path);
+guint64             get_dest_free_space          (const char  *path);
 gboolean            remove_directory             (const char  *uri);
 gboolean            remove_local_directory       (const char  *directory);
 GnomeVFSResult      make_tree                    (const char  *uri);

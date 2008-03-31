@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2008 The Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
+#include <gio/gio.h>
 #include "preferences.h"
 #include "fr-process.h"
 #include "fr-window.h"
@@ -41,12 +41,12 @@ typedef struct {
 } ViewerData;
 
 typedef struct {
-	FrWindow                *window;
-	FrProcess               *process;
-	char                    *command;
-	GnomeVFSMimeApplication *app;
-	GList                   *file_list;
-	char                    *temp_dir;
+	FrWindow  *window;
+	FrProcess *process;
+	char      *command;
+	GAppInfo  *app;
+	GList     *file_list;
+	char      *temp_dir;
 } CommandData;
 
 

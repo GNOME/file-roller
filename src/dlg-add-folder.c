@@ -28,10 +28,7 @@
 #include <gtk/gtk.h>
 #include <libgnome/gnome-config.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs-mime.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
-#include <libgnomevfs/gnome-vfs-directory.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
+#include <gio/gio.h>
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "fr-window.h"
@@ -525,42 +522,54 @@ static void
 aod_update_option_list (LoadOptionsDialogData *aod_data)
 {
 	GtkListStore   *list_store = GTK_LIST_STORE (aod_data->aod_model);
-	char           *options_dir;
-	GnomeVFSResult  result;
-	GList          *list = NULL;
+	char            *options_dir;
+	GFile           *file;
+	GFileEnumerator *fileenum;
+	GFileInfo       *info;
+	GError          *err = NULL;	
 
 	gtk_list_store_clear (list_store);
 
 	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
 	ensure_dir_exists (options_dir, 0700);
 
-	result = gnome_vfs_directory_list_load (&list,
-						options_dir,
-						GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
+	file = g_file_new_for_path (options_dir);
+	fileenum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
+	if (err != NULL) {
+		g_warning ("Failed to enumerate children in %s: %s", options_dir, err->message);
+		g_error_free (err);
+		return;
+	}
 
-	if (result == GNOME_VFS_OK) {
-		GList *scan;
+	while ((info = g_file_enumerator_next_file (fileenum, NULL, &err)) != NULL) {
+		const char  *name;
+		char        *full_path;
+		GtkTreeIter  iter;
 
-		for (scan = list; scan; scan = scan->next) {
-			GnomeVFSFileInfo *file_info = scan->data;
-			GtkTreeIter       iter;
-			char             *full_path;
-
-			if ((strcmp (file_info->name, ".") == 0)
-			    || (strcmp (file_info->name, "..") == 0))
-				continue;
-
-			full_path = g_build_filename (options_dir,
-						      file_info->name,
-						      NULL);
-			gtk_list_store_append (GTK_LIST_STORE (aod_data->aod_model),
-					       &iter);
-			gtk_list_store_set (GTK_LIST_STORE (aod_data->aod_model), &iter,
-					    0, file_info->name,
-					    1, full_path,
-					    -1);
-			g_free (full_path);
+		if (err != NULL) {
+			g_warning ("Failed to get info while enumerating: %s", err->message);
+			g_clear_error (&err);
+			continue;
 		}
+
+		name = g_file_info_get_name (info);
+		if ((strcmp (name, ".") == 0) || (strcmp (name, "..") == 0))
+			continue;
+		
+		full_path = g_build_filename (options_dir, name, NULL);
+		gtk_list_store_append (GTK_LIST_STORE (aod_data->aod_model), &iter);
+		gtk_list_store_set (GTK_LIST_STORE (aod_data->aod_model), &iter,
+				    0, name,
+				    1, full_path,
+				    -1);
+
+		g_free (full_path);
+		g_object_unref (info);
+	}
+
+	if (err != NULL) {
+		g_warning ("Failed to get info after enumeration: %s", err->message);
+		g_clear_error (&err);
 	}
 
 	gnome_vfs_file_info_list_free (list);

@@ -34,6 +34,7 @@
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include <gio/gio.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "actions.h"
@@ -1387,11 +1388,11 @@ get_selection_as_fd (FrWindow *window)
 static void
 fr_window_update_statusbar_list_info (FrWindow *window)
 {
-	char             *info, *archive_info, *selected_info;
-	char             *size_txt, *sel_size_txt;
-	int               tot_n, sel_n;
-	GnomeVFSFileSize  tot_size, sel_size;
-	GList            *scan;
+	char    *info, *archive_info, *selected_info;
+	char    *size_txt, *sel_size_txt;
+	int      tot_n, sel_n;
+	goffset  tot_size, sel_size;
+	GList   *scan;
 	
 	if (window == NULL)
 		return;
@@ -1436,9 +1437,9 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 		g_list_free (selection);
 	}
 
-	size_txt = gnome_vfs_format_file_size_for_display (tot_size);
-	sel_size_txt = gnome_vfs_format_file_size_for_display (sel_size);
-
+	size_txt = g_format_size_for_display (tot_size);
+	sel_size_txt = g_format_size_for_display (sel_size);
+	
 	if (tot_n == 0)
 		archive_info = g_strdup ("");
 	else

@@ -189,9 +189,10 @@ get_archive_filename_from_selector (FrWindow  *window,
 	debug (DEBUG_INFO, "create/save %s\n", path);
 
 	if (path_is_file (path)) {
-		GtkWidget      *dialog;
-		int             r;
-		GnomeVFSResult  result;
+		GtkWidget *dialog;
+		int        r;
+		GFile     *file;
+		GError    *err = NULL;
 
 		if (! is_supported_extension (file_sel, path)) {
 			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
@@ -224,17 +225,20 @@ get_archive_filename_from_selector (FrWindow  *window,
 			return NULL;
 		}
 
-		result = gnome_vfs_unlink (path);
-		if (result != GNOME_VFS_OK) {
+		file = g_file_new_for_uri (path);
+		g_file_delete (file, NULL, &err);
+		g_object_unref (file);
+		if (err != NULL) {
 			GtkWidget *dialog;
 			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
 							GTK_DIALOG_DESTROY_WITH_PARENT,
 							NULL,
 							_("Could not delete the old archive."),
-							gnome_vfs_result_to_string (result));
+							err->message);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_free (path);
+			g_error_free (err);
 			return NULL;
 		}
 	}

@@ -25,8 +25,7 @@
 
 #include <libgnome/gnome-config.h>
 #include <libgnomeui/libgnomeui.h>
-#include <libgnomevfs/gnome-vfs-init.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
+#include <gio/gio.h>
 #include <glade/glade.h>
 #include "file-utils.h"
 #include "glib-utils.h"
@@ -106,6 +105,7 @@ FRCommandDescription command_desc[] = {
 	{ "zip",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_ZIP },
 	{ "unzip",      TRUE,  FALSE, TRUE,  FR_FILE_TYPE_ZIP },
 	{ "rar",        TRUE,  TRUE,  TRUE,  FR_FILE_TYPE_RAR },
+	{ "unrar",      TRUE,  FALSE, TRUE,  FR_FILE_TYPE_RAR },
 	{ "gzip",       TRUE,  TRUE,  FALSE, FR_FILE_TYPE_GZIP },
 	{ "bzip2",      TRUE,  TRUE,  FALSE, FR_FILE_TYPE_BZIP2 },
 	{ "unace",      TRUE,  FALSE, TRUE,  FR_FILE_TYPE_ACE },
@@ -228,11 +228,6 @@ main (int argc, char **argv)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
 
-/*
-	if (! gnome_vfs_init ())
-		g_error ("Cannot initialize the Virtual File System.");
-*/
-
 	gnome_authentication_manager_init ();
 	glade_init ();
 	fr_stock_init ();
@@ -312,7 +307,7 @@ command_done (CommandData *cdata)
 	}
 
 	g_free (cdata->command);
-	gnome_vfs_mime_application_free (cdata->app);
+	g_object_unref (cdata->app);
 	path_list_free (cdata->file_list);
 	g_free (cdata->temp_dir);
 	if (cdata->process != NULL)
@@ -582,26 +577,22 @@ prepare_app (void)
 		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else { /* Open each archive in a window */
-		const char *utf8_archive = NULL;
-		char       *locale_archive = NULL;
+		const char *filename = NULL;
 
 		int i = 0;
-		while ((utf8_archive = remaining_args[i++]) != NULL) {
+		while ((filename = remaining_args[i++]) != NULL) {
 			GtkWidget *window;
+			GFile     *file;
 			char      *uri;
 			
 			window = fr_window_new ();
 			gtk_widget_show (window);
 			
-			locale_archive = g_filename_from_utf8 (utf8_archive, -1, NULL, NULL, NULL);
-			if (locale_archive == NULL)
-				locale_archive = g_strdup (utf8_archive);
-			uri = gnome_vfs_make_uri_from_shell_arg (locale_archive);
-			g_free (locale_archive);
-
+			file = g_file_new_for_commandline_arg (filename);
+			uri = g_file_get_uri (file);
 			fr_window_archive_open (FR_WINDOW (window), uri, GTK_WINDOW (window));
-
 			g_free (uri);
+			g_object_unref (file);
 		}
 	}
 
