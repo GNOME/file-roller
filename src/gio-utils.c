@@ -184,7 +184,8 @@ typedef struct {
 	GList                *to_visit;
 	GCancellable         *cancellable;
 	GFileEnumerator      *enumerator;
-	GError               *error;	
+	GError               *error;
+	guint                 source_id;
 } ForEachChildData;
 
 
@@ -207,15 +208,42 @@ for_each_child_data_free (ForEachChildData *fec)
 }
 
 
-static void for_each_child_start (ForEachChildData *fec, const char *directory);
-
-
 static void
-for_each_child_done (ForEachChildData *fec)
+for_each_child_set_current (ForEachChildData *fec,
+			    const char       *directory)
 {
+	if (fec->current != NULL)
+		g_object_unref (fec->current);
+	fec->current = g_file_new_for_uri (directory);
+}
+
+
+static gboolean
+for_each_child_done_cb (gpointer user_data)
+{
+	ForEachChildData *fec = user_data;
+	
+	g_source_remove (fec->source_id);
 	if (fec->done_func) 
 		fec->done_func (fec->error, fec->user_data);
 	for_each_child_data_free (fec);
+	
+	return FALSE;
+}
+
+
+static void for_each_child_start (ForEachChildData *fec);
+
+
+static gboolean
+for_each_child_start_cb (gpointer user_data) 
+{
+	ForEachChildData *fec = user_data;
+	
+	g_source_remove (fec->source_id);
+	for_each_child_start (fec);
+	
+	return FALSE;
 }
 
 
@@ -246,11 +274,12 @@ for_each_child_next_files_ready (GObject      *source_object,
 			}
 			
 			if (sub_directory != NULL) {
-				for_each_child_start (fec, sub_directory);
+				for_each_child_set_current (fec, sub_directory);
+				fec->source_id = g_idle_add (for_each_child_start_cb, fec);
 				return;
 			}
 		}
-		for_each_child_done (fec);
+		fec->source_id = g_idle_add (for_each_child_done_cb, fec);
 		return;
 	}
 	
@@ -298,7 +327,7 @@ for_each_child_ready (GObject      *source_object,
 	
 	fec->enumerator = g_file_enumerate_children_finish (fec->current, result, &(fec->error));
 	if (fec->enumerator == NULL) {
-		for_each_child_done (fec);
+		fec->source_id = g_idle_add (for_each_child_done_cb, fec);
 		return;
 	}
 	
@@ -312,19 +341,20 @@ for_each_child_ready (GObject      *source_object,
 
 
 static void
-for_each_child_start (ForEachChildData *fec,
-		      const char       *directory)
+for_each_child_start (ForEachChildData *fec)
 {
-	if (fec->start_dir_func != NULL) 
+	if (fec->start_dir_func != NULL) {
+		char *directory;
+		
+		directory = g_file_get_uri (fec->current);
 		if (! fec->start_dir_func (directory, &(fec->error), fec->user_data)) {
-			for_each_child_done (fec);
+			g_free (directory);
+			fec->source_id = g_idle_add (for_each_child_done_cb, fec);
 			return;
 		}
-	
-	if (fec->current != NULL)
-		g_object_unref (fec->current);
-	fec->current = g_file_new_for_uri (directory);
-	
+		g_free (directory);
+	}
+		
 	g_file_enumerate_children_async (fec->current,
 					 "standard::name,standard::type",
 					 fec->follow_links ? G_FILE_QUERY_INFO_NONE : G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
@@ -386,7 +416,8 @@ g_directory_foreach_child (const char           *directory,
 						      g_free,
 						      NULL);
 	
-	for_each_child_start (fec, fec->base_directory);	
+	for_each_child_set_current (fec, fec->base_directory);
+	for_each_child_start (fec);	
 }
 
 
@@ -1069,6 +1100,7 @@ typedef struct {
 	GFile                 *current_source;
 	GFile                 *current_destination;
 	int                    n_file, tot_files;
+	guint                  source_id;
 } DirectoryCopyData;
 
 
@@ -1095,15 +1127,20 @@ directory_copy_data_free (DirectoryCopyData *dcd)
 }
 
 
-static void 
-g_directory_copy_done (DirectoryCopyData *dcd,
-		       GError            *error)
+static gboolean 
+g_directory_copy_done (gpointer user_data)
 {
+	DirectoryCopyData *dcd = user_data;
+	
+	g_source_remove (dcd->source_id);
+	
 	if (dcd->callback)
-		dcd->callback (error, dcd->user_data);
-	if (error != NULL)
-		g_clear_error (&error);
+		dcd->callback (dcd->error, dcd->user_data);
+	if (dcd->error != NULL)
+		g_clear_error (&(dcd->error));
 	directory_copy_data_free (dcd);
+	
+	return FALSE;
 }
 
 
@@ -1113,6 +1150,9 @@ get_destination_for_uri (DirectoryCopyData *dcd,
 {	
 	char  *destination_uri;
 	GFile *destination_file;
+
+	if (strlen (uri) <=  strlen (dcd->source))
+		return NULL;
 
 	destination_uri = g_strconcat (dcd->destination, "/", uri + strlen (dcd->source) + 1, NULL);
 	destination_file = g_file_new_for_uri (destination_uri);
@@ -1125,6 +1165,21 @@ get_destination_for_uri (DirectoryCopyData *dcd,
 static void g_directory_copy_current_child (DirectoryCopyData *dcd);
 
 
+static gboolean 
+g_directory_copy_next_child (gpointer user_data)
+{
+	DirectoryCopyData *dcd = user_data;
+	
+	g_source_remove (dcd->source_id);
+	
+	dcd->current = g_list_next (dcd->current);
+	dcd->n_file++;
+	g_directory_copy_current_child (dcd);
+	
+	return FALSE;
+}
+
+
 static void
 g_directory_copy_child_done_cb (GObject      *source_object,
                         	GAsyncResult *result,
@@ -1133,13 +1188,11 @@ g_directory_copy_child_done_cb (GObject      *source_object,
 	DirectoryCopyData *dcd = user_data;
 
 	if (! g_file_copy_finish ((GFile*)source_object, result, &(dcd->error))) {
-		g_directory_copy_done (dcd, dcd->error);
+		dcd->source_id = g_idle_add (g_directory_copy_done, dcd);
 		return;
 	}
 
-	dcd->current = g_list_next (dcd->current);
-	dcd->n_file++;
-	g_directory_copy_current_child (dcd);
+	dcd->source_id = g_idle_add (g_directory_copy_next_child, dcd);
 }
 
 
@@ -1165,10 +1218,10 @@ static void
 g_directory_copy_current_child (DirectoryCopyData *dcd)
 {
 	ChildData *child;
-	GFile     *source, *destination;
-
+	gboolean   async_op = FALSE;
+	
 	if (dcd->current == NULL) {
-		g_directory_copy_done (dcd, NULL);
+		dcd->source_id = g_idle_add (g_directory_copy_done, dcd);
 		return;
 	}
 
@@ -1182,26 +1235,55 @@ g_directory_copy_current_child (DirectoryCopyData *dcd)
 	}
 
 	child = dcd->current->data;
+	dcd->current_source = g_file_new_for_uri (child->uri);
 	dcd->current_destination = get_destination_for_uri (dcd, child->uri);
+	if (dcd->current_destination == NULL) {
+		dcd->source_id = g_idle_add (g_directory_copy_next_child, dcd);
+		return;
+	}
+		
 	switch (g_file_info_get_file_type (child->info)) {
 	case G_FILE_TYPE_DIRECTORY:	
 		/* FIXME: how to make a directory asynchronously ? */
-		if (! g_file_make_directory (destination, dcd->cancellable, &(dcd->error))) {
-			g_directory_copy_done (dcd, dcd->error);
+		
+		/* doesn't check the returned error for now, because when an 
+		 * error occurs the code is not returned (for example when
+		 * a directory already exists the G_IO_ERROR_EXISTS code is 
+		 * *not* returned), so we cannot discriminate between warnings
+		 * and fatal errors. (see bug #525155) */
+		
+		g_file_make_directory (dcd->current_destination, 
+				       NULL, 
+				       NULL);
+		
+		/*if (! g_file_make_directory (dcd->current_destination, 
+					     dcd->cancellable, 
+					     &(dcd->error))) 
+		{
+			dcd->source_id = g_idle_add (g_directory_copy_done, dcd);
 			return;
-		}
+		}*/
 		break;
 	case G_FILE_TYPE_SYMBOLIC_LINK:
 		/* FIXME: how to make a link asynchronously ? */
-		if (! g_file_make_symbolic_link (destination, g_file_info_get_symlink_target (child->info), dcd->cancellable, &(dcd->error))) {
-			g_directory_copy_done (dcd, dcd->error);
+		
+		g_file_make_symbolic_link (dcd->current_destination, 
+					   g_file_info_get_symlink_target (child->info), 
+					   NULL, 
+					   NULL);
+
+		/*if (! g_file_make_symbolic_link (dcd->current_destination, 
+						 g_file_info_get_symlink_target (child->info), 
+						 dcd->cancellable, 
+						 &(dcd->error))) 
+		{
+			dcd->source_id = g_idle_add (g_directory_copy_done, dcd);
 			return;
-		}
+		}*/
 		break;
 	case G_FILE_TYPE_REGULAR:
-		dcd->current_source = g_file_new_for_uri (child->uri);
-		g_file_copy_async (source,
-				   destination,
+		g_file_copy_async (dcd->current_source,
+				   dcd->current_destination,
 				   dcd->flags,
 				   dcd->io_priority,
 				   dcd->cancellable,
@@ -1209,11 +1291,30 @@ g_directory_copy_current_child (DirectoryCopyData *dcd)
 				   dcd,
 				   g_directory_copy_child_done_cb,
 				   dcd);
-		g_object_unref (source);
+		async_op = TRUE;
 		break;
 	default:
 		break;
 	}
+	
+	if (! async_op)
+		dcd->source_id = g_idle_add (g_directory_copy_next_child, dcd);
+}
+
+
+static gboolean
+g_directory_copy_start_copying (gpointer user_data)
+{
+	DirectoryCopyData *dcd = user_data;
+	
+	g_source_remove (dcd->source_id);
+	
+	dcd->to_copy = g_list_reverse (dcd->to_copy);
+	dcd->current = dcd->to_copy;
+	dcd->n_file = 1;
+	g_directory_copy_current_child (dcd);
+	
+	return FALSE;
 }
 
 
@@ -1224,14 +1325,12 @@ g_directory_copy_list_ready (GError   *error,
 	DirectoryCopyData *dcd = user_data;
 
 	if (error != NULL) {
-		g_directory_copy_done (dcd, error);
+		dcd->error = g_error_copy (error);
+		dcd->source_id = g_idle_add (g_directory_copy_done, dcd);
 		return;
 	}
 
-	dcd->to_copy = g_list_reverse (dcd->to_copy);
-	dcd->current = dcd->to_copy;
-	dcd->n_file = 1;
-	g_directory_copy_current_child (dcd);
+	dcd->source_id = g_idle_add (g_directory_copy_start_copying, dcd);
 }
 
 
@@ -1260,6 +1359,8 @@ g_directory_copy_start_dir (const char  *uri,
 	dcd->to_copy = g_list_prepend (dcd->to_copy, child_data_new (uri, info));
 	g_object_unref (info);
 	
+	dcd->tot_files++;
+	
 	return TRUE;
 }
 
@@ -1276,7 +1377,6 @@ g_directory_copy_async (const char            *source,
 			gpointer               user_data)
 {
 	DirectoryCopyData *dcd;
-	GFileInfo         *info;
 	
 	dcd = g_new0 (DirectoryCopyData, 1);
 	dcd->source = g_strdup (source);
@@ -1288,12 +1388,7 @@ g_directory_copy_async (const char            *source,
 	dcd->progress_callback_data = progress_callback_data;
 	dcd->callback = callback;
 	dcd->user_data = user_data;	
-	
-	info = g_file_info_new ();
-	g_file_info_set_file_type (info, G_FILE_TYPE_DIRECTORY);
-	dcd->to_copy = g_list_prepend (NULL, child_data_new (dcd->source, info));
-	g_object_unref (info);
-	
+		
 	g_directory_foreach_child (dcd->source,
 			           TRUE,
 			           TRUE,

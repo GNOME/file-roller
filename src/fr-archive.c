@@ -994,14 +994,17 @@ copy_extracted_files_progress (goffset   current_file,
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[PROGRESS],
 		       0,
-		       (double) current_file / total_files + 1);
+		       (double) current_file / (total_files + 1));
 }
 
 
 static void
 copy_extracted_files_to_destination (FrArchive *archive)
 {
-	g_directory_copy_async (archive->priv->temp_extraction_dir,
+	char *temp_extraction_dir;
+	
+	temp_extraction_dir = get_uri_from_local_path (archive->priv->temp_extraction_dir);
+	g_directory_copy_async (temp_extraction_dir,
 				archive->priv->extraction_destination,
 				G_FILE_COPY_OVERWRITE,
 				G_PRIORITY_DEFAULT,
@@ -1010,6 +1013,7 @@ copy_extracted_files_to_destination (FrArchive *archive)
 				archive,
 				copy_extracted_files_done,
 				archive);
+	g_free (temp_extraction_dir);
 }
 
 
