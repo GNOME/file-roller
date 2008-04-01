@@ -1504,7 +1504,7 @@ fr_window_populate_file_list (FrWindow  *window,
 			utf8_path = g_filename_display_name (tmp);
 			g_free (tmp);
 
-			s_size = gnome_vfs_format_file_size_for_display (fdata->dir_size);
+			s_size = g_format_size_for_display (fdata->dir_size);
 				
 			if (fdata->list_dir) 
 				s_time = g_strdup ("");
@@ -1533,7 +1533,7 @@ fr_window_populate_file_list (FrWindow  *window,
 
 			utf8_path = g_filename_display_name (fdata->path);
 
-			s_size = gnome_vfs_format_file_size_for_display (fdata->size);
+			s_size = g_format_size_for_display (fdata->size);
 			s_time = get_time_string (fdata->modified);
 			desc = file_data_get_mime_type_description (fdata);
 
@@ -1731,7 +1731,7 @@ fr_window_update_dir_tree (FrWindow *window)
 		GtkTreeIter  node;
 		char        *name;
 		
-		name = gnome_vfs_unescape_string_for_display (file_name_from_path (window->archive->uri));
+		name = g_filename_display_basename (window->archive->uri);
 		
 		gtk_tree_store_append (window->priv->tree_store, &node, NULL);
 		gtk_tree_store_set (window->priv->tree_store, &node,
@@ -1894,7 +1894,7 @@ fr_window_update_title (FrWindow *window)
 		char *title;
 		char *name;
 
-		name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
+		name = g_filename_display_basename (fr_window_get_archive_uri (window));
 		title = g_strdup_printf ("%s %s",
 					 name,
 					 window->archive->read_only ? _("[read only]") : "");
@@ -2273,7 +2273,7 @@ fr_window_message_cb (FrCommand  *command,
 			
 			window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
 
-			name = gnome_vfs_unescape_string_for_display (file_name_from_path (window->priv->archive_uri));
+			name = g_filename_display_basename (window->priv->archive_uri);
 			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), name);
 			g_free (name);
 		}
@@ -2387,7 +2387,7 @@ open_progress_dialog (FrWindow *window)
 			gtk_box_pack_start (GTK_BOX (hbox), lbl, FALSE, FALSE, 0);
 
 			window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
-			name = gnome_vfs_unescape_string_for_display (file_name_from_path (window->priv->pd_last_archive));
+			name = g_filename_display_basename (window->priv->pd_last_archive);
 			lbl = window->priv->pd_archive = gtk_label_new (name);
 			g_free (name);
 
@@ -2650,7 +2650,7 @@ handle_errors (FrWindow    *window,
 
 		case FR_ACTION_LOADING_ARCHIVE:
 			dialog_parent = window->priv->load_error_parent_window;
-			unescaped_uri = gnome_vfs_format_uri_for_display (window->priv->archive_uri);
+			unescaped_uri = g_filename_display_name (window->priv->archive_uri);
 			utf8_name = g_filename_display_basename (unescaped_uri);
 			g_free (unescaped_uri);
 			msg = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
@@ -5566,7 +5566,7 @@ fr_window_archive_save_as (FrWindow   *window,
 		char      *utf8_name;
 		char      *message;
 
-		unescaped_uri = gnome_vfs_format_uri_for_display (uri);
+		unescaped_uri = g_filename_display_name (uri);
 		utf8_name = g_filename_display_basename (unescaped_uri);
 		g_free (unescaped_uri);
 		message = g_strdup_printf (_("Could not save the archive \"%s\""), utf8_name);
@@ -6745,7 +6745,7 @@ rename_selection (FrWindow   *window,
 		g_free (e_new_path);
 	}
 
-	new_name_uri = gnome_vfs_escape_string (rdata->new_name);
+	new_name_uri = g_filename_to_uri (rdata->new_name, NULL, NULL);
 
 	for (scan = file_list; scan; scan = scan->next) {
 		const char *current_dir_relative = rdata->current_dir + 1;
@@ -7437,7 +7437,7 @@ fr_window_open_files_with_application (FrWindow                *window,
 	GnomeVFSResult result;
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = gnome_vfs_get_uri_from_local_path (scan->data);
+		char *filename = g_filename_to_uri (scan->data, NULL, NULL);
 		uris = g_list_prepend (uris, filename);
 	}
 

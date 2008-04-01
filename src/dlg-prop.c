@@ -111,9 +111,8 @@ dlg_prop (FrWindow *window)
 	set_label (label_label, _("Path:"));
 
 	label = glade_xml_get_widget (data->gui, "p_path_label");
-	/* note: window->archive_filename is unescaped. */
 	s = remove_level_from_path (fr_window_get_archive_uri (window));
-	utf8_name = gnome_vfs_format_uri_for_display (s);
+	utf8_name = g_filename_display_name (s);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 	g_free (utf8_name);
 	g_free (s);
@@ -124,7 +123,7 @@ dlg_prop (FrWindow *window)
 	set_label (label_label, _("Name:"));
 
 	label = glade_xml_get_widget (data->gui, "p_name_label");
-	utf8_name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (window)));
+	utf8_name = g_filename_display_name (file_name_from_path (fr_window_get_archive_uri (window)));
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
 	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);

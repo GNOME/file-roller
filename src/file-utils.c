@@ -1008,27 +1008,16 @@ get_home_uri (void)
 
 
 char *
-get_uri_from_local_path (const char *local_path)
+get_uri_from_local_path (const char *path)
 {
-	char *escaped;
-	char *uri;
-
-	escaped = g_uri_escape_string (local_path, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, FALSE);
-	if (escaped[0] == '/') {
-		uri = g_strconcat ("file://", escaped, NULL);
-		g_free (escaped);
-	}
-	else
-		uri = escaped;
-
-	return uri;
+	return g_filename_to_uri (path, NULL, NULL);
 }
 
 
 char *
 get_local_path_from_uri (const char *uri)
 {
-	return g_uri_unescape_string (remove_host_from_uri (uri), NULL);
+	return g_filename_from_uri (uri, NULL, NULL);
 }
 
 

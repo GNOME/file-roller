@@ -107,12 +107,13 @@ add_clicked_cb (GtkWidget  *widget,
 	char       *tmp;
 	const char *archive_ext;
 	gboolean    do_not_add = FALSE;
+	GError     *error;
 
 	data->add_clicked = TRUE;
 
 	/* Collect data */
 
-	archive_name = gnome_vfs_escape_string (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)));
+	archive_name = g_uri_escape_string (gtk_entry_get_text (GTK_ENTRY (data->a_add_to_entry)), NULL, FALSE);
 
 	/* Check whether the user entered a valid archive name. */
 
@@ -204,7 +205,7 @@ add_clicked_cb (GtkWidget  *widget,
 		do_not_add = (r != GTK_RESPONSE_YES);
 	}
 
-	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755)) {
+	if (! do_not_add && ! make_tree (archive_dir, &error)) {
 		GtkWidget  *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -212,10 +213,11 @@ add_clicked_cb (GtkWidget  *widget,
 					   NULL,
 					   _("Could not create the archive"),
 					   _("Could not create the destination folder: %s."),
-					   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
+					   error->message);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
 
+		g_error_free (error);
 		g_free (archive_dir);
 		g_free (archive_name);
 		return;
@@ -453,12 +455,12 @@ dlg_batch_add_files (FrWindow *window,
 	parent = remove_level_from_path (first_filename);
 
 	if (file_list->next == NULL)
-		automatic_name = gnome_vfs_unescape_string (file_name_from_path ((char*) file_list->data), "");
+		automatic_name = g_uri_unescape_string (file_name_from_path ((char*) file_list->data), NULL);
 	else {
-		automatic_name = gnome_vfs_unescape_string (file_name_from_path (parent), "");
+		automatic_name = g_uri_unescape_string (file_name_from_path (parent), NULL);
 		if ((automatic_name == NULL) || (automatic_name[0] == '\0')) {
 			g_free (automatic_name);
-			automatic_name = gnome_vfs_unescape_string (file_name_from_path (first_filename), "");
+			automatic_name = g_uri_unescape_string (file_name_from_path (first_filename), NULL);
 		}
 	}
 

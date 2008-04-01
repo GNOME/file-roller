@@ -93,6 +93,7 @@ extract_cb (GtkWidget   *w,
 	GList      *file_list;
 	char       *password;
 	char       *base_dir = NULL;
+	GError     *error;
 
 	data->extract_clicked = TRUE;
 
@@ -132,11 +133,11 @@ extract_cb (GtkWidget   *w,
 				do_not_extract = TRUE;
 		}
 
-		if (! do_not_extract && ! ensure_dir_exists (extract_to_dir, 0755)) {
+		if (! do_not_extract && ! make_tree (extract_to_dir, &error)) {
 			GtkWidget  *d;
 			char       *message;
 
-			message = g_strdup_printf (_("Could not create the destination folder: %s."), gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
+			message = g_strdup_printf (_("Could not create the destination folder: %s."), error->message);
 
 			d = _gtk_error_dialog_new (GTK_WINDOW (window),
 						   GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -147,6 +148,7 @@ extract_cb (GtkWidget   *w,
 			gtk_widget_destroy (GTK_WIDGET (d));
 
 			g_free (message);
+			g_error_free (error);
 
 			return FALSE;
 		}

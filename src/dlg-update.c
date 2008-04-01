@@ -153,8 +153,8 @@ update_file_list (DialogData *data)
 		
 		/* primary text */
 		
-		file_name = gnome_vfs_unescape_string_for_display (file_name_from_path (file->path));
-		archive_name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (data->window)));
+		file_name = g_filename_display_name (file_name_from_path (file->path));
+		archive_name = g_filename_display_name (file_name_from_path (fr_window_get_archive_uri (data->window)));
 		label = g_markup_printf_escaped (_("Update the file \"%s\" in the archive \"%s\"?"), file_name, archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		gtk_label_set_markup (GTK_LABEL (data->update_file_primary_text_label), markup);
@@ -168,7 +168,7 @@ update_file_list (DialogData *data)
 		
 		/* primary text */
 		
-		archive_name = gnome_vfs_unescape_string_for_display (file_name_from_path (fr_window_get_archive_uri (data->window)));
+		archive_name = g_filename_display_name (file_name_from_path (fr_window_get_archive_uri (data->window)));
 		label = g_markup_printf_escaped (_("Update the files in the archive \"%s\"?"), archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		gtk_label_set_markup (GTK_LABEL (data->update_files_primary_text_label), markup);

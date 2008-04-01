@@ -392,7 +392,7 @@ get_temp_local_filename (const char *remote_uri)
 	if (dir == NULL)
 		return NULL;
 
-	name = gnome_vfs_unescape_string (file_name_from_path (remote_uri), "");
+	name = g_uri_unescape_string (file_name_from_path (remote_uri), NULL);
 	result = g_build_filename (dir, name, NULL);
 	
 	g_free (dir);
@@ -567,7 +567,7 @@ get_mime_type_from_content (const char *filename)
 {
 	const char *mime_type;
 
-	mime_type = gnome_vfs_get_file_mime_type (filename, NULL, FALSE);
+	mime_type = get_file_mime_type (filename, FALSE);
 	if (strcmp (mime_type, UNKNOWN_TYPE) == 0)
 		return NULL;
 
@@ -923,11 +923,13 @@ copy_to_remote_location (FrArchive  *archive,
 static void
 move_here (FrArchive *archive) 
 {
-	char *content_uri;
-	char *parent;
-	char *parent_parent;
-	char *new_content_uri;
-	
+	char   *content_uri;
+	char   *parent;
+	char   *parent_parent;
+	char   *new_content_uri;
+	GFile  *source, *destination, *parent_file;
+	GError *error;
+
 	content_uri = get_directory_content_if_unique (archive->priv->extraction_destination);
 	if (content_uri == NULL)
 		return;	
@@ -937,9 +939,17 @@ move_here (FrArchive *archive)
 	if (uricmp (parent, archive->priv->extraction_destination) == 0) {
 		char *new_uri;
 		
-		new_uri = get_new_uri_from_uri (archive->priv->extraction_destination); 
-		gnome_vfs_move (archive->priv->extraction_destination, new_uri, FALSE);
-		
+		new_uri = get_new_uri_from_uri (archive->priv->extraction_destination);
+		 
+		source = g_file_new_for_uri (archive->priv->extraction_destination);
+		destination = g_file_new_for_uri (new_uri);
+		if (! g_file_move (source, destination, 0, NULL, NULL, NULL, &error)) {
+			g_warning ("could not rename %s to %s: %s", archive->priv->extraction_destination, new_uri, error->message);
+			g_clear_error (&error);
+		}
+		g_object_unref (source);
+		g_object_unref (destination);
+				
 		g_free (archive->priv->extraction_destination);
 		archive->priv->extraction_destination = new_uri;
 
@@ -955,8 +965,19 @@ move_here (FrArchive *archive)
 	parent_parent = remove_level_from_path (parent);
 	new_content_uri = get_new_uri (parent_parent, file_name_from_path (content_uri));
 	
-	gnome_vfs_move (content_uri, new_content_uri, FALSE);
-	gnome_vfs_remove_directory (parent);
+	source = g_file_new_for_uri (content_uri);
+	destination = g_file_new_for_uri (new_content_uri);
+	if (! g_file_move (source, destination, 0, NULL, NULL, NULL, &error)) {
+		g_warning ("could not rename %s to %s: %s", content_uri, new_content_uri, error->message);
+		g_clear_error (&error);
+	}
+	
+	parent_file = g_file_new_for_uri (parent);
+	if (! g_file_delete (parent_file, NULL, &error)) {
+		g_warning ("could not remove directory %s: %s", parent, error->message);
+		g_clear_error (&error);
+	}
+	g_object_unref (parent_file);
 	
 	g_free (archive->priv->extraction_destination);
 	archive->priv->extraction_destination = new_content_uri;
@@ -3138,8 +3159,8 @@ get_desired_destination_from_archive_uri (const char *uri)
 
 
 static char *
-get_extract_here_destination (const char     *uri,
-			      GnomeVFSResult *result)
+get_extract_here_destination (const char *uri,
+			      GError     *error)
 {
 	char *desired_destination;
 	char *destination = NULL;
@@ -3153,9 +3174,9 @@ get_extract_here_destination (const char     *uri,
 			destination = g_strdup (desired_destination);
 		else
 			destination = g_strdup_printf ("%s%%20(%d)", desired_destination, n);
-		*result = gnome_vfs_make_directory (destination, 0700);
+		g_file_make_directory (destination, NULL, error);
 		n++;
-	} while (*result == GNOME_VFS_ERROR_FILE_EXISTS);
+	} while ((*error == NULL) && (*error->code == G_IO_ERROR_EXISTS));
 	
 	g_free (desired_destination);
 	
@@ -3175,15 +3196,16 @@ fr_archive_extract_here (FrArchive  *archive,
 			 gboolean    junk_path,
 			 const char *password)
 {
-	GnomeVFSResult  result;
-	char           *destination;
+	char   *destination;
+	GError *error;
 	
-	destination = get_extract_here_destination (archive->uri, &result);
-	if (result != GNOME_VFS_OK) {
+	destination = get_extract_here_destination (archive->uri, &error);
+	if (error != NULL) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_EXTRACTING_FILES,
 					     FR_PROC_ERROR_GENERIC,
-					     gnome_vfs_result_to_string (result));
+					     error->message);
+		g_clear_error (&error);
 		return FALSE;
 	}
 	

@@ -74,7 +74,6 @@ gboolean            make_tree                    (const char  *uri,
 char *              get_temp_work_dir            (void);
 gboolean            is_temp_work_dir             (const char *dir);
 gboolean            is_temp_dir                  (const char *dir);
-char *              escape_uri                   (const char *uri);
 
 /* misc functions used to parse a command output lines. */
 

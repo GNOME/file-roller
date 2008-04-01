@@ -572,7 +572,6 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 		g_clear_error (&err);
 	}
 
-	gnome_vfs_file_info_list_free (list);
 	g_free (options_dir);
 }
 
@@ -584,7 +583,9 @@ aod_remove_cb (GtkWidget             *widget,
 	GtkTreeSelection *selection;
 	GtkTreeIter       iter;
 	char             *file_path;
-
+	GFile            *file;
+	GError           *error;
+	
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (aod_data->aod_treeview));
 	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
 		return;
@@ -593,8 +594,13 @@ aod_remove_cb (GtkWidget             *widget,
 			    1, &file_path,
 			    -1);
 	gtk_list_store_remove (GTK_LIST_STORE (aod_data->aod_model), &iter);
-
-	gnome_vfs_unlink (file_path);
+	
+	file = g_file_new_for_uri (file_path);
+	if (! g_file_delete (file, NULL, &error)) {
+		g_warning ("could not delete file %s: %s", file_path, error->message);
+		g_clear_error (&error);
+	}
+	g_object_unref (file);
 	g_free (file_path);
 }
 
