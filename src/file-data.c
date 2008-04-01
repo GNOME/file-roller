@@ -22,7 +22,7 @@
 
 #include <config.h>
 #include <glib/gi18n.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
+#include <gio/gio.h>
 #include "file-data.h"
 #include "file-utils.h"
 

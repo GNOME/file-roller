@@ -1824,8 +1824,8 @@ copy_remote_files (FrArchive     *archive,
 		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
 		local_folder_uri = remove_level_from_path (local_uri);
 		if (g_hash_table_lookup (created_folders, local_folder_uri) == NULL) {
-			GnomeVFSResult result = make_tree (local_uri);
-			if (result != GNOME_VFS_OK) {
+			GError *error;
+			if (! make_tree (local_uri, &error)) {
 				g_free (local_folder_uri);
 				g_free (local_uri);
 				gio_file_list_free (sources);
@@ -1835,7 +1835,8 @@ copy_remote_files (FrArchive     *archive,
 				fr_archive_action_completed (archive,
 							     FR_ACTION_COPYING_FILES_FROM_REMOTE,
 							     FR_PROC_ERROR_GENERIC,
-							     gnome_vfs_result_to_string (result));
+							     error->message);
+				g_clear_error (&error);
 				return;
 			}
 

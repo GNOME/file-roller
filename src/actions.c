@@ -129,8 +129,10 @@ static char *
 get_archive_filename_from_selector (FrWindow  *window,
 				    GtkWidget *file_sel)
 {
-	char *path = NULL;
-	char *dir;
+	char      *path = NULL;
+	GFile     *file, *dir;
+	GFileInfo *info;
+	GError    *err = NULL;
 
 	path = get_full_path (file_sel);
 	if ((path == NULL) || (*path == 0)) {
@@ -149,11 +151,31 @@ get_archive_filename_from_selector (FrWindow  *window,
 		return NULL;
 	}
 
-	dir = remove_level_from_path (path);
-	if (! check_permissions (dir, R_OK | W_OK | X_OK)) {
+	file = g_file_new_for_uri (path);
+
+	dir = g_file_get_parent (file);
+	info = g_file_query_info (dir,
+				  G_FILE_ATTRIBUTE_ACCESS_CAN_READ "," 
+				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE "," 
+				  G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE,
+				  0, NULL, &err);
+	if (err != NULL) {
+		g_warning ("Failed to get permission for extraction dir: %s",
+			   err->message);
+		g_clear_error (&err);
+		g_object_unref (info);
+		g_object_unref (dir);
+		g_object_unref (file);
+		g_free (path);
+		return NULL;
+	}
+
+	if (! g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE)) {
 		GtkWidget *dialog;
 
-		g_free (dir);
+		g_object_unref (info);
+		g_object_unref (dir);
+		g_object_unref (file);
 		g_free (path);
 
 		dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
@@ -165,7 +187,8 @@ get_archive_filename_from_selector (FrWindow  *window,
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		return NULL;
 	}
-	g_free (dir);
+	g_object_unref (info);
+	g_object_unref (dir);
 
 	/* if the user did not specify a valid extension use the filetype combobox current type
 	 * or tar.gz if automatic is selected. */
@@ -191,8 +214,6 @@ get_archive_filename_from_selector (FrWindow  *window,
 	if (path_is_file (path)) {
 		GtkWidget *dialog;
 		int        r;
-		GFile     *file;
-		GError    *err = NULL;
 
 		if (! is_supported_extension (file_sel, path)) {
 			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
@@ -222,12 +243,11 @@ get_archive_filename_from_selector (FrWindow  *window,
 
 		if (r != GTK_RESPONSE_YES) {
 			g_free (path);
+			g_object_unref (file);
 			return NULL;
 		}
 
-		file = g_file_new_for_uri (path);
 		g_file_delete (file, NULL, &err);
-		g_object_unref (file);
 		if (err != NULL) {
 			GtkWidget *dialog;
 			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
@@ -237,12 +257,15 @@ get_archive_filename_from_selector (FrWindow  *window,
 							err->message);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
-			g_free (path);
 			g_error_free (err);
+			g_free (path);
+			g_object_unref (file);
 			return NULL;
 		}
 	}
-
+	
+	g_object_unref (file);
+	
 	return path;
 }
 
@@ -286,25 +309,31 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	int         idx;
 	const char *filename;
 	const char *ext, *newext;
-	char       *escaped_uri;
-	char       *unescaped_uri;	
 	char       *new_filename, *filename_noext;
+	const char *uri;
+	GFile      *file;
+	GFileInfo  *info;
+	GError     *err = NULL;
 
 	idx = gtk_combo_box_get_active (combo_box) - 1;
 	if (idx < 0)
 		return;
 
-	escaped_uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
-	if (escaped_uri == NULL)
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
+	if (uri == NULL)
 		return;
 
-	unescaped_uri = gnome_vfs_format_uri_for_display (escaped_uri);
-	filename = file_name_from_path (unescaped_uri);
-	if (filename == NULL) {
-		g_free (unescaped_uri);
+	file = g_file_new_for_uri (uri);
+	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME, 0, NULL, &err);
+	if (err != NULL) {
+		g_warning ("Failed to get display name for uri %s: %s", uri, err->message);
+		g_clear_error (&err);
+		g_object_unref (file);
+		g_free (uri);
 		return;
 	}
 
+	filename = g_file_info_get_display_name (info);
 	ext = fr_archive_utils__get_file_name_ext (filename);
 	if (ext == NULL)
 		ext = "";
@@ -317,7 +346,6 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 
 	g_free (new_filename);
 	g_free (filename_noext);
-	g_free (unescaped_uri);
 }
 
 
@@ -555,8 +583,6 @@ activate_action_save_as (GtkAction *action,
 	GtkWidget     *combo_box;
 	GtkFileFilter *filter;
 	int            i;
-	const char    *escaped_uri = NULL;
-	char          *unescaped_uri = NULL;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Save"),
 						GTK_WINDOW (window),
@@ -570,10 +596,28 @@ activate_action_save_as (GtkAction *action,
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
 
 	if (fr_window_get_archive_uri (window)) {
-		escaped_uri = fr_window_get_archive_uri (window);
-		unescaped_uri = gnome_vfs_format_uri_for_display (escaped_uri);
-		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), file_name_from_path (unescaped_uri));
-		g_free (unescaped_uri);
+		const char *uri;
+		GFile     *file;
+		GFileInfo *info;
+		GError    *err = NULL;
+
+		uri = fr_window_get_archive_uri (window);
+		file = g_file_new_for_uri (uri);
+		info = g_file_query_info (file,
+				G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+				0, NULL, &err);
+
+		if (err != NULL) {
+			g_warning ("Failed to get display name for uri %s: %s", uri, err->message);
+			g_clear_error (&err);
+		} 
+		else {
+			gtk_file_chooser_set_current_name (
+					GTK_FILE_CHOOSER (file_sel),
+					g_file_info_get_display_name (info));
+		}
+		g_object_unref (info);
+		g_object_unref (file);
 	}
 
 	filter = gtk_file_filter_new ();
