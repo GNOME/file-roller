@@ -940,42 +940,6 @@ file_list__get_prev_field (const char *line,
 }
 
 
-char *
-escape_uri (const char *uri)
-{
-	const char *start = NULL;
-	const char *uri_no_method;
-	char       *method;
-	char       *epath, *euri;
-
-	if (uri == NULL)
-		return NULL;
-
-	start = strstr (uri, "://");
-	if (start != NULL) {
-		uri_no_method = start + strlen ("://");
-		method = g_strndup (uri, start - uri);
-	} 
-	else {
-		uri_no_method = uri;
-		method = NULL;
-	}
-
-	epath = gnome_vfs_escape_host_and_path_string (uri_no_method);
-
-	if (method != NULL) {
-		euri = g_strdup_printf ("%s://%s", method, epath);
-		g_free (epath);
-	} 
-	else
-		euri = epath;
-
-	g_free (method);
-
-	return euri;
-}
-
-
 gboolean
 check_permissions (const char *uri,
 		   int         mode)
@@ -1049,7 +1013,7 @@ get_uri_from_local_path (const char *local_path)
 	char *escaped;
 	char *uri;
 
-	escaped = escape_uri (local_path);
+	escaped = g_uri_escape_string (local_path, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, FALSE);
 	if (escaped[0] == '/') {
 		uri = g_strconcat ("file://", escaped, NULL);
 		g_free (escaped);
@@ -1064,7 +1028,7 @@ get_uri_from_local_path (const char *local_path)
 char *
 get_local_path_from_uri (const char *uri)
 {
-	return gnome_vfs_unescape_string (remove_host_from_uri (uri), NULL);
+	return g_uri_unescape_string (remove_host_from_uri (uri), NULL);
 }
 
 
