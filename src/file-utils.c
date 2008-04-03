@@ -522,19 +522,24 @@ make_directory_tree (GFile    *dir,
 
 
 gboolean
-ensure_dir_exists (const char *uri,
-		   mode_t      mode)
+ensure_dir_exists (const char  *uri,
+		   mode_t       mode.
+		   GError     **error)
 {
 	GFile  *dir;
-	GError *error;
+	GError *priv_error = NULL;
 	
 	if (uri == NULL)
 		return FALSE;
 	
+	if (error == NULL)
+		error = &priv_error;
+	
 	dir = g_file_new_for_uri (uri);
-	if (! make_directory_tree (dir, mode, &error)) {
-		g_warning ("could create directory %s: %s", uri, error->message);
-		g_clear_error (&error);
+	if (! make_directory_tree (dir, mode, error)) {
+		g_warning ("could create directory %s: %s", uri, (*error)->message);
+		if (priv_error != NULL)
+			g_clear_error (&priv_error);
 		return FALSE;
 	}
 	

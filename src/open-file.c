@@ -47,6 +47,8 @@ open_file_free (OpenFile *ofile)
 {
 	if (ofile == NULL)
 		return;
+	if (ofile->monitor != NULL)
+		g_object_unref (ofile->monitor);
 	g_free (ofile->path);
 	g_free (ofile->extracted_uri);
 	g_free (ofile->temp_dir);

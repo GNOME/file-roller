@@ -1470,7 +1470,7 @@ create_tmp_base_dir (const char *base_dir,
 	parent_dir =  g_build_filename (temp_dir, tmp, NULL);
 	g_free (tmp);
 
-	ensure_dir_exists (parent_dir, 0700);
+	ensure_dir_exists (parent_dir, 0700, NULL);
 
 	debug (DEBUG_INFO, "mkdir %s\n", parent_dir);
 

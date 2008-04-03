@@ -100,7 +100,7 @@ fr_command_jar_add (FrCommand     *comm,
 					  jdata->package_minus_one_level,
 					  NULL);
 		
-		if (! ensure_dir_exists (pack_path, 0755 )) { 
+		if (! ensure_dir_exists (pack_path, 0755, NULL)) { 
 			g_free (pack_path);
 			continue;
 		}

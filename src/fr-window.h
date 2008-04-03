@@ -244,7 +244,7 @@ void        fr_window_open_files_with_command     (FrWindow   *window,
 						   char       *command);
 void        fr_window_open_files_with_application (FrWindow   *window,
 						   GList      *file_list,
-						   GnomeVFSMimeApplication *app);
+						   GAppInfo   *app);
 void        fr_window_update_files                (FrWindow   *window,
 						   GList      *file_list);			   
 void        fr_window_update_columns_visibility   (FrWindow   *window);

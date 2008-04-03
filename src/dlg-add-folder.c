@@ -531,7 +531,7 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 	gtk_list_store_clear (list_store);
 
 	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
-	ensure_dir_exists (options_dir, 0700);
+	ensure_dir_exists (options_dir, 0700, NULL);
 
 	file = g_file_new_for_path (options_dir);
 	fileenum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
@@ -736,7 +736,7 @@ save_options_cb (GtkWidget  *w,
 	const char *exclude_files;
 
 	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
-	ensure_dir_exists (options_dir, 0700);
+	ensure_dir_exists (options_dir, 0700, NULL);
 
 	opt_filename = _gtk_request_dialog_run (
 			GTK_WINDOW (data->dialog),

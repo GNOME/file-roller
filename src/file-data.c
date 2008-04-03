@@ -161,7 +161,7 @@ file_data_get_mime_type_description (const FileData *fdata)
 	if (fdata->link != NULL)
 		return DESCRIPTION_SYMLINK;
 
-	desc = gnome_vfs_mime_get_description (file_data_get_mime_type (fdata));
+	desc = g_content_type_get_description (file_data_get_mime_type (fdata));
 	if (desc == NULL)
 		desc = DESCRIPTION_UNKNOWN;
 

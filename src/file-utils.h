@@ -46,26 +46,27 @@ gboolean            dir_contains_one_object      (const char  *uri);
 char *              get_directory_content_if_unique (const char  *uri);
 gboolean            path_in_path                 (const char  *path_src,
 						  const char  *path_dest);
-goffset             get_file_size                (const char *uri);
-time_t              get_file_mtime               (const char *s);
-time_t              get_file_ctime               (const char *s);
-gint                file_in_path                 (const char *name);
-gboolean            ensure_dir_exists            (const char *uri,
-						  mode_t      mode);
-gboolean            file_is_hidden               (const char *name);
-G_CONST_RETURN char*file_name_from_path          (const char *path);
-char *              dir_name_from_path           (const char *path);
-char *              remove_level_from_path       (const char *path);
-char *              remove_extension_from_path   (const char *path);
-char *              remove_ending_separator      (const char *path);
-gboolean            file_extension_is            (const char *filename,
-						  const char *ext);
-void                path_list_free               (GList *path_list);
-GList *             path_list_dup                (GList *path_list);
-gboolean            is_mime_type                 (const char* type,
-						  const char* pattern);
-const char*         get_file_mime_type           (const char *filename,
-                    				  gboolean    fast_file_type);
+goffset             get_file_size                (const char  *uri);
+time_t              get_file_mtime               (const char  *s);
+time_t              get_file_ctime               (const char  *s);
+gint                file_in_path                 (const char  *name);
+gboolean            ensure_dir_exists            (const char  *uri,
+						  mode_t       mode,
+						  GError     **error);
+gboolean            file_is_hidden               (const char  *name);
+G_CONST_RETURN char*file_name_from_path          (const char  *path);
+char *              dir_name_from_path           (const char  *path);
+char *              remove_level_from_path       (const char  *path);
+char *              remove_extension_from_path   (const char  *path);
+char *              remove_ending_separator      (const char  *path);
+gboolean            file_extension_is            (const char  *filename,
+						  const char  *ext);
+void                path_list_free               (GList       *path_list);
+GList *             path_list_dup                (GList       *path_list);
+gboolean            is_mime_type                 (const char  *type,
+						  const char  *pattern);
+const char*         get_file_mime_type           (const char  *filename,
+                    				  gboolean     fast_file_type);
 guint64             get_dest_free_space          (const char  *path);
 gboolean            remove_directory             (const char  *uri);
 gboolean            remove_local_directory       (const char  *directory);

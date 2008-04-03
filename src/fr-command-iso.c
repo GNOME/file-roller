@@ -192,7 +192,7 @@ fr_command_iso_extract (FrCommand  *comm,
 
 		temp_dest_dir = unescape_str (e_temp_dest_dir);
 		temp_dest_dir_uri = get_uri_from_local_path (temp_dest_dir);
-		ensure_dir_exists (temp_dest_dir_uri, 0700);
+		ensure_dir_exists (temp_dest_dir_uri, 0700, NULL);
 
 		fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);

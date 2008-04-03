@@ -480,7 +480,7 @@ fr_window_free_open_files (FrWindow *window)
 		OpenFile *file = scan->data;
 		
 		if (file->monitor != NULL) 
-			gnome_vfs_monitor_cancel (file->monitor);
+			g_file_monitor_cancel (file->monitor);
 		open_file_free (file);
 	}
 	g_list_free (window->priv->open_files);
@@ -3328,18 +3328,17 @@ file_leave_notify_callback (GtkWidget *widget,
 static GList *
 get_uri_list_from_selection_data (char *uri_list)
 {
-	GList *uris = NULL, *scan;
-	GList *list = NULL;
+	GList  *list = NULL;
+	char  **uris;
+	int     i;
 
 	if (uri_list == NULL)
 		return NULL;
 
-	uris = gnome_vfs_uri_list_parse (uri_list);
-	for (scan = uris; scan; scan = g_list_next (scan)) {
-		char *uri = gnome_vfs_uri_to_string (scan->data, GNOME_VFS_URI_HIDE_NONE);
-		list = g_list_prepend (list, uri);
-	}
-	gnome_vfs_uri_list_free (uris);
+	uris = g_uri_list_extract_uris (uri_list);
+	for (i = 0; uris[i] != NULL; i++) 
+		list = g_list_prepend (list, g_strdup (uris[i]));
+	g_strfreev (uris);
 
 	return g_list_reverse (list);
 }
@@ -3746,7 +3745,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 
 	if (window->priv->drag_error == NULL) {
 		g_free (window->priv->drag_destination_folder);
-		window->priv->drag_destination_folder = gnome_vfs_get_local_path_from_uri (destination_folder);
+		window->priv->drag_destination_folder = g_filename_from_uri (destination_folder, NULL, NULL);
 		path_list_free (window->priv->drag_file_list);
 		window->priv->drag_file_list = fr_window_get_file_list_from_path_list (window, path_list, NULL);
 	}
@@ -5903,6 +5902,7 @@ fr_window_archive_extract (FrWindow   *window,
 {
 	ExtractData *edata;
 	gboolean     do_not_extract = FALSE;
+	GError      *error;
 
 	edata = extract_data_new (file_list,
 				  extract_to_dir,
@@ -5948,7 +5948,7 @@ fr_window_archive_extract (FrWindow   *window,
 				do_not_extract = TRUE;
 		}
 
-		if (! do_not_extract && ! ensure_dir_exists (edata->extract_to_dir, 0755)) {
+		if (! do_not_extract && ! ensure_dir_exists (edata->extract_to_dir, 0755, &error)) {
 			GtkWidget  *d;
 
 			d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -5956,7 +5956,8 @@ fr_window_archive_extract (FrWindow   *window,
 						   NULL,
 						   _("Extraction not performed"),
 						   _("Could not create the destination folder: %s."),
-						   gnome_vfs_result_to_string (gnome_vfs_result_from_errno ()));
+						   error->message);
+			g_clear_error (&error);
 			fr_window_show_error_dialog (window, d, GTK_WINDOW (window));		
 			fr_window_stop_batch (window);
 
@@ -7292,7 +7293,7 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 
 			debug (DEBUG_INFO, "mktree %s\n", dir_path);
 
-			ensure_dir_exists (dir_path, 0700);
+			ensure_dir_exists (dir_path, 0700, NULL);
 			g_free (dir_path);
 			g_hash_table_replace (created_dirs, g_strdup (dir), "1");
 		}
@@ -7429,24 +7430,25 @@ fr_window_open_files_with_command (FrWindow   *window,
 
 
 void
-fr_window_open_files_with_application (FrWindow                *window,
-				       GList                   *file_list,
-				       GnomeVFSMimeApplication *app)
+fr_window_open_files_with_application (FrWindow *window,
+				       GList    *file_list,
+				       GAppInfo *app)
 {
-	GList *uris = NULL, *scan;
-	GnomeVFSResult result;
+	GList  *uris = NULL, *scan;
+	GError *error;
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = g_filename_to_uri (scan->data, NULL, NULL);
 		uris = g_list_prepend (uris, filename);
 	}
 
-	result = gnome_vfs_mime_application_launch (app, uris);
-	if (result != GNOME_VFS_OK)
+	if (! g_app_info_launch_uris (app, uris, NULL, &error)) {
 		_gtk_error_dialog_run (GTK_WINDOW (window),
 				       _("Could not perform the operation"),
 				       "%s",
-				       gnome_vfs_result_to_string (result));
+				       error->messsage);
+		g_clear_error (&error);
+	}
 
 	path_list_free (uris);	
 }
@@ -7575,15 +7577,56 @@ open_file_modified_cb (GnomeVFSMonitorHandle    *handle,
 
 
 static void
+open_file_modified_cb (GFileMonitor     *monitor,
+		       GFile            *file,
+		       GFile            *other_file,
+		       GFileMonitorEvent event_type,
+		       gpointer          user_data)
+{
+	FrWindow *window = user_data;
+	char     *monitor_uri;
+	OpenFile *file;
+	GList    *scan;
+	
+	if ((event_type != G_FILE_MONITOR_EVENT_CHANGED) 
+	    && (event_type != G_FILE_MONITOR_EVENT_CREATED))
+	{
+		return;
+	}
+
+	monitor_uri = g_file_get_uri (file);
+	file = NULL;
+	for (scan = window->priv->open_files; scan; scan = scan->next) {
+		OpenFile *test = scan->data;
+		if (uricmp (test->extracted_uri, monitor_uri) == 0) {
+			file = test;
+			break;
+		}
+	}
+	g_free (monitor_uri);
+
+	g_return_if_fail (file != NULL);
+
+	if (window->priv->update_dialog == NULL)
+		window->priv->update_dialog = dlg_update (window);
+	dlg_update_add_file (window->priv->update_dialog, file);
+}
+
+
+static void
 fr_window_monitor_open_file (FrWindow *window, 
 			     OpenFile *file)
 {	
-	window->priv->open_files = g_list_prepend (window->priv->open_files, file);
-	gnome_vfs_monitor_add (&(file->monitor),
-                               file->extracted_uri,
-			       GNOME_VFS_MONITOR_FILE,
-                               open_file_modified_cb,
-                               window);
+	GFile *f;
+	
+	window->priv->open_files = g_list_prepend (window->priv->open_files, file);                              
+	f = g_file_new_for_uri (file->extracted_uri);  
+	file->monitor = g_file_monitor_file (f, 0, NULL, NULL);
+	g_signal_connect (file->monitor, 
+			  "changed",
+			  open_file_modified_cb,
+			  window);
+	g_object_unref (f);
 }
 
 
@@ -7610,12 +7653,12 @@ monitor_extracted_files (OpenFilesData *odata)
 static gboolean
 fr_window_open_extracted_files (OpenFilesData *odata)
 {
-	GList                   *file_list = odata->cdata->file_list;
-        gboolean                 result = FALSE;
-        const char              *first_file;
-        const char              *first_mime_type;
-        GnomeVFSMimeApplication *app;
-        GList                   *files_to_open = NULL;
+	GList      *file_list = odata->cdata->file_list;
+        gboolean    result = FALSE;
+        const char *first_file;
+        const char *first_mime_type;
+        GAppInfo   *app;
+        GList      *files_to_open = NULL;
 
 	g_return_val_if_fail (file_list != NULL, FALSE);
 
@@ -7631,7 +7674,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         }
 	
 	first_mime_type = get_file_mime_type (first_file, FALSE);
-        app = gnome_vfs_mime_get_default_application_for_uri (first_file, first_mime_type);
+        app = g_app_info_get_default_for_type (first_mime_type, FALSE);
         
         if (app == NULL) {
         	dlg_open_with (odata->window, file_list);
@@ -7655,19 +7698,23 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 				files_to_open = g_list_append (files_to_open, (char*) path);
 			}
 			else {
-				GnomeVFSMimeApplication *app2;
+				GAppInfo *app2;
 				
-				app2 = gnome_vfs_mime_get_default_application_for_uri (path, mime_type);
-				if (gnome_vfs_mime_application_equal (app, app2))
+				app2 = g_app_info_get_default_for_type (mime_type, FALSE);
+				if (g_app_info_equal (app, app2))
 					files_to_open = g_list_append (files_to_open, (char*) path);
-				gnome_vfs_mime_application_free (app2);
+				g_object_unref (app2);
 			}
 		}
         }
 
-	result = gnome_vfs_mime_application_launch (app, files_to_open) == GNOME_VFS_OK;
+	result = g_app_info_launch_uris (app, files_to_open, NULL, &error);
+        if (! result) {
+        	g_warning ("could not launch '%s': %s", g_app_info_get_executable  (app), error->message);
+        	g_clear_error (&error);
+        }
         
-        gnome_vfs_mime_application_free (app);
+        g_object_unref (app);
         g_list_free (files_to_open);
         
 	return result;

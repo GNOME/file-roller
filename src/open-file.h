@@ -29,11 +29,11 @@
 #include <libgnomevfs/gnome-vfs-monitor.h>
 
 typedef struct {
-	char                  *path;
-	char                  *extracted_uri;
-	char                  *temp_dir;
-	time_t                 last_modified;
-	GnomeVFSMonitorHandle *monitor;
+	char         *path;
+	char         *extracted_uri;
+	char         *temp_dir;
+	time_t        last_modified;
+	GFileMonitor *monitor;
 } OpenFile;
 
 #define FR_TYPE_OPEN_FILE (open_file_get_type ())

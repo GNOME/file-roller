@@ -491,7 +491,7 @@ prepare_app (void)
 	if (path_is_file (path))
 		unlink (path);
 
-	ensure_dir_exists (path, 0700);
+	ensure_dir_exists (path, 0700, NULL);
 	g_free (path);
 
 	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
