@@ -135,9 +135,9 @@ static void
 app_list_selection_changed_cb (GtkTreeSelection *selection,
 			       gpointer          p)
 {
-	DialogData              *data = p;
-	GtkTreeIter              iter;
-	GnomeVFSMimeApplication *app;
+	DialogData  *data = p;
+	GtkTreeIter  iter;
+	GAppInfo    *app;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_app_tree_view));
 	if (selection == NULL)

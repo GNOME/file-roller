@@ -95,7 +95,6 @@ gboolean 	    is_program_in_path		 (const char *filename);
 /* URI/Path utils */
 
 const char *        get_home_uri                 (void);
-GnomeVFSURI *       new_uri_from_path            (const char *path);
 char *              get_uri_from_local_path      (const char *local_path);
 char *              get_local_path_from_uri      (const char *uri);
 const char *        get_file_path_from_uri       (const char *uri);

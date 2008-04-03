@@ -140,7 +140,6 @@ typedef struct {
 	char           *uri;
 	char           *password;
 	FRAction        action;
-	GnomeVFSResult  result;
 	GList          *file_list;
 	char           *base_uri;
 	char           *dest_dir;

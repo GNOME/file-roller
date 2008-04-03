@@ -7543,40 +7543,6 @@ fr_window_update_files (FrWindow *window,
 
 
 static void
-open_file_modified_cb (GnomeVFSMonitorHandle    *handle,
-		       const char               *monitor_uri,
-		       const char               *info_uri,
-		       GnomeVFSMonitorEventType  event_type,
-		       gpointer                  user_data)
-{
-	FrWindow *window = user_data;
-	OpenFile *file;
-	GList    *scan;
-		
-	if ((event_type != GNOME_VFS_MONITOR_EVENT_CHANGED) 
-	    && (event_type != GNOME_VFS_MONITOR_EVENT_CREATED))
-	{
-		return;
-	}
-
-	file = NULL;
-	for (scan = window->priv->open_files; scan; scan = scan->next) {
-		OpenFile *test = scan->data;
-		if (uricmp (test->extracted_uri, monitor_uri) == 0) {
-			file = test;
-			break;
-		}
-	}
-
-	g_return_if_fail (file != NULL);
-
-	if (window->priv->update_dialog == NULL)
-		window->priv->update_dialog = dlg_update (window);
-	dlg_update_add_file (window->priv->update_dialog, file);	
-}
-
-
-static void
 open_file_modified_cb (GFileMonitor     *monitor,
 		       GFile            *file,
 		       GFile            *other_file,
