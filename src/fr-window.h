@@ -23,9 +23,9 @@
 #ifndef FR_WINDOW_H
 #define FR_WINDOW_H
 
+#include <gio/gio.h>
 #include <gtk/gtk.h>
 #include <libgnomeui/libgnomeui.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "typedefs.h"
 #include "fr-archive.h"
 

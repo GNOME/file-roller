@@ -26,8 +26,6 @@
 #include <sys/types.h>
 #include <time.h>
 #include <gio/gio.h>
-#include <libgnomevfs/gnome-vfs-file-size.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
 
 
 #define FILENAME_MAX_LENGTH 30 /* FIXME: find out the best value */

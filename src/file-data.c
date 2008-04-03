@@ -124,11 +124,6 @@ file_data_update_mime_type (FileData *fdata)
 
 	mime_type = get_file_mime_type (fdata->full_path, TRUE);
 
-	if (mime_type == NULL) {
-		fdata->mime_type = 0;
-		return;
-	}
-
 	fdata->mime_type = g_str_hash ((gconstpointer) mime_type);
 	if (g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type) == NULL)
 		g_hash_table_insert (mime_type_hash, (gpointer) &fdata->mime_type, g_strdup (mime_type));
@@ -136,25 +131,16 @@ file_data_update_mime_type (FileData *fdata)
 
 
 const char *
-file_data_get_mime_type (const FileData *fdata)
+file_data_get_mime_type (FileData *fdata)
 {
-	const char *mime_type;
-
 	if (fdata->mime_type == 0)
-		file_data_update_mime_type ((FileData*)fdata);
-	if (fdata->mime_type == 0)
-		return GNOME_VFS_MIME_TYPE_UNKNOWN;
-
-	mime_type = g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type);
-	if (mime_type == NULL)
-		mime_type = GNOME_VFS_MIME_TYPE_UNKNOWN;
-
-	return mime_type;
+		file_data_update_mime_type (fdata);
+	return g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type);
 }
 
 
 const char *
-file_data_get_mime_type_description (const FileData *fdata)
+file_data_get_mime_type_description (FileData *fdata)
 {
 	const char *desc;
 
@@ -170,7 +156,7 @@ file_data_get_mime_type_description (const FileData *fdata)
 
 
 gboolean
-file_data_is_dir (const FileData *fdata)
+file_data_is_dir (FileData *fdata)
 {
 	return fdata->dir || fdata->list_dir;
 }

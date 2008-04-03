@@ -25,8 +25,8 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <gio/gio.h>
 #include <time.h>
-#include <libgnomevfs/gnome-vfs-monitor.h>
 
 typedef struct {
 	char         *path;

@@ -3158,12 +3158,13 @@ get_desired_destination_from_archive_uri (const char *uri)
 
 
 static char *
-get_extract_here_destination (const char *uri,
-			      GError     *error)
+get_extract_here_destination (const char  *uri,
+			      GError     **error)
 {
-	char *desired_destination;
-	char *destination = NULL;
-	int   n = 1;
+	char  *desired_destination;
+	char  *destination = NULL;
+	int    n = 1;
+	GFile *file;
 	
 	desired_destination = get_desired_destination_from_archive_uri (uri);
 	
@@ -3173,13 +3174,17 @@ get_extract_here_destination (const char *uri,
 			destination = g_strdup (desired_destination);
 		else
 			destination = g_strdup_printf ("%s%%20(%d)", desired_destination, n);
-		g_file_make_directory (destination, NULL, error);
+			
+		file = g_file_new_for_uri (destination);
+		g_file_make_directory (file, NULL, error);
+		g_object_unref (file);
+		
 		n++;
-	} while ((*error == NULL) && (*error->code == G_IO_ERROR_EXISTS));
+	} while ((*error == NULL) && ((*error)->code == G_IO_ERROR_EXISTS));
 	
 	g_free (desired_destination);
 	
-	if (*result != GNOME_VFS_OK) {
+	if (*error != NULL) {
 		g_free (destination);
 		destination = NULL;
 	}

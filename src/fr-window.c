@@ -27,13 +27,6 @@
 #include <gdk/gdkcursor.h>
 #include <gdk/gdkkeysyms.h>
 #include <libgnomeui/gnome-icon-lookup.h>
-#include <libgnomevfs/gnome-vfs-directory.h>
-#include <libgnomevfs/gnome-vfs-mime.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
-#include <libgnomevfs/gnome-vfs-monitor.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
-#include <libgnomevfs/gnome-vfs-uri.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 #include <gio/gio.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
@@ -820,8 +813,8 @@ static gint
 sort_by_name (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = *((FileData **) ptr1);
-	const FileData *fdata2 = *((FileData **) ptr2);
+	FileData *fdata1 = *((FileData **) ptr1);
+	FileData *fdata2 = *((FileData **) ptr2);
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -838,8 +831,8 @@ static gint
 sort_by_size (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = *((FileData **) ptr1);
-	const FileData *fdata2 = *((FileData **) ptr2);
+	FileData *fdata1 = *((FileData **) ptr1);
+	FileData *fdata2 = *((FileData **) ptr2);
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -867,10 +860,10 @@ static gint
 sort_by_type (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = *((FileData **) ptr1);
-	const FileData *fdata2 = *((FileData **) ptr2);
-	int             result;
-	const char     *desc1, *desc2;
+	FileData    *fdata1 = *((FileData **) ptr1);
+	FileData    *fdata2 = *((FileData **) ptr2);
+	int          result;
+	const char  *desc1, *desc2;
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -896,8 +889,8 @@ static gint
 sort_by_time (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = *((FileData **) ptr1);
-	const FileData *fdata2 = *((FileData **) ptr2);
+	FileData *fdata1 = *((FileData **) ptr1);
+	FileData *fdata2 = *((FileData **) ptr2);
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -921,9 +914,9 @@ static gint
 sort_by_path (gconstpointer  ptr1,
 	      gconstpointer  ptr2)
 {
-	const FileData *fdata1 = *((FileData **) ptr1);
-	const FileData *fdata2 = *((FileData **) ptr2);
-	int             result;
+	FileData *fdata1 = *((FileData **) ptr1);
+	FileData *fdata2 = *((FileData **) ptr2);
+	int       result;
 
 	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
 		if (file_data_is_dir (fdata1))
@@ -7446,7 +7439,7 @@ fr_window_open_files_with_application (FrWindow *window,
 		_gtk_error_dialog_run (GTK_WINDOW (window),
 				       _("Could not perform the operation"),
 				       "%s",
-				       error->messsage);
+				       error->message);
 		g_clear_error (&error);
 	}
 
@@ -7544,7 +7537,7 @@ fr_window_update_files (FrWindow *window,
 
 static void
 open_file_modified_cb (GFileMonitor     *monitor,
-		       GFile            *file,
+		       GFile            *monitor_file,
 		       GFile            *other_file,
 		       GFileMonitorEvent event_type,
 		       gpointer          user_data)
@@ -7560,7 +7553,7 @@ open_file_modified_cb (GFileMonitor     *monitor,
 		return;
 	}
 
-	monitor_uri = g_file_get_uri (file);
+	monitor_uri = g_file_get_uri (monitor_file);
 	file = NULL;
 	for (scan = window->priv->open_files; scan; scan = scan->next) {
 		OpenFile *test = scan->data;
@@ -7590,7 +7583,7 @@ fr_window_monitor_open_file (FrWindow *window,
 	file->monitor = g_file_monitor_file (f, 0, NULL, NULL);
 	g_signal_connect (file->monitor, 
 			  "changed",
-			  open_file_modified_cb,
+			  G_CALLBACK (open_file_modified_cb),
 			  window);
 	g_object_unref (f);
 }
@@ -7625,6 +7618,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         const char *first_mime_type;
         GAppInfo   *app;
         GList      *files_to_open = NULL;
+        GError     *error;
 
 	g_return_val_if_fail (file_list != NULL, FALSE);
 
@@ -7649,7 +7643,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         
         files_to_open = g_list_append (files_to_open, (char*) first_file);
         
-        if (app->can_open_multiple_files) {
+        if (g_app_info_supports_files (app)) {
         	GList *scan;
         	
 		for (scan = file_list->next; scan; scan = scan->next) {

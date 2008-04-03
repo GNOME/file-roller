@@ -92,7 +92,7 @@ uri_is_filetype (const char *uri,
 		result = (g_file_info_get_file_type (info) == file_type);
 	}
 	else {
-		g_warning ("Failed to get file type for uri %s: %s", uri, err->message);
+		g_warning ("Failed to get file type for uri %s: %s", uri, error->message);
 		g_error_free (error);
 	}
 	
@@ -499,7 +499,12 @@ make_directory_tree (GFile    *dir,
 
 	parent = g_file_get_parent (dir);
 	if (parent != NULL) {
-		ensure_dir_exists (parent, mode, error);
+		char *uri;
+		
+		uri = g_file_get_uri (parent);
+		ensure_dir_exists (uri, mode, error);
+		g_free (uri);
+		
 		if (error != NULL) {
 			g_object_unref (parent);
 			return FALSE;
@@ -523,7 +528,7 @@ make_directory_tree (GFile    *dir,
 
 gboolean
 ensure_dir_exists (const char  *uri,
-		   mode_t       mode.
+		   mode_t       mode,
 		   GError     **error)
 {
 	GFile  *dir;
@@ -643,15 +648,17 @@ static gboolean
 delete_directory_recursive (GFile   *dir,
 			    GError **error)
 {
+	char            *uri;
 	GFileEnumerator *file_enum;
 	GFileInfo       *info;
 	gboolean         error_occurred = FALSE;
-	         
+	
 	file_enum = g_file_enumerate_children (dir, 
 					       G_FILE_ATTRIBUTE_STANDARD_NAME "," 
 					       G_FILE_ATTRIBUTE_STANDARD_TYPE,
 					       0, NULL, error);
 
+	uri = g_file_get_uri (dir);
 	while (! error_occurred && (info = g_file_enumerator_next_file (file_enum, NULL, error)) != NULL) {
 		const char *name;
 		char       *child_uri;
@@ -674,7 +681,8 @@ delete_directory_recursive (GFile   *dir,
 		g_object_unref (child);
 		g_free (child_uri);
 	}
-
+	g_free (uri);
+	
 	if (! error_occurred && ! g_file_delete (dir, NULL, error)) 
  		error_occurred = TRUE;
 	
@@ -695,7 +703,7 @@ remove_directory (const char *uri)
 	result = delete_directory_recursive (dir, &error);
 	if (error != NULL) {
 		g_warning ("Cannot delete %s: %s", uri, error->message);
-		g_clear_error (&err);
+		g_clear_error (&error);
 	}
 	g_object_unref (dir);
 	
@@ -725,7 +733,7 @@ make_tree (const char  *uri,
 	
 	dir = g_file_new_for_uri (uri);
 	if (! make_directory_tree (dir, 0755, error)) {
-		g_warning ("could create directory %s: %s", uri, error->message);
+		g_warning ("could create directory %s: %s", uri, (*error)->message);
 		return FALSE;
 	}
 	

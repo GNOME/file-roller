@@ -25,7 +25,6 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 #include "dlg-update.h"
 #include "file-utils.h"
 #include "gconf-utils.h"

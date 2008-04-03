@@ -25,10 +25,10 @@
 #include <math.h>
 #include <unistd.h>
 
+#include <gio/gio.h>
 #include <gtk/gtk.h>
 #include <libgnomeui/gnome-icon-lookup.h>
 #include <glade/glade.h>
-#include <gio.h>
 
 #include "file-utils.h"
 #include "fr-stock.h"

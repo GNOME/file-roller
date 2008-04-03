@@ -25,8 +25,6 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs-mime.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include "file-utils.h"
 #include "gconf-utils.h"
 #include "glib-utils.h"
@@ -366,7 +364,7 @@ dlg_open_with (FrWindow *window,
 		const char *name = scan->data;
 
 		mime_type = get_file_mime_type (name, FALSE);
-		if ((mime_type != NULL) && (strcmp (mime_type, GNOME_VFS_MIME_TYPE_UNKNOWN) != 0))
+		if ((mime_type != NULL) && ! g_content_type_is_unknown (mime_type))
 			data->app_list = g_list_concat (data->app_list, g_app_info_get_all_for_type (mime_type));
 	}
 
@@ -406,7 +404,7 @@ dlg_open_with (FrWindow *window,
 
 		app_names = g_list_prepend (app_names, (char*) g_app_info_get_executable (app));
 
-		utf8_name = g_locale_to_utf8 (app->name, -1, NULL, NULL, NULL);
+		utf8_name = g_locale_to_utf8 (g_app_info_get_name (app), -1, NULL, NULL, NULL);
 		/*icon = create_pixbuf (theme, gnome_vfs_mime_application_get_icon (app), icon_size);*/
 
 		gtk_list_store_append (GTK_LIST_STORE (data->app_model),

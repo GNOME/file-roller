@@ -59,9 +59,9 @@ GType           file_data_get_type                  (void);
 FileData *      file_data_new                       (void);
 FileData *      file_data_copy                      (FileData *src);
 void            file_data_free                      (FileData *fdata);
-const char *    file_data_get_mime_type             (const FileData *fdata);
-const char *    file_data_get_mime_type_description (const FileData *fdata);
-gboolean        file_data_is_dir                    (const FileData *fdata);
+const char *    file_data_get_mime_type             (FileData *fdata);
+const char *    file_data_get_mime_type_description (FileData *fdata);
+gboolean        file_data_is_dir                    (FileData *fdata);
 
 void            file_data_release_data (void);
 

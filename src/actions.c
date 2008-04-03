@@ -25,8 +25,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 #include "actions.h"
 #include "dlg-add-files.h"
 #include "dlg-add-folder.h"
@@ -329,7 +327,6 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 		g_warning ("Failed to get display name for uri %s: %s", uri, err->message);
 		g_clear_error (&err);
 		g_object_unref (file);
-		g_free (uri);
 		return;
 	}
 
