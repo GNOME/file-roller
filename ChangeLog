@@ -1,3 +1,14 @@
+2008-04-04  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-archive.c (fr_archive_extract_to_local): 
+	
+	Sort the filtered list before removing from the list itself the files 
+	contained in the extracted directories.  The sorting makes the latter
+	operation much faster.
+	
+	Compute the number of files to be extracted before modifing the 
+	extraction list.
+
 2008-03-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.22.0 released ]

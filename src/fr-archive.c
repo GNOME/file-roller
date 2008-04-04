@@ -2811,8 +2811,6 @@ extract_in_chunks (FrCommand  *command,
 {
 	GList *scan;
 
-	fr_command_set_n_files (command, g_list_length (file_list));
-
 	if (file_list == NULL) {
 		fr_command_extract (command,
 				    file_list,
@@ -3045,6 +3043,8 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		file_list_created = TRUE;
 	}
 
+	fr_command_set_n_files (archive->command, g_list_length (file_list));
+
 	use_base_dir = ! ((base_dir == NULL)
 			  || (strcmp (base_dir, "") == 0)
 			  || (strcmp (base_dir, "/") == 0));
@@ -3058,6 +3058,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		if (! extract_all && archive_type_has_issues_extracting_non_empty_folders (archive)) {
 			created_filtered_list = TRUE;
 			filtered = g_list_copy (file_list);
+			filtered = g_list_sort (filtered, (GCompareFunc) strcmp);
 			for (scan = filtered; scan; /* empty */) {  
 				gboolean changed = FALSE;
 				
