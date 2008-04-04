@@ -39,6 +39,7 @@ typedef struct {
 	gboolean    encrypted;        /* Whether the file is encrypted. */
 	gboolean    dir;              /* Whether this is a directory listed in the archive */
 	goffset     dir_size;
+	const char *content_type;
 	
 	/* Additional data. */
 
@@ -49,20 +50,15 @@ typedef struct {
 
 	/* Private data */
 
-	guint       mime_type;
 	gboolean    free_original_path;
 } FileData;
 
 #define FR_TYPE_FILE_DATA (file_data_get_type ())
 
-GType           file_data_get_type                  (void);
-FileData *      file_data_new                       (void);
-FileData *      file_data_copy                      (FileData *src);
-void            file_data_free                      (FileData *fdata);
-const char *    file_data_get_mime_type             (FileData *fdata);
-const char *    file_data_get_mime_type_description (FileData *fdata);
-gboolean        file_data_is_dir                    (FileData *fdata);
-
-void            file_data_release_data (void);
+GType           file_data_get_type      (void);
+FileData *      file_data_new           (void);
+FileData *      file_data_copy          (FileData *src);
+void            file_data_free          (FileData *fdata);
+gboolean        file_data_is_dir        (FileData *fdata);
 
 #endif /* FILE_DATA_H */

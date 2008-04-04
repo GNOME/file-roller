@@ -26,12 +26,6 @@
 #include "file-data.h"
 #include "file-utils.h"
 
-#define DESCRIPTION_UNKNOWN _("Unknown type")
-#define DESCRIPTION_SYMLINK _("Symbolic link")
-
-
-static GHashTable *mime_type_hash = NULL;
-
 
 FileData *
 file_data_new (void)
@@ -39,25 +33,11 @@ file_data_new (void)
 	FileData *fdata;
 
 	fdata = g_new0 (FileData, 1);
-	fdata->mime_type = 0;
+	fdata->content_type = NULL;
 	fdata->free_original_path = FALSE;
 	fdata->dir_size = 0;
 	
-	if (mime_type_hash == NULL)
-		mime_type_hash = g_hash_table_new_full (g_int_hash, 
-							g_int_equal,
-							NULL,
-							(GDestroyNotify) g_free);
-
 	return fdata;
-}
-
-
-void
-file_data_release_data (void)
-{
-	if (mime_type_hash != NULL)
-		g_hash_table_destroy (mime_type_hash);
 }
 
 
@@ -93,7 +73,7 @@ file_data_copy (FileData *src)
 	fdata->modified = src->modified;
 	fdata->name = g_strdup (src->name);
 	fdata->path = g_strdup (src->path);
-	fdata->mime_type = src->mime_type;
+	fdata->content_type = src->content_type;
 	fdata->encrypted = src->encrypted;
 	fdata->dir = src->dir;
 	fdata->dir_size = src->dir_size;
@@ -118,40 +98,27 @@ file_data_get_type (void)
 
 
 static void
-file_data_update_mime_type (FileData *fdata)
+file_data_update_content_type (FileData *fdata,
+			       gboolean  fast_file_type)
 {
-	const char *mime_type;
+	GFile      *file;
+	GFileInfo  *info;
+	GError     *error = NULL;
+	
+	file = g_file_new_for_path (fdata->full_path);
+	info = g_file_query_info (file, 
+				  fast_file_type ?
+				  G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE :
+				  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+				  0, NULL, &error);
+	if (error != NULL) {
+		g_warning ("could not get the content type: %s\n", error->message);
+		g_clear_error (&error);
+	}
+	else
+		fdata->content_type = g_file_info_get_content_type (info);
 
-	mime_type = get_file_mime_type (fdata->full_path, TRUE);
-
-	fdata->mime_type = g_str_hash ((gconstpointer) mime_type);
-	if (g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type) == NULL)
-		g_hash_table_insert (mime_type_hash, (gpointer) &fdata->mime_type, g_strdup (mime_type));
-}
-
-
-const char *
-file_data_get_mime_type (FileData *fdata)
-{
-	if (fdata->mime_type == 0)
-		file_data_update_mime_type (fdata);
-	return g_hash_table_lookup (mime_type_hash, (gconstpointer) &fdata->mime_type);
-}
-
-
-const char *
-file_data_get_mime_type_description (FileData *fdata)
-{
-	const char *desc;
-
-	if (fdata->link != NULL)
-		return DESCRIPTION_SYMLINK;
-
-	desc = g_content_type_get_description (file_data_get_mime_type (fdata));
-	if (desc == NULL)
-		desc = DESCRIPTION_UNKNOWN;
-
-	return desc;
+	g_object_unref (file);
 }
 
 

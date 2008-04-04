@@ -348,8 +348,8 @@ archive_sticky_only_cb (FrProcess *process,
 static void
 fr_archive_init (FrArchive *archive)
 {
-	archive->uri = NULL;
-	archive->local_filename = NULL;
+	archive->file = NULL;
+	archive->local_copy = NULL;
 	archive->is_remote = FALSE;
 	archive->command = NULL;
 	archive->is_compressed_file = FALSE;
@@ -380,24 +380,27 @@ fr_archive_new (void)
 }
 
 
-static char *
-get_temp_local_filename (const char *remote_uri)
+static GFile *
+get_local_copy_for_file (GFile *remote_file)
 {
-	char *dir;
-	char *name;
-	char *result;
+	char  *dir;
+	char  *name;
+	char  *uri;
+	GFile *local_copy;
 
 	dir = get_temp_work_dir ();
 	if (dir == NULL)
 		return NULL;
 
-	name = g_uri_unescape_string (file_name_from_path (remote_uri), NULL);
-	result = g_build_filename (dir, name, NULL);
+	name = g_file_get_basename (remote_file);
+	uri = g_build_filename (dir, name, NULL);
+	local_copy = g_file_new_for_uri (uri);
 	
-	g_free (dir);
+	g_free (uri);
 	g_free (name);
+	g_free (dir);
 
-	return result;
+	return local_copy;
 }
 
 
@@ -405,54 +408,45 @@ static void
 fr_archive_set_uri (FrArchive  *archive,
 		    const char *uri)
 {
-	if ((archive->local_filename != NULL) && archive->is_remote) {
-		GFile  *file, *folder;
+	if ((archive->local_copy != NULL) && archive->is_remote) {
+		GFile  *temp_folder;
 		GError *err = NULL;
 
-		file = g_file_new_for_path (archive->local_filename);
-		g_file_delete (file, NULL, &err);
+		g_file_delete (archive->local_copy, NULL, &err);
 		if (err != NULL) {
-			g_warning ("Failed to delete file %s: %s",
-				   archive->local_filename,
-				   err->message);
+			g_warning ("Failed to delete the local copy: %s", err->message);
 			g_clear_error (&err);
 		}
 		
-		folder = g_file_get_parent (file);
-		g_file_delete (folder, NULL, &err);
+		temp_folder = g_file_get_parent (archive->local_copy);
+		g_file_delete (temp_folder, NULL, &err);
 		if (err != NULL) {
-			g_warning ("Failed to delete parent folder of %s: %s",
-				   archive->local_filename,
-				   err->message);
+			g_warning ("Failed to delete temp folder: %s", err->message);
 			g_clear_error (&err);
 		}
 		
-		g_object_unref (folder);
-		g_object_unref (file);
+		g_object_unref (temp_folder);
 	}
 
-	if (uri != archive->uri) {
-		g_free (archive->uri);
-		archive->uri = NULL;
+	if (archive->file != NULL) {
+		g_object_unref (archive->file);
+		archive->file = NULL;
 	}
-
-	g_free (archive->local_filename);
-	archive->local_filename = NULL;
-
-	g_free (archive->mime_type);
-	archive->mime_type = NULL;
+	if (archive->local_copy != NULL) {
+		g_object_unref (archive->local_copy);
+		archive->local_copy = NULL;
+	}
+	archive->content_type = NULL;
 
 	if (uri == NULL)
 		return;
 
-	if (uri != archive->uri)
-		archive->uri = g_strdup (uri);
-
-	archive->is_remote = ! uri_is_local (uri);
+	archive->file = g_file_new_for_uri (uri);
+	archive->is_remote = ! g_file_has_uri_scheme (archive->file, "file");
 	if (archive->is_remote)
-		archive->local_filename = get_temp_local_filename (uri);
+		archive->local_copy = get_local_copy_for_file (archive->file);
 	else
-		archive->local_filename = get_local_path_from_uri (uri);
+		archive->local_copy = g_file_dup (archive->file);
 }
 
 
@@ -567,7 +561,7 @@ get_mime_type_from_content (const char *filename)
 	const char *mime_type;
 
 	mime_type = get_file_mime_type (filename, FALSE);
-	if (strcmp (mime_type, UNKNOWN_TYPE) == 0)
+	if (g_content_type_is_unknown (mime_type))
 		return NULL;
 
 	return mime_type;
@@ -597,7 +591,7 @@ get_mime_type_from_sniffer (const char *filename)
 		const char *mime_type;
 		const char *first_bytes;
 		int         len;
-	}            sniffer_data [] = {
+	} sniffer_data [] = {
 		{"application/zip",                   "\x50\x4B\x03\x04", 4},
 		/* FIXME
 		   {"application/x-compressed-tar",      "\x1F\x8B\x08\x08", 4},
@@ -624,7 +618,7 @@ get_mime_type_from_sniffer (const char *filename)
 
 	for (i = 0; sniffer_data[i].mime_type != NULL; i++) {
 		const char *first_bytes = sniffer_data[i].first_bytes;
-		int          len        = sniffer_data[i].len;
+		int         len         = sniffer_data[i].len;
 
 		if (hexcmp (first_bytes, buffer, len))
 			return sniffer_data[i].mime_type;
@@ -636,194 +630,157 @@ get_mime_type_from_sniffer (const char *filename)
 
 /* filename must not be escaped. */
 static gboolean
-create_command_from_filename (FrArchive  *archive,
-			      const char *filename,
-			      gboolean    loading)
+create_command_from_filename (FrArchive *archive,
+			      gboolean   loading)
 {
+	char *filename;
+	
+	filename = g_file_get_path (archive->local_copy);
 	archive->is_compressed_file = FALSE;
-
+	
 	if (file_extension_is (filename, ".tar.gz")
-	    || file_extension_is (filename, ".tgz")) {
+	    || file_extension_is (filename, ".tgz")) 
+	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_GZIP);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".tar.bz2")
-	    || file_extension_is (filename, ".tbz2")) {
+	else if (file_extension_is (filename, ".tar.bz2")
+	         || file_extension_is (filename, ".tbz2")) 
+	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_BZIP2);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".tar.bz")
-	    || file_extension_is (filename, ".tbz")) {
+	else if (file_extension_is (filename, ".tar.bz")
+	         || file_extension_is (filename, ".tbz")) 
+	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_BZIP);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".tar.Z")
-	    || file_extension_is (filename, ".taz")) {
+	else if (file_extension_is (filename, ".tar.Z")
+	         || file_extension_is (filename, ".taz")) 
+	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_COMPRESS);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".tar.lzma")
-	    || file_extension_is (filename, ".tzma")) {
+	else if (file_extension_is (filename, ".tar.lzma")
+	         || file_extension_is (filename, ".tzma")) 
+	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_LZMA);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".tar.lzo")
-	    || file_extension_is (filename, ".tzo")) {
+	else if (file_extension_is (filename, ".tar.lzo")
+	    || file_extension_is (filename, ".tzo")) 
+	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_LZOP);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".tar")) {
+	else if (file_extension_is (filename, ".tar")) 
+	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_NONE);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".zip")
-	    || file_extension_is (filename, ".ear")
-	    || file_extension_is (filename, ".war")
-	    || file_extension_is (filename, ".exe")) {
+	else if (file_extension_is (filename, ".zip")
+	         || file_extension_is (filename, ".ear")
+	         || file_extension_is (filename, ".war")
+	         || file_extension_is (filename, ".exe")) 
+	{
 		archive->command = fr_command_zip_new (archive->process,
 						       filename);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".jar")) {
+	else if (file_extension_is (filename, ".jar")) {
 		archive->command = fr_command_jar_new (archive->process,
 						       filename);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".zoo")) {
+	else if (file_extension_is (filename, ".zoo")) {
 		archive->command = fr_command_zoo_new (archive->process,
 						       filename);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".lzh")
-	    || file_extension_is (filename, ".lha")) {
+	else if (file_extension_is (filename, ".lzh")
+	         || file_extension_is (filename, ".lha")) 
+	{
 		archive->command = fr_command_lha_new (archive->process,
 						       filename);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".rar")) {
+	else if (file_extension_is (filename, ".rar")) {
 		archive->command = fr_command_rar_new (archive->process,
 						       filename);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".arj")) {
+	else if (file_extension_is (filename, ".arj")) {
 		archive->command = fr_command_arj_new (archive->process,
 						       filename);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".ar")) {
+	else if (file_extension_is (filename, ".ar")) {
 		archive->command = fr_command_ar_new (archive->process,
 						      filename);
-		return (archive->command != NULL);
 	}
-
-	if (file_extension_is (filename, ".7z")) {
+	else if (file_extension_is (filename, ".7z")) {
 		archive->command = fr_command_7z_new (archive->process,
 						      filename);
-		return (archive->command != NULL);
 	}
-
-	if (loading || archive->can_create_compressed_file) {
-
+	else if (loading || archive->can_create_compressed_file) {
 		if (file_extension_is (filename, ".gz")
 		    || file_extension_is (filename, ".z")
-		    || file_extension_is (filename, ".Z")) {
+		    || file_extension_is (filename, ".Z")) 
+		{
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_GZIP);
 			archive->is_compressed_file = TRUE;
-			return (archive->command != NULL);
 		}
-
-		if (file_extension_is (filename, ".bz")) {
+		else if (file_extension_is (filename, ".bz")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_BZIP);
 			archive->is_compressed_file = TRUE;
-			return (archive->command != NULL);
 		}
-
-		if (file_extension_is (filename, ".bz2")) {
+		else if (file_extension_is (filename, ".bz2")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_BZIP2);
 			archive->is_compressed_file = TRUE;
-			return (archive->command != NULL);
 		}
-
-		if (file_extension_is (filename, ".lzma")) {
+		else if (file_extension_is (filename, ".lzma")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_LZMA);
 			archive->is_compressed_file = TRUE;
-			return (archive->command != NULL);
 		}
-
-		if (file_extension_is (filename, ".lzo")) {
+		else if (file_extension_is (filename, ".lzo")) {
 			archive->command = fr_command_cfile_new (archive->process, filename, FR_COMPRESS_PROGRAM_LZOP);
 			archive->is_compressed_file = TRUE;
-			return (archive->command != NULL);
 		}
-
-		if (file_extension_is (filename, ".cpio")) {
+		else if (file_extension_is (filename, ".cpio")) {
 			archive->command = fr_command_cpio_new (archive->process,
 								filename);
-			return (archive->command != NULL);
+		}
+		else if (! archive->can_create_compressed_file) {
+			if (file_extension_is (filename, ".bin")
+		            || file_extension_is (filename, ".sit")) 
+		        {
+				archive->command = fr_command_unstuff_new (archive->process,
+								           filename);
+			}
+			else if (file_extension_is (filename, ".rpm")) {
+				archive->command = fr_command_rpm_new (archive->process,
+								       filename);
+			}
+			else if (file_extension_is (filename, ".iso")) {
+				archive->command = fr_command_iso_new (archive->process,
+							      	       filename);
+			} 
+			else if (file_extension_is (filename, ".deb")) {
+				archive->command = fr_command_ar_new (archive->process,
+							              filename);
+			}
+			else if (file_extension_is (filename, ".ace")) {
+				archive->command = fr_command_ace_new (archive->process,
+							       	       filename);
+			}
 		}
 	}
-
-	if (loading) {
-		if (file_extension_is (filename, ".bin")
-		    || file_extension_is (filename, ".sit")) {
-			archive->command = fr_command_unstuff_new (archive->process,
-								   filename);
-			return (archive->command != NULL);
-		}
-
-		if (file_extension_is (filename, ".rpm")) {
-			archive->command = fr_command_rpm_new (archive->process,
-							       filename);
-			return (archive->command != NULL);
-		}
-
-		if (file_extension_is (filename, ".iso")) {
-			archive->command = fr_command_iso_new (archive->process,
-							       filename);
-			return (archive->command != NULL);
-		}
-
-		if (file_extension_is (filename, ".deb")) {
-			archive->command = fr_command_ar_new (archive->process,
-							      filename);
-			return (archive->command != NULL);
-		}
-
-		if (file_extension_is (filename, ".ace")) {
-			archive->command = fr_command_ace_new (archive->process,
-							       filename);
-			return (archive->command != NULL);
-		}
-	}
-
-	return FALSE;
+	
+	g_free (filename);
+	
+	return (archive->command != NULL);
 }
 
 
@@ -896,23 +853,20 @@ copy_to_remote_location (FrArchive  *archive,
 			 FRAction    action)
 {
 	XferData *xfer_data;
-	char     *local_copy;
 	
 	xfer_data = g_new0 (XferData, 1);
 	xfer_data->archive = archive;
 	xfer_data->action = action;
 	
-	local_copy = get_uri_from_local_path (archive->local_filename);
-	g_copy_uri_async (local_copy,
-			  archive->uri,
-			  G_FILE_COPY_OVERWRITE,
-			  G_PRIORITY_DEFAULT,
-			  archive->priv->cancellable,
-			  copy_to_remote_location_progress,
-			  xfer_data,
-			  copy_to_remote_location_done,
-			  xfer_data);
-	g_free (local_copy);
+	g_copy_file_async (archive->local_copy,
+			   archive->file,
+			   G_FILE_COPY_OVERWRITE,
+			   G_PRIORITY_DEFAULT,
+			   archive->priv->cancellable,
+			   copy_to_remote_location_progress,
+			   xfer_data,
+			   copy_to_remote_location_done,
+			   xfer_data);
 }
 
 
@@ -1078,7 +1032,7 @@ action_performed (FrCommand   *command,
 				dropped_items_data_free (archive->priv->dropped_items_data);
 				archive->priv->dropped_items_data = NULL;
 			}
-			if (! uri_is_local (archive->uri)) {
+			if (! g_file_has_uri_scheme (archive->file, "file")) {
 				copy_to_remote_location (archive, action);
 				return;
 			}
@@ -1161,7 +1115,7 @@ fr_archive_create (FrArchive  *archive,
 	fr_archive_set_uri (archive, uri);
 
 	tmp_command = archive->command;
-	if (! create_command_from_filename (archive, archive->local_filename, FALSE)) {
+	if (! create_command_from_filename (archive, FALSE)) {
 		archive->command = tmp_command;
 		return FALSE;
 	}
@@ -1221,6 +1175,7 @@ load_local_archive (FrArchive  *archive,
 		    const char *password)
 {
 	FrCommand  *tmp_command;
+	char       *filename;
 	const char *mime_type = NULL;
 
 	archive->read_only = ! check_permissions (uri, W_OK);
@@ -1229,22 +1184,24 @@ load_local_archive (FrArchive  *archive,
 
 	tmp_command = archive->command;
 
-	mime_type = get_mime_type_from_sniffer (archive->local_filename);
+	filename = g_file_get_path (archive->local_copy);
+	mime_type = get_mime_type_from_sniffer (filename);
 	if (mime_type == NULL)
-		mime_type = get_mime_type_from_content (archive->local_filename);
-	if ((mime_type == NULL)
-	    || ! create_command_from_mime_type (archive, archive->local_filename, mime_type))
-		if (! create_command_from_filename (archive, archive->local_filename, TRUE)) {
+		mime_type = get_mime_type_from_content (filename);
+	if ((mime_type == NULL) || ! create_command_from_mime_type (archive, filename, mime_type)) {
+		if (! create_command_from_filename (archive, TRUE)) {
 			archive->command = tmp_command;
 			fr_archive_action_completed (archive,
 						     FR_ACTION_LOADING_ARCHIVE, 
 						     FR_PROC_ERROR_GENERIC,
 						     _("Archive type not supported."));
+			g_free (filename);
 			return;
 		}
+	}
+	g_free (filename);
 
-	g_free (archive->mime_type);
-	archive->mime_type = g_strdup (mime_type);
+	archive->content_type = mime_type;
 
 	if (tmp_command != NULL) {
 		g_signal_handlers_disconnect_by_data (tmp_command, archive);
@@ -1333,16 +1290,13 @@ copy_remote_file_done_cb (gpointer user_data)
 
 static void
 copy_remote_file (FrArchive  *archive,
-		  const char *remote_uri,
-		  const char *local_filename,
 		  const char *password)
 {
 	XferData *xfer_data;
-	char     *local_uri;
 	
 	xfer_data = g_new0 (XferData, 1);
 	xfer_data->archive = archive;
-	xfer_data->uri = g_strdup (remote_uri);
+	xfer_data->uri = g_file_get_uri (archive->file);
 	if (password != NULL)
 		xfer_data->password = g_strdup (password);
 	
@@ -1351,17 +1305,15 @@ copy_remote_file (FrArchive  *archive,
 		return;
 	}
 	
-	local_uri = get_uri_from_local_path (local_filename);
-	g_copy_uri_async (remote_uri,
-			  local_uri,
-			  G_FILE_COPY_OVERWRITE,
-			  G_PRIORITY_DEFAULT,
-			  archive->priv->cancellable,
-			  copy_remote_file_progress,
-			  xfer_data,
-			  copy_remote_file_done,
-			  xfer_data);
-	g_free (local_uri);
+	g_copy_file_async (archive->file,
+			   archive->local_copy,
+			   G_FILE_COPY_OVERWRITE,
+			   G_PRIORITY_DEFAULT,
+			   archive->priv->cancellable,
+			   copy_remote_file_progress,
+			   xfer_data,
+			   copy_remote_file_done,
+			   xfer_data);
 }
 
 
@@ -1379,7 +1331,7 @@ fr_archive_load (FrArchive  *archive,
 		       FR_ACTION_LOADING_ARCHIVE);
 
 	fr_archive_set_uri (archive, uri);
-	copy_remote_file (archive, uri, archive->local_filename, password);
+	copy_remote_file (archive, password);
 
 	return TRUE;
 }
@@ -1408,13 +1360,17 @@ void
 fr_archive_reload (FrArchive  *archive,
 		   const char *password)
 {
+	char *uri;
+	
 	g_return_if_fail (archive != NULL);
-	g_return_if_fail (archive->uri != NULL);
+	g_return_if_fail (archive->file != NULL);
 
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
 
-	fr_archive_load (archive, archive->uri, password);
+	uri = g_file_get_uri (archive->file);
+	fr_archive_load (archive, uri, password);
+	g_free (uri);
 }
 
 
@@ -1432,8 +1388,8 @@ fr_archive_rename (FrArchive  *archive,
 		fr_archive_load (archive, filename, NULL);
 
 	else {
-		g_free (archive->uri);
-		archive->uri = g_strdup (filename);
+		g_object_unref (archive->file);
+		archive->file = g_file_new_for_path (filename);
 
 		fr_command_set_filename (archive->command, filename);
 	}
@@ -2407,7 +2363,8 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 			      FRCompression  compression)
 {
 	GList *scan;
-
+	char  *archive_uri;
+	
 	if (archive->read_only) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_ADDING_FILES, 
@@ -2417,14 +2374,18 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 	}
 
 	/* FIXME: make this check for all the add actions */
-	for (scan = item_list; scan; scan = scan->next)
-		if (uricmp (scan->data, archive->uri) == 0) {
+	archive_uri = g_file_get_uri (archive->file);
+	for (scan = item_list; scan; scan = scan->next) {
+		if (uricmp (scan->data, archive_uri) == 0) {
+			g_free (archive_uri);
 			fr_archive_action_completed (archive,
 						     FR_ACTION_ADDING_FILES,
 						     FR_PROC_ERROR_GENERIC,
 						     _("You can't add an archive to itself."));
 			return;
 		}
+	}
+	g_free (archive_uri);
 
 	if (archive->priv->dropped_items_data != NULL)
 		dropped_items_data_free (archive->priv->dropped_items_data);
@@ -3130,15 +3091,19 @@ fr_archive_extract (FrArchive  *archive,
 
 
 static char *
-get_desired_destination_from_archive_uri (const char *uri)
+get_desired_destination_for_archive (GFile *file)
 {
-	const char *name, *ext;
-	char       *base_name, *new_name;
+	GFile      *directory;
+	char       *directory_uri;
+	char       *name;
+	const char *ext;
+	char       *new_name;
 	char       *desired_destination = NULL;
 	
-	base_name = remove_level_from_path (uri);
-
-	name = file_name_from_path (uri);
+	directory = g_file_get_parent (file);
+	directory_uri = g_file_get_uri (directory);
+	
+	name = g_file_get_basename (file);
 	ext = fr_archive_utils__get_file_name_ext (name);
 	if (ext == NULL)
 		/* if no extension is present add a suffix to the name... */
@@ -3147,27 +3112,27 @@ get_desired_destination_from_archive_uri (const char *uri)
 		/* ...else use the name without the extension */
 		new_name = g_strndup (name, strlen (name) - strlen (ext)); 
 	
-	/* add a dot to temporary hide the destination */
-	desired_destination = g_strconcat (base_name, "/", new_name, NULL);
+	desired_destination = g_strconcat (directory_uri, "/", new_name, NULL);
 	
-	g_free (base_name);
 	g_free (new_name);
+	g_free (name);
+	g_free (directory_uri);
+	g_object_unref (directory);
 	
 	return desired_destination;
 }
 
 
 static char *
-get_extract_here_destination (const char  *uri,
-			      GError     **error)
+get_extract_here_destination (GFile   *file,
+			      GError **error)
 {
 	char  *desired_destination;
 	char  *destination = NULL;
 	int    n = 1;
-	GFile *file;
+	GFile *directory;
 	
-	desired_destination = get_desired_destination_from_archive_uri (uri);
-	
+	desired_destination = get_desired_destination_for_archive (file);
 	do {
 		g_free (destination);
 		if (n == 1)
@@ -3175,16 +3140,17 @@ get_extract_here_destination (const char  *uri,
 		else
 			destination = g_strdup_printf ("%s%%20(%d)", desired_destination, n);
 			
-		file = g_file_new_for_uri (destination);
-		g_file_make_directory (file, NULL, error);
-		g_object_unref (file);
+		directory = g_file_new_for_uri (destination);
+		g_file_make_directory (directory, NULL, error);
+		g_object_unref (directory);
 		
 		n++;
-	} while ((*error == NULL) && ((*error)->code == G_IO_ERROR_EXISTS));
+	} while (g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS));
 	
 	g_free (desired_destination);
 	
 	if (*error != NULL) {
+		g_warning ("could not create destination folder: %s\n", (*error)->message);
 		g_free (destination);
 		destination = NULL;
 	}
@@ -3203,7 +3169,7 @@ fr_archive_extract_here (FrArchive  *archive,
 	char   *destination;
 	GError *error;
 	
-	destination = get_extract_here_destination (archive->uri, &error);
+	destination = get_extract_here_destination (archive->file, &error);
 	if (error != NULL) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_EXTRACTING_FILES,

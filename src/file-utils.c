@@ -494,26 +494,23 @@ make_directory_tree (GFile    *dir,
 {
 	GFile *parent;
 
-	if (dir == NULL) 
-		return FALSE;
+	if (dir == NULL)
+		return TRUE;
 
 	parent = g_file_get_parent (dir);
 	if (parent != NULL) {
-		char *uri;
+		gboolean success;
 		
-		uri = g_file_get_uri (parent);
-		ensure_dir_exists (uri, mode, error);
-		g_free (uri);
-		
-		if (error != NULL) {
-			g_object_unref (parent);
+		success = make_directory_tree (parent, mode, error);
+		g_object_unref (parent);
+		if (! success) 
 			return FALSE;
-		}
 	}
-	g_object_unref (parent);
 	
 	g_file_make_directory (dir, NULL, error);
-	if (error != NULL)	
+	if ((*error != NULL) && g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS))
+		g_clear_error (error);
+	if (*error != NULL) 
 		return FALSE;
 
 	g_file_set_attribute_uint32 (dir,
@@ -521,7 +518,8 @@ make_directory_tree (GFile    *dir,
 				     mode, 
 				     0, 
 				     NULL, 
-				     error);
+				     NULL);
+				     
 	return TRUE;
 }
 
@@ -584,6 +582,7 @@ get_file_mime_type (const char *filename,
 	GError     *err = NULL;
  	const char *result = NULL;
  	
+ 	file = g_file_new_for_uri (filename);
 	info = g_file_query_info (file, 
 				  fast_file_type ?
 				  G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE :
@@ -776,7 +775,7 @@ get_temp_work_dir (void)
 		guint64     size;
 
 		folder = get_folder_from_try_folder_list (i);
-		uri = g_strconcat ("file://", folder, NULL);
+		uri = g_filename_to_uri (folder, NULL, NULL);
 
 		size = get_dest_free_space (uri);
 		if (max_size < size) {

@@ -43,10 +43,10 @@ typedef gboolean (*FakeLoadFunc) (FrArchive *archive, gpointer data);
 struct _FrArchive {
 	GObject  __parent;
 
-	char        *uri;
+	GFile       *file;
+	GFile       *local_copy;
 	gboolean     is_remote;
-	char        *local_filename;
-	char        *mime_type;
+	const char  *content_type;
 	FrCommand   *command;
 	FrProcess   *process;
 	FRProcError  error;

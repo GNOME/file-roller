@@ -322,7 +322,6 @@ static void
 release_data ()
 {
 	g_hash_table_destroy (ProgramsCache);
-	file_data_release_data ();
 
 	eel_global_client_free ();
 
@@ -480,19 +479,22 @@ static void
 prepare_app (void)
 {
 	char *path;
+	char *uri;
 	char *extract_to_path = NULL;
 	char *add_to_path = NULL;
 
 	/* create the config dir if necessary. */
 
 	path = get_home_relative_dir (RC_DIR);
-
-	/* before the gconf port this was a file, now it's folder. */
-	if (path_is_file (path))
-		unlink (path);
-
-	ensure_dir_exists (path, 0700, NULL);
+	uri = g_filename_to_uri (path, NULL, NULL);
 	g_free (path);
+	
+	/* before the gconf port this was a file, now it's folder. */
+	if (path_is_file (uri))
+		unlink (uri);
+
+	ensure_dir_exists (uri, 0700, NULL);
+	g_free (uri);
 
 	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
 		migrate_to_new_directories ();
@@ -626,11 +628,15 @@ save_session (GnomeClient *client)
 		char     *key;
 
 		key = g_strdup_printf ("Session/archive%d", i);
-
-		if ((window->archive == NULL) || (window->archive->uri == NULL))
+		if ((window->archive == NULL) || (window->archive->file == NULL))
 			gnome_config_set_string (key, "");
-		else
-			gnome_config_set_string (key, window->archive->uri);
+		else {
+			char *uri;
+			
+			uri = g_file_get_uri (window->archive->file);
+			gnome_config_set_string (key, uri);
+			g_free (uri);
+		}
 		g_free (key);
 
 		i++;

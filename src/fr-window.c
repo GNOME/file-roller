@@ -874,8 +874,8 @@ sort_by_type (gconstpointer  ptr1,
 	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
 		return sort_by_name (ptr1, ptr2);
 
-	desc1 = file_data_get_mime_type_description (fdata1);
-	desc2 = file_data_get_mime_type_description (fdata2);
+	desc1 = g_content_type_get_description (fdata1->content_type);
+	desc2 = g_content_type_get_description (fdata2->content_type);
 
 	result = strcasecmp (desc1, desc2);
 	if (result == 0)
@@ -1181,7 +1181,7 @@ get_icon (GtkWidget *widget,
 	if (file_data_is_dir (fdata))
 		mime_type = MIME_TYPE_DIRECTORY;
 	else
-		mime_type = file_data_get_mime_type (fdata);
+		mime_type = g_content_type_get_mime_type (fdata->content_type);
 
 	/* look in the hash table. */
 
@@ -1528,7 +1528,7 @@ fr_window_populate_file_list (FrWindow  *window,
 
 			s_size = g_format_size_for_display (fdata->size);
 			s_time = get_time_string (fdata->modified);
-			desc = file_data_get_mime_type_description (fdata);
+			desc = g_content_type_get_description (fdata->content_type);
 
 			gtk_list_store_set (window->priv->list_store, &iter,
 					    COLUMN_FILE_DATA, fdata,
@@ -1722,9 +1722,11 @@ fr_window_update_dir_tree (FrWindow *window)
 	icon = get_mime_type_icon (MIME_TYPE_ARCHIVE);
 	{
 		GtkTreeIter  node;
+		char        *uri;
 		char        *name;
 		
-		name = g_filename_display_basename (window->archive->uri);
+		uri = g_file_get_uri (window->archive->file);
+		name = g_filename_display_basename (uri);
 		
 		gtk_tree_store_append (window->priv->tree_store, &node, NULL);
 		gtk_tree_store_set (window->priv->tree_store, &node,
@@ -1736,6 +1738,7 @@ fr_window_update_dir_tree (FrWindow *window)
 		g_hash_table_replace (dir_cache, "/", gtk_tree_model_get_path (GTK_TREE_MODEL (window->priv->tree_store), &node));
 		
 		g_free (name);
+		g_free (uri);
 	}
 	g_object_unref (icon);
 	
@@ -2488,11 +2491,11 @@ fr_window_add_to_recent_list (FrWindow *window,
 	if (is_temp_dir (uri))
 		return;
 
-	if (window->archive->mime_type != NULL) {
+	if (window->archive->content_type != NULL) {
 		GtkRecentData *recent_data;
 
 		recent_data = g_new0 (GtkRecentData, 1);
-		recent_data->mime_type = window->archive->mime_type;
+		recent_data->mime_type = g_content_type_get_mime_type (window->archive->content_type);
 		recent_data->app_name = "File Roller";
 		recent_data->app_exec = "file-roller";
 		gtk_recent_manager_add_full (window->priv->recent_manager, uri, recent_data);
@@ -3657,10 +3660,15 @@ get_selection_data_from_clipboard_data (FrWindow        *window,
 		      			FrClipboardData *data)
 {
 	GString *list;
+	char    *local_filename;
 	GList   *scan;
 	
 	list = g_string_new (NULL);
-	g_string_append (list, window->archive->local_filename);
+	
+	local_filename = g_file_get_path (window->archive->local_copy);
+	g_string_append (list, local_filename);
+	g_free (local_filename);
+	
 	g_string_append (list, "\r\n");
 	if (window->priv->password != NULL)
 		g_string_append (list, window->priv->password);
