@@ -1,5 +1,16 @@
 2008-04-05  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	ported from the gnome-2-22 branch:
+
+	* src/fr-archive.c (fr_archive_extract_to_local):
+ 	  	 
+	Sort the filtered list before removing the files contained in the 
+	extracted directories.  The sorting makes the remove much faster.
+ 	  	 
+	Compute the number of files to be extracted before modifing the list.
+
+2008-04-05  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/file-utils.h: 
 	* src/file-utils.c: 
 	
