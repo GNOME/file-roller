@@ -56,21 +56,13 @@ gboolean
 uri_exists (const char *uri)
 {
 	GFile     *file;
-	GFileInfo *info;
-	GError    *err = NULL;
 	gboolean   exists;
 
 	if (uri == NULL) 
 		return FALSE;
 
 	file = g_file_new_for_uri (uri);
-	info = g_file_query_info (file,	G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
-	
-	exists = (err != NULL);
-	
-	if (err != NULL)
-		g_error_free (err);
-	g_object_unref (info);
+	exists = g_file_query_exists (file, NULL);
 	g_object_unref (file);
 
 	return exists;	
@@ -104,14 +96,14 @@ uri_is_filetype (const char *uri,
 
 
 gboolean
-path_is_file (const char *uri)
+uri_is_file (const char *uri)
 {
 	return uri_is_filetype (uri, G_FILE_TYPE_REGULAR);
 }
 
 
 gboolean
-path_is_dir (const char *uri)
+uri_is_dir (const char *uri)
 {
 	return uri_is_filetype (uri, G_FILE_TYPE_DIRECTORY);
 }
@@ -202,7 +194,7 @@ dir_contains_one_object (const char *uri)
 
 
 char *
-get_directory_content_if_unique (const char  *uri)
+get_dir_content_if_unique (const char  *uri)
 {
 	GFile           *file;
 	GFileEnumerator *file_enum;
@@ -487,7 +479,7 @@ remove_ending_separator (const char *path)
 }
 
 
-static gboolean
+gboolean
 make_directory_tree (GFile    *dir,
 		     mode_t    mode,
 		     GError  **error)
@@ -724,27 +716,11 @@ remove_local_directory (const char *path)
 }
 
 
-gboolean
-make_tree (const char  *uri,
-	   GError     **error)
-{
-	GFile  *dir;
-	
-	dir = g_file_new_for_uri (uri);
-	if (! make_directory_tree (dir, 0755, error)) {
-		g_warning ("could create directory %s: %s", uri, (*error)->message);
-		return FALSE;
-	}
-	
-	return TRUE;
-}
-
-
 static const char *try_folder[] = { "~", "tmp", NULL };
 
 
-static const char *
-get_folder_from_try_folder_list (int n)
+static char *
+ith_temp_folder_to_try (int n)
 {
 	const char *folder;
 
@@ -754,7 +730,7 @@ get_folder_from_try_folder_list (int n)
 	else if (strcmp (folder, "tmp") == 0)
 		folder = g_get_tmp_dir ();
 
-	return folder;
+	return g_filename_to_uri (folder, NULL, NULL);
 }
 
 
@@ -770,21 +746,18 @@ get_temp_work_dir (void)
 	/* find the folder with more free space. */
 
 	for (i = 0; try_folder[i] != NULL; i++) {
-		const char *folder;
-		char       *uri;
-		guint64     size;
+		char    *folder;
+		guint64  size;
 
-		folder = get_folder_from_try_folder_list (i);
-		uri = g_filename_to_uri (folder, NULL, NULL);
-
-		size = get_dest_free_space (uri);
+		folder = ith_temp_folder_to_try (i);
+		size = get_dest_free_space (folder);
 		if (max_size < size) {
 			max_size = size;
 			g_free (best_folder);
-			best_folder = uri;
+			best_folder = folder;
 		}
 		else
-			g_free (uri);
+			g_free (folder);
 	}
 
 	template = g_strconcat (best_folder + strlen ("file://"), "/.fr-XXXXXX", NULL);
@@ -812,7 +785,7 @@ is_temp_work_dir (const char *dir)
 	for (i = 0; try_folder[i] != NULL; i++) {
 		const char *folder;
 
-		folder = get_folder_from_try_folder_list (i);
+		folder = ith_temp_folder_to_try (i);
 		if (strncmp (dir, folder, strlen (folder)) == 0) 
 			if (strncmp (dir + strlen (folder), "/.fr-", 5) == 0)
 				return TRUE;
@@ -1014,62 +987,8 @@ get_home_uri (void)
 {
 	static char *home_uri = NULL;
 	if (home_uri == NULL)
-		home_uri = g_strconcat ("file://", g_get_home_dir (), NULL);
+		home_uri = g_filename_to_uri (g_get_home_dir (), NULL, NULL);
 	return home_uri;
-}
-
-
-char *
-get_uri_from_local_path (const char *path)
-{
-	return g_filename_to_uri (path, NULL, NULL);
-}
-
-
-char *
-get_local_path_from_uri (const char *uri)
-{
-	return g_filename_from_uri (uri, NULL, NULL);
-}
-
-
-const char *
-get_file_path_from_uri (const char *uri)
-{
-	if (uri == NULL)
-		return NULL;
-	if (uri_scheme_is_file (uri))
-		return uri + FILE_PREFIX_L;
-	else if (uri[0] == '/')
-		return uri;
-	else
-		return NULL;
-}
-
-
-gboolean
-uri_has_scheme (const char *uri)
-{
-	return strstr (uri, "://") != NULL;
-}
-
-
-gboolean
-uri_is_local (const char *uri)
-{
-	return (! uri_has_scheme (uri)) || uri_scheme_is_file (uri);
-}
-
-
-gboolean
-uri_scheme_is_file (const char *uri)
-{
-        if (uri == NULL)
-                return FALSE;
-        if (g_utf8_strlen (uri, -1) < FILE_PREFIX_L)
-                return FALSE;
-        return strncmp (uri, FILE_PREFIX, FILE_PREFIX_L) == 0;
-
 }
 
 
@@ -1125,38 +1044,16 @@ get_uri_root (const char *uri)
 }
 
 
-char *
-get_uri_from_path (const char *path)
-{
-	if (path == NULL)
-		return NULL;
-	if ((path[0] == '\0') || (path[0] == '/'))
-		return g_strconcat ("file://", path, NULL);
-	return g_strdup (path);
-}
-
-
 int
-uricmp (const char *path1,
-	const char *path2)
+uricmp (const char *uri1,
+	const char *uri2)
 {
-	char *uri1, *uri2;
-	int   result;
-
-	uri1 = get_uri_from_path (path1);
-	uri2 = get_uri_from_path (path2);
-
-	result = strcmp_null_tolerant (uri1, uri2);
-
-	g_free (uri1);
-	g_free (uri2);
-
-	return result;
+	return strcmp_null_tolerant (uri1, uri2);
 }
 
 
 char *
-get_new_uri (const char *folder,
+get_alternative_uri (const char *folder,
 	     const char *name)
 {
 	char *new_uri = NULL;
@@ -1176,13 +1073,13 @@ get_new_uri (const char *folder,
 
 
 char *
-get_new_uri_from_uri (const char *uri)
+get_alternative_uri_for_uri (const char *uri)
 {
 	char *base_uri;
 	char *new_uri;
 	
 	base_uri = remove_level_from_path (uri);
-	new_uri = get_new_uri (base_uri, file_name_from_path (uri));
+	new_uri = get_alternative_uri (base_uri, file_name_from_path (uri));
 	g_free (base_uri);
 	
 	return new_uri;

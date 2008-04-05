@@ -2511,14 +2511,8 @@ static void
 fr_window_remove_from_recent_list (FrWindow *window,
 				   char     *filename)
 {
-	char *uri;
-
-	if (filename == NULL)
-		return;
-
-	uri = get_uri_from_path (filename);
-	gtk_recent_manager_remove_item (window->priv->recent_manager, uri, NULL);
-	g_free (uri);
+	if (filename != NULL)
+		gtk_recent_manager_remove_item (window->priv->recent_manager, filename, NULL);
 }
 
 
@@ -5919,7 +5913,7 @@ fr_window_archive_extract (FrWindow   *window,
 					    edata,
 					    (GFreeFunc) extract_data_free);
 
-	if (! path_is_dir (edata->extract_to_dir)) {
+	if (! uri_is_dir (edata->extract_to_dir)) {
 		if (! ForceDirectoryCreation) {
 			GtkWidget *d;
 			int        r;
@@ -7747,7 +7741,7 @@ static char*
 get_default_dir (const char *dir) 
 {
 	if (! is_temp_dir (dir))
-		return get_uri_from_path (dir);
+		return g_strdup (dir);
 	else
 		return NULL;
 }
@@ -7927,7 +7921,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_LOAD:
 		debug (DEBUG_INFO, "[BATCH] LOAD\n");
 
-		if (! path_is_file ((char*) action->data))
+		if (! uri_exists ((char*) action->data))
 			fr_window_archive_new (window, (char*) action->data);
 		else
 			fr_window_archive_open (window, (char*) action->data, GTK_WINDOW (window));
@@ -8247,7 +8241,7 @@ fr_window_set_batch__add (FrWindow   *window,
 			  const char *archive,
 			  GList      *file_list)
 {
-	window->priv->batch_adding_one_file = (file_list->next == NULL) && (path_is_file (file_list->data));
+	window->priv->batch_adding_one_file = (file_list->next == NULL) && (uri_is_file (file_list->data));
 
 	if (archive != NULL)
 		fr_window_append_batch_action (window,

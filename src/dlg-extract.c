@@ -103,7 +103,7 @@ extract_cb (GtkWidget   *w,
 
 	/* check directory existence. */
 
-	if (! path_is_dir (extract_to_dir)) {
+	if (! uri_is_dir (extract_to_dir)) {
 		if (! ForceDirectoryCreation) {
 			GtkWidget *d;
 			int        r;
@@ -133,7 +133,7 @@ extract_cb (GtkWidget   *w,
 				do_not_extract = TRUE;
 		}
 
-		if (! do_not_extract && ! make_tree (extract_to_dir, &error)) {
+		if (! do_not_extract && ! ensure_dir_exists (extract_to_dir, 0755, &error)) {
 			GtkWidget  *d;
 			char       *message;
 
@@ -176,7 +176,7 @@ extract_cb (GtkWidget   *w,
 
 	/* check extraction directory permissions. */
 
-	if (path_is_dir (extract_to_dir)
+	if (uri_is_dir (extract_to_dir)
 	    && ! check_permissions (extract_to_dir, R_OK | W_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;

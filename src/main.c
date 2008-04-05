@@ -259,8 +259,7 @@ initialize_data (void)
 void
 viewer_done (ViewerData *vdata)
 {
-	if ((vdata->temp_dir != NULL)
-	    && path_is_dir (vdata->temp_dir)) {
+	if ((vdata->temp_dir != NULL) && uri_is_dir (vdata->temp_dir)) {
 		char *argv[4];
 
 		argv[0] = "rm";
@@ -291,8 +290,7 @@ command_done (CommandData *cdata)
 	if (cdata == NULL)
 		return;
 		
-	if ((cdata->temp_dir != NULL)
-	    && path_is_dir (cdata->temp_dir)) {
+	if ((cdata->temp_dir != NULL) && uri_is_dir (cdata->temp_dir)) {
 		char *argv[4];
 
 		argv[0] = "rm";
@@ -349,7 +347,7 @@ migrate_dir_from_to (const char *from_dir,
 	from_path = get_home_relative_dir (from_dir);
 	to_path = get_home_relative_dir (to_dir);
 
-	if (path_is_dir (from_path) && ! path_is_dir (to_path)) {
+	if (uri_is_dir (from_path) && ! uri_exists (to_path)) {
 		char *line;
 		char *e1;
 		char *e2;
@@ -379,7 +377,7 @@ migrate_file_from_to (const char *from_file,
 	from_path = get_home_relative_dir (from_file);
 	to_path = get_home_relative_dir (to_file);
 
-	if (path_is_file (from_path) && ! path_is_file (to_path)) {
+	if (uri_is_file (from_path) && ! uri_exists (to_path)) {
 		char *line;
 		char *e1;
 		char *e2;
@@ -490,8 +488,13 @@ prepare_app (void)
 	g_free (path);
 	
 	/* before the gconf port this was a file, now it's folder. */
-	if (path_is_file (uri))
-		unlink (uri);
+	if (uri_is_file (uri)) {
+		GFile *file;
+		
+		file = g_file_new_for_uri (uri);
+		g_file_delete (file, NULL, NULL);
+		g_object_unref (file);
+	}
 
 	ensure_dir_exists (uri, 0700, NULL);
 	g_free (uri);

@@ -723,7 +723,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 
 	{
 		char *uri = get_uri_from_local_path (comm->filename);
-		archive_exists = path_is_file (uri);
+		archive_exists = uri_exists (uri);
 		g_free (uri);
 	}
 

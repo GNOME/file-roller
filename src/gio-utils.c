@@ -643,7 +643,7 @@ g_directory_list_async (const char           *directory,
 	FilterOptions    filter_options;
 	
 	gfl = g_new0 (GetFileListData, 1);
-	gfl->directory = get_uri_from_path (directory);
+	gfl->directory = g_strdup (directory);
 	gfl->base_dir = g_strdup (base_dir);
 	gfl->done_func = done_func;
 	gfl->done_data = done_data;
@@ -775,8 +775,9 @@ g_list_items_async (GList             *items,
 		char *path = scan->data;
 
 		/* FIXME: this is not async */
-		if (path_is_dir (path))
+		if (uri_is_dir (path)) {
 			gfl->to_visit = g_list_prepend (gfl->to_visit, g_strdup (path));
+		}
 		else {
 			char *rel_path = g_strdup (path + base_len + 1);
 			gfl->files = g_list_prepend (gfl->files, rel_path);

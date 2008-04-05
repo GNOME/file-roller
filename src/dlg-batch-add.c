@@ -177,7 +177,7 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
-	if (! path_is_dir (archive_dir)) {
+	if (! uri_is_dir (archive_dir)) {
 		GtkWidget *d;
 		int        r;
 		char      *folder_name;
@@ -205,7 +205,7 @@ add_clicked_cb (GtkWidget  *widget,
 		do_not_add = (r != GTK_RESPONSE_YES);
 	}
 
-	if (! do_not_add && ! make_tree (archive_dir, &error)) {
+	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755, &error)) {
 		GtkWidget  *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -252,7 +252,7 @@ add_clicked_cb (GtkWidget  *widget,
 	archive_file = g_strconcat (archive_dir, "/", archive_name, NULL);
 	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, archive_ext);
 
-	if (path_is_dir (archive_file)) {
+	if (uri_is_dir (archive_file)) {
 		GtkWidget  *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -270,7 +270,7 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
-	if (path_is_file (archive_file)) {
+	if (uri_exists (archive_file)) {
 		GtkWidget *d;
 		int        r;
 
@@ -312,7 +312,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 	gtk_widget_destroy (data->dialog);
 
-	if (! path_is_file (archive_file))
+	if (! uri_exists (archive_file))
 		fr_window_archive_new (window, archive_file);
 	else
 		fr_window_archive_open (window, archive_file, GTK_WINDOW (window));
@@ -431,7 +431,7 @@ dlg_batch_add_files (FrWindow *window,
 
 	data->window = window;
 	data->file_list = file_list;
-	data->single_file = ((file_list->next == NULL) && path_is_file ((char*) file_list->data));
+	data->single_file = ((file_list->next == NULL) && uri_is_file ((char*) file_list->data));
 	data->add_clicked = FALSE;
 
 	/* Get the widgets. */

@@ -110,7 +110,7 @@ file_sel_response_cb (GtkWidget    *widget,
 
 	/* check folder permissions. */
 
-	if (path_is_dir (current_folder)
+	if (uri_is_dir (current_folder)
 	    && ! check_permissions (current_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
@@ -199,7 +199,7 @@ selection_changed_cb (GtkWidget  *file_sel,
 
 	/* check folder permissions. */
 
-	if (path_is_dir (current_folder) && ! check_permissions (current_folder, R_OK | X_OK)) {
+	if (uri_is_dir (current_folder) && ! check_permissions (current_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 
@@ -482,11 +482,8 @@ aod_apply_cb (GtkWidget *widget,
 	if (base_dir != NULL) {
 		if ((filename != NULL) && (strcmp (filename, base_dir) != 0))
 			gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (data->dialog), filename);
-		else {
-			char *uri = get_uri_from_path (base_dir);
-			gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->dialog), uri);
-			g_free (uri);
-		}
+		else
+			gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->dialog), base_dir);
 	}
 
 	if (include_files != NULL)

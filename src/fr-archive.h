@@ -51,10 +51,11 @@ struct _FrArchive {
 	FrProcess   *process;
 	FRProcError  error;
 	gboolean     can_create_compressed_file;
-	gboolean     is_compressed_file;         /* Whether the file is an archive
-						  * or a compressed file. */
-	gboolean     read_only;                  /* Whether archive is read-only
-						  * or not. */
+	gboolean     is_compressed_file;         /* Whether the file is an 
+						  * archive or a compressed 
+						  * file. */
+	gboolean     read_only;                  /* Whether archive is 
+						  * read-only or not. */
 
 	FrArchivePrivData *priv;
 };

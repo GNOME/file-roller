@@ -209,7 +209,7 @@ get_archive_filename_from_selector (FrWindow  *window,
 
 	debug (DEBUG_INFO, "create/save %s\n", path);
 
-	if (path_is_file (path)) {
+	if (uri_exists (path)) {
 		GtkWidget *dialog;
 		int        r;
 

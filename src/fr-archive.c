@@ -383,22 +383,22 @@ fr_archive_new (void)
 static GFile *
 get_local_copy_for_file (GFile *remote_file)
 {
-	char  *dir;
-	char  *name;
-	char  *uri;
-	GFile *local_copy;
+	char  *temp_dir;
+	GFile *local_copy = NULL;
 
-	dir = get_temp_work_dir ();
-	if (dir == NULL)
-		return NULL;
+	temp_dir = get_temp_work_dir ();
+	if (temp_dir != NULL) {
+		char  *archive_name;
+		char  *local_uri;
 
-	name = g_file_get_basename (remote_file);
-	uri = g_build_filename (dir, name, NULL);
-	local_copy = g_file_new_for_uri (uri);
+		archive_name = g_file_get_basename (remote_file);
+		local_uri = g_build_filename (temp_dir, archive_name, NULL);
+		local_copy = g_file_new_for_uri (local_uri);
 	
-	g_free (uri);
-	g_free (name);
-	g_free (dir);
+		g_free (local_uri);
+		g_free (archive_name);
+	}
+	g_free (temp_dir);
 
 	return local_copy;
 }
@@ -674,7 +674,7 @@ create_command_from_filename (FrArchive *archive,
 						       FR_COMPRESS_PROGRAM_LZMA);
 	}
 	else if (file_extension_is (filename, ".tar.lzo")
-	    || file_extension_is (filename, ".tzo")) 
+		 || file_extension_is (filename, ".tzo")) 
 	{
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
@@ -883,7 +883,7 @@ move_here (FrArchive *archive)
 	GFile  *source, *destination, *parent_file;
 	GError *error;
 
-	content_uri = get_directory_content_if_unique (archive->priv->extraction_destination);
+	content_uri = get_dir_content_if_unique (archive->priv->extraction_destination);
 	if (content_uri == NULL)
 		return;	
 
@@ -892,7 +892,7 @@ move_here (FrArchive *archive)
 	if (uricmp (parent, archive->priv->extraction_destination) == 0) {
 		char *new_uri;
 		
-		new_uri = get_new_uri_from_uri (archive->priv->extraction_destination);
+		new_uri = get_alternative_uri_for_uri (archive->priv->extraction_destination);
 		 
 		source = g_file_new_for_uri (archive->priv->extraction_destination);
 		destination = g_file_new_for_uri (new_uri);
@@ -908,7 +908,7 @@ move_here (FrArchive *archive)
 
 		g_free (parent);
 		
-		content_uri = get_directory_content_if_unique (archive->priv->extraction_destination);
+		content_uri = get_dir_content_if_unique (archive->priv->extraction_destination);
 		if (content_uri == NULL)
 			return;	
 
@@ -916,7 +916,7 @@ move_here (FrArchive *archive)
 	}
 
 	parent_parent = remove_level_from_path (parent);
-	new_content_uri = get_new_uri (parent_parent, file_name_from_path (content_uri));
+	new_content_uri = get_alternative_uri (parent_parent, file_name_from_path (content_uri));
 	
 	source = g_file_new_for_uri (content_uri);
 	destination = g_file_new_for_uri (new_content_uri);
@@ -1522,7 +1522,7 @@ newer_files_only (FrArchive  *archive,
 
 		fullpath = g_strconcat (base_dir, "/", filename, NULL);
 
-		if (path_is_file (fullpath)
+		if (uri_exists (fullpath)
 		    && (fdata->modified >= get_file_mtime (fullpath))) {
 			g_free (fullpath);
 			continue;
@@ -1801,7 +1801,7 @@ copy_remote_files (FrArchive     *archive,
 		local_folder_uri = remove_level_from_path (local_uri);
 		if (g_hash_table_lookup (created_folders, local_folder_uri) == NULL) {
 			GError *error;
-			if (! make_tree (local_uri, &error)) {
+			if (! ensure_dir_exists (local_uri, 0755, &error)) {
 				g_free (local_folder_uri);
 				g_free (local_uri);
 				gio_file_list_free (sources);
@@ -2275,7 +2275,7 @@ add_dropped_items (DroppedItemsData *data)
 		char *path = scan->data;
 		char *base_dir;
 
-		if (! path_is_dir (path))
+		if (! uri_is_dir (path))
 			continue;
 
 		data->item_list = g_list_remove_link (list, scan);
