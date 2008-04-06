@@ -5467,6 +5467,7 @@ fr_window_archive_close (FrWindow *window)
 	if (! window->priv->archive_new && ! window->priv->archive_present)
 		return;
 
+	fr_window_free_open_files (window);
 	fr_clipboard_data_unref (window->priv->copy_data);
 	window->priv->copy_data = NULL;
 	
@@ -5475,8 +5476,6 @@ fr_window_archive_close (FrWindow *window)
 	
 	window->priv->archive_new = FALSE;
 	window->priv->archive_present = FALSE;
-
-	fr_window_free_open_files (window);
 
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);

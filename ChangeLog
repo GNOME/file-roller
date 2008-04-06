@@ -1,10 +1,17 @@
 2008-04-06  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (fr_window_finalize): 
+
+	no need to call fr_window_free_open_files in finalize since it's
+	already called in fr_window_free_private_data.
+
+2008-04-06  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/open-file.c: 
 	* src/main.c: 
 	* src/glib-utils.h: 
 	* src/glib-utils.c: 
-	* src/fr-window.c: 
+	* src/fr-window.c:  
 	* src/fr-command-tar.c: 
 	* src/fr-command-iso.c: 
 	* src/fr-command.h: 
