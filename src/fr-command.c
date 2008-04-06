@@ -532,6 +532,7 @@ void
 fr_command_add_file (FrCommand *comm,
 		     FileData  *fdata)
 {
+	file_data_update_content_type (fdata);
 	g_ptr_array_add (comm->files, fdata);
 }
 

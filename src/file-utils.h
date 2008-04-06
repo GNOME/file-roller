@@ -27,6 +27,8 @@
 #include <time.h>
 #include <gio/gio.h>
 
+#define MIME_TYPE_DIRECTORY "application/directory-normal"
+#define MIME_TYPE_ARCHIVE "application/x-archive"
 
 #define get_home_relative_dir(x)        \
 	g_strconcat (g_get_home_dir (), \
@@ -37,6 +39,8 @@
 gboolean            uri_exists                   (const char  *uri);
 gboolean            uri_is_file                  (const char  *uri);
 gboolean            uri_is_dir                   (const char  *uri);
+gboolean            path_is_dir                  (const char  *path);
+gboolean            uri_is_local                 (const char  *uri);
 gboolean            dir_is_empty                 (const char  *uri);
 gboolean            dir_contains_one_object      (const char  *uri);
 char *              get_dir_content_if_unique    (const char  *uri);
@@ -61,7 +65,9 @@ gboolean            file_extension_is            (const char  *filename,
 						  const char  *ext);
 gboolean            is_mime_type                 (const char  *type,
 						  const char  *pattern);
-const char*         get_file_mime_type           (const char  *filename,
+const char*         get_file_mime_type           (const char  *uri,
+                    				  gboolean     fast_file_type);
+const char*         get_file_mime_type_for_path  (const char  *filename,
                     				  gboolean     fast_file_type);
 guint64             get_dest_free_space          (const char  *path);
 gboolean            remove_directory             (const char  *uri);

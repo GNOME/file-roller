@@ -34,7 +34,7 @@ open_file_new (const char *path,
 	
 	ofile = g_new0 (OpenFile, 1);
 	ofile->path = g_strdup (path);
-	ofile->extracted_uri = get_uri_from_local_path (extracted_path);
+	ofile->extracted_uri = g_filename_to_uri (extracted_path, NULL, NULL);
 	ofile->temp_dir = g_strdup (temp_dir);
 	ofile->last_modified = get_file_mtime (ofile->extracted_uri);
 	

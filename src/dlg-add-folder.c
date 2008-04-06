@@ -162,7 +162,7 @@ file_sel_response_cb (GtkWidget    *widget,
 					 fr_window_get_current_location (window),
 					 file_name_from_path (folder),
 					 NULL);
-		dest_dir = get_local_path_from_uri (dest_uri);
+		dest_dir = g_filename_from_uri (dest_uri, NULL, NULL);
 
 		fr_window_archive_add_with_wildcard (window,
 						     include_files,

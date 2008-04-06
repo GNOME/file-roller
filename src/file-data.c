@@ -23,8 +23,9 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
-#include "file-data.h"
+#include "glib-utils.h"
 #include "file-utils.h"
+#include "file-data.h"
 
 
 FileData *
@@ -97,28 +98,14 @@ file_data_get_type (void)
 }
 
 
-static void
-file_data_update_content_type (FileData *fdata,
-			       gboolean  fast_file_type)
+void
+file_data_update_content_type (FileData *fdata)
 {
-	GFile      *file;
-	GFileInfo  *info;
-	GError     *error = NULL;
 	
-	file = g_file_new_for_path (fdata->full_path);
-	info = g_file_query_info (file, 
-				  fast_file_type ?
-				  G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE :
-				  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-				  0, NULL, &error);
-	if (error != NULL) {
-		g_warning ("could not get the content type: %s\n", error->message);
-		g_clear_error (&error);
-	}
-	else
-		fdata->content_type = g_file_info_get_content_type (info);
-
-	g_object_unref (file);
+	if (fdata->dir) 
+		fdata->content_type = MIME_TYPE_DIRECTORY;
+	else 
+		fdata->content_type = get_static_string (g_content_type_guess (fdata->full_path, NULL, 0, NULL));
 }
 
 

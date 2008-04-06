@@ -363,7 +363,7 @@ dlg_open_with (FrWindow *window,
 		const char *mime_type;
 		const char *name = scan->data;
 
-		mime_type = get_file_mime_type (name, FALSE);
+		mime_type = get_file_mime_type_for_path (name, FALSE);
 		if ((mime_type != NULL) && ! g_content_type_is_unknown (mime_type))
 			data->app_list = g_list_concat (data->app_list, g_app_info_get_all_for_type (mime_type));
 	}

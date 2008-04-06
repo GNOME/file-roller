@@ -559,3 +559,28 @@ g_ptr_array_reverse (GPtrArray *array)
 		g_ptr_array_index (array, j) = tmp;
 	}
 }
+
+
+GHashTable *static_strings = NULL;
+
+
+const char *
+get_static_string (const char *s)
+{
+        const char *result;
+
+        if (s == NULL)
+                return NULL;
+
+        if (static_strings == NULL)
+                static_strings = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+
+        if (! g_hash_table_lookup_extended (static_strings, s, (gpointer*) &result, NULL)) {
+                result = g_strdup (s);
+                g_hash_table_insert (static_strings,
+                                     (gpointer) result,
+                                     GINT_TO_POINTER (1));
+        }
+
+        return result;
+}

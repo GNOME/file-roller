@@ -494,77 +494,101 @@ fr_archive_finalize (GObject *object)
 /* filename must not be escaped. */
 static gboolean
 create_command_from_mime_type (FrArchive  *archive,
-			       const char *filename,
 			       const char *mime_type)
 {
+	char *filename;
+	
 	archive->is_compressed_file = FALSE;
 
+	filename = g_file_get_path (archive->local_copy);
 	if (is_mime_type (mime_type, "application/x-tar")) {
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_NONE);
-	} else if (is_mime_type (mime_type, "application/x-compressed-tar")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-compressed-tar")) {
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_GZIP);
-	} else if (is_mime_type (mime_type, "application/x-bzip-compressed-tar")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-bzip-compressed-tar")) {
 		archive->command = fr_command_tar_new (archive->process,
 						       filename,
 						       FR_COMPRESS_PROGRAM_BZIP2);
-	} else if (is_mime_type (mime_type, "application/zip") ||
+	} 
+	else if (is_mime_type (mime_type, "application/zip") ||
 		   is_mime_type (mime_type, "application/x-zip") ||
 		   is_mime_type (mime_type, "application/octet-stream")) {
 		archive->command = fr_command_zip_new (archive->process,
 						       filename);
-	} else if (is_mime_type (mime_type, "application/x-zoo")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-zoo")) {
 		archive->command = fr_command_zoo_new (archive->process,
 						       filename);
-	} else if (is_mime_type (mime_type, "application/x-rar")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-rar")) {
 		archive->command = fr_command_rar_new (archive->process,
 						       filename);
-	} else if (is_mime_type (mime_type, "application/x-arj")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-arj")) {
 		archive->command = fr_command_arj_new (archive->process,
 						       filename);
-	} else if (is_mime_type (mime_type, "application/x-stuffit")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-stuffit")) {
 		archive->command = fr_command_unstuff_new (archive->process,
 							   filename);
-	} else if (is_mime_type (mime_type, "application/x-rpm")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-rpm")) {
 		archive->command = fr_command_rpm_new (archive->process,
 						       filename);
-	} else if (is_mime_type (mime_type, "application/x-cd-image")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-cd-image")) {
 		archive->command = fr_command_iso_new (archive->process,
 						       filename);
-	} else if (is_mime_type (mime_type, "application/x-deb") ||
+	} 
+	else if (is_mime_type (mime_type, "application/x-deb") ||
 		   is_mime_type (mime_type, "application/x-ar")) {
 		archive->command = fr_command_ar_new (archive->process,
 						      filename);
-	} else if (is_mime_type (mime_type, "application/x-ace")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-ace")) {
 		archive->command = fr_command_ace_new (archive->process,
 						       filename);
-	} else if (is_mime_type (mime_type, "application/x-7zip")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-7zip")) {
 		archive->command = fr_command_7z_new (archive->process,
 						      filename);
-	} else if (is_mime_type (mime_type, "application/x-cpio")) {
+	} 
+	else if (is_mime_type (mime_type, "application/x-cpio")) {
 		archive->command = fr_command_cpio_new (archive->process,
 							filename);
-	} else
-		return FALSE;
-
+	} 
+	g_free (filename);
+	
 	return (archive->command != NULL);
 }
 
 
-/* filename must not be escaped. */
 static const char *
-get_mime_type_from_content (const char *filename)
+get_mime_type_from_content (GFile *file)
 {
-	const char *mime_type;
-
-	mime_type = get_file_mime_type (filename, FALSE);
-	if (g_content_type_is_unknown (mime_type))
-		return NULL;
-
-	return mime_type;
+	GFileInfo  *info;
+	GError     *err = NULL;
+ 	const char *content_type = NULL;
+	
+	info = g_file_query_info (file, 
+				  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+				  0, NULL, &err);
+	if (info == NULL) {
+		g_warning ("could not get content type: %s", err->message);
+		g_clear_error (&err);
+	}
+	else {
+		content_type = get_static_string (g_file_info_get_content_type (info));
+		g_object_unref (info);
+	}
+	
+	return content_type;
 }
 
 
@@ -585,7 +609,7 @@ hexcmp (const char *first_bytes,
 
 /* filename must not be escaped. */
 static const char *
-get_mime_type_from_sniffer (const char *filename)
+get_mime_type_from_sniffer (GFile *file)
 {
 	static struct {
 		const char *mime_type;
@@ -599,23 +623,29 @@ get_mime_type_from_sniffer (const char *filename)
 		 */
 		{ NULL, NULL, 0 }
 	};
-	FILE        *file;
-	char         buffer[5];
-	int          n, i;
+	char  *filename;
+	FILE  *f;
+	char   buffer[5];
+	int    n, i;
 
-	file = fopen (filename, "rb");
-
-	if (file == NULL)
+	if (! g_file_has_uri_scheme (file, "file"))
 		return NULL;
 
-	if (file_extension_is (filename, ".jar"))
+	filename = g_file_get_path (file);
+	if (file_extension_is (filename, ".jar")) {
+		g_free (filename);
+		return NULL;
+	}
+		
+	f = fopen (filename, "rb");
+	g_free (filename);
+	
+	if (f == NULL)
 		return NULL;
 
-	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, file);
+	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, f);
+	fclose (f);
 	buffer[n] = 0;
-
-	fclose (file);
-
 	for (i = 0; sniffer_data[i].mime_type != NULL; i++) {
 		const char *first_bytes = sniffer_data[i].first_bytes;
 		int         len         = sniffer_data[i].len;
@@ -635,9 +665,9 @@ create_command_from_filename (FrArchive *archive,
 {
 	char *filename;
 	
-	filename = g_file_get_path (archive->local_copy);
 	archive->is_compressed_file = FALSE;
 	
+	filename = g_file_get_path (archive->local_copy);
 	if (file_extension_is (filename, ".tar.gz")
 	    || file_extension_is (filename, ".tgz")) 
 	{
@@ -777,7 +807,6 @@ create_command_from_filename (FrArchive *archive,
 			}
 		}
 	}
-	
 	g_free (filename);
 	
 	return (archive->command != NULL);
@@ -986,7 +1015,7 @@ copy_extracted_files_to_destination (FrArchive *archive)
 {
 	char *temp_extraction_dir;
 	
-	temp_extraction_dir = get_uri_from_local_path (archive->priv->temp_extraction_dir);
+	temp_extraction_dir = g_filename_to_uri (archive->priv->temp_extraction_dir, NULL, NULL);
 	g_directory_copy_async (temp_extraction_dir,
 				archive->priv->extraction_destination,
 				G_FILE_COPY_OVERWRITE,
@@ -1120,8 +1149,10 @@ fr_archive_create (FrArchive  *archive,
 		return FALSE;
 	}
 
-	if (tmp_command != NULL)
+	if (tmp_command != NULL) {
+		g_signal_handlers_disconnect_by_data (tmp_command, archive);
 		g_object_unref (G_OBJECT (tmp_command));
+	}
 
 	archive->read_only = FALSE;
 
@@ -1175,7 +1206,6 @@ load_local_archive (FrArchive  *archive,
 		    const char *password)
 {
 	FrCommand  *tmp_command;
-	char       *filename;
 	const char *mime_type = NULL;
 
 	archive->read_only = ! check_permissions (uri, W_OK);
@@ -1183,30 +1213,25 @@ load_local_archive (FrArchive  *archive,
 	/* find mime type */
 
 	tmp_command = archive->command;
-
-	filename = g_file_get_path (archive->local_copy);
-	mime_type = get_mime_type_from_sniffer (filename);
+	mime_type = get_mime_type_from_sniffer (archive->local_copy);
 	if (mime_type == NULL)
-		mime_type = get_mime_type_from_content (filename);
-	if ((mime_type == NULL) || ! create_command_from_mime_type (archive, filename, mime_type)) {
+		mime_type = get_mime_type_from_content (archive->local_copy);
+	if ((mime_type == NULL) || ! create_command_from_mime_type (archive, mime_type)) {
 		if (! create_command_from_filename (archive, TRUE)) {
 			archive->command = tmp_command;
 			fr_archive_action_completed (archive,
 						     FR_ACTION_LOADING_ARCHIVE, 
 						     FR_PROC_ERROR_GENERIC,
 						     _("Archive type not supported."));
-			g_free (filename);
 			return;
 		}
 	}
-	g_free (filename);
-
-	archive->content_type = mime_type;
-
 	if (tmp_command != NULL) {
 		g_signal_handlers_disconnect_by_data (tmp_command, archive);
 		g_object_unref (tmp_command);
 	}
+
+	archive->content_type = mime_type;
 
 	if ((archive->command->file_type == FR_FILE_TYPE_ZIP)
 	    && (! is_program_in_path ("zip")))
@@ -1283,7 +1308,7 @@ copy_remote_file_done_cb (gpointer user_data)
 	XferData *xfer_data = user_data;
 	
 	g_source_remove (xfer_data->source_id);
-	copy_remote_file_done (NULL, (XferData *)user_data);
+	copy_remote_file_done (NULL, xfer_data);
 	return FALSE;
 }
 
@@ -1556,7 +1581,7 @@ convert_to_local_file_list (GList *file_list)
 		char *uri = scan->data;
 		char *local_filename;
 		
-		local_filename = get_local_path_from_uri (uri);
+		local_filename = g_uri_unescape_string (uri, NULL);
 		if (local_filename != NULL)
 			local_file_list = g_list_prepend (local_file_list, local_filename);
 	}
@@ -1881,7 +1906,7 @@ fr_archive_add_files (FrArchive     *archive,
 		      FRCompression  compression)
 {
 	if (uri_is_local (base_dir)) {
-		char *local_dir = get_local_path_from_uri (base_dir);
+		char *local_dir = g_filename_from_uri (base_dir, NULL, NULL);
 		fr_archive_add_local_files (archive,
 					    file_list, 
 					    local_dir, 
@@ -2839,7 +2864,6 @@ fr_archive_extract_to_local (FrArchive  *archive,
 			     gboolean    junk_paths,
 			     const char *password)
 {
-	char     *dest_dir;
 	GList    *filtered, *e_filtered;
 	GList    *scan;
 	gboolean  extract_all;
@@ -2848,8 +2872,6 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	gboolean  file_list_created = FALSE;
 
 	g_return_if_fail (archive != NULL);
-
-	dest_dir = get_local_path_from_uri (destination);
 
 	fr_archive_stoppable (archive, TRUE);
 
@@ -2868,7 +2890,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		file_list_created = TRUE;
 	}
 
-	fr_command_set_n_files (command, g_list_length (file_list));
+	fr_command_set_n_files (archive->command, g_list_length (file_list));
 
 	use_base_dir = ! ((base_dir == NULL)
 			  || (strcmp (base_dir, "") == 0)
@@ -2902,7 +2924,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 			e_filtered = escape_file_list (archive->command, filtered);
 			extract_in_chunks (archive->command,
 					   e_filtered,
-					   dest_dir,
+					   destination,
 					   overwrite,
 					   skip_older,
 					   junk_paths,
@@ -2961,11 +2983,11 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		else
 			filename = file_name_from_path (archive_list_filename);
 
-		if ((dest_dir[strlen (dest_dir) - 1] == '/')
+		if ((destination[strlen (destination) - 1] == '/')
 		    || (filename[0] == '/'))
-			sprintf (dest_filename, "%s%s", dest_dir, filename);
+			sprintf (dest_filename, "%s%s", destination, filename);
 		else
-			sprintf (dest_filename, "%s/%s", dest_dir, filename);
+			sprintf (dest_filename, "%s/%s", destination, filename);
 
 		debug (DEBUG_INFO, "-> %s\n", dest_filename);
 
@@ -2989,7 +3011,6 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		/* all files got filtered, do nothing. */
 		debug (DEBUG_INFO, "All files got filtered, nothing to do.\n");
 
-		g_free (dest_dir);
 		if (extract_all)
 			path_list_free (file_list);
 		return;
@@ -3019,7 +3040,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		move_files_in_chunks (archive,
 				      filtered,
 				      temp_dir,
-				      dest_dir);
+				      destination);
 
 		/* remove the temp dir. */
 
@@ -3035,7 +3056,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	else
 		extract_in_chunks (archive->command,
 				   e_filtered,
-				   dest_dir,
+				   destination,
 				   overwrite,
 				   skip_older,
 				   junk_paths,
@@ -3046,7 +3067,6 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		g_list_free (filtered);
 	if (file_list_created)
 		path_list_free (file_list);
-	g_free (dest_dir);
 }
 
 
@@ -3067,7 +3087,6 @@ fr_archive_extract (FrArchive  *archive,
 	archive->priv->temp_extraction_dir = NULL;
 
 	archive->priv->remote_extraction = ! uri_is_local (destination);
-
 	if (archive->priv->remote_extraction) {
  		archive->priv->temp_extraction_dir = get_temp_work_dir ();
 		fr_archive_extract_to_local (archive,
@@ -3079,15 +3098,20 @@ fr_archive_extract (FrArchive  *archive,
 				  	     junk_paths,
 				  	     password);
 	}
-	else 
+	else {
+		char *local_destination;
+		
+		local_destination = g_filename_from_uri (destination, NULL, NULL);
 		fr_archive_extract_to_local (archive,
 					     file_list,
-					     destination,
+					     local_destination,
 					     base_dir,
 					     skip_older,
 					     overwrite,
 					     junk_paths,
 					     password);
+		g_free (local_destination);
+	}
 }
 
 
@@ -3276,15 +3300,24 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 gboolean
 fr_archive_utils__file_is_archive (const char *filename)
 {
+	GFile      *file;
 	const char *mime_type;
 
-	mime_type = get_mime_type_from_content (filename);
-	if (mime_type == NULL)
-		return FALSE;
-
-	mime_type = get_mime_type_from_sniffer (filename);
-	if (mime_type != NULL)
+	file = g_file_new_for_uri (filename);
+	
+	mime_type = get_mime_type_from_sniffer (file);
+	if (mime_type != NULL) {
+		g_object_unref (file);
 		return TRUE;
+	}
+		
+	mime_type = get_mime_type_from_content (file);
+	if (mime_type != NULL) {
+		g_object_unref (file);
+		return TRUE;
+	}
+	
+	g_object_unref (file);
 
 	return fr_archive_utils__get_file_name_ext (filename) != NULL;
 }

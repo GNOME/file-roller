@@ -110,6 +110,26 @@ uri_is_dir (const char *uri)
 
 
 gboolean
+path_is_dir (const char *path)
+{
+	char     *uri;
+	gboolean  result;
+	
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = uri_is_dir (uri);
+	g_free (uri);
+	
+	return result;
+}
+
+gboolean
+uri_is_local (const char  *uri)
+{
+	return strncmp (uri, "file://", 7) == 0; 
+}
+
+
+gboolean
 dir_is_empty (const char *uri)
 {
 	GFile           *file;
@@ -304,6 +324,8 @@ get_file_size (const char *uri)
 
 	g_object_unref (info);
 	g_object_unref (file);
+	
+	return size;
 }
 
 
@@ -325,7 +347,7 @@ get_file_time_type (const char *uri,
 		result = (time_t) g_file_info_get_attribute_uint64 (info, type);
 	}
 	else {
-		g_warning ("Failed to get %s for %s: %s", type, uri, err->message);
+		g_warning ("Failed to get %s: %s", type, err->message);
 		g_error_free (err);
 		result = 0;		
 	}		
@@ -580,13 +602,33 @@ get_file_mime_type (const char *filename,
 				  G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE :
 				  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
 				  0, NULL, &err);
-
-	result = g_file_info_get_content_type (info);
-
-	g_object_unref (info);
+	if (info == NULL) {
+		g_warning ("could not get content type for %s: %s", filename, err->message);
+		g_clear_error (&err);
+	}
+	else {
+		result = get_static_string (g_file_info_get_content_type (info));
+		g_object_unref (info);
+	}
+	
 	g_object_unref (file);
 
 	return result;
+}
+
+
+const char*
+get_file_mime_type_for_path (const char  *filename,
+                    	     gboolean     fast_file_type)
+{
+	char       *uri;
+	const char *mime_type;
+	
+	uri = g_filename_to_uri (filename, NULL, NULL);
+	mime_type = get_file_mime_type (uri, fast_file_type);
+	g_free (uri);
+	
+	return mime_type;
 }
 
 
@@ -644,6 +686,9 @@ delete_directory_recursive (GFile   *dir,
 	GFileInfo       *info;
 	gboolean         error_occurred = FALSE;
 	
+	if (error != NULL)
+		*error = NULL;
+	
 	file_enum = g_file_enumerate_children (dir, 
 					       G_FILE_ATTRIBUTE_STANDARD_NAME "," 
 					       G_FILE_ATTRIBUTE_STANDARD_TYPE,
@@ -651,9 +696,8 @@ delete_directory_recursive (GFile   *dir,
 
 	uri = g_file_get_uri (dir);
 	while (! error_occurred && (info = g_file_enumerator_next_file (file_enum, NULL, error)) != NULL) {
-		const char *name;
-		char       *child_uri;
-		GFile      *child;
+		char  *child_uri;
+		GFile *child;
 		
 		child_uri = g_build_path ("/", uri, g_file_info_get_name (info), NULL);
 		child = g_file_new_for_uri (child_uri);
@@ -671,6 +715,7 @@ delete_directory_recursive (GFile   *dir,
 		
 		g_object_unref (child);
 		g_free (child_uri);
+		g_object_unref (info);
 	}
 	g_free (uri);
 	
@@ -692,7 +737,7 @@ remove_directory (const char *uri)
 	
 	dir = g_file_new_for_uri (uri);
 	result = delete_directory_recursive (dir, &error);
-	if (error != NULL) {
+	if (! result) {
 		g_warning ("Cannot delete %s: %s", uri, error->message);
 		g_clear_error (&error);
 	}
@@ -708,7 +753,7 @@ remove_local_directory (const char *path)
 	char     *uri;
 	gboolean  result;
 	
-	uri = get_uri_from_local_path (path);
+	uri = g_filename_to_uri (path, NULL, NULL);
 	result = remove_directory (uri);
 	g_free (uri);
 	

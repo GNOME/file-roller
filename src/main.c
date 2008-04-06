@@ -290,7 +290,7 @@ command_done (CommandData *cdata)
 	if (cdata == NULL)
 		return;
 		
-	if ((cdata->temp_dir != NULL) && uri_is_dir (cdata->temp_dir)) {
+	if ((cdata->temp_dir != NULL) && path_is_dir (cdata->temp_dir)) {
 		char *argv[4];
 
 		argv[0] = "rm";
@@ -305,7 +305,8 @@ command_done (CommandData *cdata)
 	}
 
 	g_free (cdata->command);
-	g_object_unref (cdata->app);
+	if (cdata->app != NULL)
+		g_object_unref (cdata->app);
 	path_list_free (cdata->file_list);
 	g_free (cdata->temp_dir);
 	if (cdata->process != NULL)
@@ -451,7 +452,7 @@ get_uri_from_command_line (const char *path)
 	char *full_path;
 	char *uri;
 
-	if (uri_has_scheme (path))
+	if (strstr (path, "://") != NULL)
 		return g_strdup (path);
 
 	if (g_path_is_absolute (path))
@@ -466,7 +467,7 @@ get_uri_from_command_line (const char *path)
 		g_free (current_dir);
 	}
 
-	uri = get_uri_from_local_path (full_path);
+	uri = g_filename_to_uri (full_path, NULL, NULL);
 	g_free (full_path);
 
 	return uri;

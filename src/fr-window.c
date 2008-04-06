@@ -77,8 +77,6 @@
 #define DEF_WIN_HEIGHT 480
 #define DEF_SIDEBAR_WIDTH 200
 
-#define MIME_TYPE_DIRECTORY "application/directory-normal"
-#define MIME_TYPE_ARCHIVE "application/x-archive"
 #define ICON_TYPE_DIRECTORY "gnome-fs-directory"
 #define ICON_TYPE_REGULAR   "gnome-fs-regular"
 #define FILE_LIST_ICON_SIZE GTK_ICON_SIZE_LARGE_TOOLBAR
@@ -589,6 +587,8 @@ static void
 fr_window_finalize (GObject *object)
 {
 	FrWindow *window = FR_WINDOW (object);
+
+	fr_window_free_open_files (window);
 
 	if (window->archive != NULL) {
 		g_object_unref (window->archive);
@@ -5442,25 +5442,7 @@ fr_window_archive_open (FrWindow   *current_window,
 	fr_window_archive_close (window);
 
 	g_free (window->priv->archive_uri);
-	if (! uri_has_scheme (uri)) {
-		char *path;
-		
-		if (! g_path_is_absolute (uri)) {
-			char *current_dir;
-			
-			current_dir = g_get_current_dir ();
-			path = g_strconcat (current_dir, "/", uri, NULL);
-			g_free (current_dir);
-		}
-		else 
-			path = g_strdup (uri);
-		
-		window->priv->archive_uri = get_uri_from_local_path (path);
-		 
-		g_free (path);
-	}
-	else
-		window->priv->archive_uri = g_strdup (uri);
+	window->priv->archive_uri = g_strdup (uri);
 
 	window->priv->archive_present = FALSE;
 	window->priv->give_focus_to_the_list = TRUE;
@@ -5493,6 +5475,8 @@ fr_window_archive_close (FrWindow *window)
 	
 	window->priv->archive_new = FALSE;
 	window->priv->archive_present = FALSE;
+
+	fr_window_free_open_files (window);
 
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);
@@ -7532,8 +7516,6 @@ fr_window_update_files (FrWindow *window,
 	}
 	
 	fr_process_start (window->archive->process);
-	
-	fr_window_free_open_files (window);
 }
 
 
@@ -7635,7 +7617,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         	return FALSE;
         }
 	
-	first_mime_type = get_file_mime_type (first_file, FALSE);
+	first_mime_type = get_file_mime_type_for_path (first_file, FALSE);
         app = g_app_info_get_default_for_type (first_mime_type, FALSE);
         
         if (app == NULL) {
@@ -7652,7 +7634,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 			const char *path = scan->data;
 			const char *mime_type;
 
-			mime_type = get_file_mime_type (path, FALSE);
+			mime_type = get_file_mime_type_for_path (path, FALSE);
 			if (mime_type == NULL)
 				continue;
 
@@ -7709,7 +7691,7 @@ fr_window_open_files (FrWindow *window,
 		      gboolean  ask_application)
 {
 	OpenFilesData *odata;
-		
+	
 	odata = open_files_data_new (window, file_list, ask_application);
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_OPEN_FILES,
@@ -7722,14 +7704,14 @@ fr_window_open_files (FrWindow *window,
 			  odata);
 
 	fr_process_clear (window->archive->process);
-	fr_archive_extract (window->archive,
-			    odata->file_list,
-			    odata->cdata->temp_dir,
-			    NULL,
-			    FALSE,
-			    TRUE,
-			    FALSE,
-			    window->priv->password);
+	fr_archive_extract_to_local (window->archive,
+				     odata->file_list,
+				     odata->cdata->temp_dir,
+				     NULL,
+				     FALSE,
+				     TRUE,
+				     FALSE,
+				     window->priv->password);
 	fr_process_start (window->archive->process);
 }
 

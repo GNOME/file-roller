@@ -93,7 +93,7 @@ struct _FrCommand
 	FrProcess  *process;         /* the process object used to execute
 				      * commands. */
 	FRAction    action;          /* current action. */
-	char       *filename;        /* archive filename. */
+	char       *filename;        /* archive file path. */
 	char       *e_filename;      /* escaped archive filename. */
 
 	gboolean    fake_load;       /* if TRUE does nothing when the list

@@ -55,10 +55,11 @@ typedef struct {
 
 #define FR_TYPE_FILE_DATA (file_data_get_type ())
 
-GType           file_data_get_type      (void);
-FileData *      file_data_new           (void);
-FileData *      file_data_copy          (FileData *src);
-void            file_data_free          (FileData *fdata);
-gboolean        file_data_is_dir        (FileData *fdata);
+GType           file_data_get_type            (void);
+FileData *      file_data_new                 (void);
+FileData *      file_data_copy                (FileData *src);
+void            file_data_free                (FileData *fdata);
+void            file_data_update_content_type (FileData *fdata);
+gboolean        file_data_is_dir              (FileData *fdata);
 
 #endif /* FILE_DATA_H */
