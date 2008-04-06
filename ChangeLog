@@ -1,3 +1,11 @@
+2008-04-06  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c: 
+	
+	call fr_window_free_open_files after closing the archive instead
+	of calling it after updating the files, this way a file can be updated
+	multiple times.
+
 2008-04-04  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* configure.in: bumped version number to 2.22.1 to differentiate 
