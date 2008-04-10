@@ -208,21 +208,10 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 			all_archives = FALSE;
 
 		if (can_write) {
-			char      *parent_uri;
-			GFile     *parent;
-			GFileInfo *info;
+			NautilusFileInfo *parent;
 
-			parent_uri = nautilus_file_info_get_parent_uri (file);
-			parent =  g_file_new_for_uri (parent_uri);
-			
-			info = g_file_query_info (parent, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE, 0, NULL, NULL);
-			if (info != NULL) { 
-				can_write = g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE);
-				g_object_unref (info);
-			}
-			
-			g_object_unref (parent);
-			g_free (parent_uri);
+			parent = nautilus_file_info_get_parent_info (file);
+ 			can_write = nautilus_file_info_can_write (parent);
 		}
 	}
 

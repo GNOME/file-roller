@@ -54,6 +54,3 @@ nautilus_module_list_types (const GType **types,
 	*types = type_list;
 	*num_types = 1;
 }
-
-
-
