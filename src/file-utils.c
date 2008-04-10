@@ -506,35 +506,35 @@ make_directory_tree (GFile    *dir,
 		     mode_t    mode,
 		     GError  **error)
 {
-	GFile *parent;
-
+	gboolean  success = TRUE;
+	GFile    *parent;
+	
 	if (dir == NULL)
 		return TRUE;
 
 	parent = g_file_get_parent (dir);
-	if (parent != NULL) {
-		gboolean success;
-		
+	if (parent != NULL) {	
 		success = make_directory_tree (parent, mode, error);
 		g_object_unref (parent);
-		if (! success) 
+		if (! success)  
 			return FALSE;
 	}
 	
-	g_file_make_directory (dir, NULL, error);
-	if ((*error != NULL) && g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS))
+	success = g_file_make_directory (dir, NULL, error);
+	if ((error != NULL) && (*error != NULL) && g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS)) {
 		g_clear_error (error);
-	if (*error != NULL) 
-		return FALSE;
+		success = TRUE;
+	}
+	
+	if (success) 
+		g_file_set_attribute_uint32 (dir,
+					     G_FILE_ATTRIBUTE_UNIX_MODE,
+					     mode, 
+					     0, 
+					     NULL, 
+					     NULL);
 
-	g_file_set_attribute_uint32 (dir,
-				     G_FILE_ATTRIBUTE_UNIX_MODE,
-				     mode, 
-				     0, 
-				     NULL, 
-				     NULL);
-				     
-	return TRUE;
+	return success;
 }
 
 
@@ -561,6 +561,22 @@ ensure_dir_exists (const char  *uri,
 	}
 	
 	return TRUE;
+}
+
+
+gboolean
+make_directory_tree_from_path (const char  *path,
+		   	       mode_t       mode,
+		   	       GError     **error)
+{
+	char     *uri;
+	gboolean  result;
+	
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = ensure_dir_exists (uri, mode, error);
+	g_free (uri);
+	
+	return result;
 }
 
 
@@ -1034,6 +1050,30 @@ get_home_uri (void)
 	if (home_uri == NULL)
 		home_uri = g_filename_to_uri (g_get_home_dir (), NULL, NULL);
 	return home_uri;
+}
+
+
+char *
+get_home_relative_uri (const char *partial_uri)
+{
+	return g_strconcat (get_home_uri (), 
+			    "/",
+			    partial_uri,
+			    NULL);
+}
+
+
+GFile *
+get_home_relative_file (const char *partial_uri)
+{
+	GFile *file;
+	char  *uri;
+	
+	uri = g_strconcat (get_home_uri (), "/", partial_uri, NULL);
+	file = g_file_new_for_uri (uri);
+	g_free (uri);
+	
+	return file;
 }
 
 

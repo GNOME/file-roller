@@ -352,8 +352,16 @@ search_util_get_patterns (const char *pattern_string)
 	int    i;
 
 	patterns = g_utf8_strsplit (pattern_string, ";", MAX_PATTERNS);
-	for (i = 0; patterns[i] != NULL; i++)
-		patterns[i] = g_utf8_strstrip (patterns[i]);
+	for (i = 0; patterns[i] != NULL; i++) {
+		char *p1, *p2;
+		
+		p1 = g_utf8_strstrip (patterns[i]);
+		p2 = str_substitute (p1, ".", "\\.");
+		patterns[i] = str_substitute (p2, "*", ".*");
+		
+		g_free (p2);
+		g_free (p1);
+	}
 
 	return patterns;
 }

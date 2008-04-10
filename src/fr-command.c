@@ -265,14 +265,13 @@ fr_command_start (FrProcess *process,
 
 static void
 fr_command_done (FrProcess   *process,
-		 FRProcError *error, 
 		 gpointer     data)
 {
 	FrCommand *comm = FR_COMMAND (data);
 
 	comm->process->restart = FALSE;
-	if (error->type != FR_PROC_ERROR_NONE)
-		fr_command_handle_error (comm, error);
+	if (process->error.type != FR_PROC_ERROR_NONE)
+		fr_command_handle_error (comm, &process->error);
 
 	if (comm->process->restart)
 		fr_process_start (comm->process);
@@ -281,7 +280,7 @@ fr_command_done (FrProcess   *process,
 			       fr_command_signals[DONE], 
 			       0,
 			       comm->action, 
-			       error);
+			       &process->error);
 }
 
 

@@ -136,9 +136,8 @@ fr_process_class_init (FrProcessClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrProcessClass, done),
 			      NULL, NULL,
-			      fr_marshal_VOID__POINTER,
-			      G_TYPE_NONE, 1,
-			      G_TYPE_POINTER);
+			      fr_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 	fr_process_signals[STICKY_ONLY] =
 		g_signal_new ("sticky_only",
 			      G_TYPE_FROM_CLASS (class),
@@ -641,12 +640,12 @@ start_current_command (FrProcess *fr_proc)
 					NULL,
 					&fr_proc->output_fd,
 					&fr_proc->error_fd,
-					&fr_proc->error.gerror)) {
+					&fr_proc->error.gerror)) 
+	{
 		fr_proc->error.type = FR_PROC_ERROR_SPAWN;
 		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[DONE],
-			       0,
-			       &fr_proc->error);
+			       0);
 
 		g_free (argv);
 		g_string_free (command, TRUE);
@@ -814,8 +813,7 @@ check_child (gpointer data)
 
 	g_signal_emit (G_OBJECT (fr_proc),
 		       fr_process_signals[DONE],
-		       0,
-		       &fr_proc->error);
+		       0);
 
 	return FALSE;
 }
@@ -865,8 +863,7 @@ fr_process_start (FrProcess *fr_proc)
 		fr_proc->running = FALSE;
 		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[DONE],
-			       0,
-			       &fr_proc->error);
+			       0);
 	} 
 	else {
 		fr_proc->running = TRUE;
@@ -915,8 +912,7 @@ _fr_process_stop (FrProcess *fr_proc,
 		if (emit_signal)
 			g_signal_emit (G_OBJECT (fr_proc),
 				       fr_process_signals[DONE],
-				       0,
-				       &fr_proc->error);
+				       0);
 	}
 }
 

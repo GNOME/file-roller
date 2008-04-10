@@ -177,7 +177,6 @@ fr_command_iso_extract (FrCommand  *comm,
 		char       *file_dir;
 		char       *e_temp_dest_dir = NULL;
 		char       *temp_dest_dir = NULL;
-		char       *temp_dest_dir_uri = NULL;
 
 		filename = file_name_from_path (path);
 		file_dir = remove_level_from_path (path);
@@ -191,8 +190,7 @@ fr_command_iso_extract (FrCommand  *comm,
 			continue;
 
 		temp_dest_dir = unescape_str (e_temp_dest_dir);
-		temp_dest_dir_uri = g_filename_to_uri (temp_dest_dir, NULL, NULL);
-		ensure_dir_exists (temp_dest_dir_uri, 0700, NULL);
+		make_directory_tree_from_path (temp_dest_dir, 0700, NULL);
 
 		fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
@@ -206,7 +204,6 @@ fr_command_iso_extract (FrCommand  *comm,
 
 		g_free (e_temp_dest_dir);
 		g_free (temp_dest_dir);
-		g_free (temp_dest_dir_uri);
 	}
 
 	g_free (e_dest_dir);

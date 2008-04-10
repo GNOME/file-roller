@@ -1,5 +1,33 @@
 2008-04-10  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-command-tar.c:
+	
+	Do not use the tar update command because it adds a new file version 
+	instead of replacing the old one.
+
+	* src/glib-utils.c: 
+	* src/gio-utils.c: 
+	* src/fr-window.c: 
+	* src/fr-process.h: 
+	* src/fr-process.c:  
+	* src/fr-command-jar.c: 
+	* src/fr-command-iso.c: 
+	* src/fr-command.c: 
+	* src/fr-archive.c: 
+	* src/file-utils.h: 
+	* src/file-utils.c: 
+	* src/dlg-add-folder.c: 
+
+	Fixed many uri/path conversions. 
+
+2008-04-10  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/dlg-add-folder.c: added a left padding to the "Exclude folders that 
+	are symbolic links"	option, because it's a sub-option of "Include 
+	subfolders".
+
+2008-04-10  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* configure.in: now requires Nautilus 2.22.2
 	* nautilus/nautilus-fileroller.c: 
 	* nautilus/fileroller-module.c: use nautilus_file_info_can_write

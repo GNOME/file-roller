@@ -247,6 +247,7 @@ add_folder_cb (GtkWidget *widget,
 	GtkWidget   *main_box;
 	GtkWidget   *vbox;
 	GtkWidget   *table;
+	GtkWidget   *align;
 
 	data = g_new0 (DialogData, 1);
 
@@ -296,11 +297,15 @@ add_folder_cb (GtkWidget *widget,
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, TRUE, TRUE, 0);
 
-	gtk_box_pack_start (GTK_BOX (vbox), data->add_if_newer_checkbutton,
-			    TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), data->include_subfold_checkbutton,
 			    TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), data->exclude_symlinks,
+			    
+	align = gtk_alignment_new (0, 0, 0, 0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 12, 0);
+	gtk_container_add (GTK_CONTAINER (align), data->exclude_symlinks);
+	gtk_box_pack_start (GTK_BOX (vbox), align, TRUE, TRUE, 0);
+
+	gtk_box_pack_start (GTK_BOX (vbox), data->add_if_newer_checkbutton,
 			    TRUE, TRUE, 0);
 
 	table = gtk_table_new (2, 2, FALSE);
@@ -445,6 +450,7 @@ aod_apply_cb (GtkWidget *widget,
 	DialogData            *data = aod_data->data;
 	GtkTreeSelection      *selection;
 	GtkTreeIter            iter;
+	char                  *file_uri;
 	char                  *file_path;
 	char                  *include_files = NULL;
 	char                  *exclude_files = NULL;
@@ -458,15 +464,14 @@ aod_apply_cb (GtkWidget *widget,
 	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
 		return;
 
-	gtk_tree_model_get (aod_data->aod_model, &iter,
-			    1, &file_path,
-			    -1);
-
-	g_free (data->last_options);
-	data->last_options = g_strdup (file_name_from_path (file_path));
+	gtk_tree_model_get (aod_data->aod_model, &iter, 1, &file_uri, -1);
 
 	/* Load options. */
 
+	file_path = g_filename_from_uri (file_uri, NULL, NULL);
+	g_free (data->last_options);
+	data->last_options = g_strdup (file_name_from_path (file_path));
+	
 	base_dir = config_get_string (file_path, "base_dir");
 	filename = config_get_string (file_path, "filename");
 	include_files = config_get_string (file_path, "include_files");
@@ -476,12 +481,13 @@ aod_apply_cb (GtkWidget *widget,
 	no_symlinks = config_get_bool (file_path, "no_symlinks");
 
 	g_free (file_path);
+	g_free (file_uri);
 
 	/* Sync widgets with options. */
 
 	if (base_dir != NULL) {
 		if ((filename != NULL) && (strcmp (filename, base_dir) != 0))
-			gtk_file_chooser_select_filename (GTK_FILE_CHOOSER (data->dialog), filename);
+			gtk_file_chooser_select_uri (GTK_FILE_CHOOSER (data->dialog), filename);
 		else
 			gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->dialog), base_dir);
 	}
@@ -527,10 +533,10 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 
 	gtk_list_store_clear (list_store);
 
-	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
+	options_dir = get_home_relative_uri (RC_OPTIONS_DIR);
 	ensure_dir_exists (options_dir, 0700, NULL);
 
-	file = g_file_new_for_path (options_dir);
+	file = g_file_new_for_uri (options_dir);
 	fileenum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
 	if (err != NULL) {
 		g_warning ("Failed to enumerate children in %s: %s", options_dir, err->message);
@@ -721,9 +727,10 @@ static void
 save_options_cb (GtkWidget  *w,
 		 DialogData *data)
 {
-	char       *options_dir;
+	GFile      *options_dir;
+	GFile      *options_file;
 	char       *opt_filename;
-	char       *opt_file_path;
+	char       *options_path;
 	char       *base_dir;
 	char       *filename;
 	gboolean    update;
@@ -732,29 +739,31 @@ save_options_cb (GtkWidget  *w,
 	const char *include_files;
 	const char *exclude_files;
 
-	options_dir = get_home_relative_dir (RC_OPTIONS_DIR);
-	ensure_dir_exists (options_dir, 0700, NULL);
+	options_dir = get_home_relative_file (RC_OPTIONS_DIR);
+	make_directory_tree (options_dir, 0700, NULL);
 
 	opt_filename = _gtk_request_dialog_run (
-			GTK_WINDOW (data->dialog),
-			GTK_DIALOG_MODAL,
-			_("Save Options"),
-			_("Options Name:"),
-			(data->last_options != NULL)?data->last_options:"",
-			1024,
-			GTK_STOCK_CANCEL,
-			GTK_STOCK_SAVE);
-
+				GTK_WINDOW (data->dialog),
+				GTK_DIALOG_MODAL,
+				_("Save Options"),
+				_("Options Name:"),
+				(data->last_options != NULL) ? data->last_options : "",
+				1024,
+				GTK_STOCK_CANCEL,
+				GTK_STOCK_SAVE);
 	if (opt_filename == NULL)
 		return;
 
-	opt_file_path = g_build_filename (options_dir, opt_filename, NULL);
-	g_free (opt_filename);
+	options_file = g_file_get_child_for_display_name (options_dir, opt_filename, NULL);
+	g_object_unref (options_dir);	
+	
+	g_free (data->last_options);
+	data->last_options = opt_filename;
 
 	/* Get options. */
 
-	base_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (data->dialog));
-	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (data->dialog));
+	base_dir = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (data->dialog));
+	filename = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));
 	recursive = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton));
 	no_symlinks = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->exclude_symlinks));
@@ -769,21 +778,18 @@ save_options_cb (GtkWidget  *w,
 
 	/* Save options. */
 
-	config_set_string (opt_file_path, "base_dir", base_dir);
-	config_set_string (opt_file_path, "filename", filename);
-	config_set_string (opt_file_path, "include_files", include_files);
-	config_set_string (opt_file_path, "exclude_files", exclude_files);
-	config_set_bool   (opt_file_path, "update", update);
-	config_set_bool   (opt_file_path, "recursive", recursive);
-	config_set_bool   (opt_file_path, "no_symlinks", no_symlinks);
+	options_path = g_file_get_path (options_file);
+	config_set_string (options_path, "base_dir", base_dir);
+	config_set_string (options_path, "filename", filename);
+	config_set_string (options_path, "include_files", include_files);
+	config_set_string (options_path, "exclude_files", exclude_files);
+	config_set_bool   (options_path, "update", update);
+	config_set_bool   (options_path, "recursive", recursive);
+	config_set_bool   (options_path, "no_symlinks", no_symlinks);
 	gnome_config_sync ();
-
-	g_free (data->last_options);
-	data->last_options = g_strdup (file_name_from_path (opt_file_path));
-
-	/**/
-
+	
+	g_free (options_path);
 	g_free (base_dir);
 	g_free (filename);
-	g_free (opt_file_path);
+	g_object_unref (options_file);	
 }

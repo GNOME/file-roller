@@ -55,6 +55,9 @@ gboolean            make_directory_tree          (GFile       *dir,
 gboolean            ensure_dir_exists            (const char  *uri,
 						  mode_t       mode,
 						  GError     **error);
+gboolean            make_directory_tree_from_path (const char  *path,
+		   	                           mode_t       mode,
+		   	                           GError     **error);
 gboolean            file_is_hidden               (const char  *name);
 G_CONST_RETURN char*file_name_from_path          (const char  *path);
 char *              dir_name_from_path           (const char  *path);
@@ -95,6 +98,8 @@ gboolean 	    is_program_in_path		 (const char *filename);
 /* URI utils */
 
 const char *        get_home_uri                 (void);
+char *              get_home_relative_uri        (const char *partial_uri);
+GFile *             get_home_relative_file       (const char *partial_uri);
 const char *        remove_host_from_uri         (const char *uri);
 char *              get_uri_host                 (const char *uri);
 char *              get_uri_root                 (const char *uri);

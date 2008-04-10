@@ -326,10 +326,7 @@ fr_command_tar_add (FrCommand     *comm,
 		g_free (e_base_dir);
 	}
 
-	if (update)
-		fr_process_add_arg (comm->process, "-uf");
-	else
-		fr_process_add_arg (comm->process, "-rf");
+	fr_process_add_arg (comm->process, "-rf");
 
 	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 	fr_process_add_arg (comm->process, "--");
@@ -875,7 +872,7 @@ fr_command_tar_init (FrCommand *comm)
 	comm->file_type = FR_FILE_TYPE_TAR;
 
 	comm->propCanModify                = TRUE;
-	comm->propAddCanUpdate             = TRUE;
+	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
 	comm->propAddCanStoreFolders       = TRUE;
 	comm->propExtractCanAvoidOverwrite = TRUE;

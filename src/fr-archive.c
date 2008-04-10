@@ -1045,8 +1045,10 @@ action_performed (FrCommand   *command,
 	switch (action) {
 	case FR_ACTION_DELETING_FILES:
 		if (error->type == FR_PROC_ERROR_NONE) {
-			copy_to_remote_location (archive, action);
-			return;
+			if (! g_file_has_uri_scheme (archive->file, "file")) {
+				copy_to_remote_location (archive, action);
+				return;
+			}
 		}
 		break;
 		
@@ -1431,7 +1433,8 @@ create_tmp_base_dir (const char *base_dir,
 	char *dest_dir;
 	char *temp_dir;
 	char *tmp;
-	char *parent_dir, *dir;
+	char *parent_dir;
+	char *dir;
 
 	if ((dest_path == NULL)
 	    || (*dest_path == '\0')
@@ -1450,16 +1453,13 @@ create_tmp_base_dir (const char *base_dir,
 	parent_dir =  g_build_filename (temp_dir, tmp, NULL);
 	g_free (tmp);
 
-	ensure_dir_exists (parent_dir, 0700, NULL);
-
 	debug (DEBUG_INFO, "mkdir %s\n", parent_dir);
-
+	make_directory_tree_from_path (parent_dir, 0700, NULL);
 	g_free (parent_dir);
 
 	dir = g_build_filename (temp_dir, "/", dest_dir, NULL);
-	symlink (base_dir, dir);
-
 	debug (DEBUG_INFO, "symlink %s --> %s\n", dir, base_dir);
+	symlink (base_dir, dir);
 
 	g_free (dir);
 	g_free (dest_dir);
@@ -1536,25 +1536,28 @@ newer_files_only (FrArchive  *archive,
 	for (scan = file_list; scan; scan = scan->next) {
 		char     *filename = scan->data;
 		char     *fullpath;
+		char     *uri;
 		FileData *fdata;
 
 		fdata = find_file_in_archive (archive, filename);
 
 		if (fdata == NULL) {
-			newer_files = g_list_prepend (newer_files, scan->data);
+			newer_files = g_list_prepend (newer_files, g_strdup (scan->data));
 			continue;
 		}
 
 		fullpath = g_strconcat (base_dir, "/", filename, NULL);
-
-		if (uri_exists (fullpath)
-		    && (fdata->modified >= get_file_mtime (fullpath))) {
+		uri = g_filename_to_uri (fullpath, NULL, NULL);
+		
+		if (fdata->modified >= get_file_mtime (uri)) {
 			g_free (fullpath);
+			g_free (uri);
 			continue;
 		}
-
-		newer_files = g_list_prepend (newer_files, scan->data);
 		g_free (fullpath);
+		g_free (uri);
+		
+		newer_files = g_list_prepend (newer_files, g_strdup (scan->data));
 	}
 
 	return newer_files;
@@ -1657,8 +1660,7 @@ fr_archive_add (FrArchive     *archive,
 		archive->process->error.type = FR_PROC_ERROR_NONE;
 		g_signal_emit_by_name (G_OBJECT (archive->process),
 				       "done",
-				       FR_ACTION_ADDING_FILES,
-				       &archive->process->error);
+				       FR_ACTION_ADDING_FILES);
 		return;
 	}
 
@@ -1722,7 +1724,7 @@ fr_archive_add (FrArchive     *archive,
 	}
 
 	path_list_free (e_file_list);
-	g_list_free (new_file_list);
+	path_list_free (new_file_list);
 
 	fr_command_recompress (archive->command, compression);
 
@@ -1973,11 +1975,6 @@ add_with_wildcard__step2 (GList    *file_list,
 				     FR_PROC_ERROR_NONE,
 				     NULL);
 
-/* FIXME
-	visit_dir_handle_free (archive->priv->vd_handle);
-	archive->priv->vd_handle = NULL;
-*/
-
 	if (file_list != NULL) {
 		fr_archive_add_files (aww_data->archive,
 				      file_list,
@@ -2008,7 +2005,6 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 {
 	AddWithWildcardData *aww_data;
 
-	/* FIXME: g_return_if_fail (archive->priv->vd_handle == NULL); */
 	g_return_if_fail (! archive->read_only);
 
 	aww_data = g_new0 (AddWithWildcardData, 1);
@@ -2023,20 +2019,6 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 		       fr_archive_signals[START],
 		       0,
 		       FR_ACTION_GETTING_FILE_LIST);
-
-/*
-	archive->priv->vd_handle = get_wildcard_file_list_async (
-					source_dir,
-					include_files,
-					recursive,
-					follow_links,
-					SAME_FS,
-					NO_BACKUP_FILES,
-					NO_DOT_FILES,
-					IGNORE_CASE,
-					add_with_wildcard__step2,
-					aww_data);
-*/
 					
 	g_directory_list_async (source_dir, 
 				source_dir,
@@ -2085,11 +2067,6 @@ add_directory__step2 (GList    *file_list,
 	AddDirectoryData *ad_data = data;
 	FrArchive        *archive = ad_data->archive;
 
-/* FIXME:
-	visit_dir_handle_free (archive->priv->vd_handle);
-	archive->priv->vd_handle = NULL;
-*/
-
 	if (error != NULL) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_GETTING_FILE_LIST,
@@ -2136,8 +2113,6 @@ fr_archive_add_directory (FrArchive     *archive,
 {
 	AddDirectoryData *ad_data;
 
-/* FIXME
-  	g_return_if_fail (archive->priv->vd_handle == NULL); */
 	g_return_if_fail (! archive->read_only);
 
 	ad_data = g_new0 (AddDirectoryData, 1);
@@ -2152,14 +2127,6 @@ fr_archive_add_directory (FrArchive     *archive,
 		       fr_archive_signals[START],
 		       0,
 		       FR_ACTION_GETTING_FILE_LIST);
-
-/* FIXME:
-	archive->priv->vd_handle = get_items_file_list_async (
-					ad_data->dir_list,
-					base_dir,
-					add_directory__step2,
-					ad_data);
-*/
 			    
 	g_directory_list_all_async (directory, 
 				    base_dir,
@@ -2183,8 +2150,6 @@ fr_archive_add_items (FrArchive     *archive,
 {
 	AddDirectoryData *ad_data;
 
-/* FIXME
- 	g_return_if_fail (archive->priv->vd_handle == NULL); */
 	g_return_if_fail (! archive->read_only);
 
 	ad_data = g_new0 (AddDirectoryData, 1);
@@ -2199,14 +2164,6 @@ fr_archive_add_items (FrArchive     *archive,
 		       fr_archive_signals[START],
 		       0,
 		       FR_ACTION_GETTING_FILE_LIST);
-
-/* FIXME:
-	archive->priv->vd_handle = get_items_file_list_async (
-					ad_data->dir_list,
-					base_dir,
-					add_directory__step2,
-					ad_data);
-*/
 				
 	g_list_items_async (item_list,
 			    base_dir,

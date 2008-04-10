@@ -2635,6 +2635,7 @@ handle_errors (FrWindow    *window,
 			break;
 
 		case FR_ACTION_EXTRACTING_FILES:
+		case FR_ACTION_COPYING_FILES_TO_REMOTE:
 			msg = _("An error occurred while extracting files.");
 			break;
 
@@ -2656,6 +2657,8 @@ handle_errors (FrWindow    *window,
 			break;
 
 		case FR_ACTION_ADDING_FILES:
+		case FR_ACTION_GETTING_FILE_LIST:
+		case FR_ACTION_COPYING_FILES_FROM_REMOTE:
 			msg = _("An error occurred while adding files to the archive.");
 			break;
 
@@ -2663,7 +2666,12 @@ handle_errors (FrWindow    *window,
 			msg = _("An error occurred while testing archive.");
 			break;
 
+		case FR_ACTION_SAVING_REMOTE_ARCHIVE:
+			msg = _("An error occurred while saving the archive.");
+			break;
+			
 		default:
+			msg = _("An error occurred.");
 			break;
 		}
 
@@ -2850,14 +2858,8 @@ action_performed (FrArchive   *archive,
 			fr_window_archive_reload (window);
 			return;
 		}
-
-		if (window->priv->archive_new) {
+		if (window->priv->archive_new) 
 			window->priv->archive_new = FALSE;
-			/* the archive file is created only when you add some
-			 * file to it. */
-			fr_window_add_to_recent_list (window, window->priv->archive_uri);
-		}
-
 		fr_window_add_to_recent_list (window, window->priv->archive_uri);
 		if (! window->priv->batch_mode) {
 			fr_window_archive_reload (window);
@@ -3659,7 +3661,7 @@ get_selection_data_from_clipboard_data (FrWindow        *window,
 	
 	list = g_string_new (NULL);
 	
-	local_filename = g_file_get_path (window->archive->local_copy);
+	local_filename = g_file_get_uri (window->archive->local_copy);
 	g_string_append (list, local_filename);
 	g_free (local_filename);
 	
@@ -7144,7 +7146,7 @@ add_pasted_files (FrWindow        *window,
 
 		new_file_list = g_list_prepend (new_file_list, new_name);
 	}
-
+  
 	fr_archive_add (window->archive,
 			new_file_list,
 			data->tmp_dir,
@@ -7178,7 +7180,7 @@ copy_from_archive_action_performed_cb (FrArchive   *archive,
 {
 	FrWindow *window = data;
 	gboolean  continue_batch = FALSE;
-
+	
 #ifdef DEBUG
 	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
 #endif
@@ -7202,15 +7204,15 @@ copy_from_archive_action_performed_cb (FrArchive   *archive,
 	
 	switch (action) {
 	case FR_ACTION_LISTING_CONTENT:
-		fr_process_clear (window->priv->copy_from_archive->process);
-		fr_archive_extract (window->priv->copy_from_archive,
-				    window->priv->clipboard_data->files,
-				    window->priv->clipboard_data->tmp_dir,
-				    NULL,
-				    FALSE,
-				    TRUE,
-				    FALSE,
-				    window->priv->clipboard_data->archive_password);
+		fr_process_clear (window->priv->copy_from_archive->process); 
+		fr_archive_extract_to_local (window->priv->copy_from_archive,
+				    	     window->priv->clipboard_data->files,
+				    	     window->priv->clipboard_data->tmp_dir,
+				    	     NULL,
+				   	     FALSE,
+				    	     TRUE,
+				   	     FALSE,
+				   	     window->priv->clipboard_data->archive_password);
 		fr_process_start (window->priv->copy_from_archive->process);
 		break;
 		
@@ -7267,11 +7269,12 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 		char       *dir = remove_level_from_path (new_name);
 
 		if ((dir != NULL) && (g_hash_table_lookup (created_dirs, dir) == NULL)) {
-			char *dir_path = g_build_filename (data->tmp_dir, dir, NULL);
-
+			char *dir_path;
+			
+			dir_path = g_build_filename (data->tmp_dir, dir, NULL);
 			debug (DEBUG_INFO, "mktree %s\n", dir_path);
-
-			ensure_dir_exists (dir_path, 0700, NULL);
+			make_directory_tree_from_path (dir_path, 0700, NULL);
+			
 			g_free (dir_path);
 			g_hash_table_replace (created_dirs, g_strdup (dir), "1");
 		}

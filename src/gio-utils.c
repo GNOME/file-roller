@@ -60,7 +60,7 @@ filter_new (const char    *pattern,
 	
 	filter = g_new0 (Filter, 1);
 
-	if (pattern != NULL) {
+	if ((pattern != NULL) && (strcmp (pattern, "*") != 0)) {
 		filter->pattern = g_strdup (pattern);
 		filter->patterns = search_util_get_patterns (pattern);
 	}
@@ -71,7 +71,7 @@ filter_new (const char    *pattern,
 	else
 		flags = 0;
 	
-	if (pattern != NULL) {
+	if (filter->pattern != NULL) {
 		filter->regexps = g_new0 (GRegex*, n_fields (filter->patterns) + 1);
 		for (i = 0; filter->patterns[i] != NULL; i++) 
 			filter->regexps[i] = g_regex_new (filter->patterns[i],
@@ -969,8 +969,8 @@ g_copy_file_async (GFile                 *source,
 	GList *source_files;
 	GList *destination_files;
 	
-	source_files = g_list_append (NULL, (gpointer)source);
-	destination_files = g_list_append (NULL, (gpointer)destination);
+	source_files = g_list_append (NULL, (gpointer) source);
+	destination_files = g_list_append (NULL, (gpointer) destination);
 	
 	g_copy_files_async (source_files, 
 			    destination_files, 
@@ -982,8 +982,8 @@ g_copy_file_async (GFile                 *source,
 			    callback, 
 			    user_data);
 				   
-	gio_file_list_free (source_files);
-	gio_file_list_free (destination_files);
+	g_list_free (source_files);
+	g_list_free (destination_files);
 }
 
 
