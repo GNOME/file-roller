@@ -2733,6 +2733,42 @@ convert__action_performed (FrArchive   *archive,
 
 	handle_errors (window, archive, action, error);
 
+	if (error->type == FR_PROC_ERROR_NONE) {
+		GtkWidget *d;
+		char      *filename;
+		char      *basename;	
+		char      *msg;
+		int        result;
+		
+		filename = g_file_get_basename (window->priv->convert_data.new_archive->file);
+		basename = g_filename_display_basename (filename);
+		msg = g_strdup_printf (_("The archive \"%s\" has been created successfully"), basename);
+		g_free (filename);
+		
+		d = _gtk_message_dialog_new (GTK_WINDOW (window),
+					     GTK_DIALOG_DESTROY_WITH_PARENT,
+					     GTK_STOCK_DIALOG_INFO,
+					     msg,
+					     "",
+					     _("_Open the Archive"), 1,
+					     GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
+					     NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_CLOSE);
+		result = gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (GTK_WIDGET (d));
+		
+		if (result == 1) {
+			GtkWidget *new_window;
+			char      *uri;
+			
+			uri = g_file_get_uri (window->priv->convert_data.new_archive->file);
+			new_window = fr_window_new ();
+			gtk_widget_show (new_window);		
+			fr_window_archive_open (FR_WINDOW (new_window), uri, GTK_WINDOW (new_window));
+			g_free (uri);
+		}
+	}
+
 	remove_local_directory (window->priv->convert_data.temp_dir);
 	fr_window_convert_data_free (window);
 
@@ -2883,17 +2919,21 @@ action_performed (FrArchive   *archive,
 		}
 
 		if (window->priv->convert_data.converting) {
+			char *source_dir;
+			
+			source_dir = g_filename_to_uri (window->priv->convert_data.temp_dir, NULL, NULL);
 			fr_archive_add_with_wildcard (
 				  window->priv->convert_data.new_archive,
 				  "*",
 				  NULL,
-				  window->priv->convert_data.temp_dir,
+				  source_dir,
 				  NULL,
 				  FALSE,
 				  TRUE,
 				  FALSE,
 				  window->priv->password,
 				  window->priv->compression);
+			g_free (source_dir);
 		}
 		else if (window->priv->view_folder_after_extraction) {
 			if (window->priv->batch_mode) {
@@ -5599,14 +5639,14 @@ fr_window_archive_save_as (FrWindow   *window,
 	window->priv->convert_data.temp_dir = get_temp_work_dir ();
 
 	fr_process_clear (window->archive->process);
-	fr_archive_extract (window->archive,
-			    NULL,
-			    window->priv->convert_data.temp_dir,
-			    NULL,
-			    TRUE,
-			    FALSE,
-			    FALSE,
-			    window->priv->password);
+	fr_archive_extract_to_local (window->archive,
+				     NULL,
+				     window->priv->convert_data.temp_dir,
+				     NULL,
+				     TRUE,
+				     FALSE,
+				     FALSE,
+				     window->priv->password);
 	fr_process_start (window->archive->process);
 }
 
@@ -7416,7 +7456,7 @@ fr_window_open_files_with_application (FrWindow *window,
 				       GAppInfo *app)
 {
 	GList  *uris = NULL, *scan;
-	GError *error;
+	GError *error = NULL;
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = g_filename_to_uri (scan->data, NULL, NULL);

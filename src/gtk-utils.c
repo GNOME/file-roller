@@ -22,9 +22,10 @@
 
 #include <config.h>
 #include <string.h>
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
+#include "gtk-utils.h"
 #include <libgnome/gnome-help.h>
+
+#define LOAD_BUFFER_SIZE 65536
 
 
 static void
@@ -66,7 +67,9 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 	va_list       args;
 	const gchar  *text;
 	int           response_id;
-	char         *escaped_message, *markup_text;
+	char         *markup_text;
+
+	g_return_val_if_fail ((message != NULL) || (secondary_message != NULL), NULL);
 
 	if (stock_id == NULL)
 		stock_id = GTK_STOCK_DIALOG_INFO;
@@ -85,19 +88,27 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 
 	label = gtk_label_new ("");
 
-	escaped_message = g_markup_escape_text (message, -1);
-	if (secondary_message != NULL) {
-		char *escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
-		markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
-					       escaped_message,
-					       escaped_secondary_message);
-		g_free (escaped_secondary_message);
-	} else
-		markup_text = g_strdup (escaped_message);
+	if (message != NULL) {
+		char *escaped_message;
+		
+		escaped_message = g_markup_escape_text (message, -1);
+		if (secondary_message != NULL) {
+			char *escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
+			markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
+						       escaped_message,
+						       escaped_secondary_message);
+			g_free (escaped_secondary_message);
+		} 
+		else
+			markup_text = g_strdup (escaped_message);
+		g_free (escaped_message);
+	}
+	else 
+		markup_text = g_markup_escape_text (secondary_message, -1);
+	 
 	gtk_label_set_markup (GTK_LABEL (label), markup_text);
 	g_free (markup_text);
-	g_free (escaped_message);
-
+	
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
 
@@ -778,6 +789,32 @@ create_pixbuf (GtkIconTheme  *icon_theme,
 		pixbuf = scaled;
 	}
 
+	return pixbuf;
+}
+
+
+GdkPixbuf *
+get_icon_pixbuf (GtkIconTheme *icon_theme,
+		 GThemedIcon  *icon,
+		 int           size) 
+{
+	char        **icon_names;
+	GtkIconInfo  *icon_info;
+	GdkPixbuf    *pixbuf;
+	GError       *error = NULL;
+	
+	g_object_get (icon, "names", &icon_names, NULL);
+	
+	icon_info = gtk_icon_theme_choose_icon (icon_theme, (const char **)icon_names, size, 0);
+	pixbuf = gtk_icon_info_load_icon (icon_info, &error);
+	if (pixbuf == NULL) {
+		g_warning ("could not load icon pixbuf: %s\n", error->message);
+		g_clear_error (&error);
+	}
+	
+	gtk_icon_info_free (icon_info);
+	g_strfreev (icon_names);
+	
 	return pixbuf;
 }
 

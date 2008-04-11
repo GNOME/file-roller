@@ -211,7 +211,6 @@ get_archive_filename_from_selector (FrWindow  *window,
 
 	if (uri_exists (path)) {
 		GtkWidget *dialog;
-		int        r;
 
 		if (! is_supported_extension (file_sel, path)) {
 			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
@@ -223,25 +222,6 @@ get_archive_filename_from_selector (FrWindow  *window,
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_free (path);
 
-			return NULL;
-		}
-
-		dialog = _gtk_message_dialog_new (GTK_WINDOW (file_sel),
-						  GTK_DIALOG_MODAL,
-						  GTK_STOCK_DIALOG_QUESTION,
-						  _("The archive already exists.  Do you want to overwrite it?"),
-						  NULL,
-						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						  _("Overwrite"), GTK_RESPONSE_YES,
-						  NULL);
-
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-		r = gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-
-		if (r != GTK_RESPONSE_YES) {
-			g_free (path);
-			g_object_unref (file);
 			return NULL;
 		}
 
@@ -305,14 +285,12 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 			      GtkWidget   *file_sel)
 {
 	int         idx;
-	const char *filename;
-	const char *ext, *newext;
-	char       *new_filename, *filename_noext;
-	const char *uri;
-	GFile      *file;
-	GFileInfo  *info;
-	GError     *err = NULL;
-
+	const char *uri, *basename;
+	const char *ext, *new_ext;
+	char       *basename_noext;
+	char       *new_basename;
+	char       *new_basename_uft8;
+	
 	idx = gtk_combo_box_get_active (combo_box) - 1;
 	if (idx < 0)
 		return;
@@ -321,28 +299,21 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	if (uri == NULL)
 		return;
 
-	file = g_file_new_for_uri (uri);
-	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME, 0, NULL, &err);
-	if (err != NULL) {
-		g_warning ("Failed to get display name for uri %s: %s", uri, err->message);
-		g_clear_error (&err);
-		g_object_unref (file);
-		return;
-	}
-
-	filename = g_file_info_get_display_name (info);
-	ext = fr_archive_utils__get_file_name_ext (filename);
+	ext = fr_archive_utils__get_file_name_ext (uri);
 	if (ext == NULL)
 		ext = "";
 
-	filename_noext = g_strndup (filename, strlen (filename) - strlen (ext));
+	basename = file_name_from_path (uri);
+	basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
 
-	newext = file_type_desc[save_type[idx]].ext;
-	new_filename = g_strconcat (filename_noext, newext, NULL);
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), new_filename);
+	new_ext = file_type_desc[save_type[idx]].ext;
+	new_basename = g_strconcat (basename_noext, new_ext, NULL);
+	new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), new_basename_uft8);
 
-	g_free (new_filename);
-	g_free (filename_noext);
+	g_free (new_basename_uft8);
+	g_free (new_basename);
+	g_free (basename_noext);
 }
 
 
@@ -590,6 +561,7 @@ activate_action_save_as (GtkAction *action,
 						NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (file_sel), TRUE);
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
 
 	if (fr_window_get_archive_uri (window)) {

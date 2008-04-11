@@ -1,5 +1,26 @@
 2008-04-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c: 
+	
+	show an alert dialog when the 'save as' operation is completed, and 
+	allow the user the open the new archive.  Fixed a bug in the conversion
+	procedure as well.
+	
+	* src/gtk-utils.h: 
+	* src/gtk-utils.c: 
+	* src/dlg-open-with.c: 
+	
+	load the application icon using the new API.
+	
+	* src/actions.c: 
+	
+	Use gtk_file_chooser_set_do_overwrite_confirmation instead of the 
+	custom dialog. 
+	Do not use g_file_query_info to get the	basename, just use 
+	g_uri_unescape_string because the file could not exists.
+
+2008-04-11  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c (fr_window_file_list_drag_data_get): do not translate
 	the destination into a path.  Fixes extraction with DnD.
 

@@ -24,6 +24,7 @@
 #define GTK_UTILS_H
 
 #include <glib/gi18n.h>
+#include <gio/gio.h>
 #include <gtk/gtk.h>
 
 int         _gtk_count_selected             (GtkTreeSelection *selection);
@@ -69,10 +70,13 @@ char *      _gtk_entry_get_filename_text    (GtkEntry   *entry);
 void        _gtk_label_set_filename_text    (GtkLabel   *label,
 					     const char *text);
 char *      _gtk_label_get_filename_text    (GtkLabel   *label);
-GdkPixbuf * create_pixbuf                   (GtkIconTheme  *icon_theme,
-					     const char    *icon_name,
-					     int            icon_size);
-int         get_folder_pixbuf_size_for_list (GtkWidget *widget);
+GdkPixbuf * create_pixbuf                   (GtkIconTheme *icon_theme,
+					     const char   *icon_name,
+					     int           icon_size);
+GdkPixbuf * get_icon_pixbuf                 (GtkIconTheme *icon_theme,
+		 			     GThemedIcon  *icon,
+		 			     int           size); 
+int         get_folder_pixbuf_size_for_list (GtkWidget    *widget);
 void        show_help_dialog                (GtkWindow    *parent,
 					     const char   *section);
 
