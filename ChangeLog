@@ -1,7 +1,12 @@
 2008-04-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (fr_window_file_list_drag_data_get): do not translate
+	the destination into a path.  Fixes extraction with DnD.
+
+2008-04-11  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/gio-utils.c: close the enumerator when done
-	* src/fr-archive.c: check for file existence before tryinh to load the
+	* src/fr-archive.c: check for file existence before trying to load the
 	archive.
 	* src/file-utils.c (check_permissions): there is no need to add the uri
 	in the warning because it's already included in the gerror message.

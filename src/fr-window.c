@@ -3742,7 +3742,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 
 	if (window->priv->drag_error == NULL) {
 		g_free (window->priv->drag_destination_folder);
-		window->priv->drag_destination_folder = g_filename_from_uri (destination_folder, NULL, NULL);
+		window->priv->drag_destination_folder = g_strdup (destination_folder);
 		path_list_free (window->priv->drag_file_list);
 		window->priv->drag_file_list = fr_window_get_file_list_from_path_list (window, path_list, NULL);
 	}
