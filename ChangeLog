@@ -1,3 +1,11 @@
+2008-04-11  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/gio-utils.c: close the enumerator when done
+	* src/fr-archive.c: check for file existence before tryinh to load the
+	archive.
+	* src/file-utils.c (check_permissions): there is no need to add the uri
+	in the warning because it's already included in the gerror message.
+
 2008-04-10  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/fr-command-tar.c:

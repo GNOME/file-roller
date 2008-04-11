@@ -224,6 +224,10 @@ for_each_child_done_cb (gpointer user_data)
 	ForEachChildData *fec = user_data;
 	
 	g_source_remove (fec->source_id);
+	if (fec->current != NULL) {
+		g_object_unref (fec->current);
+		 fec->current = NULL;
+	}
 	if (fec->done_func) 
 		fec->done_func (fec->error, fec->user_data);
 	for_each_child_data_free (fec);
@@ -247,6 +251,47 @@ for_each_child_start_cb (gpointer user_data)
 }
 
 
+void
+for_each_child_close_enumerator (GObject      *source_object,
+	              		 GAsyncResult *result,
+		      		 gpointer      user_data)
+{
+	ForEachChildData *fec = user_data;
+	GError           *error;
+	
+	if (! g_file_enumerator_close_finish (fec->enumerator,
+					      result,
+					      &error)) 
+	{
+		if (fec->error == NULL)
+			fec->error = g_error_copy (error);
+		else
+			g_clear_error (&error);
+	}
+	
+	if ((fec->error == NULL) && fec->recursive) {
+		char *sub_directory = NULL;
+			
+		if (fec->to_visit != NULL) {
+			GList *tmp;
+				
+			sub_directory = (char*) fec->to_visit->data;
+			tmp = fec->to_visit;
+			fec->to_visit = g_list_remove_link (fec->to_visit, tmp);
+			g_list_free (tmp);
+		}
+			
+		if (sub_directory != NULL) {
+			for_each_child_set_current (fec, sub_directory);
+			fec->source_id = g_idle_add (for_each_child_start_cb, fec);
+			return;
+		}
+	}
+	
+	fec->source_id = g_idle_add (for_each_child_done_cb, fec);
+}
+
+
 static void  
 for_each_child_next_files_ready (GObject      *source_object,
 			         GAsyncResult *result,
@@ -259,27 +304,13 @@ for_each_child_next_files_ready (GObject      *source_object,
 	children = g_file_enumerator_next_files_finish (fec->enumerator,
                                                         result,
                                                         &(fec->error));
-                                                        
+
 	if (children == NULL) {
-		if ((fec->error == NULL) && fec->recursive) {
-			char *sub_directory = NULL;
-			
-			if (fec->to_visit != NULL) {
-				GList *tmp;
-				
-				sub_directory = (char*) fec->to_visit->data;
-				tmp = fec->to_visit;
-				fec->to_visit = g_list_remove_link (fec->to_visit, tmp);
-				g_list_free (tmp);
-			}
-			
-			if (sub_directory != NULL) {
-				for_each_child_set_current (fec, sub_directory);
-				fec->source_id = g_idle_add (for_each_child_start_cb, fec);
-				return;
-			}
-		}
-		fec->source_id = g_idle_add (for_each_child_done_cb, fec);
+		g_file_enumerator_close_async (fec->enumerator,
+					       G_PRIORITY_DEFAULT,
+					       fec->cancellable,
+					       for_each_child_close_enumerator,
+					       fec);
 		return;
 	}
 	

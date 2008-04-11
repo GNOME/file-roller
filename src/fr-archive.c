@@ -1321,6 +1321,14 @@ copy_remote_file (FrArchive  *archive,
 {
 	XferData *xfer_data;
 	
+	if (! g_file_query_exists (archive->file, NULL)) {
+		GError *error;
+		error = g_error_new (G_IO_ERROR, G_IO_ERROR_NOT_FOUND, _("The file doesn't exist"));
+		fr_archive_copy_done (archive, FR_ACTION_LOADING_ARCHIVE, error);
+		g_error_free (error);
+		return;
+	}
+	
 	xfer_data = g_new0 (XferData, 1);
 	xfer_data->archive = archive;
 	xfer_data->uri = g_file_get_uri (archive->file);

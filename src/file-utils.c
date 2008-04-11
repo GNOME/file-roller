@@ -998,7 +998,7 @@ check_permissions (const char *uri,
 	file = g_file_new_for_uri (uri);
 	info = g_file_query_info (file, "access::*", 0, NULL, &err);
 	if (err != NULL) {
-		g_warning ("Failed to get access permissions for %s: %s", uri, err->message);
+		g_warning ("Failed to get access permissions: %s", err->message);
 		g_clear_error (&err);
 		result = FALSE;
 	}
