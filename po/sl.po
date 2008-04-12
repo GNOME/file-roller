@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-09-11 03:45+0100\n"
-"PO-Revision-Date: 2008-02-17 22:25+0100\n"
+"PO-Revision-Date: 2008-04-12 10:33+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -38,14 +38,14 @@ msgstr "Ustvari arhiv"
 
 # G:1 K:0 O:0
 #: ../data/glade/batch-add-files.glade.h:3
-#: ../src/fr-window.c:4030
+#: ../src/fr-window.c:4067
 msgid "Location"
 msgstr "Položaj"
 
 # G:1 K:0 O:0
 #. current location
 #: ../data/glade/batch-add-files.glade.h:4
-#: ../src/fr-window.c:5055
+#: ../src/fr-window.c:5092
 msgid "Location:"
 msgstr "Položaj:"
 
@@ -60,7 +60,7 @@ msgstr "<span weight=\"bold\" size=\"larger\">Postopek zahteva geslo</span>"
 # G:0 K:3 O:0
 #: ../data/glade/batch-password.glade.h:2
 #: ../data/glade/password.glade.h:3
-#: ../src/dlg-extract.c:440
+#: ../src/dlg-extract.c:442
 msgid "_Password:"
 msgstr "_Geslo:"
 
@@ -69,24 +69,24 @@ msgid "Delete"
 msgstr "Izbriši"
 
 #: ../data/glade/delete.glade.h:2
-#: ../src/dlg-extract.c:392
+#: ../src/dlg-extract.c:394
 msgid "_All files"
 msgstr "_Vse datoteke"
 
 # G:0 K:1 O:0
 #: ../data/glade/delete.glade.h:3
-#: ../src/dlg-extract.c:378
+#: ../src/dlg-extract.c:380
 msgid "_Files:"
 msgstr "_Datoteke:"
 
 # G:4 K:6 O:0
 #: ../data/glade/delete.glade.h:4
-#: ../src/dlg-extract.c:399
+#: ../src/dlg-extract.c:401
 msgid "_Selected files"
 msgstr "_Izbrane datoteke"
 
 #: ../data/glade/delete.glade.h:5
-#: ../src/dlg-extract.c:389
+#: ../src/dlg-extract.c:391
 msgid "example: *.txt; *.doc"
 msgstr "na primer: *.txt; *.doc"
 
@@ -124,7 +124,7 @@ msgstr "Izberite datoteke za posodobitev:"
 
 #. secondary text
 #: ../data/glade/update.glade.h:2
-#: ../src/dlg-update.c:181
+#: ../src/dlg-update.c:180
 #, c-format
 msgid "The file has been modified with an external application. If you don't update the version in the archive, all of your changes will be lost."
 msgid_plural "There are %d files that have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost."
@@ -140,8 +140,8 @@ msgstr "Poso_dobi"
 
 #. Create the application.
 #: ../data/file-roller.desktop.in.in.h:1
-#: ../src/fr-window.c:1891
-#: ../src/fr-window.c:4756
+#: ../src/fr-window.c:1888
+#: ../src/fr-window.c:4793
 #: ../src/main.c:218
 msgid "Archive Manager"
 msgstr "Upravljalnik arhivov"
@@ -151,70 +151,62 @@ msgstr "Upravljalnik arhivov"
 msgid "Create and modify an archive"
 msgstr "Ustvari in spremeni arhiv"
 
-#: ../nautilus/nautilus-fileroller.c:242
+#: ../nautilus/nautilus-fileroller.c:227
 msgid "Extract Here"
 msgstr "Razširi sem"
 
-#: ../nautilus/nautilus-fileroller.c:243
+#: ../nautilus/nautilus-fileroller.c:228
 msgid "Extract the selected archive in the current position"
 msgstr "Izbrani arhiv razširi na trenutno mesto"
 
-#: ../nautilus/nautilus-fileroller.c:260
+#: ../nautilus/nautilus-fileroller.c:245
 msgid "Extract To..."
 msgstr "Razširi v ..."
 
-#: ../nautilus/nautilus-fileroller.c:261
+#: ../nautilus/nautilus-fileroller.c:246
 msgid "Extract the selected archive"
 msgstr "Razširi izbrani arhiv"
 
-#: ../nautilus/nautilus-fileroller.c:280
+#: ../nautilus/nautilus-fileroller.c:265
 msgid "Create Archive..."
 msgstr "Ustvari arhiv ..."
 
-#: ../nautilus/nautilus-fileroller.c:281
+#: ../nautilus/nautilus-fileroller.c:266
 msgid "Create an archive with the selected objects"
 msgstr "Ustvari arhiv z izbranimi predmeti"
 
 # G:1 K:0 O:0
 #: ../src/actions.c:144
-#: ../src/actions.c:162
-#: ../src/actions.c:200
-#: ../src/dlg-batch-add.c:128
-#: ../src/dlg-batch-add.c:143
-#: ../src/dlg-batch-add.c:167
-#: ../src/dlg-batch-add.c:211
-#: ../src/dlg-batch-add.c:257
-#: ../src/fr-window.c:2643
+#: ../src/actions.c:182
+#: ../src/actions.c:219
+#: ../src/dlg-batch-add.c:126
+#: ../src/dlg-batch-add.c:141
+#: ../src/dlg-batch-add.c:170
+#: ../src/dlg-batch-add.c:214
+#: ../src/dlg-batch-add.c:261
+#: ../src/fr-window.c:2634
 msgid "Could not create the archive"
 msgstr "Ni mogoče ustvariti arhiva"
 
 #: ../src/actions.c:145
-#: ../src/dlg-batch-add.c:129
-#: ../src/dlg-batch-add.c:258
+#: ../src/dlg-batch-add.c:127
+#: ../src/dlg-batch-add.c:262
 msgid "You have to specify an archive name."
 msgstr "Vnesti morate ime arhiva."
 
-#: ../src/actions.c:163
+#: ../src/actions.c:183
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Ni dovoljenja za ustvarjanje arhiva v tej mapi"
 
-#: ../src/actions.c:201
-#: ../src/fr-archive.c:1313
-#: ../src/fr-window.c:5412
-#: ../src/fr-window.c:5578
+#: ../src/actions.c:220
+#: ../src/fr-archive.c:1227
+#: ../src/fr-window.c:5449
+#: ../src/fr-window.c:5598
 msgid "Archive type not supported."
 msgstr "Vrsta arhiva ni podprta."
 
-#: ../src/actions.c:212
-msgid "The archive already exists.  Do you want to overwrite it?"
-msgstr "Arhiv že obstaja. Ga želite prepisati?"
-
-#: ../src/actions.c:215
-msgid "Overwrite"
-msgstr "Prepiši"
-
 # G:1 K:0 O:0
-#: ../src/actions.c:233
+#: ../src/actions.c:234
 msgid "Could not delete the old archive."
 msgstr "Ni mogoče izbrisati starega arhiva."
 
@@ -224,64 +216,64 @@ msgstr "Nov"
 
 #: ../src/actions.c:353
 #: ../src/actions.c:479
-#: ../src/actions.c:576
-#: ../src/fr-window.c:4655
+#: ../src/actions.c:593
+#: ../src/fr-window.c:4692
 msgid "All archives"
 msgstr "Vsi arhivi"
 
 #: ../src/actions.c:360
 #: ../src/actions.c:486
-#: ../src/actions.c:583
+#: ../src/actions.c:600
 msgid "All files"
 msgstr "Vse datoteke"
 
 #: ../src/actions.c:370
-#: ../src/actions.c:591
+#: ../src/actions.c:608
 msgid "Archive type:"
 msgstr "Vrsta arhiva:"
 
 #: ../src/actions.c:374
-#: ../src/actions.c:595
+#: ../src/actions.c:612
 msgid "Automatic"
 msgstr "Samodejno"
 
 # G:10 K:6 O:0
 #: ../src/actions.c:468
-#: ../src/fr-window.c:5261
+#: ../src/fr-window.c:5298
 msgid "Open"
 msgstr "Odpri"
 
-#: ../src/actions.c:557
+#: ../src/actions.c:555
 msgid "Save"
 msgstr "Shrani"
 
-#: ../src/actions.c:907
-#: ../src/fr-window.c:6537
+#: ../src/actions.c:924
+#: ../src/fr-window.c:6559
 msgid "Last Output"
 msgstr "Zadnji izhod"
 
-#: ../src/actions.c:935
+#: ../src/actions.c:952
 msgid "File Roller is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "File Roller je prosta programska oprema; lahko ga širite in spreminjati pod pogoji GNU splošne javne licence kot jo določa Free Software Foundation; različica 2  ali kasnejše različice."
 
-#: ../src/actions.c:939
+#: ../src/actions.c:956
 msgid "File Roller is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "Program se prenaša prosto, vendar brez kakršnekoli garancije. Za več podrobnosti si oglejte GNU splošno javno licenco."
 
-#: ../src/actions.c:943
+#: ../src/actions.c:960
 msgid "You should have received a copy of the GNU General Public License along with File Roller; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
 msgstr "S programom bo morali dobiti tudi kopijo GNU splošne javne licence; če je niste, pišite na FcreditFree Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
 
-#: ../src/actions.c:953
+#: ../src/actions.c:970
 msgid "Copyright © 2001-2007 Free Software Foundation, Inc."
 msgstr "Avtorske pravice © 2001-2007 Free Software Foundation, Inc."
 
 # G:7 K:0 O:0
-#: ../src/actions.c:954
+#: ../src/actions.c:971
 msgid "An archive manager for GNOME."
 msgstr "Upravljalnik arhivov za GNOME"
 
-#: ../src/actions.c:957
+#: ../src/actions.c:974
 msgid "translator-credits"
 msgstr ""
 "Matjaž Horvat <m@owca.info>\n"
@@ -291,15 +283,15 @@ msgstr ""
 # G:0 K:1 O:0
 #: ../src/dlg-add-files.c:87
 #: ../src/dlg-add-files.c:147
-#: ../src/dlg-add-folder.c:126
-#: ../src/dlg-add-folder.c:214
+#: ../src/dlg-add-folder.c:123
+#: ../src/dlg-add-folder.c:211
 msgid "Could not add the files to the archive"
 msgstr "Ni mogoče dodati datotek v arhiv"
 
 #: ../src/dlg-add-files.c:88
 #: ../src/dlg-add-files.c:148
-#: ../src/dlg-add-folder.c:127
-#: ../src/dlg-add-folder.c:215
+#: ../src/dlg-add-folder.c:124
+#: ../src/dlg-add-folder.c:212
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Ni ustreznih dovoljenj za branje datotek iz mape \"%s\""
@@ -311,60 +303,60 @@ msgid "Add Files"
 msgstr "Dodaj datoteke"
 
 #: ../src/dlg-add-files.c:185
-#: ../src/dlg-add-folder.c:277
+#: ../src/dlg-add-folder.c:275
 msgid "_Add only if newer"
 msgstr "_Dodaj le, če so novejše"
 
-#: ../src/dlg-add-folder.c:263
+#: ../src/dlg-add-folder.c:261
 msgid "Add a Folder"
 msgstr "Dodaj mapo"
 
-#: ../src/dlg-add-folder.c:278
+#: ../src/dlg-add-folder.c:276
 msgid "_Include subfolders"
 msgstr "_Vključi podmape"
 
 # G:0 K:1 O:0
-#: ../src/dlg-add-folder.c:279
+#: ../src/dlg-add-folder.c:277
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "Izključi mape, ki so simbolične _povezave"
 
-#: ../src/dlg-add-folder.c:282
-#: ../src/dlg-add-folder.c:287
+#: ../src/dlg-add-folder.c:280
+#: ../src/dlg-add-folder.c:285
 msgid "example: *.o; *.bak"
 msgstr "na primer: *. *.bak"
 
-#: ../src/dlg-add-folder.c:283
+#: ../src/dlg-add-folder.c:281
 msgid "_Include files:"
 msgstr "Vključ_i datoteke:"
 
-#: ../src/dlg-add-folder.c:288
+#: ../src/dlg-add-folder.c:286
 msgid "E_xclude files:"
 msgstr "_Izključi datoteke:"
 
 # G:1 K:0 O:0
-#: ../src/dlg-add-folder.c:291
+#: ../src/dlg-add-folder.c:289
 msgid "_Load Options"
 msgstr "_Naloži možnosti"
 
-#: ../src/dlg-add-folder.c:292
+#: ../src/dlg-add-folder.c:290
 msgid "Sa_ve Options"
 msgstr "_Shrani nastavitve"
 
-#: ../src/dlg-add-folder.c:729
+#: ../src/dlg-add-folder.c:748
 msgid "Save Options"
 msgstr "Shrani nastavitve"
 
-#: ../src/dlg-add-folder.c:730
+#: ../src/dlg-add-folder.c:749
 msgid "Options Name:"
 msgstr "Ime možnosti:"
 
-#: ../src/dlg-ask-password.c:124
+#: ../src/dlg-ask-password.c:123
 #, c-format
 msgid "Enter the password for the archive '%s'."
 msgstr "Vnesite geslo za arhiv '%s'."
 
-#: ../src/dlg-batch-add.c:144
-#: ../src/fr-window.c:6833
+#: ../src/dlg-batch-add.c:142
+#: ../src/fr-window.c:6855
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -375,23 +367,23 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:147
-#: ../src/fr-window.c:6825
-#: ../src/fr-window.c:6829
-#: ../src/fr-window.c:6833
-#: ../src/fr-window.c:6869
-#: ../src/fr-window.c:6871
+#: ../src/dlg-batch-add.c:145
+#: ../src/fr-window.c:6847
+#: ../src/fr-window.c:6851
+#: ../src/fr-window.c:6855
+#: ../src/fr-window.c:6891
+#: ../src/fr-window.c:6893
 msgid "Please use a different name."
 msgstr "Uporabite drugačno ime."
 
-#: ../src/dlg-batch-add.c:168
+#: ../src/dlg-batch-add.c:171
 msgid "You don't have the right permissions to create an archive in the destination folder."
 msgstr "Ni ustreznih dovoljenj za ustvarjanje arhiva v ciljni mapi"
 
 # G:1 K:0 O:0
-#: ../src/dlg-batch-add.c:184
-#: ../src/dlg-extract.c:113
-#: ../src/fr-window.c:5928
+#: ../src/dlg-batch-add.c:187
+#: ../src/dlg-extract.c:114
+#: ../src/fr-window.c:5949
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -402,142 +394,138 @@ msgstr ""
 "\n"
 "Ali jo želite ustvariti?"
 
-#: ../src/dlg-batch-add.c:193
-#: ../src/dlg-extract.c:122
-#: ../src/fr-window.c:5937
+#: ../src/dlg-batch-add.c:196
+#: ../src/dlg-extract.c:123
+#: ../src/fr-window.c:5958
 msgid "Create _Folder"
 msgstr "Ustvari _mapo"
 
 # G:0 K:3 O:0
-#: ../src/dlg-batch-add.c:212
-#: ../src/dlg-extract.c:139
-#: ../src/fr-window.c:5957
+#: ../src/dlg-batch-add.c:215
+#: ../src/dlg-extract.c:140
+#: ../src/fr-window.c:5978
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Ni mogoče ustvariti ciljne mape: %s."
 
-#: ../src/dlg-batch-add.c:228
+#: ../src/dlg-batch-add.c:232
 msgid "Archive not created"
 msgstr "Arhiv ni bil ustvarjen"
 
-#: ../src/dlg-batch-add.c:276
+#: ../src/dlg-batch-add.c:280
 msgid "The archive is already present.  Do you want to overwrite it?"
 msgstr "Arhiv že obstaja. Ali ga želite prepisati?"
 
-#: ../src/dlg-batch-add.c:279
+#: ../src/dlg-batch-add.c:283
 msgid "_Overwrite"
 msgstr "_Prepiši"
 
-#: ../src/dlg-extract.c:144
-#: ../src/dlg-extract.c:161
-#: ../src/dlg-extract.c:187
-#: ../src/fr-window.c:3589
-#: ../src/fr-window.c:5956
-#: ../src/fr-window.c:5972
+#: ../src/dlg-extract.c:145
+#: ../src/dlg-extract.c:163
+#: ../src/dlg-extract.c:189
+#: ../src/fr-window.c:3621
+#: ../src/fr-window.c:5977
+#: ../src/fr-window.c:5994
 msgid "Extraction not performed"
 msgstr "Razširjanje ni bilo izvedeno"
 
-#: ../src/dlg-extract.c:188
-#: ../src/fr-window.c:3742
+#: ../src/dlg-extract.c:190
+#: ../src/fr-window.c:3779
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Ni ustreznih dovoljenj za razširjanje arhivov v mapo \"%s\""
 
 # G:0 K:2 O:0
-#: ../src/dlg-extract.c:361
+#: ../src/dlg-extract.c:363
 msgid "Files"
 msgstr "Datoteke"
 
-#: ../src/dlg-extract.c:410
+#: ../src/dlg-extract.c:412
 msgid "Actions"
 msgstr "Dejanja"
 
-#: ../src/dlg-extract.c:426
+#: ../src/dlg-extract.c:428
 msgid "Re-crea_te folders"
 msgstr "_Ponovno ustvari mape"
 
-#: ../src/dlg-extract.c:430
+#: ../src/dlg-extract.c:432
 msgid "Over_write existing files"
 msgstr "P_repiši obstoječe datoteke"
 
 # G:0 K:2 O:0
-#: ../src/dlg-extract.c:434
+#: ../src/dlg-extract.c:436
 msgid "Do not e_xtract older files"
 msgstr "Ne razširi _starejših datotek"
 
 # G:0 K:2 O:0
-#: ../src/dlg-extract.c:449
+#: ../src/dlg-extract.c:451
 msgid "_Open destination folder after extraction"
 msgstr "Po razširjanju _odpri ciljno mapo"
 
-#: ../src/dlg-extract.c:480
+#: ../src/dlg-extract.c:482
 #: ../src/ui.h:124
 msgid "Extract"
 msgstr "Razširi"
 
-#: ../src/dlg-prop.c:111
+#: ../src/dlg-prop.c:110
 msgid "Path:"
 msgstr "Pot:"
 
 # G:0 K:6 O:0
-#: ../src/dlg-prop.c:124
+#: ../src/dlg-prop.c:122
 msgid "Name:"
 msgstr "Ime:"
 
 # G:17 K:17 O:0
-#: ../src/dlg-prop.c:130
+#: ../src/dlg-prop.c:128
 #, c-format
 msgid "%s Properties"
 msgstr "Lastnosti %s"
 
-#: ../src/dlg-prop.c:139
+#: ../src/dlg-prop.c:137
 msgid "Modified on:"
 msgstr "Spremenjeno:"
 
-#: ../src/dlg-prop.c:149
+#: ../src/dlg-prop.c:147
 msgid "Archive size:"
 msgstr "Velikost arhiva:"
 
 # G:4 K:0 O:0
-#: ../src/dlg-prop.c:160
+#: ../src/dlg-prop.c:158
 msgid "Content size:"
 msgstr "Velikost vsebine:"
 
-#: ../src/dlg-prop.c:180
+#: ../src/dlg-prop.c:178
 msgid "Compression ratio:"
 msgstr "Stopnja stiskanja:"
 
 # G:1 K:0 O:0
-#: ../src/dlg-prop.c:195
+#: ../src/dlg-prop.c:193
 msgid "Number of files:"
 msgstr "Število datotek:"
 
 # G:0 K:1 O:0
-#: ../src/dlg-update.c:158
+#: ../src/dlg-update.c:157
 #, c-format
 msgid "Update the file \"%s\" in the archive \"%s\"?"
 msgstr "Posodobi datoteko \"%s\" v arhivu \"%s\"?"
 
 # G:0 K:1 O:0
-#: ../src/dlg-update.c:172
+#: ../src/dlg-update.c:171
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
 msgstr "Ali naj posodobim datoteke v arhivu \"%s\""
 
-#: ../src/file-data.c:29
-msgid "Unknown type"
-msgstr "Neznana vrsta"
+#: ../src/fr-archive.c:1326
+#, c-format
+msgid "The file doesn't exist"
+msgstr "Datoteka ne obstaja"
 
-# G:1 K:1 O:0
-#: ../src/file-data.c:30
-msgid "Symbolic link"
-msgstr "Simbolična povezava"
-
-#: ../src/fr-archive.c:2551
+#: ../src/fr-archive.c:2362
 msgid "You don't have the right permissions."
 msgstr "Ni ustreznih dovoljenj."
 
-#: ../src/fr-archive.c:2561
+#: ../src/fr-archive.c:2374
 msgid "You can't add an archive to itself."
 msgstr "Arhiva ni mogoče dodati samemu sebi."
 
@@ -545,24 +533,24 @@ msgstr "Arhiva ni mogoče dodati samemu sebi."
 msgid "Adding file: "
 msgstr "Dodajanje datoteke: "
 
-#: ../src/fr-command-tar.c:348
+#: ../src/fr-command-tar.c:343
 msgid "Removing file: "
 msgstr "Odstranjevanje datoteke: "
 
-#: ../src/fr-command-tar.c:357
-#: ../src/fr-window.c:2173
+#: ../src/fr-command-tar.c:352
+#: ../src/fr-window.c:2170
 msgid "Deleting files from archive"
 msgstr "Brišem datoteke iz arhiva"
 
-#: ../src/fr-command-tar.c:392
+#: ../src/fr-command-tar.c:387
 msgid "Extracting file: "
 msgstr "Razširjanje datoteke: "
 
-#: ../src/fr-command-tar.c:446
+#: ../src/fr-command-tar.c:441
 msgid "Recompressing archive"
 msgstr "Ponovno stiskanje arhiva"
 
-#: ../src/fr-command-tar.c:613
+#: ../src/fr-command-tar.c:608
 msgid "Decompressing archive"
 msgstr "Razširjanje arhiva"
 
@@ -579,7 +567,7 @@ msgstr "_Odpakiraj"
 msgid "_View File"
 msgstr "Po_glej datoteko"
 
-#: ../src/fr-window.c:1445
+#: ../src/fr-window.c:1439
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
@@ -588,7 +576,7 @@ msgstr[1] "%d predmet (%s)"
 msgstr[2] "%d predmeta (%s)"
 msgstr[3] "%d predmeti (%s)"
 
-#: ../src/fr-window.c:1450
+#: ../src/fr-window.c:1444
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
@@ -598,197 +586,215 @@ msgstr[2] "%d izbrana predmeta (%s)"
 msgstr[3] "%d izbrani predmeti (%s)"
 
 # G:1 K:0 O:0
-#: ../src/fr-window.c:1518
+#: ../src/fr-window.c:1512
 msgid "Folder"
 msgstr "Mapa"
 
 # G:5 K:1 O:0
-#: ../src/fr-window.c:1899
+#: ../src/fr-window.c:1896
 msgid "[read only]"
 msgstr "[samo za branje]"
 
-#: ../src/fr-window.c:2164
-#: ../src/fr-window.c:2194
+#: ../src/fr-window.c:2161
+#: ../src/fr-window.c:2191
 msgid "Creating archive"
 msgstr "Ustvarjanje arhiva"
 
-#: ../src/fr-window.c:2167
+#: ../src/fr-window.c:2164
 msgid "Loading archive"
 msgstr "Nalaganje arhiva"
 
-#: ../src/fr-window.c:2170
+#: ../src/fr-window.c:2167
 msgid "Reading archive"
 msgstr "Branje arhiva"
 
-#: ../src/fr-window.c:2176
+#: ../src/fr-window.c:2173
 msgid "Testing archive"
 msgstr "Preizkušanje arhiva"
 
-#: ../src/fr-window.c:2179
+#: ../src/fr-window.c:2176
 msgid "Getting the file list"
 msgstr "Pridobivanje seznama datotek"
 
-#: ../src/fr-window.c:2182
-#: ../src/fr-window.c:2191
+#: ../src/fr-window.c:2179
+#: ../src/fr-window.c:2188
 msgid "Copying the file list"
 msgstr "Kopiranje seznama datotek"
 
-#: ../src/fr-window.c:2185
+#: ../src/fr-window.c:2182
 msgid "Adding files to archive"
 msgstr "Dodajanje datotek v arhiv"
 
-#: ../src/fr-window.c:2188
+#: ../src/fr-window.c:2185
 msgid "Extracting files from archive"
 msgstr "Razširjanje datotek iz arhiva"
 
-#: ../src/fr-window.c:2197
+#: ../src/fr-window.c:2194
 msgid "Saving archive"
 msgstr "Shranjevanje arhiva"
 
-#: ../src/fr-window.c:2383
+#: ../src/fr-window.c:2380
 msgid "Archive:"
 msgstr "Arhiv:"
 
-#: ../src/fr-window.c:2475
+#: ../src/fr-window.c:2472
 msgid "wait please..."
 msgstr "prosim, počakajte ..."
 
-#: ../src/fr-window.c:2543
+#: ../src/fr-window.c:2534
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Ni mogoče prikazati mape \"%s\""
 
 # G:3 K:0 O:0
-#: ../src/fr-window.c:2647
+#: ../src/fr-window.c:2639
 msgid "An error occurred while extracting files."
 msgstr "Med razširjanjem datotek je prišlo do napake."
 
-#: ../src/fr-window.c:2655
+#: ../src/fr-window.c:2647
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Ni mogoče odpreti \"%s\""
 
-#: ../src/fr-window.c:2660
+#: ../src/fr-window.c:2652
 msgid "An error occurred while loading the archive."
 msgstr "Med nalaganjem arhiva je prišlo do napake."
 
-#: ../src/fr-window.c:2664
+#: ../src/fr-window.c:2656
 msgid "An error occurred while deleting files from the archive."
 msgstr "Med brisanjem datotek iz arhiva je prišlo do napake."
 
-#: ../src/fr-window.c:2668
+#: ../src/fr-window.c:2662
 msgid "An error occurred while adding files to the archive."
 msgstr "Med dodajanjem datotek v arhiv je prišlo do napake."
 
-#: ../src/fr-window.c:2672
+#: ../src/fr-window.c:2666
 msgid "An error occurred while testing archive."
 msgstr "Med preizkušanjem arhiva je prišlo do napake."
 
-#: ../src/fr-window.c:2681
+#: ../src/fr-window.c:2670
+msgid "An error occurred while saving the archive."
+msgstr "Med shranjevanjem arhiva je prišlo do napake."
+
+#: ../src/fr-window.c:2674
+msgid "An error occurred."
+msgstr "Prišlo je do napake."
+
+#: ../src/fr-window.c:2680
 msgid "Command not found."
 msgstr "Ukaz ni najden."
 
-#: ../src/fr-window.c:2684
+#: ../src/fr-window.c:2683
 msgid "Command exited abnormally."
 msgstr "Ukaz se je zaključil z napako."
 
-#: ../src/fr-window.c:2879
+#: ../src/fr-window.c:2745
+#, c-format
+msgid "The archive \"%s\" has been created successfully"
+msgstr "Arhiv \"%s\" je bil uspešno ustvarjen"
+
+# G:1 K:0 O:0
+#: ../src/fr-window.c:2753
+msgid "_Open the Archive"
+msgstr "_Odpri arhiv"
+
+#: ../src/fr-window.c:2908
 msgid "Test Result"
 msgstr "Izid preizkusa"
 
-#: ../src/fr-window.c:3450
-#: ../src/fr-window.c:7446
+#: ../src/fr-window.c:3482
+#: ../src/fr-window.c:7468
 msgid "Could not perform the operation"
 msgstr "Ni mogoče izvesti operacije"
 
-#: ../src/fr-window.c:3477
+#: ../src/fr-window.c:3509
 msgid "Do you want to add this file to the current archive or open it as a new archive?"
 msgstr "Ali želite dodati to datoteko trenutnemu arhivu ali jo odpreti kot nov arhiv?"
 
-#: ../src/fr-window.c:3507
+#: ../src/fr-window.c:3539
 msgid "Do you want to create a new archive with these files?"
 msgstr "Ali želite iz teh datotek ustvariti arhiv?"
 
-#: ../src/fr-window.c:3510
+#: ../src/fr-window.c:3542
 msgid "Create _Archive"
 msgstr "Ustvari _arhiv"
 
 # G:1 K:0 O:0
-#: ../src/fr-window.c:3989
-#: ../src/fr-window.c:5152
+#: ../src/fr-window.c:4026
+#: ../src/fr-window.c:5189
 msgid "Folders"
 msgstr "Mape"
 
-#: ../src/fr-window.c:4027
+#: ../src/fr-window.c:4064
 msgid "Size"
 msgstr "Velikost"
 
 # G:26 K:23 O:0
-#: ../src/fr-window.c:4028
+#: ../src/fr-window.c:4065
 msgid "Type"
 msgstr "Vrsta"
 
 # G:10 K:13 O:0
-#: ../src/fr-window.c:4029
+#: ../src/fr-window.c:4066
 msgid "Date Modified"
 msgstr "Datum spremembe"
 
 # G:6 K:8 O:0
-#: ../src/fr-window.c:4039
+#: ../src/fr-window.c:4076
 msgid "Name"
 msgstr "Ime"
 
-#: ../src/fr-window.c:5012
+#: ../src/fr-window.c:5049
 msgid "Go to the previous visited location"
 msgstr "Pojdi na prej obiskano mesto"
 
-#: ../src/fr-window.c:5020
+#: ../src/fr-window.c:5057
 msgid "Go to the next visited location"
 msgstr "Pojdi na naslednjo obiskano mesto"
 
-#: ../src/fr-window.c:5028
+#: ../src/fr-window.c:5065
 msgid "Go up one level"
 msgstr "Pojdi raven višje"
 
-#: ../src/fr-window.c:5036
+#: ../src/fr-window.c:5073
 msgid "Go to the home location"
 msgstr "Pojdi domov"
 
-#: ../src/fr-window.c:5089
+#: ../src/fr-window.c:5126
 msgid "Find:"
 msgstr "Poišči:"
 
-#: ../src/fr-window.c:5160
+#: ../src/fr-window.c:5197
 msgid "Close the folders pane"
 msgstr "Zapri okno z mapami"
 
 # G:1 K:0 O:0
-#: ../src/fr-window.c:5258
-#: ../src/fr-window.c:5261
+#: ../src/fr-window.c:5295
+#: ../src/fr-window.c:5298
 #: ../src/ui.h:142
 #: ../src/ui.h:146
 msgid "Open archive"
 msgstr "Odpri arhiv"
 
 # G:1 K:0 O:0
-#: ../src/fr-window.c:5259
+#: ../src/fr-window.c:5296
 msgid "Open a recently used archive"
 msgstr "Odpri nedavno uporabljen arhiv"
 
-#: ../src/fr-window.c:5571
+#: ../src/fr-window.c:5591
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Ni mogoče shraniti arhiva \"%s\""
 
-#: ../src/fr-window.c:6825
+#: ../src/fr-window.c:6847
 msgid "The new name is void."
 msgstr "Novo ime je prazno."
 
-#: ../src/fr-window.c:6829
+#: ../src/fr-window.c:6851
 msgid "The new name is equal to the old one."
 msgstr "Novo ime je enako staremu."
 
-#: ../src/fr-window.c:6869
+#: ../src/fr-window.c:6891
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -799,7 +805,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:6871
+#: ../src/fr-window.c:6893
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -810,47 +816,47 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:6938
+#: ../src/fr-window.c:6960
 msgid "Rename"
 msgstr "Preimenuj"
 
-#: ../src/fr-window.c:6939
+#: ../src/fr-window.c:6961
 msgid "New folder name"
 msgstr "Novo ime mape"
 
-#: ../src/fr-window.c:6939
+#: ../src/fr-window.c:6961
 msgid "New file name"
 msgstr "Novo ime datoteke"
 
-#: ../src/fr-window.c:6943
+#: ../src/fr-window.c:6965
 msgid "_Rename"
 msgstr "P_reimenuj"
 
-#: ../src/fr-window.c:6960
-#: ../src/fr-window.c:6979
+#: ../src/fr-window.c:6982
+#: ../src/fr-window.c:7001
 msgid "Could not rename the folder"
 msgstr "Ni mogoče preimenovati mape"
 
 # G:1 K:0 O:0
-#: ../src/fr-window.c:6960
-#: ../src/fr-window.c:6979
+#: ../src/fr-window.c:6982
+#: ../src/fr-window.c:7001
 msgid "Could not rename the file"
 msgstr "Ni mogoče preimenovati datoteke"
 
-#: ../src/fr-window.c:7374
+#: ../src/fr-window.c:7397
 msgid "Paste Selection"
 msgstr "Prilepi izbor"
 
 # G:1 K:0 O:0
-#: ../src/fr-window.c:7375
+#: ../src/fr-window.c:7398
 msgid "Destination folder"
 msgstr "Ciljna mapa"
 
-#: ../src/fr-window.c:7929
+#: ../src/fr-window.c:7963
 msgid "Add files to an archive"
 msgstr "Arhivu dodaj datoteke"
 
-#: ../src/fr-window.c:7972
+#: ../src/fr-window.c:8006
 msgid "Extract archive"
 msgstr "Razširi arhiv"
 
@@ -858,94 +864,94 @@ msgstr "Razširi arhiv"
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: ../src/glib-utils.c:514
+#: ../src/glib-utils.c:522
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
 # G:4 K:0 O:0
 #. Button
-#: ../src/gtk-utils.c:439
+#: ../src/gtk-utils.c:450
 msgid "Command _Line Output"
 msgstr "Izpis ukazne _vrstice"
 
-#: ../src/gtk-utils.c:842
+#: ../src/gtk-utils.c:879
 msgid "Could not display help"
 msgstr "Ni mogoče prikazati pomoči"
 
-#: ../src/main.c:66
+#: ../src/main.c:65
 msgid "Ace (.ace)"
 msgstr "Ace (.ace)"
 
-#: ../src/main.c:67
+#: ../src/main.c:66
 msgid "Ar (.ar)"
 msgstr "Ar (.ar)"
 
-#: ../src/main.c:68
+#: ../src/main.c:67
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
 # G:2 K:7 O:0
-#: ../src/main.c:75
+#: ../src/main.c:74
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: ../src/main.c:76
+#: ../src/main.c:75
 msgid "Self-extracting zip (.exe)"
 msgstr "Samodejno razširljivi arhiv zip (.exe)"
 
-#: ../src/main.c:78
+#: ../src/main.c:77
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: ../src/main.c:79
+#: ../src/main.c:78
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: ../src/main.c:82
+#: ../src/main.c:81
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: ../src/main.c:84
+#: ../src/main.c:83
 msgid "Tar uncompressed (.tar)"
 msgstr "Nestisnjen tar (.tar)"
 
-#: ../src/main.c:85
+#: ../src/main.c:84
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar, stisnjen z bzip (.tar.bz)"
 
-#: ../src/main.c:86
+#: ../src/main.c:85
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar, stisnjen z bzip2 (.tar.bz2)"
 
-#: ../src/main.c:87
+#: ../src/main.c:86
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar, stisnjen z gzip (.tar.gz)"
 
-#: ../src/main.c:88
+#: ../src/main.c:87
 msgid "Tar compressed with lzma (.tar.lzma)"
 msgstr "Tar, stisnjen z lzma (.tar.lzma)"
 
-#: ../src/main.c:89
+#: ../src/main.c:88
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar, stisnjen z lzop (.tar.lzo)"
 
-#: ../src/main.c:90
+#: ../src/main.c:89
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar, stisnjen s compress (.tar.Z)"
 
-#: ../src/main.c:92
+#: ../src/main.c:91
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: ../src/main.c:93
+#: ../src/main.c:92
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: ../src/main.c:94
+#: ../src/main.c:93
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: ../src/main.c:95
+#: ../src/main.c:94
 msgid "7-Zip (.7z)"
 msgstr "7-Zip (.7z)"
 
