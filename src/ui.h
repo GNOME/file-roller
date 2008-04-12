@@ -165,8 +165,8 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Save the current archive with a different name"),
 	  G_CALLBACK (activate_action_save_as) },
-	{ "SelectAll", NULL,
-	  N_("_Select All"), "<control>A",
+	{ "SelectAll", GTK_STOCK_SELECT_ALL,
+	  NULL, "<control>A",
 	  N_("Select all files"),
 	  G_CALLBACK (activate_action_select_all) },
 	{ "Stop", GTK_STOCK_STOP,
@@ -316,8 +316,9 @@ static const gchar *ui_info =
 "      <menuitem action='About'/>"
 "    </menu>"
 "  </menubar>"
-"  <toolbar  name='ToolBar'>"
+"  <toolbar name='ToolBar'>"
 "    <toolitem action='New'/>"
+"    <separator/>"
 "    <toolitem action='Extract_Toolbar'/>"
 "    <separator/>"
 "    <toolitem action='AddFiles_Toolbar'/>"

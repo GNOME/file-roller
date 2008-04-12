@@ -55,6 +55,14 @@
 #define PREF_EXTRACT_SKIP_NEWER       "/apps/file-roller/dialogs/extract/skip_newer"
 #define PREF_EXTRACT_RECREATE_FOLDERS "/apps/file-roller/dialogs/extract/recreate_folders"
 
+#define PREF_ADD_CURRENT_FOLDER       "/apps/file-roller/dialogs/add/current_folder"
+#define PREF_ADD_FILENAME             "/apps/file-roller/dialogs/add/filename"
+#define PREF_ADD_INCLUDE_FILES        "/apps/file-roller/dialogs/add/include_files"
+#define PREF_ADD_EXCLUDE_FILES        "/apps/file-roller/dialogs/add/exclude_files"
+#define PREF_ADD_UPDATE               "/apps/file-roller/dialogs/add/update"
+#define PREF_ADD_RECURSIVE            "/apps/file-roller/dialogs/add/recursive"
+#define PREF_ADD_NO_SYMLINKS          "/apps/file-roller/dialogs/add/no_symlinks"
+
 #define PREF_BATCH_ADD_DEFAULT_EXTENSION "/apps/file-roller/dialogs/batch-add/default_extension"
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"

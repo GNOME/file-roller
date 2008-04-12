@@ -30,7 +30,9 @@
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "fr-window.h"
+#include "gconf-utils.h"
 #include "gtk-utils.h"
+#include "preferences.h"
 
 
 typedef struct {
@@ -56,21 +58,29 @@ file_sel_response_cb (GtkWidget      *widget,
 	GtkFileChooser *file_sel = GTK_FILE_CHOOSER (widget);
 	FrWindow       *window = data->window;
 	char           *current_folder;
+	char           *uri;
 	gboolean        update;
 	GSList         *selections, *iter;
 	GList          *item_list = NULL;
 
+	current_folder = gtk_file_chooser_get_current_folder_uri (file_sel);
+	uri = gtk_file_chooser_get_uri (file_sel);
+	eel_gconf_set_string (PREF_ADD_CURRENT_FOLDER, current_folder);
+	eel_gconf_set_string (PREF_ADD_FILENAME, uri);
+	fr_window_set_add_default_dir (window, current_folder);
+	g_free (uri);
+	
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
+		g_free (current_folder);
 		return TRUE;
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
 		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-add-options");
+		g_free (current_folder);
 		return TRUE;
 	}
-
-	current_folder = gtk_file_chooser_get_current_folder_uri (file_sel);
 
 	/* check folder permissions. */
 
@@ -91,13 +101,9 @@ file_sel_response_cb (GtkWidget      *widget,
 		gtk_widget_destroy (GTK_WIDGET (d));
 
 		g_free (utf8_path);
-
-	g_free (current_folder);
-
+		g_free (current_folder);
 		return FALSE;
 	}
-
-	fr_window_set_add_default_dir (window, current_folder);
 
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));
 
@@ -164,7 +170,8 @@ add_files_cb (GtkWidget *widget,
 	GtkWidget  *file_sel;
 	DialogData *data;
 	GtkWidget  *main_box;
-
+	char       *folder;
+	
 	data = g_new0 (DialogData, 1);
 	data->window = callback_data;
 	data->dialog = file_sel =
@@ -195,8 +202,12 @@ add_files_cb (GtkWidget *widget,
 
 	/* set data */
 
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_add_default_dir (data->window));
-
+	folder = eel_gconf_get_string (PREF_ADD_CURRENT_FOLDER, "");
+	if ((folder == NULL) || (strcmp (folder, "") == 0)) 
+		folder = g_strdup (fr_window_get_add_default_dir (data->window));
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), folder);
+	g_free (folder);
+	
 	/* signals */
 
 	g_signal_connect (G_OBJECT (file_sel),

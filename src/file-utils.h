@@ -30,7 +30,7 @@
 #define MIME_TYPE_DIRECTORY "application/directory-normal"
 #define MIME_TYPE_ARCHIVE "application/x-archive"
 
-#define get_home_relative_dir(x)        \
+#define get_home_relative_path(x)        \
 	g_strconcat (g_get_home_dir (), \
 		     "/",               \
 		     (x),               \

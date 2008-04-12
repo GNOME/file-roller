@@ -345,8 +345,8 @@ migrate_dir_from_to (const char *from_dir,
 	char *from_path;
 	char *to_path;
 
-	from_path = get_home_relative_dir (from_dir);
-	to_path = get_home_relative_dir (to_dir);
+	from_path = get_home_relative_path (from_dir);
+	to_path = get_home_relative_path (to_dir);
 
 	if (uri_is_dir (from_path) && ! uri_exists (to_path)) {
 		char *line;
@@ -375,8 +375,8 @@ migrate_file_from_to (const char *from_file,
 	char *from_path;
 	char *to_path;
 
-	from_path = get_home_relative_dir (from_file);
-	to_path = get_home_relative_dir (to_file);
+	from_path = get_home_relative_path (from_file);
+	to_path = get_home_relative_path (to_file);
 
 	if (uri_is_file (from_path) && ! uri_exists (to_path)) {
 		char *line;
@@ -477,19 +477,15 @@ get_uri_from_command_line (const char *path)
 static void
 prepare_app (void)
 {
-	char *path;
 	char *uri;
 	char *extract_to_path = NULL;
 	char *add_to_path = NULL;
 
 	/* create the config dir if necessary. */
 
-	path = get_home_relative_dir (RC_DIR);
-	uri = g_filename_to_uri (path, NULL, NULL);
-	g_free (path);
+	uri = get_home_relative_uri (RC_DIR);
 	
-	/* before the gconf port this was a file, now it's folder. */
-	if (uri_is_file (uri)) {
+	if (uri_is_file (uri)) { /* before the gconf port this was a file, now it's folder. */
 		GFile *file;
 		
 		file = g_file_new_for_uri (uri);

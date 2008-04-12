@@ -124,7 +124,7 @@ bookmarks_load_from_disk (Bookmarks *bookmarks)
 
 	bookmarks_free_data (bookmarks);
 
-	path = get_home_relative_dir (bookmarks->rc_filename);
+	path = get_home_relative_path (bookmarks->rc_filename);
 
 	f = fopen (path, "r");
 	g_free (path);
@@ -159,7 +159,7 @@ bookmarks_write_to_disk (Bookmarks *bookmarks)
 
 	g_return_if_fail (bookmarks != NULL);
 
-	path = get_home_relative_dir (bookmarks->rc_filename);
+	path = get_home_relative_path (bookmarks->rc_filename);
 
 	f = fopen (path, "w+");
 	g_free (path);
