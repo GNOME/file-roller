@@ -222,20 +222,16 @@ add_password_arg (FrCommand     *comm,
 		  const char    *password,
 		  gboolean       always_specify)
 {
-	if (always_specify || ((password != NULL) && (*password != 0))) {
+	if (always_specify || ((password != NULL) && (password[0] != '\0'))) {
 		char *arg;
-		char *e_password;
+		char *quoted_arg;
+		
+		arg = g_strdup_printf ("-P %s", password);
+		quoted_arg = g_shell_quote (arg);
 
-		fr_process_add_arg (comm->process, "-P");
+		fr_process_add_arg (comm->process, quoted_arg);
 
-		e_password = escape_str (password, "\"*?[]'`()$!;");
-		if (e_password != NULL) {
-			arg = g_strconcat ("\"", e_password, "\"", NULL);
-			g_free (e_password);
-		} else
-			arg = g_strdup ("\"\"");
-
-		fr_process_add_arg (comm->process, arg);
+		g_free (quoted_arg);
 		g_free (arg);
 	}
 }

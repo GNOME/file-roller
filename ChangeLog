@@ -1,3 +1,11 @@
+2008-04-13  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-zip.c (add_password_arg): 
+	* src/fr-command-rar.c (add_password_arg): quote the whole password 
+	option usgin g_shell_quote.
+	
+	Fixes bug #523158 – exclamation mark in passwords
+
 2008-04-08  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.22.2 released ]
