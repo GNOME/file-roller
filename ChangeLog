@@ -1,3 +1,29 @@
+2008-04-13  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c: 
+	
+	Fixed bug #516043 – status bar / progress bar artifact
+
+	* src/ui.h: 
+	
+	Added keyboard shortcut to deselect all.  Moved add files and add 
+	folders	down in the edit menu.  Moved stop and reaload at the bottom of
+	the view menu.  Removed the sort by submenu.
+	
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* src/actions.c: 
+	
+	Allow to specify a password when converting an archive to another 
+	format.
+
+2008-04-13  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-rar.c (add_password_arg): quote the whole password 
+	option using g_shell_quote
+	
+	Fixes bug #523158 – exclamation mark in RAR password
+
 2008-04-12  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/ui.h: added a separator before the extract toolbar button.
@@ -10,7 +36,8 @@
 	* src/bookmarks.c: 
 	* data/file-roller.schemas: 
 	
-	load and save the add folder dialog options.
+	Load and save the add folder dialog options.  Allow to clear the
+	dialog options
 
 2008-04-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 

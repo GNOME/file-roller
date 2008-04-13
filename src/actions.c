@@ -42,7 +42,24 @@
 #include "glib-utils.h"
 
 
+typedef struct {
+	FrWindow  *window;
+	
+	GtkWidget *file_sel;
+	GtkWidget *combo_box;
+	GtkWidget *password;
+} SaveAsData;
+
+
 /* -- new archive -- */
+
+
+static void
+new_archive_dialog_destroy_cb (GtkWidget  *w,
+		               SaveAsData *data)
+{
+	g_free (data);
+}
 
 
 static void
@@ -87,16 +104,14 @@ is_supported_extension (GtkWidget *file_sel,
 
 
 static char *
-get_full_path (GtkWidget *file_sel)
+get_full_path (SaveAsData *data)
 {
-	GtkWidget   *combo_box;
 	char        *full_path = NULL;
 	char        *path;
 	const char  *filename;
 	int          idx;
 
-	combo_box = g_object_get_data (G_OBJECT (file_sel), "fr_combo_box");
-	path = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
+	path = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->file_sel));
 
 	if ((path == NULL) || (*path == 0))
 		return NULL;
@@ -107,7 +122,7 @@ get_full_path (GtkWidget *file_sel)
 		return NULL;
 	}
 
-	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (combo_box));
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box));
 	if (idx > 0) {
 		const char *path_ext = fr_archive_utils__get_file_name_ext (path);
 		char       *default_ext = file_type_desc[save_type[idx-1]].ext;
@@ -124,21 +139,20 @@ get_full_path (GtkWidget *file_sel)
 
 
 static char *
-get_archive_filename_from_selector (FrWindow  *window,
-				    GtkWidget *file_sel)
+get_archive_filename_from_selector (SaveAsData *data)
 {
 	char      *path = NULL;
 	GFile     *file, *dir;
 	GFileInfo *info;
 	GError    *err = NULL;
 
-	path = get_full_path (file_sel);
+	path = get_full_path (data);
 	if ((path == NULL) || (*path == 0)) {
 		GtkWidget *dialog;
 
 		g_free (path);
 
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						NULL,
 						_("Could not create the archive"),
@@ -176,7 +190,7 @@ get_archive_filename_from_selector (FrWindow  *window,
 		g_object_unref (file);
 		g_free (path);
 
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						NULL,
 						_("Could not create the archive"),
@@ -191,13 +205,11 @@ get_archive_filename_from_selector (FrWindow  *window,
 	/* if the user did not specify a valid extension use the filetype combobox current type
 	 * or tar.gz if automatic is selected. */
 	if (fr_archive_utils__get_file_name_ext (path) == NULL) {
-		GtkWidget *combo_box;
-		int        idx;
-		char      *new_path;
-		char      *ext = NULL;
+		int   idx;
+		char *new_path;
+		char *ext = NULL;
 
-		combo_box = g_object_get_data (G_OBJECT (file_sel), "fr_combo_box");
-		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (combo_box));
+		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box));
 		if (idx > 0)
 			ext = file_type_desc[save_type[idx-1]].ext;
 		else
@@ -212,8 +224,8 @@ get_archive_filename_from_selector (FrWindow  *window,
 	if (uri_exists (path)) {
 		GtkWidget *dialog;
 
-		if (! is_supported_extension (file_sel, path)) {
-			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+		if (! is_supported_extension (data->file_sel, path)) {
+			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
 							GTK_DIALOG_MODAL,
 							NULL,
 							_("Could not create the archive"),
@@ -228,7 +240,7 @@ get_archive_filename_from_selector (FrWindow  *window,
 		g_file_delete (file, NULL, &err);
 		if (err != NULL) {
 			GtkWidget *dialog;
-			dialog = _gtk_error_dialog_new (GTK_WINDOW (file_sel),
+			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
 							GTK_DIALOG_DESTROY_WITH_PARENT,
 							NULL,
 							_("Could not delete the old archive."),
@@ -249,32 +261,29 @@ get_archive_filename_from_selector (FrWindow  *window,
 
 
 static void
-new_file_response_cb (GtkWidget *w,
-		      int        response,
-		      GtkWidget *file_sel)
+new_file_response_cb (GtkWidget  *w,
+		      int         response,
+		      SaveAsData *data)
 {
-	FrWindow *window;
-	char     *path;
-
-	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
+	char *path;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		fr_archive_action_completed (window->archive,
+		fr_archive_action_completed (data->window->archive,
 					     FR_ACTION_CREATING_NEW_ARCHIVE,
 					     FR_PROC_ERROR_STOPPED,
 					     NULL);
-		gtk_widget_destroy (file_sel);
+		gtk_widget_destroy (data->file_sel);
 		return;
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (file_sel), "file-roller-create");
+		show_help_dialog (GTK_WINDOW (data->file_sel), "file-roller-create");
 		return;
 	}
 
-	path = get_archive_filename_from_selector (window, file_sel);
+	path = get_archive_filename_from_selector (data);
 	if (path != NULL) {
-		new_archive (file_sel, window, path);
+		new_archive (data->file_sel, data->window, path);
 		g_free (path);
 	}
 }
@@ -282,7 +291,7 @@ new_file_response_cb (GtkWidget *w,
 
 static void
 filetype_combobox_changed_cb (GtkComboBox *combo_box,
-			      GtkWidget   *file_sel)
+			      SaveAsData  *data)
 {
 	int         idx;
 	const char *uri, *basename;
@@ -291,11 +300,11 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	char       *new_basename;
 	char       *new_basename_uft8;
 	
-	idx = gtk_combo_box_get_active (combo_box) - 1;
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box)) - 1;
 	if (idx < 0)
 		return;
 
-	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->file_sel));
 	if (uri == NULL)
 		return;
 
@@ -309,7 +318,7 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	new_ext = file_type_desc[save_type[idx]].ext;
 	new_basename = g_strconcat (basename_noext, new_ext, NULL);
 	new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), new_basename_uft8);
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->file_sel), new_basename_uft8);
 
 	g_free (new_basename_uft8);
 	g_free (new_basename);
@@ -318,15 +327,18 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 
 
 void
-show_new_archive_dialog (FrWindow  *window,
+show_new_archive_dialog (FrWindow   *window,
 			 const char *archive_name)
 {
+	SaveAsData    *data;
 	GtkWidget     *file_sel;
 	GtkWidget     *hbox;
-	GtkWidget     *combo_box;
 	GtkFileFilter *filter;
 	int            i;
 
+	data = g_new0 (SaveAsData, 1);
+	data->window = window;
+	
 	file_sel = gtk_file_chooser_dialog_new (_("New"),
 						GTK_WINDOW (window),
 						GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -334,6 +346,7 @@ show_new_archive_dialog (FrWindow  *window,
 						GTK_STOCK_NEW, GTK_RESPONSE_OK,
 						GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 						NULL);
+	data->file_sel = file_sel;
 
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
@@ -370,29 +383,29 @@ show_new_archive_dialog (FrWindow  *window,
 			    gtk_label_new (_("Archive type:")),
 			    FALSE, FALSE, 0);
 
-	combo_box = gtk_combo_box_new_text ();
-	gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), _("Automatic"));
+	data->combo_box = gtk_combo_box_new_text ();
+	gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box), _("Automatic"));
 	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)
-		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
+		gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box),
 					   _(file_type_desc[save_type[i]].name));
-	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
-	gtk_box_pack_start (GTK_BOX (hbox), combo_box, TRUE, TRUE, 0);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (data->combo_box), 0);
+	gtk_box_pack_start (GTK_BOX (hbox), data->combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
 
 	/**/
 
-	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
-	g_object_set_data (G_OBJECT (file_sel), "fr_combo_box", combo_box);
-	g_object_set_data (G_OBJECT (window), "fr_file_sel", file_sel);
-
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response", 
 			  G_CALLBACK (new_file_response_cb), 
-			  file_sel);
-	g_signal_connect (G_OBJECT (combo_box),
+			  data);
+	g_signal_connect (G_OBJECT (data->combo_box),
 			  "changed", 
 			  G_CALLBACK (filetype_combobox_changed_cb),
-			  file_sel);
+			  data);
+	g_signal_connect (G_OBJECT (file_sel),
+			  "destroy", 
+			  G_CALLBACK (new_archive_dialog_destroy_cb),
+			  data);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
 	gtk_widget_show_all (file_sel);
@@ -505,52 +518,57 @@ activate_action_open (GtkAction *action,
 
 
 static void
-save_file_destroy_cb (GtkWidget *w,
-		      GtkWidget *file_sel)
+save_file_destroy_cb (GtkWidget  *w,
+		      SaveAsData *data)
 {
+	g_free (data);
 }
 
 
 static void
-save_file_response_cb (GtkWidget *w,
-		       gint       response,
-		       GtkWidget *file_sel)
+save_file_response_cb (GtkWidget  *w,
+		       gint        response,
+		       SaveAsData *data)
 {
-	FrWindow *window;
-	char     *path;
+	char *path;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (file_sel);
+		gtk_widget_destroy (data->file_sel);
 		return;
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (file_sel), "file-roller-convert-archive");
+		show_help_dialog (GTK_WINDOW (data->file_sel), "file-roller-convert-archive");
 		return;
 	}
 
-	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
-
-	path = get_archive_filename_from_selector (window, file_sel);
+	path = get_archive_filename_from_selector (data);
 	if (path == NULL)
 		return;
-
-	fr_window_archive_save_as (window, path);
-	gtk_widget_destroy (file_sel);
+		
+	fr_window_archive_save_as (data->window, path, gtk_entry_get_text (GTK_ENTRY (data->password)));
+	
+	gtk_widget_destroy (data->file_sel);
 	g_free (path);
 }
 
 
 void
 activate_action_save_as (GtkAction *action,
-			 gpointer   data)
+			 gpointer   callback_data)
 {
-	FrWindow      *window = data;
+	FrWindow      *window = callback_data;
 	GtkWidget     *file_sel;
+	GtkWidget     *table;
 	GtkWidget     *hbox;
-	GtkWidget     *combo_box;
+	GtkWidget     *label;
+	SaveAsData    *data;
 	GtkFileFilter *filter;
 	int            i;
+	const char    *password;
+
+	data = g_new0 (SaveAsData, 1);
+	data->window = window;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Save"),
 						GTK_WINDOW (window),
@@ -559,6 +577,8 @@ activate_action_save_as (GtkAction *action,
 						GTK_STOCK_SAVE, GTK_RESPONSE_OK,
 						GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 						NULL);
+	data->file_sel = file_sel;
+	
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (file_sel), TRUE);
@@ -601,41 +621,73 @@ activate_action_save_as (GtkAction *action,
 	gtk_file_filter_add_pattern (filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 
+	data->password = gtk_entry_new (); 
+	gtk_entry_set_visibility (GTK_ENTRY (data->password), FALSE);
+	
 	/**/
 
-	hbox = gtk_hbox_new (FALSE, 12);
-	gtk_box_pack_start (GTK_BOX (hbox),
-			    gtk_label_new (_("Archive type:")),
-			    FALSE, FALSE, 0);
+	table = gtk_table_new (2, 2, FALSE);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 6);
 
-	combo_box = gtk_combo_box_new_text ();
-	gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box), _("Automatic"));
+	/* archive type */
+
+	label = gtk_label_new_with_mnemonic (_("Archive _type:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+
+	data->combo_box = gtk_combo_box_new_text ();
+	gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box), _("Automatic"));
 	for (i = 0; save_type[i] != FR_FILE_TYPE_NULL; i++)
-		gtk_combo_box_append_text (GTK_COMBO_BOX (combo_box),
+		gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box),
 					   _(file_type_desc[save_type[i]].name));
-	gtk_combo_box_set_active (GTK_COMBO_BOX (combo_box), 0);
-	gtk_box_pack_start (GTK_BOX (hbox), combo_box, TRUE, TRUE, 0);
-	gtk_widget_show_all (hbox);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (data->combo_box), 0);
+	gtk_table_attach (GTK_TABLE (table), data->combo_box, 1, 2, 0, 1,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
 
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);
+	/* password */
 
+	hbox = gtk_hbox_new (FALSE, 0);
+
+	label = gtk_label_new_with_mnemonic (_("_Encrypt with password:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	
+	gtk_box_pack_start (GTK_BOX (hbox), data->password, FALSE, TRUE, 0);
+	
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
+			  (GtkAttachOptions) (GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 1, 2,
+			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			  (GtkAttachOptions) (0), 0, 0);
+	
+	gtk_widget_show_all (table);
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), table);
+	
+	/* set the default data */
+	
+	password = fr_window_get_password (window);
+	if (password == NULL)
+		password = "";
+	gtk_entry_set_text (GTK_ENTRY (data->password), password);
+	
 	/**/
-
-	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
-	g_object_set_data (G_OBJECT (file_sel), "fr_combo_box", combo_box);
 
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response", 
 			  G_CALLBACK (save_file_response_cb), 
-			  file_sel);
+			  data);
 	g_signal_connect (G_OBJECT (file_sel),
 			  "destroy", 
 			  G_CALLBACK (save_file_destroy_cb),
-			  file_sel);
-	g_signal_connect (G_OBJECT (combo_box),
+			  data);
+	g_signal_connect (G_OBJECT (data->combo_box),
 			  "changed", 
 			  G_CALLBACK (filetype_combobox_changed_cb),
-			  file_sel);
+			  data);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 	gtk_widget_show_all (file_sel);

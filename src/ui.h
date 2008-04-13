@@ -109,7 +109,7 @@ static GtkActionEntry action_entries[] = {
 	  G_CALLBACK (activate_action_delete_folder_from_sidebar) },
 	  
 	{ "DeselectAll", NULL,
-	  N_("Dese_lect All"), NULL,
+	  N_("Dese_lect All"), "<shift><control>A",
 	  N_("Deselect all files"),
 	  G_CALLBACK (activate_action_deselect_all) },
 	{ "Extract", FR_STOCK_EXTRACT,
@@ -272,9 +272,6 @@ static const gchar *ui_info =
 "      <menuitem action='Close'/>"
 "    </menu>"
 "    <menu action='EditMenu'>"
-"      <menuitem action='AddFiles'/>"
-"      <menuitem action='AddFolder'/>"
-"      <separator/>"
 "      <menuitem action='Cut'/>"
 "      <menuitem action='Copy'/>"
 "      <menuitem action='Paste'/>"
@@ -286,16 +283,19 @@ static const gchar *ui_info =
 "      <separator/>"
 "      <menuitem action='Find'/>"
 "      <separator/>"
+"      <menuitem action='AddFiles'/>"
+"      <menuitem action='AddFolder'/>"
+"      <separator/>"
 "      <menuitem action='Password'/>"
 "    </menu>"
 "    <menu action='ViewMenu'>"
-"      <menuitem action='Stop'/>"
-"      <menuitem action='Reload'/>"
-"      <separator/>"
 "      <menuitem action='ViewToolbar'/>"
 "      <menuitem action='ViewStatusbar'/>"
 "      <menuitem action='ViewFolders'/>"
 "      <separator/>"
+"      <menuitem action='ViewAllFiles'/>"
+"      <menuitem action='ViewAsFolder'/>" 
+/*"      <separator/>"
 "      <menu action='ArrangeFilesMenu'>"
 "        <menuitem action='SortByName'/>"
 "        <menuitem action='SortBySize'/>"
@@ -304,12 +304,12 @@ static const gchar *ui_info =
 "        <menuitem action='SortByLocation'/>"
 "        <separator/>"
 "        <menuitem action='SortReverseOrder'/>"
-"      </menu>"
-"      <separator/>"
-"      <menuitem action='ViewAllFiles'/>"
-"      <menuitem action='ViewAsFolder'/>" 
+"      </menu>"*/
 "      <separator/>"
 "      <menuitem action='LastOutput'/>"
+"      <separator/>"
+"      <menuitem action='Stop'/>"
+"      <menuitem action='Reload'/>"
 "    </menu>"
 "    <menu action='HelpMenu'>"
 "      <menuitem action='Contents'/>"

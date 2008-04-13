@@ -174,21 +174,20 @@ process_line (char     *line,
 
 
 static void
-add_password_arg (FrCommand	*comm,
-		  const char	*password,
-		  gboolean	disable_query)
+add_password_arg (FrCommand  *comm,
+		  const char *password,
+		  gboolean    disable_query)
 {
-	if (password != NULL && password[0] != '\0') {
-		char *arg, *e_password;
+	if ((password != NULL) && (password[0] != '\0')) {
+		char *arg;
+		char *quoted_arg;
+		
+		arg = g_strdup_printf ("-p%s", password);
+		quoted_arg = g_shell_quote (arg);
 
-		e_password = escape_str (password, "\"*?[]'`()$!;");
-		g_assert (e_password != NULL);  /* since password is non-NULL */
+		fr_process_add_arg (comm->process, quoted_arg);
 
-		arg = g_strconcat ("-p\"", e_password, "\"", NULL);
-
-		fr_process_add_arg (comm->process, arg);
-
-		g_free (e_password);
+		g_free (quoted_arg);
 		g_free (arg);
 	} 
 	else if (disable_query)

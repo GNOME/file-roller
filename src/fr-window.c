@@ -119,6 +119,7 @@ typedef struct {
 	guint      converting : 1;
 	char      *temp_dir;
 	FrArchive *new_archive;
+	char      *password;
 } FRConvertData;
 
 typedef enum {
@@ -1294,7 +1295,7 @@ get_sort_method_from_column (int column_id)
 }
 
 
-static const char *
+/*static const char *
 get_action_from_sort_method (FRWindowSortMethod sort_method)
 {
 	switch (sort_method) {
@@ -1308,7 +1309,7 @@ get_action_from_sort_method (FRWindowSortMethod sort_method)
 	}
 
 	return "SortByName";
-}
+}*/
 
 
 static void
@@ -2557,7 +2558,10 @@ fr_window_convert_data_free (FrWindow *window)
 	window->priv->convert_data.temp_dir = NULL;
 
 	g_object_unref (window->priv->convert_data.new_archive);
+	g_free (window->priv->convert_data.password);
+	
 	window->priv->convert_data.new_archive = NULL;
+	window->priv->convert_data.password = NULL;
 }
 
 
@@ -2931,7 +2935,7 @@ action_performed (FrArchive   *archive,
 				  FALSE,
 				  TRUE,
 				  FALSE,
-				  window->priv->password,
+				  window->priv->convert_data.password,
 				  window->priv->compression);
 			g_free (source_dir);
 		}
@@ -4250,8 +4254,8 @@ sort_column_changed_cb (GtkTreeSortable *sortable,
 	window->priv->sort_method = get_sort_method_from_column (column_id);
 	window->priv->sort_type = order;
 
-	set_active (window, get_action_from_sort_method (window->priv->sort_method), TRUE);
-	set_active (window, "SortReverseOrder", (window->priv->sort_type == GTK_SORT_DESCENDING));
+	/*set_active (window, get_action_from_sort_method (window->priv->sort_method), TRUE);
+	set_active (window, "SortReverseOrder", (window->priv->sort_type == GTK_SORT_DESCENDING));*/
 }
 
 
@@ -4763,6 +4767,8 @@ fr_window_construct (FrWindow *window)
 	GtkWidget        *list_scrolled_window;
 	GtkWidget        *vbox;
 	GtkWidget        *location_box;
+	GtkStatusbar     *statusbar;
+	GtkWidget        *statusbar_box;
 	GtkWidget        *filter_box;
 	GtkWidget        *tree_scrolled_window;
 	GtkWidget        *sidepane_title;
@@ -4916,6 +4922,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->convert_data.converting = FALSE;
 	window->priv->convert_data.temp_dir = NULL;
 	window->priv->convert_data.new_archive = NULL;
+	window->priv->convert_data.password = NULL;
 
 	window->priv->stoppable = TRUE;
 
@@ -5346,6 +5353,14 @@ fr_window_construct (FrWindow *window)
 	window->priv->list_info_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->priv->statusbar), "list_info");
 	window->priv->progress_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->priv->statusbar), "progress");
 
+	statusbar = GTK_STATUSBAR (window->priv->statusbar);
+	statusbar_box = gtk_hbox_new (FALSE, 4);
+	g_object_ref (statusbar->label);
+	gtk_container_remove (GTK_CONTAINER (statusbar->frame), statusbar->label);
+        gtk_box_pack_start (GTK_BOX (statusbar_box), statusbar->label, TRUE, TRUE, 0);
+	g_object_unref (statusbar->label);
+	gtk_container_add (GTK_CONTAINER (statusbar->frame), statusbar_box);
+	
 	window->priv->progress_bar = gtk_progress_bar_new ();
 	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->priv->progress_bar), ACTIVITY_PULSE_STEP);
 	gtk_widget_set_size_request (window->priv->progress_bar, -1, PROGRESS_BAR_HEIGHT);
@@ -5353,10 +5368,11 @@ fr_window_construct (FrWindow *window)
                 GtkWidget *vbox;
                 
                 vbox = gtk_vbox_new (FALSE, 0);
-                gtk_box_pack_start (GTK_BOX (window->priv->statusbar), vbox, FALSE, FALSE, 0);
-                gtk_box_pack_start (GTK_BOX (vbox), window->priv->progress_bar, TRUE, FALSE, 0);
+                gtk_box_pack_start (GTK_BOX (statusbar_box), vbox, FALSE, FALSE, 0);
+                gtk_box_pack_start (GTK_BOX (vbox), window->priv->progress_bar, TRUE, TRUE, 1);
                 gtk_widget_show (vbox);
         }
+        gtk_widget_show (statusbar_box);
 	gnome_app_set_statusbar (GNOME_APP (window), window->priv->statusbar);
 	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->priv->statusbar), TRUE);
 
@@ -5558,9 +5574,43 @@ fr_window_archive_is_present (FrWindow *window)
 }
 
 
+typedef struct {
+	char *uri;
+	char *password;
+} SaveAsData;
+
+
+static SaveAsData *
+save_as_data_new (const char *uri,
+		  const char *password)
+{
+	SaveAsData *sdata;
+	
+	sdata = g_new0 (SaveAsData, 1);
+	if (uri != NULL)
+		sdata->uri = g_strdup (uri);
+	if (password != NULL)
+		sdata->password = g_strdup (password);
+	
+	return sdata;
+}
+
+
+static void
+save_as_data_free (SaveAsData *sdata)
+{
+	if (sdata == NULL)
+		return;
+	g_free (sdata->uri);
+	g_free (sdata->password);
+	g_free (sdata);
+}
+
+
 void
 fr_window_archive_save_as (FrWindow   *window,
-			   const char *uri)
+			   const char *uri,
+			   const char *password)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (uri != NULL);
@@ -5574,6 +5624,11 @@ fr_window_archive_save_as (FrWindow   *window,
 	if (window->priv->convert_data.new_archive != NULL) {
 		g_object_unref (window->priv->convert_data.new_archive);
 		window->priv->convert_data.new_archive = NULL;
+	}
+	
+	if (window->priv->convert_data.password != NULL) {
+		g_free (window->priv->convert_data.password);
+		window->priv->convert_data.password = NULL;
 	}
 
 	/* create the new archive */
@@ -5609,10 +5664,13 @@ fr_window_archive_save_as (FrWindow   *window,
 
 	g_return_if_fail (window->priv->convert_data.new_archive->command != NULL);
 
+	if (password != NULL)
+		window->priv->convert_data.password = g_strdup (password);
+
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_SAVE_AS,
-					    g_strdup (uri),
-					    (GFreeFunc) g_free);
+					    save_as_data_new (uri, password),
+					    (GFreeFunc) save_as_data_free);
 
 	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
 			  "start",
@@ -7940,6 +7998,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 	ExtractData   *edata;
 	RenameData    *rdata;
 	OpenFilesData *odata;
+	SaveAsData    *sdata;
 
 	switch (action->type) {
 	case FR_BATCH_ACTION_LOAD:
@@ -8036,7 +8095,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_SAVE_AS:
 		debug (DEBUG_INFO, "[BATCH] SAVE_AS\n");
 
-		fr_window_archive_save_as (window, (char*) action->data);
+		sdata = action->data;
+		fr_window_archive_save_as (window, sdata->uri, sdata->password);
 		break;
 
 	case FR_BATCH_ACTION_TEST:

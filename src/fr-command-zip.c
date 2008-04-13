@@ -222,7 +222,7 @@ add_password_arg (FrCommand     *comm,
 		  const char    *password,
 		  gboolean       always_specify)
 {
-	if (always_specify || ((password != NULL) && (*password != 0))) {
+	if (always_specify || ((password != NULL) && (password[0] != '\0'))) {
 		char *arg;
 		char *e_password;
 
