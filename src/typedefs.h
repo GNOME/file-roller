@@ -118,6 +118,7 @@ typedef struct {
 	char       *ext;
 	char       *mime_type;
 	char       *name;
+	gboolean    supports_password;
 } FRFileTypeDescription;
 
 typedef struct {

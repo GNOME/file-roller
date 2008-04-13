@@ -3254,6 +3254,9 @@ fr_archive_utils__get_file_name_ext (const char *filename)
 	int n = sizeof (ext) / sizeof (char*);
 	int i;
 
+	if (filename == NULL)
+		return NULL;
+
 	for (i = n - 1; i >= 0; i--)
 		if (file_extension_is (filename, ext[i]))
 			return ext[i];

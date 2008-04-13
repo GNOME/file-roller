@@ -33,13 +33,14 @@
 #include "dlg-open-with.h"
 #include "dlg-password.h"
 #include "dlg-prop.h"
-#include "main.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
 #include "file-utils.h"
 #include "fr-process.h"
 #include "gconf-utils.h"
 #include "glib-utils.h"
+#include "main.h"
+#include "typedefs.h"
 
 
 typedef struct {
@@ -48,6 +49,7 @@ typedef struct {
 	GtkWidget *file_sel;
 	GtkWidget *combo_box;
 	GtkWidget *password;
+	GtkWidget *password_label;
 } SaveAsData;
 
 
@@ -290,6 +292,31 @@ new_file_response_cb (GtkWidget  *w,
 
 
 static void
+update_password_availability_for_ext (SaveAsData *data,
+				      const char *ext)
+{
+	int i;
+	
+	if (data->password == NULL) 
+		return;
+		
+	if (ext == NULL) {
+		gtk_widget_set_sensitive (data->password, FALSE);
+		gtk_widget_set_sensitive (data->password_label, FALSE);
+		return;
+	}
+				
+	for (i = 0; file_type_desc[i].id != FR_FILE_TYPE_NULL; i++) {
+		if (strcmp (file_type_desc[i].ext, ext) == 0) {
+			gtk_widget_set_sensitive (data->password, file_type_desc[i].supports_password);
+			gtk_widget_set_sensitive (data->password_label, file_type_desc[i].supports_password);
+			break;
+		}
+	}
+}
+
+
+static void
 filetype_combobox_changed_cb (GtkComboBox *combo_box,
 			      SaveAsData  *data)
 {
@@ -300,17 +327,22 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	char       *new_basename;
 	char       *new_basename_uft8;
 	
-	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box)) - 1;
-	if (idx < 0)
-		return;
-
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->file_sel));
 	if (uri == NULL)
 		return;
-
+	
 	ext = fr_archive_utils__get_file_name_ext (uri);
 	if (ext == NULL)
 		ext = "";
+	
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box)) - 1;
+	if (idx < 0) {
+		if (data->password != NULL) {
+			gtk_widget_set_sensitive (data->password, TRUE);
+			gtk_widget_set_sensitive (data->password_label, TRUE);
+		} 
+		return;
+	}
 
 	basename = file_name_from_path (uri);
 	basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
@@ -319,7 +351,8 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	new_basename = g_strconcat (basename_noext, new_ext, NULL);
 	new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->file_sel), new_basename_uft8);
-
+	update_password_availability_for_ext (data, new_ext);
+	
 	g_free (new_basename_uft8);
 	g_free (new_basename);
 	g_free (basename_noext);
@@ -586,9 +619,9 @@ activate_action_save_as (GtkAction *action,
 
 	if (fr_window_get_archive_uri (window)) {
 		const char *uri;
-		GFile     *file;
-		GFileInfo *info;
-		GError    *err = NULL;
+		GFile      *file;
+		GFileInfo  *info;
+		GError     *err = NULL;
 
 		uri = fr_window_get_archive_uri (window);
 		file = g_file_new_for_uri (uri);
@@ -652,7 +685,7 @@ activate_action_save_as (GtkAction *action,
 
 	hbox = gtk_hbox_new (FALSE, 0);
 
-	label = gtk_label_new_with_mnemonic (_("_Encrypt with password:"));
+	data->password_label = label = gtk_label_new_with_mnemonic (_("_Encrypt with password:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 	
 	gtk_box_pack_start (GTK_BOX (hbox), data->password, FALSE, TRUE, 0);
