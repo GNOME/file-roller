@@ -26,7 +26,6 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libgnome/gnome-config.h>
 #include <glade/glade.h>
 #include <gio/gio.h>
 #include "dlg-add-folder.h"
@@ -405,64 +404,6 @@ add_folder_cb (GtkWidget *widget,
 
 
 static void
-config_set_bool (const char *config_file,
-		 const char *option,
-		 gboolean    value)
-{
-       char *path;
-
-       path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
-       gnome_config_set_bool (path, value);
-
-       g_free (path);
-}
-
-
-static void
-config_set_string (const char *config_file,
-		   const char *option,
-		   const char *value)
-{
-	char *path;
-
-	path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
-	gnome_config_set_string (path, value);
-
-	g_free (path);
-}
-
-
-static gboolean
-config_get_bool (const char *config_file,
-		 const char *option)
-{
-	char     *path;
-	gboolean  value;
-
-	path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
-	value = gnome_config_get_bool (path);
-	g_free (path);
-
-	return value;
-}
-
-
-static char*
-config_get_string (const char *config_file,
-		   const char *option)
-{
-	char *path;
-	char *value;
-
-	path = g_strconcat ("=", config_file, "=/Options/", option, NULL);
-	value = gnome_config_get_string (path);
-	g_free (path);
-
-	return value;
-}
-
-
-static void
 dlg_add_folder_save_last_used_options (DialogData *data,
 			               const char *options_path)
 {
@@ -521,6 +462,8 @@ dlg_add_folder_load_options (DialogData *data,
 	GFile     *options_dir;
 	GFile     *options_file;
 	char      *file_path;
+	GKeyFile  *key_file;
+	GError    *error = NULL;
 	char      *base_dir = NULL;
 	char      *filename = NULL;
 	char      *include_files = NULL;
@@ -530,21 +473,26 @@ dlg_add_folder_load_options (DialogData *data,
 	gboolean   no_symlinks;
 	
 	options_dir = get_home_relative_file (RC_OPTIONS_DIR);
-	options_file = g_file_get_child (options_dir, name);
-	if (! g_file_query_exists (options_file, NULL)) {
+	options_file = g_file_get_child (options_dir, name);	
+	file_path = g_file_get_path (options_file);
+	key_file = g_key_file_new ();
+	if (! g_key_file_load_from_file (key_file, file_path, G_KEY_FILE_KEEP_COMMENTS, &error)) {
+		if (error->code != G_IO_ERROR_NOT_FOUND)
+			g_warning ("Could not load options file: %s\n", error->message);
+		g_clear_error (&error);
 		g_object_unref (options_file);
+		g_object_unref (options_dir);
+		g_key_file_free (key_file);
 		return FALSE;
 	}
 	
-	file_path = g_file_get_path (options_file);
-	
-	base_dir = config_get_string (file_path, "base_dir");
-	filename = config_get_string (file_path, "filename");
-	include_files = config_get_string (file_path, "include_files");
-	exclude_files = config_get_string (file_path, "exclude_files");
-	update = config_get_bool (file_path, "update");
-	recursive = config_get_bool (file_path, "recursive");
-	no_symlinks = config_get_bool (file_path, "no_symlinks");
+	base_dir = g_key_file_get_string (key_file, "Options", "base_dir", NULL);
+	filename = g_key_file_get_string (key_file, "Options", "filename", NULL);
+	include_files = g_key_file_get_string (key_file, "Options", "include_files", NULL);
+	exclude_files = g_key_file_get_string (key_file, "Options", "exclude_files", NULL);
+	update = g_key_file_get_boolean (key_file, "Options", "update", NULL);
+	recursive = g_key_file_get_boolean (key_file, "Options", "recursive", NULL);
+	no_symlinks = g_key_file_get_boolean (key_file, "Options", "no_symlinks", NULL);
 
 	sync_widgets_with_options (data,
 			   	   base_dir,
@@ -557,12 +505,14 @@ dlg_add_folder_load_options (DialogData *data,
 	
 	dlg_add_folder_save_last_used_options (data, file_path);
 	
-	g_free (file_path);
 	g_free (base_dir);
 	g_free (filename);
 	g_free (include_files);
 	g_free (exclude_files);
+	g_key_file_free (key_file);
+	g_free (file_path);
 	g_object_unref (options_file);
+	g_object_unref (options_dir);
 	
 	return TRUE;
 }
@@ -633,7 +583,6 @@ static void
 dlg_add_folder_save_current_options (DialogData *data,
 				     GFile      *options_file) 
 {
-	char       *options_path;
 	char       *base_dir;
 	char       *filename;
 	const char *include_files;
@@ -641,7 +590,11 @@ dlg_add_folder_save_current_options (DialogData *data,
 	gboolean    update;
 	gboolean    recursive;
 	gboolean    no_symlinks;
-
+	GKeyFile   *key_file;
+	char       *file_data;
+	gsize       size;
+	GError     *error = NULL;
+	
 	get_options_from_widgets (data,
 				  &base_dir,
 				  &filename,
@@ -652,18 +605,43 @@ dlg_add_folder_save_current_options (DialogData *data,
 				  &no_symlinks);
 
 	fr_window_set_add_default_dir (data->window, base_dir);
-
-	options_path = g_file_get_path (options_file);
-	config_set_string (options_path, "base_dir", base_dir);
-	config_set_string (options_path, "filename", filename);
-	config_set_string (options_path, "include_files", include_files);
-	config_set_string (options_path, "exclude_files", exclude_files);
-	config_set_bool   (options_path, "update", update);
-	config_set_bool   (options_path, "recursive", recursive);
-	config_set_bool   (options_path, "no_symlinks", no_symlinks);
-	gnome_config_sync ();
 	
-	g_free (options_path);
+	key_file = g_key_file_new ();
+	g_key_file_set_string (key_file, "Options", "base_dir", base_dir);
+	g_key_file_set_string (key_file, "Options", "filename", filename);
+	g_key_file_set_string (key_file, "Options", "include_files", include_files);
+	g_key_file_set_string (key_file, "Options", "exclude_files", exclude_files);
+	g_key_file_set_boolean (key_file, "Options", "update", update);
+	g_key_file_set_boolean (key_file, "Options", "recursive", recursive);
+	g_key_file_set_boolean (key_file, "Options", "no_symlinks", no_symlinks);
+	
+	file_data = g_key_file_to_data (key_file, &size, &error);
+	if (error != NULL) {
+		g_warning ("Could not save options: %s\n", error->message);
+		g_clear_error (&error);
+	}
+	else { 
+		GFileOutputStream *stream;
+		
+		stream = g_file_replace (options_file, NULL, FALSE, 0, NULL, &error);
+		if (stream == NULL) {
+			g_warning ("Could not save options: %s\n", error->message);
+			g_clear_error (&error);
+		}
+		else if (! g_output_stream_write_all (G_OUTPUT_STREAM (stream), file_data, size, NULL, NULL, &error)) {
+			g_warning ("Could not save options: %s\n", error->message);
+			g_clear_error (&error);
+		}
+		else if (! g_output_stream_close (G_OUTPUT_STREAM (stream), NULL, &error)) {
+			g_warning ("Could not save options: %s\n", error->message);
+			g_clear_error (&error);
+		}
+		
+		g_object_unref (stream);
+	}
+	
+	g_free (file_data);
+	g_key_file_free (key_file);
 	g_free (base_dir);
 	g_free (filename);	
 }
