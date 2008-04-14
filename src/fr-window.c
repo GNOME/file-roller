@@ -24,11 +24,10 @@
 #include <string.h>
 
 #include <glib/gi18n.h>
+#include <gio/gio.h>
 #include <gdk/gdkcursor.h>
 #include <gdk/gdkkeysyms.h>
-#include <gio/gio.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <libgnome/gnome-url.h>
 
 #include "actions.h"
 #include "dlg-batch-add.h"
@@ -2490,12 +2489,14 @@ static void
 open_folder (GtkWindow  *parent,
 	     const char *folder)
 {
-	GError *err = NULL;
-
+	GAppLaunchContext *app_context;
+	GError            *error = NULL;
+	
 	if (folder == NULL)
 		return;
 
-	if (! gnome_url_show (folder, &err)) {
+	app_context = g_app_launch_context_new ();
+	if (! g_app_info_launch_default_for_uri (folder, app_context, &error)) {
 		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
@@ -2508,12 +2509,12 @@ open_folder (GtkWindow  *parent,
 					   GTK_DIALOG_MODAL,
 					   NULL,
 					   message,
-					   err->message);
+					   error->message);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (d);
 
 		g_free (message);
-		g_clear_error (&err);
+		g_clear_error (&error);
 	}
 }
 
