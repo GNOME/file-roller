@@ -1,4 +1,20 @@
 2008-04-14  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
+	* src/gtk-utils.c: use g_app_info_launch_default_for_uri to show
+	the help dialog.
+	
+	* configure.in: requires at least gtk+ 2.13.0 for GdkAppLaunchContext
+	
+	* src/fr-window.c (open_folder): use a GdkAppLaunchContext instead of a
+	GAppLaunchContext
+
+	* src/main.c: re-arranged includes.
+	
+2008-04-14  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c (open_folder): unref the app_context when done.
+
+2008-04-14  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/fr-window.c: replace gnome_url_show with 
 	g_app_info_launch_default_for_uri

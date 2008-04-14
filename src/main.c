@@ -23,10 +23,10 @@
 #include <config.h>
 #include <string.h>
 
-#include <libgnome/gnome-config.h>
-#include <libgnomeui/libgnomeui.h>
 #include <gio/gio.h>
 #include <glade/glade.h>
+#include <libgnome/gnome-config.h>
+#include <libgnomeui/libgnomeui.h>
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-process.h"

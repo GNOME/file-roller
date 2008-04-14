@@ -862,51 +862,23 @@ get_folder_pixbuf_size_for_list (GtkWidget *widget)
 
 void
 show_help_dialog (GtkWindow  *parent,
-		  const char *link_id)
+		  const char *section)
 {
-	GError *err = NULL;
-	char *command;
-	const char *lang;
-	char *uri = NULL;
-	int i;
-	GdkScreen *gscreen;
-
-	const char * const * langs = g_get_language_names ();
-
-	for (i = 0; langs[i]; i++) {
-		lang = langs[i];
-		if (strchr (lang, '.')) {
-			continue;
-		}
-
-		uri = g_build_filename(FR_DATADIR,
-				       "/gnome/help/file-roller/",
-					lang,
-				       "/file-roller.xml",
-					NULL);
-					
-		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
-                    break;
-		}
-	}
 	
-	if (link_id) {
-		command = g_strconcat ("gnome-open ghelp://", uri, "?", link_id, NULL);
-	} else {
-		command = g_strconcat ("gnome-open ghelp://", uri,  NULL);
-	}
-
-	gscreen = gdk_screen_get_default();
-	gdk_spawn_command_line_on_screen (gscreen, command, &err);
-
-	if (err != NULL) {
-		GtkWidget *dialog;
+	GdkAppLaunchContext *app_context;
+	char                *uri;
+	GError              *error = NULL;
+	
+	uri = g_strconcat ("ghelp:file-roller", section ? "?" : NULL, section, NULL);	
+	app_context = gdk_app_launch_context_new ();
+	if (! g_app_info_launch_default_for_uri (uri, G_APP_LAUNCH_CONTEXT (app_context), &error)) {
+  		GtkWidget *dialog;
 
 		dialog = _gtk_message_dialog_new (parent,
 						  GTK_DIALOG_DESTROY_WITH_PARENT, 
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not display help"),
-						  err->message,
+						  error->message,
 						  GTK_STOCK_OK, GTK_RESPONSE_OK,
 						  NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
@@ -919,6 +891,8 @@ show_help_dialog (GtkWindow  *parent,
 
 		gtk_widget_show (dialog);
 
-		g_error_free (err);
+		g_clear_error (&error);
 	}
+	g_object_unref (app_context);
+	g_free (uri);
 }

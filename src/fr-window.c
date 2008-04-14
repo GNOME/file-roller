@@ -2489,14 +2489,14 @@ static void
 open_folder (GtkWindow  *parent,
 	     const char *folder)
 {
-	GAppLaunchContext *app_context;
-	GError            *error = NULL;
+	GdkAppLaunchContext *app_context;
+	GError              *error = NULL;
 	
 	if (folder == NULL)
 		return;
 
-	app_context = g_app_launch_context_new ();
-	if (! g_app_info_launch_default_for_uri (folder, app_context, &error)) {
+	app_context = gdk_app_launch_context_new ();
+	if (! g_app_info_launch_default_for_uri (folder, G_APP_LAUNCH_CONTEXT (app_context), &error)) {
 		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
@@ -2516,6 +2516,7 @@ open_folder (GtkWindow  *parent,
 		g_free (message);
 		g_clear_error (&error);
 	}
+	g_object_unref (app_context);
 }
 
 
