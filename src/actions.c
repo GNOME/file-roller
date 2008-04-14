@@ -1011,6 +1011,42 @@ activate_action_last_output (GtkAction *action,
 
 
 void
+activate_action_go_back (GtkAction *action,
+			 gpointer   data)
+{
+	FrWindow *window = data;
+	fr_window_go_back (window);
+}
+
+
+void
+activate_action_go_forward (GtkAction *action,
+			    gpointer   data)
+{
+	FrWindow *window = data;
+	fr_window_go_forward (window);
+}
+
+
+void
+activate_action_go_up (GtkAction *action,
+		       gpointer   data)
+{
+	FrWindow *window = data;
+	fr_window_go_up_one_level (window);
+}
+
+
+void
+activate_action_go_home (GtkAction *action,
+			 gpointer   data)
+{
+	FrWindow *window = data;
+	fr_window_go_to_location (window, "/", FALSE);
+}
+
+
+void
 activate_action_manual (GtkAction *action,
 			gpointer   data)
 {

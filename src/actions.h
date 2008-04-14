@@ -70,6 +70,11 @@ void activate_action_reload (GtkAction *action, gpointer data);
 void activate_action_sort_reverse_order (GtkAction *action, gpointer data);
 void activate_action_last_output (GtkAction *action, gpointer data);
 
+void activate_action_go_back (GtkAction *action, gpointer data);
+void activate_action_go_forward (GtkAction *action, gpointer data);
+void activate_action_go_up (GtkAction *action, gpointer data);
+void activate_action_go_home (GtkAction *action, gpointer data);
+
 void activate_action_manual (GtkAction *action, gpointer data);
 void activate_action_about (GtkAction *action, gpointer data);
 

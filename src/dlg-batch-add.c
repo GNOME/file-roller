@@ -27,7 +27,6 @@
 
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <libgnomeui/gnome-icon-lookup.h>
 #include <glade/glade.h>
 
 #include "file-utils.h"
@@ -323,40 +322,6 @@ add_clicked_cb (GtkWidget  *widget,
 }
 
 
-static GdkPixbuf *
-get_pixbuf_from_mime_type (const char *mime_type,
-			   int         icon_size)
-{
-	GtkIconTheme *icon_theme;
-	char         *icon_name = NULL;
-	GdkPixbuf    *icon = NULL;
-
-	icon_theme = gtk_icon_theme_get_default ();
-
-	if (icon_theme == NULL)
-		return NULL;
-
-	icon_name = gnome_icon_lookup (icon_theme,
-				       NULL,
-				       NULL,
-				       NULL,
-				       NULL,
-				       mime_type,
-				       GNOME_ICON_LOOKUP_FLAGS_NONE,
-				       NULL);
-
-	if (icon_name != NULL) 
-		icon = gtk_icon_theme_load_icon (icon_theme,
-						 icon_name,
-						 icon_size,
-						 0,
-						 NULL);
-
-	g_free (icon_name);
-	return icon;
-}
-
-
 static void
 archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 				   DialogData  *data)
@@ -371,7 +336,7 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 		save_type_list =  save_type;
 	mime_type = file_type_desc[save_type_list[idx]].mime_type;
 
-	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_pixbuf_from_mime_type (mime_type, ARCHIVE_ICON_SIZE));
+	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_mime_type_pixbuf (mime_type, ARCHIVE_ICON_SIZE, NULL));
 }
 
 

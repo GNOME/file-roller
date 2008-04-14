@@ -193,6 +193,23 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Open the selected folder"),
 	  G_CALLBACK (activate_action_open_folder_from_sidebar) },
+	  
+	{ "GoBack", GTK_STOCK_GO_BACK,
+	  NULL, NULL,
+	  N_("Go to the previous visited location"),
+	  G_CALLBACK (activate_action_go_back) },
+	{ "GoForward", GTK_STOCK_GO_FORWARD,
+	  NULL, NULL,
+	  N_("Open Go to the next visited location selected folder"),
+	  G_CALLBACK (activate_action_go_forward) },
+	{ "GoUp", GTK_STOCK_GO_UP,
+	  NULL, NULL,
+	  N_("Go up one level"),
+	  G_CALLBACK (activate_action_go_up) },
+	{ "GoHome", GTK_STOCK_HOME,
+	  NULL, NULL,
+	  N_("Go to the home location"),
+	  G_CALLBACK (activate_action_go_home) },
 };
 static guint n_action_entries = G_N_ELEMENTS (action_entries);
 
@@ -325,6 +342,12 @@ static const gchar *ui_info =
 "    <toolitem action='AddFolder_Toolbar'/>"
 "    <separator/>"
 "    <toolitem action='Stop'/>"
+"  </toolbar>"
+"  <toolbar name='LocationBar'>"
+"    <toolitem action='GoBack'/>"
+"    <toolitem action='GoForward'/>"
+"    <toolitem action='GoUp'/>"
+"    <toolitem action='GoHome'/>"
 "  </toolbar>"
 "  <popup name='FilePopupMenu'>"
 "    <menuitem action='ViewSelection'/>"

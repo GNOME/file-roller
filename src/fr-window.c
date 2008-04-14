@@ -26,9 +26,9 @@
 #include <glib/gi18n.h>
 #include <gdk/gdkcursor.h>
 #include <gdk/gdkkeysyms.h>
-#include <libgnomeui/gnome-icon-lookup.h>
 #include <gio/gio.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <libgnome/gnome-url.h>
 
 #include "actions.h"
 #include "dlg-batch-add.h"
@@ -77,8 +77,6 @@
 #define DEF_WIN_HEIGHT 480
 #define DEF_SIDEBAR_WIDTH 200
 
-#define ICON_TYPE_DIRECTORY "gnome-fs-directory"
-#define ICON_TYPE_REGULAR   "gnome-fs-regular"
 #define FILE_LIST_ICON_SIZE GTK_ICON_SIZE_LARGE_TOOLBAR
 #define DIR_TREE_ICON_SIZE GTK_ICON_SIZE_MENU
 
@@ -110,7 +108,7 @@ static GtkTargetEntry target_table[] = {
 };
 
 typedef struct {
-	FRBatchActionType type;
+	FrBatchActionType type;
 	void *            data;
 	GFreeFunc         free_func;
 } FRBatchAction;
@@ -137,6 +135,16 @@ typedef struct {
 	char     *password;
 	gboolean  extract_here;
 } ExtractData;
+
+
+typedef enum {
+        FR_WINDOW_AREA_MENUBAR,
+        FR_WINDOW_AREA_TOOLBAR,
+        FR_WINDOW_AREA_LOCATIONBAR,
+        FR_WINDOW_AREA_CONTENTS,
+        FR_WINDOW_AREA_FILTERBAR,
+        FR_WINDOW_AREA_STATUSBAR,
+} FrWindowArea;
 
 
 /* -- FrClipboardData -- */
@@ -211,10 +219,12 @@ enum {
 	LAST_SIGNAL
 };
 
-static GnomeAppClass *parent_class = NULL;
+static GtkWindowClass *parent_class = NULL;
 static guint fr_window_signals[LAST_SIGNAL] = { 0 };
 
 struct _FrWindowPrivateData {
+	GtkWidget         *layout;
+	GtkWidget         *contents;
 	GtkWidget         *list_view;
 	GtkListStore      *list_store;
 	GtkWidget         *tree_view;
@@ -225,10 +235,6 @@ struct _FrWindowPrivateData {
 	GtkWidget         *location_bar;
 	GtkWidget         *location_entry;
 	GtkWidget         *location_label;
-	GtkWidget         *up_button;
-	GtkWidget         *home_button;
-	GtkWidget         *back_button;
-	GtkWidget         *fwd_button;
 	GtkWidget         *filter_bar;
 	GtkWidget         *filter_entry;
 	GtkWidget         *paned;
@@ -717,7 +723,7 @@ fr_window_get_type (void)
 			(GInstanceInitFunc) fr_window_init
 		};
 
-		type = g_type_register_static (GNOME_TYPE_APP,
+		type = g_type_register_static (GTK_TYPE_WINDOW,
 					       "FrWindow",
 					       &type_info,
 					       0);
@@ -1133,7 +1139,6 @@ static GdkPixbuf *
 get_mime_type_icon (const char *mime_type)
 {
 	GdkPixbuf *pixbuf = NULL;
-	char      *icon_name = NULL;
 	
 	pixbuf = g_hash_table_lookup (tree_pixbuf_hash, mime_type);
 	if (pixbuf != NULL) {
@@ -1141,24 +1146,7 @@ get_mime_type_icon (const char *mime_type)
 		return pixbuf;
 	}
 
-	if (strcmp (mime_type, MIME_TYPE_DIRECTORY) == 0)
-		icon_name = g_strdup (ICON_TYPE_DIRECTORY);
-	else
-		icon_name = gnome_icon_lookup (icon_theme,
-                	                       NULL,
-	                                       NULL,
-        	                               NULL,
-                	                       NULL,
-       	                	               mime_type,
-               	                	       GNOME_ICON_LOOKUP_FLAGS_NONE,
-	                       	               NULL);
-	pixbuf = gtk_icon_theme_load_icon (icon_theme,
-					   icon_name,
-					   dir_tree_icon_size,
-					   0,
-					   NULL);
-	g_free (icon_name);						
-						
+	pixbuf = get_mime_type_pixbuf (mime_type, file_list_icon_size, icon_theme);
 	if (pixbuf == NULL)
 		return NULL;
 
@@ -1174,54 +1162,32 @@ static GdkPixbuf *
 get_icon (GtkWidget *widget,
 	  FileData  *fdata)
 {
-	GdkPixbuf   *pixbuf = NULL;
-	char        *icon_name = NULL;
-	gboolean     free_icon_name = FALSE;
-	const char  *mime_type;
+	GdkPixbuf  *pixbuf = NULL;
+	const char *content_type;
+	GIcon      *icon;
 
 	if (file_data_is_dir (fdata))
-		mime_type = MIME_TYPE_DIRECTORY;
+		content_type = MIME_TYPE_DIRECTORY;
 	else
-		mime_type = g_content_type_get_mime_type (fdata->content_type);
+		content_type = fdata->content_type;
 
 	/* look in the hash table. */
 
-	pixbuf = g_hash_table_lookup (pixbuf_hash, mime_type);
+	pixbuf = g_hash_table_lookup (pixbuf_hash, content_type);
 	if (pixbuf != NULL) {
 		g_object_ref (G_OBJECT (pixbuf));
 		return pixbuf;
 	}
 
-	if (file_data_is_dir (fdata))
-		icon_name = ICON_TYPE_DIRECTORY;
-	else if (! eel_gconf_get_boolean (PREF_LIST_USE_MIME_ICONS, TRUE))
-		icon_name = ICON_TYPE_REGULAR;
-	else {
-		icon_name = gnome_icon_lookup (icon_theme,
-	                                       NULL,
-	                                       NULL,
-	                                       NULL,
-	                                       NULL,
-        	                               mime_type,
-                	                       GNOME_ICON_LOOKUP_FLAGS_NONE,
-                        	               NULL);
-		free_icon_name = TRUE;
-	}
-	
-	pixbuf = gtk_icon_theme_load_icon (icon_theme,
-					   icon_name,
-					   file_list_icon_size,
-					   0,
-					   NULL);
-						
-	if (free_icon_name)
-		g_free (icon_name);						
-						
+	icon = g_content_type_get_icon (content_type);
+	pixbuf = get_icon_pixbuf (icon_theme, G_THEMED_ICON (icon), file_list_icon_size);				
+	g_object_unref (icon);
+			
 	if (pixbuf == NULL)
 		return NULL;
 
 	pixbuf = gdk_pixbuf_copy (pixbuf);
-	g_hash_table_insert (pixbuf_hash, (gpointer) mime_type, pixbuf);
+	g_hash_table_insert (pixbuf_hash, (gpointer) content_type, pixbuf);
 	g_object_ref (G_OBJECT (pixbuf));
 
 	return pixbuf;
@@ -1610,6 +1576,18 @@ get_tree_iter_from_path (FrWindow    *window,
 
 
 static void
+set_sensitive (FrWindow   *window,
+	       const char *action_name,
+	       gboolean    sensitive)
+{
+	GtkAction *action;
+	
+	action = gtk_action_group_get_action (window->priv->actions, action_name);
+	g_object_set (action, "sensitive", sensitive, NULL);
+}
+
+
+static void
 fr_window_update_current_location (FrWindow *window)
 {
 	const char *current_dir = fr_window_get_current_location (window);
@@ -1624,10 +1602,11 @@ fr_window_update_current_location (FrWindow *window)
 	gtk_widget_show (window->priv->location_bar);
 
 	gtk_entry_set_text (GTK_ENTRY (window->priv->location_entry), window->priv->archive_present? current_dir: "");
-	gtk_widget_set_sensitive (window->priv->home_button, window->priv->archive_present);
-	gtk_widget_set_sensitive (window->priv->up_button, window->priv->archive_present && (current_dir != NULL) && (strcmp (current_dir, "/") != 0));
-	gtk_widget_set_sensitive (window->priv->back_button, window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->next != NULL));
-	gtk_widget_set_sensitive (window->priv->fwd_button, window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
+	
+	set_sensitive (window, "GoBack", window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->next != NULL));
+	set_sensitive (window, "GoForward", window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
+	set_sensitive (window, "GoUp", window->priv->archive_present && (current_dir != NULL) && (strcmp (current_dir, "/") != 0));
+	set_sensitive (window, "GoHome", window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->location_entry, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->location_label, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->filter_entry, window->priv->archive_present);
@@ -1773,7 +1752,8 @@ fr_window_update_dir_tree (FrWindow *window)
 		g_free (parent_dir);
 	}
 	g_hash_table_destroy (dir_cache);
-	g_object_unref (icon);
+	if (icon != NULL)
+		g_object_unref (icon);
 			
 	g_ptr_array_free (dirs, TRUE);
 	
@@ -1950,17 +1930,6 @@ set_active (FrWindow   *window,
 
 	action = gtk_action_group_get_action (window->priv->actions, action_name);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), is_active);
-}
-
-
-static void
-set_sensitive (FrWindow   *window,
-	       const char *action_name,
-	       gboolean    sensitive)
-{
-	GtkAction *action;
-	action = gtk_action_group_get_action (window->priv->actions, action_name);
-	g_object_set (action, "sensitive", sensitive, NULL);
 }
 
 
@@ -4518,44 +4487,6 @@ fr_window_add_is_stoppable (FrArchive *archive,
 }
 
 
-static GtkWidget*
-create_locationbar_button (const char *stock_id,
-			   gboolean    view_text)
-{
-	GtkWidget *button;
-	GtkWidget *box;
-	GtkWidget *image;
-
-	button = gtk_button_new ();
-	gtk_button_set_relief (GTK_BUTTON (button),
-			       GTK_RELIEF_NONE);
-
-	box = gtk_hbox_new (FALSE, 1);
-	image = gtk_image_new ();
-	gtk_image_set_from_stock (GTK_IMAGE (image),
-				  stock_id,
-				  GTK_ICON_SIZE_SMALL_TOOLBAR);
-	gtk_box_pack_start (GTK_BOX (box), image, !view_text, FALSE, 0);
-
-	if (view_text) {
-		GtkStockItem  stock_item;
-		const char   *text;
-		GtkWidget    *label;
-
-		if (gtk_stock_lookup (stock_id, &stock_item))
-			text = stock_item.label;
-		else
-			text = "";
-		label = gtk_label_new_with_mnemonic (text);
-		gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
-	}
-
-	gtk_container_add (GTK_CONTAINER (button), box);
-
-	return button;
-}
-
-
 static void
 menu_item_select_cb (GtkMenuItem *proxy,
 		     FrWindow    *window)
@@ -4634,38 +4565,6 @@ sort_by_radio_action (GtkAction      *action,
 	window->priv->sort_method = gtk_radio_action_get_current_value (current);
 	window->priv->sort_type = GTK_SORT_ASCENDING;
 	fr_window_update_list_order (window);
-}
-
-
-static void
-go_up_one_level_cb (GtkWidget *widget,
-		    void      *data)
-{
-	fr_window_go_up_one_level ((FrWindow*) data);
-}
-
-
-static void
-go_home_cb (GtkWidget *widget,
-	    void      *data)
-{
-	fr_window_go_to_location ((FrWindow*) data, "/", FALSE);
-}
-
-
-static void
-go_back_cb (GtkWidget *widget,
-	    void      *data)
-{
-	fr_window_go_back ((FrWindow*) data);
-}
-
-
-static void
-go_forward_cb (GtkWidget *widget,
-	       void      *data)
-{
-	fr_window_go_forward ((FrWindow*) data);
 }
 
 
@@ -4761,11 +4660,73 @@ filter_entry_icon_released_cb (SexyIconEntry         *entry,
 
 
 static void
+fr_window_attach (FrWindow      *window,
+                  GtkWidget     *child,
+                  FrWindowArea   area)
+{
+	int position;
+
+	g_return_if_fail (window != NULL);
+	g_return_if_fail (FR_IS_WINDOW (window));
+	g_return_if_fail (child != NULL);
+	g_return_if_fail (GTK_IS_WIDGET (child));
+
+	switch (area) {
+	case FR_WINDOW_AREA_MENUBAR:
+		position = 0;
+		break;
+	case FR_WINDOW_AREA_TOOLBAR:
+		position = 1;
+		break;
+	case FR_WINDOW_AREA_LOCATIONBAR:
+		position = 2;
+		break;
+	case FR_WINDOW_AREA_CONTENTS:
+		position = 3;
+		if (window->priv->contents != NULL)
+			gtk_widget_destroy (window->priv->contents);
+		window->priv->contents = child;
+		break;
+	case FR_WINDOW_AREA_FILTERBAR:
+		position = 4;
+		break;
+	case FR_WINDOW_AREA_STATUSBAR:
+		position = 5;
+		break;
+	default:
+		g_critical ("%s: area not recognized!", G_STRFUNC);
+		return;
+		break;
+	}
+        
+	gtk_table_attach (GTK_TABLE (window->priv->layout),
+			  child,
+			  0, 1,
+			  position, position + 1,
+			  GTK_EXPAND | GTK_FILL,
+			  ((area == FR_WINDOW_AREA_CONTENTS) ? GTK_EXPAND : 0) | GTK_FILL,
+			  0, 0);
+}
+
+
+static void
+set_action_important (GtkUIManager *ui,
+		      const char   *action_name)
+{
+	GtkAction *action;
+
+	action = gtk_ui_manager_get_action (ui, action_name);
+	g_object_set (action, "is_important", TRUE, NULL);
+	g_object_unref (action);
+}
+
+
+static void
 fr_window_construct (FrWindow *window)
 {
+	GtkWidget        *menubar;
 	GtkWidget        *toolbar;
 	GtkWidget        *list_scrolled_window;
-	GtkWidget        *vbox;
 	GtkWidget        *location_box;
 	GtkStatusbar     *statusbar;
 	GtkWidget        *statusbar_box;
@@ -4796,8 +4757,11 @@ fr_window_construct (FrWindow *window)
 
 	/* Create the application. */
 
-	gnome_app_construct (GNOME_APP (window), "main", _("Archive Manager"));
-	gnome_window_icon_set_from_default (GTK_WINDOW (window));
+	window->priv->layout = gtk_table_new (4, 1, FALSE);
+        gtk_container_add (GTK_CONTAINER (window), window->priv->layout);
+        gtk_widget_show (window->priv->layout);
+
+	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
 
 	g_signal_connect (G_OBJECT (window),
 			  "delete_event",
@@ -4940,6 +4904,10 @@ fr_window_construct (FrWindow *window)
 	
 	/* Create the widgets. */
 
+	window->priv->tooltips = gtk_tooltips_new ();
+	g_object_ref (G_OBJECT (window->priv->tooltips));
+	gtk_object_sink (GTK_OBJECT (window->priv->tooltips));
+
 	/* * File list. */
 
 	window->priv->list_store = fr_list_model_new (NUMBER_OF_COLUMNS,
@@ -5032,102 +5000,11 @@ fr_window_construct (FrWindow *window)
 					GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (list_scrolled_window), window->priv->list_view);
 
-	/* * Location bar. */
-
-	location_box = gtk_hbox_new (FALSE, 1);
-	gtk_container_set_border_width (GTK_CONTAINER (location_box), 3);
-
-	window->priv->location_bar = gnome_app_add_docked (GNOME_APP (window),
-						     location_box,
-						     "LocationBar",
-						     (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL
-						      | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE
-						      | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
-						     BONOBO_DOCK_TOP,
-						     3, 1, 0);
-
-	/* buttons. */
-
-	window->priv->tooltips = gtk_tooltips_new ();
-	g_object_ref (G_OBJECT (window->priv->tooltips));
-	gtk_object_sink (GTK_OBJECT (window->priv->tooltips));
-
-	window->priv->back_button = create_locationbar_button (GTK_STOCK_GO_BACK, TRUE);
-	gtk_tooltips_set_tip (window->priv->tooltips, window->priv->back_button, _("Go to the previous visited location"), NULL);
-	gtk_box_pack_start (GTK_BOX (location_box), window->priv->back_button, FALSE, FALSE, 0);
-	g_signal_connect (G_OBJECT (window->priv->back_button),
-			  "clicked",
-			  G_CALLBACK (go_back_cb),
-			  window);
-
-	window->priv->fwd_button = create_locationbar_button (GTK_STOCK_GO_FORWARD, FALSE);
-	gtk_tooltips_set_tip (window->priv->tooltips, window->priv->fwd_button, _("Go to the next visited location"), NULL);
-	gtk_box_pack_start (GTK_BOX (location_box), window->priv->fwd_button, FALSE, FALSE, 0);
-	g_signal_connect (G_OBJECT (window->priv->fwd_button),
-			  "clicked",
-			  G_CALLBACK (go_forward_cb),
-			  window);
-
-	window->priv->up_button = create_locationbar_button (GTK_STOCK_GO_UP, FALSE);
-	gtk_tooltips_set_tip (window->priv->tooltips, window->priv->up_button, _("Go up one level"), NULL);
-	gtk_box_pack_start (GTK_BOX (location_box), window->priv->up_button, FALSE, FALSE, 0);
-	g_signal_connect (G_OBJECT (window->priv->up_button),
-			  "clicked",
-			  G_CALLBACK (go_up_one_level_cb),
-			  window);
-
-	window->priv->home_button = create_locationbar_button (GTK_STOCK_HOME, FALSE);
-	gtk_tooltips_set_tip (window->priv->tooltips, window->priv->home_button, _("Go to the home location"), NULL);
-	gtk_box_pack_start (GTK_BOX (location_box), window->priv->home_button, FALSE, FALSE, 0);
-	g_signal_connect (G_OBJECT (window->priv->home_button),
-			  "clicked",
-			  G_CALLBACK (go_home_cb),
-			  window);
-
-	/* separator */
-
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (location_box),
-			    vbox,
-			    FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox),
-			    gtk_vseparator_new (),
-			    TRUE, TRUE, 5);
-
-	/* current location */
-
-	window->priv->location_label = gtk_label_new (_("Location:"));
-	gtk_box_pack_start (GTK_BOX (location_box),
-			    window->priv->location_label, FALSE, FALSE, 5);
-
-	window->priv->location_entry = sexy_icon_entry_new ();
-	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (window->priv->location_entry),
-				  SEXY_ICON_ENTRY_PRIMARY,
-				  GTK_IMAGE (gtk_image_new_from_stock (GTK_STOCK_DIRECTORY, GTK_ICON_SIZE_MENU)));
-
-	gtk_box_pack_start (GTK_BOX (location_box),
-			    window->priv->location_entry, TRUE, TRUE, 5);
-
-	g_signal_connect (G_OBJECT (window->priv->location_entry),
-			  "key_press_event",
-			  G_CALLBACK (location_entry_key_press_event_cb),
-			  window);
-			  
-	gtk_widget_show_all (window->priv->location_bar);
-
 	/* filter bar */
 
-	filter_box = gtk_hbox_new (FALSE, 6);
+	window->priv->filter_bar = filter_box = gtk_hbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (filter_box), 3);
-
-	window->priv->filter_bar = gnome_app_add_docked (GNOME_APP (window),
-						         filter_box,
-						         "FilterBar",
-						         (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL
-						          | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE
-						          | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
-						         BONOBO_DOCK_BOTTOM,
-						         4, 1, 0);
+	fr_window_attach (FR_WINDOW (window), window->priv->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 	
 	gtk_box_pack_start (GTK_BOX (filter_box),
 			    gtk_label_new (_("Find:")), FALSE, FALSE, 0);
@@ -5217,10 +5094,10 @@ fr_window_construct (FrWindow *window)
 	gtk_paned_pack1 (GTK_PANED (window->priv->paned), window->priv->sidepane, FALSE, TRUE);
 	gtk_paned_pack2 (GTK_PANED (window->priv->paned), list_scrolled_window, TRUE, TRUE);
 	gtk_paned_set_position (GTK_PANED (window->priv->paned), eel_gconf_get_integer (PREF_UI_SIDEBAR_WIDTH, DEF_SIDEBAR_WIDTH));
+	
+	fr_window_attach (FR_WINDOW (window), window->priv->paned, FR_WINDOW_AREA_CONTENTS);
 	gtk_widget_show_all (window->priv->paned);
 	
-	gnome_app_set_contents (GNOME_APP (window), window->priv->paned);
-
 	/* Build the menu and the toolbar. */
 
 	ui = gtk_ui_manager_new ();
@@ -5261,25 +5138,61 @@ fr_window_construct (FrWindow *window)
 		g_message ("building menus failed: %s", error->message);
 		g_error_free (error);
 	}
-
-	gnome_app_add_docked (GNOME_APP (window),
-			      gtk_ui_manager_get_widget (ui, "/MenuBar"),
-			      "MenuBar",
-			      (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL
-			       | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE
-			       | (eel_gconf_get_boolean (PREF_DESKTOP_MENUBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
-			      BONOBO_DOCK_TOP,
-			      1, 1, 0);
+	
+	menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
+	fr_window_attach (FR_WINDOW (window), menubar, FR_WINDOW_AREA_MENUBAR);
+	gtk_widget_show (menubar);
+	 
 	window->priv->toolbar = toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
+	set_action_important (ui, "/ToolBar/Extract_Toolbar");
 
+	/* location bar */
+
+	window->priv->location_bar = gtk_ui_manager_get_widget (ui, "/LocationBar");
+	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (window->priv->location_bar), FALSE);
+	gtk_toolbar_set_style (GTK_TOOLBAR (window->priv->location_bar), GTK_TOOLBAR_BOTH_HORIZ);
+	set_action_important (ui, "/LocationBar/GoBack");
+
+	/* current location */
+
+	location_box = gtk_hbox_new (FALSE, 6);
+	window->priv->location_label = gtk_label_new_with_mnemonic (_("_Location:"));
+	gtk_box_pack_start (GTK_BOX (location_box),
+			    window->priv->location_label, FALSE, FALSE, 5);
+
+	window->priv->location_entry = sexy_icon_entry_new ();
+	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (window->priv->location_entry),
+				  SEXY_ICON_ENTRY_PRIMARY,
+				  GTK_IMAGE (gtk_image_new_from_stock (GTK_STOCK_DIRECTORY, GTK_ICON_SIZE_MENU)));
+
+	gtk_box_pack_start (GTK_BOX (location_box),
+			    window->priv->location_entry, TRUE, TRUE, 5);
+
+	g_signal_connect (G_OBJECT (window->priv->location_entry),
+			  "key_press_event",
+			  G_CALLBACK (location_entry_key_press_event_cb),
+			  window);
+	
 	{
-		GtkAction *action;
-
-		action = gtk_ui_manager_get_action (ui, "/ToolBar/Extract_Toolbar");
-		g_object_set (action, "is_important", TRUE, NULL);
-		g_object_unref (action);
+		GtkToolItem *tool_item;
+		
+		tool_item = gtk_separator_tool_item_new ();
+		gtk_widget_show_all (GTK_WIDGET (tool_item));
+		gtk_toolbar_insert (GTK_TOOLBAR (window->priv->location_bar), tool_item, -1);
+		
+		tool_item = gtk_tool_item_new ();
+		gtk_tool_item_set_expand (tool_item, TRUE);
+		gtk_container_add (GTK_CONTAINER (tool_item), location_box);
+		gtk_widget_show_all (GTK_WIDGET (tool_item));
+		gtk_toolbar_insert (GTK_TOOLBAR (window->priv->location_bar), tool_item, -1);
 	}
+	
+	fr_window_attach (FR_WINDOW (window), window->priv->location_bar, FR_WINDOW_AREA_LOCATIONBAR);
+	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) 
+		gtk_widget_hide (window->priv->location_bar);
+	else
+		gtk_widget_show (window->priv->location_bar);
 
 	/* Recent manager */
 
@@ -5311,7 +5224,7 @@ fr_window_construct (FrWindow *window)
 	gtk_action_connect_proxy (window->priv->open_action, GTK_WIDGET (open_recent_tool_item));
 
 	gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
-	gtk_toolbar_insert (GTK_TOOLBAR (window->priv->toolbar), open_recent_tool_item, 1);
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), open_recent_tool_item, 1);
 
 	/**/
 
@@ -5326,22 +5239,19 @@ fr_window_construct (FrWindow *window)
 				  GTK_WIDGET (open_recent_tool_item));
 
 	gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
-	gtk_toolbar_insert (GTK_TOOLBAR (window->priv->toolbar),
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar),
 			    open_recent_tool_item,
 			    4);
 	*/
-
+	
 	/**/
 
-	gnome_app_add_docked (GNOME_APP (window),
-			      toolbar,
-			      "ToolBar",
-			      (BONOBO_DOCK_ITEM_BEH_NEVER_VERTICAL
-			       | BONOBO_DOCK_ITEM_BEH_EXCLUSIVE
-			       | (eel_gconf_get_boolean (PREF_DESKTOP_TOOLBAR_DETACHABLE, TRUE) ? BONOBO_DOCK_ITEM_BEH_NORMAL : BONOBO_DOCK_ITEM_BEH_LOCKED)),
-			      BONOBO_DOCK_TOP,
-			      2, 1, 0);
-
+	fr_window_attach (FR_WINDOW (window), window->priv->toolbar, FR_WINDOW_AREA_TOOLBAR);
+	if (eel_gconf_get_boolean (PREF_UI_TOOLBAR, TRUE))
+		gtk_widget_show (toolbar);
+	else
+		gtk_widget_hide (toolbar);
+	
 	window->priv->file_popup_menu = gtk_ui_manager_get_widget (ui, "/FilePopupMenu");
 	window->priv->folder_popup_menu = gtk_ui_manager_get_widget (ui, "/FolderPopupMenu");
 	window->priv->sidebar_folder_popup_menu = gtk_ui_manager_get_widget (ui, "/SidebarFolderPopupMenu");
@@ -5373,8 +5283,13 @@ fr_window_construct (FrWindow *window)
                 gtk_widget_show (vbox);
         }
         gtk_widget_show (statusbar_box);
-	gnome_app_set_statusbar (GNOME_APP (window), window->priv->statusbar);
-	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->priv->statusbar), TRUE);
+        gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->priv->statusbar), TRUE);
+        
+	fr_window_attach (FR_WINDOW (window), window->priv->statusbar, FR_WINDOW_AREA_STATUSBAR);
+	if (eel_gconf_get_boolean (PREF_UI_STATUSBAR, TRUE))
+		gtk_widget_show (window->priv->statusbar);
+	else
+		gtk_widget_hide (window->priv->statusbar);
 
 	/**/
 
@@ -7949,9 +7864,9 @@ fr_window_set_toolbar_visibility (FrWindow *window,
 	g_return_if_fail (window != NULL);
 
 	if (visible)
-		gtk_widget_show (window->priv->toolbar->parent);
+		gtk_widget_show (window->priv->toolbar);
 	else
-		gtk_widget_hide (window->priv->toolbar->parent);
+		gtk_widget_hide (window->priv->toolbar);
 
 	set_active (window, "ViewToolbar", visible);
 }
@@ -8139,7 +8054,7 @@ fr_window_reset_current_batch_action (FrWindow *window)
 
 void
 fr_window_set_current_batch_action (FrWindow          *window,
-				    FRBatchActionType  action,
+				    FrBatchActionType  action,
 				    void              *data,
 				    GFreeFunc          free_func)
 {
@@ -8162,7 +8077,7 @@ fr_window_restart_current_batch_action (FrWindow *window)
 
 void
 fr_window_append_batch_action (FrWindow          *window,
-			       FRBatchActionType  action,
+			       FrBatchActionType  action,
 			       void              *data,
 			       GFreeFunc          free_func)
 {

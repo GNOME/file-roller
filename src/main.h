@@ -55,7 +55,6 @@ void  command_done     (CommandData *cdata);
 
 
 extern GList       *WindowList;
-extern GList       *ViewerList;
 extern GList       *CommandList;
 extern gint         ForceDirectoryCreation;
 extern GHashTable  *ProgramsCache;

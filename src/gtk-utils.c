@@ -806,6 +806,16 @@ get_icon_pixbuf (GtkIconTheme *icon_theme,
 	g_object_get (icon, "names", &icon_names, NULL);
 	
 	icon_info = gtk_icon_theme_choose_icon (icon_theme, (const char **)icon_names, size, 0);
+	if (icon_info == NULL) {
+		GIcon *default_icon;
+		
+		default_icon = g_content_type_get_icon ("gnome-fs-regular");
+		pixbuf = get_icon_pixbuf (icon_theme, G_THEMED_ICON (default_icon), size);
+		g_object_unref (default_icon);
+		
+		return pixbuf;
+	}
+		
 	pixbuf = gtk_icon_info_load_icon (icon_info, &error);
 	if (pixbuf == NULL) {
 		g_warning ("could not load icon pixbuf: %s\n", error->message);
@@ -814,6 +824,25 @@ get_icon_pixbuf (GtkIconTheme *icon_theme,
 	
 	gtk_icon_info_free (icon_info);
 	g_strfreev (icon_names);
+	
+	return pixbuf;
+}
+
+
+GdkPixbuf *
+get_mime_type_pixbuf (const char   *mime_type,
+		      int           icon_size,
+		      GtkIconTheme *icon_theme)
+{
+	GdkPixbuf *pixbuf = NULL;
+	GIcon     *icon;
+	
+	if (icon_theme == NULL) 
+		icon_theme = gtk_icon_theme_get_default ();
+	
+	icon = g_content_type_get_icon (mime_type);
+	pixbuf = get_icon_pixbuf (icon_theme, G_THEMED_ICON (icon), icon_size);
+	g_object_unref (icon);
 	
 	return pixbuf;
 }

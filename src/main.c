@@ -47,7 +47,6 @@ static gboolean session_is_restored (void);
 static gboolean load_session        (void);
 
 GList        *WindowList = NULL;
-GList        *ViewerList = NULL;
 GList        *CommandList = NULL;
 gint          ForceDirectoryCreation;
 GHashTable   *ProgramsCache = NULL;
@@ -250,39 +249,12 @@ initialize_data (void)
 	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
 
 	ProgramsCache = g_hash_table_new_full (g_str_hash,
-						g_str_equal,
-						g_free,
-						NULL);
+					       g_str_equal,
+					       g_free,
+					       NULL);
 }
 
 /* Free application data. */
-
-void
-viewer_done (ViewerData *vdata)
-{
-	if ((vdata->temp_dir != NULL) && uri_is_dir (vdata->temp_dir)) {
-		char *argv[4];
-
-		argv[0] = "rm";
-		argv[1] = "-rf";
-		argv[2] = vdata->temp_dir;
-		argv[3] = NULL;
-		g_spawn_sync (g_get_tmp_dir (), argv, NULL,
-			      G_SPAWN_SEARCH_PATH,
-			      NULL, NULL,
-			      NULL, NULL, NULL,
-			      NULL);
-	}
-
-	g_free (vdata->filename);
-	g_free (vdata->e_filename);
-	g_free (vdata->temp_dir);
-	if (vdata->process != NULL)
-		g_object_unref (vdata->process);
-
-	ViewerList = g_list_remove (ViewerList, vdata);
-	g_free (vdata);
-}
 
 
 void
@@ -324,11 +296,6 @@ release_data ()
 	g_hash_table_destroy (ProgramsCache);
 
 	eel_global_client_free ();
-
-	while (ViewerList != NULL) {
-		ViewerData *vdata = ViewerList->data;
-		viewer_done (vdata);
-	}
 
 	while (CommandList != NULL) {
 		CommandData *cdata = CommandList->data;

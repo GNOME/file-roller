@@ -25,9 +25,10 @@
 
 #include <sys/types.h>
 #include <time.h>
+#include <unistd.h>
 #include <gio/gio.h>
 
-#define MIME_TYPE_DIRECTORY "application/directory-normal"
+#define MIME_TYPE_DIRECTORY "gnome-fs-directory"
 #define MIME_TYPE_ARCHIVE "application/x-archive"
 
 #define get_home_relative_path(x)        \

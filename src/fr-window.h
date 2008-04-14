@@ -25,7 +25,6 @@
 
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <libgnomeui/libgnomeui.h>
 #include "typedefs.h"
 #include "fr-archive.h"
 
@@ -67,7 +66,7 @@ typedef enum {
 	FR_BATCH_ACTION_CLOSE,
 	FR_BATCH_ACTION_QUIT,
 	FR_BATCH_ACTIONS
-} FRBatchActionType;
+} FrBatchActionType;
 
 /* -- FrWindow -- */
 
@@ -84,15 +83,14 @@ typedef struct _FrWindowPrivateData FrWindowPrivateData;
 
 struct _FrWindow
 {
-	GnomeApp __parent;
-
-	FrArchive           *archive;
+	GtkWindow __parent;
+	FrArchive *archive;
 	FrWindowPrivateData *priv;
 };
 
 struct _FrWindowClass
 {
-	GnomeAppClass __parent_class;
+	GtkWindowClass __parent_class;
 
 	/*<signals>*/
 
@@ -102,7 +100,7 @@ struct _FrWindowClass
 
 GType       fr_window_get_type                  (void);
 GtkWidget * fr_window_new                       (void);
-void        fr_window_close                     (FrWindow *window);
+void        fr_window_close                     (FrWindow      *window);
 
 /* archive operations */
 
@@ -277,13 +275,13 @@ void        fr_window_set_folders_visibility      (FrWindow   *window,
 
 void       fr_window_new_batch                    (FrWindow      *window);
 void       fr_window_set_current_batch_action     (FrWindow      *window,
-						   FRBatchActionType  action,
+						   FrBatchActionType  action,
 						   void          *data,
 						   GFreeFunc      free_func);
 void       fr_window_reset_current_batch_action   (FrWindow      *window);
 void       fr_window_restart_current_batch_action (FrWindow      *window);
 void       fr_window_append_batch_action          (FrWindow      *window,
-						   FRBatchActionType  action,
+						   FrBatchActionType  action,
 						   void          *data,
 						   GFreeFunc      free_func);
 void       fr_window_start_batch                  (FrWindow      *window);
