@@ -4393,7 +4393,7 @@ theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	}
 	
-	fr_window_update_file_list (window, FALSE);
+	fr_window_update_file_list (window, TRUE);
 	fr_window_update_dir_tree (window);
 }
 
@@ -6472,6 +6472,9 @@ fr_window_stop_activity_mode (FrWindow *window)
 
 	g_source_remove (window->priv->activity_timeout_handle);
 	window->priv->activity_timeout_handle = 0;
+
+	if (! GTK_WIDGET_REALIZED (window))
+		return;
 
 	if (window->priv->progress_dialog != NULL)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), 0.0);

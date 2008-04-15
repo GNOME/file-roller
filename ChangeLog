@@ -1,5 +1,11 @@
 2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c: do not update the progress bar if the widget is
+	not realized.
+	(theme_changed_cb): update the view when updating the file list.
+
+2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/main.c: 
 	* src/file-utils.h: 
 	* src/file-utils.c: added g_key_file_save
