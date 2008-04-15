@@ -208,16 +208,6 @@ for_each_child_data_free (ForEachChildData *fec)
 }
 
 
-static void
-for_each_child_set_current (ForEachChildData *fec,
-			    const char       *directory)
-{
-	if (fec->current != NULL)
-		g_object_unref (fec->current);
-	fec->current = g_file_new_for_uri (directory);
-}
-
-
 static gboolean
 for_each_child_done_cb (gpointer user_data)
 {
@@ -236,7 +226,14 @@ for_each_child_done_cb (gpointer user_data)
 }
 
 
-static void for_each_child_start (ForEachChildData *fec);
+static void 
+for_each_child_done (ForEachChildData *fec)
+{
+	fec->source_id = g_idle_add (for_each_child_done_cb, fec);
+}
+
+
+static void for_each_child_start_current (ForEachChildData *fec);
 
 
 static gboolean
@@ -245,13 +242,53 @@ for_each_child_start_cb (gpointer user_data)
 	ForEachChildData *fec = user_data;
 	
 	g_source_remove (fec->source_id);
-	for_each_child_start (fec);
+	for_each_child_start_current (fec);
 	
 	return FALSE;
 }
 
 
-void
+static void 
+for_each_child_start (ForEachChildData *fec)
+{
+	fec->source_id = g_idle_add (for_each_child_start_cb, fec);
+}
+
+
+static void
+for_each_child_set_current (ForEachChildData *fec,
+			    const char       *directory)
+{
+	if (fec->current != NULL)
+		g_object_unref (fec->current);
+	fec->current = g_file_new_for_uri (directory);
+}
+
+
+static void
+for_each_child_start_next_sub_directory (ForEachChildData *fec)
+{
+	char *sub_directory = NULL;
+	
+	if (fec->to_visit != NULL) {
+		GList *tmp;
+				
+		sub_directory = (char*) fec->to_visit->data;
+		tmp = fec->to_visit;
+		fec->to_visit = g_list_remove_link (fec->to_visit, tmp);
+		g_list_free (tmp);
+	}
+	
+	if (sub_directory != NULL) {
+		for_each_child_set_current (fec, sub_directory);
+		for_each_child_start (fec);
+	}
+	else
+		for_each_child_done (fec);
+}
+
+
+static void
 for_each_child_close_enumerator (GObject      *source_object,
 	              		 GAsyncResult *result,
 		      		 gpointer      user_data)
@@ -269,26 +306,10 @@ for_each_child_close_enumerator (GObject      *source_object,
 			g_clear_error (&error);
 	}
 	
-	if ((fec->error == NULL) && fec->recursive) {
-		char *sub_directory = NULL;
-			
-		if (fec->to_visit != NULL) {
-			GList *tmp;
-				
-			sub_directory = (char*) fec->to_visit->data;
-			tmp = fec->to_visit;
-			fec->to_visit = g_list_remove_link (fec->to_visit, tmp);
-			g_list_free (tmp);
-		}
-			
-		if (sub_directory != NULL) {
-			for_each_child_set_current (fec, sub_directory);
-			fec->source_id = g_idle_add (for_each_child_start_cb, fec);
-			return;
-		}
-	}
-	
-	fec->source_id = g_idle_add (for_each_child_done_cb, fec);
+	if ((fec->error == NULL) && fec->recursive) 
+		for_each_child_start_next_sub_directory (fec);
+	else
+		for_each_child_done (fec);
 }
 
 
@@ -358,7 +379,7 @@ for_each_child_ready (GObject      *source_object,
 	
 	fec->enumerator = g_file_enumerate_children_finish (fec->current, result, &(fec->error));
 	if (fec->enumerator == NULL) {
-		fec->source_id = g_idle_add (for_each_child_done_cb, fec);
+		for_each_child_done (fec);
 		return;
 	}
 	
@@ -372,18 +393,26 @@ for_each_child_ready (GObject      *source_object,
 
 
 static void
-for_each_child_start (ForEachChildData *fec)
+for_each_child_start_current (ForEachChildData *fec)
 {
 	if (fec->start_dir_func != NULL) {
-		char *directory;
+		char  *directory;
+		DirOp  op;
 		
 		directory = g_file_get_uri (fec->current);
-		if (! fec->start_dir_func (directory, &(fec->error), fec->user_data)) {
-			g_free (directory);
-			fec->source_id = g_idle_add (for_each_child_done_cb, fec);
-			return;
-		}
+		op = fec->start_dir_func (directory, &(fec->error), fec->user_data);
 		g_free (directory);
+		
+		switch (op) {
+		case DIR_OP_SKIP:
+			for_each_child_start_next_sub_directory (fec);
+			return;
+		case DIR_OP_STOP:
+			for_each_child_done (fec);
+			return;
+		case DIR_OP_CONTINUE:
+			break;
+		}
 	}
 		
 	g_file_enumerate_children_async (fec->current,
@@ -448,7 +477,7 @@ g_directory_foreach_child (const char           *directory,
 						      NULL);
 	
 	for_each_child_set_current (fec, fec->base_directory);
-	for_each_child_start (fec);	
+	for_each_child_start_current (fec);	
 }
 
 
@@ -467,6 +496,7 @@ typedef struct {
 	GList             *current_dir;
 	Filter            *include_filter;
 	Filter            *exclude_filter;
+	Filter            *exclude_folders_filter;
 	guint              visit_timeout;
 } GetFileListData;
 
@@ -479,6 +509,7 @@ get_file_list_data_free (GetFileListData *gfl)
 
 	filter_destroy (gfl->include_filter);
 	filter_destroy (gfl->exclude_filter);
+	filter_destroy (gfl->exclude_folders_filter);
 	path_list_free (gfl->files);
 	path_list_free (gfl->dirs);
 	path_list_free (gfl->to_visit);
@@ -656,6 +687,20 @@ get_file_list_for_each_file (const char *uri,
 }
 
 
+static DirOp
+get_file_list_start_dir (const char  *uri,
+			 GError     **error,
+			 gpointer     user_data)
+{
+	GetFileListData *gfl = user_data;
+	
+	if ((gfl->exclude_folders_filter->pattern == NULL) || ! filter_matches (gfl->exclude_folders_filter, uri))
+		return DIR_OP_CONTINUE;
+	else 
+		return DIR_OP_SKIP;		
+}
+
+
 void
 g_directory_list_async (const char           *directory, 
 		       const char            *base_dir,
@@ -665,6 +710,7 @@ g_directory_list_async (const char           *directory,
 		       gboolean               no_dot_files,
 		       const char            *include_files,
 		       const char            *exclude_files,
+		       const char            *exclude_folders,
 		       gboolean               ignorecase,
 		       GCancellable          *cancellable,
 		       ListReadyCallback      done_func,
@@ -688,12 +734,13 @@ g_directory_list_async (const char           *directory,
 		filter_options |= FILTER_IGNORECASE;
 	gfl->include_filter = filter_new (include_files, filter_options);
 	gfl->exclude_filter = filter_new (exclude_files, ignorecase ? FILTER_IGNORECASE : FILTER_DEFAULT);
+	gfl->exclude_folders_filter = filter_new (exclude_folders, ignorecase ? FILTER_IGNORECASE : FILTER_DEFAULT);
 	
 	g_directory_foreach_child (directory,
 				   recursive,
 				   follow_links,
 				   cancellable,
-				   NULL,
+				   get_file_list_start_dir,
 				   get_file_list_for_each_file,
 				   get_file_list_done,
 				   gfl);
@@ -1378,7 +1425,7 @@ g_directory_copy_for_each_file (const char *uri,
 }
 
 
-static gboolean
+static DirOp
 g_directory_copy_start_dir (const char  *uri, 
 			    GError     **error,
 			    gpointer     user_data)
@@ -1393,7 +1440,7 @@ g_directory_copy_start_dir (const char  *uri,
 	
 	dcd->tot_files++;
 	
-	return TRUE;
+	return DIR_OP_CONTINUE;
 }
 
 

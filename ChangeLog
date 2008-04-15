@@ -1,5 +1,30 @@
 2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/dlg-prop.c: 
+	
+	use 'Location' instead of 'Path'.
+
+	* src/preferences.h: 
+	* src/gio-utils.h: 
+	* src/gio-utils.c: 
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* src/fr-archive.h: 
+	* src/fr-archive.c: 
+	* src/file-utils.c: 
+	* data/file-roller.schemas: 
+	* src/dlg-add-folder.c:
+	
+	added an exclude folder filter to specify sub-folders to ignore when 
+	adding a folder recursively.
+	
+	* src/dlg-add-folder.c (add_folder_cb): 
+	* src/dlg-add-files.c (add_files_cb): 
+	
+	changed mnemonic keys to avoid collisions.
+
+2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c: do not update the progress bar if the widget is
 	not realized.
 	(theme_changed_cb): update the view when updating the file list.

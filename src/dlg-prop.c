@@ -107,7 +107,7 @@ dlg_prop (FrWindow *window)
 	/* Set widgets data. */
 
 	label_label = glade_xml_get_widget (data->gui, "p_path_label_label");
-	set_label (label_label, _("Path:"));
+	set_label (label_label, _("Location:"));
 
 	label = glade_xml_get_widget (data->gui, "p_path_label");
 	s = remove_level_from_path (fr_window_get_archive_uri (window));
@@ -122,7 +122,7 @@ dlg_prop (FrWindow *window)
 	set_label (label_label, _("Name:"));
 
 	label = glade_xml_get_widget (data->gui, "p_name_label");
-	utf8_name = g_filename_display_name (file_name_from_path (fr_window_get_archive_uri (window)));
+	utf8_name = g_filename_display_basename (fr_window_get_archive_uri (window));
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
 	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);

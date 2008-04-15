@@ -28,7 +28,13 @@
 
 /* callback types */
 
-typedef gboolean (*StartDirCallback) (const char  *uri,
+typedef enum {
+	DIR_OP_CONTINUE,
+	DIR_OP_SKIP,
+	DIR_OP_STOP
+} DirOp;
+
+typedef DirOp (*StartDirCallback)    (const char  *uri,
 				      GError     **error,
 				      gpointer     user_data);
 typedef void (*ForEachChildCallback) (const char  *uri, 
@@ -68,6 +74,7 @@ void   g_directory_list_async        (const char            *directory,
 				      gboolean               no_dot_files,
 				      const char            *include_files,
 				      const char            *exclude_files,
+				      const char            *exclude_folders,
 				      gboolean               ignorecase,
 				      GCancellable          *cancellable,
 				      ListReadyCallback      done_func,
@@ -138,6 +145,6 @@ void   g_directory_copy_async        (const char            *source,
  * 
  */
 #define g_directory_list_all_async(directory, base_dir, recursive, cancellable, done_func, done_data) \
-    g_directory_list_async ((directory), (base_dir), (recursive), TRUE, FALSE, FALSE, NULL, NULL, FALSE, (cancellable), (done_func), (done_data))
+    g_directory_list_async ((directory), (base_dir), (recursive), TRUE, FALSE, FALSE, NULL, NULL, NULL, FALSE, (cancellable), (done_func), (done_data))
 
 #endif /* _GIO_UTILS_H */

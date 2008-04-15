@@ -59,6 +59,7 @@
 #define PREF_ADD_FILENAME             "/apps/file-roller/dialogs/add/filename"
 #define PREF_ADD_INCLUDE_FILES        "/apps/file-roller/dialogs/add/include_files"
 #define PREF_ADD_EXCLUDE_FILES        "/apps/file-roller/dialogs/add/exclude_files"
+#define PREF_ADD_EXCLUDE_FOLDERS      "/apps/file-roller/dialogs/add/exclude_folders"
 #define PREF_ADD_UPDATE               "/apps/file-roller/dialogs/add/update"
 #define PREF_ADD_RECURSIVE            "/apps/file-roller/dialogs/add/recursive"
 #define PREF_ADD_NO_SYMLINKS          "/apps/file-roller/dialogs/add/no_symlinks"
