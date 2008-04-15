@@ -181,7 +181,7 @@ update_file_list (DialogData *data)
 						   "There are %d files that have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.", 
 						   n_files), 
 					 n_files);
-		gtk_label_set (GTK_LABEL (data->update_files_secondary_text_label), label);
+		gtk_label_set_text (GTK_LABEL (data->update_files_secondary_text_label), label);
 		g_free (label);
 	}
 	

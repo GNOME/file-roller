@@ -1,5 +1,21 @@
 2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-marshal.list: added VOID:INT,INT used in sexy-icon-entry.c
+	
+	* src/sexy-icon-entry.c (sexy_icon_entry_class_init): 
+	
+	use fr_marshal_VOID__INT_INT instead of gtk_marshal_VOID__INT_INT
+	
+	* src/fr-window.c (fr_window_start_activity_mode): 
+	
+	use g_timeout_add instead of the deprecated gtk_timeout_add.
+	
+	* src/dlg-update.c (update_file_list): 
+
+	use gtk_label_set_text instead of the deprecated gtk_label_set.
+
+2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c: 
 	* src/dlg-extract.c: 
 	* src/dlg-add-folder.c: 

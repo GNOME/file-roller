@@ -15,7 +15,8 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  along with this program; if not, write to the Free Software
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
@@ -45,6 +46,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include "sexy-icon-entry.h"
+#include "fr-marshal.h"
 
 #define ICON_MARGIN 2
 #define MAX_ICONS 2
@@ -156,7 +158,7 @@ sexy_icon_entry_class_init(SexyIconEntryClass *klass)
 					 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 					 G_STRUCT_OFFSET(SexyIconEntryClass, icon_pressed),
 					 NULL, NULL,
-					 gtk_marshal_VOID__INT_INT,
+					 fr_marshal_VOID__INT_INT,
 					 G_TYPE_NONE, 2,
 					 G_TYPE_INT,
 					 G_TYPE_INT);
@@ -176,7 +178,7 @@ sexy_icon_entry_class_init(SexyIconEntryClass *klass)
 					 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 					 G_STRUCT_OFFSET(SexyIconEntryClass, icon_released),
 					 NULL, NULL,
-					 gtk_marshal_VOID__INT_INT,
+					 fr_marshal_VOID__INT_INT,
 					 G_TYPE_NONE, 2,
 					 G_TYPE_INT,
 					 G_TYPE_INT);

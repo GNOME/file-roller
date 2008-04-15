@@ -6452,9 +6452,9 @@ fr_window_start_activity_mode (FrWindow *window)
 	if (window->priv->activity_ref++ > 0)
 		return;
 
-	window->priv->activity_timeout_handle = gtk_timeout_add (ACTIVITY_DELAY,
-								 activity_cb,
-								 window);
+	window->priv->activity_timeout_handle = g_timeout_add (ACTIVITY_DELAY,
+							       activity_cb,
+							       window);
 	fr_window_update_sensitivity (window);
 }
 
@@ -6470,7 +6470,7 @@ fr_window_stop_activity_mode (FrWindow *window)
 	if (window->priv->activity_timeout_handle == 0)
 		return;
 
-	gtk_timeout_remove (window->priv->activity_timeout_handle);
+	g_source_remove (window->priv->activity_timeout_handle);
 	window->priv->activity_timeout_handle = 0;
 
 	if (window->priv->progress_dialog != NULL)
