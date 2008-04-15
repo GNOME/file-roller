@@ -116,5 +116,7 @@ GList *             path_list_dup                (GList       *path_list);
 GList *             gio_file_list_dup               (GList *l);
 void                gio_file_list_free              (GList *l);
 GList *             gio_file_list_new_from_uri_list (GList *uris);
+void                g_key_file_save                 (GKeyFile *key_file, 
+						     GFile    *file);
 
 #endif /* FILE_UTILS_H */

@@ -25,7 +25,6 @@
 
 #include <gio/gio.h>
 #include <glade/glade.h>
-#include <libgnome/gnome-config.h>
 #include <libgnomeui/libgnomeui.h>
 #include "file-utils.h"
 #include "glib-utils.h"
@@ -581,39 +580,52 @@ static GnomeClient *master_client = NULL;
 static const char *program_argv0 = NULL;
 
 
+static char *
+get_real_path_for_prefix (const char *prefix)
+{
+	return g_strconcat (g_get_home_dir (), "/.gnome2/", prefix, NULL);
+}
+
+
 static void
 save_session (GnomeClient *client)
 {
-	const char  *prefix;
-	GList        *scan;
-	int          i = 0;
-
-	prefix = gnome_client_get_config_prefix (client);
-	gnome_config_push_prefix (prefix);
-
+	GKeyFile *key_file;
+	GList    *scan;
+	int       i;
+	char     *path;
+	GFile    *file;
+	
+	key_file = g_key_file_new ();
+	i = 0;
 	for (scan = WindowList; scan; scan = scan->next) {
 		FrWindow *window = scan->data;
 		char     *key;
 
-		key = g_strdup_printf ("Session/archive%d", i);
-		if ((window->archive == NULL) || (window->archive->file == NULL))
-			gnome_config_set_string (key, "");
+		key = g_strdup_printf ("archive%d", i);
+		if ((window->archive == NULL) || (window->archive->file == NULL)) {
+			g_key_file_set_string (key_file, "Sessione", key, "");
+		}
 		else {
 			char *uri;
 			
 			uri = g_file_get_uri (window->archive->file);
-			gnome_config_set_string (key, uri);
+			g_key_file_set_string (key_file, "Sessione", key, uri);
 			g_free (uri);
 		}
 		g_free (key);
 
 		i++;
 	}
-
-	gnome_config_set_int ("Session/archives", i);
-
-	gnome_config_pop_prefix ();
-	gnome_config_sync ();
+	g_key_file_set_integer (key_file, "Sessione", "archives", i); 
+	
+	path = get_real_path_for_prefix (gnome_client_get_config_prefix (client));
+	file = g_file_new_for_path (path);
+	g_key_file_save (key_file, file);
+	
+	g_object_unref (file);
+	g_free (path);
+	g_key_file_free (key_file);
 }
 
 
@@ -638,7 +650,7 @@ client_save_yourself_cb (GnomeClient *client,
 
 	argv[0] = "rm";
 	argv[1] = "-rf";
-	argv[2] = gnome_config_get_real_path (prefix);
+	argv[2] = get_real_path_for_prefix (prefix);
 	argv[3] = NULL;
 	gnome_client_set_discard_command (client, 3, argv);
 
@@ -701,18 +713,22 @@ session_is_restored (void)
 gboolean
 load_session (void)
 {
-	int i, n;
+	char     *path;
+	GKeyFile *key_file;
+	int       i, n;
 
-	gnome_config_push_prefix (gnome_client_get_config_prefix (master_client));
+	path = get_real_path_for_prefix (gnome_client_get_config_prefix (master_client));
+	key_file = g_key_file_new ();
+	g_key_file_load_from_file (key_file, path, 0, NULL);
 
-	n = gnome_config_get_int ("Session/archives");
+	n = g_key_file_get_integer (key_file, "Session", "archives", NULL);
 	for (i = 0; i < n; i++) {
 		GtkWidget *window;
 		char      *key;
 		char      *filename;
 
-		key = g_strdup_printf ("Session/archive%d", i);
-		filename = gnome_config_get_string (key);
+		key = g_strdup_printf ("archive%d", i);
+		filename = g_key_file_get_string (key_file, "Session", key, NULL);
 		g_free (key);
 
 		window = fr_window_new ();
@@ -723,7 +739,8 @@ load_session (void)
 		g_free (filename);
 	}
 
-	gnome_config_pop_prefix ();
+	g_key_file_free (key_file);
+	g_free (path);
 
 	return TRUE;
 }

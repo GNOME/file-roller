@@ -1,5 +1,14 @@
 2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/main.c: 
+	* src/file-utils.h: 
+	* src/file-utils.c: added g_key_file_save
+	* src/dlg-add-folder.c: 
+	
+	use g_key_file instead of gnome_config for loading/saving sessions.
+	
+2008-04-15  Paolo Bacchilega  <paobac@svn.gnome.org>	
+	
 	* src/fr-marshal.list: added VOID:INT,INT used in sexy-icon-entry.c
 	
 	* src/sexy-icon-entry.c (sexy_icon_entry_class_init): 

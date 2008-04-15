@@ -585,9 +585,6 @@ dlg_add_folder_save_current_options (DialogData *data,
 	gboolean    recursive;
 	gboolean    no_symlinks;
 	GKeyFile   *key_file;
-	char       *file_data;
-	gsize       size;
-	GError     *error = NULL;
 	
 	get_options_from_widgets (data,
 				  &base_dir,
@@ -609,32 +606,8 @@ dlg_add_folder_save_current_options (DialogData *data,
 	g_key_file_set_boolean (key_file, "Options", "recursive", recursive);
 	g_key_file_set_boolean (key_file, "Options", "no_symlinks", no_symlinks);
 	
-	file_data = g_key_file_to_data (key_file, &size, &error);
-	if (error != NULL) {
-		g_warning ("Could not save options: %s\n", error->message);
-		g_clear_error (&error);
-	}
-	else { 
-		GFileOutputStream *stream;
-		
-		stream = g_file_replace (options_file, NULL, FALSE, 0, NULL, &error);
-		if (stream == NULL) {
-			g_warning ("Could not save options: %s\n", error->message);
-			g_clear_error (&error);
-		}
-		else if (! g_output_stream_write_all (G_OUTPUT_STREAM (stream), file_data, size, NULL, NULL, &error)) {
-			g_warning ("Could not save options: %s\n", error->message);
-			g_clear_error (&error);
-		}
-		else if (! g_output_stream_close (G_OUTPUT_STREAM (stream), NULL, &error)) {
-			g_warning ("Could not save options: %s\n", error->message);
-			g_clear_error (&error);
-		}
-		
-		g_object_unref (stream);
-	}
-	
-	g_free (file_data);
+	g_key_file_save (key_file, options_file);
+
 	g_key_file_free (key_file);
 	g_free (base_dir);
 	g_free (filename);	
