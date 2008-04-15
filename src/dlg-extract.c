@@ -56,8 +56,6 @@ typedef struct {
 
 	GtkWidget    *e_view_folder_checkbutton;
 
-	GtkTooltips  *tooltips;
-
 	gboolean      extract_clicked;
 } DialogData;
 
@@ -73,7 +71,6 @@ destroy_cb (GtkWidget  *widget,
 	}
 	path_list_free (data->selected_files);
 	g_free (data->base_dir_for_selection);
-	g_object_unref (data->tooltips);
 	g_free (data);
 }
 
@@ -388,7 +385,7 @@ create_extra_widget (DialogData *data)
 	gtk_table_attach (GTK_TABLE (table1), data->e_files_entry, 1, 2, 2, 3,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
-	gtk_tooltips_set_tip (data->tooltips, data->e_files_entry, _("example: *.txt; *.doc"), NULL);
+	gtk_widget_set_tooltip_text (data->e_files_entry, _("example: *.txt; *.doc"));
 	gtk_entry_set_activates_default (GTK_ENTRY (data->e_files_entry), TRUE);
 
 	data->e_all_radiobutton = gtk_radio_button_new_with_mnemonic (NULL, _("_All files"));
@@ -473,10 +470,6 @@ dlg_extract__common (FrWindow *window,
 	data->selected_files = selected_files;
 	data->base_dir_for_selection = base_dir_for_selection;
 	data->extract_clicked = FALSE;
-
-	data->tooltips = gtk_tooltips_new ();
-	g_object_ref (G_OBJECT (data->tooltips));
-	gtk_object_sink (GTK_OBJECT (data->tooltips));
 
 	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Extract"),

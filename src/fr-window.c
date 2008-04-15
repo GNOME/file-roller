@@ -245,7 +245,6 @@ struct _FrWindowPrivateData {
 	gboolean         filter_mode;
 	gint             current_view_length;
 
-	GtkTooltips     *tooltips;
 	guint            help_message_cid;
 	guint            list_info_cid;
 	guint            progress_cid;
@@ -506,8 +505,6 @@ fr_window_free_private_data (FrWindow *window)
 		gtk_widget_destroy (priv->recent_toolbar_menu);
 		priv->recent_toolbar_menu = NULL;
 	}
-
-	g_object_unref (G_OBJECT (priv->tooltips));
 
 	while (priv->activity_ref > 0)
 		fr_window_stop_activity_mode (window);
@@ -4906,10 +4903,6 @@ fr_window_construct (FrWindow *window)
 	
 	/* Create the widgets. */
 
-	window->priv->tooltips = gtk_tooltips_new ();
-	g_object_ref (G_OBJECT (window->priv->tooltips));
-	gtk_object_sink (GTK_OBJECT (window->priv->tooltips));
-
 	/* * File list. */
 
 	window->priv->list_store = fr_list_model_new (NUMBER_OF_COLUMNS,
@@ -5080,7 +5073,7 @@ fr_window_construct (FrWindow *window)
 	close_sidepane_button = gtk_button_new ();
 	gtk_container_add (GTK_CONTAINER (close_sidepane_button), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
 	gtk_button_set_relief (GTK_BUTTON (close_sidepane_button), GTK_RELIEF_NONE);
-	gtk_tooltips_set_tip (window->priv->tooltips, close_sidepane_button, _("Close the folders pane"), NULL);
+	gtk_widget_set_tooltip_text (close_sidepane_button, _("Close the folders pane"));
 	g_signal_connect (close_sidepane_button,
 			  "clicked",
 			  G_CALLBACK (close_sidepane_button_clicked_cb),
@@ -5214,9 +5207,9 @@ fr_window_construct (FrWindow *window)
 	open_recent_tool_item = gtk_menu_tool_button_new_from_stock (GTK_STOCK_OPEN);
 	gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->priv->recent_chooser_toolbar);
 	gtk_tool_item_set_homogeneous (open_recent_tool_item, FALSE);
-	gtk_tool_item_set_tooltip (open_recent_tool_item, window->priv->tooltips, _("Open archive"), NULL);
-	gtk_menu_tool_button_set_arrow_tooltip (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->priv->tooltips,	_("Open a recently used archive"), NULL);
-
+	gtk_widget_set_tooltip_text (GTK_WIDGET (open_recent_tool_item), _("Open archive"));
+	gtk_menu_tool_button_set_arrow_tooltip_text (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), _("Open a recently used archive"));
+	
 	window->priv->open_action = gtk_action_new ("Toolbar_Open", _("Open"), _("Open archive"), GTK_STOCK_OPEN);
 	g_object_set (window->priv->open_action, "is_important", TRUE, NULL);
 	g_signal_connect (window->priv->open_action,
@@ -5227,24 +5220,6 @@ fr_window_construct (FrWindow *window)
 
 	gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), open_recent_tool_item, 1);
-
-	/**/
-
-	/*
-	open_recent_tool_item = gtk_menu_tool_button_new_from_stock (FR_STOCK_ADD);
-	gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (open_recent_tool_item),
-				       gtk_ui_manager_get_widget (ui, "/AddMenu"));
-	gtk_tool_item_set_homogeneous (open_recent_tool_item, FALSE);
-	gtk_tool_item_set_tooltip (open_recent_tool_item, window->priv->tooltips, _("Add files to the archive"), NULL);
-	gtk_menu_tool_button_set_arrow_tooltip (GTK_MENU_TOOL_BUTTON (open_recent_tool_item), window->priv->tooltips,  _("Add files to the archive"), NULL);
-	gtk_action_connect_proxy (gtk_ui_manager_get_action (ui, "/Toolbar/AddFiles_Toolbar"),
-				  GTK_WIDGET (open_recent_tool_item));
-
-	gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
-	gtk_toolbar_insert (GTK_TOOLBAR (toolbar),
-			    open_recent_tool_item,
-			    4);
-	*/
 	
 	/**/
 
