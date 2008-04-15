@@ -397,7 +397,7 @@ for_each_child_start (ForEachChildData *fec)
 
 /**
  * g_directory_foreach_child:
- * @directory: 
+ * @directory: The directory to visit.
  * @recursive: Whether to traverse the @directory recursively.
  * @follow_links: Whether to dereference the symbolic links.
  * @cancellable: An optional @GCancellable object, used to cancel the process. 
