@@ -44,7 +44,6 @@ typedef enum {
 
 typedef struct {
 	char           *pattern;
-	char          **patterns;
 	FilterOptions   options;
 	GRegex        **regexps;
 } Filter;
@@ -56,30 +55,18 @@ filter_new (const char    *pattern,
 {
 	Filter             *filter;
 	GRegexCompileFlags  flags;
-	int                 i;
 	
 	filter = g_new0 (Filter, 1);
 
-	if ((pattern != NULL) && (strcmp (pattern, "*") != 0)) {
+	if ((pattern != NULL) && (strcmp (pattern, "*") != 0)) 
 		filter->pattern = g_strdup (pattern);
-		filter->patterns = search_util_get_patterns (pattern);
-	}
 
 	filter->options = options;
 	if (filter->options & FILTER_IGNORECASE)
 		flags = G_REGEX_CASELESS;
 	else
-		flags = 0;
-	
-	if (filter->pattern != NULL) {
-		filter->regexps = g_new0 (GRegex*, n_fields (filter->patterns) + 1);
-		for (i = 0; filter->patterns[i] != NULL; i++) 
-			filter->regexps[i] = g_regex_new (filter->patterns[i],
-						          flags,
-						          G_REGEX_MATCH_NOTEMPTY,
-						          NULL);
-		filter->regexps[i] = NULL;
-	}
+		flags = 0;	
+	filter->regexps = search_util_get_regexps (pattern, flags);
 	
 	return filter;
 }
@@ -91,39 +78,9 @@ filter_destroy (Filter *filter)
 	g_return_if_fail (filter != NULL);
 
 	g_free (filter->pattern);
-	if (filter->patterns != NULL)
-		g_strfreev (filter->patterns);
-	if (filter->regexps != NULL) {
-		int i;
-		for (i = 0; filter->regexps[i] != NULL; i++)
-			 g_regex_unref (filter->regexps[i]);
-		g_free (filter->regexps);
-	}
+	if (filter->regexps != NULL) 
+		free_regexps (filter->regexps);
 	g_free (filter);
-}
-
-
-static gboolean
-match_regexps (GRegex     **regexps,
-	       const char  *string)
-{
-	gboolean matched;
-	int      i;
-	
-	if ((regexps == NULL) || (regexps[0] == NULL))
-		return TRUE;
-
-	if (string == NULL)
-		return FALSE;
-	
-	matched = FALSE;
-	for (i = 0; regexps[i] != NULL; i++)
-		if (g_regex_match (regexps[i], string, 0, NULL)) {
-			matched = TRUE;
-			break;
-		}
-		
-	return matched;
 }
 
 
@@ -151,7 +108,7 @@ filter_matches (Filter     *filter,
 		return TRUE;
 	
 	utf8_name = g_filename_to_utf8 (file_name, -1, NULL, NULL, NULL);
-	matched = match_regexps (filter->regexps, utf8_name);
+	matched = match_regexps (filter->regexps, utf8_name, 0);
 	g_free (utf8_name);
 
 	return matched;

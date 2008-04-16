@@ -43,10 +43,13 @@ char*               escape_str                   (const char  *str,
 						  const char  *meta_chars);
 char*               unescape_str                 (const char  *str);
 gchar *             shell_escape                 (const gchar *filename);
-gboolean            match_patterns               (char       **patterns,
+gboolean            match_regexps                (GRegex     **regexps,
 						  const char  *string,
-						  int          flags);
+						  GRegexMatchFlags match_options);
 char **             search_util_get_patterns     (const char  *pattern_string);
+GRegex **           search_util_get_regexps      (const char  *pattern_string,
+			                          GRegexCompileFlags  compile_options);
+void                free_regexps                 (GRegex     **regexps);
 char *              _g_strdup_with_max_size      (const char  *s,
 						  int          max_size);
 const char *        eat_spaces                   (const char  *line);

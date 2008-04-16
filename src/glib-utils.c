@@ -26,7 +26,6 @@
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include "glib-utils.h"
-#include "utf8-fnmatch.h"
 
 
 #define MAX_PATTERNS 128
@@ -321,27 +320,41 @@ g_utf8_strchomp (char *string)
 
 
 gboolean
-match_patterns (char       **patterns,
-		const char  *string,
-		int          flags)
+match_regexps (GRegex           **regexps,
+	       const char        *string,
+	       GRegexMatchFlags   match_options)
 {
-	int i;
-	int result;
-
-	if (patterns[0] == NULL)
+	gboolean matched;
+	int      i;
+	
+	if ((regexps == NULL) || (regexps[0] == NULL))
 		return TRUE;
 
 	if (string == NULL)
 		return FALSE;
+	
+	matched = FALSE;
+	for (i = 0; regexps[i] != NULL; i++)
+		if (g_regex_match (regexps[i], string, match_options, NULL)) {
+			matched = TRUE;
+			break;
+		}
+		
+	return matched;
+}
 
-	result = FNM_NOMATCH;
-	i = 0;
-	while ((result != 0) && (patterns[i] != NULL)) {
-		result = g_utf8_fnmatch (patterns[i], string, flags);
-		i++;
-	}
 
-	return (result == 0);
+void
+free_regexps (GRegex **regexps)
+{
+	int i;
+	
+	if (regexps == NULL) 
+		return;
+		
+	for (i = 0; regexps[i] != NULL; i++)
+		g_regex_unref (regexps[i]);
+	g_free (regexps);
 }
 
 
@@ -350,6 +363,9 @@ search_util_get_patterns (const char *pattern_string)
 {
 	char **patterns;
 	int    i;
+
+	if (pattern_string == NULL)
+		return NULL;
 
 	patterns = g_utf8_strsplit (pattern_string, ";", MAX_PATTERNS);
 	for (i = 0; patterns[i] != NULL; i++) {
@@ -364,6 +380,30 @@ search_util_get_patterns (const char *pattern_string)
 	}
 
 	return patterns;
+}
+
+
+GRegex **
+search_util_get_regexps (const char         *pattern_string,
+			 GRegexCompileFlags  compile_options)
+{
+	char   **patterns;
+	GRegex **regexps;
+	int      i;
+		
+	patterns = search_util_get_patterns (pattern_string);
+	if (patterns == NULL)
+		return NULL;
+		
+	regexps = g_new0 (GRegex*, n_fields (patterns) + 1);
+	for (i = 0; patterns[i] != NULL; i++) 
+		regexps[i] = g_regex_new (patterns[i], 
+					  G_REGEX_OPTIMIZE | compile_options, 
+					  G_REGEX_MATCH_NOTEMPTY, 
+					  NULL);
+	g_strfreev (patterns);
+	
+	return regexps;
 }
 
 

@@ -129,8 +129,6 @@ file_roller_SOURCES = 			\
 	sexy-icon-entry.h		\
 	typedefs.h			\
 	ui.h				\
-	utf8-fnmatch.c			\
-	utf8-fnmatch.h			\
 	$(MKDTEMP_FILES)		\
 	$(BUILT_SOURCES)
 

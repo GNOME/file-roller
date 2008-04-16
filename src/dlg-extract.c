@@ -198,7 +198,7 @@ extract_cb (GtkWidget   *w,
 	fr_window_set_extract_default_dir (window, extract_to_dir, TRUE);
 
 	overwrite = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton));
-	skip_newer = !gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton)) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));
+	skip_newer = ! gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton)) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));
 	junk_paths = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_recreate_dir_checkbutton));
 
 	eel_gconf_set_boolean (PREF_EXTRACT_OVERWRITE, overwrite);
@@ -225,7 +225,7 @@ extract_cb (GtkWidget   *w,
 
 	file_list = NULL;
 
-	if (selected_files){
+	if (selected_files) {
 		file_list = data->selected_files;
 		data->selected_files = NULL;       /* do not the list when destroying the dialog. */
 	} 

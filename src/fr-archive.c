@@ -54,7 +54,6 @@
 #include "fr-error.h"
 #include "fr-marshal.h"
 #include "fr-process.h"
-#include "utf8-fnmatch.h"
 
 #ifndef NCARGS
 #define NCARGS _POSIX_ARG_MAX

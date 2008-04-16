@@ -53,7 +53,6 @@
 #include "sexy-icon-entry.h"
 #include "typedefs.h"
 #include "ui.h"
-#include "utf8-fnmatch.h"
 
 
 #define LAST_OUTPUT_DIALOG_NAME "last_output"
@@ -6341,13 +6340,13 @@ GList *
 fr_window_get_file_list_pattern (FrWindow    *window,
 				 const char  *pattern)
 {
-	char  **patterns;
-	GList  *list;
-	int     i;
+	GRegex **regexps;
+	GList   *list;
+	int      i;
 
 	g_return_val_if_fail (window != NULL, NULL);
 
-	patterns = search_util_get_patterns (pattern);
+	regexps = search_util_get_regexps (pattern, G_REGEX_CASELESS);
 	list = NULL;
 	for (i = 0; i < window->archive->command->files->len; i++) {
 		FileData *fd = g_ptr_array_index (window->archive->command->files, i);
@@ -6359,12 +6358,11 @@ fr_window_get_file_list_pattern (FrWindow    *window,
 			continue;
 
 		utf8_name = g_filename_to_utf8 (fd->name, -1, NULL, NULL, NULL);
-		if (match_patterns (patterns, utf8_name, 0))
+		if (match_regexps (regexps, utf8_name, 0))
 			list = g_list_prepend (list, g_strdup (fd->original_path));
 		g_free (utf8_name);
 	}
-	if (patterns != NULL)
-		g_strfreev (patterns);
+	free_regexps (regexps);
 
 	return g_list_reverse (list);
 }
