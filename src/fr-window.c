@@ -105,6 +105,11 @@ static GtkTargetEntry target_table[] = {
 	{ "text/uri-list", 0, 1 },
 };
 
+static GtkTargetEntry folder_tree_targets[] = {
+	{ "XdndFileRoller0", 0, 0 },
+	{ "XdndDirectSave0", 0, 2 }
+};
+
 typedef struct {
 	FrBatchActionType type;
 	void *            data;
@@ -327,6 +332,7 @@ struct _FrWindowPrivateData {
 	/* dragged files data */
 
 	char             *drag_destination_folder;
+	char             *drag_base_dir;
 	GError           *drag_error;
 	GList            *drag_file_list;        /* the list of files we are
 					 	  * dragging*/
@@ -2936,6 +2942,233 @@ action_performed (FrArchive   *archive,
 }
 
 
+/* -- selections -- */
+
+
+static GList *
+get_dir_list_from_path (FrWindow *window,
+	      		char     *path)
+{
+	char  *dirname;
+	int    dirname_l;
+	GList *list = NULL;
+	int    i;
+
+	if (path[strlen (path) - 1] != '/')
+		dirname = g_strconcat (path, "/", NULL);
+	else
+		dirname = g_strdup (path);
+	dirname_l = strlen (dirname);
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fd = g_ptr_array_index (window->archive->command->files, i);	
+
+		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
+			list = g_list_prepend (list, g_strdup (fd->original_path));
+	}
+	g_free (dirname);
+	
+	return g_list_reverse (list);
+}
+
+
+static GList *
+get_dir_list_from_file_data (FrWindow *window,
+	      		     FileData *fdata)
+{
+	char  *dirname;
+	GList *list;
+	
+	dirname = g_strconcat (fr_window_get_current_location (window),
+			       fdata->list_name,
+			       NULL);
+	list = get_dir_list_from_path (window, dirname);
+	g_free (dirname);
+	
+	return list;
+}
+
+
+GList *
+fr_window_get_file_list_selection (FrWindow *window,
+				   gboolean  recursive,
+				   gboolean *has_dirs)
+{
+	GtkTreeSelection *selection;
+	GList            *selections = NULL, *list, *scan;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	if (has_dirs != NULL)
+		*has_dirs = FALSE;
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
+	if (selection == NULL)
+		return NULL;
+	gtk_tree_selection_selected_foreach (selection, add_selected_from_list_view, &selections);
+
+	list = NULL;
+	for (scan = selections; scan; scan = scan->next) {
+		FileData *fd = scan->data;
+
+		if (!fd)
+			continue;
+
+		if (file_data_is_dir (fd)) {
+			if (has_dirs != NULL)
+				*has_dirs = TRUE;
+
+			if (recursive)
+				list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
+		}
+		else
+			list = g_list_prepend (list, g_strdup (fd->original_path));
+	}
+	if (selections)
+		g_list_free (selections);
+
+	return g_list_reverse (list);	
+}
+
+
+GList *
+fr_window_get_folder_tree_selection (FrWindow *window,
+				     gboolean  recursive,
+				     gboolean *has_dirs)
+{
+	GtkTreeSelection *tree_selection;
+	GList            *selections, *list, *scan;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	if (has_dirs != NULL)
+		*has_dirs = FALSE;
+
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
+	if (tree_selection == NULL)
+		return NULL;
+
+	selections = NULL;
+	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
+	if (selections == NULL)
+		return NULL;
+
+	if (has_dirs != NULL)
+		*has_dirs = TRUE;
+
+	list = NULL;
+	for (scan = selections; scan; scan = scan->next) {
+		char *path = scan->data;
+
+		if (recursive)
+			list = g_list_concat (list, get_dir_list_from_path (window, path));
+	}
+	path_list_free (selections);
+
+	return g_list_reverse (list);	
+}
+
+
+GList *
+fr_window_get_file_list_from_path_list (FrWindow *window,
+					GList    *path_list,
+					gboolean *has_dirs)
+{
+	GtkTreeModel *model;
+	GList        *selections, *list, *scan;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	model = GTK_TREE_MODEL (window->priv->list_store);
+	selections = NULL;
+
+	if (has_dirs != NULL)
+		*has_dirs = FALSE;
+
+	for (scan = path_list; scan; scan = scan->next) {
+		GtkTreeRowReference *reference = scan->data;
+		GtkTreePath         *path;
+		GtkTreeIter          iter;
+		FileData            *fdata;
+
+		path = gtk_tree_row_reference_get_path (reference);
+		if (path == NULL)
+			continue;
+
+		if (! gtk_tree_model_get_iter (model, &iter, path))
+			continue;
+
+		gtk_tree_model_get (model, &iter,
+				    COLUMN_FILE_DATA, &fdata,
+				    -1);
+
+		selections = g_list_prepend (selections, fdata);
+	}
+
+	list = NULL;
+	for (scan = selections; scan; scan = scan->next) {
+		FileData *fd = scan->data;
+
+		if (!fd)
+			continue;
+
+		if (file_data_is_dir (fd)) {
+			if (has_dirs != NULL)
+				*has_dirs = TRUE;
+			list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
+		}
+		else
+			list = g_list_prepend (list, g_strdup (fd->original_path));
+	}
+
+	if (selections != NULL)
+		g_list_free (selections);
+
+	return g_list_reverse (list);
+}
+
+
+GList *
+fr_window_get_file_list_pattern (FrWindow    *window,
+				 const char  *pattern)
+{
+	GRegex **regexps;
+	GList   *list;
+	int      i;
+
+	g_return_val_if_fail (window != NULL, NULL);
+
+	regexps = search_util_get_regexps (pattern, G_REGEX_CASELESS);
+	list = NULL;
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fd = g_ptr_array_index (window->archive->command->files, i);
+		char     *utf8_name;
+
+		/* FIXME: only files in the current location ? */
+
+		if (fd == NULL)
+			continue;
+
+		utf8_name = g_filename_to_utf8 (fd->name, -1, NULL, NULL, NULL);
+		if (match_regexps (regexps, utf8_name, 0))
+			list = g_list_prepend (list, g_strdup (fd->original_path));
+		g_free (utf8_name);
+	}
+	free_regexps (regexps);
+
+	return g_list_reverse (list);
+}
+
+
+int
+fr_window_get_n_selected_files (FrWindow *window)
+{
+	return _gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view)));
+}
+
+
+/**/
+
+
 static int
 dir_tree_button_press_cb (GtkWidget      *widget,
 		          GdkEventButton *event,
@@ -3417,7 +3650,9 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 
 	debug (DEBUG_INFO, "::DragDataReceived -->\n");
 
-	if (gtk_drag_get_source_widget (context) == window->priv->list_view) {
+	if ((gtk_drag_get_source_widget (context) == window->priv->list_view)
+	    || (gtk_drag_get_source_widget (context) == window->priv->tree_view))
+	{
 		gtk_drag_finish (context, FALSE, FALSE, time);
 		return;
 	}
@@ -3470,7 +3705,8 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 	    && ! window->archive->read_only
 	    && ! window->archive->is_compressed_file
 	    && ((window->archive->command != NULL)
-		&& window->archive->command->propCanModify)) {
+		&& window->archive->command->propCanModify)) 
+	{
 		if (one_file && is_an_archive) {
 			GtkWidget *d;
 			gint       r;
@@ -3566,6 +3802,9 @@ file_list_drag_begin (GtkWidget          *widget,
 
 	g_free (window->priv->drag_destination_folder);
 	window->priv->drag_destination_folder = NULL;
+	
+	g_free (window->priv->drag_base_dir);
+	window->priv->drag_base_dir = NULL;
 
 	gdk_property_change (context->source_window,
 			     XDS_ATOM, TEXT_ATOM,
@@ -3599,7 +3838,7 @@ file_list_drag_end (GtkWidget      *widget,
 		fr_window_archive_extract (window,
 					   window->priv->drag_file_list,
 					   window->priv->drag_destination_folder,
-					   fr_window_get_current_location (window),
+					   window->priv->drag_base_dir,
 					   FALSE,
 					   TRUE,
 					   FALSE,
@@ -3694,6 +3933,89 @@ get_selection_data_from_clipboard_data (FrWindow        *window,
 }
 
 
+static gboolean
+fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
+                                     GdkDragContext   *context,
+                                     GtkSelectionData *selection_data,
+                                     guint             info,
+                                     guint             time,
+                                     gpointer          user_data)
+{
+	FrWindow *window = user_data;
+	GList    *file_list;
+	char     *destination;
+	char     *destination_folder;
+	
+	debug (DEBUG_INFO, "::DragDataGet -->\n");
+	
+	if (window->priv->activity_ref > 0)
+		return FALSE;
+		
+	file_list = fr_window_get_folder_tree_selection (window, TRUE, NULL);
+	if (file_list == NULL)
+		return FALSE;
+	
+	if (selection_data->target == XFR_ATOM) {
+		FrClipboardData *tmp;
+		char            *data;
+		
+		tmp = fr_clipboard_data_new ();
+		tmp->files = file_list;
+		tmp->op = FR_CLIPBOARD_OP_COPY;
+		tmp->base_dir = g_strdup (fr_window_get_current_location (window));
+		
+		data = get_selection_data_from_clipboard_data (window, tmp);
+		gtk_selection_data_set (selection_data, XFR_ATOM, 8, (guchar *) data, strlen (data));
+		
+		fr_clipboard_data_unref (tmp);
+		g_free (data);
+			
+		return TRUE;
+	}
+
+	if (! nautilus_xds_dnd_is_valid_xds_context (context)) 
+		return FALSE;
+
+	destination = get_xds_atom_value (context);
+	g_return_val_if_fail (destination != NULL, FALSE);
+
+	destination_folder = remove_level_from_path (destination);
+	g_free (destination);
+
+	/* check whether the extraction can be performed in the destination
+	 * folder */
+
+	g_clear_error (&window->priv->drag_error);
+	
+	if (! check_permissions (destination_folder, R_OK | W_OK | X_OK)) {
+		char *destination_folder_display_name;
+		
+		destination_folder_display_name = g_filename_display_name (destination_folder);
+		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("You don't have the right permissions to extract archives in the folder \"%s\""), destination_folder_display_name);
+		g_free (destination_folder_display_name);
+	}
+
+	if (window->priv->drag_error == NULL) {
+		g_free (window->priv->drag_destination_folder);
+		g_free (window->priv->drag_base_dir);
+		path_list_free (window->priv->drag_file_list);
+		window->priv->drag_destination_folder = g_strdup (destination_folder);
+		window->priv->drag_base_dir = fr_window_get_selected_folder_in_tree_view (window);
+		window->priv->drag_file_list = file_list;
+	}
+
+	g_free (destination_folder);
+
+	/* sends back the response */
+
+	gtk_selection_data_set (selection_data, selection_data->target, 8, (guchar *) ((window->priv->drag_error == NULL) ? "S" : "E"), 1);
+
+	debug (DEBUG_INFO, "::DragDataGet <--\n");
+
+	return TRUE;
+}
+
+
 gboolean
 fr_window_file_list_drag_data_get (FrWindow         *window,
 				   GdkDragContext   *context,
@@ -3702,7 +4024,6 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 {
 	char *destination;
 	char *destination_folder;
-	char *destination_folder_display_name;
 
 	debug (DEBUG_INFO, "::DragDataGet -->\n");
 
@@ -3745,17 +4066,21 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	 * folder */
 
 	g_clear_error (&window->priv->drag_error);
-	destination_folder_display_name = g_filename_display_name (destination_folder);
-
-	if (! check_permissions (destination_folder, R_OK | W_OK | X_OK))
+	
+	if (! check_permissions (destination_folder, R_OK | W_OK | X_OK)) {
+		char *destination_folder_display_name;
+		
+		destination_folder_display_name = g_filename_display_name (destination_folder);
 		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("You don't have the right permissions to extract archives in the folder \"%s\""), destination_folder_display_name);
-
-	g_free (destination_folder_display_name);
+		g_free (destination_folder_display_name);
+	}
 
 	if (window->priv->drag_error == NULL) {
 		g_free (window->priv->drag_destination_folder);
-		window->priv->drag_destination_folder = g_strdup (destination_folder);
+		g_free (window->priv->drag_base_dir);
 		path_list_free (window->priv->drag_file_list);
+		window->priv->drag_destination_folder = g_strdup (destination_folder);
+		window->priv->drag_base_dir = g_strdup (fr_window_get_current_location (window));
 		window->priv->drag_file_list = fr_window_get_file_list_from_path_list (window, path_list, NULL);
 	}
 
@@ -4870,6 +5195,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->archive_uri = NULL;
 
 	window->priv->drag_destination_folder = NULL;
+	window->priv->drag_base_dir = NULL;
 	window->priv->drag_error = NULL;
 	window->priv->drag_file_list = NULL;
 
@@ -4986,7 +5312,6 @@ fr_window_construct (FrWindow *window)
 			  "drag_end",
 			  G_CALLBACK (file_list_drag_end),
 			  window);
-
 	egg_tree_multi_drag_add_drag_support (GTK_TREE_VIEW (window->priv->list_view));
 
 	list_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -5049,6 +5374,23 @@ fr_window_construct (FrWindow *window)
 			  G_CALLBACK (dir_tree_selection_changed_cb),
 			  window);
 	
+	g_signal_connect (G_OBJECT (window->priv->tree_view),
+			  "drag_begin",
+			  G_CALLBACK (file_list_drag_begin),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->tree_view),
+			  "drag_end",
+			  G_CALLBACK (file_list_drag_end),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->tree_view),
+			  "drag_data_get",
+			  G_CALLBACK (fr_window_folder_tree_drag_data_get),
+			  window);
+	gtk_drag_source_set (window->priv->tree_view,
+                             GDK_BUTTON1_MASK,
+                             folder_tree_targets, G_N_ELEMENTS (folder_tree_targets),
+                             GDK_ACTION_COPY);
+                             
 	tree_scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree_scrolled_window),
 					GTK_POLICY_AUTOMATIC,
@@ -6145,233 +6487,6 @@ fr_window_set_list_mode (FrWindow         *window,
 	fr_window_update_file_list (window, TRUE);
 	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
-}
-
-
-/* -- window_get_file_list_selection -- */
-
-
-static GList *
-get_dir_list_from_path (FrWindow *window,
-	      		char     *path)
-{
-	char  *dirname;
-	int    dirname_l;
-	GList *list = NULL;
-	int    i;
-
-	if (path[strlen (path) - 1] != '/')
-		dirname = g_strconcat (path, "/", NULL);
-	else
-		dirname = g_strdup (path);
-	dirname_l = strlen (dirname);
-	for (i = 0; i < window->archive->command->files->len; i++) {
-		FileData *fd = g_ptr_array_index (window->archive->command->files, i);	
-
-		if (strncmp (dirname, fd->full_path, dirname_l) == 0)
-			list = g_list_prepend (list, g_strdup (fd->original_path));
-	}
-	g_free (dirname);
-	
-	return g_list_reverse (list);
-}
-
-
-static GList *
-get_dir_list_from_file_data (FrWindow *window,
-	      		     FileData *fdata)
-{
-	char  *dirname;
-	GList *list;
-	
-	dirname = g_strconcat (fr_window_get_current_location (window),
-			       fdata->list_name,
-			       NULL);
-	list = get_dir_list_from_path (window, dirname);
-	g_free (dirname);
-	
-	return list;
-}
-
-
-GList *
-fr_window_get_file_list_selection (FrWindow *window,
-				   gboolean  recursive,
-				   gboolean *has_dirs)
-{
-	GtkTreeSelection *selection;
-	GList            *selections = NULL, *list, *scan;
-
-	g_return_val_if_fail (window != NULL, NULL);
-
-	if (has_dirs != NULL)
-		*has_dirs = FALSE;
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
-	if (selection == NULL)
-		return NULL;
-	gtk_tree_selection_selected_foreach (selection, add_selected_from_list_view, &selections);
-
-	list = NULL;
-	for (scan = selections; scan; scan = scan->next) {
-		FileData *fd = scan->data;
-
-		if (!fd)
-			continue;
-
-		if (file_data_is_dir (fd)) {
-			if (has_dirs != NULL)
-				*has_dirs = TRUE;
-
-			if (recursive)
-				list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
-		}
-		else
-			list = g_list_prepend (list, g_strdup (fd->original_path));
-	}
-	if (selections)
-		g_list_free (selections);
-
-	return g_list_reverse (list);	
-}
-
-
-GList *
-fr_window_get_folder_tree_selection (FrWindow *window,
-				     gboolean  recursive,
-				     gboolean *has_dirs)
-{
-	GtkTreeSelection *tree_selection;
-	GList            *selections, *list, *scan;
-
-	g_return_val_if_fail (window != NULL, NULL);
-
-	if (has_dirs != NULL)
-		*has_dirs = FALSE;
-
-	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->tree_view));
-	if (tree_selection == NULL)
-		return NULL;
-
-	selections = NULL;
-	gtk_tree_selection_selected_foreach (tree_selection, add_selected_from_tree_view, &selections);
-	if (selections == NULL)
-		return NULL;
-
-	if (has_dirs != NULL)
-		*has_dirs = TRUE;
-
-	list = NULL;
-	for (scan = selections; scan; scan = scan->next) {
-		char *path = scan->data;
-
-		if (recursive)
-			list = g_list_concat (list, get_dir_list_from_path (window, path));
-	}
-	path_list_free (selections);
-
-	return g_list_reverse (list);	
-}
-
-
-/* -- -- */
-
-
-GList *
-fr_window_get_file_list_from_path_list (FrWindow *window,
-					GList    *path_list,
-					gboolean *has_dirs)
-{
-	GtkTreeModel *model;
-	GList        *selections, *list, *scan;
-
-	g_return_val_if_fail (window != NULL, NULL);
-
-	model = GTK_TREE_MODEL (window->priv->list_store);
-	selections = NULL;
-
-	if (has_dirs != NULL)
-		*has_dirs = FALSE;
-
-	for (scan = path_list; scan; scan = scan->next) {
-		GtkTreeRowReference *reference = scan->data;
-		GtkTreePath         *path;
-		GtkTreeIter          iter;
-		FileData            *fdata;
-
-		path = gtk_tree_row_reference_get_path (reference);
-		if (path == NULL)
-			continue;
-
-		if (! gtk_tree_model_get_iter (model, &iter, path))
-			continue;
-
-		gtk_tree_model_get (model, &iter,
-				    COLUMN_FILE_DATA, &fdata,
-				    -1);
-
-		selections = g_list_prepend (selections, fdata);
-	}
-
-	list = NULL;
-	for (scan = selections; scan; scan = scan->next) {
-		FileData *fd = scan->data;
-
-		if (!fd)
-			continue;
-
-		if (file_data_is_dir (fd)) {
-			if (has_dirs != NULL)
-				*has_dirs = TRUE;
-			list = g_list_concat (list, get_dir_list_from_file_data (window, fd));
-		}
-		else
-			list = g_list_prepend (list, g_strdup (fd->original_path));
-	}
-
-	if (selections != NULL)
-		g_list_free (selections);
-
-	return g_list_reverse (list);
-}
-
-
-GList *
-fr_window_get_file_list_pattern (FrWindow    *window,
-				 const char  *pattern)
-{
-	GRegex **regexps;
-	GList   *list;
-	int      i;
-
-	g_return_val_if_fail (window != NULL, NULL);
-
-	regexps = search_util_get_regexps (pattern, G_REGEX_CASELESS);
-	list = NULL;
-	for (i = 0; i < window->archive->command->files->len; i++) {
-		FileData *fd = g_ptr_array_index (window->archive->command->files, i);
-		char     *utf8_name;
-
-		/* FIXME: only files in the current location ? */
-
-		if (fd == NULL)
-			continue;
-
-		utf8_name = g_filename_to_utf8 (fd->name, -1, NULL, NULL, NULL);
-		if (match_regexps (regexps, utf8_name, 0))
-			list = g_list_prepend (list, g_strdup (fd->original_path));
-		g_free (utf8_name);
-	}
-	free_regexps (regexps);
-
-	return g_list_reverse (list);
-}
-
-
-int
-fr_window_get_n_selected_files (FrWindow *window)
-{
-	return _gtk_count_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view)));
 }
 
 
