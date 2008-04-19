@@ -3583,7 +3583,7 @@ get_uri_list_from_selection_data (char *uri_list)
 
 static gboolean
 fr_window_drag_motion (GtkWidget      *widget,
-		       GdkDragContext *drag_context,
+		       GdkDragContext *context,
 		       gint            x,
 		       gint            y,
 		       guint           time,
@@ -3591,8 +3591,10 @@ fr_window_drag_motion (GtkWidget      *widget,
 {
 	FrWindow  *window = user_data;
 
-	if (gtk_drag_get_source_widget (drag_context) == window->priv->list_view) {
-		gdk_drag_status (drag_context, 0, time);
+	if ((gtk_drag_get_source_widget (context) == window->priv->list_view)
+	    || (gtk_drag_get_source_widget (context) == window->priv->tree_view))
+	{
+		gdk_drag_status (context, 0, time);
 		return FALSE;
 	}
 
