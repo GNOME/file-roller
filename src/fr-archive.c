@@ -622,10 +622,10 @@ get_mime_type_from_sniffer (GFile *file)
 		 */
 		{ NULL, NULL, 0 }
 	};
-	char  *filename;
-	FILE  *f;
-	char   buffer[5];
-	int    n, i;
+	char             *filename;
+	GFileInputStream *stream;
+	char              buffer[5];
+	int               n, i;
 
 	if (! g_file_has_uri_scheme (file, "file"))
 		return NULL;
@@ -635,15 +635,18 @@ get_mime_type_from_sniffer (GFile *file)
 		g_free (filename);
 		return NULL;
 	}
-		
-	f = fopen (filename, "rb");
 	g_free (filename);
-	
-	if (f == NULL)
+		
+	stream = g_file_read (file, NULL , NULL);
+	if (stream == NULL) 
 		return NULL;
-
-	n = fread (buffer, sizeof (char), sizeof (buffer) - 1, f);
-	fclose (f);
+	
+	n = g_input_stream_read (G_INPUT_STREAM (stream), buffer, sizeof (buffer) - 1, NULL, NULL);
+	g_object_unref (stream);
+	
+	if (n == -1)
+		return NULL;
+		
 	buffer[n] = 0;
 	for (i = 0; sniffer_data[i].mime_type != NULL; i++) {
 		const char *first_bytes = sniffer_data[i].first_bytes;

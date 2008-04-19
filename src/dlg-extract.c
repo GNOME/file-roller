@@ -26,7 +26,6 @@
 
 #include <glade/glade.h>
 
-#include "bookmarks.h"
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "main.h"

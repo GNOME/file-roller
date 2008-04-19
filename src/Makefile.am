@@ -37,8 +37,6 @@ BUILT_SOURCES =			\
 file_roller_SOURCES = 			\
 	actions.h			\
 	actions.c			\
-	bookmarks.c			\
-	bookmarks.h			\
 	dlg-add-files.c			\
 	dlg-add-files.h			\
 	dlg-add-folder.c		\
