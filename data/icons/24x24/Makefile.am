@@ -1,1 +1,1 @@
-SUBDIRS = actions
+SUBDIRS = actions apps
