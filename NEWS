@@ -1,3 +1,40 @@
+version 2.23.1
+--------------	
+
+        New features and user visible changes:
+
+	* Show an alert dialog when the 'save as' operation is completed, and 
+	  allow the user the open the newly created archive.
+	* Load and save the 'add folder' dialog options.  Allow to clear the
+	  options as well.
+	* Allow to specify a password when converting an archive to another 
+	  format.
+	* Added keyboard shortcut to deselect all.  Moved add files and add 
+	  folders down in the edit menu.  Moved stop and reaload at the bottom of
+	  the view menu.  Removed the 'sort by' submenu.
+	* Added an exclude folder filter to specify sub-folders to ignore when 
+	  adding a folder recursively.
+	* Added ability to extract folders from the folder
+	  pane using drag & drop.
+	
+	Bugfixes:
+	
+	* Fixed bug #523158 – exclamation mark in RAR password
+	* Fixed bug #516043 – status bar / progress bar artifact
+	* Fixed bug #512474 – Visual glitches at startup
+	
+	Internal code has been modified in order to remove the usage of
+	deprecated libraries and API: 
+	  
+	* now the GIO library is used to access the filesystem instead of 
+	  the deprecated gnome-vfs library.
+	* gtk+ is used to get the applications and mime types icons.
+	* replaced gnome_url_show with g_app_info_launch_default_for_uri.
+	* use g_app_info_launch_default_for_uri to show the help dialog.
+	* use the new tooltips API.
+	* use g_key_file instead of gnome_config for loading/saving sessions.
+	* use GRegex instead of the custom utf8_fnmatch function.
+	  
 version 2.22.0
 --------------
 
