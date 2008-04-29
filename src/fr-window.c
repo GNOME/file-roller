@@ -3466,7 +3466,8 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 	    && ! window->archive->read_only
 	    && ! window->archive->is_compressed_file
 	    && ((window->archive->command != NULL)
-		&& window->archive->command->propCanModify)) {
+		&& window->archive->command->propCanModify)) 
+	{
 		if (one_file && is_an_archive) {
 			GtkWidget *d;
 			gint       r;
@@ -5316,8 +5317,8 @@ fr_window_construct (FrWindow *window)
                 GtkWidget *vbox;
                 
                 vbox = gtk_vbox_new (FALSE, 0);
-                gtk_box_pack_start (GTK_BOX (window->priv->statusbar), vbox, FALSE, FALSE, 0);
-                gtk_box_pack_start (GTK_BOX (vbox), window->priv->progress_bar, TRUE, FALSE, 0);
+                gtk_box_pack_end (GTK_BOX (window->priv->statusbar), vbox, FALSE, FALSE, 0);
+                gtk_box_pack_start (GTK_BOX (vbox), window->priv->progress_bar, TRUE, TRUE, 1);
                 gtk_widget_show (vbox);
         }
 	gnome_app_set_statusbar (GNOME_APP (window), window->priv->statusbar);
