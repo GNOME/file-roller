@@ -329,7 +329,7 @@ eel_gconf_get_string (const char *key,
 		g_return_val_if_fail (error == NULL, result);
 		g_free (result);
 		result = g_strdup (val);
-
+		g_free (val);
 	} else if (error != NULL)
 		eel_gconf_handle_error (&error);
 
