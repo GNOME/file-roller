@@ -821,6 +821,9 @@ get_temp_work_dir (void)
 			g_free (folder);
 	}
 
+	if (best_folder == NULL)
+		return NULL;
+
 	template = g_strconcat (best_folder + strlen ("file://"), "/.fr-XXXXXX", NULL);
 	result = mkdtemp (template);
 

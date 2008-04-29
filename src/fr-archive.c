@@ -2251,7 +2251,7 @@ add_dropped_items (DroppedItemsData *data)
 		fr_archive_add_items (data->archive,
 				      list,
 				      first_base_dir,
-				      NULL,
+				      data->dest_dir,
 				      data->update,
 				      data->password,
 				      data->compression);
@@ -2280,7 +2280,7 @@ add_dropped_items (DroppedItemsData *data)
 		fr_archive_add_directory (archive,
 					  file_name_from_path (path),
 					  base_dir,
-					  NULL,
+					  data->dest_dir,
 					  data->update,
 					  data->password,
 					  data->compression);
@@ -2305,7 +2305,7 @@ add_dropped_items (DroppedItemsData *data)
 		fr_archive_add_files (archive,
 				      only_names_list,
 				      first_basedir,
-				      data->base_dir,
+				      data->dest_dir,
 				      data->update,
 				      data->password,
 				      data->compression);
