@@ -1,5 +1,16 @@
 2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (fr_window_close): do not close if an operation 
+	is underway.
+	(open_progress_dialog): prefer the progress dialog to the progress 
+	bar, maybe not all the users notice the progress bar and think no 
+	operation is in progress.
+	
+	Fixes bug #532255 – file-roller silently allows the user to exit in 
+	the middle of an operation.
+
+2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c (fr_window_update_files): 
 	(fr_window_open_files): 
 	(fr_window_open_files_with_command):

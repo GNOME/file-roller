@@ -643,6 +643,9 @@ close__step2 (gpointer data)
 void
 fr_window_close (FrWindow *window)
 {
+	if (window->priv->activity_ref > 0) 
+		return;
+		
 	window->priv->closing = TRUE;
 	
 	if (window->priv->check_clipboard != 0) {
@@ -2278,10 +2281,12 @@ display_progress_dialog (gpointer data)
 static void
 open_progress_dialog (FrWindow *window)
 {
+	/* FIXME: decide whether to use the progress bar or the dialog when
+	 * not in batch mode.
 	if (! window->priv->batch_mode) {
 		gtk_widget_show (window->priv->progress_bar);
 		return;
-	}
+	}*/
 
 	if (window->priv->hide_progress_timeout != 0) {
 		g_source_remove (window->priv->hide_progress_timeout);
