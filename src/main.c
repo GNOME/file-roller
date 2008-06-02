@@ -656,6 +656,9 @@ get_archive_filename_extension (const char *filename)
 		return NULL;
 
 	ext = get_file_extension (filename);
+	if (ext == NULL)
+		return NULL;
+		
 	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--) 
 		if (strcmp (ext, file_ext_type[i].ext) == 0)
 			return ext;

@@ -1,4 +1,16 @@
 2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c (fr_window_construct): 
+	
+	Fixed bug #527271 – Ctrl-Q should quit file-roller.
+	Patch by Eric Piel, modified to close the window instead of quitting the
+	application.
+	
+	* src/main.c (get_archive_filename_extension): 
+	
+	return NULL if the filename has no extension.
+
+2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
 	
 	* src/fr-command-rpm.c (list__process_line): 
 	
