@@ -500,7 +500,7 @@ build_uri (const char *base, ...)
 	
 	va_start (args, base);
         while ((child = va_arg (args, const char *)) != NULL) {
-        	if (! g_str_ends_with (uri->str, "/") && ! g_str_starts_with (child, "/"))
+        	if (! g_str_has_suffix (uri->str, "/") && ! g_str_has_prefix (child, "/"))
         		g_string_append (uri, "/");
         	g_string_append (uri, child);
         }

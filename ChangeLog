@@ -1,5 +1,17 @@
 2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/file-utils.c (build_uri): 
+
+	use g_str_has_prefix, g_str_has_suffix instead of g_str_starts_with and
+	g_str_ends_with, as suggested by Paolo Borelli in bug #536241
+
+	* src/glib-utils.c: 
+	* src/glib-utils.h: 
+
+	removed g_str_starts_with and g_str_ends_with
+
+2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/glib-utils.h: 
 	* src/glib-utils.c: 
 

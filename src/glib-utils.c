@@ -632,20 +632,3 @@ get_static_string (const char *s)
 
         return result;
 }
-
-
-gboolean
-g_str_starts_with (const char *s,
-		   const char *c)
-{
-	return strncmp (s, c, strlen (c)) == 0;
-}
-
-
-gboolean
-g_str_ends_with (const char *s,
-		 const char *c)
-{
-	int c_len = strlen (c);
-	return strncmp (s + strlen (s) - c_len, c, c_len) == 0;
-}
