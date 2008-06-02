@@ -48,8 +48,6 @@ struct _FrCommandRpmClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_rpm_get_type        (void);
-FrCommand*   fr_command_rpm_new             (FrProcess *process,
-					     const char *filename);
+GType fr_command_rpm_get_type (void);
 
 #endif /* FR_COMMAND_RPM_H */

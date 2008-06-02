@@ -110,7 +110,7 @@ static EnumStringTable compression_level_table [] = {
 /* --------------- */
 
 
-FRWindowSortMethod
+FrWindowSortMethod
 preferences_get_sort_method (void)
 {
 	char *s_value;
@@ -120,12 +120,12 @@ preferences_get_sort_method (void)
 	i_value = get_enum_from_string (sort_method_table, s_value);
 	g_free (s_value);
 
-	return (FRWindowSortMethod) i_value;
+	return (FrWindowSortMethod) i_value;
 }
 
 
 void
-preferences_set_sort_method (FRWindowSortMethod i_value)
+preferences_set_sort_method (FrWindowSortMethod i_value)
 {
 	char *s_value;
 
@@ -158,7 +158,7 @@ preferences_set_sort_type (GtkSortType i_value)
 }
 
 
-FRWindowListMode
+FrWindowListMode
 preferences_get_list_mode (void)
 {
 	char *s_value;
@@ -168,12 +168,12 @@ preferences_get_list_mode (void)
 	i_value = get_enum_from_string (list_mode_table, s_value);
 	g_free (s_value);
 
-	return (FRWindowListMode) i_value;
+	return (FrWindowListMode) i_value;
 }
 
 
 void
-preferences_set_list_mode (FRWindowListMode i_value)
+preferences_set_list_mode (FrWindowListMode i_value)
 {
 	char *s_value;
 
@@ -182,7 +182,7 @@ preferences_set_list_mode (FRWindowListMode i_value)
 }
 
 
-FRCompression
+FrCompression
 preferences_get_compression_level (void)
 {
 	char *s_value;
@@ -192,12 +192,12 @@ preferences_get_compression_level (void)
 	i_value = get_enum_from_string (compression_level_table, s_value);
 	g_free (s_value);
 
-	return (FRCompression) i_value;
+	return (FrCompression) i_value;
 }
 
 
 void
-preferences_set_compression_level (FRCompression i_value)
+preferences_set_compression_level (FrCompression i_value)
 {
 	char *s_value;
 

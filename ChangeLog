@@ -1,3 +1,19 @@
+2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/*.[ch]: changed the way a FrArchive creates FrCommand objects. 
+	This makes the code easier to maintain and more modularized, and can 
+	be seen as a first step in the direction of a plugin system that will 
+	allow to add new archive types support without changing file-roller.
+	
+	* configure.in: changed version to 2.23.2
+
+2008-06-01  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/ui.h: 
+	
+	Fixed bug #535967 – Meaningless message: Open Go to the next visited 
+	location selected folder
+
 2008-04-29  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/gconf-utils.c: fixed memory leak.

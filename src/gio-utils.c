@@ -75,7 +75,8 @@ filter_new (const char    *pattern,
 static void
 filter_destroy (Filter *filter)
 {	
-	g_return_if_fail (filter != NULL);
+	if (filter == NULL)
+		return;
 
 	g_free (filter->pattern);
 	if (filter->regexps != NULL) 

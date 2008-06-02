@@ -183,7 +183,7 @@ fr_command_arj_add (FrCommand     *comm,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
-		    FRCompression  compression)
+		    FrCompression  compression)
 {
 	GList *scan;
 
@@ -321,7 +321,7 @@ fr_command_arj_test (FrCommand   *comm,
 
 static void
 fr_command_arj_handle_error (FrCommand   *comm,
-			     FRProcError *error)
+			     FrProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
  		if (error->status <= 1)
@@ -329,6 +329,18 @@ fr_command_arj_handle_error (FrCommand   *comm,
 		else if (error->status == 3)
  			error->type = FR_PROC_ERROR_ASK_PASSWORD;
  	}
+}
+
+
+static void
+fr_command_arj_set_mime_type (FrCommand  *comm,
+		 	      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("arj")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
 }
 
 
@@ -349,14 +361,13 @@ fr_command_arj_class_init (FrCommandArjClass *class)
 	afc->extract        = fr_command_arj_extract;
 	afc->test           = fr_command_arj_test;
 	afc->handle_error   = fr_command_arj_handle_error;
+	afc->set_mime_type  = fr_command_arj_set_mime_type;
 }
 
 
 static void
 fr_command_arj_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_ARJ;
-
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = FALSE;
@@ -408,21 +419,4 @@ fr_command_arj_get_type ()
 	}
 
 	return type;
-}
-
-
-FrCommand *
-fr_command_arj_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if (!is_program_in_path("arj")) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ARJ, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

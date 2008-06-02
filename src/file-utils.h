@@ -48,8 +48,9 @@ char *              get_dir_content_if_unique    (const char  *uri);
 gboolean            path_in_path                 (const char  *path_src,
 						  const char  *path_dest);
 goffset             get_file_size                (const char  *uri);
-time_t              get_file_mtime               (const char  *s);
-time_t              get_file_ctime               (const char  *s);
+time_t              get_file_mtime               (const char  *uri);
+time_t              get_file_mtime_for_path      (const char  *path);
+time_t              get_file_ctime               (const char  *uri);
 gboolean            make_directory_tree          (GFile       *dir,
 		     				  mode_t       mode,
 		     				  GError     **error);
@@ -65,6 +66,7 @@ char *              dir_name_from_path           (const char  *path);
 char *              remove_level_from_path       (const char  *path);
 char *              remove_extension_from_path   (const char  *path);
 char *              remove_ending_separator      (const char  *path);
+const char *        get_file_extension           (const char  *filename);
 gboolean            file_extension_is            (const char  *filename,
 						  const char  *ext);
 gboolean            is_mime_type                 (const char  *type,

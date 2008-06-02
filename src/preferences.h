@@ -72,14 +72,14 @@
 #define PREF_DESKTOP_TOOLBAR_DETACHABLE "/desktop/gnome/interface/toolbar_detachable"
 #define PREF_NAUTILUS_CLICK_POLICY "/apps/nautilus/preferences/click_policy"
 
-FRWindowSortMethod  preferences_get_sort_method       (void);
-void                preferences_set_sort_method       (FRWindowSortMethod  i_value);
+FrWindowSortMethod  preferences_get_sort_method       (void);
+void                preferences_set_sort_method       (FrWindowSortMethod  i_value);
 GtkSortType         preferences_get_sort_type         (void);
 void                preferences_set_sort_type         (GtkSortType         i_value);
-FRWindowListMode    preferences_get_list_mode         (void);
-void                preferences_set_list_mode         (FRWindowListMode    i_value);
-FRCompression       preferences_get_compression_level (void);
-void                preferences_set_compression_level (FRCompression       i_value);
+FrWindowListMode    preferences_get_list_mode         (void);
+void                preferences_set_list_mode         (FrWindowListMode    i_value);
+FrCompression       preferences_get_compression_level (void);
+void                preferences_set_compression_level (FrCompression       i_value);
 void                pref_util_save_window_geometry    (GtkWindow          *window,
 						       const char         *dialog);
 void                pref_util_restore_window_geometry (GtkWindow          *window,

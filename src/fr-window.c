@@ -256,7 +256,7 @@ struct _FrWindowPrivateData {
 	GtkWidget *      up_arrows[5];
 	GtkWidget *      down_arrows[5];
 
-	FRAction         action;
+	FrAction         action;
 	gboolean         archive_present;
 	gboolean         archive_new;        /* A new archive has been created
 					      * but it doesn't contain any
@@ -283,19 +283,19 @@ struct _FrWindowPrivateData {
 	gboolean         single_click;
 	GtkTreePath     *path_clicked;
 
-	FRWindowSortMethod sort_method;
+	FrWindowSortMethod sort_method;
 	GtkSortType      sort_type;
 
 	char *           last_location;
 
 	gboolean         view_folders;
-	FRWindowListMode list_mode;
-	FRWindowListMode last_list_mode;
+	FrWindowListMode list_mode;
+	FrWindowListMode last_list_mode;
 	GList *          history;
 	GList *          history_current;
 	char *           password;
 	char *           password_for_paste;
-	FRCompression    compression;
+	FrCompression    compression;
 
 	guint            activity_timeout_handle;   /* activity timeout
 						     * handle. */
@@ -347,7 +347,7 @@ struct _FrWindowPrivateData {
 	gboolean   progress_pulse;
 	guint      progress_timeout;  /* Timeout to display the progress dialog. */
 	guint      hide_progress_timeout;  /* Timeout to hide the progress dialog. */
-	FRAction   pd_last_action;
+	FrAction   pd_last_action;
 	char      *pd_last_archive;
 
 	/* update dialog data */
@@ -1229,7 +1229,7 @@ get_emblem (GtkWidget *widget,
 
 
 static int
-get_column_from_sort_method (FRWindowSortMethod sort_method)
+get_column_from_sort_method (FrWindowSortMethod sort_method)
 {
 	switch (sort_method) {
 	case FR_WINDOW_SORT_BY_NAME: return COLUMN_NAME;
@@ -1263,7 +1263,7 @@ get_sort_method_from_column (int column_id)
 
 
 /*static const char *
-get_action_from_sort_method (FRWindowSortMethod sort_method)
+get_action_from_sort_method (FrWindowSortMethod sort_method)
 {
 	switch (sort_method) {
 	case FR_WINDOW_SORT_BY_NAME: return "SortByName";
@@ -2123,7 +2123,7 @@ progress_dialog_response (GtkDialog *dialog,
 
 
 static const char*
-get_message_from_action (FRAction action)
+get_message_from_action (FrAction action)
 {
 	char *message = "";
 
@@ -2175,7 +2175,7 @@ get_message_from_action (FRAction action)
 
 static void
 progress_dialog__set_last_action (FrWindow *window,
-				  FRAction  action)
+				  FrAction  action)
 {
 	const char *title;
 	char       *markup;
@@ -2425,7 +2425,7 @@ fr_window_pop_message (FrWindow *window)
 
 static void
 action_started (FrArchive *archive,
-		FRAction   action,
+		FrAction   action,
 		gpointer   data)
 {
 	FrWindow   *window = data;
@@ -2577,8 +2577,8 @@ fr_window_show_error_dialog (FrWindow  *window,
 static gboolean
 handle_errors (FrWindow    *window,
 	       FrArchive   *archive,
-	       FRAction     action,
-	       FRProcError *error)
+	       FrAction     action,
+	       FrProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_ASK_PASSWORD) {
 		dlg_ask_password (window);
@@ -2689,8 +2689,8 @@ handle_errors (FrWindow    *window,
 
 static void
 convert__action_performed (FrArchive   *archive,
-			   FRAction     action,
-			   FRProcError *error,
+			   FrAction     action,
+			   FrProcError *error,
 			   gpointer     data)
 {
 	FrWindow *window = data;
@@ -2771,8 +2771,8 @@ static void fr_window_exec_next_batch_action (FrWindow *window);
 
 static void
 action_performed (FrArchive   *archive,
-		  FRAction     action,
-		  FRProcError *error,
+		  FrAction     action,
+		  FrProcError *error,
 		  gpointer     data)
 {
 	FrWindow *window = data;
@@ -3698,7 +3698,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 
 	one_file = (list->next == NULL);
 	if (one_file)
-		is_an_archive = fr_archive_utils__file_is_archive (list->data);
+		is_an_archive = uri_is_archive (list->data);
 	else
 		is_an_archive = FALSE;
 
@@ -4919,8 +4919,8 @@ fr_window_init_recent_chooser (FrWindow         *window,
 
 	filter = gtk_recent_filter_new ();
 	gtk_recent_filter_set_name (filter, _("All archives"));
-	for (i = 0; open_type[i] != FR_FILE_TYPE_NULL; i++)
-		gtk_recent_filter_add_mime_type (filter, file_type_desc[open_type[i]].mime_type);
+	for (i = 0; open_type[i] != -1; i++)
+		gtk_recent_filter_add_mime_type (filter, mime_type_desc[open_type[i]].mime_type);
 	gtk_recent_filter_add_application (filter, "File Roller");
 	gtk_recent_chooser_add_filter (chooser, filter);
 
@@ -6054,7 +6054,7 @@ fr_window_archive_add_directory (FrWindow      *window,
 				 const char    *dest_dir,
 				 gboolean       update,
 				 const char    *password,
-				 FRCompression  compression)
+				 FrCompression  compression)
 {
 	fr_archive_add_directory (window->archive,
 				  directory,
@@ -6073,7 +6073,7 @@ fr_window_archive_add_items (FrWindow      *window,
 			     const char    *dest_dir,
 			     gboolean       update,
 			     const char    *password,
-			     FRCompression  compression)
+			     FrCompression  compression)
 {
 	fr_archive_add_items (window->archive,
 			      item_list,
@@ -6103,7 +6103,7 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 void
 fr_window_archive_remove (FrWindow      *window,
 			  GList         *file_list,
-			  FRCompression  compression)
+			  FrCompression  compression)
 {
 	fr_window_clipboard_remove_file_list (window, file_list);
 
@@ -6364,7 +6364,7 @@ fr_window_get_password (FrWindow *window)
 }
 
 
-FRCompression
+FrCompression
 fr_window_get_compression (FrWindow *window)
 {
 	return window->priv->compression;
@@ -6473,7 +6473,7 @@ fr_window_go_forward (FrWindow *window)
 
 void
 fr_window_set_list_mode (FrWindow         *window,
-			 FRWindowListMode  list_mode)
+			 FrWindowListMode  list_mode)
 {
 	g_return_if_fail (window != NULL);
 
@@ -7285,8 +7285,8 @@ add_pasted_files (FrWindow        *window,
 
 static void
 copy_from_archive_action_performed_cb (FrArchive   *archive,
-		  	   	       FRAction     action,
-		  	   	       FRProcError *error,
+		  	   	       FrAction     action,
+		  	   	       FrProcError *error,
 		  	   	       gpointer     data)
 {
 	FrWindow *window = data;
@@ -7780,8 +7780,8 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 
 static void
 fr_window_open_files__extract_done_cb (FrArchive   *archive,
-				       FRAction     action,
-				       FRProcError *error,
+				       FrAction     action,
+				       FrProcError *error,
 				       gpointer     callback_data)
 {
 	OpenFilesData *odata = callback_data;

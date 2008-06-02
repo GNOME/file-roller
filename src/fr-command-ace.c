@@ -199,9 +199,21 @@ fr_command_ace_test (FrCommand   *comm,
 
 static void
 fr_command_ace_handle_error (FrCommand   *comm, 
-			     FRProcError *error)
+			     FrProcError *error)
 {
 	/* FIXME */
+}
+
+
+static void
+fr_command_ace_set_mime_type (FrCommand  *comm,
+			      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("unace")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ;
 }
 
 
@@ -220,14 +232,13 @@ fr_command_ace_class_init (FrCommandAceClass *class)
 	afc->extract        = fr_command_ace_extract;
 	afc->test           = fr_command_ace_test;
 	afc->handle_error   = fr_command_ace_handle_error;
+	afc->set_mime_type  = fr_command_ace_set_mime_type;
 }
 
  
 static void 
 fr_command_ace_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_ACE;
-
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
@@ -276,20 +287,4 @@ fr_command_ace_get_type ()
         }
 
         return type;
-}
-
-
-FrCommand *
-fr_command_ace_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if(! is_program_in_path ("unace")) 
-		return NULL;
-	
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ACE, NULL));
-	fr_command_construct (comm, process, filename);
-	
-	return comm;
 }

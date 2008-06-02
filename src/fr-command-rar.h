@@ -52,8 +52,6 @@ struct _FrCommandRarClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_rar_get_type        (void);
-FrCommand*   fr_command_rar_new             (FrProcess *process,
-					     const char *filename);
+GType fr_command_rar_get_type (void);
 
 #endif /* FR_COMMAND_RAR_H */

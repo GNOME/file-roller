@@ -48,8 +48,6 @@ struct _FrCommandCpioClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_cpio_get_type        (void);
-FrCommand*   fr_command_cpio_new             (FrProcess *process,
-					      const char *filename);
+GType fr_command_cpio_get_type (void);
 
 #endif /* FR_COMMAND_CPIO_H */

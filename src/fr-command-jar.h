@@ -46,8 +46,6 @@ struct _FrCommandJarClass
 	FrCommandZipClass __parent_class;
 };
 
-GType        fr_command_jar_get_type        (void);
-FrCommand*   fr_command_jar_new             (FrProcess  *process,
-					     const char *filename);
+GType fr_command_jar_get_type (void);
 
 #endif /* FR_COMMAND_JAR_H */

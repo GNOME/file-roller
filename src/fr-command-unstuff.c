@@ -258,11 +258,23 @@ fr_command_unstuff_extract (FrCommand  *comm,
 
 static void
 fr_command_unstuff_handle_error (FrCommand   *comm,
-			     FRProcError *error)
+			     FrProcError *error)
 {
 	if ((error->type == FR_PROC_ERROR_COMMAND_ERROR)
 	    && (error->status <= 1))
 		error->type = FR_PROC_ERROR_NONE;
+}
+
+
+static void
+fr_command_unstuff_set_mime_type (FrCommand  *comm,
+			          const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("unstuff")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ;
 }
 
 
@@ -277,19 +289,18 @@ fr_command_unstuff_class_init (FrCommandUnstuffClass *class)
 
 	gobject_class->finalize = fr_command_unstuff_finalize;
 
-	afc->list         = fr_command_unstuff_list;
-	afc->add          = NULL;
-	afc->delete       = NULL;
-	afc->extract      = fr_command_unstuff_extract;
-	afc->handle_error = fr_command_unstuff_handle_error;
+	afc->list           = fr_command_unstuff_list;
+	afc->add            = NULL;
+	afc->delete         = NULL;
+	afc->extract        = fr_command_unstuff_extract;
+	afc->handle_error   = fr_command_unstuff_handle_error;
+	afc->set_mime_type  = fr_command_unstuff_set_mime_type;
 }
 
 
 static void
 fr_command_unstuff_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_STUFFIT;
-
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
@@ -344,21 +355,4 @@ fr_command_unstuff_get_type ()
 	}
 
 	return type;
-}
-
-
-FrCommand *
-fr_command_unstuff_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if (!is_program_in_path("unstuff")) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_UNSTUFF, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

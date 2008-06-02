@@ -367,6 +367,20 @@ get_file_mtime (const char *uri)
 
 
 time_t
+get_file_mtime_for_path (const char *path)
+{
+	char   *uri;
+	time_t  result;
+	
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = get_file_mtime (uri);
+	g_free (uri);
+	
+	return result;
+}
+
+
+time_t
 get_file_ctime (const char *uri)
 {
 	return get_file_time_type (uri, G_FILE_ATTRIBUTE_TIME_CREATED);
@@ -577,6 +591,37 @@ make_directory_tree_from_path (const char  *path,
 	g_free (uri);
 	
 	return result;
+}
+
+
+const char *
+get_file_extension (const char *filename)
+{
+	const char *ptr = filename;
+	int         len;
+	int         p;
+	const char *ext;
+	
+	if (filename == NULL)
+		return NULL;
+
+	len = strlen (filename);
+	if (len <= 1)
+		return NULL;
+
+	p = len - 1;
+	while ((p >= 0) && (ptr[p] != '.'))
+		p--;
+	if (p < 0)
+		return NULL;
+
+	ext = filename + p;	
+	if (ext - 4 > filename) {
+		const char *test = ext - 4;
+		if (strncmp (test, ".tar", 4) == 0)
+			ext = ext - 4;
+	} 
+	return ext;
 }
 
 

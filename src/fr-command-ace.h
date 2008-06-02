@@ -49,8 +49,6 @@ struct _FrCommandAceClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_ace_get_type        (void);
-FrCommand*   fr_command_ace_new             (FrProcess *process,
-					     const char *filename);
+GType fr_command_ace_get_type (void);
 
 #endif /* FR_COMMAND_ACE_H */

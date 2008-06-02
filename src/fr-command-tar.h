@@ -44,7 +44,6 @@ struct _FrCommandTar
 
 	/*<private>*/
 
-	FRCompressProgram  compress_prog;
 	char              *uncomp_filename;
 	gboolean           name_modified;
 
@@ -56,9 +55,6 @@ struct _FrCommandTarClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_tar_get_type        (void);
-FrCommand*   fr_command_tar_new             (FrProcess *process,
-					     const char *filename,
-					     FRCompressProgram prog);
+GType fr_command_tar_get_type (void);
 
 #endif /* FR_COMMAND_TAR_H */

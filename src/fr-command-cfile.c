@@ -48,13 +48,12 @@ static char *
 get_uncompressed_name_from_archive (FrCommand  *comm, 
 				    const char *e_filename)
 {
-	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
-	int             fd;
-	char            buffer[11];
-	char           *filename = NULL;
-	GString        *str = NULL;
+	int      fd;
+	char     buffer[11];
+	char    *filename = NULL;
+	GString *str = NULL;
 
-	if (comm_cfile->compress_prog != FR_COMPRESS_PROGRAM_GZIP)
+	if (is_mime_type (comm->mime_type, "application/x-gzip"))
 		return NULL;
 	
 	fd = open (e_filename, O_RDONLY);
@@ -132,7 +131,7 @@ list__process_line (char     *line,
 
 	fdata->original_path = fdata->full_path + 1;
 	fdata->link = NULL;
-	fdata->modified = get_file_mtime (comm->filename);
+	fdata->modified = get_file_mtime_for_path (comm->filename);
 	
 	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
@@ -150,7 +149,7 @@ fr_command_cfile_list (FrCommand  *comm,
 {
 	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
 
-	if (comm_cfile->compress_prog == FR_COMPRESS_PROGRAM_GZIP) {
+	if (is_mime_type (comm->mime_type, "application/x-gzip")) {
 		/* gzip let us known the uncompressed size */
 
 		fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
@@ -183,7 +182,7 @@ fr_command_cfile_list (FrCommand  *comm,
 		fdata->original_path = fdata->full_path + 1;
 		fdata->link = NULL;
 		fdata->size = get_file_size (comm->filename);
-		fdata->modified = get_file_mtime (comm->filename);
+		fdata->modified = get_file_mtime_for_path (comm->filename);
 		
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
@@ -209,13 +208,12 @@ fr_command_cfile_add (FrCommand     *comm,
 		      const char    *base_dir,
 		      gboolean       update,
 		      const char    *password,
-		      FRCompression  compression)
+		      FrCompression  compression)
 {
-	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
-	const char     *filename;
-	char           *temp_dir;
-	char           *e_temp_dir;
-	char           *temp_file;
+	const char *filename;
+	char       *temp_dir;
+	char       *e_temp_dir;
+	char       *temp_file;
 
 	if ((file_list == NULL) || (file_list->data == NULL))
 		return;
@@ -241,52 +239,36 @@ fr_command_cfile_add (FrCommand     *comm,
 
 	/**/
 
-	switch (comm_cfile->compress_prog) {
-	case FR_COMPRESS_PROGRAM_NONE:
-		break;
-		
-	case FR_COMPRESS_PROGRAM_GZIP:
+	if (is_mime_type (comm->mime_type, "application/x-gzip")) {
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_BZIP:
-		fr_process_begin_command (comm->process, "bzip");
-		fr_process_set_working_dir (comm->process, temp_dir);
-		fr_process_add_arg (comm->process, "--");
-		fr_process_add_arg (comm->process, filename);
-		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_BZIP2:
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-bzip")) {
 		fr_process_begin_command (comm->process, "bzip2");
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_COMPRESS: 
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-gzip")) {
 		fr_process_begin_command (comm->process, "compress");
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_LZMA:
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzma")) {
 		fr_process_begin_command (comm->process, "lzma");
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_LZOP: /* FIXME: untested. */
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzop")) {
 		fr_process_begin_command (comm->process, "lzop");
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-fU");
@@ -294,9 +276,7 @@ fr_command_cfile_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
-		break;
 	}
-
 
       	/* copy compressed file to the dest dir */
 
@@ -340,16 +320,15 @@ fr_command_cfile_extract (FrCommand  *comm,
 			  gboolean    junk_paths,
 			  const char *password)
 {
-	FrCommandCFile *comm_cfile = FR_COMMAND_CFILE (comm);
-	char           *temp_dir;
-	char           *e_temp_dir;
-	char           *dest_file;
-	char           *e_dest_file;
-	char           *temp_file;
-	char           *e_temp_file;
-	char           *uncompr_file;
-	char           *e_uncompr_file;
-	char           *compr_file;
+	char *temp_dir;
+	char *e_temp_dir;
+	char *dest_file;
+	char *e_dest_file;
+	char *temp_file;
+	char *e_temp_file;
+	char *uncompr_file;
+	char *e_uncompr_file;
+	char *compr_file;
 
 	/* create a temp dir. */
 
@@ -372,51 +351,35 @@ fr_command_cfile_extract (FrCommand  *comm,
 
 	/* uncompress the file */
 
-	switch (comm_cfile->compress_prog) {
-	case FR_COMPRESS_PROGRAM_NONE:
-		break;
-		
-	case FR_COMPRESS_PROGRAM_GZIP:
+	if (is_mime_type (comm->mime_type, "application/x-gzip")) {
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, "-n");
 		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_BZIP:
-		fr_process_begin_command (comm->process, "bzip");
-		fr_process_add_arg (comm->process, "-f");
-		fr_process_add_arg (comm->process, "-d");
-		fr_process_add_arg (comm->process, e_temp_file);
-		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_BZIP2:
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-bzip")) {
 		fr_process_begin_command (comm->process, "bzip2");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_COMPRESS: 
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-gzip")) {
 		fr_process_begin_command (comm->process, "uncompress");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_LZMA:
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzma")) {
 		fr_process_begin_command (comm->process, "lzma");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
-		break;
-
-	case FR_COMPRESS_PROGRAM_LZOP:
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzop")) {
 		fr_process_begin_command (comm->process, "lzop");
 		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-d");
@@ -424,7 +387,6 @@ fr_command_cfile_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, "--no-stdin");
 		fr_process_add_arg (comm->process, e_temp_file);
 		fr_process_end_command (comm->process);
-		break;
 	}
 
 	/* copy uncompress file to the dest dir */
@@ -467,6 +429,37 @@ fr_command_cfile_extract (FrCommand  *comm,
 }
 
 
+static void
+fr_command_cfile_set_mime_type (FrCommand  *comm,
+			        const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	if (is_mime_type (comm->mime_type, "application/x-gzip")) {
+		if (is_program_in_path ("gzip"))
+			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-bzip")) {
+		if (is_program_in_path ("bzip2"))
+			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-gzip")) {
+		if (is_program_in_path ("compress"))
+			comm->capabilities |= FR_COMMAND_CAP_WRITE;
+		if (is_program_in_path ("uncompress"))
+			comm->capabilities |= FR_COMMAND_CAP_READ;
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzma")) {
+		if (is_program_in_path ("lzma"))
+			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzop")) {
+		if (is_program_in_path ("lzop"))
+			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	}
+}
+
+
 static void 
 fr_command_cfile_class_init (FrCommandCFileClass *class)
 {
@@ -478,10 +471,11 @@ fr_command_cfile_class_init (FrCommandCFileClass *class)
 
         gobject_class->finalize = fr_command_cfile_finalize;
 
-        afc->list         = fr_command_cfile_list;
-	afc->add          = fr_command_cfile_add;
-	afc->delete       = fr_command_cfile_delete;
-	afc->extract      = fr_command_cfile_extract;
+        afc->list          = fr_command_cfile_list;
+	afc->add           = fr_command_cfile_add;
+	afc->delete        = fr_command_cfile_delete;
+	afc->extract       = fr_command_cfile_extract;
+	afc->set_mime_type = fr_command_cfile_set_mime_type;
 }
 
  
@@ -539,63 +533,4 @@ fr_command_cfile_get_type ()
         }
 
         return type;
-}
-
-
-FrCommand *
-fr_command_cfile_new (FrProcess         *process,
-		      const char        *filename,
-		      FRCompressProgram  prog)
-{
-	FrCommand *comm;
-
-	if ((prog == FR_COMPRESS_PROGRAM_GZIP) &&
-	    (!is_program_in_path("gzip"))) {
-		return NULL;
-	}
-
-	if ((prog == FR_COMPRESS_PROGRAM_BZIP) &&
-	    (!is_program_in_path("bzip"))) { 
-		return NULL;
-	}
-
-	if ((prog == FR_COMPRESS_PROGRAM_BZIP2) &&
-	    (!is_program_in_path("bzip2"))) {
-		return NULL;
-	}
-
-	if ((prog == FR_COMPRESS_PROGRAM_COMPRESS) && 
-	    ((!is_program_in_path("compress")) || 
-	     (!is_program_in_path("uncompress")))) {
-		return NULL;
-	}
-
-	if ((prog == FR_COMPRESS_PROGRAM_LZMA) &&
-	    (!is_program_in_path("lzma"))) {
-		return NULL;
-	}
-
-	if ((prog == FR_COMPRESS_PROGRAM_LZOP) &&
-	    (!is_program_in_path("lzop"))) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_CFILE, NULL));
-	fr_command_construct (comm, process, filename);
-	FR_COMMAND_CFILE (comm)->compress_prog = prog;
-
-	if (prog == FR_COMPRESS_PROGRAM_GZIP)
-		comm->file_type = FR_FILE_TYPE_GZIP;
-	else if (prog == FR_COMPRESS_PROGRAM_BZIP)
-		comm->file_type = FR_FILE_TYPE_BZIP;
-	else if (prog == FR_COMPRESS_PROGRAM_BZIP2)
-		comm->file_type = FR_FILE_TYPE_BZIP2;
-	else if (prog == FR_COMPRESS_PROGRAM_COMPRESS)
-		comm->file_type = FR_FILE_TYPE_COMPRESS;
-	else if (prog == FR_COMPRESS_PROGRAM_LZMA)
-		comm->file_type = FR_FILE_TYPE_LZMA;
-	else if (prog == FR_COMPRESS_PROGRAM_LZOP)
-		comm->file_type = FR_FILE_TYPE_LZOP;
-
-	return comm;
 }

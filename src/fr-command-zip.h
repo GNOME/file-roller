@@ -48,8 +48,6 @@ struct _FrCommandZipClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_zip_get_type        (void);
-FrCommand*   fr_command_zip_new             (FrProcess *process,
-					     const char *filename);
+GType fr_command_zip_get_type (void);
 
 #endif /* FR_COMMAND_ZIP_H */

@@ -214,6 +214,18 @@ fr_command_iso_extract (FrCommand  *comm,
 
 
 static void
+fr_command_iso_set_mime_type (FrCommand  *comm,
+		 	      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("isoinfo")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ;
+}
+
+
+static void
 fr_command_iso_class_init (FrCommandIsoClass *class)
 {
 	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -224,8 +236,9 @@ fr_command_iso_class_init (FrCommandIsoClass *class)
 
 	gobject_class->finalize = fr_command_iso_finalize;
 
-	afc->list    = fr_command_iso_list;
-	afc->extract = fr_command_iso_extract;
+	afc->list           = fr_command_iso_list;
+	afc->extract        = fr_command_iso_extract;
+	afc->set_mime_type  = fr_command_iso_set_mime_type;
 }
 
 
@@ -233,8 +246,6 @@ static void
 fr_command_iso_init (FrCommand *comm)
 {
 	FrCommandIso *comm_iso = FR_COMMAND_ISO (comm);
-
-	comm->file_type = FR_FILE_TYPE_ISO;
 
 	comm_iso->cur_path = NULL;
 	comm_iso->joliet = TRUE;
@@ -295,21 +306,4 @@ fr_command_iso_get_type ()
 	}
 
 	return type;
-}
-
-
-FrCommand *
-fr_command_iso_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if (! is_program_in_path ("isoinfo")) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ISO, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

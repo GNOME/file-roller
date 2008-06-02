@@ -62,7 +62,7 @@ typedef struct {
 
 	ProcFunc     end_func;
 	gpointer     end_data;
-} FRCommandInfo;
+} FrCommandInfo;
 
 
 struct _FrProcess {
@@ -80,7 +80,7 @@ struct _FrProcess {
 
 	/*< private >*/
 
-	GPtrArray   *comm;             /* FRCommandInfo elements. */
+	GPtrArray   *comm;             /* FrCommandInfo elements. */
 	gint         n_comm;           /* total number of commands */
 	gint         current_comm;     /* currenlty editing command. */
 
@@ -104,8 +104,8 @@ struct _FrProcess {
 	ProcLineFunc e_proc_line_func;
 	gpointer     e_proc_line_data;
 
-	FRProcError  error;
-	FRProcError  first_error;
+	FrProcError  error;
+	FrProcError  first_error;
 
 	gboolean     running;
 	gboolean     stopping;

@@ -54,7 +54,7 @@ fr_command_jar_add (FrCommand     *comm,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
-		    FRCompression  compression)
+		    FrCompression  compression)
 {
 	FrProcess *proc = comm->process;
 	GList     *zip_list = NULL, *jardata_list = NULL, *jar_list = NULL;
@@ -206,17 +206,4 @@ fr_command_jar_get_type ()
         }
 
         return type;
-}
-
-
-FrCommand *
-fr_command_jar_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_JAR, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

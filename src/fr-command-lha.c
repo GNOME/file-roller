@@ -231,7 +231,7 @@ fr_command_lha_add (FrCommand     *comm,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
-		    FRCompression  compression)
+		    FrCompression  compression)
 {
 	GList *scan;
 
@@ -304,6 +304,18 @@ fr_command_lha_extract (FrCommand  *comm,
 }
 
 
+static void
+fr_command_lha_set_mime_type (FrCommand  *comm,
+		 	      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("lha")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+}
+
+
 static void 
 fr_command_lha_class_init (FrCommandLhaClass *class)
 {
@@ -315,18 +327,17 @@ fr_command_lha_class_init (FrCommandLhaClass *class)
 
 	gobject_class->finalize = fr_command_lha_finalize;
 
-        afc->list         = fr_command_lha_list;
-	afc->add          = fr_command_lha_add;
-	afc->delete       = fr_command_lha_delete;
-	afc->extract      = fr_command_lha_extract;
+        afc->list           = fr_command_lha_list;
+	afc->add            = fr_command_lha_add;
+	afc->delete         = fr_command_lha_delete;
+	afc->extract        = fr_command_lha_extract;
+	afc->set_mime_type  = fr_command_lha_set_mime_type;
 }
 
  
 static void 
 fr_command_lha_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_LHA;
-
 	comm->propAddCanUpdate             = TRUE; 
 	comm->propAddCanReplace            = TRUE; 
 	comm->propAddCanStoreFolders       = TRUE;
@@ -375,21 +386,4 @@ fr_command_lha_get_type ()
         }
 
         return type;
-}
-
-
-FrCommand *
-fr_command_lha_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if (!is_program_in_path("lha")) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_LHA, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

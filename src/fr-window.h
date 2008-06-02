@@ -137,20 +137,20 @@ void        fr_window_archive_add_directory     (FrWindow      *window,
 						 const char    *dest_dir,
 						 gboolean       update,
 						 const char    *password,
-						 FRCompression  compression);
+						 FrCompression  compression);
 void        fr_window_archive_add_items         (FrWindow      *window,
 						 GList         *dir_list,
 						 const char    *base_dir,
 						 const char    *dest_dir,
 						 gboolean       update,
 						 const char    *password,
-						 FRCompression  compression);
+						 FrCompression  compression);
 void        fr_window_archive_add_dropped_items (FrWindow      *window,
 						 GList         *item_list,
 						 gboolean       update);
 void        fr_window_archive_remove            (FrWindow      *window,
 						 GList         *file_list,
-						 FRCompression  compression);
+						 FrCompression  compression);
 void        fr_window_archive_extract           (FrWindow      *window,
 						 GList         *file_list,
 						 const char    *extract_to_dir,
@@ -170,7 +170,7 @@ void        fr_window_set_password              (FrWindow      *window,
 void        fr_window_set_password_for_paste    (FrWindow      *window,
 					         const char    *password);						 
 const char *fr_window_get_password              (FrWindow      *window);
-FRCompression fr_window_get_compression 	(FrWindow      *window);
+FrCompression fr_window_get_compression 	(FrWindow      *window);
 void        fr_window_view_folder_after_extract (FrWindow      *window,
 					 	 gboolean       view);
 
@@ -186,7 +186,7 @@ void       fr_window_go_forward                 (FrWindow       *window);
 void       fr_window_current_folder_activated   (FrWindow       *window,
 						 gboolean        from_sidebar);
 void       fr_window_set_list_mode              (FrWindow       *window,
-						 FRWindowListMode  list_mode);
+						 FrWindowListMode  list_mode);
 
 /**/
 

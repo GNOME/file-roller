@@ -186,6 +186,18 @@ fr_command_rpm_extract (FrCommand  *comm,
 }
 
 
+static void
+fr_command_rpm_set_mime_type (FrCommand  *comm,
+		 	      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("rpm2cpio")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ;
+}
+
+
 static void 
 fr_command_rpm_class_init (FrCommandRpmClass *class)
 {
@@ -199,14 +211,13 @@ fr_command_rpm_class_init (FrCommandRpmClass *class)
 
         afc->list           = fr_command_rpm_list;
 	afc->extract        = fr_command_rpm_extract;
+	afc->set_mime_type  = fr_command_rpm_set_mime_type;
 }
 
  
 static void 
 fr_command_rpm_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_RPM;
-
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
@@ -255,21 +266,4 @@ fr_command_rpm_get_type ()
         }
 
         return type;
-}
-
-
-FrCommand *
-fr_command_rpm_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if (!is_program_in_path("rpm2cpio")) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_RPM, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

@@ -283,7 +283,7 @@ fr_command_zip_add (FrCommand     *comm,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
-		    FRCompression  compression)
+		    FrCompression  compression)
 {
 	GList *scan;
 
@@ -414,7 +414,7 @@ fr_command_zip_test (FrCommand   *comm,
 
 static void
 fr_command_zip_handle_error (FrCommand   *comm,
-			     FRProcError *error)
+			     FrProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
 		if (error->status <= 1)
@@ -444,6 +444,24 @@ fr_command_zip_handle_error (FrCommand   *comm,
 
 
 static void
+fr_command_zip_set_mime_type (FrCommand  *comm,
+			      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("zip")) {
+		if (strcmp (comm->mime_type, "application/x-ms-dos-executable") == 0)
+			comm->capabilities |= FR_COMMAND_CAP_READ;
+		else
+			comm->capabilities |= FR_COMMAND_CAP_ALL;
+	} 
+	else if (is_program_in_path ("unzip")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ;
+}
+
+
+static void
 fr_command_zip_class_init (FrCommandZipClass *class)
 {
 	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -460,6 +478,7 @@ fr_command_zip_class_init (FrCommandZipClass *class)
 	afc->extract        = fr_command_zip_extract;
 	afc->test           = fr_command_zip_test;
 	afc->handle_error   = fr_command_zip_handle_error;
+	afc->set_mime_type  = fr_command_zip_set_mime_type;
 
 	afc->escape         = fr_command_zip_escape;
 }
@@ -468,8 +487,6 @@ fr_command_zip_class_init (FrCommandZipClass *class)
 static void
 fr_command_zip_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_ZIP;
-
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = TRUE;
@@ -520,22 +537,4 @@ fr_command_zip_get_type ()
 	}
 
 	return type;
-}
-
-
-FrCommand *
-fr_command_zip_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if (!is_program_in_path ("zip") &&
-	    !is_program_in_path ("unzip")) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ZIP, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

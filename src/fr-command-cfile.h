@@ -43,8 +43,7 @@ struct _FrCommandCFile
 
 	/*<private>*/
 
-	FRCompressProgram compress_prog;
-	FRProcError error;
+	FrProcError error;
 };
 
 struct _FrCommandCFileClass
@@ -52,9 +51,6 @@ struct _FrCommandCFileClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_cfile_get_type   (void);
-FrCommand*   fr_command_cfile_new        (FrProcess *process,
-					  const char *filename,
-					  FRCompressProgram prog);
+GType fr_command_cfile_get_type (void);
 
 #endif /* FR_COMMAND_CFILE_H */

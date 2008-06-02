@@ -38,29 +38,19 @@ typedef enum {
 	FR_WINDOW_SORT_BY_TYPE = 2,
 	FR_WINDOW_SORT_BY_TIME = 3,
 	FR_WINDOW_SORT_BY_PATH = 4
-} FRWindowSortMethod;
+} FrWindowSortMethod;
 
 typedef enum {
 	FR_WINDOW_LIST_MODE_FLAT,
 	FR_WINDOW_LIST_MODE_AS_DIR
-} FRWindowListMode;
-
-typedef enum {
-	FR_COMPRESS_PROGRAM_NONE,
-	FR_COMPRESS_PROGRAM_GZIP,
-	FR_COMPRESS_PROGRAM_BZIP,
-	FR_COMPRESS_PROGRAM_BZIP2,
-	FR_COMPRESS_PROGRAM_COMPRESS,
-	FR_COMPRESS_PROGRAM_LZMA,
-	FR_COMPRESS_PROGRAM_LZOP
-} FRCompressProgram;
+} FrWindowListMode;
 
 typedef enum {
 	FR_COMPRESSION_VERY_FAST,
 	FR_COMPRESSION_FAST,
 	FR_COMPRESSION_NORMAL,
 	FR_COMPRESSION_MAXIMUM
-} FRCompression;
+} FrCompression;
 
 typedef enum {
 	FR_PROC_ERROR_NONE,
@@ -71,63 +61,56 @@ typedef enum {
 	FR_PROC_ERROR_SPAWN,
 	FR_PROC_ERROR_STOPPED,
 	FR_PROC_ERROR_ASK_PASSWORD
-} FRProcErrorType;
+} FrProcErrorType;
 
 typedef struct {
-	FRProcErrorType  type;
+	FrProcErrorType  type;
 	int              status;
 	GError          *gerror;
-} FRProcError;
-
-typedef enum {
-	FR_FILE_TYPE_ACE,
-	FR_FILE_TYPE_AR,
-	FR_FILE_TYPE_ARJ,
-	FR_FILE_TYPE_BZIP,
-	FR_FILE_TYPE_BZIP2,
-	FR_FILE_TYPE_COMPRESS,
-	FR_FILE_TYPE_CPIO,
-	FR_FILE_TYPE_DEB,
-	FR_FILE_TYPE_ISO,
-	FR_FILE_TYPE_EAR,
-	FR_FILE_TYPE_EXE,
-	FR_FILE_TYPE_GZIP,
-	FR_FILE_TYPE_JAR,
-	FR_FILE_TYPE_LHA,
-	FR_FILE_TYPE_LZMA,
-	FR_FILE_TYPE_LZOP,
-	FR_FILE_TYPE_RAR,
-	FR_FILE_TYPE_RPM,
-	FR_FILE_TYPE_TAR,
-	FR_FILE_TYPE_TAR_BZ,
-	FR_FILE_TYPE_TAR_BZ2,
-	FR_FILE_TYPE_TAR_GZ,
-	FR_FILE_TYPE_TAR_LZMA,
-	FR_FILE_TYPE_TAR_LZOP,
-	FR_FILE_TYPE_TAR_COMPRESS,
-	FR_FILE_TYPE_STUFFIT,
-	FR_FILE_TYPE_WAR,
-	FR_FILE_TYPE_ZIP,
-	FR_FILE_TYPE_ZOO,
-	FR_FILE_TYPE_7ZIP,
-	FR_FILE_TYPE_NULL
-} FRFileType;
+} FrProcError;
 
 typedef struct {
-	FRFileType  id;
-	char       *ext;
 	char       *mime_type;
+	char       *default_ext;
 	char       *name;
 	gboolean    supports_password;
-} FRFileTypeDescription;
+	gboolean    supports_many_files;
+} FrMimeTypeDescription;
+
+typedef struct {
+	char *ext;
+	char *mime_type;
+} FrExtensionType;
 
 typedef struct {
 	char       *command;
+	const char *mime_type;
 	gboolean    can_open;
 	gboolean    can_save;
-	gboolean    support_many_files;
-	FRFileType  file_type;
-} FRCommandDescription;
+} FrCommandDescription;
+
+typedef enum {
+	FR_COMMAND_CAP_NONE = 0,
+	FR_COMMAND_CAP_READ = 1 << 0,
+	FR_COMMAND_CAP_WRITE = 1 << 1,
+	FR_COMMAND_CAP_ARCHIVE_MANY_FILES = 1 << 2
+} FrCommandCap;
+
+#define FR_COMMAND_CAP_READ_WRITE (FR_COMMAND_CAP_READ | FR_COMMAND_CAP_WRITE)
+#define FR_COMMAND_CAP_ALL (FR_COMMAND_CAP_READ | FR_COMMAND_CAP_WRITE | FR_COMMAND_CAP_ARCHIVE_MANY_FILES)
+
+typedef guint8 FrCommandCaps;
+
+typedef struct {
+	const char    *mime_type;
+	FrCommandCaps  capabilities;
+} FrMimeTypeCap;
+
+typedef struct {
+	int        ref;
+	GType      type;
+	GPtrArray *caps;  /* array of FrMimeTypeCap */
+} FrRegisteredCommand;
 
 #endif /* TYPEDEFS_H */
 

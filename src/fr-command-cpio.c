@@ -185,6 +185,18 @@ fr_command_cpio_extract (FrCommand  *comm,
 }
 
 
+static void
+fr_command_cpio_set_mime_type (FrCommand  *comm,
+		 	       const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("cpio")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+}
+
+
 static void 
 fr_command_cpio_class_init (FrCommandCpioClass *class)
 {
@@ -198,14 +210,13 @@ fr_command_cpio_class_init (FrCommandCpioClass *class)
 
         afc->list           = fr_command_cpio_list;
 	afc->extract        = fr_command_cpio_extract;
+	afc->set_mime_type  = fr_command_cpio_set_mime_type;
 }
 
  
 static void 
 fr_command_cpio_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_CPIO;
-
 	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
@@ -255,21 +266,4 @@ fr_command_cpio_get_type ()
         }
 
         return type;
-}
-
-
-FrCommand *
-fr_command_cpio_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if (!is_program_in_path("cpio")) {
-		return NULL;
-	}
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_CPIO, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

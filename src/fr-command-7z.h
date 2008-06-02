@@ -49,8 +49,6 @@ struct _FrCommand7zClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_7z_get_type        (void);
-FrCommand*   fr_command_7z_new             (FrProcess *process,
-					    const char *filename);
+GType fr_command_7z_get_type (void);
 
 #endif /* FR_COMMAND_7Z_H */

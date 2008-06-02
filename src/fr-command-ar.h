@@ -47,8 +47,6 @@ struct _FrCommandArClass
 	FrCommandClass __parent_class;
 };
 
-GType        fr_command_ar_get_type        (void);
-FrCommand*   fr_command_ar_new             (FrProcess  *process,
-					    const char *filename);
+GType fr_command_ar_get_type (void);
 
 #endif /* FR_COMMAND_AR_H */

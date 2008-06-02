@@ -229,7 +229,7 @@ fr_command_rar_add (FrCommand     *comm,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
-		    FRCompression  compression)
+		    FrCompression  compression)
 {
 	GList *scan;
 
@@ -369,7 +369,7 @@ fr_command_rar_test (FrCommand   *comm,
 
 static void
 fr_command_rar_handle_error (FrCommand   *comm,
-			     FRProcError *error)
+			     FrProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
 		if (error->status <= 1)
@@ -393,6 +393,20 @@ fr_command_rar_handle_error (FrCommand   *comm,
 
 
 static void
+fr_command_rar_set_mime_type (FrCommand  *comm,
+		 	      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("rar")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	else if (is_program_in_path ("unrar")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ;
+}
+
+
+static void
 fr_command_rar_class_init (FrCommandRarClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
@@ -403,20 +417,19 @@ fr_command_rar_class_init (FrCommandRarClass *class)
 
 	gobject_class->finalize = fr_command_rar_finalize;
 
-	afc->list         = fr_command_rar_list;
-	afc->add          = fr_command_rar_add;
-	afc->delete       = fr_command_rar_delete;
-	afc->extract      = fr_command_rar_extract;
-	afc->test         = fr_command_rar_test;
-	afc->handle_error = fr_command_rar_handle_error;
+	afc->list           = fr_command_rar_list;
+	afc->add            = fr_command_rar_add;
+	afc->delete         = fr_command_rar_delete;
+	afc->extract        = fr_command_rar_extract;
+	afc->test           = fr_command_rar_test;
+	afc->handle_error   = fr_command_rar_handle_error;
+	afc->set_mime_type  = fr_command_rar_set_mime_type;
 }
 
 
 static void
 fr_command_rar_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_RAR;
-
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = TRUE;
@@ -465,20 +478,4 @@ fr_command_rar_get_type ()
 	}
 
 	return type;
-}
-
-
-FrCommand *
-fr_command_rar_new (FrProcess  *process,
-		    const char *filename)
-{
-	FrCommand *comm;
-
-	if ((!is_program_in_path("rar")) && (!is_program_in_path("unrar")))
-		return NULL;
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_RAR, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

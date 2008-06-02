@@ -200,7 +200,7 @@ static GtkActionEntry action_entries[] = {
 	  G_CALLBACK (activate_action_go_back) },
 	{ "GoForward", GTK_STOCK_GO_FORWARD,
 	  NULL, NULL,
-	  N_("Open Go to the next visited location selected folder"),
+	  N_("Go to the next visited location"),
 	  G_CALLBACK (activate_action_go_forward) },
 	{ "GoUp", GTK_STOCK_GO_UP,
 	  NULL, NULL,

@@ -58,13 +58,20 @@ extern GList       *WindowList;
 extern GList       *CommandList;
 extern gint         ForceDirectoryCreation;
 extern GHashTable  *ProgramsCache;
+extern GPtrArray   *Registered_Commands;
 
-extern FRFileTypeDescription file_type_desc[];
-extern FRFileType single_file_save_type[]; /* File types that can be saved when
-					    * a single file is selected.  
-					    * Includes single file compressors
-					    * such as gzip, compress, etc. */
-extern FRFileType save_type[];             /* File types that can be saved. */
-extern FRFileType open_type[];             /* File types that can be opened. */
+extern FrMimeTypeDescription mime_type_desc[];
+extern FrExtensionType file_ext_type[];
+extern int single_file_save_type[]; /* File types that can be saved when
+				     * a single file is selected.  
+				     * Includes single file compressors
+				     * such as gzip, compress, etc. */
+extern int save_type[];             /* File types that can be saved. */
+extern int open_type[];             /* File types that can be opened. */
+ 
+GType        get_command_type_from_mime_type (const char    *mime_type,
+				 	      FrCommandCaps  requested_capabilities);
+const char * get_mime_type_from_extension    (const char    *ext);
+const char * get_archive_filename_extension  (const char *uri);
 
 #endif /* MAIN_H */

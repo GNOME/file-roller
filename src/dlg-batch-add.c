@@ -80,8 +80,8 @@ destroy_cb (GtkWidget  *widget,
 static const char *
 get_ext (DialogData *data)
 {
-	FRFileType *save_type_list;
-	int         idx;
+	int *save_type_list;
+	int  idx;
 
 	if (data->single_file)
 		save_type_list = single_file_save_type;
@@ -90,7 +90,7 @@ get_ext (DialogData *data)
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
 
-	return file_type_desc[save_type_list[idx]].ext;
+	return mime_type_desc[save_type_list[idx]].default_ext;
 }
 
 
@@ -326,7 +326,7 @@ static void
 archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 				   DialogData  *data)
 {
-	FRFileType *save_type_list;
+	int        *save_type_list;
 	const char *mime_type;
 	int         idx = gtk_combo_box_get_active (combo_box);
 
@@ -334,7 +334,7 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 		save_type_list = single_file_save_type;
 	else
 		save_type_list =  save_type;
-	mime_type = file_type_desc[save_type_list[idx]].mime_type;
+	mime_type = mime_type_desc[save_type_list[idx]].mime_type;
 
 	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_mime_type_pixbuf (mime_type, ARCHIVE_ICON_SIZE, NULL));
 }
@@ -344,9 +344,9 @@ static void
 update_archive_type_combo_box_from_ext (DialogData  *data,
 					const char  *ext)
 {
-	FRFileType *save_type_list;
-	int         idx = 0;
-	int         i;
+	int *save_type_list;
+	int  idx = 0;
+	int  i;
 
 	if (ext == NULL) {
 		gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), 0);
@@ -358,8 +358,8 @@ update_archive_type_combo_box_from_ext (DialogData  *data,
 	else
 		save_type_list =  save_type;
 
-	for (i = 0; save_type_list[i] != FR_FILE_TYPE_NULL; i++)
-		if (strcmp (ext, file_type_desc[save_type_list[i]].ext) == 0) {
+	for (i = 0; save_type_list[i] != -1; i++)
+		if (strcmp (ext, mime_type_desc[save_type_list[i]].default_ext) == 0) {
 			idx = i;
 			break;
 		}
@@ -381,7 +381,7 @@ dlg_batch_add_files (FrWindow *window,
 	const char *first_filename;
 	char       *parent;
 	int         i;
-	FRFileType *save_type_list;
+	int        *save_type_list;
 
 	if (file_list == NULL)
 		return;
@@ -446,9 +446,9 @@ dlg_batch_add_files (FrWindow *window,
 	else
 		save_type_list = save_type;
 
-	for (i = 0; save_type_list[i] != FR_FILE_TYPE_NULL; i++) {
+	for (i = 0; save_type_list[i] != -1; i++) {
 		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box),
-					   file_type_desc[save_type_list[i]].ext);
+					   mime_type_desc[save_type_list[i]].default_ext);
 	}
 
 	gtk_box_pack_start (GTK_BOX (a_archive_type_box), data->a_archive_type_combo_box, TRUE, TRUE, 0);

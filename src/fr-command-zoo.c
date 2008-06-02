@@ -241,7 +241,7 @@ fr_command_zoo_add (FrCommand     *comm,
 		    const char    *base_dir,
 		    gboolean       update,
 		    const char    *password,
-		    FRCompression  compression)
+		    FrCompression  compression)
 {
 	GList        *scan;
 
@@ -323,6 +323,18 @@ fr_command_zoo_test (FrCommand   *comm,
 }
 
 
+static void
+fr_command_zoo_set_mime_type (FrCommand  *comm,
+			      const char *mime_type)
+{
+	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	
+	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("zoo")) 
+		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+}
+
+
 static void 
 fr_command_zoo_class_init (FrCommandZooClass *class)
 {
@@ -334,19 +346,18 @@ fr_command_zoo_class_init (FrCommandZooClass *class)
 
 	gobject_class->finalize = fr_command_zoo_finalize;
 
-        afc->list         = fr_command_zoo_list;
-	afc->add          = fr_command_zoo_add;
-	afc->delete       = fr_command_zoo_delete;
-	afc->extract      = fr_command_zoo_extract;
-	afc->test         = fr_command_zoo_test;
+        afc->list          = fr_command_zoo_list;
+	afc->add           = fr_command_zoo_add;
+	afc->delete        = fr_command_zoo_delete;
+	afc->extract       = fr_command_zoo_extract;
+	afc->test          = fr_command_zoo_test;
+	afc->set_mime_type = fr_command_zoo_set_mime_type;
 }
 
  
 static void 
 fr_command_zoo_init (FrCommand *comm)
 {
-	comm->file_type = FR_FILE_TYPE_ZOO;
-
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = FALSE; 
 	comm->propExtractCanAvoidOverwrite = FALSE;
@@ -394,20 +405,4 @@ fr_command_zoo_get_type ()
         }
 
         return type;
-}
-
-FrCommand *
-fr_command_zoo_new (FrProcess         *process,
-		    const char        *filename)
-{
-	FrCommand *comm;
-
-	if (!is_program_in_path("zoo")) {
-		return NULL;
-	}	
-
-	comm = FR_COMMAND (g_object_new (FR_TYPE_COMMAND_ZOO, NULL));
-	fr_command_construct (comm, process, filename);
-
-	return comm;
 }

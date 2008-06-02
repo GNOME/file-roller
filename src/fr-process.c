@@ -51,12 +51,12 @@ static void fr_process_init       (FrProcess      *fr_proc);
 static void fr_process_finalize   (GObject        *object);
 
 
-static FRCommandInfo *
+static FrCommandInfo *
 fr_command_info_new (void)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
-	c_info = g_new0 (FRCommandInfo, 1);
+	c_info = g_new0 (FrCommandInfo, 1);
 	c_info->args = NULL;
 	c_info->dir = NULL;
 	c_info->sticky = FALSE;
@@ -67,7 +67,7 @@ fr_command_info_new (void)
 
 
 static void
-fr_command_info_free (FRCommandInfo * c_info)
+fr_command_info_free (FrCommandInfo * c_info)
 {
 	if (c_info == NULL)
 		return;
@@ -246,7 +246,7 @@ void
 fr_process_begin_command (FrProcess  *fr_proc,
 			  const char *arg)
 {
-	FRCommandInfo * c_info;
+	FrCommandInfo * c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -265,7 +265,7 @@ fr_process_begin_command_at (FrProcess  *fr_proc,
 			     const char *arg,
 			     int         index)
 {
-	FRCommandInfo *c_info, *old_c_info;
+	FrCommandInfo *c_info, *old_c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 	g_return_if_fail (index >= 0 && index <= fr_proc->n_comm);
@@ -288,7 +288,7 @@ void
 fr_process_set_working_dir (FrProcess  *fr_proc,
 			    const char *dir)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -303,7 +303,7 @@ void
 fr_process_set_sticky (FrProcess *fr_proc,
 		       gboolean   sticky)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -316,7 +316,7 @@ void
 fr_process_set_ignore_error (FrProcess *fr_proc,
 			     gboolean   ignore_error)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -329,7 +329,7 @@ void
 fr_process_add_arg (FrProcess  *fr_proc,
 		    const char *arg)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -344,7 +344,7 @@ fr_process_set_arg_at (FrProcess  *fr_proc,
 		       int         n_arg,
 		       const char *arg_value)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 	GList         *arg;
 
 	g_return_if_fail (fr_proc != NULL);
@@ -363,7 +363,7 @@ fr_process_set_begin_func (FrProcess    *fr_proc,
 			   ProcFunc      func,
 			   gpointer      func_data)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -378,7 +378,7 @@ fr_process_set_end_func (FrProcess    *fr_proc,
 			 ProcFunc      func,
 			 gpointer      func_data)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -393,7 +393,7 @@ fr_process_set_continue_func (FrProcess    *fr_proc,
 			      ContinueFunc  func,
 			      gpointer      func_data)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -409,7 +409,7 @@ fr_process_set_continue_func (FrProcess    *fr_proc,
 void
 fr_process_end_command (FrProcess *fr_proc)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
 
@@ -426,7 +426,7 @@ fr_process_clear (FrProcess *fr_proc)
 	g_return_if_fail (fr_proc != NULL);
 
 	for (i = 0; i <= fr_proc->n_comm; i++) {
-		FRCommandInfo *c_info;
+		FrCommandInfo *c_info;
 
 		c_info = g_ptr_array_index (fr_proc->comm, i);
 		fr_command_info_free (c_info);
@@ -580,7 +580,7 @@ static void child_setup (gpointer user_data)
 static void
 start_current_command (FrProcess *fr_proc)
 {
-	FRCommandInfo  *c_info;
+	FrCommandInfo  *c_info;
 	GList          *arg_list, *scan;
 	GString        *command;
 	char           *dir;
@@ -671,7 +671,7 @@ static gboolean
 command_is_sticky (FrProcess *fr_proc,
 		   int        i)
 {
-	FRCommandInfo *c_info;
+	FrCommandInfo *c_info;
 	c_info = g_ptr_array_index (fr_proc->comm, i);
 	return c_info->sticky;
 }
@@ -703,7 +703,7 @@ static gint
 check_child (gpointer data)
 {
 	FrProcess      *fr_proc = data;
-	FRCommandInfo  *c_info;
+	FrCommandInfo  *c_info;
 	pid_t           pid;
 	int             status;
 	gboolean        continue_process;
