@@ -1,5 +1,23 @@
 2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (fr_window_update_files): 
+	(fr_window_open_files): 
+	(fr_window_open_files_with_command):
+	(fr_window_open_files_with_application):
+	* src/fr-window.h: 
+	* src/dlg-update.c (update_cb): 
+		
+	Do not allow to open a file or update the archive when an operation is
+	underway.  
+	Fixes bug #532789 – file-roller crashes when modifying archive, 
+	data destroyed
+
+2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/file-utils.c (get_temp_work_dir): 
+	
+	Added a check to avoid segfault described in bug #529949
+	
 	* src/fr-window.c (fr_window_construct): 
 	
 	Fixed bug #527271 – Ctrl-Q should quit file-roller.

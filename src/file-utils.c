@@ -887,7 +887,7 @@ get_temp_work_dir (void)
 			g_free (folder);
 	}
 
-	if (best_folder == NULL)
+	if ((best_folder == NULL) || (strncmp (best_folder, "file://", 7) != 0))
 		return NULL;
 
 	template = g_strconcat (best_folder + strlen ("file://"), "/.fr-XXXXXX", NULL);

@@ -100,18 +100,19 @@ update_cb (GtkWidget *widget,
 {
 	DialogData *data = callback_data;
 	GList      *selection;
-	int         n_files;
 	
 	selection = get_selected_files (data);
-	fr_window_update_files (data->window, selection);
+	if (fr_window_update_files (data->window, selection)) {
+		int n_files;
+		
+		n_files = g_list_length (data->file_list);
+		if (n_files == 1)
+			gtk_widget_destroy (data->update_file_dialog);
+		else 
+			gtk_widget_destroy (data->update_files_dialog);
+	}
 	if (selection != NULL)
 		g_list_free (selection);
-
-	n_files = g_list_length (data->file_list);
-	if (n_files == 1)
-		gtk_widget_destroy (data->update_file_dialog);
-	else 
-		gtk_widget_destroy (data->update_files_dialog);
 }
 
 

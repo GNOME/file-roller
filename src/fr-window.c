@@ -7507,6 +7507,9 @@ fr_window_open_files_with_command (FrWindow   *window,
 	CommandData *cdata;
 	GList       *scan;
 
+	if (window->priv->activity_ref > 0)
+		return;
+
 	/* The command data is used to unref the process on exit. */
 
 	cdata = g_new0 (CommandData, 1);
@@ -7534,6 +7537,9 @@ fr_window_open_files_with_application (FrWindow *window,
 {
 	GList  *uris = NULL, *scan;
 	GError *error = NULL;
+
+	if (window->priv->activity_ref > 0)
+		return;
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = g_filename_to_uri (scan->data, NULL, NULL);
@@ -7611,11 +7617,14 @@ fr_window_update_dialog_closed (FrWindow *window)
 }
 
 
-void
+gboolean
 fr_window_update_files (FrWindow *window,
 		        GList    *file_list)
 {
 	GList *scan;
+
+	if (window->priv->activity_ref > 0)
+		return FALSE;
 
 	fr_process_clear (window->archive->process);
 	
@@ -7635,6 +7644,8 @@ fr_window_update_files (FrWindow *window,
 	}
 	
 	fr_process_start (window->archive->process);
+	
+	return TRUE;
 }
 
 
@@ -7810,6 +7821,9 @@ fr_window_open_files (FrWindow *window,
 		      gboolean  ask_application)
 {
 	OpenFilesData *odata;
+	
+	if (window->priv->activity_ref > 0)
+		return;
 	
 	odata = open_files_data_new (window, file_list, ask_application);
 	fr_window_set_current_batch_action (window,
