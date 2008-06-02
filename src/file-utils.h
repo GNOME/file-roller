@@ -64,8 +64,9 @@ gboolean            file_is_hidden               (const char  *name);
 G_CONST_RETURN char*file_name_from_path          (const char  *path);
 char *              dir_name_from_path           (const char  *path);
 char *              remove_level_from_path       (const char  *path);
-char *              remove_extension_from_path   (const char  *path);
 char *              remove_ending_separator      (const char  *path);
+char *              build_uri                    (const char  *base, ...);
+char *              remove_extension_from_path   (const char  *path);
 const char *        get_file_extension           (const char  *filename);
 gboolean            file_extension_is            (const char  *filename,
 						  const char  *ext);

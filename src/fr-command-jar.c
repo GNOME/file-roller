@@ -63,7 +63,7 @@ fr_command_jar_add (FrCommand     *comm,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = scan->data;
-		char *path = g_build_path (G_DIR_SEPARATOR_S, base_dir, filename, NULL);
+		char *path = build_uri (base_dir, filename, NULL);
 		char *package = NULL;
 				
 		if (file_extension_is (filename, ".java"))
@@ -95,17 +95,13 @@ fr_command_jar_add (FrCommand     *comm,
 		char    *link_name;
 		int      retval;
 		
-		pack_path = g_build_path (G_DIR_SEPARATOR_S,
-					  tmp_dir,
-					  jdata->package_minus_one_level,
-					  NULL);
-		
+		pack_path = build_uri (tmp_dir, jdata->package_minus_one_level, NULL);
 		if (! make_directory_tree_from_path (pack_path, 0755, NULL)) { 
 			g_free (pack_path);
 			continue;
 		}
 		
-		old_link = g_build_path (G_DIR_SEPARATOR_S, base_dir, jdata->rel_path, NULL);
+		old_link = build_uri (base_dir, jdata->rel_path, NULL);
 		link_name = g_build_filename (pack_path, jdata->link_name, NULL);
 
 		retval = symlink (old_link, link_name);

@@ -7479,7 +7479,7 @@ fr_window_paste_selection (FrWindow *window,
 	g_free (utf8_path);
 
 	if (destination[0] != '/')
-		current_dir = g_build_path (G_DIR_SEPARATOR_S, fr_window_get_current_location (window), destination, NULL);
+		current_dir = build_uri (fr_window_get_current_location (window), destination, NULL);
 	else
 		current_dir = g_strdup (destination);
 	g_free (destination);

@@ -2859,6 +2859,8 @@ get_extract_here_destination (GFile   *file,
 	
 	desired_destination = get_desired_destination_for_archive (file);
 	do {
+		*error = NULL;
+		 
 		g_free (destination);
 		if (n == 1)
 			destination = g_strdup (desired_destination);
@@ -2892,7 +2894,7 @@ fr_archive_extract_here (FrArchive  *archive,
 			 const char *password)
 {
 	char   *destination;
-	GError *error;
+	GError *error = NULL;
 	
 	destination = get_extract_here_destination (archive->file, &error);
 	if (error != NULL) {

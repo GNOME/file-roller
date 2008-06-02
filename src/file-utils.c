@@ -253,7 +253,7 @@ get_dir_content_if_unique (const char  *uri)
 			break;
 		}
 		
-		content_uri = g_build_path (uri, name, NULL);
+		content_uri = build_uri (uri, name, NULL);
 		g_object_unref (info);
 	}
 	
@@ -473,6 +473,43 @@ remove_level_from_path (const gchar *path)
 }
 
 
+char *
+remove_ending_separator (const char *path)
+{
+	gint len, copy_len;
+
+	if (path == NULL)
+		return NULL;
+
+	copy_len = len = strlen (path);
+	if ((len > 1) && (path[len - 1] == '/'))
+		copy_len--;
+
+	return g_strndup (path, copy_len);
+}
+
+
+char *
+build_uri (const char *base, ...)
+{
+	va_list     args;
+	const char *child;
+	GString    *uri;
+	
+	uri = g_string_new (base);
+	
+	va_start (args, base);
+        while ((child = va_arg (args, const char *)) != NULL) {
+        	if (! g_str_ends_with (uri->str, "/") && ! g_str_starts_with (child, "/"))
+        		g_string_append (uri, "/");
+        	g_string_append (uri, child);
+        }
+	va_end (args);
+	
+	return g_string_free (uri, FALSE);
+}
+
+
 gchar *
 remove_extension_from_path (const gchar *path)
 {
@@ -496,22 +533,6 @@ remove_extension_from_path (const gchar *path)
 	new_path = g_strndup (path, (guint) p);
 
 	return new_path;
-}
-
-
-char *
-remove_ending_separator (const char *path)
-{
-	gint len, copy_len;
-
-	if (path == NULL)
-		return NULL;
-
-	copy_len = len = strlen (path);
-	if ((len > 1) && (path[len - 1] == '/'))
-		copy_len--;
-
-	return g_strndup (path, copy_len);
 }
 
 
@@ -760,7 +781,7 @@ delete_directory_recursive (GFile   *dir,
 		char  *child_uri;
 		GFile *child;
 		
-		child_uri = g_build_path ("/", uri, g_file_info_get_name (info), NULL);
+		child_uri = build_uri (uri, g_file_info_get_name (info), NULL);
 		child = g_file_new_for_uri (child_uri);
 		
 		switch (g_file_info_get_file_type (info)) {

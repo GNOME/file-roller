@@ -169,10 +169,9 @@ file_sel_response_cb (GtkWidget    *widget,
 		if (utf8_only_spaces (exclude_folders))
 			exclude_folders = NULL;
 
-		dest_uri = g_build_path (G_DIR_SEPARATOR_S,
-					 fr_window_get_current_location (window),
-					 file_name_from_path (folder),
-					 NULL);
+		dest_uri = build_uri (fr_window_get_current_location (window),
+				      file_name_from_path (folder),
+				      NULL);
 		dest_dir = g_filename_from_uri (dest_uri, NULL, NULL);
 
 		fr_window_archive_add_with_wildcard (window,

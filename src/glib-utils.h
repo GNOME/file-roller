@@ -67,6 +67,11 @@ void                g_ptr_array_free_full        (GPtrArray   *array,
 void                g_ptr_array_reverse          (GPtrArray   *array);
 const char *        get_static_string            (const char  *s);
 
+gboolean            g_str_starts_with            (const char  *s,
+						  const char  *c);
+gboolean            g_str_ends_with              (const char  *s,
+						  const char  *c);
+
 /**/
 
 #ifndef __GNUC__

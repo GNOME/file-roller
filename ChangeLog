@@ -1,5 +1,24 @@
 2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/glib-utils.h: 
+	* src/glib-utils.c: 
+
+	new functions: g_str_starts_with, g_str_ends_with
+	
+	* src/fr-window.c: 
+	* src/fr-command-jar.c: 
+	* src/file-utils.h: 
+	* src/file-utils.c: 
+	* src/dlg-add-folder.c: 
+	
+	use the custom build_uri function instead of g_buid_path.
+
+	* src/fr-archive.c (get_extract_here_destination): 
+	
+	init the error to NULL
+
+2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/*.[ch]: changed the way a FrArchive creates FrCommand objects. 
 	This makes the code easier to maintain and more modularized, and can 
 	be seen as a first step in the direction of a plugin system that will 
