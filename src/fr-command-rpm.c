@@ -124,15 +124,21 @@ list__process_line (char     *line,
 	}
 
 	if (*(fields[0]) == '/') {
-		fdata->full_path = g_strdup (fields[0]);
+		fdata->full_path = g_strcompress (fields[0]);
 		fdata->original_path = fdata->full_path;
-	} else {
-		fdata->full_path = g_strconcat ("/", fields[0], NULL);
+	} 
+	else {
+		char *compressed;
+		
+		compressed = g_strcompress (fields[0]);
+		fdata->full_path = g_strconcat ("/", compressed, NULL);
+		g_free (compressed);
+		
 		fdata->original_path = fdata->full_path + 1;
 	}
 
 	if (fields[1] != NULL)
-		fdata->link = g_strdup (fields[1]);
+		fdata->link = g_strcompress (fields[1]);
 	g_strfreev (fields);
 
 	fdata->name = g_strdup (file_name_from_path (fdata->full_path));

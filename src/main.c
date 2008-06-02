@@ -553,11 +553,11 @@ register_commands (void)
 			  "application/x-7z-compressed", FR_COMMAND_CAP_ALL,
 			  NULL);	
 	register_command (FR_TYPE_COMMAND_ACE, 
-			  "application/x-ace", FR_COMMAND_CAP_READ_WRITE,
+			  "application/x-ace", FR_COMMAND_CAP_READ_WRITE | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_AR, 
 			  "application/x-ar", FR_COMMAND_CAP_ALL,
-			  "application/x-deb", FR_COMMAND_CAP_READ,
+			  "application/x-deb", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_ARJ, 
 			  "application/x-arj", FR_COMMAND_CAP_ALL,
@@ -573,7 +573,7 @@ register_commands (void)
 			  "application/x-cpio", FR_COMMAND_CAP_ALL,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_ISO, 
-			  "application/x-cd-image", FR_COMMAND_CAP_READ,
+			  "application/x-cd-image", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_JAR,
 			  "application/x-jar", FR_COMMAND_CAP_ALL,
@@ -585,7 +585,7 @@ register_commands (void)
 			  "application/x-rar", FR_COMMAND_CAP_ALL,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_RPM,
-			  "application/x-rpm", FR_COMMAND_CAP_ALL,
+			  "application/x-rpm", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_TAR, 
 			  "application/x-tar", FR_COMMAND_CAP_ALL,
@@ -595,7 +595,7 @@ register_commands (void)
 			  "application/x-lzop-compressed-tar", FR_COMMAND_CAP_ALL,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_UNSTUFF,
-			  "application/x-stuffit", FR_COMMAND_CAP_READ,
+			  "application/x-stuffit", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_ZIP,
 			  "application/zip", FR_COMMAND_CAP_ALL,

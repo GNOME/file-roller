@@ -1,5 +1,13 @@
 2008-06-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
+	* src/fr-command-rpm.c (list__process_line): 
+	
+	Fixed bug #536055 – Support for special characters in rpm archives
+	Patch by Eric Piel
 
+	* src/main.c (register_commands): added FR_COMMAND_CAP_ARCHIVE_MANY_FILES
+	where appropriate
+	
 	* src/file-utils.c (build_uri): 
 
 	use g_str_has_prefix, g_str_has_suffix instead of g_str_starts_with and
