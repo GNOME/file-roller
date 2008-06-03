@@ -191,14 +191,26 @@ add_compress_arg (FrCommand *comm)
 {
 	if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) 
 		fr_process_add_arg (comm->process, "-z");
+		
 	else if (is_mime_type (comm->mime_type, "application/x-bzip-compressed-tar"))
 		fr_process_add_arg (comm->process, "--use-compress-program=bzip2");
+		
 	else if (is_mime_type (comm->mime_type, "application/x-compressed-tar"))
 		fr_process_add_arg (comm->process, "-Z");
+		
 	else if (is_mime_type (comm->mime_type, "application/x-lzma-compressed-tar"))
 		fr_process_add_arg (comm->process, "--use-compress-program=lzma");
+		
 	else if (is_mime_type (comm->mime_type, "application/x-lzop-compressed-tar"))
 		fr_process_add_arg (comm->process, "--use-compress-program=lzop");
+		
+	else if (is_mime_type (comm->mime_type, "application/x-7z-compressed-tar")) {
+		FrCommandTar *comm_tar = (FrCommandTar*) comm;
+		char         *option;	
+		option = g_strdup_printf ("--use-compress-program=%s", comm_tar->compress_command);
+		fr_process_add_arg (comm->process, option);
+		g_free (option);
+	}
 }
 
 
@@ -517,6 +529,45 @@ fr_command_tar_recompress (FrCommand     *comm,
 
 		new_name = g_strconcat (c_tar->uncomp_filename, ".lzo", NULL);
 	}
+	else if (is_mime_type (comm->mime_type, "application/x-7z-compressed-tar")) {
+		FrCommandTar *comm_tar = (FrCommandTar*) comm;
+		char         *e_name;
+		
+		fr_process_begin_command (comm->process, comm_tar->compress_command);
+		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
+		switch (compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			fr_process_add_arg (comm->process, "-mx=1"); break;
+		case FR_COMPRESSION_FAST:
+			fr_process_add_arg (comm->process, "-mx=5"); break;
+		case FR_COMPRESSION_NORMAL:
+			fr_process_add_arg (comm->process, "-mx=5"); break;
+		case FR_COMPRESSION_MAXIMUM:
+			fr_process_add_arg (comm->process, "-mx=7"); break;
+		}
+		fr_process_add_arg (comm->process, "a");
+		fr_process_add_arg (comm->process, "-bd");
+		fr_process_add_arg (comm->process, "-y");
+		fr_process_add_arg (comm->process, "-l");
+		
+		new_name = g_strconcat (c_tar->uncomp_filename, ".7z", NULL);
+		e_name = shell_escape (new_name);
+		fr_process_add_arg (comm->process, e_name);
+		g_free (e_name);
+		
+		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+		fr_process_end_command (comm->process);
+
+		/* remove the uncompressed tar */
+		
+		fr_process_begin_command (comm->process, "rm");
+		fr_process_add_arg (comm->process, "-f");
+		e_name = shell_escape (c_tar->uncomp_filename);
+		fr_process_add_arg (comm->process, e_name);
+		g_free (e_name);
+		fr_process_end_command (comm->process);
+	}
 
 	if (c_tar->name_modified) {
 		char *tmp_dir;
@@ -608,6 +659,11 @@ get_uncompressed_name (FrCommandTar *c_tar,
 		} 
 		else if (file_extension_is (e_filename, ".tar.lzo"))
 			new_name[l - 4] = 0;
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-7z-compressed-tar")) {
+		/* X.tar.7z -->  X.tar */
+		if (file_extension_is (e_filename, ".tar.7z")) 
+			new_name[l - 3] = 0;
 	}
 
 	return new_name;
@@ -710,6 +766,24 @@ fr_command_tar_uncompress (FrCommand *comm)
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
 		}
+		else if (is_mime_type (comm->mime_type, "application/x-7z-compressed-tar")) {
+			FrCommandTar *comm_tar = (FrCommandTar*) comm;
+			
+			fr_process_begin_command (comm->process, comm_tar->compress_command);
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
+			fr_process_add_arg (comm->process, "e");
+			fr_process_add_arg (comm->process, "-bd");
+			fr_process_add_arg (comm->process, "-y");
+			fr_process_add_arg (comm->process, tmp_name);
+			fr_process_end_command (comm->process);
+			
+			/* remove the compressed tar */
+			
+			fr_process_begin_command (comm->process, "rm");
+			fr_process_add_arg (comm->process, "-f");
+			fr_process_add_arg (comm->process, tmp_name);
+			fr_process_end_command (comm->process);
+		}
 	}
 
 	c_tar->uncomp_filename = get_uncompressed_name (c_tar, tmp_name);
@@ -748,6 +822,8 @@ static void
 fr_command_tar_set_mime_type (FrCommand  *comm,
 		 	      const char *mime_type)
 {
+	FrCommandTar *comm_tar = FR_COMMAND_TAR (comm);
+	
 	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
 
 	/* In solaris gtar is present under /usr/sfw/bin */
@@ -781,6 +857,18 @@ fr_command_tar_set_mime_type (FrCommand  *comm,
 	else if (is_mime_type (comm->mime_type, "application/x-lzop-compressed-tar")) {
 		if (is_program_in_path ("lzop"))
 			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	}
+	else if (is_mime_type (comm->mime_type, "application/x-7z-compressed-tar")) {
+		char *try_command[3] = { "7za", "7zr", "7z" };
+		int   i;
+		
+		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
+			if (is_program_in_path (try_command[i])) {
+				comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+				comm_tar->compress_command = g_strdup (try_command[i]);
+				break;
+			}
+		}
 	}
 }
 
@@ -850,6 +938,11 @@ fr_command_tar_finalize (GObject *object)
 	if (comm_tar->msg != NULL) {
 		g_free (comm_tar->msg);
 		comm_tar->msg = NULL;
+	}
+	
+	if (comm_tar->compress_command != NULL) {
+		g_free (comm_tar->compress_command);
+		comm_tar->compress_command = NULL;
 	}
 
 	/* Chain up */

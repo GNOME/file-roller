@@ -44,10 +44,11 @@ struct _FrCommandTar
 
 	/*<private>*/
 
-	char              *uncomp_filename;
-	gboolean           name_modified;
-
-	char              *msg;
+	char      *uncomp_filename;
+	gboolean   name_modified;
+	char      *compress_command;
+	
+	char      *msg;
 };
 
 struct _FrCommandTarClass

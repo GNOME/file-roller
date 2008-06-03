@@ -63,7 +63,7 @@
 #define CHECK_CLIPBOARD_TIMEOUT 500
 
 #define PROGRESS_DIALOG_WIDTH 300
-#define PROGRESS_TIMEOUT_MSECS 500     /* FIXME */
+#define PROGRESS_TIMEOUT_MSECS 1000     /* FIXME */
 #define PROGRESS_BAR_HEIGHT 10
 
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500 /* FIXME */
@@ -7760,7 +7760,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         	return FALSE;
         }
         
-        files_to_open = g_list_append (files_to_open, (char*) first_file);
+        files_to_open = g_list_append (files_to_open, g_filename_to_uri (first_file, NULL, NULL));
         
         if (g_app_info_supports_files (app)) {
         	GList *scan;
@@ -7774,14 +7774,14 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 				continue;
 
 			if (strcmp (mime_type, first_mime_type) == 0) {
-				files_to_open = g_list_append (files_to_open, (char*) path);
+				files_to_open = g_list_append (files_to_open, g_filename_to_uri (path, NULL, NULL));
 			}
 			else {
 				GAppInfo *app2;
 				
 				app2 = g_app_info_get_default_for_type (mime_type, FALSE);
 				if (g_app_info_equal (app, app2))
-					files_to_open = g_list_append (files_to_open, (char*) path);
+					files_to_open = g_list_append (files_to_open, g_filename_to_uri (path, NULL, NULL));
 				g_object_unref (app2);
 			}
 		}
@@ -7794,7 +7794,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         }
         
         g_object_unref (app);
-        g_list_free (files_to_open);
+        path_list_free (files_to_open);
         
 	return result;
 }

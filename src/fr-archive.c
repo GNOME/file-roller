@@ -513,8 +513,10 @@ create_command_from_mime_type (FrArchive  *archive,
 	
 	archive->is_compressed_file = FALSE;
 	
-	requested_capabilities |= FR_COMMAND_CAP_READ;
-	if (! loading) {
+	if (loading) {
+		requested_capabilities |= FR_COMMAND_CAP_READ;
+	}
+	else {
 		requested_capabilities |= FR_COMMAND_CAP_WRITE;	
 		if (! archive->can_create_compressed_file)
 			requested_capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
@@ -543,23 +545,20 @@ create_command_from_mime_type (FrArchive  *archive,
 }
 
 
-static gboolean
-create_command_from_filename (FrArchive *archive,
-			      gboolean   loading)
+static const char *
+get_mime_type_from_filename (GFile *file)
 {
-	char     *filename;
-	gboolean  result = FALSE;
+	const char *mime_type = NULL;
+	char       *filename;
 	
-	if (archive->local_copy == NULL)
+	if (file == NULL)
 		return FALSE;
 	
-	filename = g_file_get_path (archive->local_copy);
-	result = create_command_from_mime_type (archive, 
-					        get_mime_type_from_extension (get_file_extension (filename)), 
-					        loading);
+	filename = g_file_get_path (file);
+	mime_type = get_mime_type_from_extension (get_file_extension (filename));
 	g_free (filename);
 	
-	return result;
+	return mime_type;
 }
 
 
@@ -888,15 +887,18 @@ gboolean
 fr_archive_create (FrArchive  *archive,
 		   const char *uri)
 {
-	FrCommand *tmp_command;
-
+	FrCommand  *tmp_command;
+	const char *mime_type;
+	
 	if (uri == NULL)
 		return FALSE;
 
 	fr_archive_set_uri (archive, uri);
 
 	tmp_command = archive->command;
-	if (! create_command_from_filename (archive, FALSE)) {
+	
+	mime_type = get_mime_type_from_filename (archive->local_copy);
+	if (! create_command_from_mime_type (archive, mime_type, FALSE)) {
 		archive->command = tmp_command;
 		return FALSE;
 	}
@@ -958,16 +960,16 @@ load_local_archive (FrArchive  *archive,
 		    const char *password)
 {
 	FrCommand  *tmp_command;
-	const char *mime_type = NULL;
-
+	const char *mime_type;
+	
 	archive->read_only = ! check_permissions (uri, W_OK);
 
-	/* find out the archive mime type */
-
 	tmp_command = archive->command;
-	mime_type = get_mime_type_from_content (archive->local_copy);
+	
+	mime_type = get_mime_type_from_filename (archive->local_copy);
 	if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
-		if (! create_command_from_filename (archive, TRUE)) {
+		mime_type = get_mime_type_from_content (archive->local_copy);
+		if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
 			archive->command = tmp_command;
 			fr_archive_action_completed (archive,
 						     FR_ACTION_LOADING_ARCHIVE, 
@@ -976,6 +978,7 @@ load_local_archive (FrArchive  *archive,
 			return;
 		}
 	}
+	
 	if (tmp_command != NULL) {
 		g_signal_handlers_disconnect_by_data (tmp_command, archive);
 		g_object_unref (tmp_command);

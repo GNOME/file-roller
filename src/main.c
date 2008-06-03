@@ -77,36 +77,37 @@ static int    extract_here;
 static char  *default_url = NULL;
 
 FrMimeTypeDescription mime_type_desc[] = {
-	{ "application/x-ace",                 ".ace",      N_("Ace (.ace)"), FALSE, FALSE },
-	{ "application/x-ar",                  ".ar",       N_("Ar (.ar)"), FALSE, TRUE },
-	{ "application/x-arj",                 ".arj",      N_("Arj (.arj)"), TRUE, TRUE },
-	{ "application/x-bzip",                ".bz2",      NULL, FALSE, FALSE },
-	{ "application/x-bzip1",               ".bz",       NULL, FALSE, FALSE },
-	{ "application/x-compress",            ".Z",        NULL, FALSE, FALSE },
-	{ "application/x-cpio",                ".cpio",     NULL, FALSE, TRUE },
-	{ "application/x-deb",                 ".deb",      NULL, FALSE, TRUE },
-	{ "application/x-cd-image",            ".iso",      NULL, FALSE, TRUE },
-	{ "application/x-ear",                 ".ear",      N_("Ear (.ear)"), TRUE, TRUE },
-	{ "application/x-ms-dos-executable",   ".exe",      N_("Self-extracting zip (.exe)"), FALSE, TRUE },
-	{ "application/x-gzip",                ".gz",       NULL, FALSE, FALSE },
-	{ "application/x-jar",                 ".jar",      N_("Jar (.jar)"), TRUE, TRUE },
-	{ "application/x-lha",                 ".lzh",      N_("Lha (.lzh)"), FALSE, TRUE },
-	{ "application/x-lzma",                ".lzma",     NULL, FALSE, FALSE },
-	{ "application/x-lzop",                ".lzo",      NULL, FALSE, FALSE },
-	{ "application/x-rar",                 ".rar",      N_("Rar (.rar)"), TRUE, TRUE },
-	{ "application/x-rpm",                 ".rpm",      NULL, FALSE, TRUE },
-	{ "application/x-tar",                 ".tar",      N_("Tar uncompressed (.tar)"), FALSE, TRUE },
+	{ "application/x-ace",                  ".ace",      N_("Ace (.ace)"), FALSE, FALSE },
+	{ "application/x-ar",                   ".ar",       N_("Ar (.ar)"), FALSE, TRUE },
+	{ "application/x-arj",                  ".arj",      N_("Arj (.arj)"), TRUE, TRUE },
+	{ "application/x-bzip",                 ".bz2",      NULL, FALSE, FALSE },
+	{ "application/x-bzip1",                ".bz",       NULL, FALSE, FALSE },
+	{ "application/x-compress",             ".Z",        NULL, FALSE, FALSE },
+	{ "application/x-cpio",                 ".cpio",     NULL, FALSE, TRUE },
+	{ "application/x-deb",                  ".deb",      NULL, FALSE, TRUE },
+	{ "application/x-cd-image",             ".iso",      NULL, FALSE, TRUE },
+	{ "application/x-ear",                  ".ear",      N_("Ear (.ear)"), TRUE, TRUE },
+	{ "application/x-ms-dos-executable",    ".exe",      N_("Self-extracting zip (.exe)"), FALSE, TRUE },
+	{ "application/x-gzip",                 ".gz",       NULL, FALSE, FALSE },
+	{ "application/x-jar",                  ".jar",      N_("Jar (.jar)"), TRUE, TRUE },
+	{ "application/x-lha",                  ".lzh",      N_("Lha (.lzh)"), FALSE, TRUE },
+	{ "application/x-lzma",                 ".lzma",     NULL, FALSE, FALSE },
+	{ "application/x-lzop",                 ".lzo",      NULL, FALSE, FALSE },
+	{ "application/x-rar",                  ".rar",      N_("Rar (.rar)"), TRUE, TRUE },
+	{ "application/x-rpm",                  ".rpm",      NULL, FALSE, TRUE },
+	{ "application/x-tar",                  ".tar",      N_("Tar uncompressed (.tar)"), FALSE, TRUE },
 	{ "application/x-bzip1-compressed-tar", ".tar.bz",   N_("Tar compressed with bzip (.tar.bz)"), FALSE, TRUE },
-	{ "application/x-bzip-compressed-tar", ".tar.bz2",  N_("Tar compressed with bzip2 (.tar.bz2)"), FALSE, TRUE },
-	{ "application/x-compressed-tar",      ".tar.gz",   N_("Tar compressed with gzip (.tar.gz)"), FALSE, TRUE },
-	{ "application/x-lzma-compressed-tar", ".tar.lzma", N_("Tar compressed with lzma (.tar.lzma)"), FALSE, TRUE },
-	{ "application/x-lzop-compressed-tar", ".tar.lzo",  N_("Tar compressed with lzop (.tar.lzo)"), FALSE, TRUE },
-	{ "application/x-compressed-tar",      ".tar.Z",    N_("Tar compressed with compress (.tar.Z)"), FALSE, TRUE },
-	{ "application/x-stuffit",             ".sit",      NULL, FALSE, TRUE },
-	{ "application/x-war",                 ".war",      N_("War (.war)"), TRUE, TRUE },
-	{ "application/zip",                   ".zip",      N_("Zip (.zip)"), TRUE, TRUE },
-	{ "application/x-zoo",                 ".zoo",      N_("Zoo (.zoo)"), FALSE, TRUE },
-	{ "application/x-7z-compressed",       ".7z",       N_("7-Zip (.7z)"), TRUE, TRUE },
+	{ "application/x-bzip-compressed-tar",  ".tar.bz2",  N_("Tar compressed with bzip2 (.tar.bz2)"), FALSE, TRUE },
+	{ "application/x-compressed-tar",       ".tar.gz",   N_("Tar compressed with gzip (.tar.gz)"), FALSE, TRUE },
+	{ "application/x-lzma-compressed-tar",  ".tar.lzma", N_("Tar compressed with lzma (.tar.lzma)"), FALSE, TRUE },
+	{ "application/x-lzop-compressed-tar",  ".tar.lzo",  N_("Tar compressed with lzop (.tar.lzo)"), FALSE, TRUE },
+	{ "application/x-7z-compressed-tar",    ".tar.7z",   N_("Tar compressed with 7z (.tar.7z)"), FALSE, TRUE },
+	{ "application/x-compressed-tar",       ".tar.Z",    N_("Tar compressed with compress (.tar.Z)"), FALSE, TRUE },
+	{ "application/x-stuffit",              ".sit",      NULL, FALSE, TRUE },
+	{ "application/x-war",                  ".war",      N_("War (.war)"), TRUE, TRUE },
+	{ "application/zip",                    ".zip",      N_("Zip (.zip)"), TRUE, TRUE },
+	{ "application/x-zoo",                  ".zoo",      N_("Zoo (.zoo)"), FALSE, TRUE },
+	{ "application/x-7z-compressed",        ".7z",       N_("7-Zip (.7z)"), TRUE, TRUE },
 	{ NULL, NULL, NULL, FALSE, FALSE }
 };
 
@@ -138,6 +139,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".tar.gz", "application/x-compressed-tar" },
 	{ ".tar.lzma", "application/x-lzma-compressed-tar" },
 	{ ".tar.lzo", "application/x-lzop-compressed-tar" },
+	{ ".tar.7z", "application/x-7z-compressed-tar" },
 	{ ".tar.Z", "application/x-compressed-tar" },
 	{ ".taz", "application/x-compressed-tar" },
 	{ ".tbz", "application/x-bzip-compressed-tar" },
@@ -193,7 +195,9 @@ FrCommandDescription tar_command_desc[] = {
 	/*{ "bzip",     "application/x-bzip1-compressed-tar", FALSE, TRUE },*/
 	{ "lzma",      "application/x-lzma-compressed-tar", TRUE, TRUE },
 	{ "lzop",      "application/x-lzop-compressed-tar", TRUE, TRUE },
-	{ "compress",  "application/x-compressed-tar", TRUE, TRUE }
+	{ "compress",  "application/x-compressed-tar", TRUE, TRUE },
+	{ "7za",       "application/x-7z-compressed-tar", FALSE, TRUE },
+	{ "7zr",       "application/x-7z-compressed-tar", FALSE, TRUE }
 };
 
 
@@ -593,6 +597,7 @@ register_commands (void)
 			  "application/x-bzip-compressed-tar", FR_COMMAND_CAP_ALL,
 			  "application/x-lzma-compressed-tar", FR_COMMAND_CAP_ALL,
 			  "application/x-lzop-compressed-tar", FR_COMMAND_CAP_ALL,
+			  "application/x-7z-compressed-tar", FR_COMMAND_CAP_WRITE | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
 			  NULL);
 	register_command (FR_TYPE_COMMAND_UNSTUFF,
 			  "application/x-stuffit", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
@@ -700,9 +705,12 @@ compute_supported_archive_types (void)
 					
 				idx = get_mime_type_index (comm_desc_2.mime_type);
 				if (idx >= 0) {
-					open_type[o_i++] = idx;
-					save_type[s_i++] = idx;
-					single_file_save_type[sf_i++] = idx;
+					if (comm_desc_2.can_open)
+						open_type[o_i++] = idx;
+					if (comm_desc_2.can_save && mime_type_desc[idx].supports_many_files)
+						save_type[s_i++] = idx;
+					if (comm_desc_2.can_save)
+						single_file_save_type[sf_i++] = idx;
 				}
 			}
 		}
