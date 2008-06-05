@@ -907,7 +907,7 @@ fr_command_tar_init (FrCommand *comm)
 	comm->propAddCanUpdate              = FALSE;
 	comm->propAddCanReplace             = FALSE;
 	comm->propAddCanStoreFolders        = TRUE;
-	comm->propExtractCanAvoidOverwrite  = TRUE;
+	comm->propExtractCanAvoidOverwrite  = FALSE;
 	comm->propExtractCanSkipOlder       = TRUE;
 	comm->propExtractCanJunkPaths       = FALSE;
 	comm->propPassword                  = FALSE;

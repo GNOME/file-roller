@@ -2571,6 +2571,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	GList    *scan;
 	gboolean  extract_all;
 	gboolean  use_base_dir;
+	gboolean  all_options_supported;
 	gboolean  move_to_dest_dir;
 	gboolean  file_list_created = FALSE;
 
@@ -2581,8 +2582,17 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	/* if a command supports all the requested options use
 	 * fr_command_extract directly. */
 
+	use_base_dir = ! ((base_dir == NULL)
+			  || (strcmp (base_dir, "") == 0)
+			  || (strcmp (base_dir, "/") == 0));
+
+	all_options_supported = (! use_base_dir
+				 && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
+				 && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
+				 && ! (junk_paths && ! archive->command->propExtractCanJunkPaths));
+
 	extract_all = (file_list == NULL);
-	if (extract_all && ! archive->command->propCanExtractAll) {
+	if (extract_all && (! all_options_supported || ! archive->command->propCanExtractAll)) {
 		int i;
 		
 		file_list = NULL;
@@ -2598,15 +2608,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	else 
 		fr_command_set_n_files (archive->command, g_list_length (file_list));
 
-	use_base_dir = ! ((base_dir == NULL)
-			  || (strcmp (base_dir, "") == 0)
-			  || (strcmp (base_dir, "/") == 0));
-
-	if (! use_base_dir
-	    && ! (! overwrite && ! archive->command->propExtractCanAvoidOverwrite)
-	    && ! (skip_older && ! archive->command->propExtractCanSkipOlder)
-	    && ! (junk_paths && ! archive->command->propExtractCanJunkPaths)) 
-	{
+	if (all_options_supported) {
 		gboolean created_filtered_list = FALSE;
 
 		if (! extract_all && archive_type_has_issues_extracting_non_empty_folders (archive)) {

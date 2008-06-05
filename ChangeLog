@@ -1,5 +1,17 @@
 2008-06-05  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-archive.c (fr_archive_extract_to_local): 
+	
+	we need the file list when extracting all the files and not all the
+	options are supported by the command.
+	
+	* src/fr-command-tar.c (fr_command_tar_init): 
+	
+	set propExtractCanAvoidOverwrite to FALSE for tar archives because the
+	tar command returns a fatal error when a file already exists.
+
+2008-06-05  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/main.c: 
 	
 	do not view the folder after the extraction when in batch mode.
