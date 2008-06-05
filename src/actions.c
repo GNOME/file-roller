@@ -45,6 +45,7 @@
 
 typedef struct {
 	FrWindow  *window;
+	int       *supported_types;
 	
 	GtkWidget *file_sel;
 	GtkWidget *combo_box;
@@ -95,11 +96,12 @@ new_archive (GtkWidget *file_sel,
 */
 static gboolean
 is_supported_extension (GtkWidget *file_sel,
-			char      *filename)
+			char      *filename,
+			int       *file_type)
 {
 	int i;
-	for (i = 0; save_type[i] != -1; i++)
-		if (file_extension_is (filename, mime_type_desc[save_type[i]].default_ext))
+	for (i = 0; file_type[i] != -1; i++)
+		if (file_extension_is (filename, mime_type_desc[file_type[i]].default_ext))
 			return TRUE;
 	return FALSE;
 }
@@ -130,7 +132,7 @@ get_full_path (SaveAsData *data)
 		char       *default_ext;
 		
 		path_ext = get_archive_filename_extension (path);
-		default_ext = mime_type_desc[save_type[idx-1]].default_ext;
+		default_ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
 		if (strcmp_null_tolerant (path_ext, default_ext) != 0) {
 			full_path = g_strconcat (path, default_ext, NULL);
 			g_free (path);
@@ -216,7 +218,7 @@ get_archive_filename_from_selector (SaveAsData *data)
 
 		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box));
 		if (idx > 0)
-			ext = mime_type_desc[save_type[idx-1]].default_ext;
+			ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
 		else
 			ext = ".tar.gz";
 		new_path = g_strconcat (path, ext, NULL);
@@ -229,7 +231,7 @@ get_archive_filename_from_selector (SaveAsData *data)
 	if (uri_exists (path)) {
 		GtkWidget *dialog;
 
-		if (! is_supported_extension (data->file_sel, path)) {
+		if (! is_supported_extension (data->file_sel, path, data->supported_types)) {
 			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
 							GTK_DIALOG_MODAL,
 							NULL,
@@ -350,7 +352,7 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	basename = file_name_from_path (uri);
 	basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
 
-	new_ext = mime_type_desc[save_type[idx]].default_ext;
+	new_ext = mime_type_desc[data->supported_types[idx]].default_ext;
 	new_basename = g_strconcat (basename_noext, new_ext, NULL);
 	new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->file_sel), new_basename_uft8);
@@ -374,6 +376,7 @@ show_new_archive_dialog (FrWindow   *window,
 
 	data = g_new0 (SaveAsData, 1);
 	data->window = window;
+	data->supported_types = create_type;
 	
 	file_sel = gtk_file_chooser_dialog_new (_("New"),
 						GTK_WINDOW (window),
@@ -400,8 +403,8 @@ show_new_archive_dialog (FrWindow   *window,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; save_type[i] != -1; i++)
-		gtk_file_filter_add_mime_type (filter, mime_type_desc[save_type[i]].mime_type);
+	for (i = 0; data->supported_types[i] != -1; i++)
+		gtk_file_filter_add_mime_type (filter, mime_type_desc[data->supported_types[i]].mime_type);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
 
@@ -421,9 +424,11 @@ show_new_archive_dialog (FrWindow   *window,
 
 	data->combo_box = gtk_combo_box_new_text ();
 	gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box), _("Automatic"));
-	for (i = 0; save_type[i] != -1; i++)
+	for (i = 0; data->supported_types[i] != -1; i++) {
+		int idx = data->supported_types[i];
 		gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box),
-					   _(mime_type_desc[save_type[i]].name));
+					   _(mime_type_desc[idx].name));
+	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (data->combo_box), 0);
 	gtk_box_pack_start (GTK_BOX (hbox), data->combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (hbox);
@@ -605,6 +610,7 @@ activate_action_save_as (GtkAction *action,
 
 	data = g_new0 (SaveAsData, 1);
 	data->window = window;
+	data->supported_types = save_type;
 
 	file_sel = gtk_file_chooser_dialog_new (_("Save"),
 						GTK_WINDOW (window),
@@ -647,8 +653,8 @@ activate_action_save_as (GtkAction *action,
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; save_type[i] != -1; i++)
-		gtk_file_filter_add_mime_type (filter, mime_type_desc[save_type[i]].mime_type);
+	for (i = 0; data->supported_types[i] != -1; i++)
+		gtk_file_filter_add_mime_type (filter, mime_type_desc[data->supported_types[i]].mime_type);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
 
@@ -676,9 +682,9 @@ activate_action_save_as (GtkAction *action,
 
 	data->combo_box = gtk_combo_box_new_text ();
 	gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box), _("Automatic"));
-	for (i = 0; save_type[i] != -1; i++)
+	for (i = 0; data->supported_types[i] != -1; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box),
-					   _(mime_type_desc[save_type[i]].name));
+					   _(mime_type_desc[data->supported_types[i]].name));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (data->combo_box), 0);
 	gtk_table_attach (GTK_TABLE (table), data->combo_box, 1, 2, 0, 1,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),

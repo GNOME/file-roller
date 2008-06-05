@@ -157,6 +157,7 @@ FrExtensionType file_ext_type[] = {
 int single_file_save_type[32];
 int save_type[32];
 int open_type[32];
+int create_type[32];
 
 FrCommandDescription command_desc[] = {
 	{ "tar",        "application/x-tar", TRUE, TRUE },
@@ -687,7 +688,7 @@ static void
 compute_supported_archive_types (void)
 {
 	int i, j;
-	int sf_i = 0, s_i = 0, o_i = 0;
+	int sf_i = 0, s_i = 0, o_i = 0, c_i = 0;
 	int idx;
 	
 	for (i = 0; i < G_N_ELEMENTS (command_desc); i++) {
@@ -707,10 +708,14 @@ compute_supported_archive_types (void)
 				if (idx >= 0) {
 					if (comm_desc_2.can_open)
 						open_type[o_i++] = idx;
-					if (comm_desc_2.can_save && mime_type_desc[idx].supports_many_files)
-						save_type[s_i++] = idx;
-					if (comm_desc_2.can_save)
+					if (comm_desc_2.can_save) {
+						if (mime_type_desc[idx].supports_many_files) {
+							save_type[s_i++] = idx;
+							if (comm_desc_2.can_open)
+								create_type[c_i++] = idx;	
+						}
 						single_file_save_type[sf_i++] = idx;
+					}
 				}
 			}
 		}
@@ -719,16 +724,21 @@ compute_supported_archive_types (void)
 		if (idx >= 0) {
 			if (comm_desc.can_open)
 				open_type[o_i++] = idx;
-			if (comm_desc.can_save && mime_type_desc[idx].supports_many_files)
-				save_type[s_i++] = idx;
-			if (comm_desc.can_save)
+			if (comm_desc.can_save) {
+				if (mime_type_desc[idx].supports_many_files) {
+					save_type[s_i++] = idx;
+					if (comm_desc.can_open)
+						create_type[c_i++] = idx;
+				}
 				single_file_save_type[sf_i++] = idx;
+			}
 		}
 	}
 
 	open_type[o_i++] = -1;
 	save_type[s_i++] = -1;
 	single_file_save_type[sf_i++] = -1;
+	create_type[s_i++] = -1;
 }
 
 

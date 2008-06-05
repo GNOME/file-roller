@@ -68,6 +68,7 @@ extern int single_file_save_type[]; /* File types that can be saved when
 				     * such as gzip, compress, etc. */
 extern int save_type[];             /* File types that can be saved. */
 extern int open_type[];             /* File types that can be opened. */
+extern int create_type[];           /* File types that can be created. */
  
 GType        get_command_type_from_mime_type (const char    *mime_type,
 				 	      FrCommandCaps  requested_capabilities);

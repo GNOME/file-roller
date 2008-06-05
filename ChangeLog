@@ -1,5 +1,16 @@
 2008-06-05  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/main.h: 
+	* src/main.c: 
+	* src/actions.c: 
+	
+	Differentiate between types that can be created and types that can be 
+	saved.  The difference is that a type can be created only if it can be 
+	loaded and saved.  At the moment only tar.7z can be saved but not 
+	created.
+	
+2008-06-05  Paolo Bacchilega  <paobac@svn.gnome.org>	
+	
 	* src/fr-archive.c (fr_archive_extract_to_local): 
 	
 	we need the file list when extracting all the files and not all the
