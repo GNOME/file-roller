@@ -171,8 +171,6 @@ void        fr_window_set_password_for_paste    (FrWindow      *window,
 					         const char    *password);						 
 const char *fr_window_get_password              (FrWindow      *window);
 FrCompression fr_window_get_compression 	(FrWindow      *window);
-void        fr_window_view_folder_after_extract (FrWindow      *window,
-					 	 gboolean       view);
 
 /**/
 
@@ -300,7 +298,6 @@ void       fr_window_set_batch__add               (FrWindow      *window,
 
 /**/
 
-void       fr_window_convert_data_free       (FrWindow         *window);
 gboolean   fr_window_file_list_drag_data_get (FrWindow         *window,
 					      GdkDragContext   *context,
 					      GtkSelectionData *selection_data,

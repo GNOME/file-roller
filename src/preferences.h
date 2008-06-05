@@ -50,7 +50,6 @@
 #define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/general/compression_level"
 #define PREF_MIGRATE_DIRECTORIES   "/apps/file-roller/general/migrate_directories"
 
-#define PREF_EXTRACT_VIEW_FOLDER      "/apps/file-roller/dialogs/extract/view_destination_folder"
 #define PREF_EXTRACT_OVERWRITE        "/apps/file-roller/dialogs/extract/overwrite"
 #define PREF_EXTRACT_SKIP_NEWER       "/apps/file-roller/dialogs/extract/skip_newer"
 #define PREF_EXTRACT_RECREATE_FOLDERS "/apps/file-roller/dialogs/extract/recreate_folders"

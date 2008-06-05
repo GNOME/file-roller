@@ -2593,7 +2593,10 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		file_list_created = TRUE;
 	}
 
-	fr_command_set_n_files (archive->command, g_list_length (file_list));
+	if (extract_all && (file_list == NULL))
+		fr_command_set_n_files (archive->command, archive->command->files->len);
+	else 
+		fr_command_set_n_files (archive->command, g_list_length (file_list));
 
 	use_base_dir = ! ((base_dir == NULL)
 			  || (strcmp (base_dir, "") == 0)

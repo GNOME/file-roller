@@ -94,35 +94,57 @@ process_line (char     *line,
 	FrCommandAce  *ace_comm = FR_COMMAND_ACE (data);
 	FrCommand     *comm = FR_COMMAND (data);
 	char         **fields;
-	char          *field_name;
+	const char    *field_name;
 
 	g_return_if_fail (line != NULL);
 
+	if (ace_comm->command_type == FR_ACE_COMMAND_UNKNOWN) {
+		if (g_str_has_prefix (line, "UNACE")) {
+			if (strstr (line, "public version") != NULL)
+				ace_comm->command_type = FR_ACE_COMMAND_PUBLIC;
+			else
+				ace_comm->command_type = FR_ACE_COMMAND_NONFREE;
+		}
+		return;		
+	}
+
+	if (! ace_comm->list_started) {
+		if (ace_comm->command_type == FR_ACE_COMMAND_PUBLIC) {
+			if (g_str_has_prefix (line, "Date"))
+				ace_comm->list_started = TRUE;
+		}
+		else if (ace_comm->command_type == FR_ACE_COMMAND_NONFREE) {
+			if (g_str_has_prefix (line, "  Date"))
+				ace_comm->list_started = TRUE;
+		}
+		return;
+	}
+
 	fdata = file_data_new ();
 
-	fields = g_strsplit (line, "|", 6);
+	if (ace_comm->command_type == FR_ACE_COMMAND_PUBLIC)
+		fields = g_strsplit (line, "|", 6);
+	else if (ace_comm->command_type == FR_ACE_COMMAND_NONFREE)
+		fields = split_line (line, 5);
 
-	if ((fields == NULL) || (fields[0] == NULL))
+	if ((fields == NULL) || (fields[0] == NULL) || (n_fields (fields) < 5))
 		return;
-
-	if (! ace_comm->list_started && (strncmp(fields[0], "Date", 4) == 0)) {
-		ace_comm->list_started = TRUE;
-		return;
-	}
-
-	if (n_fields (fields) != 6) {
-		ace_comm->list_started = FALSE;
-		return;
-	}
 
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
 	fdata->modified = mktime_from_string (fields[0], fields[1]);
 
-	field_name = fields[5] + 1;
+	if (ace_comm->command_type == FR_ACE_COMMAND_PUBLIC) {
+		field_name = fields[5];
+		field_name = field_name + 1;
+	}
+	else if (ace_comm->command_type == FR_ACE_COMMAND_NONFREE)
+		field_name = get_last_field (line, 6);
+
 	if (field_name[0] != '/') {
 		fdata->full_path = g_strconcat ("/", field_name, NULL);
 		fdata->original_path = fdata->full_path + 1;
-	} else {
+	} 
+	else {
 		fdata->full_path = g_strdup (field_name);
 		fdata->original_path = fdata->full_path;
 	}
@@ -144,6 +166,7 @@ fr_command_ace_list (FrCommand  *comm,
 		    const char *password)
 {
 	FR_COMMAND_ACE (comm)->list_started = FALSE;
+	FR_COMMAND_ACE (comm)->command_type = FR_ACE_COMMAND_UNKNOWN;
 
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      process_line,
@@ -151,6 +174,7 @@ fr_command_ace_list (FrCommand  *comm,
 
 	fr_process_begin_command (comm->process, "unace");
 	fr_process_add_arg (comm->process, "v");
+	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
@@ -177,6 +201,7 @@ fr_command_ace_extract (FrCommand   *comm,
 		fr_process_add_arg (comm->process, "e");
 	else
 		fr_process_add_arg (comm->process, "x");
+	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, comm->e_filename);
 
 	for (scan = file_list; scan; scan = scan->next)
@@ -192,6 +217,7 @@ fr_command_ace_test (FrCommand   *comm,
 {
         fr_process_begin_command (comm->process, "unace");
         fr_process_add_arg (comm->process, "t");
+	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, comm->e_filename);
         fr_process_end_command (comm->process);
 }

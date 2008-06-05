@@ -35,13 +35,21 @@
 #define FR_IS_COMMAND_ACE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ACE))
 #define FR_COMMAND_ACE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ACE, FrCommandAceClass))
 
+typedef enum {
+	FR_ACE_COMMAND_UNKNOWN = 0,
+	FR_ACE_COMMAND_PUBLIC,
+	FR_ACE_COMMAND_NONFREE
+} FrAceCommand;
+
 typedef struct _FrCommandAce       FrCommandAce;
 typedef struct _FrCommandAceClass  FrCommandAceClass;
 
 struct _FrCommandAce
 {
 	FrCommand  __parent;
-	gboolean   list_started;
+
+	gboolean     list_started;
+	FrAceCommand command_type;
 };
 
 struct _FrCommandAceClass

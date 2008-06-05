@@ -1,3 +1,33 @@
+2008-06-05  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/main.c: 
+	
+	do not view the folder after the extraction when in batch mode.
+	
+	* src/fr-window.c: 	
+	
+	Display the progress dialog if the operation lasts more than 5 seconds.
+	Display the progress dialog without delay if extracting or converting
+	an archive.  After the extraction add to the progress dialog the button
+	to open the destination folder and after the conversion add the button to
+	open the newly created archive.
+
+	* src/fr-archive.c: 
+	
+	Compute the number of files even when extracting all the files and
+	the archive command supports the operation natively.
+	
+	* src/preferences.h: 
+	* src/fr-window.h: 
+	* src/dlg-extract.c: 
+	* data/file-roller.schemas: 
+	
+	Removed the 'view folder after extraction' ption from the 
+	extraction dialog.
+	
+	* src/fr-command-ace.h: 
+	* src/fr-command-ace.c: Added support for the ace-nonfree output format.
+
 2008-06-03  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/main.c: 

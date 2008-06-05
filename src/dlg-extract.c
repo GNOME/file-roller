@@ -53,8 +53,6 @@ typedef struct {
 	GtkWidget    *e_password_entry;
 	GtkWidget    *e_password_hbox;
 
-	GtkWidget    *e_view_folder_checkbutton;
-
 	gboolean      extract_clicked;
 } DialogData;
 
@@ -218,8 +216,6 @@ extract_cb (GtkWidget   *w,
 	else
 		password = NULL;
 
-	eel_gconf_set_boolean (PREF_EXTRACT_VIEW_FOLDER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton)));
-
 	/* create the file list. */
 
 	file_list = NULL;
@@ -254,9 +250,7 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
-	fr_window_view_folder_after_extract (window, eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));
 	fr_window_set_password (window, password);
-
 	fr_window_archive_extract (window,
 				   file_list,
 				   extract_to_dir,
@@ -443,10 +437,6 @@ create_extra_widget (DialogData *data)
 	gtk_box_pack_start (GTK_BOX (data->e_password_hbox), data->e_password_entry, TRUE, TRUE, 0);
 	gtk_entry_set_activates_default (GTK_ENTRY (data->e_password_entry), TRUE);
 	gtk_entry_set_visibility (GTK_ENTRY (data->e_password_entry), FALSE);
-
-	data->e_view_folder_checkbutton = gtk_check_button_new_with_mnemonic (_("_Open destination folder after extraction"));
-	gtk_box_pack_start (GTK_BOX (vbox1), data->e_view_folder_checkbutton, FALSE, FALSE, 0);
-
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label31), data->e_password_entry);
 
 	gtk_widget_show_all (vbox1);
@@ -504,8 +494,6 @@ dlg_extract__common (FrWindow *window,
 	}
 	else
 		gtk_widget_set_sensitive (data->e_password_hbox, FALSE);
-
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_view_folder_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_VIEW_FOLDER, FALSE));
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_OVERWRITE, FALSE));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_SKIP_NEWER, FALSE));

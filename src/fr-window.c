@@ -62,8 +62,8 @@
 #define MAX_MESSAGE_LENGTH 50
 #define CHECK_CLIPBOARD_TIMEOUT 500
 
-#define PROGRESS_DIALOG_WIDTH 300
-#define PROGRESS_TIMEOUT_MSECS 1000     /* FIXME */
+#define PROGRESS_DIALOG_DEFAULT_WIDTH 400
+#define PROGRESS_TIMEOUT_MSECS 5000     /* FIXME */
 #define PROGRESS_BAR_HEIGHT 10
 
 #define HIDE_PROGRESS_TIMEOUT_MSECS 500 /* FIXME */
@@ -110,23 +110,28 @@ static GtkTargetEntry folder_tree_targets[] = {
 	{ "XdndDirectSave0", 0, 2 }
 };
 
+
 typedef struct {
 	FrBatchActionType type;
 	void *            data;
 	GFreeFunc         free_func;
 } FRBatchAction;
 
+
 typedef struct {
 	guint      converting : 1;
 	char      *temp_dir;
 	FrArchive *new_archive;
 	char      *password;
+	char      *new_file;
 } FRConvertData;
+
 
 typedef enum {
 	FR_CLIPBOARD_OP_CUT,
 	FR_CLIPBOARD_OP_COPY
 } FRClipboardOp;
+
 
 typedef struct {
 	GList    *file_list;
@@ -148,6 +153,13 @@ typedef enum {
         FR_WINDOW_AREA_FILTERBAR,
         FR_WINDOW_AREA_STATUSBAR,
 } FrWindowArea;
+
+
+typedef enum {
+	DIALOG_RESPONSE_NONE = 1,
+	DIALOG_RESPONSE_OPEN_ARCHIVE,
+	DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER
+} DialogResponse;
 
 
 /* -- FrClipboardData -- */
@@ -252,6 +264,7 @@ struct _FrWindowPrivateData {
 	guint            help_message_cid;
 	guint            list_info_cid;
 	guint            progress_cid;
+	char *           last_status_message;
 
 	GtkWidget *      up_arrows[5];
 	GtkWidget *      down_arrows[5];
@@ -274,8 +287,6 @@ struct _FrWindowPrivateData {
 					       * in the Extract dialog. */
 	gboolean         freeze_default_dir;
 	gboolean         asked_for_password;
-
-	gboolean         view_folder_after_extraction;
 
 	FRBatchAction    current_batch_action;
 
@@ -339,41 +350,47 @@ struct _FrWindowPrivateData {
 
 	/* progress dialog data */
 
-	GtkWidget *progress_dialog;
-	GtkWidget *pd_action;
-	GtkWidget *pd_archive;
-	GtkWidget *pd_message;
-	GtkWidget *pd_progress_bar;
-	gboolean   progress_pulse;
-	guint      progress_timeout;  /* Timeout to display the progress dialog. */
-	guint      hide_progress_timeout;  /* Timeout to hide the progress dialog. */
-	FrAction   pd_last_action;
-	char      *pd_last_archive;
+	GtkWidget        *progress_dialog;
+	GtkWidget        *pd_action;
+	GtkWidget        *pd_archive;
+	GtkWidget        *pd_message;
+	GtkWidget        *pd_progress_bar;
+	GtkWidget        *pd_cancel_button;
+	GtkWidget        *pd_close_button;
+	GtkWidget        *pd_open_archive_button;
+	GtkWidget        *pd_open_destination_button;
+	gboolean          progress_pulse;
+	guint             progress_timeout;  /* Timeout to display the progress dialog. */
+	guint             hide_progress_timeout;  /* Timeout to hide the progress dialog. */
+	FrAction          pd_last_action;
+	char             *pd_last_archive;
 
 	/* update dialog data */
 	
-	gpointer   update_dialog;
-	GList     *open_files;
+	gpointer          update_dialog;
+	GList            *open_files;
 
 	/* batch mode data */
 
-	gboolean   batch_mode;          /* whether we are in a non interactive
+	gboolean          batch_mode;          /* whether we are in a non interactive
 					 * mode. */
-	GList     *batch_action_list;   /* FRBatchAction * elements */
-	GList     *batch_action;        /* current action. */
+	GList            *batch_action_list;   /* FRBatchAction * elements */
+	GList            *batch_action;        /* current action. */
 
-	guint      cnxn_id[GCONF_NOTIFICATIONS];
+	/* misc */
 
-	gulong     theme_changed_handler_id;
-	gboolean   non_interactive;
-	char      *extract_here_dir;
-	gboolean   extract_interact_use_default_dir;
-	gboolean   update_dropped_files;
-	gboolean   batch_adding_one_file;
+	guint             cnxn_id[GCONF_NOTIFICATIONS];
 
-	GtkWindow *load_error_parent_window;
-	gboolean   showing_error_dialog;
-	GtkWindow *error_dialog_parent;
+	gulong            theme_changed_handler_id;
+	gboolean          non_interactive;
+	char             *extract_here_dir;
+	gboolean          extract_interact_use_default_dir;
+	gboolean          update_dropped_files;
+	gboolean          batch_adding_one_file;
+
+	GtkWindow        *load_error_parent_window;
+	gboolean          showing_error_dialog;
+	GtkWindow        *error_dialog_parent;
 };
 
 
@@ -490,6 +507,34 @@ fr_window_free_open_files (FrWindow *window)
 
 
 static void
+fr_window_convert_data_free (FrWindow   *window,
+			     gboolean    all)
+{
+	if (all) {
+		g_free (window->priv->convert_data.new_file);
+		window->priv->convert_data.new_file = NULL;
+	}
+	
+	window->priv->convert_data.converting = FALSE;
+	
+	if (window->priv->convert_data.temp_dir != NULL) {
+		g_free (window->priv->convert_data.temp_dir);
+		window->priv->convert_data.temp_dir = NULL;
+	}
+	
+	if (window->priv->convert_data.new_archive != NULL) {
+		g_object_unref (window->priv->convert_data.new_archive);
+		window->priv->convert_data.new_archive = NULL;
+	}
+	
+	if (window->priv->convert_data.password != NULL) {
+		g_free (window->priv->convert_data.password);
+		window->priv->convert_data.password = NULL;
+	}
+}
+
+
+static void
 fr_window_free_private_data (FrWindow *window)
 {
 	FrWindowPrivateData *priv = window->priv;
@@ -558,6 +603,8 @@ fr_window_free_private_data (FrWindow *window)
 	
 	fr_window_free_open_files (window);
 	
+	fr_window_convert_data_free (window, TRUE);
+	
 	g_clear_error (&priv->drag_error);
 	path_list_free (priv->drag_file_list);
 	priv->drag_file_list = NULL;
@@ -584,6 +631,7 @@ fr_window_free_private_data (FrWindow *window)
 
 	g_free (priv->pd_last_archive);
 	g_free (priv->extract_here_dir);
+	g_free (priv->last_status_message);
 
 	preferences_set_sort_method (priv->sort_method);
 	preferences_set_sort_type (priv->sort_type);
@@ -2079,7 +2127,8 @@ real_close_progress_dialog (gpointer data)
 
 
 static void
-close_progress_dialog (FrWindow *window)
+close_progress_dialog (FrWindow *window,
+		       gboolean  close_now)
 {
 	if (window->priv->progress_timeout != 0) {
 		g_source_remove (window->priv->progress_timeout);
@@ -2088,14 +2137,24 @@ close_progress_dialog (FrWindow *window)
 
 	if (! window->priv->batch_mode && GTK_WIDGET_MAPPED (window))
 		gtk_widget_hide (window->priv->progress_bar);
-
-	if (window->priv->hide_progress_timeout != 0)
+		
+	if (window->priv->progress_dialog == NULL)
 		return;
 
-	if (window->priv->progress_dialog != NULL)
+	if (close_now) {
+		if (window->priv->hide_progress_timeout != 0) {
+			g_source_remove (window->priv->hide_progress_timeout);
+			window->priv->hide_progress_timeout = 0;
+		}
+		real_close_progress_dialog (window);
+	}
+	else {
+		if (window->priv->hide_progress_timeout != 0)
+			return;
 		window->priv->hide_progress_timeout = g_timeout_add (HIDE_PROGRESS_TIMEOUT_MSECS,
 								     real_close_progress_dialog,
 								     window);
+	}
 }
 
 
@@ -2106,10 +2165,52 @@ progress_dialog_delete_event (GtkWidget *caller,
 {
 	if (window->priv->stoppable) {
 		activate_action_stop (NULL, window);
-		close_progress_dialog (window);
+		close_progress_dialog (window, TRUE);
 	}
 
 	return TRUE;
+}
+
+
+static void
+open_folder (GtkWindow  *parent,
+	     const char *folder)
+{
+	GdkAppLaunchContext *app_context;
+	GError              *error = NULL;
+	
+	if (folder == NULL)
+		return;
+
+	app_context = gdk_app_launch_context_new ();
+	if (! g_app_info_launch_default_for_uri (folder, G_APP_LAUNCH_CONTEXT (app_context), &error)) {
+		GtkWidget *d;
+		char      *utf8_name;
+		char      *message;
+
+		utf8_name = g_filename_display_name (folder);
+		message = g_strdup_printf (_("Could not display the folder \"%s\""), utf8_name);
+		g_free (utf8_name);
+
+		d = _gtk_error_dialog_new (parent,
+					   GTK_DIALOG_MODAL,
+					   NULL,
+					   message,
+					   error->message);
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (d);
+
+		g_free (message);
+		g_clear_error (&error);
+	}
+	g_object_unref (app_context);
+}
+
+
+static void
+fr_window_view_extraction_destination_folder (FrWindow *window)
+{
+	open_folder (GTK_WINDOW (window), fr_archive_get_last_extraction_destination (window->archive));
 }
 
 
@@ -2118,9 +2219,30 @@ progress_dialog_response (GtkDialog *dialog,
 			  int        response_id,
 			  FrWindow  *window)
 {
-	if ((response_id == GTK_RESPONSE_CANCEL) && window->priv->stoppable) {
-		activate_action_stop (NULL, window);
-		close_progress_dialog (window);
+	GtkWidget *new_window;
+	
+	switch (response_id) {
+	case GTK_RESPONSE_CANCEL:
+		if (window->priv->stoppable) {
+			activate_action_stop (NULL, window);
+			close_progress_dialog (window, TRUE);
+		}
+		break;
+	case GTK_RESPONSE_CLOSE:
+		close_progress_dialog (window, TRUE);
+		break;
+	case DIALOG_RESPONSE_OPEN_ARCHIVE:		
+		new_window = fr_window_new ();
+		gtk_widget_show (new_window);		
+		fr_window_archive_open (FR_WINDOW (new_window), window->priv->convert_data.new_file, GTK_WINDOW (new_window));
+		close_progress_dialog (window, TRUE);
+		break;
+	case DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER:
+		fr_window_view_extraction_destination_folder (window);
+		close_progress_dialog (window, TRUE);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -2197,6 +2319,8 @@ fr_window_message_cb (FrCommand  *command,
 		      const char *msg,
 		      FrWindow   *window)
 {
+	char *current_archive;
+	
 	if (window->priv->progress_dialog == NULL)
 		return TRUE;
 
@@ -2232,24 +2356,162 @@ fr_window_message_cb (FrCommand  *command,
 	else if (window->priv->pd_last_action != window->priv->action)
 		progress_dialog__set_last_action (window, window->priv->action);
 
-	if (strcmp_null_tolerant (window->priv->pd_last_archive, window->priv->archive_uri) != 0) {
+	if (window->priv->convert_data.converting)
+		current_archive = window->priv->convert_data.new_file;
+	else
+		current_archive = window->priv->archive_uri;
+
+	if (strcmp_null_tolerant (window->priv->pd_last_archive, current_archive) != 0) {
 		g_free (window->priv->pd_last_archive);
-		if (window->priv->archive_uri == NULL) {
+		if (current_archive == NULL) {
 			window->priv->pd_last_archive = NULL;
 			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), "");
 		}
 		else {
 			char *name;
 			
-			window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
+			window->priv->pd_last_archive = g_strdup (current_archive);
 
-			name = g_filename_display_basename (window->priv->archive_uri);
+			name = g_filename_display_basename (window->priv->pd_last_archive);
 			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), name);
 			g_free (name);
 		}
 	}
 
 	return TRUE;
+}
+
+
+static void
+create_the_progress_dialog (FrWindow *window)
+{
+	GtkWindow     *parent;
+	GtkDialog     *d;
+	GtkWidget     *vbox;
+	GtkWidget     *align;
+	GtkWidget     *progress_vbox;
+	GtkWidget     *lbl;
+	const char    *title;
+	char          *markup;
+	PangoAttrList *attr_list;
+	
+	if (window->priv->progress_dialog != NULL) 
+		return;
+	
+	if (window->priv->batch_mode)
+		parent = NULL;
+	else
+		parent = GTK_WINDOW (window);
+
+	window->priv->pd_last_action = window->priv->action;
+	title = get_message_from_action (window->priv->pd_last_action);
+	window->priv->progress_dialog = gtk_dialog_new_with_buttons (title,
+					       			     parent,
+					       			     GTK_DIALOG_DESTROY_WITH_PARENT,
+					       			     NULL);
+						       
+	window->priv->pd_open_archive_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE);
+	window->priv->pd_open_destination_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), _("_Open the Destination"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
+	window->priv->pd_close_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+	window->priv->pd_cancel_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+					       
+	d = GTK_DIALOG (window->priv->progress_dialog);
+	gtk_dialog_set_has_separator (d, FALSE);
+	gtk_window_set_resizable (GTK_WINDOW (d), TRUE);
+	gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
+	gtk_window_set_default_size (GTK_WINDOW (d), PROGRESS_DIALOG_DEFAULT_WIDTH, -1);
+		
+	/* Main */
+		
+	vbox = gtk_vbox_new (FALSE, 5);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+	gtk_box_pack_start (GTK_BOX (d->vbox), vbox, FALSE, FALSE, 10);
+
+	/* action label */
+
+	lbl = window->priv->pd_action = gtk_label_new ("");
+
+	markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", title);
+	gtk_label_set_markup (GTK_LABEL (lbl), markup);
+	g_free (markup);
+
+	align = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 12, 0, 0);
+
+	gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+	gtk_misc_set_padding (GTK_MISC (lbl), 0, 0);
+	gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
+	
+	gtk_container_add (GTK_CONTAINER (align), lbl);
+	gtk_box_pack_start (GTK_BOX (vbox), align, TRUE, TRUE, 0);
+
+	/* archive name */
+
+	g_free (window->priv->pd_last_archive);
+	window->priv->pd_last_archive = NULL;
+	if (window->priv->archive_uri != NULL) {
+		GtkWidget *hbox;
+		char      *name;
+
+		hbox = gtk_hbox_new (FALSE, 6);
+		gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+
+		lbl = gtk_label_new ("");
+		markup = g_markup_printf_escaped ("<b>%s</b>", _("Archive:"));
+		gtk_label_set_markup (GTK_LABEL (lbl), markup);
+		g_free (markup);
+		gtk_box_pack_start (GTK_BOX (hbox), lbl, FALSE, FALSE, 0);
+
+		window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
+		name = g_filename_display_basename (window->priv->pd_last_archive);
+		lbl = window->priv->pd_archive = gtk_label_new (name);
+		g_free (name);
+
+		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
+		gtk_box_pack_start (GTK_BOX (hbox), lbl, TRUE, TRUE, 0);
+	}
+
+	/* progress and details */
+
+	align = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
+	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 6, 0, 0);
+
+	progress_vbox = gtk_vbox_new (FALSE, 6);
+	gtk_container_add (GTK_CONTAINER (align), progress_vbox);
+	gtk_box_pack_start (GTK_BOX (vbox), align, TRUE, TRUE, 0);
+	
+	/* progress bar */
+
+	window->priv->pd_progress_bar = gtk_progress_bar_new ();
+	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), ACTIVITY_PULSE_STEP);
+	gtk_box_pack_start (GTK_BOX (progress_vbox), window->priv->pd_progress_bar, TRUE, TRUE, 0);
+
+	/* details label */
+
+	lbl = window->priv->pd_message = gtk_label_new ("");
+
+	attr_list = pango_attr_list_new ();
+	pango_attr_list_insert (attr_list, pango_attr_style_new (PANGO_STYLE_ITALIC));
+	gtk_label_set_attributes (GTK_LABEL (lbl), attr_list);
+	pango_attr_list_unref (attr_list);
+
+	gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
+	gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
+	gtk_box_pack_start (GTK_BOX (progress_vbox), lbl, TRUE, TRUE, 0);
+	
+	gtk_widget_show_all (vbox);
+
+	/* signals */
+
+	g_signal_connect (G_OBJECT (window->priv->progress_dialog),
+			  "response",
+			  G_CALLBACK (progress_dialog_response),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->progress_dialog),
+			  "delete_event",
+			  G_CALLBACK (progress_dialog_delete_event),
+			  window);
 }
 
 
@@ -2267,9 +2529,9 @@ display_progress_dialog (gpointer data)
 						   window->priv->stoppable);
 		if (! window->priv->non_interactive)
 			gtk_widget_show (GTK_WIDGET (window));
-
+		gtk_widget_hide (window->priv->progress_bar);
 		gtk_widget_show (window->priv->progress_dialog);
-		fr_window_message_cb (NULL, NULL, window);
+		fr_window_message_cb (NULL, window->priv->last_status_message, window);
 	}
 
 	window->priv->progress_timeout = 0;
@@ -2279,133 +2541,100 @@ display_progress_dialog (gpointer data)
 
 
 static void
-open_progress_dialog (FrWindow *window)
+open_progress_dialog (FrWindow *window,
+		      gboolean  open_now)
 {
-	/* FIXME: decide whether to use the progress bar or the dialog when
-	 * not in batch mode.
-	if (! window->priv->batch_mode) {
-		gtk_widget_show (window->priv->progress_bar);
-		return;
-	}*/
-
 	if (window->priv->hide_progress_timeout != 0) {
 		g_source_remove (window->priv->hide_progress_timeout);
 		window->priv->hide_progress_timeout = 0;
 	}
-
-	if (window->priv->progress_timeout != 0)
-		return;
-
-	if (window->priv->progress_dialog == NULL) {
-		GtkWindow     *parent;
-		GtkDialog     *d;
-		GtkWidget     *vbox;
-		GtkWidget     *lbl;
-		const char    *title;
-		char          *markup;
-		PangoAttrList *attr_list;
-
-		if (window->priv->batch_mode)
-			parent = NULL;
-		else
-			parent = GTK_WINDOW (window);
-
-		window->priv->pd_last_action = window->priv->action;
-		title = get_message_from_action (window->priv->pd_last_action);
-		window->priv->progress_dialog = gtk_dialog_new_with_buttons (
-						       title,
-						       parent,
-						       GTK_DIALOG_DESTROY_WITH_PARENT,
-						       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						       NULL);
-		d = GTK_DIALOG (window->priv->progress_dialog);
-		gtk_dialog_set_has_separator (d, FALSE);
-		gtk_window_set_resizable (GTK_WINDOW (d), TRUE);
-		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
-
-		/* Main */
-		
-		vbox = gtk_vbox_new (FALSE, 5);
-		gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-		gtk_box_pack_start (GTK_BOX (d->vbox), vbox, FALSE, FALSE, 10);
-
-		/* action label */
-
-		lbl = window->priv->pd_action = gtk_label_new ("");
-
-		markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", title);
-		gtk_label_set_markup (GTK_LABEL (lbl), markup);
-		g_free (markup);
-
-		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
-		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
-
-		/* archive name */
-
-		g_free (window->priv->pd_last_archive);
-		window->priv->pd_last_archive = NULL;
-		if (window->priv->archive_uri != NULL) {
-			GtkWidget *hbox;
-			char      *name;
-
-			hbox = gtk_hbox_new (FALSE, 6);
-			gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 6);
-
-			lbl = gtk_label_new ("");
-			markup = g_markup_printf_escaped ("<b>%s</b>", _("Archive:"));
-			gtk_label_set_markup (GTK_LABEL (lbl), markup);
-			g_free (markup);
-			gtk_box_pack_start (GTK_BOX (hbox), lbl, FALSE, FALSE, 0);
-
-			window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
-			name = g_filename_display_basename (window->priv->pd_last_archive);
-			lbl = window->priv->pd_archive = gtk_label_new (name);
-			g_free (name);
-
-			gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-			gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
-			gtk_box_pack_start (GTK_BOX (hbox), lbl, TRUE, TRUE, 0);
-		}
-
-		/* progress bar */
-
-		window->priv->pd_progress_bar = gtk_progress_bar_new ();
-		gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), ACTIVITY_PULSE_STEP);
-
-		gtk_widget_set_size_request (window->priv->pd_progress_bar, PROGRESS_DIALOG_WIDTH, -1);
-		gtk_box_pack_start (GTK_BOX (vbox), window->priv->pd_progress_bar, TRUE, TRUE, 0);
-
-		/* details label */
-
-		lbl = window->priv->pd_message = gtk_label_new ("");
-
-		attr_list = pango_attr_list_new ();
-		pango_attr_list_insert (attr_list, pango_attr_style_new (PANGO_STYLE_ITALIC));
-		gtk_label_set_attributes (GTK_LABEL (lbl), attr_list);
-		pango_attr_list_unref (attr_list);
-
-		gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-		gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
-		gtk_box_pack_start (GTK_BOX (vbox), lbl, TRUE, TRUE, 0);
-
-		/**/
-
-		g_signal_connect (G_OBJECT (window->priv->progress_dialog),
-				  "response",
-				  G_CALLBACK (progress_dialog_response),
-				  window);
-		g_signal_connect (G_OBJECT (window->priv->progress_dialog),
-				  "delete_event",
-				  G_CALLBACK (progress_dialog_delete_event),
-				  window);
-
-		gtk_widget_show_all (vbox);
+	
+	if (open_now) {
+		if (window->priv->progress_timeout != 0)
+			g_source_remove (window->priv->progress_timeout);
+		window->priv->progress_timeout = 0;
 	}
 
-	window->priv->progress_timeout = g_timeout_add (PROGRESS_TIMEOUT_MSECS,
-						        display_progress_dialog,
-						        window);
+	if (window->priv->progress_timeout != 0) 
+		return;
+
+	if (! window->priv->batch_mode) 
+		gtk_widget_show (window->priv->progress_bar);
+
+	create_the_progress_dialog (window);
+	gtk_widget_show (window->priv->pd_cancel_button);
+	gtk_widget_hide (window->priv->pd_open_archive_button);
+	gtk_widget_hide (window->priv->pd_open_destination_button);
+	gtk_widget_hide (window->priv->pd_close_button);
+	
+	if (open_now)
+		display_progress_dialog (window);
+	else
+		window->priv->progress_timeout = g_timeout_add (PROGRESS_TIMEOUT_MSECS,
+							        display_progress_dialog,
+							        window);
+}
+
+
+static gboolean
+fr_window_progress_cb (FrCommand  *command,
+		       double      fraction,
+		       FrWindow   *window)
+{
+	window->priv->progress_pulse = (fraction < 0.0);
+	if (! window->priv->progress_pulse) {
+		fraction = CLAMP (fraction, 0.0, 1.0);	
+		if (window->priv->progress_dialog != NULL)
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), fraction);
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), fraction);
+	}
+	return TRUE;
+}
+
+
+static void
+open_progress_dialog_with_open_destination (FrWindow *window)
+{
+	if (window->priv->hide_progress_timeout != 0) {
+		g_source_remove (window->priv->hide_progress_timeout);
+		window->priv->hide_progress_timeout = 0;
+	}
+	if (window->priv->progress_timeout != 0) {
+		g_source_remove (window->priv->progress_timeout);
+		window->priv->progress_timeout = 0;
+	}
+	
+	create_the_progress_dialog (window);
+	gtk_widget_hide (window->priv->pd_cancel_button);
+	gtk_widget_hide (window->priv->pd_open_archive_button);
+	gtk_widget_show (window->priv->pd_open_destination_button);
+	gtk_widget_show (window->priv->pd_close_button);
+	display_progress_dialog (window);
+	fr_window_progress_cb (NULL, 1.0, window);
+	fr_window_message_cb (NULL, _("Extraction completed successfully"), window);
+}
+
+
+static void
+open_progress_dialog_with_open_archive (FrWindow *window)
+{
+	if (window->priv->hide_progress_timeout != 0) {
+		g_source_remove (window->priv->hide_progress_timeout);
+		window->priv->hide_progress_timeout = 0;
+	}
+	if (window->priv->progress_timeout != 0) {
+		g_source_remove (window->priv->progress_timeout);
+		window->priv->progress_timeout = 0;
+	}
+	
+	create_the_progress_dialog (window);
+	gtk_widget_hide (window->priv->pd_cancel_button);
+	gtk_widget_hide (window->priv->pd_open_destination_button);
+	gtk_widget_show (window->priv->pd_open_archive_button);
+	gtk_widget_show (window->priv->pd_close_button);
+	display_progress_dialog (window);
+	fr_window_progress_cb (NULL, 1.0, window);
+	fr_window_message_cb (NULL, _("Archive created successfully"), window);
 }
 
 
@@ -2413,16 +2642,24 @@ void
 fr_window_push_message (FrWindow   *window,
 			const char *msg)
 {
-	if (GTK_WIDGET_MAPPED (window))
-		gtk_statusbar_push (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid, msg);
+	if (! GTK_WIDGET_MAPPED (window))
+		return;
+
+	g_free (window->priv->last_status_message);
+	window->priv->last_status_message = g_strdup (msg);
+
+	gtk_statusbar_push (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid, window->priv->last_status_message);
+	if (window->priv->progress_dialog != NULL)
+		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), window->priv->last_status_message);
 }
 
 
 void
 fr_window_pop_message (FrWindow *window)
 {
-	if (GTK_WIDGET_MAPPED (window))
-		gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
+	if (! GTK_WIDGET_MAPPED (window))
+		return;
+	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
 		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), "");
 }
@@ -2447,7 +2684,16 @@ action_started (FrArchive *archive,
 	message = get_message_from_action (action);
 	full_msg = g_strdup_printf ("%s, %s", message, _("wait please..."));
 	fr_window_push_message (window, full_msg);
-	open_progress_dialog (window);
+	
+	switch (action) {
+	case FR_ACTION_EXTRACTING_FILES:
+		open_progress_dialog (window, TRUE);
+		break;
+	default:
+		open_progress_dialog (window, FALSE);
+		break;
+	}
+		
 	if (archive->command != NULL) {
 		fr_command_progress (archive->command, -1.0);
 		fr_command_message (archive->command, message);
@@ -2493,57 +2739,6 @@ fr_window_remove_from_recent_list (FrWindow *window,
 
 
 static void
-open_folder (GtkWindow  *parent,
-	     const char *folder)
-{
-	GdkAppLaunchContext *app_context;
-	GError              *error = NULL;
-	
-	if (folder == NULL)
-		return;
-
-	app_context = gdk_app_launch_context_new ();
-	if (! g_app_info_launch_default_for_uri (folder, G_APP_LAUNCH_CONTEXT (app_context), &error)) {
-		GtkWidget *d;
-		char      *utf8_name;
-		char      *message;
-
-		utf8_name = g_filename_display_name (folder);
-		message = g_strdup_printf (_("Could not display the folder \"%s\""), utf8_name);
-		g_free (utf8_name);
-
-		d = _gtk_error_dialog_new (parent,
-					   GTK_DIALOG_MODAL,
-					   NULL,
-					   message,
-					   error->message);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (d);
-
-		g_free (message);
-		g_clear_error (&error);
-	}
-	g_object_unref (app_context);
-}
-
-
-void
-fr_window_convert_data_free (FrWindow *window)
-{
-	window->priv->convert_data.converting = FALSE;
-
-	g_free (window->priv->convert_data.temp_dir);
-	window->priv->convert_data.temp_dir = NULL;
-
-	g_object_unref (window->priv->convert_data.new_archive);
-	g_free (window->priv->convert_data.password);
-	
-	window->priv->convert_data.new_archive = NULL;
-	window->priv->convert_data.password = NULL;
-}
-
-
-static void
 error_dialog_response_cb (GtkDialog *dialog,
 			  gint       arg1,
 			  gpointer   user_data)
@@ -2565,6 +2760,8 @@ fr_window_show_error_dialog (FrWindow  *window,
 			     GtkWidget *dialog,
 			     GtkWindow *dialog_parent)
 {
+	close_progress_dialog (window, TRUE);
+	
 	if (dialog_parent != NULL)
 		gtk_window_set_modal (dialog_parent, FALSE);
 	g_signal_connect (dialog,
@@ -2586,6 +2783,7 @@ handle_errors (FrWindow    *window,
 	       FrProcError *error)
 {
 	if (error->type == FR_PROC_ERROR_ASK_PASSWORD) {
+		close_progress_dialog (window, TRUE);
 		dlg_ask_password (window);
 		return FALSE;
 	}
@@ -2707,7 +2905,7 @@ convert__action_performed (FrArchive   *archive,
 	if ((action == FR_ACTION_GETTING_FILE_LIST) || (action == FR_ACTION_ADDING_FILES)) {
 		fr_window_stop_activity_mode (window);
 		fr_window_pop_message (window);
-		close_progress_dialog (window);
+		close_progress_dialog (window, FALSE);
 	}
 
 	if (action != FR_ACTION_ADDING_FILES)
@@ -2716,12 +2914,15 @@ convert__action_performed (FrArchive   *archive,
 	handle_errors (window, archive, action, error);
 
 	if (error->type == FR_PROC_ERROR_NONE) {
-		GtkWidget *d;
+		/*GtkWidget *d;
 		char      *filename;
 		char      *basename;	
 		char      *msg;
-		int        result;
+		int        result;*/
+				
+		open_progress_dialog_with_open_archive (window);
 		
+		/*
 		filename = g_file_get_basename (window->priv->convert_data.new_archive->file);
 		basename = g_filename_display_basename (filename);
 		msg = g_strdup_printf (_("The archive \"%s\" has been created successfully"), basename);
@@ -2749,25 +2950,14 @@ convert__action_performed (FrArchive   *archive,
 			fr_window_archive_open (FR_WINDOW (new_window), uri, GTK_WINDOW (new_window));
 			g_free (uri);
 		}
+		*/
 	}
 
 	remove_local_directory (window->priv->convert_data.temp_dir);
-	fr_window_convert_data_free (window);
+	fr_window_convert_data_free (window, FALSE);
 
 	fr_window_update_sensitivity (window);
 	fr_window_update_statusbar_list_info (window);
-}
-
-
-static gboolean
-view_extraction_destination_folder (gpointer data)
-{
-	FrWindow *window = data;
-	
-	open_folder (GTK_WINDOW (window), fr_archive_get_last_extraction_destination (window->archive));
-	window->priv->view_folder_after_extraction = FALSE;
-	
-	return FALSE;
 }
 
 
@@ -2791,7 +2981,6 @@ action_performed (FrArchive   *archive,
 
 	fr_window_stop_activity_mode (window);
 	fr_window_pop_message (window);
-	close_progress_dialog (window);
 
 	continue_batch = handle_errors (window, archive, action, error);
 
@@ -2801,6 +2990,7 @@ action_performed (FrArchive   *archive,
 	switch (action) {
 	case FR_ACTION_CREATING_NEW_ARCHIVE:
 	case FR_ACTION_CREATING_ARCHIVE:
+		close_progress_dialog (window, FALSE);
 		if (error->type != FR_PROC_ERROR_STOPPED) {
 			fr_window_history_clear (window);
 			fr_window_go_to_location (window, "/", TRUE);
@@ -2811,6 +3001,7 @@ action_performed (FrArchive   *archive,
 		break;
 
 	case FR_ACTION_LOADING_ARCHIVE:
+		close_progress_dialog (window, FALSE);
 		if (error->type != FR_PROC_ERROR_NONE) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
 			if (window->priv->non_interactive) {
@@ -2824,7 +3015,7 @@ action_performed (FrArchive   *archive,
 				gtk_window_present (GTK_WINDOW (window));
 		}
 		continue_batch = FALSE;
-
+		
 		g_signal_emit (G_OBJECT (window),
 			       fr_window_signals[ARCHIVE_LOADED],
 			       0,
@@ -2832,6 +3023,7 @@ action_performed (FrArchive   *archive,
 		break;
 
 	case FR_ACTION_LISTING_CONTENT:
+		close_progress_dialog (window, FALSE);
 		if (error->type != FR_PROC_ERROR_NONE) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
 			fr_window_archive_close (window);
@@ -2868,10 +3060,12 @@ action_performed (FrArchive   *archive,
 		break;
 
 	case FR_ACTION_DELETING_FILES:
+		close_progress_dialog (window, FALSE);
 		fr_window_archive_reload (window);
 		return;
 
 	case FR_ACTION_ADDING_FILES:
+		close_progress_dialog (window, FALSE);
 		if (error->type != FR_PROC_ERROR_NONE) {
 			fr_window_archive_reload (window);
 			return;
@@ -2886,6 +3080,7 @@ action_performed (FrArchive   *archive,
 		break;
 
 	case FR_ACTION_TESTING_ARCHIVE:
+		close_progress_dialog (window, FALSE);
 		if (error->type == FR_PROC_ERROR_NONE)
 			fr_window_view_last_output (window, _("Test Result"));
 		return;
@@ -2894,9 +3089,8 @@ action_performed (FrArchive   *archive,
 		if (error->type != FR_PROC_ERROR_NONE) {
 			if (window->priv->convert_data.converting) {
 				remove_local_directory (window->priv->convert_data.temp_dir);
-				fr_window_convert_data_free (window);
+				fr_window_convert_data_free (window, TRUE);
 			}
-			window->priv->view_folder_after_extraction = FALSE;
 			break;
 		}
 
@@ -2918,6 +3112,9 @@ action_performed (FrArchive   *archive,
 				  window->priv->compression);
 			g_free (source_dir);
 		}
+		else 
+			open_progress_dialog_with_open_destination (window);
+		/*
 		else if (window->priv->view_folder_after_extraction) {
 			if (window->priv->batch_mode) {
 				g_usleep (G_USEC_PER_SEC);
@@ -2925,10 +3122,11 @@ action_performed (FrArchive   *archive,
 			}
 			else
 				g_timeout_add (500, view_extraction_destination_folder, window);
-		}
+		}*/
 		break;
 
 	default:
+		close_progress_dialog (window, FALSE);
 		continue_batch = FALSE;
 		break;
 	}
@@ -4731,27 +4929,6 @@ theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 
 
 static gboolean
-fr_window_progress_cb (FrCommand  *command,
-		       double      fraction,
-		       FrWindow   *window)
-{
-	if (fraction < 0.0)
-		window->priv->progress_pulse = TRUE;
-
-	else {
-		window->priv->progress_pulse = FALSE;
-		if (window->priv->progress_dialog != NULL)
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), CLAMP (fraction, 0.0, 1.0));
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), CLAMP (fraction, 0.0, 1.0));
-	}
-
-	return TRUE;
-}
-
-
-
-
-static gboolean
 fr_window_stoppable_cb (FrCommand  *command,
 			gboolean    stoppable,
 			FrWindow   *window)
@@ -5188,7 +5365,6 @@ fr_window_construct (FrWindow *window)
 	window->priv->open_default_dir = g_strdup (get_home_uri ());
 	window->priv->add_default_dir = g_strdup (get_home_uri ());
 	window->priv->extract_default_dir = g_strdup (get_home_uri ());
-	window->priv->view_folder_after_extraction = FALSE;
 
 	window->priv->give_focus_to_the_list = FALSE;
 
@@ -5863,20 +6039,8 @@ fr_window_archive_save_as (FrWindow   *window,
 	g_return_if_fail (uri != NULL);
 	g_return_if_fail (window->archive != NULL);
 
-	if (window->priv->convert_data.temp_dir != NULL) {
-		g_free (window->priv->convert_data.temp_dir);
-		window->priv->convert_data.temp_dir = NULL;
-	}
-	
-	if (window->priv->convert_data.new_archive != NULL) {
-		g_object_unref (window->priv->convert_data.new_archive);
-		window->priv->convert_data.new_archive = NULL;
-	}
-	
-	if (window->priv->convert_data.password != NULL) {
-		g_free (window->priv->convert_data.password);
-		window->priv->convert_data.password = NULL;
-	}
+	fr_window_convert_data_free (window, TRUE);
+	window->priv->convert_data.new_file = g_strdup (uri);
 
 	/* create the new archive */
 
@@ -6383,14 +6547,6 @@ fr_window_get_compression (FrWindow *window)
 
 
 void
-fr_window_view_folder_after_extract (FrWindow *window,
-				     gboolean  view)
-{
-	window->priv->view_folder_after_extraction = view;
-}
-
-
-void
 fr_window_go_to_location (FrWindow   *window,
 			  const char *path,
 			  gboolean    force_update)
@@ -6552,7 +6708,7 @@ fr_window_stop (FrWindow *window)
 		fr_archive_stop (window->archive);
 		
 	if (window->priv->convert_data.converting)
-		fr_window_convert_data_free (window);		
+		fr_window_convert_data_free (window, TRUE);		
 }
 
 
@@ -7309,7 +7465,7 @@ copy_from_archive_action_performed_cb (FrArchive   *archive,
 
 	fr_window_stop_activity_mode (window);
 	fr_window_pop_message (window);
-	close_progress_dialog (window);
+	close_progress_dialog (window, FALSE);
 
 	if (error->type == FR_PROC_ERROR_ASK_PASSWORD) {
 		dlg_ask_password_for_paste_operation (window);
