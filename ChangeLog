@@ -1,3 +1,49 @@
+2008-06-06  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c: 
+	
+	added a ask_to_open_destination_after_extraction flag to open the
+	progress dialog only when appropriate.
+	
+	* src/fr-process.c: 
+	
+	check whether current_comm is >= 0 before accessing the comm array.
+	
+	* src/fr-command-cfile.c: 
+	
+	set the propAddCanUpdate and propAddCanReplace properties to TRUE.
+
+	* src/fr-command-unstuff.c: 
+	* src/fr-command-tar.c: 
+	* src/fr-command-rpm.c: 
+	* src/fr-command-iso.c: 
+	* src/fr-command-cpio.c: 	
+	* src/fr-command-ar.c: 
+	* src/fr-command-ace.c: 
+	* src/fr-command.h: 
+	* src/fr-command.c: 
+	
+	get rid of the propCanModify property as it's been obsoleted by the
+	fr_command_is_capable_of() function.
+	
+	* src/fr-archive.h: 
+	* src/fr-archive.c: 
+	
+	add a have_permissions flag to differentiate when is not possible to
+	write an archive because the archive command doesn't support this
+	feature or because we don't have the file write permission.
+	
+	* src/dlg-open-with.c (open_with__destroy_cb): 
+	
+	do not unref the AppInfo objects.
+	
+	* src/fr-stock.h: 
+	* src/fr-stock.c: 
+	* data/icons/24x24/actions/Makefile.am: 
+	* data/icons/24x24/actions/preview-file.png: 
+	
+	Removed the preview-file stock item, use gtk_stock_open instead.
+
 2008-06-05  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/main.h: 

@@ -903,7 +903,6 @@ fr_command_tar_init (FrCommand *comm)
 {
 	FrCommandTar *comm_tar = (FrCommandTar*) comm;
 
-	comm->propCanModify                 = TRUE;
 	comm->propAddCanUpdate              = FALSE;
 	comm->propAddCanReplace             = FALSE;
 	comm->propAddCanStoreFolders        = TRUE;

@@ -71,7 +71,6 @@ struct _FrCommand
 	
 	/* properties the command supports. */
 	
-	guint       propCanModify : 1; 
 	guint       propAddCanUpdate : 1;
 	guint       propAddCanReplace : 1;
 	guint       propAddCanStoreFolders : 1;

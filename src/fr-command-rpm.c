@@ -224,7 +224,6 @@ fr_command_rpm_class_init (FrCommandRpmClass *class)
 static void 
 fr_command_rpm_init (FrCommand *comm)
 {
-	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;

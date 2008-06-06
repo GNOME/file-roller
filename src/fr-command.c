@@ -402,7 +402,6 @@ fr_command_init (FrCommand *comm)
 	comm->e_filename = NULL;
 	comm->fake_load = FALSE;
 
-	comm->propCanModify = TRUE;
 	comm->propAddCanUpdate = FALSE;
 	comm->propAddCanReplace = FALSE;
 	comm->propAddCanStoreFolders = FALSE;

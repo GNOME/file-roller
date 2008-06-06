@@ -291,6 +291,7 @@ fr_process_set_working_dir (FrProcess  *fr_proc,
 	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (fr_proc->current_comm >= 0);
 
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	if (c_info->dir != NULL)
@@ -306,6 +307,7 @@ fr_process_set_sticky (FrProcess *fr_proc,
 	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (fr_proc->current_comm >= 0);
 
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->sticky = sticky;
@@ -319,6 +321,7 @@ fr_process_set_ignore_error (FrProcess *fr_proc,
 	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (fr_proc->current_comm >= 0);
 
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->ignore_error = ignore_error;
@@ -332,6 +335,7 @@ fr_process_add_arg (FrProcess  *fr_proc,
 	FrCommandInfo *c_info;
 
 	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (fr_proc->current_comm >= 0);
 
 	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
 	c_info->args = g_list_prepend (c_info->args, g_strdup (arg));

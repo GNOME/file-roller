@@ -217,7 +217,6 @@ fr_command_cpio_class_init (FrCommandCpioClass *class)
 static void 
 fr_command_cpio_init (FrCommand *comm)
 {
-	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
 	comm->propAddCanStoreFolders       = FALSE;

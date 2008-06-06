@@ -250,7 +250,6 @@ fr_command_iso_init (FrCommand *comm)
 	comm_iso->cur_path = NULL;
 	comm_iso->joliet = TRUE;
 
-	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;

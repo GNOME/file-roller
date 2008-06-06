@@ -265,7 +265,6 @@ fr_command_ace_class_init (FrCommandAceClass *class)
 static void 
 fr_command_ace_init (FrCommand *comm)
 {
-	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
 	comm->propExtractCanAvoidOverwrite = FALSE;

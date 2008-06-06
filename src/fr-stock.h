@@ -27,7 +27,6 @@
 #define FR_STOCK_ADD_FILES  "add-files-to-archive"
 #define FR_STOCK_ADD_FOLDER "add-folder-to-archive"
 #define FR_STOCK_EXTRACT    "extract-archive"
-#define FR_STOCK_VIEW       "preview-file"
 
 void fr_stock_init (void);
 

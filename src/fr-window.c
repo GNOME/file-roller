@@ -287,6 +287,7 @@ struct _FrWindowPrivateData {
 					       * in the Extract dialog. */
 	gboolean         freeze_default_dir;
 	gboolean         asked_for_password;
+	gboolean         ask_to_open_destination_after_extraction;
 
 	FRBatchAction    current_batch_action;
 
@@ -1992,7 +1993,6 @@ check_clipboard_cb (gpointer data)
 	GtkClipboard *clipboard;
 	gboolean      running;
 	gboolean      no_archive;
-	gboolean      can_modify;
 	gboolean      ro;
 	gboolean      compr_file;
 	
@@ -2002,11 +2002,10 @@ check_clipboard_cb (gpointer data)
 	running    = window->priv->activity_ref > 0;
 	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
 	ro         = ! no_archive && window->archive->read_only;
-	can_modify = (window->archive != NULL) && (window->archive->command != NULL) && window->archive->command->propCanModify;
 	compr_file = ! no_archive && window->archive->is_compressed_file;
 	
 	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
-	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && can_modify && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT) && gtk_clipboard_wait_is_target_available (clipboard, FR_SPECIAL_URI_LIST));	
+	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT) && gtk_clipboard_wait_is_target_available (clipboard, FR_SPECIAL_URI_LIST));	
 	
 	return TRUE;
 }
@@ -2017,7 +2016,6 @@ fr_window_update_sensitivity (FrWindow *window)
 {
 	gboolean no_archive;
 	gboolean ro;
-	gboolean can_modify;
 	gboolean file_op;
 	gboolean running;
 	gboolean compr_file;
@@ -2032,7 +2030,6 @@ fr_window_update_sensitivity (FrWindow *window)
 	running           = window->priv->activity_ref > 0;
 	no_archive        = (window->archive == NULL) || ! window->priv->archive_present;
 	ro                = ! no_archive && window->archive->read_only;
-	can_modify        = (window->archive != NULL) && (window->archive->command != NULL) && window->archive->command->propCanModify;
 	file_op           = ! no_archive && ! window->priv->archive_new  && ! running;
 	compr_file        = ! no_archive && window->archive->is_compressed_file;
 	n_selected        = fr_window_get_n_selected_files (window);
@@ -2040,13 +2037,13 @@ fr_window_update_sensitivity (FrWindow *window)
 	one_file_selected = n_selected == 1;
 	dir_selected      = selection_has_a_dir (window);
 
-	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && ! compr_file && can_modify);
-	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
-	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && ! compr_file && can_modify && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
-	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->priv->archive_new && ! running && ! compr_file && can_modify);
+	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && ! compr_file);
+	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && ! compr_file);
+	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && ! compr_file);
+	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && ! compr_file);
+	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && ! compr_file && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
+	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && ! compr_file && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
+	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->priv->archive_new && ! running && ! compr_file);
 	set_sensitive (window, "DeselectAll", ! no_archive && sel_not_null);
 	set_sensitive (window, "Extract", file_op);
 	set_sensitive (window, "Extract_Toolbar", file_op);
@@ -2063,7 +2060,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "Properties", file_op);
 	set_sensitive (window, "Close", !running || window->priv->stoppable);
 	set_sensitive (window, "Reload", ! (no_archive || running));
-	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && ! compr_file && can_modify && one_file_selected);
+	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && ! compr_file && one_file_selected);
 	set_sensitive (window, "SaveAs", ! no_archive && ! compr_file && ! running);
 	set_sensitive (window, "SelectAll", ! no_archive);
 	set_sensitive (window, "Stop", running && window->priv->stoppable);
@@ -2595,6 +2592,8 @@ fr_window_progress_cb (FrCommand  *command,
 static void
 open_progress_dialog_with_open_destination (FrWindow *window)
 {
+	window->priv->ask_to_open_destination_after_extraction = FALSE;
+	
 	if (window->priv->hide_progress_timeout != 0) {
 		g_source_remove (window->priv->hide_progress_timeout);
 		window->priv->hide_progress_timeout = 0;
@@ -2687,7 +2686,7 @@ action_started (FrArchive *archive,
 	
 	switch (action) {
 	case FR_ACTION_EXTRACTING_FILES:
-		open_progress_dialog (window, TRUE);
+		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction);
 		break;
 	default:
 		open_progress_dialog (window, FALSE);
@@ -3112,8 +3111,12 @@ action_performed (FrArchive   *archive,
 				  window->priv->compression);
 			g_free (source_dir);
 		}
-		else 
-			open_progress_dialog_with_open_destination (window);
+		else {
+			if (window->priv->ask_to_open_destination_after_extraction)
+				open_progress_dialog_with_open_destination (window);
+			else
+				close_progress_dialog (window, FALSE);
+		}
 		/*
 		else if (window->priv->view_folder_after_extraction) {
 			if (window->priv->batch_mode) {
@@ -3908,9 +3911,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 	if (window->priv->archive_present
 	    && (window->archive != NULL)
 	    && ! window->archive->read_only
-	    && ! window->archive->is_compressed_file
-	    && ((window->archive->command != NULL)
-		&& window->archive->command->propCanModify)) 
+	    && ! window->archive->is_compressed_file) 
 	{
 		if (one_file && is_an_archive) {
 			GtkWidget *d;
@@ -6127,7 +6128,6 @@ fr_window_archive_reload (FrWindow *window)
 
 	if (window->priv->activity_ref > 0)
 		return;
-
 	if (window->priv->archive_new)
 		return;
 
@@ -6365,19 +6365,22 @@ fr_window_archive_extract_here (FrWindow   *window,
 				  junk_paths,
 				  password,
 				  TRUE);
-
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_EXTRACT,
 					    edata,
 					    (GFreeFunc) extract_data_free);
-					    	
+
+	window->priv->ask_to_open_destination_after_extraction = TRUE;
+			
 	fr_process_clear (window->archive->process);
 	if (fr_archive_extract_here (window->archive,
 			             edata->skip_older,
 			             edata->overwrite,
 			             edata->junk_paths,
 			             edata->password))
+	{
 		fr_process_start (window->archive->process);
+	}
 }
 
 
@@ -6473,8 +6476,9 @@ fr_window_archive_extract (FrWindow   *window,
 		return;
 	}
 
-	fr_process_clear (window->archive->process);
+	window->priv->ask_to_open_destination_after_extraction = TRUE;
 
+	fr_process_clear (window->archive->process);
 	fr_archive_extract (window->archive,
 			    edata->file_list,
 			    edata->extract_to_dir,
@@ -6482,8 +6486,7 @@ fr_window_archive_extract (FrWindow   *window,
 			    edata->skip_older,
 			    edata->overwrite,
 			    edata->junk_paths,
-			    edata->password);
-				    
+			    edata->password);				    
 	fr_process_start (window->archive->process);
 }
 
@@ -7787,6 +7790,9 @@ fr_window_update_files (FrWindow *window,
 	if (window->priv->activity_ref > 0)
 		return FALSE;
 
+	if (window->archive->read_only)
+		return FALSE;
+		
 	fr_process_clear (window->archive->process);
 	
 	for (scan = file_list; scan; scan = scan->next) {
@@ -7901,7 +7907,8 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         if (first_file == NULL)
                 return FALSE;
 	
-	monitor_extracted_files (odata);
+	if (! odata->window->archive->read_only)
+		monitor_extracted_files (odata);
 	
 	if (odata->ask_application) {
         	dlg_open_with (odata->window, file_list);

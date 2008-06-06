@@ -35,9 +35,6 @@
 #include "fr-command.h"
 #include "fr-command-cfile.h"
 
-static void fr_command_cfile_class_init  (FrCommandCFileClass *class);
-static void fr_command_cfile_init        (FrCommand           *afile);
-static void fr_command_cfile_finalize    (GObject             *object);
 
 /* Parent Class */
 
@@ -461,6 +458,18 @@ fr_command_cfile_set_mime_type (FrCommand  *comm,
 
 
 static void 
+fr_command_cfile_finalize (GObject *object)
+{
+        g_return_if_fail (object != NULL);
+        g_return_if_fail (FR_IS_COMMAND_CFILE (object));
+
+	/* Chain up */
+        if (G_OBJECT_CLASS (parent_class)->finalize)
+                G_OBJECT_CLASS (parent_class)->finalize (object);
+}
+
+
+static void 
 fr_command_cfile_class_init (FrCommandCFileClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -482,29 +491,13 @@ fr_command_cfile_class_init (FrCommandCFileClass *class)
 static void 
 fr_command_cfile_init (FrCommand *comm)
 {
-	comm->propAddCanUpdate             = FALSE;
-	comm->propAddCanReplace            = FALSE; 
+	comm->propAddCanUpdate             = TRUE;
+	comm->propAddCanReplace            = TRUE; 
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = FALSE;
 	comm->propPassword                 = FALSE;
 	comm->propTest                     = FALSE;
-}
-
-
-static void 
-fr_command_cfile_finalize (GObject *object)
-{
-	FrCommandCFile *comm_tar;
-
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_CFILE (object));
-
-	comm_tar = FR_COMMAND_CFILE (object);
-
-	 /* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-                G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 

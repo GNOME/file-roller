@@ -318,7 +318,6 @@ fr_command_ar_class_init (FrCommandArClass *class)
 static void 
 fr_command_ar_init (FrCommand *comm)
 {
-	comm->propCanModify                = TRUE;
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = FALSE;

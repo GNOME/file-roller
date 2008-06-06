@@ -64,10 +64,8 @@ open_with__destroy_cb (GtkWidget  *widget,
 {
 	g_object_unref (G_OBJECT (data->gui));
 
-	if (data->app_list != NULL) {
-		g_list_foreach (data->app_list, (GFunc) g_object_unref, NULL);
+	if (data->app_list != NULL) 
 		g_list_free (data->app_list);
-	}
 
 	if (data->file_list != NULL)
 		path_list_free (data->file_list);

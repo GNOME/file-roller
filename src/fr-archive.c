@@ -962,7 +962,8 @@ load_local_archive (FrArchive  *archive,
 	FrCommand  *tmp_command;
 	const char *mime_type;
 	
-	archive->read_only = ! check_permissions (uri, W_OK);
+	archive->have_permissions = check_permissions (uri, W_OK);
+	archive->read_only = ! archive->have_permissions;
 
 	tmp_command = archive->command;
 	
@@ -2111,7 +2112,7 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 		fr_archive_action_completed (archive,
 					     FR_ACTION_ADDING_FILES, 
 					     FR_PROC_ERROR_GENERIC, 
-					     _("You don't have the right permissions."));
+					     ! archive->have_permissions ? _("You don't have the right permissions.") : _("This archive type cannot be modified"));
 		return;
 	}
 

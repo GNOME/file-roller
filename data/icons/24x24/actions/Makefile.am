@@ -7,8 +7,7 @@ iconsdir = $(themedir)/$(size)/$(context)
 icons_DATA = \
 	add-files-to-archive.png	\
 	add-folder-to-archive.png	\
-	extract-archive.png		\
-	preview-file.png
+	extract-archive.png
 
 noinst_DATA = 
 

@@ -51,11 +51,19 @@ struct _FrArchive {
 	FrProcess   *process;
 	FrProcError  error;
 	gboolean     can_create_compressed_file;
-	gboolean     is_compressed_file;         /* Whether the file is an 
-						  * archive or a compressed 
-						  * file. */
+	gboolean     is_compressed_file;         /* Whether the file is not an
+						  * archive that can contain
+						  * many files but simply a 
+						  * compressed file, for 
+						  * example foo.txt.gz is a 
+						  * compressed file, foo.zip 
+						  * is not. */
 	gboolean     read_only;                  /* Whether archive is 
-						  * read-only or not. */
+						  * read-only for whatever 
+						  * reason. */
+	gboolean     have_permissions;           /* true if we have the 
+						  * permissions to write the
+						  * file. */
 
 	FrArchivePrivData *priv;
 };

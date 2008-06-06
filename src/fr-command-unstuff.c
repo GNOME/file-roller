@@ -301,7 +301,6 @@ fr_command_unstuff_class_init (FrCommandUnstuffClass *class)
 static void
 fr_command_unstuff_init (FrCommand *comm)
 {
-	comm->propCanModify                = FALSE;
 	comm->propAddCanUpdate             = FALSE;
 	comm->propAddCanReplace            = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
