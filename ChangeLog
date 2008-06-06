@@ -1,5 +1,17 @@
 2008-06-06  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* TODO: updated
+	
+	* configure.in: bumped version number to differentiate 
+	current development version from the latest released version.
+	
+	* src/fr-window.c (open_progress_dialog): 
+	
+	Return as soon as possible if the dialog is already shown.  
+	Don't show the progress bar if open_now is true.
+
+2008-06-06  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c: 
 	
 	added a ask_to_open_destination_after_extraction flag to open the

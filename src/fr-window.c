@@ -2552,10 +2552,11 @@ open_progress_dialog (FrWindow *window,
 		window->priv->progress_timeout = 0;
 	}
 
-	if (window->priv->progress_timeout != 0) 
+	if ((window->priv->progress_timeout != 0) 
+	    || ((window->priv->progress_dialog != NULL) && GTK_WIDGET_VISIBLE (window->priv->progress_dialog))) 
 		return;
 
-	if (! window->priv->batch_mode) 
+	if (! window->priv->batch_mode && ! open_now) 
 		gtk_widget_show (window->priv->progress_bar);
 
 	create_the_progress_dialog (window);
@@ -2686,7 +2687,7 @@ action_started (FrArchive *archive,
 	
 	switch (action) {
 	case FR_ACTION_EXTRACTING_FILES:
-		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction);
+		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction || window->priv->convert_data.converting);
 		break;
 	default:
 		open_progress_dialog (window, FALSE);
