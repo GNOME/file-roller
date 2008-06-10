@@ -111,6 +111,7 @@ base_fr_command_add (FrCommand     *comm,
 		     GList         *file_list,
 		     const char    *base_dir,
 		     gboolean       update,
+		     gboolean       recursive,
 		     const char    *password,
 		     FrCompression  compression)
 {
@@ -153,14 +154,6 @@ static void
 base_fr_command_recompress (FrCommand     *comm,
 			    FrCompression  compression)
 {
-}
-
-
-char *
-base_fr_command_escape (FrCommand     *comm,
-			const char    *str)
-{
-	return shell_escape (str);
 }
 
 
@@ -319,7 +312,6 @@ fr_command_class_init (FrCommandClass *class)
 	class->test           = base_fr_command_test;
 	class->uncompress     = base_fr_command_uncompress;
 	class->recompress     = base_fr_command_recompress;
-	class->escape         = base_fr_command_escape;
 	class->handle_error   = base_fr_command_handle_error;
 	class->set_mime_type  = base_fr_command_set_mime_type;
 	class->start          = NULL;
@@ -472,7 +464,7 @@ fr_command_set_filename (FrCommand  *comm,
 	else
 		comm->filename = g_strdup (filename);
 
-	comm->e_filename = shell_escape (comm->filename);
+	comm->e_filename = g_shell_quote (comm->filename);
 
 	debug (DEBUG_INFO, "filename : %s\n", comm->filename);
 	debug (DEBUG_INFO, "e_filename : %s\n", comm->e_filename);
@@ -506,6 +498,7 @@ fr_command_add (FrCommand     *comm,
 		GList         *file_list,
 		const char    *base_dir,
 		gboolean       update,
+		gboolean       recursive,
 		const char    *password,
 		FrCompression  compression)
 {
@@ -519,6 +512,7 @@ fr_command_add (FrCommand     *comm,
 						     file_list,
 						     base_dir,
 						     update,
+						     recursive,
 						     password,
 						     compression);
 }
@@ -591,14 +585,6 @@ fr_command_recompress (FrCommand     *comm,
 {
 	fr_command_progress (comm, -1.0);	
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
-}
-
-
-char *
-fr_command_escape (FrCommand  *comm,
-		   const char *str)
-{
-	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->escape (comm, str);
 }
 
 

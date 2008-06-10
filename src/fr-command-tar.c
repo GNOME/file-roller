@@ -246,7 +246,7 @@ fr_command_tar_list (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "--force-local");
 	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-tvf");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	add_compress_arg (comm);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
@@ -291,6 +291,7 @@ fr_command_tar_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
+		    gboolean       recursive,
 		    const char    *password,
 		    FrCompression  compression)
 {
@@ -303,16 +304,15 @@ fr_command_tar_add (FrCommand     *comm,
 
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
-	fr_process_add_arg (comm->process, "--no-recursion");
+	if (! recursive)
+		fr_process_add_arg (comm->process, "--no-recursion");
 	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-p");
 		
 	if (base_dir != NULL) {
-		char *e_base_dir = shell_escape (base_dir);
 		fr_process_add_arg (comm->process, "-C");
-		fr_process_add_arg (comm->process, e_base_dir);
-		g_free (e_base_dir);
+		fr_process_add_arg (comm->process, base_dir);
 	}
 
 	fr_process_add_arg (comm->process, "-rf");
@@ -404,14 +404,12 @@ fr_command_tar_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, "--keep-newer-files");
 		
 	fr_process_add_arg (comm->process, "-xf");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	add_compress_arg (comm);
 
 	if (dest_dir != NULL) {
-		char *e_dest_dir = shell_escape (dest_dir);
 		fr_process_add_arg (comm->process, "-C");
-		fr_process_add_arg (comm->process, e_dest_dir);
-		g_free (e_dest_dir);
+		fr_process_add_arg (comm->process, dest_dir);
 	}
 	
 	fr_process_add_arg (comm->process, "--");
@@ -531,7 +529,6 @@ fr_command_tar_recompress (FrCommand     *comm,
 	}
 	else if (is_mime_type (comm->mime_type, "application/x-7z-compressed-tar")) {
 		FrCommandTar *comm_tar = (FrCommandTar*) comm;
-		char         *e_name;
 		
 		fr_process_begin_command (comm->process, comm_tar->compress_command);
 		fr_process_set_sticky (comm->process, TRUE);
@@ -552,9 +549,7 @@ fr_command_tar_recompress (FrCommand     *comm,
 		fr_process_add_arg (comm->process, "-l");
 		
 		new_name = g_strconcat (c_tar->uncomp_filename, ".7z", NULL);
-		e_name = shell_escape (new_name);
-		fr_process_add_arg (comm->process, e_name);
-		g_free (e_name);
+		fr_process_add_arg_concat (comm->process, new_name);
 		
 		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 		fr_process_end_command (comm->process);
@@ -563,9 +558,7 @@ fr_command_tar_recompress (FrCommand     *comm,
 		
 		fr_process_begin_command (comm->process, "rm");
 		fr_process_add_arg (comm->process, "-f");
-		e_name = shell_escape (c_tar->uncomp_filename);
-		fr_process_add_arg (comm->process, e_name);
-		g_free (e_name);
+		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 		fr_process_end_command (comm->process);
 	}
 
@@ -578,7 +571,7 @@ fr_command_tar_recompress (FrCommand     *comm,
 		fr_process_set_sticky (comm->process, TRUE);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, new_name);
-		fr_process_add_arg (comm->process, comm->e_filename);
+		fr_process_add_arg (comm->process, comm->filename);
 		fr_process_end_command (comm->process);
 		
 		tmp_dir = remove_level_from_path (new_name);
@@ -681,16 +674,13 @@ get_temp_name (FrCommandTar *c_tar,
 	char *template;	
 	char *result = NULL;
 	char *temp_name = NULL;
-	char *e_temp_name = NULL;
 
 	template = g_strconcat (dirname, "/.fr-XXXXXX", NULL);
 	result = mkdtemp (template);
 	temp_name = g_build_filename (result, file_name_from_path (filepath), NULL);
-	e_temp_name = shell_escape (temp_name);
-	g_free (temp_name);
 	g_free (template);
 
-	return e_temp_name;
+	return temp_name;
 }
 
 
@@ -718,13 +708,13 @@ fr_command_tar_uncompress (FrCommand *comm)
 		if (archive_exists) {
 			fr_process_begin_command (comm->process, "mv");
 			fr_process_add_arg (comm->process, "-f");
-			fr_process_add_arg (comm->process, comm->e_filename);
+			fr_process_add_arg (comm->process, comm->filename);
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
 		}
 	} 
 	else
-		tmp_name = g_strdup (comm->e_filename);
+		tmp_name = g_strdup (comm->filename);
 
 	if (archive_exists) {
 		if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) { 
@@ -788,22 +778,6 @@ fr_command_tar_uncompress (FrCommand *comm)
 
 	c_tar->uncomp_filename = get_uncompressed_name (c_tar, tmp_name);
 	g_free (tmp_name);
-}
-
-
-static char *
-fr_command_tar_escape (FrCommand     *comm,
-		       const char    *str)
-{
-	char *estr;
-	char *estr2;
-
-        estr = escape_str (str, "\\");
-        estr2 = escape_str (estr, "\\$?*'`& !|()@#:;<>");
-
-	g_free (estr);
-
-	return estr2;
 }
 
 
@@ -893,8 +867,6 @@ fr_command_tar_class_init (FrCommandTarClass *class)
 
 	afc->recompress     = fr_command_tar_recompress;
 	afc->uncompress     = fr_command_tar_uncompress;
-
-	afc->escape         = fr_command_tar_escape;
 }
 
 

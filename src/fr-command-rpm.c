@@ -159,8 +159,10 @@ fr_command_rpm_list (FrCommand  *comm,
 				      list__process_line,
 				      comm);
 
-	fr_process_begin_command (comm->process, "rpm2cpio");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_begin_command (comm->process, "sh");
+	fr_process_add_arg (comm->process, "-c");
+	fr_process_add_arg (comm->process, "rpm2cpio");
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_add_arg (comm->process, "| cpio -itv");
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
@@ -178,14 +180,17 @@ fr_command_rpm_extract (FrCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_begin_command (comm->process, "rpm2cpio");
+	fr_process_begin_command (comm->process, "sh");
+	fr_process_add_arg (comm->process, "-c");
+	fr_process_add_arg (comm->process, "rpm2cpio");
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_add_arg (comm->process, "| cpio -idu");
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = (char*) scan->data;
+		char *filename = g_shell_quote (scan->data); 
 		fr_process_add_arg (comm->process, filename);
+		g_free (filename);
 	}
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);

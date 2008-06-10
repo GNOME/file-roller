@@ -197,7 +197,7 @@ fr_command_ar_list (FrCommand  *comm,
 
 	fr_process_begin_command (comm->process, "ar");
 	fr_process_add_arg (comm->process, "tv");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -208,6 +208,7 @@ fr_command_ar_add (FrCommand     *comm,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
+		   gboolean       recursive,
 		   const char    *password,
 		   FrCompression  compression)
 {
@@ -223,10 +224,10 @@ fr_command_ar_add (FrCommand     *comm,
 	if (base_dir != NULL) 
 		fr_process_set_working_dir (comm->process, base_dir);
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next) 
-		fr_process_add_arg (comm->process, (gchar*) scan->data);
+		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
 }
@@ -240,9 +241,7 @@ fr_command_ar_delete (FrCommand *comm,
 
 	fr_process_begin_command (comm->process, "ar");
 	fr_process_add_arg (comm->process, "d");
-
-	fr_process_add_arg (comm->process, comm->e_filename);
-
+	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
@@ -266,11 +265,9 @@ fr_command_ar_extract (FrCommand  *comm,
 		fr_process_set_working_dir (comm->process, dest_dir);
 
 	fr_process_add_arg (comm->process, "x");
-	fr_process_add_arg (comm->process, comm->e_filename);
-
+	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
-
 	fr_process_end_command (comm->process);
 }
 

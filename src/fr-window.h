@@ -129,7 +129,6 @@ void        fr_window_archive_add_with_wildcard (FrWindow      *window,
 						 const char    *base_dir,
 						 const char    *dest_dir,
 						 gboolean       update,
-						 gboolean       recursive,
 						 gboolean       follow_links);
 void        fr_window_archive_add_directory     (FrWindow      *window,
 						 const char    *directory,

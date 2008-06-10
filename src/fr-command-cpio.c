@@ -153,7 +153,9 @@ fr_command_cpio_list (FrCommand  *comm,
 				      list__process_line,
 				      comm);
 
-	fr_process_begin_command (comm->process, "cpio -itv <");
+	fr_process_begin_command (comm->process, "sh");
+	fr_process_add_arg (comm->process, "-c");
+	fr_process_add_arg (comm->process, "cpio -itv <");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
@@ -171,13 +173,13 @@ fr_command_cpio_extract (FrCommand  *comm,
 {
 	GList *scan;
 
-	fr_process_begin_command (comm->process, "cpio -idu");
+	fr_process_begin_command (comm->process, "sh");
+	fr_process_add_arg (comm->process, "-c");
+	fr_process_add_arg (comm->process, "cpio -idu");
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);
-	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = (char*) scan->data;
-		fr_process_add_arg (comm->process, filename);
-	}
+	for (scan = file_list; scan; scan = scan->next) 
+		fr_process_add_arg (comm->process, scan->data);
         fr_process_add_arg (comm->process, "<");
 	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_end_command (comm->process);

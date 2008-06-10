@@ -171,7 +171,7 @@ fr_command_arj_list (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -182,6 +182,7 @@ fr_command_arj_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
+		    gboolean       recursive,
 		    const char    *password,
 		    FrCompression  compression)
 {
@@ -197,11 +198,8 @@ fr_command_arj_add (FrCommand     *comm,
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (password != NULL) {
-		char *swtch = g_strconcat ("-g/", password, NULL);
-		fr_process_add_arg (comm->process, swtch);
-		g_free (swtch);
-	}
+	if (password != NULL) 
+		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
 
 	switch (compression) {
 	case FR_COMPRESSION_VERY_FAST:
@@ -218,7 +216,7 @@ fr_command_arj_add (FrCommand     *comm,
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-");
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, (gchar*) scan->data);
@@ -240,7 +238,7 @@ fr_command_arj_delete (FrCommand *comm,
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-");
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
@@ -266,13 +264,8 @@ fr_command_arj_extract (FrCommand  *comm,
 	else
 		fr_process_add_arg (comm->process, "x");
 
-	if (dest_dir != NULL) {
-		char *e_dest_dir = fr_command_escape (comm, dest_dir);
-		char *swtch = g_strconcat ("-ht/", e_dest_dir, NULL);
-		fr_process_add_arg (comm->process, swtch);
-		g_free (swtch);
-		g_free (e_dest_dir);
-	}
+	if (dest_dir != NULL) 
+		fr_process_add_arg_concat (comm->process, "-ht/", dest_dir, NULL);
 
 	if (! overwrite)
 		fr_process_add_arg (comm->process, "-n");
@@ -280,18 +273,16 @@ fr_command_arj_extract (FrCommand  *comm,
 	if (skip_older)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (password != NULL) {
-		char *swtch = g_strconcat ("-g/", password, NULL);
-		fr_process_add_arg (comm->process, swtch);
-		g_free (swtch);
-	} else
+	if (password != NULL) 
+		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
+	else
  		fr_process_add_arg (comm->process, "-g/");
 
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-");
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
@@ -306,15 +297,12 @@ fr_command_arj_test (FrCommand   *comm,
 {
 	fr_process_begin_command (comm->process, "arj");
 	fr_process_add_arg (comm->process, "t");
-	if (password != NULL) {
-		char *swtch = g_strconcat ("-g/", password, NULL);
-		fr_process_add_arg (comm->process, swtch);
-		g_free (swtch);
-	}
+	if (password != NULL) 
+		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 }
 

@@ -343,6 +343,27 @@ fr_process_add_arg (FrProcess  *fr_proc,
 
 
 void
+fr_process_add_arg_concat (FrProcess  *fr_proc, 
+			   const char *arg1,
+			   ...)
+{
+	GString *arg;
+	va_list  args;
+	char    *s;
+
+	arg = g_string_new ("");
+
+	va_start (args, arg1);
+	while ((s = va_arg (args, char*)) != NULL)
+		g_string_append (arg, s);
+	va_end (args);
+	
+	fr_process_add_arg (fr_proc, arg->str);
+	g_string_free (arg, TRUE);
+}
+
+
+void
 fr_process_set_arg_at (FrProcess  *fr_proc,
 		       int         n_comm,
 		       int         n_arg,
@@ -586,7 +607,6 @@ start_current_command (FrProcess *fr_proc)
 {
 	FrCommandInfo  *c_info;
 	GList          *arg_list, *scan;
-	GString        *command;
 	char           *dir;
 	char          **argv;
 	int             i = 0;
@@ -601,8 +621,12 @@ start_current_command (FrProcess *fr_proc)
 	if (dir != NULL)
 		debug (DEBUG_INFO, "cd %s\n", dir);
 
-	command = NULL;
-
+	argv = g_new (char *, g_list_length (arg_list) + 1);
+	for (scan = arg_list; scan; scan = scan->next) 
+		argv[i++] = scan->data;
+	argv[i] = NULL;
+	
+/*
 	argv = g_new (char *, 4);
 	argv[i++] = "/bin/sh";
 	argv[i++] = "-c";
@@ -617,12 +641,13 @@ start_current_command (FrProcess *fr_proc)
 
 	argv[i++] = command->str;
 	argv[i] = NULL;
+*/
 
 #ifdef DEBUG
 	{
 		int j;
 
-		g_print ("/bin/sh ");
+		/*g_print ("/bin/sh ");*/
 		for (j = 0; j < i; j++)
 			g_print ("%s ", argv[j]);
 		g_print ("\n");
@@ -650,15 +675,11 @@ start_current_command (FrProcess *fr_proc)
 		g_signal_emit (G_OBJECT (fr_proc),
 			       fr_process_signals[DONE],
 			       0);
-
 		g_free (argv);
-		g_string_free (command, TRUE);
-
 		return;
 	}
 
 	g_free (argv);
-	g_string_free (command, TRUE);
 
 	fcntl (fr_proc->output_fd, F_SETFL, O_NONBLOCK);
 	fcntl (fr_proc->error_fd, F_SETFL, O_NONBLOCK);

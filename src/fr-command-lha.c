@@ -219,7 +219,7 @@ fr_command_lha_list (FrCommand  *comm,
 
 	fr_process_begin_command (comm->process, "lha");
 	fr_process_add_arg (comm->process, "lq");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -230,6 +230,7 @@ fr_command_lha_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
+		    gboolean       recursive,
 		    const char    *password,
 		    FrCompression  compression)
 {
@@ -242,9 +243,9 @@ fr_command_lha_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, "u");
 	else
 		fr_process_add_arg (comm->process, "a");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next) 
-		fr_process_add_arg (comm->process, (gchar*) scan->data);
+		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
 }
 
@@ -257,8 +258,7 @@ fr_command_lha_delete (FrCommand *comm,
 
 	fr_process_begin_command (comm->process, "lha");
 	fr_process_add_arg (comm->process, "d");
-	fr_process_add_arg (comm->process, comm->e_filename);
-
+	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
@@ -295,7 +295,7 @@ fr_command_lha_extract (FrCommand  *comm,
 	
 	options[i++] = 0;
 	fr_process_add_arg (comm->process, options);
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);

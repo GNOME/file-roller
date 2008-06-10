@@ -217,7 +217,7 @@ fr_command_7z_list (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 	add_password_arg (comm, password, FALSE);
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -228,6 +228,7 @@ fr_command_7z_add (FrCommand     *comm,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
+		   gboolean       recursive,
 		   const char    *password,
 		   FrCompression  compression)
 {
@@ -236,11 +237,8 @@ fr_command_7z_add (FrCommand     *comm,
 	fr_command_7z_begin_command (comm);
 
 	if (base_dir != NULL) {
-		char *working_dir;
 		fr_process_set_working_dir (comm->process, base_dir);
-		working_dir = g_strconcat ("-w", base_dir, NULL);
-		fr_process_add_arg (comm->process, working_dir);
-		g_free (working_dir);
+		fr_process_add_arg_concat (comm->process, "-w", base_dir, NULL);
 	}
 
 	if (update)
@@ -264,7 +262,7 @@ fr_command_7z_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, "-mx=7"); break;
 	}
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = scan->data;
@@ -286,12 +284,10 @@ fr_command_7z_delete (FrCommand *comm,
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = scan->data;
-		fr_process_add_arg (comm->process, filename);
-	}
+	for (scan = file_list; scan; scan = scan->next) 
+		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
 }
@@ -319,20 +315,13 @@ fr_command_7z_extract (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-y");
 	add_password_arg (comm, password, FALSE);
 	
-	if (dest_dir != NULL) {
-		char *e_dest_dir = fr_command_escape (comm, dest_dir);
-		char *opt = g_strconcat ("-o", e_dest_dir, NULL);
-		fr_process_add_arg (comm->process, opt);
-		g_free (opt);
-		g_free (e_dest_dir);
-	}
+	if (dest_dir != NULL) 
+		fr_process_add_arg_concat (comm->process, "-o", dest_dir, NULL);
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = scan->data;
-		fr_process_add_arg (comm->process, filename);
-	}
+	for (scan = file_list; scan; scan = scan->next) 
+		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
 }
@@ -347,7 +336,7 @@ fr_command_7z_test (FrCommand   *comm,
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 	add_password_arg (comm, password, FALSE);
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 }
 

@@ -114,6 +114,7 @@ struct _FrCommandClass
 				       GList         *file_list,
 				       const char    *base_dir,
 				       gboolean       update,
+				       gboolean       recursive,
 				       const char    *password,
 				       FrCompression  compression); 
 	void        (*delete)         (FrCommand     *comm,
@@ -132,8 +133,6 @@ struct _FrCommandClass
 				       FrCompression  compression);
 	void        (*handle_error)   (FrCommand     *comm,
 				       FrProcError   *error);
-	char *      (*escape)         (FrCommand     *comm,
-				       const char    *str);
 
 	/*<protected virtual functions>*/
 	
@@ -162,6 +161,7 @@ void           fr_command_add                (FrCommand     *comm,
 					      GList         *file_list,
 					      const char    *base_dir,
 					      gboolean       update,
+					      gboolean       recursive,
 					      const char    *password,
 					      FrCompression  compression); 
 void           fr_command_delete             (FrCommand     *comm,
@@ -178,8 +178,6 @@ void           fr_command_test               (FrCommand     *comm,
 void           fr_command_uncompress         (FrCommand     *comm);
 void           fr_command_recompress         (FrCommand     *comm,
 					      FrCompression  compression);
-char *         fr_command_escape             (FrCommand     *comm,
-					      const char    *str);
 gboolean       fr_command_is_capable_of      (FrCommand     *comm, 
 					      FrCommandCaps  capabilities);
 

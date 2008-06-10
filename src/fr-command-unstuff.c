@@ -204,7 +204,7 @@ fr_command_unstuff_list (FrCommand  *comm,
 	fr_process_add_arg (comm->process, arg);
 	g_free (arg);
 
-	filename = unstuff_is_shit_with_filenames (comm->e_filename);
+	filename = unstuff_is_shit_with_filenames (comm->filename);
 	fr_process_add_arg (comm->process, filename);
 	g_free (filename);
 	fr_process_end_command (comm->process);
@@ -229,20 +229,21 @@ fr_command_unstuff_extract (FrCommand  *comm,
 	fr_process_begin_command (comm->process, "unstuff");
 
 	if (dest_dir != NULL) {
-		char *e_dest_dir = fr_command_escape (comm, dest_dir);
-		char *e_dest_dir_dots = unstuff_is_shit_with_filenames (e_dest_dir);
-		char *arg = g_strdup_printf ("-d=%s", e_dest_dir_dots);
+		char *dest_dir_dots;
+		char *arg;
+		
+		dest_dir_dots = unstuff_is_shit_with_filenames (dest_dir);
+		arg = g_strdup_printf ("-d=%s", dest_dir_dots);
 		fr_process_add_arg (comm->process, arg);
 		FR_COMMAND_UNSTUFF (comm)->target_dir = NULL;
 		g_free (arg);
-		g_free (e_dest_dir);
-		g_free (e_dest_dir_dots);
+		g_free (dest_dir_dots);
 	}
 
 	fr_process_add_arg (comm->process, "--trace");
 
 	/* unstuff doesn't like file paths starting with /, that's so shite */
-	filename = unstuff_is_shit_with_filenames (comm->e_filename);
+	filename = unstuff_is_shit_with_filenames (comm->filename);
 	fr_process_add_arg (comm->process, filename);
 	g_free (filename);
 

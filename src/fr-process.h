@@ -139,6 +139,9 @@ void        fr_process_begin_command_at     (FrProcess    *fr_proc,
 					     int           index);
 void        fr_process_add_arg              (FrProcess    *fr_proc, 
 					     const char   *arg);
+void        fr_process_add_arg_concat       (FrProcess    *fr_proc, 
+					     const char   *arg,
+					     ...);
 void        fr_process_set_arg_at           (FrProcess    *fr_proc, 
 					     int           n_comm,
 					     int           n_arg,

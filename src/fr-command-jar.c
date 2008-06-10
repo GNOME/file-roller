@@ -53,6 +53,7 @@ fr_command_jar_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
+		    gboolean       recursive,
 		    const char    *password,
 		    FrCompression  compression)
 {
@@ -118,10 +119,10 @@ fr_command_jar_add (FrCommand     *comm,
 	}
 
 	if (zip_list != NULL) 
-		parent_class->add (comm, zip_list, base_dir, update, password, compression);
+		parent_class->add (comm, zip_list, base_dir, update, FALSE, password, compression);
 	
 	if (jar_list != NULL) 
-		parent_class->add (comm, jar_list, tmp_dir, update, password, compression);
+		parent_class->add (comm, jar_list, tmp_dir, update, FALSE, password, compression);
 
 	fr_process_begin_command (proc, "rm");
 	fr_process_set_working_dir (proc, "/");

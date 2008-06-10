@@ -175,7 +175,7 @@ fr_command_ace_list (FrCommand  *comm,
 	fr_process_begin_command (comm->process, "unace");
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-y");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -202,7 +202,7 @@ fr_command_ace_extract (FrCommand   *comm,
 	else
 		fr_process_add_arg (comm->process, "x");
 	fr_process_add_arg (comm->process, "-y");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
@@ -218,7 +218,7 @@ fr_command_ace_test (FrCommand   *comm,
         fr_process_begin_command (comm->process, "unace");
         fr_process_add_arg (comm->process, "t");
 	fr_process_add_arg (comm->process, "-y");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
         fr_process_end_command (comm->process);
 }
 

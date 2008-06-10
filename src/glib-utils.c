@@ -632,3 +632,16 @@ get_static_string (const char *s)
 
         return result;
 }
+
+
+char*
+g_uri_display_basename (const char  *uri)
+{
+	char *e_name, *name;
+	
+	e_name = g_filename_display_basename (uri);
+	name = g_uri_unescape_string (e_name, "");
+	g_free (e_name);
+	
+	return name;
+}

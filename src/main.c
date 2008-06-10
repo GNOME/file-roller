@@ -384,8 +384,8 @@ migrate_dir_from_to (const char *from_dir,
 		char *e1;
 		char *e2;
 
-		e1 = shell_escape (from_path);
-		e2 = shell_escape (to_path);
+		e1 = g_shell_quote (from_path);
+		e2 = g_shell_quote (to_path);
 		line = g_strdup_printf ("mv -f %s %s", e1, e2);
 		g_free (e1);
 		g_free (e2);
@@ -414,8 +414,8 @@ migrate_file_from_to (const char *from_file,
 		char *e1;
 		char *e2;
 
-		e1 = shell_escape (from_path);
-		e2 = shell_escape (to_path);
+		e1 = g_shell_quote (from_path);
+		e2 = g_shell_quote (to_path);
 		line = g_strdup_printf ("mv -f %s %s", e1, e2);
 		g_free (e1);
 		g_free (e2);

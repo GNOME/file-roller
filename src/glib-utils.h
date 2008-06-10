@@ -66,6 +66,7 @@ void                g_ptr_array_free_full        (GPtrArray   *array,
                        				  gpointer     user_data);
 void                g_ptr_array_reverse          (GPtrArray   *array);
 const char *        get_static_string            (const char  *s);
+char*               g_uri_display_basename       (const char  *uri);
 
 /**/
 

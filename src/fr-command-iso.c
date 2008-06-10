@@ -132,7 +132,6 @@ fr_command_iso_list (FrCommand  *comm,
 		     const char *password)
 {
 	FrCommandIso *comm_iso = FR_COMMAND_ISO (comm);
-	char         *e_filename;
 
 	g_free (comm_iso->cur_path);
 	comm_iso->cur_path = NULL;
@@ -141,15 +140,13 @@ fr_command_iso_list (FrCommand  *comm,
 				      list__process_line,
 				      comm);
 
-	e_filename = g_shell_quote (comm->filename);
-
-	fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
+	fr_process_begin_command (comm->process, "sh");
+	fr_process_add_arg (comm->process, "-c");
+	fr_process_add_arg (comm->process, PRIVEXECDIR "isoinfo.sh");
 	fr_process_add_arg (comm->process, "-i");
-	fr_process_add_arg (comm->process, e_filename);
+	fr_process_add_arg (comm->process, comm->e_filename);
 	fr_process_add_arg (comm->process, "-l");
 	fr_process_end_command (comm->process);
-
-	g_free (e_filename);
 
 	fr_process_start (comm->process);
 }
@@ -164,50 +161,46 @@ fr_command_iso_extract (FrCommand  *comm,
 			gboolean    junk_paths,
 			const char *password)
 {
-	char  *e_dest_dir;
-	char  *e_archive_filename;
 	GList *scan;
-
-	e_dest_dir = fr_command_escape (comm, dest_dir);
-	e_archive_filename = g_shell_quote (comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char       *path = scan->data;
 		const char *filename;
+		char       *e_name;
 		char       *file_dir;
-		char       *e_temp_dest_dir = NULL;
 		char       *temp_dest_dir = NULL;
 
 		filename = file_name_from_path (path);
 		file_dir = remove_level_from_path (path);
 		if ((file_dir != NULL) && (strcmp (file_dir, "/") != 0))
-			e_temp_dest_dir = g_build_filename (e_dest_dir, file_dir, NULL);
+			temp_dest_dir = g_build_filename (dest_dir, file_dir, NULL);
 		 else
-			e_temp_dest_dir = g_strdup (e_dest_dir);
+			temp_dest_dir = g_strdup (dest_dir);
 		g_free (file_dir);
 
-		if (e_temp_dest_dir == NULL)
+		if (temp_dest_dir == NULL)
 			continue;
 
-		temp_dest_dir = unescape_str (e_temp_dest_dir);
 		make_directory_tree_from_path (temp_dest_dir, 0700, NULL);
 
-		fr_process_begin_command (comm->process, "sh " PRIVEXECDIR "isoinfo.sh");
+		fr_process_begin_command (comm->process, "sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
+		fr_process_add_arg (comm->process, "-c");
+		fr_process_add_arg (comm->process, PRIVEXECDIR "isoinfo.sh");
 		fr_process_add_arg (comm->process, "-i");
-		fr_process_add_arg (comm->process, e_archive_filename);
+		fr_process_add_arg (comm->process, comm->e_filename);
 		fr_process_add_arg (comm->process, "-x");
 		fr_process_add_arg (comm->process, path);
 		fr_process_add_arg (comm->process, ">");
-		fr_process_add_arg (comm->process, filename);
+		
+		e_name = g_shell_quote (filename);
+		fr_process_add_arg (comm->process, e_name);
+		g_free (e_name);
+		
 		fr_process_end_command (comm->process);
 
-		g_free (e_temp_dest_dir);
 		g_free (temp_dest_dir);
 	}
-
-	g_free (e_dest_dir);
-	g_free (e_archive_filename);
 
 	fr_process_start (comm->process);
 }

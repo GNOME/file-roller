@@ -229,7 +229,7 @@ fr_command_zoo_list (FrCommand  *zoo_comm,
 
 	fr_process_begin_command (zoo_comm->process, "zoo");
 	fr_process_add_arg (zoo_comm->process, "lq");
-	fr_process_add_arg (zoo_comm->process, zoo_comm->e_filename);
+	fr_process_add_arg (zoo_comm->process, zoo_comm->filename);
 	fr_process_end_command (zoo_comm->process);
 	fr_process_start (zoo_comm->process);
 }
@@ -240,6 +240,7 @@ fr_command_zoo_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
+		    gboolean       recursive,
 		    const char    *password,
 		    FrCompression  compression)
 {
@@ -256,7 +257,7 @@ fr_command_zoo_add (FrCommand     *comm,
 	else
 		fr_process_add_arg (comm->process, "aP");
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
@@ -274,7 +275,7 @@ fr_command_zoo_delete (FrCommand *comm,
 
 	fr_process_begin_command (comm->process, "zoo");
 	fr_process_add_arg (comm->process, "DP");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
@@ -300,7 +301,7 @@ fr_command_zoo_extract (FrCommand  *comm,
 	else
 		fr_process_add_arg (comm->process, "x");
 
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 
 	if (dest_dir != NULL)
 		fr_process_set_working_dir (comm->process, dest_dir);
@@ -318,7 +319,7 @@ fr_command_zoo_test (FrCommand   *comm,
 {
 	fr_process_begin_command (comm->process, "zoo");
 	fr_process_add_arg (comm->process, "-test");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 }
 

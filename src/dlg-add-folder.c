@@ -181,7 +181,6 @@ file_sel_response_cb (GtkWidget    *widget,
 						     folder,
 						     dest_dir,
 						     update,
-						     recursive,
 						     follow_links);
 
 		g_free (dest_dir);
