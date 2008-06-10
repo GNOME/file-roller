@@ -1,3 +1,13 @@
+2008-06-10  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/main.c (initialize_data): 
+	* src/fr-process.c (_fr_process_stop): 
+
+	stop the process calling 'kill' on all the processes in the group, and 
+	capture the SIGTERM signal to not terminate the main process.
+	
+	Fixes bug #520844 – File roller not cancelling compression
+
 2008-06-06  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* TODO: updated
