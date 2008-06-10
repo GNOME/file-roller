@@ -306,17 +306,8 @@ main (int argc, char **argv)
 
 
 static void
-sig_int (int signo)
-{
-	signal (SIGTERM, sig_int);
-}
-
-
-static void
 initialize_data (void)
 {
-	signal (SIGTERM, sig_int);
-	
 	eel_gconf_monitor_add ("/apps/file-roller");
 	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
 

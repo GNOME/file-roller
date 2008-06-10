@@ -895,7 +895,7 @@ _fr_process_stop (FrProcess *fr_proc,
 		allow_sticky_processes_only (fr_proc, emit_signal);
 
 	else if (fr_proc->term_on_stop)
-		kill (0/*fr_proc->command_pid*/, SIGTERM);
+		kill (fr_proc->command_pid, SIGTERM);
 
 	else {
 		if (fr_proc->log_timeout != 0) {
