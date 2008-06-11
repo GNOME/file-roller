@@ -159,32 +159,6 @@ escape_str (const char *str,
 }
 
 
-/* remove backslashes from a string. */
-char*
-unescape_str (const char  *str)
-{
-	char       *new_str;
-	const char *s;
-	char       *t;
-
-	if (str == NULL)
-		return NULL;
-
-	new_str = g_malloc (strlen (str) + 1);
-
-	s = str;
-	t = new_str;
-	while (*s) {
-		if (*s == '\\')
-			s++;
-		*t++ = *s++;
-	}
-	*t = 0;
-
-	return new_str;
-}
-
-
 /* escape with backslash the file name. */
 char*
 shell_escape (const char *filename)

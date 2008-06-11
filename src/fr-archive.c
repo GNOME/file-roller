@@ -1309,7 +1309,7 @@ convert_to_local_file_list (GList *file_list)
 		char *uri = scan->data;
 		char *local_filename;
 		
-		local_filename = g_uri_unescape_string (uri, NULL);
+		local_filename = g_uri_unescape_string (uri, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH);
 		if (local_filename != NULL)
 			local_file_list = g_list_prepend (local_file_list, local_filename);
 	}

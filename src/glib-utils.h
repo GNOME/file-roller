@@ -41,7 +41,6 @@ char*               escape_str_common            (const char *str,
 						  const char  postfix);
 char*               escape_str                   (const char  *str,
 						  const char  *meta_chars);
-char*               unescape_str                 (const char  *str);
 gchar *             shell_escape                 (const gchar *filename);
 gboolean            match_regexps                (GRegex     **regexps,
 						  const char  *string,

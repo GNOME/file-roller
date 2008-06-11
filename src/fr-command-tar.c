@@ -133,10 +133,12 @@ process_line (char     *line,
 
 	g_return_if_fail (line != NULL);
 
-	fdata = file_data_new ();
-
 	date_idx = file_list__get_index_from_pattern (line, "%n%n%n%n-%n%n-%n%n %n%n:%n%n");
+	if (date_idx < 0)
+		return;
 
+	fdata = file_data_new ();
+		
 	field_size = file_list__get_prev_field (line, date_idx, 1);
 	fdata->size = g_ascii_strtoull (field_size, NULL, 10);
 	g_free (field_size);
@@ -157,7 +159,7 @@ process_line (char     *line,
 		fields = g_strsplit (field_name, " link to ", 2);
 	}
 
-	name = unescape_str (fields[0]);
+	name = g_strcompress (fields[0]);
 	if (*name == '/') {
 		fdata->full_path = g_strdup (name);
 		fdata->original_path = fdata->full_path;

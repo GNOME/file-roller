@@ -6957,7 +6957,8 @@ rename_selection (FrWindow   *window,
 		const char *current_dir_relative = rdata->current_dir + 1;
 		const char *filename = (char*) scan->data;
 		char       *old_path = NULL, *common = NULL, *new_path = NULL;
-
+		char       *new_filename;
+		
 		old_path = g_build_filename (tmp_dir, filename, NULL);
 
 		if (strlen (filename) > (strlen (rdata->current_dir) + strlen (rdata->old_name)))
@@ -6972,8 +6973,10 @@ rename_selection (FrWindow   *window,
 			fr_process_end_command (archive->process);
 		}
 
-		new_file_list = g_list_prepend (new_file_list, g_build_filename (current_dir_relative, rdata->new_name, common, NULL));
+		new_filename = g_build_filename (current_dir_relative, rdata->new_name, common, NULL);
+		new_file_list = g_list_prepend (new_file_list, g_uri_escape_string (new_filename, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, TRUE));
 
+		g_free (new_filename);
 		g_free (old_path);
 		g_free (common);
 		g_free (new_path);
@@ -7339,10 +7342,10 @@ add_pasted_files (FrWindow        *window,
 	for (scan = data->files; scan; scan = scan->next) {
 		const char *old_name = (char*) scan->data;
 		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (data->base_dir) - 1, NULL);
-
+		
 		/* skip folders */
 
-		if ((strcmp (old_name, new_name) != 0)
+		if ((strcmp (old_name, new_name) != 0) 
 		    && (old_name[strlen (old_name) - 1] != '/')) 
 		{
 			fr_process_begin_command (window->archive->process, "mv");
@@ -7353,7 +7356,8 @@ add_pasted_files (FrWindow        *window,
 			fr_process_end_command (window->archive->process);
 		}
 
-		new_file_list = g_list_prepend (new_file_list, new_name);
+		new_file_list = g_list_prepend (new_file_list, g_uri_escape_string (new_name, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, TRUE));
+		g_free (new_name);
 	}
   
 	fr_archive_add (window->archive,
@@ -7723,7 +7727,7 @@ fr_window_update_files (FrWindow *window,
 		OpenFile *file = scan->data;
 		GList    *file_list;
 		
-		file_list = g_list_append (NULL, file->path);
+		file_list = g_list_append (NULL, g_uri_escape_string (file->path, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, TRUE));
 		fr_archive_add (window->archive,
 				file_list,
 				file->temp_dir,
@@ -7732,7 +7736,7 @@ fr_window_update_files (FrWindow *window,
 				FALSE,
 				window->priv->password,
 				window->priv->compression);
-		g_list_free (file_list);
+		path_list_free (file_list);
 	}
 	
 	fr_process_start (window->archive->process);
