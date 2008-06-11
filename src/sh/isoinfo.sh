@@ -23,7 +23,8 @@ fi
 
 if test "x$3" = x-x; then
   file_to_extract=$4
-  isoinfo $iso_extensions -i "$filename" -x "$file_to_extract"
+  outfile=$5
+  isoinfo $iso_extensions -i "$filename" -x "$file_to_extract" > "$outfile"
 else
   isoinfo $iso_extensions -i "$filename" -l
 fi

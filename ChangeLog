@@ -1,4 +1,16 @@
 2008-06-11  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
+	* src/fr-command-iso.c: 
+	
+	Do not add the -c switch to sh and don't escape the filename.
+	Removed the pipe command from here, since it's been moved to isoinfo.sh
+
+	* src/sh/isoinfo.sh: 
+	
+	Added an additional argument to specify the output filename when
+	extracting.
+
+2008-06-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/fr-process.c (fr_process_add_arg_concat): 
 	add the first arg as well.
