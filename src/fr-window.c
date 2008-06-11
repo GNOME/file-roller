@@ -7814,7 +7814,8 @@ monitor_extracted_files (OpenFilesData *odata)
 		const char *extracted_path = scan2->data;
 		
 		ofile = open_file_new (file, extracted_path, odata->cdata->temp_dir);
-		fr_window_monitor_open_file (window, ofile);
+		if (ofile != NULL)
+			fr_window_monitor_open_file (window, ofile);
 	}
 }
 

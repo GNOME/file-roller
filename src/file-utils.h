@@ -48,6 +48,7 @@ char *              get_dir_content_if_unique    (const char  *uri);
 gboolean            path_in_path                 (const char  *path_src,
 						  const char  *path_dest);
 goffset             get_file_size                (const char  *uri);
+goffset             get_file_size_for_path       (const char  *path);
 time_t              get_file_mtime               (const char  *uri);
 time_t              get_file_mtime_for_path      (const char  *path);
 time_t              get_file_ctime               (const char  *uri);

@@ -43,17 +43,17 @@ static FrCommandClass *parent_class = NULL;
 
 static char *
 get_uncompressed_name_from_archive (FrCommand  *comm, 
-				    const char *e_filename)
+				    const char *archive)
 {
 	int      fd;
 	char     buffer[11];
 	char    *filename = NULL;
 	GString *str = NULL;
 
-	if (is_mime_type (comm->mime_type, "application/x-gzip"))
+	if (! is_mime_type (comm->mime_type, "application/x-gzip"))
 		return NULL;
 	
-	fd = open (e_filename, O_RDONLY);
+	fd = open (archive, O_RDONLY);
 	if (fd < 0) 
 		return NULL;
 	
@@ -178,7 +178,7 @@ fr_command_cfile_list (FrCommand  *comm,
 
 		fdata->original_path = fdata->full_path + 1;
 		fdata->link = NULL;
-		fdata->size = get_file_size (comm->filename);
+		fdata->size = get_file_size_for_path (comm->filename);
 		fdata->modified = get_file_mtime_for_path (comm->filename);
 		
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
@@ -382,8 +382,6 @@ fr_command_cfile_extract (FrCommand  *comm,
 				 "/",
 				 compr_file,
 				 NULL);
-	g_free (compr_file);
-	g_free (dest_file);
 
 	fr_process_begin_command (comm->process, "cp");
 	fr_process_add_arg (comm->process, "-f");
@@ -399,6 +397,8 @@ fr_command_cfile_extract (FrCommand  *comm,
 	fr_process_add_arg (comm->process, temp_dir);
 	fr_process_end_command (comm->process);
 
+	g_free (dest_file);
+	g_free (compr_file);
 	g_free (uncompr_file);
 	g_free (temp_file);
 	g_free (temp_dir);

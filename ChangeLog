@@ -1,5 +1,25 @@
 2008-06-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/open-file.c (open_file_new): return null if the files doesn't 
+	exists.
+	
+	* src/fr-window.c (monitor_extracted_files): don't add the file if 
+	it's NULL.
+	
+	* src/fr-command-cpio.c (fr_command_cpio_list, fr_command_cpio_extract): 
+	insert the pipe in a single argument.
+	
+	* src/fr-command-cfile.c: 
+	
+	fixed misc errors.
+	
+	* src/file-utils.h: 
+	* src/file-utils.c: 
+	
+	added function get_file_size_for_path()
+	
+2008-06-11  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* src/fr-command-rpm.c (fr_command_rpm_list, fr_command_rpm_extract): 
 	insert the pipe in a single argument.
 

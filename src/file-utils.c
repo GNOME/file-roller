@@ -329,6 +329,20 @@ get_file_size (const char *uri)
 }
 
 
+goffset
+get_file_size_for_path (const char *path)
+{
+	char    *uri;
+	goffset  result;
+	
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = get_file_size (uri);
+	g_free (uri);
+	
+	return result;
+}
+
+
 static time_t
 get_file_time_type (const char *uri, 
 		    const char *type)

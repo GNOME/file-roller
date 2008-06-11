@@ -149,14 +149,20 @@ static void
 fr_command_cpio_list (FrCommand  *comm,
 		      const char *password)
 {
+	GString *cmd;
+	
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
 				      list__process_line,
 				      comm);
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_add_arg (comm->process, "-c");
-	fr_process_add_arg (comm->process, "cpio -itv <");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	
+	cmd = g_string_new ("cpio -itv < ");
+	g_string_append (cmd, comm->e_filename);
+	fr_process_add_arg (comm->process, cmd->str);
+	g_string_free (cmd, TRUE);
+	
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -171,17 +177,26 @@ fr_command_cpio_extract (FrCommand  *comm,
 			gboolean    junk_paths,
 			const char *password)
 {
-	GList *scan;
+	GList   *scan;
+	GString *cmd;
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_add_arg (comm->process, "-c");
-	fr_process_add_arg (comm->process, "cpio -idu");
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);
-	for (scan = file_list; scan; scan = scan->next) 
-		fr_process_add_arg (comm->process, scan->data);
-        fr_process_add_arg (comm->process, "<");
-	fr_process_add_arg (comm->process, comm->e_filename);
+	
+	cmd = g_string_new ("cpio -idu ");
+	for (scan = file_list; scan; scan = scan->next) {
+		char *filename = g_shell_quote (scan->data); 
+		g_string_append (cmd, filename);
+		g_free (filename);
+		g_string_append (cmd, " ");
+	}
+        g_string_append (cmd, " < ");
+	g_string_append (cmd, comm->e_filename);
+	fr_process_add_arg (comm->process, cmd->str);
+	g_string_free (cmd, TRUE);
+	
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -195,7 +210,7 @@ fr_command_cpio_set_mime_type (FrCommand  *comm,
 	
 	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("cpio")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		comm->capabilities |= FR_COMMAND_CAP_READ;
 }
 
 
