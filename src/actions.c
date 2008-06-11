@@ -475,8 +475,8 @@ window_archive_loaded_cb (FrWindow  *window,
 	}
 	else {
 		FrWindow *original_window =  g_object_get_data (G_OBJECT (file_sel), "fr_window");
-		if (window != original_window)
-			gtk_widget_destroy (GTK_WIDGET (window));
+		if (window != original_window) 
+			fr_window_destroy_with_error_dialog (window);
 	}
 }
 

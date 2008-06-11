@@ -288,7 +288,8 @@ struct _FrWindowPrivateData {
 	gboolean         freeze_default_dir;
 	gboolean         asked_for_password;
 	gboolean         ask_to_open_destination_after_extraction;
-
+	gboolean         destroy_with_error_dialog;
+	
 	FRBatchAction    current_batch_action;
 
 	gboolean         give_focus_to_the_list;
@@ -736,9 +737,9 @@ fr_window_class_init (FrWindowClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
 			      NULL, NULL,
-			      fr_marshal_VOID__INT,
+			      fr_marshal_VOID__BOOLEAN,
 			      G_TYPE_NONE, 1,
-			      G_TYPE_INT);
+			      G_TYPE_BOOLEAN);
 
 	gobject_class = (GObjectClass*) class;
 	gobject_class->finalize = fr_window_finalize;
@@ -2752,6 +2753,8 @@ error_dialog_response_cb (GtkDialog *dialog,
 	if ((dialog_parent != NULL) && (gtk_widget_get_toplevel (GTK_WIDGET (dialog_parent)) != (GtkWidget*) dialog_parent))
 		gtk_window_set_modal (dialog_parent, TRUE);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
+	if (window->priv->destroy_with_error_dialog)
+		gtk_widget_destroy (GTK_WIDGET (window));
 }
 
 
@@ -2775,6 +2778,13 @@ fr_window_show_error_dialog (FrWindow  *window,
 	window->priv->error_dialog_parent = dialog_parent;
 }
 			     
+
+void  
+fr_window_destroy_with_error_dialog (FrWindow *window)
+{
+	window->priv->destroy_with_error_dialog = TRUE;
+}
+
 
 static gboolean
 handle_errors (FrWindow    *window,
@@ -2975,8 +2985,7 @@ action_performed (FrArchive   *archive,
 				gtk_window_present (GTK_WINDOW (window));
 		}
 		continue_batch = FALSE;
-		
-		g_signal_emit (G_OBJECT (window),
+		g_signal_emit (window,
 			       fr_window_signals[ARCHIVE_LOADED],
 			       0,
 			       error->type == FR_PROC_ERROR_NONE);
@@ -3104,7 +3113,7 @@ action_performed (FrArchive   *archive,
 			fr_window_stop_batch (window);
 		else
 			fr_window_exec_next_batch_action (window);
-	}
+	}		
 }
 
 

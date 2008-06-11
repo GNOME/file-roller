@@ -197,7 +197,7 @@ add_compress_arg (FrCommand *comm)
 	else if (is_mime_type (comm->mime_type, "application/x-bzip-compressed-tar"))
 		fr_process_add_arg (comm->process, "--use-compress-program=bzip2");
 		
-	else if (is_mime_type (comm->mime_type, "application/x-compressed-tar"))
+	else if (is_mime_type (comm->mime_type, "application/x-tarz"))
 		fr_process_add_arg (comm->process, "-Z");
 		
 	else if (is_mime_type (comm->mime_type, "application/x-lzma-compressed-tar"))
@@ -478,7 +478,7 @@ fr_command_tar_recompress (FrCommand     *comm,
 
 		new_name = g_strconcat (c_tar->uncomp_filename, ".bz2", NULL);
 	}
-	else if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) {
+	else if (is_mime_type (comm->mime_type, "application/x-tarz")) {
 		fr_process_begin_command (comm->process, "compress");
 		fr_process_set_sticky (comm->process, TRUE);
 		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
@@ -631,7 +631,7 @@ get_uncompressed_name (FrCommandTar *c_tar,
 		else if (file_extension_is (e_filename, ".tar.bz2"))
 			new_name[l - 4] = 0;
 	}
-	else if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) {
+	else if (is_mime_type (comm->mime_type, "application/x-tarz")) {
 		/* X.taz   -->  X.tar
 		 * X.tar.Z -->  X.tar */
 		if (file_extension_is (e_filename, ".taz"))
@@ -735,7 +735,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
 		}
-		else if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) {
+		else if (is_mime_type (comm->mime_type, "application/x-tarz")) {
 			fr_process_begin_command (comm->process, "uncompress");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
@@ -820,7 +820,7 @@ fr_command_tar_set_mime_type (FrCommand  *comm,
 		if (is_program_in_path ("bzip2"))
 			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
 	}
-	else if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) {
+	else if (is_mime_type (comm->mime_type, "application/x-tarz")) {
 		if (is_program_in_path ("compress"))
 			comm->capabilities |= FR_COMMAND_CAP_WRITE;
 		if (is_program_in_path ("uncompress"))

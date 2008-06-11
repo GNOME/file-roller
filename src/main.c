@@ -104,7 +104,7 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-lzma-compressed-tar",  ".tar.lzma", N_("Tar compressed with lzma (.tar.lzma)"), FALSE, TRUE },
 	{ "application/x-lzop-compressed-tar",  ".tar.lzo",  N_("Tar compressed with lzop (.tar.lzo)"), FALSE, TRUE },
 	{ "application/x-7z-compressed-tar",    ".tar.7z",   N_("Tar compressed with 7z (.tar.7z)"), FALSE, TRUE },
-	{ "application/x-compressed-tar",       ".tar.Z",    N_("Tar compressed with compress (.tar.Z)"), FALSE, TRUE },
+	{ "application/x-tarz",                 ".tar.Z",    N_("Tar compressed with compress (.tar.Z)"), FALSE, TRUE },
 	{ "application/x-stuffit",              ".sit",      NULL, FALSE, TRUE },
 	{ "application/x-war",                  ".war",      N_("War (.war)"), TRUE, TRUE },
 	{ "application/zip",                    ".zip",      N_("Zip (.zip)"), TRUE, TRUE },
@@ -142,8 +142,8 @@ FrExtensionType file_ext_type[] = {
 	{ ".tar.lzma", "application/x-lzma-compressed-tar" },
 	{ ".tar.lzo", "application/x-lzop-compressed-tar" },
 	{ ".tar.7z", "application/x-7z-compressed-tar" },
-	{ ".tar.Z", "application/x-compressed-tar" },
-	{ ".taz", "application/x-compressed-tar" },
+	{ ".tar.Z", "application/x-tarz" },
+	{ ".taz", "application/x-tarz" },
 	{ ".tbz", "application/x-bzip-compressed-tar" },
 	{ ".tbz2", "application/x-bzip-compressed-tar" },
 	{ ".tgz", "application/x-compressed-tar" },
@@ -151,7 +151,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".tzo", "application/x-lzop-compressed-tar" },
 	{ ".war", "application/x-war" },
 	{ ".z", "application/x-gzip" },
-	{ ".Z", "application/x-gzip" },
+	{ ".Z", "application/x-compress" },
 	{ ".zip", "application/zip" },
 	{ ".zoo", "application/x-zoo" }
 };
@@ -174,7 +174,7 @@ FrCommandDescription command_desc[] = {
 	{ "ar",         "application/x-deb", TRUE, FALSE },
 	{ "arj",        "application/x-arj", TRUE, TRUE },
 	{ "bzip2",      "application/x-bzip1", TRUE, FALSE },
-	{ "compress",   "application/x-gzip", TRUE, TRUE },
+	{ "compress",   "application/x-compress", TRUE, TRUE },
 	{ "cpio",       "application/x-cpio", TRUE, FALSE },
 	{ "isoinfo",    "application/x-cd-image", TRUE, FALSE },
 	{ "zip",        "application/x-ear", TRUE, TRUE },
@@ -185,7 +185,7 @@ FrCommandDescription command_desc[] = {
 	{ "lzma",       "application/x-lzma", TRUE, TRUE },
 	{ "lzop",       "application/x-lzop", TRUE, TRUE },
 	{ "rpm2cpio",   "application/x-rpm", TRUE, FALSE },
-	{ "uncompress", "application/x-gzip", TRUE, FALSE },
+	{ "uncompress", "application/x-compress", TRUE, FALSE },
 	{ "unstuff",    "application/x-stuffit", TRUE, FALSE },
 	{ "zoo",        "application/x-zoo", TRUE, TRUE },
 	{ "7za",        "application/x-7z-compressed", TRUE, TRUE },
@@ -193,14 +193,15 @@ FrCommandDescription command_desc[] = {
 };
 
 FrCommandDescription tar_command_desc[] = {
-	{ "gzip",      "application/x-compressed-tar", TRUE, TRUE },
-	{ "bzip2",     "application/x-bzip-compressed-tar", TRUE, TRUE },
+	{ "gzip",       "application/x-compressed-tar", TRUE, TRUE },
+	{ "bzip2",      "application/x-bzip-compressed-tar", TRUE, TRUE },
 	/*{ "bzip",     "application/x-bzip1-compressed-tar", FALSE, TRUE },*/
-	{ "lzma",      "application/x-lzma-compressed-tar", TRUE, TRUE },
-	{ "lzop",      "application/x-lzop-compressed-tar", TRUE, TRUE },
-	{ "compress",  "application/x-compressed-tar", TRUE, TRUE },
-	{ "7za",       "application/x-7z-compressed-tar", FALSE, TRUE },
-	{ "7zr",       "application/x-7z-compressed-tar", FALSE, TRUE }
+	{ "lzma",       "application/x-lzma-compressed-tar", TRUE, TRUE },
+	{ "lzop",       "application/x-lzop-compressed-tar", TRUE, TRUE },
+	{ "compress",   "application/x-tarz", FALSE, TRUE },
+	{ "uncompress", "application/x-tarz", TRUE, FALSE },
+	{ "7za",        "application/x-7z-compressed-tar", FALSE, TRUE },
+	{ "7zr",        "application/x-7z-compressed-tar", FALSE, TRUE }
 };
 
 
@@ -598,6 +599,7 @@ register_commands (void)
 			  "application/x-tar", FR_COMMAND_CAP_ALL,
 			  "application/x-compressed-tar", FR_COMMAND_CAP_ALL,
 			  "application/x-bzip-compressed-tar", FR_COMMAND_CAP_ALL,
+			  "application/x-tarz", FR_COMMAND_CAP_ALL,
 			  "application/x-lzma-compressed-tar", FR_COMMAND_CAP_ALL,
 			  "application/x-lzop-compressed-tar", FR_COMMAND_CAP_ALL,
 			  "application/x-7z-compressed-tar", FR_COMMAND_CAP_WRITE | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,

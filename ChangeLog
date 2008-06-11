@@ -1,5 +1,25 @@
 2008-06-11  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/main.c: 
+	
+	Added application/x-tarz and application/x-compress
+	
+ 	* src/fr-command-tar.c: 
+	
+	Added application/x-tarz to the supported formats.
+	
+	* src/fr-command-cfile.c (fr_command_cfile_add): do not use '*' as we 
+	don't use the shell anymore, instead compute the compressed filename
+	and use it.  Added mime-type application/x-compress to the supported
+	formats.
+
+	* src/fr-window.h: 
+	* src/fr-window.c:	
+	* src/actions.c: when an archive type is not supported destroy the 
+	(hidden) main window after the error dialog has been closed.
+
+2008-06-11  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/open-file.c (open_file_new): return null if the files doesn't 
 	exists.
 	
