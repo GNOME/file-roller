@@ -359,21 +359,24 @@ static void
 fr_command_rar_handle_error (FrCommand   *comm,
 			     FrProcError *error)
 {
-	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
+	if (error->type != FR_PROC_ERROR_COMMAND_ERROR) 
+		return;
+		
+	if (error->status == 3) {
+		error->type = FR_PROC_ERROR_ASK_PASSWORD;
+	}
+	else {
+		GList *scan;
+		
 		if (error->status <= 1)
 			error->type = FR_PROC_ERROR_NONE;
-		else if (error->status == 3)
-			error->type = FR_PROC_ERROR_ASK_PASSWORD;
-		else {
-			GList *scan;
 			
-			for (scan = g_list_last (comm->process->raw_error); scan; scan = scan->prev) {
-				char *line = scan->data;
+		for (scan = g_list_last (comm->process->raw_error); scan; scan = scan->prev) {
+			char *line = scan->data;
 				
-				if (strstr (line, "password incorrect") != NULL) {
-					error->type = FR_PROC_ERROR_ASK_PASSWORD;
-					break;
-				}
+			if (strstr (line, "password incorrect") != NULL) {
+				error->type = FR_PROC_ERROR_ASK_PASSWORD;
+				break;
 			}
 		}
 	}

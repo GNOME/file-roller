@@ -351,7 +351,7 @@ fr_process_add_arg_concat (FrProcess  *fr_proc,
 	va_list  args;
 	char    *s;
 
-	arg = g_string_new ("");
+	arg = g_string_new (arg1);
 
 	va_start (args, arg1);
 	while ((s = va_arg (args, char*)) != NULL)
