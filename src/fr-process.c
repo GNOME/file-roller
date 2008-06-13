@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 #include "glib-utils.h"
 
 #define REFRESH_RATE 20
+#define BUFFER_SIZE 16384
 
 enum {
 	START,
@@ -47,44 +48,170 @@ static GObjectClass *parent_class;
 static guint fr_process_signals[LAST_SIGNAL] = { 0 };
 
 static void fr_process_class_init (FrProcessClass *class);
-static void fr_process_init       (FrProcess      *fr_proc);
+static void fr_process_init       (FrProcess      *process);
 static void fr_process_finalize   (GObject        *object);
+
+
+typedef struct {
+	GList        *args;              /* command to execute */
+	char         *dir;               /* working directory */
+	guint         sticky : 1;        /* whether the command must be 
+					  * executed even if a previous 
+					  * command has failed. */
+	guint         ignore_error : 1;  /* whether to continue to execute 
+					  * other commands if this command 
+					  * fails. */
+	ContinueFunc  continue_func;
+	gpointer      continue_data;
+	ProcFunc      begin_func;
+	gpointer      begin_data;
+	ProcFunc      end_func;
+	gpointer      end_data;
+} FrCommandInfo;
 
 
 static FrCommandInfo *
 fr_command_info_new (void)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	c_info = g_new0 (FrCommandInfo, 1);
-	c_info->args = NULL;
-	c_info->dir = NULL;
-	c_info->sticky = FALSE;
-	c_info->ignore_error = FALSE;
+	info = g_new0 (FrCommandInfo, 1);
+	info->args = NULL;
+	info->dir = NULL;
+	info->sticky = FALSE;
+	info->ignore_error = FALSE;
 
-	return c_info;
+	return info;
 }
 
 
 static void
-fr_command_info_free (FrCommandInfo * c_info)
+fr_command_info_free (FrCommandInfo *info)
 {
-	if (c_info == NULL)
+	if (info == NULL)
 		return;
 
-	if (c_info->args != NULL) {
-		g_list_foreach (c_info->args, (GFunc) g_free, NULL);
-		g_list_free (c_info->args);
-		c_info->args = NULL;
+	if (info->args != NULL) {
+		g_list_foreach (info->args, (GFunc) g_free, NULL);
+		g_list_free (info->args);
+		info->args = NULL;
 	}
 
-	if (c_info->dir != NULL) {
-		g_free (c_info->dir);
-		c_info->dir = NULL;
+	if (info->dir != NULL) {
+		g_free (info->dir);
+		info->dir = NULL;
 	}
 
-	g_free (c_info);
+	g_free (info);
 }
+
+
+static void
+fr_channel_data_init (FrChannelData *channel)
+{
+	channel->source = NULL;
+	channel->raw = NULL;
+}
+
+
+static void
+fr_channel_data_close_source (FrChannelData *channel)
+{
+	if (channel->source != NULL) {
+		g_io_channel_shutdown (channel->source, FALSE, NULL);
+		g_io_channel_unref (channel->source);
+		channel->source = NULL;
+	}
+}
+
+
+static gboolean
+fr_channel_data_read (FrChannelData *channel)
+{
+	GIOStatus  status;
+	char      *line;
+	gsize      length;
+	gsize      terminator_pos;
+
+	while ((status = g_io_channel_read_line (channel->source,
+						 &line,
+						 &length,
+						 &terminator_pos,
+						 NULL)) == G_IO_STATUS_NORMAL)					 
+	{
+		line[terminator_pos] = 0;
+		channel->raw = g_list_prepend (channel->raw, line);
+		if (channel->line_func != NULL) 
+			(*channel->line_func) (line, channel->line_data);
+	}
+	
+	return (status == G_IO_STATUS_AGAIN);
+}
+
+
+static void
+fr_channel_data_flush (FrChannelData *channel)
+{
+	while (fr_channel_data_read (channel))
+		/* void */;
+	fr_channel_data_close_source (channel);
+}
+
+
+static void
+fr_channel_data_reset (FrChannelData *channel)
+{
+	fr_channel_data_close_source (channel);
+	
+	if (channel->raw != NULL) {
+		g_list_foreach (channel->raw, (GFunc) g_free, NULL);
+		g_list_free (channel->raw);
+		channel->raw = NULL;
+	}
+}
+
+
+static void
+fr_channel_data_free (FrChannelData *channel)
+{
+	fr_channel_data_reset (channel);
+}
+
+
+static void
+fr_channel_data_set_fd (FrChannelData *channel,
+			int            fd)
+{
+	const char *charset;
+	
+	fr_channel_data_reset (channel);
+	channel->source = g_io_channel_unix_new (fd);
+	g_io_channel_set_flags (channel->source, G_IO_FLAG_NONBLOCK, NULL);
+	g_io_channel_set_buffer_size (channel->source, BUFFER_SIZE);
+	if (! g_get_charset (&charset))
+		g_io_channel_set_encoding (channel->source, charset, NULL);
+}
+
+
+struct _FrProcessPrivate {
+	GPtrArray   *comm;                /* FrCommandInfo elements. */
+	gint         n_comm;              /* total number of commands */
+	gint         current_comm;        /* currenlty editing command. */
+
+	GPid         command_pid;
+	guint        check_timeout;
+
+	FrProcError  first_error;
+
+	gboolean     running;
+	gboolean     stopping;
+	gint         current_command;	
+	gint         error_command;       /* command that coused an error. */
+
+	gboolean     use_standard_locale;
+	gboolean     sticky_only;         /* whether to execute only sticky 
+			 		   * commands. */
+};
 
 
 GType
@@ -155,85 +282,64 @@ fr_process_class_init (FrProcessClass *class)
 
 
 static void
-fr_process_init (FrProcess *fr_proc)
+fr_process_init (FrProcess *process)
 {
-	fr_proc->term_on_stop = TRUE;
+	process->priv = g_new0 (FrProcessPrivate, 1);
+	
+	process->term_on_stop = TRUE;
 
-	fr_proc->comm = g_ptr_array_new ();
-	fr_proc->n_comm = -1;
-	fr_proc->current_comm = -1;
+	process->priv->comm = g_ptr_array_new ();
+	process->priv->n_comm = -1;
+	process->priv->current_comm = -1;
 
-	fr_proc->command_pid = 0;
-	fr_proc->output_fd = 0;
-	fr_proc->error_fd = 0;
+	process->priv->command_pid = 0;
+	fr_channel_data_init (&process->out);
+	fr_channel_data_init (&process->err);
 
-	fr_proc->o_buffer = g_new (char, BUFFER_SIZE + 1);
-	fr_proc->e_buffer = g_new (char, BUFFER_SIZE + 1);
+	process->error.gerror = NULL;
+	process->priv->first_error.gerror = NULL;
 
-	fr_proc->log_timeout = 0;
-	fr_proc->o_not_processed = 0;
-	fr_proc->e_not_processed = 0;
-	fr_proc->raw_output = NULL;
-	fr_proc->raw_error = NULL;
+	process->priv->check_timeout = 0;
+	process->priv->running = FALSE;
+	process->priv->stopping = FALSE;
+	process->restart = FALSE;
 
-	fr_proc->o_proc_line_func = NULL;
-	fr_proc->o_proc_line_data = NULL;
-
-	fr_proc->e_proc_line_func = NULL;
-	fr_proc->e_proc_line_data = NULL;
-
-	fr_proc->error.gerror = NULL;
-	fr_proc->first_error.gerror = NULL;
-
-	fr_proc->running = FALSE;
-	fr_proc->stopping = FALSE;
-	fr_proc->restart = FALSE;
-
-	fr_proc->use_standard_locale = FALSE;
+	process->priv->use_standard_locale = FALSE;
 }
 
 
 FrProcess *
-fr_process_new ()
+fr_process_new (void)
 {
 	return FR_PROCESS (g_object_new (FR_TYPE_PROCESS, NULL));
 }
 
 
-static void _fr_process_stop (FrProcess *fr_proc, gboolean emit_signal);
+static void fr_process_stop_priv (FrProcess *process, gboolean emit_signal);
 
 
 static void
 fr_process_finalize (GObject *object)
 {
-	FrProcess *fr_proc;
+	FrProcess *process;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_PROCESS (object));
 
-	fr_proc = FR_PROCESS (object);
+	process = FR_PROCESS (object);
 
-	_fr_process_stop (fr_proc, FALSE);
-	fr_process_clear (fr_proc);
-	g_ptr_array_free (fr_proc->comm, FALSE);
+	fr_process_stop_priv (process, FALSE);
+	fr_process_clear (process);
+	
+	g_ptr_array_free (process->priv->comm, FALSE);
 
-	if (fr_proc->raw_output != NULL) {
-		g_list_foreach (fr_proc->raw_output, (GFunc) g_free, NULL);
-		g_list_free (fr_proc->raw_output);
-		fr_proc->raw_output = NULL;
-	}
+	fr_channel_data_free (&process->out);
+	fr_channel_data_free (&process->err);
 
-	if (fr_proc->raw_error != NULL) {
-		g_list_foreach (fr_proc->raw_error, (GFunc) g_free, NULL);
-		g_list_free (fr_proc->raw_error);
-		fr_proc->raw_error = NULL;
-	}
+	g_clear_error (&process->error.gerror);
+	g_clear_error (&process->priv->first_error.gerror);
 
-	g_free (fr_proc->o_buffer);
-	g_free (fr_proc->e_buffer);
-
-	g_clear_error (&fr_proc->error.gerror);
-	g_clear_error (&fr_proc->first_error.gerror);
+	g_free (process->priv);
 
 	/* Chain up */
 
@@ -243,107 +349,107 @@ fr_process_finalize (GObject *object)
 
 
 void
-fr_process_begin_command (FrProcess  *fr_proc,
+fr_process_begin_command (FrProcess  *process,
 			  const char *arg)
 {
-	FrCommandInfo * c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	c_info = fr_command_info_new ();
-	c_info->args = g_list_prepend (NULL, g_strdup (arg));
+	info = fr_command_info_new ();
+	info->args = g_list_prepend (NULL, g_strdup (arg));
 	
-	g_ptr_array_add (fr_proc->comm, c_info);
+	g_ptr_array_add (process->priv->comm, info);
 	
-	fr_proc->n_comm++;
-	fr_proc->current_comm = fr_proc->n_comm;
+	process->priv->n_comm++;
+	process->priv->current_comm = process->priv->n_comm;
 }
 
 
 void
-fr_process_begin_command_at (FrProcess  *fr_proc,
+fr_process_begin_command_at (FrProcess  *process,
 			     const char *arg,
 			     int         index)
 {
-	FrCommandInfo *c_info, *old_c_info;
+	FrCommandInfo *info, *old_c_info;
 
-	g_return_if_fail (fr_proc != NULL);
-	g_return_if_fail (index >= 0 && index <= fr_proc->n_comm);
+	g_return_if_fail (process != NULL);
+	g_return_if_fail (index >= 0 && index <= process->priv->n_comm);
 
-	fr_proc->current_comm = index;
+	process->priv->current_comm = index;
 
-	old_c_info = g_ptr_array_index (fr_proc->comm, index);
+	old_c_info = g_ptr_array_index (process->priv->comm, index);
 
 	if (old_c_info != NULL)
 		fr_command_info_free (old_c_info);
 
-	c_info = fr_command_info_new ();
-	c_info->args = g_list_prepend (NULL, g_strdup (arg));
+	info = fr_command_info_new ();
+	info->args = g_list_prepend (NULL, g_strdup (arg));
 	
-	g_ptr_array_index (fr_proc->comm, index) = c_info;
+	g_ptr_array_index (process->priv->comm, index) = info;
 }
 
 
 void
-fr_process_set_working_dir (FrProcess  *fr_proc,
+fr_process_set_working_dir (FrProcess  *process,
 			    const char *dir)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
-	g_return_if_fail (fr_proc->current_comm >= 0);
+	g_return_if_fail (process != NULL);
+	g_return_if_fail (process->priv->current_comm >= 0);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	if (c_info->dir != NULL)
-		g_free (c_info->dir);
-	c_info->dir = g_strdup (dir);
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	if (info->dir != NULL)
+		g_free (info->dir);
+	info->dir = g_strdup (dir);
 }
 
 
 void
-fr_process_set_sticky (FrProcess *fr_proc,
+fr_process_set_sticky (FrProcess *process,
 		       gboolean   sticky)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
-	g_return_if_fail (fr_proc->current_comm >= 0);
+	g_return_if_fail (process != NULL);
+	g_return_if_fail (process->priv->current_comm >= 0);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	c_info->sticky = sticky;
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info->sticky = sticky;
 }
 
 
 void
-fr_process_set_ignore_error (FrProcess *fr_proc,
+fr_process_set_ignore_error (FrProcess *process,
 			     gboolean   ignore_error)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
-	g_return_if_fail (fr_proc->current_comm >= 0);
+	g_return_if_fail (process != NULL);
+	g_return_if_fail (process->priv->current_comm >= 0);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	c_info->ignore_error = ignore_error;
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info->ignore_error = ignore_error;
 }
 
 
 void
-fr_process_add_arg (FrProcess  *fr_proc,
+fr_process_add_arg (FrProcess  *process,
 		    const char *arg)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
-	g_return_if_fail (fr_proc->current_comm >= 0);
+	g_return_if_fail (process != NULL);
+	g_return_if_fail (process->priv->current_comm >= 0);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	c_info->args = g_list_prepend (c_info->args, g_strdup (arg));
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info->args = g_list_prepend (info->args, g_strdup (arg));
 }
 
 
 void
-fr_process_add_arg_concat (FrProcess  *fr_proc, 
+fr_process_add_arg_concat (FrProcess  *process, 
 			   const char *arg1,
 			   ...)
 {
@@ -358,24 +464,24 @@ fr_process_add_arg_concat (FrProcess  *fr_proc,
 		g_string_append (arg, s);
 	va_end (args);
 	
-	fr_process_add_arg (fr_proc, arg->str);
+	fr_process_add_arg (process, arg->str);
 	g_string_free (arg, TRUE);
 }
 
 
 void
-fr_process_set_arg_at (FrProcess  *fr_proc,
+fr_process_set_arg_at (FrProcess  *process,
 		       int         n_comm,
 		       int         n_arg,
 		       const char *arg_value)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 	GList         *arg;
 
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, n_comm);
-	arg = g_list_nth (c_info->args, n_arg);
+	info = g_ptr_array_index (process->priv->comm, n_comm);
+	arg = g_list_nth (info->args, n_arg);
 	g_return_if_fail (arg != NULL);
 
 	g_free (arg->data);
@@ -384,209 +490,109 @@ fr_process_set_arg_at (FrProcess  *fr_proc,
 
 
 void
-fr_process_set_begin_func (FrProcess    *fr_proc,
+fr_process_set_begin_func (FrProcess    *process,
 			   ProcFunc      func,
 			   gpointer      func_data)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	c_info->begin_func = func;
-	c_info->begin_data = func_data;
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info->begin_func = func;
+	info->begin_data = func_data;
 }
 
 
 void
-fr_process_set_end_func (FrProcess    *fr_proc,
+fr_process_set_end_func (FrProcess    *process,
 			 ProcFunc      func,
 			 gpointer      func_data)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	c_info->end_func = func;
-	c_info->end_data = func_data;
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info->end_func = func;
+	info->end_data = func_data;
 }
 
 
 void
-fr_process_set_continue_func (FrProcess    *fr_proc,
+fr_process_set_continue_func (FrProcess    *process,
 			      ContinueFunc  func,
 			      gpointer      func_data)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	if (fr_proc->current_comm < 0)
+	if (process->priv->current_comm < 0)
 		return;
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	c_info->continue_func = func;
-	c_info->continue_data = func_data;
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info->continue_func = func;
+	info->continue_data = func_data;
 }
 
 
 void
-fr_process_end_command (FrProcess *fr_proc)
+fr_process_end_command (FrProcess *process)
 {
-	FrCommandInfo *c_info;
+	FrCommandInfo *info;
 
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_comm);
-	c_info->args = g_list_reverse (c_info->args);
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_comm);
+	info->args = g_list_reverse (info->args);
 }
 
 
 void
-fr_process_clear (FrProcess *fr_proc)
+fr_process_clear (FrProcess *process)
 {
 	gint i;
 
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	for (i = 0; i <= fr_proc->n_comm; i++) {
-		FrCommandInfo *c_info;
+	for (i = 0; i <= process->priv->n_comm; i++) {
+		FrCommandInfo *info;
 
-		c_info = g_ptr_array_index (fr_proc->comm, i);
-		fr_command_info_free (c_info);
-		g_ptr_array_index (fr_proc->comm, i) = NULL;
+		info = g_ptr_array_index (process->priv->comm, i);
+		fr_command_info_free (info);
+		g_ptr_array_index (process->priv->comm, i) = NULL;
 	}
 
-	for (i = 0; i <= fr_proc->n_comm; i++)
-		g_ptr_array_remove_index_fast (fr_proc->comm, 0);
+	for (i = 0; i <= process->priv->n_comm; i++)
+		g_ptr_array_remove_index_fast (process->priv->comm, 0);
 
-	fr_proc->n_comm = -1;
-	fr_proc->current_comm = -1;
+	process->priv->n_comm = -1;
+	process->priv->current_comm = -1;
 }
 
 
 void
-fr_process_set_out_line_func (FrProcess    *fr_proc,
-			      ProcLineFunc  func,
-			      gpointer      data)
+fr_process_set_out_line_func (FrProcess *process,
+			      LineFunc   func,
+			      gpointer   data)
 {
-	g_return_if_fail (fr_proc != NULL);
-	fr_proc->o_proc_line_func = func;
-	fr_proc->o_proc_line_data = data;
+	g_return_if_fail (process != NULL);
+	
+	process->out.line_func = func;
+	process->out.line_data = data;
 }
 
 
 void
-fr_process_set_err_line_func (FrProcess    *fr_proc,
-			      ProcLineFunc  func,
-			      gpointer      data)
+fr_process_set_err_line_func (FrProcess *process,
+			      LineFunc   func,
+			      gpointer   data)
 {
-	g_return_if_fail (fr_proc != NULL);
-	fr_proc->e_proc_line_func = func;
-	fr_proc->e_proc_line_data = data;
-}
-
-
-static gboolean
-process_output (FrProcess *fr_proc)
-{
-	int   n, i;
-	char *line, *eol;
-
- again:
-	n = read (fr_proc->output_fd,
-		  fr_proc->o_buffer + fr_proc->o_not_processed,
-		  BUFFER_SIZE - fr_proc->o_not_processed);
-
-	if ((n < 0) && (errno == EINTR))
-		goto again;
-
-	if (n < 0)
-		return FALSE;
-
-	fr_proc->o_buffer[fr_proc->o_not_processed + n] = 0;
-
-	line = fr_proc->o_buffer;
-	while (*line != 0) {
-		eol = strchr (line, '\n');
-
-		if (eol != NULL)
-			*(eol++) = 0;
-		else if (n == 0) /* EOF on file descriptor */
-			eol = line + strlen (line);
-		else
-			break;
-
-		fr_proc->raw_output = g_list_prepend (fr_proc->raw_output,
-						      g_strdup (line));
-
-		if (fr_proc->o_proc_line_func != NULL) {
-			g_assert (line != NULL);
-			(*fr_proc->o_proc_line_func) (line, fr_proc->o_proc_line_data);
-		}
-
-		line = eol;
-	}
-
-	/* shift unprocessed text to the beginning. */
-
-	fr_proc->o_not_processed = strlen (line);
-	for (i = 0; *line != 0; line++, i++)
-		fr_proc->o_buffer[i] = *line;
-
-	return n > 0;
-}
-
-
-static gboolean
-process_error (FrProcess *fr_proc)
-{
-	int   n, i;
-	char *line, *eol;
-
- again:
-	n = read (fr_proc->error_fd,
-		  fr_proc->e_buffer + fr_proc->e_not_processed,
-		  BUFFER_SIZE - fr_proc->e_not_processed);
-
-	if ((n < 0) && (errno == EINTR))
-		goto again;
-
-	if (n < 0)
-		return FALSE;
-
-	fr_proc->e_buffer[fr_proc->e_not_processed + n] = 0;
-
-	line = fr_proc->e_buffer;
-	while (*line != 0) {
-		eol = strchr (line, '\n');
-
-		if (eol != NULL)
-			*(eol++) = 0;
-		else if (n == 0) /* EOF on file descriptor */
-			eol = line + strlen (line);
-		else
-			break;
-
-		fr_proc->raw_error = g_list_prepend (fr_proc->raw_error,
-						     g_strdup (line));
-
-		if (fr_proc->e_proc_line_func != NULL) {
-			g_assert (line != NULL);
-			(*fr_proc->e_proc_line_func) (line, fr_proc->e_proc_line_data);
-		}
-
-		line = eol;
-	}
-
-	/* shift unprocessed text to the beginning. */
-
-	fr_proc->e_not_processed = strlen (line);
-	for (i = 0; *line != 0; line++, i++)
-		fr_proc->e_buffer[i] = *line;
-
-	return n > 0;
+	g_return_if_fail (process != NULL);
+	
+	process->err.line_func = func;
+	process->err.line_data = data;
 }
 
 
@@ -595,84 +601,64 @@ static gboolean check_child (gpointer data);
 
 static void child_setup (gpointer user_data)
 {
-	FrProcess *fr_proc = user_data;
+	FrProcess *process = user_data;
 
-	if (fr_proc->use_standard_locale)
+	if (process->priv->use_standard_locale)
 		putenv ("LC_ALL=C");
 }
 
 
 static void
-start_current_command (FrProcess *fr_proc)
+start_current_command (FrProcess *process)
 {
-	FrCommandInfo  *c_info;
-	GList          *arg_list, *scan;
-	char           *dir;
+	FrCommandInfo  *info;
+	GList          *scan;
 	char          **argv;
+	int             out_fd, err_fd;
 	int             i = 0;
-
-	debug (DEBUG_INFO, "%d/%d) ", fr_proc->current_command, fr_proc->n_comm);
-
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_command);
 	
-	arg_list = c_info->args;
-	dir = c_info->dir;
+	debug (DEBUG_INFO, "%d/%d) ", process->priv->current_command, process->priv->n_comm);
 
-	if (dir != NULL)
-		debug (DEBUG_INFO, "cd %s\n", dir);
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_command);
 
-	argv = g_new (char *, g_list_length (arg_list) + 1);
-	for (scan = arg_list; scan; scan = scan->next) 
+	argv = g_new (char *, g_list_length (info->args) + 1);
+	for (scan = info->args; scan; scan = scan->next) 
 		argv[i++] = scan->data;
 	argv[i] = NULL;
 	
-/*
-	argv = g_new (char *, 4);
-	argv[i++] = "/bin/sh";
-	argv[i++] = "-c";
-
-	command = g_string_new ("");
-	for (scan = arg_list; scan; scan = scan->next) {
-		if (scan->data != NULL)
-			g_string_append (command, scan->data);
-		if (scan->next != NULL)
-			g_string_append_c (command, ' ');
-	}
-
-	argv[i++] = command->str;
-	argv[i] = NULL;
-*/
-
 #ifdef DEBUG
 	{
 		int j;
 
-		/*g_print ("/bin/sh ");*/
+		if (info->dir != NULL)
+			g_print ("\tcd %s\n", info->dir);
+		
+		g_print ("\t");
 		for (j = 0; j < i; j++)
 			g_print ("%s ", argv[j]);
 		g_print ("\n");
 	}
 #endif
 
-	if (c_info->begin_func != NULL)
-		(*c_info->begin_func) (c_info->begin_data);
+	if (info->begin_func != NULL)
+		(*info->begin_func) (info->begin_data);
 
-	if (! g_spawn_async_with_pipes (dir,
+	if (! g_spawn_async_with_pipes (info->dir,
 					argv,
 					NULL,
 					(G_SPAWN_LEAVE_DESCRIPTORS_OPEN
 					 | G_SPAWN_SEARCH_PATH
 					 | G_SPAWN_DO_NOT_REAP_CHILD),
 					child_setup,
-					fr_proc,
-					&fr_proc->command_pid,
+					process,
+					&process->priv->command_pid,
 					NULL,
-					&fr_proc->output_fd,
-					&fr_proc->error_fd,
-					&fr_proc->error.gerror)) 
+					&out_fd,
+					&err_fd,
+					&process->error.gerror)) 
 	{
-		fr_proc->error.type = FR_PROC_ERROR_SPAWN;
-		g_signal_emit (G_OBJECT (fr_proc),
+		process->error.type = FR_PROC_ERROR_SPAWN;
+		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[DONE],
 			       0);
 		g_free (argv);
@@ -681,44 +667,43 @@ start_current_command (FrProcess *fr_proc)
 
 	g_free (argv);
 
-	fcntl (fr_proc->output_fd, F_SETFL, O_NONBLOCK);
-	fcntl (fr_proc->error_fd, F_SETFL, O_NONBLOCK);
-
-	fr_proc->o_not_processed = 0;
-	fr_proc->e_not_processed = 0;
-	fr_proc->log_timeout = g_timeout_add (REFRESH_RATE,
-					      check_child,
-					      fr_proc);
+	fr_channel_data_set_fd (&process->out, out_fd);
+	fr_channel_data_set_fd (&process->err, err_fd);
+	
+	process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
+					              check_child,
+					              process);
 }
 
 
 static gboolean
-command_is_sticky (FrProcess *fr_proc,
+command_is_sticky (FrProcess *process,
 		   int        i)
 {
-	FrCommandInfo *c_info;
-	c_info = g_ptr_array_index (fr_proc->comm, i);
-	return c_info->sticky;
+	FrCommandInfo *info;
+	
+	info = g_ptr_array_index (process->priv->comm, i);
+	return info->sticky;
 }
 
 
 static void
-allow_sticky_processes_only (FrProcess *fr_proc,
+allow_sticky_processes_only (FrProcess *process,
 			     gboolean   emit_signal)
 {
-	if (! fr_proc->sticky_only) {
+	if (! process->priv->sticky_only) {
 		/* Remember the first error. */
-		fr_proc->error_command = fr_proc->current_command;
-		fr_proc->first_error.type = fr_proc->error.type;
-		fr_proc->first_error.status = fr_proc->error.status;
-		g_clear_error (&fr_proc->first_error.gerror);
-		if (fr_proc->error.gerror != NULL)
-			fr_proc->first_error.gerror = g_error_copy (fr_proc->error.gerror);
+		process->priv->error_command = process->priv->current_command;
+		process->priv->first_error.type = process->error.type;
+		process->priv->first_error.status = process->error.status;
+		g_clear_error (&process->priv->first_error.gerror);
+		if (process->error.gerror != NULL)
+			process->priv->first_error.gerror = g_error_copy (process->error.gerror);
 	}
 
-	fr_proc->sticky_only = TRUE;
+	process->priv->sticky_only = TRUE;
 	if (emit_signal) 
-		g_signal_emit (G_OBJECT (fr_proc),
+		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[STICKY_ONLY],
 			       0);
 }
@@ -727,116 +712,107 @@ allow_sticky_processes_only (FrProcess *fr_proc,
 static gint
 check_child (gpointer data)
 {
-	FrProcess      *fr_proc = data;
-	FrCommandInfo  *c_info;
+	FrProcess      *process = data;
+	FrCommandInfo  *info;
 	pid_t           pid;
 	int             status;
 	gboolean        continue_process;
 
-	c_info = g_ptr_array_index (fr_proc->comm, fr_proc->current_command);
+	info = g_ptr_array_index (process->priv->comm, process->priv->current_command);
 
 	/* Remove check. */
 
-	g_source_remove (fr_proc->log_timeout);
-	fr_proc->log_timeout = 0;
+	g_source_remove (process->priv->check_timeout);
+	process->priv->check_timeout = 0;
 
-	process_output (fr_proc);
-	process_error (fr_proc);
+	fr_channel_data_read (&process->out);
+	fr_channel_data_read (&process->err);
 
-	pid = waitpid (fr_proc->command_pid, &status, WNOHANG);
-	if (pid != fr_proc->command_pid) {
+	pid = waitpid (process->priv->command_pid, &status, WNOHANG);
+	if (pid != process->priv->command_pid) {
 		/* Add check again. */
-		fr_proc->log_timeout = g_timeout_add (REFRESH_RATE,
-						      check_child,
-						      fr_proc);
+		process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
+						              check_child,
+						              process);
 		return FALSE;
 	}
 
-	if (c_info->ignore_error) {
-		fr_proc->error.type = FR_PROC_ERROR_NONE;
+	if (info->ignore_error) {
+		process->error.type = FR_PROC_ERROR_NONE;
 		debug (DEBUG_INFO, "[ignore error]\n");
 	}
-	else if (fr_proc->error.type != FR_PROC_ERROR_STOPPED) {
+	else if (process->error.type != FR_PROC_ERROR_STOPPED) {
 		if (WIFEXITED (status)) {
 			if (WEXITSTATUS (status) == 0)
-				fr_proc->error.type = FR_PROC_ERROR_NONE;
+				process->error.type = FR_PROC_ERROR_NONE;
 			else if (WEXITSTATUS (status) == 255)
-				fr_proc->error.type = FR_PROC_ERROR_COMMAND_NOT_FOUND;
+				process->error.type = FR_PROC_ERROR_COMMAND_NOT_FOUND;
 			else {
-				fr_proc->error.type = FR_PROC_ERROR_COMMAND_ERROR;
-				fr_proc->error.status = WEXITSTATUS (status);
+				process->error.type = FR_PROC_ERROR_COMMAND_ERROR;
+				process->error.status = WEXITSTATUS (status);
 			}
 		}
 		else
-			fr_proc->error.type = FR_PROC_ERROR_EXITED_ABNORMALLY;
+			process->error.type = FR_PROC_ERROR_EXITED_ABNORMALLY;
 	}
 
-	fr_proc->command_pid = 0;
-
-	/* Read all pending output. */
-
-	while (process_output (fr_proc)) ;
-	while (process_error (fr_proc)) ;
-
-	close (fr_proc->output_fd);
-	close (fr_proc->error_fd);
-
-	fr_proc->output_fd = 0;
-	fr_proc->error_fd = 0;
+	process->priv->command_pid = 0;
+	fr_channel_data_flush (&process->out);
+	fr_channel_data_flush (&process->err);
 
 	/**/
 
-	if (c_info->end_func != NULL)
-		(*c_info->end_func) (c_info->end_data);
+	if (info->end_func != NULL)
+		(*info->end_func) (info->end_data);
 
 	/* Check whether to continue or stop the process */
 
 	continue_process = TRUE;
-	if (c_info->continue_func != NULL)
-		continue_process = (*c_info->continue_func) (c_info->continue_data);
+	if (info->continue_func != NULL)
+		continue_process = (*info->continue_func) (info->continue_data);
 
 	/* Execute next command. */
 	if (continue_process) {
-		if (fr_proc->error.type != FR_PROC_ERROR_NONE)
-			allow_sticky_processes_only (fr_proc, TRUE);
+		if (process->error.type != FR_PROC_ERROR_NONE)
+			allow_sticky_processes_only (process, TRUE);
 
-		if (fr_proc->sticky_only) {
+		if (process->priv->sticky_only) {
 			do {
-				fr_proc->current_command++;
-			} while ((fr_proc->current_command <= fr_proc->n_comm)
-				 && ! command_is_sticky (fr_proc,
-							 fr_proc->current_command));
-		} else
-			fr_proc->current_command++;
+				process->priv->current_command++;
+			} while ((process->priv->current_command <= process->priv->n_comm)
+				 && ! command_is_sticky (process, process->priv->current_command));
+		} 
+		else
+			process->priv->current_command++;
 
-		if (fr_proc->current_command <= fr_proc->n_comm) {
-			start_current_command (fr_proc);
+		if (process->priv->current_command <= process->priv->n_comm) {
+			start_current_command (process);
 			return FALSE;
 		}
 	}
 
 	/* Done */
 	
-	fr_proc->current_command = -1;
+	process->priv->current_command = -1;
 
-	if (fr_proc->raw_output != NULL)
-		fr_proc->raw_output = g_list_reverse (fr_proc->raw_output);
-	if (fr_proc->raw_error != NULL)
-		fr_proc->raw_error = g_list_reverse (fr_proc->raw_error);
+	if (process->out.raw != NULL)
+		process->out.raw = g_list_reverse (process->out.raw);
+	if (process->err.raw != NULL)
+		process->err.raw = g_list_reverse (process->err.raw);
 
-	fr_proc->running = FALSE;
-	fr_proc->stopping = FALSE;
+	process->priv->running = FALSE;
+	process->priv->stopping = FALSE;
 
-	if (fr_proc->sticky_only) {
+	if (process->priv->sticky_only) {
 		/* Restore the first error. */
-		fr_proc->error.type = fr_proc->first_error.type;
-		fr_proc->error.status = fr_proc->first_error.status;
-		g_clear_error (&fr_proc->error.gerror);
-		if (fr_proc->first_error.gerror != NULL)
-			fr_proc->error.gerror = g_error_copy (fr_proc->first_error.gerror);
+		process->error.type = process->priv->first_error.type;
+		process->error.status = process->priv->first_error.status;
+		g_clear_error (&process->error.gerror);
+		if (process->priv->first_error.gerror != NULL)
+			process->error.gerror = g_error_copy (process->priv->first_error.gerror);
 	}
 
-	g_signal_emit (G_OBJECT (fr_proc),
+	g_signal_emit (G_OBJECT (process),
 		       fr_process_signals[DONE],
 		       0);
 
@@ -845,97 +821,84 @@ check_child (gpointer data)
 
 
 void
-fr_process_use_standard_locale (FrProcess *fr_proc,
+fr_process_use_standard_locale (FrProcess *process,
 				gboolean   use_stand_locale)
 {
-	g_return_if_fail (fr_proc != NULL);
-	fr_proc->use_standard_locale = use_stand_locale;
+	g_return_if_fail (process != NULL);
+	process->priv->use_standard_locale = use_stand_locale;
 }
 
 
 void
-fr_process_start (FrProcess *fr_proc)
+fr_process_start (FrProcess *process)
 {
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	if (fr_proc->running)
+	if (process->priv->running)
 		return;
 
-	if (fr_proc->raw_output != NULL) {
-		g_list_foreach (fr_proc->raw_output, (GFunc) g_free, NULL);
-		g_list_free (fr_proc->raw_output);
-		fr_proc->raw_output = NULL;
-	}
+	fr_channel_data_reset (&process->out);
+	fr_channel_data_reset (&process->err);
 
-	if (fr_proc->raw_error != NULL) {
-		g_list_foreach (fr_proc->raw_error, (GFunc) g_free, NULL);
-		g_list_free (fr_proc->raw_error);
-		fr_proc->raw_error = NULL;
-	}
+	process->priv->sticky_only = FALSE;
+	process->priv->current_command = 0;
+	process->error.type = FR_PROC_ERROR_NONE;
 
-	fr_proc->sticky_only = FALSE;
-	fr_proc->current_command = 0;
-	fr_proc->error.type = FR_PROC_ERROR_NONE;
-
-	if (!fr_proc->restart)
-		g_signal_emit (G_OBJECT (fr_proc),
+	if (! process->restart)
+		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[START],
 			       0);
 
-	fr_proc->stopping = FALSE;
+	process->priv->stopping = FALSE;
 
-	if (fr_proc->n_comm == -1) {
-		fr_proc->running = FALSE;
-		g_signal_emit (G_OBJECT (fr_proc),
+	if (process->priv->n_comm == -1) {
+		process->priv->running = FALSE;
+		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[DONE],
 			       0);
 	} 
 	else {
-		fr_proc->running = TRUE;
-		start_current_command (fr_proc);
+		process->priv->running = TRUE;
+		start_current_command (process);
 	}
 }
 
 
 static void
-_fr_process_stop (FrProcess *fr_proc,
-		  gboolean   emit_signal)
+fr_process_stop_priv (FrProcess *process,
+		      gboolean   emit_signal)
 {
-	g_return_if_fail (fr_proc != NULL);
+	g_return_if_fail (process != NULL);
 
-	if (! fr_proc->running)
+	if (! process->priv->running)
 		return;
 
-	if (fr_proc->stopping)
+	if (process->priv->stopping)
 		return;
 
-	fr_proc->stopping = TRUE;
-	fr_proc->error.type = FR_PROC_ERROR_STOPPED;
+	process->priv->stopping = TRUE;
+	process->error.type = FR_PROC_ERROR_STOPPED;
 
-	if (command_is_sticky (fr_proc, fr_proc->current_command))
-		allow_sticky_processes_only (fr_proc, emit_signal);
+	if (command_is_sticky (process, process->priv->current_command))
+		allow_sticky_processes_only (process, emit_signal);
 
-	else if (fr_proc->term_on_stop)
-		kill (fr_proc->command_pid, SIGTERM);
+	else if (process->term_on_stop)
+		kill (process->priv->command_pid, SIGTERM);
 
 	else {
-		if (fr_proc->log_timeout != 0) {
-			g_source_remove (fr_proc->log_timeout);
-			fr_proc->log_timeout = 0;
+		if (process->priv->check_timeout != 0) {
+			g_source_remove (process->priv->check_timeout);
+			process->priv->check_timeout = 0;
 		}
 
-		fr_proc->command_pid = 0;
+		process->priv->command_pid = 0;
+		fr_channel_data_close_source (&process->out);
+		fr_channel_data_close_source (&process->err);
 
-		close (fr_proc->output_fd);
-		close (fr_proc->error_fd);
-
-		fr_proc->output_fd = 0;
-		fr_proc->error_fd = 0;
-
-		fr_proc->running = FALSE;
+		process->priv->running = FALSE;
 
 		if (emit_signal)
-			g_signal_emit (G_OBJECT (fr_proc),
+			g_signal_emit (G_OBJECT (process),
 				       fr_process_signals[DONE],
 				       0);
 	}
@@ -943,7 +906,7 @@ _fr_process_stop (FrProcess *fr_proc,
 
 
 void
-fr_process_stop (FrProcess *fr_proc)
+fr_process_stop (FrProcess *process)
 {
-	_fr_process_stop (fr_proc, TRUE);
+	fr_process_stop_priv (process, TRUE);
 }

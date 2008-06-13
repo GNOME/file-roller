@@ -342,9 +342,9 @@ fr_command_zip_handle_error (FrCommand   *comm,
 			GList *scan;
 			
 			if (comm->action == FR_ACTION_TESTING_ARCHIVE)
-				output = comm->process->raw_output;
+				output = comm->process->out.raw;
 			else
-				output = comm->process->raw_error;
+				output = comm->process->err.raw;
 			
 			for (scan = g_list_last (output); scan; scan = scan->prev) {
 				char *line = scan->data;

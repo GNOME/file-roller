@@ -371,7 +371,7 @@ fr_command_rar_handle_error (FrCommand   *comm,
 		if (error->status <= 1)
 			error->type = FR_PROC_ERROR_NONE;
 			
-		for (scan = g_list_last (comm->process->raw_error); scan; scan = scan->prev) {
+		for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
 			char *line = scan->data;
 				
 			if (strstr (line, "password incorrect") != NULL) {

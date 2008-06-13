@@ -2051,7 +2051,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "Find", ! no_archive);	
 	set_sensitive (window, "LastOutput", ((window->archive != NULL)
 					      && (window->archive->process != NULL)
-					      && (window->archive->process->raw_output != NULL)));
+					      && (window->archive->process->out.raw != NULL)));
 	set_sensitive (window, "New", ! running);
 	set_sensitive (window, "Open", ! running);
 	set_sensitive (window, "Open_Toolbar", ! running);
@@ -2881,7 +2881,7 @@ handle_errors (FrWindow    *window,
 		}
 
 		if (error->type != FR_PROC_ERROR_GENERIC)
-			output = (process->raw_error != NULL) ? process->raw_error : process->raw_output;
+			output = (process->err.raw != NULL) ? process->err.raw : process->out.raw;
 
 		dialog = _gtk_error_dialog_new (dialog_parent,
 						0,
@@ -6825,7 +6825,7 @@ fr_window_view_last_output (FrWindow   *window,
 	/**/
 
 	gtk_text_buffer_get_iter_at_offset (text_buffer, &iter, 0);
-	scan = window->archive->process->raw_output;
+	scan = window->archive->process->out.raw;
 	for (; scan; scan = scan->next) {
 		char        *line = scan->data;
 		char        *utf8_line;

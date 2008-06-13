@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *  Copyright (C) 2001, 2003, 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,88 +35,43 @@
 #define FR_IS_PROCESS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_PROCESS))
 #define FR_PROCESS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_PROCESS, FrProcessClass))
 
-typedef struct _FrProcess       FrProcess;
-typedef struct _FrProcessClass  FrProcessClass;
-
-#define BUFFER_SIZE 16384
-
-
-typedef void     (*ProcLineFunc) (char *line, gpointer data);
+typedef struct _FrProcess        FrProcess;
+typedef struct _FrProcessClass   FrProcessClass;
+typedef struct _FrProcessPrivate FrProcessPrivate;
+  
 typedef void     (*ProcFunc)     (gpointer data);
 typedef gboolean (*ContinueFunc) (gpointer data);
-
+typedef void     (*LineFunc)     (char *line, gpointer data);
 
 typedef struct {
-	GList *args;              /* command to execute */
-	char  *dir;               /* working directory */
-	guint  sticky : 1;        /* whether the command must be executed even
-				   * if a previous command has failed. */
-	guint  ignore_error : 1;  /* whether to continue to execute other 
-				   * commands if this command fails. */
-
-	ContinueFunc continue_func;
-	gpointer     continue_data;
-
-	ProcFunc     begin_func;
-	gpointer     begin_data;
-
-	ProcFunc     end_func;
-	gpointer     end_data;
-} FrCommandInfo;
-
+	GIOChannel *source;
+	GList      *raw;
+	LineFunc    line_func;
+	gpointer    line_data;
+} FrChannelData;
 
 struct _FrProcess {
 	GObject  __parent;
 
 	/*< public >*/
 
-	gboolean     term_on_stop;     /* whether we must terminate the command
-					* when calling fr_process_stop. */
+	gboolean          term_on_stop;  /* whether we must terminate the 
+					  * command when calling 
+					  * fr_process_stop. */
+
+	/*< public read-only >*/
+
+	FrChannelData     out;
+	FrChannelData     err;
+	FrProcError       error;
 
 	/*< protected >*/
 
-	gboolean     restart;          /* Whether the process must restart
-					* after an error. */
+	gboolean          restart;       /* whether to restart the process 
+			  		  * after an error. */
 
-	/*< private >*/
-
-	GPtrArray   *comm;             /* FrCommandInfo elements. */
-	gint         n_comm;           /* total number of commands */
-	gint         current_comm;     /* currenlty editing command. */
-
-	pid_t        command_pid;
-	int          output_fd;
-	int          error_fd;
-
-	guint        log_timeout;
-
-	char        *o_buffer;
-	int          o_not_processed;
-	GList       *raw_output;
-
-	char        *e_buffer;
-	int          e_not_processed;
-	GList       *raw_error;
-
-	ProcLineFunc o_proc_line_func;
-	gpointer     o_proc_line_data;
-
-	ProcLineFunc e_proc_line_func;
-	gpointer     e_proc_line_data;
-
-	FrProcError  error;
-	FrProcError  first_error;
-
-	gboolean     running;
-	gboolean     stopping;
-	gint         current_command;	
-	gint         error_command;    /* command that coused an error. */
-
-	gboolean     use_standard_locale;
-	gboolean     sticky_only;      /* whether to execute only sticky 
-					* commands. */
+	FrProcessPrivate *priv;
 };
-
 
 struct _FrProcessClass {
 	GObjectClass __parent_class;
@@ -127,7 +82,6 @@ struct _FrProcessClass {
 	void (* done)          (FrProcess   *fr_proc);
 	void (* sticky_only)   (FrProcess   *fr_proc);
 };
-
 
 GType       fr_process_get_type             (void);
 FrProcess * fr_process_new                  (void);
@@ -165,13 +119,12 @@ void        fr_process_set_ignore_error     (FrProcess    *fr_proc,
 void        fr_process_use_standard_locale  (FrProcess    *fr_proc,
 					     gboolean      use_stand_locale);
 void        fr_process_set_out_line_func    (FrProcess    *fr_proc, 
-					     ProcLineFunc  func,
+					     LineFunc  func,
 					     gpointer      func_data);
 void        fr_process_set_err_line_func    (FrProcess    *fr_proc, 
-					     ProcLineFunc  func,
+					     LineFunc  func,
 					     gpointer      func_data);
 void        fr_process_start                (FrProcess    *fr_proc);
 void        fr_process_stop                 (FrProcess    *fr_proc);
-
 
 #endif /* FR_PROCESS_H */
