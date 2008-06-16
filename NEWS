@@ -1,3 +1,19 @@
+version 2.23.3
+--------------
+	* Added partial support for tar archives compressed with 7zip.  
+	* Display the progress dialog if the operation lasts more than 5 
+	  seconds.
+	  Display the progress dialog without delay if extracting or converting
+	  an archive.  After the extraction add to the progress dialog the 
+	  button to open the destination folder and after the conversion add 
+	  the button to open the newly created archive.
+	  Removed the 'view folder after extraction' option from the 
+	  extraction dialog.
+	* Removed the preview-file stock item, use gtk_stock_open instead.
+	* Do not use the sh command to exec the process, use the utility command
+	  directly to allow to stop the process properly
+	* Use g_io_channel to read the command output.
+	
 version 2.23.2
 --------------	
 
