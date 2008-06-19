@@ -1,5 +1,16 @@
 2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (action_performed): do not reload the archive if
+	an error occurs when adding files in batch mode.
+	(fr_window_stop_activity_mode): do not allow the activity_ref counter
+	to be negative.
+		
+	* src/file-utils.c (uri_is_filetype, dir_is_empty)
+	(dir_contains_one_object, get_dir_content_if_unique): check for file
+	existance before anythink else.
+	
+2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c (action_started): 
 	
 	Show the progress dialog without any delay for any operation when

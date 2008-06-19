@@ -79,6 +79,12 @@ uri_is_filetype (const char *uri,
 	GError    *error = NULL;
 	
 	file = g_file_new_for_uri (uri);
+	
+	if (! g_file_query_exists (file, NULL)) {
+		g_object_unref (file);
+		return FALSE;
+	}
+	
 	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_TYPE, 0, NULL, &error);
 	if (error == NULL) {
 		result = (g_file_info_get_file_type (info) == file_type);
@@ -139,6 +145,12 @@ dir_is_empty (const char *uri)
 	int              n = 0;
 
 	file = g_file_new_for_uri (uri);
+	
+	if (! g_file_query_exists (file, NULL)) {
+		g_object_unref (file);
+		return TRUE;
+	}
+	
 	file_enum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &error);
 	if (error != NULL) {
 		g_warning ("Failed to enumerate children of %s: %s", uri, error->message);
@@ -175,6 +187,12 @@ dir_contains_one_object (const char *uri)
 	int              n = 0;
 
 	file = g_file_new_for_uri (uri);
+	
+	if (! g_file_query_exists (file, NULL)) {
+		g_object_unref (file);
+		return FALSE;
+	}
+	
 	file_enum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
 	if (err != NULL) {
 		g_warning ("Failed to enumerate children of %s: %s", uri, err->message);
@@ -223,6 +241,12 @@ get_dir_content_if_unique (const char  *uri)
 	char            *content_uri = NULL;
 	
 	file = g_file_new_for_uri (uri);
+	
+	if (! g_file_query_exists (file, NULL)) {
+		g_object_unref (file);
+		return NULL;
+	}
+	
 	file_enum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
 	if (err != NULL) {
 		g_warning ("Failed to enumerate children of %s: %s", uri, err->message);

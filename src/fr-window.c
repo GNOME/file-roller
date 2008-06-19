@@ -3035,13 +3035,11 @@ action_performed (FrArchive   *archive,
 
 	case FR_ACTION_ADDING_FILES:
 		close_progress_dialog (window, FALSE);
-		if (error->type != FR_PROC_ERROR_NONE) {
-			fr_window_archive_reload (window);
-			return;
+		if (error->type == FR_PROC_ERROR_NONE) {
+			if (window->priv->archive_new) 
+				window->priv->archive_new = FALSE;
+			fr_window_add_to_recent_list (window, window->priv->archive_uri);
 		}
-		if (window->priv->archive_new) 
-			window->priv->archive_new = FALSE;
-		fr_window_add_to_recent_list (window, window->priv->archive_uri);
 		if (! window->priv->batch_mode) {
 			fr_window_archive_reload (window);
 			return;
@@ -3062,7 +3060,6 @@ action_performed (FrArchive   *archive,
 			}
 			break;
 		}
-
 		if (window->priv->convert_data.converting) {
 			char *source_dir;
 			
@@ -3086,15 +3083,6 @@ action_performed (FrArchive   *archive,
 			else
 				close_progress_dialog (window, FALSE);
 		}
-		/*
-		else if (window->priv->view_folder_after_extraction) {
-			if (window->priv->batch_mode) {
-				g_usleep (G_USEC_PER_SEC);
-				view_extraction_destination_folder (window);
-			}
-			else
-				g_timeout_add (500, view_extraction_destination_folder, window);
-		}*/
 		break;
 
 	default:
@@ -6718,7 +6706,12 @@ fr_window_stop_activity_mode (FrWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
-	if (--window->priv->activity_ref > 0)
+	if (window->priv->activity_ref == 0)
+		return;
+
+	window->priv->activity_ref--;
+
+	if (window->priv->activity_ref > 0)
 		return;
 
 	if (window->priv->activity_timeout_handle == 0)
