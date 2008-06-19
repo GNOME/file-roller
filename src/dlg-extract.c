@@ -87,7 +87,7 @@ extract_cb (GtkWidget   *w,
 	GList      *file_list;
 	char       *password;
 	char       *base_dir = NULL;
-	GError     *error;
+	GError     *error = NULL;
 
 	data->extract_clicked = TRUE;
 

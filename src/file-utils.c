@@ -829,7 +829,7 @@ remove_directory (const char *uri)
 {
 	GFile     *dir;
 	gboolean   result;
-	GError    *error;
+	GError    *error = NULL;
 	
 	dir = g_file_new_for_uri (uri);
 	result = delete_directory_recursive (dir, &error);

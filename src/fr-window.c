@@ -2691,7 +2691,7 @@ action_started (FrArchive *archive,
 		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction || window->priv->convert_data.converting || window->priv->batch_mode);
 		break;
 	default:
-		open_progress_dialog (window, FALSE);
+		open_progress_dialog (window, window->priv->batch_mode);
 		break;
 	}
 		
@@ -6362,7 +6362,7 @@ fr_window_archive_extract (FrWindow   *window,
 {
 	ExtractData *edata;
 	gboolean     do_not_extract = FALSE;
-	GError      *error;
+	GError      *error = NULL;
 
 	edata = extract_data_new (file_list,
 				  extract_to_dir,
@@ -7840,7 +7840,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
         const char *first_mime_type;
         GAppInfo   *app;
         GList      *files_to_open = NULL;
-        GError     *error;
+        GError     *error = NULL;
 
 	g_return_val_if_fail (file_list != NULL, FALSE);
 

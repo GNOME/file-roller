@@ -252,7 +252,7 @@ for_each_child_close_enumerator (GObject      *source_object,
 		      		 gpointer      user_data)
 {
 	ForEachChildData *fec = user_data;
-	GError           *error;
+	GError           *error = NULL;
 	
 	if (! g_file_enumerator_close_finish (fec->enumerator,
 					      result,
@@ -911,7 +911,7 @@ g_copy_files_ready_cb (GObject      *source_object,
 {
 	CopyFilesData *cfd = user_data;
 	GFile         *source = cfd->source->data;
-	GError        *error;
+	GError        *error = NULL;
 	
 	if (! g_file_copy_finish (source, result, &error)) {
 		if (cfd->callback)

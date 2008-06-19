@@ -1,5 +1,21 @@
 2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c (action_started): 
+	
+	Show the progress dialog without any delay for any operation when
+	in batch mode. 
+
+	* src/gio-utils.c: 
+	* src/fr-window.c: 
+	* src/fr-archive.c: 
+	* src/file-utils.c: 
+	* src/dlg-extract.c: 
+	* src/dlg-batch-add.c: 
+	
+	GErrors must be initialized to NULL.
+
+2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.h: 
 	* src/dlg-extract.c:
 	* src/fr-window.c: 

@@ -659,7 +659,7 @@ move_here (FrArchive *archive)
 	char   *parent_parent;
 	char   *new_content_uri;
 	GFile  *source, *destination, *parent_file;
-	GError *error;
+	GError *error = NULL;
 
 	content_uri = get_dir_content_if_unique (archive->priv->extraction_destination);
 	if (content_uri == NULL)
@@ -1551,7 +1551,7 @@ copy_remote_files (FrArchive     *archive,
 		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
 		local_folder_uri = remove_level_from_path (local_uri);
 		if (g_hash_table_lookup (created_folders, local_folder_uri) == NULL) {
-			GError *error;
+			GError *error = NULL;
 			if (! ensure_dir_exists (local_uri, 0755, &error)) {
 				g_free (local_folder_uri);
 				g_free (local_uri);

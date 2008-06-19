@@ -106,7 +106,7 @@ add_clicked_cb (GtkWidget  *widget,
 	char       *tmp;
 	const char *archive_ext;
 	gboolean    do_not_add = FALSE;
-	GError     *error;
+	GError     *error = NULL;
 
 	data->add_clicked = TRUE;
 
