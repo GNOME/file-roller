@@ -267,15 +267,27 @@ fr_command_unstuff_handle_error (FrCommand   *comm,
 }
 
 
-static void
-fr_command_unstuff_set_mime_type (FrCommand  *comm,
-			          const char *mime_type)
+const char *unstuff_mime_type[] = { "application/x-stuffit", NULL };
+
+
+const char **  
+fr_command_unstuff_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return unstuff_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_unstuff_get_capabilities (FrCommand  *comm,
+			             const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("unstuff")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAP_READ;
+		
+	return capabilities;
 }
 
 
@@ -290,12 +302,13 @@ fr_command_unstuff_class_init (FrCommandUnstuffClass *class)
 
 	gobject_class->finalize = fr_command_unstuff_finalize;
 
-	afc->list           = fr_command_unstuff_list;
-	afc->add            = NULL;
-	afc->delete         = NULL;
-	afc->extract        = fr_command_unstuff_extract;
-	afc->handle_error   = fr_command_unstuff_handle_error;
-	afc->set_mime_type  = fr_command_unstuff_set_mime_type;
+	afc->list             = fr_command_unstuff_list;
+	afc->add              = NULL;
+	afc->delete           = NULL;
+	afc->extract          = fr_command_unstuff_extract;
+	afc->handle_error     = fr_command_unstuff_handle_error;
+	afc->get_mime_types   = fr_command_unstuff_get_mime_types;
+	afc->get_capabilities = fr_command_unstuff_get_capabilities;
 }
 
 

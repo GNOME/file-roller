@@ -164,11 +164,30 @@ base_fr_command_handle_error (FrCommand *comm,
 }
 
 
+const char **void_mime_types = { NULL };
+
+
+const char **  
+base_fr_command_get_mime_types (FrCommand *comm)
+{
+	return void_mime_types;
+}
+
+
+FrCommandCap   
+base_fr_command_get_capabilities (FrCommand  *comm,
+			          const char *mime_type)
+{
+	return FR_COMMAND_CAP_NONE;
+}
+					      
+
 static void
 base_fr_command_set_mime_type (FrCommand  *comm,
 			       const char *mime_type)
 {
 	comm->mime_type = get_static_string (mime_type);
+	comm->capabilities = fr_command_get_capabilities (comm, comm->mime_type);
 }
 
 
@@ -305,19 +324,21 @@ fr_command_class_init (FrCommandClass *class)
 	gobject_class->set_property = fr_command_set_property;
         gobject_class->get_property = fr_command_get_property;
                
-	class->list           = base_fr_command_list;
-	class->add            = base_fr_command_add;
-	class->delete         = base_fr_command_delete;
-	class->extract        = base_fr_command_extract;
-	class->test           = base_fr_command_test;
-	class->uncompress     = base_fr_command_uncompress;
-	class->recompress     = base_fr_command_recompress;
-	class->handle_error   = base_fr_command_handle_error;
-	class->set_mime_type  = base_fr_command_set_mime_type;
-	class->start          = NULL;
-	class->done           = NULL;
-	class->progress       = NULL;
-	class->message        = NULL;
+	class->list             = base_fr_command_list;
+	class->add              = base_fr_command_add;
+	class->delete           = base_fr_command_delete;
+	class->extract          = base_fr_command_extract;
+	class->test             = base_fr_command_test;
+	class->uncompress       = base_fr_command_uncompress;
+	class->recompress       = base_fr_command_recompress;
+	class->handle_error     = base_fr_command_handle_error;
+	class->get_mime_types   = base_fr_command_get_mime_types;
+	class->get_capabilities = base_fr_command_get_capabilities;
+	class->set_mime_type    = base_fr_command_set_mime_type;
+	class->start            = NULL;
+	class->done             = NULL;
+	class->progress         = NULL;
+	class->message          = NULL;
 	
 	/* signals */
 	
@@ -487,6 +508,7 @@ fr_command_list (FrCommand  *comm,
 	comm->action = FR_ACTION_LISTING_CONTENT;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
+	fr_process_use_standard_locale (FR_COMMAND (comm)->process, TRUE);
 	
 	if (!comm->fake_load)
 		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm, password);
@@ -585,6 +607,21 @@ fr_command_recompress (FrCommand     *comm,
 {
 	fr_command_progress (comm, -1.0);	
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
+}
+
+
+const char **  
+fr_command_get_mime_types (FrCommand *comm)
+{
+	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->get_mime_types (comm);
+}
+
+
+FrCommandCap   
+fr_command_get_capabilities (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->get_capabilities (comm, mime_type);
 }
 
 

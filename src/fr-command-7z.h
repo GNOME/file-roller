@@ -40,8 +40,8 @@ typedef struct _FrCommand7zClass  FrCommand7zClass;
 struct _FrCommand7z
 {
 	FrCommand __parent;
-	gboolean  list_started;
-	int       name_index;
+	gboolean   list_started;
+	FileData  *fdata;
 };
 
 struct _FrCommand7zClass

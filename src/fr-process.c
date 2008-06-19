@@ -603,8 +603,10 @@ static void child_setup (gpointer user_data)
 {
 	FrProcess *process = user_data;
 
-	if (process->priv->use_standard_locale)
+	if (process->priv->use_standard_locale) {
+		debug (DEBUG_INFO, "LC_ALL=C");
 		putenv ("LC_ALL=C");
+	}
 }
 
 
@@ -794,7 +796,8 @@ check_child (gpointer data)
 	/* Done */
 	
 	process->priv->current_command = -1;
-
+	process->priv->use_standard_locale = FALSE;
+	
 	if (process->out.raw != NULL)
 		process->out.raw = g_list_reverse (process->out.raw);
 	if (process->err.raw != NULL)

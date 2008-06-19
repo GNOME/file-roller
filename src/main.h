@@ -73,6 +73,6 @@ extern int create_type[];           /* File types that can be created. */
 GType        get_command_type_from_mime_type (const char    *mime_type,
 				 	      FrCommandCaps  requested_capabilities);
 const char * get_mime_type_from_extension    (const char    *ext);
-const char * get_archive_filename_extension  (const char *uri);
+const char * get_archive_filename_extension  (const char    *uri);
 
 #endif /* MAIN_H */

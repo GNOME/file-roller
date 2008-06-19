@@ -411,34 +411,52 @@ fr_command_cfile_extract (FrCommand  *comm,
 }
 
 
-static void
-fr_command_cfile_set_mime_type (FrCommand  *comm,
-			        const char *mime_type)
+const char *cfile_mime_type[] = { "application/x-gzip", 
+				  "application/x-bzip", 
+				  "application/x-compress",
+				  "application/x-lzma",
+				  "application/x-lzop",
+				  NULL };
+
+
+const char **  
+fr_command_cfile_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return cfile_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_cfile_get_capabilities (FrCommand  *comm,
+			           const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	if (is_mime_type (comm->mime_type, "application/x-gzip")) {
+	capabilities = FR_COMMAND_CAP_NONE;
+	if (is_mime_type (mime_type, "application/x-gzip")) {
 		if (is_program_in_path ("gzip"))
-			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAP_READ_WRITE;
 	}
-	else if (is_mime_type (comm->mime_type, "application/x-bzip")) {
+	else if (is_mime_type (mime_type, "application/x-bzip")) {
 		if (is_program_in_path ("bzip2"))
-			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAP_READ_WRITE;
 	}
-	else if (is_mime_type (comm->mime_type, "application/x-compress")) {
+	else if (is_mime_type (mime_type, "application/x-compress")) {
 		if (is_program_in_path ("compress"))
-			comm->capabilities |= FR_COMMAND_CAP_WRITE;
+			capabilities |= FR_COMMAND_CAP_WRITE;
 		if (is_program_in_path ("uncompress"))
-			comm->capabilities |= FR_COMMAND_CAP_READ;
+			capabilities |= FR_COMMAND_CAP_READ;
 	}
-	else if (is_mime_type (comm->mime_type, "application/x-lzma")) {
+	else if (is_mime_type (mime_type, "application/x-lzma")) {
 		if (is_program_in_path ("lzma"))
-			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAP_READ_WRITE;
 	}
-	else if (is_mime_type (comm->mime_type, "application/x-lzop")) {
+	else if (is_mime_type (mime_type, "application/x-lzop")) {
 		if (is_program_in_path ("lzop"))
-			comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAP_READ_WRITE;
 	}
+	
+	return capabilities;
 }
 
 
@@ -465,11 +483,12 @@ fr_command_cfile_class_init (FrCommandCFileClass *class)
 
         gobject_class->finalize = fr_command_cfile_finalize;
 
-        afc->list          = fr_command_cfile_list;
-	afc->add           = fr_command_cfile_add;
-	afc->delete        = fr_command_cfile_delete;
-	afc->extract       = fr_command_cfile_extract;
-	afc->set_mime_type = fr_command_cfile_set_mime_type;
+        afc->list             = fr_command_cfile_list;
+	afc->add              = fr_command_cfile_add;
+	afc->delete           = fr_command_cfile_delete;
+	afc->extract          = fr_command_cfile_extract;
+	afc->get_mime_types   = fr_command_cfile_get_mime_types;
+	afc->get_capabilities = fr_command_cfile_get_capabilities;
 }
 
  

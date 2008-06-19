@@ -108,48 +108,48 @@ struct _FrCommandClass
 
 	/*<virtual functions>*/
 
-	void        (*list)           (FrCommand     *comm,
-				       const char    *password);
-	void        (*add)            (FrCommand     *comm,
-				       GList         *file_list,
-				       const char    *base_dir,
-				       gboolean       update,
-				       gboolean       recursive,
-				       const char    *password,
-				       FrCompression  compression); 
-	void        (*delete)         (FrCommand     *comm,
-				       GList         *file_list); 
-	void        (*extract)        (FrCommand     *comm,
-				       GList         *file_list,
-				       const char    *dest_dir,
-				       gboolean       overwrite,
-				       gboolean       skip_older,
-				       gboolean       junk_paths,
-				       const char    *password);
-	void        (*test)           (FrCommand     *comm,
-				       const char    *password);
-	void        (*uncompress)     (FrCommand     *comm);
-	void        (*recompress)     (FrCommand     *comm,
-				       FrCompression  compression);
-	void        (*handle_error)   (FrCommand     *comm,
-				       FrProcError   *error);
-
-	/*<protected virtual functions>*/
-	
-	void        (*set_mime_type)  (FrCommand     *comm,
-				       const char    *mime_type);
+	void          (*list)             (FrCommand     *comm,
+				           const char    *password);
+	void          (*add)              (FrCommand     *comm,
+				           GList         *file_list,
+				           const char    *base_dir,
+				           gboolean       update,
+				           gboolean       recursive,
+				           const char    *password,
+				           FrCompression  compression); 
+	void          (*delete)           (FrCommand     *comm,
+				           GList         *file_list); 
+	void          (*extract)          (FrCommand     *comm,
+				           GList         *file_list,
+				           const char    *dest_dir,
+				           gboolean       overwrite,
+				           gboolean       skip_older,
+				           gboolean       junk_paths,
+				           const char    *password);
+	void          (*test)             (FrCommand     *comm,
+				           const char    *password);
+	void          (*uncompress)       (FrCommand     *comm);
+	void          (*recompress)       (FrCommand     *comm,
+				           FrCompression  compression);
+	void          (*handle_error)     (FrCommand     *comm,
+				           FrProcError   *error);
+	const char ** (*get_mime_types)   (FrCommand     *comm);
+	FrCommandCap  (*get_capabilities) (FrCommand     *comm,
+					   const char    *mime_type);
+	void          (*set_mime_type)    (FrCommand     *comm,
+				           const char    *mime_type);
 
 	/*<signals>*/
 
-	void        (*start)          (FrCommand   *comm,
-				       FrAction     action); 
-	void        (*done)           (FrCommand   *comm,
-				       FrAction     action,
-				       FrProcError *error);
-	void        (*progress)       (FrCommand   *comm,
-				       double       fraction);
-	void        (*message)        (FrCommand   *comm,
-				       const char  *msg);
+	void          (*start)            (FrCommand   *comm,
+			 	           FrAction     action); 
+	void          (*done)             (FrCommand   *comm,
+				           FrAction     action,
+				           FrProcError *error);
+	void          (*progress)         (FrCommand   *comm,
+				           double       fraction);
+	void          (*message)          (FrCommand   *comm,
+				           const char  *msg);
 };
 
 GType          fr_command_get_type           (void);
@@ -180,6 +180,13 @@ void           fr_command_recompress         (FrCommand     *comm,
 					      FrCompression  compression);
 gboolean       fr_command_is_capable_of      (FrCommand     *comm, 
 					      FrCommandCaps  capabilities);
+const char **  fr_command_get_mime_types     (FrCommand     *comm);
+FrCommandCap   fr_command_get_capabilities   (FrCommand     *comm,
+					      const char    *mime_type);
+void           fr_command_set_mime_type      (FrCommand     *comm,
+					      const char    *mime_type);
+gboolean       fr_command_is_capable_of      (FrCommand     *comm, 
+					      FrCommandCaps  capabilities);
 
 /* protected functions */
 
@@ -191,8 +198,6 @@ void           fr_command_set_n_files        (FrCommand     *comm,
 					      int            n_files);
 void           fr_command_add_file           (FrCommand     *comm,
 					      FileData      *fdata);
-void           fr_command_set_mime_type      (FrCommand     *comm,
-					      const char    *mime_type);
 
 /* private functions */
 

@@ -324,15 +324,27 @@ fr_command_zoo_test (FrCommand   *comm,
 }
 
 
-static void
-fr_command_zoo_set_mime_type (FrCommand  *comm,
-			      const char *mime_type)
+const char *zoo_mime_type[] = { "application/x-zoo", NULL };
+
+
+const char **  
+fr_command_zoo_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return zoo_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_zoo_get_capabilities (FrCommand  *comm,
+			         const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("zoo")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		
+	return capabilities;
 }
 
 
@@ -347,12 +359,13 @@ fr_command_zoo_class_init (FrCommandZooClass *class)
 
 	gobject_class->finalize = fr_command_zoo_finalize;
 
-        afc->list          = fr_command_zoo_list;
-	afc->add           = fr_command_zoo_add;
-	afc->delete        = fr_command_zoo_delete;
-	afc->extract       = fr_command_zoo_extract;
-	afc->test          = fr_command_zoo_test;
-	afc->set_mime_type = fr_command_zoo_set_mime_type;
+        afc->list             = fr_command_zoo_list;
+	afc->add              = fr_command_zoo_add;
+	afc->delete           = fr_command_zoo_delete;
+	afc->extract          = fr_command_zoo_extract;
+	afc->test             = fr_command_zoo_test;
+	afc->get_mime_types   = fr_command_zoo_get_mime_types;
+	afc->get_capabilities = fr_command_zoo_get_capabilities;
 }
 
  

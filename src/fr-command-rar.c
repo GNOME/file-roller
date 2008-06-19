@@ -383,17 +383,31 @@ fr_command_rar_handle_error (FrCommand   *comm,
 }
 
 
-static void
-fr_command_rar_set_mime_type (FrCommand  *comm,
-		 	      const char *mime_type)
+const char *rar_mime_type[] = { "application/x-cbr", 
+				"application/x-rar", 
+				NULL };
+
+
+const char **  
+fr_command_rar_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return rar_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_rar_get_capabilities (FrCommand  *comm,
+			         const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("rar")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAP_READ_WRITE;
 	else if (is_program_in_path ("unrar")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAP_READ;
+		
+	return capabilities;
 }
 
 
@@ -408,13 +422,14 @@ fr_command_rar_class_init (FrCommandRarClass *class)
 
 	gobject_class->finalize = fr_command_rar_finalize;
 
-	afc->list           = fr_command_rar_list;
-	afc->add            = fr_command_rar_add;
-	afc->delete         = fr_command_rar_delete;
-	afc->extract        = fr_command_rar_extract;
-	afc->test           = fr_command_rar_test;
-	afc->handle_error   = fr_command_rar_handle_error;
-	afc->set_mime_type  = fr_command_rar_set_mime_type;
+	afc->list             = fr_command_rar_list;
+	afc->add              = fr_command_rar_add;
+	afc->delete           = fr_command_rar_delete;
+	afc->extract          = fr_command_rar_extract;
+	afc->test             = fr_command_rar_test;
+	afc->handle_error     = fr_command_rar_handle_error;
+	afc->get_mime_types   = fr_command_rar_get_mime_types;
+	afc->get_capabilities = fr_command_rar_get_capabilities;
 }
 
 

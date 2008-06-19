@@ -676,10 +676,10 @@ file_extension_is (const char *filename,
 
 
 gboolean
-is_mime_type (const char *type, 
+is_mime_type (const char *mime_type, 
 	      const char *pattern) 
 {
-	return (strncasecmp (type, pattern, strlen (pattern)) == 0);
+	return (strncasecmp (mime_type, pattern, strlen (pattern)) == 0);
 }
 
 

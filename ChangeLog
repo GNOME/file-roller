@@ -1,4 +1,76 @@
+2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* configure.in: bumped version number to differentiate 
+	current development version from the latest released version.
+	
+	* src/fr-command-7z.h: 
+	* src/fr-command-7z.c (list__process_line, fr_command_7z_list): 
+
+	Use the technical list, because we need to know whether a file is 
+	encrypted or not.
+
+2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/main.c:
+	* src/fr-command-7z.c:
+	* src/fr-command-zip.c:
+	* data/file-roller.desktop.in.in: 
+	
+	renamed MS-DOS executable mime-type from 
+	application/x-ms-dos-executable to application/x-executable
+	
+	* src/fr-command-zip.c: added support for .cbz files
+	
+	* src/fr-command-rar.c: added support for .cbr files.
+	
+	* src/fr-command-cpio.c: Fixed list error when the file type is 'c'.
+	
+	* src/fr-command-7z.c: Added support for creating self-extracting
+	zip archives.  Added support for reading/writing zip, cbr, cbz archives.
+	Added support for reading cabinet, arj, rar and iso archives.
+	
+	Fixes bug #343201 – Use p7zip for RAR archives?
+	Fixes bug #529395 – file-roller will not open 256 AES zip files
+	Fixes bug #515194 – PK 4.5 Zip files
+	Fixes bug #519046 – add x-cbr and x-cbz support
+
+2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/main.h: 
+	* src/main.c: 
+	
+	Removed duplicated data.  Simplified the way to register commands.
+	Use the functions fr_command_get_mime_types and 
+	fr_command_get_capabilities to compute the supported mime_types and	the
+	relative capabilities.
+	
+	* src/fr-command-zoo.c: 
+	* src/fr-command-zip.c: 
+	* src/fr-command-unstuff.c: 
+	* src/fr-command-tar.c: 
+	* src/fr-command-rpm.c: 
+	* src/fr-command-rar.c: 
+	* src/fr-command-lha.c: 
+	* src/fr-command-iso.c: 
+	* src/fr-command-cpio.c: 
+	* src/fr-command-cfile.c: 
+	* src/fr-command-arj.c: 
+	* src/fr-command-ar.c: 
+	* src/fr-command-ace.c: 
+	* src/fr-command-7z.c: 
+	* src/fr-command.h: 
+	* src/fr-command.c: 
+	
+	added two new virtual functions: get_mime_types, get_capabilities.
+	
+	* src/file-utils.c (is_mime_type): rename type to mime_type.
+	
+	* nautilus/nautilus-fileroller.c: updated the mime_type list.
+	* data/file-roller.desktop.in.in: updated the MimeType field.
+
 2008-06-16  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	[ File Roller 2.23.3 released ]
 
 	* NEWS: updated
 
@@ -124,8 +196,10 @@
 	* src/dlg-add-folder.c: 
 	
 	Do not use the sh command to exec the process, use the utility command
-	directly to allow to stop the process properly (see #520844).
+	directly to allow to stop the process properly.
 	Do not escape the filenames because the shell is not used anymore.
+	
+	Fixes bug #520844 – File roller not cancelling compression
 	
 2008-06-10  Paolo Bacchilega  <paobac@svn.gnome.org>
 	

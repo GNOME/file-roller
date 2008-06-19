@@ -320,15 +320,27 @@ fr_command_arj_handle_error (FrCommand   *comm,
 }
 
 
-static void
-fr_command_arj_set_mime_type (FrCommand  *comm,
-		 	      const char *mime_type)
+const char *arj_mime_type[] = { "application/x-arj", NULL };
+
+
+const char **  
+fr_command_arj_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return arj_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_arj_get_capabilities (FrCommand  *comm,
+			         const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("arj")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		
+	return capabilities;
 }
 
 
@@ -343,13 +355,14 @@ fr_command_arj_class_init (FrCommandArjClass *class)
 
 	gobject_class->finalize = fr_command_arj_finalize;
 
-	afc->list           = fr_command_arj_list;
-	afc->add            = fr_command_arj_add;
-	afc->delete         = fr_command_arj_delete;
-	afc->extract        = fr_command_arj_extract;
-	afc->test           = fr_command_arj_test;
-	afc->handle_error   = fr_command_arj_handle_error;
-	afc->set_mime_type  = fr_command_arj_set_mime_type;
+	afc->list             = fr_command_arj_list;
+	afc->add              = fr_command_arj_add;
+	afc->delete           = fr_command_arj_delete;
+	afc->extract          = fr_command_arj_extract;
+	afc->test             = fr_command_arj_test;
+	afc->handle_error     = fr_command_arj_handle_error;
+	afc->get_mime_types   = fr_command_arj_get_mime_types;
+	afc->get_capabilities = fr_command_arj_get_capabilities;
 }
 
 

@@ -359,21 +359,36 @@ fr_command_zip_handle_error (FrCommand   *comm,
 }
 
 
-static void
-fr_command_zip_set_mime_type (FrCommand  *comm,
-			      const char *mime_type)
+const char *zip_mime_type[] = { "application/x-cbz",
+				"application/x-executable", 
+				"application/zip", 
+				NULL };
+
+
+const char **  
+fr_command_zip_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return zip_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_zip_get_capabilities (FrCommand  *comm,
+			         const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("zip")) {
-		if (strcmp (comm->mime_type, "application/x-ms-dos-executable") == 0)
-			comm->capabilities |= FR_COMMAND_CAP_READ;
+		if (strcmp (mime_type, "application/x-executable") == 0)
+			capabilities |= FR_COMMAND_CAP_READ;
 		else
-			comm->capabilities |= FR_COMMAND_CAP_ALL;
+			capabilities |= FR_COMMAND_CAP_ALL;
 	} 
 	else if (is_program_in_path ("unzip")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAP_READ;
+		
+	return capabilities;
 }
 
 
@@ -388,13 +403,14 @@ fr_command_zip_class_init (FrCommandZipClass *class)
 
 	gobject_class->finalize = fr_command_zip_finalize;
 
-	afc->list           = fr_command_zip_list;
-	afc->add            = fr_command_zip_add;
-	afc->delete         = fr_command_zip_delete;
-	afc->extract        = fr_command_zip_extract;
-	afc->test           = fr_command_zip_test;
-	afc->handle_error   = fr_command_zip_handle_error;
-	afc->set_mime_type  = fr_command_zip_set_mime_type;
+	afc->list             = fr_command_zip_list;
+	afc->add              = fr_command_zip_add;
+	afc->delete           = fr_command_zip_delete;
+	afc->extract          = fr_command_zip_extract;
+	afc->test             = fr_command_zip_test;
+	afc->handle_error     = fr_command_zip_handle_error;
+	afc->get_mime_types   = fr_command_zip_get_mime_types;
+	afc->get_capabilities = fr_command_zip_get_capabilities;
 }
 
 

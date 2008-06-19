@@ -92,11 +92,9 @@ list__process_line (char     *line,
 	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	const char  *name_field;
+	int          ofs = 0;
 
 	g_return_if_fail (line != NULL);
-
-	if (line[0] == 'd') /* Ignore directories. */
-		return;
 
 	fdata = file_data_new ();
 
@@ -107,14 +105,21 @@ list__process_line (char     *line,
 	g_strfreev (fields);
 
 	name_field = get_last_field (line, 10);
-#else
-	fields = split_line (line, 8);
-	fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
-	fdata->modified = mktime_from_string (fields[5], fields[6], fields[7]);
+#else /* !__sun */
+	if (line[0] == 'c') {
+		fields = split_line (line, 9);
+		ofs = 1;
+	}
+	else {
+		fields = split_line (line, 8);
+		ofs = 0;
+	}
+	fdata->size = g_ascii_strtoull (fields[4+ofs], NULL, 10);
+	fdata->modified = mktime_from_string (fields[5+ofs], fields[6+ofs], fields[7+ofs]);
 	g_strfreev (fields);
 
-	name_field = get_last_field (line, 9);
-#endif /* __sun */
+	name_field = get_last_field (line, 9+ofs);
+#endif /* !__sun */
 
 	fields = g_strsplit (name_field, " -> ", 2);
 
@@ -123,19 +128,41 @@ list__process_line (char     *line,
 		fields = g_strsplit (name_field, " link to ", 2);
 	}
 
+	fdata->dir = line[0] == 'd';
+	
 	if (*(fields[0]) == '/') {
-		fdata->full_path = g_strdup (fields[0]);
-		fdata->original_path = fdata->full_path;
-	} else {
-		fdata->full_path = g_strconcat ("/", fields[0], NULL);
-		fdata->original_path = fdata->full_path + 1;
+		char *name = fields[0];		
+		if (fdata->dir && (name[strlen (name) - 1] != '/')) {
+			fdata->full_path = g_strconcat (name, "/", NULL);
+			fdata->original_path = g_strdup (fields[0]);
+			fdata->free_original_path = TRUE;
+		}
+		else {
+			fdata->full_path = g_strdup (fields[0]);
+			fdata->original_path = fdata->full_path;
+		}
+	} 
+	else {
+		char *name = fields[0];		
+		if (fdata->dir && (name[strlen (name) - 1] != '/')) {
+			fdata->full_path = g_strconcat ("/", name, "/", NULL);
+			fdata->original_path = g_strdup (fields[0]);
+			fdata->free_original_path = TRUE;
+		}
+		else {
+			fdata->full_path = g_strconcat ("/", fields[0], NULL);
+			fdata->original_path = fdata->full_path + 1;
+		}
 	}
 
 	if (fields[1] != NULL)
 		fdata->link = g_strdup (fields[1]);
 	g_strfreev (fields);
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+	if (fdata->dir)
+		fdata->name = dir_name_from_path (fdata->full_path);
+	else
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
 
 	if (*fdata->name == 0)
@@ -202,15 +229,27 @@ fr_command_cpio_extract (FrCommand  *comm,
 }
 
 
-static void
-fr_command_cpio_set_mime_type (FrCommand  *comm,
-		 	       const char *mime_type)
+const char *cpio_mime_type[] = { "application/x-cpio", NULL };
+
+
+const char **  
+fr_command_cpio_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return cpio_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_cpio_get_capabilities (FrCommand  *comm,
+			          const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("cpio")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAP_READ;
+		
+	return capabilities;
 }
 
 
@@ -225,9 +264,10 @@ fr_command_cpio_class_init (FrCommandCpioClass *class)
 
 	gobject_class->finalize = fr_command_cpio_finalize;
 
-        afc->list           = fr_command_cpio_list;
-	afc->extract        = fr_command_cpio_extract;
-	afc->set_mime_type  = fr_command_cpio_set_mime_type;
+        afc->list             = fr_command_cpio_list;
+	afc->extract          = fr_command_cpio_extract;
+	afc->get_mime_types   = fr_command_cpio_get_mime_types;
+	afc->get_capabilities = fr_command_cpio_get_capabilities;
 }
 
  

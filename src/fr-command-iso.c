@@ -198,15 +198,27 @@ fr_command_iso_extract (FrCommand  *comm,
 }
 
 
-static void
-fr_command_iso_set_mime_type (FrCommand  *comm,
-		 	      const char *mime_type)
+const char *iso_mime_type[] = { "application/x-cd-image", NULL };
+
+
+const char **  
+fr_command_iso_get_mime_types (FrCommand *comm)
 {
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	return iso_mime_type;
+}
+
+
+FrCommandCap   
+fr_command_iso_get_capabilities (FrCommand  *comm,
+			         const char *mime_type)
+{
+	FrCommandCap capabilities;
 	
-	comm->capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("isoinfo")) 
-		comm->capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAP_READ;
+		
+	return capabilities;
 }
 
 
@@ -221,9 +233,10 @@ fr_command_iso_class_init (FrCommandIsoClass *class)
 
 	gobject_class->finalize = fr_command_iso_finalize;
 
-	afc->list           = fr_command_iso_list;
-	afc->extract        = fr_command_iso_extract;
-	afc->set_mime_type  = fr_command_iso_set_mime_type;
+	afc->list             = fr_command_iso_list;
+	afc->extract          = fr_command_iso_extract;
+	afc->get_mime_types   = fr_command_iso_get_mime_types;
+	afc->get_capabilities = fr_command_iso_get_capabilities;
 }
 
 

@@ -79,37 +79,40 @@ static int    extract_here;
 static char  *default_url = NULL;
 
 FrMimeTypeDescription mime_type_desc[] = {
+	{ "application/x-7z-compressed",        ".7z",       N_("7-Zip (.7z)"), TRUE, TRUE },
+	{ "application/x-7z-compressed-tar",    ".tar.7z",   N_("Tar compressed with 7z (.tar.7z)"), FALSE, TRUE },
 	{ "application/x-ace",                  ".ace",      N_("Ace (.ace)"), FALSE, FALSE },
 	{ "application/x-ar",                   ".ar",       N_("Ar (.ar)"), FALSE, TRUE },
 	{ "application/x-arj",                  ".arj",      N_("Arj (.arj)"), TRUE, TRUE },
 	{ "application/x-bzip",                 ".bz2",      NULL, FALSE, FALSE },
+	{ "application/x-bzip-compressed-tar",  ".tar.bz2",  N_("Tar compressed with bzip2 (.tar.bz2)"), FALSE, TRUE },
 	{ "application/x-bzip1",                ".bz",       NULL, FALSE, FALSE },
+	{ "application/x-bzip1-compressed-tar", ".tar.bz",   N_("Tar compressed with bzip (.tar.bz)"), FALSE, TRUE },
+	{ "application/x-cabinet",              ".cab",      N_("Cabinet (.cab)"), FALSE, TRUE },
+	{ "application/x-cbr",                  ".cbr",      N_("Rar Archived Comic Book (.cbr)"), TRUE, TRUE },
+	{ "application/x-cbz",                  ".cbz",      N_("Zip Archived Comic Book (.cbz)"), TRUE, TRUE },
+	{ "application/x-cd-image",             ".iso",      NULL, FALSE, TRUE },
 	{ "application/x-compress",             ".Z",        NULL, FALSE, FALSE },
+	{ "application/x-compressed-tar",       ".tar.gz",   N_("Tar compressed with gzip (.tar.gz)"), FALSE, TRUE },
 	{ "application/x-cpio",                 ".cpio",     NULL, FALSE, TRUE },
 	{ "application/x-deb",                  ".deb",      NULL, FALSE, TRUE },
-	{ "application/x-cd-image",             ".iso",      NULL, FALSE, TRUE },
 	{ "application/x-ear",                  ".ear",      N_("Ear (.ear)"), TRUE, TRUE },
-	{ "application/x-ms-dos-executable",    ".exe",      N_("Self-extracting zip (.exe)"), FALSE, TRUE },
+	{ "application/x-executable",           ".exe",      N_("Self-extracting zip (.exe)"), TRUE, TRUE },
 	{ "application/x-gzip",                 ".gz",       NULL, FALSE, FALSE },
 	{ "application/x-jar",                  ".jar",      N_("Jar (.jar)"), TRUE, TRUE },
 	{ "application/x-lha",                  ".lzh",      N_("Lha (.lzh)"), FALSE, TRUE },
 	{ "application/x-lzma",                 ".lzma",     NULL, FALSE, FALSE },
+	{ "application/x-lzma-compressed-tar",  ".tar.lzma", N_("Tar compressed with lzma (.tar.lzma)"), FALSE, TRUE },
 	{ "application/x-lzop",                 ".lzo",      NULL, FALSE, FALSE },
+	{ "application/x-lzop-compressed-tar",  ".tar.lzo",  N_("Tar compressed with lzop (.tar.lzo)"), FALSE, TRUE },
 	{ "application/x-rar",                  ".rar",      N_("Rar (.rar)"), TRUE, TRUE },
 	{ "application/x-rpm",                  ".rpm",      NULL, FALSE, TRUE },
 	{ "application/x-tar",                  ".tar",      N_("Tar uncompressed (.tar)"), FALSE, TRUE },
-	{ "application/x-bzip1-compressed-tar", ".tar.bz",   N_("Tar compressed with bzip (.tar.bz)"), FALSE, TRUE },
-	{ "application/x-bzip-compressed-tar",  ".tar.bz2",  N_("Tar compressed with bzip2 (.tar.bz2)"), FALSE, TRUE },
-	{ "application/x-compressed-tar",       ".tar.gz",   N_("Tar compressed with gzip (.tar.gz)"), FALSE, TRUE },
-	{ "application/x-lzma-compressed-tar",  ".tar.lzma", N_("Tar compressed with lzma (.tar.lzma)"), FALSE, TRUE },
-	{ "application/x-lzop-compressed-tar",  ".tar.lzo",  N_("Tar compressed with lzop (.tar.lzo)"), FALSE, TRUE },
-	{ "application/x-7z-compressed-tar",    ".tar.7z",   N_("Tar compressed with 7z (.tar.7z)"), FALSE, TRUE },
 	{ "application/x-tarz",                 ".tar.Z",    N_("Tar compressed with compress (.tar.Z)"), FALSE, TRUE },
 	{ "application/x-stuffit",              ".sit",      NULL, FALSE, TRUE },
 	{ "application/x-war",                  ".war",      N_("War (.war)"), TRUE, TRUE },
-	{ "application/zip",                    ".zip",      N_("Zip (.zip)"), TRUE, TRUE },
 	{ "application/x-zoo",                  ".zoo",      N_("Zoo (.zoo)"), FALSE, TRUE },
-	{ "application/x-7z-compressed",        ".7z",       N_("7-Zip (.7z)"), TRUE, TRUE },
+	{ "application/zip",                    ".zip",      N_("Zip (.zip)"), TRUE, TRUE },
 	{ NULL, NULL, NULL, FALSE, FALSE }
 };
 
@@ -121,10 +124,13 @@ FrExtensionType file_ext_type[] = {
 	{ ".bin", "application/x-stuffit" },
 	{ ".bz", "application/x-bzip" },
 	{ ".bz2", "application/x-bzip" },
+	{ ".cab", "application/x-cabinet" },
+	{ ".cbr", "application/x-cbr" },
+	{ ".cbz", "application/x-cbz" },
 	{ ".cpio", "application/x-cpio" },
 	{ ".deb", "application/x-deb" },
 	{ ".ear", "application/x-ear" },
-	{ ".exe", "application/x-ms-dos-executable" },
+	{ ".exe", "application/x-executable" },
 	{ ".gz", "application/x-gzip" },
 	{ ".iso", "application/x-cd-image" },
 	{ ".jar", "application/x-jar" },
@@ -156,54 +162,10 @@ FrExtensionType file_ext_type[] = {
 	{ ".zoo", "application/x-zoo" }
 };
 
-int single_file_save_type[32];
-int save_type[32];
-int open_type[32];
-int create_type[32];
-
-FrCommandDescription command_desc[] = {
-	{ "tar",        "application/x-tar", TRUE, TRUE },
-	{ "zip",        "application/zip",  TRUE, TRUE },
-	{ "unzip",      "application/zip", TRUE, FALSE },
-	{ "rar",        "application/x-rar", TRUE, TRUE },
-	{ "unrar",      "application/x-rar", TRUE, FALSE },
-	{ "gzip",       "application/x-gzip", TRUE, TRUE },
-	{ "bzip2",      "application/x-bzip", TRUE, TRUE },
-	{ "unace",      "application/x-ace", TRUE, FALSE },
-	{ "ar",         "application/x-ar", TRUE, TRUE },
-	{ "ar",         "application/x-deb", TRUE, FALSE },
-	{ "arj",        "application/x-arj", TRUE, TRUE },
-	{ "bzip2",      "application/x-bzip1", TRUE, FALSE },
-	{ "compress",   "application/x-compress", TRUE, TRUE },
-	{ "cpio",       "application/x-cpio", TRUE, FALSE },
-	{ "isoinfo",    "application/x-cd-image", TRUE, FALSE },
-	{ "zip",        "application/x-ear", TRUE, TRUE },
-	{ "zip",        "application/x-jar", TRUE, TRUE },
-	{ "zip",        "application/x-war", TRUE, TRUE },
-	{ "zip",        "application/x-ms-dos-executable", TRUE, FALSE },
-	{ "lha",        "application/x-lha", TRUE, TRUE },
-	{ "lzma",       "application/x-lzma", TRUE, TRUE },
-	{ "lzop",       "application/x-lzop", TRUE, TRUE },
-	{ "rpm2cpio",   "application/x-rpm", TRUE, FALSE },
-	{ "uncompress", "application/x-compress", TRUE, FALSE },
-	{ "unstuff",    "application/x-stuffit", TRUE, FALSE },
-	{ "zoo",        "application/x-zoo", TRUE, TRUE },
-	{ "7za",        "application/x-7z-compressed", TRUE, TRUE },
-	{ "7zr",        "application/x-7z-compressed", TRUE, TRUE }
-};
-
-FrCommandDescription tar_command_desc[] = {
-	{ "gzip",       "application/x-compressed-tar", TRUE, TRUE },
-	{ "bzip2",      "application/x-bzip-compressed-tar", TRUE, TRUE },
-	/*{ "bzip",     "application/x-bzip1-compressed-tar", FALSE, TRUE },*/
-	{ "lzma",       "application/x-lzma-compressed-tar", TRUE, TRUE },
-	{ "lzop",       "application/x-lzop-compressed-tar", TRUE, TRUE },
-	{ "compress",   "application/x-tarz", FALSE, TRUE },
-	{ "uncompress", "application/x-tarz", TRUE, FALSE },
-	{ "7za",        "application/x-7z-compressed-tar", FALSE, TRUE },
-	{ "7zr",        "application/x-7z-compressed-tar", FALSE, TRUE }
-};
-
+int single_file_save_type[64];
+int save_type[64];
+int open_type[64];
+int create_type[64];
 
 static const GOptionEntry options[] = {
 	{ "add-to", 'a', 0, G_OPTION_ARG_STRING, &add_to,
@@ -447,12 +409,30 @@ migrate_to_new_directories (void)
 FrRegisteredCommand *
 fr_registered_command_new (GType command_type)
 {
-	FrRegisteredCommand *reg_com;
+	FrRegisteredCommand  *reg_com;
+	FrCommand            *command;
+	const char          **mime_types;
+	int                   i;
 	
 	reg_com = g_new0 (FrRegisteredCommand, 1);
 	reg_com->ref = 1;
 	reg_com->type = command_type;
 	reg_com->caps = g_ptr_array_new ();
+	
+	command = (FrCommand*) g_object_new (reg_com->type, NULL);
+	mime_types = fr_command_get_mime_types (command);
+	for (i = 0; mime_types[i] != NULL; i++) {
+		const char    *mime_type;
+		FrMimeTypeCap *cap;
+	
+		mime_type = get_static_string (mime_types[i]);
+	
+		cap = g_new0 (FrMimeTypeCap, 1);
+		cap->mime_type = mime_type;
+		cap->capabilities = fr_command_get_capabilities (command, mime_type);
+		g_ptr_array_add (reg_com->caps, cap);
+	}
+	g_object_unref (command);	
 	
 	return reg_com;
 }
@@ -477,21 +457,6 @@ fr_registered_command_unref (FrRegisteredCommand *reg_com)
 }
 
 
-void
-fr_registered_command_add_mime_type (FrRegisteredCommand *reg_com,
-				     const char          *mime_type,
-				     FrCommandCaps        capabilities)
-{
-	FrMimeTypeCap *cap;
-	
-	cap = g_new0 (FrMimeTypeCap, 1);
-	cap->mime_type = mime_type;
-	cap->capabilities = capabilities;
-	
-	g_ptr_array_add (reg_com->caps, cap);
-}
-
-
 FrCommandCaps  
 fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 				        const char          *mime_type)
@@ -511,26 +476,11 @@ fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 
 
 void
-register_command (GType command_type, ...)
-{
-	va_list              args;
-	FrRegisteredCommand *command;
-	const char          *mime_type;
-	FrCommandCap         capabilities;
-		
+register_command (GType command_type)
+{	
 	if (Registered_Commands == NULL)
 		Registered_Commands = g_ptr_array_sized_new (5);
-	
-	command = fr_registered_command_new (command_type);
-	
-	va_start (args, command_type);
-	while ((mime_type = va_arg (args, const char *)) != NULL) {
-		capabilities = va_arg (args, FrCommandCap);
-		fr_registered_command_add_mime_type (command, mime_type, capabilities); 
-	}
-	va_end (args);
-	
-	g_ptr_array_add (Registered_Commands, command);
+	g_ptr_array_add (Registered_Commands, fr_registered_command_new (command_type));
 }
 
 
@@ -557,65 +507,21 @@ unregister_command (GType command_type)
 static void
 register_commands (void)
 {
-	register_command (FR_TYPE_COMMAND_7Z, 
-			  "application/x-7z-compressed", FR_COMMAND_CAP_ALL,
-			  NULL);	
-	register_command (FR_TYPE_COMMAND_ACE, 
-			  "application/x-ace", FR_COMMAND_CAP_READ_WRITE | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_AR, 
-			  "application/x-ar", FR_COMMAND_CAP_ALL,
-			  "application/x-deb", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_ARJ, 
-			  "application/x-arj", FR_COMMAND_CAP_ALL,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_CFILE, 
-			  "application/x-gzip", FR_COMMAND_CAP_READ_WRITE,
-			  "application/x-bzip", FR_COMMAND_CAP_READ_WRITE,
-			  "application/x-compress", FR_COMMAND_CAP_READ_WRITE,
-			  "application/x-lzma", FR_COMMAND_CAP_READ_WRITE,
-			  "application/x-lzop", FR_COMMAND_CAP_READ_WRITE,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_CPIO, 
-			  "application/x-cpio", FR_COMMAND_CAP_ALL,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_ISO, 
-			  "application/x-cd-image", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_JAR,
-			  "application/x-jar", FR_COMMAND_CAP_ALL,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_LHA,
-			  "application/x-lha", FR_COMMAND_CAP_ALL,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_RAR,
-			  "application/x-rar", FR_COMMAND_CAP_ALL,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_RPM,
-			  "application/x-rpm", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_TAR, 
-			  "application/x-tar", FR_COMMAND_CAP_ALL,
-			  "application/x-compressed-tar", FR_COMMAND_CAP_ALL,
-			  "application/x-bzip-compressed-tar", FR_COMMAND_CAP_ALL,
-			  "application/x-tarz", FR_COMMAND_CAP_ALL,
-			  "application/x-lzma-compressed-tar", FR_COMMAND_CAP_ALL,
-			  "application/x-lzop-compressed-tar", FR_COMMAND_CAP_ALL,
-			  "application/x-7z-compressed-tar", FR_COMMAND_CAP_WRITE | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_UNSTUFF,
-			  "application/x-stuffit", FR_COMMAND_CAP_READ | FR_COMMAND_CAP_ARCHIVE_MANY_FILES,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_ZIP,
-			  "application/zip", FR_COMMAND_CAP_ALL,
-			  "application/x-ear", FR_COMMAND_CAP_ALL,
-			  "application/x-war", FR_COMMAND_CAP_ALL,
-			  "application/x-ms-dos-executable", FR_COMMAND_CAP_ALL,
-			  NULL);
-	register_command (FR_TYPE_COMMAND_ZOO,
-			  "application/x-zoo", FR_COMMAND_CAP_ALL,
-			  NULL);
+	register_command (FR_TYPE_COMMAND_TAR);
+	register_command (FR_TYPE_COMMAND_CFILE);
+	register_command (FR_TYPE_COMMAND_7Z);
+	register_command (FR_TYPE_COMMAND_ZIP);
+	register_command (FR_TYPE_COMMAND_RAR);
+	register_command (FR_TYPE_COMMAND_ARJ);
+	register_command (FR_TYPE_COMMAND_ACE);
+	register_command (FR_TYPE_COMMAND_AR);
+	register_command (FR_TYPE_COMMAND_CPIO);
+	register_command (FR_TYPE_COMMAND_ISO);
+	register_command (FR_TYPE_COMMAND_JAR);
+	register_command (FR_TYPE_COMMAND_LHA);
+	register_command (FR_TYPE_COMMAND_RPM);
+	register_command (FR_TYPE_COMMAND_UNSTUFF);
+	register_command (FR_TYPE_COMMAND_ZOO);
 }
 
 
@@ -649,9 +555,13 @@ get_mime_type_from_extension (const char *ext)
 {
 	int i;
 	
+	if (ext == NULL)
+		return NULL;
+	
 	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--) 
-		if (strcmp (ext, file_ext_type[i].ext) == 0) 
+		if (strcasecmp (ext, file_ext_type[i].ext) == 0) 
 			return get_static_string (file_ext_type[i].mime_type);
+
 	return NULL;
 }
 
@@ -670,7 +580,7 @@ get_archive_filename_extension (const char *filename)
 		return NULL;
 		
 	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--) 
-		if (strcmp (ext, file_ext_type[i].ext) == 0)
+		if (strcasecmp (ext, file_ext_type[i].ext) == 0)
 			return ext;
 	return NULL;
 }
@@ -681,7 +591,7 @@ get_mime_type_index (const char *mime_type)
 {
 	int i;
 	
-	for (i = 0; i < G_N_ELEMENTS (mime_type_desc); i++) 
+	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) 
 		if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0)
 			return i;
 	return -1;
@@ -689,60 +599,59 @@ get_mime_type_index (const char *mime_type)
 
 
 static void
+add_if_non_present (int *a, 
+	            int *n,
+	            int  o)
+{
+	int i;
+	
+	for (i = 0; i < *n; i++) {
+		if (a[i] == o)
+			return;
+	}
+	a[*n] = o;
+	*n = *n + 1;
+}
+
+
+static void
 compute_supported_archive_types (void)
 {
-	int i, j;
 	int sf_i = 0, s_i = 0, o_i = 0, c_i = 0;
-	int idx;
-	
-	for (i = 0; i < G_N_ELEMENTS (command_desc); i++) {
-		FrCommandDescription comm_desc = command_desc[i];
+	int i;
 
-		if (! is_program_in_path (comm_desc.command))
-			continue;
+	for (i = 0; i < Registered_Commands->len; i++) {
+		FrRegisteredCommand *reg_com;
+		int                  j;
 
-		if (strcmp (comm_desc.command, "tar") == 0) {
-			for (j = 0; j < G_N_ELEMENTS (tar_command_desc); j++) {
-				FrCommandDescription comm_desc_2 = tar_command_desc[j];
-
-				if (!is_program_in_path (comm_desc_2.command))
-					continue;
-					
-				idx = get_mime_type_index (comm_desc_2.mime_type);
-				if (idx >= 0) {
-					if (comm_desc_2.can_open)
-						open_type[o_i++] = idx;
-					if (comm_desc_2.can_save) {
-						if (mime_type_desc[idx].supports_many_files) {
-							save_type[s_i++] = idx;
-							if (comm_desc_2.can_open)
-								create_type[c_i++] = idx;	
-						}
-						single_file_save_type[sf_i++] = idx;
-					}
-				}
+		reg_com = g_ptr_array_index (Registered_Commands, i);
+		for (j = 0; j < reg_com->caps->len; j++) {
+			FrMimeTypeCap *cap;
+			int            idx;
+			
+			cap = g_ptr_array_index (reg_com->caps, j);			
+			idx = get_mime_type_index (cap->mime_type);
+			if (idx < 0) {
+				g_warning ("mime type not recognized: %s", cap->mime_type);
+				continue;
 			}
-		}
-		
-		idx = get_mime_type_index (comm_desc.mime_type);
-		if (idx >= 0) {
-			if (comm_desc.can_open)
-				open_type[o_i++] = idx;
-			if (comm_desc.can_save) {
-				if (mime_type_desc[idx].supports_many_files) {
-					save_type[s_i++] = idx;
-					if (comm_desc.can_open)
-						create_type[c_i++] = idx;
+			if (cap->capabilities & FR_COMMAND_CAP_READ)
+				add_if_non_present (open_type, &o_i, idx);
+			if (cap->capabilities & FR_COMMAND_CAP_WRITE) {
+				if (cap->capabilities & FR_COMMAND_CAP_ARCHIVE_MANY_FILES) {
+					add_if_non_present (save_type, &s_i, idx);
+					if (cap->capabilities & FR_COMMAND_CAP_WRITE)
+						add_if_non_present (create_type, &c_i, idx);
 				}
-				single_file_save_type[sf_i++] = idx;
+				add_if_non_present (single_file_save_type, &sf_i, idx);
 			}
-		}
+		}	
 	}
-
-	open_type[o_i++] = -1;
-	save_type[s_i++] = -1;
-	single_file_save_type[sf_i++] = -1;
-	create_type[s_i++] = -1;
+	
+	open_type[o_i] = -1;
+	save_type[s_i] = -1;
+	single_file_save_type[sf_i] = -1;
+	create_type[c_i] = -1;
 }
 
 
