@@ -375,7 +375,7 @@ struct _FrWindowPrivateData {
 	/* batch mode data */
 
 	gboolean          batch_mode;          /* whether we are in a non interactive
-					 * mode. */
+					 	* mode. */
 	GList            *batch_action_list;   /* FRBatchAction * elements */
 	GList            *batch_action;        /* current action. */
 
@@ -2688,7 +2688,7 @@ action_started (FrArchive *archive,
 	
 	switch (action) {
 	case FR_ACTION_EXTRACTING_FILES:
-		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction || window->priv->convert_data.converting);
+		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction || window->priv->convert_data.converting || window->priv->batch_mode);
 		break;
 	default:
 		open_progress_dialog (window, FALSE);
@@ -4017,7 +4017,8 @@ file_list_drag_end (GtkWidget      *widget,
 					   FALSE,
 					   TRUE,
 					   FALSE,
-					   window->priv->password);
+					   window->priv->password,
+					   FALSE);
 		path_list_free (window->priv->drag_file_list);
 		window->priv->drag_file_list = NULL;
 	}
@@ -6334,7 +6335,7 @@ fr_window_archive_extract_here (FrWindow   *window,
 					    edata,
 					    (GFreeFunc) extract_data_free);
 
-	window->priv->ask_to_open_destination_after_extraction = TRUE;
+	window->priv->ask_to_open_destination_after_extraction = FALSE;
 			
 	fr_process_clear (window->archive->process);
 	if (fr_archive_extract_here (window->archive,
@@ -6356,7 +6357,8 @@ fr_window_archive_extract (FrWindow   *window,
 			   gboolean    skip_older,
 			   gboolean    overwrite,
 			   gboolean    junk_paths,
-			   const char *password)
+			   const char *password,
+			   gboolean    ask_to_open_destination)
 {
 	ExtractData *edata;
 	gboolean     do_not_extract = FALSE;
@@ -6440,7 +6442,7 @@ fr_window_archive_extract (FrWindow   *window,
 		return;
 	}
 
-	window->priv->ask_to_open_destination_after_extraction = TRUE;
+	window->priv->ask_to_open_destination_after_extraction = ask_to_open_destination;
 
 	fr_process_clear (window->archive->process);
 	fr_archive_extract (window->archive,
@@ -8174,7 +8176,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 					   edata->skip_older,
 					   edata->overwrite,
 					   edata->junk_paths,
-					   window->priv->password);
+					   window->priv->password,
+					   TRUE);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_HERE:
@@ -8192,7 +8195,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 		debug (DEBUG_INFO, "[BATCH] EXTRACT_INTERACT\n");
 
 		if (window->priv->extract_interact_use_default_dir
-		    && (window->priv->extract_default_dir != NULL))
+		    && (window->priv->extract_default_dir != NULL)) 
+		{
 			fr_window_archive_extract (window,
 						   NULL,
 						   window->priv->extract_default_dir,
@@ -8200,7 +8204,9 @@ fr_window_exec_batch_action (FrWindow      *window,
 						   FALSE,
 						   TRUE,
 						   FALSE,
-						   window->priv->password);
+						   window->priv->password,
+						   TRUE);
+		}
 		else {
 			fr_window_push_message (window, _("Extract archive"));
 			dlg_extract (NULL, window);

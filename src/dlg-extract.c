@@ -258,7 +258,8 @@ extract_cb (GtkWidget   *w,
 				   skip_newer,
 				   overwrite,
 				   junk_paths,
-				   password);
+				   password,
+				   TRUE);
 
 	path_list_free (file_list);
 	g_free (extract_to_dir);

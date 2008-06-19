@@ -157,7 +157,8 @@ void        fr_window_archive_extract           (FrWindow      *window,
 						 gboolean       skip_older,
 						 gboolean       overwrite,
 						 gboolean       junk_paths,
-						 const char    *password);
+						 const char    *password,
+						 gboolean       ask_to_open_destination);
 void        fr_window_archive_extract_here      (FrWindow      *window,
 						 gboolean       skip_older,
 						 gboolean       overwrite,

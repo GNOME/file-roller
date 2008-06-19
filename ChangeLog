@@ -1,5 +1,17 @@
 2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.h: 
+	* src/dlg-extract.c:
+	* src/fr-window.c: 
+	
+	Show the extract progress dialog without any delay when extracting
+	in batch mode.  
+	Do not ask whether to open the destination folder if the extraction 
+	was done with drag&drop or with an extract_here	operation because in 
+	these cases the user already views the destination.
+
+2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/main.c: register the alz command and mime type.
 	
 	* src/Makefile.am: 
