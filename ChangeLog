@@ -1,5 +1,20 @@
 2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/main.c: register the alz command and mime type.
+	
+	* src/Makefile.am: 
+	* src/fr-command-alz.h: 
+	* src/fr-command-alz.c: new files
+	
+	* nautilus/nautilus-fileroller.c: 
+	* data/file-roller.desktop.in.in: added application/alz mime type.
+
+	Added support for reading and extractin alz archives.
+	Patch by Changwoo Ryu
+	Fixed bug #521324 – ALZ archive support
+
+2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* configure.in: bumped version number to differentiate 
 	current development version from the latest released version.
 	

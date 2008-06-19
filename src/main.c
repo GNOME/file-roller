@@ -32,6 +32,7 @@
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-ace.h"
+#include "fr-command-alz.h"
 #include "fr-command-ar.h"
 #include "fr-command-arj.h"
 #include "fr-command-cfile.h"
@@ -82,6 +83,7 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-7z-compressed",        ".7z",       N_("7-Zip (.7z)"), TRUE, TRUE },
 	{ "application/x-7z-compressed-tar",    ".tar.7z",   N_("Tar compressed with 7z (.tar.7z)"), FALSE, TRUE },
 	{ "application/x-ace",                  ".ace",      N_("Ace (.ace)"), FALSE, FALSE },
+	{ "application/x-alz",                  ".alz",      NULL, TRUE, TRUE },
 	{ "application/x-ar",                   ".ar",       N_("Ar (.ar)"), FALSE, TRUE },
 	{ "application/x-arj",                  ".arj",      N_("Arj (.arj)"), TRUE, TRUE },
 	{ "application/x-bzip",                 ".bz2",      NULL, FALSE, FALSE },
@@ -119,6 +121,7 @@ FrMimeTypeDescription mime_type_desc[] = {
 FrExtensionType file_ext_type[] = {
 	{ ".7z", "application/x-7z-compressed" },
 	{ ".ace", "application/x-ace" },
+	{ ".alz", "application/x-alz" },
 	{ ".ar", "application/x-ar" },
 	{ ".arj", "application/x-arj" },
 	{ ".bin", "application/x-stuffit" },
@@ -510,17 +513,19 @@ register_commands (void)
 	register_command (FR_TYPE_COMMAND_TAR);
 	register_command (FR_TYPE_COMMAND_CFILE);
 	register_command (FR_TYPE_COMMAND_7Z);
-	register_command (FR_TYPE_COMMAND_ZIP);
-	register_command (FR_TYPE_COMMAND_RAR);
-	register_command (FR_TYPE_COMMAND_ARJ);
+	
 	register_command (FR_TYPE_COMMAND_ACE);
+	register_command (FR_TYPE_COMMAND_ALZ);
 	register_command (FR_TYPE_COMMAND_AR);
+	register_command (FR_TYPE_COMMAND_ARJ);
 	register_command (FR_TYPE_COMMAND_CPIO);
 	register_command (FR_TYPE_COMMAND_ISO);
 	register_command (FR_TYPE_COMMAND_JAR);
 	register_command (FR_TYPE_COMMAND_LHA);
+	register_command (FR_TYPE_COMMAND_RAR);
 	register_command (FR_TYPE_COMMAND_RPM);
 	register_command (FR_TYPE_COMMAND_UNSTUFF);
+	register_command (FR_TYPE_COMMAND_ZIP);	
 	register_command (FR_TYPE_COMMAND_ZOO);
 }
 
