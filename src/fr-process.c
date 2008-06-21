@@ -603,10 +603,8 @@ static void child_setup (gpointer user_data)
 {
 	FrProcess *process = user_data;
 
-	if (process->priv->use_standard_locale) {
-		debug (DEBUG_INFO, "LC_ALL=C");
+	if (process->priv->use_standard_locale) 
 		putenv ("LC_ALL=C");
-	}
 }
 
 
@@ -631,6 +629,9 @@ start_current_command (FrProcess *process)
 #ifdef DEBUG
 	{
 		int j;
+
+		if (process->priv->use_standard_locale) 
+			g_print ("\tLC_ALL=C\n");
 
 		if (info->dir != NULL)
 			g_print ("\tcd %s\n", info->dir);

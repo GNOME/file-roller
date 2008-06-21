@@ -409,11 +409,11 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	if (! is_program_in_path ("7za") && ! is_program_in_path ("7zr") && ! is_program_in_path ("7z"))
 		return capabilities;
 
-	capabilities |= FR_COMMAND_CAP_READ;
 	if (is_mime_type (mime_type, "application/x-7z-compressed"))
-		capabilities |= FR_COMMAND_CAP_WRITE;
+		capabilities |= FR_COMMAND_CAP_READ_WRITE;	
 	
-	if (is_program_in_path ("7z")) {
+	else if (is_program_in_path ("7z")) {
+		capabilities |= FR_COMMAND_CAP_READ;
 		if (is_mime_type (mime_type, "application/x-cbr")
 		    || is_mime_type (mime_type, "application/x-cbz")
 		    || is_mime_type (mime_type, "application/x-executable")

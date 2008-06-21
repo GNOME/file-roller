@@ -1,3 +1,10 @@
+2008-06-21  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-7z.c (fr_command_7z_get_capabilities): can handle other
+	formats only when 7z is available.
+	* src/fr-process.c (child_setup, start_current_command): do not add 
+	debug functions	in the child process.
+
 2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/fr-window.c (action_performed): do not reload the archive if
