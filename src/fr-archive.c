@@ -512,16 +512,23 @@ create_command_from_mime_type (FrArchive  *archive,
 		return FALSE;
 	
 	archive->is_compressed_file = FALSE;
-	
-	if (loading) {
-		requested_capabilities |= FR_COMMAND_CAP_READ;
-	}
-	else {
-		requested_capabilities |= FR_COMMAND_CAP_WRITE;	
-		if (! archive->can_create_compressed_file)
-			requested_capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
-	}
+
+	/* try with the WRITE capability even when loading, this way we give
+	 * priority to the commands that can read and write over commands 
+	 * that can only read a specific file format. */
+		
+	requested_capabilities |= FR_COMMAND_CAP_READ_WRITE;	
+	if (! archive->can_create_compressed_file)
+		requested_capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
+	
+	/* if no command was found and we are loading, remove the write 
+	 * capability and try again */
+	
+	if ((command_type == 0) && loading) {	
+		requested_capabilities ^= FR_COMMAND_CAP_WRITE;
+		command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
+	}
 	
 	if (command_type == 0)
 		return FALSE;

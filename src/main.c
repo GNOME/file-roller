@@ -510,6 +510,14 @@ unregister_command (GType command_type)
 static void
 register_commands (void)
 {
+	/* The order here is important. Commands registered earlier have higher
+	 * priority; for example zip archives will be opened using 7Z instead 
+	 * of ZIP.  However commands that can read and write a file format
+	 * have higher priority over commands that can only read the same 
+	 * format, regardless of the registration order; for example rar
+	 * archives will be opened with 7Z only if the rar utility is not 
+	 * installed because 7z cannot modify rar archives. */
+	 
 	register_command (FR_TYPE_COMMAND_TAR);
 	register_command (FR_TYPE_COMMAND_CFILE);
 	register_command (FR_TYPE_COMMAND_7Z);

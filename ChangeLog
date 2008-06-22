@@ -1,3 +1,12 @@
+2008-06-22  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/main.c (register_commands): added comment that explains how the
+	priority is assigned.
+	
+	* src/fr-archive.c (create_command_from_mime_type): give priority to 
+	the commands that can read and write over commands that can only read 
+	a specific file format.
+
 2008-06-21  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/fr-command-7z.c (fr_command_7z_get_capabilities): can handle other
@@ -14,7 +23,7 @@
 		
 	* src/file-utils.c (uri_is_filetype, dir_is_empty)
 	(dir_contains_one_object, get_dir_content_if_unique): check for file
-	existance before anythink else.
+	existance before anything else.
 	
 2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
