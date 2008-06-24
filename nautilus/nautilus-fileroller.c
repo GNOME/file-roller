@@ -175,6 +175,7 @@ static char *mime_types[] = {
 	"application/x-rar", 
 	"application/x-rar-compressed",
 	"application/x-rpm", 
+	"application/x-rzip",
 	"application/x-tar", 
 	"application/x-tarz",
 	"application/x-stuffit",

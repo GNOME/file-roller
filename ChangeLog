@@ -1,5 +1,17 @@
 2008-06-24  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/main.c: 
+	* src/fr-command-cfile.c: 
+	* nautilus/nautilus-fileroller.c: 
+	* data/file-roller.desktop.in.in: 
+
+	Fixed bug #503000 – Support for rzip
+
+	* src/fr-archive.c (create_command_from_mime_type): allow to load a
+	compressed file.
+	
+2008-06-24  Paolo Bacchilega  <paobac@svn.gnome.org>	
+	
 	* nautilus/nautilus-fileroller.c: do not add any menu entry when the
 	files are in an unsupported location, such as 'trash' or 'computer'.
 	

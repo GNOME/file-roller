@@ -518,7 +518,7 @@ create_command_from_mime_type (FrArchive  *archive,
 	 * that can only read a specific file format. */
 		
 	requested_capabilities |= FR_COMMAND_CAP_READ_WRITE;	
-	if (! archive->can_create_compressed_file)
+	if (! loading && ! archive->can_create_compressed_file)
 		requested_capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
 	

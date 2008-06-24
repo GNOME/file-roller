@@ -274,7 +274,14 @@ fr_command_cfile_add (FrCommand     *comm,
 		fr_process_end_command (comm->process);
 		compressed_filename = g_strconcat (filename, ".lzo", NULL);
 	}
-
+	else if (is_mime_type (comm->mime_type, "application/x-rzip")) {
+		fr_process_begin_command (comm->process, "rzip");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		compressed_filename = g_strconcat (filename, ".rz", NULL);
+	}
+	
       	/* copy compressed file to the dest dir */
 
 	fr_process_begin_command (comm->process, "cp");
@@ -376,7 +383,14 @@ fr_command_cfile_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
 	}
-
+	else if (is_mime_type (comm->mime_type, "application/x-rzip")) {
+		fr_process_begin_command (comm->process, "rzip");
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "-d");
+		fr_process_add_arg (comm->process, temp_file);
+		fr_process_end_command (comm->process);
+	}
+	
 	/* copy uncompress file to the dest dir */
 
 	uncompr_file = remove_extension_from_path (temp_file);
@@ -416,6 +430,7 @@ const char *cfile_mime_type[] = { "application/x-gzip",
 				  "application/x-compress",
 				  "application/x-lzma",
 				  "application/x-lzop",
+				  "application/x-rzip",
 				  NULL };
 
 
@@ -453,6 +468,10 @@ fr_command_cfile_get_capabilities (FrCommand  *comm,
 	}
 	else if (is_mime_type (mime_type, "application/x-lzop")) {
 		if (is_program_in_path ("lzop"))
+			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	}
+	else if (is_mime_type (mime_type, "application/x-rzip")) {
+		if (is_program_in_path ("rzip"))
 			capabilities |= FR_COMMAND_CAP_READ_WRITE;
 	}
 	
