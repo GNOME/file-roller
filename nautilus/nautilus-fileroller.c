@@ -201,6 +201,32 @@ is_archive (NautilusFileInfo *file)
 }
 
 
+static gboolean
+unsupported_scheme (NautilusFileInfo *file)
+{
+	gboolean  result = FALSE;
+	GFile    *location;
+	char     *scheme;
+			
+	location = nautilus_file_info_get_location (file);
+	scheme = g_file_get_uri_scheme (location);
+	
+	if (scheme != NULL) {
+		const char *unsupported[] = { "trash", "computer", NULL };
+		int         i;
+		
+		for (i = 0; unsupported[i] != NULL; i++)
+			if (strcmp (scheme, unsupported[i]) == 0) 
+				result = TRUE;
+	}
+	
+	g_free (scheme);
+	g_object_unref (location);
+	
+	return result;
+}
+
+
 static GList *
 nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 			    GtkWidget            *window,
@@ -216,16 +242,19 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	if (files == NULL)
 		return NULL;
 
+	if (unsupported_scheme ((NautilusFileInfo *) files->data))
+			return NULL;
+
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
-
+		
 		if (all_archives && ! is_archive (file))
 			all_archives = FALSE;
 
 		if (can_write) {
 			NautilusFileInfo *parent;
 
-			parent = nautilus_file_info_get_parent_info (file);
+			parent = nautilus_file_info_get_parent_info (file);			
  			can_write = nautilus_file_info_can_write (parent);
 		}
 	}
