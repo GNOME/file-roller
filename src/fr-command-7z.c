@@ -165,7 +165,12 @@ list__process_line (char     *line,
 		g_strfreev (modified_fields);
 	}
 	else if (strcmp (fields[0], "Encrypted") == 0) {
-		fdata->encrypted = (strcmp (fields[1], "+") == 0);
+		if (strcmp (fields[1], "+") == 0)
+			fdata->encrypted = TRUE;
+	}
+	else if (strcmp (fields[0], "Method") == 0) {
+		if (strstr (fields[1], "AES") != NULL)
+			fdata->encrypted = TRUE;
 	}
 	else if (strcmp (fields[0], "Attributes") == 0) {
 	}
