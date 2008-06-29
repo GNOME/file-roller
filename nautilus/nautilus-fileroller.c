@@ -1,6 +1,6 @@
 /*
  *  File-Roller
- * 
+ *
  *  Copyright (C) 2004 Free Software Foundation, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Paolo Bacchilega <paobac@cvs.gnome.org>
- * 
+ *
  */
 
 #include <config.h>
@@ -48,7 +48,7 @@ extract_to_callback (NautilusMenuItem *item,
 
 	uri = nautilus_file_info_get_uri (file);
 	default_dir = nautilus_file_info_get_parent_uri (file);
-	
+
 	cmd = g_string_new ("file-roller");
 	g_string_append_printf (cmd,
 				" --default-dir=%s --extract %s",
@@ -89,7 +89,7 @@ extract_here_callback (NautilusMenuItem *item,
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
 		char             *uri;
-		
+
 		uri = nautilus_file_info_get_uri (file);
 		g_string_append_printf (cmd, " %s", g_shell_quote (uri));
 		g_free (uri);
@@ -145,44 +145,43 @@ static char *mime_types[] = {
  	"application/x-7z-compressed-tar",
  	"application/x-ace",
  	"application/x-alz",
-	"application/x-ar", 
+	"application/x-ar",
 	"application/x-arj",
 	"application/x-bzip",
 	"application/x-bzip-compressed-tar",
 	"application/x-bzip1",
 	"application/x-bzip1-compressed-tar",
-	"application/x-cabinet", 
-	"application/x-cbr", 
-	"application/x-cbz", 
+	"application/x-cabinet",
+	"application/x-cbr",
+	"application/x-cbz",
 	"application/x-cd-image",
 	"application/x-compress",
-	"application/x-compressed-tar", 
-	"application/x-cpio", 
+	"application/x-compressed-tar",
+	"application/x-cpio",
 	"application/x-deb",
 	"application/x-ear",
-	"application/x-executable", 
+	"application/x-executable",
 	"application/x-gtar",
 	"application/x-gzip",
-	"application/x-gzpostscript", 
-	"application/x-jar",
+	"application/x-gzpostscript",
 	"application/x-java-archive",
 	"application/x-lha",
 	"application/x-lhz",
 	"application/x-lzma",
-	"application/x-lzma-compressed-tar", 
+	"application/x-lzma-compressed-tar",
 	"application/x-lzop",
-	"application/x-lzop-compressed-tar", 
-	"application/x-rar", 
+	"application/x-lzop-compressed-tar",
+	"application/x-rar",
 	"application/x-rar-compressed",
-	"application/x-rpm", 
+	"application/x-rpm",
 	"application/x-rzip",
-	"application/x-tar", 
+	"application/x-tar",
 	"application/x-tarz",
 	"application/x-stuffit",
-	"application/x-war", 
+	"application/x-war",
 	"application/x-zip",
 	"application/x-zip-compressed",
-	"application/x-zoo", 
+	"application/x-zoo",
 	"application/zip",
 	"multipart/x-zip",
 	NULL
@@ -208,22 +207,22 @@ unsupported_scheme (NautilusFileInfo *file)
 	gboolean  result = FALSE;
 	GFile    *location;
 	char     *scheme;
-			
+
 	location = nautilus_file_info_get_location (file);
 	scheme = g_file_get_uri_scheme (location);
-	
+
 	if (scheme != NULL) {
 		const char *unsupported[] = { "trash", "computer", NULL };
 		int         i;
-		
+
 		for (i = 0; unsupported[i] != NULL; i++)
-			if (strcmp (scheme, unsupported[i]) == 0) 
+			if (strcmp (scheme, unsupported[i]) == 0)
 				result = TRUE;
 	}
-	
+
 	g_free (scheme);
 	g_object_unref (location);
-	
+
 	return result;
 }
 
@@ -248,14 +247,14 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
-		
+
 		if (all_archives && ! is_archive (file))
 			all_archives = FALSE;
 
 		if (can_write) {
 			NautilusFileInfo *parent;
 
-			parent = nautilus_file_info_get_parent_info (file);			
+			parent = nautilus_file_info_get_parent_info (file);
  			can_write = nautilus_file_info_can_write (parent);
 		}
 	}
@@ -282,7 +281,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 					(GDestroyNotify) nautilus_file_info_list_free);
 
 		items = g_list_append (items, item);
-	} 
+	}
 	else if (all_archives && ! can_write) {
 		NautilusMenuItem *item;
 

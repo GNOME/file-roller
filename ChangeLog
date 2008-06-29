@@ -1,3 +1,21 @@
+2008-06-29  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c (open_folder): 
+	* src/gtk-utils.c (show_help_dialog): 
+	* configure.in: 
+	
+	Allow to compile with Gtk+ 2.12 as well.
+
+2008-06-29  Paolo Bacchilega  <paobac@svn.gnome.org>	
+	
+	* data/file-roller.desktop.in.in: 
+	* src/main.c: use application/x-java-archive as mime type for .jar files.
+	
+	* src/fr-command-jar.c: register the jar mime type. 
+	
+	* src/fr-command-7z.c (fr_command_7z_handle_error): added support
+	for 7zip files with encrypted headers.
+
 2008-06-24  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/main.c: 

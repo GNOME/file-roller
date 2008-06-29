@@ -101,7 +101,7 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-ear",                  ".ear",      N_("Ear (.ear)"), TRUE, TRUE },
 	{ "application/x-executable",           ".exe",      N_("Self-extracting zip (.exe)"), TRUE, TRUE },
 	{ "application/x-gzip",                 ".gz",       NULL, FALSE, FALSE },
-	{ "application/x-jar",                  ".jar",      N_("Jar (.jar)"), TRUE, TRUE },
+	{ "application/x-java-archive",         ".jar",      N_("Jar (.jar)"), TRUE, TRUE },
 	{ "application/x-lha",                  ".lzh",      N_("Lha (.lzh)"), FALSE, TRUE },
 	{ "application/x-lzma",                 ".lzma",     NULL, FALSE, FALSE },
 	{ "application/x-lzma-compressed-tar",  ".tar.lzma", N_("Tar compressed with lzma (.tar.lzma)"), FALSE, TRUE },
@@ -137,7 +137,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".exe", "application/x-executable" },
 	{ ".gz", "application/x-gzip" },
 	{ ".iso", "application/x-cd-image" },
-	{ ".jar", "application/x-jar" },
+	{ ".jar", "application/x-java-archive" },
 	{ ".lha", "application/x-lha" },
 	{ ".lzh", "application/x-lha" },
 	{ ".lzma", "application/x-lzma" },
@@ -241,9 +241,9 @@ main (int argc, char **argv)
 	context = g_option_context_new (N_("- Create and modify an archive"));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
-	
+
 	program = gnome_program_init ("file-roller", VERSION,
-				      LIBGNOMEUI_MODULE, 
+				      LIBGNOMEUI_MODULE,
 				      argc, argv,
 				      GNOME_PARAM_GOPTION_CONTEXT, context,
 				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Archive Manager"),
@@ -293,7 +293,7 @@ command_done (CommandData *cdata)
 {
 	if (cdata == NULL)
 		return;
-		
+
 	if ((cdata->temp_dir != NULL) && path_is_dir (cdata->temp_dir)) {
 		char *argv[4];
 
@@ -418,27 +418,27 @@ fr_registered_command_new (GType command_type)
 	FrCommand            *command;
 	const char          **mime_types;
 	int                   i;
-	
+
 	reg_com = g_new0 (FrRegisteredCommand, 1);
 	reg_com->ref = 1;
 	reg_com->type = command_type;
 	reg_com->caps = g_ptr_array_new ();
-	
+
 	command = (FrCommand*) g_object_new (reg_com->type, NULL);
 	mime_types = fr_command_get_mime_types (command);
 	for (i = 0; mime_types[i] != NULL; i++) {
 		const char    *mime_type;
 		FrMimeTypeCap *cap;
-	
+
 		mime_type = get_static_string (mime_types[i]);
-	
+
 		cap = g_new0 (FrMimeTypeCap, 1);
 		cap->mime_type = mime_type;
 		cap->capabilities = fr_command_get_capabilities (command, mime_type);
 		g_ptr_array_add (reg_com->caps, cap);
 	}
-	g_object_unref (command);	
-	
+	g_object_unref (command);
+
 	return reg_com;
 }
 
@@ -455,34 +455,34 @@ fr_registered_command_unref (FrRegisteredCommand *reg_com)
 {
 	if (--(reg_com->ref) != 0)
 		return;
-	
+
 	g_ptr_array_foreach (reg_com->caps, (GFunc) g_free, NULL);
 	g_ptr_array_free (reg_com->caps, TRUE);
-	g_free (reg_com); 
+	g_free (reg_com);
 }
 
 
-FrCommandCaps  
+FrCommandCaps
 fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 				        const char          *mime_type)
 {
 	int i;
-		
+
 	for (i = 0; i < reg_com->caps->len; i++) {
 		FrMimeTypeCap *cap;
-		
+
 		cap = g_ptr_array_index (reg_com->caps, i);
-		if (strcmp (mime_type, cap->mime_type) == 0) 
+		if (strcmp (mime_type, cap->mime_type) == 0)
 			return cap->capabilities;
 	}
-	
+
 	return FR_COMMAND_CAP_NONE;
 }
 
 
 void
 register_command (GType command_type)
-{	
+{
 	if (Registered_Commands == NULL)
 		Registered_Commands = g_ptr_array_sized_new (5);
 	g_ptr_array_add (Registered_Commands, fr_registered_command_new (command_type));
@@ -493,10 +493,10 @@ gboolean
 unregister_command (GType command_type)
 {
 	int i;
-	
+
 	for (i = 0; i < Registered_Commands->len; i++) {
 		FrRegisteredCommand *command;
-		
+
 		command = g_ptr_array_index (Registered_Commands, i);
 		if (command->type == command_type) {
 			g_ptr_array_remove_index (Registered_Commands, i);
@@ -504,7 +504,7 @@ unregister_command (GType command_type)
 			return TRUE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -513,17 +513,17 @@ static void
 register_commands (void)
 {
 	/* The order here is important. Commands registered earlier have higher
-	 * priority; for example zip archives will be opened using 7Z instead 
+	 * priority; for example zip archives will be opened using 7Z instead
 	 * of ZIP.  However commands that can read and write a file format
-	 * have higher priority over commands that can only read the same 
+	 * have higher priority over commands that can only read the same
 	 * format, regardless of the registration order; for example rar
-	 * archives will be opened with 7Z only if the rar utility is not 
+	 * archives will be opened with 7Z only if the rar utility is not
 	 * installed because 7z cannot modify rar archives. */
-	 
+
 	register_command (FR_TYPE_COMMAND_TAR);
 	register_command (FR_TYPE_COMMAND_CFILE);
 	register_command (FR_TYPE_COMMAND_7Z);
-	
+
 	register_command (FR_TYPE_COMMAND_ACE);
 	register_command (FR_TYPE_COMMAND_ALZ);
 	register_command (FR_TYPE_COMMAND_AR);
@@ -535,7 +535,7 @@ register_commands (void)
 	register_command (FR_TYPE_COMMAND_RAR);
 	register_command (FR_TYPE_COMMAND_RPM);
 	register_command (FR_TYPE_COMMAND_UNSTUFF);
-	register_command (FR_TYPE_COMMAND_ZIP);	
+	register_command (FR_TYPE_COMMAND_ZIP);
 	register_command (FR_TYPE_COMMAND_ZOO);
 }
 
@@ -545,22 +545,22 @@ get_command_type_from_mime_type (const char    *mime_type,
 				 FrCommandCaps  requested_capabilities)
 {
 	int i;
-	
+
 	if (mime_type == NULL)
 		return 0;
-	
+
 	for (i = 0; i < Registered_Commands->len; i++) {
 		FrRegisteredCommand *command;
 		FrCommandCaps        capabilities;
-		
+
 		command = g_ptr_array_index (Registered_Commands, i);
 		capabilities = fr_registered_command_get_capabilities (command, mime_type);
-			
+
 		/* the command must support all the requested capabilities */
 		if (((capabilities ^ requested_capabilities) & requested_capabilities) == 0)
 			return command->type;
 	}
-	
+
 	return 0;
 }
 
@@ -569,12 +569,12 @@ const char *
 get_mime_type_from_extension (const char *ext)
 {
 	int i;
-	
+
 	if (ext == NULL)
 		return NULL;
-	
-	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--) 
-		if (strcasecmp (ext, file_ext_type[i].ext) == 0) 
+
+	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--)
+		if (strcasecmp (ext, file_ext_type[i].ext) == 0)
 			return get_static_string (file_ext_type[i].mime_type);
 
 	return NULL;
@@ -586,15 +586,15 @@ get_archive_filename_extension (const char *filename)
 {
 	const char *ext;
 	int         i;
-		
+
 	if (filename == NULL)
 		return NULL;
 
 	ext = get_file_extension (filename);
 	if (ext == NULL)
 		return NULL;
-		
-	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--) 
+
+	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--)
 		if (strcasecmp (ext, file_ext_type[i].ext) == 0)
 			return ext;
 	return NULL;
@@ -605,8 +605,8 @@ static int
 get_mime_type_index (const char *mime_type)
 {
 	int i;
-	
-	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) 
+
+	for (i = 0; mime_type_desc[i].mime_type != NULL; i++)
 		if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0)
 			return i;
 	return -1;
@@ -614,12 +614,12 @@ get_mime_type_index (const char *mime_type)
 
 
 static void
-add_if_non_present (int *a, 
+add_if_non_present (int *a,
 	            int *n,
 	            int  o)
 {
 	int i;
-	
+
 	for (i = 0; i < *n; i++) {
 		if (a[i] == o)
 			return;
@@ -643,8 +643,8 @@ compute_supported_archive_types (void)
 		for (j = 0; j < reg_com->caps->len; j++) {
 			FrMimeTypeCap *cap;
 			int            idx;
-			
-			cap = g_ptr_array_index (reg_com->caps, j);			
+
+			cap = g_ptr_array_index (reg_com->caps, j);
 			idx = get_mime_type_index (cap->mime_type);
 			if (idx < 0) {
 				g_warning ("mime type not recognized: %s", cap->mime_type);
@@ -660,9 +660,9 @@ compute_supported_archive_types (void)
 				}
 				add_if_non_present (single_file_save_type, &sf_i, idx);
 			}
-		}	
+		}
 	}
-	
+
 	open_type[o_i] = -1;
 	save_type[s_i] = -1;
 	single_file_save_type[sf_i] = -1;
@@ -683,7 +683,7 @@ get_uri_from_command_line (const char *path)
 		full_path = g_strdup (path);
 	else {
 		char *current_dir;
-		
+
 		current_dir = g_get_current_dir ();
 		full_path = g_build_filename (current_dir,
 					      path,
@@ -708,10 +708,10 @@ prepare_app (void)
 	/* create the config dir if necessary. */
 
 	uri = get_home_relative_uri (RC_DIR);
-	
+
 	if (uri_is_file (uri)) { /* before the gconf port this was a file, now it's folder. */
 		GFile *file;
-		
+
 		file = g_file_new_for_uri (uri);
 		g_file_delete (file, NULL, NULL);
 		g_object_unref (file);
@@ -789,13 +789,13 @@ prepare_app (void)
 				fr_window_set_batch__extract (FR_WINDOW (window),
 							      archive_uri,
 							      extract_to_path);
-			g_free (archive_uri); 
+			g_free (archive_uri);
 		}
 		fr_window_append_batch_action (FR_WINDOW (window),
 					       FR_BATCH_ACTION_QUIT,
 					       NULL,
 					       NULL);
-					       
+
 		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else { /* Open each archive in a window */
@@ -806,10 +806,10 @@ prepare_app (void)
 			GtkWidget *window;
 			GFile     *file;
 			char      *uri;
-			
+
 			window = fr_window_new ();
 			gtk_widget_show (window);
-			
+
 			file = g_file_new_for_commandline_arg (filename);
 			uri = g_file_get_uri (file);
 			fr_window_archive_open (FR_WINDOW (window), uri, GTK_WINDOW (window));
@@ -848,7 +848,7 @@ save_session (GnomeClient *client)
 	int       i;
 	char     *path;
 	GFile    *file;
-	
+
 	key_file = g_key_file_new ();
 	i = 0;
 	for (scan = WindowList; scan; scan = scan->next) {
@@ -861,7 +861,7 @@ save_session (GnomeClient *client)
 		}
 		else {
 			char *uri;
-			
+
 			uri = g_file_get_uri (window->archive->file);
 			g_key_file_set_string (key_file, "Sessione", key, uri);
 			g_free (uri);
@@ -870,12 +870,12 @@ save_session (GnomeClient *client)
 
 		i++;
 	}
-	g_key_file_set_integer (key_file, "Sessione", "archives", i); 
-	
+	g_key_file_set_integer (key_file, "Sessione", "archives", i);
+
 	path = get_real_path_for_prefix (gnome_client_get_config_prefix (client));
 	file = g_file_new_for_path (path);
 	g_key_file_save (key_file, file);
-	
+
 	g_object_unref (file);
 	g_free (path);
 	g_key_file_free (key_file);

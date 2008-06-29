@@ -90,7 +90,7 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 
 	if (message != NULL) {
 		char *escaped_message;
-		
+
 		escaped_message = g_markup_escape_text (message, -1);
 		if (secondary_message != NULL) {
 			char *escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
@@ -98,17 +98,17 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 						       escaped_message,
 						       escaped_secondary_message);
 			g_free (escaped_secondary_message);
-		} 
+		}
 		else
 			markup_text = g_strdup (escaped_message);
 		g_free (escaped_message);
 	}
-	else 
+	else
 		markup_text = g_markup_escape_text (secondary_message, -1);
-	 
+
 	gtk_label_set_markup (GTK_LABEL (label), markup_text);
 	g_free (markup_text);
-	
+
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
 
@@ -268,7 +268,7 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 
 	button = create_button (GTK_STOCK_CANCEL, no_button_text);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      button, 
+				      button,
 				      GTK_RESPONSE_CANCEL);
 
 	button = create_button (GTK_STOCK_OK, yes_button_text);
@@ -343,14 +343,14 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 
 	button = create_button (GTK_STOCK_CANCEL, no_button_text);
 	gtk_dialog_add_action_widget (GTK_DIALOG (d),
-				      button, 
+				      button,
 				      GTK_RESPONSE_CANCEL);
 
 	/**/
 
 	button = create_button (GTK_STOCK_OK, yes_button_text);
 	gtk_dialog_add_action_widget (GTK_DIALOG (d),
-				      button, 
+				      button,
 				      GTK_RESPONSE_YES);
 
 	/**/
@@ -398,7 +398,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	stock_id = GTK_STOCK_DIALOG_ERROR;
 
 	dialog = gtk_dialog_new_with_buttons ("",
-					      parent, 
+					      parent,
 					      flags,
 					      GTK_STOCK_OK, GTK_RESPONSE_OK,
 					      NULL);
@@ -507,9 +507,9 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 				    FALSE, FALSE, 0);
 
 		g_signal_connect_swapped (G_OBJECT (button),
-					  "clicked", 
-					  G_CALLBACK (toggle_visibility), 
-					  scrolled);				    
+					  "clicked",
+					  G_CALLBACK (toggle_visibility),
+					  scrolled);
 	}
 
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
@@ -741,7 +741,7 @@ panel_find_icon (GtkIconTheme  *icon_theme,
 		retval = g_strdup (gtk_icon_info_get_filename (icon_info));
 		gtk_icon_info_free (icon_info);
 	}
-	
+
 	g_free (icon_no_extension);
 
 	return retval;
@@ -796,35 +796,35 @@ create_pixbuf (GtkIconTheme  *icon_theme,
 GdkPixbuf *
 get_icon_pixbuf (GtkIconTheme *icon_theme,
 		 GThemedIcon  *icon,
-		 int           size) 
+		 int           size)
 {
 	char        **icon_names;
 	GtkIconInfo  *icon_info;
 	GdkPixbuf    *pixbuf;
 	GError       *error = NULL;
-	
+
 	g_object_get (icon, "names", &icon_names, NULL);
-	
+
 	icon_info = gtk_icon_theme_choose_icon (icon_theme, (const char **)icon_names, size, 0);
 	if (icon_info == NULL) {
 		GIcon *default_icon;
-		
+
 		default_icon = g_content_type_get_icon ("gnome-fs-regular");
 		pixbuf = get_icon_pixbuf (icon_theme, G_THEMED_ICON (default_icon), size);
 		g_object_unref (default_icon);
-		
+
 		return pixbuf;
 	}
-		
+
 	pixbuf = gtk_icon_info_load_icon (icon_info, &error);
 	if (pixbuf == NULL) {
 		g_warning ("could not load icon pixbuf: %s\n", error->message);
 		g_clear_error (&error);
 	}
-	
+
 	gtk_icon_info_free (icon_info);
 	g_strfreev (icon_names);
-	
+
 	return pixbuf;
 }
 
@@ -836,14 +836,14 @@ get_mime_type_pixbuf (const char   *mime_type,
 {
 	GdkPixbuf *pixbuf = NULL;
 	GIcon     *icon;
-	
-	if (icon_theme == NULL) 
+
+	if (icon_theme == NULL)
 		icon_theme = gtk_icon_theme_get_default ();
-	
+
 	icon = g_content_type_get_icon (mime_type);
 	pixbuf = get_icon_pixbuf (icon_theme, G_THEMED_ICON (icon), icon_size);
 	g_object_unref (icon);
-	
+
 	return pixbuf;
 }
 
@@ -864,18 +864,23 @@ void
 show_help_dialog (GtkWindow  *parent,
 		  const char *section)
 {
-	
+#ifdef GTK_2_13
 	GdkAppLaunchContext *app_context;
 	char                *uri;
 	GError              *error = NULL;
-	
-	uri = g_strconcat ("ghelp:file-roller", section ? "?" : NULL, section, NULL);	
-	app_context = gdk_app_launch_context_new ();
+#else
+	GAppLaunchContext *app_context;
+	char              *uri;
+	GError            *error = NULL;
+#endif
+
+	uri = g_strconcat ("ghelp:file-roller", section ? "?" : NULL, section, NULL);
+	app_context = g_app_launch_context_new ();
 	if (! g_app_info_launch_default_for_uri (uri, G_APP_LAUNCH_CONTEXT (app_context), &error)) {
   		GtkWidget *dialog;
 
 		dialog = _gtk_message_dialog_new (parent,
-						  GTK_DIALOG_DESTROY_WITH_PARENT, 
+						  GTK_DIALOG_DESTROY_WITH_PARENT,
 						  GTK_STOCK_DIALOG_ERROR,
 						  _("Could not display help"),
 						  error->message,

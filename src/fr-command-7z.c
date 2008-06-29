@@ -130,7 +130,7 @@ list__process_line (char     *line,
 		}
 		return;
 	}
-	
+
 	if (p7z_comm->fdata == NULL)
 		p7z_comm->fdata = file_data_new ();
 
@@ -142,11 +142,11 @@ list__process_line (char     *line,
 	}
 
 	fdata = p7z_comm->fdata;
-	
+
 	if (strcmp (fields[0], "Path") == 0) {
 		fdata->free_original_path = TRUE;
 		fdata->original_path = g_strdup (fields[1]);
-		fdata->full_path = g_strconcat ((fdata->original_path[0] != '/') ? "/" : "", 
+		fdata->full_path = g_strconcat ((fdata->original_path[0] != '/') ? "/" : "",
 						fdata->original_path,
 						(fdata->dir && (fdata->original_path[strlen (fdata->original_path - 1)] != '/')) ? "/" : "",
 						NULL);
@@ -159,7 +159,7 @@ list__process_line (char     *line,
 	}
 	else if (strcmp (fields[0], "Modified") == 0) {
 		char **modified_fields;
-		
+
 		modified_fields = g_strsplit (fields[1], " ", 2);
 		fdata->modified = mktime_from_string (modified_fields[0], modified_fields[1]);
 		g_strfreev (modified_fields);
@@ -197,7 +197,7 @@ add_password_arg (FrCommand     *comm,
 {
 	if (always_specify || ((password != NULL) && (*password != 0))) {
 		char *arg;
-		
+
 		arg = g_strconcat ("-p", password, NULL);
 		fr_process_add_arg (comm->process, arg);
 		g_free (arg);
@@ -210,7 +210,7 @@ fr_command_7z_list (FrCommand  *comm,
 		    const char *password)
 {
 	FrCommand7z *p7z_comm = FR_COMMAND_7Z (comm);
-	
+
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
 				      comm);
@@ -302,10 +302,10 @@ fr_command_7z_delete (FrCommand *comm,
 
 	if (is_mime_type (comm->mime_type, "application/x-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
-		
+
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
@@ -333,13 +333,13 @@ fr_command_7z_extract (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 	add_password_arg (comm, password, FALSE);
-	
-	if (dest_dir != NULL) 
+
+	if (dest_dir != NULL)
 		fr_process_add_arg_concat (comm->process, "-o", dest_dir, NULL);
 
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
@@ -364,9 +364,9 @@ static void
 fr_command_7z_handle_error (FrCommand   *comm,
 			    FrProcError *error)
 {
-	if (error->type != FR_PROC_ERROR_COMMAND_ERROR) 
+	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
 		return;
-		
+
 	if (error->status <= 1) {
 		error->type = FR_PROC_ERROR_NONE;
 	}
@@ -375,8 +375,10 @@ fr_command_7z_handle_error (FrCommand   *comm,
 
 		for (scan = g_list_last (comm->process->out.raw); scan; scan = scan->prev) {
 			char *line = scan->data;
-				
-			if (strstr (line, "Wrong password?") != NULL) {
+
+			if ((strstr (line, "Wrong password?") != NULL)
+			    || (strstr (line, "Enter password") != NULL))
+			{
 				error->type = FR_PROC_ERROR_ASK_PASSWORD;
 				break;
 			}
@@ -392,7 +394,7 @@ const char *sevenz_mime_types[] = { "application/x-7z-compressed",
 				    /*"application/x-cbr",*/
 				    "application/x-cbz",
 				    "application/x-executable",
-				    "application/x-rar", 
+				    "application/x-rar",
 				    "application/zip",
 				    NULL };
 
@@ -404,19 +406,19 @@ fr_command_7z_get_mime_types (FrCommand *comm)
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_7z_get_capabilities (FrCommand  *comm,
 			        const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
 	if (! is_program_in_path ("7za") && ! is_program_in_path ("7zr") && ! is_program_in_path ("7z"))
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-7z-compressed"))
-		capabilities |= FR_COMMAND_CAP_READ_WRITE;	
-	
+		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+
 	else if (is_program_in_path ("7z")) {
 		capabilities |= FR_COMMAND_CAP_READ;
 		if (is_mime_type (mime_type, "application/x-cbr")
@@ -427,7 +429,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 			capabilities |= FR_COMMAND_CAP_WRITE;
 		}
 	}
-	
+
 	return capabilities;
 }
 
