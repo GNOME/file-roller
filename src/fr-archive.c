@@ -365,9 +365,6 @@ fr_archive_new (void)
 }
 
 
-/*!
- *
- */
 static GFile *
 get_local_copy_for_file (GFile *remote_file)
 {
