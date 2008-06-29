@@ -1,15 +1,18 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.52)
+AC_PREREQ(2.61)
 
-AC_INIT(file-roller, 2.23.4)
-AC_CONFIG_SRCDIR(src/main.c)
+AC_INIT(file-roller, 2.23.4, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AM_CONFIG_HEADER(config.h)
 
-AM_PROG_LIBTOOL
+AC_CONFIG_SRCDIR([config.h.in])
+AC_CONFIG_HEADER([config.h])
 
-GNOME_DOC_INIT
+GNOME_COMMON_INIT
+
+AC_PROG_LIBTOOL
+
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 dnl ==========================================================================
 dnl
@@ -73,8 +76,6 @@ AC_SUBST(NAUTILUS_CFLAGS)
 AC_SUBST(NAUTILUS_LIBS)
 
 
-AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
-
 dnl Checks for mkdtemp function
 
 mkdtemp_missing=false
@@ -100,8 +101,12 @@ fi
 
 dnl ******************************
 
-AC_ARG_ENABLE(deprecations,AC_HELP_STRING([--enable-deprecations],[warn about deprecated usages]))
+PKG_PROG_PKG_CONFIG
+GNOME_DOC_INIT
 
+dnl ******************************
+
+AC_ARG_ENABLE(deprecations,AC_HELP_STRING([--enable-deprecations],[warn about deprecated usages]))
 AM_CONDITIONAL(ENABLE_DEPRECATIONS, test "x$enable_deprecations" = xyes)
 
 dnl ******************************
@@ -119,39 +124,37 @@ AC_SUBST(NAUTILUS_EXTENSION_DIR)
 
 dnl ******************************
 
-AC_OUTPUT([
-Makefile
-file-roller.spec
-data/Makefile
-data/file-roller.desktop.in
-data/glade/Makefile
-data/icons/Makefile
-data/icons/16x16/Makefile
-data/icons/16x16/actions/Makefile
-data/icons/16x16/apps/Makefile
-data/icons/22x22/Makefile
-data/icons/22x22/apps/Makefile
-data/icons/24x24/Makefile
-data/icons/24x24/actions/Makefile
-data/icons/24x24/apps/Makefile
-data/icons/32x32/Makefile
-data/icons/32x32/apps/Makefile
-data/icons/scalable/Makefile
-data/icons/scalable/apps/Makefile
-src/Makefile
-src/sh/Makefile
-nautilus/Makefile
-help/Makefile
-po/Makefile.in
-])
+AC_CONFIG_FILES([Makefile
+		 file-roller.spec
+		 data/Makefile
+		 data/file-roller.desktop.in
+		 data/glade/Makefile
+		 data/icons/Makefile
+		 data/icons/16x16/Makefile
+		 data/icons/16x16/actions/Makefile
+		 data/icons/16x16/apps/Makefile
+		 data/icons/22x22/Makefile
+		 data/icons/22x22/apps/Makefile
+		 data/icons/24x24/Makefile
+		 data/icons/24x24/actions/Makefile
+		 data/icons/24x24/apps/Makefile
+		 data/icons/32x32/Makefile
+		 data/icons/32x32/apps/Makefile
+		 data/icons/scalable/Makefile
+		 data/icons/scalable/apps/Makefile
+		 src/Makefile
+		 src/sh/Makefile
+		 nautilus/Makefile
+		 help/Makefile
+		 po/Makefile.in])
+AC_OUTPUT
 
 echo "
-
 Configuration:
 
 	Source code location:   ${srcdir}
 	Compiler:               ${CC}
 	Internal mkdtemp:       ${mkdtemp_missing}
-	Nautilus support: 	${build_nautilus_actions}
-	Gtk+ version:           ${GTK_REQUIRED}
+	Nautilus support:       ${build_nautilus_actions}
+	Gtk+ series:            ${GTK_REQUIRED}
 "
