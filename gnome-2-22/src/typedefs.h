@@ -1,0 +1,132 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+
+/*
+ *  File-Roller
+ *
+ *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
+ */
+
+#ifndef TYPEDEFS_H
+#define TYPEDEFS_H
+
+#define RC_DIR              ".gnome2/file-roller"
+#define RC_BOOKMARKS_FILE   ".gnome2/file-roller/bookmarks"
+#define RC_RECENT_FILE      ".gnome2/file-roller/recents"
+#define RC_OPTIONS_DIR      ".gnome2/file-roller/options"
+
+#define OLD_RC_BOOKMARKS_FILE   ".file-roller/bookmarks"
+#define OLD_RC_RECENT_FILE      ".file-roller/recents"
+#define OLD_RC_OPTIONS_DIR      ".file-roller/options"
+
+typedef enum {
+	FR_WINDOW_SORT_BY_NAME = 0,
+	FR_WINDOW_SORT_BY_SIZE = 1,
+	FR_WINDOW_SORT_BY_TYPE = 2,
+	FR_WINDOW_SORT_BY_TIME = 3,
+	FR_WINDOW_SORT_BY_PATH = 4
+} FRWindowSortMethod;
+
+typedef enum {
+	FR_WINDOW_LIST_MODE_FLAT,
+	FR_WINDOW_LIST_MODE_AS_DIR
+} FRWindowListMode;
+
+typedef enum {
+	FR_COMPRESS_PROGRAM_NONE,
+	FR_COMPRESS_PROGRAM_GZIP,
+	FR_COMPRESS_PROGRAM_BZIP,
+	FR_COMPRESS_PROGRAM_BZIP2,
+	FR_COMPRESS_PROGRAM_COMPRESS,
+	FR_COMPRESS_PROGRAM_LZMA,
+	FR_COMPRESS_PROGRAM_LZOP
+} FRCompressProgram;
+
+typedef enum {
+	FR_COMPRESSION_VERY_FAST,
+	FR_COMPRESSION_FAST,
+	FR_COMPRESSION_NORMAL,
+	FR_COMPRESSION_MAXIMUM
+} FRCompression;
+
+typedef enum {
+	FR_PROC_ERROR_NONE,
+	FR_PROC_ERROR_GENERIC,
+	FR_PROC_ERROR_COMMAND_ERROR,
+	FR_PROC_ERROR_COMMAND_NOT_FOUND,
+	FR_PROC_ERROR_EXITED_ABNORMALLY,
+	FR_PROC_ERROR_SPAWN,
+	FR_PROC_ERROR_STOPPED,
+	FR_PROC_ERROR_ASK_PASSWORD
+} FRProcErrorType;
+
+typedef struct {
+	FRProcErrorType  type;
+	int              status;
+	GError          *gerror;
+} FRProcError;
+
+typedef enum {
+	FR_FILE_TYPE_ACE,
+	FR_FILE_TYPE_AR,
+	FR_FILE_TYPE_ARJ,
+	FR_FILE_TYPE_BZIP,
+	FR_FILE_TYPE_BZIP2,
+	FR_FILE_TYPE_COMPRESS,
+	FR_FILE_TYPE_CPIO,
+	FR_FILE_TYPE_DEB,
+	FR_FILE_TYPE_ISO,
+	FR_FILE_TYPE_EAR,
+	FR_FILE_TYPE_EXE,
+	FR_FILE_TYPE_GZIP,
+	FR_FILE_TYPE_JAR,
+	FR_FILE_TYPE_LHA,
+	FR_FILE_TYPE_LZMA,
+	FR_FILE_TYPE_LZOP,
+	FR_FILE_TYPE_RAR,
+	FR_FILE_TYPE_RPM,
+	FR_FILE_TYPE_TAR,
+	FR_FILE_TYPE_TAR_BZ,
+	FR_FILE_TYPE_TAR_BZ2,
+	FR_FILE_TYPE_TAR_GZ,
+	FR_FILE_TYPE_TAR_LZMA,
+	FR_FILE_TYPE_TAR_LZOP,
+	FR_FILE_TYPE_TAR_COMPRESS,
+	FR_FILE_TYPE_STUFFIT,
+	FR_FILE_TYPE_WAR,
+	FR_FILE_TYPE_ZIP,
+	FR_FILE_TYPE_ZOO,
+	FR_FILE_TYPE_7ZIP,
+	FR_FILE_TYPE_NULL
+} FRFileType;
+
+typedef struct {
+	FRFileType  id;
+	char       *ext;
+	char       *mime_type;
+	char       *name;
+} FRFileTypeDescription;
+
+typedef struct {
+	char       *command;
+	gboolean    can_open;
+	gboolean    can_save;
+	gboolean    support_many_files;
+	FRFileType  file_type;
+} FRCommandDescription;
+
+#endif /* TYPEDEFS_H */
+

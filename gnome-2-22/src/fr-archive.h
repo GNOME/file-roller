@@ -1,0 +1,188 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+
+/*
+ *  File-Roller
+ *
+ *  Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
+ */
+
+#ifndef ARCHIVE_H
+#define ARCHIVE_H
+
+#include <glib.h>
+#include "fr-process.h"
+#include "fr-command.h"
+#include "file-list.h"
+
+#define FR_TYPE_ARCHIVE            (fr_archive_get_type ())
+#define FR_ARCHIVE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_ARCHIVE, FrArchive))
+#define FR_ARCHIVE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_ARCHIVE, FrArchiveClass))
+#define FR_IS_ARCHIVE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_ARCHIVE))
+#define FR_IS_ARCHIVE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_ARCHIVE))
+#define FR_ARCHIVE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_ARCHIVE, FrArchiveClass))
+
+typedef struct _FrArchive         FrArchive;
+typedef struct _FRArchiveClass    FrArchiveClass;
+typedef struct _FRArchivePrivData FrArchivePrivData;
+
+typedef gboolean (*FakeLoadFunc) (FrArchive *archive, gpointer data);
+
+struct _FrArchive {
+	GObject  __parent;
+
+	char        *uri;
+	gboolean     is_remote;
+	char        *local_filename;
+	char        *mime_type;
+	FrCommand   *command;
+	FrProcess   *process;
+	FRProcError  error;
+	gboolean     can_create_compressed_file;
+	gboolean     is_compressed_file;         /* Whether the file is an archive
+						  * or a compressed file. */
+	gboolean     read_only;                  /* Whether archive is read-only
+						  * or not. */
+
+	FrArchivePrivData *priv;
+};
+
+struct _FRArchiveClass {
+	GObjectClass __parent_class;
+
+	/* -- Signals -- */
+
+	void (*start)     (FrArchive   *archive,
+			   FRAction     action); 
+	void (*done)      (FrArchive   *archive,
+			   FRAction     action, 
+			   FRProcError *error);
+	void (*progress)  (FrArchive   *archive,
+			   double       fraction);
+	void (*message)   (FrArchive   *archive,
+			   const char  *msg);
+	void (*stoppable) (FrArchive   *archive,
+			   gboolean     value);
+};
+
+GType       fr_archive_get_type                  (void);
+FrArchive * fr_archive_new                       (void);
+void        fr_archive_set_fake_load_func        (FrArchive     *archive,
+						  FakeLoadFunc   func,
+						  gpointer       data);
+gboolean    fr_archive_fake_load                 (FrArchive     *archive);
+void        fr_archive_set_add_is_stoppable_func (FrArchive     *archive,
+						  FakeLoadFunc   func,
+						  gpointer       data);
+void        fr_archive_stoppable                 (FrArchive     *archive,
+						  gboolean       stoppable);
+void        fr_archive_stop	                 (FrArchive     *archive);
+void        fr_archive_action_completed          (FrArchive       *archive,
+						  FRAction         action,
+						  FRProcErrorType  error_type,
+						  const char      *error_details);
+
+/**/
+
+gboolean    fr_archive_create                    (FrArchive     *archive,
+						  const char    *uri);
+gboolean    fr_archive_load                      (FrArchive     *archive,
+						  const char    *uri,
+						  const char    *password);
+gboolean    fr_archive_load_local                (FrArchive     *archive,
+		       				  const char    *uri,
+		       				  const char    *password);						  
+void        fr_archive_reload                    (FrArchive     *archive,
+						  const char    *password);
+void        fr_archive_rename                    (FrArchive     *archive,
+						  const char    *new_uri);
+
+/**/
+
+void        fr_archive_add                       (FrArchive     *archive,
+						  GList         *file_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
+void        fr_archive_remove                    (FrArchive     *archive,
+						  GList         *file_list,
+						  FRCompression  compression);
+void        fr_archive_extract                   (FrArchive     *archive,
+						  GList         *file_list,
+						  const char    *dest_dir,
+						  const char    *base_dir,
+						  gboolean       skip_older,
+						  gboolean       overwrite,
+						  gboolean       junk_path,
+						  const char    *password);
+gboolean    fr_archive_extract_here              (FrArchive     *archive,
+						  gboolean       skip_older,
+						  gboolean       overwrite,
+						  gboolean       junk_path,
+						  const char    *password);
+const char *fr_archive_get_last_extraction_destination (FrArchive *archive);
+
+/**/
+
+void        fr_archive_add_files                 (FrArchive     *archive,
+						  GList         *file_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
+void        fr_archive_add_with_wildcard         (FrArchive     *archive,
+						  const char    *include_files,
+						  const char    *exclude_files,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  gboolean       recursive,
+						  gboolean       follow_links,
+						  const char    *password,
+						  FRCompression  compression);
+void        fr_archive_add_directory             (FrArchive     *archive,
+						  const char    *directory,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
+void        fr_archive_add_items                 (FrArchive     *archive,
+						  GList         *item_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
+void        fr_archive_add_dropped_items         (FrArchive     *archive,
+						  GList         *item_list,
+						  const char    *base_dir,
+						  const char    *dest_dir,
+						  gboolean       update,
+						  const char    *password,
+						  FRCompression  compression);
+void        fr_archive_test                      (FrArchive     *archive,
+						  const char    *password);
+
+/* utils */
+
+G_CONST_RETURN char * fr_archive_utils__get_file_name_ext (const char *filename);
+gboolean              fr_archive_utils__file_is_archive   (const char *filename);
+
+#endif /* ARCHIVE_H */

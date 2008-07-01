@@ -1,0 +1,61 @@
+
+			   * File Roller *
+
+		  an archive manager utility for the
+			  GNOME Environment.
+
+* What is it ?
+
+  File Roller is an archive manager for the GNOME environment.  This means
+  that you can : create and modify archives; view the content of an archive; 
+  view a file contained in the archive; extract files from the archive.
+
+  File Roller is only a front-end (a graphical interface) to archiving programs
+  like tar and zip. The supported file types are :
+    * Tar archives uncompressed (.tar) or compressed with
+          * gzip (.tar.gz , .tgz)
+          * bzip (.tar.bz , .tbz)
+          * bzip2 (.tar.bz2 , .tbz2)
+          * compress (.tar.Z , .taz)
+          * lzop (.tar.lzo , .tzo)
+    * Zip archives (.zip)
+    * Jar archives (.jar , .ear , .war)
+    * Lha archives (.lzh)
+    * Rar archives (.rar)
+    * Zoo archives (.zoo)
+    * Arj archives (.arj)
+    * AR archives (.ar)
+    * Debian archives (.deb) [Read-only mode]
+    * RPM archives (.rpm) [Read-only mode]
+    * 7-zip archives (.7z)
+    * ISO files (.iso) [Read-only mode]
+    * Stuffit archives (.bin, .sit)
+    * Single files compressed with gzip, bzip, bzip2, compress, lzop
+
+* Home Page
+
+  http://fileroller.sourceforge.net
+
+* Licensing
+
+  This program is released under the terms of the GNU General Public
+  License (GNU GPL).  
+
+  You can find a copy of the license in the file COPYING.
+
+* Dependencies
+
+  In order to use this program you need a working GNOME environment
+  version 2.x, with the development tools installed properly.
+
+  Also you need : 
+          * gnome-vfs
+          * libglade
+          * bonobo-activation
+          * bonobo
+
+* Install
+
+  ./configure 
+  make
+  make install
