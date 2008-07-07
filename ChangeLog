@@ -36,6 +36,8 @@
 	
 	* data/file-roller.schemas: added the key /apps/file-roller/general/encrypt_header
 
+	Fixes bug #506698 – 7z Filename (header) Encryption request
+
 2008-06-29  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* INSTALL: changed by autoconf
@@ -159,7 +161,7 @@
 	* nautilus/nautilus-fileroller.c: 
 	* data/file-roller.desktop.in.in: added application/alz mime type.
 
-	Added support for reading and extractin alz archives.
+	Added support for reading and extracting alz archives.
 	Patch by Changwoo Ryu
 	Fixed bug #521324 – ALZ archive support
 
@@ -198,6 +200,7 @@
 	Fixes bug #529395 – file-roller will not open 256 AES zip files
 	Fixes bug #515194 – PK 4.5 Zip files
 	Fixes bug #519046 – add x-cbr and x-cbz support
+	Fixes bug #336790 – file-roller can't open winzip-10 encrypted files (AES)
 
 2008-06-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
