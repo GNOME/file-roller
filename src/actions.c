@@ -46,7 +46,7 @@
 typedef struct {
 	FrWindow  *window;
 	int       *supported_types;
-	
+
 	GtkWidget *file_sel;
 	GtkWidget *combo_box;
 	GtkWidget *password;
@@ -67,7 +67,7 @@ new_archive_dialog_destroy_cb (GtkWidget  *w,
 
 static void
 new_archive (GtkWidget *file_sel,
-	     FrWindow  *window, 
+	     FrWindow  *window,
 	     char      *uri)
 {
 	GtkWidget *archive_window;
@@ -91,7 +91,7 @@ new_archive (GtkWidget *file_sel,
 
 /* when on Automatic the user provided extension needs to be supported,
    otherwise an existing unsupported archive can be deleted (if the user
-   provided name matches with its name) before we find out that the 
+   provided name matches with its name) before we find out that the
    archive is unsupported
 */
 static gboolean
@@ -130,7 +130,7 @@ get_full_path (SaveAsData *data)
 	if (idx > 0) {
 		const char *path_ext;
 		char       *default_ext;
-		
+
 		path_ext = get_archive_filename_extension (path);
 		default_ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
 		if (strcmp_null_tolerant (path_ext, default_ext) != 0) {
@@ -174,8 +174,8 @@ get_archive_filename_from_selector (SaveAsData *data)
 
 	dir = g_file_get_parent (file);
 	info = g_file_query_info (dir,
-				  G_FILE_ATTRIBUTE_ACCESS_CAN_READ "," 
-				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE "," 
+				  G_FILE_ATTRIBUTE_ACCESS_CAN_READ ","
+				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE ","
 				  G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE,
 				  0, NULL, &err);
 	if (err != NULL) {
@@ -260,9 +260,9 @@ get_archive_filename_from_selector (SaveAsData *data)
 			return NULL;
 		}
 	}
-	
+
 	g_object_unref (file);
-	
+
 	return path;
 }
 
@@ -301,20 +301,20 @@ update_password_availability_for_ext (SaveAsData *data,
 				      const char *ext)
 {
 	int i;
-	
-	if (data->password == NULL) 
+
+	if (data->password == NULL)
 		return;
-		
+
 	if (ext == NULL) {
 		gtk_widget_set_sensitive (data->password, FALSE);
 		gtk_widget_set_sensitive (data->password_label, FALSE);
 		return;
 	}
-				
+
 	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
 		if (strcmp (mime_type_desc[i].default_ext, ext) == 0) {
-			gtk_widget_set_sensitive (data->password, mime_type_desc[i].supports_password);
-			gtk_widget_set_sensitive (data->password_label, mime_type_desc[i].supports_password);
+			gtk_widget_set_sensitive (data->password, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
+			gtk_widget_set_sensitive (data->password_label, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
 			break;
 		}
 	}
@@ -331,21 +331,21 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	char       *basename_noext;
 	char       *new_basename;
 	char       *new_basename_uft8;
-	
+
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->file_sel));
 	if (uri == NULL)
 		return;
-	
+
 	ext = get_archive_filename_extension (uri);
 	if (ext == NULL)
 		ext = "";
-	
+
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box)) - 1;
 	if (idx < 0) {
 		if (data->password != NULL) {
 			gtk_widget_set_sensitive (data->password, TRUE);
 			gtk_widget_set_sensitive (data->password_label, TRUE);
-		} 
+		}
 		return;
 	}
 
@@ -357,7 +357,7 @@ filetype_combobox_changed_cb (GtkComboBox *combo_box,
 	new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->file_sel), new_basename_uft8);
 	update_password_availability_for_ext (data, new_ext);
-	
+
 	g_free (new_basename_uft8);
 	g_free (new_basename);
 	g_free (basename_noext);
@@ -377,7 +377,7 @@ show_new_archive_dialog (FrWindow   *window,
 	data = g_new0 (SaveAsData, 1);
 	data->window = window;
 	data->supported_types = create_type;
-	
+
 	file_sel = gtk_file_chooser_dialog_new (_("New"),
 						GTK_WINDOW (window),
 						GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -436,15 +436,15 @@ show_new_archive_dialog (FrWindow   *window,
 	/**/
 
 	g_signal_connect (G_OBJECT (file_sel),
-			  "response", 
-			  G_CALLBACK (new_file_response_cb), 
+			  "response",
+			  G_CALLBACK (new_file_response_cb),
 			  data);
 	g_signal_connect (G_OBJECT (data->combo_box),
-			  "changed", 
+			  "changed",
 			  G_CALLBACK (filetype_combobox_changed_cb),
 			  data);
 	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy", 
+			  "destroy",
 			  G_CALLBACK (new_archive_dialog_destroy_cb),
 			  data);
 
@@ -475,7 +475,7 @@ window_archive_loaded_cb (FrWindow  *window,
 	}
 	else {
 		FrWindow *original_window =  g_object_get_data (G_OBJECT (file_sel), "fr_window");
-		if (window != original_window) 
+		if (window != original_window)
 			fr_window_destroy_with_error_dialog (window);
 	}
 }
@@ -502,7 +502,7 @@ open_file_response_cb (GtkWidget *w,
 
 	window = fr_window_archive_open (window, uri, GTK_WINDOW (file_sel));
 	g_signal_connect (G_OBJECT (window),
-			  "archive_loaded", 
+			  "archive_loaded",
 			  G_CALLBACK (window_archive_loaded_cb),
 			  file_sel);
 
@@ -546,9 +546,9 @@ activate_action_open (GtkAction *action,
 	g_object_set_data (G_OBJECT (file_sel), "fr_window", window);
 
 	g_signal_connect (G_OBJECT (file_sel),
-			  "response", 
-			  G_CALLBACK (open_file_response_cb), 
-			  file_sel); 
+			  "response",
+			  G_CALLBACK (open_file_response_cb),
+			  file_sel);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 	gtk_widget_show (file_sel);
@@ -586,9 +586,9 @@ save_file_response_cb (GtkWidget  *w,
 	path = get_archive_filename_from_selector (data);
 	if (path == NULL)
 		return;
-		
+
 	fr_window_archive_save_as (data->window, path, gtk_entry_get_text (GTK_ENTRY (data->password)));
-	
+
 	gtk_widget_destroy (data->file_sel);
 	g_free (path);
 }
@@ -620,7 +620,7 @@ activate_action_save_as (GtkAction *action,
 						GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 						NULL);
 	data->file_sel = file_sel;
-	
+
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (file_sel), TRUE);
@@ -641,7 +641,7 @@ activate_action_save_as (GtkAction *action,
 		if (err != NULL) {
 			g_warning ("Failed to get display name for uri %s: %s", uri, err->message);
 			g_clear_error (&err);
-		} 
+		}
 		else {
 			gtk_file_chooser_set_current_name (
 					GTK_FILE_CHOOSER (file_sel),
@@ -663,9 +663,9 @@ activate_action_save_as (GtkAction *action,
 	gtk_file_filter_add_pattern (filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
 
-	data->password = gtk_entry_new (); 
+	data->password = gtk_entry_new ();
 	gtk_entry_set_visibility (GTK_ENTRY (data->password), FALSE);
-	
+
 	/**/
 
 	table = gtk_table_new (2, 2, FALSE);
@@ -696,38 +696,38 @@ activate_action_save_as (GtkAction *action,
 
 	data->password_label = label = gtk_label_new_with_mnemonic (_("_Encrypt with password:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-	
+
 	gtk_box_pack_start (GTK_BOX (hbox), data->password, FALSE, TRUE, 0);
-	
+
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 			  (GtkAttachOptions) (GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
 	gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 1, 2,
 			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			  (GtkAttachOptions) (0), 0, 0);
-	
+
 	gtk_widget_show_all (table);
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), table);
-	
+
 	/* set the default data */
-	
+
 	password = fr_window_get_password (window);
 	if (password == NULL)
 		password = "";
 	gtk_entry_set_text (GTK_ENTRY (data->password), password);
-	
+
 	/**/
 
 	g_signal_connect (G_OBJECT (file_sel),
-			  "response", 
-			  G_CALLBACK (save_file_response_cb), 
+			  "response",
+			  G_CALLBACK (save_file_response_cb),
 			  data);
 	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy", 
+			  "destroy",
 			  G_CALLBACK (save_file_destroy_cb),
 			  data);
 	g_signal_connect (G_OBJECT (data->combo_box),
-			  "changed", 
+			  "changed",
 			  G_CALLBACK (filetype_combobox_changed_cb),
 			  data);
 
@@ -879,7 +879,7 @@ activate_action_delete_folder_from_sidebar (GtkAction *action,
 
 
 void
-activate_action_find (GtkAction *action, 
+activate_action_find (GtkAction *action,
 		      gpointer   data)
 {
 	FrWindow *window = data;
@@ -1092,7 +1092,7 @@ activate_action_about (GtkAction *action,
 		"51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA")
 	};
 	char *license_text;
-	
+
 	license_text =  g_strjoin ("\n\n", _(license[0]), _(license[1]), _(license[2]), NULL);
 
 	gtk_show_about_dialog (GTK_WINDOW (window),

@@ -123,6 +123,7 @@ typedef struct {
 	char      *temp_dir;
 	FrArchive *new_archive;
 	char      *password;
+	gboolean   encrypt_header;
 	char      *new_file;
 } FRConvertData;
 
@@ -308,6 +309,7 @@ struct _FrWindowPrivateData {
 	GList *          history_current;
 	char *           password;
 	char *           password_for_paste;
+	gboolean         encrypt_header;
 	FrCompression    compression;
 
 	guint            activity_timeout_handle;   /* activity timeout
@@ -2174,23 +2176,12 @@ static void
 open_folder (GtkWindow  *parent,
 	     const char *folder)
 {
-#ifdef GTK_2_13
-	GdkAppLaunchContext *app_context;
-	GError              *error = NULL;
-#else
-	GAppLaunchContext *app_context;
-	GError            *error = NULL;
-#endif
+	GError *error = NULL;
+
 	if (folder == NULL)
 		return;
 
-#ifdef GTK_2_13
-	app_context = gdk_app_launch_context_new ();
-#else
-	app_context = g_app_launch_context_new ();
-#endif
-
-	if (! g_app_info_launch_default_for_uri (folder, G_APP_LAUNCH_CONTEXT (app_context), &error)) {
+	if (! show_uri (gtk_window_get_screen (parent), folder, GDK_CURRENT_TIME, &error)) {
 		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
@@ -2210,7 +2201,6 @@ open_folder (GtkWindow  *parent,
 		g_free (message);
 		g_clear_error (&error);
 	}
-	g_object_unref (app_context);
 }
 
 
@@ -3083,6 +3073,7 @@ action_performed (FrArchive   *archive,
 				  FALSE,
 				  TRUE,
 				  window->priv->convert_data.password,
+				  window->priv->convert_data.encrypt_header,
 				  window->priv->compression);
 			g_free (source_dir);
 		}
@@ -5358,11 +5349,13 @@ fr_window_construct (FrWindow *window)
 
 	window->priv->password = NULL;
 	window->priv->compression = preferences_get_compression_level ();
+	window->priv->encrypt_header = eel_gconf_get_boolean (PREF_ENCRYPT_HEADER, FALSE);
 
 	window->priv->convert_data.converting = FALSE;
 	window->priv->convert_data.temp_dir = NULL;
 	window->priv->convert_data.new_archive = NULL;
 	window->priv->convert_data.password = NULL;
+	window->priv->convert_data.encrypt_header = FALSE;
 
 	window->priv->stoppable = TRUE;
 
@@ -6154,6 +6147,7 @@ fr_window_archive_add_files (FrWindow *window,
 			      fr_window_get_current_location (window),
 			      update,
 			      window->priv->password,
+			      window->priv->encrypt_header,
 			      window->priv->compression);
 
 	path_list_free (files);
@@ -6180,6 +6174,7 @@ fr_window_archive_add_with_wildcard (FrWindow      *window,
 				      update,
 				      follow_links,
 				      window->priv->password,
+				      window->priv->encrypt_header,
 				      window->priv->compression);
 }
 
@@ -6191,6 +6186,7 @@ fr_window_archive_add_directory (FrWindow      *window,
 				 const char    *dest_dir,
 				 gboolean       update,
 				 const char    *password,
+				 gboolean       encrypt_header,
 				 FrCompression  compression)
 {
 	fr_archive_add_directory (window->archive,
@@ -6199,6 +6195,7 @@ fr_window_archive_add_directory (FrWindow      *window,
 				  (dest_dir == NULL)? fr_window_get_current_location (window): dest_dir,
 				  update,
 				  password,
+				  encrypt_header,
 				  compression);
 }
 
@@ -6210,6 +6207,7 @@ fr_window_archive_add_items (FrWindow      *window,
 			     const char    *dest_dir,
 			     gboolean       update,
 			     const char    *password,
+			     gboolean       encrypt_header,
 			     FrCompression  compression)
 {
 	fr_archive_add_items (window->archive,
@@ -6218,6 +6216,7 @@ fr_window_archive_add_items (FrWindow      *window,
 			      (dest_dir == NULL)? fr_window_get_current_location (window): dest_dir,
 			      update,
 			      password,
+			      encrypt_header,
 			      compression);
 }
 
@@ -6233,6 +6232,7 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 				      fr_window_get_current_location (window),
 				      update,
 				      window->priv->password,
+				      window->priv->encrypt_header,
 				      window->priv->compression);
 }
 
@@ -6502,6 +6502,23 @@ fr_window_get_password (FrWindow *window)
 	g_return_val_if_fail (window != NULL, NULL);
 
 	return window->priv->password;
+}
+
+
+void
+fr_window_set_encrypt_header (FrWindow *window,
+			      gboolean  encrypt_header)
+{
+	g_return_val_if_fail (window != NULL, NULL);
+
+	window->priv->encrypt_header = encrypt_header;
+}
+
+
+gboolean
+fr_window_get_encrypt_header (FrWindow *window)
+{
+	return window->priv->encrypt_header;
 }
 
 
@@ -7003,6 +7020,7 @@ rename_selection (FrWindow   *window,
 			FALSE,
 			TRUE,
 			window->priv->password,
+			window->priv->encrypt_header,
 			window->priv->compression);
 
 	path_list_free (new_file_list);
@@ -7380,6 +7398,7 @@ add_pasted_files (FrWindow        *window,
 			FALSE,
 			FALSE,
 			window->priv->password,
+			window->priv->encrypt_header,
 			window->priv->compression);
 
 	path_list_free (new_file_list);
@@ -7748,6 +7767,7 @@ fr_window_update_files (FrWindow *window,
 				FALSE,
 				FALSE,
 				window->priv->password,
+				window->priv->encrypt_header,
 				window->priv->compression);
 		path_list_free (file_list);
 	}

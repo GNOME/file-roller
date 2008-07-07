@@ -228,6 +228,18 @@
 	    Possible values : very_fast, fast, normal, maximum.</long>
         </locale>
       </schema>
+      
+      <schema>
+        <key>/schemas/apps/file-roller/general/encrypt_header</key>	
+	<applyto>/apps/file-roller/general/encrypt_header</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>false</default>
+        <locale name="C">
+          <short>Encrypt the archive header</short>
+          <long>Whether to encrypt the archive header.  If the header is encrypted the password will be required to list the archive content as well.</long>
+        </locale>
+      </schema>
 
       <schema>
         <key>/schemas/apps/file-roller/general/migrate_directories</key>
@@ -380,6 +392,18 @@
         <owner>file-roller</owner>
         <type>string</type>
         <default>.tar.gz</default>
+        <locale name="C">
+          <short></short>
+          <long></long>
+        </locale>
+      </schema>
+      
+      <schema>
+        <key>/schemas/apps/file-roller/dialogs/batch-add/other_options</key>
+	<applyto>/apps/file-roller/dialogs/batch-add/other_options</applyto>
+        <owner>file-roller</owner>
+        <type>bool</type>
+        <default>false</default>
         <locale name="C">
           <short></short>
           <long></long>

@@ -25,8 +25,11 @@
 
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "gtk-utils.h"
 #include "fr-window.h"
+#include "gconf-utils.h"
+#include "gtk-utils.h"
+#include "preferences.h"
+
 
 
 #define GLADE_FILE "password.glade"
@@ -37,6 +40,7 @@ typedef struct {
 	FrWindow  *window;
 	GtkWidget *dialog;
 	GtkWidget *pw_password_entry;
+	GtkWidget *pw_encrypt_header_checkbutton;
 } DialogData;
 
 
@@ -55,13 +59,18 @@ response_cb (GtkWidget  *dialog,
 	     int         response_id,
 	     DialogData *data)
 {
-	char *password;
+	char     *password;
+	gboolean  encrypt_header;
 
 	switch (response_id) {
 	case GTK_RESPONSE_OK:
 		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
 		fr_window_set_password (data->window, password);
 		g_free (password);
+
+		encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->pw_encrypt_header_checkbutton));
+		eel_gconf_set_boolean (PREF_ENCRYPT_HEADER, encrypt_header);
+		fr_window_set_encrypt_header (data->window, encrypt_header);
 		break;
 	default:
 		break;
@@ -90,10 +99,12 @@ dlg_password (GtkWidget *widget,
 
 	data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
 	data->pw_password_entry = glade_xml_get_widget (data->gui, "pw_password_entry");
+	data->pw_encrypt_header_checkbutton = glade_xml_get_widget (data->gui, "pw_encrypt_header_checkbutton");
 
 	/* Set widgets data. */
 
 	_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry), fr_window_get_password (window));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->pw_encrypt_header_checkbutton), fr_window_get_encrypt_header (window));
 
 	/* Set the signals handlers. */
 

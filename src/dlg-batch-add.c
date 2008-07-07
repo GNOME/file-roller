@@ -54,6 +54,10 @@ typedef struct {
 	GtkWidget  *a_location_filechooserbutton;
 	GtkWidget  *add_image;
 	GtkWidget  *a_archive_type_combo_box;
+	GtkWidget  *a_password_entry;
+	GtkWidget  *a_password_label;
+	GtkWidget  *a_encrypt_header_checkbutton;
+	GtkWidget  *a_other_options_expander;
 
 	GList      *file_list;
 	gboolean    add_clicked;
@@ -93,6 +97,33 @@ get_ext (DialogData *data)
 	return mime_type_desc[save_type_list[idx]].default_ext;
 }
 
+
+static void
+set_archive_password (DialogData *data)
+{
+	int        *save_type_list;
+	int         idx;
+
+	if (data->single_file)
+		save_type_list = single_file_save_type;
+	else
+		save_type_list =  save_type;
+
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
+	if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAP_ENCRYPT) {
+		char *pwd;
+
+		pwd = (char*) gtk_entry_get_text (GTK_ENTRY (data->a_password_entry));
+		if (pwd != NULL) {
+			pwd = g_strstrip (pwd);
+			if (strcmp (pwd, "") != 0) {
+				fr_window_set_password (data->window, pwd);
+				if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAP_ENCRYPT_HEADER)
+					fr_window_set_encrypt_header (data->window, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton)));
+			}
+		}
+	}
+}
 
 /* called when the "add" button is pressed. */
 static void
@@ -138,9 +169,9 @@ add_clicked_cb (GtkWidget  *widget,
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
-					   _("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), 
-					   utf8_name, 
-					   BAD_CHARS, 
+					   _("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"),
+					   utf8_name,
+					   BAD_CHARS,
 					   _("Please use a different name."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -159,7 +190,7 @@ add_clicked_cb (GtkWidget  *widget,
 		g_free (archive_name);
 		return;
 	}
-		
+
 	if (! check_permissions (archive_dir, R_OK|W_OK|X_OK)) {
 		GtkWidget  *d;
 
@@ -249,7 +280,10 @@ add_clicked_cb (GtkWidget  *widget,
 	archive_name = g_strconcat (tmp, archive_ext, NULL);
 	g_free (tmp);
 	archive_file = g_strconcat (archive_dir, "/", archive_name, NULL);
+
 	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, archive_ext);
+	eel_gconf_set_boolean (PREF_BATCH_OTHER_OPTIONS, gtk_expander_get_expanded (GTK_EXPANDER (data->a_other_options_expander)));
+	eel_gconf_set_boolean (PREF_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton)));
 
 	if (uri_is_dir (archive_file)) {
 		GtkWidget  *d;
@@ -294,8 +328,8 @@ add_clicked_cb (GtkWidget  *widget,
 			file = g_file_new_for_uri (archive_file);
 			g_file_delete (file, NULL, &err);
 			if (err != NULL) {
-				g_warning ("Failed to delete file %s: %s", 
-					   archive_file, 
+				g_warning ("Failed to delete file %s: %s",
+					   archive_file,
 					   err->message);
 				g_clear_error (&err);
 			}
@@ -308,7 +342,7 @@ add_clicked_cb (GtkWidget  *widget,
 			return;
 		}
 	}
-
+	set_archive_password (data);
 	gtk_widget_destroy (data->dialog);
 
 	if (! uri_exists (archive_file))
@@ -319,6 +353,29 @@ add_clicked_cb (GtkWidget  *widget,
 	g_free (archive_name);
 	g_free (archive_dir);
 	g_free (archive_file);
+}
+
+
+static void
+update_password_availability_for_mime_type (DialogData *data,
+				            const char *mime_type)
+{
+	int i;
+
+	if (mime_type == NULL) {
+		gtk_widget_set_sensitive (data->a_password_entry, FALSE);
+		gtk_widget_set_sensitive (data->a_password_label, FALSE);
+		return;
+	}
+
+	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
+		if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
+			gtk_widget_set_sensitive (data->a_password_entry, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
+			gtk_widget_set_sensitive (data->a_password_label, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
+			gtk_widget_set_sensitive (data->a_encrypt_header_checkbutton, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT_HEADER);
+			break;
+		}
+	}
 }
 
 
@@ -337,6 +394,7 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 	mime_type = mime_type_desc[save_type_list[idx]].mime_type;
 
 	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_mime_type_pixbuf (mime_type, ARCHIVE_ICON_SIZE, NULL));
+	update_password_availability_for_mime_type (data, mime_type);
 }
 
 
@@ -368,20 +426,42 @@ update_archive_type_combo_box_from_ext (DialogData  *data,
 }
 
 
+static void
+update_sensitivity (DialogData *data)
+{
+	const char *password;
+	gboolean    void_password;
+
+	password = gtk_entry_get_text (GTK_ENTRY (data->a_password_entry));
+	void_password = (password == NULL) || (strcmp (password, "") == 0);
+	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton), void_password);
+	gtk_widget_set_sensitive (GTK_WIDGET (data->a_encrypt_header_checkbutton), ! void_password);
+}
+
+
+static void
+password_entry_changed_cb (GtkEditable *editable,
+			   gpointer     user_data)
+{
+	update_sensitivity ((DialogData *) user_data);
+}
+
+
 void
 dlg_batch_add_files (FrWindow *window,
 		     GList    *file_list)
 {
-	DialogData *data;
-	GtkWidget  *cancel_button;
-	GtkWidget  *add_button;
-	GtkWidget  *a_archive_type_box;
-	char       *automatic_name = NULL;
-	char       *default_ext;
-	const char *first_filename;
-	char       *parent;
-	int         i;
-	int        *save_type_list;
+	DialogData   *data;
+	GtkWidget    *cancel_button;
+	GtkWidget    *add_button;
+	GtkWidget    *a_archive_type_box;
+	GtkSizeGroup *size_group;
+	char         *automatic_name = NULL;
+	char         *default_ext;
+	const char   *first_filename;
+	char         *parent;
+	int           i;
+	int          *save_type_list;
 
 	if (file_list == NULL)
 		return;
@@ -404,6 +484,10 @@ dlg_batch_add_files (FrWindow *window,
 	data->dialog = glade_xml_get_widget (data->gui, "batch_add_files_dialog");
 	data->a_add_to_entry = glade_xml_get_widget (data->gui, "a_add_to_entry");
 	data->a_location_filechooserbutton = glade_xml_get_widget (data->gui, "a_location_filechooserbutton");
+	data->a_password_entry = glade_xml_get_widget (data->gui, "a_password_entry");
+	data->a_password_label = glade_xml_get_widget (data->gui, "a_password_label");
+	data->a_other_options_expander = glade_xml_get_widget (data->gui, "a_other_options_expander");
+	data->a_encrypt_header_checkbutton = glade_xml_get_widget (data->gui, "a_encrypt_header_checkbutton");
 
 	add_button = glade_xml_get_widget (data->gui, "a_add_button");
 	cancel_button = glade_xml_get_widget (data->gui, "a_cancel_button");
@@ -413,9 +497,16 @@ dlg_batch_add_files (FrWindow *window,
 
 	/* Set widgets data. */
 
+	size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "a_archive_label"));
+	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "a_location_label"));
+	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "a_password_label"));
+
 	gtk_button_set_use_stock (GTK_BUTTON (add_button), TRUE);
 	gtk_button_set_label (GTK_BUTTON (add_button), FR_STOCK_CREATE_ARCHIVE);
-	
+	gtk_expander_set_expanded (GTK_EXPANDER (data->a_other_options_expander), eel_gconf_get_boolean (PREF_BATCH_OTHER_OPTIONS, FALSE));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton), eel_gconf_get_boolean (PREF_ENCRYPT_HEADER, FALSE));
+
 	first_filename = (char*) file_list->data;
 	parent = remove_level_from_path (first_filename);
 
@@ -446,10 +537,9 @@ dlg_batch_add_files (FrWindow *window,
 	else
 		save_type_list = save_type;
 
-	for (i = 0; save_type_list[i] != -1; i++) {
+	for (i = 0; save_type_list[i] != -1; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box),
 					   mime_type_desc[save_type_list[i]].default_ext);
-	}
 
 	gtk_box_pack_start (GTK_BOX (a_archive_type_box), data->a_archive_type_combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (a_archive_type_box);
@@ -472,6 +562,10 @@ dlg_batch_add_files (FrWindow *window,
 			  "changed",
 			  G_CALLBACK (archive_type_combo_box_changed_cb),
 			  data);
+	g_signal_connect (G_OBJECT (data->a_password_entry),
+			  "changed",
+			  G_CALLBACK (password_entry_changed_cb),
+			  data);
 
 	/* Run dialog. */
 
@@ -482,6 +576,8 @@ dlg_batch_add_files (FrWindow *window,
 	gtk_widget_grab_focus (data->a_add_to_entry);
 	gtk_editable_select_region (GTK_EDITABLE (data->a_add_to_entry),
 				    0, -1);
+
+	update_sensitivity (data);
 
 	gtk_window_set_modal (GTK_WINDOW (data->dialog), FALSE);
 	gtk_window_present (GTK_WINDOW (data->dialog));

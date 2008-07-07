@@ -56,6 +56,7 @@ typedef struct {
 	char          *dest_dir;
 	gboolean       update;
 	char          *password;
+	gboolean       encrypt_header;
 	FrCompression  compression;
 } DroppedItemsData;
 
@@ -67,6 +68,7 @@ dropped_items_data_new (FrArchive     *archive,
 			const char    *dest_dir,
 			gboolean       update,
 			const char    *password,
+			gboolean       encrypt_header,
 			FrCompression  compression)
 {
 	DroppedItemsData *data;
@@ -81,6 +83,7 @@ dropped_items_data_new (FrArchive     *archive,
 	data->update = update;
 	if (password != NULL)
 		data->password = g_strdup (password);
+	data->encrypt_header = encrypt_header;
 	data->compression = compression;
 
 	return data;
@@ -124,6 +127,7 @@ typedef struct {
 	FrArchive      *archive;
 	char           *uri;
 	char           *password;
+	gboolean        encrypt_header;
 	FrAction        action;
 	GList          *file_list;
 	char           *base_uri;
@@ -1328,6 +1332,7 @@ fr_archive_add (FrArchive     *archive,
 		gboolean       update,
 		gboolean       recursive,
 		const char    *password,
+		gboolean       encrypt_header,
 		FrCompression  compression)
 {
 	GList    *new_file_list = NULL;
@@ -1444,6 +1449,7 @@ fr_archive_add (FrArchive     *archive,
 				update,
 				recursive,
 				password,
+				encrypt_header,
 				compression);
 		prev->next = scan;
 	}
@@ -1472,6 +1478,7 @@ fr_archive_add_local_files (FrArchive     *archive,
 			    const char    *dest_dir,
 			    gboolean       update,
 			    const char    *password,
+			    gboolean       encrypt_header,
 			    FrCompression  compression)
 {
 	fr_archive_stoppable (archive, TRUE);
@@ -1483,6 +1490,7 @@ fr_archive_add_local_files (FrArchive     *archive,
 			update,
 			FALSE,
 			password,
+			encrypt_header,
 			compression);
 	fr_process_start (archive->process);
 }
@@ -1503,6 +1511,7 @@ copy_remote_files_done (GError   *error,
 					    xfer_data->dest_dir,
 					    FALSE,
 					    xfer_data->password,
+					    xfer_data->encrypt_header,
 					    xfer_data->compression);
 	xfer_data_free (xfer_data);
 }
@@ -1533,6 +1542,7 @@ copy_remote_files (FrArchive     *archive,
 		   const char    *dest_dir,
 		   gboolean       update,
 		   const char    *password,
+		   gboolean       encrypt_header,
 		   FrCompression  compression,
 		   const char    *tmp_dir)
 {
@@ -1589,6 +1599,7 @@ copy_remote_files (FrArchive     *archive,
 	xfer_data->update = update;
 	xfer_data->dest_dir = g_strdup (dest_dir);
 	xfer_data->password = g_strdup (password);
+	xfer_data->encrypt_header = encrypt_header;
 	xfer_data->compression = compression;
 	xfer_data->tmp_dir = g_strdup (tmp_dir);
 
@@ -1628,6 +1639,7 @@ fr_archive_add_files (FrArchive     *archive,
 		      const char    *dest_dir,
 		      gboolean       update,
 		      const char    *password,
+		      gboolean       encrypt_header,
 		      FrCompression  compression)
 {
 	if (uri_is_local (base_dir)) {
@@ -1638,6 +1650,7 @@ fr_archive_add_files (FrArchive     *archive,
 					    dest_dir,
 					    update,
 					    password,
+					    encrypt_header,
 					    compression);
 		g_free (local_dir);
 	}
@@ -1648,6 +1661,7 @@ fr_archive_add_files (FrArchive     *archive,
 				   dest_dir,
 				   update,
 				   password,
+				   encrypt_header,
 				   compression,
 				   fr_archive_get_temp_work_dir (archive));
 }
@@ -1662,6 +1676,7 @@ typedef struct {
 	char          *dest_dir;
 	gboolean       update;
 	char          *password;
+	gboolean       encrypt_header;
 	FrCompression  compression;
 } AddWithWildcardData;
 
@@ -1705,6 +1720,7 @@ add_with_wildcard__step2 (GList    *file_list,
 				      aww_data->dest_dir,
 				      aww_data->update,
 				      aww_data->password,
+				      aww_data->encrypt_header,
 				      aww_data->compression);
 		path_list_free (file_list);
 	}
@@ -1723,6 +1739,7 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 			      gboolean       update,
 			      gboolean       follow_links,
 			      const char    *password,
+			      gboolean       encrypt_header,
 			      FrCompression  compression)
 {
 	AddWithWildcardData *aww_data;
@@ -1735,6 +1752,7 @@ fr_archive_add_with_wildcard (FrArchive     *archive,
 	aww_data->dest_dir = g_strdup (dest_dir);
 	aww_data->update = update;
 	aww_data->password = g_strdup (password);
+	aww_data->encrypt_header = encrypt_header;
 	aww_data->compression = compression;
 
 	g_signal_emit (G_OBJECT (archive),
@@ -1767,6 +1785,7 @@ typedef struct {
 	char          *dest_dir;
 	gboolean       update;
 	char          *password;
+	gboolean       encrypt_header;
 	FrCompression  compression;
 } AddDirectoryData;
 
@@ -1815,6 +1834,7 @@ add_directory__step2 (GList    *file_list,
 				      ad_data->dest_dir,
 				      ad_data->update,
 				      ad_data->password,
+				      ad_data->encrypt_header,
 				      ad_data->compression);
 		path_list_free (file_list);
 	}
@@ -1830,6 +1850,7 @@ fr_archive_add_directory (FrArchive     *archive,
 			  const char    *dest_dir,
 			  gboolean       update,
 			  const char    *password,
+			  gboolean       encrypt_header,
 			  FrCompression  compression)
 
 {
@@ -1843,6 +1864,7 @@ fr_archive_add_directory (FrArchive     *archive,
 	ad_data->dest_dir = g_strdup (dest_dir);
 	ad_data->update = update;
 	ad_data->password = g_strdup (password);
+	ad_data->encrypt_header = encrypt_header;
 	ad_data->compression = compression;
 
 	g_signal_emit (G_OBJECT (archive),
@@ -1865,6 +1887,7 @@ fr_archive_add_items (FrArchive     *archive,
 		      const char    *dest_dir,
 		      gboolean       update,
 		      const char    *password,
+		      gboolean       encrypt_header,
 		      FrCompression  compression)
 
 {
@@ -1878,6 +1901,7 @@ fr_archive_add_items (FrArchive     *archive,
 	ad_data->dest_dir = g_strdup (dest_dir);
 	ad_data->update = update;
 	ad_data->password = g_strdup (password);
+	ad_data->encrypt_header = encrypt_header;
 	ad_data->compression = compression;
 
 	g_signal_emit (G_OBJECT (archive),
@@ -1962,6 +1986,7 @@ add_dropped_items (DroppedItemsData *data)
 				      data->dest_dir,
 				      data->update,
 				      data->password,
+				      data->encrypt_header,
 				      data->compression);
 		g_free (first_base_dir);
 
@@ -1991,6 +2016,7 @@ add_dropped_items (DroppedItemsData *data)
 					  data->dest_dir,
 					  data->update,
 					  data->password,
+					  data->encrypt_header,
 					  data->compression);
 
 		g_free (base_dir);
@@ -2016,6 +2042,7 @@ add_dropped_items (DroppedItemsData *data)
 				      data->dest_dir,
 				      data->update,
 				      data->password,
+				      data->encrypt_header,
 				      data->compression);
 
 		g_list_free (only_names_list);
@@ -2044,6 +2071,7 @@ add_dropped_items (DroppedItemsData *data)
 				data->update,
 				FALSE,
 				data->password,
+				data->encrypt_header,
 				data->compression);
 		g_list_free (singleton);
 		g_free (basedir);
@@ -2063,6 +2091,7 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 			      const char    *dest_dir,
 			      gboolean       update,
 			      const char    *password,
+			      gboolean       encrypt_header,
 			      FrCompression  compression)
 {
 	GList *scan;
@@ -2099,6 +2128,7 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 				       		dest_dir,
 				       		update,
 				       		password,
+				       		encrypt_header,
 				       		compression);
 	add_dropped_items (archive->priv->dropped_items_data);
 }

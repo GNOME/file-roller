@@ -165,7 +165,7 @@ get_last_field_zoo (char *line)
 		field = eat_spaces (field);
 		field = strchr (field, ' ');
 		field = eat_spaces (field);
-	} else 
+	} else
 		field = eat_spaces (field);
 
 	return field;
@@ -173,7 +173,7 @@ get_last_field_zoo (char *line)
 
 
 static void
-process_zoo_line (char     *line, 
+process_zoo_line (char     *line,
 		  gpointer  data)
 {
 	FileData    *fdata;
@@ -252,7 +252,7 @@ fr_command_zoo_add (FrCommand     *comm,
 
 	fr_process_set_working_dir (comm->process, base_dir);
 
-	if (update) 
+	if (update)
 		fr_process_add_arg (comm->process, "auP");
 	else
 		fr_process_add_arg (comm->process, "aP");
@@ -327,28 +327,28 @@ fr_command_zoo_test (FrCommand   *comm,
 const char *zoo_mime_type[] = { "application/x-zoo", NULL };
 
 
-const char **  
+const char **
 fr_command_zoo_get_mime_types (FrCommand *comm)
 {
 	return zoo_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_zoo_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
-	capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("zoo")) 
+
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	if (is_program_in_path ("zoo"))
 		capabilities |= FR_COMMAND_CAP_READ_WRITE;
-		
+
 	return capabilities;
 }
 
 
-static void 
+static void
 fr_command_zoo_class_init (FrCommandZooClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -368,12 +368,12 @@ fr_command_zoo_class_init (FrCommandZooClass *class)
 	afc->get_capabilities = fr_command_zoo_get_capabilities;
 }
 
- 
-static void 
+
+static void
 fr_command_zoo_init (FrCommand *comm)
 {
 	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = FALSE; 
+	comm->propAddCanReplace            = FALSE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
 	comm->propExtractCanJunkPaths      = FALSE;
@@ -382,7 +382,7 @@ fr_command_zoo_init (FrCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_zoo_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);

@@ -69,35 +69,16 @@ typedef struct {
 	GError          *gerror;
 } FrProcError;
 
-typedef struct {
-	char       *mime_type;
-	char       *default_ext;
-	char       *name;
-	gboolean    supports_password;
-	gboolean    supports_many_files;
-} FrMimeTypeDescription;
-
-typedef struct {
-	char *ext;
-	char *mime_type;
-} FrExtensionType;
-
-typedef struct {
-	char       *command;
-	const char *mime_type;
-	gboolean    can_open;
-	gboolean    can_save;
-} FrCommandDescription;
-
 typedef enum {
 	FR_COMMAND_CAP_NONE = 0,
 	FR_COMMAND_CAP_READ = 1 << 0,
 	FR_COMMAND_CAP_WRITE = 1 << 1,
-	FR_COMMAND_CAP_ARCHIVE_MANY_FILES = 1 << 2
+	FR_COMMAND_CAP_ARCHIVE_MANY_FILES = 1 << 2,
+	FR_COMMAND_CAP_ENCRYPT = 1 << 3,
+	FR_COMMAND_CAP_ENCRYPT_HEADER = 1 << 4
 } FrCommandCap;
 
 #define FR_COMMAND_CAP_READ_WRITE (FR_COMMAND_CAP_READ | FR_COMMAND_CAP_WRITE)
-#define FR_COMMAND_CAP_ALL (FR_COMMAND_CAP_READ | FR_COMMAND_CAP_WRITE | FR_COMMAND_CAP_ARCHIVE_MANY_FILES)
 
 typedef guint8 FrCommandCaps;
 
@@ -112,5 +93,23 @@ typedef struct {
 	GPtrArray *caps;  /* array of FrMimeTypeCap */
 } FrRegisteredCommand;
 
-#endif /* TYPEDEFS_H */
+typedef struct {
+	const char    *mime_type;
+	char          *default_ext;
+	char          *name;
+	FrCommandCaps  capabilities;
+} FrMimeTypeDescription;
 
+typedef struct {
+	char       *ext;
+	const char *mime_type;
+} FrExtensionType;
+
+typedef struct {
+	char       *command;
+	const char *mime_type;
+	gboolean    can_open;
+	gboolean    can_save;
+} FrCommandDescription;
+
+#endif /* TYPEDEFS_H */

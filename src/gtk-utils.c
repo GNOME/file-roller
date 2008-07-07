@@ -860,23 +860,38 @@ get_folder_pixbuf_size_for_list (GtkWidget *widget)
 }
 
 
+gboolean
+show_uri (GdkScreen   *screen,
+	  const char  *uri,
+	  guint32      timestamp,
+	  GError     **error)
+{
+	gboolean result;
+
+#ifndef GTK_2_13
+	GAppLaunchContext *app_context;
+
+	app_context = g_app_launch_context_new ();
+	result = g_app_info_launch_default_for_uri (uri, G_APP_LAUNCH_CONTEXT (app_context), error);
+
+	g_object_unref (app_context);
+#else
+	result = gtk_show_uri (screen, uri, timestamp, error);
+#endif
+
+	return result;
+}
+
+
 void
 show_help_dialog (GtkWindow  *parent,
 		  const char *section)
 {
-#ifdef GTK_2_13
-	GdkAppLaunchContext *app_context;
-	char                *uri;
-	GError              *error = NULL;
-#else
-	GAppLaunchContext *app_context;
-	char              *uri;
-	GError            *error = NULL;
-#endif
+	char   *uri;
+	GError *error = NULL;
 
 	uri = g_strconcat ("ghelp:file-roller", section ? "?" : NULL, section, NULL);
-	app_context = g_app_launch_context_new ();
-	if (! g_app_info_launch_default_for_uri (uri, G_APP_LAUNCH_CONTEXT (app_context), &error)) {
+	if (! show_uri (gtk_window_get_screen (parent), uri, GDK_CURRENT_TIME, &error)) {
   		GtkWidget *dialog;
 
 		dialog = _gtk_message_dialog_new (parent,
@@ -898,6 +913,5 @@ show_help_dialog (GtkWindow  *parent,
 
 		g_clear_error (&error);
 	}
-	g_object_unref (app_context);
 	g_free (uri);
 }

@@ -1,3 +1,41 @@
+2008-07-07  Paolo Bacchilega  <paobac@svn.gnome.org>
+ 
+	* src/typedefs.h: 
+	* src/main.c:
+	* src/fr-command-zoo.c: 
+	* src/fr-command-rar.c: 
+	* src/fr-command-jar.c: 
+	* src/fr-command-arj.c: 
+	* src/fr-command-7z.c: 
+	
+	Changed the FrMimeTypeDescription structure in order to compute 
+	the mime type capabilities automatically in compute_supported_archive_types() 
+	
+	* src/fr-window.c: 
+	* src/gtk-utils.h: 
+	* src/gtk-utils.c: added a show_uri function, used in show_help_dialog
+	and fr-window.c:open_folder. 
+
+	* src/preferences.h:	
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* src/fr-command-rar.c: 
+	* src/fr-command-7z.c: 
+	* src/fr-command.h: 
+	* src/fr-command.c: 
+	* src/fr-archive.h: 
+	* src/fr-archive.c: 
+	* src/dlg-password.c: 
+	* src/dlg-batch-add.c: 
+	* src/actions.c: 
+	* data/glade/password.glade: 
+	* data/glade/batch-add-files.glade:
+	
+	Added support for header encryption.  Implemented header encryption for
+	7zip and rar archives.
+	
+	* data/file-roller.schemas: added the key /apps/file-roller/general/encrypt_header
+
 2008-06-29  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* INSTALL: changed by autoconf

@@ -136,6 +136,7 @@ void        fr_window_archive_add_directory     (FrWindow      *window,
 						 const char    *dest_dir,
 						 gboolean       update,
 						 const char    *password,
+						 gboolean       encrypt_header,
 						 FrCompression  compression);
 void        fr_window_archive_add_items         (FrWindow      *window,
 						 GList         *dir_list,
@@ -143,6 +144,7 @@ void        fr_window_archive_add_items         (FrWindow      *window,
 						 const char    *dest_dir,
 						 gboolean       update,
 						 const char    *password,
+						 gboolean       encrypt_header,
 						 FrCompression  compression);
 void        fr_window_archive_add_dropped_items (FrWindow      *window,
 						 GList         *item_list,
@@ -164,12 +166,15 @@ void        fr_window_archive_extract_here      (FrWindow      *window,
 						 gboolean       overwrite,
 						 gboolean       junk_paths,
 						 const char    *password);
-void        fr_window_archive_test	        (FrWindow      *window);					 
+void        fr_window_archive_test	        (FrWindow      *window);
 void        fr_window_set_password              (FrWindow      *window,
 						 const char    *password);
 void        fr_window_set_password_for_paste    (FrWindow      *window,
-					         const char    *password);						 
+					         const char    *password);
 const char *fr_window_get_password              (FrWindow      *window);
+void        fr_window_set_encrypt_header        (FrWindow      *window,
+						 gboolean       encrypt_header);
+gboolean    fr_window_get_encrypt_header        (FrWindow      *window);
 FrCompression fr_window_get_compression 	(FrWindow      *window);
 
 /**/
@@ -203,10 +208,10 @@ GList *    fr_window_get_folder_tree_selection    (FrWindow    *window,
 				     		   gboolean    *has_dirs);
 GList *    fr_window_get_selection                (FrWindow    *window,
 		  	 			   gboolean     from_sidebar,
-		  	 			   char       **return_base_dir);				     		   
+		  	 			   char       **return_base_dir);
 GtkTreeModel *
 	   fr_window_get_list_store               (FrWindow    *window);
-void       fr_window_find                         (FrWindow    *window);	   
+void       fr_window_find                         (FrWindow    *window);
 void       fr_window_select_all                   (FrWindow    *window);
 void       fr_window_unselect_all                 (FrWindow    *window);
 void       fr_window_set_sort_type                (FrWindow    *window,
@@ -244,7 +249,7 @@ void        fr_window_open_files_with_application (FrWindow   *window,
 						   GList      *file_list,
 						   GAppInfo   *app);
 gboolean    fr_window_update_files                (FrWindow   *window,
-						   GList      *file_list);			   
+						   GList      *file_list);
 void        fr_window_update_columns_visibility   (FrWindow   *window);
 void        fr_window_update_history_list         (FrWindow   *window);
 void        fr_window_set_default_dir             (FrWindow   *window,
@@ -304,6 +309,6 @@ gboolean   fr_window_file_list_drag_data_get (FrWindow         *window,
 					      GtkSelectionData *selection_data,
 					      GList            *path_list);
 
-void       fr_window_update_dialog_closed    (FrWindow *window); 
+void       fr_window_update_dialog_closed    (FrWindow *window);
 
 #endif /* FR_WINDOW_H */

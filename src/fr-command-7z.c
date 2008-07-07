@@ -263,6 +263,8 @@ fr_command_7z_add (FrCommand     *comm,
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-l");
 	add_password_arg (comm, password, FALSE);
+	if ((password != NULL) && (*password != 0) && comm->encrypt_header)
+		fr_process_add_arg (comm->process, "-mhe=on");
 
 	switch (compression) {
 	case FR_COMPRESSION_VERY_FAST:
@@ -417,16 +419,15 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-7z-compressed"))
-		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAP_READ_WRITE | FR_COMMAND_CAP_ENCRYPT | FR_COMMAND_CAP_ENCRYPT_HEADER;
 
 	else if (is_program_in_path ("7z")) {
 		capabilities |= FR_COMMAND_CAP_READ;
-		if (is_mime_type (mime_type, "application/x-cbr")
-		    || is_mime_type (mime_type, "application/x-cbz")
+		if (is_mime_type (mime_type, "application/x-cbz")
 		    || is_mime_type (mime_type, "application/x-executable")
 		    || is_mime_type (mime_type, "application/zip"))
 		{
-			capabilities |= FR_COMMAND_CAP_WRITE;
+			capabilities |= FR_COMMAND_CAP_WRITE | FR_COMMAND_CAP_ENCRYPT;
 		}
 	}
 

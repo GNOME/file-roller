@@ -48,6 +48,7 @@
 
 #define PREF_EDIT_EDITORS          "/apps/file-roller/general/editors"
 #define PREF_ADD_COMPRESSION_LEVEL "/apps/file-roller/general/compression_level"
+#define PREF_ENCRYPT_HEADER        "/apps/file-roller/general/encrypt_header"
 #define PREF_MIGRATE_DIRECTORIES   "/apps/file-roller/general/migrate_directories"
 
 #define PREF_EXTRACT_OVERWRITE        "/apps/file-roller/dialogs/extract/overwrite"
@@ -64,6 +65,7 @@
 #define PREF_ADD_NO_SYMLINKS          "/apps/file-roller/dialogs/add/no_symlinks"
 
 #define PREF_BATCH_ADD_DEFAULT_EXTENSION "/apps/file-roller/dialogs/batch-add/default_extension"
+#define PREF_BATCH_OTHER_OPTIONS         "/apps/file-roller/dialogs/batch-add/other_options"
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"

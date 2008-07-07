@@ -49,7 +49,7 @@ mktime_from_string (char *date_s,
 {
 	struct tm   tm = {0, };
 	char      **fields;
-	
+
 	tm.tm_isdst = -1;
 
 	/* date */
@@ -120,7 +120,7 @@ list__process_line (char     *line,
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
 			fdata->original_path = fdata->full_path;
-		} 
+		}
 		else {
 			fdata->full_path = g_strconcat ("/", name_field, NULL);
 			fdata->original_path = fdata->full_path + 1;
@@ -130,7 +130,7 @@ list__process_line (char     *line,
 
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 		fdata->path = remove_level_from_path (fdata->full_path);
-	} 
+	}
 	else if (arj_comm->line_no == 2) { /* Read file size and date. */
 		FileData  *fdata;
 		char     **fields;
@@ -145,7 +145,7 @@ list__process_line (char     *line,
 		if (strcmp (fields[1], "MS-DOS") == 0)
 			fdata->encrypted = (g_ascii_strcasecmp (fields[7], "11") == 0);
 		else
-			fdata->encrypted = (g_ascii_strcasecmp (fields[9], "11") == 0);			
+			fdata->encrypted = (g_ascii_strcasecmp (fields[9], "11") == 0);
 		g_strfreev (fields);
 
 		if (*fdata->name == 0)
@@ -154,7 +154,7 @@ list__process_line (char     *line,
 			fr_command_add_file (comm, fdata);
 		arj_comm->fdata = NULL;
 	}
-		
+
 	arj_comm->line_no++;
 }
 
@@ -198,7 +198,7 @@ fr_command_arj_add (FrCommand     *comm,
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (password != NULL) 
+	if (password != NULL)
 		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
 
 	switch (compression) {
@@ -264,7 +264,7 @@ fr_command_arj_extract (FrCommand  *comm,
 	else
 		fr_process_add_arg (comm->process, "x");
 
-	if (dest_dir != NULL) 
+	if (dest_dir != NULL)
 		fr_process_add_arg_concat (comm->process, "-ht/", dest_dir, NULL);
 
 	if (! overwrite)
@@ -273,7 +273,7 @@ fr_command_arj_extract (FrCommand  *comm,
 	if (skip_older)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (password != NULL) 
+	if (password != NULL)
 		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
 	else
  		fr_process_add_arg (comm->process, "-g/");
@@ -297,7 +297,7 @@ fr_command_arj_test (FrCommand   *comm,
 {
 	fr_process_begin_command (comm->process, "arj");
 	fr_process_add_arg (comm->process, "t");
-	if (password != NULL) 
+	if (password != NULL)
 		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, "-y");
@@ -323,23 +323,23 @@ fr_command_arj_handle_error (FrCommand   *comm,
 const char *arj_mime_type[] = { "application/x-arj", NULL };
 
 
-const char **  
+const char **
 fr_command_arj_get_mime_types (FrCommand *comm)
 {
 	return arj_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_arj_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("arj")) 
+
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES | FR_COMMAND_CAP_ENCRYPT;
+	if (is_program_in_path ("arj"))
 		capabilities |= FR_COMMAND_CAP_READ_WRITE;
-		
+
 	return capabilities;
 }
 

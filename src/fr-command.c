@@ -58,17 +58,17 @@ static void fr_command_init        (FrCommand *afile);
 static void fr_command_finalize    (GObject *object);
 
 char *action_names[] = { "NONE",
-			 "CREATING_NEW_ARCHIVE", 
-			 "LOADING_ARCHIVE", 
-			 "LISTING_CONTENT", 
-			 "DELETING_FILES", 
-			 "TESTING_ARCHIVE", 
-			 "GETTING_FILE_LIST", 
-			 "COPYING_FILES_FROM_REMOTE", 
-			 "ADDING_FILES", 
-			 "EXTRACTING_FILES", 
-			 "COPYING_FILES_TO_REMOTE", 
-			 "CREATING_ARCHIVE", 
+			 "CREATING_NEW_ARCHIVE",
+			 "LOADING_ARCHIVE",
+			 "LISTING_CONTENT",
+			 "DELETING_FILES",
+			 "TESTING_ARCHIVE",
+			 "GETTING_FILE_LIST",
+			 "COPYING_FILES_FROM_REMOTE",
+			 "ADDING_FILES",
+			 "EXTRACTING_FILES",
+			 "COPYING_FILES_TO_REMOTE",
+			 "CREATING_ARCHIVE",
 			 "SAVING_REMOTE_ARCHIVE" };
 
 GType
@@ -167,20 +167,20 @@ base_fr_command_handle_error (FrCommand *comm,
 const char **void_mime_types = { NULL };
 
 
-const char **  
+const char **
 base_fr_command_get_mime_types (FrCommand *comm)
 {
 	return void_mime_types;
 }
 
 
-FrCommandCap   
+FrCommandCap
 base_fr_command_get_capabilities (FrCommand  *comm,
 			          const char *mime_type)
 {
 	return FR_COMMAND_CAP_NONE;
 }
-					      
+
 
 static void
 base_fr_command_set_mime_type (FrCommand  *comm,
@@ -196,9 +196,9 @@ fr_command_start (FrProcess *process,
 		  gpointer   data)
 {
 	FrCommand *comm = FR_COMMAND (data);
-	
+
 	g_signal_emit (G_OBJECT (comm),
-		       fr_command_signals[START], 
+		       fr_command_signals[START],
 		       0,
 		       comm->action);
 }
@@ -218,9 +218,9 @@ fr_command_done (FrProcess   *process,
 		fr_process_start (comm->process);
 	else
 		g_signal_emit (G_OBJECT (comm),
-			       fr_command_signals[DONE], 
+			       fr_command_signals[DONE],
 			       0,
-			       comm->action, 
+			       comm->action,
 			       &process->error);
 }
 
@@ -231,18 +231,18 @@ fr_command_set_process (FrCommand  *comm,
 {
 	if (comm->process != NULL) {
 		g_signal_handlers_disconnect_matched (G_OBJECT (comm->process),
-					      G_SIGNAL_MATCH_DATA, 
-					      0, 
-					      0, NULL, 
+					      G_SIGNAL_MATCH_DATA,
+					      0,
+					      0, NULL,
 					      0,
 					      comm);
 		g_object_unref (G_OBJECT (comm->process));
 		comm->process = NULL;
 	}
-	
+
 	if (process == NULL)
 		return;
-	
+
 	g_object_ref (G_OBJECT (process));
 	comm->process = process;
 	g_signal_connect (G_OBJECT (comm->process),
@@ -317,13 +317,13 @@ fr_command_class_init (FrCommandClass *class)
 	parent_class = g_type_class_peek_parent (class);
 
 	gobject_class = G_OBJECT_CLASS (class);
-	
+
 	/* virtual functions */
-	
+
 	gobject_class->finalize = fr_command_finalize;
 	gobject_class->set_property = fr_command_set_property;
         gobject_class->get_property = fr_command_get_property;
-               
+
 	class->list             = base_fr_command_list;
 	class->add              = base_fr_command_add;
 	class->delete           = base_fr_command_delete;
@@ -339,9 +339,9 @@ fr_command_class_init (FrCommandClass *class)
 	class->done             = NULL;
 	class->progress         = NULL;
 	class->message          = NULL;
-	
+
 	/* signals */
-	
+
 	fr_command_signals[START] =
 		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
@@ -349,7 +349,7 @@ fr_command_class_init (FrCommandClass *class)
 			      G_STRUCT_OFFSET (FrCommandClass, start),
 			      NULL, NULL,
 			      fr_marshal_VOID__INT,
-			      G_TYPE_NONE, 
+			      G_TYPE_NONE,
 			      1, G_TYPE_INT);
 	fr_command_signals[DONE] =
 		g_signal_new ("done",
@@ -379,9 +379,9 @@ fr_command_class_init (FrCommandClass *class)
 			      fr_marshal_VOID__STRING,
 			      G_TYPE_NONE, 1,
 			      G_TYPE_STRING);
-			      
+
 	/* properties */
-	
+
 	g_object_class_install_property (gobject_class,
 					 PROP_PROCESS,
 					 g_param_spec_object ("process",
@@ -402,7 +402,7 @@ fr_command_class_init (FrCommandClass *class)
 							      "Mime type",
 							      "The file mime-type",
 							      NULL,
-							      G_PARAM_READWRITE));	
+							      G_PARAM_READWRITE));
 }
 
 
@@ -410,7 +410,7 @@ static void
 fr_command_init (FrCommand *comm)
 {
 	comm->files = g_ptr_array_sized_new (INITIAL_SIZE);
-	
+
 	comm->filename = NULL;
 	comm->e_filename = NULL;
 	comm->fake_load = FALSE;
@@ -423,7 +423,7 @@ fr_command_init (FrCommand *comm)
 	comm->propExtractCanJunkPaths = FALSE;
 	comm->propPassword = FALSE;
 	comm->propTest = FALSE;
-	comm->propCanExtractAll = TRUE; 	
+	comm->propCanExtractAll = TRUE;
 	comm->propCanDeleteNonEmptyFolders = TRUE;
 	comm->propCanExtractNonEmptyFolders = TRUE;
 }
@@ -443,7 +443,7 @@ fr_command_finalize (GObject *object)
 		g_free (comm->filename);
 	if (comm->e_filename != NULL)
 		g_free (comm->e_filename);
-	if (comm->files != NULL) 
+	if (comm->files != NULL)
 		g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
 	fr_command_set_process (comm, NULL);
 
@@ -468,7 +468,7 @@ fr_command_set_filename (FrCommand  *comm,
 		g_free (comm->e_filename);
 		comm->e_filename = NULL;
 	}
-	
+
 	if (filename == NULL)
 		return;
 
@@ -477,11 +477,11 @@ fr_command_set_filename (FrCommand  *comm,
 
 		current_dir = g_get_current_dir ();
 		comm->filename = g_strconcat (current_dir,
-					      "/", 
-					      filename, 
+					      "/",
+					      filename,
 					      NULL);
 		g_free (current_dir);
-	} 
+	}
 	else
 		comm->filename = g_strdup (filename);
 
@@ -509,7 +509,7 @@ fr_command_list (FrCommand  *comm,
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_use_standard_locale (FR_COMMAND (comm)->process, TRUE);
-	
+
 	if (!comm->fake_load)
 		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm, password);
 }
@@ -522,14 +522,16 @@ fr_command_add (FrCommand     *comm,
 		gboolean       update,
 		gboolean       recursive,
 		const char    *password,
+		gboolean       encrypt_header,
 		FrCompression  compression)
 {
 	fr_command_progress (comm, -1.0);
 
+	comm->encrypt_header = encrypt_header;
 	comm->action = FR_ACTION_ADDING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	
+
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->add (comm,
 						     file_list,
 						     base_dir,
@@ -549,7 +551,7 @@ fr_command_delete (FrCommand *comm,
 	comm->action = FR_ACTION_DELETING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	
+
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->delete (comm, file_list);
 }
 
@@ -568,9 +570,9 @@ fr_command_extract (FrCommand  *comm,
 	comm->action = FR_ACTION_EXTRACTING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	
+
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->extract (comm,
-							 file_list, 
+							 file_list,
 							 dest_dir,
 							 overwrite,
 							 skip_older,
@@ -588,7 +590,7 @@ fr_command_test (FrCommand   *comm,
 	comm->action = FR_ACTION_TESTING_ARCHIVE;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	
+
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->test (comm, password);
 }
 
@@ -605,19 +607,19 @@ void
 fr_command_recompress (FrCommand     *comm,
 		       FrCompression  compression)
 {
-	fr_command_progress (comm, -1.0);	
+	fr_command_progress (comm, -1.0);
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
 }
 
 
-const char **  
+const char **
 fr_command_get_mime_types (FrCommand *comm)
 {
 	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->get_mime_types (comm);
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_get_capabilities (FrCommand  *comm,
 			     const char *mime_type)
 {
@@ -626,7 +628,7 @@ fr_command_get_capabilities (FrCommand  *comm,
 
 
 gboolean
-fr_command_is_capable_of (FrCommand     *comm, 
+fr_command_is_capable_of (FrCommand     *comm,
 			  FrCommandCaps  requested_capabilities)
 {
 	return (((comm->capabilities ^ requested_capabilities) & requested_capabilities) == 0);
@@ -634,17 +636,17 @@ fr_command_is_capable_of (FrCommand     *comm,
 
 
 /* fraction == -1 means : I don't known how much time the current operation
- *                        will take, the dialog will display this info pulsing 
- *                        the progress bar. 
- * fraction in [0.0, 1.0] means the amount of work, in percentage, 
- *                        accomplished. 
+ *                        will take, the dialog will display this info pulsing
+ *                        the progress bar.
+ * fraction in [0.0, 1.0] means the amount of work, in percentage,
+ *                        accomplished.
  */
 void
 fr_command_progress (FrCommand *comm,
 		     double     fraction)
 {
 	g_signal_emit (G_OBJECT (comm),
-		       fr_command_signals[PROGRESS], 
+		       fr_command_signals[PROGRESS],
 		       0,
 		       fraction);
 }
@@ -655,7 +657,7 @@ fr_command_message (FrCommand  *comm,
 		    const char *msg)
 {
 	g_signal_emit (G_OBJECT (comm),
-		       fr_command_signals[MESSAGE], 
+		       fr_command_signals[MESSAGE],
 		       0,
 		       msg);
 }

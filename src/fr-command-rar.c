@@ -125,7 +125,7 @@ process_line (char     *line,
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
 			fdata->original_path = fdata->full_path;
-		} 
+		}
 		else {
 			fdata->full_path = g_strconcat ("/", name_field, NULL);
 			fdata->original_path = fdata->full_path + 1;
@@ -133,7 +133,7 @@ process_line (char     *line,
 
 		fdata->link = NULL;
 		fdata->path = remove_level_from_path (fdata->full_path);
-	} 
+	}
 	else {
 		FileData *fdata;
 
@@ -148,18 +148,18 @@ process_line (char     *line,
 
 		if ((fields[5][1] == 'D') || (fields[5][0] == 'd')) {
 			char *tmp;
-			
+
 			tmp = fdata->full_path;
 			fdata->full_path = g_strconcat (fdata->full_path, "/", NULL);
-			
+
 			fdata->original_path = g_strdup (fdata->original_path);
 			fdata->free_original_path = TRUE;
-			
+
 			g_free (tmp);
-			
+
 			fdata->name = dir_name_from_path (fdata->full_path);
 			fdata->dir = TRUE;
-		} 
+		}
 		else
 			fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 
@@ -178,8 +178,12 @@ add_password_arg (FrCommand  *comm,
 		  const char *password,
 		  gboolean    disable_query)
 {
-	if ((password != NULL) && (password[0] != '\0'))
-		fr_process_add_arg_concat (comm->process, "-p", password, NULL); 
+	if ((password != NULL) && (password[0] != '\0')) {
+		if (comm->encrypt_header)
+			fr_process_add_arg_concat (comm->process, "-hp", password, NULL);
+		else
+			fr_process_add_arg_concat (comm->process, "-p", password, NULL);
+	}
 	else if (disable_query)
 		fr_process_add_arg (comm->process, "-p-");
 }
@@ -359,21 +363,21 @@ static void
 fr_command_rar_handle_error (FrCommand   *comm,
 			     FrProcError *error)
 {
-	if (error->type != FR_PROC_ERROR_COMMAND_ERROR) 
+	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
 		return;
-		
+
 	if (error->status == 3) {
 		error->type = FR_PROC_ERROR_ASK_PASSWORD;
 	}
 	else {
 		GList *scan;
-		
+
 		if (error->status <= 1)
 			error->type = FR_PROC_ERROR_NONE;
-			
+
 		for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
 			char *line = scan->data;
-				
+
 			if (strstr (line, "password incorrect") != NULL) {
 				error->type = FR_PROC_ERROR_ASK_PASSWORD;
 				break;
@@ -383,30 +387,30 @@ fr_command_rar_handle_error (FrCommand   *comm,
 }
 
 
-const char *rar_mime_type[] = { "application/x-cbr", 
-				"application/x-rar", 
+const char *rar_mime_type[] = { "application/x-cbr",
+				"application/x-rar",
 				NULL };
 
 
-const char **  
+const char **
 fr_command_rar_get_mime_types (FrCommand *comm)
 {
 	return rar_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_rar_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("rar")) 
+
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES | FR_COMMAND_CAP_ENCRYPT | FR_COMMAND_CAP_ENCRYPT_HEADER;
+	if (is_program_in_path ("rar"))
 		capabilities |= FR_COMMAND_CAP_READ_WRITE;
-	else if (is_program_in_path ("unrar")) 
+	else if (is_program_in_path ("unrar"))
 		capabilities |= FR_COMMAND_CAP_READ;
-		
+
 	return capabilities;
 }
 

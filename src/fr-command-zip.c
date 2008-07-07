@@ -249,7 +249,7 @@ fr_command_zip_add (FrCommand     *comm,
 
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
@@ -270,7 +270,7 @@ fr_command_zip_delete (FrCommand *comm,
 	fr_process_add_arg (comm->process, "-d");
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
@@ -309,7 +309,7 @@ fr_command_zip_extract (FrCommand  *comm,
 	add_password_arg (comm, password);
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
@@ -340,15 +340,15 @@ fr_command_zip_handle_error (FrCommand   *comm,
 		else {
 			GList *output;
 			GList *scan;
-			
+
 			if (comm->action == FR_ACTION_TESTING_ARCHIVE)
 				output = comm->process->out.raw;
 			else
 				output = comm->process->err.raw;
-			
+
 			for (scan = g_list_last (output); scan; scan = scan->prev) {
 				char *line = scan->data;
-				
+
 				if (strstr (line, "incorrect password") != NULL) {
 					error->type = FR_PROC_ERROR_ASK_PASSWORD;
 					break;
@@ -360,34 +360,34 @@ fr_command_zip_handle_error (FrCommand   *comm,
 
 
 const char *zip_mime_type[] = { "application/x-cbz",
-				"application/x-executable", 
-				"application/zip", 
+				"application/x-executable",
+				"application/zip",
 				NULL };
 
 
-const char **  
+const char **
 fr_command_zip_get_mime_types (FrCommand *comm)
 {
 	return zip_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_zip_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
-	capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+
+	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES | FR_COMMAND_CAP_ENCRYPT;
 	if (is_program_in_path ("zip")) {
 		if (strcmp (mime_type, "application/x-executable") == 0)
 			capabilities |= FR_COMMAND_CAP_READ;
 		else
-			capabilities |= FR_COMMAND_CAP_ALL;
-	} 
-	else if (is_program_in_path ("unzip")) 
+			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	}
+	else if (is_program_in_path ("unzip"))
 		capabilities |= FR_COMMAND_CAP_READ;
-		
+
 	return capabilities;
 }
 

@@ -66,11 +66,11 @@ struct _FrCommand
 	GObject  __parent;
 
 	GPtrArray  *files;           /* Array of FileData* */
-	
+
 	/*<protected>*/
-	
+
 	/* properties the command supports. */
-	
+
 	guint       propAddCanUpdate : 1;
 	guint       propAddCanReplace : 1;
 	guint       propAddCanStoreFolders : 1;
@@ -84,10 +84,14 @@ struct _FrCommand
 	guint       propCanExtractNonEmptyFolders : 1;
 
 	/* progress data */
-	
-	int         n_file;          
+
+	int         n_file;
 	int         n_files;
-	
+
+	/*<protected>*/
+
+	gboolean    encrypt_header;
+
 	/*<private>*/
 
 	FrProcess  *process;         /* the process object used to execute
@@ -97,7 +101,7 @@ struct _FrCommand
 	char       *e_filename;      /* escaped archive filename. */
 	const char *mime_type;
 	FrCommandCaps capabilities;
-	
+
 	gboolean    fake_load;       /* if TRUE does nothing when the list
 				      * operation is invoked. */
 };
@@ -116,9 +120,9 @@ struct _FrCommandClass
 				           gboolean       update,
 				           gboolean       recursive,
 				           const char    *password,
-				           FrCompression  compression); 
+				           FrCompression  compression);
 	void          (*delete)           (FrCommand     *comm,
-				           GList         *file_list); 
+				           GList         *file_list);
 	void          (*extract)          (FrCommand     *comm,
 				           GList         *file_list,
 				           const char    *dest_dir,
@@ -142,7 +146,7 @@ struct _FrCommandClass
 	/*<signals>*/
 
 	void          (*start)            (FrCommand   *comm,
-			 	           FrAction     action); 
+			 	           FrAction     action);
 	void          (*done)             (FrCommand   *comm,
 				           FrAction     action,
 				           FrProcError *error);
@@ -163,9 +167,10 @@ void           fr_command_add                (FrCommand     *comm,
 					      gboolean       update,
 					      gboolean       recursive,
 					      const char    *password,
-					      FrCompression  compression); 
+					      gboolean       encrypt_header,
+					      FrCompression  compression);
 void           fr_command_delete             (FrCommand     *comm,
-					      GList         *file_list); 
+					      GList         *file_list);
 void           fr_command_extract            (FrCommand     *comm,
 					      GList         *file_list,
 					      const char    *dest_dir,
@@ -178,14 +183,14 @@ void           fr_command_test               (FrCommand     *comm,
 void           fr_command_uncompress         (FrCommand     *comm);
 void           fr_command_recompress         (FrCommand     *comm,
 					      FrCompression  compression);
-gboolean       fr_command_is_capable_of      (FrCommand     *comm, 
+gboolean       fr_command_is_capable_of      (FrCommand     *comm,
 					      FrCommandCaps  capabilities);
 const char **  fr_command_get_mime_types     (FrCommand     *comm);
 FrCommandCap   fr_command_get_capabilities   (FrCommand     *comm,
 					      const char    *mime_type);
 void           fr_command_set_mime_type      (FrCommand     *comm,
 					      const char    *mime_type);
-gboolean       fr_command_is_capable_of      (FrCommand     *comm, 
+gboolean       fr_command_is_capable_of      (FrCommand     *comm,
 					      FrCommandCaps  capabilities);
 
 /* protected functions */
