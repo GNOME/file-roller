@@ -6509,7 +6509,7 @@ void
 fr_window_set_encrypt_header (FrWindow *window,
 			      gboolean  encrypt_header)
 {
-	g_return_val_if_fail (window != NULL, NULL);
+	g_return_if_fail (window != NULL);
 
 	window->priv->encrypt_header = encrypt_header;
 }

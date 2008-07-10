@@ -503,6 +503,68 @@ get_mime_type_from_content (GFile *file)
 }
 
 
+static const char *
+get_mime_type_from_magic_numbers (GFile *file)
+{
+	static struct {
+		const char *mime_type;
+		const char *first_bytes;
+		int         offset;
+		int         len;
+	} sniffer_data [] = {	
+		/* Magic numbers taken from magic/Magdir/archive from the 
+		 * file-4.21 tarball. */	
+		{ "application/x-ace", "**ACE**", 7, 7 },
+		{ "application/x-arj", "\x60\xea", 0, 2 },
+		{ "application/x-rar", "Rar!", 0, 4 },
+		{ "application/x-rzip", "RZIP", 0, 4 },
+		{ "application/x-zoo", "\xdc\xa7\xc4\xfd", 20, 4 },
+		{ "application/zip", "PK\003\004", 0, 4 },
+		{ "application/zip", "PK00PK\003\004", 0, 8 },
+		{ NULL, NULL, 0 }
+	};
+	GFileInputStream *istream;
+	char              buffer[32];
+	int               n, i;
+
+	istream = g_file_read (file, NULL, NULL);
+	if (istream == NULL)
+		return NULL;
+	
+	n = g_input_stream_read (G_INPUT_STREAM (istream), buffer, sizeof (buffer), NULL, NULL);
+	g_object_unref (istream);
+	if (n < 0)		
+		return NULL;
+	
+	for (i = 0; sniffer_data[i].mime_type != NULL; i++) 
+		if (memcmp (sniffer_data[i].first_bytes, 
+			    buffer + sniffer_data[i].offset, 
+			    sniffer_data[i].len) == 0)
+		{
+			return sniffer_data[i].mime_type;
+		}
+
+	return NULL;
+}
+
+
+static const char *
+get_mime_type_from_filename (GFile *file)
+{
+	const char *mime_type = NULL;
+	char       *filename;
+
+	if (file == NULL)
+		return NULL;
+
+	filename = g_file_get_path (file);
+	mime_type = get_mime_type_from_extension (get_file_extension (filename));
+	g_free (filename);
+
+	return mime_type;
+}
+
+
 static gboolean
 create_command_from_mime_type (FrArchive  *archive,
 			       const char *mime_type,
@@ -553,23 +615,6 @@ create_command_from_mime_type (FrArchive  *archive,
 		archive->is_compressed_file = ! fr_command_is_capable_of (archive->command, FR_COMMAND_CAP_ARCHIVE_MANY_FILES);
 
 	return (archive->command != NULL);
-}
-
-
-static const char *
-get_mime_type_from_filename (GFile *file)
-{
-	const char *mime_type = NULL;
-	char       *filename;
-
-	if (file == NULL)
-		return FALSE;
-
-	filename = g_file_get_path (file);
-	mime_type = get_mime_type_from_extension (get_file_extension (filename));
-	g_free (filename);
-
-	return mime_type;
 }
 
 
@@ -981,12 +1026,15 @@ load_local_archive (FrArchive  *archive,
 	if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
 		mime_type = get_mime_type_from_content (archive->local_copy);
 		if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
-			archive->command = tmp_command;
-			fr_archive_action_completed (archive,
-						     FR_ACTION_LOADING_ARCHIVE,
-						     FR_PROC_ERROR_GENERIC,
-						     _("Archive type not supported."));
-			return;
+			mime_type = get_mime_type_from_magic_numbers (archive->local_copy);
+			if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
+				archive->command = tmp_command;
+				fr_archive_action_completed (archive,
+							     FR_ACTION_LOADING_ARCHIVE,
+							     FR_PROC_ERROR_GENERIC,
+							     _("Archive type not supported."));
+				return;
+			}
 		}
 	}
 
