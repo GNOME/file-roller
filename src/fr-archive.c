@@ -570,7 +570,7 @@ create_command_from_mime_type (FrArchive  *archive,
 			       const char *mime_type,
 			       gboolean    loading)
 {
-	FrCommandCaps  requested_capabilities = FR_COMMAND_CAP_NONE;
+	FrCommandCaps  requested_capabilities = FR_COMMAND_CAN_DO_NOTHING;
 	GType          command_type;
 	char          *filename;
 
@@ -583,16 +583,16 @@ create_command_from_mime_type (FrArchive  *archive,
 	 * priority to the commands that can read and write over commands
 	 * that can only read a specific file format. */
 
-	requested_capabilities |= FR_COMMAND_CAP_READ_WRITE;
+	requested_capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	if (! loading && ! archive->can_create_compressed_file)
-		requested_capabilities |= FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+		requested_capabilities |= FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
 	command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
 
 	/* if no command was found and we are loading, remove the write
 	 * capability and try again */
 
 	if ((command_type == 0) && loading) {
-		requested_capabilities ^= FR_COMMAND_CAP_WRITE;
+		requested_capabilities ^= FR_COMMAND_CAN_WRITE;
 		command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
 	}
 
@@ -612,7 +612,7 @@ create_command_from_mime_type (FrArchive  *archive,
 		archive->command = NULL;
 	}
 	else if (archive->command != NULL)
-		archive->is_compressed_file = ! fr_command_is_capable_of (archive->command, FR_COMMAND_CAP_ARCHIVE_MANY_FILES);
+		archive->is_compressed_file = ! fr_command_is_capable_of (archive->command, FR_COMMAND_CAN_ARCHIVE_MANY_FILES);
 
 	return (archive->command != NULL);
 }
@@ -1045,7 +1045,7 @@ load_local_archive (FrArchive  *archive,
 
 	archive->content_type = mime_type;
 
-	if (! fr_command_is_capable_of (archive->command, FR_COMMAND_CAP_WRITE))
+	if (! fr_command_is_capable_of (archive->command, FR_COMMAND_CAN_WRITE))
 		archive->read_only = TRUE;
 
 	g_signal_connect (G_OBJECT (archive->command),

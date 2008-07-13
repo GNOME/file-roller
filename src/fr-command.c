@@ -178,7 +178,7 @@ FrCommandCap
 base_fr_command_get_capabilities (FrCommand  *comm,
 			          const char *mime_type)
 {
-	return FR_COMMAND_CAP_NONE;
+	return FR_COMMAND_CAN_DO_NOTHING;
 }
 
 

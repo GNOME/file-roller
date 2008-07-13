@@ -309,9 +309,9 @@ fr_command_alz_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 	
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("unalz")) 
-		capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAN_READ;
 		
 	return capabilities;
 }

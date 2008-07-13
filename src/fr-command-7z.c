@@ -414,20 +414,20 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
 	if (! is_program_in_path ("7za") && ! is_program_in_path ("7zr") && ! is_program_in_path ("7z"))
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-7z-compressed"))
-		capabilities |= FR_COMMAND_CAP_READ_WRITE | FR_COMMAND_CAP_ENCRYPT | FR_COMMAND_CAP_ENCRYPT_HEADER;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 
 	else if (is_program_in_path ("7z")) {
-		capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAN_READ;
 		if (is_mime_type (mime_type, "application/x-cbz")
 		    || is_mime_type (mime_type, "application/x-executable")
 		    || is_mime_type (mime_type, "application/zip"))
 		{
-			capabilities |= FR_COMMAND_CAP_WRITE | FR_COMMAND_CAP_ENCRYPT;
+			capabilities |= FR_COMMAND_CAN_WRITE | FR_COMMAND_CAN_ENCRYPT;
 		}
 	}
 

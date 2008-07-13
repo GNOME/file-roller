@@ -110,7 +110,7 @@ set_archive_password (DialogData *data)
 		save_type_list =  save_type;
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
-	if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAP_ENCRYPT) {
+	if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT) {
 		char *pwd;
 
 		pwd = (char*) gtk_entry_get_text (GTK_ENTRY (data->a_password_entry));
@@ -118,7 +118,7 @@ set_archive_password (DialogData *data)
 			pwd = g_strstrip (pwd);
 			if (strcmp (pwd, "") != 0) {
 				fr_window_set_password (data->window, pwd);
-				if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAP_ENCRYPT_HEADER)
+				if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER)
 					fr_window_set_encrypt_header (data->window, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton)));
 			}
 		}
@@ -370,9 +370,9 @@ update_password_availability_for_mime_type (DialogData *data,
 
 	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
 		if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
-			gtk_widget_set_sensitive (data->a_password_entry, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
-			gtk_widget_set_sensitive (data->a_password_label, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
-			gtk_widget_set_sensitive (data->a_encrypt_header_checkbutton, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT_HEADER);
+			gtk_widget_set_sensitive (data->a_password_entry, mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT);
+			gtk_widget_set_sensitive (data->a_password_label, mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT);
+			gtk_widget_set_sensitive (data->a_encrypt_header_checkbutton, mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER);
 			break;
 		}
 	}

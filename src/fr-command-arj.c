@@ -336,9 +336,9 @@ fr_command_arj_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES | FR_COMMAND_CAP_ENCRYPT;
+	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
 	if (is_program_in_path ("arj"))
-		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 
 	return capabilities;
 }

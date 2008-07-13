@@ -817,36 +817,36 @@ fr_command_tar_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 	
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
 	
 	/* In solaris gtar is present under /usr/sfw/bin */
 	if (! is_program_in_path ("tar") && ! is_program_in_path ("/usr/sfw/bin/gtar")) 
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-tar")) {
-		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-compressed-tar")) {
 		if (is_program_in_path ("gzip"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-bzip-compressed-tar")) {
 		if (is_program_in_path ("bzip2"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-tarz")) {
 		if (is_program_in_path ("compress"))
-			capabilities |= FR_COMMAND_CAP_WRITE;
+			capabilities |= FR_COMMAND_CAN_WRITE;
 		if (is_program_in_path ("uncompress"))
-			capabilities |= FR_COMMAND_CAP_READ;
+			capabilities |= FR_COMMAND_CAN_READ;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzma-compressed-tar")) {
 		if (is_program_in_path ("lzma"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzop-compressed-tar")) {
 		if (is_program_in_path ("lzop"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar")) {
 		char *try_command[3] = { "7za", "7zr", "7z" };
@@ -854,7 +854,7 @@ fr_command_tar_get_capabilities (FrCommand  *comm,
 		
 		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
 			if (is_program_in_path (try_command[i])) {
-				capabilities |= FR_COMMAND_CAP_READ_WRITE;
+				capabilities |= FR_COMMAND_CAN_READ_WRITE;
 				break;
 			}
 		}

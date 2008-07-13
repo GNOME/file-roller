@@ -405,11 +405,11 @@ fr_command_rar_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES | FR_COMMAND_CAP_ENCRYPT | FR_COMMAND_CAP_ENCRYPT_HEADER;
+	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 	if (is_program_in_path ("rar"))
-		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	else if (is_program_in_path ("unrar"))
-		capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;
 }

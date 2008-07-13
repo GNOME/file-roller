@@ -70,15 +70,15 @@ typedef struct {
 } FrProcError;
 
 typedef enum {
-	FR_COMMAND_CAP_NONE = 0,
-	FR_COMMAND_CAP_READ = 1 << 0,
-	FR_COMMAND_CAP_WRITE = 1 << 1,
-	FR_COMMAND_CAP_ARCHIVE_MANY_FILES = 1 << 2,
-	FR_COMMAND_CAP_ENCRYPT = 1 << 3,
-	FR_COMMAND_CAP_ENCRYPT_HEADER = 1 << 4
+	FR_COMMAND_CAN_DO_NOTHING = 0,
+	FR_COMMAND_CAN_READ = 1 << 0,
+	FR_COMMAND_CAN_WRITE = 1 << 1,
+	FR_COMMAND_CAN_ARCHIVE_MANY_FILES = 1 << 2,
+	FR_COMMAND_CAN_ENCRYPT = 1 << 3,
+	FR_COMMAND_CAN_ENCRYPT_HEADER = 1 << 4
 } FrCommandCap;
 
-#define FR_COMMAND_CAP_READ_WRITE (FR_COMMAND_CAP_READ | FR_COMMAND_CAP_WRITE)
+#define FR_COMMAND_CAN_READ_WRITE (FR_COMMAND_CAN_READ | FR_COMMAND_CAN_WRITE)
 
 typedef guint8 FrCommandCaps;
 
@@ -104,12 +104,5 @@ typedef struct {
 	char       *ext;
 	const char *mime_type;
 } FrExtensionType;
-
-typedef struct {
-	char       *command;
-	const char *mime_type;
-	gboolean    can_open;
-	gboolean    can_save;
-} FrCommandDescription;
 
 #endif /* TYPEDEFS_H */

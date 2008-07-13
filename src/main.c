@@ -478,7 +478,7 @@ fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 			return cap->capabilities;
 	}
 
-	return FR_COMMAND_CAP_NONE;
+	return FR_COMMAND_CAN_DO_NOTHING;
 }
 
 
@@ -653,12 +653,12 @@ compute_supported_archive_types (void)
 				continue;
 			}
 			mime_type_desc[idx].capabilities |= cap->capabilities;
-			if (cap->capabilities & FR_COMMAND_CAP_READ)
+			if (cap->capabilities & FR_COMMAND_CAN_READ)
 				add_if_non_present (open_type, &o_i, idx);
-			if (cap->capabilities & FR_COMMAND_CAP_WRITE) {
-				if (cap->capabilities & FR_COMMAND_CAP_ARCHIVE_MANY_FILES) {
+			if (cap->capabilities & FR_COMMAND_CAN_WRITE) {
+				if (cap->capabilities & FR_COMMAND_CAN_ARCHIVE_MANY_FILES) {
 					add_if_non_present (save_type, &s_i, idx);
-					if (cap->capabilities & FR_COMMAND_CAP_WRITE)
+					if (cap->capabilities & FR_COMMAND_CAN_WRITE)
 						add_if_non_present (create_type, &c_i, idx);
 				}
 				add_if_non_present (single_file_save_type, &sf_i, idx);

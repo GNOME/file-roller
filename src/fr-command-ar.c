@@ -296,9 +296,9 @@ fr_command_ar_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 	
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES;
+	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
 	if (is_program_in_path ("ar")) 
-		capabilities |= FR_COMMAND_CAP_READ_WRITE;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 		
 	return capabilities;
 }

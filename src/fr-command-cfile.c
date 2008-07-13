@@ -447,32 +447,32 @@ fr_command_cfile_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 	
-	capabilities = FR_COMMAND_CAP_NONE;
+	capabilities = FR_COMMAND_CAN_DO_NOTHING;
 	if (is_mime_type (mime_type, "application/x-gzip")) {
 		if (is_program_in_path ("gzip"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-bzip")) {
 		if (is_program_in_path ("bzip2"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-compress")) {
 		if (is_program_in_path ("compress"))
-			capabilities |= FR_COMMAND_CAP_WRITE;
+			capabilities |= FR_COMMAND_CAN_WRITE;
 		if (is_program_in_path ("uncompress"))
-			capabilities |= FR_COMMAND_CAP_READ;
+			capabilities |= FR_COMMAND_CAN_READ;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzma")) {
 		if (is_program_in_path ("lzma"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzop")) {
 		if (is_program_in_path ("lzop"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-rzip")) {
 		if (is_program_in_path ("rzip"))
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	
 	return capabilities;

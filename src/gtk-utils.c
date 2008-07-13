@@ -806,8 +806,8 @@ get_icon_pixbuf (GtkIconTheme *icon_theme,
 	g_object_get (icon, "names", &icon_names, NULL);
 
 	icon_info = gtk_icon_theme_choose_icon (icon_theme, (const char **)icon_names, size, 0);
-	if (icon_info == NULL) 
-		icon_info = gtk_icon_theme_lookup_icon (icon_theme, "folder", size, GTK_ICON_LOOKUP_USE_BUILTIN);
+	if (icon_info == NULL)
+		icon_info = gtk_icon_theme_lookup_icon (icon_theme, "text-x-generic", size, GTK_ICON_LOOKUP_USE_BUILTIN);
 
 	pixbuf = gtk_icon_info_load_icon (icon_info, &error);
 	if (pixbuf == NULL) {

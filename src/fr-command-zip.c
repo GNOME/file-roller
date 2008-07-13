@@ -378,15 +378,15 @@ fr_command_zip_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities;
 
-	capabilities = FR_COMMAND_CAP_ARCHIVE_MANY_FILES | FR_COMMAND_CAP_ENCRYPT;
+	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
 	if (is_program_in_path ("zip")) {
 		if (strcmp (mime_type, "application/x-executable") == 0)
-			capabilities |= FR_COMMAND_CAP_READ;
+			capabilities |= FR_COMMAND_CAN_READ;
 		else
-			capabilities |= FR_COMMAND_CAP_READ_WRITE;
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_program_in_path ("unzip"))
-		capabilities |= FR_COMMAND_CAP_READ;
+		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;
 }

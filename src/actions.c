@@ -313,8 +313,8 @@ update_password_availability_for_ext (SaveAsData *data,
 
 	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
 		if (strcmp (mime_type_desc[i].default_ext, ext) == 0) {
-			gtk_widget_set_sensitive (data->password, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
-			gtk_widget_set_sensitive (data->password_label, mime_type_desc[i].capabilities & FR_COMMAND_CAP_ENCRYPT);
+			gtk_widget_set_sensitive (data->password, mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT);
+			gtk_widget_set_sensitive (data->password_label, mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT);
 			break;
 		}
 	}
