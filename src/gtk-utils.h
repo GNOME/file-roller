@@ -70,9 +70,6 @@ char *      _gtk_entry_get_filename_text    (GtkEntry   *entry);
 void        _gtk_label_set_filename_text    (GtkLabel   *label,
 					     const char *text);
 char *      _gtk_label_get_filename_text    (GtkLabel   *label);
-GdkPixbuf * create_pixbuf                   (GtkIconTheme *icon_theme,
-					     const char   *icon_name,
-					     int           icon_size);
 GdkPixbuf * get_icon_pixbuf                 (GtkIconTheme *icon_theme,
 		 			     GThemedIcon  *icon,
 		 			     int           size);
