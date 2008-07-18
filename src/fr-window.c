@@ -368,6 +368,7 @@ struct _FrWindowPrivateData {
 	guint             hide_progress_timeout;  /* Timeout to hide the progress dialog. */
 	FrAction          pd_last_action;
 	char             *pd_last_archive;
+	char             *working_archive;
 
 	/* update dialog data */
 
@@ -2311,13 +2312,64 @@ progress_dialog__set_last_action (FrWindow *window,
 }
 
 
+static void
+pd_update_archive_name (FrWindow *window)
+{
+	char *current_archive;
+
+	if (window->priv->convert_data.converting)
+		current_archive = window->priv->convert_data.new_file;
+	else if (window->priv->working_archive != NULL)
+		current_archive = window->priv->working_archive;
+	else
+		current_archive = window->priv->archive_uri;
+
+	if (strcmp_null_tolerant (window->priv->pd_last_archive, current_archive) != 0) {
+		g_free (window->priv->pd_last_archive);
+		if (current_archive == NULL) {
+			window->priv->pd_last_archive = NULL;
+			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), "");
+#ifdef LOG_PROGRESS
+			g_print ("archive name > (none)\n");
+#endif
+		}
+		else {
+			char *name;
+
+			window->priv->pd_last_archive = g_strdup (current_archive);
+
+			name = g_uri_display_basename (window->priv->pd_last_archive);
+			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), name);
+#ifdef LOG_PROGRESS
+			g_print ("archive name > %s\n", name);
+#endif
+			g_free (name);
+		}
+	}
+
+}
+
+
+static gboolean
+fr_window_working_archive_cb (FrCommand  *command,
+		              const char *archive_filename,
+		              FrWindow   *window)
+{
+	g_free (window->priv->working_archive);
+	window->priv->working_archive = NULL;
+	if (archive_filename != NULL)
+		window->priv->working_archive = g_strdup (archive_filename);
+	pd_update_archive_name (window);
+
+	return TRUE;
+}
+
+
 static gboolean
 fr_window_message_cb (FrCommand  *command,
 		      const char *msg,
 		      FrWindow   *window)
 {
-	char *current_archive;
-
 	if (window->priv->progress_dialog == NULL)
 		return TRUE;
 
@@ -2343,6 +2395,9 @@ fr_window_message_cb (FrCommand  *command,
 
 		if (g_utf8_validate (utf8_msg, -1, NULL))
 			gtk_label_set_text (GTK_LABEL (window->priv->pd_message), utf8_msg);
+#ifdef LOG_PROGRESS
+		g_print ("message > %s\n", utf8_msg);
+#endif
 		g_free (utf8_msg);
 	}
 
@@ -2353,27 +2408,7 @@ fr_window_message_cb (FrCommand  *command,
 	else if (window->priv->pd_last_action != window->priv->action)
 		progress_dialog__set_last_action (window, window->priv->action);
 
-	if (window->priv->convert_data.converting)
-		current_archive = window->priv->convert_data.new_file;
-	else
-		current_archive = window->priv->archive_uri;
-
-	if (strcmp_null_tolerant (window->priv->pd_last_archive, current_archive) != 0) {
-		g_free (window->priv->pd_last_archive);
-		if (current_archive == NULL) {
-			window->priv->pd_last_archive = NULL;
-			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), "");
-		}
-		else {
-			char *name;
-
-			window->priv->pd_last_archive = g_strdup (current_archive);
-
-			name = g_uri_display_basename (window->priv->pd_last_archive);
-			gtk_label_set_text (GTK_LABEL (window->priv->pd_archive), name);
-			g_free (name);
-		}
-	}
+	pd_update_archive_name (window);
 
 	return TRUE;
 }
@@ -2585,6 +2620,9 @@ fr_window_progress_cb (FrCommand  *command,
 		if (window->priv->progress_dialog != NULL)
 			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), fraction);
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), fraction);
+#ifdef LOG_PROGRESS
+		g_print ("progress > %2.2f\n", fraction);
+#endif
 	}
 	return TRUE;
 }
@@ -4906,6 +4944,11 @@ static gboolean
 fr_window_fake_load (FrArchive *archive,
 		     gpointer   data)
 {
+	/* fake loads are disabled to allow exact progress dialogs (#153281) */
+
+	return FALSE;
+
+#if 0
 	FrWindow *window = data;
 	gboolean  add_after_opening = FALSE;
 	gboolean  extract_after_opening = FALSE;
@@ -4929,7 +4972,8 @@ fr_window_fake_load (FrArchive *archive,
 		}
 		if ((action->type == FR_BATCH_ACTION_EXTRACT)
 		    || (action->type == FR_BATCH_ACTION_EXTRACT_HERE)
-		    || (action->type == FR_BATCH_ACTION_EXTRACT_INTERACT)) {
+		    || (action->type == FR_BATCH_ACTION_EXTRACT_INTERACT))
+		{
 			extract_after_opening = TRUE;
 			break;
 		}
@@ -4942,6 +4986,7 @@ fr_window_fake_load (FrArchive *archive,
 		&& ! (add_after_opening && window->priv->update_dropped_files && ! archive->command->propAddCanUpdate)
 		&& ! (add_after_opening && ! window->priv->update_dropped_files && ! archive->command->propAddCanReplace)
 		&& ! (extract_after_opening && !archive->command->propCanExtractAll));
+#endif
 }
 
 
@@ -5301,6 +5346,10 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (G_OBJECT (window->archive),
 			  "stoppable",
 			  G_CALLBACK (fr_window_stoppable_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->archive),
+			  "working_archive",
+			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
 
 	fr_archive_set_fake_load_func (window->archive,

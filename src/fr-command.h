@@ -66,6 +66,7 @@ struct _FrCommand
 	GObject  __parent;
 
 	GPtrArray  *files;           /* Array of FileData* */
+	int         n_regular_files;
 
 	/*<protected>*/
 
@@ -154,6 +155,8 @@ struct _FrCommandClass
 				           double       fraction);
 	void          (*message)          (FrCommand   *comm,
 				           const char  *msg);
+	void          (*working_archive)  (FrCommand   *comm,
+					   const char  *filename);
 };
 
 GType          fr_command_get_type           (void);
@@ -199,6 +202,8 @@ void           fr_command_progress           (FrCommand     *comm,
 					      double         fraction);
 void           fr_command_message            (FrCommand     *comm,
 					      const char    *msg);
+void           fr_command_working_archive    (FrCommand     *comm,
+		                              const char    *archive_name);
 void           fr_command_set_n_files        (FrCommand     *comm,
 					      int            n_files);
 void           fr_command_add_file           (FrCommand     *comm,

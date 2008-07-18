@@ -169,6 +169,7 @@ enum {
 	PROGRESS,
 	MESSAGE,
 	STOPPABLE,
+	WORKING_ARCHIVE,
 	LAST_SIGNAL
 };
 
@@ -261,12 +262,22 @@ fr_archive_class_init (FrArchiveClass *class)
 			      fr_marshal_VOID__BOOL,
 			      G_TYPE_NONE,
 			      1, G_TYPE_BOOLEAN);
+	fr_archive_signals[WORKING_ARCHIVE] =
+			g_signal_new ("working_archive",
+				      G_TYPE_FROM_CLASS (class),
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (FrArchiveClass, working_archive),
+				      NULL, NULL,
+				      fr_marshal_VOID__STRING,
+				      G_TYPE_NONE, 1,
+				      G_TYPE_STRING);
 
 	gobject_class->finalize = fr_archive_finalize;
 	class->start = NULL;
 	class->done = NULL;
 	class->progress = NULL;
 	class->message = NULL;
+	class->working_archive = NULL;
 }
 
 
@@ -511,9 +522,9 @@ get_mime_type_from_magic_numbers (GFile *file)
 		const char *first_bytes;
 		int         offset;
 		int         len;
-	} sniffer_data [] = {	
-		/* Magic numbers taken from magic/Magdir/archive from the 
-		 * file-4.21 tarball. */	
+	} sniffer_data [] = {
+		/* Magic numbers taken from magic/Magdir/archive from the
+		 * file-4.21 tarball. */
 		{ "application/x-ace", "**ACE**", 7, 7 },
 		{ "application/x-arj", "\x60\xea", 0, 2 },
 		{ "application/x-rar", "Rar!", 0, 4 },
@@ -530,15 +541,15 @@ get_mime_type_from_magic_numbers (GFile *file)
 	istream = g_file_read (file, NULL, NULL);
 	if (istream == NULL)
 		return NULL;
-	
+
 	n = g_input_stream_read (G_INPUT_STREAM (istream), buffer, sizeof (buffer), NULL, NULL);
 	g_object_unref (istream);
-	if (n < 0)		
+	if (n < 0)
 		return NULL;
-	
-	for (i = 0; sniffer_data[i].mime_type != NULL; i++) 
-		if (memcmp (sniffer_data[i].first_bytes, 
-			    buffer + sniffer_data[i].offset, 
+
+	for (i = 0; sniffer_data[i].mime_type != NULL; i++)
+		if (memcmp (sniffer_data[i].first_bytes,
+			    buffer + sniffer_data[i].offset,
 			    sniffer_data[i].len) == 0)
 		{
 			return sniffer_data[i].mime_type;
@@ -938,6 +949,45 @@ archive_message_cb  (FrCommand  *command,
 }
 
 
+static gboolean
+archive_working_archive_cb  (FrCommand  *command,
+			     const char *archive_filename,
+			     FrArchive  *archive)
+{
+	g_signal_emit (G_OBJECT (archive),
+		       fr_archive_signals[WORKING_ARCHIVE],
+		       0,
+		       archive_filename);
+	return TRUE;
+}
+
+
+static void
+fr_archive_connect_to_command (FrArchive *archive)
+{
+	g_signal_connect (G_OBJECT (archive->command),
+			  "start",
+			  G_CALLBACK (action_started),
+			  archive);
+	g_signal_connect (G_OBJECT (archive->command),
+			  "done",
+			  G_CALLBACK (action_performed),
+			  archive);
+	g_signal_connect (G_OBJECT (archive->command),
+			  "progress",
+			  G_CALLBACK (archive_progress_cb),
+			  archive);
+	g_signal_connect (G_OBJECT (archive->command),
+			  "message",
+			  G_CALLBACK (archive_message_cb),
+			  archive);
+	g_signal_connect (G_OBJECT (archive->command),
+			  "working_archive",
+			  G_CALLBACK (archive_working_archive_cb),
+			  archive);
+}
+
+
 gboolean
 fr_archive_create (FrArchive  *archive,
 		   const char *uri)
@@ -963,24 +1013,8 @@ fr_archive_create (FrArchive  *archive,
 		g_object_unref (G_OBJECT (tmp_command));
 	}
 
+	fr_archive_connect_to_command (archive);
 	archive->read_only = FALSE;
-
-	g_signal_connect (G_OBJECT (archive->command),
-			  "start",
-			  G_CALLBACK (action_started),
-			  archive);
-	g_signal_connect (G_OBJECT (archive->command),
-			  "done",
-			  G_CALLBACK (action_performed),
-			  archive);
-	g_signal_connect (G_OBJECT (archive->command),
-			  "progress",
-			  G_CALLBACK (archive_progress_cb),
-			  archive);
-	g_signal_connect (G_OBJECT (archive->command),
-			  "message",
-			  G_CALLBACK (archive_message_cb),
-			  archive);
 
 	return TRUE;
 }
@@ -1043,28 +1077,10 @@ load_local_archive (FrArchive  *archive,
 		g_object_unref (tmp_command);
 	}
 
+	fr_archive_connect_to_command (archive);
 	archive->content_type = mime_type;
-
 	if (! fr_command_is_capable_of (archive->command, FR_COMMAND_CAN_WRITE))
 		archive->read_only = TRUE;
-
-	g_signal_connect (G_OBJECT (archive->command),
-			  "start",
-			  G_CALLBACK (action_started),
-			  archive);
-	g_signal_connect (G_OBJECT (archive->command),
-			  "done",
-			  G_CALLBACK (action_performed),
-			  archive);
-	g_signal_connect (G_OBJECT (archive->command),
-			  "progress",
-			  G_CALLBACK (archive_progress_cb),
-			  archive);
-	g_signal_connect (G_OBJECT (archive->command),
-			  "message",
-			  G_CALLBACK (archive_message_cb),
-			  archive);
-
 	fr_archive_stoppable (archive, TRUE);
 	archive->command->fake_load = fr_archive_fake_load (archive);
 
@@ -1472,6 +1488,7 @@ fr_archive_add (FrArchive     *archive,
 	}
 
 	/* add now. */
+
 	fr_command_set_n_files (archive->command, g_list_length (new_file_list));
 
 	for (scan = new_file_list; scan != NULL; ) {
@@ -1761,7 +1778,7 @@ add_with_wildcard__step2 (GList    *file_list,
 				     FR_PROC_ERROR_NONE,
 				     NULL);
 
-	if (file_list != NULL) {
+	if (file_list != NULL)
 		fr_archive_add_files (aww_data->archive,
 				      file_list,
 				      aww_data->source_dir,
@@ -1770,9 +1787,9 @@ add_with_wildcard__step2 (GList    *file_list,
 				      aww_data->password,
 				      aww_data->encrypt_header,
 				      aww_data->compression);
-		path_list_free (file_list);
-	}
 
+	path_list_free (file_list);
+	path_list_free (dirs_list);
 	add_with_wildcard_data_free (aww_data);
 }
 
@@ -2612,7 +2629,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	}
 
 	if (extract_all && (file_list == NULL))
-		fr_command_set_n_files (archive->command, archive->command->files->len);
+		fr_command_set_n_files (archive->command, archive->command->n_regular_files);
 	else
 		fr_command_set_n_files (archive->command, g_list_length (file_list));
 

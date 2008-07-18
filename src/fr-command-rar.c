@@ -20,17 +20,20 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-rar.h"
+#include "fr-error.h"
 
 static void fr_command_rar_class_init  (FrCommandRarClass *class);
 static void fr_command_rar_init        (FrCommand         *afile);
@@ -205,6 +208,7 @@ fr_command_rar_list (FrCommand  *comm,
 		fr_process_begin_command (comm->process, "unrar");
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-c-");
+	fr_process_add_arg (comm->process, "-v");
 
 	add_password_arg (comm, password, TRUE);
 
@@ -214,6 +218,57 @@ fr_command_rar_list (FrCommand  *comm,
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
+}
+
+
+static char Progress_Message[4196];
+static char Progress_Filename[4096];
+
+
+static void
+parse_progress_line (FrCommand  *comm,
+		     const char *prefix,
+		     const char *message_prefix,
+		     const char *line)
+{
+	int prefix_len;
+
+	prefix_len = strlen (prefix);
+	if (strncmp (line, prefix, prefix_len) == 0) {
+		double fraction;
+		int    len;
+
+		strcpy (Progress_Filename, line + prefix_len);
+		len = strlen (Progress_Filename);
+		if ((len > 5) && (strncmp (Progress_Filename + len - 5, "  OK ", 5) == 0))
+			Progress_Filename[len - 5] = 0;
+		sprintf (Progress_Message, "%s%s", message_prefix, file_name_from_path (Progress_Filename));
+		fr_command_message (comm, Progress_Message);
+
+		fraction= (double) ++comm->n_file / (comm->n_files + 1);
+		fr_command_progress (comm, fraction);
+	}
+}
+
+
+static void
+process_line__add (char     *line,
+		   gpointer  data)
+{
+	FrCommand *comm = FR_COMMAND (data);
+
+	if (strncmp (line, "Creating archive ", 17) == 0) {
+		char *uri;
+
+		uri = g_filename_to_uri (line + 17, NULL, NULL);
+		fr_command_working_archive (comm, uri);
+		g_free (uri);
+
+		return;
+	}
+
+	if (comm->n_files != 0)
+		parse_progress_line (comm, "Adding    ", _("Adding file: "), line);
 }
 
 
@@ -227,6 +282,11 @@ fr_command_rar_add (FrCommand     *comm,
 		    FrCompression  compression)
 {
 	GList *scan;
+
+	fr_process_use_standard_locale (comm->process, TRUE);
+	fr_process_set_out_line_func (comm->process,
+				      process_line__add,
+				      comm);
 
 	fr_process_begin_command (comm->process, "rar");
 
@@ -267,10 +327,36 @@ fr_command_rar_add (FrCommand     *comm,
 
 
 static void
+process_line__delete (char     *line,
+		      gpointer  data)
+{
+	FrCommand *comm = FR_COMMAND (data);
+
+	if (strncmp (line, "Deleting from ", 14) == 0) {
+		char *uri;
+
+		uri = g_filename_to_uri (line + 14, NULL, NULL);
+		fr_command_working_archive (comm, uri);
+		g_free (uri);
+
+		return;
+	}
+
+	if (comm->n_files != 0)
+		parse_progress_line (comm, "Deleting ", _("Removing file: "), line);
+}
+
+
+static void
 fr_command_rar_delete (FrCommand *comm,
 		       GList     *file_list)
 {
 	GList *scan;
+
+	fr_process_use_standard_locale (comm->process, TRUE);
+	fr_process_set_out_line_func (comm->process,
+				      process_line__delete,
+				      comm);
 
 	fr_process_begin_command (comm->process, "rar");
 	fr_process_add_arg (comm->process, "d");
@@ -287,6 +373,27 @@ fr_command_rar_delete (FrCommand *comm,
 
 
 static void
+process_line__extract (char     *line,
+		       gpointer  data)
+{
+	FrCommand *comm = FR_COMMAND (data);
+
+	if (strncmp (line, "Extracting from ", 16) == 0) {
+		char *uri;
+
+		uri = g_filename_to_uri (line + 16, NULL, NULL);
+		fr_command_working_archive (comm, uri);
+		g_free (uri);
+
+		return;
+	}
+
+	if (comm->n_files != 0)
+		parse_progress_line (comm, "Extracting  ", _("Extracting file: "), line);
+}
+
+
+static void
 fr_command_rar_extract (FrCommand  *comm,
 			GList      *file_list,
 			const char *dest_dir,
@@ -296,6 +403,11 @@ fr_command_rar_extract (FrCommand  *comm,
 			const char *password)
 {
 	GList *scan;
+
+	fr_process_use_standard_locale (comm->process, TRUE);
+	fr_process_set_out_line_func (comm->process,
+				      process_line__extract,
+				      comm);
 
 	if (have_rar ())
 		fr_process_begin_command (comm->process, "rar");
@@ -363,25 +475,43 @@ static void
 fr_command_rar_handle_error (FrCommand   *comm,
 			     FrProcError *error)
 {
+	GList *scan;
+
+#if 0
+	{
+		GList *scan;
+
+		for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev)
+			g_print ("%s\n", (char*)scan->data);
+	}
+#endif
+
 	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
 		return;
 
-	if (error->status == 3) {
+	if (error->status == 3)
 		error->type = FR_PROC_ERROR_ASK_PASSWORD;
-	}
-	else {
-		GList *scan;
+	else if (error->status <= 1)
+		error->type = FR_PROC_ERROR_NONE;
 
-		if (error->status <= 1)
-			error->type = FR_PROC_ERROR_NONE;
+	for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
+		char *line = scan->data;
 
-		for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
-			char *line = scan->data;
+		if (strstr (line, "password incorrect") != NULL) {
+			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+			break;
+		}
 
-			if (strstr (line, "password incorrect") != NULL) {
-				error->type = FR_PROC_ERROR_ASK_PASSWORD;
-				break;
-			}
+		if (strncmp (line, "Cannot find volume", 18) == 0) {
+			char *volume_filename;
+
+			g_clear_error (&error->gerror);
+
+			error->type = FR_PROC_ERROR_MISSING_VOLUME;
+			volume_filename = g_path_get_basename (line + strlen ("Cannot find volume "));
+			error->gerror = g_error_new (FR_ERROR, error->status, _("Could not find the volume: %s"), volume_filename);
+			g_free (volume_filename);
+			break;
 		}
 	}
 }

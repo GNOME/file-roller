@@ -386,7 +386,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	GtkWidget     *vbox;
 	GtkWidget     *text_view;
 	GtkWidget     *scrolled = NULL;
-	GtkWidget     *button;
+	GtkWidget     *expander;
 	GtkTextBuffer *text_buf;
 	GtkTextIter    iter;
 	char          *stock_id;
@@ -431,7 +431,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 		va_end (args);
 		escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
 
-		markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
+		markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s\n",
 					       escaped_message,
 					       escaped_secondary_message);
 
@@ -445,9 +445,9 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	g_free (escaped_message);
 
 	if (view_output) {
-		/* Button */
+		/* Expander */
 
-		button = gtk_toggle_button_new_with_mnemonic (_("Command _Line Output"));
+		expander = gtk_expander_new_with_mnemonic (_("Command _Line Output"));
 
 		/* Add text */
 
@@ -487,39 +487,21 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	vbox = gtk_vbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 
-	hbox = gtk_hbox_new (FALSE, 6);
-	gtk_box_pack_start (GTK_BOX (hbox), image,
-			    FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), label,
-			    FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox,
-			    TRUE, TRUE, 0);
+	hbox = gtk_hbox_new (FALSE, 12);
+	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
 	if (view_output) {
-		hbox = gtk_hbox_new (FALSE, 6);
-		gtk_box_pack_start (GTK_BOX (hbox), button,
-			    FALSE, FALSE, 0);
-		gtk_box_pack_start (GTK_BOX (vbox), hbox,
-				    TRUE, TRUE, 0);
-
 		gtk_container_add (GTK_CONTAINER (scrolled), text_view);
-		gtk_box_pack_start (GTK_BOX (vbox), scrolled,
-				    FALSE, FALSE, 0);
-
-		g_signal_connect_swapped (G_OBJECT (button),
-					  "clicked",
-					  G_CALLBACK (toggle_visibility),
-					  scrolled);
+		gtk_container_add (GTK_CONTAINER (expander), scrolled);
+		gtk_box_pack_start (GTK_BOX (vbox), expander, TRUE, TRUE, 0);
 	}
 
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
 			    vbox,
 			    FALSE, FALSE, 0);
-
 	gtk_widget_show_all (vbox);
-
-	if (scrolled != NULL)
-		gtk_widget_hide (scrolled);
 
 	return dialog;
 }

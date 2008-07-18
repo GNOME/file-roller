@@ -1,3 +1,38 @@
+2008-07-18  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* TODO: updated
+	
+	* src/typedefs.h: 	
+	* src/fr-command-rar.c: 
+	
+	Added support for the progress dialog during add, extract and delete.
+	Related to bug #153281 – Progress bar should be exact.
+	
+	Do not ask for password when a part of a multi-volume archive is 
+	missing.	
+	Fixes bug #504584 – Incorrect comportment when extracting multi part 
+	rar files.
+	
+	* src/fr-window.c: 	
+	* src/fr-command.h: 
+	* src/fr-command.c: 
+	* src/fr-archive.h: 
+	* src/fr-archive.c: 
+	* src/dlg-prop.c: 
+	
+	Compute the number of regular files in the archive, and use that value
+	for the progress dialog and the property dialog.
+	Allow to change the name of the current archive in the progress dialog,
+	used when the archive is multi-volume.
+	Don't use the fake load anymore, in order to allow an exact progress
+	dialog when adding or extracting files in batch mode, see bug #153281.
+	
+	* src/dlg-add-folder.c (file_sel_response_cb): the destination 
+	directory is not a uri. 
+	
+	* src/gtk-utils.c: use an expander instead of a button to show/hide
+	the command line output.
+
 2008-07-13  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/gtk-utils.h: 

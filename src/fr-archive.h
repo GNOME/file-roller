@@ -73,17 +73,19 @@ struct _FrArchiveClass {
 
 	/* -- Signals -- */
 
-	void (*start)     (FrArchive   *archive,
-			   FrAction     action);
-	void (*done)      (FrArchive   *archive,
-			   FrAction     action,
-			   FrProcError *error);
-	void (*progress)  (FrArchive   *archive,
-			   double       fraction);
-	void (*message)   (FrArchive   *archive,
-			   const char  *msg);
-	void (*stoppable) (FrArchive   *archive,
-			   gboolean     value);
+	void (*start)            (FrArchive   *archive,
+			          FrAction     action);
+	void (*done)             (FrArchive   *archive,
+			          FrAction     action,
+			          FrProcError *error);
+	void (*progress)         (FrArchive   *archive,
+			          double       fraction);
+	void (*message)          (FrArchive   *archive,
+			          const char  *msg);
+	void (*stoppable)        (FrArchive   *archive,
+			          gboolean     value);
+	void (*working_archive)  (FrCommand   *comm,
+			          const char  *filename);
 };
 
 GType       fr_archive_get_type                  (void);

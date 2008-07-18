@@ -39,6 +39,7 @@ enum {
 	DONE,
 	PROGRESS,
 	MESSAGE,
+	WORKING_ARCHIVE,
 	LAST_SIGNAL
 };
 
@@ -379,6 +380,15 @@ fr_command_class_init (FrCommandClass *class)
 			      fr_marshal_VOID__STRING,
 			      G_TYPE_NONE, 1,
 			      G_TYPE_STRING);
+	fr_command_signals[WORKING_ARCHIVE] =
+			g_signal_new ("working_archive",
+				      G_TYPE_FROM_CLASS (class),
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (FrCommandClass, working_archive),
+				      NULL, NULL,
+				      fr_marshal_VOID__STRING,
+				      G_TYPE_NONE, 1,
+				      G_TYPE_STRING);
 
 	/* properties */
 
@@ -469,26 +479,27 @@ fr_command_set_filename (FrCommand  *comm,
 		comm->e_filename = NULL;
 	}
 
-	if (filename == NULL)
-		return;
+	if (filename != NULL) {
+		if (! g_path_is_absolute (filename)) {
+			char *current_dir;
 
-	if (! g_path_is_absolute (filename)) {
-		char *current_dir;
+			current_dir = g_get_current_dir ();
+			comm->filename = g_strconcat (current_dir,
+						      "/",
+						      filename,
+						      NULL);
+			g_free (current_dir);
+		}
+		else
+			comm->filename = g_strdup (filename);
 
-		current_dir = g_get_current_dir ();
-		comm->filename = g_strconcat (current_dir,
-					      "/",
-					      filename,
-					      NULL);
-		g_free (current_dir);
+		comm->e_filename = g_shell_quote (comm->filename);
+
+		debug (DEBUG_INFO, "filename : %s\n", comm->filename);
+		debug (DEBUG_INFO, "e_filename : %s\n", comm->e_filename);
 	}
-	else
-		comm->filename = g_strdup (filename);
 
-	comm->e_filename = g_shell_quote (comm->filename);
-
-	debug (DEBUG_INFO, "filename : %s\n", comm->filename);
-	debug (DEBUG_INFO, "e_filename : %s\n", comm->e_filename);
+	fr_command_working_archive (comm, comm->filename);
 }
 
 
@@ -664,6 +675,17 @@ fr_command_message (FrCommand  *comm,
 
 
 void
+fr_command_working_archive (FrCommand  *comm,
+		            const char *archive_name)
+{
+	g_signal_emit (G_OBJECT (comm),
+		       fr_command_signals[WORKING_ARCHIVE],
+		       0,
+		       archive_name);
+}
+
+
+void
 fr_command_set_n_files (FrCommand *comm,
 			int        n_files)
 {
@@ -678,6 +700,8 @@ fr_command_add_file (FrCommand *comm,
 {
 	file_data_update_content_type (fdata);
 	g_ptr_array_add (comm->files, fdata);
+	if (! fdata->dir)
+		comm->n_regular_files++;
 }
 
 
