@@ -1,5 +1,16 @@
 2008-07-20  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* TODO: updated.
+	
+	* src/fr-command-7z.c: add a -- to signal the end of the switches.
+	Implemented extact progress to add and extract.
+	Part of the bug #153281 – Progress bar should be exact
+	
+	* src/fr-archive.c: do not add the backup files, that is files ending 
+	with ~,	to the archive. 
+	
+2008-07-20  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* configure.ac: 
 	* src/typedefs.h: 
 	* src/Makefile.am:

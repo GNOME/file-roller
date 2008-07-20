@@ -20,12 +20,14 @@
  *  Foundation, Inc., 59 Temple Street #330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
 #include <config.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include "file-data.h"
 #include "file-utils.h"
@@ -79,25 +81,6 @@ mktime_from_string (char *date_s,
 
 	return mktime (&tm);
 }
-
-/*
-static void
-change_to_unix_dir_separator (char *path)
-{
-	char *c;
-
-	for (c = path; *c != 0; c++)
-		if ((*c == '\\') && (*(c+1) != '\\'))
-			*c = '/';
-}
-
-
-static char*
-to_dos (const char *path)
-{
-	return str_substitute (path, "/", "\\\\");
-}
-*/
 
 
 static void
@@ -225,6 +208,7 @@ fr_command_7z_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 	add_password_arg (comm, comm->password, FALSE);
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 
@@ -238,6 +222,43 @@ fr_command_7z_list (FrCommand  *comm)
 }
 
 
+static char Progress_Message[4196];
+static char Progress_Filename[4096];
+
+
+static void
+parse_progress_line (FrCommand  *comm,
+		     const char *prefix,
+		     const char *message_prefix,
+		     const char *line)
+{
+	int prefix_len;
+
+	prefix_len = strlen (prefix);
+	if (strncmp (line, prefix, prefix_len) == 0) {
+		double fraction;
+
+		strcpy (Progress_Filename, line + prefix_len);
+		sprintf (Progress_Message, "%s%s", message_prefix, file_name_from_path (Progress_Filename));
+		fr_command_message (comm, Progress_Message);
+
+		fraction= (double) ++comm->n_file / (comm->n_files + 1);
+		fr_command_progress (comm, fraction);
+	}
+}
+
+
+static void
+process_line__add (char     *line,
+		   gpointer  data)
+{
+	FrCommand *comm = FR_COMMAND (data);
+
+	if (comm->n_files != 0)
+		parse_progress_line (comm, "Compressing  ", _("Adding file: "), line);
+}
+
+
 static void
 fr_command_7z_add (FrCommand     *comm,
 		   GList         *file_list,
@@ -246,6 +267,11 @@ fr_command_7z_add (FrCommand     *comm,
 		   gboolean       recursive)
 {
 	GList *scan;
+
+	fr_process_use_standard_locale (comm->process, TRUE);
+	fr_process_set_out_line_func (comm->process,
+				      process_line__add,
+				      comm);
 
 	fr_command_7z_begin_command (comm);
 
@@ -268,6 +294,7 @@ fr_command_7z_add (FrCommand     *comm,
 	add_password_arg (comm, comm->password, FALSE);
 	if ((comm->password != NULL) && (*comm->password != 0) && comm->encrypt_header)
 		fr_process_add_arg (comm->process, "-mhe=on");
+	/* fr_process_add_arg (comm->process, "-ms=off"); FIXME: solid mode off? */
 
 	switch (comm->compression) {
 	case FR_COMPRESSION_VERY_FAST:
@@ -283,6 +310,7 @@ fr_command_7z_add (FrCommand     *comm,
 	if (is_mime_type (comm->mime_type, "application/x-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next) {
@@ -304,16 +332,29 @@ fr_command_7z_delete (FrCommand *comm,
 	fr_process_add_arg (comm->process, "d");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-
 	if (is_mime_type (comm->mime_type, "application/x-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *filename = scan->data;
+		fr_process_add_arg (comm->process, filename);
+	}
 
 	fr_process_end_command (comm->process);
+}
+
+
+static void
+process_line__extract (char     *line,
+		       gpointer  data)
+{
+	FrCommand *comm = FR_COMMAND (data);
+
+	if (comm->n_files != 0)
+		parse_progress_line (comm, "Extracting  ", _("Extracting file: "), line);
 }
 
 
@@ -327,6 +368,10 @@ fr_command_7z_extract (FrCommand  *comm,
 {
 	GList *scan;
 
+	fr_process_use_standard_locale (comm->process, TRUE);
+	fr_process_set_out_line_func (comm->process,
+				      process_line__extract,
+				      comm);
 	fr_command_7z_begin_command (comm);
 
 	if (junk_paths)
@@ -341,6 +386,7 @@ fr_command_7z_extract (FrCommand  *comm,
 	if (dest_dir != NULL)
 		fr_process_add_arg_concat (comm->process, "-o", dest_dir, NULL);
 
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
@@ -358,6 +404,7 @@ fr_command_7z_test (FrCommand   *comm)
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 	add_password_arg (comm, comm->password, FALSE);
+	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 }
