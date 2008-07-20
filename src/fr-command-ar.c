@@ -48,7 +48,7 @@ mktime_from_string (char *time_s,
 		    char *month_s,
 		    char *year_s)
 {
-	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	struct tm    tm = {0, };
 	char       **fields;
@@ -91,9 +91,9 @@ ar_get_last_field (const char *line,
 		   int         field_n)
 {
 	const char *f_start, *f_end;
-	
+
 	line = line + start_from;
-        
+
 	f_start = line;
 	while ((*f_start == ' ') && (*f_start != *line))
 		f_start++;
@@ -110,13 +110,13 @@ ar_get_last_field (const char *line,
 		} else
 			f_end++;
 	}
-	
+
 	return g_strdup (f_start);
 }
 
 
 static void
-process_line (char     *line, 
+process_line (char     *line,
 	      gpointer  data)
 {
 	FileData    *fdata;
@@ -182,16 +182,15 @@ process_line (char     *line,
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
-	else 
+	else
 		fr_command_add_file (comm, fdata);
 }
 
 
 static void
-fr_command_ar_list (FrCommand  *comm,
-		    const char *password)
+fr_command_ar_list (FrCommand  *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line,
 				      comm);
 
@@ -208,9 +207,7 @@ fr_command_ar_add (FrCommand     *comm,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
-		   gboolean       recursive,
-		   const char    *password,
-		   FrCompression  compression)
+		   gboolean       recursive)
 {
 	GList *scan;
 
@@ -221,12 +218,12 @@ fr_command_ar_add (FrCommand     *comm,
 	else
 		fr_process_add_arg (comm->process, "r");
 
-	if (base_dir != NULL) 
+	if (base_dir != NULL)
 		fr_process_set_working_dir (comm->process, base_dir);
 
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
@@ -254,14 +251,13 @@ fr_command_ar_extract (FrCommand  *comm,
 		       const char *dest_dir,
 		       gboolean    overwrite,
 		       gboolean    skip_older,
-		       gboolean    junk_paths,
-		       const char *password)
+		       gboolean    junk_paths)
 {
 	GList *scan;
 
 	fr_process_begin_command (comm->process, "ar");
 
-	if (dest_dir != NULL) 
+	if (dest_dir != NULL)
 		fr_process_set_working_dir (comm->process, dest_dir);
 
 	fr_process_add_arg (comm->process, "x");
@@ -273,7 +269,7 @@ fr_command_ar_extract (FrCommand  *comm,
 
 
 static void
-fr_command_ar_handle_error (FrCommand   *comm, 
+fr_command_ar_handle_error (FrCommand   *comm,
 			    FrProcError *error)
 {
 	/* FIXME */
@@ -283,28 +279,28 @@ fr_command_ar_handle_error (FrCommand   *comm,
 const char *ar_mime_type[] = { "application/x-ar", NULL };
 
 
-const char **  
+const char **
 fr_command_ar_get_mime_types (FrCommand *comm)
 {
 	return ar_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_ar_get_capabilities (FrCommand  *comm,
 			        const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("ar")) 
+	if (is_program_in_path ("ar"))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
-		
+
 	return capabilities;
 }
 
 
-static void 
+static void
 fr_command_ar_class_init (FrCommandArClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -324,8 +320,8 @@ fr_command_ar_class_init (FrCommandArClass *class)
 	afc->get_capabilities = fr_command_ar_get_capabilities;
 }
 
- 
-static void 
+
+static void
 fr_command_ar_init (FrCommand *comm)
 {
 	comm->propAddCanUpdate             = TRUE;
@@ -339,12 +335,12 @@ fr_command_ar_init (FrCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_ar_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_AR (object));
-	
+
 	/* Chain up */
         if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);

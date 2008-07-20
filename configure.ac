@@ -13,6 +13,7 @@ GNOME_COMMON_INIT
 AC_PROG_LIBTOOL
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 
 dnl ==========================================================================
 dnl

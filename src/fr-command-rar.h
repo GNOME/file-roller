@@ -42,9 +42,10 @@ struct _FrCommandRar
 {
 	FrCommand  __parent;
 
-	gboolean list_started;
-	gboolean odd_line;
+	gboolean  list_started;
+	gboolean  odd_line;
 	FileData *fdata;
+	gboolean  multi_volume;
 };
 
 struct _FrCommandRarClass

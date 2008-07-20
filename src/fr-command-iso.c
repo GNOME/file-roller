@@ -128,8 +128,7 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_iso_list (FrCommand  *comm,
-		     const char *password)
+fr_command_iso_list (FrCommand  *comm)
 {
 	FrCommandIso *comm_iso = FR_COMMAND_ISO (comm);
 
@@ -157,8 +156,7 @@ fr_command_iso_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList *scan;
 
@@ -201,23 +199,23 @@ fr_command_iso_extract (FrCommand  *comm,
 const char *iso_mime_type[] = { "application/x-cd-image", NULL };
 
 
-const char **  
+const char **
 fr_command_iso_get_mime_types (FrCommand *comm)
 {
 	return iso_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_iso_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("isoinfo")) 
+	if (is_program_in_path ("isoinfo"))
 		capabilities |= FR_COMMAND_CAN_READ;
-		
+
 	return capabilities;
 }
 

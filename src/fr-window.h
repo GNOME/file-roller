@@ -134,24 +134,17 @@ void        fr_window_archive_add_directory     (FrWindow      *window,
 						 const char    *directory,
 						 const char    *base_dir,
 						 const char    *dest_dir,
-						 gboolean       update,
-						 const char    *password,
-						 gboolean       encrypt_header,
-						 FrCompression  compression);
+						 gboolean       update);
 void        fr_window_archive_add_items         (FrWindow      *window,
 						 GList         *dir_list,
 						 const char    *base_dir,
 						 const char    *dest_dir,
-						 gboolean       update,
-						 const char    *password,
-						 gboolean       encrypt_header,
-						 FrCompression  compression);
+						 gboolean       update);
 void        fr_window_archive_add_dropped_items (FrWindow      *window,
 						 GList         *item_list,
 						 gboolean       update);
 void        fr_window_archive_remove            (FrWindow      *window,
-						 GList         *file_list,
-						 FrCompression  compression);
+						 GList         *file_list);
 void        fr_window_archive_extract           (FrWindow      *window,
 						 GList         *file_list,
 						 const char    *extract_to_dir,
@@ -159,14 +152,15 @@ void        fr_window_archive_extract           (FrWindow      *window,
 						 gboolean       skip_older,
 						 gboolean       overwrite,
 						 gboolean       junk_paths,
-						 const char    *password,
 						 gboolean       ask_to_open_destination);
 void        fr_window_archive_extract_here      (FrWindow      *window,
 						 gboolean       skip_older,
 						 gboolean       overwrite,
-						 gboolean       junk_paths,
-						 const char    *password);
+						 gboolean       junk_paths);
 void        fr_window_archive_test	        (FrWindow      *window);
+
+/**/
+
 void        fr_window_set_password              (FrWindow      *window,
 						 const char    *password);
 void        fr_window_set_password_for_paste    (FrWindow      *window,
@@ -175,7 +169,12 @@ const char *fr_window_get_password              (FrWindow      *window);
 void        fr_window_set_encrypt_header        (FrWindow      *window,
 						 gboolean       encrypt_header);
 gboolean    fr_window_get_encrypt_header        (FrWindow      *window);
+void        fr_window_set_compression 	        (FrWindow      *window,
+						 FrCompression  compression);
 FrCompression fr_window_get_compression 	(FrWindow      *window);
+void        fr_window_set_volume_size 	        (FrWindow      *window,
+						 guint          volume_size);
+guint       fr_window_get_volume_size 	        (FrWindow      *window);
 
 /**/
 

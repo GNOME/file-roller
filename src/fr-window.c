@@ -311,6 +311,7 @@ struct _FrWindowPrivateData {
 	char *           password_for_paste;
 	gboolean         encrypt_header;
 	FrCompression    compression;
+	guint            volume_size;
 
 	guint            activity_timeout_handle;   /* activity timeout
 						     * handle. */
@@ -1087,8 +1088,9 @@ compute_file_list_name (FrWindow   *window,
 
 	scan = fdata->full_path + current_dir_len;
 	end = strchr (scan, '/');
-	if ((end == NULL) && ! fdata->dir) /* file */
+	if ((end == NULL) && ! fdata->dir) { /* file */
 		fdata->list_name = g_strdup (scan);
+	}
 	else { /* folder */
 		char *dir_name;
 
@@ -1316,23 +1318,6 @@ get_sort_method_from_column (int column_id)
 
 	return FR_WINDOW_SORT_BY_NAME;
 }
-
-
-/*static const char *
-get_action_from_sort_method (FrWindowSortMethod sort_method)
-{
-	switch (sort_method) {
-	case FR_WINDOW_SORT_BY_NAME: return "SortByName";
-	case FR_WINDOW_SORT_BY_SIZE: return "SortBySize";
-	case FR_WINDOW_SORT_BY_TYPE: return "SortByType";
-	case FR_WINDOW_SORT_BY_TIME: return "SortByDate";
-	case FR_WINDOW_SORT_BY_PATH: return "SortByLocation";
-	default:
-		break;
-	}
-
-	return "SortByName";
-}*/
 
 
 static void
@@ -2346,7 +2331,6 @@ pd_update_archive_name (FrWindow *window)
 			g_free (name);
 		}
 	}
-
 }
 
 
@@ -4043,7 +4027,6 @@ file_list_drag_end (GtkWidget      *widget,
 					   FALSE,
 					   TRUE,
 					   FALSE,
-					   window->priv->password,
 					   FALSE);
 		path_list_free (window->priv->drag_file_list);
 		window->priv->drag_file_list = NULL;
@@ -6233,19 +6216,16 @@ fr_window_archive_add_directory (FrWindow      *window,
 				 const char    *directory,
 				 const char    *base_dir,
 				 const char    *dest_dir,
-				 gboolean       update,
-				 const char    *password,
-				 gboolean       encrypt_header,
-				 FrCompression  compression)
+				 gboolean       update)
 {
 	fr_archive_add_directory (window->archive,
 				  directory,
 				  base_dir,
 				  (dest_dir == NULL)? fr_window_get_current_location (window): dest_dir,
 				  update,
-				  password,
-				  encrypt_header,
-				  compression);
+				  window->priv->password,
+				  window->priv->encrypt_header,
+				  window->priv->compression);
 }
 
 
@@ -6254,19 +6234,16 @@ fr_window_archive_add_items (FrWindow      *window,
 			     GList         *item_list,
 			     const char    *base_dir,
 			     const char    *dest_dir,
-			     gboolean       update,
-			     const char    *password,
-			     gboolean       encrypt_header,
-			     FrCompression  compression)
+			     gboolean       update)
 {
 	fr_archive_add_items (window->archive,
 			      item_list,
 			      base_dir,
 			      (dest_dir == NULL)? fr_window_get_current_location (window): dest_dir,
 			      update,
-			      password,
-			      encrypt_header,
-			      compression);
+			      window->priv->password,
+			      window->priv->encrypt_header,
+			      window->priv->compression);
 }
 
 
@@ -6288,13 +6265,12 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 
 void
 fr_window_archive_remove (FrWindow      *window,
-			  GList         *file_list,
-			  FrCompression  compression)
+			  GList         *file_list)
 {
 	fr_window_clipboard_remove_file_list (window, file_list);
 
 	fr_process_clear (window->archive->process);
-	fr_archive_remove (window->archive, file_list, compression);
+	fr_archive_remove (window->archive, file_list, window->priv->compression);
 	fr_process_start (window->archive->process);
 }
 
@@ -6309,7 +6285,6 @@ extract_data_new (GList      *file_list,
 		  gboolean    skip_older,
 		  gboolean    overwrite,
 		  gboolean    junk_paths,
-		  const char *password,
 		  gboolean    extract_here)
 {
 	ExtractData *edata;
@@ -6323,8 +6298,6 @@ extract_data_new (GList      *file_list,
 	edata->junk_paths = junk_paths;
 	if (base_dir != NULL)
 		edata->base_dir = g_strdup (base_dir);
-	if (password != NULL)
-		edata->password = g_strdup (password);
 	edata->extract_here = extract_here;
 
 	return edata;
@@ -6340,7 +6313,6 @@ extract_to_data_new (const char *extract_to_dir)
 				 FALSE,
 				 TRUE,
 				 FALSE,
-				 NULL,
 				 FALSE);
 }
 
@@ -6353,7 +6325,6 @@ extract_data_free (ExtractData *edata)
 	path_list_free (edata->file_list);
 	g_free (edata->extract_to_dir);
 	g_free (edata->base_dir);
-	g_free (edata->password);
 
 	g_free (edata);
 }
@@ -6363,8 +6334,7 @@ void
 fr_window_archive_extract_here (FrWindow   *window,
 				gboolean    skip_older,
 				gboolean    overwrite,
-				gboolean    junk_paths,
-				const char *password)
+				gboolean    junk_paths)
 {
 	ExtractData *edata;
 
@@ -6374,7 +6344,6 @@ fr_window_archive_extract_here (FrWindow   *window,
 				  skip_older,
 				  overwrite,
 				  junk_paths,
-				  password,
 				  TRUE);
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_EXTRACT,
@@ -6388,7 +6357,7 @@ fr_window_archive_extract_here (FrWindow   *window,
 			             edata->skip_older,
 			             edata->overwrite,
 			             edata->junk_paths,
-			             edata->password))
+			             window->priv->password))
 	{
 		fr_process_start (window->archive->process);
 	}
@@ -6403,7 +6372,6 @@ fr_window_archive_extract (FrWindow   *window,
 			   gboolean    skip_older,
 			   gboolean    overwrite,
 			   gboolean    junk_paths,
-			   const char *password,
 			   gboolean    ask_to_open_destination)
 {
 	ExtractData *edata;
@@ -6416,7 +6384,6 @@ fr_window_archive_extract (FrWindow   *window,
 				  skip_older,
 				  overwrite,
 				  junk_paths,
-				  password,
 				  FALSE);
 
 	fr_window_set_current_batch_action (window,
@@ -6498,7 +6465,7 @@ fr_window_archive_extract (FrWindow   *window,
 			    edata->skip_older,
 			    edata->overwrite,
 			    edata->junk_paths,
-			    edata->password);
+			    window->priv->password);
 	fr_process_start (window->archive->process);
 }
 
@@ -6510,7 +6477,6 @@ fr_window_archive_test (FrWindow *window)
 					    FR_BATCH_ACTION_TEST,
 					    NULL,
 					    NULL);
-
 	fr_archive_test (window->archive, window->priv->password);
 }
 
@@ -6571,10 +6537,37 @@ fr_window_get_encrypt_header (FrWindow *window)
 }
 
 
+void
+fr_window_set_compression (FrWindow      *window,
+			   FrCompression  compression)
+{
+	g_return_if_fail (window != NULL);
+
+	window->priv->compression = compression;
+}
+
+
 FrCompression
 fr_window_get_compression (FrWindow *window)
 {
 	return window->priv->compression;
+}
+
+
+void
+fr_window_set_volume_size (FrWindow *window,
+			   guint     volume_size)
+{
+	g_return_if_fail (window != NULL);
+
+	window->priv->volume_size = volume_size;
+}
+
+
+guint
+fr_window_get_volume_size (FrWindow *window)
+{
+	return window->priv->volume_size;
 }
 
 
@@ -7603,10 +7596,9 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 				  window);
 		fr_archive_set_fake_load_func (window->priv->copy_from_archive, always_fake_load, NULL);
 	}
-
 	fr_archive_load_local (window->priv->copy_from_archive,
 		               data->archive_filename,
-			       data->archive_password);
+		               data->archive_password);
 }
 
 
@@ -8247,7 +8239,6 @@ fr_window_exec_batch_action (FrWindow      *window,
 					   edata->skip_older,
 					   edata->overwrite,
 					   edata->junk_paths,
-					   window->priv->password,
 					   TRUE);
 		break;
 
@@ -8258,8 +8249,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 		fr_window_archive_extract_here (window,
 						FALSE,
 						TRUE,
-						FALSE,
-						window->priv->password);
+						FALSE);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
@@ -8275,7 +8265,6 @@ fr_window_exec_batch_action (FrWindow      *window,
 						   FALSE,
 						   TRUE,
 						   FALSE,
-						   window->priv->password,
 						   TRUE);
 		}
 		else {

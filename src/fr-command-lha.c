@@ -44,11 +44,11 @@ static FrCommandClass *parent_class = NULL;
 /* -- list -- */
 
 static time_t
-mktime_from_string (char *month, 
-		    char *mday, 
+mktime_from_string (char *month,
+		    char *mday,
 		    char *time_or_year)
 {
-	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	struct tm     tm = {0, };
 	char        **fields;
@@ -82,7 +82,7 @@ mktime_from_string (char *month,
 		fields = g_strsplit (time_or_year, ":", 2);
 		if (fields[0] != NULL) {
 			tm.tm_hour = atoi (fields[0]);
-			if (fields[1] != NULL) 
+			if (fields[1] != NULL)
 				tm.tm_min = atoi (fields[1]);
 		}
 		g_strfreev (fields);
@@ -109,12 +109,12 @@ split_line_lha (char *line)
 		fields[i++] = g_strdup ("");
 		fields[i++] = g_strdup ("");
 		line += strlen ("[MS-DOS]");
-	} 
+	}
 	else if (strncmp (line, "[generic]", 9) == 0) {
 		fields[i++] = g_strdup ("");
 		fields[i++] = g_strdup ("");
 		line += strlen ("[generic]");
-	} 
+	}
 	else if (strncmp (line, "[unknown]", 9) == 0) {
 		fields[i++] = g_strdup ("");
 		fields[i++] = g_strdup ("");
@@ -141,13 +141,13 @@ get_last_field_lha (char *line)
 	const char *field;
 	int         n = 7;
 
-	if (strncmp (line, "[MS-DOS]", 8) == 0) 
+	if (strncmp (line, "[MS-DOS]", 8) == 0)
 		n--;
 
-	if (strncmp (line, "[generic]", 9) == 0) 
+	if (strncmp (line, "[generic]", 9) == 0)
 		n--;
 
-	if (strncmp (line, "[unknown]", 9) == 0) 
+	if (strncmp (line, "[unknown]", 9) == 0)
 		n--;
 
 	field = eat_spaces (line);
@@ -161,7 +161,7 @@ get_last_field_lha (char *line)
 
 
 static void
-process_line (char     *line, 
+process_line (char     *line,
 	      gpointer  data)
 {
 	FileData    *fdata;
@@ -175,8 +175,8 @@ process_line (char     *line,
 
 	fields = split_line_lha (line);
 	fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
-	fdata->modified = mktime_from_string (fields[4], 
-					      fields[5], 
+	fdata->modified = mktime_from_string (fields[4],
+					      fields[5],
 					      fields[6]);
 	g_strfreev (fields);
 
@@ -210,10 +210,9 @@ process_line (char     *line,
 
 
 static void
-fr_command_lha_list (FrCommand  *comm,
-		     const char *password)
+fr_command_lha_list (FrCommand  *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line,
 				      comm);
 
@@ -230,21 +229,19 @@ fr_command_lha_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
-		    gboolean       recursive,
-		    const char    *password,
-		    FrCompression  compression)
+		    gboolean       recursive)
 {
 	GList *scan;
 
 	fr_process_begin_command (comm->process, "lha");
-	if (base_dir != NULL) 
+	if (base_dir != NULL)
 		fr_process_set_working_dir (comm->process, base_dir);
 	if (update)
 		fr_process_add_arg (comm->process, "u");
 	else
 		fr_process_add_arg (comm->process, "a");
 	fr_process_add_arg (comm->process, comm->filename);
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
 }
@@ -271,28 +268,27 @@ fr_command_lha_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList *scan;
 	char   options[5];
 	int    i = 0;
 
 	fr_process_begin_command (comm->process, "lha");
-	
-	if (dest_dir != NULL) 
+
+	if (dest_dir != NULL)
 		fr_process_set_working_dir (comm->process, dest_dir);
 
 	options[i++] = 'x';
 	options[i++] = 'f'; /* Always overwrite.
-			     * The overwrite option is handled in 
+			     * The overwrite option is handled in
 			     * fr_archive_extract,
 			     * this is because lha asks the user whether he
 			     * wants to overwrite a file. */
 
 	if (junk_paths)
 		options[i++] = 'i';
-	
+
 	options[i++] = 0;
 	fr_process_add_arg (comm->process, options);
 	fr_process_add_arg (comm->process, comm->filename);
@@ -307,28 +303,28 @@ fr_command_lha_extract (FrCommand  *comm,
 const char *lha_mime_type[] = { "application/x-lha", NULL };
 
 
-const char **  
+const char **
 fr_command_lha_get_mime_types (FrCommand *comm)
 {
 	return lha_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_lha_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("lha")) 
+	if (is_program_in_path ("lha"))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
-		
+
 	return capabilities;
 }
 
 
-static void 
+static void
 fr_command_lha_class_init (FrCommandLhaClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -347,12 +343,12 @@ fr_command_lha_class_init (FrCommandLhaClass *class)
 	afc->get_capabilities = fr_command_lha_get_capabilities;
 }
 
- 
-static void 
+
+static void
 fr_command_lha_init (FrCommand *comm)
 {
-	comm->propAddCanUpdate             = TRUE; 
-	comm->propAddCanReplace            = TRUE; 
+	comm->propAddCanUpdate             = TRUE;
+	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = TRUE;
 	comm->propExtractCanAvoidOverwrite = FALSE;
 	comm->propExtractCanSkipOlder      = FALSE;
@@ -362,7 +358,7 @@ fr_command_lha_init (FrCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_lha_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);

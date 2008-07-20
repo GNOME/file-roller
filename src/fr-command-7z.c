@@ -114,6 +114,11 @@ list__process_line (char     *line,
 	if (! p7z_comm->list_started) {
 		if (strncmp (line, "--------", 8) == 0)
 			p7z_comm->list_started = TRUE;
+		else if (strncmp (line, "Multivolume = ", 14) == 0) {
+			fields = g_strsplit (line, " = ", 2);
+			p7z_comm->multi_volume = (strcmp (fields[1], "+") == 0);
+			g_strfreev (fields);
+		}
 		return;
 	}
 
@@ -206,8 +211,7 @@ add_password_arg (FrCommand     *comm,
 
 
 static void
-fr_command_7z_list (FrCommand  *comm,
-		    const char *password)
+fr_command_7z_list (FrCommand  *comm)
 {
 	FrCommand7z *p7z_comm = FR_COMMAND_7Z (comm);
 
@@ -220,7 +224,7 @@ fr_command_7z_list (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-slt");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-	add_password_arg (comm, password, FALSE);
+	add_password_arg (comm, comm->password, FALSE);
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 
@@ -228,6 +232,7 @@ fr_command_7z_list (FrCommand  *comm,
 		file_data_free (p7z_comm->fdata);
 		p7z_comm->fdata = NULL;
 	}
+	p7z_comm->multi_volume = FALSE;
 	p7z_comm->list_started = FALSE;
 	fr_process_start (comm->process);
 }
@@ -238,9 +243,7 @@ fr_command_7z_add (FrCommand     *comm,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
-		   gboolean       recursive,
-		   const char    *password,
-		   FrCompression  compression)
+		   gboolean       recursive)
 {
 	GList *scan;
 
@@ -262,11 +265,11 @@ fr_command_7z_add (FrCommand     *comm,
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-l");
-	add_password_arg (comm, password, FALSE);
-	if ((password != NULL) && (*password != 0) && comm->encrypt_header)
+	add_password_arg (comm, comm->password, FALSE);
+	if ((comm->password != NULL) && (*comm->password != 0) && comm->encrypt_header)
 		fr_process_add_arg (comm->process, "-mhe=on");
 
-	switch (compression) {
+	switch (comm->compression) {
 	case FR_COMPRESSION_VERY_FAST:
 		fr_process_add_arg (comm->process, "-mx=1"); break;
 	case FR_COMPRESSION_FAST:
@@ -320,8 +323,7 @@ fr_command_7z_extract (FrCommand  *comm,
 		       const char *dest_dir,
 		       gboolean    overwrite,
 		       gboolean    skip_older,
-		       gboolean    junk_paths,
-		       const char *password)
+		       gboolean    junk_paths)
 {
 	GList *scan;
 
@@ -334,7 +336,7 @@ fr_command_7z_extract (FrCommand  *comm,
 
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-	add_password_arg (comm, password, FALSE);
+	add_password_arg (comm, comm->password, FALSE);
 
 	if (dest_dir != NULL)
 		fr_process_add_arg_concat (comm->process, "-o", dest_dir, NULL);
@@ -349,14 +351,13 @@ fr_command_7z_extract (FrCommand  *comm,
 
 
 static void
-fr_command_7z_test (FrCommand   *comm,
-		    const char  *password)
+fr_command_7z_test (FrCommand   *comm)
 {
 	fr_command_7z_begin_command (comm);
 	fr_process_add_arg (comm->process, "t");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-	add_password_arg (comm, password, FALSE);
+	add_password_arg (comm, comm->password, FALSE);
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 }
@@ -430,6 +431,10 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 			capabilities |= FR_COMMAND_CAN_WRITE | FR_COMMAND_CAN_ENCRYPT;
 		}
 	}
+
+	/* multi-volumes are read-only */
+	if ((comm->files->len > 0) && FR_COMMAND_7Z (comm)->multi_volume && (capabilities & FR_COMMAND_CAN_WRITE))
+		capabilities ^= FR_COMMAND_CAN_WRITE;
 
 	return capabilities;
 }

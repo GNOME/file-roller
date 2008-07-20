@@ -46,7 +46,7 @@ static FrCommandClass *parent_class = NULL;
 
 
 static time_t
-mktime_from_string (char *date_s, 
+mktime_from_string (char *date_s,
 		    char *time_s)
 {
 	struct tm   tm = {0, };
@@ -70,7 +70,7 @@ mktime_from_string (char *date_s,
 	fields = g_strsplit (time_s, ":", 3);
 	if (fields[0] != NULL) {
 		tm.tm_hour = atoi (fields[0]);
-		if (fields[1] != NULL) 
+		if (fields[1] != NULL)
 			tm.tm_min = atoi (fields[1]);
 	}
 	g_strfreev (fields);
@@ -80,7 +80,7 @@ mktime_from_string (char *date_s,
 
 
 static void
-process_line (char     *line, 
+process_line (char     *line,
 	      gpointer  data)
 {
 	FrCommand     *comm = FR_COMMAND (data);
@@ -95,7 +95,7 @@ process_line (char     *line,
 
 
 	if (! alz_comm->list_started) {
-		if (strncmp (line, "-----", 5 ) == 0 ) 
+		if (strncmp (line, "-----", 5 ) == 0 )
 			alz_comm->list_started = TRUE;
 		return;
 	}
@@ -106,7 +106,7 @@ process_line (char     *line,
 
 	}
 
-	if (! alz_comm->list_started) 
+	if (! alz_comm->list_started)
 		return;
 
 	fdata = file_data_new ();
@@ -127,7 +127,7 @@ process_line (char     *line,
 	if (*name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
 		fdata->original_path = fdata->full_path;
-	} 
+	}
 	else {
 		fdata->full_path = g_strconcat ("/", name_field, NULL);
 		fdata->original_path = fdata->full_path + 1;
@@ -140,7 +140,7 @@ process_line (char     *line,
 		for (s = fdata->original_path; *s != '\0'; ++s)
 			if (*s == '\\') *s = '/';
 		fdata->name = dir_name_from_path (fdata->full_path);
-	} 
+	}
 	else {
 		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	}
@@ -166,8 +166,8 @@ add_codepage_arg (FrCommand *comm)
 
 	for (scan = env_list; *scan != NULL; ++scan) {
 		char *env = getenv (*scan);
-		
-		if (! env) 
+
+		if (! env)
 			continue;
 
 		if (strstr (env, "UTF-8") ||  strstr (env, "utf-8"))
@@ -191,7 +191,7 @@ add_password_arg (FrCommand  *comm,
 	if (password != NULL) {
 		fr_process_add_arg (comm->process, "-pwd");
 		fr_process_add_arg (comm->process, password);
-	} 
+	}
 	else if (disable_query) {
 		fr_process_add_arg (comm->process, "-pwd");
 		fr_process_add_arg (comm->process, "");
@@ -200,13 +200,12 @@ add_password_arg (FrCommand  *comm,
 
 
 static void
-fr_command_alz_list (FrCommand  *comm,
-		     const char *password)
+fr_command_alz_list (FrCommand  *comm)
 {
 	FR_COMMAND_ALZ (comm)->list_started = FALSE;
 	FR_COMMAND_ALZ (comm)->invalid_password = FALSE;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line,
 				      comm);
 
@@ -223,7 +222,7 @@ fr_command_alz_list (FrCommand  *comm,
 /* -- extract -- */
 
 static void
-process_extract_line (char     *line, 
+process_extract_line (char     *line,
 		      gpointer  data)
 {
 	FrCommand     *comm = FR_COMMAND (data);
@@ -241,7 +240,7 @@ process_extract_line (char     *line,
 
 	if (alz_comm->extract_none && (strncmp (line, "unalziiiing :", 13) == 0)) {
 		alz_comm->extract_none = FALSE;
-	} 
+	}
 	else if ((strncmp (line, "done..", 6) == 0) && alz_comm->extract_none) {
 		fr_process_stop (comm->process);
 		return;
@@ -255,13 +254,12 @@ fr_command_alz_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList *scan;
 
 	FR_COMMAND_ALZ (comm)->extract_none = TRUE;
-	
+
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_extract_line,
 				      comm);
@@ -272,16 +270,16 @@ fr_command_alz_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, dest_dir);
 	}
 	add_codepage_arg (comm);
-	add_password_arg (comm, password, TRUE);
+	add_password_arg (comm, comm->password, TRUE);
 	fr_process_add_arg (comm->process, comm->filename);
-	for (scan = file_list; scan; scan = scan->next) 
+	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 	fr_process_end_command (comm->process);
 }
 
 
 static void
-fr_command_alz_handle_error (FrCommand   *comm, 
+fr_command_alz_handle_error (FrCommand   *comm,
 			     FrProcError *error)
 {
 	if ((error->type == FR_PROC_ERROR_STOPPED)) {
@@ -296,28 +294,28 @@ fr_command_alz_handle_error (FrCommand   *comm,
 const char *alz_mime_type[] = { "application/x-alz", NULL };
 
 
-const char **  
+const char **
 fr_command_alz_get_mime_types (FrCommand *comm)
 {
 	return alz_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_alz_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("unalz")) 
+	if (is_program_in_path ("unalz"))
 		capabilities |= FR_COMMAND_CAN_READ;
-		
+
 	return capabilities;
 }
 
 
-static void 
+static void
 fr_command_alz_class_init (FrCommandAlzClass *class)
 {
         GObjectClass *gobject_class = G_OBJECT_CLASS (class);
@@ -337,8 +335,8 @@ fr_command_alz_class_init (FrCommandAlzClass *class)
 	afc->get_capabilities = fr_command_alz_get_capabilities;
 }
 
- 
-static void 
+
+static void
 fr_command_alz_init (FrCommand *comm)
 {
 	comm->propAddCanUpdate             = TRUE;
@@ -351,7 +349,7 @@ fr_command_alz_init (FrCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_alz_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);

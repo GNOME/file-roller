@@ -345,10 +345,7 @@ add_clicked_cb (GtkWidget  *widget,
 	set_archive_password (data);
 	gtk_widget_destroy (data->dialog);
 
-	if (! uri_exists (archive_file))
-		fr_window_archive_new (window, archive_file);
-	else
-		fr_window_archive_open (window, archive_file, GTK_WINDOW (window));
+	fr_window_archive_new (window, archive_file);
 
 	g_free (archive_name);
 	g_free (archive_dir);

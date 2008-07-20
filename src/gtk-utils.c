@@ -361,16 +361,6 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 }
 
 
-static void
-toggle_visibility (GtkWidget *widget)
-{
-	if (GTK_WIDGET_VISIBLE (widget))
-		gtk_widget_hide (widget);
-	else
-		gtk_widget_show (widget);
-}
-
-
 GtkWidget*
 _gtk_error_dialog_new (GtkWindow        *parent,
 		       GtkDialogFlags    flags,

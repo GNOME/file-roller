@@ -42,6 +42,7 @@ struct _FrCommand7z
 	FrCommand __parent;
 	gboolean   list_started;
 	FileData  *fdata;
+	gboolean   multi_volume;
 };
 
 struct _FrCommand7zClass

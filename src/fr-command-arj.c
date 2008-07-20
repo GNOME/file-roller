@@ -160,8 +160,7 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_arj_list (FrCommand  *comm,
-		     const char *password)
+fr_command_arj_list (FrCommand  *comm)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
@@ -182,9 +181,7 @@ fr_command_arj_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
-		    gboolean       recursive,
-		    const char    *password,
-		    FrCompression  compression)
+		    gboolean       recursive)
 {
 	GList *scan;
 
@@ -198,10 +195,10 @@ fr_command_arj_add (FrCommand     *comm,
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (password != NULL)
-		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
+	if (comm->password != NULL)
+		fr_process_add_arg_concat (comm->process, "-g/", comm->password, NULL);
 
-	switch (compression) {
+	switch (comm->compression) {
 	case FR_COMPRESSION_VERY_FAST:
 		fr_process_add_arg (comm->process, "-m3"); break;
 	case FR_COMPRESSION_FAST:
@@ -252,8 +249,7 @@ fr_command_arj_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList *scan;
 
@@ -273,8 +269,8 @@ fr_command_arj_extract (FrCommand  *comm,
 	if (skip_older)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (password != NULL)
-		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
+	if (comm->password != NULL)
+		fr_process_add_arg_concat (comm->process, "-g/", comm->password, NULL);
 	else
  		fr_process_add_arg (comm->process, "-g/");
 
@@ -292,13 +288,12 @@ fr_command_arj_extract (FrCommand  *comm,
 
 
 static void
-fr_command_arj_test (FrCommand   *comm,
-		     const char  *password)
+fr_command_arj_test (FrCommand   *comm)
 {
 	fr_process_begin_command (comm->process, "arj");
 	fr_process_add_arg (comm->process, "t");
-	if (password != NULL)
-		fr_process_add_arg_concat (comm->process, "-g/", password, NULL);
+	if (comm->password != NULL)
+		fr_process_add_arg_concat (comm->process, "-g/", comm->password, NULL);
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-");

@@ -76,7 +76,7 @@ mktime_from_string (char *date,
 	fields = g_strsplit (time, ":", 2);
 	if (fields[0] != NULL) {
 		tm.tm_hour = atoi (fields[0]);
-		if (fields[1] != NULL) 
+		if (fields[1] != NULL)
 			tm.tm_min = atoi (fields[1]);
 	}
 	tm.tm_sec = 0;
@@ -87,7 +87,7 @@ mktime_from_string (char *date,
 
 
 static void
-process_line (char     *line, 
+process_line (char     *line,
 	      gpointer  data)
 {
 	FileData      *fdata;
@@ -105,7 +105,7 @@ process_line (char     *line,
 			else
 				ace_comm->command_type = FR_ACE_COMMAND_NONFREE;
 		}
-		return;		
+		return;
 	}
 
 	if (! ace_comm->list_started) {
@@ -143,7 +143,7 @@ process_line (char     *line,
 	if (field_name[0] != '/') {
 		fdata->full_path = g_strconcat ("/", field_name, NULL);
 		fdata->original_path = fdata->full_path + 1;
-	} 
+	}
 	else {
 		fdata->full_path = g_strdup (field_name);
 		fdata->original_path = fdata->full_path;
@@ -156,19 +156,18 @@ process_line (char     *line,
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
-	else 
+	else
 		fr_command_add_file (comm, fdata);
 }
 
 
 static void
-fr_command_ace_list (FrCommand  *comm,
-		    const char *password)
+fr_command_ace_list (FrCommand  *comm)
 {
 	FR_COMMAND_ACE (comm)->list_started = FALSE;
 	FR_COMMAND_ACE (comm)->command_type = FR_ACE_COMMAND_UNKNOWN;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line,
 				      comm);
 
@@ -187,14 +186,13 @@ fr_command_ace_extract (FrCommand   *comm,
 			const char *dest_dir,
 			gboolean     overwrite,
 			gboolean     skip_older,
-			gboolean     junk_paths,
-			const char *password)
+			gboolean     junk_paths)
 {
 	GList *scan;
 
 	fr_process_begin_command (comm->process, "unace");
 
-	if (dest_dir != NULL) 
+	if (dest_dir != NULL)
 		fr_process_set_working_dir (comm->process, dest_dir);
 
 	if (junk_paths)
@@ -212,8 +210,7 @@ fr_command_ace_extract (FrCommand   *comm,
 
 
 static void
-fr_command_ace_test (FrCommand   *comm,
-                     const char  *password)
+fr_command_ace_test (FrCommand   *comm)
 {
         fr_process_begin_command (comm->process, "unace");
         fr_process_add_arg (comm->process, "t");
@@ -224,7 +221,7 @@ fr_command_ace_test (FrCommand   *comm,
 
 
 static void
-fr_command_ace_handle_error (FrCommand   *comm, 
+fr_command_ace_handle_error (FrCommand   *comm,
 			     FrProcError *error)
 {
 	/* FIXME */
@@ -234,28 +231,28 @@ fr_command_ace_handle_error (FrCommand   *comm,
 const char *ace_mime_type[] = { "application/x-ace", NULL };
 
 
-const char **  
+const char **
 fr_command_ace_get_mime_types (FrCommand *comm)
 {
 	return ace_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_ace_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("unace")) 
+	if (is_program_in_path ("unace"))
 		capabilities |= FR_COMMAND_CAN_READ;
-		
+
 	return capabilities;
 }
 
 
-static void 
+static void
 fr_command_ace_class_init (FrCommandAceClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -274,8 +271,8 @@ fr_command_ace_class_init (FrCommandAceClass *class)
 	afc->get_capabilities = fr_command_ace_get_capabilities;
 }
 
- 
-static void 
+
+static void
 fr_command_ace_init (FrCommand *comm)
 {
 	comm->propAddCanUpdate             = TRUE;
@@ -288,12 +285,12 @@ fr_command_ace_init (FrCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_ace_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_ACE (object));
-	
+
 	/* Chain up */
         if (G_OBJECT_CLASS (parent_class)->finalize)
 		G_OBJECT_CLASS (parent_class)->finalize (object);

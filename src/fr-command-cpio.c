@@ -45,11 +45,11 @@ static FrCommandClass *parent_class = NULL;
 /* -- list -- */
 
 static time_t
-mktime_from_string (char *month, 
+mktime_from_string (char *month,
 		    char *mday,
 		    char *year)
 {
-	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	struct tm     tm = {0, };
 
@@ -72,7 +72,7 @@ mktime_from_string (char *month,
 
 	  		tm.tm_hour = atoi (fields[0]);
 	  		tm.tm_min = atoi (fields[1]);
-	  
+
 	  		now = time(NULL);
 	  		now_tm = localtime (&now);
 	  		tm.tm_year = now_tm->tm_year;
@@ -85,7 +85,7 @@ mktime_from_string (char *month,
 
 
 static void
-list__process_line (char     *line, 
+list__process_line (char     *line,
 		    gpointer  data)
 {
 	FileData    *fdata;
@@ -129,9 +129,9 @@ list__process_line (char     *line,
 	}
 
 	fdata->dir = line[0] == 'd';
-	
+
 	if (*(fields[0]) == '/') {
-		char *name = fields[0];		
+		char *name = fields[0];
 		if (fdata->dir && (name[strlen (name) - 1] != '/')) {
 			fdata->full_path = g_strconcat (name, "/", NULL);
 			fdata->original_path = g_strdup (fields[0]);
@@ -141,9 +141,9 @@ list__process_line (char     *line,
 			fdata->full_path = g_strdup (fields[0]);
 			fdata->original_path = fdata->full_path;
 		}
-	} 
+	}
 	else {
-		char *name = fields[0];		
+		char *name = fields[0];
 		if (fdata->dir && (name[strlen (name) - 1] != '/')) {
 			fdata->full_path = g_strconcat ("/", name, "/", NULL);
 			fdata->original_path = g_strdup (fields[0]);
@@ -167,29 +167,28 @@ list__process_line (char     *line,
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
-	else 
+	else
 		fr_command_add_file (comm, fdata);
 }
 
 
 static void
-fr_command_cpio_list (FrCommand  *comm,
-		      const char *password)
+fr_command_cpio_list (FrCommand  *comm)
 {
 	GString *cmd;
-	
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
 				      comm);
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_add_arg (comm->process, "-c");
-	
+
 	cmd = g_string_new ("cpio -itv < ");
 	g_string_append (cmd, comm->e_filename);
 	fr_process_add_arg (comm->process, cmd->str);
 	g_string_free (cmd, TRUE);
-	
+
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -201,8 +200,7 @@ fr_command_cpio_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList   *scan;
 	GString *cmd;
@@ -211,10 +209,10 @@ fr_command_cpio_extract (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-c");
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);
-	
+
 	cmd = g_string_new ("cpio -idu ");
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = g_shell_quote (scan->data); 
+		char *filename = g_shell_quote (scan->data);
 		g_string_append (cmd, filename);
 		g_free (filename);
 		g_string_append (cmd, " ");
@@ -223,7 +221,7 @@ fr_command_cpio_extract (FrCommand  *comm,
 	g_string_append (cmd, comm->e_filename);
 	fr_process_add_arg (comm->process, cmd->str);
 	g_string_free (cmd, TRUE);
-	
+
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -232,28 +230,28 @@ fr_command_cpio_extract (FrCommand  *comm,
 const char *cpio_mime_type[] = { "application/x-cpio", NULL };
 
 
-const char **  
+const char **
 fr_command_cpio_get_mime_types (FrCommand *comm)
 {
 	return cpio_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_cpio_get_capabilities (FrCommand  *comm,
 			          const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("cpio")) 
+	if (is_program_in_path ("cpio"))
 		capabilities |= FR_COMMAND_CAN_READ;
-		
+
 	return capabilities;
 }
 
 
-static void 
+static void
 fr_command_cpio_class_init (FrCommandCpioClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -270,8 +268,8 @@ fr_command_cpio_class_init (FrCommandCpioClass *class)
 	afc->get_capabilities = fr_command_cpio_get_capabilities;
 }
 
- 
-static void 
+
+static void
 fr_command_cpio_init (FrCommand *comm)
 {
 	comm->propAddCanUpdate             = FALSE;
@@ -285,7 +283,7 @@ fr_command_cpio_init (FrCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_cpio_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);

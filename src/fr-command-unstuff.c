@@ -127,7 +127,7 @@ process_line (char     *line,
 		else
 			size = g_ascii_strtoull (ssize, NULL, 10);
 
-		if (unstuff_comm->fdata != NULL) 
+		if (unstuff_comm->fdata != NULL)
 			unstuff_comm->fdata->size = size;
 
 		return;
@@ -180,8 +180,7 @@ process_line (char     *line,
 
 
 static void
-fr_command_unstuff_list (FrCommand  *comm,
-			 const char *password)
+fr_command_unstuff_list (FrCommand  *comm)
 {
 	char *arg, *path;
 	char *filename;
@@ -218,8 +217,7 @@ fr_command_unstuff_extract (FrCommand  *comm,
 			    const char *dest_dir,
 			    gboolean    overwrite,
 			    gboolean    skip_older,
-			    gboolean    junk_paths,
-			    const char *password)
+			    gboolean    junk_paths)
 {
 #if 0
 	GList *scan;
@@ -231,7 +229,7 @@ fr_command_unstuff_extract (FrCommand  *comm,
 	if (dest_dir != NULL) {
 		char *dest_dir_dots;
 		char *arg;
-		
+
 		dest_dir_dots = unstuff_is_shit_with_filenames (dest_dir);
 		arg = g_strdup_printf ("-d=%s", dest_dir_dots);
 		fr_process_add_arg (comm->process, arg);
@@ -259,7 +257,7 @@ fr_command_unstuff_extract (FrCommand  *comm,
 
 static void
 fr_command_unstuff_handle_error (FrCommand   *comm,
-			     FrProcError *error)
+				 FrProcError *error)
 {
 	if ((error->type == FR_PROC_ERROR_COMMAND_ERROR)
 	    && (error->status <= 1))
@@ -270,23 +268,23 @@ fr_command_unstuff_handle_error (FrCommand   *comm,
 const char *unstuff_mime_type[] = { "application/x-stuffit", NULL };
 
 
-const char **  
+const char **
 fr_command_unstuff_get_mime_types (FrCommand *comm)
 {
 	return unstuff_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_unstuff_get_capabilities (FrCommand  *comm,
 			             const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("unstuff")) 
+	if (is_program_in_path ("unstuff"))
 		capabilities |= FR_COMMAND_CAN_READ;
-		
+
 	return capabilities;
 }
 

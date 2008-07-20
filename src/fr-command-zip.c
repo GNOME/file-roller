@@ -173,8 +173,7 @@ add_password_arg (FrCommand  *comm,
 
 
 static void
-fr_command_zip_list (FrCommand  *comm,
-		     const char *password)
+fr_command_zip_list (FrCommand  *comm)
 {
 	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
 
@@ -213,9 +212,7 @@ fr_command_zip_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
-		    gboolean       recursive,
-		    const char    *password,
-		    FrCompression  compression)
+		    gboolean       recursive)
 {
 	GList *scan;
 
@@ -234,9 +231,9 @@ fr_command_zip_add (FrCommand     *comm,
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
 
-	add_password_arg (comm, password);
+	add_password_arg (comm, comm->password);
 
-	switch (compression) {
+	switch (comm->compression) {
 	case FR_COMPRESSION_VERY_FAST:
 		fr_process_add_arg (comm->process, "-1"); break;
 	case FR_COMPRESSION_FAST:
@@ -283,8 +280,7 @@ fr_command_zip_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList *scan;
 
@@ -306,7 +302,7 @@ fr_command_zip_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, "-u");
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "-j");
-	add_password_arg (comm, password);
+	add_password_arg (comm, comm->password);
 	fr_process_add_arg (comm->process, comm->filename);
 
 	for (scan = file_list; scan; scan = scan->next)
@@ -317,12 +313,11 @@ fr_command_zip_extract (FrCommand  *comm,
 
 
 static void
-fr_command_zip_test (FrCommand   *comm,
-		     const char  *password)
+fr_command_zip_test (FrCommand   *comm)
 {
 	fr_process_begin_command (comm->process, "unzip");
 	fr_process_add_arg (comm->process, "-t");
-	add_password_arg (comm, password);
+	add_password_arg (comm, comm->password);
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 }

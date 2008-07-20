@@ -76,7 +76,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	}
 	else if (pattern_files) {
 		const char *pattern;
-		
+
 		pattern = gtk_entry_get_text (GTK_ENTRY (data->d_files_entry));
 		file_list = fr_window_get_file_list_pattern (window, pattern);
 		if (file_list == NULL)
@@ -90,7 +90,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	/* remove ! */
 
 	if (! do_not_remove_if_null || (file_list != NULL))
-		fr_window_archive_remove (window, file_list, fr_window_get_compression (window));
+		fr_window_archive_remove (window, file_list);
 
 	path_list_free (file_list);
 }
@@ -117,7 +117,7 @@ dlg_delete__common (FrWindow *window,
 
 	data->window = window;
 	data->selected_files = selected_files;
-	
+
 	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
 	if (!data->gui) {
 		g_warning ("Could not find " GLADE_FILE "\n");
@@ -178,16 +178,16 @@ dlg_delete (GtkWidget *widget,
 	    gpointer   callback_data)
 {
 	FrWindow *window = callback_data;
-	dlg_delete__common (window, 
+	dlg_delete__common (window,
 			    fr_window_get_file_list_selection (window, TRUE, NULL));
 }
 
 
-void 
-dlg_delete_from_sidebar (GtkWidget *widget, 
+void
+dlg_delete_from_sidebar (GtkWidget *widget,
 			 gpointer   callback_data)
 {
 	FrWindow *window = callback_data;
-	dlg_delete__common (window, 
+	dlg_delete__common (window,
 			    fr_window_get_folder_tree_selection (window, TRUE, NULL));
 }

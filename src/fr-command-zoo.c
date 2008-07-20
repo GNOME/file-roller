@@ -220,8 +220,7 @@ process_zoo_line (char     *line,
 
 
 static void
-fr_command_zoo_list (FrCommand  *zoo_comm,
-		     const char *password)
+fr_command_zoo_list (FrCommand  *zoo_comm)
 {
 	fr_process_set_out_line_func (FR_COMMAND (zoo_comm)->process,
 				      process_zoo_line,
@@ -240,9 +239,7 @@ fr_command_zoo_add (FrCommand     *comm,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
-		    gboolean       recursive,
-		    const char    *password,
-		    FrCompression  compression)
+		    gboolean       recursive)
 {
 	GList        *scan;
 
@@ -289,8 +286,7 @@ fr_command_zoo_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList *scan;
 
@@ -314,8 +310,7 @@ fr_command_zoo_extract (FrCommand  *comm,
 
 
 static void
-fr_command_zoo_test (FrCommand   *comm,
-		     const char  *password)
+fr_command_zoo_test (FrCommand   *comm)
 {
 	fr_process_begin_command (comm->process, "zoo");
 	fr_process_add_arg (comm->process, "-test");

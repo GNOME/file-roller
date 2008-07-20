@@ -32,7 +32,7 @@
 #define OLD_RC_RECENT_FILE      ".file-roller/recents"
 #define OLD_RC_OPTIONS_DIR      ".file-roller/options"
 
-typedef enum {
+typedef enum { /*< skip >*/
 	FR_WINDOW_SORT_BY_NAME = 0,
 	FR_WINDOW_SORT_BY_SIZE = 1,
 	FR_WINDOW_SORT_BY_TYPE = 2,
@@ -40,7 +40,7 @@ typedef enum {
 	FR_WINDOW_SORT_BY_PATH = 4
 } FrWindowSortMethod;
 
-typedef enum {
+typedef enum { /*< skip >*/
 	FR_WINDOW_LIST_MODE_FLAT,
 	FR_WINDOW_LIST_MODE_AS_DIR
 } FrWindowListMode;
@@ -52,7 +52,7 @@ typedef enum {
 	FR_COMPRESSION_MAXIMUM
 } FrCompression;
 
-typedef enum {
+typedef enum { /*< skip >*/
 	FR_PROC_ERROR_NONE,
 	FR_PROC_ERROR_GENERIC,
 	FR_PROC_ERROR_COMMAND_ERROR,
@@ -70,7 +70,7 @@ typedef struct {
 	GError          *gerror;
 } FrProcError;
 
-typedef enum {
+typedef enum { /*< skip >*/
 	FR_COMMAND_CAN_DO_NOTHING = 0,
 	FR_COMMAND_CAN_READ = 1 << 0,
 	FR_COMMAND_CAN_WRITE = 1 << 1,

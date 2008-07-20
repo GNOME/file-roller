@@ -39,7 +39,7 @@ typedef struct {
 	FrWindow     *window;
 	GList        *selected_files;
 	char         *base_dir_for_selection;
-	
+
 	GtkWidget    *dialog;
 
 	GtkWidget    *e_main_vbox;
@@ -181,7 +181,7 @@ extract_cb (GtkWidget   *w,
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Extraction not performed"),
-					   _("You don't have the right permissions to extract archives in the folder \"%s\""), 
+					   _("You don't have the right permissions to extract archives in the folder \"%s\""),
 					   utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -223,7 +223,7 @@ extract_cb (GtkWidget   *w,
 	if (selected_files) {
 		file_list = data->selected_files;
 		data->selected_files = NULL;       /* do not the list when destroying the dialog. */
-	} 
+	}
 	else if (pattern_files) {
 		const char *pattern;
 
@@ -258,7 +258,6 @@ extract_cb (GtkWidget   *w,
 				   skip_newer,
 				   overwrite,
 				   junk_paths,
-				   password,
 				   TRUE);
 
 	path_list_free (file_list);
@@ -540,7 +539,7 @@ dlg_extract (GtkWidget *widget,
 	FrWindow *window = callback_data;
 	GList    *files;
 	char     *base_dir;
-	
+
 	files = fr_window_get_selection (window, FALSE, &base_dir);
 	dlg_extract__common (window, files, base_dir);
 }
@@ -553,7 +552,7 @@ dlg_extract_folder_from_sidebar (GtkWidget *widget,
 	FrWindow *window = callback_data;
 	GList    *files;
 	char     *base_dir;
-	
+
 	files = fr_window_get_selection (window, TRUE, &base_dir);
 	dlg_extract__common (window, files, base_dir);
 }

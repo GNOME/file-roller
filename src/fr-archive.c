@@ -126,16 +126,16 @@ struct _FrArchivePrivData {
 typedef struct {
 	FrArchive      *archive;
 	char           *uri;
-	char           *password;
-	gboolean        encrypt_header;
 	FrAction        action;
 	GList          *file_list;
 	char           *base_uri;
 	char           *dest_dir;
 	gboolean        update;
-	FrCompression   compression;
 	char           *tmp_dir;
 	guint           source_id;
+	char           *password;
+	gboolean        encrypt_header;
+	FrCompression   compression;
 } XferData;
 
 
@@ -216,6 +216,16 @@ fr_archive_class_init (FrArchiveClass *class)
 
 	parent_class = g_type_class_peek_parent (class);
 
+	gobject_class->finalize = fr_archive_finalize;
+
+	class->start = NULL;
+	class->done = NULL;
+	class->progress = NULL;
+	class->message = NULL;
+	class->working_archive = NULL;
+
+	/* signals */
+
 	fr_archive_signals[START] =
 		g_signal_new ("start",
 			      G_TYPE_FROM_CLASS (class),
@@ -263,21 +273,14 @@ fr_archive_class_init (FrArchiveClass *class)
 			      G_TYPE_NONE,
 			      1, G_TYPE_BOOLEAN);
 	fr_archive_signals[WORKING_ARCHIVE] =
-			g_signal_new ("working_archive",
-				      G_TYPE_FROM_CLASS (class),
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (FrArchiveClass, working_archive),
-				      NULL, NULL,
-				      fr_marshal_VOID__STRING,
-				      G_TYPE_NONE, 1,
-				      G_TYPE_STRING);
-
-	gobject_class->finalize = fr_archive_finalize;
-	class->start = NULL;
-	class->done = NULL;
-	class->progress = NULL;
-	class->message = NULL;
-	class->working_archive = NULL;
+		g_signal_new ("working_archive",
+			      G_TYPE_FROM_CLASS (class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrArchiveClass, working_archive),
+			      NULL, NULL,
+			      fr_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_STRING);
 }
 
 
@@ -910,6 +913,12 @@ action_performed (FrCommand   *command,
 		}
 		break;
 
+	case FR_ACTION_LISTING_CONTENT:
+		fr_command_update_capabilities (archive->command);
+		if (! fr_command_is_capable_of (archive->command, FR_COMMAND_CAN_WRITE))
+			archive->read_only = TRUE;
+		break;
+
 	default:
 		/* nothing */
 		break;
@@ -1092,7 +1101,8 @@ load_local_archive (FrArchive  *archive,
 	/**/
 
 	fr_process_clear (archive->process);
-	fr_command_list (archive->command, password);
+	g_object_set (archive->command, "password", password, NULL);
+	fr_command_list (archive->command);
 	fr_process_start (archive->process);
 }
 
@@ -1410,6 +1420,12 @@ fr_archive_add (FrArchive     *archive,
 	if (archive->read_only)
 		return;
 
+	g_object_set (archive->command,
+		      "password", password,
+		      "encrypt_header", encrypt_header,
+		      "compression", compression,
+		      NULL);
+
 	fr_archive_stoppable (archive, fr_archive_add_is_stoppable (archive));
 
 	file_list = convert_to_local_file_list (file_list);
@@ -1512,16 +1528,13 @@ fr_archive_add (FrArchive     *archive,
 				chunk_list,
 				tmp_base_dir,
 				update,
-				recursive,
-				password,
-				encrypt_header,
-				compression);
+				recursive);
 		prev->next = scan;
 	}
 
 	path_list_free (new_file_list);
 
-	fr_command_recompress (archive->command, compression);
+	fr_command_recompress (archive->command);
 
 	if (base_dir_created) { /* remove the temp dir */
 		fr_process_begin_command (archive->process, "rm");
@@ -2120,7 +2133,11 @@ add_dropped_items (DroppedItemsData *data)
 	 * files without path info. FIXME: doesn't work with remote files. */
 
 	fr_archive_stoppable (archive, FALSE);
-
+	g_object_set (archive->command,
+		      "password", data->password,
+		      "encrypt_header", data->encrypt_header,
+		      "compression", data->compression,
+		      NULL);
 	fr_process_clear (archive->process);
 	fr_command_uncompress (archive->command);
 	for (scan = list; scan; scan = scan->next) {
@@ -2134,14 +2151,11 @@ add_dropped_items (DroppedItemsData *data)
 				singleton,
 				basedir,
 				data->update,
-				FALSE,
-				data->password,
-				data->encrypt_header,
-				data->compression);
+				FALSE);
 		g_list_free (singleton);
 		g_free (basedir);
 	}
-	fr_command_recompress (archive->command, data->compression);
+	fr_command_recompress (archive->command);
 	fr_process_start (archive->process);
 
 	path_list_free (data->item_list);
@@ -2322,10 +2336,10 @@ fr_archive_remove (FrArchive     *archive,
 		return;
 
 	fr_archive_stoppable (archive, FALSE);
-
+	g_object_set (archive->command, "compression", compression, NULL);
 	fr_command_uncompress (archive->command);
 	archive_remove (archive, file_list);
-	fr_command_recompress (archive->command, compression);
+	fr_command_recompress (archive->command);
 }
 
 
@@ -2399,14 +2413,15 @@ extract_in_chunks (FrCommand  *command,
 {
 	GList *scan;
 
+	g_object_set (command, "password", password, NULL);
+
 	if (file_list == NULL) {
 		fr_command_extract (command,
 				    file_list,
 				    dest_dir,
 				    overwrite,
 				    skip_older,
-				    junk_paths,
-				    password);
+				    junk_paths);
 		return;
 	}
 
@@ -2432,8 +2447,7 @@ extract_in_chunks (FrCommand  *command,
 				    dest_dir,
 				    overwrite,
 				    skip_older,
-				    junk_paths,
-				    password);
+				    junk_paths);
 		prev->next = scan;
 	}
 }
@@ -2959,9 +2973,12 @@ fr_archive_test (FrArchive  *archive,
 {
 	fr_archive_stoppable (archive, TRUE);
 
+	g_object_set (archive->command,
+		      "password", password,
+		      NULL);
 	fr_process_clear (archive->process);
 	fr_command_set_n_files (archive->command, 0);
-	fr_command_test (archive->command, password);
+	fr_command_test (archive->command);
 	fr_process_start (archive->process);
 }
 
@@ -2971,20 +2988,26 @@ uri_is_archive (const char *uri)
 {
 	GFile      *file;
 	const char *mime_type;
+	gboolean    is_archive = FALSE;
 
 	file = g_file_new_for_uri (uri);
-	mime_type = get_mime_type_from_content (file);
+	mime_type = get_mime_type_from_magic_numbers (file);
+	if (mime_type == NULL)
+		mime_type = get_mime_type_from_content (file);
+	if (mime_type == NULL)
+		mime_type = get_mime_type_from_filename (file);
+
 	if (mime_type != NULL) {
 		int i;
 
 		for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
 			if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
-				g_object_unref (file);
-				return TRUE;
+				is_archive = TRUE;
+				break;
 			}
 		}
 	}
 	g_object_unref (file);
 
-	return get_archive_filename_extension (uri) != NULL;
+	return is_archive;
 }

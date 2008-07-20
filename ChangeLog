@@ -1,3 +1,56 @@
+2008-07-20  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* configure.ac: 
+	* src/typedefs.h: 
+	* src/Makefile.am:
+	
+	Register FrCompression enum in the gobject type system, because it's
+	used as a property.
+	 
+	* src/gtk-utils.c: removed unused function.
+	
+	* src/fr-window.h: 
+	* src/fr-window.c: 
+	* src/fr-command-zoo.c: 
+	* src/fr-command-zip.c: 
+	* src/fr-command-unstuff.c: 
+	* src/fr-command-tar.c: 
+	* src/fr-command-rpm.c: 
+	* src/fr-command-rar.h: 
+	* src/fr-command-rar.c: 
+	* src/fr-command-lha.c: 
+	* src/fr-command-jar.c: 
+	* src/fr-command-iso.c: 
+	* src/fr-command-cpio.c: 
+	* src/fr-command-cfile.c: 
+	* src/fr-command-arj.c: 
+	* src/fr-command-ar.c: 
+	* src/fr-command-alz.c: 
+	* src/fr-command-ace.c: 
+	* src/fr-command-7z.h: 
+	* src/fr-command-7z.c: 
+	* src/fr-command.h: 
+	* src/fr-command.c: 
+	* src/fr-archive.h: 
+	* src/fr-archive.c:
+	* src/dlg-extract.c: 
+	* src/dlg-delete.c: 
+	
+	Reduce the number of FRCommand functions arguments by using 
+	gobject properties.
+
+	* src/fr-archive.c (action_performed): update the capabilities
+	after listing the content, usefull for multivolume archives that are
+	read-only. 
+	
+	* src/dlg-batch-add.c (add_clicked_cb): always create a new archive,
+	calling fr_window_archive_new.
+
+2008-07-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-rar.c (process_line): ignore files that span more 
+	volumes.
+
 2008-07-18  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* TODO: updated

@@ -45,11 +45,11 @@ static FrCommandClass *parent_class = NULL;
 /* -- list -- */
 
 static time_t
-mktime_from_string (char *month, 
+mktime_from_string (char *month,
 		    char *mday,
 		    char *year)
 {
-	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+	static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 				   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	struct tm     tm = {0, };
 
@@ -72,7 +72,7 @@ mktime_from_string (char *month,
 
 	  		tm.tm_hour = atoi (fields[0]);
 	  		tm.tm_min = atoi (fields[1]);
-	  
+
 	  		now = time(NULL);
 	  		now_tm = localtime (&now);
 	  		tm.tm_year = now_tm->tm_year;
@@ -85,7 +85,7 @@ mktime_from_string (char *month,
 
 
 static void
-list__process_line (char     *line, 
+list__process_line (char     *line,
 		    gpointer  data)
 {
 	FileData    *fdata;
@@ -126,14 +126,14 @@ list__process_line (char     *line,
 	if (*(fields[0]) == '/') {
 		fdata->full_path = g_strcompress (fields[0]);
 		fdata->original_path = fdata->full_path;
-	} 
+	}
 	else {
 		char *compressed;
-		
+
 		compressed = g_strcompress (fields[0]);
 		fdata->full_path = g_strconcat ("/", compressed, NULL);
 		g_free (compressed);
-		
+
 		fdata->original_path = fdata->full_path + 1;
 	}
 
@@ -146,16 +146,15 @@ list__process_line (char     *line,
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
-	else 
+	else
 		fr_command_add_file (comm, fdata);
 }
 
 
 static void
-fr_command_rpm_list (FrCommand  *comm,
-		     const char *password)
+fr_command_rpm_list (FrCommand  *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, 
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      list__process_line,
 				      comm);
 
@@ -173,29 +172,28 @@ fr_command_rpm_extract (FrCommand  *comm,
 			const char *dest_dir,
 			gboolean    overwrite,
 			gboolean    skip_older,
-			gboolean    junk_paths,
-			const char *password)
+			gboolean    junk_paths)
 {
 	GList   *scan;
 	GString *cmd;
-	
+
 	fr_process_begin_command (comm->process, "sh");
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);
 	fr_process_add_arg (comm->process, "-c");
-	
+
 	cmd = g_string_new ("rpm2cpio ");
 	g_string_append (cmd, comm->e_filename);
 	g_string_append (cmd, " | cpio -idu ");
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = g_shell_quote (scan->data); 
+		char *filename = g_shell_quote (scan->data);
 		g_string_append (cmd, filename);
 		g_free (filename);
 		g_string_append (cmd, " ");
 	}
 	fr_process_add_arg (comm->process, cmd->str);
 	g_string_free (cmd, TRUE);
-	
+
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -204,28 +202,28 @@ fr_command_rpm_extract (FrCommand  *comm,
 const char *rpm_mime_type[] = { "application/x-rpm", NULL };
 
 
-const char **  
+const char **
 fr_command_rpm_get_mime_types (FrCommand *comm)
 {
 	return rpm_mime_type;
 }
 
 
-FrCommandCap   
+FrCommandCap
 fr_command_rpm_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
 	FrCommandCap capabilities;
-	
+
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("rpm2cpio")) 
+	if (is_program_in_path ("rpm2cpio"))
 		capabilities |= FR_COMMAND_CAN_READ;
-		
+
 	return capabilities;
 }
 
 
-static void 
+static void
 fr_command_rpm_class_init (FrCommandRpmClass *class)
 {
         GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
@@ -242,8 +240,8 @@ fr_command_rpm_class_init (FrCommandRpmClass *class)
 	afc->get_capabilities = fr_command_rpm_get_capabilities;
 }
 
- 
-static void 
+
+static void
 fr_command_rpm_init (FrCommand *comm)
 {
 	comm->propAddCanUpdate             = FALSE;
@@ -256,7 +254,7 @@ fr_command_rpm_init (FrCommand *comm)
 }
 
 
-static void 
+static void
 fr_command_rpm_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);

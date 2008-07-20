@@ -26,12 +26,14 @@
 #include <glib.h>
 #include "file-data.h"
 #include "file-utils.h"
-#include "glib-utils.h"
-#include "fr-process.h"
 #include "fr-command.h"
+#include "fr-enum-types.h"
 #include "fr-marshal.h"
+#include "fr-process.h"
+#include "glib-utils.h"
 
 #define INITIAL_SIZE 256
+
 
 /* Signals */
 enum {
@@ -48,7 +50,11 @@ enum {
         PROP_0,
         PROP_FILENAME,
         PROP_MIME_TYPE,
-        PROP_PROCESS
+        PROP_PROCESS,
+        PROP_PASSWORD,
+        PROP_ENCRYPT_HEADER,
+        PROP_COMPRESSION,
+        PROP_VOLUME_SIZE
 };
 
 static GObjectClass *parent_class = NULL;
@@ -101,8 +107,7 @@ fr_command_get_type ()
 
 
 static void
-base_fr_command_list (FrCommand  *comm,
-		      const char *password)
+base_fr_command_list (FrCommand  *comm)
 {
 }
 
@@ -112,9 +117,7 @@ base_fr_command_add (FrCommand     *comm,
 		     GList         *file_list,
 		     const char    *base_dir,
 		     gboolean       update,
-		     gboolean       recursive,
-		     const char    *password,
-		     FrCompression  compression)
+		     gboolean       recursive)
 {
 }
 
@@ -132,15 +135,13 @@ base_fr_command_extract (FrCommand  *comm,
 			 const char *dest_dir,
 			 gboolean    overwrite,
 			 gboolean    skip_older,
-			 gboolean    junk_paths,
-			 const char *password)
+			 gboolean    junk_paths)
 {
 }
 
 
 static void
-base_fr_command_test (FrCommand   *comm,
-		      const char  *password)
+base_fr_command_test (FrCommand *comm)
 {
 }
 
@@ -152,14 +153,13 @@ base_fr_command_uncompress (FrCommand *comm)
 
 
 static void
-base_fr_command_recompress (FrCommand     *comm,
-			    FrCompression  compression)
+base_fr_command_recompress (FrCommand *comm)
 {
 }
 
 
 static void
-base_fr_command_handle_error (FrCommand *comm,
+base_fr_command_handle_error (FrCommand   *comm,
 			      FrProcError *error)
 {
 }
@@ -188,7 +188,7 @@ base_fr_command_set_mime_type (FrCommand  *comm,
 			       const char *mime_type)
 {
 	comm->mime_type = get_static_string (mime_type);
-	comm->capabilities = fr_command_get_capabilities (comm, comm->mime_type);
+	fr_command_update_capabilities (comm);
 }
 
 
@@ -227,8 +227,8 @@ fr_command_done (FrProcess   *process,
 
 
 static void
-fr_command_set_process (FrCommand  *comm,
-		        FrProcess  *process)
+fr_command_set_process (FrCommand *comm,
+		        FrProcess *process)
 {
 	if (comm->process != NULL) {
 		g_signal_handlers_disconnect_matched (G_OBJECT (comm->process),
@@ -263,23 +263,36 @@ fr_command_set_property (GObject      *object,
 			 const GValue *value,
 			 GParamSpec   *pspec)
 {
-        FrCommand *comm;
+	FrCommand *comm;
 
-        comm = FR_COMMAND (object);
+	comm = FR_COMMAND (object);
 
-        switch (prop_id) {
-        case PROP_PROCESS:
-                fr_command_set_process (comm, g_value_get_object (value));
-                break;
-        case PROP_FILENAME:
-        	fr_command_set_filename (comm, g_value_get_string (value));
-                break;
-        case PROP_MIME_TYPE:
-        	fr_command_set_mime_type (comm, g_value_get_string (value));
-                break;
-        default:
-                break;
-        }
+	switch (prop_id) {
+	case PROP_PROCESS:
+		fr_command_set_process (comm, g_value_get_object (value));
+		break;
+	case PROP_FILENAME:
+		fr_command_set_filename (comm, g_value_get_string (value));
+		break;
+	case PROP_MIME_TYPE:
+		fr_command_set_mime_type (comm, g_value_get_string (value));
+		break;
+	case PROP_PASSWORD:
+		g_free (comm->password);
+		comm->password = g_strdup (g_value_get_string (value));
+		break;
+	case PROP_ENCRYPT_HEADER:
+		comm->encrypt_header = g_value_get_boolean (value);
+		break;
+	case PROP_COMPRESSION:
+		comm->compression = g_value_get_enum (value);
+		break;
+	case PROP_VOLUME_SIZE:
+		comm->volume_size = g_value_get_uint (value);
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -289,24 +302,36 @@ fr_command_get_property (GObject    *object,
 			 GValue     *value,
 			 GParamSpec *pspec)
 {
-        FrCommand *comm;
+	FrCommand *comm;
 
-        comm = FR_COMMAND (object);
+	comm = FR_COMMAND (object);
 
-        switch (prop_id) {
-        case PROP_PROCESS:
-                g_value_set_object (value, comm->process);
-                break;
-        case PROP_FILENAME:
-        	g_value_set_string (value, comm->filename);
-                break;
-        case PROP_MIME_TYPE:
-                g_value_set_static_string (value, comm->mime_type);
-                break;
-        default:
-                G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-                break;
-        }
+	switch (prop_id) {
+	case PROP_PROCESS:
+		g_value_set_object (value, comm->process);
+		break;
+	case PROP_FILENAME:
+		g_value_set_string (value, comm->filename);
+		break;
+	case PROP_MIME_TYPE:
+		g_value_set_static_string (value, comm->mime_type);
+		break;
+	case PROP_PASSWORD:
+		g_value_set_string (value, comm->password);
+		break;
+	case PROP_ENCRYPT_HEADER:
+		g_value_set_boolean (value, comm->encrypt_header);
+		break;
+	case PROP_COMPRESSION:
+		g_value_set_enum (value, comm->compression);
+		break;
+	case PROP_VOLUME_SIZE:
+		g_value_set_uint (value, comm->volume_size);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
 }
 
 
@@ -323,7 +348,7 @@ fr_command_class_init (FrCommandClass *class)
 
 	gobject_class->finalize = fr_command_finalize;
 	gobject_class->set_property = fr_command_set_property;
-        gobject_class->get_property = fr_command_get_property;
+	gobject_class->get_property = fr_command_get_property;
 
 	class->list             = base_fr_command_list;
 	class->add              = base_fr_command_add;
@@ -395,7 +420,7 @@ fr_command_class_init (FrCommandClass *class)
 	g_object_class_install_property (gobject_class,
 					 PROP_PROCESS,
 					 g_param_spec_object ("process",
-							      "Processs",
+							      "Process",
 							      "The process object used by the command",
 							      FR_TYPE_PROCESS,
 							      G_PARAM_READWRITE));
@@ -413,6 +438,37 @@ fr_command_class_init (FrCommandClass *class)
 							      "The file mime-type",
 							      NULL,
 							      G_PARAM_READWRITE));
+	g_object_class_install_property (gobject_class,
+					 PROP_PASSWORD,
+					 g_param_spec_string ("password",
+							      "Password",
+							      "The archive password",
+							      NULL,
+							      G_PARAM_READWRITE));
+	g_object_class_install_property (gobject_class,
+					 PROP_ENCRYPT_HEADER,
+					 g_param_spec_boolean ("encrypt-header",
+							       "Encrypt header",
+							       "Whether to encrypt the archive header when creating the archive",
+							       FALSE,
+							       G_PARAM_READWRITE));
+	g_object_class_install_property (gobject_class,
+					 PROP_COMPRESSION,
+					 g_param_spec_enum ("compression",
+							    "Compression type",
+							    "The compression type to use when creating the archive",
+							    FR_TYPE_COMPRESSION,
+							    FR_COMPRESSION_NORMAL,
+							    G_PARAM_READWRITE));
+	g_object_class_install_property (gobject_class,
+					 PROP_VOLUME_SIZE,
+					 g_param_spec_uint ("volume-size",
+							    "Volume size",
+							    "The size of each volume or 0 to not use volumes",
+							    0L,
+							    G_MAXUINT,
+							    0,
+							    G_PARAM_READWRITE));
 }
 
 
@@ -421,6 +477,10 @@ fr_command_init (FrCommand *comm)
 {
 	comm->files = g_ptr_array_sized_new (INITIAL_SIZE);
 
+	comm->password = NULL;
+	comm->encrypt_header = FALSE;
+	comm->compression = FR_COMPRESSION_NORMAL;
+	comm->volume_size = 0;
 	comm->filename = NULL;
 	comm->e_filename = NULL;
 	comm->fake_load = FALSE;
@@ -449,10 +509,9 @@ fr_command_finalize (GObject *object)
 
 	comm = FR_COMMAND (object);
 
-	if (comm->filename != NULL)
-		g_free (comm->filename);
-	if (comm->e_filename != NULL)
-		g_free (comm->e_filename);
+	g_free (comm->filename);
+	g_free (comm->e_filename);
+	g_free (comm->password);
 	if (comm->files != NULL)
 		g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
 	fr_command_set_process (comm, NULL);
@@ -504,8 +563,7 @@ fr_command_set_filename (FrCommand  *comm,
 
 
 void
-fr_command_list (FrCommand  *comm,
-		 const char *password)
+fr_command_list (FrCommand  *comm)
 {
 	g_return_if_fail (FR_IS_COMMAND (comm));
 
@@ -522,7 +580,7 @@ fr_command_list (FrCommand  *comm,
 	fr_process_use_standard_locale (FR_COMMAND (comm)->process, TRUE);
 
 	if (!comm->fake_load)
-		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm, password);
+		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm);
 }
 
 
@@ -531,14 +589,10 @@ fr_command_add (FrCommand     *comm,
 		GList         *file_list,
 		const char    *base_dir,
 		gboolean       update,
-		gboolean       recursive,
-		const char    *password,
-		gboolean       encrypt_header,
-		FrCompression  compression)
+		gboolean       recursive)
 {
 	fr_command_progress (comm, -1.0);
 
-	comm->encrypt_header = encrypt_header;
 	comm->action = FR_ACTION_ADDING_FILES;
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
@@ -547,15 +601,13 @@ fr_command_add (FrCommand     *comm,
 						     file_list,
 						     base_dir,
 						     update,
-						     recursive,
-						     password,
-						     compression);
+						     recursive);
 }
 
 
 void
 fr_command_delete (FrCommand *comm,
-		   GList *file_list)
+		   GList     *file_list)
 {
 	fr_command_progress (comm, -1.0);
 
@@ -573,8 +625,7 @@ fr_command_extract (FrCommand  *comm,
 		    const char *dest_dir,
 		    gboolean    overwrite,
 		    gboolean    skip_older,
-		    gboolean    junk_paths,
-		    const char *password)
+		    gboolean    junk_paths)
 {
 	fr_command_progress (comm, -1.0);
 
@@ -587,14 +638,12 @@ fr_command_extract (FrCommand  *comm,
 							 dest_dir,
 							 overwrite,
 							 skip_older,
-							 junk_paths,
-							 password);
+							 junk_paths);
 }
 
 
 void
-fr_command_test (FrCommand   *comm,
-		 const char  *password)
+fr_command_test (FrCommand *comm)
 {
 	fr_command_progress (comm, -1.0);
 
@@ -602,7 +651,7 @@ fr_command_test (FrCommand   *comm,
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
-	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->test (comm, password);
+	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->test (comm);
 }
 
 
@@ -615,11 +664,10 @@ fr_command_uncompress (FrCommand *comm)
 
 
 void
-fr_command_recompress (FrCommand     *comm,
-		       FrCompression  compression)
+fr_command_recompress (FrCommand *comm)
 {
 	fr_command_progress (comm, -1.0);
-	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm, compression);
+	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->recompress (comm);
 }
 
 
@@ -627,6 +675,13 @@ const char **
 fr_command_get_mime_types (FrCommand *comm)
 {
 	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->get_mime_types (comm);
+}
+
+
+void
+fr_command_update_capabilities (FrCommand *comm)
+{
+	comm->capabilities = fr_command_get_capabilities (comm, comm->mime_type);
 }
 
 
@@ -714,7 +769,7 @@ fr_command_set_mime_type (FrCommand  *comm,
 
 
 void
-fr_command_handle_error (FrCommand *comm,
+fr_command_handle_error (FrCommand   *comm,
 			 FrProcError *error)
 {
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->handle_error (comm, error);
