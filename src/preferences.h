@@ -66,6 +66,7 @@
 
 #define PREF_BATCH_ADD_DEFAULT_EXTENSION "/apps/file-roller/dialogs/batch-add/default_extension"
 #define PREF_BATCH_OTHER_OPTIONS         "/apps/file-roller/dialogs/batch-add/other_options"
+#define PREF_BATCH_VOLUME_SIZE           "/apps/file-roller/dialogs/batch-add/volume_size"
 
 #define PREF_DESKTOP_ICON_THEME         "/desktop/gnome/file_views/icon_theme"
 #define PREF_DESKTOP_MENUS_HAVE_TEAROFF "/desktop/gnome/interface/menus_have_tearoff"

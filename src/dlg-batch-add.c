@@ -44,6 +44,8 @@
 #define ARCHIVE_ICON_SIZE (48)
 #define DEFAULT_EXTENSION ".tar.gz"
 #define BAD_CHARS "/\\*"
+#define MEGABYTE (1024 * 1024)
+
 
 typedef struct {
 	FrWindow   *window;
@@ -131,9 +133,12 @@ set_archive_options (DialogData *data)
 	    && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_volume_checkbutton)))
 	{
 		double value;
+		int    size;
 
 		value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (data->a_volume_spinbutton));
-		fr_window_set_volume_size (data->window, (guint) floor (value * 1024 * 1024));
+		size = floor (value * MEGABYTE);
+		eel_gconf_set_integer (PREF_BATCH_VOLUME_SIZE, size);
+		fr_window_set_volume_size (data->window, (guint) size);
 	}
 }
 
@@ -540,6 +545,7 @@ dlg_batch_add_files (FrWindow *window,
 	gtk_button_set_label (GTK_BUTTON (add_button), FR_STOCK_CREATE_ARCHIVE);
 	gtk_expander_set_expanded (GTK_EXPANDER (data->a_other_options_expander), eel_gconf_get_boolean (PREF_BATCH_OTHER_OPTIONS, FALSE));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton), eel_gconf_get_boolean (PREF_ENCRYPT_HEADER, FALSE));
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->a_volume_spinbutton), (double) eel_gconf_get_integer (PREF_BATCH_VOLUME_SIZE, 0) / MEGABYTE);
 
 	first_filename = (char*) file_list->data;
 	parent = remove_level_from_path (first_filename);
