@@ -130,7 +130,8 @@ void        fr_archive_add                       (FrArchive       *archive,
 						  gboolean         recursive,
 						  const char      *password,
 						  gboolean         encrypt_header,
-						  FrCompression    compression);
+						  FrCompression    compression,
+						  guint            volume_size);
 void        fr_archive_remove                    (FrArchive       *archive,
 						  GList           *file_list,
 						  FrCompression    compression);
@@ -167,7 +168,8 @@ void        fr_archive_add_files                 (FrArchive       *archive,
 						  gboolean         update,
 						  const char      *password,
 						  gboolean         encrypt_header,
-						  FrCompression    compression);
+						  FrCompression    compression,
+						  guint            volume_size);
 void        fr_archive_add_with_wildcard         (FrArchive       *archive,
 						  const char      *include_files,
 						  const char      *exclude_files,
@@ -178,7 +180,8 @@ void        fr_archive_add_with_wildcard         (FrArchive       *archive,
 						  gboolean         follow_links,
 						  const char      *password,
 						  gboolean         encrypt_header,
-						  FrCompression    compression);
+						  FrCompression    compression,
+						  guint            volume_size);
 void        fr_archive_add_directory             (FrArchive       *archive,
 						  const char      *directory,
 						  const char      *base_dir,
@@ -186,7 +189,8 @@ void        fr_archive_add_directory             (FrArchive       *archive,
 						  gboolean         update,
 						  const char      *password,
 						  gboolean         encrypt_header,
-						  FrCompression    compression);
+						  FrCompression    compression,
+						  guint            volume_size);
 void        fr_archive_add_items                 (FrArchive       *archive,
 						  GList           *item_list,
 						  const char      *base_dir,
@@ -194,7 +198,8 @@ void        fr_archive_add_items                 (FrArchive       *archive,
 						  gboolean         update,
 						  const char      *password,
 						  gboolean         encrypt_header,
-						  FrCompression    compression);
+						  FrCompression    compression,
+						  guint            volume_size);
 void        fr_archive_add_dropped_items         (FrArchive       *archive,
 						  GList           *item_list,
 						  const char      *base_dir,
@@ -202,7 +207,8 @@ void        fr_archive_add_dropped_items         (FrArchive       *archive,
 						  gboolean         update,
 						  const char      *password,
 						  gboolean         encrypt_header,
-						  FrCompression    compression);
+						  FrCompression    compression,
+						  guint            volume_size);
 void        fr_archive_test                      (FrArchive       *archive,
 						  const char      *password);
 

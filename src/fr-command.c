@@ -499,6 +499,7 @@ fr_command_init (FrCommand *comm)
 	comm->propCanExtractAll = TRUE;
 	comm->propCanDeleteNonEmptyFolders = TRUE;
 	comm->propCanExtractNonEmptyFolders = TRUE;
+	comm->propListFromFile = FALSE;
 }
 
 

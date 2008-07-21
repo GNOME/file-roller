@@ -1,5 +1,32 @@
 2008-07-21  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-process.h: 
+	* src/fr-process.c: 
+	
+	New function: fr_process_add_arg_printf
+	
+	* src/fr-command-tar.c: 
+	* src/fr-command-rar.c:
+	* src/fr-command-7z.c:
+	
+	Fixed command line arguments for listfiles.
+	 
+	* src/fr-command-7z.c: 
+	
+	Read the entry attribute to detect directories.
+
+	* src/typedefs.h:
+	* src/fr-window.c:	
+	* src/fr-command.c: 
+	* src/fr-archive.h: 
+	* src/fr-archive.c: 
+	* src/dlg-batch-add.c: 
+	* data/glade/batch-add-files.glade:
+	
+	Added ability to create multi-volume archives. 
+	
+2008-07-21  Paolo Bacchilega  <paobac@svn.gnome.org>	
+	
 	* TODO: updated
 	* src/fr-window.c: disable progress log.
 	

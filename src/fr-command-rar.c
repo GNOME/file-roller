@@ -322,17 +322,20 @@ fr_command_rar_add (FrCommand     *comm,
 
 	add_password_arg (comm, comm->password, FALSE);
 
+	if (comm->volume_size > 0)
+		fr_process_add_arg_printf (comm->process, "-v%ub", comm->volume_size);
+
 	/* disable percentage indicator */
 	fr_process_add_arg (comm->process, "-Idp");
 
-	if (from_file != NULL)
-		fr_process_add_arg_concat (comm->process, "-n@", from_file, NULL);
-
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
+
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
 			fr_process_add_arg (comm->process, scan->data);
+	else
+		fr_process_add_arg_concat (comm->process, "@", from_file, NULL);
 
 	fr_process_end_command (comm->process);
 }
@@ -374,14 +377,14 @@ fr_command_rar_delete (FrCommand  *comm,
 	fr_process_begin_command (comm->process, "rar");
 	fr_process_add_arg (comm->process, "d");
 
-	if (from_file != NULL)
-		fr_process_add_arg_concat (comm->process, "-n@", from_file, NULL);
-
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
+
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
 			fr_process_add_arg (comm->process, scan->data);
+	else
+		fr_process_add_arg_concat (comm->process, "@", from_file, NULL);
 
 	fr_process_end_command (comm->process);
 }
@@ -447,14 +450,14 @@ fr_command_rar_extract (FrCommand  *comm,
 	/* disable percentage indicator */
 	fr_process_add_arg (comm->process, "-Idp");
 
-	if (from_file != NULL)
-		fr_process_add_arg_concat (comm->process, "-n@", from_file, NULL);
-
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
+
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
 			fr_process_add_arg (comm->process, scan->data);
+	else
+		fr_process_add_arg_concat (comm->process, "@", from_file, NULL);
 
 	if (dest_dir != NULL)
 		fr_process_add_arg (comm->process, dest_dir);
@@ -553,7 +556,7 @@ fr_command_rar_get_capabilities (FrCommand  *comm,
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 	if (is_program_in_path ("rar"))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_CREATE_VOLUMES;
 	else if (is_program_in_path ("unrar"))
 		capabilities |= FR_COMMAND_CAN_READ;
 

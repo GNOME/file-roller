@@ -161,6 +161,8 @@ list__process_line (char     *line,
 			fdata->encrypted = TRUE;
 	}
 	else if (strcmp (fields[0], "Attributes") == 0) {
+		if (fields[1][0] == 'D')
+			fdata->dir = TRUE;
 	}
 	g_strfreev (fields);
 }
@@ -242,7 +244,7 @@ parse_progress_line (FrCommand  *comm,
 		sprintf (Progress_Message, "%s%s", message_prefix, file_name_from_path (Progress_Filename));
 		fr_command_message (comm, Progress_Message);
 
-		fraction= (double) ++comm->n_file / (comm->n_files + 1);
+		fraction = (double) ++comm->n_file / (comm->n_files + 1);
 		fr_command_progress (comm, fraction);
 	}
 }
@@ -295,6 +297,7 @@ fr_command_7z_add (FrCommand     *comm,
 	add_password_arg (comm, comm->password, FALSE);
 	if ((comm->password != NULL) && (*comm->password != 0) && comm->encrypt_header)
 		fr_process_add_arg (comm->process, "-mhe=on");
+
 	/* fr_process_add_arg (comm->process, "-ms=off"); FIXME: solid mode off? */
 
 	switch (comm->compression) {
@@ -310,6 +313,9 @@ fr_command_7z_add (FrCommand     *comm,
 
 	if (is_mime_type (comm->mime_type, "application/x-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
+
+	if (comm->volume_size > 0)
+		fr_process_add_arg_printf (comm->process, "-v%ub", comm->volume_size);
 
 	if (from_file != NULL)
 		fr_process_add_arg_concat (comm->process, "-i@", from_file, NULL);
@@ -475,7 +481,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-7z-compressed"))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER | FR_COMMAND_CAN_CREATE_VOLUMES;
 
 	else if (is_program_in_path ("7z")) {
 		capabilities |= FR_COMMAND_CAN_READ;

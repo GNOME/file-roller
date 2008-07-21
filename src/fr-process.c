@@ -55,11 +55,11 @@ static void fr_process_finalize   (GObject        *object);
 typedef struct {
 	GList        *args;              /* command to execute */
 	char         *dir;               /* working directory */
-	guint         sticky : 1;        /* whether the command must be 
-					  * executed even if a previous 
+	guint         sticky : 1;        /* whether the command must be
+					  * executed even if a previous
 					  * command has failed. */
-	guint         ignore_error : 1;  /* whether to continue to execute 
-					  * other commands if this command 
+	guint         ignore_error : 1;  /* whether to continue to execute
+					  * other commands if this command
 					  * fails. */
 	ContinueFunc  continue_func;
 	gpointer      continue_data;
@@ -137,14 +137,14 @@ fr_channel_data_read (FrChannelData *channel)
 						 &line,
 						 &length,
 						 &terminator_pos,
-						 NULL)) == G_IO_STATUS_NORMAL)					 
+						 NULL)) == G_IO_STATUS_NORMAL)
 	{
 		line[terminator_pos] = 0;
 		channel->raw = g_list_prepend (channel->raw, line);
-		if (channel->line_func != NULL) 
+		if (channel->line_func != NULL)
 			(*channel->line_func) (line, channel->line_data);
 	}
-	
+
 	return (status == G_IO_STATUS_AGAIN);
 }
 
@@ -162,7 +162,7 @@ static void
 fr_channel_data_reset (FrChannelData *channel)
 {
 	fr_channel_data_close_source (channel);
-	
+
 	if (channel->raw != NULL) {
 		g_list_foreach (channel->raw, (GFunc) g_free, NULL);
 		g_list_free (channel->raw);
@@ -183,7 +183,7 @@ fr_channel_data_set_fd (FrChannelData *channel,
 			int            fd)
 {
 	const char *charset;
-	
+
 	fr_channel_data_reset (channel);
 	channel->source = g_io_channel_unix_new (fd);
 	g_io_channel_set_flags (channel->source, G_IO_FLAG_NONBLOCK, NULL);
@@ -205,11 +205,11 @@ struct _FrProcessPrivate {
 
 	gboolean     running;
 	gboolean     stopping;
-	gint         current_command;	
+	gint         current_command;
 	gint         error_command;       /* command that coused an error. */
 
 	gboolean     use_standard_locale;
-	gboolean     sticky_only;         /* whether to execute only sticky 
+	gboolean     sticky_only;         /* whether to execute only sticky
 			 		   * commands. */
 };
 
@@ -285,7 +285,7 @@ static void
 fr_process_init (FrProcess *process)
 {
 	process->priv = g_new0 (FrProcessPrivate, 1);
-	
+
 	process->term_on_stop = TRUE;
 
 	process->priv->comm = g_ptr_array_new ();
@@ -330,7 +330,7 @@ fr_process_finalize (GObject *object)
 
 	fr_process_stop_priv (process, FALSE);
 	fr_process_clear (process);
-	
+
 	g_ptr_array_free (process->priv->comm, FALSE);
 
 	fr_channel_data_free (&process->out);
@@ -358,9 +358,9 @@ fr_process_begin_command (FrProcess  *process,
 
 	info = fr_command_info_new ();
 	info->args = g_list_prepend (NULL, g_strdup (arg));
-	
+
 	g_ptr_array_add (process->priv->comm, info);
-	
+
 	process->priv->n_comm++;
 	process->priv->current_comm = process->priv->n_comm;
 }
@@ -385,7 +385,7 @@ fr_process_begin_command_at (FrProcess  *process,
 
 	info = fr_command_info_new ();
 	info->args = g_list_prepend (NULL, g_strdup (arg));
-	
+
 	g_ptr_array_index (process->priv->comm, index) = info;
 }
 
@@ -449,7 +449,7 @@ fr_process_add_arg (FrProcess  *process,
 
 
 void
-fr_process_add_arg_concat (FrProcess  *process, 
+fr_process_add_arg_concat (FrProcess  *process,
 			   const char *arg1,
 			   ...)
 {
@@ -463,9 +463,27 @@ fr_process_add_arg_concat (FrProcess  *process,
 	while ((s = va_arg (args, char*)) != NULL)
 		g_string_append (arg, s);
 	va_end (args);
-	
+
 	fr_process_add_arg (process, arg->str);
 	g_string_free (arg, TRUE);
+}
+
+
+void
+fr_process_add_arg_printf (FrProcess    *fr_proc,
+			   const char   *format,
+			   ...)
+{
+	va_list  args;
+	char    *arg;
+
+	va_start (args, format);
+	arg = g_strdup_vprintf (format, args);
+	va_end (args);
+
+	fr_process_add_arg (fr_proc, arg);
+
+	g_free (arg);
 }
 
 
@@ -578,7 +596,7 @@ fr_process_set_out_line_func (FrProcess *process,
 			      gpointer   data)
 {
 	g_return_if_fail (process != NULL);
-	
+
 	process->out.line_func = func;
 	process->out.line_data = data;
 }
@@ -590,7 +608,7 @@ fr_process_set_err_line_func (FrProcess *process,
 			      gpointer   data)
 {
 	g_return_if_fail (process != NULL);
-	
+
 	process->err.line_func = func;
 	process->err.line_data = data;
 }
@@ -603,7 +621,7 @@ static void child_setup (gpointer user_data)
 {
 	FrProcess *process = user_data;
 
-	if (process->priv->use_standard_locale) 
+	if (process->priv->use_standard_locale)
 		putenv ("LC_ALL=C");
 }
 
@@ -616,26 +634,26 @@ start_current_command (FrProcess *process)
 	char          **argv;
 	int             out_fd, err_fd;
 	int             i = 0;
-	
+
 	debug (DEBUG_INFO, "%d/%d) ", process->priv->current_command, process->priv->n_comm);
 
 	info = g_ptr_array_index (process->priv->comm, process->priv->current_command);
 
 	argv = g_new (char *, g_list_length (info->args) + 1);
-	for (scan = info->args; scan; scan = scan->next) 
+	for (scan = info->args; scan; scan = scan->next)
 		argv[i++] = scan->data;
 	argv[i] = NULL;
-	
+
 #ifdef DEBUG
 	{
 		int j;
 
-		if (process->priv->use_standard_locale) 
+		if (process->priv->use_standard_locale)
 			g_print ("\tLC_ALL=C\n");
 
 		if (info->dir != NULL)
 			g_print ("\tcd %s\n", info->dir);
-		
+
 		g_print ("\t");
 		for (j = 0; j < i; j++)
 			g_print ("%s ", argv[j]);
@@ -658,7 +676,7 @@ start_current_command (FrProcess *process)
 					NULL,
 					&out_fd,
 					&err_fd,
-					&process->error.gerror)) 
+					&process->error.gerror))
 	{
 		process->error.type = FR_PROC_ERROR_SPAWN;
 		g_signal_emit (G_OBJECT (process),
@@ -672,7 +690,7 @@ start_current_command (FrProcess *process)
 
 	fr_channel_data_set_fd (&process->out, out_fd);
 	fr_channel_data_set_fd (&process->err, err_fd);
-	
+
 	process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
 					              check_child,
 					              process);
@@ -684,7 +702,7 @@ command_is_sticky (FrProcess *process,
 		   int        i)
 {
 	FrCommandInfo *info;
-	
+
 	info = g_ptr_array_index (process->priv->comm, i);
 	return info->sticky;
 }
@@ -705,7 +723,7 @@ allow_sticky_processes_only (FrProcess *process,
 	}
 
 	process->priv->sticky_only = TRUE;
-	if (emit_signal) 
+	if (emit_signal)
 		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[STICKY_ONLY],
 			       0);
@@ -784,7 +802,7 @@ check_child (gpointer data)
 				process->priv->current_command++;
 			} while ((process->priv->current_command <= process->priv->n_comm)
 				 && ! command_is_sticky (process, process->priv->current_command));
-		} 
+		}
 		else
 			process->priv->current_command++;
 
@@ -795,10 +813,10 @@ check_child (gpointer data)
 	}
 
 	/* Done */
-	
+
 	process->priv->current_command = -1;
 	process->priv->use_standard_locale = FALSE;
-	
+
 	if (process->out.raw != NULL)
 		process->out.raw = g_list_reverse (process->out.raw);
 	if (process->err.raw != NULL)
@@ -860,7 +878,7 @@ fr_process_start (FrProcess *process)
 		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[DONE],
 			       0);
-	} 
+	}
 	else {
 		process->priv->running = TRUE;
 		start_current_command (process);

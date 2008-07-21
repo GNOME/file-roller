@@ -316,6 +316,7 @@ fr_command_tar_add (FrCommand     *comm,
 	}
 
 	fr_process_add_arg (comm->process, "-rf");
+	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 
 	if (from_file != NULL) {
 		fr_process_add_arg (comm->process, "-T");
@@ -323,7 +324,7 @@ fr_command_tar_add (FrCommand     *comm,
 	}
 
 	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
 			fr_process_add_arg (comm->process, scan->data);
@@ -368,6 +369,7 @@ fr_command_tar_delete (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "--delete");
 	fr_process_add_arg (comm->process, "-f");
+	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 
 	if (from_file != NULL) {
 		fr_process_add_arg (comm->process, "-T");
@@ -375,7 +377,7 @@ fr_command_tar_delete (FrCommand  *comm,
 	}
 
 	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
 			fr_process_add_arg (comm->process, scan->data);
@@ -419,6 +421,7 @@ fr_command_tar_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, "--keep-newer-files");
 
 	fr_process_add_arg (comm->process, "-xf");
+	fr_process_add_arg (comm->process, comm->filename);
 	add_compress_arg (comm);
 
 	if (dest_dir != NULL) {
@@ -432,7 +435,7 @@ fr_command_tar_extract (FrCommand  *comm,
 	}
 
 	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, comm->filename);
+
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
 			fr_process_add_arg (comm->process, scan->data);

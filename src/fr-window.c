@@ -3097,7 +3097,8 @@ action_performed (FrArchive   *archive,
 				  TRUE,
 				  window->priv->convert_data.password,
 				  window->priv->convert_data.encrypt_header,
-				  window->priv->compression);
+				  window->priv->compression,
+				  window->priv->volume_size);
 			g_free (source_dir);
 		}
 		else {
@@ -5383,6 +5384,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->password = NULL;
 	window->priv->compression = preferences_get_compression_level ();
 	window->priv->encrypt_header = eel_gconf_get_boolean (PREF_ENCRYPT_HEADER, FALSE);
+	window->priv->volume_size = 0;
 
 	window->priv->convert_data.converting = FALSE;
 	window->priv->convert_data.temp_dir = NULL;
@@ -5947,6 +5949,7 @@ fr_window_archive_close (FrWindow *window)
 	window->priv->copy_data = NULL;
 
 	fr_window_set_password (window, NULL);
+	fr_window_set_volume_size(window, 0);
 	fr_window_history_clear (window);
 
 	window->priv->archive_new = FALSE;
@@ -6181,7 +6184,8 @@ fr_window_archive_add_files (FrWindow *window,
 			      update,
 			      window->priv->password,
 			      window->priv->encrypt_header,
-			      window->priv->compression);
+			      window->priv->compression,
+			      window->priv->volume_size);
 
 	path_list_free (files);
 	g_free (base_dir);
@@ -6208,7 +6212,8 @@ fr_window_archive_add_with_wildcard (FrWindow      *window,
 				      follow_links,
 				      window->priv->password,
 				      window->priv->encrypt_header,
-				      window->priv->compression);
+				      window->priv->compression,
+				      window->priv->volume_size);
 }
 
 
@@ -6226,7 +6231,8 @@ fr_window_archive_add_directory (FrWindow      *window,
 				  update,
 				  window->priv->password,
 				  window->priv->encrypt_header,
-				  window->priv->compression);
+				  window->priv->compression,
+				  window->priv->volume_size);
 }
 
 
@@ -6244,7 +6250,8 @@ fr_window_archive_add_items (FrWindow      *window,
 			      update,
 			      window->priv->password,
 			      window->priv->encrypt_header,
-			      window->priv->compression);
+			      window->priv->compression,
+			      window->priv->volume_size);
 }
 
 
@@ -6260,7 +6267,8 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 				      update,
 				      window->priv->password,
 				      window->priv->encrypt_header,
-				      window->priv->compression);
+				      window->priv->compression,
+				      window->priv->volume_size);
 }
 
 
@@ -7064,7 +7072,8 @@ rename_selection (FrWindow   *window,
 			TRUE,
 			window->priv->password,
 			window->priv->encrypt_header,
-			window->priv->compression);
+			window->priv->compression,
+			window->priv->volume_size);
 
 	path_list_free (new_file_list);
 	path_list_free (file_list);
@@ -7442,7 +7451,8 @@ add_pasted_files (FrWindow        *window,
 			FALSE,
 			window->priv->password,
 			window->priv->encrypt_header,
-			window->priv->compression);
+			window->priv->compression,
+			window->priv->volume_size);
 
 	path_list_free (new_file_list);
 
@@ -7810,7 +7820,8 @@ fr_window_update_files (FrWindow *window,
 				FALSE,
 				window->priv->password,
 				window->priv->encrypt_header,
-				window->priv->compression);
+				window->priv->compression,
+				window->priv->volume_size);
 		path_list_free (file_list);
 	}
 
