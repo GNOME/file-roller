@@ -289,6 +289,7 @@ process_line__add (char     *line,
 
 static void
 fr_command_tar_add (FrCommand     *comm,
+		    const char    *from_file,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
@@ -316,10 +317,17 @@ fr_command_tar_add (FrCommand     *comm,
 
 	fr_process_add_arg (comm->process, "-rf");
 
-	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+	if (from_file != NULL) {
+		fr_process_add_arg (comm->process, "-T");
+		fr_process_add_arg (comm->process, from_file);
+	}
+
 	fr_process_add_arg (comm->process, "--");
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			fr_process_add_arg (comm->process, scan->data);
+
 	fr_process_end_command (comm->process);
 }
 
@@ -342,8 +350,9 @@ begin_func__delete (gpointer data)
 
 
 static void
-fr_command_tar_delete (FrCommand *comm,
-		       GList     *file_list)
+fr_command_tar_delete (FrCommand  *comm,
+		       const char *from_file,
+		       GList      *file_list)
 {
 	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	GList        *scan;
@@ -359,11 +368,18 @@ fr_command_tar_delete (FrCommand *comm,
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "--delete");
 	fr_process_add_arg (comm->process, "-f");
-	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+
+	if (from_file != NULL) {
+		fr_process_add_arg (comm->process, "-T");
+		fr_process_add_arg (comm->process, from_file);
+	}
 
 	fr_process_add_arg (comm->process, "--");
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			fr_process_add_arg (comm->process, scan->data);
+
 	fr_process_end_command (comm->process);
 }
 
@@ -378,6 +394,7 @@ process_line__extract (char     *line,
 
 static void
 fr_command_tar_extract (FrCommand  *comm,
+		        const char *from_file,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -402,7 +419,6 @@ fr_command_tar_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, "--keep-newer-files");
 
 	fr_process_add_arg (comm->process, "-xf");
-	fr_process_add_arg (comm->process, comm->filename);
 	add_compress_arg (comm);
 
 	if (dest_dir != NULL) {
@@ -410,9 +426,16 @@ fr_command_tar_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, dest_dir);
 	}
 
+	if (from_file != NULL) {
+		fr_process_add_arg (comm->process, "-T");
+		fr_process_add_arg (comm->process, from_file);
+	}
+
 	fr_process_add_arg (comm->process, "--");
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	fr_process_add_arg (comm->process, comm->filename);
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
 }
@@ -920,6 +943,7 @@ fr_command_tar_init (FrCommand *comm)
 	comm->propTest                      = FALSE;
 	comm->propCanDeleteNonEmptyFolders  = FALSE;
 	comm->propCanExtractNonEmptyFolders = FALSE;
+	comm->propListFromFile              = TRUE;
 
 	comm_tar->msg = NULL;
 	comm_tar->uncomp_filename = NULL;

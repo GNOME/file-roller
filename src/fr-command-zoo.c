@@ -236,6 +236,7 @@ fr_command_zoo_list (FrCommand  *zoo_comm)
 
 static void
 fr_command_zoo_add (FrCommand     *comm,
+		    const char    *from_file,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
@@ -264,6 +265,7 @@ fr_command_zoo_add (FrCommand     *comm,
 
 static void
 fr_command_zoo_delete (FrCommand *comm,
+		       const char  *from_file,
 		       GList     *file_list)
 {
 	GList        *scan;
@@ -282,6 +284,7 @@ fr_command_zoo_delete (FrCommand *comm,
 
 static void
 fr_command_zoo_extract (FrCommand  *comm,
+			const char  *from_file,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,

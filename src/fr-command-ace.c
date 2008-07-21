@@ -182,8 +182,9 @@ fr_command_ace_list (FrCommand  *comm)
 
 static void
 fr_command_ace_extract (FrCommand   *comm,
+			const char  *from_file,
 			GList       *file_list,
-			const char *dest_dir,
+			const char  *dest_dir,
 			gboolean     overwrite,
 			gboolean     skip_older,
 			gboolean     junk_paths)

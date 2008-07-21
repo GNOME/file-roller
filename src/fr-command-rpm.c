@@ -168,6 +168,7 @@ fr_command_rpm_list (FrCommand  *comm)
 
 static void
 fr_command_rpm_extract (FrCommand  *comm,
+		        const char  *from_file,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,

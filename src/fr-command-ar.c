@@ -204,6 +204,7 @@ fr_command_ar_list (FrCommand  *comm)
 
 static void
 fr_command_ar_add (FrCommand     *comm,
+		   const char    *from_file,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
@@ -231,8 +232,9 @@ fr_command_ar_add (FrCommand     *comm,
 
 
 static void
-fr_command_ar_delete (FrCommand *comm,
-		      GList     *file_list)
+fr_command_ar_delete (FrCommand  *comm,
+		      const char *from_file,
+		      GList      *file_list)
 {
 	GList *scan;
 
@@ -247,6 +249,7 @@ fr_command_ar_delete (FrCommand *comm,
 
 static void
 fr_command_ar_extract (FrCommand  *comm,
+		       const char *from_file,
 		       GList      *file_list,
 		       const char *dest_dir,
 		       gboolean    overwrite,

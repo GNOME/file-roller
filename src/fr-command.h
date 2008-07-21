@@ -97,6 +97,7 @@ struct _FrCommand
 	guint          propCanExtractAll : 1;
 	guint          propCanDeleteNonEmptyFolders : 1;
 	guint          propCanExtractNonEmptyFolders : 1;
+	guint          propListFromFile : 1;
 
 	/*<private>*/
 
@@ -119,13 +120,16 @@ struct _FrCommandClass
 
 	void          (*list)             (FrCommand     *comm);
 	void          (*add)              (FrCommand     *comm,
+					   const char    *from_file,
 				           GList         *file_list,
 				           const char    *base_dir,
 				           gboolean       update,
 				           gboolean       recursive);
 	void          (*delete)           (FrCommand     *comm,
+			                   const char    *from_file,
 				           GList         *file_list);
 	void          (*extract)          (FrCommand     *comm,
+			                   const char    *from_file,
 				           GList         *file_list,
 				           const char    *dest_dir,
 				           gboolean       overwrite,
@@ -162,13 +166,16 @@ void           fr_command_set_filename        (FrCommand     *comm,
 					       const char    *filename);
 void           fr_command_list                (FrCommand     *comm);
 void           fr_command_add                 (FrCommand     *comm,
+					       const char    *from_file,
 					       GList         *file_list,
 					       const char    *base_dir,
 					       gboolean       update,
 					       gboolean       recursive);
 void           fr_command_delete              (FrCommand     *comm,
+					       const char    *from_file,
 					       GList         *file_list);
 void           fr_command_extract             (FrCommand     *comm,
+					       const char    *from_file,
 					       GList         *file_list,
 					       const char    *dest_dir,
 					       gboolean       overwrite,

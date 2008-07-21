@@ -161,6 +161,7 @@ xfer_data_free (XferData *data)
 #define NO_BACKUP_FILES (TRUE)
 #define NO_DOT_FILES (FALSE)
 #define IGNORE_CASE (FALSE)
+#define LIST_LENGTH_TO_USE_FILE 10 /* FIXME: find a good value */
 
 
 enum {
@@ -1327,7 +1328,7 @@ find_file_in_archive (FrArchive *archive,
 }
 
 
-static void archive_remove (FrArchive *archive, GList *file_list);
+static void delete_from_archive (FrArchive *archive, GList *file_list);
 
 
 static GList *
@@ -1398,6 +1399,57 @@ convert_to_local_file_list (GList *file_list)
 }
 
 
+static gboolean
+save_list_to_temp_file (GList   *file_list,
+		        char   **list_dir,
+		        char   **list_filename,
+		        GError **error)
+{
+	gboolean           error_occurred = FALSE;
+	GFile             *list_file;
+	GFileOutputStream *ostream;
+
+	if (error != NULL)
+		*error = NULL;
+	*list_dir = get_temp_work_dir ();
+	*list_filename = g_build_filename (*list_dir, "file-list", NULL);
+	list_file = g_file_new_for_path (*list_filename);
+	ostream = g_file_create (list_file, G_FILE_CREATE_PRIVATE, NULL, error);
+
+	if (ostream != NULL) {
+		GList *scan;
+
+		for (scan = file_list; scan != NULL; scan = scan->next) {
+			char *filename = scan->data;
+
+			if ((g_output_stream_write (G_OUTPUT_STREAM (ostream), filename, strlen (filename), NULL, error) < 0)
+			    || (g_output_stream_write (G_OUTPUT_STREAM (ostream), "\n", 1, NULL, error) < 0))
+			{
+				error_occurred = TRUE;
+				break;
+			}
+		}
+		if (! error_occurred && ! g_output_stream_close (G_OUTPUT_STREAM (ostream), NULL, error))
+			error_occurred = TRUE;
+		g_object_unref (ostream);
+	}
+	else
+		error_occurred = TRUE;
+
+	if (error_occurred) {
+		remove_local_directory (*list_dir);
+		g_free (*list_dir);
+		g_free (*list_filename);
+		*list_dir = NULL;
+		*list_filename = NULL;
+	}
+
+	g_object_unref (list_file);
+
+	return ! error_occurred;
+}
+
+
 void
 fr_archive_add (FrArchive     *archive,
 		GList         *file_list,
@@ -1413,6 +1465,7 @@ fr_archive_add (FrArchive     *archive,
 	gboolean  base_dir_created = FALSE;
 	GList    *scan;
 	char     *tmp_base_dir = NULL;
+	gboolean  error_occurred = FALSE;
 
 	if (file_list == NULL)
 		return;
@@ -1485,7 +1538,8 @@ fr_archive_add (FrArchive     *archive,
 	 * delete the files first. */
 
 	if ((! update && ! archive->command->propAddCanReplace)
-	    || (update && ! archive->command->propAddCanUpdate)) {
+	    || (update && ! archive->command->propAddCanUpdate))
+	{
 		GList *del_list = NULL;
 
 		for (scan = new_file_list; scan != NULL; scan = scan->next) {
@@ -1497,7 +1551,7 @@ fr_archive_add (FrArchive     *archive,
 		/* delete */
 
 		if (del_list != NULL) {
-			archive_remove (archive, del_list);
+			delete_from_archive (archive, del_list);
 			fr_process_set_ignore_error (archive->process, TRUE);
 			g_list_free (del_list);
 		}
@@ -1507,42 +1561,88 @@ fr_archive_add (FrArchive     *archive,
 
 	fr_command_set_n_files (archive->command, g_list_length (new_file_list));
 
-	for (scan = new_file_list; scan != NULL; ) {
-		GList *prev = scan->prev;
-		GList *chunk_list;
-		int    l;
+	if (archive->command->propListFromFile
+	    && (archive->command->n_files > LIST_LENGTH_TO_USE_FILE))
+	{
+		char   *list_dir;
+		char   *list_filename;
+		GError *error = NULL;
 
-		chunk_list = scan;
-		l = 0;
-		while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
-			if (l == 0)
-				l = strlen (scan->data);
-			prev = scan;
-			scan = scan->next;
-			if (scan != NULL)
-				l += strlen (scan->data);
+		if (! save_list_to_temp_file (new_file_list, &list_dir, &list_filename, &error)) {
+			archive->process->error.type = FR_PROC_ERROR_GENERIC;
+			archive->process->error.status = 0;
+			archive->process->error.gerror = g_error_copy (error);
+			g_signal_emit_by_name (G_OBJECT (archive->process),
+					       "done",
+					       FR_ACTION_ADDING_FILES);
+			g_clear_error (&error);
+			error_occurred = TRUE;
+		}
+		else {
+			fr_command_add (archive->command,
+					list_filename,
+					new_file_list,
+					tmp_base_dir,
+					update,
+					recursive);
+
+			/* remove the temp dir */
+
+			fr_process_begin_command (archive->process, "rm");
+			fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+			fr_process_set_sticky (archive->process, TRUE);
+			fr_process_add_arg (archive->process, "-rf");
+			fr_process_add_arg (archive->process, list_dir);
+			fr_process_end_command (archive->process);
 		}
 
-		prev->next = NULL;
-		fr_command_add (archive->command,
-				chunk_list,
-				tmp_base_dir,
-				update,
-				recursive);
-		prev->next = scan;
+		g_free (list_filename);
+		g_free (list_dir);
+	}
+	else {
+		/* specify the file list on the command line, splitting
+		 * in more commands to avoid to overflow the command line
+		 * length limit. */
+		for (scan = new_file_list; scan != NULL; ) {
+			GList *prev = scan->prev;
+			GList *chunk_list;
+			int    l;
+
+			chunk_list = scan;
+			l = 0;
+			while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
+				if (l == 0)
+					l = strlen (scan->data);
+				prev = scan;
+				scan = scan->next;
+				if (scan != NULL)
+					l += strlen (scan->data);
+			}
+
+			prev->next = NULL;
+			fr_command_add (archive->command,
+					NULL,
+					chunk_list,
+					tmp_base_dir,
+					update,
+					recursive);
+			prev->next = scan;
+		}
 	}
 
 	path_list_free (new_file_list);
 
-	fr_command_recompress (archive->command);
+	if (! error_occurred) {
+		fr_command_recompress (archive->command);
 
-	if (base_dir_created) { /* remove the temp dir */
-		fr_process_begin_command (archive->process, "rm");
-		fr_process_set_working_dir (archive->process, g_get_tmp_dir());
-		fr_process_set_sticky (archive->process, TRUE);
-		fr_process_add_arg (archive->process, "-rf");
-		fr_process_add_arg (archive->process, tmp_base_dir);
-		fr_process_end_command (archive->process);
+		if (base_dir_created) { /* remove the temp dir */
+			fr_process_begin_command (archive->process, "rm");
+			fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+			fr_process_set_sticky (archive->process, TRUE);
+			fr_process_add_arg (archive->process, "-rf");
+			fr_process_add_arg (archive->process, tmp_base_dir);
+			fr_process_end_command (archive->process);
+		}
 	}
 
 	g_free (tmp_base_dir);
@@ -2148,6 +2248,7 @@ add_dropped_items (DroppedItemsData *data)
 		basedir = remove_level_from_path (fullpath);
 		singleton = g_list_prepend (NULL, (char*)file_name_from_path (fullpath));
 		fr_command_add (archive->command,
+				NULL,
 				singleton,
 				basedir,
 				data->update,
@@ -2246,8 +2347,8 @@ archive_type_has_issues_deleting_non_empty_folders (FrArchive *archive)
 
 
 static void
-archive_remove (FrArchive *archive,
-		GList     *file_list)
+delete_from_archive (FrArchive *archive,
+		     GList     *file_list)
 {
 	gboolean  file_list_created = FALSE;
 	GList    *tmp_file_list = NULL;
@@ -2301,26 +2402,54 @@ archive_remove (FrArchive *archive,
 		g_list_free (file_list);
 
 	fr_command_set_n_files (archive->command, g_list_length (tmp_file_list));
-	for (scan = tmp_file_list; scan != NULL; ) {
-		GList *prev = scan->prev;
-		GList *chunk_list;
-		int    l;
 
-		chunk_list = scan;
-		l = 0;
-		while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
-			if (l == 0)
-				l = strlen (scan->data);
-			prev = scan;
-			scan = scan->next;
-			if (scan != NULL)
-				l += strlen (scan->data);
+	if (archive->command->propListFromFile
+	    && (archive->command->n_files > LIST_LENGTH_TO_USE_FILE))
+	{
+		char *list_dir;
+		char *list_filename;
+
+		if (save_list_to_temp_file (tmp_file_list, &list_dir, &list_filename, NULL)) {
+			fr_command_delete (archive->command,
+					   list_filename,
+					   tmp_file_list);
+
+			/* remove the temp dir */
+
+			fr_process_begin_command (archive->process, "rm");
+			fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+			fr_process_set_sticky (archive->process, TRUE);
+			fr_process_add_arg (archive->process, "-rf");
+			fr_process_add_arg (archive->process, list_dir);
+			fr_process_end_command (archive->process);
 		}
 
-		prev->next = NULL;
-		fr_command_delete (archive->command, chunk_list);
-		prev->next = scan;
+		g_free (list_filename);
+		g_free (list_dir);
 	}
+	else {
+		for (scan = tmp_file_list; scan != NULL; ) {
+			GList *prev = scan->prev;
+			GList *chunk_list;
+			int    l;
+
+			chunk_list = scan;
+			l = 0;
+			while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
+				if (l == 0)
+					l = strlen (scan->data);
+				prev = scan;
+				scan = scan->next;
+				if (scan != NULL)
+					l += strlen (scan->data);
+			}
+
+			prev->next = NULL;
+			fr_command_delete (archive->command, NULL, chunk_list);
+			prev->next = scan;
+		}
+	}
+
 	g_list_free (tmp_file_list);
 }
 
@@ -2338,7 +2467,7 @@ fr_archive_remove (FrArchive     *archive,
 	fr_archive_stoppable (archive, FALSE);
 	g_object_set (archive->command, "compression", compression, NULL);
 	fr_command_uncompress (archive->command);
-	archive_remove (archive, file_list);
+	delete_from_archive (archive, file_list);
 	fr_command_recompress (archive->command);
 }
 
@@ -2403,20 +2532,22 @@ move_files_in_chunks (FrArchive  *archive,
 
 
 static void
-extract_in_chunks (FrCommand  *command,
-		   GList      *file_list,
-		   const char *dest_dir,
-		   gboolean    overwrite,
-		   gboolean    skip_older,
-		   gboolean    junk_paths,
-		   const char *password)
+extract_from_archive (FrArchive  *archive,
+		      GList      *file_list,
+		      const char *dest_dir,
+		      gboolean    overwrite,
+		      gboolean    skip_older,
+		      gboolean    junk_paths,
+		      const char *password)
 {
-	GList *scan;
+	FrCommand *command = archive->command;
+	GList     *scan;
 
 	g_object_set (command, "password", password, NULL);
 
 	if (file_list == NULL) {
 		fr_command_extract (command,
+				    NULL,
 				    file_list,
 				    dest_dir,
 				    overwrite,
@@ -2425,30 +2556,61 @@ extract_in_chunks (FrCommand  *command,
 		return;
 	}
 
-	for (scan = file_list; scan != NULL; ) {
-		GList *prev = scan->prev;
-		GList *chunk_list;
-		int    l;
+	if (command->propListFromFile
+	    && (g_list_length (file_list) > LIST_LENGTH_TO_USE_FILE))
+	{
+		char *list_dir;
+		char *list_filename;
 
-		chunk_list = scan;
-		l = 0;
-		while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
-			if (l == 0)
-				l = strlen (scan->data);
-			prev = scan;
-			scan = scan->next;
-			if (scan != NULL)
-				l += strlen (scan->data);
+		if (save_list_to_temp_file (file_list, &list_dir, &list_filename, NULL)) {
+			fr_command_extract (command,
+					    list_filename,
+					    file_list,
+					    dest_dir,
+					    overwrite,
+					    skip_older,
+					    junk_paths);
+
+			/* remove the temp dir */
+
+			fr_process_begin_command (archive->process, "rm");
+			fr_process_set_working_dir (archive->process, g_get_tmp_dir());
+			fr_process_set_sticky (archive->process, TRUE);
+			fr_process_add_arg (archive->process, "-rf");
+			fr_process_add_arg (archive->process, list_dir);
+			fr_process_end_command (archive->process);
 		}
 
-		prev->next = NULL;
-		fr_command_extract (command,
-				    chunk_list,
-				    dest_dir,
-				    overwrite,
-				    skip_older,
-				    junk_paths);
-		prev->next = scan;
+		g_free (list_filename);
+		g_free (list_dir);
+	}
+	else {
+		for (scan = file_list; scan != NULL; ) {
+			GList *prev = scan->prev;
+			GList *chunk_list;
+			int    l;
+
+			chunk_list = scan;
+			l = 0;
+			while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
+				if (l == 0)
+					l = strlen (scan->data);
+				prev = scan;
+				scan = scan->next;
+				if (scan != NULL)
+					l += strlen (scan->data);
+			}
+
+			prev->next = NULL;
+			fr_command_extract (command,
+					    NULL,
+					    chunk_list,
+					    dest_dir,
+					    overwrite,
+					    skip_older,
+					    junk_paths);
+			prev->next = scan;
+		}
 	}
 }
 
@@ -2668,13 +2830,13 @@ fr_archive_extract_to_local (FrArchive  *archive,
 			filtered = file_list;
 
 		if (! (created_filtered_list && (filtered == NULL)))
-			extract_in_chunks (archive->command,
-					   filtered,
-					   destination,
-					   overwrite,
-					   skip_older,
-					   junk_paths,
-					   password);
+			extract_from_archive (archive,
+					      filtered,
+					      destination,
+					      overwrite,
+					      skip_older,
+					      junk_paths,
+					      password);
 
 		if (created_filtered_list && (filtered != NULL))
 			g_list_free (filtered);
@@ -2764,13 +2926,13 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		char *temp_dir;
 
 		temp_dir = get_temp_work_dir ();
-		extract_in_chunks (archive->command,
-				   filtered,
-				   temp_dir,
-				   overwrite,
-				   skip_older,
-				   junk_paths,
-				   password);
+		extract_from_archive (archive,
+				      filtered,
+				      temp_dir,
+				      overwrite,
+				      skip_older,
+				      junk_paths,
+				      password);
 
 		if (use_base_dir) {
 			GList *tmp_list = compute_list_base_path (base_dir, filtered, junk_paths, archive->command->propExtractCanJunkPaths);
@@ -2793,13 +2955,13 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		g_free (temp_dir);
 	}
 	else
-		extract_in_chunks (archive->command,
-				   filtered,
-				   destination,
-				   overwrite,
-				   skip_older,
-				   junk_paths,
-				   password);
+		extract_from_archive (archive,
+				      filtered,
+				      destination,
+				      overwrite,
+				      skip_older,
+				      junk_paths,
+				      password);
 
 	if (filtered != NULL)
 		g_list_free (filtered);

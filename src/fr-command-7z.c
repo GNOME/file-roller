@@ -261,6 +261,7 @@ process_line__add (char     *line,
 
 static void
 fr_command_7z_add (FrCommand     *comm,
+		   const char    *from_file,
 		   GList         *file_list,
 		   const char    *base_dir,
 		   gboolean       update,
@@ -310,21 +311,23 @@ fr_command_7z_add (FrCommand     *comm,
 	if (is_mime_type (comm->mime_type, "application/x-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
+	if (from_file != NULL)
+		fr_process_add_arg_concat (comm->process, "-i@", from_file, NULL);
+
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
-
-	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = scan->data;
-		fr_process_add_arg (comm->process, filename);
-	}
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
 }
 
 
 static void
-fr_command_7z_delete (FrCommand *comm,
-		      GList     *file_list)
+fr_command_7z_delete (FrCommand  *comm,
+		      const char *from_file,
+		      GList      *file_list)
 {
 	GList *scan;
 
@@ -335,13 +338,14 @@ fr_command_7z_delete (FrCommand *comm,
 	if (is_mime_type (comm->mime_type, "application/x-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
+	if (from_file != NULL)
+		fr_process_add_arg_concat (comm->process, "-i@", from_file, NULL);
+
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
-
-	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = scan->data;
-		fr_process_add_arg (comm->process, filename);
-	}
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
 }
@@ -360,6 +364,7 @@ process_line__extract (char     *line,
 
 static void
 fr_command_7z_extract (FrCommand  *comm,
+		       const char *from_file,
 		       GList      *file_list,
 		       const char *dest_dir,
 		       gboolean    overwrite,
@@ -386,11 +391,14 @@ fr_command_7z_extract (FrCommand  *comm,
 	if (dest_dir != NULL)
 		fr_process_add_arg_concat (comm->process, "-o", dest_dir, NULL);
 
+	if (from_file != NULL)
+		fr_process_add_arg_concat (comm->process, "-i@", from_file, NULL);
+
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
-
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			fr_process_add_arg (comm->process, scan->data);
 
 	fr_process_end_command (comm->process);
 }
@@ -520,6 +528,7 @@ fr_command_7z_init (FrCommand *comm)
 	comm->propExtractCanJunkPaths      = TRUE;
 	comm->propPassword                 = TRUE;
 	comm->propTest                     = TRUE;
+	comm->propListFromFile             = TRUE;
 }
 
 

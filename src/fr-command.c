@@ -114,6 +114,7 @@ base_fr_command_list (FrCommand  *comm)
 
 static void
 base_fr_command_add (FrCommand     *comm,
+		     const char    *from_file,
 		     GList         *file_list,
 		     const char    *base_dir,
 		     gboolean       update,
@@ -123,14 +124,16 @@ base_fr_command_add (FrCommand     *comm,
 
 
 static void
-base_fr_command_delete (FrCommand *comm,
-			GList     *file_list)
+base_fr_command_delete (FrCommand  *comm,
+		        const char *from_file,
+			GList       *file_list)
 {
 }
 
 
 static void
 base_fr_command_extract (FrCommand  *comm,
+		         const char *from_file,
 			 GList      *file_list,
 			 const char *dest_dir,
 			 gboolean    overwrite,
@@ -586,6 +589,7 @@ fr_command_list (FrCommand  *comm)
 
 void
 fr_command_add (FrCommand     *comm,
+		const char    *from_file,
 		GList         *file_list,
 		const char    *base_dir,
 		gboolean       update,
@@ -598,6 +602,7 @@ fr_command_add (FrCommand     *comm,
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->add (comm,
+						     from_file,
 						     file_list,
 						     base_dir,
 						     update,
@@ -606,8 +611,9 @@ fr_command_add (FrCommand     *comm,
 
 
 void
-fr_command_delete (FrCommand *comm,
-		   GList     *file_list)
+fr_command_delete (FrCommand   *comm,
+		   const char  *from_file,
+		   GList       *file_list)
 {
 	fr_command_progress (comm, -1.0);
 
@@ -615,12 +621,13 @@ fr_command_delete (FrCommand *comm,
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
-	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->delete (comm, file_list);
+	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->delete (comm, from_file, file_list);
 }
 
 
 void
 fr_command_extract (FrCommand  *comm,
+		    const char *from_file,
 		    GList      *file_list,
 		    const char *dest_dir,
 		    gboolean    overwrite,
@@ -634,6 +641,7 @@ fr_command_extract (FrCommand  *comm,
 	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
 
 	FR_COMMAND_GET_CLASS (G_OBJECT (comm))->extract (comm,
+							 from_file,
 							 file_list,
 							 dest_dir,
 							 overwrite,

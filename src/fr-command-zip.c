@@ -209,6 +209,7 @@ process_line__common (char     *line,
 
 static void
 fr_command_zip_add (FrCommand     *comm,
+		    const char    *from_file,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
@@ -245,7 +246,6 @@ fr_command_zip_add (FrCommand     *comm,
 	}
 
 	fr_process_add_arg (comm->process, comm->filename);
-
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
@@ -254,8 +254,9 @@ fr_command_zip_add (FrCommand     *comm,
 
 
 static void
-fr_command_zip_delete (FrCommand *comm,
-		       GList     *file_list)
+fr_command_zip_delete (FrCommand  *comm,
+		       const char *from_file,
+		       GList      *file_list)
 {
 	GList *scan;
 
@@ -265,8 +266,8 @@ fr_command_zip_delete (FrCommand *comm,
 
 	fr_process_begin_command (comm->process, "zip");
 	fr_process_add_arg (comm->process, "-d");
-	fr_process_add_arg (comm->process, comm->filename);
 
+	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
@@ -276,6 +277,7 @@ fr_command_zip_delete (FrCommand *comm,
 
 static void
 fr_command_zip_extract (FrCommand  *comm,
+			const char *from_file,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
@@ -303,8 +305,8 @@ fr_command_zip_extract (FrCommand  *comm,
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "-j");
 	add_password_arg (comm, comm->password);
-	fr_process_add_arg (comm->process, comm->filename);
 
+	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 

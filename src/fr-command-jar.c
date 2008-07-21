@@ -50,6 +50,7 @@ static FrCommandClass *parent_class = NULL;
 
 static void
 fr_command_jar_add (FrCommand     *comm,
+		    const char    *from_file,
 		    GList         *file_list,
 		    const char    *base_dir,
 		    gboolean       update,
@@ -117,10 +118,10 @@ fr_command_jar_add (FrCommand     *comm,
 	}
 
 	if (zip_list != NULL)
-		parent_class->add (comm, zip_list, base_dir, update, FALSE);
+		parent_class->add (comm, NULL, zip_list, base_dir, update, FALSE);
 
 	if (jar_list != NULL)
-		parent_class->add (comm, jar_list, tmp_dir, update, FALSE);
+		parent_class->add (comm, NULL, jar_list, tmp_dir, update, FALSE);
 
 	fr_process_begin_command (proc, "rm");
 	fr_process_set_working_dir (proc, "/");

@@ -250,6 +250,7 @@ process_extract_line (char     *line,
 
 static void
 fr_command_alz_extract (FrCommand  *comm,
+		        const char *from_file,
 			GList      *file_list,
 			const char *dest_dir,
 			gboolean    overwrite,
