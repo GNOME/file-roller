@@ -1,3 +1,43 @@
+version 2.23.4
+--------------
+
+        New features and user visible changes:
+	
+	* Added support for reading and extracting alz archives (#521324).
+	* Added support for rzip compressed files (#503000).
+	* Added support for creating self-extracting zip archives.
+	* Added ability to create multi-volume archives.
+	* Added support for header encryption.  Implemented header encryption for
+	  7zip and rar archives.
+	* Use the 7z command to read/write zip, cbr, cbz archives, and to
+	  read cabinet, arj, rar and iso archives.	
+	* Try to get the mime type from magic numbers if all other methods 
+	  fail.
+	* Now the progress dialog is exact when adding, extracting or deleting
+	  files for tar, zip, rar and 7zip archives (#153281).
+	* Do not add the backup files, that is files ending with ~, to the 
+	  archive. 
+	* Operations are now more efficient for archives with a long file 
+	  list.
+	
+	Bugfixes:
+	
+	* Fixed bug #343201 – Use p7zip for RAR archives?
+	* Fixed bug #529395 – file-roller will not open 256 AES zip files
+	* Fixed bug #515194 – PK 4.5 Zip files
+	* Fixed bug #519046 – add x-cbr and x-cbz support
+	* Fixed bug #336790 – file-roller can't open winzip-10 encrypted files (AES)	
+	* Fixed bug #539629 – Create archive for Trash/Computer
+	* Fixed bug #506698 – 7z Filename (header) Encryption request
+	* Fixed bug #542541 – icon lookup code is broken
+	* Fixed bug #504584 – Incorrect comportment when extracting multi part 
+	  rar files.
+	
+	Internal code:
+	
+	* Simplified the way to register commands.
+	* Allow to compile with Gtk+ 2.12 as well. 
+	
 version 2.23.3
 --------------
 	* Added partial support for tar archives compressed with 7zip.  
