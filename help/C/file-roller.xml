@@ -2,8 +2,8 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.14.0">
-  <!ENTITY manrevision "2.6">
+  <!ENTITY appversion "2.24.0">
+  <!ENTITY manrevision "2.24.0">
   <!ENTITY date "April 2006">
   <!ENTITY appname "Archive Manager">
   <!ENTITY app "<application>Archive Manager</application>">
@@ -32,6 +32,7 @@
      </abstract>
     <copyright> 
       <year>2006</year> 
+      <year>2008</year>
       <holder>Paolo Bacchilega</holder> 
     </copyright> 
      <copyright>
@@ -94,8 +95,16 @@
 
          <revhistory>
                 <revision>
+                  <revnumber>Archive Manager Manual V2.24.0</revnumber>
+                  <date>July 2008</date>
+                  <revdescription>
+                         <para role="author">Paolo Bacchilega</para>
+                         <para role="publisher">GNOME Documentation Project</para>
+                  </revdescription>
+                </revision>
+                <revision>
                   <revnumber>Archive Manager Manual V2.6</revnumber>
-                  <date>April 2006;</date>
+                  <date>April 2006</date>
                   <revdescription>
                          <para role="author">Paolo Bacchilega</para>
                          <para role="publisher">GNOME Documentation Project</para>
@@ -200,7 +209,7 @@
 <!-- ============= Introduction ============================== -->
 <!-- Use the Introduction section to give a brief overview of what
      the application is and what it does. -->
-<sect1 id="file-roller-intro"> 
+  <sect1 id="file-roller-intro"> 
     <title>Introduction</title> 
     <para>You can use the &app; application to create, view, modify, or unpack an archive. An archive is a file that acts as a container for other files. An archive can contain many files, folders, and subfolders, usually in compressed form. 
     </para>
@@ -208,7 +217,7 @@
       &app; provides only a graphical interface, and relies on command-line utilities such as <command>tar</command>, <command>gzip</command>, and <command>bzip2</command> for archive operations. 
     </para>
     <para>
-      If you have the appropriate command-line tools installed on your system, &app; supports RPM and Stuff files, as well as the archive formats listed in the following table.</para> 
+      If you have the appropriate command-line tools installed on your system, &app; supports the archive formats listed in the following table.</para> 
       <informaltable frame="all">
         <tgroup cols="2" colsep="1" rowsep="1">
           <colspec colname="COLSPEC0" colwidth="50*"/>
@@ -223,24 +232,68 @@
           </thead>
           <tbody>
             <row valign="top">
+              <entry><para>7-Zip archive</para></entry>
+              <entry align="left"><para><filename>.7z</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>WinAce archive</para></entry>
+              <entry align="left"><para><filename>.ace</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>ALZip archive</para></entry>
+              <entry align="left"><para><filename>.alz</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>AIX small indexed archive</para></entry>
+              <entry align="left"><para><filename>.ar</filename></para></entry>
+            </row>
+            <row valign="top">
               <entry><para>ARJ archive</para></entry>
               <entry align="left"><para><filename>.arj</filename></para></entry>
             </row>
             <row valign="top">
-              <entry><para>Enterprise archive</para></entry>
-              <entry align="left"><para><filename>.ear</filename></para></entry>
+              <entry><para>Cabinet file</para></entry>
+              <entry align="left"><para><filename>.cab</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>UNIX CPIO archive</para></entry>
+              <entry align="left"><para><filename>.cpio</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>Debian Linux package</para></entry>
+              <entry align="left"><para><filename>.deb</filename></para></entry>
+            </row>            
+            <row valign="top">
+              <entry><para>ISO-9660 CD disc image</para></entry>
+              <entry align="left"><para><filename>.iso</filename></para></entry>
             </row>
             <row valign="top">
               <entry><para>Java archive</para></entry>
               <entry align="left"><para><filename>.jar</filename></para></entry>
             </row>
             <row valign="top">
-              <entry><para>LHA archive</para></entry>
-              <entry align="left"><para><filename>.lzh</filename></para></entry>
+              <entry><para>Java enterprise archive</para></entry>
+              <entry align="left"><para><filename>.ear</filename></para></entry>
             </row>
             <row valign="top">
-              <entry><para>Resource Adapter archive</para></entry>
+              <entry><para>Java web archive</para></entry>
+              <entry align="left"><para><filename>.war</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>LHA archive</para></entry>
+              <entry align="left"><para><filename>.lha</filename>, <filename>.lzh</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>WinRAR compressed archive</para></entry>
               <entry align="left"><para><filename>.rar</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>RAR archived comic book</para></entry>
+              <entry align="left"><para><filename>.cbr</filename></para></entry>
+            </row>
+            <row valign="top">
+              <entry><para>RPM Linux package</para></entry>
+              <entry align="left"><para><filename>.rpm</filename></para></entry>
             </row>
             <row valign="top">
               <entry><para>Uncompressed tar archive</para></entry>
@@ -266,17 +319,21 @@
               <entry><para>Tar archive compressed with <command>compress</command></para></entry>
               <entry align="left"><para><filename>.tar.Z</filename> or <filename>.taz</filename></para></entry>
             </row>
+             <row valign="top">
+              <entry><para>Tar archive compressed with <command>7zip</command></para></entry>
+              <entry align="left"><para><filename>.tar.7z</filename></para></entry>
+            </row>
             <row valign="top">
-              <entry><para>Web archive</para></entry>
-              <entry align="left"><para><filename>.war</filename></para></entry>
+              <entry><para>Stuffit archives</para></entry>
+              <entry align="left"><para><filename>.bin</filename> or <filename>.sit</filename></para></entry>
             </row>
             <row valign="top">
               <entry><para>PKZIP or WinZip archive</para></entry>
               <entry align="left"><para><filename>.zip</filename></para></entry>
             </row>
-	    <row valign="top">
-              <entry><para>7-Zip archive</para></entry>
-              <entry align="left"><para><filename>.7z</filename></para></entry>
+            <row valign="top">
+              <entry><para>ZIP Archived Comic Book</para></entry>
+              <entry align="left"><para><filename>.cbz</filename></para></entry>
             </row>
             <row valign="top">
               <entry><para>Zoo archive</para></entry>
@@ -285,20 +342,20 @@
           </tbody>
         </tgroup>
       </informaltable>
-    <para>The most common archive format on UNIX and Linux systems is the tar archive compressed with <command>gzip</command>.  </para>  
+    <para>The most common archive format on UNIX and Linux systems is the tar archive compressed with <command>gzip</command> or <command>bzip2</command>.  </para>  
     <para>The most common archive format on Microsoft Windows systems is the archive created with <application>PKZIP</application> or <application>WinZip</application>.  </para>
-<sect2 id="file-roller-intro-nonarchive">
-    <title>Compressed Non-Archive Files</title> 
-    <para>A compressed non-archive file is a file that is created when you use <command>bzip</command>, <command>bzip2</command>, <command>gzip</command>, <command>lzop</command>, or <command>compress</command> to compress a non-archive file. For example, <filename>file.txt.gz</filename> is created when you use <command>gzip</command> to compress <filename>file.txt</filename>.</para>
-    <para>You can use &app; to create, open and extract a compressed non-archive file.</para> 
-</sect2>
-</sect1>
+    <sect2 id="file-roller-intro-nonarchive">
+      <title>Compressed Non-Archive Files</title> 
+      <para>A compressed non-archive file is a file that is created when you use <command>bzip2</command>, <command>gzip</command>, <command>lzop</command>, <command>compress</command> or <command>rzip</command> to compress a non-archive file. For example, <filename>file.txt.gz</filename> is created when you use <command>gzip</command> to compress <filename>file.txt</filename>.</para>
+      <para>You can use &app; to create, open and extract a compressed non-archive file.</para> 
+    </sect2>
+  </sect1>
 
 <!-- ============= Getting Started =========================== -->
-<sect1 id="file-roller-get-start">
-         <title>Getting Started</title>
-           <para>This section provides information on how to start &app;, and describes the &app; user interface.
-           </para>
+  <sect1 id="file-roller-get-start">
+    <title>Getting Started</title>
+    <para>This section provides information on how to start &app;, and describes the &app; user interface.
+    </para>
 
 <!-- ============= To Start File Roller ============================ -->
          <sect2 id="file-roller-to-start">
@@ -367,62 +424,15 @@
                 </variablelist>
                 <para>When you right-click in the &app; window, the application displays a popup menu. The popup menu contains the most common contextual archive commands. </para>
 
-         <sect3 id="file-roller-bookmarks">
-                <title>Bookmarks</title>
-      <para>Several &app; dialogs contain the following components, which enable you to bookmark frequently accessed folders:
-      </para>
-        <variablelist>
-          <varlistentry>
-            <term>Bookmarks</term>
-            <listitem>
-              <para>Use this list box to open a bookmarked folder.</para>
-              <para>&app; provides the following default bookmarks:</para>
-              <informaltable frame="all">
-                <tgroup cols="2" colsep="1" rowsep="1">
-                  <colspec colname="COLSPEC0" colwidth="50*"/>
-                  <colspec colname="COLSPEC1" colwidth="50*"/>
-                  <thead>
-                    <row valign="top">
-                      <entry colname="COLSPEC0">
-                        <para>Bookmark</para></entry>
-                      <entry colname="COLSPEC1" align="left"> 
-                        <para>Location</para></entry>
-                    </row>
-                  </thead>
-                  <tbody>
-                    <row valign="top">               
-                      <entry><para><guilabel>Home</guilabel></para></entry>
-                      <entry><para><filename>$HOME</filename></para></entry>
-                    </row>
-                    <row valign="top">               
-                      <entry><para><guilabel>Desktop</guilabel></para></entry>
-                      <entry><para><filename>$HOME/Desktop</filename></para></entry>
-                    </row>
-                    <row valign="top">               
-                      <entry><para><guilabel>Filesystem</guilabel></para></entry>
-                      <entry><para><filename>/</filename></para></entry>
-                    </row>
-                  </tbody>
-                </tgroup>
-              </informaltable>
-              <note>
-                <para>$HOME is the home directory specified in the <filename>/etc/passwd</filename> file. &app; always uses this value, even if the user resets the value of $HOME after login.</para>
-              </note>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>Files and folders</term>
-            <listitem><para>Use this list box to open a subfolder within the bookmarked folder, or to select a file or folder.</para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><guibutton>Add</guibutton></term>
-            <listitem><para>Click on this button to add a new bookmark to the bookmarks list box.</para></listitem>
-          </varlistentry>
-          <varlistentry>
-            <term><guibutton>Remove</guibutton></term>
-            <listitem><para>Click on this button to remove the selected bookmark from the bookmarks list box.</para></listitem>
-          </varlistentry>
-        </variablelist>
+     <sect3 id="file-roller-bookmarks">
+        <title>Browsing the Filesystem</title>
+        <para>Several &app; dialogs (<guilabel>New</guilabel>, <guilabel>Open</guilabel>, <guilabel>Extract</guilabel>,...) enable you
+        to browse files and folders on your computer. Refer to the <ulink type="help" 
+        url="ghelp:user-guide?filechooser-open">Desktop User Guide</ulink> to learn more about using the 
+        file browsing dialogs.</para>
+        <para>You can also refer to the <ulink type="help" url="ghelp:user-guide?nautilus-bookmarks">Bookmarks 
+        section</ulink> of the Desktop User Guide to learn how you can use the <guilabel>Places</guilabel> pane 
+        to access your favorite locations.</para>
      </sect3>
    </sect2>
 </sect1>
@@ -513,6 +523,10 @@
               <entry><para><filename>*.jpg; *.jpeg</filename></para></entry>
               <entry align="left"><para>All files with extension <filename>jpg</filename> and all files with extension <filename>jpeg</filename></para></entry>
             </row>
+            <row valign="top">               
+              <entry><para><filename>file?.gz</filename></para></entry>
+              <entry align="left"><para>All files with extension <filename>gz</filename> that have the name "file" followed by any single character, e.g. <filename>file2.gz</filename>, <filename>filex.gz</filename>.</para></entry>
+            </row>
           </tbody>
         </tgroup>
       </informaltable>
@@ -526,7 +540,7 @@
 	To open an archive, perform the following steps:
         <orderedlist>
           <listitem>
-           <para>Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice> to display the <guilabel>Open</guilabel> dialog.</para> 
+           <para>Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice> to display the <guilabel>Open</guilabel> dialog. Alternatively press <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>, or click <guibutton>Open</guibutton> in the toolbar.</para> 
           </listitem>
           <listitem>
            <para>Select the archive that you want to open.</para> 
@@ -545,12 +559,12 @@
             <para>The archive contents in the display area</para>
           </listitem>
           <listitem>
-            <para>The total number of files in the archive, and the size of the archive when uncompressed, in the statusbar</para>
+            <para>The number files and folders (objects) in the current location, and their size when uncompressed, in the statusbar</para>
           </listitem>
         </itemizedlist>
       </para>
       <para>
-        To open another archive, choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. &app; opens each archive in a new window. To open another archive in the same window, you must first choose <menuchoice> <guimenu>Archive</guimenu> <guimenuitem>Close</guimenuitem> </menuchoice> to close the current archive, then choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice>.
+        To open another archive, choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. &app; opens each archive in a new window. You can't open another archive in the same window.
       </para>
       <para>
 	If you try to open an archive that was created in a format that &app; does not recognize, the application displays an error message. See <xref linkend="file-roller-intro"/> for a list of supported formats.
@@ -561,26 +575,26 @@
     <sect2 id="file-roller-select-files">
       <title>To Select Files in an Archive</title>
     <para>
-      To select all files in an archive, choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Select All</guimenuitem></menuchoice>. </para>
-      <para>To deselect all files in an archive, choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Deselect All</guimenuitem></menuchoice>.
+      To select all files in an archive, choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Select All</guimenuitem></menuchoice> or press <keycombo><keycap>Ctrl</keycap><keycap>A</keycap></keycombo>. </para>
+      <para>To deselect all files in an archive, choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Deselect All</guimenuitem></menuchoice> or press <keycombo><keycap>Shift</keycap><keycap>Ctrl</keycap><keycap>A</keycap></keycombo>.
     </para>
     </sect2>
 
   <!-- =========== Extracting Files From an Archive ==================== -->
 
-<sect2 id="file-roller-extract"> 
+  <sect2 id="file-roller-extract"> 
     <title>To Extract Files From an Archive</title> 
     <para>
 	To extract files from an open archive, perform the following steps:
         <orderedlist>
         <listitem><para>
-        Select the files that you want to extract.</para>
+        Select the files that you want to extract.  To select more files, press-and-hold <keycap>Ctrl</keycap> and click on the files you want to select.</para>
         </listitem>
         <listitem><para>
-        Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Extract</guimenuitem></menuchoice> to display the <guilabel>Extract</guilabel> dialog.</para>
+        Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Extract</guimenuitem></menuchoice> to display the <guilabel>Extract</guilabel> dialog.  Alternatively click <guibutton>Extract</guibutton> in the toolbar.</para>
         </listitem>
         <listitem><para>
-         Select the folder where &app; extracts the files from the <guilabel>Extract in folder</guilabel> drop-down list. If the folder is not present in the list, choose <guilabel>Other...</guilabel> to select the folder from the <guilabel>Destination folder</guilabel> dialog, then click on <guibutton>Open</guibutton>.</para>
+        Select the folder where &app; extracts the files.</para>
         </listitem>
         <listitem><para>
         Select the required extract options. For more information about the extract options, see <xref linkend="file-roller-extract-options"/>.</para>
@@ -589,10 +603,10 @@
         Click <guibutton>Extract</guibutton>.</para>
         <note>
           <para>
-            If all of the files in the archive are protected by a password, and you have not specified the password, &app; displays an error dialog.
+            If all of the files in the archive are protected by a password, and you have not specified it, &app; asks you to enter the password.
           </para>
           <para>
-            If some but not all of the files in the archive are protected by a password, and you have not specified the password, &app; does not display an error dialog. However, &app; extracts only the unprotected files to the new archive.
+            If some but not all of the files in the archive are protected by a password, and you have not specified the password, &app; does not ask for a password. However, &app; extracts only the unprotected files.
           </para>
           <para>
             For more information about passwords, see <xref linkend="file-roller-encrypt-files"/>.
@@ -608,31 +622,33 @@
     <para>
       The Extract operation does not change the contents of the archive. For information on how to delete files from an archive, see <xref linkend="file-roller-delete-files"/>. 
     </para>
-</sect2>
+  </sect2>
     
 <!-- ======= Closing the Archive ============= --> 
-<sect2 id="file-roller-archive-close">
-  <title>To Close an Archive</title>
-  <para>To close the current archive but not the &app; window, choose <menuchoice> <guimenu>Archive</guimenu> <guimenuitem>Close</guimenuitem> </menuchoice>.
-  </para>
-  <para>To close the current archive and the current &app; window, choose <menuchoice> <guimenu>Archive</guimenu> <guimenuitem>Quit</guimenuitem> </menuchoice>.
-  </para>
-</sect2>
+  <sect2 id="file-roller-archive-close">
+    <title>To Close an Archive</title>
+    <para>To close the current archive and the current &app; window, choose <menuchoice> <guimenu>Archive</guimenu> <guimenuitem>Close</guimenuitem> </menuchoice>, or press <keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo>.
+    </para>
+    <note>
+      <para>There is no way to close the current archive but not the &app; window.
+      </para>
+    </note>
+  </sect2>
 </sect1>
 
 
-  <!-- =============  Creating Archives ============================= -->
+<!-- =============  Creating Archives ============================= -->
 <sect1 id="file-roller-creating"> 
     <title>Creating Archives</title> 
     <para>
       In addition to opening existing archives, you can also create new archives with &app;.</para>
-<sect2 id="file-roller-create"> 
+    <sect2 id="file-roller-create"> 
     <title>To Create an Archive</title> 
     <para>
       To create an archive, perform the following steps:
       <orderedlist>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>New</guimenuitem></menuchoice> to display the <guilabel>New</guilabel> dialog. 
+          <para>Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>New</guimenuitem></menuchoice> to display the <guilabel>New</guilabel> dialog.  Alternatively press <keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo>, or click <guibutton>New</guibutton> in the toolbar.
           </para>
         </listitem>
         <listitem>
@@ -640,8 +656,11 @@
           </para>
         </listitem>
         <listitem>
-          <para>Enter the name of the new archive, including the file extension, in the <guilabel>Name</guilabel> text box. 
+          <para>Enter the name of the new archive, including the file extension, in the <guilabel>Name</guilabel> text box.  Alternatively you can specify the archive name without extension, and then select the archive type from the <guilabel>Archive type</guilabel> drop-down menu, this way the extension will be added automatically.  
           </para>
+        </listitem>
+        <listitem><para>
+        Select the required create options clicking on <guilabel>Other Options</guilabel>. For more information about the create options, see <xref linkend="file-roller-create-options"/>.</para>
         </listitem>
         <listitem>
           <para>Click <guibutton>New</guibutton>. &app; creates an empty archive, but does not yet write the archive to disk. 
@@ -666,13 +685,13 @@
       To add files to an archive, perform the following steps:
       <orderedlist>
          <listitem>
-           <para>Decide where you want to add the files, then open that folder in the archive.</para> 
+           <para>Decide where in the archive you want to add the files, then open that location in the archive.</para> 
          </listitem>
          <listitem>
-           <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Add Files</guimenuitem></menuchoice> to display the <guilabel>Add Files</guilabel> dialog.</para> 
+           <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Add Files</guimenuitem></menuchoice> to display the <guilabel>Add Files</guilabel> dialog, or click <guibutton>Add Files</guibutton> in the toolbar.</para> 
          </listitem>
          <listitem>
-           <para>Select the files that you want to add.</para> 
+           <para>Select the files that you want to add.  To select more files press-and-hold <keycap>Ctrl</keycap> and click the files.</para> 
          </listitem>
          <listitem>
            <para>Click <guibutton>Add</guibutton>. &app; adds the files to the current folder in the archive.
@@ -694,7 +713,7 @@
       To add a folder to an archive, perform the following steps:
       <orderedlist>
          <listitem>
-           <para>Decide where you want to add the files, then open that folder in the archive.</para> 
+           <para>Decide where in the archive you want to add the files, then open that location in the archive.</para>
          </listitem>
          <listitem>
            <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Add a Folder</guimenuitem></menuchoice> to display the <guilabel>Add a Folder</guilabel> dialog.</para> 
@@ -734,14 +753,18 @@
         </para>
       </listitem>
       <listitem>
+        <para>Select the required create options clicking on <guilabel>Other Options</guilabel>. For more information about the create options, see <xref linkend="file-roller-create-options"/>.
+        </para>
+      </listitem>      
+      <listitem>
         <para>Click <guibutton>Save</guibutton>. 
         </para>
         <note>
           <para>
-            If all of the files in the archive are protected by a password, and you have not specified the password, &app; displays an error dialog.
+            If all of the files in the archive are protected by a password, and you have not specified the it, &app; asks you to enter the password.
           </para>
           <para>
-            If some but not all of the files in the archive are protected by a password, and you have not specified the password, &app; does not display an error dialog. However, &app; copies only the unprotected files to the new archive.
+            If some but not all of the files in the archive are protected by a password, and you have not specified the password, &app; does not ask for a password. However, &app; copies only the unprotected files to the new archive.
           </para>
           <para>
             For more information about passwords, see <xref linkend="file-roller-encrypt-files"/>.
@@ -763,7 +786,10 @@
     <sect2 id="file-roller-encrypt-files">
       <title>To Encrypt Files in an Archive</title>
     <para>For security, you might want to encrypt the files that you add to an archive. </para>
-      <para>If the archive format supports encryption, you can specify a password to encrypt the files that you add to the archive. Currently, only <filename>.zip</filename> and <filename>.arj</filename> archives support encryption.</para>
+      <para>If the archive format supports encryption, you can specify a password to encrypt the files that you add to the archive.</para>
+      <note>
+        <para>Currently, only 7-ZIP, ZIP, RAR and ARJ archives support encryption.</para>
+      </note>
      <para>To specify a password for file encryption, perform the following steps:</para>
        <orderedlist>
           <listitem><para>Choose <menuchoice><guimenu>Edit</guimenu> <guimenuitem>Password</guimenuitem></menuchoice> to display the <guilabel>Password</guilabel> dialog.</para></listitem> 
@@ -789,7 +815,7 @@
           <para>Select the file that you want to rename.</para>
         </listitem>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Rename</guimenuitem></menuchoice> to display the <guilabel>Rename</guilabel> dialog.</para>
+          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Rename</guimenuitem></menuchoice>, or press <keycombo><keycap>F2</keycap></keycombo>, to display the <guilabel>Rename</guilabel> dialog.</para>
         </listitem>
         <listitem>
           <para>Enter the new filename in the <guilabel>New file name</guilabel> text box.</para>
@@ -810,13 +836,13 @@
           <para>Select the files that you want to copy.</para>
         </listitem>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.  </para>
+          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>, or press <keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>.  </para>
         </listitem>
         <listitem>
           <para>Open the location where you want to put the copied files.</para>
         </listitem>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Paste</guimenuitem></menuchoice>.  </para>
+          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Paste</guimenuitem></menuchoice>, or press <keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo>.  </para>
         </listitem>
       </orderedlist>
   </sect2>
@@ -830,13 +856,13 @@
           <para>Select the files that you want to move.</para>
         </listitem>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Cut</guimenuitem></menuchoice>.  </para>
+          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Cut</guimenuitem></menuchoice>, or press <keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo>.  </para>
         </listitem>
         <listitem>
           <para>Open the location where you want to put the moved files.</para>
         </listitem>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Paste</guimenuitem></menuchoice>.  </para>
+          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Paste</guimenuitem></menuchoice>, or press <keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo>.  </para>
         </listitem>
       </orderedlist>
   </sect2>
@@ -850,7 +876,7 @@
           <para>Select the files that you want to delete.</para>
         </listitem>
         <listitem>
-          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Delete</guimenuitem></menuchoice> to display the <guilabel>Delete</guilabel> dialog.</para>
+          <para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Delete</guimenuitem></menuchoice> or press <keycap>Delete</keycap> to display the <guilabel>Delete</guilabel> dialog.</para>
         </listitem>
         <listitem>
           <para>Select one of the following delete options:</para>
@@ -888,6 +914,33 @@
       </orderedlist>
   </sect2>
 
+<!-- =============  Modify a File in an Archive ==================== -->
+  <sect2 id="file-roller-modify-archive-file"> 
+    <title>To Modify a File in an Archive</title> 
+    <para>
+      To modify a file in an archive perform the following steps:
+      <orderedlist>
+      <listitem><para>Double-click the file that you want to open. Alternatively right-click the file and choose <menuchoice><guimenuitem>Open</guimenuitem></menuchoice>.</para></listitem>
+      <listitem><para>Edit the file opened in step 1, and then save your changes.</para></listitem>
+      <listitem><para>&app; shows a confirmation dialog, asking confirmation to update the file in the archive with the changes you made.</para></listitem>
+      <listitem><para>Click on <guilabel>Update</guilabel>.</para></listitem>
+      </orderedlist>
+    </para>
+    <para>&app; uses information from the <guilabel>File Types and Programs</guilabel> section of Advanced Desktop Preferences to automatically determine the appropriate application for the file type, and then launches that application. If &app; cannot determine the appropriate application, &app; displays the <guilabel>Open Files</guilabel> dialog to let you choose an application, as described in below.
+    </para>
+    <sect3 id="file-roller-modifiy-archive-file-custom-app">
+    <title>To Modify a File in an Archive with a Custom Application</title>
+    <para>
+      You can use an application specified by you, rather than the default application, to modify a file. To use an external application to open a file:
+      <orderedlist>
+      <listitem><para>Right click the file.</para></listitem>
+      <listitem><para>Choose <menuchoice><guimenuitem>Open With...</guimenuitem></menuchoice>.</para></listitem>
+      </orderedlist>
+    </para>    
+    <para>&app; displays the <guilabel>Open Files</guilabel> dialog, which lists all of the applications that can open files of the specified type. To select one of the applications, double-click the application name or click on the application name and then click <guibutton>Open</guibutton>. Alternatively, enter the application name in the <guilabel>Application</guilabel> text box and then click <guibutton>Open</guibutton> to launch the application of your choice.</para>
+    <para>Once the application starts follow the procedure from step 2 as described in <xref linkend="file-roller-modify-archive-file"/>.</para>
+    </sect3>
+  </sect2>
 </sect1>
 
 
@@ -908,7 +961,7 @@
                 </para></listitem>
 	      </varlistentry>
 	      <varlistentry>
-	        <term><guilabel>Path</guilabel></term>
+	        <term><guilabel>Location</guilabel></term>
 	        <listitem><para>The position of the archive in the file system. 
                 </para></listitem>
 	      </varlistentry>
@@ -972,7 +1025,7 @@
 	  </varlistentry>
 	  <varlistentry>
 	    <term><guilabel>Location</guilabel></term>
-	    <listitem><para>The path to the file within the archive. For a folder, the <guilabel>Location</guilabel> field is blank.
+	    <listitem><para>The path to the file within the archive. This column is visible only when the window is in file view, when in folder view the location of the files is displayed in the <guilabel>Location</guilabel> text box of the folderbar. For more information about view types see <xref linkend="file-roller-view-type-folder"/>.
             </para></listitem>
 	  </varlistentry>
         </variablelist>
@@ -983,38 +1036,45 @@
       </para>
       <para>For more advanced tasks, use an application installed on your system. For more information, see <xref linkend="file-roller-view-archive-file"/>. 
       </para>
-
     </sect2>
 
   <!-- =============  Viewing a File in an Archive ==================== -->
   <sect2 id="file-roller-view-archive-file"> 
     <title>To View a File in an Archive</title> 
     <para>
-      To view a file in an archive, perform the following steps:
-      <orderedlist>
-      <listitem><para>Select the file.</para></listitem>
-      <listitem><para>Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>View File</guimenuitem></menuchoice>.</para></listitem>
-      </orderedlist>
+      To view a file in an archive follow the steps described in <xref linkend="file-roller-modify-archive-file"/>.  If you save the opened file, click <guilabel>Cancel</guilabel> when &app; asks confirmation to update the file in the archive.
     </para>
-    <para>&app; uses information from the <guilabel>File Types and Programs</guilabel> section of Advanced Desktop Preferences to automatically determine the appropriate application for the file type, and then launches that application. If &app; cannot determine the appropriate application, &app; displays the <guilabel>Open Files</guilabel> dialog to let you choose an application, as described below.
+  </sect2>
+
+<!-- =============  Testing the Integrity of an Archive ==================== -->
+  <sect2 id="file-roller-test-archive"> 
+    <title>To Test the Integrity of an Archive</title> 
+    <para>Sometimes an archive can be damaged for some reason, to check whether an archive is damaged, choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Test Integrity</guimenuitem></menuchoice>:
+            <itemizedlist>
+              <listitem>
+                <para>If the archive contains no errors, &app; opens the <guilabel>Test Result</guilabel> dialog to list each file in the archive, and indicates that each file has status <literal>OK</literal>.
+                </para>
+              </listitem>
+              <listitem>
+                <para>If the archive contains some error, &app; opens the <guilabel>Test Result</guilabel> dialog displaying the part of the archive contains the error.
+                </para>
+              </listitem>
+            </itemizedlist>
     </para>
-    <para>
-      You can use an application specified by you, rather than the default application, to view a file. To use an external application to open a file, choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Open Files</guimenuitem></menuchoice>. &app; displays the <guilabel>Open Files</guilabel> dialog, which lists all of the applications that can open files of the specified type. To select one of the applications, click on the application name and then click <guibutton>Open</guibutton>. Alternatively, enter the application name in the <guilabel>Application</guilabel> text box and then click <guibutton>Open</guibutton> to launch the application of your choice. 
+    <para>A damaged archive can be impossible to extract, this can bring to a loss of data.  For this reason you should test the archive integrity before deleting the original files.
     </para>
-     <note>
-      <para>
-	You cannot use &app; to change a file. If you use an application to open a file within a &app; archive and make any changes to the opened file, &app; <emphasis>does not</emphasis> save the changes in the archive, even if you click <guibutton>Save</guibutton> in the application. &app; creates a temporary copy of the file, and then passes the temporary copy to the file-editing application. When you close the file-editing application, &app; deletes the temporary copy of the file and all changes are lost.
-      </para>
-      <para>
-	To edit a file in a &app; archive and save your changes in the archive: 
-       <orderedlist>
-       <listitem><para><link linkend="file-roller-extract">Extract</link> the file to a temporary location. </para></listitem>
-       <listitem><para>Edit the temporary file created in step 1, and then save your changes.</para></listitem>
-       <listitem><para><link linkend="file-roller-add-files">Add</link> the edited file back into the archive, that is, overwrite the original version of the file.   </para></listitem>
-       </orderedlist>
+    <para>If the archive contains encrypted files, &app; asks the password of the archive before performing the test.
+    </para>
+    <note>
+      <para>Not all the archive types support the integrity testing, the following is the list of archive types that can be tested for integrity: 7-Zip, RAR, ZIP, ACE, ARJ and Zoo.
       </para>
     </note>
-  </sect2>
+    <tip>
+      <title>Tip</title>
+      <para>To test the integrity of an archive that doesn't support the integrity testing, extract all the files from the archive and check that the operation is completed successfully.      
+      </para>      
+    </tip>
+  </sect2>  
 </sect1>
     
 <!-- ======= Customizing the Archive Display ============= --> 
@@ -1173,8 +1233,8 @@
   <sect2 id="file-roller-view-sort">
     <title>To Sort the File List</title>
     <para>You can sort the file list by name, size, type, modification date, or location. </para>
-    <para>To specify a sort order, choose <menuchoice><guimenu>View</guimenu><guisubmenu>Arrange Files</guisubmenu></menuchoice> and select the required sort order. Alternatively, click on the heading of the corresponding column. </para>
-    <para>To reverse the sort order, click on the column heading again, or choose <menuchoice><guimenu>View</guimenu><guisubmenu>Arrange Files</guisubmenu><guisubmenu>Reversed Order</guisubmenu></menuchoice>.
+    <para>To specify a sort order, click on the heading of the corresponding column. </para>
+    <para>To reverse the sort order, click on the column heading again.
     </para>
     <para>For example, to sort the file list by modification date, click on the <guilabel>Date modified</guilabel> heading. &app; rearranges the file list to display the files by modification date, starting with the earliest. To display the latest files first, click on the <guilabel>Date modified</guilabel> heading again.
 	  </para>
@@ -1184,23 +1244,6 @@
 
   <sect2 id="file-roller-extra-info">
     <title>To Display Additional Details</title>
-      <para>To check whether an archive contains encrypted files, choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Test Integrity</guimenuitem></menuchoice>: 
-            <itemizedlist>
-              <listitem>
-                <para>If the archive contains no encrypted files, or if the archive contains encrypted files and you have entered the correct password in the <guilabel>Password</guilabel> text box, &app; opens the <guilabel>Test Result</guilabel> dialog to list each file in the archive, and indicates that each file has status <literal>OK</literal>.
-                </para>
-              </listitem>
-              <listitem>
-                <para>If the archive contains some encrypted and unencrypted files, and you have not entered the correct password in the <guilabel>Password</guilabel> text box, &app; opens the <guilabel>Test Result</guilabel> dialog to list each file in the archive, and indicates that each unencrypted file has status <literal>OK</literal>, and each encrypted file has status <literal>incorrect password</literal>.
-                </para>
-              </listitem>
-              <listitem>
-                <para>If the archive contains only encrypted files and you have not entered the correct password in the <guilabel>Password</guilabel> text box, &app; displays an <guilabel>Error</guilabel> dialog. 
-                </para>
-              </listitem>
-            </itemizedlist>
-                     For more information about file encryption, see <xref linkend="file-roller-encrypt-files"/>.
-      </para>
       <para>To open the <guilabel>Last Output</guilabel> dialog, choose <menuchoice><guimenu>View</guimenu><guimenuitem>Last Output</guimenuitem></menuchoice>: 
             <itemizedlist>
               <listitem>
@@ -1240,7 +1283,14 @@
         </listitem>
         <listitem><para>Choose <guimenuitem>Create Archive</guimenuitem> from the file manager popup menu to display the &app; <guilabel>Create Archive</guilabel> dialog.  </para>
         </listitem>
-        <listitem><para>Enter the archive name in the <guilabel>Archive</guilabel> text box. </para>
+        <listitem><para>Enter the archive name, without the file extension, in the <guilabel>Archive</guilabel> text box. </para>
+        </listitem>
+        <listitem><para>Choose the archive type from the drop-down list. </para>
+        </listitem>
+        <listitem><para>Choose the location where to save the archive file, from the <guilabel>Location</guilabel> drop-down list.  If the location is not present in the list choose <guilabel>Other...</guilabel> to select it with the <guilabel>Location</guilabel> dialog.</para>
+        </listitem>
+        <listitem><para>
+        Select the required create options clicking on <guilabel>Other Options</guilabel>. For more information about the create options, see <xref linkend="file-roller-create-options"/>.</para>
         </listitem>
         <listitem><para>Click <guilabel>Create</guilabel> to add the selected files to the root folder of the specified archive.
       </para>
@@ -1267,10 +1317,44 @@
         <listitem><para>Choose <guimenuitem>Extract Here</guimenuitem> to extract all of the archive contents into the directory where the archive is located.</para>
         </listitem>
       </orderedlist>
-      <note><para>To extract encrypted files, you must invoke &app; as described in <xref linkend="file-roller-to-start"/>.</para></note>
+      <note><para>If the archive is encrypted, &app; will ask to enter the password before extracing the files.</para></note>
     </sect2>
 
 </sect1>
+
+<!-- ======= Create Archive Advanced Options  ============= --> 
+    <sect1 id="file-roller-create-options">
+      <title>Create Options</title>
+      <para>When creating a new archive, or when converting an existing archive to another format, click on <guilabel>Other Options</guilabel> the specify the following advanced options: 
+      </para>
+      <variablelist>
+       <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Password</guilabel></term>
+	  <listitem>
+	  <para>Type the password that will be used to encrypt the archive.  If no password is specified the archive will not be encrypted.</para>
+	  <note>
+	    <para>Not all the archive type support encryption.  For more information about file encryption, see <xref linkend="file-roller-encrypt-files"/>.</para>
+	  </note>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>	  
+	  <term><guilabel>Encrypt the file list too</guilabel></term>
+	  <listitem>
+	  <para>If this option is selected, the password will be requested even to view the list of files contained in the archive, otherwise it will be requested only to extract the files from the archive.  This options is available only if a password is specified.</para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>	  
+	  <term><guilabel>Split in volumes</guilabel></term>
+	  <listitem>
+	  <para>Select this option to split the archive in more files of the specified dimension.</para>
+	  <note>
+	    <para>Only 7-Zip and RAR archives support this feature.</para>
+	  </note>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </sect1>
 
 <!-- ======= Add Advanced Options  ============= --> 
     <sect1 id="file-roller-add-options">
@@ -1315,7 +1399,8 @@
                         </para>
                       </listitem>
                     </orderedlist>
-                    &app; automatically adds to the archive all files that you created during the last week, and updates all files that you modified during the last week. However, &app; does not remove from the archive the files that you deleted during the last week. The archive update operation is much faster than doing a full backup of your home folder. 
+                </para>
+                <para>&app; automatically adds to the archive all files that you created during the last week, and updates all files that you modified during the last week. However, &app; does not remove from the archive the files that you deleted during the last week. The archive update operation is much faster than doing a full backup of your home folder. 
 	    </para>
 	  </tip>
 	</listitem>
@@ -1342,6 +1427,14 @@
             </para>
           </listitem>
 	</varlistentry>
+        <!-- ============= -->	
+	<varlistentry>
+	  <term><guilabel>Exclude folders</guilabel></term>
+	  <listitem>
+            <para>Type a filename pattern in this text box to exclude folders with names that match the specified pattern. See <xref linkend="file-roller-pattern"/> for more information about filename patterns.
+            </para>
+          </listitem>
+	</varlistentry>      
        <!-- ============= -->	
       <varlistentry>
 	<term><guilabel>Include subfolders</guilabel></term>
@@ -1367,7 +1460,7 @@
 	    </para>
           </listitem>
 	</varlistentry>
-       <!-- ============= -->	
+       <!-- ============= -->
      <varlistentry>
 	<term><guibutton>Save Options</guibutton></term>
 	  <listitem>
@@ -1392,6 +1485,14 @@
                 </para>
               </listitem>
             </itemizedlist>
+          </listitem>
+	</varlistentry>
+       <!-- ============= -->	
+     <varlistentry>
+	<term><guibutton>Reset Options</guibutton></term>
+	  <listitem>
+            <para>Click on this button to reset the current selection of advanced add options to the default values.  
+            </para>
           </listitem>
 	</varlistentry>
       </variablelist>
@@ -1482,7 +1583,7 @@
        <!-- ============= -->	
 	<varlistentry>
 	  <term><guilabel>Password</guilabel></term>
-	  <listitem><para>This option is only enabled if the archive type supports encryption. Currently, only <filename>.zip</filename> and <filename>.arj</filename> archives support encryption. </para>
+	  <listitem><para>This option is only enabled if the archive type supports encryption. Currently, only 7-ZIP, ZIP, RAR and ARJ archives support encryption. </para>
           <para>
 	     If the archive contains encrypted files, enter the required password in the <guilabel>Password</guilabel> text box to decrypt the specified files during the extraction process. The required password is the encryption password that was specified when the archive was created. For more information, see <xref linkend="file-roller-encrypt-files"/>.
           </para>

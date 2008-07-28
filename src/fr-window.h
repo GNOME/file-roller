@@ -115,7 +115,9 @@ const char *fr_window_get_paste_archive_uri     (FrWindow      *window);
 gboolean    fr_window_archive_is_present        (FrWindow      *window);
 void        fr_window_archive_save_as           (FrWindow      *window,
 						 const char    *filename,
-						 const char    *password);
+						 const char    *password,
+						 gboolean       encrypt_header,
+						 guint          volume_size);
 void        fr_window_archive_reload            (FrWindow      *window);
 void        fr_window_archive_rename            (FrWindow      *window,
 						 const char    *filename);

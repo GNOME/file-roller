@@ -23,6 +23,8 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 
+#define MEGABYTE (1024 * 1024)
+
 #define RC_DIR              ".gnome2/file-roller"
 #define RC_BOOKMARKS_FILE   ".gnome2/file-roller/bookmarks"
 #define RC_RECENT_FILE      ".gnome2/file-roller/recents"

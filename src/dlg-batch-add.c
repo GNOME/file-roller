@@ -44,7 +44,6 @@
 #define ARCHIVE_ICON_SIZE (48)
 #define DEFAULT_EXTENSION ".tar.gz"
 #define BAD_CHARS "/\\*"
-#define MEGABYTE (1024 * 1024)
 
 
 typedef struct {
@@ -112,7 +111,7 @@ set_archive_options (DialogData *data)
 	if (data->single_file)
 		save_type_list = single_file_save_type;
 	else
-		save_type_list =  save_type;
+		save_type_list = save_type;
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
 	if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT) {
@@ -143,7 +142,14 @@ set_archive_options (DialogData *data)
 }
 
 
-/* called when the "add" button is pressed. */
+static void
+help_clicked_cb (GtkWidget  *widget,
+		 DialogData *data)
+{
+	show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-fmgr-add");
+}
+
+
 static void
 add_clicked_cb (GtkWidget  *widget,
 		DialogData *data)
@@ -488,6 +494,7 @@ dlg_batch_add_files (FrWindow *window,
 {
 	DialogData   *data;
 	GtkWidget    *cancel_button;
+	GtkWidget    *help_button;
 	GtkWidget    *add_button;
 	GtkWidget    *a_archive_type_box;
 	GtkSizeGroup *size_group;
@@ -530,6 +537,7 @@ dlg_batch_add_files (FrWindow *window,
 
 	add_button = glade_xml_get_widget (data->gui, "a_add_button");
 	cancel_button = glade_xml_get_widget (data->gui, "a_cancel_button");
+	help_button = glade_xml_get_widget (data->gui, "a_help_button");
 	a_archive_type_box = glade_xml_get_widget (data->gui, "a_archive_type_box");
 
 	data->add_image = glade_xml_get_widget (data->gui, "a_add_image");
@@ -597,6 +605,10 @@ dlg_batch_add_files (FrWindow *window,
 	g_signal_connect (G_OBJECT (add_button),
 			  "clicked",
 			  G_CALLBACK (add_clicked_cb),
+			  data);
+	g_signal_connect (G_OBJECT (help_button),
+			  "clicked",
+			  G_CALLBACK (help_clicked_cb),
 			  data);
 	g_signal_connect (G_OBJECT (data->a_archive_type_combo_box),
 			  "changed",

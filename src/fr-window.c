@@ -125,6 +125,7 @@ typedef struct {
 	FrArchive *new_archive;
 	char      *password;
 	gboolean   encrypt_header;
+	guint      volume_size;
 	char      *new_file;
 } FRConvertData;
 
@@ -2831,10 +2832,15 @@ handle_errors (FrWindow    *window,
 		FrProcess *process = archive->process;
 		GList     *output = NULL;
 
-		if (window->priv->batch_mode)
+		if (window->priv->batch_mode) {
 			dialog_parent = NULL;
-		else
+			window->priv->load_error_parent_window = NULL;
+		}
+		else {
 			dialog_parent = (GtkWindow *) window;
+			if (window->priv->load_error_parent_window == NULL)
+				window->priv->load_error_parent_window = (GtkWindow *) window;
+		}
 
 		if ((action == FR_ACTION_LISTING_CONTENT) || (action == FR_ACTION_LOADING_ARCHIVE))
 			fr_window_archive_close (window);
@@ -3057,6 +3063,12 @@ action_performed (FrArchive   *archive,
 
 	case FR_ACTION_ADDING_FILES:
 		close_progress_dialog (window, FALSE);
+
+		/* update the uri because multi-volume archives can have
+		 * a different name after creation. */
+		g_free (window->priv->archive_uri);
+		window->priv->archive_uri = g_file_get_uri (window->archive->file);
+
 		if (error->type == FR_PROC_ERROR_NONE) {
 			if (window->priv->archive_new)
 				window->priv->archive_new = FALSE;
@@ -3098,7 +3110,7 @@ action_performed (FrArchive   *archive,
 				  window->priv->convert_data.password,
 				  window->priv->convert_data.encrypt_header,
 				  window->priv->compression,
-				  window->priv->volume_size);
+				  window->priv->convert_data.volume_size);
 			g_free (source_dir);
 		}
 		else {
@@ -5391,6 +5403,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->convert_data.new_archive = NULL;
 	window->priv->convert_data.password = NULL;
 	window->priv->convert_data.encrypt_header = FALSE;
+	window->priv->convert_data.volume_size = 0;
 
 	window->priv->stoppable = TRUE;
 
@@ -5868,6 +5881,16 @@ fr_window_new (void)
 }
 
 
+static void
+fr_window_set_archive_uri (FrWindow   *window,
+		           const char *uri)
+{
+	if (window->priv->archive_uri != NULL)
+			g_free (window->priv->archive_uri);
+		window->priv->archive_uri = g_strdup (uri);
+}
+
+
 gboolean
 fr_window_archive_new (FrWindow   *window,
 		       const char *uri)
@@ -5886,9 +5909,7 @@ fr_window_archive_new (FrWindow   *window,
 		return FALSE;
 	}
 
-	if (window->priv->archive_uri != NULL)
-		g_free (window->priv->archive_uri);
-	window->priv->archive_uri = g_strdup (uri);
+	fr_window_set_archive_uri (window, uri);
 	window->priv->archive_present = TRUE;
 	window->priv->archive_new = TRUE;
 
@@ -5918,9 +5939,7 @@ fr_window_archive_open (FrWindow   *current_window,
 
 	fr_window_archive_close (window);
 
-	g_free (window->priv->archive_uri);
-	window->priv->archive_uri = g_strdup (uri);
-
+	fr_window_set_archive_uri (window, uri);
 	window->priv->archive_present = FALSE;
 	window->priv->give_focus_to_the_list = TRUE;
 	window->priv->load_error_parent_window = parent;
@@ -5995,14 +6014,18 @@ fr_window_archive_is_present (FrWindow *window)
 
 
 typedef struct {
-	char *uri;
-	char *password;
+	char     *uri;
+	char     *password;
+	gboolean  encrypt_header;
+	guint     volume_size;
 } SaveAsData;
 
 
 static SaveAsData *
 save_as_data_new (const char *uri,
-		  const char *password)
+		  const char *password,
+		  gboolean    encrypt_header,
+	  	  guint       volume_size)
 {
 	SaveAsData *sdata;
 
@@ -6011,6 +6034,8 @@ save_as_data_new (const char *uri,
 		sdata->uri = g_strdup (uri);
 	if (password != NULL)
 		sdata->password = g_strdup (password);
+	sdata->encrypt_header = encrypt_header;
+	sdata->volume_size = volume_size;
 
 	return sdata;
 }
@@ -6030,7 +6055,9 @@ save_as_data_free (SaveAsData *sdata)
 void
 fr_window_archive_save_as (FrWindow   *window,
 			   const char *uri,
-			   const char *password)
+			   const char *password,
+			   gboolean    encrypt_header,
+			   guint       volume_size)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (uri != NULL);
@@ -6071,10 +6098,12 @@ fr_window_archive_save_as (FrWindow   *window,
 
 	if (password != NULL)
 		window->priv->convert_data.password = g_strdup (password);
+	window->priv->convert_data.encrypt_header = encrypt_header;
+	window->priv->convert_data.volume_size = volume_size;
 
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_SAVE_AS,
-					    save_as_data_new (uri, password),
+					    save_as_data_new (uri, password, encrypt_header, volume_size),
 					    (GFreeFunc) save_as_data_free);
 
 	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
@@ -6140,10 +6169,7 @@ fr_window_archive_rename (FrWindow   *window,
 	}
 
 	fr_archive_rename (window->archive, uri);
-
-	if (window->priv->archive_uri != NULL)
-		g_free (window->priv->archive_uri);
-	window->priv->archive_uri = g_strdup (uri);
+	fr_window_set_archive_uri (window, uri);
 
 	fr_window_update_title (window);
 	fr_window_add_to_recent_list (window, window->priv->archive_uri);
@@ -8314,7 +8340,11 @@ fr_window_exec_batch_action (FrWindow      *window,
 		debug (DEBUG_INFO, "[BATCH] SAVE_AS\n");
 
 		sdata = action->data;
-		fr_window_archive_save_as (window, sdata->uri, sdata->password);
+		fr_window_archive_save_as (window,
+					   sdata->uri,
+					   sdata->password,
+					   sdata->encrypt_header,
+					   sdata->volume_size);
 		break;
 
 	case FR_BATCH_ACTION_TEST:

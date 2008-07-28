@@ -74,13 +74,14 @@ struct _FrCommand
 	char          *filename;        /* archive file path. */
 	char          *e_filename;      /* escaped archive filename. */
 	const char    *mime_type;
+	gboolean       multi_volume;
 
 	/*<protected>*/
 
 	/* options */
 
 	char          *password;
-	gboolean       encrypt_header;
+	gboolean       encrypt_header : 1;
 	FrCompression  compression;
 	guint          volume_size;
 
@@ -163,6 +164,8 @@ struct _FrCommandClass
 
 GType          fr_command_get_type            (void);
 void           fr_command_set_filename        (FrCommand     *comm,
+					       const char    *filename);
+void           fr_command_set_multi_volume    (FrCommand     *comm,
 					       const char    *filename);
 void           fr_command_list                (FrCommand     *comm);
 void           fr_command_add                 (FrCommand     *comm,

@@ -4,6 +4,7 @@ glade_DATA = 			\
 	batch-add-files.glade	\
 	batch-password.glade	\
 	delete.glade		\
+	new.glade		\
 	open-with.glade		\
 	password.glade		\
 	properties.glade	\

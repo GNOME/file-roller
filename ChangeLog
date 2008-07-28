@@ -1,3 +1,54 @@
+2008-07-28  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* NEWS: updated.
+	* TODO: updated.
+	* README: updated.
+	
+	* src/dlg-batch-add.c (help_clicked_cb): 
+	* data/glade/batch-add-files.glade:
+	
+	Added help button.
+	 
+2008-07-26  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-archive.c (get_mime_type_from_magic_numbers): added magic
+	number for 7-zip archives. 
+
+ 	* src/fr-window.c:
+	* src/fr-process.h: 
+	* src/fr-command-rar.h: 
+	* src/fr-command-rar.c: 
+	* src/fr-command-7z.h: 
+	* src/fr-command-7z.c: 
+	* src/fr-command.h: 
+	* src/fr-command.c: 
+	* src/fr-archive.c: 
+	
+	Update the archive filename after creating a multi-volume archive.
+	
+	* src/typedefs.h:
+	* src/Makefile.am: added dlg-new.[ch]
+	* src/main.h:
+	* src/main.c:
+	* src/fr-window.h:
+	* src/fr-window.c:	
+	* src/dlg-new.c: new file
+	* src/dlg-new.c: new file  
+	* src/dlg-batch-add.c: 
+	* src/actions.c: 
+	
+	Unify the "new" and "save as" dialogs.  Allow to specify other options
+	in these dialogs, such as whether to encrypt the header and whether
+	to split the archive in volumes.
+	
+	* data/glade/new.glade: new file.
+	* data/glade/Makefile.am: include new.glade in the glade data.
+
+2008-07-25  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* configure.ac: bumped version number to differentiate 
+	current development version from the latest released version.
+
 2008-07-23  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* data/file-roller.desktop.in.in: 

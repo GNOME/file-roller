@@ -45,7 +45,6 @@ struct _FrCommandRar
 	gboolean  list_started;
 	gboolean  odd_line;
 	FileData *fdata;
-	gboolean  multi_volume;
 };
 
 struct _FrCommandRarClass

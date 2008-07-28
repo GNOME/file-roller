@@ -99,7 +99,7 @@ list__process_line (char     *line,
 			p7z_comm->list_started = TRUE;
 		else if (strncmp (line, "Multivolume = ", 14) == 0) {
 			fields = g_strsplit (line, " = ", 2);
-			p7z_comm->multi_volume = (strcmp (fields[1], "+") == 0);
+			comm->multi_volume = (strcmp (fields[1], "+") == 0);
 			g_strfreev (fields);
 		}
 		return;
@@ -218,7 +218,6 @@ fr_command_7z_list (FrCommand  *comm)
 		file_data_free (p7z_comm->fdata);
 		p7z_comm->fdata = NULL;
 	}
-	p7z_comm->multi_volume = FALSE;
 	p7z_comm->list_started = FALSE;
 	fr_process_start (comm->process);
 }
@@ -255,6 +254,14 @@ process_line__add (char     *line,
 		   gpointer  data)
 {
 	FrCommand *comm = FR_COMMAND (data);
+
+	if ((comm->volume_size > 0) && (strncmp (line, "Creating archive ", 17) == 0)) {
+		char *volume_filename;
+
+		volume_filename = g_strconcat (comm->filename, ".001", NULL);
+		fr_command_set_multi_volume (comm, volume_filename);
+		g_free (volume_filename);
+	}
 
 	if (comm->n_files != 0)
 		parse_progress_line (comm, "Compressing  ", _("Adding file: "), line);
@@ -494,7 +501,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	}
 
 	/* multi-volumes are read-only */
-	if ((comm->files->len > 0) && FR_COMMAND_7Z (comm)->multi_volume && (capabilities & FR_COMMAND_CAN_WRITE))
+	if ((comm->files->len > 0) && comm->multi_volume && (capabilities & FR_COMMAND_CAN_WRITE))
 		capabilities ^= FR_COMMAND_CAN_WRITE;
 
 	return capabilities;

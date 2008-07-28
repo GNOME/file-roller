@@ -51,6 +51,8 @@ file_roller_SOURCES = 			\
 	dlg-delete.h			\
 	dlg-extract.c			\
 	dlg-extract.h			\
+	dlg-new.c			\
+	dlg-new.h			\
 	dlg-open-with.c			\
 	dlg-open-with.h			\
 	dlg-password.c			\

@@ -122,10 +122,10 @@ void        fr_process_set_ignore_error     (FrProcess    *fr_proc,
 void        fr_process_use_standard_locale  (FrProcess    *fr_proc,
 					     gboolean      use_stand_locale);
 void        fr_process_set_out_line_func    (FrProcess    *fr_proc,
-					     LineFunc  func,
+					     LineFunc      func,
 					     gpointer      func_data);
 void        fr_process_set_err_line_func    (FrProcess    *fr_proc,
-					     LineFunc  func,
+					     LineFunc      func,
 					     gpointer      func_data);
 void        fr_process_start                (FrProcess    *fr_proc);
 void        fr_process_stop                 (FrProcess    *fr_proc);

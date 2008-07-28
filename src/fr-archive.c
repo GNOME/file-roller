@@ -533,6 +533,7 @@ get_mime_type_from_magic_numbers (GFile *file)
 	} sniffer_data [] = {
 		/* Magic numbers taken from magic/Magdir/archive from the
 		 * file-4.21 tarball. */
+		{ "application/x-7z-compressed", "7z\274\257\047\034", 0, 5 },
 		{ "application/x-ace", "**ACE**", 7, 7 },
 		{ "application/x-arj", "\x60\xea", 0, 2 },
 		{ "application/x-rar", "Rar!", 0, 4 },
@@ -857,6 +858,28 @@ static void add_dropped_items (DroppedItemsData *data);
 
 
 static void
+fr_archive_change_name (FrArchive  *archive,
+		        const char *filename)
+{
+	const char *name;
+	GFile      *parent;
+
+
+	name = file_name_from_path (filename);
+
+	parent = g_file_get_parent (archive->file);
+	g_object_unref (archive->file);
+	archive->file = g_file_get_child (parent, name);
+	g_object_unref (parent);
+
+	parent = g_file_get_parent (archive->local_copy);
+	g_object_unref (archive->local_copy);
+	archive->local_copy = g_file_get_child (parent, name);
+	g_object_unref (parent);
+}
+
+
+static void
 action_performed (FrCommand   *command,
 		  FrAction     action,
 		  FrProcError *error,
@@ -887,6 +910,10 @@ action_performed (FrCommand   *command,
 				dropped_items_data_free (archive->priv->dropped_items_data);
 				archive->priv->dropped_items_data = NULL;
 			}
+			/* the name of the volumes are different from the
+			 * original name */
+			if (archive->command->multi_volume)
+				fr_archive_change_name (archive, archive->command->filename);
 			if (! g_file_has_uri_scheme (archive->file, "file")) {
 				copy_to_remote_location (archive, action);
 				return;
@@ -1261,9 +1288,9 @@ fr_archive_rename (FrArchive  *archive,
 		fr_archive_load (archive, filename, NULL);
 	}
 	else {
-		g_object_unref (archive->file);
+		if (archive->file != NULL)
+			g_object_unref (archive->file);
 		archive->file = g_file_new_for_path (filename);
-
 		fr_command_set_filename (archive->command, filename);
 	}
 }
@@ -1454,6 +1481,41 @@ save_list_to_temp_file (GList   *file_list,
 }
 
 
+static GList *
+split_in_chunks (GList *file_list)
+{
+	GList *chunks = NULL;
+	GList *new_file_list;
+	GList *scan;
+
+	new_file_list = g_list_copy (file_list);
+	for (scan = new_file_list; scan != NULL; /* void */) {
+		GList *prev = scan->prev;
+		GList *chunk;
+		int    l;
+
+		chunk = scan;
+		l = 0;
+		while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
+			if (l == 0)
+				l = strlen (scan->data);
+			prev = scan;
+			scan = scan->next;
+			if (scan != NULL)
+				l += strlen (scan->data);
+		}
+		if (prev != NULL) {
+			if (prev->next != NULL)
+				prev->next->prev = NULL;
+			prev->next = NULL;
+		}
+		chunks = g_list_append (chunks, chunk);
+	}
+
+	return chunks;
+}
+
+
 void
 fr_archive_add (FrArchive     *archive,
 		GList         *file_list,
@@ -1606,34 +1668,26 @@ fr_archive_add (FrArchive     *archive,
 		g_free (list_dir);
 	}
 	else {
+		GList *chunks = NULL;
+
 		/* specify the file list on the command line, splitting
 		 * in more commands to avoid to overflow the command line
 		 * length limit. */
-		for (scan = new_file_list; scan != NULL; ) {
-			GList *prev = scan->prev;
-			GList *chunk_list;
-			int    l;
 
-			chunk_list = scan;
-			l = 0;
-			while ((scan != NULL) && (l < MAX_CHUNK_LEN)) {
-				if (l == 0)
-					l = strlen (scan->data);
-				prev = scan;
-				scan = scan->next;
-				if (scan != NULL)
-					l += strlen (scan->data);
-			}
+		chunks = split_in_chunks (new_file_list);
+		for (scan = chunks; scan != NULL; scan = scan->next) {
+			GList *chunk = scan->data;
 
-			prev->next = NULL;
 			fr_command_add (archive->command,
 					NULL,
-					chunk_list,
+					chunk,
 					tmp_base_dir,
 					update,
 					recursive);
-			prev->next = scan;
+			g_list_free (chunk);
 		}
+
+		g_list_free (chunks);
 	}
 
 	path_list_free (new_file_list);

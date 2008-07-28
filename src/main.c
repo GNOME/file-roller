@@ -603,7 +603,7 @@ get_archive_filename_extension (const char *filename)
 }
 
 
-static int
+int
 get_mime_type_index (const char *mime_type)
 {
 	int i;

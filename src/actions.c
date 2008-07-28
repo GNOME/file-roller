@@ -22,6 +22,7 @@
 
 #include <config.h>
 #include <string.h>
+#include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -30,6 +31,7 @@
 #include "dlg-add-folder.h"
 #include "dlg-extract.h"
 #include "dlg-delete.h"
+#include "dlg-new.h"
 #include "dlg-open-with.h"
 #include "dlg-password.h"
 #include "dlg-prop.h"
@@ -43,44 +45,35 @@
 #include "typedefs.h"
 
 
-typedef struct {
-	FrWindow  *window;
-	int       *supported_types;
-
-	GtkWidget *file_sel;
-	GtkWidget *combo_box;
-	GtkWidget *password;
-	GtkWidget *password_label;
-} SaveAsData;
-
-
 /* -- new archive -- */
 
 
 static void
-new_archive_dialog_destroy_cb (GtkWidget  *w,
-		               SaveAsData *data)
+new_archive (DlgNewData *data,
+	     char       *uri)
 {
-	g_free (data);
-}
+	GtkWidget  *archive_window;
+	gboolean    new_window;
+	const char *password;
+	gboolean    encrypt_header;
+	int         volume_size;
 
-
-static void
-new_archive (GtkWidget *file_sel,
-	     FrWindow  *window,
-	     char      *uri)
-{
-	GtkWidget *archive_window;
-	gboolean   new_window;
-
-	new_window = fr_window_archive_is_present (window) && ! fr_window_is_batch_mode (window);
+	new_window = fr_window_archive_is_present (data->window) && ! fr_window_is_batch_mode (data->window);
 	if (new_window)
 		archive_window = fr_window_new ();
 	else
-		archive_window = (GtkWidget *) window;
+		archive_window = (GtkWidget *) data->window;
+
+	password = dlg_new_data_get_password (data);
+	encrypt_header = dlg_new_data_get_encrypt_header (data);
+	volume_size = dlg_new_data_get_volume_size (data);
+
+	fr_window_set_password (FR_WINDOW (archive_window), password);
+	fr_window_set_encrypt_header (FR_WINDOW (archive_window), encrypt_header);
+	fr_window_set_volume_size (FR_WINDOW (archive_window), volume_size);
 
 	if (fr_window_archive_new (FR_WINDOW (archive_window), uri)) {
-		gtk_widget_destroy (file_sel);
+		gtk_widget_destroy (data->dialog);
 		if (! fr_window_is_batch_mode (FR_WINDOW (archive_window)))
 			gtk_window_present (GTK_WINDOW (archive_window));
 	}
@@ -108,14 +101,14 @@ is_supported_extension (GtkWidget *file_sel,
 
 
 static char *
-get_full_path (SaveAsData *data)
+get_full_path (DlgNewData *data)
 {
 	char        *full_path = NULL;
 	char        *path;
 	const char  *filename;
 	int          idx;
 
-	path = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->file_sel));
+	path = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
 
 	if ((path == NULL) || (*path == 0))
 		return NULL;
@@ -126,7 +119,7 @@ get_full_path (SaveAsData *data)
 		return NULL;
 	}
 
-	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box));
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box));
 	if (idx > 0) {
 		const char *path_ext;
 		char       *default_ext;
@@ -146,7 +139,7 @@ get_full_path (SaveAsData *data)
 
 
 static char *
-get_archive_filename_from_selector (SaveAsData *data)
+get_archive_filename_from_selector (DlgNewData *data)
 {
 	char      *path = NULL;
 	GFile     *file, *dir;
@@ -159,7 +152,7 @@ get_archive_filename_from_selector (SaveAsData *data)
 
 		g_free (path);
 
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						NULL,
 						_("Could not create the archive"),
@@ -197,7 +190,7 @@ get_archive_filename_from_selector (SaveAsData *data)
 		g_object_unref (file);
 		g_free (path);
 
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						NULL,
 						_("Could not create the archive"),
@@ -216,7 +209,7 @@ get_archive_filename_from_selector (SaveAsData *data)
 		char *new_path;
 		char *ext = NULL;
 
-		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box));
+		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box));
 		if (idx > 0)
 			ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
 		else
@@ -231,8 +224,8 @@ get_archive_filename_from_selector (SaveAsData *data)
 	if (uri_exists (path)) {
 		GtkWidget *dialog;
 
-		if (! is_supported_extension (data->file_sel, path, data->supported_types)) {
-			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
+		if (! is_supported_extension (data->dialog, path, data->supported_types)) {
+			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 							GTK_DIALOG_MODAL,
 							NULL,
 							_("Could not create the archive"),
@@ -247,7 +240,7 @@ get_archive_filename_from_selector (SaveAsData *data)
 		g_file_delete (file, NULL, &err);
 		if (err != NULL) {
 			GtkWidget *dialog;
-			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->file_sel),
+			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 							GTK_DIALOG_DESTROY_WITH_PARENT,
 							NULL,
 							_("Could not delete the old archive."),
@@ -270,7 +263,7 @@ get_archive_filename_from_selector (SaveAsData *data)
 static void
 new_file_response_cb (GtkWidget  *w,
 		      int         response,
-		      SaveAsData *data)
+		      DlgNewData *data)
 {
 	char *path;
 
@@ -279,88 +272,20 @@ new_file_response_cb (GtkWidget  *w,
 					     FR_ACTION_CREATING_NEW_ARCHIVE,
 					     FR_PROC_ERROR_STOPPED,
 					     NULL);
-		gtk_widget_destroy (data->file_sel);
+		gtk_widget_destroy (data->dialog);
 		return;
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (data->file_sel), "file-roller-create");
+		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-create");
 		return;
 	}
 
 	path = get_archive_filename_from_selector (data);
 	if (path != NULL) {
-		new_archive (data->file_sel, data->window, path);
+		new_archive (data, path);
 		g_free (path);
 	}
-}
-
-
-static void
-update_password_availability_for_ext (SaveAsData *data,
-				      const char *ext)
-{
-	int i;
-
-	if (data->password == NULL)
-		return;
-
-	if (ext == NULL) {
-		gtk_widget_set_sensitive (data->password, FALSE);
-		gtk_widget_set_sensitive (data->password_label, FALSE);
-		return;
-	}
-
-	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
-		if (strcmp (mime_type_desc[i].default_ext, ext) == 0) {
-			gtk_widget_set_sensitive (data->password, mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT);
-			gtk_widget_set_sensitive (data->password_label, mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT);
-			break;
-		}
-	}
-}
-
-
-static void
-filetype_combobox_changed_cb (GtkComboBox *combo_box,
-			      SaveAsData  *data)
-{
-	int         idx;
-	const char *uri, *basename;
-	const char *ext, *new_ext;
-	char       *basename_noext;
-	char       *new_basename;
-	char       *new_basename_uft8;
-
-	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->file_sel));
-	if (uri == NULL)
-		return;
-
-	ext = get_archive_filename_extension (uri);
-	if (ext == NULL)
-		ext = "";
-
-	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->combo_box)) - 1;
-	if (idx < 0) {
-		if (data->password != NULL) {
-			gtk_widget_set_sensitive (data->password, TRUE);
-			gtk_widget_set_sensitive (data->password_label, TRUE);
-		}
-		return;
-	}
-
-	basename = file_name_from_path (uri);
-	basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
-
-	new_ext = mime_type_desc[data->supported_types[idx]].default_ext;
-	new_basename = g_strconcat (basename_noext, new_ext, NULL);
-	new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->file_sel), new_basename_uft8);
-	update_password_availability_for_ext (data, new_ext);
-
-	g_free (new_basename_uft8);
-	g_free (new_basename);
-	g_free (basename_noext);
 }
 
 
@@ -368,88 +293,18 @@ void
 show_new_archive_dialog (FrWindow   *window,
 			 const char *archive_name)
 {
-	SaveAsData    *data;
-	GtkWidget     *file_sel;
-	GtkWidget     *hbox;
-	GtkFileFilter *filter;
-	int            i;
+	DlgNewData *data;
 
-	data = g_new0 (SaveAsData, 1);
-	data->window = window;
-	data->supported_types = create_type;
+	if (archive_name != NULL)
+		data = dlg_save_as (window, archive_name);
+	else
+		data = dlg_new (window);
 
-	file_sel = gtk_file_chooser_dialog_new (_("New"),
-						GTK_WINDOW (window),
-						GTK_FILE_CHOOSER_ACTION_SAVE,
-						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						GTK_STOCK_NEW, GTK_RESPONSE_OK,
-						GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-						NULL);
-	data->file_sel = file_sel;
-
-	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
-
-	if (archive_name != NULL) {
-		char *ext, *name_ext;
-
-		ext = eel_gconf_get_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, ".tgz");
-		name_ext = g_strconcat (archive_name, ext, NULL);
-		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (file_sel), name_ext);
-		g_free (name_ext);
-		g_free (ext);
-	}
-
-	filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; data->supported_types[i] != -1; i++)
-		gtk_file_filter_add_mime_type (filter, mime_type_desc[data->supported_types[i]].mime_type);
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
-
-	filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("All files"));
-	gtk_file_filter_add_pattern (filter, "*");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-
-	/**/
-
-	hbox = gtk_hbox_new (FALSE, 12);
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), hbox);
-
-	gtk_box_pack_start (GTK_BOX (hbox),
-			    gtk_label_new (_("Archive type:")),
-			    FALSE, FALSE, 0);
-
-	data->combo_box = gtk_combo_box_new_text ();
-	gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box), _("Automatic"));
-	for (i = 0; data->supported_types[i] != -1; i++) {
-		int idx = data->supported_types[i];
-		gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box),
-					   _(mime_type_desc[idx].name));
-	}
-	gtk_combo_box_set_active (GTK_COMBO_BOX (data->combo_box), 0);
-	gtk_box_pack_start (GTK_BOX (hbox), data->combo_box, TRUE, TRUE, 0);
-	gtk_widget_show_all (hbox);
-
-	/**/
-
-	g_signal_connect (G_OBJECT (file_sel),
+	g_signal_connect (G_OBJECT (data->dialog),
 			  "response",
 			  G_CALLBACK (new_file_response_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->combo_box),
-			  "changed",
-			  G_CALLBACK (filetype_combobox_changed_cb),
-			  data);
-	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy",
-			  G_CALLBACK (new_archive_dialog_destroy_cb),
-			  data);
-
-	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
-	gtk_widget_show_all (file_sel);
+	gtk_window_present (GTK_WINDOW (data->dialog));
 }
 
 
@@ -559,27 +414,22 @@ activate_action_open (GtkAction *action,
 
 
 static void
-save_file_destroy_cb (GtkWidget  *w,
-		      SaveAsData *data)
-{
-	g_free (data);
-}
-
-
-static void
 save_file_response_cb (GtkWidget  *w,
 		       gint        response,
-		       SaveAsData *data)
+		       DlgNewData *data)
 {
-	char *path;
+	char       *path;
+	const char *password;
+	gboolean    encrypt_header;
+	int         volume_size;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (data->file_sel);
+		gtk_widget_destroy (data->dialog);
 		return;
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (data->file_sel), "file-roller-convert-archive");
+		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-convert-archive");
 		return;
 	}
 
@@ -587,9 +437,15 @@ save_file_response_cb (GtkWidget  *w,
 	if (path == NULL)
 		return;
 
-	fr_window_archive_save_as (data->window, path, gtk_entry_get_text (GTK_ENTRY (data->password)));
+	password = dlg_new_data_get_password (data);
+	encrypt_header = dlg_new_data_get_encrypt_header (data);
+	volume_size = dlg_new_data_get_volume_size (data);
 
-	gtk_widget_destroy (data->file_sel);
+	eel_gconf_set_integer (PREF_BATCH_VOLUME_SIZE, volume_size);
+
+	fr_window_archive_save_as (data->window, path, password, encrypt_header, volume_size);
+	gtk_widget_destroy (data->dialog);
+
 	g_free (path);
 }
 
@@ -598,33 +454,9 @@ void
 activate_action_save_as (GtkAction *action,
 			 gpointer   callback_data)
 {
-	FrWindow      *window = callback_data;
-	GtkWidget     *file_sel;
-	GtkWidget     *table;
-	GtkWidget     *hbox;
-	GtkWidget     *label;
-	SaveAsData    *data;
-	GtkFileFilter *filter;
-	int            i;
-	const char    *password;
-
-	data = g_new0 (SaveAsData, 1);
-	data->window = window;
-	data->supported_types = save_type;
-
-	file_sel = gtk_file_chooser_dialog_new (_("Save"),
-						GTK_WINDOW (window),
-						GTK_FILE_CHOOSER_ACTION_SAVE,
-						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						GTK_STOCK_SAVE, GTK_RESPONSE_OK,
-						GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-						NULL);
-	data->file_sel = file_sel;
-
-	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (file_sel), TRUE);
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
+	FrWindow   *window = callback_data;
+	DlgNewData *data;
+	char       *archive_name = NULL;
 
 	if (fr_window_get_archive_uri (window)) {
 		const char *uri;
@@ -635,104 +467,28 @@ activate_action_save_as (GtkAction *action,
 		uri = fr_window_get_archive_uri (window);
 		file = g_file_new_for_uri (uri);
 		info = g_file_query_info (file,
-				G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
-				0, NULL, &err);
+					  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+					  0, NULL, &err);
 
 		if (err != NULL) {
 			g_warning ("Failed to get display name for uri %s: %s", uri, err->message);
 			g_clear_error (&err);
 		}
-		else {
-			gtk_file_chooser_set_current_name (
-					GTK_FILE_CHOOSER (file_sel),
-					g_file_info_get_display_name (info));
-		}
+		else
+			archive_name = g_strdup (g_file_info_get_display_name (info));
+
 		g_object_unref (info);
 		g_object_unref (file);
 	}
 
-	filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("All archives"));
-	for (i = 0; data->supported_types[i] != -1; i++)
-		gtk_file_filter_add_mime_type (filter, mime_type_desc[data->supported_types[i]].mime_type);
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (file_sel), filter);
-
-	filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("All files"));
-	gtk_file_filter_add_pattern (filter, "*");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (file_sel), filter);
-
-	data->password = gtk_entry_new ();
-	gtk_entry_set_visibility (GTK_ENTRY (data->password), FALSE);
-
-	/**/
-
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 6);
-
-	/* archive type */
-
-	label = gtk_label_new_with_mnemonic (_("Archive _type:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (0), 0, 0);
-
-	data->combo_box = gtk_combo_box_new_text ();
-	gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box), _("Automatic"));
-	for (i = 0; data->supported_types[i] != -1; i++)
-		gtk_combo_box_append_text (GTK_COMBO_BOX (data->combo_box),
-					   _(mime_type_desc[data->supported_types[i]].name));
-	gtk_combo_box_set_active (GTK_COMBO_BOX (data->combo_box), 0);
-	gtk_table_attach (GTK_TABLE (table), data->combo_box, 1, 2, 0, 1,
-			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-			  (GtkAttachOptions) (0), 0, 0);
-
-	/* password */
-
-	hbox = gtk_hbox_new (FALSE, 0);
-
-	data->password_label = label = gtk_label_new_with_mnemonic (_("_Encrypt with password:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-
-	gtk_box_pack_start (GTK_BOX (hbox), data->password, FALSE, TRUE, 0);
-
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (0), 0, 0);
-	gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 1, 2,
-			  (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-			  (GtkAttachOptions) (0), 0, 0);
-
-	gtk_widget_show_all (table);
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), table);
-
-	/* set the default data */
-
-	password = fr_window_get_password (window);
-	if (password == NULL)
-		password = "";
-	gtk_entry_set_text (GTK_ENTRY (data->password), password);
-
-	/**/
-
-	g_signal_connect (G_OBJECT (file_sel),
+	data = dlg_save_as (window, archive_name);
+	g_signal_connect (G_OBJECT (data->dialog),
 			  "response",
 			  G_CALLBACK (save_file_response_cb),
 			  data);
-	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy",
-			  G_CALLBACK (save_file_destroy_cb),
-			  data);
-	g_signal_connect (G_OBJECT (data->combo_box),
-			  "changed",
-			  G_CALLBACK (filetype_combobox_changed_cb),
-			  data);
+	gtk_window_present (GTK_WINDOW (data->dialog));
 
-	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
-	gtk_widget_show_all (file_sel);
+	g_free (archive_name);
 }
 
 

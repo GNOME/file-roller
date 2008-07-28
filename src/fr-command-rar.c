@@ -107,7 +107,7 @@ process_line (char     *line,
 			rar_comm->odd_line = TRUE;
 		}
 		else if (strncmp (line, "Volume ", 7) == 0)
-			rar_comm->multi_volume = TRUE;
+			comm->multi_volume = TRUE;
 		return;
 	}
 
@@ -208,7 +208,6 @@ static void
 fr_command_rar_list (FrCommand  *comm)
 {
 	FR_COMMAND_RAR (comm)->list_started = FALSE;
-	FR_COMMAND_RAR (comm)->multi_volume = FALSE;
 
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
 				      process_line,
@@ -247,17 +246,27 @@ parse_progress_line (FrCommand  *comm,
 
 	prefix_len = strlen (prefix);
 	if (strncmp (line, prefix, prefix_len) == 0) {
-		double fraction;
-		int    len;
+		double  fraction;
+		int     len;
+		char   *b_idx;
 
 		strcpy (Progress_Filename, line + prefix_len);
+
+		/* when a new volume is created a sequence of backspaces is
+		 * issued, remove the backspaces from the filename */
+		b_idx = strchr (Progress_Filename, '\x08');
+		if (b_idx != NULL)
+			*b_idx = 0;
+
+		/* remove the OK at the end of the filename */
 		len = strlen (Progress_Filename);
 		if ((len > 5) && (strncmp (Progress_Filename + len - 5, "  OK ", 5) == 0))
 			Progress_Filename[len - 5] = 0;
+
 		sprintf (Progress_Message, "%s%s", message_prefix, file_name_from_path (Progress_Filename));
 		fr_command_message (comm, Progress_Message);
 
-		fraction= (double) ++comm->n_file / (comm->n_files + 1);
+		fraction = (double) ++comm->n_file / (comm->n_files + 1);
 		fr_command_progress (comm, fraction);
 	}
 }
@@ -270,12 +279,23 @@ process_line__add (char     *line,
 	FrCommand *comm = FR_COMMAND (data);
 
 	if (strncmp (line, "Creating archive ", 17) == 0) {
+		const char *archive_filename = line + 17;
 		char *uri;
 
-		uri = g_filename_to_uri (line + 17, NULL, NULL);
-		fr_command_working_archive (comm, uri);
-		g_free (uri);
+		uri = g_filename_to_uri (archive_filename, NULL, NULL);
+		if ((comm->volume_size > 0)
+		    && g_regex_match_simple ("^.*\\.part(0)*2\\.rar$", uri, G_REGEX_CASELESS, 0))
+		{
+			char *volume_filename;
 
+			volume_filename = g_strdup (archive_filename);
+			volume_filename[strlen (volume_filename) - 5] = '1';
+			fr_command_set_multi_volume (comm, volume_filename);
+			g_free (volume_filename);
+		}
+		fr_command_working_archive (comm, uri);
+
+		g_free (uri);
 		return;
 	}
 
@@ -551,8 +571,7 @@ FrCommandCap
 fr_command_rar_get_capabilities (FrCommand  *comm,
 			         const char *mime_type)
 {
-	FrCommandRar *comm_rar = FR_COMMAND_RAR (comm);
-	FrCommandCap  capabilities;
+	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 	if (is_program_in_path ("rar"))
@@ -561,7 +580,7 @@ fr_command_rar_get_capabilities (FrCommand  *comm,
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	/* multi-volumes are read-only */
-	if ((comm->files->len > 0) && comm_rar->multi_volume && (capabilities & FR_COMMAND_CAN_WRITE))
+	if ((comm->files->len > 0) && comm->multi_volume && (capabilities & FR_COMMAND_CAN_WRITE))
 		capabilities ^= FR_COMMAND_CAN_WRITE;
 
 	return capabilities;
