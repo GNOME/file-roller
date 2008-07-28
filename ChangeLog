@@ -1,5 +1,13 @@
 2008-07-28  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/file-utils.c (get_dest_free_space): finished to port to GIO.
+	
+	Fixes bug #545161 – file-roller crashed with SIGSEGV in strlen() when 
+	extracting tarball.
+	Fixes bug #544613 – file-roller crashed with SIGSEGV in remove_directory()
+
+2008-07-28  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* NEWS: updated.
 	* TODO: updated.
 	* README: updated.
