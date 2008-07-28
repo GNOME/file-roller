@@ -37,14 +37,14 @@ typedef enum {
 typedef DirOp (*StartDirCallback)    (const char  *uri,
 				      GError     **error,
 				      gpointer     user_data);
-typedef void (*ForEachChildCallback) (const char  *uri, 
-				      GFileInfo   *info, 
+typedef void (*ForEachChildCallback) (const char  *uri,
+				      GFileInfo   *info,
 				      gpointer     user_data);
-typedef void (*ForEachDoneCallback)  (GError      *error, 
-				      gpointer     data);			     
-typedef void (*ListReadyCallback)    (GList       *files, 
-				      GList       *dirs, 
-				      GError      *error, 
+typedef void (*ForEachDoneCallback)  (GError      *error,
+				      gpointer     data);
+typedef void (*ListReadyCallback)    (GList       *files,
+				      GList       *dirs,
+				      GError      *error,
 				      gpointer     user_data);
 typedef void (*CopyProgressCallback) (goffset      current_file,
                                       goffset      total_files,
@@ -55,7 +55,7 @@ typedef void (*CopyProgressCallback) (goffset      current_file,
                                       gpointer     user_data);
 typedef void (*CopyDoneCallback)     (GError      *error,
 				      gpointer     user_data);
-				           
+
 /* asynchronous recursive list functions */
 
 void   g_directory_foreach_child     (const char            *directory,
@@ -66,7 +66,7 @@ void   g_directory_foreach_child     (const char            *directory,
 				      ForEachChildCallback   for_each_file_func,
 				      ForEachDoneCallback    done_func,
 				      gpointer               user_data);
-void   g_directory_list_async        (const char            *directory, 
+void   g_directory_list_async        (const char            *directory,
 				      const char            *base_dir,
 				      gboolean               recursive,
 				      gboolean               follow_links,
@@ -84,8 +84,8 @@ void   g_list_items_async            (GList                 *items,
 				      GCancellable          *cancellable,
 				      ListReadyCallback      done_func,
 				      gpointer               done_data);
-				      
-/* asynchronous copy functions */				      
+
+/* asynchronous copy functions */
 
 void   g_copy_files_async            (GList                 *sources,
 				      GList                 *destinations,
@@ -122,7 +122,7 @@ void   g_copy_uri_async              (const char            *source,
 				      CopyProgressCallback   progress_callback,
 				      gpointer               progress_callback_data,
 				      CopyDoneCallback       callback,
-				      gpointer               user_data);		  
+				      gpointer               user_data);
 void   g_directory_copy_async        (const char            *source,
 				      const char            *destination,
 				      GFileCopyFlags         flags,
@@ -132,17 +132,22 @@ void   g_directory_copy_async        (const char            *source,
 				      gpointer               progress_callback_data,
 				      CopyDoneCallback       callback,
 				      gpointer               user_data);
+gboolean g_load_file_in_buffer       (GFile                 *file,
+				      void                  *buffer,
+				      gsize                  size,
+				      GError               **error);
 
 /* convenience macros */
+
 /**
  * g_directory_list_all_async:
- * @directory: 
- * @base_dir: 
+ * @directory:
+ * @base_dir:
  * @recursive:
  * @cancellable:
  * @done_func:
  * @done_data:
- * 
+ *
  */
 #define g_directory_list_all_async(directory, base_dir, recursive, cancellable, done_func, done_data) \
     g_directory_list_async ((directory), (base_dir), (recursive), TRUE, FALSE, FALSE, NULL, NULL, NULL, FALSE, (cancellable), (done_func), (done_data))

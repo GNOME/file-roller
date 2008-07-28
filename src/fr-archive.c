@@ -543,17 +543,10 @@ get_mime_type_from_magic_numbers (GFile *file)
 		{ "application/zip", "PK00PK\003\004", 0, 8 },
 		{ NULL, NULL, 0 }
 	};
-	GFileInputStream *istream;
-	char              buffer[32];
-	int               n, i;
+	char buffer[32];
+	int  i;
 
-	istream = g_file_read (file, NULL, NULL);
-	if (istream == NULL)
-		return NULL;
-
-	n = g_input_stream_read (G_INPUT_STREAM (istream), buffer, sizeof (buffer), NULL, NULL);
-	g_object_unref (istream);
-	if (n < 0)
+	if (! g_load_file_in_buffer (file, buffer, 32, NULL))
 		return NULL;
 
 	for (i = 0; sniffer_data[i].mime_type != NULL; i++)
@@ -946,6 +939,10 @@ action_performed (FrCommand   *command,
 		break;
 
 	case FR_ACTION_LISTING_CONTENT:
+		/* the name of the volumes are different from the
+		 * original name */
+		if (archive->command->multi_volume)
+			fr_archive_change_name (archive, archive->command->filename);
 		fr_command_update_capabilities (archive->command);
 		if (! fr_command_is_capable_of (archive->command, FR_COMMAND_CAN_WRITE))
 			archive->read_only = TRUE;

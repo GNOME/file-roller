@@ -1,3 +1,21 @@
+2008-07-28  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-rar.c: always load the first volume of the series to
+	list the whole content of the archive. 
+
+	Fixes bug #545168 – no longer possible to open a multi-volume rar 
+	from any part
+
+	* src/fr-window.c (action_performed): update the archive name after
+	loading the content.
+	* src/fr-archive.c (action_performed): update the archive name after
+	loading the content.
+	(get_mime_type_from_magic_numbers): use the new function 
+	g_load_file_in_buffer. 
+
+	* src/gio-utils.h: 
+	* src/gio-utils.c: added function g_load_file_in_buffer()
+
 2008-07-28  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* data/glade/new.glade: Don't translate widget labels.

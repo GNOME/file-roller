@@ -3020,6 +3020,11 @@ action_performed (FrArchive   *archive,
 		break;
 
 	case FR_ACTION_LISTING_CONTENT:
+		/* update the uri because multi-volume archives can have
+		 * a different name after loading. */
+		g_free (window->priv->archive_uri);
+		window->priv->archive_uri = g_file_get_uri (window->archive->file);
+
 		close_progress_dialog (window, FALSE);
 		if (error->type != FR_PROC_ERROR_NONE) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
