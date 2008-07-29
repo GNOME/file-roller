@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2004 Free Software Foundation, Inc.
+ *  Copyright (C) 2004, 2008 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@
 #include "fr-command-7z.h"
 
 static void fr_command_7z_class_init  (FrCommand7zClass *class);
-static void fr_command_7z_init        (FrCommand         *afile);
-static void fr_command_7z_finalize    (GObject           *object);
+static void fr_command_7z_init        (FrCommand        *afile);
+static void fr_command_7z_finalize    (GObject          *object);
 
 /* Parent Class */
 
@@ -95,7 +95,24 @@ list__process_line (char     *line,
 	g_return_if_fail (line != NULL);
 
 	if (! p7z_comm->list_started) {
-		if (strncmp (line, "--------", 8) == 0)
+		if (strncmp (line, "7-Zip ", 6) == 0) {
+			const char *ver_start;
+			int         ver_len;
+		        char        version[256];
+
+			ver_start = eat_spaces (line + 6);
+		        ver_len = strchr (ver_start, ' ') - ver_start;
+        		strncpy (version, ver_start, ver_len);
+		        version[ver_len] = 0;
+
+			if (strcmp (version, "4.57") < 0)
+				p7z_comm->old_style = TRUE;
+			else
+				p7z_comm->old_style = FALSE;
+		}
+		else if (p7z_comm->old_style && (strncmp (line, "Listing archive: ", 17) == 0))
+			p7z_comm->list_started = TRUE;
+		else if (! p7z_comm->old_style && (strncmp (line, "--------", 8) == 0))
 			p7z_comm->list_started = TRUE;
 		else if (strncmp (line, "Multivolume = ", 14) == 0) {
 			fields = g_strsplit (line, " = ", 2);
