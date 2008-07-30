@@ -1,3 +1,11 @@
+2008-07-30  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-cfile.c (get_uncompressed_name_from_archive): use
+	gio to read the file.
+	
+	* src/fr-archive.c (get_mime_type_from_magic_numbers): added gzip
+	magic numbers.
+
 2008-07-29  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/fr-command-7z.h: 
@@ -44,7 +52,8 @@
 	* src/dlg-batch-add.c (help_clicked_cb): 
 	* data/glade/batch-add-files.glade:
 	
-	Added help button.
+	Feature: Added a help button to the window used to create archives
+	from the file manager menu.
 	 
 2008-07-26  Paolo Bacchilega  <paobac@svn.gnome.org>
 
@@ -62,6 +71,7 @@
 	* src/fr-archive.c: 
 	
 	Update the archive filename after creating a multi-volume archive.
+	Fixes bug: Allow to create multi-volume archives from the main window.
 	
 	* src/typedefs.h:
 	* src/Makefile.am: added dlg-new.[ch]
@@ -74,9 +84,9 @@
 	* src/dlg-batch-add.c: 
 	* src/actions.c: 
 	
-	Unify the "new" and "save as" dialogs.  Allow to specify other options
-	in these dialogs, such as whether to encrypt the header and whether
-	to split the archive in volumes.
+	Feature: Unified the "new" and "save as" dialogs.  Allow to specify other 
+	options	in these dialogs, such as whether to encrypt the header and 
+	whether	to split the archive in volumes.
 	
 	* data/glade/new.glade: new file.
 	* data/glade/Makefile.am: include new.glade in the glade data.
@@ -90,20 +100,20 @@
 
 	* data/file-roller.desktop.in.in: 
 	
-	Fixed bug #544296 – desktop entry does not validate
-	Patch by Götz Waschk
+	Fixed bug #544296 – desktop entry does not validate.
+	Patch by Götz Waschk.
 
 2008-07-22  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* data/file-roller.desktop.in.in: 
 	
-	Fixed bug #544184 – extra space in the mimetype lists
-	Patch by Sebastien Bacher
+	Fixed bug #544184 – extra space in the mimetype lists.
+	Patch by Sebastien Bacher.
 	
 	* configure.ac: 
 	
-	Fixed bug #544182 – configure.ac should use AC_PROG_CC
-	Patch by Sebastien Bacher
+	Fixed bug #544182 – configure.ac should use AC_PROG_CC.
+	Patch by Sebastien Bacher.
 
 2008-07-21  Paolo Bacchilega  <paobac@svn.gnome.org>
 	

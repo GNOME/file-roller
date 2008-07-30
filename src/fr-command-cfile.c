@@ -45,56 +45,51 @@ static char *
 get_uncompressed_name_from_archive (FrCommand  *comm,
 				    const char *archive)
 {
-	int      fd;
-	char     buffer[11];
-	char    *filename = NULL;
-	GString *str = NULL;
+	GFile        *file;
+	GInputStream *stream;
+	char         *filename = NULL;
 
 	if (! is_mime_type (comm->mime_type, "application/x-gzip"))
 		return NULL;
 
-	fd = open (archive, O_RDONLY);
-	if (fd < 0)
-		return NULL;
+	file = g_file_new_for_path (archive);
 
-	if (read (fd, &buffer, 11) < 11) {
-		close (fd);
-		return NULL;
-	}
+	stream = (GInputStream *) g_file_read (file, NULL, NULL);
+	if (stream != NULL) {
+		gboolean filename_present = TRUE;
+		char     buffer[10];
 
-	/* Check whether the FLG.FNAME is set */
-	if (((unsigned char)(buffer[3]) & 0x08) != 0x08) {
-		close (fd);
-		return NULL;
-	}
+		if (g_input_stream_read (stream, buffer, 10, NULL, NULL) >= 0) {
+			/* Check whether the FLG.FNAME is set */
+			if (((unsigned char)(buffer[3]) & 0x08) != 0x08)
+				filename_present = FALSE;
 
-	/* Check whether the FLG.FEXTRA is set */
-	if (((unsigned char)(buffer[3]) & 0x04) == 0x04) {
-		close (fd);
-		return NULL;
-	}
-
-	str = g_string_new ("");
-	/* Don't lose the first character */
-	g_string_append_c (str, buffer[10]);
-	while (read (fd, &buffer, 1) > 0) {
-		if (buffer[0] == '\0') {
-			close (fd);
-			filename = g_strdup (file_name_from_path (str->str));
-			g_string_free (str, TRUE);
-#ifdef DEBUG
-			g_message ("filename is: %s", filename);
-#endif
-			return filename;
+			/* Check whether the FLG.FEXTRA is set */
+			if (((unsigned char)(buffer[3]) & 0x04) == 0x04)
+				filename_present = FALSE;
 		}
 
-		g_string_append_c (str, buffer[0]);
+		if (filename_present) {
+			GString *str = NULL;
+
+			str = g_string_new ("");
+			while (g_input_stream_read (stream, buffer, 1, NULL, NULL) > 0) {
+				if (buffer[0] == '\0') {
+					filename = g_strdup (file_name_from_path (str->str));
+#ifdef DEBUG
+					g_message ("filename is: %s", filename);
+#endif
+					break;
+				}
+				g_string_append_c (str, buffer[0]);
+			}
+			g_string_free (str, TRUE);
+		}
+		g_object_unref (stream);
 	}
+	g_object_unref (file);
 
-	close (fd);
-	g_string_free (str, TRUE);
-
-	return NULL;
+	return filename;
 }
 
 
