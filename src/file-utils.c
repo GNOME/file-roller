@@ -875,6 +875,9 @@ remove_local_directory (const char *path)
 	char     *uri;
 	gboolean  result;
 
+	if (path == NULL)
+		return TRUE;
+	
 	uri = g_filename_to_uri (path, NULL, NULL);
 	result = remove_directory (uri);
 	g_free (uri);

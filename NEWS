@@ -1,9 +1,46 @@
 version 2.23.5
 --------------
 
-        New features and user visible changes:
-        
-        * Updated the user's manual. 
+	New features and user visible changes:
+
+	* Added a help button to the window used to create archives from the
+	  file manager menu.
+	* Unified the "new" and "save as" dialogs. Allow to specify other
+	  options in these dialogs, such as whether to encrypt the header and
+	  whether to split the archive in volumes.
+	* User's manual: now describes the current file-roller version.
+
+	Bugfixes:
+
+	* #545188: Has incorrect start text for 7zip version 4.43
+	* #545168: no longer possible to open a multi-volume rar from any
+	  part
+	* #545161: file-roller crashed with SIGSEGV in strlen() when
+	  extracting tarball.
+	* #544613: file-roller crashed with SIGSEGV in remove_directory()
+	* #544296: desktop entry does not validate. Patch by Götz Waschk.
+	* #544184: extra space in the mimetype lists. Patch by Sebastien
+	  Bacher.
+	* #544182: configure.ac should use AC_PROG_CC. Patch by Sebastien
+	  Bacher.
+	* Allow to create multi-volume archives from the main window.
+
+	Updated application translations:
+
+	* Arabic (Djihed Afifi)
+	* Dutch (Wouter Bolsterlee)
+	* Norwegian Bokmål (Kjartan Maraas)
+	* Macedonian (Arangel Angov)
+	* Occitan (Yannig Marchegay (Kokoyaya))
+	* Galego (Ignacio Casal Quinteiro)
+	* Brazilian Portuguese (Fabrício Godoy)
+	* Español (Jorge González)
+	* Czech (Adrian Guniš)
+	* Estonian (Ivar Smolin)
+
+	Updated manual translations:
+
+	* Swedish (Daniel Nylander)
 
 version 2.23.4
 --------------
