@@ -315,8 +315,15 @@ fr_command_tar_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, base_dir);
 	}
 
-	fr_process_add_arg (comm->process, "-rf");
-	fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+	if (comm->creating_archive) {
+		fr_process_add_arg (comm->process, "-cf");
+		fr_process_add_arg (comm->process, comm->filename);
+		add_compress_arg (comm);
+	}
+	else {
+		fr_process_add_arg (comm->process, "-rf");
+		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+	}
 
 	if (from_file != NULL) {
 		fr_process_add_arg (comm->process, "-T");

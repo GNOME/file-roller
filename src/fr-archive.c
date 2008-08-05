@@ -1594,7 +1594,10 @@ fr_archive_add (FrArchive     *archive,
 		return;
 	}
 
-	fr_command_uncompress (archive->command);
+	archive->command->creating_archive = ! g_file_test (archive->command->filename, G_FILE_TEST_EXISTS);
+	
+	if (! archive->command->creating_archive)
+		fr_command_uncompress (archive->command);
 
 	/* when files are already present in a tar archive and are added
 	 * again, they are not replaced, so we have to delete them first. */
@@ -1691,7 +1694,8 @@ fr_archive_add (FrArchive     *archive,
 	path_list_free (new_file_list);
 
 	if (! error_occurred) {
-		fr_command_recompress (archive->command);
+		if (! archive->command->creating_archive)
+			fr_command_recompress (archive->command);
 
 		if (base_dir_created) { /* remove the temp dir */
 			fr_process_begin_command (archive->process, "rm");

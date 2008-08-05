@@ -1,3 +1,16 @@
+2008-08-05  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
+	* src/fr-command.h: 
+	* src/fr-archive.c: added a creating_archive flag to FrCommand this 
+	way special options	can be used when fr_command_add is called to create
+	an archive.
+	
+	* src/fr-command-tar.c: when creating a new archive, compress it 
+	directly instead of creating it	uncompressed and then compress it.
+	This saves time and disk space.
+	
+	Fixes bug #542424 – Tar.bz2 archives create uncompressed archive files
+
 2008-08-04  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.23.5 released ]

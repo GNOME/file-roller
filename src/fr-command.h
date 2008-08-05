@@ -84,6 +84,7 @@ struct _FrCommand
 	gboolean       encrypt_header : 1;
 	FrCompression  compression;
 	guint          volume_size;
+	gboolean       creating_archive;
 
 	/* features. */
 
