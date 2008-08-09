@@ -357,7 +357,7 @@ fr_command_zip_handle_error (FrCommand   *comm,
 
 
 const char *zip_mime_type[] = { "application/x-cbz",
-				"application/x-executable",
+				"application/x-ms-dos-executable",
 				"application/zip",
 				NULL };
 
@@ -377,7 +377,7 @@ fr_command_zip_get_capabilities (FrCommand  *comm,
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
 	if (is_program_in_path ("zip")) {
-		if (strcmp (mime_type, "application/x-executable") == 0)
+		if (strcmp (mime_type, "application/x-ms-dos-executable") == 0)
 			capabilities |= FR_COMMAND_CAN_READ;
 		else
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;

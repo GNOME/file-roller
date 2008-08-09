@@ -101,7 +101,7 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-cpio",                 ".cpio",     NULL, 0 },
 	{ "application/x-deb",                  ".deb",      NULL, 0 },
 	{ "application/x-ear",                  ".ear",      N_("Ear (.ear)"), 0 },
-	{ "application/x-executable",           ".exe",      N_("Self-extracting zip (.exe)"), 0 },
+	{ "application/x-ms-dos-executable",    ".exe",      N_("Self-extracting zip (.exe)"), 0 },
 	{ "application/x-gzip",                 ".gz",       NULL, 0 },
 	{ "application/x-java-archive",         ".jar",      N_("Jar (.jar)"), 0 },
 	{ "application/x-lha",                  ".lzh",      N_("Lha (.lzh)"), 0 },
@@ -136,7 +136,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".cpio", "application/x-cpio" },
 	{ ".deb", "application/x-deb" },
 	{ ".ear", "application/x-ear" },
-	{ ".exe", "application/x-executable" },
+	{ ".exe", "application/x-ms-dos-executable" },
 	{ ".gz", "application/x-gzip" },
 	{ ".iso", "application/x-cd-image" },
 	{ ".jar", "application/x-java-archive" },
@@ -515,12 +515,9 @@ static void
 register_commands (void)
 {
 	/* The order here is important. Commands registered earlier have higher
-	 * priority; for example zip archives will be opened using 7Z instead
-	 * of ZIP.  However commands that can read and write a file format
+	 * priority.  However commands that can read and write a file format
 	 * have higher priority over commands that can only read the same
-	 * format, regardless of the registration order; for example rar
-	 * archives will be opened with 7Z only if the rar utility is not
-	 * installed because 7z cannot modify rar archives. */
+	 * format, regardless of the registration order. */
 
 	register_command (FR_TYPE_COMMAND_TAR);
 	register_command (FR_TYPE_COMMAND_CFILE);

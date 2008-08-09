@@ -335,7 +335,7 @@ fr_command_7z_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, "-mx=7"); break;
 	}
 
-	if (is_mime_type (comm->mime_type, "application/x-executable"))
+	if (is_mime_type (comm->mime_type, "application/x-ms-dos-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
 	if (comm->volume_size > 0)
@@ -365,7 +365,7 @@ fr_command_7z_delete (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "d");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-	if (is_mime_type (comm->mime_type, "application/x-executable"))
+	if (is_mime_type (comm->mime_type, "application/x-ms-dos-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
 	if (from_file != NULL)
@@ -481,7 +481,7 @@ const char *sevenz_mime_types[] = { "application/x-7z-compressed",
 				    "application/x-cd-image",
 				    /*"application/x-cbr",*/
 				    "application/x-cbz",
-				    "application/x-executable",
+				    "application/x-ms-dos-executable",
 				    "application/x-rar",
 				    "application/zip",
 				    NULL };
@@ -510,7 +510,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	else if (is_program_in_path ("7z")) {
 		capabilities |= FR_COMMAND_CAN_READ;
 		if (is_mime_type (mime_type, "application/x-cbz")
-		    || is_mime_type (mime_type, "application/x-executable")
+		    || is_mime_type (mime_type, "application/x-ms-dos-executable")
 		    || is_mime_type (mime_type, "application/zip"))
 		{
 			capabilities |= FR_COMMAND_CAN_WRITE | FR_COMMAND_CAN_ENCRYPT;

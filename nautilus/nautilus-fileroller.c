@@ -160,7 +160,7 @@ static char *mime_types[] = {
 	"application/x-cpio",
 	"application/x-deb",
 	"application/x-ear",
-	"application/x-executable",
+	"application/x-ms-dos-executable",
 	"application/x-gtar",
 	"application/x-gzip",
 	"application/x-gzpostscript",
