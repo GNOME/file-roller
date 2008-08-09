@@ -504,11 +504,19 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	if (! is_program_in_path ("7za") && ! is_program_in_path ("7zr") && ! is_program_in_path ("7z"))
 		return capabilities;
 
-	if (is_mime_type (mime_type, "application/x-7z-compressed"))
+	if (is_mime_type (mime_type, "application/x-7z-compressed")) {
 		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER | FR_COMMAND_CAN_CREATE_VOLUMES;
-
+	}
 	else if (is_program_in_path ("7z")) {
-		capabilities |= FR_COMMAND_CAN_READ;
+		if (is_mime_type (mime_type, "application/x-rar")
+		    || is_mime_type (mime_type, "application/x-cbr")) 
+		{
+			if (g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
+				capabilities |= FR_COMMAND_CAN_READ;
+		}
+		else
+			capabilities |= FR_COMMAND_CAN_READ;
+		
 		if (is_mime_type (mime_type, "application/x-cbz")
 		    || is_mime_type (mime_type, "application/x-ms-dos-executable")
 		    || is_mime_type (mime_type, "application/zip"))
