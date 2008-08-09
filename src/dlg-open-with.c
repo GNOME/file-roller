@@ -410,6 +410,9 @@ dlg_open_with (FrWindow *window,
 			icon_image = get_icon_pixbuf (theme, G_THEMED_ICON (icon), icon_size);
 			g_object_unref (icon);
 		}
+		else {
+			icon_image = NULL;
+		}
 		
 		gtk_list_store_append (GTK_LIST_STORE (data->app_model),
 				       &iter);

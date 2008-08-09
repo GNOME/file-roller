@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <gio/gio.h>
 
-#define MIME_TYPE_DIRECTORY "gnome-fs-directory"
+#define MIME_TYPE_DIRECTORY "folder"
 #define MIME_TYPE_ARCHIVE "application/x-archive"
 
 #define get_home_relative_path(x)        \
