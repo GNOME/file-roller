@@ -1157,8 +1157,16 @@ fr_window_dir_exists_in_archive (FrWindow   *window,
 
 	for (i = 0; i < window->archive->command->files->len; i++) {
 		FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
-		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0)
+
+		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0) {
 			return TRUE;
+		}
+		else if (fdata->dir
+			 && (fdata->full_path[strlen (fdata->full_path)] != '/')
+			 && (strncmp (dir_name, fdata->full_path, dir_name_len - 1) == 0))
+		{
+			return TRUE;
+		}
 	}
 
 	return FALSE;
