@@ -1,12 +1,5 @@
 == ToDo ==
 
-[x] optimization of the add_folder operation: if the command supports all the
-    requested options add the folder directly instead of reading the folder 
-    and adding the content in chunks.
-    
-    Partially fixed for the commands that allow to specify the file list
-    in a file, that is: tar, rar, 7zip.
-    
 [ ] #525274 – File roller seems to be unable to create zipfiles without .zip extension
 
 [ ] #512825 – Fails extraction of files within directories named '.'
@@ -15,15 +8,29 @@
 
 [ ] #482560 – totem-like plugin installer for file-roller
 
-[x] #153281 – Progress bar should be exact
-
-    This is command dependent: fixed for tar, zip, 7zip, rar.
+[ ] Progress bar should not be file based, but content size based.
+    Related to bug #153281
 
 [ ] #543225 – File-Roller is unable to open gzip-compressed files like pci.ids if they are missing an .gz extension
    
 [ ] It's not possible to load, modify, extract remote multi-volume archives.
 
 [?] #501660 – File-roller nautilus extension creates tarbombs
+
+[ ] #547312 – file-roller fails to read all files in archive that contains utf-8 files
+
+== DONE == 
+
+[x] optimization of the add_folder operation: if the command supports all the
+    requested options add the folder directly instead of reading the folder 
+    and adding the content in chunks.
+    
+    Partially fixed for the commands that allow to specify the file list
+    in a file, that is: tar, rar, 7zip.
+    
+[x] #153281 – Progress bar should be exact
+
+    This is command dependent: fixed for tar, zip, 7zip, rar.
 
 [x] #503940 – Various Archive Manager documentation mistakes
 
