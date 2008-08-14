@@ -50,8 +50,6 @@ typedef struct {
 	GtkWidget    *e_recreate_dir_checkbutton;
 	GtkWidget    *e_overwrite_checkbutton;
 	GtkWidget    *e_not_newer_checkbutton;
-	GtkWidget    *e_password_entry;
-	GtkWidget    *e_password_hbox;
 
 	gboolean      extract_clicked;
 } DialogData;
@@ -85,7 +83,6 @@ extract_cb (GtkWidget   *w,
 	gboolean    pattern_files;
 	gboolean    junk_paths;
 	GList      *file_list;
-	char       *password;
 	char       *base_dir = NULL;
 	GError     *error = NULL;
 
@@ -206,16 +203,6 @@ extract_cb (GtkWidget   *w,
 	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton));
 	pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_files_radiobutton));
 
-	if (GTK_WIDGET_SENSITIVE (data->e_password_entry)) {
-		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->e_password_entry));
-		if ((password != NULL) && (password[0] == 0)) {
-			g_free (password);
-			password = NULL;
-		}
-	}
-	else
-		password = NULL;
-
 	/* create the file list. */
 
 	file_list = NULL;
@@ -232,7 +219,6 @@ extract_cb (GtkWidget   *w,
 		if (file_list == NULL) {
 			gtk_widget_destroy (data->dialog);
 			g_free (extract_to_dir);
-			g_free (password);
 			return FALSE;
 		}
 	}
@@ -250,7 +236,6 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
-	fr_window_set_password (window, password);
 	fr_window_archive_extract (window,
 				   file_list,
 				   extract_to_dir,
@@ -263,7 +248,6 @@ extract_cb (GtkWidget   *w,
 	path_list_free (file_list);
 	g_free (extract_to_dir);
 	g_free (base_dir);
-	g_free (password);
 
 	return TRUE;
 }
@@ -338,7 +322,6 @@ create_extra_widget (DialogData *data)
 	GtkWidget *hbox30;
 	GtkWidget *label48;
 	GtkWidget *vbox15;
-	GtkWidget *label31;
 
 	vbox1 = gtk_vbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox1), 0);
@@ -350,7 +333,7 @@ create_extra_widget (DialogData *data)
 	gtk_box_pack_start (GTK_BOX (hbox28), vbox19, TRUE, TRUE, 0);
 
 	e_files_label = gtk_label_new ("");
-	set_bold_label (e_files_label, _("Files"));
+	set_bold_label (e_files_label, _("Extract"));
 	gtk_box_pack_start (GTK_BOX (vbox19), e_files_label, FALSE, FALSE, 0);
 	gtk_label_set_justify (GTK_LABEL (e_files_label), GTK_JUSTIFY_LEFT);
 	gtk_misc_set_alignment (GTK_MISC (e_files_label), 0, 0.5);
@@ -426,19 +409,6 @@ create_extra_widget (DialogData *data)
 	data->e_not_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("Do not e_xtract older files"));
 	gtk_box_pack_start (GTK_BOX (vbox15), data->e_not_newer_checkbutton, FALSE, FALSE, 0);
 
-	data->e_password_hbox = gtk_hbox_new (FALSE, 5);
-	gtk_box_pack_start (GTK_BOX (vbox15), data->e_password_hbox, TRUE, TRUE, 0);
-
-	label31 = gtk_label_new_with_mnemonic (_("_Password:"));
-	gtk_box_pack_start (GTK_BOX (data->e_password_hbox), label31, FALSE, FALSE, 0);
-	gtk_label_set_justify (GTK_LABEL (label31), GTK_JUSTIFY_LEFT);
-
-	data->e_password_entry = gtk_entry_new ();
-	gtk_box_pack_start (GTK_BOX (data->e_password_hbox), data->e_password_entry, TRUE, TRUE, 0);
-	gtk_entry_set_activates_default (GTK_ENTRY (data->e_password_entry), TRUE);
-	gtk_entry_set_visibility (GTK_ENTRY (data->e_password_entry), FALSE);
-	gtk_label_set_mnemonic_widget (GTK_LABEL (label31), data->e_password_entry);
-
 	gtk_widget_show_all (vbox1);
 
 	return vbox1;
@@ -487,13 +457,6 @@ dlg_extract__common (FrWindow *window,
 		gtk_widget_set_sensitive (data->e_selected_radiobutton, FALSE);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_all_radiobutton), TRUE);
 	}
-
-	if (window->archive->command->propPassword) {
-		gtk_widget_set_sensitive (data->e_password_hbox, TRUE);
-		_gtk_entry_set_locale_text (GTK_ENTRY (data->e_password_entry), fr_window_get_password (window));
-	}
-	else
-		gtk_widget_set_sensitive (data->e_password_hbox, FALSE);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_OVERWRITE, FALSE));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton), eel_gconf_get_boolean (PREF_EXTRACT_SKIP_NEWER, FALSE));

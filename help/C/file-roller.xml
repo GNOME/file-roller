@@ -1509,10 +1509,10 @@
       <variablelist>
        <!-- ============= -->	
 	<varlistentry>
-	  <term><guilabel>Files</guilabel></term>
+	  <term><guilabel>Extract</guilabel></term>
 	  <listitem>
             <para>
-              Select one of the following extract options:
+              Select the files to be extracted:
             </para>
             <variablelist>
               <varlistentry>
@@ -1542,65 +1542,58 @@
             </variablelist>
 	  </listitem>
 	</varlistentry>
-       <!-- ============= -->	
+	<!-- ============= -->	
 	<varlistentry>
-	  <term><guilabel>Re-create folders</guilabel></term>
-	  <listitem><para>
-	      Select this option to reconstruct the folder structure when extracting the specified files. </para> 
-              <para>For example, you specify <filename>/tmp</filename> in the <guilabel>Filename</guilabel> text box and choose to extract all files. The archive contains a subfolder called <filename>doc</filename>. 
-             <itemizedlist>
-               <listitem><para>
-              If you select the <guilabel>Re-create folders</guilabel> option, &app; extracts the contents of the subfolder to <filename>/tmp/doc</filename>.
-              </para>
-               </listitem>
-               <listitem><para>
-              If you do not select the <guilabel>Re-create folders</guilabel> option, &app; does not create any subfolders. Instead, &app; extracts all files from the archive, including files from subfolders, to <filename>/tmp</filename>.
-              </para>
-               </listitem>
-             </itemizedlist>
-	  </para></listitem>
-	</varlistentry>
-       <!-- ============= -->	
-	<varlistentry>
-	  <term><guilabel>Overwrite existing files</guilabel> </term>
-	  <listitem><para>
-	      Select this option to overwrite any files in the destination folder that have the same name as the specified files. </para>
-	    <para>
-              If you do not select this option, &app; does not extract the specified file if an existing file with the same name already exists in the destination folder.</para>
-	  </listitem>
-	</varlistentry>
-       <!-- ============= -->	
-	<varlistentry>
-	  <term><guilabel>Do not extract older files</guilabel> </term>
-	  <listitem><para>This option is only effective while the <guilabel>Overwrite existing files</guilabel> option is selected.
-	    </para>
-	    <para>
-              Select the <guilabel>Do not extract older files</guilabel> option to extract the specified file only if the destination folder does not contain the specified file, or if the destination folder contains an older version of the specified file. &app; uses the modification date to determine which file is the most recent. If the version of the file in the archive is older, &app; does not extract the specified file to the destination folder.</para>
-	    <para>
-              If you do not select the <guilabel>Do not extract older files</guilabel> option while the <guilabel>Overwrite existing files</guilabel> option is selected, &app; extracts the specified file from the archive and overwrites the previous contents of the destination folder.
-	  </para></listitem>
-	</varlistentry>
-       <!-- ============= -->	
-	<varlistentry>
-	  <term><guilabel>Password</guilabel></term>
-	  <listitem><para>This option is only enabled if the archive type supports encryption. Currently, only 7-ZIP, ZIP, RAR and ARJ archives support encryption. </para>
+      <term><guilabel>Actions</guilabel></term>
+        <listitem>
           <para>
-	     If the archive contains encrypted files, enter the required password in the <guilabel>Password</guilabel> text box to decrypt the specified files during the extraction process. The required password is the encryption password that was specified when the archive was created. For more information, see <xref linkend="file-roller-encrypt-files"/>.
-          </para>
-          <para>
-	     Alternatively, you can enter the required password in the <guilabel>Password</guilabel> dialog. To display the <guilabel>Password</guilabel> dialog, choose <menuchoice><guimenu>Edit</guimenu> <guimenuitem>Password</guimenuitem></menuchoice>. 
-	  </para>
-        </listitem>
-	</varlistentry>
-       <!-- ============= -->	
-	<varlistentry>
-	  <term><guilabel>Open destination folder after extraction</guilabel></term>
-	  <listitem><para>
-              Select this option to display the contents of the destination folder in a file manager window when the extraction of the specified files is completed. </para>
-          </listitem>
-	</varlistentry>
-      </variablelist>	
-</sect1>
+            Select the following extract options:
+          </para>	
+          <variablelist>
+	        <varlistentry>
+	          <term><guilabel>Re-create folders</guilabel></term>
+	          <listitem><para>
+	            Select this option to reconstruct the folder structure when extracting the specified files. </para> 
+                <para>For example, you specify <filename>/tmp</filename> in the <guilabel>Filename</guilabel> text box and choose to extract all files. The archive contains a subfolder called <filename>doc</filename>. 
+                <itemizedlist>
+                  <listitem><para>
+                    If you select the <guilabel>Re-create folders</guilabel> option, &app; extracts the contents of the subfolder to <filename>/tmp/doc</filename>.
+                    </para>
+                 </listitem>
+                 <listitem><para>
+                   If you do not select the <guilabel>Re-create folders</guilabel> option, &app; does not create any subfolders. Instead, &app; extracts all files from the archive, including files from subfolders, to <filename>/tmp</filename>.
+                   </para>
+                 </listitem>
+               </itemizedlist>
+	           </para></listitem>
+	         </varlistentry>
+             <!-- ============= -->	
+	         <varlistentry>
+	           <term><guilabel>Overwrite existing files</guilabel> </term>
+	           <listitem><para>
+	             Select this option to overwrite any files in the destination folder that have the same name as the specified files. </para>
+	             <para>
+                 If you do not select this option, &app; does not extract the specified file if an existing file with the same name already exists in the destination folder.</para>
+	           </listitem>
+	         </varlistentry>
+             <!-- ============= -->	
+	         <varlistentry>
+	           <term><guilabel>Do not extract older files</guilabel> </term>
+	           <listitem>
+	             <para>This option is only effective while the <guilabel>Overwrite existing files</guilabel> option is selected.
+	             </para>
+	             <para>
+                   Select the <guilabel>Do not extract older files</guilabel> option to extract the specified file only if the destination folder does not contain the specified file, or if the destination folder contains an older version of the specified file. &app; uses the modification date to determine which file is the most recent. If the version of the file in the archive is older, &app; does not extract the specified file to the destination folder.</para>
+	             <para>
+                   If you do not select the <guilabel>Do not extract older files</guilabel> option while the <guilabel>Overwrite existing files</guilabel> option is selected, &app; extracts the specified file from the archive and overwrites the previous contents of the destination folder.
+	             </para>
+	           </listitem>
+	         </varlistentry>
+	       </variablelist>
+	     </listitem>
+	   </varlistentry>
+     </variablelist>	
+  </sect1>
 
 
 </article>

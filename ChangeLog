@@ -1,5 +1,15 @@
 2008-08-14  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/dlg-extract.c: removed the password from the extract dialog,
+	because this dialog is already full of options and the password
+	entry is redundant because if the archive is encrypted the 
+	password will be requested during the extraction. 
+	
+	* data/glade/new.glade: removed the requires-version tag which causes
+	a warning.
+
+2008-08-14  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c (fr_window_dir_exists_in_archive): handle the case 
 	of directories that don't end with a separator. 
 	
