@@ -1310,8 +1310,10 @@ create_tmp_base_dir (const char *base_dir,
 	if ((dest_path == NULL)
 	    || (*dest_path == '\0')
 	    || (strcmp (dest_path, "/") == 0))
+	{
 		return g_strdup (base_dir);
-
+	}
+	
 	dest_dir = g_strdup (dest_path);
 	if (dest_dir[strlen (dest_dir) - 1] == G_DIR_SEPARATOR)
 		dest_dir[strlen (dest_dir) - 1] = 0;

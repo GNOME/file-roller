@@ -1,5 +1,11 @@
 2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-archive.c: 
+	* src/file-utils.c (make_directory_tree): do not change directory
+	permissions when the directory already exists (#547999).
+
+2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* src/fr-command-7z.c: use the second line to determine the 7zip 
 	version (#547733).
 

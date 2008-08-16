@@ -582,7 +582,7 @@ make_directory_tree (GFile    *dir,
 	gboolean  success = TRUE;
 	GFile    *parent;
 
-	if (dir == NULL)
+	if ((dir == NULL) || g_file_query_exists (dir, NULL))
 		return TRUE;
 
 	parent = g_file_get_parent (dir);
