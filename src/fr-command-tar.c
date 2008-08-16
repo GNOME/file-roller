@@ -254,6 +254,13 @@ fr_command_tar_list (FrCommand  *comm)
 }
 
 
+static gboolean
+can_create_a_compressed_archive (FrCommand *comm)
+{
+	return comm->creating_archive && ! is_mime_type (comm->mime_type, "application/x-7z-compressed-tar");
+}
+
+
 static void
 process_line__generic (char     *line,
 		       gpointer  data,
@@ -315,13 +322,16 @@ fr_command_tar_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, base_dir);
 	}
 
-	if (comm->creating_archive) {
+	if (can_create_a_compressed_archive (comm)) {
 		fr_process_add_arg (comm->process, "-cf");
 		fr_process_add_arg (comm->process, comm->filename);
 		add_compress_arg (comm);
 	}
 	else {
-		fr_process_add_arg (comm->process, "-rf");
+		if (comm->creating_archive)
+			fr_process_add_arg (comm->process, "-cf");
+		else
+			fr_process_add_arg (comm->process, "-rf");
 		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
 	}
 
@@ -461,10 +471,13 @@ begin_func__recompress (gpointer data)
 
 
 static void
-fr_command_tar_recompress (FrCommand     *comm)
+fr_command_tar_recompress (FrCommand *comm)
 {
 	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	char         *new_name = NULL;
+
+	if (can_create_a_compressed_archive (comm))
+		return;
 
 	if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) {
 		fr_process_begin_command (comm->process, "gzip");
@@ -721,6 +734,9 @@ fr_command_tar_uncompress (FrCommand *comm)
 	char         *tmp_name;
 	gboolean      archive_exists;
 
+	if (can_create_a_compressed_archive (comm))
+		return;
+
 	if (c_tar->uncomp_filename != NULL) {
 		g_free (c_tar->uncomp_filename);
 		c_tar->uncomp_filename = NULL;
@@ -822,14 +838,14 @@ fr_command_tar_handle_error (FrCommand   *comm,
 }
 
 
-const char *tar_mime_types[] = { "application/x-tar",
-			   "application/x-compressed-tar",
-			   "application/x-bzip-compressed-tar",
-			   "application/x-tarz",
-			   "application/x-lzma-compressed-tar",
-			   "application/x-lzop-compressed-tar",
-			   "application/x-7z-compressed-tar",
-			   NULL };
+const char *tar_mime_types[] = { "application/x-compressed-tar",
+				 "application/x-bzip-compressed-tar",
+				 "application/x-tar",
+				 "application/x-7z-compressed-tar",
+			         "application/x-lzma-compressed-tar",
+			         "application/x-lzop-compressed-tar",		         
+			         "application/x-tarz",
+			         NULL };
 
 
 const char **
@@ -882,7 +898,7 @@ fr_command_tar_get_capabilities (FrCommand  *comm,
 
 		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
 			if (is_program_in_path (try_command[i])) {
-				capabilities |= FR_COMMAND_CAN_READ_WRITE;
+				capabilities |= FR_COMMAND_CAN_WRITE;
 				break;
 			}
 		}

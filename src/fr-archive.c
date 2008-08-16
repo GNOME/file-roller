@@ -580,36 +580,13 @@ get_mime_type_from_filename (GFile *file)
 
 
 static gboolean
-create_command_from_mime_type (FrArchive  *archive,
-			       const char *mime_type,
-			       gboolean    loading)
+create_command_from_type (FrArchive     *archive,
+			  const char    *mime_type,
+		          GType          command_type,
+		          FrCommandCaps  requested_capabilities)
 {
-	FrCommandCaps  requested_capabilities = FR_COMMAND_CAN_DO_NOTHING;
-	GType          command_type;
-	char          *filename;
-
-	if (mime_type == NULL)
-		return FALSE;
-
-	archive->is_compressed_file = FALSE;
-
-	/* try with the WRITE capability even when loading, this way we give
-	 * priority to the commands that can read and write over commands
-	 * that can only read a specific file format. */
-
-	requested_capabilities |= FR_COMMAND_CAN_READ_WRITE;
-	if (! loading && ! archive->can_create_compressed_file)
-		requested_capabilities |= FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
-
-	/* if no command was found and we are loading, remove the write
-	 * capability and try again */
-
-	if ((command_type == 0) && loading) {
-		requested_capabilities ^= FR_COMMAND_CAN_WRITE;
-		command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
-	}
-
+	char *filename;
+	
 	if (command_type == 0)
 		return FALSE;
 
@@ -624,11 +601,63 @@ create_command_from_mime_type (FrArchive  *archive,
 	if (! fr_command_is_capable_of (archive->command, requested_capabilities)) {
 		g_object_unref (archive->command);
 		archive->command = NULL;
+		archive->is_compressed_file = FALSE;
 	}
-	else if (archive->command != NULL)
+	else 
 		archive->is_compressed_file = ! fr_command_is_capable_of (archive->command, FR_COMMAND_CAN_ARCHIVE_MANY_FILES);
 
 	return (archive->command != NULL);
+}
+
+
+static gboolean
+create_command_to_load_archive (FrArchive  *archive,
+			        const char *mime_type)
+{
+	FrCommandCaps requested_capabilities = FR_COMMAND_CAN_DO_NOTHING;
+	GType         command_type;
+
+	if (mime_type == NULL)
+		return FALSE;
+
+	/* try with the WRITE capability even when loading, this way we give
+	 * priority to the commands that can read and write over commands
+	 * that can only read a specific file format. */
+
+	requested_capabilities |= FR_COMMAND_CAN_READ_WRITE;
+	command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
+
+	/* if no command was found, remove the write capability and try again */
+
+	if (command_type == 0) {
+		requested_capabilities ^= FR_COMMAND_CAN_WRITE;
+		command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
+	}	
+
+	return create_command_from_type (archive,
+					 mime_type, 
+					 command_type, 
+					 requested_capabilities);
+}
+
+
+static gboolean
+create_command_to_create_archive (FrArchive  *archive,
+			          const char *mime_type)
+{
+	FrCommandCaps requested_capabilities = FR_COMMAND_CAN_DO_NOTHING;
+	GType         command_type;
+
+	if (mime_type == NULL)
+		return FALSE;
+
+	requested_capabilities |= FR_COMMAND_CAN_WRITE;
+	command_type = get_command_type_from_mime_type (mime_type, requested_capabilities);
+
+	return create_command_from_type (archive,
+					 mime_type, 
+					 command_type, 
+					 requested_capabilities);
 }
 
 
@@ -1042,7 +1071,7 @@ fr_archive_create (FrArchive  *archive,
 	tmp_command = archive->command;
 
 	mime_type = get_mime_type_from_filename (archive->local_copy);
-	if (! create_command_from_mime_type (archive, mime_type, FALSE)) {
+	if (! create_command_to_create_archive (archive, mime_type)) {
 		archive->command = tmp_command;
 		return FALSE;
 	}
@@ -1096,11 +1125,11 @@ load_local_archive (FrArchive  *archive,
 	tmp_command = archive->command;
 
 	mime_type = get_mime_type_from_filename (archive->local_copy);
-	if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
+	if (! create_command_to_load_archive (archive, mime_type)) {
 		mime_type = get_mime_type_from_content (archive->local_copy);
-		if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
+		if (! create_command_to_load_archive (archive, mime_type)) {
 			mime_type = get_mime_type_from_magic_numbers (archive->local_copy);
-			if (! create_command_from_mime_type (archive, mime_type, TRUE)) {
+			if (! create_command_to_load_archive (archive, mime_type)) {
 				archive->command = tmp_command;
 				fr_archive_action_completed (archive,
 							     FR_ACTION_LOADING_ARCHIVE,
@@ -1598,8 +1627,7 @@ fr_archive_add (FrArchive     *archive,
 
 	archive->command->creating_archive = ! g_file_test (archive->command->filename, G_FILE_TEST_EXISTS);
 	
-	if (! archive->command->creating_archive)
-		fr_command_uncompress (archive->command);
+	fr_command_uncompress (archive->command);
 
 	/* when files are already present in a tar archive and are added
 	 * again, they are not replaced, so we have to delete them first. */
@@ -1696,8 +1724,7 @@ fr_archive_add (FrArchive     *archive,
 	path_list_free (new_file_list);
 
 	if (! error_occurred) {
-		if (! archive->command->creating_archive)
-			fr_command_recompress (archive->command);
+		fr_command_recompress (archive->command);
 
 		if (base_dir_created) { /* remove the temp dir */
 			fr_process_begin_command (archive->process, "rm");
