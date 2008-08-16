@@ -129,39 +129,6 @@ file_sel_response_cb (GtkWidget      *widget,
 }
 
 
-static void
-selection_changed_cb (GtkWidget  *file_sel,
- 		      DialogData *data)
-{
-	FrWindow *window = data->window;
-	char     *current_folder;
-
-	current_folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (file_sel));
-
-	/* check folder permissions. */
-
-	if (uri_is_dir (current_folder)
-	    && ! check_permissions (current_folder, R_OK | X_OK)) {
-		GtkWidget *d;
-		char      *utf8_path;
-
-		utf8_path = g_filename_display_name (current_folder);
-
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
-					   GTK_DIALOG_MODAL,
-					   NULL,
-					   _("Could not add the files to the archive"),
-					   _("You don't have the right permissions to read files from folder \"%s\""), 
-					   utf8_path);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-
-		g_free (utf8_path);
-		g_free (current_folder);
-	}
-}
-
-
 /* create the "add" dialog. */
 void
 add_files_cb (GtkWidget *widget,
@@ -218,11 +185,6 @@ add_files_cb (GtkWidget *widget,
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response",
 			  G_CALLBACK (file_sel_response_cb),
-			  data);
-
-	g_signal_connect (G_OBJECT (file_sel),
-			  "selection-changed",
-			  G_CALLBACK (selection_changed_cb),
 			  data);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);

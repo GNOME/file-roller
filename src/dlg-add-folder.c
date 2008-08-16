@@ -95,10 +95,13 @@ file_sel_response_cb (GtkWidget    *widget,
 {
 	GtkFileChooser *file_sel = GTK_FILE_CHOOSER (widget);
 	FrWindow       *window = data->window;
-	char           *current_folder;
+	char           *selected_folder;
 	gboolean        update, recursive, follow_links;
-	GSList         *selections, *iter;
-	GList          *item_list = NULL;
+	const char     *include_files;
+	const char     *exclude_files;
+	const char     *exclude_folders;
+	char           *dest_dir;
+
 
 	dlg_add_folder_save_last_options (data);
 
@@ -112,17 +115,15 @@ file_sel_response_cb (GtkWidget    *widget,
 		return TRUE;
 	}
 
-	current_folder = gtk_file_chooser_get_current_folder_uri (file_sel);
+	selected_folder = gtk_file_chooser_get_uri (file_sel);
 
 	/* check folder permissions. */
 
-	if (uri_is_dir (current_folder)
-	    && ! check_permissions (current_folder, R_OK | X_OK))
-	{
+	if (! check_permissions (selected_folder, R_OK | X_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 
-		utf8_path = g_filename_display_name (current_folder);
+		utf8_path = g_filename_display_name (selected_folder);
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
 					   GTK_DIALOG_MODAL,
@@ -134,7 +135,7 @@ file_sel_response_cb (GtkWidget    *widget,
 		gtk_widget_destroy (GTK_WIDGET (d));
 
 		g_free (utf8_path);
-		g_free (current_folder);
+		g_free (selected_folder);
 
 		return FALSE;
 	}
@@ -143,87 +144,37 @@ file_sel_response_cb (GtkWidget    *widget,
 	recursive = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton));
 	follow_links = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->exclude_symlinks));
 
-	/**/
+	include_files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
+	if (utf8_only_spaces (include_files))
+		include_files = "*";
 
-	selections = gtk_file_chooser_get_uris (file_sel);
-	for (iter = selections; iter != NULL; iter = iter->next) {
-		char *path = iter->data;
-		item_list = g_list_prepend (item_list, path);
-	}
+	exclude_files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
+	if (utf8_only_spaces (exclude_files))
+		exclude_files = NULL;
 
-	if (item_list != NULL) {
-		const char *folder = (char*) item_list->data;
-		const char *include_files;
-		const char *exclude_files;
-		const char *exclude_folders;
-		char       *dest_dir;
+	exclude_folders = gtk_entry_get_text (GTK_ENTRY (data->exclude_folders_entry));
+	if (utf8_only_spaces (exclude_folders))
+		exclude_folders = NULL;
 
-		include_files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
-		exclude_files = gtk_entry_get_text (GTK_ENTRY (data->exclude_files_entry));
-		exclude_folders = gtk_entry_get_text (GTK_ENTRY (data->exclude_folders_entry));
+	dest_dir = build_uri (fr_window_get_current_location (window),
+			      file_name_from_path (selected_folder),
+			      NULL);
 
-		if (utf8_only_spaces (include_files))
-			include_files = "*";
-		if (utf8_only_spaces (exclude_files))
-			exclude_files = NULL;
-		if (utf8_only_spaces (exclude_folders))
-			exclude_folders = NULL;
+	fr_window_archive_add_with_wildcard (window,
+					     include_files,
+					     exclude_files,
+					     exclude_folders,
+					     selected_folder,
+					     dest_dir,
+					     update,
+					     follow_links);
 
-		dest_dir = build_uri (fr_window_get_current_location (window),
-				      file_name_from_path (folder),
-				      NULL);
-
-		fr_window_archive_add_with_wildcard (window,
-						     include_files,
-						     exclude_files,
-						     exclude_folders,
-						     folder,
-						     dest_dir,
-						     update,
-						     follow_links);
-
-		g_free (dest_dir);
-	}
-
-	g_list_free (item_list);
-	g_slist_foreach (selections, (GFunc) g_free, NULL);
-	g_slist_free (selections);
-	g_free (current_folder);
-
+	g_free (dest_dir);
+	g_free (selected_folder);
+	
 	gtk_widget_destroy (data->dialog);
 
 	return TRUE;
-}
-
-
-static void
-selection_changed_cb (GtkWidget  *file_sel,
-		      DialogData *data)
-{
-	FrWindow *window = data->window;
-	char     *current_folder;
-
-	/* check folder permissions. */
-
-	current_folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (file_sel));
-	if (uri_is_dir (current_folder) && ! check_permissions (current_folder, R_OK | X_OK)) {
-		GtkWidget *d;
-		char      *display_name;
-
-		display_name = g_filename_display_name (current_folder);
-
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
-					   GTK_DIALOG_MODAL,
-					   NULL,
-					   _("Could not add the files to the archive"),
-					   _("You don't have the right permissions to read files from folder \"%s\""),
-					   display_name);
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (GTK_WIDGET (d));
-
-		g_free (display_name);
-	}
-	g_free (current_folder);
 }
 
 
@@ -393,10 +344,6 @@ add_folder_cb (GtkWidget *widget,
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response",
 			  G_CALLBACK (file_sel_response_cb),
-			  data);
-	g_signal_connect (G_OBJECT (file_sel),
-			  "selection-changed",
-			  G_CALLBACK (selection_changed_cb),
 			  data);
 	g_signal_connect (G_OBJECT (data->include_subfold_checkbutton),
 			  "toggled",

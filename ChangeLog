@@ -1,5 +1,20 @@
 2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/dlg-add-files.c: removed a useless callback that checked folder 
+	permission on every filechooser selection change.
+
+	* src/dlg-add-folder.c: removed the same callback as above and 
+	simplified the response callback as well.
+	
+2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
+	* src/dlg-batch-add.c (add_clicked_cb): 
+	
+	Fixed bug #548020 – "create archive" directory selection not working 
+	correctly.  Patch by Marcel Stimberg.
+
+2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-command-tar.c: 
 	* src/fr-command-7z.c: 
 	* src/fr-archive.c: 
@@ -9,13 +24,18 @@
 2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/file-utils.c (make_directory_tree): do not change directory
-	permissions when the directory already exists (#546698).
+	permissions when the directory already exists.
 
+	Fixes bug #546698 – file-roller-2.23.1/2.23.5 removes r/x bit for 
+	anyone but root from /
+	
 2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
 	
 	* src/fr-command-7z.c: use the second line to determine the 7zip 
-	version (#547733).
-
+	version.
+	
+	Fixes bug #547733 – 7-zip tells about invalid command line
+	
 2008-08-14  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/dlg-extract.c: removed the password from the extract dialog,
@@ -40,7 +60,7 @@
 	* src/fr-command-7z.c (list__process_line): version 4.55 uses the new 
 	output format.
 	
-	Fixed bug #547297 – Crash reading zip/7za files with 7z version 4.55
+	Fixed bug #547297 – Crash reading zip/7za files with 7z version 4.55.
 		
 2008-08-09  Paolo Bacchilega  <paobac@svn.gnome.org>
 
@@ -80,7 +100,7 @@
 	
 	* src/fr-command-ar.c: add debian mime type.
 	
-	Fixes bug #546505 – Debian packages not supported anymore
+	Fixes bug #546505 – Debian packages not supported anymore.
 
 2008-08-05  Paolo Bacchilega  <paobac@svn.gnome.org>
 	
@@ -93,7 +113,7 @@
 	directly instead of creating it	uncompressed and then compress it.
 	This saves time and disk space.
 	
-	Fixes bug #542424 – Tar.bz2 archives create uncompressed archive files
+	Fixes bug #542424 – Tar.bz2 archives create uncompressed archive files.
 
 2008-08-04  Paolo Bacchilega  <paobac@svn.gnome.org>
 
