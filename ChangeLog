@@ -1,5 +1,16 @@
 2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/gio-utils.c (get_dir_list_from_file_list)
+	(get_file_list_for_each_file, get_file_list_start_dir): add the
+	first directory to the list of directories as well.
+	
+	* src/main.c (get_uri_from_command_line):  use gfile to make the 
+	conversion.
+	
+	Fixes bug #350640 – sending an empty folder doesn't work.
+
+2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* src/dlg-add-files.c: removed a useless callback that checked folder 
 	permission on every filechooser selection change.
 

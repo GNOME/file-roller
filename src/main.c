@@ -673,27 +673,13 @@ compute_supported_archive_types (void)
 static char *
 get_uri_from_command_line (const char *path)
 {
-	char *full_path;
-	char *uri;
-
-	if (strstr (path, "://") != NULL)
-		return g_strdup (path);
-
-	if (g_path_is_absolute (path))
-		full_path = g_strdup (path);
-	else {
-		char *current_dir;
-
-		current_dir = g_get_current_dir ();
-		full_path = g_build_filename (current_dir,
-					      path,
-					      NULL);
-		g_free (current_dir);
-	}
-
-	uri = g_filename_to_uri (full_path, NULL, NULL);
-	g_free (full_path);
-
+	GFile *file;
+	char  *uri;
+		
+	file = g_file_new_for_commandline_arg (path);
+	uri = g_file_get_uri (file);
+	g_object_unref (file);
+	
 	return uri;
 }
 

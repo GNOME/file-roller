@@ -520,9 +520,13 @@ get_dir_list_from_file_list (GHashTable *h_dirs,
 	if (base_dir == NULL)
 		base_dir = "";
 	base_dir_len = strlen (base_dir);
+	
 	for (scan = files; scan; scan = scan->next) {
 		char *filename = scan->data;
 		char *dir_name;
+
+		if (strlen (filename) <= base_dir_len)
+			continue;
 
 		if (is_dir_list)
 			dir_name = g_strdup (filename + base_dir_len + 1);
@@ -631,12 +635,9 @@ get_file_list_for_each_file (const char *uri,
 	GetFileListData *gfl = user_data;
 
 	switch (g_file_info_get_file_type (info)) {
-	case G_FILE_TYPE_DIRECTORY:
-		gfl->dirs = g_list_prepend (gfl->dirs, g_strdup (uri));
-		break;
 	case G_FILE_TYPE_REGULAR:
 		if (filter_matches (gfl->include_filter, uri))
-			if ((gfl->exclude_filter->pattern == NULL) || ! filter_matches (gfl->exclude_filter, uri))
+			if ((gfl->exclude_filter->pattern == NULL) || ! filter_matches (gfl->exclude_filter, uri)) 
 				gfl->files = g_list_prepend (gfl->files, g_strdup (uri));
 		break;
 	default:
@@ -652,27 +653,29 @@ get_file_list_start_dir (const char  *uri,
 {
 	GetFileListData *gfl = user_data;
 
-	if ((gfl->exclude_folders_filter->pattern == NULL) || ! filter_matches (gfl->exclude_folders_filter, uri))
+	if ((gfl->exclude_folders_filter->pattern == NULL) || ! filter_matches (gfl->exclude_folders_filter, uri)) {
+		gfl->dirs = g_list_prepend (gfl->dirs, g_strdup (uri));
 		return DIR_OP_CONTINUE;
+	}
 	else
 		return DIR_OP_SKIP;
 }
 
 
 void
-g_directory_list_async (const char           *directory,
-		       const char            *base_dir,
-		       gboolean               recursive,
-		       gboolean               follow_links,
-		       gboolean               no_backup_files,
-		       gboolean               no_dot_files,
-		       const char            *include_files,
-		       const char            *exclude_files,
-		       const char            *exclude_folders,
-		       gboolean               ignorecase,
-		       GCancellable          *cancellable,
-		       ListReadyCallback      done_func,
-		       gpointer               done_data)
+g_directory_list_async (const char        *directory,
+		        const char        *base_dir,
+		        gboolean           recursive,
+		        gboolean           follow_links,
+		        gboolean           no_backup_files,
+		        gboolean           no_dot_files,
+		        const char        *include_files,
+		        const char        *exclude_files,
+		        const char        *exclude_folders,
+		        gboolean           ignorecase,
+		        GCancellable      *cancellable,
+		        ListReadyCallback  done_func,
+		        gpointer           done_data)
 {
 	GetFileListData *gfl;
 	FilterOptions    filter_options;
