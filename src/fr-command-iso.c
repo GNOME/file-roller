@@ -128,18 +128,22 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_iso_list (FrCommand  *comm)
+list__begin (gpointer data)
 {
-	FrCommandIso *comm_iso = FR_COMMAND_ISO (comm);
+	FrCommandIso *comm = data;
+	
+	g_free (comm->cur_path);
+	comm->cur_path = NULL;
+}
 
-	g_free (comm_iso->cur_path);
-	comm_iso->cur_path = NULL;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      list__process_line,
-				      comm);
+static void
+fr_command_iso_list (FrCommand *comm)
+{
+	fr_process_set_out_line_func (comm->process, list__process_line, comm);
 
 	fr_process_begin_command (comm->process, "sh");
+	fr_process_set_begin_func (comm->process, list__begin, comm);
 	fr_process_add_arg (comm->process, PRIVEXECDIR "isoinfo.sh");
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, comm->filename);

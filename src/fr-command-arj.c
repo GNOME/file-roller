@@ -160,11 +160,9 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_arj_list (FrCommand  *comm)
+fr_command_arj_list (FrCommand *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      list__process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, list__process_line, comm);
 
 	fr_process_begin_command (comm->process, "arj");
 	fr_process_add_arg (comm->process, "v");

@@ -222,9 +222,7 @@ process_zoo_line (char     *line,
 static void
 fr_command_zoo_list (FrCommand  *zoo_comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (zoo_comm)->process,
-				      process_zoo_line,
-				      zoo_comm);
+	fr_process_set_out_line_func (zoo_comm->process, process_zoo_line, zoo_comm);
 
 	fr_process_begin_command (zoo_comm->process, "zoo");
 	fr_process_add_arg (zoo_comm->process, "lq");

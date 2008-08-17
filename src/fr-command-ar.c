@@ -188,11 +188,9 @@ process_line (char     *line,
 
 
 static void
-fr_command_ar_list (FrCommand  *comm)
+fr_command_ar_list (FrCommand *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, process_line, comm);
 
 	fr_process_begin_command (comm->process, "ar");
 	fr_process_add_arg (comm->process, "tv");

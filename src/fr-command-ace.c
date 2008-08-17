@@ -162,16 +162,22 @@ process_line (char     *line,
 
 
 static void
+list__begin (gpointer data)
+{
+	FrCommandAce *comm = data;
+	
+	comm->list_started = FALSE;
+	comm->command_type = FR_ACE_COMMAND_UNKNOWN;
+}
+
+
+static void
 fr_command_ace_list (FrCommand  *comm)
 {
-	FR_COMMAND_ACE (comm)->list_started = FALSE;
-	FR_COMMAND_ACE (comm)->command_type = FR_ACE_COMMAND_UNKNOWN;
-
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, process_line, comm);
 
 	fr_process_begin_command (comm->process, "unace");
+	fr_process_set_begin_func (comm->process, list__begin, comm);
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, comm->filename);

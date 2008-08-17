@@ -152,11 +152,9 @@ list__process_line (char     *line,
 
 
 static void
-fr_command_rpm_list (FrCommand  *comm)
+fr_command_rpm_list (FrCommand *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      list__process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, list__process_line, comm);
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_add_arg (comm->process, "-c");

@@ -241,11 +241,9 @@ begin_tar_command (FrCommand *comm)
 
 
 static void
-fr_command_tar_list (FrCommand  *comm)
+fr_command_tar_list (FrCommand *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, process_line, comm);
 
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");

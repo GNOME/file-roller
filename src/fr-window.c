@@ -2828,6 +2828,13 @@ handle_errors (FrWindow    *window,
 		dlg_ask_password (window);
 		return FALSE;
 	}
+#if 0	
+	if (error->type == FR_PROC_ERROR_BAD_CHARSET) {
+		close_progress_dialog (window, TRUE);
+		/* dlg_ask_archive_charset (window); FIXME: implement after feature freeze */
+		return FALSE;
+	}
+#endif	
 	else if (error->type == FR_PROC_ERROR_STOPPED) {
 		/* nothing */
 	}
@@ -2990,9 +2997,12 @@ action_performed (FrArchive   *archive,
 
 	continue_batch = handle_errors (window, archive, action, error);
 
-	if (error->type == FR_PROC_ERROR_ASK_PASSWORD)
+	if ((error->type == FR_PROC_ERROR_ASK_PASSWORD)
+	    /*|| (error->type == FR_PROC_ERROR_BAD_CHARSET)*/)
+	{
 		return;
-
+	}
+	
 	switch (action) {
 	case FR_ACTION_CREATING_NEW_ARCHIVE:
 	case FR_ACTION_CREATING_ARCHIVE:

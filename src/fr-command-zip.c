@@ -173,15 +173,21 @@ add_password_arg (FrCommand  *comm,
 
 
 static void
+list__begin (gpointer data)
+{
+	FrCommandZip *comm = data;
+	
+	comm->is_empty = FALSE;
+}
+
+
+static void
 fr_command_zip_list (FrCommand  *comm)
 {
-	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
-
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      list__process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, list__process_line, comm);
 
 	fr_process_begin_command (comm->process, "unzip");
+	fr_process_set_begin_func (comm->process, list__begin, comm);
 	fr_process_add_arg (comm->process, "-ZTs");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);

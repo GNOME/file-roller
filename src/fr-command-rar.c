@@ -315,18 +315,26 @@ check_multi_vomule (FrCommand *comm)
 
 
 static void
+list__begin (gpointer data)
+{
+	FrCommandRar *comm = data;
+	
+	comm->list_started = FALSE;
+}
+
+
+static void
 fr_command_rar_list (FrCommand  *comm)
 {
 	check_multi_vomule (comm);
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, process_line, comm);
 
 	if (have_rar ())
 		fr_process_begin_command (comm->process, "rar");
 	else
 		fr_process_begin_command (comm->process, "unrar");
+	fr_process_set_begin_func (comm->process, list__begin, comm);
 	fr_process_add_arg (comm->process, "v");
 	fr_process_add_arg (comm->process, "-c-");
 	fr_process_add_arg (comm->process, "-v");
@@ -339,7 +347,6 @@ fr_command_rar_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 
-	FR_COMMAND_RAR (comm)->list_started = FALSE;
 	fr_process_start (comm->process);
 }
 

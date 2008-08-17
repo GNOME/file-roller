@@ -200,16 +200,22 @@ add_password_arg (FrCommand  *comm,
 
 
 static void
+list__begin (gpointer data)
+{
+	FrCommandAlz *comm = data;
+	
+	comm->list_started = FALSE;
+	comm->invalid_password = FALSE;
+}
+
+
+static void
 fr_command_alz_list (FrCommand  *comm)
 {
-	FR_COMMAND_ALZ (comm)->list_started = FALSE;
-	FR_COMMAND_ALZ (comm)->invalid_password = FALSE;
-
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      process_line,
-				      comm);
+	fr_process_set_out_line_func (FR_COMMAND (comm)->process, process_line, comm);
 
 	fr_process_begin_command (comm->process, "unalz");
+	fr_process_set_begin_func (comm->process, list__begin, comm);
 	fr_process_add_arg (comm->process, "-l");
 	add_codepage_arg(comm);
 	fr_process_add_arg (comm->process, comm->filename);

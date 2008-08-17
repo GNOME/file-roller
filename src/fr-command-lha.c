@@ -212,9 +212,7 @@ process_line (char     *line,
 static void
 fr_command_lha_list (FrCommand  *comm)
 {
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, process_line, comm);
 
 	fr_process_begin_command (comm->process, "lha");
 	fr_process_add_arg (comm->process, "lq");

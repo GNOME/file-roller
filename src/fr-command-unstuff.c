@@ -180,17 +180,25 @@ process_line (char     *line,
 
 
 static void
-fr_command_unstuff_list (FrCommand  *comm)
+list__begin (gpointer data)
+{
+	FrCommandUnstuff *comm = data;
+	
+	comm->fdata = NULL;
+}
+
+
+static void
+fr_command_unstuff_list (FrCommand *comm)
 {
 	char *arg, *path;
 	char *filename;
 	char *path_dots;
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      process_line,
-				      comm);
+	fr_process_set_out_line_func (comm->process, process_line, comm);
 
 	fr_process_begin_command (comm->process, "unstuff");
+	fr_process_set_begin_func (comm->process, list__begin, comm);
 	fr_process_add_arg (comm->process, "--trace");
 
 	/* Actually unpack everything in a temporary directory */

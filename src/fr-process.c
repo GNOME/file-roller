@@ -111,6 +111,8 @@ fr_channel_data_init (FrChannelData *channel)
 {
 	channel->source = NULL;
 	channel->raw = NULL;
+	channel->status = G_IO_STATUS_NORMAL;
+	channel->error = NULL;
 }
 
 
@@ -125,36 +127,42 @@ fr_channel_data_close_source (FrChannelData *channel)
 }
 
 
-static gboolean
+static GIOStatus
 fr_channel_data_read (FrChannelData *channel)
 {
-	GIOStatus  status;
-	char      *line;
-	gsize      length;
-	gsize      terminator_pos;
-
-	while ((status = g_io_channel_read_line (channel->source,
-						 &line,
-						 &length,
-						 &terminator_pos,
-						 NULL)) == G_IO_STATUS_NORMAL)
+	char  *line;
+	gsize  length;
+	gsize  terminator_pos;
+	
+	channel->status = G_IO_STATUS_NORMAL;
+	g_clear_error (&channel->error);
+		
+	while ((channel->status = g_io_channel_read_line (channel->source,
+							  &line,
+							  &length,
+							  &terminator_pos,
+							  &channel->error)) == G_IO_STATUS_NORMAL)
 	{
 		line[terminator_pos] = 0;
 		channel->raw = g_list_prepend (channel->raw, line);
 		if (channel->line_func != NULL)
 			(*channel->line_func) (line, channel->line_data);
 	}
-
-	return (status == G_IO_STATUS_AGAIN);
+	
+	return channel->status;
 }
 
 
-static void
+static GIOStatus
 fr_channel_data_flush (FrChannelData *channel)
 {
-	while (fr_channel_data_read (channel))
+	GIOStatus status;
+	
+	while (((status = fr_channel_data_read (channel)) != G_IO_STATUS_ERROR) && (status != G_IO_STATUS_EOF))
 		/* void */;
 	fr_channel_data_close_source (channel);
+	
+	return status;
 }
 
 
@@ -180,17 +188,21 @@ fr_channel_data_free (FrChannelData *channel)
 
 static void
 fr_channel_data_set_fd (FrChannelData *channel,
-			int            fd)
+			int            fd,
+			const char    *charset)
 {
-	const char *charset;
-
 	fr_channel_data_reset (channel);
+
 	channel->source = g_io_channel_unix_new (fd);
 	g_io_channel_set_flags (channel->source, G_IO_FLAG_NONBLOCK, NULL);
 	g_io_channel_set_buffer_size (channel->source, BUFFER_SIZE);
-	if (! g_get_charset (&charset))
+	if (charset != NULL)
 		g_io_channel_set_encoding (channel->source, charset, NULL);
 }
+
+
+const char *try_charsets[] = { "UTF-8", "ISO-8859-1", "WINDOW-1252" };
+int n_charsets = G_N_ELEMENTS (try_charsets);
 
 
 struct _FrProcessPrivate {
@@ -211,6 +223,7 @@ struct _FrProcessPrivate {
 	gboolean     use_standard_locale;
 	gboolean     sticky_only;         /* whether to execute only sticky
 			 		   * commands. */
+	int          current_charset;
 };
 
 
@@ -303,6 +316,8 @@ fr_process_init (FrProcess *process)
 	process->priv->running = FALSE;
 	process->priv->stopping = FALSE;
 	process->restart = FALSE;
+	
+	process->priv->current_charset = -1;
 
 	process->priv->use_standard_locale = FALSE;
 }
@@ -622,7 +637,21 @@ static void child_setup (gpointer user_data)
 	FrProcess *process = user_data;
 
 	if (process->priv->use_standard_locale)
-		putenv ("LC_ALL=C");
+		putenv ("LC_MESSAGES=C");
+}
+
+
+static const char *
+fr_process_get_charset (FrProcess *process)
+{
+	const char *charset = NULL;
+	
+	if (process->priv->current_charset >= 0)
+		charset = try_charsets[process->priv->current_charset];
+	else if (g_get_charset (&charset))
+		charset = NULL;
+	
+	return charset;
 }
 
 
@@ -649,7 +678,7 @@ start_current_command (FrProcess *process)
 		int j;
 
 		if (process->priv->use_standard_locale)
-			g_print ("\tLC_ALL=C\n");
+			g_print ("\tLC_MESSAGES=C\n");
 
 		if (info->dir != NULL)
 			g_print ("\tcd %s\n", info->dir);
@@ -688,8 +717,8 @@ start_current_command (FrProcess *process)
 
 	g_free (argv);
 
-	fr_channel_data_set_fd (&process->out, out_fd);
-	fr_channel_data_set_fd (&process->err, err_fd);
+	fr_channel_data_set_fd (&process->out, out_fd, fr_process_get_charset (process));
+	fr_channel_data_set_fd (&process->err, err_fd, fr_process_get_charset (process));
 
 	process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
 					              check_child,
@@ -730,6 +759,22 @@ allow_sticky_processes_only (FrProcess *process,
 }
 
 
+static void
+fr_process_set_error (FrProcess       *process,
+		      FrProcErrorType  type,
+		      int              status,
+		      GError          *gerror)
+{
+	process->error.type = type;
+	process->error.status = status;
+	if (gerror != process->error.gerror) {
+		g_clear_error (&process->error.gerror);
+		if (gerror != NULL)
+			process->error.gerror = g_error_copy (gerror);
+	}
+}					 	
+
+
 static gint
 check_child (gpointer data)
 {
@@ -738,6 +783,7 @@ check_child (gpointer data)
 	pid_t           pid;
 	int             status;
 	gboolean        continue_process;
+	gboolean        channel_error = FALSE;
 
 	info = g_ptr_array_index (process->priv->comm, process->priv->current_command);
 
@@ -746,23 +792,30 @@ check_child (gpointer data)
 	g_source_remove (process->priv->check_timeout);
 	process->priv->check_timeout = 0;
 
-	fr_channel_data_read (&process->out);
-	fr_channel_data_read (&process->err);
-
-	pid = waitpid (process->priv->command_pid, &status, WNOHANG);
-	if (pid != process->priv->command_pid) {
-		/* Add check again. */
-		process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
-						              check_child,
-						              process);
-		return FALSE;
+	if (fr_channel_data_read (&process->out) == G_IO_STATUS_ERROR) {
+		fr_process_set_error (process, FR_PROC_ERROR_IO_CHANNEL, 0, process->out.error);
+		channel_error = TRUE;
+	}
+	else if (fr_channel_data_read (&process->err) == G_IO_STATUS_ERROR) {
+		fr_process_set_error (process, FR_PROC_ERROR_IO_CHANNEL, 0, process->err.error);
+		channel_error = TRUE;
+	}
+	else {
+		pid = waitpid (process->priv->command_pid, &status, WNOHANG);
+		if (pid != process->priv->command_pid) {
+			/* Add check again. */
+			process->priv->check_timeout = g_timeout_add (REFRESH_RATE,
+							              check_child,
+							              process);
+			return FALSE;
+		}
 	}
 
 	if (info->ignore_error) {
 		process->error.type = FR_PROC_ERROR_NONE;
 		debug (DEBUG_INFO, "[ignore error]\n");
 	}
-	else if (process->error.type != FR_PROC_ERROR_STOPPED) {
+	else if (! channel_error && (process->error.type != FR_PROC_ERROR_STOPPED)) {
 		if (WIFEXITED (status)) {
 			if (WEXITSTATUS (status) == 0)
 				process->error.type = FR_PROC_ERROR_NONE;
@@ -778,13 +831,36 @@ check_child (gpointer data)
 	}
 
 	process->priv->command_pid = 0;
-	fr_channel_data_flush (&process->out);
-	fr_channel_data_flush (&process->err);
-
-	/**/
+	
+	if (fr_channel_data_flush (&process->out) == G_IO_STATUS_ERROR) {
+		fr_process_set_error (process, FR_PROC_ERROR_IO_CHANNEL, 0, process->out.error);
+		channel_error = TRUE;
+	}
+	else if (fr_channel_data_flush (&process->err) == G_IO_STATUS_ERROR) {
+		fr_process_set_error (process, FR_PROC_ERROR_IO_CHANNEL, 0, process->err.error);
+		channel_error = TRUE;
+	}
 
 	if (info->end_func != NULL)
 		(*info->end_func) (info->end_data);
+
+	/**/
+
+	if (channel_error 
+	    && (process->error.type == FR_PROC_ERROR_IO_CHANNEL)
+	    && g_error_matches (process->error.gerror, G_CONVERT_ERROR, G_CONVERT_ERROR_ILLEGAL_SEQUENCE))
+	{	
+		if (process->priv->current_charset < n_charsets - 1) {
+			/* try with another charset */
+			process->priv->current_charset++;
+			process->priv->running = FALSE;
+			process->restart = TRUE;
+			fr_process_start (process);
+			return FALSE;
+		}		
+		/*fr_process_set_error (process, FR_PROC_ERROR_NONE, 0, NULL);*/
+		fr_process_set_error (process, FR_PROC_ERROR_BAD_CHARSET, 0, process->error.gerror);
+	}
 
 	/* Check whether to continue or stop the process */
 
@@ -827,11 +903,10 @@ check_child (gpointer data)
 
 	if (process->priv->sticky_only) {
 		/* Restore the first error. */
-		process->error.type = process->priv->first_error.type;
-		process->error.status = process->priv->first_error.status;
-		g_clear_error (&process->error.gerror);
-		if (process->priv->first_error.gerror != NULL)
-			process->error.gerror = g_error_copy (process->priv->first_error.gerror);
+		fr_process_set_error (process, 
+				      process->priv->first_error.type, 
+				      process->priv->first_error.status, 
+				      process->priv->first_error.gerror);
 	}
 
 	g_signal_emit (G_OBJECT (process),
@@ -864,12 +939,14 @@ fr_process_start (FrProcess *process)
 
 	process->priv->sticky_only = FALSE;
 	process->priv->current_command = 0;
-	process->error.type = FR_PROC_ERROR_NONE;
+	fr_process_set_error (process, FR_PROC_ERROR_NONE, 0, NULL);
 
-	if (! process->restart)
+	if (! process->restart) {
+		process->priv->current_charset = -1;
 		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[START],
 			       0);
+	}
 
 	process->priv->stopping = FALSE;
 

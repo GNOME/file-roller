@@ -154,7 +154,7 @@ list__process_line (char     *line,
 		fdata->full_path = g_strconcat ((fdata->original_path[0] != '/') ? "/" : "",
 						fdata->original_path,
 						(fdata->dir && (fdata->original_path[strlen (fdata->original_path - 1)] != '/')) ? "/" : "",
-						NULL);
+						NULL);					
 	}
 	else if (strcmp (fields[0], "Folder") == 0) {
 		fdata->dir = (strcmp (fields[1], "+") == 0);
@@ -213,15 +213,25 @@ add_password_arg (FrCommand     *comm,
 
 
 static void
-fr_command_7z_list (FrCommand  *comm)
+list__begin (gpointer data)
 {
-	FrCommand7z *p7z_comm = FR_COMMAND_7Z (comm);
+	FrCommand7z *p7z_comm = data;
+	
+	if (p7z_comm->fdata != NULL) {
+		file_data_free (p7z_comm->fdata);
+		p7z_comm->fdata = NULL;
+	}
+	p7z_comm->list_started = FALSE;
+}
 
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process,
-				      list__process_line,
-				      comm);
+
+static void
+fr_command_7z_list (FrCommand  *comm)
+{					   
+	fr_process_set_out_line_func (comm->process, list__process_line, comm);
 
 	fr_command_7z_begin_command (comm);
+	fr_process_set_begin_func (comm->process, list__begin, comm);
 	fr_process_add_arg (comm->process, "l");
 	fr_process_add_arg (comm->process, "-slt");
 	fr_process_add_arg (comm->process, "-bd");
@@ -231,11 +241,6 @@ fr_command_7z_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 
-	if (p7z_comm->fdata != NULL) {
-		file_data_free (p7z_comm->fdata);
-		p7z_comm->fdata = NULL;
-	}
-	p7z_comm->list_started = FALSE;
 	fr_process_start (comm->process);
 }
 

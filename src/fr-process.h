@@ -48,6 +48,8 @@ typedef struct {
 	GList      *raw;
 	LineFunc    line_func;
 	gpointer    line_data;
+	GIOStatus   status;
+	GError     *error;
 } FrChannelData;
 
 struct _FrProcess {
