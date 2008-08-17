@@ -703,7 +703,7 @@ gboolean
 is_mime_type (const char *mime_type,
 	      const char *pattern)
 {
-	return (strncasecmp (mime_type, pattern, strlen (pattern)) == 0);
+	return (strcasecmp (mime_type, pattern) == 0);
 }
 
 

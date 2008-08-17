@@ -1,3 +1,13 @@
+2008-08-17  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-cfile.c: allow to read .Z files with gzip.
+	* src/fr-command-tar.c: allow to read tar.Z files with gzip.
+	
+	Fixes bug: file-roller fails to open .Z files (LP#26662).
+	
+	* src/file-utils.c (is_mime_type): campare the whole string not only
+	part of it.
+
 2008-08-16  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/gio-utils.c (get_dir_list_from_file_list)

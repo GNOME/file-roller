@@ -356,7 +356,13 @@ fr_command_cfile_extract (FrCommand  *comm,
 		fr_process_end_command (comm->process);
 	}
 	else if (is_mime_type (comm->mime_type, "application/x-compress")) {
-		fr_process_begin_command (comm->process, "uncompress");
+		if (is_program_in_path ("gzip")) {
+			fr_process_begin_command (comm->process, "gzip");
+			fr_process_add_arg (comm->process, "-d");
+			fr_process_add_arg (comm->process, "-n");
+		}
+		else
+			fr_process_begin_command (comm->process, "uncompress");
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
@@ -453,7 +459,7 @@ fr_command_cfile_get_capabilities (FrCommand  *comm,
 	else if (is_mime_type (mime_type, "application/x-compress")) {
 		if (is_program_in_path ("compress"))
 			capabilities |= FR_COMMAND_CAN_WRITE;
-		if (is_program_in_path ("uncompress"))
+		if (is_program_in_path ("uncompress") || is_program_in_path ("gzip"))
 			capabilities |= FR_COMMAND_CAN_READ;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzma")) {
