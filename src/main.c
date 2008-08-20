@@ -628,6 +628,54 @@ add_if_non_present (int *a,
 }
 
 
+static int
+cmp_mime_type_by_extension (const void *p1, 
+			    const void *p2)
+{
+	int i1 = * (int*) p1;
+	int i2 = * (int*) p2;
+	
+	return strcmp (mime_type_desc[i1].default_ext, mime_type_desc[i2].default_ext);
+}
+
+
+static int
+cmp_mime_type_by_description (const void *p1, 
+			      const void *p2)
+{
+	int i1 = * (int*) p1;
+	int i2 = * (int*) p2;
+	
+	return g_utf8_collate (_(mime_type_desc[i1].name), _(mime_type_desc[i2].name));
+}
+
+
+static void
+sort_mime_types (int *a,
+                 int(*compar)(const void *, const void *))
+{
+	int n = 0;
+
+	while (a[n] != -1) 
+		n++;		
+	qsort (a, n, sizeof (int), compar);
+}
+
+
+void
+sort_mime_types_by_extension (int *a)
+{
+	sort_mime_types (a, cmp_mime_type_by_extension);
+}
+
+
+void
+sort_mime_types_by_description (int *a)
+{
+	sort_mime_types (a, cmp_mime_type_by_description);
+}
+
+
 static void
 compute_supported_archive_types (void)
 {

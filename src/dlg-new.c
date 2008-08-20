@@ -205,7 +205,8 @@ dlg_new_archive (FrWindow  *window,
 
 	data->window = window;
 	data->supported_types = supported_types;
-
+	sort_mime_types_by_description (data->supported_types);
+	
 	/* Get the widgets. */
 
 	data->dialog = glade_xml_get_widget (data->gui, "filechooserdialog");

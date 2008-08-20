@@ -49,7 +49,8 @@
 typedef struct {
 	FrWindow   *window;
 	GladeXML   *gui;
-
+	int        *supported_types;
+	
 	GtkWidget  *dialog;
 	GtkWidget  *a_add_to_entry;
 	GtkWidget  *a_location_filechooserbutton;
@@ -88,33 +89,21 @@ destroy_cb (GtkWidget  *widget,
 static const char *
 get_ext (DialogData *data)
 {
-	int *save_type_list;
-	int  idx;
-
-	if (data->single_file)
-		save_type_list = single_file_save_type;
-	else
-		save_type_list =  save_type;
+	int idx;
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
 
-	return mime_type_desc[save_type_list[idx]].default_ext;
+	return mime_type_desc[data->supported_types[idx]].default_ext;
 }
 
 
 static void
 set_archive_options (DialogData *data)
 {
-	int *save_type_list;
-	int  idx;
-
-	if (data->single_file)
-		save_type_list = single_file_save_type;
-	else
-		save_type_list = save_type;
+	int idx;
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
-	if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT) {
+	if (mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT) {
 		char *pwd;
 
 		pwd = (char*) gtk_entry_get_text (GTK_ENTRY (data->a_password_entry));
@@ -122,13 +111,13 @@ set_archive_options (DialogData *data)
 			pwd = g_strstrip (pwd);
 			if (strcmp (pwd, "") != 0) {
 				fr_window_set_password (data->window, pwd);
-				if (mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER)
+				if (mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER)
 					fr_window_set_encrypt_header (data->window, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton)));
 			}
 		}
 	}
 
-	if ((mime_type_desc[save_type_list[idx]].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES)
+	if ((mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES)
 	    && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_volume_checkbutton)))
 	{
 		double value;
@@ -415,15 +404,10 @@ static void
 archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 				   DialogData  *data)
 {
-	int        *save_type_list;
 	const char *mime_type;
 	int         idx = gtk_combo_box_get_active (combo_box);
 
-	if (data->single_file)
-		save_type_list = single_file_save_type;
-	else
-		save_type_list =  save_type;
-	mime_type = mime_type_desc[save_type_list[idx]].mime_type;
+	mime_type = mime_type_desc[data->supported_types[idx]].mime_type;
 
 	gtk_image_set_from_pixbuf (GTK_IMAGE (data->add_image), get_mime_type_pixbuf (mime_type, ARCHIVE_ICON_SIZE, NULL));
 	update_sensitivity_for_mime_type (data, mime_type);
@@ -434,22 +418,16 @@ static void
 update_archive_type_combo_box_from_ext (DialogData  *data,
 					const char  *ext)
 {
-	int *save_type_list;
-	int  idx = 0;
-	int  i;
+	int idx = 0;
+	int i;
 
 	if (ext == NULL) {
 		gtk_combo_box_set_active (GTK_COMBO_BOX (data->a_archive_type_combo_box), 0);
 		return;
 	}
 
-	if (data->single_file)
-		save_type_list = single_file_save_type;
-	else
-		save_type_list =  save_type;
-
-	for (i = 0; save_type_list[i] != -1; i++)
-		if (strcmp (ext, mime_type_desc[save_type_list[i]].default_ext) == 0) {
+	for (i = 0; data->supported_types[i] != -1; i++)
+		if (strcmp (ext, mime_type_desc[data->supported_types[i]].default_ext) == 0) {
 			idx = i;
 			break;
 		}
@@ -503,7 +481,6 @@ dlg_batch_add_files (FrWindow *window,
 	const char   *first_filename;
 	char         *parent;
 	int           i;
-	int          *save_type_list;
 
 	if (file_list == NULL)
 		return;
@@ -581,13 +558,14 @@ dlg_batch_add_files (FrWindow *window,
 
 	data->a_archive_type_combo_box = gtk_combo_box_new_text ();
 	if (data->single_file)
-		save_type_list = single_file_save_type;
+		data->supported_types = single_file_save_type;
 	else
-		save_type_list = save_type;
-
-	for (i = 0; save_type_list[i] != -1; i++)
+		data->supported_types = save_type;
+	sort_mime_types_by_extension (data->supported_types);
+	
+	for (i = 0; data->supported_types[i] != -1; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box),
-					   mime_type_desc[save_type_list[i]].default_ext);
+					   mime_type_desc[data->supported_types[i]].default_ext);
 
 	gtk_box_pack_start (GTK_BOX (a_archive_type_box), data->a_archive_type_combo_box, TRUE, TRUE, 0);
 	gtk_widget_show_all (a_archive_type_box);

@@ -75,5 +75,7 @@ GType        get_command_type_from_mime_type (const char    *mime_type,
 const char * get_mime_type_from_extension    (const char    *ext);
 const char * get_archive_filename_extension  (const char    *uri);
 int          get_mime_type_index             (const char    *mime_type);
-
+void         sort_mime_types_by_extension    (int           *a);
+void         sort_mime_types_by_description  (int           *a);
+		                              
 #endif /* MAIN_H */
