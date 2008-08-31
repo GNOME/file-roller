@@ -708,7 +708,7 @@ is_mime_type (const char *mime_type,
 
 
 const char*
-get_file_mime_type (const char *filename,
+get_file_mime_type (const char *uri,
                     gboolean    fast_file_type)
 {
 	GFile      *file;
@@ -716,14 +716,14 @@ get_file_mime_type (const char *filename,
 	GError     *err = NULL;
  	const char *result = NULL;
 
- 	file = g_file_new_for_uri (filename);
+ 	file = g_file_new_for_uri (uri);
 	info = g_file_query_info (file,
 				  fast_file_type ?
 				  G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE :
 				  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
 				  0, NULL, &err);
 	if (info == NULL) {
-		g_warning ("could not get content type for %s: %s", filename, err->message);
+		g_warning ("could not get content type for %s: %s", uri, err->message);
 		g_clear_error (&err);
 	}
 	else {

@@ -54,6 +54,8 @@ typedef struct {
 
 	GtkTreeModel *app_model;
 	GtkTreeModel *recent_model;
+	
+	GtkWidget    *last_clicked_list;
 } DialogData;
 
 
@@ -146,6 +148,7 @@ app_list_selection_changed_cb (GtkTreeSelection *selection,
 			    DATA_COLUMN, &app,
 			    -1);
 	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), g_app_info_get_executable (app));
+	data->last_clicked_list = data->o_app_tree_view;
 }
 
 
@@ -192,6 +195,7 @@ recent_list_selection_changed_cb (GtkTreeSelection *selection,
 			    -1);
 	_gtk_entry_set_locale_text (GTK_ENTRY (data->o_app_entry), editor);
 	g_free (editor);
+	data->last_clicked_list = data->o_recent_tree_view;
 }
 
 
@@ -237,34 +241,55 @@ delete_recent_cb (GtkWidget *widget,
 	DialogData       *data = callback_data;
 	GtkTreeSelection *selection;
 	GtkTreeIter       iter;
-	char             *editor;
-	GSList           *editors, *link;
+	
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view));
-	if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
-		return;
+	if (data->last_clicked_list == data->o_recent_tree_view) {
+		char   *editor;
+		GSList *editors, *link;
+	
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view));
+		if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
+			return;
 
-	gtk_tree_model_get (data->recent_model, &iter,
-			    0, &editor,
-			    -1);
-	gtk_list_store_remove (GTK_LIST_STORE (data->recent_model), &iter);
+		gtk_tree_model_get (data->recent_model, &iter,
+				    0, &editor,
+				    -1);
+		gtk_list_store_remove (GTK_LIST_STORE (data->recent_model), &iter);
 
-	/**/
+		/**/
 
-	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
-	link = g_slist_find_custom (editors, editor, (GCompareFunc) strcmp);
-	if (link != NULL) {
-		editors = g_slist_remove_link (editors, link);
-		eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
-		g_free (link->data);
-		g_slist_free (link);
+		editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
+		link = g_slist_find_custom (editors, editor, (GCompareFunc) strcmp);
+		if (link != NULL) {
+			editors = g_slist_remove_link (editors, link);
+			eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
+			g_free (link->data);
+			g_slist_free (link);
+		}
+		g_slist_foreach (editors, (GFunc) g_free, NULL);
+		g_slist_free (editors);
+
+		g_free (editor);
 	}
-	g_slist_foreach (editors, (GFunc) g_free, NULL);
-	g_slist_free (editors);
+	else if (data->last_clicked_list == data->o_app_tree_view) {
+		GAppInfo *app;
+		
+		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_app_tree_view));
+		if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
+			return;
 
-	/**/
-
-	g_free (editor);
+		gtk_tree_model_get (data->app_model, &iter,
+			    	    DATA_COLUMN, &app,
+			    	    -1);
+		gtk_list_store_remove (GTK_LIST_STORE (data->app_model), &iter);
+		
+		if (g_app_info_can_remove_supports_type (app)) {
+			const char *mime_type;
+			
+			mime_type = get_file_mime_type_for_path ((char*) data->file_list->data, FALSE);
+			g_app_info_remove_supports_type (app, mime_type, NULL);
+		}
+	}
 }
 
 

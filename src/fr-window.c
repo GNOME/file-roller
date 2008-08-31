@@ -7728,30 +7728,24 @@ fr_window_paste_selection (FrWindow *window,
 
 
 void
-fr_window_open_files_with_command (FrWindow   *window,
-				   GList      *file_list,
-				   char       *command)
+fr_window_open_files_with_command (FrWindow *window,
+				   GList    *file_list,
+				   char     *command)
 {
-	CommandData *cdata;
-	GList       *scan;
-
-	if (window->priv->activity_ref > 0)
+	GAppInfo *app;
+	GError   *error = NULL;
+		
+	app = g_app_info_create_from_commandline (command, NULL, G_APP_INFO_CREATE_NONE, &error);
+	if (error != NULL) {
+		_gtk_error_dialog_run (GTK_WINDOW (window),
+				       _("Could not perform the operation"),
+				       "%s",
+				       error->message);
+		g_clear_error (&error);
 		return;
-
-	/* The command data is used to unref the process on exit. */
-
-	cdata = g_new0 (CommandData, 1);
-	cdata->process = fr_process_new ();
-	fr_process_use_standard_locale (cdata->process, FALSE);
-	cdata->process->term_on_stop = FALSE;
-
-	fr_process_begin_command (cdata->process, command);
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (cdata->process, scan->data);
-	fr_process_end_command (cdata->process);
-
-	CommandList = g_list_prepend (CommandList, cdata);
-	fr_process_start (cdata->process);
+	}
+ 
+	fr_window_open_files_with_application (window, file_list, app);
 }
 
 
@@ -7766,10 +7760,8 @@ fr_window_open_files_with_application (FrWindow *window,
 	if (window->priv->activity_ref > 0)
 		return;
 
-	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = g_filename_to_uri (scan->data, NULL, NULL);
-		uris = g_list_prepend (uris, filename);
-	}
+	for (scan = file_list; scan; scan = scan->next) 
+		uris = g_list_prepend (uris, g_filename_to_uri (scan->data, NULL, NULL));
 
 	if (! g_app_info_launch_uris (app, uris, NULL, &error)) {
 		_gtk_error_dialog_run (GTK_WINDOW (window),
@@ -7777,6 +7769,16 @@ fr_window_open_files_with_application (FrWindow *window,
 				       "%s",
 				       error->message);
 		g_clear_error (&error);
+	}
+	else {
+		char       *uri;
+		const char *mime_type;
+		
+		uri = g_filename_to_uri (file_list->data, NULL, NULL);
+		mime_type = get_file_mime_type (uri, FALSE);
+		if (mime_type != NULL)
+			g_app_info_set_as_default_for_type (app, mime_type, NULL);
+		g_free (uri);
 	}
 
 	path_list_free (uris);
