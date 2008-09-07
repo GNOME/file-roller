@@ -92,11 +92,10 @@ list__process_line (char     *line,
 	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	const char  *name_field;
+	char        *name;
+	int          ofs = 0;
 
 	g_return_if_fail (line != NULL);
-
-	if (line[0] == 'd') /* Ignore directories. */
-		return;
 
 	fdata = file_data_new ();
 
@@ -107,14 +106,23 @@ list__process_line (char     *line,
 	g_strfreev (fields);
 
 	name_field = get_last_field (line, 10);
-#else
-	fields = split_line (line, 8);
-	fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
-	fdata->modified = mktime_from_string (fields[5], fields[6], fields[7]);
+#else /* !__sun */
+	/* Handle char and block device files */
+	if ((line[0] == 'c') || (line[0] == 'b')) {
+		fields = split_line (line, 9);
+		ofs = 1;
+		fdata->size = 0;
+		/* TODO We should also specify the content type */
+	}
+	else {
+		fields = split_line (line, 8);
+		fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
+	}
+	fdata->modified = mktime_from_string (fields[5+ofs], fields[6+ofs], fields[7+ofs]);
 	g_strfreev (fields);
 
-	name_field = get_last_field (line, 9);
-#endif /* __sun */
+	name_field = get_last_field (line, 9+ofs);
+#endif /* !__sun */
 
 	fields = g_strsplit (name_field, " -> ", 2);
 
@@ -123,25 +131,34 @@ list__process_line (char     *line,
 		fields = g_strsplit (name_field, " link to ", 2);
 	}
 
+	fdata->dir = line[0] == 'd';
+
+	name = g_strcompress (fields[0]);
 	if (*(fields[0]) == '/') {
-		fdata->full_path = g_strcompress (fields[0]);
+		fdata->full_path = g_strdup (name);
 		fdata->original_path = fdata->full_path;
 	}
 	else {
-		char *compressed;
-
-		compressed = g_strcompress (fields[0]);
-		fdata->full_path = g_strconcat ("/", compressed, NULL);
-		g_free (compressed);
-
+		fdata->full_path = g_strconcat ("/", name, NULL);
 		fdata->original_path = fdata->full_path + 1;
 	}
+	if (fdata->dir && (name[strlen (name) - 1] != '/')) {
+		char *old_full_path = fdata->full_path;
+		fdata->full_path = g_strconcat (old_full_path, "/", NULL);
+		g_free (old_full_path);
+		fdata->original_path = g_strdup (name);
+		fdata->free_original_path = TRUE;
+	}
+	g_free (name);
 
 	if (fields[1] != NULL)
 		fdata->link = g_strcompress (fields[1]);
 	g_strfreev (fields);
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+	if (fdata->dir)
+		fdata->name = dir_name_from_path (fdata->full_path);
+	else
+		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
 	fdata->path = remove_level_from_path (fdata->full_path);
 
 	if (*fdata->name == 0)

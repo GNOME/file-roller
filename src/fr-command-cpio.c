@@ -92,6 +92,7 @@ list__process_line (char     *line,
 	FrCommand   *comm = FR_COMMAND (data);
 	char       **fields;
 	const char  *name_field;
+	char        *name;
 	int          ofs = 0;
 
 	g_return_if_fail (line != NULL);
@@ -106,15 +107,17 @@ list__process_line (char     *line,
 
 	name_field = get_last_field (line, 10);
 #else /* !__sun */
-	if (line[0] == 'c') {
+	/* Handle char and block device files */
+	if ((line[0] == 'c') || (line[0] == 'b')) {
 		fields = split_line (line, 9);
 		ofs = 1;
+		fdata->size = 0;
+		/* FIXME: We should also specify the content type */
 	}
 	else {
 		fields = split_line (line, 8);
-		ofs = 0;
+		fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
 	}
-	fdata->size = g_ascii_strtoull (fields[4+ofs], NULL, 10);
 	fdata->modified = mktime_from_string (fields[5+ofs], fields[6+ofs], fields[7+ofs]);
 	g_strfreev (fields);
 
@@ -130,33 +133,27 @@ list__process_line (char     *line,
 
 	fdata->dir = line[0] == 'd';
 
+	name = g_strcompress (fields[0]);
 	if (*(fields[0]) == '/') {
-		char *name = fields[0];
-		if (fdata->dir && (name[strlen (name) - 1] != '/')) {
-			fdata->full_path = g_strconcat (name, "/", NULL);
-			fdata->original_path = g_strdup (fields[0]);
-			fdata->free_original_path = TRUE;
-		}
-		else {
-			fdata->full_path = g_strdup (fields[0]);
-			fdata->original_path = fdata->full_path;
-		}
+		fdata->full_path = g_strdup (name);
+		fdata->original_path = fdata->full_path;
 	}
 	else {
-		char *name = fields[0];
-		if (fdata->dir && (name[strlen (name) - 1] != '/')) {
-			fdata->full_path = g_strconcat ("/", name, "/", NULL);
-			fdata->original_path = g_strdup (fields[0]);
-			fdata->free_original_path = TRUE;
-		}
-		else {
-			fdata->full_path = g_strconcat ("/", fields[0], NULL);
-			fdata->original_path = fdata->full_path + 1;
-		}
+		fdata->full_path = g_strconcat ("/", name, NULL);
+		fdata->original_path = fdata->full_path + 1;
 	}
 
+	if (fdata->dir && (name[strlen (name) - 1] != '/')) {
+		char *old_full_path = fdata->full_path;
+		fdata->full_path = g_strconcat (old_full_path, "/", NULL);
+		g_free (old_full_path);
+		fdata->original_path = g_strdup (name);
+		fdata->free_original_path = TRUE;
+	}
+	g_free (name);
+
 	if (fields[1] != NULL)
-		fdata->link = g_strdup (fields[1]);
+		fdata->link = g_strcompress (fields[1]);
 	g_strfreev (fields);
 
 	if (fdata->dir)
@@ -175,18 +172,11 @@ list__process_line (char     *line,
 static void
 fr_command_cpio_list (FrCommand  *comm)
 {
-	GString *cmd;
-
 	fr_process_set_out_line_func (comm->process, list__process_line, comm);
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_add_arg (comm->process, "-c");
-
-	cmd = g_string_new ("cpio -itv < ");
-	g_string_append (cmd, comm->e_filename);
-	fr_process_add_arg (comm->process, cmd->str);
-	g_string_free (cmd, TRUE);
-
+	fr_process_add_arg_concat (comm->process, "cpio -itv < ", comm->e_filename, NULL);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -205,10 +195,10 @@ fr_command_cpio_extract (FrCommand *comm,
 	GString *cmd;
 
 	fr_process_begin_command (comm->process, "sh");
-	fr_process_add_arg (comm->process, "-c");
 	if (dest_dir != NULL)
                 fr_process_set_working_dir (comm->process, dest_dir);
-
+	fr_process_add_arg (comm->process, "-c");
+	
 	cmd = g_string_new ("cpio -idu ");
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = g_shell_quote (scan->data);
