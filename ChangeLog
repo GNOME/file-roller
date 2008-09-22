@@ -1,3 +1,15 @@
+2008-09-22  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/gtk-utils.h: 
+	* src/fr-window.c: 
+	* src/dlg-open-with.c: 
+	* src/gtk-utils.c (get_icon_pixbuf): the icon isn't always a 
+	themed_icon, it can be a file_icon too.  Load the image from the 
+	file if it's a file_icon.
+	
+	Fixes bug #546799 – file-roller crashed with SIGSEGV in 
+	g_str_hash()
+
 2008-09-13  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* data/file-roller.desktop.in.in: 

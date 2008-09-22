@@ -410,8 +410,7 @@ dlg_open_with (FrWindow *window,
 	for (scan = data->app_list; scan; scan = scan->next) {
 		gboolean   found;
 		char      *utf8_name;
-		GIcon     *icon;
-		GdkPixbuf *icon_image;
+		GdkPixbuf *icon_image = NULL;
 
 		app = scan->data;
 
@@ -428,16 +427,8 @@ dlg_open_with (FrWindow *window,
 
 		app_names = g_list_prepend (app_names, (char*) g_app_info_get_executable (app));
 
-		utf8_name = g_locale_to_utf8 (g_app_info_get_name (app), -1, NULL, NULL, NULL);
-		
-		icon = g_app_info_get_icon (app);
-		if (icon != NULL) {
-			icon_image = get_icon_pixbuf (theme, G_THEMED_ICON (icon), icon_size);
-			g_object_unref (icon);
-		}
-		else {
-			icon_image = NULL;
-		}
+		utf8_name = g_locale_to_utf8 (g_app_info_get_name (app), -1, NULL, NULL, NULL);	
+		icon_image = get_icon_pixbuf (g_app_info_get_icon (app), icon_size, theme);
 		
 		gtk_list_store_append (GTK_LIST_STORE (data->app_model),
 				       &iter);

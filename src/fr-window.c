@@ -1249,7 +1249,7 @@ get_icon (GtkWidget *widget,
 	}
 
 	icon = g_content_type_get_icon (content_type);
-	pixbuf = get_icon_pixbuf (icon_theme, G_THEMED_ICON (icon), file_list_icon_size);
+	pixbuf = get_icon_pixbuf (icon, file_list_icon_size, icon_theme);
 	g_object_unref (icon);
 
 	if (pixbuf == NULL)

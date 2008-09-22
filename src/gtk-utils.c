@@ -652,10 +652,10 @@ _gtk_label_get_filename_text (GtkLabel   *label)
 }
 
 
-GdkPixbuf *
-get_icon_pixbuf (GtkIconTheme *icon_theme,
-		 GThemedIcon  *icon,
-		 int           size)
+static GdkPixbuf *
+get_themed_icon_pixbuf (GThemedIcon  *icon,
+		        int           size,
+		        GtkIconTheme *icon_theme)
 {
 	char        **icon_names;
 	GtkIconInfo  *icon_info;
@@ -681,6 +681,39 @@ get_icon_pixbuf (GtkIconTheme *icon_theme,
 }
 
 
+static GdkPixbuf *
+get_file_icon_pixbuf (GFileIcon *icon,
+		      int        size)
+{
+	GFile     *file;
+	char      *filename;
+	GdkPixbuf *pixbuf;
+	
+	file = g_file_icon_get_file (icon);
+	filename = g_file_get_path (file);
+	pixbuf = gdk_pixbuf_new_from_file_at_size (filename, size, -1, NULL);
+	g_free (filename);
+	g_object_unref (file);
+	
+	return pixbuf;
+}
+
+
+GdkPixbuf *
+get_icon_pixbuf (GIcon        *icon,
+		 int           size,
+		 GtkIconTheme *theme)
+{
+	if (icon == NULL)
+		return NULL;
+	if (G_IS_THEMED_ICON (icon))
+		return get_themed_icon_pixbuf (G_THEMED_ICON (icon), size, theme);
+	if (G_IS_FILE_ICON (icon))
+		return get_file_icon_pixbuf (G_FILE_ICON (icon), size);
+	return NULL;
+}
+
+
 GdkPixbuf *
 get_mime_type_pixbuf (const char   *mime_type,
 		      int           icon_size,
@@ -693,7 +726,7 @@ get_mime_type_pixbuf (const char   *mime_type,
 		icon_theme = gtk_icon_theme_get_default ();
 
 	icon = g_content_type_get_icon (mime_type);
-	pixbuf = get_icon_pixbuf (icon_theme, G_THEMED_ICON (icon), icon_size);
+	pixbuf = get_icon_pixbuf (icon, icon_size, icon_theme);
 	g_object_unref (icon);
 
 	return pixbuf;
