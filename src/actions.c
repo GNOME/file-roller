@@ -101,56 +101,56 @@ is_supported_extension (GtkWidget *file_sel,
 
 
 static char *
-get_full_path (DlgNewData *data)
+get_full_uri (DlgNewData *data)
 {
-	char        *full_path = NULL;
-	char        *path;
+	char        *full_uri = NULL;
+	char        *uri;
 	const char  *filename;
 	int          idx;
 
-	path = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
 
-	if ((path == NULL) || (*path == 0))
+	if ((uri == NULL) || (*uri == 0))
 		return NULL;
 
-	filename = file_name_from_path (path);
+	filename = file_name_from_path (uri);
 	if ((filename == NULL) || (*filename == 0)) {
-		g_free (path);
+		g_free (uri);
 		return NULL;
 	}
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box));
 	if (idx > 0) {
-		const char *path_ext;
+		const char *uri_ext;
 		char       *default_ext;
 
-		path_ext = get_archive_filename_extension (path);
+		uri_ext = get_archive_filename_extension (uri);
 		default_ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
-		if (strcmp_null_tolerant (path_ext, default_ext) != 0) {
-			full_path = g_strconcat (path, default_ext, NULL);
-			g_free (path);
+		if (strcmp_null_tolerant (uri_ext, default_ext) != 0) {
+			full_uri = g_strconcat (uri, default_ext, NULL);
+			g_free (uri);
 		}
 	}
-	if (full_path == NULL)
-		full_path = path;
+	if (full_uri == NULL)
+		full_uri = uri;
 
-	return full_path;
+	return full_uri;
 }
 
 
 static char *
 get_archive_filename_from_selector (DlgNewData *data)
 {
-	char      *path = NULL;
+	char      *uri = NULL;
 	GFile     *file, *dir;
 	GFileInfo *info;
 	GError    *err = NULL;
 
-	path = get_full_path (data);
-	if ((path == NULL) || (*path == 0)) {
+	uri = get_full_uri (data);
+	if ((uri == NULL) || (*uri == 0)) {
 		GtkWidget *dialog;
 
-		g_free (path);
+		g_free (uri);
 
 		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -163,7 +163,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 		return NULL;
 	}
 
-	file = g_file_new_for_uri (path);
+	file = g_file_new_for_uri (uri);
 
 	dir = g_file_get_parent (file);
 	info = g_file_query_info (dir,
@@ -178,7 +178,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 		g_object_unref (info);
 		g_object_unref (dir);
 		g_object_unref (file);
-		g_free (path);
+		g_free (uri);
 		return NULL;
 	}
 
@@ -188,7 +188,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 		g_object_unref (info);
 		g_object_unref (dir);
 		g_object_unref (file);
-		g_free (path);
+		g_free (uri);
 
 		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 						GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -204,9 +204,9 @@ get_archive_filename_from_selector (DlgNewData *data)
 
 	/* if the user did not specify a valid extension use the filetype combobox current type
 	 * or tar.gz if automatic is selected. */
-	if (get_archive_filename_extension (path) == NULL) {
+	if (get_archive_filename_extension (uri) == NULL) {
 		int   idx;
-		char *new_path;
+		char *new_uri;
 		char *ext = NULL;
 
 		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box));
@@ -214,17 +214,17 @@ get_archive_filename_from_selector (DlgNewData *data)
 			ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
 		else
 			ext = ".tar.gz";
-		new_path = g_strconcat (path, ext, NULL);
-		g_free (path);
-		path = new_path;
+		new_uri = g_strconcat (uri, ext, NULL);
+		g_free (uri);
+		uri = new_uri;
 	}
 
-	debug (DEBUG_INFO, "create/save %s\n", path);
+	debug (DEBUG_INFO, "create/save %s\n", uri);
 
-	if (uri_exists (path)) {
+	if (uri_exists (uri)) {
 		GtkWidget *dialog;
 
-		if (! is_supported_extension (data->dialog, path, data->supported_types)) {
+		if (! is_supported_extension (data->dialog, uri, data->supported_types)) {
 			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
 							GTK_DIALOG_MODAL,
 							NULL,
@@ -232,7 +232,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 							_("Archive type not supported."));
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
-			g_free (path);
+			g_free (uri);
 
 			return NULL;
 		}
@@ -248,7 +248,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_error_free (err);
-			g_free (path);
+			g_free (uri);
 			g_object_unref (file);
 			return NULL;
 		}
@@ -256,7 +256,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 
 	g_object_unref (file);
 
-	return path;
+	return uri;
 }
 
 

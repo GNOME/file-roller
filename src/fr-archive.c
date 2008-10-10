@@ -397,13 +397,13 @@ get_local_copy_for_file (GFile *remote_file)
 	temp_dir = get_temp_work_dir ();
 	if (temp_dir != NULL) {
 		char  *archive_name;
-		char  *local_uri;
+		char  *local_path;
 
 		archive_name = g_file_get_basename (remote_file);
-		local_uri = g_build_filename (temp_dir, archive_name, NULL);
-		local_copy = g_file_new_for_uri (local_uri);
+		local_path = g_build_filename (temp_dir, archive_name, NULL);
+		local_copy = g_file_new_for_path (local_path);
 
-		g_free (local_uri);
+		g_free (local_path);
 		g_free (archive_name);
 	}
 	g_free (temp_dir);

@@ -1,3 +1,13 @@
+2008-10-10  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/actions.c: renamed get_full_path() as get_full_uri()
+	* src/fr-archive.c (get_local_copy_for_file): use 
+	g_file_new_for_path	when build a gfile from the local temp
+	filename.
+	
+	Fixes bug #555282 – opening archive on remote directory fails 
+	with "Operation not supported".
+	
 2008-09-22  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.24.0 released ]
