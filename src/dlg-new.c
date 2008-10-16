@@ -259,7 +259,7 @@ dlg_new_archive (FrWindow  *window,
 
 	gtk_button_set_use_stock (GTK_BUTTON (n_new_button), TRUE);
 	gtk_button_set_label (GTK_BUTTON (n_new_button), FR_STOCK_CREATE_ARCHIVE);
-	gtk_expander_set_expanded (GTK_EXPANDER (data->n_other_options_expander), eel_gconf_get_boolean (PREF_BATCH_OTHER_OPTIONS, FALSE));
+	gtk_expander_set_expanded (GTK_EXPANDER (data->n_other_options_expander), FALSE);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton), eel_gconf_get_boolean (PREF_ENCRYPT_HEADER, FALSE));
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->n_volume_spinbutton), (double) eel_gconf_get_integer (PREF_BATCH_VOLUME_SIZE, 0) / MEGABYTE);
 

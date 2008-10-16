@@ -160,8 +160,6 @@ for_each_child_data_free (ForEachChildData *fec)
 		g_hash_table_destroy (fec->already_visited);
 	if (fec->to_visit != NULL)
 		g_list_free (fec->to_visit);
-	if (fec->error != NULL)
-		g_error_free (fec->error);
 	g_free (fec);
 }
 

@@ -689,7 +689,7 @@ fr_archive_copy_done (FrArchive *archive,
 	const char      *error_details = NULL;
 
 	if (error != NULL) {
-		error_type = (g_error_matches (error, G_FILE_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC);
+		error_type = (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC);
 		error_details = error->message;
 	}
 	fr_archive_action_completed (archive, action, error_type, error_details);
@@ -1981,7 +1981,7 @@ add_with_wildcard__step2 (GList    *file_list,
 	if (error != NULL) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_GETTING_FILE_LIST,
-					     (g_error_matches (error, G_FILE_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC),
+					     (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC),
 					     error->message);
 		return;
 	}
@@ -2094,7 +2094,7 @@ add_directory__step2 (GList    *file_list,
 	if (error != NULL) {
 		fr_archive_action_completed (archive,
 					     FR_ACTION_GETTING_FILE_LIST,
-					     (g_error_matches (error, G_FILE_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC),
+					     (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED) ? FR_PROC_ERROR_STOPPED : FR_PROC_ERROR_GENERIC),
 					     error->message);
 		return;
 	}

@@ -1,3 +1,22 @@
+2008-10-16  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* data/glade/new.glade: 
+
+	Fixed bug #556571 – non secret password typing.
+
+	* data/glade/new.glade: 
+	* data/glade/batch-add-files.glade: set the spin button page size to 0.
+		
+	* src/dlg-new.c: hide the other options group by default.
+	
+	* src/fr-archive.c: the G_IO_ERROR_CANCELLED error type is G_IO_ERROR 
+	not G_FILE_ERROR.
+
+2008-10-14  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/gio-utils.c (for_each_child_data_free): no need to free the
+	error.
+
 2008-10-10  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/actions.c: renamed get_full_path() as get_full_uri()
