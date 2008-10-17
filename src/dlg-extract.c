@@ -134,7 +134,7 @@ extract_cb (GtkWidget   *w,
 						   GTK_DIALOG_DESTROY_WITH_PARENT,
 						   NULL,
 						   _("Extraction not performed"),
-						   message);
+						   "%s", message);
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 

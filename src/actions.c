@@ -244,7 +244,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 							GTK_DIALOG_DESTROY_WITH_PARENT,
 							NULL,
 							_("Could not delete the old archive."),
-							err->message);
+							"%s", err->message);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));
 			g_error_free (err);

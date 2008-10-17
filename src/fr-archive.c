@@ -323,9 +323,9 @@ fr_archive_action_completed (FrArchive       *archive,
 	archive->error.status = 0;
 	g_clear_error (&archive->error.gerror);
 	if (error_details != NULL)
-		archive->error.gerror = g_error_new (fr_error_quark (),
-						     0,
-						     error_details);
+		archive->error.gerror = g_error_new_literal (fr_error_quark (),
+							     0,
+							     error_details);
 	g_signal_emit (G_OBJECT (archive),
 		       fr_archive_signals[DONE],
 		       0,
