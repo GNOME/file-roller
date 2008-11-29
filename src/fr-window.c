@@ -25,7 +25,7 @@
 
 #include <glib/gi18n.h>
 #include <gio/gio.h>
-#include <gdk/gdkcursor.h>
+#include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 

@@ -23,8 +23,7 @@
 #ifndef PREFERENCES_H
 #define PREFERENCES_H
 
-#include <gtk/gtkwindow.h>
-#include <gtk/gtkenums.h>
+#include <gtk/gtk.h>
 #include "typedefs.h"
 #include "fr-window.h"
 

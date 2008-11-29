@@ -23,7 +23,7 @@
 #ifndef FR_LIST_MODEL_H
 #define FR_LIST_MODEL_H
 
-#include <gtk/gtkliststore.h>
+#include <gtk/gtk.h>
 
 #define FR_TYPE_LIST_MODEL            (fr_list_model_get_type ())
 #define FR_LIST_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_LIST_MODEL, FRListModel))
