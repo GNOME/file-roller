@@ -891,20 +891,20 @@ save_session (GnomeClient *client)
 
 		key = g_strdup_printf ("archive%d", i);
 		if ((window->archive == NULL) || (window->archive->file == NULL)) {
-			g_key_file_set_string (key_file, "Sessione", key, "");
+			g_key_file_set_string (key_file, "Session", key, "");
 		}
 		else {
 			char *uri;
 
 			uri = g_file_get_uri (window->archive->file);
-			g_key_file_set_string (key_file, "Sessione", key, uri);
+			g_key_file_set_string (key_file, "Session", key, uri);
 			g_free (uri);
 		}
 		g_free (key);
 
 		i++;
 	}
-	g_key_file_set_integer (key_file, "Sessione", "archives", i);
+	g_key_file_set_integer (key_file, "Session", "archives", i);
 
 	path = get_real_path_for_prefix (gnome_client_get_config_prefix (client));
 	file = g_file_new_for_path (path);
