@@ -1,3 +1,12 @@
+2008-12-21  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-zip.c (fr_command_zip_delete)
+	(fr_command_zip_extract): escape special zip characters.
+	
+	Fixes bug #559481 – Can't open/view file directly from File Roller 
+	if there is a bracket in the directory/file name.
+	Patch by Gerard Lommerse.
+
 2008-12-15  Saleem Abdulrasool <compnerd@compnerd.org>
 
 	* src/main.c:

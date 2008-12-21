@@ -34,6 +34,7 @@
 #include "fr-command-zip.h"
 
 #define EMPTY_ARCHIVE_WARNING        "Empty zipfile."
+#define ZIP_SPECIAL_CHARACTERS       "[]*?!^-\\"
 
 static void fr_command_zip_class_init  (FrCommandZipClass *class);
 static void fr_command_zip_init        (FrCommand         *afile);
@@ -274,8 +275,13 @@ fr_command_zip_delete (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-d");
 
 	fr_process_add_arg (comm->process, comm->filename);
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *escaped;
+		
+ 		escaped = escape_str (scan->data, ZIP_SPECIAL_CHARACTERS);
+ 		fr_process_add_arg (comm->process, escaped);
+ 		g_free (escaped);
+	}
 
 	fr_process_end_command (comm->process);
 }
@@ -313,8 +319,13 @@ fr_command_zip_extract (FrCommand  *comm,
 	add_password_arg (comm, comm->password);
 
 	fr_process_add_arg (comm->process, comm->filename);
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *escaped;
+		
+ 		escaped = escape_str (scan->data, ZIP_SPECIAL_CHARACTERS);
+ 		fr_process_add_arg (comm->process, escaped);
+ 		g_free (escaped);
+	}
 
 	fr_process_end_command (comm->process);
 }
