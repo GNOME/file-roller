@@ -188,16 +188,45 @@ static char *mime_types[] = {
 };
 
 
-static gboolean
-is_archive (NautilusFileInfo *file)
+typedef struct
 {
-	int i;
+      gboolean is_archive;
+      gboolean is_derived_archive;
+} FileMimeInfo;
+
+
+static FileMimeInfo
+get_file_mime_info (NautilusFileInfo *file)
+{
+	FileMimeInfo file_mime_info;
+	int          i;
+		
+	file_mime_info.is_archive = FALSE;
+	file_mime_info.is_derived_archive = FALSE;
 
 	for (i = 0; mime_types[i] != NULL; i++)
-		if (nautilus_file_info_is_mime_type (file, mime_types[i]))
-			return TRUE;
+		if (nautilus_file_info_is_mime_type (file, mime_types[i])) {
+			char *mime_type;
+			char *content_type_mime_file;
+			char *content_type_mime_compare;
+		      
+			mime_type = nautilus_file_info_get_mime_type (file);
+		      
+			content_type_mime_file = g_content_type_from_mime_type (mime_type);
+			content_type_mime_compare = g_content_type_from_mime_type (mime_types[i]);
+		      
+			file_mime_info.is_archive = TRUE;
+			if ((content_type_mime_file != NULL) && (content_type_mime_compare != NULL))
+				file_mime_info.is_derived_archive = ! g_content_type_equals (content_type_mime_file, content_type_mime_compare);
+                  
+			g_free (mime_type);
+			g_free (content_type_mime_file);
+			g_free (content_type_mime_compare);
+		      
+			return file_mime_info;
+		}
 
-	return FALSE;
+	return file_mime_info;
 }
 
 
@@ -237,7 +266,9 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	gboolean  can_write = TRUE;
 	gboolean  one_item;
 	gboolean  one_archive = FALSE;
+	gboolean  one_derived_archive = FALSE;
 	gboolean  all_archives = TRUE;
+	gboolean  all_archives_derived = TRUE;
 
 	if (files == NULL)
 		return NULL;
@@ -245,11 +276,17 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	if (unsupported_scheme ((NautilusFileInfo *) files->data))
 			return NULL;
 
-	for (scan = files; scan; scan = scan->next) {
+	for (scan = files; scan; scan = scan->next) {	
 		NautilusFileInfo *file = scan->data;
+		FileMimeInfo      file_mime_info;
+				
+		file_mime_info = get_file_mime_info (file);
 
-		if (all_archives && ! is_archive (file))
+		if (all_archives && ! file_mime_info.is_archive)
 			all_archives = FALSE;
+	      
+		if (all_archives_derived && file_mime_info.is_archive && ! file_mime_info.is_derived_archive)
+			all_archives_derived = FALSE;
 
 		if (can_write) {
 			NautilusFileInfo *parent;
@@ -263,6 +300,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 	one_item = (files != NULL) && (files->next == NULL);
 	one_archive = one_item && all_archives;
+	one_derived_archive = one_archive && all_archives_derived;
 
 	if (all_archives && can_write) {
 		NautilusMenuItem *item;
@@ -302,7 +340,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 	}
 
-	if (! one_archive) {
+	if (! one_archive || one_derived_archive) {
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::add",
