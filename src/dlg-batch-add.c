@@ -71,21 +71,6 @@ typedef struct {
 } DialogData;
 
 
-/* called when the main dialog is closed. */
-static void
-destroy_cb (GtkWidget  *widget,
-	    DialogData *data)
-{
-	if (! data->add_clicked) {
-		fr_window_pop_message (data->window);
-		fr_window_stop_batch (data->window);
-	}
-
-	g_object_unref (data->gui);
-	g_free (data);
-}
-
-
 static const char *
 get_ext (DialogData *data)
 {
@@ -94,6 +79,25 @@ get_ext (DialogData *data)
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
 
 	return mime_type_desc[data->supported_types[idx]].default_ext;
+}
+
+
+/* called when the main dialog is closed. */
+static void
+destroy_cb (GtkWidget  *widget,
+	    DialogData *data)
+{
+	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, get_ext (data));
+	/*eel_gconf_set_boolean (PREF_BATCH_OTHER_OPTIONS, data->add_clicked ? FALSE : gtk_expander_get_expanded (GTK_EXPANDER (data->a_other_options_expander)));*/
+	eel_gconf_set_boolean (PREF_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton)));
+	
+	if (! data->add_clicked) {
+		fr_window_pop_message (data->window);
+		fr_window_stop_batch (data->window);
+	}
+
+	g_object_unref (data->gui);
+	g_free (data);
 }
 
 
@@ -293,10 +297,6 @@ add_clicked_cb (GtkWidget  *widget,
 	archive_name = g_strconcat (tmp, archive_ext, NULL);
 	g_free (tmp);
 	archive_file = g_strconcat (archive_dir, "/", archive_name, NULL);
-
-	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, archive_ext);
-	eel_gconf_set_boolean (PREF_BATCH_OTHER_OPTIONS, gtk_expander_get_expanded (GTK_EXPANDER (data->a_other_options_expander)));
-	eel_gconf_set_boolean (PREF_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton)));
 
 	if (uri_is_dir (archive_file)) {
 		GtkWidget  *d;
@@ -528,7 +528,7 @@ dlg_batch_add_files (FrWindow *window,
 
 	gtk_button_set_use_stock (GTK_BUTTON (add_button), TRUE);
 	gtk_button_set_label (GTK_BUTTON (add_button), FR_STOCK_CREATE_ARCHIVE);
-	gtk_expander_set_expanded (GTK_EXPANDER (data->a_other_options_expander), eel_gconf_get_boolean (PREF_BATCH_OTHER_OPTIONS, FALSE));
+	gtk_expander_set_expanded (GTK_EXPANDER (data->a_other_options_expander), FALSE /*eel_gconf_get_boolean (PREF_BATCH_OTHER_OPTIONS, FALSE)*/);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton), eel_gconf_get_boolean (PREF_ENCRYPT_HEADER, FALSE));
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->a_volume_spinbutton), (double) eel_gconf_get_integer (PREF_BATCH_VOLUME_SIZE, 0) / MEGABYTE);
 
