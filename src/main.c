@@ -24,10 +24,11 @@
 #include <string.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <stdlib.h>
 
 #include <gio/gio.h>
 #include <glade/glade.h>
-#include <libgnomeui/libgnomeui.h>
+
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
@@ -56,13 +57,11 @@
 #include "file-data.h"
 #include "main.h"
 
+#include "eggsmclient.h"
+
 static void     prepare_app         (void);
 static void     initialize_data     (void);
 static void     release_data        (void);
-
-static void     init_session        (char **argv);
-static gboolean session_is_restored (void);
-static gboolean load_session        (void);
 
 GList        *WindowList = NULL;
 GList        *CommandList = NULL;
@@ -215,7 +214,9 @@ static const GOptionEntry options[] = {
 
 
 static guint startup_id = 0;
-static GOptionContext *context;
+
+/* argv[0] from main(); used as the command to restart the program */
+static const char *program_argv0 = NULL;
 
 
 static gboolean
@@ -231,10 +232,50 @@ startup_cb (gpointer data)
 }
 
 
+static void
+fr_save_state (EggSMClient *client, GKeyFile *state, gpointer user_data)
+{
+	/* discard command is automatically set by EggSMClient */
+
+	GList *window;
+	const char *argv[2] = { NULL };
+	guint i;
+
+	/* restart command */
+	argv[0] = program_argv0;
+	argv[1] = NULL;
+
+	egg_sm_client_set_restart_command (client, 1, argv);
+
+	/* state */
+	for (window = WindowList, i = 0; window; window = window->next, i++) {
+		FrWindow *session = window->data;
+		gchar *key;
+
+		key = g_strdup_printf ("archive%d", i);
+		if ((session->archive == NULL) || (session->archive->file == NULL)) {
+			g_key_file_set_string (state, "Session", key, "");
+		} else {
+			gchar *uri;
+
+			uri = g_file_get_uri (session->archive->file);
+			g_key_file_set_string (state, "Session", key, uri);
+			g_free (uri);
+		}
+		g_free (key);
+	}
+
+	g_key_file_set_integer (state, "Session", "archives", i);
+}
+
 int
 main (int argc, char **argv)
 {
-	GnomeProgram *program;
+	GError *error = NULL;
+	EggSMClient *client = NULL;
+	GOptionContext *context = NULL;
+
+	program_argv0 = argv[0];
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -244,27 +285,30 @@ main (int argc, char **argv)
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 
-	program = gnome_program_init ("file-roller", VERSION,
-				      LIBGNOMEUI_MODULE,
-				      argc, argv,
-				      GNOME_PARAM_GOPTION_CONTEXT, context,
-				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Archive Manager"),
-				      GNOME_PARAM_APP_PREFIX, FR_PREFIX,
-				      GNOME_PARAM_APP_SYSCONFDIR, FR_SYSCONFDIR,
-				      GNOME_PARAM_APP_DATADIR, FR_DATADIR,
-				      GNOME_PARAM_APP_LIBDIR, FR_LIBDIR,
-				      NULL);
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
+	g_option_context_add_group (context, egg_sm_client_get_option_group ());
+
+	if (! g_option_context_parse (context, &argc, &argv, &error)) {
+		g_critical ("Failed to parse arguments: %s", error->message);
+		g_error_free (error);
+		g_option_context_free (context);
+		return EXIT_FAILURE;
+	}
+
+	g_option_context_free (context);
 
 	g_set_application_name (_("File Roller"));
 	gtk_window_set_default_icon_name ("file-roller");
 
+	client = egg_sm_client_get ();
+	g_signal_connect (client, "save-state", G_CALLBACK (fr_save_state), NULL);
+
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
 
-	gnome_authentication_manager_init ();
 	glade_init ();
 	fr_stock_init ();
-	init_session (argv);
+	/* init_session (argv); */
 	startup_id = g_idle_add (startup_cb, NULL);
 	gtk_main ();
 	release_data ();
@@ -733,11 +777,39 @@ get_uri_from_command_line (const char *path)
 
 
 static void
+fr_restore_session (EggSMClient *client)
+{
+	GKeyFile *state = NULL;
+	guint i;
+
+	state = egg_sm_client_get_state_file (client);
+
+	i = g_key_file_get_integer (state, "Session", "archives", NULL);
+
+	for (; i > 0; i--) {
+		GtkWidget *window;
+		gchar *key, *archive;
+
+		key = g_strdup_printf ("archive%d", i);
+		archive = g_key_file_get_string (state, "Session", key, NULL);
+		g_free (key);
+
+		window = fr_window_new ();
+		gtk_widget_show (window);
+		if (strlen (archive))
+			fr_window_archive_open (FR_WINDOW (window), archive, GTK_WINDOW (window));
+
+		g_free (archive);
+	}
+}
+
+static void
 prepare_app (void)
 {
 	char *uri;
 	char *extract_to_path = NULL;
 	char *add_to_path = NULL;
+	EggSMClient *client = NULL;
 
 	/* create the config dir if necessary. */
 
@@ -760,8 +832,9 @@ prepare_app (void)
 	register_commands ();
 	compute_supported_archive_types ();
 
-	if (session_is_restored ()) {
-		load_session ();
+	client = egg_sm_client_get ();
+	if (egg_sm_client_is_resumed (client)) {
+		fr_restore_session (client);
 		return;
 	}
 
@@ -854,180 +927,4 @@ prepare_app (void)
 
 	g_free (add_to_path);
 	g_free (extract_to_path);
-}
-
-
-/* SM support */
-
-
-/* The master client we use for SM */
-static GnomeClient *master_client = NULL;
-
-/* argv[0] from main(); used as the command to restart the program */
-static const char *program_argv0 = NULL;
-
-
-static char *
-get_real_path_for_prefix (const char *prefix)
-{
-	return g_strconcat (g_get_home_dir (), "/.gnome2/", prefix, NULL);
-}
-
-
-static void
-save_session (GnomeClient *client)
-{
-	GKeyFile *key_file;
-	GList    *scan;
-	int       i;
-	char     *path;
-	GFile    *file;
-
-	key_file = g_key_file_new ();
-	i = 0;
-	for (scan = WindowList; scan; scan = scan->next) {
-		FrWindow *window = scan->data;
-		char     *key;
-
-		key = g_strdup_printf ("archive%d", i);
-		if ((window->archive == NULL) || (window->archive->file == NULL)) {
-			g_key_file_set_string (key_file, "Session", key, "");
-		}
-		else {
-			char *uri;
-
-			uri = g_file_get_uri (window->archive->file);
-			g_key_file_set_string (key_file, "Session", key, uri);
-			g_free (uri);
-		}
-		g_free (key);
-
-		i++;
-	}
-	g_key_file_set_integer (key_file, "Session", "archives", i);
-
-	path = get_real_path_for_prefix (gnome_client_get_config_prefix (client));
-	file = g_file_new_for_path (path);
-	g_key_file_save (key_file, file);
-
-	g_object_unref (file);
-	g_free (path);
-	g_key_file_free (key_file);
-}
-
-
-/* save_yourself handler for the master client */
-static gboolean
-client_save_yourself_cb (GnomeClient *client,
-			 gint phase,
-			 GnomeSaveStyle save_style,
-			 gboolean shutdown,
-			 GnomeInteractStyle interact_style,
-			 gboolean fast,
-			 gpointer data)
-{
-	const char *prefix;
-	char       *argv[4] = { NULL };
-
-	save_session (client);
-
-	prefix = gnome_client_get_config_prefix (client);
-
-	/* Tell the session manager how to discard this save */
-
-	argv[0] = "rm";
-	argv[1] = "-rf";
-	argv[2] = get_real_path_for_prefix (prefix);
-	argv[3] = NULL;
-	gnome_client_set_discard_command (client, 3, argv);
-
-	/* Tell the session manager how to clone or restart this instance */
-
-	argv[0] = (char *) program_argv0;
-	argv[1] = NULL; /* "--debug-session"; */
-
-	gnome_client_set_clone_command (client, 1, argv);
-	gnome_client_set_restart_command (client, 1, argv);
-
-	return TRUE;
-}
-
-/* die handler for the master client */
-static void
-client_die_cb (GnomeClient *client, gpointer data)
-{
-	if (! client->save_yourself_emitted)
-		save_session (client);
-
-	gtk_main_quit ();
-}
-
-
-static void
-init_session (char **argv)
-{
-	if (master_client != NULL)
-		return;
-
-	program_argv0 = argv[0];
-
-	master_client = gnome_master_client ();
-
-	g_signal_connect (master_client, "save_yourself",
-			  G_CALLBACK (client_save_yourself_cb),
-			  NULL);
-
-	g_signal_connect (master_client, "die",
-			  G_CALLBACK (client_die_cb),
-			  NULL);
-}
-
-
-gboolean
-session_is_restored (void)
-{
-	gboolean restored;
-
-	if (! master_client)
-		return FALSE;
-
-	restored = (gnome_client_get_flags (master_client) & GNOME_CLIENT_RESTORED) != 0;
-
-	return restored;
-}
-
-
-gboolean
-load_session (void)
-{
-	char     *path;
-	GKeyFile *key_file;
-	int       i, n;
-
-	path = get_real_path_for_prefix (gnome_client_get_config_prefix (master_client));
-	key_file = g_key_file_new ();
-	g_key_file_load_from_file (key_file, path, 0, NULL);
-
-	n = g_key_file_get_integer (key_file, "Session", "archives", NULL);
-	for (i = 0; i < n; i++) {
-		GtkWidget *window;
-		char      *key;
-		char      *filename;
-
-		key = g_strdup_printf ("archive%d", i);
-		filename = g_key_file_get_string (key_file, "Session", key, NULL);
-		g_free (key);
-
-		window = fr_window_new ();
-		gtk_widget_show (window);
-		if (strlen (filename) != 0)
-			fr_window_archive_open (FR_WINDOW (window), filename, GTK_WINDOW (window));
-
-		g_free (filename);
-	}
-
-	g_key_file_free (key_file);
-	g_free (path);
-
-	return TRUE;
 }

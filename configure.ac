@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
 
-AC_INIT(file-roller, 2.24.2, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
+AC_INIT(file-roller, 2.25.0, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 AC_CONFIG_SRCDIR([config.h.in])
@@ -28,17 +28,19 @@ GIO_REQUIRED=2.16.0
 GTK_2_12_REQUIRED=2.12.0
 GTK_2_13_REQUIRED=2.13.0
 GCONF_REQUIRED=2.6.0
-LIBGNOME_REQUIRED=2.6.0
-LIBGNOMEUI_REQUIRED=2.6.0
 LIBGLADE_REQUIRED=2.4.0
 NAUTILUS_REQUIRED=2.22.2
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GIO_REQUIRED)
-AC_SUBST(LIBGNOME_REQUIRED)
-AC_SUBST(LIBGNOMEUI_REQUIRED)
 AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(NAUTILUS_REQUIRED)
+
+dnl ===========================================================================
+
+PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= $GTK_2_12_REQUIRED])
+AC_SUBST([GTK_CFLAGS])
+AC_SUBST([GTK_LIBS])
 
 dnl ===========================================================================
 
@@ -56,8 +58,6 @@ PKG_CHECK_MODULES(FR,					\
 	gio-unix-2.0 >= $GIO_REQUIRED			\
 	gtk+-2.0 >= $GTK_REQUIRED			\
 	gconf-2.0 >= $GCONF_REQUIRED			\
-	libgnome-2.0 >= $LIBGNOME_REQUIRED		\
-	libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED		\
 	libglade-2.0 >= $LIBGLADE_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
@@ -146,6 +146,7 @@ AC_CONFIG_FILES([Makefile
 		 data/icons/32x32/apps/Makefile
 		 data/icons/scalable/Makefile
 		 data/icons/scalable/apps/Makefile
+		 copy-n-paste/Makefile
 		 src/Makefile
 		 src/sh/Makefile
 		 nautilus/Makefile

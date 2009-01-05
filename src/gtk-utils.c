@@ -23,7 +23,6 @@
 #include <config.h>
 #include <string.h>
 #include "gtk-utils.h"
-#include <libgnome/gnome-help.h>
 
 #define LOAD_BUFFER_SIZE 65536
 

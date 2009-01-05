@@ -17,6 +17,7 @@ endif
 gladedir = $(datadir)/file-roller/glade
 
 INCLUDES =						\
+	-I$(top_srcdir)/copy-n-paste/			\
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
 	-DFR_PREFIX=\"$(prefix)\"           		\
@@ -164,7 +165,9 @@ fr-enum-types.c: typedefs.h fr-enum-types.h
 	&& (cmp -s xgen-$(@F) fr-enum-types.c || cp xgen-$(@F) fr-enum-types.c ) \
 	&& rm -f xgen-$(@F)
 
-file_roller_LDADD = $(FR_LIBS)
+file_roller_LDADD =							\
+		    $(top_builddir)/copy-n-paste/libeggsmclient.la	\
+		    $(FR_LIBS)
 
 EXTRA_DIST = fr-marshal.list
 
