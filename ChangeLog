@@ -1,5 +1,18 @@
 2009-01-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-window.c: 
+	* src/file-utils.c: 
+	* src/dlg-extract.c: 
+	* src/dlg-batch-add.c: 
+	* src/dlg-add-folder.c: 
+	* src/dlg-add-files.c: 
+	
+	Fixed bug #563208 – file-roller can't extract to an ftp mounted 
+	directory.
+	Patch by Gerard Lommerse.
+	
+2009-01-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* src/fr-archive.c (copy_extracted_files_to_destination)
 	(get_desired_destination_for_archive): 
 	

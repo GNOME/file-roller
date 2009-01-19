@@ -548,7 +548,7 @@ dlg_batch_add_files (FrWindow *window,
 	_gtk_entry_set_filename_text (GTK_ENTRY (data->a_add_to_entry), automatic_name);
 	g_free (automatic_name);
 
-	if (check_permissions (parent, R_OK|W_OK|X_OK))
+	if (check_permissions (parent, R_OK | W_OK))
 		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), parent);
 	else
 		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (data->a_location_filechooserbutton), get_home_uri ());

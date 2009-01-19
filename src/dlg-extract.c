@@ -168,7 +168,8 @@ extract_cb (GtkWidget   *w,
 	/* check extraction directory permissions. */
 
 	if (uri_is_dir (extract_to_dir)
-	    && ! check_permissions (extract_to_dir, R_OK | W_OK | X_OK)) {
+	    && ! check_permissions (extract_to_dir, R_OK | W_OK)) 
+	{
 		GtkWidget *d;
 		char      *utf8_path;
 

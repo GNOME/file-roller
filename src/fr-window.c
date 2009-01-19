@@ -4209,7 +4209,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 
 	g_clear_error (&window->priv->drag_error);
 
-	if (! check_permissions (destination_folder, R_OK | W_OK | X_OK)) {
+	if (! check_permissions (destination_folder, R_OK | W_OK)) {
 		char *destination_folder_display_name;
 
 		destination_folder_display_name = g_filename_display_name (destination_folder);
@@ -4289,7 +4289,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 
 	g_clear_error (&window->priv->drag_error);
 
-	if (! check_permissions (destination_folder, R_OK | W_OK | X_OK)) {
+	if (! check_permissions (destination_folder, R_OK | W_OK)) {
 		char *destination_folder_display_name;
 
 		destination_folder_display_name = g_filename_display_name (destination_folder);

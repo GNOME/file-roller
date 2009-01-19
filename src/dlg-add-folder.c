@@ -119,7 +119,7 @@ file_sel_response_cb (GtkWidget    *widget,
 
 	/* check folder permissions. */
 
-	if (! check_permissions (selected_folder, R_OK | X_OK)) {
+	if (! check_permissions (selected_folder, R_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 

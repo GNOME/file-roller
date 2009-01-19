@@ -84,8 +84,7 @@ file_sel_response_cb (GtkWidget      *widget,
 
 	/* check folder permissions. */
 
-	if (uri_is_dir (current_folder)
-	    && ! check_permissions (current_folder, R_OK | X_OK)) {
+	if (uri_is_dir (current_folder) && ! check_permissions (current_folder, R_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 
