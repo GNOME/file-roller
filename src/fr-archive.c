@@ -862,10 +862,13 @@ static void
 copy_extracted_files_to_destination (FrArchive *archive)
 {
 	char *temp_extraction_dir;
+	char *extraction_destination;
 
 	temp_extraction_dir = g_filename_to_uri (archive->priv->temp_extraction_dir, NULL, NULL);
+	extraction_destination = g_filename_to_uri (archive->priv->extraction_destination, NULL, NULL);
+	
 	g_directory_copy_async (temp_extraction_dir,
-				archive->priv->extraction_destination,
+				extraction_destination,
 				G_FILE_COPY_OVERWRITE,
 				G_PRIORITY_DEFAULT,
 				archive->priv->cancellable,
@@ -873,6 +876,8 @@ copy_extracted_files_to_destination (FrArchive *archive)
 				archive,
 				copy_extracted_files_done,
 				archive);
+	
+	g_free (extraction_destination);
 	g_free (temp_extraction_dir);
 }
 
@@ -3138,6 +3143,7 @@ get_desired_destination_for_archive (GFile *file)
 	char       *name;
 	const char *ext;
 	char       *new_name;
+	char       *new_name_escaped;
 	char       *desired_destination = NULL;
 
 	directory = g_file_get_parent (file);
@@ -3151,9 +3157,11 @@ get_desired_destination_for_archive (GFile *file)
 	else
 		/* ...else use the name without the extension */
 		new_name = g_strndup (name, strlen (name) - strlen (ext));
+	new_name_escaped = g_uri_escape_string (new_name, "", FALSE);
+	
+	desired_destination = g_strconcat (directory_uri, "/", new_name_escaped, NULL);
 
-	desired_destination = g_strconcat (directory_uri, "/", new_name, NULL);
-
+	g_free (new_name_escaped);
 	g_free (new_name);
 	g_free (name);
 	g_free (directory_uri);

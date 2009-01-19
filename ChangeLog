@@ -1,5 +1,13 @@
 2009-01-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/fr-archive.c (copy_extracted_files_to_destination)
+	(get_desired_destination_for_archive): 
+	
+	Fixed bug #564029 – Unziping an archive from nautilus fails with 
+	certain characters.
+	
+2009-01-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+	
 	* src/sh/isoinfo.sh: 
 	
 	Fixed bug #565879 – isoinfo.sh has shebang but is installed -x
