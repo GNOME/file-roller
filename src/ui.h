@@ -24,7 +24,6 @@
 #define UI_H
 
 
-#include <config.h>
 #include "actions.h"
 #include "fr-stock.h"
 
