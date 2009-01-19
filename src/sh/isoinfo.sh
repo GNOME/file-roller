@@ -1,5 +1,3 @@
-#!/bin/sh
-
 filename=$2
 
 JOLIET=true
