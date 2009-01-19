@@ -31,6 +31,9 @@
 typedef struct {
 	FrWindow   *window;
 	int        *supported_types;
+	gboolean    can_encrypt;
+	gboolean    can_encrypt_header;
+	gboolean    can_create_volumes;
 	GladeXML   *gui;
 
 	GtkWidget  *dialog;

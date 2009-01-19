@@ -51,11 +51,28 @@ destroy_cb (GtkWidget  *widget,
 
 
 static void
+update_sensitivity (DlgNewData *data)
+{
+	const char *password;
+	gboolean    void_password;
+
+	password = gtk_entry_get_text (GTK_ENTRY (data->n_password_entry));
+	void_password = (password == NULL) || (strcmp (password, "") == 0);
+	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton), ! data->can_encrypt || ! data->can_encrypt_header || void_password);
+	gtk_widget_set_sensitive (data->n_volume_spinbutton, ! data->can_create_volumes || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->n_volume_checkbutton)));
+}
+
+
+static void
 update_sensitivity_for_ext (DlgNewData *data,
 			    const char *ext)
 {
 	const char *mime_type;
 	int         i;
+
+	data->can_encrypt = FALSE;
+	data->can_encrypt_header = FALSE;
+	data->can_create_volumes = FALSE;
 
 	mime_type = get_mime_type_from_extension (ext);
 
@@ -69,21 +86,21 @@ update_sensitivity_for_ext (DlgNewData *data,
 
 	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
 		if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
-			gboolean sensitive;
+			data->can_encrypt = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT;
+			gtk_widget_set_sensitive (data->n_password_entry, data->can_encrypt);
+			gtk_widget_set_sensitive (data->n_password_label, data->can_encrypt);
 
-			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT;
-			gtk_widget_set_sensitive (data->n_password_entry, sensitive);
-			gtk_widget_set_sensitive (data->n_password_label, sensitive);
+			data->can_encrypt_header = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER;
+			gtk_widget_set_sensitive (data->n_encrypt_header_checkbutton, data->can_encrypt_header);
 
-			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER;
-			gtk_widget_set_sensitive (data->n_encrypt_header_checkbutton, sensitive);
-
-			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES;
-			gtk_widget_set_sensitive (data->n_volume_box, sensitive);
+			data->can_create_volumes = mime_type_desc[i].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES;
+			gtk_widget_set_sensitive (data->n_volume_box, data->can_create_volumes);
 
 			break;
 		}
 	}
+	
+	update_sensitivity (data);
 }
 
 
@@ -116,53 +133,39 @@ static void
 archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 				   DlgNewData  *data)
 {
+	const char *uri;
+	const char *ext;
 	int         idx;
-	const char *uri, *basename;
-	const char *ext, *new_ext;
-	char       *basename_noext;
-	char       *new_basename;
-	char       *new_basename_uft8;
 
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
-	if (uri == NULL)
-		return;
-
+	
 	ext = get_archive_filename_extension (uri);
-	if (ext == NULL)
-		ext = "";
-
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box)) - 1;
-	if (idx < 0) {
-		update_sensitivity_for_ext (data, ext);
-		return;
+	if ((ext == NULL) && (idx >= 0))
+		ext = mime_type_desc[data->supported_types[idx]].default_ext;
+		
+	update_sensitivity_for_ext (data, ext);
+	
+	if ((idx >= 0) && (uri != NULL)) {
+		const char *new_ext;
+		const char *basename;
+		char       *basename_noext;
+		char       *new_basename;
+		char       *new_basename_uft8;
+			
+		new_ext = mime_type_desc[data->supported_types[idx]].default_ext;
+		basename = file_name_from_path (uri);
+		basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
+		new_basename = g_strconcat (basename_noext, new_ext, NULL);
+		new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
+	
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->dialog), new_basename_uft8);
+		update_sensitivity_for_ext (data, new_ext);
+	
+		g_free (new_basename_uft8);
+		g_free (new_basename);
+		g_free (basename_noext);
 	}
-
-	new_ext = mime_type_desc[data->supported_types[idx]].default_ext;
-	basename = file_name_from_path (uri);
-	basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
-	new_basename = g_strconcat (basename_noext, new_ext, NULL);
-	new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
-
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->dialog), new_basename_uft8);
-	update_sensitivity_for_ext (data, new_ext);
-
-	g_free (new_basename_uft8);
-	g_free (new_basename);
-	g_free (basename_noext);
-}
-
-
-static void
-update_sensitivity (DlgNewData *data)
-{
-	const char *password;
-	gboolean    void_password;
-
-	password = gtk_entry_get_text (GTK_ENTRY (data->n_password_entry));
-	void_password = (password == NULL) || (strcmp (password, "") == 0);
-	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton), void_password);
-	/*gtk_widget_set_sensitive (GTK_WIDGET (data->n_encrypt_header_checkbutton), ! void_password);*/
-	gtk_widget_set_sensitive (data->n_volume_spinbutton, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->n_volume_checkbutton)));
 }
 
 
