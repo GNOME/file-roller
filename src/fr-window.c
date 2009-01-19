@@ -60,7 +60,6 @@
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
 #define MAX_MESSAGE_LENGTH 50
-#define CHECK_CLIPBOARD_TIMEOUT 500
 
 #define PROGRESS_DIALOG_DEFAULT_WIDTH 400
 #define PROGRESS_TIMEOUT_MSECS 5000
@@ -332,7 +331,6 @@ struct _FrWindowPrivateData {
 	FrClipboardData *copy_data;
 
 	FrArchive       *copy_from_archive;
-	guint            check_clipboard;
 
 	GtkActionGroup  *actions;
 
@@ -604,10 +602,6 @@ fr_window_free_private_data (FrWindow *window)
 		g_object_unref (priv->copy_from_archive);
 		priv->copy_from_archive = NULL;
 	}
-	if (priv->check_clipboard != 0) {
-		g_source_remove (priv->check_clipboard);
-		priv->check_clipboard = 0;
-	}
 
 	fr_window_free_open_files (window);
 
@@ -704,11 +698,6 @@ fr_window_close (FrWindow *window)
 
 	window->priv->closing = TRUE;
 
-	if (window->priv->check_clipboard != 0) {
-		g_source_remove (window->priv->check_clipboard);
-		window->priv->check_clipboard = 0;
-	}
-
 	if (GTK_WIDGET_REALIZED (window)) {
 		int width, height;
 
@@ -754,12 +743,60 @@ fr_window_class_init (FrWindowClass *class)
 }
 
 
+static void fr_window_update_paste_command_sensitivity (FrWindow *, GtkClipboard *);
+
+
+static void
+clipboard_owner_change_cb (GtkClipboard *clipboard,
+			   GdkEvent     *event,
+			   gpointer      user_data)
+{
+	fr_window_update_paste_command_sensitivity ((FrWindow *) user_data, clipboard);
+}
+
+
+static void
+fr_window_realized (GtkWidget *window,
+		    gpointer  *data)
+{
+	GtkClipboard *clipboard;
+
+	clipboard = gtk_widget_get_clipboard (window, FR_CLIPBOARD);
+        g_signal_connect (clipboard,
+                          "owner_change",
+                          G_CALLBACK (clipboard_owner_change_cb),
+                          window);
+}
+
+
+static void
+fr_window_unrealized (GtkWidget *window,
+		      gpointer  *data)
+{
+	GtkClipboard *clipboard;
+
+	clipboard = gtk_widget_get_clipboard (window, FR_CLIPBOARD);
+	g_signal_handlers_disconnect_by_func (clipboard,
+					      G_CALLBACK (clipboard_owner_change_cb),
+					      window);
+}
+
+
 static void
 fr_window_init (FrWindow *window)
 {
 	window->priv = g_new0 (FrWindowPrivateData, 1);
 	window->priv->update_dropped_files = FALSE;
 	window->priv->filter_mode = FALSE;
+
+	g_signal_connect (window,
+			  "realize",
+			  G_CALLBACK (fr_window_realized),
+			  NULL);
+	g_signal_connect (window,
+			  "unrealize",
+			  G_CALLBACK (fr_window_unrealized),
+			  NULL);	
 
 	WindowList = g_list_prepend (WindowList, window);
 }
@@ -1985,28 +2022,26 @@ set_active (FrWindow   *window,
 }
 
 
-static gboolean
-check_clipboard_cb (gpointer data)
+static void	
+fr_window_update_paste_command_sensitivity (FrWindow     *window,
+					    GtkClipboard *clipboard)
 {
-	FrWindow     *window = data;
-	GtkClipboard *clipboard;
-	gboolean      running;
-	gboolean      no_archive;
-	gboolean      ro;
-	gboolean      compr_file;
-
+	gboolean running;
+	gboolean no_archive;
+	gboolean ro;
+	gboolean compr_file;
+	
 	if (window->priv->closing)
-		return FALSE;
-
+		return;
+	
+	if (clipboard == NULL)
+		clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window), FR_CLIPBOARD);
 	running    = window->priv->activity_ref > 0;
 	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
 	ro         = ! no_archive && window->archive->read_only;
 	compr_file = ! no_archive && window->archive->is_compressed_file;
-
-	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
+	
 	set_sensitive (window, "Paste", ! no_archive && ! ro && ! running && ! compr_file && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT) && gtk_clipboard_wait_is_target_available (clipboard, FR_SPECIAL_URI_LIST));
-
-	return TRUE;
 }
 
 
@@ -2072,6 +2107,7 @@ fr_window_update_sensitivity (FrWindow *window)
 						   GTK_RESPONSE_OK,
 						   running && window->priv->stoppable);
 
+	fr_window_update_paste_command_sensitivity (window, NULL);
 
 	set_sensitive (window, "SelectAll", (window->priv->current_view_length > 0) && (window->priv->current_view_length != n_selected));
 	set_sensitive (window, "DeselectAll", n_selected > 0);
@@ -2081,11 +2117,6 @@ fr_window_update_sensitivity (FrWindow *window)
 
 	set_sensitive (window, "ViewAllFiles", ! window->priv->filter_mode);
 	set_sensitive (window, "ViewAsFolder", ! window->priv->filter_mode);
-
-	/**/
-
-	if (! window->priv->closing && (window->priv->check_clipboard == 0))
-		window->priv->check_clipboard = g_timeout_add (CHECK_CLIPBOARD_TIMEOUT, check_clipboard_cb, window);
 }
 
 
