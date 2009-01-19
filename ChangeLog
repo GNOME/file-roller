@@ -1,5 +1,13 @@
 2009-01-19  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* data/glade/batch-add-files.glade:
+	* data/glade/new.glade: allow volume size smaller than a megabyte
+	
+	Fixed bug #566591 – File roller cannot create splitted archives 
+	with pieces smaller than 1 Mb
+
+2009-01-19  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/fr-window.c: do use a timeout to update the paste command
 	sensitivity, use the owner-change clipboard signal instead.
 	
