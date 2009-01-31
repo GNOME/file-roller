@@ -776,21 +776,21 @@ path_list_dup (GList *path_list)
 
 
 guint64
-get_dest_free_space (const char *uri)
+get_dest_free_space (const char *path)
 {
 	guint64    freespace = 0;
 	GFile     *file;
 	GFileInfo *info;
 	GError    *err = NULL;
 
-	file = g_file_new_for_uri (uri);
+	file = g_file_new_for_path (path);
 	info = g_file_query_filesystem_info (file, G_FILE_ATTRIBUTE_FILESYSTEM_FREE, NULL, &err);
 	if (info != NULL) {
 		freespace = g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE);
 		g_object_unref (info);
 	}
 	else {
-		g_warning ("Could not get filesystem free space on volume that contains %s: %s", uri, err->message);
+		g_warning ("Could not get filesystem free space on volume that contains %s: %s", path, err->message);
 		g_error_free (err);
 	}
 	g_object_unref (file);
@@ -886,7 +886,7 @@ remove_local_directory (const char *path)
 }
 
 
-static const char *try_folder[] = { "~", "tmp", NULL };
+static const char *try_folder[] = { "cache", "~", "tmp", NULL };
 
 
 static char *
@@ -895,12 +895,14 @@ ith_temp_folder_to_try (int n)
 	const char *folder;
 
 	folder = try_folder[n];
-	if (strcmp (folder, "~") == 0)
+	if (strcmp (folder, "cache") == 0)
+		folder = g_get_user_cache_dir ();
+	else if (strcmp (folder, "~") == 0)
 		folder = g_get_home_dir ();
 	else if (strcmp (folder, "tmp") == 0)
 		folder = g_get_tmp_dir ();
 
-	return g_filename_to_uri (folder, NULL, NULL);
+	return g_strdup (folder);
 }
 
 
@@ -930,10 +932,10 @@ get_temp_work_dir (void)
 			g_free (folder);
 	}
 
-	if ((best_folder == NULL) || (strncmp (best_folder, "file://", 7) != 0))
+	if (best_folder == NULL)
 		return NULL;
-
-	template = g_strconcat (best_folder + strlen ("file://"), "/.fr-XXXXXX", NULL);
+	
+	template = g_strconcat (best_folder, "/.fr-XXXXXX", NULL);
 	result = mkdtemp (template);
 
 	if ((result == NULL) || (*result == '\0')) {

@@ -1,3 +1,11 @@
+2009-01-31  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/file-utils.c (get_temp_work_dir): add $XDG_CACHE_HOME to the 
+	list of possible temp dirs.
+
+	Fixes bug #569825 – file-roller should use TMPDIR or XDG_CACHE_HOME 
+	for temporary files.
+
 2009-01-20  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.25.2 released ]
