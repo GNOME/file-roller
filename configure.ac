@@ -29,12 +29,10 @@ GIO_REQUIRED=2.16.0
 GTK_2_12_REQUIRED=2.12.0
 GTK_2_13_REQUIRED=2.13.0
 GCONF_REQUIRED=2.6.0
-LIBGLADE_REQUIRED=2.4.0
 NAUTILUS_REQUIRED=2.22.2
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GIO_REQUIRED)
-AC_SUBST(LIBGLADE_REQUIRED)
 AC_SUBST(NAUTILUS_REQUIRED)
 
 dnl ===========================================================================
@@ -42,6 +40,21 @@ dnl ===========================================================================
 PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= $GTK_2_12_REQUIRED])
 AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
+
+dnl ===========================================================================
+
+DATADIR="${datadir}"
+AC_SUBST(DATADIR)
+
+AC_ARG_ENABLE(run_in_place, 
+              AC_HELP_STRING([--enable-run-in-place],[load ui data and extensions from the source tree]),
+              [case "${enableval}" in
+              yes) enable_run_in_place=yes ;;
+              no) enable_run_in_place=no ;;
+              *) AC_MSG_ERROR([bad value ${enableval} for --enable-run-in-place]) ;;
+              esac],
+              [enable_run_in_place=no])
+AM_CONDITIONAL(RUN_IN_PLACE, test "x$enable_run_in_place" != xno)
 
 dnl ===========================================================================
 
@@ -58,8 +71,7 @@ PKG_CHECK_MODULES(FR,					\
 	gthread-2.0					\
 	gio-unix-2.0 >= $GIO_REQUIRED			\
 	gtk+-2.0 >= $GTK_REQUIRED			\
-	gconf-2.0 >= $GCONF_REQUIRED			\
-	libglade-2.0 >= $LIBGLADE_REQUIRED)
+	gconf-2.0 >= $GCONF_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
 
@@ -133,7 +145,7 @@ AC_CONFIG_FILES([Makefile
 		 file-roller.spec
 		 data/Makefile
 		 data/file-roller.desktop.in
-		 data/glade/Makefile
+		 data/ui/Makefile
 		 data/icons/Makefile
 		 data/icons/16x16/Makefile
 		 data/icons/16x16/actions/Makefile
@@ -163,4 +175,5 @@ Configuration:
 	Internal mkdtemp:       ${mkdtemp_missing}
 	Nautilus support:       ${build_nautilus_actions}
 	Gtk+ series:            ${GTK_REQUIRED}
+	Run in place            ${enable_run_in_place}
 "

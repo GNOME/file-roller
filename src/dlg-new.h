@@ -24,7 +24,6 @@
 #define DLG_NEW_H
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "fr-window.h"
 
 
@@ -34,7 +33,7 @@ typedef struct {
 	gboolean    can_encrypt;
 	gboolean    can_encrypt_header;
 	gboolean    can_create_volumes;
-	GladeXML   *gui;
+	GtkBuilder *builder;
 
 	GtkWidget  *dialog;
 	GtkWidget  *n_archive_type_combo_box;

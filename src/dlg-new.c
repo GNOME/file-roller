@@ -24,7 +24,6 @@
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
-
 #include <gio/gio.h>
 #include "dlg-new.h"
 #include "file-utils.h"
@@ -34,7 +33,6 @@
 #include "preferences.h"
 
 
-#define GLADE_FILE "new.glade"
 #define DEFAULT_EXTENSION ".tar.gz"
 #define BAD_CHARS "/\\*"
 #define MEGABYTE (1024 * 1024)
@@ -45,7 +43,7 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DlgNewData *data)
 {
-	g_object_unref (data->gui);
+	g_object_unref (data->builder);
 	g_free (data);
 }
 
@@ -200,9 +198,9 @@ dlg_new_archive (FrWindow  *window,
 
 	data = g_new0 (DlgNewData, 1);
 
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (data->gui == NULL) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+	data->builder = _gtk_builder_new_from_file ("new.ui");
+	if (data->builder == NULL) {
+		g_free (data);
 		return NULL;
 	}
 
@@ -212,19 +210,19 @@ dlg_new_archive (FrWindow  *window,
 	
 	/* Get the widgets. */
 
-	data->dialog = glade_xml_get_widget (data->gui, "filechooserdialog");
+	data->dialog = _gtk_builder_get_widget (data->builder, "filechooserdialog");
 
-	data->n_password_entry = glade_xml_get_widget (data->gui, "n_password_entry");
-	data->n_password_label = glade_xml_get_widget (data->gui, "n_password_label");
-	data->n_other_options_expander = glade_xml_get_widget (data->gui, "n_other_options_expander");
-	data->n_encrypt_header_checkbutton = glade_xml_get_widget (data->gui, "n_encrypt_header_checkbutton");
+	data->n_password_entry = _gtk_builder_get_widget (data->builder, "n_password_entry");
+	data->n_password_label = _gtk_builder_get_widget (data->builder, "n_password_label");
+	data->n_other_options_expander = _gtk_builder_get_widget (data->builder, "n_other_options_expander");
+	data->n_encrypt_header_checkbutton = _gtk_builder_get_widget (data->builder, "n_encrypt_header_checkbutton");
 
-	data->n_volume_checkbutton = glade_xml_get_widget (data->gui, "n_volume_checkbutton");
-	data->n_volume_spinbutton = glade_xml_get_widget (data->gui, "n_volume_spinbutton");
-	data->n_volume_box = glade_xml_get_widget (data->gui, "n_volume_box");
+	data->n_volume_checkbutton = _gtk_builder_get_widget (data->builder, "n_volume_checkbutton");
+	data->n_volume_spinbutton = _gtk_builder_get_widget (data->builder, "n_volume_spinbutton");
+	data->n_volume_box = _gtk_builder_get_widget (data->builder, "n_volume_box");
 
-	n_archive_type_box = glade_xml_get_widget (data->gui, "n_archive_type_box");
-	n_new_button = glade_xml_get_widget (data->gui, "n_new_button");
+	n_archive_type_box = _gtk_builder_get_widget (data->builder, "n_archive_type_box");
+	n_new_button = _gtk_builder_get_widget (data->builder, "n_new_button");
 
 	/* Set widgets data. */
 
@@ -257,8 +255,8 @@ dlg_new_archive (FrWindow  *window,
 	/**/
 
 	size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "n_archive_type_label"));
-	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "n_password_label"));
+	gtk_size_group_add_widget (size_group, _gtk_builder_get_widget (data->builder, "n_archive_type_label"));
+	gtk_size_group_add_widget (size_group, _gtk_builder_get_widget (data->builder, "n_password_label"));
 
 	gtk_button_set_use_stock (GTK_BUTTON (n_new_button), TRUE);
 	gtk_button_set_label (GTK_BUTTON (n_new_button), FR_STOCK_CREATE_ARCHIVE);

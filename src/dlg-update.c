@@ -22,9 +22,7 @@
 
 #include <config.h>
 #include <string.h>
-
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "dlg-update.h"
 #include "file-utils.h"
 #include "gconf-utils.h"
@@ -34,13 +32,16 @@
 #include "fr-window.h"
 
 
-#define GLADE_FILE "update.glade"
-
-enum { IS_SELECTED_COLUMN, NAME_COLUMN, DATA_COLUMN, N_COLUMNS };
+enum { 
+	IS_SELECTED_COLUMN, 
+	NAME_COLUMN,
+	DATA_COLUMN, 
+	N_COLUMNS 
+};
 
 typedef struct {
 	FrWindow     *window;
-	GladeXML     *gui;
+	GtkBuilder *builder;
 
 	GtkWidget    *update_file_dialog;	
 	GtkWidget    *update_file_primary_text_label;
@@ -62,7 +63,7 @@ dlg_update__destroy_cb (GtkWidget  *widget,
 		        DialogData *data)
 {
 	fr_window_update_dialog_closed (data->window);
-	g_object_unref (G_OBJECT (data->gui));
+	g_object_unref (G_OBJECT (data->builder));
 	if (data->file_list != NULL)
 		g_list_free (data->file_list);
 	g_free (data);
@@ -261,28 +262,29 @@ dlg_update (FrWindow *window)
 	GtkTreeViewColumn *column;	
 
 	data = g_new0 (DialogData, 1);
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (! data->gui) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+
+	data->builder = _gtk_builder_new_from_file ("update.ui");
+	if (data->builder == NULL) {
 		g_free (data);
 		return NULL;
 	}
+
 	data->file_list = NULL;
 	data->window = window;
 	
 	/* Get the widgets. */
 
-	data->update_file_dialog = glade_xml_get_widget (data->gui, "update_file_dialog");
-	data->update_file_primary_text_label = glade_xml_get_widget (data->gui, "update_file_primary_text_label");
-	update_file_ok_button = glade_xml_get_widget (data->gui, "update_file_ok_button");
-	update_file_cancel_button = glade_xml_get_widget (data->gui, "update_file_cancel_button");
+	data->update_file_dialog = _gtk_builder_get_widget (data->builder, "update_file_dialog");
+	data->update_file_primary_text_label = _gtk_builder_get_widget (data->builder, "update_file_primary_text_label");
+	update_file_ok_button = _gtk_builder_get_widget (data->builder, "update_file_ok_button");
+	update_file_cancel_button = _gtk_builder_get_widget (data->builder, "update_file_cancel_button");
 	
-	data->update_files_dialog = glade_xml_get_widget (data->gui, "update_files_dialog");
-	data->update_files_primary_text_label = glade_xml_get_widget (data->gui, "update_files_primary_text_label");
-	data->update_files_secondary_text_label = glade_xml_get_widget (data->gui, "update_files_secondary_text_label");
-	data->update_files_treeview = glade_xml_get_widget (data->gui, "update_files_treeview");
-	data->update_files_ok_button = glade_xml_get_widget (data->gui, "update_files_ok_button");
-	update_files_cancel_button = glade_xml_get_widget (data->gui, "update_files_cancel_button");
+	data->update_files_dialog = _gtk_builder_get_widget (data->builder, "update_files_dialog");
+	data->update_files_primary_text_label = _gtk_builder_get_widget (data->builder, "update_files_primary_text_label");
+	data->update_files_secondary_text_label = _gtk_builder_get_widget (data->builder, "update_files_secondary_text_label");
+	data->update_files_treeview = _gtk_builder_get_widget (data->builder, "update_files_treeview");
+	data->update_files_ok_button = _gtk_builder_get_widget (data->builder, "update_files_ok_button");
+	update_files_cancel_button = _gtk_builder_get_widget (data->builder, "update_files_cancel_button");
 
 	/* Set the signals handlers. */
 

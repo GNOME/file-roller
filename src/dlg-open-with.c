@@ -24,7 +24,6 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "file-utils.h"
 #include "gconf-utils.h"
 #include "glib-utils.h"
@@ -33,14 +32,13 @@
 #include "fr-window.h"
 
 
-#define GLADE_FILE "open-with.glade"
 #define TEMP_DOCS  "temp_docs"
 
 enum { ICON_COLUMN, TEXT_COLUMN, DATA_COLUMN, N_COLUMNS };
 
 typedef struct {
 	FrWindow     *window;
-	GladeXML     *gui;
+	GtkBuilder *builder;
 
 	GtkWidget    *dialog;
 	GtkWidget    *o_app_tree_view;
@@ -64,7 +62,7 @@ static void
 open_with__destroy_cb (GtkWidget  *widget,
 		       DialogData *data)
 {
-	g_object_unref (G_OBJECT (data->gui));
+	g_object_unref (G_OBJECT (data->builder));
 
 	if (data->app_list != NULL) 
 		g_list_free (data->app_list);
@@ -314,23 +312,24 @@ dlg_open_with (FrWindow *window,
 
 	data = g_new0 (DialogData, 1);
 
-	data->file_list = path_list_dup (file_list);
-	data->window = window;
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (! data->gui) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+	data->builder = _gtk_builder_new_from_file ("open-with.ui");
+	if (data->builder == NULL) {
+		g_free (data);
 		return;
 	}
 
+	data->file_list = path_list_dup (file_list);
+	data->window = window;
+
 	/* Get the widgets. */
 
-	data->dialog = glade_xml_get_widget (data->gui, "open_with_dialog");
-	data->o_app_tree_view = glade_xml_get_widget (data->gui, "o_app_list_tree_view");
-	data->o_recent_tree_view = glade_xml_get_widget (data->gui, "o_recent_tree_view");
-	data->o_app_entry = glade_xml_get_widget (data->gui, "o_app_entry");
-	data->o_del_button = glade_xml_get_widget (data->gui, "o_del_button");
-	data->ok_button = glade_xml_get_widget (data->gui, "o_ok_button");
-	cancel_button = glade_xml_get_widget (data->gui, "o_cancel_button");
+	data->dialog = _gtk_builder_get_widget (data->builder, "open_with_dialog");
+	data->o_app_tree_view = _gtk_builder_get_widget (data->builder, "o_app_list_tree_view");
+	data->o_recent_tree_view = _gtk_builder_get_widget (data->builder, "o_recent_tree_view");
+	data->o_app_entry = _gtk_builder_get_widget (data->builder, "o_app_entry");
+	data->o_del_button = _gtk_builder_get_widget (data->builder, "o_del_button");
+	data->ok_button = _gtk_builder_get_widget (data->builder, "o_ok_button");
+	cancel_button = _gtk_builder_get_widget (data->builder, "o_cancel_button");
 
 	gtk_widget_set_sensitive (data->ok_button, FALSE);
 

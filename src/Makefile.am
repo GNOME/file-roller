@@ -14,7 +14,11 @@ else
 DISABLE_DEPRECATED =
 endif
 
-gladedir = $(datadir)/file-roller/glade
+if RUN_IN_PLACE
+uidir = $(top_srcdir)/data/ui
+else
+uidir = $(datadir)/file-roller/ui
+endif
 
 INCLUDES =						\
 	-I$(top_srcdir)/copy-n-paste/			\
@@ -23,6 +27,7 @@ INCLUDES =						\
 	-DFR_PREFIX=\"$(prefix)\"           		\
         -DFR_SYSCONFDIR=\"$(sysconfdir)\"   		\
         -DFR_DATADIR=\"$(datadir)\"     	    	\
+        -DUI_DIR=\"$(uidir)\"				\
         -DFR_LIBDIR=\"$(libdir)\"  	         	\
         -DPKG_DATA_DIR=\"$(pkgdatadir)\"                \
 	-DPIXMAPSDIR=\""$(datadir)/pixmaps"\"		\

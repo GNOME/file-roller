@@ -1,5 +1,17 @@
 2009-01-31  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* configure.ac: removed the libglade dependency; allow to 
+	optionally load the ui from the source tree.
+
+	* data/Makefile.am: 
+	* data/glade: removed
+	* data/ui: added
+	* src/*.c
+	
+	Use gtkbuilder instead of libglade.
+	
+2009-01-31  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/file-utils.c (get_temp_work_dir): add $XDG_CACHE_HOME to the 
 	list of possible temp dirs.
 

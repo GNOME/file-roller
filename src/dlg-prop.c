@@ -22,19 +22,15 @@
 
 #include <config.h>
 #include <string.h>
-
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
 
-#define GLADE_FILE "properties.glade"
-
 
 typedef struct {
-	GladeXML  *gui;
+	GtkBuilder *builder;
 	GtkWidget *dialog;
 } DialogData;
 
@@ -44,7 +40,7 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
-	g_object_unref (G_OBJECT (data->gui));
+	g_object_unref (G_OBJECT (data->builder));
 	g_free (data);
 }
 
@@ -92,24 +88,24 @@ dlg_prop (FrWindow *window)
 
 	data = g_new (DialogData, 1);
 
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (!data->gui) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+	data->builder = _gtk_builder_new_from_file ("properties.ui");
+	if (data->builder == NULL) {
+		g_free (data);
 		return;
 	}
 
 	/* Get the widgets. */
 
-	data->dialog = glade_xml_get_widget (data->gui, "prop_dialog");
-	ok_button = glade_xml_get_widget (data->gui, "p_ok_button");
-	help_button = glade_xml_get_widget (data->gui, "p_help_button");
+	data->dialog = _gtk_builder_get_widget (data->builder, "prop_dialog");
+	ok_button = _gtk_builder_get_widget (data->builder, "p_ok_button");
+	help_button = _gtk_builder_get_widget (data->builder, "p_help_button");
 
 	/* Set widgets data. */
 
-	label_label = glade_xml_get_widget (data->gui, "p_path_label_label");
+	label_label = _gtk_builder_get_widget (data->builder, "p_path_label_label");
 	set_label (label_label, _("Location:"));
 
-	label = glade_xml_get_widget (data->gui, "p_path_label");
+	label = _gtk_builder_get_widget (data->builder, "p_path_label");
 	s = remove_level_from_path (fr_window_get_archive_uri (window));
 	utf8_name = g_filename_display_name (s);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
@@ -118,10 +114,10 @@ dlg_prop (FrWindow *window)
 
 	/**/
 
-	label_label = glade_xml_get_widget (data->gui, "p_name_label_label");
+	label_label = _gtk_builder_get_widget (data->builder, "p_name_label_label");
 	set_label (label_label, _("Name:"));
 
-	label = glade_xml_get_widget (data->gui, "p_name_label");
+	label = _gtk_builder_get_widget (data->builder, "p_name_label");
 	utf8_name = g_uri_display_basename (fr_window_get_archive_uri (window));
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
@@ -133,20 +129,20 @@ dlg_prop (FrWindow *window)
 
 	/**/
 
-	label_label = glade_xml_get_widget (data->gui, "p_date_label_label");
+	label_label = _gtk_builder_get_widget (data->builder, "p_date_label_label");
 	set_label (label_label, _("Modified on:"));
 
-	label = glade_xml_get_widget (data->gui, "p_date_label");
+	label = _gtk_builder_get_widget (data->builder, "p_date_label");
 	s = get_time_string (get_file_mtime (fr_window_get_archive_uri (window)));
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
 	/**/
 
-	label_label = glade_xml_get_widget (data->gui, "p_size_label_label");
+	label_label = _gtk_builder_get_widget (data->builder, "p_size_label_label");
 	set_label (label_label, _("Archive size:"));
 
-	label = glade_xml_get_widget (data->gui, "p_size_label");
+	label = _gtk_builder_get_widget (data->builder, "p_size_label");
 	size = get_file_size (fr_window_get_archive_uri (window));
 	s = g_format_size_for_display (size);
 	gtk_label_set_text (GTK_LABEL (label), s);
@@ -154,7 +150,7 @@ dlg_prop (FrWindow *window)
 
 	/**/
 
-	label_label = glade_xml_get_widget (data->gui, "p_uncomp_size_label_label");
+	label_label = _gtk_builder_get_widget (data->builder, "p_uncomp_size_label_label");
 	set_label (label_label, _("Content size:"));
 
 	uncompressed_size = 0;
@@ -167,17 +163,17 @@ dlg_prop (FrWindow *window)
 		}
 	}
 
-	label = glade_xml_get_widget (data->gui, "p_uncomp_size_label");
+	label = _gtk_builder_get_widget (data->builder, "p_uncomp_size_label");
 	s = g_format_size_for_display (uncompressed_size);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
 	/**/
 
-	label_label = glade_xml_get_widget (data->gui, "p_cratio_label_label");
+	label_label = _gtk_builder_get_widget (data->builder, "p_cratio_label_label");
 	set_label (label_label, _("Compression ratio:"));
 
-	label = glade_xml_get_widget (data->gui, "p_cratio_label");
+	label = _gtk_builder_get_widget (data->builder, "p_cratio_label");
 
 	if (uncompressed_size != 0)
 		ratio = (double) uncompressed_size / size;
@@ -189,10 +185,10 @@ dlg_prop (FrWindow *window)
 
 	/**/
 
-	label_label = glade_xml_get_widget (data->gui, "p_files_label_label");
+	label_label = _gtk_builder_get_widget (data->builder, "p_files_label_label");
 	set_label (label_label, _("Number of files:"));
 
-	label = glade_xml_get_widget (data->gui, "p_files_label");
+	label = _gtk_builder_get_widget (data->builder, "p_files_label");
 	s = g_strdup_printf ("%d", window->archive->command->n_regular_files);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);

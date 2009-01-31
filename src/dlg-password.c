@@ -22,21 +22,15 @@
 
 #include <config.h>
 #include <string.h>
-
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "fr-window.h"
 #include "gconf-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
 
 
-
-#define GLADE_FILE "password.glade"
-
-
 typedef struct {
-	GladeXML  *gui;
+	GtkBuilder *builder;
 	FrWindow  *window;
 	GtkWidget *dialog;
 	GtkWidget *pw_password_entry;
@@ -49,7 +43,7 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
-	g_object_unref (data->gui);
+	g_object_unref (data->builder);
 	g_free (data);
 }
 
@@ -88,18 +82,20 @@ dlg_password (GtkWidget *widget,
 	DialogData *data;
 
 	data = g_new0 (DialogData, 1);
-	data->window = window;
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (!data->gui) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+
+	data->builder = _gtk_builder_new_from_file ("password.ui");
+	if (data->builder == NULL) {
+		g_free (data);
 		return;
 	}
 
+	data->window = window;
+
 	/* Get the widgets. */
 
-	data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
-	data->pw_password_entry = glade_xml_get_widget (data->gui, "pw_password_entry");
-	data->pw_encrypt_header_checkbutton = glade_xml_get_widget (data->gui, "pw_encrypt_header_checkbutton");
+	data->dialog = _gtk_builder_get_widget (data->builder, "password_dialog");
+	data->pw_password_entry = _gtk_builder_get_widget (data->builder, "pw_password_entry");
+	data->pw_encrypt_header_checkbutton = _gtk_builder_get_widget (data->builder, "pw_encrypt_header_checkbutton");
 
 	/* Set widgets data. */
 

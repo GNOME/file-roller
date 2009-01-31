@@ -24,14 +24,11 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
 
-
-#define PROP_GLADE_FILE "batch-password.glade"
 
 typedef enum {
 	FR_PASSWORD_TYPE_MAIN,
@@ -39,7 +36,7 @@ typedef enum {
 } FrPasswordType;
 
 typedef struct {
-	GladeXML       *gui;
+	GtkBuilder     *builder;
 	FrWindow       *window;
 	FrPasswordType  pwd_type;
 	GtkWidget      *dialog;
@@ -52,7 +49,7 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
-	g_object_unref (data->gui);
+	g_object_unref (data->builder);
 	g_free (data);
 }
 
@@ -100,20 +97,22 @@ dlg_ask_password__common (FrWindow       *window,
 	char       *name;
 
 	data = g_new0 (DialogData, 1);
-	data->window = window;
-	data->pwd_type = pwd_type;
-	data->gui = glade_xml_new (GLADEDIR "/" PROP_GLADE_FILE , NULL, NULL);
-	if (!data->gui) {
-		g_warning ("Could not find " PROP_GLADE_FILE "\n");
+
+	data->builder = _gtk_builder_new_from_file ("batch-password.ui");
+	if (data->builder == NULL) {
+		g_free (data);
 		return;
 	}
 
+	data->window = window;
+	data->pwd_type = pwd_type;
+
 	/* Get the widgets. */
 
-	data->dialog = glade_xml_get_widget (data->gui, "password_dialog");
-	data->pw_password_entry = glade_xml_get_widget (data->gui, "pw_password_entry");
+	data->dialog = _gtk_builder_get_widget (data->builder, "password_dialog");
+	data->pw_password_entry = _gtk_builder_get_widget (data->builder, "pw_password_entry");
 
-	label = glade_xml_get_widget (data->gui, "pw_password_label");
+	label = _gtk_builder_get_widget (data->builder, "pw_password_label");
 
 	/* Set widgets data. */
 

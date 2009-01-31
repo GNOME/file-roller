@@ -23,9 +23,6 @@
 #include <config.h>
 #include <string.h>
 #include <unistd.h>
-
-#include <glade/glade.h>
-
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "main.h"

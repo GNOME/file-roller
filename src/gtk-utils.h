@@ -83,5 +83,10 @@ gboolean    show_uri                        (GdkScreen   *screen,
 				             GError     **error);
 void        show_help_dialog                (GtkWindow    *parent,
 					     const char   *section);
-
+GtkBuilder *  
+            _gtk_builder_new_from_file      (const char   *filename);
+GtkWidget *
+	    _gtk_builder_get_widget         (GtkBuilder   *builder,
+			 		     const char   *name);
+			 		  
 #endif

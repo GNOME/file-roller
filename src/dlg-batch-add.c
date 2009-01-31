@@ -24,11 +24,8 @@
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
-
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
-
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "gconf-utils.h"
@@ -40,7 +37,6 @@
 #include "main.h"
 
 
-#define GLADE_FILE "batch-add-files.glade"
 #define ARCHIVE_ICON_SIZE (48)
 #define DEFAULT_EXTENSION ".tar.gz"
 #define BAD_CHARS "/\\*"
@@ -48,7 +44,7 @@
 
 typedef struct {
 	FrWindow   *window;
-	GladeXML   *gui;
+	GtkBuilder *builder;
 	int        *supported_types;
 	
 	GtkWidget  *dialog;
@@ -96,7 +92,7 @@ destroy_cb (GtkWidget  *widget,
 		fr_window_stop_batch (data->window);
 	}
 
-	g_object_unref (data->gui);
+	g_object_unref (data->builder);
 	g_free (data);
 }
 
@@ -487,9 +483,9 @@ dlg_batch_add_files (FrWindow *window,
 
 	data = g_new0 (DialogData, 1);
 
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (data->gui == NULL) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+	data->builder = _gtk_builder_new_from_file ("batch-add-files.ui");
+	if (data->builder == NULL) {
+		g_free (data);
 		return;
 	}
 
@@ -500,31 +496,31 @@ dlg_batch_add_files (FrWindow *window,
 
 	/* Get the widgets. */
 
-	data->dialog = glade_xml_get_widget (data->gui, "batch_add_files_dialog");
-	data->a_add_to_entry = glade_xml_get_widget (data->gui, "a_add_to_entry");
-	data->a_location_filechooserbutton = glade_xml_get_widget (data->gui, "a_location_filechooserbutton");
-	data->a_password_entry = glade_xml_get_widget (data->gui, "a_password_entry");
-	data->a_password_label = glade_xml_get_widget (data->gui, "a_password_label");
-	data->a_other_options_expander = glade_xml_get_widget (data->gui, "a_other_options_expander");
-	data->a_encrypt_header_checkbutton = glade_xml_get_widget (data->gui, "a_encrypt_header_checkbutton");
+	data->dialog = _gtk_builder_get_widget (data->builder, "batch_add_files_dialog");
+	data->a_add_to_entry = _gtk_builder_get_widget (data->builder, "a_add_to_entry");
+	data->a_location_filechooserbutton = _gtk_builder_get_widget (data->builder, "a_location_filechooserbutton");
+	data->a_password_entry = _gtk_builder_get_widget (data->builder, "a_password_entry");
+	data->a_password_label = _gtk_builder_get_widget (data->builder, "a_password_label");
+	data->a_other_options_expander = _gtk_builder_get_widget (data->builder, "a_other_options_expander");
+	data->a_encrypt_header_checkbutton = _gtk_builder_get_widget (data->builder, "a_encrypt_header_checkbutton");
 
-	data->a_volume_checkbutton = glade_xml_get_widget (data->gui, "a_volume_checkbutton");
-	data->a_volume_spinbutton = glade_xml_get_widget (data->gui, "a_volume_spinbutton");
-	data->a_volume_box = glade_xml_get_widget (data->gui, "a_volume_box");
+	data->a_volume_checkbutton = _gtk_builder_get_widget (data->builder, "a_volume_checkbutton");
+	data->a_volume_spinbutton = _gtk_builder_get_widget (data->builder, "a_volume_spinbutton");
+	data->a_volume_box = _gtk_builder_get_widget (data->builder, "a_volume_box");
 
-	add_button = glade_xml_get_widget (data->gui, "a_add_button");
-	cancel_button = glade_xml_get_widget (data->gui, "a_cancel_button");
-	help_button = glade_xml_get_widget (data->gui, "a_help_button");
-	a_archive_type_box = glade_xml_get_widget (data->gui, "a_archive_type_box");
+	add_button = _gtk_builder_get_widget (data->builder, "a_add_button");
+	cancel_button = _gtk_builder_get_widget (data->builder, "a_cancel_button");
+	help_button = _gtk_builder_get_widget (data->builder, "a_help_button");
+	a_archive_type_box = _gtk_builder_get_widget (data->builder, "a_archive_type_box");
 
-	data->add_image = glade_xml_get_widget (data->gui, "a_add_image");
+	data->add_image = _gtk_builder_get_widget (data->builder, "a_add_image");
 
 	/* Set widgets data. */
 
 	size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "a_archive_label"));
-	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "a_location_label"));
-	gtk_size_group_add_widget (size_group, glade_xml_get_widget (data->gui, "a_password_label"));
+	gtk_size_group_add_widget (size_group, _gtk_builder_get_widget (data->builder, "a_archive_label"));
+	gtk_size_group_add_widget (size_group, _gtk_builder_get_widget (data->builder, "a_location_label"));
+	gtk_size_group_add_widget (size_group, _gtk_builder_get_widget (data->builder, "a_password_label"));
 
 	gtk_button_set_use_stock (GTK_BUTTON (add_button), TRUE);
 	gtk_button_set_label (GTK_BUTTON (add_button), FR_STOCK_CREATE_ARCHIVE);

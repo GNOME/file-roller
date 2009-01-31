@@ -26,7 +26,6 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <gio/gio.h>
 #include "dlg-add-folder.h"
 #include "file-utils.h"
@@ -35,8 +34,6 @@
 #include "gconf-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
-
-#define GLADE_FILE "add-options.glade"
 
 typedef struct {
 	FrWindow    *window;
@@ -645,7 +642,7 @@ dlg_add_folder_save_last_options (DialogData *data)
 
 typedef struct {
 	DialogData   *data;
-	GladeXML     *gui;
+	GtkBuilder *builder;
 	GtkWidget    *dialog;
 	GtkWidget    *aod_treeview;
 	GtkTreeModel *aod_model;
@@ -656,7 +653,7 @@ static void
 aod_destroy_cb (GtkWidget             *widget,
 		LoadOptionsDialogData *aod_data)
 {
-	g_object_unref (aod_data->gui);
+	g_object_unref (aod_data->builder);
 	g_free (aod_data);
 }
 
@@ -794,21 +791,20 @@ load_options_cb (GtkWidget  *w,
 	aod_data = g_new0 (LoadOptionsDialogData, 1);
 
 	aod_data->data = data;
-	aod_data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (! aod_data->gui) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+	aod_data->builder = _gtk_builder_new_from_file ("add-options.ui");
+	if (aod_data->builder == NULL) {
 		g_free (aod_data);
 		return;
 	}
 
 	/* Get the widgets. */
 
-	aod_data->dialog = glade_xml_get_widget (aod_data->gui, "add_options_dialog");
-	aod_data->aod_treeview = glade_xml_get_widget (aod_data->gui, "aod_treeview");
+	aod_data->dialog = _gtk_builder_get_widget (aod_data->builder, "add_options_dialog");
+	aod_data->aod_treeview = _gtk_builder_get_widget (aod_data->builder, "aod_treeview");
 
-	ok_button = glade_xml_get_widget (aod_data->gui, "aod_okbutton");
-	cancel_button = glade_xml_get_widget (aod_data->gui, "aod_cancelbutton");
-	remove_button = glade_xml_get_widget (aod_data->gui, "aod_remove_button");
+	ok_button = _gtk_builder_get_widget (aod_data->builder, "aod_okbutton");
+	cancel_button = _gtk_builder_get_widget (aod_data->builder, "aod_cancelbutton");
+	remove_button = _gtk_builder_get_widget (aod_data->builder, "aod_remove_button");
 
 	/* Set the signals handlers. */
 

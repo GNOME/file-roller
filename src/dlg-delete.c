@@ -22,18 +22,15 @@
 
 #include <config.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include "fr-window.h"
 #include "gtk-utils.h"
 #include "file-utils.h"
-
-#define GLADE_FILE "delete.glade"
 
 
 typedef struct {
 	FrWindow  *window;
 	GList     *selected_files;
-	GladeXML  *gui;
+	GtkBuilder *builder;
 
 	GtkWidget *dialog;
 	GtkWidget *d_all_files_radio;
@@ -49,7 +46,7 @@ destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
 	path_list_free (data->selected_files);
-	g_object_unref (G_OBJECT (data->gui));
+	g_object_unref (G_OBJECT (data->builder));
 	g_free (data);
 }
 
@@ -114,26 +111,25 @@ dlg_delete__common (FrWindow *window,
 	GtkWidget  *ok_button;
 
 	data = g_new (DialogData, 1);
-
 	data->window = window;
 	data->selected_files = selected_files;
 
-	data->gui = glade_xml_new (GLADEDIR "/" GLADE_FILE , NULL, NULL);
-	if (!data->gui) {
-		g_warning ("Could not find " GLADE_FILE "\n");
+	data->builder = _gtk_builder_new_from_file ("delete.ui");
+	if (data->builder == NULL) {
+		g_free (data);
 		return;
 	}
 
 	/* Get the widgets. */
 
-	data->dialog = glade_xml_get_widget (data->gui, "delete_dialog");
-	data->d_all_files_radio = glade_xml_get_widget (data->gui, "d_all_files_radio");
-	data->d_selected_files_radio = glade_xml_get_widget (data->gui, "d_selected_files_radio");
-	data->d_files_radio = glade_xml_get_widget (data->gui, "d_files_radio");
-	data->d_files_entry = glade_xml_get_widget (data->gui, "d_files_entry");
+	data->dialog = _gtk_builder_get_widget (data->builder, "delete_dialog");
+	data->d_all_files_radio = _gtk_builder_get_widget (data->builder, "d_all_files_radio");
+	data->d_selected_files_radio = _gtk_builder_get_widget (data->builder, "d_selected_files_radio");
+	data->d_files_radio = _gtk_builder_get_widget (data->builder, "d_files_radio");
+	data->d_files_entry = _gtk_builder_get_widget (data->builder, "d_files_entry");
 
-	ok_button = glade_xml_get_widget (data->gui, "d_ok_button");
-	cancel_button = glade_xml_get_widget (data->gui, "d_cancel_button");
+	ok_button = _gtk_builder_get_widget (data->builder, "d_ok_button");
+	cancel_button = _gtk_builder_get_widget (data->builder, "d_cancel_button");
 
 	/* Set widgets data. */
 

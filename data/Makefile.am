@@ -1,6 +1,6 @@
 @INTLTOOL_DESKTOP_RULE@
 
-SUBDIRS = glade icons
+SUBDIRS = ui icons
 
 desktop_in_in_files = file-roller.desktop.in.in
 desktop_in_files = $(desktop_in_in_files:.desktop.in.in=.desktop.in) 
