@@ -43,9 +43,6 @@ AC_SUBST([GTK_LIBS])
 
 dnl ===========================================================================
 
-DATADIR="${datadir}"
-AC_SUBST(DATADIR)
-
 AC_ARG_ENABLE(run_in_place, 
               AC_HELP_STRING([--enable-run-in-place],[load ui data and extensions from the source tree]),
               [case "${enableval}" in

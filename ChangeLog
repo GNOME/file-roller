@@ -1,3 +1,10 @@
+2009-02-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-window.c (menu_item_select_cb): use gtk_widget_get_action to 
+	get the action.
+	
+	Fixes bug #568881 – don't rely on gtk implementation details
+
 2009-01-31  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* configure.ac: removed the libglade dependency; allow to 
