@@ -29,6 +29,7 @@
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "gconf-utils.h"
+#include "gtk-utils.h"
 #include "main.h"
 #include "preferences.h"
 
