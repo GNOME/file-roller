@@ -154,7 +154,10 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 			
 		new_ext = mime_type_desc[data->supported_types[idx]].default_ext;
 		basename = file_name_from_path (uri);
-		basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
+		if (g_str_has_suffix (basename, ext)) 
+			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
+		else
+			basename_noext = g_strdup (basename);
 		new_basename = g_strconcat (basename_noext, new_ext, NULL);
 		new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
 	
