@@ -166,7 +166,8 @@ list__process_line (char     *line,
 		char **modified_fields;
 
 		modified_fields = g_strsplit (fields[1], " ", 2);
-		fdata->modified = mktime_from_string (modified_fields[0], modified_fields[1]);
+		if (modified_fields[0] != NULL)
+			fdata->modified = mktime_from_string (modified_fields[0], modified_fields[1]);
 		g_strfreev (modified_fields);
 	}
 	else if (strcmp (fields[0], "Encrypted") == 0) {
