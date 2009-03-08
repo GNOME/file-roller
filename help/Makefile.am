@@ -11,4 +11,4 @@ DOC_FIGURES = 					\
 	figures/file-roller_rightarrow.png	\
 	figures/file-roller_uparrow.png
 
-DOC_LINGUAS = bg ca de es fi fr it oc nl ru sv vi uk
+DOC_LINGUAS = bg ca de en_GB es fi fr it oc nl ru sv vi uk
