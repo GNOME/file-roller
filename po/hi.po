@@ -1,26 +1,187 @@
 # translation of file-roller.HEAD.hi.po to Hindi
 # File roller - Hindi Translation
-# Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2005, 2006, 2009 Free Software Foundation, Inc.
+#
 # ambuj_v@lycos.com <ambuj_v@lycos.com>,2003.
 # Ravishankar Shrivastava <raviratlami@yahoo.com>, 2004.
-# Rajesh Ranjan <rranjan@redhat.com>, 2005, 2006.
-#
+# Rajesh Ranjan <rranjan@redhat.com>, 2005, 2006, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD.hi\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-06 06:21+0100\n"
-"PO-Revision-Date: 2006-03-06 17:35+0530\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller&component=general\n"
+"POT-Creation-Date: 2009-02-03 18:07+0000\n"
+"PO-Revision-Date: 2009-03-13 23:31+0530\n"
 "Last-Translator: Rajesh Ranjan <rranjan@redhat.com>\n"
-"Language-Team: Hindi <fedora-trans-hi@redhat.com>\n"
+"Language-Team: Hindi <hindi.sf.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.9.1\n"
+"X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n\n"
 "\n"
+"\n"
 
-#: ../data/glade/file-roller.glade.h:1
+#: ../copy-n-paste/eggdesktopfile.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "फ़ाइल वैध .desktop फ़ाइल नहीं है"
+
+#: ../copy-n-paste/eggdesktopfile.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "अपरिचित डेस्कटॉप फ़ाइल संस्करण '%s'"
+
+#: ../copy-n-paste/eggdesktopfile.c:958
+#, c-format
+msgid "Starting %s"
+msgstr "%s शुरू हो रहा है"
+
+#: ../copy-n-paste/eggdesktopfile.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "कमांड लाइन पर अनुप्रयोग दस्तावेज़ स्वीकार नहीं करता है"
+
+#: ../copy-n-paste/eggdesktopfile.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "अपरिचित लॉन्च विकल्प: %d"
+
+#: ../copy-n-paste/eggdesktopfile.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "दस्तावेज़ URI को 'Type=Link' डेस्कटॉप प्रविष्टि में भेज नहीं सकता है"
+
+#: ../copy-n-paste/eggdesktopfile.c:1392
+#, c-format
+msgid "Not a launchable item"
+msgstr "चलाने योग्य प्रोग्राम नहीं है"
+
+#: ../copy-n-paste/eggsmclient.c:224
+msgid "Disable connection to session manager"
+msgstr "सत्र प्रबंधक में संबंधन निष्क्रिय करें"
+
+#: ../copy-n-paste/eggsmclient.c:227
+msgid "Specify file containing saved configuration"
+msgstr "सहेजा विन्यास समाहित करता फ़ाइल निर्दिष्ट करें"
+
+#: ../copy-n-paste/eggsmclient.c:227
+#| msgid "FOLDER"
+msgid "FILE"
+msgstr "फ़ाइल"
+
+#: ../copy-n-paste/eggsmclient.c:230
+msgid "Specify session management ID"
+msgstr "सत्र प्रबंधन ID निर्दिष्ट करें"
+
+#: ../copy-n-paste/eggsmclient.c:230
+msgid "ID"
+msgstr "आईडी"
+
+#: ../copy-n-paste/eggsmclient.c:244
+msgid "Session management options:"
+msgstr "सत्र प्रबंधन विकल्प:"
+
+#: ../copy-n-paste/eggsmclient.c:245
+msgid "Show session management options"
+msgstr "दिखाएँ सत्र प्रबंधन विकल्प"
+
+#: ../data/ui/add-options.ui.h:1
+msgid "Load Options"
+msgstr "विकल्पों को लोड करें"
+
+#: ../data/ui/batch-add-files.ui.h:1 ../src/fr-stock.c:42
+msgid "C_reate"
+msgstr "बनाएँ (_r)"
+
+#: ../data/ui/batch-add-files.ui.h:2
+msgid "Create Archive"
+msgstr "अभिलेख बनाएँ"
+
+#: ../data/ui/batch-add-files.ui.h:3 ../src/fr-window.c:4617
+msgid "Location"
+msgstr "स्थान"
+
+#. MB means megabytes
+#: ../data/ui/batch-add-files.ui.h:5 ../data/ui/new.ui.h:3
+msgid "MB"
+msgstr "मे.बा."
+
+#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:4
+msgid "Split in _volumes of"
+msgstr "इस वाल्यूम में बाँटें (_v)"
+
+#: ../data/ui/batch-add-files.ui.h:7
+msgid "_Archive:"
+msgstr "अभिलेखः (_A)"
+
+#: ../data/ui/batch-add-files.ui.h:8 ../data/ui/new.ui.h:5
+#: ../data/ui/password.ui.h:3
+#| msgid "Getting the file list"
+msgid "_Encrypt the file list too"
+msgstr "फ़ाइल सूची को भी गोपित करें (_E)"
+
+#  current location
+#: ../data/ui/batch-add-files.ui.h:9 ../src/fr-window.c:5749
+#| msgid "Location:"
+msgid "_Location:"
+msgstr "स्थान (_L):"
+
+#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:6
+#| msgid "Sa_ve Options"
+msgid "_Other Options"
+msgstr "अन्य विकल्प (_O)"
+
+#: ../data/ui/batch-add-files.ui.h:11 ../data/ui/batch-password.ui.h:2
+#: ../data/ui/new.ui.h:7 ../data/ui/password.ui.h:4
+msgid "_Password:"
+msgstr "पासवर्ड: (_P)"
+
+#: ../data/ui/batch-password.ui.h:1
+msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">कूटशब्द जरूरी</span>"
+
+#: ../data/ui/delete.ui.h:1
+msgid "Delete"
+msgstr "मिटाएँ"
+
+#: ../data/ui/delete.ui.h:2 ../src/dlg-extract.c:365
+msgid "_All files"
+msgstr "सभी फ़ाइलें (_A)"
+
+#: ../data/ui/delete.ui.h:3 ../src/dlg-extract.c:351
+msgid "_Files:"
+msgstr "फ़ाइलें (_F):"
+
+#: ../data/ui/delete.ui.h:4 ../src/dlg-extract.c:372
+msgid "_Selected files"
+msgstr "चयनित फ़ाइलें (_S)"
+
+#: ../data/ui/delete.ui.h:5 ../src/dlg-extract.c:362
+msgid "example: *.txt; *.doc"
+msgstr "उदहारण: *.txt; *.doc"
+
+#: ../data/ui/new.ui.h:1
+#| msgid "Archive type:"
+msgid "Archive _type:"
+msgstr "अभिलेख प्रकार (_t):"
+
+#: ../data/ui/open-with.ui.h:1
+msgid "A_vailable application:"
+msgstr "उपलब्ध अनुप्रयोगः (_v)"
+
+#: ../data/ui/open-with.ui.h:2
+msgid "Open Files"
+msgstr "फ़ाइलें खोलें"
+
+#: ../data/ui/open-with.ui.h:3
+msgid "R_ecent applications:"
+msgstr "हाल ही के अनुप्रयोगः (_e)"
+
+#: ../data/ui/open-with.ui.h:4
+msgid "_Application:"
+msgstr "अनुप्रयोगः (_A)"
+
+#: ../data/ui/password.ui.h:1
 msgid ""
 "<i><b>Note:</b> the password will be used to encrypt files you add to the "
 "current archive, and to decrypt files you extract from the current archive. "
@@ -30,267 +191,234 @@ msgstr ""
 "वर्तमान अभिलेख से निकाली जाने वाली फ़ाइल को डिक्रिप्ट करने हेतु यह पासवर्ड उपयोग में लिया "
 "जाएगा. जब अभिलेख बन्द किया जाएगा तो पासवर्ड मिटा दिया जाएगा.</i>"
 
-#: ../data/glade/file-roller.glade.h:2
-msgid "A_vailable application:"
-msgstr "उपलब्ध अनुप्रयोगः (_v)"
-
-#: ../data/glade/file-roller.glade.h:3
-msgid "C_reate"
-msgstr "बनाएँ (_r)"
-
-#: ../data/glade/file-roller.glade.h:4
-msgid "Create Archive"
-msgstr "अभिलेख बनाएँ"
-
-#: ../data/glade/file-roller.glade.h:5
-msgid "Delete"
-msgstr "मिटाएँ"
-
-#: ../data/glade/file-roller.glade.h:6
-msgid "Load Options"
-msgstr "विकल्पों को लोड करें"
-
-#: ../data/glade/file-roller.glade.h:7 ../src/window.c:2910
-msgid "Location"
-msgstr "स्थान"
-
-#  current location
-#. current location
-#: ../data/glade/file-roller.glade.h:8 ../src/window.c:3768
-msgid "Location:"
-msgstr "स्थानः"
-
-#: ../data/glade/file-roller.glade.h:9
-msgid "Open Files"
-msgstr "फ़ाइलें खोलें"
-
-#: ../data/glade/file-roller.glade.h:10
+#: ../data/ui/password.ui.h:2
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: ../data/glade/file-roller.glade.h:11
-msgid "R_ecent applications:"
-msgstr "हाल ही के अनुप्रयोगः (_e)"
+#: ../data/ui/update.ui.h:1
+msgid "S_elect the files you want to update:"
+msgstr "फाइल चुनें जिसे आप अद्यतन करना चाहते हैं (_e):"
 
-#: ../data/glade/file-roller.glade.h:12 ../src/dlg-extract.c:427
-msgid "_All files"
-msgstr "सभी फ़ाइलें (_A)"
+#. secondary text
+#: ../data/ui/update.ui.h:2 ../src/dlg-update.c:182
+#, c-format
+msgid ""
+"The file has been modified with an external application. If you don't update "
+"the version in the archive, all of your changes will be lost."
+msgid_plural ""
+"There are %d files that have been modified with an external application. If "
+"you don't update the files in the archive, all of your changes will be lost."
+msgstr[0] ""
+"The file has been modified with an external application. If you don't update "
+"the version in the archive, all of your changes will be lost."
+msgstr[1] ""
+"There are %d files that have been modified with an external application. If "
+"you don't update the files in the archive, all of your changes will be lost."
 
-#: ../data/glade/file-roller.glade.h:13
-msgid "_Application:"
-msgstr "अनुप्रयोगः (_A)"
+#: ../data/ui/update.ui.h:3
+#| msgid "_Paste"
+msgid "_Update"
+msgstr "अद्यतन करें (_U)"
 
-#: ../data/glade/file-roller.glade.h:14
-msgid "_Archive:"
-msgstr "अभिलेखः (_A)"
-
-#: ../data/glade/file-roller.glade.h:15 ../src/dlg-extract.c:413
-msgid "_Files:"
-msgstr "फ़ाइलें (_F):"
-
-#: ../data/glade/file-roller.glade.h:16 ../src/dlg-extract.c:475
-msgid "_Password:"
-msgstr "पासवर्ड: (_P)"
-
-#: ../data/glade/file-roller.glade.h:17 ../src/dlg-extract.c:434
-msgid "_Selected files"
-msgstr "चयनित फ़ाइलें (_S)"
-
-#: ../data/glade/file-roller.glade.h:18 ../src/dlg-extract.c:424
-msgid "example: *.txt; *.doc"
-msgstr "उदहारण: *.txt; *.doc"
-
-#: ../data/glade/file-roller-extract.glade.h:1 ../src/window.c:5758
-msgid "Destination folder"
-msgstr "गंतव्य फ़ोल्डर"
-
-#: ../data/glade/file-roller-extract.glade.h:2
-msgid "Ex_tract in folder:"
-msgstr "फोल्डरमे निकाल रहा है (_t):"
-
-#: ../data/glade/file-roller-extract.glade.h:3 ../src/ui.h:86
-msgid "Extract"
-msgstr "निकालें"
-
-#. Create the application.
-#: ../data/file-roller.desktop.in.h:1 ../src/gtk-utils.c:390 ../src/main.c:201
-#: ../src/window.c:845 ../src/window.c:3471
+#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1958
+#: ../src/fr-window.c:5327
 msgid "Archive Manager"
 msgstr "अभिलेख प्रबंधक"
 
-#: ../data/file-roller.desktop.in.h:2
+#: ../data/file-roller.desktop.in.in.h:2
 msgid "Create and modify an archive"
 msgstr "अभिलेख बनाएँ तथा परिवर्धित करें"
 
-#: ../nautilus/nautilus-fileroller.c:261
+#: ../nautilus/nautilus-fileroller.c:309
 msgid "Extract Here"
 msgstr "यहाँ निकालें"
 
-#: ../nautilus/nautilus-fileroller.c:262
+#: ../nautilus/nautilus-fileroller.c:310
 msgid "Extract the selected archive in the current position"
 msgstr "मौजूदा स्थिति में चयनित आर्काइव में निकालें"
 
-#: ../nautilus/nautilus-fileroller.c:279
+#: ../nautilus/nautilus-fileroller.c:327
 msgid "Extract To..."
 msgstr "इसमें निकालें..."
 
-#: ../nautilus/nautilus-fileroller.c:280
+#: ../nautilus/nautilus-fileroller.c:328
 msgid "Extract the selected archive"
 msgstr "चयनित अभिलेख में निकालें"
 
-#: ../nautilus/nautilus-fileroller.c:299
+#: ../nautilus/nautilus-fileroller.c:347
 msgid "Create Archive..."
 msgstr "अभिलेख तैयार करें..."
 
-#: ../nautilus/nautilus-fileroller.c:300
+#: ../nautilus/nautilus-fileroller.c:348
 msgid "Create an archive with the selected objects"
 msgstr "चयनित वस्तु के साथ अभिलेख बनायें"
 
-#: ../src/actions.c:161 ../src/actions.c:181 ../src/actions.c:222
-#: ../src/dlg-batch-add.c:130 ../src/dlg-batch-add.c:149
-#: ../src/dlg-batch-add.c:172 ../src/dlg-batch-add.c:223
-#: ../src/dlg-batch-add.c:270 ../src/window.c:4268
+#: ../src/actions.c:158 ../src/actions.c:196 ../src/actions.c:231
+#: ../src/dlg-batch-add.c:169 ../src/dlg-batch-add.c:184
+#: ../src/dlg-batch-add.c:213 ../src/dlg-batch-add.c:257
+#: ../src/dlg-batch-add.c:303 ../src/fr-window.c:2897
 msgid "Could not create the archive"
 msgstr "अभिलेख तैयार नहीं कर सका"
 
-#: ../src/actions.c:162 ../src/dlg-batch-add.c:131 ../src/dlg-batch-add.c:271
+#: ../src/actions.c:159 ../src/dlg-batch-add.c:170 ../src/dlg-batch-add.c:304
 msgid "You have to specify an archive name."
 msgstr "आपको अभिलेख नाम निर्दिष्ट करना होगा"
 
-#: ../src/actions.c:182
+#: ../src/actions.c:197
 msgid "You don't have permission to create an archive in this folder"
 msgstr "आपके पास इस फ़ोल्डर में अभिलेख तैयार करने की अनुमति नहीं है"
 
-#: ../src/actions.c:223 ../src/fr-archive.c:736 ../src/window.c:4269
-#: ../src/window.c:4425
+#: ../src/actions.c:232 ../src/fr-archive.c:1142 ../src/fr-window.c:5961
+#: ../src/fr-window.c:6139
 msgid "Archive type not supported."
 msgstr "अभिलेख प्रकार समर्थित नहीं."
 
-#: ../src/actions.c:236
-msgid "The archive already exists.  Do you want to overwrite it?"
-msgstr "अभिलेख पहले से ही मौजूद है. क्या आप इसके ऊपर लिखना चाहते हैं?"
-
-#: ../src/actions.c:239
-msgid "Overwrite"
-msgstr "मिटाकर लिखें"
-
-#: ../src/actions.c:256
+#: ../src/actions.c:246
 msgid "Could not delete the old archive."
 msgstr "पुराना अभिलेख मिटा नहीं सका."
 
-#: ../src/actions.c:343
-msgid "New"
-msgstr "नया"
-
-#: ../src/actions.c:380 ../src/actions.c:491 ../src/actions.c:582
-msgid "All archives"
-msgstr "सभी अभिलेख"
-
-#: ../src/actions.c:387 ../src/actions.c:498 ../src/actions.c:589
-msgid "All files"
-msgstr "सभी फ़ाइलें"
-
-#: ../src/actions.c:397 ../src/actions.c:597
-msgid "Archive type:"
-msgstr "अभिलेख प्रकारः"
-
-#: ../src/actions.c:401 ../src/actions.c:601
-msgid "Automatic"
-msgstr "स्वचालित"
-
-#: ../src/actions.c:479 ../src/window.c:3856
+#: ../src/actions.c:377 ../src/fr-window.c:5807
 msgid "Open"
 msgstr "खोलें"
 
-#: ../src/actions.c:567
-msgid "Save"
-msgstr "सहेजें"
+#: ../src/actions.c:388 ../src/dlg-new.c:245 ../src/fr-window.c:5158
+msgid "All archives"
+msgstr "सभी अभिलेख"
 
-#: ../src/actions.c:835 ../src/window.c:5310
+#: ../src/actions.c:395 ../src/dlg-new.c:252
+msgid "All files"
+msgstr "सभी फ़ाइलें"
+
+#: ../src/actions.c:774 ../src/fr-window.c:6916
 msgid "Last Output"
 msgstr "अंतिम आउटपुट"
 
-#: ../src/actions.c:855 ../src/dlg-extract.c:100
-msgid "Could not display help"
-msgstr "मदद दिखाई नहीं जा सकी"
+#: ../src/actions.c:838
+msgid ""
+"File Roller is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version."
+msgstr ""
+"File Roller is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version."
 
-#: ../src/actions.c:887
+#: ../src/actions.c:842
+msgid ""
+"File Roller is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details."
+msgstr ""
+"File Roller is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details."
+
+#: ../src/actions.c:846
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"File Roller; if not, write to the Free Software Foundation, Inc., 51 "
+"Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
+msgstr ""
+"You should have received a copy of the GNU General Public License along with "
+"File Roller; if not, write to the Free Software Foundation, Inc., 51 "
+"Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
+
+#: ../src/actions.c:856
+msgid "Copyright © 2001-2007 Free Software Foundation, Inc."
+msgstr "Copyright © 2001-2007 Free Software Foundation, Inc."
+
+#: ../src/actions.c:857
+msgid "An archive manager for GNOME."
+msgstr "गनोम हेतु एक अभिलेख प्रबंधक"
+
+#: ../src/actions.c:860
 msgid "translator-credits"
 msgstr ""
 "राजेश रंजन (rajeshkajha@yahoo.com, rranjan@redhat.com), अम्बुज वार्ष्णेय "
 "(ambuj_v@lycos.com) जी करुणाकर (karunakar@freedomink.org), रविशंकर श्रीवास्तव "
 "(raviratlami@yahoo.com)"
 
-#  Create the application.
-#: ../src/actions.c:915
-msgid "File Roller"
-msgstr "फ़ाइल रोलर"
+#: ../src/dlg-add-files.c:94 ../src/dlg-add-folder.c:128
+msgid "Could not add the files to the archive"
+msgstr "फ़ाइलों को अभिलेख में जोड़ नहीं सका"
 
-#: ../src/actions.c:918
-msgid "An archive manager for GNOME."
-msgstr "गनोम हेतु एक अभिलेख प्रबंधक"
-
-#: ../src/dlg-add-files.c:85 ../src/dlg-add-files.c:147
-#: ../src/dlg-add-folder.c:118 ../src/dlg-add-folder.c:247
+#: ../src/dlg-add-files.c:95 ../src/dlg-add-folder.c:129
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "फ़ोल्डर \"%s\" में से फ़ाइलों को पढ़ने हेतु आपके पास उचित अनुमतियाँ नहीं हैं"
 
-#: ../src/dlg-add-files.c:91 ../src/dlg-add-files.c:153
-#: ../src/dlg-add-folder.c:124 ../src/dlg-add-folder.c:253
-#: ../src/window.c:2263 ../src/window.c:2301
-msgid "Could not add the files to the archive"
-msgstr "फ़ाइलों को अभिलेख में जोड़ नहीं सका"
-
-#: ../src/dlg-add-files.c:179
+#: ../src/dlg-add-files.c:142 ../src/ui.h:48
 msgid "Add Files"
 msgstr "फ़ाइलें जोड़ें"
 
-#: ../src/dlg-add-files.c:191 ../src/dlg-add-folder.c:324
-msgid "_Add only if newer"
-msgstr "तभी जोड़ें जब नया हो (_A)"
+#: ../src/dlg-add-files.c:156 ../src/dlg-add-folder.c:228
+#| msgid "_Add only if newer"
+msgid "Add only if _newer"
+msgstr "तभी जोड़ें जब नया हो (_n)"
 
-#: ../src/dlg-add-folder.c:312
+#: ../src/dlg-add-folder.c:214
 msgid "Add a Folder"
 msgstr "फ़ोल्डर जोड़ें"
 
-#: ../src/dlg-add-folder.c:325
+#: ../src/dlg-add-folder.c:229
 msgid "_Include subfolders"
 msgstr "सब-फ़ोल्डर्स शामिल करें (_I)"
 
-#: ../src/dlg-add-folder.c:326
+#: ../src/dlg-add-folder.c:230
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "जो फ़ोल्डर्स सिंबालिक लिंक हैं उन्हें नहीं जोड़ें (_k)"
 
-#: ../src/dlg-add-folder.c:329 ../src/dlg-add-folder.c:334
+#: ../src/dlg-add-folder.c:233 ../src/dlg-add-folder.c:239
+#: ../src/dlg-add-folder.c:245
 msgid "example: *.o; *.bak"
 msgstr "उदाहरण: *.o; *.bak"
 
-#: ../src/dlg-add-folder.c:330
-msgid "_Include files:"
-msgstr "फ़ाइलें शामिल करें: (_I)"
+#: ../src/dlg-add-folder.c:234
+#| msgid "_Include files:"
+msgid "Include _files:"
+msgstr "फ़ाइलें शामिल करें (_f) :"
 
-#: ../src/dlg-add-folder.c:335
+#: ../src/dlg-add-folder.c:240
 msgid "E_xclude files:"
 msgstr "फ़ाइलें शामिल नहीं करें: (_x)"
 
-#: ../src/dlg-add-folder.c:338
+#: ../src/dlg-add-folder.c:246
+#| msgid "E_xclude files:"
+msgid "_Exclude folders:"
+msgstr "फ़ाइलें निकालें (_E):"
+
+#: ../src/dlg-add-folder.c:250
 msgid "_Load Options"
 msgstr "लोड हेतु विकल्प (_L)"
 
-#: ../src/dlg-add-folder.c:339
+#: ../src/dlg-add-folder.c:251
 msgid "Sa_ve Options"
 msgstr "सहेजने हेतु विकल्प (_v)"
 
-#: ../src/dlg-add-folder.c:786
+#: ../src/dlg-add-folder.c:252
+#| msgid "Sa_ve Options"
+msgid "_Reset Options"
+msgstr "विकल्प फिर सेट करें (_R)"
+
+#: ../src/dlg-add-folder.c:880
 msgid "Save Options"
 msgstr "सहेजने हेतु विकल्प"
 
-#: ../src/dlg-add-folder.c:787
+#: ../src/dlg-add-folder.c:881
 msgid "Options Name:"
 msgstr "विकल्प नाम:"
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5536
+#: ../src/dlg-ask-password.c:123
+#, c-format
+#| msgid "Specify a password for this archive"
+msgid "Enter the password for the archive '%s'."
+msgstr "'%s' अभिलेख हेतु कूटशब्द दाखिल करें."
+
+#: ../src/dlg-batch-add.c:185 ../src/fr-window.c:7196
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -301,18 +429,18 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:144 ../src/window.c:5528 ../src/window.c:5532
-#: ../src/window.c:5536 ../src/window.c:5593 ../src/window.c:5595
+#: ../src/dlg-batch-add.c:188 ../src/fr-window.c:7188 ../src/fr-window.c:7192
+#: ../src/fr-window.c:7196 ../src/fr-window.c:7232 ../src/fr-window.c:7234
 msgid "Please use a different name."
 msgstr "कृपया एक भिन्न नाम उपयोग करें."
 
-#: ../src/dlg-batch-add.c:173
+#: ../src/dlg-batch-add.c:214
 msgid ""
 "You don't have the right permissions to create an archive in the destination "
 "folder."
 msgstr "आपके पास गंतव्य फ़ोल्डर में अभिलेख तैयार करने की अनुमति नहीं है."
 
-#: ../src/dlg-batch-add.c:192 ../src/dlg-extract.c:160 ../src/window.c:4707
+#: ../src/dlg-batch-add.c:230 ../src/dlg-extract.c:102 ../src/fr-window.c:6491
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -323,87 +451,93 @@ msgstr ""
 "\n"
 "क्या आप इसे तैयार करना चाहेंगे?"
 
-#: ../src/dlg-batch-add.c:201 ../src/dlg-extract.c:169 ../src/window.c:4716
+#: ../src/dlg-batch-add.c:239 ../src/dlg-extract.c:111 ../src/fr-window.c:6500
 msgid "Create _Folder"
 msgstr "फ़ोल्डर बनाएँ (_F)"
 
-#: ../src/dlg-batch-add.c:219 ../src/dlg-extract.c:188 ../src/window.c:4735
+#: ../src/dlg-batch-add.c:258 ../src/dlg-extract.c:128 ../src/fr-window.c:6520
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "गंतव्य फ़ोल्डर: %s तैयार नहीं कर सका."
 
-#: ../src/dlg-batch-add.c:243
+#: ../src/dlg-batch-add.c:275
 msgid "Archive not created"
 msgstr "अभिलेख बनाया नहीं गया"
 
-#: ../src/dlg-batch-add.c:296
+#: ../src/dlg-batch-add.c:322
 msgid "The archive is already present.  Do you want to overwrite it?"
 msgstr "अभिलेख पहले से ही मौजूद है. क्या आप इसके ऊपर लिखना चाहते हैं?"
 
-#: ../src/dlg-batch-add.c:299
+#: ../src/dlg-batch-add.c:325
 msgid "_Overwrite"
 msgstr "मिटाकर लिखें (_O)"
 
-#: ../src/dlg-extract.c:192 ../src/dlg-extract.c:212 ../src/dlg-extract.c:240
-#: ../src/window.c:4739 ../src/window.c:4759
+#: ../src/dlg-extract.c:133 ../src/dlg-extract.c:151 ../src/dlg-extract.c:178
+#: ../src/fr-window.c:4085 ../src/fr-window.c:6519 ../src/fr-window.c:6536
 msgid "Extraction not performed"
 msgstr "निकाला नहीं गया"
 
-#: ../src/dlg-extract.c:235
+#: ../src/dlg-extract.c:179 ../src/fr-window.c:4247 ../src/fr-window.c:4327
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "फ़ोल्डर \"%s\" में से अभिलेखों को निकालने हेतु आपके पास उचित अनुमतियाँ नहीं हैं"
 
-#: ../src/dlg-extract.c:396
-msgid "Files"
-msgstr "फ़ाइलें"
+#: ../src/dlg-extract.c:334 ../src/dlg-extract.c:432 ../src/ui.h:123
+msgid "Extract"
+msgstr "निकालें"
 
-#: ../src/dlg-extract.c:445
+#: ../src/dlg-extract.c:383
 msgid "Actions"
 msgstr "क्रियाएँ"
 
-#: ../src/dlg-extract.c:461
-msgid "R_e-create folders"
-msgstr "फ़ोल्डर्स पुनः तैयार करें (_e)"
+#: ../src/dlg-extract.c:399
+#| msgid "R_e-create folders"
+msgid "Re-crea_te folders"
+msgstr "फ़ोल्डर फिर बनाएँ (_t)"
 
-#: ../src/dlg-extract.c:465
+#: ../src/dlg-extract.c:403
 msgid "Over_write existing files"
 msgstr "पहले से मोजूद फ़ाइल के ऊपर लिखे (_w)"
 
-#: ../src/dlg-extract.c:469
+#: ../src/dlg-extract.c:407
 msgid "Do not e_xtract older files"
 msgstr "पुरानी फ़ाइलें नहीं निकालें (_x)"
 
-#: ../src/dlg-extract.c:484
-msgid "_Open destination folder after extraction"
-msgstr "निकालने के बाद गंतव्य फ़ोल्डर खोलें (_O)"
+#: ../src/dlg-new.c:271
+msgid "Automatic"
+msgstr "स्वचालित"
 
-#: ../src/dlg-prop.c:102
-msgid "Path:"
-msgstr "पथः"
+#: ../src/dlg-new.c:338
+msgid "New"
+msgstr "नया"
 
-#: ../src/dlg-prop.c:115
+#: ../src/dlg-new.c:351
+msgid "Save"
+msgstr "सहेजें"
+
+#  current location
+#: ../src/dlg-prop.c:106
+msgid "Location:"
+msgstr "स्थानः"
+
+#: ../src/dlg-prop.c:118
 msgid "Name:"
 msgstr "नाम:"
 
-#: ../src/dlg-prop.c:121
+#: ../src/dlg-prop.c:124
 #, c-format
 msgid "%s Properties"
 msgstr "%s गुण"
 
-#: ../src/dlg-prop.c:130
+#: ../src/dlg-prop.c:133
 msgid "Modified on:"
 msgstr "को परिवर्धित:"
 
-#: ../src/dlg-prop.c:136 ../src/window.c:427
-msgid "%d %B %Y, %H:%M"
-msgstr "%d %B %Y, %H:%M"
-
-#: ../src/dlg-prop.c:144
+#: ../src/dlg-prop.c:143
 msgid "Archive size:"
 msgstr "अभिलेख आकारः"
 
-#: ../src/dlg-prop.c:155
+#: ../src/dlg-prop.c:154
 msgid "Content size:"
 msgstr "विषय-वस्तु आकारः"
 
@@ -415,43 +549,70 @@ msgstr "संपीडन अनुपातः"
 msgid "Number of files:"
 msgstr "फ़ाइलों की संख्याः"
 
-#: ../src/file-data.c:28
-msgid "Unknown type"
-msgstr "अज्ञात प्रकार"
+#: ../src/dlg-update.c:159
+#, c-format
+#| msgid "Could not add the files to the archive"
+msgid "Update the file \"%s\" in the archive \"%s\"?"
+msgstr "फाइल \"%s\" को \"%s\" अभिलेख में अद्यतन करें?"
 
-#: ../src/file-data.c:29
-msgid "Symbolic link"
-msgstr "सिंबालिक लिंक"
+#: ../src/dlg-update.c:173
+#, c-format
+#| msgid "Could not add the files to the archive"
+msgid "Update the files in the archive \"%s\"?"
+msgstr "फ़ाइलों \"%s\" अभिलेख में अद्यतन करें?"
 
-#: ../src/fr-archive.c:711
-msgid "The file does not exist."
+#: ../src/fr-archive.c:1225
+#, c-format
+#| msgid "The file does not exist."
+msgid "The file doesn't exist"
 msgstr "फ़ाइल मौज़ूद नहीं है."
 
-#: ../src/fr-command-tar.c:286
+#: ../src/fr-archive.c:2403
+msgid "You don't have the right permissions."
+msgstr "आपके पास उचित अनुमतियाँ नहीं हैं."
+
+#: ../src/fr-archive.c:2403
+#| msgid "Archive type not supported."
+msgid "This archive type cannot be modified"
+msgstr "अभिलेख प्रकार समर्थित नहीं."
+
+#: ../src/fr-archive.c:2415
+msgid "You can't add an archive to itself."
+msgstr "आप एक अभिलेख को उसी अभिलेख में नहीं जोड़ सकते."
+
+#: ../src/fr-command-rar.c:422 ../src/fr-command-tar.c:295
+#: ../src/fr-command-7z.c:289
 msgid "Adding file: "
 msgstr "फ़ाइल जोड़ रहे:"
 
-#: ../src/fr-command-tar.c:332
+#: ../src/fr-command-rar.c:500 ../src/fr-command-tar.c:359
 msgid "Removing file: "
 msgstr "फ़ाइल मिटा रहे:"
 
-#: ../src/fr-command-tar.c:341 ../src/window.c:1241
-msgid "Deleting files from archive"
-msgstr "फ़ाइलों को अभिलेख से मिटा रहे"
-
-#: ../src/fr-command-tar.c:374
+#: ../src/fr-command-rar.c:549 ../src/fr-command-tar.c:412
+#: ../src/fr-command-7z.c:396
 msgid "Extracting file: "
 msgstr "फ़ाइल निकाल रहे:"
 
-#: ../src/fr-command-tar.c:419
+#: ../src/fr-command-rar.c:669
+#, c-format
+#| msgid "Could not display the folder \"%s\""
+msgid "Could not find the volume: %s"
+msgstr "वॉल्यूम नहीं ढूँढ़ सका: %s"
+
+#: ../src/fr-command-tar.c:368 ../src/fr-window.c:2290
+msgid "Deleting files from archive"
+msgstr "फ़ाइलों को अभिलेख से मिटा रहे"
+
+#: ../src/fr-command-tar.c:471
 msgid "Recompressing archive"
 msgstr "अभिलेख पुनः संपीडित कर रहे"
 
-#: ../src/fr-command-tar.c:553
+#: ../src/fr-command-tar.c:644
 msgid "Decompressing archive"
 msgstr "अभिलेख असंपीडित कर रहे"
 
-#: ../src/fr-stock.c:44
+#: ../src/fr-stock.c:43 ../src/fr-stock.c:44
 msgid "_Add"
 msgstr "जोड़ें (_A)"
 
@@ -459,485 +620,154 @@ msgstr "जोड़ें (_A)"
 msgid "_Extract"
 msgstr "निकालें (_E)"
 
-#: ../src/fr-stock.c:46 ../src/ui.h:36 ../src/ui.h:154
-msgid "_View"
-msgstr "देखें (_V)"
-
-#  Button
-#. Button
-#: ../src/gtk-utils.c:421
-msgid "Command _Line Output"
-msgstr "कमांड लाइन आउटपुट (_L)"
-
-#: ../src/main.c:66
-msgid "Ar (.ar)"
-msgstr "Ar (.ar)"
-
-#: ../src/main.c:68
-msgid "Arj (.arj)"
-msgstr "एआरजे (.arj)"
-
-#: ../src/main.c:73
-msgid "Ear (.ear)"
-msgstr "ईएआर (.ear)"
-
-#: ../src/main.c:75
-msgid "Jar (.jar)"
-msgstr "जेएआर (.jar)"
-
-#: ../src/main.c:76
-msgid "Lha (.lzh)"
-msgstr "एलएचए (.lzh)"
-
-#: ../src/main.c:78
-msgid "Rar (.rar)"
-msgstr "आरएआर (.rar)"
-
-#: ../src/main.c:80
-msgid "Tar uncompressed (.tar)"
-msgstr "टीएआर असंपीडित (.tar)"
-
-#: ../src/main.c:81
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "टीएआर, बी-ज़िप के साथ संपीडित (.tar.bz)"
-
-#: ../src/main.c:82
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "टीएआर, बी-ज़िप2 के साथ संपीडित (.tar.bz2)"
-
-#: ../src/main.c:83
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "जीजिप के साथ टीएआर संपीडित फ़ाइल (.tar.gz)"
-
-#: ../src/main.c:84
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "एलज़ेडओपी के साथ टीएआर संपीडित फ़ाइल (.tar.lzo)"
-
-#: ../src/main.c:85
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "टीएआर, कॉम्प्रेस के साथ संपीडित (.tar.Z)"
-
-#: ../src/main.c:87
-msgid "War (.war)"
-msgstr "डबल्यूएआर (.war)"
-
-#: ../src/main.c:88
-msgid "Zip (.zip)"
-msgstr "ज़िप (.zip)"
-
-#: ../src/main.c:89
-msgid "Zoo (.zoo)"
-msgstr "जू (.zoo)"
-
-#: ../src/main.c:90
-msgid "7-Zip (.7z)"
-msgstr "7-Zip (.7z)"
-
-#: ../src/main.c:135
-msgid "Add files to the specified archive and quit the program"
-msgstr "फ़ाइलें निर्दिष्ट अभिलेख में जोड़ें तथा प्रोग्राम से बाहर हों"
-
-#: ../src/main.c:136
-msgid "ARCHIVE"
-msgstr "अभिलेख"
-
-#: ../src/main.c:139
-msgid "Add files asking the name of the archive and quit the program"
-msgstr "अभिलेख का नाम पूछ कर फ़ाइलें जोड़ें तथा प्रोग्राम से बाहर हों"
-
-#: ../src/main.c:143
-msgid "Extract archives to the specified folder and quit the program"
-msgstr "अभिलेख निर्दिष्ट फ़ोल्डर में निकालें तथा प्रोग्राम से बाहर हों"
-
-#: ../src/main.c:144 ../src/main.c:156
-msgid "FOLDER"
-msgstr "फ़ोल्डर"
-
-#: ../src/main.c:147
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr "अभिलेख गंतव्य फ़ोल्डर में पूछ कर निकालें तथा प्रोग्राम से बाहर हों"
-
-#: ../src/main.c:151
-msgid ""
-"Extract archives using the archive name as destination folder and quit the "
-"program"
-msgstr "अभिलेख नाम को गंतव्य फ़ोल्डर के रूप में प्रयोग करके अभिलेख निकालें तथा प्रोग्राम से बाहर हों"
-
-#: ../src/main.c:155
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "--add और --extract कमान्ड में उपयोग हेतु डिफ़ॉल्ट फ़ोल्डर"
-
-#: ../src/main.c:159
-msgid "Create destination folder without asking confirmation"
-msgstr "गंतव्य फ़ोल्डर की पुष्टि हेतु पूछे बगैर बनाएँ"
-
-#: ../src/recent-files/egg-recent-view-gtk.c:344 ../src/window.c:3387
+#: ../src/fr-window.c:1495
 #, c-format
-msgid "Open '%s'"
-msgstr "खोलें '%s'"
+#| msgid "%d file (%s)"
+#| msgid_plural "%d files (%s)"
+msgid "%d object (%s)"
+msgid_plural "%d objects (%s)"
+msgstr[0] "%d वस्तु (%s)"
+msgstr[1] "%d वस्तु (%s)"
 
-#: ../src/recent-files/egg-recent-view-gtk.c:442
-msgid "Empty"
-msgstr "खाली"
+#: ../src/fr-window.c:1500
+#, c-format
+#| msgid "%d file selected (%s)"
+#| msgid_plural "%d files selected (%s)"
+msgid "%d object selected (%s)"
+msgid_plural "%d objects selected (%s)"
+msgstr[0] "%d वस्तु चुना (%s)"
+msgstr[1] "%d वस्तु चुना (%s)"
 
-#: ../src/ui.h:34
-msgid "_Archive"
-msgstr "अभिलेख (_A)"
-
-#: ../src/ui.h:35
-msgid "_Edit"
-msgstr "सम्पादन (_E)"
-
-#: ../src/ui.h:37
-msgid "_Help"
-msgstr "मदद (_H)"
-
-#: ../src/ui.h:38
-msgid "_Arrange Files"
-msgstr "फ़ाइलें व्यवस्थित करें (_A)"
-
-#: ../src/ui.h:39
-msgid "Open R_ecent"
-msgstr "हाल ही का खोलें (_e)"
-
-#: ../src/ui.h:43
-msgid "Information about the program"
-msgstr "प्रोग्राम के बारे में जानकारी"
-
-#: ../src/ui.h:46
-msgid "_Add Files..."
-msgstr "फ़ाइलें जोड़ें...(_F)"
-
-#: ../src/ui.h:47 ../src/ui.h:51
-msgid "Add files to the archive"
-msgstr "फ़ाइलें अभिलेख में जोड़ें"
-
-#: ../src/ui.h:50
-msgid "Add"
-msgstr "जोड़ें"
-
-#: ../src/ui.h:54
-msgid "Add a _Folder..."
-msgstr "फ़ोल्डर जोड़ें...(_F)"
-
-#: ../src/ui.h:55
-msgid "Add a folder to the archive"
-msgstr "अभिलेख में एक फ़ोल्डर जोड़ें"
-
-#: ../src/ui.h:59
-msgid "Close the current archive"
-msgstr "वर्तमान अभिलेख बन्द करें"
-
-#: ../src/ui.h:63
-msgid "Display the File Roller Manual"
-msgstr "फ़ाइल रोलर मेनुअल दिखाएँ"
-
-#: ../src/ui.h:67
-msgid "Copy the selection"
-msgstr "चयनित प्रतिलिपि करें"
-
-#: ../src/ui.h:71
-msgid "Cut the selection"
-msgstr "चयनित को काटें"
-
-#: ../src/ui.h:75
-msgid "Delete the selection from the archive"
-msgstr "अभिलेख से चयनित को मिटाएँ"
-
-#: ../src/ui.h:78
-msgid "Dese_lect All"
-msgstr "सभी अचयनित करें (&l)"
-
-#: ../src/ui.h:79
-msgid "Deselect all files"
-msgstr "सभी फ़ाइलें अचयनित करें"
-
-#: ../src/ui.h:82
-msgid "_Extract..."
-msgstr "निकालें... (_E)"
-
-#: ../src/ui.h:83 ../src/ui.h:87
-msgid "Extract files from the archive"
-msgstr "अभिलेख में से फ़ाइलें निकालें"
-
-#: ../src/ui.h:90
-msgid "_Last Output"
-msgstr "अंतिम आउटपुट (_L)"
-
-#: ../src/ui.h:91
-msgid "View the output produced by the last executed command"
-msgstr "अंतिम कार्यान्वित कमांड द्वारा उत्पादित आउटपुट देखें"
-
-#: ../src/ui.h:95
-msgid "Create a new archive"
-msgstr "एक नया अभिलेख बनाएँ"
-
-#: ../src/ui.h:99 ../src/ui.h:103 ../src/window.c:3853 ../src/window.c:3856
-msgid "Open archive"
-msgstr "अभिलेख खोलें"
-
-#: ../src/ui.h:106
-msgid "Open Fi_les..."
-msgstr "फ़ाइलें खोलें...(_l)"
-
-#: ../src/ui.h:107
-msgid "Open selected files with an application"
-msgstr "चयनित फ़ाइलें एक प्रोग्राम के साथ खोलें"
-
-#: ../src/ui.h:110
-msgid "Pass_word..."
-msgstr "पासवर्ड... (_w)"
-
-#: ../src/ui.h:111
-msgid "Specify a password for this archive"
-msgstr "इस अभिलेख हेतु पासवर्ड निर्दिष्ट करें"
-
-#: ../src/ui.h:115
-msgid "Paste the clipboard"
-msgstr "क्लिपबोर्ड को चिपकाएँ"
-
-#: ../src/ui.h:119
-msgid "Show archive properties"
-msgstr "अभिलेख गुणों को दिखाएँ"
-
-#: ../src/ui.h:123
-msgid "Quit the application"
-msgstr "अनुप्रयोग से बाहर जाएँ"
-
-#: ../src/ui.h:127
-msgid "Reload current archive"
-msgstr "वर्तमान अभिलेख पुनः लोड करें"
-
-#: ../src/ui.h:130
-msgid "_Rename..."
-msgstr "नाम बदलें... (_R)"
-
-#: ../src/ui.h:131
-msgid "Rename the selection"
-msgstr "चयनित का नाम बदलें"
-
-#: ../src/ui.h:135
-msgid "Save the current archive with a different name"
-msgstr "वर्तमान अभिलेख को एक भिन्न नाम से सहेजें"
-
-#: ../src/ui.h:138
-msgid "Select _All"
-msgstr "सभी का चयन करे (_A)"
-
-#: ../src/ui.h:139
-msgid "Select all files"
-msgstr "सभी फ़ाइलों का चयन करे"
-
-#: ../src/ui.h:143
-msgid "Stop current operation"
-msgstr "वर्तमान कार्य को रोके"
-
-#: ../src/ui.h:146
-msgid "_Test Integrity"
-msgstr "अखंडता जाँचें (_T)"
-
-#: ../src/ui.h:147
-msgid "Test whether the archive contains errors"
-msgstr "जाँचें कि क्या अभिलेख में त्रुटियाँ हैं"
-
-#: ../src/ui.h:150
-msgid "_View File"
-msgstr "फ़ाइल दिखाएँ (_V)"
-
-#: ../src/ui.h:151 ../src/ui.h:155
-msgid "View the selected file"
-msgstr "चयनित फ़ाइल दिखाएँ"
-
-#: ../src/ui.h:163
-msgid "_Toolbar"
-msgstr "उपकरण-पट्टी (_T)"
-
-#: ../src/ui.h:164
-msgid "View the main toolbar"
-msgstr "मुख्य उपकरण-पट्टी दिखाएँ"
-
-#: ../src/ui.h:168
-msgid "Stat_usbar"
-msgstr "स्थिति-पट्टी (_u)"
-
-#: ../src/ui.h:169
-msgid "View the statusbar"
-msgstr "स्थिति पट्टी दिखाएँ"
-
-#: ../src/ui.h:173
-msgid "_Reversed Order"
-msgstr "उलटे अनुक्रम में (_R)"
-
-#: ../src/ui.h:174
-msgid "Reverse the list order"
-msgstr "अनुक्रम सूची उलटें"
-
-#: ../src/ui.h:183
-msgid "View All _Files"
-msgstr "सभी फ़ाइलें दिखाएँ (_F)"
-
-#: ../src/ui.h:186
-msgid "View as a F_older"
-msgstr "फ़ोल्डर के रूप में देखें (_o)"
-
-#: ../src/ui.h:194
-msgid "by _Name"
-msgstr "नाम से (_N)"
-
-#: ../src/ui.h:195
-msgid "Sort file list by name"
-msgstr "फ़ाइल सूची नाम के अनुसार छाँटें"
-
-#: ../src/ui.h:197
-msgid "by _Size"
-msgstr "आकार से (_S)"
-
-#: ../src/ui.h:198
-msgid "Sort file list by file size"
-msgstr "फ़ाइल सूची फ़ाइल आकार के अनुसार छाँटें"
-
-#: ../src/ui.h:200
-msgid "by T_ype"
-msgstr "प्रकार से (_y)"
-
-#: ../src/ui.h:201
-msgid "Sort file list by type"
-msgstr "फ़ाइल सूची को प्रकार के आधार छाँटें"
-
-#: ../src/ui.h:203
-msgid "by _Date modified"
-msgstr "परिवर्धन तिथि से (_D)"
-
-#: ../src/ui.h:204
-msgid "Sort file list by modification time"
-msgstr "फ़ाइल सूची परिवर्धन समय के अनुसार छाँटें"
-
-#: ../src/ui.h:206
-msgid "by _Location"
-msgstr "स्थान से (_L)"
-
-#: ../src/ui.h:207
-msgid "Sort file list by location"
-msgstr "स्थान के आधार फ़ाइल सूची छाँटें"
-
-#: ../src/window.c:692
+#: ../src/fr-window.c:1568
 msgid "Folder"
 msgstr "फ़ोल्डर"
 
-#: ../src/window.c:853
+#: ../src/fr-window.c:1966
 msgid "[read only]"
 msgstr "[सिर्फ पढ़ने योग्य] "
 
-#: ../src/window.c:947
-#, c-format
-msgid "%d file (%s)"
-msgid_plural "%d files (%s)"
-msgstr[0] "%d फ़ाइल (%s)"
-msgstr[1] ""
-
-#: ../src/window.c:952
-#, c-format
-msgid "%d file selected (%s)"
-msgid_plural "%d files selected (%s)"
-msgstr[0] "%d फ़ाइल चुना (%s)"
-msgstr[1] ""
-
-#: ../src/window.c:1238
-msgid "Reading archive"
-msgstr "अभिलेख पढ़ रहे"
-
-#: ../src/window.c:1244
-msgid "Adding files to archive"
-msgstr "फ़ाइलें अभिलेख में जोड़ रहे"
-
-#: ../src/window.c:1247
-msgid "Extracting files from archive"
-msgstr "अभिलेख से फ़ाइलें निकाल रहे"
-
-#: ../src/window.c:1250
-msgid "Testing archive"
-msgstr "अभिलेख जाँच रहे"
-
-#: ../src/window.c:1253
-msgid "Getting the file list"
-msgstr "फ़ाइल सूची प्राप्त कर रहे"
-
-#: ../src/window.c:1256
-msgid "Saving archive"
-msgstr "अभिलेख सहेज रहा है"
-
-#: ../src/window.c:1434
-msgid "Archive:"
-msgstr "अभिलेख:"
-
-#: ../src/window.c:1547
-msgid "wait please..."
-msgstr "कृपया इंतजार करें..."
-
-#: ../src/window.c:1624
+#: ../src/fr-window.c:2217
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "फ़ोल्डर \"%s\" प्रदर्शित नहीं कर सका"
 
-#: ../src/window.c:1683
-msgid ""
-"This archive is password protected.\n"
-"Please specify a password with the command: Edit->Password"
-msgstr ""
-"यह अभिलेख पासवर्ड से सुरक्षित है.\n"
-"कृपया पासवर्ड इस कमांड के साथ दें: संपादन->पासवर्ड"
+#: ../src/fr-window.c:2281 ../src/fr-window.c:2311
+#| msgid "Reading archive"
+msgid "Creating archive"
+msgstr "अभिलेख बना रहा है"
 
-#: ../src/window.c:1685
-msgid ""
-"The specified password is not valid, please specify a new password with the "
-"command: Edit->Password"
-msgstr "उल्लेखित पासवर्ड वैध नहीं है, कृपया एक नया पासवर्ड इस कमांड के साथ दें: संपादन->पासवर्ड"
+#: ../src/fr-window.c:2284
+#| msgid "Reading archive"
+msgid "Loading archive"
+msgstr "अभिलेख लोड कर रहा है"
 
-#: ../src/window.c:1690 ../src/window.c:2487 ../src/window.c:5929
-msgid "Could not perform the operation"
-msgstr "क्रिया पूरा नहीं कर पाया"
+#: ../src/fr-window.c:2287
+msgid "Reading archive"
+msgstr "अभिलेख पढ़ रहे"
 
-#: ../src/window.c:1715
+#: ../src/fr-window.c:2293
+msgid "Testing archive"
+msgstr "अभिलेख जाँच रहे"
+
+#: ../src/fr-window.c:2296
+msgid "Getting the file list"
+msgstr "फ़ाइल सूची प्राप्त कर रहे"
+
+#: ../src/fr-window.c:2299 ../src/fr-window.c:2308
+#| msgid "Getting the file list"
+msgid "Copying the file list"
+msgstr "फ़ाइल सूची की नक़ल ले रहा है"
+
+#: ../src/fr-window.c:2302
+msgid "Adding files to archive"
+msgstr "फ़ाइलें अभिलेख में जोड़ रहे"
+
+#: ../src/fr-window.c:2305
+msgid "Extracting files from archive"
+msgstr "अभिलेख से फ़ाइलें निकाल रहे"
+
+#: ../src/fr-window.c:2314
+msgid "Saving archive"
+msgstr "अभिलेख सहेज रहा है"
+
+#: ../src/fr-window.c:2470
+#| msgid "Open archive"
+msgid "_Open the Archive"
+msgstr "अभिलेख खोलें (_O)"
+
+#: ../src/fr-window.c:2471
+msgid "_Open the Destination"
+msgstr "गंतव्य खोलें (_O)"
+
+#: ../src/fr-window.c:2517
+msgid "Archive:"
+msgstr "अभिलेख:"
+
+#: ../src/fr-window.c:2677
+msgid "Extraction completed successfully"
+msgstr "निष्कर्षण सफलतापूर्वक पूर्ण"
+
+#: ../src/fr-window.c:2700
+#| msgid "Archive not created"
+msgid "Archive created successfully"
+msgstr "अभिलेख सफलतापूर्वक बनाया गया"
+
+#: ../src/fr-window.c:2748
+msgid "wait please..."
+msgstr "कृपया इंतजार करें..."
+
+#: ../src/fr-window.c:2902
 msgid "An error occurred while extracting files."
 msgstr "फ़ाइलें निकालते समय एक त्रुटि हुई."
 
-#: ../src/window.c:1719
+#: ../src/fr-window.c:2908
+#, c-format
+msgid "Could not open \"%s\""
+msgstr "\"%s\" को खोल नहीं सका"
+
+#: ../src/fr-window.c:2913
 msgid "An error occurred while loading the archive."
 msgstr "अभिलेख लोड करते समय एक त्रुटि हुई."
 
-#: ../src/window.c:1723
+#: ../src/fr-window.c:2917
 msgid "An error occurred while deleting files from the archive."
 msgstr "अभिलेख में से फ़ाइल मिटाते समय एक त्रुटि हुई."
 
-#: ../src/window.c:1727
+#: ../src/fr-window.c:2923
 msgid "An error occurred while adding files to the archive."
 msgstr "अभिलेख में फ़ाइलें जोड़ते समय एक त्रुटि हुई."
 
-#: ../src/window.c:1731
+#: ../src/fr-window.c:2927
 msgid "An error occurred while testing archive."
 msgstr "अभिलेख के परीक्षम के दौरान एक त्रुटि हुई"
 
-#: ../src/window.c:1744
+#: ../src/fr-window.c:2931
+#| msgid "An error occurred while loading the archive."
+msgid "An error occurred while saving the archive."
+msgstr "अभिलेख सहेजते समय एक त्रुटि हुई."
+
+#: ../src/fr-window.c:2935
+#| msgid "An error occurred while testing archive."
+msgid "An error occurred."
+msgstr "एक त्रुटि हुई."
+
+#: ../src/fr-window.c:2941
 msgid "Command not found."
 msgstr "कमांड नही मिला."
 
-#: ../src/window.c:1747
+#: ../src/fr-window.c:2944
 msgid "Command exited abnormally."
 msgstr "कमांड अस्वाभाविक रूप से बाहर हुआ."
 
-#: ../src/window.c:1877
+#: ../src/fr-window.c:3140
 msgid "Test Result"
 msgstr "जाँच परिणाम"
 
-#: ../src/window.c:2264
-msgid "You don't have the right permissions."
-msgstr "आपके पास उचित अनुमतियाँ नहीं हैं."
+#: ../src/fr-window.c:3944 ../src/fr-window.c:7772 ../src/fr-window.c:7799
+msgid "Could not perform the operation"
+msgstr "क्रिया पूरा नहीं कर पाया"
 
-#: ../src/window.c:2302
-msgid "You can't add an archive to itself."
-msgstr "आप एक अभिलेख को उसी अभिलेख में नहीं जोड़ सकते."
-
-#: ../src/window.c:2521
+#: ../src/fr-window.c:3970
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -945,69 +775,67 @@ msgstr ""
 "क्या आप इस फ़ाइल को वर्तमान अभिलेख में जोड़ना चाहते हैं या इसे नए अभिलेख के रूप मे खोलना "
 "चाहते हैं?"
 
-#: ../src/window.c:2558
+#: ../src/fr-window.c:4000
 msgid "Do you want to create a new archive with these files?"
 msgstr "कया आप इन फ़ाइलों के साथ नया अभिलेख बनाना चाहते हैं?"
 
-#: ../src/window.c:2561
+#: ../src/fr-window.c:4003
 msgid "Create _Archive"
 msgstr "अभिलेख तैयार करें (_A)"
 
-#: ../src/window.c:2907
+#: ../src/fr-window.c:4576 ../src/fr-window.c:5656
+#| msgid "Folder"
+msgid "Folders"
+msgstr "फ़ोल्डर"
+
+#: ../src/fr-window.c:4614
 msgid "Size"
 msgstr "आकार"
 
-#: ../src/window.c:2908
+#: ../src/fr-window.c:4615
 msgid "Type"
 msgstr "प्रकार"
 
-#: ../src/window.c:2909
+#: ../src/fr-window.c:4616
 msgid "Date Modified"
 msgstr "तिथि परिवर्धित"
 
-#: ../src/window.c:2918
+#: ../src/fr-window.c:4626
 msgid "Name"
 msgstr "नाम"
 
-#: ../src/window.c:3725
-msgid "Go to the previous visited location"
-msgstr "पिछले सैर किए स्थान पर जाएँ"
+#: ../src/fr-window.c:5576
+msgid "Find:"
+msgstr "ढूंढें:"
 
-#: ../src/window.c:3733
-msgid "Go to the next visited location"
-msgstr "अगले सैर किए स्थान पर जाएँ"
+#: ../src/fr-window.c:5664
+#| msgid "Could not rename the folder"
+msgid "Close the folders pane"
+msgstr "फ़ोल्डर पट बंद करें"
 
-#: ../src/window.c:3741
-msgid "Go up one level"
-msgstr "एक स्तर ऊपर जाएँ"
+#: ../src/fr-window.c:5804 ../src/fr-window.c:5807 ../src/ui.h:141
+#: ../src/ui.h:145
+msgid "Open archive"
+msgstr "अभिलेख खोलें"
 
-#: ../src/window.c:3749
-msgid "Go to the home location"
-msgstr "घर स्थान पर जाएँ"
-
-#: ../src/window.c:3854
+#: ../src/fr-window.c:5805
 msgid "Open a recently used archive"
 msgstr "हाल में प्रयुक्त अभिलेख खोलें"
 
-#: ../src/window.c:4360
-#, c-format
-msgid "Could not open \"%s\""
-msgstr "\"%s\" को खोल नहीं सका"
-
-#: ../src/window.c:4418
+#: ../src/fr-window.c:6132
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "अभिलेख \"%s\" सहेज नहीं सका"
 
-#: ../src/window.c:5528
+#: ../src/fr-window.c:7188
 msgid "The new name is void."
 msgstr "नया नाम अमान्य है."
 
-#: ../src/window.c:5532
+#: ../src/fr-window.c:7192
 msgid "The new name is equal to the old one."
 msgstr "नया नाम पुराने नाम के बराबर है."
 
-#: ../src/window.c:5593
+#: ../src/fr-window.c:7232
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1018,7 +846,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5595
+#: ../src/fr-window.c:7234
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1029,43 +857,471 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/window.c:5633
+#: ../src/fr-window.c:7301
 msgid "Rename"
 msgstr "नाम बदलें "
 
-#: ../src/window.c:5634
+#: ../src/fr-window.c:7302
 msgid "New folder name"
 msgstr "नया फ़ोल्डर नाम"
 
-#: ../src/window.c:5634
+#: ../src/fr-window.c:7302
 msgid "New file name"
 msgstr "नया फ़ाइल नाम"
 
-#: ../src/window.c:5638
+#: ../src/fr-window.c:7306
 msgid "_Rename"
 msgstr "नाम बदलें (_R)"
 
-#: ../src/window.c:5654 ../src/window.c:5683
+#: ../src/fr-window.c:7323 ../src/fr-window.c:7342
 msgid "Could not rename the folder"
 msgstr "फ़ोल्डर नाम नहीं बदल सका"
 
-#: ../src/window.c:5654 ../src/window.c:5683
+#: ../src/fr-window.c:7323 ../src/fr-window.c:7342
 msgid "Could not rename the file"
 msgstr "फ़ाइल नाम बदल नहीं सका"
 
-#: ../src/window.c:5757
+#: ../src/fr-window.c:7733
 msgid "Paste Selection"
 msgstr "चयन चिपकाएँ"
 
-#: ../src/window.c:5762
-msgid "_Paste"
-msgstr "चिपकाएँ (_P)"
+#: ../src/fr-window.c:7734
+msgid "Destination folder"
+msgstr "गंतव्य फ़ोल्डर"
 
-#: ../src/window.c:6285
+#: ../src/fr-window.c:8321
 msgid "Add files to an archive"
 msgstr "अभिलेख में नया फ़ाइल जोड़ें"
 
-#: ../src/window.c:6316
+#: ../src/fr-window.c:8365
 msgid "Extract archive"
 msgstr "अभिलेख निकालें"
+
+#. This is the time format used in the "Date Modified" column and
+#. * in the Properties dialog.  See the man page of strftime for an
+#. * explanation of the values.
+#: ../src/glib-utils.c:536
+msgid "%d %B %Y, %H:%M"
+msgstr "%d %B %Y, %H:%M"
+
+#  Button
+#. Expander
+#: ../src/gtk-utils.c:439
+msgid "Command _Line Output"
+msgstr "कमांड लाइन आउटपुट (_L)"
+
+#: ../src/gtk-utils.c:784
+msgid "Could not display help"
+msgstr "मदद दिखाई नहीं जा सकी"
+
+#: ../src/main.c:81
+msgid "7-Zip (.7z)"
+msgstr "7-Zip (.7z)"
+
+#: ../src/main.c:82
+#| msgid "Tar compressed with bzip (.tar.bz)"
+msgid "Tar compressed with 7z (.tar.7z)"
+msgstr "7z (.tar.7z) के साथ टार संकुचित"
+
+#: ../src/main.c:83
+#| msgid "Ar (.ar)"
+msgid "Ace (.ace)"
+msgstr "Ace (.ace)"
+
+#: ../src/main.c:85
+msgid "Ar (.ar)"
+msgstr "Ar (.ar)"
+
+#: ../src/main.c:86
+msgid "Arj (.arj)"
+msgstr "एआरजे (.arj)"
+
+#: ../src/main.c:88
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "टीएआर, बी-ज़िप2 के साथ संपीडित (.tar.bz2)"
+
+#: ../src/main.c:90
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "टीएआर, बी-ज़िप के साथ संपीडित (.tar.bz)"
+
+#: ../src/main.c:91
+msgid "Cabinet (.cab)"
+msgstr "Cabinet (.cab)"
+
+#: ../src/main.c:92
+msgid "Rar Archived Comic Book (.cbr)"
+msgstr "Rar Archived Comic Book (.cbr)"
+
+#: ../src/main.c:93
+msgid "Zip Archived Comic Book (.cbz)"
+msgstr "Zip Archived Comic Book (.cbz)"
+
+#: ../src/main.c:96
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "जीजिप के साथ टीएआर संपीडित फ़ाइल (.tar.gz)"
+
+#: ../src/main.c:99
+msgid "Ear (.ear)"
+msgstr "ईएआर (.ear)"
+
+#: ../src/main.c:100
+msgid "Self-extracting zip (.exe)"
+msgstr "स्व निष्कर्षण zip (.exe)"
+
+#: ../src/main.c:102
+msgid "Jar (.jar)"
+msgstr "जेएआर (.jar)"
+
+#: ../src/main.c:103
+msgid "Lha (.lzh)"
+msgstr "एलएचए (.lzh)"
+
+#: ../src/main.c:105
+#| msgid "Tar compressed with lzop (.tar.lzo)"
+msgid "Tar compressed with lzma (.tar.lzma)"
+msgstr "टार lzma (.tar.lzma) से संपीड़ित"
+
+#: ../src/main.c:107
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "एलज़ेडओपी के साथ टीएआर संपीडित फ़ाइल (.tar.lzo)"
+
+#: ../src/main.c:108
+msgid "Rar (.rar)"
+msgstr "आरएआर (.rar)"
+
+#: ../src/main.c:111
+msgid "Tar uncompressed (.tar)"
+msgstr "टीएआर असंपीडित (.tar)"
+
+#: ../src/main.c:112
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "टीएआर, कॉम्प्रेस के साथ संपीडित (.tar.Z)"
+
+#: ../src/main.c:114
+msgid "War (.war)"
+msgstr "डबल्यूएआर (.war)"
+
+#: ../src/main.c:115
+msgid "Zoo (.zoo)"
+msgstr "जू (.zoo)"
+
+#: ../src/main.c:116
+msgid "Zip (.zip)"
+msgstr "ज़िप (.zip)"
+
+#: ../src/main.c:175
+msgid "Add files to the specified archive and quit the program"
+msgstr "फ़ाइलें निर्दिष्ट अभिलेख में जोड़ें तथा प्रोग्राम से बाहर हों"
+
+#: ../src/main.c:176
+msgid "ARCHIVE"
+msgstr "अभिलेख"
+
+#: ../src/main.c:179
+msgid "Add files asking the name of the archive and quit the program"
+msgstr "अभिलेख का नाम पूछ कर फ़ाइलें जोड़ें तथा प्रोग्राम से बाहर हों"
+
+#: ../src/main.c:183
+msgid "Extract archives to the specified folder and quit the program"
+msgstr "अभिलेख निर्दिष्ट फ़ोल्डर में निकालें तथा प्रोग्राम से बाहर हों"
+
+#: ../src/main.c:184 ../src/main.c:196
+msgid "FOLDER"
+msgstr "फ़ोल्डर"
+
+#: ../src/main.c:187
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr "अभिलेख गंतव्य फ़ोल्डर में पूछ कर निकालें तथा प्रोग्राम से बाहर हों"
+
+#: ../src/main.c:191
+msgid ""
+"Extract archives using the archive name as destination folder and quit the "
+"program"
+msgstr "अभिलेख नाम को गंतव्य फ़ोल्डर के रूप में प्रयोग करके अभिलेख निकालें तथा प्रोग्राम से बाहर हों"
+
+#: ../src/main.c:195
+msgid "Default folder to use for the '--add' and '--extract' commands"
+msgstr "--add और --extract कमान्ड में उपयोग हेतु डिफ़ॉल्ट फ़ोल्डर"
+
+#: ../src/main.c:199
+msgid "Create destination folder without asking confirmation"
+msgstr "गंतव्य फ़ोल्डर की पुष्टि हेतु पूछे बगैर बनाएँ"
+
+#: ../src/main.c:281
+#| msgid "Create and modify an archive"
+msgid "- Create and modify an archive"
+msgstr "- अभिलेख बनाएँ तथा परिवर्धित करें"
+
+#  Create the application.
+#: ../src/main.c:297
+msgid "File Roller"
+msgstr "फ़ाइल रोलर"
+
+#: ../src/ui.h:32
+msgid "_Archive"
+msgstr "अभिलेख (_A)"
+
+#: ../src/ui.h:33
+msgid "_Edit"
+msgstr "सम्पादन (_E)"
+
+#: ../src/ui.h:34
+msgid "_View"
+msgstr "देखें (_V)"
+
+#: ../src/ui.h:35
+msgid "_Help"
+msgstr "मदद (_H)"
+
+#: ../src/ui.h:36
+msgid "_Arrange Files"
+msgstr "फ़ाइलें व्यवस्थित करें (_A)"
+
+#: ../src/ui.h:37
+#| msgid "Open R_ecent"
+msgid "Open _Recent"
+msgstr "हालिया खोलें (_R)"
+
+#: ../src/ui.h:41
+msgid "Information about the program"
+msgstr "प्रोग्राम के बारे में जानकारी"
+
+#: ../src/ui.h:44
+msgid "_Add Files..."
+msgstr "फ़ाइलें जोड़ें...(_F)"
+
+#: ../src/ui.h:45 ../src/ui.h:49
+msgid "Add files to the archive"
+msgstr "फ़ाइलें अभिलेख में जोड़ें"
+
+#: ../src/ui.h:52
+msgid "Add a _Folder..."
+msgstr "फ़ोल्डर जोड़ें...(_F)"
+
+#: ../src/ui.h:53 ../src/ui.h:57
+msgid "Add a folder to the archive"
+msgstr "अभिलेख में एक फ़ोल्डर जोड़ें"
+
+#: ../src/ui.h:56
+#| msgid "Add a Folder"
+msgid "Add Folder"
+msgstr "फ़ोल्डर जोड़ें"
+
+#: ../src/ui.h:61
+msgid "Close the current archive"
+msgstr "वर्तमान अभिलेख बन्द करें"
+
+#: ../src/ui.h:64
+#| msgid "Content size:"
+msgid "Contents"
+msgstr "विषय सूची"
+
+#: ../src/ui.h:65
+msgid "Display the File Roller Manual"
+msgstr "फ़ाइल रोलर मेनुअल दिखाएँ"
+
+#: ../src/ui.h:70 ../src/ui.h:91
+msgid "Copy the selection"
+msgstr "चयनित प्रतिलिपि करें"
+
+#: ../src/ui.h:74 ../src/ui.h:95
+msgid "Cut the selection"
+msgstr "चयनित को काटें"
+
+#: ../src/ui.h:78 ../src/ui.h:99
+msgid "Paste the clipboard"
+msgstr "क्लिपबोर्ड को चिपकाएँ"
+
+#: ../src/ui.h:81 ../src/ui.h:102
+msgid "_Rename..."
+msgstr "नाम बदलें... (_R)"
+
+#: ../src/ui.h:82 ../src/ui.h:103
+msgid "Rename the selection"
+msgstr "चयनित का नाम बदलें"
+
+#: ../src/ui.h:86 ../src/ui.h:107
+msgid "Delete the selection from the archive"
+msgstr "अभिलेख से चयनित को मिटाएँ"
+
+#: ../src/ui.h:111
+msgid "Dese_lect All"
+msgstr "सभी अचयनित करें (&l)"
+
+#: ../src/ui.h:112
+msgid "Deselect all files"
+msgstr "सभी फ़ाइलें अचयनित करें"
+
+#: ../src/ui.h:115 ../src/ui.h:119
+msgid "_Extract..."
+msgstr "निकालें... (_E)"
+
+#: ../src/ui.h:116 ../src/ui.h:120 ../src/ui.h:124
+msgid "Extract files from the archive"
+msgstr "अभिलेख में से फ़ाइलें निकालें"
+
+#: ../src/ui.h:132
+msgid "_Last Output"
+msgstr "अंतिम आउटपुट (_L)"
+
+#: ../src/ui.h:133
+msgid "View the output produced by the last executed command"
+msgstr "अंतिम कार्यान्वित कमांड द्वारा उत्पादित आउटपुट देखें"
+
+#: ../src/ui.h:137
+msgid "Create a new archive"
+msgstr "एक नया अभिलेख बनाएँ"
+
+#: ../src/ui.h:148
+#| msgid "Open Fi_les..."
+msgid "_Open With..."
+msgstr "इससे खोलें (_O)..."
+
+#: ../src/ui.h:149
+msgid "Open selected files with an application"
+msgstr "चयनित फ़ाइलें एक प्रोग्राम के साथ खोलें"
+
+#: ../src/ui.h:152
+msgid "Pass_word..."
+msgstr "पासवर्ड... (_w)"
+
+#: ../src/ui.h:153
+msgid "Specify a password for this archive"
+msgstr "इस अभिलेख हेतु पासवर्ड निर्दिष्ट करें"
+
+#: ../src/ui.h:157
+msgid "Show archive properties"
+msgstr "अभिलेख गुणों को दिखाएँ"
+
+#: ../src/ui.h:161
+msgid "Reload current archive"
+msgstr "वर्तमान अभिलेख पुनः लोड करें"
+
+#: ../src/ui.h:165
+msgid "Save the current archive with a different name"
+msgstr "वर्तमान अभिलेख को एक भिन्न नाम से सहेजें"
+
+#: ../src/ui.h:169
+msgid "Select all files"
+msgstr "सभी फ़ाइलों का चयन करे"
+
+#: ../src/ui.h:173
+msgid "Stop current operation"
+msgstr "वर्तमान कार्य को रोके"
+
+#: ../src/ui.h:176
+msgid "_Test Integrity"
+msgstr "अखंडता जाँचें (_T)"
+
+#: ../src/ui.h:177
+msgid "Test whether the archive contains errors"
+msgstr "जाँचें कि क्या अभिलेख में त्रुटियाँ हैं"
+
+#: ../src/ui.h:181 ../src/ui.h:185
+#| msgid "View the selected file"
+msgid "Open the selected file"
+msgstr "चयनित फ़ाइल खोलें"
+
+#: ../src/ui.h:189 ../src/ui.h:193
+#| msgid "View the selected file"
+msgid "Open the selected folder"
+msgstr "चयनित फोल्डर खोलें"
+
+#: ../src/ui.h:198
+msgid "Go to the previous visited location"
+msgstr "पिछले सैर किए स्थान पर जाएँ"
+
+#: ../src/ui.h:202
+msgid "Go to the next visited location"
+msgstr "अगले सैर किए स्थान पर जाएँ"
+
+#: ../src/ui.h:206
+msgid "Go up one level"
+msgstr "एक स्तर ऊपर जाएँ"
+
+#: ../src/ui.h:210
+msgid "Go to the home location"
+msgstr "घर स्थान पर जाएँ"
+
+#: ../src/ui.h:218
+msgid "_Toolbar"
+msgstr "उपकरण-पट्टी (_T)"
+
+#: ../src/ui.h:219
+msgid "View the main toolbar"
+msgstr "मुख्य उपकरण-पट्टी दिखाएँ"
+
+#: ../src/ui.h:223
+msgid "Stat_usbar"
+msgstr "स्थिति-पट्टी (_u)"
+
+#: ../src/ui.h:224
+msgid "View the statusbar"
+msgstr "स्थिति पट्टी दिखाएँ"
+
+#: ../src/ui.h:228
+msgid "_Reversed Order"
+msgstr "उलटे अनुक्रम में (_R)"
+
+#: ../src/ui.h:229
+msgid "Reverse the list order"
+msgstr "अनुक्रम सूची उलटें"
+
+#: ../src/ui.h:233
+#| msgid "Folder"
+msgid "_Folders"
+msgstr "फोल्डर (_F)"
+
+#: ../src/ui.h:234
+#| msgid "New folder name"
+msgid "View the folders pane"
+msgstr "फ़ोल्डर पट देखें"
+
+#: ../src/ui.h:243
+msgid "View All _Files"
+msgstr "सभी फ़ाइलें दिखाएँ (_F)"
+
+#: ../src/ui.h:246
+msgid "View as a F_older"
+msgstr "फ़ोल्डर के रूप में देखें (_o)"
+
+#: ../src/ui.h:254
+msgid "by _Name"
+msgstr "नाम से (_N)"
+
+#: ../src/ui.h:255
+msgid "Sort file list by name"
+msgstr "फ़ाइल सूची नाम के अनुसार छाँटें"
+
+#: ../src/ui.h:257
+msgid "by _Size"
+msgstr "आकार से (_S)"
+
+#: ../src/ui.h:258
+msgid "Sort file list by file size"
+msgstr "फ़ाइल सूची फ़ाइल आकार के अनुसार छाँटें"
+
+#: ../src/ui.h:260
+msgid "by T_ype"
+msgstr "प्रकार से (_y)"
+
+#: ../src/ui.h:261
+msgid "Sort file list by type"
+msgstr "फ़ाइल सूची को प्रकार के आधार छाँटें"
+
+#: ../src/ui.h:263
+msgid "by _Date modified"
+msgstr "परिवर्धन तिथि से (_D)"
+
+#: ../src/ui.h:264
+msgid "Sort file list by modification time"
+msgstr "फ़ाइल सूची परिवर्धन समय के अनुसार छाँटें"
+
+#: ../src/ui.h:266
+msgid "by _Location"
+msgstr "स्थान से (_L)"
+
+#: ../src/ui.h:267
+msgid "Sort file list by location"
+msgstr "स्थान के आधार फ़ाइल सूची छाँटें"
 
