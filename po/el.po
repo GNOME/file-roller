@@ -33,8 +33,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: el\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 08:55+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
+"cgi?product=file-roller&component=general\n"
+"POT-Creation-Date: 2009-02-03 18:07+0000\n"
 "PO-Revision-Date: 2009-03-07 19:20+0100\n"
 "Last-Translator: Jennie Petoumenou <epetoumenou@gmail.com>\n"
 "Language-Team: Greek <team@gnome.gr>\n"
@@ -73,8 +74,8 @@ msgstr "Μη αναγνωρίσιμη επιλογή εκκίνησης: %d"
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr ""
-"Δε μπορούν να διαβιβαστούν τα URI των εγγράφων σε μία 'Type=Link' εγγραφή "
-"στην επιφάνεια εργασίας"
+"Δε μπορούν να διαβιβαστούν τα URI των εγγράφων σε μία 'Type=Link' εγγραφή στην "
+"επιφάνεια εργασίας"
 
 #: ../copy-n-paste/eggdesktopfile.c:1392
 #, c-format
@@ -90,6 +91,7 @@ msgid "Specify file containing saved configuration"
 msgstr "Καθορίστε το αρχείο που περιέχει τις αποθηκευμένες ρυθμίσεις"
 
 #: ../copy-n-paste/eggsmclient.c:227
+#| msgid "FOLDER"
 msgid "FILE"
 msgstr "ΑΡΧΕΙΟ"
 
@@ -289,8 +291,7 @@ msgstr "Θα πρέπει να καθορίσετε ένα όνομα συμπι
 
 #: ../src/actions.c:197
 msgid "You don't have permission to create an archive in this folder"
-msgstr ""
-"Δεν έχετε δικαίωμα να δημιουργήσετε ένα συμπιεσμένο αρχείο σε αυτόν το φάκελο"
+msgstr "Δεν έχετε δικαίωμα να δημιουργήσετε ένα συμπιεσμένο αρχείο σε αυτόν το φάκελο"
 
 #: ../src/actions.c:232 ../src/fr-archive.c:1142 ../src/fr-window.c:5961
 #: ../src/fr-window.c:6139
@@ -305,11 +306,11 @@ msgstr "Αδυναμία διαγραφής παλιού συμπιεσμένο�
 msgid "Open"
 msgstr "Άνοιγμα"
 
-#: ../src/actions.c:388 ../src/dlg-new.c:248 ../src/fr-window.c:5158
+#: ../src/actions.c:388 ../src/dlg-new.c:245 ../src/fr-window.c:5158
 msgid "All archives"
 msgstr "Όλα τα συμπιεσμένα αρχεία"
 
-#: ../src/actions.c:395 ../src/dlg-new.c:255
+#: ../src/actions.c:395 ../src/dlg-new.c:252
 msgid "All files"
 msgstr "Όλα τα αρχεία"
 
@@ -371,8 +372,7 @@ msgstr "Αδυναμία προσθήκης αρχείων στο συμπιεσ
 #: ../src/dlg-add-files.c:95 ../src/dlg-add-folder.c:129
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr ""
-"Δεν έχετε τα απαραίτητα δικαιώματα ανάγνωσης αρχείων από το φάκελο \"%s\""
+msgstr "Δεν έχετε τα απαραίτητα δικαιώματα ανάγνωσης αρχείων από το φάκελο \"%s\""
 
 #: ../src/dlg-add-files.c:142 ../src/ui.h:48
 msgid "Add Files"
@@ -500,10 +500,8 @@ msgstr "Η αποσυμπίεση δεν πραγματοποιήθηκε"
 
 #: ../src/dlg-extract.c:179 ../src/fr-window.c:4247 ../src/fr-window.c:4327
 #, c-format
-msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr ""
-"Δεν έχετε τα σωστά δικαιώματα για την αποσυμπίεση αρχείων στο φάκελο \"%s\""
+msgid "You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "Δεν έχετε τα σωστά δικαιώματα για την αποσυμπίεση αρχείων στο φάκελο \"%s\""
 
 #: ../src/dlg-extract.c:334 ../src/dlg-extract.c:432 ../src/ui.h:123
 msgid "Extract"
@@ -525,15 +523,15 @@ msgstr "Αν_τικατάσταση υπάρχοντων αρχείων"
 msgid "Do not e_xtract older files"
 msgstr "Να _μην αποσυμπιέζονται παλιά αρχεία"
 
-#: ../src/dlg-new.c:274
+#: ../src/dlg-new.c:271
 msgid "Automatic"
 msgstr "Αυτόματη"
 
-#: ../src/dlg-new.c:341
+#: ../src/dlg-new.c:338
 msgid "New"
 msgstr "Νέο"
 
-#: ../src/dlg-new.c:354
+#: ../src/dlg-new.c:351
 msgid "Save"
 msgstr "Αποθήκευση"
 
@@ -599,7 +597,7 @@ msgid "You can't add an archive to itself."
 msgstr "Δεν μπορείτε να προσθέσετε ένα συμπιεσμένο αρχείο στον εαυτό του."
 
 #: ../src/fr-command-rar.c:422 ../src/fr-command-tar.c:295
-#: ../src/fr-command-7z.c:290
+#: ../src/fr-command-7z.c:289
 msgid "Adding file: "
 msgstr "Προσθήκη αρχείου: "
 
@@ -608,7 +606,7 @@ msgid "Removing file: "
 msgstr "Απομάκρυνση αρχείου: "
 
 #: ../src/fr-command-rar.c:549 ../src/fr-command-tar.c:412
-#: ../src/fr-command-7z.c:397
+#: ../src/fr-command-7z.c:396
 msgid "Extracting file: "
 msgstr "Αποσυμπίεση αρχείου: "
 
@@ -739,8 +737,7 @@ msgstr "Δημιουργήθηκε σφάλμα κατά τη φόρτωση τ�
 
 #: ../src/fr-window.c:2917
 msgid "An error occurred while deleting files from the archive."
-msgstr ""
-"Δημιουργήθηκε σφάλμα κατά τη διαγραφή αρχείων από το συμπιεσμένο αρχείο."
+msgstr "Δημιουργήθηκε σφάλμα κατά τη διαγραφή αρχείων από το συμπιεσμένο αρχείο."
 
 #: ../src/fr-window.c:2923
 msgid "An error occurred while adding files to the archive."
@@ -1326,3 +1323,4 @@ msgstr "κατά τοπο_θεσία"
 #: ../src/ui.h:267
 msgid "Sort file list by location"
 msgstr "Ταξινόμηση λίστας αρχείου κατά τοποθεσία"
+
