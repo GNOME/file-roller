@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
 
-AC_INIT(file-roller, 2.25.92, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
+AC_INIT(file-roller, 2.26.0, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 AC_CONFIG_SRCDIR([config.h.in])
