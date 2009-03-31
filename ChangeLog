@@ -1,5 +1,12 @@
 2009-03-31  Paolo Bacchilega  <paobac@svn.gnome.org>
 
+	* src/file-utils.c (get_file_size): init size to 0
+	
+	Fixes bug #576960 – file-roller shows random filesize for 
+	zero bytes files.
+	
+2009-03-31  Paolo Bacchilega  <paobac@svn.gnome.org>
+
 	* src/file-utils.h: 
 	* src/file-utils.c: 
 	

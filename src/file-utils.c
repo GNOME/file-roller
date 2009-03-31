@@ -328,9 +328,9 @@ path_in_path (const char *dirname,
 goffset
 get_file_size (const char *uri)
 {
+	goffset    size = 0;
 	GFile     *file;
 	GFileInfo *info;
-	goffset    size;
 	GError    *err = NULL;
 
 	if ((uri == NULL) || (*uri == '\0'))
