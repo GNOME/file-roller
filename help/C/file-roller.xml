@@ -2,8 +2,8 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
-  <!ENTITY appversion "2.24.0">
-  <!ENTITY manrevision "2.24.0">
+  <!ENTITY appversion "2.26.0">
+  <!ENTITY manrevision "2.26.0">
   <!ENTITY date "April 2006">
   <!ENTITY appname "Archive Manager">
   <!ENTITY app "<application>Archive Manager</application>">
@@ -28,9 +28,13 @@
   <articleinfo> 
     <title>&app; Manual</title>
      <abstract role="description">
-       <para>You can use the Archive Manager, also known as File Roller, to create, view, modify, or unpack an archive.</para>
+       <para>Archive Manager, also known as File Roller, allows you to create, view, modify, or unpack an archive.</para>
      </abstract>
-    <copyright> 
+    <copyright>
+      <year>2009</year>
+      <holder>Paul Cutler</holder>
+    </copyright>	    
+	<copyright> 
       <year>2006</year> 
       <year>2008</year>
       <holder>Paolo Bacchilega</holder> 
@@ -48,6 +52,7 @@
       <year>2002</year> 
       <holder>Alexander Kirillov</holder> 
     </copyright> 
+
 
 <!-- translators: uncomment this:
 
@@ -91,9 +96,30 @@
 	  <address> <email>kirillov@math.sunysb.edu</email> </address> 
 	</affiliation> 
       </author> 
+      <author>
+        <firstname>Paul</firstname>
+        <surname>Cutler</surname>
+        <affiliation>
+          <orgname>GNOME Documentation Project</orgname>
+          <address><email>pcutler@foresightlinux.org</email></address>
+        </affiliation>
+      </author>	  
     </authorgroup>
+	
+	<releaseinfo revision="2.26" role="review">
+		<ulink type="techreview" url="http://bugzilla.gnome.org/show_bug.cgi?id=575419"/>
+	</releaseinfo>
 
          <revhistory>
+                <revision>
+                  <revnumber>Archive Manager Manual V2.26.0</revnumber>
+                  <date>March 2009</date>
+                  <revdescription>
+                         <para role="author">Paul Cutler</para>
+                         <para role="publisher">GNOME Documentation Project</para>
+                  </revdescription>
+                </revision>
+				
                 <revision>
                   <revnumber>Archive Manager Manual V2.24.0</revnumber>
                   <date>July 2008</date>
@@ -102,6 +128,7 @@
                          <para role="publisher">GNOME Documentation Project</para>
                   </revdescription>
                 </revision>
+				
                 <revision>
                   <revnumber>Archive Manager Manual V2.6</revnumber>
                   <date>April 2006</date>
@@ -1325,7 +1352,7 @@
 <!-- ======= Create Archive Advanced Options  ============= --> 
     <sect1 id="file-roller-create-options">
       <title>Create Options</title>
-      <para>When creating a new archive, or when converting an existing archive to another format, click on <guilabel>Other Options</guilabel> the specify the following advanced options: 
+      <para>When creating a new archive, or when converting an existing archive to another format, click on <guilabel>Other Options</guilabel> to specify the following advanced options: 
       </para>
       <variablelist>
        <!-- ============= -->	
@@ -1334,7 +1361,7 @@
 	  <listitem>
 	  <para>Type the password that will be used to encrypt the archive.  If no password is specified the archive will not be encrypted.</para>
 	  <note>
-	    <para>Not all the archive type support encryption.  For more information about file encryption, see <xref linkend="file-roller-encrypt-files"/>.</para>
+	    <para>Not all archive types support encryption.  For more information about file encryption, see <xref linkend="file-roller-encrypt-files"/>.</para>
 	  </note>
 	  </listitem>
 	</varlistentry>
