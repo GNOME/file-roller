@@ -62,4 +62,9 @@ void            file_data_free                (FileData *fdata);
 void            file_data_update_content_type (FileData *fdata);
 gboolean        file_data_is_dir              (FileData *fdata);
 
+int  file_data_compare_by_path                (gconstpointer a, 
+				               gconstpointer b);
+int  find_path_in_file_data_array             (GPtrArray   *array,
+				               const char *path);
+
 #endif /* FILE_DATA_H */

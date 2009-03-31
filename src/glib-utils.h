@@ -64,6 +64,9 @@ void                g_ptr_array_free_full        (GPtrArray   *array,
                        				  GFunc        func,
                        				  gpointer     user_data);
 void                g_ptr_array_reverse          (GPtrArray   *array);
+int                 g_ptr_array_binary_search    (GPtrArray   *array,
+						  gpointer     value,
+						  GCompareFunc func);
 const char *        get_static_string            (const char  *s);
 char*               g_uri_display_basename       (const char  *uri);
 

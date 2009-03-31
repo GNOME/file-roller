@@ -1,3 +1,36 @@
+2009-03-31  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/file-utils.h: 
+	* src/file-utils.c: 
+	
+	added a parent_folder argument to get_temp_work_dir
+	
+	* src/fr-archive.c (fr_archive_extract_to_local): 
+	
+	create the temp dir in the destination folder to make the mv 
+	operation faster.
+
+	* src/fr-command-unstuff.c: 
+	* src/fr-command-jar.c: 
+	* src/fr-window.c: 
+	* src/fr-command-cfile.c: 
+	
+	updated calls to get_temp_work_dir
+
+	* src/glib-utils.h: 
+	* src/glib-utils.c: 
+	* src/fr-window.c: 
+	* src/fr-command.c: 
+	* src/fr-archive.c: 
+	* src/file-data.h: 
+	* src/file-data.c: 
+	
+	sort the files array after getting the list and search a path using 
+	a binary search to speed up the operation.
+	
+	Fixes bug #577389 – File roller hangs and leaks memory when file is 
+	dragged / dropped from archive
+
 2009-03-16  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	[ File Roller 2.26.0 released ]

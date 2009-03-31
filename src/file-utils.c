@@ -907,7 +907,7 @@ ith_temp_folder_to_try (int n)
 
 
 char *
-get_temp_work_dir (void)
+get_temp_work_dir (const char *parent_folder)
 {
 	guint64  max_size = 0;
 	char    *best_folder = NULL;
@@ -915,23 +915,27 @@ get_temp_work_dir (void)
 	char    *template;
 	char    *result = NULL;
 
-	/* find the folder with more free space. */
-
-	for (i = 0; try_folder[i] != NULL; i++) {
-		char    *folder;
-		guint64  size;
-
-		folder = ith_temp_folder_to_try (i);
-		size = get_dest_free_space (folder);
-		if (max_size < size) {
-			max_size = size;
-			g_free (best_folder);
-			best_folder = folder;
+	if (parent_folder == NULL) { 	
+		/* find the folder with more free space. */
+	
+		for (i = 0; try_folder[i] != NULL; i++) {
+			char    *folder;
+			guint64  size;
+	
+			folder = ith_temp_folder_to_try (i);
+			size = get_dest_free_space (folder);
+			if (max_size < size) {
+				max_size = size;
+				g_free (best_folder);
+				best_folder = folder;
+			}
+			else
+				g_free (folder);
 		}
-		else
-			g_free (folder);
-	}
-
+	}	
+	else 
+		best_folder = g_strdup (parent_folder);
+		
 	if (best_folder == NULL)
 		return NULL;
 	

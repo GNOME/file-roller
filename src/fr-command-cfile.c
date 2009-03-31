@@ -211,7 +211,7 @@ fr_command_cfile_add (FrCommand     *comm,
 
 	/* copy file to the temp dir */
 
-	temp_dir = get_temp_work_dir ();
+	temp_dir = get_temp_work_dir (NULL);
 	filename = file_list->data;
 	temp_file = g_strconcat (temp_dir, "/", filename, NULL);
 
@@ -326,7 +326,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 
 	/* copy file to the temp dir, remove the already existing file first */
 
-	temp_dir = get_temp_work_dir ();
+	temp_dir = get_temp_work_dir (NULL);
 	temp_file = g_strconcat (temp_dir,
 				 "/",
 				 file_name_from_path (comm->filename),

@@ -114,3 +114,39 @@ file_data_is_dir (FileData *fdata)
 {
 	return fdata->dir || fdata->list_dir;
 }
+
+
+int
+file_data_compare_by_path (gconstpointer a,
+			   gconstpointer b)
+{
+	FileData *data_a = *((FileData **) a);
+	FileData *data_b = *((FileData **) b);
+	
+	return strcmp (data_a->full_path, data_b->full_path);
+}
+
+
+int
+find_path_in_file_data_array (GPtrArray  *array,
+			      const char *path)
+{
+	int       l, r, p, cmp = -1;
+	FileData *fd;
+			
+	l = 0;
+	r = array->len;
+	while (l < r) {
+		p = l + ((r - l) / 2);
+		fd = (FileData *) g_ptr_array_index (array, p);
+		cmp = strcmp (path, fd->original_path);
+		if (cmp == 0)
+			return p; 
+		else if (cmp < 0)
+			r = p;
+		else 
+			l = p + 1;
+	}
+	
+	return -1;
+}

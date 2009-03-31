@@ -394,7 +394,7 @@ get_local_copy_for_file (GFile *remote_file)
 	char  *temp_dir;
 	GFile *local_copy = NULL;
 
-	temp_dir = get_temp_work_dir ();
+	temp_dir = get_temp_work_dir (NULL);
 	if (temp_dir != NULL) {
 		char  *archive_name;
 		char  *local_path;
@@ -1355,7 +1355,7 @@ create_tmp_base_dir (const char *base_dir,
 	debug (DEBUG_INFO, "base_dir: %s\n", base_dir);
 	debug (DEBUG_INFO, "dest_dir: %s\n", dest_dir);
 
-	temp_dir = get_temp_work_dir ();
+	temp_dir = get_temp_work_dir (NULL);
 	tmp = remove_level_from_path (dest_dir);
 	parent_dir =  g_build_filename (temp_dir, tmp, NULL);
 	g_free (tmp);
@@ -1383,13 +1383,11 @@ find_file_in_archive (FrArchive *archive,
 
 	g_return_val_if_fail (path != NULL, NULL);
 
-	for (i = 0; i < archive->command->files->len; i++) {
-		FileData *fdata = g_ptr_array_index (archive->command->files, i);
-		if (strcmp (path, fdata->original_path) == 0)
-			return fdata;
-	}
-
-	return NULL;
+	i = find_path_in_file_data_array (archive->command->files, path);
+	if (i >= 0)
+		return (FileData *) g_ptr_array_index (archive->command->files, i);
+	else
+		return NULL;
 }
 
 
@@ -1476,7 +1474,7 @@ save_list_to_temp_file (GList   *file_list,
 
 	if (error != NULL)
 		*error = NULL;
-	*list_dir = get_temp_work_dir ();
+	*list_dir = get_temp_work_dir (NULL);
 	*list_filename = g_build_filename (*list_dir, "file-list", NULL);
 	list_file = g_file_new_for_path (*list_filename);
 	ostream = g_file_create (list_file, G_FILE_CREATE_PRIVATE, NULL, error);
@@ -1906,7 +1904,7 @@ static char *
 fr_archive_get_temp_work_dir (FrArchive *archive)
 {
 	fr_archive_remove_temp_work_dir (archive);
-	archive->priv->temp_dir = get_temp_work_dir ();
+	archive->priv->temp_dir = get_temp_work_dir (NULL);
 	return archive->priv->temp_dir;
 }
 
@@ -2752,7 +2750,7 @@ compute_base_path (const char *base_dir,
 			new_path = g_strdup (file_name_from_path (path));
 		else
 			new_path = g_strdup (path);
-		debug (DEBUG_INFO, "%s, %s --> %s\n", base_dir, path, new_path);
+		/*debug (DEBUG_INFO, "%s, %s --> %s\n", base_dir, path, new_path);*/
 		return new_path;
 	}
 
@@ -2771,7 +2769,7 @@ compute_base_path (const char *base_dir,
 		new_path = g_strndup (path, name_len);
 	}
 
-	debug (DEBUG_INFO, "%s, %s --> %s\n", base_dir, path, new_path);
+	/*debug (DEBUG_INFO, "%s, %s --> %s\n", base_dir, path, new_path);*/
 
 	return new_path;
 }
@@ -2850,23 +2848,24 @@ file_list_contains_files_in_this_dir (GList      *file_list,
 
 
 static GList*
-remove_files_contained_in_this_dir (GList      *file_list,
-				    const char *dirname,
-				    gboolean   *changed)
+remove_files_contained_in_this_dir (GList *file_list,
+				    GList *dir_pointer)
 {
+	char  *dirname = dir_pointer->data;
+	int    dirname_l = strlen (dirname);
 	GList *scan;
-
-	*changed = FALSE;
-
-	for (scan = file_list; scan; /* empty */) {
+	
+	for (scan = dir_pointer->next; scan; /* empty */) {
 		char *filename = scan->data;
+
+		if (strncmp (dirname, filename, dirname_l) != 0)
+			break;
 
 		if (path_in_path (dirname, filename)) {
 			GList *next = scan->next;
 
 			file_list = g_list_remove_link (file_list, scan);
 			g_list_free (scan);
-			*changed = TRUE;
 
 			scan = next;
 		}
@@ -2936,15 +2935,8 @@ fr_archive_extract_to_local (FrArchive  *archive,
 			created_filtered_list = TRUE;
 			filtered = g_list_copy (file_list);
 			filtered = g_list_sort (filtered, (GCompareFunc) strcmp);
-			for (scan = filtered; scan; /* empty */) {
-				gboolean changed = FALSE;
-
-				filtered = remove_files_contained_in_this_dir (filtered, scan->data, &changed);
-				if (changed)
-					scan = filtered;
-				else
-					scan = scan->next;
-			}
+			for (scan = filtered; scan; scan = scan->next) 
+				filtered = remove_files_contained_in_this_dir (filtered, scan);
 		}
 		else
 			filtered = file_list;
@@ -3015,7 +3007,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		else
 			sprintf (dest_filename, "%s/%s", destination, filename);
 
-		debug (DEBUG_INFO, "-> %s\n", dest_filename);
+		/*debug (DEBUG_INFO, "-> %s\n", dest_filename);*/
 
 		/**/
 
@@ -3045,7 +3037,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	if (move_to_dest_dir) {
 		char *temp_dir;
 
-		temp_dir = get_temp_work_dir ();
+		temp_dir = get_temp_work_dir (destination);
 		extract_from_archive (archive,
 				      filtered,
 				      temp_dir,
@@ -3108,7 +3100,7 @@ fr_archive_extract (FrArchive  *archive,
 
 	archive->priv->remote_extraction = ! uri_is_local (destination);
 	if (archive->priv->remote_extraction) {
- 		archive->priv->temp_extraction_dir = get_temp_work_dir ();
+ 		archive->priv->temp_extraction_dir = get_temp_work_dir (NULL);
 		fr_archive_extract_to_local (archive,
 				  	     file_list,
 				  	     archive->priv->temp_extraction_dir,

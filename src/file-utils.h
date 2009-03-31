@@ -80,7 +80,7 @@ const char*         get_file_mime_type_for_path  (const char  *filename,
 guint64             get_dest_free_space          (const char  *path);
 gboolean            remove_directory             (const char  *uri);
 gboolean            remove_local_directory       (const char  *directory);
-char *              get_temp_work_dir            (void);
+char *              get_temp_work_dir            (const char  *parent_folder);
 gboolean            is_temp_work_dir             (const char *dir);
 gboolean            is_temp_dir                  (const char *dir);
 

@@ -218,14 +218,21 @@ fr_command_done (FrProcess   *process,
 	if (process->error.type != FR_PROC_ERROR_NONE)
 		fr_command_handle_error (comm, &process->error);
 
-	if (comm->process->restart)
+	if (comm->process->restart) {
 		fr_process_start (comm->process);
-	else
-		g_signal_emit (G_OBJECT (comm),
-			       fr_command_signals[DONE],
-			       0,
-			       comm->action,
-			       &process->error);
+		return;
+	}
+	
+	if (comm->action == FR_ACTION_LISTING_CONTENT) {
+		/* order the list by name to speed up search */
+		g_ptr_array_sort (comm->files, file_data_compare_by_path);
+	}
+	
+	g_signal_emit (G_OBJECT (comm),
+		       fr_command_signals[DONE],
+		       0,
+		       comm->action,
+		       &process->error);
 }
 
 

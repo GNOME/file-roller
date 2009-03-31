@@ -87,7 +87,7 @@ fr_command_jar_add (FrCommand     *comm,
 		g_free (path);
 	}
 
-	tmp_dir = get_temp_work_dir ();
+	tmp_dir = get_temp_work_dir (NULL);
 	for (scan = jardata_list; scan ; scan = scan->next) {
 		JarData *jdata = scan->data;
 		char    *pack_path;

@@ -1041,17 +1041,6 @@ sort_by_path (gconstpointer  ptr1,
 }
 
 
-static gint
-sort_by_full_path (gconstpointer  ptr1,
-	           gconstpointer  ptr2)
-{
-	const FileData *fdata1 = *((FileData **) ptr1);
-	const FileData *fdata2 = *((FileData **) ptr2);
-
-	return strcmp (fdata1->full_path, fdata2->full_path);
-}
-
-
 static guint64
 get_dir_size (FrWindow   *window,
 	      const char *current_dir,
@@ -1096,34 +1085,35 @@ file_data_respects_filter (FrWindow *window,
 }
 
 
-static void
+static gboolean
 compute_file_list_name (FrWindow   *window,
 			FileData   *fdata,
 			const char *current_dir,
 			int         current_dir_len,
-			GHashTable *names_hash)
+			GHashTable *names_hash,
+			gboolean   *different_name)
 {
 	register char *scan, *end;
 
-	g_free (fdata->list_name);
-	fdata->list_name = NULL;
-	fdata->list_dir = FALSE;
+	*different_name = FALSE;
 
 	if (! file_data_respects_filter (window, fdata))
-		return;
+		return FALSE;
 
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
 		fdata->list_name = g_strdup (fdata->name);
 		if (fdata->dir)
 			fdata->dir_size = 0;
-		return;
+		return FALSE;
 	}
 
-	if (strncmp (fdata->full_path, current_dir, current_dir_len) != 0)
-		return;
+	if (strncmp (fdata->full_path, current_dir, current_dir_len) != 0) {
+		*different_name = TRUE;
+		return FALSE;
+	}
 
 	if (strlen (fdata->full_path) == current_dir_len)
-		return;
+		return FALSE;
 
 	scan = fdata->full_path + current_dir_len;
 	end = strchr (scan, '/');
@@ -1141,7 +1131,7 @@ compute_file_list_name (FrWindow   *window,
 		/* avoid to insert duplicated folders */
 		if (g_hash_table_lookup (names_hash, dir_name) != NULL) {
 			g_free (dir_name);
-			return;
+			return FALSE;
 		}
 		g_hash_table_insert (names_hash, dir_name, GINT_TO_POINTER (1));
 
@@ -1150,6 +1140,8 @@ compute_file_list_name (FrWindow   *window,
 		fdata->list_name = dir_name;
 		fdata->dir_size = get_dir_size (window, current_dir, dir_name);
 	}
+	
+	return TRUE;
 }
 
 
@@ -1161,6 +1153,9 @@ fr_window_compute_list_names (FrWindow  *window,
 	int         current_dir_len;
 	GHashTable *names_hash;
 	int         i;
+	gboolean    visible_list_started = FALSE;
+	gboolean    visible_list_completed = FALSE;
+	gboolean    different_name;
 
 	current_dir = fr_window_get_current_location (window);
 	current_dir_len = strlen (current_dir);
@@ -1168,7 +1163,24 @@ fr_window_compute_list_names (FrWindow  *window,
 
 	for (i = 0; i < files->len; i++) {
 		FileData *fdata = g_ptr_array_index (files, i);
-		compute_file_list_name (window, fdata, current_dir, current_dir_len, names_hash);
+
+		g_free (fdata->list_name);
+		fdata->list_name = NULL;
+		fdata->list_dir = FALSE;
+		
+		/* the files array is sorted by path, when the visible list
+		 * is started and we find a path that doesn't match the 
+		 * current_dir path, the following files can't match 
+		 * the current_dir path. */
+		
+		if (visible_list_completed)
+			continue;
+		
+		if (compute_file_list_name (window, fdata, current_dir, current_dir_len, names_hash, &different_name)) {
+			visible_list_started = TRUE;
+		}
+		else if (visible_list_started && different_name) 
+			visible_list_completed = TRUE;
 	}
 
 	g_hash_table_destroy (names_hash);
@@ -1925,7 +1937,6 @@ fr_window_update_file_list (FrWindow *window,
 		}
 		g_free (current_dir);
 
-		g_ptr_array_sort (window->archive->command->files, sort_by_full_path);
 		fr_window_compute_list_names (window, window->archive->command->files);
 		files = fr_window_get_current_dir_list (window);
 		free_files = TRUE;
@@ -6182,7 +6193,7 @@ fr_window_archive_save_as (FrWindow   *window,
 			  window);
 
 	window->priv->convert_data.converting = TRUE;
-	window->priv->convert_data.temp_dir = get_temp_work_dir ();
+	window->priv->convert_data.temp_dir = get_temp_work_dir (NULL);
 
 	fr_process_clear (window->archive->process);
 	fr_archive_extract_to_local (window->archive,
@@ -7074,7 +7085,7 @@ rename_selection (FrWindow   *window,
 
 	fr_process_clear (archive->process);
 
-	tmp_dir = get_temp_work_dir ();
+	tmp_dir = get_temp_work_dir (NULL);
 
 	if (is_dir)
 		file_list = get_dir_list_from_path (window, rdata->path_to_rename);
@@ -7638,7 +7649,7 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 
 	current_dir_relative = data->current_dir + 1;
 
-	data->tmp_dir = get_temp_work_dir ();
+	data->tmp_dir = get_temp_work_dir (NULL);
 	created_dirs = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	for (scan = data->files; scan; scan = scan->next) {
 		const char *old_name = (char*) scan->data;
@@ -7838,7 +7849,7 @@ open_files_data_new (FrWindow *window,
 	odata->file_list = path_list_dup (file_list);
 	odata->ask_application = ask_application;
 	odata->cdata = g_new0 (CommandData, 1);
-	odata->cdata->temp_dir = get_temp_work_dir ();
+	odata->cdata->temp_dir = get_temp_work_dir (NULL);
 	odata->cdata->file_list = NULL;
 	for (scan = file_list; scan; scan = scan->next) {
 		char *file = scan->data;
