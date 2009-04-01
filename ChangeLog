@@ -1,3 +1,22 @@
+2009-04-02  Paolo Bacchilega  <paobac@svn.gnome.org>
+
+	* src/fr-command-rar.c (fr_command_rar_handle_error): 
+	
+	A CRC error isn't always caused by a password request.
+	Fixes bug #574657 – support corrupted rar archives.
+	
+	* src/gtk-utils.c (_gtk_error_dialog_new): 
+	
+	Expand the command line output if the secondary text is null.
+	
+	* src/fr-window.c: 
+	* src/dlg-extract.c: 
+	* src/dlg-batch-add.c: 
+	* src/actions.c: 
+	
+	Always use a c-formatted string as 5th argument of 
+	_gtk_error_dialog_new().
+
 2009-03-31  Paolo Bacchilega  <paobac@svn.gnome.org>
 
 	* src/file-utils.c (get_file_size): init size to 0

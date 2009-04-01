@@ -167,6 +167,7 @@ add_clicked_cb (GtkWidget  *widget,
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
+					   "%s",
 					   _("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -211,6 +212,7 @@ add_clicked_cb (GtkWidget  *widget,
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
+					   "%s",
 					   _("You don't have the right permissions to create an archive in the destination folder."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -301,6 +303,7 @@ add_clicked_cb (GtkWidget  *widget,
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
+					   "%s",
 					   _("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));

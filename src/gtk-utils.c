@@ -437,7 +437,8 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 		/* Expander */
 
 		expander = gtk_expander_new_with_mnemonic (_("Command _Line Output"));
-
+		gtk_expander_set_expanded (GTK_EXPANDER (expander), secondary_text == NULL);
+		
 		/* Add text */
 
 		scrolled = gtk_scrolled_window_new (NULL, NULL);

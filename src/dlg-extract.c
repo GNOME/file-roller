@@ -123,19 +123,16 @@ extract_cb (GtkWidget   *w,
 
 		if (! do_not_extract && ! ensure_dir_exists (extract_to_dir, 0755, &error)) {
 			GtkWidget  *d;
-			char       *message;
-
-			message = g_strdup_printf (_("Could not create the destination folder: %s."), error->message);
 
 			d = _gtk_error_dialog_new (GTK_WINDOW (window),
 						   GTK_DIALOG_DESTROY_WITH_PARENT,
 						   NULL,
 						   _("Extraction not performed"),
-						   "%s", message);
+						   _("Could not create the destination folder: %s."),
+						   error->message);
 			gtk_dialog_run (GTK_DIALOG (d));
 			gtk_widget_destroy (GTK_WIDGET (d));
 
-			g_free (message);
 			g_error_free (error);
 
 			return FALSE;

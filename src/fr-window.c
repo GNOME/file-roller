@@ -2232,7 +2232,8 @@ open_folder (GtkWindow  *parent,
 					   GTK_DIALOG_MODAL,
 					   NULL,
 					   message,
-					   "%s", error->message);
+					   "%s", 
+					   error->message);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (d);
 
@@ -2972,7 +2973,8 @@ handle_errors (FrWindow    *window,
 						0,
 						output,
 						msg,
-						"%s", details);
+						((details != NULL) ? "%s" : NULL), 
+						details);
 		fr_window_show_error_dialog (window, dialog, dialog_parent);
 
 		return FALSE;
@@ -6147,6 +6149,7 @@ fr_window_archive_save_as (FrWindow   *window,
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   message,
+					   "%s",
 					   _("Archive type not supported."));
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (d);
@@ -7332,7 +7335,8 @@ fr_window_rename_selection (FrWindow *window,
 						     GTK_DIALOG_DESTROY_WITH_PARENT,
 						     NULL,
 						     (renaming_dir ? _("Could not rename the folder") : _("Could not rename the file")),
-						     "%s", reason);
+						     "%s", 
+						     reason);
 			gtk_dialog_run (GTK_DIALOG (dlg));
 			gtk_widget_destroy (dlg);
 

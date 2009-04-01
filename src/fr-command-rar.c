@@ -646,9 +646,10 @@ fr_command_rar_handle_error (FrCommand   *comm,
 	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
 		return;
 
-	if (error->status == 3)
+	/*if (error->status == 3)
 		error->type = FR_PROC_ERROR_ASK_PASSWORD;
-	else if (error->status <= 1)
+	else */
+	if (error->status <= 1)
 		error->type = FR_PROC_ERROR_NONE;
 
 	for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
@@ -657,6 +658,10 @@ fr_command_rar_handle_error (FrCommand   *comm,
 		if (strstr (line, "password incorrect") != NULL) {
 			error->type = FR_PROC_ERROR_ASK_PASSWORD;
 			break;
+		}
+
+		if (strncmp (line, "Unexpected end of archive", 25) == 0) {
+			/* FIXME: handle this type of errors at a higher level when the freeze is over. */
 		}
 
 		if (strncmp (line, "Cannot find volume", 18) == 0) {
