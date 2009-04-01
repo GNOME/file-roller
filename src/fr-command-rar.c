@@ -572,6 +572,9 @@ fr_command_rar_extract (FrCommand  *comm,
 		fr_process_begin_command (comm->process, "unrar");
 
 	fr_process_add_arg (comm->process, "x");
+	
+	/* keep broken extracted files */
+	fr_process_add_arg (comm->process, "-kb");
 
 	if (overwrite)
 		fr_process_add_arg (comm->process, "-o+");
