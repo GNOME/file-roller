@@ -26,18 +26,17 @@ dnl ==========================================================================
 
 GLIB_REQUIRED=2.16.0
 GIO_REQUIRED=2.16.0
-GTK_2_12_REQUIRED=2.12.0
-GTK_2_13_REQUIRED=2.13.0
+GTK_REQUIRED=2.16.0
 GCONF_REQUIRED=2.6.0
 NAUTILUS_REQUIRED=2.22.2
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GIO_REQUIRED)
+AC_SUBST(GTK_REQUIRED)
 AC_SUBST(NAUTILUS_REQUIRED)
 
 dnl ===========================================================================
 
-PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= $GTK_2_12_REQUIRED])
 AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
 
@@ -54,14 +53,6 @@ AC_ARG_ENABLE(run_in_place,
 AM_CONDITIONAL(RUN_IN_PLACE, test "x$enable_run_in_place" != xno)
 
 dnl ===========================================================================
-
-if pkg-config --atleast-version=$GTK_2_13_REQUIRED gtk+-2.0; then
-	GTK_REQUIRED=$GTK_2_13_REQUIRED
-	AC_DEFINE(GTK_2_13, "1", [Use the Gtk+ 2.13 series])
-else
-	GTK_REQUIRED=$GTK_2_12_REQUIRED
-fi
-AC_SUBST(GTK_REQUIRED)
 
 PKG_CHECK_MODULES(FR,					\
 	glib-2.0 >= $GLIB_REQUIRED			\
@@ -171,6 +162,5 @@ Configuration:
 	Compiler:               ${CC}
 	Internal mkdtemp:       ${mkdtemp_missing}
 	Nautilus support:       ${build_nautilus_actions}
-	Gtk+ series:            ${GTK_REQUIRED}
 	Run in place            ${enable_run_in_place}
 "

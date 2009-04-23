@@ -753,16 +753,7 @@ show_uri (GdkScreen   *screen,
 {
 	gboolean result;
 
-#ifndef GTK_2_13
-	GAppLaunchContext *app_context;
-
-	app_context = g_app_launch_context_new ();
-	result = g_app_info_launch_default_for_uri (uri, G_APP_LAUNCH_CONTEXT (app_context), error);
-
-	g_object_unref (app_context);
-#else
 	result = gtk_show_uri (screen, uri, timestamp, error);
-#endif
 
 	return result;
 }

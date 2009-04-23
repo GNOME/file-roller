@@ -5070,7 +5070,7 @@ menu_item_select_cb (GtkMenuItem *proxy,
 	GtkAction *action;
 	char      *message;
 
-	action = gtk_widget_get_action (GTK_WIDGET (proxy));
+	action = gtk_activatable_get_related_action (GTK_ACTIVATABLE (proxy));
 	g_return_if_fail (action != NULL);
 
 	g_object_get (G_OBJECT (action), "tooltip", &message, NULL);
@@ -5823,7 +5823,7 @@ fr_window_construct (FrWindow *window)
 			  "activate",
 			  G_CALLBACK (activate_action_open),
 			  window);
-	gtk_action_connect_proxy (window->priv->open_action, GTK_WIDGET (open_recent_tool_item));
+	gtk_activatable_set_related_action (GTK_ACTIVATABLE (open_recent_tool_item), window->priv->open_action);
 
 	gtk_widget_show (GTK_WIDGET (open_recent_tool_item));
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), open_recent_tool_item, 1);
