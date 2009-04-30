@@ -981,7 +981,7 @@ fr_process_stop_priv (FrProcess *process,
 	if (command_is_sticky (process, process->priv->current_command))
 		allow_sticky_processes_only (process, emit_signal);
 
-	else if (process->term_on_stop)
+	else if (process->term_on_stop && (process->priv->command_pid > 0))
 		kill (process->priv->command_pid, SIGTERM);
 
 	else {
