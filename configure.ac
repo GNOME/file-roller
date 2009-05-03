@@ -37,6 +37,7 @@ AC_SUBST(NAUTILUS_REQUIRED)
 
 dnl ===========================================================================
 
+PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= $GTK_REQUIRED])
 AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
 
