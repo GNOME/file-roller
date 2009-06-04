@@ -98,12 +98,12 @@ list__process_line (char     *line,
 		if (strncmp (line, "p7zip Version ", 14) == 0) {
 			const char *ver_start;
 			int         ver_len;
-		        char        version[256];
+			char        version[256];
 
 			ver_start = eat_spaces (line + 14);
-		        ver_len = strchr (ver_start, ' ') - ver_start;
-        		strncpy (version, ver_start, ver_len);
-		        version[ver_len] = 0;
+			ver_len = strchr (ver_start, ' ') - ver_start;
+			strncpy (version, ver_start, ver_len);
+			version[ver_len] = 0;
 
 			if (strcmp (version, "4.55") < 0)
 				p7z_comm->old_style = TRUE;
@@ -112,7 +112,7 @@ list__process_line (char     *line,
 		}
 		else if (p7z_comm->old_style && (strncmp (line, "Listing archive: ", 17) == 0))
 			p7z_comm->list_started = TRUE;
-		else if (! p7z_comm->old_style && (strncmp (line, "--------", 8) == 0))
+		else if (! p7z_comm->old_style && (strcmp (line, "----------") == 0))
 			p7z_comm->list_started = TRUE;
 		else if (strncmp (line, "Multivolume = ", 14) == 0) {
 			fields = g_strsplit (line, " = ", 2);
@@ -124,14 +124,20 @@ list__process_line (char     *line,
 
 	if (strcmp (line, "") == 0) {
 		if (p7z_comm->fdata != NULL) {
-			fdata = p7z_comm->fdata;
-			if (fdata->dir)
-				fdata->name = dir_name_from_path (fdata->full_path);
-			else
-				fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-			fdata->path = remove_level_from_path (fdata->full_path);
-			fr_command_add_file (comm, fdata);
-			p7z_comm->fdata = NULL;
+			if (p7z_comm->fdata->original_path == NULL) {
+				file_data_free (p7z_comm->fdata);
+				p7z_comm->fdata = NULL;
+			}
+			else {
+				fdata = p7z_comm->fdata;
+				if (fdata->dir)
+					fdata->name = dir_name_from_path (fdata->full_path);
+				else
+					fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+				fdata->path = remove_level_from_path (fdata->full_path);
+				fr_command_add_file (comm, fdata);
+				p7z_comm->fdata = NULL;
+			}
 		}
 		return;
 	}
@@ -154,7 +160,7 @@ list__process_line (char     *line,
 		fdata->full_path = g_strconcat ((fdata->original_path[0] != '/') ? "/" : "",
 						fdata->original_path,
 						(fdata->dir && (fdata->original_path[strlen (fdata->original_path - 1)] != '/')) ? "/" : "",
-						NULL);					
+						NULL);
 	}
 	else if (strcmp (fields[0], "Folder") == 0) {
 		fdata->dir = (strcmp (fields[1], "+") == 0);
@@ -217,7 +223,7 @@ static void
 list__begin (gpointer data)
 {
 	FrCommand7z *p7z_comm = data;
-	
+
 	if (p7z_comm->fdata != NULL) {
 		file_data_free (p7z_comm->fdata);
 		p7z_comm->fdata = NULL;
@@ -228,7 +234,7 @@ list__begin (gpointer data)
 
 static void
 fr_command_7z_list (FrCommand  *comm)
-{					   
+{
 	fr_process_set_out_line_func (comm->process, list__process_line, comm);
 
 	fr_command_7z_begin_command (comm);
@@ -502,7 +508,7 @@ fr_command_7z_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_7z_get_capabilities (FrCommand  *comm,
-			        const char *mime_type)
+				const char *mime_type)
 {
 	FrCommandCap capabilities;
 
@@ -518,14 +524,14 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	}
 	else if (is_program_in_path ("7z")) {
 		if (is_mime_type (mime_type, "application/x-rar")
-		    || is_mime_type (mime_type, "application/x-cbr")) 
+		    || is_mime_type (mime_type, "application/x-cbr"))
 		{
 			if (g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
 				capabilities |= FR_COMMAND_CAN_READ;
 		}
 		else
 			capabilities |= FR_COMMAND_CAN_READ;
-		
+
 		if (is_mime_type (mime_type, "application/x-cbz")
 		    || is_mime_type (mime_type, "application/x-ms-dos-executable")
 		    || is_mime_type (mime_type, "application/zip"))
