@@ -50,7 +50,6 @@
 #include "gtk-utils.h"
 #include "gconf-utils.h"
 #include "open-file.h"
-#include "sexy-icon-entry.h"
 #include "typedefs.h"
 #include "ui.h"
 
@@ -5223,14 +5222,14 @@ filter_entry_activate_cb (GtkEntry *entry,
 
 
 static void
-filter_entry_icon_released_cb (SexyIconEntry         *entry,
-			       SexyIconEntryPosition  icon_pos,
-			       int                    button,
-			       gpointer               user_data)
+filter_entry_icon_release_cb (GtkEntry             *entry,
+			      GtkEntryIconPosition  icon_pos,
+			      GdkEventButton       *event,
+			      gpointer              user_data)
 {
 	FrWindow *window = FR_WINDOW (user_data);
 
-	if ((button == 1) && (icon_pos == SEXY_ICON_ENTRY_SECONDARY))
+	if ((event->button == 1) && (icon_pos == GTK_ENTRY_ICON_SECONDARY))
 		fr_window_deactivate_filter (window);
 }
 
@@ -5590,11 +5589,10 @@ fr_window_construct (FrWindow *window)
 
 	/* * filter entry */
 
-	window->priv->filter_entry = sexy_icon_entry_new ();
-	/*sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (window->priv->filter_entry),
-				  SEXY_ICON_ENTRY_PRIMARY,
-				  GTK_IMAGE (gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU)));*/
-	sexy_icon_entry_add_clear_button (SEXY_ICON_ENTRY (window->priv->filter_entry));
+	window->priv->filter_entry = GTK_WIDGET (gtk_entry_new ());
+	gtk_entry_set_icon_from_stock (GTK_ENTRY (window->priv->filter_entry),
+				       GTK_ENTRY_ICON_SECONDARY,
+				       GTK_STOCK_CLEAR);
 
 	gtk_widget_set_size_request (window->priv->filter_entry, 300, -1);
 	gtk_box_pack_start (GTK_BOX (filter_box),
@@ -5605,8 +5603,8 @@ fr_window_construct (FrWindow *window)
 			  G_CALLBACK (filter_entry_activate_cb),
 			  window);
 	g_signal_connect (G_OBJECT (window->priv->filter_entry),
-			  "icon_released",
-			  G_CALLBACK (filter_entry_icon_released_cb),
+			  "icon-release",
+			  G_CALLBACK (filter_entry_icon_release_cb),
 			  window);
 
 	gtk_widget_show_all (filter_box);
@@ -5763,10 +5761,10 @@ fr_window_construct (FrWindow *window)
 	gtk_box_pack_start (GTK_BOX (location_box),
 			    window->priv->location_label, FALSE, FALSE, 5);
 
-	window->priv->location_entry = sexy_icon_entry_new ();
-	sexy_icon_entry_set_icon (SEXY_ICON_ENTRY (window->priv->location_entry),
-				  SEXY_ICON_ENTRY_PRIMARY,
-				  GTK_IMAGE (gtk_image_new_from_stock (GTK_STOCK_DIRECTORY, GTK_ICON_SIZE_MENU)));
+	window->priv->location_entry = gtk_entry_new ();
+	gtk_entry_set_icon_from_stock (GTK_ENTRY (window->priv->location_entry),
+				       GTK_ENTRY_ICON_PRIMARY,
+				       GTK_STOCK_DIRECTORY);
 
 	gtk_box_pack_start (GTK_BOX (location_box),
 			    window->priv->location_entry, TRUE, TRUE, 5);
