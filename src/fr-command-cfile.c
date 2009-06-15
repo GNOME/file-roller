@@ -249,6 +249,14 @@ fr_command_cfile_add (FrCommand     *comm,
 		fr_process_end_command (comm->process);
 		compressed_filename = g_strconcat (filename, ".Z", NULL);
 	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzip")) {
+		fr_process_begin_command (comm->process, "lzip");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "--");
+		fr_process_add_arg (comm->process, filename);
+		fr_process_end_command (comm->process);
+		compressed_filename = g_strconcat (filename, ".lz", NULL);
+	}
 	else if (is_mime_type (comm->mime_type, "application/x-lzma")) {
 		fr_process_begin_command (comm->process, "lzma");
 		fr_process_set_working_dir (comm->process, temp_dir);
@@ -375,6 +383,13 @@ fr_command_cfile_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
 	}
+	else if (is_mime_type (comm->mime_type, "application/x-lzip")) {
+		fr_process_begin_command (comm->process, "lzip");
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "-d");
+		fr_process_add_arg (comm->process, temp_file);
+		fr_process_end_command (comm->process);
+	}
 	else if (is_mime_type (comm->mime_type, "application/x-lzma")) {
 		fr_process_begin_command (comm->process, "lzma");
 		fr_process_add_arg (comm->process, "-f");
@@ -443,6 +458,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 const char *cfile_mime_type[] = { "application/x-gzip",
 				  "application/x-bzip",
 				  "application/x-compress",
+				  "application/x-lzip",
 				  "application/x-lzma",
 				  "application/x-lzop",
 				  "application/x-rzip",
@@ -477,6 +493,10 @@ fr_command_cfile_get_capabilities (FrCommand  *comm,
 			capabilities |= FR_COMMAND_CAN_WRITE;
 		if (is_program_in_path ("uncompress") || is_program_in_path ("gzip"))
 			capabilities |= FR_COMMAND_CAN_READ;
+	}
+	else if (is_mime_type (mime_type, "application/x-lzip")) {
+		if (is_program_in_path ("lzip"))
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzma")) {
 		if (is_program_in_path ("lzma"))

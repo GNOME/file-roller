@@ -537,6 +537,7 @@ get_mime_type_from_magic_numbers (GFile *file)
 		{ "application/x-ace", "**ACE**", 7, 7 },
 		{ "application/x-arj", "\x60\xea", 0, 2 },
 		{ "application/x-gzip", "\037\213", 0, 2 },
+		{ "application/x-lzip", "LZIP", 0, 4 },
 		{ "application/x-rar", "Rar!", 0, 4 },
 		{ "application/x-rzip", "RZIP", 0, 4 },
 		{ "application/x-zoo", "\xdc\xa7\xc4\xfd", 20, 4 },

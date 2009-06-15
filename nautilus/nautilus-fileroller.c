@@ -167,6 +167,8 @@ static char *mime_types[] = {
 	"application/x-java-archive",
 	"application/x-lha",
 	"application/x-lhz",
+	"application/x-lzip",
+	"application/x-lzip-compressed-tar",
 	"application/x-lzma",
 	"application/x-lzma-compressed-tar",
 	"application/x-lzop",
