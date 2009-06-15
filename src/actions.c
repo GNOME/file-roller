@@ -156,7 +156,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 						GTK_DIALOG_DESTROY_WITH_PARENT,
 						NULL,
 						_("Could not create the archive"),
-						"%s", 
+						"%s",
 						_("You have to specify an archive name."));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -247,7 +247,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 							GTK_DIALOG_DESTROY_WITH_PARENT,
 							NULL,
 							_("Could not delete the old archive."),
-							"%s", 
+							"%s",
 							err->message);
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (GTK_WIDGET (dialog));

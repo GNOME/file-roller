@@ -464,6 +464,31 @@ static void
 fr_command_7z_handle_error (FrCommand   *comm,
 			    FrProcError *error)
 {
+	if (error->type == FR_PROC_ERROR_NONE) {
+		FileData *first;
+		char     *basename;
+		char     *testname;
+
+		/* This is a way to fix bug #582712. */
+
+		if (comm->files->len != 1)
+			return;
+		if (! g_str_has_suffix (comm->filename, ".001"))
+			return;
+
+		first = g_ptr_array_index (comm->files, 0);
+		basename = g_path_get_basename (comm->filename);
+		testname = g_strconcat (first->original_path, ".001", NULL);
+
+		if (strcmp (basename, testname) == 0)
+			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+
+		g_free (testname);
+		g_free (basename);
+
+		return;
+	}
+
 	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
 		return;
 
