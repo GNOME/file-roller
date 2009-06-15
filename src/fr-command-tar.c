@@ -206,13 +206,16 @@ add_compress_arg (FrCommand *comm)
 	else if (is_mime_type (comm->mime_type, "application/x-lzma-compressed-tar"))
 		fr_process_add_arg (comm->process, "--use-compress-program=lzma");
 
+	else if (is_mime_type (comm->mime_type, "application/x-xz-compressed-tar"))
+		fr_process_add_arg (comm->process, "--use-compress-program=xz");
+
 	else if (is_mime_type (comm->mime_type, "application/x-lzop-compressed-tar"))
 		fr_process_add_arg (comm->process, "--use-compress-program=lzop");
 
 	else if (is_mime_type (comm->mime_type, "application/x-7z-compressed-tar")) {
 		FrCommandTar *comm_tar = (FrCommandTar*) comm;
 		char         *option;
-		
+
 		option = g_strdup_printf ("--use-compress-program=%s", comm_tar->compress_command);
 		fr_process_add_arg (comm->process, option);
 		g_free (option);
@@ -551,6 +554,26 @@ fr_command_tar_recompress (FrCommand *comm)
 
 		new_name = g_strconcat (c_tar->uncomp_filename, ".lzma", NULL);
 	}
+	else if (is_mime_type (comm->mime_type, "application/x-xz-compressed-tar")) {
+		fr_process_begin_command (comm->process, "xz");
+		fr_process_set_sticky (comm->process, TRUE);
+		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
+		switch (comm->compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			fr_process_add_arg (comm->process, "-1"); break;
+		case FR_COMPRESSION_FAST:
+			fr_process_add_arg (comm->process, "-3"); break;
+		case FR_COMPRESSION_NORMAL:
+			fr_process_add_arg (comm->process, "-6"); break;
+		case FR_COMPRESSION_MAXIMUM:
+			fr_process_add_arg (comm->process, "-9"); break;
+		}
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, c_tar->uncomp_filename);
+		fr_process_end_command (comm->process);
+
+		new_name = g_strconcat (c_tar->uncomp_filename, ".xz", NULL);
+	}
 	else if (is_mime_type (comm->mime_type, "application/x-lzop-compressed-tar")) {
 		fr_process_begin_command (comm->process, "lzop");
 		fr_process_set_sticky (comm->process, TRUE);
@@ -688,6 +711,12 @@ get_uncompressed_name (FrCommandTar *c_tar,
 		if (file_extension_is (e_filename, ".tar.lzma"))
 			new_name[l - 5] = 0;
 	}
+	else if (is_mime_type (comm->mime_type, "application/x-xz-compressed-tar")) {
+		/* X.tar.xz --> X.tar
+		 * (There doesn't seem to be a shorthand suffix) */
+		if (file_extension_is (e_filename, ".tar.xz"))
+			new_name[l - 5] = 0;
+	}
 	else if (is_mime_type (comm->mime_type, "application/x-lzop-compressed-tar")) {
 		/* X.tzo     -->  X.tar
 		 * X.tar.lzo -->  X.tar */
@@ -799,6 +828,14 @@ fr_command_tar_uncompress (FrCommand *comm)
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
 		}
+		else if (is_mime_type (comm->mime_type, "application/x-xz-compressed-tar")) {
+			fr_process_begin_command (comm->process, "xz");
+			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
+			fr_process_add_arg (comm->process, "-f");
+			fr_process_add_arg (comm->process, "-d");
+			fr_process_add_arg (comm->process, tmp_name);
+			fr_process_end_command (comm->process);
+		}
 		else if (is_mime_type (comm->mime_type, "application/x-lzop-compressed-tar")) {
 			fr_process_begin_command (comm->process, "lzop");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
@@ -848,8 +885,9 @@ const char *tar_mime_types[] = { "application/x-compressed-tar",
 				 "application/x-tar",
 				 "application/x-7z-compressed-tar",
 			         "application/x-lzma-compressed-tar",
-			         "application/x-lzop-compressed-tar",		         
+			         "application/x-lzop-compressed-tar",
 			         "application/x-tarz",
+				 "application/x-xz-compressed-tar",
 			         NULL };
 
 
@@ -883,14 +921,18 @@ fr_command_tar_get_capabilities (FrCommand  *comm,
 		if (is_program_in_path ("bzip2"))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
-	else if (is_mime_type (mime_type, "application/x-tarz")) {		
+	else if (is_mime_type (mime_type, "application/x-tarz")) {
 		if (is_program_in_path ("compress") && is_program_in_path ("uncompress"))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 		else if (is_program_in_path ("gzip"))
-			capabilities |= FR_COMMAND_CAN_READ; 
+			capabilities |= FR_COMMAND_CAN_READ;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzma-compressed-tar")) {
 		if (is_program_in_path ("lzma"))
+			capabilities |= FR_COMMAND_CAN_READ_WRITE;
+	}
+	else if (is_mime_type (mime_type, "application/x-xz-compressed-tar")) {
+		if (is_program_in_path ("xz"))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzop-compressed-tar")) {

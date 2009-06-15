@@ -179,6 +179,8 @@ static char *mime_types[] = {
 	"application/x-tarz",
 	"application/x-stuffit",
 	"application/x-war",
+	"application/x-xz",
+	"application/x-xz-compressed-tar",
 	"application/x-zip",
 	"application/x-zip-compressed",
 	"application/x-zoo",
