@@ -3090,6 +3090,7 @@ action_performed (FrArchive   *archive,
 		if (error->type != FR_PROC_ERROR_NONE) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
 			fr_window_archive_close (window);
+			fr_window_set_password (window, NULL);
 			break;
 		}
 
