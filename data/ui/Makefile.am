@@ -11,3 +11,5 @@ ui_DATA = 			\
 	update.ui
 
 EXTRA_DIST = $(ui_DATA)
+
+-include $(top_srcdir)/git.mk

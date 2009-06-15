@@ -13,3 +13,5 @@ libeggsmclient_la_SOURCES = eggdesktopfile.h \
 			    eggsmclient.c \
 			    eggsmclient-private.h \
 			    eggsmclient-xsmp.c
+
+-include $(top_srcdir)/git.mk

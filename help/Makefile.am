@@ -12,3 +12,5 @@ DOC_FIGURES = 					\
 	figures/file-roller_uparrow.png
 
 DOC_LINGUAS = bg ca de el en_GB es fi fr it oc nl ru sv vi uk
+
+-include $(top_srcdir)/git.mk

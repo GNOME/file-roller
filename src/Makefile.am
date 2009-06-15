@@ -175,3 +175,5 @@ file_roller_LDADD =							\
 EXTRA_DIST = fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)
+
+-include $(top_srcdir)/git.mk

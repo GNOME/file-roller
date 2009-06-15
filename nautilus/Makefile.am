@@ -24,3 +24,5 @@ libnautilus_fileroller_la_SOURCES =     \
 
 libnautilus_fileroller_la_LDFLAGS = -module -avoid-version -no-undefined
 libnautilus_fileroller_la_LIBADD  = $(NAUTILUS_LIBS)
+
+-include $(top_srcdir)/git.mk
