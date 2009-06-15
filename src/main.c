@@ -188,7 +188,7 @@ static const GOptionEntry options[] = {
 	  NULL },
 
 	{ "extract-here", 'h', 0, G_OPTION_ARG_NONE, &extract_here,
-	  N_("Extract archives using the archive name as destination folder and quit the program"),
+	  N_("Extract the contents of the archives in the archive folder and quit the program"),
 	  NULL },
 
 	{ "default-dir", '\0', 0, G_OPTION_ARG_STRING, &default_url,
@@ -669,23 +669,23 @@ add_if_non_present (int *a,
 
 
 static int
-cmp_mime_type_by_extension (const void *p1, 
+cmp_mime_type_by_extension (const void *p1,
 			    const void *p2)
 {
 	int i1 = * (int*) p1;
 	int i2 = * (int*) p2;
-	
+
 	return strcmp (mime_type_desc[i1].default_ext, mime_type_desc[i2].default_ext);
 }
 
 
 static int
-cmp_mime_type_by_description (const void *p1, 
+cmp_mime_type_by_description (const void *p1,
 			      const void *p2)
 {
 	int i1 = * (int*) p1;
 	int i2 = * (int*) p2;
-	
+
 	return g_utf8_collate (_(mime_type_desc[i1].name), _(mime_type_desc[i2].name));
 }
 
@@ -696,8 +696,8 @@ sort_mime_types (int *a,
 {
 	int n = 0;
 
-	while (a[n] != -1) 
-		n++;		
+	while (a[n] != -1)
+		n++;
 	qsort (a, n, sizeof (int), compar);
 }
 
@@ -763,11 +763,11 @@ get_uri_from_command_line (const char *path)
 {
 	GFile *file;
 	char  *uri;
-		
+
 	file = g_file_new_for_commandline_arg (path);
 	uri = g_file_get_uri (file);
 	g_object_unref (file);
-	
+
 	return uri;
 }
 
