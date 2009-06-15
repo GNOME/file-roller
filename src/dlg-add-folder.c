@@ -98,6 +98,7 @@ file_sel_response_cb (GtkWidget    *widget,
 	const char     *exclude_files;
 	const char     *exclude_folders;
 	char           *dest_dir;
+	char           *local_filename;
 
 
 	dlg_add_folder_save_last_options (data);
@@ -153,8 +154,9 @@ file_sel_response_cb (GtkWidget    *widget,
 	if (utf8_only_spaces (exclude_folders))
 		exclude_folders = NULL;
 
+	local_filename = g_filename_from_uri (selected_folder, NULL, NULL);
 	dest_dir = build_uri (fr_window_get_current_location (window),
-			      file_name_from_path (selected_folder),
+			      file_name_from_path (local_filename),
 			      NULL);
 
 	fr_window_archive_add_with_wildcard (window,
@@ -166,9 +168,10 @@ file_sel_response_cb (GtkWidget    *widget,
 					     update,
 					     follow_links);
 
+	g_free (local_filename);
 	g_free (dest_dir);
 	g_free (selected_folder);
-	
+
 	gtk_widget_destroy (data->dialog);
 
 	return TRUE;
