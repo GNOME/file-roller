@@ -39,6 +39,8 @@ DISTCLEANFILES =                        \
 	intltool-merge                  \
 	intltool-update
 
+GITIGNOREFILES = build .cdt* .cproject .project .settings/
+
 DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
 distclean-local:
