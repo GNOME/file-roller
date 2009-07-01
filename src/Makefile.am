@@ -176,4 +176,7 @@ EXTRA_DIST = fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)
 
+dist-hook:
+	cd $(distdir); rm -f $(CLEANFILES)
+
 -include $(top_srcdir)/git.mk
