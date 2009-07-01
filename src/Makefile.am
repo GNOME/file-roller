@@ -177,3 +177,6 @@ file_roller_LDADD =							\
 EXTRA_DIST = fr-marshal.list
 
 CLEANFILES = $(BUILT_SOURCES)
+
+dist-hook:
+	cd $(distdir); rm -f $(CLEANFILES)
