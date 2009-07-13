@@ -478,6 +478,23 @@ begin_func__recompress (gpointer data)
 }
 
 
+static gboolean
+gzip_continue_func (gpointer user_data)
+{
+	FrCommand *comm = user_data;
+
+	/* ignore gzip warnings */
+
+	if (comm->process->error.status == 2) {
+		comm->process->error.type = FR_PROC_ERROR_NONE;
+		comm->process->error.status = 0;
+		g_clear_error (&comm->process->error.gerror);
+	}
+
+	return comm->process->error.status == 0;
+}
+
+
 static void
 fr_command_tar_recompress (FrCommand *comm)
 {
@@ -491,6 +508,7 @@ fr_command_tar_recompress (FrCommand *comm)
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_set_sticky (comm->process, TRUE);
 		fr_process_set_begin_func (comm->process, begin_func__recompress, comm);
+		fr_process_set_continue_func (comm->process, gzip_continue_func, comm);
 		switch (comm->compression) {
 		case FR_COMPRESSION_VERY_FAST:
 			fr_process_add_arg (comm->process, "-1"); break;
@@ -830,6 +848,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		if (is_mime_type (comm->mime_type, "application/x-compressed-tar")) {
 			fr_process_begin_command (comm->process, "gzip");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
+			fr_process_set_continue_func (comm->process, gzip_continue_func, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
 			fr_process_add_arg (comm->process, tmp_name);
@@ -844,8 +863,10 @@ fr_command_tar_uncompress (FrCommand *comm)
 			fr_process_end_command (comm->process);
 		}
 		else if (is_mime_type (comm->mime_type, "application/x-tarz")) {
-			if (is_program_in_path ("gzip"))
+			if (is_program_in_path ("gzip")) {
 				fr_process_begin_command (comm->process, "gzip");
+				fr_process_set_continue_func (comm->process, gzip_continue_func, comm);
+			}
 			else
 				fr_process_begin_command (comm->process, "uncompress");
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);

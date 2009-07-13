@@ -359,11 +359,13 @@ open_file_response_cb (GtkWidget *w,
 	if ((window == NULL) || (uri == NULL))
 		return;
 
-	window = fr_window_archive_open (window, uri, GTK_WINDOW (file_sel));
+	if (fr_window_archive_is_present (window))
+		window = (FrWindow *) fr_window_new ();
 	g_signal_connect (G_OBJECT (window),
 			  "archive_loaded",
 			  G_CALLBACK (window_archive_loaded_cb),
 			  file_sel);
+	fr_window_archive_open (window, uri, GTK_WINDOW (file_sel));
 
 	g_free (uri);
 }

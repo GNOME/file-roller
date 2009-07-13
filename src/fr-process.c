@@ -133,10 +133,10 @@ fr_channel_data_read (FrChannelData *channel)
 	char  *line;
 	gsize  length;
 	gsize  terminator_pos;
-	
+
 	channel->status = G_IO_STATUS_NORMAL;
 	g_clear_error (&channel->error);
-		
+
 	while ((channel->status = g_io_channel_read_line (channel->source,
 							  &line,
 							  &length,
@@ -148,7 +148,7 @@ fr_channel_data_read (FrChannelData *channel)
 		if (channel->line_func != NULL)
 			(*channel->line_func) (line, channel->line_data);
 	}
-	
+
 	return channel->status;
 }
 
@@ -157,11 +157,11 @@ static GIOStatus
 fr_channel_data_flush (FrChannelData *channel)
 {
 	GIOStatus status;
-	
+
 	while (((status = fr_channel_data_read (channel)) != G_IO_STATUS_ERROR) && (status != G_IO_STATUS_EOF))
 		/* void */;
 	fr_channel_data_close_source (channel);
-	
+
 	return status;
 }
 
@@ -316,7 +316,7 @@ fr_process_init (FrProcess *process)
 	process->priv->running = FALSE;
 	process->priv->stopping = FALSE;
 	process->restart = FALSE;
-	
+
 	process->priv->current_charset = -1;
 
 	process->priv->use_standard_locale = FALSE;
@@ -645,12 +645,12 @@ static const char *
 fr_process_get_charset (FrProcess *process)
 {
 	const char *charset = NULL;
-	
+
 	if (process->priv->current_charset >= 0)
 		charset = try_charsets[process->priv->current_charset];
 	else if (g_get_charset (&charset))
 		charset = NULL;
-	
+
 	return charset;
 }
 
@@ -772,7 +772,7 @@ fr_process_set_error (FrProcess       *process,
 		if (gerror != NULL)
 			process->error.gerror = g_error_copy (gerror);
 	}
-}					 	
+}
 
 
 static gint
@@ -831,7 +831,7 @@ check_child (gpointer data)
 	}
 
 	process->priv->command_pid = 0;
-	
+
 	if (fr_channel_data_flush (&process->out) == G_IO_STATUS_ERROR) {
 		fr_process_set_error (process, FR_PROC_ERROR_IO_CHANNEL, 0, process->out.error);
 		channel_error = TRUE;
@@ -846,10 +846,10 @@ check_child (gpointer data)
 
 	/**/
 
-	if (channel_error 
+	if (channel_error
 	    && (process->error.type == FR_PROC_ERROR_IO_CHANNEL)
 	    && g_error_matches (process->error.gerror, G_CONVERT_ERROR, G_CONVERT_ERROR_ILLEGAL_SEQUENCE))
-	{	
+	{
 		if (process->priv->current_charset < n_charsets - 1) {
 			/* try with another charset */
 			process->priv->current_charset++;
@@ -857,7 +857,7 @@ check_child (gpointer data)
 			process->restart = TRUE;
 			fr_process_start (process);
 			return FALSE;
-		}		
+		}
 		/*fr_process_set_error (process, FR_PROC_ERROR_NONE, 0, NULL);*/
 		fr_process_set_error (process, FR_PROC_ERROR_BAD_CHARSET, 0, process->error.gerror);
 	}
@@ -903,9 +903,9 @@ check_child (gpointer data)
 
 	if (process->priv->sticky_only) {
 		/* Restore the first error. */
-		fr_process_set_error (process, 
-				      process->priv->first_error.type, 
-				      process->priv->first_error.status, 
+		fr_process_set_error (process,
+				      process->priv->first_error.type,
+				      process->priv->first_error.status,
 				      process->priv->first_error.gerror);
 	}
 

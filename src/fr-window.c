@@ -4181,14 +4181,14 @@ get_selection_data_from_clipboard_data (FrWindow        *window,
 		      			FrClipboardData *data)
 {
 	GString *list;
-	char    *local_filename;
+	char    *archive_uri;
 	GList   *scan;
 
 	list = g_string_new (NULL);
 
-	local_filename = g_file_get_uri (window->archive->local_copy);
-	g_string_append (list, local_filename);
-	g_free (local_filename);
+	archive_uri = g_file_get_uri (window->archive->file);
+	g_string_append (list, archive_uri);
+	g_free (archive_uri);
 
 	g_string_append (list, "\r\n");
 	if (window->priv->password != NULL)
@@ -6002,12 +6002,9 @@ fr_window_archive_open (FrWindow   *current_window,
 			GtkWindow  *parent)
 {
 	FrWindow *window = current_window;
-	gboolean  new_window_created = FALSE;
 
-	if (current_window->priv->archive_present) {
-		new_window_created = TRUE;
+	if (current_window->priv->archive_present)
 		window = (FrWindow *) fr_window_new ();
-	}
 
 	g_return_val_if_fail (window != NULL, FALSE);
 
@@ -7605,13 +7602,13 @@ copy_from_archive_action_performed_cb (FrArchive   *archive,
 	case FR_ACTION_LISTING_CONTENT:
 		fr_process_clear (window->priv->copy_from_archive->process);
 		fr_archive_extract_to_local (window->priv->copy_from_archive,
-						 window->priv->clipboard_data->files,
-						 window->priv->clipboard_data->tmp_dir,
-						 NULL,
-						FALSE,
-						 TRUE,
-						FALSE,
-						window->priv->clipboard_data->archive_password);
+					     window->priv->clipboard_data->files,
+					     window->priv->clipboard_data->tmp_dir,
+					     NULL,
+					     FALSE,
+					     TRUE,
+					     FALSE,
+					     window->priv->clipboard_data->archive_password);
 		fr_process_start (window->priv->copy_from_archive->process);
 		break;
 

@@ -582,7 +582,7 @@ fr_command_set_multi_volume (FrCommand  *comm,
 
 
 void
-fr_command_list (FrCommand  *comm)
+fr_command_list (FrCommand *comm)
 {
 	g_return_if_fail (FR_IS_COMMAND (comm));
 
@@ -594,13 +594,19 @@ fr_command_list (FrCommand  *comm)
 	}
 
 	comm->action = FR_ACTION_LISTING_CONTENT;
-	fr_process_set_out_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	fr_process_set_err_line_func (FR_COMMAND (comm)->process, NULL, NULL);
-	fr_process_use_standard_locale (FR_COMMAND (comm)->process, TRUE);
+	fr_process_set_out_line_func (comm->process, NULL, NULL);
+	fr_process_set_err_line_func (comm->process, NULL, NULL);
+	fr_process_use_standard_locale (comm->process, TRUE);
 	comm->multi_volume = FALSE;
 
-	if (!comm->fake_load)
+	if (! comm->fake_load)
 		FR_COMMAND_GET_CLASS (G_OBJECT (comm))->list (comm);
+	else
+		g_signal_emit (G_OBJECT (comm),
+			       fr_command_signals[DONE],
+			       0,
+			       comm->action,
+			       &comm->process->error);
 }
 
 
