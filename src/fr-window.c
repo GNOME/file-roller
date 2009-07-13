@@ -2479,7 +2479,7 @@ create_the_progress_dialog (FrWindow *window)
 								     NULL);
 
 	window->priv->pd_open_archive_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE);
-	window->priv->pd_open_destination_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), _("_Open the Destination"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
+	window->priv->pd_open_destination_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
 	window->priv->pd_close_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
 	window->priv->pd_cancel_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
 
