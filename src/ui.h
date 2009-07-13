@@ -29,7 +29,7 @@
 
 
 static GtkActionEntry action_entries[] = {
-	{ "ArchiveMenu", NULL, N_("_Archive") },
+	{ "FileMenu", NULL, N_("_File") },
 	{ "EditMenu", NULL, N_("_Edit") },
 	{ "ViewMenu", NULL, N_("_View") },
 	{ "HelpMenu", NULL, N_("_Help") },
@@ -55,7 +55,7 @@ static GtkActionEntry action_entries[] = {
 	{ "AddFolder_Toolbar", FR_STOCK_ADD_FOLDER,
 	  N_("Add Folder"), NULL,
 	  N_("Add a folder to the archive"),
-	  G_CALLBACK (activate_action_add_folder) },	  
+	  G_CALLBACK (activate_action_add_folder) },
 	{ "Close", GTK_STOCK_CLOSE,
 	  NULL, NULL,
 	  N_("Close the current archive"),
@@ -64,28 +64,28 @@ static GtkActionEntry action_entries[] = {
 	  N_("Contents"), "F1",
 	  N_("Display the File Roller Manual"),
 	  G_CALLBACK (activate_action_manual) },
-	  
+
 	{ "Copy", GTK_STOCK_COPY,
 	  NULL, NULL,
 	  N_("Copy the selection"),
 	  G_CALLBACK (activate_action_copy) },
 	{ "Cut", GTK_STOCK_CUT,
 	  NULL, NULL,
-	  N_("Cut the selection"),	  
+	  N_("Cut the selection"),
 	  G_CALLBACK (activate_action_cut) },
 	{ "Paste", GTK_STOCK_PASTE,
 	  NULL, NULL,
 	  N_("Paste the clipboard"),
-	  G_CALLBACK (activate_action_paste) },	 
+	  G_CALLBACK (activate_action_paste) },
 	{ "Rename", NULL,
 	  N_("_Rename..."), "F2",
 	  N_("Rename the selection"),
-	  G_CALLBACK (activate_action_rename) },	   
+	  G_CALLBACK (activate_action_rename) },
 	{ "Delete", GTK_STOCK_DELETE,
 	  NULL, "Delete",
 	  N_("Delete the selection from the archive"),
 	  G_CALLBACK (activate_action_delete) },
-	  
+
 	{ "CopyFolderFromSidebar", GTK_STOCK_COPY,
 	  NULL, NULL,
 	  N_("Copy the selection"),
@@ -97,16 +97,16 @@ static GtkActionEntry action_entries[] = {
 	{ "PasteFolderFromSidebar", GTK_STOCK_PASTE,
 	  NULL, NULL,
 	  N_("Paste the clipboard"),
-	  G_CALLBACK (activate_action_paste_folder_from_sidebar) },	 	
+	  G_CALLBACK (activate_action_paste_folder_from_sidebar) },
 	{ "RenameFolderFromSidebar", NULL,
 	  N_("_Rename..."), "F2",
 	  N_("Rename the selection"),
-	  G_CALLBACK (activate_action_rename_folder_from_sidebar) },	    
+	  G_CALLBACK (activate_action_rename_folder_from_sidebar) },
 	{ "DeleteFolderFromSidebar", GTK_STOCK_DELETE,
 	  NULL, NULL,
 	  N_("Delete the selection from the archive"),
 	  G_CALLBACK (activate_action_delete_folder_from_sidebar) },
-	  
+
 	{ "DeselectAll", NULL,
 	  N_("Dese_lect All"), "<shift><control>A",
 	  N_("Deselect all files"),
@@ -127,7 +127,7 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  NULL,
 	  G_CALLBACK (activate_action_find) },
-	  
+
 	{ "LastOutput", NULL,
 	  N_("_Last Output"), NULL,
 	  N_("View the output produced by the last executed command"),
@@ -192,7 +192,7 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Open the selected folder"),
 	  G_CALLBACK (activate_action_open_folder_from_sidebar) },
-	  
+
 	{ "GoBack", GTK_STOCK_GO_BACK,
 	  NULL, NULL,
 	  N_("Go to the previous visited location"),
@@ -217,22 +217,22 @@ static GtkToggleActionEntry action_toggle_entries[] = {
 	{ "ViewToolbar", NULL,
 	  N_("_Toolbar"), NULL,
 	  N_("View the main toolbar"),
-	  G_CALLBACK (activate_action_view_toolbar), 
+	  G_CALLBACK (activate_action_view_toolbar),
 	  TRUE },
 	{ "ViewStatusbar", NULL,
 	  N_("Stat_usbar"), NULL,
 	  N_("View the statusbar"),
-	  G_CALLBACK (activate_action_view_statusbar), 
+	  G_CALLBACK (activate_action_view_statusbar),
 	  TRUE },
 	{ "SortReverseOrder", NULL,
 	  N_("_Reversed Order"), NULL,
 	  N_("Reverse the list order"),
-	  G_CALLBACK (activate_action_sort_reverse_order), 
+	  G_CALLBACK (activate_action_sort_reverse_order),
 	  FALSE },
 	{ "ViewFolders", NULL,
 	  N_("_Folders"), "F9",
 	  N_("View the folders pane"),
-	  G_CALLBACK (activate_action_view_folders), 
+	  G_CALLBACK (activate_action_view_folders),
 	  FALSE },
 };
 static guint n_action_toggle_entries = G_N_ELEMENTS (action_toggle_entries);
@@ -269,10 +269,10 @@ static GtkRadioActionEntry sort_by_entries[] = {
 static guint n_sort_by_entries = G_N_ELEMENTS (sort_by_entries);
 
 
-static const gchar *ui_info = 
+static const gchar *ui_info =
 "<ui>"
 "  <menubar name='MenuBar'>"
-"    <menu name='Archive' action='ArchiveMenu'>"
+"    <menu name='Archive' action='FileMenu'>"
 "      <menuitem action='New'/>"
 "      <menuitem action='Open'/>"
 "      <menu name='OpenRecentMenu' action='OpenRecentMenu'>"
@@ -310,7 +310,7 @@ static const gchar *ui_info =
 "      <menuitem action='ViewFolders'/>"
 "      <separator/>"
 "      <menuitem action='ViewAllFiles'/>"
-"      <menuitem action='ViewAsFolder'/>" 
+"      <menuitem action='ViewAsFolder'/>"
 /*"      <separator/>"
 "      <menu action='ArrangeFilesMenu'>"
 "        <menuitem action='SortByName'/>"
