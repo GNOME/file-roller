@@ -204,7 +204,7 @@ get_file_mime_info (NautilusFileInfo *file)
 {
 	FileMimeInfo file_mime_info;
 	int          i;
-		
+
 	file_mime_info.is_archive = FALSE;
 	file_mime_info.is_derived_archive = FALSE;
 
@@ -213,20 +213,20 @@ get_file_mime_info (NautilusFileInfo *file)
 			char *mime_type;
 			char *content_type_mime_file;
 			char *content_type_mime_compare;
-		      
+
 			mime_type = nautilus_file_info_get_mime_type (file);
-		      
+
 			content_type_mime_file = g_content_type_from_mime_type (mime_type);
 			content_type_mime_compare = g_content_type_from_mime_type (mime_types[i]);
-		      
+
 			file_mime_info.is_archive = TRUE;
 			if ((content_type_mime_file != NULL) && (content_type_mime_compare != NULL))
 				file_mime_info.is_derived_archive = ! g_content_type_equals (content_type_mime_file, content_type_mime_compare);
-                  
+
 			g_free (mime_type);
 			g_free (content_type_mime_file);
 			g_free (content_type_mime_compare);
-		      
+
 			return file_mime_info;
 		}
 
@@ -280,15 +280,15 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	if (unsupported_scheme ((NautilusFileInfo *) files->data))
 			return NULL;
 
-	for (scan = files; scan; scan = scan->next) {	
+	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
 		FileMimeInfo      file_mime_info;
-				
+
 		file_mime_info = get_file_mime_info (file);
 
 		if (all_archives && ! file_mime_info.is_archive)
 			all_archives = FALSE;
-	      
+
 		if (all_archives_derived && file_mime_info.is_archive && ! file_mime_info.is_derived_archive)
 			all_archives_derived = FALSE;
 
@@ -348,8 +348,8 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::add",
-					       _("Create Archive..."),
-					       _("Create an archive with the selected objects"),
+					       _("Compress..."),
+					       _("Create a compressed archive with the selected objects"),
 					       "gnome-mime-application-x-archive");
 		g_signal_connect (item,
 				  "activate",
