@@ -632,12 +632,17 @@ fr_process_set_err_line_func (FrProcess *process,
 static gboolean check_child (gpointer data);
 
 
-static void child_setup (gpointer user_data)
+static void
+child_setup (gpointer user_data)
 {
 	FrProcess *process = user_data;
 
 	if (process->priv->use_standard_locale)
 		putenv ("LC_MESSAGES=C");
+
+	/* detach from the tty */
+
+	setsid ();
 }
 
 
