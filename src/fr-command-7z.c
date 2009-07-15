@@ -464,17 +464,24 @@ static void
 fr_command_7z_handle_error (FrCommand   *comm,
 			    FrProcError *error)
 {
+g_print ("[1]\n");
 	if (error->type == FR_PROC_ERROR_NONE) {
 		FileData *first;
 		char     *basename;
 		char     *testname;
 
+g_print ("[2]\n");
+
 		/* This is a way to fix bug #582712. */
 
-		if (comm->files->len != 1)
+		if (comm->files->len != 1) {
+g_print ("[2-1]\n");
 			return;
-		if (! g_str_has_suffix (comm->filename, ".001"))
+		}
+		if (! g_str_has_suffix (comm->filename, ".001")) {
+g_print ("[2-2]\n");
 			return;
+		}
 
 		first = g_ptr_array_index (comm->files, 0);
 		basename = g_path_get_basename (comm->filename);
@@ -486,17 +493,28 @@ fr_command_7z_handle_error (FrCommand   *comm,
 		g_free (testname);
 		g_free (basename);
 
+g_print ("[2-3]\n");
+
 		return;
 	}
+
+g_print ("[3]\n");
 
 	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
 		return;
 
+g_print ("[4]\n");
+
 	if (error->status <= 1) {
+
+g_print ("[5]\n");
+
 		error->type = FR_PROC_ERROR_NONE;
 	}
 	else {
 		GList *scan;
+
+g_print ("[6]\n");
 
 		for (scan = g_list_last (comm->process->out.raw); scan; scan = scan->prev) {
 			char *line = scan->data;
@@ -504,11 +522,15 @@ fr_command_7z_handle_error (FrCommand   *comm,
 			if ((strstr (line, "Wrong password?") != NULL)
 			    || (strstr (line, "Enter password") != NULL))
 			{
+
+g_print ("[7]\n");
 				error->type = FR_PROC_ERROR_ASK_PASSWORD;
 				break;
 			}
 		}
 	}
+g_print ("[8]\n");
+
 }
 
 
