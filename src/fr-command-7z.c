@@ -498,10 +498,10 @@ g_print ("[2-3]\n");
 		return;
 	}
 
-g_print ("[3]\n");
+g_print ("[3] [%d] [%d]\n", error->type, error->status);
 
-	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
-		return;
+	/*if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
+		return;*/
 
 g_print ("[4]\n");
 
