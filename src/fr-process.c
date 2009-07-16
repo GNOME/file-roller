@@ -831,8 +831,10 @@ check_child (gpointer data)
 				process->error.status = WEXITSTATUS (status);
 			}
 		}
-		else
+		else {
 			process->error.type = FR_PROC_ERROR_EXITED_ABNORMALLY;
+			process->error.status = WEXITSTATUS (status);
+		}
 	}
 
 	process->priv->command_pid = 0;
