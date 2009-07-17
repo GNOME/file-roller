@@ -471,10 +471,10 @@ fr_command_7z_handle_error (FrCommand   *comm,
 
 		/* This is a way to fix bug #582712. */
 
-		if (comm->files->len != 1) 
+		if (comm->files->len != 1)
 			return;
-		
-		if (! g_str_has_suffix (comm->filename, ".001")) 
+
+		if (! g_str_has_suffix (comm->filename, ".001"))
 			return;
 
 		first = g_ptr_array_index (comm->files, 0);
