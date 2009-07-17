@@ -833,7 +833,7 @@ check_child (gpointer data)
 		}
 		else {
 			process->error.type = FR_PROC_ERROR_EXITED_ABNORMALLY;
-			process->error.status = WEXITSTATUS (status);
+			process->error.status = 255;
 		}
 	}
 
