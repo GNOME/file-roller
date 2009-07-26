@@ -183,7 +183,7 @@ static void
 list__begin (gpointer data)
 {
 	FrCommandUnstuff *comm = data;
-	
+
 	comm->fdata = NULL;
 }
 
@@ -268,9 +268,11 @@ static void
 fr_command_unstuff_handle_error (FrCommand   *comm,
 				 FrProcError *error)
 {
-	if ((error->type == FR_PROC_ERROR_COMMAND_ERROR)
+	if ((error->type != FR_PROC_ERROR_NONE)
 	    && (error->status <= 1))
+	{
 		error->type = FR_PROC_ERROR_NONE;
+	}
 }
 
 

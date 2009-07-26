@@ -318,7 +318,7 @@ static void
 list__begin (gpointer data)
 {
 	FrCommandRar *comm = data;
-	
+
 	comm->list_started = FALSE;
 }
 
@@ -572,7 +572,7 @@ fr_command_rar_extract (FrCommand  *comm,
 		fr_process_begin_command (comm->process, "unrar");
 
 	fr_process_add_arg (comm->process, "x");
-	
+
 	/* keep broken extracted files */
 	fr_process_add_arg (comm->process, "-kb");
 
@@ -646,7 +646,7 @@ fr_command_rar_handle_error (FrCommand   *comm,
 	}
 #endif
 
-	if (error->type != FR_PROC_ERROR_COMMAND_ERROR)
+	if (error->type == FR_PROC_ERROR_NONE)
 		return;
 
 	/*if (error->status == 3)

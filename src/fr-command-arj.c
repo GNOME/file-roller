@@ -307,7 +307,7 @@ static void
 fr_command_arj_handle_error (FrCommand   *comm,
 			     FrProcError *error)
 {
-	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
+	if (error->type != FR_PROC_ERROR_NONE) {
  		if (error->status <= 1)
  			error->type = FR_PROC_ERROR_NONE;
 		else if (error->status == 3)

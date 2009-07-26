@@ -177,7 +177,7 @@ static void
 list__begin (gpointer data)
 {
 	FrCommandZip *comm = data;
-	
+
 	comm->is_empty = FALSE;
 }
 
@@ -277,7 +277,7 @@ fr_command_zip_delete (FrCommand  *comm,
 	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next) {
 		char *escaped;
-		
+
  		escaped = escape_str (scan->data, ZIP_SPECIAL_CHARACTERS);
  		fr_process_add_arg (comm->process, escaped);
  		g_free (escaped);
@@ -321,7 +321,7 @@ fr_command_zip_extract (FrCommand  *comm,
 	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next) {
 		char *escaped;
-		
+
  		escaped = escape_str (scan->data, ZIP_SPECIAL_CHARACTERS);
  		fr_process_add_arg (comm->process, escaped);
  		g_free (escaped);
@@ -346,7 +346,7 @@ static void
 fr_command_zip_handle_error (FrCommand   *comm,
 			     FrProcError *error)
 {
-	if (error->type == FR_PROC_ERROR_COMMAND_ERROR) {
+	if (error->type != FR_PROC_ERROR_NONE) {
 		if (error->status <= 1)
 			error->type = FR_PROC_ERROR_NONE;
 		else if ((error->status == 82) || (error->status == 5))
