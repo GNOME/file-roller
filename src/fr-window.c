@@ -6437,6 +6437,22 @@ extract_data_free (ExtractData *edata)
 }
 
 
+static gboolean
+archive_is_encrypted (FrWindow *window)
+{
+	int i;
+
+	for (i = 0; i < window->archive->command->files->len; i++) {
+		FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
+
+		if (fdata->encrypted)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 void
 fr_window_archive_extract_here (FrWindow   *window,
 				gboolean    skip_older,
@@ -6456,6 +6472,11 @@ fr_window_archive_extract_here (FrWindow   *window,
 					    FR_BATCH_ACTION_EXTRACT,
 					    edata,
 					    (GFreeFunc) extract_data_free);
+
+	if (archive_is_encrypted (window) && (window->priv->password == NULL)) {
+		dlg_ask_password (window);
+		return;
+	}
 
 	window->priv->ask_to_open_destination_after_extraction = FALSE;
 
@@ -6497,6 +6518,11 @@ fr_window_archive_extract (FrWindow   *window,
 					    FR_BATCH_ACTION_EXTRACT,
 					    edata,
 					    (GFreeFunc) extract_data_free);
+
+	if (archive_is_encrypted (window) && (window->priv->password == NULL)) {
+		dlg_ask_password (window);
+		return;
+	}
 
 	if (! uri_is_dir (edata->extract_to_dir)) {
 		if (! ForceDirectoryCreation) {
