@@ -175,7 +175,7 @@ fr_command_rpm_list (FrCommand *comm)
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_add_arg (comm->process, "-c");
-	fr_process_add_arg_concat (comm->process, "rpm2cpio ", comm->e_filename, " | cpio -itv", NULL);
+	fr_process_add_arg_concat (comm->process, PRIVEXECDIR "rpm2cpio ", comm->e_filename, " -itv", NULL);
 	fr_process_end_command (comm->process);
 	fr_process_start (comm->process);
 }
@@ -198,9 +198,9 @@ fr_command_rpm_extract (FrCommand  *comm,
                 fr_process_set_working_dir (comm->process, dest_dir);
 	fr_process_add_arg (comm->process, "-c");
 
-	cmd = g_string_new ("rpm2cpio ");
+	cmd = g_string_new (PRIVEXECDIR "rpm2cpio ");
 	g_string_append (cmd, comm->e_filename);
-	g_string_append (cmd, " | cpio -idu ");
+	g_string_append (cmd, " -idu ");
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = g_shell_quote (scan->data);
 		g_string_append (cmd, filename);
@@ -232,7 +232,7 @@ fr_command_rpm_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("rpm2cpio"))
+	if (is_program_in_path ("cpio"))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;

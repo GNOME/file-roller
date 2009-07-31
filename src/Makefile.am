@@ -1,4 +1,4 @@
-SUBDIRS = sh
+SUBDIRS = commands sh
 
 bin_PROGRAMS = file-roller
 
@@ -16,8 +16,10 @@ endif
 
 if RUN_IN_PLACE
 uidir = $(top_srcdir)/data/ui
+privexecdir = $(abs_top_builddir)/src/commands/
 else
 uidir = $(datadir)/file-roller/ui
+privexecdir = $(libexecdir)/file-roller/
 endif
 
 INCLUDES =						\
@@ -32,7 +34,7 @@ INCLUDES =						\
         -DPKG_DATA_DIR=\"$(pkgdatadir)\"                \
 	-DPIXMAPSDIR=\""$(datadir)/pixmaps"\"		\
 	-DGLADEDIR=\""$(gladedir)"\" 			\
-	-DPRIVEXECDIR=\""$(libexecdir)/file-roller/"\"	\
+	-DPRIVEXECDIR=\"$(privexecdir)\"		\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)
 
