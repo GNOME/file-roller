@@ -67,7 +67,7 @@ file_sel_response_cb (GtkWidget      *widget,
 	eel_gconf_set_string (PREF_ADD_FILENAME, uri);
 	fr_window_set_add_default_dir (window, current_folder);
 	g_free (uri);
-	
+
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
 		g_free (current_folder);
@@ -92,7 +92,7 @@ file_sel_response_cb (GtkWidget      *widget,
 					   GTK_DIALOG_MODAL,
 					   NULL,
 					   _("Could not add the files to the archive"),
-					   _("You don't have the right permissions to read files from folder \"%s\""), 
+					   _("You don't have the right permissions to read files from folder \"%s\""),
 					   utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));
@@ -108,14 +108,14 @@ file_sel_response_cb (GtkWidget      *widget,
 
 	selections = gtk_file_chooser_get_uris (file_sel);
 	for (iter = selections; iter != NULL; iter = iter->next) {
-		char *path = iter->data;
-		item_list = g_list_prepend (item_list, path);
+		char *uri = iter->data;
+		item_list = g_list_prepend (item_list, g_file_new_for_uri (uri));
 	}
 
 	if (item_list != NULL)
 		fr_window_archive_add_files (window, item_list, update);
 
-	g_list_free (item_list);
+	gio_file_list_free (item_list);
 	g_slist_foreach (selections, (GFunc) g_free, NULL);
 	g_slist_free (selections);
 	g_free (current_folder);
@@ -135,7 +135,7 @@ add_files_cb (GtkWidget *widget,
 	DialogData *data;
 	GtkWidget  *main_box;
 	char       *folder;
-	
+
 	data = g_new0 (DialogData, 1);
 	data->window = callback_data;
 	data->dialog = file_sel =
@@ -167,15 +167,15 @@ add_files_cb (GtkWidget *widget,
 	/* set data */
 
 	folder = eel_gconf_get_string (PREF_ADD_CURRENT_FOLDER, "");
-	if ((folder == NULL) || (strcmp (folder, "") == 0)) 
+	if ((folder == NULL) || (strcmp (folder, "") == 0))
 		folder = g_strdup (fr_window_get_add_default_dir (data->window));
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), folder);
 	g_free (folder);
-	
+
 	/* signals */
 
 	g_signal_connect (G_OBJECT (file_sel),
-			  "destroy", 
+			  "destroy",
 			  G_CALLBACK (open_file_destroy_cb),
 			  data);
 

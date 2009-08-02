@@ -122,7 +122,7 @@ void        fr_window_archive_reload            (FrWindow      *window);
 void        fr_window_archive_rename            (FrWindow      *window,
 						 const char    *filename);
 void        fr_window_archive_add_files         (FrWindow      *window,
-						 GList         *file_list,
+						 GList         *file_list, /* GFile list */
 						 gboolean       update);
 void        fr_window_archive_add_with_wildcard (FrWindow      *window,
 						 const char    *include_files,

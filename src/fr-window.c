@@ -6253,31 +6253,39 @@ fr_window_archive_rename (FrWindow   *window,
 
 void
 fr_window_archive_add_files (FrWindow *window,
-			     GList    *file_list,
+			     GList    *file_list, /* GFile list */
 			     gboolean  update)
 {
-	GList *files = NULL;
-	GList *scan;
+	GFile *base;
 	char  *base_dir;
 	int    base_len;
+	GList *files = NULL;
+	GList *scan;
+	char  *base_uri;
 
-	base_dir = remove_level_from_path (file_list->data);
-
+	base = g_file_get_parent ((GFile *) file_list->data);
+	base_dir = g_file_get_path (base);
 	base_len = 0;
 	if (strcmp (base_dir, "/") != 0)
 		base_len = strlen (base_dir);
 
 	for (scan = file_list; scan; scan = scan->next) {
-		char *path = scan->data;
-		char *rel_path;
+		GFile *file = scan->data;
+		char  *path;
+		char  *rel_path;
 
+		path = g_file_get_path (file);
 		rel_path = g_strdup (path + base_len + 1);
 		files = g_list_prepend (files, rel_path);
+
+		g_free (path);
 	}
+
+	base_uri = g_file_get_uri (base);
 
 	fr_archive_add_files (window->archive,
 			      files,
-			      base_dir,
+			      base_uri,
 			      fr_window_get_current_location (window),
 			      update,
 			      window->priv->password,
@@ -6285,8 +6293,10 @@ fr_window_archive_add_files (FrWindow *window,
 			      window->priv->compression,
 			      window->priv->volume_size);
 
+	g_free (base_uri);
 	path_list_free (files);
 	g_free (base_dir);
+	g_object_unref (base);
 }
 
 
