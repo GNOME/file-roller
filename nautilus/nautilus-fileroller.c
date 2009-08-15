@@ -151,7 +151,7 @@ static char *mime_types[] = {
 	"application/x-bzip-compressed-tar",
 	"application/x-bzip1",
 	"application/x-bzip1-compressed-tar",
-	"application/x-cabinet",
+	"application/vnd.ms-cab-compressed",
 	"application/x-cbr",
 	"application/x-cbz",
 	"application/x-cd-image",

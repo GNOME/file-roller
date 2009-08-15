@@ -512,7 +512,7 @@ fr_command_7z_handle_error (FrCommand   *comm,
 
 const char *sevenz_mime_types[] = { "application/x-7z-compressed",
 				    "application/x-arj",
-				    "application/x-cabinet",
+				    "application/vnd.ms-cab-compressed",
 				    "application/x-cd-image",
 				    /*"application/x-cbr",*/
 				    "application/x-cbz",
@@ -545,7 +545,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar")) {
 		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER | FR_COMMAND_CAN_CREATE_VOLUMES;
 	}
-	else if (is_program_in_path ("7z")) {
+	else if (is_program_in_path ("7z") || is_program_in_path ("7za")) {
 		if (is_mime_type (mime_type, "application/x-rar")
 		    || is_mime_type (mime_type, "application/x-cbr"))
 		{
