@@ -495,8 +495,9 @@ get_relative_file_list (GList      *rel_list,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *full_path = scan->data;
+
 		if (path_in_path (base_dir, full_path)) {
-			char *rel_path = g_strdup (full_path + base_len + 1);
+			char *rel_path = g_uri_unescape_string (full_path + base_len + 1, NULL);
 			rel_list = g_list_prepend (rel_list, rel_path);
 		}
 	}
@@ -518,7 +519,7 @@ get_dir_list_from_file_list (GHashTable *h_dirs,
 	if (base_dir == NULL)
 		base_dir = "";
 	base_dir_len = strlen (base_dir);
-	
+
 	for (scan = files; scan; scan = scan->next) {
 		char *filename = scan->data;
 		char *dir_name;
@@ -635,7 +636,7 @@ get_file_list_for_each_file (const char *uri,
 	switch (g_file_info_get_file_type (info)) {
 	case G_FILE_TYPE_REGULAR:
 		if (filter_matches (gfl->include_filter, uri))
-			if ((gfl->exclude_filter->pattern == NULL) || ! filter_matches (gfl->exclude_filter, uri)) 
+			if ((gfl->exclude_filter->pattern == NULL) || ! filter_matches (gfl->exclude_filter, uri))
 				gfl->files = g_list_prepend (gfl->files, g_strdup (uri));
 		break;
 	default:
@@ -809,14 +810,14 @@ g_list_items_async (GList             *items,
 		base_len = strlen (base_dir);
 
 	for (scan = items; scan; scan = scan->next) {
-		char *path = scan->data;
+		char *uri = scan->data;
 
 		/* FIXME: this is not async */
-		if (uri_is_dir (path)) {
-			gfl->to_visit = g_list_prepend (gfl->to_visit, g_strdup (path));
+		if (uri_is_dir (uri)) {
+			gfl->to_visit = g_list_prepend (gfl->to_visit, g_strdup (uri));
 		}
 		else {
-			char *rel_path = g_strdup (path + base_len + 1);
+			char *rel_path = g_uri_unescape_string (uri + base_len + 1, NULL);
 			gfl->files = g_list_prepend (gfl->files, rel_path);
 		}
 	}

@@ -1846,8 +1846,12 @@ add_dropped_items (DroppedItemsData *data)
 
 		first_basedir = remove_level_from_path (list->data);
 
-		for (scan = list; scan; scan = scan->next)
-			only_names_list = g_list_prepend (only_names_list, (gpointer) file_name_from_path (scan->data));
+		for (scan = list; scan; scan = scan->next) {
+			char *name;
+
+			name = g_uri_unescape_string (file_name_from_path (scan->data), NULL);
+			only_names_list = g_list_prepend (only_names_list, name);
+		}
 
 		fr_archive_add_files (archive,
 				      only_names_list,
@@ -1859,7 +1863,7 @@ add_dropped_items (DroppedItemsData *data)
 				      data->compression,
 				      data->volume_size);
 
-		g_list_free (only_names_list);
+		path_list_free (only_names_list);
 		g_free (first_basedir);
 
 		return;
