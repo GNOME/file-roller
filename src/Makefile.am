@@ -17,9 +17,11 @@ endif
 if RUN_IN_PLACE
 uidir = $(top_srcdir)/data/ui
 privexecdir = $(abs_top_builddir)/src/commands/
+shdir = $(top_srcdir)/src/sh/
 else
 uidir = $(datadir)/file-roller/ui
 privexecdir = $(libexecdir)/file-roller/
+shdir = $(libexecdir)/file-roller/
 endif
 
 INCLUDES =						\
@@ -35,6 +37,7 @@ INCLUDES =						\
 	-DPIXMAPSDIR=\""$(datadir)/pixmaps"\"		\
 	-DGLADEDIR=\""$(gladedir)"\" 			\
 	-DPRIVEXECDIR=\"$(privexecdir)\"		\
+	-DSHDIR=\"$(shdir)\"				\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)
 

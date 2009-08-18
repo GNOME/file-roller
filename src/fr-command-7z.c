@@ -545,7 +545,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar")) {
 		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER | FR_COMMAND_CAN_CREATE_VOLUMES;
 	}
-	else if (is_program_in_path ("7z") || is_program_in_path ("7za")) {
+	else if (is_program_in_path ("7z")) {
 		if (is_mime_type (mime_type, "application/x-rar")
 		    || is_mime_type (mime_type, "application/x-cbr"))
 		{
@@ -561,6 +561,16 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 		{
 			capabilities |= FR_COMMAND_CAN_WRITE | FR_COMMAND_CAN_ENCRYPT;
 		}
+	}
+	else if (is_program_in_path ("7za")) {
+		if (is_mime_type (mime_type, "application/vnd.ms-cab-compressed")
+		    || is_mime_type (mime_type, "application/zip"))
+		{
+			capabilities |= FR_COMMAND_CAN_READ;
+		}
+
+		if (is_mime_type (mime_type, "application/zip"))
+			capabilities |= FR_COMMAND_CAN_WRITE;
 	}
 
 	/* multi-volumes are read-only */

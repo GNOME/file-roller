@@ -131,7 +131,7 @@ static void
 list__begin (gpointer data)
 {
 	FrCommandIso *comm = data;
-	
+
 	g_free (comm->cur_path);
 	comm->cur_path = NULL;
 }
@@ -144,7 +144,7 @@ fr_command_iso_list (FrCommand *comm)
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_set_begin_func (comm->process, list__begin, comm);
-	fr_process_add_arg (comm->process, PRIVEXECDIR "isoinfo.sh");
+	fr_process_add_arg (comm->process, SHDIR "isoinfo.sh");
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_add_arg (comm->process, "-l");
@@ -186,7 +186,7 @@ fr_command_iso_extract (FrCommand  *comm,
 
 		fr_process_begin_command (comm->process, "sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
-		fr_process_add_arg (comm->process, PRIVEXECDIR "isoinfo.sh");
+		fr_process_add_arg (comm->process, SHDIR "isoinfo.sh");
 		fr_process_add_arg (comm->process, "-i");
 		fr_process_add_arg (comm->process, comm->filename);
 		fr_process_add_arg (comm->process, "-x");
