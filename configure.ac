@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
 
-AC_INIT(file-roller, 2.27.91, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
+AC_INIT(file-roller, 2.27.92, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 AC_CONFIG_SRCDIR([config.h.in])
@@ -44,7 +44,7 @@ AC_SUBST([GTK_LIBS])
 dnl ===========================================================================
 
 AC_ARG_ENABLE(run_in_place, 
-              AC_HELP_STRING([--enable-run-in-place],[load ui data and extensions from the source tree]),
+              AS_HELP_STRING([--enable-run-in-place],[load ui data and extensions from the source tree]),
               [case "${enableval}" in
               yes) enable_run_in_place=yes ;;
               no) enable_run_in_place=no ;;
@@ -68,7 +68,7 @@ AC_SUBST(FR_LIBS)
 NAUTILUS_CFLAGS=""
 NAUTILUS_LIBS=""
 build_nautilus_actions=no
-AC_ARG_ENABLE(nautilus_actions, AC_HELP_STRING([--disable-nautilus-actions],[don't build the nautilus context menu actions]))
+AC_ARG_ENABLE(nautilus_actions,AS_HELP_STRING([--disable-nautilus-actions],[don't build the nautilus context menu actions]),)
 
 if test x"$enable_nautilus_actions" != xno; then
 	if pkg-config --atleast-version=$NAUTILUS_REQUIRED libnautilus-extension; then
@@ -112,7 +112,7 @@ GNOME_DOC_INIT
 
 dnl ******************************
 
-AC_ARG_ENABLE(deprecations,AC_HELP_STRING([--enable-deprecations],[warn about deprecated usages]))
+AC_ARG_ENABLE(deprecations,AS_HELP_STRING([--enable-deprecations],[warn about deprecated usages]),)
 AM_CONDITIONAL(ENABLE_DEPRECATIONS, test "x$enable_deprecations" = xyes)
 
 dnl ******************************
