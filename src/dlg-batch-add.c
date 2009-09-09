@@ -104,11 +104,10 @@ set_archive_options (DialogData *data)
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->a_archive_type_combo_box));
 	if (mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT) {
-		char *pwd;
+		const char *pwd;
 
-		pwd = (char*) gtk_entry_get_text (GTK_ENTRY (data->a_password_entry));
+		pwd = gtk_entry_get_text (GTK_ENTRY (data->a_password_entry));
 		if (pwd != NULL) {
-			pwd = g_strstrip (pwd);
 			if (strcmp (pwd, "") != 0) {
 				fr_window_set_password (data->window, pwd);
 				if (mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER)
