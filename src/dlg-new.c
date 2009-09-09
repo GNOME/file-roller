@@ -385,9 +385,8 @@ dlg_new_data_get_encrypt_header (DlgNewData *data)
 		return FALSE;
 
 	if (mime_type_desc[idx].capabilities & FR_COMMAND_CAN_ENCRYPT) {
-		char *password = (char*) gtk_entry_get_text (GTK_ENTRY (data->n_password_entry));
+		const char *password = gtk_entry_get_text (GTK_ENTRY (data->n_password_entry));
 		if (password != NULL) {
-			password = g_strstrip (password);
 			if (strcmp (password, "") != 0) {
 				if (mime_type_desc[idx].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER)
 					encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton));
