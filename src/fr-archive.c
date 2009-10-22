@@ -877,9 +877,10 @@ load_local_archive (FrArchive  *archive,
 			mime_type = get_mime_type_from_magic_numbers (archive->file);
 			if (! create_command_to_load_archive (archive, mime_type)) {
 				archive->command = tmp_command;
+				archive->content_type = mime_type;
 				fr_archive_action_completed (archive,
 							     FR_ACTION_LOADING_ARCHIVE,
-							     FR_PROC_ERROR_GENERIC,
+							     FR_PROC_ERROR_UNSUPPORTED_FORMAT,
 							     _("Archive type not supported."));
 				return;
 			}

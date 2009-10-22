@@ -39,7 +39,8 @@ INCLUDES =						\
 	-DPRIVEXECDIR=\"$(privexecdir)\"		\
 	-DSHDIR=\"$(shdir)\"				\
 	$(DISABLE_DEPRECATED)				\
-	$(FR_CFLAGS)
+	$(FR_CFLAGS)					\
+	$(DBUS_CFLAGS)
 
 BUILT_SOURCES =			\
 	fr-marshal.c		\
@@ -66,6 +67,8 @@ file_roller_SOURCES = 			\
 	dlg-new.h			\
 	dlg-open-with.c			\
 	dlg-open-with.h			\
+	dlg-package-installer.c		\
+	dlg-package-installer.h		\
 	dlg-password.c			\
 	dlg-password.h			\
 	dlg-prop.c			\
@@ -175,7 +178,8 @@ fr-enum-types.c: typedefs.h fr-enum-types.h
 
 file_roller_LDADD =							\
 		    $(top_builddir)/copy-n-paste/libeggsmclient.la	\
-		    $(FR_LIBS)
+		    $(FR_LIBS)						\
+		    $(DBUS_LIBS)
 
 EXTRA_DIST = fr-marshal.list
 

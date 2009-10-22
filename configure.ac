@@ -90,6 +90,23 @@ AC_CHECK_FUNC(mkdtemp,
     mkdtemp_missing=true)
 AM_CONDITIONAL(MKDTEMP_MISSING, test x$mkdtemp_missing = xtrue)
 
+dnl ==========================================================================
+
+AC_ARG_ENABLE(packagekit,
+	      [AC_HELP_STRING([--disable-packagekit],[build without PackageKit support])],,
+	      [enable_packagekit=yes])
+if test "x$enable_packagekit" != "xno"; then
+	if pkg-config dbus-glib-1; then
+		AC_DEFINE(ENABLE_PACKAGEKIT, 1, [define to enable PackageKit installer])
+		DBUS_CFLAGS = `pkg-config --cflags dbus-glib-1`
+		DBUS_LIBS = `pkg-config --libs dbus-glib-1`
+        else
+		enable_packagekit=no
+        fi
+fi
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
+
 dnl ******************************
 
 GETTEXT_PACKAGE=file-roller
@@ -164,5 +181,6 @@ Configuration:
 	Compiler:               ${CC}
 	Internal mkdtemp:       ${mkdtemp_missing}
 	Nautilus support:       ${build_nautilus_actions}
+	PackageKit support:     ${enable_packagekit}
 	Run in place            ${enable_run_in_place}
 "

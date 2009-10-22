@@ -35,6 +35,7 @@
 #include "dlg-extract.h"
 #include "dlg-open-with.h"
 #include "dlg-ask-password.h"
+#include "dlg-package-installer.h"
 #include "dlg-update.h"
 #include "eggtreemultidnd.h"
 #include "fr-marshal.h"
@@ -2878,8 +2879,13 @@ handle_errors (FrWindow    *window,
 		dlg_ask_password (window);
 		return FALSE;
 	}
+	else if (error->type == FR_PROC_ERROR_UNSUPPORTED_FORMAT) {
+		close_progress_dialog (window, TRUE);
+		dlg_package_installer (window, archive, action);
+		return FALSE;
+	}
 #if 0
-	if (error->type == FR_PROC_ERROR_BAD_CHARSET) {
+	else if (error->type == FR_PROC_ERROR_BAD_CHARSET) {
 		close_progress_dialog (window, TRUE);
 		/* dlg_ask_archive_charset (window); FIXME: implement after feature freeze */
 		return FALSE;
@@ -3049,6 +3055,7 @@ action_performed (FrArchive   *archive,
 	continue_batch = handle_errors (window, archive, action, error);
 
 	if ((error->type == FR_PROC_ERROR_ASK_PASSWORD)
+	    || (error->type == FR_PROC_ERROR_UNSUPPORTED_FORMAT)
 	    /*|| (error->type == FR_PROC_ERROR_BAD_CHARSET)*/)
 	{
 		return;
