@@ -310,15 +310,24 @@ fr_command_alz_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_alz_get_capabilities (FrCommand  *comm,
-			         const char *mime_type)
+			         const char *mime_type,
+				 gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("unalz"))
+	if (is_program_available ("unalz", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;
+}
+
+
+static const char *
+fr_command_alz_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "unalz";
 }
 
 
@@ -340,6 +349,7 @@ fr_command_alz_class_init (FrCommandAlzClass *class)
 	afc->handle_error     = fr_command_alz_handle_error;
 	afc->get_mime_types   = fr_command_alz_get_mime_types;
 	afc->get_capabilities = fr_command_alz_get_capabilities;
+	afc->get_packages     = fr_command_alz_get_packages;
 }
 
 

@@ -1178,6 +1178,14 @@ is_program_in_path (const char *filename)
 }
 
 
+gboolean
+is_program_available (const char *filename,
+		      gboolean    check)
+{
+	return ! check || is_program_in_path (filename);
+}
+
+
 const char *
 get_home_uri (void)
 {

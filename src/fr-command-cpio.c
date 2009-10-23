@@ -228,15 +228,24 @@ fr_command_cpio_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_cpio_get_capabilities (FrCommand  *comm,
-			          const char *mime_type)
+			          const char *mime_type,
+				  gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("cpio"))
+	if (is_program_available ("cpio", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;
+}
+
+
+static const char *
+fr_command_cpio_get_packages (FrCommand  *comm,
+			      const char *mime_type)
+{
+	return "cpio";
 }
 
 
@@ -255,6 +264,7 @@ fr_command_cpio_class_init (FrCommandCpioClass *class)
 	afc->extract          = fr_command_cpio_extract;
 	afc->get_mime_types   = fr_command_cpio_get_mime_types;
 	afc->get_capabilities = fr_command_cpio_get_capabilities;
+	afc->get_packages     = fr_command_cpio_get_packages;
 }
 
 

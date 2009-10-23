@@ -65,7 +65,8 @@ typedef enum { /*< skip >*/
 	FR_PROC_ERROR_ASK_PASSWORD,
 	FR_PROC_ERROR_MISSING_VOLUME,
 	FR_PROC_ERROR_IO_CHANNEL,
-	FR_PROC_ERROR_BAD_CHARSET
+	FR_PROC_ERROR_BAD_CHARSET,
+	FR_PROC_ERROR_UNSUPPORTED_FORMAT
 } FrProcErrorType;
 
 typedef struct {
@@ -90,13 +91,20 @@ typedef guint8 FrCommandCaps;
 
 typedef struct {
 	const char    *mime_type;
-	FrCommandCaps  capabilities;
+	FrCommandCaps  current_capabilities;
+	FrCommandCaps  potential_capabilities;
 } FrMimeTypeCap;
+
+typedef struct {
+	const char *mime_type;
+	const char *packages;
+} FrMimeTypePackages;
 
 typedef struct {
 	int        ref;
 	GType      type;
 	GPtrArray *caps;  /* array of FrMimeTypeCap */
+	GPtrArray *packages;  /* array of FrMimeTypePackages */
 } FrRegisteredCommand;
 
 typedef struct {

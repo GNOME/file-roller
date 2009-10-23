@@ -531,12 +531,13 @@ fr_command_7z_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_7z_get_capabilities (FrCommand  *comm,
-				const char *mime_type)
+				const char *mime_type,
+				gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (! is_program_in_path ("7za") && ! is_program_in_path ("7zr") && ! is_program_in_path ("7z"))
+	if (! is_program_available ("7za", check_command) && ! is_program_available ("7zr", check_command) && ! is_program_available ("7z", check_command))
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-7z-compressed")) {
@@ -545,11 +546,11 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar")) {
 		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER | FR_COMMAND_CAN_CREATE_VOLUMES;
 	}
-	else if (is_program_in_path ("7z")) {
+	else if (is_program_available ("7z", check_command)) {
 		if (is_mime_type (mime_type, "application/x-rar")
 		    || is_mime_type (mime_type, "application/x-cbr"))
 		{
-			if (g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
+			if (! check_command || g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
 				capabilities |= FR_COMMAND_CAN_READ;
 		}
 		else
@@ -562,7 +563,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 			capabilities |= FR_COMMAND_CAN_WRITE | FR_COMMAND_CAN_ENCRYPT;
 		}
 	}
-	else if (is_program_in_path ("7za")) {
+	else if (is_program_available ("7za", check_command)) {
 		if (is_mime_type (mime_type, "application/vnd.ms-cab-compressed")
 		    || is_mime_type (mime_type, "application/zip"))
 		{
@@ -578,6 +579,19 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 		capabilities ^= FR_COMMAND_CAN_WRITE;
 
 	return capabilities;
+}
+
+
+static const char *
+fr_command_7z_get_packages (FrCommand  *comm,
+			    const char *mime_type)
+{
+	if (is_mime_type (mime_type, "application/x-rar"))
+		return "p7zip,p7zip-rar";
+	else if (is_mime_type (mime_type, "application/zip") || is_mime_type (mime_type, "application/vnd.ms-cab-compressed"))
+		return "p7zip,p7zip-full";
+	else
+		return "p7zip";
 }
 
 
@@ -600,6 +614,7 @@ fr_command_7z_class_init (FrCommand7zClass *class)
 	afc->handle_error     = fr_command_7z_handle_error;
 	afc->get_mime_types   = fr_command_7z_get_mime_types;
 	afc->get_capabilities = fr_command_7z_get_capabilities;
+	afc->get_packages     = fr_command_7z_get_packages;
 }
 
 

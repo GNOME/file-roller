@@ -313,15 +313,24 @@ fr_command_lha_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_lha_get_capabilities (FrCommand  *comm,
-			         const char *mime_type)
+			         const char *mime_type,
+				 gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("lha"))
+	if (is_program_available ("lha", check_command))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 
 	return capabilities;
+}
+
+
+static const char *
+fr_command_lha_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "lha";
 }
 
 
@@ -342,6 +351,7 @@ fr_command_lha_class_init (FrCommandLhaClass *class)
 	afc->extract          = fr_command_lha_extract;
 	afc->get_mime_types   = fr_command_lha_get_mime_types;
 	afc->get_capabilities = fr_command_lha_get_capabilities;
+	afc->get_packages     = fr_command_lha_get_packages;
 }
 
 

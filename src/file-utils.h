@@ -99,6 +99,8 @@ char*               file_list__get_prev_field    (const char *line,
 gboolean            check_permissions            (const char *path,
 						  int         mode);
 gboolean 	    is_program_in_path		 (const char *filename);
+gboolean 	    is_program_available	 (const char *filename,
+						  gboolean    check);
 
 /* URI utils */
 

@@ -291,12 +291,13 @@ fr_command_ar_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_ar_get_capabilities (FrCommand  *comm,
-			        const char *mime_type)
+			        const char *mime_type,
+				gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("ar")) {
+	if (is_program_available ("ar", check_command)) {
 		if (is_mime_type (mime_type, "application/x-deb"))
 			capabilities |= FR_COMMAND_CAN_READ;
 		else if (is_mime_type (mime_type, "application/x-ar"))
@@ -304,6 +305,14 @@ fr_command_ar_get_capabilities (FrCommand  *comm,
 	}
 
 	return capabilities;
+}
+
+
+static const char *
+fr_command_ar_get_packages (FrCommand  *comm,
+			    const char *mime_type)
+{
+	return "binutils";
 }
 
 
@@ -325,6 +334,7 @@ fr_command_ar_class_init (FrCommandArClass *class)
 	afc->handle_error     = fr_command_ar_handle_error;
 	afc->get_mime_types   = fr_command_ar_get_mime_types;
 	afc->get_capabilities = fr_command_ar_get_capabilities;
+	afc->get_packages     = fr_command_ar_get_packages;
 }
 
 

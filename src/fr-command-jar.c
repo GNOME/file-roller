@@ -159,15 +159,24 @@ fr_command_jar_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_jar_get_capabilities (FrCommand  *comm,
-			         const char *mime_type)
+			         const char *mime_type,
+				 gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("zip"))
+	if (is_program_available ("zip", check_command))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 
 	return capabilities;
+}
+
+
+static const char *
+fr_command_jar_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "zip,unzip";
 }
 
 
@@ -184,6 +193,7 @@ fr_command_jar_class_init (FrCommandJarClass *class)
 	afc->add = fr_command_jar_add;
 	afc->get_mime_types = fr_command_jar_get_mime_types;
 	afc->get_capabilities = fr_command_jar_get_capabilities;
+	afc->get_packages     = fr_command_jar_get_packages;
 }
 
 

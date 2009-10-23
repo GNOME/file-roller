@@ -288,15 +288,24 @@ fr_command_unstuff_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_unstuff_get_capabilities (FrCommand  *comm,
-			             const char *mime_type)
+			             const char *mime_type,
+				     gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("unstuff"))
+	if (is_program_available ("unstuff", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;
+}
+
+
+static const char *
+fr_command_unstaff_get_packages (FrCommand  *comm,
+			         const char *mime_type)
+{
+	return "unstaff";
 }
 
 
@@ -318,6 +327,7 @@ fr_command_unstuff_class_init (FrCommandUnstuffClass *class)
 	afc->handle_error     = fr_command_unstuff_handle_error;
 	afc->get_mime_types   = fr_command_unstuff_get_mime_types;
 	afc->get_capabilities = fr_command_unstuff_get_capabilities;
+	afc->get_packages     = fr_command_unstaff_get_packages;
 }
 
 
