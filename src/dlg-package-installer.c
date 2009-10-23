@@ -132,7 +132,7 @@ install_packages (InstallerData *idata)
 							NULL,
 							G_TYPE_UINT, xid,
 							G_TYPE_STRV, names,
-							G_TYPE_STRING, "" /*"hide-confirm-search"*/,
+							G_TYPE_STRING, "hide-confirm-search,hide-finished,hide-warning",
 							G_TYPE_INVALID);
 			success = (call != NULL);
 
