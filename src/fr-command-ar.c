@@ -291,12 +291,13 @@ fr_command_ar_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_ar_get_capabilities (FrCommand  *comm,
-			        const char *mime_type)
+			        const char *mime_type,
+				gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("ar")) {
+	if (is_program_available ("ar", check_command)) {
 		if (is_mime_type (mime_type, "application/x-deb"))
 			capabilities |= FR_COMMAND_CAN_READ;
 		else if (is_mime_type (mime_type, "application/x-ar"))

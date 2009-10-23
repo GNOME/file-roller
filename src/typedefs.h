@@ -91,13 +91,20 @@ typedef guint8 FrCommandCaps;
 
 typedef struct {
 	const char    *mime_type;
-	FrCommandCaps  capabilities;
+	FrCommandCaps  current_capabilities;
+	FrCommandCaps  potential_capabilities;
 } FrMimeTypeCap;
+
+typedef struct {
+	const char *mime_type;
+	const char *packages;
+} FrMimeTypePackages;
 
 typedef struct {
 	int        ref;
 	GType      type;
 	GPtrArray *caps;  /* array of FrMimeTypeCap */
+	GPtrArray *packages;  /* array of FrMimeTypePackages */
 } FrRegisteredCommand;
 
 typedef struct {

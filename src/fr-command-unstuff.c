@@ -288,12 +288,13 @@ fr_command_unstuff_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_unstuff_get_capabilities (FrCommand  *comm,
-			             const char *mime_type)
+			             const char *mime_type,
+				     gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_in_path ("unstuff"))
+	if (is_program_available ("unstuff", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;

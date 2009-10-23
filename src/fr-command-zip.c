@@ -388,18 +388,19 @@ fr_command_zip_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_zip_get_capabilities (FrCommand  *comm,
-			         const char *mime_type)
+			         const char *mime_type,
+				 gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
-	if (is_program_in_path ("zip")) {
+	if (is_program_available ("zip", check_command)) {
 		if (strcmp (mime_type, "application/x-ms-dos-executable") == 0)
 			capabilities |= FR_COMMAND_CAN_READ;
 		else
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
-	else if (is_program_in_path ("unzip"))
+	else if (is_program_available ("unzip", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;

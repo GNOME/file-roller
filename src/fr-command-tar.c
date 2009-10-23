@@ -963,47 +963,48 @@ fr_command_tar_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_tar_get_capabilities (FrCommand  *comm,
-			         const char *mime_type)
+			         const char *mime_type,
+				 gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
 
 	/* In solaris gtar is present under /usr/sfw/bin */
-	if (! is_program_in_path ("tar") && ! is_program_in_path ("/usr/sfw/bin/gtar"))
+	if (! is_program_available ("tar", check_command) && ! is_program_available ("/usr/sfw/bin/gtar", check_command))
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-tar")) {
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-compressed-tar")) {
-		if (is_program_in_path ("gzip"))
+		if (is_program_available ("gzip", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-bzip-compressed-tar")) {
-		if (is_program_in_path ("bzip2"))
+		if (is_program_available ("bzip2", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-tarz")) {
-		if (is_program_in_path ("compress") && is_program_in_path ("uncompress"))
+		if (is_program_available ("compress", check_command) && is_program_available ("uncompress", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
-		else if (is_program_in_path ("gzip"))
+		else if (is_program_available ("gzip", check_command))
 			capabilities |= FR_COMMAND_CAN_READ;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzip-compressed-tar")) {
-		if (is_program_in_path ("lzip"))
+		if (is_program_available ("lzip", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzma-compressed-tar")) {
-		if (is_program_in_path ("lzma"))
+		if (is_program_available ("lzma", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-xz-compressed-tar")) {
-		if (is_program_in_path ("xz"))
+		if (is_program_available ("xz", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzop-compressed-tar")) {
-		if (is_program_in_path ("lzop"))
+		if (is_program_available ("lzop", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar")) {
@@ -1011,7 +1012,7 @@ fr_command_tar_get_capabilities (FrCommand  *comm,
 		int   i;
 
 		for (i = 0; i < G_N_ELEMENTS (try_command); i++) {
-			if (is_program_in_path (try_command[i])) {
+			if (is_program_available (try_command[i], check_command)) {
 				capabilities |= FR_COMMAND_CAN_WRITE;
 				break;
 			}

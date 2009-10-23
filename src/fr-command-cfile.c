@@ -475,43 +475,44 @@ fr_command_cfile_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_cfile_get_capabilities (FrCommand  *comm,
-			           const char *mime_type)
+			           const char *mime_type,
+				   gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_DO_NOTHING;
 	if (is_mime_type (mime_type, "application/x-gzip")) {
-		if (is_program_in_path ("gzip"))
+		if (is_program_available ("gzip", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-bzip")) {
-		if (is_program_in_path ("bzip2"))
+		if (is_program_available ("bzip2", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-compress")) {
-		if (is_program_in_path ("compress"))
+		if (is_program_available ("compress", check_command))
 			capabilities |= FR_COMMAND_CAN_WRITE;
-		if (is_program_in_path ("uncompress") || is_program_in_path ("gzip"))
+		if (is_program_available ("uncompress", check_command) || is_program_available ("gzip", check_command))
 			capabilities |= FR_COMMAND_CAN_READ;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzip")) {
-		if (is_program_in_path ("lzip"))
+		if (is_program_available ("lzip", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzma")) {
-		if (is_program_in_path ("lzma"))
+		if (is_program_available ("lzma", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-xz")) {
-		if (is_program_in_path ("xz"))
+		if (is_program_available ("xz", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-lzop")) {
-		if (is_program_in_path ("lzop"))
+		if (is_program_available ("lzop", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 	else if (is_mime_type (mime_type, "application/x-rzip")) {
-		if (is_program_in_path ("rzip"))
+		if (is_program_available ("rzip", check_command))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 

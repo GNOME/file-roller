@@ -144,9 +144,12 @@ struct _FrCommandClass
 				           FrProcError   *error);
 	const char ** (*get_mime_types)   (FrCommand     *comm);
 	FrCommandCap  (*get_capabilities) (FrCommand     *comm,
-					   const char    *mime_type);
+					   const char    *mime_type,
+					   gboolean       check_command);
 	void          (*set_mime_type)    (FrCommand     *comm,
 				           const char    *mime_type);
+	const char *  (*get_packages)     (FrCommand     *comm,
+					   const char    *mime_type);
 
 	/*<signals>*/
 
@@ -193,11 +196,14 @@ gboolean       fr_command_is_capable_of       (FrCommand     *comm,
 const char **  fr_command_get_mime_types      (FrCommand     *comm);
 void           fr_command_update_capabilities (FrCommand     *comm);
 FrCommandCap   fr_command_get_capabilities    (FrCommand     *comm,
-					       const char    *mime_type);
+					       const char    *mime_type,
+					       gboolean       check_command);
 void           fr_command_set_mime_type       (FrCommand     *comm,
 					       const char    *mime_type);
 gboolean       fr_command_is_capable_of       (FrCommand     *comm,
 					       FrCommandCaps  capabilities);
+const char *   fr_command_get_packages        (FrCommand     *comm,
+					       const char    *mime_type);
 
 /* protected functions */
 

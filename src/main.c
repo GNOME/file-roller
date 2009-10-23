@@ -475,20 +475,29 @@ fr_registered_command_new (GType command_type)
 	reg_com->ref = 1;
 	reg_com->type = command_type;
 	reg_com->caps = g_ptr_array_new ();
+	reg_com->packages = g_ptr_array_new ();
 
 	command = (FrCommand*) g_object_new (reg_com->type, NULL);
 	mime_types = fr_command_get_mime_types (command);
 	for (i = 0; mime_types[i] != NULL; i++) {
-		const char    *mime_type;
-		FrMimeTypeCap *cap;
+		const char         *mime_type;
+		FrMimeTypeCap      *cap;
+		FrMimeTypePackages *packages;
 
 		mime_type = get_static_string (mime_types[i]);
 
 		cap = g_new0 (FrMimeTypeCap, 1);
 		cap->mime_type = mime_type;
-		cap->capabilities = fr_command_get_capabilities (command, mime_type);
+		cap->current_capabilities = fr_command_get_capabilities (command, mime_type, TRUE);
+		cap->potential_capabilities = fr_command_get_capabilities (command, mime_type, FALSE);
 		g_ptr_array_add (reg_com->caps, cap);
+
+		packages = g_new0 (FrMimeTypePackages, 1);
+		packages->mime_type = mime_type;
+		packages->packages = fr_command_get_packages (command, mime_type);
+		g_ptr_array_add (reg_com->packages, packages);
 	}
+
 	g_object_unref (command);
 
 	return reg_com;
@@ -525,7 +534,25 @@ fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 
 		cap = g_ptr_array_index (reg_com->caps, i);
 		if (strcmp (mime_type, cap->mime_type) == 0)
-			return cap->capabilities;
+			return cap->current_capabilities;
+	}
+
+	return FR_COMMAND_CAN_DO_NOTHING;
+}
+
+
+FrCommandCaps
+fr_registered_command_get_potential_capabilities (FrRegisteredCommand *reg_com,
+						  const char          *mime_type)
+{
+	int i;
+
+	for (i = 0; i < reg_com->caps->len; i++) {
+		FrMimeTypeCap *cap;
+
+		cap = g_ptr_array_index (reg_com->caps, i);
+		if (strcmp (mime_type, cap->mime_type) == 0)
+			return cap->potential_capabilities;
 	}
 
 	return FR_COMMAND_CAN_DO_NOTHING;
@@ -604,6 +631,28 @@ get_command_type_from_mime_type (const char    *mime_type,
 
 		command = g_ptr_array_index (Registered_Commands, i);
 		capabilities = fr_registered_command_get_capabilities (command, mime_type);
+
+		/* the command must support all the requested capabilities */
+		if (((capabilities ^ requested_capabilities) & requested_capabilities) == 0)
+			return command->type;
+	}
+
+	return 0;
+}
+
+
+GType
+get_preferred_command_for_mime_type (const char    *mime_type,
+				     FrCommandCaps  requested_capabilities)
+{
+	int i;
+
+	for (i = 0; i < Registered_Commands->len; i++) {
+		FrRegisteredCommand *command;
+		FrCommandCaps        capabilities;
+
+		command = g_ptr_array_index (Registered_Commands, i);
+		capabilities = fr_registered_command_get_potential_capabilities (command, mime_type);
 
 		/* the command must support all the requested capabilities */
 		if (((capabilities ^ requested_capabilities) & requested_capabilities) == 0)
@@ -747,13 +796,13 @@ compute_supported_archive_types (void)
 				g_warning ("mime type not recognized: %s", cap->mime_type);
 				continue;
 			}
-			mime_type_desc[idx].capabilities |= cap->capabilities;
-			if (cap->capabilities & FR_COMMAND_CAN_READ)
+			mime_type_desc[idx].capabilities |= cap->current_capabilities;
+			if (cap->current_capabilities & FR_COMMAND_CAN_READ)
 				add_if_non_present (open_type, &o_i, idx);
-			if (cap->capabilities & FR_COMMAND_CAN_WRITE) {
-				if (cap->capabilities & FR_COMMAND_CAN_ARCHIVE_MANY_FILES) {
+			if (cap->current_capabilities & FR_COMMAND_CAN_WRITE) {
+				if (cap->current_capabilities & FR_COMMAND_CAN_ARCHIVE_MANY_FILES) {
 					add_if_non_present (save_type, &s_i, idx);
-					if (cap->capabilities & FR_COMMAND_CAN_WRITE)
+					if (cap->current_capabilities & FR_COMMAND_CAN_WRITE)
 						add_if_non_present (create_type, &c_i, idx);
 				}
 				add_if_non_present (single_file_save_type, &sf_i, idx);

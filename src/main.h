@@ -70,12 +70,14 @@ extern int save_type[];             /* File types that can be saved. */
 extern int open_type[];             /* File types that can be opened. */
 extern int create_type[];           /* File types that can be created. */
 
-GType        get_command_type_from_mime_type (const char    *mime_type,
-				 	      FrCommandCaps  requested_capabilities);
-const char * get_mime_type_from_extension    (const char    *ext);
-const char * get_archive_filename_extension  (const char    *uri);
-int          get_mime_type_index             (const char    *mime_type);
-void         sort_mime_types_by_extension    (int           *a);
-void         sort_mime_types_by_description  (int           *a);
+GType        get_command_type_from_mime_type      (const char    *mime_type,
+						   FrCommandCaps  requested_capabilities);
+GType        get_preferred_command_for_mime_type  (const char    *mime_type,
+						   FrCommandCaps  requested_capabilities);
+const char * get_mime_type_from_extension         (const char    *ext);
+const char * get_archive_filename_extension       (const char    *uri);
+int          get_mime_type_index                  (const char    *mime_type);
+void         sort_mime_types_by_extension         (int           *a);
+void         sort_mime_types_by_description       (int           *a);
 		                              
 #endif /* MAIN_H */

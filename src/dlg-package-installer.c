@@ -30,9 +30,10 @@
 
 
 typedef struct {
-	FrWindow  *window;
-	FrArchive *archive;
-	FrAction   action;
+	FrWindow   *window;
+	FrArchive  *archive;
+	FrAction    action;
+	const char *packages;
 } InstallerData;
 
 
@@ -56,7 +57,10 @@ package_installer_terminated (InstallerData *idata,
 					     error);
 	}
 	else {
-		/* FIXME: continue batch operation */
+		if (fr_window_is_batch_mode (idata->window))
+			fr_window_resume_batch (idata->window);
+		else
+			fr_window_restart_current_batch_action (idata->window);
 	}
 
 	installer_data_free (idata);
@@ -120,7 +124,7 @@ install_packages (InstallerData *idata)
 		        else
 		        	xid = 0;
 
-		        names = g_strsplit ("rar,unrar", ",", -1);
+		        names = g_strsplit (idata->packages, ",", -1);
 			call = dbus_g_proxy_begin_call (proxy,
 							"InstallPackageNames",
 							(DBusGProxyCallNotify) packagekit_install_package_call_notify_cb,
@@ -128,7 +132,7 @@ install_packages (InstallerData *idata)
 							NULL,
 							G_TYPE_UINT, xid,
 							G_TYPE_STRV, names,
-							G_TYPE_STRING, "",
+							G_TYPE_STRING, "" /*"hide-confirm-search"*/,
 							G_TYPE_INVALID);
 			success = (call != NULL);
 
@@ -154,7 +158,7 @@ confirm_search_dialog_response_cb (GtkDialog *dialog,
 		install_packages (idata);
 	}
 	else {
-		/* FIXME: cancel the batch operation */
+		fr_window_stop_batch (idata->window);
 		installer_data_free (idata);
 	}
 }
@@ -203,14 +207,33 @@ dlg_package_installer (FrWindow  *window,
 		       FrArchive *archive,
 		       FrAction   action)
 {
-	gboolean         success = FALSE;
 	InstallerData   *idata;
+	GType            command_type;
+	FrCommand       *command;
 	DBusGConnection *connection;
+	gboolean         success = FALSE;
 
 	idata = g_new0 (InstallerData, 1);
 	idata->window = g_object_ref (window);
 	idata->archive = g_object_ref (archive);
 	idata->action = action;
+
+	command_type = get_preferred_command_for_mime_type (idata->archive->content_type, FR_COMMAND_CAN_READ_WRITE);
+	if (command_type == 0)
+		command_type = get_preferred_command_for_mime_type (idata->archive->content_type, FR_COMMAND_CAN_READ);
+	if (command_type == 0) {
+		package_installer_terminated (idata, _("Archive type not supported."));
+		return;
+	}
+
+	command = g_object_new (command_type, 0);
+	idata->packages = fr_command_get_packages (command, idata->archive->content_type);
+	g_object_unref (command);
+
+	if (idata->packages == NULL) {
+		package_installer_terminated (idata, _("Archive type not supported."));
+		return;
+	}
 
 #ifdef ENABLE_PACKAGEKIT
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);

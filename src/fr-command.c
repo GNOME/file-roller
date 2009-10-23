@@ -180,7 +180,8 @@ base_fr_command_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 base_fr_command_get_capabilities (FrCommand  *comm,
-			          const char *mime_type)
+			          const char *mime_type,
+			          gboolean    check_command)
 {
 	return FR_COMMAND_CAN_DO_NOTHING;
 }
@@ -192,6 +193,14 @@ base_fr_command_set_mime_type (FrCommand  *comm,
 {
 	comm->mime_type = get_static_string (mime_type);
 	fr_command_update_capabilities (comm);
+}
+
+
+static const char *
+base_fr_command_get_packages (FrCommand  *comm,
+			      const char *mime_type)
+{
+	return NULL;
 }
 
 
@@ -370,6 +379,7 @@ fr_command_class_init (FrCommandClass *class)
 	class->get_mime_types   = base_fr_command_get_mime_types;
 	class->get_capabilities = base_fr_command_get_capabilities;
 	class->set_mime_type    = base_fr_command_set_mime_type;
+	class->get_packages     = base_fr_command_get_packages;
 	class->start            = NULL;
 	class->done             = NULL;
 	class->progress         = NULL;
@@ -712,15 +722,16 @@ fr_command_get_mime_types (FrCommand *comm)
 void
 fr_command_update_capabilities (FrCommand *comm)
 {
-	comm->capabilities = fr_command_get_capabilities (comm, comm->mime_type);
+	comm->capabilities = fr_command_get_capabilities (comm, comm->mime_type, TRUE);
 }
 
 
 FrCommandCap
 fr_command_get_capabilities (FrCommand  *comm,
-			     const char *mime_type)
+			     const char *mime_type,
+			     gboolean    check_command)
 {
-	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->get_capabilities (comm, mime_type);
+	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->get_capabilities (comm, mime_type, check_command);
 }
 
 
@@ -729,6 +740,14 @@ fr_command_is_capable_of (FrCommand     *comm,
 			  FrCommandCaps  requested_capabilities)
 {
 	return (((comm->capabilities ^ requested_capabilities) & requested_capabilities) == 0);
+}
+
+
+const char *
+fr_command_get_packages (FrCommand  *comm,
+			 const char *mime_type)
+{
+	return FR_COMMAND_GET_CLASS (G_OBJECT (comm))->get_packages (comm, mime_type);
 }
 
 

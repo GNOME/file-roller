@@ -328,12 +328,13 @@ fr_command_arj_get_mime_types (FrCommand *comm)
 
 FrCommandCap
 fr_command_arj_get_capabilities (FrCommand  *comm,
-			         const char *mime_type)
+			         const char *mime_type,
+				 gboolean    check_command)
 {
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
-	if (is_program_in_path ("arj"))
+	if (is_program_available ("arj", check_command))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 
 	return capabilities;
