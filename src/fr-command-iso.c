@@ -226,6 +226,14 @@ fr_command_iso_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_iso_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "genisoimage";
+}
+
+
 static void
 fr_command_iso_class_init (FrCommandIsoClass *class)
 {
@@ -241,6 +249,7 @@ fr_command_iso_class_init (FrCommandIsoClass *class)
 	afc->extract          = fr_command_iso_extract;
 	afc->get_mime_types   = fr_command_iso_get_mime_types;
 	afc->get_capabilities = fr_command_iso_get_capabilities;
+	afc->get_packages     = fr_command_iso_get_packages;
 }
 
 

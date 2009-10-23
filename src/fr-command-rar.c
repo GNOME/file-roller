@@ -719,11 +719,9 @@ static const char *
 fr_command_rar_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	if (is_mime_type (mime_type, "application/x-rar") || is_mime_type (mime_type, "application/x-cbr"))
-		return "rar,unrar";
-	else
-		return NULL;
+	return "rar,unrar";
 }
+
 
 static void
 fr_command_rar_class_init (FrCommandRarClass *class)

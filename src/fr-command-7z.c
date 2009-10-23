@@ -550,7 +550,7 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 		if (is_mime_type (mime_type, "application/x-rar")
 		    || is_mime_type (mime_type, "application/x-cbr"))
 		{
-			if (g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
+			if (! check_command || g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
 				capabilities |= FR_COMMAND_CAN_READ;
 		}
 		else
@@ -582,6 +582,19 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_7z_get_packages (FrCommand  *comm,
+			    const char *mime_type)
+{
+	if (is_mime_type (mime_type, "application/x-rar"))
+		return "p7zip,p7zip-rar";
+	else if (is_mime_type (mime_type, "application/zip") || is_mime_type (mime_type, "application/vnd.ms-cab-compressed"))
+		return "p7zip,p7zip-full";
+	else
+		return "p7zip";
+}
+
+
 static void
 fr_command_7z_class_init (FrCommand7zClass *class)
 {
@@ -601,6 +614,7 @@ fr_command_7z_class_init (FrCommand7zClass *class)
 	afc->handle_error     = fr_command_7z_handle_error;
 	afc->get_mime_types   = fr_command_7z_get_mime_types;
 	afc->get_capabilities = fr_command_7z_get_capabilities;
+	afc->get_packages     = fr_command_7z_get_packages;
 }
 
 

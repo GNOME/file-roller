@@ -172,6 +172,14 @@ fr_command_jar_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_jar_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "zip,unzip";
+}
+
+
 static void
 fr_command_jar_class_init (FrCommandJarClass *class)
 {
@@ -185,6 +193,7 @@ fr_command_jar_class_init (FrCommandJarClass *class)
 	afc->add = fr_command_jar_add;
 	afc->get_mime_types = fr_command_jar_get_mime_types;
 	afc->get_capabilities = fr_command_jar_get_capabilities;
+	afc->get_packages     = fr_command_jar_get_packages;
 }
 
 

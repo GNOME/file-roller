@@ -532,6 +532,31 @@ fr_command_cfile_finalize (GObject *object)
 }
 
 
+static const char *
+fr_command_cfile_get_packages (FrCommand  *comm,
+			       const char *mime_type)
+{
+	if (is_mime_type (mime_type, "application/x-gzip"))
+		return "gzip";
+	else if (is_mime_type (mime_type, "application/x-bzip"))
+		return "bzip2";
+	else if (is_mime_type (mime_type, "application/x-compress"))
+		return "ncompress";
+	else if (is_mime_type (mime_type, "application/x-lzip"))
+		return "lzip";
+	else if (is_mime_type (mime_type, "application/x-lzma"))
+		return "lzma";
+	else if (is_mime_type (mime_type, "application/x-xz"))
+		return "xz";
+	else if (is_mime_type (mime_type, "application/x-lzop"))
+		return "lzop";
+	else if (is_mime_type (mime_type, "application/x-rzip"))
+		return "rzip";
+
+	return NULL;
+}
+
+
 static void
 fr_command_cfile_class_init (FrCommandCFileClass *class)
 {
@@ -549,6 +574,7 @@ fr_command_cfile_class_init (FrCommandCFileClass *class)
 	afc->extract          = fr_command_cfile_extract;
 	afc->get_mime_types   = fr_command_cfile_get_mime_types;
 	afc->get_capabilities = fr_command_cfile_get_capabilities;
+	afc->get_packages     = fr_command_cfile_get_packages;
 }
 
 

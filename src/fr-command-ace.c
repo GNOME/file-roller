@@ -260,6 +260,14 @@ fr_command_ace_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_ace_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "unace";
+}
+
+
 static void
 fr_command_ace_class_init (FrCommandAceClass *class)
 {
@@ -277,6 +285,7 @@ fr_command_ace_class_init (FrCommandAceClass *class)
 	afc->handle_error     = fr_command_ace_handle_error;
 	afc->get_mime_types   = fr_command_ace_get_mime_types;
 	afc->get_capabilities = fr_command_ace_get_capabilities;
+	afc->get_packages     = fr_command_ace_get_packages;
 }
 
 

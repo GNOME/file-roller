@@ -240,6 +240,14 @@ fr_command_rpm_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_rpm_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "cpio,rpm";
+}
+
+
 static void
 fr_command_rpm_class_init (FrCommandRpmClass *class)
 {
@@ -255,6 +263,7 @@ fr_command_rpm_class_init (FrCommandRpmClass *class)
 	afc->extract          = fr_command_rpm_extract;
 	afc->get_mime_types   = fr_command_rpm_get_mime_types;
 	afc->get_capabilities = fr_command_rpm_get_capabilities;
+	afc->get_packages     = fr_command_rpm_get_packages;
 }
 
 

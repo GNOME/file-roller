@@ -341,6 +341,14 @@ fr_command_arj_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_arj_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "arj";
+}
+
+
 static void
 fr_command_arj_class_init (FrCommandArjClass *class)
 {
@@ -360,6 +368,7 @@ fr_command_arj_class_init (FrCommandArjClass *class)
 	afc->handle_error     = fr_command_arj_handle_error;
 	afc->get_mime_types   = fr_command_arj_get_mime_types;
 	afc->get_capabilities = fr_command_arj_get_capabilities;
+	afc->get_packages     = fr_command_arj_get_packages;
 }
 
 

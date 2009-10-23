@@ -407,6 +407,14 @@ fr_command_zip_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_zip_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "zip,unzip";
+}
+
+
 static void
 fr_command_zip_class_init (FrCommandZipClass *class)
 {
@@ -426,6 +434,7 @@ fr_command_zip_class_init (FrCommandZipClass *class)
 	afc->handle_error     = fr_command_zip_handle_error;
 	afc->get_mime_types   = fr_command_zip_get_mime_types;
 	afc->get_capabilities = fr_command_zip_get_capabilities;
+	afc->get_packages     = fr_command_zip_get_packages;
 }
 
 

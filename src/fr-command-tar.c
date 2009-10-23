@@ -1045,6 +1045,33 @@ fr_command_tar_set_mime_type (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_tar_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	if (is_mime_type (mime_type, "application/x-tar"))
+		return "tar";
+	else if (is_mime_type (mime_type, "application/x-compressed-tar"))
+		return "tar,gzip";
+	else if (is_mime_type (mime_type, "application/x-bzip-compressed-tar"))
+		return "tar,bzip2";
+	else if (is_mime_type (mime_type, "application/x-tarz"))
+		return "tar,gzip,ncompress";
+	else if (is_mime_type (mime_type, "application/x-lzip-compressed-tar"))
+		return "tar,lzip";
+	else if (is_mime_type (mime_type, "application/x-lzma-compressed-tar"))
+		return "tar,lzma";
+	else if (is_mime_type (mime_type, "application/x-xz-compressed-tar"))
+		return "tar,xz";
+	else if (is_mime_type (mime_type, "application/x-lzop-compressed-tar"))
+		return "tar,lzop";
+	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar"))
+		return "tar,p7zip";
+
+	return NULL;
+}
+
+
 static void
 fr_command_tar_class_init (FrCommandTarClass *class)
 {
@@ -1066,6 +1093,7 @@ fr_command_tar_class_init (FrCommandTarClass *class)
 	afc->set_mime_type    = fr_command_tar_set_mime_type;
 	afc->recompress       = fr_command_tar_recompress;
 	afc->uncompress       = fr_command_tar_uncompress;
+	afc->get_packages     = fr_command_tar_get_packages;
 }
 
 

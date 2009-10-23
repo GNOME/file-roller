@@ -241,6 +241,14 @@ fr_command_cpio_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_cpio_get_packages (FrCommand  *comm,
+			      const char *mime_type)
+{
+	return "cpio";
+}
+
+
 static void
 fr_command_cpio_class_init (FrCommandCpioClass *class)
 {
@@ -256,6 +264,7 @@ fr_command_cpio_class_init (FrCommandCpioClass *class)
 	afc->extract          = fr_command_cpio_extract;
 	afc->get_mime_types   = fr_command_cpio_get_mime_types;
 	afc->get_capabilities = fr_command_cpio_get_capabilities;
+	afc->get_packages     = fr_command_cpio_get_packages;
 }
 
 

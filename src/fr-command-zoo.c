@@ -345,6 +345,14 @@ fr_command_zoo_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_zoo_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "zoo";
+}
+
+
 static void
 fr_command_zoo_class_init (FrCommandZooClass *class)
 {
@@ -363,6 +371,7 @@ fr_command_zoo_class_init (FrCommandZooClass *class)
 	afc->test             = fr_command_zoo_test;
 	afc->get_mime_types   = fr_command_zoo_get_mime_types;
 	afc->get_capabilities = fr_command_zoo_get_capabilities;
+	afc->get_packages     = fr_command_zoo_get_packages;
 }
 
 

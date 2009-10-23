@@ -308,6 +308,14 @@ fr_command_ar_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_ar_get_packages (FrCommand  *comm,
+			    const char *mime_type)
+{
+	return "binutils";
+}
+
+
 static void
 fr_command_ar_class_init (FrCommandArClass *class)
 {
@@ -326,6 +334,7 @@ fr_command_ar_class_init (FrCommandArClass *class)
 	afc->handle_error     = fr_command_ar_handle_error;
 	afc->get_mime_types   = fr_command_ar_get_mime_types;
 	afc->get_capabilities = fr_command_ar_get_capabilities;
+	afc->get_packages     = fr_command_ar_get_packages;
 }
 
 

@@ -326,6 +326,14 @@ fr_command_lha_get_capabilities (FrCommand  *comm,
 }
 
 
+static const char *
+fr_command_lha_get_packages (FrCommand  *comm,
+			     const char *mime_type)
+{
+	return "lha";
+}
+
+
 static void
 fr_command_lha_class_init (FrCommandLhaClass *class)
 {
@@ -343,6 +351,7 @@ fr_command_lha_class_init (FrCommandLhaClass *class)
 	afc->extract          = fr_command_lha_extract;
 	afc->get_mime_types   = fr_command_lha_get_mime_types;
 	afc->get_capabilities = fr_command_lha_get_capabilities;
+	afc->get_packages     = fr_command_lha_get_packages;
 }
 
 
