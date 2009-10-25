@@ -1108,16 +1108,29 @@ gboolean
 check_permissions (const char *uri,
 		   int         mode)
 {
+	GFile    *file;
+	gboolean  result;
+
+	file = g_file_new_for_uri (uri);
+	result = check_file_permissions (file, mode);
+
+	g_object_unref (file);
+
+	return result;
+}
+
+
+gboolean
+check_file_permissions (GFile *file,
+		        int    mode)
+{
 	gboolean   result = TRUE;
-	GFile     *file;
 	GFileInfo *info;
 	GError    *err = NULL;
 	gboolean   default_permission_when_unknown = TRUE;
 
-	file = g_file_new_for_uri (uri);
 	info = g_file_query_info (file, "access::*", 0, NULL, &err);
 	if (err != NULL) {
-		g_warning ("Failed to get access permissions: %s", err->message);
 		g_clear_error (&err);
 		result = FALSE;
 	}
@@ -1128,24 +1141,23 @@ check_permissions (const char *uri,
 			else
 				result = (result && default_permission_when_unknown);
 		}
-		
+
 		if ((mode & W_OK) == W_OK) {
 			if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE))
 				result = (result && g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE));
 			else
 				result = (result && default_permission_when_unknown);
 		}
-		
+
 		if ((mode & X_OK) == X_OK) {
 			if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE))
 				result = (result && g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE));
 			else
 				result = (result && default_permission_when_unknown);
 		}
-	}		
-	
-	g_object_unref (info);
-	g_object_unref (file);
+
+		g_object_unref (info);
+	}
 
 	return result;
 }

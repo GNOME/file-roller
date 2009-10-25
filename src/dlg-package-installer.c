@@ -27,6 +27,7 @@
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
 #include "dlg-package-installer.h"
+#include "gtk-utils.h"
 #include "main.h"
 
 
@@ -175,6 +176,7 @@ dbus_name_has_owner_call_notify_cb (DBusGProxy     *proxy,
 	GError        *error = NULL;
 	gboolean       success;
 	gboolean       present;
+	char          *secondary_text;
 	GtkWidget     *dialog;
 
 	success = dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_BOOLEAN, &present, G_TYPE_INVALID);
@@ -189,18 +191,20 @@ dbus_name_has_owner_call_notify_cb (DBusGProxy     *proxy,
 		return;
 	}
 
-	dialog = gtk_message_dialog_new (GTK_WINDOW (idata->window),
-					 GTK_DIALOG_MODAL,
-					 GTK_MESSAGE_ERROR,
-					 GTK_BUTTONS_YES_NO,
-					 "%s", "error");
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  _("There is no command installed for %s files.\nDo you want to search for an command to open this file?"),
-						  g_content_type_get_description (idata->archive->content_type));
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-
+	secondary_text = g_strdup_printf (_("There is no command installed for %s files.\nDo you want to search for a command to open this file?"),
+					  g_content_type_get_description (idata->archive->content_type));
+	dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
+					  GTK_DIALOG_MODAL,
+					  GTK_STOCK_DIALOG_ERROR,
+					  _("Could not open this file type"),
+					  secondary_text,
+					  GTK_STOCK_CANCEL, GTK_RESPONSE_NO,
+					  _("_Search Command"), GTK_RESPONSE_YES,
+					  NULL);
 	g_signal_connect (dialog, "response", G_CALLBACK (confirm_search_dialog_response_cb), idata);
-	gtk_widget_show_all (dialog);
+	gtk_widget_show (dialog);
+
+	g_free (secondary_text);
 }
 
 

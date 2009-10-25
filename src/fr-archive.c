@@ -859,13 +859,20 @@ fr_archive_fake_load (FrArchive *archive)
 
 static void
 load_local_archive (FrArchive  *archive,
-		    const char *uri,
 		    const char *password)
 {
 	FrCommand  *tmp_command;
 	const char *mime_type;
 
-	archive->have_permissions = check_permissions (uri, W_OK);
+	if (! g_file_query_exists (archive->file, NULL)) {
+		fr_archive_action_completed (archive,
+					     FR_ACTION_LOADING_ARCHIVE,
+					     FR_PROC_ERROR_GENERIC,
+					     _("File not found."));
+		return;
+	}
+
+	archive->have_permissions = check_file_permissions (archive->file, W_OK);
 	archive->read_only = ! archive->have_permissions;
 
 	tmp_command = archive->command;
@@ -926,7 +933,7 @@ fr_archive_load (FrArchive  *archive,
 		       FR_ACTION_LOADING_ARCHIVE);
 
 	fr_archive_set_uri (archive, uri);
-	load_local_archive (archive, uri, password);
+	load_local_archive (archive, password);
 
 	return TRUE;
 }
@@ -945,7 +952,7 @@ fr_archive_load_local (FrArchive  *archive,
 		       FR_ACTION_LOADING_ARCHIVE);
 
 	fr_archive_set_uri (archive, uri);
-	load_local_archive (archive, uri, password);
+	load_local_archive (archive, password);
 
 	return TRUE;
 }
