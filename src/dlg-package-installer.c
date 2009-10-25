@@ -27,6 +27,7 @@
 #include <gtk/gtk.h>
 #include <dbus/dbus-glib.h>
 #include "dlg-package-installer.h"
+#include "main.h"
 
 
 typedef struct {
@@ -57,6 +58,7 @@ package_installer_terminated (InstallerData *idata,
 					     error);
 	}
 	else {
+		update_registered_commands_capabilities ();
 		if (fr_window_is_batch_mode (idata->window))
 			fr_window_resume_batch (idata->window);
 		else

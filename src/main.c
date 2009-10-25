@@ -663,6 +663,30 @@ get_preferred_command_for_mime_type (const char    *mime_type,
 }
 
 
+void
+update_registered_commands_capabilities (void)
+{
+	int i;
+
+	for (i = 0; i < Registered_Commands->len; i++) {
+		FrRegisteredCommand *reg_com;
+		FrCommand           *command;
+		int                  j;
+
+		reg_com = g_ptr_array_index (Registered_Commands, i);
+		command = (FrCommand*) g_object_new (reg_com->type, NULL);
+		for (j = 0; j < reg_com->caps->len; j++) {
+			FrMimeTypeCap *cap = g_ptr_array_index (reg_com->caps, j);
+
+			cap->current_capabilities = fr_command_get_capabilities (command, cap->mime_type, TRUE);
+			cap->potential_capabilities = fr_command_get_capabilities (command, cap->mime_type, FALSE);
+		}
+
+		g_object_unref (command);
+	}
+}
+
+
 const char *
 get_mime_type_from_extension (const char *ext)
 {
