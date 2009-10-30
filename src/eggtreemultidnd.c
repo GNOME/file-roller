@@ -179,8 +179,14 @@ stop_drag_check (GtkWidget *widget)
   priv_data->event_list = NULL;
   priv_data->pending_event = FALSE;
 
-  g_signal_handler_disconnect (widget, priv_data->motion_notify_handler);
-  g_signal_handler_disconnect (widget, priv_data->button_release_handler);
+  if (priv_data->motion_notify_handler) {
+    g_signal_handler_disconnect (widget, priv_data->motion_notify_handler);
+    priv_data->motion_notify_handler = 0;
+  }
+  if (priv_data->button_release_handler) {
+    g_signal_handler_disconnect (widget, priv_data->button_release_handler);
+    priv_data->button_release_handler = 0;
+  }
 }
 
 
@@ -401,16 +407,23 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
 	priv_data->event_list = g_slist_append (priv_data->event_list,
 						gdk_event_copy ((GdkEvent*)event));
 
-      priv_data->motion_notify_handler =
-	g_signal_connect (G_OBJECT (tree_view),
-			  "motion_notify_event",
-			  G_CALLBACK (egg_tree_multi_drag_motion_event),
-			  NULL);
-      priv_data->button_release_handler =
-	g_signal_connect (G_OBJECT (tree_view),
-			  "button_release_event",
-			  G_CALLBACK (egg_tree_multi_drag_button_release_event),
-			  NULL);
+      if (priv_data->motion_notify_handler == 0)
+        {
+          priv_data->motion_notify_handler =
+	    g_signal_connect (G_OBJECT (tree_view),
+	  		      "motion_notify_event",
+			      G_CALLBACK (egg_tree_multi_drag_motion_event),
+			      NULL);
+        }
+
+      if (priv_data->button_release_handler == 0)
+        {
+          priv_data->button_release_handler =
+	    g_signal_connect (G_OBJECT (tree_view),
+	 		      "button_release_event",
+			      G_CALLBACK (egg_tree_multi_drag_button_release_event),
+			      NULL);
+        }
 
       if (priv_data->drag_data_get_handler == 0)
 	{
