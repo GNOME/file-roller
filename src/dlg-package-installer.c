@@ -127,6 +127,8 @@ install_packages (InstallerData *idata)
 		        else
 		        	xid = 0;
 
+		        dbus_g_proxy_set_default_timeout (proxy, INT_MAX);
+
 		        names = g_strsplit (idata->packages, ",", -1);
 			call = dbus_g_proxy_begin_call (proxy,
 							"InstallPackageNames",
