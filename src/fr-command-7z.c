@@ -331,8 +331,13 @@ fr_command_7z_add (FrCommand     *comm,
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-l");
 	add_password_arg (comm, comm->password, FALSE);
-	if ((comm->password != NULL) && (*comm->password != 0) && comm->encrypt_header)
+	if ((comm->password != NULL)
+	    && (*comm->password != 0)
+	    && comm->encrypt_header
+	    && fr_command_is_capable_of (comm, FR_COMMAND_CAN_ENCRYPT_HEADER))
+	{
 		fr_process_add_arg (comm->process, "-mhe=on");
+	}
 
 	/* fr_process_add_arg (comm->process, "-ms=off"); FIXME: solid mode off? */
 
