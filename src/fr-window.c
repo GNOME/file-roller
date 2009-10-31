@@ -1534,6 +1534,8 @@ fr_window_populate_file_list (FrWindow  *window,
 {
 	int i;
 
+	gtk_list_store_clear (window->priv->list_store);
+
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
 	 				      GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
 	 				      GTK_SORT_ASCENDING);
@@ -1887,9 +1889,10 @@ fr_window_update_file_list (FrWindow *window,
 	if (GTK_WIDGET_REALIZED (window->priv->list_view))
 		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->list_view), 0, 0);
 
-	gtk_list_store_clear (window->priv->list_store);
-
 	if (! window->priv->archive_present || window->priv->archive_new) {
+		if (update_view)
+			gtk_list_store_clear (window->priv->list_store);
+
 		window->priv->current_view_length = 0;
 
 		if (window->priv->archive_new) {
