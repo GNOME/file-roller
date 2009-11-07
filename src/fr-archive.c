@@ -2130,7 +2130,8 @@ static void
 move_files_to_dir (FrArchive  *archive,
 		   GList      *file_list,
 		   const char *source_dir,
-		   const char *dest_dir)
+		   const char *dest_dir,
+		   gboolean    overwrite)
 {
 	GList *list;
 	GList *scan;
@@ -2150,7 +2151,11 @@ move_files_to_dir (FrArchive  *archive,
 		destname = g_build_filename (dest_dir, basename, NULL);
 		if (g_file_test (destname, G_FILE_TEST_IS_DIR)) {
 			fr_process_begin_command (archive->process, "cp");
-			fr_process_add_arg (archive->process, "-Rf");
+			fr_process_add_arg (archive->process, "-R");
+			if (overwrite)
+				fr_process_add_arg (archive->process, "-f");
+			else
+				fr_process_add_arg (archive->process, "-n");
 			if (filename[0] == '/')
 				fr_process_add_arg_concat (archive->process, source_dir, filename, NULL);
 			else
@@ -2174,7 +2179,10 @@ move_files_to_dir (FrArchive  *archive,
 	/* 'list' now contains the files that can be moved without problems */
 
 	fr_process_begin_command (archive->process, "mv");
-	fr_process_add_arg (archive->process, "-f");
+	if (overwrite)
+		fr_process_add_arg (archive->process, "-f");
+	else
+		fr_process_add_arg (archive->process, "-n");
 	for (scan = list; scan; scan = scan->next) {
 		char *filename = scan->data;
 
@@ -2194,7 +2202,8 @@ static void
 move_files_in_chunks (FrArchive  *archive,
 		      GList      *file_list,
 		      const char *temp_dir,
-		      const char *dest_dir)
+		      const char *dest_dir,
+		      gboolean    overwrite)
 {
 	GList *scan;
 	int    temp_dir_l;
@@ -2218,7 +2227,7 @@ move_files_in_chunks (FrArchive  *archive,
 		}
 
 		prev->next = NULL;
-		move_files_to_dir (archive, chunk_list, temp_dir, dest_dir);
+		move_files_to_dir (archive, chunk_list, temp_dir, dest_dir, overwrite);
 		prev->next = scan;
 	}
 }
@@ -2630,7 +2639,8 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		move_files_in_chunks (archive,
 				      filtered,
 				      temp_dir,
-				      destination);
+				      destination,
+				      overwrite);
 
 		/* remove the temp dir. */
 
