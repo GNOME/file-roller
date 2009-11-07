@@ -2142,7 +2142,7 @@ move_files_to_dir (FrArchive  *archive,
 		destname = g_build_filename (dest_dir, basename, NULL);
 		if (g_file_test (destname, G_FILE_TEST_IS_DIR)) {
 			fr_process_begin_command (archive->process, "cp");
-			fr_process_add_arg (archive->process, "-R");
+			fr_process_add_arg (archive->process, "-Rf");
 			if (filename[0] == '/')
 				fr_process_add_arg_concat (archive->process, source_dir, filename, NULL);
 			else
