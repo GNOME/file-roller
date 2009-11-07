@@ -2124,12 +2124,52 @@ move_files_to_dir (FrArchive  *archive,
 		   const char *source_dir,
 		   const char *dest_dir)
 {
+	GList *list;
 	GList *scan;
+
+	/* we prefer mv instead of cp for performance reasons,
+	 * but if the destination folder already exists mv
+	 * doesn't work correctly. (bug #590027) */
+
+	list = g_list_copy (file_list);
+	for (scan = list; scan; /* void */) {
+		GList *next = scan->next;
+		char  *filename = scan->data;
+		char  *basename;
+		char  *destname;
+
+		basename = g_path_get_basename (filename);
+		destname = g_build_filename (dest_dir, basename, NULL);
+		if (g_file_test (destname, G_FILE_TEST_IS_DIR)) {
+			fr_process_begin_command (archive->process, "cp");
+			fr_process_add_arg (archive->process, "-R");
+			if (filename[0] == '/')
+				fr_process_add_arg_concat (archive->process, source_dir, filename, NULL);
+			else
+				fr_process_add_arg_concat (archive->process, source_dir, "/", filename, NULL);
+			fr_process_add_arg (archive->process, dest_dir);
+			fr_process_end_command (archive->process);
+
+			list = g_list_remove_link (list, scan);
+			g_list_free (scan);
+		}
+
+		g_free (destname);
+		g_free (basename);
+
+		scan = next;
+	}
+
+	if (list == NULL)
+		return;
+
+	/* 'list' now contains the files that can be moved without problems */
 
 	fr_process_begin_command (archive->process, "mv");
 	fr_process_add_arg (archive->process, "-f");
-	for (scan = file_list; scan; scan = scan->next) {
+	for (scan = list; scan; scan = scan->next) {
 		char *filename = scan->data;
+
 		if (filename[0] == '/')
 			fr_process_add_arg_concat (archive->process, source_dir, filename, NULL);
 		else
@@ -2137,6 +2177,8 @@ move_files_to_dir (FrArchive  *archive,
 	}
 	fr_process_add_arg (archive->process, dest_dir);
 	fr_process_end_command (archive->process);
+
+	g_list_free (list);
 }
 
 
