@@ -3498,6 +3498,14 @@ dir_tree_button_press_cb (GtkWidget      *widget,
 
 		return TRUE;
 	}
+	else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 8)) {
+		fr_window_go_back (window);
+		return TRUE;
+	}
+	else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 9)) {
+		fr_window_go_forward (window);
+		return TRUE;
+	}
 
 	return FALSE;
 }
@@ -3704,6 +3712,16 @@ file_button_press_cb (GtkWidget      *widget,
 		}
 
 		return FALSE;
+	}
+	else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 8)) {
+		// go back
+		fr_window_go_back (window);
+		return TRUE;
+	}
+	else if ((event->type == GDK_BUTTON_PRESS) && (event->button == 9)) {
+		// go forward
+		fr_window_go_forward (window);
+		return TRUE;
 	}
 
 	return FALSE;
