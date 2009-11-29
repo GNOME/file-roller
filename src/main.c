@@ -172,7 +172,8 @@ FrExtensionType file_ext_type[] = {
 	{ ".z", "application/x-gzip" },
 	{ ".Z", "application/x-compress" },
 	{ ".zip", "application/zip" },
-	{ ".zoo", "application/x-zoo" }
+	{ ".zoo", "application/x-zoo" },
+	{ NULL, NULL }
 };
 
 int single_file_save_type[64];
@@ -695,9 +696,12 @@ get_mime_type_from_extension (const char *ext)
 	if (ext == NULL)
 		return NULL;
 
-	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--)
+	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--) {
+		if (file_ext_type[i].ext == NULL)
+			continue;
 		if (strcasecmp (ext, file_ext_type[i].ext) == 0)
 			return get_static_string (file_ext_type[i].mime_type);
+	}
 
 	return NULL;
 }
@@ -716,9 +720,13 @@ get_archive_filename_extension (const char *filename)
 	if (ext == NULL)
 		return NULL;
 
-	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--)
+	for (i = G_N_ELEMENTS (file_ext_type) - 1; i >= 0; i--) {
+		if (file_ext_type[i].ext == NULL)
+			continue;
 		if (strcasecmp (ext, file_ext_type[i].ext) == 0)
 			return ext;
+	}
+
 	return NULL;
 }
 

@@ -24,6 +24,7 @@
 #define DLG_NEW_H
 
 #include <gtk/gtk.h>
+#include "eggfileformatchooser.h"
 #include "fr-window.h"
 
 
@@ -36,7 +37,7 @@ typedef struct {
 	GtkBuilder *builder;
 
 	GtkWidget  *dialog;
-	GtkWidget  *n_archive_type_combo_box;
+	/*GtkWidget  *n_archive_type_combo_box;*/
 	GtkWidget  *n_other_options_expander;
 	GtkWidget  *n_password_entry;
 	GtkWidget  *n_password_label;
@@ -44,6 +45,7 @@ typedef struct {
 	GtkWidget  *n_volume_checkbutton;
 	GtkWidget  *n_volume_spinbutton;
 	GtkWidget  *n_volume_box;
+	EggFileFormatChooser *format_chooser;
 } DlgNewData;
 
 

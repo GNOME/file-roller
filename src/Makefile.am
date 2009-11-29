@@ -75,6 +75,9 @@ file_roller_SOURCES = 			\
 	dlg-prop.h			\
 	dlg-update.c			\
 	dlg-update.h			\
+	eggfileformatchooser.c		\
+	eggfileformatchooser.h		\
+	egg-macros.h			\
 	eggtreemultidnd.c		\
 	eggtreemultidnd.h		\
 	file-data.c			\

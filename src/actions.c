@@ -119,7 +119,7 @@ get_full_uri (DlgNewData *data)
 		return NULL;
 	}
 
-	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box));
+	idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (data->format_chooser), uri);
 	if (idx > 0) {
 		const char *uri_ext;
 		char       *default_ext;
@@ -211,7 +211,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 		char *new_uri;
 		char *ext = NULL;
 
-		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box));
+		idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (data->format_chooser), uri);
 		if (idx > 0)
 			ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
 		else

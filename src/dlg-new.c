@@ -34,6 +34,7 @@
 #include "preferences.h"
 
 
+#define GET_WIDGET(x) (_gtk_builder_get_widget (data->builder, (x)))
 #define DEFAULT_EXTENSION ".tar.gz"
 #define BAD_CHARS "/\\*"
 #define MEGABYTE (1024 * 1024)
@@ -117,7 +118,8 @@ get_archive_type (DlgNewData *data)
 	if (ext == NULL) {
 		int idx;
 
-		idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box)) - 1;
+		idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (data->format_chooser), uri);
+		/*idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box)) - 1;*/
 		if (idx >= 0)
 			return data->supported_types[idx];
 
@@ -128,6 +130,7 @@ get_archive_type (DlgNewData *data)
 }
 
 
+/* FIXME
 static void
 archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 				   DlgNewData  *data)
@@ -169,6 +172,7 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 		g_free (basename_noext);
 	}
 }
+*/
 
 
 static void
@@ -187,15 +191,89 @@ volume_toggled_cb (GtkToggleButton *toggle_button,
 }
 
 
+static void
+format_chooser_selection_changed_cb (EggFileFormatChooser *format_chooser,
+				     DlgNewData           *data)
+{
+	const char *uri;
+	const char *ext;
+	int         n_format;
+
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
+	if (uri == NULL)
+		return;
+
+	ext = get_archive_filename_extension (uri);
+	n_format = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (data->format_chooser), uri);
+	if (ext == NULL)
+		ext = mime_type_desc[data->supported_types[n_format - 1]].default_ext;
+
+	update_sensitivity_for_ext (data, ext);
+
+	if (uri != NULL) {
+		const char *new_ext;
+		const char *basename;
+		char       *basename_noext;
+		char       *new_basename;
+		char       *new_basename_uft8;
+
+		new_ext = mime_type_desc[data->supported_types[n_format - 1]].default_ext;
+		basename = file_name_from_path (uri);
+		if (g_str_has_suffix (basename, ext))
+			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
+		else
+			basename_noext = g_strdup (basename);
+		new_basename = g_strconcat (basename_noext, new_ext, NULL);
+		new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
+
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->dialog), new_basename_uft8);
+		update_sensitivity_for_ext (data, new_ext);
+
+		g_free (new_basename_uft8);
+		g_free (new_basename);
+		g_free (basename_noext);
+	}
+}
+
+
+static char *
+get_icon_name_for_type (const char *mime_type)
+{
+	char *name = NULL;
+
+	if (mime_type != NULL) {
+		char *s;
+
+		name = g_strconcat ("gnome-mime-", mime_type, NULL);
+		for (s = name; *s; ++s)
+			if (! g_ascii_isalpha (*s))
+				*s = '-';
+	}
+
+	if ((name == NULL) || ! gtk_icon_theme_has_icon (gtk_icon_theme_get_default (), name)) {
+		g_free (name);
+		name = g_strdup ("package-x-generic");
+	}
+
+	return name;
+}
+
+
+static void
+options_expander_unmap_cb (GtkWidget *widget,
+			   gpointer   user_data)
+{
+	egg_file_format_chooser_emit_size_changed ((EggFileFormatChooser *) user_data);
+}
+
+
 static DlgNewData *
 dlg_new_archive (FrWindow  *window,
 		int        *supported_types,
 		const char *default_name)
 {
 	DlgNewData    *data;
-	GtkWidget     *n_archive_type_box;
 	GtkWidget     *n_new_button;
-	GtkSizeGroup  *size_group;
 	GtkFileFilter *filter;
 	/*char          *default_ext;*/
 	int            i;
@@ -225,7 +303,6 @@ dlg_new_archive (FrWindow  *window,
 	data->n_volume_spinbutton = _gtk_builder_get_widget (data->builder, "n_volume_spinbutton");
 	data->n_volume_box = _gtk_builder_get_widget (data->builder, "n_volume_box");
 
-	n_archive_type_box = _gtk_builder_get_widget (data->builder, "n_archive_type_box");
 	n_new_button = _gtk_builder_get_widget (data->builder, "n_new_button");
 
 	/* Set widgets data. */
@@ -258,28 +335,51 @@ dlg_new_archive (FrWindow  *window,
 
 	/**/
 
-	size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	gtk_size_group_add_widget (size_group, _gtk_builder_get_widget (data->builder, "n_archive_type_label"));
-	gtk_size_group_add_widget (size_group, _gtk_builder_get_widget (data->builder, "n_password_label"));
-
 	gtk_button_set_use_stock (GTK_BUTTON (n_new_button), TRUE);
 	gtk_button_set_label (GTK_BUTTON (n_new_button), FR_STOCK_CREATE_ARCHIVE);
 	gtk_expander_set_expanded (GTK_EXPANDER (data->n_other_options_expander), FALSE);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton), eel_gconf_get_boolean (PREF_ENCRYPT_HEADER, FALSE));
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (data->n_volume_spinbutton), (double) eel_gconf_get_integer (PREF_BATCH_VOLUME_SIZE, 0) / MEGABYTE);
 
-	/* archive type combobox */
+	/* format chooser */
 
-	data->n_archive_type_combo_box = gtk_combo_box_new_text ();
-	gtk_combo_box_append_text (GTK_COMBO_BOX (data->n_archive_type_combo_box), _("Automatic"));
+	data->format_chooser = (EggFileFormatChooser *) egg_file_format_chooser_new ();
 	for (i = 0; data->supported_types[i] != -1; i++) {
-		int idx = data->supported_types[i];
-		gtk_combo_box_append_text (GTK_COMBO_BOX (data->n_archive_type_combo_box),
-					   _(mime_type_desc[idx].name));
+		int   idx = data->supported_types[i];
+		char *exts[4];
+		int   e;
+		int   n_exts;
+		char *icon_name;
+
+		n_exts = 0;
+		for (e = 0; (n_exts < 4) && file_ext_type[e].ext != NULL; e++) {
+			if (strcmp (file_ext_type[e].ext, mime_type_desc[idx].default_ext) == 0)
+				continue;
+			if (strcmp (file_ext_type[e].mime_type, mime_type_desc[idx].mime_type) == 0)
+				exts[n_exts++] = file_ext_type[e].ext;
+		}
+		while (n_exts < 4)
+			exts[n_exts++] = NULL;
+
+		g_print ("%s => %s, %s, %s, %s\n", mime_type_desc[idx].mime_type, exts[0], exts[1], exts[2], exts[3]);
+
+		icon_name = get_icon_name_for_type (mime_type_desc[idx].mime_type);
+		egg_file_format_chooser_add_format (data->format_chooser,
+						    0,
+						    _(mime_type_desc[idx].name),
+						    icon_name,
+						    mime_type_desc[idx].default_ext,
+						    exts[0],
+						    exts[1],
+						    exts[2],
+						    exts[3],
+						    NULL);
+
+		g_free (icon_name);
 	}
-	gtk_combo_box_set_active (GTK_COMBO_BOX (data->n_archive_type_combo_box), 0);
-	gtk_box_pack_start (GTK_BOX (n_archive_type_box), data->n_archive_type_combo_box, TRUE, TRUE, 0);
-	gtk_widget_show_all (n_archive_type_box);
+	egg_file_format_chooser_set_format (data->format_chooser, 0);
+	gtk_widget_show (GTK_WIDGET (data->format_chooser));
+	gtk_box_pack_start (GTK_BOX (GET_WIDGET ("format_chooser_box")), GTK_WIDGET (data->format_chooser), TRUE, TRUE, 0);
 
 	/* Set the signals handlers. */
 
@@ -303,10 +403,10 @@ dlg_new_archive (FrWindow  *window,
 			  G_CALLBACK (add_clicked_cb),
 			  data);*/
 
-	g_signal_connect (G_OBJECT (data->n_archive_type_combo_box),
+	/* FIXME g_signal_connect (G_OBJECT (data->n_archive_type_combo_box),
 			  "changed",
 			  G_CALLBACK (archive_type_combo_box_changed_cb),
-			  data);
+			  data); */
 	g_signal_connect (G_OBJECT (data->n_password_entry),
 			  "changed",
 			  G_CALLBACK (password_entry_changed_cb),
@@ -315,6 +415,14 @@ dlg_new_archive (FrWindow  *window,
 			  "toggled",
 			  G_CALLBACK (volume_toggled_cb),
 			  data);
+	g_signal_connect (G_OBJECT (data->format_chooser),
+			  "selection-changed",
+			  G_CALLBACK (format_chooser_selection_changed_cb),
+			  data);
+	g_signal_connect_after (GET_WIDGET ("other_oprtions_alignment"),
+				"unmap",
+				G_CALLBACK (options_expander_unmap_cb),
+				data->format_chooser);
 
 	/* Run dialog. */
 
