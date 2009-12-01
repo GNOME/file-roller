@@ -96,10 +96,9 @@ AC_ARG_ENABLE(packagekit,
 	      [AC_HELP_STRING([--disable-packagekit],[build without PackageKit support])],,
 	      [enable_packagekit=yes])
 if test "x$enable_packagekit" != "xno"; then
-	if pkg-config dbus-glib-1; then
+	PKG_CHECK_MODULES(DBUS, dbus-glib-1, has_dbus_glib=yes, has_dbug_glib=no)
+	if test "x$has_dbus_glib" = "xyes"; then
 		AC_DEFINE(ENABLE_PACKAGEKIT, 1, [define to enable PackageKit installer])
-		DBUS_CFLAGS = `pkg-config --cflags dbus-glib-1`
-		DBUS_LIBS = `pkg-config --libs dbus-glib-1`
         else
 		enable_packagekit=no
         fi
