@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller&component=general\n"
-"POT-Creation-Date: 2009-11-17 06:11+0000\n"
-"PO-Revision-Date: 2009-11-17 10:12+0100\n"
+"POT-Creation-Date: 2009-12-02 18:52+0000\n"
+"PO-Revision-Date: 2009-12-04 20:14+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,7 @@ msgstr "Možnosti upravljanja seje:"
 
 #: ../copy-n-paste/eggsmclient.c:253
 msgid "Show session management options"
-msgstr "Prikaži možnosti upravljanja seje"
+msgstr "Pokaži možnosti upravljanja seje"
 
 #: ../data/file-roller.desktop.in.in.h:1
 #: ../src/fr-window.c:1974
@@ -118,17 +118,17 @@ msgstr "Mesto"
 
 #. MB means megabytes
 #: ../data/ui/batch-add-files.ui.h:5
-#: ../data/ui/new.ui.h:3
+#: ../data/ui/new.ui.h:2
 msgid "MB"
 msgstr "MB"
 
 #: ../data/ui/batch-add-files.ui.h:6
-#: ../data/ui/new.ui.h:4
+#: ../data/ui/new.ui.h:3
 msgid "Split in _volumes of"
 msgstr "Razdeli na _enote po"
 
 #: ../data/ui/batch-add-files.ui.h:7
-#: ../data/ui/new.ui.h:5
+#: ../data/ui/new.ui.h:4
 #: ../data/ui/password.ui.h:3
 msgid "_Encrypt the file list too"
 msgstr "_Šifriraj tudi seznam datotek"
@@ -145,14 +145,14 @@ msgid "_Location:"
 msgstr "_Mesto:"
 
 #: ../data/ui/batch-add-files.ui.h:10
-#: ../data/ui/new.ui.h:6
+#: ../data/ui/new.ui.h:5
 msgid "_Other Options"
 msgstr "_Ostale možnosti"
 
 # G:0 K:3 O:0
 #: ../data/ui/batch-add-files.ui.h:11
 #: ../data/ui/batch-password.ui.h:2
-#: ../data/ui/new.ui.h:7
+#: ../data/ui/new.ui.h:6
 #: ../data/ui/password.ui.h:4
 msgid "_Password:"
 msgstr "_Geslo:"
@@ -187,10 +187,6 @@ msgstr "_Izbrane datoteke"
 msgid "example: *.txt; *.doc"
 msgstr "na primer: *.txt; *.doc"
 
-#: ../data/ui/new.ui.h:1
-msgid "Archive _type:"
-msgstr "Vrsta _arhiva:"
-
 # G:0 K:1 O:0
 #: ../data/ui/open-with.ui.h:1
 msgid "A_vailable application:"
@@ -221,7 +217,7 @@ msgstr "Geslo"
 
 #: ../data/ui/update.ui.h:1
 msgid "S_elect the files you want to update:"
-msgstr "Izberite datoteke za posodobitev:"
+msgstr "_Izberite datoteke za posodobitev:"
 
 #. secondary text
 #: ../data/ui/update.ui.h:2
@@ -310,13 +306,13 @@ msgid "Open"
 msgstr "Odpri"
 
 #: ../src/actions.c:394
-#: ../src/dlg-new.c:248
+#: ../src/dlg-new.c:325
 #: ../src/fr-window.c:5207
 msgid "All archives"
 msgstr "Vsi arhivi"
 
 #: ../src/actions.c:401
-#: ../src/dlg-new.c:255
+#: ../src/dlg-new.c:332
 msgid "All files"
 msgstr "Vse datoteke"
 
@@ -538,15 +534,11 @@ msgstr "P_repiši obstoječe datoteke"
 msgid "Do not e_xtract older files"
 msgstr "Ne razširi _starejših datotek"
 
-#: ../src/dlg-new.c:274
-msgid "Automatic"
-msgstr "Samodejno"
-
-#: ../src/dlg-new.c:341
+#: ../src/dlg-new.c:449
 msgid "New"
 msgstr "Nov"
 
-#: ../src/dlg-new.c:354
+#: ../src/dlg-new.c:462
 msgid "Save"
 msgstr "Shrani"
 
@@ -622,6 +614,40 @@ msgstr "Posodobi datoteko \"%s\" v arhivu \"%s\"?"
 msgid "Update the files in the archive \"%s\"?"
 msgstr "Ali naj posodobim datoteke v arhivu \"%s\""
 
+#: ../src/eggfileformatchooser.c:235
+#, c-format
+msgid "File _Format: %s"
+msgstr "_Zapis datoteke: %s"
+
+#: ../src/eggfileformatchooser.c:381
+msgid "All Files"
+msgstr "Vse datoteke"
+
+#: ../src/eggfileformatchooser.c:382
+msgid "All Supported Files"
+msgstr "Vse podprte datoteke"
+
+#: ../src/eggfileformatchooser.c:391
+msgid "By Extension"
+msgstr "Po priponi"
+
+#: ../src/eggfileformatchooser.c:406
+msgid "File Format"
+msgstr "Zapis datoteke"
+
+#: ../src/eggfileformatchooser.c:424
+msgid "Extension(s)"
+msgstr "Pripone"
+
+#: ../src/eggfileformatchooser.c:654
+#, c-format
+msgid "The program was not able to find out the file format you want to use for `%s'. Please make sure to use a known extension for that file or manually choose a file format from the list below."
+msgstr "Ni mogoče določiti zapisa datoteke, uporabljene za `%s'. Prepričajte se, da uporabljate ustrezno pripono datoteke ali pa sami izberite zapis iz spodnjega seznama."
+
+#: ../src/eggfileformatchooser.c:661
+msgid "File format not recognized"
+msgstr "Zapisa datoteke ni mogoče prepoznati."
+
 #: ../src/fr-archive.c:871
 msgid "File not found."
 msgstr "Datoteke ni mogoče najti."
@@ -663,7 +689,7 @@ msgstr "Ni mogoče najti enote: %s"
 #: ../src/fr-command-tar.c:374
 #: ../src/fr-window.c:2310
 msgid "Deleting files from archive"
-msgstr "Brišem datoteke iz arhiva"
+msgstr "Brisanje datotek iz arhiva"
 
 #: ../src/fr-command-tar.c:477
 msgid "Recompressing archive"
@@ -761,7 +787,7 @@ msgstr "_Odpri arhiv"
 # G:4 K:6 O:0
 #: ../src/fr-window.c:2492
 msgid "_Show the Files"
-msgstr "_Prikaži datoteke"
+msgstr "_Pokaži datoteke"
 
 #: ../src/fr-window.c:2538
 msgid "Archive:"
@@ -782,7 +808,7 @@ msgstr "počakajte ..."
 # G:3 K:0 O:0
 #: ../src/fr-window.c:2930
 msgid "An error occurred while extracting files."
-msgstr "Med razširjanjem datotek je prišlo do napake."
+msgstr "Prišlo je do napake med razširjanjem datotek."
 
 #: ../src/fr-window.c:2936
 #, c-format
@@ -791,23 +817,23 @@ msgstr "Ni mogoče odpreti \"%s\""
 
 #: ../src/fr-window.c:2941
 msgid "An error occurred while loading the archive."
-msgstr "Med nalaganjem arhiva je prišlo do napake."
+msgstr "Prišlo je do napake med nalaganjem arhiva."
 
 #: ../src/fr-window.c:2945
 msgid "An error occurred while deleting files from the archive."
-msgstr "Med brisanjem datotek iz arhiva je prišlo do napake."
+msgstr "Prišlo je do napake med brisanjem datotek iz arhiva."
 
 #: ../src/fr-window.c:2951
 msgid "An error occurred while adding files to the archive."
-msgstr "Med dodajanjem datotek v arhiv je prišlo do napake."
+msgstr "Prišlo je do napake med dodajanjem datotek v arhiv."
 
 #: ../src/fr-window.c:2955
 msgid "An error occurred while testing archive."
-msgstr "Med preizkušanjem arhiva je prišlo do napake."
+msgstr "Prišlo je do napake med preizkušanjem arhiva."
 
 #: ../src/fr-window.c:2959
 msgid "An error occurred while saving the archive."
-msgstr "Med shranjevanjem arhiva je prišlo do napake."
+msgstr "Prišlo je do napake med shranjevanjem arhiva."
 
 #: ../src/fr-window.c:2963
 msgid "An error occurred."
@@ -1092,51 +1118,51 @@ msgstr "Zoo (.zoo)"
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: ../src/main.c:185
+#: ../src/main.c:186
 msgid "Add files to the specified archive and quit the program"
 msgstr "Dodaj datoteke navedenemu arhivu in končaj program"
 
-#: ../src/main.c:186
+#: ../src/main.c:187
 msgid "ARCHIVE"
 msgstr "ARHIV"
 
 # G:0 K:1 O:0
-#: ../src/main.c:189
+#: ../src/main.c:190
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Dodaj datoteke, vprašaj za ime arhiva in končaj program"
 
-#: ../src/main.c:193
+#: ../src/main.c:194
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Razširi datoteke v navedeno mapo in končaj program"
 
-#: ../src/main.c:194
-#: ../src/main.c:206
+#: ../src/main.c:195
+#: ../src/main.c:207
 msgid "FOLDER"
 msgstr "MAPA"
 
 # G:16 K:3 O:0
-#: ../src/main.c:197
+#: ../src/main.c:198
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Razširi datoteke, vprašaj za ciljno mapo in končaj program"
 
-#: ../src/main.c:201
+#: ../src/main.c:202
 msgid "Extract the contents of the archives in the archive folder and quit the program"
 msgstr "Razširi vsebino arhiva v navedeno mapo in končaj program"
 
-#: ../src/main.c:205
+#: ../src/main.c:206
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "Privzeta mapa za uporabo pri ukazih '--add' in '--extract'"
 
-#: ../src/main.c:209
+#: ../src/main.c:210
 msgid "Create destination folder without asking confirmation"
 msgstr "Ustvari ciljno mapo, brez spraševanja za potrditev"
 
 # G:3 K:7 O:0
-#: ../src/main.c:291
+#: ../src/main.c:292
 msgid "- Create and modify an archive"
 msgstr "- Ustvari in spremeni arhiv"
 
-#: ../src/main.c:307
+#: ../src/main.c:308
 msgid "File Roller"
 msgstr "File roller"
 
@@ -1211,7 +1237,7 @@ msgstr "Vsebina"
 # G:8 K:1 O:0
 #: ../src/ui.h:65
 msgid "Display the File Roller Manual"
-msgstr "Prikaži priročnik File rollerja"
+msgstr "Pokaži priročnik File rollerja"
 
 #: ../src/ui.h:70
 #: ../src/ui.h:91
@@ -1365,7 +1391,7 @@ msgstr "_Orodna vrstica"
 # G:2 K:0 O:0
 #: ../src/ui.h:219
 msgid "View the main toolbar"
-msgstr "Prikaži glavno orodno vrstico"
+msgstr "Pokaži glavno orodno vrstico"
 
 #: ../src/ui.h:223
 msgid "Stat_usbar"
@@ -1374,7 +1400,7 @@ msgstr "Vrstica _stanja"
 # G:4 K:0 O:0
 #: ../src/ui.h:224
 msgid "View the statusbar"
-msgstr "Prikaži vrstico stanja"
+msgstr "Pokaži vrstico stanja"
 
 #: ../src/ui.h:228
 msgid "_Reversed Order"
@@ -1448,6 +1474,10 @@ msgstr "po _mestu"
 msgid "Sort file list by location"
 msgstr "Razvrsti seznam datotek glede na pot"
 
+#~ msgid "Archive _type:"
+#~ msgstr "Vrsta _arhiva:"
+#~ msgid "Automatic"
+#~ msgstr "Samodejno"
 #~ msgid "Create Archive"
 #~ msgstr "Ustvari arhiv"
 #~ msgid "_Archive:"
