@@ -50,6 +50,7 @@ struct _EggFileFormatChooserPrivate
   GtkTreeSelection *selection;
   guint idle_hack;
   guint last_id;
+  gulong size_changed_event;
 
   GtkFileChooser *chooser;
   GtkFileFilter *all_files;
@@ -355,11 +356,24 @@ find_by_extension (GtkTreeModel *model,
   return search->success;
 }
 
+static int
+emit_default_size_changed (gpointer user_data)
+{
+  EggFileFormatChooser *self = user_data;
+
+  self->priv->size_changed_event = 0;
+  g_signal_emit_by_name (self->priv->chooser, "default-size-changed");
+  return FALSE;
+}
+
 static void
 expander_unmap_cb (GtkWidget *widget,
 		   gpointer   user_data)
 {
-  egg_file_format_chooser_emit_size_changed ((EggFileFormatChooser *)user_data);
+  EggFileFormatChooser *self = user_data;
+
+  if (self->priv->size_changed_event == 0)
+    self->priv->size_changed_event = gdk_threads_add_idle (emit_default_size_changed, self);
 }
 
 static void
@@ -374,6 +388,8 @@ egg_file_format_chooser_init (EggFileFormatChooser *self)
 
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, EGG_TYPE_FILE_FORMAT_CHOOSER, 
                                             EggFileFormatChooserPrivate);
+
+  self->priv->size_changed_event = 0;
 
 /* file filters */
 
@@ -487,6 +503,11 @@ egg_file_format_chooser_dispose (GObject *obj)
         {
           g_source_remove (self->priv->idle_hack);
           self->priv->idle_hack = 0;
+        }
+      if (self->priv->size_changed_event != 0)
+        {
+          g_source_remove (self->priv->size_changed_event);
+          self->priv->size_changed_event = 0;
         }
     }
 
@@ -699,12 +720,8 @@ egg_file_format_chooser_realize (GtkWidget *widget)
 
   g_return_if_fail (NULL == self->priv->chooser);
 
-  parent = gtk_widget_get_toplevel (widget);
-
-  if (!GTK_IS_FILE_CHOOSER (parent))
-    parent = gtk_widget_get_parent (widget);
-
-  while (parent && !GTK_IS_FILE_CHOOSER (parent))
+  parent = gtk_widget_get_parent (widget);
+  while ((parent != NULL) && !GTK_IS_FILE_CHOOSER (parent))
     parent = gtk_widget_get_parent (parent);
 
   self->priv->chooser = GTK_FILE_CHOOSER (parent);
@@ -1196,24 +1213,11 @@ egg_file_format_chooser_append_extension (EggFileFormatChooser *self,
   return result;
 }
 
-static int
-emit_default_size_changed (gpointer data)
-{
-  if (GTK_IS_FILE_CHOOSER (data))
-    g_signal_emit_by_name (data, "default-size-changed");
-  return FALSE;
-}
-
 void
 egg_file_format_chooser_emit_size_changed (EggFileFormatChooser *self)
 {
-  GtkWidget *parent;
-
-  parent = gtk_widget_get_parent (GTK_WIDGET (self));
-  while ((parent != NULL) && !GTK_IS_FILE_CHOOSER (parent))
-    parent = gtk_widget_get_parent (parent);
-  if (parent != NULL)
-    gdk_threads_add_idle (emit_default_size_changed, parent);
+  if (self->priv->size_changed_event == 0)
+    self->priv->size_changed_event = gdk_threads_add_idle (emit_default_size_changed, self);
 }
 
 /* vim: set sw=2 sta et: */
