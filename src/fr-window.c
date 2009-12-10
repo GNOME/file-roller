@@ -7217,9 +7217,8 @@ rename_selection (FrWindow   *window,
 		}
 
 		new_filename = g_build_filename (current_dir_relative, rdata->new_name, common, NULL);
-		new_file_list = g_list_prepend (new_file_list, g_uri_escape_string (new_filename, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, TRUE));
+		new_file_list = g_list_prepend (new_file_list, new_filename);
 
-		g_free (new_filename);
 		g_free (old_path);
 		g_free (common);
 		g_free (new_path);
@@ -7336,7 +7335,6 @@ fr_window_rename_selection (FrWindow *window,
 	gboolean  renaming_dir = FALSE;
 	char     *utf8_old_name;
 	char     *utf8_new_name;
-
 
 	if (from_sidebar) {
 		path_to_rename = fr_window_get_selected_folder_in_tree_view (window);
@@ -7602,8 +7600,7 @@ add_pasted_files (FrWindow        *window,
 			fr_process_end_command (window->archive->process);
 		}
 
-		new_file_list = g_list_prepend (new_file_list, g_uri_escape_string (new_name, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, TRUE));
-		g_free (new_name);
+		new_file_list = g_list_prepend (new_file_list, new_name);
 	}
 
 	fr_archive_add (window->archive,
@@ -7974,11 +7971,11 @@ fr_window_update_files (FrWindow *window,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		OpenFile *file = scan->data;
-		GList    *file_list;
+		GList    *local_file_list;
 
-		file_list = g_list_append (NULL, g_uri_escape_string (file->path, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, TRUE));
+		local_file_list = g_list_append (NULL, file->path);
 		fr_archive_add (window->archive,
-				file_list,
+				local_file_list,
 				file->temp_dir,
 				"/",
 				FALSE,
@@ -7987,7 +7984,7 @@ fr_window_update_files (FrWindow *window,
 				window->priv->encrypt_header,
 				window->priv->compression,
 				window->priv->volume_size);
-		path_list_free (file_list);
+		g_list_free (local_file_list);
 	}
 
 	fr_process_start (window->archive->process);
