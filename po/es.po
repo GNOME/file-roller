@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: file-roller.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&component=general\n"
-"POT-Creation-Date: 2009-11-16 18:17+0000\n"
-"PO-Revision-Date: 2009-11-16 19:48+0100\n"
+"POT-Creation-Date: 2009-11-30 19:51+0000\n"
+"PO-Revision-Date: 2009-12-13 23:29+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -110,15 +110,15 @@ msgid "Location"
 msgstr "Lugar"
 
 #. MB means megabytes
-#: ../data/ui/batch-add-files.ui.h:5 ../data/ui/new.ui.h:3
+#: ../data/ui/batch-add-files.ui.h:5 ../data/ui/new.ui.h:2
 msgid "MB"
 msgstr "MiB"
 
-#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:4
+#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:3
 msgid "Split in _volumes of"
 msgstr "Partir en _volúmenes de"
 
-#: ../data/ui/batch-add-files.ui.h:7 ../data/ui/new.ui.h:5
+#: ../data/ui/batch-add-files.ui.h:7 ../data/ui/new.ui.h:4
 #: ../data/ui/password.ui.h:3
 msgid "_Encrypt the file list too"
 msgstr "_Cifrar también la lista de archivos"
@@ -131,12 +131,12 @@ msgstr "Nombre del _archivo:"
 msgid "_Location:"
 msgstr "_Lugar:"
 
-#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:6
+#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:5
 msgid "_Other Options"
 msgstr "_Otras opciones"
 
 #: ../data/ui/batch-add-files.ui.h:11 ../data/ui/batch-password.ui.h:2
-#: ../data/ui/new.ui.h:7 ../data/ui/password.ui.h:4
+#: ../data/ui/new.ui.h:6 ../data/ui/password.ui.h:4
 msgid "_Password:"
 msgstr "C_ontraseña:"
 
@@ -164,10 +164,6 @@ msgstr "Archivos _seleccionados"
 #: ../data/ui/delete.ui.h:5 ../src/dlg-extract.c:359
 msgid "example: *.txt; *.doc"
 msgstr "ejemplo: *.txt; *.doc"
-
-#: ../data/ui/new.ui.h:1
-msgid "Archive _type:"
-msgstr "_Tipo de archivador:"
 
 #: ../data/ui/open-with.ui.h:1
 msgid "A_vailable application:"
@@ -277,11 +273,11 @@ msgstr "No se pudo eliminar el archivador anterior."
 msgid "Open"
 msgstr "Abrir"
 
-#: ../src/actions.c:394 ../src/dlg-new.c:248 ../src/fr-window.c:5207
+#: ../src/actions.c:394 ../src/dlg-new.c:325 ../src/fr-window.c:5207
 msgid "All archives"
 msgstr "Todos los archivadores"
 
-#: ../src/actions.c:401 ../src/dlg-new.c:255
+#: ../src/actions.c:401 ../src/dlg-new.c:332
 msgid "All files"
 msgstr "Todos los archivos"
 
@@ -495,15 +491,11 @@ msgstr "Sobre_escribir archivos existentes"
 msgid "Do not e_xtract older files"
 msgstr "No e_xtraer archivos más antiguos"
 
-#: ../src/dlg-new.c:274
-msgid "Automatic"
-msgstr "Automático"
-
-#: ../src/dlg-new.c:341
+#: ../src/dlg-new.c:449
 msgid "New"
 msgstr "Nuevo"
 
-#: ../src/dlg-new.c:354
+#: ../src/dlg-new.c:462
 msgid "Save"
 msgstr "Guardar"
 
@@ -521,7 +513,6 @@ msgstr ""
 "¿Quiere buscar un comando para abrir este archivo?"
 
 #: ../src/dlg-package-installer.c:201
-#| msgid "Could not rename the file"
 msgid "Could not open this file type"
 msgstr "No se pudo abrir este tipo de archivo"
 
@@ -571,6 +562,48 @@ msgstr "¿Actualizar el archivo «%s» en el archivador «%s»?"
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
 msgstr "¿Actualizar los archivos en el archivador «%s»?"
+
+#: ../src/eggfileformatchooser.c:235
+#, c-format
+msgid "File _Format: %s"
+msgstr "_Formato de archivo: %s"
+
+#: ../src/eggfileformatchooser.c:381
+#| msgid "All files"
+msgid "All Files"
+msgstr "Todos los archivos"
+
+#: ../src/eggfileformatchooser.c:382
+msgid "All Supported Files"
+msgstr "Todos los archivos soportados"
+
+#: ../src/eggfileformatchooser.c:391
+msgid "By Extension"
+msgstr "Por extensión"
+
+#: ../src/eggfileformatchooser.c:406
+#| msgid "File Roller"
+msgid "File Format"
+msgstr "Formato de archivo"
+
+#: ../src/eggfileformatchooser.c:424
+msgid "Extension(s)"
+msgstr "Extensiones"
+
+#: ../src/eggfileformatchooser.c:654
+#, c-format
+msgid ""
+"The program was not able to find out the file format you want to use for `%"
+"s'. Please make sure to use a known extension for that file or manually "
+"choose a file format from the list below."
+msgstr ""
+"El programa no pudo encontrar el formato de archivo que quiere usar para «%"
+"s». Asegúrese de usar una extensión de archivo conocida para el archivo o "
+"elija manualmente un formato de archivo de la lista de abajo."
+
+#: ../src/eggfileformatchooser.c:661
+msgid "File format not recognized"
+msgstr "No se reconoció el formato de archivo"
 
 #: ../src/fr-archive.c:871
 msgid "File not found."
@@ -1012,33 +1045,33 @@ msgstr "Zoo (.zoo)"
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: ../src/main.c:185
+#: ../src/main.c:186
 msgid "Add files to the specified archive and quit the program"
 msgstr "Añade archivos al archivador especificado y sale del programa"
 
-#: ../src/main.c:186
+#: ../src/main.c:187
 msgid "ARCHIVE"
 msgstr "ARCHIVADOR"
 
-#: ../src/main.c:189
+#: ../src/main.c:190
 msgid "Add files asking the name of the archive and quit the program"
 msgstr ""
 "Añade archivos preguntando el nombre del archivador y luego sale del programa"
 
-#: ../src/main.c:193
+#: ../src/main.c:194
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Extrae archivadores a la carpeta especificada y sale del programa"
 
-#: ../src/main.c:194 ../src/main.c:206
+#: ../src/main.c:195 ../src/main.c:207
 msgid "FOLDER"
 msgstr "CARPETA"
 
-#: ../src/main.c:197
+#: ../src/main.c:198
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr ""
 "Extrae archivadores preguntando la carpeta de destino y sale del programa"
 
-#: ../src/main.c:201
+#: ../src/main.c:202
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
@@ -1046,19 +1079,19 @@ msgstr ""
 "Extrae el contenido de los archivadores en la carpeta del archivador y sale "
 "del programa"
 
-#: ../src/main.c:205
+#: ../src/main.c:206
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "Carpeta predeterminada para los comandos «--add» y «--extract»"
 
-#: ../src/main.c:209
+#: ../src/main.c:210
 msgid "Create destination folder without asking confirmation"
 msgstr "Crea una carpeta de destino si pedir confirmación"
 
-#: ../src/main.c:291
+#: ../src/main.c:292
 msgid "- Create and modify an archive"
 msgstr " - Crear y modificar un archivador"
 
-#: ../src/main.c:307
+#: ../src/main.c:308
 msgid "File Roller"
 msgstr "File Roller"
 
@@ -1321,6 +1354,12 @@ msgstr "por _ruta"
 #: ../src/ui.h:267
 msgid "Sort file list by location"
 msgstr "Ordena los archivos por su ruta"
+
+#~ msgid "Archive _type:"
+#~ msgstr "_Tipo de archivador:"
+
+#~ msgid "Automatic"
+#~ msgstr "Automático"
 
 #~ msgid "Create Archive"
 #~ msgstr "Crear archivador"
