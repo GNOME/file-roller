@@ -330,7 +330,7 @@ static const char *
 fr_command_lha_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "lha";
+	return PACKAGES ("lha");
 }
 
 

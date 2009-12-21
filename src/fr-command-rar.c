@@ -719,7 +719,7 @@ static const char *
 fr_command_rar_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "rar,unrar";
+	return PACKAGES ("rar,unrar");
 }
 
 

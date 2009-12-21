@@ -596,11 +596,11 @@ fr_command_7z_get_packages (FrCommand  *comm,
 			    const char *mime_type)
 {
 	if (is_mime_type (mime_type, "application/x-rar"))
-		return "p7zip,p7zip-rar";
+		return PACKAGES ("p7zip,p7zip-rar");
 	else if (is_mime_type (mime_type, "application/zip") || is_mime_type (mime_type, "application/vnd.ms-cab-compressed"))
-		return "p7zip,p7zip-full";
+		return PACKAGES ("p7zip,p7zip-full");
 	else
-		return "p7zip";
+		return PACKAGES ("p7zip");
 }
 
 

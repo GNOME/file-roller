@@ -411,7 +411,7 @@ static const char *
 fr_command_zip_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "zip,unzip";
+	return PACKAGES ("zip,unzip");
 }
 
 

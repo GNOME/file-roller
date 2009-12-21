@@ -327,7 +327,7 @@ static const char *
 fr_command_alz_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "unalz";
+	return PACKAGES ("unalz");
 }
 
 

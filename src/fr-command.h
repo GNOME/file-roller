@@ -27,6 +27,8 @@
 #include "file-data.h"
 #include "fr-process.h"
 
+#define PACKAGES(x) (x)
+
 #define FR_TYPE_COMMAND            (fr_command_get_type ())
 #define FR_COMMAND(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND, FrCommand))
 #define FR_COMMAND_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND, FrCommandClass))

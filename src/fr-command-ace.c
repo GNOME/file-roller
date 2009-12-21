@@ -264,7 +264,7 @@ static const char *
 fr_command_ace_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "unace";
+	return PACKAGES ("unace");
 }
 
 

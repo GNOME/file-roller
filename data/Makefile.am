@@ -8,6 +8,9 @@ desktop_in_files = $(desktop_in_in_files:.desktop.in.in=.desktop.in)
 desktopdir = $(datadir)/applications
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop) 
 
+matchdir = $(datadir)/file-roller
+match_DATA = packages.match
+
 schemadir = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = file-roller.schemas
 
@@ -34,6 +37,8 @@ EXTRA_DIST = 			\
 	$(desktop_in_in_files)	\
 	$(desktop_in_files)	\
 	$(desktop_DATA)		\
+	packages.match.in	\
+	packages.match		\
 	$(schema_DATA)
 
 

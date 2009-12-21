@@ -345,7 +345,7 @@ static const char *
 fr_command_arj_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "arj";
+	return PACKAGES ("arj");
 }
 
 

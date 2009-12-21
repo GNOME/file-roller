@@ -230,7 +230,7 @@ static const char *
 fr_command_iso_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "genisoimage";
+	return PACKAGES ("genisoimage");
 }
 
 

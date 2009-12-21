@@ -537,21 +537,21 @@ fr_command_cfile_get_packages (FrCommand  *comm,
 			       const char *mime_type)
 {
 	if (is_mime_type (mime_type, "application/x-gzip"))
-		return "gzip";
+		return PACKAGES ("gzip");
 	else if (is_mime_type (mime_type, "application/x-bzip"))
-		return "bzip2";
+		return PACKAGES ("bzip2");
 	else if (is_mime_type (mime_type, "application/x-compress"))
-		return "ncompress";
+		return PACKAGES ("ncompress");
 	else if (is_mime_type (mime_type, "application/x-lzip"))
-		return "lzip";
+		return PACKAGES ("lzip");
 	else if (is_mime_type (mime_type, "application/x-lzma"))
-		return "lzma";
+		return PACKAGES ("lzma");
 	else if (is_mime_type (mime_type, "application/x-xz"))
-		return "xz";
+		return PACKAGES ("xz");
 	else if (is_mime_type (mime_type, "application/x-lzop"))
-		return "lzop";
+		return PACKAGES ("lzop");
 	else if (is_mime_type (mime_type, "application/x-rzip"))
-		return "rzip";
+		return PACKAGES ("rzip");
 
 	return NULL;
 }

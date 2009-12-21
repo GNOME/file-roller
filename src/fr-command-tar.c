@@ -1050,23 +1050,23 @@ fr_command_tar_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
 	if (is_mime_type (mime_type, "application/x-tar"))
-		return "tar";
+		return PACKAGES ("tar");
 	else if (is_mime_type (mime_type, "application/x-compressed-tar"))
-		return "tar,gzip";
+		return PACKAGES ("tar,gzip");
 	else if (is_mime_type (mime_type, "application/x-bzip-compressed-tar"))
-		return "tar,bzip2";
+		return PACKAGES ("tar,bzip2");
 	else if (is_mime_type (mime_type, "application/x-tarz"))
-		return "tar,gzip,ncompress";
+		return PACKAGES ("tar,gzip,ncompress");
 	else if (is_mime_type (mime_type, "application/x-lzip-compressed-tar"))
-		return "tar,lzip";
+		return PACKAGES ("tar,lzip");
 	else if (is_mime_type (mime_type, "application/x-lzma-compressed-tar"))
-		return "tar,lzma";
+		return PACKAGES ("tar,lzma");
 	else if (is_mime_type (mime_type, "application/x-xz-compressed-tar"))
-		return "tar,xz";
+		return PACKAGES ("tar,xz");
 	else if (is_mime_type (mime_type, "application/x-lzop-compressed-tar"))
-		return "tar,lzop";
+		return PACKAGES ("tar,lzop");
 	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar"))
-		return "tar,p7zip";
+		return PACKAGES ("tar,p7zip");
 
 	return NULL;
 }

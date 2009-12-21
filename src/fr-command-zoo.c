@@ -349,7 +349,7 @@ static const char *
 fr_command_zoo_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "zoo";
+	return PACKAGES ("zoo");
 }
 
 

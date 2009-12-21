@@ -15,10 +15,12 @@ DISABLE_DEPRECATED =
 endif
 
 if RUN_IN_PLACE
+privdatadir = $(top_srcdir)/data/
 uidir = $(top_srcdir)/data/ui
 privexecdir = $(abs_top_builddir)/src/commands/
 shdir = $(top_srcdir)/src/sh/
 else
+privdatadir = $(datadir)/file-roller/
 uidir = $(datadir)/file-roller/ui
 privexecdir = $(libexecdir)/file-roller/
 shdir = $(libexecdir)/file-roller/
@@ -31,6 +33,7 @@ INCLUDES =						\
 	-DFR_PREFIX=\"$(prefix)\"           		\
         -DFR_SYSCONFDIR=\"$(sysconfdir)\"   		\
         -DFR_DATADIR=\"$(datadir)\"     	    	\
+        -DPRIVDATADIR=\"$(privdatadir)\"		\
         -DUI_DIR=\"$(uidir)\"				\
         -DFR_LIBDIR=\"$(libdir)\"  	         	\
         -DPKG_DATA_DIR=\"$(pkgdatadir)\"                \

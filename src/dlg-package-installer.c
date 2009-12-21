@@ -100,6 +100,38 @@ packagekit_install_package_call_notify_cb (DBusGProxy     *proxy,
 }
 
 
+static char **
+get_packages_real_names (char **names)
+{
+	char     **real_names;
+	GKeyFile  *key_file;
+	char      *filename;
+	int        i;
+
+	real_names = g_new0 (char *, g_strv_length (names));
+	key_file = g_key_file_new ();
+	filename = g_build_filename (PRIVDATADIR, "packages.match", NULL);
+	g_key_file_load_from_file (key_file, filename, G_KEY_FILE_NONE, NULL);
+
+	for (i = 0; names[i] != NULL; i++) {
+		char *real_name;
+
+		real_name = g_key_file_get_string (key_file, "Package Matches", names[i], NULL);
+		if (real_name != NULL)
+			real_name = g_strstrip (real_name);
+		if ((real_name == NULL) || (strncmp (real_name, "", 1) == 0))
+			real_names[i] = g_strdup (real_name);
+
+		g_free (real_name);
+	}
+
+	g_free (filename);
+	g_key_file_free (key_file);
+
+	return real_names;
+}
+
+
 static void
 install_packages (InstallerData *idata)
 {
@@ -119,6 +151,7 @@ install_packages (InstallerData *idata)
 			GdkWindow       *window;
 			guint            xid;
 			char           **names;
+			char           **real_names;
 			DBusGProxyCall  *call;
 
 			window = gtk_widget_get_window (GTK_WIDGET (idata->window));
@@ -130,6 +163,7 @@ install_packages (InstallerData *idata)
 		        dbus_g_proxy_set_default_timeout (proxy, INT_MAX);
 
 		        names = g_strsplit (idata->packages, ",", -1);
+		        real_names = get_packages_real_names (names);
 			call = dbus_g_proxy_begin_call (proxy,
 							"InstallPackageNames",
 							(DBusGProxyCallNotify) packagekit_install_package_call_notify_cb,
@@ -141,6 +175,7 @@ install_packages (InstallerData *idata)
 							G_TYPE_INVALID);
 			success = (call != NULL);
 
+			g_strfreev (real_names);
 			g_strfreev (names);
 		}
 	}

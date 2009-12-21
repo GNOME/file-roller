@@ -312,7 +312,7 @@ static const char *
 fr_command_ar_get_packages (FrCommand  *comm,
 			    const char *mime_type)
 {
-	return "binutils";
+	return PACKAGES ("binutils");
 }
 
 

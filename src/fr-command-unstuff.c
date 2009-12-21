@@ -305,7 +305,7 @@ static const char *
 fr_command_unstaff_get_packages (FrCommand  *comm,
 			         const char *mime_type)
 {
-	return "unstaff";
+	return PACKAGES ("unstaff");
 }
 
 

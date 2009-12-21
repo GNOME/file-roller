@@ -244,7 +244,7 @@ static const char *
 fr_command_rpm_get_packages (FrCommand  *comm,
 			     const char *mime_type)
 {
-	return "cpio,rpm";
+	return PACKAGES ("cpio,rpm");
 }
 
 
