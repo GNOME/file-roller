@@ -119,8 +119,10 @@ get_packages_real_names (char **names)
 		real_name = g_key_file_get_string (key_file, "Package Matches", names[i], NULL);
 		if (real_name != NULL)
 			real_name = g_strstrip (real_name);
-		if ((real_name == NULL) || (strncmp (real_name, "", 1) == 0))
+		if ((real_name != NULL) && (strncmp (real_name, "", 1) != 0))
 			real_names[i] = g_strdup (real_name);
+		else
+			real_names[i] = g_strdup (names[i]);
 
 		g_free (real_name);
 	}
