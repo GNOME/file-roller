@@ -6477,18 +6477,48 @@ extract_data_free (ExtractData *edata)
 
 
 static gboolean
-archive_is_encrypted (FrWindow *window)
+archive_is_encrypted (FrWindow *window,
+		      GList    *file_list)
 {
-	int i;
+	gboolean encrypted = FALSE;
 
-	for (i = 0; i < window->archive->command->files->len; i++) {
-		FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
+	if (file_list == NULL) {
+		int i;
 
-		if (fdata->encrypted)
-			return TRUE;
+		for (i = 0; ! encrypted && i < window->archive->command->files->len; i++) {
+			FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
+
+			if (fdata->encrypted)
+				encrypted = TRUE;
+		}
+	}
+	else {
+
+		GHashTable *file_hash;
+		int         i;
+		GList      *scan;
+
+		file_hash = g_hash_table_new (g_str_hash, g_str_equal);
+		for (i = 0; i < window->archive->command->files->len; i++) {
+			FileData *fdata = g_ptr_array_index (window->archive->command->files, i);
+			g_hash_table_insert (file_hash, fdata->original_path, fdata);
+		}
+
+		for (scan = file_list; ! encrypted && scan; scan = scan->next) {
+			char     *filename = scan->data;
+			FileData *fdata;
+
+			fdata = g_hash_table_lookup (file_hash, filename);
+			g_return_val_if_fail (fdata != NULL, FALSE);
+
+			if (fdata->encrypted)
+				encrypted = TRUE;
+		}
+
+		g_hash_table_destroy (file_hash);
 	}
 
-	return FALSE;
+	return encrypted;
 }
 
 
@@ -6512,7 +6542,7 @@ fr_window_archive_extract_here (FrWindow   *window,
 					    edata,
 					    (GFreeFunc) extract_data_free);
 
-	if (archive_is_encrypted (window) && (window->priv->password == NULL)) {
+	if (archive_is_encrypted (window, NULL) && (window->priv->password == NULL)) {
 		dlg_ask_password (window);
 		return;
 	}
@@ -6558,7 +6588,7 @@ fr_window_archive_extract (FrWindow   *window,
 					    edata,
 					    (GFreeFunc) extract_data_free);
 
-	if (archive_is_encrypted (window) && (window->priv->password == NULL)) {
+	if (archive_is_encrypted (window, edata->file_list) && (window->priv->password == NULL)) {
 		dlg_ask_password (window);
 		return;
 	}
