@@ -107,7 +107,7 @@ list__process_line (char     *line,
 		return;
 	}
 
-	if (line[0] != ' ') { /* Read the filename. */
+	if (g_regex_match (arj_comm->filename_line_regex, line, 0, NULL)) { /* Read the filename. */
 		FileData   *fdata;
 		const char *name_field;
 
@@ -142,7 +142,7 @@ list__process_line (char     *line,
 		fields = split_line (line, 10);
 		fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
 		fdata->modified = mktime_from_string (fields[5], fields[6]);
-		if (strcmp (fields[1], "MS-DOS") == 0)
+		if ((strcmp (fields[1], "MS-DOS") == 0) || (strcmp (fields[1], "WIN32") == 0))
 			fdata->encrypted = (g_ascii_strcasecmp (fields[7], "11") == 0);
 		else
 			fdata->encrypted = (g_ascii_strcasecmp (fields[9], "11") == 0);
@@ -375,6 +375,8 @@ fr_command_arj_class_init (FrCommandArjClass *class)
 static void
 fr_command_arj_init (FrCommand *comm)
 {
+	FrCommandArj *arj_comm;
+
 	comm->propAddCanUpdate             = TRUE;
 	comm->propAddCanReplace            = TRUE;
 	comm->propAddCanStoreFolders       = FALSE;
@@ -384,16 +386,23 @@ fr_command_arj_init (FrCommand *comm)
 	comm->propPassword                 = TRUE;
 	comm->propTest                     = TRUE;
 
-	FR_COMMAND_ARJ (comm)->list_started = FALSE;
-	FR_COMMAND_ARJ (comm)->fdata = FALSE;
+	arj_comm = FR_COMMAND_ARJ (comm);
+	arj_comm->list_started = FALSE;
+	arj_comm->fdata = FALSE;
+	arj_comm->filename_line_regex = g_regex_new ("[0-9]+\\) ", G_REGEX_OPTIMIZE, 0, NULL);
 }
 
 
 static void
 fr_command_arj_finalize (GObject *object)
 {
+	FrCommandArj *arj_comm;
+
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_ARJ (object));
+
+	arj_comm = FR_COMMAND_ARJ (object);
+	g_regex_unref (arj_comm->filename_line_regex);
 
 	/* Chain up */
 	if (G_OBJECT_CLASS (parent_class)->finalize)

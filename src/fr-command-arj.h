@@ -44,6 +44,7 @@ struct _FrCommandArj
 	gboolean  list_started;
 	int       line_no;
 	FileData *fdata;
+	GRegex   *filename_line_regex;
 };
 
 struct _FrCommandArjClass
