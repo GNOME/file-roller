@@ -155,24 +155,24 @@ file_roller_SOURCES = 			\
 	$(BUILT_SOURCES)
 
 fr-marshal.h: fr-marshal.list $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=fr_marshal > $@
+	$(AM_V_GEN)( $(GLIB_GENMARSHAL) $< --header --prefix=fr_marshal > $@ )
 
 fr-marshal.c: fr-marshal.list $(GLIB_GENMARSHAL)
-	echo "#include \"fr-marshal.h\"" > $@ && \
-	$(GLIB_GENMARSHAL) $< --body --prefix=fr_marshal >> $@
+	$(AM_V_GEN)( echo "#include \"fr-marshal.h\"" > $@ && \
+	$(GLIB_GENMARSHAL) $< --body --prefix=fr_marshal >> $@ )
 
 fr-enum-types.h: typedefs.h $(GLIB_MKENUMS)
-	$(GLIB_MKENUMS) \
+	$(AM_V_GEN)( $(GLIB_MKENUMS) \
 		--fhead "#ifndef FR_ENUM__TYPES_H\n#define FR_ENUM_TYPES_H\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
 		--fprod "/* enumerations from \"@filename@\" */\n" \
 		--vhead "GType @enum_name@_get_type (void);\n#define FR_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" \
 		--ftail "G_END_DECLS\n\n#endif /* FR_ENUM_TYPES_H */" \
 		$^> xgen-$(@F) \
 	&& (cmp -s xgen-$(@F) fr-enum-types.h || cp xgen-$(@F) fr-enum-types.h ) \
-	&& rm -f xgen-$(@F)
+	&& rm -f xgen-$(@F) )
 
 fr-enum-types.c: typedefs.h fr-enum-types.h
-	$(GLIB_MKENUMS) \
+	$(AM_V_GEN)( $(GLIB_MKENUMS) \
 		--fhead "#include <glib-object.h>\n" \
 		--fprod "\n/* enumerations from \"@filename@\" */\n#include \"@filename@\"" \
 		--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" \
@@ -180,7 +180,7 @@ fr-enum-types.c: typedefs.h fr-enum-types.h
 		--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
 		$^> xgen-$(@F) \
 	&& (cmp -s xgen-$(@F) fr-enum-types.c || cp xgen-$(@F) fr-enum-types.c ) \
-	&& rm -f xgen-$(@F)
+	&& rm -f xgen-$(@F) )
 
 file_roller_LDADD =							\
 		    $(top_builddir)/copy-n-paste/libeggsmclient.la	\
