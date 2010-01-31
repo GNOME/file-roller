@@ -7119,8 +7119,10 @@ typedef struct {
 	char     *path_to_rename;
 	char     *old_name;
 	char     *new_name;
-	gboolean  is_dir;
 	char     *current_dir;
+	gboolean  is_dir;
+	gboolean  dir_in_archive;
+	char     *original_path;
 } RenameData;
 
 
@@ -7129,7 +7131,9 @@ rename_data_new (const char *path_to_rename,
 		 const char *old_name,
 		 const char *new_name,
 		 const char *current_dir,
-		 gboolean    is_dir)
+		 gboolean    is_dir,
+		 gboolean    dir_in_archive,
+		 const char *original_path)
 {
 	RenameData *rdata;
 
@@ -7139,9 +7143,12 @@ rename_data_new (const char *path_to_rename,
 		rdata->old_name = g_strdup (old_name);
 	if (new_name != NULL)
 		rdata->new_name = g_strdup (new_name);
-	rdata->is_dir = is_dir;
 	if (current_dir != NULL)
 		rdata->current_dir = g_strdup (current_dir);
+	rdata->is_dir = is_dir;
+	rdata->dir_in_archive = dir_in_archive;
+	if (original_path != NULL)
+		rdata->original_path = g_strdup (original_path);
 
 	return rdata;
 }
@@ -7156,7 +7163,7 @@ rename_data_free (RenameData *rdata)
 	g_free (rdata->old_name);
 	g_free (rdata->new_name);
 	g_free (rdata->current_dir);
-
+	g_free (rdata->original_path);
 	g_free (rdata);
 }
 
@@ -7167,19 +7174,26 @@ rename_selection (FrWindow   *window,
 		  const char *old_name,
 		  const char *new_name,
 		  const char *current_dir,
-		  gboolean    is_dir)
+		  gboolean    is_dir,
+		  gboolean    dir_in_archive,
+		  const char *original_path)
 {
-	GList      *file_list;
-	char       *tmp_dir;
 	FrArchive  *archive = window->archive;
-	GList      *scan, *new_file_list = NULL;
 	RenameData *rdata;
+	char       *tmp_dir;
+	GList      *file_list;
+	gboolean    added_dir;
+	char       *new_dirname;
+	GList      *new_file_list;
+	GList      *scan;
 
 	rdata = rename_data_new (path_to_rename,
 				 old_name,
 				 new_name,
 				 current_dir,
-				 is_dir);
+				 is_dir,
+				 dir_in_archive,
+				 original_path);
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_RENAME,
 					    rdata,
@@ -7203,16 +7217,35 @@ rename_selection (FrWindow   *window,
 				     FALSE,
 				     window->priv->password);
 
-	fr_archive_remove (archive,
-			   file_list,
-			   window->priv->compression);
+	/* temporarily add the dir to rename to the list if it's stored in the
+	 * archive, this way it will be removed from the archive... */
+	added_dir = FALSE;
+	if (is_dir && dir_in_archive && ! g_list_find_custom (file_list, original_path, (GCompareFunc) strcmp)) {
+		file_list = g_list_prepend (file_list, g_strdup (original_path));
+		added_dir = TRUE;
+	}
 
+	fr_archive_remove (archive, file_list, window->priv->compression);
 	fr_window_clipboard_remove_file_list (window, file_list);
 
-	/* rename files. */
+	/* ...and remove it from the list again */
+	if (added_dir) {
+		GList *tmp;
 
+		tmp = file_list;
+		file_list = g_list_remove_link (file_list, tmp);
+
+		g_free (tmp->data);
+		g_list_free (tmp);
+	}
+
+	/* rename the files. */
+
+	new_dirname = g_build_filename (rdata->current_dir + 1, rdata->new_name, "/", NULL);
+	new_file_list = NULL;
 	if (rdata->is_dir) {
-		char *old_path, *new_path;
+		char *old_path;
+		char *new_path;
 
 		old_path = g_build_filename (tmp_dir, rdata->current_dir, rdata->old_name, NULL);
 		new_path = g_build_filename (tmp_dir, rdata->current_dir, rdata->new_name, NULL);
@@ -7256,6 +7289,11 @@ rename_selection (FrWindow   *window,
 	}
 	new_file_list = g_list_reverse (new_file_list);
 
+	/* FIXME: this is broken for tar archives.
+	if (is_dir && dir_in_archive && ! g_list_find_custom (new_file_list, new_dirname, (GCompareFunc) strcmp))
+		new_file_list = g_list_prepend (new_file_list, g_build_filename (rdata->current_dir + 1, rdata->new_name, NULL));
+	*/
+
 	fr_archive_add (archive,
 			new_file_list,
 			tmp_dir,
@@ -7267,6 +7305,7 @@ rename_selection (FrWindow   *window,
 			window->priv->compression,
 			window->priv->volume_size);
 
+	g_free (new_dirname);
 	path_list_free (new_file_list);
 	path_list_free (file_list);
 
@@ -7364,6 +7403,8 @@ fr_window_rename_selection (FrWindow *window,
 	char     *parent_dir;
 	char     *old_name;
 	gboolean  renaming_dir = FALSE;
+	gboolean  dir_in_archive = FALSE;
+	char     *original_path = NULL;
 	char     *utf8_old_name;
 	char     *utf8_new_name;
 
@@ -7383,8 +7424,10 @@ fr_window_rename_selection (FrWindow *window,
 			return;
 
 		renaming_dir = file_data_is_dir (selected_item);
+		dir_in_archive = selected_item->dir;
+		original_path = g_strdup (selected_item->original_path);
 
-		if (renaming_dir && ! selected_item->dir) {
+		if (renaming_dir && ! dir_in_archive) {
 			parent_dir = g_strdup (fr_window_get_current_location (window));
 			old_name = g_strdup (selected_item->list_name);
 			path_to_rename = g_build_filename (parent_dir, old_name, NULL);
@@ -7462,7 +7505,14 @@ fr_window_rename_selection (FrWindow *window,
 			goto retry__rename_selection;
 		}
 
-		rename_selection (window, path_to_rename, old_name, new_name, parent_dir, renaming_dir);
+		rename_selection (window,
+				  path_to_rename,
+				  old_name,
+				  new_name,
+				  parent_dir,
+				  renaming_dir,
+				  dir_in_archive,
+				  original_path);
 
 		g_free (new_name);
 	}
@@ -7470,6 +7520,7 @@ fr_window_rename_selection (FrWindow *window,
 	g_free (old_name);
 	g_free (parent_dir);
 	g_free (path_to_rename);
+	g_free (original_path);
 }
 
 
@@ -8490,7 +8541,9 @@ fr_window_exec_batch_action (FrWindow      *window,
 				  rdata->old_name,
 				  rdata->new_name,
 				  rdata->current_dir,
-				  rdata->is_dir);
+				  rdata->is_dir,
+				  rdata->dir_in_archive,
+				  rdata->original_path);
 		break;
 
 	case FR_BATCH_ACTION_PASTE:

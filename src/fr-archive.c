@@ -1970,7 +1970,7 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 
 static gboolean
 file_is_in_subfolder_of (const char *filename,
-			 GList      *folder_list)
+		         GList      *folder_list)
 {
 	GList *scan;
 
@@ -1987,13 +1987,10 @@ file_is_in_subfolder_of (const char *filename,
 	return FALSE;
 }
 
-
 static gboolean
 archive_type_has_issues_deleting_non_empty_folders (FrArchive *archive)
 {
-	/*if ((archive->command->files == NULL) || (archive->command->files->len == 0))
-		return FALSE;  FIXME: test with extract_here */
-	return ! archive->command->propCanDeleteNonEmptyFolders;
+       return ! archive->command->propCanDeleteNonEmptyFolders;
 }
 
 

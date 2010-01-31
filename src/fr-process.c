@@ -877,8 +877,18 @@ check_child (gpointer data)
 
 	/* Execute next command. */
 	if (continue_process) {
-		if (process->error.type != FR_PROC_ERROR_NONE)
+		if (process->error.type != FR_PROC_ERROR_NONE) {
 			allow_sticky_processes_only (process, TRUE);
+#ifdef DEBUG
+			{
+				GList *scan;
+
+				g_print ("** ERROR **\n");
+				for (scan = process->err.raw; scan; scan = scan->next)
+					g_print ("%s\n", (char *)scan->data);
+			}
+#endif
+		}
 
 		if (process->priv->sticky_only) {
 			do {
