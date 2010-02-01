@@ -2768,7 +2768,7 @@ action_started (FrArchive *archive,
 #endif
 
 	message = get_message_from_action (action);
-	full_msg = g_strdup_printf ("%s, %s", message, _("wait please..."));
+	full_msg = g_strdup_printf ("%s, %s", message, _("please wait..."));
 	fr_window_push_message (window, full_msg);
 
 	switch (action) {

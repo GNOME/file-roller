@@ -260,7 +260,7 @@ static GtkRadioActionEntry sort_by_entries[] = {
 	  N_("by T_ype"), NULL,
 	  N_("Sort file list by type"), FR_WINDOW_SORT_BY_TYPE },
 	{ "SortByDate", NULL,
-	  N_("by _Date modified"), NULL,
+	  N_("by _Date Modified"), NULL,
 	  N_("Sort file list by modification time"), FR_WINDOW_SORT_BY_TIME },
 	{ "SortByLocation", NULL,
 	  N_("by _Location"), NULL,
