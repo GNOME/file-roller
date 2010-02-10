@@ -91,6 +91,8 @@ AC_CHECK_FUNC(mkdtemp,
     mkdtemp_missing=true)
 AM_CONDITIONAL(MKDTEMP_MISSING, test x$mkdtemp_missing = xtrue)
 
+AC_CHECK_LIB(m, floor)
+
 dnl ==========================================================================
 
 AC_ARG_ENABLE(packagekit,
