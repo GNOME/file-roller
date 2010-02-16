@@ -548,11 +548,14 @@ fr_registered_command_get_potential_capabilities (FrRegisteredCommand *reg_com,
 {
 	int i;
 
+	if (mime_type == NULL)
+		return FR_COMMAND_CAN_DO_NOTHING;
+
 	for (i = 0; i < reg_com->caps->len; i++) {
 		FrMimeTypeCap *cap;
 
 		cap = g_ptr_array_index (reg_com->caps, i);
-		if (strcmp (mime_type, cap->mime_type) == 0)
+		if ((cap->mime_type != NULL) && (strcmp (mime_type, cap->mime_type) == 0))
 			return cap->potential_capabilities;
 	}
 
