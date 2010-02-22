@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
 
-AC_INIT(file-roller, 2.29.90, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
+AC_INIT(file-roller, 2.29.91, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
 AM_INIT_AUTOMAKE([1.9 foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -44,7 +44,7 @@ AC_SUBST([GTK_LIBS])
 
 dnl ===========================================================================
 
-AC_ARG_ENABLE(run_in_place, 
+AC_ARG_ENABLE(run_in_place,
               AS_HELP_STRING([--enable-run-in-place],[load ui data and extensions from the source tree]),
               [case "${enableval}" in
               yes) enable_run_in_place=yes ;;

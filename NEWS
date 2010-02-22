@@ -1,3 +1,24 @@
+version 2.29.91
+---------------
+
+        Bugs fixed:
+
+        * Ensure that strcmp gets non-NULL values (#609449)
+
+        New or updated application translations:
+
+        * Chinese (Hong Kong) (Chao-Hsiung Liao)
+        * Chinese/Traditional (Chao-Hsiung Liao)
+        * Czech (Adrian Guniš)
+        * Gallician (Fran Diéguez)
+        * German (Nathan-J. Hirschauer)
+        * Norwegian Bokmål (Kjartan Maraas)
+        * Polish (Piotr Drąg)
+        * Romanian (Lucian Adrian Grijincu)
+        * Slovenian (Matej Urbančič)
+        * Swedish (Daniel Nylander)
+        * Tamil (Dr,T,Vasudevan)
+
 version 2.29.90
 ---------------
 
@@ -86,19 +107,19 @@ version 2.29.1
 
 	New features and user visible changes
 
-	* Install the missing packages if a command is not available 
+	* Install the missing packages if a command is not available
           (#482560)
 
 	Bugs fixed:
 
-	* #590606: drag and drop bug makes file-roller UI unusable as 
+	* #590606: drag and drop bug makes file-roller UI unusable as
           a whole
-	* #600131: encrypt_header is left enabled when creating zip 
+	* #600131: encrypt_header is left enabled when creating zip
           archives
-	* #580624: Visual refresh issues while browsing into the 
+	* #580624: Visual refresh issues while browsing into the
           directories included in the archive
-	* #326017: 4th and 5th mouse buttons should control back / 
-	  forward 
+	* #326017: 4th and 5th mouse buttons should control back /
+	  forward
 	* #590027: file-roller will not update files
 
         New or updated application translations:
@@ -122,8 +143,8 @@ version 2.28.0
 
         New or updated application translations:
 
-        * Assamese 
-        * Breton (Denis) 
+        * Assamese
+        * Breton (Denis)
         * British English (Philip Withnall)
         * Catalan (Gil Forcada)
         * Danish (Kenneth Nielsen)
@@ -291,12 +312,12 @@ version 2.26.1
 --------------
 
 	Bugs fixed:
-	
+
 	* #574657: support corrupted rar archives.
         * #576960: file-roller shows random filesize for zero bytes files.
         * #577389: File roller hangs and leaks memory when file is dragged /
           dropped from archive
-	
+
 	New or updated application translations:
 
 	* Estonian (Ivar Smolin)
@@ -309,7 +330,7 @@ version 2.26.1
 	* Assamese (Amitakhya Phukan)
 
 	New or updated manual translations:
-	
+
 	* Español (Jorge González)
 	* French (Claude Paroz)
 	* German (Mario Blättermann)
@@ -505,7 +526,7 @@ version 2.24.0
 	* Afrikaans (F Wolff)
 	* Arabic (Anas Afif Emad)
 	* Catalan (Jordi Mallach)
-	* Croatian 
+	* Croatian
 	* Danish (Ask Hjorth Larsen)
 	* Dzongkha (Dawa pemo)
 	* French (Claude Paroz)
@@ -521,7 +542,7 @@ version 2.24.0
 	* Russian (Yuriy Penkin)
 	* Serbian (sr) (Горан Ракић)
 	* Serbian (sr) (Goran Rakić)
-	* Telugu (Krishna Babu K)	
+	* Telugu (Krishna Babu K)
 	* Turkish (Baris Cicek)
 
 	New or updated manual translations:
@@ -671,7 +692,7 @@ version 2.23.4
 --------------
 
         New features and user visible changes:
-	
+
 	* Added support for reading and extracting alz archives (#521324).
 	* Added support for rzip compressed files (#503000).
 	* Added support for creating self-extracting zip archives.
@@ -679,92 +700,92 @@ version 2.23.4
 	* Added support for header encryption.  Implemented header encryption for
 	  7zip and rar archives.
 	* Use the 7z command to read/write zip, cbr, cbz archives, and to
-	  read cabinet, arj, rar and iso archives.	
-	* Try to get the mime type from magic numbers if all other methods 
+	  read cabinet, arj, rar and iso archives.
+	* Try to get the mime type from magic numbers if all other methods
 	  fail.
 	* Now the progress dialog is exact when adding, extracting or deleting
 	  files for tar, zip, rar and 7zip archives (#153281).
-	* Do not add the backup files, that is files ending with ~, to the 
-	  archive. 
-	* Operations are now more efficient for archives with a long file 
+	* Do not add the backup files, that is files ending with ~, to the
+	  archive.
+	* Operations are now more efficient for archives with a long file
 	  list.
-	
+
 	Bugfixes:
-	
+
 	* Fixed bug #343201 – Use p7zip for RAR archives?
 	* Fixed bug #529395 – file-roller will not open 256 AES zip files
 	* Fixed bug #515194 – PK 4.5 Zip files
 	* Fixed bug #519046 – add x-cbr and x-cbz support
-	* Fixed bug #336790 – file-roller can't open winzip-10 encrypted files (AES)	
+	* Fixed bug #336790 – file-roller can't open winzip-10 encrypted files (AES)
 	* Fixed bug #539629 – Create archive for Trash/Computer
 	* Fixed bug #506698 – 7z Filename (header) Encryption request
 	* Fixed bug #542541 – icon lookup code is broken
-	* Fixed bug #504584 – Incorrect comportment when extracting multi part 
+	* Fixed bug #504584 – Incorrect comportment when extracting multi part
 	  rar files.
-	
+
 	Internal code:
-	
+
 	* Simplified the way to register commands.
-	* Allow to compile with Gtk+ 2.12 as well. 
-	
+	* Allow to compile with Gtk+ 2.12 as well.
+
 version 2.23.3
 --------------
-	* Added partial support for tar archives compressed with 7zip.  
-	* Display the progress dialog if the operation lasts more than 5 
+	* Added partial support for tar archives compressed with 7zip.
+	* Display the progress dialog if the operation lasts more than 5
 	  seconds.
 	  Display the progress dialog without delay if extracting or converting
-	  an archive.  After the extraction add to the progress dialog the 
-	  button to open the destination folder and after the conversion add 
+	  an archive.  After the extraction add to the progress dialog the
+	  button to open the destination folder and after the conversion add
 	  the button to open the newly created archive.
-	  Removed the 'view folder after extraction' option from the 
+	  Removed the 'view folder after extraction' option from the
 	  extraction dialog.
 	* Removed the preview-file stock item, use gtk_stock_open instead.
 	* Do not use the sh command to exec the process, use the utility command
 	  directly to allow to stop the process properly
 	* Use g_io_channel to read the command output.
-	
+
 version 2.23.2
---------------	
+--------------
 
 	* Fixed bug #480190 – files added to archive are wrongly placed in root
-	* Fixed bug #535967 – Meaningless message: Open Go to the next visited 
+	* Fixed bug #535967 – Meaningless message: Open Go to the next visited
 	  location selected folder
 	* Fixed bug #536055 – Support for special characters in rpm archives
 	* Fixed bug #527271 – Ctrl-Q should quit file-roller.
-	* Fixed bug #532789 – file-roller crashes when modifying archive, 
+	* Fixed bug #532789 – file-roller crashes when modifying archive,
 	  data destroyed
-	* Fixed bug #532255 – file-roller silently allows the user to exit in 
+	* Fixed bug #532255 – file-roller silently allows the user to exit in
 	  the middle of an operation.
 
 version 2.23.1
---------------	
+--------------
 
         New features and user visible changes:
 
-	* Show an alert dialog when the 'save as' operation is completed, and 
+	* Show an alert dialog when the 'save as' operation is completed, and
 	  allow the user the open the newly created archive.
 	* Load and save the 'add folder' dialog options.  Allow to clear the
 	  options as well.
-	* Allow to specify a password when converting an archive to another 
+	* Allow to specify a password when converting an archive to another
 	  format.
-	* Added keyboard shortcut to deselect all.  Moved add files and add 
+	* Added keyboard shortcut to deselect all.  Moved add files and add
 	  folders down in the edit menu.  Moved stop and reaload at the bottom of
 	  the view menu.  Removed the 'sort by' submenu.
-	* Added an exclude folder filter to specify sub-folders to ignore when 
+	* Added an exclude folder filter to specify sub-folders to ignore when
 	  adding a folder recursively.
 	* Added ability to extract folders from the folder
 	  pane using drag & drop.
-	
+
 	Bugfixes:
-	
+
 	* Fixed bug #523158 – exclamation mark in RAR password
 	* Fixed bug #516043 – status bar / progress bar artifact
 	* Fixed bug #512474 – Visual glitches at startup
-	
+
 	Internal code has been modified in order to remove the usage of
-	deprecated libraries and API: 
-	  
-	* now the GIO library is used to access the filesystem instead of 
+	deprecated libraries and API:
+
+	* now the GIO library is used to access the filesystem instead of
 	  the deprecated gnome-vfs library.
 	* gtk+ is used to get the applications and mime types icons.
 	* replaced gnome_url_show with g_app_info_launch_default_for_uri.
@@ -772,7 +793,7 @@ version 2.23.1
 	* use the new tooltips API.
 	* use g_key_file instead of gnome_config for loading/saving sessions.
 	* use GRegex instead of the custom utf8_fnmatch function.
-	  
+
 version 2.22.0
 --------------
 
@@ -792,17 +813,17 @@ version 2.21.91
 
 version 2.21.2
 --------------
-	
+
 	New features:
-	
-	* Added the ability to find the files of the archive with the 
+
+	* Added the ability to find the files of the archive with the
 	  specified filename.
-	  
+
 	Bug fixes:
-	
+
 	* Fixed bug #303213 – default to extract in home instead of tmp
 	* Fixed bug #509933 – 2.21.1 does not compile
-	
+
 version 2.21.1
 --------------
 
@@ -810,71 +831,71 @@ version 2.21.1
 
 	* Implemented the ability to update the files in an archive
 	  when the files are modified with an external application (#109767).
-	* Added support for lzma files, both normal files and tar-files 
+	* Added support for lzma files, both normal files and tar-files
 	  compressed by lzma (#502999).
-	
+
 	Bugfixes:
-	
+
 	* Fixed bug #487012: Check for the existence of 'filename.tar.{bz2,gz}'
-	  and only if it doesn't exist it makes file-roller call tar with 
+	  and only if it doesn't exist it makes file-roller call tar with
 	  the '-cf' switch.
 	* Fixed bug #487079: Key F10 can not activate the main menu.
 	* Fixed bug #499958: file size displayed incorrectly on .Z file
 	* Fixed bug #499558: File-roller is unable to expand some zip files
 	* Fixed bug #458399: fix duplicated hotkeys, assign new hotkeys, add
 	  some user-friendly features
-	* Fixed bug #475166: Failed assertion when --extract-here is used 
+	* Fixed bug #475166: Failed assertion when --extract-here is used
  	  without --extract-to
  	* Fixed bug #505987: Nautilus extension directory changed to -2.0
- 	* Fixed bug #487012: file-roller causes gnu tar >= 1.19 to give 
+ 	* Fixed bug #487012: file-roller causes gnu tar >= 1.19 to give
 	  warnings when creating tar-archives
 	* Fixed bug #490891: skips files when opening an old ARJ archive
 	* Fixed bug #504597: Direct compare on string
 
 version 2.20.2
 --------------
-	* Updated translations: Occitan (oc), Galician (gl), Arabic (ar), 
+	* Updated translations: Occitan (oc), Galician (gl), Arabic (ar),
 	Slovenian (sl), Hebrew (he), Hungarian (hu).
-	
+
 version 2.20.1
 --------------
 	* Fixed crash after cancelling an archive creation from the Nautilus
 	context menu. (bug #482203)
-	
+
 version 2.20.0
 --------------
 	* Fixed bug #473158 - ask-password.glade is missing
-	* Fixes bug #463968 - file-roller crashed with SIGSEGV in 
+	* Fixes bug #463968 - file-roller crashed with SIGSEGV in
 	  g_closure_invoke()
-	* Removed old check that prevented extraction to remote locations 
+	* Removed old check that prevented extraction to remote locations
 	  via DnD.
 
 version 2.19.92
 ---------------
 	* Display empty folders in 7zip archives.
-	
+
 version 2.19.91
 ---------------
-	* Fixed bug #467482 - [gutsy regression] "extract here" no longer puts 
+	* Fixed bug #467482 - [gutsy regression] "extract here" no longer puts
 	  extracted file "here".
 	* Fixed bug #468677 - file-roller doesn't open folders if you go up
 	  one level.
 	* Fixed bug #469528 - file-roller crashed with SIGSEGV in strlen()
-	* Fixed bug #469221 - extract a package on an NTFS partition doesn't 
+	* Fixed bug #469221 - extract a package on an NTFS partition doesn't
 	  work.
 
 version 2.19.90
 ---------------
 	* Fixed copy & paste of folders with tar archives.
 	* Fixed execution of the sidebar context menu commands.
-	* Fixed renaming of files.  Do not change the current location when 
+	* Fixed renaming of files.  Do not change the current location when
 	reloading the archive after a rename.
 	* Fixed bug #144216 - can't open compressed .EXE files
 	* Fixed bug #463251 - remove #include <gnome.h> lines
 	* Fixed bug #463235 - Can't add an empty directory with --add option.
 	* Fixed bug #463753 - replace gnome_help_display.
 	* Fixed bug #463887 - Progress bar height should be smaller.
-	
+
 version 2.19.4
 --------------
 	* Get the mime type from the file content to find out the default
@@ -883,30 +904,30 @@ version 2.19.4
 	* Unescape the archive filename in the tree view.
 	* Fixed bug #450150 - Translate program description correctly.
 	* Fixesd bug #461356 - Please add comment to this time string.
-	
+
 version 2.19.3
 --------------
 	* Added support for Drag&Drop among file-roller	windows.
-	* Added a folders pane.  
+	* Added a folders pane.
 	* Fixed daylight saving time calculation.
 	* Save and restore the filename column width.
-	* Fixed bug #402756 - Can not open a file whose name is in 
+	* Fixed bug #402756 - Can not open a file whose name is in
 	non-ascii encoding.
-	
+
 version 2.19.2
 --------------
 	* Added support for cut/copy and paste among different windows.
 	* Fixed bug #171619 - uses GnomeIconTheme which is deprecated
 	* Fixed bug #398824 - crash in Archive Manager: Opened a lha-archiv
-	* Fixed bug #438340 - file-roller has problems with files starting 
+	* Fixed bug #438340 - file-roller has problems with files starting
 	  with a dash ("-")
 	* Fixed bug #402760 - "modified time" column is displayed blank in
 	  zh_CN.GB18030 locale when creating a new archive
-	* Fixes bug #440662 - extraction of files with special characters only 
+	* Fixes bug #440662 - extraction of files with special characters only
 	  when in directory.
-	* Fixes bug #439154 - file-roller: fails to create archives from 
+	* Fixes bug #439154 - file-roller: fails to create archives from
 	  files starting with '#'
-	
+
 version 2.19.1
 --------------
 	* Added ability to load and save remote archives, to add remote files
