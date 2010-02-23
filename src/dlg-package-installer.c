@@ -204,47 +204,6 @@ confirm_search_dialog_response_cb (GtkDialog *dialog,
 }
 
 
-static void
-dbus_name_has_owner_call_notify_cb (DBusGProxy     *proxy,
-				    DBusGProxyCall *call,
-				    gpointer        user_data)
-{
-	InstallerData *idata = user_data;
-	GError        *error = NULL;
-	gboolean       success;
-	gboolean       present;
-	char          *secondary_text;
-	GtkWidget     *dialog;
-
-	success = dbus_g_proxy_end_call (proxy, call, &error, G_TYPE_BOOLEAN, &present, G_TYPE_INVALID);
-	if (! success) {
-		package_installer_terminated (idata, error->message);
-		g_error_free (error);
-		return;
-	}
-
-	if (! present) {
-		package_installer_terminated (idata, _("Archive type not supported."));
-		return;
-	}
-
-	secondary_text = g_strdup_printf (_("There is no command installed for %s files.\nDo you want to search for a command to open this file?"),
-					  g_content_type_get_description (idata->archive->content_type));
-	dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
-					  GTK_DIALOG_MODAL,
-					  GTK_STOCK_DIALOG_ERROR,
-					  _("Could not open this file type"),
-					  secondary_text,
-					  GTK_STOCK_CANCEL, GTK_RESPONSE_NO,
-					  _("_Search Command"), GTK_RESPONSE_YES,
-					  NULL);
-	g_signal_connect (dialog, "response", G_CALLBACK (confirm_search_dialog_response_cb), idata);
-	gtk_widget_show (dialog);
-
-	g_free (secondary_text);
-}
-
-
 void
 dlg_package_installer (FrWindow  *window,
 		       FrArchive *archive,
@@ -279,29 +238,30 @@ dlg_package_installer (FrWindow  *window,
 	}
 
 #ifdef ENABLE_PACKAGEKIT
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
-	if (connection != NULL) {
-		DBusGProxy *proxy;
 
-		proxy = dbus_g_proxy_new_for_name (connection,
-						   DBUS_SERVICE_DBUS,
-						   DBUS_PATH_DBUS,
-						   DBUS_INTERFACE_DBUS);
-		if (proxy != NULL) {
-			DBusGProxyCall *call;
+	{
+		char      *secondary_text;
+		GtkWidget *dialog;
 
-			call = dbus_g_proxy_begin_call (proxy,
-							"NameHasOwner",
-							(DBusGProxyCallNotify) dbus_name_has_owner_call_notify_cb,
-							idata,
-							NULL,
-							G_TYPE_STRING, "org.freedesktop.PackageKit",
-							G_TYPE_INVALID);
-			success = (call != NULL);
-		}
+		secondary_text = g_strdup_printf (_("There is no command installed for %s files.\nDo you want to search for a command to open this file?"),
+						  g_content_type_get_description (idata->archive->content_type));
+		dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
+						  GTK_DIALOG_MODAL,
+						  GTK_STOCK_DIALOG_ERROR,
+						  _("Could not open this file type"),
+						  secondary_text,
+						  GTK_STOCK_CANCEL, GTK_RESPONSE_NO,
+						  _("_Search Command"), GTK_RESPONSE_YES,
+						  NULL);
+		g_signal_connect (dialog, "response", G_CALLBACK (confirm_search_dialog_response_cb), idata);
+		gtk_widget_show (dialog);
+
+		g_free (secondary_text);
 	}
-#endif /* ENABLE_PACKAGEKIT */
 
-	if (! success)
-		package_installer_terminated (idata, _("Archive type not supported."));
+#else /* ! ENABLE_PACKAGEKIT */
+
+	package_installer_terminated (idata, _("Archive type not supported."));
+
+#endif /* ENABLE_PACKAGEKIT */
 }
