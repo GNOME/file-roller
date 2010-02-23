@@ -672,6 +672,8 @@ update_registered_commands_capabilities (void)
 {
 	int i;
 
+	g_hash_table_remove_all (ProgramsCache);
+
 	for (i = 0; i < Registered_Commands->len; i++) {
 		FrRegisteredCommand *reg_com;
 		FrCommand           *command;
