@@ -52,6 +52,12 @@ static void
 package_installer_terminated (InstallerData *idata,
 			      const char    *error)
 {
+	GdkWindow *window;
+
+	window = gtk_widget_get_window (GTK_WIDGET (idata->window));
+	if (window != NULL)
+		gdk_window_set_cursor (window, NULL);
+
 	if (error != NULL) {
 		fr_archive_action_completed (idata->archive,
 					     FR_ACTION_CREATING_NEW_ARCHIVE,
@@ -140,7 +146,17 @@ install_packages (InstallerData *idata)
 
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
 	if (connection != NULL) {
+		GdkWindow  *window;
 		DBusGProxy *proxy;
+
+		window = gtk_widget_get_window (GTK_WIDGET (idata->window));
+		if (window != NULL) {
+			GdkCursor *cursor;
+
+			cursor = gdk_cursor_new (GDK_WATCH);
+			gdk_window_set_cursor (window, cursor);
+			gdk_cursor_unref (cursor);
+		}
 
 		proxy = dbus_g_proxy_new_for_name (connection,
 						   "org.freedesktop.PackageKit",
@@ -148,13 +164,11 @@ install_packages (InstallerData *idata)
 						   "org.freedesktop.PackageKit.Modify");
 
 		if (proxy != NULL) {
-			GdkWindow       *window;
 			guint            xid;
 			char           **names;
 			char           **real_names;
 			DBusGProxyCall  *call;
 
-			window = gtk_widget_get_window (GTK_WIDGET (idata->window));
 		        if (window != NULL)
 		        	xid = GDK_WINDOW_XID (window);
 		        else
