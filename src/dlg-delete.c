@@ -97,7 +97,7 @@ static void
 entry_changed_cb (GtkWidget  *widget,
 		  DialogData *data)
 {
-	if (! GTK_TOGGLE_BUTTON (data->d_files_radio)->active)
+	if (! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_files_radio)))
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->d_files_radio), TRUE);
 }
 

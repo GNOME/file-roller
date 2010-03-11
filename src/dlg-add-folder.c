@@ -185,7 +185,7 @@ include_subfold_toggled_cb (GtkWidget *widget,
 	DialogData *data = callback_data;
 
 	gtk_widget_set_sensitive (data->exclude_symlinks,
-				  GTK_TOGGLE_BUTTON (widget)->active);
+				  gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)));
 
 	return FALSE;
 }

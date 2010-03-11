@@ -700,10 +700,10 @@ fr_window_close (FrWindow *window)
 
 	window->priv->closing = TRUE;
 
-	if (GTK_WIDGET_REALIZED (window)) {
+	if (gtk_widget_get_realized (GTK_WIDGET (window))) {
 		int width, height;
 
-		gdk_drawable_get_size (GTK_WIDGET (window)->window, &width, &height);
+		gdk_drawable_get_size (gtk_widget_get_window(GTK_WIDGET (window)), &width, &height);
 		eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
 		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
 
@@ -1436,7 +1436,7 @@ get_selection_as_fd (FrWindow *window)
 	GtkTreeSelection *selection;
 	GList            *list = NULL;
 
-	if (! GTK_WIDGET_REALIZED (window->priv->list_view))
+	if (! gtk_widget_get_realized (window->priv->list_view))
 		return NULL;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
@@ -1756,11 +1756,11 @@ fr_window_update_dir_tree (FrWindow *window)
 	}
 	else {
 		gtk_widget_set_sensitive (window->priv->tree_view, TRUE);
-		if (! GTK_WIDGET_VISIBLE (window->priv->sidepane))
+		if (! gtk_widget_get_visible (window->priv->sidepane))
 			gtk_widget_show_all (window->priv->sidepane);
 	}
 
-	if (GTK_WIDGET_REALIZED (window->priv->tree_view))
+	if (gtk_widget_get_realized (window->priv->tree_view))
 		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->tree_view), 0, 0);
 
 	/**/
@@ -1886,7 +1886,7 @@ fr_window_update_file_list (FrWindow *window,
 	GPtrArray  *files;
 	gboolean    free_files = FALSE;
 
-	if (GTK_WIDGET_REALIZED (window->priv->list_view))
+	if (gtk_widget_get_realized (window->priv->list_view))
 		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->list_view), 0, 0);
 
 	if (! window->priv->archive_present || window->priv->archive_new) {
@@ -1897,19 +1897,19 @@ fr_window_update_file_list (FrWindow *window,
 
 		if (window->priv->archive_new) {
 			gtk_widget_set_sensitive (window->priv->list_view, TRUE);
-			gtk_widget_show_all (window->priv->list_view->parent);
+			gtk_widget_show_all (gtk_widget_get_parent(window->priv->list_view));
 		}
 		else {
 			gtk_widget_set_sensitive (window->priv->list_view, FALSE);
-			gtk_widget_hide_all (window->priv->list_view->parent);
+			gtk_widget_hide_all (gtk_widget_get_parent(window->priv->list_view));
 		}
 
 		return;
 	}
 	else {
 		gtk_widget_set_sensitive (window->priv->list_view, TRUE);
-		if (! GTK_WIDGET_VISIBLE (window->priv->list_view))
-			gtk_widget_show_all (window->priv->list_view->parent);
+		if (! gtk_widget_get_visible (window->priv->list_view))
+			gtk_widget_show_all (gtk_widget_get_parent(window->priv->list_view));
 	}
 
 	if (window->priv->give_focus_to_the_list) {
@@ -2011,7 +2011,7 @@ selection_has_a_dir (FrWindow *window)
 	GtkTreeSelection *selection;
 	gboolean          has_a_dir = FALSE;
 
-	if (! GTK_WIDGET_REALIZED (window->priv->list_view))
+	if (! gtk_widget_get_realized (window->priv->list_view))
 		return FALSE;
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
@@ -2178,7 +2178,7 @@ close_progress_dialog (FrWindow *window,
 		window->priv->progress_timeout = 0;
 	}
 
-	if (! window->priv->batch_mode && GTK_WIDGET_MAPPED (window))
+	if (! window->priv->batch_mode && gtk_widget_get_mapped (GTK_WIDGET (window)))
 		gtk_widget_hide (window->priv->progress_bar);
 
 	if (window->priv->progress_dialog == NULL)
@@ -2503,7 +2503,7 @@ create_the_progress_dialog (FrWindow *window)
 
 	vbox = gtk_vbox_new (FALSE, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	gtk_box_pack_start (GTK_BOX (d->vbox), vbox, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (d)), vbox, FALSE, FALSE, 10);
 
 	/* action label */
 
@@ -2634,7 +2634,7 @@ open_progress_dialog (FrWindow *window,
 	}
 
 	if ((window->priv->progress_timeout != 0)
-	    || ((window->priv->progress_dialog != NULL) && GTK_WIDGET_VISIBLE (window->priv->progress_dialog)))
+	    || ((window->priv->progress_dialog != NULL) && gtk_widget_get_visible (window->priv->progress_dialog)))
 		return;
 
 	if (! window->priv->batch_mode && ! open_now)
@@ -2728,7 +2728,7 @@ void
 fr_window_push_message (FrWindow   *window,
 			const char *msg)
 {
-	if (! GTK_WIDGET_MAPPED (window))
+	if (! gtk_widget_get_mapped (GTK_WIDGET (window)))
 		return;
 
 	g_free (window->priv->last_status_message);
@@ -2743,7 +2743,7 @@ fr_window_push_message (FrWindow   *window,
 void
 fr_window_pop_message (FrWindow *window)
 {
-	if (! GTK_WIDGET_MAPPED (window))
+	if (! gtk_widget_get_mapped (GTK_WIDGET (window)))
 		return;
 	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
@@ -4445,10 +4445,10 @@ key_press_cb (GtkWidget   *widget,
 	gboolean  retval = FALSE;
 	gboolean  alt;
 
-	if (GTK_WIDGET_HAS_FOCUS (window->priv->location_entry))
+	if (gtk_widget_has_focus (window->priv->location_entry))
 		return FALSE;
 
-	if (GTK_WIDGET_HAS_FOCUS (window->priv->filter_entry)) {
+	if (gtk_widget_has_focus (window->priv->filter_entry)) {
 		switch (event->keyval) {
 		case GDK_Escape:
 			fr_window_deactivate_filter (window);
@@ -7013,7 +7013,7 @@ fr_window_stop_activity_mode (FrWindow *window)
 	g_source_remove (window->priv->activity_timeout_handle);
 	window->priv->activity_timeout_handle = 0;
 
-	if (! GTK_WIDGET_REALIZED (window))
+	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
 		return;
 
 	if (window->priv->progress_dialog != NULL)
@@ -7061,8 +7061,8 @@ fr_window_view_last_output (FrWindow   *window,
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+	gtk_container_set_border_width (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 6);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (gtk_dialog_get_content_area (GTK_DIALOG (dialog)))), 8);
 
 	gtk_widget_set_size_request (dialog, 500, 300);
 
@@ -7094,7 +7094,7 @@ fr_window_view_last_output (FrWindow   *window,
 			    TRUE, TRUE, 0);
 
 	gtk_widget_show_all (vbox);
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
 			    vbox,
 			    TRUE, TRUE, 0);
 

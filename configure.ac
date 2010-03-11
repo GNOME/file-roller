@@ -27,7 +27,7 @@ dnl ==========================================================================
 
 GLIB_REQUIRED=2.16.0
 GIO_REQUIRED=2.16.0
-GTK_REQUIRED=2.16.0
+GTK_REQUIRED=2.19.7
 GCONF_REQUIRED=2.6.0
 NAUTILUS_REQUIRED=2.22.2
 

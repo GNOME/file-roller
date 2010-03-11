@@ -274,7 +274,7 @@ static void
 files_entry_changed_cb (GtkWidget  *widget,
 			DialogData *data)
 {
-	if (! GTK_TOGGLE_BUTTON (data->e_files_radiobutton)->active)
+	if (! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_files_radiobutton)))
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_files_radiobutton), TRUE);
 }
 
