@@ -4059,6 +4059,8 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 			if (r == GTK_RESPONSE_YES) {
 				char       *first_item;
 				char       *folder;
+				char       *local_path = NULL;
+				char       *utf8_path = NULL;
 				const char *archive_name;
 
 				fr_window_free_batch_data (window);
@@ -4072,12 +4074,26 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 				if (folder != NULL)
 					fr_window_set_open_default_dir (window, folder);
 
-				if ((list->next != NULL) && (folder != NULL))
+				if ((list->next != NULL) && (folder != NULL)) {
 					archive_name = file_name_from_path (folder);
-				else
-					archive_name = file_name_from_path (first_item);
+				}
+				else {
+					if (uri_is_local (first_item)) {
+						local_path = g_filename_from_uri (first_item, NULL, NULL);
+						if (local_path)
+							utf8_path = g_filename_to_utf8 (local_path, -1, NULL, NULL, NULL);
+						if (!utf8_path)
+							utf8_path= g_strdup (first_item);
+						g_free (local_path);
+					}
+					else {
+						utf8_path = g_strdup (first_item);
+					}
+					archive_name = file_name_from_path (utf8_path);
+				}
 
 				show_new_archive_dialog (window, archive_name);
+				g_free (utf8_path);
 
 				g_free (folder);
 			}
