@@ -25,11 +25,7 @@
 #include <glib/gi18n.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
-
-#ifdef ENABLE_PACKAGEKIT
 #include <dbus/dbus-glib.h>
-#endif /* ENABLE_PACKAGEKIT */
-
 #include "dlg-package-installer.h"
 #include "gtk-utils.h"
 #include "main.h"
@@ -80,7 +76,6 @@ package_installer_terminated (InstallerData *idata,
 }
 
 
-#ifdef ENABLE_PACKAGEKIT
 static void
 packagekit_install_package_call_notify_cb (DBusGProxy     *proxy,
 					   DBusGProxyCall *call,
@@ -221,7 +216,6 @@ confirm_search_dialog_response_cb (GtkDialog *dialog,
 		installer_data_free (idata);
 	}
 }
-#endif /* ENABLE_PACKAGEKIT */
 
 
 void
@@ -232,6 +226,8 @@ dlg_package_installer (FrWindow  *window,
 	InstallerData   *idata;
 	GType            command_type;
 	FrCommand       *command;
+	DBusGConnection *connection;
+	gboolean         success = FALSE;
 
 	idata = g_new0 (InstallerData, 1);
 	idata->window = g_object_ref (window);
