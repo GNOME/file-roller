@@ -3961,7 +3961,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 		return;
 	}
 
-	if (! ((data->length >= 0) && (data->format == 8))) {
+	if (! ((gtk_selection_data_get_length (data) >= 0) && (gtk_selection_data_get_format (data) == 8))) {
 		gtk_drag_finish (context, FALSE, FALSE, time);
 		return;
 	}
@@ -3973,17 +3973,17 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 
 	gtk_drag_finish (context, TRUE, FALSE, time);
 
-	if (data->target == XFR_ATOM) {
+	if (gtk_selection_data_get_target (data) == XFR_ATOM) {
 		FrClipboardData *dnd_data;
 
-		dnd_data = get_clipboard_data_from_selection_data (window, (char*) data->data);
+		dnd_data = get_clipboard_data_from_selection_data (window, (char*) gtk_selection_data_get_data (data));
 		dnd_data->current_dir = g_strdup (fr_window_get_current_location (window));
 		fr_window_paste_from_clipboard_data (window, dnd_data);
 
 		return;
 	}
 
-	list = get_uri_list_from_selection_data ((char*)data->data);
+	list = get_uri_list_from_selection_data ((char*) gtk_selection_data_get_data (data));
 	if (list == NULL) {
 		GtkWidget *d;
 
@@ -4274,7 +4274,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	if (file_list == NULL)
 		return FALSE;
 
-	if (selection_data->target == XFR_ATOM) {
+	if (gtk_selection_data_get_target (selection_data) == XFR_ATOM) {
 		FrClipboardData *tmp;
 		char            *data;
 
@@ -4327,7 +4327,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 
 	/* sends back the response */
 
-	gtk_selection_data_set (selection_data, selection_data->target, 8, (guchar *) ((window->priv->drag_error == NULL) ? "S" : "E"), 1);
+	gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8, (guchar *) ((window->priv->drag_error == NULL) ? "S" : "E"), 1);
 
 	debug (DEBUG_INFO, "::DragDataGet <--\n");
 
@@ -4354,7 +4354,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	if (window->priv->activity_ref > 0)
 		return FALSE;
 
-	if (selection_data->target == XFR_ATOM) {
+	if (gtk_selection_data_get_target (selection_data) == XFR_ATOM) {
 		FrClipboardData *tmp;
 		char            *data;
 
@@ -4407,7 +4407,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 
 	/* sends back the response */
 
-	gtk_selection_data_set (selection_data, selection_data->target, 8, (guchar *) ((window->priv->drag_error == NULL) ? "S" : "E"), 1);
+	gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8, (guchar *) ((window->priv->drag_error == NULL) ? "S" : "E"), 1);
 
 	debug (DEBUG_INFO, "::DragDataGet <--\n");
 
@@ -5904,7 +5904,7 @@ fr_window_construct (FrWindow *window)
 	statusbar_box = gtk_statusbar_get_message_area (statusbar);
 	gtk_box_set_homogeneous (GTK_BOX (statusbar_box), FALSE);
 	gtk_box_set_spacing (GTK_BOX (statusbar_box), 4);
-	gtk_box_set_child_packing (GTK_BOX (statusbar_box), statusbar->label, TRUE, TRUE, 0, GTK_PACK_START );
+	gtk_box_set_child_packing (GTK_BOX (statusbar_box), gtk_statusbar_get_message_area (statusbar), TRUE, TRUE, 0, GTK_PACK_START );
 #else
 	statusbar_box = gtk_hbox_new (FALSE, 4);
 	g_object_ref (statusbar->label);
@@ -7556,12 +7556,12 @@ fr_clipboard_get (GtkClipboard     *clipboard,
 	FrWindow *window = user_data_or_owner;
 	char     *data;
 
-	if (selection_data->target != FR_SPECIAL_URI_LIST)
+	if (gtk_selection_data_get_target (selection_data) != FR_SPECIAL_URI_LIST)
 		return;
 
 	data = get_selection_data_from_clipboard_data (window, window->priv->copy_data);
 	gtk_selection_data_set (selection_data,
-				selection_data->target,
+				gtk_selection_data_get_target (selection_data),
 				8,
 				(guchar *) data,
 				strlen (data));
@@ -7891,7 +7891,7 @@ fr_window_paste_selection_to (FrWindow   *window,
 	if (selection_data == NULL)
 		return;
 
-	paste_data = get_clipboard_data_from_selection_data (window, (char*) selection_data->data);
+	paste_data = get_clipboard_data_from_selection_data (window, (char*) gtk_selection_data_get_data (selection_data));
 	paste_data->current_dir = g_strdup (current_dir);
 	fr_window_paste_from_clipboard_data (window, paste_data);
 

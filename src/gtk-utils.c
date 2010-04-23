@@ -63,6 +63,7 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 	GtkWidget    *label;
 	GtkWidget    *image;
 	GtkWidget    *hbox;
+	GtkWidget    *content_area;
 	va_list       args;
 	const gchar  *text;
 	int           response_id;
@@ -75,10 +76,12 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 
 	dialog = gtk_dialog_new_with_buttons ("", parent, flags, NULL);
 
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
+	gtk_box_set_spacing (GTK_BOX (content_area), 8);
 
 	/* Add label and image */
 
@@ -120,7 +123,7 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 	gtk_box_pack_start (GTK_BOX (hbox), label,
 			    TRUE, TRUE, 0);
 
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+	gtk_box_pack_start (GTK_BOX (content_area),
 			    hbox,
 			    FALSE, FALSE, 0);
 
@@ -179,7 +182,7 @@ create_button (const char *stock_id,
 	button = gtk_button_new_with_mnemonic (label_text);
 	gtk_button_set_image (GTK_BUTTON (button), image);
 
-	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
+	gtk_widget_set_can_default (button, TRUE);
 
 	gtk_widget_show (button);
 
@@ -204,6 +207,7 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 	GtkWidget    *vbox;
 	GtkWidget    *entry;
 	GtkWidget    *button;
+	GtkWidget    *content_area;
 	char         *stock_id;
 	char         *result;
 
@@ -211,10 +215,12 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 
 	dialog = gtk_dialog_new_with_buttons (title, parent, flags, NULL);
 
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
+	gtk_box_set_spacing (GTK_BOX (content_area), 8);
 
 	/* Add label and image */
 
@@ -248,7 +254,7 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 	gtk_box_pack_start (GTK_BOX (vbox), entry,
 			    FALSE, FALSE, 0);
 
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+	gtk_box_pack_start (GTK_BOX (content_area),
 			    hbox,
 			    FALSE, FALSE, 0);
 
@@ -295,15 +301,18 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 	GtkWidget    *image;
 	GtkWidget    *hbox;
 	GtkWidget    *button;
+	GtkWidget    *content_area;
 	char         *stock_id = GTK_STOCK_DIALOG_WARNING;
 
 	d = gtk_dialog_new_with_buttons ("", parent, flags, NULL);
 	gtk_window_set_resizable (GTK_WINDOW (d), FALSE);
 
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (d));
+
 	gtk_dialog_set_has_separator (GTK_DIALOG (d), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (d), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (d)->vbox), 6);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (d)->vbox), 8);
+	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
+	gtk_box_set_spacing (GTK_BOX (content_area), 8);
 
 	/* Add label and image */
 
@@ -323,7 +332,7 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 	gtk_box_pack_start (GTK_BOX (hbox), label,
 			    TRUE, TRUE, 0);
 
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (d)->vbox),
+	gtk_box_pack_start (GTK_BOX (content_area),
 			    hbox,
 			    FALSE, FALSE, 0);
 
@@ -367,6 +376,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	GtkWidget     *text_view;
 	GtkWidget     *scrolled = NULL;
 	GtkWidget     *expander;
+	GtkWidget    *content_area;
 	GtkTextBuffer *text_buf;
 	GtkTextIter    iter;
 	char          *stock_id;
@@ -385,10 +395,12 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), 6);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 8);
+	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
+	gtk_box_set_spacing (GTK_BOX (content_area), 8);
 
 	gtk_widget_set_size_request (dialog, 500, -1);
 
@@ -479,7 +491,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 		gtk_box_pack_start (GTK_BOX (vbox), expander, TRUE, TRUE, 0);
 	}
 
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+	gtk_box_pack_start (GTK_BOX (content_area),
 			    vbox,
 			    FALSE, FALSE, 0);
 	gtk_widget_show_all (vbox);
