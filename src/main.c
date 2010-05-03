@@ -102,6 +102,8 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-gzip",                 ".gz",       NULL, 0 },
 	{ "application/x-java-archive",         ".jar",      N_("Jar (.jar)"), 0 },
 	{ "application/x-lha",                  ".lzh",      N_("Lha (.lzh)"), 0 },
+	{ "application/x-lrzip",                ".lrz",      N_("Lrzip (.lrz)"), 0},
+	{ "application/x-lrzip-compressed-tar", ".tar.lrz",  N_("Tar compressed with lrzip (.tar.lrz)"), 0 },
 	{ "application/x-lzip",                 ".lz",       NULL, 0 },
 	{ "application/x-lzip-compressed-tar",  ".tar.lz",   N_("Tar compressed with lzip (.tar.lz)"), 0 },
 	{ "application/x-lzma",                 ".lzma",     NULL, 0 },
@@ -119,7 +121,6 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-xz-compressed-tar",    ".tar.xz",   N_("Tar compressed with xz (.tar.xz)"), 0 },
 	{ "application/x-zoo",                  ".zoo",      N_("Zoo (.zoo)"), 0 },
 	{ "application/zip",                    ".zip",      N_("Zip (.zip)"), 0 },
-	{ "application/x-lrzip",                ".lrz",      N_("Lrzip (.lrz)"), 0},
 	{ NULL, NULL, NULL, 0 }
 };
 
@@ -143,6 +144,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".iso", "application/x-cd-image" },
 	{ ".jar", "application/x-java-archive" },
 	{ ".lha", "application/x-lha" },
+	{ ".lrz", "application/x-lrzip" },
 	{ ".lzh", "application/x-lha" },
 	{ ".lz", "application/x-lzip" },
 	{ ".lzma", "application/x-lzma" },
@@ -155,6 +157,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".tar.bz", "application/x-bzip-compressed-tar" },
 	{ ".tar.bz2", "application/x-bzip-compressed-tar" },
 	{ ".tar.gz", "application/x-compressed-tar" },
+	{ ".tar.lrz", "application/x-lrzip-compressed-tar" },
 	{ ".tar.lz", "application/x-lzip-compressed-tar" },
 	{ ".tar.lzma", "application/x-lzma-compressed-tar" },
 	{ ".tar.lzo", "application/x-lzop-compressed-tar" },
@@ -175,7 +178,6 @@ FrExtensionType file_ext_type[] = {
 	{ ".Z", "application/x-compress" },
 	{ ".zip", "application/zip" },
 	{ ".zoo", "application/x-zoo" },
-	{ ".lrz", "application/x-lrzip" },
 	{ NULL, NULL }
 };
 
