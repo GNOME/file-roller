@@ -1107,7 +1107,7 @@ fr_command_tar_get_packages (FrCommand  *comm,
 		return PACKAGES ("tar,bzip2");
 	else if (is_mime_type (mime_type, "application/x-tarz"))
 		return PACKAGES ("tar,gzip,ncompress");
-	else if (is_mime_type (mime_type, "application/x-lzip-compressed-tar"))
+	else if (is_mime_type (mime_type, "application/x-lrzip-compressed-tar"))
 		return PACKAGES ("tar,lrzip");
 	else if (is_mime_type (mime_type, "application/x-lzip-compressed-tar"))
 		return PACKAGES ("tar,lzip");
