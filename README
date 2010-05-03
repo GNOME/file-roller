@@ -7,8 +7,8 @@
 * What is it ?
 
   File Roller is an archive manager for the GNOME environment.  This means
-  that you can create and modify archives; view the content of an archive; 
-  view and modify a file contained in the archive; extract files from the 
+  that you can create and modify archives; view the content of an archive;
+  view and modify a file contained in the archive; extract files from the
   archive.
 
   File Roller is only a front-end (a graphical interface) to archiving programs
@@ -30,12 +30,13 @@
     * RAR Archived Comic Book (.cbr)
     * RPM Linux Package (.rpm) [Read-only mode]
     * Tape Archive File:
-          * uncompressed (.tar) 
+          * uncompressed (.tar)
       or compressed with:
           * gzip (.tar.gz , .tgz)
           * bzip (.tar.bz , .tbz)
           * bzip2 (.tar.bz2 , .tbz2)
           * compress (.tar.Z , .taz)
+          * lrzip (.tar.lrz , .tlrz)
           * lzip (.tar.lz , .tlz)
           * lzop (.tar.lzo , .tzo)
           * 7zip (.tar.7z)
@@ -44,8 +45,8 @@
     * ZIP Archive (.zip)
     * ZIP Archived Comic Book (.cbz)
     * ZOO Compressed Archive File (.zoo)
-    * Single files compressed with gzip, bzip, bzip2, compress, lzip, lzop, 
-      rzip, xz.
+    * Single files compressed with gzip, bzip, bzip2, compress, lrzip, lzip,
+      lzop, rzip, xz.
 
 * Home Page
 
@@ -54,16 +55,16 @@
 * Licensing
 
   This program is released under the terms of the GNU General Public
-  License (GNU GPL) version 2 or greater.  
+  License (GNU GPL) version 2 or greater.
   You can find a copy of the license in the file COPYING.
 
 * Dependencies
 
-  In order to build this program from the source code you need a working 
+  In order to build this program from the source code you need a working
   GNOME environment version 2.x, with the development tools installed
-  properly. 
+  properly.
 
-  Also you need the following libraries: 
+  Also you need the following libraries:
   	* glib >= 2.16.0
   	* gtk+ >= 2.12.0
   	* libgnome >= 2.6.0
@@ -73,6 +74,6 @@
 
 * Install
 
-  ./configure 
+  ./configure
   make
   make install
