@@ -119,6 +119,8 @@ file_roller_SOURCES = 			\
 	fr-command-unstuff.h		\
 	fr-command-zip.c		\
 	fr-command-zip.h		\
+	fr-command-lrzip.c		\
+	fr-command-lrzip.h		\
 	fr-command-zoo.c		\
 	fr-command-zoo.h		\
 	fr-command-7z.c			\

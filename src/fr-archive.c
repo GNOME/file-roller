@@ -452,6 +452,7 @@ get_mime_type_from_magic_numbers (GFile *file)
 		{ "application/x-zoo", "\xdc\xa7\xc4\xfd", 20, 4 },
 		{ "application/zip", "PK\003\004", 0, 4 },
 		{ "application/zip", "PK00PK\003\004", 0, 8 },
+		{ "application/x-lrzip", "LRZI", 0, 4 },
 		{ NULL, NULL, 0 }
 	};
 	char buffer[32];

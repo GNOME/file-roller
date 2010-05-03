@@ -45,6 +45,7 @@
 #include "fr-command-zip.h"
 #include "fr-command-zoo.h"
 #include "fr-command-7z.h"
+#include "fr-command-lrzip.h"
 #include "fr-process.h"
 #include "fr-stock.h"
 #include "gconf-utils.h"
@@ -118,6 +119,7 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-xz-compressed-tar",    ".tar.xz",   N_("Tar compressed with xz (.tar.xz)"), 0 },
 	{ "application/x-zoo",                  ".zoo",      N_("Zoo (.zoo)"), 0 },
 	{ "application/zip",                    ".zip",      N_("Zip (.zip)"), 0 },
+	{ "application/x-lrzip",                ".lrz",      N_("Lrzip (.lrz)"), 0},
 	{ NULL, NULL, NULL, 0 }
 };
 
@@ -173,6 +175,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".Z", "application/x-compress" },
 	{ ".zip", "application/zip" },
 	{ ".zoo", "application/x-zoo" },
+	{ ".lrz", "application/x-lrzip" },
 	{ NULL, NULL }
 };
 
@@ -616,6 +619,7 @@ register_commands (void)
 	register_command (FR_TYPE_COMMAND_RPM);
 	register_command (FR_TYPE_COMMAND_UNSTUFF);
 	register_command (FR_TYPE_COMMAND_ZIP);
+	register_command (FR_TYPE_COMMAND_LRZIP);
 	register_command (FR_TYPE_COMMAND_ZOO);
 }
 
