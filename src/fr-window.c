@@ -703,7 +703,7 @@ fr_window_close (FrWindow *window)
 	if (gtk_widget_get_realized (GTK_WIDGET (window))) {
 		int width, height;
 
-		gdk_drawable_get_size (gtk_widget_get_window(GTK_WIDGET (window)), &width, &height);
+		gdk_drawable_get_size (gtk_widget_get_window (GTK_WIDGET (window)), &width, &height);
 		eel_gconf_set_integer (PREF_UI_WINDOW_WIDTH, width);
 		eel_gconf_set_integer (PREF_UI_WINDOW_HEIGHT, height);
 
@@ -1897,11 +1897,11 @@ fr_window_update_file_list (FrWindow *window,
 
 		if (window->priv->archive_new) {
 			gtk_widget_set_sensitive (window->priv->list_view, TRUE);
-			gtk_widget_show_all (gtk_widget_get_parent(window->priv->list_view));
+			gtk_widget_show_all (gtk_widget_get_parent (window->priv->list_view));
 		}
 		else {
 			gtk_widget_set_sensitive (window->priv->list_view, FALSE);
-			gtk_widget_hide_all (gtk_widget_get_parent(window->priv->list_view));
+			gtk_widget_hide_all (gtk_widget_get_parent (window->priv->list_view));
 		}
 
 		return;
@@ -1909,7 +1909,7 @@ fr_window_update_file_list (FrWindow *window,
 	else {
 		gtk_widget_set_sensitive (window->priv->list_view, TRUE);
 		if (! gtk_widget_get_visible (window->priv->list_view))
-			gtk_widget_show_all (gtk_widget_get_parent(window->priv->list_view));
+			gtk_widget_show_all (gtk_widget_get_parent (window->priv->list_view));
 	}
 
 	if (window->priv->give_focus_to_the_list) {

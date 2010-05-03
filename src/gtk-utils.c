@@ -376,7 +376,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	GtkWidget     *text_view;
 	GtkWidget     *scrolled = NULL;
 	GtkWidget     *expander;
-	GtkWidget    *content_area;
+	GtkWidget     *content_area;
 	GtkTextBuffer *text_buf;
 	GtkTextIter    iter;
 	char          *stock_id;
@@ -441,7 +441,7 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 
 		expander = gtk_expander_new_with_mnemonic (_("Command _Line Output"));
 		gtk_expander_set_expanded (GTK_EXPANDER (expander), secondary_text == NULL);
-		
+
 		/* Add text */
 
 		scrolled = gtk_scrolled_window_new (NULL, NULL);
@@ -691,13 +691,13 @@ get_file_icon_pixbuf (GFileIcon *icon,
 	GFile     *file;
 	char      *filename;
 	GdkPixbuf *pixbuf;
-	
+
 	file = g_file_icon_get_file (icon);
 	filename = g_file_get_path (file);
 	pixbuf = gdk_pixbuf_new_from_file_at_size (filename, size, -1, NULL);
 	g_free (filename);
 	g_object_unref (file);
-	
+
 	return pixbuf;
 }
 
@@ -796,7 +796,7 @@ show_help_dialog (GtkWindow  *parent,
 }
 
 
-GtkBuilder * 
+GtkBuilder *
 _gtk_builder_new_from_file (const char *ui_file)
 {
 	char       *filename;
@@ -810,12 +810,12 @@ _gtk_builder_new_from_file (const char *ui_file)
                 g_clear_error (&error);
         }
 	g_free (filename);
-	        
+
         return builder;
 }
 
 
-GtkWidget * 
+GtkWidget *
 _gtk_builder_get_widget (GtkBuilder *builder,
 			 const char *name)
 {
