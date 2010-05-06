@@ -97,7 +97,7 @@ void        fr_process_add_arg              (FrProcess    *fr_proc,
 					     const char   *arg);
 void        fr_process_add_arg_concat       (FrProcess    *fr_proc,
 					     const char   *arg,
-					     ...);
+					     ...) G_GNUC_NULL_TERMINATED;
 void        fr_process_add_arg_printf       (FrProcess    *fr_proc,
 					     const char   *format,
 					     ...) G_GNUC_PRINTF (2, 3);
