@@ -44,6 +44,8 @@ struct _FrArchive {
 	GObject  __parent;
 
 	GFile       *file;
+	GFile       *local_copy;
+	gboolean     is_remote;
 	const char  *content_type;
 	FrCommand   *command;
 	FrProcess   *process;

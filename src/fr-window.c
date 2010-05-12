@@ -4226,14 +4226,14 @@ get_selection_data_from_clipboard_data (FrWindow        *window,
 		      			FrClipboardData *data)
 {
 	GString *list;
-	char    *archive_uri;
+	char    *local_filename;
 	GList   *scan;
 
 	list = g_string_new (NULL);
 
-	archive_uri = g_file_get_uri (window->archive->file);
-	g_string_append (list, archive_uri);
-	g_free (archive_uri);
+	local_filename = g_file_get_uri (window->archive->local_copy);
+	g_string_append (list, local_filename);
+	g_free (local_filename);
 
 	g_string_append (list, "\r\n");
 	if (window->priv->password != NULL)

@@ -58,7 +58,7 @@ typedef void (*CopyDoneCallback)     (GError      *error,
 
 /* asynchronous recursive list functions */
 
-void   g_directory_foreach_child     (const char            *directory,
+void   g_directory_foreach_child     (GFile                 *directory,
 				      gboolean               recursive,
 				      gboolean               follow_links,
 				      GCancellable          *cancellable,

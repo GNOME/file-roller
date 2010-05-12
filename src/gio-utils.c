@@ -127,7 +127,7 @@ filter_empty (Filter *filter)
 
 
 typedef struct {
-	char                 *base_directory;
+	GFile                *base_directory;
 	gboolean              recursive;
 	gboolean              follow_links;
 	StartDirCallback      start_dir_func;
@@ -153,7 +153,8 @@ for_each_child_data_free (ForEachChildData *fec)
 	if (fec == NULL)
 		return;
 
-	g_free (fec->base_directory);
+	if (fec->base_directory != NULL)
+		g_object_unref (fec->base_directory);
 	if (fec->current != NULL)
 		g_object_unref (fec->current);
 	if (fec->already_visited)
@@ -172,7 +173,7 @@ for_each_child_done_cb (gpointer user_data)
 	g_source_remove (fec->source_id);
 	if (fec->current != NULL) {
 		g_object_unref (fec->current);
-		 fec->current = NULL;
+		fec->current = NULL;
 	}
 	if (fec->done_func)
 		fec->done_func (fec->error, fec->user_data);
@@ -212,14 +213,23 @@ for_each_child_start (ForEachChildData *fec)
 
 
 static void
-for_each_child_set_current (ForEachChildData *fec,
-			    const char       *directory)
+for_each_child_set_current_uri (ForEachChildData *fec,
+				const char       *directory)
 {
 	if (fec->current != NULL)
 		g_object_unref (fec->current);
 	fec->current = g_file_new_for_uri (directory);
 }
 
+
+static void
+for_each_child_set_current (ForEachChildData *fec,
+			    GFile            *directory)
+{
+	if (fec->current != NULL)
+		g_object_unref (fec->current);
+	fec->current = g_file_dup (directory);
+}
 
 static void
 for_each_child_start_next_sub_directory (ForEachChildData *fec)
@@ -236,7 +246,7 @@ for_each_child_start_next_sub_directory (ForEachChildData *fec)
 	}
 
 	if (sub_directory != NULL) {
-		for_each_child_set_current (fec, sub_directory);
+		for_each_child_set_current_uri (fec, sub_directory);
 		for_each_child_start (fec);
 	}
 	else
@@ -276,7 +286,6 @@ for_each_child_next_files_ready (GObject      *source_object,
 {
 	ForEachChildData *fec = user_data;
 	GList            *children, *scan;
-	char             *current_directory;
 
 	children = g_file_enumerator_next_files_finish (fec->enumerator,
                                                         result,
@@ -291,16 +300,16 @@ for_each_child_next_files_ready (GObject      *source_object,
 		return;
 	}
 
-	current_directory = g_file_get_uri (fec->current);
 	for (scan = children; scan; scan = scan->next) {
 		GFileInfo *child_info = scan->data;
-		char      *name, *uri;
+		GFile     *f;
+		char      *uri;
 
-		name = g_uri_escape_string (g_file_info_get_name (child_info), G_URI_RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT, FALSE);
-		uri = g_strconcat (current_directory, "/", name, NULL);
+		f = g_file_get_child (fec->current, g_file_info_get_name (child_info));
+		uri = g_file_get_uri (f);
 
 		if (g_file_info_get_file_type (child_info) == G_FILE_TYPE_DIRECTORY) {
-			/* avoid to visit a directory more than ones */
+			/* avoid to visit a directory more than once */
 
 			if (g_hash_table_lookup (fec->already_visited, uri) == NULL) {
 				char *sub_directory;
@@ -314,9 +323,8 @@ for_each_child_next_files_ready (GObject      *source_object,
 		fec->for_each_file_func (uri, child_info, fec->user_data);
 
 		g_free (uri);
-		g_free (name);
+		g_object_unref (f);
 	}
-	g_free (current_directory);
 
 	g_file_enumerator_next_files_async (fec->enumerator,
                                             N_FILES_PER_REQUEST,
@@ -404,7 +412,7 @@ for_each_child_start_current (ForEachChildData *fec)
  * Each callback uses the same @user_data additional parameter.
  */
 void
-g_directory_foreach_child (const char           *directory,
+g_directory_foreach_child (GFile                *directory,
 			   gboolean              recursive,
 			   gboolean              follow_links,
 			   GCancellable         *cancellable,
@@ -419,7 +427,7 @@ g_directory_foreach_child (const char           *directory,
 
 	fec = g_new0 (ForEachChildData, 1);
 
-	fec->base_directory = g_strdup (directory);
+	fec->base_directory = g_object_ref (directory);
 	fec->recursive = recursive;
 	fec->follow_links = follow_links;
 	fec->cancellable = cancellable;
@@ -443,8 +451,8 @@ g_directory_foreach_child (const char           *directory,
 typedef struct {
 	GList             *files;
 	GList             *dirs;
-	char              *directory;
-	char              *base_dir;
+	GFile             *directory;
+	GFile             *base_dir;
 	GCancellable      *cancellable;
 	ListReadyCallback  done_func;
 	gpointer           done_data;
@@ -469,8 +477,10 @@ get_file_list_data_free (GetFileListData *gfl)
 	path_list_free (gfl->files);
 	path_list_free (gfl->dirs);
 	path_list_free (gfl->to_visit);
-	g_free (gfl->directory);
-	g_free (gfl->base_dir);
+	if (gfl->directory != NULL)
+		g_object_unref (gfl->directory);
+	if (gfl->base_dir != NULL)
+		g_object_unref (gfl->base_dir);
 	g_free (gfl);
 }
 
@@ -479,27 +489,25 @@ get_file_list_data_free (GetFileListData *gfl)
 
 
 static GList*
-get_relative_file_list (GList      *rel_list,
-			GList      *file_list,
-			const char *base_dir)
+get_relative_file_list (GList *rel_list,
+			GList *file_list,
+			GFile *base_dir)
 {
 	GList *scan;
-	int    base_len;
 
 	if (base_dir == NULL)
 		return NULL;
 
-	base_len = 0;
-	if (strcmp (base_dir, "/") != 0)
-		base_len = strlen (base_dir);
-
 	for (scan = file_list; scan; scan = scan->next) {
-		char *full_path = scan->data;
+		char  *full_path = scan->data;
+		GFile *f;
+		char  *relative_path;
 
-		if (path_in_path (base_dir, full_path)) {
-			char *rel_path = g_uri_unescape_string (full_path + base_len + 1, NULL);
-			rel_list = g_list_prepend (rel_list, rel_path);
-		}
+		f = g_file_new_for_commandline_arg (full_path);
+		relative_path = g_file_get_relative_path (base_dir, f);
+		if (relative_path != NULL)
+			rel_list = g_list_prepend (rel_list, relative_path);
+		g_object_unref (f);
 	}
 
 	return rel_list;
@@ -565,6 +573,7 @@ get_file_list_done (GError   *error,
 	GetFileListData *gfl = user_data;
 	GHashTable      *h_dirs;
 	GList           *scan;
+	char            *uri;
 
 	gfl->files = g_list_reverse (gfl->files);
 	gfl->dirs = g_list_reverse (gfl->dirs);
@@ -582,7 +591,7 @@ get_file_list_done (GError   *error,
 	if (gfl->base_dir != NULL) {
 		char *dir;
 
-		dir = g_strdup (gfl->base_dir);
+		dir = g_file_get_uri (gfl->base_dir);
 		gfl->dirs = g_list_prepend (gfl->dirs, dir);
 		g_hash_table_insert (h_dirs, dir, GINT_TO_POINTER (1));
 	}
@@ -594,11 +603,13 @@ get_file_list_done (GError   *error,
 	for (scan = gfl->dirs; scan; scan = scan->next)
 		g_hash_table_insert (h_dirs, (char*)scan->data, GINT_TO_POINTER (1));
 
-	gfl->dirs = g_list_concat (gfl->dirs, get_dir_list_from_file_list (h_dirs, gfl->base_dir, gfl->files, FALSE));
+	uri = g_file_get_uri (gfl->base_dir);
+	gfl->dirs = g_list_concat (gfl->dirs, get_dir_list_from_file_list (h_dirs, uri, gfl->files, FALSE));
 
 	if (filter_empty (gfl->include_filter))
-		gfl->dirs = g_list_concat (gfl->dirs, get_dir_list_from_file_list (h_dirs, gfl->base_dir, gfl->dirs, TRUE));
+		gfl->dirs = g_list_concat (gfl->dirs, get_dir_list_from_file_list (h_dirs, uri, gfl->dirs, TRUE));
 
+	g_free (uri);
 	/**/
 
 	if (error == NULL) {
@@ -680,8 +691,8 @@ g_directory_list_async (const char        *directory,
 	FilterOptions    filter_options;
 
 	gfl = g_new0 (GetFileListData, 1);
-	gfl->directory = g_strdup (directory);
-	gfl->base_dir = g_strdup (base_dir);
+	gfl->directory = g_file_new_for_commandline_arg (directory);
+	gfl->base_dir = g_file_new_for_commandline_arg (base_dir);
 	gfl->done_func = done_func;
 	gfl->done_data = done_data;
 
@@ -696,7 +707,7 @@ g_directory_list_async (const char        *directory,
 	gfl->exclude_filter = filter_new (exclude_files, ignorecase ? FILTER_IGNORECASE : FILTER_DEFAULT);
 	gfl->exclude_folders_filter = filter_new (exclude_folders, ignorecase ? FILTER_IGNORECASE : FILTER_DEFAULT);
 
-	g_directory_foreach_child (directory,
+	g_directory_foreach_child (gfl->directory,
 				   recursive,
 				   follow_links,
 				   cancellable,
@@ -756,7 +767,9 @@ static void
 get_items_for_current_dir (GetFileListData *gfl)
 {
 	const char *directory_name;
+	GFile      *directory_file;
 	char       *directory_uri;
+	char       *base_dir_uri;
 
 	if (gfl->current_dir == NULL) {
 		if (gfl->done_func) {
@@ -770,19 +783,20 @@ get_items_for_current_dir (GetFileListData *gfl)
 	}
 
 	directory_name = file_name_from_path ((char*) gfl->current_dir->data);
-	if (strcmp (gfl->base_dir, "/") == 0)
-		directory_uri = g_strconcat (gfl->base_dir, directory_name, NULL);
-	else
-		directory_uri = g_strconcat (gfl->base_dir, "/", directory_name, NULL);
+	directory_file = g_file_get_child (gfl->base_dir, directory_name);
+	directory_uri = g_file_get_uri (directory_file);
+	base_dir_uri = g_file_get_uri (gfl->base_dir);
 
 	g_directory_list_all_async (directory_uri,
-			   	    gfl->base_dir,
+				    base_dir_uri,
 				    TRUE,
 				    gfl->cancellable,
-			   	    get_items_for_current_dir_done,
-			   	    gfl);
+				    get_items_for_current_dir_done,
+				    gfl);
 
 	g_free (directory_uri);
+	g_free (base_dir_uri);
+	g_object_unref (directory_file);
 }
 
 
@@ -800,7 +814,7 @@ g_list_items_async (GList             *items,
 	g_return_if_fail (base_dir != NULL);
 
 	gfl = g_new0 (GetFileListData, 1);
-	gfl->base_dir = g_strdup (base_dir);
+	gfl->base_dir = g_file_new_for_commandline_arg (base_dir);
 	gfl->cancellable = cancellable;
 	gfl->done_func = done_func;
 	gfl->done_data = done_data;
@@ -916,6 +930,19 @@ g_copy_files_ready_cb (GObject      *source_object,
 	GError        *error = NULL;
 
 	if (! g_file_copy_finish (source, result, &error)) {
+		/* source and target are directories, ignore the error */
+		if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_WOULD_MERGE))
+			g_clear_error (&error);
+		/* source is directory, create target directory */
+		if (g_error_matches (error, G_IO_ERROR,  G_IO_ERROR_WOULD_RECURSE)) {
+			g_clear_error (&error);
+			g_file_make_directory ((GFile*) cfd->destination->data,
+					       cfd->cancellable,
+					       &error);
+		}
+	}
+
+	if (error) {
 		if (cfd->callback)
 			cfd->callback (error, cfd->user_data);
 		g_clear_error (&error);
@@ -1123,8 +1150,8 @@ child_data_free (ChildData *child)
 
 
 typedef struct {
-	char                  *source;
-	char                  *destination;
+	GFile                 *source;
+	GFile                 *destination;
 	GFileCopyFlags         flags;
 	int                    io_priority;
 	GCancellable          *cancellable;
@@ -1149,8 +1176,10 @@ directory_copy_data_free (DirectoryCopyData *dcd)
 	if (dcd == NULL)
 		return;
 
-	g_free (dcd->source);
-	g_free (dcd->destination);
+	if (dcd->source != NULL)
+		g_object_unref (dcd->source);
+	if (dcd->destination != NULL)
+		g_object_unref (dcd->destination);
 	if (dcd->current_source != NULL) {
 		g_object_unref (dcd->current_source);
 		dcd->current_source = NULL;
@@ -1161,7 +1190,6 @@ directory_copy_data_free (DirectoryCopyData *dcd)
 	}
 	g_list_foreach (dcd->to_copy, (GFunc) child_data_free, NULL);
 	g_list_free (dcd->to_copy);
-	g_object_unref (dcd->cancellable);
 	g_free (dcd);
 }
 
@@ -1187,15 +1215,19 @@ static GFile *
 get_destination_for_uri (DirectoryCopyData *dcd,
 		         const char        *uri)
 {
-	char  *destination_uri;
+	GFile *f_uri;
 	GFile *destination_file;
+	char  *relative_path;
 
-	if (strlen (uri) <=  strlen (dcd->source))
-		return NULL;
+	f_uri = g_file_new_for_uri (uri);
+	relative_path = g_file_get_relative_path (dcd->source, f_uri);
+	if (relative_path != NULL)
+		destination_file = g_file_resolve_relative_path (dcd->destination, relative_path);
+	else
+		destination_file = g_file_dup (dcd->destination);
 
-	destination_uri = g_strconcat (dcd->destination, "/", uri + strlen (dcd->source) + 1, NULL);
-	destination_file = g_file_new_for_uri (destination_uri);
-	g_free (destination_uri);
+	g_free (relative_path);
+	g_object_unref (f_uri);
 
 	return destination_file;
 }
@@ -1417,9 +1449,10 @@ g_directory_copy_async (const char            *source,
 {
 	DirectoryCopyData *dcd;
 
+	/* Creating GFile objects here will save us lot of effort in path construction */
 	dcd = g_new0 (DirectoryCopyData, 1);
-	dcd->source = g_strdup (source);
-	dcd->destination = g_strdup (destination);
+	dcd->source = g_file_new_for_commandline_arg (source);
+	dcd->destination = g_file_new_for_commandline_arg (destination);
 	dcd->flags = flags;
 	dcd->io_priority = io_priority;
 	dcd->cancellable = cancellable;
