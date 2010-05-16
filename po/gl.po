@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-04 22:45+0200\n"
-"PO-Revision-Date: 2010-05-04 22:46+0200\n"
+"POT-Creation-Date: 2010-05-16 14:15+0200\n"
+"PO-Revision-Date: 2010-05-16 15:01+0200\n"
 "Last-Translator: Fran Diéguez <frandieguez@ubuntu.com>\n"
 "Language-Team: Galician <gnome@g11n.net>\n"
 "MIME-Version: 1.0\n"
@@ -267,7 +267,7 @@ msgstr "Non ten permisos para crear un arquivo neste cartafol"
 
 #: ../src/actions.c:235 ../src/dlg-package-installer.c:203
 #: ../src/dlg-package-installer.c:245 ../src/dlg-package-installer.c:254
-#: ../src/dlg-package-installer.c:282 ../src/fr-archive.c:892
+#: ../src/dlg-package-installer.c:282 ../src/fr-archive.c:1146
 #: ../src/fr-window.c:6033 ../src/fr-window.c:6209
 msgid "Archive type not supported."
 msgstr "Este tipo de arquivo non é compatíbel."
@@ -337,9 +337,11 @@ msgstr "Un xestor de arquivos para o GNOME."
 #: ../src/actions.c:866
 msgid "translator-credits"
 msgstr ""
-"Francisco Diéguez <frandieguez@ubuntu.com>, 2010;\n"
-"Suso Baleato <suso.baleato@xunta.es>, 2009;\n"
-"Antón Méixome <meixome@mancomun.org>, 2009."
+"Fran Diéguez <frandieguez@ubuntu.com>, 2009, 2010.\n"
+"Antón Méixome <meixome@mancomun.org>, 2009.\n"
+"Mancomún <g11n@mancomun.org>, 2009.\n"
+"Suso Baleato <suso.baleato@xunta.es>, 2009.\n"
+"Ignacio Casal Quinteiro <icq@svn.gnome.org>, 2005, 2006, 2007, 2008.\n"
 
 #: ../src/dlg-add-files.c:94 ../src/dlg-add-folder.c:129
 msgid "Could not add the files to the archive"
@@ -610,19 +612,24 @@ msgstr ""
 msgid "File format not recognized"
 msgstr "O formato de ficheiro non se recoñece"
 
-#: ../src/fr-archive.c:872
+#: ../src/fr-archive.c:1126
 msgid "File not found."
 msgstr "Non se encontrou o ficheiro."
 
-#: ../src/fr-archive.c:1935
+#: ../src/fr-archive.c:1229
+#, c-format
+msgid "The file doesn't exist"
+msgstr "O ficheiro non existe"
+
+#: ../src/fr-archive.c:2409
 msgid "You don't have the right permissions."
 msgstr "Non ten os permisos apropiados."
 
-#: ../src/fr-archive.c:1935
+#: ../src/fr-archive.c:2409
 msgid "This archive type cannot be modified"
 msgstr "Este tipo de arquivo non pode ser modificado"
 
-#: ../src/fr-archive.c:1947
+#: ../src/fr-archive.c:2421
 msgid "You can't add an archive to itself."
 msgstr "Non pode engadir un arquivo a si mesmo."
 
