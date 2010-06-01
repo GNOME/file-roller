@@ -6220,9 +6220,12 @@ fr_window_archive_save_as (FrWindow   *window,
 
 	g_return_if_fail (window->priv->convert_data.new_archive->command != NULL);
 
-	if (password != NULL)
+	if (password != NULL) {
 		window->priv->convert_data.password = g_strdup (password);
-	window->priv->convert_data.encrypt_header = encrypt_header;
+		window->priv->convert_data.encrypt_header = encrypt_header;
+	}
+	else
+		window->priv->convert_data.encrypt_header = FALSE;
 	window->priv->convert_data.volume_size = volume_size;
 
 	fr_window_set_current_batch_action (window,

@@ -46,7 +46,7 @@ typedef struct {
 	FrWindow   *window;
 	GtkBuilder *builder;
 	int        *supported_types;
-	
+
 	GtkWidget  *dialog;
 	GtkWidget  *a_add_to_entry;
 	GtkWidget  *a_location_filechooserbutton;
@@ -86,7 +86,7 @@ destroy_cb (GtkWidget  *widget,
 	eel_gconf_set_string (PREF_BATCH_ADD_DEFAULT_EXTENSION, get_ext (data));
 	/*eel_gconf_set_boolean (PREF_BATCH_OTHER_OPTIONS, data->add_clicked ? FALSE : gtk_expander_get_expanded (GTK_EXPANDER (data->a_other_options_expander)));*/
 	eel_gconf_set_boolean (PREF_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton)));
-	
+
 	if (! data->add_clicked) {
 		fr_window_pop_message (data->window);
 		fr_window_stop_batch (data->window);
@@ -374,6 +374,7 @@ update_sensitivity_for_mime_type (DialogData *data,
 		gtk_widget_set_sensitive (data->a_password_entry, FALSE);
 		gtk_widget_set_sensitive (data->a_password_label, FALSE);
 		gtk_widget_set_sensitive (data->a_encrypt_header_checkbutton, FALSE);
+		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton), TRUE);
 		gtk_widget_set_sensitive (data->a_volume_box, FALSE);
 		return;
 	}
@@ -388,6 +389,7 @@ update_sensitivity_for_mime_type (DialogData *data,
 
 			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER;
 			gtk_widget_set_sensitive (data->a_encrypt_header_checkbutton, sensitive);
+			gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton), ! sensitive);
 
 			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES;
 			gtk_widget_set_sensitive (data->a_volume_box, sensitive);
@@ -437,13 +439,6 @@ update_archive_type_combo_box_from_ext (DialogData  *data,
 static void
 update_sensitivity (DialogData *data)
 {
-	const char *password;
-	gboolean    void_password;
-
-	password = gtk_entry_get_text (GTK_ENTRY (data->a_password_entry));
-	void_password = (password == NULL) || (strcmp (password, "") == 0);
-	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->a_encrypt_header_checkbutton), void_password);
-	/*gtk_widget_set_sensitive (GTK_WIDGET (data->a_encrypt_header_checkbutton), ! void_password);*/
 	gtk_widget_set_sensitive (data->a_volume_spinbutton, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->a_volume_checkbutton)));
 }
 
@@ -560,7 +555,7 @@ dlg_batch_add_files (FrWindow *window,
 	else
 		data->supported_types = save_type;
 	sort_mime_types_by_extension (data->supported_types);
-	
+
 	for (i = 0; data->supported_types[i] != -1; i++)
 		gtk_combo_box_append_text (GTK_COMBO_BOX (data->a_archive_type_combo_box),
 					   mime_type_desc[data->supported_types[i]].default_ext);

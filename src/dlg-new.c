@@ -53,12 +53,8 @@ destroy_cb (GtkWidget  *widget,
 static void
 update_sensitivity (DlgNewData *data)
 {
-	const char *password;
-	gboolean    void_password;
-
-	password = gtk_entry_get_text (GTK_ENTRY (data->n_password_entry));
-	void_password = (password == NULL) || (strcmp (password, "") == 0);
-	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton), ! data->can_encrypt || ! data->can_encrypt_header || void_password);
+	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton), ! data->can_encrypt_header);
+	gtk_widget_set_sensitive (data->n_encrypt_header_checkbutton, data->can_encrypt_header);
 	gtk_widget_set_sensitive (data->n_volume_spinbutton, ! data->can_create_volumes || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->n_volume_checkbutton)));
 }
 
@@ -99,7 +95,7 @@ update_sensitivity_for_ext (DlgNewData *data,
 			break;
 		}
 	}
-	
+
 	update_sensitivity (data);
 }
 
@@ -140,33 +136,33 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 	int         idx;
 
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
-	
+
 	ext = get_archive_filename_extension (uri);
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box)) - 1;
 	if ((ext == NULL) && (idx >= 0))
 		ext = mime_type_desc[data->supported_types[idx]].default_ext;
-		
+
 	update_sensitivity_for_ext (data, ext);
-	
+
 	if ((idx >= 0) && (uri != NULL)) {
 		const char *new_ext;
 		const char *basename;
 		char       *basename_noext;
 		char       *new_basename;
 		char       *new_basename_uft8;
-			
+
 		new_ext = mime_type_desc[data->supported_types[idx]].default_ext;
 		basename = file_name_from_path (uri);
-		if (g_str_has_suffix (basename, ext)) 
+		if (g_str_has_suffix (basename, ext))
 			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
 		else
 			basename_noext = g_strdup (basename);
 		new_basename = g_strconcat (basename_noext, new_ext, NULL);
 		new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
-	
+
 		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->dialog), new_basename_uft8);
 		update_sensitivity_for_ext (data, new_ext);
-	
+
 		g_free (new_basename_uft8);
 		g_free (new_basename);
 		g_free (basename_noext);
@@ -289,7 +285,7 @@ dlg_new_archive (FrWindow  *window,
 	data->window = window;
 	data->supported_types = supported_types;
 	sort_mime_types_by_description (data->supported_types);
-	
+
 	/* Get the widgets. */
 
 	data->dialog = _gtk_builder_get_widget (data->builder, "filechooserdialog");
