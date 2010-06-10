@@ -35,6 +35,7 @@
 #include "fr-command-arj.h"
 #include "fr-command-cfile.h"
 #include "fr-command-cpio.h"
+#include "fr-command-dpkg.h"
 #include "fr-command-iso.h"
 #include "fr-command-jar.h"
 #include "fr-command-lha.h"
@@ -608,6 +609,7 @@ register_commands (void)
 	register_command (FR_TYPE_COMMAND_TAR);
 	register_command (FR_TYPE_COMMAND_CFILE);
 	register_command (FR_TYPE_COMMAND_7Z);
+	register_command (FR_TYPE_COMMAND_DPKG);
 
 	register_command (FR_TYPE_COMMAND_ACE);
 	register_command (FR_TYPE_COMMAND_ALZ);
