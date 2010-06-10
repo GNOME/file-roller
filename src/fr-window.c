@@ -7065,7 +7065,7 @@ fr_window_view_last_output (FrWindow   *window,
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 6);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (gtk_dialog_get_content_area (GTK_DIALOG (dialog)))), 8);
+	gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 8);
 
 	gtk_widget_set_size_request (dialog, 500, 300);
 
