@@ -117,6 +117,59 @@ process_line (char     *line,
 		return;
 	}
 
+	if (! rar_comm->odd_line) {
+		FileData *fdata;
+
+		fdata = rar_comm->fdata;
+
+		/* read file info. */
+
+		fields = split_line (line, 6);
+		if (g_strv_length (fields) < 6) {
+			/* wrong line format, treat this line as a filename line */
+			g_strfreev (fields);
+			file_data_free (rar_comm->fdata);
+			rar_comm->fdata = NULL;
+			rar_comm->odd_line = TRUE;
+		}
+		else {
+			if ((strcmp (fields[2], "<->") == 0)
+			    || (strcmp (fields[2], "<--") == 0))
+			{
+				/* ignore files that span more volumes */
+
+				file_data_free (rar_comm->fdata);
+				rar_comm->fdata = NULL;
+			}
+			else {
+				fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
+				fdata->modified = mktime_from_string (fields[3], fields[4]);
+
+				if ((fields[5][1] == 'D') || (fields[5][0] == 'd')) {
+					char *tmp;
+
+					tmp = fdata->full_path;
+					fdata->full_path = g_strconcat (fdata->full_path, "/", NULL);
+
+					fdata->original_path = g_strdup (fdata->original_path);
+					fdata->free_original_path = TRUE;
+
+					g_free (tmp);
+
+					fdata->name = dir_name_from_path (fdata->full_path);
+					fdata->dir = TRUE;
+				}
+				else
+					fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+
+				fr_command_add_file (comm, fdata);
+				rar_comm->fdata = NULL;
+			}
+
+			g_strfreev (fields);
+		}
+	}
+
 	if (rar_comm->odd_line) {
 		FileData *fdata;
 
@@ -141,48 +194,7 @@ process_line (char     *line,
 		fdata->path = remove_level_from_path (fdata->full_path);
 	}
 	else {
-		FileData *fdata;
 
-		fdata = rar_comm->fdata;
-
-		/* read file info. */
-
-		fields = split_line (line, 6);
-
-		if ((strcmp (fields[2], "<->") == 0)
-		    || (strcmp (fields[2], "<--") == 0))
-		{
-			/* ignore files that span more volumes */
-
-			file_data_free (rar_comm->fdata);
-			rar_comm->fdata = NULL;
-		}
-		else {
-			fdata->size = g_ascii_strtoull (fields[0], NULL, 10);
-			fdata->modified = mktime_from_string (fields[3], fields[4]);
-
-			if ((fields[5][1] == 'D') || (fields[5][0] == 'd')) {
-				char *tmp;
-
-				tmp = fdata->full_path;
-				fdata->full_path = g_strconcat (fdata->full_path, "/", NULL);
-
-				fdata->original_path = g_strdup (fdata->original_path);
-				fdata->free_original_path = TRUE;
-
-				g_free (tmp);
-
-				fdata->name = dir_name_from_path (fdata->full_path);
-				fdata->dir = TRUE;
-			}
-			else
-				fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-
-			fr_command_add_file (comm, fdata);
-			rar_comm->fdata = NULL;
-		}
-
-		g_strfreev (fields);
 	}
 
 	rar_comm->odd_line = ! rar_comm->odd_line;
