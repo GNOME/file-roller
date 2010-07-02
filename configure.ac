@@ -25,8 +25,8 @@ dnl it too, or it will never make it into the spec file!
 dnl
 dnl ==========================================================================
 
-GLIB_REQUIRED=2.16.0
-GIO_REQUIRED=2.16.0
+GLIB_REQUIRED=2.25.5
+GIO_REQUIRED=2.25.5
 GTK_REQUIRED=2.19.7
 GCONF_REQUIRED=2.6.0
 NAUTILUS_REQUIRED=2.22.2
@@ -99,15 +99,8 @@ AC_ARG_ENABLE(packagekit,
 	      [AC_HELP_STRING([--disable-packagekit],[build without PackageKit support])],,
 	      [enable_packagekit=yes])
 if test "x$enable_packagekit" != "xno"; then
-	PKG_CHECK_MODULES(DBUS, dbus-glib-1, has_dbus_glib=yes, has_dbug_glib=no)
-	if test "x$has_dbus_glib" = "xyes"; then
-		AC_DEFINE(ENABLE_PACKAGEKIT, 1, [define to enable PackageKit installer])
-        else
-		enable_packagekit=no
-        fi
+	AC_DEFINE(ENABLE_PACKAGEKIT, 1, [define to enable PackageKit installer])
 fi
-AC_SUBST(DBUS_CFLAGS)
-AC_SUBST(DBUS_LIBS)
 
 dnl ******************************
 
