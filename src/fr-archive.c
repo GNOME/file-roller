@@ -1489,12 +1489,17 @@ save_list_to_temp_file (GList   *file_list,
 		for (scan = file_list; scan != NULL; scan = scan->next) {
 			char *filename = scan->data;
 
+			filename = str_substitute (filename, "\n", "\\n");
 			if ((g_output_stream_write (G_OUTPUT_STREAM (ostream), filename, strlen (filename), NULL, error) < 0)
 			    || (g_output_stream_write (G_OUTPUT_STREAM (ostream), "\n", 1, NULL, error) < 0))
 			{
 				error_occurred = TRUE;
-				break;
 			}
+
+			g_free (filename);
+
+			if (error_occurred)
+				break;
 		}
 		if (! error_occurred && ! g_output_stream_close (G_OUTPUT_STREAM (ostream), NULL, error))
 			error_occurred = TRUE;
