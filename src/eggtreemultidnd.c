@@ -310,7 +310,7 @@ egg_tree_multi_drag_motion_event (GtkWidget      *widget,
       selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
       gtk_tree_selection_selected_foreach (selection, selection_foreach, &path_list);
       if (path_list == NULL)
-	      return;
+	      return FALSE;
 
       path_list = g_list_reverse (path_list);
 
