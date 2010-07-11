@@ -33,10 +33,8 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <dirent.h>
-
 #include <glib.h>
 #include <gio/gio.h>
-#include <gconf/gconf-client.h>
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "main.h"
