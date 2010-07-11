@@ -31,12 +31,12 @@
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "fr-window.h"
-#include "gconf-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
 
 typedef struct {
 	FrWindow    *window;
+	GSettings   *settings;
 	GtkWidget   *dialog;
 	GtkWidget   *include_subfold_checkbutton;
 	GtkWidget   *add_if_newer_checkbutton;
@@ -59,6 +59,7 @@ static void
 open_file_destroy_cb (GtkWidget  *widget,
 		      DialogData *data)
 {
+	g_object_unref (data->settings);
 	g_free (data->last_options);
 	g_free (data);
 }
@@ -210,9 +211,8 @@ add_folder_cb (GtkWidget *widget,
 	GtkWidget   *align;
 
 	data = g_new0 (DialogData, 1);
-
+	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_ADD);
 	data->window = callback_data;
-
 	data->dialog = file_sel =
 		gtk_file_chooser_dialog_new (_("Add a Folder"),
 					     GTK_WINDOW (data->window),
@@ -505,14 +505,14 @@ dlg_add_folder_load_last_options (DialogData *data)
 	gboolean  recursive;
 	gboolean  no_symlinks;
 
-	base_dir = eel_gconf_get_string (PREF_ADD_CURRENT_FOLDER, "");
-	filename = eel_gconf_get_string (PREF_ADD_FILENAME, "");
-	include_files = eel_gconf_get_string (PREF_ADD_INCLUDE_FILES, "");
-	exclude_files = eel_gconf_get_string (PREF_ADD_EXCLUDE_FILES, "");
-	exclude_folders = eel_gconf_get_string (PREF_ADD_EXCLUDE_FOLDERS, "");
-	update = eel_gconf_get_boolean (PREF_ADD_UPDATE, FALSE);
-	recursive = eel_gconf_get_boolean (PREF_ADD_RECURSIVE, TRUE);
-	no_symlinks = eel_gconf_get_boolean (PREF_ADD_NO_SYMLINKS, FALSE);
+	base_dir = g_settings_get_string (data->settings, PREF_ADD_CURRENT_FOLDER);
+	filename = g_settings_get_string (data->settings, PREF_ADD_FILENAME);
+	include_files = g_settings_get_string (data->settings, PREF_ADD_INCLUDE_FILES);
+	exclude_files = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FILES);
+	exclude_folders = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS);
+	update = g_settings_get_boolean (data->settings, PREF_ADD_UPDATE);
+	recursive = g_settings_get_boolean (data->settings, PREF_ADD_RECURSIVE);
+	no_symlinks = g_settings_get_boolean (data->settings, PREF_ADD_NO_SYMLINKS);
 
 	sync_widgets_with_options (data,
 			   	   base_dir,
@@ -629,14 +629,14 @@ dlg_add_folder_save_last_options (DialogData *data)
 				  &recursive,
 				  &no_symlinks);
 
-	eel_gconf_set_string (PREF_ADD_CURRENT_FOLDER, base_dir);
-	eel_gconf_set_string (PREF_ADD_FILENAME, filename);
-	eel_gconf_set_string (PREF_ADD_INCLUDE_FILES, include_files);
-	eel_gconf_set_string (PREF_ADD_EXCLUDE_FILES, exclude_files);
-	eel_gconf_set_string (PREF_ADD_EXCLUDE_FOLDERS, exclude_folders);
-	eel_gconf_set_boolean (PREF_ADD_UPDATE, update);
-	eel_gconf_set_boolean (PREF_ADD_RECURSIVE, recursive);
-	eel_gconf_set_boolean (PREF_ADD_NO_SYMLINKS, no_symlinks);
+	g_settings_set_string (data->settings, PREF_ADD_CURRENT_FOLDER, base_dir);
+	g_settings_set_string (data->settings, PREF_ADD_FILENAME, filename);
+	g_settings_set_string (data->settings, PREF_ADD_INCLUDE_FILES, include_files);
+	g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FILES, exclude_files);
+	g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS, exclude_folders);
+	g_settings_set_boolean (data->settings, PREF_ADD_UPDATE, update);
+	g_settings_set_boolean (data->settings, PREF_ADD_RECURSIVE, recursive);
+	g_settings_set_boolean (data->settings, PREF_ADD_NO_SYMLINKS, no_symlinks);
 
 	g_free (base_dir);
 	g_free (filename);

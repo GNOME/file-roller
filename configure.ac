@@ -10,10 +10,10 @@ AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADER([config.h])
 
 GNOME_COMMON_INIT
-
 AC_PROG_CC
 AM_DISABLE_STATIC
 AC_PROG_LIBTOOL
+GLIB_GSETTINGS
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
@@ -147,14 +147,6 @@ if test "x$enable_deprecations" = "xyes"; then
         DISABLE_DEPRECATED="-DGSEAL_ENABLE -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 fi
 AC_SUBST(DISABLE_DEPRECATED)
-
-dnl ******************************
-
-AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
-if test x"$GCONFTOOL" = xno; then
-	AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-fi
-AM_GCONF_SOURCE_2
 
 dnl ******************************
 
