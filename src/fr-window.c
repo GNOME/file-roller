@@ -4676,10 +4676,10 @@ static void
 add_file_list_columns (FrWindow    *window,
 		       GtkTreeView *treeview)
 {
-	static char       *titles[] = {N_("Size"),
-				       N_("Type"),
-				       N_("Date Modified"),
-				       N_("Location")};
+	static char       *titles[] = {NC_("File", "Size"),
+				       NC_("File", "Type"),
+				       NC_("File", "Date Modified"),
+				       NC_("File", "Location")};
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 	GValue             value = { 0, };
@@ -4688,7 +4688,7 @@ add_file_list_columns (FrWindow    *window,
 	/* First column. */
 
 	window->priv->filename_column = column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_set_title (column, _("Name"));
+	gtk_tree_view_column_set_title (column, C_("File", "Name"));
 
 	/* emblem */
 
@@ -5816,6 +5816,7 @@ fr_window_construct (FrWindow *window)
 	/* current location */
 
 	location_box = gtk_hbox_new (FALSE, 6);
+	/* Translators: after the colon there is a folder name. */
 	window->priv->location_label = gtk_label_new_with_mnemonic (_("_Location:"));
 	gtk_box_pack_start (GTK_BOX (location_box),
 			    window->priv->location_label, FALSE, FALSE, 5);
@@ -7366,14 +7367,17 @@ valid_name (const char  *new_name,
 	utf8_new_name = g_filename_display_name (new_name);
 
 	if (*new_name == '\0') {
+		/* Translators: the name references to a filename.  This message can appear when renaming a file. */
 		*reason = g_strdup_printf ("%s\n\n%s", _("The new name is void."), _("Please use a different name."));
 		retval = FALSE;
 	}
 	else if (strcmp (new_name, old_name) == 0) {
+		/* Translators: the name references to a filename.  This message can appear when renaming a file. */
 		*reason = g_strdup_printf ("%s\n\n%s", _("The new name is equal to the old one."), _("Please use a different name."));
 		retval = FALSE;
 	}
 	else if (strchrs (new_name, BAD_CHARS)) {
+		/* Translators: the name references to a filename.  This message can appear when renaming a file. */
 		*reason = g_strdup_printf (_("The name \"%s\" is not valid because it cannot contain the characters: %s\n\n%s"), utf8_new_name, BAD_CHARS, _("Please use a different name."));
 		retval = FALSE;
 	}

@@ -157,6 +157,8 @@ add_files_cb (GtkWidget *widget,
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 
+	/* Translators: add a file to the archive only if the disk version is
+	 * newer than the archive version. */
 	data->add_if_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("Add only if _newer"));
 
 	main_box = gtk_hbox_new (FALSE, 20);

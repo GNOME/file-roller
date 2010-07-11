@@ -304,6 +304,7 @@ static void
 process_line__add (char     *line,
 		   gpointer  data)
 {
+	/* Translators: after the colon there is a filename. */
 	process_line__generic (line, data, _("Adding file: "));
 }
 
@@ -368,6 +369,7 @@ static void
 process_line__delete (char     *line,
 		      gpointer  data)
 {
+	/* Translators: after the colon there is a filename. */
 	process_line__generic (line, data, _("Removing file: "));
 }
 
@@ -421,6 +423,7 @@ static void
 process_line__extract (char     *line,
 		       gpointer  data)
 {
+	/* Translators: after the colon there is a filename. */
 	process_line__generic (line, data, _("Extracting file: "));
 }
 

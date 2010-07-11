@@ -436,7 +436,7 @@ dlg_new (FrWindow *window)
 	DlgNewData *data;
 
 	data = dlg_new_archive (window, create_type, NULL);
-	gtk_window_set_title (GTK_WINDOW (data->dialog), _("New"));
+	gtk_window_set_title (GTK_WINDOW (data->dialog), C_("File", "New"));
 
 	return data;
 }
@@ -449,7 +449,7 @@ dlg_save_as (FrWindow   *window,
 	DlgNewData *data;
 
 	data = dlg_new_archive (window, save_type, default_name);
-	gtk_window_set_title (GTK_WINDOW (data->dialog), _("Save"));
+	gtk_window_set_title (GTK_WINDOW (data->dialog), C_("File", "Save"));
 
 	return data;
 }

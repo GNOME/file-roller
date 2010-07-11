@@ -311,7 +311,8 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_here",
 					       _("Extract Here"),
-					       _("Extract the selected archive in the current position"),
+					       /* Translators: the current position is the current folder */
+					       _("Extract the selected archive to the current position"),
 					       "drive-harddisk");
 		g_signal_connect (item,
 				  "activate",

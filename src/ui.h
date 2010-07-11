@@ -29,11 +29,12 @@
 
 
 static GtkActionEntry action_entries[] = {
-	{ "FileMenu", NULL, N_("_File") },
+	{ "FileMenu", NULL, N_("_Archive") },
 	{ "EditMenu", NULL, N_("_Edit") },
 	{ "ViewMenu", NULL, N_("_View") },
 	{ "HelpMenu", NULL, N_("_Help") },
 	{ "ArrangeFilesMenu", NULL, N_("_Arrange Files") },
+	/* Translators: this is the label for the "open recent file" sub-menu. */
 	{ "OpenRecentMenu", NULL, N_("Open _Recent") },
 
 	{ "About", GTK_STOCK_ABOUT,
@@ -124,7 +125,7 @@ static GtkActionEntry action_entries[] = {
 	  N_("Extract files from the archive"),
 	  G_CALLBACK (activate_action_extract) },
 	{ "Find", GTK_STOCK_FIND,
-	  NULL, NULL,
+	  N_("Find..."), NULL,
 	  NULL,
 	  G_CALLBACK (activate_action_find) },
 
@@ -133,11 +134,11 @@ static GtkActionEntry action_entries[] = {
 	  N_("View the output produced by the last executed command"),
 	  G_CALLBACK (activate_action_last_output) },
 	{ "New", GTK_STOCK_NEW,
-	  NULL, NULL,
+	  NC_("File", "New..."), NULL,
 	  N_("Create a new archive"),
 	  G_CALLBACK (activate_action_new) },
 	{ "Open", GTK_STOCK_OPEN,
-	  NULL, NULL,
+	  NC_("File", "Open..."), NULL,
 	  N_("Open archive"),
 	  G_CALLBACK (activate_action_open) },
 	{ "Open_Toolbar", GTK_STOCK_OPEN,
@@ -161,7 +162,7 @@ static GtkActionEntry action_entries[] = {
 	  N_("Reload current archive"),
 	  G_CALLBACK (activate_action_reload) },
 	{ "SaveAs", GTK_STOCK_SAVE_AS,
-	  NULL, NULL,
+	  NC_("File", "Save As..."), NULL,
 	  N_("Save the current archive with a different name"),
 	  G_CALLBACK (activate_action_save_as) },
 	{ "SelectAll", GTK_STOCK_SELECT_ALL,
@@ -207,6 +208,7 @@ static GtkActionEntry action_entries[] = {
 	  G_CALLBACK (activate_action_go_up) },
 	{ "GoHome", GTK_STOCK_HOME,
 	  NULL, NULL,
+	  /* Translators: the home location is the home folder. */
 	  N_("Go to the home location"),
 	  G_CALLBACK (activate_action_go_home) },
 };
@@ -263,7 +265,9 @@ static GtkRadioActionEntry sort_by_entries[] = {
 	  N_("by _Date Modified"), NULL,
 	  N_("Sort file list by modification time"), FR_WINDOW_SORT_BY_TIME },
 	{ "SortByLocation", NULL,
+	  /* Translators: this is the "sort by file location" menu item */
 	  N_("by _Location"), NULL,
+	  /* Translators: location is the file location */
 	  N_("Sort file list by location"), FR_WINDOW_SORT_BY_PATH },
 };
 static guint n_sort_by_entries = G_N_ELEMENTS (sort_by_entries);

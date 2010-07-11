@@ -103,6 +103,7 @@ dlg_prop (FrWindow *window)
 	/* Set widgets data. */
 
 	label_label = _gtk_builder_get_widget (data->builder, "p_path_label_label");
+	/* Translators: after the colon there is a folder name. */
 	set_label (label_label, _("Location:"));
 
 	label = _gtk_builder_get_widget (data->builder, "p_path_label");
@@ -115,7 +116,7 @@ dlg_prop (FrWindow *window)
 	/**/
 
 	label_label = _gtk_builder_get_widget (data->builder, "p_name_label_label");
-	set_label (label_label, _("Name:"));
+	set_label (label_label, C_("File", "Name:"));
 
 	label = _gtk_builder_get_widget (data->builder, "p_name_label");
 	utf8_name = g_uri_display_basename (fr_window_get_archive_uri (window));

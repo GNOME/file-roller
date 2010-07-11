@@ -183,6 +183,8 @@ egg_desktop_file_new_from_key_file (GKeyFile    *key_file,
 	}
       else if (version_num > 1.0)
 	{
+	  /* Translators: Version here is capitalized because it refers to a
+	   * field in the desktop file */
 	  g_set_error (error, EGG_DESKTOP_FILE_ERROR,
 		       EGG_DESKTOP_FILE_ERROR_INVALID,
 		       _("Unrecognized desktop file Version '%s'"), version);
@@ -1370,7 +1372,7 @@ egg_desktop_file_launch (EggDesktopFile *desktop_file,
 	{
 	  g_set_error (error, EGG_DESKTOP_FILE_ERROR,
 		       EGG_DESKTOP_FILE_ERROR_NOT_LAUNCHABLE,
-		       _("Can't pass document URIs to a 'Type=Link' desktop entry"));
+		       _("Can't pass documents to this desktop element"));
 	  return FALSE;
 	}	  
 
