@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: file-roller MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&component=general\n"
-"POT-Creation-Date: 2010-05-15 10:34+0000\n"
-"PO-Revision-Date: 2010-05-26 19:08+0300\n"
+"POT-Creation-Date: 2010-07-11 15:23+0000\n"
+"PO-Revision-Date: 2010-07-12 08:16+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -45,9 +45,8 @@ msgid "Unrecognized launch option: %d"
 msgstr "Tundmatu käivitusvalik: %d"
 
 #, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"Dokumendi URI-sid pole võimalik 'Liik=Viit' tüüpi töölauakirjetele edastada"
+msgid "Can't pass documents to this desktop element"
+msgstr "Dokumente pole võimalik sellele töölauakirjele edastada"
 
 #, c-format
 msgid "Not a launchable item"
@@ -96,6 +95,7 @@ msgstr "Asukoht"
 msgid "MB"
 msgstr "MB"
 
+#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
 msgid "Split into _volumes of"
 msgstr "Tükeldatakse _andmehulkadeks suurusega"
 
@@ -105,6 +105,7 @@ msgstr "Krüptitakse ka failide _nimekiri"
 msgid "_Filename:"
 msgstr "_Failinimi:"
 
+#. Translators: after the colon there is a folder name.
 msgid "_Location:"
 msgstr "_Asukoht:"
 
@@ -163,16 +164,16 @@ msgstr "_Vali failid, mida soovid värskendada:"
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don't update "
-"the version in the archive, all of your changes will be lost."
+"the file in the archive, all of your changes will be lost."
 msgid_plural ""
-"There are %d files that have been modified with an external application. If "
-"you don't update the files in the archive, all of your changes will be lost."
+"%d files have been modified with an external application. If you don't "
+"update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
-"Faili on välise rakenduse poolt muudetud. Kui sa arhiivis olevat versiooni "
-"ei värskenda, siis lähevad tehtud muudatused jäädavalt kaotsi."
+"Faili on välise rakenduse poolt muudetud. Kui sa arhiivis olevat fail ei "
+"värskenda, siis lähevad tehtud muudatused jäädavalt kaotsi."
 msgstr[1] ""
-"%d faili on välise rakenduse poolt muudetud. Kui sa arhiivis olevat "
-"versiooni ei värskenda, siis lähevad tehtud muudatused jäädavalt kaotsi."
+"%d faili on välise rakenduse poolt muudetud. Kui sa arhiivis olevat fail ei "
+"värskenda, siis lähevad tehtud muudatused jäädavalt kaotsi."
 
 msgid "_Update"
 msgstr "_Värskenda"
@@ -180,7 +181,8 @@ msgstr "_Värskenda"
 msgid "Extract Here"
 msgstr "Paki siia lahti"
 
-msgid "Extract the selected archive in the current position"
+#. Translators: the current position is the current folder
+msgid "Extract the selected archive to the current position"
 msgstr "Valitud arhiivi lahtipakkimine käesolevasse kataloogi"
 
 msgid "Extract To..."
@@ -276,6 +278,8 @@ msgstr "Sul pole kataloogist \"%s\" lugemiseks vajalikke õigusi"
 msgid "Add Files"
 msgstr "Failide lisamine"
 
+#. Translators: add a file to the archive only if the disk version is
+#. * newer than the archive version.
 msgid "Add only if _newer"
 msgstr "Lisatakse, kui on _uuem"
 
@@ -319,6 +323,7 @@ msgstr "Valikute nimi:"
 msgid "Enter the password for the archive '%s'."
 msgstr "Salasõna määramine selle arhiivi '%s' jaoks."
 
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -386,9 +391,11 @@ msgstr "Olemasolevad failid ki_rjutatakse üle"
 msgid "Do not e_xtract older files"
 msgstr "Va_nemaid faile lahti ei pakita"
 
+msgctxt "File"
 msgid "New"
 msgstr "Uus"
 
+msgctxt "File"
 msgid "Save"
 msgstr "Salvestamine"
 
@@ -409,9 +416,11 @@ msgstr "Seda failitüüpi pole võimalik avada"
 msgid "_Search Command"
 msgstr "_Otsi käsku"
 
+#. Translators: after the colon there is a folder name.
 msgid "Location:"
 msgstr "Asukoht:"
 
+msgctxt "File"
 msgid "Name:"
 msgstr "Nimi:"
 
@@ -490,12 +499,15 @@ msgstr "Seda liiki arhiivi pole võimalik muuta"
 msgid "You can't add an archive to itself."
 msgstr "Sa pole võimalik lisada arhiivi iseendasse."
 
+#. Translators: after the colon there is a filename.
 msgid "Adding file: "
 msgstr "Lisatav fail: "
 
+#. Translators: after the colon there is a filename.
 msgid "Extracting file: "
 msgstr "Lahtipakitav fail: "
 
+#. Translators: after the colon there is a filename.
 msgid "Removing file: "
 msgstr "Eemaldatav fail: "
 
@@ -637,15 +649,23 @@ msgstr "Loo _arhiiv"
 msgid "Folders"
 msgstr "Kataloogid"
 
+msgctxt "File"
 msgid "Size"
 msgstr "Suurus"
 
+msgctxt "File"
 msgid "Type"
 msgstr "Liik"
 
+msgctxt "File"
 msgid "Date Modified"
 msgstr "Muutmise kuupäev"
 
+msgctxt "File"
+msgid "Location"
+msgstr "Asukoht"
+
+msgctxt "File"
 msgid "Name"
 msgstr "Nimi"
 
@@ -665,9 +685,11 @@ msgstr "Mõne viimatikasutatud arhiivi avamine"
 msgid "Could not save the archive \"%s\""
 msgstr "Arhiivi \"%s\" pole võimalik salvestada"
 
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
 msgid "The new name is void."
 msgstr "Uus nimi on kehtetu."
 
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
 msgid "The new name is equal to the old one."
 msgstr "Uus ja vana nimi on samad."
 
@@ -858,8 +880,8 @@ msgstr "- Arhiivi loomine ja muutmine"
 msgid "File Roller"
 msgstr "Failirull"
 
-msgid "_File"
-msgstr "_Fail"
+msgid "_Archive"
+msgstr "_Arhiiv"
 
 msgid "_Edit"
 msgstr "_Redaktor"
@@ -873,6 +895,7 @@ msgstr "A_bi"
 msgid "_Arrange Files"
 msgstr "Ko_rrasta failid"
 
+#. Translators: this is the label for the "open recent file" sub-menu.
 msgid "Open _Recent"
 msgstr "Ava _hiljutine"
 
@@ -933,14 +956,25 @@ msgstr "_Paki lahti..."
 msgid "Extract files from the archive"
 msgstr "Failide arhiivist lahtipakkimine"
 
+msgid "Find..."
+msgstr "Otsi..."
+
 msgid "_Last Output"
 msgstr "Viimane vä_ljund"
 
 msgid "View the output produced by the last executed command"
 msgstr "Viimase käivitatud käsu väljundi vaatamine"
 
+msgctxt "File"
+msgid "New..."
+msgstr "Uus..."
+
 msgid "Create a new archive"
 msgstr "Uue arhiivi loomine"
+
+msgctxt "File"
+msgid "Open..."
+msgstr "Ava..."
 
 msgid "_Open With..."
 msgstr "Ava _rakendusega..."
@@ -959,6 +993,10 @@ msgstr "Arhiivi omaduste näitamine"
 
 msgid "Reload current archive"
 msgstr "Aktiivse arhiivi uuestilaadimine"
+
+msgctxt "File"
+msgid "Save As..."
+msgstr "Salvesta kui..."
 
 msgid "Save the current archive with a different name"
 msgstr "Käesoleva arhiivi salvestamine teise nime alla"
@@ -990,6 +1028,7 @@ msgstr "Liikumine järgmisesse külastatud kohta"
 msgid "Go up one level"
 msgstr "Liikumine sammu võrra üles"
 
+#. Translators: the home location is the home folder.
 msgid "Go to the home location"
 msgstr "Liikumine kodukataloogi"
 
@@ -1047,8 +1086,13 @@ msgstr "_Muutmise kuupäeva järgi"
 msgid "Sort file list by modification time"
 msgstr "Loendi sortimine muutmisaegade järgi"
 
+#. Translators: this is the "sort by file location" menu item
 msgid "by _Location"
 msgstr "_Asukoha järgi"
 
+#. Translators: location is the file location
 msgid "Sort file list by location"
 msgstr "Loendi sortimine asukohtade järgi"
+
+#~ msgid "_File"
+#~ msgstr "_Fail"
