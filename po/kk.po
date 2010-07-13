@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fileroller 2.26\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-12 16:23+0300\n"
-"PO-Revision-Date: 2010-07-11 20:40+0600\n"
+"POT-Creation-Date: 2010-07-13 14:21+0300\n"
+"PO-Revision-Date: 2010-07-13 09:11+0600\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=2; plural= (n != 1);\n"
 "X-Poedit-Language: Kazakh\n"
 "X-Poedit-Country: KAZAKHSTAN\n"
 
@@ -44,9 +44,9 @@ msgid "Unrecognized launch option: %d"
 msgstr "Белгісіз қосу опциясы: %d"
 
 #: ../copy-n-paste/eggdesktopfile.c:1375
-#, fuzzy, c-format
+#, c-format
 msgid "Can't pass documents to this desktop element"
-msgstr "Құжат URI-ін 'Type=Link' desktop элементіне беру мүмкін емес"
+msgstr "Бұл desktop элементіне құжаттарды беру мүмкін емес"
 
 #: ../copy-n-paste/eggdesktopfile.c:1394
 #, c-format
@@ -199,7 +199,7 @@ msgstr "Жаңа_ртуға тиісті файлдарды ерекшелеңі
 
 #. secondary text
 #: ../data/ui/update.ui.h:2 ../src/dlg-update.c:181
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The file has been modified with an external application. If you don't update "
 "the file in the archive, all of your changes will be lost."
@@ -207,6 +207,9 @@ msgid_plural ""
 "%d files have been modified with an external application. If you don't "
 "update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
+"Сыртқы бағдарламамен түзетілген бір файл бар. Ол файлды архивте "
+"жаңартпасаңыз, өзгерістер жоғалады."
+msgstr[1] ""
 "Сыртқы бағдарламамен түзетілген %d файл бар. Ол файл(дар)ды архивте "
 "жаңартпасаңыз, өзгерістер жоғалады."
 
@@ -220,7 +223,6 @@ msgstr "Осында тарқату"
 
 #. Translators: the current position is the current folder
 #: ../nautilus/nautilus-fileroller.c:315
-#, fuzzy
 msgid "Extract the selected archive to the current position"
 msgstr "Таңдалған архивті ағымдағы жерге тарқату"
 
@@ -486,13 +488,11 @@ msgid "Do not e_xtract older files"
 msgstr "Ескі фа_йлдарды тарқатпау"
 
 #: ../src/dlg-new.c:439
-#, fuzzy
 msgctxt "File"
 msgid "New"
 msgstr "Жаңа"
 
 #: ../src/dlg-new.c:452
-#, fuzzy
 msgctxt "File"
 msgid "Save"
 msgstr "Сақтау"
@@ -524,7 +524,6 @@ msgid "Location:"
 msgstr "Орналасуы:"
 
 #: ../src/dlg-prop.c:119
-#, fuzzy
 msgctxt "File"
 msgid "Name:"
 msgstr "Аты:"
@@ -672,12 +671,14 @@ msgstr "_Тарқату"
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "%d объект (%s)"
+msgstr[1] "%d объект (%s)"
 
 #: ../src/fr-window.c:1509
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "%d объект таңдалған (%s)"
+msgstr[1] "%d объект таңдалған (%s)"
 
 #: ../src/fr-window.c:1579
 msgid "Folder"
@@ -822,31 +823,26 @@ msgid "Folders"
 msgstr "Бумалар"
 
 #: ../src/fr-window.c:4679
-#, fuzzy
 msgctxt "File"
 msgid "Size"
 msgstr "Өлшемі"
 
 #: ../src/fr-window.c:4680
-#, fuzzy
 msgctxt "File"
 msgid "Type"
 msgstr "Түрі"
 
 #: ../src/fr-window.c:4681
-#, fuzzy
 msgctxt "File"
 msgid "Date Modified"
-msgstr "Өзертілген күні"
+msgstr "Өзгертілген күні"
 
 #: ../src/fr-window.c:4682
-#, fuzzy
 msgctxt "File"
 msgid "Location"
 msgstr "Орналасуы"
 
 #: ../src/fr-window.c:4691
-#, fuzzy
 msgctxt "File"
 msgid "Name"
 msgstr "Аты"
@@ -1221,9 +1217,8 @@ msgid "Extract files from the archive"
 msgstr "Файлдарды архивтен тарқату"
 
 #: ../src/ui.h:128
-#, fuzzy
 msgid "Find..."
-msgstr "Іздеу:"
+msgstr "Іздеу..."
 
 #: ../src/ui.h:133
 msgid "_Last Output"
@@ -1234,20 +1229,18 @@ msgid "View the output produced by the last executed command"
 msgstr "Соңғы орындалған команданың шығыс ақпаратын қарау"
 
 #: ../src/ui.h:137
-#, fuzzy
 msgctxt "File"
 msgid "New..."
-msgstr "Жаңа"
+msgstr "Жаңа..."
 
 #: ../src/ui.h:138
 msgid "Create a new archive"
 msgstr "Жаңа архивті жасау"
 
 #: ../src/ui.h:141
-#, fuzzy
 msgctxt "File"
 msgid "Open..."
-msgstr "Ашу"
+msgstr "Ашу..."
 
 #: ../src/ui.h:149
 msgid "_Open With..."
@@ -1276,7 +1269,7 @@ msgstr "Ағымдағы архивті қайта жүктеу"
 #: ../src/ui.h:165
 msgctxt "File"
 msgid "Save As..."
-msgstr ""
+msgstr "Қалайша сақтау..."
 
 #: ../src/ui.h:166
 msgid "Save the current archive with a different name"
@@ -1404,31 +1397,3 @@ msgstr "Орна_ласуы бойынша"
 #: ../src/ui.h:271
 msgid "Sort file list by location"
 msgstr "Файлдар тізімін орналасуы бойынша сұрыптау"
-
-#~| msgid "_Files:"
-#~ msgid "_File"
-#~ msgstr "_Файл"
-
-#~ msgid "Create Archive"
-#~ msgstr "Архивті құру"
-
-#~ msgid "_Archive:"
-#~ msgstr "_Архив:"
-
-#~ msgid "Archive _type:"
-#~ msgstr "Архив _түрі:"
-
-#~ msgid "Create Archive..."
-#~ msgstr "Архивті жасау..."
-
-#~ msgid "Automatic"
-#~ msgstr "Автоматты түрде"
-
-#~ msgid "_Open the Destination"
-#~ msgstr "_Мақсат бумасын ашу"
-
-#~ msgid ""
-#~ "Extract archives using the archive name as destination folder and quit "
-#~ "the program"
-#~ msgstr ""
-#~ "Архивтерді архив атымен аталған бумаларға тарқату және бағдарламадан шығу"
