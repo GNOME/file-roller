@@ -4119,7 +4119,7 @@ file_list_drag_begin (GtkWidget          *widget,
 	g_free (window->priv->drag_base_dir);
 	window->priv->drag_base_dir = NULL;
 
-	gdk_property_change (context->source_window,
+	gdk_property_change (gdk_drag_context_get_source_window (context),
 			     XDS_ATOM, TEXT_ATOM,
 			     8, GDK_PROP_MODE_REPLACE,
 			     (guchar *) XDS_FILENAME,
@@ -4138,7 +4138,7 @@ file_list_drag_end (GtkWidget      *widget,
 
 	debug (DEBUG_INFO, "::DragEnd -->\n");
 
-	gdk_property_delete (context->source_window, XDS_ATOM);
+	gdk_property_delete (gdk_drag_context_get_source_window (context), XDS_ATOM);
 
 	if (window->priv->drag_error != NULL) {
 		_gtk_error_dialog_run (GTK_WINDOW (window),
@@ -4175,9 +4175,9 @@ get_xds_atom_value (GdkDragContext *context)
 	char *ret;
 
 	g_return_val_if_fail (context != NULL, NULL);
-	g_return_val_if_fail (context->source_window != NULL, NULL);
+	g_return_val_if_fail (gdk_drag_context_get_source_window (context) != NULL, NULL);
 
-	if (gdk_property_get (context->source_window,
+	if (gdk_property_get (gdk_drag_context_get_source_window (context),
 			      XDS_ATOM, TEXT_ATOM,
 			      0, MAX_XDS_ATOM_VAL_LEN,
 			      FALSE, NULL, NULL, NULL,
@@ -4192,7 +4192,7 @@ static gboolean
 context_offers_target (GdkDragContext *context,
 		       GdkAtom target)
 {
-	return (g_list_find (context->targets, target) != NULL);
+	return (g_list_find (gdk_drag_context_list_targets (context), target) != NULL);
 }
 
 
