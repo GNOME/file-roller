@@ -27,9 +27,26 @@ dnl ==========================================================================
 
 GLIB_REQUIRED=2.25.5
 GIO_REQUIRED=2.25.5
-GTK_REQUIRED=2.19.7
-GCONF_REQUIRED=2.6.0
 NAUTILUS_REQUIRED=2.22.2
+
+AC_MSG_CHECKING([which gtk+ version to compile against])
+AC_ARG_WITH([gtk],
+  [AS_HELP_STRING([--with-gtk=2.0|3.0],[which gtk+ version to compile against (default: 2.0)])],
+  [case "$with_gtk" in
+     2.0|3.0) ;;
+     *) AC_MSG_ERROR([invalid gtk version specified]) ;;
+   esac],
+  [with_gtk=2.0])
+AC_MSG_RESULT([$with_gtk])
+
+case "$with_gtk" in
+  2.0) GTK_API_VERSION=2.0
+       GTK_REQUIRED=2.21.4
+       ;;
+  3.0) GTK_API_VERSION=3.0
+       GTK_REQUIRED=2.90.0
+       ;;
+esac
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GIO_REQUIRED)
@@ -38,7 +55,7 @@ AC_SUBST(NAUTILUS_REQUIRED)
 
 dnl ===========================================================================
 
-PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= $GTK_REQUIRED])
+PKG_CHECK_MODULES(GTK, [gtk+-$GTK_API_VERSION >= $GTK_REQUIRED])
 AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
 
@@ -60,8 +77,7 @@ PKG_CHECK_MODULES(FR,					\
 	glib-2.0 >= $GLIB_REQUIRED			\
 	gthread-2.0					\
 	gio-unix-2.0 >= $GIO_REQUIRED			\
-	gtk+-2.0 >= $GTK_REQUIRED			\
-	gconf-2.0 >= $GCONF_REQUIRED)
+	gtk+-$GTK_API_VERSION >= $GTK_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
 
