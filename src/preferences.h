@@ -76,8 +76,8 @@
 #define PREF_BATCH_ADD_OTHER_OPTIONS      "other-options"
 #define PREF_BATCH_ADD_VOLUME_SIZE        "volume-size"
 
-#define NAUTILUS_SCHEMA                   "org.gnome.nautilus.general"
-#define NAUTILUS_CLICK_POLICY             "click-policy"
+#define NAUTILUS_SCHEMA_PREFERENCES       "org.gnome.nautilus.preferences"
+#define PREF_NAUTILUS_CLICK_POLICY        "click-policy"
 
 void  pref_util_save_window_geometry    (GtkWindow  *window,
 					 const char *dialog_id);

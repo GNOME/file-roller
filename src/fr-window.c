@@ -54,7 +54,6 @@
 #include "ui.h"
 
 
-#undef NAUTILUS_PORTED_TO_GSETTINGS
 #define LAST_OUTPUT_DIALOG_NAME "last-output"
 #define MAX_HISTORY_LEN 5
 #define ACTIVITY_DELAY 100
@@ -4577,11 +4576,7 @@ is_single_click_policy (FrWindow *window)
 	char     *value;
 	gboolean  result = FALSE;
 
-#if NAUTILUS_PORTED_TO_GSETTINGS
-	value = g_settings_get_string (window->priv->settings_nautilus, NAUTILUS_CLICK_POLICY);
-#else
-	value = g_strdup ("double");
-#endif
+	value = g_settings_get_enum (window->priv->settings_nautilus, PREF_NAUTILUS_CLICK_POLICY);
 	result = (value != NULL) && (strncmp (value, "single", 6) == 0);
 	g_free (value);
 
@@ -4949,7 +4944,6 @@ pref_show_field_changed (GSettings  *settings,
 }
 
 
-#if NAUTILUS_PORTED_TO_GSETTINGS
 static void
 pref_click_policy_changed (GSettings  *settings,
 		  	   const char *key,
@@ -4966,7 +4960,6 @@ pref_click_policy_changed (GSettings  *settings,
 	if (display != NULL)
 		gdk_display_flush (display);
 }
-#endif
 
 
 static void gh_unref_pixbuf (gpointer  key,
@@ -5383,11 +5376,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->settings_ui = g_settings_new (FILE_ROLLER_SCHEMA_UI);
 	window->priv->settings_general = g_settings_new (FILE_ROLLER_SCHEMA_GENERAL);
 	window->priv->settings_dialogs = g_settings_new (FILE_ROLLER_SCHEMA_DIALOGS);
-#if NAUTILUS_PORTED_TO_GSETTINGS
-	window->priv->settings_nautilus = g_settings_new (NAUTILUS_SCHEMA);
-#else
-	window->priv->settings_nautilus = NULL;
-#endif
+	window->priv->settings_nautilus = g_settings_new (NAUTILUS_SCHEMA_PREFERENCES);
 
 	/* Create the application. */
 
@@ -5987,12 +5976,10 @@ fr_window_construct (FrWindow *window)
 			  "changed::" PREF_LISTING_USE_MIME_ICONS,
 			  G_CALLBACK (pref_use_mime_icons_changed),
 			  window);
-#if NAUTILUS_PORTED_TO_GSETTINGS
 	g_signal_connect (window->priv->settings_nautilus,
-			  "changed::" NAUTILUS_CLICK_POLICY,
+			  "changed::" PREF_NAUTILUS_CLICK_POLICY,
 			  G_CALLBACK (pref_click_policy_changed),
 			  window);
-#endif
 
 	/* Give focus to the list. */
 
