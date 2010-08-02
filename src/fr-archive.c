@@ -2178,6 +2178,7 @@ fr_archive_add_directory (FrArchive     *archive,
 				    ad_data);
 }
 
+
 void
 fr_archive_add_items (FrArchive     *archive,
 		      GList         *item_list,
