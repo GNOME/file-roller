@@ -766,10 +766,11 @@ get_items_for_current_dir_done (GList    *files,
 static void
 get_items_for_current_dir (GetFileListData *gfl)
 {
-	const char *directory_name;
-	GFile      *directory_file;
-	char       *directory_uri;
-	char       *base_dir_uri;
+	GFile *current_dir;
+	char  *directory_name;
+	GFile *directory_file;
+	char  *directory_uri;
+	char  *base_dir_uri;
 
 	if (gfl->current_dir == NULL) {
 		if (gfl->done_func) {
@@ -782,7 +783,8 @@ get_items_for_current_dir (GetFileListData *gfl)
 		return;
 	}
 
-	directory_name = file_name_from_path ((char*) gfl->current_dir->data);
+	current_dir = g_file_new_for_uri ((char*) gfl->current_dir->data);
+	directory_name = g_file_get_basename (current_dir);
 	directory_file = g_file_get_child (gfl->base_dir, directory_name);
 	directory_uri = g_file_get_uri (directory_file);
 	base_dir_uri = g_file_get_uri (gfl->base_dir);
@@ -794,9 +796,11 @@ get_items_for_current_dir (GetFileListData *gfl)
 				    get_items_for_current_dir_done,
 				    gfl);
 
-	g_free (directory_uri);
 	g_free (base_dir_uri);
+	g_free (directory_uri);
 	g_object_unref (directory_file);
+	g_free (directory_name);
+	g_object_unref (current_dir);
 }
 
 
