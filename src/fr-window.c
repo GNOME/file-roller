@@ -4573,14 +4573,10 @@ fr_window_delete_event_cb (GtkWidget *caller,
 static gboolean
 is_single_click_policy (FrWindow *window)
 {
-	char     *value;
-	gboolean  result = FALSE;
+	int click_policy;
 
-	value = g_settings_get_enum (window->priv->settings_nautilus, PREF_NAUTILUS_CLICK_POLICY);
-	result = (value != NULL) && (strncmp (value, "single", 6) == 0);
-	g_free (value);
-
-	return result;
+	click_policy = g_settings_get_enum (window->priv->settings_nautilus, PREF_NAUTILUS_CLICK_POLICY);
+	return click_policy == 0;
 }
 
 
