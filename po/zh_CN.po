@@ -1,17 +1,19 @@
 # zh_CN translation for file-roller.
-# Copyright (C) 2003 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) 2003, 2004, 2005, 2006, 2008, 2009, 2010 Free Software Foundation, Inc.
+# This file is distributed under the same license as the file-roller package.
 # Funda Wang <fundawang@gmail.com>, 2003-2006.
-# 甘露(Gan Lu) <rhythm.gan@gmail.com>, 2008,2009
+# 甘露(Gan Lu) <rhythm.gan@gmail.com>, 2008, 2009.
+# Fan Qijiang <fqj1994@linux.com>, 2010.
+# Aron Xu <aronxu@gnome.org>, 2010.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
-"roller&component=general\n"
-"POT-Creation-Date: 2010-05-27 13:31+0000\n"
-"PO-Revision-Date: 2010-01-17 15:11+0800\n"
-"Last-Translator: Fan Qijiang <fqj1994@linux.com>\n"
-"Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
+"Project-Id-Version: file-roller master\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-14 01:00+0800\n"
+"PO-Revision-Date: 2010-08-14 01:02+0800\n"
+"Last-Translator: Aron Xu <happyaron.xu@gmail.com>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,7 +47,7 @@ msgstr "不能识别的启动选项：%d"
 #: ../copy-n-paste/eggdesktopfile.c:1373
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "无法传递文档 URIs 到 '类型=链接' 的桌面入口"
+msgstr "无法传递文档 URI 到 'Type=Link' 桌面元素"
 
 #: ../copy-n-paste/eggdesktopfile.c:1392
 #, c-format
@@ -203,7 +205,7 @@ msgid_plural ""
 "There are %d files that have been modified with an external application. If "
 "you don't update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
-"文件已被外部应用程序修改。如果您不更新归档中的版本，您的所有更必将会丢失。"
+"文件已被外部应用程序修改。如果您不更新归档中的版本，您的所有更改将会丢失。"
 msgstr[1] ""
 "%d 个文件已被外部应用程序修改。如果您不更新归档中的文件，您的所有更改将会丢"
 "失。"
@@ -253,7 +255,7 @@ msgstr "您没有在此文件夹中创建归档文件的权限"
 
 #: ../src/actions.c:235 ../src/dlg-package-installer.c:203
 #: ../src/dlg-package-installer.c:245 ../src/dlg-package-installer.c:254
-#: ../src/dlg-package-installer.c:282 ../src/fr-archive.c:1146
+#: ../src/dlg-package-installer.c:282 ../src/fr-archive.c:891
 #: ../src/fr-window.c:6033 ../src/fr-window.c:6209
 msgid "Archive type not supported."
 msgstr "不支持的归档文件类型。"
@@ -322,7 +324,8 @@ msgstr ""
 "GNOME 简体中文翻译 <i18n-translation@lists.linux.net.cn\n"
 "Yang Zhang <zyang@gmail.com> 2007.\n"
 "甘露(Gan Lu) <rhythm.gan@gmail.com>，2008, 2009\n"
-"Fan Qijiang <fqj1994@linux.com>, 2010"
+"Fan Qijiang <fqj1994@linux.com>, 2010\n"
+"Aron Xu <aronxu@gnome.org>, 2010"
 
 #: ../src/dlg-add-files.c:94 ../src/dlg-add-folder.c:129
 msgid "Could not add the files to the archive"
@@ -591,55 +594,50 @@ msgstr ""
 msgid "File format not recognized"
 msgstr "无法识别文件格式"
 
-#: ../src/fr-archive.c:1126
+#: ../src/fr-archive.c:871
 msgid "File not found."
 msgstr "文件没有找到。"
 
-#: ../src/fr-archive.c:1229
-#, c-format
-msgid "The file doesn't exist"
-msgstr "文件不存在"
-
-#: ../src/fr-archive.c:2409
+#: ../src/fr-archive.c:1939
 msgid "You don't have the right permissions."
 msgstr "您没有正确的权限。"
 
-#: ../src/fr-archive.c:2409
+#: ../src/fr-archive.c:1939
 msgid "This archive type cannot be modified"
 msgstr "此归档文件类型无法修改"
 
-#: ../src/fr-archive.c:2421
+#: ../src/fr-archive.c:1951
 msgid "You can't add an archive to itself."
 msgstr "您无法将归档文件添加到其自身。"
 
-#: ../src/fr-command-7z.c:296 ../src/fr-command-rar.c:422
-#: ../src/fr-command-tar.c:307
+#: ../src/fr-command-7z.c:296 ../src/fr-command-rar.c:434
+#: ../src/fr-command-tar.c:304
 msgid "Adding file: "
 msgstr "添加文件："
 
-#: ../src/fr-command-7z.c:412 ../src/fr-command-rar.c:549
-#: ../src/fr-command-tar.c:424
+#: ../src/fr-command-7z.c:412 ../src/fr-command-rar.c:561
+#: ../src/fr-command-tar.c:421
 msgid "Extracting file: "
 msgstr "归档文件："
 
-#: ../src/fr-command-rar.c:500 ../src/fr-command-tar.c:371
+#: ../src/fr-command-rar.c:512 ../src/fr-command-tar.c:368
 msgid "Removing file: "
 msgstr "删除文件："
 
-#: ../src/fr-command-rar.c:677
+#: ../src/fr-command-rar.c:689
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "找不到卷：%s"
 
-#: ../src/fr-command-tar.c:380 ../src/fr-window.c:2310
+#: ../src/fr-command-tar.c:377 ../src/fr-window.c:2310
 msgid "Deleting files from archive"
 msgstr "从归档文件中删除文件"
 
-#: ../src/fr-command-tar.c:483
+#: ../src/fr-command-tar.c:480
 msgid "Recompressing archive"
 msgstr "重新归档文件"
 
-#: ../src/fr-command-tar.c:734
+#: ../src/fr-command-tar.c:711
 msgid "Decompressing archive"
 msgstr "解压缩文件"
 
@@ -922,169 +920,161 @@ msgid "%d %B %Y, %H:%M"
 msgstr "%Y年%-m月%-d日 %H:%M"
 
 #. Expander
-#: ../src/gtk-utils.c:442
+#: ../src/gtk-utils.c:430
 msgid "Command _Line Output"
 msgstr "命令行输出(_L)"
 
-#: ../src/gtk-utils.c:779
+#: ../src/gtk-utils.c:767
 msgid "Could not display help"
 msgstr "无法显示帮助"
 
-#: ../src/main.c:82
+#: ../src/main.c:81
 msgid "7-Zip (.7z)"
 msgstr "7-Zip (.7z)"
 
-#: ../src/main.c:83
+#: ../src/main.c:82
 msgid "Tar compressed with 7z (.tar.7z)"
-msgstr "用 7z 压缩的 Tar (.tar.7z)"
+msgstr "用 7z 压缩的 Tar 归档文件(.tar.7z)"
 
-#: ../src/main.c:84
+#: ../src/main.c:83
 msgid "Ace (.ace)"
 msgstr "Ace (.ace)"
 
-#: ../src/main.c:86
+#: ../src/main.c:85
 msgid "Ar (.ar)"
 msgstr "Ar (.ar)"
 
-#: ../src/main.c:87
+#: ../src/main.c:86
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: ../src/main.c:89
+#: ../src/main.c:88
 msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "用 bzip2 压缩的 Tar (.tar.bz2)"
+msgstr "用 bzip2 压缩的 Tar 归档文件(.tar.bz2)"
+
+#: ../src/main.c:90
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "用 bzip 压缩的 Tar 归档文件(.tar.bz)"
 
 #: ../src/main.c:91
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "用 bzip 压缩的 Tar (.tar.bz)"
-
-#: ../src/main.c:92
 msgid "Cabinet (.cab)"
 msgstr "Cabinet (.cab)"
 
-#: ../src/main.c:93
+#: ../src/main.c:92
 msgid "Rar Archived Comic Book (.cbr)"
-msgstr "RAR 压缩的动画书(.cbr)"
+msgstr "RAR 压缩的 Comic Book 归档文件(.cbr)"
 
-#: ../src/main.c:94
+#: ../src/main.c:93
 msgid "Zip Archived Comic Book (.cbz)"
-msgstr "ZIP 压缩的动画书(.cbz)"
+msgstr "ZIP 压缩的 Comic Book 归档文件(.cbz)"
 
-#: ../src/main.c:97
+#: ../src/main.c:96
 msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "用 gzip 压缩的 Tar (.tar.gz)"
+msgstr "用 gzip 压缩的 Tar 归档文件(.tar.gz)"
 
-#: ../src/main.c:100
+#: ../src/main.c:99
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: ../src/main.c:101
+#: ../src/main.c:100
 msgid "Self-extracting zip (.exe)"
-msgstr "自解压 Zip(.exe)"
+msgstr "自解压 Zip 归档文件(.exe)"
 
-#: ../src/main.c:103
+#: ../src/main.c:102
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: ../src/main.c:104
+#: ../src/main.c:103
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
 #: ../src/main.c:105
-msgid "Lrzip (.lrz)"
-msgstr "Lrzip (.lrz)"
-
-#: ../src/main.c:106
-msgid "Tar compressed with lrzip (.tar.lrz)"
-msgstr "用 lrzip 压缩的 Tar (.tar.lrz)"
-
-#: ../src/main.c:108
 msgid "Tar compressed with lzip (.tar.lz)"
-msgstr "用 lzip 压缩的 Tar (.tar.lz)"
+msgstr "用 lzip 压缩的 Tar 归档文件(.tar.lz)"
+
+#: ../src/main.c:107
+msgid "Tar compressed with lzma (.tar.lzma)"
+msgstr "用 lzma 压缩的 Tar 归档文件(.tar.lzma)"
+
+#: ../src/main.c:109
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "用 lzop 压缩的 Tar 归档文件(.tar.lzo)"
 
 #: ../src/main.c:110
-msgid "Tar compressed with lzma (.tar.lzma)"
-msgstr "用 lzma 压缩的 Tar (.tar.lzma)"
-
-#: ../src/main.c:112
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "用 lzop 压缩的 Tar (.tar.lzo)"
-
-#: ../src/main.c:113
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: ../src/main.c:116
+#: ../src/main.c:113
 msgid "Tar uncompressed (.tar)"
-msgstr "未压缩的 Tar (.tar)"
+msgstr "未压缩的 Tar 归档文件(.tar)"
 
-#: ../src/main.c:117
+#: ../src/main.c:114
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "用 compress 压缩的 (.tar.Z)"
 
-#: ../src/main.c:119
+#: ../src/main.c:116
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: ../src/main.c:120
+#: ../src/main.c:117
 msgid "Xz (.xz)"
 msgstr "Xz (.xz)"
 
-#: ../src/main.c:121
+#: ../src/main.c:118
 msgid "Tar compressed with xz (.tar.xz)"
-msgstr "用 xz 压缩的 Tar (.tar.xz)"
+msgstr "用 xz 压缩的 Tar 归档文件(.tar.xz)"
 
-#: ../src/main.c:122
+#: ../src/main.c:119
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: ../src/main.c:123
+#: ../src/main.c:120
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: ../src/main.c:191
+#: ../src/main.c:186
 msgid "Add files to the specified archive and quit the program"
 msgstr "将文件添加到指定归档文件，然后退出程序"
 
-#: ../src/main.c:192
+#: ../src/main.c:187
 msgid "ARCHIVE"
 msgstr "归档文件"
 
-#: ../src/main.c:195
+#: ../src/main.c:190
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "添加文件，询问归档文件的名称，然后退出程序"
 
-#: ../src/main.c:199
+#: ../src/main.c:194
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "将归档文件解压缩到指定文件夹，然后退出程序"
 
-#: ../src/main.c:200 ../src/main.c:212
+#: ../src/main.c:195 ../src/main.c:207
 msgid "FOLDER"
 msgstr "文件夹"
 
-#: ../src/main.c:203
+#: ../src/main.c:198
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "解压缩文件，询问目的文件夹的名称，然后退出程序"
 
-#: ../src/main.c:207
+#: ../src/main.c:202
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "将归档文件的内容解压缩到归档文件夹，然后退出程序"
 
-#: ../src/main.c:211
+#: ../src/main.c:206
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "“--add”和“--extract”命令所使用的默认文件夹"
 
-#: ../src/main.c:215
+#: ../src/main.c:210
 msgid "Create destination folder without asking confirmation"
 msgstr "不请求确认就创建目的文件夹"
 
-#: ../src/main.c:297
+#: ../src/main.c:292
 msgid "- Create and modify an archive"
 msgstr "- 创建并修改归档文件"
 
-#: ../src/main.c:313
+#: ../src/main.c:308
 msgid "File Roller"
 msgstr "文件打包器"
 
@@ -1348,6 +1338,37 @@ msgstr "按位置(_L)"
 msgid "Sort file list by location"
 msgstr "按位置排序文件列表"
 
+#~ msgid "The file doesn't exist"
+#~ msgstr "文件不存在"
+
+#~ msgctxt "File"
+#~ msgid "Location"
+#~ msgstr "位置"
+
+#~ msgid "Lrzip (.lrz)"
+#~ msgstr "Lrzip (.lrz)"
+
+#~ msgid "Tar compressed with lrzip (.tar.lrz)"
+#~ msgstr "用 lrzip 压缩的 Tar 归档文件(.tar.lrz)"
+
+#~ msgid "_Archive"
+#~ msgstr "归档文件(_A)"
+
+#~ msgid "Find..."
+#~ msgstr "查找..."
+
+#~ msgctxt "File"
+#~ msgid "New..."
+#~ msgstr "新建..."
+
+#~ msgctxt "File"
+#~ msgid "Open..."
+#~ msgstr "打开..."
+
+#~ msgctxt "File"
+#~ msgid "Save As..."
+#~ msgstr "另存为..."
+
 #~ msgid "Archive _type:"
 #~ msgstr "归档文件类型(_T)："
 
@@ -1370,6 +1391,3 @@ msgstr "按位置排序文件列表"
 #~ "Extract archives using the archive name as destination folder and quit "
 #~ "the program"
 #~ msgstr "解压缩文件，使用归档文件名称作为目标文件夹，然后退出程序"
-
-#~ msgid "_Archive"
-#~ msgstr "归档文件(_A)"
