@@ -10,10 +10,10 @@ AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADER([config.h])
 
 GNOME_COMMON_INIT
+
 AC_PROG_CC
 AM_DISABLE_STATIC
 AC_PROG_LIBTOOL
-GLIB_GSETTINGS
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
@@ -27,6 +27,7 @@ dnl ==========================================================================
 
 GLIB_REQUIRED=2.25.5
 GIO_REQUIRED=2.25.5
+GCONF_REQUIRED=2.6.0
 NAUTILUS_REQUIRED=2.22.2
 
 AC_MSG_CHECKING([which gtk+ version to compile against])
@@ -77,7 +78,8 @@ PKG_CHECK_MODULES(FR,					\
 	glib-2.0 >= $GLIB_REQUIRED			\
 	gthread-2.0					\
 	gio-unix-2.0 >= $GIO_REQUIRED			\
-	gtk+-$GTK_API_VERSION >= $GTK_REQUIRED)
+	gtk+-$GTK_API_VERSION >= $GTK_REQUIRED		\
+	gconf-2.0 >= $GCONF_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
 
@@ -145,6 +147,14 @@ if test "x$enable_deprecations" = "xyes"; then
         DISABLE_DEPRECATED="-DGSEAL_ENABLE -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 fi
 AC_SUBST(DISABLE_DEPRECATED)
+
+dnl ******************************
+
+AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+if test x"$GCONFTOOL" = xno; then
+	AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+fi
+AM_GCONF_SOURCE_2
 
 dnl ******************************
 

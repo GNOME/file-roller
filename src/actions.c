@@ -39,6 +39,7 @@
 #include "fr-window.h"
 #include "file-utils.h"
 #include "fr-process.h"
+#include "gconf-utils.h"
 #include "glib-utils.h"
 #include "main.h"
 #include "typedefs.h"
@@ -427,7 +428,6 @@ save_file_response_cb (GtkWidget  *w,
 	const char *password;
 	gboolean    encrypt_header;
 	int         volume_size;
-	GSettings  *settings;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
@@ -447,9 +447,7 @@ save_file_response_cb (GtkWidget  *w,
 	encrypt_header = dlg_new_data_get_encrypt_header (data);
 	volume_size = dlg_new_data_get_volume_size (data);
 
-	settings = g_settings_new (FILE_ROLLER_SCHEMA_BATCH_ADD);
-	g_settings_set_int (settings, PREF_BATCH_ADD_VOLUME_SIZE, volume_size);
-	g_object_unref (settings);
+	eel_gconf_set_integer (PREF_BATCH_VOLUME_SIZE, volume_size);
 
 	fr_window_archive_save_as (data->window, path, password, encrypt_header, volume_size);
 	gtk_widget_destroy (data->dialog);
@@ -725,11 +723,7 @@ void
 activate_action_view_toolbar (GtkAction *action,
 			      gpointer   data)
 {
-	GSettings *settings;
-
-	settings = g_settings_new (FILE_ROLLER_SCHEMA_UI);
-	g_settings_set_boolean (settings, PREF_UI_VIEW_TOOLBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
-	g_object_unref (settings);
+	eel_gconf_set_boolean (PREF_UI_TOOLBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
 
 
@@ -737,23 +731,15 @@ void
 activate_action_view_statusbar (GtkAction *action,
 				gpointer   data)
 {
-	GSettings *settings;
-
-	settings = g_settings_new (FILE_ROLLER_SCHEMA_UI);
-	g_settings_set_boolean (settings, PREF_UI_VIEW_STATUSBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
-	g_object_unref (settings);
+	eel_gconf_set_boolean (PREF_UI_STATUSBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
 
 
 void
 activate_action_view_folders (GtkAction *action,
-			      gpointer   data)
+				gpointer   data)
 {
-	GSettings *settings;
-
-	settings = g_settings_new (FILE_ROLLER_SCHEMA_UI);
-	g_settings_set_boolean (settings, PREF_UI_VIEW_FOLDERS, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
-	g_object_unref (settings);
+	eel_gconf_set_boolean (PREF_UI_FOLDERS, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
 
 

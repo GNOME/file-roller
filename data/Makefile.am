@@ -1,22 +1,29 @@
+@INTLTOOL_DESKTOP_RULE@
+
 SUBDIRS = ui icons
 
-desktopdir = $(datadir)/applications
 desktop_in_in_files = file-roller.desktop.in.in
 desktop_in_files = $(desktop_in_in_files:.desktop.in.in=.desktop.in) 
+
+desktopdir = $(datadir)/applications
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop) 
-@INTLTOOL_DESKTOP_RULE@
 
 matchdir = $(datadir)/file-roller
 match_DATA = packages.match
 
-gsettings_SCHEMAS = org.gnome.file-roller.gschema.xml
-@GSETTINGS_RULES@
+schemadir = @GCONF_SCHEMA_FILE_DIR@
+schema_DATA = file-roller.schemas
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
 
-install-data-hook: update-cache
-uninstall-hook: update-cache
-update-cache:
+install-data-local:
+if GCONF_SCHEMAS_INSTALL
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(srcdir)/$(schema_DATA)
+endif
+
+install-data-hook: update-icon-cache
+uninstall-hook: update-icon-cache
+update-icon-cache:
 	if test -z "$(DESTDIR)"; then \
 		echo "Updating Gtk icon cache."; \
 		$(gtk_update_icon_cache); \
@@ -25,13 +32,15 @@ update-cache:
 		echo "***   $(gtk_update_icon_cache)"; \
 	fi
 
+
 EXTRA_DIST = 			\
 	$(desktop_in_in_files)	\
 	$(desktop_in_files)	\
 	$(desktop_DATA)		\
 	packages.match.in	\
 	packages.match		\
-	$(gsettings_SCHEMAS)
+	$(schema_DATA)
+
 
 DISTCLEANFILES =                \
 	$(desktop_in_files)	\

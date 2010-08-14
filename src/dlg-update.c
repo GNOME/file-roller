@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 #include "dlg-update.h"
 #include "file-utils.h"
+#include "gconf-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "main.h"

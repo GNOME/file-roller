@@ -49,6 +49,7 @@
 #include "fr-command-lrzip.h"
 #include "fr-process.h"
 #include "fr-stock.h"
+#include "gconf-utils.h"
 #include "fr-window.h"
 #include "typedefs.h"
 #include "preferences.h"
@@ -334,6 +335,9 @@ main (int argc, char **argv)
 static void
 initialize_data (void)
 {
+	eel_gconf_monitor_add ("/apps/file-roller");
+	eel_gconf_monitor_add (PREF_NAUTILUS_CLICK_POLICY);
+
 	ProgramsCache = g_hash_table_new_full (g_str_hash,
 					       g_str_equal,
 					       g_free,
@@ -381,10 +385,85 @@ release_data ()
 {
 	g_hash_table_destroy (ProgramsCache);
 
+	eel_global_client_free ();
+
 	while (CommandList != NULL) {
 		CommandData *cdata = CommandList->data;
 		command_done (cdata);
 	}
+}
+
+/* Create the windows. */
+
+
+static void
+migrate_dir_from_to (const char *from_dir,
+		     const char *to_dir)
+{
+	char *from_path;
+	char *to_path;
+
+	from_path = get_home_relative_path (from_dir);
+	to_path = get_home_relative_path (to_dir);
+
+	if (uri_is_dir (from_path) && ! uri_exists (to_path)) {
+		char *line;
+		char *e1;
+		char *e2;
+
+		e1 = g_shell_quote (from_path);
+		e2 = g_shell_quote (to_path);
+		line = g_strdup_printf ("mv -f %s %s", e1, e2);
+		g_free (e1);
+		g_free (e2);
+
+		g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
+		g_free (line);
+	}
+
+	g_free (from_path);
+	g_free (to_path);
+}
+
+
+static void
+migrate_file_from_to (const char *from_file,
+		      const char *to_file)
+{
+	char *from_path;
+	char *to_path;
+
+	from_path = get_home_relative_path (from_file);
+	to_path = get_home_relative_path (to_file);
+
+	if (uri_is_file (from_path) && ! uri_exists (to_path)) {
+		char *line;
+		char *e1;
+		char *e2;
+
+		e1 = g_shell_quote (from_path);
+		e2 = g_shell_quote (to_path);
+		line = g_strdup_printf ("mv -f %s %s", e1, e2);
+		g_free (e1);
+		g_free (e2);
+
+		g_spawn_command_line_sync (line, NULL, NULL, NULL, NULL);
+		g_free (line);
+	}
+
+	g_free (from_path);
+	g_free (to_path);
+}
+
+
+static void
+migrate_to_new_directories (void)
+{
+	migrate_dir_from_to  (OLD_RC_OPTIONS_DIR, RC_OPTIONS_DIR);
+	migrate_file_from_to (OLD_RC_BOOKMARKS_FILE, RC_BOOKMARKS_FILE);
+	migrate_file_from_to (OLD_RC_RECENT_FILE, RC_RECENT_FILE);
+
+	eel_gconf_set_boolean (PREF_MIGRATE_DIRECTORIES, FALSE);
 }
 
 
@@ -836,7 +915,7 @@ prepare_app (void)
 
 	uri = get_home_relative_uri (RC_DIR);
 
-	if (uri_is_file (uri)) { /* before the GConf port this was a file, now it's folder. */
+	if (uri_is_file (uri)) { /* before the gconf port this was a file, now it's folder. */
 		GFile *file;
 
 		file = g_file_new_for_uri (uri);
@@ -846,6 +925,9 @@ prepare_app (void)
 
 	ensure_dir_exists (uri, 0700, NULL);
 	g_free (uri);
+
+	if (eel_gconf_get_boolean (PREF_MIGRATE_DIRECTORIES, TRUE))
+		migrate_to_new_directories ();
 
 	register_commands ();
 	compute_supported_archive_types ();

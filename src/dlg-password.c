@@ -24,6 +24,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include "fr-window.h"
+#include "gconf-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
 
@@ -62,13 +63,7 @@ response_cb (GtkWidget  *dialog,
 		g_free (password);
 
 		encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->pw_encrypt_header_checkbutton));
-		{
-			GSettings *settings;
-
-			settings = g_settings_new (FILE_ROLLER_SCHEMA_GENERAL);
-			g_settings_set_boolean (settings, PREF_GENERAL_ENCRYPT_HEADER, encrypt_header);
-			g_object_unref (settings);
-		}
+		eel_gconf_set_boolean (PREF_ENCRYPT_HEADER, encrypt_header);
 		fr_window_set_encrypt_header (data->window, encrypt_header);
 		break;
 	default:

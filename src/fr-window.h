@@ -28,6 +28,7 @@
 #include "typedefs.h"
 #include "fr-archive.h"
 
+#define GCONF_NOTIFICATIONS 10
 
 enum {
 	COLUMN_FILE_DATA,

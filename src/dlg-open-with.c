@@ -22,8 +22,10 @@
 
 #include <config.h>
 #include <string.h>
+
 #include <gtk/gtk.h>
 #include "file-utils.h"
+#include "gconf-utils.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "main.h"
@@ -36,8 +38,7 @@ enum { ICON_COLUMN, TEXT_COLUMN, DATA_COLUMN, N_COLUMNS };
 
 typedef struct {
 	FrWindow     *window;
-	GSettings    *settings;
-	GtkBuilder   *builder;
+	GtkBuilder *builder;
 
 	GtkWidget    *dialog;
 	GtkWidget    *o_app_tree_view;
@@ -61,12 +62,14 @@ static void
 open_with__destroy_cb (GtkWidget  *widget,
 		       DialogData *data)
 {
+	g_object_unref (G_OBJECT (data->builder));
+
 	if (data->app_list != NULL) 
 		g_list_free (data->app_list);
+
 	if (data->file_list != NULL)
 		path_list_free (data->file_list);
-	g_object_unref (data->builder);
-	g_object_unref (data->settings);
+
 	g_free (data);
 }
 
@@ -80,8 +83,7 @@ open_cb (GtkWidget *widget,
 	gboolean     present = FALSE;
 	char        *command = NULL;
 	GList       *scan;
-	char       **editors;
-	int          i;
+	GSList      *sscan, *editors;
 
 	application = gtk_entry_get_text (GTK_ENTRY (data->o_app_entry));
 
@@ -96,25 +98,23 @@ open_cb (GtkWidget *widget,
 
 	/* add the command to the editors list if not already present. */
 
-	editors = g_settings_get_strv (data->settings, PREF_GENERAL_EDITORS);
-	for (i = 0; ! present && editors[i] != NULL; i++) {
-		if (strcmp (editors[i], application) == 0) {
-			command = g_strdup (editors[i]);
+	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
+	for (sscan = editors; sscan && ! present; sscan = sscan->next) {
+		char *recent_command = sscan->data;
+		if (strcmp (recent_command, application) == 0) {
+			command = g_strdup (recent_command);
 			present = TRUE;
 		}
 	}
 
 	if (! present) {
-		char **new_editors;
-
-		new_editors = _g_strv_prepend (editors, g_strdup (application));
+		editors = g_slist_prepend (editors, g_strdup (application));
 		command = g_strdup (application);
-		g_settings_set_strv (data->settings, PREF_GENERAL_EDITORS, (const gchar * const *) new_editors);
-
-		g_strfreev (new_editors);
+		eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
 	}
 
-	g_strfreev (editors);
+	g_slist_foreach (editors, (GFunc) g_free, NULL);
+	g_slist_free (editors);
 
 	/* exec the application */
 
@@ -242,8 +242,8 @@ delete_recent_cb (GtkWidget *widget,
 	
 
 	if (data->last_clicked_list == data->o_recent_tree_view) {
-		char  *editor;
-		char **editors;
+		char   *editor;
+		GSList *editors, *link;
 	
 		selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (data->o_recent_tree_view));
 		if (! gtk_tree_selection_get_selected (selection, NULL, &iter))
@@ -256,11 +256,17 @@ delete_recent_cb (GtkWidget *widget,
 
 		/**/
 
-		editors = g_settings_get_strv (data->settings, PREF_GENERAL_EDITORS);
-		if (_g_strv_remove (editors, editor))
-			g_settings_set_strv (data->settings, PREF_GENERAL_EDITORS, (const gchar * const *) editors);
+		editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
+		link = g_slist_find_custom (editors, editor, (GCompareFunc) strcmp);
+		if (link != NULL) {
+			editors = g_slist_remove_link (editors, link);
+			eel_gconf_set_string_list (PREF_EDIT_EDITORS, editors);
+			g_free (link->data);
+			g_slist_free (link);
+		}
+		g_slist_foreach (editors, (GFunc) g_free, NULL);
+		g_slist_free (editors);
 
-		g_strfreev (editors);
 		g_free (editor);
 	}
 	else if (data->last_clicked_list == data->o_app_tree_view) {
@@ -290,23 +296,22 @@ void
 dlg_open_with (FrWindow *window,
 	       GList    *file_list)
 {
-	DialogData         *data;
-	GAppInfo           *app;
-	GList              *scan, *app_names = NULL;
-	char              **editors;
-	int                 i;
-	GtkWidget          *cancel_button;
-	GtkTreeIter         iter;
-	GtkCellRenderer    *renderer;
-	GtkTreeViewColumn  *column;
-	GtkIconTheme       *theme;
-	int                 icon_size;
+	DialogData        *data;
+	GAppInfo          *app;
+	GList             *scan, *app_names = NULL;
+	GSList            *sscan, *editors;
+	GtkWidget         *cancel_button;
+	GtkTreeIter        iter;
+	GtkCellRenderer   *renderer;
+	GtkTreeViewColumn *column;
+	GtkIconTheme      *theme;
+	int                icon_size;
 
 	if (file_list == NULL)
 		return;
 
 	data = g_new0 (DialogData, 1);
-	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_GENERAL);
+
 	data->builder = _gtk_builder_new_from_file ("open-with.ui");
 	if (data->builder == NULL) {
 		g_free (data);
@@ -467,14 +472,17 @@ dlg_open_with (FrWindow *window,
 				 data->recent_model);
 	g_object_unref (G_OBJECT (data->recent_model));
 
-	editors = g_settings_get_strv (data->settings, PREF_GENERAL_EDITORS);
-	for (i = 0; editors[i] != NULL; i++) {
+	editors = eel_gconf_get_string_list (PREF_EDIT_EDITORS);
+	for (sscan = editors; sscan; sscan = sscan->next) {
+		char *editor = sscan->data;
+
 		gtk_list_store_append (GTK_LIST_STORE (data->recent_model), &iter);
 		gtk_list_store_set (GTK_LIST_STORE (data->recent_model), &iter,
-				    0, editors[i],
+				    0, editor,
 				    -1);
 	}
-	g_strfreev (editors);
+	g_slist_foreach (editors, (GFunc) g_free, NULL);
+	g_slist_free (editors);
 
 	renderer = gtk_cell_renderer_text_new ();
 	column = gtk_tree_view_column_new_with_attributes (NULL,

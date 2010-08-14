@@ -130,6 +130,8 @@ file_roller_SOURCES = 			\
 	fr-process.h			\
 	fr-window.c			\
 	fr-window.h			\
+	gconf-utils.c			\
+	gconf-utils.h			\
 	gio-utils.c			\
 	gio-utils.h			\
 	glib-utils.c			\
