@@ -357,7 +357,7 @@ dlg_new_archive (FrWindow  *window,
 		while (n_exts < 4)
 			exts[n_exts++] = NULL;
 
-		g_print ("%s => %s, %s, %s, %s\n", mime_type_desc[idx].mime_type, exts[0], exts[1], exts[2], exts[3]);
+		/* g_print ("%s => %s, %s, %s, %s\n", mime_type_desc[idx].mime_type, exts[0], exts[1], exts[2], exts[3]); */
 
 		icon_name = get_icon_name_for_type (mime_type_desc[idx].mime_type);
 		egg_file_format_chooser_add_format (data->format_chooser,
