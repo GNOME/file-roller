@@ -45,6 +45,7 @@ typedef struct {
 
 	GtkWidget    *update_file_dialog;
 	GtkWidget    *update_file_primary_text_label;
+	GtkWidget    *update_file_secondary_text_label;
 
 	GtkWidget    *update_files_dialog;
 	GtkWidget    *update_files_primary_text_label;
@@ -170,6 +171,15 @@ update_file_list (DialogData *data)
 		g_free (archive_name);
 		g_free (unescaped);
 		g_free (file_name);
+
+		/* secondary text */
+
+		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don't update the version in the archive, all of your changes will be lost.",
+						   "There are %d files that have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.",
+						   n_files),
+					 n_files);
+		gtk_label_set_text (GTK_LABEL (data->update_file_secondary_text_label), label);
+		g_free (label);
 	}
 	else if (n_files > 1) {
 		char *unescaped;
@@ -289,6 +299,8 @@ dlg_update (FrWindow *window)
 
 	data->update_file_dialog = _gtk_builder_get_widget (data->builder, "update_file_dialog");
 	data->update_file_primary_text_label = _gtk_builder_get_widget (data->builder, "update_file_primary_text_label");
+	data->update_file_secondary_text_label = _gtk_builder_get_widget (data->builder, "update_file_secondary_text_label");
+
 	update_file_ok_button = _gtk_builder_get_widget (data->builder, "update_file_ok_button");
 	update_file_cancel_button = _gtk_builder_get_widget (data->builder, "update_file_cancel_button");
 
