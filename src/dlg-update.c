@@ -174,7 +174,7 @@ update_file_list (DialogData *data)
 
 		/* secondary text */
 
-		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don't update the version in the archive, all of your changes will be lost.",
+		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don't update the file in the archive, all of your changes will be lost.",
 						   "%d files have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.",
 						   n_files),
 					 n_files);
