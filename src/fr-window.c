@@ -4579,7 +4579,8 @@ fr_window_delete_event_cb (GtkWidget *caller,
 static gboolean
 is_single_click_policy (void)
 {
-	int click_policy;
+	char     *value;
+	gboolean  result;
 
 	value = eel_gconf_get_string (PREF_NAUTILUS_CLICK_POLICY, "double");
 	result = strncmp (value, "single", 6) == 0;
