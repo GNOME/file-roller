@@ -175,7 +175,7 @@ update_file_list (DialogData *data)
 		/* secondary text */
 
 		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don't update the version in the archive, all of your changes will be lost.",
-						   "There are %d files that have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.",
+						   "%d files have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.",
 						   n_files),
 					 n_files);
 		gtk_label_set_text (GTK_LABEL (data->update_file_secondary_text_label), label);
