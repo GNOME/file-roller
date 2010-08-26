@@ -550,10 +550,14 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 		return capabilities;
 
 	if (is_mime_type (mime_type, "application/x-7z-compressed")) {
-		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER | FR_COMMAND_CAN_CREATE_VOLUMES;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_CREATE_VOLUMES;
+		if (is_program_available ("7z", check_command))
+			capabilities |= FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 	}
 	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar")) {
-		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER | FR_COMMAND_CAN_CREATE_VOLUMES;
+		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		if (is_program_available ("7z", check_command))
+			capabilities |= FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 	}
 	else if (is_program_available ("7z", check_command)) {
 		if (is_mime_type (mime_type, "application/x-rar")
