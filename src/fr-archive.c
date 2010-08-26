@@ -2812,7 +2812,9 @@ compute_base_path (const char *base_dir,
 			new_path = g_strdup (file_name_from_path (path));
 		else
 			new_path = g_strdup (path);
+
 		/*debug (DEBUG_INFO, "%s, %s --> %s\n", base_dir, path, new_path);*/
+
 		return new_path;
 	}
 
@@ -2853,6 +2855,7 @@ compute_list_base_path (const char *base_dir,
 	for (scan = filtered; scan; scan = scan->next) {
 		const char *path = scan->data;
 		char       *new_path;
+
 		new_path = compute_base_path (base_dir, path, junk_paths, can_junk_paths);
 		if (new_path != NULL)
 			list = g_list_prepend (list, new_path);

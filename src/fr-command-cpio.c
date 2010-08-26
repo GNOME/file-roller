@@ -199,12 +199,19 @@ fr_command_cpio_extract (FrCommand *comm,
                 fr_process_set_working_dir (comm->process, dest_dir);
 	fr_process_add_arg (comm->process, "-c");
 	
-	cmd = g_string_new ("cpio -idu ");
+	cmd = g_string_new ("cpio -idu --no-absolute-filenames ");
 	for (scan = file_list; scan; scan = scan->next) {
-		char *filename = g_shell_quote (scan->data);
+		char *filepath = scan->data;
+		char *filename;
+
+		if (filepath[0] == '/')
+			filename = g_shell_quote (filepath + 1);
+		else
+			filename = g_shell_quote (filepath);
 		g_string_append (cmd, filename);
-		g_free (filename);
 		g_string_append (cmd, " ");
+
+		g_free (filename);
 	}
         g_string_append (cmd, " < ");
 	g_string_append (cmd, comm->e_filename);
