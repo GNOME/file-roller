@@ -162,8 +162,10 @@ load_constant_pool_utfs (JavaClassFile *cfile)
 		case CONST_CLASS:
 			class = g_new0 (struct class_info, 1);
 			class->index = i + 1;
-			if (read (cfile->fd, &class->name_index, 2) != 2)
+			if (read (cfile->fd, &class->name_index, 2) != 2) {
+				g_free (class);
 				return;	/* error reading */
+			}
 			class->name_index = GUINT16_FROM_BE (class->name_index);
 			cfile->const_pool_class = g_slist_append (cfile->const_pool_class, class);
 			break;
@@ -207,12 +209,16 @@ load_constant_pool_utfs (JavaClassFile *cfile)
 		case CONST_UTF8:
 			txt = g_new0 (struct utf_string, 1);
 			txt->index = i + 1;
-			if (read (cfile->fd, &(txt->length), 2) == -1)
+			if (read (cfile->fd, &(txt->length), 2) == -1) {
+				g_free (txt);
 				return;	/* error while reading */
+			}
 			txt->length = GUINT16_FROM_BE (txt->length);
 			txt->str = g_new0 (char, txt->length);
-			if (read (cfile->fd, txt->str, txt->length) == -1)
+			if (read (cfile->fd, txt->str, txt->length) == -1) {
+				g_free (txt);
 				return;	/* error while reading */
+			}
 			cfile->const_pool_utf = g_slist_append (cfile->const_pool_utf, txt);
 			break;
 		
