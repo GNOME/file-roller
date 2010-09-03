@@ -806,7 +806,7 @@ get_uncompressed_name (FrCommandTar *c_tar,
 		/* X.tar.xz --> X.tar
 		 * (There doesn't seem to be a shorthand suffix) */
 		if (file_extension_is (e_filename, ".tar.xz"))
-			new_name[l - 5] = 0;
+			new_name[l - 3] = 0;
 	}
 	else if (is_mime_type (comm->mime_type, "application/x-lzop-compressed-tar")) {
 		/* X.tzo     -->  X.tar
