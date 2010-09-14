@@ -183,12 +183,12 @@ install_packages (InstallerData *idata)
 
 			g_dbus_proxy_call (proxy,
 					   "InstallPackageNames",
-					   g_variant_new ("(u^asms)",
+					   g_variant_new ("(u^ass)",
 							  xid,
 							  names,
 							  "hide-confirm-search,hide-finished,hide-warning"),
 					   G_DBUS_CALL_FLAGS_NONE,
-					   -1,
+					   G_MAXINT,
 					   NULL,
 					   packagekit_install_package_names_ready_cb,
 					   idata);
