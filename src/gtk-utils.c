@@ -78,7 +78,6 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
 	gtk_box_set_spacing (GTK_BOX (content_area), 8);
@@ -217,7 +216,6 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
 	gtk_box_set_spacing (GTK_BOX (content_area), 8);
@@ -309,7 +307,6 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (d));
 
-	gtk_dialog_set_has_separator (GTK_DIALOG (d), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (d), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
 	gtk_box_set_spacing (GTK_BOX (content_area), 8);
@@ -397,7 +394,6 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
 	gtk_box_set_spacing (GTK_BOX (content_area), 8);

@@ -2488,7 +2488,6 @@ create_the_progress_dialog (FrWindow *window)
 	window->priv->pd_cancel_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
 
 	d = GTK_DIALOG (window->priv->progress_dialog);
-	gtk_dialog_set_has_separator (d, FALSE);
 	gtk_window_set_resizable (GTK_WINDOW (d), TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 	gtk_window_set_default_size (GTK_WINDOW (d), PROGRESS_DIALOG_DEFAULT_WIDTH, -1);
@@ -7066,7 +7065,6 @@ fr_window_view_last_output (FrWindow   *window,
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 6);
 	gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 8);
