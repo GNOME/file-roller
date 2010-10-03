@@ -913,13 +913,13 @@ get_temp_work_dir (const char *parent_folder)
 	char    *template;
 	char    *result = NULL;
 
-	if (parent_folder == NULL) { 	
+	if (parent_folder == NULL) {
 		/* find the folder with more free space. */
-	
+
 		for (i = 0; try_folder[i] != NULL; i++) {
 			char    *folder;
 			guint64  size;
-	
+
 			folder = ith_temp_folder_to_try (i);
 			size = get_dest_free_space (folder);
 			if (max_size < size) {
@@ -930,13 +930,13 @@ get_temp_work_dir (const char *parent_folder)
 			else
 				g_free (folder);
 		}
-	}	
-	else 
+	}
+	else
 		best_folder = g_strdup (parent_folder);
-		
+
 	if (best_folder == NULL)
 		return NULL;
-	
+
 	template = g_strconcat (best_folder, "/.fr-XXXXXX", NULL);
 	result = mkdtemp (template);
 
@@ -953,7 +953,7 @@ gboolean
 is_temp_work_dir (const char *dir)
 {
 	int i;
-	const char *folder;
+	char *folder;
 
 	if (strncmp (dir, "file://", 7) == 0)
 		dir = dir + 7;
