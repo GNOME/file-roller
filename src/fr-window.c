@@ -697,7 +697,8 @@ fr_window_close (FrWindow *window)
 	if (gtk_widget_get_realized (GTK_WIDGET (window))) {
 		int width, height;
 
-		gdk_drawable_get_size (gtk_widget_get_window (GTK_WIDGET (window)), &width, &height);
+		width = gtk_widget_get_allocated_width (GTK_WIDGET (window));
+		height = gtk_widget_get_allocated_height (GTK_WIDGET (window));
 		g_settings_set_int (window->priv->settings_ui, PREF_UI_WINDOW_WIDTH, width);
 		g_settings_set_int (window->priv->settings_ui, PREF_UI_WINDOW_HEIGHT, height);
 
