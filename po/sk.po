@@ -12,16 +12,14 @@ msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&component=general\n"
-"POT-Creation-Date: 2010-02-24 18:40+0000\n"
-"PO-Revision-Date: 2010-03-01 15:05+0100\n"
+"POT-Creation-Date: 2010-08-23 11:40+0000\n"
+"PO-Revision-Date: 2010-10-04 9:52+0200\n"
 "Last-Translator: Peter Mráz <etkinator@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Poedit-Country: SLOVAKIA\n"
-"X-Poedit-Language: Slovak\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
@@ -29,34 +27,32 @@ msgid "File is not a valid .desktop file"
 msgstr "Súbor nie je platný .desktop súbor"
 
 # * https://bugzilla.gnome.org/show_bug.cgi?id=611332
-#: ../copy-n-paste/eggdesktopfile.c:188
+#: ../copy-n-paste/eggdesktopfile.c:190
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "Nerozpoznaná verzia '%s' súboru pracovnej plochy"
 
-#: ../copy-n-paste/eggdesktopfile.c:958
+#: ../copy-n-paste/eggdesktopfile.c:960
 #, c-format
 msgid "Starting %s"
 msgstr "Spúšťa sa %s"
 
-#: ../copy-n-paste/eggdesktopfile.c:1100
+#: ../copy-n-paste/eggdesktopfile.c:1102
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "Aplikácia neprijíma dokumenty v príkazovom riadku"
 
-#: ../copy-n-paste/eggdesktopfile.c:1168
+#: ../copy-n-paste/eggdesktopfile.c:1170
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "Nerozpoznaná spúšťacia voľba: %d"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611392
-#: ../copy-n-paste/eggdesktopfile.c:1373
-#, fuzzy, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"Nedá sa predať URI adresa dokumentu položke pracovnej plochy 'Type=Link"
+#: ../copy-n-paste/eggdesktopfile.c:1375
+#, c-format
+msgid "Can't pass documents to this desktop element"
+msgstr "Dokumenty sa nedajú predať tomuto prvku pracovnej plochy"
 
-#: ../copy-n-paste/eggdesktopfile.c:1392
+#: ../copy-n-paste/eggdesktopfile.c:1394
 #, c-format
 msgid "Not a launchable item"
 msgstr "Nespustiteľná položka"
@@ -90,7 +86,7 @@ msgid "Show session management options"
 msgstr "Zobraziť voľby správy relácie"
 
 #: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1974
-#: ../src/fr-window.c:5377
+#: ../src/fr-window.c:5393
 msgid "Archive Manager"
 msgstr "Správca archívov"
 
@@ -100,7 +96,7 @@ msgstr "Vytvoriť a upraviť archív"
 
 #: ../data/ui/add-options.ui.h:1
 msgid "Load Options"
-msgstr "Načítať možnosti"
+msgstr "Načítať voľby"
 
 #: ../data/ui/batch-add-files.ui.h:1 ../src/fr-stock.c:42
 msgid "C_reate"
@@ -111,7 +107,7 @@ msgid "Compress"
 msgstr "Komprimovať"
 
 # * https://bugzilla.gnome.org/show_bug.cgi?id=611359
-#: ../data/ui/batch-add-files.ui.h:3 ../src/fr-window.c:4667
+#: ../data/ui/batch-add-files.ui.h:3
 msgid "Location"
 msgstr "Umiestnenie"
 
@@ -120,30 +116,30 @@ msgstr "Umiestnenie"
 msgid "MB"
 msgstr "MB"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611360
-#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:3
+#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
+#: ../data/ui/batch-add-files.ui.h:7 ../data/ui/new.ui.h:3
 msgid "Split into _volumes of"
 msgstr "_Rozdeliť na zväzky po"
 
-#: ../data/ui/batch-add-files.ui.h:7 ../data/ui/new.ui.h:4
+#: ../data/ui/batch-add-files.ui.h:8 ../data/ui/new.ui.h:4
 #: ../data/ui/password.ui.h:3
 msgid "_Encrypt the file list too"
 msgstr "_Zašifrovať aj zoznam súborov"
 
-#: ../data/ui/batch-add-files.ui.h:8
+#: ../data/ui/batch-add-files.ui.h:9
 msgid "_Filename:"
 msgstr "Názov _súboru:"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611361
-#: ../data/ui/batch-add-files.ui.h:9 ../src/fr-window.c:5798
+#. Translators: after the colon there is a folder name.
+#: ../data/ui/batch-add-files.ui.h:10 ../src/fr-window.c:5815
 msgid "_Location:"
 msgstr "_Umiestnenie:"
 
-#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:5
+#: ../data/ui/batch-add-files.ui.h:11 ../data/ui/new.ui.h:5
 msgid "_Other Options"
 msgstr "Ďalšie _možnosti"
 
-#: ../data/ui/batch-add-files.ui.h:11 ../data/ui/batch-password.ui.h:2
+#: ../data/ui/batch-add-files.ui.h:12 ../data/ui/batch-password.ui.h:2
 #: ../data/ui/new.ui.h:6 ../data/ui/password.ui.h:4
 msgid "_Password:"
 msgstr "_Heslo:"
@@ -208,23 +204,23 @@ msgstr "Vyb_erte súbory, ktoré chcete aktualizovať:"
 
 # * https://bugzilla.gnome.org/show_bug.cgi?id=611220
 #. secondary text
-#: ../data/ui/update.ui.h:2 ../src/dlg-update.c:182
+#: ../data/ui/update.ui.h:2 ../src/dlg-update.c:177 ../src/dlg-update.c:205
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don't update "
-"the version in the archive, all of your changes will be lost."
+"the file in the archive, all of your changes will be lost."
 msgid_plural ""
-"There are %d files that have been modified with an external application. If "
-"you don't update the files in the archive, all of your changes will be lost."
+"%d files have been modified with an external application. If you don't "
+"update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
 "Týchto %d súborov bolo zmenených externou aplikáciou. Ak neaktualizujete "
-"verzie v archíve, všetky vykonané zmeny sa stratia."
+"verzie súborov v archíve, všetky vykonané zmeny sa stratia."
 msgstr[1] ""
-"Tento súbor bol zmenený externou aplikáciou. Ak neaktualizujete verziu v "
-"archíve, všetky vykonané zmeny sa stratia."
+"Tento súbor bol zmenený externou aplikáciou. Ak neaktualizujete verziu "
+"súboru v archíve, všetky vykonané zmeny sa stratia."
 msgstr[2] ""
 "Tieto %d súbory boli zmenené externou aplikáciou. Ak neaktualizujete verzie "
-"v archíve, všetky vykonané zmeny sa stratia."
+"súborov v archíve, všetky vykonané zmeny sa stratia."
 
 #: ../data/ui/update.ui.h:3
 msgid "_Update"
@@ -234,24 +230,24 @@ msgstr "_Aktualizovať"
 msgid "Extract Here"
 msgstr "Rozbaliť sem"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611226
-#: ../nautilus/nautilus-fileroller.c:314
-msgid "Extract the selected archive in the current position"
-msgstr "Rozbaliť zvolený archív na aktuálnu pozíciu"
+#. Translators: the current position is the current folder
+#: ../nautilus/nautilus-fileroller.c:315
+msgid "Extract the selected archive to the current position"
+msgstr "Rozbaliť zvolený archív do aktuálneho priečinka"
 
-#: ../nautilus/nautilus-fileroller.c:331
+#: ../nautilus/nautilus-fileroller.c:332
 msgid "Extract To..."
 msgstr "Rozbaliť do..."
 
-#: ../nautilus/nautilus-fileroller.c:332
+#: ../nautilus/nautilus-fileroller.c:333
 msgid "Extract the selected archive"
 msgstr "Rozbaliť zvolený archív"
 
-#: ../nautilus/nautilus-fileroller.c:351
+#: ../nautilus/nautilus-fileroller.c:352
 msgid "Compress..."
 msgstr "Komprimovať..."
 
-#: ../nautilus/nautilus-fileroller.c:352
+#: ../nautilus/nautilus-fileroller.c:353
 msgid "Create a compressed archive with the selected objects"
 msgstr "Vytvoriť komprimovaný archív so zvolenými objektmi"
 
@@ -268,12 +264,11 @@ msgstr "Máte zadať názov archívu."
 
 #: ../src/actions.c:199
 msgid "You don't have permission to create an archive in this folder"
-msgstr "Nemáte oprávnenia pre vytvorenie archívu v tomto priečinku"
+msgstr "Nemáte oprávnenia na vytvorenie archívu v tomto priečinku"
 
-#: ../src/actions.c:235 ../src/dlg-package-installer.c:198
-#: ../src/dlg-package-installer.c:241 ../src/dlg-package-installer.c:250
-#: ../src/dlg-package-installer.c:278 ../src/fr-archive.c:891
-#: ../src/fr-window.c:6010 ../src/fr-window.c:6186
+#: ../src/actions.c:235 ../src/dlg-package-installer.c:254
+#: ../src/dlg-package-installer.c:263 ../src/dlg-package-installer.c:291
+#: ../src/fr-archive.c:1146 ../src/fr-window.c:6034 ../src/fr-window.c:6210
 msgid "Archive type not supported."
 msgstr "Nepodporovaný typ archívu."
 
@@ -281,19 +276,19 @@ msgstr "Nepodporovaný typ archívu."
 msgid "Could not delete the old archive."
 msgstr "Nepodarilo sa odstrániť starý archív."
 
-#: ../src/actions.c:383 ../src/fr-window.c:5856
+#: ../src/actions.c:383 ../src/fr-window.c:5873
 msgid "Open"
 msgstr "Otvoriť"
 
-#: ../src/actions.c:394 ../src/dlg-new.c:325 ../src/fr-window.c:5208
+#: ../src/actions.c:394 ../src/dlg-new.c:321 ../src/fr-window.c:5224
 msgid "All archives"
 msgstr "Všetky archívy"
 
-#: ../src/actions.c:401 ../src/dlg-new.c:332
+#: ../src/actions.c:401 ../src/dlg-new.c:328
 msgid "All files"
 msgstr "Všetky súbory"
 
-#: ../src/actions.c:780 ../src/fr-window.c:7029
+#: ../src/actions.c:780 ../src/fr-window.c:7056
 msgid "Last Output"
 msgstr "Posledný výstup"
 
@@ -304,10 +299,10 @@ msgid ""
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
 msgstr ""
-"File Roller je slobodný softvér; môžete ho redistribuovať a/alebo "
-"modifikovať za podmienok GNU General Public License publikovaných Free "
-"Software Foundation; a to buď verzie licencie 2, alebo (podľa vášho "
-"uváženia) ľubovoľnej novšej verzie."
+"File Roller je slobodný softvér; môžete ho ďalej šíriť a/alebo upravovať podľa "
+"ustanovení Všeobecnej verejnej licencie GNU tak, ako bola vydaná "
+"organizáciou Free Software Foundation, a to buď verzie 2 tejto licencie, "
+"alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie."
 
 #: ../src/actions.c:848
 msgid ""
@@ -316,9 +311,10 @@ msgid ""
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 msgstr ""
-"File Roller je distribuovaný v nádeji, že bude užitočný, ale BEZ AKEJKOĽVEK "
-"ZÁRUKY a to ani bez predpokladanej záruky PREDAJNOSTI,  alebo VHODNOSTI PRE "
-"KONKRÉTNY ÚČEL. Ďalšie podrobnosti nájdete v GNU General Public License."
+"Program File Roller je rozširovaný v nádeji, že bude užitočný, avšak BEZ "
+"AKEJKOĽVEK ZÁRUKY. Neposkytujú sa ani odvodené záruky OBCHODOVATEĽNOSTI "
+"alebo VHODNOSTI PRE URČITÝ ÚČEL. Ďalšie podrobnosti hľadajte vo Všeobecnej "
+"verejnej licencii GNU."
 
 #: ../src/actions.c:852
 msgid ""
@@ -326,9 +322,9 @@ msgid ""
 "File Roller; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
 msgstr ""
-"Kópiu GNU General Public License ste mali dostať spolu s aplikáciou File "
-"Roller; ak sa tak nestalo, napíšte na Free Software Foundation, Inc., 59 "
-"Temple Place, Suite 330, Boston, MA  02111-1307 USA"
+"Kópiu Všeobecnej verejnej licencie GNU ste mali obdržať spolu s programom "
+"File Roller. Ak sa tak nestalo, napíšte na Free Software Foundation, Inc., 51 "
+"Franklin St, Fifth Floor, Boston, MA  02111-1301 USA"
 
 #: ../src/actions.c:862
 msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
@@ -355,12 +351,13 @@ msgstr "Nepodarilo sa pridať súbory do archívu"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Nemáte dostatočné oprávnenia na čítanie súborov z priečinka \"%s\""
 
-#: ../src/dlg-add-files.c:142 ../src/ui.h:48
+#: ../src/dlg-add-files.c:142 ../src/ui.h:49
 msgid "Add Files"
 msgstr "Pridať súbory"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611356
-#: ../src/dlg-add-files.c:156 ../src/dlg-add-folder.c:231
+#. Translators: add a file to the archive only if the disk version is
+#. * newer than the archive version.
+#: ../src/dlg-add-files.c:158 ../src/dlg-add-folder.c:231
 msgid "Add only if _newer"
 msgstr "_Pridať iba ak je novší"
 
@@ -395,11 +392,11 @@ msgstr "_Vynechať priečinky:"
 
 #: ../src/dlg-add-folder.c:253
 msgid "_Load Options"
-msgstr "N_ačítať nastavenia"
+msgstr "N_ačítať voľby"
 
 #: ../src/dlg-add-folder.c:254
 msgid "Sa_ve Options"
-msgstr "_Uložiť nastavenia"
+msgstr "_Uložiť voľby"
 
 #: ../src/dlg-add-folder.c:255
 msgid "_Reset Options"
@@ -407,18 +404,19 @@ msgstr "_Obnoviť voľby"
 
 #: ../src/dlg-add-folder.c:883
 msgid "Save Options"
-msgstr "Uložiť nastavenia"
+msgstr "Uložiť voľby"
 
 #: ../src/dlg-add-folder.c:884
 msgid "Options Name:"
-msgstr "Názov pre nastavenia:"
+msgstr "Názov pre voľby:"
 
 #: ../src/dlg-ask-password.c:123
 #, c-format
 msgid "Enter the password for the archive '%s'."
-msgstr "Zadať heslo pre archív '%s'."
+msgstr "Zadajte heslo pre archív '%s'."
 
-#: ../src/dlg-batch-add.c:185 ../src/fr-window.c:7347
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
+#: ../src/dlg-batch-add.c:185 ../src/fr-window.c:7377
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -429,8 +427,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:188 ../src/fr-window.c:7339 ../src/fr-window.c:7343
-#: ../src/fr-window.c:7347 ../src/fr-window.c:7383 ../src/fr-window.c:7385
+#: ../src/dlg-batch-add.c:188 ../src/fr-window.c:7367 ../src/fr-window.c:7372
+#: ../src/fr-window.c:7377 ../src/fr-window.c:7413 ../src/fr-window.c:7415
 msgid "Please use a different name."
 msgstr "Prosím, použite iný názov."
 
@@ -441,7 +439,7 @@ msgid ""
 msgstr ""
 "Nemáte dostatočné oprávnenia na vytvorenie archívu v cieľovom priečinku."
 
-#: ../src/dlg-batch-add.c:231 ../src/dlg-extract.c:102 ../src/fr-window.c:6604
+#: ../src/dlg-batch-add.c:231 ../src/dlg-extract.c:102 ../src/fr-window.c:6631
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -452,11 +450,11 @@ msgstr ""
 "\n"
 "Chcete ho vytvoriť?"
 
-#: ../src/dlg-batch-add.c:240 ../src/dlg-extract.c:111 ../src/fr-window.c:6613
+#: ../src/dlg-batch-add.c:240 ../src/dlg-extract.c:111 ../src/fr-window.c:6640
 msgid "Create _Folder"
 msgstr "Vytvoriť _priečinok"
 
-#: ../src/dlg-batch-add.c:259 ../src/dlg-extract.c:131 ../src/fr-window.c:6633
+#: ../src/dlg-batch-add.c:259 ../src/dlg-extract.c:131 ../src/fr-window.c:6660
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Nepodarilo sa vytvoriť cieľový priečinok: %s."
@@ -474,17 +472,17 @@ msgid "_Overwrite"
 msgstr "_Prepísať"
 
 #: ../src/dlg-extract.c:130 ../src/dlg-extract.c:148 ../src/dlg-extract.c:175
-#: ../src/fr-window.c:4134 ../src/fr-window.c:6632 ../src/fr-window.c:6649
+#: ../src/fr-window.c:4150 ../src/fr-window.c:6659 ../src/fr-window.c:6676
 msgid "Extraction not performed"
 msgstr "Rozbalenie sa neuskutočnilo"
 
-#: ../src/dlg-extract.c:176 ../src/fr-window.c:4297 ../src/fr-window.c:4377
+#: ../src/dlg-extract.c:176 ../src/fr-window.c:4313 ../src/fr-window.c:4393
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Nemáte dostatočné oprávnenia na rozbalenie archívu v priečinku \"%s\"."
 
-#: ../src/dlg-extract.c:331 ../src/dlg-extract.c:429 ../src/ui.h:123
+#: ../src/dlg-extract.c:331 ../src/dlg-extract.c:429 ../src/ui.h:124
 msgid "Extract"
 msgstr "Rozbaliť"
 
@@ -504,20 +502,21 @@ msgstr "_Prepísať existujúce súbory"
 msgid "Do not e_xtract older files"
 msgstr "_Nerozbaľovať staršie súbory"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611357
-#: ../src/dlg-new.c:449
+#: ../src/dlg-new.c:445
+msgctxt "File"
 msgid "New"
 msgstr "Nový"
 
-#: ../src/dlg-new.c:462
+#: ../src/dlg-new.c:458
+msgctxt "File"
 msgid "Save"
 msgstr "Uložiť"
 
-#: ../src/dlg-package-installer.c:97
+#: ../src/dlg-package-installer.c:96 ../src/dlg-package-installer.c:205
 msgid "There was an internal error trying to search for applications:"
 msgstr "Pri pokuse nájsť aplikácie nastala vnútorná chyba:"
 
-#: ../src/dlg-package-installer.c:260
+#: ../src/dlg-package-installer.c:273
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -526,55 +525,55 @@ msgstr ""
 "Pre súbory %s nie je nainštalovaný žiadny príkaz.\n"
 "Chcete vyhľadať príkaz na otvorenie tohto súboru?"
 
-#: ../src/dlg-package-installer.c:265
+#: ../src/dlg-package-installer.c:278
 msgid "Could not open this file type"
 msgstr "Nepodarilo sa otvoriť tento typ súboru"
 
-#: ../src/dlg-package-installer.c:268
+#: ../src/dlg-package-installer.c:281
 msgid "_Search Command"
 msgstr "_Hľadať príkaz"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611365
-#: ../src/dlg-prop.c:106
+#. Translators: after the colon there is a folder name.
+#: ../src/dlg-prop.c:107
 msgid "Location:"
 msgstr "Umiestnenie:"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611366
-#: ../src/dlg-prop.c:118
+#: ../src/dlg-prop.c:119
+msgctxt "File"
 msgid "Name:"
 msgstr "Názov:"
 
-#: ../src/dlg-prop.c:124
+#: ../src/dlg-prop.c:125
 #, c-format
 msgid "%s Properties"
 msgstr "Vlastnosti %s"
 
-#: ../src/dlg-prop.c:133
+#: ../src/dlg-prop.c:134
 msgid "Modified on:"
 msgstr "Zmenený:"
 
-#: ../src/dlg-prop.c:143
+#: ../src/dlg-prop.c:144
 msgid "Archive size:"
 msgstr "Veľkosť archívu:"
 
-#: ../src/dlg-prop.c:154
+#: ../src/dlg-prop.c:155
 msgid "Content size:"
 msgstr "Veľkosť obsahu:"
 
-#: ../src/dlg-prop.c:174
+#: ../src/dlg-prop.c:175
 msgid "Compression ratio:"
 msgstr "Kompresný pomer:"
 
-#: ../src/dlg-prop.c:189
+#: ../src/dlg-prop.c:190
 msgid "Number of files:"
 msgstr "Počet súborov:"
 
-#: ../src/dlg-update.c:159
+#: ../src/dlg-update.c:165
 #, c-format
 msgid "Update the file \"%s\" in the archive \"%s\"?"
 msgstr "Aktualizovať súbor \"%s\" v archíve \"%s\"?"
 
-#: ../src/dlg-update.c:173
+#: ../src/dlg-update.c:194
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
 msgstr "Aktualizovať súbory v archíve \"%s\"?"
@@ -619,53 +618,58 @@ msgstr ""
 msgid "File format not recognized"
 msgstr "Formát súboru nebol rozpoznaný"
 
-#: ../src/fr-archive.c:871
+#: ../src/fr-archive.c:1126
 msgid "File not found."
 msgstr "Súbor nenájdený."
 
-#: ../src/fr-archive.c:1934
+#: ../src/fr-archive.c:1229
+#, c-format
+msgid "The file doesn't exist"
+msgstr "Súbor neexistuje"
+
+#: ../src/fr-archive.c:2415
 msgid "You don't have the right permissions."
 msgstr "Nemáte dostatočné oprávnenia."
 
-#: ../src/fr-archive.c:1934
+#: ../src/fr-archive.c:2415
 msgid "This archive type cannot be modified"
 msgstr "Tento typ archívu nemôže byť zmenený"
 
-#: ../src/fr-archive.c:1946
+#: ../src/fr-archive.c:2427
 msgid "You can't add an archive to itself."
 msgstr "Nemôžete pridať archív do seba samého."
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611367
-#: ../src/fr-command-7z.c:296 ../src/fr-command-rar.c:422
-#: ../src/fr-command-tar.c:301
+#. Translators: after the colon there is a filename.
+#: ../src/fr-command-7z.c:296 ../src/fr-command-rar.c:434
+#: ../src/fr-command-tar.c:308
 msgid "Adding file: "
 msgstr "Pridáva sa súbor: "
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611368
-#: ../src/fr-command-7z.c:412 ../src/fr-command-rar.c:549
-#: ../src/fr-command-tar.c:418
+#. Translators: after the colon there is a filename.
+#: ../src/fr-command-7z.c:412 ../src/fr-command-rar.c:561
+#: ../src/fr-command-tar.c:427
 msgid "Extracting file: "
 msgstr "Rozbaľuje sa súbor: "
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611369
-#: ../src/fr-command-rar.c:500 ../src/fr-command-tar.c:365
+#. Translators: after the colon there is a filename.
+#: ../src/fr-command-rar.c:512 ../src/fr-command-tar.c:373
 msgid "Removing file: "
 msgstr "Odstraňuje sa súbor: "
 
-#: ../src/fr-command-rar.c:677
+#: ../src/fr-command-rar.c:689
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "Nepodarilo sa nájsť zväzok: %s"
 
-#: ../src/fr-command-tar.c:374 ../src/fr-window.c:2310
+#: ../src/fr-command-tar.c:382 ../src/fr-window.c:2310
 msgid "Deleting files from archive"
 msgstr "Odstraňujú sa súbory z archívu"
 
-#: ../src/fr-command-tar.c:477
+#: ../src/fr-command-tar.c:486
 msgid "Recompressing archive"
 msgstr "Archív sa nanovo komprimuje"
 
-#: ../src/fr-command-tar.c:708
+#: ../src/fr-command-tar.c:737
 msgid "Decompressing archive"
 msgstr "Archív sa rozbaľuje"
 
@@ -740,7 +744,7 @@ msgstr "Rozbaľujú sa súbory z archívu"
 
 #: ../src/fr-window.c:2334
 msgid "Saving archive"
-msgstr "Ukladanie archívu"
+msgstr "Ukladá sa archív"
 
 #: ../src/fr-window.c:2491
 msgid "_Open the Archive"
@@ -811,8 +815,8 @@ msgstr "Príkaz skončil neobvykle."
 msgid "Test Result"
 msgstr "Výsledok testu"
 
-#: ../src/fr-window.c:3993 ../src/fr-window.c:7934 ../src/fr-window.c:7961
-#: ../src/fr-window.c:8216
+#: ../src/fr-window.c:3993 ../src/fr-window.c:7964 ../src/fr-window.c:7991
+#: ../src/fr-window.c:8246
 msgid "Could not perform the operation"
 msgstr "Operáciu sa nepodarilo vykonať"
 
@@ -832,60 +836,68 @@ msgstr "Chcete vytvoriť nový archív obsahujúci tieto súbory?"
 msgid "Create _Archive"
 msgstr "_Vytvoriť archív"
 
-#: ../src/fr-window.c:4626 ../src/fr-window.c:5705
+#: ../src/fr-window.c:4642 ../src/fr-window.c:5721
 msgid "Folders"
 msgstr "Priečinky"
 
-#: ../src/fr-window.c:4664
+#: ../src/fr-window.c:4680
+msgctxt "File"
 msgid "Size"
 msgstr "Veľkosť"
 
-#: ../src/fr-window.c:4665
+#: ../src/fr-window.c:4681
+msgctxt "File"
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/fr-window.c:4666
+#: ../src/fr-window.c:4682
+msgctxt "File"
 msgid "Date Modified"
 msgstr "Dátum zmeny"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611370
-#: ../src/fr-window.c:4676
+#: ../src/fr-window.c:4683
+msgctxt "File"
+msgid "Location"
+msgstr "Umiestnenie"
+
+#: ../src/fr-window.c:4692
+msgctxt "File"
 msgid "Name"
 msgstr "Názov"
 
-#: ../src/fr-window.c:5626
+#: ../src/fr-window.c:5642
 msgid "Find:"
-msgstr "Hľadať:"
+msgstr "Nájsť:"
 
-#: ../src/fr-window.c:5713
+#: ../src/fr-window.c:5729
 msgid "Close the folders pane"
 msgstr "Zavrieť panel priečinkov"
 
-#: ../src/fr-window.c:5853 ../src/fr-window.c:5856 ../src/ui.h:141
-#: ../src/ui.h:145
+#: ../src/fr-window.c:5870 ../src/fr-window.c:5873 ../src/ui.h:142
+#: ../src/ui.h:146
 msgid "Open archive"
 msgstr "Otvoriť archív"
 
-#: ../src/fr-window.c:5854
+#: ../src/fr-window.c:5871
 msgid "Open a recently used archive"
 msgstr "Otvoriť nedávno použitý archív"
 
-#: ../src/fr-window.c:6178
+#: ../src/fr-window.c:6202
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Nepodarilo sa uložiť archív \"%s\""
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611371
-#: ../src/fr-window.c:7339
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
+#: ../src/fr-window.c:7367
 msgid "The new name is void."
 msgstr "Nový názov je prázdny."
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611372
-#: ../src/fr-window.c:7343
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
+#: ../src/fr-window.c:7372
 msgid "The new name is equal to the old one."
 msgstr "Nový názov je rovnaký ako starý."
 
-#: ../src/fr-window.c:7383
+#: ../src/fr-window.c:7413
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -896,7 +908,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7385
+#: ../src/fr-window.c:7415
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -907,43 +919,43 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7455
+#: ../src/fr-window.c:7485
 msgid "Rename"
 msgstr "Premenovať"
 
-#: ../src/fr-window.c:7456
+#: ../src/fr-window.c:7486
 msgid "New folder name"
 msgstr "Nový názov priečinka"
 
-#: ../src/fr-window.c:7456
+#: ../src/fr-window.c:7486
 msgid "New file name"
 msgstr "Nový názov súboru"
 
-#: ../src/fr-window.c:7460
+#: ../src/fr-window.c:7490
 msgid "_Rename"
 msgstr "Pre_menovať"
 
-#: ../src/fr-window.c:7477 ../src/fr-window.c:7497
+#: ../src/fr-window.c:7507 ../src/fr-window.c:7527
 msgid "Could not rename the folder"
 msgstr "Nepodarilo sa premenovať priečinok"
 
-#: ../src/fr-window.c:7477 ../src/fr-window.c:7497
+#: ../src/fr-window.c:7507 ../src/fr-window.c:7527
 msgid "Could not rename the file"
 msgstr "Nepodarilo sa premenovať súbor"
 
-#: ../src/fr-window.c:7895
+#: ../src/fr-window.c:7925
 msgid "Paste Selection"
 msgstr "Vložiť výber"
 
-#: ../src/fr-window.c:7896
+#: ../src/fr-window.c:7926
 msgid "Destination folder"
 msgstr "Cieľový priečinok"
 
-#: ../src/fr-window.c:8486
+#: ../src/fr-window.c:8516
 msgid "Add files to an archive"
 msgstr "Pridať súbory do archívu"
 
-#: ../src/fr-window.c:8530
+#: ../src/fr-window.c:8560
 msgid "Extract archive"
 msgstr "Rozbaliť archív"
 
@@ -955,172 +967,178 @@ msgid "%d %B %Y, %H:%M"
 msgstr "%e. %B %Y o %H:%M"
 
 #. Expander
-#: ../src/gtk-utils.c:430
+#: ../src/gtk-utils.c:442
 msgid "Command _Line Output"
 msgstr "Výstup _príkazového riadka"
 
-#: ../src/gtk-utils.c:767
+#: ../src/gtk-utils.c:779
 msgid "Could not display help"
 msgstr "Nepodarilo sa zobraziť pomocníka"
 
-#: ../src/main.c:81
+#: ../src/main.c:83
 msgid "7-Zip (.7z)"
 msgstr "7-Zip (.7z)"
 
-#: ../src/main.c:82
+#: ../src/main.c:84
 msgid "Tar compressed with 7z (.tar.7z)"
 msgstr "Tar komprimovaný pomocou 7z (.tar.7z)"
 
-#: ../src/main.c:83
+#: ../src/main.c:85
 msgid "Ace (.ace)"
 msgstr "Ace (.ace)"
 
-#: ../src/main.c:85
+#: ../src/main.c:87
 msgid "Ar (.ar)"
 msgstr "Ar (.ar)"
 
-#: ../src/main.c:86
+#: ../src/main.c:88
 msgid "Arj (.arj)"
 msgstr "Arj (.arj)"
 
-#: ../src/main.c:88
+#: ../src/main.c:90
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "Tar komprimovaný pomocou bzip2 (.tar.bz2)"
 
-#: ../src/main.c:90
+#: ../src/main.c:92
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "Tar komprimovaný pomocou bzip (.tar.bz)"
 
-#: ../src/main.c:91
+#: ../src/main.c:93
 msgid "Cabinet (.cab)"
 msgstr "Cabinet (.cab)"
 
 # * http://en.wikipedia.org/wiki/Comic_Book_Archive_file
-#: ../src/main.c:92
+#: ../src/main.c:94
 msgid "Rar Archived Comic Book (.cbr)"
 msgstr "Komiks v archíve rar (.cbr)"
 
 # * http://en.wikipedia.org/wiki/Comic_Book_Archive_file
-#: ../src/main.c:93
+#: ../src/main.c:95
 msgid "Zip Archived Comic Book (.cbz)"
 msgstr "Komiks v archíve zip (.cbz)"
 
-#: ../src/main.c:96
+#: ../src/main.c:98
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "Tar komprimovaný pomocou gzip (.tar.gz)"
 
-#: ../src/main.c:99
+#: ../src/main.c:101
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: ../src/main.c:100
+#: ../src/main.c:102
 msgid "Self-extracting zip (.exe)"
 msgstr "Samorozbaľujúci zip (.exe)"
 
-#: ../src/main.c:102
+#: ../src/main.c:104
 msgid "Jar (.jar)"
 msgstr "Jar (.jar)"
 
-#: ../src/main.c:103
+#: ../src/main.c:105
 msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
-#: ../src/main.c:105
+#: ../src/main.c:106
+msgid "Lrzip (.lrz)"
+msgstr "Lrzip (.lrz)"
+
+#: ../src/main.c:107
+msgid "Tar compressed with lrzip (.tar.lrz)"
+msgstr "Tar komprimovaný pomocou lrzip (.tar.lrz)"
+
+#: ../src/main.c:109
 msgid "Tar compressed with lzip (.tar.lz)"
 msgstr "Tar komprimovaný pomocou lzip (.tar.lz)"
 
-#: ../src/main.c:107
+#: ../src/main.c:111
 msgid "Tar compressed with lzma (.tar.lzma)"
 msgstr "Tar komprimovaný pomocou lzma (.tar.lzma)"
 
-#: ../src/main.c:109
+#: ../src/main.c:113
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "Tar komprimovaný pomocou lzop (.tar.lzo)"
 
-#: ../src/main.c:110
+#: ../src/main.c:114
 msgid "Rar (.rar)"
 msgstr "Rar (.rar)"
 
-#: ../src/main.c:113
+#: ../src/main.c:117
 msgid "Tar uncompressed (.tar)"
 msgstr "Nekomprimovaný tar (.tar)"
 
-#: ../src/main.c:114
+#: ../src/main.c:118
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "Tar komprimovaný pomocou compress (.tar.Z)"
 
-#: ../src/main.c:116
+#: ../src/main.c:120
 msgid "War (.war)"
 msgstr "War (.war)"
 
-#: ../src/main.c:117
+#: ../src/main.c:121
 msgid "Xz (.xz)"
 msgstr "Xz (.xz)"
 
-#: ../src/main.c:118
+#: ../src/main.c:122
 msgid "Tar compressed with xz (.tar.xz)"
 msgstr "Tar komprimovaný pomocou xz (.tar.xz)"
 
-#: ../src/main.c:119
+#: ../src/main.c:123
 msgid "Zoo (.zoo)"
 msgstr "Zoo (.zoo)"
 
-#: ../src/main.c:120
+#: ../src/main.c:124
 msgid "Zip (.zip)"
 msgstr "Zip (.zip)"
 
-#: ../src/main.c:186
+#: ../src/main.c:192
 msgid "Add files to the specified archive and quit the program"
 msgstr "Pridať súbory do zadaného archívu a ukončiť program"
 
-#: ../src/main.c:187
+#: ../src/main.c:193
 msgid "ARCHIVE"
 msgstr "ARCHÍV"
 
-#: ../src/main.c:190
-#, fuzzy
+#: ../src/main.c:196
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Pridať súbory, vyžiadať si názov archívu a skončiť program"
 
-#: ../src/main.c:194
+#: ../src/main.c:200
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Rozbaliť archívy do zadaného cieľového priečinka a ukončiť program"
 
-#: ../src/main.c:195 ../src/main.c:207
+#: ../src/main.c:201 ../src/main.c:213
 msgid "FOLDER"
 msgstr "PRIEČINOK"
 
-#: ../src/main.c:198
-#, fuzzy
+#: ../src/main.c:204
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "Rozbaliť archívy, vyžadať cieľový priečinok a skončiť program"
+msgstr "Rozbaliť archívy, vyžiadať cieľový priečinok a skončiť program"
 
-#: ../src/main.c:202
+#: ../src/main.c:208
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "Rozbaliť obsah archívov v priečinku archívu a ukončiť program"
 
-#: ../src/main.c:206
+#: ../src/main.c:212
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr ""
 "Predvolený priečinok, ktorý sa má použiť pri príkazoch '--add' a '--extract'"
 
-#: ../src/main.c:210
+#: ../src/main.c:216
 msgid "Create destination folder without asking confirmation"
 msgstr "Vytvoriť cieľový priečinok bez vyžiadania potvrdenia"
 
-#: ../src/main.c:292
+#: ../src/main.c:298
 msgid "- Create and modify an archive"
 msgstr "- Vytvoriť a upraviť archív"
 
-#: ../src/main.c:308
+#: ../src/main.c:314
 msgid "File Roller"
 msgstr "File Roller"
 
 #: ../src/ui.h:32
-msgid "_File"
-msgstr "_Súbor"
+msgid "_Archive"
+msgstr "_Archív"
 
 #: ../src/ui.h:33
 msgid "_Edit"
@@ -1138,250 +1156,269 @@ msgstr "_Pomocník"
 msgid "_Arrange Files"
 msgstr "_Usporiadať súbory"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611375
-#: ../src/ui.h:37
+#. Translators: this is the label for the "open recent file" sub-menu.
+#: ../src/ui.h:38
 msgid "Open _Recent"
 msgstr "Otvoriť n_edávny"
 
-#: ../src/ui.h:41
+#: ../src/ui.h:42
 msgid "Information about the program"
 msgstr "Informácie o programe"
 
-#: ../src/ui.h:44
+#: ../src/ui.h:45
 msgid "_Add Files..."
-msgstr "_Pridať súbory..."
+msgstr "Pridať _súbory..."
 
-#: ../src/ui.h:45 ../src/ui.h:49
+#: ../src/ui.h:46 ../src/ui.h:50
 msgid "Add files to the archive"
 msgstr "Pridať súbory do archívu"
 
-#: ../src/ui.h:52
+#: ../src/ui.h:53
 msgid "Add a _Folder..."
-msgstr "Pridať _priečinok..."
+msgstr "Pridať p_riečinok..."
 
-#: ../src/ui.h:53 ../src/ui.h:57
+#: ../src/ui.h:54 ../src/ui.h:58
 msgid "Add a folder to the archive"
 msgstr "Pridať priečinok do archívu"
 
-#: ../src/ui.h:56
+#: ../src/ui.h:57
 msgid "Add Folder"
 msgstr "Pridať priečinok"
 
-#: ../src/ui.h:61
+#: ../src/ui.h:62
 msgid "Close the current archive"
 msgstr "Zatvoriť aktuálny archív"
 
-#: ../src/ui.h:64
+#: ../src/ui.h:65
 msgid "Contents"
 msgstr "Obsah"
 
-#: ../src/ui.h:65
+#: ../src/ui.h:66
 msgid "Display the File Roller Manual"
 msgstr "Zobraziť príručku pre File Roller"
 
-#: ../src/ui.h:70 ../src/ui.h:91
+#: ../src/ui.h:71 ../src/ui.h:92
 msgid "Copy the selection"
 msgstr "Kopírovať výber"
 
-#: ../src/ui.h:74 ../src/ui.h:95
+#: ../src/ui.h:75 ../src/ui.h:96
 msgid "Cut the selection"
 msgstr "Vystrihnúť výber"
 
 # * https://bugzilla.gnome.org/show_bug.cgi?id=611331
-#: ../src/ui.h:78 ../src/ui.h:99
+#: ../src/ui.h:79 ../src/ui.h:100
 msgid "Paste the clipboard"
 msgstr "Vložiť schránku"
 
-#: ../src/ui.h:81 ../src/ui.h:102
+#: ../src/ui.h:82 ../src/ui.h:103
 msgid "_Rename..."
 msgstr "Pre_menovať..."
 
-#: ../src/ui.h:82 ../src/ui.h:103
+#: ../src/ui.h:83 ../src/ui.h:104
 msgid "Rename the selection"
 msgstr "Premenovať výber"
 
-#: ../src/ui.h:86 ../src/ui.h:107
+#: ../src/ui.h:87 ../src/ui.h:108
 msgid "Delete the selection from the archive"
 msgstr "Odstrániť výber z archívu"
 
-#: ../src/ui.h:111
+#: ../src/ui.h:112
 msgid "Dese_lect All"
 msgstr "_Odznačiť všetko"
 
-#: ../src/ui.h:112
+#: ../src/ui.h:113
 msgid "Deselect all files"
 msgstr "Zrušiť výber všetkých súborov"
 
-#: ../src/ui.h:115 ../src/ui.h:119
+#: ../src/ui.h:116 ../src/ui.h:120
 msgid "_Extract..."
 msgstr "_Rozbaliť..."
 
-#: ../src/ui.h:116 ../src/ui.h:120 ../src/ui.h:124
+#: ../src/ui.h:117 ../src/ui.h:121 ../src/ui.h:125
 msgid "Extract files from the archive"
 msgstr "Rozbaliť súbory z archívu"
 
-#: ../src/ui.h:132
-msgid "_Last Output"
-msgstr "_Posledný výstup"
+#: ../src/ui.h:128
+msgid "Find..."
+msgstr "Nájsť..."
 
 #: ../src/ui.h:133
+msgid "_Last Output"
+msgstr "Posledný _výstup"
+
+#: ../src/ui.h:134
 msgid "View the output produced by the last executed command"
 msgstr "Zobraziť výstup vyprodukovaný posledným spusteným príkazom"
 
 #: ../src/ui.h:137
+msgctxt "File"
+msgid "New..."
+msgstr "Nový..."
+
+#: ../src/ui.h:138
 msgid "Create a new archive"
 msgstr "Vytvoriť nový archív"
 
-#: ../src/ui.h:148
+#: ../src/ui.h:141
+msgctxt "File"
+msgid "Open..."
+msgstr "Otvoriť..."
+
+#: ../src/ui.h:149
 msgid "_Open With..."
 msgstr "Otvoriť _pomocou..."
 
-#: ../src/ui.h:149
+#: ../src/ui.h:150
 msgid "Open selected files with an application"
 msgstr "Otvoriť vybrané súbory pomocou aplikácie"
 
-#: ../src/ui.h:152
-msgid "Pass_word..."
-msgstr "_Heslo..."
-
 #: ../src/ui.h:153
+msgid "Pass_word..."
+msgstr "H_eslo..."
+
+#: ../src/ui.h:154
 msgid "Specify a password for this archive"
 msgstr "Zadať heslo pre tento archív"
 
-#: ../src/ui.h:157
+#: ../src/ui.h:158
 msgid "Show archive properties"
 msgstr "Zobraziť vlastnosti archívu"
 
-#: ../src/ui.h:161
+#: ../src/ui.h:162
 msgid "Reload current archive"
 msgstr "Znovu načítať aktuálny archív"
 
 #: ../src/ui.h:165
+msgctxt "File"
+msgid "Save As..."
+msgstr "Uložiť ako..."
+
+#: ../src/ui.h:166
 msgid "Save the current archive with a different name"
 msgstr "Uložiť aktuálny archív pod iným názvom"
 
-#: ../src/ui.h:169
+#: ../src/ui.h:170
 msgid "Select all files"
 msgstr "Vybrať všetky súbory"
 
-#: ../src/ui.h:173
+#: ../src/ui.h:174
 msgid "Stop current operation"
 msgstr "Zastaviť aktuálnu operáciu"
 
-#: ../src/ui.h:176
+#: ../src/ui.h:177
 msgid "_Test Integrity"
 msgstr "_Kontrola integrity"
 
-#: ../src/ui.h:177
+#: ../src/ui.h:178
 msgid "Test whether the archive contains errors"
 msgstr "Otestovať, či archív obsahuje chyby"
 
-#: ../src/ui.h:181 ../src/ui.h:185
+#: ../src/ui.h:182 ../src/ui.h:186
 msgid "Open the selected file"
 msgstr "Otvoriť vybraný súbor"
 
-#: ../src/ui.h:189 ../src/ui.h:193
+#: ../src/ui.h:190 ../src/ui.h:194
 msgid "Open the selected folder"
 msgstr "Otvoriť vybraný priečinok"
 
-#: ../src/ui.h:198
+#: ../src/ui.h:199
 msgid "Go to the previous visited location"
-msgstr "Prejsť na predchádzajúce navštívené miesto"
+msgstr "Prejsť na predchádzajúce navštívené umiestnenie"
 
-#: ../src/ui.h:202
+#: ../src/ui.h:203
 msgid "Go to the next visited location"
-msgstr "Prejsť na nasledujúce navštívené miesto"
+msgstr "Prejsť na nasledujúce navštívené umiestnenie"
 
-#: ../src/ui.h:206
+#: ../src/ui.h:207
 msgid "Go up one level"
 msgstr "Prejsť o jednu úroveň vyššie"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611376
-#: ../src/ui.h:210
-#, fuzzy
+#. Translators: the home location is the home folder.
+#: ../src/ui.h:212
 msgid "Go to the home location"
 msgstr "Prejsť do domovského priečinka"
 
-#: ../src/ui.h:218
-#, fuzzy
+#: ../src/ui.h:220
 msgid "_Toolbar"
 msgstr "_Lišta s nástrojmi"
 
-#: ../src/ui.h:219
-#, fuzzy
+#: ../src/ui.h:221
 msgid "View the main toolbar"
 msgstr "Zobraziť hlavnú lištu s nástrojmi"
 
-#: ../src/ui.h:223
+#: ../src/ui.h:225
 msgid "Stat_usbar"
 msgstr "_Stavová lišta"
 
-#: ../src/ui.h:224
+#: ../src/ui.h:226
 msgid "View the statusbar"
 msgstr "Zobraziť stavovú lištu"
 
-#: ../src/ui.h:228
+#: ../src/ui.h:230
 msgid "_Reversed Order"
 msgstr "_Opačné poradie"
 
-#: ../src/ui.h:229
+#: ../src/ui.h:231
 msgid "Reverse the list order"
 msgstr "Obrátiť usporiadanie zoznamu"
 
-#: ../src/ui.h:233
+#: ../src/ui.h:235
 msgid "_Folders"
 msgstr "_Priečinky"
 
-#: ../src/ui.h:234
+#: ../src/ui.h:236
 msgid "View the folders pane"
 msgstr "Zobraziť panel priečinkov"
 
-#: ../src/ui.h:243
+#: ../src/ui.h:245
 msgid "View All _Files"
 msgstr "Zobraziť všetky _súbory"
 
-#: ../src/ui.h:246
+#: ../src/ui.h:248
 msgid "View as a F_older"
-msgstr "Zobraziť ako _priečinok"
+msgstr "Zobraziť _ako priečinok"
 
-#: ../src/ui.h:254
+#: ../src/ui.h:256
 msgid "by _Name"
 msgstr "podľa _názvu"
 
-#: ../src/ui.h:255
+#: ../src/ui.h:257
 msgid "Sort file list by name"
 msgstr "Zoradiť zoznam súborov podľa názvu"
 
-#: ../src/ui.h:257
+#: ../src/ui.h:259
 msgid "by _Size"
 msgstr "podľa _veľkosti"
 
-#: ../src/ui.h:258
+#: ../src/ui.h:260
 msgid "Sort file list by file size"
 msgstr "Zoradiť zoznam súborov podľa veľkosti"
 
-#: ../src/ui.h:260
+#: ../src/ui.h:262
 msgid "by T_ype"
 msgstr "podľa _typu"
 
-#: ../src/ui.h:261
+#: ../src/ui.h:263
 msgid "Sort file list by type"
 msgstr "Zoradiť zoznam súborov podľa typu"
 
-#: ../src/ui.h:263
+#: ../src/ui.h:265
 msgid "by _Date Modified"
 msgstr "podľa _dátumu zmeny"
 
-#: ../src/ui.h:264
+#: ../src/ui.h:266
 msgid "Sort file list by modification time"
 msgstr "Zoradiť zoznam súborov podľa času zmeny"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611380
-#: ../src/ui.h:266
+#. Translators: this is the "sort by file location" menu item
+#: ../src/ui.h:269
 msgid "by _Location"
 msgstr "podľa u_miestnenia"
 
-# * https://bugzilla.gnome.org/show_bug.cgi?id=611381
-#: ../src/ui.h:267
+#. Translators: location is the file location
+#: ../src/ui.h:271
 msgid "Sort file list by location"
-msgstr "Zoradiť zoznam súborov podľa umiestnenia"
+msgstr "Zoradiť zoznam súborov podľa ich umiestnenia"
+
+#~ msgid "_File"
+#~ msgstr "_Súbor"
