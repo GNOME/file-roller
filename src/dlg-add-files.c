@@ -64,7 +64,9 @@ file_sel_response_cb (GtkWidget      *widget,
 	current_folder = gtk_file_chooser_get_current_folder_uri (file_sel);
 	uri = gtk_file_chooser_get_uri (file_sel);
 	eel_gconf_set_string (PREF_ADD_CURRENT_FOLDER, current_folder);
-	eel_gconf_set_string (PREF_ADD_FILENAME, uri);
+	if (uri != NULL) {
+		eel_gconf_set_string (PREF_ADD_FILENAME, uri);
+	}
 	fr_window_set_add_default_dir (window, current_folder);
 	g_free (uri);
 
