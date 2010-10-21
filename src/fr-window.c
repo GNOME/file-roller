@@ -5395,6 +5395,7 @@ fr_window_construct (FrWindow *window)
 	gtk_widget_show (window->priv->layout);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
+	gtk_window_set_has_resize_grip (GTK_WINDOW (window), TRUE);
 
 	g_signal_connect (G_OBJECT (window),
 			  "delete_event",
@@ -5931,7 +5932,6 @@ fr_window_construct (FrWindow *window)
 		gtk_widget_show (vbox);
 	}
 	gtk_widget_show (statusbar_box);
-	gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->priv->statusbar), TRUE);
 
 	fr_window_attach (FR_WINDOW (window), window->priv->statusbar, FR_WINDOW_AREA_STATUSBAR);
 	if (g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_STATUSBAR))
