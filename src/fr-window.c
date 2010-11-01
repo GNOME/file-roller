@@ -1903,8 +1903,7 @@ fr_window_update_file_list (FrWindow *window,
 	}
 	else {
 		gtk_widget_set_sensitive (window->priv->list_view, TRUE);
-		if (! gtk_widget_get_visible (window->priv->list_view))
-			gtk_widget_show_all (gtk_widget_get_parent (window->priv->list_view));
+		gtk_widget_show_all (gtk_widget_get_parent (window->priv->list_view));
 	}
 
 	if (window->priv->give_focus_to_the_list) {
