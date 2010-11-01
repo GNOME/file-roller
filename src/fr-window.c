@@ -1896,7 +1896,7 @@ fr_window_update_file_list (FrWindow *window,
 		}
 		else {
 			gtk_widget_set_sensitive (window->priv->list_view, FALSE);
-			gtk_widget_hide_all (gtk_widget_get_parent (window->priv->list_view));
+			gtk_widget_hide (gtk_widget_get_parent (window->priv->list_view));
 		}
 
 		return;
