@@ -375,6 +375,8 @@ dlg_new_archive (FrWindow  *window,
 	gtk_widget_show (GTK_WIDGET (data->format_chooser));
 	gtk_box_pack_start (GTK_BOX (GET_WIDGET ("format_chooser_box")), GTK_WIDGET (data->format_chooser), TRUE, TRUE, 0);
 
+	gtk_widget_set_vexpand (GET_WIDGET ("extra_widget"), FALSE);
+
 	/* Set the signals handlers. */
 
 	/*g_signal_connect (G_OBJECT (data->dialog),
