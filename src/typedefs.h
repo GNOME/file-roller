@@ -28,14 +28,7 @@
 
 #define MEGABYTE (1024 * 1024)
 
-#define RC_DIR              ".gnome2/file-roller"
-#define RC_BOOKMARKS_FILE   ".gnome2/file-roller/bookmarks"
-#define RC_RECENT_FILE      ".gnome2/file-roller/recents"
-#define RC_OPTIONS_DIR      ".gnome2/file-roller/options"
-
-#define OLD_RC_BOOKMARKS_FILE   ".file-roller/bookmarks"
-#define OLD_RC_RECENT_FILE      ".file-roller/recents"
-#define OLD_RC_OPTIONS_DIR      ".file-roller/options"
+#define ADD_FOLDER_OPTIONS_DIR  "file-roller/options"
 
 typedef enum { /*< skip >*/
 	FR_WINDOW_SORT_BY_NAME = 0,
