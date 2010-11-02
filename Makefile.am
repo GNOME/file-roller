@@ -42,12 +42,14 @@ DISTCLEANFILES =                        \
 DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
 MAINTAINERCLEANFILES = \
+	$(srcdir)/ABOUT-NLS \
 	$(srcdir)/INSTALL \
 	$(srcdir)/aclocal.m4 \
 	$(srcdir)/autoscan.log \
 	$(srcdir)/compile \
 	$(srcdir)/config.guess \
 	$(srcdir)/config.h.in \
+	$(srcdir)/config.rpath \
 	$(srcdir)/config.sub \
 	$(srcdir)/configure.scan \
 	$(srcdir)/depcomp \
@@ -60,6 +62,14 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/xmldocs.make \
 	$(srcdir)/gtk-doc.make \
 	$(srcdir)/ChangeLog \
+	$(srcdir)/po/Makevars.template \
+	$(srcdir)/po/Rules-quot \
+	$(srcdir)/po/boldquot.sed \
+	$(srcdir)/po/en@boldquot.header \
+	$(srcdir)/po/en@quot.header \
+	$(srcdir)/po/insert-header.sin \
+	$(srcdir)/po/quot.sed \
+	$(srcdir)/po/remove-potcdate.sin \
 	`find "$(srcdir)" -type f -name Makefile.in -print`
 
 GITIGNOREFILES = build .cdt* .cproject .project .settings/
