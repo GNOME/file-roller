@@ -27,15 +27,15 @@
 #include "typedefs.h"
 #include "fr-window.h"
 
-#define FILE_ROLLER_SCHEMA                "org.gnome.file-roller"
-#define FILE_ROLLER_SCHEMA_LISTING        FILE_ROLLER_SCHEMA ".listing"
-#define FILE_ROLLER_SCHEMA_UI             FILE_ROLLER_SCHEMA ".ui"
-#define FILE_ROLLER_SCHEMA_GENERAL        FILE_ROLLER_SCHEMA ".general"
-#define FILE_ROLLER_SCHEMA_DIALOGS        FILE_ROLLER_SCHEMA ".dialogs"
-#define FILE_ROLLER_SCHEMA_ADD            FILE_ROLLER_SCHEMA_DIALOGS ".add"
-#define FILE_ROLLER_SCHEMA_BATCH_ADD      FILE_ROLLER_SCHEMA_DIALOGS ".batch-add"
-#define FILE_ROLLER_SCHEMA_EXTRACT        FILE_ROLLER_SCHEMA_DIALOGS ".extract"
-#define FILE_ROLLER_SCHEMA_LAST_OUTPUT    FILE_ROLLER_SCHEMA_DIALOGS ".last-output"
+#define FILE_ROLLER_SCHEMA                "org.gnome.FileRoller"
+#define FILE_ROLLER_SCHEMA_LISTING        FILE_ROLLER_SCHEMA ".Listing"
+#define FILE_ROLLER_SCHEMA_UI             FILE_ROLLER_SCHEMA ".UI"
+#define FILE_ROLLER_SCHEMA_GENERAL        FILE_ROLLER_SCHEMA ".General"
+#define FILE_ROLLER_SCHEMA_DIALOGS        FILE_ROLLER_SCHEMA ".Dialogs"
+#define FILE_ROLLER_SCHEMA_ADD            FILE_ROLLER_SCHEMA_DIALOGS ".Add"
+#define FILE_ROLLER_SCHEMA_BATCH_ADD      FILE_ROLLER_SCHEMA_DIALOGS ".BatchAdd"
+#define FILE_ROLLER_SCHEMA_EXTRACT        FILE_ROLLER_SCHEMA_DIALOGS ".Extract"
+#define FILE_ROLLER_SCHEMA_LAST_OUTPUT    FILE_ROLLER_SCHEMA_DIALOGS ".LastOutput"
 
 #define PREF_LISTING_SORT_METHOD          "sort-method"
 #define PREF_LISTING_SORT_TYPE            "sort-type"
@@ -76,7 +76,7 @@
 #define PREF_BATCH_ADD_OTHER_OPTIONS      "other-options"
 #define PREF_BATCH_ADD_VOLUME_SIZE        "volume-size"
 
-#define NAUTILUS_SCHEMA                   "org.gnome.nautilus.general"
+#define NAUTILUS_SCHEMA                   "org.gnome.nautilus.preferences"
 #define NAUTILUS_CLICK_POLICY             "click-policy"
 
 void  pref_util_save_window_geometry    (GtkWindow  *window,

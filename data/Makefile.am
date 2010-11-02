@@ -9,8 +9,16 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 matchdir = $(datadir)/file-roller
 match_DATA = packages.match
 
-gsettings_SCHEMAS = org.gnome.file-roller.gschema.xml
+gsettingsschema_in_files = org.gnome.FileRoller.gschema.xml.in
+gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
+.PRECIOUS: $(gsettings_SCHEMAS)
+
+@INTLTOOL_XML_NOMERGE_RULE@
+
 @GSETTINGS_RULES@
+
+convertdir = $(datadir)/GConf/gsettings
+convert_DATA = file-roller.convert
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
 
@@ -25,16 +33,26 @@ update-cache:
 		echo "***   $(gtk_update_icon_cache)"; \
 	fi
 
-EXTRA_DIST = 			\
-	$(desktop_in_in_files)	\
-	$(desktop_in_files)	\
-	$(desktop_DATA)		\
-	packages.match.in	\
-	packages.match		\
-	$(gsettings_SCHEMAS)
+EXTRA_DIST = 				\
+	file-roller.convert		\
+	packages.match.in		\
+	packages.match			\
+	$(desktop_in_in_files)		\
+	$(desktop_in_files)		\
+	$(desktop_DATA)			\
+	$(gsettingsschema_in_files)	\
+	$(NULL)
 
-DISTCLEANFILES =                \
-	$(desktop_in_files)	\
-	$(desktop_DATA)	
+DISTCLEANFILES =			\
+	$(desktop_in_files)		\
+	$(desktop_DATA)			\
+	$(NULL)
+
+CLEANFILES = 				\
+        $(gsettings_SCHEMAS)		\
+        $(NULL)
+
+dist-hook:
+	cd $(distdir); rm -f $(CLEANFILES)
 
 -include $(top_srcdir)/git.mk

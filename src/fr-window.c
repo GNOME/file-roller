@@ -54,7 +54,7 @@
 #include "ui.h"
 
 #undef NAUTILUS_PORTED_TO_GSETTINGS
-#define LAST_OUTPUT_DIALOG_NAME "last-output"
+#define LAST_OUTPUT_SCHEMA_NAME "LastOutput"
 #define MAX_HISTORY_LEN 5
 #define ACTIVITY_DELAY 100
 #define ACTIVITY_PULSE_STEP (0.033)
@@ -7037,7 +7037,7 @@ static gboolean
 last_output_window__unrealize_cb (GtkWidget  *widget,
 				  gpointer    data)
 {
-	pref_util_save_window_geometry (GTK_WINDOW (widget), LAST_OUTPUT_DIALOG_NAME);
+	pref_util_save_window_geometry (GTK_WINDOW (widget), LAST_OUTPUT_SCHEMA_NAME);
 	return FALSE;
 }
 
@@ -7136,7 +7136,7 @@ fr_window_view_last_output (FrWindow   *window,
 
 	/**/
 
-	pref_util_restore_window_geometry (GTK_WINDOW (dialog), LAST_OUTPUT_DIALOG_NAME);
+	pref_util_restore_window_geometry (GTK_WINDOW (dialog), LAST_OUTPUT_SCHEMA_NAME);
 }
 
 
