@@ -845,31 +845,9 @@ void
 activate_action_about (GtkAction *action,
 		       gpointer   data)
 {
-	FrWindow *window = data;
-	const char *authors[] = {
-		"Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL
-	};
-	const char *documenters [] = {
-		"Alexander Kirillov",
-		"Breda McColgan",
-		NULL
-	};
-	const char *license[] = {
-		N_("File Roller is free software; you can redistribute it and/or modify "
-		"it under the terms of the GNU General Public License as published by "
-		"the Free Software Foundation; either version 2 of the License, or "
-		"(at your option) any later version."),
-		N_("File Roller is distributed in the hope that it will be useful, "
-		"but WITHOUT ANY WARRANTY; without even the implied warranty of "
-		"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-		"GNU General Public License for more details."),
-		N_("You should have received a copy of the GNU General Public License "
-		"along with File Roller; if not, write to the Free Software Foundation, Inc., "
-		"51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA")
-	};
-	char *license_text;
-
-	license_text =  g_strjoin ("\n\n", _(license[0]), _(license[1]), _(license[2]), NULL);
+	FrWindow   *window = data;
+	const char *authors[] = { "Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL	};
+	const char *documenters [] = { "Alexander Kirillov", "Breda McColgan", NULL };
 
 	gtk_show_about_dialog (GTK_WINDOW (window),
 			       "version", VERSION,
@@ -879,9 +857,7 @@ activate_action_about (GtkAction *action,
 			       "documenters", documenters,
 			       "translator-credits", _("translator-credits"),
 			       "logo-icon-name", "file-roller",
-			       "license", license_text,
+			       "license-type", GTK_LICENSE_GPL_2_0,
 			       "wrap-license", TRUE,
 			       NULL);
-
-	g_free (license_text);
 }
