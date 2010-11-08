@@ -1,3 +1,45 @@
+version 2.91.1
+--------------
+
+	New features and user visible changes:
+	
+	* Added Windows Imaging Format (.wim, .swm) support.	
+        * Save the configuration files in the XDG config subdirectory instead of 
+          using $HOME/.gnome2, and provide an automatic migration mechanism. 
+          (#522812)
+
+        Bugs fixed:
+
+        * Fixed crash when clicking Cancel in Add Files (#631472)
+
+	Internal code changes:
+
+        * Replace gtk_statusbar_set_has_resize_grip. ...with
+          gtk_window_set_has_resize_grip (#632696)	
+        * Handle combo box text api going away. it is being replaced by
+          GtkComboBoxText in GTK3 (Matthias Clasen) (#632643)  
+	* Removed the use of gtk_widget_hide_all.
+	* Fixed a compiler warning.
+	* Use upstream gettext instead of the glib one.
+	* Use the license-type property in the about dialog.
+	* Some changes to the gschema file: allow to translate the summary and 
+	  description fields; added a .convert file for automatic data 
+	  convertion from GConf.
+
+        New or updated application translations:
+
+        * Brazilian Portuguese (Marcelo Odir)
+        * Danish (Kenneth Nielsen)
+        * Español (Jorge González)
+        * Estonian (Ivar Smolin)
+        * Hebrew (Yaron Shahrabani)
+        * Uyghur (Sahran)
+
+        New or updated manual translations:
+
+        * French (Claude Paroz)
+        * Slovenian (Matej Urbančič)
+
 version 2.91.0
 --------------
 
