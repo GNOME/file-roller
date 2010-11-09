@@ -5742,7 +5742,7 @@ fr_window_construct (FrWindow *window)
 
 	/* main content */
 
-	window->priv->paned = gtk_hpaned_new ();
+	window->priv->paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_paned_pack1 (GTK_PANED (window->priv->paned), window->priv->sidepane, FALSE, TRUE);
 	gtk_paned_pack2 (GTK_PANED (window->priv->paned), list_scrolled_window, TRUE, TRUE);
 	gtk_paned_set_position (GTK_PANED (window->priv->paned), g_settings_get_int (window->priv->settings_ui, PREF_UI_SIDEBAR_WIDTH));
