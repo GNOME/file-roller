@@ -954,8 +954,8 @@ get_temp_work_dir (const char *parent_folder)
 gboolean
 is_temp_work_dir (const char *dir)
 {
-	int i;
-	const char *folder;
+	int   i;
+	char *folder;
 
 	if (strncmp (dir, "file://", 7) == 0)
 		dir = dir + 7;
