@@ -39,7 +39,7 @@
 #include "file-utils.h"
 #include "fr-process.h"
 #include "glib-utils.h"
-#include "main.h"
+#include "fr-init.h"
 #include "typedefs.h"
 
 

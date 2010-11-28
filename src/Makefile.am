@@ -1,6 +1,8 @@
 SUBDIRS = commands sh
 
 bin_PROGRAMS = file-roller
+libexec_PROGRAMS = file-roller-server
+noinst_PROGRAMS = test-server
 
 if MKDTEMP_MISSING
 MKDTEMP_FILES=mkdtemp.c mkdtemp.h
@@ -44,7 +46,7 @@ BUILT_SOURCES =			\
 	fr-enum-types.h		\
 	fr-enum-types.c
 
-file_roller_SOURCES = 			\
+COMMON_SOURCES = 			\
 	actions.h			\
 	actions.c			\
 	dlg-add-files.c			\
@@ -122,6 +124,8 @@ file_roller_SOURCES = 			\
 	fr-command-7z.h			\
 	fr-error.c			\
 	fr-error.h			\
+	fr-init.c			\
+	fr-init.h			\
 	fr-list-model.c			\
 	fr-list-model.h			\
 	fr-stock.c			\
@@ -138,8 +142,6 @@ file_roller_SOURCES = 			\
 	gtk-utils.h			\
 	java-utils.c			\
 	java-utils.h			\
-	main.c				\
-	main.h				\
 	open-file.c			\
 	open-file.h			\
 	preferences.c			\
@@ -177,9 +179,24 @@ fr-enum-types.c: typedefs.h fr-enum-types.h
 	&& (cmp -s xgen-$(@F) fr-enum-types.c || cp xgen-$(@F) fr-enum-types.c ) \
 	&& rm -f xgen-$(@F) )
 
-file_roller_LDADD =							\
-		    $(top_builddir)/copy-n-paste/libeggsmclient.la	\
-		    $(FR_LIBS)
+file_roller_SOURCES = 			\
+	$(COMMON_SOURCES)		\
+	main.c
+
+file_roller_LDADD =					\
+	$(top_builddir)/copy-n-paste/libeggsmclient.la	\
+	$(FR_LIBS)
+
+file_roller_server_SOURCES =		\
+	$(COMMON_SOURCES)		\
+	server.c
+	
+file_roller_server_LDADD =		\
+	$(file_roller_LDADD)
+
+test_server_SOURCES = test-server.c
+test_server_FLAGS = $(FR_CFLAGS)
+test_server_LDADD = $(FR_LIBS)
 
 EXTRA_DIST = fr-marshal.list
 

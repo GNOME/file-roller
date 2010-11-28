@@ -38,7 +38,7 @@
 #include "fr-error.h"
 #include "fr-marshal.h"
 #include "fr-process.h"
-#include "main.h"
+#include "fr-init.h"
 
 #ifndef NCARGS
 #define NCARGS _POSIX_ARG_MAX
