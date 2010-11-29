@@ -20,6 +20,7 @@
  */
 
 #include <config.h>
+#include <stdlib.h>
 #include <glib/gi18n.h>
 #include "file-data.h"
 #include "file-utils.h"
@@ -592,7 +593,7 @@ compute_supported_archive_types (void)
 }
 
 
-static initialized = FALSE;
+static gboolean initialized = FALSE;
 
 
 void
