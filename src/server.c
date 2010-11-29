@@ -36,7 +36,6 @@ static const char introspection_xml[] =
 	"<node>"
 	"  <interface name='org.gnome.ArchiveManager'>"
 
-#if 0
 	/**
 	 * GetSuppertedTypes:
 	 *
@@ -45,21 +44,25 @@ static const char introspection_xml[] =
 	 * Input arguments:
 	 *
 	 * @action:
-	 *   Can be one of the following values: create, extract
+	 *   Can be one of the following values:
+	 *   *) create: create an archive that can contain many files.
+	 *   *) create_single_file: create an archive that can contain a single file.
+	 *   *) extract: extract the content of an archive.
 	 *
 	 * Output arguments:
 	 *
 	 * @types:
-	 *   The supported archive types described as an array of tuples, where
-	 *   the tuple is composed by: the mime type, the default extension,
-	 *   a human readable description.
+	 *   The supported archive types described as an array of hash tables,
+	 *   where each hash table has the following keys:
+	 *   *) mime-type: the mime type relative to the archive type.
+	 *   *) default-extension: the extension to use for newly created archives.
+	 *   *) description: a human readable description of the archive type.
 	 */
 
 	"    <method name='GetSuppertedTypes'>"
 	"      <arg name='action' type='s' direction='in'/>"
-	"      <arg name='types' type='a(sss)' direction='out'/>"
+	"      <arg name='types' type='aa{ss}' direction='out'/>"
 	"    </method>"
-#endif
 
 	/**
 	 * AddToArchive:
@@ -73,6 +76,8 @@ static const char introspection_xml[] =
 	 *   The archive URI.
 	 * @files:
 	 *   The files to add to the archive, as an array of URIs.
+	 * @use_progress_dialog:
+	 *   Whether to show the progress dialog.
 	 */
 
 	"    <method name='AddToArchive'>"
@@ -97,6 +102,8 @@ static const char introspection_xml[] =
 	 * @destination:
 	 *   An optional destination, if not specified the folder of the first
 	 *   file in @files is used.
+	 * @use_progress_dialog:
+	 *   Whether to show the progress dialog.
 	 */
 
 	"    <method name='Compress'>"
@@ -116,6 +123,8 @@ static const char introspection_xml[] =
 	 *   The archive to extract.
 	 * @destination:
 	 *   The location where to extract the archive.
+	 * @use_progress_dialog:
+	 *   Whether to show the progress dialog.
 	 */
 
 	"    <method name='Extract'>"
@@ -133,6 +142,8 @@ static const char introspection_xml[] =
 	 *
 	 * @archive:
 	 *   The archive to extract.
+	 * @use_progress_dialog:
+	 *   Whether to show the progress dialog.
 	 */
 
 	"    <method name='ExtractHere'>"
@@ -151,6 +162,7 @@ static const char introspection_xml[] =
 	 * @details:
 	 *   text message that describes the current operation.
 	 */
+
 	"    <signal name='Progress'>"
 	"      <arg name='fraction' type='d'/>"
 	"      <arg name='details' type='s'/>"
@@ -195,6 +207,8 @@ window_progress_cb (FrWindow *window,
 						      fraction,
 						      details),
 				       NULL);
+
+	return TRUE;
 }
 
 
@@ -211,7 +225,53 @@ handle_method_call (GDBusConnection       *connection,
 	update_registered_commands_capabilities ();
 
 	if (g_strcmp0 (method_name, "GetSuppertedTypes") == 0) {
-		/* TODO */
+		char *action;
+		int  *supported_types = NULL;
+
+		g_variant_get (parameters, "(s)", &action);
+
+		if (g_strcmp0 (action, "create") == 0) {
+			supported_types = save_type;
+		}
+		else if (g_strcmp0 (action, "create_single_file") == 0) {
+			supported_types = single_file_save_type;
+		}
+		else if (g_strcmp0 (action, "extract") == 0) {
+			supported_types = open_type;
+		}
+
+		if (supported_types == NULL) {
+			g_dbus_method_invocation_return_error (invocation,
+							       G_IO_ERROR,
+							       G_IO_ERROR_INVALID_ARGUMENT,
+							       "Action not valid %s, valid values are: create, create_single_file, extract",
+							       action);
+		}
+		else {
+			GVariantBuilder builder;
+			int             i;
+
+			g_variant_builder_init (&builder, G_VARIANT_TYPE ("(aa{ss})"));
+			g_variant_builder_open (&builder, G_VARIANT_TYPE ("aa{ss}"));
+			for (i = 0; supported_types[i] != -1; i++) {
+				g_variant_builder_open (&builder, G_VARIANT_TYPE ("a{ss}"));
+				g_variant_builder_add (&builder, "{ss}",
+						       "mime-type",
+						       mime_type_desc[supported_types[i]].mime_type);
+				g_variant_builder_add (&builder, "{ss}",
+						       "default-extension",
+						       mime_type_desc[supported_types[i]].default_ext);
+				g_variant_builder_add (&builder, "{ss}",
+						       "description",
+						       _(mime_type_desc[supported_types[i]].name));
+				g_variant_builder_close (&builder);
+			}
+			g_variant_builder_close (&builder);
+
+			g_dbus_method_invocation_return_value (invocation, g_variant_builder_end (&builder));
+		}
+
+		g_free (action);
 	}
 	else if (g_strcmp0 (method_name, "AddToArchive") == 0) {
 		char       *archive;

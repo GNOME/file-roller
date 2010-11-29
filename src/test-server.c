@@ -27,6 +27,70 @@ GMainLoop *loop;
 
 
 static void
+fileroller_getsupportedtypes_ready_cb (GObject      *source_object,
+		  	  	       GAsyncResult *res,
+		  	  	       gpointer      user_data)
+{
+	GDBusProxy *proxy;
+	GVariant   *values;
+	GError     *error = NULL;
+
+	proxy = G_DBUS_PROXY (source_object);
+	values = g_dbus_proxy_call_finish (proxy, res, &error);
+	if (values == NULL) {
+		g_error ("%s\n", error->message);
+		g_clear_error (&error);
+	}
+	else {
+		GVariantIter  argument_iter;
+		GVariant     *array_of_types;
+		GVariantIter  type_iter;
+		GVariant     *supported_type;
+		int           n = 0;
+
+		g_variant_iter_init (&argument_iter, values);
+		array_of_types = g_variant_iter_next_value (&argument_iter);
+
+		g_variant_iter_init (&type_iter, array_of_types);
+		while ((supported_type = g_variant_iter_next_value (&type_iter))) {
+			char         *mime_type = NULL;
+			char         *default_ext = NULL;
+			char         *description = NULL;
+			char         *key;
+			char         *value;
+			GVariantIter  value_iter;
+
+			g_variant_iter_init (&value_iter, supported_type);
+			while (g_variant_iter_next (&value_iter, "{ss}", &key, &value)) {
+				if (g_strcmp0 (key, "mime-type") == 0)
+					mime_type = g_strdup (value);
+				else if (g_strcmp0 (key, "default-extension") == 0)
+					default_ext = g_strdup (value);
+				else if (g_strcmp0 (key, "description") == 0)
+					description = g_strdup (value);
+
+				g_free (key);
+				g_free (value);
+			}
+
+			n++;
+			g_print ("%d)\tmime-type: %s\n\tdefault-extension: %s\n\tdescription: %s\n", n, mime_type, default_ext, description);
+
+			g_free (description);
+			g_free (default_ext);
+			g_free (mime_type);
+			g_variant_unref (supported_type);
+		}
+
+		g_variant_unref (array_of_types);
+	}
+
+	g_object_unref (proxy);
+	g_main_loop_quit (loop);
+}
+
+
+static void
 fileroller_addtoarchive_ready_cb (GObject      *source_object,
 				  GAsyncResult *res,
 				  gpointer      user_data)
@@ -97,6 +161,19 @@ main (int argc, char *argv[])
 			                  G_CALLBACK (on_signal),
 			                  NULL);
 
+#if 0
+			/* -- GetSuppertedTypes -- */
+
+			g_dbus_proxy_call (proxy,
+					   "GetSuppertedTypes",
+					   g_variant_new ("(s)", "create"),
+					   G_DBUS_CALL_FLAGS_NONE,
+					   G_MAXINT,
+					   NULL,
+					   fileroller_getsupportedtypes_ready_cb,
+					   NULL);
+#endif
+
 			/* -- AddToArchive -- */
 
 			char  *archive;
@@ -109,7 +186,10 @@ main (int argc, char *argv[])
 
 			g_dbus_proxy_call (proxy,
 					   "AddToArchive",
-					   g_variant_new ("(s^asb)", archive, files, FALSE),
+					   g_variant_new ("(s^asb)",
+							  archive,
+							  files,
+							  FALSE),
 					   G_DBUS_CALL_FLAGS_NONE,
 					   G_MAXINT,
 					   NULL,
@@ -119,7 +199,9 @@ main (int argc, char *argv[])
 			g_free (archive);
 			g_strfreev (files);
 
-			/* -- Compress --
+#if 0
+
+			/* -- Compress -- */
 
 			char **files;
 			char  *destination;
@@ -131,7 +213,10 @@ main (int argc, char *argv[])
 
 			g_dbus_proxy_call (proxy,
 					   "Compress",
-					   g_variant_new ("(^assb)", files, destination, TRUE),
+					   g_variant_new ("(^assb)",
+							  files,
+							  destination,
+							  TRUE),
 					   G_DBUS_CALL_FLAGS_NONE,
 					   G_MAXINT,
 					   NULL,
@@ -140,9 +225,8 @@ main (int argc, char *argv[])
 
 			g_strfreev (files);
 			g_free (destination);
-			*/
 
-			/* -- Extract --
+			/* -- Extract -- */
 
 			g_dbus_proxy_call (proxy,
 					   "Extract",
@@ -155,9 +239,8 @@ main (int argc, char *argv[])
 					   NULL,
 					   fileroller_addtoarchive_ready_cb,
 					   NULL);
-			*/
 
-			/* -- ExtractHere --
+			/* -- ExtractHere -- */
 
 			g_dbus_proxy_call (proxy,
 					   "ExtractHere",
@@ -169,10 +252,14 @@ main (int argc, char *argv[])
 					   NULL,
 					   fileroller_addtoarchive_ready_cb,
 					   NULL);
-			*/
+
+#endif
+
 		}
 	}
 
 	loop = g_main_loop_new (NULL, FALSE);
 	g_main_loop_run (loop);
+
+	return 0;
 }
