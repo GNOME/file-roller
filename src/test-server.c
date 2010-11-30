@@ -162,10 +162,10 @@ main (int argc, char *argv[])
 			                  NULL);
 
 #if 0
-			/* -- GetSuppertedTypes -- */
+			/* -- GetSupportedTypes -- */
 
 			g_dbus_proxy_call (proxy,
-					   "GetSuppertedTypes",
+					   "GetSupportedTypes",
 					   g_variant_new ("(s)", "create"),
 					   G_DBUS_CALL_FLAGS_NONE,
 					   G_MAXINT,

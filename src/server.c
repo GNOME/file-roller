@@ -37,7 +37,7 @@ static const char introspection_xml[] =
 	"  <interface name='org.gnome.ArchiveManager'>"
 
 	/**
-	 * GetSuppertedTypes:
+	 * GetSupportedTypes:
 	 *
 	 * Returns the supported archive types for a specific action.
 	 *
@@ -59,7 +59,7 @@ static const char introspection_xml[] =
 	 *   *) description: a human readable description of the archive type.
 	 */
 
-	"    <method name='GetSuppertedTypes'>"
+	"    <method name='GetSupportedTypes'>"
 	"      <arg name='action' type='s' direction='in'/>"
 	"      <arg name='types' type='aa{ss}' direction='out'/>"
 	"    </method>"
@@ -224,7 +224,7 @@ handle_method_call (GDBusConnection       *connection,
 {
 	update_registered_commands_capabilities ();
 
-	if (g_strcmp0 (method_name, "GetSuppertedTypes") == 0) {
+	if (g_strcmp0 (method_name, "GetSupportedTypes") == 0) {
 		char *action;
 		int  *supported_types = NULL;
 
