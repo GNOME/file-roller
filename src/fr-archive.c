@@ -40,6 +40,10 @@
 #include "fr-process.h"
 #include "fr-init.h"
 
+#if ENABLE_MAGIC
+#include <magic.h>
+#endif
+
 #ifndef NCARGS
 #define NCARGS _POSIX_ARG_MAX
 #endif
@@ -524,6 +528,33 @@ get_mime_type_from_content (GFile *file)
 static const char *
 get_mime_type_from_magic_numbers (GFile *file)
 {
+#if ENABLE_MAGIC
+	static magic_t magic = NULL;
+
+	if (! magic) {
+		magic = magic_open (MAGIC_MIME);
+		if (magic)
+			magic_load (magic, NULL);
+		else
+			g_warning ("unable to open magic database");
+	}
+
+	if (magic) {
+		const char * mime_type = NULL;
+		char * filepath = g_file_get_path (file);
+
+		if (filepath) {
+			mime_type = magic_file (magic, filepath);
+			g_free (filepath);
+		}
+
+		if (mime_type)
+			return mime_type;
+
+		g_warning ("unable to detect filetype from magic: %s",
+			   magic_error (magic));
+	}
+#else
 	static struct {
 		const char *mime_type;
 		const char *first_bytes;
@@ -561,6 +592,7 @@ get_mime_type_from_magic_numbers (GFile *file)
 		{
 			return sniffer_data[i].mime_type;
 		}
+#endif
 
 	return NULL;
 }

@@ -106,6 +106,38 @@ fi
 
 dnl ******************************
 
+dnl ******************************
+
+AC_ARG_ENABLE([magic],
+              AS_HELP_STRING([--enable-magic], [use libmagic to detect file type]),,
+              [enable_magic=no])
+
+if test x"$enable_magic" = x"yes" ; then
+	save_LIBS="$LIBS"
+	LIBS="$LIBS -lmagic"
+	AC_MSG_CHECKING([whether libmagic works])
+	AC_LINK_IFELSE([AC_LANG_SOURCE([
+#include <magic.h>
+int main () { magic_t m = magic_open(MAGIC_NONE); }
+])],
+		       [AC_MSG_RESULT([yes])],
+		       [AC_MSG_RESULT([no])
+		        AC_MSG_ERROR([libmagic is needed for magic])])
+	LIBS="$save_LIBS"
+
+	MAGIC_CFLAGS=
+	MAGIC_LIBS=-lmagic
+
+	AC_SUBST(MAGIC_CFLAGS)
+	AC_SUBST(MAGIC_LIBS)
+
+	AC_DEFINE(ENABLE_MAGIC, 1, [define to enable magic])
+fi
+
+AM_CONDITIONAL(ENABLE_MAGIC, test x"$enable_magic" != x"no")
+
+dnl ******************************
+
 IT_PROG_INTLTOOL([0.40.0])
 
 GETTEXT_PACKAGE=file-roller

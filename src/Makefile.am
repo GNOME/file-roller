@@ -187,6 +187,10 @@ file_roller_LDADD =					\
 	$(top_builddir)/copy-n-paste/libeggsmclient.la	\
 	$(FR_LIBS)
 
+if ENABLE_MAGIC
+file_roller_LDADD += $(MAGIC_LIBS)
+endif
+
 file_roller_server_SOURCES =		\
 	$(COMMON_SOURCES)		\
 	server.c
