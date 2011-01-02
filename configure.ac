@@ -44,15 +44,12 @@ AC_SUBST([GTK_LIBS])
 
 dnl ===========================================================================
 
-AC_ARG_ENABLE(run_in_place,
-              AS_HELP_STRING([--enable-run-in-place],[load ui data and extensions from the source tree]),
-              [case "${enableval}" in
-              yes) enable_run_in_place=yes ;;
-              no) enable_run_in_place=no ;;
-              *) AC_MSG_ERROR([bad value ${enableval} for --enable-run-in-place]) ;;
-              esac],
-              [enable_run_in_place=no])
-AM_CONDITIONAL(RUN_IN_PLACE, test "x$enable_run_in_place" != xno)
+AC_ARG_ENABLE([run_in_place],
+	      AS_HELP_STRING([--enable-run-in-place],
+			     [load ui data and extensions from source tree]),,
+	      [enable_run_in_place=no])
+
+AM_CONDITIONAL(RUN_IN_PLACE, test x"$enable_run_in_place" != x"no")
 
 dnl ===========================================================================
 
