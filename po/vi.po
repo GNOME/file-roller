@@ -10,8 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&component=general\n"
 "POT-Creation-Date: 2010-11-02 12:29+0000\n"
-"PO-Revision-Date: 2010-03-22 23:16+0930\n"
-"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"PO-Revision-Date: 2011-01-03 13:39+0700\n"
+"Last-Translator: Nguyen Vu Hung <vuhung16plus@gmail.com>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +22,12 @@ msgstr ""
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
 msgid "File is not a valid .desktop file"
-msgstr "Tập tin không phải là một tập tin .desktop hợp lệ"
+msgstr "Tập tin .desktop không hợp lệ"
 
 #: ../copy-n-paste/eggdesktopfile.c:190
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
-msgstr "Không nhận ra tập tin môi trường phiên bản « %s »"
+msgstr "Không nhận phiên bản tập tin .desktop '%s'"
 
 #: ../copy-n-paste/eggdesktopfile.c:960
 #, c-format
@@ -45,12 +45,10 @@ msgid "Unrecognized launch option: %d"
 msgstr "Không nhận ra tùy chọn khởi chạy: %d"
 
 #: ../copy-n-paste/eggdesktopfile.c:1375
-#, fuzzy, c-format
+#, c-format
 #| msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgid "Can't pass documents to this desktop element"
-msgstr ""
-"Không thể gửi địa chỉ URI của tài liệu qua cho một mục nhập môi trường « "
-"Type=Link » (Kiểu=Liên kết)"
+msgstr "Không thể di chuyển tài liệu tới phần tử desktop này"
 
 #: ../copy-n-paste/eggdesktopfile.c:1394
 #, c-format
@@ -95,137 +93,139 @@ msgid "Create and modify an archive"
 msgstr "Tạo và sửa đổi kho"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
-#, fuzzy
 #| msgid "Compression ratio:"
 msgid "Compression level"
-msgstr "Tỷ lệ nén:"
+msgstr "Mức nén"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:2
 msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
 msgstr ""
+"Mức nén có thể dùng khi thêm file vào kho. Giá trị cho phép: very-fast (rất "
+"nhanh nhanh), fast (nhanh), normal (bình thường), maximum (tối đa)."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
 msgid "Default volume size"
-msgstr ""
+msgstr "Cỡ khối mặc định"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:4
 msgid "Display path"
-msgstr ""
+msgstr "Hiện đường dẫn"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
 msgid "Display size"
-msgstr ""
+msgstr "Hiển thị cỡ"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:6
 msgid "Display the path column in the main window."
-msgstr ""
+msgstr "Hiển thị cột đường dẫn ở cửa sổ chính."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
 msgid "Display the size column in the main window."
-msgstr ""
+msgstr "Hiện cột cỡ ở cửa sổ chính."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:8
 msgid "Display the time column in the main window."
-msgstr ""
+msgstr "Hiện cột thời gian ở cửa sổ chính."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:9
 msgid "Display the type column in the main window."
-msgstr ""
+msgstr "Hiện cột kiểu ở cửa sổ chính."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:10
 msgid "Display time"
-msgstr ""
+msgstr "Hiện thời gian"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:11
 msgid "Display type"
-msgstr ""
+msgstr "Hiện kiểu"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:12
-#, fuzzy
 #| msgid "Do not e_xtract older files"
 msgid "Do not overwrite newer files"
-msgstr "Không _giải nén tập tin cũ hơn"
+msgstr "Không ghi đè tập tin mới"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:13
-#, fuzzy
 #| msgid "_Edit"
 msgid "Editors"
-msgstr "_Sửa"
+msgstr "Trình soạn thảo"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:14
 msgid "Encrypt the archive header"
-msgstr ""
+msgstr "Mã hóa phần đầu tập tin nén"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:15
 msgid "How to sort files"
-msgstr ""
+msgstr "Cách sắp xếp tập tin"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
 msgid ""
 "If true will display icons depending on the file type (slower), otherwise "
 "will use always the same icon for all files (faster)."
 msgstr ""
+"Nếu \"đúng\", sẽ hiện biểu tượng tùy theo kiểu tập tin (chậm hơn), nếu "
+"không, sẽ hiện chung một loại biểu tượng (nhanh hơn)."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
 msgid "List Mode"
-msgstr ""
+msgstr "Chế độ danh sách"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
 msgid ""
 "List of applications entered in the 'Open File' dialog and not associated "
 "with the file type."
 msgstr ""
+"Danh sách chương trình nhâp trong hộp thoại \"Mở tập tin\" nhưng không ứg "
+"với loại tập tin nào."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
 msgid "Max history length"
-msgstr ""
+msgstr "Lượng lịch sử tối đa"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
 msgid "Max number of items in the 'Open Recents' submenu."
-msgstr ""
+msgstr "Số \"các tập tin mở gần đây\" nhiều nhất."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
 msgid "Name column width"
-msgstr ""
+msgstr "Chiều ngang cột tên"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
-#, fuzzy
 #| msgid "Over_write existing files"
 msgid "Overwrite existing files"
-msgstr "Ghi đè _lên tập tin đã có"
+msgstr "Ghi đè tập tin tồn tại"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
-#, fuzzy
 #| msgid "Update the files in the archive \"%s\"?"
 msgid "Recreate the folders stored in the archive"
-msgstr "Cập nhật các tập tin trong kho lưu « %s » không?"
+msgstr "Tạo lại thư mục được lưu trong kho"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
 msgid "Sort type"
-msgstr ""
+msgstr "Kiểu sắp xếp"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
 msgid "The default size for volumes."
-msgstr ""
+msgstr "Cỡ mặc định cho kho."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
 msgid "The default width of the name column the file list."
-msgstr ""
+msgstr "Chiều ngang cố định của cột tên trong danh sách tập tin."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
 msgid ""
 "Use 'all-files' to view all the files in the archive in a single list, use "
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
+"Dùng 'all-files' (mọi tập tin) để xem danh sách các kho trong danh sách đơn, "
+"dùng 'as-folder' (dạng thư mục')để xem kho nén dưới dạng thư mục."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
 msgid "Use mime icons"
-msgstr ""
+msgstr "Dùng biểu tượng MIME"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
-#, fuzzy
 #| msgid "View the statusbar"
 msgid "View statusbar"
 msgstr "Xem thanh trạng thái"
@@ -235,42 +235,46 @@ msgid "View the folders pane"
 msgstr "Xem ô cửa sổ thư mục"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
-#, fuzzy
 #| msgid "View the main toolbar"
 msgid "View toolbar"
-msgstr "Xem thanh công cụ chính"
+msgstr "Xem thanh công cụ"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
 msgid ""
 "What criteria must be used to arrange files. Possible values: name, size, "
 "type, time, path."
 msgstr ""
+"Tiêu chuẩn để sắp xếp tập tin. Các giá trị có thể: name (tên), size (cỡ), "
+"type (kiểu), time (thời gian), path (đường dẫn)."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
-#, fuzzy
 #| msgid "Close the folders pane"
 msgid "Whether to display the folders pane."
-msgstr "Đóng ô cửa sổ thư mục"
+msgstr "Hiển thị khung thư mục"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:34
 msgid "Whether to display the statusbar."
-msgstr ""
+msgstr "Hiển thị thahh trạng thái?"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:35
 msgid "Whether to display the toolbar."
-msgstr ""
+msgstr "Hiển thị thanh công cụ?"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:36
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
+"Có mã hóa phần đầu kho nén hay không. Nếu phần đầu được mã hóa thì cần nhập "
+"mật khẩu cho cả phần đầu và phần chính (nội dung) của kho nén."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:37
 msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
+"Sắp xếp theo thứ tự tăng hay giảm dần. Giá trị có thể: ascending (tăng dần), "
+"descending (giảm dần)."
 
 #: ../data/ui/add-options.ui.h:1
 msgid "Load Options"
@@ -381,7 +385,7 @@ msgstr "C_họn những tập tin cần cập nhật:"
 
 #. secondary text
 #: ../data/ui/update.ui.h:2 ../src/dlg-update.c:175 ../src/dlg-update.c:203
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "The file has been modified with an external application. If you don't "
 #| "update the version in the archive, all of your changes will be lost."
@@ -409,10 +413,9 @@ msgstr "Giải nén vào đây"
 
 #. Translators: the current position is the current folder
 #: ../nautilus/nautilus-fileroller.c:316
-#, fuzzy
 #| msgid "Extract the selected archive in the current position"
 msgid "Extract the selected archive to the current position"
-msgstr "Giải nén kho đã chọn vào thư mục hiện tại"
+msgstr "Giải nén kho đã chọn vào vị trí hiện tại"
 
 #: ../nautilus/nautilus-fileroller.c:333
 msgid "Extract To..."
@@ -643,14 +646,12 @@ msgid "Do not e_xtract older files"
 msgstr "Không _giải nén tập tin cũ hơn"
 
 #: ../src/dlg-new.c:440
-#, fuzzy
 #| msgid "New"
 msgctxt "File"
 msgid "New"
 msgstr "Mới"
 
 #: ../src/dlg-new.c:453
-#, fuzzy
 #| msgid "Save"
 msgctxt "File"
 msgid "Save"
@@ -683,7 +684,6 @@ msgid "Location:"
 msgstr "Vị trí:"
 
 #: ../src/dlg-prop.c:118
-#, fuzzy
 #| msgid "Name:"
 msgctxt "File"
 msgid "Name:"
@@ -771,7 +771,7 @@ msgstr "Không tìm thấy tập tin."
 #: ../src/fr-archive.c:1228
 #, c-format
 msgid "The file doesn't exist"
-msgstr ""
+msgstr "Tập tin không tồn tại"
 
 #: ../src/fr-archive.c:2415
 msgid "You don't have the right permissions."
@@ -983,35 +983,30 @@ msgid "Folders"
 msgstr "Thư mục"
 
 #: ../src/fr-window.c:4677
-#, fuzzy
 #| msgid "Size"
 msgctxt "File"
 msgid "Size"
 msgstr "Cỡ"
 
 #: ../src/fr-window.c:4678
-#, fuzzy
 #| msgid "Type"
 msgctxt "File"
 msgid "Type"
 msgstr "Kiểu"
 
 #: ../src/fr-window.c:4679
-#, fuzzy
 #| msgid "Date Modified"
 msgctxt "File"
 msgid "Date Modified"
 msgstr "Ngày sửa đổi"
 
 #: ../src/fr-window.c:4680
-#, fuzzy
 #| msgid "Location"
 msgctxt "File"
 msgid "Location"
 msgstr "Vị trí"
 
 #: ../src/fr-window.c:4689
-#, fuzzy
 #| msgid "Name"
 msgctxt "File"
 msgid "Name"
@@ -1188,16 +1183,14 @@ msgid "Lha (.lzh)"
 msgstr "Lha (.lzh)"
 
 #: ../src/main.c:104
-#, fuzzy
 #| msgid "Lha (.lzh)"
 msgid "Lrzip (.lrz)"
-msgstr "Lha (.lzh)"
+msgstr "Lrzip (.lrz)"
 
 #: ../src/main.c:105
-#, fuzzy
 #| msgid "Tar compressed with lzip (.tar.lz)"
 msgid "Tar compressed with lrzip (.tar.lrz)"
-msgstr "Tar nén bằng lzip (.tar.lz)"
+msgstr "Tar nén bằng lrzip (.tar.lrz)"
 
 #: ../src/main.c:107
 msgid "Tar compressed with lzip (.tar.lz)"
@@ -1213,7 +1206,7 @@ msgstr "Tar nén bằng lzop (.tar.lzo)"
 
 #: ../src/main.c:112
 msgid "Windows Imaging Format (.wim)"
-msgstr ""
+msgstr "Windows Imaging Format (.wim)"
 
 #: ../src/main.c:113
 msgid "Rar (.rar)"
@@ -1297,10 +1290,9 @@ msgid "File Roller"
 msgstr "Trình quản lí kho File Roller"
 
 #: ../src/ui.h:31
-#, fuzzy
 #| msgid "Archive:"
 msgid "_Archive"
-msgstr "Kho:"
+msgstr "_Kho:"
 
 #: ../src/ui.h:32
 msgid "_Edit"
@@ -1400,10 +1392,9 @@ msgid "Extract files from the archive"
 msgstr "Giải nén tập tin khỏi kho"
 
 #: ../src/ui.h:127
-#, fuzzy
 #| msgid "Find:"
 msgid "Find..."
-msgstr "Tìm:"
+msgstr "Tìm..."
 
 #: ../src/ui.h:132
 msgid "_Last Output"
@@ -1414,22 +1405,20 @@ msgid "View the output produced by the last executed command"
 msgstr "Xem dữ liệu được xuất ra của lệnh đã thực hiện lần trước"
 
 #: ../src/ui.h:136
-#, fuzzy
 #| msgid "New"
 msgctxt "File"
 msgid "New..."
-msgstr "Mới"
+msgstr "Mới..."
 
 #: ../src/ui.h:137
 msgid "Create a new archive"
 msgstr "Tạo kho mới"
 
 #: ../src/ui.h:140
-#, fuzzy
 #| msgid "Open"
 msgctxt "File"
 msgid "Open..."
-msgstr "Mở"
+msgstr "Mở..."
 
 #: ../src/ui.h:148
 msgid "_Open With..."
@@ -1458,7 +1447,7 @@ msgstr "Tải lại kho hiện thời"
 #: ../src/ui.h:164
 msgctxt "File"
 msgid "Save As..."
-msgstr ""
+msgstr "Lưu với tên..."
 
 #: ../src/ui.h:165
 msgid "Save the current archive with a different name"
@@ -1615,7 +1604,3 @@ msgstr "Sắp xếp danh sách tập tin theo vị trí"
 #~ "Free Software Foundation, Inc.,\n"
 #~ "51 Franklin Street, Fifth Floor,\n"
 #~ "Boston, MA  02110-1301, USA (Mỹ)."
-
-#~| msgid "_Files:"
-#~ msgid "_File"
-#~ msgstr "_Tập tin"
