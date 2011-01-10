@@ -952,7 +952,6 @@ gboolean
 is_temp_work_dir (const char *dir)
 {
 	int i;
-	char *folder;
 
 	if (strncmp (dir, "file://", 7) == 0)
 		dir = dir + 7;
@@ -960,16 +959,19 @@ is_temp_work_dir (const char *dir)
 		return FALSE;
 
 	for (i = 0; try_folder[i] != NULL; i++) {
+		char *folder;
 
 		folder = ith_temp_folder_to_try (i);
-		if (strncmp (dir, folder, strlen (folder)) == 0)
+		if (strncmp (dir, folder, strlen (folder)) == 0) {
 			if (strncmp (dir + strlen (folder), "/.fr-", 5) == 0) {
 				g_free (folder);
 				return TRUE;
 			}
+		}
+
+		g_free (folder);
 	}
 
-	g_free (folder);
 	return FALSE;
 }
 
