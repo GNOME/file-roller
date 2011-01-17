@@ -252,6 +252,7 @@ fr_command_zip_add (FrCommand     *comm,
 	}
 
 	fr_process_add_arg (comm->process, comm->filename);
+	fr_process_add_arg (comm->process, "--");
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
 
@@ -274,6 +275,7 @@ fr_command_zip_delete (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "-d");
 
 	fr_process_add_arg (comm->process, comm->filename);
+	fr_process_add_arg (comm->process, "--");
 	for (scan = file_list; scan; scan = scan->next) {
 		char *escaped;
 
@@ -318,6 +320,7 @@ fr_command_zip_extract (FrCommand  *comm,
 	add_password_arg (comm, comm->password);
 
 	fr_process_add_arg (comm->process, comm->filename);
+	fr_process_add_arg (comm->process, "--");
 	for (scan = file_list; scan; scan = scan->next) {
 		char *escaped;
 
