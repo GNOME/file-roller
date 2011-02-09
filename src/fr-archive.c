@@ -555,43 +555,44 @@ get_mime_type_from_magic_numbers (GFile *file)
 			   magic_error (magic));
 	}
 #else
-	static struct {
-		const char *mime_type;
-		const char *first_bytes;
-		int         offset;
-		int         len;
-	} sniffer_data [] = {
-		/* Magic numbers taken from magic/Magdir/archive from the
-		 * file-4.21 tarball. */
-		{ "application/x-7z-compressed", "7z\274\257\047\034", 0, 5 },
-		{ "application/x-ace", "**ACE**", 7, 7 },
-		{ "application/x-arj", "\x60\xea", 0, 2 },
-		{ "application/x-bzip2", "BZh", 0, 3 },
-		{ "application/x-gzip", "\037\213", 0, 2 },
-		{ "application/x-lzip", "LZIP", 0, 4 },
-		{ "application/x-lzop", "\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a", 0, 9 },
-		{ "application/x-rar", "Rar!", 0, 4 },
-		{ "application/x-rzip", "RZIP", 0, 4 },
-		{ "application/x-xz", "\3757zXZ\000", 0, 6 },
-		{ "application/x-zoo", "\xdc\xa7\xc4\xfd", 20, 4 },
-		{ "application/zip", "PK\003\004", 0, 4 },
-		{ "application/zip", "PK00PK\003\004", 0, 8 },
-		{ "application/x-lrzip", "LRZI", 0, 4 },
-		{ NULL, NULL, 0 }
+	static const struct magic {
+		const unsigned int off;
+		const unsigned int len;
+		const char * const id;
+		const char * const mime_type;
+	} magic_ids [] = {
+		/* magic ids taken from magic/Magdir/archive from the file-4.21 tarball */
+		{ 0,  6, "7z\274\257\047\034",                   "application/x-7z-compressed" },
+		{ 7,  7, "**ACE**",                              "application/x-ace"           },
+		{ 0,  2, "\x60\xea",                             "application/x-arj"           },
+		{ 0,  3, "BZh",                                  "application/x-bzip2"         },
+		{ 0,  2, "\037\213",                             "application/x-gzip"          },
+		{ 0,  4, "LZIP",                                 "application/x-lzip"          },
+		{ 0,  9, "\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a", "application/x-lzop",         },
+		{ 0,  4, "Rar!",                                 "application/x-rar"           },
+		{ 0,  4, "RZIP",                                 "application/x-rzip"          },
+		{ 0,  6, "\3757zXZ\000",                         "application/x-xz"            },
+		{ 20, 4, "\xdc\xa7\xc4\xfd",                     "application/x-zoo",          },
+		{ 0,  4, "PK\003\004",                           "application/zip"             },
+		{ 0,  8, "PK00PK\003\004",                       "application/zip"             },
+		{ 0,  4, "LRZI",                                 "application/x-lrzip"         },
 	};
+
 	char buffer[32];
 	int  i;
 
-	if (! g_load_file_in_buffer (file, buffer, 32, NULL))
+	if (! g_load_file_in_buffer (file, buffer, sizeof (buffer), NULL))
 		return NULL;
 
-	for (i = 0; sniffer_data[i].mime_type != NULL; i++)
-		if (memcmp (sniffer_data[i].first_bytes,
-			    buffer + sniffer_data[i].offset,
-			    sniffer_data[i].len) == 0)
-		{
-			return sniffer_data[i].mime_type;
-		}
+	for (i = 0; i < G_N_ELEMENTS (magic_ids); i++) {
+		const struct magic * const magic = &magic_ids[i];
+
+		if (sizeof (buffer) < (magic->off + magic->len))
+			g_warning ("buffer underrun for mime type '%s' magic",
+				   magic->mime_type);
+		else if (! memcmp (buffer + magic->off, magic->id, magic->len))
+			return magic->mime_type;
+	}
 #endif
 
 	return NULL;
