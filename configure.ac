@@ -64,8 +64,9 @@ AC_SUBST(FR_LIBS)
 dnl ******************************
 
 AC_ARG_ENABLE([nautilus_actions],
-	      AS_HELP_STRING([--disable-nautilus-actions],
-			     [do not build the nautilus context menu actions]))
+	      [AS_HELP_STRING([--disable-nautilus-actions],
+			      [do not build the nautilus context menu actions])],,
+	      [enable_nautilus_actions=yes])
 
 if test x"$enable_nautilus_actions" != x"no" ; then
 	PKG_CHECK_MODULES(NAUTILUS,					\
