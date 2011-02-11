@@ -199,5 +199,6 @@ Configuration:
 	Internal mkdtemp:       ${mkdtemp_missing}
 	Nautilus support:       ${enable_nautilus_actions}
 	PackageKit support:     ${enable_packagekit}
+	Use libmagic:           ${enable_magic}
 	Run in place            ${enable_run_in_place}
 "
