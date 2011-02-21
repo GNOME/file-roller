@@ -1,3 +1,21 @@
+version 2.91.90
+---------------
+
+        Bugs fixed:
+
+        * Fixed extraction of zip archives when "unzip" is used (#639664)
+
+        New or updated application translations:
+
+        * Arabic (Khaled Hosny)
+        * Asturian (ivarela)
+        * Bengali (India) (Runa Bhattacharjee)
+        * Slovak (Peter Mráz)
+
+        New or updated manual translations:
+
+        * Español (Jorge González)
+
 version 2.91.6
 --------------
 
@@ -91,10 +109,10 @@ version 2.91.1
 --------------
 
 	New features and user visible changes:
-	
-	* Added Windows Imaging Format (.wim, .swm) support.	
-        * Save the configuration files in the XDG config subdirectory instead of 
-          using $HOME/.gnome2, and provide an automatic migration mechanism. 
+
+	* Added Windows Imaging Format (.wim, .swm) support.
+        * Save the configuration files in the XDG config subdirectory instead of
+          using $HOME/.gnome2, and provide an automatic migration mechanism.
           (#522812)
 
         Bugs fixed:
@@ -104,15 +122,15 @@ version 2.91.1
 	Internal code changes:
 
         * Replace gtk_statusbar_set_has_resize_grip. ...with
-          gtk_window_set_has_resize_grip (#632696)	
+          gtk_window_set_has_resize_grip (#632696)
         * Handle combo box text api going away. it is being replaced by
-          GtkComboBoxText in GTK3 (Matthias Clasen) (#632643)  
+          GtkComboBoxText in GTK3 (Matthias Clasen) (#632643)
 	* Removed the use of gtk_widget_hide_all.
 	* Fixed a compiler warning.
 	* Use upstream gettext instead of the glib one.
 	* Use the license-type property in the about dialog.
-	* Some changes to the gschema file: allow to translate the summary and 
-	  description fields; added a .convert file for automatic data 
+	* Some changes to the gschema file: allow to translate the summary and
+	  description fields; added a .convert file for automatic data
 	  convertion from GConf.
 
         New or updated application translations:
@@ -139,7 +157,7 @@ version 2.91.0
 
 	Bugs fixed:
 
-	* Package installer: don't display an error message if the user 
+	* Package installer: don't display an error message if the user
         cancelled the operation.
 
         New or updated application translations:
@@ -201,7 +219,7 @@ version 2.31.91
           definition in .po file is "Plural-Forms: nplurals=1; plural=0;\n"
           (e.g. ja.po). (Kiyotaka NISHIBORI) (#627387)
 	* Use GConf instead of GSettings
-	
+
         New or updated application translations:
 
         * Arabic (Khaled Hosny)
@@ -220,7 +238,7 @@ version 2.31.90
 ---------------
 
 	New features and user visible changes:
-	
+
 	* Use GConf instead of GSettings
 
         New or updated application translations:
@@ -242,7 +260,7 @@ version 2.31.5
 
         * Make it possible to build against GTK+ 3. (#624564)
 	* Make it compile again with GSEAL and DEPRECATED macros enabled
-	
+
         New or updated application translations:
 
         * Bengali INDIA (Runa Bhattacharjee)
@@ -273,7 +291,7 @@ version 2.31.4
 
         * Migrated from dbus-glib to glib's GDBus (#622900)
 	* Ported to GSettings
-	
+
         New or updated application translations:
 
         * Estonian (Priit Laes)
