@@ -14,15 +14,16 @@
 # Krix Apolinário <krixapolinario@gmail.com>, 2009.
 # Antonio Fernandes C. Neto <fernandes@pelivre.org>, 2010.
 # Marcelo Odir <marceloodir@gmail.com>, 2010.
+# Isis Binder <isis.binder@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&component=general\n"
-"POT-Creation-Date: 2010-11-03 17:21+0000\n"
+"POT-Creation-Date: 2011-03-09 20:26+0000\n"
 "PO-Revision-Date: 2010-11-05 13:49-0300\n"
-"Last-Translator: Marcelo Odir <marceloodir@gmail.com>\n"
+"Last-Translator: Isis Binder <isis.binder@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,61 +42,61 @@ msgstr "O arquivo não é um arquivo .desktop válido"
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "A versão \"%s\" do arquivo desktop não é reconhecida"
 
-#: ../copy-n-paste/eggdesktopfile.c:960
+#: ../copy-n-paste/eggdesktopfile.c:970
 #, c-format
 msgid "Starting %s"
 msgstr "Iniciando %s"
 
-#: ../copy-n-paste/eggdesktopfile.c:1102
+#: ../copy-n-paste/eggdesktopfile.c:1112
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "O aplicativo não aceita documentos na linha de comando"
 
-#: ../copy-n-paste/eggdesktopfile.c:1170
+#: ../copy-n-paste/eggdesktopfile.c:1180
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "Opção de lançamento desconhecida: %d"
 
-#: ../copy-n-paste/eggdesktopfile.c:1375
+#: ../copy-n-paste/eggdesktopfile.c:1385
 #, c-format
 msgid "Can't pass documents to this desktop element"
 msgstr "Não é possível passar documentos para esse elemento desktop"
 
-#: ../copy-n-paste/eggdesktopfile.c:1394
+#: ../copy-n-paste/eggdesktopfile.c:1406
 #, c-format
 msgid "Not a launchable item"
 msgstr "O item não é lançável"
 
-#: ../copy-n-paste/eggsmclient.c:225
+#: ../copy-n-paste/eggsmclient.c:226
 msgid "Disable connection to session manager"
 msgstr "Desabilitar conexão ao gerenciador de sessão"
 
-#: ../copy-n-paste/eggsmclient.c:228
+#: ../copy-n-paste/eggsmclient.c:229
 msgid "Specify file containing saved configuration"
 msgstr "Especifica o arquivo contendo a configuração salva"
 
-#: ../copy-n-paste/eggsmclient.c:228
+#: ../copy-n-paste/eggsmclient.c:229
 msgid "FILE"
 msgstr "ARQUIVO"
 
-#: ../copy-n-paste/eggsmclient.c:231
+#: ../copy-n-paste/eggsmclient.c:232
 msgid "Specify session management ID"
 msgstr "Especifica um ID de gerenciamento de sessão"
 
-#: ../copy-n-paste/eggsmclient.c:231
+#: ../copy-n-paste/eggsmclient.c:232
 msgid "ID"
 msgstr "ID"
 
-#: ../copy-n-paste/eggsmclient.c:252
+#: ../copy-n-paste/eggsmclient.c:253
 msgid "Session management options:"
 msgstr "Opções de gerenciamento de sessão:"
 
-#: ../copy-n-paste/eggsmclient.c:253
+#: ../copy-n-paste/eggsmclient.c:254
 msgid "Show session management options"
 msgstr "Mostrar opções de gerenciamento de sessão"
 
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1968
-#: ../src/fr-window.c:5396
+#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1996
+#: ../src/fr-window.c:5452
 msgid "Archive Manager"
 msgstr "Gerenciador de pacotes"
 
@@ -117,7 +118,7 @@ msgstr ""
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
 msgid "Default volume size"
-msgstr ""
+msgstr "Tamanho padrão do volume"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:4
 msgid "Display path"
@@ -156,7 +157,6 @@ msgid "Do not overwrite newer files"
 msgstr "Não extrair arquivos mais antigos"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:13
-#| msgid "_Edit"
 msgid "Editors"
 msgstr "Editores"
 
@@ -186,14 +186,16 @@ msgid ""
 "List of applications entered in the 'Open File' dialog and not associated "
 "with the file type."
 msgstr ""
+"Lista de aplicativos informados na janela \"Abrir arquivo\" e não associados "
+"com o tipo do arquivo."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
 msgid "Max history length"
-msgstr ""
+msgstr "Comprimento máximo do histórico"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
 msgid "Max number of items in the 'Open Recents' submenu."
-msgstr ""
+msgstr "Quantidade máxima de itens no submenu \"Abrir recentes\"."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
 msgid "Name column width"
@@ -213,21 +215,23 @@ msgstr "Tipo de ordenação"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
 msgid "The default size for volumes."
-msgstr ""
+msgstr "O tamanho padrão para volumes."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
 msgid "The default width of the name column the file list."
-msgstr ""
+msgstr "A largura padrão para o nome da coluna na primeira lista."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
 msgid ""
 "Use 'all-files' to view all the files in the archive in a single list, use "
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
+"Use \"all-files\" para ver todos os arquivos no pacote em uma lista única, use "
+"\"as-folder\" para navegar no pacote como uma pasta."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
 msgid "Use mime icons"
-msgstr ""
+msgstr "Usa ícones mime"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
 msgid "View statusbar"
@@ -250,29 +254,32 @@ msgstr ""
 "nome, tamanho, tipo, hora, caminho."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
-#| msgid "Close the folders pane"
 msgid "Whether to display the folders pane."
 msgstr "Exibe o painel de pastas"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:34
 msgid "Whether to display the statusbar."
-msgstr ""
+msgstr "Exibe a barra de status."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:35
 msgid "Whether to display the toolbar."
-msgstr ""
+msgstr "Exibe a barra de ferramentas."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:36
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
+"Criptografa o cabeçalho do pacote. Se o cabeçalho estiver criptografado, a "
+"senha será necessária para listar o conteúdo do pacote."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:37
 msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
+"Ordenar de modo ascendente ou descendente. Valores possíveis: ascendente, "
+"descendente."
 
 #: ../data/ui/add-options.ui.h:1
 msgid "Load Options"
@@ -310,7 +317,7 @@ msgid "_Filename:"
 msgstr "_Nome do arquivo:"
 
 #. Translators: after the colon there is a folder name.
-#: ../data/ui/batch-add-files.ui.h:10 ../src/fr-window.c:5819
+#: ../data/ui/batch-add-files.ui.h:10 ../src/fr-window.c:5879
 msgid "_Location:"
 msgstr "_Localização:"
 
@@ -346,22 +353,6 @@ msgstr "Arquivos _selecionados"
 #: ../data/ui/delete.ui.h:5 ../src/dlg-extract.c:359
 msgid "example: *.txt; *.doc"
 msgstr "exemplo: *.txt; *.doc"
-
-#: ../data/ui/open-with.ui.h:1
-msgid "A_vailable application:"
-msgstr "Aplicativo disponí_vel:"
-
-#: ../data/ui/open-with.ui.h:2
-msgid "Open Files"
-msgstr "Abrir arquivos"
-
-#: ../data/ui/open-with.ui.h:3
-msgid "R_ecent applications:"
-msgstr "Aplicativos r_ecentes:"
-
-#: ../data/ui/open-with.ui.h:4
-msgid "_Application:"
-msgstr "A_plicativo:"
 
 #: ../data/ui/password.ui.h:1
 msgid ""
@@ -430,7 +421,7 @@ msgstr "Cria um pacote compactado com os objetos selecionados"
 #: ../src/actions.c:156 ../src/actions.c:195 ../src/actions.c:231
 #: ../src/dlg-batch-add.c:169 ../src/dlg-batch-add.c:185
 #: ../src/dlg-batch-add.c:214 ../src/dlg-batch-add.c:259
-#: ../src/dlg-batch-add.c:305 ../src/fr-window.c:2918
+#: ../src/dlg-batch-add.c:305 ../src/fr-window.c:2985
 msgid "Could not create the archive"
 msgstr "Não foi possível criar o pacote"
 
@@ -444,7 +435,7 @@ msgstr "Você não possui permissão para criar um pacote nesta pasta"
 
 #: ../src/actions.c:233 ../src/dlg-package-installer.c:266
 #: ../src/dlg-package-installer.c:275 ../src/dlg-package-installer.c:303
-#: ../src/fr-archive.c:1145 ../src/fr-window.c:6036 ../src/fr-window.c:6212
+#: ../src/fr-archive.c:1178 ../src/fr-window.c:6094 ../src/fr-window.c:6270
 msgid "Archive type not supported."
 msgstr "Não há suporte a este tipo de pacote."
 
@@ -452,11 +443,11 @@ msgstr "Não há suporte a este tipo de pacote."
 msgid "Could not delete the old archive."
 msgstr "Não foi possível excluir o pacote antigo."
 
-#: ../src/actions.c:381 ../src/fr-window.c:5877
+#: ../src/actions.c:381 ../src/fr-window.c:5937
 msgid "Open"
 msgstr "Abrir"
 
-#: ../src/actions.c:392 ../src/dlg-new.c:312 ../src/fr-window.c:5216
+#: ../src/actions.c:392 ../src/dlg-new.c:312 ../src/fr-window.c:5277
 msgid "All archives"
 msgstr "Todos os pacotes"
 
@@ -464,7 +455,7 @@ msgstr "Todos os pacotes"
 msgid "All files"
 msgstr "Todos os arquivos"
 
-#: ../src/actions.c:793 ../src/fr-window.c:7058
+#: ../src/actions.c:793 ../src/fr-window.c:7120
 msgid "Last Output"
 msgstr "Última saída"
 
@@ -489,7 +480,8 @@ msgstr ""
 "Fábio Nogueira <deb-user-ba@ubuntu.com>\n"
 "Fabrício Godoy <skarllot@gmail.com>\n"
 "Krix Apolinário <krixapolinario@gmail.com>\n"
-"Antonio Fernandes C. Neto <fernandes@pelivre.org>"
+"Antonio Fernandes C. Neto <fernandes@pelivre.org>\n"
+"Isis Binder <isis.binder@gmail.com>"
 
 #: ../src/dlg-add-files.c:99 ../src/dlg-add-folder.c:129
 msgid "Could not add the files to the archive"
@@ -566,7 +558,7 @@ msgid "Enter the password for the archive '%s'."
 msgstr "Digite a senha para o pacote \"%s\"."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/dlg-batch-add.c:186 ../src/fr-window.c:7378
+#: ../src/dlg-batch-add.c:186 ../src/fr-window.c:7435
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -577,8 +569,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:189 ../src/fr-window.c:7368 ../src/fr-window.c:7373
-#: ../src/fr-window.c:7378 ../src/fr-window.c:7414 ../src/fr-window.c:7416
+#: ../src/dlg-batch-add.c:189 ../src/fr-window.c:7425 ../src/fr-window.c:7430
+#: ../src/fr-window.c:7435 ../src/fr-window.c:7471 ../src/fr-window.c:7473
 msgid "Please use a different name."
 msgstr "Por favor, use um nome diferente."
 
@@ -590,7 +582,7 @@ msgstr ""
 "Você não possui as permissões corretas para criar pacotes na pasta de "
 "destino."
 
-#: ../src/dlg-batch-add.c:232 ../src/dlg-extract.c:102 ../src/fr-window.c:6633
+#: ../src/dlg-batch-add.c:232 ../src/dlg-extract.c:102 ../src/fr-window.c:6691
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -601,11 +593,11 @@ msgstr ""
 "\n"
 "Você deseja criá-la?"
 
-#: ../src/dlg-batch-add.c:241 ../src/dlg-extract.c:111 ../src/fr-window.c:6642
+#: ../src/dlg-batch-add.c:241 ../src/dlg-extract.c:111 ../src/fr-window.c:6700
 msgid "Create _Folder"
 msgstr "Criar _pasta"
 
-#: ../src/dlg-batch-add.c:260 ../src/dlg-extract.c:131 ../src/fr-window.c:6662
+#: ../src/dlg-batch-add.c:260 ../src/dlg-extract.c:131 ../src/fr-window.c:6717
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Não foi possível criar a pasta de destino: %s."
@@ -623,11 +615,12 @@ msgid "_Overwrite"
 msgstr "S_obrescrever"
 
 #: ../src/dlg-extract.c:130 ../src/dlg-extract.c:148 ../src/dlg-extract.c:175
-#: ../src/fr-window.c:4143 ../src/fr-window.c:6661 ../src/fr-window.c:6678
+#: ../src/fr-window.c:4210 ../src/fr-window.c:6721 ../src/fr-window.c:6740
+#: ../src/fr-window.c:6745
 msgid "Extraction not performed"
 msgstr "Extração não realizada"
 
-#: ../src/dlg-extract.c:176 ../src/fr-window.c:4306 ../src/fr-window.c:4386
+#: ../src/dlg-extract.c:176 ../src/fr-window.c:4373 ../src/fr-window.c:4453
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
@@ -771,24 +764,24 @@ msgstr ""
 msgid "File format not recognized"
 msgstr "Formato de arquivo não reconhecido"
 
-#: ../src/fr-archive.c:1125
+#: ../src/fr-archive.c:1158
 msgid "File not found."
 msgstr "Arquivo não localizado."
 
-#: ../src/fr-archive.c:1228
+#: ../src/fr-archive.c:1261
 #, c-format
 msgid "The file doesn't exist"
 msgstr "O arquivo não existe"
 
-#: ../src/fr-archive.c:2415
+#: ../src/fr-archive.c:2427
 msgid "You don't have the right permissions."
 msgstr "Você não possui as permissões corretas."
 
-#: ../src/fr-archive.c:2415
+#: ../src/fr-archive.c:2427
 msgid "This archive type cannot be modified"
 msgstr "Este tipo de pacote não pode ser modificado"
 
-#: ../src/fr-archive.c:2427
+#: ../src/fr-archive.c:2439
 msgid "You can't add an archive to itself."
 msgstr "Você não pode adicionar um pacote a ele mesmo."
 
@@ -799,7 +792,7 @@ msgid "Adding file: "
 msgstr "Adicionando arquivo: "
 
 #. Translators: after the colon there is a filename.
-#: ../src/fr-command-7z.c:411 ../src/fr-command-rar.c:560
+#: ../src/fr-command-7z.c:416 ../src/fr-command-rar.c:560
 #: ../src/fr-command-tar.c:426
 msgid "Extracting file: "
 msgstr "Extraindo arquivo: "
@@ -814,7 +807,7 @@ msgstr "Removendo arquivo: "
 msgid "Could not find the volume: %s"
 msgstr "Não foi possível localizar o volume: %s"
 
-#: ../src/fr-command-tar.c:381 ../src/fr-window.c:2304
+#: ../src/fr-command-tar.c:381 ../src/fr-window.c:2332
 msgid "Deleting files from archive"
 msgstr "Excluindo arquivos do pacote"
 
@@ -826,6 +819,122 @@ msgstr "Comprimindo pacote novamente"
 msgid "Decompressing archive"
 msgstr "Descomprimindo pacote"
 
+#: ../src/fr-init.c:58
+msgid "7-Zip (.7z)"
+msgstr "7-Zip (.7z)"
+
+#: ../src/fr-init.c:59
+msgid "Tar compressed with 7z (.tar.7z)"
+msgstr "Tar compactado com 7z (.tar.7z)"
+
+#: ../src/fr-init.c:60
+msgid "Ace (.ace)"
+msgstr "Ace (.ace)"
+
+#: ../src/fr-init.c:62
+msgid "Ar (.ar)"
+msgstr "Ar (.ar)"
+
+#: ../src/fr-init.c:63
+msgid "Arj (.arj)"
+msgstr "Arj (.arj)"
+
+#: ../src/fr-init.c:65
+msgid "Tar compressed with bzip2 (.tar.bz2)"
+msgstr "Tar compactado com bzip2 (.tar.bz2)"
+
+#: ../src/fr-init.c:67
+msgid "Tar compressed with bzip (.tar.bz)"
+msgstr "Tar compactado com bzip (.tar.bz)"
+
+#: ../src/fr-init.c:68
+msgid "Cabinet (.cab)"
+msgstr "Cabinet (.cab)"
+
+#: ../src/fr-init.c:69
+msgid "Rar Archived Comic Book (.cbr)"
+msgstr "Pacote Rar de Quadrinhos (.cbr)"
+
+#: ../src/fr-init.c:70
+msgid "Zip Archived Comic Book (.cbz)"
+msgstr "Pacote Zip de Quadrinhos (.cbz)"
+
+#: ../src/fr-init.c:73
+msgid "Tar compressed with gzip (.tar.gz)"
+msgstr "Tar compactado com gzip (.tar.gz)"
+
+#: ../src/fr-init.c:76
+msgid "Ear (.ear)"
+msgstr "Ear (.ear)"
+
+#: ../src/fr-init.c:77
+msgid "Self-extracting zip (.exe)"
+msgstr "Zip com extração própria (.exe)"
+
+#: ../src/fr-init.c:79
+msgid "Jar (.jar)"
+msgstr "Jar (.jar)"
+
+#: ../src/fr-init.c:80
+msgid "Lha (.lzh)"
+msgstr "Lha (.lzh)"
+
+#: ../src/fr-init.c:81
+msgid "Lrzip (.lrz)"
+msgstr "Lrzip (.lrz)"
+
+#: ../src/fr-init.c:82
+msgid "Tar compressed with lrzip (.tar.lrz)"
+msgstr "Tar compactado com lrzip (.tar.lrz)"
+
+#: ../src/fr-init.c:84
+msgid "Tar compressed with lzip (.tar.lz)"
+msgstr "Tar compactado com lzip (.tar.lz)"
+
+#: ../src/fr-init.c:86
+msgid "Tar compressed with lzma (.tar.lzma)"
+msgstr "Tar compactado com lzma (.tar.lzma)"
+
+#: ../src/fr-init.c:88
+msgid "Tar compressed with lzop (.tar.lzo)"
+msgstr "Tar compactado com lzop (.tar.lzo)"
+
+#: ../src/fr-init.c:89
+msgid "Windows Imaging Format (.wim)"
+msgstr "Formato de imagem do Windows (.wim)"
+
+#: ../src/fr-init.c:90
+msgid "Rar (.rar)"
+msgstr "Rar (.rar)"
+
+#: ../src/fr-init.c:93
+msgid "Tar uncompressed (.tar)"
+msgstr "Tar descompactado (.tar)"
+
+#: ../src/fr-init.c:94
+msgid "Tar compressed with compress (.tar.Z)"
+msgstr "Tar compactado com compress (.tar.Z)"
+
+#: ../src/fr-init.c:96
+msgid "War (.war)"
+msgstr "War (.war)"
+
+#: ../src/fr-init.c:97
+msgid "Xz (.xz)"
+msgstr "Xz (.xz)"
+
+#: ../src/fr-init.c:98
+msgid "Tar compressed with xz (.tar.xz)"
+msgstr "Tar compactado com xz (.tar.xz)"
+
+#: ../src/fr-init.c:99
+msgid "Zoo (.zoo)"
+msgstr "Zoo (.zoo)"
+
+#: ../src/fr-init.c:100
+msgid "Zip (.zip)"
+msgstr "Zip (.zip)"
+
 #: ../src/fr-stock.c:42 ../src/fr-stock.c:43
 msgid "_Add"
 msgstr "_Adicionar"
@@ -834,144 +943,144 @@ msgstr "_Adicionar"
 msgid "_Extract"
 msgstr "_Extrair"
 
-#: ../src/fr-window.c:1504
+#: ../src/fr-window.c:1532
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "%d objeto (%s)"
 msgstr[1] "%d objetos (%s)"
 
-#: ../src/fr-window.c:1509
+#: ../src/fr-window.c:1537
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "%d objeto selecionado (%s)"
 msgstr[1] "%d objetos selecionados (%s)"
 
-#: ../src/fr-window.c:1579
+#: ../src/fr-window.c:1607
 msgid "Folder"
 msgstr "Pasta"
 
-#: ../src/fr-window.c:1976
+#: ../src/fr-window.c:2004
 msgid "[read only]"
 msgstr "[somente leitura]"
 
-#: ../src/fr-window.c:2227
+#: ../src/fr-window.c:2255
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Não foi possível exibir a pasta \"%s\""
 
-#: ../src/fr-window.c:2295 ../src/fr-window.c:2325
+#: ../src/fr-window.c:2323 ../src/fr-window.c:2353
 msgid "Creating archive"
 msgstr "Criando pacote"
 
-#: ../src/fr-window.c:2298
+#: ../src/fr-window.c:2326
 msgid "Loading archive"
 msgstr "Carregando pacote"
 
-#: ../src/fr-window.c:2301
+#: ../src/fr-window.c:2329
 msgid "Reading archive"
 msgstr "Lendo pacote"
 
-#: ../src/fr-window.c:2307
+#: ../src/fr-window.c:2335
 msgid "Testing archive"
 msgstr "Testando o pacote"
 
-#: ../src/fr-window.c:2310
+#: ../src/fr-window.c:2338
 msgid "Getting the file list"
 msgstr "Obtendo a lista de arquivos"
 
-#: ../src/fr-window.c:2313 ../src/fr-window.c:2322
+#: ../src/fr-window.c:2341 ../src/fr-window.c:2350
 msgid "Copying the file list"
 msgstr "Copiando a lista de arquivos"
 
-#: ../src/fr-window.c:2316
+#: ../src/fr-window.c:2344
 msgid "Adding files to archive"
 msgstr "Adicionando arquivos ao pacote"
 
-#: ../src/fr-window.c:2319
+#: ../src/fr-window.c:2347
 msgid "Extracting files from archive"
 msgstr "Extraindo arquivos do pacote"
 
-#: ../src/fr-window.c:2328
+#: ../src/fr-window.c:2356
 msgid "Saving archive"
 msgstr "Salvando pacote"
 
-#: ../src/fr-window.c:2485
+#: ../src/fr-window.c:2524
 msgid "_Open the Archive"
 msgstr "_Abrir o pacote"
 
-#: ../src/fr-window.c:2486
+#: ../src/fr-window.c:2525
 msgid "_Show the Files"
 msgstr "_Mostrar os arquivos"
 
-#: ../src/fr-window.c:2531
+#: ../src/fr-window.c:2570
 msgid "Archive:"
 msgstr "Pacote:"
 
-#: ../src/fr-window.c:2693
+#: ../src/fr-window.c:2741
 msgid "Extraction completed successfully"
 msgstr "Extração concluída com sucesso"
 
-#: ../src/fr-window.c:2716
+#: ../src/fr-window.c:2764
 msgid "Archive created successfully"
 msgstr "Pacote criado com sucesso"
 
-#: ../src/fr-window.c:2764
+#: ../src/fr-window.c:2812
 msgid "please wait..."
 msgstr "aguarde, por favor..."
 
-#: ../src/fr-window.c:2923
+#: ../src/fr-window.c:2897 ../src/fr-window.c:3032
+msgid "Command exited abnormally."
+msgstr "O comando saiu de modo anormal."
+
+#: ../src/fr-window.c:2990
 msgid "An error occurred while extracting files."
 msgstr "Ocorreu um erro ao extrair os arquivos."
 
-#: ../src/fr-window.c:2929
+#: ../src/fr-window.c:2996
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Não foi possível abrir \"%s\""
 
-#: ../src/fr-window.c:2934
+#: ../src/fr-window.c:3001
 msgid "An error occurred while loading the archive."
 msgstr "Ocorreu um erro ao carregar o pacote."
 
-#: ../src/fr-window.c:2938
+#: ../src/fr-window.c:3005
 msgid "An error occurred while deleting files from the archive."
 msgstr "Ocorreu um erro ao excluir os arquivos do pacote."
 
-#: ../src/fr-window.c:2944
+#: ../src/fr-window.c:3011
 msgid "An error occurred while adding files to the archive."
 msgstr "Ocorreu um erro ao adicionar os arquivos ao pacote."
 
-#: ../src/fr-window.c:2948
+#: ../src/fr-window.c:3015
 msgid "An error occurred while testing archive."
 msgstr "Ocorreu um erro ao testar o pacote."
 
-#: ../src/fr-window.c:2952
+#: ../src/fr-window.c:3019
 msgid "An error occurred while saving the archive."
 msgstr "Ocorreu um erro ao salvar o pacote."
 
-#: ../src/fr-window.c:2956
+#: ../src/fr-window.c:3023
 msgid "An error occurred."
 msgstr "Ocorreu um erro."
 
-#: ../src/fr-window.c:2962
+#: ../src/fr-window.c:3029
 msgid "Command not found."
 msgstr "Comando não localizado."
 
-#: ../src/fr-window.c:2965
-msgid "Command exited abnormally."
-msgstr "O comando saiu de modo anormal."
-
-#: ../src/fr-window.c:3164
+#: ../src/fr-window.c:3231
 msgid "Test Result"
 msgstr "Resultado do teste"
 
-#: ../src/fr-window.c:3986 ../src/fr-window.c:7965 ../src/fr-window.c:7992
-#: ../src/fr-window.c:8247
+#: ../src/fr-window.c:4053 ../src/fr-window.c:8022 ../src/fr-window.c:8056
+#: ../src/fr-window.c:8306
 msgid "Could not perform the operation"
 msgstr "Não foi possível executar a operação"
 
-#: ../src/fr-window.c:4012
+#: ../src/fr-window.c:4079
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -979,76 +1088,76 @@ msgstr ""
 "Você deseja adicionar este arquivo ao pacote atual ou abri-lo como um novo "
 "pacote?"
 
-#: ../src/fr-window.c:4042
+#: ../src/fr-window.c:4109
 msgid "Do you want to create a new archive with these files?"
 msgstr "Você deseja criar um novo pacote com estes arquivos?"
 
-#: ../src/fr-window.c:4045
+#: ../src/fr-window.c:4112
 msgid "Create _Archive"
 msgstr "Criar _pacote"
 
-#: ../src/fr-window.c:4639 ../src/fr-window.c:5725
+#: ../src/fr-window.c:4702 ../src/fr-window.c:5783
 msgid "Folders"
 msgstr "Pastas"
 
-#: ../src/fr-window.c:4677
+#: ../src/fr-window.c:4740
 msgctxt "File"
 msgid "Size"
 msgstr "Tamanho"
 
-#: ../src/fr-window.c:4678
+#: ../src/fr-window.c:4741
 msgctxt "File"
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/fr-window.c:4679
+#: ../src/fr-window.c:4742
 msgctxt "File"
 msgid "Date Modified"
 msgstr "Data de modificação"
 
-#: ../src/fr-window.c:4680
+#: ../src/fr-window.c:4743
 msgctxt "File"
 msgid "Location"
 msgstr "Localização"
 
-#: ../src/fr-window.c:4689
+#: ../src/fr-window.c:4752
 msgctxt "File"
 msgid "Name"
 msgstr "Nome"
 
-#: ../src/fr-window.c:5646
+#: ../src/fr-window.c:5704
 msgid "Find:"
 msgstr "Localizar:"
 
-#: ../src/fr-window.c:5733
+#: ../src/fr-window.c:5791
 msgid "Close the folders pane"
 msgstr "Fecha o painel de pastas"
 
-#: ../src/fr-window.c:5874 ../src/fr-window.c:5877 ../src/ui.h:141
+#: ../src/fr-window.c:5934 ../src/fr-window.c:5937 ../src/ui.h:141
 #: ../src/ui.h:145
 msgid "Open archive"
 msgstr "Abre um pacote"
 
-#: ../src/fr-window.c:5875
+#: ../src/fr-window.c:5935
 msgid "Open a recently used archive"
 msgstr "Abre um pacote recentemente utilizado"
 
-#: ../src/fr-window.c:6204
+#: ../src/fr-window.c:6262
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Não foi possível salvar o pacote \"%s\""
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7368
+#: ../src/fr-window.c:7425
 msgid "The new name is void."
 msgstr "O novo nome está vazio."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7373
+#: ../src/fr-window.c:7430
 msgid "The new name is equal to the old one."
 msgstr "O novo nome é igual ao nome antigo."
 
-#: ../src/fr-window.c:7414
+#: ../src/fr-window.c:7471
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1059,7 +1168,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7416
+#: ../src/fr-window.c:7473
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1070,43 +1179,43 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7486
+#: ../src/fr-window.c:7543
 msgid "Rename"
 msgstr "Renomear"
 
-#: ../src/fr-window.c:7487
+#: ../src/fr-window.c:7544
 msgid "New folder name"
 msgstr "Nome da nova pasta"
 
-#: ../src/fr-window.c:7487
+#: ../src/fr-window.c:7544
 msgid "New file name"
 msgstr "Nome do novo arquivo"
 
-#: ../src/fr-window.c:7491
+#: ../src/fr-window.c:7548
 msgid "_Rename"
 msgstr "_Renomear"
 
-#: ../src/fr-window.c:7508 ../src/fr-window.c:7528
+#: ../src/fr-window.c:7565 ../src/fr-window.c:7585
 msgid "Could not rename the folder"
 msgstr "Não foi possível renomear a pasta"
 
-#: ../src/fr-window.c:7508 ../src/fr-window.c:7528
+#: ../src/fr-window.c:7565 ../src/fr-window.c:7585
 msgid "Could not rename the file"
 msgstr "Não foi possível renomear o arquivo"
 
-#: ../src/fr-window.c:7926
+#: ../src/fr-window.c:7983
 msgid "Paste Selection"
 msgstr "Colar seleção"
 
-#: ../src/fr-window.c:7927
+#: ../src/fr-window.c:7984
 msgid "Destination folder"
 msgstr "Pasta de destino"
 
-#: ../src/fr-window.c:8517
+#: ../src/fr-window.c:8585
 msgid "Add files to an archive"
 msgstr "Adicionar arquivos a um pacote"
 
-#: ../src/fr-window.c:8561
+#: ../src/fr-window.c:8629
 msgid "Extract archive"
 msgstr "Extrair pacote"
 
@@ -1118,175 +1227,59 @@ msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
 #. Expander
-#: ../src/gtk-utils.c:437
+#: ../src/gtk-utils.c:416
 msgid "Command _Line Output"
 msgstr "Saída da _linha de comando"
 
-#: ../src/gtk-utils.c:774
+#: ../src/gtk-utils.c:753
 msgid "Could not display help"
 msgstr "Não foi possível exibir a ajuda"
 
-#: ../src/main.c:81
-msgid "7-Zip (.7z)"
-msgstr "7-Zip (.7z)"
-
-#: ../src/main.c:82
-msgid "Tar compressed with 7z (.tar.7z)"
-msgstr "Tar compactado com 7z (.tar.7z)"
-
-#: ../src/main.c:83
-msgid "Ace (.ace)"
-msgstr "Ace (.ace)"
-
-#: ../src/main.c:85
-msgid "Ar (.ar)"
-msgstr "Ar (.ar)"
-
-#: ../src/main.c:86
-msgid "Arj (.arj)"
-msgstr "Arj (.arj)"
-
-#: ../src/main.c:88
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "Tar compactado com bzip2 (.tar.bz2)"
-
-#: ../src/main.c:90
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "Tar compactado com bzip (.tar.bz)"
-
-#: ../src/main.c:91
-msgid "Cabinet (.cab)"
-msgstr "Cabinet (.cab)"
-
-#: ../src/main.c:92
-msgid "Rar Archived Comic Book (.cbr)"
-msgstr "Pacote Rar de Quadrinhos (.cbr)"
-
-#: ../src/main.c:93
-msgid "Zip Archived Comic Book (.cbz)"
-msgstr "Pacote Zip de Quadrinhos (.cbz)"
-
-#: ../src/main.c:96
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "Tar compactado com gzip (.tar.gz)"
-
-#: ../src/main.c:99
-msgid "Ear (.ear)"
-msgstr "Ear (.ear)"
-
-#: ../src/main.c:100
-msgid "Self-extracting zip (.exe)"
-msgstr "Zip com extração própria (.exe)"
-
-#: ../src/main.c:102
-msgid "Jar (.jar)"
-msgstr "Jar (.jar)"
-
-#: ../src/main.c:103
-msgid "Lha (.lzh)"
-msgstr "Lha (.lzh)"
-
-#: ../src/main.c:104
-msgid "Lrzip (.lrz)"
-msgstr "Lrzip (.lrz)"
-
-#: ../src/main.c:105
-msgid "Tar compressed with lrzip (.tar.lrz)"
-msgstr "Tar compactado com lrzip (.tar.lrz)"
-
-#: ../src/main.c:107
-msgid "Tar compressed with lzip (.tar.lz)"
-msgstr "Tar compactado com lzip (.tar.lz)"
-
-#: ../src/main.c:109
-msgid "Tar compressed with lzma (.tar.lzma)"
-msgstr "Tar compactado com lzma (.tar.lzma)"
-
-#: ../src/main.c:111
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "Tar compactado com lzop (.tar.lzo)"
-
-#: ../src/main.c:112
-msgid "Windows Imaging Format (.wim)"
-msgstr ""
-
-#: ../src/main.c:113
-msgid "Rar (.rar)"
-msgstr "Rar (.rar)"
-
-#: ../src/main.c:116
-msgid "Tar uncompressed (.tar)"
-msgstr "Tar descompactado (.tar)"
-
-#: ../src/main.c:117
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "Tar compactado com compress (.tar.Z)"
-
-#: ../src/main.c:119
-msgid "War (.war)"
-msgstr "War (.war)"
-
-#: ../src/main.c:120
-msgid "Xz (.xz)"
-msgstr "Xz (.xz)"
-
-#: ../src/main.c:121
-msgid "Tar compressed with xz (.tar.xz)"
-msgstr "Tar compactado com xz (.tar.xz)"
-
-#: ../src/main.c:122
-msgid "Zoo (.zoo)"
-msgstr "Zoo (.zoo)"
-
-#: ../src/main.c:123
-msgid "Zip (.zip)"
-msgstr "Zip (.zip)"
-
-#: ../src/main.c:193
+#: ../src/main.c:51
 msgid "Add files to the specified archive and quit the program"
 msgstr "Adiciona arquivos ao pacote especificado e sai do programa"
 
-#: ../src/main.c:194
+#: ../src/main.c:52
 msgid "ARCHIVE"
 msgstr "PACOTE"
 
-#: ../src/main.c:197
+#: ../src/main.c:55
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Adiciona arquivos perguntando o nome do pacote e sai do programa"
 
-#: ../src/main.c:201
+#: ../src/main.c:59
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Extrai pacotes para a pasta especificada e sai do programa"
 
-#: ../src/main.c:202 ../src/main.c:214
+#: ../src/main.c:60 ../src/main.c:72
 msgid "FOLDER"
 msgstr "PASTA"
 
-#: ../src/main.c:205
+#: ../src/main.c:63
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Extrai pacotes perguntando a pasta de destino e sai do programa"
 
-#: ../src/main.c:209
+#: ../src/main.c:67
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "Extrai o conteúdo dos pacotes na pasta do pacote e sai do programa"
 
-#: ../src/main.c:213
+#: ../src/main.c:71
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "A pasta padrão para usar para os comandos \"--add\" e \"--extract\""
 
-#: ../src/main.c:217
+#: ../src/main.c:75
 msgid "Create destination folder without asking confirmation"
 msgstr "Cria a pasta de destino sem pedir confirmação"
 
-#: ../src/main.c:299
+#: ../src/main.c:296 ../src/server.c:444
 msgid "- Create and modify an archive"
 msgstr "- Cria e modifica um pacote"
 
-#: ../src/main.c:315
+#: ../src/main.c:312 ../src/server.c:457
 msgid "File Roller"
-msgstr "Compactador de Arquivos"
+msgstr "Compactador de arquivos"
 
 #: ../src/ui.h:31
 msgid "_Archive"
@@ -1462,7 +1455,7 @@ msgstr "_Testar integridade"
 
 #: ../src/ui.h:177
 msgid "Test whether the archive contains errors"
-msgstr "Testa se exitem erros no pacote"
+msgstr "Testa se existem erros no pacote"
 
 #: ../src/ui.h:181 ../src/ui.h:185
 msgid "Open the selected file"
@@ -1567,148 +1560,3 @@ msgstr "por _localização"
 msgid "Sort file list by location"
 msgstr "Ordena a lista de arquivos por localização"
 
-#~ msgid ""
-#~ "File Roller is free software; you can redistribute it and/or modify it "
-#~ "under the terms of the GNU General Public License as published by the "
-#~ "Free Software Foundation; either version 2 of the License, or (at your "
-#~ "option) any later version."
-#~ msgstr ""
-#~ "O Compactador de Arquivos (File Roller) é um software livre; você pode "
-#~ "redistribuí-lo e/ou modificá-lo sob os termos da Licença Pública Geral "
-#~ "GNU (GNU General Public License), conforme publicada pela Free Software "
-#~ "Foundation; tanto a versão 2 da Licença, quanto (a seu critério) qualquer "
-#~ "versão mais nova."
-
-#~ msgid ""
-#~ "File Roller is distributed in the hope that it will be useful, but "
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of "
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-#~ "Public License for more details."
-#~ msgstr ""
-#~ "O Compactador de arquivos é distribuído na expectativa de ser útil, mas "
-#~ "SEM QUALQUER GARANTIA; sem mesmo a garantia implícita de COMERCIALIZAÇÃO "
-#~ "ou de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Consulte a Licença "
-#~ "Pública Geral GNU (GNU General Public License) para obter mais detalhes."
-
-#~ msgid ""
-#~ "You should have received a copy of the GNU General Public License along "
-#~ "with File Roller; if not, write to the Free Software Foundation, Inc., 51 "
-#~ "Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
-#~ msgstr ""
-#~ "Você deve ter recebido uma cópia da Licença Pública Geral GNU junto com o "
-#~ "Compactador de arquivos; caso contrário, escreva para a Free Software "
-#~ "Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA."
-
-#~ msgid "_File"
-#~ msgstr "_Arquivo"
-
-#~ msgid "Archive _type:"
-#~ msgstr "Tipo de paco_te:"
-
-#~ msgid "Automatic"
-#~ msgstr "Automático"
-
-#~ msgid "Create Archive"
-#~ msgstr "Criar pacote"
-
-#~ msgid "_Archive:"
-#~ msgstr "_Pacote:"
-
-#~ msgid "Create Archive..."
-#~ msgstr "Criar pacote..."
-
-#~ msgid "_Open the Destination"
-#~ msgstr "A_brir o destino"
-
-#~ msgid ""
-#~ "Extract archives using the archive name as destination folder and quit "
-#~ "the program"
-#~ msgstr ""
-#~ "Extrai pacotes usando o nome do pacote como pasta de destino e sai do "
-#~ "programa"
-
-#~ msgid "Files"
-#~ msgstr "Arquivos"
-
-#~ msgid "Archive type:"
-#~ msgstr "Tipo de pacote:"
-
-#~ msgid "_Encrypt with password:"
-#~ msgstr "_Criptografar com senha:"
-
-#~ msgid "_Open destination folder after extraction"
-#~ msgstr "Abrir pasta de _destino após extração"
-
-#~ msgid "_View File"
-#~ msgstr "_Ver arquivo"
-
-#~ msgid "View the selected file"
-#~ msgstr "Ver o arquivo selecionado"
-
-#~ msgid "Open Go to the next visited location selected folder"
-#~ msgstr "Abrir Ir para a próxima localização visitada de pasta selecionada"
-
-#~ msgid "The archive already exists.  Do you want to overwrite it?"
-#~ msgstr "O pacote já existe. Você deseja sobrescrevê-lo?"
-
-#~ msgid "Overwrite"
-#~ msgstr "Sobrescrever"
-
-#~ msgid "Path:"
-#~ msgstr "Caminho:"
-
-#~ msgid "Unknown type"
-#~ msgstr "Tipo desconhecido"
-
-#~ msgid "Symbolic link"
-#~ msgstr "Link simbólico"
-
-#~ msgid "_Select All"
-#~ msgstr "Selecionar _tudo"
-
-#~ msgid "Cannot extract archives in a remote folder \"%s\""
-#~ msgstr "Não é possível extrair arquivos em uma pasta remota \"%s\""
-
-#~ msgid "Ex_tract in folder:"
-#~ msgstr "Ex_trair na pasta:"
-
-#~ msgid "Add"
-#~ msgstr "Adicionar"
-
-#~ msgid "Quit the application"
-#~ msgstr "Sair do aplicativo"
-
-#~ msgid ""
-#~ "This archive is password protected.\n"
-#~ "Please specify a password with the command: Edit->Password"
-#~ msgstr ""
-#~ "Esse pacote está protegido por senha.\n"
-#~ "Por favor especifique a senha com o comando: Editar->Senha"
-
-#~ msgid ""
-#~ "The specified password is not valid, please specify a new password with "
-#~ "the command: Edit->Password"
-#~ msgstr ""
-#~ "A senha especificada não é válida, por favor especifique uma nova senha "
-#~ "com o comando: Editar->Senha"
-
-#~ msgid "    "
-#~ msgstr "    "
-
-#~ msgid "Open '%s'"
-#~ msgstr "Abrir \"%s\""
-
-#~ msgid "Empty"
-#~ msgstr "Vazio"
-
-#~ msgid "File Roller Component add operations"
-#~ msgstr "Operações de adição de componente do Compactador de Arquivos"
-
-#~ msgid "File Roller Component extract operations"
-#~ msgstr "Operações de extração de componente do Compactador de Arquivos"
-
-#~ msgid "File roller component"
-#~ msgstr "Componente do Compactador de Arquivos"
-
-#~ msgid "Could not save the archive"
-#~ msgstr "Não foi possível salvar o pacote"
