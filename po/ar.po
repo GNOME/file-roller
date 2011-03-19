@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD.ar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-04 00:39+0200\n"
-"PO-Revision-Date: 2011-02-04 00:39+0300\n"
+"POT-Creation-Date: 2011-03-19 03:00+0200\n"
+"PO-Revision-Date: 2011-03-19 03:00+0300\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -88,7 +88,7 @@ msgid "Show session management options"
 msgstr "اعرض خيارات إدارة الجلسات"
 
 #: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1996
-#: ../src/fr-window.c:5462
+#: ../src/fr-window.c:5452
 msgid "Archive Manager"
 msgstr "مدير الأرشيفات"
 
@@ -294,7 +294,7 @@ msgid "_Filename:"
 msgstr "اسم ال_ملف:"
 
 #. Translators: after the colon there is a folder name.
-#: ../data/ui/batch-add-files.ui.h:10 ../src/fr-window.c:5887
+#: ../data/ui/batch-add-files.ui.h:10 ../src/fr-window.c:5879
 msgid "_Location:"
 msgstr "المكان:"
 
@@ -421,7 +421,7 @@ msgstr "لا تملك التراخيص الكافية لإنشاء أرشيف ف
 
 #: ../src/actions.c:233 ../src/dlg-package-installer.c:266
 #: ../src/dlg-package-installer.c:275 ../src/dlg-package-installer.c:303
-#: ../src/fr-archive.c:1145 ../src/fr-window.c:6104 ../src/fr-window.c:6280
+#: ../src/fr-archive.c:1178 ../src/fr-window.c:6094 ../src/fr-window.c:6270
 msgid "Archive type not supported."
 msgstr "نوع الأرشيف غير مدعوم."
 
@@ -429,11 +429,11 @@ msgstr "نوع الأرشيف غير مدعوم."
 msgid "Could not delete the old archive."
 msgstr "تعذّر محو الأرشيف القديم."
 
-#: ../src/actions.c:381 ../src/fr-window.c:5945
+#: ../src/actions.c:381 ../src/fr-window.c:5937
 msgid "Open"
 msgstr "افتح"
 
-#: ../src/actions.c:392 ../src/dlg-new.c:312 ../src/fr-window.c:5283
+#: ../src/actions.c:392 ../src/dlg-new.c:312 ../src/fr-window.c:5277
 msgid "All archives"
 msgstr "كل الأراشيف"
 
@@ -441,7 +441,7 @@ msgstr "كل الأراشيف"
 msgid "All files"
 msgstr "كل الملفات"
 
-#: ../src/actions.c:793 ../src/fr-window.c:7130
+#: ../src/actions.c:793 ../src/fr-window.c:7120
 msgid "Last Output"
 msgstr "المخرج الأخير"
 
@@ -536,7 +536,7 @@ msgid "Enter the password for the archive '%s'."
 msgstr "حدّد كلمة سر للأرشيف '%s'."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/dlg-batch-add.c:186 ../src/fr-window.c:7450
+#: ../src/dlg-batch-add.c:186 ../src/fr-window.c:7435
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -547,8 +547,8 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:189 ../src/fr-window.c:7440 ../src/fr-window.c:7445
-#: ../src/fr-window.c:7450 ../src/fr-window.c:7486 ../src/fr-window.c:7488
+#: ../src/dlg-batch-add.c:189 ../src/fr-window.c:7425 ../src/fr-window.c:7430
+#: ../src/fr-window.c:7435 ../src/fr-window.c:7471 ../src/fr-window.c:7473
 msgid "Please use a different name."
 msgstr "الرجاء استعمال اسم آخر."
 
@@ -558,7 +558,7 @@ msgid ""
 "folder."
 msgstr "لا تملك الصلاحيات الكافية لإنشاء أرشيف في هذا المجلّد."
 
-#: ../src/dlg-batch-add.c:232 ../src/dlg-extract.c:102 ../src/fr-window.c:6701
+#: ../src/dlg-batch-add.c:232 ../src/dlg-extract.c:102 ../src/fr-window.c:6691
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -569,11 +569,11 @@ msgstr ""
 "\n"
 " هل تريد إنشاءه؟"
 
-#: ../src/dlg-batch-add.c:241 ../src/dlg-extract.c:111 ../src/fr-window.c:6710
+#: ../src/dlg-batch-add.c:241 ../src/dlg-extract.c:111 ../src/fr-window.c:6700
 msgid "Create _Folder"
 msgstr "أنشئ _مجلّد"
 
-#: ../src/dlg-batch-add.c:260 ../src/dlg-extract.c:131 ../src/fr-window.c:6727
+#: ../src/dlg-batch-add.c:260 ../src/dlg-extract.c:131 ../src/fr-window.c:6717
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "تعذّر إنشاء المجلّد المرسل اليه: %s."
@@ -591,8 +591,8 @@ msgid "_Overwrite"
 msgstr "ا_كتب فوقه"
 
 #: ../src/dlg-extract.c:130 ../src/dlg-extract.c:148 ../src/dlg-extract.c:175
-#: ../src/fr-window.c:4210 ../src/fr-window.c:6731 ../src/fr-window.c:6750
-#: ../src/fr-window.c:6755
+#: ../src/fr-window.c:4210 ../src/fr-window.c:6721 ../src/fr-window.c:6740
+#: ../src/fr-window.c:6745
 msgid "Extraction not performed"
 msgstr "لم يؤدّى الاستخراج"
 
@@ -737,24 +737,24 @@ msgstr ""
 msgid "File format not recognized"
 msgstr "نسق الملف غير معروف"
 
-#: ../src/fr-archive.c:1125
+#: ../src/fr-archive.c:1158
 msgid "File not found."
 msgstr "الملف غير موجود."
 
-#: ../src/fr-archive.c:1228
+#: ../src/fr-archive.c:1261
 #, c-format
 msgid "The file doesn't exist"
 msgstr "الملف غير موجود"
 
-#: ../src/fr-archive.c:2415
+#: ../src/fr-archive.c:2427
 msgid "You don't have the right permissions."
 msgstr "لا تملك الصلاحيات الكافية."
 
-#: ../src/fr-archive.c:2415
+#: ../src/fr-archive.c:2427
 msgid "This archive type cannot be modified"
 msgstr "لا يمكن تعديل نوع الأرشيف"
 
-#: ../src/fr-archive.c:2427
+#: ../src/fr-archive.c:2439
 msgid "You can't add an archive to itself."
 msgstr "لا يمكنك إضافة أرشيف لنفسه."
 
@@ -1056,8 +1056,8 @@ msgstr "لا وجود للأمر."
 msgid "Test Result"
 msgstr "نتيجة الاختبار"
 
-#: ../src/fr-window.c:4053 ../src/fr-window.c:8037 ../src/fr-window.c:8071
-#: ../src/fr-window.c:8321
+#: ../src/fr-window.c:4053 ../src/fr-window.c:8022 ../src/fr-window.c:8056
+#: ../src/fr-window.c:8306
 msgid "Could not perform the operation"
 msgstr "تعذّر القيام بالعملية"
 
@@ -1075,68 +1075,68 @@ msgstr "هل تريد إنشاء أرشيف جديد بهذه الملفّات؟
 msgid "Create _Archive"
 msgstr "أنشئ أر_شيفا"
 
-#: ../src/fr-window.c:4706 ../src/fr-window.c:5793
+#: ../src/fr-window.c:4702 ../src/fr-window.c:5783
 msgid "Folders"
 msgstr "مجلّدات"
 
-#: ../src/fr-window.c:4744
+#: ../src/fr-window.c:4740
 msgctxt "File"
 msgid "Size"
 msgstr "الحجم"
 
-#: ../src/fr-window.c:4745
+#: ../src/fr-window.c:4741
 msgctxt "File"
 msgid "Type"
 msgstr "النوع"
 
-#: ../src/fr-window.c:4746
+#: ../src/fr-window.c:4742
 msgctxt "File"
 msgid "Date Modified"
 msgstr "تاريخ التعديل"
 
-#: ../src/fr-window.c:4747
+#: ../src/fr-window.c:4743
 msgctxt "File"
 msgid "Location"
 msgstr "المكان"
 
-#: ../src/fr-window.c:4756
+#: ../src/fr-window.c:4752
 msgctxt "File"
 msgid "Name"
 msgstr "الاسم"
 
-#: ../src/fr-window.c:5714
+#: ../src/fr-window.c:5704
 msgid "Find:"
 msgstr "ابحث:"
 
-#: ../src/fr-window.c:5801
+#: ../src/fr-window.c:5791
 msgid "Close the folders pane"
 msgstr "أغلق لوحة المجلّدات"
 
-#: ../src/fr-window.c:5942 ../src/fr-window.c:5945 ../src/ui.h:141
+#: ../src/fr-window.c:5934 ../src/fr-window.c:5937 ../src/ui.h:141
 #: ../src/ui.h:145
 msgid "Open archive"
 msgstr "افتح أرشيفا"
 
-#: ../src/fr-window.c:5943
+#: ../src/fr-window.c:5935
 msgid "Open a recently used archive"
 msgstr "افتح آخر أرشيف تم استخدامه"
 
-#: ../src/fr-window.c:6272
+#: ../src/fr-window.c:6262
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "تعذّر حفظ الأرشيف \"%s\""
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7440
+#: ../src/fr-window.c:7425
 msgid "The new name is void."
 msgstr "الاسم الجديد فارغ."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7445
+#: ../src/fr-window.c:7430
 msgid "The new name is equal to the old one."
 msgstr "الاسم الجديد مساو للاسم القديم."
 
-#: ../src/fr-window.c:7486
+#: ../src/fr-window.c:7471
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1147,7 +1147,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7488
+#: ../src/fr-window.c:7473
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1158,43 +1158,43 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7558
+#: ../src/fr-window.c:7543
 msgid "Rename"
 msgstr "غيّر الاسم"
 
-#: ../src/fr-window.c:7559
+#: ../src/fr-window.c:7544
 msgid "New folder name"
 msgstr "اسم المجلّد الجديد"
 
-#: ../src/fr-window.c:7559
+#: ../src/fr-window.c:7544
 msgid "New file name"
 msgstr "اسم الملف الجديد"
 
-#: ../src/fr-window.c:7563
+#: ../src/fr-window.c:7548
 msgid "_Rename"
 msgstr "_غيّر الاسم"
 
-#: ../src/fr-window.c:7580 ../src/fr-window.c:7600
+#: ../src/fr-window.c:7565 ../src/fr-window.c:7585
 msgid "Could not rename the folder"
 msgstr "تعذّر تغيير اسم المجلّد"
 
-#: ../src/fr-window.c:7580 ../src/fr-window.c:7600
+#: ../src/fr-window.c:7565 ../src/fr-window.c:7585
 msgid "Could not rename the file"
 msgstr "تعذّر تغيير اسم الملف"
 
-#: ../src/fr-window.c:7998
+#: ../src/fr-window.c:7983
 msgid "Paste Selection"
 msgstr "الصق المحدد"
 
-#: ../src/fr-window.c:7999
+#: ../src/fr-window.c:7984
 msgid "Destination folder"
 msgstr "المجلّد المطلوب"
 
-#: ../src/fr-window.c:8600
+#: ../src/fr-window.c:8585
 msgid "Add files to an archive"
 msgstr "أضِف الملفات للأرشيف"
 
-#: ../src/fr-window.c:8644
+#: ../src/fr-window.c:8629
 msgid "Extract archive"
 msgstr "استخرج الأرشيف"
 
@@ -1206,11 +1206,11 @@ msgid "%d %B %Y, %H:%M"
 msgstr "%Od %B %Y، %OI:%OM"
 
 #. Expander
-#: ../src/gtk-utils.c:434
+#: ../src/gtk-utils.c:416
 msgid "Command _Line Output"
 msgstr "خرْج _سطر الأوامر"
 
-#: ../src/gtk-utils.c:771
+#: ../src/gtk-utils.c:753
 msgid "Could not display help"
 msgstr "تعذّر عرض المساعدة"
 
@@ -1374,7 +1374,6 @@ msgid "View the output produced by the last executed command"
 msgstr "اعرض المخرج الناتج من آخر أمر تم تنفيذه"
 
 #: ../src/ui.h:136
-msgctxt "File"
 msgid "New..."
 msgstr "جديد..."
 
@@ -1383,7 +1382,6 @@ msgid "Create a new archive"
 msgstr "أنشئ أرشيفا جديد"
 
 #: ../src/ui.h:140
-msgctxt "File"
 msgid "Open..."
 msgstr "افتح..."
 
@@ -1412,7 +1410,6 @@ msgid "Reload current archive"
 msgstr "أعد تحميل الأرشيف الحالي"
 
 #: ../src/ui.h:164
-msgctxt "File"
 msgid "Save As..."
 msgstr "احفظ باسم..."
 
