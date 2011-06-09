@@ -435,7 +435,7 @@ file_is_hidden (const gchar *name)
 
 /* like g_path_get_basename but does not warn about NULL and does not
  * alloc a new string. */
-G_CONST_RETURN gchar *
+const gchar *
 file_name_from_path (const gchar *file_name)
 {
 	register char   *base;
