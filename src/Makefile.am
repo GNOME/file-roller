@@ -11,10 +11,10 @@ MKDTEMP_FILES=
 endif
 
 if RUN_IN_PLACE
-privdatadir = $(top_srcdir)/data/
-uidir = $(top_srcdir)/data/ui
+privdatadir = $(abs_top_srcdir)/data/
+uidir = $(abs_top_srcdir)/data/ui
 privexecdir = $(abs_top_builddir)/src/commands/
-shdir = $(top_srcdir)/src/sh/
+shdir = $(abs_top_srcdir)/src/sh/
 else
 privdatadir = $(datadir)/file-roller/
 uidir = $(datadir)/file-roller/ui
