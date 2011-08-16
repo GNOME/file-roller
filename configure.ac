@@ -44,6 +44,21 @@ AC_SUBST([GTK_LIBS])
 
 dnl ===========================================================================
 
+AC_ARG_ENABLE(debug,
+	      AS_HELP_STRING([--enable-debug], [enable compilation of debugging messages]),
+	      [case "${enableval}" in
+	      yes) ENABLE_DEBUG=yes ;;
+	      no) ENABLE_DEBUG=no ;;
+	      *) AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
+	      esac],
+	      [ENABLE_DEBUG=no])
+if test x$ENABLE_DEBUG = xyes; then
+	AC_DEFINE(DEBUG, 1, [enable compilation of debugging messages])
+	CFLAGS="$CFLAGS -g -O0 -DDEBUG"
+fi
+
+dnl ===========================================================================
+
 AC_ARG_ENABLE([run_in_place],
 	      AS_HELP_STRING([--enable-run-in-place],
 			     [load ui data and extensions from source tree]),,
@@ -156,8 +171,11 @@ GNOME_DOC_INIT
 
 dnl ******************************
 
-AC_ARG_ENABLE(deprecations,AS_HELP_STRING([--enable-deprecations],[warn about deprecated usages]),)
-if test "x$enable_deprecations" = "xyes"; then
+AC_ARG_ENABLE(deprecated,
+              AS_HELP_STRING([--disable-deprecated],[warn about deprecated usages]),
+              [disable_deprecated=yes],
+              [disable_deprecated=no])
+if test "x$disable_deprecated" = "xyes"; then
         DISABLE_DEPRECATED="-DGSEAL_ENABLE -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 fi
 AC_SUBST(DISABLE_DEPRECATED)
@@ -196,11 +214,15 @@ AC_OUTPUT
 echo "
 Configuration:
 
-	Source code location:   ${srcdir}
-	Compiler:               ${CC}
-	Internal mkdtemp:       ${mkdtemp_missing}
-	Nautilus support:       ${enable_nautilus_actions}
-	PackageKit support:     ${enable_packagekit}
-	Use libmagic:           ${enable_magic}
-	Run in place            ${enable_run_in_place}
+	Source code location    : ${srcdir}
+	Prefix                  : ${prefix}
+	Compiler                : ${CC}
+	CFLAGS                  : ${CFLAGS}
+	Enable debug code       : ${ENABLE_DEBUG}
+	Disable deprecated code : ${disable_deprecated}
+	Run in place            : ${enable_run_in_place}
+	Internal mkdtemp        : ${mkdtemp_missing}
+	Nautilus support        : ${enable_nautilus_actions}
+	PackageKit support      : ${enable_packagekit}
+	Use libmagic            : ${enable_magic}
 "
