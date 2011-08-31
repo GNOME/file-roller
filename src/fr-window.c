@@ -1524,8 +1524,8 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 		g_list_free (selection);
 	}
 
-	size_txt = g_format_size_for_display (tot_size);
-	sel_size_txt = g_format_size_for_display (sel_size);
+	size_txt = g_format_size (tot_size);
+	sel_size_txt = g_format_size (sel_size);
 
 	if (tot_n == 0)
 		archive_info = g_strdup ("");
@@ -1593,7 +1593,7 @@ fr_window_populate_file_list (FrWindow  *window,
 			utf8_path = g_filename_display_name (tmp);
 			g_free (tmp);
 
-			s_size = g_format_size_for_display (fdata->dir_size);
+			s_size = g_format_size (fdata->dir_size);
 
 			if (fdata->list_dir)
 				s_time = g_strdup ("");
@@ -1622,7 +1622,7 @@ fr_window_populate_file_list (FrWindow  *window,
 
 			utf8_path = g_filename_display_name (fdata->path);
 
-			s_size = g_format_size_for_display (fdata->size);
+			s_size = g_format_size (fdata->size);
 			s_time = get_time_string (fdata->modified);
 			desc = g_content_type_get_description (fdata->content_type);
 

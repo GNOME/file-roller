@@ -144,7 +144,7 @@ dlg_prop (FrWindow *window)
 
 	label = _gtk_builder_get_widget (data->builder, "p_size_label");
 	size = get_file_size (fr_window_get_archive_uri (window));
-	s = g_format_size_for_display (size);
+	s = g_format_size (size);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
@@ -164,7 +164,7 @@ dlg_prop (FrWindow *window)
 	}
 
 	label = _gtk_builder_get_widget (data->builder, "p_uncomp_size_label");
-	s = g_format_size_for_display (uncompressed_size);
+	s = g_format_size (uncompressed_size);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 

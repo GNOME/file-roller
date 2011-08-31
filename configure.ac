@@ -26,7 +26,7 @@ dnl it too, or it will never make it into the spec file!
 dnl
 dnl ==========================================================================
 
-GLIB_REQUIRED=2.25.5
+GLIB_REQUIRED=2.29.14
 GIO_REQUIRED=2.25.5
 GTK_REQUIRED=3.0.2
 NAUTILUS_REQUIRED=2.22.2
