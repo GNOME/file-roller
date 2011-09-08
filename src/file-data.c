@@ -36,7 +36,7 @@ file_data_new (void)
 	fdata->content_type = NULL;
 	fdata->free_original_path = FALSE;
 	fdata->dir_size = 0;
-	
+
 	return fdata;
 }
 
@@ -53,6 +53,7 @@ file_data_free (FileData *fdata)
 	g_free (fdata->path);
 	g_free (fdata->link);
 	g_free (fdata->list_name);
+	g_free (fdata->sort_key);
 	g_free (fdata);
 }
 
@@ -66,7 +67,7 @@ file_data_copy (FileData *src)
 
 	fdata->original_path = g_strdup (src->original_path);
 	fdata->free_original_path = TRUE;
-	
+
 	fdata->full_path = g_strdup (src->full_path);
 	fdata->link = g_strdup (src->link);
 	fdata->size = src->size;
@@ -80,6 +81,7 @@ file_data_copy (FileData *src)
 
 	fdata->list_dir = src->list_dir;
 	fdata->list_name = g_strdup (src->list_name);
+	fdata->sort_key = g_strdup (src->sort_key);
 
 	return fdata;
 }
@@ -89,10 +91,10 @@ GType
 file_data_get_type (void)
 {
 	static GType type = 0;
-  
+
 	if (type == 0)
 		type = g_boxed_type_register_static ("FRFileData", (GBoxedCopyFunc) file_data_copy, (GBoxedFreeFunc) file_data_free);
-  
+
 	return type;
 }
 
@@ -100,10 +102,10 @@ file_data_get_type (void)
 void
 file_data_update_content_type (FileData *fdata)
 {
-	
-	if (fdata->dir) 
+
+	if (fdata->dir)
 		fdata->content_type = MIME_TYPE_DIRECTORY;
-	else 
+	else
 		fdata->content_type = get_static_string (g_content_type_guess (fdata->full_path, NULL, 0, NULL));
 }
 
@@ -115,13 +117,28 @@ file_data_is_dir (FileData *fdata)
 }
 
 
+void
+file_data_set_list_name (FileData   *fdata,
+			 const char *value)
+{
+	g_free (fdata->list_name);
+	fdata->list_name = g_strdup (value);
+
+	g_free (fdata->sort_key);
+	if (fdata->list_name != NULL)
+		fdata->sort_key = g_utf8_collate_key_for_filename (fdata->list_name, -1);
+	else
+		fdata->sort_key = NULL;
+}
+
+
 int
 file_data_compare_by_path (gconstpointer a,
 			   gconstpointer b)
 {
 	FileData *data_a = *((FileData **) a);
 	FileData *data_b = *((FileData **) b);
-	
+
 	return strcmp (data_a->full_path, data_b->full_path);
 }
 
@@ -132,7 +149,7 @@ find_path_in_file_data_array (GPtrArray  *array,
 {
 	int       l, r, p, cmp = -1;
 	FileData *fd;
-			
+
 	l = 0;
 	r = array->len;
 	while (l < r) {
@@ -140,12 +157,12 @@ find_path_in_file_data_array (GPtrArray  *array,
 		fd = (FileData *) g_ptr_array_index (array, p);
 		cmp = strcmp (path, fd->original_path);
 		if (cmp == 0)
-			return p; 
+			return p;
 		else if (cmp < 0)
 			r = p;
-		else 
+		else
 			l = p + 1;
 	}
-	
+
 	return -1;
 }
