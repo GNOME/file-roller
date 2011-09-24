@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2011-07-16 05:14+0000\n"
-"PO-Revision-Date: 2011-07-15 00:45+0200\n"
+"PO-Revision-Date: 2011-09-24 11:02+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Aragonese <softaragones@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -153,13 +153,16 @@ msgstr "Cifrar a cabecera de l'archivo"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:15
 msgid "How to sort files"
-msgstr ""
+msgstr "Como ordenar archivos"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
 msgid ""
 "If true will display icons depending on the file type (slower), otherwise "
 "will use always the same icon for all files (faster)."
 msgstr ""
+"Si ye verdadero amostrara iconos en funcion d'o tipo d'archivo (más lento), "
+"d'atro modo fera servir de peren o mesmo icono ta totz os archivos (mas "
+"rapido)."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
 msgid "List Mode"
@@ -170,6 +173,8 @@ msgid ""
 "List of applications entered in the 'Open File' dialog and not associated "
 "with the file type."
 msgstr ""
+"Lista d'aplicacions mesa en o dialogo 'Ubrir archivo' y no asociadas con o "
+"tipo d'archivo."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
 msgid "Max history length"
@@ -177,7 +182,7 @@ msgstr "Tamanyo maximo d'o historial"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
 msgid "Max number of items in the 'Open Recents' submenu."
-msgstr ""
+msgstr "O numero maximo d'elementos en o submenu 'Ubrir recientz'."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
 msgid "Name column width"
@@ -209,6 +214,8 @@ msgid ""
 "Use 'all-files' to view all the files in the archive in a single list, use "
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
+"Fer servir 'totz os archivos' ta veyer totz os archivos en una lista simpla, "
+"faiga servir 'como carpeta' ta navegar por l'archivador como en una carpeta."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
 msgid "Use mime icons"
@@ -231,6 +238,8 @@ msgid ""
 "What criteria must be used to arrange files. Possible values: name, size, "
 "type, time, path."
 msgstr ""
+"Que criterios fer servir ta ordenar archivos. Os valors posibles estan: "
+"nome, tamanyo, tipo, hora y ruta."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
 msgid "Whether to display the folders pane."
@@ -249,12 +258,16 @@ msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
+"Dice si cifrar a cabecera d¡o archivo. Si la cabecera ye cifrada se "
+"demandará la clau de paso ta listar tambien o conteniu d'o archivo."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:37
 msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
+"Dice si ordenar en sentido ascendent u descendent. Os valors posibles estan: "
+"asdendent, descendent."
 
 #: ../data/ui/add-options.ui.h:1
 msgid "Load Options"
@@ -336,6 +349,10 @@ msgid ""
 "current archive, and to decrypt files you extract from the current archive. "
 "When the archive is closed the password will be deleted.</i>"
 msgstr ""
+"<i><b>Nota:</b> a clau de paso se ferá servir ta cifrar os archivos que "
+"anyada a l'archivador actual, y ta descifrar os archivos que extraiga d'o "
+"archivador actual. Cuan se tranque l'archivador se borrara a clau de paso.</"
+"i>"
 
 #: ../data/ui/password.ui.h:2
 msgid "Password"
@@ -355,7 +372,11 @@ msgid_plural ""
 "%d files have been modified with an external application. If you don't "
 "update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
+"L'archivo ha estau modificau con una aplicacion externa. Se perderan totz os "
+"cambeos si no esviella la version en l'archivador."
 msgstr[1] ""
+"%d archivos han estau modificaus con una aplicacion externa. Se perderan "
+"totz os cambeos si no esviella las versions en l'archivador."
 
 #: ../data/ui/update.ui.h:3
 msgid "_Update"
@@ -399,7 +420,7 @@ msgstr "Ha de especificar un nome d'archivador."
 
 #: ../src/actions.c:197
 msgid "You don't have permission to create an archive in this folder"
-msgstr ""
+msgstr "No ha permisos ta creyar un archivador en ista carpeta"
 
 #: ../src/actions.c:233 ../src/dlg-package-installer.c:268
 #: ../src/dlg-package-installer.c:277 ../src/dlg-package-installer.c:305
@@ -446,7 +467,7 @@ msgstr "No s'han puesto anyadir os archivos a l'archivador"
 #: ../src/dlg-add-files.c:100 ../src/dlg-add-folder.c:130
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr ""
+msgstr "No ha los permisos apropiaus ta leyer archivos d'a carpeta \"%s\""
 
 #: ../src/dlg-add-files.c:148 ../src/ui.h:48
 msgid "Add Files"
@@ -464,11 +485,11 @@ msgstr "Anyadir una carpeta"
 
 #: ../src/dlg-add-folder.c:231
 msgid "_Include subfolders"
-msgstr ""
+msgstr "_Incluyir subcarpetas"
 
 #: ../src/dlg-add-folder.c:232
 msgid "Exclude folders that are symbolic lin_ks"
-msgstr ""
+msgstr "Excluyir as carpetas que sigan en_rastres simbolicos"
 
 #: ../src/dlg-add-folder.c:235 ../src/dlg-add-folder.c:241
 #: ../src/dlg-add-folder.c:247
@@ -477,15 +498,15 @@ msgstr "exemplo: *.o; *.bak"
 
 #: ../src/dlg-add-folder.c:236
 msgid "Include _files:"
-msgstr ""
+msgstr "Incluyir _archivos:"
 
 #: ../src/dlg-add-folder.c:242
 msgid "E_xclude files:"
-msgstr ""
+msgstr "E_xcluyir archivos:"
 
 #: ../src/dlg-add-folder.c:248
 msgid "_Exclude folders:"
-msgstr ""
+msgstr "_Excluyir carpetas:"
 
 #: ../src/dlg-add-folder.c:252
 msgid "_Load Options"
@@ -497,7 +518,7 @@ msgstr "_Alzar opcions"
 
 #: ../src/dlg-add-folder.c:254
 msgid "_Reset Options"
-msgstr ""
+msgstr "_Restablecer opcions"
 
 #: ../src/dlg-add-folder.c:882
 msgid "Save Options"
@@ -533,7 +554,7 @@ msgstr "Faiga servir un nome diferent."
 msgid ""
 "You don't have the right permissions to create an archive in the destination "
 "folder."
-msgstr ""
+msgstr "No ha permiso ta creyar un archivador en a carpeta de destino."
 
 #: ../src/dlg-batch-add.c:232 ../src/dlg-extract.c:102 ../src/fr-window.c:6686
 #, c-format
@@ -577,7 +598,7 @@ msgstr "Sacada no feita"
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr ""
+msgstr "No ha los permisos ta extrayer archivadors en a carpeta \"%s\""
 
 #: ../src/dlg-extract.c:331 ../src/dlg-extract.c:429 ../src/ui.h:123
 msgid "Extract"
@@ -597,7 +618,7 @@ msgstr "Sobre_escribir archivos existentz"
 
 #: ../src/dlg-extract.c:404
 msgid "Do not e_xtract older files"
-msgstr ""
+msgstr "No e_xtrayer archivos mas viellos"
 
 #: ../src/dlg-new.c:440
 msgctxt "File"
@@ -619,6 +640,8 @@ msgid ""
 "There is no command installed for %s files.\n"
 "Do you want to search for a command to open this file?"
 msgstr ""
+"No bi ha garra comando instalau ta los archivos %s.\n"
+"Quiere mirar d'un comando ta ubrir iste archivo?"
 
 #: ../src/dlg-package-installer.c:292
 msgid "Could not open this file type"
@@ -626,7 +649,7 @@ msgstr "No s'ha puesto ubir iste tipo d'archivo"
 
 #: ../src/dlg-package-installer.c:295
 msgid "_Search Command"
-msgstr ""
+msgstr "Comando de _busqueda"
 
 #. Translators: after the colon there is a folder name.
 #: ../src/dlg-prop.c:106
@@ -701,10 +724,13 @@ msgstr "Extensions"
 #: ../src/eggfileformatchooser.c:675
 #, c-format
 msgid ""
-"The program was not able to find out the file format you want to use for `%"
-"s'. Please make sure to use a known extension for that file or manually "
+"The program was not able to find out the file format you want to use for `"
+"%s'. Please make sure to use a known extension for that file or manually "
 "choose a file format from the list below."
 msgstr ""
+"O programa no ha puesto trobar o formato d'archivo que quiere fer servir ta "
+"'%s'. Pare cuenta de fer servir una extension d'archivo conoxida ta "
+"l'archivo u trie manualment un formato d'archivo d'a lista de abaxo."
 
 #: ../src/eggfileformatchooser.c:682
 msgid "File format not recognized"
@@ -721,7 +747,7 @@ msgstr "L'archivo no existe pas"
 
 #: ../src/fr-archive.c:2427
 msgid "You don't have the right permissions."
-msgstr ""
+msgstr "No tiene os permisos apropiaus."
 
 #: ../src/fr-archive.c:2427
 msgid "This archive type cannot be modified"
@@ -815,7 +841,7 @@ msgstr "Ear (.ear)"
 
 #: ../src/fr-init.c:77
 msgid "Self-extracting zip (.exe)"
-msgstr ""
+msgstr "Zip autoextrayible (.exe)"
 
 #: ../src/fr-init.c:79
 msgid "Jar (.jar)"
@@ -934,7 +960,7 @@ msgstr "Comprebando archivador"
 
 #: ../src/fr-window.c:2338
 msgid "Getting the file list"
-msgstr ""
+msgstr "Obteniendo la lista d'archivos"
 
 #: ../src/fr-window.c:2341 ../src/fr-window.c:2350
 msgid "Copying the file list"
@@ -978,11 +1004,11 @@ msgstr "aguarde..."
 
 #: ../src/fr-window.c:2897 ../src/fr-window.c:3032
 msgid "Command exited abnormally."
-msgstr ""
+msgstr "O comando remató con error."
 
 #: ../src/fr-window.c:2990
 msgid "An error occurred while extracting files."
-msgstr ""
+msgstr "Habió una error en extraer os archivos."
 
 #: ../src/fr-window.c:2996
 #, c-format
@@ -991,27 +1017,27 @@ msgstr "No s'ha puesto ubrir \"%s\""
 
 #: ../src/fr-window.c:3001
 msgid "An error occurred while loading the archive."
-msgstr ""
+msgstr "Habió una error cargando l'archivador."
 
 #: ../src/fr-window.c:3005
 msgid "An error occurred while deleting files from the archive."
-msgstr ""
+msgstr "Habió una error borrando archivos de l'archivador."
 
 #: ../src/fr-window.c:3011
 msgid "An error occurred while adding files to the archive."
-msgstr ""
+msgstr "Habió una error anyadiendo archivos a l'archivador."
 
 #: ../src/fr-window.c:3015
 msgid "An error occurred while testing archive."
-msgstr ""
+msgstr "Habió una error comprebando l'archivador."
 
 #: ../src/fr-window.c:3019
 msgid "An error occurred while saving the archive."
-msgstr ""
+msgstr "Habió una error en alzar l'archivador."
 
 #: ../src/fr-window.c:3023
 msgid "An error occurred."
-msgstr ""
+msgstr "Habió una error."
 
 #: ../src/fr-window.c:3029
 msgid "Command not found."
@@ -1024,13 +1050,15 @@ msgstr "Resultau d'a comprebacion"
 #: ../src/fr-window.c:4053 ../src/fr-window.c:8017 ../src/fr-window.c:8051
 #: ../src/fr-window.c:8301
 msgid "Could not perform the operation"
-msgstr ""
+msgstr "No s'ha puesto fer la operacion"
 
 #: ../src/fr-window.c:4079
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
+"Quiere anyadir iste archivo a l'archivador actual u prefiere ubrir-lo como "
+"archivador nuevo?"
 
 #: ../src/fr-window.c:4109
 msgid "Do you want to create a new archive with these files?"
@@ -1173,7 +1201,7 @@ msgstr "%d %B %Y, %H:%M"
 #. Expander
 #: ../src/gtk-utils.c:416
 msgid "Command _Line Output"
-msgstr ""
+msgstr "Surtida de linia de _comandos"
 
 #: ../src/gtk-utils.c:753
 msgid "Could not display help"
@@ -1181,7 +1209,7 @@ msgstr "No s'ha puesto amostrar l'aduya"
 
 #: ../src/main.c:51
 msgid "Add files to the specified archive and quit the program"
-msgstr ""
+msgstr "Anyade archivos a l'archivador especificau y surte d'o programa"
 
 #: ../src/main.c:52
 msgid "ARCHIVE"
@@ -1190,10 +1218,12 @@ msgstr "ARCHIVADOR"
 #: ../src/main.c:55
 msgid "Add files asking the name of the archive and quit the program"
 msgstr ""
+"Anyade archivos demandando lo nome d'o archivador y dimpués surte d'o "
+"programa"
 
 #: ../src/main.c:59
 msgid "Extract archives to the specified folder and quit the program"
-msgstr ""
+msgstr "Extrae archivadors a la carpeta especificada y surte d'o programa"
 
 #: ../src/main.c:60 ../src/main.c:72
 msgid "FOLDER"
@@ -1202,20 +1232,23 @@ msgstr "CARPETA"
 #: ../src/main.c:63
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr ""
+"Extrae archivadors demandando la carpeta de destino y surte d'o programa"
 
 #: ../src/main.c:67
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr ""
+"Extrae o conteniu d'os archivadors en a carpeta de l'archivador y surte d'o "
+"programa"
 
 #: ../src/main.c:71
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
+msgstr "Carpeta predeterminada ta os comandos '--add' y '--extract'"
 
 #: ../src/main.c:75
 msgid "Create destination folder without asking confirmation"
-msgstr ""
+msgstr "Creya una carpeta de destino sin demandar confirmacion"
 
 #: ../src/main.c:296 ../src/server.c:444
 msgid "- Create and modify an archive"
@@ -1243,7 +1276,7 @@ msgstr "Ad_uya"
 
 #: ../src/ui.h:35
 msgid "_Arrange Files"
-msgstr ""
+msgstr "_Ordenar archivos"
 
 #. Translators: this is the label for the "open recent file" sub-menu.
 #: ../src/ui.h:37
@@ -1312,7 +1345,7 @@ msgstr "Borra la tria d'o archivador"
 
 #: ../src/ui.h:111
 msgid "Dese_lect All"
-msgstr ""
+msgstr "_Destrigar tot"
 
 #: ../src/ui.h:112
 msgid "Deselect all files"
@@ -1336,7 +1369,7 @@ msgstr "_Zaguer resultau"
 
 #: ../src/ui.h:133
 msgid "View the output produced by the last executed command"
-msgstr ""
+msgstr "Veyer a surtida feita por lo zaguer comando executau"
 
 #: ../src/ui.h:136
 msgid "New..."
@@ -1364,7 +1397,7 @@ msgstr "Clau de _paso"
 
 #: ../src/ui.h:153
 msgid "Specify a password for this archive"
-msgstr ""
+msgstr "Especifique una clau de paso ta iste archivador"
 
 #: ../src/ui.h:157
 msgid "Show archive properties"
@@ -1372,7 +1405,7 @@ msgstr "Amostrar as propiedatz d'o archivador"
 
 #: ../src/ui.h:161
 msgid "Reload current archive"
-msgstr ""
+msgstr "Recargar l'archivador actual"
 
 #: ../src/ui.h:164
 msgid "Save As..."
@@ -1380,7 +1413,7 @@ msgstr "Alzar como..."
 
 #: ../src/ui.h:165
 msgid "Save the current archive with a different name"
-msgstr ""
+msgstr "Alza l'archivo actual con un nome diferent"
 
 #: ../src/ui.h:169
 msgid "Select all files"
@@ -1388,7 +1421,7 @@ msgstr "Trigar totz os archivos"
 
 #: ../src/ui.h:173
 msgid "Stop current operation"
-msgstr ""
+msgstr "Aturar la operacion en curso"
 
 #: ../src/ui.h:176
 msgid "_Test Integrity"
@@ -1396,7 +1429,7 @@ msgstr "_Comprebar integridat"
 
 #: ../src/ui.h:177
 msgid "Test whether the archive contains errors"
-msgstr ""
+msgstr "Compreba si l'archivador ha errors"
 
 #: ../src/ui.h:181 ../src/ui.h:185
 msgid "Open the selected file"
@@ -1441,11 +1474,11 @@ msgstr "Veyer a barra d'estau"
 
 #: ../src/ui.h:229
 msgid "_Reversed Order"
-msgstr ""
+msgstr "Orden _inverso"
 
 #: ../src/ui.h:230
 msgid "Reverse the list order"
-msgstr ""
+msgstr "Invierte la ordenacion d'o listau"
 
 #: ../src/ui.h:234
 msgid "_Folders"
@@ -1465,7 +1498,7 @@ msgstr "por _nome"
 
 #: ../src/ui.h:256
 msgid "Sort file list by name"
-msgstr ""
+msgstr "Ordena los archivos por o suyo nome"
 
 #: ../src/ui.h:258
 msgid "by _Size"
@@ -1473,7 +1506,7 @@ msgstr "por _tamanyo"
 
 #: ../src/ui.h:259
 msgid "Sort file list by file size"
-msgstr ""
+msgstr "Ordena los archivos por o suyo tamanyo"
 
 #: ../src/ui.h:261
 msgid "by T_ype"
@@ -1481,7 +1514,7 @@ msgstr "por ti_po"
 
 #: ../src/ui.h:262
 msgid "Sort file list by type"
-msgstr ""
+msgstr "Ordena os archivos por o suyo tipo"
 
 #: ../src/ui.h:264
 msgid "by _Date Modified"
@@ -1489,7 +1522,7 @@ msgstr "por _calendata de modificacion"
 
 #: ../src/ui.h:265
 msgid "Sort file list by modification time"
-msgstr ""
+msgstr "Ordena los archivos por a suya calendata de modificacion"
 
 #. Translators: this is the "sort by file location" menu item
 #: ../src/ui.h:268
@@ -1499,4 +1532,4 @@ msgstr "por _ruta"
 #. Translators: location is the file location
 #: ../src/ui.h:270
 msgid "Sort file list by location"
-msgstr ""
+msgstr "Ordena los archivos por a suya ruta"
