@@ -4654,6 +4654,9 @@ is_single_click_policy (FrWindow *window)
 	char     *value;
 	gboolean  result;
 
+	if (!window->priv->settings_nautilus)
+		return FALSE;
+
 	value = g_settings_get_string (window->priv->settings_nautilus, NAUTILUS_CLICK_POLICY);
 	result = (value != NULL) && (strncmp (value, "single", 6) == 0);
 	g_free (value);
@@ -5422,6 +5425,8 @@ fr_window_construct (FrWindow *window)
 	GtkToolItem      *open_recent_tool_item;
 	GtkWidget        *menu_item;
 	GError           *error = NULL;
+	const char * const *schemas;
+	const char       *schema;
 
 	/* data common to all windows. */
 
@@ -5438,7 +5443,15 @@ fr_window_construct (FrWindow *window)
 	window->priv->settings_ui = g_settings_new (FILE_ROLLER_SCHEMA_UI);
 	window->priv->settings_general = g_settings_new (FILE_ROLLER_SCHEMA_GENERAL);
 	window->priv->settings_dialogs = g_settings_new (FILE_ROLLER_SCHEMA_DIALOGS);
-	window->priv->settings_nautilus = g_settings_new (NAUTILUS_SCHEMA);
+
+	/* Only use the nautilus schema if it's installed */
+	schemas = g_settings_list_schemas();
+	for (schema = *schemas; schema != NULL; schema++) {
+		if (g_strcmp0 (schema, NAUTILUS_SCHEMA) == 0) {
+			window->priv->settings_nautilus = g_settings_new (NAUTILUS_SCHEMA);
+			break;
+		}
+	}
 
 	/* Create the application. */
 
@@ -6035,10 +6048,12 @@ fr_window_construct (FrWindow *window)
 			  "changed::" PREF_LISTING_USE_MIME_ICONS,
 			  G_CALLBACK (pref_use_mime_icons_changed),
 			  window);
-	g_signal_connect (window->priv->settings_nautilus,
-			  "changed::" NAUTILUS_CLICK_POLICY,
-			  G_CALLBACK (pref_click_policy_changed),
-			  window);
+
+	if (window->priv->settings_nautilus)
+		g_signal_connect (window->priv->settings_nautilus,
+				  "changed::" NAUTILUS_CLICK_POLICY,
+				  G_CALLBACK (pref_click_policy_changed),
+				  window);
 
 	/* Give focus to the list. */
 
