@@ -4654,7 +4654,7 @@ is_single_click_policy (FrWindow *window)
 	char     *value;
 	gboolean  result;
 
-	if (!window->priv->settings_nautilus)
+	if (window->priv->settings_nautilus == NULL)
 		return FALSE;
 
 	value = g_settings_get_string (window->priv->settings_nautilus, NAUTILUS_CLICK_POLICY);
@@ -5407,26 +5407,25 @@ set_action_important (GtkUIManager *ui,
 static void
 fr_window_construct (FrWindow *window)
 {
-	GtkWidget        *menubar;
-	GtkWidget        *toolbar;
-	GtkWidget        *list_scrolled_window;
-	GtkWidget        *location_box;
-	GtkStatusbar     *statusbar;
-	GtkWidget        *statusbar_box;
-	GtkWidget        *filter_box;
-	GtkWidget        *tree_scrolled_window;
-	GtkWidget        *sidepane_title;
-	GtkWidget        *sidepane_title_box;
-	GtkWidget        *sidepane_title_label;
-	GtkWidget        *close_sidepane_button;
-	GtkTreeSelection *selection;
-	GtkActionGroup   *actions;
-	GtkUIManager     *ui;
-	GtkToolItem      *open_recent_tool_item;
-	GtkWidget        *menu_item;
-	GError           *error = NULL;
+	GtkWidget          *menubar;
+	GtkWidget          *toolbar;
+	GtkWidget          *list_scrolled_window;
+	GtkWidget          *location_box;
+	GtkStatusbar       *statusbar;
+	GtkWidget          *statusbar_box;
+	GtkWidget          *filter_box;
+	GtkWidget          *tree_scrolled_window;
+	GtkWidget          *sidepane_title;
+	GtkWidget          *sidepane_title_box;
+	GtkWidget          *sidepane_title_label;
+	GtkWidget          *close_sidepane_button;
+	GtkTreeSelection   *selection;
+	GtkActionGroup     *actions;
+	GtkUIManager       *ui;
+	GtkToolItem        *open_recent_tool_item;
+	GtkWidget          *menu_item;
+	GError             *error = NULL;
 	const char * const *schemas;
-	const char       *schema;
 
 	/* data common to all windows. */
 
@@ -5445,9 +5444,11 @@ fr_window_construct (FrWindow *window)
 	window->priv->settings_dialogs = g_settings_new (FILE_ROLLER_SCHEMA_DIALOGS);
 
 	/* Only use the nautilus schema if it's installed */
-	schemas = g_settings_list_schemas();
-	for (schema = *schemas; schema != NULL; schema++) {
-		if (g_strcmp0 (schema, NAUTILUS_SCHEMA) == 0) {
+	for (schemas = g_settings_list_schemas ();
+	     *schemas != NULL;
+	     schemas++)
+	{
+		if (g_strcmp0 (*schemas, NAUTILUS_SCHEMA) == 0) {
 			window->priv->settings_nautilus = g_settings_new (NAUTILUS_SCHEMA);
 			break;
 		}
