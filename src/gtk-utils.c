@@ -107,7 +107,7 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
 
-	hbox = gtk_hbox_new (FALSE, 24);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 24);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
 
 	gtk_box_pack_start (GTK_BOX (hbox), image,
@@ -222,8 +222,8 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 	gtk_entry_set_max_length (GTK_ENTRY (entry), max_length);
 	gtk_entry_set_text (GTK_ENTRY (entry), default_value);
 
-	hbox = gtk_hbox_new (FALSE, 24);
-	vbox = gtk_vbox_new (FALSE, 6);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 24);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
 	gtk_box_pack_start (GTK_BOX (hbox), image,
@@ -302,7 +302,7 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
 
-	hbox = gtk_hbox_new (FALSE, 24);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 24);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 
 	gtk_box_pack_start (GTK_BOX (hbox), image,
@@ -451,10 +451,10 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 		gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (text_view), FALSE);
 	}
 
-	vbox = gtk_vbox_new (FALSE, 6);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 
-	hbox = gtk_hbox_new (FALSE, 12);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);

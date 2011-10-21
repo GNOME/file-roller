@@ -2535,7 +2535,7 @@ create_the_progress_dialog (FrWindow *window)
 
 	/* Main */
 
-	hbox = gtk_hbox_new (FALSE, 24);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 24);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (d)), hbox, FALSE, FALSE, 10);
 
@@ -2546,7 +2546,7 @@ create_the_progress_dialog (FrWindow *window)
 	gtk_misc_set_alignment (GTK_MISC (window->priv->pd_icon), 0.5, 0.0);
 	gtk_box_pack_start (GTK_BOX (hbox), window->priv->pd_icon, FALSE, FALSE, 0);
 
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
 
 	/* action label */
@@ -2575,7 +2575,7 @@ create_the_progress_dialog (FrWindow *window)
 		GtkWidget *hbox;
 		char      *name;
 
-		hbox = gtk_hbox_new (FALSE, 6);
+		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 		gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
 
 		lbl = gtk_label_new ("");
@@ -2599,7 +2599,7 @@ create_the_progress_dialog (FrWindow *window)
 	align = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
 	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 6, 0, 0);
 
-	progress_vbox = gtk_vbox_new (FALSE, 6);
+	progress_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_add (GTK_CONTAINER (align), progress_vbox);
 	gtk_box_pack_start (GTK_BOX (vbox), align, TRUE, TRUE, 0);
 
@@ -5700,7 +5700,7 @@ fr_window_construct (FrWindow *window)
 
 	/* filter bar */
 
-	window->priv->filter_bar = filter_box = gtk_hbox_new (FALSE, 6);
+	window->priv->filter_bar = filter_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (filter_box), 3);
 	fr_window_attach (FR_WINDOW (window), window->priv->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 
@@ -5776,12 +5776,12 @@ fr_window_construct (FrWindow *window)
 
 	/* side pane */
 
-	window->priv->sidepane = gtk_vbox_new (FALSE, 0);
+	window->priv->sidepane = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	sidepane_title = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (sidepane_title), GTK_SHADOW_ETCHED_IN);
 
-	sidepane_title_box = gtk_hbox_new (FALSE, 0);
+	sidepane_title_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (sidepane_title_box), 2);
 	gtk_container_add (GTK_CONTAINER (sidepane_title), sidepane_title_box);
 	sidepane_title_label = gtk_label_new (_("Folders"));
@@ -5878,7 +5878,7 @@ fr_window_construct (FrWindow *window)
 
 	/* current location */
 
-	location_box = gtk_hbox_new (FALSE, 6);
+	location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	/* Translators: after the colon there is a folder name. */
 	window->priv->location_label = gtk_label_new_with_mnemonic (_("_Location:"));
 	gtk_box_pack_start (GTK_BOX (location_box),
@@ -5975,7 +5975,7 @@ fr_window_construct (FrWindow *window)
 	gtk_box_set_spacing (GTK_BOX (statusbar_box), 4);
 	gtk_box_set_child_packing (GTK_BOX (statusbar_box), gtk_statusbar_get_message_area (statusbar), TRUE, TRUE, 0, GTK_PACK_START );
 #else
-	statusbar_box = gtk_hbox_new (FALSE, 4);
+	statusbar_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 	g_object_ref (statusbar->label);
 	gtk_container_remove (GTK_CONTAINER (statusbar->frame), statusbar->label);
 	gtk_box_pack_start (GTK_BOX (statusbar_box), statusbar->label, TRUE, TRUE, 0);
@@ -5989,7 +5989,7 @@ fr_window_construct (FrWindow *window)
 	{
 		GtkWidget *vbox;
 
-		vbox = gtk_vbox_new (FALSE, 0);
+		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_box_pack_start (GTK_BOX (statusbar_box), vbox, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox), window->priv->progress_bar, TRUE, TRUE, 1);
 		gtk_widget_show (vbox);
@@ -7154,7 +7154,7 @@ fr_window_view_last_output (FrWindow   *window,
 
 	/**/
 
-	vbox = gtk_vbox_new (FALSE, 6);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 
 	gtk_container_add (GTK_CONTAINER (scrolled), text_view);

@@ -253,11 +253,11 @@ add_folder_cb (GtkWidget *widget,
 	data->save_button = gtk_button_new_with_mnemonic (_("Sa_ve Options"));
 	data->clear_button = gtk_button_new_with_mnemonic (_("_Reset Options"));
 
-	main_box = gtk_hbox_new (FALSE, 20);
+	main_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20);
 	gtk_container_set_border_width (GTK_CONTAINER (main_box), 0);
 	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (file_sel), main_box);
 
-	vbox = gtk_vbox_new (FALSE, 6);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, TRUE, TRUE, 0);
 
@@ -317,7 +317,7 @@ add_folder_cb (GtkWidget *widget,
 
 	/**/
 
-	vbox = gtk_vbox_new (FALSE, 5);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, FALSE, FALSE, 0);
 
