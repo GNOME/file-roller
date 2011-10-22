@@ -4957,14 +4957,17 @@ pref_history_len_changed (GSettings  *settings,
 			  const char *key,
 			  gpointer    user_data)
 {
-	FrWindow *window = user_data;
+	FrWindow  *window = user_data;
+	int        limit;
+	GtkAction *action;
 
-	/* FIXME
-	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (window->priv->recent_chooser_menu),
-				      g_settings_get_int (settings, PREF_UI_HISTORY_LEN));
-	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (window->priv->recent_chooser_toolbar),
-				      g_settings_get_int (settings, PREF_UI_HISTORY_LEN));
-	*/
+	limit = g_settings_get_int (settings, PREF_UI_HISTORY_LEN);
+
+	action = gtk_action_group_get_action (window->priv->actions, "OpenRecent");
+	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (action), limit);
+
+	action = gtk_action_group_get_action (window->priv->actions, "OpenRecent_Toolbar");
+	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (action), limit);
 }
 
 
