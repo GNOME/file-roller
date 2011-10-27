@@ -1,15 +1,17 @@
 include $(top_srcdir)/gnome-doc-utils.make
 dist-hook: doc-dist-hook
 
-DOC_MODULE = file-roller
-DOC_ENTITIES = legal.xml
-DOC_INCLUDES =
-DOC_FIGURES = 					\
-	figures/file-roller_home.png		\
-	figures/file-roller_leftarrow.png	\
-	figures/file-roller_main_window.png	\
-	figures/file-roller_rightarrow.png	\
-	figures/file-roller_uparrow.png
+# Module name
+DOC_ID = file-roller
+
+# List of figures to be included
+DOC_FIGURES = figures/file-roller-main-window.png
+
+# List of pages
+DOC_PAGES = \
+	create-archive.page \
+	index.page \
+	introduction.page
 
 DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr it ja oc nl ru sl sv vi uk zh_CN zh_HK zh_TW
 
