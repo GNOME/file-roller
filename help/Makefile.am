@@ -9,7 +9,7 @@ DOC_FIGURES = figures/file-roller-main-window.png
 
 # List of pages
 DOC_PAGES = \
-	create-archive.page \
+	archive-create.page \
 	index.page \
 	introduction.page
 
