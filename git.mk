@@ -40,7 +40,7 @@
 # build dir.
 #
 # This file knows how to handle autoconf, automake, libtool, gtk-doc,
-# gnome-doc-utils, intltool.
+# gnome-doc-utils, mallard, intltool, gsettings.
 #
 #
 # KNOWN ISSUES:
@@ -52,6 +52,10 @@
 #   And add those files to git.  See vte/gnome-pty-helper/git.mk for
 #   example.
 #
+# ChangeLog
+#
+# - 2010-12-06 Add support for Mallard docs
+# - 2010-12-06 Start this change log
 
 git-all: git-mk-install
 
@@ -82,7 +86,7 @@ git-mk-install:
 ### .gitignore generation
 
 $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
-	@echo Generating $@; \
+	$(AM_V_GEN) \
 	{ \
 		if test "x$(DOC_MODULE)" = x -o "x$(DOC_MAIN_SGML_FILE)" = x; then :; else \
 			for x in \
@@ -93,16 +97,24 @@ $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 				xml html \
 			; do echo /$$x; done; \
 		fi; \
-		if test "x$(DOC_MODULE)" = x -o "x$(DOC_LINGUAS)" = x; then :; else \
+		if test "x$(DOC_MODULE)$(DOC_ID)" = x -o "x$(DOC_LINGUAS)" = x; then :; else \
 			for x in \
 				$(_DOC_C_DOCS) \
 				$(_DOC_LC_DOCS) \
 				$(_DOC_OMF_ALL) \
 				$(_DOC_DSK_ALL) \
 				$(_DOC_HTML_ALL) \
+				$(_DOC_MOFILES) \
 				$(_DOC_POFILES) \
+				$(DOC_H_FILE) \
 				"*/.xml2po.mo" \
 				"*/*.omf.out" \
+			; do echo /$$x; done; \
+		fi; \
+		if test "x$(gsettings_SCHEMAS)" = x; then :; else \
+			for x in \
+				$(gsettings_SCHEMAS:.xml=.valid) \
+				$(gsettings__enum_file) \
 			; do echo /$$x; done; \
 		fi; \
 		if test -f $(srcdir)/po/Makefile.in.in; then \
@@ -115,6 +127,7 @@ $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 				po/.intltool-merge-cache \
 				"po/*.gmo" \
 				"po/*.mo" \
+				po/$(GETTEXT_PACKAGE).pot \
 				intltool-extract.in \
 				intltool-merge.in \
 				intltool-update.in \
@@ -135,6 +148,7 @@ $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 			$(GITIGNOREFILES) \
 			$(CLEANFILES) \
 			$(PROGRAMS) \
+			$(check_PROGRAMS) \
 			$(EXTRA_PROGRAMS) \
 			$(LTLIBRARIES) \
 			so_locations \
@@ -157,11 +171,12 @@ $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 			"*.bak" \
 			"*~" \
 			".*.sw[nop]" \
+			".dirstamp" \
 		; do echo /$$x; done; \
 	} | \
 	sed "s@^/`echo "$(srcdir)" | sed 's/\(.\)/[\1]/g'`/@/@" | \
 	sed 's@/[.]/@/@g' | \
-	LANG=C sort | uniq > $@.tmp && \
+	LC_ALL=C sort | uniq > $@.tmp && \
 	mv $@.tmp $@;
 
 all: $(srcdir)/.gitignore gitignore-recurse-maybe
@@ -170,8 +185,11 @@ gitignore-recurse-maybe:
 		$(MAKE) $(AM_MAKEFLAGS) gitignore-recurse; \
 	fi;
 gitignore-recurse:
-	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
-	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) .gitignore gitignore-recurse || echo "Skipping $$subdir"); \
+	@for subdir in $(DIST_SUBDIRS); do \
+	  case " $(SUBDIRS) " in \
+	    *" $$subdir "*) :;; \
+	    *) test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) .gitignore gitignore-recurse || echo "Skipping $$subdir");; \
+	  esac; \
 	done
 gitignore: $(srcdir)/.gitignore gitignore-recurse
 
