@@ -11,7 +11,8 @@ DOC_FIGURES = figures/file-roller-main-window.png
 DOC_PAGES = \
 	archive-create.page \
 	index.page \
-	introduction.page
+	introduction.page \
+	supported-formats.page
 
 DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr it ja oc nl ru sl sv te vi uk zh_CN zh_HK zh_TW
 
