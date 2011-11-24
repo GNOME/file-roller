@@ -13,6 +13,6 @@ DOC_PAGES = \
 	index.page \
 	introduction.page
 
-DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr it ja oc nl ru sl sv vi uk zh_CN zh_HK zh_TW
+DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr it ja oc nl ru sl sv te vi uk zh_CN zh_HK zh_TW
 
 -include $(top_srcdir)/git.mk
