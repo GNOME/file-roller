@@ -5,11 +5,16 @@ dist-hook: doc-dist-hook
 DOC_ID = file-roller
 
 # List of figures to be included
-DOC_FIGURES = figures/file-roller-main-window.png
+DOC_FIGURES = \
+	figures/file-roller-main-window.png \
+	figures/file-roller-open-recent.png
 
 # List of pages
 DOC_PAGES = \
 	archive-create.page \
+	archive-edit.page \
+	archive-open.page \
+	archive-view.page \
 	index.page \
 	introduction.page \
 	supported-formats.page
