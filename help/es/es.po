@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.help.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 09:20+0000\n"
-"PO-Revision-Date: 2011-12-06 14:29+0100\n"
+"POT-Creation-Date: 2011-12-09 16:04+0000\n"
+"PO-Revision-Date: 2011-12-09 18:57+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,17 +25,20 @@ msgid "<app>File Roller</app> has the ability to use various file formats."
 msgstr "<app>File Roller</app> soporta varios formatos de archivo."
 
 #: C/supported-formats.page:9(name) C/introduction.page:10(name)
-#: C/archive-create.page:9(name)
+#: C/archive-view.page:9(name) C/archive-open.page:9(name)
+#: C/archive-edit.page:10(name) C/archive-create.page:9(name)
 msgid "Marta Bogdanowicz"
 msgstr "Marta Bogdanowicz"
 
 #: C/supported-formats.page:10(email) C/introduction.page:11(email)
-#: C/archive-create.page:10(email)
+#: C/archive-view.page:10(email) C/archive-open.page:10(email)
+#: C/archive-edit.page:11(email) C/archive-create.page:10(email)
 msgid "majus85@gmail.com"
 msgstr "majus85@gmail.com"
 
 #: C/supported-formats.page:13(p) C/introduction.page:14(p)
-#: C/archive-create.page:13(p)
+#: C/archive-view.page:13(p) C/archive-open.page:13(p)
+#: C/archive-edit.page:14(p) C/archive-create.page:13(p)
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Compartir Igual 3.0"
 
@@ -44,17 +47,14 @@ msgid "Supported file formats"
 msgstr "Formatos de archivo soportados"
 
 #: C/supported-formats.page:19(p)
-#| msgid "Screenshot of the <app>File Roller</app>"
 msgid "The formats support by <app>File Roller</app> include:"
 msgstr "Los formatos soportados por <app>File Roller</app> incluyen:"
 
 #: C/supported-formats.page:22(p)
-#| msgid "Archives"
 msgid "Archive only"
 msgstr "Solo archivadores"
 
 #: C/supported-formats.page:24(p)
-#| msgid "AIX small indexed archive"
 msgid "AIX Small Indexed Archive (<file>.ar</file>)"
 msgstr "Archivador indexado pequeño AIX (<file>.ar</file>)"
 
@@ -75,7 +75,6 @@ msgid "Java Archive (<file>.jar</file>)"
 msgstr "Archivador Java (<file>.jar</file>)"
 
 #: C/supported-formats.page:32(p)
-#| msgid "WinRAR compressed archive"
 msgid "WinRAR Compressed Archive (<file>.rar</file>)"
 msgstr "Archivador comprimido con WinRAR (<file>.rar</file>)"
 
@@ -84,22 +83,18 @@ msgid "Tape Archive File compressed with:"
 msgstr "Archivador en cinta comprimido con:"
 
 #: C/supported-formats.page:35(p)
-#| msgid "<filename>.tar.gz</filename> or <filename>.tgz</filename>"
 msgid "gzip (<file>.tar.gz</file>, <file>.tgz</file>)"
 msgstr "gzip (<file>.tar.gz</file>, <file>.tgz</file>)"
 
 #: C/supported-formats.page:36(p)
-#| msgid "<filename>.tar.bz</filename> or <filename>.tbz</filename>"
 msgid "bzip (<file>.tar.bz</file>, <file>.tbz</file>)"
 msgstr "bzip (<file>.tar.bz</file>, <file>.tbz</file>)"
 
 #: C/supported-formats.page:37(p)
-#| msgid "<filename>.tar.bz2</filename> or <filename>.tbz2</filename>"
 msgid "bzip2 (<file>.tar.bz2</file>, <file>.tbz2</file>)"
 msgstr "bzip2 (<file>.tar.bz2</file>, <file>.tbz2</file>)"
 
 #: C/supported-formats.page:38(p)
-#| msgid "<filename>.tar.lzo</filename> or <filename>.tzo</filename>"
 msgid "lzop (<file>.tar.lzo</file>, <file>.tzo</file>)"
 msgstr "lzop (<file>.tar.lzo</file>, <file>.tzo</file>)"
 
@@ -116,7 +111,6 @@ msgid "Cabinet File (<file>.cab</file>)"
 msgstr "Archivo Cabinet (<file>.cab</file>)"
 
 #: C/supported-formats.page:44(p)
-#| msgid "ZIP Archived Comic Book"
 msgid "ZIP Archived Comic Book (<file>.cbz</file>)"
 msgstr "Libro de cómic archivado en ZIP (<file>.cbz</file>)"
 
@@ -125,7 +119,6 @@ msgid "ZIP Archive (<file>.zip</file>)"
 msgstr "Archivador ZIP (<file>.zip</file>)"
 
 #: C/supported-formats.page:46(p)
-#| msgid "Compressed Non-Archive Files"
 msgid "ZOO Compressed Archive File (<file>.zoo</file>)"
 msgstr "Archivador ZOO comprimido (<file>.zoo</file>)"
 
@@ -204,12 +197,14 @@ msgid "Extract files from archive"
 msgstr "Extrae archivos de un archivador"
 
 #: C/introduction.page:41(title)
-msgid "The <gui>File Roller</gui> main window"
-msgstr "La ventana principal de <gui>File Roller</gui>"
+#| msgid "The <gui>File Roller</gui> main window"
+msgid "<gui>File Roller</gui> main window"
+msgstr "Ventana principal de <gui>File Roller</gui>"
 
-#: C/introduction.page:42(media)
-msgid "Screenshot of the <app>File Roller</app>"
-msgstr "Captura de pantalla de <app>File Roller</app>"
+#: C/introduction.page:43(p)
+#| msgid "Screenshot of the <app>File Roller</app>"
+msgid "Screenshot of the <app>File Roller</app> main window."
+msgstr "Captura de pantalla de la ventana principal de <app>File Roller</app>."
 
 #: C/index.page:5(title)
 msgid "File Roller Archive Manager Help"
@@ -218,6 +213,277 @@ msgstr "Ayuda del gestor de archivadores File Roller"
 #: C/index.page:8(title)
 msgid "Managing archives"
 msgstr "Gestionar archivadores"
+
+#: C/archive-view.page:7(desc)
+msgid "View an existing archive and its content."
+msgstr "Ver un archivo existente y su contenido"
+
+#: C/archive-view.page:17(title)
+#| msgid "Viewing Archives"
+msgid "View an archive"
+msgstr "Ver como un archivador"
+
+#: C/archive-view.page:19(p)
+#| msgid "The number of files in the archive."
+msgid "There are two ways of viewing the archive:"
+msgstr "Hay dos maneras de ver un archivador:"
+
+#: C/archive-view.page:23(p)
+#| msgid "All files"
+msgid "View all files"
+msgstr "Ver todos los archivos"
+
+#: C/archive-view.page:24(p)
+msgid ""
+"To use this view, click <guiseq><gui style=\"menu\">View</gui><gui style="
+"\"menuitem\">View All Files</gui></guiseq>. <app>File Roller</app> will list "
+"all files inside the archive. You will see their names, sizes, types, dates "
+"of the last modification and locations."
+msgstr ""
+"Para usar esta vista, pulse <guiseq><gui style=\"menu\">Ver</gui><gui style="
+"\"menuitem\">Ver todos los archivos</gui></guiseq>. <app>File Roller</app> "
+"listará todos los archivos del archivador. Verá sus nombres, tamaños, tipos, "
+"fechas de la última modificación y ubicaciones."
+
+#: C/archive-view.page:29(p)
+msgid ""
+"You may use these column headings mentioned above (name, size…) to sort the "
+"files in your archive. Do this by clicking on them, and click the same one "
+"again to sort in reverse order."
+msgstr ""
+"Puede usar las cabeceras de las columnas mencionadas (nombre, tamaño) para "
+"ordenar los archivos del archivador. Hágalo pulsando sobre ellas, y pulsando "
+"otra vez sobre la misma para invertir el orden."
+
+#: C/archive-view.page:35(p)
+msgid "View as a folder"
+msgstr "Ver como una carpeta"
+
+#: C/archive-view.page:36(p)
+msgid ""
+"This view displays the classic directory structure. To use this, click "
+"<guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem\">View as a "
+"Folder</gui></guiseq>."
+msgstr ""
+"Esta vista muestra la estructura clásica de carpetas. Para usarla, pulse en "
+"<guiseq><gui style=\"menu\">Ver</gui><gui style=\"menuitem\">Ver como una "
+"carpeta</gui></guiseq>."
+
+#: C/archive-view.page:40(p)
+msgid ""
+"While viewing your archive in this way, press <gui style=\"button\">F9</"
+"gui>, or click <guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem"
+"\">Folders</gui></guiseq> option. You will see a tree view of the folders in "
+"the side pane. It allows you to navigate easily between folders."
+msgstr ""
+"Mientras está viendo el archivador de esta manera, pulse <gui style=\"button"
+"\">F9</gui>, o pulse en la opción <guiseq><gui style=\"menu\">Ver</gui><gui "
+"style=\"menuitem\">Carpetas</gui></guiseq>. Verá una vista en árbol de las "
+"carpetas en el panel lateral. Esto le permite navegar fácilmente entre las "
+"carpetas."
+
+#: C/archive-view.page:50(title)
+#| msgid "The number of files in the archive."
+msgid "Open files in your archive"
+msgstr "Abrir archivos en el archivador"
+
+#: C/archive-view.page:51(p)
+msgid ""
+"Open files, which are in you archive by double-clicking the file name, or "
+"right-click on the file name and select <gui>Open</gui>. <app>File Roller</"
+"app> will open the file with the default application for that file type."
+msgstr ""
+"Abra archivos que estén en su archivador pulsando dos veces sobre el nombre "
+"del archivo, o pulse con el botón derecho sobre el nombre del archivo y "
+"elija <gui>Abrir</gui>. <app>File Roller</app> abrirá el archivo con la "
+"aplicación predeterminada para ese tipo de archivo."
+
+#: C/archive-view.page:56(p)
+msgid "Open the file with different application by following these steps:"
+msgstr "Abra el archivo con otra aplicación siguiendo estos pasos:"
+
+#: C/archive-view.page:58(p)
+#| msgid "Selected files"
+msgid "Select the file"
+msgstr "Seleccione el archivo"
+
+#: C/archive-view.page:59(p)
+#| msgid "Right-click popup menu"
+msgid "Right-click"
+msgstr "Pulse con el botón derecho"
+
+#: C/archive-view.page:60(p)
+#| msgid "Click <guibutton>Open</guibutton>."
+msgid "Click <gui>Open With…</gui>"
+msgstr "Pulse en <gui>Abrir con...</gui>"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/archive-open.page:36(None)
+#| msgid ""
+#| "@@image: 'figures/file-roller-main-window.png'; "
+#| "md5=133c50bfcf2ac220d3c2c61180f339db"
+msgid ""
+"@@image: 'figures/file-roller-open-recent.png'; "
+"md5=56d69ff2cb369cc5b0b85d5dde11018e"
+msgstr ""
+"@@image: 'figures/file-roller-open-recent.png'; "
+"md5=56d69ff2cb369cc5b0b85d5dde11018e"
+
+#: C/archive-open.page:7(desc)
+#| msgid "Modify existing archives"
+msgid "Open an existing archive."
+msgstr "Abrir un archivador existente."
+
+#: C/archive-open.page:17(title)
+#| msgid "To Open an Archive"
+msgid "Open an archive"
+msgstr "Abrir un archivador"
+
+#: C/archive-open.page:19(p)
+#| msgid ""
+#| "To create a new archive with <app>File Roller</app>, follow these steps:"
+msgid ""
+"Open an existing archive with <app>File Roller</app> in the following ways:"
+msgstr ""
+"Abra un archivador existente con <app>File Roller</app> siguiendo estos "
+"pasos:"
+
+#: C/archive-open.page:23(p)
+#| msgid "Click <guibutton>Open</guibutton>."
+msgid "Click the toolbar button <gui>Open</gui>."
+msgstr "Pulse en el botón <gui>Abrir</gui> de la bara de herramientas."
+
+#: C/archive-open.page:26(p)
+#| msgid ""
+#| "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</"
+#| "guimenuitem></menuchoice>."
+msgid ""
+"Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem\">Open…"
+"</gui></guiseq>"
+msgstr ""
+"Pulse en <guiseq><gui style=\"menu\">Archivador</gui><gui style=\"menuitem"
+"\">Abrir...</gui></guiseq>"
+
+#: C/archive-open.page:31(p)
+msgid ""
+"You may also use the <gui>Open Recent</gui> option in the following ways:"
+msgstr ""
+"También puede usar la opción <gui>Abrir reciente</gui> de las siguientes "
+"maneras:"
+
+#: C/archive-open.page:35(p)
+msgid ""
+"Click the <media type=\"image\" mime=\"image/png\" src=\"figures/file-roller-"
+"open-recent.png\"> Open a recently used archive</media> toolbar button and "
+"select a file."
+msgstr ""
+"Pulse el botón <media type=\"image\" mime=\"image/png\" src=\"figures/file-"
+"roller-open-recent.png\"> Abrir un archivador usado recientemente</media> en "
+"la barra de herramientas y seleccione un archivo."
+
+#: C/archive-open.page:41(p)
+msgid ""
+"Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem\">Open "
+"Recent</gui></guiseq> to see the list of recently used archives."
+msgstr ""
+"Pulse <guiseq><gui style=\"menu\">Archivador</gui><gui style=\"menuitem"
+"\">Abrir reciente</gui></guiseq> para ver una lista de los archivadores "
+"usados recientemente."
+
+#: C/archive-open.page:47(p)
+msgid ""
+"If <app>File Roller</app> cannot open your recently used archive, and shows "
+"the error message <gui>The file doesn't exist</gui>, it may be that the "
+"location of the archive file has changed. Then, you may use <gui>Open</gui> "
+"option to search for it."
+msgstr ""
+"Si <app>File Roller</app> no puede abrir su archivador usado recientemente, "
+"y muestra el mensaje de error <gui>El archivo no existe</gui>, puede deberse "
+"a que la ubicación del archivo ha cambiado. En este caso, puede usar la "
+"opción <gui>Abrir</gui> para buscarlo."
+
+#: C/archive-edit.page:8(desc)
+#| msgid "Modifying the Contents of an Archive"
+msgid "Change the content of your archive."
+msgstr "Modificar el contenido de un archivador."
+
+#: C/archive-edit.page:18(title)
+#| msgid "WinAce archive"
+msgid "Edit an archive"
+msgstr "Editar un archivador"
+
+#: C/archive-edit.page:20(p)
+msgid ""
+"With <app>File Roller</app> you can edit an existing archive by adding new "
+"files, removing unwanted ones or by changing their names. You can work with "
+"folders in the same way as with files."
+msgstr ""
+"Con <app>File Roller</app> puede editar un archivador existente añadiendo "
+"archivos nuevos, quitando los archivos que no quiera o cambiando sus "
+"nombres. Puede trabajar con las carpetas de la misma manera que con los "
+"archivos."
+
+#: C/archive-edit.page:26(code)
+#, no-wrap
+#| msgid "All files"
+msgid "Add files"
+msgstr "Añadir archivos"
+
+#: C/archive-edit.page:27(p)
+msgid ""
+"Add files to an existing archive by following the instructions on <link xref="
+"\"archive-create\"/> page."
+msgstr ""
+"Añada archivos a un archivador existente siguiente las instrucciones de la "
+"<link xref=\"archive-create\"/>."
+
+#: C/archive-edit.page:31(code)
+#, no-wrap
+#| msgid "Selected files"
+msgid "Remove files"
+msgstr "Quitar archivos"
+
+#: C/archive-edit.page:33(p) C/archive-edit.page:42(p)
+#| msgid "Selected files"
+msgid "Select the file."
+msgstr "Seleccione el archivo."
+
+#: C/archive-edit.page:34(p)
+msgid ""
+"Click <guiseq><gui style=\"menu\">Edit</gui><gui style=\"menuitem\">Delete</"
+"gui></guiseq>, or right-click on the selected file, and choose <gui>Delete</"
+"gui>."
+msgstr ""
+"Pulse <guiseq><gui style=\"menu\">Editar</gui><gui style=\"menuitem"
+"\">Eliminar</gui></guiseq>, o pulse con el botón derecho sobre el archivo y "
+"elija <gui>Eliminar</gui>."
+
+#: C/archive-edit.page:40(code)
+#, no-wrap
+#| msgid "Include files"
+msgid "Rename files"
+msgstr "Renombrar archivos"
+
+#: C/archive-edit.page:43(p)
+msgid ""
+"Click <guiseq><gui style=\"menu\">Edit</gui><gui style=\"menuitem\">Rename…</"
+"gui></guiseq>, or right-click on the selected file, and choose <gui>Rename…</"
+"gui>."
+msgstr ""
+"Pulse <guiseq><gui style=\"menu\">Editar</gui><gui style=\"menuitem"
+"\">Renombrar…</gui></guiseq>, o pulse con el botón derecho en el archivo "
+"seleccionado y elija <gui>Renombrar…</gui>."
+
+#: C/archive-edit.page:46(p)
+msgid "A dialog will open. Enter the new file name into the text entry field."
+msgstr ""
+"Se abrirá un diálogo. Escriba el nombre del archivo nuevo en el campo de "
+"entrada de texto."
+
+#: C/archive-edit.page:48(p)
+msgid "Confirm the name by clicking <gui>Rename</gui>."
+msgstr "Confirme el nombre pulsando <gui>Renombrar</gui>."
 
 #: C/archive-create.page:7(desc)
 msgid "Add files or folders to your new archive."
@@ -228,21 +494,27 @@ msgid "Create a new archive"
 msgstr "Crear un archivador nuevo"
 
 #: C/archive-create.page:19(p)
+#| msgid ""
+#| "To create a new archive with <app>File Roller</app>, follow these steps:"
 msgid ""
-"To create a new archive with <app>File Roller</app>, follow these steps:"
+"Create a new archive with <app>File Roller</app>, by following these steps:"
 msgstr ""
-"Para crear un archivador nuevo con <app>File Roller</app>, siga estos pasos:"
+"Cree un archivador nuevo con <app>File Roller</app>, siguiendo estos pasos:"
 
 #: C/archive-create.page:25(p)
+#| msgid ""
+#| "Click on the icon <gui>Create a new archive</gui> in the toolbar, or "
+#| "select <guiseq><gui>Archive</gui><gui>New…</gui></guiseq>."
 msgid ""
-"Click on the icon <gui>Create a new archive</gui> in the toolbar, or select "
-"<guiseq><gui>Archive</gui><gui>New…</gui></guiseq>."
+"Click the <gui>Create a new archive</gui> toolbar button, or click "
+"<guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem\">New…</gui></"
+"guiseq>"
 msgstr ""
 "Pulse en el icono <gui>Crear un archivador nuevo</gui> en la barra de "
-"herramientas, o seleccione <guiseq><gui>Archivo</gui><gui>Nuevo…</gui></"
-"guiseq>."
+"herramientas, o seleccione <guiseq><gui style=\"menu\">Archivador</"
+"gui><gui>Nuevo…</gui></guiseq>."
 
-#: C/archive-create.page:30(p)
+#: C/archive-create.page:29(p)
 msgid ""
 "Name your new archive file, choose its location and click <gui>Create</gui>."
 msgstr "Dé un nombre al archivo, elija su ubicación y pulse <gui>Crear</gui>."
@@ -261,39 +533,49 @@ msgstr ""
 "volumen en <gui>MiB</gui>."
 
 #: C/archive-create.page:40(p)
+#| msgid ""
+#| "Add the desired files to your archive by clicking on the icon <gui>Add "
+#| "files to the archive</gui>, or by selecting <guiseq><gui>Edit</"
+#| "gui><gui>Add files…</gui></guiseq>. <app>File Roller</app> also allows "
+#| "you to add whole folders. To do this, click the icon <gui>Add a folder to "
+#| "the archive</gui>, or select <guiseq><gui>Edit</gui><gui>Add a folder… </"
+#| "gui></guiseq>."
 msgid ""
-"Add the desired files to your archive by clicking on the icon <gui>Add files "
-"to the archive</gui>, or by selecting <guiseq><gui>Edit</gui><gui>Add files…"
-"</gui></guiseq>. <app>File Roller</app> also allows you to add whole "
-"folders. To do this, click the icon <gui>Add a folder to the archive</gui>, "
-"or select <guiseq><gui>Edit</gui><gui>Add a folder… </gui></guiseq>."
+"Add the desired files to your archive by clicking the <gui>Add files to the "
+"archive</gui> toolbar button, or by clicking <guiseq><gui style=\"menu"
+"\">Edit</gui><gui style=\"menuitem\">Add files…</gui></guiseq>. <app>File "
+"Roller</app> also allows you to add whole folders. To do this, click the "
+"<gui>Add a folder to the archive</gui> toolbar button, or select "
+"<guiseq><gui style=\"menu\">Edit</gui><gui style=\"menuitem\">Add a folder…</"
+"gui></guiseq>"
 msgstr ""
 "Añada los archivos que quiere al archivador pulsando en el botón <gui>Añadir "
-"archivos al archivador</gui>, o seleccionando <guiseq><gui>Editar</"
-"gui><gui>Añadir archivos…</gui></guiseq>. <app>File Roller</app> también le "
-"permite añadir carpetas completas. Para hacer esto, pulse el icono "
-"<gui>Añadir una carpeta al archivador</gui>, o seleccione "
-"<guiseq><gui>Editar</gui><gui>Añadir una carpeta… </gui></guiseq>."
+"archivos al archivador</gui>, o seleccionando <guiseq><gui style=\"menu"
+"\">Editar</gui><gui style=\"menuitem\">Añadir archivos…</gui></guiseq>. "
+"<app>File Roller</app> también le permite añadir carpetas completas. Para "
+"hacer esto, pulse el icono <gui>Añadir una carpeta al archivador</gui>, o "
+"seleccione <guiseq><gui style=\"menu\">Editar</gui><gui style=\"menuitem"
+"\">Añadir una carpeta…</gui></guiseq>."
 
-#: C/archive-create.page:47(p)
+#: C/archive-create.page:49(p)
 msgid ""
 "When you add a folder to your archive, you will be offered some options:"
 msgstr ""
 "Cuando añada una carpeta a un archivador, se le ofrecerán varias opciones:"
 
-#: C/archive-create.page:50(p)
+#: C/archive-create.page:52(p)
 msgid "Whether to include subfolders or not"
 msgstr "indica si se deben incluir o no las subcarpetas"
 
-#: C/archive-create.page:51(p)
+#: C/archive-create.page:53(p)
 msgid "Choose which files should be included"
 msgstr "Elija los archivos que se deben incluir"
 
-#: C/archive-create.page:52(p)
+#: C/archive-create.page:54(p)
 msgid "Select which subfolders or files are to be excluded"
 msgstr "Seleccione qué subcarpetas o archivos se deben excluir"
 
-#: C/archive-create.page:57(p)
+#: C/archive-create.page:59(p)
 msgid "Once you finish adding files, your archive is ready."
 msgstr ""
 "Una vez que haya terminado de añadir archivos, el archivador estará listo."
@@ -650,9 +932,6 @@ msgstr ""
 
 #~ msgid ".7z"
 #~ msgstr ".7z"
-
-#~ msgid "WinAce archive"
-#~ msgstr "Archivador WinAce"
 
 #~ msgid ".ace"
 #~ msgstr ".ace"
@@ -1056,13 +1335,6 @@ msgstr ""
 #~ "archivos."
 
 #~ msgid ""
-#~ "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</"
-#~ "guimenuitem></menuchoice>."
-#~ msgstr ""
-#~ "Elija <menuchoice><guimenu>Archivador</guimenu><guimenuitem>Abrir</"
-#~ "guimenuitem></menuchoice>."
-
-#~ msgid ""
 #~ "If you have recently opened the archive, it will be listed directly in "
 #~ "the <menuchoice><guimenu>Archive</guimenu></menuchoice> menu."
 #~ msgstr ""
@@ -1081,9 +1353,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Si ha abierto recientemente el archivo, pulse en la flecha hacia abajo "
 #~ "cerca del botón <guibutton>Abrir</guibutton> de la barra de herramientas."
-
-#~ msgid "Right-click popup menu"
-#~ msgstr "Menú emergente del botón derecho"
 
 #~ msgid ""
 #~ "Right-click on the archive, then choose <guilabel>Open</guilabel> from "
@@ -1151,9 +1420,6 @@ msgstr ""
 #~ msgid "*"
 #~ msgstr "*"
 
-#~ msgid "All files"
-#~ msgstr "Todos los archivos"
-
 #~ msgid "*.tar*"
 #~ msgstr "*.tar*"
 
@@ -1188,9 +1454,6 @@ msgstr ""
 #~ "nombre del «archivo» seguido por uno sólo carácter, ej <filename>archivo2."
 #~ "gz</filename>, <filename>archivox.gz</filename>."
 
-#~ msgid "To Open an Archive"
-#~ msgstr "Para abrir un archivador"
-
 #~ msgid ""
 #~ "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</"
 #~ "guimenuitem></menuchoice> to display the <guilabel>Open</guilabel> "
@@ -1205,9 +1468,6 @@ msgstr ""
 
 #~ msgid "Select the archive that you want to open."
 #~ msgstr "Seleccione el archivador que desee abrir."
-
-#~ msgid "Click <guibutton>Open</guibutton>."
-#~ msgstr "Pulse en <guibutton>Abrir</guibutton>."
 
 #~ msgid "To open an archive, perform the following steps: <placeholder-1/>"
 #~ msgstr ""
@@ -1675,9 +1935,6 @@ msgstr ""
 #~ "contraseña. Sin embargo, el <application>Gestor de archivadores</"
 #~ "application> sólo copia los archivos desprotegidos al archivador nuevo."
 
-#~ msgid "Modifying the Contents of an Archive"
-#~ msgstr "Modificar el contenido de un archivador"
-
 #~ msgid "You can modify the contents of an archive in several ways."
 #~ msgstr "Puede modificar el contenido de un archivador de varias formas."
 
@@ -1865,9 +2122,6 @@ msgstr ""
 #~ msgid "Delete all files from the archive."
 #~ msgstr "Borra todos los archivos del archivador."
 
-#~ msgid "Selected files"
-#~ msgstr "Archivos seleccionados"
-
 #~ msgid "Delete the selected files from the archive."
 #~ msgstr "Borra los archivos seleccionados del archivador."
 
@@ -1982,9 +2236,6 @@ msgstr ""
 #~ "tal y como se describe en la <xref linkend=\"file-roller-modify-archive-"
 #~ "file\"/>."
 
-#~ msgid "Viewing Archives"
-#~ msgstr "Ver archivadores"
-
 #~ msgid ""
 #~ "<application>Archive Manager</application> enables you to view several "
 #~ "aspects of an archive."
@@ -2043,9 +2294,6 @@ msgstr ""
 
 #~ msgid "Number of files"
 #~ msgstr "Número de archivos"
-
-#~ msgid "The number of files in the archive."
-#~ msgstr "El número de archivos en el archivador."
 
 #~ msgid ""
 #~ "To view the properties of an archive, choose "
@@ -2797,9 +3045,6 @@ msgstr ""
 #~ "Puede usar las siguientes opciones disponibles en el diálogo "
 #~ "<guilabel>Añadir una carpeta</guilabel> para permitir seleccionar y "
 #~ "añadir automáticamente todos los archivos que satisfagan cierto criterio:"
-
-#~ msgid "Include files"
-#~ msgstr "Incluir archivos"
 
 #~ msgid ""
 #~ "Type a filename pattern in this text box to include files with names that "
