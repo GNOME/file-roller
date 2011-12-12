@@ -1,0 +1,77 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide"
+      id="archive-extract-advanced-options">
+
+  <info>
+    <link type="guide" xref="index#advanced-options"/>
+    <desc>Specify your preferences for archive extraction.</desc>
+    <credit type="author">
+      <name>Marta Bogdanowicz</name>
+      <email>majus85@gmail.com</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+  </info>
+
+  <title>Advanced options for archive extracting</title>
+
+  <p><app>File Roller</app> offers different options while extracting an
+  archive. You can see these options in the file chooser dialog, which you use
+  for choosing the location for extracted files. At the bottom of this dialog,
+  you can decide if you want to extract:</p>
+  <terms>
+    <item>
+      <title><gui>All files</gui></title>
+        <p>the whole archive will be extracted</p>
+    </item>
+    <item>
+      <title><gui>Selected files</gui></title>
+        <p><app>File Roller</app> extracts only the chosen files</p>
+          <note>
+          <p>Select them before you click <guiseq><gui style="menu">Archive</gui>
+          <gui style="menuitem">Extract…</gui></guiseq>. Do this by clicking on
+          the file name. Press <key>Ctrl</key> or <key>Shift</key>, to select
+          more than one file.</p>
+          </note>
+    </item>
+    <item>
+      <title><gui>Files</gui></title>
+        <p>you can type the names of the files that you want to extract</p>
+          <note>
+          <p>The file name needs to be followed by a file extension. You can
+          extract, for exapmle, all <file>.txt</file> files, by typing
+          <file>*.txt</file>.</p>
+          </note>
+    </item>
+  </terms>
+
+  <p>You can specify in the file chooser dialog whether you want:</p>
+  <terms>
+    <item>
+      <title><gui>Re-create folders</gui></title>
+        <p>Tick this option if you want to keep the directory structure, as it
+        was in your archive</p>
+    </item>
+    <item>
+      <title><gui>Overwrite existing files</gui></title>
+        <p>If your archive contains files with the same name as those in the
+        destination folder, then <app>File Roller</app> will overwrite them
+        during extraction if this option is enabled</p>
+    </item>
+    <item>
+      <title><gui>Do not extract older folders</gui></title>
+        <p>This option will not overwrite existing files with the same name,
+        which have a more recent modification date than those which are in the
+        archive.</p>
+    </item>
+  </terms>
+
+  <p>These <gui>Actions</gui> are listed at the bottom of the dialog.</p>
+
+  <note style="advanced">
+    <p>The option <gui>Do not extract older files</gui> is only avaiable when
+    the option <gui>Overwrite existing files</gui> has been enabled.</p>
+  </note>
+
+</page>

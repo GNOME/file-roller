@@ -13,11 +13,14 @@ DOC_FIGURES = \
 DOC_PAGES = \
 	archive-create.page \
 	archive-edit.page \
+	archive-extract.page \
+	archive-extract-advanced-options.page \
 	archive-open.page \
 	archive-view.page \
 	index.page \
 	introduction.page \
-	supported-formats.page
+	supported-formats.page \
+	test-integrity.page
 
 DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr it ja oc nl ru sl sv te vi uk zh_CN zh_HK zh_TW
 
