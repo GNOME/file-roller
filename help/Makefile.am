@@ -19,6 +19,8 @@ DOC_PAGES = \
 	archive-view.page \
 	index.page \
 	introduction.page \
+	keyboard-shortcuts.page \
+	password-protection.page \
 	supported-formats.page \
 	test-integrity.page
 
