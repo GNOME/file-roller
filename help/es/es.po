@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.help.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-13 10:34+0000\n"
-"PO-Revision-Date: 2011-12-14 17:16+0100\n"
+"POT-Creation-Date: 2011-12-14 16:16+0000\n"
+"PO-Revision-Date: 2011-12-16 14:39+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,6 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 
 #: C/test-integrity.page:7(desc)
-#| msgid "To Test the Integrity of an Archive"
 msgid "Check the integrity of an archive"
 msgstr "Comprobar la integridad de un archivador"
 
@@ -55,10 +54,6 @@ msgid "Test integrity"
 msgstr "Comprobar la integridad"
 
 #: C/test-integrity.page:19(p)
-#| msgid ""
-#| "Click the <gui>Create a new archive</gui> toolbar button, or click "
-#| "<guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem\">New…</"
-#| "gui></guiseq>"
 msgid ""
 "<app>File Roller</app> allows you to check whether the compressed data in an "
 "archive contains any errors. Do this by clicking <guiseq><gui style=\"menu"
@@ -79,7 +74,6 @@ msgstr ""
 "de la comprobación."
 
 #: C/test-integrity.page:28(p)
-#| msgid "Select the files that you want to copy."
 msgid "The integrity test verifies that your data is not corrupt."
 msgstr ""
 "La comprobación de integridad verifica que sus datos no están corruptos."
@@ -259,7 +253,6 @@ msgid "Managing archives"
 msgstr "Gestionar archivadores"
 
 #: C/index.page:12(title)
-#| msgid "Add Options"
 msgid "Advanced options"
 msgstr "Opciones avanzadas"
 
@@ -316,11 +309,6 @@ msgstr ""
 "carpeta</gui></guiseq>."
 
 #: C/archive-view.page:40(p)
-#| msgid ""
-#| "While viewing your archive in this way, press <gui style=\"button\">F9</"
-#| "gui>, or click <guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem"
-#| "\">Folders</gui></guiseq> option. You will see a tree view of the folders "
-#| "in the side pane. It allows you to navigate easily between folders."
 msgid ""
 "While viewing your archive in this way, press <key>F9</key>, or click "
 "<guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem\">Folders</gui></"
@@ -453,9 +441,12 @@ msgid ""
 "choosing the location for extracted files. At the bottom of this dialog, you "
 "can decide if you want to extract:"
 msgstr ""
+"<app>File Roller</app> ofrece diferentes opciones para extraer un "
+"archivador. Puede ver estas opciones en el diálogo del selector de archivos "
+"que usa para elegir la ubicación de los archivos extraídos. En la parte "
+"inferior de este diálogo, puede decidir si quiere extraer:"
 
 #: C/archive-extract-advanced-options.page:25(gui)
-#| msgid "Add files"
 msgid "All files"
 msgstr "Todos los archivos"
 
@@ -464,19 +455,14 @@ msgid "the whole archive will be extracted"
 msgstr "se extraerá todo el archivador"
 
 #: C/archive-extract-advanced-options.page:29(gui)
-#| msgid "Select the file"
 msgid "Selected files"
 msgstr "Archivos seleccionados"
 
 #: C/archive-extract-advanced-options.page:30(p)
-#| msgid "<app>File Roller</app> has the ability to use various file formats."
 msgid "<app>File Roller</app> extracts only the chosen files"
 msgstr "<app>File Roller</app> extrae sólo los archivos seleccionados"
 
 #: C/archive-extract-advanced-options.page:32(p)
-#| msgid ""
-#| "Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem"
-#| "\">Open Recent</gui></guiseq> to see the list of recently used archives."
 msgid ""
 "Select them before you click <guiseq><gui style=\"menu\">Archive</gui><gui "
 "style=\"menuitem\">Extract…</gui></guiseq>. Do this by clicking on the file "
@@ -493,21 +479,23 @@ msgid "Files"
 msgstr "Archivos"
 
 #: C/archive-extract-advanced-options.page:40(p)
-#| msgid "Select the files that you want to delete."
 msgid "you can type the names of the files that you want to extract"
 msgstr "puede escribir los nombres de los archivos que quiere extraer"
 
 #: C/archive-extract-advanced-options.page:42(p)
+#| msgid ""
+#| "The file name needs to be followed by a file extension. You can extract, "
+#| "for exapmle, all <file>.txt</file> files, by typing <file>*.txt</file>."
 msgid ""
 "The file name needs to be followed by a file extension. You can extract, for "
-"exapmle, all <file>.txt</file> files, by typing <file>*.txt</file>."
+"example, all <file>.txt</file> files, by typing <file>*.txt</file>."
 msgstr ""
 "El nombre del archivo debe tener una extensión. Por ejemplo, puede extraer "
 "todos los archivos <file>.txt</file>  escribiendo <file>*.txt</file>."
 
 #: C/archive-extract-advanced-options.page:49(p)
 msgid "You can specify in the file chooser dialog whether you want:"
-msgstr ""
+msgstr "En el diálogo del selector de archivos puede elegir si quiere:"
 
 #: C/archive-extract-advanced-options.page:52(gui)
 msgid "Re-create folders"
@@ -531,9 +519,11 @@ msgid ""
 "destination folder, then <app>File Roller</app> will overwrite them during "
 "extraction if this option is enabled"
 msgstr ""
+"Si su archivador contiene archivos con el mismo nombre que los de la carpeta "
+"de destino, <app>File Roller</app> los sobreescribirá durante la extracción "
+"si esta opción está activada"
 
 #: C/archive-extract-advanced-options.page:63(gui)
-#| msgid "Do not extract older files"
 msgid "Do not extract older folders"
 msgstr "No extraer carpetas más antiguos"
 
@@ -542,13 +532,15 @@ msgid ""
 "This option will not overwrite existing files with the same name, which have "
 "a more recent modification date than those which are in the archive."
 msgstr ""
+"Esta opción no sobreescribirá archivos existentes con el mismo nombre que "
+"tengan una fecha de modificación más reciente que la de los que están en el "
+"archivador."
 
 #: C/archive-extract-advanced-options.page:70(p)
 msgid "These <gui>Actions</gui> are listed at the bottom of the dialog."
-msgstr ""
+msgstr "Estas <gui>Acciones</gui> se listan en la parte inferior del diálogo."
 
 #: C/archive-extract-advanced-options.page:73(p)
-#, fuzzy
 #| msgid ""
 #| "This option is only effective while the <guilabel>Overwrite existing "
 #| "files</guilabel> option is selected."
@@ -556,23 +548,18 @@ msgid ""
 "The option <gui>Do not extract older files</gui> is only avaiable when the "
 "option <gui>Overwrite existing files</gui> has been enabled."
 msgstr ""
-"Esta opción sólo es efectiva cuando la opción <guilabel>Sobreescribir "
-"archivos existentes</guilabel> está seleccionada."
+"La opción <gui>No extraer archivos más antiguos</gui> sólo está disponible "
+"cuando la opción <gui>Sobreescribir archivos existentes</gui> está activada."
 
 #: C/archive-extract.page:10(desc)
-#| msgid "Add files or folders to your new archive."
 msgid "Extract files or folders from your archive"
 msgstr "Extraer archivos o carpetas de un archivador"
 
 #: C/archive-extract.page:20(title)
-#| msgid "Edit an archive"
 msgid "Extract an archive"
 msgstr "Extraer un archivador"
 
 #: C/archive-extract.page:22(p)
-#| msgid ""
-#| "Create a new archive with <app>File Roller</app>, by following these "
-#| "steps:"
 msgid ""
 "Extract files from archive using <app>File Roller</app> by following these "
 "steps:"
@@ -585,9 +572,6 @@ msgid "<link xref=\"archive-open\">Open</link> an archive."
 msgstr "<link xref=\"archive-open\">Abrir</link> un archivador."
 
 #: C/archive-extract.page:27(p)
-#| msgid ""
-#| "Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem"
-#| "\">Open…</gui></guiseq>"
 msgid ""
 "Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem"
 "\">Extract…</gui></guiseq> or click the <gui>Extract</gui> toolbar button."
@@ -601,15 +585,18 @@ msgid ""
 "Choose the location in the file chooser, into which the files should be "
 "extracted. This will be the destination folder."
 msgstr ""
+"En el gestor de archivos, elija la ubicación en la que se deberán extraer "
+"los archivos. Esta será la carpeta de destino."
 
 #: C/archive-extract.page:33(p)
 msgid ""
 "There are additional options in this dialog. See <link xref=\"archive-"
 "extract-advanced-options\">advanced options for extracting archives</link>."
 msgstr ""
+"Hay opciones adicionales en este diálogo. Consulte las <link xref=\"archive-"
+"extract-advanced-options\">opciones avanzadas para extraer archivos</link>."
 
 #: C/archive-extract.page:38(p)
-#| msgid "Click <guibutton>Extract</guibutton>."
 msgid "Click <gui>Extract</gui>."
 msgstr "Pulse <gui>Extraer</gui>."
 
@@ -618,12 +605,16 @@ msgid ""
 "If an archive is protected by a password, <app>File Roller</app> will "
 "request it. Type the password and click <gui>OK</gui>."
 msgstr ""
+"Si un archivador está protegido con contraseña, <app>File Roller</app> se la "
+"pedirá. Escriba la contraseña y pulse <gui>Aceptar</gui>."
 
 #: C/archive-extract.page:43(p)
 msgid ""
 "The application will show you the progress bar in a new dialog. If the "
 "extraction completes successfully, you will be asked whether you want to:"
 msgstr ""
+"La aplicación mostrará la barra de progreso en el diálogo nuevo. Si la "
+"extracción termina correctamente, se le preguntará si quiere:"
 
 #: C/archive-extract.page:47(p)
 msgid "<gui>Quit</gui> - this option closes <app>File Roller</app>"
@@ -634,6 +625,8 @@ msgid ""
 "<gui>Show the files</gui> - after clicking this the destination folder will "
 "be open in <app>Nautilus</app>"
 msgstr ""
+"<gui>Mostrar los archivos</gui>: al pulsar esto, la carpeta de destino se "
+"abrirá en <app>Nautilus</app>"
 
 #: C/archive-extract.page:50(p)
 msgid ""
