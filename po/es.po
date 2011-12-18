@@ -4,23 +4,23 @@
 # Rodrigo Marcos Fombellida <rodrifom@gmail.com>, 2007.
 # Spanish localization for File Roller.
 # Copyright © 2002, 2006, 2007, 2008 the Free Software Foundation, Inc.
-# Jorge González <jorgegonz@svn.gnome.org>, 2007, 2009, 2010.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
+# Jorge González <jorgegonz@svn.gnome.org>, 2007, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-11-14 21:10+0000\n"
-"PO-Revision-Date: 2011-12-09 18:23+0100\n"
-"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Español <gnome-es-list@gnome.org>\n"
+"POT-Creation-Date: 2011-12-18 10:48+0000\n"
+"PO-Revision-Date: 2011-12-18 15:27+0100\n"
+"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
@@ -298,7 +298,6 @@ msgid "Split into _volumes of"
 msgstr "Partir en _volúmenes de"
 
 #: ../data/ui/batch-add-files.ui.h:7 ../data/ui/new.ui.h:4
-#: ../data/ui/password.ui.h:3
 msgid "_Encrypt the file list too"
 msgstr "_Cifrar también la lista de archivos"
 
@@ -358,6 +357,11 @@ msgstr ""
 #: ../data/ui/password.ui.h:2
 msgid "Password"
 msgstr "Contraseña"
+
+#: ../data/ui/password.ui.h:3
+#| msgid "_Encrypt the file list too"
+msgid "_Encrypt the file list"
+msgstr "_Cifrar la lista de archivos"
 
 #: ../data/ui/update.ui.h:1
 msgid "S_elect the files you want to update:"
@@ -531,16 +535,16 @@ msgid "Save Options"
 msgstr "Guarda las opciones"
 
 #: ../src/dlg-add-folder.c:883
-msgid "Options Name:"
-msgstr "Nombre de opciones:"
+#| msgid "Options Name:"
+msgid "_Options Name:"
+msgstr "Nombre de _opciones:"
 
 #: ../src/dlg-ask-password.c:122
 #, c-format
 msgid "Enter the password for the archive '%s'."
 msgstr "Especifique una contraseña para el archivador «%s»."
 
-#. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/dlg-batch-add.c:174 ../src/fr-window.c:7433
+#: ../src/dlg-batch-add.c:174
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -551,8 +555,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:177 ../src/fr-window.c:7423 ../src/fr-window.c:7428
-#: ../src/fr-window.c:7433 ../src/fr-window.c:7469 ../src/fr-window.c:7471
+#: ../src/dlg-batch-add.c:177 ../src/fr-window.c:7469 ../src/fr-window.c:7471
 msgid "Please use a different name."
 msgstr "Use un nombre diferente."
 
@@ -673,8 +676,10 @@ msgid "%s Properties"
 msgstr "Propiedades de %s"
 
 #: ../src/dlg-prop.c:133
-msgid "Modified on:"
-msgstr "Modificado el:"
+#| msgctxt "File"
+#| msgid "Date Modified"
+msgid "Last modified:"
+msgstr "Última modificación:"
 
 #: ../src/dlg-prop.c:143
 msgid "Archive size:"
@@ -748,8 +753,9 @@ msgstr "No se encontró el archivo."
 
 #: ../src/fr-archive.c:1261
 #, c-format
-msgid "The file doesn't exist"
-msgstr "El archivo no existes"
+#| msgid "File not found."
+msgid "Archive not found"
+msgstr "No se encontró el archivo"
 
 #: ../src/fr-archive.c:2427
 msgid "You don't have the right permissions."
@@ -1131,13 +1137,28 @@ msgstr "No se pudo guardar el archivador «%s»"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7423
-msgid "The new name is void."
-msgstr "El nombre nuevo está vacío."
+msgid "New name is void, please type a name."
+msgstr "El nombre está vacío, introdúzca un nombre."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7428
-msgid "The new name is equal to the old one."
-msgstr "El nombre nuevo es igual al antiguo."
+msgid "New name is the same as old one, please type other name."
+msgstr "El nombre nuevo es el mismo que el antiguo, introdúzca otro nombre."
+
+#. Translators: the %s references to a filename.  This message can appear when renaming a file.
+#: ../src/fr-window.c:7433
+#, c-format
+#| msgid ""
+#| "The name \"%s\" is not valid because it cannot contain the characters: "
+#| "%s\n"
+#| "\n"
+#| "%s"
+msgid ""
+"Name \"%s\" is not valid because it contains at least one of the following "
+"characters: %s, please type other name."
+msgstr ""
+"El nombre «%s» no es válido porque contiene al menos uno de los siguientes "
+"caracteres: %s, introdúzca otro nombre."
 
 #: ../src/fr-window.c:7469
 #, c-format
@@ -1166,12 +1187,14 @@ msgid "Rename"
 msgstr "Renombrar"
 
 #: ../src/fr-window.c:7542
-msgid "New folder name"
-msgstr "Nombre de carpeta nuevo"
+#| msgid "New folder name"
+msgid "_New folder name:"
+msgstr "_Nombre de carpeta nueva:"
 
 #: ../src/fr-window.c:7542
-msgid "New file name"
-msgstr "Nombre de archivo nuevo"
+#| msgid "New file name"
+msgid "_New file name:"
+msgstr "_Nombre del archivo nuevo:"
 
 #: ../src/fr-window.c:7546
 msgid "_Rename"
@@ -1190,8 +1213,9 @@ msgid "Paste Selection"
 msgstr "Pegar selección"
 
 #: ../src/fr-window.c:7982
-msgid "Destination folder"
-msgstr "Carpeta de destino"
+#| msgid "Destination folder"
+msgid "_Destination folder:"
+msgstr "Carpeta de _destino:"
 
 #: ../src/fr-window.c:8583
 msgid "Add files to an archive"
@@ -1209,11 +1233,11 @@ msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
 #. Expander
-#: ../src/gtk-utils.c:416
+#: ../src/gtk-utils.c:421
 msgid "Command _Line Output"
 msgstr "Salida de línea de _comandos"
 
-#: ../src/gtk-utils.c:741
+#: ../src/gtk-utils.c:750
 msgid "Could not display help"
 msgstr "No se pudo mostrar la ayuda"
 
@@ -1541,6 +1565,18 @@ msgstr "por _ruta"
 #: ../src/ui.h:268
 msgid "Sort file list by location"
 msgstr "Ordena los archivos por su ruta"
+
+#~ msgid "Modified on:"
+#~ msgstr "Modificado el:"
+
+#~ msgid "The file doesn't exist"
+#~ msgstr "El archivo no existes"
+
+#~ msgid "The new name is void."
+#~ msgstr "El nombre nuevo está vacío."
+
+#~ msgid "The new name is equal to the old one."
+#~ msgstr "El nombre nuevo es igual al antiguo."
 
 #~ msgid "A_vailable application:"
 #~ msgstr "Aplicación _disponible:"
