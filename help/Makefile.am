@@ -22,7 +22,9 @@ DOC_PAGES = \
 	keyboard-shortcuts.page \
 	password-protection.page \
 	supported-formats.page \
-	test-integrity.page
+	test-integrity.page \
+	troubleshooting-archive-open.page \
+	troubleshooting-password.page
 
 DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr it ja oc nl ru sl sv te vi uk zh_CN zh_HK zh_TW
 
