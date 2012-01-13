@@ -2104,9 +2104,6 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "Extract", file_op);
 	set_sensitive (window, "Extract_Toolbar", file_op);
 	set_sensitive (window, "Find", ! no_archive);
-	set_sensitive (window, "LastOutput", ((window->archive != NULL)
-					      && (window->archive->process != NULL)
-					      && (window->archive->process->out.raw != NULL)));
 	set_sensitive (window, "New", ! running);
 	set_sensitive (window, "Open", ! running);
 	set_sensitive (window, "Open_Toolbar", ! running);

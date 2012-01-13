@@ -786,15 +786,6 @@ activate_action_sort_reverse_order (GtkAction *action,
 
 
 void
-activate_action_last_output (GtkAction *action,
-			     gpointer   data)
-{
-	FrWindow *window = data;
-	fr_window_view_last_output (window, _("Last Output"));
-}
-
-
-void
 activate_action_go_back (GtkAction *action,
 			 gpointer   data)
 {

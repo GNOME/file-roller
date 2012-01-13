@@ -126,10 +126,6 @@ static GtkActionEntry action_entries[] = {
 	  NULL,
 	  G_CALLBACK (activate_action_find) },
 
-	{ "LastOutput", NULL,
-	  N_("_Last Output"), NULL,
-	  N_("View the output produced by the last executed command"),
-	  G_CALLBACK (activate_action_last_output) },
 	{ "New", GTK_STOCK_NEW,
 	  N_("New…"), NULL,
 	  N_("Create a new archive"),
@@ -320,8 +316,6 @@ static const gchar *ui_info =
 "        <separator/>"
 "        <menuitem action='SortReverseOrder'/>"
 "      </menu>"*/
-"      <separator/>"
-"      <menuitem action='LastOutput'/>"
 "      <separator/>"
 "      <menuitem action='Stop'/>"
 "      <menuitem action='Reload'/>"
