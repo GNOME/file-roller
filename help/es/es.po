@@ -4,14 +4,14 @@
 # FRancisco Javier F. Serrador <serrador@cvs.gnome.org>, 2006.
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2006.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 200, 2009.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.help.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-19 16:28+0000\n"
-"PO-Revision-Date: 2011-12-23 14:47+0100\n"
+"POT-Creation-Date: 2012-01-12 19:57+0000\n"
+"PO-Revision-Date: 2012-01-15 20:34+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,19 +20,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: C/test-integrity.page:7(desc)
-msgid "Check the integrity of an archive"
-msgstr "Comprobar la integridad de un archivador"
+#: C/troubleshooting-password.page:8(desc)
+msgid "I have set a password, but it does not protect the whole archive."
+msgstr "He establecido una contraseña, pero no protege a todo el archivo."
 
-#: C/test-integrity.page:9(name) C/supported-formats.page:9(name)
-#: C/password-protection.page:11(name) C/keyboard-shortcuts.page:9(name)
-#: C/introduction.page:10(name) C/archive-view.page:9(name)
-#: C/archive-open.page:9(name) C/archive-extract-advanced-options.page:9(name)
+#: C/troubleshooting-password.page:10(name)
+#: C/troubleshooting-archive-open.page:11(name) C/test-integrity.page:9(name)
+#: C/supported-formats.page:9(name) C/password-protection.page:11(name)
+#: C/keyboard-shortcuts.page:9(name) C/introduction.page:10(name)
+#: C/archive-view.page:9(name) C/archive-open.page:9(name)
+#: C/archive-extract-advanced-options.page:9(name)
 #: C/archive-extract.page:12(name) C/archive-edit.page:10(name)
 #: C/archive-create.page:9(name)
 msgid "Marta Bogdanowicz"
 msgstr "Marta Bogdanowicz"
 
+#: C/troubleshooting-password.page:11(email)
+#: C/troubleshooting-archive-open.page:12(email)
 #: C/test-integrity.page:10(email) C/supported-formats.page:10(email)
 #: C/password-protection.page:12(email) C/keyboard-shortcuts.page:10(email)
 #: C/introduction.page:11(email) C/archive-view.page:10(email)
@@ -43,14 +47,75 @@ msgstr "Marta Bogdanowicz"
 msgid "majus85@gmail.com"
 msgstr "majus85@gmail.com"
 
-#: C/test-integrity.page:13(p) C/supported-formats.page:13(p)
-#: C/password-protection.page:15(p) C/keyboard-shortcuts.page:13(p)
-#: C/introduction.page:14(p) C/archive-view.page:13(p)
-#: C/archive-open.page:13(p) C/archive-extract-advanced-options.page:13(p)
-#: C/archive-extract.page:16(p) C/archive-edit.page:14(p)
-#: C/archive-create.page:13(p)
+#: C/troubleshooting-password.page:14(p)
+#: C/troubleshooting-archive-open.page:15(p) C/test-integrity.page:13(p)
+#: C/supported-formats.page:13(p) C/password-protection.page:15(p)
+#: C/keyboard-shortcuts.page:13(p) C/introduction.page:14(p)
+#: C/archive-view.page:13(p) C/archive-open.page:13(p)
+#: C/archive-extract-advanced-options.page:13(p) C/archive-extract.page:16(p)
+#: C/archive-edit.page:14(p) C/archive-create.page:13(p)
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Compartir Igual 3.0"
+
+#: C/troubleshooting-password.page:18(title)
+msgid "Problem setting a password"
+msgstr "Problema al establecer una contraseña"
+
+#: C/troubleshooting-password.page:20(p)
+msgid ""
+"<app>File Roller</app> does not ensure password protection for an existing "
+"archive. While working with such an archive, you can only set a password for "
+"newly added files. To do this, follow instructions on <link xref=\"password-"
+"protection\">Password protection</link> page."
+msgstr ""
+"<app>File Roller</app> no asegura la protección por contraseña de un "
+"archivador existente. Al trabajar con un archivador, sólo puede establecer "
+"una contraseña para los archivos nuevos que añada. Para hacer esto, siga las "
+"instrucciones de la página <link xref=\"password-protection\">Protección por "
+"contraseña</link>."
+
+#: C/troubleshooting-archive-open.page:9(desc)
+#| msgid "Open an archive"
+msgid "I cannot open an archive."
+msgstr "No puedo abrir un archivador."
+
+#: C/troubleshooting-archive-open.page:19(title)
+#| msgid "Open an archive"
+msgid "Problem opening an archive"
+msgstr "Problema al abrir un archivador"
+
+#: C/troubleshooting-archive-open.page:21(p)
+msgid ""
+"If you cannot open an existing archive with <app>File Roller</app>, check "
+"the format of your file. Some types of archive may require additional "
+"plugins, the installation process for these varies between different "
+"distributions."
+msgstr ""
+"Si no puede abrir un archivador existente con  <app>File Roller</app>, "
+"compruebe el formato del archivo. Algunos tipos de archivadores pueden "
+"requerir complementos adicionales, y el proceso de instalación de estos "
+"varía de unas distribuciones a otras."
+
+#: C/troubleshooting-archive-open.page:26(p)
+#| msgid ""
+#| "If <app>File Roller</app> cannot open your recently used archive, and "
+#| "shows the error message <gui>The file doesn't exist</gui>, it may be that "
+#| "the location of the archive file has changed. Then, you may use "
+#| "<gui>Open</gui> option to search for it."
+msgid ""
+"If <app>File Roller</app> cannot open a recently used archive, it may be "
+"that the location of this archive file has changed. See the help page about "
+"<link xref=\"archive-open\">opening an archive</link> for further "
+"information."
+msgstr ""
+"Si <app>File Roller</app> no puede abrir un archivador usado recientemente, "
+"puede deberse a que la ubicación del archivo ha cambiado. Consulte la página "
+"de ayuda sobre <link xref=\"archive-open\">abrir un archivador</link> para "
+"obtener más información."
+
+#: C/test-integrity.page:7(desc)
+msgid "Check the integrity of an archive"
+msgstr "Comprobar la integridad de un archivador"
 
 #: C/test-integrity.page:17(title)
 msgid "Test integrity"
@@ -195,9 +260,12 @@ msgstr ""
 "Establezca una contraseña para cifrar de archivos de un archivador nuevos "
 "siguiendo estos pasos:"
 
-#: C/password-protection.page:26(link) C/archive-create.page:17(title)
-msgid "Create a new archive"
-msgstr "Crear un archivador nuevo"
+#: C/password-protection.page:26(p)
+#| msgid ""
+#| "Continue with <link xref=\"archive-create\"> creating a new archive</link>"
+msgid "Start <link xref=\"archive-create\">creating a new archive</link>"
+msgstr ""
+"Empiece <link xref=\"archive-create\">creando un archivador nuevo</link>"
 
 #: C/password-protection.page:27(p)
 msgid "The file chooser will open"
@@ -231,14 +299,14 @@ msgid "Type your password into the password field"
 msgstr "escriba su contraseña en el campo de contraseña"
 
 #: C/password-protection.page:39(p)
-#| msgid "<link xref=\"archive-open\">Open</link> an archive."
 msgid ""
 "Continue with <link xref=\"archive-create\"> creating a new archive</link>"
 msgstr ""
 "Continúe <link xref=\"archive-create\">creando un archivador nuevo</link>"
 
 #: C/password-protection.page:43(p)
-msgid "Protect an existing archive by setting a password :"
+#| msgid "Protect an existing archive by setting a password :"
+msgid "Protect an existing archive by setting a password:"
 msgstr "Proteger un archivador existente usando una contraseña:"
 
 #: C/password-protection.page:45(link) C/keyboard-shortcuts.page:28(p)
@@ -402,7 +470,6 @@ msgid "F"
 msgstr "F"
 
 #: C/keyboard-shortcuts.page:72(p)
-#| msgid "Extract files or folders from your archive"
 msgid "Delete files or folders from an archive"
 msgstr "Eliminar archivos o carpetas de un archivador"
 
@@ -544,6 +611,10 @@ msgstr "Gestionar archivadores"
 #: C/index.page:12(title)
 msgid "Advanced options"
 msgstr "Opciones avanzadas"
+
+#: C/index.page:16(title)
+msgid "Troubleshooting"
+msgstr "Resolución de problemas"
 
 #: C/archive-view.page:7(desc)
 msgid "View an existing archive and its content."
@@ -989,6 +1060,10 @@ msgstr "Confirme el nombre pulsando <gui>Renombrar</gui>."
 msgid "Add files or folders to your new archive."
 msgstr "Añadir archivos o carpetas al archivador nuevo."
 
+#: C/archive-create.page:17(title)
+msgid "Create a new archive"
+msgstr "Crear un archivador nuevo"
+
 #: C/archive-create.page:19(p)
 msgid ""
 "Create a new archive with <app>File Roller</app>, by following these steps:"
@@ -1006,9 +1081,6 @@ msgstr ""
 "gui><gui>Nuevo…</gui></guiseq>."
 
 #: C/archive-create.page:29(p)
-#| msgid ""
-#| "Name your new archive file, choose its location and click <gui>Create</"
-#| "gui>."
 msgid ""
 "The file chooser will open. Use it to name your new archive file and choose "
 "its location, and click <gui>Create</gui>."
@@ -1017,12 +1089,6 @@ msgstr ""
 "archivador, elija su ubicación y pulse <gui>Crear</gui>."
 
 #: C/archive-create.page:32(p)
-#| msgid ""
-#| "In this window you may also choose the type of the file format that you "
-#| "want to use, available extensions should be listed below. By clicking "
-#| "<gui>Other options</gui> you can set a password, or split your new "
-#| "archive into smaller parts. You should specify the size of the volume in "
-#| "<gui>MB</gui>."
 msgid ""
 "In this dialog you may also choose the type of the file format that you want "
 "to use, available extensions should be listed below. By clicking <gui>Other "
@@ -1860,10 +1926,10 @@ msgstr ""
 #~ msgid ""
 #~ "In <application>Archive Manager</application>, you can perform the same "
 #~ "action in several ways. For example, you can open an archive in the "
-#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1"
-#~ "\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
-#~ "colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
-#~ "tgroup></informaltable>"
+#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep="
+#~ "\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/"
+#~ "><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/"
+#~ "><placeholder-2/></tgroup></informaltable>"
 #~ msgstr ""
 #~ "En el <application>Gestor de archivadores</application>, puede efectuar "
 #~ "la misma acción de formas distintas. Por ejemplo, puede abrir un "
@@ -2349,8 +2415,8 @@ msgstr ""
 #~ "archivador."
 
 #~ msgid ""
-#~ "To add a folder to an archive, perform the following steps: <placeholder-"
-#~ "1/>"
+#~ "To add a folder to an archive, perform the following steps: "
+#~ "<placeholder-1/>"
 #~ msgstr ""
 #~ "Para añadir una carpeta a un archivador, realice los pasos siguientes: "
 #~ "<placeholder-1/>"
@@ -2625,8 +2691,8 @@ msgstr ""
 #~ msgstr "Pulse en <guibutton>Actualizar</guibutton>."
 
 #~ msgid ""
-#~ "To modify a file in an archive perform the following steps: <placeholder-"
-#~ "1/>"
+#~ "To modify a file in an archive perform the following steps: "
+#~ "<placeholder-1/>"
 #~ msgstr ""
 #~ "Para modificar un archivo en un archivador realice los siguientes pasos: "
 #~ "<placeholder-1/>"
