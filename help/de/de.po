@@ -1,14 +1,14 @@
 # German translation of the file-roller manual.
 # Jan Arne Petersen <jpetersen@jpetersen.org>, 2006.
-# Mario Blättermann <mario.blaettermann@gmail.com>, 2008, 2009, 2011.
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2008, 2009, 2011, 2012.
 # Christian Kirbach <Christian.Kirbach@googlemail.com>, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: file-roller master\n"
+"Project-Id-Version: file-roller help master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-09 18:00+0000\n"
-"PO-Revision-Date: 2011-12-11 21:49+0100\n"
+"POT-Creation-Date: 2012-01-12 19:57+0000\n"
+"PO-Revision-Date: 2012-02-06 11:56+0100\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,27 +17,127 @@ msgstr ""
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 
-#: C/supported-formats.page:7(desc)
-msgid "<app>File Roller</app> has the ability to use various file formats."
-msgstr "Der <app>Archivmanager</app> beherrscht verschiedene Dateiformate."
+#: C/troubleshooting-password.page:8(desc)
+msgid "I have set a password, but it does not protect the whole archive."
+msgstr ""
+"Ich habe ein Passwort festgelegt, aber es schützt nicht das ganze Archiv."
 
-#: C/supported-formats.page:9(name) C/introduction.page:10(name)
+#: C/troubleshooting-password.page:10(name)
+#: C/troubleshooting-archive-open.page:11(name) C/test-integrity.page:9(name)
+#: C/supported-formats.page:9(name) C/password-protection.page:11(name)
+#: C/keyboard-shortcuts.page:9(name) C/introduction.page:10(name)
 #: C/archive-view.page:9(name) C/archive-open.page:9(name)
-#: C/archive-edit.page:10(name) C/archive-create.page:9(name)
+#: C/archive-extract-advanced-options.page:9(name)
+#: C/archive-extract.page:12(name) C/archive-edit.page:10(name)
+#: C/archive-create.page:9(name)
 msgid "Marta Bogdanowicz"
 msgstr "Marta Bogdanowicz"
 
-#: C/supported-formats.page:10(email) C/introduction.page:11(email)
-#: C/archive-view.page:10(email) C/archive-open.page:10(email)
-#: C/archive-edit.page:11(email) C/archive-create.page:10(email)
+#: C/troubleshooting-password.page:11(email)
+#: C/troubleshooting-archive-open.page:12(email)
+#: C/test-integrity.page:10(email) C/supported-formats.page:10(email)
+#: C/password-protection.page:12(email) C/keyboard-shortcuts.page:10(email)
+#: C/introduction.page:11(email) C/archive-view.page:10(email)
+#: C/archive-open.page:10(email)
+#: C/archive-extract-advanced-options.page:10(email)
+#: C/archive-extract.page:13(email) C/archive-edit.page:11(email)
+#: C/archive-create.page:10(email)
 msgid "majus85@gmail.com"
 msgstr "majus85@gmail.com"
 
-#: C/supported-formats.page:13(p) C/introduction.page:14(p)
+#: C/troubleshooting-password.page:14(p)
+#: C/troubleshooting-archive-open.page:15(p) C/test-integrity.page:13(p)
+#: C/supported-formats.page:13(p) C/password-protection.page:15(p)
+#: C/keyboard-shortcuts.page:13(p) C/introduction.page:14(p)
 #: C/archive-view.page:13(p) C/archive-open.page:13(p)
+#: C/archive-extract-advanced-options.page:13(p) C/archive-extract.page:16(p)
 #: C/archive-edit.page:14(p) C/archive-create.page:13(p)
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Share Alike 3.0"
+
+#: C/troubleshooting-password.page:18(title)
+msgid "Problem setting a password"
+msgstr "Problem beim Festlegen eines Passworts"
+
+#: C/troubleshooting-password.page:20(p)
+msgid ""
+"<app>File Roller</app> does not ensure password protection for an existing "
+"archive. While working with such an archive, you can only set a password for "
+"newly added files. To do this, follow instructions on <link xref=\"password-"
+"protection\">Password protection</link> page."
+msgstr ""
+"Der <app>Archivmanager</app> sichert kein bestehendes Archiv mit einem "
+"Passwort. Bei der Arbeit mit einem solchen Archiv können lediglich neu "
+"hinzugefügte Dateien mit einem Passwort geschützt werden. Um dies zu tun, "
+"folgen Sie den Anweisungen in der Seite <link xref=\"password-protection"
+"\">Passwortschutz</link>."
+
+#: C/troubleshooting-archive-open.page:9(desc)
+msgid "I cannot open an archive."
+msgstr "Ich kann kein Archiv öffnen"
+
+#: C/troubleshooting-archive-open.page:19(title)
+msgid "Problem opening an archive"
+msgstr "Problem beim Öffnen eines Archivs"
+
+#: C/troubleshooting-archive-open.page:21(p)
+msgid ""
+"If you cannot open an existing archive with <app>File Roller</app>, check the "
+"format of your file. Some types of archive may require additional plugins, "
+"the installation process for these varies between different distributions."
+msgstr ""
+"Falls Sie mit dem <app>Archivmanager</app> kein vorhandenes Archiv öffnen "
+"können, überprüfen Sie das Format Ihrer Datei. Einige Archivtypen erfordern "
+"zusätzliche Plugins, wobei sich deren Installationsprozess von Distribution "
+"zu Distribution unterscheiden kann."
+
+#: C/troubleshooting-archive-open.page:26(p)
+msgid ""
+"If <app>File Roller</app> cannot open a recently used archive, it may be that "
+"the location of this archive file has changed. See the help page about <link "
+"xref=\"archive-open\">opening an archive</link> for further information."
+msgstr ""
+"Wenn der <app>Archivmanager</app> Ihre zuletzt geöffneten Archive nicht "
+"öffnen kann und die Fehlermeldung <gui>Die Datei ist nicht vorhanden</gui> "
+"ausgibt, so hat sich gegebenenfalls der Ort des Archivs geändert. In der "
+"Hilfeseite zum <link xref=\"archive-open\">Öffnen eines Archivs</link> finden "
+"Sie weitere Informationen."
+
+#: C/test-integrity.page:7(desc)
+msgid "Check the integrity of an archive"
+msgstr "Die Integrität Ihres Archivs prüfen."
+
+#: C/test-integrity.page:17(title)
+msgid "Test integrity"
+msgstr "Integritätsprüfung"
+
+#: C/test-integrity.page:19(p)
+#, fuzzy
+msgid ""
+"<app>File Roller</app> allows you to check whether the compressed data in an "
+"archive contains any errors. Do this by clicking <guiseq><gui style=\"menu"
+"\">Archive</gui><gui style=\"menuitem\">Test Integrity</gui></guiseq>."
+msgstr ""
+"Klicken Sie auf das Symbol <gui>Ein neues Archiv anlegen</gui> in der "
+"Werkzeugleiste oder wählen Sie <guiseq><gui style=\"menu\">Archiv</gui><gui "
+"style=\"menuitem\">Neu …</gui></guiseq>."
+
+#: C/test-integrity.page:24(p)
+msgid ""
+"The dialog with the <gui>Test Result</gui> will pop up. You will see the list "
+"of tested files and, at the bottom, there will also be the test summary."
+msgstr ""
+"Der Dialog mit dem <gui>Testergebnis</gui> wird geöffnet. Sie sehen eine "
+"Liste der getesteten Dateien sowie am unteren Rand eine Zusammenfassung des "
+"Tests."
+
+#: C/test-integrity.page:28(p)
+msgid "The integrity test verifies that your data is not corrupt."
+msgstr "Die Integritätsprüfung untersucht, ob Ihre Daten beschädigt sind."
+
+#: C/supported-formats.page:7(desc)
+msgid "<app>File Roller</app> has the ability to use various file formats."
+msgstr "Der <app>Archivmanager</app> beherrscht verschiedene Dateiformate."
 
 #: C/supported-formats.page:17(title)
 msgid "Supported file formats"
@@ -126,6 +226,290 @@ msgstr ""
 "Für einige Dateiformate benötigt der <app>Archivmanager</app> gegebenenfalls "
 "zusätzliche Plugins."
 
+#: C/password-protection.page:9(desc)
+msgid "Set the password for your archive."
+msgstr "Ein Passwort für Ihr Archiv festlegen."
+
+#: C/password-protection.page:19(title)
+msgid "Password protection"
+msgstr "Passwortschutz"
+
+#: C/password-protection.page:21(p)
+msgid ""
+"<app>File Roller</app> allows you to encrypt an archive with a password only "
+"in specific circumstances."
+msgstr ""
+"Der <app>Archivmanager</app> ermöglicht Ihnen die Verschlüsselung eines "
+"Archivs mit einem Passwort nur unter bestimmten Umständen."
+
+#: C/password-protection.page:24(p)
+msgid ""
+"Set a password to encrypt data in a new archive by following these steps:"
+msgstr "Gehen Sie wie folgt vor, um die Daten in einem Archiv zu verschlüsseln:"
+
+#: C/password-protection.page:26(p)
+msgid "Start <link xref=\"archive-create\">creating a new archive</link>"
+msgstr "Erstellen Sie <link xref=\"archive-create\">ein neues Archiv</link>"
+
+#: C/password-protection.page:27(p)
+msgid "The file chooser will open"
+msgstr "Der Dateiwähler wird geöffnet"
+
+#: C/password-protection.page:28(p)
+msgid ""
+"At the bottom of this dialog you can choose the <gui>File Format</gui> and "
+"<gui>Other Options</gui>, where you can set a password"
+msgstr ""
+"Am unteren Rand dieses Dialogs können Sie das <gui>Dateiformat</gui> und "
+"<gui>Weitere Optionen</gui> wählen, wo Sie auch ein Passwort festlegen können"
+
+#: C/password-protection.page:30(p)
+msgid "Click <gui>Other Options</gui> and type a password"
+msgstr ""
+"Klicken Sie auf <gui>Weitere Optionen</gui> und geben Sie ein Passwort ein"
+
+#: C/password-protection.page:32(p)
+msgid ""
+"You may not be able to type password, because <app>File Roller</app> does not "
+"allow this option to be used for all types of archive files, so it is better "
+"to choose file format before setting a password."
+msgstr ""
+"Möglicherweise können Sie kein Passwort eingeben, weil der "
+"<app>Archivmanager</app> dies nicht für alle Archivtypen erlaubt. Daher ist "
+"es besser, wenn Sie vor dem Festlegen eines Passworts zunächst ein "
+"entsprechendes Dateiformat wählen."
+
+#: C/password-protection.page:38(p)
+msgid "Type your password into the password field"
+msgstr "Geben Sie Ihr Passwort in das Passwortfeld ein"
+
+#: C/password-protection.page:39(p)
+msgid ""
+"Continue with <link xref=\"archive-create\"> creating a new archive</link>"
+msgstr ""
+"Setzen Sie die <link xref=\"archive-create\">Erstellung eines neuen Archivs</"
+"link> fort"
+
+#: C/password-protection.page:43(p)
+msgid "Protect an existing archive by setting a password:"
+msgstr "So schützen Sie ein vorhandenes Archiv mit einem Passwort:"
+
+#: C/password-protection.page:45(link) C/keyboard-shortcuts.page:28(p)
+#: C/archive-open.page:17(title)
+msgid "Open an archive"
+msgstr "Ein Archiv öffnen"
+
+#: C/password-protection.page:46(p)
+msgid ""
+"Click <guiseq><gui style=\"menu\">Edit</gui><gui style=\"menuitem\">Password…"
+"</gui></guiseq>"
+msgstr ""
+"Klicken Sie auf <guiseq><gui style=\"menu\">Bearbeiten</gui><gui style="
+"\"menuitem\">Passwort …</gui></guiseq>"
+
+#: C/password-protection.page:48(p)
+msgid "Type password into the password field"
+msgstr "Geben Sie Ihr Passwort in das Passwortfeld ein"
+
+#: C/password-protection.page:50(p)
+msgid ""
+"If you want to encrypt the list of files tick <gui>Encrypt the file list too</"
+"gui>."
+msgstr ""
+"Falls Sie die Dateiliste verschlüsseln wollen, aktivieren Sie <gui>Dateiliste "
+"ebenfalls verschlüsseln</gui>."
+
+#: C/password-protection.page:54(p)
+msgid "Click <gui style=\"button\">OK</gui> to continue"
+msgstr "Klicken Sie auf <gui style=\"button\">OK</gui>, um fortzusetzen"
+
+#: C/password-protection.page:56(p)
+msgid ""
+"<app>File Roller</app> will encrypt only new files which will be added to the "
+"archive!"
+msgstr ""
+"Der <app>Archivmanager</app> verschlüsselt nur Dateien, die neu zum Archiv "
+"hinzugefügt werden!"
+
+#: C/keyboard-shortcuts.page:7(desc)
+msgid "The list of shortcuts in <app>File Roller</app>."
+msgstr "Eine Liste der Tastenkombinationen des <app>Archivmanagers</app>."
+
+#: C/keyboard-shortcuts.page:17(title)
+msgid "Keyboard shortcuts"
+msgstr "Tastenkombinationen"
+
+#: C/keyboard-shortcuts.page:19(p)
+msgid ""
+"Using keyboard shortcuts can help speed up work-flow. In the table below is a "
+"list of shortcuts which can be used in <app>File Roller</app>."
+msgstr ""
+"Mit Tastenkombinationen können Sie Ihre Arbeitsabläufe beschleunigen. In der "
+"nachfolgenden Tabelle werden Tastenkombinationen aufgelistet, die Sie im "
+"<app>Archivmanager</app> verwenden können."
+
+#: C/keyboard-shortcuts.page:24(p)
+msgid "Create new archive"
+msgstr "Ein neues Archiv erstellen"
+
+#: C/keyboard-shortcuts.page:25(key) C/keyboard-shortcuts.page:29(key)
+#: C/keyboard-shortcuts.page:33(key) C/keyboard-shortcuts.page:41(key)
+#: C/keyboard-shortcuts.page:45(key) C/keyboard-shortcuts.page:49(key)
+#: C/keyboard-shortcuts.page:53(key) C/keyboard-shortcuts.page:61(key)
+#: C/keyboard-shortcuts.page:65(key) C/keyboard-shortcuts.page:69(key)
+#: C/keyboard-shortcuts.page:81(key) C/keyboard-shortcuts.page:85(key)
+#: C/keyboard-shortcuts.page:93(key)
+msgid "Ctrl"
+msgstr "Strg"
+
+#: C/keyboard-shortcuts.page:25(key)
+msgid "N"
+msgstr "N"
+
+#: C/keyboard-shortcuts.page:29(key)
+msgid "O"
+msgstr "O"
+
+#: C/keyboard-shortcuts.page:32(p) C/archive-extract.page:20(title)
+msgid "Extract an archive"
+msgstr "Ein Archiv entpacken"
+
+#: C/keyboard-shortcuts.page:33(key)
+msgid "E"
+msgstr "E"
+
+#: C/keyboard-shortcuts.page:36(p)
+msgid "View archive properties"
+msgstr "Die Archiveigenschaften anzeigen"
+
+#: C/keyboard-shortcuts.page:37(key)
+msgid "Alt"
+msgstr "Alt"
+
+#: C/keyboard-shortcuts.page:37(key)
+msgid "Return"
+msgstr "Eingabetaste"
+
+#: C/keyboard-shortcuts.page:40(p)
+msgid "Close"
+msgstr "Schließen"
+
+#: C/keyboard-shortcuts.page:41(key)
+msgid "W"
+msgstr "W"
+
+#: C/keyboard-shortcuts.page:44(p)
+msgid "Cut"
+msgstr "Ausschneiden"
+
+#: C/keyboard-shortcuts.page:45(key)
+msgid "X"
+msgstr "X"
+
+#: C/keyboard-shortcuts.page:48(p)
+msgid "Copy"
+msgstr "Kopieren"
+
+#: C/keyboard-shortcuts.page:49(key)
+msgid "C"
+msgstr "C"
+
+#: C/keyboard-shortcuts.page:52(p)
+msgid "Paste"
+msgstr "Einfügen"
+
+#: C/keyboard-shortcuts.page:53(key)
+msgid "V"
+msgstr "V"
+
+#: C/keyboard-shortcuts.page:56(p)
+msgid "Rename file or folder in an archive"
+msgstr "Dateien oder Ordner in einem Archiv umbenennen"
+
+#: C/keyboard-shortcuts.page:57(key)
+msgid "F2"
+msgstr "F2"
+
+#: C/keyboard-shortcuts.page:60(p)
+msgid "Select all"
+msgstr "Alles auswählen"
+
+#: C/keyboard-shortcuts.page:61(key) C/keyboard-shortcuts.page:65(key)
+msgid "A"
+msgstr "A"
+
+#: C/keyboard-shortcuts.page:64(p)
+msgid "Deselect all"
+msgstr "Auswahl aufheben"
+
+#: C/keyboard-shortcuts.page:65(key)
+msgid "Shift"
+msgstr "Umschalttaste"
+
+#: C/keyboard-shortcuts.page:68(p)
+msgid "Find"
+msgstr "Suchen"
+
+#: C/keyboard-shortcuts.page:69(key)
+msgid "F"
+msgstr "F"
+
+#: C/keyboard-shortcuts.page:72(p)
+msgid "Delete files or folders from an archive"
+msgstr "Dateien oder Ordner aus einem Archiv löschen"
+
+#: C/keyboard-shortcuts.page:73(key)
+msgid "Delete"
+msgstr "Löschen"
+
+#: C/keyboard-shortcuts.page:76(p)
+msgid "Display the tree view of the folders in the side pane"
+msgstr "In der Seitenleiste die Ordner in einer Baumansicht anzeigen"
+
+#: C/keyboard-shortcuts.page:77(key)
+msgid "F9"
+msgstr "F9"
+
+#: C/keyboard-shortcuts.page:80(p)
+msgid "View the content of an archive as a list of files"
+msgstr "Den Inhalt eines Archivs als Dateiliste anzeigen"
+
+#: C/keyboard-shortcuts.page:81(key)
+msgid "1"
+msgstr "1"
+
+#: C/keyboard-shortcuts.page:84(p)
+msgid "View the content of an archive as a folder structure"
+msgstr "Den Inhalt eines Archivs als Ordnerstruktur anzeigen"
+
+#: C/keyboard-shortcuts.page:85(key)
+msgid "2"
+msgstr "2"
+
+#: C/keyboard-shortcuts.page:88(p)
+msgid "Stop the operation"
+msgstr "Den Vorgang abbrechen"
+
+#: C/keyboard-shortcuts.page:89(key)
+msgid "Esc"
+msgstr "Esc"
+
+#: C/keyboard-shortcuts.page:92(p)
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#: C/keyboard-shortcuts.page:93(key)
+msgid "R"
+msgstr "R"
+
+#: C/keyboard-shortcuts.page:96(p)
+msgid "View help content"
+msgstr "Den Inhalt der Hilfe anzeigen"
+
+#: C/keyboard-shortcuts.page:97(key)
+msgid "F1"
+msgstr "F1"
+
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/introduction.page:42(None)
@@ -206,6 +590,14 @@ msgstr "Hilfe zum Archivmanager"
 msgid "Managing archives"
 msgstr "Verwalten von Archiven"
 
+#: C/index.page:12(title)
+msgid "Advanced options"
+msgstr "Erweiterte Optionen"
+
+#: C/index.page:16(title)
+msgid "Troubleshooting"
+msgstr "Fehlerbehandlung"
+
 #: C/archive-view.page:7(desc)
 msgid "View an existing archive and its content."
 msgstr "Ein bestehendes Archiv und dessen Inhalt einsehen."
@@ -259,11 +651,12 @@ msgstr ""
 "Ordner anzeigen</gui></guiseq>."
 
 #: C/archive-view.page:40(p)
+#, fuzzy
 msgid ""
-"While viewing your archive in this way, press <gui style=\"button\">F9</gui>, "
-"or click <guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem"
-"\">Folders</gui></guiseq> option. You will see a tree view of the folders in "
-"the side pane. It allows you to navigate easily between folders."
+"While viewing your archive in this way, press <key>F9</key>, or click "
+"<guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem\">Folders</gui></"
+"guiseq> option. You will see a tree view of the folders in the side pane. It "
+"allows you to navigate easily between folders."
 msgstr ""
 "Drücken Sie beim Anzeigen Ihres Archivs <gui style=\"button\">F9</gui> oder "
 "wählen Sie <guiseq><gui style=\"menu\">Ansicht</gui><gui style=\"menuitem"
@@ -313,10 +706,6 @@ msgstr "Original verwenden"
 #: C/archive-open.page:7(desc)
 msgid "Open an existing archive."
 msgstr "Ein vorhandenes Archiv öffnen."
-
-#: C/archive-open.page:17(title)
-msgid "Open an archive"
-msgstr "Ein Archiv öffnen"
 
 #: C/archive-open.page:19(p)
 msgid ""
@@ -372,6 +761,193 @@ msgstr ""
 "öffnen kann und die Fehlermeldung <gui>Die Datei ist nicht vorhanden</gui> "
 "ausgibt, so hat sich gegebenenfalls der Ort des Archivs geändert. Verwenden "
 "Sie dann <gui>Öffnen</gui>, um danach zu suchen."
+
+#: C/archive-extract-advanced-options.page:7(desc)
+msgid "Specify your preferences for archive extraction."
+msgstr "Einstellungen für das Entpacken von Archiven"
+
+#: C/archive-extract-advanced-options.page:17(title)
+msgid "Advanced options for archive extracting"
+msgstr "Fortgeschrittene Optionen zum Entpacken von Archiven"
+
+#: C/archive-extract-advanced-options.page:19(p)
+msgid ""
+"<app>File Roller</app> offers different options while extracting an archive. "
+"You can see these options in the file chooser dialog, which you use for "
+"choosing the location for extracted files. At the bottom of this dialog, you "
+"can decide if you want to extract:"
+msgstr ""
+
+#: C/archive-extract-advanced-options.page:25(gui)
+msgid "All files"
+msgstr "Alle Dateien"
+
+#: C/archive-extract-advanced-options.page:26(p)
+msgid "the whole archive will be extracted"
+msgstr ""
+
+#: C/archive-extract-advanced-options.page:29(gui)
+msgid "Selected files"
+msgstr "Ausgewählte Dateien"
+
+#: C/archive-extract-advanced-options.page:30(p)
+msgid "<app>File Roller</app> extracts only the chosen files"
+msgstr "Der <app>Archivmanager</app> entpackt nur die gewählten Dateien"
+
+#: C/archive-extract-advanced-options.page:32(p)
+#, fuzzy
+msgid ""
+"Select them before you click <guiseq><gui style=\"menu\">Archive</gui><gui "
+"style=\"menuitem\">Extract…</gui></guiseq>. Do this by clicking on the file "
+"name. Press <key>Ctrl</key> or <key>Shift</key>, to select more than one file."
+msgstr ""
+"Wählen Sie <guiseq><gui style=\"menu\">Archiv</gui><gui style=\"menuitem"
+"\">Zuletzt geöffnet</gui></guiseq>, um die Liste zuletzt verwendeter Archive "
+"zu sehen."
+
+#: C/archive-extract-advanced-options.page:39(gui)
+msgid "Files"
+msgstr "Dateien"
+
+#: C/archive-extract-advanced-options.page:40(p)
+msgid "you can type the names of the files that you want to extract"
+msgstr ""
+
+#: C/archive-extract-advanced-options.page:42(p)
+msgid ""
+"The file name needs to be followed by a file extension. You can extract, for "
+"example, all <file>.txt</file> files, by typing <file>*.txt</file>."
+msgstr ""
+"Dem Dateinamen muss eine Dateinamenerweiterung angehängt werden. Sie können "
+"zum Beispiel alle <file>.txt</file>-Dateien entpacken, indem Sie <file>*.txt</"
+"file> eingeben."
+
+#: C/archive-extract-advanced-options.page:49(p)
+msgid "You can specify in the file chooser dialog whether you want:"
+msgstr ""
+
+#: C/archive-extract-advanced-options.page:52(gui)
+msgid "Re-create folders"
+msgstr "Ordner neu anlegen"
+
+#: C/archive-extract-advanced-options.page:53(p)
+msgid ""
+"Tick this option if you want to keep the directory structure, as it was in "
+"your archive"
+msgstr ""
+"Aktivieren Sie diese Option, wenn Sie die Ordnerstruktur erhalten wollen, so "
+"wie sie in Ihrem Archiv vorhanden ist"
+
+#: C/archive-extract-advanced-options.page:57(gui)
+msgid "Overwrite existing files"
+msgstr "Vorhandene Dateien ersetzen"
+
+#: C/archive-extract-advanced-options.page:58(p)
+msgid ""
+"If your archive contains files with the same name as those in the destination "
+"folder, then <app>File Roller</app> will overwrite them during extraction if "
+"this option is enabled"
+msgstr ""
+
+#: C/archive-extract-advanced-options.page:63(gui)
+msgid "Do not extract older folders"
+msgstr "Keine älteren Ordner entpacken"
+
+#: C/archive-extract-advanced-options.page:64(p)
+msgid ""
+"This option will not overwrite existing files with the same name, which have "
+"a more recent modification date than those which are in the archive."
+msgstr ""
+"Diese Option sorgt dafür, dass keine vorhandenen Dateien gleichen Namens "
+"überschrieben werden, die laut Änderungszeitpunkt neuer sind als jene im "
+"Archiv."
+
+#: C/archive-extract-advanced-options.page:70(p)
+msgid "These <gui>Actions</gui> are listed at the bottom of the dialog."
+msgstr ""
+"Diese <gui>Aktionen</gui> werden am unteren Rand des Dialogs aufgelistet."
+
+#: C/archive-extract-advanced-options.page:73(p)
+msgid ""
+"The option <gui>Do not extract older files</gui> is only avaiable when the "
+"option <gui>Overwrite existing files</gui> has been enabled."
+msgstr ""
+
+#: C/archive-extract.page:10(desc)
+msgid "Extract files or folders from your archive"
+msgstr "Dateien oder Ordner aus einem Archiv entpacken"
+
+#: C/archive-extract.page:22(p)
+#, fuzzy
+msgid ""
+"Extract files from archive using <app>File Roller</app> by following these "
+"steps:"
+msgstr ""
+"Erstellen Sie ein neues Archiv mit dem <app>Archivmanager</app> wie folgt:"
+
+#: C/archive-extract.page:26(p)
+msgid "<link xref=\"archive-open\">Open</link> an archive."
+msgstr "<link xref=\"archive-open\">Öffnen</link> Sie ein Archiv."
+
+#: C/archive-extract.page:27(p)
+#, fuzzy
+msgid ""
+"Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem"
+"\">Extract…</gui></guiseq> or click the <gui>Extract</gui> toolbar button."
+msgstr ""
+"Klicken Sie auf <guiseq><gui style=\"menu\">Archiv</gui><gui style=\"menuitem"
+"\">Öffnen …</gui></guiseq>"
+
+#: C/archive-extract.page:30(p)
+msgid ""
+"Choose the location in the file chooser, into which the files should be "
+"extracted. This will be the destination folder."
+msgstr ""
+
+#: C/archive-extract.page:33(p)
+msgid ""
+"There are additional options in this dialog. See <link xref=\"archive-extract-"
+"advanced-options\">advanced options for extracting archives</link>."
+msgstr ""
+
+#: C/archive-extract.page:38(p)
+msgid "Click <gui>Extract</gui>."
+msgstr "Klicken Sie auf <gui>Entpacken</gui>."
+
+#: C/archive-extract.page:39(p)
+msgid ""
+"If an archive is protected by a password, <app>File Roller</app> will request "
+"it. Type the password and click <gui>OK</gui>."
+msgstr ""
+"Falls das Archiv durch ein Passwort geschützt ist, wird der "
+"<app>Archivmanager</app> Sie danach fragen. Geben Sie das Passwort ein und "
+"klicken Sie auf <gui>OK</gui>."
+
+#: C/archive-extract.page:43(p)
+msgid ""
+"The application will show you the progress bar in a new dialog. If the "
+"extraction completes successfully, you will be asked whether you want to:"
+msgstr ""
+
+#: C/archive-extract.page:47(p)
+msgid "<gui>Quit</gui> - this option closes <app>File Roller</app>"
+msgstr "<gui>Beenden</gui> - dadurch wird der <app>Archivmanager</app> beendet"
+
+#: C/archive-extract.page:48(p)
+msgid ""
+"<gui>Show the files</gui> - after clicking this the destination folder will "
+"be open in <app>Nautilus</app>"
+msgstr ""
+"<gui>Dateien anzeigen</gui> - der Zielordner wird in <app>Nautilus</app> "
+"angezeigt"
+
+#: C/archive-extract.page:50(p)
+msgid ""
+"<gui>Close</gui> - the dialog will be closed and you will see your archive "
+"again"
+msgstr ""
+"<gui>Schließen</gui> - der Dialog wird geschlossen und das Archiv wieder "
+"angezeigt"
 
 #: C/archive-edit.page:8(desc)
 msgid "Change the content of your archive."
@@ -473,15 +1049,17 @@ msgstr ""
 "style=\"menuitem\">Neu …</gui></guiseq>."
 
 #: C/archive-create.page:29(p)
+#, fuzzy
 msgid ""
-"Name your new archive file, choose its location and click <gui>Create</gui>."
+"The file chooser will open. Use it to name your new archive file and choose "
+"its location, and click <gui>Create</gui>."
 msgstr ""
 "Geben Sie Ihrer neuen Archivdatei einen Namen, wählen Sie einen Speicherort "
 "und klicken Sie auf <gui>Anlegen</gui>."
 
 #: C/archive-create.page:32(p)
 msgid ""
-"In this window you may also choose the type of the file format that you want "
+"In this dialog you may also choose the type of the file format that you want "
 "to use, available extensions should be listed below. By clicking <gui>Other "
 "options</gui> you can set a password, or split your new archive into smaller "
 "parts. You should specify the size of the volume in <gui>MB</gui>."
@@ -539,5 +1117,5 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Jan Arne Petersen <jpetersen@jpetersen.org>, 2006\n"
-"Mario Blättermann <mario.blaettermann@gmail.com>, 2008, 2009, 2011\n"
+"Mario Blättermann <mario.blaettermann@gmail.com>, 2008, 2009, 2011, 2012\n"
 "Christian Kirbach <Christian.Kirbach@googlemail.com>, 2011"
