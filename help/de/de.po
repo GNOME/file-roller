@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: file-roller help master\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-12 19:57+0000\n"
-"PO-Revision-Date: 2012-02-06 11:56+0100\n"
+"PO-Revision-Date: 2012-02-07 12:20+0100\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -112,15 +112,15 @@ msgid "Test integrity"
 msgstr "Integritätsprüfung"
 
 #: C/test-integrity.page:19(p)
-#, fuzzy
 msgid ""
 "<app>File Roller</app> allows you to check whether the compressed data in an "
 "archive contains any errors. Do this by clicking <guiseq><gui style=\"menu"
 "\">Archive</gui><gui style=\"menuitem\">Test Integrity</gui></guiseq>."
 msgstr ""
-"Klicken Sie auf das Symbol <gui>Ein neues Archiv anlegen</gui> in der "
-"Werkzeugleiste oder wählen Sie <guiseq><gui style=\"menu\">Archiv</gui><gui "
-"style=\"menuitem\">Neu …</gui></guiseq>."
+"Mit dem <app>Archivmanager</app> können Sie überprüfen, ob die in einem "
+"Archiv enthaltenen gepackten Daten fehlerhaft sind. Wählen Sie hierzu "
+"<guiseq><gui style=\"menu\">Archiv</gui><gui style=\"menuitem"
+"\">Integritätsprüfung</gui></guiseq>."
 
 #: C/test-integrity.page:24(p)
 msgid ""
@@ -145,7 +145,7 @@ msgstr "Unterstützte Dateiformate"
 
 #: C/supported-formats.page:19(p)
 msgid "The formats support by <app>File Roller</app> include:"
-msgstr "Die vom <app>Archivmanager</app> unterstützen Formate sind u.a.:"
+msgstr "Die vom <app>Archivmanager</app> unterstützten Formate sind u.a.:"
 
 #: C/supported-formats.page:22(p)
 msgid "Archive only"
@@ -651,7 +651,6 @@ msgstr ""
 "Ordner anzeigen</gui></guiseq>."
 
 #: C/archive-view.page:40(p)
-#, fuzzy
 msgid ""
 "While viewing your archive in this way, press <key>F9</key>, or click "
 "<guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem\">Folders</gui></"
@@ -777,6 +776,10 @@ msgid ""
 "choosing the location for extracted files. At the bottom of this dialog, you "
 "can decide if you want to extract:"
 msgstr ""
+"Der <app>Archivmanager</app> bietet verschiedene Optionen für das Entpacken "
+"eines Archivs. Sie sehen diese Optionen im Dateiauswahldialog, welcher für "
+"die Wahl des Ortes der entpackten Dateien verwendet wird. Am unteren Rand "
+"dieses Dialogs können Sie Folgendes auswählen:"
 
 #: C/archive-extract-advanced-options.page:25(gui)
 msgid "All files"
@@ -784,7 +787,7 @@ msgstr "Alle Dateien"
 
 #: C/archive-extract-advanced-options.page:26(p)
 msgid "the whole archive will be extracted"
-msgstr ""
+msgstr "Das ganze Archiv wird entpackt"
 
 #: C/archive-extract-advanced-options.page:29(gui)
 msgid "Selected files"
@@ -795,15 +798,15 @@ msgid "<app>File Roller</app> extracts only the chosen files"
 msgstr "Der <app>Archivmanager</app> entpackt nur die gewählten Dateien"
 
 #: C/archive-extract-advanced-options.page:32(p)
-#, fuzzy
 msgid ""
 "Select them before you click <guiseq><gui style=\"menu\">Archive</gui><gui "
 "style=\"menuitem\">Extract…</gui></guiseq>. Do this by clicking on the file "
 "name. Press <key>Ctrl</key> or <key>Shift</key>, to select more than one file."
 msgstr ""
-"Wählen Sie <guiseq><gui style=\"menu\">Archiv</gui><gui style=\"menuitem"
-"\">Zuletzt geöffnet</gui></guiseq>, um die Liste zuletzt verwendeter Archive "
-"zu sehen."
+"Wählen Sie die Dateien aus, bevor Sie <guiseq><gui style=\"menu\">Archiv</"
+"gui><gui style=\"menuitem\">Entpacken …</gui></guiseq> wählen. Klicken Sie "
+"hierzu auf den Dateinamen. Halten Sie die <key>Strg</key>-Taste oder die "
+"<key>Umschalttaste</key> gedrückt, um mehrere Dateien auszuwählen."
 
 #: C/archive-extract-advanced-options.page:39(gui)
 msgid "Files"
@@ -811,7 +814,7 @@ msgstr "Dateien"
 
 #: C/archive-extract-advanced-options.page:40(p)
 msgid "you can type the names of the files that you want to extract"
-msgstr ""
+msgstr "Geben Sie die Namen der zu entpackenden Dateien ein"
 
 #: C/archive-extract-advanced-options.page:42(p)
 msgid ""
@@ -824,7 +827,7 @@ msgstr ""
 
 #: C/archive-extract-advanced-options.page:49(p)
 msgid "You can specify in the file chooser dialog whether you want:"
-msgstr ""
+msgstr "Im Dateiwählerdialog können Sie Folgendes angeben:"
 
 #: C/archive-extract-advanced-options.page:52(gui)
 msgid "Re-create folders"
@@ -848,6 +851,9 @@ msgid ""
 "folder, then <app>File Roller</app> will overwrite them during extraction if "
 "this option is enabled"
 msgstr ""
+"Falls Ihr Archiv Dateien enthält, deren Namen im Zielordner bereits vorhanden "
+"sind, dann überschreibt der <app>Archivmanager</app> diese Dateien beim "
+"entpacken, falls diese Option aktiviert ist"
 
 #: C/archive-extract-advanced-options.page:63(gui)
 msgid "Do not extract older folders"
@@ -872,43 +878,50 @@ msgid ""
 "The option <gui>Do not extract older files</gui> is only avaiable when the "
 "option <gui>Overwrite existing files</gui> has been enabled."
 msgstr ""
+"Die Option <gui>Keine älteren Dateien entpacken</gui> ist nur verfügbar, wenn "
+"die Option <gui>Vorhandene Dateien ersetzen</gui> aktiviert ist."
 
 #: C/archive-extract.page:10(desc)
 msgid "Extract files or folders from your archive"
 msgstr "Dateien oder Ordner aus einem Archiv entpacken"
 
 #: C/archive-extract.page:22(p)
-#, fuzzy
 msgid ""
 "Extract files from archive using <app>File Roller</app> by following these "
 "steps:"
 msgstr ""
-"Erstellen Sie ein neues Archiv mit dem <app>Archivmanager</app> wie folgt:"
+"Entpacken Sie Dateien aus einem Archiv mit dem <app>Archivmanager</app> wie "
+"folgt:"
 
 #: C/archive-extract.page:26(p)
 msgid "<link xref=\"archive-open\">Open</link> an archive."
 msgstr "<link xref=\"archive-open\">Öffnen</link> Sie ein Archiv."
 
 #: C/archive-extract.page:27(p)
-#, fuzzy
 msgid ""
 "Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem"
 "\">Extract…</gui></guiseq> or click the <gui>Extract</gui> toolbar button."
 msgstr ""
 "Klicken Sie auf <guiseq><gui style=\"menu\">Archiv</gui><gui style=\"menuitem"
-"\">Öffnen …</gui></guiseq>"
+"\">Entpacken …</gui></guiseq> oder klicken Sie auf den <gui>Entpacken</gui>-"
+"Knopf in der Werkzeugleiste."
 
 #: C/archive-extract.page:30(p)
 msgid ""
 "Choose the location in the file chooser, into which the files should be "
 "extracted. This will be the destination folder."
 msgstr ""
+"Wählen Sie den Ort im Dateiwählerdialog, wo die Dateien entpackt werden "
+"sollen. Dies wird der Zielordner sein."
 
 #: C/archive-extract.page:33(p)
 msgid ""
 "There are additional options in this dialog. See <link xref=\"archive-extract-"
 "advanced-options\">advanced options for extracting archives</link>."
 msgstr ""
+"In diesem Dialog stehen weitere Optionen zur Verfügung. Siehe <link xref="
+"\"archive-extract-advanced-options\">Fortgeschrittene Optionen zum Entpacken "
+"von Archiven</link>."
 
 #: C/archive-extract.page:38(p)
 msgid "Click <gui>Extract</gui>."
@@ -928,6 +941,9 @@ msgid ""
 "The application will show you the progress bar in a new dialog. If the "
 "extraction completes successfully, you will be asked whether you want to:"
 msgstr ""
+"Die Anwendung zeigt einen Fortschrittsbalken in einem neuen Fenster an. "
+"Sobald das Entpacken erfolgreich abgeschlossen ist, können Sie zwischen "
+"folgenden Optionen wählen:"
 
 #: C/archive-extract.page:47(p)
 msgid "<gui>Quit</gui> - this option closes <app>File Roller</app>"
@@ -1049,13 +1065,12 @@ msgstr ""
 "style=\"menuitem\">Neu …</gui></guiseq>."
 
 #: C/archive-create.page:29(p)
-#, fuzzy
 msgid ""
 "The file chooser will open. Use it to name your new archive file and choose "
 "its location, and click <gui>Create</gui>."
 msgstr ""
-"Geben Sie Ihrer neuen Archivdatei einen Namen, wählen Sie einen Speicherort "
-"und klicken Sie auf <gui>Anlegen</gui>."
+"Der Dateiwählerdialog wird geöffnet. Geben Sie Ihrer neuen Archivdatei einen "
+"Namen, wählen Sie einen Speicherort und klicken Sie auf <gui>Anlegen</gui>."
 
 #: C/archive-create.page:32(p)
 msgid ""
