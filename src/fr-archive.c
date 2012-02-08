@@ -532,7 +532,7 @@ get_mime_type_from_magic_numbers (GFile *file)
 	static magic_t magic = NULL;
 
 	if (! magic) {
-		magic = magic_open (MAGIC_MIME);
+		magic = magic_open (MAGIC_MIME_TYPE);
 		if (magic)
 			magic_load (magic, NULL);
 		else
