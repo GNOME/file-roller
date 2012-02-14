@@ -5,15 +5,16 @@
 # Hideki Yamane <henrich@debian.org>, 2011-2012.
 # KUSANO Takayuki <AE5T-KSN@asahi-net.or.jp>, 2010.
 # Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2010.
+# Jiro Matsuzawa <jmatsuzawa@src.gnome.org>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-01 13:29+0000\n"
-"PO-Revision-Date: 2012-02-05 11:23+0900\n"
-"Last-Translator: Hideki Yamane <henrich@debian.org>\n"
+"POT-Creation-Date: 2012-02-11 19:14+0000\n"
+"PO-Revision-Date: 2012-02-12 13:30+0900\n"
+"Last-Translator: Jiro Matsuzawa <jmatsuzawa@src.gnome.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,68 +94,76 @@ msgid "Create and modify an archive"
 msgstr "書庫を作成したり修正します"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
-msgid "Compression level"
-msgstr "圧縮レベル:"
+msgid "How to sort files"
+msgstr "ファイルの並べ替え方"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:2
 msgid ""
-"Compression level used when adding files to an archive. Possible values: "
-"very-fast, fast, normal, maximum."
+"What criteria must be used to arrange files. Possible values: name, size, "
+"type, time, path."
 msgstr ""
-"圧縮レベルは書庫へファイルを追加する際に使われます。利用可能な値: very-fast, "
-"fast, normal, maximum."
+"ファイルを並べるのに、どの基準を使うか。利用可能な値: 名前、サイズ、ファイル"
+"形式、変更日時、パス"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
-msgid "Default volume size"
-msgstr "デフォルトのボリュームサイズ"
+msgid "Sort type"
+msgstr "拡張子で並べ替え"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:4
-msgid "Display path"
-msgstr "パスを表示する"
+msgid ""
+"Whether to sort in ascending or descending direction. Possible values: "
+"ascending, descending."
+msgstr ""
+"昇順／逆順のどちらで並び替えするかです。利用可能な値: ascending, descending"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
-msgid "Display size"
-msgstr "サイズを表示する"
+msgid "List Mode"
+msgstr "一覧の形式"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:6
-msgid "Display the path column in the main window."
-msgstr "メインウィンドウにパスの列を表示します。"
+msgid ""
+"Use 'all-files' to view all the files in the archive in a single list, use "
+"'as-folder' to navigate the archive as a folder."
+msgstr ""
+"\"すべてのファイルを表示\"は、書庫にあるすべてのファイルを一覧で表示するのに"
+"使います。\"フォルダー形式で表示\"は、書庫をフォルダーのように扱う場合に使い"
+"ます。"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
-msgid "Display the size column in the main window."
-msgstr "メインウィンドウにサイズの列を表示します。"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:8
-msgid "Display the time column in the main window."
-msgstr "メインウィンドウに変更日時の列を表示します。"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:9
-msgid "Display the type column in the main window."
-msgstr "メインウィンドウに拡張子の列を表示します。"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:10
-msgid "Display time"
-msgstr "変更日時を表示する"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:11
 msgid "Display type"
 msgstr "拡張子を表示する"
 
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:8
+msgid "Display the type column in the main window."
+msgstr "メインウィンドウに拡張子の列を表示します。"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:9
+msgid "Display size"
+msgstr "サイズを表示する"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:10
+msgid "Display the size column in the main window."
+msgstr "メインウィンドウにサイズの列を表示します。"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:11
+msgid "Display time"
+msgstr "変更日時を表示する"
+
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:12
-msgid "Do not overwrite newer files"
-msgstr "より新しいファイルは上書きしない"
+msgid "Display the time column in the main window."
+msgstr "メインウィンドウに変更日時の列を表示します。"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:13
-msgid "Editors"
-msgstr "編集"
+msgid "Display path"
+msgstr "パスを表示する"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:14
-msgid "Encrypt the archive header"
-msgstr "書庫のヘッダーを暗号化する"
+msgid "Display the path column in the main window."
+msgstr "メインウィンドウにパスの列を表示します。"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:15
-msgid "How to sort files"
-msgstr "ファイルの並べ替え方"
+msgid "Use mime icons"
+msgstr "mime アイコンを使う"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
 msgid ""
@@ -165,16 +174,12 @@ msgstr ""
 "は、すべてのファイルに対して常に同じアイコンを使います(高速)。"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
-msgid "List Mode"
-msgstr "一覧の形式"
+msgid "Name column width"
+msgstr "名前の列幅"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
-msgid ""
-"List of applications entered in the 'Open File' dialog and not associated "
-"with the file type."
-msgstr ""
-"ファイル形式に関連付けられていないが、\"ファイルを開く\" ダイアログで表示され"
-"るアプリケーションの一覧です。"
+msgid "The default width of the name column in the file list."
+msgstr "ファイル一覧の名前列のデフォルト幅"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
 msgid "Max history length"
@@ -185,75 +190,58 @@ msgid "Max number of items in the 'Open Recents' submenu."
 msgstr "\"最近開いた書庫\"サブメニューに表示する最大数"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
-msgid "Name column width"
-msgstr "名前の列幅"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
-msgid "Overwrite existing files"
-msgstr "既存のファイルを上書きする"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
-msgid "Recreate the folders stored in the archive"
-msgstr "書庫中に保存されているフォルダーを再生成する"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
-msgid "Sort type"
-msgstr "拡張子で並べ替え"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
-msgid "The default size for volumes."
-msgstr "分割容量のデフォルトサイズです。"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
-msgid "The default width of the name column in the file list."
-msgstr "ファイル一覧の名前列のデフォルト幅"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
-msgid ""
-"Use 'all-files' to view all the files in the archive in a single list, use "
-"'as-folder' to navigate the archive as a folder."
-msgstr ""
-"\"すべてのファイルを表示\"は、書庫にあるすべてのファイルを一覧で表示するのに"
-"使います。\"フォルダー形式で表示\"は、書庫をフォルダーのように扱う場合に使い"
-"ます。"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
-msgid "Use mime icons"
-msgstr "mime アイコンを使う"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
-msgid "View statusbar"
-msgstr "ステータスバーを表示"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30 ../src/ui.h:229
-msgid "View the folders pane"
-msgstr "フォルダーをツリー形式で表示"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
 msgid "View toolbar"
 msgstr "ツールバーを表示"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
-msgid ""
-"What criteria must be used to arrange files. Possible values: name, size, "
-"type, time, path."
-msgstr ""
-"ファイルを並べるのに、どの基準を使うか。利用可能な値: 名前、サイズ、ファイル"
-"形式、変更日時、パス"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
-msgid "Whether to display the folders pane."
-msgstr "フォルダーペインを表示するかどうか。"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:34
-msgid "Whether to display the statusbar."
-msgstr "ステータスバーを表示するかどうか。"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:35
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
 msgid "Whether to display the toolbar."
 msgstr "ツールバーを表示するかどうか。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:36
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
+msgid "View statusbar"
+msgstr "ステータスバーを表示"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
+msgid "Whether to display the statusbar."
+msgstr "ステータスバーを表示するかどうか。"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25 ../src/ui.h:229
+msgid "View the folders pane"
+msgstr "フォルダーをツリー形式で表示"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
+msgid "Whether to display the folders pane."
+msgstr "フォルダーペインを表示するかどうか。"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
+msgid "Editors"
+msgstr "編集"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
+msgid ""
+"List of applications entered in the 'Open File' dialog and not associated "
+"with the file type."
+msgstr ""
+"ファイル形式に関連付けられていないが、\"ファイルを開く\" ダイアログで表示され"
+"るアプリケーションの一覧です。"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
+msgid "Compression level"
+msgstr "圧縮レベル:"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30
+msgid ""
+"Compression level used when adding files to an archive. Possible values: "
+"very-fast, fast, normal, maximum."
+msgstr ""
+"圧縮レベルは書庫へファイルを追加する際に使われます。利用可能な値: very-fast, "
+"fast, normal, maximum."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
+msgid "Encrypt the archive header"
+msgstr "書庫のヘッダーを暗号化する"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
@@ -261,12 +249,25 @@ msgstr ""
 "書庫のヘッダーを暗号化するかどうかです。ヘッダーが暗号化されている場合、書庫"
 "の内容と同様にファイル一覧を表示するのにもパスワードが必要になります。"
 
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
+msgid "Overwrite existing files"
+msgstr "既存のファイルを上書きする"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:34
+msgid "Do not overwrite newer files"
+msgstr "より新しいファイルは上書きしない"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:35
+msgid "Recreate the folders stored in the archive"
+msgstr "書庫中に保存されているフォルダーを再生成する"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:36
+msgid "Default volume size"
+msgstr "デフォルトのボリュームサイズ"
+
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:37
-msgid ""
-"Whether to sort in ascending or descending direction. Possible values: "
-"ascending, descending."
-msgstr ""
-"昇順／逆順のどちらで並び替えするかです。利用可能な値: ascending, descending"
+msgid "The default size for volumes."
+msgstr "分割容量のデフォルトサイズです。"
 
 #: ../data/ui/add-options.ui.h:1
 msgid "Load Options"
@@ -277,40 +278,40 @@ msgid "Compress"
 msgstr "圧縮"
 
 #: ../data/ui/batch-add-files.ui.h:2
-msgid "Location"
-msgstr "場所"
-
-#. MB means megabytes
-#: ../data/ui/batch-add-files.ui.h:4 ../data/ui/new.ui.h:2
-msgid "MB"
-msgstr "MB"
-
-#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:3
-msgid "Split into _volumes of"
-msgstr "次の容量で分割する(_V): "
-
-#: ../data/ui/batch-add-files.ui.h:7 ../data/ui/new.ui.h:4
-msgid "_Encrypt the file list too"
-msgstr "ファイルの一覧も暗号化する(_E)"
-
-#: ../data/ui/batch-add-files.ui.h:8
 msgid "_Filename:"
 msgstr "ファイル名(_F):"
 
 #. Translators: after the colon there is a folder name.
-#: ../data/ui/batch-add-files.ui.h:9 ../src/fr-window.c:5904
+#: ../data/ui/batch-add-files.ui.h:3 ../src/fr-window.c:5904
 msgid "_Location:"
 msgstr "場所(_L):"
 
-#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:5
-msgid "_Other Options"
-msgstr "その他のオプション(_O)"
+#: ../data/ui/batch-add-files.ui.h:4
+msgid "Location"
+msgstr "場所"
 
-#: ../data/ui/batch-add-files.ui.h:11 ../data/ui/batch-password.ui.h:2
-#: ../data/ui/new.ui.h:6 ../data/ui/password.ui.h:4
+#: ../data/ui/batch-add-files.ui.h:5 ../data/ui/batch-password.ui.h:2
+#: ../data/ui/new.ui.h:1 ../data/ui/password.ui.h:3
 msgid "_Password:"
 msgstr "パスワード(_P):"
+
+#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:2
+msgid "_Encrypt the file list too"
+msgstr "ファイルの一覧も暗号化する(_E)"
+
+#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
+#: ../data/ui/batch-add-files.ui.h:8 ../data/ui/new.ui.h:3
+msgid "Split into _volumes of"
+msgstr "次の容量で分割する(_V): "
+
+#. MB means megabytes
+#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:5
+msgid "MB"
+msgstr "MB"
+
+#: ../data/ui/batch-add-files.ui.h:11 ../data/ui/new.ui.h:6
+msgid "_Other Options"
+msgstr "その他のオプション(_O)"
 
 #: ../data/ui/batch-password.ui.h:1
 msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
@@ -320,23 +321,31 @@ msgstr "<span weight=\"bold\" size=\"larger\">パスワードが必要です</sp
 msgid "Delete"
 msgstr "削除"
 
-#: ../data/ui/delete.ui.h:2 ../src/dlg-extract.c:362
-msgid "_All files"
-msgstr "すべてのファイル(_A)"
-
-#: ../data/ui/delete.ui.h:3 ../src/dlg-extract.c:348
+#: ../data/ui/delete.ui.h:2 ../src/dlg-extract.c:348
 msgid "_Files:"
 msgstr "ファイル(_F):"
 
-#: ../data/ui/delete.ui.h:4 ../src/dlg-extract.c:369
-msgid "_Selected files"
-msgstr "選択したファイル(_S)"
-
-#: ../data/ui/delete.ui.h:5 ../src/dlg-extract.c:359
+#: ../data/ui/delete.ui.h:3 ../src/dlg-extract.c:359
 msgid "example: *.txt; *.doc"
 msgstr "例: *.txt; *.doc"
 
+#: ../data/ui/delete.ui.h:4 ../src/dlg-extract.c:362
+msgid "_All files"
+msgstr "すべてのファイル(_A)"
+
+#: ../data/ui/delete.ui.h:5 ../src/dlg-extract.c:369
+msgid "_Selected files"
+msgstr "選択したファイル(_S)"
+
 #: ../data/ui/password.ui.h:1
+msgid "Password"
+msgstr "パスワード"
+
+#: ../data/ui/password.ui.h:2
+msgid "_Encrypt the file list"
+msgstr "ファイルの一覧を暗号化する(_E)"
+
+#: ../data/ui/password.ui.h:4
 msgid ""
 "<i><b>Note:</b> the password will be used to encrypt files you add to the "
 "current archive, and to decrypt files you extract from the current archive. "
@@ -346,20 +355,8 @@ msgstr ""
 "開するファイルの暗号化を解除するために使用します。書庫を閉じるとパスワードは"
 "削除されます。</i>"
 
-#: ../data/ui/password.ui.h:2
-msgid "Password"
-msgstr "パスワード"
-
-#: ../data/ui/password.ui.h:3
-msgid "_Encrypt the file list"
-msgstr "ファイルの一覧を暗号化する(_E)"
-
-#: ../data/ui/update.ui.h:1
-msgid "S_elect the files you want to update:"
-msgstr "アップデートするファイルを選択してください(_E):"
-
 #. secondary text
-#: ../data/ui/update.ui.h:2 ../src/dlg-update.c:175 ../src/dlg-update.c:203
+#: ../data/ui/update.ui.h:1 ../src/dlg-update.c:175 ../src/dlg-update.c:203
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don't update "
@@ -371,9 +368,13 @@ msgstr[0] ""
 "別のアプリケーションが書庫にある %d 個のファイルを変更しました。これらのファ"
 "イルを更新しないと変更内容がすべて破棄されます。"
 
-#: ../data/ui/update.ui.h:3
+#: ../data/ui/update.ui.h:2
 msgid "_Update"
 msgstr "更新する(_U)"
+
+#: ../data/ui/update.ui.h:3
+msgid "S_elect the files you want to update:"
+msgstr "アップデートするファイルを選択してください(_E):"
 
 #: ../nautilus/nautilus-fileroller.c:325
 msgid "Extract Here"
@@ -452,6 +453,7 @@ msgstr ""
 "やまねひでき <henrich@debian.org>\n"
 "草野貴之 <AE5T-KSN@asahi-net.or.jp>\n"
 "Yasumichi Akahoshi <yasumichi@vinelinux.org>\n"
+"松澤 二郎 <jmatsuzawa@src.gnome.org>\n"
 "日本GNOMEユーザー会 http://www.gnome.gr.jp/"
 
 #: ../src/dlg-add-files.c:99 ../src/dlg-add-folder.c:129
@@ -1120,12 +1122,12 @@ msgstr "最後の出力"
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7420
 msgid "New name is void, please type a name."
-msgstr ""
+msgstr "名前が入力されていません。名前を入力してください。"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7425
 msgid "New name is the same as old one, please type other name."
-msgstr ""
+msgstr "新しい名前が古い名前と同じです。他の名前を入力してください。"
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7430
