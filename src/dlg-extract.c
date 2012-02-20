@@ -236,7 +236,7 @@ extract_cb (GtkWidget   *w,
 				   extract_to_dir,
 				   base_dir,
 				   skip_newer,
-				   overwrite,
+				   overwrite ? FR_OVERWRITE_YES : FR_OVERWRITE_NO,
 				   junk_paths,
 				   TRUE);
 
