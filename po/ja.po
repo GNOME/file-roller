@@ -12,9 +12,9 @@ msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-24 16:20+0000\n"
-"PO-Revision-Date: 2012-02-25 03:49+0900\n"
-"Last-Translator: Jiro Matsuzawa <kano@na.rim.or.jp>\n"
+"POT-Creation-Date: 2012-02-25 04:59+0000\n"
+"PO-Revision-Date: 2012-02-25 14:54+0900\n"
+"Last-Translator: Jiro Matsuzawa <jmatsuzawa@src.gnome.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,11 +87,11 @@ msgstr "セッション管理のオプションを表示する"
 #: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1981
 #: ../src/fr-window.c:5452
 msgid "Archive Manager"
-msgstr "書庫マネージャー"
+msgstr "アーカイブマネージャー"
 
 #: ../data/file-roller.desktop.in.in.h:2
 msgid "Create and modify an archive"
-msgstr "書庫を作成したり修正します"
+msgstr "アーカイブを作成したり修正します"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
 msgid "How to sort files"
@@ -102,8 +102,8 @@ msgid ""
 "What criteria must be used to arrange files. Possible values: name, size, "
 "type, time, path."
 msgstr ""
-"ファイルを並べるのに、どの基準を使うか。利用可能な値: 名前、サイズ、ファイル"
-"形式、更新日時、パス"
+"ファイルを並べるのに、どの基準を使うか。利用可能な値: name, size, type, "
+"time, path"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
 msgid "Sort type"
@@ -125,9 +125,8 @@ msgid ""
 "Use 'all-files' to view all the files in the archive in a single list, use "
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
-"\"すべてのファイルを表示\"は、書庫にあるすべてのファイルを一覧で表示するのに"
-"使います。\"フォルダー形式で表示\"は、書庫をフォルダーのように扱う場合に使い"
-"ます。"
+"'all-files' は、アーカイブにあるすべてのファイルを一覧で表示するのに使いま"
+"す。'as-folder' は、アーカイブをフォルダーのように扱う場合に使います。"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
 msgid "Display type"
@@ -187,7 +186,7 @@ msgstr "履歴の最大数"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
 msgid "Max number of items in the 'Open Recents' submenu."
-msgstr "\"最近開いた書庫\"サブメニューに表示する最大数"
+msgstr "\"最近開いたアーカイブ\"サブメニューに表示する最大数"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
 msgid "View toolbar"
@@ -234,20 +233,21 @@ msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
 msgstr ""
-"圧縮レベルは書庫へファイルを追加する際に使われます。利用可能な値: very-fast, "
-"fast, normal, maximum."
+"圧縮レベルはアーカイブへファイルを追加する際に使われます。利用可能な値: very-"
+"fast, fast, normal, maximum."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
 msgid "Encrypt the archive header"
-msgstr "書庫のヘッダーを暗号化する"
+msgstr "アーカイブのヘッダーを暗号化する"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
-"書庫のヘッダーを暗号化するかどうかです。ヘッダーが暗号化されている場合、書庫"
-"の内容と同様にファイル一覧を表示するのにもパスワードが必要になります。"
+"アーカイブのヘッダーを暗号化するかどうかです。ヘッダーが暗号化されている場"
+"合、アーカイブの内容と同様にファイル一覧を表示するのにもパスワードが必要にな"
+"ります。"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
 msgid "Overwrite existing files"
@@ -259,7 +259,7 @@ msgstr "より新しいファイルは上書きしない"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:35
 msgid "Recreate the folders stored in the archive"
-msgstr "書庫中に保存されているフォルダーを再生成する"
+msgstr "アーカイブ中に保存されているフォルダーを再生成する"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:36
 msgid "Default volume size"
@@ -351,9 +351,9 @@ msgid ""
 "current archive, and to decrypt files you extract from the current archive. "
 "When the archive is closed the password will be deleted.</i>"
 msgstr ""
-"<i><b>注意:</b> パスワードは書庫に追加するファイルを暗号化したり、書庫から展"
-"開するファイルの暗号化を解除するために使用します。書庫を閉じるとパスワードは"
-"削除されます。</i>"
+"<i><b>注意:</b> パスワードはアーカイブに追加するファイルを暗号化したり、アー"
+"カイブから展開するファイルの暗号化を解除するために使用します。アーカイブを閉"
+"じるとパスワードは削除されます。</i>"
 
 #. secondary text
 #: ../data/ui/update.ui.h:1 ../src/dlg-update.c:175 ../src/dlg-update.c:203
@@ -365,8 +365,8 @@ msgid_plural ""
 "%d files have been modified with an external application. If you don't "
 "update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
-"別のアプリケーションが書庫にある %d 個のファイルを変更しました。これらのファ"
-"イルを更新しないと変更内容がすべて破棄されます。"
+"別のアプリケーションがアーカイブにある %d 個のファイルを変更しました。これら"
+"のファイルを更新しないと変更内容がすべて破棄されます。"
 
 #: ../data/ui/update.ui.h:2
 msgid "_Update"
@@ -383,7 +383,7 @@ msgstr "ここに展開する"
 #. Translators: the current position is the current folder
 #: ../nautilus/nautilus-fileroller.c:327
 msgid "Extract the selected archive to the current position"
-msgstr "指定した書庫を現在の場所に展開します"
+msgstr "指定したアーカイブを現在の場所に展開します"
 
 #: ../nautilus/nautilus-fileroller.c:344
 msgid "Extract To..."
@@ -391,7 +391,7 @@ msgstr "展開..."
 
 #: ../nautilus/nautilus-fileroller.c:345
 msgid "Extract the selected archive"
-msgstr "指定した書庫を展開します"
+msgstr "指定したアーカイブを展開します"
 
 #: ../nautilus/nautilus-fileroller.c:364
 msgid "Compress..."
@@ -399,32 +399,32 @@ msgstr "圧縮..."
 
 #: ../nautilus/nautilus-fileroller.c:365
 msgid "Create a compressed archive with the selected objects"
-msgstr "選択したオブジェクトを含む圧縮された書庫を生成します"
+msgstr "選択したオブジェクトを含む圧縮されたアーカイブを生成します"
 
 #: ../src/actions.c:156 ../src/actions.c:195 ../src/actions.c:231
 #: ../src/dlg-batch-add.c:157 ../src/dlg-batch-add.c:173
 #: ../src/dlg-batch-add.c:202 ../src/dlg-batch-add.c:247
 #: ../src/dlg-batch-add.c:293 ../src/fr-window.c:2980
 msgid "Could not create the archive"
-msgstr "書庫を生成できません"
+msgstr "アーカイブを生成できません"
 
 #: ../src/actions.c:158 ../src/dlg-batch-add.c:159 ../src/dlg-batch-add.c:295
 msgid "You have to specify an archive name."
-msgstr "書庫名を指定してください。"
+msgstr "アーカイブ名を指定してください。"
 
 #: ../src/actions.c:197
 msgid "You don't have permission to create an archive in this folder"
-msgstr "このフォルダーの中に書庫を作成する権限がありません。"
+msgstr "このフォルダーの中にアーカイブを作成する権限がありません。"
 
 #: ../src/actions.c:233 ../src/dlg-package-installer.c:268
 #: ../src/dlg-package-installer.c:277 ../src/dlg-package-installer.c:305
 #: ../src/fr-archive.c:1178 ../src/fr-window.c:6090 ../src/fr-window.c:6266
 msgid "Archive type not supported."
-msgstr "この種類の書庫はサポートしていません。"
+msgstr "この種類のアーカイブはサポートしていません。"
 
 #: ../src/actions.c:247
 msgid "Could not delete the old archive."
-msgstr "古い書庫を削除できません。"
+msgstr "古いアーカイブを削除できません。"
 
 #: ../src/actions.c:381 ../src/fr-window.c:5827
 msgid "Open"
@@ -432,7 +432,7 @@ msgstr "開く"
 
 #: ../src/actions.c:392 ../src/dlg-new.c:312 ../src/fr-window.c:5266
 msgid "All archives"
-msgstr "すべての書庫"
+msgstr "すべてのアーカイブ"
 
 #: ../src/actions.c:399 ../src/dlg-new.c:319
 msgid "All files"
@@ -444,7 +444,7 @@ msgstr "Copyright © 2001-2010 フリーソフトウェア財団"
 
 #: ../src/actions.c:845
 msgid "An archive manager for GNOME."
-msgstr "GNOME 向けの書庫マネージャーです。"
+msgstr "GNOME 向けのアーカイブマネージャーです。"
 
 #: ../src/actions.c:848
 msgid "translator-credits"
@@ -458,7 +458,7 @@ msgstr ""
 
 #: ../src/dlg-add-files.c:99 ../src/dlg-add-folder.c:129
 msgid "Could not add the files to the archive"
-msgstr "書庫にファイルを追加できません"
+msgstr "アーカイブにファイルを追加できません"
 
 #: ../src/dlg-add-files.c:100 ../src/dlg-add-folder.c:130
 #, c-format
@@ -527,7 +527,7 @@ msgstr "オプション名(_O):"
 #: ../src/dlg-ask-password.c:122
 #, c-format
 msgid "Enter the password for the archive '%s'."
-msgstr "この書庫 '%s' のパスワードを入力してください。"
+msgstr "このアーカイブ '%s' のパスワードを入力してください。"
 
 #: ../src/dlg-batch-add.c:174
 #, c-format
@@ -548,7 +548,8 @@ msgstr "別の名前を指定してください。"
 msgid ""
 "You don't have the right permissions to create an archive in the destination "
 "folder."
-msgstr "対象となるフォルダーの中に書庫を作成するための適切な権限がありません。"
+msgstr ""
+"対象となるフォルダーの中にアーカイブを作成するための適切な権限がありません。"
 
 #: ../src/dlg-batch-add.c:220 ../src/dlg-extract.c:102 ../src/fr-window.c:6865
 #, c-format
@@ -572,11 +573,11 @@ msgstr "展開先のフォルダー %s を生成できません。"
 
 #: ../src/dlg-batch-add.c:265
 msgid "Archive not created"
-msgstr "書庫を作成しません"
+msgstr "アーカイブを作成しません"
 
 #: ../src/dlg-batch-add.c:313
 msgid "The archive is already present.  Do you want to overwrite it?"
-msgstr "書庫が既に存在しています。上書きしてもよろしいですか?"
+msgstr "アーカイブが既に存在しています。上書きしてもよろしいですか?"
 
 #: ../src/dlg-batch-add.c:316
 msgid "_Overwrite"
@@ -586,13 +587,13 @@ msgstr "上書きする(_O)"
 #: ../src/fr-window.c:4205 ../src/fr-window.c:6895 ../src/fr-window.c:6914
 #: ../src/fr-window.c:6919
 msgid "Extraction not performed"
-msgstr "書庫の展開を中止します"
+msgstr "アーカイブの展開を中止します"
 
 #: ../src/dlg-extract.c:176 ../src/fr-window.c:4368 ../src/fr-window.c:4448
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "フォルダー \"%s\" の中に書庫を展開する権限がありません。"
+msgstr "フォルダー \"%s\" の中にアーカイブを展開する権限がありません。"
 
 #: ../src/dlg-extract.c:331 ../src/dlg-extract.c:429 ../src/ui.h:121
 msgid "Extract"
@@ -666,7 +667,7 @@ msgstr "更新日時:"
 
 #: ../src/dlg-prop.c:143
 msgid "Archive size:"
-msgstr "書庫のサイズ:"
+msgstr "アーカイブのサイズ:"
 
 #: ../src/dlg-prop.c:154
 msgid "Content size:"
@@ -683,12 +684,12 @@ msgstr "ファイル数:"
 #: ../src/dlg-update.c:163
 #, c-format
 msgid "Update the file \"%s\" in the archive \"%s\"?"
-msgstr "\"%2$s\" という書庫の中にある \"%1$s\" を更新しますか?"
+msgstr "\"%2$s\" というアーカイブの中にある \"%1$s\" を更新しますか?"
 
 #: ../src/dlg-update.c:192
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
-msgstr "\"%s\" という書庫の中にあるファイルを更新しますか?"
+msgstr "\"%s\" というアーカイブの中にあるファイルを更新しますか?"
 
 #: ../src/eggfileformatchooser.c:236
 #, c-format
@@ -738,7 +739,7 @@ msgstr "ファイルが見つかりません。"
 #: ../src/fr-archive.c:1261
 #, c-format
 msgid "Archive not found"
-msgstr "書庫が見つかりません。"
+msgstr "アーカイブが見つかりません。"
 
 #: ../src/fr-archive.c:2427
 msgid "You don't have the right permissions."
@@ -746,11 +747,11 @@ msgstr "適切な権限がありません。"
 
 #: ../src/fr-archive.c:2427
 msgid "This archive type cannot be modified"
-msgstr "この種類の書庫を変更することはできません。"
+msgstr "この種類のアーカイブを変更することはできません。"
 
 #: ../src/fr-archive.c:2439
 msgid "You can't add an archive to itself."
-msgstr "書庫自身を追加することはできません。"
+msgstr "アーカイブ自身を追加することはできません。"
 
 #. Translators: after the colon there is a filename.
 #: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:324
@@ -776,15 +777,15 @@ msgstr "ボリュームが見つかりませんでした: %s"
 
 #: ../src/fr-command-tar.c:381 ../src/fr-window.c:2315
 msgid "Deleting files from archive"
-msgstr "書庫からファイルを削除します"
+msgstr "アーカイブからファイルを削除します"
 
 #: ../src/fr-command-tar.c:485
 msgid "Recompressing archive"
-msgstr "書庫の再圧縮"
+msgstr "アーカイブの再圧縮"
 
 #: ../src/fr-command-tar.c:736
 msgid "Decompressing archive"
-msgstr "書庫の解凍"
+msgstr "アーカイブの解凍"
 
 #: ../src/fr-init.c:58
 msgid "7-Zip (.7z)"
@@ -820,11 +821,11 @@ msgstr "キャビネット (.cab)"
 
 #: ../src/fr-init.c:69
 msgid "Rar Archived Comic Book (.cbr)"
-msgstr "Rar で書庫化したコミックブック (.cbr)"
+msgstr "Rar でアーカイブ化したコミックブック (.cbr)"
 
 #: ../src/fr-init.c:70
 msgid "Zip Archived Comic Book (.cbz)"
-msgstr "Zip で書庫化したコミックブック (.cbz)"
+msgstr "Zip でアーカイブ化したコミックブック (.cbz)"
 
 #: ../src/fr-init.c:73
 msgid "Tar compressed with gzip (.tar.gz)"
@@ -942,19 +943,19 @@ msgstr "フォルダー \"%s\" を表示できません"
 
 #: ../src/fr-window.c:2306 ../src/fr-window.c:2336
 msgid "Creating archive"
-msgstr "書庫の作成中"
+msgstr "アーカイブの作成中"
 
 #: ../src/fr-window.c:2309
 msgid "Loading archive"
-msgstr "書庫の読み込み中"
+msgstr "アーカイブの読み込み中"
 
 #: ../src/fr-window.c:2312
 msgid "Reading archive"
-msgstr "書庫の読み込み中"
+msgstr "アーカイブの読み込み中"
 
 #: ../src/fr-window.c:2318
 msgid "Testing archive"
-msgstr "書庫をテストします"
+msgstr "アーカイブをテストします"
 
 #: ../src/fr-window.c:2321
 msgid "Getting the file list"
@@ -966,19 +967,19 @@ msgstr "ファイルの一覧をコピー中"
 
 #: ../src/fr-window.c:2327
 msgid "Adding files to archive"
-msgstr "書庫にファイルを追加します"
+msgstr "アーカイブにファイルを追加します"
 
 #: ../src/fr-window.c:2330
 msgid "Extracting files from archive"
-msgstr "書庫からファイルを展開します"
+msgstr "アーカイブからファイルを展開します"
 
 #: ../src/fr-window.c:2339
 msgid "Saving archive"
-msgstr "書庫の保存中"
+msgstr "アーカイブの保存中"
 
 #: ../src/fr-window.c:2509
 msgid "_Open the Archive"
-msgstr "書庫を開く(_O)"
+msgstr "アーカイブを開く(_O)"
 
 #: ../src/fr-window.c:2510
 msgid "_Show the Files"
@@ -986,15 +987,15 @@ msgstr "ファイルを表示する(_S)"
 
 #: ../src/fr-window.c:2565
 msgid "Archive:"
-msgstr "書庫:"
+msgstr "アーカイブ:"
 
 #: ../src/fr-window.c:2736
 msgid "Extraction completed successfully"
-msgstr "書庫の展開が完了しました"
+msgstr "アーカイブの展開が完了しました"
 
 #: ../src/fr-window.c:2759
 msgid "Archive created successfully"
-msgstr "書庫を作成しました"
+msgstr "アーカイブを作成しました"
 
 #: ../src/fr-window.c:2807
 msgid "please wait…"
@@ -1015,23 +1016,23 @@ msgstr "\"%s\" を開けませんでした"
 
 #: ../src/fr-window.c:2996
 msgid "An error occurred while loading the archive."
-msgstr "書庫の読み込み中にエラーが発生しました。"
+msgstr "アーカイブの読み込み中にエラーが発生しました。"
 
 #: ../src/fr-window.c:3000
 msgid "An error occurred while deleting files from the archive."
-msgstr "書庫からファイルの削除中にエラーが発生しました。"
+msgstr "アーカイブからファイルの削除中にエラーが発生しました。"
 
 #: ../src/fr-window.c:3006
 msgid "An error occurred while adding files to the archive."
-msgstr "ファイルを書庫へ追加中にエラーが発生しました。"
+msgstr "ファイルをアーカイブへ追加中にエラーが発生しました。"
 
 #: ../src/fr-window.c:3010
 msgid "An error occurred while testing archive."
-msgstr "書庫のテスト中にエラーが発生しました。"
+msgstr "アーカイブのテスト中にエラーが発生しました。"
 
 #: ../src/fr-window.c:3014
 msgid "An error occurred while saving the archive."
-msgstr "書庫の保存中にエラーが発生しました。"
+msgstr "アーカイブの保存中にエラーが発生しました。"
 
 #: ../src/fr-window.c:3018
 msgid "An error occurred."
@@ -1054,15 +1055,15 @@ msgstr "作業を実行できません"
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
-msgstr "このファイルを現在の書庫または新規の書庫に追加しますか?"
+msgstr "このファイルを現在のアーカイブまたは新規のアーカイブに追加しますか?"
 
 #: ../src/fr-window.c:4104
 msgid "Do you want to create a new archive with these files?"
-msgstr "これらのファイルを含んだ新しい書庫を作成しますか?"
+msgstr "これらのファイルを含んだ新しいアーカイブを作成しますか?"
 
 #: ../src/fr-window.c:4107
 msgid "Create _Archive"
-msgstr "新しい書庫の作成(_A)"
+msgstr "新しいアーカイブの作成(_A)"
 
 #: ../src/fr-window.c:4700 ../src/fr-window.c:5776
 msgid "Folders"
@@ -1104,16 +1105,16 @@ msgstr "フォルダーペインを閉じます"
 #. Translators: this is the label for the "open recent file" sub-menu.
 #: ../src/fr-window.c:5815
 msgid "Open _Recent"
-msgstr "最近開いた書庫(_R)"
+msgstr "最近開いたアーカイブ(_R)"
 
 #: ../src/fr-window.c:5816 ../src/fr-window.c:5828
 msgid "Open a recently used archive"
-msgstr "最近扱った書庫を開きます"
+msgstr "最近扱ったアーカイブを開きます"
 
 #: ../src/fr-window.c:6258
 #, c-format
 msgid "Could not save the archive \"%s\""
-msgstr "書庫 \"%s\" を保存できません"
+msgstr "アーカイブ \"%s\" を保存できません"
 
 #: ../src/fr-window.c:6774
 #, fuzzy, c-format
@@ -1227,11 +1228,11 @@ msgstr "操作先のフォルダー(_D):"
 
 #: ../src/fr-window.c:8760
 msgid "Add files to an archive"
-msgstr "ファイルを書庫に追加します"
+msgstr "ファイルをアーカイブに追加します"
 
 #: ../src/fr-window.c:8804
 msgid "Extract archive"
-msgstr "書庫からファイルを展開します"
+msgstr "アーカイブからファイルを展開します"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
@@ -1251,7 +1252,7 @@ msgstr "ヘルプを表示できません"
 
 #: ../src/main.c:51
 msgid "Add files to the specified archive and quit the program"
-msgstr "ファイルを指定された書庫に追加してプログラムを終了する"
+msgstr "ファイルを指定されたアーカイブに追加してプログラムを終了する"
 
 #: ../src/main.c:52
 msgid "ARCHIVE"
@@ -1259,11 +1260,11 @@ msgstr "ARCHIVE"
 
 #: ../src/main.c:55
 msgid "Add files asking the name of the archive and quit the program"
-msgstr "指定された書庫名のファイルを追加してプログラムを終了する"
+msgstr "指定されたアーカイブ名のファイルを追加してプログラムを終了する"
 
 #: ../src/main.c:59
 msgid "Extract archives to the specified folder and quit the program"
-msgstr "書庫を指定したフォルダーに展開してプログラムを終了する"
+msgstr "アーカイブを指定したフォルダーに展開してプログラムを終了する"
 
 #: ../src/main.c:60 ../src/main.c:72
 msgid "FOLDER"
@@ -1271,14 +1272,15 @@ msgstr "FOLDER"
 
 #: ../src/main.c:63
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "展開先のフォルダー指定して書庫を展開してからプログラムを終了する"
+msgstr "展開先のフォルダー指定してアーカイブを展開してからプログラムを終了する"
 
 #: ../src/main.c:67
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr ""
-"書庫フォルダー中の内容を指定したフォルダーに展開してプログラムを終了する"
+"アーカイブフォルダー中の内容を指定したフォルダーに展開してプログラムを終了す"
+"る"
 
 #: ../src/main.c:71
 msgid "Default folder to use for the '--add' and '--extract' commands"
@@ -1290,7 +1292,7 @@ msgstr "展開先のフォルダーを作成するときに確認しない"
 
 #: ../src/main.c:296 ../src/server.c:444
 msgid "- Create and modify an archive"
-msgstr "- 書庫を作成したり修正します"
+msgstr "- アーカイブを作成したり修正します"
 
 #: ../src/main.c:312 ../src/server.c:457
 msgid "File Roller"
@@ -1298,7 +1300,7 @@ msgstr "File Roller"
 
 #: ../src/ui.h:31
 msgid "_Archive"
-msgstr "書庫(_A)"
+msgstr "アーカイブ(_A)"
 
 #: ../src/ui.h:32
 msgid "_Edit"
@@ -1326,7 +1328,7 @@ msgstr "ファイルの追加(_A)…"
 
 #: ../src/ui.h:43 ../src/ui.h:47
 msgid "Add files to the archive"
-msgstr "ファイルを書庫へ追加します"
+msgstr "ファイルをアーカイブへ追加します"
 
 #: ../src/ui.h:50
 msgid "Add a _Folder…"
@@ -1334,7 +1336,7 @@ msgstr "フォルダーの追加(_F)…"
 
 #: ../src/ui.h:51 ../src/ui.h:55
 msgid "Add a folder to the archive"
-msgstr "フォルダーを書庫へ追加します"
+msgstr "フォルダーをアーカイブへ追加します"
 
 #: ../src/ui.h:54
 msgid "Add Folder"
@@ -1342,7 +1344,7 @@ msgstr "フォルダーの追加"
 
 #: ../src/ui.h:59
 msgid "Close the current archive"
-msgstr "この書庫を閉じます"
+msgstr "このアーカイブを閉じます"
 
 #: ../src/ui.h:62
 msgid "Contents"
@@ -1374,7 +1376,7 @@ msgstr "選択部分の名前を変更します"
 
 #: ../src/ui.h:84 ../src/ui.h:105
 msgid "Delete the selection from the archive"
-msgstr "書庫から選択部分を削除します"
+msgstr "アーカイブから選択部分を削除します"
 
 #: ../src/ui.h:109
 msgid "Dese_lect All"
@@ -1390,7 +1392,7 @@ msgstr "展開(_E)…"
 
 #: ../src/ui.h:114 ../src/ui.h:118 ../src/ui.h:122
 msgid "Extract files from the archive"
-msgstr "書庫からファイルを展開します"
+msgstr "アーカイブからファイルを展開します"
 
 #: ../src/ui.h:125
 msgid "Find…"
@@ -1402,7 +1404,7 @@ msgstr "新規…"
 
 #: ../src/ui.h:131
 msgid "Create a new archive"
-msgstr "新しい書庫ファイルを生成します"
+msgstr "新しいアーカイブファイルを生成します"
 
 #: ../src/ui.h:134
 msgid "Open…"
@@ -1410,7 +1412,7 @@ msgstr "開く…"
 
 #: ../src/ui.h:135 ../src/ui.h:139
 msgid "Open archive"
-msgstr "書庫を開きます"
+msgstr "アーカイブを開きます"
 
 #: ../src/ui.h:142
 msgid "_Open With…"
@@ -1426,15 +1428,15 @@ msgstr "パスワード(_W)…"
 
 #: ../src/ui.h:147
 msgid "Specify a password for this archive"
-msgstr "この書庫のパスワードを指定します"
+msgstr "このアーカイブのパスワードを指定します"
 
 #: ../src/ui.h:151
 msgid "Show archive properties"
-msgstr "書庫のプロパティを表示します"
+msgstr "アーカイブのプロパティを表示します"
 
 #: ../src/ui.h:155
 msgid "Reload current archive"
-msgstr "この書庫を再度読み込みます"
+msgstr "このアーカイブを再度読み込みます"
 
 #: ../src/ui.h:158
 msgid "Save As…"
@@ -1442,7 +1444,7 @@ msgstr "別名で保存…"
 
 #: ../src/ui.h:159
 msgid "Save the current archive with a different name"
-msgstr "この書庫に別の名前を付けて保存します"
+msgstr "このアーカイブに別の名前を付けて保存します"
 
 #: ../src/ui.h:163
 msgid "Select all files"
@@ -1458,7 +1460,7 @@ msgstr "整合性のテスト(_T)"
 
 #: ../src/ui.h:171
 msgid "Test whether the archive contains errors"
-msgstr "書庫に問題がないかどうかテストします"
+msgstr "アーカイブに問題がないかどうかテストします"
 
 #: ../src/ui.h:175 ../src/ui.h:179
 msgid "Open the selected file"
@@ -1483,7 +1485,7 @@ msgstr "一つ上の階層へ移動します"
 #. Translators: the home location is the home folder.
 #: ../src/ui.h:205
 msgid "Go to the home location"
-msgstr "書庫のルートへ移動します"
+msgstr "アーカイブのルートへ移動します"
 
 #: ../src/ui.h:213
 msgid "_Toolbar"
