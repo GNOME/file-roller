@@ -1,7 +1,7 @@
 # Vietnamese translator for File-Roller.
 # Copyright © 2010 Free Software Foundation, Inc.
 # T.M.Thanh <tmthanh@yahoo.com>, 2002.
-# Nguyễn Thái Ngọc Duy <pclouds@gmail.com>, 2004,2011.
+# Nguyễn Thái Ngọc Duy <pclouds@gmail.com>, 2004,2011-2012.
 # Clytie Siddall <clytie@riverland.net.au>, 2005-2010.
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-02-20 23:54+0000\n"
-"PO-Revision-Date: 2012-03-08 19:05+0700\n"
+"PO-Revision-Date: 2012-03-08 19:10+0700\n"
 "Last-Translator: Nguyễn Thái Ngọc Duy <pclouds@gmail.com>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -176,7 +176,6 @@ msgid "Name column width"
 msgstr "Chiều ngang cột tên"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
-#, fuzzy
 #| msgid "The default width of the name column the file list."
 msgid "The default width of the name column in the file list."
 msgstr "Chiều ngang cố định của cột tên trong danh sách tập tin."
@@ -342,10 +341,9 @@ msgid "Password"
 msgstr "Mật khẩu"
 
 #: ../data/ui/password.ui.h:2
-#, fuzzy
 #| msgid "_Encrypt the file list too"
 msgid "_Encrypt the file list"
-msgstr "_Mã hoá cả danh sách tập tin"
+msgstr "_Mã hoá danh sách tập tin"
 
 #: ../data/ui/password.ui.h:4
 msgid ""
@@ -517,10 +515,9 @@ msgid "Save Options"
 msgstr "Lưu tùy chọn"
 
 #: ../src/dlg-add-folder.c:883
-#, fuzzy
 #| msgid "Options Name:"
 msgid "_Options Name:"
-msgstr "Tên tùy chọn:"
+msgstr "Tên _tùy chọn:"
 
 #: ../src/dlg-ask-password.c:122
 #, c-format
@@ -659,11 +656,10 @@ msgid "%s Properties"
 msgstr "Thuộc tính của %s"
 
 #: ../src/dlg-prop.c:133
-#, fuzzy
 #| msgctxt "File"
 #| msgid "Date Modified"
 msgid "Last modified:"
-msgstr "Ngày sửa đổi"
+msgstr "Ngày sửa đổi:"
 
 #: ../src/dlg-prop.c:143
 msgid "Archive size:"
@@ -736,10 +732,10 @@ msgid "File not found."
 msgstr "Không tìm thấy tập tin."
 
 #: ../src/fr-archive.c:1261
-#, fuzzy, c-format
+#, c-format
 #| msgid "File not found."
 msgid "Archive not found"
-msgstr "Không tìm thấy tập tin."
+msgstr "Không tìm thấy kho lưu"
 
 #: ../src/fr-archive.c:2427
 msgid "You don't have the right permissions."
@@ -997,10 +993,9 @@ msgid "Archive created successfully"
 msgstr "Đã tạo kho thành công"
 
 #: ../src/fr-window.c:2807
-#, fuzzy
 #| msgid "please wait..."
 msgid "please wait…"
-msgstr "hãy đợi..."
+msgstr "vui lòng đợi…"
 
 #: ../src/fr-window.c:2892 ../src/fr-window.c:3027
 msgid "Command exited abnormally."
@@ -1120,36 +1115,32 @@ msgid "Could not save the archive \"%s\""
 msgstr "Không thể lưu kho « %s »"
 
 #: ../src/fr-window.c:6774
-#, fuzzy, c-format
+#, c-format
 #| msgid "_Selected files"
 msgid "Replace file \"%s\"?"
-msgstr "Tập tin đã _chọn"
+msgstr "Thay thế tập tin \"%s\" chứ?"
 
 #: ../src/fr-window.c:6777
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "A file named \"%s\" already exists.\n"
 #| "\n"
 #| "%s"
 msgid "Another file with the same name already exists in \"%s\"."
-msgstr ""
-"Một tập tin tên « %s » đã có.\n"
-"\n"
-"%s"
+msgstr "Tập tin tên \"%s\" đã có."
 
 #: ../src/fr-window.c:6784
 msgid "Replace _All"
-msgstr ""
+msgstr "Thay thế _tất cả"
 
 #: ../src/fr-window.c:6785
 msgid "_Skip"
-msgstr ""
+msgstr "_Bỏ qua"
 
 #: ../src/fr-window.c:6786
-#, fuzzy
 #| msgid "_Rename"
 msgid "_Replace"
-msgstr "Th_ay tên"
+msgstr "Th_ay thế"
 
 #: ../src/fr-window.c:7293
 msgid "Last Output"
@@ -1158,16 +1149,16 @@ msgstr "Kết xuất cuối"
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7598
 msgid "New name is void, please type a name."
-msgstr ""
+msgstr "Tên không hợp lệ, vui lòng nhập lại."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7603
 msgid "New name is the same as old one, please type other name."
-msgstr ""
+msgstr "Tên mới trùng với tên cũ, vui lòng nhập tên khác."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7608
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "The name \"%s\" is not valid because it cannot contain the characters: "
 #| "%s\n"
@@ -1177,9 +1168,8 @@ msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
-"Tên « %s » không hợp lệ vì không cho phép nó chứa ký tự: %s\n"
-"\n"
-"%s"
+"Tên \"%s\" không hợp lệ vì chứa ký tự không cho phép sau: %s, vui lòng nhập "
+"tên khác."
 
 #: ../src/fr-window.c:7644
 #, c-format
@@ -1208,16 +1198,14 @@ msgid "Rename"
 msgstr "Thay tên"
 
 #: ../src/fr-window.c:7717
-#, fuzzy
 #| msgid "New folder name"
 msgid "_New folder name:"
-msgstr "Tên thư mục mới"
+msgstr "Tên thư mục _mới:"
 
 #: ../src/fr-window.c:7717
-#, fuzzy
 #| msgid "New file name"
 msgid "_New file name:"
-msgstr "Tên tập tin mới"
+msgstr "Tên tập tin _mới:"
 
 #: ../src/fr-window.c:7721
 msgid "_Rename"
@@ -1236,10 +1224,9 @@ msgid "Paste Selection"
 msgstr "Dán vùng chọn"
 
 #: ../src/fr-window.c:8159
-#, fuzzy
 #| msgid "Destination folder"
 msgid "_Destination folder:"
-msgstr "Thư mục đích"
+msgstr "Thư mục đí_ch:"
 
 #: ../src/fr-window.c:8760
 msgid "Add files to an archive"
@@ -1339,20 +1326,18 @@ msgid "Information about the program"
 msgstr "Thông tin về chương trình"
 
 #: ../src/ui.h:42
-#, fuzzy
 #| msgid "Add Files"
 msgid "_Add Files…"
-msgstr "Thêm tập tin"
+msgstr "_Thêm tập tin…"
 
 #: ../src/ui.h:43 ../src/ui.h:47
 msgid "Add files to the archive"
 msgstr "Thêm tập tin vào kho"
 
 #: ../src/ui.h:50
-#, fuzzy
 #| msgid "Add a Folder"
 msgid "Add a _Folder…"
-msgstr "Thêm thư mục"
+msgstr "Thêm t_hư mục…"
 
 #: ../src/ui.h:51 ../src/ui.h:55
 msgid "Add a folder to the archive"
@@ -1387,10 +1372,9 @@ msgid "Paste the clipboard"
 msgstr "Dán bảng nháp"
 
 #: ../src/ui.h:79 ../src/ui.h:100
-#, fuzzy
 #| msgid "_Rename"
 msgid "_Rename…"
-msgstr "Th_ay tên"
+msgstr "Đổ_i tên…"
 
 #: ../src/ui.h:80 ../src/ui.h:101
 msgid "Rename the selection"
@@ -1409,57 +1393,51 @@ msgid "Deselect all files"
 msgstr "Bỏ chọn mọi tập tin"
 
 #: ../src/ui.h:113 ../src/ui.h:117
-#, fuzzy
 #| msgid "_Extract"
 msgid "_Extract…"
-msgstr "_Giải nén"
+msgstr "_Giải nén…"
 
 #: ../src/ui.h:114 ../src/ui.h:118 ../src/ui.h:122
 msgid "Extract files from the archive"
 msgstr "Giải nén tập tin khỏi kho"
 
 #: ../src/ui.h:125
-#, fuzzy
 #| msgid "Find:"
 msgid "Find…"
-msgstr "Tìm:"
+msgstr "Tìm…"
 
 #: ../src/ui.h:130
-#, fuzzy
 #| msgctxt "File"
 #| msgid "New"
 msgid "New…"
-msgstr "Mới"
+msgstr "Mới…"
 
 #: ../src/ui.h:131
 msgid "Create a new archive"
 msgstr "Tạo kho mới"
 
 #: ../src/ui.h:134
-#, fuzzy
 #| msgid "Open"
 msgid "Open…"
-msgstr "Mở"
+msgstr "Mở…"
 
 #: ../src/ui.h:135 ../src/ui.h:139
 msgid "Open archive"
 msgstr "Mở kho"
 
 #: ../src/ui.h:142
-#, fuzzy
 #| msgid "_Open With..."
 msgid "_Open With…"
-msgstr "Mở _bằng..."
+msgstr "Mở _bằng…"
 
 #: ../src/ui.h:143
 msgid "Open selected files with an application"
 msgstr "Mở các tập tin được chọn bằng một ứng dụng"
 
 #: ../src/ui.h:146
-#, fuzzy
 #| msgid "Password"
 msgid "Pass_word…"
-msgstr "Mật khẩu"
+msgstr "_Mật khẩu…"
 
 #: ../src/ui.h:147
 msgid "Specify a password for this archive"
@@ -1474,10 +1452,9 @@ msgid "Reload current archive"
 msgstr "Tải lại kho hiện thời"
 
 #: ../src/ui.h:158
-#, fuzzy
 #| msgid "Save As..."
 msgid "Save As…"
-msgstr "Lưu với tên..."
+msgstr "Lưu mới…"
 
 #: ../src/ui.h:159
 msgid "Save the current archive with a different name"
