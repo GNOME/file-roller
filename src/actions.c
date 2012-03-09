@@ -279,7 +279,7 @@ new_file_response_cb (GtkWidget  *w,
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-create");
+		show_help_dialog (GTK_WINDOW (data->dialog), "archive-create");
 		return;
 	}
 
@@ -434,7 +434,7 @@ save_file_response_cb (GtkWidget  *w,
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (data->dialog), "file-roller-convert-archive");
+		show_help_dialog (GTK_WINDOW (data->dialog), "archive-convert");
 		return;
 	}
 

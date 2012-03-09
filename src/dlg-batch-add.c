@@ -123,7 +123,7 @@ static void
 help_clicked_cb (GtkWidget  *widget,
 		 DialogData *data)
 {
-	show_help_dialog (GTK_WINDOW (GET_WIDGET ("dialog")), "file-roller-fmgr-add");
+	show_help_dialog (GTK_WINDOW (GET_WIDGET ("dialog")), "archive-create");
 }
 
 
