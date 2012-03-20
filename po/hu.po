@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-20 23:54+0000\n"
-"PO-Revision-Date: 2012-03-04 03:17+0100\n"
+"POT-Creation-Date: 2012-03-04 02:17+0000\n"
+"PO-Revision-Date: 2012-03-20 12:03+0100\n"
 "Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "MIME-Version: 1.0\n"
@@ -179,7 +179,6 @@ msgid "Name column width"
 msgstr "Név oszlop szélessége"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
-#| msgid "The default width of the name column the file list."
 msgid "The default width of the name column in the file list."
 msgstr "A név oszlop alapértelmezett szélessége a fájllistában."
 
@@ -344,7 +343,6 @@ msgid "Password"
 msgstr "Jelszó"
 
 #: ../data/ui/password.ui.h:2
-#| msgid "_Encrypt the file list too"
 msgid "_Encrypt the file list"
 msgstr "_Fájllista titkosítása"
 
@@ -436,11 +434,11 @@ msgstr "Nem sikerült törölni a régi archívumot."
 msgid "Open"
 msgstr "Megnyitás"
 
-#: ../src/actions.c:392 ../src/dlg-new.c:312 ../src/fr-window.c:5266
+#: ../src/actions.c:392 ../src/fr-window.c:5266
 msgid "All archives"
 msgstr "Minden archívum"
 
-#: ../src/actions.c:399 ../src/dlg-new.c:319
+#: ../src/actions.c:399
 msgid "All files"
 msgstr "Minden fájl"
 
@@ -505,7 +503,7 @@ msgstr "Fájlok _kizárása:"
 
 #: ../src/dlg-add-folder.c:248
 msgid "_Exclude folders:"
-msgstr "Fájlok _kizárása:"
+msgstr "M_appák kizárása:"
 
 #: ../src/dlg-add-folder.c:252
 msgid "_Load Options"
@@ -524,7 +522,6 @@ msgid "Save Options"
 msgstr "Beállítások mentése"
 
 #: ../src/dlg-add-folder.c:883
-#| msgid "Options Name:"
 msgid "_Options Name:"
 msgstr "_Beállítások neve:"
 
@@ -618,12 +615,12 @@ msgstr "Léte_ző fájlok felülírása"
 msgid "Do not e_xtract older files"
 msgstr "Ne _bontson ki régebbi fájlokat"
 
-#: ../src/dlg-new.c:440
+#: ../src/dlg-new.c:427
 msgctxt "File"
 msgid "New"
 msgstr "Új"
 
-#: ../src/dlg-new.c:453
+#: ../src/dlg-new.c:440
 msgctxt "File"
 msgid "Save"
 msgstr "Mentés"
@@ -665,8 +662,6 @@ msgid "%s Properties"
 msgstr "%s tulajdonságai"
 
 #: ../src/dlg-prop.c:133
-#| msgctxt "File"
-#| msgid "Date Modified"
 msgid "Last modified:"
 msgstr "Utolsó módosítás:"
 
@@ -742,7 +737,6 @@ msgstr "A fájl nem található."
 
 #: ../src/fr-archive.c:1261
 #, c-format
-#| msgid "File not found."
 msgid "Archive not found"
 msgstr "Az archívum nem található"
 
@@ -1004,7 +998,6 @@ msgid "Archive created successfully"
 msgstr "Az archívum sikeresen létrejött"
 
 #: ../src/fr-window.c:2807
-#| msgid "please wait..."
 msgid "please wait…"
 msgstr "kis türelmet…"
 
@@ -1127,16 +1120,11 @@ msgstr "A(z) „%s” archívum mentése nem sikerült"
 
 #: ../src/fr-window.c:6774
 #, c-format
-#| msgid "_Selected files"
 msgid "Replace file \"%s\"?"
 msgstr "Lecseréli a(z) „%s” fájlt?"
 
 #: ../src/fr-window.c:6777
 #, c-format
-#| msgid ""
-#| "A file named \"%s\" already exists.\n"
-#| "\n"
-#| "%s"
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "Már létezik ilyen nevű másik fájl „%s” alatt."
 
@@ -1149,7 +1137,6 @@ msgid "_Skip"
 msgstr "_Kihagyás"
 
 #: ../src/fr-window.c:6786
-#| msgid "_Rename"
 msgid "_Replace"
 msgstr "_Csere"
 
@@ -1170,18 +1157,12 @@ msgstr "Az új név megegyezik a régivel, írjon be egy másik nevet."
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7608
 #, c-format
-#| msgid ""
-#| "The name \"%s\" is not valid because it cannot contain the characters: %"
-#| "s\n"
-#| "\n"
-#| "%s"
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
 "A(z) „%s” név érvénytelen, mert a következő karakterek legalább egyikét "
-"tartalmazza: "
-"%s. Írjon be egy másik nevet."
+"tartalmazza: %s. Írjon be egy másik nevet."
 
 #: ../src/fr-window.c:7644
 #, c-format
@@ -1210,12 +1191,10 @@ msgid "Rename"
 msgstr "Átnevezés"
 
 #: ../src/fr-window.c:7717
-#| msgid "New folder name"
 msgid "_New folder name:"
 msgstr "Új _mappanév:"
 
 #: ../src/fr-window.c:7717
-#| msgid "New file name"
 msgid "_New file name:"
 msgstr "Új _fájlnév:"
 
@@ -1236,7 +1215,6 @@ msgid "Paste Selection"
 msgstr "Kijelölés beillesztése"
 
 #: ../src/fr-window.c:8159
-#| msgid "Destination folder"
 msgid "_Destination folder:"
 msgstr "_Célmappa:"
 
@@ -1339,7 +1317,6 @@ msgid "Information about the program"
 msgstr "Információk a programról"
 
 #: ../src/ui.h:42
-#| msgid "Add Files"
 msgid "_Add Files…"
 msgstr "Fájlok hozzá_adása…"
 
@@ -1348,7 +1325,6 @@ msgid "Add files to the archive"
 msgstr "Fájlok hozzáadása az archívumhoz"
 
 #: ../src/ui.h:50
-#| msgid "Add a Folder"
 msgid "Add a _Folder…"
 msgstr "_Mappa hozzáadása…"
 
@@ -1385,7 +1361,6 @@ msgid "Paste the clipboard"
 msgstr "A vágólap tartalmának beillesztése"
 
 #: ../src/ui.h:79 ../src/ui.h:100
-#| msgid "_Rename"
 msgid "_Rename…"
 msgstr "Á_tnevezés…"
 
@@ -1406,7 +1381,6 @@ msgid "Deselect all files"
 msgstr "Megszünteti az összes fájl kijelölését"
 
 #: ../src/ui.h:113 ../src/ui.h:117
-#| msgid "_Extract"
 msgid "_Extract…"
 msgstr "_Kibontás…"
 
@@ -1415,13 +1389,10 @@ msgid "Extract files from the archive"
 msgstr "Fájlok kibontása az archívumból"
 
 #: ../src/ui.h:125
-#| msgid "Find:"
 msgid "Find…"
 msgstr "Keresés…"
 
 #: ../src/ui.h:130
-#| msgctxt "File"
-#| msgid "New"
 msgid "New…"
 msgstr "Új…"
 
@@ -1430,7 +1401,6 @@ msgid "Create a new archive"
 msgstr "Új archívum létrehozása"
 
 #: ../src/ui.h:134
-#| msgid "Open"
 msgid "Open…"
 msgstr "Megnyitás…"
 
@@ -1439,7 +1409,6 @@ msgid "Open archive"
 msgstr "Archívum megnyitása"
 
 #: ../src/ui.h:142
-#| msgid "_Open With..."
 msgid "_Open With…"
 msgstr "Megnyitás e_zzel…"
 
@@ -1448,7 +1417,6 @@ msgid "Open selected files with an application"
 msgstr "Kijelölt fájlok megnyitása egy alkalmazással"
 
 #: ../src/ui.h:146
-#| msgid "Password"
 msgid "Pass_word…"
 msgstr "_Jelszó:"
 
@@ -1465,7 +1433,6 @@ msgid "Reload current archive"
 msgstr "A jelenlegi archívum ismételt betöltése"
 
 #: ../src/ui.h:158
-#| msgid "Save As..."
 msgid "Save As…"
 msgstr "Mentés másként…"
 
