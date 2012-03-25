@@ -1,35 +1,37 @@
 # Japanese translation for file-roller.
 # Copyright (C) 2010 file-roller's COPYRIGHT HOLDER
 # This file is distributed under the same license as the file-roller package.
-# Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2010.
+# Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2010, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
-"POT-Creation-Date: 2011-12-31 14:51+0000\n"
-"PO-Revision-Date: 2012-01-01 23:38+0900\n"
-"Last-Translator: Jiro Matsuzawa <jmatsuzawa@src.gnome.org>\n"
+"POT-Creation-Date: 2012-03-25 22:02+0000\n"
+"PO-Revision-Date: 2012-03-26 07:39+0900\n"
+"Last-Translator: Jiro Masuzawa <jmatsuzawa@src.gnome.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: C/test-integrity.page:7(desc)
-#, fuzzy
-#| msgid "To Test the Integrity of an Archive"
-msgid "Check the integrity of an archive"
-msgstr "書庫の整合性をテストするには"
+#: C/troubleshooting-password.page:8(desc)
+msgid "I have set a password, but it does not protect the whole archive."
+msgstr "パスワードを設定したが、アーカイブ全体が保護されていない。"
 
-#: C/test-integrity.page:9(name) C/supported-formats.page:9(name)
-#: C/password-protection.page:11(name) C/keyboard-shortcuts.page:9(name)
-#: C/introduction.page:10(name) C/archive-view.page:9(name)
-#: C/archive-open.page:9(name) C/archive-extract-advanced-options.page:9(name)
+#: C/troubleshooting-password.page:10(name)
+#: C/troubleshooting-archive-open.page:11(name) C/test-integrity.page:9(name)
+#: C/supported-formats.page:9(name) C/password-protection.page:11(name)
+#: C/keyboard-shortcuts.page:9(name) C/introduction.page:10(name)
+#: C/archive-view.page:9(name) C/archive-open.page:9(name)
+#: C/archive-extract-advanced-options.page:9(name)
 #: C/archive-extract.page:12(name) C/archive-edit.page:10(name)
 #: C/archive-create.page:9(name)
 msgid "Marta Bogdanowicz"
-msgstr ""
+msgstr "Marta Bogdanowicz"
 
+#: C/troubleshooting-password.page:11(email)
+#: C/troubleshooting-archive-open.page:12(email)
 #: C/test-integrity.page:10(email) C/supported-formats.page:10(email)
 #: C/password-protection.page:12(email) C/keyboard-shortcuts.page:10(email)
 #: C/introduction.page:11(email) C/archive-view.page:10(email)
@@ -38,20 +40,73 @@ msgstr ""
 #: C/archive-extract.page:13(email) C/archive-edit.page:11(email)
 #: C/archive-create.page:10(email)
 msgid "majus85@gmail.com"
-msgstr ""
+msgstr "majus85@gmail.com"
 
-#: C/test-integrity.page:13(p) C/supported-formats.page:13(p)
-#: C/password-protection.page:15(p) C/keyboard-shortcuts.page:13(p)
-#: C/introduction.page:14(p) C/archive-view.page:13(p)
-#: C/archive-open.page:13(p) C/archive-extract-advanced-options.page:13(p)
-#: C/archive-extract.page:16(p) C/archive-edit.page:14(p)
-#: C/archive-create.page:13(p)
+#: C/troubleshooting-password.page:14(p)
+#: C/troubleshooting-archive-open.page:15(p) C/test-integrity.page:13(p)
+#: C/supported-formats.page:13(p) C/password-protection.page:15(p)
+#: C/keyboard-shortcuts.page:13(p) C/introduction.page:14(p)
+#: C/archive-view.page:13(p) C/archive-open.page:13(p)
+#: C/archive-extract-advanced-options.page:13(p) C/archive-extract.page:16(p)
+#: C/archive-edit.page:14(p) C/archive-create.page:13(p)
 msgid "Creative Commons Share Alike 3.0"
 msgstr ""
 
+#: C/troubleshooting-password.page:18(title)
+msgid "Problem setting a password"
+msgstr "パスワード設定時の問題"
+
+#: C/troubleshooting-password.page:20(p)
+msgid ""
+"<app>File Roller</app> does not ensure password protection for an existing "
+"archive. While working with such an archive, you can only set a password for "
+"newly added files. To do this, follow instructions on <link xref=\"password-"
+"protection\">Password protection</link> page."
+msgstr ""
+"<app>File Roller</app> は既存のアーカイブに対しては、パスワードによる保護を保"
+"証しません。既存のアーカイブについて作業している間は、新たに追加されたファイ"
+"ルに対してのみパスワードを設定できます。これを行うには、<link xref="
+"\"password-protection\">パスワードによる保護</link>というページの指示に従って"
+"ください。"
+
+#: C/troubleshooting-archive-open.page:9(desc)
+msgid "I cannot open an archive."
+msgstr "アーカイブを開けない場合"
+
+#: C/troubleshooting-archive-open.page:19(title)
+msgid "Problem opening an archive"
+msgstr "アーカイブを開く際の問題"
+
+#: C/troubleshooting-archive-open.page:21(p)
+msgid ""
+"If you cannot open an existing archive with <app>File Roller</app>, check "
+"the format of your file. Some types of archive may require additional "
+"plugins, the installation process for these varies between different "
+"distributions."
+msgstr ""
+"<app>File Roller</app> で既存のアーカイブを開くことができない場合、そのファイ"
+"ルの形式を確認してください。アーカイブの種類によっては、追加のプラグインを必"
+"要とします。インストール手順は、ディストリビューションにより異なります。"
+
+#: C/troubleshooting-archive-open.page:26(p)
+msgid ""
+"If <app>File Roller</app> cannot open a recently used archive, it may be "
+"that the location of this archive file has changed. See the help page about "
+"<link xref=\"archive-open\">opening an archive</link> for further "
+"information."
+msgstr ""
+"<app>File Roller</app> が最近使用したアーカイブを開くことができない場合、アー"
+"カイブファイルの場所が変更されている可能性があります。さらに詳しい情報につい"
+"ては、<link xref=\"archive-open\">アーカイブを開く</link>というヘルプページを"
+"ご覧ください。"
+
+#: C/test-integrity.page:7(desc)
+msgid "Check the integrity of an archive"
+msgstr "アーカイブの整合性をテストする"
+
 #: C/test-integrity.page:17(title)
 msgid "Test integrity"
-msgstr ""
+msgstr "整合性のテスト"
 
 #: C/test-integrity.page:19(p)
 msgid ""
@@ -59,168 +114,156 @@ msgid ""
 "archive contains any errors. Do this by clicking <guiseq><gui style=\"menu"
 "\">Archive</gui><gui style=\"menuitem\">Test Integrity</gui></guiseq>."
 msgstr ""
+"<app>File Roller</app> を使えば、アーカイブ内の圧縮データにエラーが含まれてい"
+"るかを検査できます。<guiseq><gui style=\"menu\">アーカイブ</gui><gui style="
+"\"menuitem\">整合性のテスト</gui></guiseq>をクリックして実行します。"
 
 #: C/test-integrity.page:24(p)
 msgid ""
 "The dialog with the <gui>Test Result</gui> will pop up. You will see the "
 "list of tested files and, at the bottom, there will also be the test summary."
 msgstr ""
+"<gui>テスト結果</gui>を示すダイアログがポップアップされます。テストしたファイ"
+"ルの一覧を閲覧でき、下部にテストの概要も表示されます。"
 
 #: C/test-integrity.page:28(p)
-#, fuzzy
-#| msgid "Select the files that you want to copy."
 msgid "The integrity test verifies that your data is not corrupt."
-msgstr "コピーしたいファイルを選択してください。"
+msgstr "整合のテストでは、データが破損していないかを確認します。"
 
 #: C/supported-formats.page:7(desc)
 msgid "<app>File Roller</app> has the ability to use various file formats."
-msgstr ""
+msgstr "<app>File Roller</app> ではさまざまなファイル形式を利用可能"
 
 #: C/supported-formats.page:17(title)
 msgid "Supported file formats"
-msgstr ""
+msgstr "サポートされている形式"
 
 #: C/supported-formats.page:19(p)
 msgid "The formats support by <app>File Roller</app> include:"
-msgstr ""
+msgstr "<app>File Roller</app> がサポートする形式"
 
 #: C/supported-formats.page:22(p)
-#, fuzzy
-#| msgid "Archives"
 msgid "Archive only"
-msgstr "書庫"
+msgstr "アーカイブのみ"
 
 #: C/supported-formats.page:24(p)
-#, fuzzy
-#| msgid "AIX small indexed archive"
 msgid "AIX Small Indexed Archive (<file>.ar</file>)"
-msgstr "AIX small indexed書庫"
+msgstr "AIX Small Indexed アーカイブ (<file>.ar</file>)"
 
 #: C/supported-formats.page:25(p)
 msgid "ISO-9660 CD Disc Image [Read-only mode] (<file>.iso</file>)"
-msgstr ""
+msgstr "ISO-9660 CD ディスクイメージ [読み込み専用] (<file>.iso</file>)"
 
 #: C/supported-formats.page:26(p)
 msgid "Tape Archive File (<file>.tar</file>)"
-msgstr ""
+msgstr "テープアーカイブファイル (<file>.tar</file>)"
 
 #: C/supported-formats.page:29(p)
 msgid "Archive and compression"
-msgstr ""
+msgstr "アーカイブと圧縮"
 
 #: C/supported-formats.page:31(p)
 msgid "Java Archive (<file>.jar</file>)"
-msgstr ""
+msgstr "Java アーカイブ (<file>.jar</file>)"
 
 #: C/supported-formats.page:32(p)
-#, fuzzy
-#| msgid "WinRAR compressed archive"
 msgid "WinRAR Compressed Archive (<file>.rar</file>)"
-msgstr "WinRAR圧縮書庫"
+msgstr "WinRAR 圧縮アーカイブ (<file>.rar</file>)"
 
 #: C/supported-formats.page:33(p)
 msgid "Tape Archive File compressed with:"
-msgstr ""
+msgstr "圧縮されたテープアーカイブファイル"
 
 #: C/supported-formats.page:35(p)
-#, fuzzy
-#| msgid "<filename>.tar.gz</filename> or <filename>.tgz</filename>"
 msgid "gzip (<file>.tar.gz</file>, <file>.tgz</file>)"
-msgstr "<filename>.tar.gz</filename> または <filename>.tgz</filename>"
+msgstr "gzip (<file>.tar.gz</file>、<file>.tgz</file>)"
 
 #: C/supported-formats.page:36(p)
-#, fuzzy
-#| msgid "<filename>.tar.bz</filename> or <filename>.tbz</filename>"
 msgid "bzip (<file>.tar.bz</file>, <file>.tbz</file>)"
-msgstr "<filename>.tar.bz</filename> または <filename>.tbz</filename>"
+msgstr "bzip (<file>.tar.bz</file>、<file>.tbz</file>)"
 
 #: C/supported-formats.page:37(p)
-#, fuzzy
-#| msgid "<filename>.tar.bz2</filename> or <filename>.tbz2</filename>"
 msgid "bzip2 (<file>.tar.bz2</file>, <file>.tbz2</file>)"
-msgstr "<filename>.tar.bz2</filename> または <filename>.tbz2</filename>"
+msgstr "bzip2 (<file>.tar.bz2</file>、<file>.tbz2</file>)"
 
 #: C/supported-formats.page:38(p)
-#, fuzzy
-#| msgid "<filename>.tar.lzo</filename> or <filename>.tzo</filename>"
 msgid "lzop (<file>.tar.lzo</file>, <file>.tzo</file>)"
-msgstr "<filename>.tar.lzo</filename> または <filename>.tzo</filename>"
+msgstr "lzop (<file>.tar.lzo</file>、<file>.tzo</file>)"
 
 #: C/supported-formats.page:39(p)
 msgid "7zip (<file>.tar.7z</file>)"
-msgstr ""
+msgstr "7zip (<file>.tar.7z</file>)"
 
 #: C/supported-formats.page:40(p)
 msgid "xz (<file>.tar.xz</file>)"
-msgstr ""
+msgstr "xz (<file>.tar.xz</file>)"
 
 #: C/supported-formats.page:43(p)
 msgid "Cabinet File (<file>.cab</file>)"
-msgstr ""
+msgstr "キャビネットファイル (<file>.cab</file>)"
 
 #: C/supported-formats.page:44(p)
-#, fuzzy
-#| msgid "ZIP Archived Comic Book"
 msgid "ZIP Archived Comic Book (<file>.cbz</file>)"
-msgstr "ZIP Archived Comic Book"
+msgstr "ZIP でアーカイブ化されたコミックブック (<file>.cbz</file>)"
 
 #: C/supported-formats.page:45(p)
 msgid "ZIP Archive (<file>.zip</file>)"
-msgstr ""
+msgstr "ZIP アーカイブ (<file>.zip</file>)"
 
 #: C/supported-formats.page:46(p)
-#, fuzzy
-#| msgid "Compressed Non-Archive Files"
 msgid "ZOO Compressed Archive File (<file>.zoo</file>)"
-msgstr "圧縮された非書庫ファイル"
+msgstr "ZOO 圧縮アーカイブファイル (<file>.zoo</file>)"
 
 #: C/supported-formats.page:53(p)
 msgid ""
 "For some file formats, <app>File Roller</app> may require additional plugins."
 msgstr ""
+"ファイル形式によっては、<app>File Roller</app> が追加のプラグインを必要としま"
+"す。"
 
 #: C/password-protection.page:9(desc)
 msgid "Set the password for your archive."
-msgstr ""
+msgstr "アーカイブへのパスワードの設定"
 
 #: C/password-protection.page:19(title)
 msgid "Password protection"
-msgstr ""
+msgstr "パスワードによる保護"
 
 #: C/password-protection.page:21(p)
 msgid ""
 "<app>File Roller</app> allows you to encrypt an archive with a password only "
 "in specific circumstances."
 msgstr ""
+"<app>File Roller</app> を使えば、指定した状況でのみアーカイブをパスワードによ"
+"り暗号化できます。"
 
 #: C/password-protection.page:24(p)
-#, fuzzy
-#| msgid ""
-#| "To specify a password for file encryption, perform the following steps:"
 msgid ""
 "Set a password to encrypt data in a new archive by following these steps:"
 msgstr ""
-"パスワードを指定してファイル暗号化するには、以下の手順を実行してください:"
+"新しいアーカイブ内のデータを暗号化するために以下の手順でパスワードを設定しま"
+"す。"
 
-#: C/password-protection.page:26(link) C/archive-create.page:17(title)
-#, fuzzy
-#| msgid "To Create an Archive"
-msgid "Create a new archive"
-msgstr "書庫を作成するには"
+#: C/password-protection.page:26(p)
+msgid "Start <link xref=\"archive-create\">creating a new archive</link>"
+msgstr ""
+"<link xref=\"archive-create\">新しいアーカイブの作成</link>を開始します。"
 
 #: C/password-protection.page:27(p)
 msgid "The file chooser will open"
-msgstr ""
+msgstr "ファイル選択ダイアログが開きます"
 
 #: C/password-protection.page:28(p)
 msgid ""
 "At the bottom of this dialog you can choose the <gui>File Format</gui> and "
 "<gui>Other Options</gui>, where you can set a password"
 msgstr ""
+"このダイアログの下部で<gui>ファイル形式</gui>およびパスワードを設定できる"
+"<gui>その他のオプション</gui>を選択できます"
 
 #: C/password-protection.page:30(p)
 msgid "Click <gui>Other Options</gui> and type a password"
-msgstr ""
+msgstr "<gui>その他のオプション</gui>をクリックし、パスワードを入力します"
 
 #: C/password-protection.page:32(p)
 msgid ""
@@ -228,74 +271,79 @@ msgid ""
 "not allow this option to be used for all types of archive files, so it is "
 "better to choose file format before setting a password."
 msgstr ""
+"<app>File Roller</app> ではすべてのアーカイブ形式でこのオプションが利用できる"
+"訳ではないため、パスワードを入力できないかもしれません。そのため、パスワード"
+"を設定する前にファイル形式を選択した方が良いです。"
 
 #: C/password-protection.page:38(p)
 msgid "Type your password into the password field"
-msgstr ""
+msgstr "パスワード入力欄にパスワードを入力します"
 
 #: C/password-protection.page:39(p)
 msgid ""
 "Continue with <link xref=\"archive-create\"> creating a new archive</link>"
-msgstr ""
+msgstr "<link xref=\"archive-create\">新しいアーカイブの作成</link>に続きます"
 
 #: C/password-protection.page:43(p)
-msgid "Protect an existing archive by setting a password :"
-msgstr ""
+msgid "Protect an existing archive by setting a password:"
+msgstr "パスワードを設定して既存のアーカイブを保護するには"
 
 #: C/password-protection.page:45(link) C/keyboard-shortcuts.page:28(p)
 #: C/archive-open.page:17(title)
-#, fuzzy
-#| msgid "To Open an Archive"
 msgid "Open an archive"
-msgstr "書庫を開くには"
+msgstr "アーカイブを開く"
 
 #: C/password-protection.page:46(p)
 msgid ""
 "Click <guiseq><gui style=\"menu\">Edit</gui><gui style=\"menuitem\">Password…"
 "</gui></guiseq>"
 msgstr ""
+"<guiseq><gui style=\"menu\">編集</gui><gui style=\"menuitem\">パスワード…</"
+"gui></guiseq>をクリックします"
 
 #: C/password-protection.page:48(p)
 msgid "Type password into the password field"
-msgstr ""
+msgstr "パスワード入力欄にパスワードを入力します"
 
 #: C/password-protection.page:50(p)
 msgid ""
 "If you want to encrypt the list of files tick <gui>Encrypt the file list "
 "too</gui>."
 msgstr ""
+"ファイルの一覧を暗号化したい場合は、<gui>ファイルの一覧も暗号化する</gui>を"
+"チェックしてください。"
 
 #: C/password-protection.page:54(p)
-#, fuzzy
-#| msgid "Click <guibutton>OK</guibutton>."
 msgid "Click <gui style=\"button\">OK</gui> to continue"
-msgstr "<guibutton>OK</guibutton>をクリックしてください。"
+msgstr "続けるには <gui style=\"button\">OK</gui> をクリックします。"
 
 #: C/password-protection.page:56(p)
 msgid ""
 "<app>File Roller</app> will encrypt only new files which will be added to "
 "the archive!"
 msgstr ""
+"<app>File Roller</app> は、アーカイブに追加された新しいファイルのみをアーカイ"
+"ブします!"
 
 #: C/keyboard-shortcuts.page:7(desc)
 msgid "The list of shortcuts in <app>File Roller</app>."
-msgstr ""
+msgstr "<app>File Roller</app> のショートカット一覧"
 
 #: C/keyboard-shortcuts.page:17(title)
 msgid "Keyboard shortcuts"
-msgstr ""
+msgstr "キーボードショートカット"
 
 #: C/keyboard-shortcuts.page:19(p)
 msgid ""
 "Using keyboard shortcuts can help speed up work-flow. In the table below is "
 "a list of shortcuts which can be used in <app>File Roller</app>."
 msgstr ""
+"キーボードショートカットを使うと作業の速度向上を助けます。下の表は、"
+"<app>File Roller</app> で使用できるショートカットの一覧です。"
 
 #: C/keyboard-shortcuts.page:24(p)
-#, fuzzy
-#| msgid "To Create an Archive"
 msgid "Create new archive"
-msgstr "書庫を作成するには"
+msgstr "新しいアーカイブの作成"
 
 #: C/keyboard-shortcuts.page:25(key) C/keyboard-shortcuts.page:29(key)
 #: C/keyboard-shortcuts.page:33(key) C/keyboard-shortcuts.page:41(key)
@@ -304,197 +352,171 @@ msgstr "書庫を作成するには"
 #: C/keyboard-shortcuts.page:65(key) C/keyboard-shortcuts.page:69(key)
 #: C/keyboard-shortcuts.page:81(key) C/keyboard-shortcuts.page:85(key)
 #: C/keyboard-shortcuts.page:93(key)
-#, fuzzy
-#| msgid "Cutler"
 msgid "Ctrl"
-msgstr "Cutler"
+msgstr "Ctrl"
 
 #: C/keyboard-shortcuts.page:25(key)
 msgid "N"
-msgstr ""
+msgstr "N"
 
 #: C/keyboard-shortcuts.page:29(key)
 msgid "O"
-msgstr ""
+msgstr "O"
 
 #: C/keyboard-shortcuts.page:32(p) C/archive-extract.page:20(title)
-#, fuzzy
-#| msgid "To Create an Archive"
 msgid "Extract an archive"
-msgstr "書庫を作成するには"
+msgstr "アーカイブの展開"
 
 #: C/keyboard-shortcuts.page:33(key)
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #: C/keyboard-shortcuts.page:36(p)
-#, fuzzy
-#| msgid "Viewing Archives"
 msgid "View archive properties"
-msgstr "書庫の閲覧"
+msgstr "アーカイブのプロパティを表示"
 
 #: C/keyboard-shortcuts.page:37(key)
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #: C/keyboard-shortcuts.page:37(key)
 msgid "Return"
-msgstr ""
+msgstr "Return"
 
 #: C/keyboard-shortcuts.page:40(p)
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #: C/keyboard-shortcuts.page:41(key)
 msgid "W"
-msgstr ""
+msgstr "W"
 
 #: C/keyboard-shortcuts.page:44(p)
-#, fuzzy
-#| msgid "Cutler"
 msgid "Cut"
-msgstr "Cutler"
+msgstr "切り取り"
 
 #: C/keyboard-shortcuts.page:45(key)
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: C/keyboard-shortcuts.page:48(p)
 msgid "Copy"
-msgstr ""
+msgstr "コピー"
 
 #: C/keyboard-shortcuts.page:49(key)
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #: C/keyboard-shortcuts.page:52(p)
-#, fuzzy
-#| msgid "Pattern"
 msgid "Paste"
-msgstr "パターン"
+msgstr "貼り付け"
 
 #: C/keyboard-shortcuts.page:53(key)
 msgid "V"
-msgstr ""
+msgstr "V"
 
 #: C/keyboard-shortcuts.page:56(p)
-#, fuzzy
-#| msgid "The name of a file or folder in the archive."
 msgid "Rename file or folder in an archive"
-msgstr "書庫内のファイルまたはフォルダーの名前です。"
+msgstr "アーカイブ内のファイルまたはフォルダーの名前を変更"
 
 #: C/keyboard-shortcuts.page:57(key)
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: C/keyboard-shortcuts.page:60(p)
-#, fuzzy
-#| msgid "Selected files"
 msgid "Select all"
-msgstr "選択したファイル"
+msgstr "すべて選択"
 
 #: C/keyboard-shortcuts.page:61(key) C/keyboard-shortcuts.page:65(key)
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #: C/keyboard-shortcuts.page:64(p)
 msgid "Deselect all"
-msgstr ""
+msgstr "すべて選択解除"
 
 #: C/keyboard-shortcuts.page:65(key)
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #: C/keyboard-shortcuts.page:68(p)
-#, fuzzy
-#| msgid "Window"
 msgid "Find"
-msgstr "ウィンドウ"
+msgstr "検索"
 
 #: C/keyboard-shortcuts.page:69(key)
 msgid "F"
-msgstr ""
+msgstr "F"
 
 #: C/keyboard-shortcuts.page:72(p)
-#, fuzzy
-#| msgid "Delete all files from the archive."
 msgid "Delete files or folders from an archive"
-msgstr "書庫からすべてのファイルを削除します。"
+msgstr "アーカイブからファイルまたはフォルダーを削除"
 
 #: C/keyboard-shortcuts.page:73(key)
 msgid "Delete"
-msgstr ""
+msgstr "Delete"
 
 #: C/keyboard-shortcuts.page:76(p)
 msgid "Display the tree view of the folders in the side pane"
-msgstr ""
+msgstr "サイドペインにフォルダーのツリービューを表示"
 
 #: C/keyboard-shortcuts.page:77(key)
 msgid "F9"
-msgstr ""
+msgstr "F9"
 
 #: C/keyboard-shortcuts.page:80(p)
-#, fuzzy
-#| msgid "To View the Contents of an Archive"
 msgid "View the content of an archive as a list of files"
-msgstr "書庫の内容を閲覧するには"
+msgstr "ファイルの一覧としてアーカイブの内容を表示"
 
 #: C/keyboard-shortcuts.page:81(key)
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: C/keyboard-shortcuts.page:84(p)
-#, fuzzy
-#| msgid "To View the Contents of an Archive"
 msgid "View the content of an archive as a folder structure"
-msgstr "書庫の内容を閲覧するには"
+msgstr "フォルダー構造としてアーカイブの内容を表示"
 
 #: C/keyboard-shortcuts.page:85(key)
 msgid "2"
-msgstr ""
+msgstr "2"
 
 #: C/keyboard-shortcuts.page:88(p)
 msgid "Stop the operation"
-msgstr ""
+msgstr "操作の停止"
 
 #: C/keyboard-shortcuts.page:89(key)
 msgid "Esc"
-msgstr ""
+msgstr "Esc"
 
 #: C/keyboard-shortcuts.page:92(p)
 msgid "Refresh"
-msgstr ""
+msgstr "更新"
 
 #: C/keyboard-shortcuts.page:93(key)
 msgid "R"
-msgstr ""
+msgstr "R"
 
 #: C/keyboard-shortcuts.page:96(p)
 msgid "View help content"
-msgstr ""
+msgstr "ヘルプの内容を表示"
 
 #: C/keyboard-shortcuts.page:97(key)
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/introduction.page:42(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/file-roller_main_window.png'; "
-#| "md5=1ffe6686c623c5a279a1ad13fb8eb488"
 msgid ""
 "@@image: 'figures/file-roller-main-window.png'; "
 "md5=133c50bfcf2ac220d3c2c61180f339db"
 msgstr ""
-"@@image: 'figures/file-roller_main_window.png'; "
-"md5=3335d1eb35b0e25bb09400b8d9addb0d"
+"@@image: 'figures/file-roller-main-window.png'; "
+"md5=a8b90b847f062f1511bb2d8adaf3c5c7"
 
 #: C/introduction.page:7(desc)
 msgid ""
 "Introduction to the <app>File Roller</app> archive managing application."
-msgstr ""
+msgstr "<app>File Roller</app> アーカイブ管理アプリケーションの紹介"
 
 #: C/introduction.page:18(title)
 msgid "Introduction"
@@ -506,6 +528,9 @@ msgid ""
 "be easy to use. It provides all the tools necessary for creating, modifying "
 "or extracting archives."
 msgstr ""
+"<app>File Roller</app> は、アーカイブを管理するためのアプリケーションです。簡"
+"単に使えるように設計されています。アーカイブを作成、修正あるいは展開するため"
+"に必要なツールをすべて提供します。"
 
 #: C/introduction.page:25(p)
 msgid ""
@@ -514,90 +539,74 @@ msgid ""
 "into a single one, archive files are useful for storing data and "
 "transferring it between computers."
 msgstr ""
+"アーカイブは、メタデータとともに 1 つ以上のファイルから構成されます。一部ある"
+"いは全体が暗号化されていることもあります。複数のファイルを 1 つのファイルにま"
+"とめることにより、アーカイブファイルはデータの保存やコンピューター間での転送"
+"に役立ちます。"
 
 #: C/introduction.page:31(p)
 msgid "With <app>File Roller</app> you can:"
-msgstr ""
+msgstr "<app>File Roller</app> でできること"
 
 #: C/introduction.page:33(p)
 msgid "Create new archive by adding files or folders"
-msgstr ""
+msgstr "ファイルやフォルダーを追加して新しいアーカイブを作成"
 
 #: C/introduction.page:34(p)
-#, fuzzy
-#| msgid "To View the Contents of an Archive"
 msgid "View the content of the existing archive"
-msgstr "書庫の内容を閲覧するには"
+msgstr "既存アーカイブの内容を表示"
 
 #: C/introduction.page:35(p)
-#, fuzzy
-#| msgid "To View a File in an Archive"
 msgid "View a file contained in the archive"
-msgstr "書庫内のファイルを閲覧するには"
+msgstr "アーカイブ内に含まれるファイルを表示"
 
 #: C/introduction.page:36(p)
-#, fuzzy
-#| msgid "To Modify a File in an Archive"
 msgid "Modify existing archives"
-msgstr "書庫内のファイルを修正するには"
+msgstr "既存アーカイブの修正"
 
 #: C/introduction.page:37(p)
-#, fuzzy
-#| msgid "Extract all files from the archive."
 msgid "Extract files from archive"
-msgstr "書庫からすべてのファイルを展開します。"
+msgstr "アーカイブからファイルを抽出"
 
 #: C/introduction.page:41(title)
-#, fuzzy
-#| msgid "Shows File Roller main window."
 msgid "<gui>File Roller</gui> main window"
-msgstr "File Rollerメインウィンドウの表示"
+msgstr "File Roller のメインウィンドウ"
 
 #: C/introduction.page:43(p)
-#, fuzzy
-#| msgid "Shows File Roller main window."
 msgid "Screenshot of the <app>File Roller</app> main window."
-msgstr "File Rollerメインウィンドウの表示"
+msgstr "File Roller のメインウィンドウのスクリーンショット"
 
 #: C/index.page:5(title)
-#, fuzzy
-#| msgid "File Roller Manual V2.5"
 msgid "File Roller Archive Manager Help"
-msgstr "File Roller マニュアル V2.5"
+msgstr "File Roller アーカイブマネージャーヘルプ"
 
 #: C/index.page:8(title)
-#, fuzzy
-#| msgid "Creating Archives"
 msgid "Managing archives"
-msgstr "書庫の作成"
+msgstr "アーカイブの管理"
 
 #: C/index.page:12(title)
-#, fuzzy
-#| msgid "Add Options"
 msgid "Advanced options"
-msgstr "追加オプション"
+msgstr "高度なオプション"
+
+#: C/index.page:16(title)
+msgid "Troubleshooting"
+msgstr "トラブルシューティング"
 
 #: C/archive-view.page:7(desc)
 msgid "View an existing archive and its content."
-msgstr ""
+msgstr "既存のアーカイブとその内容の表示"
 
 #: C/archive-view.page:17(title)
-#, fuzzy
-#| msgid "Viewing Archives"
 msgid "View an archive"
-msgstr "書庫の閲覧"
+msgstr "アーカイブの表示"
 
 #: C/archive-view.page:19(p)
-#, fuzzy
-#| msgid "The name of a file or folder in the archive."
 msgid "There are two ways of viewing the archive:"
-msgstr "書庫内のファイルまたはフォルダーの名前です。"
+msgstr "アーカイブを表示する 2 つの方法"
 
 #: C/archive-view.page:23(p)
-#, fuzzy
-#| msgid "All files"
 msgid "View all files"
-msgstr "すべてのファイル"
+msgstr "全ファイルの一覧表示"
 
 #: C/archive-view.page:24(p)
 msgid ""
@@ -606,6 +615,10 @@ msgid ""
 "all files inside the archive. You will see their names, sizes, types, dates "
 "of the last modification and locations."
 msgstr ""
+"この表示を利用するには、<guiseq><gui style=\"menu\">表示</gui><gui style="
+"\"menuitem\">全ファイルの一覧表示</gui></guiseq>をクリックします。<app>File "
+"Roller</app> はアーカイブ内のすべてのファイルを一覧表示します。すべてのファイ"
+"ルの名前、サイズ、種類、更新日時および場所を確認できます。"
 
 #: C/archive-view.page:29(p)
 msgid ""
@@ -613,10 +626,13 @@ msgid ""
 "files in your archive. Do this by clicking on them, and click the same one "
 "again to sort in reverse order."
 msgstr ""
+"(名前、サイズ…と書かれた)列見出しを使えば、アーカイブ内のファイルを並び替える"
+"ことができます。列見出しをクリックすることで並び替えを行え、同じ列見出しを再"
+"度クリックすると逆順に並び替えることができます。"
 
 #: C/archive-view.page:35(p)
 msgid "View as a folder"
-msgstr ""
+msgstr "フォルダー形式で表示"
 
 #: C/archive-view.page:36(p)
 msgid ""
@@ -624,6 +640,9 @@ msgid ""
 "<guiseq><gui style=\"menu\">View</gui><gui style=\"menuitem\">View as a "
 "Folder</gui></guiseq>."
 msgstr ""
+"この表示は、伝統的なディレクトリ構造で表示します。この表示を利用するには、"
+"<guiseq><gui style=\"menu\">表示</gui><gui style=\"menuitem\">フォルダー形式"
+"で表示</gui></guiseq>をクリックします。"
 
 #: C/archive-view.page:40(p)
 msgid ""
@@ -632,12 +651,14 @@ msgid ""
 "guiseq> option. You will see a tree view of the folders in the side pane. It "
 "allows you to navigate easily between folders."
 msgstr ""
+"この方法でアーカイブを表示している間に <key>F9</key> を押すか、<guiseq><gui "
+"style=\"menu\">表示</gui><gui style=\"menuitem\">フォルダー</gui></guiseq>を"
+"押してください。サイドペインにフォルダーがツリー表示されます。これにより、簡"
+"単にフォルダー間を移動できます。"
 
 #: C/archive-view.page:50(title)
-#, fuzzy
-#| msgid "The number of files in the archive."
 msgid "Open files in your archive"
-msgstr "書庫内のファイル数です。"
+msgstr "アーカイブ内のファイルを開く"
 
 #: C/archive-view.page:51(p)
 msgid ""
@@ -645,79 +666,65 @@ msgid ""
 "right-click on the file name and select <gui>Open</gui>. <app>File Roller</"
 "app> will open the file with the default application for that file type."
 msgstr ""
+"アーカイブ内のファイル名をダブルクリックするか、ファイル名上を右クリックして"
+"<gui>開く</gui>を選択するとファイルが開きます。<app>File Roller</app> は、"
+"ファイルの種類に応じてデフォルトのアプリケーションでファイルを開きます。"
 
 #: C/archive-view.page:56(p)
 msgid "Open the file with different application by following these steps:"
 msgstr ""
+"以下の手順を踏むことで別のアプリケーションでファイルを開くことができます。"
 
 #: C/archive-view.page:58(p)
-#, fuzzy
-#| msgid "Selected files"
 msgid "Select the file"
-msgstr "選択したファイル"
+msgstr "ファイルを選択"
 
 #: C/archive-view.page:59(p)
-#, fuzzy
-#| msgid "Right-click popup menu"
 msgid "Right-click"
-msgstr "右クリックポップアップメニュー"
+msgstr "右クリック"
 
 #: C/archive-view.page:60(p)
-#, fuzzy
-#| msgid "Click <guibutton>Open</guibutton>."
 msgid "Click <gui>Open With…</gui>"
-msgstr "<guibutton>開く</guibutton>をクリックしてください。"
+msgstr "<guibutton>別のアプリで開く…</guibutton>をクリック"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/archive-open.page:36(None)
-#, fuzzy
-#| msgid ""
-#| "@@image: 'figures/file-roller_home.png'; "
-#| "md5=1cede2c4f8d21c357d0eb9979f39f18d"
 msgid ""
 "@@image: 'figures/file-roller-open-recent.png'; "
 "md5=56d69ff2cb369cc5b0b85d5dde11018e"
 msgstr ""
-"@@image: 'figures/file-roller_home.png'; md5=f78e16ac880c4591d14d8556f1f1c42a"
+"@@image: 'figures/file-roller-open-recent.png'; "
+"md5=56d69ff2cb369cc5b0b85d5dde11018e"
 
 #: C/archive-open.page:7(desc)
-#, fuzzy
-#| msgid "To Open an Archive"
 msgid "Open an existing archive."
-msgstr "書庫を開くには"
+msgstr "既存のアーカイブを開く"
 
 #: C/archive-open.page:19(p)
-#, fuzzy
-#| msgid ""
-#| "You can start <application>Archive Manager</application> in the following "
-#| "ways:"
 msgid ""
 "Open an existing archive with <app>File Roller</app> in the following ways:"
-msgstr "以下の方法で<application>書庫マネージャー</application>を起動できます:"
+msgstr ""
+"以下の方法で <app>File Roller</app> を使って既存のアーカイブを開きます。"
 
 #: C/archive-open.page:23(p)
-#, fuzzy
-#| msgid "Click <guibutton>Open</guibutton>."
 msgid "Click the toolbar button <gui>Open</gui>."
-msgstr "<guibutton>開く</guibutton>をクリックしてください。"
+msgstr "<gui>開く</gui>というツールバーボタンをクリックします。"
 
 #: C/archive-open.page:26(p)
-#, fuzzy
-#| msgid ""
-#| "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</"
-#| "guimenuitem></menuchoice>."
 msgid ""
 "Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem\">Open…"
 "</gui></guiseq>"
 msgstr ""
-"<menuchoice><guimenu>ファイル</guimenu><guimenuitem>開く</guimenuitem></"
-"menuchoice>を選択してください。"
+"<guiseq><gui style=\"menu\">アーカイブ</gui><gui style=\"menuitem\">開く…</"
+"gui></guiseq>をクリックします。"
 
 #: C/archive-open.page:31(p)
 msgid ""
 "You may also use the <gui>Open Recent</gui> option in the following ways:"
 msgstr ""
+"以下の方法で<gui>最近開いたアーカイブ</gui>という選択肢を利用することもできま"
+"す。"
 
 #: C/archive-open.page:35(p)
 msgid ""
@@ -725,12 +732,18 @@ msgid ""
 "open-recent.png\"> Open a recently used archive</media> toolbar button and "
 "select a file."
 msgstr ""
+"<media type=\"image\" mime=\"image/png\" src=\"figures/file-roller-open-"
+"recent.png\">最近使用したアーカイブ</media>のようなツールバーボタンをクリック"
+"してファイルを選択します。"
 
 #: C/archive-open.page:41(p)
 msgid ""
 "Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem\">Open "
 "Recent</gui></guiseq> to see the list of recently used archives."
 msgstr ""
+"<guiseq><gui style=\"menu\">アーカイブ</gui><gui style=\"menuitem\">最近開い"
+"たアーカイブ</gui></guiseq>をクリックして最近使用したアーカイブの一覧を表示し"
+"ます。"
 
 #: C/archive-open.page:47(p)
 msgid ""
@@ -739,14 +752,18 @@ msgid ""
 "location of the archive file has changed. Then, you may use <gui>Open</gui> "
 "option to search for it."
 msgstr ""
+"<app>File Roller</app> が最近使用したアーカイブを開くことができず、<gui>ファ"
+"イルが存在しません</gui>というエラーメッセージを表示した場合、アーカイブファ"
+"イルの場所が変更されている可能性があります。その場合、<gui>開く</gui>というメ"
+"ニューを利用してファイルを探してください。"
 
 #: C/archive-extract-advanced-options.page:7(desc)
 msgid "Specify your preferences for archive extraction."
-msgstr ""
+msgstr "アーカイブ展開に関する好みを指定"
 
 #: C/archive-extract-advanced-options.page:17(title)
 msgid "Advanced options for archive extracting"
-msgstr ""
+msgstr "アーカイブ展開に関する高度なオプション"
 
 #: C/archive-extract-advanced-options.page:19(p)
 msgid ""
@@ -755,16 +772,18 @@ msgid ""
 "choosing the location for extracted files. At the bottom of this dialog, you "
 "can decide if you want to extract:"
 msgstr ""
+"<app>File Roller</app> は、アーカイブを展開する際に様々なオプションを提示しま"
+"す。ファイル選択ダイアログ内に、ファイルを展開する場所を選択するのに利用でき"
+"るオプションが表示されます。このダイアログの下部で展開する方法を決定できま"
+"す。"
 
 #: C/archive-extract-advanced-options.page:25(gui)
 msgid "All files"
 msgstr "すべてのファイル"
 
 #: C/archive-extract-advanced-options.page:26(p)
-#, fuzzy
-#| msgid "Select the files to be extracted:"
 msgid "the whole archive will be extracted"
-msgstr "展開するファイルを選択してください:"
+msgstr "アーカイブのすべてが展開されます。"
 
 #: C/archive-extract-advanced-options.page:29(gui)
 msgid "Selected files"
@@ -772,7 +791,7 @@ msgstr "選択したファイル"
 
 #: C/archive-extract-advanced-options.page:30(p)
 msgid "<app>File Roller</app> extracts only the chosen files"
-msgstr ""
+msgstr "<app>File Roller</app> は、選択されたファイルのみを展開します。"
 
 #: C/archive-extract-advanced-options.page:32(p)
 msgid ""
@@ -781,26 +800,31 @@ msgid ""
 "name. Press <key>Ctrl</key> or <key>Shift</key>, to select more than one "
 "file."
 msgstr ""
+"<guiseq><gui style=\"menu\">アーカイブ</gui><gui style=\"menuitem\">展開…</"
+"gui></guiseq>をクリックする前にファイルを選択してください。ファイル名をクリッ"
+"クすることでファイルを選択できます。<key>Ctrl</key> または <key>Shift</key> "
+"を押すと複数のファイルを選択できます。"
 
 #: C/archive-extract-advanced-options.page:39(gui)
 msgid "Files"
 msgstr "ファイル"
 
 #: C/archive-extract-advanced-options.page:40(p)
-#, fuzzy
-#| msgid "Select the files that you want to delete."
 msgid "you can type the names of the files that you want to extract"
-msgstr "削除したいファイルを選択してください。"
+msgstr "展開したいファイルの名前を入力できます"
 
 #: C/archive-extract-advanced-options.page:42(p)
 msgid ""
 "The file name needs to be followed by a file extension. You can extract, for "
 "example, all <file>.txt</file> files, by typing <file>*.txt</file>."
 msgstr ""
+"ファイル名には、ファイルの拡張子を続ける必要があります。例えば、<file>*.txt</"
+"file> と入力することにより、すべての <file>.txt</file> がついたファイルを展開"
+"できます。"
 
 #: C/archive-extract-advanced-options.page:49(p)
 msgid "You can specify in the file chooser dialog whether you want:"
-msgstr ""
+msgstr "ファイル選択ダイアログ内で、次の設定が可能です"
 
 #: C/archive-extract-advanced-options.page:52(gui)
 msgid "Re-create folders"
@@ -811,6 +835,8 @@ msgid ""
 "Tick this option if you want to keep the directory structure, as it was in "
 "your archive"
 msgstr ""
+"ディレクトリ構造をアーカイブと同様に維持する場合は、このオプションにチェック"
+"を入れてください。"
 
 #: C/archive-extract-advanced-options.page:57(gui)
 msgid "Overwrite existing files"
@@ -822,116 +848,125 @@ msgid ""
 "destination folder, then <app>File Roller</app> will overwrite them during "
 "extraction if this option is enabled"
 msgstr ""
+"展開先のフォルダーに存在するファイル名と同名のファイルがアーカイブ内に存在す"
+"る場合、このオプションが有効になっていると <app>File Roller</app> は、展開中"
+"に既存のファイルを上書きします。"
 
 #: C/archive-extract-advanced-options.page:63(gui)
-#, fuzzy
-#| msgid "Do not extract older files"
-msgid "Do not extract older folders"
-msgstr "古いファイルは展開しない"
+msgid "Do not extract older files"
+msgstr "古いファイルを展開しない"
 
 #: C/archive-extract-advanced-options.page:64(p)
 msgid ""
 "This option will not overwrite existing files with the same name, which have "
 "a more recent modification date than those which are in the archive."
 msgstr ""
+"このオプションを指定するとアーカイブ内の更新日時より新しい更新日時の同名ファ"
+"イルを上書きしません。"
 
 #: C/archive-extract-advanced-options.page:70(p)
 msgid "These <gui>Actions</gui> are listed at the bottom of the dialog."
 msgstr ""
+"これらの<gui>アクション</gui>は、ダイアログの下部に一覧表示されています。"
 
 #: C/archive-extract-advanced-options.page:73(p)
-#, fuzzy
-#| msgid ""
-#| "This option is only effective while the <guilabel>Overwrite existing "
-#| "files</guilabel> option is selected."
 msgid ""
 "The option <gui>Do not extract older files</gui> is only avaiable when the "
 "option <gui>Overwrite existing files</gui> has been enabled."
 msgstr ""
-"このオプションは、<guilabel>既存のファイルに上書きする</guilabel>オプションが"
-"選択されている場合にのみ有効です。"
+"<gui>古いファイルを展開しない</gui>というオプションは、<gui>既存のファイルに"
+"上書きする</gui>というオプションが有効である場合にのみ利用可能です。"
 
 #: C/archive-extract.page:10(desc)
-#, fuzzy
-#| msgid "Extract all files from the archive."
 msgid "Extract files or folders from your archive"
-msgstr "書庫からすべてのファイルを展開します。"
+msgstr "アーカイブからファイルまたはフォルダーを展開"
 
 #: C/archive-extract.page:22(p)
-#, fuzzy
-#| msgid "To delete files from an archive, perform the following steps:"
 msgid ""
 "Extract files from archive using <app>File Roller</app> by following these "
 "steps:"
-msgstr "書庫からファイルを削除するには、以下の手順を実行してください:"
+msgstr ""
+"以下の手順で <app>File Roller</app> を利用してアーカイブからファイルを展開し"
+"ます。"
 
 #: C/archive-extract.page:26(p)
 msgid "<link xref=\"archive-open\">Open</link> an archive."
-msgstr ""
+msgstr "任意のアーカイブを<link xref=\"archive-open\">開きます</link>。"
 
 #: C/archive-extract.page:27(p)
 msgid ""
 "Click <guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem"
 "\">Extract…</gui></guiseq> or click the <gui>Extract</gui> toolbar button."
 msgstr ""
+"<guiseq><gui style=\"menu\">アーカイブ</gui><gui style=\"menuitem\">展開…</"
+"gui></guiseq>をクリックするか、<gui>展開</gui>というツールバーボタンをクリッ"
+"クします。"
 
 #: C/archive-extract.page:30(p)
 msgid ""
 "Choose the location in the file chooser, into which the files should be "
 "extracted. This will be the destination folder."
 msgstr ""
+"ファイル選択ダイアログでファイルを展開する場所を選択します。これが、展開先"
+"フォルダーとなります。"
 
 #: C/archive-extract.page:33(p)
 msgid ""
 "There are additional options in this dialog. See <link xref=\"archive-"
 "extract-advanced-options\">advanced options for extracting archives</link>."
 msgstr ""
+"このダイアログには、追加のオプションが存在します。<link xref=\"archive-"
+"extract-advanced-options\">アーカイブ展開に関する高度なオプション</link>を参"
+"照してください。"
 
 #: C/archive-extract.page:38(p)
-#, fuzzy
-#| msgid "Click <guibutton>Extract</guibutton>."
 msgid "Click <gui>Extract</gui>."
-msgstr "<guibutton>展開</guibutton>をクリックしてください。"
+msgstr "<gui>展開</gui>をクリックする。"
 
 #: C/archive-extract.page:39(p)
 msgid ""
 "If an archive is protected by a password, <app>File Roller</app> will "
 "request it. Type the password and click <gui>OK</gui>."
 msgstr ""
+"アーカイブがパスワードにより保護されている場合、<app>File Roller</app> がパス"
+"ワードを要求します。パスワードを入力し、<gui>OK</gui> をクリックします。"
 
 #: C/archive-extract.page:43(p)
 msgid ""
 "The application will show you the progress bar in a new dialog. If the "
 "extraction completes successfully, you will be asked whether you want to:"
 msgstr ""
+"アプリケーションは、新しいダイアログでプログレスバーを表示します。展開が成功"
+"すれば、次にどうするか以下のオプションから選択するよう尋ねられます。"
 
 #: C/archive-extract.page:47(p)
 msgid "<gui>Quit</gui> - this option closes <app>File Roller</app>"
 msgstr ""
+"<gui>終了</gui> - このオプションは、<app>File Roller</app> を閉じます。"
 
 #: C/archive-extract.page:48(p)
 msgid ""
 "<gui>Show the files</gui> - after clicking this the destination folder will "
 "be open in <app>Nautilus</app>"
 msgstr ""
+"<gui>ファイルを表示する</gui> - これをクリックすると <app>Nautilus</app> で展"
+"開先のフォルダーを開きます。"
 
 #: C/archive-extract.page:50(p)
 msgid ""
 "<gui>Close</gui> - the dialog will be closed and you will see your archive "
 "again"
 msgstr ""
+"<gui>閉じる</gui> - このダイアログを閉じます。再び、アーカイブを閲覧できま"
+"す。"
 
 #: C/archive-edit.page:8(desc)
-#, fuzzy
-#| msgid "Modifying the Contents of an Archive"
 msgid "Change the content of your archive."
-msgstr "書庫の内容を変更する"
+msgstr "アーカイブの内容の変更"
 
 #: C/archive-edit.page:18(title)
-#, fuzzy
-#| msgid "WinAce archive"
 msgid "Edit an archive"
-msgstr "WinAce書庫"
+msgstr "アーカイブの編集"
 
 #: C/archive-edit.page:20(p)
 msgid ""
@@ -939,30 +974,31 @@ msgid ""
 "files, removing unwanted ones or by changing their names. You can work with "
 "folders in the same way as with files."
 msgstr ""
+"<app>File Roller</app> を使えば、新しいファイルの追加、不要なファイルの削除あ"
+"るいはファイル名の変更によって既存のアーカイブを編集できます。フォルダーにつ"
+"いてもファイルと同様に作業できます。"
 
 #: C/archive-edit.page:26(code)
-#, fuzzy, no-wrap
-#| msgid "All files"
+#, no-wrap
 msgid "Add files"
-msgstr "すべてのファイル"
+msgstr "ファイルの追加"
 
 #: C/archive-edit.page:27(p)
 msgid ""
 "Add files to an existing archive by following the instructions on <link xref="
 "\"archive-create\"/> page."
 msgstr ""
+"<link xref=\"archive-create\"/>というページの指示に従って、既存のアーカイブに"
+"ファイルを追加してください。"
 
 #: C/archive-edit.page:31(code)
-#, fuzzy, no-wrap
-#| msgid "Selected files"
+#, no-wrap
 msgid "Remove files"
-msgstr "選択したファイル"
+msgstr "ファイルの削除"
 
 #: C/archive-edit.page:33(p) C/archive-edit.page:42(p)
-#, fuzzy
-#| msgid "Selected files"
 msgid "Select the file."
-msgstr "選択したファイル"
+msgstr "ファイルを選択します。"
 
 #: C/archive-edit.page:34(p)
 msgid ""
@@ -970,12 +1006,14 @@ msgid ""
 "gui></guiseq>, or right-click on the selected file, and choose <gui>Delete</"
 "gui>."
 msgstr ""
+"<guiseq><gui style=\"menu\">編集</gui><gui style=\"menuitem\">削除</gui></"
+"guiseq>をクリックするか、選択したファイル上を右クリックして<gui>削除</gui>を"
+"選択します。"
 
 #: C/archive-edit.page:40(code)
-#, fuzzy, no-wrap
-#| msgid "Include files"
+#, no-wrap
 msgid "Rename files"
-msgstr "対象とするファイル"
+msgstr "ファイル名の変更"
 
 #: C/archive-edit.page:43(p)
 msgid ""
@@ -983,25 +1021,32 @@ msgid ""
 "gui></guiseq>, or right-click on the selected file, and choose <gui>Rename…</"
 "gui>."
 msgstr ""
+"<guiseq><gui style=\"menu\">編集</gui><gui style=\"menuitem\">名前の変更…</"
+"gui></guiseq>をクリックするか、選択したファイル上を右クリックして<gui>名前の"
+"変更…</gui>を選択します。"
 
 #: C/archive-edit.page:46(p)
 msgid "A dialog will open. Enter the new file name into the text entry field."
-msgstr ""
+msgstr "ダイアログが開きます。文字入力欄に新しいファイル名を入力します。"
 
 #: C/archive-edit.page:48(p)
 msgid "Confirm the name by clicking <gui>Rename</gui>."
-msgstr ""
+msgstr "<gui>名前の変更</gui>をクリックして、新しい名前を確定します。"
 
 #: C/archive-create.page:7(desc)
-#, fuzzy
-#| msgid "The name of a file or folder in the archive."
 msgid "Add files or folders to your new archive."
-msgstr "書庫内のファイルまたはフォルダーの名前です。"
+msgstr "新しいアーカイブにファイルやフォルダーを追加"
+
+#: C/archive-create.page:17(title)
+msgid "Create a new archive"
+msgstr "新しいアーカイブの作成"
 
 #: C/archive-create.page:19(p)
 msgid ""
 "Create a new archive with <app>File Roller</app>, by following these steps:"
 msgstr ""
+"以下の手順で <app>File Roller</app> を使って新しいアーカイブを作成してくださ"
+"い。"
 
 #: C/archive-create.page:25(p)
 msgid ""
@@ -1009,12 +1054,17 @@ msgid ""
 "<guiseq><gui style=\"menu\">Archive</gui><gui style=\"menuitem\">New…</gui></"
 "guiseq>"
 msgstr ""
+"<gui>新しいアーカイブファイルを作成します</gui>というツールバーボタンをクリッ"
+"クするか、<guiseq><gui style=\"menu\">アーカイブ</gui><gui style=\"menuitem"
+"\">新規…</gui></guiseq>をクリックします。"
 
 #: C/archive-create.page:29(p)
 msgid ""
 "The file chooser will open. Use it to name your new archive file and choose "
 "its location, and click <gui>Create</gui>."
 msgstr ""
+"ファイル選択ダイアログが開く。新しいアーカイブファイルの名前と場所を選択し、"
+"<gui>作成</gui>をクリックします。"
 
 #: C/archive-create.page:32(p)
 msgid ""
@@ -1023,6 +1073,10 @@ msgid ""
 "options</gui> you can set a password, or split your new archive into smaller "
 "parts. You should specify the size of the volume in <gui>MB</gui>."
 msgstr ""
+"このダイアログでは、利用したいファイル形式の種類も選択することができ、利用可"
+"能な拡張子を一覧表示できます。<gui>その他のオプション</gui>をクリックするとパ"
+"スワードを設定できたり、新しいアーカイブをより小さな部品に分割することができ"
+"ます。分割する容量は、<gui>MB</gui> 単位で指定する必要があります。"
 
 #: C/archive-create.page:40(p)
 msgid ""
@@ -1034,2571 +1088,37 @@ msgid ""
 "<guiseq><gui style=\"menu\">Edit</gui><gui style=\"menuitem\">Add a folder…</"
 "gui></guiseq>"
 msgstr ""
+"<gui>ファイルをアーカイブへ追加します</gui>というツールバーボタンをクリックす"
+"るか、<guiseq><gui style=\"menu\">編集</gui><gui style=\"menuitem\">ファイル"
+"の追加…</gui></guiseq>をクリックすることにより、望みのファイルを追加します。"
+"<app>File Roller</app> を使えば、フォルダー全体を追加することもできます。これ"
+"を行うには、<gui>フォルダーをアーカイブへ追加します</gui>というツールバーボタ"
+"ンをクリックするか、<guiseq><gui style=\"menu\">編集</gui><gui style="
+"\"menuitem\">フォルダーの追加…</gui></guiseq>を選択します。"
 
 #: C/archive-create.page:49(p)
 msgid ""
 "When you add a folder to your archive, you will be offered some options:"
 msgstr ""
+"アーカイブにフォルダーを追加する際にいくつかのオプションを提示されます。"
 
 #: C/archive-create.page:52(p)
-#, fuzzy
-#| msgid "Include subfolders"
 msgid "Whether to include subfolders or not"
-msgstr "サブフォルダーも含める"
+msgstr "サブフォルダーも含めるかどうか"
 
 #: C/archive-create.page:53(p)
 msgid "Choose which files should be included"
-msgstr ""
+msgstr "どのファイルを対象とするかの選択"
 
 #: C/archive-create.page:54(p)
-#, fuzzy
-#| msgid "Select the files to be extracted:"
 msgid "Select which subfolders or files are to be excluded"
-msgstr "展開するファイルを選択してください:"
+msgstr "どのサブフォルダーやファイルを除外するかの選択"
 
 #: C/archive-create.page:59(p)
 msgid "Once you finish adding files, your archive is ready."
-msgstr ""
+msgstr "ファイルの追加が完了すれば、アーカイブは準備完了です。"
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
 msgid "translator-credits"
-msgstr "Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2010"
-
-#~ msgid ""
-#~ "@@image: 'figures/file-roller_leftarrow.png'; "
-#~ "md5=1878b2a4132b673aa79df7660398caa0"
-#~ msgstr ""
-#~ "@@image: 'figures/file-roller_leftarrow.png'; "
-#~ "md5=2ce3b1b3ad35a59c318eae5f811e1e9b"
-
-#~ msgid ""
-#~ "@@image: 'figures/file-roller_rightarrow.png'; "
-#~ "md5=45a0479ca13140680220976ccb653bda"
-#~ msgstr ""
-#~ "@@image: 'figures/file-roller_rightarrow.png'; "
-#~ "md5=e33d43aad49dca89f13e6a25740f961e"
-
-#~ msgid ""
-#~ "@@image: 'figures/file-roller_uparrow.png'; "
-#~ "md5=097f01471c5575ceeb527ea8d50061bd"
-#~ msgstr ""
-#~ "@@image: 'figures/file-roller_uparrow.png'; "
-#~ "md5=a7f5013ec783eb9286c3a712a054e106"
-
-#~ msgid "<application>Archive Manager</application> Manual"
-#~ msgstr "<application>書庫マネージャ</application>マニュアル"
-
-#~ msgid ""
-#~ "Archive Manager, also known as File Roller, allows you to create, view, "
-#~ "modify, or unpack an archive."
-#~ msgstr ""
-#~ "File Rollerとしても知られる書庫マネージャは、アーカイブを作成、閲覧、修正"
-#~ "あるいは展開することができます。"
-
-#~ msgid "2009"
-#~ msgstr "2009"
-
-#~ msgid "Paul Cutler"
-#~ msgstr "Paul Cutler"
-
-#~ msgid "2006"
-#~ msgstr "2006"
-
-#~ msgid "2008"
-#~ msgstr "2008"
-
-#~ msgid "Paolo Bacchilega"
-#~ msgstr "Paolo Bacchilega"
-
-#~ msgid "2003"
-#~ msgstr "2003"
-
-#~ msgid "2004"
-#~ msgstr "2004"
-
-#~ msgid "Sun Microsystems"
-#~ msgstr "サン・マイクロシステムズ"
-
-#~ msgid "2002"
-#~ msgstr "2002"
-
-#~ msgid "Alexander Kirillov"
-#~ msgstr "Alexander Kirillov"
-
-#~ msgid "GNOME Documentation Project"
-#~ msgstr "GNOMEドキュメンテーションプロジェクト"
-
-#~ msgid ""
-#~ "Permission is granted to copy, distribute and/or modify this document "
-#~ "under the terms of the GNU Free Documentation License (GFDL), Version 1.1 "
-#~ "or any later version published by the Free Software Foundation with no "
-#~ "Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. You "
-#~ "can find a copy of the GFDL at this <ulink type=\"help\" url=\"ghelp:fdl"
-#~ "\">link</ulink> or in the file COPYING-DOCS distributed with this manual."
-#~ msgstr ""
-#~ "このドキュメントをフリーソフトウェア財団発行の GNU フリー文書利用許諾契約"
-#~ "書 (バージョン 1.1 かそれ以降から一つを選択) が定める条件の下で複製、頒"
-#~ "布、あるいは改変することを許可する。変更不可部分、表カバーテキスト、裏カ"
-#~ "バーテキストは存在しない。この利用許諾契約書の複製物は<ulink type=\"help"
-#~ "\" url=\"ghelp:fdl\">このリンク</ulink>、またはこの文書と共に配布されてい"
-#~ "る <filename>COPYING-DOCS</filename> というファイルに中に記載されている。"
-
-#~ msgid ""
-#~ "This manual is part of a collection of GNOME manuals distributed under "
-#~ "the GFDL. If you want to distribute this manual separately from the "
-#~ "collection, you can do so by adding a copy of the license to the manual, "
-#~ "as described in section 6 of the license."
-#~ msgstr ""
-#~ "本ドキュメントは GFDL の下で配布されているその他の GNOME マニュアル集の一"
-#~ "部である。これらのマニュアルとは別に本ドキュメントを別個に配布する場合は、"
-#~ "GFDL のセクション6で説明しているように、そのマニュアル集に対するライセンス"
-#~ "の複製を添付することで実現できる。"
-
-#~ msgid ""
-#~ "Many of the names used by companies to distinguish their products and "
-#~ "services are claimed as trademarks. Where those names appear in any GNOME "
-#~ "documentation, and the members of the GNOME Documentation Project are "
-#~ "made aware of those trademarks, then the names are in capital letters or "
-#~ "initial capital letters."
-#~ msgstr ""
-#~ "製品やサービスを区別するために企業によって利用されている名称の多 くは商標"
-#~ "です。これらの名称がGNOMEドキュメンテーションに現れた場合で、GNOMEドキュメ"
-#~ "ンテーションプロジェクトのメンバーが商標と認識している場合、これらの名前は"
-#~ "大文字あるいは頭文字を大文字で記述しています。"
-
-#~ msgid ""
-#~ "DOCUMENT IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTY OF ANY KIND, "
-#~ "EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES "
-#~ "THAT THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS "
-#~ "MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE "
-#~ "RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR "
-#~ "MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR "
-#~ "MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL "
-#~ "WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY "
-#~ "SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES "
-#~ "AN ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED "
-#~ "VERSION OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS "
-#~ "DISCLAIMER; AND"
-#~ msgstr ""
-#~ "DOCUMENT IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTY OF ANY KIND, "
-#~ "EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES "
-#~ "THAT THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS "
-#~ "MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE "
-#~ "RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR "
-#~ "MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR "
-#~ "MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL "
-#~ "WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY "
-#~ "SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES "
-#~ "AN ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED "
-#~ "VERSION OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS "
-#~ "DISCLAIMER; AND"
-
-#~ msgid ""
-#~ "UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT "
-#~ "(INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL "
-#~ "WRITER, ANY CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED "
-#~ "VERSION OF THE DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE "
-#~ "LIABLE TO ANY PERSON FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR "
-#~ "CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT LIMITATION, "
-#~ "DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR "
-#~ "MALFUNCTION, OR ANY AND ALL OTHER DAMAGES OR LOSSES ARISING OUT OF OR "
-#~ "RELATING TO USE OF THE DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT, "
-#~ "EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH "
-#~ "DAMAGES."
-#~ msgstr ""
-#~ "UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT "
-#~ "(INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL "
-#~ "WRITER, ANY CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED "
-#~ "VERSION OF THE DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE "
-#~ "LIABLE TO ANY PERSON FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR "
-#~ "CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT LIMITATION, "
-#~ "DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR "
-#~ "MALFUNCTION, OR ANY AND ALL OTHER DAMAGES OR LOSSES ARISING OUT OF OR "
-#~ "RELATING TO USE OF THE DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT, "
-#~ "EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH "
-#~ "DAMAGES."
-
-#~ msgid ""
-#~ "DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED UNDER THE "
-#~ "TERMS OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER "
-#~ "UNDERSTANDING THAT: <placeholder-1/>"
-#~ msgstr ""
-#~ "DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED UNDER THE "
-#~ "TERMS OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER "
-#~ "UNDERSTANDING THAT: <placeholder-1/>"
-
-#~ msgid "Sun"
-#~ msgstr "サン"
-
-#~ msgid "GNOME Documentation Team"
-#~ msgstr "GNOME ドキュメンテーション・チーム"
-
-#~ msgid "Paolo"
-#~ msgstr "Paolo"
-
-#~ msgid "Bacchilega"
-#~ msgstr "Bacchilega"
-
-#~ msgid "Alexander"
-#~ msgstr "Alexander"
-
-#~ msgid "Kirillov"
-#~ msgstr "Kirillov"
-
-#~ msgid "kirillov@math.sunysb.edu"
-#~ msgstr "kirillov@math.sunysb.edu"
-
-#~ msgid "Paul"
-#~ msgstr "Paul"
-
-#~ msgid "pcutler@foresightlinux.org"
-#~ msgstr "pcutler@foresightlinux.org"
-
-#~ msgid "Archive Manager Manual V2.26.0"
-#~ msgstr "書庫マネージャマニュアル V2.26.0"
-
-#~ msgid "March 2009"
-#~ msgstr "2009年3月"
-
-#~ msgid "Archive Manager Manual V2.24.0"
-#~ msgstr "書庫マネージャマニュアル V2.24.0"
-
-#~ msgid "July 2008"
-#~ msgstr "2008年7月"
-
-#~ msgid "Archive Manager Manual V2.6"
-#~ msgstr "書庫マネージャマニュアル V2.6"
-
-#~ msgid "April 2006"
-#~ msgstr "2006年4月"
-
-#~ msgid "March 2004"
-#~ msgstr "2004年3月"
-
-#~ msgid "Sun GNOME Documentation Team"
-#~ msgstr "サン GNOME ドキュメンテーション・チーム"
-
-#~ msgid "File Roller Manual V2.4"
-#~ msgstr "File Roller マニュアル V2.4"
-
-#~ msgid "February 2004"
-#~ msgstr "2004年2月"
-
-#~ msgid "File Roller Manual V2.3"
-#~ msgstr "File Roller マニュアル V2.3"
-
-#~ msgid "August 2003"
-#~ msgstr "2003年8月"
-
-#~ msgid "File Roller Manual V2.2"
-#~ msgstr "File Roller マニュアル V2.2"
-
-#~ msgid "June 2003"
-#~ msgstr "2003年6月"
-
-#~ msgid "File Roller Manual V2.1"
-#~ msgstr "File Roller マニュアル V2.1"
-
-#~ msgid "January 2003"
-#~ msgstr "2003年1月"
-
-#~ msgid "File Roller Manual V2.0"
-#~ msgstr "File Roller マニュアル V2.0"
-
-#~ msgid "June 2002"
-#~ msgstr "2002年6月"
-
-#~ msgid "This manual describes version 2.26.0 of Archive Manager."
-#~ msgstr ""
-#~ "このマニュアルでは、書庫マネージャのバージョン2.26.0について説明します。"
-
-#~ msgid "Feedback"
-#~ msgstr "フィードバック"
-
-#~ msgid ""
-#~ "To report a bug or make a suggestion regarding the <application>Archive "
-#~ "Manager</application> application or this manual, follow the directions "
-#~ "in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback "
-#~ "Page</ulink>."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>やこのマニュアルに対してバグの報"
-#~ "告や提案を行うには、<ulink url=\"ghelp:gnome-feedback\" type=\"help"
-#~ "\">GNOME Feedback Page</ulink>の指示に従ってください。"
-
-#~ msgid "File Roller"
-#~ msgstr "File Roller"
-
-#~ msgid "file-roller"
-#~ msgstr "file-roller"
-
-#~ msgid "Archiving"
-#~ msgstr "アーカイブ"
-
-#~ msgid "Adding files to"
-#~ msgstr "ファイルの追加"
-
-#~ msgid "Deleting files from"
-#~ msgstr "ファイルの削除"
-
-#~ msgid "Opening"
-#~ msgstr "開く"
-
-#~ msgid "Viewing"
-#~ msgstr "閲覧"
-
-#~ msgid "Extracting"
-#~ msgstr "展開"
-
-#~ msgid "Creating"
-#~ msgstr "作成"
-
-#~ msgid ""
-#~ "You can use the <application>Archive Manager</application> application to "
-#~ "create, view, modify, or unpack an archive. An archive is a file that "
-#~ "acts as a container for other files. An archive can contain many files, "
-#~ "folders, and subfolders, usually in compressed form."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>アプリケーションを使えば、書庫を"
-#~ "作成、閲覧、修正あるいは展開することができます。書庫は、他のファイルのコン"
-#~ "テナとして機能するファイルです。書庫には、複数のファイル、フォルダやサブ"
-#~ "フォルダを通常は圧縮された形式で含めることが可能です。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> provides only a graphical "
-#~ "interface, and relies on command-line utilities such as <command>tar</"
-#~ "command>, <command>gzip</command>, and <command>bzip2</command> for "
-#~ "archive operations."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、グラフィカルインターフェース"
-#~ "のみを提供し、<command>tar</command>、<command>gzip</command>や "
-#~ "<command>bzip2</command>といった書庫操作のためのコマンドラインユーティリ"
-#~ "ティに依存します。"
-
-#~ msgid ""
-#~ "If you have the appropriate command-line tools installed on your system, "
-#~ "<application>Archive Manager</application> supports the archive formats "
-#~ "listed in the following table."
-#~ msgstr ""
-#~ "お使いのシステムに適切なコマンドラインツールがインストールされているなら"
-#~ "ば、<application>書庫マネージャ</application>は以下の表に示された書庫形式"
-#~ "をサポートします。"
-
-#~ msgid "Format"
-#~ msgstr "形式"
-
-#~ msgid "Filename Extension"
-#~ msgstr "ファイル名拡張子"
-
-#~ msgid "7-Zip archive"
-#~ msgstr "7-Zip書庫"
-
-#~ msgid ".7z"
-#~ msgstr ".7z"
-
-#~ msgid ".ace"
-#~ msgstr ".ace"
-
-#~ msgid "ALZip archive"
-#~ msgstr "ALZip書庫"
-
-#~ msgid ".alz"
-#~ msgstr ".alz"
-
-#~ msgid ".ar"
-#~ msgstr ".ar"
-
-#~ msgid "ARJ archive"
-#~ msgstr "ARJ書庫"
-
-#~ msgid ".arj"
-#~ msgstr ".arj"
-
-#~ msgid "Cabinet file"
-#~ msgstr "キャビネットファイル"
-
-#~ msgid ".cab"
-#~ msgstr ".cab"
-
-#~ msgid "UNIX CPIO archive"
-#~ msgstr "UNIX CPIO書庫"
-
-#~ msgid ".cpio"
-#~ msgstr ".cpio"
-
-#~ msgid "Debian Linux package"
-#~ msgstr "Debian Linuxパッケージ"
-
-#~ msgid ".deb"
-#~ msgstr ".deb"
-
-#~ msgid "ISO-9660 CD disc image"
-#~ msgstr "ISO-9660 CD ディスクイメージ"
-
-#~ msgid ".iso"
-#~ msgstr ".iso"
-
-#~ msgid "Java archive"
-#~ msgstr "Javaアーカイブ"
-
-#~ msgid ".jar"
-#~ msgstr ".jar"
-
-#~ msgid "Java enterprise archive"
-#~ msgstr "Javaエンタープライズアーカイブ"
-
-#~ msgid ".ear"
-#~ msgstr ".ear"
-
-#~ msgid "Java web archive"
-#~ msgstr "Java web アーカイブ"
-
-#~ msgid ".war"
-#~ msgstr ".war"
-
-#~ msgid "LHA archive"
-#~ msgstr "LHA書庫"
-
-#~ msgid "<filename>.lha</filename>, <filename>.lzh</filename>"
-#~ msgstr "<filename>.lha</filename>, <filename>.lzh</filename>"
-
-#~ msgid ".rar"
-#~ msgstr ".rar"
-
-#~ msgid "RAR Archived Comic Book"
-#~ msgstr "RAR Archived Comic Book"
-
-#~ msgid ".cbr"
-#~ msgstr ".cbr"
-
-#~ msgid "RPM Linux package"
-#~ msgstr "RPM Linux パッケージ"
-
-#~ msgid ".rpm"
-#~ msgstr ".rpm"
-
-#~ msgid "Uncompressed tar archive"
-#~ msgstr "無圧縮tarアーカイブ"
-
-#~ msgid ".tar"
-#~ msgstr ".tar"
-
-#~ msgid "Tar archive compressed with <command>bzip</command>"
-#~ msgstr "<command>bzip</command>圧縮Tarアーカイブ"
-
-#~ msgid "Tar archive compressed with <command>bzip2</command>"
-#~ msgstr "<command>bzip2</command>圧縮Tarアーカイブ"
-
-#~ msgid "Tar archive compressed with <command>gzip</command>"
-#~ msgstr "<command>gzip</command>圧縮Tarアーカイブ"
-
-#~ msgid "Tar archive compressed with <command>lzip</command>"
-#~ msgstr "<command>lzip</command>圧縮Tarアーカイブ"
-
-#~ msgid "<filename>.tar.lz</filename> or <filename>.tlz</filename>"
-#~ msgstr "<filename>.tar.lz</filename> または <filename>.tlz</filename>"
-
-#~ msgid "Tar archive compressed with <command>lzop</command>"
-#~ msgstr "<command>lzop</command>圧縮Tarアーカイブ"
-
-#~ msgid "Tar archive compressed with <command>compress</command>"
-#~ msgstr "<command>compress</command>圧縮Tarアーカイブ"
-
-#~ msgid "<filename>.tar.Z</filename> or <filename>.taz</filename>"
-#~ msgstr "<filename>.tar.Z</filename> または <filename>.taz</filename>"
-
-#~ msgid "Tar archive compressed with <command>7zip</command>"
-#~ msgstr "<command>7zip</command>圧縮Tarアーカイブ"
-
-#~ msgid ".tar.7z"
-#~ msgstr ".tar.7z"
-
-#~ msgid "Stuffit archives"
-#~ msgstr "Stuffitアーカイブ"
-
-#~ msgid "<filename>.bin</filename> or <filename>.sit</filename>"
-#~ msgstr "<filename>.bin</filename> または <filename>.sit</filename>"
-
-#~ msgid "PKZIP or WinZip archive"
-#~ msgstr "PKZIP または WinZip書庫"
-
-#~ msgid ".zip"
-#~ msgstr ".zip"
-
-#~ msgid ".cbz"
-#~ msgstr ".cbz"
-
-#~ msgid "Zoo archive"
-#~ msgstr "Zoo書庫"
-
-#~ msgid ".zoo"
-#~ msgstr ".zoo"
-
-#~ msgid ""
-#~ "The most common archive format on UNIX and Linux systems is the tar "
-#~ "archive compressed with <command>gzip</command> or <command>bzip2</"
-#~ "command>."
-#~ msgstr ""
-#~ "UNIXやLinuxシステムで最も一般的なアーカイブ形式は、<command>gzip</command>"
-#~ "あるいは<command>bzip2</command>で圧縮されたTarアーカイブです。"
-
-#~ msgid ""
-#~ "The most common archive format on Microsoft Windows systems is the "
-#~ "archive created with <application>PKZIP</application> or "
-#~ "<application>WinZip</application>."
-#~ msgstr ""
-#~ "Microsoft Windowsシステムで最も一般的なアーカイブ形式は、"
-#~ "<application>PKZIP</application>あるいは<application>WinZip</application>"
-#~ "で作成された書庫です。"
-
-#~ msgid ""
-#~ "A compressed non-archive file is a file that is created when you use "
-#~ "<command>bzip2</command>, <command>gzip</command>, <command>lzip</"
-#~ "command>, <command>lzop</command>, <command>compress</command> or "
-#~ "<command>rzip</command> to compress a non-archive file. For example, "
-#~ "<filename>file.txt.gz</filename> is created when you use <command>gzip</"
-#~ "command> to compress <filename>file.txt</filename>."
-#~ msgstr ""
-#~ "圧縮された非書庫ファイルは、<command>bzip2</command>、<command>gzip</"
-#~ "command>、<command>lzip</command>、<command>lzop</command>、"
-#~ "<command>compress</command>あるいは<command>rzip</command>を使って非書庫"
-#~ "ファイルを圧縮した際に作成されるファイルです。例えば、<filename>file.txt."
-#~ "gz</filename>は、<command>gzip</command>を使って<filename>file.txt</"
-#~ "filename>を圧縮すると作成されます。"
-
-#~ msgid ""
-#~ "You can use <application>Archive Manager</application> to create, open "
-#~ "and extract a compressed non-archive file."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>を使えば、圧縮された非書庫ファイ"
-#~ "ルを作成したり、開いたり、展開することが可能です。"
-
-#~ msgid "Getting Started"
-#~ msgstr "始めてみる"
-
-#~ msgid ""
-#~ "This section provides information on how to start <application>Archive "
-#~ "Manager</application>, and describes the <application>Archive Manager</"
-#~ "application> user interface."
-#~ msgstr ""
-#~ "この節では、<application>書庫マネージャ</application>の起動方法に関する情"
-#~ "報を提供し、<application>書庫マネージャ</application>のユーザインター"
-#~ "フェースについて説明します。"
-
-#~ msgid "To Start <application>Archive Manager</application>"
-#~ msgstr "<application>書庫マネージャ</application>を起動するには"
-
-#~ msgid "<guimenu>Applications</guimenu> menu"
-#~ msgstr "<guimenu>アプリケーション</guimenu>メニュー"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guisubmenu>Accessories</"
-#~ "guisubmenu><guimenuitem>Archive Manager</guimenuitem></menuchoice>."
-#~ msgstr ""
-#~ "<menuchoice><guisubmenu>アクセサリ</guisubmenu><guimenuitem>書庫マネージャ"
-#~ "</guimenuitem></menuchoice>を選択します。"
-
-#~ msgid "Command line"
-#~ msgstr "コマンドライン"
-
-#~ msgid "Execute the following command: <command>file-roller</command>"
-#~ msgstr "次のコマンドを実行してください: <command>file-roller</command>"
-
-#~ msgid "When You Start <application>Archive Manager</application>"
-#~ msgstr "<application>書庫マネージャ</application>を起動すると"
-
-#~ msgid ""
-#~ "When you start <application>Archive Manager</application>, the following "
-#~ "window is displayed:"
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>を起動すると次のようなウィンドウ"
-#~ "が表示されます:"
-
-#~ msgid "<application>Archive Manager</application> Window"
-#~ msgstr "<application>書庫マネージャ</application>ウィンドウ"
-
-#~ msgid ""
-#~ "The <application>Archive Manager</application> window contains the "
-#~ "following elements:"
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>のウィンドウは、以下の要素を含ん"
-#~ "でいます:"
-
-#~ msgid "Menubar"
-#~ msgstr "メニューバー"
-
-#~ msgid ""
-#~ "The menus on the menubar contain all of the commands that you need to "
-#~ "work with archives in <application>Archive Manager</application>."
-#~ msgstr ""
-#~ "メニューバー上のメニューは、<application>書庫マネージャ</application>で書"
-#~ "庫に対する作業に必要なすべてのコマンドを含んでいます。"
-
-#~ msgid "Toolbar"
-#~ msgstr "ツールバー"
-
-#~ msgid ""
-#~ "The toolbar contains a subset of the commands that you can access from "
-#~ "the menubar. <application>Archive Manager</application> displays the "
-#~ "toolbar by default. To hide the toolbar, choose "
-#~ "<menuchoice><guimenu>View</guimenu><guimenuitem>Toolbar</guimenuitem></"
-#~ "menuchoice>. To show the toolbar, choose <menuchoice><guimenu>View</"
-#~ "guimenu><guimenuitem>Toolbar</guimenuitem></menuchoice> again."
-#~ msgstr ""
-#~ "ツールバーは、メニューバーからアクセスできるコマンドのサブセットを含んでい"
-#~ "ます。<application>書庫マネージャ</application>は、デフォルトでツールバー"
-#~ "を表示します。ツールバーを隠すには、<menuchoice><guimenu>表示</"
-#~ "guimenu><guimenuitem>ツールバー</guimenuitem></menuchoice>を選択してくださ"
-#~ "い。ツールバーを表示するには、<menuchoice><guimenu>表示</"
-#~ "guimenu><guimenuitem>ツールバー</guimenuitem></menuchoice>を再度、選択して"
-#~ "ください。"
-
-#~ msgid "Folderbar"
-#~ msgstr "フォルダバー"
-
-#~ msgid ""
-#~ "The folderbar enables you to navigate among folders within an archive. "
-#~ "<application>Archive Manager</application> displays the folderbar only in "
-#~ "folder view. See <xref linkend=\"file-roller-view-type-folder\"/> for "
-#~ "more information."
-#~ msgstr ""
-#~ "フォルダバーは、書庫中のフォルダ間を移動する事を可能にします。"
-#~ "<application>書庫マネージャ</application>は、フォルダビューのみでフォルダ"
-#~ "バーを表示します。詳しくは、<xref linkend=\"file-roller-view-type-folder"
-#~ "\"/>を参照してください。"
-
-#~ msgid "Display area"
-#~ msgstr "表示エリア"
-
-#~ msgid "The display area displays the contents of the archive."
-#~ msgstr "表示エリアは、書庫の中身を表示します。"
-
-#~ msgid "Statusbar"
-#~ msgstr "ステータスバー"
-
-#~ msgid ""
-#~ "The statusbar displays information about current <application>Archive "
-#~ "Manager</application> activity and contextual information about the "
-#~ "archive contents. <application>Archive Manager</application> displays the "
-#~ "statusbar by default. To hide the statusbar, choose "
-#~ "<menuchoice><guimenu>View</guimenu><guimenuitem>Statusbar</guimenuitem></"
-#~ "menuchoice>. To show the statusbar, choose <menuchoice><guimenu>View</"
-#~ "guimenu><guimenuitem>Statusbar</guimenuitem></menuchoice> again."
-#~ msgstr ""
-#~ "ステータスバーは、現在の<application>書庫マネージャ</application>の活動状"
-#~ "況や書庫内容に関するコンテキスト情報を表示します。<application>書庫マネー"
-#~ "ジャ</application>は、デフォルトでステータスバーを表示します。ステータス"
-#~ "バーを隠すには、<menuchoice><guimenu>表示</guimenu><guimenuitem>ステータス"
-#~ "バー</guimenuitem></menuchoice>を選択してください。ステータスバーを表示す"
-#~ "るには、<menuchoice><guimenu>表示</guimenu><guimenuitem>ステータスバー</"
-#~ "guimenuitem></menuchoice>を再度、選択してください。"
-
-#~ msgid ""
-#~ "When you right-click in the <application>Archive Manager</application> "
-#~ "window, the application displays a popup menu. The popup menu contains "
-#~ "the most common contextual archive commands."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>ウィンドウで右クリックするとポッ"
-#~ "プアップメニューが表示されます。ポップアップメニューには、最も一般的な書庫"
-#~ "コマンドが含まれます。"
-
-#~ msgid "Browsing the Filesystem"
-#~ msgstr "ファイルシステムのブラウズ"
-
-#~ msgid ""
-#~ "Several <application>Archive Manager</application> dialogs "
-#~ "(<guilabel>New</guilabel>, <guilabel>Open</guilabel>, <guilabel>Extract</"
-#~ "guilabel>,...) enable you to browse files and folders on your computer. "
-#~ "Refer to the <ulink type=\"help\" url=\"ghelp:user-guide?filechooser-open"
-#~ "\">Desktop User Guide</ulink> to learn more about using the file browsing "
-#~ "dialogs."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>のダイアログ(<guilabel>新規</"
-#~ "guilabel>、<guilabel>開く</guilabel>、<guilabel>展開</guilabel>、...)のい"
-#~ "くつかは、お使いのコンピュータのファイルやフォルダをブラウズすることができ"
-#~ "ます。<ulink type=\"help\" url=\"ghelp:user-guide?filechooser-open\">デス"
-#~ "クトップユーザガイド</ulink>を参照して、ブラウズダイアログの使い方について"
-#~ "詳しく学んでください。"
-
-#~ msgid ""
-#~ "You can also refer to the <ulink type=\"help\" url=\"ghelp:user-guide?"
-#~ "nautilus-bookmarks\">Bookmarks section</ulink> of the Desktop User Guide "
-#~ "to learn how you can use the <guilabel>Places</guilabel> pane to access "
-#~ "your favorite locations."
-#~ msgstr ""
-#~ "また、デスクトップユーザガイドの<ulink type=\"help\" url=\"ghelp:user-"
-#~ "guide?nautilus-bookmarks\">お気に入りの場所に対してブックマークを活用する"
-#~ "</ulink>を参照して、お気に入りの場所にアクセスするためにどのように"
-#~ "<guilabel>場所</guilabel>ペインを利用できるか学べます。"
-
-#~ msgid "Working With Archives"
-#~ msgstr "書庫に対する作業"
-
-#~ msgid ""
-#~ "When you use <application>Archive Manager</application> to work with an "
-#~ "archive, all changes are saved to disk immediately. For example, if you "
-#~ "delete a file from an archive, <application>Archive Manager</application> "
-#~ "deletes the file as soon as you click <guibutton>OK</guibutton>. This "
-#~ "behavior is different to that of most applications, which save the "
-#~ "changes to disk only when you quit the application or select "
-#~ "<guimenuitem>Save</guimenuitem> in the menu."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>を使って書庫に対して作業を行うと"
-#~ "すべての変更は即座にディスクに保存されます。例えば、書庫からファイルを削除"
-#~ "し<guibutton>OK</guibutton>をクリックするとできるだけ早く<application>書庫"
-#~ "マネージャ</application>はファイルを削除します。この振舞いは、アプリケー"
-#~ "ションを終了するかメニューの<guimenuitem>選択</guimenuitem>した時のみ変更"
-#~ "をディスクに保存するほとんどのアプリケーションと異なります。"
-
-#~ msgid ""
-#~ "If an archive is very large, or you have a slow system, some archive "
-#~ "actions can take significant time. To abort the current action, press "
-#~ "<keycap>Esc</keycap>. Alternatively, choose <menuchoice><guimenu>View</"
-#~ "guimenu><guimenuitem>Stop</guimenuitem></menuchoice>, or click "
-#~ "<guibutton>Stop</guibutton> in the toolbar."
-#~ msgstr ""
-#~ "書庫が非常に大きい場合や遅いシステムを使っている場合、いくつかの書庫に対す"
-#~ "る操作は大幅に時間がかかります。現在の操作を中止するには、<keycap>Esc</"
-#~ "keycap>キーを押してください。あるいは、<menuchoice><guimenu>表示</"
-#~ "guimenu><guimenuitem>停止</guimenuitem></menuchoice>を選択するか、ツール"
-#~ "バーの <guibutton>停止</guibutton>をクリックしてください。"
-
-#~ msgid "UI Component"
-#~ msgstr "UI構成要素"
-
-#~ msgid "Action"
-#~ msgstr "操作"
-
-#~ msgid ""
-#~ "Drag an archive into the <application>Archive Manager</application> "
-#~ "window from another application such as a file manager."
-#~ msgstr ""
-#~ "ファイルマネージャといった他のアプリケーションから<application>書庫マネー"
-#~ "ジャ</application>のウィンドウに書庫をドラッグしてください。"
-
-#~ msgid ""
-#~ "If you have recently opened the archive, it will be listed directly in "
-#~ "the <menuchoice><guimenu>Archive</guimenu></menuchoice> menu."
-#~ msgstr ""
-#~ "最近開いた書庫があれば、<menuchoice><guimenu>ファイル</guimenu></"
-#~ "menuchoice>メニューに直接表示されているでしょう。"
-
-#~ msgid "Click on the <guibutton>Open</guibutton> toolbar button."
-#~ msgstr ""
-#~ "<guibutton>開く</guibutton>というツールバーボタンをクリックしてください。"
-
-#~ msgid ""
-#~ "If you have recently opened the archive, click on the down arrow near the "
-#~ "<guibutton>Open</guibutton> toolbar button."
-#~ msgstr ""
-#~ "最近開いた書庫があれば、<guibutton>開く</guibutton>というツールバーボタン"
-#~ "のそばにある下向き矢印をクリックしてください。"
-
-#~ msgid ""
-#~ "Right-click on the archive, then choose <guilabel>Open</guilabel> from "
-#~ "the popup menu."
-#~ msgstr ""
-#~ "書庫を右クリックして、ポップアップメニューから<guilabel>開く</guilabel>を"
-#~ "選択してください。"
-
-#~ msgid "Shortcut keys"
-#~ msgstr "ショートカットキー"
-
-#~ msgid "Press <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>."
-#~ msgstr ""
-#~ "<keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>を押してくださ"
-#~ "い。"
-
-#~ msgid ""
-#~ "In <application>Archive Manager</application>, you can perform the same "
-#~ "action in several ways. For example, you can open an archive in the "
-#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1"
-#~ "\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
-#~ "colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
-#~ "tgroup></informaltable>"
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>では、同じ操作をいくつかの方法で"
-#~ "実行できます。例えば、以下の方法で書庫を開くことが可能です: "
-#~ "<informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1\" rowsep=\"1"
-#~ "\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec colname="
-#~ "\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></tgroup></"
-#~ "informaltable>"
-
-#~ msgid "This manual documents functionality from the menubar."
-#~ msgstr "このマニュアルではメニューバーからの機能を文書化します。"
-
-#~ msgid "Filename Patterns"
-#~ msgstr "ファイル名のパターン"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> enables you to add, extract, "
-#~ "or delete several files at once. To apply an action to all files that "
-#~ "match a certain pattern, enter the pattern in the text box. The pattern "
-#~ "can include standard wildcard symbols such as <keycap>*</keycap> to match "
-#~ "any string, and <keycap>?</keycap> to match any single symbol. You can "
-#~ "enter several patterns separated by semicolons. <application>Archive "
-#~ "Manager</application> applies the action to all files that match at least "
-#~ "one of the patterns. The examples in the following table show how to use "
-#~ "filename patterns to select files."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>を使えば、ファイルの追加、展開あ"
-#~ "るいは削除をすぐに行うことができます。特定のパターンに一致するすべてのファ"
-#~ "イルに操作を適用するには、テキストボックスにそのパターンを入力してくださ"
-#~ "い。不特定の複数の文字に一致する<keycap>*</keycap>や一文字に一致する"
-#~ "<keycap>?</keycap>といった標準的なワイルドカードをパターンに含むことが可能"
-#~ "です。セミコロンで区切って複数のパターンを入力できます。<application>書庫"
-#~ "マネージャ</application>は、少なくとも一つのパターンに一致するすべてのファ"
-#~ "イルに操作を適用します。以下の表の例は、ファイルを選択するのにどのような"
-#~ "ファイル名のパターンを利用するかを示しています。"
-
-#~ msgid "Files Matched"
-#~ msgstr "一致するファイル"
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid "*.tar*"
-#~ msgstr "*.tar*"
-
-#~ msgid ""
-#~ "All files with extension <filename>tar</filename>, including those in "
-#~ "which the <filename>tar</filename> extension is followed by any sequence "
-#~ "of symbols, such as <filename>filename.tar.gz</filename>"
-#~ msgstr ""
-#~ "拡張子<filename>tar</filename>がついたすべてのファイル。"
-#~ "<filename>filename.tar.gz</filename>といった<filename>tar</filename>拡張子"
-#~ "に不特定の文字列が続く場合も含まれます。"
-
-#~ msgid "*.jpg; *.jpeg"
-#~ msgstr "*.jpg; *.jpeg"
-
-#~ msgid ""
-#~ "All files with extension <filename>jpg</filename> and all files with "
-#~ "extension <filename>jpeg</filename>"
-#~ msgstr ""
-#~ "拡張子<filename>jpg</filename>のついたすべてのファイルと拡張子"
-#~ "<filename>jpeg</filename>のついたすべてのファイル"
-
-#~ msgid "file?.gz"
-#~ msgstr "file?.gz"
-
-#~ msgid ""
-#~ "All files with extension <filename>gz</filename> that have the name \"file"
-#~ "\" followed by any single character, e.g. <filename>file2.gz</filename>, "
-#~ "<filename>filex.gz</filename>."
-#~ msgstr ""
-#~ "『file』に不特定の一文字が続く名前で拡張子<filename>gz</filename>のついた"
-#~ "すべてのファイル。例えば、<filename>file2.gz</filename>、<filename>filex."
-#~ "gz</filename>です。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Open</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>Open</guilabel> "
-#~ "dialog. Alternatively press <keycombo><keycap>Ctrl</keycap><keycap>O</"
-#~ "keycap></keycombo>, or click <guibutton>Open</guibutton> in the toolbar."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>ファイル</guimenu><guimenuitem>開く</guimenuitem></"
-#~ "menuchoice>を選択してください。すると<guilabel>開く</guilabel>ダイアログが"
-#~ "表示されます。あるいは、<keycombo><keycap>Ctrl</keycap><keycap>O</"
-#~ "keycap></keycombo>を押すか、ツールバーの<guibutton>開く</guibutton>をク"
-#~ "リックしてください。"
-
-#~ msgid "Select the archive that you want to open."
-#~ msgstr "開きたい書庫を選択してください。"
-
-#~ msgid "To open an archive, perform the following steps: <placeholder-1/>"
-#~ msgstr "書庫を開くには、以下の手順を実行してください: <placeholder-1/>"
-
-#~ msgid "The archive name in the window titlebar"
-#~ msgstr "ウィンドウタイトルバーに書庫の名前"
-
-#~ msgid "The archive contents in the display area"
-#~ msgstr "表示エリアに書庫の内容"
-
-#~ msgid ""
-#~ "The number files and folders (objects) in the current location, and their "
-#~ "size when uncompressed, in the statusbar"
-#~ msgstr ""
-#~ "ステータスバーに現在の場所にあるファイルやフォルダ(オブジェクト)の数と展開"
-#~ "された場合のサイズ"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> automatically determines the "
-#~ "archive type, and displays: <placeholder-1/>"
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、自動的に書庫の種類を決定し、"
-#~ "以下を表示します: <placeholder-1/>"
-
-#~ msgid ""
-#~ "To open another archive, choose <menuchoice><guimenu>Archive</"
-#~ "guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. "
-#~ "<application>Archive Manager</application> opens each archive in a new "
-#~ "window. You can't open another archive in the same window."
-#~ msgstr ""
-#~ "他の書庫を開くには、再度、<menuchoice><guimenu>ファイル</"
-#~ "guimenu><guimenuitem>開く</guimenuitem></menuchoice>を選択してください。"
-#~ "<application>書庫マネージャ</application>は、各書庫を新しいウィンドウに開"
-#~ "きます。他のアーカイブを同じウィンドウに開くことはできません。"
-
-#~ msgid ""
-#~ "If you try to open an archive that was created in a format that "
-#~ "<application>Archive Manager</application> does not recognize, the "
-#~ "application displays an error message. See <xref linkend=\"file-roller-"
-#~ "intro\"/> for a list of supported formats."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>が認識できない形式で作成された書"
-#~ "庫を開こうとした場合、アプリケーションはエラーメッセージを表示します。サ"
-#~ "ポートされている形式の一覧は、<xref linkend=\"file-roller-intro\"/>を参照"
-#~ "してください。"
-
-#~ msgid "To Select Files in an Archive"
-#~ msgstr "書庫内のファイルを選択するには"
-
-#~ msgid ""
-#~ "To select all files in an archive, choose <menuchoice><guimenu>Edit</"
-#~ "guimenu><guimenuitem>Select All</guimenuitem></menuchoice> or press "
-#~ "<keycombo><keycap>Ctrl</keycap><keycap>A</keycap></keycombo>."
-#~ msgstr ""
-#~ "書庫内のすべてのファイルを選択するには、<menuchoice><guimenu>編集</"
-#~ "guimenu><guimenuitem>すべて選択</guimenuitem></menuchoice>を選択するか、"
-#~ "<keycombo><keycap>Ctrl</keycap><keycap>A</keycap></keycombo>を押してくださ"
-#~ "い。"
-
-#~ msgid ""
-#~ "To deselect all files in an archive, choose <menuchoice><guimenu>Edit</"
-#~ "guimenu><guimenuitem>Deselect All</guimenuitem></menuchoice> or press "
-#~ "<keycombo><keycap>Shift</keycap><keycap>Ctrl</keycap><keycap>A</keycap></"
-#~ "keycombo>."
-#~ msgstr ""
-#~ "すべてのファイルの選択を解除するには、<menuchoice><guimenu>編集</"
-#~ "guimenu><guimenuitem>すべて選択解除</guimenuitem></menuchoice>を選択する"
-#~ "か、<keycombo><keycap>Shift</keycap><keycap>Ctrl</keycap><keycap>A</"
-#~ "keycap></keycombo>を押してください。"
-
-#~ msgid "To Extract Files From an Archive"
-#~ msgstr "書庫からファイルを展開するには"
-
-#~ msgid ""
-#~ "Select the files that you want to extract. To select more files, press-"
-#~ "and-hold <keycap>Ctrl</keycap> and click on the files you want to select."
-#~ msgstr ""
-#~ "展開したいファイルを選択してください。さらにファイルを選択するには、"
-#~ "<keycap>Ctrl</keycap>を押したまま、選択したいファイルをクリックします。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Extract</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>Extract</guilabel> "
-#~ "dialog. Alternatively click <guibutton>Extract</guibutton> in the toolbar."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>ファイル</guimenu><guimenuitem>展開</guimenuitem></"
-#~ "menuchoice>を選択してください。すると<guilabel>展開</guilabel>ダイアログが"
-#~ "表示されます。あるいは、ツールバーの<guibutton>展開</guibutton>をクリック"
-#~ "してください。"
-
-#~ msgid ""
-#~ "Select the folder where <application>Archive Manager</application> "
-#~ "extracts the files."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>がファイルを展開するフォルダを選"
-#~ "択してください。"
-
-#~ msgid ""
-#~ "Select the required extract options. For more information about the "
-#~ "extract options, see <xref linkend=\"file-roller-extract-options\"/>."
-#~ msgstr ""
-#~ "必要な展開オプションを選択してください。展開オプションについての詳しい情報"
-#~ "は、<xref linkend=\"file-roller-extract-options\"/>を参照してください。"
-
-#~ msgid ""
-#~ "If all of the files in the archive are protected by a password, and you "
-#~ "have not specified it, <application>Archive Manager</application> asks "
-#~ "you to enter the password."
-#~ msgstr ""
-#~ "書庫内のすべてのファイルがパスワードにより保護されおり、まだパスワードを指"
-#~ "定していない場合、<application>書庫マネージャ</application>はパスワードの"
-#~ "入力を求めます。"
-
-#~ msgid ""
-#~ "If some but not all of the files in the archive are protected by a "
-#~ "password, and you have not specified the password, <application>Archive "
-#~ "Manager</application> does not ask for a password. However, "
-#~ "<application>Archive Manager</application> extracts only the unprotected "
-#~ "files."
-#~ msgstr ""
-#~ "書庫内のすべてではないが一部のファイルがパスワードで保護されており、パス"
-#~ "ワードをまだ指定していない場合、<application>書庫マネージャ</application>"
-#~ "はパスワードを尋ねません。しかしながら、<application>書庫マネージャ</"
-#~ "application>は保護されていないファイルのみを展開します。"
-
-#~ msgid ""
-#~ "For more information about passwords, see <xref linkend=\"file-roller-"
-#~ "encrypt-files\"/>."
-#~ msgstr ""
-#~ "パスワードについての詳しい情報は、<xref linkend=\"file-roller-encrypt-"
-#~ "files\"/>を参照してください。"
-
-#~ msgid ""
-#~ "To extract files from an open archive, perform the following steps: "
-#~ "<placeholder-1/>"
-#~ msgstr ""
-#~ "開いている書庫からファイルを展開するには、以下の手順を実行してください: "
-#~ "<placeholder-1/>"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> also provides ways of "
-#~ "extracting files from an archive in a file manager window, without "
-#~ "opening a <application>Archive Manager</application> window. See <xref "
-#~ "linkend=\"file-roller-fmgr\"/> for more information."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、<application>書庫マネージャ</"
-#~ "application>ウィンドウを開かずにファイルマネージャで書庫からファイルを展開"
-#~ "する方法も提供しています。詳しくは、<xref linkend=\"file-roller-fmgr\"/>を"
-#~ "参照してください。"
-
-#~ msgid ""
-#~ "The Extract operation extracts a <emphasis>copy</emphasis> of the "
-#~ "specified files from the archive. The extracted files have the same "
-#~ "permissions and modification date as the original files that were added "
-#~ "to the archive."
-#~ msgstr ""
-#~ "展開操作は、書庫から指定されたファイルの<emphasis>コピー</emphasis>を展開"
-#~ "します。展開されたファイルは、書庫に追加された時の元のファイルと同じ権限や"
-#~ "更新日時を保持しています。"
-
-#~ msgid ""
-#~ "The Extract operation does not change the contents of the archive. For "
-#~ "information on how to delete files from an archive, see <xref linkend="
-#~ "\"file-roller-delete-files\"/>."
-#~ msgstr ""
-#~ "展開操作は、書庫の内容を変更しません。書庫からファイルを削除する方法につい"
-#~ "ては、<xref linkend=\"file-roller-delete-files\"/>を参照してください。"
-
-#~ msgid "To Close an Archive"
-#~ msgstr "書庫を閉じるには"
-
-#~ msgid ""
-#~ "To close the current archive and the current <application>Archive "
-#~ "Manager</application> window, choose <menuchoice><guimenu>Archive</"
-#~ "guimenu><guimenuitem>Close</guimenuitem></menuchoice>, or press "
-#~ "<keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo>."
-#~ msgstr ""
-#~ "現在の書庫および現在の<application>書庫マネージャ</application>ウィンドウ"
-#~ "を閉じるには、<menuchoice><guimenu>ファイル</guimenu><guimenuitem>閉じる</"
-#~ "guimenuitem></menuchoice>を選択するか、<keycombo><keycap>Ctrl</"
-#~ "keycap><keycap>W</keycap></keycombo>を押してください。"
-
-#~ msgid ""
-#~ "There is no way to close the current archive but not the "
-#~ "<application>Archive Manager</application> window."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>ウィンドウを閉じずに現在の書庫を"
-#~ "閉じる方法はありません。"
-
-#~ msgid ""
-#~ "In addition to opening existing archives, you can also create new "
-#~ "archives with <application>Archive Manager</application>."
-#~ msgstr ""
-#~ "既存の書庫を開くことに加え、<application>書庫マネージャ</application>を"
-#~ "使って新しい書庫を作成することも可能です。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>New</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>New</guilabel> dialog. "
-#~ "Alternatively press <keycombo><keycap>Ctrl</keycap><keycap>N</keycap></"
-#~ "keycombo>, or click <guibutton>New</guibutton> in the toolbar."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>ファイル</guimenu><guimenuitem>新規</guimenuitem></"
-#~ "menuchoice>を選択してください。すると<guilabel>新規</guilabel>ダイアログが"
-#~ "表示されます。あるいは、<keycombo><keycap>Ctrl</keycap><keycap>N</"
-#~ "keycap></keycombo>を押すか、ツールバーの<guibutton>新規</guibutton>をク"
-#~ "リックしてください。"
-
-#~ msgid ""
-#~ "Specify the folder where <application>Archive Manager</application> "
-#~ "places the new archive clicking on the entry in the <guilabel>Save in "
-#~ "folder</guilabel> drop-down list. If the folder is not present in list, "
-#~ "click on <guilabel>Browse for other folders</guilabel>, and select the "
-#~ "folder. Alternatively, enter the path in the <guilabel>Name</guilabel> "
-#~ "text box."
-#~ msgstr ""
-#~ "<guilabel>フォルダの中に保存</guilabel>ドロップダウンリストをクリックして"
-#~ "<application>書庫マネージャ</application>が新しい書庫を置くフォルダを指定"
-#~ "してください。希望するフォルダがリストに提示されていない場合は、<guilabel>"
-#~ "他のフォルダ</guilabel>をクリックして希望するフォルダを選択してください。"
-#~ "あるいは、<guilabel>名前</guilabel>テキストボックスにそのパスを入力してく"
-#~ "ださい。"
-
-#~ msgid ""
-#~ "Enter the name of the new archive, including the file extension, in the "
-#~ "<guilabel>Name</guilabel> text box. Alternatively you can specify the "
-#~ "archive name without extension, and then select the archive type from the "
-#~ "<guilabel>Archive type</guilabel> drop-down menu, this way the extension "
-#~ "will be added automatically."
-#~ msgstr ""
-#~ "<guilabel>名前</guilabel>テキストボックスに拡張子を含めた新しい書庫の名前"
-#~ "を入力してください。あるいは、拡張子なしで書庫の名前を指定して、<guilabel>"
-#~ "書庫の種類</guilabel>ドロップダウンメニューから書庫の種類を選択する事もで"
-#~ "きます。この方法では、拡張子は自動的に付加されます。"
-
-#~ msgid ""
-#~ "Select the required create options clicking on <guilabel>Other Options</"
-#~ "guilabel>. For more information about the create options, see <xref "
-#~ "linkend=\"file-roller-create-options\"/>."
-#~ msgstr ""
-#~ "<guilabel>その他のオプション</guilabel>をクリックして、必要な作成オプショ"
-#~ "ンを選択してください。作成オプションについての詳しい情報は、<xref linkend="
-#~ "\"file-roller-create-options\"/>を参照してください。"
-
-#~ msgid ""
-#~ "Click <guibutton>New</guibutton>. <application>Archive Manager</"
-#~ "application> creates an empty archive, but does not yet write the archive "
-#~ "to disk."
-#~ msgstr ""
-#~ "<guibutton>作成</guibutton>をクリックしてください。<application>書庫マネー"
-#~ "ジャ</application>は空の書庫を作成しますが、まだディスクには書き込んでいま"
-#~ "せん。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> writes a new archive to disk "
-#~ "only when the archive contains at least one file. If you create a new "
-#~ "archive and quit <application>Archive Manager</application> before you "
-#~ "add any files to the archive, <application>Archive Manager</application> "
-#~ "deletes the archive."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>が新しい書庫をディスクに書き込む"
-#~ "のは、少なくとも一つのファイルが書庫に含まれている時のみです。新しい書庫を"
-#~ "作成し、書庫に何らかのファイルを追加する前に<application>書庫マネージャ</"
-#~ "application>を終了してしまうと<application>書庫マネージャ</application>は"
-#~ "その書庫を削除します。"
-
-#~ msgid ""
-#~ "Add files to the new archive as described in <xref linkend=\"file-roller-"
-#~ "add-files\"/>. <placeholder-1/>"
-#~ msgstr ""
-#~ "<xref linkend=\"file-roller-add-files\"/>で説明するように新しい書庫にファ"
-#~ "イルを追加してください。 <placeholder-1/>"
-
-#~ msgid "To create an archive, perform the following steps: <placeholder-1/>"
-#~ msgstr "書庫を作成するには、以下の手順を実行してください: <placeholder-1/>"
-
-#~ msgid "To Add Files to an Archive"
-#~ msgstr "書庫にファイルを追加するには"
-
-#~ msgid ""
-#~ "Decide where in the archive you want to add the files, then open that "
-#~ "location in the archive."
-#~ msgstr ""
-#~ "アーカイブのどこにファイルを追加したいかを決定し、書庫のその場所を開いてく"
-#~ "ださい。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Add Files</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>Add Files</guilabel> "
-#~ "dialog, or click <guibutton>Add Files</guibutton> in the toolbar."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>ファイルの追加</"
-#~ "guimenuitem></menuchoice>を選択するか、ツールバーの<guibutton>ファイルの追"
-#~ "加</guibutton>をクリックしてください。すると<guilabel>ファイルの追加</"
-#~ "guilabel>ダイアログが表示されます。"
-
-#~ msgid ""
-#~ "Select the files that you want to add. To select more files press-and-"
-#~ "hold <keycap>Ctrl</keycap> and click the files."
-#~ msgstr ""
-#~ "追加したいファイルを選択してください。さらにファイルを追加するには、"
-#~ "<keycap>Ctrl</keycap>を押したままファイルをクリックしてください。"
-
-#~ msgid ""
-#~ "Click <guibutton>Add</guibutton>. <application>Archive Manager</"
-#~ "application> adds the files to the current folder in the archive."
-#~ msgstr ""
-#~ "<guibutton>追加</guibutton>をクリックしてください。<application>書庫マネー"
-#~ "ジャ</application> は、書庫内の現在のフォルダにファイルを追加します。"
-
-#~ msgid ""
-#~ "To add files to an archive, perform the following steps: <placeholder-1/>"
-#~ msgstr ""
-#~ "書庫にファイルを追加するには、以下の手順を実行してください: <placeholder-"
-#~ "1/>"
-
-#~ msgid ""
-#~ "You cannot add folders to the archive with the <guilabel>Add Files</"
-#~ "guilabel> dialog. To add a folder see <xref linkend=\"file-roller-add-"
-#~ "folder\"/>."
-#~ msgstr ""
-#~ "<guilabel>ファイルの追加</guilabel>ダイアログでは、書庫にフォルダを追加す"
-#~ "ることはできません。書庫にフォルダを追加するには、<xref linkend=\"file-"
-#~ "roller-add-folder\"/>を参照してください。"
-
-#~ msgid ""
-#~ "The <guilabel>Add Files</guilabel> dialog provides the <guilabel>Add only "
-#~ "if newer</guilabel> option, see <xref linkend=\"file-roller-add-options\"/"
-#~ "> for more information on this option."
-#~ msgstr ""
-#~ "<guilabel>ファイルの追加</guilabel>ダイアログは、<guilabel>新しい場合にの"
-#~ "み追加する</guilabel>オプションを提供しています。このオプションに関する詳"
-#~ "細は、<xref linkend=\"file-roller-add-options\"/>を参照してください。"
-
-#~ msgid ""
-#~ "You can also add files to an archive in a file manager window, without "
-#~ "opening an <application>Archive Manager</application> window. See <xref "
-#~ "linkend=\"file-roller-fmgr\"/> for more information."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>ウィンドウを開かずにファイルマ"
-#~ "ネージャのウィンドウで書庫にファイルを追加することもできます。詳しくは、"
-#~ "<xref linkend=\"file-roller-fmgr\"/>を参照してください。"
-
-#~ msgid ""
-#~ "The Add operation adds a <emphasis>copy</emphasis> of the specified files "
-#~ "or folders to the archive. <application>Archive Manager</application> "
-#~ "does not remove the original files, which remain unchanged in the file "
-#~ "system. The copies that are added to the archive have the same "
-#~ "permissions and modification date as the original files."
-#~ msgstr ""
-#~ "追加操作は、指定されたファイルやフォルダの<emphasis>コピー</emphasis>を書"
-#~ "庫に追加します。<application>書庫マネージャ</application>は元のファイルを"
-#~ "削除しません。つまり、ファイルシステム上に変更されることなく残っています。"
-#~ "書庫に追加されたコピーは、元のファイルと同じ権限と更新日時を有しています。"
-
-#~ msgid "To Add a Folder to an Archive"
-#~ msgstr "書庫にフォルダを追加するには"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Add a Folder</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>Add a Folder</"
-#~ "guilabel> dialog."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>フォルダの追加</"
-#~ "guimenuitem></menuchoice>を選択してください。すると<guilabel>フォルダの追"
-#~ "加</guilabel>ダイアログが表示されます。"
-
-#~ msgid "Select the folder that you want to add."
-#~ msgstr "追加したいフォルダを選択してください。"
-
-#~ msgid ""
-#~ "Click <guibutton>Add</guibutton>. <application>Archive Manager</"
-#~ "application> adds the folder to the current folder in the archive."
-#~ msgstr ""
-#~ "<guibutton>追加</guibutton>をクリックしてください。<application>書庫マネー"
-#~ "ジャ</application>は、書庫内の現在のフォルダにフォルダを追加します。"
-
-#~ msgid ""
-#~ "To add a folder to an archive, perform the following steps: <placeholder-"
-#~ "1/>"
-#~ msgstr ""
-#~ "書庫にフォルダを追加するには、以下の手順を実行してください: <placeholder-"
-#~ "1/>"
-
-#~ msgid ""
-#~ "The <guilabel>Add a Folder</guilabel> dialog provides several advanced "
-#~ "options. See <xref linkend=\"file-roller-add-options\"/> for more "
-#~ "information."
-#~ msgstr ""
-#~ "<guilabel>フォルダの追加</guilabel>ダイアログは、いくつかの拡張オプション"
-#~ "を提供しています。詳しくは、<xref linkend=\"file-roller-add-options\"/>を"
-#~ "参照してください。"
-
-#~ msgid "To Convert an Archive to Another Format"
-#~ msgstr "書庫を他の形式に変換するには"
-
-#~ msgid ""
-#~ "To convert an archive to another format and save as a new file, perform "
-#~ "the following steps:"
-#~ msgstr ""
-#~ "書庫を他の形式に変換して新しいファイルとして保存するには、以下の手順を実行"
-#~ "してください:"
-
-#~ msgid "Open the archive that you want to convert."
-#~ msgstr "変換したい書庫を開いてください。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Archive</guimenu><guimenuitem>Save As</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>Save</guilabel> dialog."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>ファイル</guimenu><guimenuitem>別名で保存</"
-#~ "guimenuitem></menuchoice>を選択してください。すると<guilabel>保存</"
-#~ "guilabel>ダイアログが表示されます。"
-
-#~ msgid ""
-#~ "Enter the new archive name in the <guilabel>Name</guilabel> text box."
-#~ msgstr ""
-#~ "<guilabel>名前</guilabel>テキストボックスに新しい書庫の名前を入力してくだ"
-#~ "さい。"
-
-#~ msgid ""
-#~ "Select the new format from the <guilabel>Archive type</guilabel> drop-"
-#~ "down list. Alternatively, enter the filename extension in the "
-#~ "<guilabel>Name</guilabel> text box, and select <guilabel>Automatic</"
-#~ "guilabel> from the <guilabel>Archive type</guilabel> drop-down list."
-#~ msgstr ""
-#~ "<guilabel>書庫の種類</guilabel>ドロップダウンリストから新しい形式を選択し"
-#~ "てください。あるいは、<guilabel>名前</guilabel>テキストボックスにファイル"
-#~ "名の拡張子を入力して<guilabel>書庫の種類</guilabel>ドロップダウンリストか"
-#~ "ら<guilabel>自動</guilabel>を選択してください。"
-
-#~ msgid "Click <guibutton>Save</guibutton>."
-#~ msgstr "<guibutton>作成</guibutton>をクリックしてください。"
-
-#~ msgid ""
-#~ "If some but not all of the files in the archive are protected by a "
-#~ "password, and you have not specified the password, <application>Archive "
-#~ "Manager</application> does not ask for a password. However, "
-#~ "<application>Archive Manager</application> copies only the unprotected "
-#~ "files to the new archive."
-#~ msgstr ""
-#~ "すべてではないが書庫内の一部のファイルがパスワードにより保護されており、ま"
-#~ "だパスワードを指定していない場合、<application>書庫マネージャ</"
-#~ "application>はパスワードを尋ねません。しかしながら、<application>書庫マ"
-#~ "ネージャ</application>は新しい書庫に保護されていないファイルのみをコピーし"
-#~ "ます。"
-
-#~ msgid "You can modify the contents of an archive in several ways."
-#~ msgstr "いくつかの方法で書庫の内容を変更できます。"
-
-#~ msgid "To Encrypt Files in an Archive"
-#~ msgstr "書庫内のファイルを暗号化するには"
-
-#~ msgid ""
-#~ "For security, you might want to encrypt the files that you add to an "
-#~ "archive."
-#~ msgstr "安全のため、書庫に追加したファイルを暗号化したいかもしれません。"
-
-#~ msgid ""
-#~ "If the archive format supports encryption, you can specify a password to "
-#~ "encrypt the files that you add to the archive."
-#~ msgstr ""
-#~ "その書庫の形式が暗号化をサポートしているならば、パスワードを指定して書庫に"
-#~ "追加したファイルの暗号化を行うことが可能です。"
-
-#~ msgid "Currently, only 7-Zip, ZIP, RAR and ARJ archives support encryption."
-#~ msgstr ""
-#~ "現在、7-Zip、ZIP、RARおよびARJ書庫のみが暗号化をサポートしています。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Password</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>Password</guilabel> "
-#~ "dialog."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>パスワード</guimenuitem></"
-#~ "menuchoice>を選択してください。すると<guilabel>パスワード</guilabel>ダイア"
-#~ "ログが表示されます。"
-
-#~ msgid "Enter the password in the <guilabel>Password</guilabel> text box."
-#~ msgstr ""
-#~ "<guilabel>パスワード</guilabel>テキストボックスにパスワードを入力してくだ"
-#~ "さい。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> uses the password to encrypt "
-#~ "the files that you add to the current archive, and to decrypt the files "
-#~ "that you extract from the current archive. <application>Archive Manager</"
-#~ "application> deletes the password when you close the archive."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、現在の書庫に追加したファイル"
-#~ "を暗号化するためと現在の書庫から展開するファイルを復号するためにパスワード"
-#~ "を使用します。<application>書庫マネージャ</application>は、書庫を閉じた際"
-#~ "にパスワードを消去します。"
-
-#~ msgid ""
-#~ "For information on how to check whether an archive contains encrypted "
-#~ "files, see <xref linkend=\"file-roller-extra-info\"/>."
-#~ msgstr ""
-#~ "書庫に暗号化されたファイルが含まれているかの判定方法については、<xref "
-#~ "linkend=\"file-roller-extra-info\"/>を参照してください。"
-
-#~ msgid ""
-#~ "The encryption provided by archive utilities is weak and insecure. If "
-#~ "security is important, use a strong encryption tool such as <ulink url="
-#~ "\"http://www.gnupg.org\" type=\"http\">GNU Privacy Guard</ulink>."
-#~ msgstr ""
-#~ "書庫ユーティリティによって提供される暗号化は弱くセキュアではありません。セ"
-#~ "キュリティが重要である場合は、<ulink url=\"http://www.gnupg.org\" type="
-#~ "\"http\">GNU Privacy Guard</ulink>といった強力な暗号化ツールを使用してくだ"
-#~ "さい。"
-
-#~ msgid "To Rename a File in an Archive"
-#~ msgstr "書庫内のファイルの名前を変更するには"
-
-#~ msgid "To rename a file in an archive, perform the following steps:"
-#~ msgstr "書庫内のファイルの名前を変更するには、以下の手順を実行してください:"
-
-#~ msgid "Select the file that you want to rename."
-#~ msgstr "名前を変更したいファイルを選択してください。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Rename</"
-#~ "guimenuitem></menuchoice>, or press <keycombo><keycap>F2</keycap></"
-#~ "keycombo>, to display the <guilabel>Rename</guilabel> dialog."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>名前の変更</guimenuitem></"
-#~ "menuchoice>を選択するか、<keycombo><keycap>F2</keycap></keycombo>を押して"
-#~ "ください。すると<guilabel>名前の変更</guilabel>ダイアログが表示されます。"
-
-#~ msgid ""
-#~ "Enter the new filename in the <guilabel>New file name</guilabel> text box."
-#~ msgstr ""
-#~ "<guilabel>新しいファイル名</guilabel>テキストボックスに新しいファイル名を"
-#~ "入力してください。"
-
-#~ msgid "Click <guibutton>Rename</guibutton>."
-#~ msgstr "<guibutton>名前の変更</guibutton>をクリックしてください。"
-
-#~ msgid "To Copy Files in an Archive"
-#~ msgstr "書庫内でファイルをコピーするには"
-
-#~ msgid "To copy files in an archive, perform the following steps:"
-#~ msgstr "書庫内でファイルをコピーするには、以下の手順を実行してください:"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</"
-#~ "guimenuitem></menuchoice>, or press <keycombo><keycap>Ctrl</"
-#~ "keycap><keycap>C</keycap></keycombo>."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>コピー</guimenuitem></"
-#~ "menuchoice>を選択するか、<keycombo><keycap>Ctrl</keycap><keycap>C</"
-#~ "keycap></keycombo>を押してください。"
-
-#~ msgid "Open the location where you want to put the copied files."
-#~ msgstr "コピーしたファイルを置きたい場所を開いてください。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Paste</"
-#~ "guimenuitem></menuchoice>, or press <keycombo><keycap>Ctrl</"
-#~ "keycap><keycap>V</keycap></keycombo>."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>貼り付け</guimenuitem></"
-#~ "menuchoice>を選択するか、<keycombo><keycap>Ctrl</keycap><keycap>V</"
-#~ "keycap></keycombo>を押してください。"
-
-#~ msgid "To Move Files in an Archive"
-#~ msgstr "書庫内でファイルを移動するには"
-
-#~ msgid "To move files in an archive, perform the following steps:"
-#~ msgstr "書庫内でファイルを移動するには、以下の手順を実行してください:"
-
-#~ msgid "Select the files that you want to move."
-#~ msgstr "移動したいファイルを選択してください。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Cut</guimenuitem></"
-#~ "menuchoice>, or press <keycombo><keycap>Ctrl</keycap><keycap>X</keycap></"
-#~ "keycombo>."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>切り取り</guimenuitem></"
-#~ "menuchoice>を選択するか、<keycombo><keycap>Ctrl</keycap><keycap>X</"
-#~ "keycap></keycombo>を押してください。"
-
-#~ msgid "Open the location where you want to put the moved files."
-#~ msgstr "移動したファイルを置きたい場所を開いてください。"
-
-#~ msgid "To Delete Files From an Archive"
-#~ msgstr "書庫からファイルを削除するには"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Delete</"
-#~ "guimenuitem></menuchoice> or press <keycap>Delete</keycap> to display the "
-#~ "<guilabel>Delete</guilabel> dialog."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>削除</guimenuitem></"
-#~ "menuchoice>を選択するか、<keycap>Delete</keycap>を押してください。すると"
-#~ "<guilabel>削除</guilabel>ダイアログが開きます。"
-
-#~ msgid "Select one of the following delete options:"
-#~ msgstr "以下の削除オプションの一つを選択してください:"
-
-#~ msgid "Delete the selected files from the archive."
-#~ msgstr "書庫から選択したファイルを削除します。"
-
-#~ msgid ""
-#~ "Delete from the archive all files that match the specified pattern. See "
-#~ "<xref linkend=\"file-roller-pattern\"/> for more information about "
-#~ "filename patterns."
-#~ msgstr "指定したパターンと一致するすべてのファイルを書庫から削除します。"
-
-#~ msgid ""
-#~ "Double-click the file that you want to open. Alternatively right-click "
-#~ "the file and choose <menuchoice><guimenuitem>Open</guimenuitem></"
-#~ "menuchoice>."
-#~ msgstr ""
-#~ "開きたいファイルをダブルクリックしてください。あるいは、ファイルを右クリッ"
-#~ "クして<menuchoice><guimenuitem>開く</guimenuitem></menuchoice>を選択してく"
-#~ "ださい。"
-
-#~ msgid "Edit the file opened in step 1, and then save your changes."
-#~ msgstr "手順1で開いたファイルを編集して、変更を保存してください。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> shows a confirmation dialog, "
-#~ "asking confirmation to update the file in the archive with the changes "
-#~ "you made."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>が確認ダイアログを表示して、あな"
-#~ "たが加えた変更で書庫内のファイルを更新するか確認します。"
-
-#~ msgid "Click on <guilabel>Update</guilabel>."
-#~ msgstr "<guilabel>更新する</guilabel>をクリックしてください。"
-
-#~ msgid ""
-#~ "To modify a file in an archive perform the following steps: <placeholder-"
-#~ "1/>"
-#~ msgstr ""
-#~ "書庫内のファイルを修正するには、以下の手順を実行してください: "
-#~ "<placeholder-1/>"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> uses the system-defined "
-#~ "associations between file types and programs to determine the appropriate "
-#~ "application to launch for a specific file. These assocations can be "
-#~ "displayed and modified in the <guilabel>Open With</guilabel> tab of the "
-#~ "file properties dialog. If <application>Archive Manager</application> "
-#~ "cannot determine the appropriate application, <application>Archive "
-#~ "Manager</application> displays the <guilabel>Open Files</guilabel> dialog "
-#~ "to let you choose an application, as described in below."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、システムで定義されたファイル"
-#~ "形式とプログラムの関連付けを利用して適切なアプリケーションを決定し、指定さ"
-#~ "れたファイルのために起動します。この関連付けは、ファイルプロパティダイアロ"
-#~ "グの<guilabel>開き方</guilabel>タブで確認したり、変更することが可能です。"
-#~ "<application>書庫マネージャ</application>が適切なアプリケーションを決定で"
-#~ "きない場合は、<guilabel>ファイルを開く</guilabel>ダイアログを表示して、以"
-#~ "下で説明するようにアプリケーションの選択を促します。"
-
-#~ msgid "To Modify a File in an Archive with a Custom Application"
-#~ msgstr "任意のアプリケーションで書庫内のファイルを修正するには"
-
-#~ msgid "Right click the file."
-#~ msgstr "ファイルを右クリックしてください。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenuitem>Open With...</guimenuitem></menuchoice>."
-#~ msgstr ""
-#~ "<menuchoice><guimenuitem>別のアプリで開く...</guimenuitem></menuchoice>を"
-#~ "選択してください。"
-
-#~ msgid ""
-#~ "You can use an application specified by you, rather than the default "
-#~ "application, to modify a file. To use an external application to open a "
-#~ "file: <placeholder-1/>"
-#~ msgstr ""
-#~ "ファイルを修正するために既定のアプリケーションではなく、指定するアプリケー"
-#~ "ションを使用できます。外部アプリケーションを使ってファイルを開くには: "
-#~ "<placeholder-1/>"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> displays the <guilabel>Open "
-#~ "Files</guilabel> dialog, which lists all of the applications that can "
-#~ "open files of the specified type. To select one of the applications, "
-#~ "double-click the application name or click on the application name and "
-#~ "then click <guibutton>Open</guibutton>. Alternatively, enter the "
-#~ "application name in the <guilabel>Application</guilabel> text box and "
-#~ "then click <guibutton>Open</guibutton> to launch the application of your "
-#~ "choice."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、指定された形式のファイルを開"
-#~ "くことができるすべてのアプリケーションを一覧にした<guilabel>ファイルを開く"
-#~ "</guilabel>ダイアログを表示します。その内の一つを選択するには、アプリケー"
-#~ "ション名をダブルクリックするか、アプリケーション名をクリックしてから"
-#~ "<guibutton>開く</guibutton>をクリックしてください。あるいは、<guilabel>ア"
-#~ "プリケーション</guilabel>テキストボックスにアプリケーション名を入力して"
-#~ "<guibutton>開く</guibutton>をクリックすると選択したアプリケーションが起動"
-#~ "します。"
-
-#~ msgid ""
-#~ "Once the application starts follow the procedure from step 2 as described "
-#~ "in <xref linkend=\"file-roller-modify-archive-file\"/>."
-#~ msgstr ""
-#~ "アプリケーションが起動したら、<xref linkend=\"file-roller-modify-archive-"
-#~ "file\"/>で説明した手順2からの手順に従ってください。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> enables you to view several "
-#~ "aspects of an archive."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>を使うと書庫の様々な側面を閲覧で"
-#~ "きます。"
-
-#~ msgid "To View the Properties of an Archive"
-#~ msgstr "書庫のプロパティを閲覧するには"
-
-#~ msgid "Name"
-#~ msgstr "ファイル名"
-
-#~ msgid "The name of the archive."
-#~ msgstr "書庫の名前です。"
-
-#~ msgid "Location"
-#~ msgstr "場所"
-
-#~ msgid "The position of the archive in the file system."
-#~ msgstr "ファイルシステムにおける書庫の位置です。"
-
-#~ msgid "Modified on"
-#~ msgstr "変更日時"
-
-#~ msgid "The date and time at which the archive was last modified."
-#~ msgstr "書庫が最後に修正された日時です。"
-
-#~ msgid "Archive size"
-#~ msgstr "書庫のサイズ"
-
-#~ msgid "The size of the archive contents when compressed."
-#~ msgstr "圧縮された際に書庫が占める大きさです。"
-
-#~ msgid "Content size"
-#~ msgstr "展開後のサイズ"
-
-#~ msgid ""
-#~ "The size of the archive contents when uncompressed. This information is "
-#~ "also available in the statusbar."
-#~ msgstr ""
-#~ "展開された際に書庫が占める大きさです。この情報は、ステータスバーでも確認で"
-#~ "きます。"
-
-#~ msgid "Compression ratio"
-#~ msgstr "圧縮比"
-
-#~ msgid ""
-#~ "The compression ratio is a value used to describe the reduction in size "
-#~ "of the data. For example a compression ratio of 5 means that the "
-#~ "compressed archive is 1/5th the size of the original data."
-#~ msgstr ""
-#~ "圧縮比は、データサイズの減少について説明するために利用される値です。例え"
-#~ "ば、圧縮比5は、圧縮された書庫が元のデータの1/5の大きさである事を意味しま"
-#~ "す。"
-
-#~ msgid "Number of files"
-#~ msgstr "ファイル数"
-
-#~ msgid ""
-#~ "To view the properties of an archive, choose "
-#~ "<menuchoice><guimenu>Archive</guimenu><guimenuitem>Properties</"
-#~ "guimenuitem></menuchoice> to display the <guilabel>Properties</guilabel> "
-#~ "dialog. The <guilabel>Properties</guilabel> dialog displays the following "
-#~ "information about the archive: <placeholder-1/>"
-#~ msgstr ""
-#~ "書庫のプロパティを閲覧するには、<menuchoice><guimenu>ファイル</"
-#~ "guimenu><guimenuitem>プロパティ</guimenuitem></menuchoice>を選択してくださ"
-#~ "い。すると<guilabel>プロパティ</guilabel>ダイアログが表示されます。"
-#~ "<guilabel>プロパティ</guilabel>ダイアログは、書庫について以下の情報を表示"
-#~ "します: <placeholder-1/>"
-
-#~ msgid "Size"
-#~ msgstr "サイズ"
-
-#~ msgid ""
-#~ "The size of the file when the file is extracted from the archive. For a "
-#~ "folder, the <guilabel>Size</guilabel> field is blank. For information on "
-#~ "how to display the size of the compressed file, see <xref linkend=\"file-"
-#~ "roller-extra-info\"/>."
-#~ msgstr ""
-#~ "書庫から展開された際のファイルの大きさです。フォルダに関しては、<guilabel>"
-#~ "サイズ</guilabel>列は空白です。圧縮されたファイルの大きさを表示する方法に"
-#~ "関する情報は、<xref linkend=\"file-roller-extra-info\"/>を参照してくださ"
-#~ "い。"
-
-#~ msgid "Type"
-#~ msgstr "種類"
-
-#~ msgid ""
-#~ "The type of the file. For a folder, the value in the <guilabel>Type</"
-#~ "guilabel> field is <literal>Folder</literal>."
-#~ msgstr ""
-#~ "ファイルの種類です。フォルダに関しては、<guilabel>種類</guilabel>の値は、"
-#~ "<literal>フォルダ</literal>です。"
-
-#~ msgid "Date modified"
-#~ msgstr "変更日時"
-
-#~ msgid ""
-#~ "The date on which the file was last modified. For a folder, the "
-#~ "<guilabel>Date modified</guilabel> field is blank."
-#~ msgstr ""
-#~ "ファイルが最後に変更された日時です。フォルダに関しては、<guilabel>変更日時"
-#~ "</guilabel>列が空白です。"
-
-#~ msgid ""
-#~ "The path to the file within the archive. This column is visible only when "
-#~ "the window is in file view, when in folder view the location of the files "
-#~ "is displayed in the <guilabel>Location</guilabel> text box of the "
-#~ "folderbar. For more information about view types see <xref linkend=\"file-"
-#~ "roller-view-type-folder\"/>."
-#~ msgstr ""
-#~ "書庫内でのファイルへのパスです。この列は、ウィンドウがファイルビューである"
-#~ "時のみ表示されます。フォルダビューの時は、ファイルの場所は、フォルダバーの"
-#~ "<guilabel>場所</guilabel>テキストボックスに表示されます。ビューの種類に関"
-#~ "する詳しい情報は、<xref linkend=\"file-roller-view-type-folder\"/>を参照し"
-#~ "てください。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> displays the archive contents "
-#~ "in the main window as a file list with the following columns: "
-#~ "<placeholder-1/>"
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、書庫の内容を以下の列とともに"
-#~ "ファイルリストとしてメインウィンドウに表示します: <placeholder-1/>"
-
-#~ msgid ""
-#~ "If another program has modified the archive since <application>Archive "
-#~ "Manager</application> opened the archive, choose "
-#~ "<menuchoice><guimenu>View</guimenu><guimenuitem>Reload</guimenuitem></"
-#~ "menuchoice> to reload the archive contents from disk."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>で書庫を開いてから他のプログラム"
-#~ "で書庫を修正した場合は、書庫の内容をディスクから再読み込みするために"
-#~ "<menuchoice><guimenu>表示</guimenu><guimenuitem>更新</guimenuitem></"
-#~ "menuchoice>を選択してください。"
-
-#~ msgid ""
-#~ "For information on how to customize the way that <application>Archive "
-#~ "Manager</application> displays the archive contents, see <xref linkend="
-#~ "\"file-roller-archive-custom\"/>."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>が書庫の内容を表示する方法を変更"
-#~ "する方法に関する情報は、<xref linkend=\"file-roller-archive-custom\"/>を参"
-#~ "照してください。"
-
-#~ msgid ""
-#~ "For more advanced tasks, use an application installed on your system. For "
-#~ "more information, see <xref linkend=\"file-roller-view-archive-file\"/>."
-#~ msgstr ""
-#~ "より高度な作業については、お使いのシステムにインストールされているアプリ"
-#~ "ケーションを利用してください。詳しくは、<xref linkend=\"file-roller-view-"
-#~ "archive-file\"/>を参照してください。"
-
-#~ msgid ""
-#~ "To view a file in an archive follow the steps described in <xref linkend="
-#~ "\"file-roller-modify-archive-file\"/>. If you save the opened file, click "
-#~ "<guilabel>Cancel</guilabel> when <application>Archive Manager</"
-#~ "application> asks confirmation to update the file in the archive."
-#~ msgstr ""
-#~ "書庫内のファイルを閲覧するには<xref linkend=\"file-roller-modify-archive-"
-#~ "file\"/>で説明した手順に従ってください。開いたファイルを保存した場合は、"
-#~ "<application>書庫マネージャ</application>から書庫内のファイルを更新するか"
-#~ "尋ねられた時に<guilabel>キャンセル</guilabel>をクリックしてください。"
-
-#~ msgid ""
-#~ "If the archive contains no errors, <application>Archive Manager</"
-#~ "application> opens the <guilabel>Test Result</guilabel> dialog to list "
-#~ "each file in the archive, and indicates that each file has status "
-#~ "<literal>OK</literal>."
-#~ msgstr ""
-#~ "書庫がエラーを含まない場合、<application>書庫マネージャ</application>は、"
-#~ "<guilabel>テスト結果</guilabel>ダイアログを開き、書庫の各ファイルを一覧表"
-#~ "にして各ファイルの状態が<literal>OK</literal>である事を示します。"
-
-#~ msgid ""
-#~ "If the archive contains some error, <application>Archive Manager</"
-#~ "application> opens the <guilabel>Test Result</guilabel> dialog displaying "
-#~ "the part of the archive contains the error."
-#~ msgstr ""
-#~ "書庫がエラーを含んでいる場合、<application>書庫マネージャ</application>"
-#~ "は、書庫がエラーを含んでいる部分を表示する<guilabel>テスト結果</guilabel>"
-#~ "ダイアログを開きます。"
-
-#~ msgid ""
-#~ "Sometimes an archive can be damaged for some reason, to check whether an "
-#~ "archive is damaged, choose <menuchoice><guimenu>Archive</"
-#~ "guimenu><guimenuitem>Test Integrity</guimenuitem></menuchoice>: "
-#~ "<placeholder-1/>"
-#~ msgstr ""
-#~ "時折、何らかの理由で書庫が破損することがあります。書庫が破損していないか検"
-#~ "査するには、<menuchoice><guimenu>ファイル</guimenu><guimenuitem>整合性のテ"
-#~ "スト</guimenuitem></menuchoice>を選択してください: <placeholder-1/>"
-
-#~ msgid ""
-#~ "A damaged archive can be impossible to extract, this can bring to a loss "
-#~ "of data. For this reason you should test the archive integrity before "
-#~ "deleting the original files."
-#~ msgstr ""
-#~ "破損した書庫は展開することができません。これは、データの喪失をもたらしま"
-#~ "す。このため、元のファイルを削除する前に書庫の整合性をテストすべきです。"
-
-#~ msgid ""
-#~ "If the archive contains encrypted files, <application>Archive Manager</"
-#~ "application> asks the password of the archive before performing the test."
-#~ msgstr ""
-#~ "書庫が暗号化されたファイルを含んでいる場合は、テストを実行する前に"
-#~ "<application>書庫マネージャ</application>が書庫のパスワードを尋ねます。"
-
-#~ msgid ""
-#~ "Not all the archive types support the integrity testing, the following is "
-#~ "the list of archive types that can be tested for integrity: 7-Zip, RAR, "
-#~ "ZIP, ACE, ARJ and Zoo."
-#~ msgstr ""
-#~ "すべての書庫形式が整合性のテストをサポートしている訳ではありません。以下に"
-#~ "示す書庫形式で整合性をテストできます。: 7-Zip、RAR、ZIP、ACE、ARJおよび"
-#~ "Zoo。"
-
-#~ msgid "Tip"
-#~ msgstr "助言"
-
-#~ msgid ""
-#~ "To test the integrity of an archive that doesn't support the integrity "
-#~ "testing, extract all the files from the archive and check that the "
-#~ "operation is completed successfully."
-#~ msgstr ""
-#~ "整合性のテストをサポートしない書庫の整合性をテストするには、書庫からすべて"
-#~ "のファイルを展開し、操作が正常に完了しているかを照合してください。"
-
-#~ msgid "Customizing the Archive Display"
-#~ msgstr "書庫の表示のカスタマイズ"
-
-#~ msgid ""
-#~ "You can customize the way that <application>Archive Manager</application> "
-#~ "displays the archive contents, as follows:"
-#~ msgstr ""
-#~ "以下のようにして<application>書庫マネージャ</application>が書庫の内容を表"
-#~ "示する方法をカスタマイズできます:"
-
-#~ msgid ""
-#~ "Switch between folder view and file view. For more information, see <xref "
-#~ "linkend=\"file-roller-view-type\"/>."
-#~ msgstr ""
-#~ "フォルダビューとファイルビューを切り替えてください。詳細は、<xref linkend="
-#~ "\"file-roller-view-type\"/>を参照してください。"
-
-#~ msgid ""
-#~ "Specify the order in which to display files in the list. For more "
-#~ "information, see <xref linkend=\"file-roller-view-sort\"/>."
-#~ msgstr ""
-#~ "一覧でファイルを表示する順番を指定してください。詳細は、<xref linkend="
-#~ "\"file-roller-view-sort\"/>を参照してください。"
-
-#~ msgid ""
-#~ "Display additional details about the contents of the archive. For more "
-#~ "information, see <xref linkend=\"file-roller-extra-info\"/>."
-#~ msgstr ""
-#~ "書庫の内容についてその他の詳細情報を表示してください。詳しくは、<xref "
-#~ "linkend=\"file-roller-extra-info\"/>を参照してください。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> updates the display "
-#~ "immediately, when you make any of the above customizations."
-#~ msgstr ""
-#~ "上記のいずれかのカスタマイズを行った場合、<application>書庫マネージャ</"
-#~ "application>は即座に表示を更新します。"
-
-#~ msgid "To Set the View Type"
-#~ msgstr "ビューの種類を設定するには"
-
-#~ msgid ""
-#~ "If the archive contains folders, you can show the archive contents in "
-#~ "either <link linkend=\"file-roller-view-type-folder\">folder view</link> "
-#~ "or <link linkend=\"file-roller-view-type-file\">file view</link>."
-#~ msgstr ""
-#~ "書庫がフォルダを含んでいる場合、書庫の内容を<link linkend=\"file-roller-"
-#~ "view-type-folder\">フォルダビュー</link>または<link linkend=\"file-roller-"
-#~ "view-type-file\">ファイルビュー</link>のいずれかで表示できます。"
-
-#~ msgid "Folder View"
-#~ msgstr "フォルダビュー"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> displays the archive contents "
-#~ "in folder view by default. To explicitly select folder view, choose "
-#~ "<menuchoice><guimenu>View</guimenu><guimenuitem>View as a Folder</"
-#~ "guimenuitem></menuchoice>."
-#~ msgstr ""
-#~ "デフォルトでは、<application>書庫マネージャ</application>は書庫の内容を"
-#~ "フォルダビューで表示します。明示的にフォルダビューを選択するには、"
-#~ "<menuchoice><guimenu>表示</guimenu><guimenuitem>フォルダ形式で表示</"
-#~ "guimenuitem></menuchoice>を選択してください。"
-
-#~ msgid ""
-#~ "In folder view, <application>Archive Manager</application> shows folders "
-#~ "in the same way as a file manager shows folders. That is, "
-#~ "<application>Archive Manager</application> indicates folders in the "
-#~ "display area with a folder icon and the folder name. To view the contents "
-#~ "of a folder, double-click on the folder name."
-#~ msgstr ""
-#~ "フォルダビューでは、<application>書庫マネージャ</application>はファイルマ"
-#~ "ネージャがフォルダを表示するのと同じ方法でフォルダを表示します。つまり、"
-#~ "<application>書庫マネージャ</application>は表示エリアにフォルダアイコンと"
-#~ "フォルダ名とともにフォルダを表示します。フォルダの内容を閲覧するには、フォ"
-#~ "ルダ名をダブルクリックしてください。"
-
-#~ msgid ""
-#~ "The folderbar, which <application>Archive Manager</application> displays "
-#~ "only in folder view, contains the components described in the following "
-#~ "table."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>がフォルダビューでのみ表示する"
-#~ "フォルダバーは、下表に説明する部品を含んでいます。"
-
-#~ msgid "Component"
-#~ msgstr "部品"
-
-#~ msgid "Description"
-#~ msgstr "説明"
-
-#~ msgid "Shows icon to navigate backwards in location history list."
-#~ msgstr "場所の履歴一覧を戻るためのアイコンを表示しています。"
-
-#~ msgid ""
-#~ "Click on this button to navigate backwards in the location history list."
-#~ msgstr "場所の履歴一覧を戻るには、このボタンをクリックしてください。"
-
-#~ msgid "Shows icon to navigate forwards in location history list."
-#~ msgstr "場所の履歴一覧を進むためのアイコンを表示しています。"
-
-#~ msgid ""
-#~ "Click on this button to navigate forwards in the location history list."
-#~ msgstr "場所の履歴一覧を進むには、このボタンをクリックしてください。"
-
-#~ msgid "Shows icon to navigate up one level in folder tree."
-#~ msgstr "フォルダツリーの1階層上に移動するためのアイコンを表示しています。"
-
-#~ msgid "Click on this button to navigate up one level in the folder tree."
-#~ msgstr ""
-#~ "フォルダツリーの1階層上に移動するには、このボタンをクリックしてください。"
-
-#~ msgid "Shows icon to open the top-level folder in the archive."
-#~ msgstr "書庫の最上位階層のフォルダを開くためのアイコンを表示しています。"
-
-#~ msgid "Click on this button to open the top-level folder in the archive."
-#~ msgstr ""
-#~ "書庫の最上位階層のフォルダを開くには、このボタンをクリックしてください。"
-
-#~ msgid ""
-#~ "This field shows the full pathname, within the archive, of the current "
-#~ "folder."
-#~ msgstr "この欄は、現在のフォルダの書庫内でのフルパス名を表示します。"
-
-#~ msgid ""
-#~ "To change to a different level in the folder tree, type the new location "
-#~ "in the <guilabel>Location</guilabel> text box then press <keycap>Return</"
-#~ "keycap>. <application>Archive Manager</application> displays the contents "
-#~ "of the new location."
-#~ msgstr ""
-#~ "フォルダツリー内で異なる階層に変更するには、<guilabel>場所</guilabel>テキ"
-#~ "ストボックスに新しい場所を入力して<keycap>Return</keycap>を押してくださ"
-#~ "い。<application>書庫マネージャ</application>は新しい場所の内容を表示しま"
-#~ "す。"
-
-#~ msgid "File View"
-#~ msgstr "ファイルビュー"
-
-#~ msgid ""
-#~ "To select file view, choose <menuchoice><guimenu>View</"
-#~ "guimenu><guimenuitem>View All Files</guimenuitem></menuchoice>."
-#~ msgstr ""
-#~ "ファイルビューを選択するには、<menuchoice><guimenu>表示</"
-#~ "guimenu><guimenuitem>全ファイルの一覧表示</guimenuitem></menuchoice>を選択"
-#~ "してください。"
-
-#~ msgid ""
-#~ "In file view, <application>Archive Manager</application> displays all "
-#~ "files in the archive, including files from subfolders, in a single list."
-#~ msgstr ""
-#~ "ファイルビューでは、<application>書庫マネージャ</application>はサブフォル"
-#~ "ダのファイルを含んだすべてのファイルを単一のリストで表示します。"
-
-#~ msgid "To Sort the File List"
-#~ msgstr "ファイルリストを並び替えるには"
-
-#~ msgid ""
-#~ "You can sort the file list by name, size, type, modification date, or "
-#~ "location."
-#~ msgstr ""
-#~ "名前、サイズ、種類、変更日時、あるいは場所によってファイルリストを並び替え"
-#~ "ることができます。"
-
-#~ msgid ""
-#~ "To specify a sort order, click on the heading of the corresponding column."
-#~ msgstr ""
-#~ "並び替え順を指定するには、対応する列の見出しをクリックしてください。"
-
-#~ msgid "To reverse the sort order, click on the column heading again."
-#~ msgstr "並び替え順を反転するには、列の見出しを再度クリックします。"
-
-#~ msgid ""
-#~ "For example, to sort the file list by modification date, click on the "
-#~ "<guilabel>Date modified</guilabel> heading. <application>Archive Manager</"
-#~ "application> rearranges the file list to display the files by "
-#~ "modification date, starting with the earliest. To display the latest "
-#~ "files first, click on the <guilabel>Date modified</guilabel> heading "
-#~ "again."
-#~ msgstr ""
-#~ "例えば、変更日時によってファイルリストを並び替えるには、<guilabel>変更日時"
-#~ "</guilabel>の見出しをクリックしてください。<application>書庫マネージャ</"
-#~ "application>は、最古のファイルから始まるようにファイルを表示するべくファイ"
-#~ "ルリストを再配置します。最近のファイルを最初に表示するには、<guilabel>変更"
-#~ "日時</guilabel>の見出しを再度クリックしてください。"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> always performs a secondary "
-#~ "sort based on the file name. In the above example, <application>Archive "
-#~ "Manager</application> sorts by name any files that have the same "
-#~ "modification date."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は、常に2次ソートをファイル名に基"
-#~ "づいて実行します。上記の例では、同じ変更日時を持つファイルを名前によって並"
-#~ "び替えます。"
-
-#~ msgid "To Display Additional Details"
-#~ msgstr "その他の詳細情報を表示するには"
-
-#~ msgid ""
-#~ "If you tested the archive in the current <application>Archive Manager</"
-#~ "application> session, the <guilabel>Last Output</guilabel> dialog "
-#~ "displays the results of the last test."
-#~ msgstr ""
-#~ "現在の<application>書庫マネージャ</application>のセッションで書庫をテスト"
-#~ "した場合、<guilabel>最後の出力</guilabel>ダイアログが、最後のテストの結果"
-#~ "を表示します。"
-
-#~ msgid ""
-#~ "If you did not test the archive in the current <application>Archive "
-#~ "Manager</application> session, the <guilabel>Last Output</guilabel> "
-#~ "dialog displays a list of all files in the archive, but does not indicate "
-#~ "any status for the files. Instead, the <guilabel>Last Output</guilabel> "
-#~ "dialog provides the compressed size of each file and the percentage of "
-#~ "compression, and the date and time at which the file was last modified."
-#~ msgstr ""
-#~ "現在の<application>書庫マネージャ</application>のセッションで書庫をテスト"
-#~ "していない場合、<guilabel>最後の出力</guilabel>ダイアログは書庫のすべての"
-#~ "ファイルを一覧表示します。しかし、ファイルの状態は何ら示しません。代わりに"
-#~ "<guilabel>最後の出力</guilabel>ダイアログは、各ファイルの圧縮された大きさ"
-#~ "や圧縮率、ファイルが最後に修正された日時を提供します。"
-
-#~ msgid ""
-#~ "To open the <guilabel>Last Output</guilabel> dialog, choose "
-#~ "<menuchoice><guimenu>View</guimenu><guimenuitem>Last Output</"
-#~ "guimenuitem></menuchoice>: <placeholder-1/>"
-#~ msgstr ""
-#~ "<guilabel>最後の出力</guilabel>ダイアログを開くには、<menuchoice><guimenu>"
-#~ "表示</guimenu><guimenuitem>最後の出力</guimenuitem></menuchoice>を選択して"
-#~ "ください: <placeholder-1/>"
-
-#~ msgid "Using the File Manager to Work with an Archive"
-#~ msgstr "書庫に対する作業にファイルマネージャを利用する"
-
-#~ msgid ""
-#~ "You can use the file manager to add files to an archive, or to extract "
-#~ "files from an archive."
-#~ msgstr ""
-#~ "ファイルマネージャを利用して書庫にファイルを追加したり、書庫からファイルを"
-#~ "展開することができます。"
-
-#~ msgid "To Add Files to an Archive by Using the File Manager"
-#~ msgstr "ファイルマネージャを利用して書庫にファイルを追加するには"
-
-#~ msgid ""
-#~ "Drag the files into a <application>Archive Manager</application> window "
-#~ "from a file manager window."
-#~ msgstr ""
-#~ "ファイルマネージャウィンドウから<application>書庫マネージャ</application>"
-#~ "ウィンドウにファイルをドラッグしてください。"
-
-#~ msgid "Use the file manager popup menu to add the files to the archive."
-#~ msgstr ""
-#~ "書庫にファイルを追加するためにファイルマネージャのポップアップメニューを利"
-#~ "用してください。"
-
-#~ msgid ""
-#~ "You can use the file manager to add files to an archive, in the following "
-#~ "ways: <placeholder-1/>"
-#~ msgstr ""
-#~ "以下の方法でファイルマネージャを利用して書庫にファイルを追加できます: "
-#~ "<placeholder-1/>"
-
-#~ msgid ""
-#~ "To use the file manager popup menu to add files to an archive, perform "
-#~ "the following steps:"
-#~ msgstr ""
-#~ "ファイルマネージャのポップアップメニューを利用して書庫にファイルを追加する"
-#~ "には、以下の手順を実行してください:"
-
-#~ msgid "Right-click on the files or folders in a file manager window."
-#~ msgstr ""
-#~ "ファイルマネージャウィンドウ内のファイルやフォルダ上で右クリックしてくださ"
-#~ "い。"
-
-#~ msgid ""
-#~ "Choose <guimenuitem>Create Archive</guimenuitem> from the file manager "
-#~ "popup menu to display the <application>Archive Manager</"
-#~ "application><guilabel>Create Archive</guilabel> dialog."
-#~ msgstr ""
-#~ "ファイルマネージャのポップアップメニューから<guimenuitem>圧縮</"
-#~ "guimenuitem>を選択してください。すると<application>書庫マネージャ</"
-#~ "application>の<guilabel>圧縮</guilabel>ダイアログが表示されます。"
-
-#~ msgid ""
-#~ "Enter the archive name, without the file extension, in the "
-#~ "<guilabel>Archive</guilabel> text box."
-#~ msgstr ""
-#~ "<guilabel>ファイル名</guilabel>テキストボックスに拡張子なしで書庫の名前を"
-#~ "入力してください。"
-
-#~ msgid "Choose the archive type from the drop-down list."
-#~ msgstr "ドロップダウンリストから、書庫の種類を選択してください。"
-
-#~ msgid ""
-#~ "Choose the location where to save the archive file, from the "
-#~ "<guilabel>Location</guilabel> drop-down list. If the location is not "
-#~ "present in the list choose <guilabel>Other...</guilabel> to select it "
-#~ "with the <guilabel>Location</guilabel> dialog."
-#~ msgstr ""
-#~ "<guilabel>場所</guilabel>ドロップダウンリストから、書庫を保存する場所を選"
-#~ "択してください。保存したい場所がリストに示されていない場合は、<guilabel>そ"
-#~ "の他...</guilabel>を選択し<guilabel>場所</guilabel>ダイアログで保存したい"
-#~ "場所を選択してください。"
-
-#~ msgid ""
-#~ "Click <guilabel>Create</guilabel> to add the selected files to the root "
-#~ "folder of the specified archive."
-#~ msgstr ""
-#~ "<guilabel>作成</guilabel>をクリックしてください。すると指定された書庫の"
-#~ "ルートフォルダに選択したファイルが追加されます。"
-
-#~ msgid ""
-#~ "To select any of the advanced add options, you must invoke "
-#~ "<application>Archive Manager</application> as described in <xref linkend="
-#~ "\"file-roller-to-start\"/>."
-#~ msgstr ""
-#~ "何らかの拡張追加オプションを選択するには、<xref linkend=\"file-roller-to-"
-#~ "start\"/>で説明したように<application>書庫マネージャ</application>を起動し"
-#~ "てください。"
-
-#~ msgid "To Extract Files From an Archive by Using the File Manager"
-#~ msgstr "ファイルマネージャを利用して書庫からファイルを展開するには"
-
-#~ msgid ""
-#~ "Drag the files from a <application>Archive Manager</application> window "
-#~ "into a file manager window."
-#~ msgstr ""
-#~ "ファイルマネージャウィンドウから<application>書庫マネージャウィンドウ</"
-#~ "application>にファイルをドラッグしてください。"
-
-#~ msgid ""
-#~ "Use the file manager popup menu to extract the files from the archive."
-#~ msgstr ""
-#~ "書庫からファイルを展開するためにファイルマネージャのポップアップメニューを"
-#~ "利用してください。"
-
-#~ msgid ""
-#~ "You can use the file manager to extract files from an archive, in the "
-#~ "following ways: <placeholder-1/>"
-#~ msgstr ""
-#~ "以下の方法でファイルマネージャを利用して書庫からファイルを展開できます: "
-#~ "<placeholder-1/>"
-
-#~ msgid ""
-#~ "To use the file manager popup menu to extract files from an archive, "
-#~ "perform the following steps:"
-#~ msgstr ""
-#~ "ファイルマネージャのポップアップメニューを利用して書庫からファイルを展開す"
-#~ "るには、以下の手順を実行してください:"
-
-#~ msgid "Right-click on the archive in a file manager window."
-#~ msgstr "ファイルマネージャウィンドウの書庫上で右クリックしてください。"
-
-#~ msgid ""
-#~ "Choose <guimenuitem>Extract Here</guimenuitem> to extract all of the "
-#~ "archive contents into the directory where the archive is located."
-#~ msgstr ""
-#~ "<guimenuitem>ここに展開</guimenuitem>を選択してください。すると書庫が置か"
-#~ "れているディレクトリに書庫の全内容が展開されます。"
-
-#~ msgid ""
-#~ "If the archive is encrypted, <application>Archive Manager</application> "
-#~ "will ask to enter the password before extracting the files."
-#~ msgstr ""
-#~ "書庫が暗号化されている場合、<application>書庫マネージャ</application>は"
-#~ "ファイルを展開する前にパスワードの入力を求めます。"
-
-#~ msgid "Create Options"
-#~ msgstr "作成オプション"
-
-#~ msgid ""
-#~ "When creating a new archive, or when converting an existing archive to "
-#~ "another format, click on <guilabel>Other Options</guilabel> to specify "
-#~ "the following advanced options:"
-#~ msgstr ""
-#~ "新しい書庫の作成時や既存の書庫を他の形式に変換する際、以下の拡張オプション"
-#~ "を指定するには<guilabel>その他のオプション</guilabel>クリックしてください:"
-
-#~ msgid "Password"
-#~ msgstr "パスワード"
-
-#~ msgid ""
-#~ "Type the password that will be used to encrypt the archive. If no "
-#~ "password is specified the archive will not be encrypted."
-#~ msgstr ""
-#~ "書庫を暗号化するために利用するパスワードを入力してください。パスワードを指"
-#~ "定しない場合、書庫を暗号化しません。"
-
-#~ msgid ""
-#~ "Not all archive types support encryption. For more information about file "
-#~ "encryption, see <xref linkend=\"file-roller-encrypt-files\"/>."
-#~ msgstr ""
-#~ "すべての書庫の種類で暗号化がサポートされるわけではありません。暗号化につい"
-#~ "ての詳細情報は、<xref linkend=\"file-roller-encrypt-files\"/>を参照してく"
-#~ "ださい。"
-
-#~ msgid "Encrypt the file list too"
-#~ msgstr "ファイルの一覧も暗号化する"
-
-#~ msgid ""
-#~ "If this option is selected, the password will be requested even to view "
-#~ "the list of files contained in the archive, otherwise it will be "
-#~ "requested only to extract the files from the archive. This option is "
-#~ "available only if a password is specified."
-#~ msgstr ""
-#~ "このオプションを選択した場合、書庫からファイルを展開する場合のみならず、書"
-#~ "庫に含まれるファイル一覧を閲覧する際もパスワードを必要とします。このオプ"
-#~ "ションは、パスワードを指定した場合のみ有効です。"
-
-#~ msgid "Split in volumes"
-#~ msgstr "容量で分割する"
-
-#~ msgid ""
-#~ "Select this option to split the archive in more files of the specified "
-#~ "dimension."
-#~ msgstr ""
-#~ "指定された大きさのファイルに書庫を分割するには、このオプションを指定してく"
-#~ "ださい。"
-
-#~ msgid "Only 7-Zip and RAR archives support this feature."
-#~ msgstr "この機能は、7-Zip書庫とRAR書庫でのみサポートされます。"
-
-#~ msgid ""
-#~ "The <guilabel>Add Files</guilabel> and <guilabel>Add a Folder</guilabel> "
-#~ "dialogs provide the following option:"
-#~ msgstr ""
-#~ "<guilabel>ファイルの追加</guilabel>および<guilabel>フォルダの追加</"
-#~ "guilabel>ダイアログは、以下のオプションを提供します:"
-
-#~ msgid "Add only if newer"
-#~ msgstr "新しい場合にのみ追加する"
-
-#~ msgid ""
-#~ "Select this option to add the specified file to the archive only if the "
-#~ "archive does not contain the specified file, or if the archive contains "
-#~ "an older version of the specified file. <application>Archive Manager</"
-#~ "application> uses the modification date to determine which file is the "
-#~ "most recent. If the version of the file in the archive is the most "
-#~ "recent, <application>Archive Manager</application> does not add the "
-#~ "specified file to the archive."
-#~ msgstr ""
-#~ "指定されたファイルが書庫に含まれていない場合か指定されたファイルの古い版が"
-#~ "書庫に含まれている場合にのみ、書庫に指定されたファイルを追加するには、この"
-#~ "オプションを選択してください。<application>書庫マネージャ</application>"
-#~ "は、ファイルが最も最近のものであるか決定するのに変更日時を利用します。書庫"
-#~ "内のファイルが最も最近の版である場合、<application>書庫マネージャ</"
-#~ "application>は書庫に指定されたファイルを追加しません。"
-
-#~ msgid ""
-#~ "If you do not select this option, <application>Archive Manager</"
-#~ "application> adds the file to the archive and overwrites the previous "
-#~ "archive contents."
-#~ msgstr ""
-#~ "このオプションを選択しない場合、<application>書庫マネージャ</application>"
-#~ "は指定されたファイルを書庫に追加して以前の書庫の内容を上書きします。"
-
-#~ msgid ""
-#~ "Open the <filename>backup.tar.gz</filename> archive in "
-#~ "<application>Archive Manager</application>."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>で<filename>backup.tar.gz</"
-#~ "filename>という書庫を開いてください。"
-
-#~ msgid ""
-#~ "Choose <menuchoice><guimenu>Edit</guimenu><guimenuitem>Add</guimenuitem></"
-#~ "menuchoice> to display the <guilabel>Add a Folder</guilabel> dialog."
-#~ msgstr ""
-#~ "<menuchoice><guimenu>編集</guimenu><guimenuitem>フォルダの追加</"
-#~ "guimenuitem></menuchoice>を選択してください。すると<guilabel>フォルダの追"
-#~ "加</guilabel>ダイアログが表示されます。"
-
-#~ msgid "Select your home folder."
-#~ msgstr "ホームフォルダを選択してください。"
-
-#~ msgid "Select the <guilabel>Add only if newer</guilabel> option."
-#~ msgstr ""
-#~ "<guilabel>新しい場合にのみ追加する</guilabel>というオプションを選択してく"
-#~ "ださい。"
-
-#~ msgid "Click <guibutton>Add</guibutton>."
-#~ msgstr "<guibutton>追加</guibutton>をクリックしてください。"
-
-#~ msgid ""
-#~ "If you use <application>Archive Manager</application> to create backups, "
-#~ "the <guilabel>Add only if newer</guilabel> option is very useful. For "
-#~ "example, the archive <filename>backup.tar.gz</filename> contains a week-"
-#~ "old backup of your home folder. To update the archive to contain a "
-#~ "current backup of your home folder, perform the following steps: "
-#~ "<placeholder-1/>"
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>を利用してバックアップを作成する"
-#~ "場合、<guilabel>新しい場合にのみ追加する</guilabel>というオプションは非常"
-#~ "に便利です。例えば、<filename>backup.tar.gz</filename>という書庫が1週間前"
-#~ "のホームフォルダのバックアップを含んでいるとします。書庫が現在のホームフォ"
-#~ "ルダのバックアップを含むように更新するには、以下の手順を実行してください: "
-#~ "<placeholder-1/>"
-
-#~ msgid ""
-#~ "<application>Archive Manager</application> automatically adds to the "
-#~ "archive all files that you created during the last week, and updates all "
-#~ "files that you modified during the last week. However, "
-#~ "<application>Archive Manager</application> does not remove from the "
-#~ "archive the files that you deleted during the last week. The archive "
-#~ "update operation is much faster than doing a full backup of your home "
-#~ "folder."
-#~ msgstr ""
-#~ "<application>書庫マネージャ</application>は自動的に1週間の間に作成したすべ"
-#~ "てのファイルを追加し、1週間の間に変更したすべてのファイルを更新します。し"
-#~ "かしながら、<application>書庫マネージャ</application>は1週間の間に削除した"
-#~ "ファイルを書庫から削除しません。この書庫の更新作業は、ホームフォルダのフル"
-#~ "バックアップを行うよりはるかに高速です。"
-
-#~ msgid "Add to Folder Options"
-#~ msgstr "フォルダへの追加オプション"
-
-#~ msgid ""
-#~ "The following options are available in the <guilabel>Add a Folder</"
-#~ "guilabel> dialog and allow to automatically select and add all files that "
-#~ "satisfy certain criteria:"
-#~ msgstr ""
-#~ "以下のオプションは、<guilabel>フォルダの追加</guilabel>ダイアログのみで有"
-#~ "効であり、特定の条件を満たすすべてのファイルを自動的に選択し追加することが"
-#~ "可能です。"
-
-#~ msgid ""
-#~ "Type a filename pattern in this text box to include files with names that "
-#~ "match the specified pattern. See <xref linkend=\"file-roller-pattern\"/> "
-#~ "for more information about filename patterns."
-#~ msgstr ""
-#~ "指定されたパターンに一致する名前のファイルを対象とするには、このテキスト"
-#~ "ボックスにファイル名のパターンを入力してください。ファイル名のパターンに関"
-#~ "する詳細は、<xref linkend=\"file-roller-pattern\"/>を参照してください。"
-
-#~ msgid "Exclude files"
-#~ msgstr "除外するファイル"
-
-#~ msgid ""
-#~ "Type a filename pattern in this text box to exclude files with names that "
-#~ "match the specified pattern. See <xref linkend=\"file-roller-pattern\"/> "
-#~ "for more information about filename patterns."
-#~ msgstr ""
-#~ "指定されたパターンに一致する名前のファイルを除外するには、このテキストボッ"
-#~ "クスにファイル名のパターンを入力してください。ファイル名のパターンに関する"
-#~ "詳細は、<xref linkend=\"file-roller-pattern\"/>を参照してください。"
-
-#~ msgid "Exclude folders"
-#~ msgstr "除外するフォルダ"
-
-#~ msgid ""
-#~ "Type a filename pattern in this text box to exclude folders with names "
-#~ "that match the specified pattern. See <xref linkend=\"file-roller-pattern"
-#~ "\"/> for more information about filename patterns."
-#~ msgstr ""
-#~ "指定されたパターンに一致する名前のフォルダを除外するには、このテキストボッ"
-#~ "クスにファイル名のパターンを入力してください。ファイル名のパターンに関する"
-#~ "詳細は、<xref linkend=\"file-roller-pattern\"/>を参照してください。"
-
-#~ msgid ""
-#~ "Select this option to add all files that match the specified pattern, "
-#~ "from the current folder and from subfolders."
-#~ msgstr ""
-#~ "現在のフォルダとサブフォルダから指定されたパターンに一致するすべてのファイ"
-#~ "ルを追加するには、このオプションを選択してください。"
-
-#~ msgid ""
-#~ "The filename, not the subfolder name, must match the specified pattern."
-#~ msgstr ""
-#~ "サブフォルダ名ではなく、ファイル名が指定されたパターンに一致する必要があり"
-#~ "ます。"
-
-#~ msgid ""
-#~ "If you do not select this option, <application>Archive Manager</"
-#~ "application> adds the matching files from the current folder only."
-#~ msgstr ""
-#~ "このオプションを指定しない場合、<application>書庫マネージャ</application>"
-#~ "は現在のフォルダのみから一致したファイルを追加します。"
-
-#~ msgid "Exclude folders that are symbolic links"
-#~ msgstr "フォルダがシンボリックリンクの場合は除く"
-
-#~ msgid ""
-#~ "Select this option to omit files from folders that are symbolic links. "
-#~ "Symbolic links are pointers or shortcuts to other folders."
-#~ msgstr ""
-#~ "シンボリックリンクであるフォルダからのファイルを省くには、このオプションを"
-#~ "選択してください。シンボリックリンクは、他のフォルダへのポインタまたは"
-#~ "ショートカットです。"
-
-#~ msgid ""
-#~ "If you do not select this option, <application>Archive Manager</"
-#~ "application> adds the matching files from folders that are symbolic links."
-#~ msgstr ""
-#~ "このオプションを指定しない場合、<application>書庫マネージャ</application>"
-#~ "はシンボリックリンクであるフォルダから一致したファイルを追加します。"
-
-#~ msgid "Save Options"
-#~ msgstr "オプションの保存"
-
-#~ msgid ""
-#~ "Click on this button to save the current selection of advanced add "
-#~ "options to a file. The <guilabel>Save Options</guilabel> dialog is "
-#~ "displayed. Enter a descriptive filename in the <guilabel>Options Name</"
-#~ "guilabel> text box, then click <guibutton>Save</guibutton>."
-#~ msgstr ""
-#~ "拡張追加オプションの現在の選択状態をファイルに保存するには、このボタンをク"
-#~ "リックしてください。<guilabel>オプションの保存</guilabel>ダイアログが表示"
-#~ "されます。<guilabel>オプション名</guilabel>テキストボックスに説明的なファ"
-#~ "イル名を入力して<guibutton>保存</guibutton>をクリックしてください。"
-
-#~ msgid "Load Options"
-#~ msgstr "オプションの読み込み"
-
-#~ msgid ""
-#~ "Click on this button to load or delete a previously saved selection of "
-#~ "advanced add options. The <guilabel>Load Options</guilabel> dialog is "
-#~ "displayed."
-#~ msgstr ""
-#~ "以前に保存した拡張追加オプションの選択状態を読み込んだり削除したりするに"
-#~ "は、このボタンを押してください。<guilabel>オプションの読み込み</guilabel>"
-#~ "ダイアログが表示されます。"
-
-#~ msgid ""
-#~ "To load a set of options, select the options file in the list box, then "
-#~ "click <guibutton>Apply</guibutton>."
-#~ msgstr ""
-#~ "オプションの組み合わせを読み込むには、リストボックスのオプションファイルを"
-#~ "選択し、<guibutton>適用</guibutton>をクリックしてください。"
-
-#~ msgid ""
-#~ "To delete a set of options, select the options file in the list box, then "
-#~ "click <guibutton>Remove</guibutton>. Click <guibutton>Close</guibutton> "
-#~ "to close the <guilabel>Load Options</guilabel> dialog."
-#~ msgstr ""
-#~ "オプションの組み合わせを削除するには、リストボックスのオプションファイルを"
-#~ "選択し、<guibutton>削除</guibutton>をクリックしてください。<guilabel>オプ"
-#~ "ションの読み込み</guilabel>ダイアログを閉じるには<guibutton>閉じる</"
-#~ "guibutton>をクリックしてください。"
-
-#~ msgid "Reset Options"
-#~ msgstr "オプションのクリア"
-
-#~ msgid ""
-#~ "Click on this button to reset the current selection of advanced add "
-#~ "options to the default values."
-#~ msgstr ""
-#~ "拡張追加オプションの現在の選択状態をリセットして既定の選択状態にするには、"
-#~ "このボタンをクリックしてください。"
-
-#~ msgid "Extract Options"
-#~ msgstr "展開オプション"
-
-#~ msgid ""
-#~ "The <guilabel>Extract</guilabel> dialog provides the following options, "
-#~ "which are saved when you quit <application>Archive Manager</application>:"
-#~ msgstr ""
-#~ "<guilabel>展開</guilabel>ダイアログは以下のオプションを提供し、"
-#~ "<application>書庫マネージャ</application>終了時に保存されます:"
-
-#~ msgid "Extract"
-#~ msgstr "展開"
-
-#~ msgid "Extract the selected files from the archive."
-#~ msgstr "書庫から選択したファイルを展開します。"
-
-#~ msgid ""
-#~ "Extract from the archive all files that match the specified pattern. See "
-#~ "<xref linkend=\"file-roller-pattern\"/> for more information about "
-#~ "filename patterns."
-#~ msgstr ""
-#~ "指定されたパターンに一致するすべてのファイルを書庫から展開します。ファイル"
-#~ "名のパターンに関する詳細は、<xref linkend=\"file-roller-pattern\"/>を参照"
-#~ "してください。"
-
-#~ msgid "Actions"
-#~ msgstr "オプション"
-
-#~ msgid "Select the following extract options:"
-#~ msgstr "以下の展開オプションを選択してください:"
-
-#~ msgid ""
-#~ "Select this option to reconstruct the folder structure when extracting "
-#~ "the specified files."
-#~ msgstr ""
-#~ "指定されたファイルを展開する際にフォルダ構造を再構築するにはこのオプション"
-#~ "を選択してください。"
-
-#~ msgid ""
-#~ "If you select the <guilabel>Re-create folders</guilabel> option, "
-#~ "<application>Archive Manager</application> extracts the contents of the "
-#~ "subfolder to <filename>/tmp/doc</filename>."
-#~ msgstr ""
-#~ "<guilabel>フォルダを再作成する</guilabel>オプションを選択した場合、"
-#~ "<application>書庫マネージャ</application>はサブフォルダの内容を<filename>/"
-#~ "tmp/doc</filename>に展開します。"
-
-#~ msgid ""
-#~ "If you do not select the <guilabel>Re-create folders</guilabel> option, "
-#~ "<application>Archive Manager</application> does not create any "
-#~ "subfolders. Instead, <application>Archive Manager</application> extracts "
-#~ "all files from the archive, including files from subfolders, to "
-#~ "<filename>/tmp</filename>."
-#~ msgstr ""
-#~ "<guilabel>フォルダを再作成する</guilabel>オプションを選択しない場合、"
-#~ "<application>書庫マネージャ</application>はいかなるサブフォルダも作成しま"
-#~ "せん。代わりに<application>書庫マネージャ</application>はサブフォルダの"
-#~ "ファイルを含んだすべてのファイルを<filename>/tmp</filename>に展開します。"
-
-#~ msgid ""
-#~ "For example, you specify <filename>/tmp</filename> in the "
-#~ "<guilabel>Filename</guilabel> text box and choose to extract all files. "
-#~ "The archive contains a subfolder called <filename>doc</filename>. "
-#~ "<placeholder-1/>"
-#~ msgstr ""
-#~ "例えば、<guilabel>ファイル名</guilabel>テキストボックスで<filename>/tmp</"
-#~ "filename>を指定し、すべてのファイルを選択したとします。対象とする書庫は、"
-#~ "<filename>doc</filename>というサブフォルダを含んでいます。 <placeholder-1/"
-#~ ">"
-
-#~ msgid ""
-#~ "Select this option to overwrite any files in the destination folder that "
-#~ "have the same name as the specified files."
-#~ msgstr ""
-#~ "展開先にある指定されたファイルと同じ名前を持つファイルを上書きするにはこの"
-#~ "オプションを選択してください。"
-
-#~ msgid ""
-#~ "If you do not select this option, <application>Archive Manager</"
-#~ "application> does not extract the specified file if an existing file with "
-#~ "the same name already exists in the destination folder."
-#~ msgstr ""
-#~ "このオプションを指定しない場合、<application>書庫マネージャ</application>"
-#~ "は展開するファイルと同じ名前のファイルが展開先にあると指定されたファイルを"
-#~ "展開しません。"
-
-#~ msgid ""
-#~ "Select the <guilabel>Do not extract older files</guilabel> option to "
-#~ "extract the specified file only if the destination folder does not "
-#~ "contain the specified file, or if the destination folder contains an "
-#~ "older version of the specified file. <application>Archive Manager</"
-#~ "application> uses the modification date to determine which file is the "
-#~ "most recent. If the version of the file in the archive is older, "
-#~ "<application>Archive Manager</application> does not extract the specified "
-#~ "file to the destination folder."
-#~ msgstr ""
-#~ "展開先フォルダが指定されたファイルを含まない場合か指定されたファイルの古い"
-#~ "版が含まれる場合にのみファイルを展開するには、<guilabel>古いファイルは展開"
-#~ "しない</guilabel>を選択してください。<application>書庫マネージャ</"
-#~ "application>は変更日時を利用してファイルが最も最近のものであるか決定しま"
-#~ "す。書庫にあるファイルの版が古い場合、<application>書庫マネージャ</"
-#~ "application>は展開先フォルダに指定されたファイルを展開しません。"
-
-#~ msgid ""
-#~ "If you do not select the <guilabel>Do not extract older files</guilabel> "
-#~ "option while the <guilabel>Overwrite existing files</guilabel> option is "
-#~ "selected, <application>Archive Manager</application> extracts the "
-#~ "specified file from the archive and overwrites the previous contents of "
-#~ "the destination folder."
-#~ msgstr ""
-#~ "<guilabel>既存のファイルに上書きする</guilabel>オプションが選択されている"
-#~ "時に<guilabel>古いファイルは展開しない</guilabel>オプションを指定しない場"
-#~ "合、<application>書庫マネージャ</application>は指定されたファイルを展開"
-#~ "し、展開先フォルダの以前の内容を上書きします。"
+msgstr "Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2012"
