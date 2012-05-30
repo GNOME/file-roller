@@ -239,7 +239,7 @@ enum {
 	LAST_SIGNAL
 };
 
-static GtkWindowClass *parent_class = NULL;
+static GtkApplicationWindowClass *parent_class = NULL;
 static guint fr_window_signals[LAST_SIGNAL] = { 0 };
 
 struct _FrWindowPrivateData {
@@ -666,8 +666,6 @@ fr_window_finalize (GObject *object)
 			g_hash_table_destroy (tree_pixbuf_hash);
 			tree_pixbuf_hash = NULL;
 		}
-
-		gtk_main_quit ();
 	}
 }
 
@@ -6057,7 +6055,7 @@ fr_window_new (void)
 {
 	GtkWidget *window;
 
-	window = g_object_new (FR_TYPE_WINDOW, NULL);
+	window = g_object_new (FR_TYPE_WINDOW, "application", g_application_get_default (), NULL);
 	fr_window_construct ((FrWindow*) window);
 
 	return window;

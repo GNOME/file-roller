@@ -28,7 +28,7 @@ dnl ==========================================================================
 
 GLIB_REQUIRED=2.29.14
 GIO_REQUIRED=2.25.5
-GTK_REQUIRED=3.0.2
+GTK_REQUIRED=3.4.0
 NAUTILUS_REQUIRED=2.22.2
 
 AC_SUBST(GLIB_REQUIRED)
