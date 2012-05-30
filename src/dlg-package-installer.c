@@ -170,7 +170,8 @@ install_packages (InstallerData *idata)
 
 			cursor = gdk_cursor_new (GDK_WATCH);
 			gdk_window_set_cursor (window, cursor);
-			gdk_cursor_unref (cursor);
+
+			g_object_unref (cursor);
 		}
 
 		proxy = g_dbus_proxy_new_sync (connection,
