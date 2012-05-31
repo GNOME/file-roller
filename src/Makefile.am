@@ -1,4 +1,4 @@
-SUBDIRS = commands sh
+SUBDIRS = commands sh ui
 
 bin_PROGRAMS = file-roller
 libexec_PROGRAMS = file-roller-server
@@ -44,7 +44,10 @@ BUILT_SOURCES =			\
 	fr-marshal.c		\
 	fr-marshal.h		\
 	fr-enum-types.h		\
-	fr-enum-types.c
+	fr-enum-types.c		\
+	fr-resources.c		\
+	fr-resources.h		\
+	$(NULL)
 
 COMMON_SOURCES = 			\
 	actions.h			\
@@ -181,6 +184,12 @@ fr-enum-types.c: typedefs.h fr-enum-types.h
 	&& (cmp -s xgen-$(@F) fr-enum-types.c || cp xgen-$(@F) fr-enum-types.c ) \
 	&& rm -f xgen-$(@F) )
 
+fr-resources.c: file-roller.gresource.xml $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies file-roller.gresource.xml)
+	$(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name fr $(srcdir)/file-roller.gresource.xml
+
+fr-resources.h: file-roller.gresource.xml $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies file-roller.gresource.xml)
+	$(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name fr $(srcdir)/file-roller.gresource.xml
+
 file_roller_SOURCES = 			\
 	$(COMMON_SOURCES)		\
 	main.c
@@ -204,7 +213,9 @@ test_server_SOURCES = test-server.c
 test_server_FLAGS = $(FR_CFLAGS)
 test_server_LDADD = $(FR_LIBS)
 
-EXTRA_DIST = fr-marshal.list
+EXTRA_DIST = 				\
+	file-roller.gresource.xml	\
+	fr-marshal.list 
 
 CLEANFILES = $(BUILT_SOURCES)
 

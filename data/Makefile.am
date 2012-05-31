@@ -1,4 +1,4 @@
-SUBDIRS = ui icons
+SUBDIRS = icons
 
 desktopdir = $(datadir)/applications
 desktop_in_in_files = file-roller.desktop.in.in

@@ -18,6 +18,7 @@ GLIB_GSETTINGS
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
+AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
 dnl ==========================================================================
 dnl
@@ -185,8 +186,7 @@ dnl ******************************
 AC_CONFIG_FILES([Makefile
 		 file-roller.spec
 		 data/Makefile
-		 data/file-roller.desktop.in
-		 data/ui/Makefile
+		 data/file-roller.desktop.in		 
 		 data/icons/Makefile
 		 data/icons/16x16/Makefile
 		 data/icons/16x16/actions/Makefile
@@ -206,6 +206,7 @@ AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 src/commands/Makefile
 		 src/sh/Makefile
+		 src/ui/Makefile
 		 nautilus/Makefile
 		 help/Makefile
 		 po/Makefile.in])

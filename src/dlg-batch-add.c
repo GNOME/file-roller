@@ -471,7 +471,7 @@ dlg_batch_add_files (FrWindow *window,
 	data = g_new0 (DialogData, 1);
 	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_BATCH_ADD);
 	data->settings_general = g_settings_new (FILE_ROLLER_SCHEMA_GENERAL);
-	data->builder = _gtk_builder_new_from_file ("batch-add-files.ui");
+	data->builder = _gtk_builder_new_from_resource ("batch-add-files.ui");
 	if (data->builder == NULL) {
 		g_free (data);
 		return;
