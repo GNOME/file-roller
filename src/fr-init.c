@@ -610,7 +610,6 @@ initialize_data (void)
 	migrate_options_directory ();
 	register_commands ();
 	compute_supported_archive_types ();
-
 	fr_stock_init ();
 }
 
@@ -651,7 +650,8 @@ command_done (CommandData *cdata)
 void
 release_data (void)
 {
-	g_hash_table_destroy (ProgramsCache);
+	if (! initialized)
+		return;
 
 	while (CommandList != NULL) {
 		CommandData *cdata = CommandList->data;
