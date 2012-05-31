@@ -1,16 +1,15 @@
-include $(top_srcdir)/gnome-doc-utils.make
-dist-hook: doc-dist-hook
+@YELP_HELP_RULES@
 
 # Module name
-DOC_ID = file-roller
+HELP_ID = file-roller
 
 # List of figures to be included
-DOC_FIGURES = \
+HELP_MEDIA = \
 	figures/file-roller-main-window.png \
 	figures/file-roller-open-recent.png
 
 # List of pages
-DOC_PAGES = \
+HELP_FILES = \
 	archive-create.page \
 	archive-edit.page \
 	archive-extract.page \
@@ -26,6 +25,6 @@ DOC_PAGES = \
 	troubleshooting-archive-open.page \
 	troubleshooting-password.page
 
-DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu it ja oc nl ru sl sv te vi uk zh_CN zh_HK zh_TW
+HELP_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu it ja oc nl ru sl sv te vi uk zh_CN zh_HK zh_TW
 
 -include $(top_srcdir)/git.mk

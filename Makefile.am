@@ -29,11 +29,9 @@ EXTRA_DIST = 			\
 	file-roller.spec.in	\
 	intltool-merge.in	\
 	intltool-update.in	\
-	intltool-extract.in	\
-	gnome-doc-utils.make
-
+	intltool-extract.in
+	
 DISTCLEANFILES =                        \
-	gnome-doc-utils.make		\
 	po/.intltool-merge-cache        \
 	intltool-extract                \
 	intltool-merge                  \
