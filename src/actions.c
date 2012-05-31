@@ -530,6 +530,21 @@ activate_action_close (GtkAction *action,
 
 
 void
+activate_action_quit (GtkAction *action,
+		      gpointer   data)
+{
+	GList *windows;
+
+	/* Copy the list to avoid possible errors if the original list is
+	 * modified after closing a window. */
+	windows = g_list_copy (gtk_application_get_windows (GTK_APPLICATION (g_application_get_default ())));
+	g_list_foreach (windows, (GFunc) fr_window_close, NULL);
+
+	g_list_free (windows);
+}
+
+
+void
 activate_action_add_files (GtkAction *action,
 			   gpointer   data)
 {

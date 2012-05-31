@@ -27,8 +27,11 @@
 #include <glib/gi18n.h>
 #include <glib.h>
 #include <gio/gio.h>
+#include "actions.h"
 #include "eggsmclient.h"
 #include "fr-init.h"
+#include "gtk-utils.h"
+
 
 gint          ForceDirectoryCreation;
 
@@ -228,9 +231,72 @@ prepare_app (void)
 
 
 static void
+activate_help (GSimpleAction *action,
+               GVariant      *parameter,
+               gpointer       user_data)
+{
+	GApplication *application = user_data;
+	GList        *windows;
+
+	windows = gtk_application_get_windows (GTK_APPLICATION (application));
+	if (windows != NULL)
+		activate_action_manual (NULL, windows->data);
+}
+
+
+static void
+activate_about (GSimpleAction *action,
+		GVariant      *parameter,
+		gpointer       user_data)
+{
+	GApplication *application = user_data;
+	GList        *windows;
+
+	windows = gtk_application_get_windows (GTK_APPLICATION (application));
+	if (windows != NULL)
+		activate_action_about (NULL, windows->data);
+}
+
+
+static void
+activate_quit (GSimpleAction *action,
+               GVariant      *parameter,
+               gpointer       user_data)
+{
+	activate_action_quit (NULL, NULL);
+}
+
+
+static const GActionEntry app_menu_entries[] = {
+	{ "help",  activate_help },
+	{ "about", activate_about },
+	{ "quit",  activate_quit }
+};
+
+
+static void
+initialize_app_menu (GApplication *application)
+{
+	GtkBuilder *builder;
+
+	g_action_map_add_action_entries (G_ACTION_MAP (application),
+					 app_menu_entries,
+					 G_N_ELEMENTS (app_menu_entries),
+					 application);
+
+	builder = _gtk_builder_new_from_resource ("app-menu.ui");
+	gtk_application_set_app_menu (GTK_APPLICATION (application),
+				      G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
+
+	g_object_unref (builder);
+}
+
+
+static void
 startup_cb (GApplication *application)
 {
 	initialize_data ();
+	initialize_app_menu (application);
 	prepare_app ();
 }
 
@@ -254,8 +320,8 @@ fr_save_state (EggSMClient *client, GKeyFile *state, gpointer user_data)
 {
 	/* discard command is automatically set by EggSMClient */
 
-	const char   *argv[2] = { NULL };
 	GApplication *application;
+	const char   *argv[2] = { NULL };
 	guint         i;
 
 	/* restart command */
