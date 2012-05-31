@@ -647,11 +647,7 @@ fr_window_finalize (GObject *object)
 		window->priv = NULL;
 	}
 
-	WindowList = g_list_remove (WindowList, window);
-
-	G_OBJECT_CLASS (parent_class)->finalize (object);
-
-	if (WindowList == NULL) {
+	if (gtk_application_get_windows (GTK_APPLICATION (g_application_get_default ())) == NULL) {
 		if (pixbuf_hash != NULL) {
 			g_hash_table_foreach (pixbuf_hash,
 					      gh_unref_pixbuf,
@@ -667,6 +663,8 @@ fr_window_finalize (GObject *object)
 			tree_pixbuf_hash = NULL;
 		}
 	}
+
+	G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 
@@ -806,8 +804,6 @@ fr_window_init (FrWindow *window)
 			  "unrealize",
 			  G_CALLBACK (fr_window_unrealized),
 			  NULL);
-
-	WindowList = g_list_prepend (WindowList, window);
 }
 
 

@@ -161,7 +161,6 @@ FrExtensionType file_ext_type[] = {
 };
 
 
-GList        *WindowList;
 GList        *CommandList;
 gint          ForceDirectoryCreation;
 GHashTable   *ProgramsCache;
