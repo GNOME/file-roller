@@ -70,7 +70,7 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/po/remove-potcdate.sin \
 	`find "$(srcdir)" -type f -name Makefile.in -print`
 
-GITIGNOREFILES = build .cdt* .cproject .project .settings/
+GITIGNOREFILES = build .cdt* .cproject .project .settings/ .autotools
 
 CLEANFILES = ChangeLog
 
