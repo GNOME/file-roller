@@ -1366,8 +1366,9 @@ create_tmp_base_dir (const char *base_dir,
 
 	dir = g_build_filename (temp_dir, "/", dest_dir, NULL);
 	debug (DEBUG_INFO, "symlink %s --> %s\n", dir, base_dir);
-	if (! symlink (base_dir, dir))
-		/* void */;
+	if (! symlink (base_dir, dir)) {
+		/* void */
+	}
 
 	g_free (dir);
 	g_free (dest_dir);
