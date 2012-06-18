@@ -205,7 +205,7 @@ process_line__common (char     *line,
 	if (line == NULL)
 		return;
 
-	if (comm->n_files != 0) {
+	if (comm->n_files > 1) {
 		double fraction = (double) ++comm->n_file / (comm->n_files + 1);
 		fr_command_progress (comm, fraction);
 	}

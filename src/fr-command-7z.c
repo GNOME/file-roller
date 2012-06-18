@@ -257,14 +257,27 @@ fr_command_7z_list (FrCommand  *comm)
 static void
 parse_progress_line (FrCommand  *comm,
 		     const char *prefix,
-		     const char *message_prefix,
+		     const char *message_format,
 		     const char *line)
 {
 	int prefix_len;
 
 	prefix_len = strlen (prefix);
-	if (strncmp (line, prefix, prefix_len) == 0)
-		fr_command_progress (comm, (double) ++comm->n_file / (comm->n_files + 1));
+	if (strncmp (line, prefix, prefix_len) == 0) {
+		if (comm->n_files > 1) {
+			fr_command_progress (comm, (double) ++comm->n_file / (comm->n_files + 1));
+		}
+		else {
+			char  filename[4196];
+			char *msg;
+
+			strcpy (filename, line + prefix_len);
+			msg = g_strdup_printf (message_format, filename, NULL);
+			fr_command_message (comm, msg);
+
+			g_free (msg);
+		}
+	}
 }
 
 
@@ -287,7 +300,7 @@ process_line__add (char     *line,
 	}
 
 	if (comm->n_files != 0)
-		parse_progress_line (comm, "Compressing  ", _("Adding file: "), line);
+		parse_progress_line (comm, "Compressing  ", _("Adding \"%s\""), line);
 }
 
 
@@ -408,7 +421,7 @@ process_line__extract (char     *line,
 	FrCommand *comm = FR_COMMAND (data);
 
 	if (comm->n_files != 0)
-		parse_progress_line (comm, "Extracting  ", _("Extracting file: "), line);
+		parse_progress_line (comm, "Extracting  ", _("Extracting \"%s\""), line);
 }
 
 

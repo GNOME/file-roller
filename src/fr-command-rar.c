@@ -257,11 +257,41 @@ fr_command_rar_list (FrCommand  *comm)
 static void
 parse_progress_line (FrCommand  *comm,
 		     const char *prefix,
-		     const char *message_prefix,
+		     const char *message_format,
 		     const char *line)
 {
-	if (strncmp (line, prefix, strlen (prefix)) == 0)
-		fr_command_progress (comm, (double) ++comm->n_file / (comm->n_files + 1));
+	int prefix_len;
+
+	prefix_len = strlen (prefix);
+	if (strncmp (line, prefix, prefix_len) == 0) {
+		if (comm->n_files > 1) {
+			fr_command_progress (comm, (double) ++comm->n_file / (comm->n_files + 1));
+		}
+		else {
+			char  filename[4096];
+			char *b_idx;
+			int   len;
+			char *msg;
+
+			strcpy (filename, line + prefix_len);
+
+			/* when a new volume is created a sequence of backspaces is
+			 * issued, remove the backspaces from the filename */
+			b_idx = strchr (filename, '\x08');
+			if (b_idx != NULL)
+				*b_idx = 0;
+
+			/* remove the OK at the end of the filename */
+			len = strlen (filename);
+			if ((len > 5) && (strncmp (filename + len - 5, "  OK ", 5) == 0))
+				filename[len - 5] = 0;
+
+			msg = g_strdup_printf (message_format, file_name_from_path (filename), NULL);
+			fr_command_message (comm, msg);
+
+			g_free (msg);
+		}
+	}
 }
 
 
@@ -297,7 +327,7 @@ process_line__add (char     *line,
 	}
 
 	if (comm->n_files != 0)
-		parse_progress_line (comm, "Adding    ", _("Adding file: "), line);
+		parse_progress_line (comm, "Adding    ", _("Adding \"%s\""), line);
 }
 
 
@@ -375,7 +405,7 @@ process_line__delete (char     *line,
 	}
 
 	if (comm->n_files != 0)
-		parse_progress_line (comm, "Deleting ", _("Removing file: "), line);
+		parse_progress_line (comm, "Deleting ", _("Removing \"%s\""), line);
 }
 
 
@@ -424,7 +454,7 @@ process_line__extract (char     *line,
 	}
 
 	if (comm->n_files != 0)
-		parse_progress_line (comm, "Extracting  ", _("Extracting file: "), line);
+		parse_progress_line (comm, "Extracting  ", _("Extracting \"%s\""), line);
 }
 
 

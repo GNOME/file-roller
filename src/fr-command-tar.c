@@ -277,7 +277,7 @@ can_create_a_compressed_archive (FrCommand *comm)
 static void
 process_line__generic (char     *line,
 		       gpointer  data,
-		       char     *action_msg)
+		       char     *message_format)
 {
 	FrCommand *comm = FR_COMMAND (data);
 
@@ -287,12 +287,12 @@ process_line__generic (char     *line,
 	if (line[strlen (line) - 1] == '/') /* ignore directories */
 		return;
 
-	if (comm->n_files != 0) {
+	if (comm->n_files > 1) {
 		double fraction = (double) ++comm->n_file / (comm->n_files + 1);
 		fr_command_progress (comm, fraction);
 	}
 	else {
-		char *msg = g_strconcat (action_msg, file_name_from_path (line), NULL);
+		char *msg = g_strdup_printf (message_format, file_name_from_path (line), NULL);
 		fr_command_message (comm, msg);
 		g_free (msg);
 	}
@@ -303,8 +303,8 @@ static void
 process_line__add (char     *line,
 		   gpointer  data)
 {
-	/* Translators: after the colon there is a filename. */
-	process_line__generic (line, data, _("Adding file: "));
+	/* Translators: %s is a filename. */
+	process_line__generic (line, data, _("Adding \"%s\""));
 }
 
 
@@ -368,8 +368,8 @@ static void
 process_line__delete (char     *line,
 		      gpointer  data)
 {
-	/* Translators: after the colon there is a filename. */
-	process_line__generic (line, data, _("Removing file: "));
+	/* Translators: %s is a filename. */
+	process_line__generic (line, data, _("Removing \"%s\""));
 }
 
 
@@ -422,8 +422,8 @@ static void
 process_line__extract (char     *line,
 		       gpointer  data)
 {
-	/* Translators: after the colon there is a filename. */
-	process_line__generic (line, data, _("Extracting file: "));
+	/* Translators: %s is a filename. */
+	process_line__generic (line, data, _("Extracting \"%s\""));
 }
 
 
