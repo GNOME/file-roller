@@ -28,6 +28,7 @@
 #include "fr-command.h"
 #include "fr-enum-types.h"
 #include "fr-marshal.h"
+#include "fr-proc-error.h"
 #include "fr-process.h"
 #include "glib-utils.h"
 
@@ -218,12 +219,14 @@ fr_command_start (FrProcess *process,
 
 static void
 fr_command_done (FrProcess   *process,
+		 FrProcError *error,
 		 gpointer     data)
 {
 	FrCommand *comm = FR_COMMAND (data);
 
 	comm->process->restart = FALSE;
-	fr_command_handle_error (comm, &process->error);
+	if (error->type != FR_PROC_ERROR_STOPPED)
+		fr_command_handle_error (comm, error);
 
 	if (comm->process->restart) {
 		fr_process_start (comm->process);
@@ -239,7 +242,7 @@ fr_command_done (FrProcess   *process,
 		       fr_command_signals[DONE],
 		       0,
 		       comm->action,
-		       &process->error);
+		       error);
 }
 
 
@@ -401,10 +404,10 @@ fr_command_class_init (FrCommandClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrCommandClass, done),
 			      NULL, NULL,
-			      fr_marshal_VOID__INT_POINTER,
+			      fr_marshal_VOID__INT_BOXED,
 			      G_TYPE_NONE, 2,
 			      G_TYPE_INT,
-			      G_TYPE_POINTER);
+			      FR_TYPE_PROC_ERROR);
 	fr_command_signals[PROGRESS] =
 		g_signal_new ("progress",
 			      G_TYPE_FROM_CLASS (class),

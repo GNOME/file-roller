@@ -29,6 +29,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <glib.h>
+#include "fr-proc-error.h"
 #include "fr-process.h"
 #include "fr-marshal.h"
 #include "glib-utils.h"
@@ -275,8 +276,9 @@ fr_process_class_init (FrProcessClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrProcessClass, done),
 			      NULL, NULL,
-			      fr_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
+			      fr_marshal_VOID__BOXED,
+			      G_TYPE_NONE, 1,
+			      FR_TYPE_PROC_ERROR);
 	fr_process_signals[STICKY_ONLY] =
 		g_signal_new ("sticky_only",
 			      G_TYPE_FROM_CLASS (class),
@@ -719,7 +721,8 @@ start_current_command (FrProcess *process)
 		process->error.type = FR_PROC_ERROR_SPAWN;
 		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[DONE],
-			       0);
+			       0,
+			       &process->error);
 		g_free (argv);
 		return;
 	}
@@ -932,7 +935,8 @@ check_child (gpointer data)
 
 	g_signal_emit (G_OBJECT (process),
 		       fr_process_signals[DONE],
-		       0);
+		       0,
+		       &process->error);
 
 	return FALSE;
 }
@@ -975,7 +979,8 @@ fr_process_start (FrProcess *process)
 		process->priv->running = FALSE;
 		g_signal_emit (G_OBJECT (process),
 			       fr_process_signals[DONE],
-			       0);
+			       0,
+			       &process->error);
 	}
 	else {
 		process->priv->running = TRUE;
@@ -1020,7 +1025,8 @@ fr_process_stop_priv (FrProcess *process,
 		if (emit_signal)
 			g_signal_emit (G_OBJECT (process),
 				       fr_process_signals[DONE],
-				       0);
+				       0,
+				       &process->error);
 	}
 }
 
