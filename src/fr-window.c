@@ -5250,14 +5250,6 @@ fr_window_init_recent_chooser (FrWindow         *window,
 
 
 static void
-close_sidepane_button_clicked_cb (GtkButton *button,
-				  FrWindow  *window)
-{
-	fr_window_set_folders_visibility (window, FALSE);
-}
-
-
-static void
 fr_window_activate_filter (FrWindow *window)
 {
 	GtkTreeView       *tree_view = GTK_TREE_VIEW (window->priv->list_view);
@@ -5371,16 +5363,10 @@ fr_window_construct (FrWindow *window)
 	GtkWidget          *statusbar_box;
 	GtkWidget          *filter_box;
 	GtkWidget          *tree_scrolled_window;
-	GtkWidget          *sidepane_title;
-	GtkWidget          *sidepane_title_box;
-	GtkWidget          *sidepane_title_label;
-	GtkWidget          *close_sidepane_button;
 	GtkTreeSelection   *selection;
 	GtkActionGroup     *actions;
 	GtkAction          *action;
 	GtkUIManager       *ui;
-	GtkToolItem        *open_recent_tool_item;
-	GtkWidget          *menu_item;
 	GError             *error = NULL;
 	const char * const *schemas;
 
@@ -5731,29 +5717,6 @@ fr_window_construct (FrWindow *window)
 	/* side pane */
 
 	window->priv->sidepane = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-
-	sidepane_title = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (sidepane_title), GTK_SHADOW_ETCHED_IN);
-
-	sidepane_title_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (sidepane_title_box), 2);
-	gtk_container_add (GTK_CONTAINER (sidepane_title), sidepane_title_box);
-	sidepane_title_label = gtk_label_new (_("Folders"));
-
-	gtk_misc_set_alignment (GTK_MISC (sidepane_title_label), 0.0, 0.5);
-	gtk_box_pack_start (GTK_BOX (sidepane_title_box), sidepane_title_label, TRUE, TRUE, 0);
-
-	close_sidepane_button = gtk_button_new ();
-	gtk_container_add (GTK_CONTAINER (close_sidepane_button), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
-	gtk_button_set_relief (GTK_BUTTON (close_sidepane_button), GTK_RELIEF_NONE);
-	gtk_widget_set_tooltip_text (close_sidepane_button, _("Close the folders pane"));
-	g_signal_connect (close_sidepane_button,
-			  "clicked",
-			  G_CALLBACK (close_sidepane_button_clicked_cb),
-			  window);
-	gtk_box_pack_end (GTK_BOX (sidepane_title_box), close_sidepane_button, FALSE, FALSE, 0);
-
-	gtk_box_pack_start (GTK_BOX (window->priv->sidepane), sidepane_title, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (window->priv->sidepane), tree_scrolled_window, TRUE, TRUE, 0);
 
 	/* main content */
