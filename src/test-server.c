@@ -161,7 +161,7 @@ main (int argc, char *argv[])
 			                  G_CALLBACK (on_signal),
 			                  NULL);
 
-#if 0
+#if 1
 			/* -- GetSupportedTypes -- */
 
 			g_dbus_proxy_call (proxy,
@@ -174,14 +174,15 @@ main (int argc, char *argv[])
 					   NULL);
 #endif
 
+#if 0
 			/* -- AddToArchive -- */
 
 			char  *archive;
 			char **files;
 
-			archive = g_strdup ("file:///home/paolo/Scrivania/firefox-4.0b8pre.tar.gz");
+			archive = g_strdup ("file:///home/paolo/Scrivania/test.tar.gz");
 			files = g_new0 (char *, 2);
-			files[0] = g_strdup ("file:///home/paolo/Scrivania/firefox-4.0b8pre");
+			files[0] = g_strdup ("file:///home/paolo/Scrivania/test");
 			files[1] = NULL;
 
 			g_dbus_proxy_call (proxy,
@@ -198,6 +199,7 @@ main (int argc, char *argv[])
 
 			g_free (archive);
 			g_strfreev (files);
+#endif
 
 #if 0
 
@@ -207,7 +209,7 @@ main (int argc, char *argv[])
 			char  *destination;
 
 			files = g_new0 (char *, 2);
-			files[0] = g_strdup ("file:///home/paolo/Scrivania/firefox-4.0b8pre");
+			files[0] = g_strdup ("file:///home/paolo/Scrivania/test");
 			files[1] = NULL;
 			destination = g_strdup ("file:///home/paolo/Scrivania");
 
@@ -226,6 +228,10 @@ main (int argc, char *argv[])
 			g_strfreev (files);
 			g_free (destination);
 
+#endif
+
+#if 0
+
 			/* -- Extract -- */
 
 			g_dbus_proxy_call (proxy,
@@ -239,6 +245,10 @@ main (int argc, char *argv[])
 					   NULL,
 					   fileroller_addtoarchive_ready_cb,
 					   NULL);
+
+#endif
+
+#if 0
 
 			/* -- ExtractHere -- */
 
