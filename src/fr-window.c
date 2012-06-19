@@ -5237,7 +5237,6 @@ fr_window_init_recent_chooser (FrWindow         *window,
 	gtk_recent_filter_set_name (filter, _("All archives"));
 	for (i = 0; open_type[i] != -1; i++)
 		gtk_recent_filter_add_mime_type (filter, mime_type_desc[open_type[i]].mime_type);
-	gtk_recent_filter_add_application (filter, "File Roller");
 	gtk_recent_chooser_add_filter (chooser, filter);
 
 	gtk_recent_chooser_set_local_only (chooser, FALSE);
