@@ -8896,6 +8896,10 @@ fr_window_stop_batch (FrWindow *window)
 
 	if (window->priv->batch_mode) {
 		if (! window->priv->showing_error_dialog) {
+			g_signal_emit (window,
+				       fr_window_signals[READY],
+				       0,
+				       NULL);
 			gtk_widget_destroy (GTK_WIDGET (window));
 			return;
 		}
