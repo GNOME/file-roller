@@ -42,6 +42,7 @@
 
 
 #define ORG_GNOME_ARCHIVEMANAGER_XML "/org/gnome/FileRoller/../data/org.gnome.ArchiveManager1.xml"
+#define SERVICE_TIMEOUT 10
 
 
 gint                ForceDirectoryCreation;
@@ -526,12 +527,22 @@ on_bus_acquired_for_archive_manager (GDBusConnection *connection,
 }
 
 
+static gboolean
+service_timeout_cb (gpointer user_data)
+{
+	g_application_release (G_APPLICATION (user_data));
+	return FALSE;
+}
+
+
 static void
 fr_application_register_archive_manager_service (FrApplication *self)
 {
 	gsize         size;
 	guchar       *buffer;
 	GInputStream *stream;
+
+	g_application_hold (G_APPLICATION (self));
 
 	g_resources_get_info (ORG_GNOME_ARCHIVEMANAGER_XML, 0, &size, NULL, NULL);
 	buffer = g_new (guchar, size);
@@ -547,6 +558,8 @@ fr_application_register_archive_manager_service (FrApplication *self)
 					 NULL /*on_name_lost*/,
 					 self,
 					 NULL);
+
+	g_timeout_add_seconds (SERVICE_TIMEOUT, service_timeout_cb, self);
 
 	g_free (buffer);
 }
@@ -857,7 +870,7 @@ fr_application_new (void)
 {
         return g_object_new (fr_application_get_type (),
                              "application-id", "org.gnome.FileRoller",
-                             "flags", G_APPLICATION_IS_SERVICE,
+                             "flags", G_APPLICATION_FLAGS_NONE,
                              NULL);
 }
 
