@@ -2808,9 +2808,6 @@ static void
 fr_window_add_to_recent_list (FrWindow *window,
 			      char     *uri)
 {
-	if (window->priv->batch_mode)
-		return;
-
 	if (is_temp_dir (uri))
 		return;
 
