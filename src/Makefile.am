@@ -15,11 +15,13 @@ privdatadir = $(abs_top_srcdir)/data/
 uidir = $(abs_top_srcdir)/data/ui
 privexecdir = $(abs_top_builddir)/src/commands/
 shdir = $(abs_top_srcdir)/src/sh/
+applications_dir = $(abs_top_builddir)/data
 else
 privdatadir = $(datadir)/file-roller/
 uidir = $(datadir)/file-roller/ui
 privexecdir = $(libexecdir)/file-roller/
 shdir = $(libexecdir)/file-roller/
+applications_dir = $(datadir)/applications
 endif
 
 INCLUDES =						\
@@ -37,6 +39,7 @@ INCLUDES =						\
 	-DGLADEDIR=\""$(gladedir)"\" 			\
 	-DPRIVEXECDIR=\"$(privexecdir)\"		\
 	-DSHDIR=\"$(shdir)\"				\
+	-DAPPLICATIONS_DIR=\"$(applications_dir)\"	\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)
 
