@@ -36,23 +36,26 @@
 #  include "eggsmclient.h"
 #endif
 #include "eggdesktopfile.h"
+#include "file-utils.h"
 #include "fr-init.h"
 #include "gtk-utils.h"
 
 
-gint              ForceDirectoryCreation;
+#define ORG_GNOME_ARCHIVEMANAGER_XML "/org/gnome/FileRoller/../data/org.gnome.ArchiveManager1.xml"
 
-static char     **remaining_args;
-static char      *arg_add_to = NULL;
-static int        arg_add = FALSE;
-static char      *arg_extract_to = NULL;
-static int        arg_extract = FALSE;
-static int        arg_extract_here = FALSE;
-static char      *arg_default_url = NULL;
-static gboolean   arg_version = FALSE;
 
-/* argv[0] from main(); used as the command to restart the program */
-static const char *program_argv0 = NULL;
+gint                ForceDirectoryCreation;
+static char       **remaining_args;
+static char        *arg_add_to = NULL;
+static int          arg_add = FALSE;
+static char        *arg_extract_to = NULL;
+static int          arg_extract = FALSE;
+static int          arg_extract_here = FALSE;
+static char        *arg_default_url = NULL;
+static gboolean     arg_version = FALSE;
+static gboolean     arg_service = FALSE;
+static const char  *program_argv0 = NULL; /* argv[0] from main(); used as the command to restart the program */
+
 
 static const GOptionEntry options[] = {
 	{ "add-to", 'a', 0, G_OPTION_ARG_STRING, &arg_add_to,
@@ -82,6 +85,9 @@ static const GOptionEntry options[] = {
 	{ "force", '\0', 0, G_OPTION_ARG_NONE, &ForceDirectoryCreation,
 	  N_("Create destination folder without asking confirmation"),
 	  NULL },
+
+	{ "service", 'v', 0, G_OPTION_ARG_NONE, &arg_service,
+	  N_("Start as a service"), NULL },
 
 	{ "version", 'v', 0, G_OPTION_ARG_NONE, &arg_version,
 	  N_("Show version"), NULL },
@@ -157,6 +163,9 @@ initialize_app_menu (GApplication *application)
 
 	g_object_unref (builder);
 }
+
+
+/* -- session management -- */
 
 
 #ifdef USE_SMCLIENT
@@ -248,27 +257,303 @@ fr_restore_session (EggSMClient *client)
 #endif /* USE_SMCLIENT */
 
 
+/* -- service -- */
+
+
+static void
+window_ready_cb (GtkWidget *widget,
+		 GError    *error,
+		 gpointer   user_data)
+{
+	if (error == NULL)
+		g_dbus_method_invocation_return_value ((GDBusMethodInvocation *) user_data, NULL);
+	else
+		g_dbus_method_invocation_return_error ((GDBusMethodInvocation *) user_data,
+						       error->domain,
+						       error->code,
+						       "%s",
+						       error->message);
+}
+
+
+static gboolean
+window_progress_cb (FrWindow *window,
+		    double    fraction,
+		    char     *details,
+		    gpointer  user_data)
+{
+	GDBusConnection *connection = user_data;
+
+	g_dbus_connection_emit_signal (connection,
+				       NULL,
+				       "org/gnome/ArchiveManager1",
+				       "org.gnome.ArchiveManager1",
+				       "Progress",
+				       g_variant_new ("(ds)",
+						      fraction,
+						      details),
+				       NULL);
+
+	return TRUE;
+}
+
+
+static void
+handle_method_call (GDBusConnection       *connection,
+		    const char            *sender,
+		    const char            *object_path,
+		    const char            *interface_name,
+		    const char            *method_name,
+		    GVariant              *parameters,
+		    GDBusMethodInvocation *invocation,
+		    gpointer               user_data)
+{
+	update_registered_commands_capabilities ();
+
+	if (g_strcmp0 (method_name, "GetSupportedTypes") == 0) {
+		char *action;
+		int  *supported_types = NULL;
+
+		g_variant_get (parameters, "(s)", &action);
+
+		if (g_strcmp0 (action, "create") == 0) {
+			supported_types = save_type;
+		}
+		else if (g_strcmp0 (action, "create_single_file") == 0) {
+			supported_types = single_file_save_type;
+		}
+		else if (g_strcmp0 (action, "extract") == 0) {
+			supported_types = open_type;
+		}
+
+		if (supported_types == NULL) {
+			g_dbus_method_invocation_return_error (invocation,
+							       G_IO_ERROR,
+							       G_IO_ERROR_INVALID_ARGUMENT,
+							       "Invalid action '%s', valid values are: create, create_single_file, extract",
+							       action);
+		}
+		else {
+			GVariantBuilder builder;
+			int             i;
+
+			g_variant_builder_init (&builder, G_VARIANT_TYPE ("(aa{ss})"));
+			g_variant_builder_open (&builder, G_VARIANT_TYPE ("aa{ss}"));
+			for (i = 0; supported_types[i] != -1; i++) {
+				g_variant_builder_open (&builder, G_VARIANT_TYPE ("a{ss}"));
+				g_variant_builder_add (&builder, "{ss}",
+						       "mime-type",
+						       mime_type_desc[supported_types[i]].mime_type);
+				g_variant_builder_add (&builder, "{ss}",
+						       "default-extension",
+						       mime_type_desc[supported_types[i]].default_ext);
+				g_variant_builder_add (&builder, "{ss}",
+						       "description",
+						       _(mime_type_desc[supported_types[i]].name));
+				g_variant_builder_close (&builder);
+			}
+			g_variant_builder_close (&builder);
+
+			g_dbus_method_invocation_return_value (invocation, g_variant_builder_end (&builder));
+		}
+
+		g_free (action);
+	}
+	else if (g_strcmp0 (method_name, "AddToArchive") == 0) {
+		char       *archive;
+		char      **files;
+		gboolean    use_progress_dialog;
+		int         i;
+		GList      *file_list = NULL;
+		GtkWidget  *window;
+
+		g_variant_get (parameters, "(s^asb)", &archive, &files, &use_progress_dialog);
+
+		for (i = 0; files[i] != NULL; i++)
+			file_list = g_list_prepend (file_list, files[i]);
+		file_list = g_list_reverse (file_list);
+
+		window = fr_window_new ();
+		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
+
+		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+
+		fr_window_new_batch (FR_WINDOW (window), _("Compress"));
+		fr_window_set_batch__add (FR_WINDOW (window), archive, file_list);
+		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		fr_window_start_batch (FR_WINDOW (window));
+
+		g_free (archive);
+	}
+	else if (g_strcmp0 (method_name, "Compress") == 0) {
+		char      **files;
+		char       *destination;
+		gboolean    use_progress_dialog;
+		int         i;
+		GList      *file_list = NULL;
+		GtkWidget  *window;
+
+		g_variant_get (parameters, "(^assb)", &files, &destination, &use_progress_dialog);
+
+		for (i = 0; files[i] != NULL; i++)
+			file_list = g_list_prepend (file_list, files[i]);
+		file_list = g_list_reverse (file_list);
+
+		if ((destination == NULL) || (strcmp (destination, "") == 0))
+			destination = remove_level_from_path (file_list->data);
+
+		window = fr_window_new ();
+		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
+		fr_window_set_default_dir (FR_WINDOW (window), destination, TRUE);
+
+		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+
+		fr_window_new_batch (FR_WINDOW (window), _("Extract archive"));
+		fr_window_set_batch__add (FR_WINDOW (window), NULL, file_list);
+		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		fr_window_start_batch (FR_WINDOW (window));
+
+		g_free (destination);
+	}
+	else if (g_strcmp0 (method_name, "Extract") == 0) {
+		char      *archive;
+		char      *destination;
+		gboolean   use_progress_dialog;
+		GtkWidget *window;
+
+		g_variant_get (parameters, "(ssb)", &archive, &destination, &use_progress_dialog);
+
+		window = fr_window_new ();
+		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
+		if ((destination != NULL) & (strcmp (destination, "") != 0))
+			fr_window_set_default_dir (FR_WINDOW (window), destination, TRUE);
+
+		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+
+		fr_window_new_batch (FR_WINDOW (window), _("Extract archive"));
+		fr_window_set_batch__extract (FR_WINDOW (window), archive, destination);
+		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		fr_window_start_batch (FR_WINDOW (window));
+
+		g_free (destination);
+		g_free (archive);
+	}
+	else if (g_strcmp0 (method_name, "ExtractHere") == 0) {
+		char      *archive;
+		gboolean   use_progress_dialog;
+		GtkWidget *window;
+
+		g_variant_get (parameters, "(sb)", &archive, &use_progress_dialog);
+
+		window = fr_window_new ();
+		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
+
+		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
+		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
+
+		fr_window_new_batch (FR_WINDOW (window), _("Extract archive"));
+		fr_window_set_batch__extract_here (FR_WINDOW (window), archive);
+		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		fr_window_start_batch (FR_WINDOW (window));
+
+		g_free (archive);
+	}
+}
+
+
+static const GDBusInterfaceVTable interface_vtable = {
+	handle_method_call,
+	NULL, 			/* handle_get_property */
+	NULL 			/* handle_set_property */
+};
+
+
 /* -- main application -- */
 
 
-typedef GtkApplication      FrApplication;
+typedef struct {
+	GtkApplication __parent;
+	GDBusNodeInfo  *introspection_data;
+	guint           owner_id;
+} FrApplication;
+
 typedef GtkApplicationClass FrApplicationClass;
 
 static gpointer fr_application_parent_class;
 
 
 G_DEFINE_TYPE (FrApplication, fr_application, GTK_TYPE_APPLICATION)
+#define FR_APPLICATION(x) ((FrApplication *)(x))
 
 
 static void
 fr_application_finalize (GObject *object)
 {
+	FrApplication *self = FR_APPLICATION (object);
+
+	if (self->introspection_data != NULL)
+		g_dbus_node_info_unref (self->introspection_data);
+	if (self->owner_id != 0)
+		g_bus_unown_name (self->owner_id);
+
         G_OBJECT_CLASS (fr_application_parent_class)->finalize (object);
 }
 
 
 static void
-fr_application_init (FrApplication *app)
+on_bus_acquired_for_archive_manager (GDBusConnection *connection,
+				     const char      *name,
+				     gpointer         user_data)
+{
+	FrApplication *self = user_data;
+	guint          registration_id;
+	GError        *error = NULL;
+
+	registration_id = g_dbus_connection_register_object (connection,
+							     "/org/gnome/ArchiveManager1",
+							     self->introspection_data->interfaces[0],
+							     &interface_vtable,
+							     NULL,
+							     NULL,  /* user_data_free_func */
+							     &error); /* GError** */
+	if (registration_id == 0) {
+		g_error ("%s", error->message);
+		g_clear_error (&error);
+	}
+}
+
+
+static void
+fr_application_register_archive_manager_service (FrApplication *self)
+{
+	gsize         size;
+	guchar       *buffer;
+	GInputStream *stream;
+
+	g_resources_get_info (ORG_GNOME_ARCHIVEMANAGER_XML, 0, &size, NULL, NULL);
+	buffer = g_new (guchar, size);
+	stream = g_resources_open_stream (ORG_GNOME_ARCHIVEMANAGER_XML, 0, NULL);
+	g_input_stream_read_all (stream, buffer, size, NULL, NULL, NULL);
+
+	self->introspection_data = g_dbus_node_info_new_for_xml ((gchar *) buffer, NULL);
+	self->owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
+					 "org.gnome.ArchiveManager1",
+					 G_BUS_NAME_OWNER_FLAGS_NONE,
+					 on_bus_acquired_for_archive_manager,
+					 NULL /*on_name_acquired*/,
+					 NULL /*on_name_lost*/,
+					 self,
+					 NULL);
+
+	g_free (buffer);
+}
+
+
+static void
+fr_application_init (FrApplication *self)
 {
 #ifdef GDK_WINDOWING_X11
 	egg_set_desktop_file (APPLICATIONS_DIR "/file-roller.desktop");
@@ -277,6 +562,9 @@ fr_application_init (FrApplication *app)
 	g_set_application_name (_("File Roller"));
 	gtk_window_set_default_icon_name ("file-roller");
 #endif
+
+	self->owner_id = 0;
+	self->introspection_data = NULL;
 }
 
 
@@ -285,6 +573,7 @@ fr_application_startup (GApplication *application)
 {
 	G_APPLICATION_CLASS (fr_application_parent_class)->startup (application);
 
+	fr_application_register_archive_manager_service (FR_APPLICATION (application));
 	initialize_data ();
 	initialize_app_menu (application);
 }
@@ -397,7 +686,8 @@ fr_application_command_line (GApplication            *application,
 #endif
 
 	if (remaining_args == NULL) { /* No archive specified. */
-		gtk_widget_show (fr_window_new ());
+		if (! arg_service)
+			gtk_widget_show (fr_window_new ());
 		return fr_application_command_line_finished (application, EXIT_SUCCESS);
 	}
 
@@ -566,8 +856,8 @@ static GtkApplication *
 fr_application_new (void)
 {
         return g_object_new (fr_application_get_type (),
-                             "application-id", "org.gnome.file-roller",
-                             "flags", G_APPLICATION_FLAGS_NONE,
+                             "application-id", "org.gnome.FileRoller",
+                             "flags", G_APPLICATION_IS_SERVICE,
                              NULL);
 }
 

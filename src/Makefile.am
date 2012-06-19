@@ -1,7 +1,6 @@
 SUBDIRS = commands sh ui
 
 bin_PROGRAMS = file-roller
-libexec_PROGRAMS = file-roller-server
 noinst_PROGRAMS = test-server
 
 if MKDTEMP_MISSING
@@ -206,13 +205,6 @@ file_roller_LDADD =					\
 if ENABLE_MAGIC
 file_roller_LDADD += $(MAGIC_LIBS)
 endif
-
-file_roller_server_SOURCES =		\
-	$(COMMON_SOURCES)		\
-	server.c
-	
-file_roller_server_LDADD =		\
-	$(file_roller_LDADD)
 
 test_server_SOURCES = test-server.c
 test_server_FLAGS = $(FR_CFLAGS)

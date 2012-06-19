@@ -148,9 +148,9 @@ main (int argc, char *argv[])
 		proxy = g_dbus_proxy_new_sync (connection,
 					       G_DBUS_PROXY_FLAGS_NONE,
 					       NULL,
-					       "org.gnome.FileRoller",
-					       "/org/gnome/FileRoller",
-					       "org.gnome.ArchiveManager",
+					       "org.gnome.ArchiveManager1",
+					       "/org/gnome/ArchiveManager1",
+					       "org.gnome.ArchiveManager1",
 					       NULL,
 					       &error);
 
@@ -265,6 +265,10 @@ main (int argc, char *argv[])
 
 #endif
 
+		}
+		else {
+			g_error ("%s\n", error->message);
+			g_clear_error (&error);
 		}
 	}
 

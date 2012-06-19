@@ -13,7 +13,7 @@ servicedir = $(datadir)/dbus-1/services
 service_in_files = org.gnome.FileRoller.service.in
 service_DATA = $(service_in_files:.service.in=.service)
 $(service_DATA): $(service_in_files) Makefile
-	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+	$(AM_V_GEN) $(SED) -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 gsettingsschema_in_files = org.gnome.FileRoller.gschema.xml.in
 gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
@@ -41,6 +41,7 @@ update-cache:
 
 EXTRA_DIST = 				\
 	file-roller.convert		\
+	org.gnome.ArchiveManager1.xml	\
 	packages.match.in		\
 	packages.match			\
 	$(desktop_in_in_files)		\
