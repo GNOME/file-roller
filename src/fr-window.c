@@ -2362,6 +2362,9 @@ progress_dialog_update_action_description (FrWindow *window)
 	char       *description;
 	char       *description_markup;
 
+	if (window->priv->progress_dialog == NULL)
+		return;
+
 	if (window->priv->convert_data.converting)
 		current_archive = window->priv->convert_data.new_file;
 	else if (window->priv->working_archive != NULL)
