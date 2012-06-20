@@ -6,10 +6,12 @@ EXTRA_DIST = 			\
 	delete.ui		\
 	error-dialog.ui		\
 	menus-toolbars.ui	\
+	message-dialog.ui	\
 	new.ui			\
 	password.ui		\
 	progress-dialog.ui	\
 	properties.ui		\
+	request-dialog.ui	\
 	update.ui
 
 -include $(top_srcdir)/git.mk

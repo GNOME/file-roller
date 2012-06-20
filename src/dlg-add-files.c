@@ -81,7 +81,7 @@ file_sel_response_cb (GtkWidget      *widget,
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (data->dialog), "archive-edit");
+		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-edit");
 		g_free (current_folder);
 		return TRUE;
 	}

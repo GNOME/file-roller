@@ -260,7 +260,7 @@ file_sel_response_cb (GtkWidget    *widget,
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
-		show_help_dialog (GTK_WINDOW (data->dialog), "archive-extract");
+		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-extract");
 		return TRUE;
 	}
 

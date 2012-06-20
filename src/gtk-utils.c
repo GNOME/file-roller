@@ -45,44 +45,45 @@ _gtk_tree_selection_count_selected (GtkTreeSelection *selection)
 
 	if (selection == NULL)
 		return 0;
+
 	gtk_tree_selection_selected_foreach (selection, count_selected, &n);
 	return n;
 }
 
 
-GtkWidget*
-_gtk_message_dialog_new (GtkWindow        *parent,
-			 GtkDialogFlags    flags,
-			 const char       *stock_id,
-			 const char       *message,
-			 const char       *secondary_message,
-			 const gchar      *first_button_text,
+GtkWidget *
+_gtk_message_dialog_new (GtkWindow      *parent,
+			 GtkDialogFlags  flags,
+			 const char     *stock_id,
+			 const char     *message,
+			 const char     *secondary_message,
+			 const gchar    *first_button_text,
 			 ...)
 {
-	GtkWidget    *dialog;
-	GtkWidget    *label;
-	GtkWidget    *image;
-	GtkWidget    *hbox;
-	GtkWidget    *content_area;
-	va_list       args;
-	const gchar  *text;
-	int           response_id;
-	char         *markup_text;
+	GtkBuilder  *builder;
+	GtkWidget   *dialog;
+	GtkWidget   *label;
+	va_list      args;
+	const gchar *text;
+	int          response_id;
+	char        *markup_text;
 
-	g_return_val_if_fail ((message != NULL) || (secondary_message != NULL), NULL);
+	builder = _gtk_builder_new_from_resource ("message-dialog.ui");
+	dialog = _gtk_builder_get_widget (builder, "message_dialog");
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
+	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
+	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
-	if (stock_id == NULL)
-		stock_id = GTK_STOCK_DIALOG_INFO;
+	/* set the icon */
 
-	dialog = gtk_dialog_new_with_buttons ("", parent, flags, NULL, NULL);
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	gtk_image_set_from_stock (GTK_IMAGE (_gtk_builder_get_widget (builder, "icon_image")),
+				  stock_id,
+				  GTK_ICON_SIZE_DIALOG);
 
-	/* Add label and image */
+	/* set the message */
 
-	image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_DIALOG);
-	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
-
-	label = gtk_label_new ("");
+	label = _gtk_builder_get_widget (builder, "message_label");
 
 	if (message != NULL) {
 		char *escaped_message;
@@ -105,25 +106,7 @@ _gtk_message_dialog_new (GtkWindow        *parent,
 	gtk_label_set_markup (GTK_LABEL (label), markup_text);
 	g_free (markup_text);
 
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 24);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-
-	gtk_box_pack_start (GTK_BOX (hbox), image,
-			    FALSE, FALSE, 0);
-
-	gtk_box_pack_start (GTK_BOX (hbox), label,
-			    TRUE, TRUE, 0);
-
-	gtk_box_pack_start (GTK_BOX (content_area),
-			    hbox,
-			    FALSE, FALSE, 0);
-
-	gtk_widget_show_all (hbox);
-
-	/* Add buttons */
+	/* add the buttons */
 
 	if (first_button_text == NULL)
 		return dialog;
@@ -161,7 +144,8 @@ create_button (const char *stock_id,
 	if (gtk_stock_lookup (text, &stock_item)) {
 		label_text = stock_item.label;
 		text_is_stock = TRUE;
-	} else {
+	}
+	else {
 		label_text = text;
 		text_is_stock = FALSE;
 	}
@@ -182,79 +166,45 @@ create_button (const char *stock_id,
 
 
 char *
-_gtk_request_dialog_run (GtkWindow        *parent,
-			 GtkDialogFlags    flags,
-			 const char       *title,
-			 const char       *message,
-			 const char       *default_value,
-			 int               max_length,
-			 const gchar      *no_button_text,
-			 const gchar      *yes_button_text)
+_gtk_request_dialog_run (GtkWindow      *parent,
+			 GtkDialogFlags  flags,
+			 const char     *title,
+			 const char     *message,
+			 const char     *default_value,
+			 int             max_length,
+			 const gchar    *no_button_text,
+			 const gchar    *yes_button_text)
 {
-	GtkWidget    *dialog;
-	GtkWidget    *label;
-	GtkWidget    *image;
-	GtkWidget    *hbox;
-	GtkWidget    *vbox;
-	GtkWidget    *entry;
-	GtkWidget    *button;
-	GtkWidget    *content_area;
-	char         *stock_id;
-	char         *result;
+	GtkBuilder *builder;
+	GtkWidget  *dialog;
+	GtkWidget  *label;
+	GtkWidget  *entry;
+	char       *result;
 
-	stock_id = GTK_STOCK_DIALOG_QUESTION;
+	builder = _gtk_builder_new_from_resource ("request-dialog.ui");
+	dialog = _gtk_builder_get_widget (builder, "request_dialog");
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
+	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
+	gtk_window_set_title (GTK_WINDOW (dialog), title);
+	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
-	dialog = gtk_dialog_new_with_buttons (title, parent, flags, NULL, NULL);
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	label = _gtk_builder_get_widget (builder, "message_label");
+	gtk_label_set_text_with_mnemonic (GTK_LABEL (label), message);
 
-	/* Add label and image */
-
-	image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_DIALOG);
-	gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-	gtk_widget_set_valign (image, GTK_ALIGN_START);
-
-	label = gtk_label_new_with_mnemonic (message);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (label), FALSE);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
-	gtk_widget_set_valign (label, GTK_ALIGN_START);
-
-	entry = gtk_entry_new ();
-	gtk_entry_set_width_chars (GTK_ENTRY (entry), 50);
-	gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+	entry = _gtk_builder_get_widget (builder, "value_entry");
 	gtk_entry_set_max_length (GTK_ENTRY (entry), max_length);
 	gtk_entry_set_text (GTK_ENTRY (entry), default_value);
-	gtk_label_set_mnemonic_widget (GTK_LABEL (label), entry);
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
-
-	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-	gtk_box_set_spacing (GTK_BOX (content_area), 14); /* 14 + 2 * 5 = 24 */
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
-	gtk_box_set_spacing (GTK_BOX (vbox), 6);
-
-	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (content_area), hbox, FALSE, FALSE, 0);
-
-	gtk_widget_show_all (hbox);
 
 	/* Add buttons */
 
-	button = create_button (GTK_STOCK_CANCEL, no_button_text);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      button,
+				      create_button (GTK_STOCK_CANCEL, no_button_text),
 				      GTK_RESPONSE_CANCEL);
-
-	button = create_button (GTK_STOCK_OK, yes_button_text);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      button,
+				      create_button (GTK_STOCK_OK, yes_button_text),
 				      GTK_RESPONSE_YES);
-
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 
 	/* Run dialog */
@@ -269,72 +219,6 @@ _gtk_request_dialog_run (GtkWindow        *parent,
 	gtk_widget_destroy (dialog);
 
 	return result;
-}
-
-
-GtkWidget*
-_gtk_yesno_dialog_new (GtkWindow        *parent,
-		       GtkDialogFlags    flags,
-		       const char       *message,
-		       const char       *no_button_text,
-		       const char       *yes_button_text)
-{
-	GtkWidget    *d;
-	GtkWidget    *label;
-	GtkWidget    *image;
-	GtkWidget    *hbox;
-	GtkWidget    *button;
-	GtkWidget    *content_area;
-	char         *stock_id = GTK_STOCK_DIALOG_WARNING;
-
-	d = gtk_dialog_new_with_buttons ("", parent, flags, NULL, NULL);
-	gtk_window_set_resizable (GTK_WINDOW (d), FALSE);
-
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (d));
-
-	/* Add label and image */
-
-	image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_DIALOG);
-	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
-
-	label = gtk_label_new (message);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 24);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-
-	gtk_box_pack_start (GTK_BOX (hbox), image,
-			    FALSE, FALSE, 0);
-
-	gtk_box_pack_start (GTK_BOX (hbox), label,
-			    TRUE, TRUE, 0);
-
-	gtk_box_pack_start (GTK_BOX (content_area),
-			    hbox,
-			    FALSE, FALSE, 0);
-
-	gtk_widget_show_all (hbox);
-
-	/* Add buttons */
-
-	button = create_button (GTK_STOCK_CANCEL, no_button_text);
-	gtk_dialog_add_action_widget (GTK_DIALOG (d),
-				      button,
-				      GTK_RESPONSE_CANCEL);
-
-	/**/
-
-	button = create_button (GTK_STOCK_OK, yes_button_text);
-	gtk_dialog_add_action_widget (GTK_DIALOG (d),
-				      button,
-				      GTK_RESPONSE_YES);
-
-	/**/
-
-	gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
-
-	return d;
 }
 
 
@@ -423,9 +307,9 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 
 
 void
-_gtk_error_dialog_run (GtkWindow        *parent,
-		       const gchar      *main_message,
-		       const gchar      *format,
+_gtk_error_dialog_run (GtkWindow  *parent,
+		       const char *main_message,
+		       const char *format,
 		       ...)
 {
 	GtkWidget *d;
@@ -497,7 +381,8 @@ _gtk_label_set_locale_text (GtkLabel   *label,
 	if (utf8_text != NULL) {
 		gtk_label_set_text (label, utf8_text);
 		g_free (utf8_text);
-	} else
+	}
+	else
 		gtk_label_set_text (label, "");
 }
 
@@ -528,7 +413,8 @@ _gtk_entry_set_filename_text (GtkEntry   *entry,
 	if (utf8_text != NULL) {
 		gtk_entry_set_text (entry, utf8_text);
 		g_free (utf8_text);
-	} else
+	}
+	else
 		gtk_entry_set_text (entry, "");
 }
 
@@ -658,29 +544,15 @@ _g_mime_type_get_icon (const char   *mime_type,
 }
 
 
-gboolean
-show_uri (GdkScreen   *screen,
-	  const char  *uri,
-	  guint32      timestamp,
-	  GError     **error)
-{
-	gboolean result;
-
-	result = gtk_show_uri (screen, uri, timestamp, error);
-
-	return result;
-}
-
-
 void
-show_help_dialog (GtkWindow  *parent,
-		  const char *section)
+_gtk_show_help_dialog (GtkWindow  *parent,
+		       const char *section)
 {
 	char   *uri;
 	GError *error = NULL;
 
 	uri = g_strconcat ("help:file-roller", section ? "?" : NULL, section, NULL);
-	if (! show_uri (gtk_window_get_screen (parent), uri, GDK_CURRENT_TIME, &error)) {
+	if (! gtk_show_uri (gtk_window_get_screen (parent), uri, GDK_CURRENT_TIME, &error)) {
   		GtkWidget *dialog;
 
 		dialog = _gtk_message_dialog_new (parent,

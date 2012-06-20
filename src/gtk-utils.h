@@ -42,11 +42,6 @@ gchar *       _gtk_request_dialog_run              (GtkWindow        *parent,
 						    int               max_length,
 						    const char       *no_button_text,
 						    const char       *yes_button_text);
-GtkWidget *   _gtk_yesno_dialog_new                (GtkWindow        *parent,
-						    GtkDialogFlags    flags,
-						    const char       *message,
-						    const char       *no_button_text,
-						    const char       *yes_button_text);
 GtkWidget *   _gtk_error_dialog_new                (GtkWindow        *parent,
 						    GtkDialogFlags    flags,
 						    GList            *row_output,
@@ -75,11 +70,7 @@ GdkPixbuf *   _g_icon_get_pixbuf                   (GIcon            *icon,
 GdkPixbuf *   _g_mime_type_get_icon                (const char       *mime_type,
 						    int               icon_size,
 						    GtkIconTheme     *icon_theme);
-gboolean      show_uri                             (GdkScreen        *screen,
-						    const char       *uri,
-						    guint32           timestamp,
-						    GError          **error);
-void          show_help_dialog                     (GtkWindow        *parent,
+void          _gtk_show_help_dialog                (GtkWindow        *parent,
 						    const char       *section);
 GtkBuilder *  _gtk_builder_new_from_file           (const char       *filename);
 GtkBuilder *  _gtk_builder_new_from_resource       (const char       *resource_path);
