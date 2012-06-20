@@ -338,7 +338,7 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 }
 
 
-GtkWidget*
+GtkWidget *
 _gtk_error_dialog_new (GtkWindow      *parent,
 		       GtkDialogFlags  flags,
 		       GList          *row_output,
