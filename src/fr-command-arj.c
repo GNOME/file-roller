@@ -127,8 +127,8 @@ list__process_line (char     *line,
 
 		fdata->link = NULL;
 
-		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-		fdata->path = remove_level_from_path (fdata->full_path);
+		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->path = _g_path_remove_level (fdata->full_path);
 	}
 	else if (arj_comm->line_no == 2) { /* Read file size and date. */
 		FileData  *fdata;
@@ -333,7 +333,7 @@ fr_command_arj_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
-	if (is_program_available ("arj", check_command))
+	if (_g_program_is_available ("arj", check_command))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 
 	return capabilities;

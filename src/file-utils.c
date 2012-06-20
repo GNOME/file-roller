@@ -50,7 +50,7 @@
 
 
 gboolean
-uri_exists (const char *uri)
+_g_uri_query_exists (const char *uri)
 {
 	GFile     *file;
 	gboolean   exists;
@@ -67,8 +67,8 @@ uri_exists (const char *uri)
 
 
 static gboolean
-uri_is_filetype (const char *uri,
-		 GFileType   file_type)
+_g_uri_is_filetype (const char *uri,
+		    GFileType   file_type)
 {
 	gboolean   result = FALSE;
 	GFile     *file;
@@ -99,41 +99,56 @@ uri_is_filetype (const char *uri,
 
 
 gboolean
-uri_is_file (const char *uri)
+_g_uri_query_is_file (const char *uri)
 {
-	return uri_is_filetype (uri, G_FILE_TYPE_REGULAR);
+	return _g_uri_is_filetype (uri, G_FILE_TYPE_REGULAR);
 }
 
 
 gboolean
-uri_is_dir (const char *uri)
+_g_uri_query_is_dir (const char *uri)
 {
-	return uri_is_filetype (uri, G_FILE_TYPE_DIRECTORY);
+	return _g_uri_is_filetype (uri, G_FILE_TYPE_DIRECTORY);
+}
+
+
+char *
+_g_uri_create_alternative (const char *folder,
+			   const char *name)
+{
+	char *new_uri = NULL;
+	int   n = 1;
+
+	do {
+		g_free (new_uri);
+		if (n == 1)
+			new_uri = g_strconcat (folder, "/", name, NULL);
+		else
+			new_uri = g_strdup_printf ("%s/%s%%20(%d)", folder, name, n);
+		n++;
+	}
+	while (_g_uri_query_exists (new_uri));
+
+	return new_uri;
+}
+
+
+char *
+_g_uri_create_alternative_for_uri (const char *uri)
+{
+	char *base_uri;
+	char *new_uri;
+
+	base_uri = _g_path_remove_level (uri);
+	new_uri = _g_uri_create_alternative (base_uri, _g_path_get_file_name (uri));
+	g_free (base_uri);
+
+	return new_uri;
 }
 
 
 gboolean
-path_is_dir (const char *path)
-{
-	char     *uri;
-	gboolean  result;
-
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = uri_is_dir (uri);
-	g_free (uri);
-
-	return result;
-}
-
-gboolean
-uri_is_local (const char  *uri)
-{
-	return strncmp (uri, "file://", 7) == 0;
-}
-
-
-gboolean
-dir_is_empty (const char *uri)
+_g_uri_query_dir_is_empty (const char *uri)
 {
 	GFile           *file;
 	GFileEnumerator *file_enum;
@@ -175,7 +190,7 @@ dir_is_empty (const char *uri)
 
 
 gboolean
-dir_contains_one_object (const char *uri)
+_g_uri_dir_contains_one_object (const char *uri)
 {
 	GFile           *file;
 	GFileEnumerator *file_enum;
@@ -229,7 +244,7 @@ dir_contains_one_object (const char *uri)
 
 
 char *
-get_dir_content_if_unique (const char  *uri)
+_g_uri_get_dir_content_if_unique (const char  *uri)
 {
 	GFile           *file;
 	GFileEnumerator *file_enum;
@@ -274,7 +289,7 @@ get_dir_content_if_unique (const char  *uri)
 			break;
 		}
 
-		content_uri = build_uri (uri, name, NULL);
+		content_uri = _g_uri_build (uri, name, NULL);
 		g_object_unref (info);
 	}
 
@@ -290,40 +305,8 @@ get_dir_content_if_unique (const char  *uri)
 }
 
 
-/* Check whether the dirname is contained in filename */
-gboolean
-path_in_path (const char *dirname,
-	      const char *filename)
-{
-	int dirname_l, filename_l, separator_position;
-
-	if ((dirname == NULL) || (filename == NULL))
-		return FALSE;
-
-	dirname_l = strlen (dirname);
-	filename_l = strlen (filename);
-
-	if ((dirname_l == filename_l + 1)
-	     && (dirname[dirname_l - 1] == '/'))
-		return FALSE;
-
-	if ((filename_l == dirname_l + 1)
-	     && (filename[filename_l - 1] == '/'))
-		return FALSE;
-
-	if (dirname[dirname_l - 1] == '/')
-		separator_position = dirname_l - 1;
-	else
-		separator_position = dirname_l;
-
-	return ((filename_l > dirname_l)
-		&& (strncmp (dirname, filename, dirname_l) == 0)
-		&& (filename[separator_position] == '/'));
-}
-
-
 goffset
-get_file_size (const char *uri)
+_g_uri_get_file_size (const char *uri)
 {
 	goffset    size = 0;
 	GFile     *file;
@@ -350,23 +333,9 @@ get_file_size (const char *uri)
 }
 
 
-goffset
-get_file_size_for_path (const char *path)
-{
-	char    *uri;
-	goffset  result;
-
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = get_file_size (uri);
-	g_free (uri);
-
-	return result;
-}
-
-
 static time_t
-get_file_time_type (const char *uri,
-		    const char *type)
+_g_uri_get_file_time_type (const char *uri,
+			   const char *type)
 {
 	time_t     result = 0;
 	GFile     *file;
@@ -395,223 +364,23 @@ get_file_time_type (const char *uri,
 
 
 time_t
-get_file_mtime (const char *uri)
+_g_uri_get_file_mtime (const char *uri)
 {
-	return get_file_time_type (uri, G_FILE_ATTRIBUTE_TIME_MODIFIED);
+	return _g_uri_get_file_time_type (uri, G_FILE_ATTRIBUTE_TIME_MODIFIED);
 }
 
 
 time_t
-get_file_mtime_for_path (const char *path)
+_g_uri_get_file_ctime (const char *uri)
 {
-	char   *uri;
-	time_t  result;
-
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = get_file_mtime (uri);
-	g_free (uri);
-
-	return result;
-}
-
-
-time_t
-get_file_ctime (const char *uri)
-{
-	return get_file_time_type (uri, G_FILE_ATTRIBUTE_TIME_CREATED);
+	return _g_uri_get_file_time_type (uri, G_FILE_ATTRIBUTE_TIME_CREATED);
 }
 
 
 gboolean
-file_is_hidden (const gchar *name)
-{
-	if (name[0] != '.') return FALSE;
-	if (name[1] == '\0') return FALSE;
-	if ((name[1] == '.') && (name[2] == '\0')) return FALSE;
-
-	return TRUE;
-}
-
-
-/* like g_path_get_basename but does not warn about NULL and does not
- * alloc a new string. */
-const gchar *
-file_name_from_path (const gchar *file_name)
-{
-	register char   *base;
-	register gssize  last_char;
-
-	if (file_name == NULL)
-		return NULL;
-
-	if (file_name[0] == '\0')
-		return "";
-
-	last_char = strlen (file_name) - 1;
-
-	if (file_name [last_char] == G_DIR_SEPARATOR)
-		return "";
-
-	base = g_utf8_strrchr (file_name, -1, G_DIR_SEPARATOR);
-	if (! base)
-		return file_name;
-
-	return base + 1;
-}
-
-
-char *
-dir_name_from_path (const gchar *path)
-{
-	register gssize base;
-	register gssize last_char;
-
-	if (path == NULL)
-		return NULL;
-
-	if (path[0] == '\0')
-		return g_strdup ("");
-
-	last_char = strlen (path) - 1;
-	if (path[last_char] == G_DIR_SEPARATOR)
-		last_char--;
-
-	base = last_char;
-	while ((base >= 0) && (path[base] != G_DIR_SEPARATOR))
-		base--;
-
-	return g_strndup (path + base + 1, last_char - base);
-}
-
-
-gchar *
-remove_level_from_path (const gchar *path)
-{
-	int         p;
-	const char *ptr = path;
-	char       *new_path;
-
-	if (path == NULL)
-		return NULL;
-
-	p = strlen (path) - 1;
-	if (p < 0)
-		return NULL;
-
-	while ((p > 0) && (ptr[p] != '/'))
-		p--;
-	if ((p == 0) && (ptr[p] == '/'))
-		p++;
-	new_path = g_strndup (path, (guint)p);
-
-	return new_path;
-}
-
-
-char *
-remove_ending_separator (const char *path)
-{
-	gint len, copy_len;
-
-	if (path == NULL)
-		return NULL;
-
-	copy_len = len = strlen (path);
-	if ((len > 1) && (path[len - 1] == '/'))
-		copy_len--;
-
-	return g_strndup (path, copy_len);
-}
-
-
-char *
-build_uri (const char *base, ...)
-{
-	va_list     args;
-	const char *child;
-	GString    *uri;
-
-	uri = g_string_new (base);
-
-	va_start (args, base);
-        while ((child = va_arg (args, const char *)) != NULL) {
-        	if (! g_str_has_suffix (uri->str, "/") && ! g_str_has_prefix (child, "/"))
-        		g_string_append (uri, "/");
-        	g_string_append (uri, child);
-        }
-	va_end (args);
-
-	return g_string_free (uri, FALSE);
-}
-
-
-gchar *
-remove_extension_from_path (const gchar *path)
-{
-	int         len;
-	int         p;
-	const char *ptr = path;
-	char       *new_path;
-
-	if (! path)
-		return NULL;
-
-	len = strlen (path);
-	if (len == 1)
-		return g_strdup (path);
-
-	p = len - 1;
-	while ((p > 0) && (ptr[p] != '.'))
-		p--;
-	if (p == 0)
-		p = len;
-	new_path = g_strndup (path, (guint) p);
-
-	return new_path;
-}
-
-
-gboolean
-make_directory_tree (GFile    *dir,
-		     mode_t    mode,
-		     GError  **error)
-{
-	gboolean  success = TRUE;
-	GFile    *parent;
-
-	if ((dir == NULL) || g_file_query_exists (dir, NULL))
-		return TRUE;
-
-	parent = g_file_get_parent (dir);
-	if (parent != NULL) {
-		success = make_directory_tree (parent, mode, error);
-		g_object_unref (parent);
-		if (! success)
-			return FALSE;
-	}
-
-	success = g_file_make_directory (dir, NULL, error);
-	if ((error != NULL) && (*error != NULL) && g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS)) {
-		g_clear_error (error);
-		success = TRUE;
-	}
-
-	if (success)
-		g_file_set_attribute_uint32 (dir,
-					     G_FILE_ATTRIBUTE_UNIX_MODE,
-					     mode,
-					     0,
-					     NULL,
-					     NULL);
-
-	return success;
-}
-
-
-gboolean
-ensure_dir_exists (const char  *uri,
-		   mode_t       mode,
-		   GError     **error)
+_g_uri_ensure_dir_exists (const char  *uri,
+			  mode_t       mode,
+			  GError     **error)
 {
 	GFile  *dir;
 	GError *priv_error = NULL;
@@ -623,7 +392,7 @@ ensure_dir_exists (const char  *uri,
 		error = &priv_error;
 
 	dir = g_file_new_for_uri (uri);
-	if (! make_directory_tree (dir, mode, error)) {
+	if (! _g_file_make_directory_tree (dir, mode, error)) {
 		g_warning ("could create directory %s: %s", uri, (*error)->message);
 		if (priv_error != NULL)
 			g_clear_error (&priv_error);
@@ -634,79 +403,9 @@ ensure_dir_exists (const char  *uri,
 }
 
 
-gboolean
-make_directory_tree_from_path (const char  *path,
-		   	       mode_t       mode,
-		   	       GError     **error)
-{
-	char     *uri;
-	gboolean  result;
-
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = ensure_dir_exists (uri, mode, error);
-	g_free (uri);
-
-	return result;
-}
-
-
 const char *
-get_file_extension (const char *filename)
-{
-	const char *ptr = filename;
-	int         len;
-	int         p;
-	const char *ext;
-
-	if (filename == NULL)
-		return NULL;
-
-	len = strlen (filename);
-	if (len <= 1)
-		return NULL;
-
-	p = len - 1;
-	while ((p >= 0) && (ptr[p] != '.'))
-		p--;
-	if (p < 0)
-		return NULL;
-
-	ext = filename + p;
-	if (ext - 4 > filename) {
-		const char *test = ext - 4;
-		if (strncmp (test, ".tar", 4) == 0)
-			ext = ext - 4;
-	}
-	return ext;
-}
-
-
-gboolean
-file_extension_is (const char *filename,
-		   const char *ext)
-{
-	int filename_l, ext_l;
-
-	filename_l = strlen (filename);
-	ext_l = strlen (ext);
-
-	if (filename_l < ext_l)
-		return FALSE;
-	return strcasecmp (filename + filename_l - ext_l, ext) == 0;
-}
-
-
-gboolean
-is_mime_type (const char *mime_type,
-	      const char *pattern)
-{
-	return (strcasecmp (mime_type, pattern) == 0);
-}
-
-
-const char*
-get_file_mime_type (const char *uri,
-                    gboolean    fast_file_type)
+_g_uri_get_mime_type (const char *uri,
+                      gboolean    fast_file_type)
 {
 	GFile      *file;
 	GFileInfo  *info;
@@ -734,43 +433,7 @@ get_file_mime_type (const char *uri,
 }
 
 
-const char*
-get_file_mime_type_for_path (const char  *filename,
-                    	     gboolean     fast_file_type)
-{
-	char       *uri;
-	const char *mime_type;
-
-	uri = g_filename_to_uri (filename, NULL, NULL);
-	mime_type = get_file_mime_type (uri, fast_file_type);
-	g_free (uri);
-
-	return mime_type;
-}
-
-
-guint64
-get_dest_free_space (const char *path)
-{
-	guint64    freespace = 0;
-	GFile     *file;
-	GFileInfo *info;
-	GError    *err = NULL;
-
-	file = g_file_new_for_path (path);
-	info = g_file_query_filesystem_info (file, G_FILE_ATTRIBUTE_FILESYSTEM_FREE, NULL, &err);
-	if (info != NULL) {
-		freespace = g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE);
-		g_object_unref (info);
-	}
-	else {
-		g_warning ("Could not get filesystem free space on volume that contains %s: %s", path, err->message);
-		g_error_free (err);
-	}
-	g_object_unref (file);
-
-	return freespace;
-}
+/* -- _g_uri_remove_directory -- */
 
 
 static gboolean
@@ -795,7 +458,7 @@ delete_directory_recursive (GFile   *dir,
 		char  *child_uri;
 		GFile *child;
 
-		child_uri = build_uri (uri, g_file_info_get_name (info), NULL);
+		child_uri = _g_uri_build (uri, g_file_info_get_name (info), NULL);
 		child = g_file_new_for_uri (child_uri);
 
 		switch (g_file_info_get_file_type (info)) {
@@ -825,7 +488,7 @@ delete_directory_recursive (GFile   *dir,
 
 
 gboolean
-remove_directory (const char *uri)
+_g_uri_remove_directory (const char *uri)
 {
 	GFile     *dir;
 	gboolean   result;
@@ -844,7 +507,123 @@ remove_directory (const char *uri)
 
 
 gboolean
-remove_local_directory (const char *path)
+_g_uri_check_permissions (const char *uri,
+		   int         mode)
+{
+	GFile    *file;
+	gboolean  result;
+
+	file = g_file_new_for_uri (uri);
+	result = _g_file_check_permissions (file, mode);
+
+	g_object_unref (file);
+
+	return result;
+}
+
+
+/* path */
+
+
+gboolean
+_g_path_query_is_dir (const char *path)
+{
+	char     *uri;
+	gboolean  result;
+
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = _g_uri_query_is_dir (uri);
+	g_free (uri);
+
+	return result;
+}
+
+
+goffset
+_g_path_get_file_size (const char *path)
+{
+	char    *uri;
+	goffset  result;
+
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = _g_uri_get_file_size (uri);
+	g_free (uri);
+
+	return result;
+}
+
+
+time_t
+_g_path_get_file_mtime (const char *path)
+{
+	char   *uri;
+	time_t  result;
+
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = _g_uri_get_file_mtime (uri);
+	g_free (uri);
+
+	return result;
+}
+
+
+gboolean
+_g_path_make_directory_tree (const char  *path,
+		   	     mode_t       mode,
+		   	     GError     **error)
+{
+	char     *uri;
+	gboolean  result;
+
+	uri = g_filename_to_uri (path, NULL, NULL);
+	result = _g_uri_ensure_dir_exists (uri, mode, error);
+	g_free (uri);
+
+	return result;
+}
+
+
+const char*
+_g_path_get_mime_type (const char *filename,
+                       gboolean    fast_file_type)
+{
+	char       *uri;
+	const char *mime_type;
+
+	uri = g_filename_to_uri (filename, NULL, NULL);
+	mime_type = _g_uri_get_mime_type (uri, fast_file_type);
+	g_free (uri);
+
+	return mime_type;
+}
+
+
+guint64
+_g_path_get_free_space (const char *path)
+{
+	guint64    freespace = 0;
+	GFile     *file;
+	GFileInfo *info;
+	GError    *err = NULL;
+
+	file = g_file_new_for_path (path);
+	info = g_file_query_filesystem_info (file, G_FILE_ATTRIBUTE_FILESYSTEM_FREE, NULL, &err);
+	if (info != NULL) {
+		freespace = g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE);
+		g_object_unref (info);
+	}
+	else {
+		g_warning ("Could not get filesystem free space on volume that contains %s: %s", path, err->message);
+		g_error_free (err);
+	}
+	g_object_unref (file);
+
+	return freespace;
+}
+
+
+gboolean
+_g_path_remove_directory (const char *path)
 {
 	char     *uri;
 	gboolean  result;
@@ -853,7 +632,7 @@ remove_local_directory (const char *path)
 		return TRUE;
 
 	uri = g_filename_to_uri (path, NULL, NULL);
-	result = remove_directory (uri);
+	result = _g_uri_remove_directory (uri);
 	g_free (uri);
 
 	return result;
@@ -881,7 +660,7 @@ ith_temp_folder_to_try (int n)
 
 
 char *
-get_temp_work_dir (const char *parent_folder)
+_g_path_get_temp_work_dir (const char *parent_folder)
 {
 	guint64  max_size = 0;
 	char    *best_folder = NULL;
@@ -897,7 +676,7 @@ get_temp_work_dir (const char *parent_folder)
 			guint64  size;
 
 			folder = ith_temp_folder_to_try (i);
-			size = get_dest_free_space (folder);
+			size = _g_path_get_free_space (folder);
 			if (max_size < size) {
 				max_size = size;
 				g_free (best_folder);
@@ -926,21 +705,21 @@ get_temp_work_dir (const char *parent_folder)
 
 
 gboolean
-is_temp_work_dir (const char *dir)
+_g_path_is_temp_work_dir (const char *path)
 {
 	int i;
 
-	if (strncmp (dir, "file://", 7) == 0)
-		dir = dir + 7;
-	else if (dir[0] != '/')
+	if (strncmp (path, "file://", 7) == 0)
+		path = path + 7;
+	else if (path[0] != '/')
 		return FALSE;
 
 	for (i = 0; try_folder[i] != NULL; i++) {
 		char *folder;
 
 		folder = ith_temp_folder_to_try (i);
-		if (strncmp (dir, folder, strlen (folder)) == 0) {
-			if (strncmp (dir + strlen (folder), "/.fr-", 5) == 0) {
+		if (strncmp (path, folder, strlen (folder)) == 0) {
+			if (strncmp (path + strlen (folder), "/.fr-", 5) == 0) {
 				g_free (folder);
 				return TRUE;
 			}
@@ -954,154 +733,25 @@ is_temp_work_dir (const char *dir)
 
 
 gboolean
-is_temp_dir (const char *dir)
+_g_path_is_temp_dir (const char *path)
 {
-	if (strncmp (dir, "file://", 7) == 0)
-		dir = dir + 7;
-	if (strcmp (g_get_tmp_dir (), dir) == 0)
+	if (strncmp (path, "file://", 7) == 0)
+		path = path + 7;
+	if (strcmp (g_get_tmp_dir (), path) == 0)
 		return TRUE;
-	if (path_in_path (g_get_tmp_dir (), dir))
+	if (_g_path_is_parent_of (g_get_tmp_dir (), path))
 		return TRUE;
 	else
-		return is_temp_work_dir (dir);
+		return _g_path_is_temp_work_dir (path);
 }
 
 
-/* file list utils */
+/* GFile */
 
 
 gboolean
-file_list__match_pattern (const char *line,
-			  const char *pattern)
-{
-	const char *l = line, *p = pattern;
-
-	for (; (*p != 0) && (*l != 0); p++, l++) {
-		if (*p != '%') {
-			if (*p != *l)
-				return FALSE;
-		}
-		else {
-			p++;
-			switch (*p) {
-			case 'a':
-				break;
-			case 'n':
-				if (!isdigit (*l))
-					return FALSE;
-				break;
-			case 'c':
-				if (!isalpha (*l))
-					return FALSE;
-				break;
-			default:
-				return FALSE;
-			}
-		}
-	}
-
-	return (*p == 0);
-}
-
-
-int
-file_list__get_index_from_pattern (const char *line,
-				   const char *pattern)
-{
-	int         line_l, pattern_l;
-	const char *l;
-
-	line_l = strlen (line);
-	pattern_l = strlen (pattern);
-
-	if ((pattern_l == 0) || (line_l == 0))
-		return -1;
-
-	for (l = line; *l != 0; l++)
-		if (file_list__match_pattern (l, pattern))
-			return (l - line);
-
-	return -1;
-}
-
-
-char*
-file_list__get_next_field (const char *line,
-			   int         start_from,
-			   int         field_n)
-{
-	const char *f_start, *f_end;
-
-	line = line + start_from;
-
-	f_start = line;
-	while ((*f_start == ' ') && (*f_start != *line))
-		f_start++;
-	f_end = f_start;
-
-	while ((field_n > 0) && (*f_end != 0)) {
-		if (*f_end == ' ') {
-			field_n--;
-			if (field_n != 0) {
-				while ((*f_end == ' ') && (*f_end != *line))
-					f_end++;
-				f_start = f_end;
-			}
-		} else
-			f_end++;
-	}
-
-	return g_strndup (f_start, f_end - f_start);
-}
-
-
-char*
-file_list__get_prev_field (const char *line,
-			   int         start_from,
-			   int         field_n)
-{
-	const char *f_start, *f_end;
-
-	f_start = line + start_from - 1;
-	while ((*f_start == ' ') && (*f_start != *line))
-		f_start--;
-	f_end = f_start;
-
-	while ((field_n > 0) && (*f_start != *line)) {
-		if (*f_start == ' ') {
-			field_n--;
-			if (field_n != 0) {
-				while ((*f_start == ' ') && (*f_start != *line))
-					f_start--;
-				f_end = f_start;
-			}
-		} else
-			f_start--;
-	}
-
-	return g_strndup (f_start + 1, f_end - f_start);
-}
-
-
-gboolean
-check_permissions (const char *uri,
-		   int         mode)
-{
-	GFile    *file;
-	gboolean  result;
-
-	file = g_file_new_for_uri (uri);
-	result = check_file_permissions (file, mode);
-
-	g_object_unref (file);
-
-	return result;
-}
-
-
-gboolean
-check_file_permissions (GFile *file,
-		        int    mode)
+_g_file_check_permissions (GFile *file,
+			   int    mode)
 {
 	gboolean   result = TRUE;
 	GFileInfo *info;
@@ -1143,7 +793,70 @@ check_file_permissions (GFile *file,
 
 
 gboolean
-is_program_in_path (const char *filename)
+_g_file_make_directory_tree (GFile    *dir,
+			     mode_t    mode,
+			     GError  **error)
+{
+	gboolean  success = TRUE;
+	GFile    *parent;
+
+	if ((dir == NULL) || g_file_query_exists (dir, NULL))
+		return TRUE;
+
+	parent = g_file_get_parent (dir);
+	if (parent != NULL) {
+		success = _g_file_make_directory_tree (parent, mode, error);
+		g_object_unref (parent);
+		if (! success)
+			return FALSE;
+	}
+
+	success = g_file_make_directory (dir, NULL, error);
+	if ((error != NULL) && (*error != NULL) && g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS)) {
+		g_clear_error (error);
+		success = TRUE;
+	}
+
+	if (success)
+		g_file_set_attribute_uint32 (dir,
+					     G_FILE_ATTRIBUTE_UNIX_MODE,
+					     mode,
+					     0,
+					     NULL,
+					     NULL);
+
+	return success;
+}
+
+
+GFile *
+_g_file_new_user_config_subdir (const char *child_name,
+			        gboolean    create_child)
+{
+	char   *full_path;
+	GFile  *file;
+	GError *error = NULL;
+
+	full_path = g_strconcat (g_get_user_config_dir (), "/", child_name, NULL);
+	file = g_file_new_for_path (full_path);
+	g_free (full_path);
+
+	if  (create_child && ! _g_file_make_directory_tree (file, 0700, &error)) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+		g_object_unref (file);
+		file = NULL;
+	}
+
+	return file;
+}
+
+
+/* program */
+
+
+gboolean
+_g_program_is_in_path (const char *filename)
 {
 	char *str;
 	char *value;
@@ -1170,197 +883,19 @@ is_program_in_path (const char *filename)
 
 
 gboolean
-is_program_available (const char *filename,
-		      gboolean    check)
+_g_program_is_available (const char *filename,
+		         gboolean    check)
 {
-	return ! check || is_program_in_path (filename);
+	return ! check || _g_program_is_in_path (filename);
 }
 
 
-const char *
-get_home_uri (void)
-{
-	static char *home_uri = NULL;
-	if (home_uri == NULL)
-		home_uri = g_filename_to_uri (g_get_home_dir (), NULL, NULL);
-	return home_uri;
-}
-
-
-char *
-get_home_relative_uri (const char *partial_uri)
-{
-	return g_strconcat (get_home_uri (),
-			    "/",
-			    partial_uri,
-			    NULL);
-}
-
-
-GFile *
-get_home_relative_file (const char *partial_uri)
-{
-	GFile *file;
-	char  *uri;
-
-	uri = g_strconcat (get_home_uri (), "/", partial_uri, NULL);
-	file = g_file_new_for_uri (uri);
-	g_free (uri);
-
-	return file;
-}
-
-
-GFile *
-get_user_config_subdirectory (const char *child_name,
-			      gboolean    create_child)
-{
-	char   *full_path;
-	GFile  *file;
-	GError *error = NULL;
-
-	full_path = g_strconcat (g_get_user_config_dir (), "/", child_name, NULL);
-	file = g_file_new_for_path (full_path);
-	g_free (full_path);
-
-	if  (create_child && ! make_directory_tree (file, 0700, &error)) {
-		g_warning ("%s", error->message);
-		g_error_free (error);
-		g_object_unref (file);
-		file = NULL;
-	}
-
-	return file;
-}
-
-
-const char *
-remove_host_from_uri (const char *uri)
-{
-        const char *idx, *sep;
-
-        if (uri == NULL)
-                return NULL;
-
-        idx = strstr (uri, "://");
-        if (idx == NULL)
-                return uri;
-        idx += 3;
-        if (*idx == '\0')
-                return "/";
-        sep = strstr (idx, "/");
-        if (sep == NULL)
-                return idx;
-        return sep;
-}
-
-
-char *
-get_uri_host (const char *uri)
-{
-	const char *idx;
-
-	idx = strstr (uri, "://");
-	if (idx == NULL)
-		return NULL;
-	idx = strstr (idx + 3, "/");
-	if (idx == NULL)
-		return NULL;
-	return g_strndup (uri, (idx - uri));
-}
-
-
-char *
-get_uri_root (const char *uri)
-{
-	char *host;
-	char *root;
-
-	host = get_uri_host (uri);
-	if (host == NULL)
-		return NULL;
-	root = g_strconcat (host, "/", NULL);
-	g_free (host);
-
-	return root;
-}
-
-
-int
-uricmp (const char *uri1,
-	const char *uri2)
-{
-	return _g_strcmp_null_tolerant (uri1, uri2);
-}
-
-
-char *
-get_alternative_uri (const char *folder,
-	     const char *name)
-{
-	char *new_uri = NULL;
-	int   n = 1;
-
-	do {
-		g_free (new_uri);
-		if (n == 1)
-			new_uri = g_strconcat (folder, "/", name, NULL);
-		else
-			new_uri = g_strdup_printf ("%s/%s%%20(%d)", folder, name, n);
-		n++;
-	} while (uri_exists (new_uri));
-
-	return new_uri;
-}
-
-
-char *
-get_alternative_uri_for_uri (const char *uri)
-{
-	char *base_uri;
-	char *new_uri;
-
-	base_uri = remove_level_from_path (uri);
-	new_uri = get_alternative_uri (base_uri, file_name_from_path (uri));
-	g_free (base_uri);
-
-	return new_uri;
-}
-
-
-GList *
-_g_file_list_dup (GList *l)
-{
-	GList *r = NULL, *scan;
-	for (scan = l; scan; scan = scan->next)
-		r = g_list_prepend (r, g_file_dup ((GFile*)scan->data));
-	return g_list_reverse (r);
-}
+/* GKeyFile */
 
 
 void
-_g_file_list_free (GList *l)
-{
-	GList *scan;
-	for (scan = l; scan; scan = scan->next)
-		g_object_unref (scan->data);
-	g_list_free (l);
-}
-
-
-GList *
-_g_file_list_new_from_uri_list (GList *uris)
-{
-	GList *r = NULL, *scan;
-	for (scan = uris; scan; scan = scan->next)
-		r = g_list_prepend (r, g_file_new_for_uri ((char*)scan->data));
-	return g_list_reverse (r);
-}
-
-
-void
-g_key_file_save (GKeyFile *key_file,
-	         GFile    *file)
+_g_key_file_save (GKeyFile *key_file,
+	          GFile    *file)
 {
 	char   *file_data;
 	gsize   size;

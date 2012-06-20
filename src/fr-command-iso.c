@@ -118,8 +118,8 @@ list__process_line (char     *line,
 		else
 			fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
 		fdata->original_path = fdata->full_path;
-		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-		fdata->path = remove_level_from_path (fdata->full_path);
+		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->path = _g_path_remove_level (fdata->full_path);
 
 		fr_command_add_file (comm, fdata);
 	}
@@ -170,8 +170,8 @@ fr_command_iso_extract (FrCommand  *comm,
 		char       *file_dir;
 		char       *temp_dest_dir = NULL;
 
-		filename = file_name_from_path (path);
-		file_dir = remove_level_from_path (path);
+		filename = _g_path_get_file_name (path);
+		file_dir = _g_path_remove_level (path);
 		if ((file_dir != NULL) && (strcmp (file_dir, "/") != 0))
 			temp_dest_dir = g_build_filename (dest_dir, file_dir, NULL);
 		 else
@@ -181,7 +181,7 @@ fr_command_iso_extract (FrCommand  *comm,
 		if (temp_dest_dir == NULL)
 			continue;
 
-		make_directory_tree_from_path (temp_dest_dir, 0700, NULL);
+		_g_path_make_directory_tree (temp_dest_dir, 0700, NULL);
 
 		fr_process_begin_command (comm->process, "sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
@@ -216,7 +216,7 @@ fr_command_iso_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_available ("isoinfo", check_command))
+	if (_g_program_is_available ("isoinfo", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;

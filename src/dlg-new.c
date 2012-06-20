@@ -27,6 +27,7 @@
 #include "dlg-new.h"
 #include "file-utils.h"
 #include "fr-stock.h"
+#include "glib-utils.h"
 #include "gtk-utils.h"
 #include "fr-init.h"
 #include "preferences.h"
@@ -150,7 +151,7 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 		char       *new_basename_uft8;
 
 		new_ext = mime_type_desc[data->supported_types[idx]].default_ext;
-		basename = file_name_from_path (uri);
+		basename = _g_path_get_file_name (uri);
 		if (g_str_has_suffix (basename, ext))
 			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
 		else
@@ -212,7 +213,7 @@ format_chooser_selection_changed_cb (EggFileFormatChooser *format_chooser,
 		char       *new_basename_uft8;
 
 		new_ext = mime_type_desc[data->supported_types[n_format - 1]].default_ext;
-		basename = file_name_from_path (uri);
+		basename = _g_path_get_file_name (uri);
 		if (g_str_has_suffix (basename, ext))
 			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
 		else

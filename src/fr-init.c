@@ -180,12 +180,12 @@ migrate_options_directory (void)
 
 	old_directory_path = get_home_relative_path (".gnome2/file-roller/options");
 	old_directory = g_file_new_for_path (old_directory_path);
-	new_directory = get_user_config_subdirectory (ADD_FOLDER_OPTIONS_DIR, FALSE);
+	new_directory = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, FALSE);
 	if (g_file_query_exists (old_directory, NULL) && ! g_file_query_exists (new_directory, NULL)) {
 		GFile *parent;
 
 		parent = g_file_get_parent (new_directory);
-		if (make_directory_tree (parent, 0700, NULL))
+		if (_g_file_make_directory_tree (parent, 0700, NULL))
 			g_file_move (old_directory, new_directory, 0, NULL, NULL, NULL, NULL);
 
 		g_object_unref (parent);
@@ -459,7 +459,7 @@ get_archive_filename_extension (const char *filename)
 	if (filename == NULL)
 		return NULL;
 
-	ext = get_file_extension (filename);
+	ext = _g_filename_get_extension (filename);
 	if (ext == NULL)
 		return NULL;
 
@@ -623,7 +623,7 @@ command_done (CommandData *cdata)
 	if (cdata == NULL)
 		return;
 
-	if ((cdata->temp_dir != NULL) && path_is_dir (cdata->temp_dir)) {
+	if ((cdata->temp_dir != NULL) && _g_path_query_is_dir (cdata->temp_dir)) {
 		char *argv[4];
 
 		argv[0] = "rm";

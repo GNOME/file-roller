@@ -149,10 +149,10 @@ list__process_line (char     *line,
 
 	fdata->dir = line[0] == 'd';
 	if (fdata->dir)
-		fdata->name = dir_name_from_path (fdata->full_path);
+		fdata->name = _g_path_get_dir_name (fdata->full_path);
 	else
-		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-	fdata->path = remove_level_from_path (fdata->full_path);
+		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
@@ -401,13 +401,13 @@ fr_command_zip_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
-	if (is_program_available ("zip", check_command)) {
+	if (_g_program_is_available ("zip", check_command)) {
 		if (strcmp (mime_type, "application/x-ms-dos-executable") == 0)
 			capabilities |= FR_COMMAND_CAN_READ;
 		else
 			capabilities |= FR_COMMAND_CAN_WRITE;
 	}
-	if (is_program_available ("unzip", check_command))
+	if (_g_program_is_available ("unzip", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;

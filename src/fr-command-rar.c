@@ -48,7 +48,7 @@ static FrCommandClass *parent_class = NULL;
 static gboolean
 have_rar (void)
 {
-	return is_program_in_path ("rar");
+	return _g_program_is_in_path ("rar");
 }
 
 
@@ -156,11 +156,11 @@ process_line (char     *line,
 
 					g_free (tmp);
 
-					fdata->name = dir_name_from_path (fdata->full_path);
+					fdata->name = _g_path_get_dir_name (fdata->full_path);
 					fdata->dir = TRUE;
 				}
 				else
-					fdata->name = g_strdup (file_name_from_path (fdata->full_path));
+					fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
 
 				fr_command_add_file (comm, fdata);
 				rar_comm->fdata = NULL;
@@ -191,7 +191,7 @@ process_line (char     *line,
 		}
 
 		fdata->link = NULL;
-		fdata->path = remove_level_from_path (fdata->full_path);
+		fdata->path = _g_path_remove_level (fdata->full_path);
 	}
 	else {
 
@@ -286,7 +286,7 @@ parse_progress_line (FrCommand  *comm,
 			if ((len > 5) && (strncmp (filename + len - 5, "  OK ", 5) == 0))
 				filename[len - 5] = 0;
 
-			msg = g_strdup_printf (message_format, file_name_from_path (filename), NULL);
+			msg = g_strdup_printf (message_format, _g_path_get_file_name (filename), NULL);
 			fr_command_message (comm, msg);
 
 			g_free (msg);
@@ -615,9 +615,9 @@ fr_command_rar_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
-	if (is_program_available ("rar", check_command))
+	if (_g_program_is_available ("rar", check_command))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_CREATE_VOLUMES;
-	else if (is_program_available ("unrar", check_command))
+	else if (_g_program_is_available ("unrar", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	/* multi-volumes are read-only */

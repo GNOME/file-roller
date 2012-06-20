@@ -135,7 +135,7 @@ update_file_list (DialogData *data)
 		gtk_list_store_append (GTK_LIST_STORE (data->list_model),
 				       &iter);
 
-		utf8_name = g_filename_display_name (file_name_from_path (file->path));
+		utf8_name = g_filename_display_name (_g_path_get_file_name (file->path));
 		gtk_list_store_set (GTK_LIST_STORE (data->list_model),
 				    &iter,
 				    IS_SELECTED_COLUMN, TRUE,
@@ -157,7 +157,7 @@ update_file_list (DialogData *data)
 
 		/* primary text */
 
-		file_name = g_filename_display_name (file_name_from_path (file->path));
+		file_name = g_filename_display_name (_g_path_get_file_name (file->path));
 		unescaped = g_uri_unescape_string (fr_window_get_archive_uri (data->window), NULL);
 		archive_name = g_path_get_basename (unescaped);
 		label = g_markup_printf_escaped (_("Update the file \"%s\" in the archive \"%s\"?"), file_name, archive_name);
@@ -393,7 +393,7 @@ dlg_update_add_file (gpointer  dialog,
 
 	for (scan = data->file_list; scan; scan = scan->next) {
 		OpenFile *test = scan->data;
-		if (uricmp (test->extracted_uri, file->extracted_uri) == 0)
+		if (_g_uri_cmp (test->extracted_uri, file->extracted_uri) == 0)
 			return;
 	}
 

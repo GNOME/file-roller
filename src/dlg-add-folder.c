@@ -22,7 +22,6 @@
 #include <config.h>
 #include <string.h>
 #include <unistd.h>
-
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gio/gio.h>
@@ -30,8 +29,10 @@
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "fr-window.h"
+#include "glib-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
+
 
 typedef struct {
 	FrWindow    *window;
@@ -117,7 +118,7 @@ file_sel_response_cb (GtkWidget    *widget,
 
 	/* check folder permissions. */
 
-	if (! check_permissions (selected_folder, R_OK)) {
+	if (! _g_uri_check_permissions (selected_folder, R_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 
@@ -155,8 +156,8 @@ file_sel_response_cb (GtkWidget    *widget,
 		exclude_folders = NULL;
 
 	local_filename = g_filename_from_uri (selected_folder, NULL, NULL);
-	dest_dir = build_uri (fr_window_get_current_location (window),
-			      file_name_from_path (local_filename),
+	dest_dir = _g_uri_build (fr_window_get_current_location (window),
+			      _g_path_get_file_name (local_filename),
 			      NULL);
 
 	fr_window_archive_add_with_wildcard (window,
@@ -374,7 +375,7 @@ dlg_add_folder_save_last_used_options (DialogData *data,
 			               const char *options_path)
 {
 	g_free (data->last_options);
-	data->last_options = g_strdup (file_name_from_path (options_path));
+	data->last_options = g_strdup (_g_path_get_file_name (options_path));
 }
 
 
@@ -443,7 +444,7 @@ dlg_add_folder_load_options (DialogData *data,
 	gboolean   recursive;
 	gboolean   no_symlinks;
 
-	options_dir = get_user_config_subdirectory (ADD_FOLDER_OPTIONS_DIR, TRUE);
+	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
 	options_file = g_file_get_child (options_dir, name);
 	file_path = g_file_get_path (options_file);
 	key_file = g_key_file_new ();
@@ -598,7 +599,7 @@ dlg_add_folder_save_current_options (DialogData *data,
 	g_key_file_set_boolean (key_file, "Options", "recursive", recursive);
 	g_key_file_set_boolean (key_file, "Options", "no_symlinks", no_symlinks);
 
-	g_key_file_save (key_file, options_file);
+	_g_key_file_save (key_file, options_file);
 
 	g_key_file_free (key_file);
 	g_free (base_dir);
@@ -704,8 +705,8 @@ aod_update_option_list (LoadOptionsDialogData *aod_data)
 
 	gtk_list_store_clear (list_store);
 
-	options_dir = get_user_config_subdirectory (ADD_FOLDER_OPTIONS_DIR, TRUE);
-	make_directory_tree (options_dir, 0700, NULL);
+	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
+	_g_file_make_directory_tree (options_dir, 0700, NULL);
 
 	file_enum = g_file_enumerate_children (options_dir, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
 	if (err != NULL) {
@@ -766,7 +767,7 @@ aod_remove_cb (GtkWidget             *widget,
 	gtk_tree_model_get (aod_data->aod_model, &iter, 1, &filename, -1);
 	gtk_list_store_remove (GTK_LIST_STORE (aod_data->aod_model), &iter);
 
-	options_dir = get_user_config_subdirectory (ADD_FOLDER_OPTIONS_DIR, TRUE);
+	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
 	options_file = g_file_get_child (options_dir, filename);
 	if (! g_file_delete (options_file, NULL, &error)) {
 		g_warning ("could not delete the options: %s", error->message);
@@ -873,8 +874,8 @@ save_options_cb (GtkWidget  *w,
 	GFile *options_file;
 	char  *opt_filename;
 
-	options_dir = get_user_config_subdirectory (ADD_FOLDER_OPTIONS_DIR, TRUE);
-	make_directory_tree (options_dir, 0700, NULL);
+	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
+	_g_file_make_directory_tree (options_dir, 0700, NULL);
 
 	opt_filename = _gtk_request_dialog_run (
 				GTK_WINDOW (data->dialog),

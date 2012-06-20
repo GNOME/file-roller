@@ -19,6 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ctype.h>
 #include <string.h>
 #include <stdio.h>
 #include <glib.h>
@@ -704,7 +705,7 @@ _g_time_to_string (time_t time)
 }
 
 
-/* uri */
+/* uri/path/filename */
 
 
 char*
@@ -717,6 +718,492 @@ _g_uri_display_basename (const char  *uri)
 	g_free (e_name);
 
 	return name;
+}
+
+
+const char *
+_g_uri_get_home (void)
+{
+	static char *home_uri = NULL;
+	if (home_uri == NULL)
+		home_uri = g_filename_to_uri (g_get_home_dir (), NULL, NULL);
+	return home_uri;
+}
+
+
+char *
+_g_uri_get_home_relative (const char *partial_uri)
+{
+	return g_strconcat (_g_uri_get_home (),
+			    "/",
+			    partial_uri,
+			    NULL);
+}
+
+
+const char *
+_g_uri_remove_host (const char *uri)
+{
+        const char *idx, *sep;
+
+        if (uri == NULL)
+                return NULL;
+
+        idx = strstr (uri, "://");
+        if (idx == NULL)
+                return uri;
+        idx += 3;
+        if (*idx == '\0')
+                return "/";
+        sep = strstr (idx, "/");
+        if (sep == NULL)
+                return idx;
+        return sep;
+}
+
+
+char *
+_g_uri_get_host (const char *uri)
+{
+	const char *idx;
+
+	idx = strstr (uri, "://");
+	if (idx == NULL)
+		return NULL;
+	idx = strstr (idx + 3, "/");
+	if (idx == NULL)
+		return NULL;
+	return g_strndup (uri, (idx - uri));
+}
+
+
+char *
+_g_uri_get_root (const char *uri)
+{
+	char *host;
+	char *root;
+
+	host = _g_uri_get_host (uri);
+	if (host == NULL)
+		return NULL;
+	root = g_strconcat (host, "/", NULL);
+	g_free (host);
+
+	return root;
+}
+
+
+gboolean
+_g_uri_is_local (const char  *uri)
+{
+	return strncmp (uri, "file://", 7) == 0;
+}
+
+
+int
+_g_uri_cmp (const char *uri1,
+	    const char *uri2)
+{
+	return _g_strcmp_null_tolerant (uri1, uri2);
+}
+
+
+char *
+_g_uri_build (const char *base, ...)
+{
+	va_list     args;
+	const char *child;
+	GString    *uri;
+
+	uri = g_string_new (base);
+
+	va_start (args, base);
+        while ((child = va_arg (args, const char *)) != NULL) {
+        	if (! g_str_has_suffix (uri->str, "/") && ! g_str_has_prefix (child, "/"))
+        		g_string_append (uri, "/");
+        	g_string_append (uri, child);
+        }
+	va_end (args);
+
+	return g_string_free (uri, FALSE);
+}
+
+
+/* like g_path_get_basename but does not warn about NULL and does not
+ * alloc a new string. */
+const gchar *
+_g_path_get_file_name (const gchar *file_name)
+{
+	register char   *base;
+	register gssize  last_char;
+
+	if (file_name == NULL)
+		return NULL;
+
+	if (file_name[0] == '\0')
+		return "";
+
+	last_char = strlen (file_name) - 1;
+
+	if (file_name [last_char] == G_DIR_SEPARATOR)
+		return "";
+
+	base = g_utf8_strrchr (file_name, -1, G_DIR_SEPARATOR);
+	if (! base)
+		return file_name;
+
+	return base + 1;
+}
+
+
+char *
+_g_path_get_dir_name (const gchar *path)
+{
+	register gssize base;
+	register gssize last_char;
+
+	if (path == NULL)
+		return NULL;
+
+	if (path[0] == '\0')
+		return g_strdup ("");
+
+	last_char = strlen (path) - 1;
+	if (path[last_char] == G_DIR_SEPARATOR)
+		last_char--;
+
+	base = last_char;
+	while ((base >= 0) && (path[base] != G_DIR_SEPARATOR))
+		base--;
+
+	return g_strndup (path + base + 1, last_char - base);
+}
+
+
+gchar *
+_g_path_remove_level (const gchar *path)
+{
+	int         p;
+	const char *ptr = path;
+	char       *new_path;
+
+	if (path == NULL)
+		return NULL;
+
+	p = strlen (path) - 1;
+	if (p < 0)
+		return NULL;
+
+	while ((p > 0) && (ptr[p] != '/'))
+		p--;
+	if ((p == 0) && (ptr[p] == '/'))
+		p++;
+	new_path = g_strndup (path, (guint)p);
+
+	return new_path;
+}
+
+
+char *
+_g_path_remove_ending_separator (const char *path)
+{
+	gint len, copy_len;
+
+	if (path == NULL)
+		return NULL;
+
+	copy_len = len = strlen (path);
+	if ((len > 1) && (path[len - 1] == '/'))
+		copy_len--;
+
+	return g_strndup (path, copy_len);
+}
+
+
+gchar *
+_g_path_remove_extension (const gchar *path)
+{
+	int         len;
+	int         p;
+	const char *ptr = path;
+	char       *new_path;
+
+	if (! path)
+		return NULL;
+
+	len = strlen (path);
+	if (len == 1)
+		return g_strdup (path);
+
+	p = len - 1;
+	while ((p > 0) && (ptr[p] != '.'))
+		p--;
+	if (p == 0)
+		p = len;
+	new_path = g_strndup (path, (guint) p);
+
+	return new_path;
+}
+
+/* Check whether the dirname is contained in filename */
+gboolean
+_g_path_is_parent_of (const char *dirname,
+		      const char *filename)
+{
+	int dirname_l, filename_l, separator_position;
+
+	if ((dirname == NULL) || (filename == NULL))
+		return FALSE;
+
+	dirname_l = strlen (dirname);
+	filename_l = strlen (filename);
+
+	if ((dirname_l == filename_l + 1)
+	     && (dirname[dirname_l - 1] == '/'))
+		return FALSE;
+
+	if ((filename_l == dirname_l + 1)
+	     && (filename[filename_l - 1] == '/'))
+		return FALSE;
+
+	if (dirname[dirname_l - 1] == '/')
+		separator_position = dirname_l - 1;
+	else
+		separator_position = dirname_l;
+
+	return ((filename_l > dirname_l)
+		&& (strncmp (dirname, filename, dirname_l) == 0)
+		&& (filename[separator_position] == '/'));
+}
+
+
+gboolean
+_g_filename_is_hidden (const gchar *name)
+{
+	if (name[0] != '.') return FALSE;
+	if (name[1] == '\0') return FALSE;
+	if ((name[1] == '.') && (name[2] == '\0')) return FALSE;
+
+	return TRUE;
+}
+
+
+const char *
+_g_filename_get_extension (const char *filename)
+{
+	const char *ptr = filename;
+	int         len;
+	int         p;
+	const char *ext;
+
+	if (filename == NULL)
+		return NULL;
+
+	len = strlen (filename);
+	if (len <= 1)
+		return NULL;
+
+	p = len - 1;
+	while ((p >= 0) && (ptr[p] != '.'))
+		p--;
+	if (p < 0)
+		return NULL;
+
+	ext = filename + p;
+	if (ext - 4 > filename) {
+		const char *test = ext - 4;
+		if (strncmp (test, ".tar", 4) == 0)
+			ext = ext - 4;
+	}
+	return ext;
+}
+
+
+gboolean
+_g_filename_has_extension (const char *filename,
+		   const char *ext)
+{
+	int filename_l, ext_l;
+
+	filename_l = strlen (filename);
+	ext_l = strlen (ext);
+
+	if (filename_l < ext_l)
+		return FALSE;
+	return strcasecmp (filename + filename_l - ext_l, ext) == 0;
+}
+
+
+gboolean
+_g_mime_type_matches (const char *mime_type,
+		      const char *pattern)
+{
+	return (strcasecmp (mime_type, pattern) == 0);
+}
+
+
+/* GFile */
+
+
+GFile *
+_g_file_new_home_relative (const char *partial_uri)
+{
+	GFile *file;
+	char  *uri;
+
+	uri = g_strconcat (_g_uri_get_home (), "/", partial_uri, NULL);
+	file = g_file_new_for_uri (uri);
+	g_free (uri);
+
+	return file;
+}
+
+
+GList *
+_g_file_list_dup (GList *l)
+{
+	GList *r = NULL, *scan;
+	for (scan = l; scan; scan = scan->next)
+		r = g_list_prepend (r, g_file_dup ((GFile*) scan->data));
+	return g_list_reverse (r);
+}
+
+
+void
+_g_file_list_free (GList *l)
+{
+	GList *scan;
+	for (scan = l; scan; scan = scan->next)
+		g_object_unref (scan->data);
+	g_list_free (l);
+}
+
+
+GList *
+_g_file_list_new_from_uri_list (GList *uris)
+{
+	GList *r = NULL, *scan;
+	for (scan = uris; scan; scan = scan->next)
+		r = g_list_prepend (r, g_file_new_for_uri ((char*)scan->data));
+	return g_list_reverse (r);
+}
+
+
+/* line parser */
+
+
+gboolean
+_g_line_matches_pattern (const char *line,
+			 const char *pattern)
+{
+	const char *l = line, *p = pattern;
+
+	for (/* void */; (*p != 0) && (*l != 0); p++, l++) {
+		if (*p != '%') {
+			if (*p != *l)
+				return FALSE;
+		}
+		else {
+			p++;
+			switch (*p) {
+			case 'a':
+				break;
+			case 'n':
+				if (!isdigit (*l))
+					return FALSE;
+				break;
+			case 'c':
+				if (!isalpha (*l))
+					return FALSE;
+				break;
+			default:
+				return FALSE;
+			}
+		}
+	}
+
+	return (*p == 0);
+}
+
+
+int
+_g_line_get_index_from_pattern (const char *line,
+				const char *pattern)
+{
+	int         line_l, pattern_l;
+	const char *l;
+
+	line_l = strlen (line);
+	pattern_l = strlen (pattern);
+
+	if ((pattern_l == 0) || (line_l == 0))
+		return -1;
+
+	for (l = line; *l != 0; l++)
+		if (_g_line_matches_pattern (l, pattern))
+			return (l - line);
+
+	return -1;
+}
+
+
+char*
+_g_line_get_next_field (const char *line,
+			int         start_from,
+			int         field_n)
+{
+	const char *f_start, *f_end;
+
+	line = line + start_from;
+
+	f_start = line;
+	while ((*f_start == ' ') && (*f_start != *line))
+		f_start++;
+	f_end = f_start;
+
+	while ((field_n > 0) && (*f_end != 0)) {
+		if (*f_end == ' ') {
+			field_n--;
+			if (field_n != 0) {
+				while ((*f_end == ' ') && (*f_end != *line))
+					f_end++;
+				f_start = f_end;
+			}
+		}
+		else
+			f_end++;
+	}
+
+	return g_strndup (f_start, f_end - f_start);
+}
+
+
+char*
+_g_line_get_prev_field (const char *line,
+			int         start_from,
+			int         field_n)
+{
+	const char *f_start, *f_end;
+
+	f_start = line + start_from - 1;
+	while ((*f_start == ' ') && (*f_start != *line))
+		f_start--;
+	f_end = f_start;
+
+	while ((field_n > 0) && (*f_start != *line)) {
+		if (*f_start == ' ') {
+			field_n--;
+			if (field_n != 0) {
+				while ((*f_start == ' ') && (*f_start != *line))
+					f_start--;
+				f_end = f_start;
+			}
+		}
+		else
+			f_start--;
+	}
+
+	return g_strndup (f_start + 1, f_end - f_start);
 }
 
 

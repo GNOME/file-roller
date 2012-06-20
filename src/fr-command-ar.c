@@ -22,13 +22,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-command-ar.h"
+#include "glib-utils.h"
 
 static void fr_command_ar_class_init  (FrCommandArClass *class);
 static void fr_command_ar_init        (FrCommand        *afile);
@@ -129,16 +128,16 @@ process_line (char     *line,
 
 	fdata = file_data_new ();
 
-	date_idx = file_list__get_index_from_pattern (line, "%c%c%c %a%n %n%n:%n%n %n%n%n%n");
+	date_idx = _g_line_get_index_from_pattern (line, "%c%c%c %a%n %n%n:%n%n %n%n%n%n");
 
-	field_size = file_list__get_prev_field (line, date_idx, 1);
+	field_size = _g_line_get_prev_field (line, date_idx, 1);
 	fdata->size = g_ascii_strtoull (field_size, NULL, 10);
 	g_free (field_size);
 
-	field_month = file_list__get_next_field (line, date_idx, 1);
-	field_day = file_list__get_next_field (line, date_idx, 2);
-	field_time = file_list__get_next_field (line, date_idx, 3);
-	field_year = file_list__get_next_field (line, date_idx, 4);
+	field_month = _g_line_get_next_field (line, date_idx, 1);
+	field_day = _g_line_get_next_field (line, date_idx, 2);
+	field_time = _g_line_get_next_field (line, date_idx, 3);
+	field_year = _g_line_get_next_field (line, date_idx, 4);
 	fdata->modified = mktime_from_string (field_time, field_day, field_month, field_year);
 	g_free (field_day);
 	g_free (field_month);
@@ -176,8 +175,8 @@ process_line (char     *line,
 	g_strfreev (fields);
 	g_free (field_name);
 
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-	fdata->path = remove_level_from_path (fdata->full_path);
+	fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
@@ -276,7 +275,7 @@ fr_command_ar_handle_error (FrCommand   *comm,
 }
 
 
-const char *ar_mime_type[] = { "application/x-ar", 
+const char *ar_mime_type[] = { "application/x-ar",
 			       "application/x-deb",
 			       NULL };
 
@@ -296,10 +295,10 @@ fr_command_ar_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_available ("ar", check_command)) {
-		if (is_mime_type (mime_type, "application/x-deb"))
+	if (_g_program_is_available ("ar", check_command)) {
+		if (_g_mime_type_matches (mime_type, "application/x-deb"))
 			capabilities |= FR_COMMAND_CAN_READ;
-		else if (is_mime_type (mime_type, "application/x-ar"))
+		else if (_g_mime_type_matches (mime_type, "application/x-ar"))
 			capabilities |= FR_COMMAND_CAN_READ_WRITE;
 	}
 

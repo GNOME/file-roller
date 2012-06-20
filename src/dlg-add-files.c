@@ -27,6 +27,7 @@
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "fr-window.h"
+#include "glib-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
 
@@ -87,7 +88,7 @@ file_sel_response_cb (GtkWidget      *widget,
 
 	/* check folder permissions. */
 
-	if (uri_is_dir (current_folder) && ! check_permissions (current_folder, R_OK)) {
+	if (_g_uri_query_is_dir (current_folder) && ! _g_uri_check_permissions (current_folder, R_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 

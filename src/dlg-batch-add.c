@@ -185,7 +185,7 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
-	if (! check_permissions (archive_dir, R_OK|W_OK|X_OK)) {
+	if (! _g_uri_check_permissions (archive_dir, R_OK|W_OK|X_OK)) {
 		GtkWidget  *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -202,7 +202,7 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
-	if (! uri_is_dir (archive_dir)) {
+	if (! _g_uri_query_is_dir (archive_dir)) {
 		GtkWidget *d;
 		int        r;
 		char      *folder_name;
@@ -230,7 +230,7 @@ add_clicked_cb (GtkWidget  *widget,
 		do_not_add = (r != GTK_RESPONSE_YES);
 	}
 
-	if (! do_not_add && ! ensure_dir_exists (archive_dir, 0755, &error)) {
+	if (! do_not_add && ! _g_uri_ensure_dir_exists (archive_dir, 0755, &error)) {
 		GtkWidget  *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -276,7 +276,7 @@ add_clicked_cb (GtkWidget  *widget,
 	g_free (tmp);
 	archive_file = g_strconcat (archive_dir, "/", archive_name, NULL);
 
-	if (uri_is_dir (archive_file)) {
+	if (_g_uri_query_is_dir (archive_file)) {
 		GtkWidget  *d;
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -295,7 +295,7 @@ add_clicked_cb (GtkWidget  *widget,
 		return;
 	}
 
-	if (uri_exists (archive_file)) {
+	if (_g_uri_query_exists (archive_file)) {
 		GtkWidget *d;
 		int        r;
 
@@ -481,7 +481,7 @@ dlg_batch_add_files (FrWindow *window,
 
 	data->window = window;
 	data->file_list = file_list;
-	data->single_file = ((file_list->next == NULL) && uri_is_file ((char*) file_list->data));
+	data->single_file = ((file_list->next == NULL) && _g_uri_query_is_file ((char*) file_list->data));
 	data->add_clicked = FALSE;
 
 	/* Set widgets data. */
@@ -498,25 +498,25 @@ dlg_batch_add_files (FrWindow *window,
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (GET_WIDGET ("a_volume_spinbutton")), (double) g_settings_get_int (data->settings, PREF_BATCH_ADD_VOLUME_SIZE) / MEGABYTE);
 
 	first_filename = (char*) file_list->data;
-	parent = remove_level_from_path (first_filename);
+	parent = _g_path_remove_level (first_filename);
 
 	if (file_list->next == NULL)
-		automatic_name = g_uri_unescape_string (file_name_from_path ((char*) file_list->data), NULL);
+		automatic_name = g_uri_unescape_string (_g_path_get_file_name ((char*) file_list->data), NULL);
 	else {
-		automatic_name = g_uri_unescape_string (file_name_from_path (parent), NULL);
+		automatic_name = g_uri_unescape_string (_g_path_get_file_name (parent), NULL);
 		if ((automatic_name == NULL) || (automatic_name[0] == '\0')) {
 			g_free (automatic_name);
-			automatic_name = g_uri_unescape_string (file_name_from_path (first_filename), NULL);
+			automatic_name = g_uri_unescape_string (_g_path_get_file_name (first_filename), NULL);
 		}
 	}
 
 	_gtk_entry_set_filename_text (GTK_ENTRY (GET_WIDGET ("a_add_to_entry")), automatic_name);
 	g_free (automatic_name);
 
-	if (check_permissions (parent, R_OK | W_OK))
+	if (_g_uri_check_permissions (parent, R_OK | W_OK))
 		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (GET_WIDGET ("a_location_filechooserbutton")), parent);
 	else
-		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (GET_WIDGET ("a_location_filechooserbutton")), get_home_uri ());
+		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (GET_WIDGET ("a_location_filechooserbutton")), _g_uri_get_home ());
 	g_free (parent);
 
 	/* archive type combobox */

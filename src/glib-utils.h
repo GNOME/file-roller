@@ -23,95 +23,148 @@
 #define _GLIB_UTILS_H
 
 #include <time.h>
-
-#define g_signal_handlers_disconnect_by_data(instance, data) \
-    g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
-					  0, 0, NULL, NULL, (data))
+#include <glib.h>
+#include <gio/gio.h>
 
 #ifndef __GNUC__
 #define __FUNCTION__ ""
 #endif
 
 #define DEBUG_INFO __FILE__, __LINE__, __FUNCTION__
+#define MIME_TYPE_DIRECTORY "folder"
+#define MIME_TYPE_ARCHIVE "application/x-archive"
+
+#define get_home_relative_path(x)        \
+	g_strconcat (g_get_home_dir (), \
+		     "/",               \
+		     (x),               \
+		     NULL)
+
+#define g_signal_handlers_disconnect_by_data(instance, data) \
+    g_signal_handlers_disconnect_matched ((instance), G_SIGNAL_MATCH_DATA, \
+					  0, 0, NULL, NULL, (data))
 
 /* gobject */
 
-gpointer            _g_object_ref                 (gpointer             object);
-void                _g_object_unref               (gpointer             object);
+gpointer            _g_object_ref                  (gpointer             object);
+void                _g_object_unref                (gpointer             object);
 
 /* string */
 
-gboolean            _g_strchrs                    (const char          *str,
-						   const char          *chars);
-char *              _g_str_substitute             (const char          *str,
-						   const char          *from_str,
-						   const char          *to_str);
-int                 _g_strcmp_null_tolerant       (const char          *s1,
-						   const char          *s2);
-char*               _g_str_escape_full            (const char          *str,
-						   const char          *meta_chars,
-						   const char           prefix,
-						   const char           postfix);
-char*               _g_str_escape                 (const char          *str,
-						   const char          *meta_chars);
-char *              _g_str_shell_escape           (const char          *filename);
-char *              _g_strdup_with_max_size       (const char          *s,
-						   int                  max_size);
-const char *        _g_str_eat_spaces             (const char          *line);
-const char *        _g_str_eat_void_chars         (const char          *line);
-char **             _g_str_split_line             (const char          *line,
-						   int                  n_fields);
-const char *        _g_str_get_last_field         (const char          *line,
-						   int                  last_field);
-const char *        _g_str_get_static             (const char          *s);
+gboolean            _g_strchrs                     (const char          *str,
+						    const char          *chars);
+char *              _g_str_substitute              (const char          *str,
+						    const char          *from_str,
+						    const char          *to_str);
+int                 _g_strcmp_null_tolerant        (const char          *s1,
+						    const char          *s2);
+char*               _g_str_escape_full             (const char          *str,
+						    const char          *meta_chars,
+						    const char           prefix,
+						    const char           postfix);
+char*               _g_str_escape                  (const char          *str,
+						    const char          *meta_chars);
+char *              _g_str_shell_escape            (const char          *filename);
+char *              _g_strdup_with_max_size        (const char          *s,
+						    int                  max_size);
+const char *        _g_str_eat_spaces              (const char          *line);
+const char *        _g_str_eat_void_chars          (const char          *line);
+char **             _g_str_split_line              (const char          *line,
+						    int                  n_fields);
+const char *        _g_str_get_last_field          (const char          *line,
+						    int                  last_field);
+const char *        _g_str_get_static              (const char          *s);
 
 /* string vector */
 
-char **             _g_strv_prepend               (char               **str_array,
-						   const char          *str);
-gboolean            _g_strv_remove                (char               **str_array,
-		  	  	  	  	   const char          *str);
+char **             _g_strv_prepend                (char               **str_array,
+						    const char          *str);
+gboolean            _g_strv_remove                 (char               **str_array,
+		  	  	  	  	    const char          *str);
 
 /* string list */
 
-void                _g_string_list_free           (GList               *path_list);
-GList *             _g_string_list_dup            (GList               *path_list);
+void                _g_string_list_free            (GList               *path_list);
+GList *             _g_string_list_dup             (GList               *path_list);
 
 /* GPtrArray */
 
-GPtrArray *         _g_ptr_array_copy             (GPtrArray           *array);
-void                _g_ptr_array_free_full        (GPtrArray           *array,
-                       				   GFunc                func,
-                       				   gpointer             user_data);
-void                _g_ptr_array_reverse          (GPtrArray           *array);
-int                 _g_ptr_array_binary_search    (GPtrArray           *array,
-						   gpointer             value,
-						   GCompareFunc         func);
+GPtrArray *         _g_ptr_array_copy              (GPtrArray           *array);
+void                _g_ptr_array_free_full         (GPtrArray           *array,
+                       				    GFunc                func,
+                       				    gpointer             user_data);
+void                _g_ptr_array_reverse           (GPtrArray           *array);
+int                 _g_ptr_array_binary_search     (GPtrArray           *array,
+						    gpointer             value,
+						    GCompareFunc         func);
 
 /* GRegex */
 
-gboolean            _g_regexp_matchv              (GRegex             **regexps,
-						   const char          *string,
-						   GRegexMatchFlags     match_options);
-void                _g_regexp_freev               (GRegex             **regexps);
-char **             _g_regexp_get_patternv        (const char          *pattern_string);
-GRegex **           _g_regexp_split_from_patterns (const char          *pattern_string,
-			                           GRegexCompileFlags   compile_options);
+gboolean            _g_regexp_matchv               (GRegex             **regexps,
+						    const char          *string,
+						    GRegexMatchFlags     match_options);
+void                _g_regexp_freev                (GRegex             **regexps);
+char **             _g_regexp_get_patternv         (const char          *pattern_string);
+GRegex **           _g_regexp_split_from_patterns  (const char          *pattern_string,
+			                            GRegexCompileFlags   compile_options);
 
 /* time */
 
-char *              _g_time_to_string             (time_t               time);
+char *              _g_time_to_string              (time_t               time);
 
-/* uri */
+/* uri/path/filename */
 
-char *              _g_uri_display_basename       (const char          *uri);
+char *              _g_uri_display_basename        (const char          *uri);
+const char *        _g_uri_get_home                (void);
+char *              _g_uri_get_home_relative       (const char          *partial_uri);
+const char *        _g_uri_remove_host             (const char          *uri);
+char *              _g_uri_get_host                (const char          *uri);
+char *              _g_uri_get_root                (const char          *uri);
+gboolean            _g_uri_is_local                (const char          *uri);
+int                 _g_uri_cmp                     (const char          *uri1,
+						    const char          *uri2);
+char *              _g_uri_build                   (const char          *base,
+						    ...);
+const char *        _g_path_get_file_name          (const char          *path);
+char *              _g_path_get_dir_name           (const char          *path);
+char *              _g_path_remove_level           (const char          *path);
+char *              _g_path_remove_ending_separator(const char          *path);
+char *              _g_path_remove_extension       (const char          *path);
+gboolean            _g_path_is_parent_of           (const char          *dirname,
+						    const char          *filename);
+gboolean            _g_filename_is_hidden          (const char          *name);
+const char *        _g_filename_get_extension      (const char          *filename);
+gboolean            _g_filename_has_extension      (const char          *filename,
+						    const char          *ext);
+gboolean            _g_mime_type_matches           (const char          *type,
+						    const char          *pattern);
+
+/* GFile */
+
+GFile *             _g_file_new_home_relative      (const char          *partial_uri);
+GList *             _g_file_list_dup               (GList               *l);
+void                _g_file_list_free              (GList               *l);
+GList *             _g_file_list_new_from_uri_list (GList               *uris);
+
+/* functions used to parse a command output lines. */
+
+gboolean            _g_line_matches_pattern        (const char          *line,
+						    const char          *pattern);
+int                 _g_line_get_index_from_pattern (const char          *line,
+						    const char          *pattern);
+char*               _g_line_get_next_field         (const char          *line,
+						    int                  start_from,
+						    int                  field_n);
+char*               _g_line_get_prev_field         (const char          *line,
+						    int                  start_from,
+						    int                  field_n);
 
 /* debug */
 
-void                debug                         (const char          *file,
-						   int                  line,
-						   const char          *function,
-						   const char          *format,
-						   ...);
+void                debug                          (const char          *file,
+						    int                  line,
+						    const char          *function,
+						    const char          *format,
+						    ...);
 
 #endif /* _GLIB_UTILS_H */

@@ -23,13 +23,12 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-command-unstuff.h"
+#include "glib-utils.h"
 
 static void fr_command_unstuff_class_init  (FrCommandUnstuffClass *class);
 static void fr_command_unstuff_init        (FrCommand         *afile);
@@ -164,8 +163,8 @@ process_line (char     *line,
 	fdata->full_path = filename;
 	fdata->original_path = filename;
 	fdata->link = NULL;
-	fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-	fdata->path = remove_level_from_path (fdata->full_path);
+	fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	fdata->size = 0;
 	fdata->modified = time (NULL);
@@ -201,7 +200,7 @@ fr_command_unstuff_list (FrCommand *comm)
 	fr_process_add_arg (comm->process, "--trace");
 
 	/* Actually unpack everything in a temporary directory */
-	path = get_temp_work_dir (NULL);
+	path = _g_path_get_temp_work_dir (NULL);
 	path_dots = unstuff_is_shit_with_filenames (path);
 	g_free (path);
 
@@ -293,7 +292,7 @@ fr_command_unstuff_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_available ("unstuff", check_command))
+	if (_g_program_is_available ("unstuff", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;

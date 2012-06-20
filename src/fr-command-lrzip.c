@@ -58,7 +58,7 @@ list__process_line (char     *line,
 
 	fdata->encrypted = FALSE;
 
-	char *new_fname = g_strdup (file_name_from_path (comm->filename));
+	char *new_fname = g_strdup (_g_path_get_file_name (comm->filename));
 	if (g_str_has_suffix (new_fname, ".lrz"))
 		new_fname[strlen (new_fname) - 4] = '\0';
 
@@ -70,7 +70,7 @@ list__process_line (char     *line,
 		fdata->full_path = g_strconcat ("/", new_fname, NULL);
 		fdata->original_path = fdata->full_path + 1;
 	}
-	fdata->path = remove_level_from_path (fdata->full_path);
+	fdata->path = _g_path_remove_level (fdata->full_path);
 	fdata->name = new_fname;
 	fdata->dir = FALSE;
 	fdata->link = NULL;
@@ -181,7 +181,7 @@ fr_command_lrzip_get_capabilities (FrCommand  *comm,
 {
 	FrCommandCap capabilities = FR_COMMAND_CAN_DO_NOTHING;
 
-	if (is_program_available ("lrzip", check_command))
+	if (_g_program_is_available ("lrzip", check_command))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 
 	return capabilities;

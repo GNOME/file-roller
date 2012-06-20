@@ -38,6 +38,7 @@
 #include "eggdesktopfile.h"
 #include "file-utils.h"
 #include "fr-init.h"
+#include "glib-utils.h"
 #include "gtk-utils.h"
 
 
@@ -402,7 +403,7 @@ handle_method_call (GDBusConnection       *connection,
 		file_list = g_list_reverse (file_list);
 
 		if ((destination == NULL) || (strcmp (destination, "") == 0))
-			destination = remove_level_from_path (file_list->data);
+			destination = _g_path_remove_level (file_list->data);
 
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);

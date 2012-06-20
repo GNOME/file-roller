@@ -27,107 +27,66 @@
 #include <unistd.h>
 #include <gio/gio.h>
 
-#define MIME_TYPE_DIRECTORY "folder"
-#define MIME_TYPE_ARCHIVE "application/x-archive"
+/* uri */
 
-#define get_home_relative_path(x)        \
-	g_strconcat (g_get_home_dir (), \
-		     "/",               \
-		     (x),               \
-		     NULL)
+gboolean            _g_uri_query_exists                   (const char  *uri);
+gboolean            _g_uri_query_is_file                  (const char  *uri);
+gboolean            _g_uri_query_is_dir                   (const char  *uri);
+char *              _g_uri_create_alternative             (const char  *folder,
+							   const char  *name);
+char *              _g_uri_create_alternative_for_uri     (const char  *uri);
+gboolean            _g_uri_query_dir_is_empty             (const char  *uri);
+gboolean            _g_uri_dir_contains_one_object        (const char  *uri);
+char *              _g_uri_get_dir_content_if_unique      (const char  *uri);
+goffset             _g_uri_get_file_size                  (const char  *uri);
 
-gboolean            uri_exists                   (const char  *uri);
-gboolean            uri_is_file                  (const char  *uri);
-gboolean            uri_is_dir                   (const char  *uri);
-gboolean            path_is_dir                  (const char  *path);
-gboolean            uri_is_local                 (const char  *uri);
-gboolean            dir_is_empty                 (const char  *uri);
-gboolean            dir_contains_one_object      (const char  *uri);
-char *              get_dir_content_if_unique    (const char  *uri);
-gboolean            path_in_path                 (const char  *path_src,
-						  const char  *path_dest);
-goffset             get_file_size                (const char  *uri);
-goffset             get_file_size_for_path       (const char  *path);
-time_t              get_file_mtime               (const char  *uri);
-time_t              get_file_mtime_for_path      (const char  *path);
-time_t              get_file_ctime               (const char  *uri);
-gboolean            make_directory_tree          (GFile       *dir,
-		     				  mode_t       mode,
-		     				  GError     **error);
-gboolean            ensure_dir_exists            (const char  *uri,
-						  mode_t       mode,
-						  GError     **error);
-gboolean            make_directory_tree_from_path (const char  *path,
-		   	                           mode_t       mode,
-		   	                           GError     **error);
-gboolean            file_is_hidden               (const char  *name);
-const char *        file_name_from_path          (const char  *path);
-char *              dir_name_from_path           (const char  *path);
-char *              remove_level_from_path       (const char  *path);
-char *              remove_ending_separator      (const char  *path);
-char *              build_uri                    (const char  *base, ...);
-char *              remove_extension_from_path   (const char  *path);
-const char *        get_file_extension           (const char  *filename);
-gboolean            file_extension_is            (const char  *filename,
-						  const char  *ext);
-gboolean            is_mime_type                 (const char  *type,
-						  const char  *pattern);
-const char*         get_file_mime_type           (const char  *uri,
-                    				  gboolean     fast_file_type);
-const char*         get_file_mime_type_for_path  (const char  *filename,
-                    				  gboolean     fast_file_type);
-guint64             get_dest_free_space          (const char  *path);
-gboolean            remove_directory             (const char  *uri);
-gboolean            remove_local_directory       (const char  *directory);
-char *              get_temp_work_dir            (const char  *parent_folder);
-gboolean            is_temp_work_dir             (const char *dir);
-gboolean            is_temp_dir                  (const char *dir);
+time_t              _g_uri_get_file_mtime                 (const char  *uri);
 
-/* misc functions used to parse a command output lines. */
+time_t              _g_uri_get_file_ctime                 (const char  *uri);
+gboolean            _g_uri_ensure_dir_exists              (const char  *uri,
+							   mode_t       mode,
+							   GError     **error);
+const char*         _g_uri_get_mime_type                  (const char  *uri,
+							   gboolean     fast_file_type);
+gboolean            _g_uri_remove_directory               (const char  *uri);
+gboolean            _g_uri_check_permissions              (const char  *uri,
+							   int          mode);
 
-gboolean            file_list__match_pattern           (const char *line,
-							const char *pattern);
-int                 file_list__get_index_from_pattern  (const char *line,
-						        const char *pattern);
-char*               file_list__get_next_field          (const char *line,
-							int         start_from,
-							int         field_n);
-char*               file_list__get_prev_field          (const char *line,
-							int         start_from,
-							int         field_n);
-gboolean            check_permissions                  (const char *path,
-							int         mode);
-gboolean            check_file_permissions             (GFile      *file,
-							int         mode);
-gboolean 	    is_program_in_path		       (const char *filename);
-gboolean 	    is_program_available	       (const char *filename,
-							gboolean    check);
+/* path */
 
-/* URI utils */
+gboolean            _g_path_query_is_dir                  (const char  *path);
+goffset             _g_path_get_file_size                 (const char  *path);
+time_t              _g_path_get_file_mtime                (const char  *path);
+gboolean            _g_path_make_directory_tree           (const char  *path,
+							   mode_t       mode,
+							   GError     **error);
+const char*         _g_path_get_mime_type                 (const char  *filename,
+							   gboolean     fast_file_type);
+guint64             _g_path_get_free_space                (const char  *path);
+gboolean            _g_path_remove_directory              (const char  *path);
+char *              _g_path_get_temp_work_dir             (const char  *parent_folder);
+gboolean            _g_path_is_temp_work_dir              (const char  *path);
+gboolean            _g_path_is_temp_dir                   (const char  *path);
 
-const char *        get_home_uri                       (void);
-char *              get_home_relative_uri              (const char *partial_uri);
-GFile *             get_home_relative_file             (const char *partial_uri);
-GFile *             get_user_config_subdirectory       (const char *child_name,
-							gboolean    create_);
-const char *        remove_host_from_uri               (const char *uri);
-char *              get_uri_host                       (const char *uri);
-char *              get_uri_root                       (const char *uri);
-int                 uricmp                             (const char *uri1,
-							const char *uri2);
-char *              get_alternative_uri                (const char *folder,
-							const char *name);
-char *              get_alternative_uri_for_uri        (const char *uri);
+/* GFile */
 
-/* GFile utils */
+gboolean            _g_file_check_permissions             (GFile       *file,
+							   int          mode);
+gboolean            _g_file_make_directory_tree           (GFile       *dir,
+							   mode_t       mode,
+							   GError     **error);
+GFile *             _g_file_new_user_config_subdir        (const char  *child_name,
+						    	   gboolean     create_);
 
-GList *             _g_file_list_dup                   (GList      *l);
-void                _g_file_list_free                  (GList      *l);
-GList *             _g_file_list_new_from_uri_list     (GList      *uris);
+/* program */
 
-/* GKeyFile utils */
+gboolean 	    _g_program_is_in_path		  (const char *filename);
+gboolean 	    _g_program_is_available	          (const char *filename,
+							   gboolean    check);
 
-void                g_key_file_save                    (GKeyFile   *key_file,
-						        GFile      *file);
+/* GKeyFile */
+
+void                _g_key_file_save                      (GKeyFile   *key_file,
+						           GFile      *file);
 
 #endif /* FILE_UTILS_H */

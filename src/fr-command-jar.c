@@ -63,12 +63,12 @@ fr_command_jar_add (FrCommand     *comm,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = scan->data;
-		char *path = build_uri (base_dir, filename, NULL);
+		char *path = _g_uri_build (base_dir, filename, NULL);
 		char *package = NULL;
 
-		if (file_extension_is (filename, ".java"))
+		if (_g_filename_has_extension (filename, ".java"))
 			package = get_package_name_from_java_file (path);
-		else if (file_extension_is (filename, ".class"))
+		else if (_g_filename_has_extension (filename, ".class"))
 			package = get_package_name_from_class_file (path);
 
 		if ((package == NULL) || (strlen (package) == 0))
@@ -76,10 +76,10 @@ fr_command_jar_add (FrCommand     *comm,
 		else {
 			JarData *newdata = g_new0 (JarData, 1);
 
-			newdata->package_minus_one_level = remove_level_from_path (package);
-			newdata->link_name = g_strdup (file_name_from_path (package));
-			newdata->rel_path = remove_level_from_path (filename);
-			newdata->filename = g_strdup (file_name_from_path (filename));
+			newdata->package_minus_one_level = _g_path_remove_level (package);
+			newdata->link_name = g_strdup (_g_path_get_file_name (package));
+			newdata->rel_path = _g_path_remove_level (filename);
+			newdata->filename = g_strdup (_g_path_get_file_name (filename));
 			jardata_list = g_list_append (jardata_list, newdata);
 		}
 
@@ -87,7 +87,7 @@ fr_command_jar_add (FrCommand     *comm,
 		g_free (path);
 	}
 
-	tmp_dir = get_temp_work_dir (NULL);
+	tmp_dir = _g_path_get_temp_work_dir (NULL);
 	for (scan = jardata_list; scan ; scan = scan->next) {
 		JarData *jdata = scan->data;
 		char    *pack_path;
@@ -95,13 +95,13 @@ fr_command_jar_add (FrCommand     *comm,
 		char    *link_name;
 		int      retval;
 
-		pack_path = build_uri (tmp_dir, jdata->package_minus_one_level, NULL);
-		if (! make_directory_tree_from_path (pack_path, 0755, NULL)) {
+		pack_path = _g_uri_build (tmp_dir, jdata->package_minus_one_level, NULL);
+		if (! _g_path_make_directory_tree (pack_path, 0755, NULL)) {
 			g_free (pack_path);
 			continue;
 		}
 
-		old_link = build_uri (base_dir, jdata->rel_path, NULL);
+		old_link = _g_uri_build (base_dir, jdata->rel_path, NULL);
 		link_name = g_build_filename (pack_path, jdata->link_name, NULL);
 
 		retval = symlink (old_link, link_name);
@@ -165,7 +165,7 @@ fr_command_jar_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_available ("zip", check_command))
+	if (_g_program_is_available ("zip", check_command))
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
 
 	return capabilities;

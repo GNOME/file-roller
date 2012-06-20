@@ -131,10 +131,10 @@ list__process_line (char     *line,
 			else {
 				fdata = p7z_comm->fdata;
 				if (fdata->dir)
-					fdata->name = dir_name_from_path (fdata->full_path);
+					fdata->name = _g_path_get_dir_name (fdata->full_path);
 				else
-					fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-				fdata->path = remove_level_from_path (fdata->full_path);
+					fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+				fdata->path = _g_path_remove_level (fdata->full_path);
 				fr_command_add_file (comm, fdata);
 				p7z_comm->fdata = NULL;
 			}
@@ -195,11 +195,11 @@ list__process_line (char     *line,
 static void
 fr_command_7z_begin_command (FrCommand *comm)
 {
-	if (is_program_in_path ("7z"))
+	if (_g_program_is_in_path ("7z"))
 		fr_process_begin_command (comm->process, "7z");
-	else if (is_program_in_path ("7za"))
+	else if (_g_program_is_in_path ("7za"))
 		fr_process_begin_command (comm->process, "7za");
-	else if (is_program_in_path ("7zr"))
+	else if (_g_program_is_in_path ("7zr"))
 		fr_process_begin_command (comm->process, "7zr");
 }
 
@@ -331,8 +331,8 @@ fr_command_7z_add (FrCommand     *comm,
 		fr_process_add_arg_concat (comm->process, "-w", base_dir, NULL);
 	}
 
-	if (is_mime_type (comm->mime_type, "application/zip")
-	    || is_mime_type (comm->mime_type, "application/x-cbz"))
+	if (_g_mime_type_matches (comm->mime_type, "application/zip")
+	    || _g_mime_type_matches (comm->mime_type, "application/x-cbz"))
 	{
 		fr_process_add_arg (comm->process, "-tzip");
 		fr_process_add_arg (comm->process, "-mem=AES128");
@@ -368,7 +368,7 @@ fr_command_7z_add (FrCommand     *comm,
 		break;
 	}
 
-	if (is_mime_type (comm->mime_type, "application/x-ms-dos-executable"))
+	if (_g_mime_type_matches (comm->mime_type, "application/x-ms-dos-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
 	if (comm->volume_size > 0)
@@ -398,7 +398,7 @@ fr_command_7z_delete (FrCommand  *comm,
 	fr_process_add_arg (comm->process, "d");
 	fr_process_add_arg (comm->process, "-bd");
 	fr_process_add_arg (comm->process, "-y");
-	if (is_mime_type (comm->mime_type, "application/x-ms-dos-executable"))
+	if (_g_mime_type_matches (comm->mime_type, "application/x-ms-dos-executable"))
 		fr_process_add_arg (comm->process, "-sfx");
 
 	if (from_file != NULL)
@@ -559,22 +559,22 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (! is_program_available ("7za", check_command) && ! is_program_available ("7zr", check_command) && ! is_program_available ("7z", check_command))
+	if (! _g_program_is_available ("7za", check_command) && ! _g_program_is_available ("7zr", check_command) && ! _g_program_is_available ("7z", check_command))
 		return capabilities;
 
-	if (is_mime_type (mime_type, "application/x-7z-compressed")) {
+	if (_g_mime_type_matches (mime_type, "application/x-7z-compressed")) {
 		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_CREATE_VOLUMES;
-		if (is_program_available ("7z", check_command))
+		if (_g_program_is_available ("7z", check_command))
 			capabilities |= FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 	}
-	else if (is_mime_type (mime_type, "application/x-7z-compressed-tar")) {
+	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
 		capabilities |= FR_COMMAND_CAN_READ_WRITE;
-		if (is_program_available ("7z", check_command))
+		if (_g_program_is_available ("7z", check_command))
 			capabilities |= FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
 	}
-	else if (is_program_available ("7z", check_command)) {
-		if (is_mime_type (mime_type, "application/x-rar")
-		    || is_mime_type (mime_type, "application/x-cbr"))
+	else if (_g_program_is_available ("7z", check_command)) {
+		if (_g_mime_type_matches (mime_type, "application/x-rar")
+		    || _g_mime_type_matches (mime_type, "application/x-cbr"))
 		{
 			if (! check_command || g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
 				capabilities |= FR_COMMAND_CAN_READ;
@@ -582,21 +582,21 @@ fr_command_7z_get_capabilities (FrCommand  *comm,
 		else
 			capabilities |= FR_COMMAND_CAN_READ;
 
-		if (is_mime_type (mime_type, "application/x-cbz")
-		    || is_mime_type (mime_type, "application/x-ms-dos-executable")
-		    || is_mime_type (mime_type, "application/zip"))
+		if (_g_mime_type_matches (mime_type, "application/x-cbz")
+		    || _g_mime_type_matches (mime_type, "application/x-ms-dos-executable")
+		    || _g_mime_type_matches (mime_type, "application/zip"))
 		{
 			capabilities |= FR_COMMAND_CAN_WRITE | FR_COMMAND_CAN_ENCRYPT;
 		}
 	}
-	else if (is_program_available ("7za", check_command)) {
-		if (is_mime_type (mime_type, "application/vnd.ms-cab-compressed")
-		    || is_mime_type (mime_type, "application/zip"))
+	else if (_g_program_is_available ("7za", check_command)) {
+		if (_g_mime_type_matches (mime_type, "application/vnd.ms-cab-compressed")
+		    || _g_mime_type_matches (mime_type, "application/zip"))
 		{
 			capabilities |= FR_COMMAND_CAN_READ;
 		}
 
-		if (is_mime_type (mime_type, "application/zip"))
+		if (_g_mime_type_matches (mime_type, "application/zip"))
 			capabilities |= FR_COMMAND_CAN_WRITE;
 	}
 
@@ -612,9 +612,9 @@ static const char *
 fr_command_7z_get_packages (FrCommand  *comm,
 			    const char *mime_type)
 {
-	if (is_mime_type (mime_type, "application/x-rar"))
+	if (_g_mime_type_matches (mime_type, "application/x-rar"))
 		return PACKAGES ("p7zip,p7zip-rar");
-	else if (is_mime_type (mime_type, "application/zip") || is_mime_type (mime_type, "application/vnd.ms-cab-compressed"))
+	else if (_g_mime_type_matches (mime_type, "application/zip") || _g_mime_type_matches (mime_type, "application/vnd.ms-cab-compressed"))
 		return PACKAGES ("p7zip,p7zip-full");
 	else
 		return PACKAGES ("p7zip");

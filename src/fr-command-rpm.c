@@ -164,10 +164,10 @@ list__process_line (char     *line,
 	g_strfreev (fields);
 
 	if (fdata->dir)
-		fdata->name = dir_name_from_path (fdata->full_path);
+		fdata->name = _g_path_get_dir_name (fdata->full_path);
 	else
-		fdata->name = g_strdup (file_name_from_path (fdata->full_path));
-	fdata->path = remove_level_from_path (fdata->full_path);
+		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
@@ -240,7 +240,7 @@ fr_command_rpm_get_capabilities (FrCommand  *comm,
 	FrCommandCap capabilities;
 
 	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
-	if (is_program_available ("cpio", check_command))
+	if (_g_program_is_available ("cpio", check_command))
 		capabilities |= FR_COMMAND_CAN_READ;
 
 	return capabilities;

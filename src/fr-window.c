@@ -1238,7 +1238,7 @@ get_parent_dir (const char *current_dir)
 
 	dir = g_strdup (current_dir);
 	dir[strlen (dir) - 1] = 0;
-	new_dir = remove_level_from_path (dir);
+	new_dir = _g_path_remove_level (dir);
 	g_free (dir);
 
 	if (new_dir[strlen (new_dir) - 1] == '/')
@@ -1562,10 +1562,10 @@ fr_window_populate_file_list (FrWindow  *window,
 			char *s_time;
 
 			if (fdata->list_dir)
-				tmp = remove_ending_separator (fr_window_get_current_location (window));
+				tmp = _g_path_remove_ending_separator (fr_window_get_current_location (window));
 
 			else
-				tmp = remove_level_from_path (fdata->path);
+				tmp = _g_path_remove_level (fdata->path);
 			utf8_path = g_filename_display_name (tmp);
 			g_free (tmp);
 
@@ -1720,7 +1720,7 @@ fr_window_update_current_location (FrWindow *window)
 	fr_window_history_print (window);
 #endif
 
-	path = remove_ending_separator (current_dir);
+	path = _g_path_remove_ending_separator (current_dir);
 	if (get_tree_iter_from_path (window, path, NULL, &iter)) {
 		GtkTreeSelection *selection;
 		GtkTreePath      *t_path;
@@ -1778,9 +1778,9 @@ fr_window_update_dir_tree (FrWindow *window)
 		}
 
 		if (fdata->dir)
-			dir = remove_ending_separator (fdata->full_path);
+			dir = _g_path_remove_ending_separator (fdata->full_path);
 		else
-			dir = remove_level_from_path (fdata->full_path);
+			dir = _g_path_remove_level (fdata->full_path);
 
 		while ((dir != NULL) && (strcmp (dir, "/") != 0)) {
 			char *new_dir;
@@ -1792,7 +1792,7 @@ fr_window_update_dir_tree (FrWindow *window)
 			g_ptr_array_add (dirs, new_dir);
 			g_hash_table_replace (dir_cache, new_dir, "1");
 
-			dir = remove_level_from_path (new_dir);
+			dir = _g_path_remove_level (new_dir);
 		}
 
 		g_free (dir);
@@ -1837,7 +1837,7 @@ fr_window_update_dir_tree (FrWindow *window)
 		GtkTreeIter  parent;
 		GtkTreeIter  node;
 
-		parent_dir = remove_level_from_path (dir);
+		parent_dir = _g_path_remove_level (dir);
 		if (parent_dir == NULL)
 			continue;
 
@@ -1848,7 +1848,7 @@ fr_window_update_dir_tree (FrWindow *window)
 		gtk_tree_store_append (window->priv->tree_store, &node, &parent);
 		gtk_tree_store_set (window->priv->tree_store, &node,
 				    TREE_COLUMN_ICON, icon,
-				    TREE_COLUMN_NAME, file_name_from_path (dir),
+				    TREE_COLUMN_NAME, _g_path_get_file_name (dir),
 				    TREE_COLUMN_PATH, dir,
 				    TREE_COLUMN_WEIGHT, PANGO_WEIGHT_NORMAL,
 				    -1);
@@ -2747,7 +2747,7 @@ static void
 fr_window_add_to_recent_list (FrWindow *window,
 			      char     *uri)
 {
-	if (is_temp_dir (uri))
+	if (_g_path_is_temp_dir (uri))
 		return;
 
 	if (window->archive->content_type != NULL) {
@@ -2999,7 +2999,7 @@ convert__action_performed (FrArchive   *archive,
 	if (error->type == FR_PROC_ERROR_NONE)
 		open_progress_dialog_with_open_archive (window);
 
-	remove_local_directory (window->priv->convert_data.temp_dir);
+	_g_path_remove_directory (window->priv->convert_data.temp_dir);
 	fr_window_convert_data_free (window, FALSE);
 
 	fr_window_update_sensitivity (window);
@@ -3085,8 +3085,8 @@ action_performed (FrArchive   *archive,
 			break;
 		}
 
-		archive_dir = remove_level_from_path (window->priv->archive_uri);
-		temp_dir = is_temp_dir (archive_dir);
+		archive_dir = _g_path_remove_level (window->priv->archive_uri);
+		temp_dir = _g_path_is_temp_dir (archive_dir);
 		if (! window->priv->archive_present) {
 			window->priv->archive_present = TRUE;
 
@@ -3148,7 +3148,7 @@ action_performed (FrArchive   *archive,
 	case FR_ACTION_EXTRACTING_FILES:
 		if (error->type != FR_PROC_ERROR_NONE) {
 			if (window->priv->convert_data.converting) {
-				remove_local_directory (window->priv->convert_data.temp_dir);
+				_g_path_remove_directory (window->priv->convert_data.temp_dir);
 				fr_window_convert_data_free (window, TRUE);
 			}
 			break;
@@ -4044,15 +4044,15 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 							       (GFreeFunc) _g_string_list_free);
 
 				first_item = (char*) list->data;
-				folder = remove_level_from_path (first_item);
+				folder = _g_path_remove_level (first_item);
 				if (folder != NULL)
 					fr_window_set_open_default_dir (window, folder);
 
 				if ((list->next != NULL) && (folder != NULL)) {
-					archive_name = file_name_from_path (folder);
+					archive_name = _g_path_get_file_name (folder);
 				}
 				else {
-					if (uri_is_local (first_item)) {
+					if (_g_uri_is_local (first_item)) {
 						local_path = g_filename_from_uri (first_item, NULL, NULL);
 						if (local_path)
 							utf8_path = g_filename_to_utf8 (local_path, -1, NULL, NULL, NULL);
@@ -4063,7 +4063,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 					else {
 						utf8_path = g_strdup (first_item);
 					}
-					archive_name = file_name_from_path (utf8_path);
+					archive_name = _g_path_get_file_name (utf8_path);
 				}
 
 				show_new_archive_dialog (window, archive_name);
@@ -4272,7 +4272,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	destination = get_xds_atom_value (context);
 	g_return_val_if_fail (destination != NULL, FALSE);
 
-	destination_folder = remove_level_from_path (destination);
+	destination_folder = _g_path_remove_level (destination);
 	g_free (destination);
 
 	/* check whether the extraction can be performed in the destination
@@ -4280,7 +4280,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 
 	g_clear_error (&window->priv->drag_error);
 
-	if (! check_permissions (destination_folder, R_OK | W_OK)) {
+	if (! _g_uri_check_permissions (destination_folder, R_OK | W_OK)) {
 		char *destination_folder_display_name;
 
 		destination_folder_display_name = g_filename_display_name (destination_folder);
@@ -4352,7 +4352,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	destination = get_xds_atom_value (context);
 	g_return_val_if_fail (destination != NULL, FALSE);
 
-	destination_folder = remove_level_from_path (destination);
+	destination_folder = _g_path_remove_level (destination);
 	g_free (destination);
 
 	/* check whether the extraction can be performed in the destination
@@ -4360,7 +4360,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 
 	g_clear_error (&window->priv->drag_error);
 
-	if (! check_permissions (destination_folder, R_OK | W_OK)) {
+	if (! _g_uri_check_permissions (destination_folder, R_OK | W_OK)) {
 		char *destination_folder_display_name;
 
 		destination_folder_display_name = g_filename_display_name (destination_folder);
@@ -5432,9 +5432,9 @@ fr_window_construct (FrWindow *window)
 
 	window->priv->action = FR_ACTION_NONE;
 
-	window->priv->open_default_dir = g_strdup (get_home_uri ());
-	window->priv->add_default_dir = g_strdup (get_home_uri ());
-	window->priv->extract_default_dir = g_strdup (get_home_uri ());
+	window->priv->open_default_dir = g_strdup (_g_uri_get_home ());
+	window->priv->add_default_dir = g_strdup (_g_uri_get_home ());
+	window->priv->extract_default_dir = g_strdup (_g_uri_get_home ());
 
 	window->priv->give_focus_to_the_list = FALSE;
 
@@ -6181,7 +6181,7 @@ fr_window_archive_save_as (FrWindow   *window,
 			  window);
 
 	window->priv->convert_data.converting = TRUE;
-	window->priv->convert_data.temp_dir = get_temp_work_dir (NULL);
+	window->priv->convert_data.temp_dir = _g_path_get_temp_work_dir (NULL);
 
 	fr_process_clear (window->archive->process);
 	fr_archive_extract_to_local (window->archive,
@@ -6699,7 +6699,7 @@ fr_window_archive_extract (FrWindow    *window,
 		return;
 	}
 
-	if (! uri_is_dir (edata->extract_to_dir)) {
+	if (! _g_uri_query_is_dir (edata->extract_to_dir)) {
 
 		/* There is nothing to ask if the destination doesn't exist. */
 		if (edata->overwrite == FR_OVERWRITE_ASK)
@@ -6734,7 +6734,7 @@ fr_window_archive_extract (FrWindow    *window,
 				do_not_extract = TRUE;
 		}
 
-		if (! do_not_extract && ! ensure_dir_exists (edata->extract_to_dir, 0755, &error)) {
+		if (! do_not_extract && ! _g_uri_ensure_dir_exists (edata->extract_to_dir, 0755, &error)) {
 			GtkWidget *d;
 			char      *details;
 
@@ -7309,7 +7309,7 @@ rename_selection (FrWindow   *window,
 
 	fr_process_clear (archive->process);
 
-	tmp_dir = get_temp_work_dir (NULL);
+	tmp_dir = _g_path_get_temp_work_dir (NULL);
 
 	if (is_dir)
 		file_list = get_dir_list_from_path (window, rdata->path_to_rename);
@@ -7523,8 +7523,8 @@ fr_window_rename_selection (FrWindow *window,
 		path_to_rename = fr_window_get_selected_folder_in_tree_view (window);
 		if (path_to_rename == NULL)
 			return;
-		parent_dir = remove_level_from_path (path_to_rename);
-		old_name = g_strdup (file_name_from_path (path_to_rename));
+		parent_dir = _g_path_remove_level (path_to_rename);
+		old_name = g_strdup (_g_path_get_file_name (path_to_rename));
 		renaming_dir = TRUE;
 	}
 	else {
@@ -7545,12 +7545,12 @@ fr_window_rename_selection (FrWindow *window,
 		}
 		else {
 			if (renaming_dir) {
-				path_to_rename = remove_ending_separator (selected_item->full_path);
-				parent_dir = remove_level_from_path (path_to_rename);
+				path_to_rename = _g_path_remove_ending_separator (selected_item->full_path);
+				parent_dir = _g_path_remove_level (path_to_rename);
 			}
 			else {
 				path_to_rename = g_strdup (selected_item->original_path);
-				parent_dir = remove_level_from_path (selected_item->full_path);
+				parent_dir = _g_path_remove_level (selected_item->full_path);
 			}
 			old_name = g_strdup (selected_item->name);
 		}
@@ -7683,7 +7683,7 @@ fr_window_get_selection (FrWindow   *window,
 
 		files = fr_window_get_folder_tree_selection (window, TRUE, NULL);
 		selected_folder = fr_window_get_selected_folder_in_tree_view (window);
-		parent_folder = remove_level_from_path (selected_folder);
+		parent_folder = _g_path_remove_level (selected_folder);
 		if (parent_folder == NULL)
 			base_dir = g_strdup ("/");
 		else if (parent_folder[strlen (parent_folder) - 1] == '/')
@@ -7911,19 +7911,19 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 
 	current_dir_relative = data->current_dir + 1;
 
-	data->tmp_dir = get_temp_work_dir (NULL);
+	data->tmp_dir = _g_path_get_temp_work_dir (NULL);
 	created_dirs = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	for (scan = data->files; scan; scan = scan->next) {
 		const char *old_name = (char*) scan->data;
 		char       *new_name = g_build_filename (current_dir_relative, old_name + strlen (data->base_dir) - 1, NULL);
-		char       *dir = remove_level_from_path (new_name);
+		char       *dir = _g_path_remove_level (new_name);
 
 		if ((dir != NULL) && (g_hash_table_lookup (created_dirs, dir) == NULL)) {
 			char *dir_path;
 
 			dir_path = g_build_filename (data->tmp_dir, dir, NULL);
 			debug (DEBUG_INFO, "mktree %s\n", dir_path);
-			make_directory_tree_from_path (dir_path, 0700, NULL);
+			_g_path_make_directory_tree (dir_path, 0700, NULL);
 
 			g_free (dir_path);
 			g_hash_table_replace (created_dirs, g_strdup (dir), "1");
@@ -8017,7 +8017,7 @@ fr_window_paste_selection (FrWindow *window,
 	g_free (utf8_path);
 
 	if (destination[0] != '/')
-		current_dir = build_uri (fr_window_get_current_location (window), destination, NULL);
+		current_dir = _g_uri_build (fr_window_get_current_location (window), destination, NULL);
 	else
 		current_dir = g_strdup (destination);
 	g_free (destination);
@@ -8109,7 +8109,7 @@ open_files_data_new (FrWindow *window,
 	odata->file_list = _g_string_list_dup (file_list);
 	odata->ask_application = ask_application;
 	odata->cdata = g_new0 (CommandData, 1);
-	odata->cdata->temp_dir = get_temp_work_dir (NULL);
+	odata->cdata->temp_dir = _g_path_get_temp_work_dir (NULL);
 	odata->cdata->file_list = NULL;
 	for (scan = file_list; scan; scan = scan->next) {
 		char *file = scan->data;
@@ -8206,7 +8206,7 @@ open_file_modified_cb (GFileMonitor     *monitor,
 	file = NULL;
 	for (scan = window->priv->open_files; scan; scan = scan->next) {
 		OpenFile *test = scan->data;
-		if (uricmp (test->extracted_uri, monitor_uri) == 0) {
+		if (_g_uri_cmp (test->extracted_uri, monitor_uri) == 0) {
 			file = test;
 			break;
 		}
@@ -8285,7 +8285,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 		return FALSE;
 	}
 
-	first_mime_type = get_file_mime_type_for_path (first_file, FALSE);
+	first_mime_type = _g_path_get_mime_type (first_file, FALSE);
 	app = g_app_info_get_default_for_type (first_mime_type, FALSE);
 
 	if (app == NULL) {
@@ -8302,7 +8302,7 @@ fr_window_open_extracted_files (OpenFilesData *odata)
 			const char *path = scan->data;
 			const char *mime_type;
 
-			mime_type = get_file_mime_type_for_path (path, FALSE);
+			mime_type = _g_path_get_mime_type (path, FALSE);
 			if (mime_type == NULL)
 				continue;
 
@@ -8400,7 +8400,7 @@ fr_window_open_files (FrWindow *window,
 static char*
 get_default_dir (const char *dir)
 {
-	if (! is_temp_dir (dir))
+	if (! _g_path_is_temp_dir (dir))
 		return g_strdup (dir);
 	else
 		return NULL;
@@ -8424,7 +8424,7 @@ const char *
 fr_window_get_open_default_dir (FrWindow *window)
 {
 	if (window->priv->open_default_dir == NULL)
-		return get_home_uri ();
+		return _g_uri_get_home ();
 	else
 		return  window->priv->open_default_dir;
 }
@@ -8447,7 +8447,7 @@ const char *
 fr_window_get_add_default_dir (FrWindow *window)
 {
 	if (window->priv->add_default_dir == NULL)
-		return get_home_uri ();
+		return _g_uri_get_home ();
 	else
 		return  window->priv->add_default_dir;
 }
@@ -8478,7 +8478,7 @@ const char *
 fr_window_get_extract_default_dir (FrWindow *window)
 {
 	if (window->priv->extract_default_dir == NULL)
-		return get_home_uri ();
+		return _g_uri_get_home ();
 	else
 		return  window->priv->extract_default_dir;
 }
@@ -8590,7 +8590,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_LOAD:
 		debug (DEBUG_INFO, "[BATCH] LOAD\n");
 
-		if (! uri_exists ((char*) action->data))
+		if (! _g_uri_query_exists ((char*) action->data))
 			fr_window_archive_new (window, (char*) action->data);
 		else
 			fr_window_archive_open (window, (char*) action->data, GTK_WINDOW (window));
@@ -8936,7 +8936,7 @@ fr_window_set_batch__add (FrWindow   *window,
 			  const char *archive,
 			  GList      *file_list)
 {
-	window->priv->batch_adding_one_file = (file_list->next == NULL) && (uri_is_file (file_list->data));
+	window->priv->batch_adding_one_file = (file_list->next == NULL) && (_g_uri_query_is_file (file_list->data));
 
 	if (archive != NULL)
 		fr_window_append_batch_action (window,

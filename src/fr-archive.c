@@ -383,7 +383,7 @@ get_local_copy_for_file (GFile *remote_file)
 	char  *temp_dir;
 	GFile *local_copy = NULL;
 
-	temp_dir = get_temp_work_dir (NULL);
+	temp_dir = _g_path_get_temp_work_dir (NULL);
 	if (temp_dir != NULL) {
 		char  *archive_name;
 		char  *local_path;
@@ -452,7 +452,7 @@ fr_archive_remove_temp_work_dir (FrArchive *archive)
 {
 	if (archive->priv->temp_dir == NULL)
 		return;
-	remove_local_directory (archive->priv->temp_dir);
+	_g_path_remove_directory (archive->priv->temp_dir);
 	g_free (archive->priv->temp_dir);
 	archive->priv->temp_dir = NULL;
 }
@@ -595,7 +595,7 @@ get_mime_type_from_filename (GFile *file)
 		return NULL;
 
 	filename = g_file_get_path (file);
-	mime_type = get_mime_type_from_extension (get_file_extension (filename));
+	mime_type = get_mime_type_from_extension (_g_filename_get_extension (filename));
 	g_free (filename);
 
 	return mime_type;
@@ -778,16 +778,16 @@ move_here (FrArchive *archive)
 	GFile  *source, *destination, *parent_file;
 	GError *error = NULL;
 
-	content_uri = get_dir_content_if_unique (archive->priv->extraction_destination);
+	content_uri = _g_uri_get_dir_content_if_unique (archive->priv->extraction_destination);
 	if (content_uri == NULL)
 		return;
 
-	parent = remove_level_from_path (content_uri);
+	parent = _g_path_remove_level (content_uri);
 
-	if (uricmp (parent, archive->priv->extraction_destination) == 0) {
+	if (_g_uri_cmp (parent, archive->priv->extraction_destination) == 0) {
 		char *new_uri;
 
-		new_uri = get_alternative_uri_for_uri (archive->priv->extraction_destination);
+		new_uri = _g_uri_create_alternative_for_uri (archive->priv->extraction_destination);
 
 		source = g_file_new_for_uri (archive->priv->extraction_destination);
 		destination = g_file_new_for_uri (new_uri);
@@ -803,15 +803,15 @@ move_here (FrArchive *archive)
 
 		g_free (parent);
 
-		content_uri = get_dir_content_if_unique (archive->priv->extraction_destination);
+		content_uri = _g_uri_get_dir_content_if_unique (archive->priv->extraction_destination);
 		if (content_uri == NULL)
 			return;
 
-		parent = remove_level_from_path (content_uri);
+		parent = _g_path_remove_level (content_uri);
 	}
 
-	parent_parent = remove_level_from_path (parent);
-	new_content_uri = get_alternative_uri (parent_parent, file_name_from_path (content_uri));
+	parent_parent = _g_path_remove_level (parent);
+	new_content_uri = _g_uri_create_alternative (parent_parent, _g_path_get_file_name (content_uri));
 
 	source = g_file_new_for_uri (content_uri);
 	destination = g_file_new_for_uri (new_content_uri);
@@ -842,7 +842,7 @@ copy_extracted_files_done (GError   *error,
 {
 	FrArchive *archive = user_data;
 
-	remove_local_directory (archive->priv->temp_extraction_dir);
+	_g_path_remove_directory (archive->priv->temp_extraction_dir);
 	g_free (archive->priv->temp_extraction_dir);
 	archive->priv->temp_extraction_dir = NULL;
 
@@ -901,7 +901,7 @@ fr_archive_change_name (FrArchive  *archive,
 	const char *name;
 	GFile      *parent;
 
-	name = file_name_from_path (filename);
+	name = _g_path_get_file_name (filename);
 
 	parent = g_file_get_parent (archive->file);
 	g_object_unref (archive->file);
@@ -972,13 +972,13 @@ action_performed (FrCommand   *command,
 			g_print ("action_performed: ERROR!\n");
 
 			if ((archive->priv->remote_extraction) && (archive->priv->temp_extraction_dir != NULL)) {
-				remove_local_directory (archive->priv->temp_extraction_dir);
+				_g_path_remove_directory (archive->priv->temp_extraction_dir);
 				g_free (archive->priv->temp_extraction_dir);
 				archive->priv->temp_extraction_dir = NULL;
 			}
 
 			if (archive->priv->extract_here)
-				remove_directory (archive->priv->extraction_destination);
+				_g_uri_remove_directory (archive->priv->extraction_destination);
 		}
 		break;
 
@@ -1140,7 +1140,7 @@ load_local_archive (FrArchive  *archive,
 		return;
 	}
 
-	archive->have_permissions = check_file_permissions (archive->file, W_OK);
+	archive->have_permissions = _g_file_check_permissions (archive->file, W_OK);
 	archive->read_only = ! archive->have_permissions;
 
 	old_command = archive->command;
@@ -1355,13 +1355,13 @@ create_tmp_base_dir (const char *base_dir,
 	debug (DEBUG_INFO, "base_dir: %s\n", base_dir);
 	debug (DEBUG_INFO, "dest_dir: %s\n", dest_dir);
 
-	temp_dir = get_temp_work_dir (NULL);
-	tmp = remove_level_from_path (dest_dir);
+	temp_dir = _g_path_get_temp_work_dir (NULL);
+	tmp = _g_path_remove_level (dest_dir);
 	parent_dir =  g_build_filename (temp_dir, tmp, NULL);
 	g_free (tmp);
 
 	debug (DEBUG_INFO, "mkdir %s\n", parent_dir);
-	make_directory_tree_from_path (parent_dir, 0700, NULL);
+	_g_path_make_directory_tree (parent_dir, 0700, NULL);
 	g_free (parent_dir);
 
 	dir = g_build_filename (temp_dir, "/", dest_dir, NULL);
@@ -1420,7 +1420,7 @@ newer_files_only (FrArchive  *archive,
 		fullpath = g_strconcat (base_dir, "/", filename, NULL);
 		uri = g_filename_to_uri (fullpath, NULL, NULL);
 
-		if (fdata->modified >= get_file_mtime (uri)) {
+		if (fdata->modified >= _g_uri_get_file_mtime (uri)) {
 			g_free (fullpath);
 			g_free (uri);
 			continue;
@@ -1447,7 +1447,7 @@ save_list_to_temp_file (GList   *file_list,
 
 	if (error != NULL)
 		*error = NULL;
-	*list_dir = get_temp_work_dir (NULL);
+	*list_dir = _g_path_get_temp_work_dir (NULL);
 	*list_filename = g_build_filename (*list_dir, "file-list", NULL);
 	list_file = g_file_new_for_path (*list_filename);
 	ostream = g_file_create (list_file, G_FILE_CREATE_PRIVATE, NULL, error);
@@ -1478,7 +1478,7 @@ save_list_to_temp_file (GList   *file_list,
 		error_occurred = TRUE;
 
 	if (error_occurred) {
-		remove_local_directory (*list_dir);
+		_g_path_remove_directory (*list_dir);
 		g_free (*list_dir);
 		g_free (*list_filename);
 		*list_dir = NULL;
@@ -1599,7 +1599,7 @@ fr_archive_add (FrArchive     *archive,
 		debug (DEBUG_INFO, "nothing to update.\n");
 
 		if (base_dir_created)
-			remove_local_directory (tmp_base_dir);
+			_g_path_remove_directory (tmp_base_dir);
 		g_free (tmp_base_dir);
 
 		archive->process->error.type = FR_PROC_ERROR_NONE;
@@ -1625,9 +1625,9 @@ fr_archive_add (FrArchive     *archive,
 
 		local_copy_parent = g_file_get_parent (archive->local_copy);
 		archive_dir = g_file_get_path (local_copy_parent);
-		tmp_archive_dir = get_temp_work_dir (archive_dir);
+		tmp_archive_dir = _g_path_get_temp_work_dir (archive_dir);
 		archive_filename = g_file_get_path (archive->local_copy);
-		tmp_archive_filename = g_build_filename (tmp_archive_dir, file_name_from_path (archive_filename), NULL);
+		tmp_archive_filename = g_build_filename (tmp_archive_dir, _g_path_get_file_name (archive_filename), NULL);
 		tmp_file = g_file_new_for_path (tmp_archive_filename);
 		g_object_set (archive->command, "file", tmp_file, NULL);
 
@@ -1872,10 +1872,10 @@ copy_remote_files (FrArchive     *archive,
 		char  *remote_uri;
 
 		local_uri = g_strconcat ("file://", tmp_dir, "/", partial_filename, NULL);
-		local_folder_uri = remove_level_from_path (local_uri);
+		local_folder_uri = _g_path_remove_level (local_uri);
 		if (g_hash_table_lookup (created_folders, local_folder_uri) == NULL) {
 			GError *error = NULL;
-			if (! ensure_dir_exists (local_folder_uri, 0755, &error)) {
+			if (! _g_uri_ensure_dir_exists (local_folder_uri, 0755, &error)) {
 				g_free (local_folder_uri);
 				g_free (local_uri);
 				_g_file_list_free (sources);
@@ -1941,7 +1941,7 @@ static char *
 fr_archive_get_temp_work_dir (FrArchive *archive)
 {
 	fr_archive_remove_temp_work_dir (archive);
-	archive->priv->temp_dir = get_temp_work_dir (NULL);
+	archive->priv->temp_dir = _g_path_get_temp_work_dir (NULL);
 	return archive->priv->temp_dir;
 }
 
@@ -1957,7 +1957,7 @@ fr_archive_add_files (FrArchive     *archive,
 		      FrCompression  compression,
 		      guint          volume_size)
 {
-	if (uri_is_local (base_dir)) {
+	if (_g_uri_is_local (base_dir)) {
 		char *local_dir = g_filename_from_uri (base_dir, NULL, NULL);
 		fr_archive_add_local_files (archive,
 					    file_list,
@@ -2258,7 +2258,7 @@ all_files_in_same_dir (GList *list)
 	if (list == NULL)
 		return FALSE;
 
-	first_basedir = remove_level_from_path (list->data);
+	first_basedir = _g_path_remove_level (list->data);
 	if (first_basedir == NULL)
 		return TRUE;
 
@@ -2266,7 +2266,7 @@ all_files_in_same_dir (GList *list)
 		char *path = scan->data;
 		char *basedir;
 
-		basedir = remove_level_from_path (path);
+		basedir = _g_path_remove_level (path);
 		if (basedir == NULL) {
 			same_dir = FALSE;
 			break;
@@ -2307,7 +2307,7 @@ add_dropped_items (DroppedItemsData *data)
 	if (all_files_in_same_dir (list)) {
 		char *first_base_dir;
 
-		first_base_dir = remove_level_from_path (list->data);
+		first_base_dir = _g_path_remove_level (list->data);
 		fr_archive_add_items (data->archive,
 				      list,
 				      first_base_dir,
@@ -2331,16 +2331,16 @@ add_dropped_items (DroppedItemsData *data)
 		char *path = scan->data;
 		char *base_dir;
 
-		if (! uri_is_dir (path))
+		if (! _g_uri_query_is_dir (path))
 			continue;
 
 		data->item_list = g_list_remove_link (list, scan);
 		if (data->item_list != NULL)
 			archive->priv->continue_adding_dropped_items = TRUE;
-		base_dir = remove_level_from_path (path);
+		base_dir = _g_path_remove_level (path);
 
 		fr_archive_add_directory (archive,
-					  file_name_from_path (path),
+					  _g_path_get_file_name (path),
 					  base_dir,
 					  data->dest_dir,
 					  data->update,
@@ -2361,12 +2361,12 @@ add_dropped_items (DroppedItemsData *data)
 		char  *first_basedir;
 		GList *only_names_list = NULL;
 
-		first_basedir = remove_level_from_path (list->data);
+		first_basedir = _g_path_remove_level (list->data);
 
 		for (scan = list; scan; scan = scan->next) {
 			char *name;
 
-			name = g_uri_unescape_string (file_name_from_path (scan->data), NULL);
+			name = g_uri_unescape_string (_g_path_get_file_name (scan->data), NULL);
 			only_names_list = g_list_prepend (only_names_list, name);
 		}
 
@@ -2405,8 +2405,8 @@ add_dropped_items (DroppedItemsData *data)
 		char  *basedir;
 		GList *singleton;
 
-		basedir = remove_level_from_path (fullpath);
-		singleton = g_list_prepend (NULL, (char*)file_name_from_path (fullpath));
+		basedir = _g_path_remove_level (fullpath);
+		singleton = g_list_prepend (NULL, (char*)_g_path_get_file_name (fullpath));
 		fr_command_add (archive->command,
 				NULL,
 				singleton,
@@ -2449,7 +2449,7 @@ fr_archive_add_dropped_items (FrArchive     *archive,
 	/* FIXME: make this check for all the add actions */
 	archive_uri = g_file_get_uri (archive->file);
 	for (scan = item_list; scan; scan = scan->next) {
-		if (uricmp (scan->data, archive_uri) == 0) {
+		if (_g_uri_cmp (scan->data, archive_uri) == 0) {
 			g_free (archive_uri);
 			fr_archive_action_completed (archive,
 						     FR_ACTION_ADDING_FILES,
@@ -2491,7 +2491,7 @@ file_is_in_subfolder_of (const char *filename,
 	for (scan = folder_list; scan; scan = scan->next) {
 		char *folder_in_list = (char*) scan->data;
 
-		if (path_in_path (folder_in_list, filename))
+		if (_g_path_is_parent_of (folder_in_list, filename))
 			return TRUE;
 	}
 
@@ -2645,9 +2645,9 @@ fr_archive_remove (FrArchive     *archive,
 
 		local_copy_parent = g_file_get_parent (archive->local_copy);
 		archive_dir = g_file_get_path (local_copy_parent);
-		tmp_archive_dir = get_temp_work_dir (archive_dir);
+		tmp_archive_dir = _g_path_get_temp_work_dir (archive_dir);
 		archive_filename = g_file_get_path (archive->local_copy);
-		tmp_archive_filename = g_build_filename (tmp_archive_dir, file_name_from_path (archive_filename), NULL);
+		tmp_archive_filename = g_build_filename (tmp_archive_dir, _g_path_get_file_name (archive_filename), NULL);
 		tmp_file = g_file_new_for_path (tmp_archive_filename);
 		g_object_set (archive->command, "file", tmp_file, NULL);
 
@@ -2903,7 +2903,7 @@ compute_base_path (const char *base_dir,
 
 	if (junk_paths) {
 		if (can_junk_paths)
-			new_path = g_strdup (file_name_from_path (path));
+			new_path = g_strdup (_g_path_get_file_name (path));
 		else
 			new_path = g_strdup (path);
 
@@ -2998,7 +2998,7 @@ file_list_contains_files_in_this_dir (GList      *file_list,
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = scan->data;
 
-		if (path_in_path (dirname, filename))
+		if (_g_path_is_parent_of (dirname, filename))
 			return TRUE;
 	}
 
@@ -3020,7 +3020,7 @@ remove_files_contained_in_this_dir (GList *file_list,
 		if (strncmp (dirname, filename, dirname_l) != 0)
 			break;
 
-		if (path_in_path (dirname, filename)) {
+		if (_g_path_is_parent_of (dirname, filename)) {
 			GList *next = scan->next;
 
 			file_list = g_list_remove_link (file_list, scan);
@@ -3159,7 +3159,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		if (! junk_paths)
 			filename = archive_list_filename;
 		else
-			filename = file_name_from_path (archive_list_filename);
+			filename = _g_path_get_file_name (archive_list_filename);
 
 		if ((destination[strlen (destination) - 1] == '/')
 		    || (filename[0] == '/'))
@@ -3174,7 +3174,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		if (! archive->command->propExtractCanSkipOlder
 		    && skip_older
 		    && g_file_test (dest_filename, G_FILE_TEST_EXISTS)
-		    && (fdata->modified < get_file_mtime_for_path (dest_filename)))
+		    && (fdata->modified < _g_path_get_file_mtime (dest_filename)))
 			continue;
 
 		if (! archive->command->propExtractCanAvoidOverwrite
@@ -3197,7 +3197,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	if (move_to_dest_dir) {
 		char *temp_dir;
 
-		temp_dir = get_temp_work_dir (destination);
+		temp_dir = _g_path_get_temp_work_dir (destination);
 		extract_from_archive (archive,
 				      filtered,
 				      temp_dir,
@@ -3259,9 +3259,9 @@ fr_archive_extract (FrArchive  *archive,
 	g_free (archive->priv->temp_extraction_dir);
 	archive->priv->temp_extraction_dir = NULL;
 
-	archive->priv->remote_extraction = ! uri_is_local (destination);
+	archive->priv->remote_extraction = ! _g_uri_is_local (destination);
 	if (archive->priv->remote_extraction) {
-		archive->priv->temp_extraction_dir = get_temp_work_dir (NULL);
+		archive->priv->temp_extraction_dir = _g_path_get_temp_work_dir (NULL);
 		fr_archive_extract_to_local (archive,
 					     file_list,
 					     archive->priv->temp_extraction_dir,

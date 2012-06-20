@@ -25,6 +25,7 @@
 #include "file-utils.h"
 #include "fr-command.h"
 #include "gio-utils.h"
+#include "glib-utils.h"
 
 
 typedef enum {
@@ -109,7 +110,7 @@ rar_check_multi_volume (FrCommand *comm)
 		char   *volume_name = NULL;
 		char   *name;
 
-		name = g_filename_to_utf8 (file_name_from_path (comm->filename), -1, NULL, NULL, NULL);
+		name = g_filename_to_utf8 (_g_path_get_file_name (comm->filename), -1, NULL, NULL, NULL);
 
 		volume_name = get_first_volume_name (name, "^(.*\\.part)([0-9]+)(\\.rar)$", FIRST_VOLUME_IS_001);
 		if (volume_name == NULL)

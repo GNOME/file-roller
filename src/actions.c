@@ -92,7 +92,7 @@ is_supported_extension (GtkWidget *file_sel,
 {
 	int i;
 	for (i = 0; file_type[i] != -1; i++)
-		if (file_extension_is (filename, mime_type_desc[file_type[i]].default_ext))
+		if (_g_filename_has_extension (filename, mime_type_desc[file_type[i]].default_ext))
 			return TRUE;
 	return FALSE;
 }
@@ -111,7 +111,7 @@ get_full_uri (DlgNewData *data)
 	if ((uri == NULL) || (*uri == 0))
 		return NULL;
 
-	filename = file_name_from_path (uri);
+	filename = _g_path_get_file_name (uri);
 	if ((filename == NULL) || (*filename == 0)) {
 		g_free (uri);
 		return NULL;
@@ -221,7 +221,7 @@ get_archive_filename_from_selector (DlgNewData *data)
 
 	debug (DEBUG_INFO, "create/save %s\n", uri);
 
-	if (uri_exists (uri)) {
+	if (_g_uri_query_exists (uri)) {
 		GtkWidget *dialog;
 
 		if (! is_supported_extension (data->dialog, uri, data->supported_types)) {

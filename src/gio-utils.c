@@ -94,7 +94,7 @@ filter_matches (Filter     *filter,
 
 	g_return_val_if_fail (name != NULL, FALSE);
 
-	file_name = file_name_from_path (name);
+	file_name = _g_path_get_file_name (name);
 
 	if ((filter->options & FILTER_NODOTFILES)
 	    && ((file_name[0] == '.') || (strstr (file_name, "/.") != NULL)))
@@ -537,7 +537,7 @@ get_dir_list_from_file_list (GHashTable *h_dirs,
 		if (is_dir_list)
 			dir_name = g_strdup (filename + base_dir_len + 1);
 		else
-			dir_name = remove_level_from_path (filename + base_dir_len + 1);
+			dir_name = _g_path_remove_level (filename + base_dir_len + 1);
 
 		while ((dir_name != NULL) && (dir_name[0] != '\0') && (strcmp (dir_name, "/") != 0)) {
 			char *tmp;
@@ -554,7 +554,7 @@ get_dir_list_from_file_list (GHashTable *h_dirs,
 				g_free (dir);
 
 			tmp = dir_name;
-			dir_name = remove_level_from_path (tmp);
+			dir_name = _g_path_remove_level (tmp);
 			g_free (tmp);
 		}
 
@@ -830,7 +830,7 @@ g_list_items_async (GList             *items,
 		char *uri = scan->data;
 
 		/* FIXME: this is not async */
-		if (uri_is_dir (uri)) {
+		if (_g_uri_query_is_dir (uri)) {
 			gfl->to_visit = g_list_prepend (gfl->to_visit, g_strdup (uri));
 		}
 		else {

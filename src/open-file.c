@@ -34,12 +34,12 @@ open_file_new (const char *path,
 	ofile = g_new0 (OpenFile, 1);
 	ofile->path = g_strdup (path);
 	ofile->extracted_uri = g_filename_to_uri (extracted_path, NULL, NULL);
-	if (! uri_exists (ofile->extracted_uri)) {
+	if (! _g_uri_query_exists (ofile->extracted_uri)) {
 		open_file_free (ofile);
 		return NULL;
 	} 
 	ofile->temp_dir = g_strdup (temp_dir);
-	ofile->last_modified = get_file_mtime (ofile->extracted_uri);
+	ofile->last_modified = _g_uri_get_file_mtime (ofile->extracted_uri);
 	
 	return ofile;
 }
