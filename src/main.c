@@ -88,7 +88,7 @@ static const GOptionEntry options[] = {
 	  N_("Create destination folder without asking confirmation"),
 	  NULL },
 
-	{ "service", 'v', 0, G_OPTION_ARG_NONE, &arg_service,
+	{ "service", '\0', 0, G_OPTION_ARG_NONE, &arg_service,
 	  N_("Start as a service"), NULL },
 
 	{ "version", 'v', 0, G_OPTION_ARG_NONE, &arg_version,
