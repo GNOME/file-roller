@@ -100,7 +100,7 @@ list__process_line (char     *line,
 			int         ver_len;
 			char        version[256];
 
-			ver_start = eat_spaces (line + 14);
+			ver_start = _g_str_eat_spaces (line + 14);
 			ver_len = strchr (ver_start, ' ') - ver_start;
 			strncpy (version, ver_start, ver_len);
 			version[ver_len] = 0;

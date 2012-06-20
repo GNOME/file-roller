@@ -124,7 +124,7 @@ get_full_uri (DlgNewData *data)
 
 		uri_ext = get_archive_filename_extension (uri);
 		default_ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
-		if (strcmp_null_tolerant (uri_ext, default_ext) != 0) {
+		if (_g_strcmp_null_tolerant (uri_ext, default_ext) != 0) {
 			full_uri = g_strconcat (uri, default_ext, NULL);
 			g_free (uri);
 		}
@@ -705,7 +705,7 @@ activate_action_view_or_open (GtkAction *action,
 	if (file_list == NULL)
 		return;
 	fr_window_open_files (window, file_list, FALSE);
-	path_list_free (file_list);
+	_g_string_list_free (file_list);
 }
 
 

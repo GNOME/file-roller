@@ -127,7 +127,7 @@ list__process_line (char     *line,
 
 	fdata = file_data_new ();
 
-	fields = split_line (line, 7);
+	fields = _g_str_split_line (line, 7);
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
 	fdata->modified = mktime_from_string (fields[6]);
 	fdata->encrypted = (*fields[4] == 'B') || (*fields[4] == 'T');
@@ -135,7 +135,7 @@ list__process_line (char     *line,
 
 	/* Full path */
 
-	name_field = get_last_field (line, 8);
+	name_field = _g_str_get_last_field (line, 8);
 
 	if (*name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
@@ -282,7 +282,7 @@ fr_command_zip_delete (FrCommand  *comm,
 	for (scan = file_list; scan; scan = scan->next) {
 		char *escaped;
 
- 		escaped = escape_str (scan->data, ZIP_SPECIAL_CHARACTERS);
+ 		escaped = _g_str_escape (scan->data, ZIP_SPECIAL_CHARACTERS);
  		fr_process_add_arg (comm->process, escaped);
  		g_free (escaped);
 	}
@@ -328,7 +328,7 @@ fr_command_zip_extract (FrCommand  *comm,
 	for (scan = file_list; scan; scan = scan->next) {
 		char *escaped;
 
- 		escaped = escape_str (scan->data, ZIP_SPECIAL_CHARACTERS);
+ 		escaped = _g_str_escape (scan->data, ZIP_SPECIAL_CHARACTERS);
  		fr_process_add_arg (comm->process, escaped);
  		g_free (escaped);
 	}

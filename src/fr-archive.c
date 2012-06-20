@@ -81,7 +81,7 @@ dropped_items_data_new (FrArchive     *archive,
 
 	data = g_new0 (DroppedItemsData, 1);
 	data->archive = archive;
-	data->item_list = path_list_dup (item_list);
+	data->item_list = _g_string_list_dup (item_list);
 	if (base_dir != NULL)
 		data->base_dir = g_strdup (base_dir);
 	if (dest_dir != NULL)
@@ -102,7 +102,7 @@ dropped_items_data_free (DroppedItemsData *data)
 {
 	if (data == NULL)
 		return;
-	path_list_free (data->item_list);
+	_g_string_list_free (data->item_list);
 	g_free (data->base_dir);
 	g_free (data->dest_dir);
 	g_free (data->password);
@@ -152,7 +152,7 @@ xfer_data_free (XferData *data)
 
 	g_free (data->uri);
 	g_free (data->password);
-	path_list_free (data->file_list);
+	_g_string_list_free (data->file_list);
 	g_free (data->base_uri);
 	g_free (data->dest_dir);
 	g_free (data->tmp_dir);
@@ -503,7 +503,7 @@ get_mime_type_from_content (GFile *file)
 		g_clear_error (&err);
 	}
 	else {
-		content_type = get_static_string (g_file_info_get_content_type (info));
+		content_type = _g_str_get_static (g_file_info_get_content_type (info));
 		g_object_unref (info);
 	}
 
@@ -1458,7 +1458,7 @@ save_list_to_temp_file (GList   *file_list,
 		for (scan = file_list; scan != NULL; scan = scan->next) {
 			char *filename = scan->data;
 
-			filename = str_substitute (filename, "\n", "\\n");
+			filename = _g_str_substitute (filename, "\n", "\\n");
 			if ((g_output_stream_write (G_OUTPUT_STREAM (ostream), filename, strlen (filename), NULL, error) < 0)
 			    || (g_output_stream_write (G_OUTPUT_STREAM (ostream), "\n", 1, NULL, error) < 0))
 			{
@@ -1581,7 +1581,7 @@ fr_archive_add (FrArchive     *archive,
 	}
 	else {
 		tmp_base_dir = g_strdup (base_dir);
-		new_file_list = path_list_dup (file_list);
+		new_file_list = _g_string_list_dup (file_list);
 	}
 
 	/* if the command cannot update,  get the list of files that are
@@ -1592,7 +1592,7 @@ fr_archive_add (FrArchive     *archive,
 
 		tmp_file_list = new_file_list;
 		new_file_list = newer_files_only (archive, tmp_file_list, tmp_base_dir);
-		path_list_free (tmp_file_list);
+		_g_string_list_free (tmp_file_list);
 	}
 
 	if (new_file_list == NULL) {
@@ -1740,7 +1740,7 @@ fr_archive_add (FrArchive     *archive,
 		g_list_free (chunks);
 	}
 
-	path_list_free (new_file_list);
+	_g_string_list_free (new_file_list);
 
 	if (! error_occurred) {
 		fr_command_recompress (archive->command);
@@ -1878,8 +1878,8 @@ copy_remote_files (FrArchive     *archive,
 			if (! ensure_dir_exists (local_folder_uri, 0755, &error)) {
 				g_free (local_folder_uri);
 				g_free (local_uri);
-				gio_file_list_free (sources);
-				gio_file_list_free (destinations);
+				_g_file_list_free (sources);
+				_g_file_list_free (destinations);
 				g_hash_table_destroy (created_folders);
 
 				fr_archive_action_completed (archive,
@@ -1906,7 +1906,7 @@ copy_remote_files (FrArchive     *archive,
 
 	xfer_data = g_new0 (XferData, 1);
 	xfer_data->archive = archive;
-	xfer_data->file_list = path_list_dup (file_list);
+	xfer_data->file_list = _g_string_list_dup (file_list);
 	xfer_data->base_uri = g_strdup (base_uri);
 	xfer_data->dest_dir = g_strdup (dest_dir);
 	xfer_data->update = update;
@@ -1932,8 +1932,8 @@ copy_remote_files (FrArchive     *archive,
 			    copy_remote_files_done,
 			    xfer_data);
 
-	gio_file_list_free (sources);
-	gio_file_list_free (destinations);
+	_g_file_list_free (sources);
+	_g_file_list_free (destinations);
 }
 
 
@@ -2042,8 +2042,8 @@ add_with_wildcard__step2 (GList    *file_list,
 				      aww_data->compression,
 				      aww_data->volume_size);
 
-	path_list_free (file_list);
-	path_list_free (dirs_list);
+	_g_string_list_free (file_list);
+	_g_string_list_free (dirs_list);
 	add_with_wildcard_data_free (aww_data);
 }
 
@@ -2147,7 +2147,7 @@ add_directory__step2 (GList    *file_list,
 	if (archive->command->propAddCanStoreFolders)
 		file_list = g_list_concat (file_list, dir_list);
 	else
-		path_list_free (dir_list);
+		_g_string_list_free (dir_list);
 
 	if (file_list != NULL) {
 		fr_archive_add_files (ad_data->archive,
@@ -2159,7 +2159,7 @@ add_directory__step2 (GList    *file_list,
 				      ad_data->encrypt_header,
 				      ad_data->compression,
 				      ad_data->volume_size);
-		path_list_free (file_list);
+		_g_string_list_free (file_list);
 	}
 
 	add_directory_data_free (ad_data);
@@ -2380,7 +2380,7 @@ add_dropped_items (DroppedItemsData *data)
 				      data->compression,
 				      data->volume_size);
 
-		path_list_free (only_names_list);
+		_g_string_list_free (only_names_list);
 		g_free (first_basedir);
 
 		return;
@@ -2419,7 +2419,7 @@ add_dropped_items (DroppedItemsData *data)
 	fr_command_recompress (archive->command);
 	fr_process_start (archive->process);
 
-	path_list_free (data->item_list);
+	_g_string_list_free (data->item_list);
 	data->item_list = NULL;
 }
 
@@ -3114,7 +3114,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 			g_list_free (filtered);
 
 		if (file_list_created)
-			path_list_free (file_list);
+			_g_string_list_free (file_list);
 
 		return;
 	}
@@ -3190,7 +3190,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 		debug (DEBUG_INFO, "All files got filtered, nothing to do.\n");
 
 		if (extract_all)
-			path_list_free (file_list);
+			_g_string_list_free (file_list);
 		return;
 	}
 
@@ -3239,7 +3239,7 @@ fr_archive_extract_to_local (FrArchive  *archive,
 	if (filtered != NULL)
 		g_list_free (filtered);
 	if (file_list_created)
-		path_list_free (file_list);
+		_g_string_list_free (file_list);
 }
 
 

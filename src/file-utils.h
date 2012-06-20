@@ -85,47 +85,49 @@ gboolean            is_temp_dir                  (const char *dir);
 
 /* misc functions used to parse a command output lines. */
 
-gboolean            file_list__match_pattern     (const char *line,
-						  const char *pattern);
-int                 file_list__get_index_from_pattern (const char *line,
-						       const char *pattern);
-char*               file_list__get_next_field    (const char *line,
-						  int         start_from,
-						  int         field_n);
-char*               file_list__get_prev_field    (const char *line,
-						  int         start_from,
-						  int         field_n);
-gboolean            check_permissions            (const char *path,
-						  int         mode);
-gboolean            check_file_permissions       (GFile      *file,
-						  int         mode);
-gboolean 	    is_program_in_path		 (const char *filename);
-gboolean 	    is_program_available	 (const char *filename,
-						  gboolean    check);
+gboolean            file_list__match_pattern           (const char *line,
+							const char *pattern);
+int                 file_list__get_index_from_pattern  (const char *line,
+						        const char *pattern);
+char*               file_list__get_next_field          (const char *line,
+							int         start_from,
+							int         field_n);
+char*               file_list__get_prev_field          (const char *line,
+							int         start_from,
+							int         field_n);
+gboolean            check_permissions                  (const char *path,
+							int         mode);
+gboolean            check_file_permissions             (GFile      *file,
+							int         mode);
+gboolean 	    is_program_in_path		       (const char *filename);
+gboolean 	    is_program_available	       (const char *filename,
+							gboolean    check);
 
 /* URI utils */
 
-const char *        get_home_uri                 (void);
-char *              get_home_relative_uri        (const char *partial_uri);
-GFile *             get_home_relative_file       (const char *partial_uri);
-GFile *             get_user_config_subdirectory (const char *child_name,
-						  gboolean    create_);
-const char *        remove_host_from_uri         (const char *uri);
-char *              get_uri_host                 (const char *uri);
-char *              get_uri_root                 (const char *uri);
-int                 uricmp                       (const char *uri1,
-						  const char *uri2);
-char *              get_alternative_uri          (const char *folder,
-	     					  const char *name);
-char *              get_alternative_uri_for_uri  (const char *uri);
+const char *        get_home_uri                       (void);
+char *              get_home_relative_uri              (const char *partial_uri);
+GFile *             get_home_relative_file             (const char *partial_uri);
+GFile *             get_user_config_subdirectory       (const char *child_name,
+							gboolean    create_);
+const char *        remove_host_from_uri               (const char *uri);
+char *              get_uri_host                       (const char *uri);
+char *              get_uri_root                       (const char *uri);
+int                 uricmp                             (const char *uri1,
+							const char *uri2);
+char *              get_alternative_uri                (const char *folder,
+							const char *name);
+char *              get_alternative_uri_for_uri        (const char *uri);
 
-void                path_list_free               (GList       *path_list);
-GList *             path_list_dup                (GList       *path_list);
+/* GFile utils */
 
-GList *             gio_file_list_dup               (GList *l);
-void                gio_file_list_free              (GList *l);
-GList *             gio_file_list_new_from_uri_list (GList *uris);
-void                g_key_file_save                 (GKeyFile *key_file, 
-						     GFile    *file);
+GList *             _g_file_list_dup                   (GList      *l);
+void                _g_file_list_free                  (GList      *l);
+GList *             _g_file_list_new_from_uri_list     (GList      *uris);
+
+/* GKeyFile utils */
+
+void                g_key_file_save                    (GKeyFile   *key_file,
+						        GFile      *file);
 
 #endif /* FILE_UTILS_H */

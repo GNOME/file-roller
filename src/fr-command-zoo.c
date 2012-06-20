@@ -121,15 +121,15 @@ split_line_zoo (char *line)
 	fields[5] = NULL;
 
 	/* Get Length */
-	scan = eat_spaces (line);
+	scan = _g_str_eat_spaces (line);
 	field_end = strchr (scan, ' ');
 	fields[0] = g_strndup (scan, field_end - scan);
-	scan = eat_spaces (field_end);
+	scan = _g_str_eat_spaces (field_end);
 
 	/* Toss CF, Size Now */
 	for (i = 0; i < 2; i++) {
 		field_end = strchr (scan, ' ');
-		scan = eat_spaces (field_end);
+		scan = _g_str_eat_spaces (field_end);
 	}
 
 	/* Get Day, Month, Year, Time */
@@ -140,7 +140,7 @@ split_line_zoo (char *line)
 		}
 		field_end = strchr (scan, ' ');
 		fields[i] = g_strndup (scan, field_end - scan);
-		scan = eat_spaces (field_end);
+		scan = _g_str_eat_spaces (field_end);
 	}
 
 	return fields;
@@ -154,18 +154,18 @@ get_last_field_zoo (char *line)
 	int         i;
 	int         n = 6;
 
-	field = eat_spaces (line);
+	field = _g_str_eat_spaces (line);
 	for (i = 0; i < n; i++) {
 		field = strchr (field, ' ');
-		field = eat_spaces (field);
+		field = _g_str_eat_spaces (field);
 	}
 	field = strchr (field, ' ');
 	if (g_ascii_strncasecmp (field, " C ", 3) == 0) {
-		field = eat_spaces (field);
+		field = _g_str_eat_spaces (field);
 		field = strchr (field, ' ');
-		field = eat_spaces (field);
+		field = _g_str_eat_spaces (field);
 	} else
-		field = eat_spaces (field);
+		field = _g_str_eat_spaces (field);
 
 	return field;
 }

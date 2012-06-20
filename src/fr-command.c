@@ -191,7 +191,7 @@ static void
 base_fr_command_set_mime_type (FrCommand  *comm,
 			       const char *mime_type)
 {
-	comm->mime_type = get_static_string (mime_type);
+	comm->mime_type = _g_str_get_static (mime_type);
 	fr_command_update_capabilities (comm);
 }
 
@@ -535,7 +535,7 @@ fr_command_finalize (GObject *object)
 	g_free (comm->e_filename);
 	g_free (comm->password);
 	if (comm->files != NULL)
-		g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
+		_g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
 	fr_command_set_process (comm, NULL);
 
 	/* Chain up */
@@ -614,7 +614,7 @@ fr_command_list (FrCommand *comm)
 	fr_command_progress (comm, -1.0);
 
 	if (comm->files != NULL) {
-		g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
+		_g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
 		comm->files = g_ptr_array_sized_new (INITIAL_SIZE);
 	}
 

@@ -120,12 +120,12 @@ split_line_lha (char *line)
 		line += strlen ("[unknown]");
 	}
 
-	scan = eat_spaces (line);
+	scan = _g_str_eat_spaces (line);
 	for (; i < n_fields; i++) {
 		field_end = strchr (scan, ' ');
 		if (field_end != NULL) {
 			fields[i] = g_strndup (scan, field_end - scan);
-			scan = eat_spaces (field_end);
+			scan = _g_str_eat_spaces (field_end);
 		}
 	}
 
@@ -149,10 +149,10 @@ get_last_field_lha (char *line)
 	if (strncmp (line, "[unknown]", 9) == 0)
 		n--;
 
-	field = eat_spaces (line);
+	field = _g_str_eat_spaces (line);
 	for (i = 0; i < n; i++) {
 		field = strchr (field, ' ');
-		field = eat_spaces (field);
+		field = _g_str_eat_spaces (field);
 	}
 
 	return field;

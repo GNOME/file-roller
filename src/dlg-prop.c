@@ -81,7 +81,7 @@ dlg_prop (FrWindow *window)
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_name_label");
-	utf8_name = g_uri_display_basename (fr_window_get_archive_uri (window));
+	utf8_name = _g_uri_display_basename (fr_window_get_archive_uri (window));
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
 	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);
@@ -93,7 +93,7 @@ dlg_prop (FrWindow *window)
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_date_label");
-	s = get_time_string (get_file_mtime (fr_window_get_archive_uri (window)));
+	s = _g_time_to_string (get_file_mtime (fr_window_get_archive_uri (window)));
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 

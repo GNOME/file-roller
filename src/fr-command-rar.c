@@ -124,7 +124,7 @@ process_line (char     *line,
 
 		/* read file info. */
 
-		fields = split_line (line, 6);
+		fields = _g_str_split_line (line, 6);
 		if (g_strv_length (fields) < 6) {
 			/* wrong line format, treat this line as a filename line */
 			g_strfreev (fields);

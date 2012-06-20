@@ -155,7 +155,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 		return;
 	}
-	else if (strchrs (archive_name, BAD_CHARS)) {
+	else if (_g_strchrs (archive_name, BAD_CHARS)) {
 		GtkWidget *d;
 		char      *utf8_name = g_filename_display_name (archive_name);
 
@@ -390,7 +390,7 @@ archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
 
 	mime_type = mime_type_desc[data->supported_types[idx]].mime_type;
 
-	icon = get_mime_type_pixbuf (mime_type, ARCHIVE_ICON_SIZE, NULL);
+	icon = _g_mime_type_get_icon (mime_type, ARCHIVE_ICON_SIZE, NULL);
 	if (icon != NULL) {
 		gtk_image_set_from_pixbuf (GTK_IMAGE (GET_WIDGET ("archive_icon_image")), icon);
 		g_object_unref (icon);

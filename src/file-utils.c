@@ -724,7 +724,7 @@ get_file_mime_type (const char *uri,
 		g_clear_error (&err);
 	}
 	else {
-		result = get_static_string (g_file_info_get_content_type (info));
+		result = _g_str_get_static (g_file_info_get_content_type (info));
 		g_object_unref (info);
 	}
 
@@ -746,29 +746,6 @@ get_file_mime_type_for_path (const char  *filename,
 	g_free (uri);
 
 	return mime_type;
-}
-
-
-void
-path_list_free (GList *path_list)
-{
-	if (path_list == NULL)
-		return;
-	g_list_foreach (path_list, (GFunc) g_free, NULL);
-	g_list_free (path_list);
-}
-
-
-GList *
-path_list_dup (GList *path_list)
-{
-	GList *new_list = NULL;
-	GList *scan;
-
-	for (scan = path_list; scan; scan = scan->next)
-		new_list = g_list_prepend (new_list, g_strdup (scan->data));
-
-	return g_list_reverse (new_list);
 }
 
 
@@ -874,7 +851,7 @@ remove_local_directory (const char *path)
 
 	if (path == NULL)
 		return TRUE;
-	
+
 	uri = g_filename_to_uri (path, NULL, NULL);
 	result = remove_directory (uri);
 	g_free (uri);
@@ -1313,7 +1290,7 @@ int
 uricmp (const char *uri1,
 	const char *uri2)
 {
-	return strcmp_null_tolerant (uri1, uri2);
+	return _g_strcmp_null_tolerant (uri1, uri2);
 }
 
 
@@ -1352,7 +1329,7 @@ get_alternative_uri_for_uri (const char *uri)
 
 
 GList *
-gio_file_list_dup (GList *l)
+_g_file_list_dup (GList *l)
 {
 	GList *r = NULL, *scan;
 	for (scan = l; scan; scan = scan->next)
@@ -1362,7 +1339,7 @@ gio_file_list_dup (GList *l)
 
 
 void
-gio_file_list_free (GList *l)
+_g_file_list_free (GList *l)
 {
 	GList *scan;
 	for (scan = l; scan; scan = scan->next)
@@ -1372,7 +1349,7 @@ gio_file_list_free (GList *l)
 
 
 GList *
-gio_file_list_new_from_uri_list (GList *uris)
+_g_file_list_new_from_uri_list (GList *uris)
 {
 	GList *r = NULL, *scan;
 	for (scan = uris; scan; scan = scan->next)

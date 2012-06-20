@@ -106,7 +106,7 @@ file_data_update_content_type (FileData *fdata)
 	if (fdata->dir)
 		fdata->content_type = MIME_TYPE_DIRECTORY;
 	else
-		fdata->content_type = get_static_string (g_content_type_guess (fdata->full_path, NULL, 0, NULL));
+		fdata->content_type = _g_str_get_static (g_content_type_guess (fdata->full_path, NULL, 0, NULL));
 }
 
 

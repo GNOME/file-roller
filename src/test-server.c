@@ -161,7 +161,7 @@ main (int argc, char *argv[])
 			                  G_CALLBACK (on_signal),
 			                  NULL);
 
-#if 1
+#if 0
 			/* -- GetSupportedTypes -- */
 
 			g_dbus_proxy_call (proxy,
@@ -201,7 +201,7 @@ main (int argc, char *argv[])
 			g_strfreev (files);
 #endif
 
-#if 0
+#if 1
 
 			/* -- Compress -- */
 

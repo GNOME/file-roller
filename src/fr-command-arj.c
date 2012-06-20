@@ -114,7 +114,7 @@ list__process_line (char     *line,
 
 		arj_comm->fdata = fdata = file_data_new ();
 
-		name_field = get_last_field (line, 2);
+		name_field = _g_str_get_last_field (line, 2);
 
 		if (*name_field == '/') {
 			fdata->full_path = g_strdup (name_field);
@@ -138,7 +138,7 @@ list__process_line (char     *line,
 
 		/* read file info. */
 
-		fields = split_line (line, 10);
+		fields = _g_str_split_line (line, 10);
 		fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
 		fdata->modified = mktime_from_string (fields[5], fields[6]);
 		if ((strcmp (fields[1], "MS-DOS") == 0) || (strcmp (fields[1], "WIN32") == 0))

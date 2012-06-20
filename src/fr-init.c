@@ -221,7 +221,7 @@ fr_registered_command_new (GType command_type)
 		FrMimeTypeCap      *cap;
 		FrMimeTypePackages *packages;
 
-		mime_type = get_static_string (mime_types[i]);
+		mime_type = _g_str_get_static (mime_types[i]);
 
 		cap = g_new0 (FrMimeTypeCap, 1);
 		cap->mime_type = mime_type;
@@ -443,7 +443,7 @@ get_mime_type_from_extension (const char *ext)
 		if (file_ext_type[i].ext == NULL)
 			continue;
 		if (strcasecmp (ext, file_ext_type[i].ext) == 0)
-			return get_static_string (file_ext_type[i].mime_type);
+			return _g_str_get_static (file_ext_type[i].mime_type);
 	}
 
 	return NULL;
@@ -640,7 +640,7 @@ command_done (CommandData *cdata)
 	g_free (cdata->command);
 	if (cdata->app != NULL)
 		g_object_unref (cdata->app);
-	path_list_free (cdata->file_list);
+	_g_string_list_free (cdata->file_list);
 	g_free (cdata->temp_dir);
 	if (cdata->process != NULL)
 		g_object_unref (cdata->process);

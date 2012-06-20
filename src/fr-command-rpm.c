@@ -72,7 +72,7 @@ mktime_from_string (char *month,
 	if (year != NULL) {
 		if (strchr (year, ':') != NULL) {
 			char **fields = g_strsplit (year, ":", 2);
-			if (n_fields (fields) == 2) {
+			if (g_strv_length (fields) == 2) {
 				time_t      now;
 				struct tm  *now_tm;
 
@@ -108,28 +108,28 @@ list__process_line (char     *line,
 	fdata = file_data_new ();
 
 #ifdef __sun
-	fields = split_line (line, 9);
+	fields = _g_str_split_line (line, 9);
 	fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
 	fdata->modified = mktime_from_string (fields[5], fields[6], fields[8]);
 	g_strfreev (fields);
 
-	name_field = get_last_field (line, 10);
+	name_field = _g_str_get_last_field (line, 10);
 #else /* !__sun */
 	/* Handle char and block device files */
 	if ((line[0] == 'c') || (line[0] == 'b')) {
-		fields = split_line (line, 9);
+		fields = _g_str_split_line (line, 9);
 		ofs = 1;
 		fdata->size = 0;
 		/* TODO We should also specify the content type */
 	}
 	else {
-		fields = split_line (line, 8);
+		fields = _g_str_split_line (line, 8);
 		fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
 	}
 	fdata->modified = mktime_from_string (fields[5+ofs], fields[6+ofs], fields[7+ofs]);
 	g_strfreev (fields);
 
-	name_field = get_last_field (line, 9+ofs);
+	name_field = _g_str_get_last_field (line, 9+ofs);
 #endif /* !__sun */
 
 	fields = g_strsplit (name_field, " -> ", 2);

@@ -359,8 +359,8 @@ fr_process_finalize (GObject *object)
 
 	g_clear_error (&process->error.gerror);
 	g_clear_error (&process->priv->first_error.gerror);
-	path_list_free (process->priv->first_error_stdout);
-	path_list_free (process->priv->first_error_stderr);
+	_g_string_list_free (process->priv->first_error_stdout);
+	_g_string_list_free (process->priv->first_error_stderr);
 
 	g_free (process->priv);
 
@@ -769,11 +769,11 @@ allow_sticky_processes_only (FrProcess *process,
 		if (process->error.gerror != NULL)
 			process->priv->first_error.gerror = g_error_copy (process->error.gerror);
 
-		path_list_free (process->priv->first_error_stdout);
-		process->priv->first_error_stdout = g_list_reverse (path_list_dup (process->out.raw));
+		_g_string_list_free (process->priv->first_error_stdout);
+		process->priv->first_error_stdout = g_list_reverse (_g_string_list_dup (process->out.raw));
 
-		path_list_free (process->priv->first_error_stderr);
-		process->priv->first_error_stderr = g_list_reverse (path_list_dup (process->err.raw));
+		_g_string_list_free (process->priv->first_error_stderr);
+		process->priv->first_error_stderr = g_list_reverse (_g_string_list_dup (process->err.raw));
 	}
 
 	process->priv->sticky_only = TRUE;
@@ -948,11 +948,11 @@ check_child (gpointer data)
 
 		/* Restore the first error output as well. */
 
-		path_list_free (process->out.raw);
+		_g_string_list_free (process->out.raw);
 		process->out.raw = process->priv->first_error_stdout;
 		process->priv->first_error_stdout = NULL;
 
-		path_list_free (process->err.raw);
+		_g_string_list_free (process->err.raw);
 		process->err.raw = process->priv->first_error_stderr;
 		process->priv->first_error_stderr = NULL;
 	}

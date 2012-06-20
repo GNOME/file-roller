@@ -116,9 +116,9 @@ dlg_ask_password__common (FrWindow       *window,
 	/* Set widgets data. */
 
 	if (data->pwd_type == FR_PASSWORD_TYPE_MAIN)
-		name = g_uri_display_basename (fr_window_get_archive_uri (window));
+		name = _g_uri_display_basename (fr_window_get_archive_uri (window));
 	else if (data->pwd_type == FR_PASSWORD_TYPE_PASTE_FROM)
-		name = g_uri_display_basename (fr_window_get_paste_archive_uri (window));
+		name = _g_uri_display_basename (fr_window_get_paste_archive_uri (window));
 	text = g_strdup_printf (_("Enter the password for the archive '%s'."), name);
 	gtk_label_set_label (GTK_LABEL (label), text);
 	g_free (text);

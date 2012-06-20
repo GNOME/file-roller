@@ -124,9 +124,9 @@ process_line (char     *line,
 	if (ace_comm->command_type == FR_ACE_COMMAND_PUBLIC)
 		fields = g_strsplit (line, "|", 6);
 	else if (ace_comm->command_type == FR_ACE_COMMAND_NONFREE)
-		fields = split_line (line, 5);
+		fields = _g_str_split_line (line, 5);
 
-	if ((fields == NULL) || (fields[0] == NULL) || (n_fields (fields) < 5))
+	if ((fields == NULL) || (fields[0] == NULL) || (g_strv_length (fields) < 5))
 		return;
 
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
@@ -137,7 +137,7 @@ process_line (char     *line,
 		field_name = field_name + 1;
 	}
 	else if (ace_comm->command_type == FR_ACE_COMMAND_NONFREE)
-		field_name = get_last_field (line, 6);
+		field_name = _g_str_get_last_field (line, 6);
 
 	if (field_name[0] != '/') {
 		fdata->full_path = g_strconcat ("/", field_name, NULL);

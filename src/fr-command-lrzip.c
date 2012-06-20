@@ -48,7 +48,7 @@ list__process_line (char     *line,
 		return;
 
 	fdata = file_data_new ();
-	fdata->size = g_ascii_strtoull (get_last_field (line, 4), NULL, 10);
+	fdata->size = g_ascii_strtoull (_g_str_get_last_field (line, 4), NULL, 10);
 
 	struct stat st;
 	if (stat (comm->filename, &st) == 0)

@@ -50,7 +50,7 @@ process_metadata_line (char      *line,
 
         g_return_if_fail (line != NULL);
 
-        fields = split_line (line, 6);
+        fields = _g_str_split_line (line, 6);
         if (!fields[1] || !g_str_equal (fields[1], "bytes,")) {
                 g_strfreev (fields);
                 return;
@@ -62,7 +62,7 @@ process_metadata_line (char      *line,
         if (fields[5] && g_str_equal (fields[4],"*")) {
                 name = g_strdup (fields[5]);
         } else {
-                name = g_strdup (get_last_field (line, 5));
+                name = g_strdup (_g_str_get_last_field (line, 5));
         }
         g_strstrip (name);
 
@@ -98,7 +98,7 @@ process_data_line (char     *line,
 
         fdata = file_data_new ();
 
-        fields = split_line (line, 5);
+        fields = _g_str_split_line (line, 5);
         fdata->size = g_ascii_strtoull (fields[2], NULL, 10);
         tmfields = g_strsplit(fields[3], "-", 3);
         if (tmfields[2]) {
@@ -116,7 +116,7 @@ process_data_line (char     *line,
         fdata->modified = mktime (&tm);
         g_strfreev (fields);
 
-        name = get_last_field (line, 6);
+        name = _g_str_get_last_field (line, 6);
         fields = g_strsplit (name, " -> ", 2);
 
         fdata->dir = line[0] == 'd';

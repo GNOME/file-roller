@@ -25,6 +25,7 @@
 #include "file-utils.h"
 #include "fr-stock.h"
 #include "fr-init.h"
+#include "glib-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
 #include "typedefs.h"
@@ -60,7 +61,7 @@ destroy_cb (GtkWidget  *widget,
 		fr_window_pop_message (data->window);
 		fr_window_stop_batch (data->window);
 	}
-	path_list_free (data->selected_files);
+	_g_string_list_free (data->selected_files);
 	g_free (data->base_dir_for_selection);
 	g_object_unref (data->settings);
 	g_free (data);
@@ -162,7 +163,7 @@ extract_cb (GtkWidget   *w,
 	/* check extraction directory permissions. */
 
 	if (uri_is_dir (extract_to_dir)
-	    && ! check_permissions (extract_to_dir, R_OK | W_OK)) 
+	    && ! check_permissions (extract_to_dir, R_OK | W_OK))
 	{
 		GtkWidget *d;
 		char      *utf8_path;
@@ -240,7 +241,7 @@ extract_cb (GtkWidget   *w,
 				   junk_paths,
 				   TRUE);
 
-	path_list_free (file_list);
+	_g_string_list_free (file_list);
 	g_free (extract_to_dir);
 	g_free (base_dir);
 

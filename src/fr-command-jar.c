@@ -28,6 +28,7 @@
 #include "fr-command.h"
 #include "fr-command-zip.h"
 #include "fr-command-jar.h"
+#include "glib-utils.h"
 #include "java-utils.h"
 
 
@@ -138,9 +139,9 @@ fr_command_jar_add (FrCommand     *comm,
 		g_free (jdata->rel_path);
 	}
 
-	path_list_free (jardata_list);
-	path_list_free (jar_list);
-	path_list_free (zip_list);
+	_g_string_list_free (jardata_list);
+	_g_string_list_free (jar_list);
+	_g_string_list_free (zip_list);
 	g_free (tmp_dir);
 }
 

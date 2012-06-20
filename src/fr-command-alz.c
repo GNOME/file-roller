@@ -109,11 +109,11 @@ process_line (char     *line,
 		return;
 
 	fdata = file_data_new ();
-	fields = split_line (line, 5);
+	fields = _g_str_split_line (line, 5);
 	fdata->modified = mktime_from_string (fields[0], fields[1]);
 	fdata->size = g_ascii_strtoull (fields[3], NULL, 10);
 
-	name_field = g_strdup (get_last_field (line, 6));
+	name_field = g_strdup (_g_str_get_last_field (line, 6));
 	name_len = strlen (name_field);
 
 	name_last = name_field[name_len - 1];

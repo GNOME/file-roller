@@ -102,5 +102,5 @@ open_with_cb (GtkWidget *widget,
 		return;
 
 	fr_window_open_files (window, file_list, TRUE);
-	path_list_free (file_list);
+	_g_string_list_free (file_list);
 }

@@ -120,7 +120,7 @@ file_sel_response_cb (GtkWidget      *widget,
 	if (item_list != NULL)
 		fr_window_archive_add_files (window, item_list, update);
 
-	gio_file_list_free (item_list);
+	_g_file_list_free (item_list);
 	g_slist_foreach (selections, (GFunc) g_free, NULL);
 	g_slist_free (selections);
 	g_free (current_folder);

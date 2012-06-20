@@ -65,7 +65,7 @@ filter_new (const char    *pattern,
 		flags = G_REGEX_CASELESS;
 	else
 		flags = 0;
-	filter->regexps = search_util_get_regexps (pattern, flags);
+	filter->regexps = _g_regexp_split_from_patterns (pattern, flags);
 
 	return filter;
 }
@@ -79,7 +79,7 @@ filter_destroy (Filter *filter)
 
 	g_free (filter->pattern);
 	if (filter->regexps != NULL)
-		free_regexps (filter->regexps);
+		_g_regexp_freev (filter->regexps);
 	g_free (filter);
 }
 
@@ -108,7 +108,7 @@ filter_matches (Filter     *filter,
 		return TRUE;
 
 	utf8_name = g_filename_to_utf8 (file_name, -1, NULL, NULL, NULL);
-	matched = match_regexps (filter->regexps, utf8_name, 0);
+	matched = _g_regexp_matchv (filter->regexps, utf8_name, 0);
 	g_free (utf8_name);
 
 	return matched;
@@ -473,9 +473,9 @@ get_file_list_data_free (GetFileListData *gfl)
 	filter_destroy (gfl->include_filter);
 	filter_destroy (gfl->exclude_filter);
 	filter_destroy (gfl->exclude_folders_filter);
-	path_list_free (gfl->files);
-	path_list_free (gfl->dirs);
-	path_list_free (gfl->to_visit);
+	_g_string_list_free (gfl->files);
+	_g_string_list_free (gfl->dirs);
+	_g_string_list_free (gfl->to_visit);
 	if (gfl->directory != NULL)
 		g_object_unref (gfl->directory);
 	if (gfl->base_dir != NULL)
@@ -578,7 +578,7 @@ get_file_list_done (GError   *error,
 	gfl->dirs = g_list_reverse (gfl->dirs);
 
 	if (! filter_empty (gfl->include_filter) || (gfl->exclude_filter->pattern != NULL)) {
-		path_list_free (gfl->dirs);
+		_g_string_list_free (gfl->dirs);
 		gfl->dirs = NULL;
 	}
 
@@ -749,8 +749,8 @@ get_items_for_current_dir_done (GList    *files,
 	if (error != NULL) {
 		if (gfl->done_func)
 			gfl->done_func (NULL, NULL, error, gfl->done_data);
-		path_list_free (files);
-		path_list_free (dirs);
+		_g_string_list_free (files);
+		_g_string_list_free (dirs);
 		get_file_list_data_free (gfl);
 		return;
 	}
@@ -879,8 +879,8 @@ copy_files_data_new (GList                 *sources,
 	CopyFilesData *cfd;
 
 	cfd = g_new0 (CopyFilesData, 1);
-	cfd->sources = gio_file_list_dup (sources);
-	cfd->destinations = gio_file_list_dup (destinations);
+	cfd->sources = _g_file_list_dup (sources);
+	cfd->destinations = _g_file_list_dup (destinations);
 	cfd->flags = flags;
 	cfd->io_priority = io_priority;
 	cfd->cancellable = cancellable;
@@ -903,8 +903,8 @@ copy_files_data_free (CopyFilesData *cfd)
 {
 	if (cfd == NULL)
 		return;
-	gio_file_list_free (cfd->sources);
-	gio_file_list_free (cfd->destinations);
+	_g_file_list_free (cfd->sources);
+	_g_file_list_free (cfd->destinations);
 	g_free (cfd);
 }
 
@@ -1068,8 +1068,8 @@ g_copy_uris_async (GList                 *sources,
 {
 	GList *source_files, *destination_files;
 
-	source_files = gio_file_list_new_from_uri_list (sources);
-	destination_files = gio_file_list_new_from_uri_list (destinations);
+	source_files = _g_file_list_new_from_uri_list (sources);
+	destination_files = _g_file_list_new_from_uri_list (destinations);
 
 	g_copy_files_async (source_files,
 			    destination_files,
@@ -1081,8 +1081,8 @@ g_copy_uris_async (GList                 *sources,
 			    callback,
 			    user_data);
 
-	gio_file_list_free (source_files);
-	gio_file_list_free (destination_files);
+	_g_file_list_free (source_files);
+	_g_file_list_free (destination_files);
 }
 
 

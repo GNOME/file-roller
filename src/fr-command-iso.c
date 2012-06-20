@@ -84,28 +84,28 @@ list__process_line (char     *line,
 
 	if (line[0] == 'D') {
 		g_free (comm_iso->cur_path);
-		comm_iso->cur_path = g_strdup (get_last_field (line, 4));
+		comm_iso->cur_path = g_strdup (_g_str_get_last_field (line, 4));
 
 	} else if (line[0] == '-') { /* Is file */
 		const char *last_field, *first_bracket;
 
 		fdata = file_data_new ();
 
-		fields = split_line (line, 8);
+		fields = _g_str_split_line (line, 8);
 		fdata->size = g_ascii_strtoull (fields[4], NULL, 10);
 		fdata->modified = mktime_from_string (fields[5], fields[6], fields[7]);
 		g_strfreev (fields);
 
 		/* Full path */
 
-		last_field = get_last_field (line, 9);
+		last_field = _g_str_get_last_field (line, 9);
 		first_bracket = strchr (last_field, ']');
 		if (first_bracket == NULL) {
 			file_data_free (fdata);
 			return;
 		}
 
-		name_field = eat_spaces (first_bracket + 1);
+		name_field = _g_str_eat_spaces (first_bracket + 1);
 		if ((name_field == NULL)
 		    || (strcmp (name_field, ".") == 0)
 		    || (strcmp (name_field, "..") == 0)) {

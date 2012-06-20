@@ -103,7 +103,7 @@ list__process_line (char     *line,
 
 	fdata = file_data_new ();
 
-	fields = split_line (line, 2);
+	fields = _g_str_split_line (line, 2);
 	if (strcmp (fields[1], "-1") != 0)
 		fdata->size = g_ascii_strtoull (fields[1], NULL, 10);
 	g_strfreev (fields);

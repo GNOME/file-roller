@@ -39,7 +39,7 @@ count_selected (GtkTreeModel *model,
 
 
 int
-_gtk_count_selected (GtkTreeSelection *selection)
+_gtk_tree_selection_count_selected (GtkTreeSelection *selection)
 {
 	int n = 0;
 
@@ -625,9 +625,9 @@ get_file_icon_pixbuf (GFileIcon *icon,
 
 
 GdkPixbuf *
-get_icon_pixbuf (GIcon        *icon,
-		 int           size,
-		 GtkIconTheme *theme)
+_g_icon_get_pixbuf (GIcon        *icon,
+		    int           size,
+		    GtkIconTheme *theme)
 {
 	if (icon == NULL)
 		return NULL;
@@ -640,9 +640,9 @@ get_icon_pixbuf (GIcon        *icon,
 
 
 GdkPixbuf *
-get_mime_type_pixbuf (const char   *mime_type,
-		      int           icon_size,
-		      GtkIconTheme *icon_theme)
+_g_mime_type_get_icon (const char   *mime_type,
+		       int           icon_size,
+		       GtkIconTheme *icon_theme)
 {
 	GdkPixbuf *pixbuf = NULL;
 	GIcon     *icon;
@@ -651,7 +651,7 @@ get_mime_type_pixbuf (const char   *mime_type,
 		icon_theme = gtk_icon_theme_get_default ();
 
 	icon = g_content_type_get_icon (mime_type);
-	pixbuf = get_icon_pixbuf (icon, icon_size, icon_theme);
+	pixbuf = _g_icon_get_pixbuf (icon, icon_size, icon_theme);
 	g_object_unref (icon);
 
 	return pixbuf;

@@ -22,8 +22,8 @@
 #include <config.h>
 #include <gtk/gtk.h>
 #include "fr-window.h"
+#include "glib-utils.h"
 #include "gtk-utils.h"
-#include "file-utils.h"
 
 
 typedef struct {
@@ -44,7 +44,7 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
-	path_list_free (data->selected_files);
+	_g_string_list_free (data->selected_files);
 	g_object_unref (G_OBJECT (data->builder));
 	g_free (data);
 }
@@ -88,7 +88,7 @@ ok_clicked_cb (GtkWidget  *widget,
 	if (! do_not_remove_if_null || (file_list != NULL))
 		fr_window_archive_remove (window, file_list);
 
-	path_list_free (file_list);
+	_g_string_list_free (file_list);
 }
 
 
