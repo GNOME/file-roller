@@ -617,7 +617,7 @@ fr_application_create_option_context (void)
 
 
 static char *
-get_uri_from_command_line (const char *path)
+_g_uri_get_from_command_line (const char *path)
 {
 	GFile *file;
 	char  *uri;
@@ -706,14 +706,14 @@ fr_application_command_line (GApplication            *application,
 	}
 
 	if (arg_extract_to != NULL)
-		extract_to_uri = get_uri_from_command_line (arg_extract_to);
+		extract_to_uri = _g_uri_get_from_command_line (arg_extract_to);
 
 	if (arg_add_to != NULL)
-		add_to_uri = get_uri_from_command_line (arg_add_to);
+		add_to_uri = _g_uri_get_from_command_line (arg_add_to);
 
 	if ((arg_add_to != NULL) || (arg_add == 1)) { /* Add files to an archive */
 		GtkWidget   *window;
-		GList       *file_list = NULL;
+		GList       *file_list;
 		const char  *filename;
 		int          i = 0;
 
@@ -722,8 +722,9 @@ fr_application_command_line (GApplication            *application,
 		if (arg_default_url != NULL)
 			fr_window_set_default_dir (FR_WINDOW (window), arg_default_url, TRUE);
 
+		file_list = NULL;
 		while ((filename = remaining_args[i++]) != NULL)
-			file_list = g_list_prepend (file_list, get_uri_from_command_line (filename));
+			file_list = g_list_prepend (file_list, _g_uri_get_from_command_line (filename));
 		file_list = g_list_reverse (file_list);
 
 		fr_window_new_batch (FR_WINDOW (window), _("Compress"));
@@ -751,7 +752,7 @@ fr_application_command_line (GApplication            *application,
 		while ((archive = remaining_args[i++]) != NULL) {
 			char *archive_uri;
 
-			archive_uri = get_uri_from_command_line (archive);
+			archive_uri = _g_uri_get_from_command_line (archive);
 			if (arg_extract_here == 1)
 				fr_window_set_batch__extract_here (FR_WINDOW (window),
 								   archive_uri);
@@ -774,18 +775,15 @@ fr_application_command_line (GApplication            *application,
 		int i = 0;
 		while ((filename = remaining_args[i++]) != NULL) {
 			GtkWidget *window;
-			GFile     *file;
 			char      *uri;
 
 			window = fr_window_new ();
 			gtk_widget_show (window);
 
-			file = g_file_new_for_commandline_arg (filename);
-			uri = g_file_get_uri (file);
+			uri = _g_uri_get_from_command_line (filename);
 			fr_window_archive_open (FR_WINDOW (window), uri, GTK_WINDOW (window));
 
 			g_free (uri);
-			g_object_unref (file);
 		}
 	}
 
