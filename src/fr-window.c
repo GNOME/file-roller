@@ -2462,112 +2462,51 @@ static void
 create_the_progress_dialog (FrWindow *window)
 {
 	GtkWindow      *parent;
-	GtkDialogFlags flags;
-	GtkDialog      *d;
-	GtkWidget      *hbox;
-	GtkWidget      *vbox;
-	GtkWidget      *align;
-	GtkWidget      *progress_vbox;
-	GtkWidget      *lbl;
-	PangoAttrList  *attr_list;
-	GdkPixbuf      *icon;
+	GtkDialogFlags  flags;
+	const char     *title;
+	GtkBuilder     *builder;
+	GtkWidget      *dialog;
 
 	if (window->priv->progress_dialog != NULL)
 		return;
 
-	flags = GTK_DIALOG_DESTROY_WITH_PARENT;
 	if (window->priv->batch_mode) {
 		parent = NULL;
+		flags = 0;
+		title = window->priv->batch_title;
 	}
 	else {
 		parent = GTK_WINDOW (window);
-		flags |= GTK_DIALOG_MODAL;
+		flags = GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL;
+		title = NULL;
 	}
 
-	window->priv->progress_dialog = gtk_dialog_new_with_buttons ((window->priv->batch_mode ? window->priv->batch_title : NULL),
-								     parent,
-								     flags,
-								     NULL,
-								     NULL);
+	builder = _gtk_builder_new_from_resource ("progress-dialog.ui");
+	dialog = _gtk_builder_get_widget (builder, "progress_dialog");
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+	gtk_window_set_title (GTK_WINDOW (dialog), title);
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
+	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
+	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
-	window->priv->pd_quit_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_QUIT, DIALOG_RESPONSE_QUIT);
-	window->priv->pd_open_archive_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE);
-	window->priv->pd_open_destination_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
-	window->priv->pd_close_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
-	window->priv->pd_cancel_button = gtk_dialog_add_button (GTK_DIALOG (window->priv->progress_dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+	window->priv->pd_quit_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_QUIT, DIALOG_RESPONSE_QUIT);
+	window->priv->pd_open_archive_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE);
+	window->priv->pd_open_destination_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
+	window->priv->pd_close_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+	window->priv->pd_cancel_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
-	d = GTK_DIALOG (window->priv->progress_dialog);
-	gtk_window_set_resizable (GTK_WINDOW (d), TRUE);
-	gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
-	gtk_window_set_default_size (GTK_WINDOW (d), PROGRESS_DIALOG_DEFAULT_WIDTH, -1);
-
-	/* Main */
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 24);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (d)), hbox, FALSE, FALSE, 10);
-
-	icon = get_mime_type_pixbuf ("package-x-generic", _gtk_widget_lookup_for_size (GTK_WIDGET (window), GTK_ICON_SIZE_DIALOG), NULL);
-	window->priv->pd_icon = gtk_image_new_from_pixbuf (icon);
-	g_object_unref (icon);
-
-	gtk_misc_set_alignment (GTK_MISC (window->priv->pd_icon), 0.5, 0.0);
-	gtk_box_pack_start (GTK_BOX (hbox), window->priv->pd_icon, FALSE, FALSE, 0);
-
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
-	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
-
-	/* action description */
-
-	lbl = window->priv->pd_action = gtk_label_new ("");
-
-	align = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
-	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 12, 0, 0);
-
-	gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-	gtk_misc_set_padding (GTK_MISC (lbl), 0, 0);
-	gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
-
-	gtk_container_add (GTK_CONTAINER (align), lbl);
-	gtk_box_pack_start (GTK_BOX (vbox), align, TRUE, TRUE, 0);
-
-	/* archive name */
+	window->priv->progress_dialog = dialog;
+	window->priv->pd_icon = _gtk_builder_get_widget (builder, "icon_image");
+	window->priv->pd_action = _gtk_builder_get_widget (builder, "action_label");
+	window->priv->pd_progress_bar = _gtk_builder_get_widget (builder, "progress_progressbar");
+	window->priv->pd_message = _gtk_builder_get_widget (builder, "message_label");
 
 	g_free (window->priv->pd_last_archive);
 	window->priv->pd_last_archive = NULL;
 	if (window->priv->archive_uri != NULL)
 		window->priv->pd_last_archive = g_strdup (window->priv->archive_uri);
-
-	/* progress and details */
-
-	align = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
-	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 6, 0, 0);
-
-	progress_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-	gtk_container_add (GTK_CONTAINER (align), progress_vbox);
-	gtk_box_pack_start (GTK_BOX (vbox), align, TRUE, TRUE, 0);
-
-	/* progress bar */
-
-	window->priv->pd_progress_bar = gtk_progress_bar_new ();
-	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), ACTIVITY_PULSE_STEP);
-	gtk_box_pack_start (GTK_BOX (progress_vbox), window->priv->pd_progress_bar, TRUE, TRUE, 0);
-
-	/* details label */
-
-	lbl = window->priv->pd_message = gtk_label_new ("");
-
-	attr_list = pango_attr_list_new ();
-	pango_attr_list_insert (attr_list, pango_attr_size_new (9000));
-	gtk_label_set_attributes (GTK_LABEL (lbl), attr_list);
-	pango_attr_list_unref (attr_list);
-
-	gtk_misc_set_alignment (GTK_MISC (lbl), 0.0, 0.5);
-	gtk_label_set_ellipsize (GTK_LABEL (lbl), PANGO_ELLIPSIZE_END);
-	gtk_box_pack_start (GTK_BOX (progress_vbox), lbl, TRUE, TRUE, 0);
-
-	gtk_widget_show_all (hbox);
-
 	progress_dialog_update_action_description (window);
 
 	/* signals */

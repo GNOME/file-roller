@@ -8,6 +8,7 @@ EXTRA_DIST = 			\
 	menus-toolbars.ui	\
 	new.ui			\
 	password.ui		\
+	progress-dialog.ui	\
 	properties.ui		\
 	update.ui
 
