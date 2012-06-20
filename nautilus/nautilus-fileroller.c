@@ -286,7 +286,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		return NULL;
 
 	if (unsupported_scheme ((NautilusFileInfo *) files->data))
-			return NULL;
+		return NULL;
 
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
