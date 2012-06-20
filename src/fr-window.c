@@ -2878,8 +2878,10 @@ fr_window_show_error_dialog (FrWindow   *window,
 
 	close_progress_dialog (window, TRUE);
 
-	if (window->priv->batch_mode)
+	if (window->priv->batch_mode) {
+		gtk_window_set_title (GTK_WINDOW (dialog), window->priv->batch_title);
 		fr_window_destroy_with_error_dialog (window);
+	}
 
 	if (dialog_parent != NULL)
 		gtk_window_set_modal (dialog_parent, FALSE);
@@ -2887,7 +2889,8 @@ fr_window_show_error_dialog (FrWindow   *window,
 			  "response",
 			  G_CALLBACK (error_dialog_response_cb),
 			  window);
-	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+	if (dialog_parent != NULL)
+		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	gtk_widget_show (dialog);
 
 	window->priv->showing_error_dialog = TRUE;
