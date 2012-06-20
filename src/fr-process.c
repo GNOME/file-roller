@@ -29,6 +29,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <glib.h>
+#include "file-utils.h"
 #include "fr-proc-error.h"
 #include "fr-process.h"
 #include "fr-marshal.h"
@@ -214,6 +215,8 @@ struct _FrProcessPrivate {
 	guint        check_timeout;
 
 	FrProcError  first_error;
+	GList       *first_error_stdout;
+	GList       *first_error_stderr;
 
 	gboolean     running;
 	gboolean     stopping;
@@ -312,6 +315,8 @@ fr_process_init (FrProcess *process)
 
 	process->error.gerror = NULL;
 	process->priv->first_error.gerror = NULL;
+	process->priv->first_error_stdout = NULL;
+	process->priv->first_error_stderr = NULL;
 
 	process->priv->check_timeout = 0;
 	process->priv->running = FALSE;
@@ -354,6 +359,8 @@ fr_process_finalize (GObject *object)
 
 	g_clear_error (&process->error.gerror);
 	g_clear_error (&process->priv->first_error.gerror);
+	path_list_free (process->priv->first_error_stdout);
+	path_list_free (process->priv->first_error_stderr);
 
 	g_free (process->priv);
 
@@ -761,6 +768,12 @@ allow_sticky_processes_only (FrProcess *process,
 		g_clear_error (&process->priv->first_error.gerror);
 		if (process->error.gerror != NULL)
 			process->priv->first_error.gerror = g_error_copy (process->error.gerror);
+
+		path_list_free (process->priv->first_error_stdout);
+		process->priv->first_error_stdout = g_list_reverse (path_list_dup (process->out.raw));
+
+		path_list_free (process->priv->first_error_stderr);
+		process->priv->first_error_stderr = g_list_reverse (path_list_dup (process->err.raw));
 	}
 
 	process->priv->sticky_only = TRUE;
@@ -927,10 +940,21 @@ check_child (gpointer data)
 
 	if (process->priv->sticky_only) {
 		/* Restore the first error. */
+
 		fr_process_set_error (process,
 				      process->priv->first_error.type,
 				      process->priv->first_error.status,
 				      process->priv->first_error.gerror);
+
+		/* Restore the first error output as well. */
+
+		path_list_free (process->out.raw);
+		process->out.raw = process->priv->first_error_stdout;
+		process->priv->first_error_stdout = NULL;
+
+		path_list_free (process->err.raw);
+		process->err.raw = process->priv->first_error_stderr;
+		process->priv->first_error_stderr = NULL;
 	}
 
 	g_signal_emit (G_OBJECT (process),
