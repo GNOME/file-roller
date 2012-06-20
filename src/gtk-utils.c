@@ -339,63 +339,37 @@ _gtk_yesno_dialog_new (GtkWindow        *parent,
 
 
 GtkWidget*
-_gtk_error_dialog_new (GtkWindow        *parent,
-		       GtkDialogFlags    flags,
-		       GList            *row_output,
-		       const char       *primary_text,
-		       const char       *secondary_text,
+_gtk_error_dialog_new (GtkWindow      *parent,
+		       GtkDialogFlags  flags,
+		       GList          *row_output,
+		       const char     *primary_text,
+		       const char     *secondary_text_format,
 		       ...)
 {
-	GtkWidget     *dialog;
-	GtkWidget     *label;
-	GtkWidget     *image;
-	GtkWidget     *hbox;
-	GtkWidget     *vbox;
-	GtkWidget     *text_view;
-	GtkWidget     *scrolled = NULL;
-	GtkWidget     *expander;
-	GtkWidget     *content_area;
-	GtkWidget     *action_area;
-	GtkTextBuffer *text_buf;
-	GtkTextIter    iter;
-	char          *stock_id;
-	GList         *scan;
-	char          *escaped_message, *markup_text;
-	va_list        args;
-	gboolean       view_output = (row_output != NULL);
+	GtkBuilder *builder;
+	GtkWidget  *dialog;
+	char       *escaped_message;
+	char       *markup_text;
+	gboolean    view_output;
 
-	stock_id = GTK_STOCK_DIALOG_ERROR;
-
-	dialog = gtk_dialog_new_with_buttons ("",
-					      parent,
-					      flags,
-					      GTK_STOCK_OK, GTK_RESPONSE_OK,
-					      NULL);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	builder = _gtk_builder_new_from_resource ("error-dialog.ui");
+	dialog = _gtk_builder_get_widget (builder, "error_dialog");
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
+	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
+	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-	action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog));
-
-	/* Add label and image */
-
-	image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_DIALOG);
-	gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-	gtk_widget_set_valign (image, GTK_ALIGN_START);
-
-	label = gtk_label_new ("");
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
-	gtk_widget_set_valign (label, GTK_ALIGN_START);
+	/* label */
 
 	escaped_message = g_markup_escape_text (primary_text, -1);
-	if (secondary_text != NULL) {
-		char *secondary_message;
-		char *escaped_secondary_message;
+	if (secondary_text_format != NULL) {
+		va_list  args;
+		char    *secondary_message;
+		char    *escaped_secondary_message;
 
-		va_start (args, secondary_text);
-		secondary_message = g_strdup_vprintf (secondary_text, args);
+		va_start (args, secondary_text_format);
+		secondary_message = g_strdup_vprintf (secondary_text_format, args);
 		va_end (args);
 		escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
 
@@ -408,75 +382,41 @@ _gtk_error_dialog_new (GtkWindow        *parent,
 	}
 	else
 		markup_text = g_strdup (escaped_message);
-	gtk_label_set_markup (GTK_LABEL (label), markup_text);
+	gtk_label_set_markup (GTK_LABEL (_gtk_builder_get_widget (builder, "message_label")), markup_text);
 	g_free (markup_text);
 	g_free (escaped_message);
 
+	/* output */
+
+	view_output = (row_output != NULL) && (secondary_text_format == NULL);
 	if (view_output) {
-		gtk_widget_set_size_request (dialog, 500, -1);
+		GtkTextBuffer *text_buffer;
+		GtkTextIter    iter;
+		GList         *scan;
 
-		/* Expander */
-
-		expander = gtk_expander_new_with_mnemonic (_("Command _Line Output"));
-		gtk_expander_set_expanded (GTK_EXPANDER (expander), secondary_text == NULL);
-
-		/* Add text */
-
-		scrolled = gtk_scrolled_window_new (NULL, NULL);
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-						GTK_POLICY_AUTOMATIC,
-						GTK_POLICY_AUTOMATIC);
-		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled),
-						     GTK_SHADOW_ETCHED_IN);
-		gtk_widget_set_size_request (scrolled, -1, 200);
-
-		text_buf = gtk_text_buffer_new (NULL);
-		gtk_text_buffer_create_tag (text_buf, "monospace",
-					    "family", "monospace", NULL);
-		gtk_text_buffer_get_iter_at_offset (text_buf, &iter, 0);
+		text_buffer = (GtkTextBuffer *) gtk_builder_get_object (builder, "output_textbuffer");
+		gtk_text_buffer_create_tag (text_buffer, "monospace",
+					    "family", "monospace",
+					    NULL);
+		gtk_text_buffer_get_iter_at_offset (text_buffer, &iter, 0);
 		for (scan = row_output; scan; scan = scan->next) {
-			char *line = scan->data;
-			char *utf8_line;
-			gsize bytes_written;
+			char  *line = scan->data;
+			char  *utf8_line;
+			gsize  bytes_written;
 
 			utf8_line = g_locale_to_utf8 (line, -1, NULL, &bytes_written, NULL);
-			gtk_text_buffer_insert_with_tags_by_name (text_buf,
+			gtk_text_buffer_insert_with_tags_by_name (text_buffer,
 								  &iter,
 								  utf8_line,
 								  bytes_written,
 								  "monospace", NULL);
 			g_free (utf8_line);
 
-			gtk_text_buffer_insert (text_buf, &iter, "\n", 1);
+			gtk_text_buffer_insert (text_buffer, &iter, "\n", 1);
 		}
-		text_view = gtk_text_view_new_with_buffer (text_buf);
-		g_object_unref (text_buf);
-		gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
-		gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (text_view), FALSE);
 	}
 
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
-
-	if (view_output) {
-		gtk_container_add (GTK_CONTAINER (scrolled), text_view);
-		gtk_container_add (GTK_CONTAINER (expander), scrolled);
-		gtk_box_pack_start (GTK_BOX (vbox), expander, TRUE, TRUE, 0);
-	}
-
-	gtk_box_pack_start (GTK_BOX (content_area), vbox, FALSE, FALSE, 0);
-
-	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-	gtk_box_set_spacing (GTK_BOX (content_area), 14); /* 14 + 2 * 5 = 24 */
-	gtk_container_set_border_width (GTK_CONTAINER (action_area), 5);
-	gtk_box_set_spacing (GTK_BOX (action_area), 6);
-
-	gtk_widget_show_all (vbox);
+	gtk_widget_set_visible (_gtk_builder_get_widget (builder, "output_box"), view_output);
 
 	return dialog;
 }

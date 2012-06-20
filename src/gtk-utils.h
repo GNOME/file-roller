@@ -51,7 +51,7 @@ GtkWidget*  _gtk_error_dialog_new           (GtkWindow        *parent,
 					     GtkDialogFlags    flags,
 					     GList            *row_output,
 					     const char       *primary_text,
-					     const char       *secondary_text,
+					     const char       *secondary_text_format,
 					     ...) G_GNUC_PRINTF (5, 6);
 void        _gtk_error_dialog_run           (GtkWindow        *parent,
 					     const gchar      *main_message,
@@ -81,7 +81,7 @@ gboolean    show_uri                        (GdkScreen   *screen,
 				             GError     **error);
 void        show_help_dialog                (GtkWindow    *parent,
 					     const char   *section);
-GtkBuilder *  
+GtkBuilder *
             _gtk_builder_new_from_file      (const char   *filename);
 GtkBuilder *
 	   _gtk_builder_new_from_resource   (const char   *resource_path);
