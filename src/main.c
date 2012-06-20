@@ -601,7 +601,6 @@ fr_application_create_option_context (void)
 
 	context = g_option_context_new (N_("- Create and modify an archive"));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
-	g_option_context_set_ignore_unknown_options (context, TRUE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 
 	if (g_once_init_enter (&initialized)) {
@@ -811,6 +810,7 @@ fr_application_local_command_line (GApplication   *application,
         *exit_status = 0;
 
         context = fr_application_create_option_context ();
+        g_option_context_set_ignore_unknown_options (context, TRUE);
 	if (! g_option_context_parse (context, &local_argc, &local_argv, &error)) {
 		*exit_status = EXIT_FAILURE;
 		g_critical ("Failed to parse arguments: %s", error->message);
