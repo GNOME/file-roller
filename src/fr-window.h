@@ -283,6 +283,8 @@ void        fr_window_use_progress_dialog         (FrWindow   *window,
 
 void       fr_window_new_batch                    (FrWindow      *window,
 						   const char    *title);
+const char *
+           fr_window_get_batch_title              (FrWindow      *window);
 void       fr_window_set_current_batch_action     (FrWindow      *window,
 						   FrBatchActionType  action,
 						   void          *data,

@@ -8880,6 +8880,13 @@ fr_window_new_batch (FrWindow   *window,
 }
 
 
+const char *
+fr_window_get_batch_title (FrWindow *window)
+{
+	return window->priv->batch_title;
+}
+
+
 void
 fr_window_set_batch__extract_here (FrWindow   *window,
 				   const char *filename)
