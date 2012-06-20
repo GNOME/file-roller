@@ -18,26 +18,6 @@
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="p_help_button">
-                <property name="label">gtk-help</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="has_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="has_default">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_action_appearance">False</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-                <property name="secondary">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkButton" id="p_ok_button">
                 <property name="label">gtk-close</property>
                 <property name="use_action_appearance">False</property>
@@ -75,8 +55,12 @@
               <object class="GtkLabel" id="p_name_label_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes" context="File">Name:</property>
                 <property name="justify">center</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="x_options">GTK_FILL</property>
@@ -87,8 +71,12 @@
               <object class="GtkLabel" id="p_size_label_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">Archive size:</property>
                 <property name="justify">center</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="top_attach">3</property>
@@ -117,8 +105,12 @@
               <object class="GtkLabel" id="p_path_label_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes" comments="after the colon there is a folder name.">Location:</property>
                 <property name="justify">center</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="top_attach">1</property>
@@ -147,7 +139,11 @@
               <object class="GtkLabel" id="p_cratio_label_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">Compression ratio:</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="top_attach">5</property>
@@ -176,8 +172,12 @@
               <object class="GtkLabel" id="p_date_label_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">Last modified:</property>
                 <property name="justify">center</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="top_attach">2</property>
@@ -190,7 +190,11 @@
               <object class="GtkLabel" id="p_uncomp_size_label_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">Content size:</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="top_attach">4</property>
@@ -235,8 +239,12 @@
               <object class="GtkLabel" id="p_files_label_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">Number of files:</property>
                 <property name="justify">center</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="top_attach">6</property>
@@ -286,7 +294,6 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="-11">p_help_button</action-widget>
       <action-widget response="-7">p_ok_button</action-widget>
     </action-widgets>
   </object>

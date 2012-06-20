@@ -120,14 +120,6 @@ set_archive_options (DialogData *data)
 
 
 static void
-help_clicked_cb (GtkWidget  *widget,
-		 DialogData *data)
-{
-	show_help_dialog (GTK_WINDOW (GET_WIDGET ("dialog")), "archive-create");
-}
-
-
-static void
 add_clicked_cb (GtkWidget  *widget,
 		DialogData *data)
 {
@@ -556,10 +548,6 @@ dlg_batch_add_files (FrWindow *window,
 	g_signal_connect (G_OBJECT (GET_WIDGET ("a_add_button")),
 			  "clicked",
 			  G_CALLBACK (add_clicked_cb),
-			  data);
-	g_signal_connect (GET_WIDGET ("a_help_button"),
-			  "clicked",
-			  G_CALLBACK (help_clicked_cb),
 			  data);
 	g_signal_connect (G_OBJECT (data->archive_type_combo_box),
 			  "changed",

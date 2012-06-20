@@ -62,21 +62,11 @@ set_label (GtkWidget *label, const char *text)
 }
 
 
-static int
-help_cb (GtkWidget   *w,
-	 DialogData  *data)
-{
-	show_help_dialog (GTK_WINDOW (data->dialog), "archive-properties");
-	return TRUE;
-}
-
-
 void
 dlg_prop (FrWindow *window)
 {
 	DialogData       *data;
 	GtkWidget        *ok_button;
-	GtkWidget        *help_button;
 	GtkWidget        *label_label;
 	GtkWidget        *label;
 	char             *s;
@@ -97,7 +87,6 @@ dlg_prop (FrWindow *window)
 
 	data->dialog = _gtk_builder_get_widget (data->builder, "prop_dialog");
 	ok_button = _gtk_builder_get_widget (data->builder, "p_ok_button");
-	help_button = _gtk_builder_get_widget (data->builder, "p_help_button");
 
 	/* Set widgets data. */
 
@@ -203,10 +192,6 @@ dlg_prop (FrWindow *window)
 				  "clicked",
 				  G_CALLBACK (gtk_widget_destroy),
 				  G_OBJECT (data->dialog));
-	g_signal_connect (G_OBJECT (help_button),
-			  "clicked",
-			  G_CALLBACK (help_cb),
-			  data);
 
 	/* Run dialog. */
 
