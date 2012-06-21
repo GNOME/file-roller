@@ -1291,25 +1291,6 @@ fr_archive_load (FrArchive  *archive,
 }
 
 
-gboolean
-fr_archive_load_local (FrArchive  *archive,
-		       const char *uri,
-		       const char *password)
-{
-	g_return_val_if_fail (archive != NULL, FALSE);
-
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[START],
-		       0,
-		       FR_ACTION_LOADING_ARCHIVE);
-
-	fr_archive_set_uri (archive, uri);
-	copy_remote_file (archive, password);
-
-	return TRUE;
-}
-
-
 void
 fr_archive_reload (FrArchive  *archive,
 		   const char *password)

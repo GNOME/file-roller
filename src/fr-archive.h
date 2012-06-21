@@ -108,9 +108,6 @@ gboolean    fr_archive_create                    (FrArchive       *archive,
 gboolean    fr_archive_load                      (FrArchive       *archive,
 						  const char      *uri,
 						  const char      *password);
-gboolean    fr_archive_load_local                (FrArchive       *archive,
-		       				  const char      *uri,
-		       				  const char      *password);
 void        fr_archive_reload                    (FrArchive       *archive,
 						  const char      *password);
 

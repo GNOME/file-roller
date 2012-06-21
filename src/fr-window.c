@@ -170,7 +170,7 @@ typedef enum {
 
 typedef struct {
 	int            refs;
-	char          *archive_filename;
+	char          *archive_uri;
 	char          *archive_password;
 	FRClipboardOp  op;
 	char          *base_dir;
@@ -208,7 +208,7 @@ fr_clipboard_data_unref (FrClipboardData *clipboard_data)
 	if (--clipboard_data->refs > 0)
 		return;
 
-	g_free (clipboard_data->archive_filename);
+	g_free (clipboard_data->archive_uri);
 	g_free (clipboard_data->archive_password);
 	g_free (clipboard_data->base_dir);
 	g_free (clipboard_data->tmp_dir);
@@ -3893,7 +3893,7 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 
 	uris = g_strsplit (data, "\r\n", -1);
 
-	clipboard_data->archive_filename = g_strdup (uris[0]);
+	clipboard_data->archive_uri = g_strdup (uris[0]);
 	if (window->priv->password_for_paste != NULL)
 		clipboard_data->archive_password = g_strdup (window->priv->password_for_paste);
 	else if (strcmp (uris[1], "") != 0)
@@ -6047,7 +6047,7 @@ fr_window_get_paste_archive_uri (FrWindow *window)
 	g_return_val_if_fail (window != NULL, NULL);
 
 	if (window->priv->clipboard_data != NULL)
-		return window->priv->clipboard_data->archive_filename;
+		return window->priv->clipboard_data->archive_uri;
 	else
 		return NULL;
 }
@@ -7960,9 +7960,9 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 				  window);
 		fr_archive_set_fake_load_func (window->priv->copy_from_archive, always_fake_load, NULL);
 	}
-	fr_archive_load_local (window->priv->copy_from_archive,
-			       data->archive_filename,
-			       data->archive_password);
+	fr_archive_load (window->priv->copy_from_archive,
+			 data->archive_uri,
+			 data->archive_password);
 }
 
 
