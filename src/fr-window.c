@@ -3157,19 +3157,18 @@ action_performed (FrArchive   *archive,
 			char *source_dir;
 
 			source_dir = g_filename_to_uri (window->priv->convert_data.temp_dir, NULL, NULL);
-			fr_archive_add_with_wildcard (
-				  window->priv->convert_data.new_archive,
-				  "*",
-				  NULL,
-				  NULL,
-				  source_dir,
-				  NULL,
-				  FALSE,
-				  TRUE,
-				  window->priv->convert_data.password,
-				  window->priv->convert_data.encrypt_header,
-				  window->priv->compression,
-				  window->priv->convert_data.volume_size);
+			fr_archive_add_with_wildcard (window->priv->convert_data.new_archive,
+						      "*",
+						      NULL,
+						      NULL,
+						      source_dir,
+						      NULL,
+						      FALSE,
+						      TRUE,
+						      window->priv->convert_data.password,
+						      window->priv->convert_data.encrypt_header,
+						      window->priv->compression,
+						      window->priv->convert_data.volume_size);
 			g_free (source_dir);
 		}
 		else {
@@ -6343,8 +6342,8 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 
 
 void
-fr_window_archive_remove (FrWindow      *window,
-			  GList         *file_list)
+fr_window_archive_remove (FrWindow *window,
+			  GList    *file_list)
 {
 	fr_window_clipboard_remove_file_list (window, file_list);
 
