@@ -205,6 +205,6 @@ void        fr_archive_test                      (FrArchive       *archive,
 
 /* utilities */
 
-gboolean    uri_is_archive                       (const char      *uri);
+gboolean    _g_uri_is_archive                    (const char      *uri);
 
 #endif /* FR_ARCHIVE_H */

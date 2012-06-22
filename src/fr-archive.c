@@ -3404,7 +3404,7 @@ fr_archive_test (FrArchive  *archive,
 
 
 gboolean
-uri_is_archive (const char *uri)
+_g_uri_is_archive (const char *uri)
 {
 	GFile      *file;
 	const char *mime_type;
