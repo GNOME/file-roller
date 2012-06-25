@@ -1,3 +1,46 @@
+version 3.5.2
+-------------
+
+ New features and user visible changes:
+
+  * Allow the user to cancel addition and deletion of files 
+    to an exiting archive.
+  * Progress dialog: show the number of remaining files to 
+    complete the operation; show the archive name in the 
+    main message.
+  * Removed the stop button from the toolbar.  The user can 
+    use the progress dialog cancel button to stop a long
+    operation.
+  * Enabled interactive search in the file list.  The user 
+    can just start typing the name of a file and if present
+    in the list it will get selected.
+  * Removed the help buttons from the dialogs.
+
+ Internal code changes:
+
+  * Renamed the D-Bus interface as org.gnome.ArchiveManager1. 
+  * Use the file-roller extecutable as a D-Bus service as well,
+    instead of using a separate executable.
+  * Define the progress dialog and other dialogs in external files, 
+    saved as gresources.
+  * Added a prefix to the utility functions for a better
+    organization and readability of the code.
+
+ New or updated application translations:
+
+  * Greek (Tom Tryfonidis)
+  * Arabic (Khaled Hosny)
+  * Assamese (Nilamdyuti Goswami)
+  * Español (Daniel Mustieles)
+  * Galician (Fran Dieguez)
+  * Lithuanian (Algimantas Margevičius)
+  * Russian (Yuri Kozlov)
+  * Slovenian (Matej Urbančič)
+
+ New or updated manual translations:
+
+  * French (Bruno Brouard)
+
 version 3.5.1
 -------------
 
