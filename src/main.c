@@ -53,7 +53,7 @@ static int          arg_add = FALSE;
 static char        *arg_extract_to = NULL;
 static int          arg_extract = FALSE;
 static int          arg_extract_here = FALSE;
-static char        *arg_default_url = NULL;
+static char        *arg_default_dir = NULL;
 static gboolean     arg_version = FALSE;
 static gboolean     arg_service = FALSE;
 static const char  *program_argv0 = NULL; /* argv[0] from main(); used as the command to restart the program */
@@ -80,7 +80,7 @@ static const GOptionEntry options[] = {
 	  N_("Extract the contents of the archives in the archive folder and quit the program"),
 	  NULL },
 
-	{ "default-dir", '\0', 0, G_OPTION_ARG_STRING, &arg_default_url,
+	{ "default-dir", '\0', 0, G_OPTION_ARG_STRING, &arg_default_dir,
 	  N_("Default folder to use for the '--add' and '--extract' commands"),
 	  N_("FOLDER") },
 
@@ -644,7 +644,7 @@ fr_application_command_line_finished (GApplication *application,
 	arg_extract_to = NULL;
 	arg_extract = FALSE;
 	arg_extract_here = FALSE;
-	arg_default_url = NULL;
+	arg_default_dir = NULL;
 	arg_version = FALSE;
 
 	return status;
@@ -661,6 +661,7 @@ fr_application_command_line (GApplication            *application,
 	GError          *error = NULL;
 	char            *extract_to_uri = NULL;
 	char            *add_to_uri = NULL;
+	char            *default_uri = NULL;
 
 	argv = g_application_command_line_get_arguments (command_line, &argc);
 
@@ -710,6 +711,9 @@ fr_application_command_line (GApplication            *application,
 	if (arg_add_to != NULL)
 		add_to_uri = _g_uri_get_from_command_line (arg_add_to);
 
+	if (arg_default_dir != NULL)
+		default_uri = _g_uri_get_from_command_line (arg_default_dir);
+
 	if ((arg_add_to != NULL) || (arg_add == 1)) { /* Add files to an archive */
 		GtkWidget   *window;
 		GList       *file_list;
@@ -718,8 +722,8 @@ fr_application_command_line (GApplication            *application,
 
 		window = fr_window_new ();
 
-		if (arg_default_url != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), arg_default_url, TRUE);
+		if (default_uri != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_uri, TRUE);
 
 		file_list = NULL;
 		while ((filename = remaining_args[i++]) != NULL)
@@ -744,8 +748,8 @@ fr_application_command_line (GApplication            *application,
 
 		window = fr_window_new ();
 
-		if (arg_default_url != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), arg_default_url, TRUE);
+		if (default_uri != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_uri, TRUE);
 
 		fr_window_new_batch (FR_WINDOW (window), _("Extract archive"));
 		while ((archive = remaining_args[i++]) != NULL) {
@@ -786,6 +790,7 @@ fr_application_command_line (GApplication            *application,
 		}
 	}
 
+	g_free (default_uri);
 	g_free (add_to_uri);
 	g_free (extract_to_uri);
 
