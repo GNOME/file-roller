@@ -39,7 +39,7 @@ static int    add;
 static char  *extract_to = NULL;
 static int    extract;
 static int    extract_here;
-static char  *default_url = NULL;
+static char  *default_dir = NULL;
 
 static guint  startup_id = 0;
 
@@ -67,7 +67,7 @@ static const GOptionEntry options[] = {
 	  N_("Extract the contents of the archives in the archive folder and quit the program"),
 	  NULL },
 
-	{ "default-dir", '\0', 0, G_OPTION_ARG_STRING, &default_url,
+	{ "default-dir", '\0', 0, G_OPTION_ARG_STRING, &default_dir,
 	  N_("Default folder to use for the '--add' and '--extract' commands"),
 	  N_("FOLDER") },
 
@@ -130,6 +130,7 @@ prepare_app (void)
 {
 	char        *extract_to_uri = NULL;
 	char        *add_to_uri = NULL;
+	char        *default_uri = NULL;
 	EggSMClient *client = NULL;
 
 	client = egg_sm_client_get ();
@@ -151,6 +152,9 @@ prepare_app (void)
 	if (add_to != NULL)
 		add_to_uri = get_uri_from_command_line (add_to);
 
+	if (default_dir != NULL)
+		default_uri = get_uri_from_command_line (default_dir);
+
 	if ((add_to != NULL) || (add == 1)) { /* Add files to an archive */
 		GtkWidget   *window;
 		GList       *file_list = NULL;
@@ -158,8 +162,8 @@ prepare_app (void)
 		int          i = 0;
 
 		window = fr_window_new ();
-		if (default_url != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), default_url, TRUE);
+		if (default_uri != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_uri, TRUE);
 
 		while ((filename = remaining_args[i++]) != NULL)
 			file_list = g_list_prepend (file_list, get_uri_from_command_line (filename));
@@ -182,8 +186,8 @@ prepare_app (void)
 		int         i = 0;
 
 		window = fr_window_new ();
-		if (default_url != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), default_url, TRUE);
+		if (default_uri != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_uri, TRUE);
 
 		fr_window_new_batch (FR_WINDOW (window));
 		while ((archive = remaining_args[i++]) != NULL) {
@@ -226,6 +230,7 @@ prepare_app (void)
 		}
 	}
 
+	g_free (default_uri);
 	g_free (add_to_uri);
 	g_free (extract_to_uri);
 }
