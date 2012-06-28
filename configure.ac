@@ -1,8 +1,8 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.61)
+AC_PREREQ([2.69])
 
-AC_INIT(file-roller, 3.5.2, [http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller])
+AC_INIT([file-roller],[3.5.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller],[file-roller])
 AM_INIT_AUTOMAKE([1.11 foreign no-dist-gzip dist-xz tar-ustar])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -10,9 +10,8 @@ AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
-GNOME_COMMON_INIT
 AC_PROG_CC
-AC_PROG_LIBTOOL
+LT_INIT
 PKG_PROG_PKG_CONFIG
 GLIB_GSETTINGS
 
@@ -60,7 +59,7 @@ fi
 
 dnl ===========================================================================
 
-WARN_CFLAGS="-Wall -Wcast-align -Wtype-limits -Wclobbered -Wempty-body -Wignored-qualifiers"
+WARN_CFLAGS="-Wall -Wcast-align -Wtype-limits -Wclobbered -Wempty-body -Wignored-qualifiers -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wno-sign-compare"
 
 for option in $WARN_CFLAGS; do
 	SAVE_CFLAGS="$CFLAGS"
@@ -134,7 +133,7 @@ AC_CHECK_LIB(m, floor)
 dnl ==========================================================================
 
 AC_ARG_ENABLE(packagekit,
-	      [AC_HELP_STRING([--disable-packagekit],[build without PackageKit support])],,
+	      [AS_HELP_STRING([--disable-packagekit],[build without PackageKit support])],,
 	      [enable_packagekit=yes])
 if test "x$enable_packagekit" != "xno"; then
 	AC_DEFINE(ENABLE_PACKAGEKIT, 1, [define to enable PackageKit installer])
