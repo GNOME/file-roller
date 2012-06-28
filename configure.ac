@@ -59,7 +59,11 @@ fi
 
 dnl ===========================================================================
 
+if test x$ENABLE_DEBUG = xyes; then
 WARN_CFLAGS="-Wall -Wcast-align -Wtype-limits -Wclobbered -Wempty-body -Wignored-qualifiers -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wno-sign-compare"
+else
+WARN_CFLAGS="-Wall"
+fi
 
 for option in $WARN_CFLAGS; do
 	SAVE_CFLAGS="$CFLAGS"
