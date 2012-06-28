@@ -26,6 +26,7 @@
 #include "fr-command.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
+#include "rar-utils.h"
 
 
 typedef enum {

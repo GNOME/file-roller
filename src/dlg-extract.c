@@ -29,6 +29,7 @@
 #include "gtk-utils.h"
 #include "fr-window.h"
 #include "typedefs.h"
+#include "dlg-extract.h"
 
 
 typedef struct {

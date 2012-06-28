@@ -30,6 +30,7 @@
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
+#include "dlg-add-files.h"
 
 
 typedef struct {

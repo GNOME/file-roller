@@ -27,6 +27,7 @@
 #include "gtk-utils.h"
 #include "fr-init.h"
 #include "fr-window.h"
+#include "dlg-open-with.h"
 
 
 typedef struct {

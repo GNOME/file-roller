@@ -200,7 +200,7 @@ migrate_options_directory (void)
 /* -- FrRegisteredCommand -- */
 
 
-FrRegisteredCommand *
+static FrRegisteredCommand *
 fr_registered_command_new (GType command_type)
 {
 	FrRegisteredCommand  *reg_com;
@@ -241,14 +241,14 @@ fr_registered_command_new (GType command_type)
 }
 
 
-void
+G_GNUC_UNUSED static void
 fr_registered_command_ref (FrRegisteredCommand *reg_com)
 {
 	reg_com->ref++;
 }
 
 
-void
+static void
 fr_registered_command_unref (FrRegisteredCommand *reg_com)
 {
 	if (--(reg_com->ref) != 0)
@@ -260,7 +260,7 @@ fr_registered_command_unref (FrRegisteredCommand *reg_com)
 }
 
 
-FrCommandCaps
+static FrCommandCaps
 fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 				        const char          *mime_type)
 {
@@ -278,7 +278,7 @@ fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 }
 
 
-FrCommandCaps
+static FrCommandCaps
 fr_registered_command_get_potential_capabilities (FrRegisteredCommand *reg_com,
 						  const char          *mime_type)
 {
@@ -299,7 +299,7 @@ fr_registered_command_get_potential_capabilities (FrRegisteredCommand *reg_com,
 }
 
 
-void
+static void
 register_command (GType command_type)
 {
 	if (Registered_Commands == NULL)
@@ -308,7 +308,7 @@ register_command (GType command_type)
 }
 
 
-gboolean
+G_GNUC_UNUSED static gboolean
 unregister_command (GType command_type)
 {
 	int i;

@@ -26,6 +26,7 @@
 #include "file-utils.h"
 #include "gtk-utils.h"
 #include "fr-window.h"
+#include "dlg-prop.h"
 
 
 typedef struct {
