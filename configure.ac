@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.68])
 
 AC_INIT([file-roller],[3.5.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller],[file-roller])
 AM_INIT_AUTOMAKE([1.11 foreign no-dist-gzip dist-xz tar-ustar])
