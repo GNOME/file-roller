@@ -5,7 +5,8 @@ INCLUDES =						\
 	-I$(top_builddir)				\
 	$(DISABLE_DEPRECATED)				\
 	$(NAUTILUS_CFLAGS)				\
-	$(FR_CFLAGS)
+	$(FR_CFLAGS)					\
+	$(JSON_GLIB_CFLAGS)
 
 nautilus_extensiondir=$(NAUTILUS_EXTENSION_DIR)
 

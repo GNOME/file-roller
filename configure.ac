@@ -30,6 +30,7 @@ GLIB_REQUIRED=2.29.14
 GIO_REQUIRED=2.25.5
 GTK_REQUIRED=3.4.0
 NAUTILUS_REQUIRED=2.22.2
+JSON_GLIB_REQUIRED=0.14.0
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GIO_REQUIRED)
@@ -121,6 +122,23 @@ AM_CONDITIONAL(ENABLE_NAUTILUS_ACTIONS, test x"$enable_nautilus_actions" != x"no
 
 NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
 AC_SUBST(NAUTILUS_EXTENSION_DIR)
+
+dnl ******************************
+
+PKG_CHECK_MODULES(JSON_GLIB,
+		  [json-glib-1.0 >= $JSON_GLIB_REQUIRED
+		   glib-2.0],
+		  [enable_json_glib=yes],
+		  [enable_json_glib=no])
+
+if test x$enable_json_glib = xyes ; then
+	AC_DEFINE(HAVE_JSON_GLIB, 1, [Define to 1 if json-glib support is included])
+fi
+
+AC_SUBST(JSON_GLIB_CFLAGS)
+AC_SUBST(JSON_GLIB_LIBS)
+
+AM_CONDITIONAL(ENABLE_JSON_GLIB, test x"$enable_json_glib" != x"no")
 
 dnl ******************************
 
@@ -249,4 +267,5 @@ Configuration:
 	Nautilus support        : ${enable_nautilus_actions}
 	PackageKit support      : ${enable_packagekit}
 	Use libmagic            : ${enable_magic}
+	JSON support            : ${enable_json_glib}
 "

@@ -39,6 +39,9 @@
 #include "fr-command-rar.h"
 #include "fr-command-rpm.h"
 #include "fr-command-tar.h"
+#if HAVE_JSON_GLIB
+  #include "fr-command-unarchiver.h"
+#endif
 #include "fr-command-unstuff.h"
 #include "fr-command-zip.h"
 #include "fr-command-zoo.h"
@@ -355,6 +358,9 @@ register_commands (void)
 	register_command (FR_TYPE_COMMAND_ZIP);
 	register_command (FR_TYPE_COMMAND_LRZIP);
 	register_command (FR_TYPE_COMMAND_ZOO);
+#if HAVE_JSON_GLIB
+	register_command (FR_TYPE_COMMAND_UNARCHIVER);
+#endif
 }
 
 

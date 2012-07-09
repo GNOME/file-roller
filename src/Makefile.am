@@ -40,7 +40,8 @@ INCLUDES =						\
 	-DSHDIR=\"$(shdir)\"				\
 	-DAPPLICATIONS_DIR=\"$(applications_dir)\"	\
 	$(DISABLE_DEPRECATED)				\
-	$(FR_CFLAGS)
+	$(FR_CFLAGS)					\
+	$(JSON_GLIB_CFLAGS)
 
 BUILT_SOURCES =			\
 	fr-marshal.c		\
@@ -160,6 +161,12 @@ COMMON_SOURCES = 			\
 	$(MKDTEMP_FILES)		\
 	$(BUILT_SOURCES)
 
+if ENABLE_JSON_GLIB
+COMMON_SOURCES +=			\
+	fr-command-unarchiver.h		\
+	fr-command-unarchiver.c
+endif
+
 fr-marshal.h: fr-marshal.list $(GLIB_GENMARSHAL)
 	$(AM_V_GEN)( $(GLIB_GENMARSHAL) $< --header --prefix=fr_marshal > $@ )
 
@@ -200,15 +207,16 @@ file_roller_SOURCES = 			\
 
 file_roller_LDADD =					\
 	$(top_builddir)/copy-n-paste/libeggsmclient.la	\
-	$(FR_LIBS)
+	$(FR_LIBS)					\
+	$(JSON_GLIB_LIBS)
 
 if ENABLE_MAGIC
 file_roller_LDADD += $(MAGIC_LIBS)
 endif
 
 test_server_SOURCES = test-server.c
-test_server_FLAGS = $(FR_CFLAGS)
-test_server_LDADD = $(FR_LIBS)
+test_server_FLAGS = $(FR_CFLAGS) $(JSON_GLIB_CFLAGS)
+test_server_LDADD = $(FR_LIBS) $(JSON_GLIB_LIBS)
 
 EXTRA_DIST = 				\
 	file-roller.gresource.xml	\
