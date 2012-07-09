@@ -87,19 +87,99 @@ struct _FrCommand
 	guint          volume_size;
 	gboolean       creating_archive;
 
-	/* features. */
+	/* command features. */
 
-	guint          propAddCanUpdate : 1;
+	/* propAddCanReplace:
+	 *
+	 * TRUE if the command can overwrite a file in the archive.
+	 */
 	guint          propAddCanReplace : 1;
+
+	/* propAddCanReplace:
+	 *
+	 * TRUE if the command can overwrite a file in the archive if older
+	 * then the file on disk.
+	 */
+	guint          propAddCanUpdate : 1;
+
+	/* propAddCanStoreFolders:
+	 *
+	 * TRUE if the command can store folder entries inside the archive.
+	 */
 	guint          propAddCanStoreFolders : 1;
+
+	/* propExtractCanAvoidOverwrite:
+	 *
+	 * TRUE if the command can avoid to overwrite the files on disk.
+	 */
 	guint          propExtractCanAvoidOverwrite : 1;
+
+	/* propExtractCanSkipOlder:
+	 *
+	 * TRUE if the command can avoid to overwrite a file on disk when it is
+	 * newer than the file in the archive.
+	 */
 	guint          propExtractCanSkipOlder : 1;
+
+	/* propExtractCanJunkPaths:
+	 *
+	 * TRUE if the command can extract the files in the current folder
+	 * without recreating the directory structure.
+	 */
 	guint          propExtractCanJunkPaths : 1;
+
+	/* propPassword:
+	 *
+	 * TRUE if the command can use passwords for adding or extracting files.
+	 */
 	guint          propPassword : 1;
+
+	/* propTest:
+	 *
+	 * TRUE if the command can test the archive integrity.
+	 */
 	guint          propTest : 1;
+
+	/* propCanExtractAll:
+	 *
+	 * TRUE if the command extract all the files when no file is specified.
+	 */
 	guint          propCanExtractAll : 1;
+
+	/* propCanDeleteNonEmptyFolders:
+	 *
+	 * is used to overcome an issue with tar, that deletes only the folder
+	 * entry in the archive instead of deleting the folder content
+	 * recursively.
+	 */
 	guint          propCanDeleteNonEmptyFolders : 1;
+
+	/* propCanExtractNonEmptyFolders:
+	 *
+	 * is used to overcome an issue with tar.  For example if
+	 * the content of a tar archive is
+	 *
+	 * readme.txt
+	 * doc/
+	 * doc/page1.html
+	 * doc/page2.html
+	 *
+	 * and we want to extract the content of the doc folder, the command:
+	 *
+	 * tar -xf archive.tar doc doc/page1.html doc/page2.html
+	 *
+	 * gives an error.
+	 * To fix the issue we have to remove the files inside the doc
+	 * folder from the command line, getting the following command:
+	 *
+	 * tar -xf archive.tar doc
+	 */
 	guint          propCanExtractNonEmptyFolders : 1;
+
+	/* propListFromFile:
+	 *
+	 * if TRUE the command has an option to read the file list from a file
+	 */
 	guint          propListFromFile : 1;
 
 	/*<private>*/
