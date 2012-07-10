@@ -22,23 +22,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-ace.h"
 
-static void fr_command_ace_class_init  (FrCommandAceClass *class);
-static void fr_command_ace_init        (FrCommand        *afile);
-static void fr_command_ace_finalize    (GObject          *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
-
+G_DEFINE_TYPE (FrCommandAce, fr_command_ace, FR_TYPE_COMMAND)
 
 /* -- list -- */
 
@@ -268,74 +260,48 @@ fr_command_ace_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_ace_class_init (FrCommandAceClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
-
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_ace_finalize;
-
-        afc->list             = fr_command_ace_list;
-	afc->extract          = fr_command_ace_extract;
-	afc->test             = fr_command_ace_test;
-	afc->handle_error     = fr_command_ace_handle_error;
-	afc->get_mime_types   = fr_command_ace_get_mime_types;
-	afc->get_capabilities = fr_command_ace_get_capabilities;
-	afc->get_packages     = fr_command_ace_get_packages;
-}
-
-
-static void
-fr_command_ace_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = TRUE;
-}
-
-
-static void
 fr_command_ace_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_ACE (object));
 
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_ace_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_ace_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_ace_get_type ()
+static void
+fr_command_ace_class_init (FrCommandAceClass *klass)
 {
-        static GType type = 0;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandAceClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_ace_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandAce),
-			0,
-			(GInstanceInitFunc) fr_command_ace_init
-		};
+        fr_command_ace_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandAce",
-					       &type_info,
-					       0);
-        }
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_ace_finalize;
 
-        return type;
+	command_class = FR_COMMAND_CLASS (klass);
+        command_class->list             = fr_command_ace_list;
+	command_class->extract          = fr_command_ace_extract;
+	command_class->test             = fr_command_ace_test;
+	command_class->handle_error     = fr_command_ace_handle_error;
+	command_class->get_mime_types   = fr_command_ace_get_mime_types;
+	command_class->get_capabilities = fr_command_ace_get_capabilities;
+	command_class->get_packages     = fr_command_ace_get_packages;
+}
+
+
+static void
+fr_command_ace_init (FrCommandAce *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propExtractCanAvoidOverwrite = FALSE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = TRUE;
+	base->propPassword                 = FALSE;
+	base->propTest                     = TRUE;
 }

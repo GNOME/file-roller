@@ -23,22 +23,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-dpkg.h"
 
-static void fr_command_dpkg_class_init  (FrCommandDpkgClass *class);
-static void fr_command_dpkg_init        (FrCommand         *afile);
-static void fr_command_dpkg_finalize    (GObject           *object);
 
-/* Parent Class */
+G_DEFINE_TYPE (FrCommandDpkg, fr_command_dpkg, FR_TYPE_COMMAND)
 
-static FrCommandClass *parent_class = NULL;
 
 static void
 process_metadata_line (char      *line,
@@ -240,72 +234,46 @@ fr_command_dpkg_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_dpkg_class_init (FrCommandDpkgClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
-
-        parent_class = g_type_class_peek_parent (class);
-        afc = (FrCommandClass*) class;
-
-        gobject_class->finalize = fr_command_dpkg_finalize;
-
-        afc->list             = fr_command_dpkg_list;
-        afc->extract          = fr_command_dpkg_extract;
-        afc->get_mime_types   = fr_command_dpkg_get_mime_types;
-        afc->get_capabilities = fr_command_dpkg_get_capabilities;
-        afc->get_packages     = fr_command_dpkg_get_packages;
-}
-
-
-static void
-fr_command_dpkg_init (FrCommand *comm)
-{
-        comm->propAddCanUpdate             = FALSE;
-        comm->propAddCanReplace            = FALSE;
-        comm->propExtractCanAvoidOverwrite = FALSE;
-        comm->propExtractCanSkipOlder      = FALSE;
-        comm->propExtractCanJunkPaths      = FALSE;
-        comm->propPassword                 = FALSE;
-        comm->propTest                     = FALSE;
-}
-
-
-static void
 fr_command_dpkg_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_DPKG (object));
 
-        /* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-                G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_dpkg_parent_class)->finalize)
+                G_OBJECT_CLASS (fr_command_dpkg_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_dpkg_get_type ()
+static void
+fr_command_dpkg_class_init (FrCommandDpkgClass *klass)
 {
-        static GType type = 0;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-                        sizeof (FrCommandDpkgClass),
-                        NULL,
-                        NULL,
-                        (GClassInitFunc) fr_command_dpkg_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (FrCommandDpkg),
-                        0,
-                        (GInstanceInitFunc) fr_command_dpkg_init
-                };
+        fr_command_dpkg_parent_class = g_type_class_peek_parent (klass);
 
-                type = g_type_register_static (FR_TYPE_COMMAND,
-                                               "FRCommandDpkg",
-                                               &type_info,
-                                               0);
-        }
+        gobject_class = G_OBJECT_CLASS (klass);
+        gobject_class->finalize = fr_command_dpkg_finalize;
 
-        return type;
+        command_class = FR_COMMAND_CLASS (klass);
+        command_class->list             = fr_command_dpkg_list;
+        command_class->extract          = fr_command_dpkg_extract;
+        command_class->get_mime_types   = fr_command_dpkg_get_mime_types;
+        command_class->get_capabilities = fr_command_dpkg_get_capabilities;
+        command_class->get_packages     = fr_command_dpkg_get_packages;
+}
+
+
+static void
+fr_command_dpkg_init (FrCommandDpkg *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+        base->propAddCanUpdate             = FALSE;
+        base->propAddCanReplace            = FALSE;
+        base->propExtractCanAvoidOverwrite = FALSE;
+        base->propExtractCanSkipOlder      = FALSE;
+        base->propExtractCanJunkPaths      = FALSE;
+        base->propPassword                 = FALSE;
+        base->propTest                     = FALSE;
 }

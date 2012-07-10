@@ -23,7 +23,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
-
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-command-zip.h"
@@ -32,20 +31,15 @@
 #include "java-utils.h"
 
 
+G_DEFINE_TYPE (FrCommandJar, fr_command_jar, FR_TYPE_COMMAND_ZIP)
+
+
 typedef struct {
 	char *filename;
 	char *rel_path;
 	char *package_minus_one_level;
 	char *link_name;		/* package dir = package_minus_one_level + '/' + link_name */
 } JarData;
-
-
-static void fr_command_jar_class_init  (FrCommandJarClass *class);
-static void fr_command_jar_init        (FrCommand         *afile);
-static void fr_command_jar_finalize    (GObject           *object);
-
-
-static FrCommandClass *parent_class = NULL;
 
 
 static void
@@ -118,10 +112,10 @@ fr_command_jar_add (FrCommand     *comm,
 	}
 
 	if (zip_list != NULL)
-		parent_class->add (comm, NULL, zip_list, base_dir, update, FALSE);
+		FR_COMMAND_CLASS (fr_command_jar_parent_class)->add (comm, NULL, zip_list, base_dir, update, FALSE);
 
 	if (jar_list != NULL)
-		parent_class->add (comm, NULL, jar_list, tmp_dir, update, FALSE);
+		FR_COMMAND_CLASS (fr_command_jar_parent_class)->add (comm, NULL, jar_list, tmp_dir, update, FALSE);
 
 	fr_process_begin_command (proc, "rm");
 	fr_process_set_working_dir (proc, "/");
@@ -181,63 +175,37 @@ fr_command_jar_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_jar_class_init (FrCommandJarClass *class)
-{
-	GObjectClass   *gobject_class = G_OBJECT_CLASS(class);
-	FrCommandClass *afc = FR_COMMAND_CLASS (class);
-
-	parent_class = g_type_class_peek_parent (class);
-
-	gobject_class->finalize = fr_command_jar_finalize;
-
-	afc->add = fr_command_jar_add;
-	afc->get_mime_types = fr_command_jar_get_mime_types;
-	afc->get_capabilities = fr_command_jar_get_capabilities;
-	afc->get_packages     = fr_command_jar_get_packages;
-}
-
-
-static void
-fr_command_jar_init (FrCommand *comm)
-{
-}
-
-
-static void
 fr_command_jar_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_JAR (object));
 
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_jar_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_jar_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_jar_get_type ()
+static void
+fr_command_jar_class_init (FrCommandJarClass *klass)
 {
-        static GType type = 0;
+	GObjectClass   *gobject_class;
+	FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandJarClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_jar_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandJar),
-			0,
-			(GInstanceInitFunc) fr_command_jar_init
-		};
+	fr_command_jar_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND_ZIP,
-					       "FRCommandJar",
-					       &type_info,
-					       0);
-        }
+	gobject_class = G_OBJECT_CLASS(klass);
+	gobject_class->finalize = fr_command_jar_finalize;
 
-        return type;
+	command_class = FR_COMMAND_CLASS (klass);
+	command_class->add              = fr_command_jar_add;
+	command_class->get_mime_types   = fr_command_jar_get_mime_types;
+	command_class->get_capabilities = fr_command_jar_get_capabilities;
+	command_class->get_packages     = fr_command_jar_get_packages;
+}
+
+
+static void
+fr_command_jar_init (FrCommandJar *self)
+{
+	/* void */
 }

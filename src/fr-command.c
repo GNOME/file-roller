@@ -35,6 +35,9 @@
 #define INITIAL_SIZE 256
 
 
+G_DEFINE_TYPE (FrCommand, fr_command, G_TYPE_OBJECT)
+
+
 /* Signals */
 enum {
 	START,
@@ -57,12 +60,9 @@ enum {
         PROP_VOLUME_SIZE
 };
 
-static GObjectClass *parent_class = NULL;
+
 static guint fr_command_signals[LAST_SIGNAL] = { 0 };
 
-static void fr_command_class_init  (FrCommandClass *class);
-static void fr_command_init        (FrCommand *afile);
-static void fr_command_finalize    (GObject *object);
 
 char *action_names[] = { "NONE",
 			 "CREATING_NEW_ARCHIVE",
@@ -77,33 +77,6 @@ char *action_names[] = { "NONE",
 			 "COPYING_FILES_TO_REMOTE",
 			 "CREATING_ARCHIVE",
 			 "SAVING_REMOTE_ARCHIVE" };
-
-GType
-fr_command_get_type ()
-{
-	static GType type = 0;
-
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrCommandClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommand),
-			0,
-			(GInstanceInitFunc) fr_command_init
-		};
-
-		type = g_type_register_static (G_TYPE_OBJECT,
-					       "FRCommand",
-					       &type_info,
-					       0);
-	}
-
-	return type;
-}
 
 
 static void
@@ -356,42 +329,64 @@ fr_command_get_property (GObject    *object,
 
 
 static void
-fr_command_class_init (FrCommandClass *class)
+fr_command_finalize (GObject *object)
+{
+	FrCommand* comm;
+
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND (object));
+
+	comm = FR_COMMAND (object);
+
+	g_free (comm->filename);
+	g_free (comm->e_filename);
+	g_free (comm->password);
+	if (comm->files != NULL)
+		_g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
+	fr_command_set_process (comm, NULL);
+
+	/* Chain up */
+	if (G_OBJECT_CLASS (fr_command_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_parent_class)->finalize (object);
+}
+
+
+static void
+fr_command_class_init (FrCommandClass *klass)
 {
 	GObjectClass *gobject_class;
 
-	parent_class = g_type_class_peek_parent (class);
-
-	gobject_class = G_OBJECT_CLASS (class);
+	fr_command_parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual functions */
 
+	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_finalize;
 	gobject_class->set_property = fr_command_set_property;
 	gobject_class->get_property = fr_command_get_property;
 
-	class->list             = base_fr_command_list;
-	class->add              = base_fr_command_add;
-	class->delete           = base_fr_command_delete;
-	class->extract          = base_fr_command_extract;
-	class->test             = base_fr_command_test;
-	class->uncompress       = base_fr_command_uncompress;
-	class->recompress       = base_fr_command_recompress;
-	class->handle_error     = base_fr_command_handle_error;
-	class->get_mime_types   = base_fr_command_get_mime_types;
-	class->get_capabilities = base_fr_command_get_capabilities;
-	class->set_mime_type    = base_fr_command_set_mime_type;
-	class->get_packages     = base_fr_command_get_packages;
-	class->start            = NULL;
-	class->done             = NULL;
-	class->progress         = NULL;
-	class->message          = NULL;
+	klass->list             = base_fr_command_list;
+	klass->add              = base_fr_command_add;
+	klass->delete           = base_fr_command_delete;
+	klass->extract          = base_fr_command_extract;
+	klass->test             = base_fr_command_test;
+	klass->uncompress       = base_fr_command_uncompress;
+	klass->recompress       = base_fr_command_recompress;
+	klass->handle_error     = base_fr_command_handle_error;
+	klass->get_mime_types   = base_fr_command_get_mime_types;
+	klass->get_capabilities = base_fr_command_get_capabilities;
+	klass->set_mime_type    = base_fr_command_set_mime_type;
+	klass->get_packages     = base_fr_command_get_packages;
+	klass->start            = NULL;
+	klass->done             = NULL;
+	klass->progress         = NULL;
+	klass->message          = NULL;
 
 	/* signals */
 
 	fr_command_signals[START] =
 		g_signal_new ("start",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrCommandClass, start),
 			      NULL, NULL,
@@ -400,7 +395,7 @@ fr_command_class_init (FrCommandClass *class)
 			      1, G_TYPE_INT);
 	fr_command_signals[DONE] =
 		g_signal_new ("done",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrCommandClass, done),
 			      NULL, NULL,
@@ -410,7 +405,7 @@ fr_command_class_init (FrCommandClass *class)
 			      FR_TYPE_PROC_ERROR);
 	fr_command_signals[PROGRESS] =
 		g_signal_new ("progress",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrCommandClass, progress),
 			      NULL, NULL,
@@ -419,7 +414,7 @@ fr_command_class_init (FrCommandClass *class)
 			      G_TYPE_DOUBLE);
 	fr_command_signals[MESSAGE] =
 		g_signal_new ("message",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrCommandClass, message),
 			      NULL, NULL,
@@ -428,7 +423,7 @@ fr_command_class_init (FrCommandClass *class)
 			      G_TYPE_STRING);
 	fr_command_signals[WORKING_ARCHIVE] =
 			g_signal_new ("working_archive",
-				      G_TYPE_FROM_CLASS (class),
+				      G_TYPE_FROM_CLASS (klass),
 				      G_SIGNAL_RUN_LAST,
 				      G_STRUCT_OFFSET (FrCommandClass, working_archive),
 				      NULL, NULL,
@@ -494,53 +489,30 @@ fr_command_class_init (FrCommandClass *class)
 
 
 static void
-fr_command_init (FrCommand *comm)
+fr_command_init (FrCommand *self)
 {
-	comm->files = g_ptr_array_sized_new (INITIAL_SIZE);
+	self->files = g_ptr_array_sized_new (INITIAL_SIZE);
 
-	comm->password = NULL;
-	comm->encrypt_header = FALSE;
-	comm->compression = FR_COMPRESSION_NORMAL;
-	comm->volume_size = 0;
-	comm->filename = NULL;
-	comm->e_filename = NULL;
-	comm->fake_load = FALSE;
+	self->password = NULL;
+	self->encrypt_header = FALSE;
+	self->compression = FR_COMPRESSION_NORMAL;
+	self->volume_size = 0;
+	self->filename = NULL;
+	self->e_filename = NULL;
+	self->fake_load = FALSE;
 
-	comm->propAddCanUpdate = FALSE;
-	comm->propAddCanReplace = FALSE;
-	comm->propAddCanStoreFolders = FALSE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder = FALSE;
-	comm->propExtractCanJunkPaths = FALSE;
-	comm->propPassword = FALSE;
-	comm->propTest = FALSE;
-	comm->propCanExtractAll = TRUE;
-	comm->propCanDeleteNonEmptyFolders = TRUE;
-	comm->propCanExtractNonEmptyFolders = TRUE;
-	comm->propListFromFile = FALSE;
-}
-
-
-static void
-fr_command_finalize (GObject *object)
-{
-	FrCommand* comm;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (FR_IS_COMMAND (object));
-
-	comm = FR_COMMAND (object);
-
-	g_free (comm->filename);
-	g_free (comm->e_filename);
-	g_free (comm->password);
-	if (comm->files != NULL)
-		_g_ptr_array_free_full (comm->files, (GFunc) file_data_free, NULL);
-	fr_command_set_process (comm, NULL);
-
-	/* Chain up */
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+	self->propAddCanUpdate = FALSE;
+	self->propAddCanReplace = FALSE;
+	self->propAddCanStoreFolders = FALSE;
+	self->propExtractCanAvoidOverwrite = FALSE;
+	self->propExtractCanSkipOlder = FALSE;
+	self->propExtractCanJunkPaths = FALSE;
+	self->propPassword = FALSE;
+	self->propTest = FALSE;
+	self->propCanExtractAll = TRUE;
+	self->propCanDeleteNonEmptyFolders = TRUE;
+	self->propCanExtractNonEmptyFolders = TRUE;
+	self->propListFromFile = FALSE;
 }
 
 

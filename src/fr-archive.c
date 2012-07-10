@@ -179,49 +179,132 @@ enum {
 	LAST_SIGNAL
 };
 
-static GObjectClass *parent_class;
+
 static guint fr_archive_signals[LAST_SIGNAL] = { 0 };
 
-static void fr_archive_class_init (FrArchiveClass *class);
-static void fr_archive_init       (FrArchive *archive);
-static void fr_archive_finalize   (GObject *object);
+
+G_DEFINE_TYPE (FrArchive, fr_archive, G_TYPE_OBJECT)
 
 
-GType
-fr_archive_get_type (void)
+static GFile *
+get_local_copy_for_file (GFile *remote_file)
 {
-	static GType type = 0;
+	char  *temp_dir;
+	GFile *local_copy = NULL;
 
-	if (! type) {
-		static const GTypeInfo type_info = {
-			sizeof (FrArchiveClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_archive_class_init,
-			NULL,
-			NULL,
-			sizeof (FrArchive),
-			0,
-			(GInstanceInitFunc) fr_archive_init
-		};
+	temp_dir = _g_path_get_temp_work_dir (NULL);
+	if (temp_dir != NULL) {
+		char  *archive_name;
+		char  *local_path;
 
-		type = g_type_register_static (G_TYPE_OBJECT,
-					       "FrArchive",
-					       &type_info,
-					       0);
+		archive_name = g_file_get_basename (remote_file);
+		local_path = g_build_filename (temp_dir, archive_name, NULL);
+		local_copy = g_file_new_for_path (local_path);
+
+		g_free (local_path);
+		g_free (archive_name);
+	}
+	g_free (temp_dir);
+
+	return local_copy;
+}
+
+
+static void
+fr_archive_set_uri (FrArchive  *archive,
+		    const char *uri)
+{
+	if ((archive->local_copy != NULL) && archive->is_remote) {
+		GFile  *temp_folder;
+		GError *err = NULL;
+
+		g_file_delete (archive->local_copy, NULL, &err);
+		if (err != NULL) {
+			g_warning ("Failed to delete the local copy: %s", err->message);
+			g_clear_error (&err);
+		}
+
+		temp_folder = g_file_get_parent (archive->local_copy);
+		g_file_delete (temp_folder, NULL, &err);
+		if (err != NULL) {
+			g_warning ("Failed to delete temp folder: %s", err->message);
+			g_clear_error (&err);
+		}
+
+		g_object_unref (temp_folder);
 	}
 
-	return type;
+	if (archive->file != NULL) {
+		g_object_unref (archive->file);
+		archive->file = NULL;
+	}
+	if (archive->local_copy != NULL) {
+		g_object_unref (archive->local_copy);
+		archive->local_copy = NULL;
+	}
+	archive->content_type = NULL;
+
+	if (uri == NULL)
+		return;
+
+	archive->file = g_file_new_for_uri (uri);
+	archive->is_remote = ! g_file_has_uri_scheme (archive->file, "file");
+	if (archive->is_remote)
+		archive->local_copy = get_local_copy_for_file (archive->file);
+	else
+		archive->local_copy = g_file_dup (archive->file);
+}
+
+
+static void
+fr_archive_remove_temp_work_dir (FrArchive *archive)
+{
+	if (archive->priv->temp_dir == NULL)
+		return;
+	_g_path_remove_directory (archive->priv->temp_dir);
+	g_free (archive->priv->temp_dir);
+	archive->priv->temp_dir = NULL;
+}
+
+
+static void
+fr_archive_finalize (GObject *object)
+{
+	FrArchive *archive;
+
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_ARCHIVE (object));
+
+	archive = FR_ARCHIVE (object);
+
+	fr_archive_set_uri (archive, NULL);
+	fr_archive_remove_temp_work_dir (archive);
+	if (archive->command != NULL)
+		g_object_unref (archive->command);
+	g_object_unref (archive->process);
+	if (archive->priv->dropped_items_data != NULL) {
+		dropped_items_data_free (archive->priv->dropped_items_data);
+		archive->priv->dropped_items_data = NULL;
+	}
+	g_free (archive->priv->temp_extraction_dir);
+	g_free (archive->priv->extraction_destination);
+	g_free (archive->priv);
+
+	/* Chain up */
+
+	if (G_OBJECT_CLASS (fr_archive_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_archive_parent_class)->finalize (object);
 }
 
 
 static void
 fr_archive_class_init (FrArchiveClass *class)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass *gobject_class;
 
-	parent_class = g_type_class_peek_parent (class);
+	fr_archive_parent_class = g_type_class_peek_parent (class);
 
+	gobject_class = G_OBJECT_CLASS (class);
 	gobject_class->finalize = fr_archive_finalize;
 
 	class->start = NULL;
@@ -374,117 +457,6 @@ FrArchive *
 fr_archive_new (void)
 {
 	return FR_ARCHIVE (g_object_new (FR_TYPE_ARCHIVE, NULL));
-}
-
-
-static GFile *
-get_local_copy_for_file (GFile *remote_file)
-{
-	char  *temp_dir;
-	GFile *local_copy = NULL;
-
-	temp_dir = _g_path_get_temp_work_dir (NULL);
-	if (temp_dir != NULL) {
-		char  *archive_name;
-		char  *local_path;
-
-		archive_name = g_file_get_basename (remote_file);
-		local_path = g_build_filename (temp_dir, archive_name, NULL);
-		local_copy = g_file_new_for_path (local_path);
-
-		g_free (local_path);
-		g_free (archive_name);
-	}
-	g_free (temp_dir);
-
-	return local_copy;
-}
-
-
-static void
-fr_archive_set_uri (FrArchive  *archive,
-		    const char *uri)
-{
-	if ((archive->local_copy != NULL) && archive->is_remote) {
-		GFile  *temp_folder;
-		GError *err = NULL;
-
-		g_file_delete (archive->local_copy, NULL, &err);
-		if (err != NULL) {
-			g_warning ("Failed to delete the local copy: %s", err->message);
-			g_clear_error (&err);
-		}
-
-		temp_folder = g_file_get_parent (archive->local_copy);
-		g_file_delete (temp_folder, NULL, &err);
-		if (err != NULL) {
-			g_warning ("Failed to delete temp folder: %s", err->message);
-			g_clear_error (&err);
-		}
-
-		g_object_unref (temp_folder);
-	}
-
-	if (archive->file != NULL) {
-		g_object_unref (archive->file);
-		archive->file = NULL;
-	}
-	if (archive->local_copy != NULL) {
-		g_object_unref (archive->local_copy);
-		archive->local_copy = NULL;
-	}
-	archive->content_type = NULL;
-
-	if (uri == NULL)
-		return;
-
-	archive->file = g_file_new_for_uri (uri);
-	archive->is_remote = ! g_file_has_uri_scheme (archive->file, "file");
-	if (archive->is_remote)
-		archive->local_copy = get_local_copy_for_file (archive->file);
-	else
-		archive->local_copy = g_file_dup (archive->file);
-}
-
-
-static void
-fr_archive_remove_temp_work_dir (FrArchive *archive)
-{
-	if (archive->priv->temp_dir == NULL)
-		return;
-	_g_path_remove_directory (archive->priv->temp_dir);
-	g_free (archive->priv->temp_dir);
-	archive->priv->temp_dir = NULL;
-}
-
-
-static void
-fr_archive_finalize (GObject *object)
-{
-	FrArchive *archive;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (FR_IS_ARCHIVE (object));
-
-	archive = FR_ARCHIVE (object);
-
-	fr_archive_set_uri (archive, NULL);
-	fr_archive_remove_temp_work_dir (archive);
-	if (archive->command != NULL)
-		g_object_unref (archive->command);
-	g_object_unref (archive->process);
-	if (archive->priv->dropped_items_data != NULL) {
-		dropped_items_data_free (archive->priv->dropped_items_data);
-		archive->priv->dropped_items_data = NULL;
-	}
-	g_free (archive->priv->temp_extraction_dir);
-	g_free (archive->priv->extraction_destination);
-	g_free (archive->priv);
-
-	/* Chain up */
-
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 

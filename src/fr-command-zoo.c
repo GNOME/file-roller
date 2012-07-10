@@ -22,22 +22,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-zoo.h"
 
-static void fr_command_zoo_class_init  (FrCommandZooClass *class);
-static void fr_command_zoo_init        (FrCommand         *afile);
-static void fr_command_zoo_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandZoo, fr_command_zoo, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -353,75 +346,49 @@ fr_command_zoo_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_zoo_class_init (FrCommandZooClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
-
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_zoo_finalize;
-
-        afc->list             = fr_command_zoo_list;
-	afc->add              = fr_command_zoo_add;
-	afc->delete           = fr_command_zoo_delete;
-	afc->extract          = fr_command_zoo_extract;
-	afc->test             = fr_command_zoo_test;
-	afc->get_mime_types   = fr_command_zoo_get_mime_types;
-	afc->get_capabilities = fr_command_zoo_get_capabilities;
-	afc->get_packages     = fr_command_zoo_get_packages;
-}
-
-
-static void
-fr_command_zoo_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = FALSE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = FALSE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = TRUE;
-}
-
-
-static void
 fr_command_zoo_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_ZOO (object));
 
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_zoo_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_zoo_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_zoo_get_type ()
+static void
+fr_command_zoo_class_init (FrCommandZooClass *klass)
 {
-        static GType type = 0;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandZooClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_zoo_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandZoo),
-			0,
-			(GInstanceInitFunc) fr_command_zoo_init
-		};
+        fr_command_zoo_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandZoo",
-					       &type_info,
-					       0);
-        }
+        gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_zoo_finalize;
 
-        return type;
+	command_class = FR_COMMAND_CLASS (klass);
+        command_class->list             = fr_command_zoo_list;
+	command_class->add              = fr_command_zoo_add;
+	command_class->delete           = fr_command_zoo_delete;
+	command_class->extract          = fr_command_zoo_extract;
+	command_class->test             = fr_command_zoo_test;
+	command_class->get_mime_types   = fr_command_zoo_get_mime_types;
+	command_class->get_capabilities = fr_command_zoo_get_capabilities;
+	command_class->get_packages     = fr_command_zoo_get_packages;
+}
+
+
+static void
+fr_command_zoo_init (FrCommandZoo *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = FALSE;
+	base->propExtractCanAvoidOverwrite = FALSE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = FALSE;
+	base->propPassword                 = FALSE;
+	base->propTest                     = TRUE;
 }

@@ -38,13 +38,8 @@
 #define LSAR_SUPPORTED_FORMAT 2
 #define LSAR_DATE_FORMAT "%Y-%m-%d %H:%M:%S %z"
 
-static void fr_command_unarchiver_class_init  (FrCommandUnarchiverClass *class);
-static void fr_command_unarchiver_init        (FrCommand         *afile);
-static void fr_command_unarchiver_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandUnarchiver, fr_command_unarchiver, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -280,82 +275,53 @@ fr_command_unarchiver_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_unarchiver_class_init (FrCommandUnarchiverClass *class)
-{
-	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
-	FrCommandClass *afc;
-
-	parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_unarchiver_finalize;
-
-	afc->list             = fr_command_unarchiver_list;
-	afc->extract          = fr_command_unarchiver_extract;
-	afc->handle_error     = fr_command_unarchiver_handle_error;
-	afc->get_mime_types   = fr_command_unarchiver_get_mime_types;
-	afc->get_capabilities = fr_command_unarchiver_get_capabilities;
-	afc->get_packages     = fr_command_unarchiver_get_packages;
-}
-
-
-static void
-fr_command_unarchiver_init (FrCommand *comm)
-{
-	FrCommandUnarchiver *unar_comm;
-
-	comm->propExtractCanAvoidOverwrite = TRUE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = TRUE;
-	comm->propTest                     = FALSE;
-	comm->propListFromFile             = FALSE;
-
-	unar_comm = FR_COMMAND_UNARCHIVER (comm);
-	unar_comm->stream = NULL;
-}
-
-
-static void
 fr_command_unarchiver_finalize (GObject *object)
 {
-	FrCommandUnarchiver *unar_comm;
+	FrCommandUnarchiver *self;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_UNARCHIVER (object));
 
-	unar_comm = FR_COMMAND_UNARCHIVER (object);
-	_g_object_unref (unar_comm->stream);
+	self = FR_COMMAND_UNARCHIVER (object);
+	_g_object_unref (self->stream);
 
-	/* Chain up */
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (fr_command_unarchiver_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_unarchiver_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_unarchiver_get_type ()
+static void
+fr_command_unarchiver_class_init (FrCommandUnarchiverClass *klass)
 {
-	static GType type = 0;
+	GObjectClass   *gobject_class;
+	FrCommandClass *command_class;
 
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrCommandUnarchiverClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_unarchiver_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandUnarchiver),
-			0,
-			(GInstanceInitFunc) fr_command_unarchiver_init
-		};
+	fr_command_unarchiver_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FrCommandUnarchiver",
-					       &type_info,
-					       0);
-	}
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_unarchiver_finalize;
 
-	return type;
+	command_class = FR_COMMAND_CLASS (klass);
+	command_class->list             = fr_command_unarchiver_list;
+	command_class->extract          = fr_command_unarchiver_extract;
+	command_class->handle_error     = fr_command_unarchiver_handle_error;
+	command_class->get_mime_types   = fr_command_unarchiver_get_mime_types;
+	command_class->get_capabilities = fr_command_unarchiver_get_capabilities;
+	command_class->get_packages     = fr_command_unarchiver_get_packages;
+}
+
+
+static void
+fr_command_unarchiver_init (FrCommandUnarchiver *self)
+{
+	FrCommand *base = FR_COMMAND (self);;
+
+	base->propExtractCanAvoidOverwrite = TRUE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = TRUE;
+	base->propPassword                 = TRUE;
+	base->propTest                     = FALSE;
+	base->propListFromFile             = FALSE;
+
+	self->stream = NULL;
 }

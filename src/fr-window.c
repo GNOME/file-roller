@@ -232,6 +232,10 @@ fr_clipboard_data_set_password (FrClipboardData *clipboard_data,
 
 /**/
 
+
+G_DEFINE_TYPE (FrWindow, fr_window, GTK_TYPE_APPLICATION_WINDOW)
+
+
 enum {
 	ARCHIVE_LOADED,
 	PROGRESS,
@@ -239,7 +243,6 @@ enum {
 	LAST_SIGNAL
 };
 
-static GtkApplicationWindowClass *parent_class = NULL;
 static guint fr_window_signals[LAST_SIGNAL] = { 0 };
 
 struct _FrWindowPrivateData {
@@ -629,45 +632,6 @@ fr_window_free_private_data (FrWindow *window)
 }
 
 
-static void
-fr_window_finalize (GObject *object)
-{
-	FrWindow *window = FR_WINDOW (object);
-
-	fr_window_free_open_files (window);
-
-	if (window->archive != NULL) {
-		g_object_unref (window->archive);
-		window->archive = NULL;
-	}
-
-	if (window->priv != NULL) {
-		fr_window_free_private_data (window);
-		g_free (window->priv);
-		window->priv = NULL;
-	}
-
-	if (gtk_application_get_windows (GTK_APPLICATION (g_application_get_default ())) == NULL) {
-		if (pixbuf_hash != NULL) {
-			g_hash_table_foreach (pixbuf_hash,
-					      gh_unref_pixbuf,
-					      NULL);
-			g_hash_table_destroy (pixbuf_hash);
-			pixbuf_hash = NULL;
-		}
-		if (tree_pixbuf_hash != NULL) {
-			g_hash_table_foreach (tree_pixbuf_hash,
-					      gh_unref_pixbuf,
-					      NULL);
-			g_hash_table_destroy (tree_pixbuf_hash);
-			tree_pixbuf_hash = NULL;
-		}
-	}
-
-	G_OBJECT_CLASS (parent_class)->finalize (object);
-}
-
-
 static gboolean
 close__step2 (gpointer data)
 {
@@ -706,15 +670,54 @@ fr_window_close (FrWindow *window)
 
 
 static void
-fr_window_class_init (FrWindowClass *class)
+fr_window_finalize (GObject *object)
+{
+	FrWindow *window = FR_WINDOW (object);
+
+	fr_window_free_open_files (window);
+
+	if (window->archive != NULL) {
+		g_object_unref (window->archive);
+		window->archive = NULL;
+	}
+
+	if (window->priv != NULL) {
+		fr_window_free_private_data (window);
+		g_free (window->priv);
+		window->priv = NULL;
+	}
+
+	if (gtk_application_get_windows (GTK_APPLICATION (g_application_get_default ())) == NULL) {
+		if (pixbuf_hash != NULL) {
+			g_hash_table_foreach (pixbuf_hash,
+					      gh_unref_pixbuf,
+					      NULL);
+			g_hash_table_destroy (pixbuf_hash);
+			pixbuf_hash = NULL;
+		}
+		if (tree_pixbuf_hash != NULL) {
+			g_hash_table_foreach (tree_pixbuf_hash,
+					      gh_unref_pixbuf,
+					      NULL);
+			g_hash_table_destroy (tree_pixbuf_hash);
+			tree_pixbuf_hash = NULL;
+		}
+	}
+
+	G_OBJECT_CLASS (fr_window_parent_class)->finalize (object);
+}
+
+
+static void
+fr_window_class_init (FrWindowClass *klass)
 {
 	GObjectClass *gobject_class;
 
-	parent_class = g_type_class_peek_parent (class);
+	fr_window_parent_class = g_type_class_peek_parent (klass);
 
 	fr_window_signals[ARCHIVE_LOADED] =
 		g_signal_new ("archive-loaded",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
 			      NULL, NULL,
@@ -723,7 +726,7 @@ fr_window_class_init (FrWindowClass *class)
 			      G_TYPE_BOOLEAN);
 	fr_window_signals[PROGRESS] =
 		g_signal_new ("progress",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrWindowClass, progress),
 			      NULL, NULL,
@@ -733,7 +736,7 @@ fr_window_class_init (FrWindowClass *class)
 			      G_TYPE_STRING);
 	fr_window_signals[READY] =
 		g_signal_new ("ready",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrWindowClass, ready),
 			      NULL, NULL,
@@ -741,7 +744,7 @@ fr_window_class_init (FrWindowClass *class)
 			      G_TYPE_NONE, 1,
 			      G_TYPE_POINTER);
 
-	gobject_class = (GObjectClass*) class;
+	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_window_finalize;
 }
 
@@ -804,33 +807,6 @@ fr_window_init (FrWindow *window)
 			  NULL);
 }
 
-
-GType
-fr_window_get_type (void)
-{
-	static GType type = 0;
-
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrWindowClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_window_class_init,
-			NULL,
-			NULL,
-			sizeof (FrWindow),
-			0,
-			(GInstanceInitFunc) fr_window_init
-		};
-
-		type = g_type_register_static (GTK_TYPE_APPLICATION_WINDOW,
-					       "FrWindow",
-					       &type_info,
-					       0);
-	}
-
-	return type;
-}
 
 
 /* -- window history -- */

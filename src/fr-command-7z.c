@@ -24,10 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
 #include <glib/gi18n.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
@@ -35,13 +33,8 @@
 #include "fr-command-7z.h"
 #include "rar-utils.h"
 
-static void fr_command_7z_class_init  (FrCommand7zClass *class);
-static void fr_command_7z_init        (FrCommand        *afile);
-static void fr_command_7z_finalize    (GObject          *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommand7z, fr_command_7z, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -622,14 +615,27 @@ fr_command_7z_get_packages (FrCommand  *comm,
 
 
 static void
+fr_command_7z_finalize (GObject *object)
+{
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_COMMAND_7Z (object));
+
+	/* Chain up */
+	if (G_OBJECT_CLASS (fr_command_7z_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_7z_parent_class)->finalize (object);
+}
+
+
+static void
 fr_command_7z_class_init (FrCommand7zClass *class)
 {
-	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass   *gobject_class;
 	FrCommandClass *afc;
 
-	parent_class = g_type_class_peek_parent (class);
+	fr_command_7z_parent_class = g_type_class_peek_parent (class);
 	afc = (FrCommandClass*) class;
 
+	gobject_class = G_OBJECT_CLASS (class);
 	gobject_class->finalize = fr_command_7z_finalize;
 
 	afc->list             = fr_command_7z_list;
@@ -645,55 +651,17 @@ fr_command_7z_class_init (FrCommand7zClass *class)
 
 
 static void
-fr_command_7z_init (FrCommand *comm)
+fr_command_7z_init (FrCommand7z *self)
 {
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = TRUE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = TRUE;
-	comm->propTest                     = TRUE;
-	comm->propListFromFile             = TRUE;
-}
+	FrCommand *base = FR_COMMAND (self);
 
-
-static void
-fr_command_7z_finalize (GObject *object)
-{
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (FR_IS_COMMAND_7Z (object));
-
-	/* Chain up */
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
-}
-
-
-GType
-fr_command_7z_get_type ()
-{
-	static GType type = 0;
-
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrCommand7zClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_7z_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommand7z),
-			0,
-			(GInstanceInitFunc) fr_command_7z_init
-		};
-
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommand7z",
-					       &type_info,
-					       0);
-	}
-
-	return type;
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propAddCanStoreFolders       = TRUE;
+	base->propExtractCanAvoidOverwrite = FALSE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = TRUE;
+	base->propPassword                 = TRUE;
+	base->propTest                     = TRUE;
+	base->propListFromFile             = TRUE;
 }

@@ -27,12 +27,12 @@ G_BEGIN_DECLS
 #define EGG_TYPE_TREE_MULTI_DRAG_SOURCE            (egg_tree_multi_drag_source_get_type ())
 #define EGG_TREE_MULTI_DRAG_SOURCE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_TREE_MULTI_DRAG_SOURCE, EggTreeMultiDragSource))
 #define EGG_IS_TREE_MULTI_DRAG_SOURCE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EGG_TYPE_TREE_MULTI_DRAG_SOURCE))
-#define EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), EGG_TYPE_TREE_MULTI_DRAG_SOURCE, EggTreeMultiDragSourceIface))
+#define EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), EGG_TYPE_TREE_MULTI_DRAG_SOURCE, EggTreeMultiDragSourceInterface))
 
 typedef struct _EggTreeMultiDragSource      EggTreeMultiDragSource; /* Dummy typedef */
-typedef struct _EggTreeMultiDragSourceIface EggTreeMultiDragSourceIface;
+typedef struct _EggTreeMultiDragSourceInterface EggTreeMultiDragSourceInterface;
 
-struct _EggTreeMultiDragSourceIface
+struct _EggTreeMultiDragSourceInterface
 {
   GTypeInterface g_iface;
 

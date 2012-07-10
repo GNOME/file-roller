@@ -27,6 +27,9 @@
 #include "file-data.h"
 
 
+G_DEFINE_BOXED_TYPE(FileData, file_data, file_data_copy, file_data_free)
+
+
 FileData *
 file_data_new (void)
 {
@@ -84,18 +87,6 @@ file_data_copy (FileData *src)
 	fdata->sort_key = g_strdup (src->sort_key);
 
 	return fdata;
-}
-
-
-GType
-file_data_get_type (void)
-{
-	static GType type = 0;
-
-	if (type == 0)
-		type = g_boxed_type_register_static ("FRFileData", (GBoxedCopyFunc) file_data_copy, (GBoxedFreeFunc) file_data_free);
-
-	return type;
 }
 
 

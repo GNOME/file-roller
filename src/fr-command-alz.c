@@ -23,22 +23,15 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "fr-command.h"
 #include "fr-command-alz.h"
 #include "glib-utils.h"
 
-static void fr_command_alz_class_init  (FrCommandAlzClass *class);
-static void fr_command_alz_init        (FrCommand         *afile);
-static void fr_command_alz_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandAlz, fr_command_alz, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -331,75 +324,49 @@ fr_command_alz_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_alz_class_init (FrCommandAlzClass *class)
-{
-        GObjectClass *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
-
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_alz_finalize;
-
-        afc->list             = fr_command_alz_list;
-	afc->add              = NULL;
-	afc->delete           = NULL;
-	afc->extract          = fr_command_alz_extract;
-	afc->handle_error     = fr_command_alz_handle_error;
-	afc->get_mime_types   = fr_command_alz_get_mime_types;
-	afc->get_capabilities = fr_command_alz_get_capabilities;
-	afc->get_packages     = fr_command_alz_get_packages;
-}
-
-
-static void
-fr_command_alz_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = FALSE;
-	comm->propPassword                 = TRUE;
-	comm->propTest                     = FALSE;
-}
-
-
-static void
 fr_command_alz_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_ALZ (object));
 
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_alz_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_alz_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_alz_get_type ()
+static void
+fr_command_alz_class_init (FrCommandAlzClass *klass)
 {
-        static GType type = 0;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandAlzClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_alz_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandAlz),
-			0,
-			(GInstanceInitFunc) fr_command_alz_init
-		};
+        fr_command_alz_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FrCommandAlz",
-					       &type_info,
-					       0);
-        }
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_alz_finalize;
 
-        return type;
+	command_class = (FrCommandClass*) klass;
+        command_class->list             = fr_command_alz_list;
+	command_class->add              = NULL;
+	command_class->delete           = NULL;
+	command_class->extract          = fr_command_alz_extract;
+	command_class->handle_error     = fr_command_alz_handle_error;
+	command_class->get_mime_types   = fr_command_alz_get_mime_types;
+	command_class->get_capabilities = fr_command_alz_get_capabilities;
+	command_class->get_packages     = fr_command_alz_get_packages;
+}
+
+
+static void
+fr_command_alz_init (FrCommandAlz *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propExtractCanAvoidOverwrite = FALSE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = FALSE;
+	base->propPassword                 = TRUE;
+	base->propTest                     = FALSE;
 }

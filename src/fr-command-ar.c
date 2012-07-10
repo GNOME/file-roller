@@ -29,13 +29,8 @@
 #include "fr-command-ar.h"
 #include "glib-utils.h"
 
-static void fr_command_ar_class_init  (FrCommandArClass *class);
-static void fr_command_ar_init        (FrCommand        *afile);
-static void fr_command_ar_finalize    (GObject          *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandAr, fr_command_ar, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -315,76 +310,50 @@ fr_command_ar_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_ar_class_init (FrCommandArClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
-
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_ar_finalize;
-
-        afc->list             = fr_command_ar_list;
-	afc->add              = fr_command_ar_add;
-	afc->delete           = fr_command_ar_delete;
-	afc->extract          = fr_command_ar_extract;
-	afc->handle_error     = fr_command_ar_handle_error;
-	afc->get_mime_types   = fr_command_ar_get_mime_types;
-	afc->get_capabilities = fr_command_ar_get_capabilities;
-	afc->get_packages     = fr_command_ar_get_packages;
-}
-
-
-static void
-fr_command_ar_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = FALSE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = FALSE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
-}
-
-
-static void
 fr_command_ar_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_AR (object));
 
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_ar_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_ar_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_ar_get_type ()
+static void
+fr_command_ar_class_init (FrCommandArClass *klass)
 {
-        static GType type = 0;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandArClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_ar_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandAr),
-			0,
-			(GInstanceInitFunc) fr_command_ar_init
-		};
+        fr_command_ar_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandAr",
-					       &type_info,
-					       0);
-        }
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_ar_finalize;
 
-        return type;
+	command_class = FR_COMMAND_CLASS (klass);
+        command_class->list             = fr_command_ar_list;
+	command_class->add              = fr_command_ar_add;
+	command_class->delete           = fr_command_ar_delete;
+	command_class->extract          = fr_command_ar_extract;
+	command_class->handle_error     = fr_command_ar_handle_error;
+	command_class->get_mime_types   = fr_command_ar_get_mime_types;
+	command_class->get_capabilities = fr_command_ar_get_capabilities;
+	command_class->get_packages     = fr_command_ar_get_packages;
+}
+
+
+static void
+fr_command_ar_init (FrCommandAr *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propAddCanStoreFolders       = FALSE;
+	base->propExtractCanAvoidOverwrite = FALSE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = FALSE;
+	base->propPassword                 = FALSE;
+	base->propTest                     = FALSE;
 }

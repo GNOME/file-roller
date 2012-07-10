@@ -23,25 +23,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-zip.h"
 
-#define EMPTY_ARCHIVE_WARNING        "Empty zipfile."
-#define ZIP_SPECIAL_CHARACTERS       "[]*?!^-\\"
+#define EMPTY_ARCHIVE_WARNING  "Empty zipfile."
+#define ZIP_SPECIAL_CHARACTERS "[]*?!^-\\"
 
-static void fr_command_zip_class_init  (FrCommandZipClass *class);
-static void fr_command_zip_init        (FrCommand         *afile);
-static void fr_command_zip_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandZip, fr_command_zip, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -423,79 +416,53 @@ fr_command_zip_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_zip_class_init (FrCommandZipClass *class)
-{
-	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-	FrCommandClass *afc;
-
-	parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_zip_finalize;
-
-	afc->list             = fr_command_zip_list;
-	afc->add              = fr_command_zip_add;
-	afc->delete           = fr_command_zip_delete;
-	afc->extract          = fr_command_zip_extract;
-	afc->test             = fr_command_zip_test;
-	afc->handle_error     = fr_command_zip_handle_error;
-	afc->get_mime_types   = fr_command_zip_get_mime_types;
-	afc->get_capabilities = fr_command_zip_get_capabilities;
-	afc->get_packages     = fr_command_zip_get_packages;
-}
-
-
-static void
-fr_command_zip_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = TRUE;
-	comm->propExtractCanAvoidOverwrite = TRUE;
-	comm->propExtractCanSkipOlder      = TRUE;
-	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = TRUE;
-	comm->propTest                     = TRUE;
-
-	FR_COMMAND_ZIP (comm)->is_empty = FALSE;
-}
-
-
-static void
 fr_command_zip_finalize (GObject *object)
 {
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_ZIP (object));
 
-	/* Chain up */
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (fr_command_zip_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_zip_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_zip_get_type ()
+static void
+fr_command_zip_class_init (FrCommandZipClass *klass)
 {
-	static GType type = 0;
+	GObjectClass   *gobject_class;
+	FrCommandClass *command_class;
 
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrCommandZipClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_zip_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandZip),
-			0,
-			(GInstanceInitFunc) fr_command_zip_init
-		};
+	fr_command_zip_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandZip",
-					       &type_info,
-					       0);
-	}
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_zip_finalize;
 
-	return type;
+	command_class = FR_COMMAND_CLASS (klass);
+	command_class->list             = fr_command_zip_list;
+	command_class->add              = fr_command_zip_add;
+	command_class->delete           = fr_command_zip_delete;
+	command_class->extract          = fr_command_zip_extract;
+	command_class->test             = fr_command_zip_test;
+	command_class->handle_error     = fr_command_zip_handle_error;
+	command_class->get_mime_types   = fr_command_zip_get_mime_types;
+	command_class->get_capabilities = fr_command_zip_get_capabilities;
+	command_class->get_packages     = fr_command_zip_get_packages;
+}
+
+
+static void
+fr_command_zip_init (FrCommandZip *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propAddCanStoreFolders       = TRUE;
+	base->propExtractCanAvoidOverwrite = TRUE;
+	base->propExtractCanSkipOlder      = TRUE;
+	base->propExtractCanJunkPaths      = TRUE;
+	base->propPassword                 = TRUE;
+	base->propTest                     = TRUE;
+
+	self->is_empty = FALSE;
 }

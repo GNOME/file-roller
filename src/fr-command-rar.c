@@ -23,10 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
 #include <glib/gi18n.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "gio-utils.h"
@@ -36,13 +34,8 @@
 #include "fr-error.h"
 #include "rar-utils.h"
 
-static void fr_command_rar_class_init  (FrCommandRarClass *class);
-static void fr_command_rar_init        (FrCommand         *afile);
-static void fr_command_rar_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandRar, fr_command_rar, FR_TYPE_COMMAND)
 
 
 static gboolean
@@ -637,78 +630,52 @@ fr_command_rar_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_rar_class_init (FrCommandRarClass *class)
-{
-	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
-	FrCommandClass *afc;
-
-	parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_rar_finalize;
-
-	afc->list             = fr_command_rar_list;
-	afc->add              = fr_command_rar_add;
-	afc->delete           = fr_command_rar_delete;
-	afc->extract          = fr_command_rar_extract;
-	afc->test             = fr_command_rar_test;
-	afc->handle_error     = fr_command_rar_handle_error;
-	afc->get_mime_types   = fr_command_rar_get_mime_types;
-	afc->get_capabilities = fr_command_rar_get_capabilities;
-	afc->get_packages     = fr_command_rar_get_packages;
-}
-
-
-static void
-fr_command_rar_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = TRUE;
-	comm->propExtractCanAvoidOverwrite = TRUE;
-	comm->propExtractCanSkipOlder      = TRUE;
-	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = TRUE;
-	comm->propTest                     = TRUE;
-	comm->propListFromFile             = TRUE;
-}
-
-
-static void
 fr_command_rar_finalize (GObject *object)
 {
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_RAR (object));
 
-	/* Chain up */
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (fr_command_rar_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_rar_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_rar_get_type ()
+static void
+fr_command_rar_class_init (FrCommandRarClass *klass)
 {
-	static GType type = 0;
+	GObjectClass   *gobject_class;
+	FrCommandClass *command_class;
 
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrCommandRarClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_rar_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandRar),
-			0,
-			(GInstanceInitFunc) fr_command_rar_init
-		};
+	fr_command_rar_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandRar",
-					       &type_info,
-					       0);
-	}
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_rar_finalize;
 
-	return type;
+	command_class = FR_COMMAND_CLASS (klass);
+	command_class->list             = fr_command_rar_list;
+	command_class->add              = fr_command_rar_add;
+	command_class->delete           = fr_command_rar_delete;
+	command_class->extract          = fr_command_rar_extract;
+	command_class->test             = fr_command_rar_test;
+	command_class->handle_error     = fr_command_rar_handle_error;
+	command_class->get_mime_types   = fr_command_rar_get_mime_types;
+	command_class->get_capabilities = fr_command_rar_get_capabilities;
+	command_class->get_packages     = fr_command_rar_get_packages;
+}
+
+
+static void
+fr_command_rar_init (FrCommandRar *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propAddCanStoreFolders       = TRUE;
+	base->propExtractCanAvoidOverwrite = TRUE;
+	base->propExtractCanSkipOlder      = TRUE;
+	base->propExtractCanJunkPaths      = TRUE;
+	base->propPassword                 = TRUE;
+	base->propTest                     = TRUE;
+	base->propListFromFile             = TRUE;
 }

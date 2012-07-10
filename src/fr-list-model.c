@@ -25,7 +25,14 @@
 #include "fr-window.h"
 
 
-static GtkListStoreClass *parent_class;
+static void fr_list_model_multi_drag_source_init (EggTreeMultiDragSourceInterface *iface);
+
+
+G_DEFINE_TYPE_WITH_CODE (FrListModel,
+			 fr_list_model,
+			 GTK_TYPE_LIST_STORE,
+			 G_IMPLEMENT_INTERFACE (EGG_TYPE_TREE_MULTI_DRAG_SOURCE,
+					        fr_list_model_multi_drag_source_init))
 
 
 static gboolean
@@ -95,70 +102,35 @@ fr_list_model_multi_drag_data_delete (EggTreeMultiDragSource *drag_source,
 static void
 fr_list_model_finalize (GObject *object)
 {
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (fr_list_model_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_list_model_parent_class)->finalize (object);
 }
 
 
 static void
-fr_list_model_init (FRListModel *model)
-{
-}
-
-
-static void
-fr_list_model_class_init (FRListModelClass *klass)
+fr_list_model_class_init (FrListModelClass *klass)
 {
 	GObjectClass *object_class;
 
-	object_class = (GObjectClass *)klass;
-	parent_class = g_type_class_peek_parent (klass);
+	fr_list_model_parent_class = g_type_class_peek_parent (klass);
 
+	object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = fr_list_model_finalize;
 }
 
 
+static void
+fr_list_model_init (FrListModel *model)
+{
+}
+
 
 static void
-fr_list_model_multi_drag_source_init (EggTreeMultiDragSourceIface *iface)
+fr_list_model_multi_drag_source_init (EggTreeMultiDragSourceInterface *iface)
 {
 	iface->row_draggable = fr_list_model_multi_row_draggable;
 	iface->drag_data_get = fr_list_model_multi_drag_data_get;
 	iface->drag_data_delete = fr_list_model_multi_drag_data_delete;
-}
-
-
-GType
-fr_list_model_get_type (void)
-{
-	static GType object_type = 0;
-
-	if (object_type == 0) {
-		static const GTypeInfo object_info = {
-			sizeof (FRListModelClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) fr_list_model_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (FRListModel),
-			0,
-			(GInstanceInitFunc) fr_list_model_init,
-		};
-
-		static const GInterfaceInfo multi_drag_source_info = {
-			(GInterfaceInitFunc) fr_list_model_multi_drag_source_init,
-			NULL,
-			NULL
-		};
-
-		object_type = g_type_register_static (GTK_TYPE_LIST_STORE, "FRListModel", &object_info, 0);
-		g_type_add_interface_static (object_type,
-					     EGG_TYPE_TREE_MULTI_DRAG_SOURCE,
-					     &multi_drag_source_info);
-	}
-
-	return object_type;
 }
 
 

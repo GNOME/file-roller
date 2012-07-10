@@ -11,22 +11,15 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-lrzip.h"
 
-static void fr_command_lrzip_class_init  (FrCommandLrzipClass *class);
-static void fr_command_lrzip_init        (FrCommand         *afile);
-static void fr_command_lrzip_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandLrzip, fr_command_lrzip, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -197,74 +190,48 @@ fr_command_lrzip_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_lrzip_class_init (FrCommandLrzipClass *class)
-{
-	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-	FrCommandClass *afc;
-
-	parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_lrzip_finalize;
-
-	afc->list             = fr_command_lrzip_list;
-	afc->add              = fr_command_lrzip_add;
-	afc->extract          = fr_command_lrzip_extract;
-	afc->get_mime_types   = fr_command_lrzip_get_mime_types;
-	afc->get_capabilities = fr_command_lrzip_get_capabilities;
-	afc->get_packages     = fr_command_lrzip_get_packages;
-}
-
-
-static void
-fr_command_lrzip_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = FALSE;
-	comm->propAddCanReplace            = FALSE;
-	comm->propAddCanStoreFolders       = FALSE;
-	comm->propExtractCanAvoidOverwrite = TRUE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = FALSE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
-}
-
-
-static void
 fr_command_lrzip_finalize (GObject *object)
 {
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_LRZIP (object));
 
-	/* Chain up */
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (fr_command_lrzip_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_lrzip_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_lrzip_get_type ()
+static void
+fr_command_lrzip_class_init (FrCommandLrzipClass *klass)
 {
-	static GType type = 0;
+	GObjectClass   *gobject_class;
+	FrCommandClass *command_class;
 
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrCommandLrzipClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_lrzip_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandLrzip),
-			0,
-			(GInstanceInitFunc) fr_command_lrzip_init
-		};
+	fr_command_lrzip_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandLrzip",
-					       &type_info,
-					       0);
-	}
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_lrzip_finalize;
 
-	return type;
+	command_class = FR_COMMAND_CLASS (klass);
+	command_class->list             = fr_command_lrzip_list;
+	command_class->add              = fr_command_lrzip_add;
+	command_class->extract          = fr_command_lrzip_extract;
+	command_class->get_mime_types   = fr_command_lrzip_get_mime_types;
+	command_class->get_capabilities = fr_command_lrzip_get_capabilities;
+	command_class->get_packages     = fr_command_lrzip_get_packages;
+}
+
+
+static void
+fr_command_lrzip_init (FrCommandLrzip *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = FALSE;
+	base->propAddCanReplace            = FALSE;
+	base->propAddCanStoreFolders       = FALSE;
+	base->propExtractCanAvoidOverwrite = TRUE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = FALSE;
+	base->propPassword                 = FALSE;
+	base->propTest                     = FALSE;
 }

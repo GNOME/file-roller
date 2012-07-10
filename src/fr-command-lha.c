@@ -22,22 +22,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-lha.h"
 
-static void fr_command_lha_class_init  (FrCommandLhaClass *class);
-static void fr_command_lha_init        (FrCommand         *afile);
-static void fr_command_lha_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandLha, fr_command_lha, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -334,75 +327,49 @@ fr_command_lha_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_lha_class_init (FrCommandLhaClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
-
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_lha_finalize;
-
-        afc->list             = fr_command_lha_list;
-	afc->add              = fr_command_lha_add;
-	afc->delete           = fr_command_lha_delete;
-	afc->extract          = fr_command_lha_extract;
-	afc->get_mime_types   = fr_command_lha_get_mime_types;
-	afc->get_capabilities = fr_command_lha_get_capabilities;
-	afc->get_packages     = fr_command_lha_get_packages;
-}
-
-
-static void
-fr_command_lha_init (FrCommand *comm)
-{
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = TRUE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
-}
-
-
-static void
 fr_command_lha_finalize (GObject *object)
 {
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_LHA (object));
 
-	 /* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_lha_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_lha_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_lha_get_type ()
+static void
+fr_command_lha_class_init (FrCommandLhaClass *klass)
 {
-        static GType type = 0;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandLhaClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_lha_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandLha),
-			0,
-			(GInstanceInitFunc) fr_command_lha_init
-		};
+        fr_command_lha_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandLha",
-					       &type_info,
-					       0);
-        }
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_lha_finalize;
 
-        return type;
+	command_class = FR_COMMAND_CLASS (klass);
+        command_class->list             = fr_command_lha_list;
+	command_class->add              = fr_command_lha_add;
+	command_class->delete           = fr_command_lha_delete;
+	command_class->extract          = fr_command_lha_extract;
+	command_class->get_mime_types   = fr_command_lha_get_mime_types;
+	command_class->get_capabilities = fr_command_lha_get_capabilities;
+	command_class->get_packages     = fr_command_lha_get_packages;
+}
+
+
+static void
+fr_command_lha_init (FrCommandLha *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propAddCanStoreFolders       = TRUE;
+	base->propExtractCanAvoidOverwrite = FALSE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = TRUE;
+	base->propPassword                 = FALSE;
+	base->propTest                     = FALSE;
 }

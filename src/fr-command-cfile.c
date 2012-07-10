@@ -25,9 +25,7 @@
 #include <string.h>
 #include <time.h>
 #include <fcntl.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
@@ -35,9 +33,7 @@
 #include "fr-command-cfile.h"
 
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandCFile, fr_command_cfile, FR_TYPE_COMMAND)
 
 
 static char *
@@ -519,18 +515,6 @@ fr_command_cfile_get_capabilities (FrCommand  *comm,
 }
 
 
-static void
-fr_command_cfile_finalize (GObject *object)
-{
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (FR_IS_COMMAND_CFILE (object));
-
-	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-                G_OBJECT_CLASS (parent_class)->finalize (object);
-}
-
-
 static const char *
 fr_command_cfile_get_packages (FrCommand  *comm,
 			       const char *mime_type)
@@ -557,62 +541,49 @@ fr_command_cfile_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_cfile_class_init (FrCommandCFileClass *class)
+fr_command_cfile_finalize (GObject *object)
 {
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
+        g_return_if_fail (object != NULL);
+        g_return_if_fail (FR_IS_COMMAND_CFILE (object));
 
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-        gobject_class->finalize = fr_command_cfile_finalize;
-
-        afc->list             = fr_command_cfile_list;
-	afc->add              = fr_command_cfile_add;
-	afc->delete           = fr_command_cfile_delete;
-	afc->extract          = fr_command_cfile_extract;
-	afc->get_mime_types   = fr_command_cfile_get_mime_types;
-	afc->get_capabilities = fr_command_cfile_get_capabilities;
-	afc->get_packages     = fr_command_cfile_get_packages;
+	/* Chain up */
+        if (G_OBJECT_CLASS (fr_command_cfile_parent_class)->finalize)
+                G_OBJECT_CLASS (fr_command_cfile_parent_class)->finalize (object);
 }
 
 
 static void
-fr_command_cfile_init (FrCommand *comm)
+fr_command_cfile_class_init (FrCommandCFileClass *klass)
 {
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propExtractCanAvoidOverwrite = FALSE;
-	comm->propExtractCanSkipOlder      = FALSE;
-	comm->propExtractCanJunkPaths      = FALSE;
-	comm->propPassword                 = FALSE;
-	comm->propTest                     = FALSE;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
+
+        fr_command_cfile_parent_class = g_type_class_peek_parent (klass);
+
+	gobject_class = G_OBJECT_CLASS (klass);
+        gobject_class->finalize = fr_command_cfile_finalize;
+
+        command_class = FR_COMMAND_CLASS (klass);
+        command_class->list             = fr_command_cfile_list;
+	command_class->add              = fr_command_cfile_add;
+	command_class->delete           = fr_command_cfile_delete;
+	command_class->extract          = fr_command_cfile_extract;
+	command_class->get_mime_types   = fr_command_cfile_get_mime_types;
+	command_class->get_capabilities = fr_command_cfile_get_capabilities;
+	command_class->get_packages     = fr_command_cfile_get_packages;
 }
 
 
-GType
-fr_command_cfile_get_type ()
+static void
+fr_command_cfile_init (FrCommandCFile *self)
 {
-        static GType type = 0;
+	FrCommand *base = FR_COMMAND (self);
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandCFileClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_cfile_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandCFile),
-			0,
-			(GInstanceInitFunc) fr_command_cfile_init
-		};
-
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandCFile",
-					       &type_info,
-					       0);
-        }
-
-        return type;
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propExtractCanAvoidOverwrite = FALSE;
+	base->propExtractCanSkipOlder      = FALSE;
+	base->propExtractCanJunkPaths      = FALSE;
+	base->propPassword                 = FALSE;
+	base->propTest                     = FALSE;
 }

@@ -39,13 +39,8 @@
 
 #define ACTIVITY_DELAY 20
 
-static void fr_command_tar_class_init  (FrCommandTarClass *class);
-static void fr_command_tar_init        (FrCommand         *afile);
-static void fr_command_tar_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandTar, fr_command_tar, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -1067,7 +1062,7 @@ fr_command_tar_set_mime_type (FrCommand  *comm,
 {
 	FrCommandTar *comm_tar = FR_COMMAND_TAR (comm);
 
-	FR_COMMAND_CLASS (parent_class)->set_mime_type (comm, mime_type);
+	FR_COMMAND_CLASS (fr_command_tar_parent_class)->set_mime_type (comm, mime_type);
 
 	if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
 		char *try_command[3] = { "7za", "7zr", "7z" };
@@ -1113,106 +1108,79 @@ fr_command_tar_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_tar_class_init (FrCommandTarClass *class)
-{
-        GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-        FrCommandClass *afc;
-
-        parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_tar_finalize;
-
-        afc->list             = fr_command_tar_list;
-	afc->add              = fr_command_tar_add;
-	afc->delete           = fr_command_tar_delete;
-	afc->extract          = fr_command_tar_extract;
-	afc->handle_error     = fr_command_tar_handle_error;
-	afc->get_mime_types   = fr_command_tar_get_mime_types;
-	afc->get_capabilities = fr_command_tar_get_capabilities;
-	afc->set_mime_type    = fr_command_tar_set_mime_type;
-	afc->recompress       = fr_command_tar_recompress;
-	afc->uncompress       = fr_command_tar_uncompress;
-	afc->get_packages     = fr_command_tar_get_packages;
-}
-
-
-static void
-fr_command_tar_init (FrCommand *comm)
-{
-	FrCommandTar *comm_tar = (FrCommandTar*) comm;
-
-	comm->propAddCanUpdate              = FALSE;
-	comm->propAddCanReplace             = FALSE;
-	comm->propAddCanStoreFolders        = TRUE;
-	comm->propExtractCanAvoidOverwrite  = FALSE;
-	comm->propExtractCanSkipOlder       = TRUE;
-	comm->propExtractCanJunkPaths       = FALSE;
-	comm->propPassword                  = FALSE;
-	comm->propTest                      = FALSE;
-	comm->propCanDeleteNonEmptyFolders  = FALSE;
-	comm->propCanExtractNonEmptyFolders = FALSE;
-	comm->propListFromFile              = TRUE;
-
-	comm_tar->msg = NULL;
-	comm_tar->uncomp_filename = NULL;
-}
-
-
-static void
 fr_command_tar_finalize (GObject *object)
 {
-	FrCommandTar *comm_tar;
+	FrCommandTar *self;
 
         g_return_if_fail (object != NULL);
         g_return_if_fail (FR_IS_COMMAND_TAR (object));
 
-	comm_tar = FR_COMMAND_TAR (object);
+	self = FR_COMMAND_TAR (object);
 
-	if (comm_tar->uncomp_filename != NULL) {
-		g_free (comm_tar->uncomp_filename);
-		comm_tar->uncomp_filename = NULL;
+	if (self->uncomp_filename != NULL) {
+		g_free (self->uncomp_filename);
+		self->uncomp_filename = NULL;
 	}
 
-	if (comm_tar->msg != NULL) {
-		g_free (comm_tar->msg);
-		comm_tar->msg = NULL;
+	if (self->msg != NULL) {
+		g_free (self->msg);
+		self->msg = NULL;
 	}
 
-	if (comm_tar->compress_command != NULL) {
-		g_free (comm_tar->compress_command);
-		comm_tar->compress_command = NULL;
+	if (self->compress_command != NULL) {
+		g_free (self->compress_command);
+		self->compress_command = NULL;
 	}
 
 	/* Chain up */
-        if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+        if (G_OBJECT_CLASS (fr_command_tar_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_tar_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_tar_get_type ()
+static void
+fr_command_tar_class_init (FrCommandTarClass *klass)
 {
-        static GType type = 0;
+        GObjectClass   *gobject_class;
+        FrCommandClass *command_class;
 
-        if (! type) {
-                GTypeInfo type_info = {
-			sizeof (FrCommandTarClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_tar_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandTar),
-			0,
-			(GInstanceInitFunc) fr_command_tar_init
-		};
+        fr_command_tar_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandTar",
-					       &type_info,
-					       0);
-        }
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_tar_finalize;
 
-        return type;
+	command_class = FR_COMMAND_CLASS (klass);
+        command_class->list             = fr_command_tar_list;
+	command_class->add              = fr_command_tar_add;
+	command_class->delete           = fr_command_tar_delete;
+	command_class->extract          = fr_command_tar_extract;
+	command_class->handle_error     = fr_command_tar_handle_error;
+	command_class->get_mime_types   = fr_command_tar_get_mime_types;
+	command_class->get_capabilities = fr_command_tar_get_capabilities;
+	command_class->set_mime_type    = fr_command_tar_set_mime_type;
+	command_class->recompress       = fr_command_tar_recompress;
+	command_class->uncompress       = fr_command_tar_uncompress;
+	command_class->get_packages     = fr_command_tar_get_packages;
+}
+
+
+static void
+fr_command_tar_init (FrCommandTar *self)
+{
+	FrCommand *base = FR_COMMAND (self);
+
+	base->propAddCanUpdate              = FALSE;
+	base->propAddCanReplace             = FALSE;
+	base->propAddCanStoreFolders        = TRUE;
+	base->propExtractCanAvoidOverwrite  = FALSE;
+	base->propExtractCanSkipOlder       = TRUE;
+	base->propExtractCanJunkPaths       = FALSE;
+	base->propPassword                  = FALSE;
+	base->propTest                      = FALSE;
+	base->propCanDeleteNonEmptyFolders  = FALSE;
+	base->propCanExtractNonEmptyFolders = FALSE;
+	base->propListFromFile              = TRUE;
+
+	self->msg = NULL;
+	self->uncomp_filename = NULL;
 }

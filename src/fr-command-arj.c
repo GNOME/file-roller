@@ -22,22 +22,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <glib.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "fr-command.h"
 #include "fr-command-arj.h"
 
-static void fr_command_arj_class_init  (FrCommandArjClass *class);
-static void fr_command_arj_init        (FrCommand         *afile);
-static void fr_command_arj_finalize    (GObject           *object);
 
-/* Parent Class */
-
-static FrCommandClass *parent_class = NULL;
+G_DEFINE_TYPE (FrCommandArj, fr_command_arj, FR_TYPE_COMMAND)
 
 
 /* -- list -- */
@@ -349,89 +342,60 @@ fr_command_arj_get_packages (FrCommand  *comm,
 
 
 static void
-fr_command_arj_class_init (FrCommandArjClass *class)
-{
-	GObjectClass   *gobject_class = G_OBJECT_CLASS (class);
-	FrCommandClass *afc;
-
-	parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
-
-	gobject_class->finalize = fr_command_arj_finalize;
-
-	afc->list             = fr_command_arj_list;
-	afc->add              = fr_command_arj_add;
-	afc->delete           = fr_command_arj_delete;
-	afc->extract          = fr_command_arj_extract;
-	afc->test             = fr_command_arj_test;
-	afc->handle_error     = fr_command_arj_handle_error;
-	afc->get_mime_types   = fr_command_arj_get_mime_types;
-	afc->get_capabilities = fr_command_arj_get_capabilities;
-	afc->get_packages     = fr_command_arj_get_packages;
-}
-
-
-static void
-fr_command_arj_init (FrCommand *comm)
-{
-	FrCommandArj *arj_comm;
-
-	comm->propAddCanUpdate             = TRUE;
-	comm->propAddCanReplace            = TRUE;
-	comm->propAddCanStoreFolders       = FALSE;
-	comm->propExtractCanAvoidOverwrite = TRUE;
-	comm->propExtractCanSkipOlder      = TRUE;
-	comm->propExtractCanJunkPaths      = TRUE;
-	comm->propPassword                 = TRUE;
-	comm->propTest                     = TRUE;
-
-	arj_comm = FR_COMMAND_ARJ (comm);
-	arj_comm->list_started = FALSE;
-	arj_comm->fdata = FALSE;
-	arj_comm->filename_line_regex = g_regex_new ("[0-9]+\\) ", G_REGEX_OPTIMIZE, 0, NULL);
-}
-
-
-static void
 fr_command_arj_finalize (GObject *object)
 {
-	FrCommandArj *arj_comm;
+	FrCommandArj *self;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (FR_IS_COMMAND_ARJ (object));
 
-	arj_comm = FR_COMMAND_ARJ (object);
-	g_regex_unref (arj_comm->filename_line_regex);
+	self = FR_COMMAND_ARJ (object);
+	g_regex_unref (self->filename_line_regex);
 
-	/* Chain up */
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
+	if (G_OBJECT_CLASS (fr_command_arj_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_command_arj_parent_class)->finalize (object);
 }
 
 
-GType
-fr_command_arj_get_type ()
+static void
+fr_command_arj_class_init (FrCommandArjClass *klass)
 {
-	static GType type = 0;
+	GObjectClass   *gobject_class;
+	FrCommandClass *command_class;
 
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrCommandArjClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_command_arj_class_init,
-			NULL,
-			NULL,
-			sizeof (FrCommandArj),
-			0,
-			(GInstanceInitFunc) fr_command_arj_init
-		};
+	fr_command_arj_parent_class = g_type_class_peek_parent (klass);
 
-		type = g_type_register_static (FR_TYPE_COMMAND,
-					       "FRCommandArj",
-					       &type_info,
-					       0);
-	}
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_command_arj_finalize;
 
-	return type;
+	command_class = FR_COMMAND_CLASS (klass);
+	command_class->list             = fr_command_arj_list;
+	command_class->add              = fr_command_arj_add;
+	command_class->delete           = fr_command_arj_delete;
+	command_class->extract          = fr_command_arj_extract;
+	command_class->test             = fr_command_arj_test;
+	command_class->handle_error     = fr_command_arj_handle_error;
+	command_class->get_mime_types   = fr_command_arj_get_mime_types;
+	command_class->get_capabilities = fr_command_arj_get_capabilities;
+	command_class->get_packages     = fr_command_arj_get_packages;
+}
+
+
+static void
+fr_command_arj_init (FrCommandArj *self)
+{
+	FrCommand *base = FR_COMMAND (self);;
+
+	base->propAddCanUpdate             = TRUE;
+	base->propAddCanReplace            = TRUE;
+	base->propAddCanStoreFolders       = FALSE;
+	base->propExtractCanAvoidOverwrite = TRUE;
+	base->propExtractCanSkipOlder      = TRUE;
+	base->propExtractCanJunkPaths      = TRUE;
+	base->propPassword                 = TRUE;
+	base->propTest                     = TRUE;
+
+	self->list_started = FALSE;
+	self->fdata = FALSE;
+	self->filename_line_regex = g_regex_new ("[0-9]+\\) ", G_REGEX_OPTIMIZE, 0, NULL);
 }

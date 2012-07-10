@@ -49,33 +49,13 @@ typedef struct
 } EggTreeMultiDndData;
 
 
-GType
-egg_tree_multi_drag_source_get_type (void)
+G_DEFINE_INTERFACE (EggTreeMultiDragSource, egg_tree_multi_drag_source, 0)
+
+
+static void
+egg_tree_multi_drag_source_default_init (EggTreeMultiDragSourceInterface *iface)
 {
-  static GType our_type = 0;
-
-  if (!our_type)
-    {
-      static const GTypeInfo our_info =
-	{
-	  sizeof (EggTreeMultiDragSourceIface), /* class_size */
-	  NULL,		/* base_init */
-	  NULL,		/* base_finalize */
-	  NULL,
-	  NULL,		/* class_finalize */
-	  NULL,		/* class_data */
-	  0,
-	  0,            /* n_preallocs */
-	  NULL
-	};
-
-      our_type = g_type_register_static (G_TYPE_INTERFACE,
-					 "EggTreeMultiDragSource",
-					 &our_info,
-					 0);
-    }
-
-  return our_type;
+        /* void */
 }
 
 
@@ -94,7 +74,7 @@ gboolean
 egg_tree_multi_drag_source_row_draggable (EggTreeMultiDragSource *drag_source,
 					  GList                  *path_list)
 {
-  EggTreeMultiDragSourceIface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
+  EggTreeMultiDragSourceInterface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
 
   g_return_val_if_fail (EGG_IS_TREE_MULTI_DRAG_SOURCE (drag_source), FALSE);
   g_return_val_if_fail (iface->row_draggable != NULL, FALSE);
@@ -124,7 +104,7 @@ gboolean
 egg_tree_multi_drag_source_drag_data_delete (EggTreeMultiDragSource *drag_source,
 					     GList                  *path_list)
 {
-  EggTreeMultiDragSourceIface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
+  EggTreeMultiDragSourceInterface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
 
   g_return_val_if_fail (EGG_IS_TREE_MULTI_DRAG_SOURCE (drag_source), FALSE);
   g_return_val_if_fail (iface->drag_data_delete != NULL, FALSE);
@@ -153,7 +133,7 @@ egg_tree_multi_drag_source_drag_data_get (EggTreeMultiDragSource *drag_source,
 					  GtkSelectionData       *selection_data,
 					  GList                  *path_list)
 {
-  EggTreeMultiDragSourceIface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
+  EggTreeMultiDragSourceInterface *iface = EGG_TREE_MULTI_DRAG_SOURCE_GET_IFACE (drag_source);
 
   g_return_val_if_fail (EGG_IS_TREE_MULTI_DRAG_SOURCE (drag_source), FALSE);
   g_return_val_if_fail (iface->drag_data_get != NULL, FALSE);

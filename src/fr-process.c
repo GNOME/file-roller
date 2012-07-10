@@ -38,6 +38,10 @@
 #define REFRESH_RATE 20
 #define BUFFER_SIZE 16384
 
+
+G_DEFINE_TYPE (FrProcess, fr_process, G_TYPE_OBJECT)
+
+
 enum {
 	START,
 	DONE,
@@ -45,12 +49,8 @@ enum {
 	LAST_SIGNAL
 };
 
-static GObjectClass *parent_class;
-static guint fr_process_signals[LAST_SIGNAL] = { 0 };
 
-static void fr_process_class_init (FrProcessClass *class);
-static void fr_process_init       (FrProcess      *process);
-static void fr_process_finalize   (GObject        *object);
+static guint fr_process_signals[LAST_SIGNAL] = { 0 };
 
 
 typedef struct {
@@ -230,44 +230,49 @@ struct _FrProcessPrivate {
 };
 
 
-GType
-fr_process_get_type (void)
+static void fr_process_stop_priv (FrProcess *process, gboolean emit_signal);
+
+
+static void
+fr_process_finalize (GObject *object)
 {
-	static GType type = 0;
+	FrProcess *process;
 
-	if (! type) {
-		GTypeInfo type_info = {
-			sizeof (FrProcessClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) fr_process_class_init,
-			NULL,
-			NULL,
-			sizeof (FrProcess),
-			0,
-			(GInstanceInitFunc) fr_process_init
-		};
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (FR_IS_PROCESS (object));
 
-		type = g_type_register_static (G_TYPE_OBJECT,
-					       "FRProcess",
-					       &type_info,
-					       0);
-	}
+	process = FR_PROCESS (object);
 
-	return type;
+	fr_process_stop_priv (process, FALSE);
+	fr_process_clear (process);
+
+	g_ptr_array_free (process->priv->comm, FALSE);
+
+	fr_channel_data_free (&process->out);
+	fr_channel_data_free (&process->err);
+
+	g_clear_error (&process->error.gerror);
+	g_clear_error (&process->priv->first_error.gerror);
+	_g_string_list_free (process->priv->first_error_stdout);
+	_g_string_list_free (process->priv->first_error_stderr);
+
+	g_free (process->priv);
+
+	if (G_OBJECT_CLASS (fr_process_parent_class)->finalize)
+		G_OBJECT_CLASS (fr_process_parent_class)->finalize (object);
 }
 
 
 static void
-fr_process_class_init (FrProcessClass *class)
+fr_process_class_init (FrProcessClass *klass)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass *gobject_class;
 
-	parent_class = g_type_class_peek_parent (class);
+	fr_process_parent_class = g_type_class_peek_parent (klass);
 
 	fr_process_signals[START] =
 		g_signal_new ("start",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrProcessClass, start),
 			      NULL, NULL,
@@ -275,7 +280,7 @@ fr_process_class_init (FrProcessClass *class)
 			      G_TYPE_NONE, 0);
 	fr_process_signals[DONE] =
 		g_signal_new ("done",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrProcessClass, done),
 			      NULL, NULL,
@@ -284,17 +289,18 @@ fr_process_class_init (FrProcessClass *class)
 			      FR_TYPE_PROC_ERROR);
 	fr_process_signals[STICKY_ONLY] =
 		g_signal_new ("sticky_only",
-			      G_TYPE_FROM_CLASS (class),
+			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrProcessClass, sticky_only),
 			      NULL, NULL,
 			      fr_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
 
+	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_process_finalize;
 
-	class->start = NULL;
-	class->done  = NULL;
+	klass->start = NULL;
+	klass->done  = NULL;
 }
 
 
@@ -333,41 +339,6 @@ FrProcess *
 fr_process_new (void)
 {
 	return FR_PROCESS (g_object_new (FR_TYPE_PROCESS, NULL));
-}
-
-
-static void fr_process_stop_priv (FrProcess *process, gboolean emit_signal);
-
-
-static void
-fr_process_finalize (GObject *object)
-{
-	FrProcess *process;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (FR_IS_PROCESS (object));
-
-	process = FR_PROCESS (object);
-
-	fr_process_stop_priv (process, FALSE);
-	fr_process_clear (process);
-
-	g_ptr_array_free (process->priv->comm, FALSE);
-
-	fr_channel_data_free (&process->out);
-	fr_channel_data_free (&process->err);
-
-	g_clear_error (&process->error.gerror);
-	g_clear_error (&process->priv->first_error.gerror);
-	_g_string_list_free (process->priv->first_error_stdout);
-	_g_string_list_free (process->priv->first_error_stderr);
-
-	g_free (process->priv);
-
-	/* Chain up */
-
-	if (G_OBJECT_CLASS (parent_class)->finalize)
-		G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 
