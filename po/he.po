@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-02 12:49+0300\n"
-"PO-Revision-Date: 2012-06-02 12:49+0200\n"
+"POT-Creation-Date: 2012-07-12 19:28+0300\n"
+"PO-Revision-Date: 2012-07-12 19:34+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "Language: he\n"
@@ -84,8 +84,8 @@ msgid "Show session management options"
 msgstr "Show session management options"
 
 #: ../data/file-roller.desktop.in.in.h:1
-#: ../src/fr-window.c:1975
-#: ../src/fr-window.c:5446
+#: ../src/fr-window.c:1949
+#: ../src/fr-window.c:5322
 msgid "Archive Manager"
 msgstr "מנהל הארכיונים"
 
@@ -192,7 +192,7 @@ msgstr "Whether to display the statusbar."
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
 #: ../src/ui.h:229
 msgid "View the folders pane"
-msgstr "הצגת סרגל התיקיות"
+msgstr "View the folders pane"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
 msgid "Whether to display the folders pane."
@@ -270,18 +270,18 @@ msgstr "יצירת ארכיון דחוס עם הפריטים הנבחרים"
 #: ../src/actions.c:156
 #: ../src/actions.c:195
 #: ../src/actions.c:231
-#: ../src/dlg-batch-add.c:157
-#: ../src/dlg-batch-add.c:173
-#: ../src/dlg-batch-add.c:202
-#: ../src/dlg-batch-add.c:247
-#: ../src/dlg-batch-add.c:293
-#: ../src/fr-window.c:2974
+#: ../src/dlg-batch-add.c:150
+#: ../src/dlg-batch-add.c:166
+#: ../src/dlg-batch-add.c:195
+#: ../src/dlg-batch-add.c:240
+#: ../src/dlg-batch-add.c:286
+#: ../src/fr-window.c:2874
 msgid "Could not create the archive"
 msgstr "לא ניתן ליצור את הארכיון"
 
 #: ../src/actions.c:158
-#: ../src/dlg-batch-add.c:159
-#: ../src/dlg-batch-add.c:295
+#: ../src/dlg-batch-add.c:152
+#: ../src/dlg-batch-add.c:288
 msgid "You have to specify an archive name."
 msgstr "עליך לציין שם ארכיון."
 
@@ -293,9 +293,9 @@ msgstr "אין לך הרשאות ליצור ארכיון בתיקייה זו"
 #: ../src/dlg-package-installer.c:269
 #: ../src/dlg-package-installer.c:278
 #: ../src/dlg-package-installer.c:306
-#: ../src/fr-archive.c:1178
-#: ../src/fr-window.c:6084
-#: ../src/fr-window.c:6260
+#: ../src/fr-archive.c:1131
+#: ../src/fr-window.c:5934
+#: ../src/fr-window.c:6110
 msgid "Archive type not supported."
 msgstr "סוג הארכיון אינו נתמך."
 
@@ -304,12 +304,12 @@ msgid "Could not delete the old archive."
 msgstr "לא ניתן למחוק את הארכיון הישן."
 
 #: ../src/actions.c:381
-#: ../src/fr-window.c:5821
+#: ../src/fr-window.c:5671
 msgid "Open"
 msgstr "פתיחה"
 
 #: ../src/actions.c:392
-#: ../src/fr-window.c:5260
+#: ../src/fr-window.c:5151
 msgid "All archives"
 msgstr "כל הארכיונים"
 
@@ -334,85 +334,86 @@ msgstr ""
 "פרויקט תרגום GNOME לעברית:\n"
 "‏http://gnome-il.berlios.de"
 
-#: ../src/dlg-add-files.c:99
-#: ../src/dlg-add-folder.c:129
+#: ../src/dlg-add-files.c:101
+#: ../src/dlg-add-folder.c:130
 msgid "Could not add the files to the archive"
 msgstr "לא ניתן להוסיף את הקבצים לארכיון"
 
-#: ../src/dlg-add-files.c:100
-#: ../src/dlg-add-folder.c:130
+#: ../src/dlg-add-files.c:102
+#: ../src/dlg-add-folder.c:131
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "אין לך את ההרשאות הנכונות לקריאת קבצים מהתיקייה „%s“"
 
-#: ../src/dlg-add-files.c:148
+#: ../src/dlg-add-files.c:150
 #: ../src/ui.h:46
 msgid "Add Files"
 msgstr "הוספת קבצים"
 
 #. Translators: add a file to the archive only if the disk version is
 #. * newer than the archive version.
-#: ../src/dlg-add-files.c:164
-#: ../src/dlg-add-folder.c:230
+#: ../src/dlg-add-files.c:166
+#: ../src/dlg-add-folder.c:231
 msgid "Add only if _newer"
 msgstr "הו_ספה רק אם חדש יותר"
 
-#: ../src/dlg-add-folder.c:216
+#: ../src/dlg-add-folder.c:217
 msgid "Add a Folder"
 msgstr "הוספת תיקיה"
 
-#: ../src/dlg-add-folder.c:231
+#: ../src/dlg-add-folder.c:232
 msgid "_Include subfolders"
 msgstr "ה_כללת תת־תיקיות"
 
-#: ../src/dlg-add-folder.c:232
+#: ../src/dlg-add-folder.c:233
 msgid "Exclude folders that are symbolic lin_ks"
 msgstr "שלילת תיקיות שהן _קישורים סמליים"
 
-#: ../src/dlg-add-folder.c:235
-#: ../src/dlg-add-folder.c:241
-#: ../src/dlg-add-folder.c:247
+#: ../src/dlg-add-folder.c:236
+#: ../src/dlg-add-folder.c:242
+#: ../src/dlg-add-folder.c:248
 msgid "example: *.o; *.bak"
 msgstr "לדוגמה: ‎*.o; *.bak"
 
-#: ../src/dlg-add-folder.c:236
+#: ../src/dlg-add-folder.c:237
 msgid "Include _files:"
 msgstr "הכ_ללת קבצים:"
 
-#: ../src/dlg-add-folder.c:242
+#: ../src/dlg-add-folder.c:243
 msgid "E_xclude files:"
 msgstr "_שלילת קבצים:"
 
-#: ../src/dlg-add-folder.c:248
+#: ../src/dlg-add-folder.c:249
 msgid "_Exclude folders:"
-msgstr "_שלילת קבצים:"
+msgstr "_שלילת תיקיות:"
 
-#: ../src/dlg-add-folder.c:252
+#: ../src/dlg-add-folder.c:253
 msgid "_Load Options"
 msgstr "_טעינת אפשרויות"
 
-#: ../src/dlg-add-folder.c:253
+#: ../src/dlg-add-folder.c:254
 msgid "Sa_ve Options"
 msgstr "ש_מירת האפשרויות"
 
-#: ../src/dlg-add-folder.c:254
+#: ../src/dlg-add-folder.c:255
 msgid "_Reset Options"
 msgstr "אי_פוס האפשרויות"
 
-#: ../src/dlg-add-folder.c:882
+#: ../src/dlg-add-folder.c:883
 msgid "Save Options"
 msgstr "שמירת האפשרויות"
 
-#: ../src/dlg-add-folder.c:883
+#: ../src/dlg-add-folder.c:884
 msgid "_Options Name:"
 msgstr "שם ה_אפשרויות:"
 
-#: ../src/dlg-ask-password.c:122
+#. Translators: %s is a filename
+#: ../src/dlg-ask-password.c:119
 #, c-format
-msgid "Enter the password for the archive '%s'."
-msgstr "נא להזין ססמה לארכיון '%s'."
+msgid "Password required for \"%s\""
+msgstr "נדרשת ססמה עבור „%s“"
 
-#: ../src/dlg-batch-add.c:174
+#: ../src/dlg-batch-add.c:167
 #, c-format
 msgid ""
 "The name \"%s\" is not valid because it cannot contain the characters: %s\n"
@@ -423,19 +424,19 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/dlg-batch-add.c:177
-#: ../src/fr-window.c:7638
-#: ../src/fr-window.c:7640
+#: ../src/dlg-batch-add.c:170
+#: ../src/fr-window.c:7469
+#: ../src/fr-window.c:7471
 msgid "Please use a different name."
 msgstr "נא להשתמש בשם אחר."
 
-#: ../src/dlg-batch-add.c:204
+#: ../src/dlg-batch-add.c:197
 msgid "You don't have the right permissions to create an archive in the destination folder."
 msgstr "אין לך הרשאות ליצור ארכיון בתיקיית היעד."
 
-#: ../src/dlg-batch-add.c:220
-#: ../src/dlg-extract.c:102
-#: ../src/fr-window.c:6859
+#: ../src/dlg-batch-add.c:213
+#: ../src/dlg-extract.c:104
+#: ../src/fr-window.c:6690
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -446,96 +447,96 @@ msgstr ""
 "\n"
 "האם ברצונך ליצור אותה?"
 
-#: ../src/dlg-batch-add.c:229
-#: ../src/dlg-extract.c:111
-#: ../src/fr-window.c:6868
+#: ../src/dlg-batch-add.c:222
+#: ../src/dlg-extract.c:113
+#: ../src/fr-window.c:6699
 msgid "Create _Folder"
 msgstr "יצירת _תיקייה"
 
-#: ../src/dlg-batch-add.c:248
-#: ../src/dlg-extract.c:131
-#: ../src/fr-window.c:6885
+#: ../src/dlg-batch-add.c:241
+#: ../src/dlg-extract.c:133
+#: ../src/fr-window.c:6716
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "לא ניתן ליצור את תיקיית היעד: %s."
 
-#: ../src/dlg-batch-add.c:265
+#: ../src/dlg-batch-add.c:258
 msgid "Archive not created"
 msgstr "לא נוצר ארכיון"
 
-#: ../src/dlg-batch-add.c:313
+#: ../src/dlg-batch-add.c:306
 msgid "The archive is already present.  Do you want to overwrite it?"
 msgstr "הארכיון כבר קיים.  האם ברצונך להחליפו?"
 
-#: ../src/dlg-batch-add.c:316
+#: ../src/dlg-batch-add.c:309
 msgid "_Overwrite"
 msgstr "ה_חלפה"
 
-#: ../src/dlg-extract.c:130
-#: ../src/dlg-extract.c:148
-#: ../src/dlg-extract.c:175
-#: ../src/fr-window.c:4199
-#: ../src/fr-window.c:6889
-#: ../src/fr-window.c:6908
-#: ../src/fr-window.c:6913
+#: ../src/dlg-extract.c:132
+#: ../src/dlg-extract.c:150
+#: ../src/dlg-extract.c:177
+#: ../src/fr-window.c:4099
+#: ../src/fr-window.c:6720
+#: ../src/fr-window.c:6739
+#: ../src/fr-window.c:6744
 msgid "Extraction not performed"
 msgstr "החילוץ לא התבצע"
 
-#: ../src/dlg-extract.c:176
-#: ../src/fr-window.c:4362
-#: ../src/fr-window.c:4442
+#: ../src/dlg-extract.c:178
+#: ../src/fr-window.c:4262
+#: ../src/fr-window.c:4342
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "אין לך את ההרשאות המתאימות לחלץ ארכיונים לתיקייה „%s“"
 
-#: ../src/dlg-extract.c:331
-#: ../src/dlg-extract.c:429
+#: ../src/dlg-extract.c:333
+#: ../src/dlg-extract.c:431
 #: ../src/ui.h:121
 msgid "Extract"
 msgstr "חילוץ"
 
-#: ../src/dlg-extract.c:348
+#: ../src/dlg-extract.c:350
 #: ../src/ui/delete.ui.h:2
 msgid "_Files:"
 msgstr "_קבצים:"
 
-#: ../src/dlg-extract.c:359
+#: ../src/dlg-extract.c:361
 #: ../src/ui/delete.ui.h:3
 msgid "example: *.txt; *.doc"
 msgstr "לדוגמה: ‎*.txt; *.doc"
 
-#: ../src/dlg-extract.c:362
+#: ../src/dlg-extract.c:364
 #: ../src/ui/delete.ui.h:4
 msgid "_All files"
 msgstr "_כל הקבצים"
 
-#: ../src/dlg-extract.c:369
+#: ../src/dlg-extract.c:371
 #: ../src/ui/delete.ui.h:5
 msgid "_Selected files"
 msgstr "קבצים _נבחרים"
 
-#: ../src/dlg-extract.c:380
+#: ../src/dlg-extract.c:382
 msgid "Actions"
 msgstr "פעולות"
 
-#: ../src/dlg-extract.c:396
+#: ../src/dlg-extract.c:398
 msgid "Re-crea_te folders"
 msgstr "י_צירת תיקיות מחדש"
 
-#: ../src/dlg-extract.c:400
+#: ../src/dlg-extract.c:402
 msgid "Over_write existing files"
 msgstr "ה_חלפת קבצים קיימים"
 
-#: ../src/dlg-extract.c:404
+#: ../src/dlg-extract.c:406
 msgid "Do not e_xtract older files"
 msgstr "אין לח_לץ קבצים ישנים יותר"
 
-#: ../src/dlg-new.c:427
+#: ../src/dlg-new.c:428
 msgctxt "File"
 msgid "New"
 msgstr "חדש"
 
-#: ../src/dlg-new.c:440
+#: ../src/dlg-new.c:441
 msgctxt "File"
 msgid "Save"
 msgstr "שמירה"
@@ -562,40 +563,10 @@ msgstr "לא ניתן לפתוח סוג קובץ זה"
 msgid "_Search Command"
 msgstr "_חיפוש פקודה"
 
-#. Translators: after the colon there is a folder name.
-#: ../src/dlg-prop.c:106
-msgid "Location:"
-msgstr "מיקום:"
-
-#: ../src/dlg-prop.c:118
-msgctxt "File"
-msgid "Name:"
-msgstr "שם:"
-
-#: ../src/dlg-prop.c:124
+#: ../src/dlg-prop.c:88
 #, c-format
 msgid "%s Properties"
 msgstr "מאפייני %s"
-
-#: ../src/dlg-prop.c:133
-msgid "Last modified:"
-msgstr "תאריך השינוי:"
-
-#: ../src/dlg-prop.c:143
-msgid "Archive size:"
-msgstr "גודל הארכיון:"
-
-#: ../src/dlg-prop.c:154
-msgid "Content size:"
-msgstr "גודל תוכן הארכיון:"
-
-#: ../src/dlg-prop.c:174
-msgid "Compression ratio:"
-msgstr "רמת הכיווץ:"
-
-#: ../src/dlg-prop.c:189
-msgid "Number of files:"
-msgstr "מספר הקבצים:"
 
 #: ../src/dlg-update.c:163
 #, c-format
@@ -651,178 +622,180 @@ msgstr "אין באפשרות התכנית למצוא את מבנה הקובץ �
 msgid "File format not recognized"
 msgstr "תצורת הקובץ אינה מזוהה"
 
-#: ../src/fr-archive.c:1158
+#: ../src/fr-archive.c:1111
 msgid "File not found."
 msgstr "הקובץ לא נמצא."
 
-#: ../src/fr-archive.c:1261
+#: ../src/fr-archive.c:1217
 #, c-format
 msgid "Archive not found"
 msgstr "הארכיון לא נמצא"
 
-#: ../src/fr-archive.c:2427
+#: ../src/fr-archive.c:2398
 msgid "You don't have the right permissions."
 msgstr "אין לך את ההרשאות הנכונות."
 
-#: ../src/fr-archive.c:2427
+#: ../src/fr-archive.c:2398
 msgid "This archive type cannot be modified"
 msgstr "לא ניתן לשנות ארכיון זה"
 
-#: ../src/fr-archive.c:2439
+#: ../src/fr-archive.c:2410
 msgid "You can't add an archive to itself."
 msgstr "אין אפשרות להוסיף ארכיון לעצמו."
 
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-7z.c:297
-#: ../src/fr-command-rar.c:324
-#: ../src/fr-command-tar.c:307
-msgid "Adding file: "
-msgstr "קובץ נוסף: "
+#. Translators: %s is a filename.
+#: ../src/fr-command-7z.c:296
+#: ../src/fr-command-rar.c:323
+#: ../src/fr-command-tar.c:302
+#, c-format
+msgid "Adding \"%s\""
+msgstr "„%s“ נוסף"
 
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-7z.c:418
-#: ../src/fr-command-rar.c:451
-#: ../src/fr-command-tar.c:426
-msgid "Extracting file: "
-msgstr "קובץ מחולץ: "
+#. Translators: %s is a filename.
+#: ../src/fr-command-7z.c:417
+#: ../src/fr-command-rar.c:450
+#: ../src/fr-command-tar.c:421
+#, c-format
+msgid "Extracting \"%s\""
+msgstr "„%s“ מחולץ"
 
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-rar.c:402
-#: ../src/fr-command-tar.c:372
-msgid "Removing file: "
-msgstr "קובץ מוסר: "
+#. Translators: %s is a filename.
+#: ../src/fr-command-rar.c:401
+#: ../src/fr-command-tar.c:367
+#, c-format
+msgid "Removing \"%s\""
+msgstr "„%s“ מוסר"
 
-#: ../src/fr-command-rar.c:584
+#: ../src/fr-command-rar.c:583
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "הכרך לא נמצא: %s"
 
-#: ../src/fr-command-tar.c:381
-#: ../src/fr-window.c:2309
+#: ../src/fr-command-tar.c:376
 msgid "Deleting files from archive"
 msgstr "קבצים נמחקים מהארכיון"
 
-#: ../src/fr-command-tar.c:485
+#: ../src/fr-command-tar.c:480
 msgid "Recompressing archive"
 msgstr "הארכיון מכווץ מחדש"
 
-#: ../src/fr-command-tar.c:736
+#: ../src/fr-command-tar.c:721
 msgid "Decompressing archive"
 msgstr "הארכיון מורחב"
 
-#: ../src/fr-init.c:58
+#: ../src/fr-init.c:61
 msgid "7-Zip (.7z)"
 msgstr "‎7-Zip (.7z)"
 
-#: ../src/fr-init.c:59
+#: ../src/fr-init.c:62
 msgid "Tar compressed with 7z (.tar.7z)"
 msgstr "‏Tar מכווץ באמצעות 7z ‏(tar.7z.)"
 
-#: ../src/fr-init.c:60
+#: ../src/fr-init.c:63
 msgid "Ace (.ace)"
 msgstr "‎Ace‏ (.ace)"
 
-#: ../src/fr-init.c:62
+#: ../src/fr-init.c:65
 msgid "Ar (.ar)"
 msgstr "‎Ar‏ (.ar)"
 
-#: ../src/fr-init.c:63
+#: ../src/fr-init.c:66
 msgid "Arj (.arj)"
 msgstr "‎Arj‏ (.arj)"
 
-#: ../src/fr-init.c:65
+#: ../src/fr-init.c:68
 msgid "Tar compressed with bzip2 (.tar.bz2)"
 msgstr "‏Tar מכווץ באמצעות bzip2 ‏(tar.bz2.)"
 
-#: ../src/fr-init.c:67
+#: ../src/fr-init.c:70
 msgid "Tar compressed with bzip (.tar.bz)"
 msgstr "‏Tar מכווץ באמצעות bzip ‏(tar.bz.)"
 
-#: ../src/fr-init.c:68
+#: ../src/fr-init.c:71
 msgid "Cabinet (.cab)"
 msgstr "‎Cabinet (.cab)"
 
-#: ../src/fr-init.c:69
+#: ../src/fr-init.c:72
 msgid "Rar Archived Comic Book (.cbr)"
 msgstr "ספר קומיקס מכווץ באמצעות Rar ‏(cbr.)"
 
-#: ../src/fr-init.c:70
+#: ../src/fr-init.c:73
 msgid "Zip Archived Comic Book (.cbz)"
 msgstr "ספר קומיקס מכווץ באמצעות Zip ‏(cbz.)"
 
-#: ../src/fr-init.c:73
+#: ../src/fr-init.c:76
 msgid "Tar compressed with gzip (.tar.gz)"
 msgstr "‏Tar מכווץ באמצעות gzip ‏(tar.gz.)"
 
-#: ../src/fr-init.c:76
+#: ../src/fr-init.c:79
 msgid "Ear (.ear)"
 msgstr "Ear (.ear)"
 
-#: ../src/fr-init.c:77
+#: ../src/fr-init.c:80
 msgid "Self-extracting zip (.exe)"
 msgstr "‏Zip בחילוץ אוטומטי (exe.)"
 
-#: ../src/fr-init.c:79
+#: ../src/fr-init.c:82
 msgid "Jar (.jar)"
 msgstr "Jar ‏(.jar)"
 
-#: ../src/fr-init.c:80
+#: ../src/fr-init.c:83
 msgid "Lha (.lzh)"
 msgstr "Lha ‏(.lzh)"
 
-#: ../src/fr-init.c:81
+#: ../src/fr-init.c:84
 msgid "Lrzip (.lrz)"
 msgstr "Lrzip (.lrz)"
 
-#: ../src/fr-init.c:82
+#: ../src/fr-init.c:85
 msgid "Tar compressed with lrzip (.tar.lrz)"
 msgstr "‏Tar מכווץ באמצעות lrzip‏ (‎.tar.lrz)"
 
-#: ../src/fr-init.c:84
+#: ../src/fr-init.c:87
 msgid "Tar compressed with lzip (.tar.lz)"
 msgstr "‏Tar מכווץ באמצעות lzip‏ (‎.tar.lz)"
 
-#: ../src/fr-init.c:86
+#: ../src/fr-init.c:89
 msgid "Tar compressed with lzma (.tar.lzma)"
 msgstr "‏Tar מכווץ באמצעות lzma ‏(tar.lzma.)"
 
-#: ../src/fr-init.c:88
+#: ../src/fr-init.c:91
 msgid "Tar compressed with lzop (.tar.lzo)"
 msgstr "‏Tar מכווץ באמצעות lzop ‏(tar.lzop.)"
 
-#: ../src/fr-init.c:89
+#: ../src/fr-init.c:92
 msgid "Windows Imaging Format (.wim)"
 msgstr "מבנה התמונות של Windows‏ (‎.wim)"
 
-#: ../src/fr-init.c:90
+#: ../src/fr-init.c:93
 msgid "Rar (.rar)"
 msgstr "‏Rar ‏(rar.)"
 
-#: ../src/fr-init.c:93
+#: ../src/fr-init.c:96
 msgid "Tar uncompressed (.tar)"
 msgstr "‏Tar לא מכווץ (tar.)"
 
-#: ../src/fr-init.c:94
+#: ../src/fr-init.c:97
 msgid "Tar compressed with compress (.tar.Z)"
 msgstr "‏Tar מכווץ באמצעות compress ‏(tar.Z.)"
 
-#: ../src/fr-init.c:96
+#: ../src/fr-init.c:99
 msgid "War (.war)"
 msgstr "War ‏(.War)"
 
-#: ../src/fr-init.c:97
+#: ../src/fr-init.c:100
 msgid "Xz (.xz)"
 msgstr "Xz (.xz)"
 
-#: ../src/fr-init.c:98
+#: ../src/fr-init.c:101
 msgid "Tar compressed with xz (.tar.xz)"
 msgstr "‏Tar מכווץ באמצעות xz‏ (‎.tar.xz)"
 
-#: ../src/fr-init.c:99
+#: ../src/fr-init.c:102
 msgid "Zoo (.zoo)"
 msgstr "Zoo ‏(.zoo)"
 
-#: ../src/fr-init.c:100
+#: ../src/fr-init.c:103
 msgid "Zip (.zip)"
 msgstr "Zip ‏(.zip)"
 
@@ -839,262 +812,285 @@ msgstr "הו_ספה"
 msgid "_Extract"
 msgstr "_חילוץ"
 
-#: ../src/fr-window.c:1511
+#: ../src/fr-window.c:1485
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "פריט %d‏ (%s)"
 msgstr[1] "%d פריטים (%s)"
 
-#: ../src/fr-window.c:1516
+#: ../src/fr-window.c:1490
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "קובץ %d נבחר (%s)"
 msgstr[1] "%d קבצים נבחרו (%s)"
 
-#: ../src/fr-window.c:1586
+#: ../src/fr-window.c:1560
 msgid "Folder"
 msgstr "תיקייה"
 
-#: ../src/fr-window.c:1983
+#: ../src/fr-window.c:1957
 msgid "[read only]"
 msgstr "[קריאה בלבד]"
 
-#: ../src/fr-window.c:2232
+#: ../src/fr-window.c:2206
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "לא ניתן להציג את התיקייה „%s“"
 
-#: ../src/fr-window.c:2300
-#: ../src/fr-window.c:2330
-msgid "Creating archive"
-msgstr "נוצר ארכיון"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2280
+#: ../src/fr-window.c:2318
+#, c-format
+msgid "Creating \"%s\""
+msgstr "„%s“ נוצר"
 
-#: ../src/fr-window.c:2303
-msgid "Loading archive"
-msgstr "ארכיון נטען"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2284
+#, c-format
+msgid "Loading \"%s\""
+msgstr "„%s“ נטען"
 
-#: ../src/fr-window.c:2306
-msgid "Reading archive"
-msgstr "הארכיון נקרא"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2288
+#, c-format
+msgid "Reading \"%s\""
+msgstr "„%s“ נקרא"
 
-#: ../src/fr-window.c:2312
-msgid "Testing archive"
-msgstr "הארכיון נבדק"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2292
+#, c-format
+msgid "Deleting files from \"%s\""
+msgstr "נמחקים קבצים מתוך „%s“"
 
-#: ../src/fr-window.c:2315
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2296
+#, c-format
+msgid "Testing \"%s\""
+msgstr "„%s“ בבדיקה"
+
+#: ../src/fr-window.c:2299
 msgid "Getting the file list"
 msgstr "רשימת הקבצים מתקבלת"
 
-#: ../src/fr-window.c:2318
-#: ../src/fr-window.c:2327
-msgid "Copying the file list"
-msgstr "רשימת הקבצים מועתקת"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2303
+#, c-format
+msgid "Copying the files to add to \"%s\""
+msgstr "מועתקים הקבצים להוספה אל „%s“"
 
-#: ../src/fr-window.c:2321
-msgid "Adding files to archive"
-msgstr "נוספים קבצים לארכיון"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2307
+#, c-format
+msgid "Adding files to \"%s\""
+msgstr "נוספים קבצים אל „%s“ "
 
-#: ../src/fr-window.c:2324
-msgid "Extracting files from archive"
-msgstr "קבצים מחולצים מהארכיון"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2311
+#, c-format
+msgid "Extracting files from \"%s\""
+msgstr "קבצים מחולצים מתוך „%s“"
 
-#: ../src/fr-window.c:2333
-msgid "Saving archive"
-msgstr "שמירת הארכיון"
+#: ../src/fr-window.c:2314
+msgid "Copying the extracted files to the destination"
+msgstr "הקבצים שחולצו מועתקים אל היעד"
 
-#: ../src/fr-window.c:2503
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2322
+#, c-format
+msgid "Saving \"%s\""
+msgstr "„%s” נשמר"
+
+#: ../src/fr-window.c:2470
 msgid "_Open the Archive"
 msgstr "פתיחת ה_ארכיון"
 
-#: ../src/fr-window.c:2504
+#: ../src/fr-window.c:2471
 msgid "_Show the Files"
 msgstr "ה_צגת הקבצים"
 
-#: ../src/fr-window.c:2559
-msgid "Archive:"
-msgstr "ארכיון:"
+#: ../src/fr-window.c:2586
+#, c-format
+msgid "%d file remaining"
+msgid_plural "%'d files remaining"
+msgstr[0] "נותר קובץ אחד"
+msgstr[1] "נותרו %'d קבצים"
 
-#: ../src/fr-window.c:2730
+#: ../src/fr-window.c:2636
 msgid "Extraction completed successfully"
 msgstr "החילוץ הסתיים בהצלחה"
 
-#: ../src/fr-window.c:2753
+#: ../src/fr-window.c:2659
 msgid "Archive created successfully"
 msgstr "הארכיון נוצר בהצלחה"
 
-#: ../src/fr-window.c:2801
-msgid "please wait…"
+#: ../src/fr-window.c:2717
+msgid "Please wait…"
 msgstr "נא להמתין…"
 
-#: ../src/fr-window.c:2886
-#: ../src/fr-window.c:3021
+#: ../src/fr-window.c:2783
+#: ../src/fr-window.c:2921
 msgid "Command exited abnormally."
 msgstr "פקודה הסתיימה בצורה לא רגילה."
 
-#: ../src/fr-window.c:2979
+#: ../src/fr-window.c:2879
 msgid "An error occurred while extracting files."
 msgstr "ארעה שגיאה בזמן חילוץ קבצים."
 
-#: ../src/fr-window.c:2985
+#: ../src/fr-window.c:2885
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "לא ניתן לפתוח את „%s“"
 
-#: ../src/fr-window.c:2990
+#: ../src/fr-window.c:2890
 msgid "An error occurred while loading the archive."
 msgstr "אירעה שגיאה בזמן טעינת הארכיון."
 
-#: ../src/fr-window.c:2994
+#: ../src/fr-window.c:2894
 msgid "An error occurred while deleting files from the archive."
 msgstr "אירעה שגיאה בזמן מחיקת קבצים מהארכיון."
 
-#: ../src/fr-window.c:3000
+#: ../src/fr-window.c:2900
 msgid "An error occurred while adding files to the archive."
 msgstr "אירעה שגיאה בזמן הוספת קבצים לארכיון."
 
-#: ../src/fr-window.c:3004
+#: ../src/fr-window.c:2904
 msgid "An error occurred while testing archive."
 msgstr "אירעה שגיאה בזמן בדיקת הארכיון."
 
-#: ../src/fr-window.c:3008
+#: ../src/fr-window.c:2908
 msgid "An error occurred while saving the archive."
 msgstr "אירעה שגיאה בזמן שמירת הארכיון."
 
-#: ../src/fr-window.c:3012
+#: ../src/fr-window.c:2912
 msgid "An error occurred."
 msgstr "אירעה שגיאה."
 
-#: ../src/fr-window.c:3018
+#: ../src/fr-window.c:2918
 msgid "Command not found."
 msgstr "פקודה לא נמצאה."
 
-#: ../src/fr-window.c:3220
+#: ../src/fr-window.c:3121
 msgid "Test Result"
 msgstr "תוצאות בדיקה"
 
-#: ../src/fr-window.c:4042
-#: ../src/fr-window.c:8191
-#: ../src/fr-window.c:8225
-#: ../src/fr-window.c:8475
+#: ../src/fr-window.c:3942
+#: ../src/fr-window.c:8020
+#: ../src/fr-window.c:8054
+#: ../src/fr-window.c:8304
 msgid "Could not perform the operation"
 msgstr "לא ניתן לבצע את הפעולה"
 
-#: ../src/fr-window.c:4068
+#: ../src/fr-window.c:3968
 msgid "Do you want to add this file to the current archive or open it as a new archive?"
 msgstr "האם ברצונך להוסיף קובץ זה לארכיון הנוכחי או לפתוח אותו כארכיון חדש?"
 
-#: ../src/fr-window.c:4098
+#: ../src/fr-window.c:3998
 msgid "Do you want to create a new archive with these files?"
 msgstr "האם ברצונך ליצור ארכיון חדש עם קבצים אלו?"
 
-#: ../src/fr-window.c:4101
+#: ../src/fr-window.c:4001
 msgid "Create _Archive"
 msgstr "יצירת _ארכיון"
 
-#: ../src/fr-window.c:4694
-#: ../src/fr-window.c:5770
+#: ../src/fr-window.c:4594
 msgid "Folders"
 msgstr "תיקיות"
 
-#: ../src/fr-window.c:4732
+#: ../src/fr-window.c:4632
 msgctxt "File"
 msgid "Size"
 msgstr "גודל"
 
-#: ../src/fr-window.c:4733
+#: ../src/fr-window.c:4633
 msgctxt "File"
 msgid "Type"
 msgstr "סוג"
 
-#: ../src/fr-window.c:4734
+#: ../src/fr-window.c:4634
 msgctxt "File"
 msgid "Date Modified"
 msgstr "תאריך השינוי"
 
-#: ../src/fr-window.c:4735
+#: ../src/fr-window.c:4635
 msgctxt "File"
 msgid "Location"
 msgstr "מיקום"
 
-#: ../src/fr-window.c:4744
+#: ../src/fr-window.c:4644
 msgctxt "File"
 msgid "Name"
 msgstr "שם"
 
-#: ../src/fr-window.c:5691
+#: ../src/fr-window.c:5564
 msgid "Find:"
 msgstr "חיפוש:"
 
-#: ../src/fr-window.c:5778
-msgid "Close the folders pane"
-msgstr "סגירת סרגל התיקיות"
-
 #. Translators: this is the label for the "open recent file" sub-menu.
-#: ../src/fr-window.c:5809
+#: ../src/fr-window.c:5659
 msgid "Open _Recent"
 msgstr "נפתחו לא_חרונה"
 
-#: ../src/fr-window.c:5810
-#: ../src/fr-window.c:5822
+#: ../src/fr-window.c:5660
+#: ../src/fr-window.c:5672
 msgid "Open a recently used archive"
 msgstr "פתיחת ארכיון שהיה בשימוש לאחרונה"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5899
+#: ../src/fr-window.c:5749
 #: ../src/ui/batch-add-files.ui.h:3
 msgid "_Location:"
 msgstr "מי_קום:"
 
-#: ../src/fr-window.c:6252
+#: ../src/fr-window.c:6102
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "לא ניתן לשמור את הארכיון „%s“"
 
-#: ../src/fr-window.c:6768
+#: ../src/fr-window.c:6599
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "האם להחליף את הקובץ „%s“?"
 
-#: ../src/fr-window.c:6771
+#: ../src/fr-window.c:6602
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "כבר קיים קובץ אחר באותו השם תחת „%s“."
 
-#: ../src/fr-window.c:6778
+#: ../src/fr-window.c:6609
 msgid "Replace _All"
-msgstr "החלפת ה_כל"
+msgstr "החלפת ה_כול"
 
-#: ../src/fr-window.c:6779
+#: ../src/fr-window.c:6610
 msgid "_Skip"
 msgstr "_דילוג"
 
-#: ../src/fr-window.c:6780
+#: ../src/fr-window.c:6611
 msgid "_Replace"
 msgstr "ה_חלפה"
 
-#: ../src/fr-window.c:7287
+#: ../src/fr-window.c:7118
 msgid "Last Output"
 msgstr "פלט אחרון"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7592
+#: ../src/fr-window.c:7423
 msgid "New name is void, please type a name."
 msgstr "השם החדש הוא ריק (void), נא להזין שם."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7597
+#: ../src/fr-window.c:7428
 msgid "New name is the same as old one, please type other name."
 msgstr "השם החדש זהה לישן, נא להזין שם אחר."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7602
+#: ../src/fr-window.c:7433
 #, c-format
 msgid "Name \"%s\" is not valid because it contains at least one of the following characters: %s, please type other name."
 msgstr "השם „%s“ אינו תקני כיוון שהוא כולל לפחות את אחד מהתווים הבאים: %s, נא להזין שם אחר."
 
-#: ../src/fr-window.c:7638
+#: ../src/fr-window.c:7469
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1105,7 +1101,7 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7640
+#: ../src/fr-window.c:7471
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1116,110 +1112,122 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7710
+#: ../src/fr-window.c:7541
 msgid "Rename"
 msgstr "שינוי שם"
 
-#: ../src/fr-window.c:7711
+#: ../src/fr-window.c:7542
 msgid "_New folder name:"
 msgstr "שם התיקייה ה_חדשה:"
 
-#: ../src/fr-window.c:7711
+#: ../src/fr-window.c:7542
 msgid "_New file name:"
 msgstr "שם ה_קובץ החדש:"
 
-#: ../src/fr-window.c:7715
+#: ../src/fr-window.c:7546
 msgid "_Rename"
 msgstr "_שינוי שם"
 
-#: ../src/fr-window.c:7732
-#: ../src/fr-window.c:7752
+#: ../src/fr-window.c:7563
+#: ../src/fr-window.c:7582
 msgid "Could not rename the folder"
 msgstr "לא ניתן לשנות את שם התיקייה"
 
-#: ../src/fr-window.c:7732
-#: ../src/fr-window.c:7752
+#: ../src/fr-window.c:7563
+#: ../src/fr-window.c:7582
 msgid "Could not rename the file"
 msgstr "לא ניתן לשנות את שם הקובץ"
 
-#: ../src/fr-window.c:8152
+#: ../src/fr-window.c:7981
 msgid "Paste Selection"
 msgstr "הדבקת הבחירה"
 
-#: ../src/fr-window.c:8153
+#: ../src/fr-window.c:7982
 msgid "_Destination folder:"
 msgstr "תיקיית ה_יעד:"
 
-#: ../src/fr-window.c:8754
+#: ../src/fr-window.c:8583
 msgid "Add files to an archive"
 msgstr "הוספת קבצים לארכיון"
 
-#: ../src/fr-window.c:8798
+#: ../src/fr-window.c:8627
+#: ../src/main.c:415
+#: ../src/main.c:438
+#: ../src/main.c:459
+#: ../src/main.c:754
 msgid "Extract archive"
 msgstr "חילוץ ארכיון"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: ../src/glib-utils.c:560
+#: ../src/glib-utils.c:699
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
-#. Expander
-#: ../src/gtk-utils.c:422
-msgid "Command _Line Output"
-msgstr "פלט _שורת הפקודה"
-
-#: ../src/gtk-utils.c:751
+#: ../src/gtk-utils.c:561
 msgid "Could not display help"
 msgstr "לא ניתן להציג עזרה"
 
-#: ../src/main.c:51
+#: ../src/main.c:64
 msgid "Add files to the specified archive and quit the program"
 msgstr "Add files to the specified archive and quit the program"
 
-#: ../src/main.c:52
+#: ../src/main.c:65
 msgid "ARCHIVE"
 msgstr "ARCHIVE"
 
-#: ../src/main.c:55
+#: ../src/main.c:68
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Add files asking the name of the archive and quit the program"
 
-#: ../src/main.c:59
+#: ../src/main.c:72
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Extract archives to the specified folder and quit the program"
 
-#: ../src/main.c:60
-#: ../src/main.c:72
+#: ../src/main.c:73
+#: ../src/main.c:85
 msgid "FOLDER"
 msgstr "FOLDER"
 
-#: ../src/main.c:63
+#: ../src/main.c:76
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Extract archives asking the destination folder and quit the program"
 
-#: ../src/main.c:67
+#: ../src/main.c:80
 msgid "Extract the contents of the archives in the archive folder and quit the program"
 msgstr "Extract the contents of the archives in the archive folder and quit the program"
 
-#: ../src/main.c:71
+#: ../src/main.c:84
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "Default folder to use for the '--add' and '--extract' commands"
 
-#: ../src/main.c:75
+#: ../src/main.c:88
 msgid "Create destination folder without asking confirmation"
 msgstr "Create destination folder without asking confirmation"
 
-#: ../src/main.c:379
-#: ../src/server.c:444
-msgid "- Create and modify an archive"
-msgstr "- Create and modify an archive"
+#: ../src/main.c:92
+msgid "Start as a service"
+msgstr "התחלה כשירות"
 
-#: ../src/main.c:395
-#: ../src/server.c:457
+#: ../src/main.c:95
+msgid "Show version"
+msgstr "הצגת הגרסה"
+
+#: ../src/main.c:384
+#: ../src/main.c:733
+#: ../src/ui/batch-add-files.ui.h:1
+msgid "Compress"
+msgstr "דחיסה"
+
+#. manually set name and icon
+#: ../src/main.c:576
 msgid "File Roller"
 msgstr "משטח הקבצים"
+
+#: ../src/main.c:602
+msgid "- Create and modify an archive"
+msgstr "- Create and modify an archive"
 
 #: ../src/ui/add-options.ui.h:1
 msgid "Load Options"
@@ -1237,10 +1245,6 @@ msgstr "על אודות מ_נהל הארכיונים"
 #: ../src/ui/app-menu.ui.h:3
 msgid "_Quit"
 msgstr "י_ציאה"
-
-#: ../src/ui/batch-add-files.ui.h:1
-msgid "Compress"
-msgstr "דחיסה"
 
 #: ../src/ui/batch-add-files.ui.h:2
 msgid "_Filename:"
@@ -1280,12 +1284,16 @@ msgid "_Other Options"
 msgstr "אפשרויות א_חרות"
 
 #: ../src/ui/batch-password.ui.h:1
-msgid "Password required"
-msgstr "נדרשת ססמה"
+msgid "Password required for \"archive.tar.xz\""
+msgstr "נדרשת ססמה לקובץ \"archive.tar.xz\""
 
 #: ../src/ui/delete.ui.h:1
 msgid "Delete"
 msgstr "מחיקה"
+
+#: ../src/ui/error-dialog.ui.h:1
+msgid "C_ommand Line Output:"
+msgstr "פלט _שורת הפקודה:"
 
 #: ../src/ui.h:31
 msgid "_Archive"
@@ -1576,6 +1584,36 @@ msgstr "ה_צפנת רשימת הקבצים "
 msgid "Note: the password will be used to encrypt files you add to the current archive, and to decrypt files you extract from the current archive. When the archive is closed the password will be deleted."
 msgstr "לידיעתך: הססמה תשמש להצפנת הקבצים שיצורפו לארכיון הנוכחי, ולפענוח הקבצים שיחולצו מהארכיון הנוכחי. כאשר הארכיון ייסגר הססמה תימחק."
 
+#: ../src/ui/properties.ui.h:1
+msgctxt "File"
+msgid "Name:"
+msgstr "שם:"
+
+#: ../src/ui/properties.ui.h:2
+msgid "Archive size:"
+msgstr "גודל הארכיון:"
+
+#. after the colon there is a folder name.
+#: ../src/ui/properties.ui.h:4
+msgid "Location:"
+msgstr "מיקום:"
+
+#: ../src/ui/properties.ui.h:5
+msgid "Compression ratio:"
+msgstr "רמת הכיווץ:"
+
+#: ../src/ui/properties.ui.h:6
+msgid "Last modified:"
+msgstr "תאריך השינוי:"
+
+#: ../src/ui/properties.ui.h:7
+msgid "Content size:"
+msgstr "גודל תוכן הארכיון:"
+
+#: ../src/ui/properties.ui.h:8
+msgid "Number of files:"
+msgstr "מספר הקבצים:"
+
 #: ../src/ui/update.ui.h:1
 msgid "_Update"
 msgstr "_עדכון"
@@ -1583,6 +1621,36 @@ msgstr "_עדכון"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "נא ל_בחור את הקבצים שברצונך לעדכן:"
+
+#~ msgid "Enter the password for the archive '%s'."
+#~ msgstr "נא להזין ססמה לארכיון '%s'."
+
+#~ msgid "Adding file: "
+#~ msgstr "קובץ נוסף: "
+
+#~ msgid "Extracting file: "
+#~ msgstr "קובץ מחולץ: "
+
+#~ msgid "Creating archive"
+#~ msgstr "נוצר ארכיון"
+
+#~ msgid "Loading archive"
+#~ msgstr "ארכיון נטען"
+
+#~ msgid "Reading archive"
+#~ msgstr "הארכיון נקרא"
+
+#~ msgid "Testing archive"
+#~ msgstr "הארכיון נבדק"
+
+#~ msgid "Saving archive"
+#~ msgstr "שמירת הארכיון"
+
+#~ msgid "Archive:"
+#~ msgstr "ארכיון:"
+
+#~ msgid "Close the folders pane"
+#~ msgstr "סגירת סרגל התיקיות"
 
 #~ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
 #~ msgstr "<span weight=\"bold\" size=\"larger\">דרושה ססמה</span>"
