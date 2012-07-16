@@ -71,11 +71,11 @@ list__process_line (char     *line,
 	if (fdata->name == 0)
 		file_data_free (fdata);
 	else
-		fr_command_add_file (comm, fdata);
+		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }
 
 
-static void
+static gboolean
 fr_command_lrzip_list (FrCommand  *comm)
 {
 	fr_process_set_err_line_func (comm->process, list__process_line, comm);
@@ -84,7 +84,8 @@ fr_command_lrzip_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+
+	return TRUE;
 }
 
 
@@ -103,7 +104,7 @@ fr_command_lrzip_add (FrCommand  *comm,
 
 	/* preserve links. */
 
-	switch (comm->compression) {
+	switch (FR_ARCHIVE (comm)->compression) {
 	case FR_COMPRESSION_VERY_FAST:
 		fr_process_add_arg (comm->process, "-l"); break;
 	case FR_COMPRESSION_FAST:
@@ -161,28 +162,28 @@ const char *lrzip_mime_type[] = { "application/x-lrzip", NULL };
 
 
 static const char **
-fr_command_lrzip_get_mime_types (FrCommand *comm)
+fr_command_lrzip_get_mime_types (FrArchive *archive)
 {
 	return lrzip_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_lrzip_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_lrzip_get_capabilities (FrArchive  *archive,
 				   const char *mime_type,
 				   gboolean    check_command)
 {
-	FrCommandCap capabilities = FR_COMMAND_CAN_DO_NOTHING;
+	FrArchiveCap capabilities = FR_ARCHIVE_CAN_DO_NOTHING;
 
 	if (_g_program_is_available ("lrzip", check_command))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_lrzip_get_packages (FrCommand  *comm,
+fr_command_lrzip_get_packages (FrArchive  *archive,
 			       const char *mime_type)
 {
 	return PACKAGES ("lrzip");
@@ -204,6 +205,7 @@ static void
 fr_command_lrzip_class_init (FrCommandLrzipClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_lrzip_parent_class = g_type_class_peek_parent (klass);
@@ -211,20 +213,22 @@ fr_command_lrzip_class_init (FrCommandLrzipClass *klass)
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_lrzip_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_lrzip_get_mime_types;
+	archive_class->get_capabilities = fr_command_lrzip_get_capabilities;
+	archive_class->get_packages     = fr_command_lrzip_get_packages;
+
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->list             = fr_command_lrzip_list;
 	command_class->add              = fr_command_lrzip_add;
 	command_class->extract          = fr_command_lrzip_extract;
-	command_class->get_mime_types   = fr_command_lrzip_get_mime_types;
-	command_class->get_capabilities = fr_command_lrzip_get_capabilities;
-	command_class->get_packages     = fr_command_lrzip_get_packages;
 }
 
 
 static void
 fr_command_lrzip_init (FrCommandLrzip *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = FALSE;
 	base->propAddCanReplace            = FALSE;

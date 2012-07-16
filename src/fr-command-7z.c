@@ -80,14 +80,14 @@ static void
 list__process_line (char     *line,
 		    gpointer  data)
 {
-	FrCommand    *comm = FR_COMMAND (data);
-	FrCommand7z  *p7z_comm = FR_COMMAND_7Z (comm);
+	FrCommand7z  *self = FR_COMMAND_7Z (data);
+	FrArchive    *archive = FR_ARCHIVE (data);
 	char        **fields;
 	FileData     *fdata;
 
 	g_return_if_fail (line != NULL);
 
-	if (! p7z_comm->list_started) {
+	if (! self->list_started) {
 		if (strncmp (line, "p7zip Version ", 14) == 0) {
 			const char *ver_start;
 			int         ver_len;
@@ -99,44 +99,44 @@ list__process_line (char     *line,
 			version[ver_len] = 0;
 
 			if (strcmp (version, "4.55") < 0)
-				p7z_comm->old_style = TRUE;
+				self->old_style = TRUE;
 			else
-				p7z_comm->old_style = FALSE;
+				self->old_style = FALSE;
 		}
-		else if (p7z_comm->old_style && (strncmp (line, "Listing archive: ", 17) == 0))
-			p7z_comm->list_started = TRUE;
-		else if (! p7z_comm->old_style && (strcmp (line, "----------") == 0))
-			p7z_comm->list_started = TRUE;
+		else if (self->old_style && (strncmp (line, "Listing archive: ", 17) == 0))
+			self->list_started = TRUE;
+		else if (! self->old_style && (strcmp (line, "----------") == 0))
+			self->list_started = TRUE;
 		else if (strncmp (line, "Multivolume = ", 14) == 0) {
 			fields = g_strsplit (line, " = ", 2);
-			comm->multi_volume = (strcmp (fields[1], "+") == 0);
+			archive->multi_volume = (strcmp (fields[1], "+") == 0);
 			g_strfreev (fields);
 		}
 		return;
 	}
 
 	if (strcmp (line, "") == 0) {
-		if (p7z_comm->fdata != NULL) {
-			if (p7z_comm->fdata->original_path == NULL) {
-				file_data_free (p7z_comm->fdata);
-				p7z_comm->fdata = NULL;
+		if (self->fdata != NULL) {
+			if (self->fdata->original_path == NULL) {
+				file_data_free (self->fdata);
+				self->fdata = NULL;
 			}
 			else {
-				fdata = p7z_comm->fdata;
+				fdata = self->fdata;
 				if (fdata->dir)
 					fdata->name = _g_path_get_dir_name (fdata->full_path);
 				else
 					fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
 				fdata->path = _g_path_remove_level (fdata->full_path);
-				fr_command_add_file (comm, fdata);
-				p7z_comm->fdata = NULL;
+				fr_archive_add_file (archive, fdata);
+				self->fdata = NULL;
 			}
 		}
 		return;
 	}
 
-	if (p7z_comm->fdata == NULL)
-		p7z_comm->fdata = file_data_new ();
+	if (self->fdata == NULL)
+		self->fdata = file_data_new ();
 
 	fields = g_strsplit (line, " = ", 2);
 
@@ -145,7 +145,7 @@ list__process_line (char     *line,
 		return;
 	}
 
-	fdata = p7z_comm->fdata;
+	fdata = self->fdata;
 
 	if (strcmp (fields[0], "Path") == 0) {
 		fdata->free_original_path = TRUE;
@@ -198,15 +198,15 @@ fr_command_7z_begin_command (FrCommand *comm)
 
 
 static void
-add_password_arg (FrCommand     *comm,
-		  const char    *password,
-		  gboolean       always_specify)
+add_password_arg (FrCommand  *command,
+		  const char *password,
+		  gboolean    always_specify)
 {
 	if (always_specify || ((password != NULL) && (*password != 0))) {
 		char *arg;
 
 		arg = g_strconcat ("-p", password, NULL);
-		fr_process_add_arg (comm->process, arg);
+		fr_process_add_arg (command->process, arg);
 		g_free (arg);
 	}
 }
@@ -225,30 +225,30 @@ list__begin (gpointer data)
 }
 
 
-static void
-fr_command_7z_list (FrCommand  *comm)
+static gboolean
+fr_command_7z_list (FrCommand *command)
 {
-	rar_check_multi_volume (comm);
+	rar_check_multi_volume (command);
 
-	fr_process_set_out_line_func (comm->process, list__process_line, comm);
+	fr_process_set_out_line_func (command->process, list__process_line, command);
 
-	fr_command_7z_begin_command (comm);
-	fr_process_set_begin_func (comm->process, list__begin, comm);
-	fr_process_add_arg (comm->process, "l");
-	fr_process_add_arg (comm->process, "-slt");
-	fr_process_add_arg (comm->process, "-bd");
-	fr_process_add_arg (comm->process, "-y");
-	add_password_arg (comm, comm->password, FALSE);
-	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, comm->filename);
-	fr_process_end_command (comm->process);
+	fr_command_7z_begin_command (command);
+	fr_process_set_begin_func (command->process, list__begin, command);
+	fr_process_add_arg (command->process, "l");
+	fr_process_add_arg (command->process, "-slt");
+	fr_process_add_arg (command->process, "-bd");
+	fr_process_add_arg (command->process, "-y");
+	add_password_arg (command, FR_ARCHIVE (command)->password, FALSE);
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
+	fr_process_end_command (command->process);
 
-	fr_process_start (comm->process);
+	return TRUE;
 }
 
 
 static void
-parse_progress_line (FrCommand  *comm,
+parse_progress_line (FrArchive  *archive,
 		     const char *prefix,
 		     const char *message_format,
 		     const char *line)
@@ -257,8 +257,8 @@ parse_progress_line (FrCommand  *comm,
 
 	prefix_len = strlen (prefix);
 	if (strncmp (line, prefix, prefix_len) == 0) {
-		if (comm->n_files > 1) {
-			fr_command_progress (comm, (double) ++comm->n_file / (comm->n_files + 1));
+		if (archive->n_files > 1) {
+			fr_archive_progress (archive, (double) ++archive->n_file / (archive->n_files + 1));
 		}
 		else {
 			char  filename[4196];
@@ -266,7 +266,7 @@ parse_progress_line (FrCommand  *comm,
 
 			strcpy (filename, line + prefix_len);
 			msg = g_strdup_printf (message_format, filename, NULL);
-			fr_command_message (comm, msg);
+			fr_archive_message (archive, msg);
 
 			g_free (msg);
 		}
@@ -278,132 +278,134 @@ static void
 process_line__add (char     *line,
 		   gpointer  data)
 {
-	FrCommand *comm = FR_COMMAND (data);
+	FrCommand *command = FR_COMMAND (data);
+	FrArchive *archive = FR_ARCHIVE (data);
 
-	if ((comm->volume_size > 0) && (strncmp (line, "Creating archive ", 17) == 0)) {
+	if ((archive->volume_size > 0) && (strncmp (line, "Creating archive ", 17) == 0)) {
 		char  *volume_filename;
 		GFile *volume_file;
 
-		volume_filename = g_strconcat (comm->filename, ".001", NULL);
+		volume_filename = g_strconcat (command->filename, ".001", NULL);
 		volume_file = g_file_new_for_path (volume_filename);
-		fr_command_set_multi_volume (comm, volume_file);
+		fr_archive_set_multi_volume (archive, volume_file);
 
 		g_object_unref (volume_file);
 		g_free (volume_filename);
 	}
 
-	if (comm->n_files != 0)
-		parse_progress_line (comm, "Compressing  ", _("Adding \"%s\""), line);
+	if (archive->n_files != 0)
+		parse_progress_line (archive, "Compressing  ", _("Adding \"%s\""), line);
 }
 
 
 static void
-fr_command_7z_add (FrCommand     *comm,
-		   const char    *from_file,
-		   GList         *file_list,
-		   const char    *base_dir,
-		   gboolean       update,
-		   gboolean       recursive)
+fr_command_7z_add (FrCommand  *command,
+		   const char *from_file,
+		   GList      *file_list,
+		   const char *base_dir,
+		   gboolean    update,
+		   gboolean    recursive)
 {
-	GList *scan;
+	FrArchive *archive = FR_ARCHIVE (command);
+	GList     *scan;
 
-	fr_process_use_standard_locale (comm->process, TRUE);
-	fr_process_set_out_line_func (comm->process,
+	fr_process_use_standard_locale (command->process, TRUE);
+	fr_process_set_out_line_func (command->process,
 				      process_line__add,
-				      comm);
+				      command);
 
-	fr_command_7z_begin_command (comm);
+	fr_command_7z_begin_command (command);
 
 	if (update)
-		fr_process_add_arg (comm->process, "u");
+		fr_process_add_arg (command->process, "u");
 	else
-		fr_process_add_arg (comm->process, "a");
+		fr_process_add_arg (command->process, "a");
 
 	if (base_dir != NULL) {
-		fr_process_set_working_dir (comm->process, base_dir);
-		fr_process_add_arg_concat (comm->process, "-w", base_dir, NULL);
+		fr_process_set_working_dir (command->process, base_dir);
+		fr_process_add_arg_concat (command->process, "-w", base_dir, NULL);
 	}
 
-	if (_g_mime_type_matches (comm->mime_type, "application/zip")
-	    || _g_mime_type_matches (comm->mime_type, "application/x-cbz"))
+	if (_g_mime_type_matches (archive->mime_type, "application/zip")
+	    || _g_mime_type_matches (archive->mime_type, "application/x-cbz"))
 	{
-		fr_process_add_arg (comm->process, "-tzip");
-		fr_process_add_arg (comm->process, "-mem=AES128");
+		fr_process_add_arg (command->process, "-tzip");
+		fr_process_add_arg (command->process, "-mem=AES128");
 	}
 
-	fr_process_add_arg (comm->process, "-bd");
-	fr_process_add_arg (comm->process, "-y");
-	fr_process_add_arg (comm->process, "-l");
-	add_password_arg (comm, comm->password, FALSE);
-	if ((comm->password != NULL)
-	    && (*comm->password != 0)
-	    && comm->encrypt_header
-	    && fr_command_is_capable_of (comm, FR_COMMAND_CAN_ENCRYPT_HEADER))
+	fr_process_add_arg (command->process, "-bd");
+	fr_process_add_arg (command->process, "-y");
+	fr_process_add_arg (command->process, "-l");
+	add_password_arg (command, archive->password, FALSE);
+	if ((archive->password != NULL)
+	    && (*archive->password != 0)
+	    && archive->encrypt_header
+	    && fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_ENCRYPT_HEADER))
 	{
-		fr_process_add_arg (comm->process, "-mhe=on");
+		fr_process_add_arg (command->process, "-mhe=on");
 	}
 
-	/* fr_process_add_arg (comm->process, "-ms=off"); FIXME: solid mode off? */
+	/* fr_process_add_arg (command->process, "-ms=off"); FIXME: solid mode off? */
 
-	switch (comm->compression) {
+	switch (archive->compression) {
 	case FR_COMPRESSION_VERY_FAST:
-		fr_process_add_arg (comm->process, "-mx=1");
+		fr_process_add_arg (command->process, "-mx=1");
 		break;
 	case FR_COMPRESSION_FAST:
-		fr_process_add_arg (comm->process, "-mx=5");
+		fr_process_add_arg (command->process, "-mx=5");
 		break;
 	case FR_COMPRESSION_NORMAL:
-		fr_process_add_arg (comm->process, "-mx=7");
+		fr_process_add_arg (command->process, "-mx=7");
 		break;
 	case FR_COMPRESSION_MAXIMUM:
-		fr_process_add_arg (comm->process, "-mx=9");
-		fr_process_add_arg (comm->process, "-m0=lzma2");;
+		fr_process_add_arg (command->process, "-mx=9");
+		fr_process_add_arg (command->process, "-m0=lzma2");;
 		break;
 	}
 
-	if (_g_mime_type_matches (comm->mime_type, "application/x-ms-dos-executable"))
-		fr_process_add_arg (comm->process, "-sfx");
+	if (_g_mime_type_matches (archive->mime_type, "application/x-ms-dos-executable"))
+		fr_process_add_arg (command->process, "-sfx");
 
-	if (comm->volume_size > 0)
-		fr_process_add_arg_printf (comm->process, "-v%ub", comm->volume_size);
+	if (archive->volume_size > 0)
+		fr_process_add_arg_printf (command->process, "-v%ub", archive->volume_size);
 
 	if (from_file != NULL)
-		fr_process_add_arg_concat (comm->process, "-i@", from_file, NULL);
+		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);
 
-	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, comm->filename);
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
-			fr_process_add_arg (comm->process, scan->data);
+			fr_process_add_arg (command->process, scan->data);
 
-	fr_process_end_command (comm->process);
+	fr_process_end_command (command->process);
 }
 
 
 static void
-fr_command_7z_delete (FrCommand  *comm,
+fr_command_7z_delete (FrCommand  *command,
 		      const char *from_file,
 		      GList      *file_list)
 {
 	GList *scan;
 
-	fr_command_7z_begin_command (comm);
-	fr_process_add_arg (comm->process, "d");
-	fr_process_add_arg (comm->process, "-bd");
-	fr_process_add_arg (comm->process, "-y");
-	if (_g_mime_type_matches (comm->mime_type, "application/x-ms-dos-executable"))
-		fr_process_add_arg (comm->process, "-sfx");
+	fr_command_7z_begin_command (command);
+	fr_process_add_arg (command->process, "d");
+	fr_process_add_arg (command->process, "-bd");
+	fr_process_add_arg (command->process, "-y");
+	if (_g_mime_type_matches (FR_ARCHIVE (command)->mime_type, "application/x-ms-dos-executable"))
+		fr_process_add_arg (command->process, "-sfx");
 
 	if (from_file != NULL)
-		fr_process_add_arg_concat (comm->process, "-i@", from_file, NULL);
+		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);
 
-	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, comm->filename);
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
-			fr_process_add_arg (comm->process, scan->data);
+			fr_process_add_arg (command->process, scan->data);
 
-	fr_process_end_command (comm->process);
+	fr_process_end_command (command->process);
 }
 
 
@@ -411,15 +413,15 @@ static void
 process_line__extract (char     *line,
 		       gpointer  data)
 {
-	FrCommand *comm = FR_COMMAND (data);
+	FrArchive *archive = FR_ARCHIVE (data);
 
-	if (comm->n_files != 0)
-		parse_progress_line (comm, "Extracting  ", _("Extracting \"%s\""), line);
+	if (archive->n_files != 0)
+		parse_progress_line (archive, "Extracting  ", _("Extracting \"%s\""), line);
 }
 
 
 static void
-fr_command_7z_extract (FrCommand  *comm,
+fr_command_7z_extract (FrCommand  *command,
 		       const char *from_file,
 		       GList      *file_list,
 		       const char *dest_dir,
@@ -427,76 +429,81 @@ fr_command_7z_extract (FrCommand  *comm,
 		       gboolean    skip_older,
 		       gboolean    junk_paths)
 {
-	GList *scan;
+	FrArchive *archive = FR_ARCHIVE (command);
+	GList     *scan;
 
-	fr_process_use_standard_locale (comm->process, TRUE);
-	fr_process_set_out_line_func (comm->process,
+	fr_process_use_standard_locale (command->process, TRUE);
+	fr_process_set_out_line_func (command->process,
 				      process_line__extract,
-				      comm);
-	fr_command_7z_begin_command (comm);
+				      command);
+	fr_command_7z_begin_command (command);
 
 	if (junk_paths)
-		fr_process_add_arg (comm->process, "e");
+		fr_process_add_arg (command->process, "e");
 	else
-		fr_process_add_arg (comm->process, "x");
+		fr_process_add_arg (command->process, "x");
 
-	fr_process_add_arg (comm->process, "-bd");
-	fr_process_add_arg (comm->process, "-y");
-	add_password_arg (comm, comm->password, FALSE);
+	fr_process_add_arg (command->process, "-bd");
+	fr_process_add_arg (command->process, "-y");
+	add_password_arg (command, archive->password, FALSE);
 
 	if (dest_dir != NULL)
-		fr_process_add_arg_concat (comm->process, "-o", dest_dir, NULL);
+		fr_process_add_arg_concat (command->process, "-o", dest_dir, NULL);
 
 	if (from_file != NULL)
-		fr_process_add_arg_concat (comm->process, "-i@", from_file, NULL);
+		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);
 
-	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, comm->filename);
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
-			fr_process_add_arg (comm->process, scan->data);
+			fr_process_add_arg (command->process, scan->data);
 
-	fr_process_end_command (comm->process);
+	fr_process_end_command (command->process);
 }
 
 
 static void
-fr_command_7z_test (FrCommand   *comm)
+fr_command_7z_test (FrCommand *command)
 {
-	fr_command_7z_begin_command (comm);
-	fr_process_add_arg (comm->process, "t");
-	fr_process_add_arg (comm->process, "-bd");
-	fr_process_add_arg (comm->process, "-y");
-	add_password_arg (comm, comm->password, FALSE);
-	fr_process_add_arg (comm->process, "--");
-	fr_process_add_arg (comm->process, comm->filename);
-	fr_process_end_command (comm->process);
+	FrArchive *archive = FR_ARCHIVE (command);
+
+	fr_command_7z_begin_command (command);
+	fr_process_add_arg (command->process, "t");
+	fr_process_add_arg (command->process, "-bd");
+	fr_process_add_arg (command->process, "-y");
+	add_password_arg (command, archive->password, FALSE);
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
+	fr_process_end_command (command->process);
 }
 
 
 static void
-fr_command_7z_handle_error (FrCommand   *comm,
-			    FrProcError *error)
+fr_command_7z_handle_error (FrCommand   *command,
+			    FrError *error)
 {
-	if (error->type == FR_PROC_ERROR_NONE) {
+	FrArchive *archive = FR_ARCHIVE (command);
+
+	if (error->type == FR_ERROR_NONE) {
 		FileData *first;
 		char     *basename;
 		char     *testname;
 
 		/* This is a way to fix bug #582712. */
 
-		if (comm->files->len != 1)
+		if (archive->files->len != 1)
 			return;
 
-		if (! g_str_has_suffix (comm->filename, ".001"))
+		if (! g_str_has_suffix (command->filename, ".001"))
 			return;
 
-		first = g_ptr_array_index (comm->files, 0);
-		basename = g_path_get_basename (comm->filename);
+		first = g_ptr_array_index (archive->files, 0);
+		basename = g_path_get_basename (command->filename);
 		testname = g_strconcat (first->original_path, ".001", NULL);
 
 		if (strcmp (basename, testname) == 0)
-			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+			error->type = FR_ERROR_ASK_PASSWORD;
 
 		g_free (testname);
 		g_free (basename);
@@ -505,18 +512,18 @@ fr_command_7z_handle_error (FrCommand   *comm,
 	}
 
 	if (error->status <= 1) {
-		error->type = FR_PROC_ERROR_NONE;
+		error->type = FR_ERROR_NONE;
 	}
 	else {
 		GList *scan;
 
-		for (scan = g_list_last (comm->process->out.raw); scan; scan = scan->prev) {
+		for (scan = g_list_last (command->process->out.raw); scan; scan = scan->prev) {
 			char *line = scan->data;
 
 			if ((strstr (line, "Wrong password?") != NULL)
 			    || (strstr (line, "Enter password") != NULL))
 			{
-				error->type = FR_PROC_ERROR_ASK_PASSWORD;
+				error->type = FR_ERROR_ASK_PASSWORD;
 				break;
 			}
 		}
@@ -538,71 +545,71 @@ const char *sevenz_mime_types[] = { "application/x-7z-compressed",
 
 
 static const char **
-fr_command_7z_get_mime_types (FrCommand *comm)
+fr_command_7z_get_mime_types (FrArchive *archive)
 {
 	return sevenz_mime_types;
 }
 
 
-static FrCommandCap
-fr_command_7z_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_7z_get_capabilities (FrArchive  *archive,
 				const char *mime_type,
 				gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (! _g_program_is_available ("7za", check_command) && ! _g_program_is_available ("7zr", check_command) && ! _g_program_is_available ("7z", check_command))
 		return capabilities;
 
 	if (_g_mime_type_matches (mime_type, "application/x-7z-compressed")) {
-		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_CREATE_VOLUMES;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE | FR_ARCHIVE_CAN_CREATE_VOLUMES;
 		if (_g_program_is_available ("7z", check_command))
-			capabilities |= FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
+			capabilities |= FR_ARCHIVE_CAN_ENCRYPT | FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 	}
 	else if (_g_mime_type_matches (mime_type, "application/x-7z-compressed-tar")) {
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 		if (_g_program_is_available ("7z", check_command))
-			capabilities |= FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
+			capabilities |= FR_ARCHIVE_CAN_ENCRYPT | FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 	}
 	else if (_g_program_is_available ("7z", check_command)) {
 		if (_g_mime_type_matches (mime_type, "application/x-rar")
 		    || _g_mime_type_matches (mime_type, "application/x-cbr"))
 		{
 			if (! check_command || g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
-				capabilities |= FR_COMMAND_CAN_READ;
+				capabilities |= FR_ARCHIVE_CAN_READ;
 		}
 		else
-			capabilities |= FR_COMMAND_CAN_READ;
+			capabilities |= FR_ARCHIVE_CAN_READ;
 
 		if (_g_mime_type_matches (mime_type, "application/x-cbz")
 		    || _g_mime_type_matches (mime_type, "application/x-ms-dos-executable")
 		    || _g_mime_type_matches (mime_type, "application/zip"))
 		{
-			capabilities |= FR_COMMAND_CAN_WRITE | FR_COMMAND_CAN_ENCRYPT;
+			capabilities |= FR_ARCHIVE_CAN_WRITE | FR_ARCHIVE_CAN_ENCRYPT;
 		}
 	}
 	else if (_g_program_is_available ("7za", check_command)) {
 		if (_g_mime_type_matches (mime_type, "application/vnd.ms-cab-compressed")
 		    || _g_mime_type_matches (mime_type, "application/zip"))
 		{
-			capabilities |= FR_COMMAND_CAN_READ;
+			capabilities |= FR_ARCHIVE_CAN_READ;
 		}
 
 		if (_g_mime_type_matches (mime_type, "application/zip"))
-			capabilities |= FR_COMMAND_CAN_WRITE;
+			capabilities |= FR_ARCHIVE_CAN_WRITE;
 	}
 
 	/* multi-volumes are read-only */
-	if ((comm->files->len > 0) && comm->multi_volume && (capabilities & FR_COMMAND_CAN_WRITE))
-		capabilities ^= FR_COMMAND_CAN_WRITE;
+	if ((archive->files->len > 0) && archive->multi_volume && (capabilities & FR_ARCHIVE_CAN_WRITE))
+		capabilities ^= FR_ARCHIVE_CAN_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_7z_get_packages (FrCommand  *comm,
+fr_command_7z_get_packages (FrArchive  *archive,
 			    const char *mime_type)
 {
 	if (_g_mime_type_matches (mime_type, "application/x-rar"))
@@ -630,30 +637,33 @@ static void
 fr_command_7z_class_init (FrCommand7zClass *class)
 {
 	GObjectClass   *gobject_class;
-	FrCommandClass *afc;
+	FrArchiveClass *archive_class;
+	FrCommandClass *command_class;
 
 	fr_command_7z_parent_class = g_type_class_peek_parent (class);
-	afc = (FrCommandClass*) class;
 
 	gobject_class = G_OBJECT_CLASS (class);
 	gobject_class->finalize = fr_command_7z_finalize;
 
-	afc->list             = fr_command_7z_list;
-	afc->add              = fr_command_7z_add;
-	afc->delete           = fr_command_7z_delete;
-	afc->extract          = fr_command_7z_extract;
-	afc->test             = fr_command_7z_test;
-	afc->handle_error     = fr_command_7z_handle_error;
-	afc->get_mime_types   = fr_command_7z_get_mime_types;
-	afc->get_capabilities = fr_command_7z_get_capabilities;
-	afc->get_packages     = fr_command_7z_get_packages;
+	archive_class = FR_ARCHIVE_CLASS (class);
+	archive_class->get_mime_types   = fr_command_7z_get_mime_types;
+	archive_class->get_capabilities = fr_command_7z_get_capabilities;
+	archive_class->get_packages     = fr_command_7z_get_packages;
+
+	command_class = FR_COMMAND_CLASS (class);
+	command_class->list             = fr_command_7z_list;
+	command_class->add              = fr_command_7z_add;
+	command_class->delete           = fr_command_7z_delete;
+	command_class->extract          = fr_command_7z_extract;
+	command_class->test             = fr_command_7z_test;
+	command_class->handle_error     = fr_command_7z_handle_error;
 }
 
 
 static void
 fr_command_7z_init (FrCommand7z *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;

@@ -148,7 +148,7 @@ process_line (char     *line,
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
-		fr_command_add_file (comm, fdata);
+		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }
 
 
@@ -162,7 +162,7 @@ list__begin (gpointer data)
 }
 
 
-static void
+static gboolean
 fr_command_ace_list (FrCommand  *comm)
 {
 	fr_process_set_out_line_func (comm->process, process_line, comm);
@@ -173,7 +173,8 @@ fr_command_ace_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+
+	return TRUE;
 }
 
 
@@ -220,7 +221,7 @@ fr_command_ace_test (FrCommand   *comm)
 
 static void
 fr_command_ace_handle_error (FrCommand   *comm,
-			     FrProcError *error)
+			     FrError *error)
 {
 	/* FIXME */
 }
@@ -230,29 +231,29 @@ const char *ace_mime_type[] = { "application/x-ace", NULL };
 
 
 static const char **
-fr_command_ace_get_mime_types (FrCommand *comm)
+fr_command_ace_get_mime_types (FrArchive *archive)
 {
 	return ace_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_ace_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_ace_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("unace", check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_ace_get_packages (FrCommand  *comm,
+fr_command_ace_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("unace");
@@ -273,29 +274,32 @@ fr_command_ace_finalize (GObject *object)
 static void
 fr_command_ace_class_init (FrCommandAceClass *klass)
 {
-        GObjectClass   *gobject_class;
-        FrCommandClass *command_class;
+	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
+	FrCommandClass *command_class;
 
-        fr_command_ace_parent_class = g_type_class_peek_parent (klass);
+	fr_command_ace_parent_class = g_type_class_peek_parent (klass);
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_ace_finalize;
+
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_ace_get_mime_types;
+	archive_class->get_capabilities = fr_command_ace_get_capabilities;
+	archive_class->get_packages     = fr_command_ace_get_packages;
 
 	command_class = FR_COMMAND_CLASS (klass);
         command_class->list             = fr_command_ace_list;
 	command_class->extract          = fr_command_ace_extract;
 	command_class->test             = fr_command_ace_test;
 	command_class->handle_error     = fr_command_ace_handle_error;
-	command_class->get_mime_types   = fr_command_ace_get_mime_types;
-	command_class->get_capabilities = fr_command_ace_get_capabilities;
-	command_class->get_packages     = fr_command_ace_get_packages;
 }
 
 
 static void
 fr_command_ace_init (FrCommandAce *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;

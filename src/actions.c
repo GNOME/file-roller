@@ -267,13 +267,15 @@ new_file_response_cb (GtkWidget  *w,
 		      int         response,
 		      DlgNewData *data)
 {
-	char *path;
+	char *uri;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		fr_archive_action_completed (data->window->archive,
+		/* FIXME: libarchive
+		 fr_archive_action_completed (data->window->archive,
 					     FR_ACTION_CREATING_NEW_ARCHIVE,
 					     FR_PROC_ERROR_STOPPED,
 					     NULL);
+					     */
 		gtk_widget_destroy (data->dialog);
 		return;
 	}
@@ -283,10 +285,10 @@ new_file_response_cb (GtkWidget  *w,
 		return;
 	}
 
-	path = get_archive_filename_from_selector (data);
-	if (path != NULL) {
-		new_archive (data, path);
-		g_free (path);
+	uri = get_archive_filename_from_selector (data);
+	if (uri != NULL) {
+		new_archive (data, uri);
+		g_free (uri);
 	}
 }
 

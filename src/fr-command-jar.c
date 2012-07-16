@@ -145,29 +145,29 @@ const char *jar_mime_type[] = { "application/x-java-archive",
 
 
 static const char **
-fr_command_jar_get_mime_types (FrCommand *comm)
+fr_command_jar_get_mime_types (FrArchive *archive)
 {
 	return jar_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_jar_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_jar_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("zip", check_command))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_jar_get_packages (FrCommand  *comm,
+fr_command_jar_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("zip,unzip");
@@ -189,6 +189,7 @@ static void
 fr_command_jar_class_init (FrCommandJarClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_jar_parent_class = g_type_class_peek_parent (klass);
@@ -196,11 +197,13 @@ fr_command_jar_class_init (FrCommandJarClass *klass)
 	gobject_class = G_OBJECT_CLASS(klass);
 	gobject_class->finalize = fr_command_jar_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_jar_get_mime_types;
+	archive_class->get_capabilities = fr_command_jar_get_capabilities;
+	archive_class->get_packages     = fr_command_jar_get_packages;
+
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->add              = fr_command_jar_add;
-	command_class->get_mime_types   = fr_command_jar_get_mime_types;
-	command_class->get_capabilities = fr_command_jar_get_capabilities;
-	command_class->get_packages     = fr_command_jar_get_packages;
 }
 
 

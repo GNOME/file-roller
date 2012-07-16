@@ -81,14 +81,14 @@ update_sensitivity_for_ext (DlgNewData *data,
 
 	for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
 		if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
-			data->can_encrypt = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT;
+			data->can_encrypt = mime_type_desc[i].capabilities & FR_ARCHIVE_CAN_ENCRYPT;
 			gtk_widget_set_sensitive (data->n_password_entry, data->can_encrypt);
 			gtk_widget_set_sensitive (data->n_password_label, data->can_encrypt);
 
-			data->can_encrypt_header = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER;
+			data->can_encrypt_header = mime_type_desc[i].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 			gtk_widget_set_sensitive (data->n_encrypt_header_checkbutton, data->can_encrypt_header);
 
-			data->can_create_volumes = mime_type_desc[i].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES;
+			data->can_create_volumes = mime_type_desc[i].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES;
 			gtk_widget_set_sensitive (data->n_volume_box, data->can_create_volumes);
 
 			break;
@@ -454,7 +454,7 @@ dlg_new_data_get_password (DlgNewData *data)
 	if (idx < 0)
 		return NULL;
 
-	if (mime_type_desc[idx].capabilities & FR_COMMAND_CAN_ENCRYPT)
+	if (mime_type_desc[idx].capabilities & FR_ARCHIVE_CAN_ENCRYPT)
 		password = (char*) gtk_entry_get_text (GTK_ENTRY (data->n_password_entry));
 
 	return password;
@@ -471,11 +471,11 @@ dlg_new_data_get_encrypt_header (DlgNewData *data)
 	if (idx < 0)
 		return FALSE;
 
-	if (mime_type_desc[idx].capabilities & FR_COMMAND_CAN_ENCRYPT) {
+	if (mime_type_desc[idx].capabilities & FR_ARCHIVE_CAN_ENCRYPT) {
 		const char *password = gtk_entry_get_text (GTK_ENTRY (data->n_password_entry));
 		if (password != NULL) {
 			if (strcmp (password, "") != 0) {
-				if (mime_type_desc[idx].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER)
+				if (mime_type_desc[idx].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER)
 					encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->n_encrypt_header_checkbutton));
 			}
 		}
@@ -495,7 +495,7 @@ dlg_new_data_get_volume_size (DlgNewData *data)
 	if (idx < 0)
 		return 0;
 
-	if ((mime_type_desc[idx].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES)
+	if ((mime_type_desc[idx].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES)
 	    && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->n_volume_checkbutton)))
 	{
 		double value;

@@ -143,7 +143,7 @@ list__process_line (char     *line,
 		if (*fdata->name == 0)
 			file_data_free (fdata);
 		else
-			fr_command_add_file (comm, fdata);
+			fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 		arj_comm->fdata = NULL;
 	}
 
@@ -151,7 +151,7 @@ list__process_line (char     *line,
 }
 
 
-static void
+static gboolean
 fr_command_arj_list (FrCommand *comm)
 {
 	fr_process_set_out_line_func (comm->process, list__process_line, comm);
@@ -162,7 +162,8 @@ fr_command_arj_list (FrCommand *comm)
 	fr_process_add_arg (comm->process, "-");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+
+	return TRUE;
 }
 
 
@@ -186,10 +187,10 @@ fr_command_arj_add (FrCommand     *comm,
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (comm->password != NULL)
-		fr_process_add_arg_concat (comm->process, "-g/", comm->password, NULL);
+	if (FR_ARCHIVE (comm)->password != NULL)
+		fr_process_add_arg_concat (comm->process, "-g/", FR_ARCHIVE (comm)->password, NULL);
 
-	switch (comm->compression) {
+	switch (FR_ARCHIVE (comm)->compression) {
 	case FR_COMPRESSION_VERY_FAST:
 		fr_process_add_arg (comm->process, "-m3"); break;
 	case FR_COMPRESSION_FAST:
@@ -262,8 +263,8 @@ fr_command_arj_extract (FrCommand  *comm,
 	if (skip_older)
 		fr_process_add_arg (comm->process, "-u");
 
-	if (comm->password != NULL)
-		fr_process_add_arg_concat (comm->process, "-g/", comm->password, NULL);
+	if (FR_ARCHIVE (comm)->password != NULL)
+		fr_process_add_arg_concat (comm->process, "-g/", FR_ARCHIVE (comm)->password, NULL);
 	else
  		fr_process_add_arg (comm->process, "-g/");
 
@@ -281,12 +282,12 @@ fr_command_arj_extract (FrCommand  *comm,
 
 
 static void
-fr_command_arj_test (FrCommand   *comm)
+fr_command_arj_test (FrCommand *comm)
 {
 	fr_process_begin_command (comm->process, "arj");
 	fr_process_add_arg (comm->process, "t");
-	if (comm->password != NULL)
-		fr_process_add_arg_concat (comm->process, "-g/", comm->password, NULL);
+	if (FR_ARCHIVE (comm)->password != NULL)
+		fr_process_add_arg_concat (comm->process, "-g/", FR_ARCHIVE (comm)->password, NULL);
 	fr_process_add_arg (comm->process, "-i");
 	fr_process_add_arg (comm->process, "-y");
 	fr_process_add_arg (comm->process, "-");
@@ -296,14 +297,14 @@ fr_command_arj_test (FrCommand   *comm)
 
 
 static void
-fr_command_arj_handle_error (FrCommand   *comm,
-			     FrProcError *error)
+fr_command_arj_handle_error (FrCommand *comm,
+			     FrError   *error)
 {
-	if (error->type != FR_PROC_ERROR_NONE) {
+	if (error->type != FR_ERROR_NONE) {
  		if (error->status <= 1)
- 			error->type = FR_PROC_ERROR_NONE;
+ 			error->type = FR_ERROR_NONE;
 		else if (error->status == 3)
- 			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+ 			error->type = FR_ERROR_ASK_PASSWORD;
  	}
 }
 
@@ -312,29 +313,29 @@ const char *arj_mime_type[] = { "application/x-arj", NULL };
 
 
 static const char **
-fr_command_arj_get_mime_types (FrCommand *comm)
+fr_command_arj_get_mime_types (FrArchive *archive)
 {
 	return arj_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_arj_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_arj_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES | FR_ARCHIVE_CAN_ENCRYPT;
 	if (_g_program_is_available ("arj", check_command))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_arj_get_packages (FrCommand  *comm,
+fr_command_arj_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("arj");
@@ -361,12 +362,18 @@ static void
 fr_command_arj_class_init (FrCommandArjClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_arj_parent_class = g_type_class_peek_parent (klass);
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_arj_finalize;
+
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_arj_get_mime_types;
+	archive_class->get_capabilities = fr_command_arj_get_capabilities;
+	archive_class->get_packages     = fr_command_arj_get_packages;
 
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->list             = fr_command_arj_list;
@@ -375,16 +382,13 @@ fr_command_arj_class_init (FrCommandArjClass *klass)
 	command_class->extract          = fr_command_arj_extract;
 	command_class->test             = fr_command_arj_test;
 	command_class->handle_error     = fr_command_arj_handle_error;
-	command_class->get_mime_types   = fr_command_arj_get_mime_types;
-	command_class->get_capabilities = fr_command_arj_get_capabilities;
-	command_class->get_packages     = fr_command_arj_get_packages;
 }
 
 
 static void
 fr_command_arj_init (FrCommandArj *self)
 {
-	FrCommand *base = FR_COMMAND (self);;
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;

@@ -112,8 +112,8 @@ dlg_prop (FrWindow *window)
 	if (fr_window_archive_is_present (window)) {
 		int i;
 
-		for (i = 0; i < window->archive->command->files->len; i++) {
-			FileData *fd = g_ptr_array_index (window->archive->command->files, i);
+		for (i = 0; i < window->archive->files->len; i++) {
+			FileData *fd = g_ptr_array_index (window->archive->files, i);
 			uncompressed_size += fd->size;
 		}
 	}
@@ -138,7 +138,7 @@ dlg_prop (FrWindow *window)
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_files_label");
-	s = g_strdup_printf ("%d", window->archive->command->n_regular_files);
+	s = g_strdup_printf ("%d", window->archive->n_regular_files);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 

@@ -48,6 +48,11 @@
 
 gpointer            _g_object_ref                  (gpointer             object);
 void                _g_object_unref                (gpointer             object);
+void                _g_clear_object                (gpointer             p);
+
+/* error */
+
+void                _g_error_free                  (GError              *error);
 
 /* string */
 

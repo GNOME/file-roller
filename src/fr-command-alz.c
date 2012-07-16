@@ -142,7 +142,7 @@ process_line (char     *line,
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
-		fr_command_add_file (comm, fdata);
+		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 
 	g_free (name_field);
 	g_strfreev (fields);
@@ -201,7 +201,7 @@ list__begin (gpointer data)
 }
 
 
-static void
+static gboolean
 fr_command_alz_list (FrCommand  *comm)
 {
 	fr_process_set_out_line_func (FR_COMMAND (comm)->process, process_line, comm);
@@ -213,7 +213,8 @@ fr_command_alz_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 	fr_process_use_standard_locale (comm->process, TRUE);
-	fr_process_start (comm->process);
+
+	return TRUE;
 }
 
 
@@ -223,8 +224,8 @@ static void
 process_extract_line (char     *line,
 		      gpointer  data)
 {
-	FrCommand     *comm = FR_COMMAND (data);
-	FrCommandAlz  *alz_comm = FR_COMMAND_ALZ (comm);
+	FrCommand    *comm = FR_COMMAND (data);
+	FrCommandAlz *alz_comm = FR_COMMAND_ALZ (comm);
 
 	g_return_if_fail (line != NULL);
 
@@ -232,7 +233,7 @@ process_extract_line (char     *line,
 
 	if (strncmp (line, "err code(28) (invalid password)", 31) == 0) {
 		alz_comm->invalid_password = TRUE;
-		fr_process_stop (comm->process);
+		fr_process_cancel (comm->process);
 		return;
 	}
 
@@ -240,7 +241,7 @@ process_extract_line (char     *line,
 		alz_comm->extract_none = FALSE;
 	}
 	else if ((strncmp (line, "done..", 6) == 0) && alz_comm->extract_none) {
-		fr_process_stop (comm->process);
+		fr_process_cancel (comm->process);
 		return;
 	}
 }
@@ -269,7 +270,7 @@ fr_command_alz_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, dest_dir);
 	}
 	add_codepage_arg (comm);
-	add_password_arg (comm, comm->password, TRUE);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password, TRUE);
 	fr_process_add_arg (comm->process, comm->filename);
 	for (scan = file_list; scan; scan = scan->next)
 		fr_process_add_arg (comm->process, scan->data);
@@ -279,12 +280,12 @@ fr_command_alz_extract (FrCommand  *comm,
 
 static void
 fr_command_alz_handle_error (FrCommand   *comm,
-			     FrProcError *error)
+			     FrError *error)
 {
-	if ((error->type == FR_PROC_ERROR_STOPPED)) {
+	if ((error->type == FR_ERROR_STOPPED)) {
 		if  (FR_COMMAND_ALZ (comm)->extract_none ||
-		     FR_COMMAND_ALZ (comm)->invalid_password ) {
-			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+		     FR_COMMAND_ALZ (comm)->invalid_password) {
+			error->type = FR_ERROR_ASK_PASSWORD;
 		}
 	}
 }
@@ -294,29 +295,29 @@ const char *alz_mime_type[] = { "application/x-alz", NULL };
 
 
 static const char **
-fr_command_alz_get_mime_types (FrCommand *comm)
+fr_command_alz_get_mime_types (FrArchive *archive)
 {
 	return alz_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_alz_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_alz_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("unalz", check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_alz_get_packages (FrCommand  *comm,
+fr_command_alz_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("unalz");
@@ -338,6 +339,7 @@ static void
 fr_command_alz_class_init (FrCommandAlzClass *klass)
 {
         GObjectClass   *gobject_class;
+        FrArchiveClass *archive_class;
         FrCommandClass *command_class;
 
         fr_command_alz_parent_class = g_type_class_peek_parent (klass);
@@ -345,22 +347,24 @@ fr_command_alz_class_init (FrCommandAlzClass *klass)
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_alz_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_alz_get_mime_types;
+	archive_class->get_capabilities = fr_command_alz_get_capabilities;
+	archive_class->get_packages     = fr_command_alz_get_packages;
+
 	command_class = (FrCommandClass*) klass;
         command_class->list             = fr_command_alz_list;
 	command_class->add              = NULL;
 	command_class->delete           = NULL;
 	command_class->extract          = fr_command_alz_extract;
 	command_class->handle_error     = fr_command_alz_handle_error;
-	command_class->get_mime_types   = fr_command_alz_get_mime_types;
-	command_class->get_capabilities = fr_command_alz_get_capabilities;
-	command_class->get_packages     = fr_command_alz_get_packages;
 }
 
 
 static void
 fr_command_alz_init (FrCommandAlz *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;

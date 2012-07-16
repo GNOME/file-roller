@@ -112,7 +112,7 @@ list_command_completed (gpointer data)
 					fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
 				fdata->path = _g_path_remove_level (fdata->full_path);
 
-				fr_command_add_file (FR_COMMAND (unar_comm), fdata);
+				fr_archive_add_file (FR_ARCHIVE (unar_comm), fdata);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ list_command_completed (gpointer data)
 }
 
 
-static void
+static gboolean
 fr_command_unarchiver_list (FrCommand  *comm)
 {
 	FrCommandUnarchiver *unar_comm = FR_COMMAND_UNARCHIVER (comm);
@@ -134,12 +134,12 @@ fr_command_unarchiver_list (FrCommand  *comm)
 	fr_process_begin_command (comm->process, "lsar");
 	fr_process_set_end_func (comm->process, list_command_completed, comm);
 	fr_process_add_arg (comm->process, "-j");
-	if ((comm->password != NULL) && (comm->password[0] != '\0'))
-		fr_process_add_arg_concat (comm->process, "-password=", comm->password, NULL);
+	if ((FR_ARCHIVE (comm)->password != NULL) && (FR_ARCHIVE (comm)->password[0] != '\0'))
+		fr_process_add_arg_concat (comm->process, "-password=", FR_ARCHIVE (comm)->password, NULL);
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 
-	fr_process_start (comm->process);
+	return TRUE;
 }
 
 
@@ -148,6 +148,7 @@ process_line__extract (char     *line,
 		       gpointer  data)
 {
 	FrCommand           *comm = FR_COMMAND (data);
+	FrArchive           *archive = FR_ARCHIVE (comm);
 	FrCommandUnarchiver *unar_comm = FR_COMMAND_UNARCHIVER (comm);
 
 	if (line == NULL)
@@ -159,12 +160,12 @@ process_line__extract (char     *line,
 	if (unar_comm->n_line == 1)
 		return;
 
-	if (comm->n_files > 1) {
-		double fraction = (double) ++comm->n_file / (comm->n_files + 1);
-		fr_command_progress (comm, CLAMP (fraction, 0.0, 1.0));
+	if (archive->n_files > 1) {
+		double fraction = (double) ++archive->n_file / (archive->n_files + 1);
+		fr_archive_progress (archive, CLAMP (fraction, 0.0, 1.0));
 	}
 	else
-		fr_command_message (comm, line);
+		fr_archive_message (archive, line);
 }
 
 
@@ -197,8 +198,8 @@ fr_command_unarchiver_extract (FrCommand  *comm,
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "-D");
 
-	if ((comm->password != NULL) && (comm->password[0] != '\0'))
-		fr_process_add_arg_concat (comm->process, "-password=", comm->password, NULL);
+	if ((FR_ARCHIVE (comm)->password != NULL) && (FR_ARCHIVE (comm)->password[0] != '\0'))
+		fr_process_add_arg_concat (comm->process, "-password=", FR_ARCHIVE (comm)->password, NULL);
 
 	if (dest_dir != NULL)
 		fr_process_add_arg_concat (comm->process, "-output-directory=", dest_dir, NULL);
@@ -214,7 +215,7 @@ fr_command_unarchiver_extract (FrCommand  *comm,
 
 static void
 fr_command_unarchiver_handle_error (FrCommand   *comm,
-				    FrProcError *error)
+				    FrError *error)
 {
 	GList *scan;
 
@@ -225,14 +226,14 @@ fr_command_unarchiver_handle_error (FrCommand   *comm,
 	}
 #endif
 
-	if (error->type == FR_PROC_ERROR_NONE)
+	if (error->type == FR_ERROR_NONE)
 		return;
 
 	for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
 		char *line = scan->data;
 
 		if (strstr (line, "password") != NULL) {
-			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+			error->type = FR_ERROR_ASK_PASSWORD;
 			break;
 		}
 	}
@@ -245,29 +246,29 @@ const char *unarchiver_mime_type[] = { "application/x-cbr",
 
 
 static const char **
-fr_command_unarchiver_get_mime_types (FrCommand *comm)
+fr_command_unarchiver_get_mime_types (FrArchive *archive)
 {
 	return unarchiver_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_unarchiver_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_unarchiver_get_capabilities (FrArchive  *archive,
 					const char *mime_type,
 					gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_DO_NOTHING;
+	capabilities = FR_ARCHIVE_CAN_DO_NOTHING;
 	if (_g_program_is_available ("lsar", check_command) && _g_program_is_available ("unar", check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_unarchiver_get_packages (FrCommand  *comm,
+fr_command_unarchiver_get_packages (FrArchive  *archive,
 				    const char *mime_type)
 {
 	return PACKAGES ("unarchiver");
@@ -294,6 +295,7 @@ static void
 fr_command_unarchiver_class_init (FrCommandUnarchiverClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_unarchiver_parent_class = g_type_class_peek_parent (klass);
@@ -301,20 +303,22 @@ fr_command_unarchiver_class_init (FrCommandUnarchiverClass *klass)
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_unarchiver_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_unarchiver_get_mime_types;
+	archive_class->get_capabilities = fr_command_unarchiver_get_capabilities;
+	archive_class->get_packages     = fr_command_unarchiver_get_packages;
+
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->list             = fr_command_unarchiver_list;
 	command_class->extract          = fr_command_unarchiver_extract;
 	command_class->handle_error     = fr_command_unarchiver_handle_error;
-	command_class->get_mime_types   = fr_command_unarchiver_get_mime_types;
-	command_class->get_capabilities = fr_command_unarchiver_get_capabilities;
-	command_class->get_packages     = fr_command_unarchiver_get_packages;
 }
 
 
 static void
 fr_command_unarchiver_init (FrCommandUnarchiver *self)
 {
-	FrCommand *base = FR_COMMAND (self);;
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder      = FALSE;

@@ -25,6 +25,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <sys/types.h>
+#include "fr-error.h"
 #include "typedefs.h"
 
 #define FR_TYPE_PROCESS            (fr_process_get_type ())
@@ -39,7 +40,7 @@ typedef struct _FrProcessClass   FrProcessClass;
 typedef struct _FrProcessPrivate FrProcessPrivate;
 
 typedef void     (*ProcFunc)     (gpointer data);
-typedef gboolean (*ContinueFunc) (gpointer data);
+typedef gboolean (*ContinueFunc) (FrError **error, gpointer data);
 typedef void     (*LineFunc)     (char *line, gpointer data);
 
 typedef struct {
@@ -54,23 +55,10 @@ typedef struct {
 struct _FrProcess {
 	GObject  __parent;
 
-	/*< public >*/
-
-	gboolean          term_on_stop;  /* whether we must terminate the
-					  * command when calling
-					  * fr_process_stop. */
-
-	/*< public read-only >*/
-
 	FrChannelData     out;
 	FrChannelData     err;
-	FrProcError       error;
-
-	/*< protected >*/
-
 	gboolean          restart;       /* whether to restart the process
 			  		  * after an error. */
-
 	FrProcessPrivate *priv;
 };
 
@@ -79,57 +67,61 @@ struct _FrProcessClass {
 
 	/* -- Signals -- */
 
-	void (* start)         (FrProcess   *fr_proc);
-	void (* done)          (FrProcess   *fr_proc,
-				FrProcError *error);
-	void (* sticky_only)   (FrProcess   *fr_proc);
+	void (* sticky_only) (FrProcess *fr_proc);
 };
 
 GType       fr_process_get_type             (void);
 FrProcess * fr_process_new                  (void);
-void        fr_process_clear                (FrProcess    *fr_proc);
-void        fr_process_begin_command        (FrProcess    *fr_proc,
-					     const char   *arg);
-void        fr_process_begin_command_at     (FrProcess    *fr_proc,
-					     const char   *arg,
-					     int           index);
-void        fr_process_add_arg              (FrProcess    *fr_proc,
-					     const char   *arg);
-void        fr_process_add_arg_concat       (FrProcess    *fr_proc,
-					     const char   *arg,
+void        fr_process_clear                (FrProcess            *fr_proc);
+void        fr_process_begin_command        (FrProcess            *fr_proc,
+					     const char           *arg);
+void        fr_process_begin_command_at     (FrProcess            *fr_proc,
+					     const char           *arg,
+					     int                   index);
+void        fr_process_add_arg              (FrProcess            *fr_proc,
+					     const char           *arg);
+void        fr_process_add_arg_concat       (FrProcess            *fr_proc,
+					     const char           *arg,
 					     ...) G_GNUC_NULL_TERMINATED;
-void        fr_process_add_arg_printf       (FrProcess    *fr_proc,
-					     const char   *format,
+void        fr_process_add_arg_printf       (FrProcess            *fr_proc,
+					     const char           *format,
 					     ...) G_GNUC_PRINTF (2, 3);
-void        fr_process_set_arg_at           (FrProcess    *fr_proc,
-					     int           n_comm,
-					     int           n_arg,
-					     const char   *arg);
-void        fr_process_set_begin_func       (FrProcess    *fr_proc,
-					     ProcFunc      func,
-					     gpointer      func_data);
-void        fr_process_set_end_func         (FrProcess    *fr_proc,
-					     ProcFunc      func,
-					     gpointer      func_data);
-void        fr_process_set_continue_func    (FrProcess    *fr_proc,
-					     ContinueFunc  func,
-					     gpointer      func_data);
-void        fr_process_end_command          (FrProcess    *fr_proc);
-void        fr_process_set_working_dir      (FrProcess    *fr_proc,
-					     const char   *arg);
-void        fr_process_set_sticky           (FrProcess    *fr_proc,
-					     gboolean      sticky);
-void        fr_process_set_ignore_error     (FrProcess    *fr_proc,
-					     gboolean      ignore_error);
-void        fr_process_use_standard_locale  (FrProcess    *fr_proc,
-					     gboolean      use_stand_locale);
-void        fr_process_set_out_line_func    (FrProcess    *fr_proc,
-					     LineFunc      func,
-					     gpointer      func_data);
-void        fr_process_set_err_line_func    (FrProcess    *fr_proc,
-					     LineFunc      func,
-					     gpointer      func_data);
-void        fr_process_start                (FrProcess    *fr_proc);
-void        fr_process_stop                 (FrProcess    *fr_proc);
+void        fr_process_set_arg_at           (FrProcess            *fr_proc,
+					     int                   n_comm,
+					     int                   n_arg,
+					     const char           *arg);
+void        fr_process_set_begin_func       (FrProcess            *fr_proc,
+					     ProcFunc              func,
+					     gpointer              func_data);
+void        fr_process_set_end_func         (FrProcess            *fr_proc,
+					     ProcFunc              func,
+					     gpointer              func_data);
+void        fr_process_set_continue_func    (FrProcess            *fr_proc,
+					     ContinueFunc          func,
+					     gpointer              func_data);
+void        fr_process_end_command          (FrProcess            *fr_proc);
+void        fr_process_set_working_dir      (FrProcess            *fr_proc,
+					     const char           *arg);
+void        fr_process_set_sticky           (FrProcess            *fr_proc,
+					     gboolean              sticky);
+void        fr_process_set_ignore_error     (FrProcess            *fr_proc,
+					     gboolean              ignore_error);
+void        fr_process_use_standard_locale  (FrProcess            *fr_proc,
+					     gboolean              use_stand_locale);
+void        fr_process_set_out_line_func    (FrProcess            *fr_proc,
+					     LineFunc              func,
+					     gpointer              func_data);
+void        fr_process_set_err_line_func    (FrProcess            *fr_proc,
+					     LineFunc              func,
+					     gpointer              func_data);
+void        fr_process_execute              (FrProcess            *process,
+					     GCancellable         *cancellable,
+					     GAsyncReadyCallback   callback,
+					     gpointer              user_data);
+gboolean    fr_process_execute_finish       (FrProcess            *process,
+					     GAsyncResult         *result,
+					     FrError             **error);
+void        fr_process_restart              (FrProcess            *process);
+void        fr_process_cancel               (FrProcess            *process);
 
 #endif /* FR_PROCESS_H */

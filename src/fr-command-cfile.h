@@ -42,7 +42,7 @@ struct _FrCommandCFile
 
 	/*<private>*/
 
-	FrProcError error;
+	FrError error;
 };
 
 struct _FrCommandCFileClass

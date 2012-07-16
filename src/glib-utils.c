@@ -50,6 +50,29 @@ _g_object_unref (gpointer object)
 }
 
 
+void
+_g_clear_object (gpointer p)
+{
+	gpointer *object_p = (gpointer *) p;
+
+	if ((object_p != NULL) && (*object_p != NULL)) {
+		g_object_unref (*object_p);
+		*object_p = NULL;
+	}
+}
+
+
+/* error */
+
+
+void
+_g_error_free (GError *error)
+{
+	if (error != NULL)
+		g_error_free (error);
+}
+
+
 /* string */
 
 

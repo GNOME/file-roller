@@ -200,16 +200,16 @@ client_save_state (EggSMClient *client,
 		     window = window->next, i++)
 		{
 			FrWindow *session = window->data;
-			gchar *key;
+			gchar    *key;
 
 			key = g_strdup_printf ("archive%d", i);
-			if ((session->archive == NULL) || (session->archive->file == NULL)) {
+			if ((session->archive == NULL) || (fr_archive_get_file (session->archive) == NULL)) {
 				g_key_file_set_string (state, "Session", key, "");
 			}
 			else {
 				gchar *uri;
 
-				uri = g_file_get_uri (session->archive->file);
+				uri = g_file_get_uri (fr_archive_get_file (session->archive));
 				g_key_file_set_string (state, "Session", key, uri);
 				g_free (uri);
 			}
@@ -310,7 +310,7 @@ handle_method_call (GDBusConnection       *connection,
 		    GDBusMethodInvocation *invocation,
 		    gpointer               user_data)
 {
-	update_registered_commands_capabilities ();
+	update_registered_archives_capabilities ();
 
 	if (g_strcmp0 (method_name, "GetSupportedTypes") == 0) {
 		char *action;

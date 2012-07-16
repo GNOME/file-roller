@@ -125,7 +125,7 @@ rar_check_multi_volume (FrCommand *comm)
 
 			parent = g_file_get_parent (file);
 			volume_file = g_file_get_child (parent, volume_name);
-			fr_command_set_multi_volume (comm, volume_file);
+			fr_archive_set_multi_volume (FR_ARCHIVE (comm), volume_file);
 
 			g_object_unref (volume_file);
 			g_object_unref (parent);

@@ -23,13 +23,80 @@
 #include "fr-error.h"
 
 
-GQuark 
+GQuark
 fr_error_quark (void)
 {
 	static GQuark quark;
-        
+
         if (!quark)
-                quark = g_quark_from_static_string ("file-roller-error");
-	
+                quark = g_quark_from_static_string ("FrError");
+
         return quark;
+}
+
+
+G_DEFINE_BOXED_TYPE (FrError,
+		     fr_error,
+		     fr_error_copy,
+		     fr_error_free);
+
+
+FrError *
+fr_error_new (FrErrorType  type,
+	      int          status,
+	      GError      *gerror)
+{
+	FrError *error;
+
+	error = g_new0 (FrError, 1);
+	fr_error_set (error, type, status, gerror);
+
+	return error;
+}
+
+
+FrError *
+fr_error_copy (FrError *error)
+{
+	if (error != NULL)
+		return fr_error_new (error->type, error->status, error->gerror);
+	else
+		return NULL;
+}
+
+
+void
+fr_error_free (FrError *error)
+{
+	if (error == NULL)
+		return;
+	g_clear_error (&error->gerror);
+	g_free (error);
+}
+
+
+void
+fr_error_set (FrError     *error,
+	      FrErrorType  type,
+	      int          status,
+	      GError      *gerror)
+{
+	error->type = type;
+	error->status = status;
+	if (gerror != error->gerror) {
+		g_clear_error (&error->gerror);
+		if (gerror != NULL)
+			error->gerror = g_error_copy (gerror);
+	}
+}
+
+
+void
+fr_clear_error (FrError **error)
+{
+	if ((error == NULL) || (*error == NULL))
+		return;
+
+	fr_error_free (*error);
+	*error = NULL;
 }

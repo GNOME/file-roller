@@ -93,20 +93,20 @@ set_archive_options (DialogData *data)
 	int idx;
 
 	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->archive_type_combo_box));
-	if (mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT) {
+	if (mime_type_desc[data->supported_types[idx]].capabilities & FR_ARCHIVE_CAN_ENCRYPT) {
 		const char *pwd;
 
 		pwd = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("a_password_entry")));
 		if (pwd != NULL) {
 			if (strcmp (pwd, "") != 0) {
 				fr_window_set_password (data->window, pwd);
-				if (mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER)
+				if (mime_type_desc[data->supported_types[idx]].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER)
 					fr_window_set_encrypt_header (data->window, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("a_encrypt_header_checkbutton"))));
 			}
 		}
 	}
 
-	if ((mime_type_desc[data->supported_types[idx]].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES)
+	if ((mime_type_desc[data->supported_types[idx]].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES)
 	    && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("a_volume_checkbutton"))))
 	{
 		double value;
@@ -364,15 +364,15 @@ update_sensitivity_for_mime_type (DialogData *data,
 		if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
 			gboolean sensitive;
 
-			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT;
+			sensitive = mime_type_desc[i].capabilities & FR_ARCHIVE_CAN_ENCRYPT;
 			gtk_widget_set_sensitive (GET_WIDGET ("a_password_entry"), sensitive);
 			gtk_widget_set_sensitive (GET_WIDGET ("a_password_label"), sensitive);
 
-			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_ENCRYPT_HEADER;
+			sensitive = mime_type_desc[i].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 			gtk_widget_set_sensitive (GET_WIDGET ("a_encrypt_header_checkbutton"), sensitive);
 			gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("a_encrypt_header_checkbutton")), ! sensitive);
 
-			sensitive = mime_type_desc[i].capabilities & FR_COMMAND_CAN_CREATE_VOLUMES;
+			sensitive = mime_type_desc[i].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES;
 			gtk_widget_set_sensitive (GET_WIDGET ("a_volume_box"), sensitive);
 
 			break;

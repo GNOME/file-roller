@@ -29,6 +29,11 @@
 
 #define ADD_FOLDER_OPTIONS_DIR  "file-roller/options"
 
+typedef enum {
+	FR_CLIPBOARD_OP_CUT,
+	FR_CLIPBOARD_OP_COPY
+} FrClipboardOp;
+
 typedef enum { /*< skip >*/
 	FR_WINDOW_SORT_BY_NAME = 0,
 	FR_WINDOW_SORT_BY_SIZE = 1,
@@ -56,44 +61,23 @@ typedef enum {
 } FrOverwrite;
 
 typedef enum { /*< skip >*/
-	FR_PROC_ERROR_NONE,
-	FR_PROC_ERROR_GENERIC,
-	FR_PROC_ERROR_COMMAND_ERROR,
-	FR_PROC_ERROR_COMMAND_NOT_FOUND,
-	FR_PROC_ERROR_EXITED_ABNORMALLY,
-	FR_PROC_ERROR_SPAWN,
-	FR_PROC_ERROR_STOPPED,
-	FR_PROC_ERROR_ASK_PASSWORD,
-	FR_PROC_ERROR_MISSING_VOLUME,
-	FR_PROC_ERROR_IO_CHANNEL,
-	FR_PROC_ERROR_BAD_CHARSET,
-	FR_PROC_ERROR_UNSUPPORTED_FORMAT
-} FrProcErrorType;
+	FR_ARCHIVE_CAN_DO_NOTHING = 0,
+	FR_ARCHIVE_CAN_READ = 1 << 0,
+	FR_ARCHIVE_CAN_WRITE = 1 << 1,
+	FR_ARCHIVE_CAN_STORE_MANY_FILES = 1 << 2,
+	FR_ARCHIVE_CAN_ENCRYPT = 1 << 3,
+	FR_ARCHIVE_CAN_ENCRYPT_HEADER = 1 << 4,
+	FR_ARCHIVE_CAN_CREATE_VOLUMES = 1 << 5
+} FrArchiveCap;
 
-typedef struct {
-	FrProcErrorType  type;
-	int              status;
-	GError          *gerror;
-} FrProcError;
+#define FR_ARCHIVE_CAN_READ_WRITE (FR_ARCHIVE_CAN_READ | FR_ARCHIVE_CAN_WRITE)
 
-typedef enum { /*< skip >*/
-	FR_COMMAND_CAN_DO_NOTHING = 0,
-	FR_COMMAND_CAN_READ = 1 << 0,
-	FR_COMMAND_CAN_WRITE = 1 << 1,
-	FR_COMMAND_CAN_ARCHIVE_MANY_FILES = 1 << 2,
-	FR_COMMAND_CAN_ENCRYPT = 1 << 3,
-	FR_COMMAND_CAN_ENCRYPT_HEADER = 1 << 4,
-	FR_COMMAND_CAN_CREATE_VOLUMES = 1 << 5
-} FrCommandCap;
-
-#define FR_COMMAND_CAN_READ_WRITE (FR_COMMAND_CAN_READ | FR_COMMAND_CAN_WRITE)
-
-typedef guint8 FrCommandCaps;
+typedef guint8 FrArchiveCaps;
 
 typedef struct {
 	const char    *mime_type;
-	FrCommandCaps  current_capabilities;
-	FrCommandCaps  potential_capabilities;
+	FrArchiveCaps  current_capabilities;
+	FrArchiveCaps  potential_capabilities;
 } FrMimeTypeCap;
 
 typedef struct {
@@ -106,13 +90,13 @@ typedef struct {
 	GType      type;
 	GPtrArray *caps;  /* array of FrMimeTypeCap */
 	GPtrArray *packages;  /* array of FrMimeTypePackages */
-} FrRegisteredCommand;
+} FrRegisteredArchive;
 
 typedef struct {
 	const char    *mime_type;
 	char          *default_ext;
 	char          *name;
-	FrCommandCaps  capabilities;
+	FrArchiveCaps  capabilities;
 } FrMimeTypeDescription;
 
 typedef struct {

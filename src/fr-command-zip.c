@@ -150,7 +150,7 @@ list__process_line (char     *line,
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
-		fr_command_add_file (comm, fdata);
+		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }
 
 
@@ -174,7 +174,7 @@ list__begin (gpointer data)
 }
 
 
-static void
+static gboolean
 fr_command_zip_list (FrCommand  *comm)
 {
 	fr_process_set_out_line_func (comm->process, list__process_line, comm);
@@ -185,7 +185,8 @@ fr_command_zip_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+
+	return TRUE;
 }
 
 
@@ -193,17 +194,18 @@ static void
 process_line__common (char     *line,
 		      gpointer  data)
 {
-	FrCommand  *comm = FR_COMMAND (data);
+	FrCommand *comm = FR_COMMAND (data);
+	FrArchive *archive = FR_ARCHIVE (comm);
 
 	if (line == NULL)
 		return;
 
-	if (comm->n_files > 1) {
-		double fraction = (double) ++comm->n_file / (comm->n_files + 1);
-		fr_command_progress (comm, fraction);
+	if (archive->n_files > 1) {
+		double fraction = (double) ++archive->n_file / (archive->n_files + 1);
+		fr_archive_progress (archive, fraction);
 	}
 	else
-		fr_command_message (comm, line);
+		fr_archive_message (archive, line);
 }
 
 
@@ -232,9 +234,9 @@ fr_command_zip_add (FrCommand     *comm,
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
 
-	add_password_arg (comm, comm->password);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password);
 
-	switch (comm->compression) {
+	switch (FR_ARCHIVE (comm)->compression) {
 	case FR_COMPRESSION_VERY_FAST:
 		fr_process_add_arg (comm->process, "-1"); break;
 	case FR_COMPRESSION_FAST:
@@ -313,7 +315,7 @@ fr_command_zip_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, "-u");
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "-j");
-	add_password_arg (comm, comm->password);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password);
 
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
@@ -335,7 +337,7 @@ fr_command_zip_test (FrCommand   *comm)
 {
 	fr_process_begin_command (comm->process, "unzip");
 	fr_process_add_arg (comm->process, "-t");
-	add_password_arg (comm, comm->password);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password);
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
@@ -343,19 +345,19 @@ fr_command_zip_test (FrCommand   *comm)
 
 
 static void
-fr_command_zip_handle_error (FrCommand   *comm,
-			     FrProcError *error)
+fr_command_zip_handle_error (FrCommand *comm,
+			     FrError   *error)
 {
-	if (error->type != FR_PROC_ERROR_NONE) {
+	if (error->type != FR_ERROR_NONE) {
 		if (error->status <= 1)
-			error->type = FR_PROC_ERROR_NONE;
+			error->type = FR_ERROR_NONE;
 		else if ((error->status == 82) || (error->status == 5))
-			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+			error->type = FR_ERROR_ASK_PASSWORD;
 		else {
 			GList *output;
 			GList *scan;
 
-			if (comm->action == FR_ACTION_TESTING_ARCHIVE)
+			if (FR_ARCHIVE (comm)->action == FR_ACTION_TESTING_ARCHIVE)
 				output = comm->process->out.raw;
 			else
 				output = comm->process->err.raw;
@@ -364,7 +366,7 @@ fr_command_zip_handle_error (FrCommand   *comm,
 				char *line = scan->data;
 
 				if (strstr (line, "incorrect password") != NULL) {
-					error->type = FR_PROC_ERROR_ASK_PASSWORD;
+					error->type = FR_ERROR_ASK_PASSWORD;
 					break;
 				}
 			}
@@ -380,35 +382,35 @@ const char *zip_mime_type[] = { "application/x-cbz",
 
 
 static const char **
-fr_command_zip_get_mime_types (FrCommand *comm)
+fr_command_zip_get_mime_types (FrArchive *archive)
 {
 	return zip_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_zip_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_zip_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES | FR_ARCHIVE_CAN_ENCRYPT;
 	if (_g_program_is_available ("zip", check_command)) {
 		if (strcmp (mime_type, "application/x-ms-dos-executable") == 0)
-			capabilities |= FR_COMMAND_CAN_READ;
+			capabilities |= FR_ARCHIVE_CAN_READ;
 		else
-			capabilities |= FR_COMMAND_CAN_WRITE;
+			capabilities |= FR_ARCHIVE_CAN_WRITE;
 	}
 	if (_g_program_is_available ("unzip", check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_zip_get_packages (FrCommand  *comm,
+fr_command_zip_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("zip,unzip");
@@ -430,12 +432,18 @@ static void
 fr_command_zip_class_init (FrCommandZipClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_zip_parent_class = g_type_class_peek_parent (klass);
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_zip_finalize;
+
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_zip_get_mime_types;
+	archive_class->get_capabilities = fr_command_zip_get_capabilities;
+	archive_class->get_packages     = fr_command_zip_get_packages;
 
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->list             = fr_command_zip_list;
@@ -444,16 +452,13 @@ fr_command_zip_class_init (FrCommandZipClass *klass)
 	command_class->extract          = fr_command_zip_extract;
 	command_class->test             = fr_command_zip_test;
 	command_class->handle_error     = fr_command_zip_handle_error;
-	command_class->get_mime_types   = fr_command_zip_get_mime_types;
-	command_class->get_capabilities = fr_command_zip_get_capabilities;
-	command_class->get_packages     = fr_command_zip_get_packages;
 }
 
 
 static void
 fr_command_zip_init (FrCommandZip *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;

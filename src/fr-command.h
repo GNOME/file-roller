@@ -3,7 +3,7 @@
 /*
  *  File-Roller
  *
- *  Copyright (C) 2001 The Free Software Foundation, Inc.
+ *  Copyright (C) 2012 Free Software Foundation, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #define FR_COMMAND_H
 
 #include <glib.h>
-#include "file-data.h"
+#include "fr-archive.h"
 #include "fr-process.h"
 
 #define PACKAGES(x) (x)
@@ -35,273 +35,53 @@
 #define FR_IS_COMMAND_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND))
 #define FR_COMMAND_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND, FrCommandClass))
 
-typedef struct _FrCommand         FrCommand;
-typedef struct _FrCommandClass    FrCommandClass;
+typedef struct _FrCommand        FrCommand;
+typedef struct _FrCommandClass   FrCommandClass;
+typedef struct _FrCommandPrivate FrCommandPrivate;
 
-typedef enum {
-	FR_ACTION_NONE,
-	FR_ACTION_CREATING_NEW_ARCHIVE,
-	FR_ACTION_LOADING_ARCHIVE,            /* loading the archive from a remote location */
-	FR_ACTION_LISTING_CONTENT,            /* listing the content of the archive */
-	FR_ACTION_DELETING_FILES,             /* deleting files from the archive */
-	FR_ACTION_TESTING_ARCHIVE,            /* testing the archive integrity */
-	FR_ACTION_GETTING_FILE_LIST,          /* getting the file list (when fr_archive_add_with_wildcard or
-						 fr_archive_add_directory are used, we need to scan a directory
-						 and collect the files to add to the archive, this
-						 may require some time to complete, so the operation
-						 is asynchronous) */
-	FR_ACTION_COPYING_FILES_FROM_REMOTE,  /* copying files to be added to the archive from a remote location */
-	FR_ACTION_ADDING_FILES,               /* adding files to an archive */
-	FR_ACTION_EXTRACTING_FILES,           /* extracting files */
-	FR_ACTION_COPYING_FILES_TO_REMOTE,    /* copying extracted files to a remote location */
-	FR_ACTION_CREATING_ARCHIVE,           /* creating a local archive */
-	FR_ACTION_SAVING_REMOTE_ARCHIVE       /* copying the archive to a remote location */
-} FrAction;
+struct _FrCommand {
+	FrArchive  __parent;
+	FrCommandPrivate *priv;
 
-#ifdef DEBUG
-extern char *action_names[];
-#endif
+	/*<protected, read only>*/
 
-struct _FrCommand
-{
-	GObject  __parent;
-
-	/*<public, read only>*/
-
-	GPtrArray     *files;           /* Array of FileData* */
-	int            n_regular_files;
-	FrProcess     *process;         /* the process object used to execute
-				         * commands. */
-	char          *filename;        /* archive file path. */
-	char          *e_filename;      /* escaped archive filename. */
-	const char    *mime_type;
-	gboolean       multi_volume;
-
-	/*<protected>*/
-
-	/* options */
-
-	char          *password;
-	gboolean       encrypt_header : 1;
-	FrCompression  compression;
-	guint          volume_size;
-	gboolean       creating_archive;
-
-	/* command features. */
-
-	/* propAddCanReplace:
-	 *
-	 * TRUE if the command can overwrite a file in the archive.
-	 */
-	guint          propAddCanReplace : 1;
-
-	/* propAddCanReplace:
-	 *
-	 * TRUE if the command can overwrite a file in the archive if older
-	 * then the file on disk.
-	 */
-	guint          propAddCanUpdate : 1;
-
-	/* propAddCanStoreFolders:
-	 *
-	 * TRUE if the command can store folder entries inside the archive.
-	 */
-	guint          propAddCanStoreFolders : 1;
-
-	/* propExtractCanAvoidOverwrite:
-	 *
-	 * TRUE if the command can avoid to overwrite the files on disk.
-	 */
-	guint          propExtractCanAvoidOverwrite : 1;
-
-	/* propExtractCanSkipOlder:
-	 *
-	 * TRUE if the command can avoid to overwrite a file on disk when it is
-	 * newer than the file in the archive.
-	 */
-	guint          propExtractCanSkipOlder : 1;
-
-	/* propExtractCanJunkPaths:
-	 *
-	 * TRUE if the command can extract the files in the current folder
-	 * without recreating the directory structure.
-	 */
-	guint          propExtractCanJunkPaths : 1;
-
-	/* propPassword:
-	 *
-	 * TRUE if the command can use passwords for adding or extracting files.
-	 */
-	guint          propPassword : 1;
-
-	/* propTest:
-	 *
-	 * TRUE if the command can test the archive integrity.
-	 */
-	guint          propTest : 1;
-
-	/* propCanExtractAll:
-	 *
-	 * TRUE if the command extract all the files when no file is specified.
-	 */
-	guint          propCanExtractAll : 1;
-
-	/* propCanDeleteNonEmptyFolders:
-	 *
-	 * is used to overcome an issue with tar, that deletes only the folder
-	 * entry in the archive instead of deleting the folder content
-	 * recursively.
-	 */
-	guint          propCanDeleteNonEmptyFolders : 1;
-
-	/* propCanExtractNonEmptyFolders:
-	 *
-	 * is used to overcome an issue with tar.  For example if
-	 * the content of a tar archive is
-	 *
-	 * readme.txt
-	 * doc/
-	 * doc/page1.html
-	 * doc/page2.html
-	 *
-	 * and we want to extract the content of the doc folder, the command:
-	 *
-	 * tar -xf archive.tar doc doc/page1.html doc/page2.html
-	 *
-	 * gives an error.
-	 * To fix the issue we have to remove the files inside the doc
-	 * folder from the command line, getting the following command:
-	 *
-	 * tar -xf archive.tar doc
-	 */
-	guint          propCanExtractNonEmptyFolders : 1;
-
-	/* propListFromFile:
-	 *
-	 * if TRUE the command has an option to read the file list from a file
-	 */
-	guint          propListFromFile : 1;
-
-	/*<private>*/
-
-	FrCommandCaps  capabilities;
-	FrAction       action;        /* current action. */
-	gboolean       fake_load;     /* if TRUE does nothing when the list
-				       * operation is invoked. */
-
-	/* progress data */
-
-	int            n_file;
-	int            n_files;
+	FrProcess *process;         /* the process object used to execute
+				     * commands. */
+	char      *filename;        /* local archive file path. */
+	char      *e_filename;      /* escaped filename. */
+	gboolean   creating_archive;
 };
 
-struct _FrCommandClass
-{
-	GObjectClass __parent_class;
+struct _FrCommandClass {
+	FrArchiveClass __parent_class;
 
 	/*<virtual functions>*/
 
-	void          (*list)             (FrCommand     *comm);
-	void          (*add)              (FrCommand     *comm,
-					   const char    *from_file,
-				           GList         *file_list,
-				           const char    *base_dir,
-				           gboolean       update,
-				           gboolean       recursive);
-	void          (*delete)           (FrCommand     *comm,
-			                   const char    *from_file,
-				           GList         *file_list);
-	void          (*extract)          (FrCommand     *comm,
-			                   const char    *from_file,
-				           GList         *file_list,
-				           const char    *dest_dir,
-				           gboolean       overwrite,
-				           gboolean       skip_older,
-				           gboolean       junk_paths);
-	void          (*test)             (FrCommand     *comm);
-	void          (*uncompress)       (FrCommand     *comm);
-	void          (*recompress)       (FrCommand     *comm);
-	void          (*handle_error)     (FrCommand     *comm,
-				           FrProcError   *error);
-	const char ** (*get_mime_types)   (FrCommand     *comm);
-	FrCommandCap  (*get_capabilities) (FrCommand     *comm,
-					   const char    *mime_type,
-					   gboolean       check_command);
-	void          (*set_mime_type)    (FrCommand     *comm,
-				           const char    *mime_type);
-	const char *  (*get_packages)     (FrCommand     *comm,
-					   const char    *mime_type);
-
-	/*<signals>*/
-
-	void          (*start)            (FrCommand   *comm,
-			 	           FrAction     action);
-	void          (*done)             (FrCommand   *comm,
-				           FrAction     action,
-				           FrProcError *error);
-	void          (*progress)         (FrCommand   *comm,
-				           double       fraction);
-	void          (*message)          (FrCommand   *comm,
-				           const char  *msg);
-	void          (*working_archive)  (FrCommand   *comm,
-					   const char  *filename);
+	gboolean  (*list)           (FrCommand   *comm);
+	void      (*add)            (FrCommand   *comm,
+				     const char  *from_file,
+				     GList       *file_list,
+				     const char  *base_dir,
+				     gboolean     update,
+				     gboolean     recursive);
+	void      (*delete)         (FrCommand   *comm,
+		                     const char  *from_file,
+		                     GList       *file_list);
+	void      (*extract)        (FrCommand   *comm,
+		                     const char  *from_file,
+		                     GList       *file_list,
+		                     const char  *dest_dir,
+		                     gboolean     overwrite,
+		                     gboolean     skip_older,
+		                     gboolean     junk_paths);
+	void      (*test)           (FrCommand   *comm);
+	void      (*uncompress)     (FrCommand   *comm);
+	void      (*recompress)     (FrCommand   *comm);
+	void      (*handle_error)   (FrCommand   *comm,
+			             FrError     *error);
 };
 
-GType          fr_command_get_type            (void);
-void           fr_command_set_file            (FrCommand     *comm,
-					       GFile         *file);
-void           fr_command_set_multi_volume    (FrCommand     *comm,
-					       GFile         *file);
-void           fr_command_list                (FrCommand     *comm);
-void           fr_command_add                 (FrCommand     *comm,
-					       const char    *from_file,
-					       GList         *file_list,
-					       const char    *base_dir,
-					       gboolean       update,
-					       gboolean       recursive);
-void           fr_command_delete              (FrCommand     *comm,
-					       const char    *from_file,
-					       GList         *file_list);
-void           fr_command_extract             (FrCommand     *comm,
-					       const char    *from_file,
-					       GList         *file_list,
-					       const char    *dest_dir,
-					       gboolean       overwrite,
-					       gboolean       skip_older,
-					       gboolean       junk_paths);
-void           fr_command_test                (FrCommand     *comm);
-void           fr_command_uncompress          (FrCommand     *comm);
-void           fr_command_recompress          (FrCommand     *comm);
-gboolean       fr_command_is_capable_of       (FrCommand     *comm,
-					       FrCommandCaps  capabilities);
-const char **  fr_command_get_mime_types      (FrCommand     *comm);
-void           fr_command_update_capabilities (FrCommand     *comm);
-FrCommandCap   fr_command_get_capabilities    (FrCommand     *comm,
-					       const char    *mime_type,
-					       gboolean       check_command);
-void           fr_command_set_mime_type       (FrCommand     *comm,
-					       const char    *mime_type);
-gboolean       fr_command_is_capable_of       (FrCommand     *comm,
-					       FrCommandCaps  capabilities);
-const char *   fr_command_get_packages        (FrCommand     *comm,
-					       const char    *mime_type);
-
-/* protected functions */
-
-void           fr_command_progress            (FrCommand     *comm,
-					       double         fraction);
-void           fr_command_message             (FrCommand     *comm,
-					       const char    *msg);
-void           fr_command_working_archive     (FrCommand     *comm,
-		                               const char    *archive_name);
-void           fr_command_set_n_files         (FrCommand     *comm,
-					       int            n_files);
-void           fr_command_add_file            (FrCommand     *comm,
-					       FileData      *fdata);
-
-/* private functions */
-
-void           fr_command_handle_error        (FrCommand     *comm,
-					       FrProcError   *error);
+GType    fr_command_get_type         (void);
+GList *  fr_command_get_last_output  (FrCommand *command);
 
 #endif /* FR_COMMAND_H */

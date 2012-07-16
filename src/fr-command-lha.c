@@ -197,11 +197,11 @@ process_line (char     *line,
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
-		fr_command_add_file (comm, fdata);
+		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }
 
 
-static void
+static gboolean
 fr_command_lha_list (FrCommand  *comm)
 {
 	fr_process_set_out_line_func (comm->process, process_line, comm);
@@ -210,7 +210,8 @@ fr_command_lha_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, "lq");
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+
+	return TRUE;
 }
 
 
@@ -297,29 +298,29 @@ const char *lha_mime_type[] = { "application/x-lha", NULL };
 
 
 static const char **
-fr_command_lha_get_mime_types (FrCommand *comm)
+fr_command_lha_get_mime_types (FrArchive *archive)
 {
 	return lha_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_lha_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_lha_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("lha", check_command))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_lha_get_packages (FrCommand  *comm,
+fr_command_lha_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("lha");
@@ -341,6 +342,7 @@ static void
 fr_command_lha_class_init (FrCommandLhaClass *klass)
 {
         GObjectClass   *gobject_class;
+        FrArchiveClass *archive_class;
         FrCommandClass *command_class;
 
         fr_command_lha_parent_class = g_type_class_peek_parent (klass);
@@ -348,21 +350,23 @@ fr_command_lha_class_init (FrCommandLhaClass *klass)
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_lha_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_lha_get_mime_types;
+	archive_class->get_capabilities = fr_command_lha_get_capabilities;
+	archive_class->get_packages     = fr_command_lha_get_packages;
+
 	command_class = FR_COMMAND_CLASS (klass);
         command_class->list             = fr_command_lha_list;
 	command_class->add              = fr_command_lha_add;
 	command_class->delete           = fr_command_lha_delete;
 	command_class->extract          = fr_command_lha_extract;
-	command_class->get_mime_types   = fr_command_lha_get_mime_types;
-	command_class->get_capabilities = fr_command_lha_get_capabilities;
-	command_class->get_packages     = fr_command_lha_get_packages;
 }
 
 
 static void
 fr_command_lha_init (FrCommandLha *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
