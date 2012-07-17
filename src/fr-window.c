@@ -2327,6 +2327,10 @@ get_action_description (FrAction    action,
 		/* Translators: %s is a filename */
 		message = g_strdup_printf (_("Saving \"%s\""), basename);
 		break;
+	case FR_ACTION_RENAMING_FILES:
+		message = g_strdup_printf (_("Renaming the files"));
+		break;
+
 	case FR_ACTION_NONE:
 		break;
 	}
