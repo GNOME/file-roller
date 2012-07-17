@@ -9055,7 +9055,7 @@ fr_window_start_batch (FrWindow *window)
 
 	window->priv->batch_mode = TRUE;
 	window->priv->batch_action = window->priv->batch_action_list;
-	gtk_widget_hide (window);
+	gtk_widget_hide (GTK_WIDGET (window));
 
 	fr_window_exec_current_batch_action (window);
 }
