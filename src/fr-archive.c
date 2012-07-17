@@ -887,10 +887,7 @@ fr_archive_add_files (FrArchive           *archive,
 {
 	g_return_if_fail (! archive->read_only);
 
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[START],
-		       0,
-		       FR_ACTION_ADDING_FILES);
+	fr_archive_action_started (archive, FR_ACTION_ADDING_FILES);
 
 	FR_ARCHIVE_GET_CLASS (archive)->add_files (archive,
 						   file_list,
@@ -1016,10 +1013,7 @@ fr_archive_add_with_wildcard (FrArchive           *archive,
 	aww_data->callback = callback;
 	aww_data->user_data = user_data;
 
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[START],
-		       0,
-		       FR_ACTION_GETTING_FILE_LIST);
+	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
 
 	g_directory_list_async (source_dir,
 				source_dir,
@@ -1148,10 +1142,7 @@ fr_archive_add_directory (FrArchive           *archive,
 	ad_data->callback = callback;
 	ad_data->user_data = user_data;
 
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[START],
-		       0,
-		       FR_ACTION_GETTING_FILE_LIST);
+	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
 
 	g_directory_list_all_async (directory,
 				    base_dir,
@@ -1194,10 +1185,7 @@ fr_archive_add_items (FrArchive           *archive,
 	ad_data->callback = callback;
 	ad_data->user_data = user_data;
 
-	g_signal_emit (G_OBJECT (archive),
-		       fr_archive_signals[START],
-		       0,
-		       FR_ACTION_GETTING_FILE_LIST);
+	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
 
 	g_list_items_async (item_list,
 			    base_dir,
