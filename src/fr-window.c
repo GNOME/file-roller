@@ -7986,7 +7986,7 @@ paste_from_archive_paste_clipboard_ready_cb (GObject      *source_object,
 					     gpointer      user_data)
 {
 	FrWindow *window = user_data;
-	GError   *error;
+	GError   *error = NULL;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_paste_from_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
@@ -8030,7 +8030,7 @@ paste_from_archive_remove_ready_cb (GObject      *source_object,
 				    gpointer      user_data)
 {
 	FrWindow *window = user_data;
-	GError   *error;
+	GError   *error = NULL;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
 		_paste_from_archive_operation_completed (window, FR_ACTION_DELETING_FILES, error);
@@ -8048,7 +8048,7 @@ paste_from_archive_extract_ready_cb (GObject      *source_object,
 				     gpointer      user_data)
 {
 	FrWindow *window = user_data;
-	GError   *error;
+	GError   *error = NULL;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
 		_paste_from_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
@@ -8363,7 +8363,7 @@ update_files_ready_cb (GObject      *source_object,
 		       gpointer      user_data)
 {
 	FrWindow *window = user_data;
-	GError   *error;
+	GError   *error = NULL;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 
@@ -8575,7 +8575,7 @@ open_files_extract_ready_cb (GObject      *source_object,
 			     gpointer      user_data)
 {
 	OpenFilesData *odata = user_data;
-	GError        *error;
+	GError        *error = NULL;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
 		_archive_operation_completed (odata->window, FR_ACTION_EXTRACTING_FILES, error);
