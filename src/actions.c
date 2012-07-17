@@ -30,7 +30,6 @@
 #include "dlg-add-folder.h"
 #include "dlg-extract.h"
 #include "dlg-delete.h"
-#include "dlg-new.h"
 #include "dlg-open-with.h"
 #include "dlg-password.h"
 #include "dlg-prop.h"
@@ -43,280 +42,11 @@
 #include "typedefs.h"
 
 
-/* -- new archive -- */
-
-
-static void
-new_archive (DlgNewData *data,
-	     char       *uri)
-{
-	GtkWidget  *archive_window;
-	gboolean    new_window;
-	const char *password;
-	gboolean    encrypt_header;
-	int         volume_size;
-
-	new_window = fr_window_archive_is_present (data->window) && ! fr_window_is_batch_mode (data->window);
-	if (new_window)
-		archive_window = fr_window_new ();
-	else
-		archive_window = (GtkWidget *) data->window;
-
-	password = dlg_new_data_get_password (data);
-	encrypt_header = dlg_new_data_get_encrypt_header (data);
-	volume_size = dlg_new_data_get_volume_size (data);
-
-	fr_window_set_password (FR_WINDOW (archive_window), password);
-	fr_window_set_encrypt_header (FR_WINDOW (archive_window), encrypt_header);
-	fr_window_set_volume_size (FR_WINDOW (archive_window), volume_size);
-
-	if (fr_window_archive_new (FR_WINDOW (archive_window), uri)) {
-		gtk_widget_destroy (data->dialog);
-		if (! fr_window_is_batch_mode (FR_WINDOW (archive_window)))
-			gtk_window_present (GTK_WINDOW (archive_window));
-	}
-	else if (new_window)
-		gtk_widget_destroy (archive_window);
-}
-
-
-/* when on Automatic the user provided extension needs to be supported,
-   otherwise an existing unsupported archive can be deleted (if the user
-   provided name matches with its name) before we find out that the
-   archive is unsupported
-*/
-static gboolean
-is_supported_extension (GtkWidget *file_sel,
-			char      *filename,
-			int       *file_type)
-{
-	int i;
-	for (i = 0; file_type[i] != -1; i++)
-		if (_g_filename_has_extension (filename, mime_type_desc[file_type[i]].default_ext))
-			return TRUE;
-	return FALSE;
-}
-
-
-static char *
-get_full_uri (DlgNewData *data)
-{
-	char        *full_uri = NULL;
-	char        *uri;
-	const char  *filename;
-	int          idx;
-
-	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
-
-	if ((uri == NULL) || (*uri == 0))
-		return NULL;
-
-	filename = _g_path_get_file_name (uri);
-	if ((filename == NULL) || (*filename == 0)) {
-		g_free (uri);
-		return NULL;
-	}
-
-	idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (data->format_chooser), uri);
-	if (idx > 0) {
-		const char *uri_ext;
-		char       *default_ext;
-
-		uri_ext = get_archive_filename_extension (uri);
-		default_ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
-		if (_g_strcmp_null_tolerant (uri_ext, default_ext) != 0) {
-			full_uri = g_strconcat (uri, default_ext, NULL);
-			g_free (uri);
-		}
-	}
-	if (full_uri == NULL)
-		full_uri = uri;
-
-	return full_uri;
-}
-
-
-static char *
-get_archive_filename_from_selector (DlgNewData *data)
-{
-	char      *uri = NULL;
-	GFile     *file, *dir;
-	GFileInfo *info;
-	GError    *err = NULL;
-
-	uri = get_full_uri (data);
-	if ((uri == NULL) || (*uri == 0)) {
-		GtkWidget *dialog;
-
-		g_free (uri);
-
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
-						GTK_DIALOG_DESTROY_WITH_PARENT,
-						NULL,
-						_("Could not create the archive"),
-						"%s",
-						_("You have to specify an archive name."));
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-
-		return NULL;
-	}
-
-	file = g_file_new_for_uri (uri);
-
-	dir = g_file_get_parent (file);
-	info = g_file_query_info (dir,
-				  G_FILE_ATTRIBUTE_ACCESS_CAN_READ ","
-				  G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE ","
-				  G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE,
-				  0, NULL, &err);
-	if (err != NULL) {
-		g_warning ("Failed to get permission for extraction dir: %s",
-			   err->message);
-		g_clear_error (&err);
-		g_object_unref (info);
-		g_object_unref (dir);
-		g_object_unref (file);
-		g_free (uri);
-		return NULL;
-	}
-
-	if (! g_file_info_get_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE)) {
-		GtkWidget *dialog;
-
-		g_object_unref (info);
-		g_object_unref (dir);
-		g_object_unref (file);
-		g_free (uri);
-
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
-						GTK_DIALOG_DESTROY_WITH_PARENT,
-						NULL,
-						_("Could not create the archive"),
-						"%s",
-						_("You don't have permission to create an archive in this folder"));
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-		return NULL;
-	}
-	g_object_unref (info);
-	g_object_unref (dir);
-
-	/* if the user did not specify a valid extension use the filetype combobox current type
-	 * or tar.gz if automatic is selected. */
-	if (get_archive_filename_extension (uri) == NULL) {
-		int   idx;
-		char *new_uri;
-		char *ext = NULL;
-
-		idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (data->format_chooser), uri);
-		if (idx > 0)
-			ext = mime_type_desc[data->supported_types[idx-1]].default_ext;
-		else
-			ext = ".tar.gz";
-		new_uri = g_strconcat (uri, ext, NULL);
-		g_free (uri);
-		uri = new_uri;
-	}
-
-	debug (DEBUG_INFO, "create/save %s\n", uri);
-
-	if (_g_uri_query_exists (uri)) {
-		GtkWidget *dialog;
-
-		if (! is_supported_extension (data->dialog, uri, data->supported_types)) {
-			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
-							GTK_DIALOG_MODAL,
-							NULL,
-							_("Could not create the archive"),
-							"%s",
-							_("Archive type not supported."));
-			gtk_dialog_run (GTK_DIALOG (dialog));
-			gtk_widget_destroy (GTK_WIDGET (dialog));
-			g_free (uri);
-
-			return NULL;
-		}
-
-		g_file_delete (file, NULL, &err);
-		if (err != NULL) {
-			GtkWidget *dialog;
-			dialog = _gtk_error_dialog_new (GTK_WINDOW (data->dialog),
-							GTK_DIALOG_DESTROY_WITH_PARENT,
-							NULL,
-							_("Could not delete the old archive."),
-							"%s",
-							err->message);
-			gtk_dialog_run (GTK_DIALOG (dialog));
-			gtk_widget_destroy (GTK_WIDGET (dialog));
-			g_error_free (err);
-			g_free (uri);
-			g_object_unref (file);
-			return NULL;
-		}
-	}
-
-	g_object_unref (file);
-
-	return uri;
-}
-
-
-static void
-new_file_response_cb (GtkWidget  *w,
-		      int         response,
-		      DlgNewData *data)
-{
-	char *uri;
-
-	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		/* FIXME: libarchive
-		 fr_archive_action_completed (data->window->archive,
-					     FR_ACTION_CREATING_NEW_ARCHIVE,
-					     FR_PROC_ERROR_STOPPED,
-					     NULL);
-					     */
-		gtk_widget_destroy (data->dialog);
-		return;
-	}
-
-	if (response == GTK_RESPONSE_HELP) {
-		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-create");
-		return;
-	}
-
-	uri = get_archive_filename_from_selector (data);
-	if (uri != NULL) {
-		new_archive (data, uri);
-		g_free (uri);
-	}
-}
-
-
-void
-show_new_archive_dialog (FrWindow   *window,
-			 const char *archive_name)
-{
-	DlgNewData *data;
-
-	if (archive_name != NULL)
-		data = dlg_save_as (window, archive_name);
-	else
-		data = dlg_new (window);
-
-	g_signal_connect (G_OBJECT (data->dialog),
-			  "response",
-			  G_CALLBACK (new_file_response_cb),
-			  data);
-	gtk_window_present (GTK_WINDOW (data->dialog));
-}
-
-
 void
 activate_action_new (GtkAction *action,
 		     gpointer   data)
 {
-	show_new_archive_dialog ((FrWindow*)data, NULL);
+	fr_window_action_new_archive (FR_WINDOW (data));
 }
 
 
@@ -328,6 +58,7 @@ window_archive_loaded_cb (FrWindow  *window,
 			  gboolean   success,
 			  GtkWidget *file_sel)
 {
+	/* FIXME: libarchive */
 	if (success) {
 		g_signal_handlers_disconnect_by_data (window, file_sel);
 		gtk_widget_destroy (file_sel);
@@ -419,85 +150,11 @@ activate_action_open (GtkAction *action,
 /* -- save archive -- */
 
 
-static void
-save_file_response_cb (GtkWidget  *w,
-		       gint        response,
-		       DlgNewData *data)
-{
-	char       *path;
-	const char *password;
-	gboolean    encrypt_header;
-	int         volume_size;
-	GSettings  *settings;
-
-	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
-		gtk_widget_destroy (data->dialog);
-		return;
-	}
-
-	if (response == GTK_RESPONSE_HELP) {
-		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-convert");
-		return;
-	}
-
-	path = get_archive_filename_from_selector (data);
-	if (path == NULL)
-		return;
-
-	password = dlg_new_data_get_password (data);
-	encrypt_header = dlg_new_data_get_encrypt_header (data);
-	volume_size = dlg_new_data_get_volume_size (data);
-
-	settings = g_settings_new (FILE_ROLLER_SCHEMA_BATCH_ADD);
-	g_settings_set_int (settings, PREF_BATCH_ADD_VOLUME_SIZE, volume_size);
-	g_object_unref (settings);
-
-	fr_window_archive_save_as (data->window, path, password, encrypt_header, volume_size);
-	gtk_widget_destroy (data->dialog);
-
-	g_free (path);
-}
-
-
 void
 activate_action_save_as (GtkAction *action,
-			 gpointer   callback_data)
+			 gpointer   user_data)
 {
-	FrWindow   *window = callback_data;
-	DlgNewData *data;
-	char       *archive_name = NULL;
-
-	if (fr_window_get_archive_uri (window)) {
-		const char *uri;
-		GFile      *file;
-		GFileInfo  *info;
-		GError     *err = NULL;
-
-		uri = fr_window_get_archive_uri (window);
-		file = g_file_new_for_uri (uri);
-		info = g_file_query_info (file,
-					  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
-					  0, NULL, &err);
-
-		if (err != NULL) {
-			g_warning ("Failed to get display name for uri %s: %s", uri, err->message);
-			g_clear_error (&err);
-		}
-		else
-			archive_name = g_strdup (g_file_info_get_display_name (info));
-
-		g_object_unref (info);
-		g_object_unref (file);
-	}
-
-	data = dlg_save_as (window, archive_name);
-	g_signal_connect (G_OBJECT (data->dialog),
-			  "response",
-			  G_CALLBACK (save_file_response_cb),
-			  data);
-	gtk_window_present (GTK_WINDOW (data->dialog));
-
-	g_free (archive_name);
+	fr_window_action_save_as (FR_WINDOW (user_data));
 }
 
 

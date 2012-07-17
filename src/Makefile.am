@@ -67,8 +67,6 @@ COMMON_SOURCES = 			\
 	dlg-delete.h			\
 	dlg-extract.c			\
 	dlg-extract.h			\
-	dlg-new.c			\
-	dlg-new.h			\
 	dlg-open-with.c			\
 	dlg-open-with.h			\
 	dlg-package-installer.c		\
@@ -134,6 +132,8 @@ COMMON_SOURCES = 			\
 	fr-init.h			\
 	fr-list-model.c			\
 	fr-list-model.h			\
+	fr-new-archive-dialog.c		\
+	fr-new-archive-dialog.h		\
 	fr-stock.c			\
 	fr-stock.h			\
 	fr-process.c			\

@@ -116,11 +116,6 @@ void            fr_window_archive_close                (FrWindow      *window);
 const char *    fr_window_get_archive_uri              (FrWindow      *window);
 const char *    fr_window_get_paste_archive_uri        (FrWindow      *window);
 gboolean        fr_window_archive_is_present           (FrWindow      *window);
-void            fr_window_archive_save_as              (FrWindow      *window,
-						        const char    *filename,
-						        const char    *password,
-						        gboolean       encrypt_header,
-						        guint          volume_size);
 void            fr_window_archive_reload               (FrWindow      *window);
 void            fr_window_archive_add_files            (FrWindow      *window,
 						        GList         *file_list, /* GFile list */
@@ -238,6 +233,8 @@ void            fr_window_stop_activity_mode           (FrWindow    *window);
 
 /**/
 
+void            fr_window_action_new_archive           (FrWindow   *window);
+void            fr_window_action_save_as               (FrWindow   *window);
 void            fr_window_view_last_output             (FrWindow   *window,
 						        const char *title);
 void            fr_window_open_files                   (FrWindow   *window,

@@ -44,6 +44,7 @@
 #include "fr-archive.h"
 #include "fr-command.h"
 #include "fr-error.h"
+#include "fr-new-archive-dialog.h"
 #include "fr-stock.h"
 #include "fr-window.h"
 #include "file-data.h"
@@ -115,7 +116,7 @@ typedef struct {
 	FrBatchActionType type;
 	void *            data;
 	GFreeFunc         free_func;
-} FRBatchAction;
+} FrBatchAction;
 
 
 typedef struct {
@@ -126,7 +127,7 @@ typedef struct {
 	gboolean   encrypt_header;
 	guint      volume_size;
 	char      *new_file;
-} FRConvertData;
+} FrConvertData;
 
 
 typedef struct {
@@ -292,7 +293,7 @@ struct _FrWindowPrivate {
 	gboolean         ask_to_open_destination_after_extraction;
 	gboolean         destroy_with_error_dialog;
 
-	FRBatchAction    current_batch_action;
+	FrBatchAction    current_batch_action;
 
 	gboolean         give_focus_to_the_list;
 	gboolean         single_click;
@@ -322,7 +323,7 @@ struct _FrWindowPrivate {
 	guint            update_timeout_handle;     /* update file list
 						     * timeout handle. */
 
-	FRConvertData    convert_data;
+	FrConvertData    convert_data;
 
 	gboolean         stoppable;
 	gboolean         closing;
@@ -377,7 +378,7 @@ struct _FrWindowPrivate {
 
 	gboolean          batch_mode;          /* whether we are in a non interactive
 					 	* mode. */
-	GList            *batch_action_list;   /* FRBatchAction * elements */
+	GList            *batch_action_list;   /* FrBatchAction * elements */
 	GList            *batch_action;        /* current action. */
 	char             *batch_title;
 
@@ -392,7 +393,6 @@ struct _FrWindowPrivate {
 	GSettings        *settings_nautilus;
 
 	gulong            theme_changed_handler_id;
-	gboolean          non_interactive;
 	char             *extract_here_dir;
 	gboolean          extract_interact_use_default_dir;
 	gboolean          update_dropped_files;
@@ -413,7 +413,7 @@ fr_window_free_batch_data (FrWindow *window)
 	GList *scan;
 
 	for (scan = window->priv->batch_action_list; scan; scan = scan->next) {
-		FRBatchAction *adata = scan->data;
+		FrBatchAction *adata = scan->data;
 
 		if ((adata->data != NULL) && (adata->free_func != NULL))
 			(*adata->free_func) (adata->data);
@@ -1435,7 +1435,7 @@ fr_window_update_statusbar_list_info (FrWindow *window)
 	goffset  tot_size, sel_size;
 	GList   *scan;
 
-	if (window == NULL)
+	if ((window == NULL) || window->priv->batch_mode)
 		return;
 
 	if (window->archive == NULL) {
@@ -2062,7 +2062,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	no_archive           = (window->archive == NULL) || ! window->priv->archive_present;
 	ro                   = ! no_archive && window->archive->read_only;
 	file_op              = ! no_archive && ! window->priv->archive_new  && ! running;
-	can_store_many_files = fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_STORE_MANY_FILES);
+	can_store_many_files = (window->archive != NULL) && fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_STORE_MANY_FILES);
 	n_selected           = fr_window_get_n_selected_files (window);
 	sel_not_null         = n_selected > 0;
 	one_file_selected    = n_selected == 1;
@@ -2369,7 +2369,7 @@ progress_dialog_update_action_description (FrWindow *window)
 
 
 static gboolean
-fr_window_working_archive_cb (FrCommand  *command,
+fr_window_working_archive_cb (FrArchive  *archive,
 			      const char *archive_filename,
 			      FrWindow   *window)
 {
@@ -2384,9 +2384,9 @@ fr_window_working_archive_cb (FrCommand  *command,
 
 
 static gboolean
-fr_archive_message_cb (FrCommand  *command,
-		      const char *msg,
-		      FrWindow   *window)
+fr_archive_message_cb (FrArchive  *archive,
+		       const char *msg,
+		       FrWindow   *window)
 {
 	if (window->priv->pd_last_message != msg) {
 		g_free (window->priv->pd_last_message);
@@ -2516,7 +2516,7 @@ display_progress_dialog (gpointer data)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->priv->progress_dialog),
 						   GTK_RESPONSE_OK,
 						   window->priv->stoppable);
-		if (! window->priv->non_interactive)
+		if (! window->priv->batch_mode)
 			gtk_widget_show (GTK_WIDGET (window));
 		gtk_widget_hide (window->priv->progress_bar);
 		gtk_widget_show (window->priv->progress_dialog);
@@ -2569,8 +2569,8 @@ open_progress_dialog (FrWindow *window,
 
 static gboolean
 fr_archive_progress_cb (FrArchive *archive,
-		       double     fraction,
-		       FrWindow  *window)
+		        double     fraction,
+		        FrWindow  *window)
 {
 	window->priv->progress_pulse = (fraction < 0.0);
 	if (! window->priv->progress_pulse) {
@@ -2929,6 +2929,10 @@ _handle_archive_operation_error (FrWindow  *window,
 			msg = _("An error occurred while saving the archive.");
 			break;
 
+		case FR_ACTION_RENAMING_FILES:
+			msg = _("An error occurred while renaming the files.");
+			break;
+
 		default:
 			msg = _("An error occurred.");
 			break;
@@ -3008,21 +3012,14 @@ _archive_operation_completed (FrWindow *window,
 		close_progress_dialog (window, FALSE);
 		if (error != NULL) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
-			if (window->priv->non_interactive) {
+			if (window->priv->batch_mode)
 				fr_window_archive_close (window);
-				fr_window_stop_batch (window);
-			}
 		}
 		else {
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
-			if (! window->priv->non_interactive)
+			if (! window->priv->batch_mode)
 				gtk_window_present (GTK_WINDOW (window));
 		}
-		continue_batch = FALSE;
-		g_signal_emit (window,
-			       fr_window_signals[ARCHIVE_LOADED],
-			       0,
-			       error == NULL);
 		break;
 
 	case FR_ACTION_LISTING_CONTENT:
@@ -3066,7 +3063,7 @@ _archive_operation_completed (FrWindow *window,
 		fr_window_update_title (window);
 		fr_window_go_to_location (window, fr_window_get_current_location (window), TRUE);
 		fr_window_update_dir_tree (window);
-		if (! window->priv->batch_mode && window->priv->non_interactive)
+		if (! window->priv->batch_mode)
 			gtk_window_present (GTK_WINDOW (window));
 		break;
 
@@ -3114,213 +3111,24 @@ _archive_operation_completed (FrWindow *window,
 		break;
 	}
 
-	if (window->priv->batch_action == NULL) {
-		fr_window_update_sensitivity (window);
-		fr_window_update_statusbar_list_info (window);
-	}
-
-	if (continue_batch) {
-		if (error != NULL)
-			fr_window_stop_batch (window);
-		else
-			fr_window_exec_next_batch_action (window);
-	}
+	if (continue_batch)
+		fr_window_exec_next_batch_action (window);
+	else
+		fr_window_stop_batch (window);
 }
-
-
-#if 0  /* FIXME: libarchive */
 
 
 static void
-action_performed (FrArchive   *archive,
-		  FrAction     action,
-		  FrError *error,
-		  gpointer     data)
+_archive_operation_cancelled (FrWindow *window,
+			      FrAction  action)
 {
-	FrWindow *window = data;
-	gboolean  continue_batch = FALSE;
-	char     *archive_dir;
-	gboolean  temp_dir;
+	GError *error;
 
-#ifdef DEBUG
-	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
-#endif
+	error = g_error_new_literal (FR_ERROR, FR_ERROR_STOPPED, "");
+	_archive_operation_completed (window, action, error);
 
-	fr_window_stop_activity_mode (window);
-	fr_window_pop_message (window);
-
-	continue_batch = _handle_archive_operation_error (window, archive, action, error);
-
-	if ((error->type == FR_ERROR_ASK_PASSWORD)
-	    || (error->type == FR_ERROR_UNSUPPORTED_FORMAT)
-	    /*|| (error->type == FR_PROC_ERROR_BAD_CHARSET)*/)
-	{
-		return;
-	}
-
-	switch (action) {
-	case FR_ACTION_CREATING_NEW_ARCHIVE:
-	case FR_ACTION_CREATING_ARCHIVE:
-		close_progress_dialog (window, FALSE);
-		if (error->type != FR_ERROR_STOPPED) {
-			fr_window_history_clear (window);
-			fr_window_go_to_location (window, "/", TRUE);
-			fr_window_update_dir_tree (window);
-			fr_window_update_title (window);
-			fr_window_update_sensitivity (window);
-		}
-		break;
-
-	case FR_ACTION_LOADING_ARCHIVE:
-		close_progress_dialog (window, FALSE);
-		if (error->type != FR_ERROR_NONE) {
-			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
-			if (window->priv->non_interactive) {
-				fr_window_archive_close (window);
-				fr_window_stop_batch (window);
-			}
-		}
-		else {
-			fr_window_add_to_recent_list (window, window->priv->archive_uri);
-			if (! window->priv->non_interactive)
-				gtk_window_present (GTK_WINDOW (window));
-		}
-		continue_batch = FALSE;
-		g_signal_emit (window,
-			       fr_window_signals[ARCHIVE_LOADED],
-			       0,
-			       error->type == FR_ERROR_NONE);
-		break;
-
-	case FR_ACTION_LISTING_CONTENT:
-		/* update the uri because multi-volume archives can have
-		 * a different name after loading. */
-		g_free (window->priv->archive_uri);
-		window->priv->archive_uri = g_file_get_uri (window->archive->file);
-
-		close_progress_dialog (window, FALSE);
-		if (error->type != FR_ERROR_NONE) {
-			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
-			fr_window_archive_close (window);
-			fr_window_set_password (window, NULL);
-			break;
-		}
-
-		archive_dir = _g_path_remove_level (window->priv->archive_uri);
-		temp_dir = _g_path_is_temp_dir (archive_dir);
-		if (! window->priv->archive_present) {
-			window->priv->archive_present = TRUE;
-
-			fr_window_history_clear (window);
-			fr_window_history_add (window, "/");
-
-			if (! temp_dir) {
-				fr_window_set_open_default_dir (window, archive_dir);
-				fr_window_set_add_default_dir (window, archive_dir);
-				if (! window->priv->freeze_default_dir)
-					fr_window_set_extract_default_dir (window, archive_dir, FALSE);
-			}
-
-			window->priv->archive_new = FALSE;
-		}
-		g_free (archive_dir);
-
-		if (! temp_dir)
-			fr_window_add_to_recent_list (window, window->priv->archive_uri);
-
-		fr_window_update_title (window);
-		fr_window_go_to_location (window, fr_window_get_current_location (window), TRUE);
-		fr_window_update_dir_tree (window);
-		if (! window->priv->batch_mode && window->priv->non_interactive)
-			gtk_window_present (GTK_WINDOW (window));
-		break;
-
-	case FR_ACTION_DELETING_FILES:
-		close_progress_dialog (window, FALSE);
-		if (error->type != FR_ERROR_STOPPED)
-			fr_window_archive_reload (window);
-		return;
-
-	case FR_ACTION_ADDING_FILES:
-		close_progress_dialog (window, FALSE);
-
-		/* update the uri because multi-volume archives can have
-		 * a different name after creation. */
-		g_free (window->priv->archive_uri);
-		window->priv->archive_uri = g_file_get_uri (window->archive->file);
-
-		if (error->type == FR_ERROR_NONE) {
-			if (window->priv->archive_new)
-				window->priv->archive_new = FALSE;
-			fr_window_add_to_recent_list (window, window->priv->archive_uri);
-		}
-		if (! window->priv->batch_mode && (error->type != FR_ERROR_STOPPED)) {
-			fr_window_archive_reload (window);
-			return;
-		}
-		break;
-
-	case FR_ACTION_TESTING_ARCHIVE:
-		close_progress_dialog (window, FALSE);
-		if (error->type == FR_ERROR_NONE)
-			fr_window_view_last_output (window, _("Test Result"));
-		return;
-
-	case FR_ACTION_EXTRACTING_FILES:
-		if (error->type != FR_ERROR_NONE) {
-			if (window->priv->convert_data.converting) {
-				_g_path_remove_directory (window->priv->convert_data.temp_dir);
-				_fr_window_convert_data_free (window, TRUE);
-			}
-			break;
-		}
-		if (window->priv->convert_data.converting) {
-			char *source_dir;
-
-			source_dir = g_filename_to_uri (window->priv->convert_data.temp_dir, NULL, NULL);
-			fr_archive_add_with_wildcard (window->priv->convert_data.new_archive,
-						      "*",
-						      NULL,
-						      NULL,
-						      source_dir,
-						      NULL,
-						      FALSE,
-						      TRUE,
-						      window->priv->convert_data.password,
-						      window->priv->convert_data.encrypt_header,
-						      window->priv->compression,
-						      window->priv->convert_data.volume_size);
-			g_free (source_dir);
-		}
-		else {
-			if (window->priv->ask_to_open_destination_after_extraction)
-				open_progress_dialog_with_open_destination (window);
-			else
-				close_progress_dialog (window, FALSE);
-		}
-		break;
-
-	default:
-		close_progress_dialog (window, FALSE);
-		continue_batch = FALSE;
-		break;
-	}
-
-	if (window->priv->batch_action == NULL) {
-		fr_window_update_sensitivity (window);
-		fr_window_update_statusbar_list_info (window);
-	}
-
-	if (continue_batch) {
-		if (error->type != FR_ERROR_NONE)
-			fr_window_stop_batch (window);
-		else
-			fr_window_exec_next_batch_action (window);
-	}
+	g_error_free (error);
 }
-
-
-#endif
 
 
 /* -- selections -- */
@@ -4035,6 +3843,66 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 
 
 static void
+new_archive_dialog_response_cb (GtkDialog *dialog,
+				int        response,
+				gpointer   user_data)
+{
+	FrWindow   *window = user_data;
+	char       *uri;
+	GtkWidget  *archive_window;
+	gboolean    new_window;
+	const char *password;
+	gboolean    encrypt_header;
+	int         volume_size;
+
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		_archive_operation_cancelled (window, FR_ACTION_CREATING_NEW_ARCHIVE);
+		return;
+	}
+
+	uri = fr_new_archive_dialog_get_uri (FR_NEW_ARCHIVE_DIALOG (dialog));
+	if (uri == NULL)
+		return;
+
+	new_window = fr_window_archive_is_present (window) && ! fr_window_is_batch_mode (window);
+	if (new_window)
+		archive_window = fr_window_new ();
+	else
+		archive_window = (GtkWidget *) window;
+
+	password = fr_new_archive_dialog_get_password (FR_NEW_ARCHIVE_DIALOG (dialog));
+	encrypt_header = fr_new_archive_dialog_get_encrypt_header (FR_NEW_ARCHIVE_DIALOG (dialog));
+	volume_size = fr_new_archive_dialog_get_volume_size (FR_NEW_ARCHIVE_DIALOG (dialog));
+
+	fr_window_set_password (FR_WINDOW (archive_window), password);
+	fr_window_set_encrypt_header (FR_WINDOW (archive_window), encrypt_header);
+	fr_window_set_volume_size (FR_WINDOW (archive_window), volume_size);
+
+	if (fr_window_archive_new (FR_WINDOW (archive_window), uri)) {
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		if (! fr_window_is_batch_mode (FR_WINDOW (archive_window)))
+			gtk_window_present (GTK_WINDOW (archive_window));
+		_archive_operation_completed (window, FR_ACTION_CREATING_NEW_ARCHIVE, NULL);
+	}
+	else {
+		GError *error;
+
+		if (new_window)
+			gtk_widget_destroy (archive_window);
+
+		error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("Archive type not supported."));
+		window->priv->load_error_parent_window = GTK_WINDOW (dialog);
+		_handle_archive_operation_error (window, NULL, FR_ACTION_CREATING_ARCHIVE, error, NULL, NULL);
+
+		g_error_free (error);
+	}
+
+	g_free (uri);
+}
+
+
+static void
 fr_window_drag_data_received  (GtkWidget          *widget,
 			       GdkDragContext     *context,
 			       gint                x,
@@ -4159,6 +4027,7 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 				char       *local_path = NULL;
 				char       *utf8_path = NULL;
 				const char *archive_name;
+				GtkWidget  *dialog;
 
 				fr_window_free_batch_data (window);
 				fr_window_append_batch_action (window,
@@ -4189,9 +4058,17 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 					archive_name = _g_path_get_file_name (utf8_path);
 				}
 
-				show_new_archive_dialog (window, archive_name);
-				g_free (utf8_path);
+				dialog = fr_new_archive_dialog_new (GTK_WINDOW (window),
+								    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
+								    archive_name);
+				gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (dialog), fr_window_get_open_default_dir (window));
+				g_signal_connect (G_OBJECT (dialog),
+						  "response",
+						  G_CALLBACK (new_archive_dialog_response_cb),
+						  window);
+				gtk_window_present (GTK_WINDOW (dialog));
 
+				g_free (utf8_path);
 				g_free (folder);
 			}
 		}
@@ -5128,9 +5005,9 @@ theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
 
 
 static gboolean
-fr_archive_stoppable_cb (FrCommand  *command,
-			gboolean    stoppable,
-			FrWindow   *window)
+fr_archive_stoppable_cb (FrArchive *archive,
+			 gboolean   stoppable,
+			 FrWindow  *window)
 {
 	window->priv->stoppable = stoppable;
 	set_sensitive (window, "Stop", stoppable);
@@ -5500,7 +5377,6 @@ fr_window_construct (FrWindow *window)
 	window->priv->batch_action_list = NULL;
 	window->priv->batch_action = NULL;
 	window->priv->extract_interact_use_default_dir = FALSE;
-	window->priv->non_interactive = FALSE;
 
 	window->priv->password = NULL;
 	window->priv->compression = g_settings_get_enum (window->priv->settings_general, PREF_GENERAL_COMPRESSION_LEVEL);
@@ -6037,39 +5913,13 @@ fr_window_archive_new (FrWindow   *window,
 		_fr_window_set_archive_uri (window, uri);
 		window->priv->archive_present = TRUE;
 		window->priv->archive_new = TRUE;
+
+		g_object_unref (archive);
 	}
 
-	g_object_unref (archive);
 	g_object_unref (file);
 
 	return archive != NULL;
-
-	/* FIXME: libarchive */
-#if 0
-
-	if (! fr_archive_create (window->archive, uri)) {
-		GtkWindow *file_sel = g_object_get_data (G_OBJECT (window), "fr_file_sel");
-
-		window->priv->load_error_parent_window = file_sel;
-		fr_archive_action_completed (window->archive,
-					     FR_ACTION_CREATING_NEW_ARCHIVE,
-					     FR_ERROR_GENERIC,
-					     _("Archive type not supported."));
-
-		return FALSE;
-	}
-
-	_fr_window_set_archive_uri (window, uri);
-	window->priv->archive_present = TRUE;
-	window->priv->archive_new = TRUE;
-
-	fr_archive_action_completed (window->archive,
-				     FR_ACTION_CREATING_NEW_ARCHIVE,
-				     FR_ERROR_NONE,
-				     NULL);
-
-	return TRUE;
-#endif
 }
 
 
@@ -6109,6 +5959,12 @@ archive_open_ready_cb (GObject      *source_object,
 	GError    *error = NULL;
 
 	archive = fr_archive_open_finish (G_FILE (source_object), result, &error);
+
+	g_signal_emit (window,
+		       fr_window_signals[ARCHIVE_LOADED],
+		       0,
+		       archive != NULL);
+
 	if (archive == NULL) {
 		_archive_operation_completed (window, FR_ACTION_LOADING_ARCHIVE, error);
 		g_error_free (error);
@@ -6140,6 +5996,7 @@ fr_window_archive_open (FrWindow   *current_window,
 	window->priv->give_focus_to_the_list = TRUE;
 	window->priv->load_error_parent_window = parent;
 
+	/* this is used to reload the archive after asking a password */
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_LOAD,
 					    g_strdup (window->priv->archive_uri),
@@ -6210,284 +6067,6 @@ fr_window_archive_is_present (FrWindow *window)
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	return window->priv->archive_present;
-}
-
-
-typedef struct {
-	char     *uri;
-	char     *password;
-	gboolean  encrypt_header;
-	guint     volume_size;
-} SaveAsData;
-
-
-static SaveAsData *
-save_as_data_new (const char *uri,
-		  const char *password,
-		  gboolean    encrypt_header,
-	  	  guint       volume_size)
-{
-	SaveAsData *sdata;
-
-	sdata = g_new0 (SaveAsData, 1);
-	if (uri != NULL)
-		sdata->uri = g_strdup (uri);
-	if (password != NULL)
-		sdata->password = g_strdup (password);
-	sdata->encrypt_header = encrypt_header;
-	sdata->volume_size = volume_size;
-
-	return sdata;
-}
-
-
-static void
-save_as_data_free (SaveAsData *sdata)
-{
-	if (sdata == NULL)
-		return;
-	g_free (sdata->uri);
-	g_free (sdata->password);
-	g_free (sdata);
-}
-
-
-#if 0 /* FIXME: libarchive */
-
-
-static void
-convert__action_performed (FrArchive   *archive,
-			   FrAction     action,
-			   FrError *error,
-			   gpointer     data)
-{
-	FrWindow *window = data;
-
-#ifdef DEBUG
-	debug (DEBUG_INFO, "%s [CONVERT::DONE] (FR::Window)\n", action_names[action]);
-#endif
-
-	if ((action == FR_ACTION_GETTING_FILE_LIST) || (action == FR_ACTION_ADDING_FILES)) {
-		fr_window_stop_activity_mode (window);
-		fr_window_pop_message (window);
-		close_progress_dialog (window, FALSE);
-	}
-
-	if (action != FR_ACTION_ADDING_FILES)
-		return;
-
-	_handle_archive_operation_error (window, archive, action, error);
-
-	if (error->type == FR_ERROR_NONE)
-		open_progress_dialog_with_open_archive (window);
-
-	_g_path_remove_directory (window->priv->convert_data.temp_dir);
-	_fr_window_convert_data_free (window, FALSE);
-
-	fr_window_update_sensitivity (window);
-	fr_window_update_statusbar_list_info (window);
-}
-
-
-#endif
-
-
-#if 0
-
-
-if (error != NULL) {
-	/* FIXME
-	if (window->priv->convert_data.converting) {
-		_g_path_remove_directory (window->priv->convert_data.temp_dir);
-		_fr_window_convert_data_free (window, TRUE);
-	}
-	*/
-	break;
-}
-/* FIXME
-if (window->priv->convert_data.converting) {
-	char *source_dir;
-
-	source_dir = g_filename_to_uri (window->priv->convert_data.temp_dir, NULL, NULL);
-	fr_archive_add_with_wildcard (window->priv->convert_data.new_archive,
-				      "*",
-				      NULL,
-				      NULL,
-				      source_dir,
-				      NULL,
-				      FALSE,
-				      TRUE,
-				      window->priv->convert_data.password,
-				      window->priv->convert_data.encrypt_header,
-				      window->priv->compression,
-				      window->priv->convert_data.volume_size);
-	g_free (source_dir);
-}
-else */ {
-	if (window->priv->ask_to_open_destination_after_extraction)
-		open_progress_dialog_with_open_destination (window);
-	else
-		close_progress_dialog (window, FALSE);
-}
-
-
-#endif
-
-
-static void
-archive_add_ready_for_conversion_cb (GObject      *source_object,
-				     GAsyncResult *result,
-				     gpointer      user_data)
-{
-	FrWindow *window = user_data;
-	GError   *error = NULL;
-
-	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
-
-	fr_window_stop_activity_mode (window);
-	fr_window_pop_message (window);
-	close_progress_dialog (window, FALSE);
-
-	if (error == NULL)
-		open_progress_dialog_with_open_archive (window);
-	else
-		_handle_archive_operation_error (window,
-						 window->priv->convert_data.new_archive,
-						 FR_ACTION_ADDING_FILES,
-						 error,
-						 NULL,
-						 NULL);
-
-	_g_path_remove_directory (window->priv->convert_data.temp_dir);
-	_fr_window_convert_data_free (window, FALSE);
-
-	fr_window_update_sensitivity (window);
-	fr_window_update_statusbar_list_info (window);
-}
-
-
-static void
-archive_extraction_ready_for_convertion_cb (GObject      *source_object,
-					    GAsyncResult *result,
-					    gpointer      user_data)
-{
-	FrWindow *window = user_data;
-	GError   *error = NULL;
-	char     *source_dir;
-
-	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
-		_g_path_remove_directory (window->priv->convert_data.temp_dir);
-		_fr_window_convert_data_free (window, TRUE);
-		_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
-		return;
-	}
-
-	source_dir = g_filename_to_uri (window->priv->convert_data.temp_dir, NULL, NULL);
-	fr_archive_add_with_wildcard (window->priv->convert_data.new_archive,
-				      "*",
-				      NULL,
-				      NULL,
-				      source_dir,
-				      NULL,
-				      FALSE,
-				      TRUE,
-				      window->priv->convert_data.password,
-				      window->priv->convert_data.encrypt_header,
-				      window->priv->compression,
-				      window->priv->convert_data.volume_size,
-				      window->priv->cancellable,
-				      archive_add_ready_for_conversion_cb,
-				      window);
-
-	g_free (source_dir);
-}
-
-
-void
-fr_window_archive_save_as (FrWindow   *window,
-			   const char *uri,
-			   const char *password,
-			   gboolean    encrypt_header,
-			   guint       volume_size)
-{
-	GFile *file;
-
-	g_return_if_fail (window != NULL);
-	g_return_if_fail (uri != NULL);
-	g_return_if_fail (window->archive != NULL);
-
-	_fr_window_convert_data_free (window, TRUE);
-	window->priv->convert_data.new_file = g_strdup (uri);
-
-	/* create the new archive */
-
-	file = g_file_new_for_uri (uri);
-	window->priv->convert_data.new_archive = fr_archive_create (file);
-	g_object_unref (file);
-
-	if (window->priv->convert_data.new_archive == NULL) {
-		GtkWidget *d;
-		char      *utf8_name;
-		char      *message;
-
-		utf8_name = _g_uri_display_basename (uri);
-		message = g_strdup_printf (_("Could not save the archive \"%s\""), utf8_name);
-		g_free (utf8_name);
-
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
-					   GTK_DIALOG_DESTROY_WITH_PARENT,
-					   NULL,
-					   message,
-					   "%s",
-					   _("Archive type not supported."));
-		gtk_dialog_run (GTK_DIALOG (d));
-		gtk_widget_destroy (d);
-
-		g_free (message);
-
-		return;
-	}
-
-	if (password != NULL) {
-		window->priv->convert_data.password = g_strdup (password);
-		window->priv->convert_data.encrypt_header = encrypt_header;
-	}
-	else
-		window->priv->convert_data.encrypt_header = FALSE;
-	window->priv->convert_data.volume_size = volume_size;
-
-	fr_window_set_current_batch_action (window,
-					    FR_BATCH_ACTION_SAVE_AS,
-					    save_as_data_new (uri, password, encrypt_header, volume_size),
-					    (GFreeFunc) save_as_data_free);
-
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
-			  "progress",
-			  G_CALLBACK (fr_archive_progress_cb),
-			  window);
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
-			  "message",
-			  G_CALLBACK (fr_archive_message_cb),
-			  window);
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
-			  "stoppable",
-			  G_CALLBACK (fr_archive_stoppable_cb),
-			  window);
-
-	window->priv->convert_data.converting = TRUE;
-	window->priv->convert_data.temp_dir = _g_path_get_temp_work_dir (NULL);
-
-	fr_archive_extract_to_local (window->archive,
-				     NULL,
-				     window->priv->convert_data.temp_dir,
-				     NULL,
-				     TRUE,
-				     FALSE,
-				     FALSE,
-				     window->priv->password,
-				     window->priv->cancellable,
-				     archive_extraction_ready_for_convertion_cb,
-				     window);
 }
 
 
@@ -7456,6 +7035,7 @@ activity_cb (gpointer data)
 }
 
 
+/* FIXME: libarchive, call once for each async operation */
 void
 fr_window_start_activity_mode (FrWindow *window)
 {
@@ -7502,6 +7082,313 @@ fr_window_stop_activity_mode (FrWindow *window)
 		fr_window_update_sensitivity (window);
 	}
 }
+
+
+void
+fr_window_action_new_archive (FrWindow *window)
+{
+	GtkWidget *dialog;
+
+	dialog = fr_new_archive_dialog_new (GTK_WINDOW (window),
+					    FR_NEW_ARCHIVE_ACTION_NEW,
+					    NULL);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (dialog), fr_window_get_open_default_dir (window));
+	g_signal_connect (G_OBJECT (dialog),
+			  "response",
+			  G_CALLBACK (new_archive_dialog_response_cb),
+			  window);
+	gtk_window_present (GTK_WINDOW (dialog));
+}
+
+
+/* -- fr_window_action_save_as -- */
+
+
+typedef struct {
+	char     *uri;
+	char     *password;
+	gboolean  encrypt_header;
+	guint     volume_size;
+} SaveAsData;
+
+
+static SaveAsData *
+save_as_data_new (const char *uri,
+		  const char *password,
+		  gboolean    encrypt_header,
+	  	  guint       volume_size)
+{
+	SaveAsData *sdata;
+
+	sdata = g_new0 (SaveAsData, 1);
+	if (uri != NULL)
+		sdata->uri = g_strdup (uri);
+	if (password != NULL)
+		sdata->password = g_strdup (password);
+	sdata->encrypt_header = encrypt_header;
+	sdata->volume_size = volume_size;
+
+	return sdata;
+}
+
+
+static void
+save_as_data_free (SaveAsData *sdata)
+{
+	if (sdata == NULL)
+		return;
+	g_free (sdata->uri);
+	g_free (sdata->password);
+	g_free (sdata);
+}
+
+
+static void
+archive_add_ready_for_conversion_cb (GObject      *source_object,
+				     GAsyncResult *result,
+				     gpointer      user_data)
+{
+	FrWindow *window = user_data;
+	GError   *error = NULL;
+
+	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
+
+	fr_window_stop_activity_mode (window);
+	fr_window_pop_message (window);
+	close_progress_dialog (window, FALSE);
+
+	if (error == NULL)
+		open_progress_dialog_with_open_archive (window);
+	else
+		_handle_archive_operation_error (window,
+						 window->priv->convert_data.new_archive,
+						 FR_ACTION_ADDING_FILES,
+						 error,
+						 NULL,
+						 NULL);
+
+	_g_path_remove_directory (window->priv->convert_data.temp_dir);
+	_fr_window_convert_data_free (window, FALSE);
+
+	if (window->priv->batch_mode)
+		fr_window_exec_next_batch_action (window);
+	else
+		fr_window_stop_batch (window);
+}
+
+
+static void
+archive_extraction_ready_for_convertion_cb (GObject      *source_object,
+					    GAsyncResult *result,
+					    gpointer      user_data)
+{
+	FrWindow *window = user_data;
+	GError   *error = NULL;
+	char     *source_dir;
+
+	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
+		_g_path_remove_directory (window->priv->convert_data.temp_dir);
+		_fr_window_convert_data_free (window, TRUE);
+		_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
+		return;
+	}
+
+	source_dir = g_filename_to_uri (window->priv->convert_data.temp_dir, NULL, NULL);
+	fr_archive_add_with_wildcard (window->priv->convert_data.new_archive,
+				      "*",
+				      NULL,
+				      NULL,
+				      source_dir,
+				      NULL,
+				      FALSE,
+				      TRUE,
+				      window->priv->convert_data.password,
+				      window->priv->convert_data.encrypt_header,
+				      window->priv->compression,
+				      window->priv->convert_data.volume_size,
+				      window->priv->cancellable,
+				      archive_add_ready_for_conversion_cb,
+				      window);
+
+	g_free (source_dir);
+}
+
+
+static void
+fr_window_archive_save_as (FrWindow   *window,
+			   const char *uri,
+			   const char *password,
+			   gboolean    encrypt_header,
+			   guint       volume_size)
+{
+	GFile *file;
+
+	g_return_if_fail (window != NULL);
+	g_return_if_fail (uri != NULL);
+	g_return_if_fail (window->archive != NULL);
+
+	_fr_window_convert_data_free (window, TRUE);
+	window->priv->convert_data.new_file = g_strdup (uri);
+
+	/* create the new archive */
+
+	file = g_file_new_for_uri (uri);
+	window->priv->convert_data.new_archive = fr_archive_create (file);
+	g_object_unref (file);
+
+	if (window->priv->convert_data.new_archive == NULL) {
+		GtkWidget *d;
+		char      *utf8_name;
+		char      *message;
+
+		utf8_name = _g_uri_display_basename (uri);
+		message = g_strdup_printf (_("Could not save the archive \"%s\""), utf8_name);
+		g_free (utf8_name);
+
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   message,
+					   "%s",
+					   _("Archive type not supported."));
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (d);
+
+		g_free (message);
+
+		return;
+	}
+
+	if (password != NULL) {
+		window->priv->convert_data.password = g_strdup (password);
+		window->priv->convert_data.encrypt_header = encrypt_header;
+	}
+	else
+		window->priv->convert_data.encrypt_header = FALSE;
+	window->priv->convert_data.volume_size = volume_size;
+
+	fr_window_set_current_batch_action (window,
+					    FR_BATCH_ACTION_SAVE_AS,
+					    save_as_data_new (uri, password, encrypt_header, volume_size),
+					    (GFreeFunc) save_as_data_free);
+
+	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+			  "progress",
+			  G_CALLBACK (fr_archive_progress_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+			  "message",
+			  G_CALLBACK (fr_archive_message_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+			  "stoppable",
+			  G_CALLBACK (fr_archive_stoppable_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+			  "working_archive",
+			  G_CALLBACK (fr_window_working_archive_cb),
+			  window);
+
+	window->priv->convert_data.converting = TRUE;
+	window->priv->convert_data.temp_dir = _g_path_get_temp_work_dir (NULL);
+
+	fr_archive_extract_to_local (window->archive,
+				     NULL,
+				     window->priv->convert_data.temp_dir,
+				     NULL,
+				     TRUE,
+				     TRUE,
+				     FALSE,
+				     window->priv->password,
+				     window->priv->cancellable,
+				     archive_extraction_ready_for_convertion_cb,
+				     window);
+}
+
+
+static void
+save_as_archive_dialog_response_cb (GtkDialog *dialog,
+				    int        response,
+				    gpointer   user_data)
+{
+	FrWindow   *window = user_data;
+	char       *uri;
+	const char *password;
+	gboolean    encrypt_header;
+	int         volume_size;
+	GSettings  *settings;
+
+	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		_archive_operation_cancelled (window, FR_ACTION_CREATING_ARCHIVE);
+		return;
+	}
+
+	if (response != GTK_RESPONSE_OK)
+		return;
+
+	uri = fr_new_archive_dialog_get_uri (FR_NEW_ARCHIVE_DIALOG (dialog));
+	if (uri == NULL)
+		return;
+
+	password = fr_new_archive_dialog_get_password (FR_NEW_ARCHIVE_DIALOG (dialog));
+	encrypt_header = fr_new_archive_dialog_get_encrypt_header (FR_NEW_ARCHIVE_DIALOG (dialog));
+	volume_size = fr_new_archive_dialog_get_volume_size (FR_NEW_ARCHIVE_DIALOG (dialog));
+
+	settings = g_settings_new (FILE_ROLLER_SCHEMA_BATCH_ADD);
+	g_settings_set_int (settings, PREF_BATCH_ADD_VOLUME_SIZE, volume_size);
+	g_object_unref (settings);
+
+	fr_window_archive_save_as (window, uri, password, encrypt_header, volume_size);
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free (uri);
+}
+
+
+void
+fr_window_action_save_as (FrWindow *window)
+{
+	char      *archive_name;
+	GtkWidget *dialog;
+
+	archive_name = NULL;
+	if (window->priv->archive_uri != NULL) {
+		GFile      *file;
+		GFileInfo  *info;
+		GError     *err = NULL;
+
+		file = g_file_new_for_uri (window->priv->archive_uri);
+		info = g_file_query_info (file,
+					  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+					  0, NULL, &err);
+
+		if (err != NULL) {
+			g_warning ("Failed to get display name for uri %s: %s", window->priv->archive_uri, err->message);
+			g_clear_error (&err);
+		}
+		else
+			archive_name = g_strdup (g_file_info_get_display_name (info));
+
+		g_object_unref (info);
+		g_object_unref (file);
+	}
+
+	dialog = fr_new_archive_dialog_new (GTK_WINDOW (window),
+					    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
+					    archive_name);
+	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (dialog), fr_window_get_open_default_dir (window));
+	g_signal_connect (G_OBJECT (dialog),
+			  "response",
+			  G_CALLBACK (save_as_archive_dialog_response_cb),
+			  window);
+	gtk_window_present (GTK_WINDOW (dialog));
+
+	g_free (archive_name);
+}
+
+
+/* -- fr_window_view_last_output  -- */
 
 
 static gboolean
@@ -7674,7 +7561,7 @@ archive_rename_ready_cb (GObject      *source_object,
 	GError   *error = NULL;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
-	_archive_operation_completed (window, FR_ACTION_ADDING_FILES /* FIXME: FR_ACTION_RENAME_FILES ? */, error);
+	_archive_operation_completed (window, FR_ACTION_RENAMING_FILES, error);
 
 	_g_error_free (error);
 }
@@ -8065,6 +7952,8 @@ _paste_from_archive_operation_completed (FrWindow *window,
 					 FrAction  action,
 					 GError   *error)
 {
+	FrArchive *archive;
+
 #ifdef DEBUG
 	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
 #endif
@@ -8078,8 +7967,11 @@ _paste_from_archive_operation_completed (FrWindow *window,
 		return;
 	}
 
-	/* FIXME: do not use this function !! */
-	_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
+	if (action == FR_ACTION_ADDING_FILES)
+		archive = window->archive;
+	else
+		archive = window->priv->copy_from_archive;
+	_handle_archive_operation_error (window, archive, action, error, NULL, NULL);
 
 	if (error->code != FR_ERROR_NONE) {
 		fr_clipboard_data_unref (window->priv->clipboard_data);
@@ -8477,8 +8369,6 @@ update_files_ready_cb (GObject      *source_object,
 
 	fr_window_stop_activity_mode (window);
 	fr_window_pop_message (window);
-
-	/* FIXME: do not use this function !!! */
 	_handle_archive_operation_error (window, window->archive, FR_ACTION_ADDING_FILES, error, NULL, NULL);
 
 	_g_error_free (error);
@@ -8688,7 +8578,6 @@ open_files_extract_ready_cb (GObject      *source_object,
 	GError        *error;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
-		/* FIXME: do not use this function!!! */
 		_archive_operation_completed (odata->window, FR_ACTION_EXTRACTING_FILES, error);
 		g_error_free (error);
 	}
@@ -8912,7 +8801,7 @@ static void fr_window_exec_current_batch_action (FrWindow *window);
 
 static void
 fr_window_exec_batch_action (FrWindow      *window,
-			     FRBatchAction *action)
+			     FrBatchAction *action)
 {
 	ExtractData   *edata;
 	RenameData    *rdata;
@@ -8923,8 +8812,15 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_LOAD:
 		debug (DEBUG_INFO, "[BATCH] LOAD\n");
 
-		if (! _g_uri_query_exists ((char*) action->data))
-			fr_window_archive_new (window, (char*) action->data);
+		if (! _g_uri_query_exists ((char*) action->data)) {
+			GError *error = NULL;
+
+			if (! fr_window_archive_new (window, (char*) action->data))
+				error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("Archive type not supported."));
+			_archive_operation_completed (window, FR_ACTION_CREATING_NEW_ARCHIVE, error);
+
+			_g_error_free (error);
+		}
 		else
 			fr_window_archive_open (window, (char*) action->data, GTK_WINDOW (window));
 		break;
@@ -9060,7 +8956,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 void
 fr_window_reset_current_batch_action (FrWindow *window)
 {
-	FRBatchAction *action = &window->priv->current_batch_action;
+	FrBatchAction *action = &window->priv->current_batch_action;
 
 	if ((action->data != NULL) && (action->free_func != NULL))
 		(*action->free_func) (action->data);
@@ -9076,7 +8972,7 @@ fr_window_set_current_batch_action (FrWindow          *window,
 				    void              *data,
 				    GFreeFunc          free_func)
 {
-	FRBatchAction *action;
+	FrBatchAction *action;
 
 	fr_window_reset_current_batch_action (window);
 
@@ -9100,11 +8996,11 @@ fr_window_append_batch_action (FrWindow          *window,
 			       void              *data,
 			       GFreeFunc          free_func)
 {
-	FRBatchAction *a_desc;
+	FrBatchAction *a_desc;
 
 	g_return_if_fail (window != NULL);
 
-	a_desc = g_new0 (FRBatchAction, 1);
+	a_desc = g_new0 (FrBatchAction, 1);
 	a_desc->type = action;
 	a_desc->data = data;
 	a_desc->free_func = free_func;
@@ -9116,13 +9012,13 @@ fr_window_append_batch_action (FrWindow          *window,
 static void
 fr_window_exec_current_batch_action (FrWindow *window)
 {
-	FRBatchAction *action;
+	FrBatchAction *action;
 
 	if (window->priv->batch_action == NULL) {
 		window->priv->batch_mode = FALSE;
 		return;
 	}
-	action = (FRBatchAction *) window->priv->batch_action->data;
+	action = (FrBatchAction *) window->priv->batch_action->data;
 	fr_window_exec_batch_action (window, action);
 }
 
@@ -9155,6 +9051,7 @@ fr_window_start_batch (FrWindow *window)
 
 	window->priv->batch_mode = TRUE;
 	window->priv->batch_action = window->priv->batch_action_list;
+	gtk_widget_hide (window);
 
 	fr_window_exec_current_batch_action (window);
 }
@@ -9163,27 +9060,21 @@ fr_window_start_batch (FrWindow *window)
 void
 fr_window_stop_batch (FrWindow *window)
 {
-	if (! window->priv->non_interactive)
+	fr_window_update_sensitivity (window);
+	fr_window_update_statusbar_list_info (window);
+
+	if (! window->priv->batch_mode)
 		return;
 
 	window->priv->extract_interact_use_default_dir = FALSE;
 
-	if (window->priv->batch_mode) {
-		if (! window->priv->showing_error_dialog) {
-			g_signal_emit (window,
-				       fr_window_signals[READY],
-				       0,
-				       NULL);
-			gtk_widget_destroy (GTK_WIDGET (window));
-			return;
-		}
+	if (! window->priv->showing_error_dialog) {
+		g_signal_emit (window,
+			       fr_window_signals[READY],
+			       0,
+			       NULL);
+		gtk_widget_destroy (GTK_WIDGET (window));
 	}
-	else {
-		gtk_window_present (GTK_WINDOW (window));
-		fr_window_archive_close (window);
-	}
-
-	window->priv->batch_mode = FALSE;
 }
 
 
@@ -9206,7 +9097,6 @@ fr_window_new_batch (FrWindow   *window,
 		     const char *title)
 {
 	fr_window_free_batch_data (window);
-	window->priv->non_interactive = TRUE;
 	g_free (window->priv->batch_title);
 	window->priv->batch_title = g_strdup (title);
 }
