@@ -283,6 +283,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	int        i;
 
 	gtk_file_chooser_set_action (GTK_FILE_CHOOSER (self), GTK_FILE_CHOOSER_ACTION_SAVE);
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (self), TRUE);
 	gtk_window_set_modal (GTK_WINDOW (self), TRUE);
 	gtk_window_set_transient_for (GTK_WINDOW (self), parent);
 
