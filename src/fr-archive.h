@@ -44,7 +44,8 @@ typedef enum {
 	FR_ACTION_COPYING_FILES_TO_REMOTE,    /* copying extracted files to a remote location */
 	FR_ACTION_CREATING_ARCHIVE,           /* creating a local archive */
 	FR_ACTION_SAVING_REMOTE_ARCHIVE,      /* copying the archive to a remote location */
-	FR_ACTION_RENAMING_FILES              /* renaming files stored in the archive */
+	FR_ACTION_RENAMING_FILES,             /* renaming files stored in the archive */
+	FR_ACTION_PASTING_FILES               /* pasting files from the clipboard into the archive */
 } FrAction;
 
 #ifdef DEBUG
