@@ -838,7 +838,8 @@ copy_remote_file (LoadData *load_data)
 		return;
 	}
 
-	if (self->priv->is_remote)
+	if (self->priv->is_remote) {
+		fr_archive_action_started (load_data->archive, FR_ACTION_LOADING_ARCHIVE);
 		g_copy_file_async (fr_archive_get_file (FR_ARCHIVE (self)),
 				   self->priv->local_copy,
 				   G_FILE_COPY_OVERWRITE,
@@ -848,6 +849,7 @@ copy_remote_file (LoadData *load_data)
 				   load_data,
 				   copy_remote_file_done,
 				   load_data);
+	}
 	else
 		g_idle_add (copy_remote_file_done_cb, load_data);
 }
