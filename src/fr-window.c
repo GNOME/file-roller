@@ -2330,7 +2330,9 @@ get_action_description (FrAction    action,
 	case FR_ACTION_RENAMING_FILES:
 		message = g_strdup_printf (_("Renaming the files"));
 		break;
-
+	case FR_ACTION_PASTING_FILES:
+		message = g_strdup_printf (_("Pasting the files from the clipboard"));
+		break;
 	case FR_ACTION_NONE:
 		break;
 	}
@@ -2445,6 +2447,23 @@ fr_archive_message_cb (FrArchive  *archive,
 
 
 static void
+fr_archive_start_cb (FrArchive *archive,
+		     FrAction   action,
+		     FrWindow  *window)
+{
+	char *uri;
+	char *description;
+
+	uri = g_file_get_uri (fr_archive_get_file (archive));
+	description = get_action_description (action, uri);
+	fr_archive_message_cb (archive, description, window);
+
+	g_free (uri);
+	g_free (description);
+}
+
+
+static void
 create_the_progress_dialog (FrWindow *window)
 {
 	GtkWindow      *parent;
@@ -2524,7 +2543,7 @@ display_progress_dialog (gpointer data)
 			gtk_widget_show (GTK_WIDGET (window));
 		gtk_widget_hide (window->priv->progress_bar);
 		gtk_widget_show (window->priv->progress_dialog);
-		fr_archive_message_cb (NULL, window->priv->pd_last_message, window);
+		fr_archive_message (window->archive, window->priv->pd_last_message);
 	}
 
 	window->priv->progress_timeout = 0;
@@ -2590,6 +2609,7 @@ fr_archive_progress_cb (FrArchive *archive,
 			remaining_files = archive->n_files - archive->n_file + 1;
 
 			switch (window->priv->action) {
+			case FR_ACTION_CREATING_ARCHIVE:
 			case FR_ACTION_ADDING_FILES:
 			case FR_ACTION_EXTRACTING_FILES:
 			case FR_ACTION_DELETING_FILES:
@@ -2601,8 +2621,10 @@ fr_archive_progress_cb (FrArchive *archive,
 				break;
 			}
 
-			if (message != NULL)
+			if (message != NULL) {
 				fr_archive_message (archive, message);
+				g_free (message);
+			}
 		}
 
 		window->priv->pd_last_fraction = fraction;
@@ -2691,39 +2713,6 @@ fr_window_pop_message (FrWindow *window)
 	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
 		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), "");
-}
-
-
-static void
-action_started (FrArchive *archive,
-		FrAction   action,
-		gpointer   data)
-{
-	FrWindow *window = data;
-	char     *message;
-
-	window->priv->action = action;
-	fr_window_start_activity_mode (window);
-
-#ifdef DEBUG
-	debug (DEBUG_INFO, "%s [START] (FR::Window)\n", action_names[action]);
-#endif
-
-	message = get_action_description (action, window->priv->pd_last_archive);
-	fr_window_push_message (window, message);
-	g_free (message);
-
-	switch (action) {
-	case FR_ACTION_EXTRACTING_FILES:
-		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction || window->priv->convert_data.converting || window->priv->batch_mode);
-		break;
-	default:
-		open_progress_dialog (window, window->priv->batch_mode);
-		break;
-	}
-
-	fr_archive_progress (archive, -1.0);
-	fr_archive_message (archive, _("Please wait…"));
 }
 
 
@@ -3132,6 +3121,37 @@ _archive_operation_cancelled (FrWindow *window,
 	_archive_operation_completed (window, action, error);
 
 	g_error_free (error);
+}
+
+
+static void
+_archive_operation_started (FrWindow *window,
+			    FrAction  action)
+{
+	char *message;
+
+	window->priv->action = action;
+	fr_window_start_activity_mode (window);
+
+#ifdef DEBUG
+	debug (DEBUG_INFO, "%s [START] (FR::Window)\n", action_names[action]);
+#endif
+
+	message = get_action_description (action, window->priv->pd_last_archive);
+	fr_window_push_message (window, message);
+	g_free (message);
+
+	switch (action) {
+	case FR_ACTION_EXTRACTING_FILES:
+		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction || window->priv->convert_data.converting || window->priv->batch_mode);
+		break;
+	default:
+		open_progress_dialog (window, window->priv->batch_mode);
+		break;
+	}
+
+	fr_archive_progress_cb (NULL, -1.0, window);
+	fr_archive_message_cb (NULL, _("Please wait…"), window);
 }
 
 
@@ -5880,6 +5900,10 @@ _fr_window_set_archive (FrWindow  *window,
 			  G_CALLBACK (fr_archive_message_cb),
 			  window);
 	g_signal_connect (G_OBJECT (window->archive),
+			  "start",
+			  G_CALLBACK (fr_archive_start_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->archive),
 			  "stoppable",
 			  G_CALLBACK (fr_archive_stoppable_cb),
 			  window);
@@ -5999,6 +6023,8 @@ fr_window_archive_open (FrWindow   *current_window,
 	_fr_window_set_archive_uri (window, uri);
 	window->priv->give_focus_to_the_list = TRUE;
 	window->priv->load_error_parent_window = parent;
+
+	_archive_operation_started (window, FR_ACTION_LOADING_ARCHIVE);
 
 	/* this is used to reload the archive after asking a password */
 	fr_window_set_current_batch_action (window,
@@ -6140,6 +6166,8 @@ fr_window_archive_add_files (FrWindow *window,
 
 	base_uri = g_file_get_uri (base);
 
+	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
+
 	fr_archive_add_files (window->archive,
 			      files,
 			      base_uri,
@@ -6171,6 +6199,8 @@ fr_window_archive_add_with_wildcard (FrWindow      *window,
 				     gboolean       update,
 				     gboolean       follow_links)
 {
+	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
+
 	fr_archive_add_with_wildcard (window->archive,
 				      include_files,
 				      exclude_files,
@@ -6196,6 +6226,8 @@ fr_window_archive_add_directory (FrWindow      *window,
 				 const char    *dest_dir,
 				 gboolean       update)
 {
+	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
+
 	fr_archive_add_directory (window->archive,
 				  directory,
 				  base_dir,
@@ -6218,6 +6250,8 @@ fr_window_archive_add_items (FrWindow      *window,
 			     const char    *dest_dir,
 			     gboolean       update)
 {
+	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
+
 	fr_archive_add_items (window->archive,
 			      item_list,
 			      base_dir,
@@ -6238,6 +6272,8 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 				     GList    *item_list,
 				     gboolean  update)
 {
+	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
+
 	fr_archive_add_dropped_items (window->archive,
 				      item_list,
 				      fr_window_get_current_location (window),
@@ -6272,6 +6308,7 @@ void
 fr_window_archive_remove (FrWindow *window,
 			  GList    *file_list)
 {
+	_archive_operation_started (window, FR_ACTION_DELETING_FILES);
 	fr_window_clipboard_remove_file_list (window, file_list);
 	fr_archive_remove (window->archive,
 			   file_list,
@@ -6371,6 +6408,8 @@ static void
 _fr_window_archive_extract_from_edata (FrWindow    *window,
 				       ExtractData *edata)
 {
+	_archive_operation_started (window, FR_ACTION_EXTRACTING_FILES);
+
 	window->priv->ask_to_open_destination_after_extraction = edata->ask_to_open_destination;
 
 	fr_archive_extract (window->archive,
@@ -6716,6 +6755,7 @@ fr_window_archive_extract_here (FrWindow   *window,
 		return;
 	}
 
+	_archive_operation_started (window, FR_ACTION_EXTRACTING_FILES);
 	window->priv->ask_to_open_destination_after_extraction = edata->ask_to_open_destination;
 
 	fr_archive_extract_here (window->archive,
@@ -6750,6 +6790,7 @@ archive_test_ready_cb (GObject      *source_object,
 void
 fr_window_archive_test (FrWindow *window)
 {
+	_archive_operation_started (window, FR_ACTION_TESTING_ARCHIVE);
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_TEST,
 					    NULL,
@@ -7270,6 +7311,8 @@ fr_window_archive_save_as (FrWindow   *window,
 	else
 		window->priv->convert_data.encrypt_header = FALSE;
 	window->priv->convert_data.volume_size = volume_size;
+
+	_archive_operation_started (window, FR_ACTION_CREATING_ARCHIVE);
 
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_SAVE_AS,
@@ -8089,10 +8132,6 @@ paste_from_archive_open_cb (GObject      *source_object,
 	}
 
 	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
-			  "start",
-			  G_CALLBACK (action_started),
-			  window);
-	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
 			  "progress",
 			  G_CALLBACK (fr_archive_progress_cb),
 			  window);
@@ -8101,8 +8140,16 @@ paste_from_archive_open_cb (GObject      *source_object,
 			  G_CALLBACK (fr_archive_message_cb),
 			  window);
 	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+			  "start",
+			  G_CALLBACK (fr_archive_start_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
 			  "stoppable",
 			  G_CALLBACK (fr_archive_stoppable_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
+			  "working_archive",
+			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
 
 	fr_archive_extract_to_local (window->priv->copy_from_archive,
@@ -8167,6 +8214,8 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 	g_hash_table_destroy (created_dirs);
 
 	/**/
+
+	_archive_operation_started (window, FR_ACTION_PASTING_FILES);
 
 	file = g_file_new_for_uri (data->archive_uri);
 	fr_archive_open (file,
@@ -8605,6 +8654,8 @@ fr_window_open_files (FrWindow *window,
 					    FR_BATCH_ACTION_OPEN_FILES,
 					    odata,
 					    (GFreeFunc) open_files_data_free);
+
+	_archive_operation_started (odata->window, FR_ACTION_EXTRACTING_FILES);
 
 	fr_archive_extract_to_local (window->archive,
 				     odata->file_list,
