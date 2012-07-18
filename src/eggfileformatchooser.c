@@ -187,11 +187,11 @@ egg_file_format_filter_add_extensions (GtkFileFilter *filter,
   while (*extptr)
     {
       length = strcspn (extptr, ",");
-      pattern = g_new (gchar, length + 3);
+      pattern = g_new (gchar, length + 2);
 
-      memcpy (pattern, "*.", 2);
-      memcpy (pattern + 2, extptr, length);
-      pattern[length + 2] = '\0';
+      memcpy (pattern, "*", 1);
+      memcpy (pattern + 1, extptr, length);
+      pattern[length + 1] = '\0';
 
       if (filter_name)
         {
