@@ -8038,7 +8038,7 @@ _paste_from_archive_operation_completed (FrWindow *window,
 	fr_window_pop_message (window);
 	close_progress_dialog (window, FALSE);
 
-	if (error->code == FR_ERROR_ASK_PASSWORD) {
+	if ((error != NULL) && (error->code == FR_ERROR_ASK_PASSWORD)) {
 		dlg_ask_password_for_paste_operation (window);
 		return;
 	}
@@ -8049,7 +8049,7 @@ _paste_from_archive_operation_completed (FrWindow *window,
 		archive = window->priv->copy_from_archive;
 	_handle_archive_operation_error (window, archive, action, error, NULL, NULL);
 
-	if (error->code != FR_ERROR_NONE) {
+	if (error != NULL) {
 		fr_clipboard_data_unref (window->priv->clipboard_data);
 		window->priv->clipboard_data = NULL;
 	}
@@ -8065,7 +8065,7 @@ paste_from_archive_paste_clipboard_ready_cb (GObject      *source_object,
 	GError   *error = NULL;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
-	_paste_from_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
+	_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, error);
 
 	fr_clipboard_data_unref (window->priv->clipboard_data);
 	window->priv->clipboard_data = NULL;
@@ -8109,7 +8109,7 @@ paste_from_archive_remove_ready_cb (GObject      *source_object,
 	GError   *error = NULL;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
-		_paste_from_archive_operation_completed (window, FR_ACTION_DELETING_FILES, error);
+		_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, error);
 		g_error_free (error);
 		return;
 	}
@@ -8127,18 +8127,19 @@ paste_from_archive_extract_ready_cb (GObject      *source_object,
 	GError   *error = NULL;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
-		_paste_from_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
+		_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, error);
 		g_error_free (error);
 		return;
 	}
 
-	if (window->priv->clipboard_data->op == FR_CLIPBOARD_OP_CUT)
+	if (window->priv->clipboard_data->op == FR_CLIPBOARD_OP_CUT) {
 		fr_archive_remove (window->priv->copy_from_archive,
 				   window->priv->clipboard_data->files,
 				   window->priv->compression,
 				   window->priv->cancellable,
 				   paste_from_archive_remove_ready_cb,
 				   window);
+	}
 	else
 		add_pasted_files (window, window->priv->clipboard_data);
 }
@@ -8155,7 +8156,7 @@ paste_from_archive_open_cb (GObject      *source_object,
 	_g_object_unref (window->priv->copy_from_archive);
 	window->priv->copy_from_archive = fr_archive_open_finish (G_FILE (source_object), result, &error);
 	if (window->priv->copy_from_archive == NULL) {
-		_paste_from_archive_operation_completed (window, FR_ACTION_LOADING_ARCHIVE, error);
+		_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, error);
 		g_error_free (error);
 		return;
 	}
