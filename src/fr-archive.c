@@ -71,7 +71,6 @@ struct _FrArchivePrivate {
 
 	/* internal */
 
-	GCancellable  *cancellable;
 	gboolean       creating_archive;
 	char          *extraction_destination;
 	gboolean       have_write_permissions;     /* true if we have the
@@ -231,7 +230,6 @@ fr_archive_finalize (GObject *object)
 	archive = FR_ARCHIVE (object);
 
 	_fr_archive_set_uri (archive, NULL);
-	g_object_unref (archive->priv->cancellable);
 
 	/* Chain up */
 
@@ -289,7 +287,6 @@ fr_archive_class_init (FrArchiveClass *klass)
 	gobject_class->set_property = fr_archive_set_property;
 	gobject_class->get_property = fr_archive_get_property;
 
-	klass->start = NULL;
 	klass->progress = NULL;
 	klass->message = NULL;
 	klass->stoppable = NULL;
@@ -368,6 +365,7 @@ fr_archive_class_init (FrArchiveClass *klass)
 			      fr_marshal_VOID__INT,
 			      G_TYPE_NONE,
 			      1, G_TYPE_INT);
+
 	fr_archive_signals[PROGRESS] =
 		g_signal_new ("progress",
 			      G_TYPE_FROM_CLASS (klass),
@@ -440,7 +438,6 @@ fr_archive_init (FrArchive *self)
         self->propListFromFile = FALSE;
 
 	self->priv->file = NULL;
-	self->priv->cancellable = g_cancellable_new ();
 	self->priv->creating_archive = FALSE;
 	self->priv->extraction_destination = NULL;
 	self->priv->have_write_permissions = FALSE;
@@ -809,9 +806,6 @@ fr_archive_open (GFile               *file,
         					   open_data,
                                                    (GDestroyNotify) load_data_free);
 
-        /* FIXME: libarchive
-         fr_archive_action_started (archive, FR_ACTION_LOADING_ARCHIVE); */
-
         /* load a few bytes to guess the archive type */
 
 	g_file_read_async (open_data->file,
@@ -856,7 +850,6 @@ fr_archive_load (FrArchive           *archive,
 		archive->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
 	}
 
-	fr_archive_action_started (archive, FR_ACTION_LISTING_CONTENT);
 	FR_ARCHIVE_GET_CLASS (archive)->load (archive, password, cancellable, callback, user_data);
 }
 
@@ -1620,18 +1613,11 @@ fr_archive_change_name (FrArchive  *archive,
 }
 
 
-GCancellable *
-fr_archive_get_cancellable (FrArchive *self)
-{
-	return self->priv->cancellable;
-}
-
-
 void
-fr_archive_action_started (FrArchive *self,
+fr_archive_action_started (FrArchive *archive,
 			   FrAction   action)
 {
-	g_signal_emit (self,
+	g_signal_emit (archive,
 		       fr_archive_signals[START],
 		       0,
 		       action);

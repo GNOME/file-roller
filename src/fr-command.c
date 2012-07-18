@@ -1087,6 +1087,7 @@ _fr_command_add (FrCommand      *self,
 		 gboolean        encrypt_header,
 		 FrCompression   compression,
 		 guint           volume_size,
+		 GCancellable   *cancellable,
 		 GError        **error)
 {
 	FrArchive *archive = FR_ARCHIVE (self);
@@ -1155,7 +1156,7 @@ _fr_command_add (FrCommand      *self,
 		return FALSE;
 	}
 
-	self->creating_archive = ! g_file_query_exists (self->priv->local_copy, fr_archive_get_cancellable (FR_ARCHIVE (self)));
+	self->creating_archive = ! g_file_query_exists (self->priv->local_copy, cancellable);
 
 	/* create the new archive in a temporary sub-directory, this allows
 	 * to cancel the operation without losing the original archive and
@@ -1422,6 +1423,7 @@ _fr_command_add_local_files (FrCommand           *self,
 			       encrypt_header,
 			       compression,
 			       volume_size,
+			       cancellable,
 			       &error))
 	{
 		if (error != NULL) {
@@ -2877,6 +2879,7 @@ fr_command_paste_clipboard (FrArchive           *archive,
 			       encrypt_header,
 			       compression,
 			       volume_size,
+			       cancellable,
 			       &error))
 	{
 		GSimpleAsyncResult *result;
@@ -3214,6 +3217,7 @@ fr_command_update_open_files (FrArchive           *archive,
 				 encrypt_header,
 				 compression,
 				 volume_size,
+				 cancellable,
 				 NULL);
 
 		g_list_free (local_file_list);

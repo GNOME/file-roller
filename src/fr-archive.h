@@ -490,9 +490,8 @@ void          fr_archive_set_multi_volume        (FrArchive           *archive,
 					          GFile               *file);
 void          fr_archive_change_name             (FrArchive           *archive,
 						  const char          *filename);
-GCancellable *fr_archive_get_cancellable         (FrArchive           *archive);
 void          fr_archive_action_started          (FrArchive           *archive,
-						  FrAction             action);
+                                                  FrAction             action);
 void          fr_archive_progress                (FrArchive           *archive,
 						  double               fraction);
 void          fr_archive_message                 (FrArchive           *archive,
