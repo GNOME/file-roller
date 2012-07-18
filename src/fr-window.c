@@ -7215,10 +7215,37 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 	_g_path_remove_directory (window->priv->convert_data.temp_dir);
 	_fr_window_convert_data_free (window, FALSE);
 
-	if (window->priv->batch_mode)
+	if (window->priv->batch_mode && (error == NULL))
 		fr_window_exec_next_batch_action (window);
 	else
 		fr_window_stop_batch (window);
+}
+
+
+static void
+_save_as_operation_completed_with_error (FrWindow *window,
+					 FrAction  action,
+					 GError   *error)
+{
+	g_return_if_fail (error != NULL);
+
+#ifdef DEBUG
+	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
+#endif
+
+	if (error->code == FR_ERROR_ASK_PASSWORD) {
+		dlg_ask_password_for_paste_operation (window);
+		return;
+	}
+
+	_g_path_remove_directory (window->priv->convert_data.temp_dir);
+	_fr_window_convert_data_free (window, TRUE);
+
+	fr_window_stop_activity_mode (window);
+	fr_window_pop_message (window);
+	close_progress_dialog (window, FALSE);
+
+	fr_window_stop_batch (window);
 }
 
 
@@ -7232,9 +7259,7 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 	char     *source_dir;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
-		_g_path_remove_directory (window->priv->convert_data.temp_dir);
-		_fr_window_convert_data_free (window, TRUE);
-		_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
+		_save_as_operation_completed_with_error (window, FR_ACTION_EXTRACTING_FILES, error);
 		return;
 	}
 
@@ -7326,6 +7351,10 @@ fr_window_archive_save_as (FrWindow   *window,
 	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
 			  "message",
 			  G_CALLBACK (fr_archive_message_cb),
+			  window);
+	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+			  "start",
+			  G_CALLBACK (fr_archive_start_cb),
 			  window);
 	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
 			  "stoppable",
