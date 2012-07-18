@@ -228,9 +228,7 @@ copy_archive_to_remote_location_progress (goffset   current_file,
 {
 	XferData *xfer_data = user_data;
 
-	g_signal_emit_by_name (xfer_data->archive,
-			       "progress",
-			       (double) current_num_bytes / total_num_bytes);
+	fr_archive_progress (xfer_data->archive, (double) current_num_bytes / total_num_bytes);
 }
 
 
@@ -245,6 +243,8 @@ copy_archive_to_remote_location (FrArchive          *archive,
 	xfer_data->archive = _g_object_ref (archive);
 	xfer_data->result = _g_object_ref (result);
 	xfer_data->cancellable = _g_object_ref (cancellable);
+
+	fr_archive_action_started (archive, FR_ACTION_SAVING_REMOTE_ARCHIVE);
 
 	g_copy_file_async (FR_COMMAND (xfer_data->archive)->priv->local_copy,
 			   fr_archive_get_file (xfer_data->archive),
@@ -364,9 +364,7 @@ copy_extracted_files_progress (goffset   current_file,
 {
 	FrArchive *archive = user_data;
 
-	g_signal_emit_by_name (archive,
-			       "progress",
-			       (double) current_file / (total_files + 1));
+	fr_archive_progress (archive, (double) current_file / (total_files + 1));
 }
 
 
@@ -382,6 +380,8 @@ copy_extracted_files_to_destination (FrArchive          *archive,
 	xfer_data->archive = _g_object_ref (archive);
 	xfer_data->result = _g_object_ref (result);
 	xfer_data->cancellable = _g_object_ref (cancellable);
+
+	fr_archive_action_started (archive, FR_ACTION_COPYING_FILES_TO_REMOTE);
 
 	g_directory_copy_async (self->priv->temp_extraction_dir,
 				fr_archive_get_last_extraction_destination (archive),
@@ -586,7 +586,7 @@ _fr_command_set_filename (FrCommand  *self,
 		debug (DEBUG_INFO, "e_filename : %s\n", self->e_filename);
 	}
 
-	g_signal_emit_by_name (self, "working-archive", self->filename);
+	fr_archive_working_archive (FR_ARCHIVE (self), self->filename);
 }
 
 
@@ -806,9 +806,7 @@ copy_remote_file_progress (goffset   current_file,
 {
 	LoadData *load_data = user_data;
 
-	g_signal_emit_by_name (load_data->archive,
-			       "progress",
-			       (double) current_num_bytes / total_num_bytes);
+	fr_archive_progress (load_data->archive, (double) current_num_bytes / total_num_bytes);
 }
 
 
@@ -1486,9 +1484,7 @@ copy_remote_files_progress (goffset   current_file,
 {
 	XferData *xfer_data = user_data;
 
-	g_signal_emit_by_name (xfer_data->archive,
-			       "progress",
-			       (double) current_file / (total_files + 1));
+	fr_archive_progress (xfer_data->archive, (double) current_file / (total_files + 1));
 }
 
 
@@ -1571,7 +1567,7 @@ copy_remote_files (FrCommand           *self,
 	xfer_data->cancellable = _g_object_ref (cancellable);
 	xfer_data->result = result;
 
-	g_signal_emit_by_name (self, "start", FR_ACTION_COPYING_FILES_FROM_REMOTE);
+	fr_archive_action_started (FR_ARCHIVE (self), FR_ACTION_COPYING_FILES_FROM_REMOTE);
 
 	g_copy_files_async (sources,
 			    destinations,
