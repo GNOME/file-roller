@@ -3237,6 +3237,20 @@ fr_command_update_open_files (FrArchive           *archive,
 
 
 static void
+fr_command_base_uncompress (FrCommand *command)
+{
+	/* void */
+}
+
+
+static void
+fr_command_base_recompress (FrCommand *command)
+{
+	/* void */
+}
+
+
+static void
 fr_command_class_init (FrCommandClass *klass)
 {
 	GObjectClass   *gobject_class;
@@ -3260,6 +3274,15 @@ fr_command_class_init (FrCommandClass *klass)
 	archive_class->paste_clipboard = fr_command_paste_clipboard;
 	archive_class->add_dropped_items = fr_command_add_dropped_items;
 	archive_class->update_open_files = fr_command_update_open_files;
+
+	klass->list = NULL;
+	klass->add = NULL;
+	klass->delete = NULL;
+	klass->extract = NULL;
+	klass->test = NULL;
+	klass->uncompress = fr_command_base_uncompress;
+	klass->recompress = fr_command_base_recompress;
+	klass->handle_error = NULL;
 
 	/* properties */
 
