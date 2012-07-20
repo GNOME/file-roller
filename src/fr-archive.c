@@ -60,7 +60,10 @@ char *action_names[] = { "NONE",
 			 "EXTRACTING_FILES",
 			 "COPYING_FILES_TO_REMOTE",
 			 "CREATING_ARCHIVE",
-			 "SAVING_REMOTE_ARCHIVE" };
+			 "SAVING_REMOTE_ARCHIVE",
+			 "RENAMING_FILES",
+			 "PASTING_FILES" };
+
 
 
 struct _FrArchivePrivate {
