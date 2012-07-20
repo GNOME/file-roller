@@ -45,7 +45,7 @@
 #endif
 
 
-#define FILES_ARRAY_INITIAL_SIZE 256
+#define FILE_ARRAY_INITIAL_SIZE	256
 
 
 char *action_names[] = { "NONE",
@@ -77,16 +77,6 @@ struct _FrArchivePrivate {
 						    * permissions to write the
 						    * file. */
 };
-
-
-#define MAX_CHUNK_LEN (NCARGS * 2 / 3) /* Max command line length */
-#define UNKNOWN_TYPE "application/octet-stream"
-#define SAME_FS (FALSE)
-#define NO_BACKUP_FILES (TRUE)
-#define NO_DOT_FILES (FALSE)
-#define IGNORE_CASE (FALSE)
-#define LIST_LENGTH_TO_USE_FILE 10 /* FIXME: find a good value */
-#define FILE_ARRAY_INITIAL_SIZE 256
 
 
 enum {
