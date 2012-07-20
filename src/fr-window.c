@@ -8412,10 +8412,7 @@ open_files_data_new (FrWindow *window,
 		char *file = scan->data;
 		char *filename;
 
-		filename = g_strconcat (odata->cdata->temp_dir,
-					"/",
-					file,
-					NULL);
+		filename = g_build_filename (odata->cdata->temp_dir, file, NULL);
 		odata->cdata->file_list = g_list_prepend (odata->cdata->file_list, filename);
 	}
 
