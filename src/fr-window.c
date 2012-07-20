@@ -8058,8 +8058,6 @@ _paste_from_archive_operation_completed (FrWindow *window,
 	if (error != NULL) {
 		fr_clipboard_data_unref (window->priv->clipboard_data);
 		window->priv->clipboard_data = NULL;
-
-		fr_window_archive_reload (window);
 	}
 }
 
@@ -8077,6 +8075,9 @@ paste_from_archive_paste_clipboard_ready_cb (GObject      *source_object,
 
 	fr_clipboard_data_unref (window->priv->clipboard_data);
 	window->priv->clipboard_data = NULL;
+
+	if (error == NULL)
+		fr_window_archive_reload (window);
 
 	_g_error_free (error);
 }
