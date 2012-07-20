@@ -65,6 +65,8 @@ char *action_names[] = { "NONE",
 			 "PASTING_FILES" };
 
 
+G_DEFINE_TYPE (FrArchive, fr_archive, G_TYPE_OBJECT)
+
 
 struct _FrArchivePrivate {
 	/* propeties */
@@ -92,12 +94,6 @@ enum {
 };
 
 
-static guint fr_archive_signals[LAST_SIGNAL] = { 0 };
-
-
-G_DEFINE_TYPE (FrArchive, fr_archive, G_TYPE_OBJECT)
-
-
 /* Properties */
 enum {
         PROP_0,
@@ -108,6 +104,9 @@ enum {
         PROP_COMPRESSION,
         PROP_VOLUME_SIZE
 };
+
+
+static guint fr_archive_signals[LAST_SIGNAL] = { 0 };
 
 
 static void
@@ -387,7 +386,7 @@ fr_archive_class_init (FrArchiveClass *klass)
 			      G_TYPE_NONE,
 			      1, G_TYPE_BOOLEAN);
 	fr_archive_signals[WORKING_ARCHIVE] =
-		g_signal_new ("working_archive",
+		g_signal_new ("working-archive",
 			      G_TYPE_FROM_CLASS (klass),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (FrArchiveClass, working_archive),
@@ -404,7 +403,7 @@ fr_archive_init (FrArchive *self)
 	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_ARCHIVE, FrArchivePrivate);
 
 	self->mime_type = NULL;
-	self->files = g_ptr_array_sized_new (FILES_ARRAY_INITIAL_SIZE);
+	self->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
 	self->n_regular_files = 0;
         self->password = NULL;
         self->encrypt_header = FALSE;
@@ -1005,12 +1004,12 @@ fr_archive_add_with_wildcard (FrArchive           *archive,
 				source_dir,
 				TRUE,
 				follow_links,
-				NO_BACKUP_FILES,
-				NO_DOT_FILES,
+				TRUE,
+				FALSE,
 				include_files,
 				exclude_files,
 				exclude_folders,
-				IGNORE_CASE,
+				FALSE,
 				aww_data->cancellable,
 				add_with_wildcard__step2,
 				aww_data);
