@@ -633,14 +633,6 @@ fr_window_free_private_data (FrWindow *window)
 }
 
 
-static gboolean
-close__step2 (gpointer data)
-{
-	gtk_widget_destroy (GTK_WIDGET (data));
-	return FALSE;
-}
-
-
 void
 fr_window_close (FrWindow *window)
 {
@@ -666,7 +658,7 @@ fr_window_close (FrWindow *window)
 			g_settings_set_int (window->priv->settings_listing, PREF_LISTING_NAME_COLUMN_WIDTH, width);
 	}
 
-	g_idle_add (close__step2, window);
+	gtk_widget_destroy (GTK_WIDGET (window));
 }
 
 
@@ -2271,6 +2263,14 @@ fr_window_view_extraction_destination_folder (FrWindow *window)
 }
 
 
+static gboolean
+close_window_cb (gpointer data)
+{
+	fr_window_close (FR_WINDOW (data));
+	return FALSE;
+}
+
+
 static void
 progress_dialog_response (GtkDialog *dialog,
 			  int        response_id,
@@ -2299,7 +2299,7 @@ progress_dialog_response (GtkDialog *dialog,
 		close_progress_dialog (window, TRUE);
 		break;
 	case DIALOG_RESPONSE_QUIT:
-		fr_window_close (window);
+		g_idle_add (close_window_cb, window);
 		break;
 	default:
 		break;
