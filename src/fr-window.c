@@ -2194,7 +2194,7 @@ close_progress_dialog (FrWindow *window,
 		window->priv->progress_timeout = 0;
 	}
 
-	if (! window->priv->batch_mode && gtk_widget_get_mapped (GTK_WIDGET (window)))
+	if (! window->priv->batch_mode)
 		gtk_widget_hide (window->priv->progress_bar);
 
 	if (window->priv->progress_dialog == NULL)
