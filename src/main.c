@@ -602,6 +602,7 @@ fr_application_create_option_context (void)
 	context = g_option_context_new (N_("- Create and modify an archive"));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
+	g_option_context_set_ignore_unknown_options (context, TRUE);
 
 	if (g_once_init_enter (&initialized)) {
 		g_option_context_add_group (context, gtk_get_option_group (TRUE));

@@ -544,8 +544,10 @@ fr_window_free_private_data (FrWindow *window)
 		window->priv->update_timeout_handle = 0;
 	}
 
-	while (window->priv->activity_ref > 0)
-		fr_window_stop_activity_mode (window);
+	if (window->priv->activity_timeout_handle != 0) {
+		g_source_remove (window->priv->activity_timeout_handle);
+		window->priv->activity_timeout_handle = 0;
+	}
 
 	if (window->priv->progress_timeout != 0) {
 		g_source_remove (window->priv->progress_timeout);
@@ -832,7 +834,7 @@ fr_window_init (FrWindow *window)
 	window->priv->use_progress_dialog = TRUE;
 	window->priv->batch_title = NULL;
 	window->priv->cancellable = g_cancellable_new ();
-
+	window->priv->compression = FR_COMPRESSION_NORMAL;
 	window->archive = NULL;
 
 	g_signal_connect (window,
@@ -2578,7 +2580,7 @@ display_progress_dialog (gpointer data)
 			gtk_widget_show (GTK_WIDGET (window));
 		gtk_widget_hide (window->priv->progress_bar);
 		gtk_widget_show (window->priv->progress_dialog);
-		fr_archive_message (window->archive, window->priv->pd_last_message);
+		fr_archive_message_cb (NULL, window->priv->pd_last_message, window);
 	}
 
 	window->priv->progress_timeout = 0;
@@ -4620,12 +4622,13 @@ selection_changed_cb (GtkTreeSelection *selection,
 }
 
 
-static void
+static gboolean
 fr_window_delete_event_cb (GtkWidget *caller,
 			   GdkEvent  *event,
 			   FrWindow  *window)
 {
 	fr_window_close (window);
+	return TRUE;
 }
 
 

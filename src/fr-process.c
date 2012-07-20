@@ -659,14 +659,16 @@ execute_cancelled_cb (GCancellable *cancellable,
 	ExecuteData *exec_data = user_data;
 	FrProcess   *process = exec_data->process;
 
-	g_cancellable_disconnect (exec_data->cancellable, exec_data->cancel_id);
-	exec_data->cancel_id = 0;
-
 	if (! process->priv->running)
 		return;
 
 	if (process->priv->stopping)
 		return;
+
+	if (exec_data->cancel_id != 0) {
+		g_cancellable_disconnect (exec_data->cancellable, exec_data->cancel_id);
+		exec_data->cancel_id = 0;
+	}
 
 	process->priv->stopping = TRUE;
 	exec_data->error = fr_error_new (FR_ERROR_STOPPED, 0, NULL);
@@ -1059,8 +1061,11 @@ fr_process_execute_finish (FrProcess     *process,
 	if (exec_data->error == NULL)
 		return TRUE;
 
-	if (error != NULL)
+	if (error != NULL) {
+		if (exec_data->error->gerror == NULL)
+			exec_data->error->gerror = g_error_new_literal (FR_ERROR, exec_data->error->type, "");
 		*error = fr_error_copy (exec_data->error);
+	}
 
 	return FALSE;
 }
