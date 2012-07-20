@@ -78,7 +78,7 @@ struct _FrArchive {
 	/*<public>*/
 
 	char          *password;
-	gboolean       encrypt_header : 1;
+	gboolean       encrypt_header;
 	FrCompression  compression;
 	gboolean       multi_volume;
 	guint          volume_size;
