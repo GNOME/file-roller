@@ -748,7 +748,43 @@ fr_window_class_init (FrWindowClass *klass)
 }
 
 
-static void fr_window_update_paste_command_sensitivity (FrWindow *, GtkClipboard *);
+static void
+set_sensitive (FrWindow   *window,
+	       const char *action_name,
+	       gboolean    sensitive)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->actions, action_name);
+	g_object_set (action, "sensitive", sensitive, NULL);
+}
+
+
+static void
+fr_window_update_paste_command_sensitivity (FrWindow     *window,
+					    GtkClipboard *clipboard)
+{
+	gboolean running;
+	gboolean no_archive;
+	gboolean ro;
+
+	if (window->priv->closing)
+		return;
+
+	if (clipboard == NULL)
+		clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window), FR_CLIPBOARD);
+	running    = window->priv->activity_ref > 0;
+	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
+	ro         = ! no_archive && window->archive->read_only;
+
+	set_sensitive (window, "Paste",
+		       ! no_archive
+		       && ! ro
+		       && ! running
+		       && fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_STORE_MANY_FILES)
+		       && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT)
+		       && gtk_clipboard_wait_is_target_available (clipboard, FR_SPECIAL_URI_LIST));
+}
 
 
 static void
@@ -868,6 +904,177 @@ fr_window_history_pop (FrWindow *window)
 		window->priv->history_current = window->priv->history;
 	g_free (first->data);
 	g_list_free (first);
+}
+
+
+/* -- activity mode -- */
+
+
+
+static void
+check_whether_has_a_dir (GtkTreeModel *model,
+			 GtkTreePath  *path,
+			 GtkTreeIter  *iter,
+			 gpointer      data)
+{
+	gboolean *has_a_dir = data;
+	FileData *fdata;
+
+	gtk_tree_model_get (model, iter,
+			    COLUMN_FILE_DATA, &fdata,
+			    -1);
+	if (file_data_is_dir (fdata))
+		*has_a_dir = TRUE;
+}
+
+
+static gboolean
+selection_has_a_dir (FrWindow *window)
+{
+	GtkTreeSelection *selection;
+	gboolean          has_a_dir = FALSE;
+
+	if (! gtk_widget_get_realized (window->priv->list_view))
+		return FALSE;
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
+	if (selection == NULL)
+		return FALSE;
+
+	gtk_tree_selection_selected_foreach (selection,
+					     check_whether_has_a_dir,
+					     &has_a_dir);
+
+	return has_a_dir;
+}
+
+
+static void
+fr_window_update_sensitivity (FrWindow *window)
+{
+	gboolean no_archive;
+	gboolean ro;
+	gboolean file_op;
+	gboolean running;
+	gboolean can_store_many_files;
+	gboolean sel_not_null;
+	gboolean one_file_selected;
+	gboolean dir_selected;
+	int      n_selected;
+
+	if (window->priv->batch_mode)
+		return;
+
+	running              = window->priv->activity_ref > 0;
+	no_archive           = (window->archive == NULL) || ! window->priv->archive_present;
+	ro                   = ! no_archive && window->archive->read_only;
+	file_op              = ! no_archive && ! window->priv->archive_new  && ! running;
+	can_store_many_files = (window->archive != NULL) && fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_STORE_MANY_FILES);
+	n_selected           = fr_window_get_n_selected_files (window);
+	sel_not_null         = n_selected > 0;
+	one_file_selected    = n_selected == 1;
+	dir_selected         = selection_has_a_dir (window);
+
+	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
+	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
+	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->priv->archive_new && ! running && can_store_many_files);
+	set_sensitive (window, "DeselectAll", ! no_archive && sel_not_null);
+	set_sensitive (window, "Extract", file_op);
+	set_sensitive (window, "Extract_Toolbar", file_op);
+	set_sensitive (window, "Find", ! no_archive);
+	set_sensitive (window, "New", ! running);
+	set_sensitive (window, "Open", ! running);
+	set_sensitive (window, "Open_Toolbar", ! running);
+	set_sensitive (window, "OpenSelection", file_op && sel_not_null && ! dir_selected);
+	set_sensitive (window, "OpenFolder", file_op && one_file_selected && dir_selected);
+	set_sensitive (window, "Password", ! running && (window->priv->asked_for_password || (! no_archive && window->archive->propPassword)));
+	set_sensitive (window, "Properties", file_op);
+	set_sensitive (window, "Close", !running || window->priv->stoppable);
+	set_sensitive (window, "Reload", ! (no_archive || running));
+	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && can_store_many_files && one_file_selected);
+	set_sensitive (window, "SaveAs", ! no_archive && can_store_many_files && ! running);
+	set_sensitive (window, "SelectAll", ! no_archive);
+	set_sensitive (window, "Stop", running && window->priv->stoppable);
+	set_sensitive (window, "TestArchive", ! no_archive && ! running && window->archive->propTest);
+	set_sensitive (window, "ViewSelection", file_op && one_file_selected && ! dir_selected);
+	set_sensitive (window, "ViewSelection_Toolbar", file_op && one_file_selected && ! dir_selected);
+
+	if (window->priv->progress_dialog != NULL)
+		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->priv->progress_dialog),
+						   GTK_RESPONSE_OK,
+						   running && window->priv->stoppable);
+
+	fr_window_update_paste_command_sensitivity (window, NULL);
+
+	set_sensitive (window, "SelectAll", (window->priv->current_view_length > 0) && (window->priv->current_view_length != n_selected));
+	set_sensitive (window, "DeselectAll", n_selected > 0);
+	set_sensitive (window, "OpenRecent", ! running);
+	set_sensitive (window, "OpenRecent_Toolbar", ! running);
+
+	set_sensitive (window, "ViewFolders", (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR));
+
+	set_sensitive (window, "ViewAllFiles", ! window->priv->filter_mode);
+	set_sensitive (window, "ViewAsFolder", ! window->priv->filter_mode);
+}
+
+
+static int
+activity_cb (gpointer data)
+{
+	FrWindow *window = data;
+
+	if ((window->priv->pd_progress_bar != NULL) && window->priv->progress_pulse)
+		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->priv->pd_progress_bar));
+	if (window->priv->progress_pulse)
+		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->priv->progress_bar));
+
+	return TRUE;
+}
+
+
+static void
+fr_window_start_activity_mode (FrWindow *window)
+{
+	g_return_if_fail (window != NULL);
+
+	if (window->priv->activity_ref++ > 0)
+		return;
+
+	window->priv->activity_timeout_handle = g_timeout_add (ACTIVITY_DELAY,
+							       activity_cb,
+							       window);
+	fr_window_update_sensitivity (window);
+}
+
+
+static void
+fr_window_stop_activity_mode (FrWindow *window)
+{
+	g_return_if_fail (window != NULL);
+
+	if (window->priv->activity_ref == 0)
+		return;
+
+	if (--window->priv->activity_ref > 0)
+		return;
+
+	if (window->priv->activity_timeout_handle != 0) {
+		g_source_remove (window->priv->activity_timeout_handle);
+		window->priv->activity_timeout_handle = 0;
+	}
+
+	if (window->priv->progress_dialog != NULL)
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), 0.0);
+
+	if (! window->priv->batch_mode) {
+		if (window->priv->progress_bar != NULL)
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), 0.0);
+		fr_window_update_sensitivity (window);
+	}
 }
 
 
@@ -1228,9 +1435,6 @@ get_parent_dir (const char *current_dir)
 
 	return retval;
 }
-
-
-static void fr_window_update_statusbar_list_info (FrWindow *window);
 
 
 static GdkPixbuf *
@@ -1659,18 +1863,6 @@ get_tree_iter_from_path (FrWindow    *window,
 
 
 static void
-set_sensitive (FrWindow   *window,
-	       const char *action_name,
-	       gboolean    sensitive)
-{
-	GtkAction *action;
-
-	action = gtk_action_group_get_action (window->priv->actions, action_name);
-	g_object_set (action, "sensitive", sensitive, NULL);
-}
-
-
-static void
 fr_window_update_current_location (FrWindow *window)
 {
 	const char *current_dir = fr_window_get_current_location (window);
@@ -1937,13 +2129,6 @@ fr_window_update_file_list (FrWindow *window,
 }
 
 
-void
-fr_window_update_list_order (FrWindow *window)
-{
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store), get_column_from_sort_method (window->priv->sort_method), window->priv->sort_type);
-}
-
-
 static void
 fr_window_update_title (FrWindow *window)
 {
@@ -1962,156 +2147,6 @@ fr_window_update_title (FrWindow *window)
 		g_free (title);
 		g_free (name);
 	}
-}
-
-
-static void
-check_whether_has_a_dir (GtkTreeModel *model,
-			 GtkTreePath  *path,
-			 GtkTreeIter  *iter,
-			 gpointer      data)
-{
-	gboolean *has_a_dir = data;
-	FileData *fdata;
-
-	gtk_tree_model_get (model, iter,
-			    COLUMN_FILE_DATA, &fdata,
-			    -1);
-	if (file_data_is_dir (fdata))
-		*has_a_dir = TRUE;
-}
-
-
-static gboolean
-selection_has_a_dir (FrWindow *window)
-{
-	GtkTreeSelection *selection;
-	gboolean          has_a_dir = FALSE;
-
-	if (! gtk_widget_get_realized (window->priv->list_view))
-		return FALSE;
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
-	if (selection == NULL)
-		return FALSE;
-
-	gtk_tree_selection_selected_foreach (selection,
-					     check_whether_has_a_dir,
-					     &has_a_dir);
-
-	return has_a_dir;
-}
-
-
-static void
-set_active (FrWindow   *window,
-	    const char *action_name,
-	    gboolean    is_active)
-{
-	GtkAction *action;
-
-	action = gtk_action_group_get_action (window->priv->actions, action_name);
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), is_active);
-}
-
-
-static void
-fr_window_update_paste_command_sensitivity (FrWindow     *window,
-					    GtkClipboard *clipboard)
-{
-	gboolean running;
-	gboolean no_archive;
-	gboolean ro;
-
-	if (window->priv->closing)
-		return;
-
-	if (clipboard == NULL)
-		clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window), FR_CLIPBOARD);
-	running    = window->priv->activity_ref > 0;
-	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
-	ro         = ! no_archive && window->archive->read_only;
-
-	set_sensitive (window, "Paste",
-		       ! no_archive
-		       && ! ro
-		       && ! running
-		       && fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_STORE_MANY_FILES)
-		       && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT)
-		       && gtk_clipboard_wait_is_target_available (clipboard, FR_SPECIAL_URI_LIST));
-}
-
-
-static void
-fr_window_update_sensitivity (FrWindow *window)
-{
-	gboolean no_archive;
-	gboolean ro;
-	gboolean file_op;
-	gboolean running;
-	gboolean can_store_many_files;
-	gboolean sel_not_null;
-	gboolean one_file_selected;
-	gboolean dir_selected;
-	int      n_selected;
-
-	if (window->priv->batch_mode)
-		return;
-
-	running              = window->priv->activity_ref > 0;
-	no_archive           = (window->archive == NULL) || ! window->priv->archive_present;
-	ro                   = ! no_archive && window->archive->read_only;
-	file_op              = ! no_archive && ! window->priv->archive_new  && ! running;
-	can_store_many_files = (window->archive != NULL) && fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_STORE_MANY_FILES);
-	n_selected           = fr_window_get_n_selected_files (window);
-	sel_not_null         = n_selected > 0;
-	one_file_selected    = n_selected == 1;
-	dir_selected         = selection_has_a_dir (window);
-
-	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
-	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
-	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->priv->archive_new && ! running && can_store_many_files);
-	set_sensitive (window, "DeselectAll", ! no_archive && sel_not_null);
-	set_sensitive (window, "Extract", file_op);
-	set_sensitive (window, "Extract_Toolbar", file_op);
-	set_sensitive (window, "Find", ! no_archive);
-	set_sensitive (window, "New", ! running);
-	set_sensitive (window, "Open", ! running);
-	set_sensitive (window, "Open_Toolbar", ! running);
-	set_sensitive (window, "OpenSelection", file_op && sel_not_null && ! dir_selected);
-	set_sensitive (window, "OpenFolder", file_op && one_file_selected && dir_selected);
-	set_sensitive (window, "Password", ! running && (window->priv->asked_for_password || (! no_archive && window->archive->propPassword)));
-	set_sensitive (window, "Properties", file_op);
-	set_sensitive (window, "Close", !running || window->priv->stoppable);
-	set_sensitive (window, "Reload", ! (no_archive || running));
-	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && can_store_many_files && one_file_selected);
-	set_sensitive (window, "SaveAs", ! no_archive && can_store_many_files && ! running);
-	set_sensitive (window, "SelectAll", ! no_archive);
-	set_sensitive (window, "Stop", running && window->priv->stoppable);
-	set_sensitive (window, "TestArchive", ! no_archive && ! running && window->archive->propTest);
-	set_sensitive (window, "ViewSelection", file_op && one_file_selected && ! dir_selected);
-	set_sensitive (window, "ViewSelection_Toolbar", file_op && one_file_selected && ! dir_selected);
-
-	if (window->priv->progress_dialog != NULL)
-		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->priv->progress_dialog),
-						   GTK_RESPONSE_OK,
-						   running && window->priv->stoppable);
-
-	fr_window_update_paste_command_sensitivity (window, NULL);
-
-	set_sensitive (window, "SelectAll", (window->priv->current_view_length > 0) && (window->priv->current_view_length != n_selected));
-	set_sensitive (window, "DeselectAll", n_selected > 0);
-	set_sensitive (window, "OpenRecent", ! running);
-	set_sensitive (window, "OpenRecent_Toolbar", ! running);
-
-	set_sensitive (window, "ViewFolders", (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR));
-
-	set_sensitive (window, "ViewAllFiles", ! window->priv->filter_mode);
-	set_sensitive (window, "ViewAsFolder", ! window->priv->filter_mode);
 }
 
 
@@ -2692,7 +2727,7 @@ open_progress_dialog_with_open_archive (FrWindow *window)
 }
 
 
-void
+static void
 fr_window_push_message (FrWindow   *window,
 			const char *msg)
 {
@@ -2705,11 +2740,12 @@ fr_window_push_message (FrWindow   *window,
 }
 
 
-void
+static void
 fr_window_pop_message (FrWindow *window)
 {
 	if (! gtk_widget_get_mapped (GTK_WIDGET (window)))
 		return;
+
 	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
 		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), "");
@@ -2980,8 +3016,6 @@ _archive_operation_completed (FrWindow *window,
 #endif
 
 	fr_window_stop_activity_mode (window);
-	fr_window_pop_message (window);
-
 	_handle_archive_operation_error (window, window->archive, action, error, &continue_batch, &opens_dialog);
 	if (opens_dialog)
 		return;
@@ -4418,6 +4452,26 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 
 
 static void
+fr_window_update_columns_visibility (FrWindow *window)
+{
+	GtkTreeView       *tree_view = GTK_TREE_VIEW (window->priv->list_view);
+	GtkTreeViewColumn *column;
+
+	column = gtk_tree_view_get_column (tree_view, 1);
+	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_SIZE));
+
+	column = gtk_tree_view_get_column (tree_view, 2);
+	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_TYPE));
+
+	column = gtk_tree_view_get_column (tree_view, 3);
+	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_TIME));
+
+	column = gtk_tree_view_get_column (tree_view, 4);
+	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_PATH));
+}
+
+
+static void
 fr_window_deactivate_filter (FrWindow *window)
 {
 	window->priv->filter_mode = FALSE;
@@ -4853,6 +4907,18 @@ no_sort_column_sort_func (GtkTreeModel *model,
 
 
 static void
+set_active (FrWindow   *window,
+	    const char *action_name,
+	    gboolean    is_active)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->actions, action_name);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), is_active);
+}
+
+
+static void
 sort_column_changed_cb (GtkTreeSortable *sortable,
 			gpointer         user_data)
 {
@@ -5108,6 +5174,15 @@ view_as_radio_action (GtkAction      *action,
 {
 	FrWindow *window = data;
 	fr_window_set_list_mode (window, gtk_radio_action_get_current_value (current));
+}
+
+
+static void
+fr_window_update_list_order (FrWindow *window)
+{
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+					      get_column_from_sort_method (window->priv->sort_method),
+					      window->priv->sort_type);
 }
 
 
@@ -7048,84 +7123,8 @@ fr_window_set_sort_type (FrWindow     *window,
 void
 fr_window_stop (FrWindow *window)
 {
-	if (! window->priv->stoppable)
-		return;
-
-	g_cancellable_cancel (window->priv->cancellable);
-
-	/* FIXME: libarchive
-	if (window->priv->activity_ref > 0)
-		fr_archive_stop (window->archive);
-
-	if (window->priv->convert_data.converting)
-		_fr_window_convert_data_free (window, TRUE);
-	*/
-}
-
-
-/* -- start/stop activity mode -- */
-
-
-static int
-activity_cb (gpointer data)
-{
-	FrWindow *window = data;
-
-	if ((window->priv->pd_progress_bar != NULL) && window->priv->progress_pulse)
-		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->priv->pd_progress_bar));
-	if (window->priv->progress_pulse)
-		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->priv->progress_bar));
-
-	return TRUE;
-}
-
-
-/* FIXME: libarchive, call once for each async operation */
-void
-fr_window_start_activity_mode (FrWindow *window)
-{
-	g_return_if_fail (window != NULL);
-
-	if (window->priv->activity_ref++ > 0)
-		return;
-
-	window->priv->activity_timeout_handle = g_timeout_add (ACTIVITY_DELAY,
-							       activity_cb,
-							       window);
-	fr_window_update_sensitivity (window);
-}
-
-
-void
-fr_window_stop_activity_mode (FrWindow *window)
-{
-	g_return_if_fail (window != NULL);
-
-	if (window->priv->activity_ref == 0)
-		return;
-
-	window->priv->activity_ref--;
-
-	if (window->priv->activity_ref > 0)
-		return;
-
-	if (window->priv->activity_timeout_handle == 0)
-		return;
-
-	g_source_remove (window->priv->activity_timeout_handle);
-	window->priv->activity_timeout_handle = 0;
-
-	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
-		return;
-
-	if (window->priv->progress_dialog != NULL)
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), 0.0);
-
-	if (! window->priv->batch_mode) {
-		if (window->priv->progress_bar != NULL)
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), 0.0);
-		fr_window_update_sensitivity (window);
-	}
+	if (window->priv->stoppable && (window->priv->activity_ref > 0))
+		g_cancellable_cancel (window->priv->cancellable);
 }
 
 
@@ -7199,7 +7198,6 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 
 	fr_window_stop_activity_mode (window);
-	fr_window_pop_message (window);
 	close_progress_dialog (window, FALSE);
 
 	if (error == NULL)
@@ -7242,9 +7240,7 @@ _save_as_operation_completed_with_error (FrWindow *window,
 	_fr_window_convert_data_free (window, TRUE);
 
 	fr_window_stop_activity_mode (window);
-	fr_window_pop_message (window);
 	close_progress_dialog (window, FALSE);
-
 	fr_window_stop_batch (window);
 }
 
@@ -8804,26 +8800,6 @@ fr_window_set_default_dir (FrWindow   *window,
 	fr_window_set_open_default_dir (window, default_dir);
 	fr_window_set_add_default_dir (window, default_dir);
 	fr_window_set_extract_default_dir (window, default_dir, FALSE);
-}
-
-
-void
-fr_window_update_columns_visibility (FrWindow *window)
-{
-	GtkTreeView       *tree_view = GTK_TREE_VIEW (window->priv->list_view);
-	GtkTreeViewColumn *column;
-
-	column = gtk_tree_view_get_column (tree_view, 1);
-	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_SIZE));
-
-	column = gtk_tree_view_get_column (tree_view, 2);
-	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_TYPE));
-
-	column = gtk_tree_view_get_column (tree_view, 3);
-	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_TIME));
-
-	column = gtk_tree_view_get_column (tree_view, 4);
-	gtk_tree_view_column_set_visible (column, g_settings_get_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_PATH));
 }
 
 
