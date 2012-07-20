@@ -7672,6 +7672,8 @@ rename_selection (FrWindow   *window,
 					    rdata,
 					    (GFreeFunc) rename_data_free);
 
+	_archive_operation_started (window, FR_ACTION_RENAMING_FILES);
+
 	g_object_set (window->archive,
 		      "compression", window->priv->compression,
 		      "encrypt-header", window->priv->encrypt_header,
