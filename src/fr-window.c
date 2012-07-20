@@ -2876,6 +2876,9 @@ _handle_archive_operation_error (FrWindow  *window,
 	if (error == NULL)
 		return;
 
+	if ((error != NULL) && (error->code == FR_ERROR_STOPPED))
+		g_cancellable_reset (window->priv->cancellable);
+
 	switch (error->code) {
 	case FR_ERROR_ASK_PASSWORD:
 		close_progress_dialog (window, TRUE);
