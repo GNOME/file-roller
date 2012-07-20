@@ -462,7 +462,6 @@ void
 fr_archive_update_capabilities (FrArchive *self)
 {
 	self->priv->capabilities = fr_archive_get_capabilities (self, self->mime_type, TRUE);
-	/* FIXME: check if this is correct */
 	self->read_only = ! fr_archive_is_capable_of (self, FR_ARCHIVE_CAN_WRITE);
 }
 
@@ -1675,30 +1674,42 @@ fr_archive_add_file (FrArchive *self,
 }
 
 
-/* FIXME: use sniffer as in fr_archive_open */
 gboolean
 _g_uri_is_archive (const char *uri)
 {
 	GFile      *file;
 	const char *mime_type = NULL;
 	gboolean    is_archive = FALSE;
+	char       *buffer;
+	int         buffer_size;
 
 	file = g_file_new_for_uri (uri);
-	/* FIXME: libarchive
-	mime_type = get_mime_type_from_magic_numbers (file); */
-	if (mime_type == NULL)
-		mime_type = get_mime_type_from_filename (file);
+	buffer_size = BUFFER_SIZE_FOR_PRELOAD;
+	buffer = g_new (char, buffer_size);
 
-	if (mime_type != NULL) {
-		int i;
+	if (g_load_file_in_buffer (file, buffer, buffer_size, NULL)) {
+		gboolean result_uncertain;
 
-		for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
-			if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
-				is_archive = TRUE;
-				break;
+		g_content_type_guess (uri, (guchar *) buffer, buffer_size, &result_uncertain);
+		if (result_uncertain) {
+			mime_type = get_mime_type_from_magic_numbers (buffer, buffer_size);
+			if (mime_type == NULL)
+				mime_type = get_mime_type_from_filename (file);
+		}
+
+		if (mime_type != NULL) {
+			int i;
+
+			for (i = 0; mime_type_desc[i].mime_type != NULL; i++) {
+				if (strcmp (mime_type_desc[i].mime_type, mime_type) == 0) {
+					is_archive = TRUE;
+					break;
+				}
 			}
 		}
 	}
+
+	g_free (buffer);
 	g_object_unref (file);
 
 	return is_archive;
