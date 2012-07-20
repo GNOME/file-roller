@@ -665,11 +665,6 @@ execute_cancelled_cb (GCancellable *cancellable,
 	if (process->priv->stopping)
 		return;
 
-	if (exec_data->cancel_id != 0) {
-		g_cancellable_disconnect (exec_data->cancellable, exec_data->cancel_id);
-		exec_data->cancel_id = 0;
-	}
-
 	process->priv->stopping = TRUE;
 	exec_data->error = fr_error_new (FR_ERROR_STOPPED, 0, NULL);
 
@@ -691,6 +686,10 @@ execute_cancelled_cb (GCancellable *cancellable,
 
 		process->priv->running = FALSE;
 
+		if (exec_data->cancel_id != 0) {
+			g_signal_handler_disconnect (exec_data->cancellable, exec_data->cancel_id);
+			exec_data->cancel_id = 0;
+		}
 		g_simple_async_result_complete_in_idle (exec_data->result);
 	}
 }
@@ -740,6 +739,17 @@ _fr_process_get_charset (FrProcess *process)
 		charset = NULL;
 
 	return charset;
+}
+
+
+static void
+_fr_process_execute_complete_in_idle (ExecuteData *exec_data)
+{
+	if (exec_data->cancel_id != 0) {
+		g_cancellable_disconnect (exec_data->cancellable, exec_data->cancel_id);
+		exec_data->cancel_id = 0;
+	}
+	g_simple_async_result_complete_in_idle (exec_data->result);
 }
 
 
@@ -890,7 +900,7 @@ check_child (gpointer data)
 		exec_data->first_error_stderr = NULL;
 	}
 
-	g_simple_async_result_complete_in_idle (exec_data->result);
+	_fr_process_execute_complete_in_idle (exec_data);
 
 	return FALSE;
 }
@@ -951,7 +961,7 @@ execute_current_command (ExecuteData *exec_data)
 					&error))
 	{
 		exec_data->error = fr_error_new (FR_ERROR_SPAWN, 0, error);
-		g_simple_async_result_complete_in_idle (exec_data->result);
+		_fr_process_execute_complete_in_idle (exec_data);
 
 		g_error_free (error);
 		g_free (argv);
@@ -992,7 +1002,7 @@ _fr_process_start (ExecuteData *exec_data)
 
 	if (process->priv->n_comm == -1) {
 		process->priv->running = FALSE;
-		g_simple_async_result_complete_in_idle (exec_data->result);
+		_fr_process_execute_complete_in_idle (exec_data);
 	}
 	else {
 		process->priv->running = TRUE;
@@ -1032,7 +1042,7 @@ fr_process_execute (FrProcess           *process,
 
 		if (g_cancellable_set_error_if_cancelled (cancellable, &error)) {
 			exec_data->error = fr_error_new (FR_ERROR_STOPPED, 0, error);
-			g_simple_async_result_complete_in_idle (exec_data->result);
+			_fr_process_execute_complete_in_idle (exec_data);
 
 			g_error_free (error);
 			return;
