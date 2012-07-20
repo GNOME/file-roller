@@ -37,10 +37,10 @@
 #include "glib-utils.h"
 
 
-#define MAX_CHUNK_LEN (NCARGS * 2 / 3) /* Max command line length */
-#define LIST_LENGTH_TO_USE_FILE 10     /* FIXME: find a good value */
+#define MAX_CHUNK_LEN		 (NCARGS * 2 / 3) /* Max command line length */
+#define LIST_LENGTH_TO_USE_FILE	 10
 #ifndef NCARGS
-#define NCARGS _POSIX_ARG_MAX
+  #define NCARGS		 _POSIX_ARG_MAX
 #endif
 
 
@@ -1106,9 +1106,9 @@ _fr_command_add (FrCommand      *self,
 	g_object_set (self,
 		      "filename", self->priv->local_copy,
 		      "password", password,
-		      "encrypt_header", encrypt_header,
+		      "encrypt-header", encrypt_header,
 		      "compression", compression,
-		      "volume_size", volume_size,
+		      "volume-size", volume_size,
 		      NULL);
 
 	fr_archive_set_stoppable (archive, TRUE);
@@ -1809,7 +1809,7 @@ _fr_command_remove (FrCommand     *self,
 		archive_filename = g_file_get_path (self->priv->local_copy);
 		tmp_archive_filename = g_build_filename (tmp_archive_dir, _g_path_get_file_name (archive_filename), NULL);
 		tmp_file = g_file_new_for_path (tmp_archive_filename);
-		g_object_set (self, "file", tmp_file, NULL);
+		g_object_set (self, "filename", tmp_file, NULL);
 
 		if (! self->creating_archive) {
 			/* copy the original self to the new position */
@@ -2625,7 +2625,7 @@ fr_command_test_integrity (FrArchive           *archive,
 	XferData  *xfer_data;
 
 	fr_archive_set_stoppable (archive, TRUE);
-	g_object_set (self,
+	g_object_set (archive,
 		      "filename", self->priv->local_copy,
 		      "password", password,
 		      NULL);
@@ -2653,6 +2653,24 @@ fr_command_test_integrity (FrArchive           *archive,
 
 
 static void
+process_ready_for_rename (GObject      *source_object,
+			  GAsyncResult *result,
+			  gpointer      user_data)
+{
+	XferData  *xfer_data = user_data;
+	FrError   *error = NULL;
+
+	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error))
+		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
+
+	g_simple_async_result_complete_in_idle (xfer_data->result);
+
+	fr_error_free (error);
+	xfer_data_free (xfer_data);
+}
+
+
+static void
 fr_command_rename (FrArchive           *archive,
 		   GList               *file_list,
 		   const char          *old_name,
@@ -2665,8 +2683,6 @@ fr_command_rename (FrArchive           *archive,
 		   GAsyncReadyCallback  callback,
 		   gpointer             user_data)
 {
-	/* FIXME: libarchive */
-#if 0
 	FrCommand *self = FR_COMMAND (archive);
 	char      *tmp_dir;
 	gboolean   added_dir;
@@ -2674,12 +2690,16 @@ fr_command_rename (FrArchive           *archive,
 	GList     *new_file_list;
 	GList     *scan;
 	GError    *error = NULL;
+	XferData  *xfer_data;
 
-	g_object_set (self, "filename", self->priv->local_copy, NULL);
+	fr_archive_set_stoppable (archive, TRUE);
+	g_object_set (archive,
+		      "filename", self->priv->local_copy,
+		      NULL);
+
 	tmp_dir = _g_path_get_temp_work_dir (NULL);
 
 	fr_process_clear (self->process);
-
 	_fr_command_extract (self,
 			     file_list,
 			     tmp_dir,
@@ -2697,6 +2717,7 @@ fr_command_rename (FrArchive           *archive,
 		added_dir = TRUE;
 	}
 
+	/* FIXME: libarchive, check this */
 	_fr_command_remove (self, file_list, archive->compression);
 
 	/* ...and remove it from the list again */
@@ -2714,7 +2735,7 @@ fr_command_rename (FrArchive           *archive,
 
 	new_dirname = g_build_filename (current_dir + 1, new_name, "/", NULL);
 	new_file_list = NULL;
-	if (rdata->is_dir) {
+	if (is_dir) {
 		char *old_path;
 		char *new_path;
 
@@ -2743,7 +2764,7 @@ fr_command_rename (FrArchive           *archive,
 			common = g_strdup (filename + strlen (current_dir) + strlen (old_name));
 		new_path = g_build_filename (tmp_dir, current_dir, new_name, common, NULL);
 
-		if (! rdata->is_dir) {
+		if (! is_dir) {
 			fr_process_begin_command (self->process, "mv");
 			fr_process_add_arg (self->process, "-f");
 			fr_process_add_arg (self->process, old_path);
@@ -2775,9 +2796,25 @@ fr_command_rename (FrArchive           *archive,
 			       archive->encrypt_header,
 			       archive->compression,
 			       archive->volume_size,
+			       cancellable,
 			       &error))
 	{
-		/* FIXME */
+		GSimpleAsyncResult *result;
+
+		result = g_simple_async_result_new (G_OBJECT (self),
+						    callback,
+						    user_data,
+						    fr_archive_rename);
+		g_simple_async_result_set_from_error (result, error);
+		g_simple_async_result_complete_in_idle (result);
+
+		g_unlink (tmp_dir);
+
+		g_object_unref (result);
+		g_error_free (error);
+		g_free (tmp_dir);
+
+		return;
 	}
 
 	g_free (new_dirname);
@@ -2792,10 +2829,20 @@ fr_command_rename (FrArchive           *archive,
 	fr_process_add_arg (self->process, tmp_dir);
 	fr_process_end_command (self->process);
 
-	fr_process_start (self->process);
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = _g_object_ref (self);
+	xfer_data->cancellable = _g_object_ref (cancellable);
+	xfer_data->result = g_simple_async_result_new (G_OBJECT (self),
+						       callback,
+						       user_data,
+						       fr_archive_rename);
+
+	fr_process_execute (self->process,
+			    cancellable,
+			    process_ready_for_rename,
+			    xfer_data);
 
 	g_free (tmp_dir);
-#endif
 }
 
 
@@ -3089,9 +3136,9 @@ add_dropped_items (DroppedItemsData *data)
 	g_object_set (self,
 		      "filename", self->priv->local_copy,
 		      "password", data->password,
-		      "encrypt_header", data->encrypt_header,
+		      "encrypt-header", data->encrypt_header,
 		      "compression", data->compression,
-		      "volume_size", data->volume_size,
+		      "volume-size", data->volume_size,
 		      NULL);
 
 	fr_process_clear (self->process);
@@ -3335,9 +3382,11 @@ archive_file_changed_cb (GObject    *object,
 			 gpointer    user_data)
 {
 	FrCommand *self = user_data;
-	GFile            *file;
+	GFile     *file;
 
 	/* FIXME: if multi_volume... */
+	if (FR_ARCHIVE (self)->multi_volume)
+		return;
 
 	if ((self->priv->local_copy != NULL) && self->priv->is_remote) {
 		GFile  *temp_folder;

@@ -2917,9 +2917,6 @@ _handle_archive_operation_error (FrWindow  *window,
 				window->priv->load_error_parent_window = (GtkWindow *) window;
 		}
 
-		if ((action == FR_ACTION_LISTING_CONTENT) || (action == FR_ACTION_LOADING_ARCHIVE))
-			fr_window_archive_close (window);
-
 		switch (action) {
 		case FR_ACTION_CREATING_NEW_ARCHIVE:
 			dialog_parent = window->priv->load_error_parent_window;
@@ -3041,8 +3038,7 @@ _archive_operation_completed (FrWindow *window,
 		close_progress_dialog (window, FALSE);
 		if (error != NULL) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
-			if (window->priv->batch_mode)
-				fr_window_archive_close (window);
+			fr_window_archive_close (window);
 		}
 		else {
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
@@ -3133,6 +3129,12 @@ _archive_operation_completed (FrWindow *window,
 		else
 			close_progress_dialog (window, FALSE);
 		break;
+
+	case FR_ACTION_RENAMING_FILES:
+		close_progress_dialog (window, FALSE);
+		if (! operation_canceled)
+			fr_window_archive_reload (window);
+		return;
 
 	default:
 		close_progress_dialog (window, FALSE);
