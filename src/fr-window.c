@@ -8663,12 +8663,13 @@ open_files_extract_ready_cb (GObject      *source_object,
 	OpenFilesData *odata = user_data;
 	GError        *error = NULL;
 
-	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
-		_archive_operation_completed (odata->window, FR_ACTION_EXTRACTING_FILES, error);
-		g_error_free (error);
-	}
+	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
+	_archive_operation_completed (odata->window, FR_ACTION_EXTRACTING_FILES, error);
 
-	fr_window_open_extracted_files (odata);
+	if (error == NULL)
+		fr_window_open_extracted_files (odata);
+
+	_g_error_free (error);
 }
 
 
