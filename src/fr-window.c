@@ -5991,7 +5991,7 @@ _fr_window_set_archive (FrWindow  *window,
 			  G_CALLBACK (fr_archive_stoppable_cb),
 			  window);
 	g_signal_connect (G_OBJECT (window->archive),
-			  "working_archive",
+			  "working-archive",
 			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
 }
@@ -7365,7 +7365,7 @@ fr_window_archive_save_as (FrWindow   *window,
 			  G_CALLBACK (fr_archive_stoppable_cb),
 			  window);
 	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
-			  "working_archive",
+			  "working-archive",
 			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
 
@@ -7674,9 +7674,9 @@ rename_selection (FrWindow   *window,
 
 	g_object_set (window->archive,
 		      "compression", window->priv->compression,
-		      "encrypt_header", window->priv->encrypt_header,
+		      "encrypt-header", window->priv->encrypt_header,
 		      "password", window->priv->password,
-		      "volume_size", window->priv->volume_size,
+		      "volume-size", window->priv->volume_size,
 		      NULL);
 
 	if (is_dir)
@@ -8184,7 +8184,7 @@ paste_from_archive_open_cb (GObject      *source_object,
 			  G_CALLBACK (fr_archive_stoppable_cb),
 			  window);
 	g_signal_connect (G_OBJECT (window->priv->copy_from_archive),
-			  "working_archive",
+			  "working-archive",
 			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
 
