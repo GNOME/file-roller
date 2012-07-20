@@ -8053,6 +8053,8 @@ _paste_from_archive_operation_completed (FrWindow *window,
 	if (error != NULL) {
 		fr_clipboard_data_unref (window->priv->clipboard_data);
 		window->priv->clipboard_data = NULL;
+
+		fr_window_archive_reload (window);
 	}
 }
 
