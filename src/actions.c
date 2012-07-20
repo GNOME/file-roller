@@ -58,7 +58,6 @@ window_archive_loaded_cb (FrWindow  *window,
 			  gboolean   success,
 			  GtkWidget *file_sel)
 {
-	/* FIXME: libarchive */
 	if (success) {
 		g_signal_handlers_disconnect_by_data (window, file_sel);
 		gtk_widget_destroy (file_sel);
