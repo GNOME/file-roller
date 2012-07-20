@@ -69,6 +69,7 @@ ask_password__response_cb (GtkWidget  *dialog,
 		else if (data->pwd_type == FR_PASSWORD_TYPE_PASTE_FROM)
 			fr_window_set_password_for_paste (data->window, password);
 		g_free (password);
+
 		if (fr_window_is_batch_mode (data->window))
 			fr_window_resume_batch (data->window);
 		else

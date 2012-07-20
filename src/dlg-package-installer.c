@@ -58,12 +58,10 @@ package_installer_terminated (InstallerData *idata,
 		gdk_window_set_cursor (window, NULL);
 
 	if (error_type != FR_ERROR_NONE) {
-		/* FIXME: libarchive
-		fr_archive_action_completed (idata->archive,
-					     idata->action,
-					     error_type,
-					     error_message);
-		*/
+		fr_window_stop_batch_with_error (idata->window,
+						 idata->action,
+						 error_type,
+						 error_message);
 	}
 	else {
 		update_registered_archives_capabilities ();

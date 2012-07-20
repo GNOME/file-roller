@@ -58,10 +58,9 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
-	if (! data->extract_clicked) {
-		fr_window_pop_message (data->window);
+	if (! data->extract_clicked)
 		fr_window_stop_batch (data->window);
-	}
+
 	_g_string_list_free (data->selected_files);
 	g_free (data->base_dir_for_selection);
 	g_object_unref (data->settings);

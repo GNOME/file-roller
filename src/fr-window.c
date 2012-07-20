@@ -9145,6 +9145,7 @@ fr_window_start_batch (FrWindow *window)
 void
 fr_window_stop_batch (FrWindow *window)
 {
+	fr_window_pop_message (window);
 	fr_window_update_sensitivity (window);
 	fr_window_update_statusbar_list_info (window);
 
@@ -9160,6 +9161,21 @@ fr_window_stop_batch (FrWindow *window)
 			       NULL);
 		gtk_widget_destroy (GTK_WIDGET (window));
 	}
+}
+
+
+void
+fr_window_stop_batch_with_error (FrWindow     *window,
+				 FrAction      action,
+				 FrErrorType   error_type,
+				 const char   *error_message)
+{
+	GError *error;
+
+	error = g_error_new_literal (FR_ERROR, error_type, error_message);
+	_archive_operation_completed (window, action , error);
+
+	g_error_free (error);
 }
 
 

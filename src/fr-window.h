@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 #include "typedefs.h"
 #include "fr-archive.h"
+#include "fr-error.h"
 
 
 enum {
@@ -191,7 +192,6 @@ void            fr_window_set_list_mode                (FrWindow      *window,
 
 /**/
 
-void            fr_window_update_list_order            (FrWindow    *window);
 GList *         fr_window_get_file_list_selection      (FrWindow    *window,
 						        gboolean     recursive,
 						        gboolean    *has_dirs);
@@ -228,8 +228,6 @@ void            fr_window_paste_selection              (FrWindow    *window,
 /**/
 
 void            fr_window_stop                         (FrWindow    *window);
-void            fr_window_start_activity_mode          (FrWindow    *window);
-void            fr_window_stop_activity_mode           (FrWindow    *window);
 
 /**/
 
@@ -248,7 +246,6 @@ void            fr_window_open_files_with_application  (FrWindow   *window,
 						        GAppInfo   *app);
 gboolean        fr_window_update_files                 (FrWindow   *window,
 						        GList      *file_list);
-void            fr_window_update_columns_visibility    (FrWindow   *window);
 void            fr_window_update_history_list          (FrWindow   *window);
 void            fr_window_set_default_dir              (FrWindow   *window,
 						        const char *default_dir,
@@ -263,9 +260,6 @@ void            fr_window_set_extract_default_dir      (FrWindow   *window,
 						        const char *default_dir,
 						        gboolean    freeze);
 const char *    fr_window_get_extract_default_dir      (FrWindow   *window);
-void            fr_window_push_message                 (FrWindow   *window,
-						        const char *msg);
-void            fr_window_pop_message                  (FrWindow   *window);
 void            fr_window_set_toolbar_visibility       (FrWindow   *window,
 						        gboolean    value);
 void            fr_window_set_statusbar_visibility     (FrWindow   *window,
@@ -294,6 +288,10 @@ void            fr_window_append_batch_action          (FrWindow      *window,
 						        GFreeFunc      free_func);
 void            fr_window_start_batch                  (FrWindow      *window);
 void            fr_window_stop_batch                   (FrWindow      *window);
+void            fr_window_stop_batch_with_error        (FrWindow     *window,
+							FrAction      action,
+							FrErrorType   error_type,
+							const char   *error_message);
 void            fr_window_resume_batch                 (FrWindow      *window);
 gboolean        fr_window_is_batch_mode                (FrWindow      *window);
 void            fr_window_set_batch__extract           (FrWindow      *window,

@@ -75,10 +75,8 @@ destroy_cb (GtkWidget  *widget,
 	/*g_settings_set_boolean (data->settings, PREF_BATCH_ADD_OTHER_OPTIONS, data->add_clicked ? FALSE : gtk_expander_get_expanded (GTK_EXPANDER (GET_WIDGET ("a_other_options_expander"))));*/
 	g_settings_set_boolean (data->settings_general, PREF_GENERAL_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("a_encrypt_header_checkbutton"))));
 
-	if (! data->add_clicked) {
-		fr_window_pop_message (data->window);
+	if (! data->add_clicked)
 		fr_window_stop_batch (data->window);
-	}
 
 	g_object_unref (data->builder);
 	g_object_unref (data->settings_general);
