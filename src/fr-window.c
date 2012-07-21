@@ -3921,6 +3921,36 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 }
 
 
+gboolean
+fr_window_create_archive_and_continue (FrWindow   *window,
+			  	       const char *uri,
+			  	       GtkWindow  *error_dialog_parent)
+{
+	gboolean result = FALSE;
+
+	if (fr_window_archive_new (FR_WINDOW (window), uri)) {
+		if (! fr_window_is_batch_mode (FR_WINDOW (window)))
+			gtk_window_present (GTK_WINDOW (window));
+		_archive_operation_completed (window, FR_ACTION_CREATING_NEW_ARCHIVE, NULL);
+
+		result = TRUE;
+	}
+	else {
+		GError *error;
+
+		error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("Archive type not supported."));
+		window->priv->load_error_parent_window = error_dialog_parent;
+		_archive_operation_completed (window, FR_ACTION_CREATING_NEW_ARCHIVE, error);
+
+		g_error_free (error);
+
+		result = FALSE;
+	}
+
+	return result;
+}
+
+
 static void
 new_archive_dialog_response_cb (GtkDialog *dialog,
 				int        response,
@@ -3958,24 +3988,10 @@ new_archive_dialog_response_cb (GtkDialog *dialog,
 	fr_window_set_encrypt_header (FR_WINDOW (archive_window), encrypt_header);
 	fr_window_set_volume_size (FR_WINDOW (archive_window), volume_size);
 
-	if (fr_window_archive_new (FR_WINDOW (archive_window), uri)) {
+	if (fr_window_create_archive_and_continue (FR_WINDOW (archive_window), uri, GTK_WINDOW (dialog)))
 		gtk_widget_destroy (GTK_WIDGET (dialog));
-		if (! fr_window_is_batch_mode (FR_WINDOW (archive_window)))
-			gtk_window_present (GTK_WINDOW (archive_window));
-		_archive_operation_completed (window, FR_ACTION_CREATING_NEW_ARCHIVE, NULL);
-	}
-	else {
-		GError *error;
-
-		if (new_window)
-			gtk_widget_destroy (archive_window);
-
-		error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("Archive type not supported."));
-		window->priv->load_error_parent_window = GTK_WINDOW (dialog);
-		_handle_archive_operation_error (window, NULL, FR_ACTION_CREATING_ARCHIVE, error, NULL, NULL);
-
-		g_error_free (error);
-	}
+	else if (new_window)
+		gtk_widget_destroy (archive_window);
 
 	g_free (uri);
 }

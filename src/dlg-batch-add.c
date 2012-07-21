@@ -335,7 +335,7 @@ add_clicked_cb (GtkWidget  *widget,
 	set_archive_options (data);
 	gtk_widget_destroy (GET_WIDGET ("dialog"));
 
-	fr_window_archive_new (window, archive_file);
+	fr_window_create_archive_and_continue (window, archive_file, NULL);
 
 	g_free (archive_name);
 	g_free (archive_dir);

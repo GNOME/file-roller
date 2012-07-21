@@ -1060,6 +1060,8 @@ add_directory__step2 (GList    *file_list,
 					    fr_archive_add_directory);
 
 	if (error != NULL) {
+		_g_string_list_free (dir_list);
+
 		g_simple_async_result_set_from_error (result, error);
 		g_simple_async_result_complete_in_idle (result);
 	}
@@ -1087,9 +1089,8 @@ add_directory__step2 (GList    *file_list,
 					      ad_data->user_data);
 	}
 
-	g_object_unref (result);
 	_g_string_list_free (file_list);
-	_g_string_list_free (dir_list);
+	g_object_unref (result);
 	add_directory_data_free (ad_data);
 }
 

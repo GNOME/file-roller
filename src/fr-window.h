@@ -232,6 +232,9 @@ void            fr_window_stop                         (FrWindow    *window);
 /**/
 
 void            fr_window_action_new_archive           (FrWindow   *window);
+gboolean        fr_window_create_archive_and_continue  (FrWindow   *window,
+							const char *uri,
+							GtkWindow  *error_dialog_parent);
 void            fr_window_action_save_as               (FrWindow   *window);
 void            fr_window_view_last_output             (FrWindow   *window,
 						        const char *title);
