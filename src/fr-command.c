@@ -3373,8 +3373,10 @@ archive_file_changed_cb (GObject    *object,
 	FrCommand *self = user_data;
 	GFile     *file;
 
-	/* FIXME: if multi_volume... */
-	if (FR_ARCHIVE (self)->multi_volume)
+	/* we cannot change the local copy if the archive is a multi-volume and
+	 * stored on a remote location, to do that we should copy all the
+	 * remote parts to a local temporary directory. */
+	if (FR_ARCHIVE (self)->multi_volume && self->priv->is_remote)
 		return;
 
 	if ((self->priv->local_copy != NULL) && self->priv->is_remote) {
