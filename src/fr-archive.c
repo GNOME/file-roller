@@ -62,7 +62,8 @@ char *action_names[] = { "NONE",
 			 "CREATING_ARCHIVE",
 			 "SAVING_REMOTE_ARCHIVE",
 			 "RENAMING_FILES",
-			 "PASTING_FILES" };
+			 "PASTING_FILES",
+			 "UPDATING_FILES" };
 
 
 G_DEFINE_TYPE (FrArchive, fr_archive, G_TYPE_OBJECT)

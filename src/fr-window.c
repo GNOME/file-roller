@@ -2365,10 +2365,16 @@ get_action_description (FrAction    action,
 		message = g_strdup_printf (_("Saving \"%s\""), basename);
 		break;
 	case FR_ACTION_RENAMING_FILES:
-		message = g_strdup_printf (_("Renaming the files"));
+		/* Translators: %s is a filename */
+		message = g_strdup_printf (_("Renaming the files in \"%s\""), basename);
 		break;
 	case FR_ACTION_PASTING_FILES:
-		message = g_strdup_printf (_("Pasting the files from the clipboard"));
+		/* Translators: %s is a filename */
+		message = g_strdup_printf (_("Pasting the files from the clipboard into \"%s\""), basename);
+		break;
+	case FR_ACTION_UPDATING_FILES:
+		/* Translators: %s is a filename */
+		message = g_strdup_printf (_("Updating the files in \"%s\""), basename);
 		break;
 	case FR_ACTION_NONE:
 		break;
@@ -2964,6 +2970,10 @@ _handle_archive_operation_error (FrWindow  *window,
 			msg = _("An error occurred while renaming the files.");
 			break;
 
+		case FR_ACTION_UPDATING_FILES:
+			msg = _("An error occurred while updating the files.");
+			break;
+
 		default:
 			msg = _("An error occurred.");
 			break;
@@ -3134,6 +3144,7 @@ _archive_operation_completed (FrWindow *window,
 		break;
 
 	case FR_ACTION_RENAMING_FILES:
+	case FR_ACTION_UPDATING_FILES:
 		close_progress_dialog (window, FALSE);
 		if (! operation_canceled)
 			fr_window_archive_reload (window);
@@ -8455,10 +8466,7 @@ update_files_ready_cb (GObject      *source_object,
 	GError   *error = NULL;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
-
-	fr_window_stop_activity_mode (window);
-	fr_window_pop_message (window);
-	_handle_archive_operation_error (window, window->archive, FR_ACTION_ADDING_FILES, error, NULL, NULL);
+	_archive_operation_completed (window, FR_ACTION_UPDATING_FILES, error);
 
 	_g_error_free (error);
 }
@@ -8486,6 +8494,8 @@ fr_window_update_files (FrWindow *window,
 		file_list = g_list_prepend (file_list, open_file->path);
 		dir_list = g_list_prepend (dir_list, open_file->temp_dir);
 	}
+
+	_archive_operation_started (window, FR_ACTION_UPDATING_FILES);
 
 	fr_archive_update_open_files (window->archive,
 				      file_list,
