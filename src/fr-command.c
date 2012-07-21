@@ -1820,7 +1820,7 @@ _fr_command_remove (FrCommand     *self,
 	delete_from_archive (self, file_list);
 	fr_command_recompress (self);
 
-	/* move the new self to the original position */
+	/* move the new archive to the original position */
 
 	fr_process_begin_command (self->process, "mv");
 	fr_process_add_arg (self->process, "-f");
@@ -1836,6 +1836,11 @@ _fr_command_remove (FrCommand     *self,
 	fr_process_add_arg (self->process, "-rf");
 	fr_process_add_arg (self->process, tmp_archive_dir);
 	fr_process_end_command (self->process);
+
+	/* _fr_command_remove can change the filename, reset its value */
+	g_object_set (archive,
+		      "filename", self->priv->local_copy,
+		      NULL);
 
 	g_free (tmp_archive_filename);
 	g_free (archive_filename);
@@ -2706,7 +2711,6 @@ fr_command_rename (FrArchive           *archive,
 		added_dir = TRUE;
 	}
 
-	/* FIXME: libarchive, check this */
 	_fr_command_remove (self, file_list, archive->compression);
 
 	/* ...and remove it from the list again */
