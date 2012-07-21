@@ -89,7 +89,6 @@ struct _FrArchive {
 
 	/*<protected>*/
 
-	/* FIXME: remove this two attributes */
 	gboolean       extract_here;
 
 	/* progress data */

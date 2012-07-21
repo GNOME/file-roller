@@ -2482,6 +2482,7 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 			_g_uri_remove_directory (fr_archive_get_last_extraction_destination (xfer_data->archive));
 	}
 
+	xfer_data->archive->extract_here = FALSE;
 	g_simple_async_result_complete_in_idle (xfer_data->result);
 
 	fr_error_free (error);
