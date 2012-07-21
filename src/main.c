@@ -31,6 +31,9 @@
 #include <glib/gprintf.h>
 #include <glib.h>
 #include <gio/gio.h>
+#ifdef ENABLE_NOTIFICATION
+#  include <libnotify/notify.h>
+#endif
 #include "actions.h"
 #ifdef USE_SMCLIENT
 #  include "eggsmclient.h"
@@ -56,6 +59,7 @@ static int          arg_extract_here = FALSE;
 static char        *arg_default_dir = NULL;
 static gboolean     arg_version = FALSE;
 static gboolean     arg_service = FALSE;
+static gboolean     arg_notify = FALSE;
 static const char  *program_argv0 = NULL; /* argv[0] from main(); used as the command to restart the program */
 
 
@@ -87,6 +91,9 @@ static const GOptionEntry options[] = {
 	{ "force", '\0', 0, G_OPTION_ARG_NONE, &ForceDirectoryCreation,
 	  N_("Create destination folder without asking confirmation"),
 	  NULL },
+
+	{ "notify", '\0', 0, G_OPTION_ARG_NONE, &arg_notify,
+	  N_("Use the notification system to notify the operation completion"), NULL },
 
 	{ "service", '\0', 0, G_OPTION_ARG_NONE, &arg_service,
 	  N_("Start as a service"), NULL },
@@ -578,6 +585,11 @@ fr_application_init (FrApplication *self)
 	gtk_window_set_default_icon_name ("file-roller");
 #endif
 
+#ifdef ENABLE_NOTIFICATION
+	if (! notify_init (g_get_application_name ()))
+                g_warning ("Cannot initialize notification system.");
+#endif /* ENABLE_NOTIFICATION */
+
 	self->owner_id = 0;
 	self->introspection_data = NULL;
 }
@@ -734,10 +746,11 @@ fr_application_command_line (GApplication            *application,
 
 		fr_window_new_batch (FR_WINDOW (window), _("Compress"));
 		fr_window_set_batch__add (FR_WINDOW (window), add_to_uri, file_list);
-		fr_window_append_batch_action (FR_WINDOW (window),
-					       FR_BATCH_ACTION_QUIT,
-					       NULL,
-					       NULL);
+
+		if (! arg_notify)
+			fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		else
+			fr_window_set_notify (FR_WINDOW (window), TRUE);
 		fr_window_start_batch (FR_WINDOW (window));
 	}
 	else if ((arg_extract_to != NULL) || (arg_extract == 1) || (arg_extract_here == 1)) {
@@ -759,18 +772,12 @@ fr_application_command_line (GApplication            *application,
 
 			archive_uri = _g_uri_get_from_command_line (archive);
 			if (arg_extract_here == 1)
-				fr_window_set_batch__extract_here (FR_WINDOW (window),
-								   archive_uri);
+				fr_window_set_batch__extract_here (FR_WINDOW (window), archive_uri);
 			else
-				fr_window_set_batch__extract (FR_WINDOW (window),
-							      archive_uri,
-							      extract_to_uri);
+				fr_window_set_batch__extract (FR_WINDOW (window), archive_uri, extract_to_uri);
 			g_free (archive_uri);
 		}
-		fr_window_append_batch_action (FR_WINDOW (window),
-					       FR_BATCH_ACTION_QUIT,
-					       NULL,
-					       NULL);
+		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 
 		fr_window_start_batch (FR_WINDOW (window));
 	}

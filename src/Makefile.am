@@ -41,7 +41,8 @@ INCLUDES =						\
 	-DAPPLICATIONS_DIR=\"$(applications_dir)\"	\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)					\
-	$(JSON_GLIB_CFLAGS)
+	$(JSON_GLIB_CFLAGS)				\
+	$(LIBNOTIFY_CFLAGS)
 
 BUILT_SOURCES =			\
 	fr-marshal.c		\
@@ -90,6 +91,8 @@ COMMON_SOURCES = 			\
 	fr-archive.h			\
 	fr-command.c			\
 	fr-command.h			\
+	fr-command-7z.c			\
+	fr-command-7z.h			\
 	fr-command-ace.c		\
 	fr-command-ace.h		\
 	fr-command-alz.c		\
@@ -124,8 +127,6 @@ COMMON_SOURCES = 			\
 	fr-command-lrzip.h		\
 	fr-command-zoo.c		\
 	fr-command-zoo.h		\
-	fr-command-7z.c			\
-	fr-command-7z.h			\
 	fr-error.c			\
 	fr-error.h			\
 	fr-init.c			\
@@ -206,7 +207,8 @@ file_roller_SOURCES = 			\
 file_roller_LDADD =					\
 	$(top_builddir)/copy-n-paste/libeggsmclient.la	\
 	$(FR_LIBS)					\
-	$(JSON_GLIB_LIBS)
+	$(JSON_GLIB_LIBS)				\
+	$(LIBNOTIFY_LIBS)
 
 if ENABLE_MAGIC
 file_roller_LDADD += $(MAGIC_LIBS)

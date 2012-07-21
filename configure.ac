@@ -31,6 +31,7 @@ GIO_REQUIRED=2.25.5
 GTK_REQUIRED=3.4.0
 NAUTILUS_REQUIRED=2.22.2
 JSON_GLIB_REQUIRED=0.14.0
+LIBNOTIFY_REQUIRED=0.4.3
 
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GIO_REQUIRED)
@@ -161,7 +162,29 @@ if test "x$enable_packagekit" != "xno"; then
 	AC_DEFINE(ENABLE_PACKAGEKIT, 1, [define to enable PackageKit installer])
 fi
 
-dnl ******************************
+dnl ===========================================================================
+dnl
+dnl libnotify
+dnl
+AC_ARG_ENABLE(notification,[AC_HELP_STRING([--enable-notification],[enable operation completion notification [default=yes]])],, [enable_notification="yes"])
+AM_CONDITIONAL(ENABLE_NOTIFICATION, test "x$enable_notification" = xyes)
+
+LIBNOTIFY_LIBS=""
+LIBNOTIFY_CFLAGS=""
+if test x"$enable_notification" = xyes; then
+   AC_MSG_CHECKING(for notification support)
+
+   if pkg-config --atleast-version=$LIBNOTIFY_REQUIRED libnotify; then
+      LIBNOTIFY_LIBS=`pkg-config --libs libnotify`
+      LIBNOTIFY_CFLAGS=`pkg-config --cflags libnotify`
+      AC_DEFINE(ENABLE_NOTIFICATION, 1, [Have libnotify])
+   else
+      enable_notification=no
+   fi
+fi
+AC_MSG_RESULT($enable_notification)
+AC_SUBST(LIBNOTIFY_LIBS)
+AC_SUBST(LIBNOTIFY_CFLAGS)
 
 dnl ******************************
 
@@ -268,4 +291,5 @@ Configuration:
 	PackageKit support      : ${enable_packagekit}
 	Use libmagic            : ${enable_magic}
 	JSON support            : ${enable_json_glib}
+	Enable notification     : ${enable_notification}
 "

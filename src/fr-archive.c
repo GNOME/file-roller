@@ -728,10 +728,9 @@ open_archive_stream_ready_cb (GObject      *source_object,
 			mime_type = get_mime_type_from_filename (open_data->file);
 			archive = create_archive_to_load_archive (open_data->file, mime_type);
 			if (archive == NULL) {
-				error = g_error_new (FR_ERROR,
-						     FR_ERROR_UNSUPPORTED_FORMAT,
-						     "%s",
-						     _("Archive type not supported."));
+				error = g_error_new_literal (FR_ERROR,
+						     	     FR_ERROR_UNSUPPORTED_FORMAT,
+						     	     _("Archive type not supported."));
 				load_data_complete_with_error (open_data, error);
 				return;
 			}

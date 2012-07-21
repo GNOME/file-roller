@@ -29,7 +29,9 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-
+#ifdef ENABLE_NOTIFICATION
+#  include <libnotify/notify.h>
+#endif
 #include "actions.h"
 #include "dlg-batch-add.h"
 #include "dlg-delete.h"
@@ -292,6 +294,7 @@ struct _FrWindowPrivate {
 	gboolean         asked_for_password;
 	gboolean         ask_to_open_destination_after_extraction;
 	gboolean         destroy_with_error_dialog;
+	gboolean         quit_with_progress_dialog;
 
 	FrBatchAction    current_batch_action;
 
@@ -327,6 +330,7 @@ struct _FrWindowPrivate {
 
 	gboolean         stoppable;
 	gboolean         closing;
+	gboolean         notify;
 
 	FrClipboardData *clipboard_data;
 	FrClipboardData *copy_data;
@@ -2175,6 +2179,14 @@ location_entry_key_press_event_cb (GtkWidget   *widget,
 }
 
 
+static void
+_fr_window_close_after_notification (FrWindow *window)
+{
+	fr_window_set_current_batch_action (window, FR_BATCH_ACTION_QUIT, NULL, NULL);
+	fr_window_restart_current_batch_action (window);
+}
+
+
 static gboolean
 real_close_progress_dialog (gpointer data)
 {
@@ -2187,6 +2199,9 @@ real_close_progress_dialog (gpointer data)
 
 	if (window->priv->progress_dialog != NULL)
 		gtk_widget_hide (window->priv->progress_dialog);
+
+	if (window->priv->batch_mode && window->priv->quit_with_progress_dialog)
+		_fr_window_close_after_notification (window);
 
 	return FALSE;
 }
@@ -2247,7 +2262,10 @@ open_folder (GtkWindow  *parent,
 	if (folder == NULL)
 		return;
 
-	if (! gtk_show_uri (gtk_window_get_screen (parent), folder, GDK_CURRENT_TIME, &error)) {
+	if (! gtk_show_uri (parent != NULL ? gtk_window_get_screen (parent) : NULL,
+			    folder,
+			    GDK_CURRENT_TIME, &error))
+	{
 		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
@@ -2864,6 +2882,14 @@ fr_window_destroy_with_error_dialog (FrWindow *window)
 }
 
 
+void
+fr_window_set_notify (FrWindow   *window,
+		      gboolean    notify)
+{
+	window->priv->notify = notify;
+}
+
+
 static void
 _handle_archive_operation_error (FrWindow  *window,
 				 FrArchive *archive,
@@ -3056,11 +3082,6 @@ _archive_operation_completed (FrWindow *window,
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
 			fr_window_archive_close (window);
 		}
-		else {
-			fr_window_add_to_recent_list (window, window->priv->archive_uri);
-			if (! window->priv->batch_mode)
-				gtk_window_present (GTK_WINDOW (window));
-		}
 		break;
 
 	case FR_ACTION_LISTING_CONTENT:
@@ -3124,13 +3145,17 @@ _archive_operation_completed (FrWindow *window,
 		g_free (window->priv->archive_uri);
 		window->priv->archive_uri = g_file_get_uri (fr_archive_get_file (window->archive));
 
+		if (window->priv->notify) {
+			g_free (window->priv->convert_data.new_file);
+			window->priv->convert_data.new_file = g_strdup (window->priv->archive_uri);
+		}
+
 		if (error == NULL) {
 			if (window->priv->archive_new)
 				window->priv->archive_new = FALSE;
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
 		}
 
-		close_progress_dialog (window, FALSE);
 		if (! window->priv->batch_mode && ! operation_canceled) {
 			fr_window_archive_reload (window);
 			return;
@@ -6236,6 +6261,93 @@ fr_window_archive_reload (FrWindow *window)
 /**/
 
 
+#ifdef ENABLE_NOTIFICATION
+
+
+static void
+notification_closed_cb  (NotifyNotification *notification,
+			gpointer            user_data)
+{
+	_fr_window_close_after_notification (FR_WINDOW (user_data));
+}
+
+
+static void
+notify_action_open_archive_cb (NotifyNotification *notification,
+			       char               *action,
+			       gpointer            user_data)
+{
+	FrWindow  *window = user_data;
+	GtkWidget *new_window;
+
+	new_window = fr_window_new ();
+	gtk_widget_show (new_window);
+
+	fr_window_archive_open (FR_WINDOW (new_window),
+				window->priv->convert_data.new_file,
+				GTK_WINDOW (new_window));
+}
+
+
+static void
+_fr_window_notify_creation_complete (FrWindow *window)
+{
+	char               *title;
+	char               *basename;
+	char               *message;
+	NotifyNotification *notification;
+	gboolean            notification_supports_actions;
+	GList              *caps;
+
+	title = get_action_description (window->priv->action, window->priv->pd_last_archive);
+	basename = _g_uri_display_basename (window->priv->convert_data.new_file);
+	message = g_strdup_printf (_("Archive \"%s\" created successfully"), basename);
+	notification = notify_notification_new (window->priv->batch_title, message, "file-roller");
+
+	g_signal_connect (notification,
+			  "closed",
+			  G_CALLBACK (notification_closed_cb),
+			  window);
+
+	notification_supports_actions = FALSE;
+	caps = notify_get_server_caps ();
+	if (caps != NULL) {
+		notification_supports_actions = g_list_find_custom (caps, "actions", (GCompareFunc) strcmp) != NULL;
+		_g_string_list_free (caps);
+	}
+
+	if (notification_supports_actions) {
+		notify_notification_add_action (notification,
+						"document-open-symbolic",
+						_("Open"),
+						notify_action_open_archive_cb,
+						window,
+						NULL);
+		/*notify_notification_set_hint (notification,
+					      "action-icons",
+					      g_variant_new_boolean (TRUE));*/
+	}
+
+	notify_notification_show (notification, NULL);
+	g_free (message);
+	g_free (basename);
+	g_free (title);
+}
+
+
+#else
+
+
+static void
+_fr_window_notify_creation_complete (FrWindow *window)
+{
+	_fr_window_close_after_notification (window);
+}
+
+
+#endif
+
+
 static void
 archive_add_files_ready_cb (GObject      *source_object,
 			    GAsyncResult *result,
@@ -6243,9 +6355,39 @@ archive_add_files_ready_cb (GObject      *source_object,
 {
 	FrWindow *window = user_data;
 	GError   *error = NULL;
+	gboolean  notify;
+
+	/* get here the value because the window can be destroy after calling
+	 * _archive_operation_completed. */
+	notify = window->priv->notify;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
+
+	if (notify) {
+		GtkWidget *main_window;
+		gboolean   has_system_notification;
+
+		if (window->priv->batch_mode)
+			main_window = window->priv->progress_dialog;
+		else
+			main_window = GTK_WIDGET (window);
+
+#ifdef ENABLE_NOTIFICATION
+		has_system_notification = TRUE;
+#else
+		has_system_notification = FALSE;
+#endif
+
+		if (! has_system_notification || gtk_window_has_toplevel_focus (GTK_WINDOW (main_window))) {
+			window->priv->quit_with_progress_dialog = TRUE;
+			open_progress_dialog_with_open_archive (window);
+		}
+		else {
+			close_progress_dialog (window, TRUE);
+			_fr_window_notify_creation_complete (window);
+		}
+	}
 
 	_g_error_free (error);
 }
@@ -9048,8 +9190,10 @@ fr_window_exec_batch_action (FrWindow      *window,
 			       0,
 			       NULL);
 
-		if ((window->priv->progress_dialog != NULL) && (gtk_widget_get_parent (window->priv->progress_dialog) != GTK_WIDGET (window)))
+		if ((window->priv->progress_dialog != NULL) && (gtk_widget_get_parent (window->priv->progress_dialog) != GTK_WIDGET (window))) {
 			gtk_widget_destroy (window->priv->progress_dialog);
+			window->priv->progress_dialog = NULL;
+		}
 		gtk_widget_destroy (GTK_WIDGET (window));
 		break;
 
@@ -9120,10 +9264,9 @@ fr_window_exec_current_batch_action (FrWindow *window)
 {
 	FrBatchAction *action;
 
-	if (window->priv->batch_action == NULL) {
-		window->priv->batch_mode = FALSE;
+	if (window->priv->batch_action == NULL)
 		return;
-	}
+
 	action = (FrBatchAction *) window->priv->batch_action->data;
 	fr_window_exec_batch_action (window, action);
 }

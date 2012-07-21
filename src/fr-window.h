@@ -306,6 +306,8 @@ void            fr_window_set_batch__add               (FrWindow      *window,
 						        const char    *archive,
 						        GList         *file_list);
 void            fr_window_destroy_with_error_dialog    (FrWindow      *window);
+void            fr_window_set_notify                   (FrWindow      *window,
+							gboolean       notify);
 
 /**/
 
