@@ -406,9 +406,6 @@ fr_command_add (FrCommand  *self,
 		gboolean    update,
 		gboolean    recursive)
 {
-	FrArchive *archive = FR_ARCHIVE (self);
-
-	archive->action = FR_ACTION_ADDING_FILES;
 	fr_process_set_out_line_func (self->process, NULL, NULL);
 	fr_process_set_err_line_func (self->process, NULL, NULL);
 
@@ -426,9 +423,6 @@ fr_command_delete (FrCommand  *self,
 		   const char *from_file,
 		   GList      *file_list)
 {
-	FrArchive *archive = FR_ARCHIVE (self);
-
-	archive->action = FR_ACTION_DELETING_FILES;
 	fr_process_set_out_line_func (self->process, NULL, NULL);
 	fr_process_set_err_line_func (self->process, NULL, NULL);
 
@@ -445,9 +439,6 @@ fr_command_extract (FrCommand  *self,
 		    gboolean    skip_older,
 		    gboolean    junk_paths)
 {
-	FrArchive *archive = FR_ARCHIVE (self);
-
-	archive->action = FR_ACTION_EXTRACTING_FILES;
 	fr_process_set_out_line_func (self->process, NULL, NULL);
 	fr_process_set_err_line_func (self->process, NULL, NULL);
 
@@ -464,9 +455,6 @@ fr_command_extract (FrCommand  *self,
 static void
 fr_command_test (FrCommand *self)
 {
-	FrArchive *archive = FR_ARCHIVE (self);
-
-	archive->action = FR_ACTION_TESTING_ARCHIVE;
 	fr_process_set_out_line_func (self->process, NULL, NULL);
 	fr_process_set_err_line_func (self->process, NULL, NULL);
 
@@ -760,7 +748,6 @@ load_local_archive (LoadData *load_data)
 {
 	FrCommand *self = FR_COMMAND (load_data->archive);
 
-	load_data->archive->action = FR_ACTION_LISTING_CONTENT;
 	fr_process_set_out_line_func (self->process, NULL, NULL);
 	fr_process_set_err_line_func (self->process, NULL, NULL);
 	fr_process_use_standard_locale (self->process, TRUE);

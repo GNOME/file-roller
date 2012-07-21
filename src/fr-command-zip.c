@@ -348,26 +348,28 @@ static void
 fr_command_zip_handle_error (FrCommand *comm,
 			     FrError   *error)
 {
-	if (error->type != FR_ERROR_NONE) {
-		if (error->status <= 1)
-			error->type = FR_ERROR_NONE;
-		else if ((error->status == 82) || (error->status == 5))
-			error->type = FR_ERROR_ASK_PASSWORD;
-		else {
+	if (error->type == FR_ERROR_NONE)
+		return;
+
+	if (error->status <= 1)
+		error->type = FR_ERROR_NONE;
+	else if ((error->status == 82) || (error->status == 5))
+		error->type = FR_ERROR_ASK_PASSWORD;
+	else {
+		int i;
+
+		for (i = 1; i <= 2; i++) {
 			GList *output;
 			GList *scan;
 
-			if (FR_ARCHIVE (comm)->action == FR_ACTION_TESTING_ARCHIVE)
-				output = comm->process->out.raw;
-			else
-				output = comm->process->err.raw;
+			output = (i == 1) ? comm->process->err.raw : comm->process->out.raw;
 
 			for (scan = g_list_last (output); scan; scan = scan->prev) {
 				char *line = scan->data;
 
 				if (strstr (line, "incorrect password") != NULL) {
 					error->type = FR_ERROR_ASK_PASSWORD;
-					break;
+					return;
 				}
 			}
 		}

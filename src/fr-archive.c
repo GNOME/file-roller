@@ -411,7 +411,6 @@ fr_archive_init (FrArchive *self)
         self->multi_volume = FALSE;
         self->volume_size = 0;
 	self->read_only = FALSE;
-	self->action = FR_ACTION_NONE;
         self->extract_here = FALSE;
         self->n_file = 0;
         self->n_files = 0;
