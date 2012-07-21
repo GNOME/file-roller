@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <sys/param.h>
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include "file-data.h"
