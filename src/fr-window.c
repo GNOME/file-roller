@@ -3110,8 +3110,10 @@ _archive_operation_completed (FrWindow *window,
 
 	case FR_ACTION_DELETING_FILES:
 		close_progress_dialog (window, FALSE);
-		if (! operation_canceled)
+		if (! window->priv->batch_mode && ! operation_canceled) {
 			fr_window_archive_reload (window);
+			return;
+		}
 		return;
 
 	case FR_ACTION_ADDING_FILES:
@@ -3127,6 +3129,8 @@ _archive_operation_completed (FrWindow *window,
 				window->priv->archive_new = FALSE;
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
 		}
+
+		close_progress_dialog (window, FALSE);
 		if (! window->priv->batch_mode && ! operation_canceled) {
 			fr_window_archive_reload (window);
 			return;
