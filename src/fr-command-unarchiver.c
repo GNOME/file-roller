@@ -233,7 +233,7 @@ fr_command_unarchiver_handle_error (FrCommand   *comm,
 		char *line = scan->data;
 
 		if (strstr (line, "password") != NULL) {
-			error->type = FR_ERROR_ASK_PASSWORD;
+			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 			break;
 		}
 	}

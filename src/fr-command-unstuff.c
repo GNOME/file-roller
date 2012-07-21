@@ -266,7 +266,7 @@ fr_command_unstuff_handle_error (FrCommand   *comm,
 	if ((error->type != FR_ERROR_NONE)
 	    && (error->status <= 1))
 	{
-		error->type = FR_ERROR_NONE;
+		fr_error_clear_gerror (error);
 	}
 }
 

@@ -49,17 +49,20 @@ typedef struct {
 	int          status;
 } FrError;
 
-GQuark     fr_error_quark      (void);
-GType      fr_error_get_type   (void);
-FrError *  fr_error_new        (FrErrorType   type,
-				int           status,
-				GError       *gerror);
-FrError *  fr_error_copy       (FrError      *error);
-void       fr_error_free       (FrError      *error);
-void       fr_error_set        (FrError      *error,
-				FrErrorType   type,
-				int           status,
-				GError       *gerror);
-void       fr_clear_error      (FrError     **error);
+GQuark     fr_error_quark          (void);
+GType      fr_error_get_type       (void);
+FrError *  fr_error_new            (FrErrorType   type,
+		 		    int           status,
+			 	    GError       *gerror);
+FrError *  fr_error_copy           (FrError      *error);
+void       fr_error_free           (FrError      *error);
+void       fr_error_set            (FrError      *error,
+				    FrErrorType   type,
+				    int           status,
+				    GError       *gerror);
+void       fr_error_take_gerror    (FrError      *error,
+				    GError       *gerror);
+void       fr_error_clear_gerror   (FrError      *error);
+void       fr_clear_error          (FrError     **error);
 
 #endif /* __FR_ERROR_H__ */

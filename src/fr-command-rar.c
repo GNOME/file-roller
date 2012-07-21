@@ -535,8 +535,8 @@ fr_command_rar_test (FrCommand   *comm)
 
 
 static void
-fr_command_rar_handle_error (FrCommand   *comm,
-			     FrError *error)
+fr_command_rar_handle_error (FrCommand *comm,
+			     FrError   *error)
 {
 	GList *scan;
 
@@ -552,22 +552,20 @@ fr_command_rar_handle_error (FrCommand   *comm,
 	if (error->type == FR_ERROR_NONE)
 		return;
 
-	/*if (error->status == 3)
-		error->type = FR_ERROR_ASK_PASSWORD;
-	else */
+	/* ignore warnings */
 	if (error->status <= 1)
-		error->type = FR_ERROR_NONE;
+		fr_error_clear_gerror (error);
 
 	for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
 		char *line = scan->data;
 
 		if (strstr (line, "password incorrect") != NULL) {
-			error->type = FR_ERROR_ASK_PASSWORD;
+			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 			break;
 		}
 
 		if (strstr (line, "wrong password") != NULL) {
-			error->type = FR_ERROR_ASK_PASSWORD;
+			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 			break;
 		}
 
@@ -576,13 +574,9 @@ fr_command_rar_handle_error (FrCommand   *comm,
 		}
 
 		if (strncmp (line, "Cannot find volume", 18) == 0) {
-			char *volume_filename;
+			char *volume_filename = g_path_get_basename (line + strlen ("Cannot find volume "));
+			fr_error_take_gerror (error, g_error_new (FR_ERROR, FR_ERROR_MISSING_VOLUME, _("Could not find the volume: %s"), volume_filename));
 
-			g_clear_error (&error->gerror);
-
-			error->type = FR_ERROR_MISSING_VOLUME;
-			volume_filename = g_path_get_basename (line + strlen ("Cannot find volume "));
-			error->gerror = g_error_new (FR_ERROR, error->status, _("Could not find the volume: %s"), volume_filename);
 			g_free (volume_filename);
 			break;
 		}

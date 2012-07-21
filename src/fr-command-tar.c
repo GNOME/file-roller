@@ -971,7 +971,7 @@ fr_command_tar_handle_error (FrCommand   *comm,
 {
 	if (error->type != FR_ERROR_NONE) {
 		if (error->status <= 1)
-			error->type = FR_ERROR_NONE;
+			fr_error_clear_gerror (error);
 	}
 }
 

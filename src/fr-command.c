@@ -480,21 +480,35 @@ fr_command_recompress (FrCommand *self)
 static gboolean
 fr_command_handle_process_error (FrCommand     *self,
 				 GAsyncResult  *result,
-				 FrError      **error)
+				 GError       **error)
 {
+	FrError *process_error = NULL;
+
 	self->process->restart = FALSE;
 
-	if (! fr_process_execute_finish (self->process, result, error)) {
-		if (g_error_matches ((*error)->gerror, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-			(*error)->type = FR_ERROR_STOPPED;
+	fr_process_execute_finish (self->process, result, &process_error);
 
-		if ((*error)->type != FR_ERROR_STOPPED)
-			FR_COMMAND_GET_CLASS (G_OBJECT (self))->handle_error (self, (*error));
+	if (process_error == NULL)
+		process_error = fr_error_new (FR_ERROR_NONE, 0, NULL);
 
-		if (self->process->restart) {
-			fr_process_restart (self->process);
-			return FALSE;
-		}
+	if (g_error_matches (process_error->gerror, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (process_error->gerror);
+		process_error->type = FR_ERROR_STOPPED;
+		process_error->gerror = g_error_new_literal (FR_ERROR, FR_ERROR_STOPPED, "");
+	}
+
+	if (process_error->type != FR_ERROR_STOPPED)
+		/* the command can change process_error->gerror or activate the
+		 * 'restart' flag */
+		FR_COMMAND_GET_CLASS (G_OBJECT (self))->handle_error (self, process_error);
+
+	if ((error != NULL) && (process_error->gerror != NULL))
+		*error = g_error_copy (process_error->gerror);
+	fr_error_free (process_error);
+
+	if (self->process->restart) {
+		fr_process_restart (self->process);
+		return FALSE;
 	}
 
 	return TRUE;
@@ -727,20 +741,18 @@ load_local_archive_list_ready_cb (GObject      *source_object,
 				  gpointer      user_data)
 {
 	LoadData *load_data = user_data;
-	FrError  *error = NULL;
+	GError   *error = NULL;
 
 	if (! fr_command_handle_process_error (FR_COMMAND (load_data->archive), result, &error))
+		/* command restarted */
 		return;
 
-	if (error != NULL) {
-		_fr_command_load_complete_with_error (load_data, error->gerror);
-		fr_error_free (error);
-		return;
-	}
+	if (error != NULL)
+		_fr_command_load_complete_with_error (load_data, error);
+	else
+		_fr_command_load_complete (load_data);
 
-	_fr_command_load_complete (load_data);
-
-	fr_error_free (error);
+	_g_error_free (error);
 }
 
 

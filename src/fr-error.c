@@ -92,6 +92,24 @@ fr_error_set (FrError     *error,
 
 
 void
+fr_error_take_gerror (FrError *error,
+		      GError  *gerror)
+{
+	if (gerror != error->gerror) {
+		g_clear_error (&error->gerror);
+		error->gerror = gerror;
+	}
+}
+
+
+void
+fr_error_clear_gerror (FrError *error)
+{
+	g_clear_error (&error->gerror);
+}
+
+
+void
 fr_clear_error (FrError **error)
 {
 	if ((error == NULL) || (*error == NULL))

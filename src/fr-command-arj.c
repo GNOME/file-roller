@@ -302,9 +302,9 @@ fr_command_arj_handle_error (FrCommand *comm,
 {
 	if (error->type != FR_ERROR_NONE) {
  		if (error->status <= 1)
- 			error->type = FR_ERROR_NONE;
+ 			fr_error_clear_gerror (error);
 		else if (error->status == 3)
- 			error->type = FR_ERROR_ASK_PASSWORD;
+			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
  	}
 }
 

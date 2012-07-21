@@ -220,8 +220,8 @@ fr_command_ace_test (FrCommand   *comm)
 
 
 static void
-fr_command_ace_handle_error (FrCommand   *comm,
-			     FrError *error)
+fr_command_ace_handle_error (FrCommand *comm,
+			     FrError   *error)
 {
 	/* FIXME */
 }

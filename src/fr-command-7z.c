@@ -480,8 +480,8 @@ fr_command_7z_test (FrCommand *command)
 
 
 static void
-fr_command_7z_handle_error (FrCommand   *command,
-			    FrError *error)
+fr_command_7z_handle_error (FrCommand *command,
+			    FrError   *error)
 {
 	FrArchive *archive = FR_ARCHIVE (command);
 
@@ -503,7 +503,7 @@ fr_command_7z_handle_error (FrCommand   *command,
 		testname = g_strconcat (first->original_path, ".001", NULL);
 
 		if (strcmp (basename, testname) == 0)
-			error->type = FR_ERROR_ASK_PASSWORD;
+			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 
 		g_free (testname);
 		g_free (basename);
@@ -523,7 +523,7 @@ fr_command_7z_handle_error (FrCommand   *command,
 			if ((strstr (line, "Wrong password?") != NULL)
 			    || (strstr (line, "Enter password") != NULL))
 			{
-				error->type = FR_ERROR_ASK_PASSWORD;
+				fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 				break;
 			}
 		}

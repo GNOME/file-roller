@@ -264,8 +264,8 @@ fr_command_ar_extract (FrCommand  *comm,
 
 
 static void
-fr_command_ar_handle_error (FrCommand   *comm,
-			    FrError *error)
+fr_command_ar_handle_error (FrCommand *comm,
+			    FrError   *error)
 {
 	/* FIXME */
 }

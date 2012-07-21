@@ -352,9 +352,9 @@ fr_command_zip_handle_error (FrCommand *comm,
 		return;
 
 	if (error->status <= 1)
-		error->type = FR_ERROR_NONE;
+		fr_error_clear_gerror (error);
 	else if ((error->status == 82) || (error->status == 5))
-		error->type = FR_ERROR_ASK_PASSWORD;
+		fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 	else {
 		int i;
 
@@ -368,7 +368,7 @@ fr_command_zip_handle_error (FrCommand *comm,
 				char *line = scan->data;
 
 				if (strstr (line, "incorrect password") != NULL) {
-					error->type = FR_ERROR_ASK_PASSWORD;
+					fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 					return;
 				}
 			}
