@@ -476,6 +476,8 @@ static const GDBusInterfaceVTable interface_vtable = {
 /* -- main application -- */
 
 
+#define FR_APPLICATION(x) ((FrApplication *)(x))
+
 typedef struct {
 	GtkApplication __parent;
 	GDBusNodeInfo  *introspection_data;
@@ -486,9 +488,8 @@ typedef GtkApplicationClass FrApplicationClass;
 
 static gpointer fr_application_parent_class;
 
-
+GType fr_application_get_type (void); /* added to suppress a compiler warning */
 G_DEFINE_TYPE (FrApplication, fr_application, GTK_TYPE_APPLICATION)
-#define FR_APPLICATION(x) ((FrApplication *)(x))
 
 
 static void
