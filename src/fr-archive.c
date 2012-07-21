@@ -1691,7 +1691,7 @@ _g_uri_is_archive (const char *uri)
 	if (g_load_file_in_buffer (file, buffer, buffer_size, NULL)) {
 		gboolean result_uncertain;
 
-		g_content_type_guess (uri, (guchar *) buffer, buffer_size, &result_uncertain);
+		mime_type = g_content_type_guess (uri, (guchar *) buffer, buffer_size, &result_uncertain);
 		if (result_uncertain) {
 			mime_type = get_mime_type_from_magic_numbers (buffer, buffer_size);
 			if (mime_type == NULL)
