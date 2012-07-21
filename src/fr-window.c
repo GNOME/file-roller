@@ -1031,7 +1031,7 @@ activity_cb (gpointer data)
 
 
 static void
-fr_window_start_activity_mode (FrWindow *window)
+_fr_window_start_activity_mode (FrWindow *window)
 {
 	g_return_if_fail (window != NULL);
 
@@ -1046,33 +1046,50 @@ fr_window_start_activity_mode (FrWindow *window)
 
 
 static void
-fr_window_stop_activity_mode (FrWindow *window)
+fr_window_pop_message (FrWindow *window)
 {
-	g_return_if_fail (window != NULL);
-
-	if (window->priv->activity_ref == 0)
+	if (! gtk_widget_get_mapped (GTK_WIDGET (window)))
 		return;
 
-	if (--window->priv->activity_ref > 0)
-		return;
-
-	if (window->priv->activity_timeout_handle != 0) {
-		g_source_remove (window->priv->activity_timeout_handle);
-		window->priv->activity_timeout_handle = 0;
-	}
-
+	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), 0.0);
-
-	if (! window->priv->batch_mode) {
-		if (window->priv->progress_bar != NULL)
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), 0.0);
-		fr_window_update_sensitivity (window);
-	}
+		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), "");
 }
 
 
-/* -- window_update_file_list -- */
+static void
+add_selected_fd (GtkTreeModel *model,
+		 GtkTreePath  *path,
+		 GtkTreeIter  *iter,
+		 gpointer      data)
+{
+	GList    **list = data;
+	FileData  *fdata;
+
+	gtk_tree_model_get (model, iter,
+			    COLUMN_FILE_DATA, &fdata,
+			    -1);
+	if (! fdata->list_dir)
+		*list = g_list_prepend (*list, fdata);
+}
+
+
+static GList *
+get_selection_as_fd (FrWindow *window)
+{
+	GtkTreeSelection *selection;
+	GList            *list = NULL;
+
+	if (! gtk_widget_get_realized (window->priv->list_view))
+		return NULL;
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
+	if (selection == NULL)
+		return NULL;
+	gtk_tree_selection_selected_foreach (selection, add_selected_fd, &list);
+
+	return list;
+}
 
 
 static GPtrArray *
@@ -1093,6 +1110,120 @@ fr_window_get_current_dir_list (FrWindow *window)
 
 	return files;
 }
+
+
+static void
+fr_window_update_statusbar_list_info (FrWindow *window)
+{
+	char    *info, *archive_info, *selected_info;
+	char    *size_txt, *sel_size_txt;
+	int      tot_n, sel_n;
+	goffset  tot_size, sel_size;
+	GList   *scan;
+
+	if ((window == NULL) || window->priv->batch_mode)
+		return;
+
+	if (window->archive == NULL) {
+		gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->list_info_cid);
+		return;
+	}
+
+	tot_n = 0;
+	tot_size = 0;
+
+	if (window->priv->archive_present) {
+		GPtrArray *files = fr_window_get_current_dir_list (window);
+		int        i;
+
+		for (i = 0; i < files->len; i++) {
+			FileData *fd = g_ptr_array_index (files, i);
+
+			tot_n++;
+			if (! file_data_is_dir (fd))
+				tot_size += fd->size;
+			else
+				tot_size += fd->dir_size;
+		}
+		g_ptr_array_free (files, TRUE);
+	}
+
+	sel_n = 0;
+	sel_size = 0;
+
+	if (window->priv->archive_present) {
+		GList *selection = get_selection_as_fd (window);
+
+		for (scan = selection; scan; scan = scan->next) {
+			FileData *fd = scan->data;
+
+			sel_n++;
+			if (! file_data_is_dir (fd))
+				sel_size += fd->size;
+		}
+		g_list_free (selection);
+	}
+
+	size_txt = g_format_size (tot_size);
+	sel_size_txt = g_format_size (sel_size);
+
+	if (tot_n == 0)
+		archive_info = g_strdup ("");
+	else
+		archive_info = g_strdup_printf (ngettext ("%d object (%s)", "%d objects (%s)", tot_n), tot_n, size_txt);
+
+	if (sel_n == 0)
+		selected_info = g_strdup ("");
+	else
+		selected_info = g_strdup_printf (ngettext ("%d object selected (%s)", "%d objects selected (%s)", sel_n), sel_n, sel_size_txt);
+
+	info = g_strconcat (archive_info,
+			    ((sel_n == 0) ? NULL : ", "),
+			    selected_info,
+			    NULL);
+
+	gtk_statusbar_push (GTK_STATUSBAR (window->priv->statusbar), window->priv->list_info_cid, info);
+
+	g_free (size_txt);
+	g_free (sel_size_txt);
+	g_free (archive_info);
+	g_free (selected_info);
+	g_free (info);
+}
+
+
+static void
+_fr_window_stop_activity_mode (FrWindow *window)
+{
+	g_return_if_fail (window != NULL);
+
+	if (window->priv->activity_ref == 0)
+		return;
+
+	fr_window_pop_message (window);
+
+	if (--window->priv->activity_ref > 0)
+		return;
+
+	if (window->priv->activity_timeout_handle != 0) {
+		g_source_remove (window->priv->activity_timeout_handle);
+		window->priv->activity_timeout_handle = 0;
+	}
+
+	if (window->priv->progress_dialog != NULL)
+		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), 0.0);
+
+	if (! window->priv->batch_mode) {
+		if (window->priv->progress_bar != NULL)
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), 0.0);
+	}
+
+	fr_window_update_sensitivity (window);
+	fr_window_update_statusbar_list_info (window);
+}
+
+
+/* -- window_update_file_list -- */
 
 
 static gint
@@ -1590,121 +1721,6 @@ add_selected_from_tree_view (GtkTreeModel *model,
 
 
 static void
-add_selected_fd (GtkTreeModel *model,
-		 GtkTreePath  *path,
-		 GtkTreeIter  *iter,
-		 gpointer      data)
-{
-	GList    **list = data;
-	FileData  *fdata;
-
-	gtk_tree_model_get (model, iter,
-			    COLUMN_FILE_DATA, &fdata,
-			    -1);
-	if (! fdata->list_dir)
-		*list = g_list_prepend (*list, fdata);
-}
-
-
-static GList *
-get_selection_as_fd (FrWindow *window)
-{
-	GtkTreeSelection *selection;
-	GList            *list = NULL;
-
-	if (! gtk_widget_get_realized (window->priv->list_view))
-		return NULL;
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
-	if (selection == NULL)
-		return NULL;
-	gtk_tree_selection_selected_foreach (selection, add_selected_fd, &list);
-
-	return list;
-}
-
-
-static void
-fr_window_update_statusbar_list_info (FrWindow *window)
-{
-	char    *info, *archive_info, *selected_info;
-	char    *size_txt, *sel_size_txt;
-	int      tot_n, sel_n;
-	goffset  tot_size, sel_size;
-	GList   *scan;
-
-	if ((window == NULL) || window->priv->batch_mode)
-		return;
-
-	if (window->archive == NULL) {
-		gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->list_info_cid);
-		return;
-	}
-
-	tot_n = 0;
-	tot_size = 0;
-
-	if (window->priv->archive_present) {
-		GPtrArray *files = fr_window_get_current_dir_list (window);
-		int        i;
-
-		for (i = 0; i < files->len; i++) {
-			FileData *fd = g_ptr_array_index (files, i);
-
-			tot_n++;
-			if (! file_data_is_dir (fd))
-				tot_size += fd->size;
-			else
-				tot_size += fd->dir_size;
-		}
-		g_ptr_array_free (files, TRUE);
-	}
-
-	sel_n = 0;
-	sel_size = 0;
-
-	if (window->priv->archive_present) {
-		GList *selection = get_selection_as_fd (window);
-
-		for (scan = selection; scan; scan = scan->next) {
-			FileData *fd = scan->data;
-
-			sel_n++;
-			if (! file_data_is_dir (fd))
-				sel_size += fd->size;
-		}
-		g_list_free (selection);
-	}
-
-	size_txt = g_format_size (tot_size);
-	sel_size_txt = g_format_size (sel_size);
-
-	if (tot_n == 0)
-		archive_info = g_strdup ("");
-	else
-		archive_info = g_strdup_printf (ngettext ("%d object (%s)", "%d objects (%s)", tot_n), tot_n, size_txt);
-
-	if (sel_n == 0)
-		selected_info = g_strdup ("");
-	else
-		selected_info = g_strdup_printf (ngettext ("%d object selected (%s)", "%d objects selected (%s)", sel_n), sel_n, sel_size_txt);
-
-	info = g_strconcat (archive_info,
-			    ((sel_n == 0) ? NULL : ", "),
-			    selected_info,
-			    NULL);
-
-	gtk_statusbar_push (GTK_STATUSBAR (window->priv->statusbar), window->priv->list_info_cid, info);
-
-	g_free (size_txt);
-	g_free (sel_size_txt);
-	g_free (archive_info);
-	g_free (selected_info);
-	g_free (info);
-}
-
-
-static void
 fr_window_populate_file_list (FrWindow  *window,
 			      GPtrArray *files)
 {
@@ -1803,8 +1819,7 @@ fr_window_populate_file_list (FrWindow  *window,
 					      get_column_from_sort_method (window->priv->sort_method),
 					      window->priv->sort_type);
 
-	fr_window_update_statusbar_list_info (window);
-	fr_window_stop_activity_mode (window);
+	_fr_window_stop_activity_mode (window);
 }
 
 
@@ -2082,7 +2097,7 @@ fr_window_update_file_list (FrWindow *window,
 
 	/**/
 
-	fr_window_start_activity_mode (window);
+	_fr_window_start_activity_mode (window);
 
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
 		fr_window_compute_list_names (window, window->archive->files);
@@ -2749,18 +2764,6 @@ fr_window_push_message (FrWindow   *window,
 
 
 static void
-fr_window_pop_message (FrWindow *window)
-{
-	if (! gtk_widget_get_mapped (GTK_WIDGET (window)))
-		return;
-
-	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
-	if (window->priv->progress_dialog != NULL)
-		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), "");
-}
-
-
-static void
 fr_window_add_to_recent_list (FrWindow *window,
 			      char     *uri)
 {
@@ -3027,7 +3030,7 @@ _archive_operation_completed (FrWindow *window,
 	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
 #endif
 
-	fr_window_stop_activity_mode (window);
+	_fr_window_stop_activity_mode (window);
 	_handle_archive_operation_error (window, window->archive, action, error, &continue_batch, &opens_dialog);
 	if (opens_dialog)
 		return;
@@ -3183,7 +3186,7 @@ _archive_operation_started (FrWindow *window,
 	char *message;
 
 	window->priv->action = action;
-	fr_window_start_activity_mode (window);
+	_fr_window_start_activity_mode (window);
 
 #ifdef DEBUG
 	debug (DEBUG_INFO, "%s [START] (FR::Window)\n", action_names[action]);
@@ -7216,7 +7219,7 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 
-	fr_window_stop_activity_mode (window);
+	_fr_window_stop_activity_mode (window);
 	close_progress_dialog (window, FALSE);
 
 	if (error == NULL)
@@ -7232,10 +7235,12 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 	_g_path_remove_directory (window->priv->convert_data.temp_dir);
 	_fr_window_convert_data_free (window, FALSE);
 
-	if (window->priv->batch_mode && (error == NULL))
+	if (error == NULL)
 		fr_window_exec_next_batch_action (window);
 	else
 		fr_window_stop_batch (window);
+
+	_g_error_free (error);
 }
 
 
@@ -7258,7 +7263,7 @@ _save_as_operation_completed_with_error (FrWindow *window,
 	_g_path_remove_directory (window->priv->convert_data.temp_dir);
 	_fr_window_convert_data_free (window, TRUE);
 
-	fr_window_stop_activity_mode (window);
+	_fr_window_stop_activity_mode (window);
 	close_progress_dialog (window, FALSE);
 	fr_window_stop_batch (window);
 }
@@ -8051,8 +8056,7 @@ _paste_from_archive_operation_completed (FrWindow *window,
 	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
 #endif
 
-	fr_window_stop_activity_mode (window);
-	fr_window_pop_message (window);
+	_fr_window_stop_activity_mode (window);
 	close_progress_dialog (window, FALSE);
 
 	if ((error != NULL) && (error->code == FR_ERROR_ASK_PASSWORD)) {
@@ -9142,10 +9146,6 @@ fr_window_start_batch (FrWindow *window)
 void
 fr_window_stop_batch (FrWindow *window)
 {
-	fr_window_pop_message (window);
-	fr_window_update_sensitivity (window);
-	fr_window_update_statusbar_list_info (window);
-
 	if (! window->priv->batch_mode)
 		return;
 
