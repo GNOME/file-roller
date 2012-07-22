@@ -1057,7 +1057,7 @@ fr_window_pop_message (FrWindow *window)
 
 	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
-		gtk_widget_hide (window->priv->pd_message);
+		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), _("Operation completed"));
 }
 
 
@@ -2698,7 +2698,10 @@ fr_archive_progress_cb (FrArchive *archive,
 			remaining_files = archive->n_files - archive->n_file + 1;
 
 			switch (window->priv->action) {
-			case FR_ACTION_CREATING_ARCHIVE:
+			/* case FR_ACTION_CREATING_ARCHIVE:
+			case FR_ACTION_RENAMING_FILES:
+			case FR_ACTION_PASTING_FILES:
+			case FR_ACTION_UPDATING_FILES: FIXME */
 			case FR_ACTION_ADDING_FILES:
 			case FR_ACTION_EXTRACTING_FILES:
 			case FR_ACTION_DELETING_FILES:
@@ -7586,6 +7589,7 @@ fr_window_archive_save_as (FrWindow   *window,
 	window->priv->convert_data.converting = TRUE;
 	window->priv->convert_data.temp_dir = _g_path_get_temp_work_dir (NULL);
 
+	fr_archive_action_started (window->archive, FR_ACTION_EXTRACTING_FILES);
 	fr_archive_extract_to_local (window->archive,
 				     NULL,
 				     window->priv->convert_data.temp_dir,
