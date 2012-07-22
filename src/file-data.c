@@ -93,7 +93,6 @@ file_data_copy (FileData *src)
 void
 file_data_update_content_type (FileData *fdata)
 {
-
 	if (fdata->dir)
 		fdata->content_type = MIME_TYPE_DIRECTORY;
 	else

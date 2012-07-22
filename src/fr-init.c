@@ -25,6 +25,9 @@
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
+#if ENABLE_LIBARCHIVE
+# include "fr-archive-libarchive.h"
+#endif
 #include "fr-command.h"
 #include "fr-command-ace.h"
 #include "fr-command-alz.h"
@@ -339,8 +342,8 @@ register_archives (void)
 	 * have higher priority over commands that can only read the same
 	 * format, regardless of the registration order. */
 
-#if HAVE_LIBARCHIVE
-	register_archive (FR_TYPE_LIBARCHIVE);
+#if ENABLE_LIBARCHIVE
+	register_archive (FR_TYPE_ARCHIVE_LIBARCHIVE);
 #endif
 
 	register_archive (FR_TYPE_COMMAND_TAR);

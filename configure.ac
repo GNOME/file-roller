@@ -19,24 +19,13 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
-dnl ==========================================================================
-dnl
-dnl If you add a version number here, you *must* add an AC_SUBST line for
-dnl it too, or it will never make it into the spec file!
-dnl
-dnl ==========================================================================
-
 GLIB_REQUIRED=2.29.14
 GIO_REQUIRED=2.25.5
 GTK_REQUIRED=3.4.0
 NAUTILUS_REQUIRED=2.22.2
 JSON_GLIB_REQUIRED=0.14.0
 LIBNOTIFY_REQUIRED=0.4.3
-
-AC_SUBST(GLIB_REQUIRED)
-AC_SUBST(GIO_REQUIRED)
-AC_SUBST(GTK_REQUIRED)
-AC_SUBST(NAUTILUS_REQUIRED)
+LIBARCHIVE_REQUIRED=3.0.0
 
 dnl ===========================================================================
 
@@ -84,7 +73,9 @@ unset option
 CFLAGS="$CFLAGS $WARNINGS"
 
 dnl ===========================================================================
-
+dnl
+dnl run_in_place
+dnl
 AC_ARG_ENABLE([run_in_place],
 	      AS_HELP_STRING([--enable-run-in-place],
 			     [load ui data and extensions from source tree]),,
@@ -103,7 +94,9 @@ AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
 
 dnl ******************************
-
+dnl
+dnl nautilus actions
+dnl
 AC_ARG_ENABLE([nautilus_actions],
 	      [AS_HELP_STRING([--disable-nautilus-actions],
 			      [do not build the nautilus context menu actions])],,
@@ -125,7 +118,9 @@ NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extensio
 AC_SUBST(NAUTILUS_EXTENSION_DIR)
 
 dnl ******************************
-
+dnl
+dnl json-glib-1.0
+dnl
 PKG_CHECK_MODULES(JSON_GLIB,
 		  [json-glib-1.0 >= $JSON_GLIB_REQUIRED
 		   glib-2.0],
@@ -142,9 +137,9 @@ AC_SUBST(JSON_GLIB_LIBS)
 AM_CONDITIONAL(ENABLE_JSON_GLIB, test x"$enable_json_glib" != x"no")
 
 dnl ******************************
-
+dnl
 dnl Checks for mkdtemp function
-
+dnl
 mkdtemp_missing=false
 AC_CHECK_FUNC(mkdtemp,
     [AC_DEFINE([HAVE_MKDTEMP], 1, [Have GlibC function to make temp dirs])],
@@ -154,7 +149,9 @@ AM_CONDITIONAL(MKDTEMP_MISSING, test x$mkdtemp_missing = xtrue)
 AC_CHECK_LIB(m, floor)
 
 dnl ==========================================================================
-
+dnl
+dnl packagekit
+dnl
 AC_ARG_ENABLE(packagekit,
 	      [AS_HELP_STRING([--disable-packagekit],[build without PackageKit support])],,
 	      [enable_packagekit=yes])
@@ -187,7 +184,9 @@ AC_SUBST(LIBNOTIFY_LIBS)
 AC_SUBST(LIBNOTIFY_CFLAGS)
 
 dnl ******************************
-
+dnl
+dnl magic
+dnl
 AC_ARG_ENABLE([magic],
               AS_HELP_STRING([--enable-magic], [use libmagic to detect file type]),,
               [enable_magic=yes])
@@ -215,6 +214,30 @@ int main () { magic_t m = magic_open(MAGIC_NONE); }
 fi
 
 AM_CONDITIONAL(ENABLE_MAGIC, test x"$enable_magic" != x"no")
+
+dnl ===========================================================================
+dnl
+dnl libarchive
+dnl
+AC_ARG_ENABLE(libarchive,[AC_HELP_STRING([--enable-libarchive],[enable code that requires libarchive [default=yes]])],, [enable_libarchive="yes"])
+AM_CONDITIONAL(ENABLE_LIBARCHIVE, test "x$enable_libarchive" = xyes)
+
+LIBARCHIVE_LIBS=""
+LIBARCHIVE_CFLAGS=""
+if test x"$enable_libarchive" = xyes; then
+   AC_MSG_CHECKING(for libarchive support)
+
+   if pkg-config --atleast-version=$LIBARCHIVE_REQUIRED libarchive; then
+      LIBARCHIVE_LIBS=`pkg-config --libs libarchive`
+      LIBARCHIVE_CFLAGS=`pkg-config --cflags libarchive`
+      AC_DEFINE(ENABLE_LIBARCHIVE, 1, [Have libarchive])
+   else
+      enable_libarchive=no
+   fi
+fi
+AC_MSG_RESULT($enable_libarchive)
+AC_SUBST(LIBARCHIVE_LIBS)
+AC_SUBST(LIBARCHIVE_CFLAGS)
 
 dnl ******************************
 
@@ -287,9 +310,10 @@ Configuration:
 	Disable deprecated code : ${disable_deprecated}
 	Run in place            : ${enable_run_in_place}
 	Internal mkdtemp        : ${mkdtemp_missing}
-	Nautilus support        : ${enable_nautilus_actions}
+	Nautilus module         : ${enable_nautilus_actions}
 	PackageKit support      : ${enable_packagekit}
 	Use libmagic            : ${enable_magic}
 	JSON support            : ${enable_json_glib}
-	Enable notification     : ${enable_notification}
+	Notifications support   : ${enable_notification}
+	Use libarchive          : ${enable_libarchive}
 "

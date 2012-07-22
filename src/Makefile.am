@@ -42,7 +42,8 @@ INCLUDES =						\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)					\
 	$(JSON_GLIB_CFLAGS)				\
-	$(LIBNOTIFY_CFLAGS)
+	$(LIBNOTIFY_CFLAGS)				\
+	$(LIBARCHIVE_CFLAGS)
 
 BUILT_SOURCES =			\
 	fr-marshal.c		\
@@ -166,6 +167,12 @@ COMMON_SOURCES +=			\
 	fr-command-unarchiver.c
 endif
 
+if ENABLE_LIBARCHIVE
+COMMON_SOURCES +=			\
+	fr-archive-libarchive.h		\
+	fr-archive-libarchive.c
+endif
+
 fr-marshal.h: fr-marshal.list $(GLIB_GENMARSHAL)
 	$(AM_V_GEN)( $(GLIB_GENMARSHAL) $< --header --prefix=fr_marshal > $@ )
 
@@ -208,7 +215,8 @@ file_roller_LDADD =					\
 	$(top_builddir)/copy-n-paste/libeggsmclient.la	\
 	$(FR_LIBS)					\
 	$(JSON_GLIB_LIBS)				\
-	$(LIBNOTIFY_LIBS)
+	$(LIBNOTIFY_LIBS)				\
+	$(LIBARCHIVE_LIBS)
 
 if ENABLE_MAGIC
 file_roller_LDADD += $(MAGIC_LIBS)
