@@ -28,6 +28,9 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
+#if ENABLE_MAGIC
+#  include <magic.h>
+#endif
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gio-utils.h"
@@ -39,10 +42,6 @@
 #include "fr-marshal.h"
 #include "fr-process.h"
 #include "fr-init.h"
-
-#if ENABLE_MAGIC
-#include <magic.h>
-#endif
 
 
 #define FILE_ARRAY_INITIAL_SIZE	256
@@ -620,6 +619,30 @@ static const char *
 get_mime_type_from_magic_numbers (char  *buffer,
 				  gsize  buffer_size)
 {
+#if ENABLE_MAGIC
+
+	static magic_t magic = NULL;
+
+	if (magic == NULL) {
+		magic = magic_open (MAGIC_MIME_TYPE);
+		if (magic != NULL)
+			magic_load (magic, NULL);
+		else
+			g_warning ("unable to open magic database");
+	}
+
+	if (magic != NULL) {
+		const char * mime_type;
+
+		mime_type = magic_buffer (magic, buffer, buffer_size);
+		if (mime_type)
+			return mime_type;
+
+		g_warning ("unable to detect filetype from magic: %s", magic_error (magic));
+	}
+
+#else
+
 	static const struct magic {
 		const unsigned int off;
 		const unsigned int len;
@@ -654,6 +677,8 @@ get_mime_type_from_magic_numbers (char  *buffer,
 		else if (! memcmp (buffer + magic->off, magic->id, magic->len))
 			return magic->mime_type;
 	}
+
+#endif
 
 	return NULL;
 }

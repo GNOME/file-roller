@@ -190,7 +190,7 @@ dnl ******************************
 
 AC_ARG_ENABLE([magic],
               AS_HELP_STRING([--enable-magic], [use libmagic to detect file type]),,
-              [enable_magic=no])
+              [enable_magic=yes])
 
 if test x"$enable_magic" = x"yes" ; then
 	save_LIBS="$LIBS"
