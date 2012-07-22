@@ -1057,7 +1057,7 @@ fr_window_pop_message (FrWindow *window)
 
 	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
-		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), "");
+		gtk_widget_hide (window->priv->pd_message);
 }
 
 
@@ -2506,8 +2506,10 @@ fr_archive_message_cb (FrArchive  *archive,
 		if (utf8_msg == NULL)
 			return TRUE;
 
-		if (g_utf8_validate (utf8_msg, -1, NULL))
+		if (g_utf8_validate (utf8_msg, -1, NULL)) {
 			gtk_label_set_text (GTK_LABEL (window->priv->pd_message), utf8_msg);
+			gtk_widget_show (window->priv->pd_message);
+		}
 
 		g_free (window->priv->pd_last_message);
 		window->priv->pd_last_message = g_strdup (utf8_msg);
@@ -2525,7 +2527,7 @@ fr_archive_message_cb (FrArchive  *archive,
 		g_free (utf8_msg);
 	}
 	else
-		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), "");
+		gtk_widget_hide (window->priv->pd_message);
 
 	progress_dialog_update_action_description (window);
 
