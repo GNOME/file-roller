@@ -2420,11 +2420,24 @@ get_action_description (FrAction    action,
 
 
 static void
+progress_dialog_set_action_description (FrWindow   *window,
+					const char *description)
+{
+	char *description_markup;
+
+	description_markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", description);
+	gtk_label_set_markup (GTK_LABEL (window->priv->pd_action), description_markup);
+
+	g_free (description_markup);
+}
+
+
+static void
 progress_dialog_update_action_description (FrWindow *window)
 {
 	const char *current_archive;
 	char       *description;
-	char       *description_markup;
+
 
 	if (window->priv->progress_dialog == NULL)
 		return;
@@ -2442,10 +2455,8 @@ progress_dialog_update_action_description (FrWindow *window)
 		window->priv->pd_last_archive = g_strdup (current_archive);
 
 	description = get_action_description (window->priv->action, window->priv->pd_last_archive);
-	description_markup = g_markup_printf_escaped ("<span weight=\"bold\" size=\"larger\">%s</span>", description);
-	gtk_label_set_markup (GTK_LABEL (window->priv->pd_action), description_markup);
+	progress_dialog_set_action_description (window, description);
 
-	g_free (description_markup);
 	g_free (description);
 }
 
@@ -2748,6 +2759,9 @@ open_progress_dialog_with_open_destination (FrWindow *window)
 static void
 open_progress_dialog_with_open_archive (FrWindow *window)
 {
+	char *basename;
+	char *description;
+
 	if (window->priv->hide_progress_timeout != 0) {
 		g_source_remove (window->priv->hide_progress_timeout);
 		window->priv->hide_progress_timeout = 0;
@@ -2763,8 +2777,17 @@ open_progress_dialog_with_open_archive (FrWindow *window)
 	gtk_widget_show (window->priv->pd_open_archive_button);
 	gtk_widget_show (window->priv->pd_close_button);
 	display_progress_dialog (window);
+
 	fr_archive_progress_cb (NULL, 1.0, window);
-	fr_archive_message_cb (NULL, _("Archive created successfully"), window);
+	fr_archive_message_cb (NULL, NULL, window);
+
+	basename = _g_uri_display_basename (window->priv->convert_data.new_file);
+	/* Translators: %s is a filename */
+	description = g_strdup_printf (_("\"%s\" created successfully"), basename);
+	progress_dialog_set_action_description (window, description);
+
+	g_free (description);
+	g_free (basename);
 }
 
 
@@ -6264,11 +6287,23 @@ fr_window_archive_reload (FrWindow *window)
 #ifdef ENABLE_NOTIFICATION
 
 
+typedef struct {
+	FrWindow *window;
+	gboolean  window_closed;
+} NotifyData;
+
+
 static void
 notification_closed_cb  (NotifyNotification *notification,
-			gpointer            user_data)
+			 gpointer            user_data)
 {
-	_fr_window_close_after_notification (FR_WINDOW (user_data));
+	NotifyData *notify_data = user_data;
+	FrWindow   *window = notify_data->window;
+
+	if (! notify_data->window_closed)
+		gtk_window_present (GTK_WINDOW (window->priv->progress_dialog));
+
+	g_free (notify_data);
 }
 
 
@@ -6277,8 +6312,9 @@ notify_action_open_archive_cb (NotifyNotification *notification,
 			       char               *action,
 			       gpointer            user_data)
 {
-	FrWindow  *window = user_data;
-	GtkWidget *new_window;
+	NotifyData *notify_data = user_data;
+	FrWindow   *window = notify_data->window;
+	GtkWidget  *new_window;
 
 	new_window = fr_window_new ();
 	gtk_widget_show (new_window);
@@ -6286,6 +6322,9 @@ notify_action_open_archive_cb (NotifyNotification *notification,
 	fr_window_archive_open (FR_WINDOW (new_window),
 				window->priv->convert_data.new_file,
 				GTK_WINDOW (new_window));
+
+	notify_data->window_closed = TRUE;
+	_fr_window_close_after_notification (window);
 }
 
 
@@ -6298,16 +6337,21 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	NotifyNotification *notification;
 	gboolean            notification_supports_actions;
 	GList              *caps;
+	NotifyData         *notify_data;
 
 	title = get_action_description (window->priv->action, window->priv->pd_last_archive);
 	basename = _g_uri_display_basename (window->priv->convert_data.new_file);
-	message = g_strdup_printf (_("Archive \"%s\" created successfully"), basename);
+	/* Translators: %s is a filename */
+	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
 	notification = notify_notification_new (window->priv->batch_title, message, "file-roller");
 
+	notify_data = g_new0 (NotifyData, 1);
+	notify_data->window = window;
+	notify_data->window_closed = FALSE;
 	g_signal_connect (notification,
 			  "closed",
 			  G_CALLBACK (notification_closed_cb),
-			  window);
+			  notify_data);
 
 	notification_supports_actions = FALSE;
 	caps = notify_get_server_caps ();
@@ -6321,7 +6365,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 						"document-open-symbolic",
 						_("Open"),
 						notify_action_open_archive_cb,
-						window,
+						notify_data,
 						NULL);
 		/*notify_notification_set_hint (notification,
 					      "action-icons",
@@ -6341,7 +6385,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 static void
 _fr_window_notify_creation_complete (FrWindow *window)
 {
-	_fr_window_close_after_notification (window);
+	gtk_window_present (GTK_WINDOW (window->priv->progress_dialog));
 }
 
 
@@ -6364,29 +6408,19 @@ archive_add_files_ready_cb (GObject      *source_object,
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
 
-	if (notify) {
+	if ((error == NULL) && notify) {
 		GtkWidget *main_window;
-		gboolean   has_system_notification;
 
 		if (window->priv->batch_mode)
 			main_window = window->priv->progress_dialog;
 		else
 			main_window = GTK_WIDGET (window);
 
-#ifdef ENABLE_NOTIFICATION
-		has_system_notification = TRUE;
-#else
-		has_system_notification = FALSE;
-#endif
+		window->priv->quit_with_progress_dialog = TRUE;
+		open_progress_dialog_with_open_archive (window);
 
-		if (! has_system_notification || gtk_window_has_toplevel_focus (GTK_WINDOW (main_window))) {
-			window->priv->quit_with_progress_dialog = TRUE;
-			open_progress_dialog_with_open_archive (window);
-		}
-		else {
-			close_progress_dialog (window, TRUE);
+		if (! gtk_window_has_toplevel_focus (GTK_WINDOW (main_window)))
 			_fr_window_notify_creation_complete (window);
-		}
 	}
 
 	_g_error_free (error);
