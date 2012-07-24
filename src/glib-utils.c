@@ -1000,6 +1000,29 @@ _g_path_is_parent_of (const char *dirname,
 }
 
 
+const char *
+_g_path_get_base_name (const char *path,
+		       const char *base_dir,
+		       gboolean    junk_paths)
+{
+	int         base_dir_len;
+	const char *base_path;
+
+	if (junk_paths)
+		return _g_path_get_file_name (path);
+
+	base_dir_len = strlen (base_dir);
+	if (strlen (path) <= base_dir_len)
+		return NULL;
+
+	base_path = path + base_dir_len;
+	if (path[0] != '/')
+		base_path -= 1;
+
+	return base_path;
+}
+
+
 gboolean
 _g_filename_is_hidden (const gchar *name)
 {
