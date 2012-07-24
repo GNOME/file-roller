@@ -286,9 +286,8 @@ process_line__generic (char     *line,
 	if (line[strlen (line) - 1] == '/') /* ignore directories */
 		return;
 
-	if (archive->n_files > 1) {
-		double fraction = (double) ++archive->n_file / (archive->n_files + 1);
-		fr_archive_progress (archive, fraction);
+	if (fr_archive_progress_get_total_files (archive) > 1) {
+		fr_archive_progress (archive, fr_archive_progress_inc_completed_files (archive, 1));
 	}
 	else {
 		char *msg = g_strdup_printf (message_format, _g_path_get_file_name (line), NULL);

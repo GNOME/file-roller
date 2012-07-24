@@ -200,10 +200,8 @@ process_line__common (char     *line,
 	if (line == NULL)
 		return;
 
-	if (archive->n_files > 1) {
-		double fraction = (double) ++archive->n_file / (archive->n_files + 1);
-		fr_archive_progress (archive, fraction);
-	}
+	if (fr_archive_progress_get_total_files (archive) > 1)
+		fr_archive_progress (archive, fr_archive_progress_inc_completed_files (archive, 1));
 	else
 		fr_archive_message (archive, line);
 }

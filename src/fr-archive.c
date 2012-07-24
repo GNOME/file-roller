@@ -45,6 +45,7 @@
 
 
 #define FILE_ARRAY_INITIAL_SIZE	256
+#define PROGRESS_DELAY          100
 
 
 char *action_names[] = { "NONE",
@@ -74,7 +75,16 @@ struct _FrArchivePrivate {
 	GFile         *file;
 	FrArchiveCaps  capabilities;
 
-	/* internal */
+	/* progress data */
+
+	int            total_files;
+	int            completed_files;
+	gsize          total_bytes;
+	gsize          completed_bytes;
+	GMutex         progress_mutex;
+	gulong         progress_event;
+
+	/* others */
 
 	gboolean       creating_archive;
 	char          *extraction_destination;
@@ -222,6 +232,13 @@ fr_archive_finalize (GObject *object)
 	archive = FR_ARCHIVE (object);
 
 	_fr_archive_set_uri (archive, NULL);
+	if (archive->priv->progress_event != 0) {
+		g_source_remove (archive->priv->progress_event);
+		archive->priv->progress_event = 0;
+	}
+	g_mutex_clear (&archive->priv->progress_mutex);
+	g_hash_table_unref (archive->files_hash);
+	_g_ptr_array_free_full (archive->files, (GFunc) file_data_free, NULL);
 
 	/* Chain up */
 
@@ -404,6 +421,7 @@ fr_archive_init (FrArchive *self)
 
 	self->mime_type = NULL;
 	self->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
+	self->files_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	self->n_regular_files = 0;
         self->password = NULL;
         self->encrypt_header = FALSE;
@@ -412,8 +430,6 @@ fr_archive_init (FrArchive *self)
         self->volume_size = 0;
 	self->read_only = FALSE;
         self->extract_here = FALSE;
-        self->n_file = 0;
-        self->n_files = 0;
 
         self->propAddCanUpdate = FALSE;
         self->propAddCanReplace = FALSE;
@@ -432,6 +448,11 @@ fr_archive_init (FrArchive *self)
 	self->priv->creating_archive = FALSE;
 	self->priv->extraction_destination = NULL;
 	self->priv->have_write_permissions = FALSE;
+        self->priv->completed_files = 0;
+        self->priv->total_files = 0;
+        self->priv->completed_bytes = 0;
+        self->priv->total_bytes = 0;
+	g_mutex_init (&self->priv->progress_mutex);
 }
 
 
@@ -861,6 +882,7 @@ fr_archive_load (FrArchive           *archive,
 	g_return_if_fail (archive != NULL);
 
 	if (archive->files != NULL) {
+		g_hash_table_remove_all (archive->files_hash);
 		_g_ptr_array_free_full (archive->files, (GFunc) file_data_free, NULL);
 		archive->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
 	}
@@ -874,7 +896,44 @@ fr_archive_operation_finish (FrArchive     *archive,
 			     GAsyncResult  *result,
 			     GError       **error)
 {
-	return ! g_simple_async_result_propagate_error (G_SIMPLE_ASYNC_RESULT (result), error);
+	gboolean success;
+
+	if (archive->priv->progress_event != 0) {
+		g_source_remove (archive->priv->progress_event);
+		archive->priv->progress_event = 0;
+	}
+
+	success = ! g_simple_async_result_propagate_error (G_SIMPLE_ASYNC_RESULT (result), error);
+
+	if (success && (g_simple_async_result_get_source_tag (G_SIMPLE_ASYNC_RESULT (result)) == fr_archive_load)) {
+		int i;
+
+		/* order the list by name to speed up search */
+		g_ptr_array_sort (archive->files, file_data_compare_by_path);
+
+		/* update the file_data hash */
+		g_hash_table_remove_all (archive->files_hash);
+		for (i = 0; i < archive->files->len; i++) {
+			FileData *file_data = g_ptr_array_index (archive->files, i);
+			g_hash_table_insert (archive->files_hash, file_data->original_path, file_data);
+		}
+	}
+
+	if (! success && (error != NULL) && g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (*error);
+		*error = g_error_new_literal (FR_ERROR, FR_ERROR_STOPPED, "");
+	}
+
+	return success;
+}
+
+
+static gboolean
+_fr_archive_update_progress_cb (gpointer user_data)
+{
+	FrArchive *archive = user_data;
+	fr_archive_progress (archive, fr_archive_progress_get_fraction (archive));
+	return TRUE;
 }
 
 
@@ -896,6 +955,7 @@ fr_archive_add_files (FrArchive           *archive,
 	g_return_if_fail (! archive->read_only);
 
 	fr_archive_action_started (archive, FR_ACTION_ADDING_FILES);
+	archive->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, archive);
 
 	FR_ARCHIVE_GET_CLASS (archive)->add_files (archive,
 						   file_list,
@@ -1214,6 +1274,8 @@ fr_archive_remove (FrArchive           *archive,
 {
 	g_return_if_fail (! archive->read_only);
 
+	archive->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, archive);
+
 	FR_ARCHIVE_GET_CLASS (archive)->remove_files (archive,
 						      file_list,
 						      compression,
@@ -1238,6 +1300,8 @@ fr_archive_extract (FrArchive           *self,
 {
 	g_free (self->priv->extraction_destination);
 	self->priv->extraction_destination = g_strdup (destination);
+
+	self->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, self);
 
 	FR_ARCHIVE_GET_CLASS (self)->extract_files (self,
 						    file_list,
@@ -1680,11 +1744,100 @@ fr_archive_working_archive (FrArchive  *self,
 
 
 void
-fr_archive_set_n_files (FrArchive *self,
-			int        n_files)
+fr_archive_progress_set_total_files (FrArchive *self,
+				     int        n_files)
 {
-	self->n_files = n_files;
-	self->n_file = 0;
+	g_mutex_lock (&self->priv->progress_mutex);
+	self->priv->total_files = n_files;
+	self->priv->completed_files = 0;
+	g_mutex_unlock (&self->priv->progress_mutex);
+}
+
+
+int
+fr_archive_progress_get_total_files (FrArchive *self)
+{
+	int result;
+
+	g_mutex_lock (&self->priv->progress_mutex);
+	result = self->priv->total_files;
+	g_mutex_unlock (&self->priv->progress_mutex);
+
+	return result;
+}
+
+
+int
+fr_archive_progress_get_completed_files (FrArchive *self)
+{
+	int result;
+
+	g_mutex_lock (&self->priv->progress_mutex);
+	result = self->priv->completed_files;
+	g_mutex_unlock (&self->priv->progress_mutex);
+
+	return result;
+}
+
+
+double
+fr_archive_progress_inc_completed_files (FrArchive *self,
+		 	 	 	 int        new_completed)
+{
+	double fraction;
+
+	g_mutex_lock (&self->priv->progress_mutex);
+	self->priv->completed_files += new_completed;
+	fraction = (double) self->priv->completed_files / (self->priv->total_files + 1);
+	g_mutex_unlock (&self->priv->progress_mutex);
+
+	return fraction;
+
+}
+
+
+void
+fr_archive_progress_set_total_bytes (FrArchive *self,
+				     gsize      total)
+{
+	g_mutex_lock (&self->priv->progress_mutex);
+	self->priv->total_bytes = total;
+	self->priv->completed_bytes = 0;
+	g_mutex_unlock (&self->priv->progress_mutex);
+}
+
+
+double
+fr_archive_progress_inc_completed_bytes (FrArchive *self,
+					 gsize      new_completed)
+{
+	double fraction;
+
+	g_mutex_lock (&self->priv->progress_mutex);
+	self->priv->completed_bytes += new_completed;
+	fraction = (double) self->priv->completed_bytes / (self->priv->total_bytes + 1);
+	/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
+	g_mutex_unlock (&self->priv->progress_mutex);
+
+	return fraction;
+}
+
+
+double
+fr_archive_progress_get_fraction (FrArchive *self)
+{
+	double fraction;
+
+	g_mutex_lock (&self->priv->progress_mutex);
+	if ((self->priv->total_bytes > 0) && (self->priv->completed_bytes > 0))
+		fraction = (double) self->priv->completed_bytes / (self->priv->total_bytes + 1);
+	else if ((self->priv->total_files > 0) && (self->priv->completed_files > 0))
+		fraction = (double) self->priv->completed_files / (self->priv->total_files + 1);
+	else
+		fraction = 0.0;
+	g_mutex_unlock (&self->priv->progress_mutex);
+
+	return fraction;
 }
 
 

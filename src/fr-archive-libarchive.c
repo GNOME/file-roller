@@ -26,8 +26,10 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include "file-data.h"
+#include "fr-error.h"
 #include "fr-archive-libarchive.h"
 #include "glib-utils.h"
+#include "typedefs.h"
 
 
 G_DEFINE_TYPE (FrArchiveLibarchive, fr_archive_libarchive, FR_TYPE_ARCHIVE)
@@ -172,6 +174,7 @@ load_archive_thread (GSimpleAsyncResult *result,
 	LoadData             *load_data;
 	struct archive       *a;
 	struct archive_entry *entry;
+	int                   r;
 
 	load_data = g_simple_async_result_get_op_res_gpointer (result);
 
@@ -179,7 +182,7 @@ load_archive_thread (GSimpleAsyncResult *result,
 	archive_read_support_filter_all (a);
 	archive_read_support_format_all (a);
 	archive_read_open (a, load_data, load_data_open, load_data_read, load_data_close);
-	while (archive_read_next_header (a, &entry) == ARCHIVE_OK) {
+	while ((r = archive_read_next_header (a, &entry)) == ARCHIVE_OK) {
 		FileData   *file_data;
 		const char *pathname;
 
@@ -228,12 +231,12 @@ load_archive_thread (GSimpleAsyncResult *result,
 	}
 	archive_read_free (a);
 
+	if ((load_data->error == NULL) && (r != ARCHIVE_EOF))
+		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
 	if (load_data->error == NULL)
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
-
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
-	g_simple_async_result_complete_in_idle (result);
 
 	load_data_free (load_data);
 }

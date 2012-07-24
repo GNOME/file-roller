@@ -160,10 +160,8 @@ process_line__extract (char     *line,
 	if (unar_comm->n_line == 1)
 		return;
 
-	if (archive->n_files > 1) {
-		double fraction = (double) ++archive->n_file / (archive->n_files + 1);
-		fr_archive_progress (archive, CLAMP (fraction, 0.0, 1.0));
-	}
+	if (fr_archive_progress_get_total_files (archive) > 1)
+		fr_archive_progress (archive, fr_archive_progress_inc_completed_files (archive, 1));
 	else
 		fr_archive_message (archive, line);
 }

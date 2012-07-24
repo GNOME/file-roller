@@ -2691,17 +2691,13 @@ fr_archive_progress_cb (FrArchive *archive,
 			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), fraction);
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), fraction);
 
-		if ((archive != NULL) && (archive->n_files > 1)) {
+		if ((archive != NULL) && (fr_archive_progress_get_total_files (archive) > 1)) {
 			char *message = NULL;
 			int   remaining_files;
 
-			remaining_files = archive->n_files - archive->n_file + 1;
+			remaining_files = fr_archive_progress_get_total_files (archive) - fr_archive_progress_get_completed_files (archive) + 1;
 
 			switch (window->priv->action) {
-			/* case FR_ACTION_CREATING_ARCHIVE:
-			case FR_ACTION_RENAMING_FILES:
-			case FR_ACTION_PASTING_FILES:
-			case FR_ACTION_UPDATING_FILES: FIXME */
 			case FR_ACTION_ADDING_FILES:
 			case FR_ACTION_EXTRACTING_FILES:
 			case FR_ACTION_DELETING_FILES:
@@ -3089,7 +3085,7 @@ _archive_operation_completed (FrWindow *window,
 	if (opens_dialog)
 		return;
 
-	operation_canceled = ((error != NULL) && (error->code == FR_ERROR_STOPPED));
+	operation_canceled = g_error_matches (error, FR_ERROR, FR_ERROR_STOPPED);
 
 	switch (action) {
 	case FR_ACTION_CREATING_NEW_ARCHIVE:
@@ -6706,8 +6702,23 @@ static void
 _fr_window_archive_extract_from_edata (FrWindow    *window,
 				       ExtractData *edata)
 {
-	_archive_operation_started (window, FR_ACTION_EXTRACTING_FILES);
+	GList *scan;
+	gsize  total_size;
 
+	total_size = 0;
+	for (scan = edata->file_list; scan; scan = scan->next) {
+		char     *filename = scan->data;
+		FileData *file_data;
+
+		file_data = g_hash_table_lookup (window->archive->files_hash, filename);
+		if (file_data == NULL)
+			continue;
+
+		total_size += file_data->size;
+	}
+	fr_archive_progress_set_total_bytes (window->archive, total_size);
+
+	_archive_operation_started (window, FR_ACTION_EXTRACTING_FILES);
 	window->priv->ask_to_open_destination_after_extraction = edata->ask_to_open_destination;
 
 	fr_archive_extract (window->archive,

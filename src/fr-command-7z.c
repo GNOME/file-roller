@@ -257,8 +257,8 @@ parse_progress_line (FrArchive  *archive,
 
 	prefix_len = strlen (prefix);
 	if (strncmp (line, prefix, prefix_len) == 0) {
-		if (archive->n_files > 1) {
-			fr_archive_progress (archive, (double) ++archive->n_file / (archive->n_files + 1));
+		if (fr_archive_progress_get_total_files (archive) > 1) {
+			fr_archive_progress (archive, fr_archive_progress_inc_completed_files (archive, 1));
 		}
 		else {
 			char  filename[4196];
@@ -293,7 +293,7 @@ process_line__add (char     *line,
 		g_free (volume_filename);
 	}
 
-	if (archive->n_files != 0)
+	if (fr_archive_progress_get_total_files (archive) > 0)
 		parse_progress_line (archive, "Compressing  ", _("Adding \"%s\""), line);
 }
 
@@ -415,7 +415,7 @@ process_line__extract (char     *line,
 {
 	FrArchive *archive = FR_ARCHIVE (data);
 
-	if (archive->n_files != 0)
+	if (fr_archive_progress_get_total_files (archive) > 0)
 		parse_progress_line (archive, "Extracting  ", _("Extracting \"%s\""), line);
 }
 

@@ -720,9 +720,6 @@ _fr_command_load_complete (LoadData *load_data)
 
 	archive = load_data->archive;
 
-	/* order the list by name to speed up search */
-	g_ptr_array_sort (archive->files, file_data_compare_by_path);
-
 	/* the name of the volumes are different from the
 	 * original name */
 	if (archive->multi_volume)
@@ -1099,6 +1096,7 @@ _fr_command_add (FrCommand      *self,
 	char      *archive_filename = NULL;
 	char      *tmp_archive_filename = NULL;
 	gboolean   error_occurred = FALSE;
+	int        new_file_list_length;
 
 	if (file_list == NULL)
 		return FALSE;
@@ -1226,9 +1224,10 @@ _fr_command_add (FrCommand      *self,
 
 	/* add now. */
 
-	fr_archive_set_n_files (archive, g_list_length (new_file_list));
+	new_file_list_length = g_list_length (new_file_list);
+	fr_archive_progress_set_total_files (archive, new_file_list_length);
 
-	if (archive->propListFromFile && (archive->n_files > LIST_LENGTH_TO_USE_FILE)) {
+	if (archive->propListFromFile && (new_file_list_length > LIST_LENGTH_TO_USE_FILE)) {
 		char   *list_dir;
 		char   *list_filename;
 
@@ -1677,6 +1676,7 @@ delete_from_archive (FrCommand *self,
 	GList     *tmp_file_list = NULL;
 	gboolean   tmp_file_list_created = FALSE;
 	GList     *scan;
+	int        tmp_file_list_length;
 
 	/* file_list == NULL means delete all the files in the archive. */
 
@@ -1724,9 +1724,10 @@ delete_from_archive (FrCommand *self,
 	if (file_list_created)
 		g_list_free (file_list);
 
-	fr_archive_set_n_files (archive, g_list_length (tmp_file_list));
+	tmp_file_list_length = g_list_length (tmp_file_list);
+	fr_archive_progress_set_total_files (archive, tmp_file_list_length);
 
-	if (archive->propListFromFile && (archive->n_files > LIST_LENGTH_TO_USE_FILE)) {
+	if (archive->propListFromFile && (tmp_file_list_length > LIST_LENGTH_TO_USE_FILE)) {
 		char *list_dir;
 		char *list_filename;
 
@@ -2112,7 +2113,7 @@ extract_from_archive (FrCommand  *self,
 }
 
 
-static char*
+static char *
 compute_base_path (const char *base_dir,
 		   const char *path,
 		   gboolean    junk_paths,
@@ -2299,9 +2300,9 @@ _fr_command_extract (FrCommand  *self,
 	}
 
 	if (extract_all && (file_list == NULL))
-		fr_archive_set_n_files (archive, archive->files->len);
+		fr_archive_progress_set_total_files (archive, archive->files->len);
 	else
-		fr_archive_set_n_files (archive, g_list_length (file_list));
+		fr_archive_progress_set_total_files (archive, g_list_length (file_list));
 
 	if (all_options_supported) {
 		gboolean created_filtered_list = FALSE;
@@ -2635,7 +2636,7 @@ fr_command_test_integrity (FrArchive           *archive,
 		      "filename", self->priv->local_copy,
 		      "password", password,
 		      NULL);
-	fr_archive_set_n_files (archive, 0);
+	fr_archive_progress_set_total_files (archive, 0);
 
 	fr_process_clear (self->process);
 	fr_command_test (self);

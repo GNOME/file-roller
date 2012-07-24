@@ -73,7 +73,8 @@ struct _FrArchive {
 	/*<public, read only>*/
 
 	const char    *mime_type;
-	GPtrArray     *files;                      /* Array of FileData* */
+	GPtrArray     *files;                      /* Array of FileData */
+	GHashTable    *files_hash;                 /* Hash of FileData with original_path as key */
 	int            n_regular_files;
 
 	/*<public>*/
@@ -90,11 +91,6 @@ struct _FrArchive {
 	/*<protected>*/
 
 	gboolean       extract_here;
-
-	/* progress data */
-
-	int            n_file;
-	int            n_files;
 
 	/* features. */
 
@@ -498,8 +494,20 @@ void          fr_archive_message                 (FrArchive           *archive,
 						  const char          *msg);
 void          fr_archive_working_archive         (FrArchive           *archive,
 						  const char          *archive_name);
-void          fr_archive_set_n_files             (FrArchive           *archive,
-						  int                  n_files);
+void          fr_archive_progress_set_total_files(FrArchive           *archive,
+						  int                  total);
+int           fr_archive_progress_get_total_files(FrArchive           *archive);
+int           fr_archive_progress_get_completed_files
+						 (FrArchive           *archive);
+double        fr_archive_progress_inc_completed_files
+						 (FrArchive           *archive,
+						  int                  new_completed);
+void          fr_archive_progress_set_total_bytes (FrArchive           *archive,
+						  gsize                total);
+double        fr_archive_progress_inc_completed_bytes
+						 (FrArchive           *archive,
+						  gsize                new_completed);
+double        fr_archive_progress_get_fraction   (FrArchive           *archive);
 void          fr_archive_add_file                (FrArchive           *archive,
 						  FileData            *file_data);
 
