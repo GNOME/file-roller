@@ -1004,7 +1004,7 @@ add_with_wildcard_data_free (AddWithWildcardData *aww_data)
 
 static void
 add_with_wildcard__step2 (GList    *file_list,
-			  GList    *dirs_list,
+			  GList    *dir_list,
 			  GError   *error,
 			  gpointer  data)
 {
@@ -1022,6 +1022,11 @@ add_with_wildcard__step2 (GList    *file_list,
 		g_simple_async_result_complete_in_idle (result);
 	}
 	else {
+		if (archive->propAddCanStoreFolders) {
+			file_list = g_list_concat (file_list, dir_list);
+			dir_list = NULL;
+		}
+
 		if (file_list == NULL)
 			g_simple_async_result_complete_in_idle (result);
 		else
@@ -1042,7 +1047,7 @@ add_with_wildcard__step2 (GList    *file_list,
 
 	g_object_unref (result);
 	_g_string_list_free (file_list);
-	_g_string_list_free (dirs_list);
+	_g_string_list_free (dir_list);
 	add_with_wildcard_data_free (aww_data);
 }
 
@@ -1150,10 +1155,10 @@ add_directory__step2 (GList    *file_list,
 		g_simple_async_result_complete_in_idle (result);
 	}
 	else {
-		if (archive->propAddCanStoreFolders)
+		if (archive->propAddCanStoreFolders) {
 			file_list = g_list_concat (file_list, dir_list);
-		else
-			_g_string_list_free (dir_list);
+			dir_list = NULL;
+		}
 
 		if (file_list == NULL)
 			g_simple_async_result_complete_in_idle (result);
@@ -1174,6 +1179,7 @@ add_directory__step2 (GList    *file_list,
 	}
 
 	_g_string_list_free (file_list);
+	_g_string_list_free (dir_list);
 	g_object_unref (result);
 	add_directory_data_free (ad_data);
 }

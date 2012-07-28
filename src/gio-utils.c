@@ -577,10 +577,12 @@ get_file_list_done (GError   *error,
 	gfl->files = g_list_reverse (gfl->files);
 	gfl->dirs = g_list_reverse (gfl->dirs);
 
+	/* FIXME: delete the folders that contain only filtered out files
 	if (! filter_empty (gfl->include_filter) || (gfl->exclude_filter->pattern != NULL)) {
 		_g_string_list_free (gfl->dirs);
 		gfl->dirs = NULL;
 	}
+	*/
 
 	h_dirs = g_hash_table_new (g_str_hash, g_str_equal);
 

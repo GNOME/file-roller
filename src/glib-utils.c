@@ -1080,6 +1080,27 @@ _g_filename_has_extension (const char *filename,
 }
 
 
+char *
+_g_filename_get_random (int length)
+{
+	const char *letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	const int   n_letters = strlen (letters);
+	char       *result, *c;
+	GRand      *rand;
+	int         i;
+
+	result = g_new (char, length + 1);
+
+	rand = g_rand_new ();
+	for (i = 0, c = result; i < length; i++, c++)
+		*c = letters[g_rand_int_range (rand, 0, n_letters)];
+	*c = '\0';
+	g_rand_free (rand);
+
+	return result;
+}
+
+
 gboolean
 _g_mime_type_matches (const char *mime_type,
 		      const char *pattern)
