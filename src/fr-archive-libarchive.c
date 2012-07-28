@@ -577,6 +577,27 @@ _archive_write_set_format_from_filename (struct archive *a,
 }
 
 
+static void
+_archive_write_set_compression_level (struct archive *a,
+				      FrCompression   compression)
+{
+	switch (compression) {
+	case FR_COMPRESSION_VERY_FAST:
+		archive_write_set_filter_option (a, NULL, "compression-level", "1");
+		break;
+	case FR_COMPRESSION_FAST:
+		archive_write_set_filter_option (a, NULL, "compression-level", "3");
+		break;
+	case FR_COMPRESSION_NORMAL:
+		archive_write_set_filter_option (a, NULL, "compression-level", "6");
+		break;
+	case FR_COMPRESSION_MAXIMUM:
+		archive_write_set_filter_option (a, NULL, "compression-level", "9");
+		break;
+	}
+}
+
+
 typedef enum {
 	WRITE_ACTION_ABORT,
 	WRITE_ACTION_SKIP_ENTRY,
@@ -669,6 +690,7 @@ add_to_archive_thread  (GSimpleAsyncResult *result,
 
 	b = archive_write_new ();
 	_archive_write_set_format_from_filename (b, fr_archive_get_file (load_data->archive));
+	_archive_write_set_compression_level (b, add_data->compression);
 	archive_write_open (b, add_data, save_data_open, save_data_write, save_data_close);
 
 	a = archive_read_new ();
