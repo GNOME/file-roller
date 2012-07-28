@@ -615,6 +615,7 @@ _archive_write_file (struct archive       *b,
 	LoadData             *load_data = LOAD_DATA (add_data);
 	GFileInfo            *info;
 	struct archive_entry *w_entry;
+	int                   rb;
 
 	/* write the file header */
 
@@ -641,7 +642,7 @@ _archive_write_file (struct archive       *b,
 	}
 
 	archive_entry_set_pathname (w_entry, file_to_add->pathname);
-	archive_write_header (b, w_entry);
+	rb = archive_write_header (b, w_entry);
 
 	/* write the file data */
 
@@ -661,7 +662,12 @@ _archive_write_file (struct archive       *b,
 		}
 	}
 
+	rb = archive_write_finish_entry (b);
+
 	add_data->n_files_to_add--;
+
+	if ((load_data->error == NULL) && (rb != ARCHIVE_OK))
+		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (b));
 
 	archive_entry_free (w_entry);
 	g_object_unref (info);
@@ -740,6 +746,8 @@ add_to_archive_thread  (GSimpleAsyncResult *result,
 			default:
 				break;
 			}
+
+			rb = archive_write_finish_entry (b);
 		}
 	}
 
@@ -749,6 +757,7 @@ add_to_archive_thread  (GSimpleAsyncResult *result,
 		ra = ARCHIVE_EOF;
 	}
 
+	/* add the files that weren't present in the archive already */
 	remaining_files = g_hash_table_get_values (add_data->files_to_add);
 	for (scan = remaining_files; (load_data->error == NULL) && scan; scan = scan->next) {
 		FileToAdd *file_to_add = scan->data;
@@ -756,6 +765,9 @@ add_to_archive_thread  (GSimpleAsyncResult *result,
 		if (_archive_write_file (b, add_data, file_to_add, NULL, cancellable) == WRITE_ACTION_ABORT)
 			break;
 	}
+	g_list_free (remaining_files);
+
+	rb = archive_write_close (b);
 
 	if ((load_data->error == NULL) && (ra != ARCHIVE_EOF))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
@@ -768,7 +780,6 @@ add_to_archive_thread  (GSimpleAsyncResult *result,
 
 	archive_read_free (a);
 	archive_write_free (b);
-	g_list_free (remaining_files);
 	add_data_free (add_data);
 }
 
