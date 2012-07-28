@@ -1001,7 +1001,7 @@ _g_path_is_parent_of (const char *dirname,
 
 
 const char *
-_g_path_get_base_name (const char *path,
+_g_path_get_basename (const char *path,
 		       const char *base_dir,
 		       gboolean    junk_paths)
 {

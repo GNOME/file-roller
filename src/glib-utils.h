@@ -137,7 +137,7 @@ char *              _g_path_remove_ending_separator(const char          *path);
 char *              _g_path_remove_extension       (const char          *path);
 gboolean            _g_path_is_parent_of           (const char          *dirname,
 						    const char          *filename);
-const char *        _g_path_get_base_name          (const char          *path,
+const char *        _g_path_get_basename          (const char          *path,
 						    const char          *base_dir,
 						    gboolean             junk_paths);
 gboolean            _g_filename_is_hidden          (const char          *name);

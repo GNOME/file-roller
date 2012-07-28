@@ -6799,7 +6799,7 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 		GFileInfo  *info;
 		GFileType   file_type;
 
-		base_name = _g_path_get_base_name ((char *) odata->current_file->data, odata->edata->base_dir, odata->edata->junk_paths);
+		base_name = _g_path_get_basename ((char *) odata->current_file->data, odata->edata->base_dir, odata->edata->junk_paths);
 		e_base_name = g_uri_escape_string (base_name, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, TRUE);
 		dest_uri = g_strdup_printf ("%s/%s", odata->edata->extract_to_dir, e_base_name);
 		file = g_file_new_for_uri (dest_uri);
