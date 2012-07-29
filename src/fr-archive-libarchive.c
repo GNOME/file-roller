@@ -1296,7 +1296,7 @@ _remove_files_entry_action (SaveData             *save_data,
 static void
 fr_archive_libarchive_remove_files (FrArchive           *archive,
 				    GList               *file_list,
-				    FrCompression        compression, /* FIXME: remove this option */
+				    FrCompression        compression,
 				    GCancellable        *cancellable,
 				    GAsyncReadyCallback  callback,
 				    gpointer             user_data)
@@ -1316,7 +1316,7 @@ fr_archive_libarchive_remove_files (FrArchive           *archive,
 				     FALSE,
 				     archive->password,
 				     archive->encrypt_header,
-				     archive->compression,
+				     compression,
 				     0,
 				     cancellable,
 				     g_simple_async_result_new (G_OBJECT (archive),
