@@ -1089,21 +1089,28 @@ _fr_archive_libarchive_save (FrArchive          *archive,
 
 
 typedef struct {
-	GList      *file_list;
-	GFile      *base_dir;
-	char       *dest_dir;
 	GHashTable *files_to_add;
 	int         n_files_to_add;
 } AddData;
+
+
+static AddData *
+add_data_new (void)
+{
+	AddData *add_data;
+
+	add_data = g_new0 (AddData, 1);
+	add_data->files_to_add = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) add_file_free);
+	add_data->n_files_to_add = 0;
+
+	return add_data;
+}
 
 
 static void
 add_data_free (AddData *add_data)
 {
 	g_hash_table_unref (add_data->files_to_add);
-	g_free (add_data->dest_dir);
-	_g_object_unref (add_data->base_dir);
-	_g_string_list_free (add_data->file_list);
 	g_free (add_data);
 }
 
@@ -1180,7 +1187,7 @@ _add_files_end (SaveData *save_data,
 static void
 fr_archive_libarchive_add_files (FrArchive           *archive,
 				 GList               *file_list,
-				 const char          *base_dir,
+				 const char          *base_dir_uri,
 				 const char          *dest_dir,
 				 gboolean             update,
 				 gboolean             recursive,
@@ -1193,28 +1200,26 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 				 gpointer             user_data)
 {
 	AddData *add_data;
+	GFile   *base_dir;
 	GList   *scan;
 
-	g_return_if_fail (base_dir != NULL);
+	g_return_if_fail (base_dir_uri != NULL);
 
-	add_data = g_new0 (AddData, 1);
-	add_data->file_list = _g_string_list_dup (file_list);
-	add_data->base_dir = g_file_new_for_uri (base_dir);
-	add_data->dest_dir = g_strdup (dest_dir[0] == '/' ? dest_dir + 1 : dest_dir);
-	add_data->files_to_add = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) add_file_free);
-	add_data->n_files_to_add = 0;
-	for (scan = add_data->file_list; scan; scan = scan->next) {
+	add_data = add_data_new ();
+
+	base_dir = g_file_new_for_uri (base_dir_uri);
+	dest_dir = dest_dir[0] == '/' ? dest_dir + 1 : dest_dir;
+	for (scan = file_list; scan; scan = scan->next) {
 		char  *relative_pathname = scan->data;
 		char  *full_pathname;
 		GFile *file;
 
-		full_pathname = g_build_filename (add_data->dest_dir, relative_pathname, NULL);
-		file = g_file_get_child (add_data->base_dir, relative_pathname);
+		full_pathname = g_build_filename (dest_dir, relative_pathname, NULL);
+		file = g_file_get_child (base_dir, relative_pathname);
 		g_hash_table_insert (add_data->files_to_add, full_pathname, add_file_new (file, full_pathname));
 		add_data->n_files_to_add++;
 
 		g_object_unref (file);
-		g_free (full_pathname);
 	}
 
 	_fr_archive_libarchive_save (archive,
@@ -1233,6 +1238,8 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 				     _add_files_entry_action,
 				     add_data,
 				     (GDestroyNotify) add_data_free);
+
+	g_object_unref (base_dir);
 }
 
 
@@ -1240,7 +1247,6 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 
 
 typedef struct {
-	GList      *file_list;
 	GHashTable *files_to_remove;
 	int         n_files_to_remove;
 } RemoveData;
@@ -1250,7 +1256,6 @@ static void
 remove_data_free (RemoveData *remove_data)
 {
 	g_hash_table_unref (remove_data->files_to_remove);
-	_g_string_list_free (remove_data->file_list);
 	g_free (remove_data);
 }
 
@@ -1300,11 +1305,10 @@ fr_archive_libarchive_remove_files (FrArchive           *archive,
 	GList      *scan;
 
 	remove_data = g_new0 (RemoveData, 1);
-	remove_data->file_list = _g_string_list_dup (file_list);
-	remove_data->files_to_remove = g_hash_table_new (g_str_hash, g_str_equal);
+	remove_data->files_to_remove = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	remove_data->n_files_to_remove = 0;
-	for (scan = remove_data->file_list; scan; scan = scan->next) {
-		g_hash_table_insert (remove_data->files_to_remove, scan->data, GINT_TO_POINTER (1));
+	for (scan = file_list; scan; scan = scan->next) {
+		g_hash_table_insert (remove_data->files_to_remove, g_strdup (scan->data), GINT_TO_POINTER (1));
 		remove_data->n_files_to_remove++;
 	}
 
@@ -1331,13 +1335,6 @@ fr_archive_libarchive_remove_files (FrArchive           *archive,
 
 
 typedef struct {
-	GList      *file_list;
-	char       *old_name;
-	char       *new_name;
-	char       *current_dir;
-	gboolean    is_dir;
-	gboolean    dir_in_archive;
-	char       *original_path;
 	GHashTable *files_to_rename;
 	int         n_files_to_rename;
 } RenameData;
@@ -1347,11 +1344,6 @@ static void
 rename_data_free (RenameData *rename_data)
 {
 	g_hash_table_unref (rename_data->files_to_rename);
-	g_free (rename_data->old_name);
-	g_free (rename_data->new_name);
-	g_free (rename_data->current_dir);
-	g_free (rename_data->original_path);
-	_g_string_list_free (rename_data->file_list);
 	g_free (rename_data);
 }
 
@@ -1404,32 +1396,25 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 			      GAsyncReadyCallback  callback,
 			      gpointer             user_data)
 {
-	RenameData    *rename_data;
-	char          *old_dirname;
-	char          *new_dirname;
-	int            old_dirname_len;
-	GList         *scan;
+	RenameData *rename_data;
+	char       *old_dirname;
+	char       *new_dirname;
+	int         old_dirname_len;
+	GList      *scan;
 
 	rename_data = g_new0 (RenameData, 1);
-	rename_data->file_list = _g_string_list_dup (file_list);
-	rename_data->old_name = g_strdup (old_name);
-	rename_data->new_name = g_strdup (new_name);
-	rename_data->current_dir = g_strdup (current_dir);
-	rename_data->is_dir = is_dir;
-	rename_data->dir_in_archive = dir_in_archive;
-	rename_data->original_path = g_strdup (original_path);
-	rename_data->files_to_rename = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, g_free);
+	rename_data->files_to_rename = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 	rename_data->n_files_to_rename = 0;
 
 	old_dirname = g_build_filename (current_dir + 1, old_name, "/", NULL);
 	old_dirname_len = strlen (old_dirname);
 	new_dirname = g_build_filename (current_dir + 1, new_name, "/", NULL);
-	for (scan = rename_data->file_list; scan; scan = scan->next) {
+	for (scan = file_list; scan; scan = scan->next) {
 		char *old_pathname = scan->data;
 		char *new_pathname;
 
 		new_pathname = g_build_filename (new_dirname, old_pathname + old_dirname_len, NULL);
-		g_hash_table_insert (rename_data->files_to_rename, old_pathname, new_pathname);
+		g_hash_table_insert (rename_data->files_to_rename, g_strdup (old_pathname), new_pathname);
 		rename_data->n_files_to_rename++;
 	}
 
