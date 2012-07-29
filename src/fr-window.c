@@ -4142,12 +4142,12 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 			gtk_widget_destroy (GTK_WIDGET (d));
 
 			if (r == 0)  /* Add */
-				fr_window_archive_add_dropped_items (window, list, FALSE);
+				fr_window_archive_add_dropped_items (window, list);
 			else if (r == 1)  /* Open */
 				fr_window_archive_open (window, list->data, GTK_WINDOW (window));
  		}
  		else
-			fr_window_archive_add_dropped_items (window, list, FALSE);
+			fr_window_archive_add_dropped_items (window, list);
 	}
 	else {
 		if (one_file && is_an_archive)
@@ -6563,8 +6563,7 @@ fr_window_archive_add_items (FrWindow      *window,
 
 void
 fr_window_archive_add_dropped_items (FrWindow *window,
-				     GList    *item_list,
-				     gboolean  update)
+				     GList    *item_list)
 {
 	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
 
@@ -6572,7 +6571,6 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 				      item_list,
 				      fr_window_get_current_location (window),
 				      fr_window_get_current_location (window),
-				      update,
 				      window->priv->password,
 				      window->priv->encrypt_header,
 				      window->priv->compression,
@@ -9131,7 +9129,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_ADD:
 		debug (DEBUG_INFO, "[BATCH] ADD\n");
 
-		fr_window_archive_add_dropped_items (window, (GList*) action->data, FALSE);
+		fr_window_archive_add_dropped_items (window, (GList*) action->data);
 		break;
 
 	case FR_BATCH_ACTION_OPEN:

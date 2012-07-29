@@ -69,6 +69,9 @@ char *action_names[] = { "NONE",
 G_DEFINE_TYPE (FrArchive, fr_archive, G_TYPE_OBJECT)
 
 
+typedef struct _DroppedItemsData DroppedItemsData;
+
+
 struct _FrArchivePrivate {
 	/* propeties */
 
@@ -91,6 +94,7 @@ struct _FrArchivePrivate {
 	gboolean       have_write_permissions;     /* true if we have the
 						    * permissions to write the
 						    * file. */
+	DroppedItemsData *dropped_items_data;
 };
 
 
@@ -221,6 +225,9 @@ fr_archive_get_property (GObject    *object,
 }
 
 
+static void dropped_items_data_free (DroppedItemsData *data);
+
+
 static void
 fr_archive_finalize (GObject *object)
 {
@@ -239,6 +246,10 @@ fr_archive_finalize (GObject *object)
 	g_mutex_clear (&archive->priv->progress_mutex);
 	g_hash_table_unref (archive->files_hash);
 	_g_ptr_array_free_full (archive->files, (GFunc) file_data_free, NULL);
+	if (archive->priv->dropped_items_data != NULL) {
+		dropped_items_data_free (archive->priv->dropped_items_data);
+		archive->priv->dropped_items_data = NULL;
+	}
 
 	/* Chain up */
 
@@ -312,7 +323,7 @@ fr_archive_class_init (FrArchiveClass *klass)
 	klass->test_integrity = NULL;
 	klass->rename = NULL;
 	klass->paste_clipboard = NULL;
-	klass->add_dropped_items = NULL;
+	klass->add_dropped_files = NULL;
 	klass->update_open_files = NULL;
 
 	/* properties */
@@ -452,6 +463,7 @@ fr_archive_init (FrArchive *self)
         self->priv->total_files = 0;
         self->priv->completed_bytes = 0;
         self->priv->total_bytes = 0;
+        self->priv->dropped_items_data = NULL;
 	g_mutex_init (&self->priv->progress_mutex);
 }
 
@@ -1580,12 +1592,283 @@ fr_archive_paste_clipboard (FrArchive           *archive,
 }
 
 
+/* -- add_dropped_files  -- */
+
+
+struct _DroppedItemsData {
+	FrArchive           *archive;
+	GList               *item_list;
+	char                *base_dir;
+	char                *dest_dir;
+	char                *password;
+	gboolean             encrypt_header;
+	FrCompression        compression;
+	guint                volume_size;
+	GCancellable        *cancellable;
+	GAsyncReadyCallback  callback;
+	gpointer             user_data;
+} ;
+
+
+static DroppedItemsData *
+dropped_items_data_new (FrArchive           *archive,
+			GList               *item_list,
+			const char          *base_dir,
+			const char          *dest_dir,
+			const char          *password,
+			gboolean             encrypt_header,
+			FrCompression        compression,
+			guint                volume_size,
+			GCancellable        *cancellable,
+			GAsyncReadyCallback  callback,
+			gpointer             user_data)
+{
+	DroppedItemsData *data;
+
+	data = g_new0 (DroppedItemsData, 1);
+	data->archive = archive;
+	data->item_list = _g_string_list_dup (item_list);
+	if (base_dir != NULL)
+		data->base_dir = g_strdup (base_dir);
+	if (dest_dir != NULL)
+		data->dest_dir = g_strdup (dest_dir);
+	if (password != NULL)
+		data->password = g_strdup (password);
+	data->encrypt_header = encrypt_header;
+	data->compression = compression;
+	data->volume_size = volume_size;
+	data->cancellable = _g_object_ref (cancellable);
+	data->callback = callback;
+	data->user_data = user_data;
+
+	return data;
+}
+
+
+static void
+dropped_items_data_free (DroppedItemsData *data)
+{
+	if (data == NULL)
+		return;
+	_g_string_list_free (data->item_list);
+	g_free (data->base_dir);
+	g_free (data->dest_dir);
+	g_free (data->password);
+	_g_object_unref (data->cancellable);
+	g_free (data);
+}
+
+
+static gboolean
+all_files_in_same_dir (GList *list)
+{
+	gboolean  same_dir = TRUE;
+	char     *first_basedir;
+	GList    *scan;
+
+	if (list == NULL)
+		return FALSE;
+
+	first_basedir = _g_path_remove_level (list->data);
+	if (first_basedir == NULL)
+		return TRUE;
+
+	for (scan = list->next; scan; scan = scan->next) {
+		char *path = scan->data;
+		char *basedir;
+
+		basedir = _g_path_remove_level (path);
+		if (basedir == NULL) {
+			same_dir = FALSE;
+			break;
+		}
+
+		if (strcmp (first_basedir, basedir) != 0) {
+			same_dir = FALSE;
+			g_free (basedir);
+			break;
+		}
+		g_free (basedir);
+	}
+	g_free (first_basedir);
+
+	return same_dir;
+}
+
+
+static void add_dropped_items (DroppedItemsData *data);
+
+
+static void
+add_dropped_items_ready_cb (GObject      *source_object,
+			    GAsyncResult *result,
+			    gpointer      user_data)
+{
+	DroppedItemsData *data = user_data;
+	FrArchive        *archive = data->archive;
+	GError           *error = NULL;
+
+	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
+	if (error != NULL) {
+		GSimpleAsyncResult *result;
+
+		result = g_simple_async_result_new (G_OBJECT (data->archive),
+						    data->callback,
+						    data->user_data,
+						    fr_archive_add_dropped_items);
+		g_simple_async_result_set_from_error (result, error);
+		g_simple_async_result_complete_in_idle (result);
+
+		g_error_free (error);
+		dropped_items_data_free (archive->priv->dropped_items_data);
+		archive->priv->dropped_items_data = NULL;
+		return;
+	}
+
+	/* continue adding the items... */
+	add_dropped_items (data);
+}
+
+
+static void
+add_dropped_items (DroppedItemsData *data)
+{
+	FrArchive *archive = data->archive;
+	GList     *list = data->item_list;
+	GList     *scan;
+
+	if (list == NULL) {
+		GSimpleAsyncResult *result;
+
+		result = g_simple_async_result_new (G_OBJECT (data->archive),
+						    data->callback,
+						    data->user_data,
+						    fr_archive_add_dropped_items);
+		g_simple_async_result_complete_in_idle (result);
+
+		dropped_items_data_free (archive->priv->dropped_items_data);
+		archive->priv->dropped_items_data = NULL;
+		return;
+	}
+
+	/* if all files and directories are in the same directory call
+	 * fr_archive_add_items... */
+
+	if (all_files_in_same_dir (list)) {
+		char *first_base_dir;
+
+		data->item_list = NULL;
+
+		first_base_dir = _g_path_remove_level (list->data);
+		fr_archive_add_items (FR_ARCHIVE (archive),
+				      list,
+				      first_base_dir,
+				      data->dest_dir,
+				      FALSE,
+				      data->password,
+				      data->encrypt_header,
+				      data->compression,
+				      data->volume_size,
+				      data->cancellable,
+				      add_dropped_items_ready_cb,
+				      data);
+
+		g_free (first_base_dir);
+		_g_string_list_free (list);
+		return;
+	}
+
+	/* ...else add a directory at a time. */
+
+	for (scan = list; scan; scan = scan->next) {
+		char *path = scan->data;
+		char *base_dir;
+
+		if (! _g_uri_query_is_dir (path))
+			continue;
+
+		data->item_list = g_list_remove_link (list, scan);
+
+		base_dir = _g_path_remove_level (path);
+		fr_archive_add_directory (FR_ARCHIVE (archive),
+					  _g_path_get_file_name (path),
+					  base_dir,
+					  data->dest_dir,
+					  FALSE,
+					  data->password,
+					  data->encrypt_header,
+					  data->compression,
+					  data->volume_size,
+					  data->cancellable,
+					  add_dropped_items_ready_cb,
+					  data);
+
+		g_free (base_dir);
+		g_free (path);
+
+		return;
+	}
+
+	/* At this point all the directories have been added, only files
+	 * remaining.  If all files are in the same directory call
+	 * fr_archive_add_files. */
+
+	data->item_list = NULL;
+
+	if (all_files_in_same_dir (list)) {
+		char  *first_basedir;
+		GList *only_names_list = NULL;
+
+		first_basedir = _g_path_remove_level (list->data);
+		for (scan = list; scan; scan = scan->next) {
+			char *name;
+
+			name = g_uri_unescape_string (_g_path_get_file_name (scan->data), NULL);
+			only_names_list = g_list_prepend (only_names_list, name);
+		}
+
+		fr_archive_add_files (FR_ARCHIVE (archive),
+				      only_names_list,
+				      first_basedir,
+				      data->dest_dir,
+				      FALSE,
+				      FALSE,
+				      data->password,
+				      data->encrypt_header,
+				      data->compression,
+				      data->volume_size,
+				      data->cancellable,
+				      add_dropped_items_ready_cb,
+				      data);
+
+		_g_string_list_free (only_names_list);
+		g_free (first_basedir);
+	}
+	else
+		/* ...else call the archive specific function to add the files in the
+		 * current archive directory. */
+
+		FR_ARCHIVE_GET_CLASS (archive)->add_dropped_files (archive,
+								   list,
+								   data->base_dir,
+								   data->dest_dir,
+								   data->password,
+								   data->encrypt_header,
+								   data->compression,
+								   data->volume_size,
+								   data->cancellable,
+								   add_dropped_items_ready_cb,
+								   data);
+
+	_g_string_list_free (list);
+}
+
+
 void
 fr_archive_add_dropped_items (FrArchive           *archive,
 			      GList               *item_list,
 			      const char          *base_dir,
 			      const char          *dest_dir,
-			      gboolean             update,
 			      const char          *password,
 			      gboolean             encrypt_header,
 			      FrCompression        compression,
@@ -1631,18 +1914,20 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 	}
 	g_free (archive_uri);
 
-	FR_ARCHIVE_GET_CLASS (archive)->add_dropped_items (archive,
-							   item_list,
-							   base_dir,
-							   dest_dir,
-							   update,
-							   password,
-							   encrypt_header,
-							   compression,
-							   volume_size,
-							   cancellable,
-							   callback,
-							   user_data);
+	if (archive->priv->dropped_items_data != NULL)
+		dropped_items_data_free (archive->priv->dropped_items_data);
+	archive->priv->dropped_items_data = dropped_items_data_new (archive,
+								    item_list,
+								    base_dir,
+								    dest_dir,
+								    password,
+								    encrypt_header,
+								    compression,
+								    volume_size,
+								    cancellable,
+								    callback,
+								    user_data);
+	add_dropped_items (archive->priv->dropped_items_data);
 }
 
 

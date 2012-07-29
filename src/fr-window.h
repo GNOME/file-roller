@@ -140,8 +140,7 @@ void            fr_window_archive_add_items            (FrWindow      *window,
 						        const char    *dest_dir,
 						        gboolean       update);
 void            fr_window_archive_add_dropped_items    (FrWindow      *window,
-						        GList         *item_list,
-						        gboolean       update);
+						        GList         *item_list);
 void            fr_window_archive_remove               (FrWindow      *window,
 						        GList         *file_list);
 void            fr_window_archive_extract              (FrWindow      *window,

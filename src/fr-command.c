@@ -45,76 +45,6 @@
 #endif
 
 
-/* -- DroppedItemsData -- */
-
-
-typedef struct {
-	FrCommand           *command;
-	GList               *item_list;
-	char                *base_dir;
-	char                *dest_dir;
-	gboolean             update;
-	char                *password;
-	gboolean             encrypt_header;
-	FrCompression        compression;
-	guint                volume_size;
-	GCancellable        *cancellable;
-	GAsyncReadyCallback  callback;
-	gpointer             user_data;
-} DroppedItemsData;
-
-
-static DroppedItemsData *
-dropped_items_data_new (FrCommand           *command,
-			GList               *item_list,
-			const char          *base_dir,
-			const char          *dest_dir,
-			gboolean             update,
-			const char          *password,
-			gboolean             encrypt_header,
-			FrCompression        compression,
-			guint                volume_size,
-			GCancellable        *cancellable,
-			GAsyncReadyCallback  callback,
-			gpointer             user_data)
-{
-	DroppedItemsData *data;
-
-	data = g_new0 (DroppedItemsData, 1);
-	data->command = command;
-	data->item_list = _g_string_list_dup (item_list);
-	if (base_dir != NULL)
-		data->base_dir = g_strdup (base_dir);
-	if (dest_dir != NULL)
-		data->dest_dir = g_strdup (dest_dir);
-	data->update = update;
-	if (password != NULL)
-		data->password = g_strdup (password);
-	data->encrypt_header = encrypt_header;
-	data->compression = compression;
-	data->volume_size = volume_size;
-	data->cancellable = _g_object_ref (cancellable);
-	data->callback = callback;
-	data->user_data = user_data;
-
-	return data;
-}
-
-
-static void
-dropped_items_data_free (DroppedItemsData *data)
-{
-	if (data == NULL)
-		return;
-	_g_string_list_free (data->item_list);
-	g_free (data->base_dir);
-	g_free (data->dest_dir);
-	g_free (data->password);
-	_g_object_unref (data->cancellable);
-	g_free (data);
-}
-
-
 /* -- XferData -- */
 
 
@@ -171,13 +101,11 @@ enum {
 
 
 struct _FrCommandPrivate {
-	GFile            *local_copy;
-	gboolean          is_remote;
-	char             *temp_dir;
-	gboolean          continue_adding_dropped_items;
-	DroppedItemsData *dropped_items_data;
-	char             *temp_extraction_dir;
-	gboolean          remote_extraction;
+	GFile     *local_copy;
+	gboolean   is_remote;
+	char      *temp_dir;
+	char      *temp_extraction_dir;
+	gboolean   remote_extraction;
 };
 
 
@@ -667,10 +595,6 @@ fr_command_finalize (GObject *object)
 
 	_g_object_unref (self->process);
 	_fr_command_remove_temp_work_dir (self);
-	if (self->priv->dropped_items_data != NULL) {
-		dropped_items_data_free (self->priv->dropped_items_data);
-		self->priv->dropped_items_data = NULL;
-	}
 	g_free (self->priv->temp_extraction_dir);
 
 	if (G_OBJECT_CLASS (fr_command_parent_class)->finalize)
@@ -1341,9 +1265,6 @@ add_data_free (AddData *add_data)
 }
 
 
-static void add_dropped_items (DroppedItemsData *data);
-
-
 static void
 process_ready_for_add_files_cb (GObject      *source_object,
 				GAsyncResult *result,
@@ -1360,16 +1281,6 @@ process_ready_for_add_files_cb (GObject      *source_object,
 		FrCommand *self = FR_COMMAND (archive);
 
 		_fr_command_remove_temp_work_dir (self);
-
-		if (self->priv->continue_adding_dropped_items) {
-			add_dropped_items (self->priv->dropped_items_data);
-			return;
-		}
-
-		if (self->priv->dropped_items_data != NULL) {
-			dropped_items_data_free (self->priv->dropped_items_data);
-			self->priv->dropped_items_data = NULL;
-		}
 
 		/* the name of the volumes are different from the
 		 * original name */
@@ -2979,177 +2890,38 @@ fr_command_paste_clipboard (FrArchive           *archive,
 }
 
 
-/* -- fr_command_add_dropped_items -- */
-
-
-static gboolean
-all_files_in_same_dir (GList *list)
-{
-	gboolean  same_dir = TRUE;
-	char     *first_basedir;
-	GList    *scan;
-
-	if (list == NULL)
-		return FALSE;
-
-	first_basedir = _g_path_remove_level (list->data);
-	if (first_basedir == NULL)
-		return TRUE;
-
-	for (scan = list->next; scan; scan = scan->next) {
-		char *path = scan->data;
-		char *basedir;
-
-		basedir = _g_path_remove_level (path);
-		if (basedir == NULL) {
-			same_dir = FALSE;
-			break;
-		}
-
-		if (strcmp (first_basedir, basedir) != 0) {
-			same_dir = FALSE;
-			g_free (basedir);
-			break;
-		}
-		g_free (basedir);
-	}
-	g_free (first_basedir);
-
-	return same_dir;
-}
+/* -- fr_command_add_dropped_files -- */
 
 
 static void
-add_dropped_items (DroppedItemsData *data)
+fr_command_add_dropped_files (FrArchive           *archive,
+		   	      GList               *file_list,
+		   	      const char          *base_dir,
+		   	      const char          *dest_dir,
+		   	      const char          *password,
+		   	      gboolean             encrypt_header,
+		   	      FrCompression        compression,
+		   	      guint                volume_size,
+		   	      GCancellable        *cancellable,
+		   	      GAsyncReadyCallback  callback,
+		   	      gpointer             user_data)
 {
-	FrCommand *self = data->command;
-	GList     *list = data->item_list;
+	FrCommand *self = FR_COMMAND (archive);
 	GList     *scan;
 
-	if (list == NULL) {
-		GSimpleAsyncResult *result;
-
-		result = g_simple_async_result_new (G_OBJECT (data->command),
-						    data->callback,
-						    data->user_data,
-						    fr_archive_add_dropped_items);
-		g_simple_async_result_complete_in_idle (result);
-
-		dropped_items_data_free (self->priv->dropped_items_data);
-		self->priv->dropped_items_data = NULL;
-		return;
-	}
-
-	/* if all files/dirs are in the same directory call fr_archive_add_items... */
-
-	if (all_files_in_same_dir (list)) {
-		char *first_base_dir;
-
-		first_base_dir = _g_path_remove_level (list->data);
-		fr_archive_add_items (FR_ARCHIVE (self),
-				      list,
-				      first_base_dir,
-				      data->dest_dir,
-				      data->update,
-				      data->password,
-				      data->encrypt_header,
-				      data->compression,
-				      data->volume_size,
-				      data->cancellable,
-				      data->callback,
-				      data->user_data);
-
-		g_free (first_base_dir);
-		dropped_items_data_free (self->priv->dropped_items_data);
-		self->priv->dropped_items_data = NULL;
-
-		return;
-	}
-
-	/* ...else add a directory at a time. */
-
-	for (scan = list; scan; scan = scan->next) {
-		char *path = scan->data;
-		char *base_dir;
-
-		if (! _g_uri_query_is_dir (path))
-			continue;
-
-		data->item_list = g_list_remove_link (list, scan);
-		if (data->item_list != NULL)
-			self->priv->continue_adding_dropped_items = TRUE;
-		base_dir = _g_path_remove_level (path);
-
-		fr_archive_add_directory (FR_ARCHIVE (self),
-					  _g_path_get_file_name (path),
-					  base_dir,
-					  data->dest_dir,
-					  data->update,
-					  data->password,
-					  data->encrypt_header,
-					  data->compression,
-					  data->volume_size,
-					  data->cancellable,
-					  data->callback,
-					  data->user_data);
-
-		g_free (base_dir);
-		g_free (path);
-
-		return;
-	}
-
-	/* if all files are in the same directory call fr_archive_add_files. */
-
-	if (all_files_in_same_dir (list)) {
-		char  *first_basedir;
-		GList *only_names_list = NULL;
-
-		first_basedir = _g_path_remove_level (list->data);
-
-		for (scan = list; scan; scan = scan->next) {
-			char *name;
-
-			name = g_uri_unescape_string (_g_path_get_file_name (scan->data), NULL);
-			only_names_list = g_list_prepend (only_names_list, name);
-		}
-
-		fr_archive_add_files (FR_ARCHIVE (self),
-				      only_names_list,
-				      first_basedir,
-				      data->dest_dir,
-				      data->update,
-				      FALSE,
-				      data->password,
-				      data->encrypt_header,
-				      data->compression,
-				      data->volume_size,
-				      data->cancellable,
-				      data->callback,
-				      data->user_data);
-
-		_g_string_list_free (only_names_list);
-		g_free (first_basedir);
-
-		return;
-	}
-
-	/* ...else call fr_command_add for each file.  This is needed to add
-	 * files without path info. FIXME: doesn't work with remote files. */
-
 	fr_archive_set_stoppable (FR_ARCHIVE (self), TRUE);
-	self->creating_archive = ! g_file_query_exists (self->priv->local_copy, data->cancellable);
+	self->creating_archive = ! g_file_query_exists (self->priv->local_copy, cancellable);
 	g_object_set (self,
 		      "filename", self->priv->local_copy,
-		      "password", data->password,
-		      "encrypt-header", data->encrypt_header,
-		      "compression", data->compression,
-		      "volume-size", data->volume_size,
+		      "password", password,
+		      "encrypt-header", encrypt_header,
+		      "compression", compression,
+		      "volume-size", volume_size,
 		      NULL);
 
 	fr_process_clear (self->process);
 	fr_command_uncompress (self);
-	for (scan = list; scan; scan = scan->next) {
+	for (scan = file_list; scan; scan = scan->next) {
 		char  *fullpath = scan->data;
 		char  *basedir;
 		GList *singleton;
@@ -3160,53 +2932,16 @@ add_dropped_items (DroppedItemsData *data)
 				NULL,
 				singleton,
 				basedir,
-				data->update,
+				FALSE,
 				FALSE);
 		g_list_free (singleton);
 		g_free (basedir);
 	}
 	fr_command_recompress (self);
 	fr_process_execute (self->process,
-			    data->cancellable,
-			    data->callback,
-			    data->user_data);
-
-	_g_string_list_free (data->item_list);
-	data->item_list = NULL;
-}
-
-
-static void
-fr_command_add_dropped_items (FrArchive           *archive,
-		   	      GList               *item_list,
-		   	      const char          *base_dir,
-		   	      const char          *dest_dir,
-		   	      gboolean             update,
-		   	      const char          *password,
-		   	      gboolean             encrypt_header,
-		   	      FrCompression        compression,
-		   	      guint                volume_size,
-		   	      GCancellable        *cancellable,
-		   	      GAsyncReadyCallback  callback,
-		   	      gpointer             user_data)
-{
-	FrCommand *self = FR_COMMAND (archive);
-
-	if (self->priv->dropped_items_data != NULL)
-		dropped_items_data_free (self->priv->dropped_items_data);
-	self->priv->dropped_items_data = dropped_items_data_new (self,
-								 item_list,
-								 base_dir,
-								 dest_dir,
-								 update,
-								 password,
-								 encrypt_header,
-								 compression,
-								 volume_size,
-								 cancellable,
-								 callback,
-								 user_data);
-	add_dropped_items (self->priv->dropped_items_data);
+			    cancellable,
+			    callback,
+			    user_data);
 }
 
 
@@ -3327,7 +3062,7 @@ fr_command_class_init (FrCommandClass *klass)
 	archive_class->test_integrity = fr_command_test_integrity;
 	archive_class->rename = fr_command_rename;
 	archive_class->paste_clipboard = fr_command_paste_clipboard;
-	archive_class->add_dropped_items = fr_command_add_dropped_items;
+	archive_class->add_dropped_files = fr_command_add_dropped_files;
 	archive_class->update_open_files = fr_command_update_open_files;
 
 	klass->list = NULL;
@@ -3442,8 +3177,6 @@ fr_command_init (FrCommand *self)
 	self->priv->local_copy = NULL;
 	self->priv->is_remote = FALSE;
 	self->priv->temp_dir = NULL;
-	self->priv->continue_adding_dropped_items = FALSE;
-	self->priv->dropped_items_data = NULL;
 	self->priv->temp_extraction_dir = NULL;
 	self->priv->remote_extraction = FALSE;
 

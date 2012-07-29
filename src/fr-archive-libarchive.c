@@ -1502,15 +1502,14 @@ fr_archive_libarchive_paste_clipboard (FrArchive           *archive,
 }
 
 
-/* -- fr_archive_libarchive_add_dropped_items -- */
+/* -- fr_archive_libarchive_add_dropped_files -- */
 
 
 static void
-fr_archive_libarchive_add_dropped_items (FrArchive           *archive,
-					 GList               *item_list,
+fr_archive_libarchive_add_dropped_files (FrArchive           *archive,
+					 GList               *files,
 					 const char          *base_dir,
 					 const char          *dest_dir,
-					 gboolean             update,
 					 const char          *password,
 					 gboolean             encrypt_header,
 					 FrCompression        compression,
@@ -1519,6 +1518,50 @@ fr_archive_libarchive_add_dropped_items (FrArchive           *archive,
 					 GAsyncReadyCallback  callback,
 					 gpointer             user_data)
 {
+	AddData *add_data;
+	GList   *scan;
+
+	g_return_if_fail (base_dir != NULL);
+
+	add_data = add_data_new ();
+
+	if (dest_dir[0] == '/')
+		dest_dir += 1;
+
+	for (scan = files; scan; scan = scan->next) {
+		const char *uri = (char *) scan->data;
+		char       *filepath;
+		char       *archive_pathname;
+		GFile      *file;
+
+		filepath = g_filename_from_uri (uri, NULL, NULL);
+		if (filepath == NULL)
+			continue;
+
+		archive_pathname = g_build_filename (dest_dir, _g_path_get_file_name (filepath), NULL);
+		file = g_file_new_for_uri (uri);
+		g_hash_table_insert (add_data->files_to_add, archive_pathname, add_file_new (file, archive_pathname));
+
+		g_object_unref (file);
+		g_free (filepath);
+	}
+
+	_fr_archive_libarchive_save (archive,
+				     FALSE,
+				     password,
+				     encrypt_header,
+				     compression,
+				     volume_size,
+				     cancellable,
+				     g_simple_async_result_new (G_OBJECT (archive),
+				     				callback,
+				     				user_data,
+				     				fr_archive_paste_clipboard),
+				     _add_files_begin,
+				     _add_files_end,
+				     _add_files_entry_action,
+				     add_data,
+				     (GDestroyNotify) add_data_free);
 }
 
 
@@ -1602,7 +1645,7 @@ fr_archive_libarchive_class_init (FrArchiveLibarchiveClass *klass)
 	archive_class->remove_files = fr_archive_libarchive_remove_files;
 	archive_class->rename = fr_archive_libarchive_rename;
 	archive_class->paste_clipboard = fr_archive_libarchive_paste_clipboard;
-	archive_class->add_dropped_items = fr_archive_libarchive_add_dropped_items;
+	archive_class->add_dropped_files = fr_archive_libarchive_add_dropped_files;
 	archive_class->update_open_files = fr_archive_libarchive_update_open_files;
 }
 
