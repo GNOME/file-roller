@@ -1283,10 +1283,10 @@ _remove_files_entry_action (SaveData             *save_data,
 	action = WRITE_ACTION_WRITE_ENTRY;
 	pathname = archive_entry_pathname (w_entry);
 	if (g_hash_table_lookup (remove_data->files_to_remove, pathname)) {
+		action = WRITE_ACTION_SKIP_ENTRY;
 		fr_archive_progress_inc_completed_files (load_data->archive, 1);
 		remove_data->n_files_to_remove--;
 		g_hash_table_remove (remove_data->files_to_remove, pathname);
-		action = WRITE_ACTION_SKIP_ENTRY;
 	}
 
 	return action;
@@ -1525,57 +1525,6 @@ fr_archive_libarchive_add_dropped_items (FrArchive           *archive,
 /* -- fr_archive_libarchive_update_open_files -- */
 
 
-typedef struct {
-	GList      *file_list;
-	GHashTable *files_to_add;
-	int         n_files_to_add;
-} UpdateData;
-
-
-static void
-update_data_free (UpdateData *update_data)
-{
-	g_hash_table_unref (update_data->files_to_add);
-	_g_string_list_free (update_data->file_list);
-	g_free (update_data);
-}
-
-
-static void
-_update_open_files_begin (SaveData *save_data,
-			  gpointer  user_data)
-{
-	UpdateData *update_data = user_data;
-
-	fr_archive_progress_set_total_files (LOAD_DATA (save_data)->archive, update_data->n_files_to_add);
-}
-
-
-static WriteAction
-_update_open_files_entry_action (SaveData             *save_data,
-				 struct archive_entry *w_entry,
-				 gpointer              user_data)
-{
-	UpdateData  *update_data = user_data;
-	LoadData    *load_data = LOAD_DATA (save_data);
-	WriteAction  action;
-	const char  *pathname;
-	AddFile     *add_file;
-
-	action = WRITE_ACTION_WRITE_ENTRY;
-	pathname = archive_entry_pathname (w_entry);
-	add_file = g_hash_table_lookup (update_data->files_to_add, pathname);
-	if (add_file != NULL) {
-		action = _archive_write_file (save_data->b, save_data, add_file, w_entry, load_data->cancellable);
-		fr_archive_progress_inc_completed_files (load_data->archive, 1);
-		update_data->n_files_to_add--;
-		g_hash_table_remove (update_data->files_to_add, pathname);
-	}
-
-	return action;
-}
-
-
 static void
 fr_archive_libarchive_update_open_files (FrArchive           *archive,
 					 GList               *file_list,
@@ -1588,15 +1537,13 @@ fr_archive_libarchive_update_open_files (FrArchive           *archive,
 					 GAsyncReadyCallback  callback,
 					 gpointer             user_data)
 {
-	UpdateData *update_data;
-	GList      *scan_file;
-	GList      *scan_dir;
+	AddData *add_data;
+	GList   *scan_file;
+	GList   *scan_dir;
 
-	update_data = g_new0 (UpdateData, 1);
-	update_data->file_list = _g_string_list_dup (file_list);
-	update_data->files_to_add = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) add_file_free);
-	update_data->n_files_to_add = 0;
-	for (scan_file = update_data->file_list, scan_dir = dir_list;
+	add_data = add_data_new ();
+
+	for (scan_file = file_list, scan_dir = dir_list;
 	     scan_file && scan_dir;
 	     scan_file = scan_file->next, scan_dir = scan_dir->next)
 	{
@@ -1607,15 +1554,15 @@ fr_archive_libarchive_update_open_files (FrArchive           *archive,
 
 		full_pathname = g_build_filename (temp_dir, relative_pathname, NULL);
 		file = g_file_new_for_path (full_pathname);
-		g_hash_table_insert (update_data->files_to_add, relative_pathname, add_file_new (file, relative_pathname));
-		update_data->n_files_to_add++;
+		g_hash_table_insert (add_data->files_to_add, g_strdup (relative_pathname), add_file_new (file, relative_pathname));
+		add_data->n_files_to_add++;
 
 		g_object_unref (file);
 		g_free (full_pathname);
 	}
 
 	_fr_archive_libarchive_save (archive,
-				     TRUE,
+				     FALSE,
 				     password,
 				     encrypt_header,
 				     compression,
@@ -1624,12 +1571,12 @@ fr_archive_libarchive_update_open_files (FrArchive           *archive,
 				     g_simple_async_result_new (G_OBJECT (archive),
 				     				callback,
 				     				user_data,
-				     				fr_archive_update_open_files),
-				     _update_open_files_begin,
-				     NULL,
-				     _update_open_files_entry_action,
-				     update_data,
-				     (GDestroyNotify) update_data_free);
+				     				fr_archive_paste_clipboard),
+				     _add_files_begin,
+				     _add_files_end,
+				     _add_files_entry_action,
+				     add_data,
+				     (GDestroyNotify) add_data_free);
 }
 
 
