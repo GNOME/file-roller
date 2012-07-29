@@ -1474,6 +1474,46 @@ fr_archive_libarchive_paste_clipboard (FrArchive           *archive,
 				       GAsyncReadyCallback  callback,
 				       gpointer             user_data)
 {
+	AddData *add_data;
+	GList   *scan;
+
+	g_return_if_fail (base_dir != NULL);
+
+	add_data = add_data_new ();
+
+	current_dir = current_dir + 1;
+	for (scan = files; scan; scan = scan->next) {
+		const char *old_name = (char *) scan->data;
+		char       *new_name;
+		char       *filename;
+		GFile      *file;
+
+		new_name = g_build_filename (current_dir, old_name + strlen (base_dir) - 1, NULL);
+		filename = g_build_filename (tmp_dir, old_name, NULL);
+		file = g_file_new_for_path (filename);
+		g_hash_table_insert (add_data->files_to_add, new_name, add_file_new (file, new_name));
+		add_data->n_files_to_add++;
+
+		g_object_unref (file);
+		g_free (filename);
+	}
+
+	_fr_archive_libarchive_save (archive,
+				     FALSE,
+				     password,
+				     encrypt_header,
+				     compression,
+				     volume_size,
+				     cancellable,
+				     g_simple_async_result_new (G_OBJECT (archive),
+				     				callback,
+				     				user_data,
+				     				fr_archive_paste_clipboard),
+				     _add_files_begin,
+				     _add_files_end,
+				     _add_files_entry_action,
+				     add_data,
+				     (GDestroyNotify) add_data_free);
 }
 
 
