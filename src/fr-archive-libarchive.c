@@ -1327,6 +1327,67 @@ fr_archive_libarchive_extract_files (FrArchive           *archive,
 /* -- fr_archive_libarchive_rename -- */
 
 
+typedef struct {
+	GList      *file_list;
+	char       *old_name;
+	char       *new_name;
+	char       *current_dir;
+	gboolean    is_dir;
+	gboolean    dir_in_archive;
+	char       *original_path;
+	GHashTable *files_to_rename;
+	int         n_files_to_rename;
+} RenameData;
+
+
+static void
+rename_data_free (RenameData *rename_data)
+{
+	g_hash_table_unref (rename_data->files_to_rename);
+	g_free (rename_data->old_name);
+	g_free (rename_data->new_name);
+	g_free (rename_data->current_dir);
+	g_free (rename_data->original_path);
+	_g_string_list_free (rename_data->file_list);
+	g_free (rename_data);
+}
+
+
+static void
+_rename_files_begin (SaveData *save_data,
+		     gpointer  user_data)
+{
+	RenameData *rename_data = user_data;
+
+	fr_archive_progress_set_total_files (LOAD_DATA (save_data)->archive, rename_data->n_files_to_rename);
+}
+
+
+static WriteAction
+_rename_files_entry_action (SaveData             *save_data,
+			    struct archive_entry *w_entry,
+			    gpointer              user_data)
+{
+	RenameData  *rename_data = user_data;
+	LoadData    *load_data = LOAD_DATA (save_data);
+	WriteAction  action;
+	const char  *pathname;
+	char       *new_pathname;
+
+	action = WRITE_ACTION_WRITE_ENTRY;
+	pathname = archive_entry_pathname (w_entry);
+	new_pathname = g_hash_table_lookup (rename_data->files_to_rename, pathname);
+	if (new_pathname != NULL) {
+		archive_entry_set_pathname (w_entry, new_pathname);
+		fr_archive_progress_inc_completed_files (load_data->archive, 1);
+		rename_data->n_files_to_rename--;
+		g_hash_table_remove (rename_data->files_to_rename, pathname);
+	}
+
+	return action;
+}
+
+
 static void
 fr_archive_libarchive_rename (FrArchive           *archive,
 			      GList               *file_list,
@@ -1340,6 +1401,66 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 			      GAsyncReadyCallback  callback,
 			      gpointer             user_data)
 {
+	RenameData    *rename_data;
+	char          *old_dirname;
+	char          *new_dirname;
+	int            old_dirname_len;
+	GList         *scan;
+	char          *password;
+	gboolean       encrypt_header;
+	FrCompression  compression;
+	guint          volume_size;
+
+	rename_data = g_new0 (RenameData, 1);
+	rename_data->file_list = _g_string_list_dup (file_list);
+	rename_data->old_name = g_strdup (old_name);
+	rename_data->new_name = g_strdup (new_name);
+	rename_data->current_dir = g_strdup (current_dir);
+	rename_data->is_dir = is_dir;
+	rename_data->dir_in_archive = dir_in_archive;
+	rename_data->original_path = g_strdup (original_path);
+	rename_data->files_to_rename = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, g_free);
+	rename_data->n_files_to_rename = 0;
+
+	old_dirname = g_build_filename (current_dir + 1, old_name, "/", NULL);
+	old_dirname_len = strlen (old_dirname);
+	new_dirname = g_build_filename (current_dir + 1, new_name, "/", NULL);
+	for (scan = rename_data->file_list; scan; scan = scan->next) {
+		char *old_pathname = scan->data;
+		char *new_pathname;
+
+		new_pathname = g_build_filename (new_dirname, old_pathname + old_dirname_len, NULL);
+		g_hash_table_insert (rename_data->files_to_rename, old_pathname, new_pathname);
+		rename_data->n_files_to_rename++;
+	}
+
+	g_object_get (archive,
+		      "password", &password,
+		      "encrypt-header", &encrypt_header,
+		      "compression", &compression,
+		      "volume-size", &volume_size,
+		      NULL);
+
+	_fr_archive_libarchive_save (archive,
+				     FALSE,
+				     password,
+				     encrypt_header,
+				     compression,
+				     volume_size,
+				     cancellable,
+				     g_simple_async_result_new (G_OBJECT (archive),
+				     				callback,
+				     				user_data,
+				     				fr_archive_rename),
+     				     _rename_files_begin,
+				     NULL,
+				     _rename_files_entry_action,
+				     rename_data,
+				     (GDestroyNotify) rename_data_free);
+
+	g_free (password);
+	g_free (new_dirname);
+	g_free (old_dirname);
 }
 
 

@@ -8038,7 +8038,7 @@ fr_window_rename_selection (FrWindow *window,
 			return;
 
 		renaming_dir = file_data_is_dir (selected_item);
-		dir_in_archive = selected_item->dir;
+		dir_in_archive = selected_item->dir && ! selected_item->list_dir;
 		original_path = g_strdup (selected_item->original_path);
 
 		if (renaming_dir && ! dir_in_archive) {
