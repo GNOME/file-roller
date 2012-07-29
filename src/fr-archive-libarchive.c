@@ -969,6 +969,55 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 /* -- remove -- */
 
 
+typedef struct {
+	GList      *file_list;
+	GHashTable *files_to_remove;
+	int         n_files_to_remove;
+} RemoveData;
+
+
+static void
+remove_data_free (RemoveData *remove_data)
+{
+	g_hash_table_unref (remove_data->files_to_remove);
+	_g_string_list_free (remove_data->file_list);
+	g_free (remove_data);
+}
+
+
+static void
+_remove_files_begin (SaveData *save_data,
+		     gpointer  user_data)
+{
+	RemoveData *remove_data = user_data;
+
+	fr_archive_progress_set_total_files (LOAD_DATA (save_data)->archive, remove_data->n_files_to_remove);
+}
+
+
+static WriteAction
+_remove_files_entry_action (SaveData             *save_data,
+			    struct archive_entry *w_entry,
+			    gpointer              user_data)
+{
+	RemoveData  *remove_data = user_data;
+	LoadData    *load_data = LOAD_DATA (save_data);
+	WriteAction  action;
+	const char  *pathname;
+
+	action = WRITE_ACTION_WRITE_ENTRY;
+	pathname = archive_entry_pathname (w_entry);
+	if (g_hash_table_lookup (remove_data->files_to_remove, pathname)) {
+		fr_archive_progress_inc_completed_files (load_data->archive, 1);
+		remove_data->n_files_to_remove--;
+		g_hash_table_remove (remove_data->files_to_remove, pathname);
+		action = WRITE_ACTION_SKIP_ENTRY;
+	}
+
+	return action;
+}
+
+
 static void
 fr_archive_libarchive_remove_files (FrArchive           *archive,
 				    GList               *file_list,
@@ -977,6 +1026,34 @@ fr_archive_libarchive_remove_files (FrArchive           *archive,
 				    GAsyncReadyCallback  callback,
 				    gpointer             user_data)
 {
+	RemoveData *remove_data;
+	GList      *scan;
+
+	remove_data = g_new0 (RemoveData, 1);
+	remove_data->file_list = _g_string_list_dup (file_list);
+	remove_data->files_to_remove = g_hash_table_new (g_str_hash, g_str_equal);
+	remove_data->n_files_to_remove = 0;
+	for (scan = remove_data->file_list; scan; scan = scan->next) {
+		g_hash_table_insert (remove_data->files_to_remove, scan->data, GINT_TO_POINTER (1));
+		remove_data->n_files_to_remove++;
+	}
+
+	_fr_archive_libarchive_save (archive,
+				     FALSE,
+				     NULL,
+				     FALSE,
+				     compression,
+				     0,
+				     cancellable,
+				     g_simple_async_result_new (G_OBJECT (archive),
+				     				callback,
+				     				user_data,
+				     				fr_archive_remove),
+     				     _remove_files_begin,
+				     NULL,
+				     _remove_files_entry_action,
+				     remove_data,
+				     (GDestroyNotify) remove_data_free);
 }
 
 
