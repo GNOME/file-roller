@@ -1288,7 +1288,7 @@ _remove_files_entry_action (SaveData             *save_data,
 static void
 fr_archive_libarchive_remove_files (FrArchive           *archive,
 				    GList               *file_list,
-				    FrCompression        compression,
+				    FrCompression        compression, /* FIXME: remove this option */
 				    GCancellable        *cancellable,
 				    GAsyncReadyCallback  callback,
 				    gpointer             user_data)
@@ -1307,9 +1307,9 @@ fr_archive_libarchive_remove_files (FrArchive           *archive,
 
 	_fr_archive_libarchive_save (archive,
 				     FALSE,
-				     NULL,
-				     FALSE,
-				     compression,
+				     archive->password,
+				     archive->encrypt_header,
+				     archive->compression,
 				     0,
 				     cancellable,
 				     g_simple_async_result_new (G_OBJECT (archive),
@@ -1406,10 +1406,6 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 	char          *new_dirname;
 	int            old_dirname_len;
 	GList         *scan;
-	char          *password;
-	gboolean       encrypt_header;
-	FrCompression  compression;
-	guint          volume_size;
 
 	rename_data = g_new0 (RenameData, 1);
 	rename_data->file_list = _g_string_list_dup (file_list);
@@ -1434,19 +1430,12 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 		rename_data->n_files_to_rename++;
 	}
 
-	g_object_get (archive,
-		      "password", &password,
-		      "encrypt-header", &encrypt_header,
-		      "compression", &compression,
-		      "volume-size", &volume_size,
-		      NULL);
-
 	_fr_archive_libarchive_save (archive,
 				     FALSE,
-				     password,
-				     encrypt_header,
-				     compression,
-				     volume_size,
+				     archive->password,
+				     archive->encrypt_header,
+				     archive->compression,
+				     0,
 				     cancellable,
 				     g_simple_async_result_new (G_OBJECT (archive),
 				     				callback,
@@ -1458,7 +1447,6 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 				     rename_data,
 				     (GDestroyNotify) rename_data_free);
 
-	g_free (password);
 	g_free (new_dirname);
 	g_free (old_dirname);
 }
