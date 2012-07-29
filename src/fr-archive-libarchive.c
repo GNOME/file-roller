@@ -117,14 +117,23 @@ typedef struct {
 
 
 static void
-load_data_free (LoadData *add_data)
+load_data_init (LoadData *load_data)
 {
-	_g_object_unref (add_data->archive);
-	_g_object_unref (add_data->cancellable);
-	_g_object_unref (add_data->result);
-	_g_object_unref (add_data->istream);
-	g_free (add_data->buffer);
-	g_free (add_data);
+	load_data->buffer_size = BUFFER_SIZE;
+	load_data->buffer = g_new (char, load_data->buffer_size);
+
+}
+
+
+static void
+load_data_free (LoadData *load_data)
+{
+	_g_object_unref (load_data->archive);
+	_g_object_unref (load_data->cancellable);
+	_g_object_unref (load_data->result);
+	_g_object_unref (load_data->istream);
+	g_free (load_data->buffer);
+	g_free (load_data);
 }
 
 
@@ -258,14 +267,14 @@ fr_archive_libarchive_load (FrArchive           *archive,
 	LoadData *load_data;
 
 	load_data = g_new0 (LoadData, 1);
+	load_data_init (load_data);
+
 	load_data->archive = g_object_ref (archive);
 	load_data->cancellable = _g_object_ref (cancellable);
 	load_data->result = g_simple_async_result_new (G_OBJECT (archive),
 						       callback,
 						       user_data,
 						       fr_archive_load);
-	load_data->buffer_size = BUFFER_SIZE;
-	load_data->buffer = g_new (char, load_data->buffer_size);
 
 	g_simple_async_result_set_op_res_gpointer (load_data->result, load_data, NULL);
 	g_simple_async_result_run_in_thread (load_data->result,
@@ -275,24 +284,82 @@ fr_archive_libarchive_load (FrArchive           *archive,
 }
 
 
-/* -- save data -- */
+/* --  AddFile -- */
+
+
+typedef struct {
+	GFile *file;
+	char  *pathname;
+} AddFile;
+
+
+static AddFile *
+add_file_new (GFile      *file,
+	      const char *archive_pathname)
+{
+	AddFile *add_file;
+
+	add_file = g_new (AddFile, 1);
+	add_file->file = g_object_ref (file);
+	add_file->pathname = g_strdup (archive_pathname);
+
+	return add_file;
+}
+
+
+static void
+add_file_free (AddFile *add_file)
+{
+	g_object_unref (add_file->file);
+	g_free (add_file->pathname);
+	g_free (add_file);
+}
+
+
+/* -- _fr_archive_libarchive_save -- */
 
 
 #define SAVE_DATA(x) ((SaveData *)(x))
 
+typedef enum {
+	WRITE_ACTION_ABORT,
+	WRITE_ACTION_SKIP_ENTRY,
+	WRITE_ACTION_WRITE_ENTRY
+} WriteAction;
 
-typedef struct {
-	LoadData       parent;
-	GFile         *tmp_file;
-	GOutputStream *ostream;
-	GHashTable    *usernames;
-	GHashTable    *groupnames;
-} SaveData;
+typedef struct      _SaveData SaveData;
+typedef void        (*SaveDataFunc)    (SaveData *, gpointer user_data);
+typedef WriteAction (*EntryActionFunc) (SaveData *, struct archive_entry *, gpointer user_data);
+
+
+struct _SaveData {
+	LoadData         parent;
+	GFile           *tmp_file;
+	GOutputStream   *ostream;
+	GHashTable      *usernames;
+	GHashTable      *groupnames;
+	gboolean         update;
+	char            *password;
+	gboolean         encrypt_header;
+	FrCompression    compression;
+	guint            volume_size;
+	void            *buffer;
+	gsize            buffer_size;
+	SaveDataFunc     begin_operation;
+	SaveDataFunc     end_operation;
+	EntryActionFunc  entry_action;
+	gpointer         user_data;
+	GDestroyNotify   user_data_notify;
+	struct archive  *b;
+};
 
 
 static void
 save_data_init (SaveData *save_data)
 {
+	load_data_init (LOAD_DATA (save_data));
+	save_data->buffer_size = BUFFER_SIZE;
+	save_data->buffer = g_new (char, save_data->buffer_size);
 	save_data->usernames = g_hash_table_new_full (g_int64_hash, g_int64_equal, g_free, g_free);
 	save_data->groupnames = g_hash_table_new_full (g_int64_hash, g_int64_equal, g_free, g_free);
 }
@@ -301,6 +368,10 @@ save_data_init (SaveData *save_data)
 static void
 save_data_free (SaveData *save_data)
 {
+	if (save_data->user_data_notify != NULL)
+		save_data->user_data_notify (save_data->user_data);
+	g_free (save_data->buffer);
+	g_free (save_data->password);
 	g_hash_table_unref (save_data->groupnames);
 	g_hash_table_unref (save_data->usernames);
 	_g_object_unref (save_data->ostream);
@@ -366,163 +437,6 @@ save_data_close (struct archive *a,
 		g_file_delete (save_data->tmp_file, NULL, NULL);
 
 	return 0;
-}
-
-
-/* -- add -- */
-
-
-typedef struct {
-	SaveData       parent;
-	GList         *file_list;
-	GFile         *base_dir;
-	char          *dest_dir;
-	gboolean       update;
-	gboolean       recursive;
-	char          *password;
-	gboolean       encrypt_header;
-	FrCompression  compression;
-	guint          volume_size;
-	GHashTable    *files_to_add;
-	int            n_files_to_add;
-	void          *buffer;
-	gsize          buffer_size;
-} AddData;
-
-
-static void
-add_data_free (AddData *add_data)
-{
-	g_free (add_data->buffer);
-	g_hash_table_unref (add_data->files_to_add);
-	g_free (add_data->password);
-	g_free (add_data->dest_dir);
-	_g_object_unref (add_data->base_dir);
-	_g_string_list_free (add_data->file_list);
-	save_data_free (SAVE_DATA (add_data));
-}
-
-
-typedef struct {
-	GFile *file;
-	char  *pathname;
-} FileToAdd;
-
-
-static FileToAdd *
-file_to_add_new (AddData    *add_data,
-		 const char *relative_name,
-		 const char *full_name)
-{
-	FileToAdd *file_to_add;
-
-	file_to_add = g_new (FileToAdd, 1);
-	file_to_add->file = g_file_get_child (add_data->base_dir, relative_name);
-	file_to_add->pathname = g_strdup (full_name);
-
-	return file_to_add;
-}
-
-
-static void
-file_to_add_free (FileToAdd *file_to_add)
-{
-	g_object_unref (file_to_add->file);
-	g_free (file_to_add->pathname);
-	g_free (file_to_add);
-}
-
-
-static gint64 *
-_g_int64_pointer_new (gint64 i)
-{
-	gint64 *p;
-
-	p = g_new (gint64, 1);
-	*p = i;
-
-	return p;
-}
-
-
-static gboolean
-_archive_entry_copy_file_info (struct archive_entry *entry,
-			       GFileInfo            *info,
-			       SaveData             *save_data)
-{
-	int     filetype;
-	char   *username;
-	char   *groupname;
-	gint64  id;
-
-	switch (g_file_info_get_file_type (info)) {
-	case G_FILE_TYPE_REGULAR:
-		filetype = AE_IFREG;
-		break;
-	case G_FILE_TYPE_DIRECTORY:
-		filetype = AE_IFDIR;
-		break;
-	case G_FILE_TYPE_SYMBOLIC_LINK:
-		filetype = AE_IFLNK;
-		break;
-	default:
-		return FALSE;
-		break;
-	}
-	archive_entry_set_filetype (entry, filetype);
-
-	archive_entry_set_atime (entry,
-				 g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_ACCESS),
-				 g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_ACCESS_USEC) * 1000);
-	archive_entry_set_ctime (entry,
-				 g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_CREATED),
-				 g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_CREATED_USEC) * 1000);
-	archive_entry_set_mtime (entry,
-				 g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED),
-				 g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC) * 1000);
-	archive_entry_unset_birthtime (entry);
-	archive_entry_set_dev (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_DEVICE));
-	archive_entry_set_gid (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_GID));
-	archive_entry_set_uid (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_UID));
-	archive_entry_set_ino64 (entry, g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_UNIX_INODE));
-	archive_entry_set_mode (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_MODE));
-	archive_entry_set_nlink (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_NLINK));
-	archive_entry_set_rdev (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_RDEV));
-	archive_entry_set_size (entry, g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_STANDARD_SIZE));
-	if (filetype == AE_IFLNK) {
-		g_print ("symlink: %s\n", g_file_info_get_attribute_byte_string (info, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET));
-		archive_entry_set_symlink (entry, g_file_info_get_attribute_byte_string (info, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET));
-	}
-
-	/* username */
-
-	id = archive_entry_uid (entry);
-	username = g_hash_table_lookup (save_data->usernames, &id);
-	if (username == NULL) {
-		struct passwd *pwd = getpwuid (id);
-		if (pwd != NULL) {
-			username = g_strdup (pwd->pw_name);
-			g_hash_table_insert (save_data->usernames, _g_int64_pointer_new (id), username);
-		}
-	}
-	if (username != NULL)
-		archive_entry_set_uname (entry, username);
-
-	/* groupname */
-
-	id = archive_entry_gid (entry);
-	groupname = g_hash_table_lookup (save_data->groupnames, &id);
-	if (groupname == NULL) {
-		struct group *grp = getgrgid (id);
-		if (grp != NULL) {
-			groupname = g_strdup (grp->gr_name);
-			g_hash_table_insert (save_data->groupnames, _g_int64_pointer_new (id), groupname);
-		}
-	}
-	if (groupname != NULL)
-		archive_entry_set_gname (entry, groupname);
-
-	return TRUE;
 }
 
 
@@ -598,28 +512,118 @@ _archive_write_set_compression_level (struct archive *a,
 }
 
 
-typedef enum {
-	WRITE_ACTION_ABORT,
-	WRITE_ACTION_SKIP_ENTRY,
-	WRITE_ACTION_WRITE_ENTRY
-} WriteAction;
+/* -- _archive_write_file -- */
+
+
+static gint64 *
+_g_int64_pointer_new (gint64 i)
+{
+	gint64 *p;
+
+	p = g_new (gint64, 1);
+	*p = i;
+
+	return p;
+}
+
+
+static gboolean
+_archive_entry_copy_file_info (struct archive_entry *entry,
+			       GFileInfo            *info,
+			       SaveData             *save_data)
+{
+	int     filetype;
+	char   *username;
+	char   *groupname;
+	gint64  id;
+
+	switch (g_file_info_get_file_type (info)) {
+	case G_FILE_TYPE_REGULAR:
+		filetype = AE_IFREG;
+		break;
+	case G_FILE_TYPE_DIRECTORY:
+		filetype = AE_IFDIR;
+		break;
+	case G_FILE_TYPE_SYMBOLIC_LINK:
+		filetype = AE_IFLNK;
+		break;
+	default:
+		return FALSE;
+		break;
+	}
+	archive_entry_set_filetype (entry, filetype);
+
+	archive_entry_set_atime (entry,
+				 g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_ACCESS),
+				 g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_ACCESS_USEC) * 1000);
+	archive_entry_set_ctime (entry,
+				 g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_CREATED),
+				 g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_CREATED_USEC) * 1000);
+	archive_entry_set_mtime (entry,
+				 g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED),
+				 g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC) * 1000);
+	archive_entry_unset_birthtime (entry);
+	archive_entry_set_dev (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_DEVICE));
+	archive_entry_set_gid (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_GID));
+	archive_entry_set_uid (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_UID));
+	archive_entry_set_ino64 (entry, g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_UNIX_INODE));
+	archive_entry_set_mode (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_MODE));
+	archive_entry_set_nlink (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_NLINK));
+	archive_entry_set_rdev (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_RDEV));
+	archive_entry_set_size (entry, g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_STANDARD_SIZE));
+	if (filetype == AE_IFLNK) {
+		/* FIXME: allow to store symlinks */
+		g_print ("symlink: %s\n", g_file_info_get_attribute_byte_string (info, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET));
+		archive_entry_set_symlink (entry, g_file_info_get_attribute_byte_string (info, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET));
+	}
+
+	/* username */
+
+	id = archive_entry_uid (entry);
+	username = g_hash_table_lookup (save_data->usernames, &id);
+	if (username == NULL) {
+		struct passwd *pwd = getpwuid (id);
+		if (pwd != NULL) {
+			username = g_strdup (pwd->pw_name);
+			g_hash_table_insert (save_data->usernames, _g_int64_pointer_new (id), username);
+		}
+	}
+	if (username != NULL)
+		archive_entry_set_uname (entry, username);
+
+	/* groupname */
+
+	id = archive_entry_gid (entry);
+	groupname = g_hash_table_lookup (save_data->groupnames, &id);
+	if (groupname == NULL) {
+		struct group *grp = getgrgid (id);
+		if (grp != NULL) {
+			groupname = g_strdup (grp->gr_name);
+			g_hash_table_insert (save_data->groupnames, _g_int64_pointer_new (id), groupname);
+		}
+	}
+	if (groupname != NULL)
+		archive_entry_set_gname (entry, groupname);
+
+	return TRUE;
+}
 
 
 static WriteAction
 _archive_write_file (struct archive       *b,
-		     AddData              *add_data,
-		     FileToAdd            *file_to_add,
+		     SaveData             *save_data,
+		     AddFile              *add_file,
 		     struct archive_entry *r_entry,
 		     GCancellable         *cancellable)
 {
-	LoadData             *load_data = LOAD_DATA (add_data);
+	LoadData             *load_data = LOAD_DATA (save_data);
 	GFileInfo            *info;
 	struct archive_entry *w_entry;
 	int                   rb;
 
 	/* write the file header */
 
-	info = g_file_query_info (file_to_add->file,
+	info = g_file_query_info (add_file->file,
 				  FILE_ATTRIBUTES_NEEDED_BY_ARCHIVE_ENTRY,
 				  G_FILE_QUERY_INFO_NONE,
 				  cancellable,
@@ -628,20 +632,20 @@ _archive_write_file (struct archive       *b,
 		return WRITE_ACTION_ABORT;
 
 	w_entry = archive_entry_new ();
-	if (! _archive_entry_copy_file_info (w_entry, info, SAVE_DATA (add_data))) {
+	if (! _archive_entry_copy_file_info (w_entry, info, save_data)) {
 		archive_entry_free (w_entry);
 		g_object_unref (info);
 		return WRITE_ACTION_SKIP_ENTRY;
 	}
 
 	/* honor the update flag */
-	if (add_data->update && (r_entry != NULL) && (archive_entry_mtime (w_entry) < archive_entry_mtime (r_entry))) {
+	if (save_data->update && (r_entry != NULL) && (archive_entry_mtime (w_entry) < archive_entry_mtime (r_entry))) {
 		archive_entry_free (w_entry);
 		g_object_unref (info);
 		return WRITE_ACTION_WRITE_ENTRY;
 	}
 
-	archive_entry_set_pathname (w_entry, file_to_add->pathname);
+	archive_entry_set_pathname (w_entry, add_file->pathname);
 	rb = archive_write_header (b, w_entry);
 
 	/* write the file data */
@@ -649,12 +653,12 @@ _archive_write_file (struct archive       *b,
 	if (g_file_info_get_file_type (info) == G_FILE_TYPE_REGULAR) {
 		GInputStream *istream;
 
-		istream = (GInputStream *) g_file_read (file_to_add->file, cancellable, &load_data->error);
+		istream = (GInputStream *) g_file_read (add_file->file, cancellable, &load_data->error);
 		if (istream != NULL) {
 			gssize bytes_read;
 
-			while ((bytes_read = g_input_stream_read (istream, add_data->buffer, add_data->buffer_size, cancellable, &load_data->error)) > 0) {
-				archive_write_data (b, add_data->buffer, bytes_read);
+			while ((bytes_read = g_input_stream_read (istream, save_data->buffer, save_data->buffer_size, cancellable, &load_data->error)) > 0) {
+				archive_write_data (b, save_data->buffer, bytes_read);
 				fr_archive_progress_inc_completed_bytes (load_data->archive, bytes_read);
 			}
 
@@ -663,8 +667,6 @@ _archive_write_file (struct archive       *b,
 	}
 
 	rb = archive_write_finish_entry (b);
-
-	add_data->n_files_to_add--;
 
 	if ((load_data->error == NULL) && (rb != ARCHIVE_OK))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (b));
@@ -677,58 +679,50 @@ _archive_write_file (struct archive       *b,
 
 
 static void
-add_to_archive_thread  (GSimpleAsyncResult *result,
-			GObject            *object,
-			GCancellable       *cancellable)
+save_archive_thread (GSimpleAsyncResult *result,
+		     GObject            *object,
+		     GCancellable       *cancellable)
 {
-	AddData              *add_data;
+	SaveData             *save_data;
 	LoadData             *load_data;
 	struct archive       *a, *b;
 	struct archive_entry *r_entry;
 	int                   ra, rb;
-	GList                *remaining_files;
-	GList                *scan;
 
-	add_data = g_simple_async_result_get_op_res_gpointer (result);
-	load_data = LOAD_DATA (add_data);
+	save_data = g_simple_async_result_get_op_res_gpointer (result);
+	load_data = LOAD_DATA (save_data);
 
-	fr_archive_progress_set_total_files (load_data->archive, add_data->n_files_to_add);
-
-	b = archive_write_new ();
+	save_data->b = b = archive_write_new ();
 	_archive_write_set_format_from_filename (b, fr_archive_get_file (load_data->archive));
-	_archive_write_set_compression_level (b, add_data->compression);
-	archive_write_open (b, add_data, save_data_open, save_data_write, save_data_close);
+	_archive_write_set_compression_level (b, save_data->compression);
+	archive_write_open (b, save_data, save_data_open, save_data_write, save_data_close);
 
 	a = archive_read_new ();
 	archive_read_support_filter_all (a);
 	archive_read_support_format_all (a);
 	archive_read_open (a, load_data, load_data_open, load_data_read, load_data_close);
 
+	if (save_data->begin_operation != NULL)
+		save_data->begin_operation (save_data, save_data->user_data);
+
 	while ((load_data->error == NULL) && (ra = archive_read_next_header (a, &r_entry)) == ARCHIVE_OK) {
-		WriteAction  action;
-		const char  *pathname;
-		FileToAdd   *file_to_add;
-		int64_t      offset;
+		struct archive_entry *w_entry;
+		WriteAction           action;
 
 		if (g_cancellable_is_cancelled (cancellable))
 			break;
 
-		fr_archive_progress_inc_completed_files (load_data->archive, 1);
-
 		action = WRITE_ACTION_WRITE_ENTRY;
-
-		pathname = archive_entry_pathname (r_entry);
-		file_to_add = g_hash_table_lookup (add_data->files_to_add, pathname);
-		if (file_to_add != NULL) {
-			action = _archive_write_file (b, add_data, file_to_add, r_entry, cancellable);
-			g_hash_table_remove (add_data->files_to_add, pathname);
-		}
+		w_entry = archive_entry_clone (r_entry);
+		if (save_data->entry_action != NULL)
+			action = save_data->entry_action (save_data, w_entry, save_data->user_data);
 
 		if (action == WRITE_ACTION_WRITE_ENTRY) {
-			const void *buffer;
-			size_t      buffer_size;
+			const void   *buffer;
+			size_t        buffer_size;
+			__LA_INT64_T  offset;
 
-			rb = archive_write_header (b, r_entry);
+			rb = archive_write_header (b, w_entry);
 			if (rb != ARCHIVE_OK)
 				break;
 
@@ -749,23 +743,15 @@ add_to_archive_thread  (GSimpleAsyncResult *result,
 
 			rb = archive_write_finish_entry (b);
 		}
+
+		archive_entry_free (w_entry);
 	}
 
-	/* allow to add files to a new archive */
-	if (g_error_matches (load_data->error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND)) {
-		g_clear_error (&load_data->error);
+	if (g_error_matches (load_data->error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
 		ra = ARCHIVE_EOF;
-	}
 
-	/* add the files that weren't present in the archive already */
-	remaining_files = g_hash_table_get_values (add_data->files_to_add);
-	for (scan = remaining_files; (load_data->error == NULL) && scan; scan = scan->next) {
-		FileToAdd *file_to_add = scan->data;
-
-		if (_archive_write_file (b, add_data, file_to_add, NULL, cancellable) == WRITE_ACTION_ABORT)
-			break;
-	}
-	g_list_free (remaining_files);
+	if (save_data->end_operation != NULL)
+		save_data->end_operation (save_data, save_data->user_data);
 
 	rb = archive_write_close (b);
 
@@ -780,7 +766,144 @@ add_to_archive_thread  (GSimpleAsyncResult *result,
 
 	archive_read_free (a);
 	archive_write_free (b);
-	add_data_free (add_data);
+	save_data_free (save_data);
+}
+
+
+static void
+_fr_archive_libarchive_save (FrArchive          *archive,
+			     gboolean            update,
+			     const char         *password,
+			     gboolean            encrypt_header,
+			     FrCompression       compression,
+			     guint               volume_size,
+			     GCancellable       *cancellable,
+			     GSimpleAsyncResult *result,
+			     SaveDataFunc        begin_operation,
+			     SaveDataFunc        end_operation,
+			     EntryActionFunc     entry_action,
+			     gpointer            user_data,
+			     GDestroyNotify      notify)
+{
+	SaveData *save_data;
+	LoadData *load_data;
+
+	save_data = g_new0 (SaveData, 1);
+	save_data_init (SAVE_DATA (save_data));
+
+	load_data = LOAD_DATA (save_data);
+	load_data->archive = g_object_ref (archive);
+	load_data->cancellable = _g_object_ref (cancellable);
+	load_data->result = result;
+
+	save_data->update = update;
+	save_data->password = g_strdup (password);
+	save_data->encrypt_header = encrypt_header;
+	save_data->compression = compression;
+	save_data->volume_size = volume_size;
+	save_data->begin_operation = begin_operation;
+	save_data->end_operation = end_operation;
+	save_data->entry_action = entry_action;
+	save_data->user_data = user_data;
+	save_data->user_data_notify = notify;
+
+	g_simple_async_result_set_op_res_gpointer (load_data->result, save_data, NULL);
+	g_simple_async_result_run_in_thread (load_data->result,
+					     save_archive_thread,
+					     G_PRIORITY_DEFAULT,
+					     cancellable);
+}
+
+
+/* -- add_files -- */
+
+
+typedef struct {
+	GList      *file_list;
+	GFile      *base_dir;
+	char       *dest_dir;
+	GHashTable *files_to_add;
+	int         n_files_to_add;
+} AddData;
+
+
+static void
+add_data_free (AddData *add_data)
+{
+	g_hash_table_unref (add_data->files_to_add);
+	g_free (add_data->dest_dir);
+	_g_object_unref (add_data->base_dir);
+	_g_string_list_free (add_data->file_list);
+	g_free (add_data);
+}
+
+
+static void
+_add_files_begin (SaveData *save_data,
+		  gpointer  user_data)
+{
+	AddData *add_data = user_data;
+
+	fr_archive_progress_set_total_files (LOAD_DATA (save_data)->archive, add_data->n_files_to_add);
+}
+
+
+static WriteAction
+_add_files_entry_action (SaveData             *save_data,
+			 struct archive_entry *w_entry,
+			 gpointer              user_data)
+{
+	AddData     *add_data = user_data;
+	LoadData    *load_data = LOAD_DATA (save_data);
+	WriteAction  action;
+	const char  *pathname;
+	AddFile     *add_file;
+
+	action = WRITE_ACTION_WRITE_ENTRY;
+	pathname = archive_entry_pathname (w_entry);
+	add_file = g_hash_table_lookup (add_data->files_to_add, pathname);
+	if (add_file != NULL) {
+		action = _archive_write_file (save_data->b, save_data, add_file, w_entry, load_data->cancellable);
+		fr_archive_progress_inc_completed_files (load_data->archive, 1);
+		add_data->n_files_to_add--;
+		g_hash_table_remove (add_data->files_to_add, pathname);
+	}
+
+	return action;
+}
+
+
+static void
+_add_files_end (SaveData *save_data,
+		gpointer  user_data)
+{
+	AddData  *add_data = user_data;
+	LoadData *load_data = LOAD_DATA (save_data);
+	GList    *remaining_files;
+	GList    *scan;
+
+	/* allow to add files to a new archive */
+
+	if (g_error_matches (load_data->error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
+		g_clear_error (&load_data->error);
+
+	/* add the files that weren't present in the archive already */
+
+	remaining_files = g_hash_table_get_values (add_data->files_to_add);
+	for (scan = remaining_files; (load_data->error == NULL) && scan; scan = scan->next) {
+		AddFile *add_file = scan->data;
+
+		if (_archive_write_file (save_data->b,
+					 save_data,
+					 add_file,
+					 NULL,
+					 load_data->cancellable) == WRITE_ACTION_ABORT)
+		{
+			break;
+		}
+	}
+
+	g_list_free (remaining_files);
 }
 
 
@@ -799,54 +922,47 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 				 GAsyncReadyCallback  callback,
 				 gpointer             user_data)
 {
-	AddData  *add_data;
-	LoadData *load_data;
-	GList    *scan;
+	AddData *add_data;
+	GList   *scan;
 
 	g_return_if_fail (base_dir != NULL);
 
 	add_data = g_new0 (AddData, 1);
-	save_data_init (SAVE_DATA (add_data));
-
-	load_data = LOAD_DATA (add_data);
-	load_data->archive = g_object_ref (archive);
-	load_data->cancellable = _g_object_ref (cancellable);
-	load_data->result = g_simple_async_result_new (G_OBJECT (archive),
-						       callback,
-						       user_data,
-						       fr_archive_add_files);
-	load_data->buffer_size = BUFFER_SIZE;
-	load_data->buffer = g_new (char, load_data->buffer_size);
-
 	add_data->file_list = _g_string_list_dup (file_list);
 	add_data->base_dir = g_file_new_for_uri (base_dir);
 	add_data->dest_dir = g_strdup (dest_dir[0] == '/' ? dest_dir + 1 : dest_dir);
-	add_data->update = update;
-	add_data->recursive = recursive;
-	add_data->password = g_strdup (password);
-	add_data->encrypt_header = encrypt_header;
-	add_data->compression = compression;
-	add_data->volume_size = volume_size;
-	add_data->files_to_add = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) file_to_add_free);
+	add_data->files_to_add = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) add_file_free);
 	add_data->n_files_to_add = 0;
 	for (scan = add_data->file_list; scan; scan = scan->next) {
-		char *relative_pathname = scan->data;
-		char *full_pathname;
+		char  *relative_pathname = scan->data;
+		char  *full_pathname;
+		GFile *file;
 
 		full_pathname = g_build_filename (add_data->dest_dir, relative_pathname, NULL);
-		g_hash_table_insert (add_data->files_to_add, full_pathname, file_to_add_new (add_data, relative_pathname, full_pathname));
+		file = g_file_get_child (add_data->base_dir, relative_pathname);
+		g_hash_table_insert (add_data->files_to_add, full_pathname, add_file_new (file, full_pathname));
 		add_data->n_files_to_add++;
 
+		g_object_unref (file);
 		g_free (full_pathname);
 	}
-	add_data->buffer_size = BUFFER_SIZE;
-	add_data->buffer = g_new (char, add_data->buffer_size);
 
-	g_simple_async_result_set_op_res_gpointer (load_data->result, add_data, NULL);
-	g_simple_async_result_run_in_thread (load_data->result,
-					     add_to_archive_thread,
-					     G_PRIORITY_DEFAULT,
-					     cancellable);
+	_fr_archive_libarchive_save (archive,
+				     update,
+				     password,
+				     encrypt_header,
+				     compression,
+				     volume_size,
+				     cancellable,
+				     g_simple_async_result_new (G_OBJECT (archive),
+				     				callback,
+				     				user_data,
+				     				fr_archive_add_files),
+				     _add_files_begin,
+				     _add_files_end,
+				     _add_files_entry_action,
+				     add_data,
+				     (GDestroyNotify) add_data_free);
 }
 
 
