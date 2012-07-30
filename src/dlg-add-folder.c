@@ -862,6 +862,7 @@ load_options_cb (GtkWidget  *w,
 	gtk_window_set_transient_for (GTK_WINDOW (aod_data->dialog),
 				      GTK_WINDOW (data->dialog));
 	gtk_window_set_modal (GTK_WINDOW (aod_data->dialog), TRUE);
+	_gtk_dialog_add_to_window_group (GTK_DIALOG (aod_data->dialog));
 	gtk_widget_show (aod_data->dialog);
 }
 
