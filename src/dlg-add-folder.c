@@ -202,7 +202,7 @@ add_folder_cb (GtkWidget *widget,
 		gtk_file_chooser_dialog_new (_("Add a Folder"),
 					     GTK_WINDOW (data->window),
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-					     NULL);
+					     NULL, NULL);
 
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 510);
 
