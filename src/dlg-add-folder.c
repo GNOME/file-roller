@@ -30,6 +30,7 @@
 #include "fr-stock.h"
 #include "fr-window.h"
 #include "glib-utils.h"
+#include "gth-menu-button.h"
 #include "gtk-utils.h"
 #include "preferences.h"
 
@@ -47,9 +48,6 @@ typedef struct {
 	GtkWidget   *exclude_files_label;
 	GtkWidget   *exclude_folders_entry;
 	GtkWidget   *exclude_folders_label;
-	GtkWidget   *load_button;
-	GtkWidget   *save_button;
-	GtkWidget   *clear_button;
 	char        *last_options;
 } DialogData;
 
@@ -177,10 +175,9 @@ file_sel_response_cb (GtkWidget    *widget,
 }
 
 
-
-static void load_options_cb (GtkWidget *w, DialogData *data);
-static void save_options_cb (GtkWidget *w, DialogData *data);
-static void clear_options_cb (GtkWidget *w, DialogData *data);
+static void load_options_activate_cb (GtkMenuItem *menu_item, DialogData *data);
+static void save_options_activate_cb (GtkMenuItem *menu_item, DialogData *data);
+static void clear_options_activate_cb (GtkMenuItem *menu_item, DialogData *data);
 static void dlg_add_folder_load_last_options (DialogData *data);
 
 
@@ -191,10 +188,12 @@ add_folder_cb (GtkWidget *widget,
 {
 	GtkWidget   *file_sel;
 	DialogData  *data;
+	GtkWidget   *options_button;
+	GtkWidget   *options_menu;
+	GtkWidget   *menu_item;
 	GtkWidget   *main_box;
 	GtkWidget   *vbox;
 	GtkWidget   *table;
-	GtkWidget   *align;
 
 	data = g_new0 (DialogData, 1);
 	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_ADD);
@@ -203,9 +202,6 @@ add_folder_cb (GtkWidget *widget,
 		gtk_file_chooser_dialog_new (_("Add a Folder"),
 					     GTK_WINDOW (data->window),
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					     FR_STOCK_ADD_FOLDER, GTK_RESPONSE_OK,
-					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
 
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 510);
@@ -235,9 +231,38 @@ add_folder_cb (GtkWidget *widget,
 	gtk_misc_set_alignment (GTK_MISC (data->exclude_folders_label), 0.0, 0.5);
 	gtk_label_set_mnemonic_widget (GTK_LABEL (data->exclude_folders_label), data->exclude_folders_entry);
 
-	data->load_button = gtk_button_new_with_mnemonic (_("_Load Options"));
-	data->save_button = gtk_button_new_with_mnemonic (_("Sa_ve Options"));
-	data->clear_button = gtk_button_new_with_mnemonic (_("_Reset Options"));
+	/* options menu button */
+
+	options_button = gth_menu_button_new ();
+	gth_menu_button_set_label (GTH_MENU_BUTTON (options_button), _("_Options"));
+	gth_menu_button_set_use_underline (GTH_MENU_BUTTON (options_button), TRUE);
+	gtk_widget_show (options_button);
+
+	options_menu = gtk_menu_new ();
+	gth_menu_button_set_menu (GTH_MENU_BUTTON (options_button), options_menu);
+
+	/* load options */
+
+	menu_item = gtk_menu_item_new_with_label (_("Load Options"));
+	gtk_widget_show (menu_item);
+	g_signal_connect (menu_item, "activate", G_CALLBACK (load_options_activate_cb), data);
+	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
+
+	/* save options */
+
+	menu_item = gtk_menu_item_new_with_label (_("Save Options"));
+	gtk_widget_show (menu_item);
+	g_signal_connect (menu_item, "activate", G_CALLBACK (save_options_activate_cb), data);
+	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
+
+	/* clear options */
+
+	menu_item = gtk_menu_item_new_with_label (_("Reset Options"));
+	gtk_widget_show (menu_item);
+	g_signal_connect (menu_item, "activate", G_CALLBACK (clear_options_activate_cb), data);
+	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
+
+	/**/
 
 	main_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20);
 	gtk_container_set_border_width (GTK_CONTAINER (main_box), 0);
@@ -247,14 +272,8 @@ add_folder_cb (GtkWidget *widget,
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, TRUE, TRUE, 0);
 
-
-	align = gtk_alignment_new (0, 0, 0, 0);
-	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 12, 0);
-	gtk_container_add (GTK_CONTAINER (align), data->exclude_symlinks);
-	gtk_box_pack_start (GTK_BOX (vbox), align, TRUE, TRUE, 0);
-
-	gtk_box_pack_start (GTK_BOX (vbox), data->add_if_newer_checkbutton,
-			    TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), data->add_if_newer_checkbutton, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), data->exclude_symlinks, TRUE, TRUE, 0);
 
 	table = gtk_table_new (2, 4, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
@@ -305,12 +324,17 @@ add_folder_cb (GtkWidget *widget,
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, FALSE, FALSE, 0);
 
-	gtk_box_pack_start (GTK_BOX (vbox), data->load_button,
-			    FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), data->save_button,
-			    FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), data->clear_button,
-			    FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (data->dialog))),
+			    options_button,
+			    FALSE,
+			    FALSE,
+			    0);
+	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
+			       GTK_STOCK_CANCEL,
+			       GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
+			       FR_STOCK_ADD_FOLDER,
+			       GTK_RESPONSE_OK);
 
 	gtk_widget_show_all (main_box);
 
@@ -327,18 +351,6 @@ add_folder_cb (GtkWidget *widget,
 	g_signal_connect (G_OBJECT (file_sel),
 			  "response",
 			  G_CALLBACK (file_sel_response_cb),
-			  data);
-	g_signal_connect (G_OBJECT (data->load_button),
-			  "clicked",
-			  G_CALLBACK (load_options_cb),
-			  data);
-	g_signal_connect (G_OBJECT (data->save_button),
-			  "clicked",
-			  G_CALLBACK (save_options_cb),
-			  data);
-	g_signal_connect (G_OBJECT (data->clear_button),
-			  "clicked",
-			  G_CALLBACK (clear_options_cb),
 			  data);
 
 	gtk_window_set_modal (GTK_WINDOW (file_sel),TRUE);
@@ -388,8 +400,8 @@ sync_widgets_with_options (DialogData *data,
 
 
 static void
-clear_options_cb (GtkWidget  *w,
-		  DialogData *data)
+clear_options_activate_cb (GtkMenuItem *menu_item,
+			   DialogData  *data)
 {
 	sync_widgets_with_options (data,
 				   gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (data->dialog)),
@@ -743,8 +755,8 @@ aod_remove_cb (GtkWidget             *widget,
 
 
 static void
-load_options_cb (GtkWidget  *w,
-		 DialogData *data)
+load_options_activate_cb (GtkMenuItem *menu_item,
+			  DialogData  *data)
 {
 	LoadOptionsDialogData *aod_data;
 	GtkWidget             *ok_button;
@@ -830,8 +842,8 @@ load_options_cb (GtkWidget  *w,
 
 
 static void
-save_options_cb (GtkWidget  *w,
-		 DialogData *data)
+save_options_activate_cb (GtkMenuItem *menu_item,
+			  DialogData  *data)
 {
 	GFile *options_dir;
 	GFile *options_file;
