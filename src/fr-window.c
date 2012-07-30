@@ -404,7 +404,6 @@ struct _FrWindowPrivate {
 
 	GtkWindow        *load_error_parent_window;
 	gboolean          showing_error_dialog;
-	GtkWindow        *error_dialog_parent;
 };
 
 
@@ -2584,6 +2583,8 @@ create_the_progress_dialog (FrWindow *window)
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
+	_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
+
 	window->priv->pd_quit_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_QUIT, DIALOG_RESPONSE_QUIT);
 	window->priv->pd_open_archive_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE);
 	window->priv->pd_open_destination_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
@@ -2843,13 +2844,8 @@ error_dialog_response_cb (GtkDialog *dialog,
 			  gpointer   user_data)
 {
 	FrWindow  *window = user_data;
-	GtkWindow *dialog_parent = window->priv->error_dialog_parent;
 
 	window->priv->showing_error_dialog = FALSE;
-	window->priv->error_dialog_parent = NULL;
-
-	if ((dialog_parent != NULL) && (gtk_widget_get_toplevel (GTK_WIDGET (dialog_parent)) != (GtkWidget*) dialog_parent))
-		gtk_window_set_modal (dialog_parent, TRUE);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 
 	if (window->priv->destroy_with_error_dialog)
@@ -2884,8 +2880,6 @@ fr_window_show_error_dialog (FrWindow   *window,
 		fr_window_destroy_with_error_dialog (window);
 	}
 
-	if (dialog_parent != NULL)
-		gtk_window_set_modal (dialog_parent, FALSE);
 	g_signal_connect (dialog,
 			  "response",
 			  G_CALLBACK (error_dialog_response_cb),
@@ -2895,7 +2889,6 @@ fr_window_show_error_dialog (FrWindow   *window,
 	gtk_widget_show (dialog);
 
 	window->priv->showing_error_dialog = TRUE;
-	window->priv->error_dialog_parent = dialog_parent;
 }
 
 
