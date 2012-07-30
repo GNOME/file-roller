@@ -1209,7 +1209,10 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 	add_data = add_data_new ();
 
 	base_dir = g_file_new_for_uri (base_dir_uri);
-	dest_dir = dest_dir[0] == '/' ? dest_dir + 1 : dest_dir;
+	if (dest_dir != NULL)
+		dest_dir = dest_dir[0] == '/' ? dest_dir + 1 : dest_dir;
+	else
+		dest_dir = "";
 	for (scan = file_list; scan; scan = scan->next) {
 		char  *relative_pathname = scan->data;
 		char  *full_pathname;
