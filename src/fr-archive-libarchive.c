@@ -909,6 +909,7 @@ _archive_write_file (struct archive       *b,
 	}
 
 	/* honor the update flag */
+
 	if (save_data->update && (r_entry != NULL) && (archive_entry_mtime (w_entry) < archive_entry_mtime (r_entry))) {
 		archive_entry_free (w_entry);
 		g_object_unref (info);
