@@ -38,7 +38,6 @@ typedef struct {
 	FrWindow    *window;
 	GSettings   *settings;
 	GtkWidget   *dialog;
-	GtkWidget   *include_subfold_checkbutton;
 	GtkWidget   *add_if_newer_checkbutton;
 	GtkWidget   *exclude_symlinks;
 	GtkWidget   *include_files_checkbutton;
@@ -94,7 +93,7 @@ file_sel_response_cb (GtkWidget    *widget,
 	GtkFileChooser *file_sel = GTK_FILE_CHOOSER (widget);
 	FrWindow       *window = data->window;
 	char           *selected_folder;
-	gboolean        update, recursive, follow_links;
+	gboolean        update, follow_links;
 	const char     *include_files;
 	const char     *exclude_files;
 	const char     *exclude_folders;
@@ -140,7 +139,6 @@ file_sel_response_cb (GtkWidget    *widget,
 	}
 
 	update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));
-	recursive = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton));
 	follow_links = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->exclude_symlinks));
 
 	include_files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
@@ -178,18 +176,6 @@ file_sel_response_cb (GtkWidget    *widget,
 	return TRUE;
 }
 
-
-static int
-include_subfold_toggled_cb (GtkWidget *widget,
-			    gpointer   callback_data)
-{
-	DialogData *data = callback_data;
-
-	gtk_widget_set_sensitive (data->exclude_symlinks,
-				  gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)));
-
-	return FALSE;
-}
 
 
 static void load_options_cb (GtkWidget *w, DialogData *data);
@@ -229,7 +215,6 @@ add_folder_cb (GtkWidget *widget,
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 
 	data->add_if_newer_checkbutton = gtk_check_button_new_with_mnemonic (_("Add only if _newer"));
-	data->include_subfold_checkbutton = gtk_check_button_new_with_mnemonic (_("_Include subfolders"));
 	data->exclude_symlinks = gtk_check_button_new_with_mnemonic (_("Exclude folders that are symbolic lin_ks"));
 
 	data->include_files_entry = gtk_entry_new ();
@@ -262,8 +247,6 @@ add_folder_cb (GtkWidget *widget,
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	gtk_box_pack_start (GTK_BOX (main_box), vbox, TRUE, TRUE, 0);
 
-	gtk_box_pack_start (GTK_BOX (vbox), data->include_subfold_checkbutton,
-			    TRUE, TRUE, 0);
 
 	align = gtk_alignment_new (0, 0, 0, 0);
 	gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 12, 0);
@@ -345,10 +328,6 @@ add_folder_cb (GtkWidget *widget,
 			  "response",
 			  G_CALLBACK (file_sel_response_cb),
 			  data);
-	g_signal_connect (G_OBJECT (data->include_subfold_checkbutton),
-			  "toggled",
-			  G_CALLBACK (include_subfold_toggled_cb),
-			  data);
 	g_signal_connect (G_OBJECT (data->load_button),
 			  "clicked",
 			  G_CALLBACK (load_options_cb),
@@ -387,7 +366,6 @@ sync_widgets_with_options (DialogData *data,
 			   const char *exclude_files,
 			   const char *exclude_folders,
 			   gboolean    update,
-			   gboolean    recursive,
 			   gboolean    no_symlinks)
 {
 	if ((base_dir == NULL) || (strcmp (base_dir, "") == 0))
@@ -405,7 +383,6 @@ sync_widgets_with_options (DialogData *data,
 	if (exclude_folders != NULL)
 		gtk_entry_set_text (GTK_ENTRY (data->exclude_folders_entry), exclude_folders);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton), update);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton), recursive);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->exclude_symlinks), no_symlinks);
 }
 
@@ -421,7 +398,6 @@ clear_options_cb (GtkWidget  *w,
 				   "",
 				   "",
 				   FALSE,
-				   TRUE,
 				   FALSE);
 }
 
@@ -441,7 +417,6 @@ dlg_add_folder_load_options (DialogData *data,
 	char      *exclude_files = NULL;
 	char      *exclude_folders = NULL;
 	gboolean   update;
-	gboolean   recursive;
 	gboolean   no_symlinks;
 
 	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
@@ -464,7 +439,6 @@ dlg_add_folder_load_options (DialogData *data,
 	exclude_files = g_key_file_get_string (key_file, "Options", "exclude_files", NULL);
 	exclude_folders = g_key_file_get_string (key_file, "Options", "exclude_folders", NULL);
 	update = g_key_file_get_boolean (key_file, "Options", "update", NULL);
-	recursive = g_key_file_get_boolean (key_file, "Options", "recursive", NULL);
 	no_symlinks = g_key_file_get_boolean (key_file, "Options", "no_symlinks", NULL);
 
 	sync_widgets_with_options (data,
@@ -474,7 +448,6 @@ dlg_add_folder_load_options (DialogData *data,
 			   	   exclude_files,
 			   	   exclude_folders,
 			   	   update,
-			   	   recursive,
 			   	   no_symlinks);
 
 	dlg_add_folder_save_last_used_options (data, file_path);
@@ -502,7 +475,6 @@ dlg_add_folder_load_last_options (DialogData *data)
 	char     *exclude_files = NULL;
 	char     *exclude_folders = NULL;
 	gboolean  update;
-	gboolean  recursive;
 	gboolean  no_symlinks;
 
 	base_dir = g_settings_get_string (data->settings, PREF_ADD_CURRENT_FOLDER);
@@ -511,7 +483,6 @@ dlg_add_folder_load_last_options (DialogData *data)
 	exclude_files = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FILES);
 	exclude_folders = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS);
 	update = g_settings_get_boolean (data->settings, PREF_ADD_UPDATE);
-	recursive = g_settings_get_boolean (data->settings, PREF_ADD_RECURSIVE);
 	no_symlinks = g_settings_get_boolean (data->settings, PREF_ADD_NO_SYMLINKS);
 
 	sync_widgets_with_options (data,
@@ -521,7 +492,6 @@ dlg_add_folder_load_last_options (DialogData *data)
 			   	   exclude_files,
 			   	   exclude_folders,
 			   	   update,
-			   	   recursive,
 			   	   no_symlinks);
 
 	g_free (base_dir);
@@ -540,13 +510,11 @@ get_options_from_widgets (DialogData  *data,
 			  const char **exclude_files,
 			  const char **exclude_folders,
 			  gboolean    *update,
-			  gboolean    *recursive,
 			  gboolean    *no_symlinks)
 {
 	*base_dir = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (data->dialog));
 	*filename = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
 	*update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->add_if_newer_checkbutton));
-	*recursive = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->include_subfold_checkbutton));
 	*no_symlinks = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->exclude_symlinks));
 
 	*include_files = gtk_entry_get_text (GTK_ENTRY (data->include_files_entry));
@@ -573,7 +541,6 @@ dlg_add_folder_save_current_options (DialogData *data,
 	const char *exclude_files;
 	const char *exclude_folders;
 	gboolean    update;
-	gboolean    recursive;
 	gboolean    no_symlinks;
 	GKeyFile   *key_file;
 
@@ -584,7 +551,6 @@ dlg_add_folder_save_current_options (DialogData *data,
 				  &exclude_files,
 				  &exclude_folders,
 				  &update,
-				  &recursive,
 				  &no_symlinks);
 
 	fr_window_set_add_default_dir (data->window, base_dir);
@@ -596,7 +562,6 @@ dlg_add_folder_save_current_options (DialogData *data,
 	g_key_file_set_string (key_file, "Options", "exclude_files", exclude_files);
 	g_key_file_set_string (key_file, "Options", "exclude_folders", exclude_folders);
 	g_key_file_set_boolean (key_file, "Options", "update", update);
-	g_key_file_set_boolean (key_file, "Options", "recursive", recursive);
 	g_key_file_set_boolean (key_file, "Options", "no_symlinks", no_symlinks);
 
 	_g_key_file_save (key_file, options_file);
@@ -616,7 +581,6 @@ dlg_add_folder_save_last_options (DialogData *data)
 	const char *exclude_files;
 	const char *exclude_folders;
 	gboolean    update;
-	gboolean    recursive;
 	gboolean    no_symlinks;
 
 	get_options_from_widgets (data,
@@ -626,7 +590,6 @@ dlg_add_folder_save_last_options (DialogData *data)
 				  &exclude_files,
 				  &exclude_folders,
 				  &update,
-				  &recursive,
 				  &no_symlinks);
 
 	g_settings_set_string (data->settings, PREF_ADD_CURRENT_FOLDER, base_dir);
@@ -635,7 +598,6 @@ dlg_add_folder_save_last_options (DialogData *data)
 	g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FILES, exclude_files);
 	g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS, exclude_folders);
 	g_settings_set_boolean (data->settings, PREF_ADD_UPDATE, update);
-	g_settings_set_boolean (data->settings, PREF_ADD_RECURSIVE, recursive);
 	g_settings_set_boolean (data->settings, PREF_ADD_NO_SYMLINKS, no_symlinks);
 
 	g_free (base_dir);
