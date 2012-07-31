@@ -709,76 +709,86 @@ save_data_close (struct archive *a,
 
 
 static void
-_archive_write_set_format_from_filename (struct archive *a,
-					 GFile          *file)
+_archive_write_set_format_from_context (struct archive *a,
+					SaveData       *save_data)
 {
 	char       *uri;
 	const char *ext;
+	int         archive_filter;
 
-	uri = g_file_get_uri (file);
+	/* set format and filter from the file extension */
+
+	uri = g_file_get_uri (fr_archive_get_file (LOAD_DATA (save_data)->archive));
 	ext = _g_filename_get_extension (uri);
-
 	if (ext == NULL) {
 		/* defaults to an uncompressed tar */
 		ext = ".tar";
 	}
+	archive_filter = ARCHIVE_FILTER_NONE;
 
 	if ((strcmp (ext, ".tar.bz2") == 0) || (strcmp (ext, ".tbz2") == 0)) {
 		archive_write_add_filter_bzip2 (a);
 		archive_write_set_format_ustar (a);
+		archive_filter = ARCHIVE_FILTER_BZIP2;
 	}
 	else if ((strcmp (ext, ".tar.Z") == 0) || (strcmp (ext, ".taz") == 0)) {
 		archive_write_add_filter_compress (a);
 		archive_write_set_format_ustar (a);
+		archive_filter = ARCHIVE_FILTER_COMPRESS;
 	}
 	else if ((strcmp (ext, ".tar.gz") == 0) || (strcmp (ext, ".tgz") == 0)) {
 		archive_write_add_filter_gzip (a);
 		archive_write_set_format_ustar (a);
+		archive_filter = ARCHIVE_FILTER_GZIP;
 	}
 	else if ((strcmp (ext, ".tar.lz") == 0) || (strcmp (ext, ".tlz") == 0)) {
 		archive_write_add_filter_lzip (a);
 		archive_write_set_format_ustar (a);
+		archive_filter = ARCHIVE_FILTER_LZIP;
 	}
 	else if ((strcmp (ext, ".tar.lzma") == 0) || (strcmp (ext, ".tzma") == 0)) {
 		archive_write_add_filter_lzma (a);
 		archive_write_set_format_ustar (a);
+		archive_filter = ARCHIVE_FILTER_LZMA;
 	}
 	else if ((strcmp (ext, ".tar.xz") == 0) || (strcmp (ext, ".txz") == 0)) {
 		archive_write_add_filter_xz (a);
 		archive_write_set_format_ustar (a);
+		archive_filter = ARCHIVE_FILTER_XZ;
 	}
 	else {
 		/* defaults to an uncompressed tar */
 		archive_write_add_filter_none (a);
 		archive_write_set_format_ustar (a);
+		archive_filter = ARCHIVE_FILTER_NONE;
 	}
 
-	/* FIXME: add all the supported formats */
+	/* FIXME: add all the libarchive supported formats */
+
+	/* set the compression level */
+
+	if (archive_filter != ARCHIVE_FILTER_NONE) {
+		char *compression_level = NULL;
+
+		switch (save_data->compression) {
+		case FR_COMPRESSION_VERY_FAST:
+			compression_level = "1";
+			break;
+		case FR_COMPRESSION_FAST:
+			compression_level = "3";
+			break;
+		case FR_COMPRESSION_NORMAL:
+			compression_level = "6";
+			break;
+		case FR_COMPRESSION_MAXIMUM:
+			compression_level = "9";
+			break;
+		}
+		if (compression_level != NULL)
+			archive_write_set_filter_option (a, NULL, "compression-level", compression_level);
+	}
 
 	g_free (uri);
-}
-
-
-static void
-_archive_write_set_compression_level (struct archive *a,
-				      FrCompression   compression)
-{
-	/* FIXME: check if the filter supports the option */
-
-	switch (compression) {
-	case FR_COMPRESSION_VERY_FAST:
-		archive_write_set_filter_option (a, NULL, "compression-level", "1");
-		break;
-	case FR_COMPRESSION_FAST:
-		archive_write_set_filter_option (a, NULL, "compression-level", "3");
-		break;
-	case FR_COMPRESSION_NORMAL:
-		archive_write_set_filter_option (a, NULL, "compression-level", "6");
-		break;
-	case FR_COMPRESSION_MAXIMUM:
-		archive_write_set_filter_option (a, NULL, "compression-level", "9");
-		break;
-	}
 }
 
 
@@ -964,8 +974,7 @@ save_archive_thread (GSimpleAsyncResult *result,
 	load_data = LOAD_DATA (save_data);
 
 	save_data->b = b = archive_write_new ();
-	_archive_write_set_format_from_filename (b, fr_archive_get_file (load_data->archive));
-	_archive_write_set_compression_level (b, save_data->compression);
+	_archive_write_set_format_from_context (b, save_data);
 	archive_write_open (b, save_data, save_data_open, save_data_write, save_data_close);
 
 	a = archive_read_new ();
@@ -1668,6 +1677,6 @@ fr_archive_libarchive_init (FrArchiveLibarchive *self)
 	base->propExtractCanSkipOlder = TRUE;
 	base->propExtractCanJunkPaths = TRUE;
 	base->propCanExtractAll = TRUE;
-	base->propCanDeleteNonEmptyFolders = TRUE; /* FIXME: not implemented yet */
-	base->propCanExtractNonEmptyFolders = TRUE; /* FIXME: not implemented yet */
+	base->propCanDeleteNonEmptyFolders = TRUE;
+	base->propCanExtractNonEmptyFolders = TRUE;
 }
