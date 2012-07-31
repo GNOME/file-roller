@@ -119,6 +119,8 @@ activate_action_open (GtkAction *action,
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
+	_gtk_dialog_add_to_window_group (GTK_DIALOG (file_sel));
+	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All archives"));
@@ -141,7 +143,6 @@ activate_action_open (GtkAction *action,
 			  G_CALLBACK (open_file_response_cb),
 			  file_sel);
 
-	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 	gtk_widget_show (file_sel);
 }
 
