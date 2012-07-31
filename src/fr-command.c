@@ -602,117 +602,20 @@ fr_command_finalize (GObject *object)
 }
 
 
-/* -- load -- */
-
-
-typedef struct {
-	FrArchive          *archive;
-	char               *password;
-	GCancellable       *cancellable;
-	GSimpleAsyncResult *result;
-} LoadData;
-
-
-static void
-load_data_free (LoadData *add_data)
-{
-	_g_object_unref (add_data->archive);
-	g_free (add_data->password);
-	_g_object_unref (add_data->cancellable);
-	_g_object_unref (add_data->result);
-	g_free (add_data);
-}
-
-
-static void
-_fr_command_load_complete_with_error (LoadData *add_data,
-				      GError   *error)
-{
-	g_return_if_fail (error != NULL);
-
-	g_simple_async_result_set_from_error (add_data->result, error);
-	g_simple_async_result_complete_in_idle (add_data->result);
-
-	load_data_free (add_data);
-}
-
-
-static void
-_fr_command_load_complete (LoadData *load_data)
-{
-	FrArchive *archive;
-
-	archive = load_data->archive;
-
-	/* the name of the volumes are different from the
-	 * original name */
-	if (archive->multi_volume)
-		fr_archive_change_name (archive, FR_COMMAND (archive)->filename);
-	fr_archive_update_capabilities (archive);
-
-	g_simple_async_result_complete_in_idle (load_data->result);
-
-	load_data_free (load_data);
-}
-
-
-static void
-load_local_archive_list_ready_cb (GObject      *source_object,
-				  GAsyncResult *result,
-				  gpointer      user_data)
-{
-	LoadData *load_data = user_data;
-	GError   *error = NULL;
-
-	if (! fr_command_handle_process_error (FR_COMMAND (load_data->archive), result, &error))
-		/* command restarted */
-		return;
-
-	if (error != NULL)
-		_fr_command_load_complete_with_error (load_data, error);
-	else
-		_fr_command_load_complete (load_data);
-
-	_g_error_free (error);
-}
-
-
-static void
-load_local_archive (LoadData *load_data)
-{
-	FrCommand *self = FR_COMMAND (load_data->archive);
-
-	fr_process_set_out_line_func (self->process, NULL, NULL);
-	fr_process_set_err_line_func (self->process, NULL, NULL);
-	fr_process_use_standard_locale (self->process, TRUE);
-	load_data->archive->multi_volume = FALSE;
-
-        g_object_set (self,
-                      "filename", self->priv->local_copy,
-                      "password", load_data->password,
-                      NULL);
-
-        fr_process_clear (self->process);
-	if (FR_COMMAND_GET_CLASS (G_OBJECT (self))->list (self))
-		fr_process_execute (self->process,
-				    load_data->cancellable,
-				    load_local_archive_list_ready_cb,
-				    load_data);
-	else
-		_fr_command_load_complete (load_data);
-}
+/* -- open -- */
 
 
 static void
 copy_remote_file_done (GError   *error,
 		       gpointer  user_data)
 {
-	LoadData *load_data = user_data;
+	XferData *xfer_data = user_data;
 
 	if (error != NULL)
-		_fr_command_load_complete_with_error (load_data, error);
-	else
-		load_local_archive (load_data);
+		g_simple_async_result_set_from_error (xfer_data->result, error);
+	g_simple_async_result_complete_in_idle (xfer_data->result);
+
+	xfer_data_free (xfer_data);
 }
 
 
@@ -725,76 +628,135 @@ copy_remote_file_progress (goffset   current_file,
                            goffset   total_num_bytes,
                            gpointer  user_data)
 {
-	LoadData *load_data = user_data;
+	XferData *xfer_data = user_data;
 
-	fr_archive_progress (load_data->archive, (double) current_num_bytes / total_num_bytes);
-}
-
-
-static gboolean
-copy_remote_file_done_cb (gpointer user_data)
-{
-	LoadData *load_data = user_data;
-
-	copy_remote_file_done (NULL, load_data);
-
-	return FALSE;
+	fr_archive_progress (xfer_data->archive, (double) current_num_bytes / total_num_bytes);
 }
 
 
 static void
-copy_remote_file (LoadData *load_data)
+fr_command_open (FrArchive           *archive,
+		 GCancellable        *cancellable,
+		 GAsyncReadyCallback  callback,
+		 gpointer             user_data)
 {
-	FrCommand *self = FR_COMMAND (load_data->archive);
+	FrCommand *command = FR_COMMAND (archive);
+	XferData  *xfer_data;
 
-	if (! g_file_query_exists (fr_archive_get_file (FR_ARCHIVE (self)),
-				   load_data->cancellable))
-	{
-		GError *error;
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = g_object_ref (archive);
+	xfer_data->cancellable = _g_object_ref (cancellable);
+	xfer_data->result = g_simple_async_result_new (G_OBJECT (archive),
+						       callback,
+						       user_data,
+						       fr_archive_open);
 
-		error = g_error_new (G_IO_ERROR, G_IO_ERROR_NOT_FOUND, _("Archive not found"));
-		_fr_command_load_complete_with_error (load_data, error);
-		g_error_free (error);
+	if (! command->priv->is_remote) {
+		GError *error = NULL;
 
+		if (! g_file_query_exists (fr_archive_get_file (archive), cancellable)) {
+			error = g_error_new (G_IO_ERROR, G_IO_ERROR_NOT_FOUND, _("Archive not found"));
+		}
+
+		if (error != NULL)
+			g_simple_async_result_set_from_error (xfer_data->result, error);
+		g_simple_async_result_complete_in_idle (xfer_data->result);
+
+		xfer_data_free (xfer_data);
 		return;
 	}
 
-	if (self->priv->is_remote) {
-		fr_archive_action_started (load_data->archive, FR_ACTION_LOADING_ARCHIVE);
-		g_copy_file_async (fr_archive_get_file (FR_ARCHIVE (self)),
-				   self->priv->local_copy,
-				   G_FILE_COPY_OVERWRITE,
-				   G_PRIORITY_DEFAULT,
-				   load_data->cancellable,
-				   copy_remote_file_progress,
-				   load_data,
-				   copy_remote_file_done,
-				   load_data);
+	fr_archive_action_started (archive, FR_ACTION_LOADING_ARCHIVE);
+	g_copy_file_async (fr_archive_get_file (archive),
+			   command->priv->local_copy,
+			   G_FILE_COPY_OVERWRITE,
+			   G_PRIORITY_DEFAULT,
+			   xfer_data->cancellable,
+			   copy_remote_file_progress,
+			   xfer_data,
+			   copy_remote_file_done,
+			   xfer_data);
+}
+
+
+/* -- list -- */
+
+
+static void
+_fr_command_load_complete (XferData *xfer_data,
+			   GError   *error)
+{
+	if (error == NULL) {
+		FrArchive *archive = xfer_data->archive;
+
+		/* the name of the volumes are different from the
+		 * original name */
+		if (archive->multi_volume)
+			fr_archive_change_name (archive, FR_COMMAND (archive)->filename);
+		fr_archive_update_capabilities (archive);
 	}
 	else
-		g_idle_add (copy_remote_file_done_cb, load_data);
+		g_simple_async_result_set_from_error (xfer_data->result, error);
+	g_simple_async_result_complete_in_idle (xfer_data->result);
+
+	xfer_data_free (xfer_data);
 }
 
 
 static void
-fr_command_load (FrArchive           *archive,
+load_local_archive_list_ready_cb (GObject      *source_object,
+				  GAsyncResult *result,
+				  gpointer      user_data)
+{
+	XferData *xfer_data = user_data;
+	GError   *error = NULL;
+
+	if (! fr_command_handle_process_error (FR_COMMAND (xfer_data->archive), result, &error))
+		/* command restarted */
+		return;
+
+	_fr_command_load_complete (xfer_data, error);
+
+	_g_error_free (error);
+}
+
+
+static void
+fr_command_list (FrArchive           *archive,
 		 const char          *password,
 		 GCancellable        *cancellable,
 		 GAsyncReadyCallback  callback,
 		 gpointer             user_data)
 {
-	LoadData *load_data;
+	FrCommand *command = FR_COMMAND (archive);
+	XferData  *xfer_data;
 
-	load_data = g_new0 (LoadData, 1);
-	load_data->archive = g_object_ref (archive);
-	load_data->password = g_strdup (password);
-	load_data->cancellable = _g_object_ref (cancellable);
-	load_data->result = g_simple_async_result_new (G_OBJECT (archive),
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->password = g_strdup (password);
+	xfer_data->archive = g_object_ref (archive);
+	xfer_data->cancellable = _g_object_ref (cancellable);
+	xfer_data->result = g_simple_async_result_new (G_OBJECT (archive),
 						       callback,
 						       user_data,
-						       fr_archive_load);
+						       fr_archive_list);
 
-	copy_remote_file (load_data);
+	fr_process_set_out_line_func (command->process, NULL, NULL);
+	fr_process_set_err_line_func (command->process, NULL, NULL);
+	fr_process_use_standard_locale (command->process, TRUE);
+	archive->multi_volume = FALSE;
+        g_object_set (archive,
+                      "filename", command->priv->local_copy,
+                      "password", password,
+                      NULL);
+
+        fr_process_clear (command->process);
+	if (FR_COMMAND_GET_CLASS (G_OBJECT (command))->list (command))
+		fr_process_execute (command->process,
+				    cancellable,
+				    load_local_archive_list_ready_cb,
+				    xfer_data);
+	else
+		_fr_command_load_complete (xfer_data, NULL);
 }
 
 
@@ -1248,59 +1210,44 @@ _fr_command_add (FrCommand      *self,
 /* -- fr_command_add_files -- */
 
 
-typedef struct {
-	FrArchive          *archive;
-	GCancellable       *cancellable;
-	GSimpleAsyncResult *result;
-} AddData;
-
-
 static void
-add_data_free (AddData *add_data)
+process_ready_after_changing_archive (GObject      *source_object,
+				      GAsyncResult *result,
+				      gpointer      user_data)
 {
-	_g_object_unref (add_data->archive);
-	_g_object_unref (add_data->cancellable);
-	_g_object_unref (add_data->result);
-	g_free (add_data);
-}
-
-
-static void
-process_ready_for_add_files_cb (GObject      *source_object,
-				GAsyncResult *result,
-				gpointer      user_data)
-{
-	AddData *add_data = user_data;
-	FrError *error = NULL;
+	XferData *xfer_data = user_data;
+	FrError  *error = NULL;
 
 	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error)) {
-		g_simple_async_result_set_from_error (add_data->result, error->gerror);
+		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
 	}
 	else {
-		FrArchive *archive = add_data->archive;
+		FrArchive *archive = xfer_data->archive;
 		FrCommand *self = FR_COMMAND (archive);
 
-		_fr_command_remove_temp_work_dir (self);
+		if (g_simple_async_result_get_source_tag (xfer_data->result) == fr_archive_add_files) {
+			_fr_command_remove_temp_work_dir (self);
 
-		/* the name of the volumes are different from the
-		 * original name */
-		if (archive->multi_volume)
-			fr_archive_change_name (archive, self->filename);
+			/* the name of the volumes are different from the
+			 * original name */
+			if (archive->multi_volume)
+				fr_archive_change_name (archive, self->filename);
+		}
 
 		if (! g_file_has_uri_scheme (fr_archive_get_file (archive), "file")) {
-			copy_archive_to_remote_location (add_data->archive,
-							 add_data->result,
-							 add_data->cancellable);
+			copy_archive_to_remote_location (xfer_data->archive,
+							 xfer_data->result,
+							 xfer_data->cancellable);
 
-			add_data_free (add_data);
+			xfer_data_free (xfer_data);
 			return;
 		}
 	}
 
-	g_simple_async_result_complete_in_idle (add_data->result);
+	g_simple_async_result_complete_in_idle (xfer_data->result);
 
 	fr_error_free (error);
-	add_data_free (add_data);
+	xfer_data_free (xfer_data);
 }
 
 
@@ -1318,8 +1265,8 @@ _fr_command_add_local_files (FrCommand           *self,
 			     GCancellable        *cancellable,
 			     GSimpleAsyncResult  *command_result)
 {
-	AddData *add_data;
-	GError  *error = NULL;
+	XferData *xfer_data;
+	GError   *error = NULL;
 
 	g_object_set (self, "filename", self->priv->local_copy, NULL);
 	fr_process_clear (self->process);
@@ -1344,15 +1291,15 @@ _fr_command_add_local_files (FrCommand           *self,
 		return;
 	}
 
-	add_data = g_new0 (AddData, 1);
-	add_data->archive = _g_object_ref (self);
-	add_data->cancellable = _g_object_ref (cancellable);
-	add_data->result = _g_object_ref (command_result);
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = _g_object_ref (self);
+	xfer_data->cancellable = _g_object_ref (cancellable);
+	xfer_data->result = _g_object_ref (command_result);
 
 	fr_process_execute (self->process,
-			    add_data->cancellable,
-			    process_ready_for_add_files_cb,
-			    add_data);
+			    xfer_data->cancellable,
+			    process_ready_after_changing_archive,
+			    xfer_data);
 }
 
 
@@ -1464,7 +1411,7 @@ copy_remote_files (FrCommand           *self,
 	g_hash_table_destroy (created_folders);
 
 	xfer_data = g_new0 (XferData, 1);
-	xfer_data->archive = FR_ARCHIVE (self);
+	xfer_data->archive = g_object_ref (self);
 	xfer_data->file_list = _g_string_list_dup (file_list);
 	xfer_data->base_uri = g_strdup (base_uri);
 	xfer_data->dest_dir = g_strdup (dest_dir);
@@ -1773,35 +1720,6 @@ _fr_command_remove (FrCommand     *self,
 
 
 static void
-process_ready_for_remove_files_cb (GObject      *source_object,
-				   GAsyncResult *result,
-				   gpointer      user_data)
-{
-	XferData *xfer_data = user_data;
-	FrError  *error = NULL;
-
-	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error)) {
-		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
-		fr_error_free (error);
-	}
-	else {
-		if (! g_file_has_uri_scheme (fr_archive_get_file (xfer_data->archive), "file")) {
-			copy_archive_to_remote_location (xfer_data->archive,
-							 xfer_data->result,
-							 xfer_data->cancellable);
-
-			xfer_data_free (xfer_data);
-			return;
-		}
-	}
-
-	g_simple_async_result_complete_in_idle (xfer_data->result);
-
-	xfer_data_free (xfer_data);
-}
-
-
-static void
 fr_command_remove_files (FrArchive           *archive,
 		  	 GList               *file_list,
 		  	 FrCompression        compression,
@@ -1826,7 +1744,7 @@ fr_command_remove_files (FrArchive           *archive,
 
 	fr_process_execute (self->process,
 			    cancellable,
-			    process_ready_for_remove_files_cb,
+			    process_ready_after_changing_archive,
 			    xfer_data);
 }
 
@@ -2571,24 +2489,6 @@ fr_command_test_integrity (FrArchive           *archive,
 
 
 static void
-process_ready_for_rename (GObject      *source_object,
-			  GAsyncResult *result,
-			  gpointer      user_data)
-{
-	XferData  *xfer_data = user_data;
-	FrError   *error = NULL;
-
-	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error))
-		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
-
-	g_simple_async_result_complete_in_idle (xfer_data->result);
-
-	fr_error_free (error);
-	xfer_data_free (xfer_data);
-}
-
-
-static void
 fr_command_rename (FrArchive           *archive,
 		   GList               *file_list,
 		   const char          *old_name,
@@ -2756,7 +2656,7 @@ fr_command_rename (FrArchive           *archive,
 
 	fr_process_execute (self->process,
 			    cancellable,
-			    process_ready_for_rename,
+			    process_ready_after_changing_archive,
 			    xfer_data);
 
 	g_free (tmp_dir);
@@ -2764,24 +2664,6 @@ fr_command_rename (FrArchive           *archive,
 
 
 /* -- fr_command_paste_clipboard -- */
-
-
-static void
-process_ready_for_paste_clipboard (GObject      *source_object,
-				   GAsyncResult *result,
-				   gpointer      user_data)
-{
-	XferData  *xfer_data = user_data;
-	FrError   *error = NULL;
-
-	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error))
-		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
-
-	g_simple_async_result_complete_in_idle (xfer_data->result);
-
-	fr_error_free (error);
-	xfer_data_free (xfer_data);
-}
 
 
 static void
@@ -2885,7 +2767,7 @@ fr_command_paste_clipboard (FrArchive           *archive,
 
 	fr_process_execute (command->process,
 			    cancellable,
-			    process_ready_for_paste_clipboard,
+			    process_ready_after_changing_archive,
 			    xfer_data);
 }
 
@@ -2906,21 +2788,22 @@ fr_command_add_dropped_files (FrArchive           *archive,
 		   	      GAsyncReadyCallback  callback,
 		   	      gpointer             user_data)
 {
-	FrCommand *self = FR_COMMAND (archive);
+	FrCommand *command = FR_COMMAND (archive);
 	GList     *scan;
+	XferData  *xfer_data;
 
-	fr_archive_set_stoppable (FR_ARCHIVE (self), TRUE);
-	self->creating_archive = ! g_file_query_exists (self->priv->local_copy, cancellable);
-	g_object_set (self,
-		      "filename", self->priv->local_copy,
+	fr_archive_set_stoppable (FR_ARCHIVE (command), TRUE);
+	command->creating_archive = ! g_file_query_exists (command->priv->local_copy, cancellable);
+	g_object_set (command,
+		      "filename", command->priv->local_copy,
 		      "password", password,
 		      "encrypt-header", encrypt_header,
 		      "compression", compression,
 		      "volume-size", volume_size,
 		      NULL);
 
-	fr_process_clear (self->process);
-	fr_command_uncompress (self);
+	fr_process_clear (command->process);
+	fr_command_uncompress (command);
 	for (scan = file_list; scan; scan = scan->next) {
 		char  *fullpath = scan->data;
 		char  *basedir;
@@ -2928,7 +2811,7 @@ fr_command_add_dropped_files (FrArchive           *archive,
 
 		basedir = _g_path_remove_level (fullpath);
 		singleton = g_list_prepend (NULL, (char*)_g_path_get_file_name (fullpath));
-		fr_command_add (self,
+		fr_command_add (command,
 				NULL,
 				singleton,
 				basedir,
@@ -2937,33 +2820,26 @@ fr_command_add_dropped_files (FrArchive           *archive,
 		g_list_free (singleton);
 		g_free (basedir);
 	}
-	fr_command_recompress (self);
-	fr_process_execute (self->process,
+	fr_command_recompress (command);
+
+	/**/
+
+	xfer_data = g_new0 (XferData, 1);
+	xfer_data->archive = _g_object_ref (command);
+	xfer_data->cancellable = _g_object_ref (cancellable);
+	xfer_data->result = g_simple_async_result_new (G_OBJECT (command),
+						       callback,
+						       user_data,
+						       fr_archive_add_dropped_items);
+
+	fr_process_execute (command->process,
 			    cancellable,
-			    callback,
-			    user_data);
+			    process_ready_after_changing_archive,
+			    xfer_data);
 }
 
 
 /* -- fr_command_update_open_files -- */
-
-
-static void
-process_ready_for_update_open_files (GObject      *source_object,
-				     GAsyncResult *result,
-				     gpointer      user_data)
-{
-	XferData *xfer_data = user_data;
-	FrError  *error = NULL;
-
-	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error))
-		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
-
-	g_simple_async_result_complete_in_idle (xfer_data->result);
-
-	fr_error_free (error);
-	xfer_data_free (xfer_data);
-}
 
 
 static void
@@ -3021,7 +2897,7 @@ fr_command_update_open_files (FrArchive           *archive,
 
 	fr_process_execute (self->process,
 			    cancellable,
-			    process_ready_for_update_open_files,
+			    process_ready_after_changing_archive,
 			    xfer_data);
 }
 
@@ -3055,7 +2931,8 @@ fr_command_class_init (FrCommandClass *klass)
 	gobject_class->finalize = fr_command_finalize;
 
 	archive_class = FR_ARCHIVE_CLASS (klass);
-	archive_class->load = fr_command_load;
+	archive_class->open = fr_command_open;
+	archive_class->list = fr_command_list;
 	archive_class->add_files = fr_command_add_files;
 	archive_class->remove_files = fr_command_remove_files;
 	archive_class->extract_files = fr_command_extract_files;
