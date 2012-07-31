@@ -359,6 +359,7 @@ struct _FrWindowPrivate {
 	GtkWidget        *pd_action;
 	GtkWidget        *pd_message;
 	GtkWidget        *pd_progress_bar;
+	GtkWidget        *pd_progress_box;
 	GtkWidget        *pd_cancel_button;
 	GtkWidget        *pd_close_button;
 	GtkWidget        *pd_open_archive_button;
@@ -2603,6 +2604,7 @@ create_the_progress_dialog (FrWindow *window)
 	window->priv->pd_action = _gtk_builder_get_widget (builder, "action_label");
 	window->priv->pd_progress_bar = _gtk_builder_get_widget (builder, "progress_progressbar");
 	window->priv->pd_message = _gtk_builder_get_widget (builder, "message_label");
+	window->priv->pd_progress_box = _gtk_builder_get_widget (builder, "progress_box");
 
 	g_free (window->priv->pd_last_archive);
 	window->priv->pd_last_archive = NULL;
@@ -2722,6 +2724,11 @@ fr_archive_progress_cb (FrArchive *archive,
 			}
 		}
 
+		if (fraction == 1.0)
+			gtk_widget_hide (window->priv->pd_progress_box);
+		else
+			gtk_widget_show (window->priv->pd_progress_box);
+
 		window->priv->pd_last_fraction = fraction;
 
 		g_signal_emit (G_OBJECT (window),
@@ -2759,8 +2766,11 @@ open_progress_dialog_with_open_destination (FrWindow *window)
 	gtk_widget_show (window->priv->pd_quit_button);
 	gtk_widget_show (window->priv->pd_close_button);
 	display_progress_dialog (window);
+
 	fr_archive_progress_cb (NULL, 1.0, window);
-	fr_archive_message_cb (NULL, _("Extraction completed successfully"), window);
+	fr_archive_message_cb (NULL, NULL, window);
+
+	progress_dialog_set_action_description (window, _("Extraction completed successfully"));
 }
 
 
@@ -3235,6 +3245,7 @@ static void
 _archive_operation_started (FrWindow *window,
 			    FrAction  action)
 {
+	char *archive_uri;
 	char *message;
 
 	window->priv->action = action;
@@ -3244,7 +3255,10 @@ _archive_operation_started (FrWindow *window,
 	debug (DEBUG_INFO, "%s [START] (FR::Window)\n", action_names[action]);
 #endif
 
-	message = get_action_description (action, window->priv->pd_last_archive);
+	archive_uri = window->priv->pd_last_archive;
+	if (archive_uri == NULL)
+		archive_uri =  window->priv->archive_uri;
+	message = get_action_description (action, archive_uri);
 	fr_window_push_message (window, message);
 	g_free (message);
 
