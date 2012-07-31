@@ -263,6 +263,7 @@ struct _FrWindowPrivate {
 	GtkTreePath       *tree_hover_path;
 	GtkTreePath       *list_hover_path;
 	GtkTreeViewColumn *filename_column;
+	GtkWindowGroup    *window_group;
 
 	gboolean         filter_mode;
 	gint             current_view_length;
@@ -633,6 +634,8 @@ fr_window_free_private_data (FrWindow *window)
 	_g_object_unref (window->priv->settings_nautilus);
 
 	_g_object_unref (window->priv->cancellable);
+
+	g_object_unref (window->priv->window_group);
 }
 
 
@@ -830,6 +833,9 @@ fr_window_init (FrWindow *window)
 	window->priv->batch_title = NULL;
 	window->priv->cancellable = g_cancellable_new ();
 	window->priv->compression = FR_COMPRESSION_NORMAL;
+	window->priv->window_group = gtk_window_group_new ();
+	gtk_window_group_add_window (window->priv->window_group, GTK_WINDOW (window));
+
 	window->archive = NULL;
 
 	g_signal_connect (window,
