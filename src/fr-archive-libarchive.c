@@ -99,7 +99,7 @@ fr_archive_libarchive_get_packages (FrArchive  *archive,
 }
 
 
-/* -- load -- */
+/* LoadData */
 
 
 #define LOAD_DATA(x) ((LoadData *)(x))
@@ -121,7 +121,6 @@ load_data_init (LoadData *load_data)
 {
 	load_data->buffer_size = BUFFER_SIZE;
 	load_data->buffer = g_new (char, load_data->buffer_size);
-
 }
 
 
@@ -181,8 +180,11 @@ load_data_close (struct archive *a,
 }
 
 
+/* -- list -- */
+
+
 static void
-load_archive_thread (GSimpleAsyncResult *result,
+list_archive_thread (GSimpleAsyncResult *result,
 		     GObject            *object,
 		     GCancellable       *cancellable)
 {
@@ -258,7 +260,7 @@ load_archive_thread (GSimpleAsyncResult *result,
 
 
 static void
-fr_archive_libarchive_load (FrArchive           *archive,
+fr_archive_libarchive_list (FrArchive           *archive,
 			    const char          *password,
 			    GCancellable        *cancellable,
 			    GAsyncReadyCallback  callback,
@@ -274,11 +276,11 @@ fr_archive_libarchive_load (FrArchive           *archive,
 	load_data->result = g_simple_async_result_new (G_OBJECT (archive),
 						       callback,
 						       user_data,
-						       fr_archive_load);
+						       fr_archive_list);
 
 	g_simple_async_result_set_op_res_gpointer (load_data->result, load_data, NULL);
 	g_simple_async_result_run_in_thread (load_data->result,
-					     load_archive_thread,
+					     list_archive_thread,
 					     G_PRIORITY_DEFAULT,
 					     cancellable);
 }
@@ -527,7 +529,7 @@ fr_archive_libarchive_extract_files (FrArchive           *archive,
 	load_data->result = g_simple_async_result_new (G_OBJECT (archive),
 						       callback,
 						       user_data,
-						       fr_archive_load);
+						       fr_archive_list);
 	load_data->buffer_size = BUFFER_SIZE;
 	load_data->buffer = g_new (char, load_data->buffer_size);
 
@@ -589,11 +591,13 @@ add_file_free (AddFile *add_file)
 
 #define SAVE_DATA(x) ((SaveData *)(x))
 
+
 typedef enum {
 	WRITE_ACTION_ABORT,
 	WRITE_ACTION_SKIP_ENTRY,
 	WRITE_ACTION_WRITE_ENTRY
 } WriteAction;
+
 
 typedef struct      _SaveData SaveData;
 typedef void        (*SaveDataFunc)    (SaveData *, gpointer user_data);
@@ -1652,7 +1656,7 @@ fr_archive_libarchive_class_init (FrArchiveLibarchiveClass *klass)
 	archive_class->get_mime_types = fr_archive_libarchive_get_mime_types;
 	archive_class->get_capabilities = fr_archive_libarchive_get_capabilities;
 	archive_class->get_packages = fr_archive_libarchive_get_packages;
-	archive_class->load = fr_archive_libarchive_load;
+	archive_class->list = fr_archive_libarchive_list;
 	archive_class->extract_files = fr_archive_libarchive_extract_files;
 	archive_class->add_files = fr_archive_libarchive_add_files;
 	archive_class->remove_files = fr_archive_libarchive_remove_files;
