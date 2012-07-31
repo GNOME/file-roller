@@ -6134,7 +6134,7 @@ archive_load_ready_cb (GObject      *source_object,
 static void
 fr_window_archive_load (FrWindow *window)
 {
-	fr_archive_load (window->archive,
+	fr_archive_list (window->archive,
 			 window->priv->password,
 			 window->priv->cancellable,
 			 archive_load_ready_cb,
@@ -6198,7 +6198,10 @@ fr_window_archive_open (FrWindow   *current_window,
 					    (GFreeFunc) g_free);
 
 	file = g_file_new_for_uri (window->priv->archive_uri);
-	fr_archive_open (file, window->priv->cancellable, archive_open_ready_cb, window);
+	fr_archive_open (file,
+			 window->priv->cancellable,
+			 archive_open_ready_cb,
+			 window);
 
 	g_object_unref (file);
 

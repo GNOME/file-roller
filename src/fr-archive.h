@@ -214,7 +214,11 @@ struct _FrArchiveClass {
 				            const char          *mime_type);
 	const char *  (*get_packages)      (FrArchive           *archive,
 					    const char          *mime_type);
-	void          (*load)              (FrArchive           *archive,
+	void          (*open)              (FrArchive           *archive,
+					    GCancellable        *cancellable,
+					    GAsyncReadyCallback  callback,
+					    gpointer             user_data);
+	void          (*list)              (FrArchive           *archive,
 					    const char          *password,
 					    GCancellable        *cancellable,
 					    GAsyncReadyCallback  callback,
@@ -325,7 +329,7 @@ void          fr_archive_open                    (GFile               *file,
 FrArchive *   fr_archive_open_finish             (GFile               *file,
 						  GAsyncResult        *result,
 						  GError             **error);
-void          fr_archive_load                    (FrArchive           *archive,
+void          fr_archive_list                    (FrArchive           *archive,
 						  const char          *password,
 						  GCancellable        *cancellable,
 		       	       	       	          GAsyncReadyCallback  callback,

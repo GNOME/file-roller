@@ -316,7 +316,8 @@ fr_archive_class_init (FrArchiveClass *klass)
 	klass->get_capabilities = fr_archive_base_get_capabilities;
 	klass->set_mime_type = fr_archive_base_set_mime_type;
 	klass->get_packages = fr_archive_base_get_packages;
-	klass->load = NULL;
+	klass->open = NULL;
+	klass->list = NULL;
 	klass->add_files = NULL;
 	klass->extract_files = NULL;
 	klass->remove_files = NULL;
@@ -623,7 +624,7 @@ typedef struct {
 
 
 static void
-load_data_free (OpenData *open_data)
+open_data_free (OpenData *open_data)
 {
 	g_object_unref (open_data->file);
 	_g_object_unref (open_data->cancellable);
@@ -635,7 +636,7 @@ load_data_free (OpenData *open_data)
 
 
 static void
-load_data_complete_with_error (OpenData *load_data,
+open_data_complete_with_error (OpenData *load_data,
 			       GError   *error)
 {
 	GSimpleAsyncResult *result;
@@ -749,6 +750,23 @@ create_archive_to_load_archive (GFile      *file,
 
 
 static void
+open_archive_ready_cb (GObject      *source_object,
+		       GAsyncResult *result,
+		       gpointer      user_data)
+{
+	OpenData *open_data = user_data;
+	GError   *error = NULL;
+
+	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
+		open_data_complete_with_error (open_data, error);
+		return;
+	}
+
+	g_simple_async_result_complete_in_idle (open_data->result);
+}
+
+
+static void
 open_archive_stream_ready_cb (GObject      *source_object,
 			      GAsyncResult *result,
 			      gpointer      user_data)
@@ -765,7 +783,7 @@ open_archive_stream_ready_cb (GObject      *source_object,
 	bytes_read = g_input_stream_read_finish (G_INPUT_STREAM (istream), result, &error);
 	if (bytes_read == -1) {
 		g_object_unref (istream);
-		load_data_complete_with_error (open_data, error);
+		open_data_complete_with_error (open_data, error);
 		return;
 	}
 
@@ -789,7 +807,7 @@ open_archive_stream_ready_cb (GObject      *source_object,
 				error = g_error_new_literal (FR_ERROR,
 						     	     FR_ERROR_UNSUPPORTED_FORMAT,
 						     	     _("Archive type not supported."));
-				load_data_complete_with_error (open_data, error);
+				open_data_complete_with_error (open_data, error);
 				return;
 			}
 		}
@@ -799,7 +817,13 @@ open_archive_stream_ready_cb (GObject      *source_object,
 	archive->read_only = ! fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_WRITE) || ! archive->priv->have_write_permissions;
 	open_data->archive = archive;
 
-        g_simple_async_result_complete_in_idle (open_data->result);
+	if (FR_ARCHIVE_GET_CLASS (archive)->open != NULL)
+		FR_ARCHIVE_GET_CLASS (archive)->open (archive,
+						      open_data->cancellable,
+						      open_archive_ready_cb,
+						      open_data);
+	else
+		g_simple_async_result_complete_in_idle (open_data->result);
 
         g_free (local_mime_type);
         g_free (uri);
@@ -817,7 +841,7 @@ open_archive_read_ready_cb (GObject      *source_object,
 
 	istream = g_file_read_finish (G_FILE (source_object), result, &error);
 	if (istream == NULL) {
-		load_data_complete_with_error (open_data, error);
+		open_data_complete_with_error (open_data, error);
 		return;
 	}
 
@@ -852,7 +876,7 @@ fr_archive_open (GFile               *file,
 	open_data->buffer = g_new (char, open_data->buffer_size);
         g_simple_async_result_set_op_res_gpointer (open_data->result,
         					   open_data,
-                                                   (GDestroyNotify) load_data_free);
+                                                   (GDestroyNotify) open_data_free);
 
         /* load a few bytes to guess the archive type */
 
@@ -885,7 +909,7 @@ fr_archive_open_finish (GFile         *file,
 
 
 void
-fr_archive_load (FrArchive           *archive,
+fr_archive_list (FrArchive           *archive,
 		 const char          *password,
 		 GCancellable        *cancellable,
 		 GAsyncReadyCallback  callback,
@@ -899,7 +923,7 @@ fr_archive_load (FrArchive           *archive,
 		archive->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
 	}
 
-	FR_ARCHIVE_GET_CLASS (archive)->load (archive, password, cancellable, callback, user_data);
+	FR_ARCHIVE_GET_CLASS (archive)->list (archive, password, cancellable, callback, user_data);
 }
 
 
@@ -917,7 +941,7 @@ fr_archive_operation_finish (FrArchive     *archive,
 
 	success = ! g_simple_async_result_propagate_error (G_SIMPLE_ASYNC_RESULT (result), error);
 
-	if (success && (g_simple_async_result_get_source_tag (G_SIMPLE_ASYNC_RESULT (result)) == fr_archive_load)) {
+	if (success && (g_simple_async_result_get_source_tag (G_SIMPLE_ASYNC_RESULT (result)) == fr_archive_list)) {
 		int i;
 
 		/* order the list by name to speed up search */
