@@ -63,14 +63,19 @@ fr_archive_libarchive_finalize (GObject *object)
 
 
 const char *libarchiver_mime_types[] = {
+		"application/vnd.ms-cab-compressed",
+		"application/x-7z-compressed",
+		"application/x-ar",
+		"application/x-cd-image",
 		"application/x-compressed-tar",
+		"application/x-cpio",
 		"application/x-bzip-compressed-tar",
-		"application/x-tar",
-		"application/x-7z-compressed-tar",
-		"application/x-lrzip-compressed-tar",
+		"application/x-lha",
 		"application/x-lzip-compressed-tar",
 		"application/x-lzma-compressed-tar",
+		"application/x-tar",
 		"application/x-tarz",
+		"application/x-xar",
 		"application/x-xz-compressed-tar",
 		NULL };
 
@@ -87,7 +92,30 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 					const char *mime_type,
 					gboolean    check_command)
 {
-	return FR_ARCHIVE_CAN_STORE_MANY_FILES | FR_ARCHIVE_CAN_READ | FR_ARCHIVE_CAN_WRITE;
+	FrArchiveCap capabilities;
+
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
+
+	/* write-only formats */
+	if (strcmp (mime_type, "application/x-7z-compressed") == 0) {
+		capabilities |= FR_ARCHIVE_CAN_WRITE;
+		return capabilities;
+	}
+
+	capabilities |= FR_ARCHIVE_CAN_READ;
+
+	/* read-only formats */
+	if ((strcmp (mime_type, "application/vnd.ms-cab-compressed") == 0)
+	    || (strcmp (mime_type, "application/x-lha") == 0)
+	    || (strcmp (mime_type, "application/x-xar") == 0))
+	{
+		return capabilities;
+	}
+
+	/* all other formats can be read and written */
+	capabilities |= FR_ARCHIVE_CAN_WRITE;
+
+	return capabilities;
 }
 
 
@@ -248,7 +276,7 @@ list_archive_thread (GSimpleAsyncResult *result,
 	}
 	archive_read_free (a);
 
-	if ((load_data->error == NULL) && (r != ARCHIVE_EOF))
+	if ((load_data->error == NULL) && (r != ARCHIVE_EOF) && (archive_error_string (a) != NULL))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
 	if (load_data->error == NULL)
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
@@ -731,48 +759,80 @@ _archive_write_set_format_from_context (struct archive *a,
 	archive_filter = ARCHIVE_FILTER_NONE;
 
 	if ((strcmp (ext, ".tar.bz2") == 0) || (strcmp (ext, ".tbz2") == 0)) {
-		archive_write_add_filter_bzip2 (a);
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_BZIP2;
 	}
 	else if ((strcmp (ext, ".tar.Z") == 0) || (strcmp (ext, ".taz") == 0)) {
-		archive_write_add_filter_compress (a);
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_COMPRESS;
 	}
 	else if ((strcmp (ext, ".tar.gz") == 0) || (strcmp (ext, ".tgz") == 0)) {
-		archive_write_add_filter_gzip (a);
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_GZIP;
 	}
 	else if ((strcmp (ext, ".tar.lz") == 0) || (strcmp (ext, ".tlz") == 0)) {
-		archive_write_add_filter_lzip (a);
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZIP;
 	}
 	else if ((strcmp (ext, ".tar.lzma") == 0) || (strcmp (ext, ".tzma") == 0)) {
-		archive_write_add_filter_lzma (a);
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZMA;
 	}
 	else if ((strcmp (ext, ".tar.xz") == 0) || (strcmp (ext, ".txz") == 0)) {
-		archive_write_add_filter_xz (a);
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_XZ;
 	}
 	else if (strcmp (ext, ".tar") == 0) {
 		archive_write_add_filter_none (a);
 		archive_write_set_format_pax_restricted (a);
-		archive_filter = ARCHIVE_FILTER_NONE;
+	}
+	else if (strcmp (ext, ".iso") == 0) {
+		archive_write_set_format_iso9660 (a);
+	}
+	else if (strcmp (ext, ".cpio") == 0) {
+		archive_write_set_format_cpio (a);
+	}
+	else if (strcmp (ext, ".xar") == 0) {
+		archive_write_set_format_xar (a);
+	}
+	else if (strcmp (ext, ".ar") == 0) {
+		archive_write_set_format_ar_svr4 (a);
+	}
+	else if (strcmp (ext, ".7z") == 0) {
+		archive_write_set_format_7zip (a);
 	}
 
-	/* FIXME: add all the libarchive supported formats */
-
-	/* set the compression level */
+	/* set the filter */
 
 	if (archive_filter != ARCHIVE_FILTER_NONE) {
 		char *compression_level = NULL;
 
+		switch (archive_filter) {
+		case ARCHIVE_FILTER_BZIP2:
+			archive_write_add_filter_bzip2 (a);
+			break;
+		case ARCHIVE_FILTER_COMPRESS:
+			archive_write_add_filter_compress (a);
+			break;
+		case ARCHIVE_FILTER_GZIP:
+			archive_write_add_filter_gzip (a);
+			break;
+		case ARCHIVE_FILTER_LZIP:
+			archive_write_add_filter_lzip (a);
+			break;
+		case ARCHIVE_FILTER_LZMA:
+			archive_write_add_filter_lzma (a);
+			break;
+		case ARCHIVE_FILTER_XZ:
+			archive_write_add_filter_xz (a);
+			break;
+		default:
+			break;
+		}
+
+		/* set the compression level */
+
+		compression_level = NULL;
 		switch (save_data->compression) {
 		case FR_COMPRESSION_VERY_FAST:
 			compression_level = "1";
