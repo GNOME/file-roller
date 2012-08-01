@@ -732,38 +732,37 @@ _archive_write_set_format_from_context (struct archive *a,
 
 	if ((strcmp (ext, ".tar.bz2") == 0) || (strcmp (ext, ".tbz2") == 0)) {
 		archive_write_add_filter_bzip2 (a);
-		archive_write_set_format_ustar (a);
+		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_BZIP2;
 	}
 	else if ((strcmp (ext, ".tar.Z") == 0) || (strcmp (ext, ".taz") == 0)) {
 		archive_write_add_filter_compress (a);
-		archive_write_set_format_ustar (a);
+		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_COMPRESS;
 	}
 	else if ((strcmp (ext, ".tar.gz") == 0) || (strcmp (ext, ".tgz") == 0)) {
 		archive_write_add_filter_gzip (a);
-		archive_write_set_format_ustar (a);
+		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_GZIP;
 	}
 	else if ((strcmp (ext, ".tar.lz") == 0) || (strcmp (ext, ".tlz") == 0)) {
 		archive_write_add_filter_lzip (a);
-		archive_write_set_format_ustar (a);
+		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZIP;
 	}
 	else if ((strcmp (ext, ".tar.lzma") == 0) || (strcmp (ext, ".tzma") == 0)) {
 		archive_write_add_filter_lzma (a);
-		archive_write_set_format_ustar (a);
+		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZMA;
 	}
 	else if ((strcmp (ext, ".tar.xz") == 0) || (strcmp (ext, ".txz") == 0)) {
 		archive_write_add_filter_xz (a);
-		archive_write_set_format_ustar (a);
+		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_XZ;
 	}
-	else {
-		/* defaults to an uncompressed tar */
+	else if (strcmp (ext, ".tar") == 0) {
 		archive_write_add_filter_none (a);
-		archive_write_set_format_ustar (a);
+		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_NONE;
 	}
 
