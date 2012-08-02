@@ -223,7 +223,7 @@ fr_registered_archive_new (GType command_type)
 	reg_com->packages = g_ptr_array_new ();
 
 	archive = (FrArchive*) g_object_new (reg_com->type, NULL);
-	mime_types = fr_archive_get_mime_types (archive);
+	mime_types = fr_archive_get_supported_types (archive);
 	for (i = 0; mime_types[i] != NULL; i++) {
 		const char         *mime_type;
 		FrMimeTypeCap      *cap;

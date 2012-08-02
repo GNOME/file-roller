@@ -109,7 +109,8 @@ void            fr_window_close                        (FrWindow      *window);
 /* archive operations */
 
 gboolean        fr_window_archive_new                  (FrWindow      *window,
-						        const char    *uri);
+						        const char    *uri,
+						        const char    *mime_type);
 FrWindow *      fr_window_archive_open                 (FrWindow      *window,
 						        const char    *uri,
 						        GtkWindow     *parent);
@@ -233,6 +234,7 @@ void            fr_window_stop                         (FrWindow    *window);
 void            fr_window_action_new_archive           (FrWindow   *window);
 gboolean        fr_window_create_archive_and_continue  (FrWindow   *window,
 							const char *uri,
+							const char *mime_type,
 							GtkWindow  *error_dialog_parent);
 void            fr_window_action_save_as               (FrWindow   *window);
 void            fr_window_view_last_output             (FrWindow   *window,

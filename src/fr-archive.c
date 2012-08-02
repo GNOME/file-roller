@@ -485,7 +485,7 @@ fr_archive_is_capable_of (FrArchive     *self,
 
 
 const char **
-fr_archive_get_mime_types (FrArchive *self)
+fr_archive_get_supported_types (FrArchive *self)
 {
 	return FR_ARCHIVE_GET_CLASS (G_OBJECT (self))->get_mime_types (self);
 }
@@ -513,6 +513,13 @@ fr_archive_set_mime_type (FrArchive  *self,
 			  const char *mime_type)
 {
 	FR_ARCHIVE_GET_CLASS (G_OBJECT (self))->set_mime_type (self, mime_type);
+}
+
+
+const char *
+fr_archive_get_mime_type (FrArchive  *self)
+{
+	return self->mime_type;
 }
 
 
@@ -582,14 +589,15 @@ create_archive_for_mime_type (GType          archive_type,
 
 
 FrArchive *
-fr_archive_create (GFile *file)
+fr_archive_create (GFile      *file,
+		   const char *mime_type)
 {
-	const char *mime_type;
-	GType       archive_type;
-	FrArchive  *archive;
-	GFile      *parent;
+	GType      archive_type;
+	FrArchive *archive;
+	GFile     *parent;
 
-	mime_type = get_mime_type_from_filename (file);
+	if (mime_type == NULL)
+		mime_type = get_mime_type_from_filename (file);
 	archive_type = get_archive_type_from_mime_type (mime_type, FR_ARCHIVE_CAN_WRITE);
 
 	archive = create_archive_for_mime_type (archive_type,

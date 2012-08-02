@@ -50,12 +50,13 @@ struct _FrNewArchiveDialogClass {
 };
 
 GType           fr_new_archive_dialog_get_type            (void);
-GtkWidget *     fr_new_archive_dialog_new                 (GtkWindow          *parent,
-							   FrNewArchiveAction  action,
-							   const char         *default_name);
-char *          fr_new_archive_dialog_get_uri             (FrNewArchiveDialog *dialog);
-const char *    fr_new_archive_dialog_get_password        (FrNewArchiveDialog *dialog);
-gboolean        fr_new_archive_dialog_get_encrypt_header  (FrNewArchiveDialog *dialog);
-int             fr_new_archive_dialog_get_volume_size     (FrNewArchiveDialog *dialog);
+GtkWidget *     fr_new_archive_dialog_new                 (GtkWindow           *parent,
+							   FrNewArchiveAction   action,
+							   const char          *default_name);
+char *          fr_new_archive_dialog_get_uri             (FrNewArchiveDialog  *dialog,
+							   const char         **mime_type);
+const char *    fr_new_archive_dialog_get_password        (FrNewArchiveDialog  *dialog);
+gboolean        fr_new_archive_dialog_get_encrypt_header  (FrNewArchiveDialog  *dialog);
+int             fr_new_archive_dialog_get_volume_size     (FrNewArchiveDialog  *dialog);
 
 #endif /* FR_NEW_ARCHIVE_DIALOG_H */

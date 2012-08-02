@@ -3990,11 +3990,12 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 gboolean
 fr_window_create_archive_and_continue (FrWindow   *window,
 			  	       const char *uri,
+			  	       const char *mime_type,
 			  	       GtkWindow  *error_dialog_parent)
 {
 	gboolean result = FALSE;
 
-	if (fr_window_archive_new (FR_WINDOW (window), uri)) {
+	if (fr_window_archive_new (FR_WINDOW (window), uri, mime_type)) {
 		if (! fr_window_is_batch_mode (FR_WINDOW (window)))
 			gtk_window_present (GTK_WINDOW (window));
 		_archive_operation_completed (window, FR_ACTION_CREATING_NEW_ARCHIVE, NULL);
@@ -4024,6 +4025,7 @@ new_archive_dialog_response_cb (GtkDialog *dialog,
 {
 	FrWindow   *window = user_data;
 	char       *uri;
+	const char *mime_type;
 	GtkWidget  *archive_window;
 	gboolean    new_window;
 	const char *password;
@@ -4036,7 +4038,7 @@ new_archive_dialog_response_cb (GtkDialog *dialog,
 		return;
 	}
 
-	uri = fr_new_archive_dialog_get_uri (FR_NEW_ARCHIVE_DIALOG (dialog));
+	uri = fr_new_archive_dialog_get_uri (FR_NEW_ARCHIVE_DIALOG (dialog), &mime_type);
 	if (uri == NULL)
 		return;
 
@@ -4054,8 +4056,13 @@ new_archive_dialog_response_cb (GtkDialog *dialog,
 	fr_window_set_encrypt_header (FR_WINDOW (archive_window), encrypt_header);
 	fr_window_set_volume_size (FR_WINDOW (archive_window), volume_size);
 
-	if (fr_window_create_archive_and_continue (FR_WINDOW (archive_window), uri, GTK_WINDOW (dialog)))
+	if (fr_window_create_archive_and_continue (FR_WINDOW (archive_window),
+						   uri,
+						   mime_type,
+						   GTK_WINDOW (dialog)))
+	{
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+	}
 	else if (new_window)
 		gtk_widget_destroy (archive_window);
 
@@ -6105,7 +6112,8 @@ _fr_window_set_archive_uri (FrWindow   *window,
 
 gboolean
 fr_window_archive_new (FrWindow   *window,
-		       const char *uri)
+		       const char *uri,
+		       const char *mime_type)
 {
 	GFile     *file;
 	FrArchive *archive;
@@ -6113,7 +6121,7 @@ fr_window_archive_new (FrWindow   *window,
 	g_return_val_if_fail (window != NULL, FALSE);
 
 	file = g_file_new_for_uri (uri);
-	archive = fr_archive_create (file);
+	archive = fr_archive_create (file, mime_type);
 	if (archive != NULL) {
 		fr_window_archive_close (window);
 		_fr_window_set_archive (window, archive);
@@ -7402,6 +7410,7 @@ fr_window_action_new_archive (FrWindow *window)
 
 typedef struct {
 	char     *uri;
+	char     *mime_type;
 	char     *password;
 	gboolean  encrypt_header;
 	guint     volume_size;
@@ -7410,6 +7419,7 @@ typedef struct {
 
 static SaveAsData *
 save_as_data_new (const char *uri,
+		  const char *mime_type,
 		  const char *password,
 		  gboolean    encrypt_header,
 	  	  guint       volume_size)
@@ -7419,6 +7429,8 @@ save_as_data_new (const char *uri,
 	sdata = g_new0 (SaveAsData, 1);
 	if (uri != NULL)
 		sdata->uri = g_strdup (uri);
+	if (mime_type != NULL)
+		sdata->mime_type = g_strdup (mime_type);
 	if (password != NULL)
 		sdata->password = g_strdup (password);
 	sdata->encrypt_header = encrypt_header;
@@ -7434,6 +7446,7 @@ save_as_data_free (SaveAsData *sdata)
 	if (sdata == NULL)
 		return;
 	g_free (sdata->uri);
+	g_free (sdata->mime_type);
 	g_free (sdata->password);
 	g_free (sdata);
 }
@@ -7537,6 +7550,7 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 static void
 fr_window_archive_save_as (FrWindow   *window,
 			   const char *uri,
+			   const char *mime_type,
 			   const char *password,
 			   gboolean    encrypt_header,
 			   guint       volume_size)
@@ -7553,7 +7567,7 @@ fr_window_archive_save_as (FrWindow   *window,
 	/* create the new archive */
 
 	file = g_file_new_for_uri (uri);
-	window->priv->convert_data.new_archive = fr_archive_create (file);
+	window->priv->convert_data.new_archive = fr_archive_create (file, mime_type);
 	g_object_unref (file);
 
 	if (window->priv->convert_data.new_archive == NULL) {
@@ -7591,7 +7605,7 @@ fr_window_archive_save_as (FrWindow   *window,
 
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_SAVE_AS,
-					    save_as_data_new (uri, password, encrypt_header, volume_size),
+					    save_as_data_new (uri, mime_type, password, encrypt_header, volume_size),
 					    (GFreeFunc) save_as_data_free);
 
 	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
@@ -7640,6 +7654,7 @@ save_as_archive_dialog_response_cb (GtkDialog *dialog,
 {
 	FrWindow   *window = user_data;
 	char       *uri;
+	const char *mime_type;
 	const char *password;
 	gboolean    encrypt_header;
 	int         volume_size;
@@ -7654,7 +7669,7 @@ save_as_archive_dialog_response_cb (GtkDialog *dialog,
 	if (response != GTK_RESPONSE_OK)
 		return;
 
-	uri = fr_new_archive_dialog_get_uri (FR_NEW_ARCHIVE_DIALOG (dialog));
+	uri = fr_new_archive_dialog_get_uri (FR_NEW_ARCHIVE_DIALOG (dialog), &mime_type);
 	if (uri == NULL)
 		return;
 
@@ -7666,7 +7681,7 @@ save_as_archive_dialog_response_cb (GtkDialog *dialog,
 	g_settings_set_int (settings, PREF_BATCH_ADD_VOLUME_SIZE, volume_size);
 	g_object_unref (settings);
 
-	fr_window_archive_save_as (window, uri, password, encrypt_header, volume_size);
+	fr_window_archive_save_as (window, uri, mime_type, password, encrypt_header, volume_size);
 
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	g_free (uri);
@@ -9132,7 +9147,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 		if (! _g_uri_query_exists ((char*) action->data)) {
 			GError *error = NULL;
 
-			if (! fr_window_archive_new (window, (char*) action->data))
+			if (! fr_window_archive_new (window, (char*) action->data, NULL))
 				error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("Archive type not supported."));
 			_archive_operation_completed (window, FR_ACTION_CREATING_NEW_ARCHIVE, error);
 
@@ -9233,6 +9248,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 		sdata = action->data;
 		fr_window_archive_save_as (window,
 					   sdata->uri,
+					   sdata->mime_type,
 					   sdata->password,
 					   sdata->encrypt_header,
 					   sdata->volume_size);

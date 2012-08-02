@@ -744,61 +744,55 @@ static void
 _archive_write_set_format_from_context (struct archive *a,
 					SaveData       *save_data)
 {
-	char       *uri;
-	const char *ext;
+	const char *mime_type;
 	int         archive_filter;
 
-	/* set format and filter from the file extension */
+	/* set format and filter from the mime type */
 
-	uri = g_file_get_uri (fr_archive_get_file (LOAD_DATA (save_data)->archive));
-	ext = _g_filename_get_extension (uri);
-	if (ext == NULL) {
-		/* defaults to an uncompressed tar */
-		ext = ".tar";
-	}
+	mime_type = fr_archive_get_mime_type (LOAD_DATA (save_data)->archive);
 	archive_filter = ARCHIVE_FILTER_NONE;
 
-	if ((strcmp (ext, ".tar.bz2") == 0) || (strcmp (ext, ".tbz2") == 0)) {
+	if (_g_str_equal (mime_type, "application/x-bzip-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_BZIP2;
 	}
-	else if ((strcmp (ext, ".tar.Z") == 0) || (strcmp (ext, ".taz") == 0)) {
+	else if (_g_str_equal (mime_type, "application/x-tarz")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_COMPRESS;
 	}
-	else if ((strcmp (ext, ".tar.gz") == 0) || (strcmp (ext, ".tgz") == 0)) {
+	else if (_g_str_equal (mime_type, "application/x-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_GZIP;
 	}
-	else if ((strcmp (ext, ".tar.lz") == 0) || (strcmp (ext, ".tlz") == 0)) {
+	else if (_g_str_equal (mime_type, "application/x-lzip-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZIP;
 	}
-	else if ((strcmp (ext, ".tar.lzma") == 0) || (strcmp (ext, ".tzma") == 0)) {
+	else if (_g_str_equal (mime_type, "application/x-lzma-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZMA;
 	}
-	else if ((strcmp (ext, ".tar.xz") == 0) || (strcmp (ext, ".txz") == 0)) {
+	else if (_g_str_equal (mime_type, "application/x-xz-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_XZ;
 	}
-	else if (strcmp (ext, ".tar") == 0) {
+	else if (_g_str_equal (mime_type, "application/x-tar")) {
 		archive_write_add_filter_none (a);
 		archive_write_set_format_pax_restricted (a);
 	}
-	else if (strcmp (ext, ".iso") == 0) {
+	else if (_g_str_equal (mime_type, "application/x-cd-image")) {
 		archive_write_set_format_iso9660 (a);
 	}
-	else if (strcmp (ext, ".cpio") == 0) {
+	else if (_g_str_equal (mime_type, "application/x-cpio")) {
 		archive_write_set_format_cpio (a);
 	}
-	else if (strcmp (ext, ".xar") == 0) {
+	else if (_g_str_equal (mime_type, "application/x-xar")) {
 		archive_write_set_format_xar (a);
 	}
-	else if (strcmp (ext, ".ar") == 0) {
+	else if (_g_str_equal (mime_type, "application/x-ar")) {
 		archive_write_set_format_ar_svr4 (a);
 	}
-	else if (strcmp (ext, ".7z") == 0) {
+	else if (_g_str_equal (mime_type, "application/x-7z-compressed")) {
 		archive_write_set_format_7zip (a);
 	}
 
@@ -850,8 +844,6 @@ _archive_write_set_format_from_context (struct archive *a,
 		if (compression_level != NULL)
 			archive_write_set_filter_option (a, NULL, "compression-level", compression_level);
 	}
-
-	g_free (uri);
 }
 
 

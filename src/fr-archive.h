@@ -310,18 +310,20 @@ GType         fr_archive_get_type                (void);
 GFile *       fr_archive_get_file                (FrArchive           *archive);
 gboolean      fr_archive_is_capable_of           (FrArchive           *archive,
 						  FrArchiveCaps        capabilities);
-const char ** fr_archive_get_mime_types          (FrArchive           *archive);
+const char ** fr_archive_get_supported_types     (FrArchive           *archive);
 void          fr_archive_update_capabilities     (FrArchive           *archive);
 FrArchiveCap  fr_archive_get_capabilities        (FrArchive           *archive,
 						  const char          *mime_type,
 						  gboolean             check_command);
 void          fr_archive_set_mime_type           (FrArchive           *archive,
 						  const char          *mime_type);
+const char *  fr_archive_get_mime_type           (FrArchive           *archive);
 const char *  fr_archive_get_packages            (FrArchive           *archive,
 						  const char          *mime_type);
 void          fr_archive_set_stoppable           (FrArchive           *archive,
 						  gboolean             stoppable);
-FrArchive *   fr_archive_create                  (GFile               *file);
+FrArchive *   fr_archive_create                  (GFile               *file,
+						  const char          *mime_type);
 void          fr_archive_open                    (GFile               *file,
 		       	       	       	          GCancellable        *cancellable,
 		       	       	       	          GAsyncReadyCallback  callback,

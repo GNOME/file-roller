@@ -66,6 +66,17 @@ get_ext (DialogData *data)
 }
 
 
+static const char *
+get_mime_type (DialogData *data)
+{
+	int idx;
+
+	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->archive_type_combo_box));
+
+	return mime_type_desc[data->supported_types[idx]].mime_type;
+}
+
+
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
@@ -128,6 +139,7 @@ add_clicked_cb (GtkWidget  *widget,
 	char       *archive_file;
 	char       *tmp;
 	const char *archive_ext;
+	const char *mime_type;
 	gboolean    do_not_add = FALSE;
 	GError     *error = NULL;
 
@@ -270,6 +282,8 @@ add_clicked_cb (GtkWidget  *widget,
 	/**/
 
 	archive_ext = get_ext (data);
+	mime_type = get_mime_type (data);
+
 	tmp = archive_name;
 	archive_name = g_strconcat (tmp, archive_ext, NULL);
 	g_free (tmp);
@@ -332,10 +346,11 @@ add_clicked_cb (GtkWidget  *widget,
 			return;
 		}
 	}
+
 	set_archive_options (data);
 	gtk_widget_destroy (GET_WIDGET ("dialog"));
 
-	fr_window_create_archive_and_continue (window, archive_file, NULL);
+	fr_window_create_archive_and_continue (window, archive_file, mime_type, NULL);
 
 	g_free (archive_name);
 	g_free (archive_dir);

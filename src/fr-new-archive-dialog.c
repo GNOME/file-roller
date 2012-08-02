@@ -24,7 +24,6 @@
 #include <math.h>
 #include <unistd.h>
 #include <gio/gio.h>
-#include "eggfileformatchooser.h"
 #include "file-utils.h"
 #include "fr-init.h"
 #include "fr-new-archive-dialog.h"
@@ -34,18 +33,19 @@
 #include "preferences.h"
 
 
-#define GET_WIDGET(x)     (_gtk_builder_get_widget (self->priv->builder, (x)))
-#define DEFAULT_EXTENSION ".tar.gz"
-#define MEGABYTE          (1024 * 1024)
+#define GET_WIDGET(x)       (_gtk_builder_get_widget (self->priv->builder, (x)))
+#define DEFAULT_EXTENSION   ".tar.gz"
+#define MEGABYTE            (1024 * 1024)
+#define MIME_TYPE_INDEX_KEY "fr-mime-type-idx"
 
 
 struct _FrNewArchiveDialogPrivate {
-	GtkBuilder           *builder;
-	EggFileFormatChooser *format_chooser;
-	int                  *supported_types;
-	gboolean              can_encrypt;
-	gboolean              can_encrypt_header;
-	gboolean              can_create_volumes;
+	GtkBuilder *builder;
+	int        *supported_types;
+	GHashTable *supported_ext;
+	gboolean    can_encrypt;
+	gboolean    can_encrypt_header;
+	gboolean    can_create_volumes;
 };
 
 
@@ -60,6 +60,7 @@ fr_new_archive_dialog_finalize (GObject *object)
 	self = FR_NEW_ARCHIVE_DIALOG (object);
 
 	g_object_unref (self->priv->builder);
+	g_hash_table_unref (self->priv->supported_ext);
 
 	G_OBJECT_CLASS (fr_new_archive_dialog_parent_class)->finalize (object);
 }
@@ -82,6 +83,7 @@ fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 {
 	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_NEW_ARCHIVE_DIALOG, FrNewArchiveDialogPrivate);
 	self->priv->builder = NULL;
+	self->priv->supported_ext = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 
@@ -135,51 +137,6 @@ _fr_new_archive_dialog_update_sensitivity_for_ext (FrNewArchiveDialog *self,
 }
 
 
-/* FIXME
-static void
-archive_type_combo_box_changed_cb (GtkComboBox *combo_box,
-				   DlgNewData  *data)
-{
-	const char *uri;
-	const char *ext;
-	int         idx;
-
-	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
-
-	ext = get_archive_filename_extension (uri);
-	idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box)) - 1;
-	if ((ext == NULL) && (idx >= 0))
-		ext = mime_type_desc[self->priv->supported_types[idx]].default_ext;
-
-	_fr_new_archive_dialog_update_sensitivity_for_ext (data, ext);
-
-	if ((idx >= 0) && (uri != NULL)) {
-		const char *new_ext;
-		const char *basename;
-		char       *basename_noext;
-		char       *new_basename;
-		char       *new_basename_uft8;
-
-		new_ext = mime_type_desc[self->priv->supported_types[idx]].default_ext;
-		basename = _g_path_get_file_name (uri);
-		if (g_str_has_suffix (basename, ext))
-			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
-		else
-			basename_noext = g_strdup (basename);
-		new_basename = g_strconcat (basename_noext, new_ext, NULL);
-		new_basename_uft8 = g_uri_unescape_string (new_basename, NULL);
-
-		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (data->dialog), new_basename_uft8);
-		_fr_new_archive_dialog_update_sensitivity_for_ext (data, new_ext);
-
-		g_free (new_basename_uft8);
-		g_free (new_basename);
-		g_free (basename_noext);
-	}
-}
-*/
-
-
 static void
 password_entry_changed_cb (GtkEditable *editable,
 			   gpointer     user_data)
@@ -196,9 +153,34 @@ volume_toggled_cb (GtkToggleButton *toggle_button,
 }
 
 
+static int
+_fr_new_archive_dialog_get_format (FrNewArchiveDialog *self,
+				   const char         *uri)
+{
+	GtkFileFilter *filter;
+	int            idx;
+
+	filter = gtk_file_chooser_get_filter (GTK_FILE_CHOOSER (self));
+	if (filter == NULL) {
+		const char *ext;
+
+		/* get the format from the extension */
+
+		ext = _g_filename_get_extension (uri);
+		idx = GPOINTER_TO_INT (g_hash_table_lookup (self->priv->supported_ext, ext));
+
+		return idx - 1;
+	}
+
+	idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (filter), MIME_TYPE_INDEX_KEY));
+	return idx - 1;
+}
+
+
 static void
-format_chooser_selection_changed_cb (EggFileFormatChooser *format_chooser,
-				     gpointer              user_data)
+filter_notify_cb (GObject    *gobject,
+                  GParamSpec *pspec,
+                  gpointer    user_data)
 {
 	FrNewArchiveDialog *self = user_data;
 	const char         *uri;
@@ -209,10 +191,13 @@ format_chooser_selection_changed_cb (EggFileFormatChooser *format_chooser,
 	if (uri == NULL)
 		return;
 
+	n_format = _fr_new_archive_dialog_get_format (self, uri);
+	if (n_format < 0)
+		return;
+
 	ext = get_archive_filename_extension (uri);
-	n_format = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (self->priv->format_chooser), uri);
 	if (ext == NULL)
-		ext = mime_type_desc[self->priv->supported_types[n_format - 1]].default_ext;
+		ext = mime_type_desc[self->priv->supported_types[n_format]].default_ext;
 
 	_fr_new_archive_dialog_update_sensitivity_for_ext (self, ext);
 
@@ -223,7 +208,7 @@ format_chooser_selection_changed_cb (EggFileFormatChooser *format_chooser,
 		char       *new_basename;
 		char       *new_basename_uft8;
 
-		new_ext = mime_type_desc[self->priv->supported_types[n_format - 1]].default_ext;
+		new_ext = mime_type_desc[self->priv->supported_types[n_format]].default_ext;
 		basename = _g_path_get_file_name (uri);
 		if (g_str_has_suffix (basename, ext))
 			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
@@ -242,34 +227,18 @@ format_chooser_selection_changed_cb (EggFileFormatChooser *format_chooser,
 }
 
 
-static void
-options_expander_unmap_cb (GtkWidget *widget,
-			   gpointer   user_data)
+static gboolean
+all_supported_files_filter_func (const GtkFileFilterInfo *filter_info,
+				 gpointer                 data)
 {
-	egg_file_format_chooser_emit_size_changed ((EggFileFormatChooser *) user_data);
-}
+	FrNewArchiveDialog *self = data;
+	const char         *ext;
 
-
-static char *
-get_icon_name_for_type (const char *mime_type)
-{
-	char *name = NULL;
-
-	if (mime_type != NULL) {
-		char *s;
-
-		name = g_strconcat ("gnome-mime-", mime_type, NULL);
-		for (s = name; *s; ++s)
-			if (! g_ascii_isalpha (*s))
-				*s = '-';
-	}
-
-	if ((name == NULL) || ! gtk_icon_theme_has_icon (gtk_icon_theme_get_default (), name)) {
-		g_free (name);
-		name = g_strdup ("package-x-generic");
-	}
-
-	return name;
+	ext = _g_filename_get_extension (filter_info->uri);
+	if (ext != NULL)
+		return g_hash_table_lookup (self->priv->supported_ext, ext) != NULL;
+	else
+		return FALSE;
 }
 
 
@@ -279,11 +248,11 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 				  FrNewArchiveAction  action,
 				  const char         *default_name)
 {
-	GSettings *settings;
-	int        i;
+	GSettings     *settings;
+	GtkFileFilter *filter;
+	int            i;
 
 	gtk_file_chooser_set_action (GTK_FILE_CHOOSER (self), GTK_FILE_CHOOSER_ACTION_SAVE);
-	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (self), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (self), FALSE);
 	gtk_window_set_modal (GTK_WINDOW (self), TRUE);
 	gtk_window_set_transient_for (GTK_WINDOW (self), parent);
@@ -329,45 +298,68 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (GET_WIDGET("volume_spinbutton")), (double) g_settings_get_int (settings, PREF_BATCH_ADD_VOLUME_SIZE) / MEGABYTE);
 	g_object_unref (settings);
 
-	/* format chooser */
+	/* file filter */
 
-	self->priv->format_chooser = (EggFileFormatChooser *) egg_file_format_chooser_new ();
+	/* all files */
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_add_pattern (filter, "*");
+	gtk_file_filter_set_name (filter, _("All Files"));
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (self), filter);
+
+	/* all supported files */
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_add_custom (filter,
+				    GTK_FILE_FILTER_URI,
+				    all_supported_files_filter_func,
+				    self,
+				    NULL);
+	gtk_file_filter_set_name (filter, _("All Supported Files"));
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (self), filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (self), filter);
+
 	for (i = 0; self->priv->supported_types[i] != -1; i++) {
-		int   idx = self->priv->supported_types[i];
-		char *exts[4];
-		int   e;
-		int   n_exts;
-		char *icon_name;
+		int      idx;
+		GString *name;
+		int      n_ext;
+		int      e;
 
-		n_exts = 0;
-		for (e = 0; (n_exts < 4) && file_ext_type[e].ext != NULL; e++) {
-			if (strcmp (file_ext_type[e].ext, mime_type_desc[idx].default_ext) == 0)
-				continue;
-			if (strcmp (file_ext_type[e].mime_type, mime_type_desc[idx].mime_type) == 0)
-				exts[n_exts++] = file_ext_type[e].ext;
+		filter = gtk_file_filter_new ();
+		g_object_set_data (G_OBJECT (filter), MIME_TYPE_INDEX_KEY, GINT_TO_POINTER (i + 1));
+
+		idx = self->priv->supported_types[i];
+		name = g_string_new (_(mime_type_desc[idx].name));
+		g_string_append (name, " (");
+
+		n_ext = 0;
+		for (e = 0; file_ext_type[e].ext != NULL; e++) {
+			if (_g_str_equal (file_ext_type[e].mime_type, mime_type_desc[idx].mime_type)) {
+				char *ext;
+				char *pattern;
+
+				ext = file_ext_type[e].ext;
+				g_hash_table_insert (self->priv->supported_ext, ext, GINT_TO_POINTER (idx + 1));
+				n_ext++;
+
+				if (n_ext > 1)
+					g_string_append (name, ", ");
+				g_string_append (name, "*");
+				g_string_append (name, ext);
+
+				pattern = g_strdup_printf ("*%s", ext);
+				gtk_file_filter_add_pattern (filter, pattern);
+
+				g_free (pattern);
+			}
 		}
-		while (n_exts < 4)
-			exts[n_exts++] = NULL;
 
-		/* g_print ("%s => %s, %s, %s, %s\n", mime_type_desc[idx].mime_type, exts[0], exts[1], exts[2], exts[3]); */
+		g_string_append (name, ")");
+		gtk_file_filter_set_name (filter, name->str);
+		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (self), filter);
 
-		icon_name = get_icon_name_for_type (mime_type_desc[idx].mime_type);
-		egg_file_format_chooser_add_format (self->priv->format_chooser,
-						    0,
-						    _(mime_type_desc[idx].name),
-						    icon_name,
-						    mime_type_desc[idx].default_ext,
-						    exts[0],
-						    exts[1],
-						    exts[2],
-						    exts[3],
-						    NULL);
-
-		g_free (icon_name);
+		g_string_free (name, TRUE);
 	}
-	egg_file_format_chooser_set_format (self->priv->format_chooser, 0);
-	gtk_widget_show (GTK_WIDGET (self->priv->format_chooser));
-	gtk_box_pack_start (GTK_BOX (GET_WIDGET ("format_chooser_box")), GTK_WIDGET (self->priv->format_chooser), TRUE, TRUE, 0);
 
 	gtk_widget_set_vexpand (GET_WIDGET ("extra_widget"), FALSE);
 
@@ -375,10 +367,6 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	/* Set the signals handlers. */
 
-	/* FIXME g_signal_connect (GET_WIDGET ("archive_type_combo_box"),
-			  "changed",
-			  G_CALLBACK (archive_type_combo_box_changed_cb),
-			  self); */
 	g_signal_connect (GET_WIDGET ("password_entry"),
 			  "changed",
 			  G_CALLBACK (password_entry_changed_cb),
@@ -387,14 +375,10 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 			  "toggled",
 			  G_CALLBACK (volume_toggled_cb),
 			  self);
-	g_signal_connect (self->priv->format_chooser,
-			  "selection-changed",
-			  G_CALLBACK (format_chooser_selection_changed_cb),
+	g_signal_connect (self,
+			  "notify::filter",
+			  G_CALLBACK (filter_notify_cb),
 			  self);
-	g_signal_connect_after (GET_WIDGET ("other_options_alignment"),
-				"unmap",
-				G_CALLBACK (options_expander_unmap_cb),
-				self->priv->format_chooser);
 }
 
 
@@ -424,12 +408,11 @@ _fr_new_archive_dialog_get_archive_type (FrNewArchiveDialog *self)
 
 	ext = get_archive_filename_extension (uri);
 	if (ext == NULL) {
-		int idx;
+		int n_format;
 
-		idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (self->priv->format_chooser), uri);
-		/*idx = gtk_combo_box_get_active (GTK_COMBO_BOX (data->n_archive_type_combo_box)) - 1;*/
-		if (idx >= 0)
-			return self->priv->supported_types[idx];
+		n_format = _fr_new_archive_dialog_get_format (self, uri);
+		if (n_format >= 0)
+			return self->priv->supported_types[n_format];
 
 		ext = DEFAULT_EXTENSION;
 	}
@@ -438,71 +421,21 @@ _fr_new_archive_dialog_get_archive_type (FrNewArchiveDialog *self)
 }
 
 
-/* when on Automatic the user provided extension needs to be supported,
-   otherwise an existing unsupported archive can be deleted (if the user
-   provided name matches with its name) before we find out that the
-   archive is unsupported
-*/
-static gboolean
-is_supported_extension (char *filename,
-			int  *file_types)
+char *
+fr_new_archive_dialog_get_uri (FrNewArchiveDialog  *self,
+			       const char         **mime_type)
 {
-	int i;
-	for (i = 0; file_types[i] != -1; i++)
-		if (_g_filename_has_extension (filename, mime_type_desc[file_types[i]].default_ext))
-			return TRUE;
-	return FALSE;
-}
+	char       *uri = NULL;
+	int         n_format;
+	const char *file_mime_type;
+	GFile      *file, *dir;
+	GFileInfo  *dir_info;
+	GError     *err = NULL;
+	GtkWidget  *dialog;
 
-
-static char *
-_fr_new_archive_dialog_get_uri (FrNewArchiveDialog *self)
-{
-	char        *full_uri = NULL;
-	char        *uri;
-	const char  *filename;
-	int          idx;
+	/* uri */
 
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (self));
-
-	if ((uri == NULL) || (*uri == 0))
-		return NULL;
-
-	filename = _g_path_get_file_name (uri);
-	if ((filename == NULL) || (*filename == 0)) {
-		g_free (uri);
-		return NULL;
-	}
-
-	idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (self->priv->format_chooser), uri);
-	if (idx > 0) {
-		const char *uri_ext;
-		char       *default_ext;
-
-		uri_ext = get_archive_filename_extension (uri);
-		default_ext = mime_type_desc[self->priv->supported_types[idx-1]].default_ext;
-		if (_g_strcmp_null_tolerant (uri_ext, default_ext) != 0) {
-			full_uri = g_strconcat (uri, default_ext, NULL);
-			g_free (uri);
-		}
-	}
-	if (full_uri == NULL)
-		full_uri = uri;
-
-	return full_uri;
-}
-
-
-char *
-fr_new_archive_dialog_get_uri (FrNewArchiveDialog *self)
-{
-	char      *uri = NULL;
-	GFile     *file, *dir;
-	GFileInfo *dir_info;
-	GError    *err = NULL;
-	GtkWidget *dialog;
-
-	uri = _fr_new_archive_dialog_get_uri (self);
 	if ((uri == NULL) || (*uri == 0)) {
 		g_free (uri);
 
@@ -518,6 +451,33 @@ fr_new_archive_dialog_get_uri (FrNewArchiveDialog *self)
 
 		return NULL;
 	}
+
+	/* mime type */
+
+	n_format = _fr_new_archive_dialog_get_format (self, uri);
+	if (n_format >= 0)
+		file_mime_type = mime_type_desc[self->priv->supported_types[n_format]].mime_type;
+	else
+		file_mime_type = NULL;
+	if (mime_type != NULL)
+		*mime_type = file_mime_type;
+
+	if (file_mime_type == NULL) {
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						NULL,
+						_("Could not create the archive"),
+						"%s",
+						_("Archive type not supported."));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		g_free (uri);
+
+		return NULL;
+	}
+
+	/* check permissions */
 
 	file = g_file_new_for_uri (uri);
 	dir = g_file_get_parent (file);
@@ -556,39 +516,7 @@ fr_new_archive_dialog_get_uri (FrNewArchiveDialog *self)
 		return NULL;
 	}
 
-	/* if the user did not specify a valid extension use the filetype combobox current type
-	 * or tar.gz if automatic is selected. */
-	if (get_archive_filename_extension (uri) == NULL) {
-		int   idx;
-		char *new_uri;
-		char *ext = NULL;
-
-		idx = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (self->priv->format_chooser), uri);
-		if (idx > 0)
-			ext = mime_type_desc[self->priv->supported_types[idx-1]].default_ext;
-		else
-			ext = ".tar.gz";
-		new_uri = g_strconcat (uri, ext, NULL);
-		g_free (uri);
-		uri = new_uri;
-	}
-
-	debug (DEBUG_INFO, "create/save %s\n", uri);
-
-	if (! is_supported_extension (uri, self->priv->supported_types)) {
-		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
-						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-						NULL,
-						_("Could not create the archive"),
-						"%s",
-						_("Archive type not supported."));
-		gtk_dialog_run (GTK_DIALOG (dialog));
-
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-		g_free (uri);
-
-		return NULL;
-	}
+	/* overwrite confirmation */
 
 	file = g_file_new_for_uri (uri);
 
