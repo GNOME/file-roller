@@ -161,19 +161,20 @@ _fr_new_archive_dialog_get_format (FrNewArchiveDialog *self,
 	int            idx;
 
 	filter = gtk_file_chooser_get_filter (GTK_FILE_CHOOSER (self));
-	if (filter == NULL) {
+	if (filter == NULL)
+		return -1;
+
+	idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (filter), MIME_TYPE_INDEX_KEY)) - 1;
+	if (idx < 0) {
 		const char *ext;
 
 		/* get the format from the extension */
 
 		ext = _g_filename_get_extension (uri);
-		idx = GPOINTER_TO_INT (g_hash_table_lookup (self->priv->supported_ext, ext));
-
-		return idx - 1;
+		idx = GPOINTER_TO_INT (g_hash_table_lookup (self->priv->supported_ext, ext)) - 1;
 	}
 
-	idx = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (filter), MIME_TYPE_INDEX_KEY));
-	return idx - 1;
+	return idx;
 }
 
 
@@ -339,7 +340,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 				char *pattern;
 
 				ext = file_ext_type[e].ext;
-				g_hash_table_insert (self->priv->supported_ext, ext, GINT_TO_POINTER (idx + 1));
+				g_hash_table_insert (self->priv->supported_ext, ext, GINT_TO_POINTER (i + 1));
 				n_ext++;
 
 				if (n_ext > 1)
