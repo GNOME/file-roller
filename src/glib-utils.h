@@ -61,7 +61,7 @@ gboolean            _g_strchrs                     (const char          *str,
 char *              _g_str_substitute              (const char          *str,
 						    const char          *from_str,
 						    const char          *to_str);
-int                 _g_strcmp_null_tolerant        (const char          *s1,
+gboolean            _g_str_equal                   (const char          *s1,
 						    const char          *s2);
 char*               _g_str_escape_full             (const char          *str,
 						    const char          *meta_chars,

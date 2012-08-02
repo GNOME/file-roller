@@ -119,18 +119,11 @@ _g_str_substitute (const char *str,
 }
 
 
-int
-_g_strcmp_null_tolerant (const char *s1,
-			 const char *s2)
+gboolean
+_g_str_equal (const char *s1,
+	      const char *s2)
 {
-	if ((s1 == NULL) && (s2 == NULL))
-		return 0;
-	else if ((s1 != NULL) && (s2 == NULL))
-		return 1;
-	else if ((s1 == NULL) && (s2 != NULL))
-		return -1;
-	else
-		return strcmp (s1, s2);
+	return g_strcmp0 (s1, s2) == 0;
 }
 
 
@@ -827,7 +820,7 @@ int
 _g_uri_cmp (const char *uri1,
 	    const char *uri2)
 {
-	return _g_strcmp_null_tolerant (uri1, uri2);
+	return g_strcmp0 (uri1, uri2);
 }
 
 
