@@ -170,6 +170,9 @@ load_data_open (struct archive *a,
 {
 	LoadData *load_data = client_data;
 
+	if (load_data->error != NULL)
+		return ARCHIVE_FATAL;
+
 	load_data->istream = (GInputStream *) g_file_read (fr_archive_get_file (load_data->archive),
 							   load_data->cancellable,
 							   &load_data->error);
@@ -183,6 +186,9 @@ load_data_read (struct archive  *a,
 		const void     **buff)
 {
 	LoadData *load_data = client_data;
+
+	if (load_data->error != NULL)
+		return -1;
 
 	*buff = load_data->buffer;
 	return g_input_stream_read (load_data->istream,
@@ -198,6 +204,9 @@ load_data_close (struct archive *a,
 		 void           *client_data)
 {
 	LoadData *load_data = client_data;
+
+	if (load_data->error != NULL)
+		return ARCHIVE_FATAL;
 
 	if (load_data->istream != NULL) {
 		_g_object_unref (load_data->istream);
@@ -689,6 +698,9 @@ save_data_open (struct archive *a,
 	GFile    *parent;
 	char     *name;
 
+	if (load_data->error != NULL)
+		return ARCHIVE_FATAL;
+
 	/* FIXME: use a better temp filename */
 	parent = g_file_get_parent (fr_archive_get_file (load_data->archive));
 	name = _g_filename_get_random (16);
@@ -711,6 +723,9 @@ save_data_write (struct archive *a,
 	SaveData *save_data = client_data;
 	LoadData *load_data = LOAD_DATA (save_data);
 
+	if (load_data->error != NULL)
+		return -1;
+
 	return g_output_stream_write (save_data->ostream, buff, n, load_data->cancellable, &load_data->error);
 }
 
@@ -721,6 +736,9 @@ save_data_close (struct archive *a,
 {
 	SaveData *save_data = client_data;
 	LoadData *load_data = LOAD_DATA (save_data);
+
+	if (load_data->error != NULL)
+		return ARCHIVE_FATAL;
 
 	if (save_data->ostream != NULL)
 		g_output_stream_close (save_data->ostream, load_data->cancellable, &load_data->error);
@@ -736,7 +754,7 @@ save_data_close (struct archive *a,
 	else
 		g_file_delete (save_data->tmp_file, NULL, NULL);
 
-	return 0;
+	return ARCHIVE_OK;
 }
 
 
