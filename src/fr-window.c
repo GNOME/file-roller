@@ -283,6 +283,7 @@ struct _FrWindowPrivate {
 					      * be created only when the user
 					      * adds some file to the
 					      * archive.*/
+	gboolean         reload_archive;
 
 	char *           archive_uri;
 	char *           open_default_dir;    /* default directory to be used
@@ -3123,6 +3124,8 @@ _archive_operation_completed (FrWindow *window,
 		g_free (window->priv->archive_uri);
 		window->priv->archive_uri = g_file_get_uri (fr_archive_get_file (window->archive));
 
+		window->priv->reload_archive = FALSE;
+
 		close_progress_dialog (window, FALSE);
 		if (error != NULL) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_uri);
@@ -3164,11 +3167,8 @@ _archive_operation_completed (FrWindow *window,
 
 	case FR_ACTION_DELETING_FILES:
 		close_progress_dialog (window, FALSE);
-		if (! window->priv->batch_mode && ! operation_canceled) {
-			fr_window_archive_reload (window);
-			return;
-		}
-		return;
+		if (! window->priv->batch_mode && ! operation_canceled)
+			window->priv->reload_archive = TRUE;
 
 	case FR_ACTION_ADDING_FILES:
 		close_progress_dialog (window, FALSE);
@@ -3189,10 +3189,9 @@ _archive_operation_completed (FrWindow *window,
 			fr_window_add_to_recent_list (window, window->priv->archive_uri);
 		}
 
-		if (! window->priv->batch_mode && ! operation_canceled) {
-			fr_window_archive_reload (window);
-			return;
-		}
+		if (! window->priv->batch_mode && ! operation_canceled)
+			window->priv->reload_archive = TRUE;
+
 		break;
 
 	case FR_ACTION_TESTING_ARCHIVE:
@@ -3211,8 +3210,8 @@ _archive_operation_completed (FrWindow *window,
 	case FR_ACTION_RENAMING_FILES:
 	case FR_ACTION_UPDATING_FILES:
 		close_progress_dialog (window, FALSE);
-		if (! operation_canceled)
-			fr_window_archive_reload (window);
+		if (! window->priv->batch_mode && ! operation_canceled)
+			window->priv->reload_archive = TRUE;
 		return;
 
 	default:
@@ -5576,6 +5575,7 @@ fr_window_construct (FrWindow *window)
 
 	window->priv->archive_present = FALSE;
 	window->priv->archive_new = FALSE;
+	window->priv->reload_archive = FALSE;
 	window->priv->archive_uri = NULL;
 
 	window->priv->drag_destination_folder = NULL;
@@ -9349,8 +9349,14 @@ fr_window_exec_current_batch_action (FrWindow *window)
 {
 	FrBatchAction *action;
 
-	if (window->priv->batch_action == NULL)
+	if (window->priv->batch_action == NULL) {
+		fr_window_free_batch_data (window);
+		if (window->priv->reload_archive) {
+			window->priv->reload_archive = FALSE;
+			fr_window_archive_reload (window);
+		}
 		return;
+	}
 
 	action = (FrBatchAction *) window->priv->batch_action->data;
 	fr_window_exec_batch_action (window, action);
@@ -9394,8 +9400,11 @@ fr_window_start_batch (FrWindow *window)
 void
 fr_window_stop_batch (FrWindow *window)
 {
-	if (! window->priv->batch_mode)
+	if (! window->priv->batch_mode) {
+		fr_window_free_batch_data (window);
+		window->priv->reload_archive = FALSE;
 		return;
+	}
 
 	window->priv->extract_interact_use_default_dir = FALSE;
 
