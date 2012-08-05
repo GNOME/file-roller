@@ -51,7 +51,7 @@ list__process_line (char     *line,
 
 	fdata->encrypted = FALSE;
 
-	char *new_fname = g_strdup (_g_path_get_file_name (comm->filename));
+	char *new_fname = g_strdup (_g_path_get_basename (comm->filename));
 	if (g_str_has_suffix (new_fname, ".lrz"))
 		new_fname[strlen (new_fname) - 4] = '\0';
 

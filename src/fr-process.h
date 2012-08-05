@@ -23,7 +23,7 @@
 #define FR_PROCESS_H
 
 #include <glib.h>
-#include <gtk/gtk.h>
+#include <gio/gio.h>
 #include <sys/types.h>
 #include "fr-error.h"
 #include "typedefs.h"
@@ -86,6 +86,8 @@ void        fr_process_add_arg_concat       (FrProcess            *fr_proc,
 void        fr_process_add_arg_printf       (FrProcess            *fr_proc,
 					     const char           *format,
 					     ...) G_GNUC_PRINTF (2, 3);
+void        fr_process_add_arg_file         (FrProcess            *process,
+					     GFile                *file);
 void        fr_process_set_arg_at           (FrProcess            *fr_proc,
 					     int                   n_comm,
 					     int                   n_arg,
@@ -102,6 +104,8 @@ void        fr_process_set_continue_func    (FrProcess            *fr_proc,
 void        fr_process_end_command          (FrProcess            *fr_proc);
 void        fr_process_set_working_dir      (FrProcess            *fr_proc,
 					     const char           *arg);
+void        fr_process_set_working_dir_file (FrProcess            *fr_proc,
+					     GFile                *folder);
 void        fr_process_set_sticky           (FrProcess            *fr_proc,
 					     gboolean              sticky);
 void        fr_process_set_ignore_error     (FrProcess            *fr_proc,

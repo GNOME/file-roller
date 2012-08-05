@@ -129,20 +129,21 @@ update_file_list (DialogData *data)
 
 	gtk_list_store_clear (GTK_LIST_STORE (data->list_model));
 	for (scan = data->file_list; scan; scan = scan->next) {
-		char     *utf8_name;
+		char     *display_name;
 		OpenFile *file = scan->data;
 
 		gtk_list_store_append (GTK_LIST_STORE (data->list_model),
 				       &iter);
 
-		utf8_name = g_filename_display_name (_g_path_get_file_name (file->path));
+		display_name = _g_file_get_display_basename (file->extracted_file);
 		gtk_list_store_set (GTK_LIST_STORE (data->list_model),
 				    &iter,
 				    IS_SELECTED_COLUMN, TRUE,
-				    NAME_COLUMN, utf8_name,
+				    NAME_COLUMN, display_name,
 				    DATA_COLUMN, file,
 				    -1);
-		g_free (utf8_name);
+
+		g_free (display_name);
 	}
 
 	/* update the labels */
@@ -150,16 +151,14 @@ update_file_list (DialogData *data)
 	if (n_files == 1) {
 		OpenFile *file = data->file_list->data;
 		char     *file_name;
-		char     *unescaped;
 		char     *archive_name;
 		char     *label;
 		char     *markup;
 
 		/* primary text */
 
-		file_name = g_filename_display_name (_g_path_get_file_name (file->path));
-		unescaped = g_uri_unescape_string (fr_window_get_archive_uri (data->window), NULL);
-		archive_name = g_path_get_basename (unescaped);
+		file_name = _g_file_get_display_basename (file->extracted_file);
+		archive_name = _g_file_get_display_basename (fr_window_get_archive_file (data->window));
 		label = g_markup_printf_escaped (_("Update the file \"%s\" in the archive \"%s\"?"), file_name, archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		gtk_label_set_markup (GTK_LABEL (data->update_file_primary_text_label), markup);
@@ -167,7 +166,6 @@ update_file_list (DialogData *data)
 		g_free (markup);
 		g_free (label);
 		g_free (archive_name);
-		g_free (unescaped);
 		g_free (file_name);
 
 		/* secondary text */
@@ -180,15 +178,13 @@ update_file_list (DialogData *data)
 		g_free (label);
 	}
 	else if (n_files > 1) {
-		char *unescaped;
 		char *archive_name;
 		char *label;
 		char *markup;
 
 		/* primary text */
 
-		unescaped = g_uri_unescape_string (fr_window_get_archive_uri (data->window), NULL);
-		archive_name = g_path_get_basename (unescaped);
+		archive_name = _g_file_get_display_basename (fr_window_get_archive_file (data->window));
 		label = g_markup_printf_escaped (_("Update the files in the archive \"%s\"?"), archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		gtk_label_set_markup (GTK_LABEL (data->update_files_primary_text_label), markup);
@@ -196,7 +192,6 @@ update_file_list (DialogData *data)
 		g_free (markup);
 		g_free (label);
 		g_free (archive_name);
-		g_free (unescaped);
 
 		/* secondary text */
 
@@ -393,7 +388,7 @@ dlg_update_add_file (gpointer  dialog,
 
 	for (scan = data->file_list; scan; scan = scan->next) {
 		OpenFile *test = scan->data;
-		if (_g_uri_cmp (test->extracted_uri, file->extracted_uri) == 0)
+		if (_g_file_cmp_uris (test->extracted_file, file->extracted_file) == 0)
 			return;
 	}
 

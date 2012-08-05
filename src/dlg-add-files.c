@@ -57,44 +57,50 @@ file_sel_response_cb (GtkWidget      *widget,
 {
 	GtkFileChooser *file_sel = GTK_FILE_CHOOSER (widget);
 	FrWindow       *window = data->window;
-	char           *current_folder;
-	char           *uri;
+	GFile          *current_folder;
+	GFile          *file;
 	gboolean        update;
 	GSList         *selections, *iter;
-	GList          *item_list = NULL;
+	GList          *file_list = NULL;
 
-	current_folder = gtk_file_chooser_get_current_folder_uri (file_sel);
-	uri = gtk_file_chooser_get_uri (file_sel);
+	current_folder = gtk_file_chooser_get_current_folder_file (file_sel);
+	file = gtk_file_chooser_get_file (file_sel);
 
 	if (current_folder != NULL) {
-		g_settings_set_string (data->settings, PREF_ADD_CURRENT_FOLDER, current_folder);
+		char *uri = g_file_get_uri (current_folder);
+		g_settings_set_string (data->settings, PREF_ADD_CURRENT_FOLDER, uri);
 		fr_window_set_add_default_dir (window, current_folder);
+
+		g_free (uri);
 	}
-	if (uri != NULL) {
+
+	if (file != NULL) {
+		char *uri = g_file_get_uri (file);
 		g_settings_set_string (data->settings, PREF_ADD_FILENAME, uri);
 		g_free (uri);
 	}
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (data->dialog);
-		g_free (current_folder);
+		_g_object_unref (current_folder);
+		_g_object_unref (file);
 		return TRUE;
 	}
 
 	if (response == GTK_RESPONSE_HELP) {
 		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-edit");
-		g_free (current_folder);
+		_g_object_unref (current_folder);
+		_g_object_unref (file);
 		return TRUE;
 	}
 
 	/* check folder permissions. */
 
-	if (_g_uri_query_is_dir (current_folder) && ! _g_uri_check_permissions (current_folder, R_OK)) {
+	if (_g_file_query_is_dir (current_folder) && ! _g_file_check_permissions (current_folder, R_OK)) {
 		GtkWidget *d;
 		char      *utf8_path;
 
-		utf8_path = g_filename_display_name (current_folder);
-
+		utf8_path = g_file_get_parse_name (current_folder);
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
 					   GTK_DIALOG_MODAL,
 					   NULL,
@@ -116,16 +122,17 @@ file_sel_response_cb (GtkWidget      *widget,
 	selections = gtk_file_chooser_get_uris (file_sel);
 	for (iter = selections; iter != NULL; iter = iter->next) {
 		char *uri = iter->data;
-		item_list = g_list_prepend (item_list, g_file_new_for_uri (uri));
+		file_list = g_list_prepend (file_list, g_file_new_for_uri (uri));
 	}
 
-	if (item_list != NULL)
-		fr_window_archive_add_files (window, item_list, update);
+	if (file_list != NULL)
+		fr_window_archive_add_files (window, file_list, current_folder, update);
 
-	_g_file_list_free (item_list);
+	_g_file_list_free (file_list);
 	g_slist_foreach (selections, (GFunc) g_free, NULL);
 	g_slist_free (selections);
-	g_free (current_folder);
+	_g_object_unref (current_folder);
+	_g_object_unref (file);
 
 	gtk_widget_destroy (data->dialog);
 
@@ -178,7 +185,7 @@ add_files_cb (GtkWidget *widget,
 
 	folder = g_settings_get_string (data->settings, PREF_ADD_CURRENT_FOLDER);
 	if ((folder == NULL) || (strcmp (folder, "") == 0))
-		folder = g_strdup (fr_window_get_add_default_dir (data->window));
+		folder = g_file_get_uri (fr_window_get_add_default_dir (data->window));
 	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), folder);
 	g_free (folder);
 

@@ -91,6 +91,7 @@ struct _FrArchive {
 	/*<protected>*/
 
 	gboolean       extract_here;
+	gssize         files_to_add_size;
 
 	/* features. */
 
@@ -202,7 +203,7 @@ struct _FrArchiveClass {
 	void          (*stoppable)         (FrArchive           *archive,
 			           	    gboolean             value);
 	void          (*working_archive)   (FrArchive           *archive,
-			           	    const char          *filename);
+			           	    const char          *uri);
 
 	/*< virtual functions >*/
 
@@ -224,8 +225,8 @@ struct _FrArchiveClass {
 					    GAsyncReadyCallback  callback,
 					    gpointer             user_data);
 	void          (*add_files)         (FrArchive           *archive,
-					    GList               *file_list,
-					    const char          *base_dir,
+					    GList               *file_list, /* GFile list */
+					    GFile               *base_dir,
 					    const char          *dest_dir,
 					    gboolean             update,
 					    gboolean             recursive,
@@ -238,7 +239,7 @@ struct _FrArchiveClass {
 					    gpointer             user_data);
 	void          (*extract_files)     (FrArchive           *archive,
 	    				    GList               *file_list,
-	    				    const char          *destination,
+	    				    GFile               *destination,
 	    				    const char          *base_dir,
 	    				    gboolean             skip_older,
 	    				    gboolean             overwrite,
@@ -270,7 +271,7 @@ struct _FrArchiveClass {
 					    GAsyncReadyCallback  callback,
 					    gpointer             user_data);
 	void          (*paste_clipboard)   (FrArchive           *archive,
-					    char                *archive_uri,
+					    GFile               *archive_file,
 					    char                *password,
 					    gboolean             encrypt_header,
 					    FrCompression        compression,
@@ -278,14 +279,13 @@ struct _FrArchiveClass {
 					    FrClipboardOp        op,
 					    char                *base_dir,
 					    GList               *files,
-					    char                *tmp_dir,
+					    GFile               *tmp_dir,
 					    char                *current_dir,
 					    GCancellable        *cancellable,
 					    GAsyncReadyCallback  callback,
 					    gpointer             user_data);
 	void          (*add_dropped_files) (FrArchive           *archive,
 				   	    GList               *item_list,
-				   	    const char          *base_dir,
 				   	    const char          *dest_dir,
 				   	    const char          *password,
 				   	    gboolean             encrypt_header,
@@ -340,11 +340,10 @@ gboolean      fr_archive_operation_finish        (FrArchive           *archive,
 						  GAsyncResult        *result,
 						  GError             **error);
 void          fr_archive_add_files               (FrArchive           *archive,
-						  GList               *file_list,
-						  const char          *base_dir,
+						  GList               *file_list, /* GFile list */
+						  GFile               *base_dir,
 						  const char          *dest_dir,
 						  gboolean             update,
-						  gboolean             recursive,
 						  const char          *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
@@ -352,38 +351,14 @@ void          fr_archive_add_files               (FrArchive           *archive,
 						  GCancellable        *cancellable,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
-void          fr_archive_add_with_wildcard       (FrArchive           *archive,
+void          fr_archive_add_files_with_filter   (FrArchive           *archive,
+						  GFile               *base_dir,
 						  const char          *include_files,
 						  const char          *exclude_files,
 						  const char          *exclude_folders,
-						  const char          *base_dir,
 						  const char          *dest_dir,
 						  gboolean             update,
 						  gboolean             follow_links,
-						  const char          *password,
-						  gboolean             encrypt_header,
-						  FrCompression        compression,
-						  guint                volume_size,
-						  GCancellable        *cancellable,
-						  GAsyncReadyCallback  callback,
-						  gpointer             user_data);
-void          fr_archive_add_directory           (FrArchive           *archive,
-						  const char          *directory,
-						  const char          *base_dir,
-						  const char          *dest_dir,
-						  gboolean             update,
-						  const char          *password,
-						  gboolean             encrypt_header,
-						  FrCompression        compression,
-						  guint                volume_size,
-						  GCancellable        *cancellable,
-						  GAsyncReadyCallback  callback,
-						  gpointer             user_data);
-void          fr_archive_add_items               (FrArchive           *archive,
-						  GList               *item_list,
-						  const char          *base_dir,
-						  const char          *dest_dir,
-						  gboolean             update,
 						  const char          *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
@@ -399,18 +374,7 @@ void          fr_archive_remove                  (FrArchive           *archive,
 						  gpointer             user_data);
 void          fr_archive_extract                 (FrArchive           *archive,
 						  GList               *file_list,
-						  const char          *dest_uri,
-						  const char          *base_dir,
-						  gboolean             skip_older,
-						  gboolean             overwrite,
-						  gboolean             junk_path,
-						  const char          *password,
-		       	       	       	          GCancellable        *cancellable,
-		       	       	       	          GAsyncReadyCallback  callback,
-		       	       	       	          gpointer             user_data);
-void          fr_archive_extract_to_local        (FrArchive           *archive,
-						  GList               *file_list,
-						  const char          *dest_path,
+						  GFile               *destination,
 						  const char          *base_dir,
 						  gboolean             skip_older,
 						  gboolean             overwrite,
@@ -429,8 +393,8 @@ gboolean      fr_archive_extract_here            (FrArchive           *archive,
 		       	       	       	          gpointer             user_data);
 void          fr_archive_set_last_extraction_destination
 						 (FrArchive           *archive,
-						  const char          *uri);
-const char *  fr_archive_get_last_extraction_destination
+						  GFile               *folder);
+GFile *       fr_archive_get_last_extraction_destination
 						 (FrArchive           *archive);
 void          fr_archive_test                    (FrArchive           *archive,
 						  const char          *password,
@@ -449,7 +413,7 @@ void          fr_archive_rename                  (FrArchive           *archive,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
 void          fr_archive_paste_clipboard         (FrArchive           *archive,
-						  char                *archive_uri,
+						  GFile               *file,
 						  char                *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,
@@ -457,14 +421,13 @@ void          fr_archive_paste_clipboard         (FrArchive           *archive,
 						  FrClipboardOp        op,
 						  char                *base_dir,
 						  GList               *files,
-						  char                *tmp_dir,
+						  GFile               *tmp_dir,
 						  char                *current_dir,
 		       	       	       	          GCancellable        *cancellable,
 		       	       	       	          GAsyncReadyCallback  callback,
 		       	       	       	          gpointer             user_data);
 void          fr_archive_add_dropped_items       (FrArchive           *archive,
 						  GList               *item_list,
-						  const char          *base_dir,
 						  const char          *dest_dir,
 						  const char          *password,
 						  gboolean             encrypt_header,
@@ -508,6 +471,9 @@ double        fr_archive_progress_inc_completed_files
 						  int                  new_completed);
 void          fr_archive_progress_set_total_bytes (FrArchive           *archive,
 						  gsize                total);
+double        fr_archive_progress_set_completed_bytes
+						 (FrArchive           *self,
+						  gsize                completed_bytes);
 double        fr_archive_progress_inc_completed_bytes
 						 (FrArchive           *archive,
 						  gsize                new_completed);
@@ -517,6 +483,6 @@ void          fr_archive_add_file                (FrArchive           *archive,
 
 /* utilities */
 
-gboolean      _g_uri_is_archive                  (const char          *uri);
+gboolean      _g_file_is_archive                 (GFile               *file);
 
 #endif /* FR_ARCHIVE_H */

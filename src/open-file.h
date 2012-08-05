@@ -28,9 +28,8 @@
 #include <time.h>
 
 typedef struct {
-	char         *path;
-	char         *extracted_uri;
-	char         *temp_dir;
+	GFile        *extracted_file;
+	GFile        *temp_dir;
 	time_t        last_modified;
 	GFileMonitor *monitor;
 } OpenFile;
@@ -38,9 +37,9 @@ typedef struct {
 #define FR_TYPE_OPEN_FILE (open_file_get_type ())
 
 GType       open_file_get_type (void);
-OpenFile *  open_file_new      (const char *path,
-			        const char *extracted_path,
-			        const char *temp_dir);
+OpenFile *  open_file_new      (const char *original_path,
+			        GFile      *extracted_file,
+			        GFile      *temp_dir);
 OpenFile *  open_file_copy     (OpenFile   *src);
 void        open_file_free     (OpenFile   *ofile);
 

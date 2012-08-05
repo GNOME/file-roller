@@ -111,7 +111,7 @@ list__process_line (char     *line,
 		else
 			fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
 		fdata->original_path = fdata->full_path;
-		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 		fdata->path = _g_path_remove_level (fdata->full_path);
 
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
@@ -162,8 +162,9 @@ fr_command_iso_extract (FrCommand  *comm,
 		const char *filename;
 		char       *file_dir;
 		char       *temp_dest_dir = NULL;
+		GFile      *directory;
 
-		filename = _g_path_get_file_name (path);
+		filename = _g_path_get_basename (path);
 		file_dir = _g_path_remove_level (path);
 		if ((file_dir != NULL) && (strcmp (file_dir, "/") != 0))
 			temp_dest_dir = g_build_filename (dest_dir, file_dir, NULL);
@@ -174,7 +175,8 @@ fr_command_iso_extract (FrCommand  *comm,
 		if (temp_dest_dir == NULL)
 			continue;
 
-		_g_path_make_directory_tree (temp_dest_dir, 0700, NULL);
+		directory = g_file_new_for_path (temp_dest_dir);
+		_g_file_make_directory_tree (directory, 0700, NULL);
 
 		fr_process_begin_command (comm->process, "sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
@@ -186,6 +188,7 @@ fr_command_iso_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 
+		g_object_unref (directory);
 		g_free (temp_dest_dir);
 	}
 }

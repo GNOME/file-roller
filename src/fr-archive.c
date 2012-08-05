@@ -45,7 +45,7 @@
 
 
 #define FILE_ARRAY_INITIAL_SIZE	256
-#define PROGRESS_DELAY          100
+#define PROGRESS_DELAY          50
 
 
 char *action_names[] = { "NONE",
@@ -90,7 +90,7 @@ struct _FrArchivePrivate {
 	/* others */
 
 	gboolean       creating_archive;
-	char          *extraction_destination;
+	GFile         *extraction_destination;
 	gboolean       have_write_permissions;     /* true if we have the
 						    * permissions to write the
 						    * file. */
@@ -916,6 +916,23 @@ fr_archive_open_finish (GFile         *file,
 }
 
 
+static gboolean
+_fr_archive_update_progress_cb (gpointer user_data)
+{
+	FrArchive *archive = user_data;
+	fr_archive_progress (archive, fr_archive_progress_get_fraction (archive));
+	return TRUE;
+}
+
+
+static void
+_fr_archive_activate_progress_update (FrArchive *archive)
+{
+	if (archive->priv->progress_event == 0)
+		archive->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, archive);
+}
+
+
 void
 fr_archive_list (FrArchive           *archive,
 		 const char          *password,
@@ -924,6 +941,8 @@ fr_archive_list (FrArchive           *archive,
 		 gpointer             user_data)
 {
 	g_return_if_fail (archive != NULL);
+
+	_fr_archive_activate_progress_update (archive);
 
 	if (archive->files != NULL) {
 		g_hash_table_remove_all (archive->files_hash);
@@ -963,6 +982,8 @@ fr_archive_operation_finish (FrArchive     *archive,
 		}
 	}
 
+	archive->files_to_add_size = 0;
+
 	if (! success && (error != NULL) && g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
 		g_error_free (*error);
 		*error = g_error_new_literal (FR_ERROR, FR_ERROR_STOPPED, "");
@@ -972,310 +993,117 @@ fr_archive_operation_finish (FrArchive     *archive,
 }
 
 
-static gboolean
-_fr_archive_update_progress_cb (gpointer user_data)
+/* -- fr_archive_add_files -- */
+
+
+typedef struct {
+	FrArchive           *archive;
+	GFile               *base_dir;
+	char                *dest_dir;
+	gboolean             update;
+	char                *password;
+	gboolean             encrypt_header;
+	FrCompression        compression;
+	guint                volume_size;
+	GCancellable        *cancellable;
+	GAsyncReadyCallback  callback;
+	gpointer             user_data;
+	FileFilter          *include_files_filter;
+	FileFilter          *exclude_files_filter;
+	FileFilter          *exclude_directories_filter;
+} AddData;
+
+
+static void
+add_data_free (AddData *add_data)
 {
-	FrArchive *archive = user_data;
-	fr_archive_progress (archive, fr_archive_progress_get_fraction (archive));
-	return TRUE;
+	file_filter_unref (add_data->include_files_filter);
+	file_filter_unref (add_data->exclude_files_filter);
+	file_filter_unref (add_data->exclude_directories_filter);
+	_g_object_unref (add_data->base_dir);
+	g_free (add_data->dest_dir);
+	g_free (add_data->password);
+	_g_object_unref (add_data->cancellable);
+	g_free (add_data);
+}
+
+
+static void
+fr_archive_add_files_ready_cb (GList    *file_info_list, /* FileInfo list */
+		      	       GError   *error,
+		      	       gpointer  user_data)
+{
+	AddData            *add_data = user_data;
+	FrArchive          *archive = add_data->archive;
+	GSimpleAsyncResult *result;
+
+	result = g_simple_async_result_new (G_OBJECT (archive),
+					    add_data->callback,
+					    add_data->user_data,
+					    fr_archive_add_files);
+
+	if (error != NULL) {
+		g_simple_async_result_set_from_error (result, error);
+		g_simple_async_result_complete_in_idle (result);
+	}
+	else {
+		GList *file_list;
+		GList *scan;
+
+		archive->files_to_add_size = 0;
+
+		file_list = NULL;
+		for (scan = file_info_list; scan; scan = scan->next) {
+			FileInfo *data = scan->data;
+
+			switch (g_file_info_get_file_type (data->info)) {
+			case G_FILE_TYPE_REGULAR:
+			case G_FILE_TYPE_DIRECTORY:
+			case G_FILE_TYPE_SYMBOLIC_LINK:
+				break;
+			default: /* ignore any other type */
+				continue;
+			}
+
+			if (! archive->propAddCanStoreFolders && (g_file_info_get_file_type (data->info) == G_FILE_TYPE_DIRECTORY))
+				continue;
+
+			file_list = g_list_prepend (file_list, g_object_ref (data->file));
+			archive->files_to_add_size += g_file_info_get_size (data->info);
+		}
+		file_list = g_list_reverse (file_list);
+
+		if (file_list != NULL) {
+			fr_archive_action_started (archive, FR_ACTION_ADDING_FILES);
+			_fr_archive_activate_progress_update (archive);
+
+			FR_ARCHIVE_GET_CLASS (archive)->add_files (add_data->archive,
+								   file_list,
+								   add_data->base_dir,
+								   add_data->dest_dir,
+								   add_data->update,
+								   FALSE,
+								   add_data->password,
+								   add_data->encrypt_header,
+								   add_data->compression,
+								   add_data->volume_size,
+								   add_data->cancellable,
+								   add_data->callback,
+								   add_data->user_data);
+		}
+		else
+			g_simple_async_result_complete_in_idle (result);
+	}
+
+	g_object_unref (result);
+	add_data_free (add_data);
 }
 
 
 void
 fr_archive_add_files (FrArchive           *archive,
 		      GList               *file_list,
-		      const char          *base_dir,
-		      const char          *dest_dir,
-		      gboolean             update,
-		      gboolean             recursive,
-		      const char          *password,
-		      gboolean             encrypt_header,
-		      FrCompression        compression,
-		      guint                volume_size,
-		      GCancellable        *cancellable,
-		      GAsyncReadyCallback  callback,
-		      gpointer             user_data)
-{
-	g_return_if_fail (! archive->read_only);
-
-	fr_archive_action_started (archive, FR_ACTION_ADDING_FILES);
-	archive->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, archive);
-
-	FR_ARCHIVE_GET_CLASS (archive)->add_files (archive,
-						   file_list,
-						   base_dir,
-						   dest_dir,
-						   update,
-						   recursive,
-						   password,
-						   encrypt_header,
-						   compression,
-						   volume_size,
-						   cancellable,
-						   callback,
-						   user_data);
-}
-
-
-/* -- add with wildcard -- */
-
-
-typedef struct {
-	FrArchive           *archive;
-	char                *source_dir;
-	char                *dest_dir;
-	gboolean             update;
-	char                *password;
-	gboolean             encrypt_header;
-	FrCompression        compression;
-	guint                volume_size;
-	GCancellable        *cancellable;
-	GAsyncReadyCallback  callback;
-	gpointer             user_data;
-} AddWithWildcardData;
-
-
-static void
-add_with_wildcard_data_free (AddWithWildcardData *aww_data)
-{
-	g_free (aww_data->source_dir);
-	g_free (aww_data->dest_dir);
-	g_free (aww_data->password);
-	_g_object_unref (aww_data->cancellable);
-	g_free (aww_data);
-}
-
-
-static void
-add_with_wildcard__step2 (GList    *file_list,
-			  GList    *dir_list,
-			  GError   *error,
-			  gpointer  data)
-{
-	AddWithWildcardData *aww_data = data;
-	FrArchive           *archive = aww_data->archive;
-	GSimpleAsyncResult  *result;
-
-	result = g_simple_async_result_new (G_OBJECT (archive),
-					    aww_data->callback,
-					    aww_data->user_data,
-					    fr_archive_add_with_wildcard);
-
-	if (error != NULL) {
-		g_simple_async_result_set_from_error (result, error);
-		g_simple_async_result_complete_in_idle (result);
-	}
-	else {
-		if (archive->propAddCanStoreFolders) {
-			file_list = g_list_concat (file_list, dir_list);
-			dir_list = NULL;
-		}
-
-		if (file_list == NULL)
-			g_simple_async_result_complete_in_idle (result);
-		else
-			fr_archive_add_files (aww_data->archive,
-					      file_list,
-					      aww_data->source_dir,
-					      aww_data->dest_dir,
-					      aww_data->update,
-					      FALSE,
-					      aww_data->password,
-					      aww_data->encrypt_header,
-					      aww_data->compression,
-					      aww_data->volume_size,
-					      aww_data->cancellable,
-					      aww_data->callback,
-					      aww_data->user_data);
-	}
-
-	g_object_unref (result);
-	_g_string_list_free (file_list);
-	_g_string_list_free (dir_list);
-	add_with_wildcard_data_free (aww_data);
-}
-
-
-void
-fr_archive_add_with_wildcard (FrArchive           *archive,
-			      const char          *include_files,
-			      const char          *exclude_files,
-			      const char          *exclude_folders,
-			      const char          *source_dir,
-			      const char          *dest_dir,
-			      gboolean             update,
-			      gboolean             follow_links,
-			      const char          *password,
-			      gboolean             encrypt_header,
-			      FrCompression        compression,
-			      guint                volume_size,
-			      GCancellable        *cancellable,
-			      GAsyncReadyCallback  callback,
-			      gpointer             user_data)
-{
-	AddWithWildcardData *aww_data;
-
-	g_return_if_fail (! archive->read_only);
-
-	aww_data = g_new0 (AddWithWildcardData, 1);
-	aww_data->archive = archive;
-	aww_data->source_dir = g_strdup (source_dir);
-	aww_data->dest_dir = g_strdup (dest_dir);
-	aww_data->update = update;
-	aww_data->password = g_strdup (password);
-	aww_data->encrypt_header = encrypt_header;
-	aww_data->compression = compression;
-	aww_data->volume_size = volume_size;
-	aww_data->cancellable = _g_object_ref (cancellable);
-	aww_data->callback = callback;
-	aww_data->user_data = user_data;
-
-	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
-
-	g_directory_list_async (source_dir,
-				source_dir,
-				TRUE,
-				follow_links,
-				TRUE,
-				FALSE,
-				include_files,
-				exclude_files,
-				exclude_folders,
-				FALSE,
-				aww_data->cancellable,
-				add_with_wildcard__step2,
-				aww_data);
-}
-
-
-/* -- fr_archive_add_directory -- */
-
-
-typedef struct {
-	FrArchive           *archive;
-	char                *base_dir;
-	char                *dest_dir;
-	gboolean             update;
-	char                *password;
-	gboolean             encrypt_header;
-	FrCompression        compression;
-	guint                volume_size;
-	GCancellable        *cancellable;
-	GAsyncReadyCallback  callback;
-	gpointer             user_data;
-} AddDirectoryData;
-
-
-static void
-add_directory_data_free (AddDirectoryData *ad_data)
-{
-	g_free (ad_data->base_dir);
-	g_free (ad_data->dest_dir);
-	g_free (ad_data->password);
-	_g_object_unref (ad_data->cancellable);
-	g_free (ad_data);
-}
-
-
-static void
-add_directory__step2 (GList    *file_list,
-		      GList    *dir_list,
-		      GError   *error,
-		      gpointer  user_data)
-{
-	AddDirectoryData   *ad_data = user_data;
-	FrArchive          *archive = ad_data->archive;
-	GSimpleAsyncResult *result;
-
-	result = g_simple_async_result_new (G_OBJECT (archive),
-					    ad_data->callback,
-					    ad_data->user_data,
-					    fr_archive_add_directory);
-
-	if (error != NULL) {
-		_g_string_list_free (dir_list);
-
-		g_simple_async_result_set_from_error (result, error);
-		g_simple_async_result_complete_in_idle (result);
-	}
-	else {
-		if (archive->propAddCanStoreFolders) {
-			file_list = g_list_concat (file_list, dir_list);
-			dir_list = NULL;
-		}
-
-		if (file_list == NULL)
-			g_simple_async_result_complete_in_idle (result);
-		else
-			fr_archive_add_files (ad_data->archive,
-					      file_list,
-					      ad_data->base_dir,
-					      ad_data->dest_dir,
-					      ad_data->update,
-					      FALSE,
-					      ad_data->password,
-					      ad_data->encrypt_header,
-					      ad_data->compression,
-					      ad_data->volume_size,
-					      ad_data->cancellable,
-					      ad_data->callback,
-					      ad_data->user_data);
-	}
-
-	_g_string_list_free (file_list);
-	_g_string_list_free (dir_list);
-	g_object_unref (result);
-	add_directory_data_free (ad_data);
-}
-
-
-void
-fr_archive_add_directory (FrArchive           *archive,
-			  const char          *directory,
-			  const char          *base_dir,
-			  const char          *dest_dir,
-			  gboolean             update,
-			  const char          *password,
-			  gboolean             encrypt_header,
-			  FrCompression        compression,
-			  guint                volume_size,
-			  GCancellable        *cancellable,
-			  GAsyncReadyCallback  callback,
-			  gpointer             user_data)
-
-{
-	AddDirectoryData *ad_data;
-
-	g_return_if_fail (! archive->read_only);
-
-	ad_data = g_new0 (AddDirectoryData, 1);
-	ad_data->archive = archive;
-	ad_data->base_dir = g_strdup (base_dir);
-	ad_data->dest_dir = g_strdup (dest_dir);
-	ad_data->update = update;
-	ad_data->password = g_strdup (password);
-	ad_data->encrypt_header = encrypt_header;
-	ad_data->compression = compression;
-	ad_data->volume_size = volume_size;
-	ad_data->cancellable = _g_object_ref (cancellable);
-	ad_data->callback = callback;
-	ad_data->user_data = user_data;
-
-	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
-
-	g_directory_list_all_async (directory,
-				    base_dir,
-				    TRUE,
-				    cancellable,
-				    add_directory__step2,
-				    ad_data);
-}
-
-
-void
-fr_archive_add_items (FrArchive           *archive,
-		      GList               *item_list,
-		      const char          *base_dir,
+		      GFile               *base_dir,
 		      const char          *dest_dir,
 		      gboolean             update,
 		      const char          *password,
@@ -1287,30 +1115,123 @@ fr_archive_add_items (FrArchive           *archive,
 		      gpointer             user_data)
 
 {
-	AddDirectoryData *ad_data;
+	AddData *add_data;
 
 	g_return_if_fail (! archive->read_only);
 
-	ad_data = g_new0 (AddDirectoryData, 1);
-	ad_data->archive = archive;
-	ad_data->base_dir = g_strdup (base_dir);
-	ad_data->dest_dir = g_strdup (dest_dir);
-	ad_data->update = update;
-	ad_data->password = g_strdup (password);
-	ad_data->encrypt_header = encrypt_header;
-	ad_data->compression = compression;
-	ad_data->volume_size = volume_size;
-	ad_data->cancellable = _g_object_ref (cancellable);
-	ad_data->callback = callback;
-	ad_data->user_data = user_data;
+	add_data = g_new0 (AddData, 1);
+	add_data->archive = archive;
+	add_data->base_dir = _g_object_ref (base_dir);
+	add_data->dest_dir = g_strdup (dest_dir);
+	add_data->update = update;
+	add_data->password = g_strdup (password);
+	add_data->encrypt_header = encrypt_header;
+	add_data->compression = compression;
+	add_data->volume_size = volume_size;
+	add_data->cancellable = _g_object_ref (cancellable);
+	add_data->callback = callback;
+	add_data->user_data = user_data;
 
 	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
 
-	g_list_items_async (item_list,
-			    base_dir,
-			    cancellable,
-			    add_directory__step2,
-			    ad_data);
+	_g_file_list_query_info_async (file_list,
+				       FILE_LIST_RECURSIVE | FILE_LIST_NO_BACKUP_FILES,
+				       (G_FILE_ATTRIBUTE_STANDARD_NAME ","
+					G_FILE_ATTRIBUTE_STANDARD_SIZE ","
+					G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN ","
+					G_FILE_ATTRIBUTE_STANDARD_IS_BACKUP),
+				       cancellable,
+				       NULL,
+				       NULL,
+				       fr_archive_add_files_ready_cb,
+				       add_data);
+}
+
+
+/* -- fr_archive_add_files_with_filter -- */
+
+
+static gboolean
+directory_filter_cb (GFile     *file,
+		     GFileInfo *info,
+		     gpointer   user_data)
+{
+	AddData *add_data = user_data;
+
+	return ! file_filter_empty (add_data->exclude_directories_filter)
+			&& file_filter_matches (add_data->exclude_directories_filter, file);
+}
+
+
+static gboolean
+file_filter_cb (GFile     *file,
+		GFileInfo *info,
+		gpointer   user_data)
+{
+	AddData *add_data = user_data;
+
+	if (file_filter_matches (add_data->include_files_filter, file))
+		return FALSE;
+
+	return ! file_filter_empty (add_data->exclude_files_filter)
+			&& file_filter_matches (add_data->exclude_files_filter, file);
+}
+
+
+void
+fr_archive_add_files_with_filter (FrArchive           *archive,
+				  GFile               *source_dir,
+				  const char          *include_files,
+				  const char          *exclude_files,
+				  const char          *exclude_directories,
+				  const char          *dest_dir,
+				  gboolean             update,
+				  gboolean             follow_links,
+				  const char          *password,
+				  gboolean             encrypt_header,
+				  FrCompression        compression,
+				  guint                volume_size,
+				  GCancellable        *cancellable,
+				  GAsyncReadyCallback  callback,
+				  gpointer             user_data)
+{
+	AddData *add_data;
+	GList   *file_list;
+
+	g_return_if_fail (! archive->read_only);
+
+	add_data = g_new0 (AddData, 1);
+	add_data->archive = archive;
+	add_data->base_dir = _g_object_ref (source_dir);
+	add_data->dest_dir = g_strdup (dest_dir);
+	add_data->update = update;
+	add_data->password = g_strdup (password);
+	add_data->encrypt_header = encrypt_header;
+	add_data->compression = compression;
+	add_data->volume_size = volume_size;
+	add_data->cancellable = _g_object_ref (cancellable);
+	add_data->callback = callback;
+	add_data->user_data = user_data;
+	add_data->include_files_filter = file_filter_new (include_files);
+	add_data->exclude_files_filter = file_filter_new (exclude_files);
+	add_data->exclude_directories_filter = file_filter_new (exclude_directories);
+
+	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
+
+	file_list = g_list_prepend (NULL, source_dir);
+	_g_file_list_query_info_async (file_list,
+				       FILE_LIST_RECURSIVE | FILE_LIST_NO_BACKUP_FILES,
+				       (G_FILE_ATTRIBUTE_STANDARD_NAME ","
+					G_FILE_ATTRIBUTE_STANDARD_SIZE ","
+					G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN ","
+					G_FILE_ATTRIBUTE_STANDARD_IS_BACKUP),
+				       cancellable,
+				       directory_filter_cb,
+				       file_filter_cb,
+				       fr_archive_add_files_ready_cb,
+				       add_data);
+
+	g_list_free (file_list);
 }
 
 
@@ -1335,10 +1256,39 @@ fr_archive_remove (FrArchive           *archive,
 }
 
 
+static gsize
+_fr_archive_get_file_list_size (FrArchive *archive,
+				GList     *file_list)
+{
+	gsize     total_size = 0;
+	gboolean  local_file_list = FALSE;
+	GList    *scan;
+
+	if (file_list == NULL) {
+		file_list = g_hash_table_get_keys (archive->files_hash);
+		local_file_list = TRUE;
+	}
+
+	for (scan = file_list; scan; scan = scan->next) {
+		const char *original_path = scan->data;
+		FileData   *file_data;
+
+		file_data = g_hash_table_lookup (archive->files_hash, original_path);
+		if (file_data != NULL)
+			total_size += file_data->size;
+	}
+
+	if (local_file_list)
+		g_list_free (file_list);
+
+	return total_size;
+}
+
+
 void
-fr_archive_extract (FrArchive           *self,
+fr_archive_extract (FrArchive           *archive,
 		    GList               *file_list,
-		    const char          *destination,
+		    GFile               *destination,
 		    const char          *base_dir,
 		    gboolean             skip_older,
 		    gboolean             overwrite,
@@ -1348,57 +1298,23 @@ fr_archive_extract (FrArchive           *self,
 		    GAsyncReadyCallback  callback,
 		    gpointer             user_data)
 {
-	g_free (self->priv->extraction_destination);
-	self->priv->extraction_destination = g_strdup (destination);
+	_g_object_unref (archive->priv->extraction_destination);
+	archive->priv->extraction_destination = g_object_ref (destination);
 
-	self->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, self);
+	fr_archive_progress_set_total_bytes (archive, _fr_archive_get_file_list_size (archive, file_list));
+	_fr_archive_activate_progress_update (archive);
 
-	FR_ARCHIVE_GET_CLASS (self)->extract_files (self,
-						    file_list,
-						    destination,
-						    base_dir,
-						    skip_older,
-						    overwrite,
-						    junk_paths,
-						    password,
-						    cancellable,
-						    callback,
-						    user_data);
-}
-
-
-void
-fr_archive_extract_to_local (FrArchive           *self,
-			     GList               *file_list,
-			     const char          *destination_path,
-			     const char          *base_dir,
-			     gboolean             skip_older,
-			     gboolean             overwrite,
-			     gboolean             junk_paths,
-			     const char          *password,
-			     GCancellable        *cancellable,
-			     GAsyncReadyCallback  callback,
-			     gpointer             user_data)
-{
-	char *destination_uri;
-
-	destination_uri = g_filename_to_uri (destination_path, NULL, NULL);
-	if (destination_uri == NULL)
-		return;
-
-	fr_archive_extract (self,
-			    file_list,
-			    destination_uri,
-			    base_dir,
-			    skip_older,
-			    overwrite,
-			    junk_paths,
-			    password,
-			    cancellable,
-			    callback,
-			    user_data);
-
-	g_free (destination_uri);
+	FR_ARCHIVE_GET_CLASS (archive)->extract_files (archive,
+						       file_list,
+						       destination,
+						       base_dir,
+						       skip_older,
+						       overwrite,
+						       junk_paths,
+						       password,
+						       cancellable,
+						       callback,
+						       user_data);
 }
 
 
@@ -1441,42 +1357,41 @@ get_desired_destination_for_archive (GFile *file)
 }
 
 
-static char *
+static GFile *
 get_extract_here_destination (GFile   *file,
 			      GError **error)
 {
+	GFile *directory = NULL;
 	char  *desired_destination;
-	char  *destination = NULL;
 	int    n = 1;
-	GFile *directory;
 
 	desired_destination = get_desired_destination_for_archive (file);
 	do {
+		char *uri;
+
 		*error = NULL;
 
-		g_free (destination);
+		_g_object_unref (directory);
 		if (n == 1)
-			destination = g_strdup (desired_destination);
+			uri = g_strdup (desired_destination);
 		else
-			destination = g_strdup_printf ("%s%%20(%d)", desired_destination, n);
-
-		directory = g_file_new_for_uri (destination);
+			uri = g_strdup_printf ("%s%%20(%d)", desired_destination, n);
+		directory = g_file_new_for_uri (uri);
 		g_file_make_directory (directory, NULL, error);
-		g_object_unref (directory);
-
 		n++;
+
+		g_free (uri);
 	}
 	while (g_error_matches (*error, G_IO_ERROR, G_IO_ERROR_EXISTS));
 
-	g_free (desired_destination);
-
 	if (*error != NULL) {
 		g_warning ("could not create destination folder: %s\n", (*error)->message);
-		g_free (destination);
-		destination = NULL;
+		_g_clear_object (&directory);
 	}
 
-	return destination;
+	g_free (desired_destination);
+
+	return directory;
 }
 
 
@@ -1490,7 +1405,7 @@ fr_archive_extract_here (FrArchive           *archive,
 			 GAsyncReadyCallback  callback,
 			 gpointer             user_data)
 {
-	char   *destination;
+	GFile  *destination;
 	GError *error = NULL;
 
 	destination = get_extract_here_destination (archive->priv->file, &error);
@@ -1522,27 +1437,23 @@ fr_archive_extract_here (FrArchive           *archive,
 			    callback,
 			    user_data);
 
-	g_free (destination);
+	g_object_unref (destination);
 
 	return TRUE;
 }
 
 
 void
-fr_archive_set_last_extraction_destination (FrArchive  *archive,
-					    const char *uri)
+fr_archive_set_last_extraction_destination (FrArchive *archive,
+					    GFile     *folder)
 {
-	if (uri == archive->priv->extraction_destination)
-		return;
-
-	g_free (archive->priv->extraction_destination);
-	archive->priv->extraction_destination = NULL;
-	if (uri != NULL)
-		archive->priv->extraction_destination = g_strdup (uri);
+	_g_clear_object (&archive->priv->extraction_destination);
+	if (folder != NULL)
+		archive->priv->extraction_destination = g_object_ref (folder);
 }
 
 
-const char *
+GFile *
 fr_archive_get_last_extraction_destination (FrArchive *archive)
 {
 	return archive->priv->extraction_destination;
@@ -1593,7 +1504,7 @@ fr_archive_rename (FrArchive           *archive,
 
 void
 fr_archive_paste_clipboard (FrArchive           *archive,
-			    char                *archive_uri,
+			    GFile               *file,
 			    char                *password,
 			    gboolean             encrypt_header,
 			    FrCompression        compression,
@@ -1601,14 +1512,14 @@ fr_archive_paste_clipboard (FrArchive           *archive,
 			    FrClipboardOp        op,
 			    char                *base_dir,
 			    GList               *files,
-			    char                *tmp_dir,
+			    GFile               *tmp_dir,
 			    char                *current_dir,
 			    GCancellable        *cancellable,
 			    GAsyncReadyCallback  callback,
 			    gpointer             user_data)
 {
 	FR_ARCHIVE_GET_CLASS (archive)->paste_clipboard (archive,
-							 archive_uri,
+							 file,
 							 password,
 							 encrypt_header,
 							 compression,
@@ -1630,7 +1541,6 @@ fr_archive_paste_clipboard (FrArchive           *archive,
 struct _DroppedItemsData {
 	FrArchive           *archive;
 	GList               *item_list;
-	char                *base_dir;
 	char                *dest_dir;
 	char                *password;
 	gboolean             encrypt_header;
@@ -1645,7 +1555,6 @@ struct _DroppedItemsData {
 static DroppedItemsData *
 dropped_items_data_new (FrArchive           *archive,
 			GList               *item_list,
-			const char          *base_dir,
 			const char          *dest_dir,
 			const char          *password,
 			gboolean             encrypt_header,
@@ -1659,9 +1568,7 @@ dropped_items_data_new (FrArchive           *archive,
 
 	data = g_new0 (DroppedItemsData, 1);
 	data->archive = archive;
-	data->item_list = _g_string_list_dup (item_list);
-	if (base_dir != NULL)
-		data->base_dir = g_strdup (base_dir);
+	data->item_list = _g_object_list_ref (item_list);
 	if (dest_dir != NULL)
 		data->dest_dir = g_strdup (dest_dir);
 	if (password != NULL)
@@ -1682,8 +1589,7 @@ dropped_items_data_free (DroppedItemsData *data)
 {
 	if (data == NULL)
 		return;
-	_g_string_list_free (data->item_list);
-	g_free (data->base_dir);
+	_g_object_list_unref (data->item_list);
 	g_free (data->dest_dir);
 	g_free (data->password);
 	_g_object_unref (data->cancellable);
@@ -1695,34 +1601,33 @@ static gboolean
 all_files_in_same_dir (GList *list)
 {
 	gboolean  same_dir = TRUE;
-	char     *first_basedir;
+	GFile    *first_parent;
 	GList    *scan;
 
 	if (list == NULL)
 		return FALSE;
 
-	first_basedir = _g_path_remove_level (list->data);
-	if (first_basedir == NULL)
+	first_parent = g_file_get_parent (G_FILE (list->data));
+	if (first_parent == NULL)
 		return TRUE;
 
-	for (scan = list->next; scan; scan = scan->next) {
-		char *path = scan->data;
-		char *basedir;
+	for (scan = list->next; same_dir && scan; scan = scan->next) {
+		GFile *file = G_FILE (scan->data);
+		GFile *parent;
 
-		basedir = _g_path_remove_level (path);
-		if (basedir == NULL) {
+		parent = g_file_get_parent (file);
+		if (parent == NULL) {
 			same_dir = FALSE;
 			break;
 		}
 
-		if (strcmp (first_basedir, basedir) != 0) {
+		if (_g_file_cmp_uris (first_parent, parent) != 0)
 			same_dir = FALSE;
-			g_free (basedir);
-			break;
-		}
-		g_free (basedir);
+
+		g_object_unref (parent);
 	}
-	g_free (first_basedir);
+
+	g_object_unref (first_parent);
 
 	return same_dir;
 }
@@ -1787,14 +1692,14 @@ add_dropped_items (DroppedItemsData *data)
 	 * fr_archive_add_items... */
 
 	if (all_files_in_same_dir (list)) {
-		char *first_base_dir;
+		GFile *first_parent;
 
 		data->item_list = NULL;
 
-		first_base_dir = _g_path_remove_level (list->data);
-		fr_archive_add_items (FR_ARCHIVE (archive),
+		first_parent = g_file_get_parent (G_FILE (list->data));
+		fr_archive_add_files (FR_ARCHIVE (archive),
 				      list,
-				      first_base_dir,
+				      first_parent,
 				      data->dest_dir,
 				      FALSE,
 				      data->password,
@@ -1805,38 +1710,41 @@ add_dropped_items (DroppedItemsData *data)
 				      add_dropped_items_ready_cb,
 				      data);
 
-		g_free (first_base_dir);
-		_g_string_list_free (list);
+		g_object_unref (first_parent);
+		_g_object_list_unref (list);
 		return;
 	}
 
 	/* ...else add a directory at a time. */
 
 	for (scan = list; scan; scan = scan->next) {
-		char *path = scan->data;
-		char *base_dir;
+		GFile *file = G_FILE (scan->data);
+		GList *singleton;
+		GFile *parent;
 
-		if (! _g_uri_query_is_dir (path))
+		if (! _g_file_query_is_dir (file))
 			continue;
 
 		data->item_list = g_list_remove_link (list, scan);
 
-		base_dir = _g_path_remove_level (path);
-		fr_archive_add_directory (FR_ARCHIVE (archive),
-					  _g_path_get_file_name (path),
-					  base_dir,
-					  data->dest_dir,
-					  FALSE,
-					  data->password,
-					  data->encrypt_header,
-					  data->compression,
-					  data->volume_size,
-					  data->cancellable,
-					  add_dropped_items_ready_cb,
-					  data);
+		singleton = g_list_prepend (NULL, file);
+		parent = g_file_get_parent (file);
+		fr_archive_add_files (FR_ARCHIVE (archive),
+				      singleton,
+				      parent,
+				      data->dest_dir,
+				      FALSE,
+				      data->password,
+				      data->encrypt_header,
+				      data->compression,
+				      data->volume_size,
+				      data->cancellable,
+				      add_dropped_items_ready_cb,
+				      data);
 
-		g_free (base_dir);
-		g_free (path);
+		g_list_free (singleton);
+		g_object_unref (parent);
+		g_object_unref (file);
 
 		return;
 	}
@@ -1848,22 +1756,13 @@ add_dropped_items (DroppedItemsData *data)
 	data->item_list = NULL;
 
 	if (all_files_in_same_dir (list)) {
-		char  *first_basedir;
-		GList *only_names_list = NULL;
+		GFile *first_parent;
 
-		first_basedir = _g_path_remove_level (list->data);
-		for (scan = list; scan; scan = scan->next) {
-			char *name;
-
-			name = g_uri_unescape_string (_g_path_get_file_name (scan->data), NULL);
-			only_names_list = g_list_prepend (only_names_list, name);
-		}
-
+		first_parent = g_file_get_parent (G_FILE (list->data));
 		fr_archive_add_files (FR_ARCHIVE (archive),
-				      only_names_list,
-				      first_basedir,
+				      list,
+				      first_parent,
 				      data->dest_dir,
-				      FALSE,
 				      FALSE,
 				      data->password,
 				      data->encrypt_header,
@@ -1873,8 +1772,8 @@ add_dropped_items (DroppedItemsData *data)
 				      add_dropped_items_ready_cb,
 				      data);
 
-		_g_string_list_free (only_names_list);
-		g_free (first_basedir);
+		g_object_unref (first_parent);
+		_g_object_list_unref (list);
 	}
 	else
 		/* ...else call the archive specific function to add the files in the
@@ -1882,7 +1781,6 @@ add_dropped_items (DroppedItemsData *data)
 
 		FR_ARCHIVE_GET_CLASS (archive)->add_dropped_files (archive,
 								   list,
-								   data->base_dir,
 								   data->dest_dir,
 								   data->password,
 								   data->encrypt_header,
@@ -1899,7 +1797,6 @@ add_dropped_items (DroppedItemsData *data)
 void
 fr_archive_add_dropped_items (FrArchive           *archive,
 			      GList               *item_list,
-			      const char          *base_dir,
 			      const char          *dest_dir,
 			      const char          *password,
 			      gboolean             encrypt_header,
@@ -1911,7 +1808,6 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 {
 	GSimpleAsyncResult *result;
 	GList              *scan;
-	char               *archive_uri;
 
 	result = g_simple_async_result_new (G_OBJECT (archive),
 					    callback,
@@ -1930,9 +1826,8 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 	}
 
 	/* FIXME: make this check for all the add actions */
-	archive_uri = g_file_get_uri (archive->priv->file);
 	for (scan = item_list; scan; scan = scan->next) {
-		if (_g_uri_cmp (scan->data, archive_uri) == 0) {
+		if (_g_file_cmp_uris (G_FILE (scan->data), archive->priv->file) == 0) {
 			GError *error;
 
 			error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("You can't add an archive to itself."));
@@ -1940,17 +1835,14 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 			g_simple_async_result_complete_in_idle (result);
 
 			g_error_free (error);
-			g_free (archive_uri);
 			return;
 		}
 	}
-	g_free (archive_uri);
 
 	if (archive->priv->dropped_items_data != NULL)
 		dropped_items_data_free (archive->priv->dropped_items_data);
 	archive->priv->dropped_items_data = dropped_items_data_new (archive,
 								    item_list,
-								    base_dir,
 								    dest_dir,
 								    password,
 								    encrypt_header,
@@ -2005,7 +1897,7 @@ fr_archive_change_name (FrArchive  *archive,
 	GFile      *parent;
 	GFile      *file;
 
-	name = _g_path_get_file_name (filename);
+	name = _g_path_get_basename (filename);
 
 	parent = g_file_get_parent (archive->priv->file);
 	file = g_file_get_child (parent, name);;
@@ -2111,7 +2003,11 @@ fr_archive_progress_inc_completed_files (FrArchive *self,
 
 	g_mutex_lock (&self->priv->progress_mutex);
 	self->priv->completed_files += new_completed;
-	fraction = (double) self->priv->completed_files / (self->priv->total_files + 1);
+	if (self->priv->total_files > 0)
+		fraction = (double) self->priv->completed_files / (self->priv->total_files + 1);
+	else
+		fraction = 0.0;
+	/*g_print ("%d / %d  : %f\n", self->priv->completed_files, self->priv->total_files + 1, fraction);*/
 	g_mutex_unlock (&self->priv->progress_mutex);
 
 	return fraction;
@@ -2130,6 +2026,36 @@ fr_archive_progress_set_total_bytes (FrArchive *self,
 }
 
 
+static double
+_set_completed_bytes (FrArchive *self,
+		      gsize      completed_bytes)
+{
+	double fraction;
+
+	self->priv->completed_bytes = completed_bytes;
+	if (self->priv->total_bytes > 0)
+		fraction = (double) self->priv->completed_bytes / (self->priv->total_bytes + 1);
+	else
+		fraction = 0.0;
+	/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
+
+	return fraction;
+}
+
+
+double
+fr_archive_progress_set_completed_bytes (FrArchive *self,
+					 gsize      completed_bytes)
+{
+	double fraction;
+
+	g_mutex_lock (&self->priv->progress_mutex);
+	fraction = _set_completed_bytes (self, completed_bytes);
+	g_mutex_unlock (&self->priv->progress_mutex);
+
+	return fraction;
+}
+
 double
 fr_archive_progress_inc_completed_bytes (FrArchive *self,
 					 gsize      new_completed)
@@ -2137,9 +2063,7 @@ fr_archive_progress_inc_completed_bytes (FrArchive *self,
 	double fraction;
 
 	g_mutex_lock (&self->priv->progress_mutex);
-	self->priv->completed_bytes += new_completed;
-	fraction = (double) self->priv->completed_bytes / (self->priv->total_bytes + 1);
-	/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
+	fraction = _set_completed_bytes (self, self->priv->completed_bytes + new_completed);
 	g_mutex_unlock (&self->priv->progress_mutex);
 
 	return fraction;
@@ -2176,21 +2100,21 @@ fr_archive_add_file (FrArchive *self,
 
 
 gboolean
-_g_uri_is_archive (const char *uri)
+_g_file_is_archive (GFile *file)
 {
-	GFile      *file;
 	const char *mime_type = NULL;
 	gboolean    is_archive = FALSE;
 	char       *buffer;
 	int         buffer_size;
 
-	file = g_file_new_for_uri (uri);
 	buffer_size = BUFFER_SIZE_FOR_PRELOAD;
 	buffer = g_new (char, buffer_size);
 
 	if (g_load_file_in_buffer (file, buffer, buffer_size, NULL)) {
-		gboolean result_uncertain;
+		char     *uri;
+		gboolean  result_uncertain;
 
+		uri = g_file_get_uri (file);
 		mime_type = g_content_type_guess (uri, (guchar *) buffer, buffer_size, &result_uncertain);
 		if (result_uncertain) {
 			mime_type = get_mime_type_from_magic_numbers (buffer, buffer_size);
@@ -2208,10 +2132,11 @@ _g_uri_is_archive (const char *uri)
 				}
 			}
 		}
+
+		g_free (uri);
 	}
 
 	g_free (buffer);
-	g_object_unref (file);
 
 	return is_archive;
 }

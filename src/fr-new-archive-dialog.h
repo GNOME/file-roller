@@ -53,7 +53,7 @@ GType           fr_new_archive_dialog_get_type            (void);
 GtkWidget *     fr_new_archive_dialog_new                 (GtkWindow           *parent,
 							   FrNewArchiveAction   action,
 							   const char          *default_name);
-char *          fr_new_archive_dialog_get_uri             (FrNewArchiveDialog  *dialog,
+GFile *         fr_new_archive_dialog_get_file            (FrNewArchiveDialog  *dialog,
 							   const char         **mime_type);
 const char *    fr_new_archive_dialog_get_password        (FrNewArchiveDialog  *dialog);
 gboolean        fr_new_archive_dialog_get_encrypt_header  (FrNewArchiveDialog  *dialog);

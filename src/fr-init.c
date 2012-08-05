@@ -638,27 +638,13 @@ command_done (CommandData *cdata)
 	if (cdata == NULL)
 		return;
 
-	if ((cdata->temp_dir != NULL) && _g_path_query_is_dir (cdata->temp_dir)) {
-		char *argv[4];
-
-		argv[0] = "rm";
-		argv[1] = "-rf";
-		argv[2] = cdata->temp_dir;
-		argv[3] = NULL;
-		g_spawn_sync (g_get_tmp_dir (), argv, NULL,
-			      G_SPAWN_SEARCH_PATH,
-			      NULL, NULL,
-			      NULL, NULL, NULL,
-			      NULL);
-	}
+	_g_file_remove_directory (cdata->temp_dir, NULL, NULL);
 
 	g_free (cdata->command);
-	if (cdata->app != NULL)
-		g_object_unref (cdata->app);
-	_g_string_list_free (cdata->file_list);
-	g_free (cdata->temp_dir);
-	if (cdata->process != NULL)
-		g_object_unref (cdata->process);
+	_g_object_unref (cdata->app);
+	_g_object_list_unref (cdata->file_list);
+	_g_object_unref (cdata->temp_dir);
+	_g_object_unref (cdata->process);
 
 	CommandList = g_list_remove (CommandList, cdata);
 	g_free (cdata);

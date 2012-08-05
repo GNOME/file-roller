@@ -46,306 +46,127 @@
 #define BUF_SIZE 4096
 #define FILE_PREFIX    "file://"
 #define FILE_PREFIX_L  7
-#define SPECIAL_DIR(x) ((strcmp ((x), "..") == 0) || (strcmp ((x), ".") == 0))
+#define IS_SPECIAL_DIR(x) ((strcmp ((x), "..") == 0) || (strcmp ((x), ".") == 0))
 
 
-gboolean
-_g_uri_query_exists (const char *uri)
+/* path */
+
+
+static const char *try_folder[] = { "cache", "~", "tmp", NULL };
+
+
+static const char *
+get_nth_temp_folder_to_try (int n)
 {
-	GFile     *file;
-	gboolean   exists;
+        const char *folder;
 
-	if (uri == NULL)
-		return FALSE;
+        folder = try_folder[n];
+        if (strcmp (folder, "cache") == 0)
+                folder = g_get_user_cache_dir ();
+        else if (strcmp (folder, "~") == 0)
+                folder = g_get_home_dir ();
+        else if (strcmp (folder, "tmp") == 0)
+                folder = g_get_tmp_dir ();
 
-	file = g_file_new_for_uri (uri);
-	exists = g_file_query_exists (file, NULL);
-	g_object_unref (file);
-
-	return exists;
+        return folder;
 }
 
 
+char *
+_g_path_get_temp_work_dir (const char *parent_folder)
+{
+        guint64  max_size = 0;
+        char    *best_folder = NULL;
+        int      i;
+        char    *template;
+        char    *result = NULL;
+
+        if (parent_folder == NULL) {
+                /* find the folder with more free space. */
+
+                for (i = 0; try_folder[i] != NULL; i++) {
+                        const char *folder;
+                        GFile      *file;
+                        guint64     size;
+
+                        folder = get_nth_temp_folder_to_try (i);
+                        file = g_file_new_for_path (folder);
+                        size = _g_file_get_free_space (file);
+                        g_object_unref (file);
+
+                        if (max_size < size) {
+                                max_size = size;
+                                g_free (best_folder);
+                                best_folder = g_strdup (folder);
+                        }
+                }
+        }
+        else
+                best_folder = g_strdup (parent_folder);
+
+        if (best_folder == NULL)
+                return NULL;
+
+        template = g_strconcat (best_folder, "/.fr-XXXXXX", NULL);
+        result = mkdtemp (template);
+
+        if ((result == NULL) || (*result == '\0')) {
+                g_free (template);
+                result = NULL;
+        }
+
+        return result;
+}
+
+
+/* GFile */
+
+
 static gboolean
-_g_uri_is_filetype (const char *uri,
-		    GFileType   file_type)
+_g_file_is_filetype (GFile     *file,
+		     GFileType  file_type)
 {
 	gboolean   result = FALSE;
-	GFile     *file;
 	GFileInfo *info;
-	GError    *error = NULL;
 
-	file = g_file_new_for_uri (uri);
-
-	if (! g_file_query_exists (file, NULL)) {
-		g_object_unref (file);
+	if (! g_file_query_exists (file, NULL))
 		return FALSE;
-	}
 
-	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_TYPE, 0, NULL, &error);
-	if (error == NULL) {
+	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_TYPE, 0, NULL, NULL);
+	if (info != NULL) {
 		result = (g_file_info_get_file_type (info) == file_type);
+		g_object_unref (info);
 	}
-	else {
-		g_warning ("Failed to get file type for uri %s: %s", uri, error->message);
-		g_error_free (error);
-	}
-
-	g_object_unref (info);
-	g_object_unref (file);
 
 	return result;
 }
 
 
 gboolean
-_g_uri_query_is_file (const char *uri)
+_g_file_query_is_file (GFile *file)
 {
-	return _g_uri_is_filetype (uri, G_FILE_TYPE_REGULAR);
+	return _g_file_is_filetype (file, G_FILE_TYPE_REGULAR);
 }
 
 
 gboolean
-_g_uri_query_is_dir (const char *uri)
+_g_file_query_is_dir (GFile *file)
 {
-	return _g_uri_is_filetype (uri, G_FILE_TYPE_DIRECTORY);
-}
-
-
-char *
-_g_uri_create_alternative (const char *folder,
-			   const char *name)
-{
-	char *new_uri = NULL;
-	int   n = 1;
-
-	do {
-		g_free (new_uri);
-		if (n == 1)
-			new_uri = g_strconcat (folder, "/", name, NULL);
-		else
-			new_uri = g_strdup_printf ("%s/%s%%20(%d)", folder, name, n);
-		n++;
-	}
-	while (_g_uri_query_exists (new_uri));
-
-	return new_uri;
-}
-
-
-char *
-_g_uri_create_alternative_for_uri (const char *uri)
-{
-	char *base_uri;
-	char *new_uri;
-
-	base_uri = _g_path_remove_level (uri);
-	new_uri = _g_uri_create_alternative (base_uri, _g_path_get_file_name (uri));
-	g_free (base_uri);
-
-	return new_uri;
-}
-
-
-gboolean
-_g_uri_query_dir_is_empty (const char *uri)
-{
-	GFile           *file;
-	GFileEnumerator *file_enum;
-	GFileInfo       *info;
-	GError          *error = NULL;
-	int              n = 0;
-
-	file = g_file_new_for_uri (uri);
-
-	if (! g_file_query_exists (file, NULL)) {
-		g_object_unref (file);
-		return TRUE;
-	}
-
-	file_enum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &error);
-	if (error != NULL) {
-		g_warning ("Failed to enumerate children of %s: %s", uri, error->message);
-		g_error_free (error);
-		g_object_unref (file_enum);
-		g_object_unref (file);
-		return TRUE;
-	}
-
-	while ((n == 0) && ((info = g_file_enumerator_next_file (file_enum, NULL, &error)) != NULL)) {
-		if (error != NULL) {
-			g_warning ("Encountered error while enumerating children of %s (ignoring): %s", uri, error->message);
-			g_error_free (error);
-		}
-		else if (! SPECIAL_DIR (g_file_info_get_name (info)))
-			n++;
-		g_object_unref (info);
-	}
-
-	g_object_unref (file);
-	g_object_unref (file_enum);
-
-	return (n == 0);
-}
-
-
-gboolean
-_g_uri_dir_contains_one_object (const char *uri)
-{
-	GFile           *file;
-	GFileEnumerator *file_enum;
-	GFileInfo       *info;
-	GError          *err = NULL;
-	int              n = 0;
-
-	file = g_file_new_for_uri (uri);
-
-	if (! g_file_query_exists (file, NULL)) {
-		g_object_unref (file);
-		return FALSE;
-	}
-
-	file_enum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
-	if (err != NULL) {
-		g_warning ("Failed to enumerate children of %s: %s", uri, err->message);
-		g_error_free (err);
-		g_object_unref (file_enum);
-		g_object_unref (file);
-		return FALSE;
-	}
-
-	while ((info = g_file_enumerator_next_file (file_enum, NULL, &err)) != NULL) {
-		const char *name;
-
-		if (err != NULL) {
-			g_warning ("Encountered error while enumerating children of %s, ignoring: %s", uri, err->message);
-			g_error_free (err);
-			g_object_unref (info);
-			continue;
-		}
-
-		name = g_file_info_get_name (info);
-		if (strcmp (name, ".") == 0 || strcmp (name, "..") == 0) {
-			g_object_unref (info);
- 			continue;
-		}
-
-		g_object_unref (info);
-
-		if (++n > 1)
-			break;
-	}
-
-	g_object_unref (file);
-	g_object_unref (file_enum);
-
-	return (n == 1);
-}
-
-
-char *
-_g_uri_get_dir_content_if_unique (const char  *uri)
-{
-	GFile           *file;
-	GFileEnumerator *file_enum;
-	GFileInfo       *info;
-	GError          *err = NULL;
-	char            *content_uri = NULL;
-
-	file = g_file_new_for_uri (uri);
-
-	if (! g_file_query_exists (file, NULL)) {
-		g_object_unref (file);
-		return NULL;
-	}
-
-	file_enum = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &err);
-	if (err != NULL) {
-		g_warning ("Failed to enumerate children of %s: %s", uri, err->message);
-		g_error_free (err);
-		return NULL;
-	}
-
-	while ((info = g_file_enumerator_next_file (file_enum, NULL, &err)) != NULL) {
-		const char *name;
-
-		if (err != NULL) {
-			g_warning ("Failed to get info while enumerating children: %s", err->message);
-			g_clear_error (&err);
-			g_object_unref (info);
-			continue;
-		}
-
-		name = g_file_info_get_name (info);
-		if ((strcmp (name, ".") == 0) || (strcmp (name, "..") == 0)) {
-			g_object_unref (info);
-			continue;
-		}
-
-		if (content_uri != NULL) {
-			g_free (content_uri);
-			g_object_unref (info);
-			content_uri = NULL;
-			break;
-		}
-
-		content_uri = _g_uri_build (uri, name, NULL);
-		g_object_unref (info);
-	}
-
-	if (err != NULL) {
-		g_warning ("Failed to get info after enumerating children: %s", err->message);
-		g_clear_error (&err);
-	}
-
-	g_object_unref (file_enum);
-	g_object_unref (file);
-
-	return content_uri;
-}
-
-
-goffset
-_g_uri_get_file_size (const char *uri)
-{
-	goffset    size = 0;
-	GFile     *file;
-	GFileInfo *info;
-	GError    *err = NULL;
-
-	if ((uri == NULL) || (*uri == '\0'))
-		return 0;
-
-	file = g_file_new_for_uri (uri);
-	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SIZE, 0, NULL, &err);
-	if (err == NULL) {
-		size = g_file_info_get_size (info);
-	}
-	else {
-		g_warning ("Failed to get file size for %s: %s", uri, err->message);
-		g_error_free (err);
-	}
-
-	g_object_unref (info);
-	g_object_unref (file);
-
-	return size;
+	return _g_file_is_filetype (file, G_FILE_TYPE_DIRECTORY);
 }
 
 
 static time_t
-_g_uri_get_file_time_type (const char *uri,
-			   const char *type)
+_g_file_get_file_time_type (GFile      *file,
+			    const char *type)
 {
 	time_t     result = 0;
-	GFile     *file;
 	GFileInfo *info;
 	GError    *err = NULL;
 
-	if ((uri == NULL) || (*uri == '\0'))
+	if (file == NULL)
  		return 0;
 
-	file = g_file_new_for_uri (uri);
 	info = g_file_query_info (file, type, 0, NULL, &err);
 	if (err == NULL) {
 		result = (time_t) g_file_info_get_attribute_uint64 (info, type);
@@ -357,396 +178,143 @@ _g_uri_get_file_time_type (const char *uri,
 	}
 
 	g_object_unref (info);
-	g_object_unref (file);
-
-	return result;
-}
-
-
-time_t
-_g_uri_get_file_mtime (const char *uri)
-{
-	return _g_uri_get_file_time_type (uri, G_FILE_ATTRIBUTE_TIME_MODIFIED);
-}
-
-
-time_t
-_g_uri_get_file_ctime (const char *uri)
-{
-	return _g_uri_get_file_time_type (uri, G_FILE_ATTRIBUTE_TIME_CREATED);
-}
-
-
-gboolean
-_g_uri_ensure_dir_exists (const char  *uri,
-			  mode_t       mode,
-			  GError     **error)
-{
-	GFile  *dir;
-	GError *priv_error = NULL;
-
-	if (uri == NULL)
-		return FALSE;
-
-	if (error == NULL)
-		error = &priv_error;
-
-	dir = g_file_new_for_uri (uri);
-	if (! _g_file_make_directory_tree (dir, mode, error)) {
-		g_warning ("could create directory %s: %s", uri, (*error)->message);
-		if (priv_error != NULL)
-			g_clear_error (&priv_error);
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
-
-const char *
-_g_uri_get_mime_type (const char *uri,
-                      gboolean    fast_file_type)
-{
-	GFile      *file;
-	GFileInfo  *info;
-	GError     *err = NULL;
- 	const char *result = NULL;
-
- 	file = g_file_new_for_uri (uri);
-	info = g_file_query_info (file,
-				  fast_file_type ?
-				  G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE :
-				  G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-				  0, NULL, &err);
-	if (info == NULL) {
-		g_warning ("could not get content type for %s: %s", uri, err->message);
-		g_clear_error (&err);
-	}
-	else {
-		result = _g_str_get_static (g_file_info_get_content_type (info));
-		g_object_unref (info);
-	}
-
-	g_object_unref (file);
-
-	return result;
-}
-
-
-/* -- _g_uri_remove_directory -- */
-
-
-static gboolean
-delete_directory_recursive (GFile   *dir,
-			    GError **error)
-{
-	char            *uri;
-	GFileEnumerator *file_enum;
-	GFileInfo       *info;
-	gboolean         error_occurred = FALSE;
-
-	if (error != NULL)
-		*error = NULL;
-
-	file_enum = g_file_enumerate_children (dir,
-					       G_FILE_ATTRIBUTE_STANDARD_NAME ","
-					       G_FILE_ATTRIBUTE_STANDARD_TYPE,
-					       0, NULL, error);
-
-	uri = g_file_get_uri (dir);
-	while (! error_occurred && (info = g_file_enumerator_next_file (file_enum, NULL, error)) != NULL) {
-		char  *child_uri;
-		GFile *child;
-
-		child_uri = _g_uri_build (uri, g_file_info_get_name (info), NULL);
-		child = g_file_new_for_uri (child_uri);
-
-		switch (g_file_info_get_file_type (info)) {
-		case G_FILE_TYPE_DIRECTORY:
-			if (! delete_directory_recursive (child, error))
-				error_occurred = TRUE;
-			break;
-		default:
-			if (! g_file_delete (child, NULL, error))
-				error_occurred = TRUE;
-			break;
-		}
-
-		g_object_unref (child);
-		g_free (child_uri);
-		g_object_unref (info);
-	}
-	g_free (uri);
-
-	if (! error_occurred && ! g_file_delete (dir, NULL, error))
- 		error_occurred = TRUE;
-
-	g_object_unref (file_enum);
-
-	return ! error_occurred;
-}
-
-
-gboolean
-_g_uri_remove_directory (const char *uri)
-{
-	GFile     *dir;
-	gboolean   result;
-	GError    *error = NULL;
-
-	dir = g_file_new_for_uri (uri);
-	result = delete_directory_recursive (dir, &error);
-	if (! result) {
-		g_warning ("Cannot delete %s: %s", uri, error->message);
-		g_clear_error (&error);
-	}
-	g_object_unref (dir);
-
-	return result;
-}
-
-
-gboolean
-_g_uri_check_permissions (const char *uri,
-		   int         mode)
-{
-	GFile    *file;
-	gboolean  result;
-
-	file = g_file_new_for_uri (uri);
-	result = _g_file_check_permissions (file, mode);
-
-	g_object_unref (file);
-
-	return result;
-}
-
-
-/* path */
-
-
-gboolean
-_g_path_query_is_dir (const char *path)
-{
-	char     *uri;
-	gboolean  result;
-
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = _g_uri_query_is_dir (uri);
-	g_free (uri);
 
 	return result;
 }
 
 
 goffset
-_g_path_get_file_size (const char *path)
+_g_file_get_file_size (GFile *file)
 {
-	char    *uri;
-	goffset  result;
+	goffset    size = 0;
+	GFileInfo *info;
+	GError    *error = NULL;
 
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = _g_uri_get_file_size (uri);
-	g_free (uri);
+	if (file == NULL)
+		return 0;
 
-	return result;
+	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SIZE, 0, NULL, &error);
+	if (info != NULL) {
+		size = g_file_info_get_size (info);
+		g_object_unref (info);
+	}
+	else {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+	}
+
+	return size;
 }
 
 
 time_t
-_g_path_get_file_mtime (const char *path)
+_g_file_get_file_mtime (GFile *file)
 {
-	char   *uri;
-	time_t  result;
-
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = _g_uri_get_file_mtime (uri);
-	g_free (uri);
-
-	return result;
+	return _g_file_get_file_time_type (file, G_FILE_ATTRIBUTE_TIME_MODIFIED);
 }
 
 
-gboolean
-_g_path_make_directory_tree (const char  *path,
-		   	     mode_t       mode,
-		   	     GError     **error)
+time_t
+_g_file_get_file_ctime (GFile *file)
 {
-	char     *uri;
-	gboolean  result;
-
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = _g_uri_ensure_dir_exists (uri, mode, error);
-	g_free (uri);
-
-	return result;
+	return _g_file_get_file_time_type (file, G_FILE_ATTRIBUTE_TIME_CREATED);
 }
 
 
-const char*
-_g_path_get_mime_type (const char *filename,
-                       gboolean    fast_file_type)
+const char *
+_g_file_get_mime_type (GFile    *file,
+                       gboolean  fast_file_type)
 {
-	char       *uri;
-	const char *mime_type;
+	GFileInfo  *info;
+	GError     *error = NULL;
+ 	const char *result = NULL;
 
-	uri = g_filename_to_uri (filename, NULL, NULL);
-	mime_type = _g_uri_get_mime_type (uri, fast_file_type);
-	g_free (uri);
-
-	return mime_type;
-}
-
-
-guint64
-_g_path_get_free_space (const char *path)
-{
-	guint64    freespace = 0;
-	GFile     *file;
-	GFileInfo *info;
-	GError    *err = NULL;
-
-	file = g_file_new_for_path (path);
-	info = g_file_query_filesystem_info (file, G_FILE_ATTRIBUTE_FILESYSTEM_FREE, NULL, &err);
-	if (info != NULL) {
-		freespace = g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE);
-		g_object_unref (info);
+ 	info = g_file_query_info (file,
+				  (fast_file_type ?
+				   G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE :
+				   G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE),
+				  0,
+				  NULL,
+				  &error);
+	if (info == NULL) {
+		g_warning ("%s", error->message);
+		g_clear_error (&error);
 	}
 	else {
-		g_warning ("Could not get filesystem free space on volume that contains %s: %s", path, err->message);
-		g_error_free (err);
+		result = _g_str_get_static (g_file_info_get_content_type (info));
+		g_object_unref (info);
 	}
-	g_object_unref (file);
 
-	return freespace;
+	return result;
 }
 
 
 gboolean
-_g_path_remove_directory (const char *path)
+_g_file_is_temp_dir (GFile *file)
 {
-	char     *uri;
-	gboolean  result;
+	gboolean  result = FALSE;
+	char     *path;
 
+	path = g_file_get_path (file);
 	if (path == NULL)
-		return TRUE;
+		result = TRUE;
+	else if (strcmp (g_get_tmp_dir (), path) == 0)
+		result = TRUE;
+	else if (_g_path_is_parent_of (g_get_tmp_dir (), path))
+		result = TRUE;
+	else
+		result = _g_file_is_temp_work_dir (file);
 
-	uri = g_filename_to_uri (path, NULL, NULL);
-	result = _g_uri_remove_directory (uri);
-	g_free (uri);
+	g_free (path);
 
 	return result;
 }
 
 
-static const char *try_folder[] = { "cache", "~", "tmp", NULL };
-
-
-static char *
-ith_temp_folder_to_try (int n)
+GFile *
+_g_file_create_alternative (GFile      *folder,
+			    const char *name)
 {
-	const char *folder;
+	GFile *file = NULL;
+	int    n = 1;
 
-	folder = try_folder[n];
-	if (strcmp (folder, "cache") == 0)
-		folder = g_get_user_cache_dir ();
-	else if (strcmp (folder, "~") == 0)
-		folder = g_get_home_dir ();
-	else if (strcmp (folder, "tmp") == 0)
-		folder = g_get_tmp_dir ();
+	do {
+		char *new_name;
 
-	return g_strdup (folder);
-}
+		_g_object_unref (file);
 
+		if (n == 1)
+			new_name = g_strdup (name);
+		else
+			new_name = g_strdup_printf ("%s (%d)", name, n);
+		n++;
 
-char *
-_g_path_get_temp_work_dir (const char *parent_folder)
-{
-	guint64  max_size = 0;
-	char    *best_folder = NULL;
-	int      i;
-	char    *template;
-	char    *result = NULL;
+		file = g_file_get_child (folder, new_name);
 
-	if (parent_folder == NULL) {
-		/* find the folder with more free space. */
-
-		for (i = 0; try_folder[i] != NULL; i++) {
-			char    *folder;
-			guint64  size;
-
-			folder = ith_temp_folder_to_try (i);
-			size = _g_path_get_free_space (folder);
-			if (max_size < size) {
-				max_size = size;
-				g_free (best_folder);
-				best_folder = folder;
-			}
-			else
-				g_free (folder);
-		}
+		g_free (new_name);
 	}
-	else
-		best_folder = g_strdup (parent_folder);
+	while (g_file_query_exists (file, NULL));
 
-	if (best_folder == NULL)
-		return NULL;
-
-	template = g_strconcat (best_folder, "/.fr-XXXXXX", NULL);
-	result = mkdtemp (template);
-
-	if ((result == NULL) || (*result == '\0')) {
-		g_free (template);
-		result = NULL;
-	}
-
-	return result;
+	return file;
 }
 
 
-gboolean
-_g_path_is_temp_work_dir (const char *path)
+GFile *
+_g_file_create_alternative_for_file (GFile *file)
 {
-	int i;
+	GFile *parent;
+	char  *name;
+	GFile *new_file;
 
-	if (strncmp (path, "file://", 7) == 0)
-		path = path + 7;
-	else if (path[0] != '/')
-		return FALSE;
+	parent = g_file_get_parent (file);
+	name = g_file_get_basename (file);
+	new_file = _g_file_create_alternative (parent, name);
 
-	for (i = 0; try_folder[i] != NULL; i++) {
-		char *folder;
+	g_free (name);
+	g_object_unref (parent);
 
-		folder = ith_temp_folder_to_try (i);
-		if (strncmp (path, folder, strlen (folder)) == 0) {
-			if (strncmp (path + strlen (folder), "/.fr-", 5) == 0) {
-				g_free (folder);
-				return TRUE;
-			}
-		}
-
-		g_free (folder);
-	}
-
-	return FALSE;
+	return new_file;
 }
-
-
-gboolean
-_g_path_is_temp_dir (const char *path)
-{
-	if (strncmp (path, "file://", 7) == 0)
-		path = path + 7;
-	if (strcmp (g_get_tmp_dir (), path) == 0)
-		return TRUE;
-	if (_g_path_is_parent_of (g_get_tmp_dir (), path))
-		return TRUE;
-	else
-		return _g_path_is_temp_work_dir (path);
-}
-
-
-/* GFile */
 
 
 gboolean
@@ -829,6 +397,50 @@ _g_file_make_directory_tree (GFile    *dir,
 }
 
 
+gboolean
+_g_file_remove_directory (GFile         *directory,
+			  GCancellable  *cancellable,
+			  GError       **error)
+{
+	GFileEnumerator *enumerator;
+	GFileInfo       *info;
+	gboolean         error_occurred = FALSE;
+
+	enumerator = g_file_enumerate_children (directory,
+					        G_FILE_ATTRIBUTE_STANDARD_NAME ","
+					        G_FILE_ATTRIBUTE_STANDARD_TYPE,
+					        0,
+					        cancellable,
+					        error);
+
+	while (! error_occurred && (info = g_file_enumerator_next_file (enumerator, cancellable, error)) != NULL) {
+		GFile *child;
+
+		child = g_file_get_child (directory, g_file_info_get_name (info));
+		switch (g_file_info_get_file_type (info)) {
+		case G_FILE_TYPE_DIRECTORY:
+			if (! _g_file_remove_directory (child, cancellable, error))
+				error_occurred = TRUE;
+			break;
+		default:
+			if (! g_file_delete (child, cancellable, error))
+				error_occurred = TRUE;
+			break;
+		}
+
+		g_object_unref (child);
+		g_object_unref (info);
+	}
+
+	if (! error_occurred && ! g_file_delete (directory, cancellable, error))
+ 		error_occurred = TRUE;
+
+	g_object_unref (enumerator);
+
+	return ! error_occurred;
+}
+
+
 GFile *
 _g_file_new_user_config_subdir (const char *child_name,
 			        gboolean    create_child)
@@ -849,6 +461,213 @@ _g_file_new_user_config_subdir (const char *child_name,
 	}
 
 	return file;
+}
+
+
+GFile *
+_g_file_get_dir_content_if_unique (GFile *file)
+{
+	GFileEnumerator *enumarator;
+	GFileInfo       *info;
+	GError          *error = NULL;
+	GFile           *content = NULL;
+
+	if (! g_file_query_exists (file, NULL)) {
+		g_object_unref (file);
+		return NULL;
+	}
+
+	enumarator = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &error);
+	if (error != NULL) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+		return NULL;
+	}
+
+	while ((info = g_file_enumerator_next_file (enumarator, NULL, &error)) != NULL) {
+		const char *name;
+
+		if (error != NULL) {
+			g_warning ("Failed to get info while enumerating children: %s", error->message);
+			g_clear_error (&error);
+			g_object_unref (info);
+			continue;
+		}
+
+		name = g_file_info_get_name (info);
+		if ((strcmp (name, ".") == 0) || (strcmp (name, "..") == 0)) {
+			g_object_unref (info);
+			continue;
+		}
+
+		if (content != NULL) {
+			g_object_unref (content);
+			g_object_unref (info);
+			content = NULL;
+			break;
+		}
+
+		content = g_file_get_child (file, name);
+
+		g_object_unref (info);
+	}
+
+	if (error != NULL) {
+		g_warning ("Failed to get info after enumerating children: %s", error->message);
+		g_clear_error (&error);
+	}
+
+	g_object_unref (enumarator);
+
+	return content;
+}
+
+
+guint64
+_g_file_get_free_space (GFile *file)
+{
+	GFileInfo *info;
+	guint64    freespace = 0;
+	GError    *error = NULL;
+
+	info = g_file_query_filesystem_info (file, G_FILE_ATTRIBUTE_FILESYSTEM_FREE, NULL, &error);
+	if (info != NULL) {
+		freespace = g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE);
+		g_object_unref (info);
+	}
+	else {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+	}
+
+	return freespace;
+}
+
+
+GFile *
+_g_file_get_temp_work_dir (GFile *parent_folder)
+{
+	char  *parent_path;
+	char  *tmp;
+	GFile *file;
+
+	parent_path = (parent_folder != NULL) ? g_file_get_path (parent_folder) : NULL;
+	tmp = _g_path_get_temp_work_dir (parent_path);
+	file = g_file_new_for_path (tmp);
+
+	g_free (tmp);
+	g_free (parent_path);
+
+	return file;
+}
+
+
+gboolean
+_g_file_is_temp_work_dir (GFile *file)
+{
+	gboolean  result = FALSE;
+	char     *path;
+	int       i;
+
+	path = g_file_get_path (file);
+	if (path[0] != '/')
+		return FALSE;
+
+	for (i = 0; try_folder[i] != NULL; i++) {
+		const char *folder;
+
+		folder = get_nth_temp_folder_to_try (i);
+		if (strncmp (path, folder, strlen (folder)) == 0) {
+			if (strncmp (path + strlen (folder), "/.fr-", 5) == 0) {
+				result = TRUE;
+				break;
+			}
+		}
+	}
+
+	return result;
+}
+
+
+gboolean
+_g_file_query_dir_is_empty (GFile *file)
+{
+	GFileEnumerator *enumerator;
+	GFileInfo       *info;
+	GError          *error = NULL;
+	int              n = 0;
+
+	if (! g_file_query_exists (file, NULL))
+		return TRUE;
+
+	enumerator = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &error);
+	if (error != NULL) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+		g_object_unref (enumerator);
+		return TRUE;
+	}
+
+	while ((n == 0) && ((info = g_file_enumerator_next_file (enumerator, NULL, &error)) != NULL)) {
+		if (error != NULL) {
+			g_warning ("%s", error->message);
+			g_error_free (error);
+		}
+		else if (! IS_SPECIAL_DIR (g_file_info_get_name (info)))
+			n++;
+		g_object_unref (info);
+	}
+
+	g_object_unref (enumerator);
+
+	return (n == 0);
+}
+
+
+gboolean
+_g_file_dir_contains_one_object (GFile *file)
+{
+	GFileEnumerator *enumerator;
+	GFileInfo       *info;
+	GError          *error = NULL;
+	int              n = 0;
+
+	if (! g_file_query_exists (file, NULL))
+		return FALSE;
+
+	enumerator = g_file_enumerate_children (file, G_FILE_ATTRIBUTE_STANDARD_NAME, 0, NULL, &error);
+	if (error != NULL) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+		g_object_unref (enumerator);
+		return FALSE;
+	}
+
+	while ((info = g_file_enumerator_next_file (enumerator, NULL, &error)) != NULL) {
+		const char *name;
+
+		if (error != NULL) {
+			g_warning ("%s", error->message);
+			g_error_free (error);
+			g_object_unref (info);
+			continue;
+		}
+
+		name = g_file_info_get_name (info);
+		if (strcmp (name, ".") == 0 || strcmp (name, "..") == 0) {
+			g_object_unref (info);
+ 			continue;
+		}
+
+		g_object_unref (info);
+
+		if (++n > 1)
+			break;
+	}
+
+	g_object_unref (enumerator);
+
+	return (n == 1);
 }
 
 

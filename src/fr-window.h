@@ -109,44 +109,35 @@ void            fr_window_close                        (FrWindow      *window);
 /* archive operations */
 
 gboolean        fr_window_archive_new                  (FrWindow      *window,
-						        const char    *uri,
+							GFile         *file,
 						        const char    *mime_type);
 FrWindow *      fr_window_archive_open                 (FrWindow      *window,
-						        const char    *uri,
+							GFile         *file,
 						        GtkWindow     *parent);
 void            fr_window_archive_close                (FrWindow      *window);
-const char *    fr_window_get_archive_uri              (FrWindow      *window);
-const char *    fr_window_get_paste_archive_uri        (FrWindow      *window);
+GFile *         fr_window_get_archive_file             (FrWindow      *window);
+GFile *         fr_window_get_archive_file_for_paste   (FrWindow      *window);
 gboolean        fr_window_archive_is_present           (FrWindow      *window);
 void            fr_window_archive_reload               (FrWindow      *window);
 void            fr_window_archive_add_files            (FrWindow      *window,
-						        GList         *file_list, /* GFile list */
-						        gboolean       update);
-void            fr_window_archive_add_with_wildcard    (FrWindow      *window,
+							GList         *file_list, /* GFile list */
+							GFile         *base_dir,
+							gboolean       update);
+void            fr_window_archive_add_with_filter      (FrWindow      *window,
+							GFile         *base_dir,
 						        const char    *include_files,
 						        const char    *exclude_files,
 						        const char    *exclude_folders,
-						        const char    *base_dir,
 						        const char    *dest_dir,
 						        gboolean       update,
 						        gboolean       follow_links);
-void            fr_window_archive_add_directory        (FrWindow      *window,
-						        const char    *directory,
-						        const char    *base_dir,
-						        const char    *dest_dir,
-						        gboolean       update);
-void            fr_window_archive_add_items            (FrWindow      *window,
-						        GList         *dir_list,
-						        const char    *base_dir,
-						        const char    *dest_dir,
-						        gboolean       update);
 void            fr_window_archive_add_dropped_items    (FrWindow      *window,
-						        GList         *item_list);
+						        GList         *file_list);
 void            fr_window_archive_remove               (FrWindow      *window,
 						        GList         *file_list);
 void            fr_window_archive_extract              (FrWindow      *window,
 						        GList         *file_list,
-						        const char    *extract_to_dir,
+						        GFile         *destination,
 						        const char    *base_dir,
 						        gboolean       skip_older,
 						        FrOverwrite    overwrite,
@@ -233,7 +224,7 @@ void            fr_window_stop                         (FrWindow    *window);
 
 void            fr_window_action_new_archive           (FrWindow   *window);
 gboolean        fr_window_create_archive_and_continue  (FrWindow   *window,
-							const char *uri,
+							GFile      *file,
 							const char *mime_type,
 							GtkWindow  *error_dialog_parent);
 void            fr_window_action_save_as               (FrWindow   *window);
@@ -252,18 +243,18 @@ gboolean        fr_window_update_files                 (FrWindow   *window,
 						        GList      *file_list);
 void            fr_window_update_history_list          (FrWindow   *window);
 void            fr_window_set_default_dir              (FrWindow   *window,
-						        const char *default_dir,
+							GFile      *default_dir,
 						        gboolean    freeze);
 void            fr_window_set_open_default_dir         (FrWindow   *window,
-						        const char *default_dir);
-const char *    fr_window_get_open_default_dir         (FrWindow   *window);
+							GFile      *default_dir);
+GFile *         fr_window_get_open_default_dir         (FrWindow   *window);
 void            fr_window_set_add_default_dir          (FrWindow   *window,
-						        const char *default_dir);
-const char *    fr_window_get_add_default_dir          (FrWindow   *window);
+							GFile      *default_dir);
+GFile *         fr_window_get_add_default_dir          (FrWindow   *window);
 void            fr_window_set_extract_default_dir      (FrWindow   *window,
-						        const char *default_dir,
+							GFile      *default_dir,
 						        gboolean    freeze);
-const char *    fr_window_get_extract_default_dir      (FrWindow   *window);
+GFile *         fr_window_get_extract_default_dir      (FrWindow   *window);
 void            fr_window_set_toolbar_visibility       (FrWindow   *window,
 						        gboolean    value);
 void            fr_window_set_statusbar_visibility     (FrWindow   *window,
@@ -299,12 +290,12 @@ void            fr_window_stop_batch_with_error        (FrWindow     *window,
 void            fr_window_resume_batch                 (FrWindow      *window);
 gboolean        fr_window_is_batch_mode                (FrWindow      *window);
 void            fr_window_set_batch__extract           (FrWindow      *window,
-						        const char    *filename,
-						        const char    *dest_dir);
+						        GFile         *archive,
+						        GFile         *destination);
 void            fr_window_set_batch__extract_here      (FrWindow      *window,
-						        const char    *filename);
+							GFile         *archive);
 void            fr_window_set_batch__add               (FrWindow      *window,
-						        const char    *archive,
+							GFile         *archive,
 						        GList         *file_list);
 void            fr_window_destroy_with_error_dialog    (FrWindow      *window);
 void            fr_window_set_notify                   (FrWindow      *window,

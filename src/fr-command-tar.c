@@ -175,7 +175,7 @@ process_line (char     *line,
 	if (fdata->dir)
 		fdata->name = _g_path_get_dir_name (fdata->full_path);
 	else
-		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
@@ -290,7 +290,7 @@ process_line__generic (char     *line,
 		fr_archive_progress (archive, fr_archive_progress_inc_completed_files (archive, 1));
 	}
 	else {
-		char *msg = g_strdup_printf (message_format, _g_path_get_file_name (line), NULL);
+		char *msg = g_strdup_printf (message_format, _g_path_get_basename (line), NULL);
 		fr_archive_message (archive, msg);
 		g_free (msg);
 	}
@@ -830,7 +830,7 @@ get_temp_name (FrCommandTar *c_tar,
 
 	template = g_strconcat (dirname, "/.fr-XXXXXX", NULL);
 	result = mkdtemp (template);
-	temp_name = g_build_filename (result, _g_path_get_file_name (filepath), NULL);
+	temp_name = g_build_filename (result, _g_path_get_basename (filepath), NULL);
 	g_free (template);
 
 	return temp_name;

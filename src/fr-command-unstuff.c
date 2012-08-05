@@ -159,7 +159,7 @@ process_line (char     *line,
 	fdata->full_path = filename;
 	fdata->original_path = filename;
 	fdata->link = NULL;
-	fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	fdata->size = 0;

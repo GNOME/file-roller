@@ -27,56 +27,39 @@
 #include <unistd.h>
 #include <gio/gio.h>
 
-/* uri */
-
-gboolean            _g_uri_query_exists                   (const char  *uri);
-gboolean            _g_uri_query_is_file                  (const char  *uri);
-gboolean            _g_uri_query_is_dir                   (const char  *uri);
-char *              _g_uri_create_alternative             (const char  *folder,
-							   const char  *name);
-char *              _g_uri_create_alternative_for_uri     (const char  *uri);
-gboolean            _g_uri_query_dir_is_empty             (const char  *uri);
-gboolean            _g_uri_dir_contains_one_object        (const char  *uri);
-char *              _g_uri_get_dir_content_if_unique      (const char  *uri);
-goffset             _g_uri_get_file_size                  (const char  *uri);
-
-time_t              _g_uri_get_file_mtime                 (const char  *uri);
-
-time_t              _g_uri_get_file_ctime                 (const char  *uri);
-gboolean            _g_uri_ensure_dir_exists              (const char  *uri,
-							   mode_t       mode,
-							   GError     **error);
-const char*         _g_uri_get_mime_type                  (const char  *uri,
-							   gboolean     fast_file_type);
-gboolean            _g_uri_remove_directory               (const char  *uri);
-gboolean            _g_uri_check_permissions              (const char  *uri,
-							   int          mode);
-
 /* path */
 
-gboolean            _g_path_query_is_dir                  (const char  *path);
-goffset             _g_path_get_file_size                 (const char  *path);
-time_t              _g_path_get_file_mtime                (const char  *path);
-gboolean            _g_path_make_directory_tree           (const char  *path,
-							   mode_t       mode,
-							   GError     **error);
-const char*         _g_path_get_mime_type                 (const char  *filename,
-							   gboolean     fast_file_type);
-guint64             _g_path_get_free_space                (const char  *path);
-gboolean            _g_path_remove_directory              (const char  *path);
-char *              _g_path_get_temp_work_dir             (const char  *parent_folder);
-gboolean            _g_path_is_temp_work_dir              (const char  *path);
-gboolean            _g_path_is_temp_dir                   (const char  *path);
+char *              _g_path_get_temp_work_dir             (const char *parent_folder);
 
 /* GFile */
 
+gboolean            _g_file_query_is_file                 (GFile       *file);
+gboolean            _g_file_query_is_dir                  (GFile       *file);
+goffset             _g_file_get_file_size                 (GFile       *file);
+time_t              _g_file_get_file_mtime                (GFile       *file);
+time_t              _g_file_get_file_ctime                (GFile       *file);
+const char*         _g_file_get_mime_type                 (GFile       *file,
+							   gboolean     fast_file_type);
+gboolean            _g_file_is_temp_dir                   (GFile       *file);
+GFile *             _g_file_create_alternative            (GFile       *folder,
+							   const char  *name);
+GFile *             _g_file_create_alternative_for_file   (GFile       *file);
 gboolean            _g_file_check_permissions             (GFile       *file,
 							   int          mode);
 gboolean            _g_file_make_directory_tree           (GFile       *dir,
 							   mode_t       mode,
 							   GError     **error);
+gboolean            _g_file_remove_directory              (GFile         *directory,
+							   GCancellable  *cancellable,
+							   GError       **error);
 GFile *             _g_file_new_user_config_subdir        (const char  *child_name,
 						    	   gboolean     create_);
+GFile *             _g_file_get_dir_content_if_unique     (GFile       *file);
+guint64             _g_file_get_free_space                (GFile       *file);
+GFile *             _g_file_get_temp_work_dir             (GFile       *parent_folder);
+gboolean            _g_file_is_temp_work_dir              (GFile       *file);
+gboolean            _g_file_query_dir_is_empty            (GFile       *file);
+gboolean            _g_file_dir_contains_one_object       (GFile       *file);
 
 /* program */
 

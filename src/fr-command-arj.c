@@ -120,7 +120,7 @@ list__process_line (char     *line,
 
 		fdata->link = NULL;
 
-		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 		fdata->path = _g_path_remove_level (fdata->full_path);
 	}
 	else if (arj_comm->line_no == 2) { /* Read file size and date. */

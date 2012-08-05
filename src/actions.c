@@ -76,7 +76,7 @@ open_file_response_cb (GtkWidget *w,
 		       GtkWidget *file_sel)
 {
 	FrWindow *window = NULL;
-	char     *uri;
+	GFile    *file;
 
 	if ((response == GTK_RESPONSE_CANCEL) || (response == GTK_RESPONSE_DELETE_EVENT)) {
 		gtk_widget_destroy (file_sel);
@@ -84,9 +84,9 @@ open_file_response_cb (GtkWidget *w,
 	}
 
 	window = g_object_get_data (G_OBJECT (file_sel), "fr_window");
-	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (file_sel));
+	file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (file_sel));
 
-	if ((window == NULL) || (uri == NULL))
+	if ((window == NULL) || (file == NULL))
 		return;
 
 	if (fr_window_archive_is_present (window))
@@ -95,9 +95,9 @@ open_file_response_cb (GtkWidget *w,
 			  "archive_loaded",
 			  G_CALLBACK (window_archive_loaded_cb),
 			  file_sel);
-	fr_window_archive_open (window, uri, GTK_WINDOW (file_sel));
+	fr_window_archive_open (window, file, GTK_WINDOW (file_sel));
 
-	g_free (uri);
+	g_object_unref (file);
 }
 
 
@@ -118,7 +118,7 @@ activate_action_open (GtkAction *action,
 						NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (file_sel), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (file_sel), FALSE);
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window));
+	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (file_sel), fr_window_get_open_default_dir (window), NULL);
 	_gtk_dialog_add_to_window_group (GTK_DIALOG (file_sel));
 	gtk_window_set_modal (GTK_WINDOW (file_sel), TRUE);
 

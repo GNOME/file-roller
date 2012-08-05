@@ -70,7 +70,7 @@ get_uncompressed_name_from_archive (FrCommand  *comm,
 			str = g_string_new ("");
 			while (g_input_stream_read (stream, buffer, 1, NULL, NULL) > 0) {
 				if (buffer[0] == '\0') {
-					filename = g_strdup (_g_path_get_file_name (str->str));
+					filename = g_strdup (_g_path_get_basename (str->str));
 #ifdef DEBUG
 					g_message ("filename is: %s", filename);
 #endif
@@ -95,6 +95,7 @@ list__process_line (char     *line,
 	FrCommand  *comm = FR_COMMAND (data);
 	FileData   *fdata;
 	char      **fields;
+	GFile      *file;
 	char       *filename;
 
 	fdata = file_data_new ();
@@ -104,29 +105,31 @@ list__process_line (char     *line,
 		fdata->size = g_ascii_strtoull (fields[1], NULL, 10);
 	g_strfreev (fields);
 
+	file = g_file_new_for_path (comm->filename);
+
 	if (fdata->size == 0)
-		fdata->size = _g_uri_get_file_size (comm->filename);
+		fdata->size = _g_file_get_file_size (file);
 
 	filename = get_uncompressed_name_from_archive (comm, comm->filename);
 	if (filename == NULL)
 		filename = _g_path_remove_extension (comm->filename);
 
-	fdata->full_path = g_strconcat ("/",
-					_g_path_get_file_name (filename),
-					NULL);
+	fdata->full_path = g_strconcat ("/", _g_path_get_basename (filename), NULL);
 	g_free (filename);
 
 	fdata->original_path = fdata->full_path + 1;
 	fdata->link = NULL;
-	fdata->modified = _g_path_get_file_mtime (comm->filename);
+	fdata->modified = _g_file_get_file_mtime (file);
 
-	fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
 		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
+
+	g_object_unref (file);
 }
 
 
@@ -153,27 +156,31 @@ fr_command_cfile_list (FrCommand *comm)
 
 		FileData *fdata;
 		char     *filename;
+		GFile    *file;
 
 		fdata = file_data_new ();
 
 		filename = _g_path_remove_extension (comm->filename);
 		fdata->full_path = g_strconcat ("/",
-						_g_path_get_file_name (filename),
+						_g_path_get_basename (filename),
 						NULL);
 		g_free (filename);
 
+		file = g_file_new_for_path (comm->filename);
+
 		fdata->original_path = fdata->full_path + 1;
 		fdata->link = NULL;
-		fdata->size = _g_path_get_file_size (comm->filename);
-		fdata->modified = _g_path_get_file_mtime (comm->filename);
-
-		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->size = _g_file_get_file_size (file);
+		fdata->modified = _g_file_get_file_mtime (file);
+		fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 		fdata->path = _g_path_remove_level (fdata->full_path);
 
 		if (*fdata->name == 0)
 			file_data_free (fdata);
 		else
 			fr_archive_add_file (FR_ARCHIVE (comm), fdata);
+
+		g_object_unref (file);
 
 		return FALSE;
 	}
@@ -336,7 +343,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 	temp_dir = _g_path_get_temp_work_dir (NULL);
 	temp_file = g_strconcat (temp_dir,
 				 "/",
-				 _g_path_get_file_name (comm->filename),
+				 _g_path_get_basename (comm->filename),
 				 NULL);
 
 	fr_process_begin_command (comm->process, "cp");
@@ -418,7 +425,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 
 	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
 	if (compr_file == NULL)
-		compr_file = _g_path_remove_extension (_g_path_get_file_name (comm->filename));
+		compr_file = _g_path_remove_extension (_g_path_get_basename (comm->filename));
 	dest_file = g_strconcat (dest_dir,
 				 "/",
 				 compr_file,

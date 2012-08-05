@@ -210,7 +210,7 @@ filter_notify_cb (GObject    *gobject,
 		char       *new_basename_uft8;
 
 		new_ext = mime_type_desc[self->priv->supported_types[n_format]].default_ext;
-		basename = _g_path_get_file_name (uri);
+		basename = _g_path_get_basename (uri);
 		if (g_str_has_suffix (basename, ext))
 			basename_noext = g_strndup (basename, strlen (basename) - strlen (ext));
 		else
@@ -422,11 +422,11 @@ _fr_new_archive_dialog_get_archive_type (FrNewArchiveDialog *self)
 }
 
 
-char *
-fr_new_archive_dialog_get_uri (FrNewArchiveDialog  *self,
-			       const char         **mime_type)
+GFile *
+fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
+			        const char         **mime_type)
 {
-	char       *uri = NULL;
+	char       *uri;
 	int         n_format;
 	const char *file_mime_type;
 	GFile      *file, *dir;
@@ -527,7 +527,7 @@ fr_new_archive_dialog_get_uri (FrNewArchiveDialog  *self,
 		char     *secondary_message;
 		gboolean  overwrite;
 
-		filename = _g_uri_display_basename (uri);
+		filename = _g_file_get_display_basename (file);
 		message = g_strdup_printf (_("A file named \"%s\" already exists.  Do you want to replace it?"), filename);
 		secondary_message = g_strdup_printf (_("The file already exists in \"%s\".  Replacing it will overwrite its contents."), g_file_info_get_display_name (dir_info));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (self),
@@ -570,10 +570,10 @@ fr_new_archive_dialog_get_uri (FrNewArchiveDialog  *self,
 		}
 	}
 
-	g_object_unref (file);
 	g_object_unref (dir_info);
+	g_free (uri);
 
-	return uri;
+	return file;
 }
 
 

@@ -422,6 +422,18 @@ fr_process_set_working_dir (FrProcess  *process,
 
 
 void
+fr_process_set_working_dir_file (FrProcess *process,
+				 GFile     *folder)
+{
+	char *path;
+
+	path = g_file_get_path (folder);
+	fr_process_set_working_dir (process, path);
+
+	g_free (path);
+}
+
+void
 fr_process_set_sticky (FrProcess *process,
 		       gboolean   sticky)
 {
@@ -499,6 +511,19 @@ fr_process_add_arg_printf (FrProcess    *fr_proc,
 	fr_process_add_arg (fr_proc, arg);
 
 	g_free (arg);
+}
+
+
+void
+fr_process_add_arg_file (FrProcess *process,
+			 GFile     *file)
+{
+	char *path;
+
+	path = g_file_get_path (file);
+	fr_process_add_arg (process, path);
+
+	g_free (path);
 }
 
 

@@ -153,7 +153,7 @@ process_line (char     *line,
 					fdata->dir = TRUE;
 				}
 				else
-					fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+					fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 
 				fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 				rar_comm->fdata = NULL;
@@ -280,7 +280,7 @@ parse_progress_line (FrCommand  *comm,
 			if ((len > 5) && (strncmp (filename + len - 5, "  OK ", 5) == 0))
 				filename[len - 5] = 0;
 
-			msg = g_strdup_printf (message_format, _g_path_get_file_name (filename), NULL);
+			msg = g_strdup_printf (message_format, _g_path_get_basename (filename), NULL);
 			fr_archive_message (archive, msg);
 
 			g_free (msg);

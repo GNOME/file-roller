@@ -93,6 +93,7 @@ dlg_ask_password__common (FrWindow       *window,
 			  FrPasswordType  pwd_type)
 {
 	DialogData *data;
+	GFile      *file;
 	char       *filename;
 	char       *message;
 
@@ -113,9 +114,10 @@ dlg_ask_password__common (FrWindow       *window,
 	/* Set widgets data. */
 
 	if (data->pwd_type == FR_PASSWORD_TYPE_MAIN)
-		filename = _g_uri_display_basename (fr_window_get_archive_uri (window));
+		file = fr_window_get_archive_file (window);
 	else if (data->pwd_type == FR_PASSWORD_TYPE_PASTE_FROM)
-		filename = _g_uri_display_basename (fr_window_get_paste_archive_uri (window));
+		file = fr_window_get_archive_file_for_paste (window);
+	filename = _g_file_get_display_basename (file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("Password required for \"%s\""), filename);
 	gtk_label_set_label (GTK_LABEL (_gtk_builder_get_widget (data->builder, "title_label")), message);

@@ -22,24 +22,24 @@
 #include <config.h>
 #include "open-file.h"
 #include "file-utils.h"
+#include "glib-utils.h"
 
 
-OpenFile*
-open_file_new (const char *path,
-	       const char *extracted_path,
-	       const char *temp_dir)
+OpenFile *
+open_file_new (const char *original_path,
+	       GFile      *extracted_file,
+	       GFile      *temp_dir)
 {
 	OpenFile *ofile;
 
 	ofile = g_new0 (OpenFile, 1);
-	ofile->path = g_strdup (path);
-	ofile->extracted_uri = g_filename_to_uri (extracted_path, NULL, NULL);
-	if (! _g_uri_query_exists (ofile->extracted_uri)) {
+	ofile->extracted_file = g_object_ref (extracted_file);
+	if (! g_file_query_exists (ofile->extracted_file, NULL)) {
 		open_file_free (ofile);
 		return NULL;
 	}
-	ofile->temp_dir = g_strdup (temp_dir);
-	ofile->last_modified = _g_uri_get_file_mtime (ofile->extracted_uri);
+	ofile->temp_dir = g_object_ref (temp_dir);
+	ofile->last_modified = _g_file_get_file_mtime (ofile->extracted_file);
 
 	return ofile;
 }
@@ -52,9 +52,8 @@ open_file_free (OpenFile *ofile)
 		return;
 	if (ofile->monitor != NULL)
 		g_object_unref (ofile->monitor);
-	g_free (ofile->path);
-	g_free (ofile->extracted_uri);
-	g_free (ofile->temp_dir);
+	_g_object_unref (ofile->extracted_file);
+	_g_object_unref (ofile->temp_dir);
 	g_free (ofile);
 }
 
@@ -65,9 +64,8 @@ open_file_copy (OpenFile *src)
 	OpenFile *ofile;
 
 	ofile = g_new0 (OpenFile, 1);
-	ofile->path = g_strdup (src->path);
-	ofile->extracted_uri = g_strdup (src->extracted_uri);
-	ofile->temp_dir = g_strdup (src->temp_dir);
+	ofile->extracted_file = g_object_ref (src->extracted_file);
+	ofile->temp_dir = g_object_ref (src->temp_dir);
 	ofile->last_modified = src->last_modified;
 
 	return ofile;

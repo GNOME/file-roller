@@ -40,7 +40,7 @@ typedef struct {
 	char      *command;
 	GAppInfo  *app;
 	GList     *file_list;
-	char      *temp_dir;
+	GFile     *temp_dir;
 } CommandData;
 
 extern GList                 *CommandList;

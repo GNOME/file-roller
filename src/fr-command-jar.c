@@ -57,7 +57,7 @@ fr_command_jar_add (FrCommand     *comm,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = scan->data;
-		char *path = _g_uri_build (base_dir, filename, NULL);
+		char *path = g_build_filename (base_dir, filename, NULL);
 		char *package = NULL;
 
 		if (_g_filename_has_extension (filename, ".java"))
@@ -71,9 +71,9 @@ fr_command_jar_add (FrCommand     *comm,
 			JarData *newdata = g_new0 (JarData, 1);
 
 			newdata->package_minus_one_level = _g_path_remove_level (package);
-			newdata->link_name = g_strdup (_g_path_get_file_name (package));
+			newdata->link_name = g_strdup (_g_path_get_basename (package));
 			newdata->rel_path = _g_path_remove_level (filename);
-			newdata->filename = g_strdup (_g_path_get_file_name (filename));
+			newdata->filename = g_strdup (_g_path_get_basename (filename));
 			jardata_list = g_list_append (jardata_list, newdata);
 		}
 
@@ -85,17 +85,20 @@ fr_command_jar_add (FrCommand     *comm,
 	for (scan = jardata_list; scan ; scan = scan->next) {
 		JarData *jdata = scan->data;
 		char    *pack_path;
+		GFile   *directory;
 		char    *old_link;
 		char    *link_name;
 		int      retval;
 
-		pack_path = _g_uri_build (tmp_dir, jdata->package_minus_one_level, NULL);
-		if (! _g_path_make_directory_tree (pack_path, 0755, NULL)) {
+		pack_path = g_build_filename (tmp_dir, jdata->package_minus_one_level, NULL);
+		directory = g_file_new_for_path (pack_path);
+		if (! _g_file_make_directory_tree (directory, 0755, NULL)) {
+			g_object_unref (directory);
 			g_free (pack_path);
 			continue;
 		}
 
-		old_link = _g_uri_build (base_dir, jdata->rel_path, NULL);
+		old_link = g_build_filename (base_dir, jdata->rel_path, NULL);
 		link_name = g_build_filename (pack_path, jdata->link_name, NULL);
 
 		retval = symlink (old_link, link_name);
@@ -108,6 +111,7 @@ fr_command_jar_add (FrCommand     *comm,
 
 		g_free (link_name);
 		g_free (old_link);
+		g_object_unref (directory);
 		g_free (pack_path);
 	}
 

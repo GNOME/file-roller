@@ -190,7 +190,7 @@ process_line (char     *line,
 	if (fdata->dir)
 		fdata->name = _g_path_get_dir_name (fdata->full_path);
 	else
-		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
