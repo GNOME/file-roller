@@ -735,18 +735,20 @@ save_data_open (struct archive *a,
 	SaveData *save_data = client_data;
 	LoadData *load_data = LOAD_DATA (save_data);
 	GFile    *parent;
-	char     *name;
+	char     *basename;
+	char     *tmpname;
 
 	if (load_data->error != NULL)
 		return ARCHIVE_FATAL;
 
-	/* FIXME: use a better temp filename */
 	parent = g_file_get_parent (fr_archive_get_file (load_data->archive));
-	name = _g_filename_get_random (16);
-	save_data->tmp_file = g_file_get_child (parent, name);
+	basename = g_file_get_basename (fr_archive_get_file (load_data->archive));
+	tmpname = _g_filename_get_random (16, basename);
+	save_data->tmp_file = g_file_get_child (parent, tmpname);
 	save_data->ostream = (GOutputStream *) g_file_create (save_data->tmp_file, G_FILE_CREATE_NONE, load_data->cancellable, &load_data->error);
 
-	g_free (name);
+	g_free (tmpname);
+	g_free (basename);
 	g_object_unref (parent);
 
 	return (save_data->ostream != NULL) ? ARCHIVE_OK : ARCHIVE_FATAL;

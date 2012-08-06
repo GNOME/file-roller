@@ -142,7 +142,8 @@ gboolean            _g_filename_is_hidden          (const char          *name);
 const char *        _g_filename_get_extension      (const char          *filename);
 gboolean            _g_filename_has_extension      (const char          *filename,
 						    const char          *ext);
-char *              _g_filename_get_random         (int                  length);
+char *              _g_filename_get_random         (int                  random_part_len,
+						    const char          *suffix);
 gboolean            _g_mime_type_matches           (const char          *type,
 						    const char          *pattern);
 
