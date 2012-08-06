@@ -1445,9 +1445,8 @@ _remove_files_entry_action (SaveData             *save_data,
 	if (g_hash_table_lookup (remove_data->files_to_remove, pathname)) {
 		action = WRITE_ACTION_SKIP_ENTRY;
 		remove_data->n_files_to_remove--;
-		g_hash_table_remove (remove_data->files_to_remove, pathname);
-		fr_archive_progress_inc_completed_bytes (load_data->archive, archive_entry_size (w_entry));
 		fr_archive_progress_inc_completed_files (load_data->archive, 1);
+		g_hash_table_remove (remove_data->files_to_remove, pathname);
 	}
 
 	return action;
