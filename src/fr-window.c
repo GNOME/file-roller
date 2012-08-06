@@ -2708,12 +2708,13 @@ fr_archive_progress_cb (FrArchive *archive,
 			case FR_ACTION_ADDING_FILES:
 			case FR_ACTION_EXTRACTING_FILES:
 			case FR_ACTION_DELETING_FILES:
+			case FR_ACTION_UPDATING_FILES:
 				if (remaining_files > 0)
 					message = g_strdup_printf (ngettext ("%d file remaining",
 									     "%'d files remaining",
 									     remaining_files), remaining_files);
 				else
-					message = g_strdup (_("Operation completed"));
+					message = g_strdup (_("Please wait…"));
 				break;
 			default:
 				break;
