@@ -259,11 +259,6 @@ file_sel_response_cb (GtkWidget    *widget,
 		return TRUE;
 	}
 
-	if (response == GTK_RESPONSE_HELP) {
-		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-extract");
-		return TRUE;
-	}
-
 	if (response == GTK_RESPONSE_OK)
 		return extract_cb (widget, data);
 
@@ -432,7 +427,6 @@ dlg_extract__common (FrWindow *window,
 					     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     FR_STOCK_EXTRACT, GTK_RESPONSE_OK,
-					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
 
 	gtk_window_set_default_size (GTK_WINDOW (file_sel), 530, 510);

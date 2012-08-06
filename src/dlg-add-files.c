@@ -87,13 +87,6 @@ file_sel_response_cb (GtkWidget      *widget,
 		return TRUE;
 	}
 
-	if (response == GTK_RESPONSE_HELP) {
-		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-edit");
-		_g_object_unref (current_folder);
-		_g_object_unref (file);
-		return TRUE;
-	}
-
 	/* check folder permissions. */
 
 	if (_g_file_query_is_dir (current_folder) && ! _g_file_check_permissions (current_folder, R_OK)) {
@@ -159,7 +152,6 @@ add_files_cb (GtkWidget *widget,
 					     GTK_FILE_CHOOSER_ACTION_OPEN,
 					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					     FR_STOCK_ADD_FILES, GTK_RESPONSE_OK,
-					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
 					     NULL);
 
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 450);

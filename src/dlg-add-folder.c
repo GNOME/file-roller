@@ -105,11 +105,6 @@ file_sel_response_cb (GtkWidget    *widget,
 		return TRUE;
 	}
 
-	if (response == GTK_RESPONSE_HELP) {
-		_gtk_show_help_dialog (GTK_WINDOW (data->dialog), "archive-edit");
-		return TRUE;
-	}
-
 	selected_folder = gtk_file_chooser_get_file (file_sel);
 
 	/* check folder permissions. */
