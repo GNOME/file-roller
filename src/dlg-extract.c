@@ -242,7 +242,7 @@ extract_cb (GtkWidget   *w,
 				   TRUE);
 
 	_g_string_list_free (file_list);
-	g_free (destination);
+	g_object_unref (destination);
 	g_free (base_dir);
 
 	return TRUE;
