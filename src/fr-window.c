@@ -6161,6 +6161,7 @@ archive_load_ready_cb (GObject      *source_object,
 static void
 fr_window_archive_load (FrWindow *window)
 {
+	_archive_operation_started (window, FR_ACTION_LISTING_CONTENT);
 	fr_archive_list (window->archive,
 			 window->priv->password,
 			 window->priv->cancellable,
@@ -6185,9 +6186,9 @@ archive_open_ready_cb (GObject      *source_object,
 		       0,
 		       archive != NULL);
 
-	if (archive == NULL) {
-		_archive_operation_completed (window, FR_ACTION_LOADING_ARCHIVE, error);
-		g_error_free (error);
+	_archive_operation_completed (window, FR_ACTION_LOADING_ARCHIVE, error);
+	if ((archive == NULL) || (error != NULL)) {
+		_g_error_free (error);
 		return;
 	}
 
