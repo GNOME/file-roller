@@ -30,8 +30,8 @@
 
 
 typedef enum {
-	FR_PASSWORD_TYPE_MAIN,
-	FR_PASSWORD_TYPE_PASTE_FROM
+	FR_PASSWORD_TYPE_MAIN_ARCHIVE,
+	FR_PASSWORD_TYPE_SECOND_ARCHIVE
 } FrPasswordType;
 
 
@@ -64,11 +64,12 @@ ask_password__response_cb (GtkWidget  *dialog,
 	switch (response_id) {
 	case GTK_RESPONSE_OK:
 		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->password_entry));
-		if (data->pwd_type == FR_PASSWORD_TYPE_MAIN)
+		if (data->pwd_type == FR_PASSWORD_TYPE_MAIN_ARCHIVE)
 			fr_window_set_password (data->window, password);
-		else if (data->pwd_type == FR_PASSWORD_TYPE_PASTE_FROM)
-			fr_window_set_password_for_paste (data->window, password);
+		else if (data->pwd_type == FR_PASSWORD_TYPE_SECOND_ARCHIVE)
+			fr_window_set_password_for_second_archive (data->window, password);
 		g_free (password);
+
 		if (fr_window_is_batch_mode (data->window))
 			fr_window_resume_batch (data->window);
 		else
@@ -92,6 +93,7 @@ dlg_ask_password__common (FrWindow       *window,
 			  FrPasswordType  pwd_type)
 {
 	DialogData *data;
+	GFile      *file;
 	char       *filename;
 	char       *message;
 
@@ -111,10 +113,11 @@ dlg_ask_password__common (FrWindow       *window,
 
 	/* Set widgets data. */
 
-	if (data->pwd_type == FR_PASSWORD_TYPE_MAIN)
-		filename = _g_uri_display_basename (fr_window_get_archive_uri (window));
-	else if (data->pwd_type == FR_PASSWORD_TYPE_PASTE_FROM)
-		filename = _g_uri_display_basename (fr_window_get_paste_archive_uri (window));
+	if (data->pwd_type == FR_PASSWORD_TYPE_MAIN_ARCHIVE)
+		file = fr_window_get_archive_file (window);
+	else if (data->pwd_type == FR_PASSWORD_TYPE_SECOND_ARCHIVE)
+		file = fr_window_get_archive_file_for_paste (window);
+	filename = _g_file_get_display_basename (file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("Password required for \"%s\""), filename);
 	gtk_label_set_label (GTK_LABEL (_gtk_builder_get_widget (data->builder, "title_label")), message);
@@ -155,12 +158,12 @@ dlg_ask_password__common (FrWindow       *window,
 void
 dlg_ask_password (FrWindow *window)
 {
-	dlg_ask_password__common (window, FR_PASSWORD_TYPE_MAIN);
+	dlg_ask_password__common (window, FR_PASSWORD_TYPE_MAIN_ARCHIVE);
 }
 
 
 void
-dlg_ask_password_for_paste_operation (FrWindow *window)
+dlg_ask_password_for_second_archive (FrWindow *window)
 {
-	dlg_ask_password__common (window, FR_PASSWORD_TYPE_PASTE_FROM);
+	dlg_ask_password__common (window, FR_PASSWORD_TYPE_SECOND_ARCHIVE);
 }

@@ -121,7 +121,9 @@ add_callback (NautilusMenuItem *item,
 	dir = g_path_get_dirname (uri);
 
 	cmd = g_string_new ("file-roller");
-	g_string_append_printf (cmd," --default-dir=%s --add", g_shell_quote (dir));
+	g_string_append (cmd, " --notify");
+	g_string_append_printf (cmd," --default-dir=%s", g_shell_quote (dir));
+	g_string_append (cmd," --add");
 
 	g_free (dir);
 	g_free (uri);

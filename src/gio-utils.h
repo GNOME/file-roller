@@ -25,7 +25,6 @@
 #include <glib.h>
 #include <gio/gio.h>
 
-/* callback types */
 
 typedef enum {
 	DIR_OP_CONTINUE,
@@ -33,56 +32,83 @@ typedef enum {
 	DIR_OP_STOP
 } DirOp;
 
-typedef DirOp (*StartDirCallback)    (const char  *uri,
-				      GError     **error,
-				      gpointer     user_data);
-typedef void (*ForEachChildCallback) (const char  *uri,
-				      GFileInfo   *info,
-				      gpointer     user_data);
-typedef void (*ForEachDoneCallback)  (GError      *error,
-				      gpointer     data);
-typedef void (*ListReadyCallback)    (GList       *files,
-				      GList       *dirs,
-				      GError      *error,
-				      gpointer     user_data);
-typedef void (*CopyProgressCallback) (goffset      current_file,
-                                      goffset      total_files,
-                                      GFile       *source,
-                                      GFile       *destination,
-                                      goffset      current_num_bytes,
-                                      goffset      total_num_bytes,
-                                      gpointer     user_data);
-typedef void (*CopyDoneCallback)     (GError      *error,
-				      gpointer     user_data);
+
+typedef enum {
+        FILE_LIST_DEFAULT = 0,
+        FILE_LIST_RECURSIVE = 1 << 0,
+        FILE_LIST_NO_FOLLOW_LINKS = 1 << 1,
+        FILE_LIST_NO_BACKUP_FILES = 1 << 2,
+        FILE_LIST_NO_HIDDEN_FILES = 1 << 3
+} FileListFlags;
+
+
+/* FileInfo */
+
+typedef struct {
+	GFile     *file;
+	GFileInfo *info;
+} FileInfo;
+
+/* FileFilter */
+
+typedef struct _FileFilter FileFilter;
+
+FileFilter *  file_filter_new        (const char        *pattern);
+void          file_filter_unref      (FileFilter        *filter);
+gboolean      file_filter_matches    (FileFilter        *filter,
+				      GFile             *file);
+gboolean      file_filter_empty      (FileFilter        *filter);
+
+/* callback types */
+
+typedef gboolean  (*FilterMatchCallback)  (GFile     *file,
+					   GFileInfo *info,
+					   gpointer   user_data);
+typedef DirOp (*StartDirCallback)    (GFile                 *directory,
+				      GFileInfo             *info,
+				      GError               **error,
+				      gpointer               user_data);
+typedef void (*ForEachChildCallback) (GFile                 *file,
+				      GFileInfo             *info,
+				      gpointer               user_data);
+typedef void (*ForEachDoneCallback)  (GError                *error,
+				      gpointer               data);
+typedef void (*ListReadyCallback)    (GList                 *files,
+				      GList                 *dirs,
+				      GError                *error,
+				      gpointer               user_data);
+typedef void (*InfoReadyCallback)    (GList                 *files, /* FileInfo list */
+				      GError                *error,
+				      gpointer               user_data);
+typedef void (*CopyProgressCallback) (goffset                current_file,
+                                      goffset                total_files,
+                                      GFile                 *source,
+                                      GFile                 *destination,
+                                      goffset                current_num_bytes,
+                                      goffset                total_num_bytes,
+                                      gpointer               user_data);
+typedef void (*CopyDoneCallback)     (GError                *error,
+				      gpointer               user_data);
 
 /* asynchronous recursive list functions */
 
 void   g_directory_foreach_child     (GFile                 *directory,
 				      gboolean               recursive,
 				      gboolean               follow_links,
+				      const char            *attributes,
 				      GCancellable          *cancellable,
 				      StartDirCallback       start_dir_func,
 				      ForEachChildCallback   for_each_file_func,
 				      ForEachDoneCallback    done_func,
 				      gpointer               user_data);
-void   g_directory_list_async        (const char            *directory,
-				      const char            *base_dir,
-				      gboolean               recursive,
-				      gboolean               follow_links,
-				      gboolean               no_backup_files,
-				      gboolean               no_dot_files,
-				      const char            *include_files,
-				      const char            *exclude_files,
-				      const char            *exclude_folders,
-				      gboolean               ignorecase,
-				      GCancellable          *cancellable,
-				      ListReadyCallback      done_func,
-				      gpointer               done_data);
-void   g_list_items_async            (GList                 *items,
-				      const char            *base_dir,
-				      GCancellable          *cancellable,
-				      ListReadyCallback      done_func,
-				      gpointer               done_data);
+void   _g_file_list_query_info_async (GList                 *file_list, /* GFile list */
+				      FileListFlags          flags,
+                     	     	      const char            *attributes,
+                     	     	      GCancellable          *cancellable,
+                     	     	      FilterMatchCallback    directory_filter_func,
+                     	     	      FilterMatchCallback    file_filter_func,
+                     	     	      InfoReadyCallback      ready_callback,
+                     	     	      gpointer               user_data);
 
 /* asynchronous copy functions */
 
@@ -122,8 +148,8 @@ void   g_copy_uri_async              (const char            *source,
 				      gpointer               progress_callback_data,
 				      CopyDoneCallback       callback,
 				      gpointer               user_data);
-void   g_directory_copy_async        (const char            *source,
-				      const char            *destination,
+void   g_directory_copy_async        (GFile                 *source,
+				      GFile                 *destination,
 				      GFileCopyFlags         flags,
 				      int                    io_priority,
 				      GCancellable          *cancellable,

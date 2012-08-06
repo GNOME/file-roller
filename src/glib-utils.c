@@ -50,6 +50,47 @@ _g_object_unref (gpointer object)
 }
 
 
+void
+_g_clear_object (gpointer p)
+{
+	g_clear_object ((GObject **) p);
+}
+
+
+GList *
+_g_object_list_ref (GList *list)
+{
+	GList *new_list;
+
+	if (list == NULL)
+		return NULL;
+
+	new_list = g_list_copy (list);
+	g_list_foreach (new_list, (GFunc) g_object_ref, NULL);
+
+	return new_list;
+}
+
+
+void
+_g_object_list_unref (GList *list)
+{
+	g_list_foreach (list, (GFunc) g_object_unref, NULL);
+	g_list_free (list);
+}
+
+
+/* error */
+
+
+void
+_g_error_free (GError *error)
+{
+	if (error != NULL)
+		g_error_free (error);
+}
+
+
 /* string */
 
 
@@ -96,18 +137,11 @@ _g_str_substitute (const char *str,
 }
 
 
-int
-_g_strcmp_null_tolerant (const char *s1,
-			 const char *s2)
+gboolean
+_g_str_equal (const char *s1,
+	      const char *s2)
 {
-	if ((s1 == NULL) && (s2 == NULL))
-		return 0;
-	else if ((s1 != NULL) && (s2 == NULL))
-		return 1;
-	else if ((s1 == NULL) && (s2 != NULL))
-		return -1;
-	else
-		return strcmp (s1, s2);
+	return g_strcmp0 (s1, s2) == 0;
 }
 
 
@@ -708,19 +742,6 @@ _g_time_to_string (time_t time)
 /* uri/path/filename */
 
 
-char*
-_g_uri_display_basename (const char  *uri)
-{
-	char *e_name, *name;
-
-	e_name = g_filename_display_basename (uri);
-	name = g_uri_unescape_string (e_name, "");
-	g_free (e_name);
-
-	return name;
-}
-
-
 const char *
 _g_uri_get_home (void)
 {
@@ -793,46 +814,18 @@ _g_uri_get_root (const char *uri)
 }
 
 
-gboolean
-_g_uri_is_local (const char  *uri)
-{
-	return strncmp (uri, "file://", 7) == 0;
-}
-
-
 int
 _g_uri_cmp (const char *uri1,
 	    const char *uri2)
 {
-	return _g_strcmp_null_tolerant (uri1, uri2);
-}
-
-
-char *
-_g_uri_build (const char *base, ...)
-{
-	va_list     args;
-	const char *child;
-	GString    *uri;
-
-	uri = g_string_new (base);
-
-	va_start (args, base);
-        while ((child = va_arg (args, const char *)) != NULL) {
-        	if (! g_str_has_suffix (uri->str, "/") && ! g_str_has_prefix (child, "/"))
-        		g_string_append (uri, "/");
-        	g_string_append (uri, child);
-        }
-	va_end (args);
-
-	return g_string_free (uri, FALSE);
+	return g_strcmp0 (uri1, uri2);
 }
 
 
 /* like g_path_get_basename but does not warn about NULL and does not
  * alloc a new string. */
 const gchar *
-_g_path_get_file_name (const gchar *file_name)
+_g_path_get_basename (const gchar *file_name)
 {
 	register char   *base;
 	register gssize  last_char;
@@ -977,6 +970,32 @@ _g_path_is_parent_of (const char *dirname,
 }
 
 
+const char *
+_g_path_get_relative_basename (const char *path,
+			       const char *base_dir,
+			       gboolean    junk_paths)
+{
+	int         base_dir_len;
+	const char *base_path;
+
+	if (junk_paths)
+		return _g_path_get_basename (path);
+
+	if (base_dir == NULL)
+		return (path[0] == '/') ? path + 1 : path;
+
+	base_dir_len = strlen (base_dir);
+	if (strlen (path) <= base_dir_len)
+		return NULL;
+
+	base_path = path + base_dir_len;
+	if (path[0] != '/')
+		base_path -= 1;
+
+	return base_path;
+}
+
+
 gboolean
 _g_filename_is_hidden (const gchar *name)
 {
@@ -1034,6 +1053,35 @@ _g_filename_has_extension (const char *filename,
 }
 
 
+char *
+_g_filename_get_random (int         random_part_len,
+		        const char *suffix)
+{
+	const char *letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	const int   n_letters = strlen (letters);
+	int         suffix_len;
+	char       *result, *c;
+	GRand      *rand;
+	int         i;
+
+	suffix_len = suffix != NULL ? strlen (suffix) + 1 : 0;
+	result = g_new (char, suffix_len + random_part_len + 1);
+
+	rand = g_rand_new ();
+	for (i = 0, c = result; i < random_part_len; i++, c++)
+		*c = letters[g_rand_int_range (rand, 0, n_letters)];
+	*c = '\0';
+	g_rand_free (rand);
+
+	if (suffix != NULL) {
+		strcpy (c, ".");
+		strcpy (c + 1, suffix);
+	}
+
+	return result;
+}
+
+
 gboolean
 _g_mime_type_matches (const char *mime_type,
 		      const char *pattern)
@@ -1043,6 +1091,70 @@ _g_mime_type_matches (const char *mime_type,
 
 
 /* GFile */
+
+
+int
+_g_file_cmp_uris (GFile *a,
+                  GFile *b)
+{
+	char *uri_a;
+	char *uri_b;
+	int   result;
+
+	uri_a = g_file_get_uri (a);
+	uri_b = g_file_get_uri (b);
+	result = g_strcmp0 (uri_a, uri_b);
+
+	g_free (uri_b);
+	g_free (uri_a);
+
+	return result;
+}
+
+
+gboolean
+_g_file_is_local (GFile *file)
+{
+	char     *scheme;
+	gboolean  is_local;
+
+	scheme = g_file_get_uri_scheme (file);
+	is_local = strcmp (scheme, "file") == 0;
+
+	g_free (scheme);
+
+	return is_local;
+}
+
+
+GFile *
+_g_file_get_home (void)
+{
+	static GFile *file = NULL;
+
+	if (file != NULL)
+		return file;
+
+	file = g_file_new_for_path (g_get_home_dir ());
+
+	return file;
+}
+
+
+char *
+_g_file_get_display_basename (GFile *file)
+{
+	char *uri, *e_name, *name;
+
+	uri = g_file_get_uri (file);
+	e_name = g_filename_display_basename (uri);
+	name = g_uri_unescape_string (e_name, "");
+
+	g_free (e_name);
+	g_free (uri);
+
+	return name;
+}
 
 
 GFile *
@@ -1086,6 +1198,38 @@ _g_file_list_new_from_uri_list (GList *uris)
 	for (scan = uris; scan; scan = scan->next)
 		r = g_list_prepend (r, g_file_new_for_uri ((char*)scan->data));
 	return g_list_reverse (r);
+}
+
+
+GFile *
+_g_file_append_path (GFile  *file,
+		     ...)
+{
+	char       *uri;
+	const char *path;
+	va_list     args;
+	GFile      *new_file;
+
+	uri = g_file_get_uri (file);
+
+	va_start (args, file);
+	while ((path = va_arg (args, const char *)) != NULL) {
+		char *escaped;
+		char *new_uri;
+
+		escaped = g_uri_escape_string (path, G_URI_RESERVED_CHARS_ALLOWED_IN_PATH, FALSE);
+		new_uri = g_build_filename (uri, escaped, NULL);
+		g_free (uri);
+		uri = new_uri;
+
+		g_free (escaped);
+	}
+	va_end (args);
+	new_file = g_file_new_for_uri (uri);
+
+	g_free (uri);
+
+	return new_file;
 }
 
 

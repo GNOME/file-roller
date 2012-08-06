@@ -111,7 +111,7 @@ rar_check_multi_volume (FrCommand *comm)
 		char   *volume_name = NULL;
 		char   *name;
 
-		name = g_filename_to_utf8 (_g_path_get_file_name (comm->filename), -1, NULL, NULL, NULL);
+		name = g_filename_to_utf8 (_g_path_get_basename (comm->filename), -1, NULL, NULL, NULL);
 
 		volume_name = get_first_volume_name (name, "^(.*\\.part)([0-9]+)(\\.rar)$", FIRST_VOLUME_IS_001);
 		if (volume_name == NULL)
@@ -125,7 +125,7 @@ rar_check_multi_volume (FrCommand *comm)
 
 			parent = g_file_get_parent (file);
 			volume_file = g_file_get_child (parent, volume_name);
-			fr_command_set_multi_volume (comm, volume_file);
+			fr_archive_set_multi_volume (FR_ARCHIVE (comm), volume_file);
 
 			g_object_unref (volume_file);
 			g_object_unref (parent);

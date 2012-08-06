@@ -51,6 +51,7 @@ dlg_prop (FrWindow *window)
 	DialogData *data;
 	GtkWidget  *ok_button;
 	GtkWidget  *label;
+	GFile      *parent;
 	char       *s;
 	goffset     size, uncompressed_size;
 	char       *utf8_name;
@@ -73,16 +74,16 @@ dlg_prop (FrWindow *window)
 	/* Set widgets data. */
 
 	label = _gtk_builder_get_widget (data->builder, "p_path_label");
-	s = _g_path_remove_level (fr_window_get_archive_uri (window));
-	utf8_name = g_filename_display_name (s);
+	parent = g_file_get_parent (fr_window_get_archive_file (window));
+	utf8_name = _g_file_get_display_basename (parent);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 	g_free (utf8_name);
-	g_free (s);
+	g_object_unref (parent);
 
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_name_label");
-	utf8_name = _g_uri_display_basename (fr_window_get_archive_uri (window));
+	utf8_name = _g_file_get_display_basename (fr_window_get_archive_file (window));
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 
 	title_txt = g_strdup_printf (_("%s Properties"), utf8_name);
@@ -94,14 +95,14 @@ dlg_prop (FrWindow *window)
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_date_label");
-	s = _g_time_to_string (_g_uri_get_file_mtime (fr_window_get_archive_uri (window)));
+	s = _g_time_to_string (_g_file_get_file_mtime (fr_window_get_archive_file (window)));
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_size_label");
-	size = _g_uri_get_file_size (fr_window_get_archive_uri (window));
+	size = _g_file_get_file_size (fr_window_get_archive_file (window));
 	s = g_format_size (size);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
@@ -112,8 +113,8 @@ dlg_prop (FrWindow *window)
 	if (fr_window_archive_is_present (window)) {
 		int i;
 
-		for (i = 0; i < window->archive->command->files->len; i++) {
-			FileData *fd = g_ptr_array_index (window->archive->command->files, i);
+		for (i = 0; i < window->archive->files->len; i++) {
+			FileData *fd = g_ptr_array_index (window->archive->files, i);
 			uncompressed_size += fd->size;
 		}
 	}
@@ -138,7 +139,7 @@ dlg_prop (FrWindow *window)
 	/**/
 
 	label = _gtk_builder_get_widget (data->builder, "p_files_label");
-	s = g_strdup_printf ("%d", window->archive->command->n_regular_files);
+	s = g_strdup_printf ("%d", window->archive->n_regular_files);
 	gtk_label_set_text (GTK_LABEL (label), s);
 	g_free (s);
 

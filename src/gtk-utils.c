@@ -75,6 +75,9 @@ _gtk_message_dialog_new (GtkWindow      *parent,
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
+	if (flags & GTK_DIALOG_MODAL)
+		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
+
 	/* set the icon */
 
 	gtk_image_set_from_stock (GTK_IMAGE (_gtk_builder_get_widget (builder, "icon_image")),
@@ -190,6 +193,9 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
 	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
+	if (flags & GTK_DIALOG_MODAL)
+		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
+
 	label = _gtk_builder_get_widget (builder, "message_label");
 	gtk_label_set_text_with_mnemonic (GTK_LABEL (label), message);
 
@@ -243,6 +249,9 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
+
+	if (flags & GTK_DIALOG_MODAL)
+		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
 
 	/* label */
 
@@ -334,6 +343,19 @@ _gtk_error_dialog_run (GtkWindow  *parent,
 			  NULL);
 
 	gtk_widget_show (d);
+}
+
+
+void
+_gtk_dialog_add_to_window_group (GtkDialog *dialog)
+{
+	GtkWidget *toplevel;
+
+	g_return_if_fail (dialog != NULL);
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (dialog));
+	if (gtk_widget_is_toplevel (toplevel) && gtk_window_has_group (GTK_WINDOW (toplevel)))
+		gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)), GTK_WINDOW (dialog));
 }
 
 

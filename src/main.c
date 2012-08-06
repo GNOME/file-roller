@@ -31,6 +31,9 @@
 #include <glib/gprintf.h>
 #include <glib.h>
 #include <gio/gio.h>
+#ifdef ENABLE_NOTIFICATION
+#  include <libnotify/notify.h>
+#endif
 #include "actions.h"
 #ifdef USE_SMCLIENT
 #  include "eggsmclient.h"
@@ -56,6 +59,7 @@ static int          arg_extract_here = FALSE;
 static char        *arg_default_dir = NULL;
 static gboolean     arg_version = FALSE;
 static gboolean     arg_service = FALSE;
+static gboolean     arg_notify = FALSE;
 static const char  *program_argv0 = NULL; /* argv[0] from main(); used as the command to restart the program */
 
 
@@ -87,6 +91,9 @@ static const GOptionEntry options[] = {
 	{ "force", '\0', 0, G_OPTION_ARG_NONE, &ForceDirectoryCreation,
 	  N_("Create destination folder without asking confirmation"),
 	  NULL },
+
+	{ "notify", '\0', 0, G_OPTION_ARG_NONE, &arg_notify,
+	  N_("Use the notification system to notify the operation completion"), NULL },
 
 	{ "service", '\0', 0, G_OPTION_ARG_NONE, &arg_service,
 	  N_("Start as a service"), NULL },
@@ -200,16 +207,16 @@ client_save_state (EggSMClient *client,
 		     window = window->next, i++)
 		{
 			FrWindow *session = window->data;
-			gchar *key;
+			gchar    *key;
 
 			key = g_strdup_printf ("archive%d", i);
-			if ((session->archive == NULL) || (session->archive->file == NULL)) {
+			if ((session->archive == NULL) || (fr_archive_get_file (session->archive) == NULL)) {
 				g_key_file_set_string (state, "Session", key, "");
 			}
 			else {
 				gchar *uri;
 
-				uri = g_file_get_uri (session->archive->file);
+				uri = g_file_get_uri (fr_archive_get_file (session->archive));
 				g_key_file_set_string (state, "Session", key, uri);
 				g_free (uri);
 			}
@@ -241,17 +248,24 @@ fr_restore_session (EggSMClient *client)
 
 	for (; i > 0; i--) {
 		GtkWidget *window;
-		gchar *key, *archive;
+		char      *key;
+		char      *uri;
 
 		key = g_strdup_printf ("archive%d", i);
-		archive = g_key_file_get_string (state, "Session", key, NULL);
-		g_free (key);
+		uri = g_key_file_get_string (state, "Session", key, NULL);
 
 		window = fr_window_new ();
-		if (strlen (archive))
-			fr_window_archive_open (FR_WINDOW (window), archive, GTK_WINDOW (window));
+		if (strlen (uri) > 0) {
+			GFile *file;
 
-		g_free (archive);
+			file = g_file_new_for_uri (uri);
+			fr_window_archive_open (FR_WINDOW (window), file, GTK_WINDOW (window));
+
+			g_object_unref (file);
+		}
+
+		g_free (uri);
+		g_free (key);
 	}
 }
 
@@ -310,7 +324,7 @@ handle_method_call (GDBusConnection       *connection,
 		    GDBusMethodInvocation *invocation,
 		    gpointer               user_data)
 {
-	update_registered_commands_capabilities ();
+	update_registered_archives_capabilities ();
 
 	if (g_strcmp0 (method_name, "GetSupportedTypes") == 0) {
 		char *action;
@@ -362,17 +376,19 @@ handle_method_call (GDBusConnection       *connection,
 		g_free (action);
 	}
 	else if (g_strcmp0 (method_name, "AddToArchive") == 0) {
-		char       *archive;
+		char       *archive_uri;
 		char      **files;
 		gboolean    use_progress_dialog;
 		int         i;
+		GFile      *file;
 		GList      *file_list = NULL;
 		GtkWidget  *window;
 
-		g_variant_get (parameters, "(s^asb)", &archive, &files, &use_progress_dialog);
+		g_variant_get (parameters, "(s^asb)", &archive_uri, &files, &use_progress_dialog);
 
+		file = g_file_new_for_uri (archive_uri);
 		for (i = 0; files[i] != NULL; i++)
-			file_list = g_list_prepend (file_list, files[i]);
+			file_list = g_list_prepend (file_list, g_file_new_for_uri (files[i]));
 		file_list = g_list_reverse (file_list);
 
 		window = fr_window_new ();
@@ -382,28 +398,33 @@ handle_method_call (GDBusConnection       *connection,
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_new_batch (FR_WINDOW (window), _("Compress"));
-		fr_window_set_batch__add (FR_WINDOW (window), archive, file_list);
+		fr_window_set_batch__add (FR_WINDOW (window), file, file_list);
 		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_start_batch (FR_WINDOW (window));
 
-		g_free (archive);
+		g_object_unref (file);
+		_g_object_list_unref (file_list);
+		g_free (archive_uri);
 	}
 	else if (g_strcmp0 (method_name, "Compress") == 0) {
 		char      **files;
-		char       *destination;
+		char       *destination_uri;
 		gboolean    use_progress_dialog;
 		int         i;
 		GList      *file_list = NULL;
+		GFile      *destination;
 		GtkWidget  *window;
 
-		g_variant_get (parameters, "(^assb)", &files, &destination, &use_progress_dialog);
+		g_variant_get (parameters, "(^assb)", &files, &destination_uri, &use_progress_dialog);
+
+		if ((destination_uri != NULL) && (strcmp (destination_uri, "") != 0))
+			destination = g_file_new_for_uri (destination_uri);
+		else
+			destination = g_file_get_parent (G_FILE (file_list->data));
 
 		for (i = 0; files[i] != NULL; i++)
-			file_list = g_list_prepend (file_list, files[i]);
+			file_list = g_list_prepend (file_list, g_file_new_for_uri (files[i]));
 		file_list = g_list_reverse (file_list);
-
-		if ((destination == NULL) || (strcmp (destination, "") == 0))
-			destination = _g_path_remove_level (file_list->data);
 
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
@@ -417,20 +438,33 @@ handle_method_call (GDBusConnection       *connection,
 		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_start_batch (FR_WINDOW (window));
 
-		g_free (destination);
+		_g_object_list_unref (file_list);
+		g_object_unref (destination);
+		g_free (destination_uri);
 	}
 	else if (g_strcmp0 (method_name, "Extract") == 0) {
-		char      *archive;
-		char      *destination;
+		char      *archive_uri;
+		char      *destination_uri;
 		gboolean   use_progress_dialog;
 		GtkWidget *window;
+		GFile     *archive;
+		GFile     *destination;
 
-		g_variant_get (parameters, "(ssb)", &archive, &destination, &use_progress_dialog);
+		g_variant_get (parameters, "(ssb)", &archive_uri, &destination_uri, &use_progress_dialog);
+
+		archive = g_file_new_for_uri (archive_uri);
+		destination = g_file_new_for_uri (destination_uri);
 
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
-		if ((destination != NULL) & (strcmp (destination, "") != 0))
-			fr_window_set_default_dir (FR_WINDOW (window), destination, TRUE);
+		if ((destination_uri != NULL) & (strcmp (destination_uri, "") != 0)) {
+			GFile *file;
+
+			file = g_file_new_for_uri (destination_uri);
+			fr_window_set_default_dir (FR_WINDOW (window), file, TRUE);
+
+			g_object_unref (file);
+		}
 
 		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
@@ -440,15 +474,20 @@ handle_method_call (GDBusConnection       *connection,
 		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_start_batch (FR_WINDOW (window));
 
-		g_free (destination);
-		g_free (archive);
+		g_object_unref (archive);
+		g_object_unref (destination);
+		g_free (destination_uri);
+		g_free (archive_uri);
 	}
 	else if (g_strcmp0 (method_name, "ExtractHere") == 0) {
-		char      *archive;
+		char      *uri;
+		GFile     *archive;
 		gboolean   use_progress_dialog;
 		GtkWidget *window;
 
-		g_variant_get (parameters, "(sb)", &archive, &use_progress_dialog);
+		g_variant_get (parameters, "(sb)", &uri, &use_progress_dialog);
+
+		archive = g_file_new_for_uri (uri);
 
 		window = fr_window_new ();
 		fr_window_use_progress_dialog (FR_WINDOW (window), use_progress_dialog);
@@ -461,7 +500,8 @@ handle_method_call (GDBusConnection       *connection,
 		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_start_batch (FR_WINDOW (window));
 
-		g_free (archive);
+		g_object_unref (archive);
+		g_free (uri);
 	}
 }
 
@@ -476,6 +516,8 @@ static const GDBusInterfaceVTable interface_vtable = {
 /* -- main application -- */
 
 
+#define FR_APPLICATION(x) ((FrApplication *)(x))
+
 typedef struct {
 	GtkApplication __parent;
 	GDBusNodeInfo  *introspection_data;
@@ -486,9 +528,8 @@ typedef GtkApplicationClass FrApplicationClass;
 
 static gpointer fr_application_parent_class;
 
-
+GType fr_application_get_type (void); /* added to suppress a compiler warning */
 G_DEFINE_TYPE (FrApplication, fr_application, GTK_TYPE_APPLICATION)
-#define FR_APPLICATION(x) ((FrApplication *)(x))
 
 
 static void
@@ -577,6 +618,11 @@ fr_application_init (FrApplication *self)
 	gtk_window_set_default_icon_name ("file-roller");
 #endif
 
+#ifdef ENABLE_NOTIFICATION
+	if (! notify_init (g_get_application_name ()))
+                g_warning ("Cannot initialize notification system.");
+#endif /* ENABLE_NOTIFICATION */
+
 	self->owner_id = 0;
 	self->introspection_data = NULL;
 }
@@ -602,6 +648,7 @@ fr_application_create_option_context (void)
 	context = g_option_context_new (N_("- Create and modify an archive"));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
+	g_option_context_set_ignore_unknown_options (context, TRUE);
 
 	if (g_once_init_enter (&initialized)) {
 		g_option_context_add_group (context, gtk_get_option_group (TRUE));
@@ -612,20 +659,6 @@ fr_application_create_option_context (void)
 	}
 
 	return context;
-}
-
-
-static char *
-_g_uri_get_from_command_line (const char *path)
-{
-	GFile *file;
-	char  *uri;
-
-	file = g_file_new_for_commandline_arg (path);
-	uri = g_file_get_uri (file);
-	g_object_unref (file);
-
-	return uri;
 }
 
 
@@ -659,9 +692,9 @@ fr_application_command_line (GApplication            *application,
 	int              argc;
 	GOptionContext  *context;
 	GError          *error = NULL;
-	char            *extract_to_uri = NULL;
-	char            *add_to_uri = NULL;
-	char            *default_uri = NULL;
+	GFile           *extraction_destination = NULL;
+	GFile           *add_to_archive = NULL;
+	GFile           *default_directory = NULL;
 
 	argv = g_application_command_line_get_arguments (command_line, &argc);
 
@@ -706,13 +739,13 @@ fr_application_command_line (GApplication            *application,
 	}
 
 	if (arg_extract_to != NULL)
-		extract_to_uri = _g_uri_get_from_command_line (arg_extract_to);
+		extraction_destination = g_file_new_for_commandline_arg (arg_extract_to);
 
 	if (arg_add_to != NULL)
-		add_to_uri = _g_uri_get_from_command_line (arg_add_to);
+		add_to_archive = g_file_new_for_commandline_arg (arg_add_to);
 
 	if (arg_default_dir != NULL)
-		default_uri = _g_uri_get_from_command_line (arg_default_dir);
+		default_directory = g_file_new_for_commandline_arg (arg_default_dir);
 
 	if ((arg_add_to != NULL) || (arg_add == 1)) { /* Add files to an archive */
 		GtkWidget   *window;
@@ -722,21 +755,24 @@ fr_application_command_line (GApplication            *application,
 
 		window = fr_window_new ();
 
-		if (default_uri != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), default_uri, TRUE);
+		if (default_directory != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_directory, TRUE);
 
 		file_list = NULL;
 		while ((filename = remaining_args[i++]) != NULL)
-			file_list = g_list_prepend (file_list, _g_uri_get_from_command_line (filename));
+			file_list = g_list_prepend (file_list, g_file_new_for_commandline_arg (filename));
 		file_list = g_list_reverse (file_list);
 
 		fr_window_new_batch (FR_WINDOW (window), _("Compress"));
-		fr_window_set_batch__add (FR_WINDOW (window), add_to_uri, file_list);
-		fr_window_append_batch_action (FR_WINDOW (window),
-					       FR_BATCH_ACTION_QUIT,
-					       NULL,
-					       NULL);
+		fr_window_set_batch__add (FR_WINDOW (window), add_to_archive, file_list);
+
+		if (! arg_notify)
+			fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		else
+			fr_window_set_notify (FR_WINDOW (window), TRUE);
 		fr_window_start_batch (FR_WINDOW (window));
+
+		_g_object_list_unref (file_list);
 	}
 	else if ((arg_extract_to != NULL) || (arg_extract == 1) || (arg_extract_here == 1)) {
 
@@ -748,27 +784,22 @@ fr_application_command_line (GApplication            *application,
 
 		window = fr_window_new ();
 
-		if (default_uri != NULL)
-			fr_window_set_default_dir (FR_WINDOW (window), default_uri, TRUE);
+		if (default_directory != NULL)
+			fr_window_set_default_dir (FR_WINDOW (window), default_directory, TRUE);
 
 		fr_window_new_batch (FR_WINDOW (window), _("Extract archive"));
 		while ((archive = remaining_args[i++]) != NULL) {
-			char *archive_uri;
+			GFile *file;
 
-			archive_uri = _g_uri_get_from_command_line (archive);
+			file = g_file_new_for_commandline_arg (archive);
 			if (arg_extract_here == 1)
-				fr_window_set_batch__extract_here (FR_WINDOW (window),
-								   archive_uri);
+				fr_window_set_batch__extract_here (FR_WINDOW (window), file);
 			else
-				fr_window_set_batch__extract (FR_WINDOW (window),
-							      archive_uri,
-							      extract_to_uri);
-			g_free (archive_uri);
+				fr_window_set_batch__extract (FR_WINDOW (window), file, extraction_destination);
+
+			g_object_unref (file);
 		}
-		fr_window_append_batch_action (FR_WINDOW (window),
-					       FR_BATCH_ACTION_QUIT,
-					       NULL,
-					       NULL);
+		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 
 		fr_window_start_batch (FR_WINDOW (window));
 	}
@@ -778,21 +809,21 @@ fr_application_command_line (GApplication            *application,
 		int i = 0;
 		while ((filename = remaining_args[i++]) != NULL) {
 			GtkWidget *window;
-			char      *uri;
+			GFile     *file;
 
 			window = fr_window_new ();
 			gtk_widget_show (window);
 
-			uri = _g_uri_get_from_command_line (filename);
-			fr_window_archive_open (FR_WINDOW (window), uri, GTK_WINDOW (window));
+			file = g_file_new_for_commandline_arg (filename);
+			fr_window_archive_open (FR_WINDOW (window), file, GTK_WINDOW (window));
 
-			g_free (uri);
+			g_object_unref (file);
 		}
 	}
 
-	g_free (default_uri);
-	g_free (add_to_uri);
-	g_free (extract_to_uri);
+	_g_object_unref (default_directory);
+	_g_object_unref (add_to_archive);
+	g_free (extraction_destination);
 
 	return fr_application_command_line_finished (application, EXIT_SUCCESS);
 }

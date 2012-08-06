@@ -57,7 +57,7 @@ fr_command_jar_add (FrCommand     *comm,
 
 	for (scan = file_list; scan; scan = scan->next) {
 		char *filename = scan->data;
-		char *path = _g_uri_build (base_dir, filename, NULL);
+		char *path = g_build_filename (base_dir, filename, NULL);
 		char *package = NULL;
 
 		if (_g_filename_has_extension (filename, ".java"))
@@ -71,9 +71,9 @@ fr_command_jar_add (FrCommand     *comm,
 			JarData *newdata = g_new0 (JarData, 1);
 
 			newdata->package_minus_one_level = _g_path_remove_level (package);
-			newdata->link_name = g_strdup (_g_path_get_file_name (package));
+			newdata->link_name = g_strdup (_g_path_get_basename (package));
 			newdata->rel_path = _g_path_remove_level (filename);
-			newdata->filename = g_strdup (_g_path_get_file_name (filename));
+			newdata->filename = g_strdup (_g_path_get_basename (filename));
 			jardata_list = g_list_append (jardata_list, newdata);
 		}
 
@@ -85,17 +85,20 @@ fr_command_jar_add (FrCommand     *comm,
 	for (scan = jardata_list; scan ; scan = scan->next) {
 		JarData *jdata = scan->data;
 		char    *pack_path;
+		GFile   *directory;
 		char    *old_link;
 		char    *link_name;
 		int      retval;
 
-		pack_path = _g_uri_build (tmp_dir, jdata->package_minus_one_level, NULL);
-		if (! _g_path_make_directory_tree (pack_path, 0755, NULL)) {
+		pack_path = g_build_filename (tmp_dir, jdata->package_minus_one_level, NULL);
+		directory = g_file_new_for_path (pack_path);
+		if (! _g_file_make_directory_tree (directory, 0755, NULL)) {
+			g_object_unref (directory);
 			g_free (pack_path);
 			continue;
 		}
 
-		old_link = _g_uri_build (base_dir, jdata->rel_path, NULL);
+		old_link = g_build_filename (base_dir, jdata->rel_path, NULL);
 		link_name = g_build_filename (pack_path, jdata->link_name, NULL);
 
 		retval = symlink (old_link, link_name);
@@ -108,6 +111,7 @@ fr_command_jar_add (FrCommand     *comm,
 
 		g_free (link_name);
 		g_free (old_link);
+		g_object_unref (directory);
 		g_free (pack_path);
 	}
 
@@ -145,29 +149,29 @@ const char *jar_mime_type[] = { "application/x-java-archive",
 
 
 static const char **
-fr_command_jar_get_mime_types (FrCommand *comm)
+fr_command_jar_get_mime_types (FrArchive *archive)
 {
 	return jar_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_jar_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_jar_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("zip", check_command))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_jar_get_packages (FrCommand  *comm,
+fr_command_jar_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("zip,unzip");
@@ -189,6 +193,7 @@ static void
 fr_command_jar_class_init (FrCommandJarClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_jar_parent_class = g_type_class_peek_parent (klass);
@@ -196,11 +201,13 @@ fr_command_jar_class_init (FrCommandJarClass *klass)
 	gobject_class = G_OBJECT_CLASS(klass);
 	gobject_class->finalize = fr_command_jar_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_jar_get_mime_types;
+	archive_class->get_capabilities = fr_command_jar_get_capabilities;
+	archive_class->get_packages     = fr_command_jar_get_packages;
+
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->add              = fr_command_jar_add;
-	command_class->get_mime_types   = fr_command_jar_get_mime_types;
-	command_class->get_capabilities = fr_command_jar_get_capabilities;
-	command_class->get_packages     = fr_command_jar_get_packages;
 }
 
 

@@ -25,6 +25,9 @@
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
+#if ENABLE_LIBARCHIVE
+# include "fr-archive-libarchive.h"
+#endif
 #include "fr-command.h"
 #include "fr-command-ace.h"
 #include "fr-command-alz.h"
@@ -58,49 +61,50 @@
 /* The capabilities are computed automatically in
  * compute_supported_archive_types() so it's correct to initialize to 0 here. */
 FrMimeTypeDescription mime_type_desc[] = {
-	{ "application/x-7z-compressed",        ".7z",       N_("7-Zip (.7z)"), 0 },
-	{ "application/x-7z-compressed-tar",    ".tar.7z",   N_("Tar compressed with 7z (.tar.7z)"), 0 },
-	{ "application/x-ace",                  ".ace",      N_("Ace (.ace)"), 0 },
+	{ "application/x-7z-compressed",        ".7z",       N_("7-Zip"), 0 },
+	{ "application/x-7z-compressed-tar",    ".tar.7z",   N_("Tar compressed with 7z"), 0 },
+	{ "application/x-ace",                  ".ace",      N_("Ace"), 0 },
 	{ "application/x-alz",                  ".alz",      NULL, 0 },
-	{ "application/x-ar",                   ".ar",       N_("Ar (.ar)"), 0 },
-	{ "application/x-arj",                  ".arj",      N_("Arj (.arj)"), 0 },
+	{ "application/x-ar",                   ".ar",       N_("Ar"), 0 },
+	{ "application/x-arj",                  ".arj",      N_("Arj"), 0 },
 	{ "application/x-bzip",                 ".bz2",      NULL, 0 },
-	{ "application/x-bzip-compressed-tar",  ".tar.bz2",  N_("Tar compressed with bzip2 (.tar.bz2)"), 0 },
+	{ "application/x-bzip-compressed-tar",  ".tar.bz2",  N_("Tar compressed with bzip2"), 0 },
 	{ "application/x-bzip1",                ".bz",       NULL, 0 },
-	{ "application/x-bzip1-compressed-tar", ".tar.bz",   N_("Tar compressed with bzip (.tar.bz)"), 0 },
-	{ "application/vnd.ms-cab-compressed",  ".cab",      N_("Cabinet (.cab)"), 0 },
-	{ "application/x-cbr",                  ".cbr",      N_("Rar Archived Comic Book (.cbr)"), 0 },
-	{ "application/x-cbz",                  ".cbz",      N_("Zip Archived Comic Book (.cbz)"), 0 },
-	{ "application/x-cd-image",             ".iso",      NULL, 0 },
+	{ "application/x-bzip1-compressed-tar", ".tar.bz",   N_("Tar compressed with bzip"), 0 },
+	{ "application/vnd.ms-cab-compressed",  ".cab",      N_("Cabinet"), 0 },
+	{ "application/x-cbr",                  ".cbr",      N_("Rar Archived Comic Book"), 0 },
+	{ "application/x-cbz",                  ".cbz",      N_("Zip Archived Comic Book"), 0 },
+	{ "application/x-cd-image",             ".iso",      N_("ISO Image"), 0 },
 	{ "application/x-compress",             ".Z",        NULL, 0 },
-	{ "application/x-compressed-tar",       ".tar.gz",   N_("Tar compressed with gzip (.tar.gz)"), 0 },
-	{ "application/x-cpio",                 ".cpio",     NULL, 0 },
+	{ "application/x-compressed-tar",       ".tar.gz",   N_("Tar compressed with gzip"), 0 },
+	{ "application/x-cpio",                 ".cpio",     N_("Cpio"), 0 },
 	{ "application/x-deb",                  ".deb",      NULL, 0 },
-	{ "application/x-ear",                  ".ear",      N_("Ear (.ear)"), 0 },
-	{ "application/x-ms-dos-executable",    ".exe",      N_("Self-extracting zip (.exe)"), 0 },
+	{ "application/x-ear",                  ".ear",      N_("Ear"), 0 },
+	{ "application/x-ms-dos-executable",    ".exe",      N_("Self-extracting zip"), 0 },
 	{ "application/x-gzip",                 ".gz",       NULL, 0 },
-	{ "application/x-java-archive",         ".jar",      N_("Jar (.jar)"), 0 },
-	{ "application/x-lha",                  ".lzh",      N_("Lha (.lzh)"), 0 },
-	{ "application/x-lrzip",                ".lrz",      N_("Lrzip (.lrz)"), 0},
-	{ "application/x-lrzip-compressed-tar", ".tar.lrz",  N_("Tar compressed with lrzip (.tar.lrz)"), 0 },
+	{ "application/x-java-archive",         ".jar",      N_("Jar"), 0 },
+	{ "application/x-lha",                  ".lzh",      N_("Lha"), 0 },
+	{ "application/x-lrzip",                ".lrz",      N_("Lrzip"), 0},
+	{ "application/x-lrzip-compressed-tar", ".tar.lrz",  N_("Tar compressed with lrzip"), 0 },
 	{ "application/x-lzip",                 ".lz",       NULL, 0 },
-	{ "application/x-lzip-compressed-tar",  ".tar.lz",   N_("Tar compressed with lzip (.tar.lz)"), 0 },
+	{ "application/x-lzip-compressed-tar",  ".tar.lz",   N_("Tar compressed with lzip"), 0 },
 	{ "application/x-lzma",                 ".lzma",     NULL, 0 },
-	{ "application/x-lzma-compressed-tar",  ".tar.lzma", N_("Tar compressed with lzma (.tar.lzma)"), 0 },
+	{ "application/x-lzma-compressed-tar",  ".tar.lzma", N_("Tar compressed with lzma"), 0 },
 	{ "application/x-lzop",                 ".lzo",      NULL, 0 },
-	{ "application/x-lzop-compressed-tar",  ".tar.lzo",  N_("Tar compressed with lzop (.tar.lzo)"), 0 },
-	{ "application/x-ms-wim",               ".wim",      N_("Windows Imaging Format (.wim)"), 0 },
-	{ "application/x-rar",                  ".rar",      N_("Rar (.rar)"), 0 },
+	{ "application/x-lzop-compressed-tar",  ".tar.lzo",  N_("Tar compressed with lzop"), 0 },
+	{ "application/x-ms-wim",               ".wim",      N_("Windows Imaging Format"), 0 },
+	{ "application/x-rar",                  ".rar",      N_("Rar"), 0 },
 	{ "application/x-rpm",                  ".rpm",      NULL, 0 },
 	{ "application/x-rzip",                 ".rz",       NULL, 0 },
-	{ "application/x-tar",                  ".tar",      N_("Tar uncompressed (.tar)"), 0 },
-	{ "application/x-tarz",                 ".tar.Z",    N_("Tar compressed with compress (.tar.Z)"), 0 },
+	{ "application/x-tar",                  ".tar",      N_("Tar uncompressed"), 0 },
+	{ "application/x-tarz",                 ".tar.Z",    N_("Tar compressed with compress"), 0 },
 	{ "application/x-stuffit",              ".sit",      NULL, 0 },
-	{ "application/x-war",                  ".war",      N_("War (.war)"), 0 },
-	{ "application/x-xz",                   ".xz",       N_("Xz (.xz)"), 0 },
-	{ "application/x-xz-compressed-tar",    ".tar.xz",   N_("Tar compressed with xz (.tar.xz)"), 0 },
-	{ "application/x-zoo",                  ".zoo",      N_("Zoo (.zoo)"), 0 },
-	{ "application/zip",                    ".zip",      N_("Zip (.zip)"), 0 },
+	{ "application/x-war",                  ".war",      N_("War"), 0 },
+	{ "application/x-xar",                  ".xar",      N_("Xar"), 0 },
+	{ "application/x-xz",                   ".xz",       N_("Xz"), 0 },
+	{ "application/x-xz-compressed-tar",    ".tar.xz",   N_("Tar compressed with xz"), 0 },
+	{ "application/x-zoo",                  ".zoo",      N_("Zoo"), 0 },
+	{ "application/zip",                    ".zip",      N_("Zip"), 0 },
 	{ NULL, NULL, NULL, 0 }
 };
 
@@ -155,6 +159,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".tzo", "application/x-lzop-compressed-tar" },
 	{ ".war", "application/x-war" },
 	{ ".wim", "application/x-ms-wim" },
+	{ ".xar", "application/x-xar" },
 	{ ".xz", "application/x-xz" },
 	{ ".z", "application/x-gzip" },
 	{ ".Z", "application/x-compress" },
@@ -167,7 +172,7 @@ FrExtensionType file_ext_type[] = {
 GList        *CommandList;
 gint          ForceDirectoryCreation;
 GHashTable   *ProgramsCache;
-GPtrArray    *Registered_Commands;
+GPtrArray    *Registered_Archives;
 int           single_file_save_type[64];
 int           save_type[64];
 int           open_type[64];
@@ -200,25 +205,25 @@ migrate_options_directory (void)
 }
 
 
-/* -- FrRegisteredCommand -- */
+/* -- FrRegisteredArchive -- */
 
 
-static FrRegisteredCommand *
-fr_registered_command_new (GType command_type)
+static FrRegisteredArchive *
+fr_registered_archive_new (GType command_type)
 {
-	FrRegisteredCommand  *reg_com;
-	FrCommand            *command;
+	FrRegisteredArchive  *reg_com;
+	FrArchive            *archive;
 	const char          **mime_types;
 	int                   i;
 
-	reg_com = g_new0 (FrRegisteredCommand, 1);
+	reg_com = g_new0 (FrRegisteredArchive, 1);
 	reg_com->ref = 1;
 	reg_com->type = command_type;
 	reg_com->caps = g_ptr_array_new ();
 	reg_com->packages = g_ptr_array_new ();
 
-	command = (FrCommand*) g_object_new (reg_com->type, NULL);
-	mime_types = fr_command_get_mime_types (command);
+	archive = (FrArchive*) g_object_new (reg_com->type, NULL);
+	mime_types = fr_archive_get_supported_types (archive);
 	for (i = 0; mime_types[i] != NULL; i++) {
 		const char         *mime_type;
 		FrMimeTypeCap      *cap;
@@ -228,31 +233,31 @@ fr_registered_command_new (GType command_type)
 
 		cap = g_new0 (FrMimeTypeCap, 1);
 		cap->mime_type = mime_type;
-		cap->current_capabilities = fr_command_get_capabilities (command, mime_type, TRUE);
-		cap->potential_capabilities = fr_command_get_capabilities (command, mime_type, FALSE);
+		cap->current_capabilities = fr_archive_get_capabilities (archive, mime_type, TRUE);
+		cap->potential_capabilities = fr_archive_get_capabilities (archive, mime_type, FALSE);
 		g_ptr_array_add (reg_com->caps, cap);
 
 		packages = g_new0 (FrMimeTypePackages, 1);
 		packages->mime_type = mime_type;
-		packages->packages = fr_command_get_packages (command, mime_type);
+		packages->packages = fr_archive_get_packages (archive, mime_type);
 		g_ptr_array_add (reg_com->packages, packages);
 	}
 
-	g_object_unref (command);
+	g_object_unref (archive);
 
 	return reg_com;
 }
 
 
 G_GNUC_UNUSED static void
-fr_registered_command_ref (FrRegisteredCommand *reg_com)
+fr_registered_command_ref (FrRegisteredArchive *reg_com)
 {
 	reg_com->ref++;
 }
 
 
 static void
-fr_registered_command_unref (FrRegisteredCommand *reg_com)
+fr_registered_archive_unref (FrRegisteredArchive *reg_com)
 {
 	if (--(reg_com->ref) != 0)
 		return;
@@ -263,8 +268,8 @@ fr_registered_command_unref (FrRegisteredCommand *reg_com)
 }
 
 
-static FrCommandCaps
-fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
+static FrArchiveCaps
+fr_registered_archive_get_capabilities (FrRegisteredArchive *reg_com,
 				        const char          *mime_type)
 {
 	int i;
@@ -277,18 +282,18 @@ fr_registered_command_get_capabilities (FrRegisteredCommand *reg_com,
 			return cap->current_capabilities;
 	}
 
-	return FR_COMMAND_CAN_DO_NOTHING;
+	return FR_ARCHIVE_CAN_DO_NOTHING;
 }
 
 
-static FrCommandCaps
-fr_registered_command_get_potential_capabilities (FrRegisteredCommand *reg_com,
+static FrArchiveCaps
+fr_registered_archive_get_potential_capabilities (FrRegisteredArchive *reg_com,
 						  const char          *mime_type)
 {
 	int i;
 
 	if (mime_type == NULL)
-		return FR_COMMAND_CAN_DO_NOTHING;
+		return FR_ARCHIVE_CAN_DO_NOTHING;
 
 	for (i = 0; i < reg_com->caps->len; i++) {
 		FrMimeTypeCap *cap;
@@ -298,31 +303,31 @@ fr_registered_command_get_potential_capabilities (FrRegisteredCommand *reg_com,
 			return cap->potential_capabilities;
 	}
 
-	return FR_COMMAND_CAN_DO_NOTHING;
+	return FR_ARCHIVE_CAN_DO_NOTHING;
 }
 
 
 static void
-register_command (GType command_type)
+register_archive (GType command_type)
 {
-	if (Registered_Commands == NULL)
-		Registered_Commands = g_ptr_array_sized_new (5);
-	g_ptr_array_add (Registered_Commands, fr_registered_command_new (command_type));
+	if (Registered_Archives == NULL)
+		Registered_Archives = g_ptr_array_sized_new (5);
+	g_ptr_array_add (Registered_Archives, fr_registered_archive_new (command_type));
 }
 
 
 G_GNUC_UNUSED static gboolean
-unregister_command (GType command_type)
+unregister_archive (GType command_type)
 {
 	int i;
 
-	for (i = 0; i < Registered_Commands->len; i++) {
-		FrRegisteredCommand *command;
+	for (i = 0; i < Registered_Archives->len; i++) {
+		FrRegisteredArchive *archive;
 
-		command = g_ptr_array_index (Registered_Commands, i);
-		if (command->type == command_type) {
-			g_ptr_array_remove_index (Registered_Commands, i);
-			fr_registered_command_unref (command);
+		archive = g_ptr_array_index (Registered_Archives, i);
+		if (archive->type == command_type) {
+			g_ptr_array_remove_index (Registered_Archives, i);
+			fr_registered_archive_unref (archive);
 			return TRUE;
 		}
 	}
@@ -332,53 +337,57 @@ unregister_command (GType command_type)
 
 
 static void
-register_commands (void)
+register_archives (void)
 {
 	/* The order here is important. Commands registered earlier have higher
 	 * priority.  However commands that can read and write a file format
 	 * have higher priority over commands that can only read the same
 	 * format, regardless of the registration order. */
 
-	register_command (FR_TYPE_COMMAND_TAR);
-	register_command (FR_TYPE_COMMAND_CFILE);
-	register_command (FR_TYPE_COMMAND_7Z);
-	register_command (FR_TYPE_COMMAND_DPKG);
+#if ENABLE_LIBARCHIVE
+	register_archive (FR_TYPE_ARCHIVE_LIBARCHIVE);
+#endif
 
-	register_command (FR_TYPE_COMMAND_ACE);
-	register_command (FR_TYPE_COMMAND_ALZ);
-	register_command (FR_TYPE_COMMAND_AR);
-	register_command (FR_TYPE_COMMAND_ARJ);
-	register_command (FR_TYPE_COMMAND_CPIO);
-	register_command (FR_TYPE_COMMAND_ISO);
-	register_command (FR_TYPE_COMMAND_JAR);
-	register_command (FR_TYPE_COMMAND_LHA);
-	register_command (FR_TYPE_COMMAND_RAR);
-	register_command (FR_TYPE_COMMAND_RPM);
-	register_command (FR_TYPE_COMMAND_UNSTUFF);
-	register_command (FR_TYPE_COMMAND_ZIP);
-	register_command (FR_TYPE_COMMAND_LRZIP);
-	register_command (FR_TYPE_COMMAND_ZOO);
+	register_archive (FR_TYPE_COMMAND_TAR);
+	register_archive (FR_TYPE_COMMAND_CFILE);
+	register_archive (FR_TYPE_COMMAND_7Z);
+	register_archive (FR_TYPE_COMMAND_DPKG);
+
+	register_archive (FR_TYPE_COMMAND_ACE);
+	register_archive (FR_TYPE_COMMAND_ALZ);
+	register_archive (FR_TYPE_COMMAND_AR);
+	register_archive (FR_TYPE_COMMAND_ARJ);
+	register_archive (FR_TYPE_COMMAND_CPIO);
+	register_archive (FR_TYPE_COMMAND_ISO);
+	register_archive (FR_TYPE_COMMAND_JAR);
+	register_archive (FR_TYPE_COMMAND_LHA);
+	register_archive (FR_TYPE_COMMAND_RAR);
+	register_archive (FR_TYPE_COMMAND_RPM);
+	register_archive (FR_TYPE_COMMAND_UNSTUFF);
+	register_archive (FR_TYPE_COMMAND_ZIP);
+	register_archive (FR_TYPE_COMMAND_LRZIP);
+	register_archive (FR_TYPE_COMMAND_ZOO);
 #if HAVE_JSON_GLIB
-	register_command (FR_TYPE_COMMAND_UNARCHIVER);
+	register_archive (FR_TYPE_COMMAND_UNARCHIVER);
 #endif
 }
 
 
 GType
-get_command_type_from_mime_type (const char    *mime_type,
-				 FrCommandCaps  requested_capabilities)
+get_archive_type_from_mime_type (const char    *mime_type,
+				 FrArchiveCaps  requested_capabilities)
 {
 	int i;
 
 	if (mime_type == NULL)
 		return 0;
 
-	for (i = 0; i < Registered_Commands->len; i++) {
-		FrRegisteredCommand *command;
-		FrCommandCaps        capabilities;
+	for (i = 0; i < Registered_Archives->len; i++) {
+		FrRegisteredArchive *command;
+		FrArchiveCaps        capabilities;
 
-		command = g_ptr_array_index (Registered_Commands, i);
-		capabilities = fr_registered_command_get_capabilities (command, mime_type);
+		command = g_ptr_array_index (Registered_Archives, i);
+		capabilities = fr_registered_archive_get_capabilities (command, mime_type);
 
 		/* the command must support all the requested capabilities */
 		if (((capabilities ^ requested_capabilities) & requested_capabilities) == 0)
@@ -390,21 +399,21 @@ get_command_type_from_mime_type (const char    *mime_type,
 
 
 GType
-get_preferred_command_for_mime_type (const char    *mime_type,
-				     FrCommandCaps  requested_capabilities)
+get_preferred_archive_for_mime_type (const char    *mime_type,
+				     FrArchiveCaps  requested_capabilities)
 {
 	int i;
 
-	for (i = 0; i < Registered_Commands->len; i++) {
-		FrRegisteredCommand *command;
-		FrCommandCaps        capabilities;
+	for (i = 0; i < Registered_Archives->len; i++) {
+		FrRegisteredArchive *archive;
+		FrArchiveCaps        capabilities;
 
-		command = g_ptr_array_index (Registered_Commands, i);
-		capabilities = fr_registered_command_get_potential_capabilities (command, mime_type);
+		archive = g_ptr_array_index (Registered_Archives, i);
+		capabilities = fr_registered_archive_get_potential_capabilities (archive, mime_type);
 
-		/* the command must support all the requested capabilities */
+		/* the archive must support all the requested capabilities */
 		if (((capabilities ^ requested_capabilities) & requested_capabilities) == 0)
-			return command->type;
+			return archive->type;
 	}
 
 	return 0;
@@ -412,27 +421,27 @@ get_preferred_command_for_mime_type (const char    *mime_type,
 
 
 void
-update_registered_commands_capabilities (void)
+update_registered_archives_capabilities (void)
 {
 	int i;
 
 	g_hash_table_remove_all (ProgramsCache);
 
-	for (i = 0; i < Registered_Commands->len; i++) {
-		FrRegisteredCommand *reg_com;
-		FrCommand           *command;
+	for (i = 0; i < Registered_Archives->len; i++) {
+		FrRegisteredArchive *reg_com;
+		FrArchive           *archive;
 		int                  j;
 
-		reg_com = g_ptr_array_index (Registered_Commands, i);
-		command = (FrCommand*) g_object_new (reg_com->type, NULL);
+		reg_com = g_ptr_array_index (Registered_Archives, i);
+		archive = g_object_new (reg_com->type, NULL);
 		for (j = 0; j < reg_com->caps->len; j++) {
 			FrMimeTypeCap *cap = g_ptr_array_index (reg_com->caps, j);
 
-			cap->current_capabilities = fr_command_get_capabilities (command, cap->mime_type, TRUE);
-			cap->potential_capabilities = fr_command_get_capabilities (command, cap->mime_type, FALSE);
+			cap->current_capabilities = fr_archive_get_capabilities (archive, cap->mime_type, TRUE);
+			cap->potential_capabilities = fr_archive_get_capabilities (archive, cap->mime_type, FALSE);
 		}
 
-		g_object_unref (command);
+		g_object_unref (archive);
 	}
 }
 
@@ -562,11 +571,11 @@ compute_supported_archive_types (void)
 	int sf_i = 0, s_i = 0, o_i = 0, c_i = 0;
 	int i;
 
-	for (i = 0; i < Registered_Commands->len; i++) {
-		FrRegisteredCommand *reg_com;
+	for (i = 0; i < Registered_Archives->len; i++) {
+		FrRegisteredArchive *reg_com;
 		int                  j;
 
-		reg_com = g_ptr_array_index (Registered_Commands, i);
+		reg_com = g_ptr_array_index (Registered_Archives, i);
 		for (j = 0; j < reg_com->caps->len; j++) {
 			FrMimeTypeCap *cap;
 			int            idx;
@@ -578,12 +587,12 @@ compute_supported_archive_types (void)
 				continue;
 			}
 			mime_type_desc[idx].capabilities |= cap->current_capabilities;
-			if (cap->current_capabilities & FR_COMMAND_CAN_READ)
+			if (cap->current_capabilities & FR_ARCHIVE_CAN_READ)
 				add_if_non_present (open_type, &o_i, idx);
-			if (cap->current_capabilities & FR_COMMAND_CAN_WRITE) {
-				if (cap->current_capabilities & FR_COMMAND_CAN_ARCHIVE_MANY_FILES) {
+			if (cap->current_capabilities & FR_ARCHIVE_CAN_WRITE) {
+				if (cap->current_capabilities & FR_ARCHIVE_CAN_STORE_MANY_FILES) {
 					add_if_non_present (save_type, &s_i, idx);
-					if (cap->current_capabilities & FR_COMMAND_CAN_WRITE)
+					if (cap->current_capabilities & FR_ARCHIVE_CAN_WRITE)
 						add_if_non_present (create_type, &c_i, idx);
 				}
 				add_if_non_present (single_file_save_type, &sf_i, idx);
@@ -617,7 +626,7 @@ initialize_data (void)
 					   PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
 
 	migrate_options_directory ();
-	register_commands ();
+	register_archives ();
 	compute_supported_archive_types ();
 	fr_stock_init ();
 }
@@ -629,27 +638,13 @@ command_done (CommandData *cdata)
 	if (cdata == NULL)
 		return;
 
-	if ((cdata->temp_dir != NULL) && _g_path_query_is_dir (cdata->temp_dir)) {
-		char *argv[4];
-
-		argv[0] = "rm";
-		argv[1] = "-rf";
-		argv[2] = cdata->temp_dir;
-		argv[3] = NULL;
-		g_spawn_sync (g_get_tmp_dir (), argv, NULL,
-			      G_SPAWN_SEARCH_PATH,
-			      NULL, NULL,
-			      NULL, NULL, NULL,
-			      NULL);
-	}
+	_g_file_remove_directory (cdata->temp_dir, NULL, NULL);
 
 	g_free (cdata->command);
-	if (cdata->app != NULL)
-		g_object_unref (cdata->app);
-	_g_string_list_free (cdata->file_list);
-	g_free (cdata->temp_dir);
-	if (cdata->process != NULL)
-		g_object_unref (cdata->process);
+	_g_object_unref (cdata->app);
+	_g_object_list_unref (cdata->file_list);
+	_g_object_unref (cdata->temp_dir);
+	_g_object_unref (cdata->process);
 
 	CommandList = g_list_remove (CommandList, cdata);
 	g_free (cdata);

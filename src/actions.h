@@ -23,9 +23,6 @@
 #define ACTIONS_H
 
 #include <gtk/gtk.h>
-#include "fr-window.h"
-
-void show_new_archive_dialog (FrWindow *window, const char *archive_name);
 
 void activate_action_new (GtkAction *action, gpointer data);
 void activate_action_open (GtkAction *action, gpointer data);

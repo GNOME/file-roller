@@ -23,9 +23,46 @@
 #define __FR_ERROR_H__
 
 #include <glib.h>
+#include <glib-object.h>
 
 #define FR_ERROR fr_error_quark ()
-GQuark fr_error_quark (void);
+#define FR_TYPE_ERROR (fr_error_get_type ())
 
+typedef enum { /*< skip >*/
+	FR_ERROR_NONE,
+	FR_ERROR_GENERIC,
+	FR_ERROR_COMMAND_ERROR,
+	FR_ERROR_COMMAND_NOT_FOUND,
+	FR_ERROR_EXITED_ABNORMALLY,
+	FR_ERROR_SPAWN,
+	FR_ERROR_STOPPED,
+	FR_ERROR_ASK_PASSWORD,
+	FR_ERROR_MISSING_VOLUME,
+	FR_ERROR_IO_CHANNEL,
+	FR_ERROR_BAD_CHARSET,
+	FR_ERROR_UNSUPPORTED_FORMAT
+} FrErrorType;
+
+typedef struct {
+	GError      *gerror;
+	FrErrorType  type;
+	int          status;
+} FrError;
+
+GQuark     fr_error_quark          (void);
+GType      fr_error_get_type       (void);
+FrError *  fr_error_new            (FrErrorType   type,
+		 		    int           status,
+			 	    GError       *gerror);
+FrError *  fr_error_copy           (FrError      *error);
+void       fr_error_free           (FrError      *error);
+void       fr_error_set            (FrError      *error,
+				    FrErrorType   type,
+				    int           status,
+				    GError       *gerror);
+void       fr_error_take_gerror    (FrError      *error,
+				    GError       *gerror);
+void       fr_error_clear_gerror   (FrError      *error);
+void       fr_clear_error          (FrError     **error);
 
 #endif /* __FR_ERROR_H__ */

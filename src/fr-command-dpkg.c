@@ -68,7 +68,7 @@ process_metadata_line (char      *line,
 
         fdata->name = g_strdup (name);
         fdata->path = g_strdup ("DEBIAN");
-        fr_command_add_file (comm, fdata);
+        fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }
 
 static void
@@ -140,17 +140,17 @@ process_data_line (char     *line,
         if (fdata->dir)
                 fdata->name = _g_path_get_dir_name (fdata->full_path);
         else
-                fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+                fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
         fdata->path = _g_path_remove_level (fdata->full_path);
 
         if (*fdata->name == 0)
                 file_data_free (fdata);
         else
-                fr_command_add_file (comm, fdata);
+                fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 }
 
 
-static void
+static gboolean
 fr_command_dpkg_list (FrCommand *comm)
 {
         fr_process_set_out_line_func (comm->process, process_data_line, comm);
@@ -159,13 +159,13 @@ fr_command_dpkg_list (FrCommand *comm)
         fr_process_add_arg (comm->process, "-I");
         fr_process_add_arg (comm->process, comm->filename);
         fr_process_end_command (comm->process);
-        fr_process_start (comm->process);
 
         fr_process_begin_command (comm->process, "dpkg-deb");
         fr_process_add_arg (comm->process, "-c");
         fr_process_add_arg (comm->process, comm->filename);
         fr_process_end_command (comm->process);
-        fr_process_start (comm->process);
+
+        return TRUE;
 }
 
 
@@ -204,29 +204,29 @@ const char *dpkg_mime_type[] = { "application/x-deb", NULL };
 
 
 static const char **
-fr_command_dpkg_get_mime_types (FrCommand *comm)
+fr_command_dpkg_get_mime_types (FrArchive *archive)
 {
         return dpkg_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_dpkg_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_dpkg_get_capabilities (FrArchive  *archive,
                                   const char *mime_type,
                                   gboolean    check_command)
 {
-        FrCommandCap capabilities;
+        FrArchiveCap capabilities;
 
-        capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+        capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
         if (_g_program_is_available ("dpkg-deb", check_command))
-                capabilities |= FR_COMMAND_CAN_READ;
+                capabilities |= FR_ARCHIVE_CAN_READ;
 
         return capabilities;
 }
 
 
 static const char *
-fr_command_dpkg_get_packages (FrCommand  *comm,
+fr_command_dpkg_get_packages (FrArchive  *archive,
                               const char *mime_type)
 {
         return PACKAGES ("dpkg");
@@ -248,6 +248,7 @@ static void
 fr_command_dpkg_class_init (FrCommandDpkgClass *klass)
 {
         GObjectClass   *gobject_class;
+        FrArchiveClass *archive_class;
         FrCommandClass *command_class;
 
         fr_command_dpkg_parent_class = g_type_class_peek_parent (klass);
@@ -255,19 +256,21 @@ fr_command_dpkg_class_init (FrCommandDpkgClass *klass)
         gobject_class = G_OBJECT_CLASS (klass);
         gobject_class->finalize = fr_command_dpkg_finalize;
 
+        archive_class = FR_ARCHIVE_CLASS (klass);
+        archive_class->get_mime_types   = fr_command_dpkg_get_mime_types;
+        archive_class->get_capabilities = fr_command_dpkg_get_capabilities;
+        archive_class->get_packages     = fr_command_dpkg_get_packages;
+
         command_class = FR_COMMAND_CLASS (klass);
         command_class->list             = fr_command_dpkg_list;
         command_class->extract          = fr_command_dpkg_extract;
-        command_class->get_mime_types   = fr_command_dpkg_get_mime_types;
-        command_class->get_capabilities = fr_command_dpkg_get_capabilities;
-        command_class->get_packages     = fr_command_dpkg_get_packages;
 }
 
 
 static void
 fr_command_dpkg_init (FrCommandDpkg *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
         base->propAddCanUpdate             = FALSE;
         base->propAddCanReplace            = FALSE;

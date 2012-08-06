@@ -23,9 +23,7 @@
 #define FR_COMMAND_ACE_H
 
 #include <glib.h>
-#include "file-data.h"
 #include "fr-command.h"
-#include "fr-process.h"
 
 #define FR_TYPE_COMMAND_ACE            (fr_command_ace_get_type ())
 #define FR_COMMAND_ACE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ACE, FrCommandAce))

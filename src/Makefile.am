@@ -41,7 +41,9 @@ INCLUDES =						\
 	-DAPPLICATIONS_DIR=\"$(applications_dir)\"	\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)					\
-	$(JSON_GLIB_CFLAGS)
+	$(JSON_GLIB_CFLAGS)				\
+	$(LIBNOTIFY_CFLAGS)				\
+	$(LIBARCHIVE_CFLAGS)
 
 BUILT_SOURCES =			\
 	fr-marshal.c		\
@@ -67,8 +69,6 @@ COMMON_SOURCES = 			\
 	dlg-delete.h			\
 	dlg-extract.c			\
 	dlg-extract.h			\
-	dlg-new.c			\
-	dlg-new.h			\
 	dlg-open-with.c			\
 	dlg-open-with.h			\
 	dlg-package-installer.c		\
@@ -79,8 +79,6 @@ COMMON_SOURCES = 			\
 	dlg-prop.h			\
 	dlg-update.c			\
 	dlg-update.h			\
-	eggfileformatchooser.c		\
-	eggfileformatchooser.h		\
 	egg-macros.h			\
 	eggtreemultidnd.c		\
 	eggtreemultidnd.h		\
@@ -92,6 +90,8 @@ COMMON_SOURCES = 			\
 	fr-archive.h			\
 	fr-command.c			\
 	fr-command.h			\
+	fr-command-7z.c			\
+	fr-command-7z.h			\
 	fr-command-ace.c		\
 	fr-command-ace.h		\
 	fr-command-alz.c		\
@@ -126,18 +126,16 @@ COMMON_SOURCES = 			\
 	fr-command-lrzip.h		\
 	fr-command-zoo.c		\
 	fr-command-zoo.h		\
-	fr-command-7z.c			\
-	fr-command-7z.h			\
 	fr-error.c			\
 	fr-error.h			\
 	fr-init.c			\
 	fr-init.h			\
 	fr-list-model.c			\
 	fr-list-model.h			\
+	fr-new-archive-dialog.c		\
+	fr-new-archive-dialog.h		\
 	fr-stock.c			\
 	fr-stock.h			\
-	fr-proc-error.c			\
-	fr-proc-error.h			\
 	fr-process.c			\
 	fr-process.h			\
 	fr-window.c			\
@@ -146,6 +144,8 @@ COMMON_SOURCES = 			\
 	gio-utils.h			\
 	glib-utils.c			\
 	glib-utils.h			\
+	gth-menu-button.c		\
+	gth-menu-button.h		\
 	gtk-utils.c			\
 	gtk-utils.h			\
 	java-utils.c			\
@@ -167,6 +167,12 @@ COMMON_SOURCES +=			\
 	fr-command-unarchiver.c
 endif
 
+if ENABLE_LIBARCHIVE
+COMMON_SOURCES +=			\
+	fr-archive-libarchive.h		\
+	fr-archive-libarchive.c
+endif
+
 fr-marshal.h: fr-marshal.list $(GLIB_GENMARSHAL)
 	$(AM_V_GEN)( $(GLIB_GENMARSHAL) $< --header --prefix=fr_marshal > $@ )
 
@@ -186,7 +192,7 @@ fr-enum-types.h: typedefs.h $(GLIB_MKENUMS)
 
 fr-enum-types.c: typedefs.h fr-enum-types.h
 	$(AM_V_GEN)( $(GLIB_MKENUMS) \
-		--fhead "#include <glib-object.h>\n" \
+		--fhead "#include <glib-object.h>\n#include \"fr-enum-types.h\"\n" \
 		--fprod "\n/* enumerations from \"@filename@\" */\n#include \"@filename@\"" \
 		--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" \
 		--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
@@ -208,7 +214,9 @@ file_roller_SOURCES = 			\
 file_roller_LDADD =					\
 	$(top_builddir)/copy-n-paste/libeggsmclient.la	\
 	$(FR_LIBS)					\
-	$(JSON_GLIB_LIBS)
+	$(JSON_GLIB_LIBS)				\
+	$(LIBNOTIFY_LIBS)				\
+	$(LIBARCHIVE_LIBS)
 
 if ENABLE_MAGIC
 file_roller_LDADD += $(MAGIC_LIBS)

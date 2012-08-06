@@ -52,6 +52,7 @@ void          _gtk_error_dialog_run                (GtkWindow        *parent,
 						    const gchar      *main_message,
 						    const gchar      *format,
 						    ...);
+void          _gtk_dialog_add_to_window_group      (GtkDialog        *dialog);
 void          _gtk_entry_set_locale_text           (GtkEntry         *entry,
 					     	    const char       *text);
 char *        _gtk_entry_get_locale_text           (GtkEntry         *entry);

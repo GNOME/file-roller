@@ -47,9 +47,9 @@ installer_data_free (InstallerData *idata)
 
 
 static void
-package_installer_terminated (InstallerData   *idata,
-			      FrProcErrorType  error_type,
-			      const char      *error_message)
+package_installer_terminated (InstallerData *idata,
+			      FrErrorType    error_type,
+			      const char    *error_message)
 {
 	GdkWindow *window;
 
@@ -57,14 +57,14 @@ package_installer_terminated (InstallerData   *idata,
 	if (window != NULL)
 		gdk_window_set_cursor (window, NULL);
 
-	if (error_type != FR_PROC_ERROR_NONE) {
-		fr_archive_action_completed (idata->archive,
-					     idata->action,
-					     error_type,
-					     error_message);
+	if (error_type != FR_ERROR_NONE) {
+		fr_window_stop_batch_with_error (idata->window,
+						 idata->action,
+						 error_type,
+						 error_message);
 	}
 	else {
-		update_registered_commands_capabilities ();
+		update_registered_archives_capabilities ();
 		if (fr_window_is_batch_mode (idata->window))
 			fr_window_resume_batch (idata->window);
 		else
@@ -87,7 +87,7 @@ packagekit_install_package_names_ready_cb (GObject      *source_object,
 	GDBusProxy      *proxy;
 	GVariant        *values;
 	GError          *error = NULL;
-	FrProcErrorType  error_type = FR_PROC_ERROR_NONE;
+	FrErrorType  error_type = FR_ERROR_NONE;
 	char            *error_message = NULL;
 
 	proxy = G_DBUS_PROXY (source_object);
@@ -98,11 +98,11 @@ packagekit_install_package_names_ready_cb (GObject      *source_object,
 			&& (error->message != NULL)
 			&& (strstr (error->message, "org.freedesktop.Packagekit.Modify.Cancelled") != NULL)))
 		{
-			error_type = FR_PROC_ERROR_STOPPED;
+			error_type = FR_ERROR_STOPPED;
 			error_message = NULL;
 		}
 		else {
-			error_type = FR_PROC_ERROR_GENERIC;
+			error_type = FR_ERROR_GENERIC;
 			error_message = g_strdup_printf ("%s\n%s",
 							 _("There was an internal error trying to search for applications:"),
 							 error->message);
@@ -219,7 +219,7 @@ install_packages (InstallerData *idata)
 		message = g_strdup_printf ("%s\n%s",
 					   _("There was an internal error trying to search for applications:"),
 					   error->message);
-		package_installer_terminated (idata, FR_PROC_ERROR_GENERIC, message);
+		package_installer_terminated (idata, FR_ERROR_GENERIC, message);
 
 		g_clear_error (&error);
 	}
@@ -254,28 +254,28 @@ dlg_package_installer (FrWindow  *window,
 		       FrAction   action)
 {
 	InstallerData   *idata;
-	GType            command_type;
-	FrCommand       *command;
+	GType            archive_type;
+	FrArchive       *preferred_archive;
 
 	idata = g_new0 (InstallerData, 1);
 	idata->window = g_object_ref (window);
 	idata->archive = g_object_ref (archive);
 	idata->action = action;
 
-	command_type = get_preferred_command_for_mime_type (idata->archive->content_type, FR_COMMAND_CAN_READ_WRITE);
-	if (command_type == 0)
-		command_type = get_preferred_command_for_mime_type (idata->archive->content_type, FR_COMMAND_CAN_READ);
-	if (command_type == 0) {
-		package_installer_terminated (idata, FR_PROC_ERROR_GENERIC, _("Archive type not supported."));
+	archive_type = get_preferred_archive_for_mime_type (idata->archive->mime_type, FR_ARCHIVE_CAN_READ_WRITE);
+	if (archive_type == 0)
+		archive_type = get_preferred_archive_for_mime_type (idata->archive->mime_type, FR_ARCHIVE_CAN_READ);
+	if (archive_type == 0) {
+		package_installer_terminated (idata, FR_ERROR_GENERIC, _("Archive type not supported."));
 		return;
 	}
 
-	command = g_object_new (command_type, 0);
-	idata->packages = fr_command_get_packages (command, idata->archive->content_type);
-	g_object_unref (command);
+	preferred_archive = g_object_new (archive_type, 0);
+	idata->packages = fr_archive_get_packages (preferred_archive, idata->archive->mime_type);
+	g_object_unref (preferred_archive);
 
 	if (idata->packages == NULL) {
-		package_installer_terminated (idata, FR_PROC_ERROR_GENERIC, _("Archive type not supported."));
+		package_installer_terminated (idata, FR_ERROR_GENERIC, _("Archive type not supported."));
 		return;
 	}
 
@@ -286,7 +286,7 @@ dlg_package_installer (FrWindow  *window,
 		GtkWidget *dialog;
 
 		secondary_text = g_strdup_printf (_("There is no command installed for %s files.\nDo you want to search for a command to open this file?"),
-						  g_content_type_get_description (idata->archive->content_type));
+						  g_content_type_get_description (idata->archive->mime_type));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_ERROR,
@@ -303,7 +303,7 @@ dlg_package_installer (FrWindow  *window,
 
 #else /* ! ENABLE_PACKAGEKIT */
 
-	package_installer_terminated (idata, FR_PROC_ERROR_GENERIC, _("Archive type not supported."));
+	package_installer_terminated (idata, FR_ERROR_GENERIC, _("Archive type not supported."));
 
 #endif /* ENABLE_PACKAGEKIT */
 }

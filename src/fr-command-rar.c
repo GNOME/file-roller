@@ -101,7 +101,7 @@ process_line (char     *line,
 			rar_comm->odd_line = TRUE;
 		}
 		else if (strncmp (line, "Volume ", 7) == 0)
-			comm->multi_volume = TRUE;
+			FR_ARCHIVE (comm)->multi_volume = TRUE;
 		return;
 	}
 
@@ -153,9 +153,9 @@ process_line (char     *line,
 					fdata->dir = TRUE;
 				}
 				else
-					fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+					fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 
-				fr_command_add_file (comm, fdata);
+				fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 				rar_comm->fdata = NULL;
 			}
 
@@ -200,7 +200,7 @@ add_password_arg (FrCommand  *comm,
 		  gboolean    disable_query)
 {
 	if ((password != NULL) && (password[0] != '\0')) {
-		if (comm->encrypt_header)
+		if (FR_ARCHIVE (comm)->encrypt_header)
 			fr_process_add_arg_concat (comm->process, "-hp", password, NULL);
 		else
 			fr_process_add_arg_concat (comm->process, "-p", password, NULL);
@@ -219,7 +219,7 @@ list__begin (gpointer data)
 }
 
 
-static void
+static gboolean
 fr_command_rar_list (FrCommand  *comm)
 {
 	rar_check_multi_volume (comm);
@@ -235,7 +235,7 @@ fr_command_rar_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, "-c-");
 	fr_process_add_arg (comm->process, "-v");
 
-	add_password_arg (comm, comm->password, TRUE);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password, TRUE);
 
 	/* stop switches scanning */
 	fr_process_add_arg (comm->process, "--");
@@ -243,7 +243,7 @@ fr_command_rar_list (FrCommand  *comm)
 	fr_process_add_arg (comm->process, comm->filename);
 	fr_process_end_command (comm->process);
 
-	fr_process_start (comm->process);
+	return TRUE;
 }
 
 
@@ -253,12 +253,13 @@ parse_progress_line (FrCommand  *comm,
 		     const char *message_format,
 		     const char *line)
 {
-	int prefix_len;
+	FrArchive *archive = FR_ARCHIVE (comm);
+	int        prefix_len;
 
 	prefix_len = strlen (prefix);
 	if (strncmp (line, prefix, prefix_len) == 0) {
-		if (comm->n_files > 1) {
-			fr_command_progress (comm, (double) ++comm->n_file / (comm->n_files + 1));
+		if (fr_archive_progress_get_total_files (archive) > 1) {
+			fr_archive_progress (archive, fr_archive_progress_inc_completed_files (archive, 1));
 		}
 		else {
 			char  filename[4096];
@@ -279,8 +280,8 @@ parse_progress_line (FrCommand  *comm,
 			if ((len > 5) && (strncmp (filename + len - 5, "  OK ", 5) == 0))
 				filename[len - 5] = 0;
 
-			msg = g_strdup_printf (message_format, _g_path_get_file_name (filename), NULL);
-			fr_command_message (comm, msg);
+			msg = g_strdup_printf (message_format, _g_path_get_basename (filename), NULL);
+			fr_archive_message (archive, msg);
 
 			g_free (msg);
 		}
@@ -293,13 +294,14 @@ process_line__add (char     *line,
 		   gpointer  data)
 {
 	FrCommand *comm = FR_COMMAND (data);
+	FrArchive *archive = FR_ARCHIVE (comm);
 
 	if (strncmp (line, "Creating archive ", 17) == 0) {
 		const char *archive_filename = line + 17;
 		char *uri;
 
 		uri = g_filename_to_uri (archive_filename, NULL, NULL);
-		if ((comm->volume_size > 0)
+		if ((archive->volume_size > 0)
 		    && g_regex_match_simple ("^.*\\.part(0)*2\\.rar$", uri, G_REGEX_CASELESS, 0))
 		{
 			char  *volume_filename;
@@ -308,18 +310,18 @@ process_line__add (char     *line,
 			volume_filename = g_strdup (archive_filename);
 			volume_filename[strlen (volume_filename) - 5] = '1';
 			volume_file = g_file_new_for_path (volume_filename);
-			fr_command_set_multi_volume (comm, volume_file);
+			fr_archive_set_multi_volume (archive, volume_file);
 
 			g_object_unref (volume_file);
 			g_free (volume_filename);
 		}
-		fr_command_working_archive (comm, uri);
+		fr_archive_working_archive (archive, uri);
 
 		g_free (uri);
 		return;
 	}
 
-	if (comm->n_files != 0)
+	if (fr_archive_progress_get_total_files (archive) > 0)
 		parse_progress_line (comm, "Adding    ", _("Adding \"%s\""), line);
 }
 
@@ -349,7 +351,7 @@ fr_command_rar_add (FrCommand     *comm,
 	else
 		fr_process_add_arg (comm->process, "a");
 
-	switch (comm->compression) {
+	switch (FR_ARCHIVE (comm)->compression) {
 	case FR_COMPRESSION_VERY_FAST:
 		fr_process_add_arg (comm->process, "-m1"); break;
 	case FR_COMPRESSION_FAST:
@@ -360,10 +362,10 @@ fr_command_rar_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, "-m5"); break;
 	}
 
-	add_password_arg (comm, comm->password, FALSE);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password, FALSE);
 
-	if (comm->volume_size > 0)
-		fr_process_add_arg_printf (comm->process, "-v%ub", comm->volume_size);
+	if (FR_ARCHIVE (comm)->volume_size > 0)
+		fr_process_add_arg_printf (comm->process, "-v%ub", FR_ARCHIVE (comm)->volume_size);
 
 	/* disable percentage indicator */
 	fr_process_add_arg (comm->process, "-Idp");
@@ -391,13 +393,13 @@ process_line__delete (char     *line,
 		char *uri;
 
 		uri = g_filename_to_uri (line + 14, NULL, NULL);
-		fr_command_working_archive (comm, uri);
+		fr_archive_working_archive (FR_ARCHIVE (comm), uri);
 		g_free (uri);
 
 		return;
 	}
 
-	if (comm->n_files != 0)
+	if (fr_archive_progress_get_total_files (FR_ARCHIVE (comm)) > 0)
 		parse_progress_line (comm, "Deleting ", _("Removing \"%s\""), line);
 }
 
@@ -440,13 +442,13 @@ process_line__extract (char     *line,
 		char *uri;
 
 		uri = g_filename_to_uri (line + 16, NULL, NULL);
-		fr_command_working_archive (comm, uri);
+		fr_archive_working_archive (FR_ARCHIVE (comm), uri);
 		g_free (uri);
 
 		return;
 	}
 
-	if (comm->n_files != 0)
+	if (fr_archive_progress_get_total_files (FR_ARCHIVE (comm)) > 0)
 		parse_progress_line (comm, "Extracting  ", _("Extracting \"%s\""), line);
 }
 
@@ -488,7 +490,7 @@ fr_command_rar_extract (FrCommand  *comm,
 	if (junk_paths)
 		fr_process_add_arg (comm->process, "-ep");
 
-	add_password_arg (comm, comm->password, TRUE);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password, TRUE);
 
 	/* disable percentage indicator */
 	fr_process_add_arg (comm->process, "-Idp");
@@ -519,7 +521,7 @@ fr_command_rar_test (FrCommand   *comm)
 
 	fr_process_add_arg (comm->process, "t");
 
-	add_password_arg (comm, comm->password, TRUE);
+	add_password_arg (comm, FR_ARCHIVE (comm)->password, TRUE);
 
 	/* disable percentage indicator */
 	fr_process_add_arg (comm->process, "-Idp");
@@ -533,8 +535,8 @@ fr_command_rar_test (FrCommand   *comm)
 
 
 static void
-fr_command_rar_handle_error (FrCommand   *comm,
-			     FrProcError *error)
+fr_command_rar_handle_error (FrCommand *comm,
+			     FrError   *error)
 {
 	GList *scan;
 
@@ -547,25 +549,23 @@ fr_command_rar_handle_error (FrCommand   *comm,
 	}
 #endif
 
-	if (error->type == FR_PROC_ERROR_NONE)
+	if (error->type == FR_ERROR_NONE)
 		return;
 
-	/*if (error->status == 3)
-		error->type = FR_PROC_ERROR_ASK_PASSWORD;
-	else */
+	/* ignore warnings */
 	if (error->status <= 1)
-		error->type = FR_PROC_ERROR_NONE;
+		fr_error_clear_gerror (error);
 
 	for (scan = g_list_last (comm->process->err.raw); scan; scan = scan->prev) {
 		char *line = scan->data;
 
 		if (strstr (line, "password incorrect") != NULL) {
-			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 			break;
 		}
 
 		if (strstr (line, "wrong password") != NULL) {
-			error->type = FR_PROC_ERROR_ASK_PASSWORD;
+			fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 			break;
 		}
 
@@ -574,13 +574,9 @@ fr_command_rar_handle_error (FrCommand   *comm,
 		}
 
 		if (strncmp (line, "Cannot find volume", 18) == 0) {
-			char *volume_filename;
+			char *volume_filename = g_path_get_basename (line + strlen ("Cannot find volume "));
+			fr_error_take_gerror (error, g_error_new (FR_ERROR, FR_ERROR_MISSING_VOLUME, _("Could not find the volume: %s"), volume_filename));
 
-			g_clear_error (&error->gerror);
-
-			error->type = FR_PROC_ERROR_MISSING_VOLUME;
-			volume_filename = g_path_get_basename (line + strlen ("Cannot find volume "));
-			error->gerror = g_error_new (FR_ERROR, error->status, _("Could not find the volume: %s"), volume_filename);
 			g_free (volume_filename);
 			break;
 		}
@@ -594,35 +590,35 @@ const char *rar_mime_type[] = { "application/x-cbr",
 
 
 static const char **
-fr_command_rar_get_mime_types (FrCommand *comm)
+fr_command_rar_get_mime_types (FrArchive *archive)
 {
 	return rar_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_rar_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_rar_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES | FR_COMMAND_CAN_ENCRYPT | FR_COMMAND_CAN_ENCRYPT_HEADER;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES | FR_ARCHIVE_CAN_ENCRYPT | FR_ARCHIVE_CAN_ENCRYPT_HEADER;
 	if (_g_program_is_available ("rar", check_command))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE | FR_COMMAND_CAN_CREATE_VOLUMES;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE | FR_ARCHIVE_CAN_CREATE_VOLUMES;
 	else if (_g_program_is_available ("unrar", check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	/* multi-volumes are read-only */
-	if ((comm->files->len > 0) && comm->multi_volume && (capabilities & FR_COMMAND_CAN_WRITE))
-		capabilities ^= FR_COMMAND_CAN_WRITE;
+	if ((archive->files->len > 0) && archive->multi_volume && (capabilities & FR_ARCHIVE_CAN_WRITE))
+		capabilities ^= FR_ARCHIVE_CAN_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_rar_get_packages (FrCommand  *comm,
+fr_command_rar_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("rar,unrar");
@@ -644,12 +640,18 @@ static void
 fr_command_rar_class_init (FrCommandRarClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_rar_parent_class = g_type_class_peek_parent (klass);
 
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_rar_finalize;
+
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_rar_get_mime_types;
+	archive_class->get_capabilities = fr_command_rar_get_capabilities;
+	archive_class->get_packages     = fr_command_rar_get_packages;
 
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->list             = fr_command_rar_list;
@@ -658,16 +660,13 @@ fr_command_rar_class_init (FrCommandRarClass *klass)
 	command_class->extract          = fr_command_rar_extract;
 	command_class->test             = fr_command_rar_test;
 	command_class->handle_error     = fr_command_rar_handle_error;
-	command_class->get_mime_types   = fr_command_rar_get_mime_types;
-	command_class->get_capabilities = fr_command_rar_get_capabilities;
-	command_class->get_packages     = fr_command_rar_get_packages;
 }
 
 
 static void
 fr_command_rar_init (FrCommandRar *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;

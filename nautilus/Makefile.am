@@ -6,7 +6,8 @@ INCLUDES =						\
 	$(DISABLE_DEPRECATED)				\
 	$(NAUTILUS_CFLAGS)				\
 	$(FR_CFLAGS)					\
-	$(JSON_GLIB_CFLAGS)
+	$(JSON_GLIB_CFLAGS)				\
+	$(LIBNOTIFY_CFLAGS)
 
 nautilus_extensiondir=$(NAUTILUS_EXTENSION_DIR)
 

@@ -58,10 +58,9 @@ static void
 destroy_cb (GtkWidget  *widget,
 	    DialogData *data)
 {
-	if (! data->extract_clicked) {
-		fr_window_pop_message (data->window);
+	if (! data->extract_clicked)
 		fr_window_stop_batch (data->window);
-	}
+
 	_g_string_list_free (data->selected_files);
 	g_free (data->base_dir_for_selection);
 	g_object_unref (data->settings);
@@ -75,7 +74,7 @@ extract_cb (GtkWidget   *w,
 {
 	FrWindow   *window = data->window;
 	gboolean    do_not_extract = FALSE;
-	char       *extract_to_dir;
+	GFile      *destination;
 	gboolean    overwrite;
 	gboolean    skip_newer;
 	gboolean    selected_files;
@@ -89,18 +88,18 @@ extract_cb (GtkWidget   *w,
 
 	/* collect extraction options. */
 
-	extract_to_dir = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (data->dialog));
+	destination = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (data->dialog));
 
 	/* check directory existence. */
 
-	if (! _g_uri_query_is_dir (extract_to_dir)) {
+	if (! _g_file_query_is_dir (destination)) {
 		if (! ForceDirectoryCreation) {
 			GtkWidget *d;
 			int        r;
 			char      *folder_name;
 			char      *msg;
 
-			folder_name = g_filename_display_name (extract_to_dir);
+			folder_name = _g_file_get_display_basename (destination);
 			msg = g_strdup_printf (_("Destination folder \"%s\" does not exist.\n\nDo you want to create it?"), folder_name);
 			g_free (folder_name);
 
@@ -123,7 +122,7 @@ extract_cb (GtkWidget   *w,
 				do_not_extract = TRUE;
 		}
 
-		if (! do_not_extract && ! _g_uri_ensure_dir_exists (extract_to_dir, 0755, &error)) {
+		if (! do_not_extract && ! _g_file_make_directory_tree (destination, 0755, &error)) {
 			GtkWidget  *d;
 
 			d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -163,13 +162,13 @@ extract_cb (GtkWidget   *w,
 
 	/* check extraction directory permissions. */
 
-	if (_g_uri_query_is_dir (extract_to_dir)
-	    && ! _g_uri_check_permissions (extract_to_dir, R_OK | W_OK))
+	if (_g_file_query_is_dir (destination)
+	    && ! _g_file_check_permissions (destination, R_OK | W_OK))
 	{
 		GtkWidget *d;
 		char      *utf8_path;
 
-		utf8_path = g_filename_display_name (extract_to_dir);
+		utf8_path = _g_file_get_display_basename (destination);
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -181,12 +180,12 @@ extract_cb (GtkWidget   *w,
 		gtk_widget_destroy (GTK_WIDGET (d));
 
 		g_free (utf8_path);
-		g_free (extract_to_dir);
+		g_object_unref (destination);
 
 		return FALSE;
 	}
 
-	fr_window_set_extract_default_dir (window, extract_to_dir, TRUE);
+	fr_window_set_extract_default_dir (window, destination, TRUE);
 
 	overwrite = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_overwrite_checkbutton));
 	skip_newer = ! gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton)) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->e_not_newer_checkbutton));
@@ -215,7 +214,7 @@ extract_cb (GtkWidget   *w,
 		file_list = fr_window_get_file_list_pattern (window, pattern);
 		if (file_list == NULL) {
 			gtk_widget_destroy (data->dialog);
-			g_free (extract_to_dir);
+			g_object_unref (destination);
 			return FALSE;
 		}
 	}
@@ -235,7 +234,7 @@ extract_cb (GtkWidget   *w,
 
 	fr_window_archive_extract (window,
 				   file_list,
-				   extract_to_dir,
+				   destination,
 				   base_dir,
 				   skip_newer,
 				   overwrite ? FR_OVERWRITE_YES : FR_OVERWRITE_NO,
@@ -243,7 +242,7 @@ extract_cb (GtkWidget   *w,
 				   TRUE);
 
 	_g_string_list_free (file_list);
-	g_free (extract_to_dir);
+	g_free (destination);
 	g_free (base_dir);
 
 	return TRUE;
@@ -446,7 +445,7 @@ dlg_extract__common (FrWindow *window,
 
 	/* Set widgets data. */
 
-	gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (file_sel), fr_window_get_extract_default_dir (window));
+	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (file_sel), fr_window_get_extract_default_dir (window), NULL);
 
 	if (data->selected_files != NULL)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_selected_radiobutton), TRUE);

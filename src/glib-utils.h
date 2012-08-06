@@ -48,6 +48,13 @@
 
 gpointer            _g_object_ref                  (gpointer             object);
 void                _g_object_unref                (gpointer             object);
+void                _g_clear_object                (gpointer             p);
+GList *             _g_object_list_ref             (GList               *list);
+void                _g_object_list_unref           (GList               *list);
+
+/* error */
+
+void                _g_error_free                  (GError              *error);
 
 /* string */
 
@@ -56,7 +63,7 @@ gboolean            _g_strchrs                     (const char          *str,
 char *              _g_str_substitute              (const char          *str,
 						    const char          *from_str,
 						    const char          *to_str);
-int                 _g_strcmp_null_tolerant        (const char          *s1,
+gboolean            _g_str_equal                   (const char          *s1,
 						    const char          *s2);
 char*               _g_str_escape_full             (const char          *str,
 						    const char          *meta_chars,
@@ -114,37 +121,45 @@ char *              _g_time_to_string              (time_t               time);
 
 /* uri/path/filename */
 
-char *              _g_uri_display_basename        (const char          *uri);
 const char *        _g_uri_get_home                (void);
 char *              _g_uri_get_home_relative       (const char          *partial_uri);
 const char *        _g_uri_remove_host             (const char          *uri);
 char *              _g_uri_get_host                (const char          *uri);
 char *              _g_uri_get_root                (const char          *uri);
-gboolean            _g_uri_is_local                (const char          *uri);
 int                 _g_uri_cmp                     (const char          *uri1,
 						    const char          *uri2);
-char *              _g_uri_build                   (const char          *base,
-						    ...);
-const char *        _g_path_get_file_name          (const char          *path);
+const char *        _g_path_get_basename           (const char          *path);
 char *              _g_path_get_dir_name           (const char          *path);
 char *              _g_path_remove_level           (const char          *path);
 char *              _g_path_remove_ending_separator(const char          *path);
 char *              _g_path_remove_extension       (const char          *path);
 gboolean            _g_path_is_parent_of           (const char          *dirname,
 						    const char          *filename);
+const char *        _g_path_get_relative_basename  (const char          *path,
+						    const char          *base_dir,
+						    gboolean             junk_paths);
 gboolean            _g_filename_is_hidden          (const char          *name);
 const char *        _g_filename_get_extension      (const char          *filename);
 gboolean            _g_filename_has_extension      (const char          *filename,
 						    const char          *ext);
+char *              _g_filename_get_random         (int                  random_part_len,
+						    const char          *suffix);
 gboolean            _g_mime_type_matches           (const char          *type,
 						    const char          *pattern);
 
 /* GFile */
 
+int                 _g_file_cmp_uris               (GFile               *a,
+						    GFile               *b);
+gboolean            _g_file_is_local               (GFile               *file);
+GFile *             _g_file_get_home               (void);
+char *              _g_file_get_display_basename   (GFile               *file);
 GFile *             _g_file_new_home_relative      (const char          *partial_uri);
 GList *             _g_file_list_dup               (GList               *l);
 void                _g_file_list_free              (GList               *l);
 GList *             _g_file_list_new_from_uri_list (GList               *uris);
+GFile *             _g_file_append_path            (GFile               *file,
+                                                    ...);
 
 /* functions used to parse a command output lines. */
 

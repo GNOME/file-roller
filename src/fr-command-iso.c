@@ -111,10 +111,10 @@ list__process_line (char     *line,
 		else
 			fdata->full_path = g_strstrip (g_strconcat (comm_iso->cur_path, name_field, NULL));
 		fdata->original_path = fdata->full_path;
-		fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+		fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 		fdata->path = _g_path_remove_level (fdata->full_path);
 
-		fr_command_add_file (comm, fdata);
+		fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 	}
 }
 
@@ -129,7 +129,7 @@ list__begin (gpointer data)
 }
 
 
-static void
+static gboolean
 fr_command_iso_list (FrCommand *comm)
 {
 	fr_process_set_out_line_func (comm->process, list__process_line, comm);
@@ -142,7 +142,7 @@ fr_command_iso_list (FrCommand *comm)
 	fr_process_add_arg (comm->process, "-l");
 	fr_process_end_command (comm->process);
 
-	fr_process_start (comm->process);
+	return TRUE;
 }
 
 
@@ -162,8 +162,9 @@ fr_command_iso_extract (FrCommand  *comm,
 		const char *filename;
 		char       *file_dir;
 		char       *temp_dest_dir = NULL;
+		GFile      *directory;
 
-		filename = _g_path_get_file_name (path);
+		filename = _g_path_get_basename (path);
 		file_dir = _g_path_remove_level (path);
 		if ((file_dir != NULL) && (strcmp (file_dir, "/") != 0))
 			temp_dest_dir = g_build_filename (dest_dir, file_dir, NULL);
@@ -174,7 +175,8 @@ fr_command_iso_extract (FrCommand  *comm,
 		if (temp_dest_dir == NULL)
 			continue;
 
-		_g_path_make_directory_tree (temp_dest_dir, 0700, NULL);
+		directory = g_file_new_for_path (temp_dest_dir);
+		_g_file_make_directory_tree (directory, 0700, NULL);
 
 		fr_process_begin_command (comm->process, "sh");
 		fr_process_set_working_dir (comm->process, temp_dest_dir);
@@ -186,6 +188,7 @@ fr_command_iso_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 
+		g_object_unref (directory);
 		g_free (temp_dest_dir);
 	}
 }
@@ -195,29 +198,29 @@ const char *iso_mime_type[] = { "application/x-cd-image", NULL };
 
 
 static const char **
-fr_command_iso_get_mime_types (FrCommand *comm)
+fr_command_iso_get_mime_types (FrArchive *archive)
 {
 	return iso_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_iso_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_iso_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("isoinfo", check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_iso_get_packages (FrCommand  *comm,
+fr_command_iso_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("genisoimage");
@@ -241,29 +244,32 @@ fr_command_iso_finalize (GObject *object)
 
 
 static void
-fr_command_iso_class_init (FrCommandIsoClass *class)
+fr_command_iso_class_init (FrCommandIsoClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
-	fr_command_iso_parent_class = g_type_class_peek_parent (class);
+	fr_command_iso_parent_class = g_type_class_peek_parent (klass);
 
-	gobject_class = G_OBJECT_CLASS (class);
+	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_iso_finalize;
 
-	command_class = FR_COMMAND_CLASS (class);
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_iso_get_mime_types;
+	archive_class->get_capabilities = fr_command_iso_get_capabilities;
+	archive_class->get_packages     = fr_command_iso_get_packages;
+
+	command_class = FR_COMMAND_CLASS (klass);
 	command_class->list             = fr_command_iso_list;
 	command_class->extract          = fr_command_iso_extract;
-	command_class->get_mime_types   = fr_command_iso_get_mime_types;
-	command_class->get_capabilities = fr_command_iso_get_capabilities;
-	command_class->get_packages     = fr_command_iso_get_packages;
 }
 
 
 static void
 fr_command_iso_init (FrCommandIso *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = FALSE;
 	base->propAddCanReplace            = FALSE;

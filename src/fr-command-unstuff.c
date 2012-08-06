@@ -159,14 +159,14 @@ process_line (char     *line,
 	fdata->full_path = filename;
 	fdata->original_path = filename;
 	fdata->link = NULL;
-	fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	fdata->size = 0;
 	fdata->modified = time (NULL);
 
 	unstuff_comm->fdata = fdata;
-	fr_command_add_file (comm, fdata);
+	fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 
 	unlink (real_filename);
 	g_free (real_filename);
@@ -182,7 +182,7 @@ list__begin (gpointer data)
 }
 
 
-static void
+static gboolean
 fr_command_unstuff_list (FrCommand *comm)
 {
 	char *arg, *path;
@@ -209,7 +209,8 @@ fr_command_unstuff_list (FrCommand *comm)
 	fr_process_add_arg (comm->process, filename);
 	g_free (filename);
 	fr_process_end_command (comm->process);
-	fr_process_start (comm->process);
+
+	return TRUE;
 }
 
 
@@ -260,12 +261,12 @@ fr_command_unstuff_extract (FrCommand  *comm,
 
 static void
 fr_command_unstuff_handle_error (FrCommand   *comm,
-				 FrProcError *error)
+				 FrError *error)
 {
-	if ((error->type != FR_PROC_ERROR_NONE)
+	if ((error->type != FR_ERROR_NONE)
 	    && (error->status <= 1))
 	{
-		error->type = FR_PROC_ERROR_NONE;
+		fr_error_clear_gerror (error);
 	}
 }
 
@@ -274,29 +275,29 @@ const char *unstuff_mime_type[] = { "application/x-stuffit", NULL };
 
 
 static const char **
-fr_command_unstuff_get_mime_types (FrCommand *comm)
+fr_command_unstuff_get_mime_types (FrArchive *archive)
 {
 	return unstuff_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_unstuff_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_unstuff_get_capabilities (FrArchive  *archive,
 			             const char *mime_type,
 				     gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("unstuff", check_command))
-		capabilities |= FR_COMMAND_CAN_READ;
+		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_unstuff_get_packages (FrCommand  *comm,
+fr_command_unstuff_get_packages (FrArchive  *archive,
 			         const char *mime_type)
 {
 	return PACKAGES ("unstaff");
@@ -327,6 +328,7 @@ static void
 fr_command_unstuff_class_init (FrCommandUnstuffClass *klass)
 {
 	GObjectClass   *gobject_class;
+	FrArchiveClass *archive_class;
 	FrCommandClass *command_class;
 
 	fr_command_unstuff_parent_class = g_type_class_peek_parent (klass);
@@ -334,20 +336,22 @@ fr_command_unstuff_class_init (FrCommandUnstuffClass *klass)
 	gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_unstuff_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_unstuff_get_mime_types;
+	archive_class->get_capabilities = fr_command_unstuff_get_capabilities;
+	archive_class->get_packages     = fr_command_unstuff_get_packages;
+
 	command_class = FR_COMMAND_CLASS (klass);
 	command_class->list             = fr_command_unstuff_list;
 	command_class->extract          = fr_command_unstuff_extract;
 	command_class->handle_error     = fr_command_unstuff_handle_error;
-	command_class->get_mime_types   = fr_command_unstuff_get_mime_types;
-	command_class->get_capabilities = fr_command_unstuff_get_capabilities;
-	command_class->get_packages     = fr_command_unstuff_get_packages;
 }
 
 
 static void
 fr_command_unstuff_init (FrCommandUnstuff *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = FALSE;
 	base->propAddCanReplace            = FALSE;

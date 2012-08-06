@@ -40,13 +40,13 @@ typedef struct {
 	char      *command;
 	GAppInfo  *app;
 	GList     *file_list;
-	char      *temp_dir;
+	GFile     *temp_dir;
 } CommandData;
 
 extern GList                 *CommandList;
 extern gint                   ForceDirectoryCreation;
 extern GHashTable            *ProgramsCache;
-extern GPtrArray             *Registered_Commands;
+extern GPtrArray             *Registered_Archives;
 extern FrMimeTypeDescription  mime_type_desc[];
 extern FrExtensionType        file_ext_type[];
 extern int                    single_file_save_type[]; /* File types that can be saved when
@@ -57,11 +57,11 @@ extern int                    save_type[];             /* File types that can be
 extern int                    open_type[];             /* File types that can be opened. */
 extern int                    create_type[];           /* File types that can be created. */
 
-GType        get_command_type_from_mime_type         (const char    *mime_type,
-						      FrCommandCaps  requested_capabilities);
-GType        get_preferred_command_for_mime_type     (const char    *mime_type,
-						      FrCommandCaps  requested_capabilities);
-void         update_registered_commands_capabilities (void);
+GType        get_archive_type_from_mime_type         (const char    *mime_type,
+						      FrArchiveCaps  requested_capabilities);
+GType        get_preferred_archive_for_mime_type     (const char    *mime_type,
+						      FrArchiveCaps  requested_capabilities);
+void         update_registered_archives_capabilities (void);
 const char * get_mime_type_from_extension            (const char    *ext);
 const char * get_archive_filename_extension          (const char    *uri);
 int          get_mime_type_index                     (const char    *mime_type);

@@ -201,17 +201,17 @@ process_zoo_line (char     *line,
 		fdata->original_path = fdata->full_path + 1;
 	}
 
-	fdata->name = g_strdup (_g_path_get_file_name (fdata->full_path));
+	fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
 	fdata->path = _g_path_remove_level (fdata->full_path);
 
 	if (*fdata->name == 0)
 		file_data_free (fdata);
 	else
-		fr_command_add_file (zoo_comm, fdata);
+		fr_archive_add_file (FR_ARCHIVE (zoo_comm), fdata);
 }
 
 
-static void
+static gboolean
 fr_command_zoo_list (FrCommand  *zoo_comm)
 {
 	fr_process_set_out_line_func (zoo_comm->process, process_zoo_line, zoo_comm);
@@ -220,7 +220,8 @@ fr_command_zoo_list (FrCommand  *zoo_comm)
 	fr_process_add_arg (zoo_comm->process, "lq");
 	fr_process_add_arg (zoo_comm->process, zoo_comm->filename);
 	fr_process_end_command (zoo_comm->process);
-	fr_process_start (zoo_comm->process);
+
+	return TRUE;
 }
 
 
@@ -316,29 +317,29 @@ const char *zoo_mime_type[] = { "application/x-zoo", NULL };
 
 
 static const char **
-fr_command_zoo_get_mime_types (FrCommand *comm)
+fr_command_zoo_get_mime_types (FrArchive *archive)
 {
 	return zoo_mime_type;
 }
 
 
-static FrCommandCap
-fr_command_zoo_get_capabilities (FrCommand  *comm,
+static FrArchiveCap
+fr_command_zoo_get_capabilities (FrArchive  *archive,
 			         const char *mime_type,
 				 gboolean    check_command)
 {
-	FrCommandCap capabilities;
+	FrArchiveCap capabilities;
 
-	capabilities = FR_COMMAND_CAN_ARCHIVE_MANY_FILES;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("zoo", check_command))
-		capabilities |= FR_COMMAND_CAN_READ_WRITE;
+		capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 
 	return capabilities;
 }
 
 
 static const char *
-fr_command_zoo_get_packages (FrCommand  *comm,
+fr_command_zoo_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
 	return PACKAGES ("zoo");
@@ -360,6 +361,7 @@ static void
 fr_command_zoo_class_init (FrCommandZooClass *klass)
 {
         GObjectClass   *gobject_class;
+        FrArchiveClass *archive_class;
         FrCommandClass *command_class;
 
         fr_command_zoo_parent_class = g_type_class_peek_parent (klass);
@@ -367,22 +369,24 @@ fr_command_zoo_class_init (FrCommandZooClass *klass)
         gobject_class = G_OBJECT_CLASS (klass);
 	gobject_class->finalize = fr_command_zoo_finalize;
 
+	archive_class = FR_ARCHIVE_CLASS (klass);
+	archive_class->get_mime_types   = fr_command_zoo_get_mime_types;
+	archive_class->get_capabilities = fr_command_zoo_get_capabilities;
+	archive_class->get_packages     = fr_command_zoo_get_packages;
+
 	command_class = FR_COMMAND_CLASS (klass);
         command_class->list             = fr_command_zoo_list;
 	command_class->add              = fr_command_zoo_add;
 	command_class->delete           = fr_command_zoo_delete;
 	command_class->extract          = fr_command_zoo_extract;
 	command_class->test             = fr_command_zoo_test;
-	command_class->get_mime_types   = fr_command_zoo_get_mime_types;
-	command_class->get_capabilities = fr_command_zoo_get_capabilities;
-	command_class->get_packages     = fr_command_zoo_get_packages;
 }
 
 
 static void
 fr_command_zoo_init (FrCommandZoo *self)
 {
-	FrCommand *base = FR_COMMAND (self);
+	FrArchive *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = FALSE;
