@@ -2040,7 +2040,7 @@ _set_completed_bytes (FrArchive *self,
 
 	self->priv->completed_bytes = completed_bytes;
 	if (self->priv->total_bytes > 0)
-		fraction = (double) self->priv->completed_bytes / (self->priv->total_bytes + 1);
+		fraction = (double) self->priv->completed_bytes / self->priv->total_bytes;
 	else
 		fraction = 0.0;
 	/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
@@ -2083,7 +2083,7 @@ fr_archive_progress_get_fraction (FrArchive *self)
 
 	g_mutex_lock (&self->priv->progress_mutex);
 	if ((self->priv->total_bytes > 0) && (self->priv->completed_bytes > 0))
-		fraction = (double) self->priv->completed_bytes / (self->priv->total_bytes + 1);
+		fraction = (double) self->priv->completed_bytes / self->priv->total_bytes;
 	else if ((self->priv->total_files > 0) && (self->priv->completed_files > 0))
 		fraction = (double) self->priv->completed_files / (self->priv->total_files + 1);
 	else

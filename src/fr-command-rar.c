@@ -258,7 +258,7 @@ parse_progress_line (FrCommand  *comm,
 
 	prefix_len = strlen (prefix);
 	if (strncmp (line, prefix, prefix_len) == 0) {
-		if (fr_archive_progress_get_total_files (archive) > 1) {
+		if (fr_archive_progress_get_total_files (archive) > 0) {
 			fr_archive_progress (archive, fr_archive_progress_inc_completed_files (archive, 1));
 		}
 		else {
