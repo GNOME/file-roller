@@ -527,7 +527,7 @@ _fr_window_convert_data_free (FrWindow   *window,
 	window->priv->convert_data.converting = FALSE;
 
 	if (window->priv->convert_data.temp_dir != NULL) {
-		g_free (window->priv->convert_data.temp_dir);
+		g_object_unref (window->priv->convert_data.temp_dir);
 		window->priv->convert_data.temp_dir = NULL;
 	}
 
