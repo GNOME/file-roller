@@ -75,7 +75,7 @@ dlg_prop (FrWindow *window)
 
 	label = _gtk_builder_get_widget (data->builder, "p_path_label");
 	parent = g_file_get_parent (fr_window_get_archive_file (window));
-	utf8_name = _g_file_get_display_basename (parent);
+	utf8_name = g_file_get_parse_name (parent);
 	gtk_label_set_text (GTK_LABEL (label), utf8_name);
 	g_free (utf8_name);
 	g_object_unref (parent);
