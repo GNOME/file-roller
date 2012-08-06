@@ -315,7 +315,7 @@ struct _FrWindowPrivate {
 	GList *          history;
 	GList *          history_current;
 	char *           password;
-	char *           password_for_paste;
+	char *           second_password;
 	gboolean         encrypt_header;
 	FrCompression    compression;
 	guint            volume_size;
@@ -577,7 +577,7 @@ fr_window_free_private_data (FrWindow *window)
 	_g_object_unref (window->priv->archive_file);
 
 	g_free (window->priv->password);
-	g_free (window->priv->password_for_paste);
+	g_free (window->priv->second_password);
 	g_free (window->priv->custom_action_message);
 
 	g_object_unref (window->priv->list_store);
@@ -3980,8 +3980,8 @@ get_clipboard_data_from_selection_data (FrWindow   *window,
 	uris = g_strsplit (data, "\r\n", -1);
 
 	clipboard_data->file = g_file_new_for_uri (uris[0]);
-	if (window->priv->password_for_paste != NULL)
-		clipboard_data->password = g_strdup (window->priv->password_for_paste);
+	if (window->priv->second_password != NULL)
+		clipboard_data->password = g_strdup (window->priv->second_password);
 	else if (strcmp (uris[1], "") != 0)
 		clipboard_data->password = g_strdup (uris[1]);
 	clipboard_data->op = (strcmp (uris[2], "copy") == 0) ? FR_CLIPBOARD_OP_COPY : FR_CLIPBOARD_OP_CUT;
@@ -7068,18 +7068,18 @@ fr_window_set_password (FrWindow   *window,
 }
 
 void
-fr_window_set_password_for_paste (FrWindow   *window,
-				  const char *password)
+fr_window_set_password_for_second_archive (FrWindow   *window,
+					   const char *password)
 {
 	g_return_if_fail (window != NULL);
 
-	if (window->priv->password_for_paste != NULL) {
-		g_free (window->priv->password_for_paste);
-		window->priv->password_for_paste = NULL;
+	if (window->priv->second_password != NULL) {
+		g_free (window->priv->second_password);
+		window->priv->second_password = NULL;
 	}
 
 	if ((password != NULL) && (password[0] != '\0'))
-		window->priv->password_for_paste = g_strdup (password);
+		window->priv->second_password = g_strdup (password);
 }
 
 const char *
@@ -7411,16 +7411,16 @@ _save_as_operation_completed_with_error (FrWindow *window,
 	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
 #endif
 
+	_g_file_remove_directory (window->priv->convert_data.temp_dir, NULL, NULL);
+	_fr_window_convert_data_free (window, TRUE);
+	_fr_window_stop_activity_mode (window);
+	close_progress_dialog (window, FALSE);
+
 	if (error->code == FR_ERROR_ASK_PASSWORD) {
-		dlg_ask_password_for_paste_operation (window);
+		dlg_ask_password (window);
 		return;
 	}
 
-	_g_file_remove_directory (window->priv->convert_data.temp_dir, NULL, NULL);
-	_fr_window_convert_data_free (window, TRUE);
-
-	_fr_window_stop_activity_mode (window);
-	close_progress_dialog (window, FALSE);
 	fr_window_stop_batch (window);
 }
 
@@ -7503,6 +7503,7 @@ fr_window_archive_save_as (FrWindow   *window,
 	}
 	else
 		window->priv->convert_data.encrypt_header = FALSE;
+
 	window->priv->convert_data.volume_size = volume_size;
 
 	_archive_operation_started (window, FR_ACTION_CREATING_ARCHIVE);
@@ -8202,7 +8203,7 @@ _paste_from_archive_operation_completed (FrWindow *window,
 	close_progress_dialog (window, FALSE);
 
 	if ((error != NULL) && (error->code == FR_ERROR_ASK_PASSWORD)) {
-		dlg_ask_password_for_paste_operation (window);
+		dlg_ask_password_for_second_archive (window);
 		return;
 	}
 
@@ -8244,9 +8245,9 @@ static void
 add_pasted_files (FrWindow        *window,
 		  FrClipboardData *data)
 {
-	if (window->priv->password_for_paste != NULL) {
-		g_free (window->priv->password_for_paste);
-		window->priv->password_for_paste = NULL;
+	if (window->priv->second_password != NULL) {
+		g_free (window->priv->second_password);
+		window->priv->second_password = NULL;
 	}
 
 	fr_archive_paste_clipboard (window->archive,
@@ -8373,8 +8374,8 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 	char       *from_archive;
 	char       *to_archive;
 
-	if (window->priv->password_for_paste != NULL)
-		fr_clipboard_data_set_password (data, window->priv->password_for_paste);
+	if (window->priv->second_password != NULL)
+		fr_clipboard_data_set_password (data, window->priv->second_password);
 
 	if (window->priv->clipboard_data != data) {
 		fr_clipboard_data_unref (window->priv->clipboard_data);

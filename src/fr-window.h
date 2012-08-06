@@ -153,7 +153,7 @@ void            fr_window_archive_test	               (FrWindow      *window);
 
 void            fr_window_set_password                 (FrWindow      *window,
 						        const char    *password);
-void            fr_window_set_password_for_paste       (FrWindow      *window,
+void            fr_window_set_password_for_second_archive       (FrWindow      *window,
 						        const char    *password);
 const char *    fr_window_get_password                 (FrWindow      *window);
 void            fr_window_set_encrypt_header           (FrWindow      *window,

@@ -24,7 +24,7 @@
 
 #include "fr-window.h"
 
-void dlg_ask_password (FrWindow  *window);
-void dlg_ask_password_for_paste_operation (FrWindow  *window);
+void dlg_ask_password                    (FrWindow  *window);
+void dlg_ask_password_for_second_archive (FrWindow  *window);
 
 #endif /* DLG_PASSWORD_H */
