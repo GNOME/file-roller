@@ -389,7 +389,7 @@ create_extra_widget (DialogData *data)
 	vbox15 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_box_pack_start (GTK_BOX (hbox30), vbox15, TRUE, TRUE, 0);
 
-	data->e_recreate_dir_checkbutton = gtk_check_button_new_with_mnemonic (_("Re-crea_te folders"));
+	data->e_recreate_dir_checkbutton = gtk_check_button_new_with_mnemonic (_("_Keep directory structure"));
 	gtk_box_pack_start (GTK_BOX (vbox15), data->e_recreate_dir_checkbutton, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->e_recreate_dir_checkbutton), TRUE);
 
