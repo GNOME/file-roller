@@ -49,7 +49,7 @@ typedef struct {
 	int        *supported_types;
 	GtkWidget  *archive_type_combo_box;
 	GList      *file_list;
-	gboolean    add_clicked;
+	gboolean    creating;
 	const char *last_mime_type;
 	gboolean    single_file;
 } DialogData;
@@ -86,7 +86,7 @@ destroy_cb (GtkWidget  *widget,
 	/*g_settings_set_boolean (data->settings, PREF_BATCH_ADD_OTHER_OPTIONS, data->add_clicked ? FALSE : gtk_expander_get_expanded (GTK_EXPANDER (GET_WIDGET ("a_other_options_expander"))));*/
 	g_settings_set_boolean (data->settings_general, PREF_GENERAL_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("a_encrypt_header_checkbutton"))));
 
-	if (! data->add_clicked)
+	if (! data->creating)
 		fr_window_stop_batch (data->window);
 
 	g_object_unref (data->builder);
@@ -142,8 +142,6 @@ add_clicked_cb (GtkWidget  *widget,
 	const char *mime_type;
 	gboolean    do_not_add = FALSE;
 	GError     *error = NULL;
-
-	data->add_clicked = TRUE;
 
 	/* Collect data */
 
@@ -493,7 +491,7 @@ dlg_batch_add_files (FrWindow *window,
 	data->window = window;
 	data->file_list = file_list;
 	data->single_file = ((file_list->next == NULL) && _g_file_query_is_file (G_FILE (file_list->data)));
-	data->add_clicked = FALSE;
+	data->creating = FALSE;
 
 	/* Set widgets data. */
 
