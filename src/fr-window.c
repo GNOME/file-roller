@@ -8578,7 +8578,7 @@ fr_window_open_files_with_application (FrWindow *window,
 
 	uris = NULL;
 	for (scan = file_list; scan; scan = scan->next)
-		uris = g_list_prepend (uris, g_filename_to_uri (scan->data, NULL, NULL));
+		uris = g_list_prepend (uris, g_file_get_uri (G_FILE (scan->data)));
 
 	context = gdk_display_get_app_launch_context (gtk_widget_get_display (GTK_WIDGET (window)));
 	gdk_app_launch_context_set_screen (context, gtk_widget_get_screen (GTK_WIDGET (window)));

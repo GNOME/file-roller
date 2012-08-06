@@ -73,16 +73,14 @@ dlg_open_with (FrWindow *window,
 {
 	OpenData  *o_data;
 	GtkWidget *app_chooser;
-	GFile     *first_file;
 
 	o_data = g_new0 (OpenData, 1);
 	o_data->window = window;
 	o_data->file_list = file_list;
 
-	first_file = g_file_new_for_path (file_list->data);
 	app_chooser = gtk_app_chooser_dialog_new (GTK_WINDOW (window),
 						  GTK_DIALOG_MODAL,
-						  first_file);
+						  G_FILE (file_list->data));
 	g_signal_connect (app_chooser,
 			  "response",
 			  G_CALLBACK (app_chooser_response_cb),
