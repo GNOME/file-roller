@@ -94,6 +94,11 @@ dlg_prop (FrWindow *window)
 
 	/**/
 
+	label = _gtk_builder_get_widget (data->builder, "p_mime_type_label");
+	gtk_label_set_text (GTK_LABEL (label), window->archive->mime_type);
+
+	/**/
+
 	label = _gtk_builder_get_widget (data->builder, "p_date_label");
 	s = _g_time_to_string (_g_file_get_file_mtime (fr_window_get_archive_file (window)));
 	gtk_label_set_text (GTK_LABEL (label), s);
