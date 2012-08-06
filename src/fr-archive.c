@@ -1245,7 +1245,7 @@ fr_archive_remove (FrArchive           *archive,
 {
 	g_return_if_fail (! archive->read_only);
 
-	archive->priv->progress_event = g_timeout_add (PROGRESS_DELAY, _fr_archive_update_progress_cb, archive);
+	_fr_archive_activate_progress_update (archive);
 
 	FR_ARCHIVE_GET_CLASS (archive)->remove_files (archive,
 						      file_list,
@@ -1488,6 +1488,8 @@ fr_archive_rename (FrArchive           *archive,
 		   GAsyncReadyCallback  callback,
 		   gpointer             user_data)
 {
+	_fr_archive_activate_progress_update (archive);
+
 	FR_ARCHIVE_GET_CLASS (archive)->rename (archive,
 						file_list,
 						old_name,
@@ -1518,6 +1520,8 @@ fr_archive_paste_clipboard (FrArchive           *archive,
 			    GAsyncReadyCallback  callback,
 			    gpointer             user_data)
 {
+	_fr_archive_activate_progress_update (archive);
+
 	FR_ARCHIVE_GET_CLASS (archive)->paste_clipboard (archive,
 							 file,
 							 password,
@@ -1867,6 +1871,7 @@ fr_archive_update_open_files (FrArchive           *archive,
 			      GAsyncReadyCallback  callback,
 			      gpointer             user_data)
 {
+	_fr_archive_activate_progress_update (archive);
 	FR_ARCHIVE_GET_CLASS (archive)->update_open_files (archive,
 							   file_list,
 							   dir_list,

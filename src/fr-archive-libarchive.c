@@ -254,25 +254,6 @@ _g_file_get_size (GFile        *file,
 }
 
 
-#if 1 /* FIXME: delete if not needed */
-
-static gssize
-_archive_read_data_skip (struct archive *a)
-{
-	int         r;
-	const void *buff;
-	size_t      size;
-	int64_t     offset;
-
-	while ((r = archive_read_data_block (a, &buff, &size, &offset)) == ARCHIVE_OK)
-		/* void */;
-
-	return (r == ARCHIVE_EOF) ? (gssize) offset + size : 0;
-}
-
-#endif
-
-
 static void
 list_archive_thread (GSimpleAsyncResult *result,
 		     GObject            *object,
@@ -282,7 +263,6 @@ list_archive_thread (GSimpleAsyncResult *result,
 	struct archive       *a;
 	struct archive_entry *entry;
 	int                   r;
-	gssize                skipped_size = 0;
 
 	load_data = g_simple_async_result_get_op_res_gpointer (result);
 
@@ -340,14 +320,9 @@ list_archive_thread (GSimpleAsyncResult *result,
 
 		fr_archive_add_file (load_data->archive, file_data);
 
-		skipped_size += _archive_read_data_skip (a);
+		archive_read_data_skip (a);
 	}
 	archive_read_free (a);
-
-	g_print ("compressed size: %" G_GSSIZE_FORMAT ", uncompressed size: %" G_GSSIZE_FORMAT ", skipped: %" G_GSSIZE_FORMAT "\n",
-			FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->compressed_size,
-			FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size,
-			skipped_size);
 
 	if ((load_data->error == NULL) && (r != ARCHIVE_EOF) && (archive_error_string (a) != NULL))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
@@ -1442,9 +1417,12 @@ static void
 _remove_files_begin (SaveData *save_data,
 		     gpointer  user_data)
 {
+	LoadData   *load_data = LOAD_DATA (save_data);
 	RemoveData *remove_data = user_data;
 
-	fr_archive_progress_set_total_files (LOAD_DATA (save_data)->archive, remove_data->n_files_to_remove);
+	fr_archive_progress_set_total_files (load_data->archive, remove_data->n_files_to_remove);
+	fr_archive_progress_set_total_bytes (load_data->archive,
+				FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size);
 }
 
 
@@ -1462,9 +1440,10 @@ _remove_files_entry_action (SaveData             *save_data,
 	pathname = archive_entry_pathname (w_entry);
 	if (g_hash_table_lookup (remove_data->files_to_remove, pathname)) {
 		action = WRITE_ACTION_SKIP_ENTRY;
-		fr_archive_progress_inc_completed_files (load_data->archive, 1);
 		remove_data->n_files_to_remove--;
 		g_hash_table_remove (remove_data->files_to_remove, pathname);
+		fr_archive_progress_inc_completed_bytes (load_data->archive, archive_entry_size (w_entry));
+		fr_archive_progress_inc_completed_files (load_data->archive, 1);
 	}
 
 	return action;
@@ -1530,9 +1509,12 @@ static void
 _rename_files_begin (SaveData *save_data,
 		     gpointer  user_data)
 {
+	LoadData   *load_data = LOAD_DATA (save_data);
 	RenameData *rename_data = user_data;
 
-	fr_archive_progress_set_total_files (LOAD_DATA (save_data)->archive, rename_data->n_files_to_rename);
+	fr_archive_progress_set_total_files (load_data->archive, rename_data->n_files_to_rename);
+	fr_archive_progress_set_total_bytes (load_data->archive,
+				FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size);
 }
 
 
@@ -1643,6 +1625,8 @@ fr_archive_libarchive_paste_clipboard (FrArchive           *archive,
 	g_return_if_fail (base_dir != NULL);
 
 	add_data = add_data_new ();
+
+	fr_archive_action_started (archive, FR_ACTION_ADDING_FILES);
 
 	current_dir = current_dir + 1;
 	for (scan = files; scan; scan = scan->next) {

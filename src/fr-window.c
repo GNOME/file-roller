@@ -375,6 +375,7 @@ struct _FrWindowPrivate {
 	double            pd_last_fraction;
 	char             *pd_last_message;
 	gboolean          use_progress_dialog;
+	char             *custom_action_message;
 
 	/* update dialog data */
 
@@ -577,6 +578,7 @@ fr_window_free_private_data (FrWindow *window)
 
 	g_free (window->priv->password);
 	g_free (window->priv->password_for_paste);
+	g_free (window->priv->custom_action_message);
 
 	g_object_unref (window->priv->list_store);
 
@@ -2348,8 +2350,9 @@ progress_dialog_response (GtkDialog *dialog,
 }
 
 
-static char*
-get_action_description (FrAction  action,
+static char *
+get_action_description (FrWindow *window,
+			FrAction  action,
 			GFile    *file)
 {
 	char *basename;
@@ -2373,7 +2376,7 @@ get_action_description (FrAction  action,
 		break;
 	case FR_ACTION_DELETING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Deleting files from \"%s\""), basename);
+		message = g_strdup_printf (_("Deleting the files from \"%s\""), basename);
 		break;
 	case FR_ACTION_TESTING_ARCHIVE:
 		/* Translators: %s is a filename */
@@ -2388,11 +2391,11 @@ get_action_description (FrAction  action,
 		break;
 	case FR_ACTION_ADDING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Adding files to \"%s\""), basename);
+		message = g_strdup_printf (_("Adding the files to \"%s\""), basename);
 		break;
 	case FR_ACTION_EXTRACTING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Extracting files from \"%s\""), basename);
+		message = g_strdup_printf (_("Extracting the files from \"%s\""), basename);
 		break;
 	case FR_ACTION_COPYING_FILES_TO_REMOTE:
 		message = g_strdup (_("Copying the extracted files to the destination"));
@@ -2405,19 +2408,18 @@ get_action_description (FrAction  action,
 		/* Translators: %s is a filename */
 		message = g_strdup_printf (_("Saving \"%s\""), basename);
 		break;
+	case FR_ACTION_PASTING_FILES:
+		message = g_strdup (window->priv->custom_action_message);
+		break;
 	case FR_ACTION_RENAMING_FILES:
 		/* Translators: %s is a filename */
 		message = g_strdup_printf (_("Renaming the files in \"%s\""), basename);
-		break;
-	case FR_ACTION_PASTING_FILES:
-		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Pasting the files from the clipboard into \"%s\""), basename);
 		break;
 	case FR_ACTION_UPDATING_FILES:
 		/* Translators: %s is a filename */
 		message = g_strdup_printf (_("Updating the files in \"%s\""), basename);
 		break;
-	case FR_ACTION_NONE:
+	default:
 		break;
 	}
 
@@ -2461,7 +2463,7 @@ progress_dialog_update_action_description (FrWindow *window)
 	if (current_archive != NULL)
 		window->priv->pd_last_archive = g_object_ref (current_archive);
 
-	description = get_action_description (window->priv->action, window->priv->pd_last_archive);
+	description = get_action_description (window, window->priv->action, window->priv->pd_last_archive);
 	progress_dialog_set_action_description (window, description);
 
 	g_free (description);
@@ -2548,7 +2550,7 @@ fr_archive_start_cb (FrArchive *archive,
 {
 	char *description;
 
-	description = get_action_description (action, fr_archive_get_file (archive));
+	description = get_action_description (window, action, fr_archive_get_file (archive));
 	fr_archive_message_cb (archive, description, window);
 
 	g_free (description);
@@ -2700,15 +2702,18 @@ fr_archive_progress_cb (FrArchive *archive,
 			char *message = NULL;
 			int   remaining_files;
 
-			remaining_files = fr_archive_progress_get_total_files (archive) - fr_archive_progress_get_completed_files (archive) + 1;
+			remaining_files = fr_archive_progress_get_total_files (archive) - fr_archive_progress_get_completed_files (archive);
 
 			switch (window->priv->action) {
 			case FR_ACTION_ADDING_FILES:
 			case FR_ACTION_EXTRACTING_FILES:
 			case FR_ACTION_DELETING_FILES:
-				message = g_strdup_printf (ngettext ("%d file remaining",
-								     "%'d files remaining",
-								     remaining_files), remaining_files);
+				if (remaining_files > 0)
+					message = g_strdup_printf (ngettext ("%d file remaining",
+									     "%'d files remaining",
+									     remaining_files), remaining_files);
+				else
+					message = g_strdup (_("Operation completed"));
 				break;
 			default:
 				break;
@@ -3265,7 +3270,7 @@ _archive_operation_started (FrWindow *window,
 	archive = window->priv->pd_last_archive;
 	if (archive == NULL)
 		archive =  window->priv->archive_file;
-	message = get_action_description (action, archive);
+	message = get_action_description (window, action, archive);
 	fr_window_push_message (window, message);
 	g_free (message);
 
@@ -6362,7 +6367,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	GList              *caps;
 	NotifyData         *notify_data;
 
-	title = get_action_description (window->priv->action, window->priv->pd_last_archive);
+	title = get_action_description (window, window->priv->action, window->priv->pd_last_archive);
 	basename = _g_file_get_display_basename (window->priv->convert_data.new_file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
@@ -8294,6 +8299,7 @@ paste_from_archive_extract_ready_cb (GObject      *source_object,
 	}
 
 	if (window->priv->clipboard_data->op == FR_CLIPBOARD_OP_CUT) {
+		fr_archive_action_started (window->priv->copy_from_archive, FR_ACTION_DELETING_FILES);
 		fr_archive_remove (window->priv->copy_from_archive,
 				   window->priv->clipboard_data->files,
 				   window->priv->compression,
@@ -8364,6 +8370,8 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 	const char *current_dir_relative;
 	GHashTable *created_dirs;
 	GList      *scan;
+	char       *from_archive;
+	char       *to_archive;
 
 	if (window->priv->password_for_paste != NULL)
 		fr_clipboard_data_set_password (data, window->priv->password_for_paste);
@@ -8406,12 +8414,24 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 
 	/**/
 
+	g_free (window->priv->custom_action_message);
+	from_archive = _g_file_get_display_basename (data->file);
+	to_archive = _g_file_get_display_basename (window->priv->archive_file);
+	if (data->op == FR_CLIPBOARD_OP_CUT)
+		/* Translators: %s are archive filenames */
+		window->priv->custom_action_message = g_strdup_printf (_("Moving the files from \"%s\" to \"%s\""), from_archive, to_archive);
+	else
+		/* Translators: %s are archive filenames */
+		window->priv->custom_action_message = g_strdup_printf (_("Copying the files from \"%s\" to \"%s\""), from_archive, to_archive);
 	_archive_operation_started (window, FR_ACTION_PASTING_FILES);
 
 	fr_archive_open (data->file,
 			 window->priv->cancellable,
 			 paste_from_archive_open_cb,
 			 window);
+
+	g_free (to_archive);
+	g_free (from_archive);
 }
 
 
