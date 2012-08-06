@@ -198,11 +198,11 @@ load_data_read (struct archive  *a,
 		return -1;
 
 	*buff = load_data->buffer;
-	bytes =g_input_stream_read (load_data->istream,
-				    load_data->buffer,
-				    load_data->buffer_size,
-				    load_data->cancellable,
-				    &load_data->error);
+	bytes = g_input_stream_read (load_data->istream,
+				     load_data->buffer,
+				     load_data->buffer_size,
+				     load_data->cancellable,
+				     &load_data->error);
 
 	/* update the progress only if listing the content */
 	if (g_simple_async_result_get_source_tag (load_data->result) == fr_archive_list) {
@@ -776,11 +776,15 @@ save_data_close (struct archive *a,
 	SaveData *save_data = client_data;
 	LoadData *load_data = LOAD_DATA (save_data);
 
-	if (load_data->error != NULL)
-		return ARCHIVE_FATAL;
+	if (save_data->ostream != NULL) {
+		GError *error = NULL;
 
-	if (save_data->ostream != NULL)
-		g_output_stream_close (save_data->ostream, load_data->cancellable, &load_data->error);
+		g_output_stream_close (save_data->ostream, load_data->cancellable, &error);
+		if (load_data->error == NULL && error != NULL)
+			load_data->error = g_error_copy (error);
+
+		_g_error_free (error);
+	}
 
 	if (load_data->error == NULL)
 		g_file_move (save_data->tmp_file,
