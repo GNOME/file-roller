@@ -605,7 +605,7 @@ fr_archive_libarchive_extract_files (FrArchive           *archive,
 	load_data->result = g_simple_async_result_new (G_OBJECT (archive),
 						       callback,
 						       user_data,
-						       fr_archive_list);
+						       fr_archive_extract);
 	load_data->buffer_size = BUFFER_SIZE;
 	load_data->buffer = g_new (char, load_data->buffer_size);
 
@@ -1724,7 +1724,7 @@ fr_archive_libarchive_add_dropped_files (FrArchive           *archive,
 				     g_simple_async_result_new (G_OBJECT (archive),
 				     				callback,
 				     				user_data,
-				     				fr_archive_paste_clipboard),
+				     				fr_archive_add_dropped_items),
 				     _add_files_begin,
 				     _add_files_end,
 				     _add_files_entry_action,
@@ -1779,7 +1779,7 @@ fr_archive_libarchive_update_open_files (FrArchive           *archive,
 				     g_simple_async_result_new (G_OBJECT (archive),
 				     				callback,
 				     				user_data,
-				     				fr_archive_paste_clipboard),
+				     				fr_archive_update_open_files),
 				     _add_files_begin,
 				     _add_files_end,
 				     _add_files_entry_action,
