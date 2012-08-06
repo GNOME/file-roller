@@ -154,7 +154,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if ((archive_name == NULL) || (*archive_name == '\0')) {
 		GtkWidget *d;
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (GET_WIDGET ("dialog")),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
@@ -170,7 +170,7 @@ add_clicked_cb (GtkWidget  *widget,
 		GtkWidget *d;
 		char      *utf8_name = g_filename_display_name (archive_name);
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (GET_WIDGET ("dialog")),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
@@ -198,7 +198,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if (! _g_file_check_permissions (archive_folder, R_OK|W_OK|X_OK)) {
 		GtkWidget  *d;
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (GET_WIDGET ("dialog")),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
@@ -209,6 +209,7 @@ add_clicked_cb (GtkWidget  *widget,
 
 		g_object_unref (archive_folder);
 		g_free (archive_name);
+
 		return;
 	}
 
@@ -243,7 +244,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if (! do_not_add && ! _g_file_make_directory_tree (archive_folder, 0755, &error)) {
 		GtkWidget  *d;
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (GET_WIDGET ("dialog")),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
@@ -255,13 +256,14 @@ add_clicked_cb (GtkWidget  *widget,
 		g_error_free (error);
 		g_object_unref (archive_folder);
 		g_free (archive_name);
+
 		return;
 	}
 
 	if (do_not_add) {
 		GtkWidget *d;
 
-		d = _gtk_message_dialog_new (GTK_WINDOW (window),
+		d = _gtk_message_dialog_new (GTK_WINDOW (GET_WIDGET ("dialog")),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
 					     GTK_STOCK_DIALOG_WARNING,
 					     _("Archive not created"),
@@ -291,7 +293,7 @@ add_clicked_cb (GtkWidget  *widget,
 	if (_g_file_query_is_dir (archive_file)) {
 		GtkWidget  *d;
 
-		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+		d = _gtk_error_dialog_new (GTK_WINDOW (GET_WIDGET ("dialog")),
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Could not create the archive"),
@@ -341,6 +343,7 @@ add_clicked_cb (GtkWidget  *widget,
 		}
 	}
 
+	data->creating = TRUE;
 	set_archive_options (data);
 	gtk_widget_destroy (GET_WIDGET ("dialog"));
 
