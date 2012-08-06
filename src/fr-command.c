@@ -2336,11 +2336,12 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 				       gpointer      user_data)
 {
 	XferData  *xfer_data = user_data;
-	FrError   *error = NULL;
+	GError    *error = NULL;
 	FrCommand *self = FR_COMMAND (xfer_data->archive);
 
-	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error))
-		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
+	if (! fr_command_handle_process_error (FR_COMMAND (xfer_data->archive), result, &error))
+		/* command restarted */
+		return;
 
 	if (error == NULL) {
 		if (self->priv->remote_extraction) {
@@ -2354,9 +2355,10 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 			move_here (xfer_data->archive, xfer_data->cancellable);
 	}
 	else {
+		g_simple_async_result_set_from_error (xfer_data->result, error);
+
 		/* if an error occurred during extraction remove the
 		 * temp extraction dir, if used. */
-		g_print ("action_performed: ERROR!\n");
 
 		if ((self->priv->remote_extraction) && (self->priv->temp_extraction_dir != NULL)) {
 			_g_file_remove_directory (self->priv->temp_extraction_dir, NULL, NULL);
@@ -2370,7 +2372,7 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 	xfer_data->archive->extract_here = FALSE;
 	g_simple_async_result_complete_in_idle (xfer_data->result);
 
-	fr_error_free (error);
+	_g_error_free (error);
 	xfer_data_free (xfer_data);
 }
 
