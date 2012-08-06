@@ -1520,6 +1520,7 @@ fr_archive_paste_clipboard (FrArchive           *archive,
 			    GAsyncReadyCallback  callback,
 			    gpointer             user_data)
 {
+	fr_archive_action_started (archive, FR_ACTION_ADDING_FILES);
 	_fr_archive_activate_progress_update (archive);
 
 	FR_ARCHIVE_GET_CLASS (archive)->paste_clipboard (archive,

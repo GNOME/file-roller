@@ -1644,8 +1644,6 @@ fr_archive_libarchive_paste_clipboard (FrArchive           *archive,
 
 	add_data = add_data_new ();
 
-	fr_archive_action_started (archive, FR_ACTION_ADDING_FILES);
-
 	current_dir = current_dir + 1;
 	for (scan = files; scan; scan = scan->next) {
 		const char *old_name = (char *) scan->data;
