@@ -1527,20 +1527,20 @@ _rename_files_entry_action (SaveData             *save_data,
 			    struct archive_entry *w_entry,
 			    gpointer              user_data)
 {
-	RenameData  *rename_data = user_data;
 	LoadData    *load_data = LOAD_DATA (save_data);
+	RenameData  *rename_data = user_data;
 	WriteAction  action;
 	const char  *pathname;
-	char       *new_pathname;
+	char        *new_pathname;
 
 	action = WRITE_ACTION_WRITE_ENTRY;
 	pathname = archive_entry_pathname (w_entry);
 	new_pathname = g_hash_table_lookup (rename_data->files_to_rename, pathname);
 	if (new_pathname != NULL) {
 		archive_entry_set_pathname (w_entry, new_pathname);
-		fr_archive_progress_inc_completed_files (load_data->archive, 1);
 		rename_data->n_files_to_rename--;
 		g_hash_table_remove (rename_data->files_to_rename, pathname);
+		fr_archive_progress_inc_completed_files (load_data->archive, 1);
 	}
 
 	return action;
@@ -1561,25 +1561,42 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 			      gpointer             user_data)
 {
 	RenameData *rename_data;
-	char       *old_dirname;
-	char       *new_dirname;
-	int         old_dirname_len;
-	GList      *scan;
 
 	rename_data = g_new0 (RenameData, 1);
 	rename_data->files_to_rename = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 	rename_data->n_files_to_rename = 0;
 
-	old_dirname = g_build_filename (current_dir + 1, old_name, "/", NULL);
-	old_dirname_len = strlen (old_dirname);
-	new_dirname = g_build_filename (current_dir + 1, new_name, "/", NULL);
-	for (scan = file_list; scan; scan = scan->next) {
-		char *old_pathname = scan->data;
+	if (is_dir) {
+		char  *old_dirname;
+		char  *new_dirname;
+		int    old_dirname_len;
+		GList *scan;
+
+		old_dirname = g_build_filename (current_dir + 1, old_name, "/", NULL);
+		old_dirname_len = strlen (old_dirname);
+		new_dirname = g_build_filename (current_dir + 1, new_name, "/", NULL);
+
+		for (scan = file_list; scan; scan = scan->next) {
+			char *old_pathname = scan->data;
+			char *new_pathname;
+
+			new_pathname = g_build_filename (new_dirname, old_pathname + old_dirname_len, NULL);
+			g_hash_table_insert (rename_data->files_to_rename, g_strdup (old_pathname), new_pathname);
+			rename_data->n_files_to_rename++;
+		}
+
+		g_free (new_dirname);
+		g_free (old_dirname);
+	}
+	else {
+		char *old_pathname = (char *) file_list->data;
 		char *new_pathname;
 
-		new_pathname = g_build_filename (new_dirname, old_pathname + old_dirname_len, NULL);
-		g_hash_table_insert (rename_data->files_to_rename, g_strdup (old_pathname), new_pathname);
-		rename_data->n_files_to_rename++;
+		new_pathname = g_build_filename (current_dir + 1, new_name, NULL);
+		g_hash_table_insert (rename_data->files_to_rename,
+				     g_strdup (old_pathname),
+				     new_pathname);
+		rename_data->n_files_to_rename = 1;
 	}
 
 	_fr_archive_libarchive_save (archive,
@@ -1598,9 +1615,6 @@ fr_archive_libarchive_rename (FrArchive           *archive,
 				     _rename_files_entry_action,
 				     rename_data,
 				     (GDestroyNotify) rename_data_free);
-
-	g_free (new_dirname);
-	g_free (old_dirname);
 }
 
 
