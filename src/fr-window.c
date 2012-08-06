@@ -3225,7 +3225,7 @@ _archive_operation_completed (FrWindow *window,
 		close_progress_dialog (window, FALSE);
 		if (! window->priv->batch_mode && ! operation_canceled)
 			window->priv->reload_archive = TRUE;
-		return;
+		break;
 
 	default:
 		close_progress_dialog (window, FALSE);
@@ -8314,6 +8314,35 @@ paste_from_archive_extract_ready_cb (GObject      *source_object,
 
 
 static void
+paste_from_archive_list_ready_cb (GObject      *source_object,
+				  GAsyncResult *result,
+				  gpointer      user_data)
+{
+	FrWindow *window = user_data;
+	GError   *error = NULL;
+
+	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
+		_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, error);
+		g_error_free (error);
+		return;
+	}
+
+	fr_archive_action_started (window->priv->copy_from_archive, FR_ACTION_EXTRACTING_FILES);
+	fr_archive_extract (window->priv->copy_from_archive,
+			    window->priv->clipboard_data->files,
+			    window->priv->clipboard_data->tmp_dir,
+			    NULL,
+			    FALSE,
+			    TRUE,
+			    FALSE,
+			    window->priv->clipboard_data->password,
+			    window->priv->cancellable,
+			    paste_from_archive_extract_ready_cb,
+			    window);
+}
+
+
+static void
 paste_from_archive_open_cb (GObject      *source_object,
 			    GAsyncResult *result,
 			    gpointer      user_data)
@@ -8350,17 +8379,25 @@ paste_from_archive_open_cb (GObject      *source_object,
 			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
 
-	fr_archive_extract (window->priv->copy_from_archive,
-			    window->priv->clipboard_data->files,
-			    window->priv->clipboard_data->tmp_dir,
-			    NULL,
-			    FALSE,
-			    TRUE,
-			    FALSE,
-			    window->priv->clipboard_data->password,
-			    window->priv->cancellable,
-			    paste_from_archive_extract_ready_cb,
-			    window);
+	fr_archive_action_started (window->priv->copy_from_archive, FR_ACTION_LISTING_CONTENT);
+	fr_archive_list (window->priv->copy_from_archive,
+			 window->priv->clipboard_data->password,
+			 window->priv->cancellable,
+			 paste_from_archive_list_ready_cb,
+			 window);
+}
+
+
+static void
+_window_started_loading_file (FrWindow *window,
+			      GFile    *file)
+{
+	char *description;
+
+	description = get_action_description (window, FR_ACTION_LOADING_ARCHIVE, file);
+	fr_archive_message_cb (NULL, description, window);
+
+	g_free (description);
 }
 
 
@@ -8426,6 +8463,7 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 		window->priv->custom_action_message = g_strdup_printf (_("Copying the files from \"%s\" to \"%s\""), from_archive, to_archive);
 	_archive_operation_started (window, FR_ACTION_PASTING_FILES);
 
+	_window_started_loading_file (window, data->file);
 	fr_archive_open (data->file,
 			 window->priv->cancellable,
 			 paste_from_archive_open_cb,
@@ -8644,6 +8682,9 @@ fr_window_update_files (FrWindow *window,
 
 	if (window->archive->read_only)
 		return FALSE;
+
+	/* the size will be computed by the archive object */
+	window->archive->files_to_add_size = 0;
 
 	file_list = NULL;
 	dir_list = NULL;
