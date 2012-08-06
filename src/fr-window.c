@@ -1005,7 +1005,6 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "Rename", ! no_archive && ! ro && ! running && can_store_many_files && one_file_selected);
 	set_sensitive (window, "SaveAs", ! no_archive && can_store_many_files && ! running);
 	set_sensitive (window, "SelectAll", ! no_archive);
-	set_sensitive (window, "Stop", running && window->priv->stoppable);
 	set_sensitive (window, "TestArchive", ! no_archive && ! running && window->archive->propTest);
 	set_sensitive (window, "ViewSelection", file_op && one_file_selected && ! dir_selected);
 	set_sensitive (window, "ViewSelection_Toolbar", file_op && one_file_selected && ! dir_selected);
@@ -5216,7 +5215,6 @@ fr_archive_stoppable_cb (FrArchive *archive,
 			 FrWindow  *window)
 {
 	window->priv->stoppable = stoppable;
-	set_sensitive (window, "Stop", stoppable);
 	if (window->priv->progress_dialog != NULL)
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (window->priv->progress_dialog),
 						   GTK_RESPONSE_OK,
