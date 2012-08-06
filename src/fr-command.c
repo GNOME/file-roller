@@ -958,6 +958,16 @@ split_in_chunks (GList *file_list)
 }
 
 
+/* this is because the fr_archive_progress_inc_completed_files function is
+ * called *before* the file is actually added/removed from the archive, adding
+ * 1 to the totale we get for example a 50% (instead of 100%) progress when
+ * adding a single file. */
+static int
+get_length_for_progress (int l)
+{
+	return (l > 0) ? l + 1 : 0;
+}
+
 static gboolean
 _fr_command_add (FrCommand      *self,
 		 GList          *file_list,
@@ -1110,7 +1120,7 @@ _fr_command_add (FrCommand      *self,
 	/* add now. */
 
 	new_file_list_length = g_list_length (new_file_list);
-	fr_archive_progress_set_total_files (archive, new_file_list_length);
+	fr_archive_progress_set_total_files (archive, get_length_for_progress (new_file_list_length));
 
 	if (archive->propListFromFile && (new_file_list_length > LIST_LENGTH_TO_USE_FILE)) {
 		char   *list_dir;
@@ -1603,7 +1613,7 @@ delete_from_archive (FrCommand *self,
 		g_list_free (file_list);
 
 	tmp_file_list_length = g_list_length (tmp_file_list);
-	fr_archive_progress_set_total_files (archive, tmp_file_list_length);
+	fr_archive_progress_set_total_files (archive, get_length_for_progress (tmp_file_list_length));
 
 	if (archive->propListFromFile && (tmp_file_list_length > LIST_LENGTH_TO_USE_FILE)) {
 		char *list_dir;
@@ -2156,9 +2166,9 @@ _fr_command_extract (FrCommand  *self,
 	}
 
 	if (extract_all && (file_list == NULL))
-		fr_archive_progress_set_total_files (archive, archive->files->len);
+		fr_archive_progress_set_total_files (archive, get_length_for_progress (archive->files->len));
 	else
-		fr_archive_progress_set_total_files (archive, g_list_length (file_list));
+		fr_archive_progress_set_total_files (archive, get_length_for_progress (g_list_length (file_list)));
 
 	if (all_options_supported) {
 		gboolean created_filtered_list = FALSE;
@@ -2487,7 +2497,7 @@ fr_command_test_integrity (FrArchive           *archive,
 		      "filename", self->priv->local_copy,
 		      "password", password,
 		      NULL);
-	fr_archive_progress_set_total_files (archive, 0);
+	fr_archive_progress_set_total_files (archive, get_length_for_progress (0));
 
 	fr_process_clear (self->process);
 	fr_command_test (self);
