@@ -1,3 +1,39 @@
+version 3.5.4
+-------------
+
+ New features and user visible changes:
+
+  * Optionally use libarchive to handle tar, cpio, lha archives and ISO images.
+  * Notify the completion of a long operation with the system notification
+    system (requires libnotify).
+  * Removed the Stop action from the View menu.
+  * Removed the Help buttons from the dialogs.
+  * Updated the user help. (Ekaterina Gerasimova)
+
+ Bugs fixed:
+
+  * Can't open file inside a .rar archive (with unar) (#680676)
+  * Change "Re-create folders" to "Keep directory structure" (#681235)
+
+ Internal code changes:
+
+  * Huge internal code refactoring to allow the use of libarchive.  This can
+    bring some regressions.
+
+ New or updated application translations:
+
+  * Chinese (simplified) (Wylmer Wang)
+  * Gujarati (Sweta Kothari)
+  * Japanese (Takayuki KUSANO)
+  * Kazakh (Baurzhan Muftakhidinov)
+  * Magyar (Gabor Kelemen)
+  * Serbian (Miroslav Nikolić)
+  * Telugu (Praveen Illa)
+
+ New or updated manual translations:
+
+  * Chinese (China) (Wylmer Wang)
+
 version 3.5.3
 -------------
 
@@ -28,25 +64,25 @@ version 3.5.2
 
  New features and user visible changes:
 
-  * Allow the user to cancel addition and deletion of files 
+  * Allow the user to cancel addition and deletion of files
     to an exiting archive.
-  * Progress dialog: show the number of remaining files to 
-    complete the operation; show the archive name in the 
+  * Progress dialog: show the number of remaining files to
+    complete the operation; show the archive name in the
     main message.
-  * Removed the stop button from the toolbar.  The user can 
+  * Removed the stop button from the toolbar.  The user can
     use the progress dialog cancel button to stop a long
     operation.
-  * Enabled interactive search in the file list.  The user 
+  * Enabled interactive search in the file list.  The user
     can just start typing the name of a file and if present
     in the list it will get selected.
   * Removed the help buttons from the dialogs.
 
  Internal code changes:
 
-  * Renamed the D-Bus interface as org.gnome.ArchiveManager1. 
+  * Renamed the D-Bus interface as org.gnome.ArchiveManager1.
   * Use the file-roller extecutable as a D-Bus service as well,
     instead of using a separate executable.
-  * Define the progress dialog and other dialogs in external files, 
+  * Define the progress dialog and other dialogs in external files,
     saved as gresources.
   * Added a prefix to the utility functions for a better
     organization and readability of the code.
@@ -429,10 +465,10 @@ version 3.0.2
 
         Bugs fixed:
 
-        * Fix implementation and use of the alternative package name 
-          lookup, when installing the missing utilities. (Iain Nicol) 
+        * Fix implementation and use of the alternative package name
+          lookup, when installing the missing utilities. (Iain Nicol)
           (#603757)
-        * Can't open rar files with password protected file data and 
+        * Can't open rar files with password protected file data and
           headers. (#646562)
 	* Fixed translation of the file list column headers.
           (Gabor Kelemen) (#649159)
