@@ -4879,7 +4879,7 @@ add_file_list_columns (FrWindow    *window,
 {
 	static char       *titles[] = {NC_("File", "Size"),
 				       NC_("File", "Type"),
-				       NC_("File", "Date Modified"),
+				       NC_("File", "Modified"),
 				       NC_("File", "Location")};
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
