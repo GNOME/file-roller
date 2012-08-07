@@ -192,6 +192,7 @@ add_folder_cb (GtkWidget *widget,
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 510);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (data->dialog), FALSE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (data->dialog), FALSE);
+	gtk_file_chooser_set_create_folders (GTK_FILE_CHOOSER (data->dialog), FALSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	data->builder = _gtk_builder_new_from_resource ("add-dialog-options.ui");
