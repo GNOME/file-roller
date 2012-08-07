@@ -171,6 +171,8 @@ _fr_new_archive_dialog_get_format (FrNewArchiveDialog *self,
 		/* get the format from the extension */
 
 		ext = _g_filename_get_extension (uri);
+		if (ext == NULL)
+			ext = DEFAULT_EXTENSION;
 		idx = GPOINTER_TO_INT (g_hash_table_lookup (self->priv->supported_ext, ext)) - 1;
 	}
 
