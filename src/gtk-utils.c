@@ -93,14 +93,18 @@ _gtk_message_dialog_new (GtkWindow      *parent,
 
 		escaped_message = g_markup_escape_text (message, -1);
 		if (secondary_message != NULL) {
-			char *escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
+			char *escaped_secondary_message;
+
+			escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
 			markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
 						       escaped_message,
 						       escaped_secondary_message);
+
 			g_free (escaped_secondary_message);
 		}
 		else
-			markup_text = g_strdup (escaped_message);
+			markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>", escaped_message);
+
 		g_free (escaped_message);
 	}
 	else
