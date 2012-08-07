@@ -1,10 +1,12 @@
 EXTRA_DIST = 				\
+	add-dialog-options.ui		\
 	add-options.ui			\
 	app-menu.ui			\
 	batch-add-files.ui		\
 	batch-password.ui		\
 	delete.ui			\
 	error-dialog.ui			\
+	extract-dialog-options.ui	\
 	menus-toolbars.ui		\
 	message-dialog.ui		\
 	new-archive-dialog-options.ui	\
