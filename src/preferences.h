@@ -62,7 +62,6 @@
 #define PREF_EXTRACT_RECREATE_FOLDERS     "recreate-folders"
 
 #define PREF_ADD_CURRENT_FOLDER           "current-folder"
-#define PREF_ADD_FILENAME                 "filename"
 #define PREF_ADD_INCLUDE_FILES            "include-files"
 #define PREF_ADD_EXCLUDE_FILES            "exclude-files"
 #define PREF_ADD_EXCLUDE_FOLDERS          "exclude-folders"

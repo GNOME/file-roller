@@ -161,6 +161,13 @@ GList *             _g_file_list_new_from_uri_list (GList               *uris);
 GFile *             _g_file_append_path            (GFile               *file,
                                                     ...);
 
+/* GKeyFile */
+
+GList *             _g_key_file_get_string_list    (GKeyFile            *key_file,
+						    const char          *group_name,
+						    const char          *key,
+						    GError             **error);
+
 /* functions used to parse a command output lines. */
 
 gboolean            _g_line_matches_pattern        (const char          *line,

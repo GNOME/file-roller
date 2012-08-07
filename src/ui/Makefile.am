@@ -7,6 +7,7 @@ EXTRA_DIST = 				\
 	delete.ui			\
 	error-dialog.ui			\
 	extract-dialog-options.ui	\
+	file-selector.ui		\
 	menus-toolbars.ui		\
 	message-dialog.ui		\
 	new-archive-dialog-options.ui	\

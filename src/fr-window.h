@@ -124,6 +124,7 @@ void            fr_window_archive_add_files            (FrWindow      *window,
 							GFile         *base_dir,
 							gboolean       update);
 void            fr_window_archive_add_with_filter      (FrWindow      *window,
+							GList         *files, /* GFile list */
 							GFile         *base_dir,
 						        const char    *include_files,
 						        const char    *exclude_files,

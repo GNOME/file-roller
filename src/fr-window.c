@@ -982,10 +982,8 @@ fr_window_update_sensitivity (FrWindow *window)
 	one_file_selected    = n_selected == 1;
 	dir_selected         = selection_has_a_dir (window);
 
-	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "Add", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "Add_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
 	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->priv->archive_new && ! running && can_store_many_files);
@@ -5928,6 +5926,7 @@ fr_window_construct (FrWindow *window)
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar), GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 	set_action_important (ui, "/ToolBar/Extract_Toolbar");
+	set_action_important (ui, "/ToolBar/Add_Toolbar");
 
 	/* location bar */
 
@@ -6506,6 +6505,7 @@ fr_window_archive_add_files (FrWindow   *window,
 
 void
 fr_window_archive_add_with_filter (FrWindow      *window,
+				   GList         *file_list, /* GFile list */
 				   GFile         *base_dir,
 				   const char    *include_files,
 				   const char    *exclude_files,
@@ -6517,6 +6517,7 @@ fr_window_archive_add_with_filter (FrWindow      *window,
 	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
 
 	fr_archive_add_files_with_filter (window->archive,
+					  file_list,
 					  base_dir,
 					  include_files,
 					  exclude_files,
@@ -7493,21 +7494,19 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 		return;
 	}
 
-	fr_archive_add_files_with_filter (window->priv->convert_data.new_archive,
-					  window->priv->convert_data.temp_dir,
-					  "*",
-					  NULL,
-					  NULL,
-					  NULL,
-					  FALSE,
-					  FALSE,
-					  window->priv->convert_data.password,
-					  window->priv->convert_data.encrypt_header,
-					  window->priv->compression,
-					  window->priv->convert_data.volume_size,
-					  window->priv->cancellable,
-					  archive_add_ready_for_conversion_cb,
-					  window);
+	fr_archive_add_files (window->priv->convert_data.new_archive,
+			      NULL,
+			      window->priv->convert_data.temp_dir,
+			      NULL,
+			      FALSE,
+			      FALSE,
+			      window->priv->convert_data.password,
+			      window->priv->convert_data.encrypt_header,
+			      window->priv->compression,
+			      window->priv->convert_data.volume_size,
+			      window->priv->cancellable,
+			      archive_add_ready_for_conversion_cb,
+			      window);
 }
 
 

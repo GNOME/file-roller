@@ -32,8 +32,7 @@ void activate_action_properties (GtkAction *action, gpointer data);
 void activate_action_close (GtkAction *action, gpointer data);
 void activate_action_quit (GtkAction *action, gpointer data);
 
-void activate_action_add_files (GtkAction *action, gpointer data);
-void activate_action_add_folder (GtkAction *action, gpointer data);
+void activate_action_add (GtkAction *action, gpointer data);
 void activate_action_extract (GtkAction *action, gpointer data);
 void activate_action_extract_folder_from_sidebar (GtkAction *action, gpointer data);
 

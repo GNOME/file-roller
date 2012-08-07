@@ -23,10 +23,8 @@
       <menuitem action="SelectAll"/>
       <menuitem action="DeselectAll"/>
       <separator/>
+      <menuitem action="Add"/>
       <menuitem action="Find"/>
-      <separator/>
-      <menuitem action="AddFiles"/>
-      <menuitem action="AddFolder"/>
       <separator/>
       <menuitem action="Password"/>
     </menu>
@@ -49,10 +47,11 @@
     <toolitem action="New"/>
     <toolitem action="OpenRecent_Toolbar"/>
     <separator/>
-    <toolitem action="Extract_Toolbar"/>
+    <toolitem action="Add_Toolbar"/>
     <separator/>
-    <toolitem action="AddFiles_Toolbar"/>
-    <toolitem action="AddFolder_Toolbar"/>
+    <toolitem action="Extract_Toolbar"/>
+    <separator expand="true"/>
+    <toolitem action="Properties"/>
   </toolbar>
   <toolbar name="LocationBar">
     <toolitem action="GoBack"/>
@@ -84,8 +83,7 @@
     <menuitem action="Delete"/>
   </popup>
   <popup name="AddMenu">
-    <menuitem action="AddFiles"/>
-    <menuitem action="AddFolder"/>
+    <menuitem action="Add"/>
   </popup>
   <popup name="SidebarFolderPopupMenu">
     <menuitem action="OpenFolderFromSidebar"/>

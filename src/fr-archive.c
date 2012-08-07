@@ -1186,6 +1186,7 @@ file_filter_cb (GFile     *file,
 
 void
 fr_archive_add_files_with_filter (FrArchive           *archive,
+				  GList               *file_list,
 				  GFile               *source_dir,
 				  const char          *include_files,
 				  const char          *exclude_files,
@@ -1202,7 +1203,6 @@ fr_archive_add_files_with_filter (FrArchive           *archive,
 				  gpointer             user_data)
 {
 	AddData       *add_data;
-	GList         *file_list;
 	FileListFlags  flags;
 
 	g_return_if_fail (! archive->read_only);
@@ -1226,7 +1226,6 @@ fr_archive_add_files_with_filter (FrArchive           *archive,
 
 	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
 
-	file_list = g_list_prepend (NULL, source_dir);
 	flags = FILE_LIST_RECURSIVE | FILE_LIST_NO_BACKUP_FILES;
 	if (! follow_links)
 		flags |= FILE_LIST_NO_FOLLOW_LINKS;
@@ -1241,8 +1240,6 @@ fr_archive_add_files_with_filter (FrArchive           *archive,
 				       file_filter_cb,
 				       fr_archive_add_files_ready_cb,
 				       add_data);
-
-	g_list_free (file_list);
 }
 
 
