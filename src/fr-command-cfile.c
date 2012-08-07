@@ -190,12 +190,12 @@ fr_command_cfile_list (FrCommand *comm)
 
 
 static void
-fr_command_cfile_add (FrCommand     *comm,
-		      const char    *from_file,
-		      GList         *file_list,
-		      const char    *base_dir,
-		      gboolean       update,
-		      gboolean       recursive)
+fr_command_cfile_add (FrCommand  *comm,
+		      const char *from_file,
+		      GList      *file_list,
+		      const char *base_dir,
+		      gboolean    update,
+		      gboolean    follow_links)
 {
 	FrArchive  *archive = FR_ARCHIVE (comm);
 	const char *filename;
@@ -587,6 +587,7 @@ fr_command_cfile_init (FrCommandCFile *self)
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
+	base->propAddCanStoreLinks         = FALSE;
 	base->propExtractCanAvoidOverwrite = FALSE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = FALSE;

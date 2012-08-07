@@ -327,12 +327,12 @@ process_line__add (char     *line,
 
 
 static void
-fr_command_rar_add (FrCommand     *comm,
-		    const char    *from_file,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    gboolean       update,
-		    gboolean       recursive)
+fr_command_rar_add (FrCommand  *comm,
+		    const char *from_file,
+		    GList      *file_list,
+		    const char *base_dir,
+		    gboolean    update,
+		    gboolean    follow_links)
 {
 	GList *scan;
 
@@ -350,6 +350,9 @@ fr_command_rar_add (FrCommand     *comm,
 		fr_process_add_arg (comm->process, "u");
 	else
 		fr_process_add_arg (comm->process, "a");
+
+	if (! follow_links)
+		fr_process_add_arg (comm->process, "-ol");
 
 	switch (FR_ARCHIVE (comm)->compression) {
 	case FR_COMPRESSION_VERY_FAST:
@@ -671,6 +674,7 @@ fr_command_rar_init (FrCommandRar *self)
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
 	base->propAddCanStoreFolders       = TRUE;
+	base->propAddCanStoreLinks         = TRUE;
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder      = TRUE;
 	base->propExtractCanJunkPaths      = TRUE;

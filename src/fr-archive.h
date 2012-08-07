@@ -114,6 +114,13 @@ struct _FrArchive {
 	 */
 	guint          propAddCanStoreFolders : 1;
 
+	/*
+	 * propAddCanStoreLinks
+	 *
+	 * TRUE if the command can store symbolic links
+	 */
+	guint          propAddCanStoreLinks : 1;
+
 	/* propExtractCanAvoidOverwrite:
 	 *
 	 * TRUE if the command can avoid to overwrite the files on disk.
@@ -229,7 +236,7 @@ struct _FrArchiveClass {
 					    GFile               *base_dir,
 					    const char          *dest_dir,
 					    gboolean             update,
-					    gboolean             recursive,
+					    gboolean             follow_links,
 					    const char          *password,
 					    gboolean             encrypt_header,
 					    FrCompression        compression,
@@ -344,6 +351,7 @@ void          fr_archive_add_files               (FrArchive           *archive,
 						  GFile               *base_dir,
 						  const char          *dest_dir,
 						  gboolean             update,
+						  gboolean             follow_links,
 						  const char          *password,
 						  gboolean             encrypt_header,
 						  FrCompression        compression,

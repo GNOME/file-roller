@@ -63,7 +63,7 @@ struct _FrCommandClass {
 				     GList       *file_list,
 				     const char  *base_dir,
 				     gboolean     update,
-				     gboolean     recursive);
+				     gboolean     follow_links);
 	void      (*delete)         (FrCommand   *comm,
 		                     const char  *from_file,
 		                     GList       *file_list);

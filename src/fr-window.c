@@ -1605,6 +1605,21 @@ get_icon (GtkWidget *widget,
 	const char *content_type;
 	GIcon      *icon;
 
+	if (fdata->link != NULL) {
+		pixbuf = g_hash_table_lookup (pixbuf_hash, "emblem-symbolic-link");
+		if (pixbuf != NULL)
+			return g_object_ref (G_OBJECT (pixbuf));
+
+		pixbuf = gtk_icon_theme_load_icon (icon_theme,
+						   "emblem-symbolic-link",
+						   file_list_icon_size,
+						   0,
+						   NULL);
+		g_hash_table_insert (pixbuf_hash, (gpointer) "emblem-symbolic-link", pixbuf);
+
+		return g_object_ref (G_OBJECT (pixbuf));
+	}
+
 	if (file_data_is_dir (fdata))
 		content_type = MIME_TYPE_DIRECTORY;
 	else
@@ -1613,10 +1628,8 @@ get_icon (GtkWidget *widget,
 	/* look in the hash table. */
 
 	pixbuf = g_hash_table_lookup (pixbuf_hash, content_type);
-	if (pixbuf != NULL) {
-		g_object_ref (G_OBJECT (pixbuf));
-		return pixbuf;
-	}
+	if (pixbuf != NULL)
+		return g_object_ref (G_OBJECT (pixbuf));
 
 	icon = g_content_type_get_icon (content_type);
 	pixbuf = _g_icon_get_pixbuf (icon, file_list_icon_size, icon_theme);
@@ -1625,11 +1638,9 @@ get_icon (GtkWidget *widget,
 	if (pixbuf == NULL)
 		return NULL;
 
-	pixbuf = gdk_pixbuf_copy (pixbuf);
 	g_hash_table_insert (pixbuf_hash, (gpointer) content_type, pixbuf);
-	g_object_ref (G_OBJECT (pixbuf));
 
-	return pixbuf;
+	return g_object_ref (G_OBJECT (pixbuf));
 }
 
 
@@ -1637,32 +1648,29 @@ static GdkPixbuf *
 get_emblem (GtkWidget *widget,
 	    FileData  *fdata)
 {
-	GdkPixbuf *pixbuf = NULL;
+	const char *emblem_name = NULL;
+	GdkPixbuf  *pixbuf;
 
-	if (! fdata->encrypted)
+	if (fdata->encrypted)
+		emblem_name = "emblem-nowrite";
+
+	if (emblem_name == NULL)
 		return NULL;
 
-	/* encrypted */
-
-	pixbuf = g_hash_table_lookup (pixbuf_hash, "emblem-nowrite");
+	pixbuf = g_hash_table_lookup (pixbuf_hash, emblem_name);
 	if (pixbuf != NULL) {
 		g_object_ref (G_OBJECT (pixbuf));
 		return pixbuf;
 	}
 
 	pixbuf = gtk_icon_theme_load_icon (icon_theme,
-					   "emblem-nowrite",
+					   emblem_name,
 					   file_list_icon_size,
 					   0,
 					   NULL);
-	if (pixbuf == NULL)
-		return NULL;
+	g_hash_table_insert (pixbuf_hash, (gpointer) emblem_name, pixbuf);
 
-	pixbuf = gdk_pixbuf_copy (pixbuf);
-	g_hash_table_insert (pixbuf_hash, (gpointer) "emblem-nowrite", pixbuf);
-	g_object_ref (G_OBJECT (pixbuf));
-
-	return pixbuf;
+	return g_object_ref (G_OBJECT (pixbuf));
 }
 
 
@@ -6486,6 +6494,7 @@ fr_window_archive_add_files (FrWindow   *window,
 			      base_dir,
 			      fr_window_get_current_location (window),
 			      update,
+			      FALSE,
 			      window->priv->password,
 			      window->priv->encrypt_header,
 			      window->priv->compression,
@@ -7503,7 +7512,7 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 					  NULL,
 					  NULL,
 					  FALSE,
-					  TRUE,
+					  FALSE,
 					  window->priv->convert_data.password,
 					  window->priv->convert_data.encrypt_header,
 					  window->priv->compression,

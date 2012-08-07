@@ -243,7 +243,11 @@ _g_file_get_size (GFile        *file,
 	GFileInfo *info;
 	goffset    size;
 
-	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SIZE, 0, cancellable, NULL);
+	info = g_file_query_info (file,
+				  G_FILE_ATTRIBUTE_STANDARD_SIZE,
+				  G_FILE_QUERY_INFO_NONE,
+				  cancellable,
+				  NULL);
 	if (info == NULL)
 		return 0;
 
@@ -450,7 +454,11 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		if (extract_data->skip_older || ! extract_data->overwrite) {
 			GFileInfo *info;
 
-			info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME "," G_FILE_ATTRIBUTE_TIME_MODIFIED, 0, cancellable, &local_error);
+			info = g_file_query_info (file,
+						  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME "," G_FILE_ATTRIBUTE_TIME_MODIFIED,
+						  G_FILE_QUERY_INFO_NONE,
+						  cancellable,
+						  &local_error);
 			if (info != NULL) {
 				gboolean skip = FALSE;
 
@@ -969,11 +977,8 @@ _archive_entry_copy_file_info (struct archive_entry *entry,
 	archive_entry_set_nlink (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_NLINK));
 	archive_entry_set_rdev (entry, g_file_info_get_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_RDEV));
 	archive_entry_set_size (entry, g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_STANDARD_SIZE));
-	if (filetype == AE_IFLNK) {
-		/* FIXME: allow to store symlinks */
-		g_print ("symlink: %s\n", g_file_info_get_attribute_byte_string (info, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET));
+	if (filetype == AE_IFLNK)
 		archive_entry_set_symlink (entry, g_file_info_get_attribute_byte_string (info, G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET));
-	}
 
 	/* username */
 
@@ -1011,6 +1016,7 @@ static WriteAction
 _archive_write_file (struct archive       *b,
 		     SaveData             *save_data,
 		     AddFile              *add_file,
+		     gboolean              follow_link,
 		     struct archive_entry *r_entry,
 		     GCancellable         *cancellable)
 {
@@ -1023,7 +1029,7 @@ _archive_write_file (struct archive       *b,
 
 	info = g_file_query_info (add_file->file,
 				  FILE_ATTRIBUTES_NEEDED_BY_ARCHIVE_ENTRY,
-				  G_FILE_QUERY_INFO_NONE,
+				  (! follow_link ? G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS : 0),
 				  cancellable,
 				  &load_data->error);
 	if (info == NULL)
@@ -1219,6 +1225,7 @@ _fr_archive_libarchive_save (FrArchive          *archive,
 
 
 typedef struct {
+	gboolean    follow_links;
 	GHashTable *files_to_add;
 	int         n_files_to_add;
 } AddData;
@@ -1232,6 +1239,7 @@ add_data_new (void)
 	add_data = g_new0 (AddData, 1);
 	add_data->files_to_add = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) add_file_free);
 	add_data->n_files_to_add = 0;
+	add_data->follow_links = TRUE;
 
 	return add_data;
 }
@@ -1291,7 +1299,12 @@ _add_files_entry_action (SaveData             *save_data,
 	pathname = archive_entry_pathname (w_entry);
 	add_file = g_hash_table_lookup (add_data->files_to_add, pathname);
 	if (add_file != NULL) {
-		action = _archive_write_file (save_data->b, save_data, add_file, w_entry, load_data->cancellable);
+		action = _archive_write_file (save_data->b,
+					      save_data,
+					      add_file,
+					      add_data->follow_links,
+					      w_entry,
+					      load_data->cancellable);
 		fr_archive_progress_inc_completed_files (load_data->archive, 1);
 		add_data->n_files_to_add--;
 		g_hash_table_remove (add_data->files_to_add, pathname);
@@ -1327,6 +1340,7 @@ _add_files_end (SaveData *save_data,
 		if (_archive_write_file (save_data->b,
 					 save_data,
 					 add_file,
+					 add_data->follow_links,
 					 NULL,
 					 load_data->cancellable) == WRITE_ACTION_ABORT)
 		{
@@ -1346,7 +1360,7 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 				 GFile               *base_dir,
 				 const char          *dest_dir,
 				 gboolean             update,
-				 gboolean             recursive,
+				 gboolean             follow_links,
 				 const char          *password,
 				 gboolean             encrypt_header,
 				 FrCompression        compression,
@@ -1361,6 +1375,7 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 	g_return_if_fail (base_dir != NULL);
 
 	add_data = add_data_new ();
+	add_data->follow_links = follow_links;
 
 	if (dest_dir != NULL)
 		dest_dir = (dest_dir[0] == '/' ? dest_dir + 1 : dest_dir);
@@ -1827,6 +1842,7 @@ fr_archive_libarchive_init (FrArchiveLibarchive *self)
 	base->propAddCanReplace = TRUE;
 	base->propAddCanUpdate = TRUE;
 	base->propAddCanStoreFolders = TRUE;
+	base->propAddCanStoreLinks = TRUE;
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder = TRUE;
 	base->propExtractCanJunkPaths = TRUE;

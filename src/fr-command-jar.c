@@ -43,12 +43,12 @@ typedef struct {
 
 
 static void
-fr_command_jar_add (FrCommand     *comm,
-		    const char    *from_file,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    gboolean       update,
-		    gboolean       recursive)
+fr_command_jar_add (FrCommand  *comm,
+		    const char *from_file,
+		    GList      *file_list,
+		    const char *base_dir,
+		    gboolean    update,
+		    gboolean    follow_links)
 {
 	FrProcess *proc = comm->process;
 	GList     *zip_list = NULL, *jardata_list = NULL, *jar_list = NULL;
@@ -116,10 +116,10 @@ fr_command_jar_add (FrCommand     *comm,
 	}
 
 	if (zip_list != NULL)
-		FR_COMMAND_CLASS (fr_command_jar_parent_class)->add (comm, NULL, zip_list, base_dir, update, FALSE);
+		FR_COMMAND_CLASS (fr_command_jar_parent_class)->add (comm, NULL, zip_list, base_dir, update, follow_links);
 
 	if (jar_list != NULL)
-		FR_COMMAND_CLASS (fr_command_jar_parent_class)->add (comm, NULL, jar_list, tmp_dir, update, FALSE);
+		FR_COMMAND_CLASS (fr_command_jar_parent_class)->add (comm, NULL, jar_list, tmp_dir, update, follow_links);
 
 	fr_process_begin_command (proc, "rm");
 	fr_process_set_working_dir (proc, "/");

@@ -446,6 +446,7 @@ fr_archive_init (FrArchive *self)
         self->propAddCanUpdate = FALSE;
         self->propAddCanReplace = FALSE;
         self->propAddCanStoreFolders = FALSE;
+        self->propAddCanStoreLinks = FALSE;
         self->propExtractCanAvoidOverwrite = FALSE;
         self->propExtractCanSkipOlder = FALSE;
         self->propExtractCanJunkPaths = FALSE;
@@ -1001,6 +1002,7 @@ typedef struct {
 	GFile               *base_dir;
 	char                *dest_dir;
 	gboolean             update;
+	gboolean             follow_links;
 	char                *password;
 	gboolean             encrypt_header;
 	FrCompression        compression;
@@ -1082,7 +1084,7 @@ fr_archive_add_files_ready_cb (GList    *file_info_list, /* FileInfo list */
 								   add_data->base_dir,
 								   add_data->dest_dir,
 								   add_data->update,
-								   FALSE,
+								   add_data->follow_links,
 								   add_data->password,
 								   add_data->encrypt_header,
 								   add_data->compression,
@@ -1106,6 +1108,7 @@ fr_archive_add_files (FrArchive           *archive,
 		      GFile               *base_dir,
 		      const char          *dest_dir,
 		      gboolean             update,
+		      gboolean             follow_links,
 		      const char          *password,
 		      gboolean             encrypt_header,
 		      FrCompression        compression,
@@ -1124,6 +1127,7 @@ fr_archive_add_files (FrArchive           *archive,
 	add_data->base_dir = _g_object_ref (base_dir);
 	add_data->dest_dir = g_strdup (dest_dir);
 	add_data->update = update;
+	add_data->follow_links = follow_links;
 	add_data->password = g_strdup (password);
 	add_data->encrypt_header = encrypt_header;
 	add_data->compression = compression;
@@ -1195,8 +1199,9 @@ fr_archive_add_files_with_filter (FrArchive           *archive,
 				  GAsyncReadyCallback  callback,
 				  gpointer             user_data)
 {
-	AddData *add_data;
-	GList   *file_list;
+	AddData       *add_data;
+	GList         *file_list;
+	FileListFlags  flags;
 
 	g_return_if_fail (! archive->read_only);
 
@@ -1205,6 +1210,7 @@ fr_archive_add_files_with_filter (FrArchive           *archive,
 	add_data->base_dir = _g_object_ref (source_dir);
 	add_data->dest_dir = g_strdup (dest_dir);
 	add_data->update = update;
+	add_data->follow_links = follow_links;
 	add_data->password = g_strdup (password);
 	add_data->encrypt_header = encrypt_header;
 	add_data->compression = compression;
@@ -1219,8 +1225,11 @@ fr_archive_add_files_with_filter (FrArchive           *archive,
 	fr_archive_action_started (archive, FR_ACTION_GETTING_FILE_LIST);
 
 	file_list = g_list_prepend (NULL, source_dir);
+	flags = FILE_LIST_RECURSIVE | FILE_LIST_NO_BACKUP_FILES;
+	if (! follow_links)
+		flags |= FILE_LIST_NO_FOLLOW_LINKS;
 	_g_file_list_query_info_async (file_list,
-				       FILE_LIST_RECURSIVE | FILE_LIST_NO_BACKUP_FILES,
+				       flags,
 				       (G_FILE_ATTRIBUTE_STANDARD_NAME ","
 					G_FILE_ATTRIBUTE_STANDARD_SIZE ","
 					G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN ","
@@ -1707,6 +1716,7 @@ add_dropped_items (DroppedItemsData *data)
 				      first_parent,
 				      data->dest_dir,
 				      FALSE,
+				      FALSE,
 				      data->password,
 				      data->encrypt_header,
 				      data->compression,
@@ -1739,6 +1749,7 @@ add_dropped_items (DroppedItemsData *data)
 				      parent,
 				      data->dest_dir,
 				      FALSE,
+				      FALSE,
 				      data->password,
 				      data->encrypt_header,
 				      data->compression,
@@ -1768,6 +1779,7 @@ add_dropped_items (DroppedItemsData *data)
 				      list,
 				      first_parent,
 				      data->dest_dir,
+				      FALSE,
 				      FALSE,
 				      data->password,
 				      data->encrypt_header,

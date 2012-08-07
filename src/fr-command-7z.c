@@ -304,7 +304,7 @@ fr_command_7z_add (FrCommand  *command,
 		   GList      *file_list,
 		   const char *base_dir,
 		   gboolean    update,
-		   gboolean    recursive)
+		   gboolean    follow_links)
 {
 	FrArchive *archive = FR_ARCHIVE (command);
 	GList     *scan;
@@ -335,7 +335,8 @@ fr_command_7z_add (FrCommand  *command,
 
 	fr_process_add_arg (command->process, "-bd");
 	fr_process_add_arg (command->process, "-y");
-	fr_process_add_arg (command->process, "-l");
+	if (follow_links)
+		fr_process_add_arg (command->process, "-l");
 	add_password_arg (command, archive->password, FALSE);
 	if ((archive->password != NULL)
 	    && (*archive->password != 0)
@@ -668,6 +669,7 @@ fr_command_7z_init (FrCommand7z *self)
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
 	base->propAddCanStoreFolders       = TRUE;
+	base->propAddCanStoreLinks         = TRUE;
 	base->propExtractCanAvoidOverwrite = FALSE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = TRUE;

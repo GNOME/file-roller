@@ -284,7 +284,7 @@ sync_widgets_with_options (DialogData *data,
 			   const char *exclude_files,
 			   const char *exclude_folders,
 			   gboolean    update,
-			   gboolean    no_symlinks)
+			   gboolean    no_follow_symlinks)
 {
 	if (directory == NULL)
 		directory = fr_window_get_add_default_dir (data->window);
@@ -303,7 +303,16 @@ sync_widgets_with_options (DialogData *data,
 	if (exclude_folders != NULL)
 		gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("exclude_folders_entry")), exclude_folders);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")), update);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), ! no_symlinks);
+
+	if ((data->window->archive != NULL) && data->window->archive->propAddCanStoreLinks) {
+		gtk_widget_set_sensitive (GET_WIDGET ("follow_links_checkbutton"), TRUE);
+		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), FALSE);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), ! no_follow_symlinks);
+	}
+	else {
+		gtk_widget_set_sensitive (GET_WIDGET ("follow_links_checkbutton"), FALSE);
+		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")), TRUE);
+	}
 }
 
 
@@ -323,7 +332,7 @@ clear_options_activate_cb (GtkMenuItem *menu_item,
 				   "",
 				   "",
 				   FALSE,
-				   FALSE);
+				   TRUE);
 
 	_g_object_unref (folder);
 	_g_object_unref (file);
@@ -409,7 +418,7 @@ dlg_add_folder_load_last_options (DialogData *data)
 	char     *exclude_files = NULL;
 	char     *exclude_folders = NULL;
 	gboolean  update;
-	gboolean  no_symlinks;
+	gboolean  no_follow_symlinks;
 	GFile    *folder;
 	GFile    *file;
 
@@ -421,7 +430,7 @@ dlg_add_folder_load_last_options (DialogData *data)
 	exclude_files = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FILES);
 	exclude_folders = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS);
 	update = g_settings_get_boolean (data->settings, PREF_ADD_UPDATE);
-	no_symlinks = g_settings_get_boolean (data->settings, PREF_ADD_NO_SYMLINKS);
+	no_follow_symlinks = g_settings_get_boolean (data->settings, PREF_ADD_NO_FOLLOW_SYMLINKS);
 
 	sync_widgets_with_options (data,
 				   folder,
@@ -430,7 +439,7 @@ dlg_add_folder_load_last_options (DialogData *data)
 			   	   exclude_files,
 			   	   exclude_folders,
 			   	   update,
-			   	   no_symlinks);
+			   	   no_follow_symlinks);
 
 	_g_object_unref (file);
 	_g_object_unref (folder);
@@ -541,7 +550,7 @@ dlg_add_folder_save_last_options (DialogData *data)
 	g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FILES, exclude_files);
 	g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS, exclude_folders);
 	g_settings_set_boolean (data->settings, PREF_ADD_UPDATE, update);
-	g_settings_set_boolean (data->settings, PREF_ADD_NO_SYMLINKS, no_symlinks);
+	g_settings_set_boolean (data->settings, PREF_ADD_NO_FOLLOW_SYMLINKS, no_symlinks);
 
 	g_free (base_dir);
 	g_free (filename);

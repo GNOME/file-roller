@@ -68,7 +68,7 @@
 #define PREF_ADD_EXCLUDE_FOLDERS          "exclude-folders"
 #define PREF_ADD_UPDATE                   "update"
 #define PREF_ADD_RECURSIVE                "recursive"
-#define PREF_ADD_NO_SYMLINKS              "no-symlinks"
+#define PREF_ADD_NO_FOLLOW_SYMLINKS       "no-symlinks"
 
 #define PREF_BATCH_ADD_DEFAULT_EXTENSION  "default-extension"
 #define PREF_BATCH_ADD_OTHER_OPTIONS      "other-options"

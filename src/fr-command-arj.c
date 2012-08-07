@@ -168,12 +168,12 @@ fr_command_arj_list (FrCommand *comm)
 
 
 static void
-fr_command_arj_add (FrCommand     *comm,
-		    const char    *from_file,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    gboolean       update,
-		    gboolean       recursive)
+fr_command_arj_add (FrCommand  *comm,
+		    const char *from_file,
+		    GList      *file_list,
+		    const char *base_dir,
+		    gboolean    update,
+		    gboolean    follow_links)
 {
 	GList *scan;
 
@@ -393,6 +393,7 @@ fr_command_arj_init (FrCommandArj *self)
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
 	base->propAddCanStoreFolders       = FALSE;
+	base->propAddCanStoreLinks         = FALSE;
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder      = TRUE;
 	base->propExtractCanJunkPaths      = TRUE;

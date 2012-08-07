@@ -56,7 +56,7 @@ typedef struct {
 	GFile              *base_dir;
 	char               *dest_dir;
 	gboolean            update;
-	gboolean            recursive;
+	gboolean            follow_links;
 	GFile              *tmp_dir;
 	guint               source_id;
 	char               *password;
@@ -327,7 +327,7 @@ fr_command_add (FrCommand  *self,
 		GList      *file_list,
 		GFile      *base_dir,
 		gboolean    update,
-		gboolean    recursive)
+		gboolean    follow_links)
 {
 	char *base_dir_path;
 
@@ -341,7 +341,7 @@ fr_command_add (FrCommand  *self,
 						     file_list,
 						     base_dir_path,
 						     update,
-						     recursive);
+						     follow_links);
 
 	g_free (base_dir_path);
 }
@@ -964,7 +964,7 @@ _fr_command_add (FrCommand      *self,
 		 GFile          *base_dir,
 		 const char     *dest_dir,
 		 gboolean        update,
-		 gboolean        recursive,
+		 gboolean        follow_links,
 		 const char     *password,
 		 gboolean        encrypt_header,
 		 FrCompression   compression,
@@ -1125,7 +1125,7 @@ _fr_command_add (FrCommand      *self,
 					new_file_list,
 					tmp_base_dir,
 					update,
-					recursive);
+					follow_links);
 
 			/* remove the temp dir */
 
@@ -1156,7 +1156,7 @@ _fr_command_add (FrCommand      *self,
 					chunk,
 					tmp_base_dir,
 					update,
-					recursive);
+					follow_links);
 			g_list_free (chunk);
 		}
 
@@ -1276,7 +1276,7 @@ _fr_command_add_local_files (FrCommand           *self,
 			     GFile               *base_dir,
 			     const char          *dest_dir,
 			     gboolean             update,
-			     gboolean             recursive,
+			     gboolean             follow_links,
 			     const char          *password,
 			     gboolean             encrypt_header,
 			     FrCompression        compression,
@@ -1297,7 +1297,7 @@ _fr_command_add_local_files (FrCommand           *self,
 			       base_dir,
 			       dest_dir,
 			       update,
-			       recursive,
+			       follow_links,
 			       password,
 			       encrypt_header,
 			       compression,
@@ -1344,8 +1344,8 @@ copy_remote_files_done (GError   *error,
 					     xfer_data->file_list,
 					     xfer_data->tmp_dir,
 					     xfer_data->dest_dir,
-					     FALSE,
-					     xfer_data->recursive,
+					     xfer_data->update,
+					     xfer_data->follow_links,
 					     xfer_data->password,
 					     xfer_data->encrypt_header,
 					     xfer_data->compression,
@@ -1378,7 +1378,7 @@ copy_remote_files (FrCommand           *self,
 		   GFile               *base_dir,
 		   const char          *dest_dir,
 		   gboolean             update,
-		   gboolean             recursive,
+		   gboolean             follow_links,
 		   const char          *password,
 		   gboolean             encrypt_header,
 		   FrCompression        compression,
@@ -1442,7 +1442,7 @@ copy_remote_files (FrCommand           *self,
 	xfer_data->base_dir = g_object_ref (base_dir);
 	xfer_data->dest_dir = g_strdup (dest_dir);
 	xfer_data->update = update;
-	xfer_data->recursive = recursive;
+	xfer_data->follow_links = follow_links;
 	xfer_data->dest_dir = g_strdup (dest_dir);
 	xfer_data->password = g_strdup (password);
 	xfer_data->encrypt_header = encrypt_header;
@@ -1475,7 +1475,7 @@ fr_command_add_files (FrArchive           *base,
 		      GFile               *base_dir,
 		      const char          *dest_dir,
 		      gboolean             update,
-		      gboolean             recursive,
+		      gboolean             follow_links,
 		      const char          *password,
 		      gboolean             encrypt_header,
 		      FrCompression        compression,
@@ -1498,7 +1498,7 @@ fr_command_add_files (FrArchive           *base,
 					     base_dir,
 					     dest_dir,
 					     update,
-					     recursive,
+					     follow_links,
 					     password,
 					     encrypt_header,
 					     compression,
@@ -1511,7 +1511,7 @@ fr_command_add_files (FrArchive           *base,
 				   base_dir,
 				   dest_dir,
 				   update,
-				   recursive,
+				   follow_links,
 				   password,
 				   encrypt_header,
 				   compression,

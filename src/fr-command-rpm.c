@@ -291,6 +291,7 @@ fr_command_rpm_init (FrCommandRpm *self)
 
 	base->propAddCanUpdate             = FALSE;
 	base->propAddCanReplace            = FALSE;
+	base->propAddCanStoreLinks         = FALSE;
 	base->propExtractCanAvoidOverwrite = FALSE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = FALSE;

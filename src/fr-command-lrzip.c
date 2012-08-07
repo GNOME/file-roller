@@ -95,7 +95,7 @@ fr_command_lrzip_add (FrCommand  *comm,
 		      GList      *file_list,
 		      const char *base_dir,
 		      gboolean    update,
-		      gboolean    recursive)
+		      gboolean    follow_links)
 {
 	fr_process_begin_command (comm->process, "lrzip");
 
@@ -233,6 +233,7 @@ fr_command_lrzip_init (FrCommandLrzip *self)
 	base->propAddCanUpdate             = FALSE;
 	base->propAddCanReplace            = FALSE;
 	base->propAddCanStoreFolders       = FALSE;
+	base->propAddCanStoreLinks         = FALSE;
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = FALSE;

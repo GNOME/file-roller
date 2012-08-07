@@ -226,14 +226,14 @@ fr_command_zoo_list (FrCommand  *zoo_comm)
 
 
 static void
-fr_command_zoo_add (FrCommand     *comm,
-		    const char    *from_file,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    gboolean       update,
-		    gboolean       recursive)
+fr_command_zoo_add (FrCommand  *comm,
+		    const char *from_file,
+		    GList      *file_list,
+		    const char *base_dir,
+		    gboolean    update,
+		    gboolean    follow_links)
 {
-	GList        *scan;
+	GList *scan;
 
 	/* Add files. */
 
@@ -255,11 +255,11 @@ fr_command_zoo_add (FrCommand     *comm,
 
 
 static void
-fr_command_zoo_delete (FrCommand *comm,
-		       const char  *from_file,
-		       GList     *file_list)
+fr_command_zoo_delete (FrCommand  *comm,
+		       const char *from_file,
+		       GList      *file_list)
 {
-	GList        *scan;
+	GList *scan;
 
 	/* Delete files. */
 
@@ -390,6 +390,7 @@ fr_command_zoo_init (FrCommandZoo *self)
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = FALSE;
+	base->propAddCanStoreLinks         = FALSE;
 	base->propExtractCanAvoidOverwrite = FALSE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = FALSE;

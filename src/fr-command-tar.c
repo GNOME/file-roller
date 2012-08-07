@@ -307,12 +307,12 @@ process_line__add (char     *line,
 
 
 static void
-fr_command_tar_add (FrCommand     *comm,
-		    const char    *from_file,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    gboolean       update,
-		    gboolean       recursive)
+fr_command_tar_add (FrCommand  *comm,
+		    const char *from_file,
+		    GList      *file_list,
+		    const char *base_dir,
+		    gboolean    update,
+		    gboolean    follow_links)
 {
 	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	GList        *scan;
@@ -323,11 +323,12 @@ fr_command_tar_add (FrCommand     *comm,
 
 	begin_tar_command (comm);
 	fr_process_add_arg (comm->process, "--force-local");
-	if (! recursive)
-		fr_process_add_arg (comm->process, "--no-recursion");
+	fr_process_add_arg (comm->process, "--no-recursion");
 	fr_process_add_arg (comm->process, "--no-wildcards");
 	fr_process_add_arg (comm->process, "-v");
 	fr_process_add_arg (comm->process, "-p");
+	if (follow_links)
+		fr_process_add_arg (comm->process, "-h");
 
 	if (base_dir != NULL) {
 		fr_process_add_arg (comm->process, "-C");
@@ -1180,6 +1181,7 @@ fr_command_tar_init (FrCommandTar *self)
 	base->propAddCanUpdate              = FALSE;
 	base->propAddCanReplace             = FALSE;
 	base->propAddCanStoreFolders        = TRUE;
+	base->propAddCanStoreLinks          = TRUE;
 	base->propExtractCanAvoidOverwrite  = FALSE;
 	base->propExtractCanSkipOlder       = TRUE;
 	base->propExtractCanJunkPaths       = FALSE;

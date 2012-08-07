@@ -216,12 +216,12 @@ fr_command_lha_list (FrCommand  *comm)
 
 
 static void
-fr_command_lha_add (FrCommand     *comm,
-		    const char    *from_file,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    gboolean       update,
-		    gboolean       recursive)
+fr_command_lha_add (FrCommand  *comm,
+		    const char *from_file,
+		    GList      *file_list,
+		    const char *base_dir,
+		    gboolean    update,
+		    gboolean    follow_links)
 {
 	GList *scan;
 
@@ -371,6 +371,7 @@ fr_command_lha_init (FrCommandLha *self)
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
 	base->propAddCanStoreFolders       = TRUE;
+	base->propAddCanStoreLinks         = FALSE;
 	base->propExtractCanAvoidOverwrite = FALSE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = TRUE;

@@ -208,12 +208,12 @@ process_line__common (char     *line,
 
 
 static void
-fr_command_zip_add (FrCommand     *comm,
-		    const char    *from_file,
-		    GList         *file_list,
-		    const char    *base_dir,
-		    gboolean       update,
-		    gboolean       recursive)
+fr_command_zip_add (FrCommand  *comm,
+		    const char *from_file,
+		    GList      *file_list,
+		    const char *base_dir,
+		    gboolean    update,
+		    gboolean    follow_links)
 {
 	GList *scan;
 
@@ -226,8 +226,8 @@ fr_command_zip_add (FrCommand     *comm,
 	if (base_dir != NULL)
 		fr_process_set_working_dir (comm->process, base_dir);
 
-	/* preserve links. */
-	fr_process_add_arg (comm->process, "-y");
+	if (! follow_links)
+		fr_process_add_arg (comm->process, "-y");
 
 	if (update)
 		fr_process_add_arg (comm->process, "-u");
@@ -463,6 +463,7 @@ fr_command_zip_init (FrCommandZip *self)
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
 	base->propAddCanStoreFolders       = TRUE;
+	base->propAddCanStoreLinks         = TRUE;
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder      = TRUE;
 	base->propExtractCanJunkPaths      = TRUE;
