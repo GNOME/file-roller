@@ -309,20 +309,17 @@ clear_options_activate_cb (GtkMenuItem *menu_item,
 			   DialogData  *data)
 {
 	GFile *folder;
-	GList *files;
 
 	folder = fr_file_selector_dialog_get_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog));
-	files = fr_file_selector_dialog_get_selected_files (FR_FILE_SELECTOR_DIALOG (data->dialog));
 	sync_widgets_with_options (data,
 				   folder,
-				   files,
+				   NULL,
 				   "",
 				   "",
 				   "",
 				   FALSE,
 				   TRUE);
 
-	_g_object_list_unref (files);
 	_g_object_unref (folder);
 }
 
