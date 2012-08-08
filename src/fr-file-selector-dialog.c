@@ -28,6 +28,7 @@
 
 
 #define GET_WIDGET(x) (_gtk_builder_get_widget (self->priv->builder, (x)))
+#define PREF_FILE_SELECTOR_WINDOW_SIZE "window-size"
 
 
 G_DEFINE_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, GTK_TYPE_DIALOG)
@@ -69,6 +70,7 @@ struct _FrFileSelectorDialogPrivate {
 	GFile         *current_folder;
 	LoadData      *current_operation;
 	GthIconCache  *icon_cache;
+	GSettings     *settings;
 };
 
 
@@ -119,20 +121,128 @@ fr_file_selector_dialog_finalize (GObject *object)
 	g_object_unref (self->priv->builder);
 	_g_object_unref (self->priv->current_folder);
 	gth_icon_cache_free (self->priv->icon_cache);
+	g_object_unref (self->priv->settings);
 
 	G_OBJECT_CLASS (fr_file_selector_dialog_parent_class)->finalize (object);
 }
 
 
+/* Taken from the Gtk+ file gtkfilechooserdefault.c
+ * Copyright (C) 2003, Red Hat, Inc.  */
+
+
+#define NUM_LINES 45
+#define NUM_CHARS 60
+
+
+/* Guesses a size based upon font sizes */
+static void
+find_good_size_from_style (GtkWidget *widget,
+                           gint      *width,
+                           gint      *height)
+{
+  GtkStyleContext *context;
+  GtkStateFlags state;
+  int font_size;
+  GdkScreen *screen;
+  double resolution;
+
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_widget_get_state_flags (widget);
+
+  screen = gtk_widget_get_screen (widget);
+  if (screen)
+    {
+      resolution = gdk_screen_get_resolution (screen);
+      if (resolution < 0.0) /* will be -1 if the resolution is not defined in the GdkScreen */
+        resolution = 96.0;
+    }
+  else
+    resolution = 96.0; /* wheeee */
+
+  font_size = pango_font_description_get_size (gtk_style_context_get_font (context, state));
+  font_size = PANGO_PIXELS (font_size) * resolution / 72.0;
+
+  *width = font_size * NUM_CHARS;
+  *height = font_size * NUM_LINES;
+}
+
+
+static void
+fr_file_selector_dialog_get_default_size (FrFileSelectorDialog *self,
+					  int                  *default_width,
+					  int                  *default_height)
+{
+	int width, height;
+
+	g_settings_get (self->priv->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", &width, &height);
+	if ((width > 0) && (height > 0)) {
+		*default_width = width;
+		*default_height = height;
+		return;
+	}
+
+	find_good_size_from_style (GTK_WIDGET (self), default_width, default_height);
+
+	if ((self->priv->extra_widget != NULL) && gtk_widget_get_visible (self->priv->extra_widget)) {
+		GtkRequisition req;
+
+		gtk_widget_get_preferred_size (GET_WIDGET ("extra_widget_container"),  &req, NULL);
+		*default_height += gtk_box_get_spacing (GTK_BOX (GET_WIDGET ("content"))) + req.height;
+	}
+}
+
+
+static void
+fr_file_selector_dialog_realize (GtkWidget *widget)
+{
+	FrFileSelectorDialog *self;
+	int                   default_width;
+	int                   default_height;
+
+	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->realize (widget);
+
+	self = FR_FILE_SELECTOR_DIALOG (widget);
+
+	fr_file_selector_dialog_get_default_size (self, &default_width, &default_height);
+	gtk_window_set_default_size (GTK_WINDOW (self), default_width, default_height);
+
+}
+
+
+static void
+fr_file_selector_dialog_unmap (GtkWidget *widget)
+{
+	FrFileSelectorDialog *self;
+	int                   width;
+	int                   height;
+
+	self = FR_FILE_SELECTOR_DIALOG (widget);
+
+	gtk_window_get_size (GTK_WINDOW (self), &width, &height);
+	g_settings_set (self->priv->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", width, height);
+
+	/* FIXME: cancel all operations */
+
+	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->unmap (widget);
+}
+
+
+
 static void
 fr_file_selector_dialog_class_init (FrFileSelectorDialogClass *klass)
 {
-	GObjectClass *object_class;
+	GObjectClass   *object_class;
+	GtkWidgetClass *widget_class;
 
 	g_type_class_add_private (klass, sizeof (FrFileSelectorDialogPrivate));
 
 	object_class = (GObjectClass*) klass;
 	object_class->finalize = fr_file_selector_dialog_finalize;
+
+	widget_class = (GtkWidgetClass *) klass;
+	widget_class->realize = fr_file_selector_dialog_realize;
+	widget_class->unmap = fr_file_selector_dialog_unmap;
 }
 
 
@@ -207,11 +317,10 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialogPrivate);
 	self->priv->current_folder = NULL;
 	self->priv->builder = _gtk_builder_new_from_resource ("file-selector.ui");
-
 	self->priv->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
+	self->priv->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
 
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
-	gtk_window_set_default_size (GTK_WINDOW (self), 830, 510); /* FIXME: find a good size */
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
 
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME_ORDER, compare_name_func, self, NULL);

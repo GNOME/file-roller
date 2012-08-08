@@ -47,6 +47,7 @@
   <schema id="org.gnome.FileRoller" path="/org/gnome/file-roller/">
     <child name="listing" schema="org.gnome.FileRoller.Listing"/>
     <child name="ui" schema="org.gnome.FileRoller.UI"/>
+    <child name="file-selector" schema="org.gnome.FileRoller.FileSelector"/>
     <child name="general" schema="org.gnome.FileRoller.General"/>
     <child name="dialogs" schema="org.gnome.FileRoller.Dialogs"/>
   </schema>
@@ -128,6 +129,12 @@
       <default>false</default>
       <_summary>View the folders pane</_summary>
       <_description>Whether to display the folders pane.</_description>
+    </key>
+  </schema>
+
+  <schema id="org.gnome.FileRoller.FileSelector" path="/org/gnome/file-roller/file-selector/" gettext-domain="file-roller">
+    <key name='window-size' type='(ii)'>
+      <default>(-1, -1)</default>
     </key>
   </schema>
 
