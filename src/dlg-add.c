@@ -91,8 +91,6 @@ file_selector_response_cb (GtkWidget    *widget,
 	const char  *include_files;
 	const char  *exclude_files;
 	const char  *exclude_folders;
-	char        *dest_dir;
-	char        *folder_basename;
 	GList       *files;
 
 	dlg_add_folder_save_last_options (data);
@@ -142,11 +140,6 @@ file_selector_response_cb (GtkWidget    *widget,
 	if (utf8_only_spaces (exclude_folders))
 		exclude_folders = NULL;
 
-	folder_basename = g_file_get_basename (current_folder);
-	dest_dir = g_build_filename (fr_window_get_current_location (window),
-			      	     folder_basename,
-			      	     NULL);
-
 	files = fr_file_selector_dialog_get_selected_files (FR_FILE_SELECTOR_DIALOG (data->dialog));
 
 	fr_window_archive_add_with_filter (window,
@@ -155,13 +148,11 @@ file_selector_response_cb (GtkWidget    *widget,
 					   include_files,
 					   exclude_files,
 					   exclude_folders,
-					   dest_dir,
+					   fr_window_get_current_location (window),
 					   update,
 					   follow_links);
 
 	_g_object_list_unref (files);
-	g_free (dest_dir);
-	g_free (folder_basename);
 	g_object_unref (current_folder);
 
 	gtk_widget_destroy (data->dialog);
@@ -416,15 +407,19 @@ dlg_add_folder_load_options (DialogData *data,
 static void
 dlg_add_folder_load_last_options (DialogData *data)
 {
-	char     *base_dir = NULL;
-	char     *include_files = NULL;
-	char     *exclude_files = NULL;
-	char     *exclude_folders = NULL;
-	gboolean  update;
-	gboolean  no_follow_symlinks;
-	GFile    *folder;
+	char      *base_dir = NULL;
+	char     **uris;
+	GList     *files;
+	char      *include_files = NULL;
+	char      *exclude_files = NULL;
+	char      *exclude_folders = NULL;
+	gboolean   update;
+	gboolean   no_follow_symlinks;
+	GFile     *folder;
+	int        i;
 
 	base_dir = g_settings_get_string (data->settings, PREF_ADD_CURRENT_FOLDER);
+	uris = g_settings_get_strv (data->settings, PREF_ADD_SELECTED_FILES);
 	folder = g_file_new_for_uri (base_dir);
 	include_files = g_settings_get_string (data->settings, PREF_ADD_INCLUDE_FILES);
 	exclude_files = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FILES);
@@ -432,9 +427,14 @@ dlg_add_folder_load_last_options (DialogData *data)
 	update = g_settings_get_boolean (data->settings, PREF_ADD_UPDATE);
 	no_follow_symlinks = g_settings_get_boolean (data->settings, PREF_ADD_NO_FOLLOW_SYMLINKS);
 
+	files = NULL;
+	for (i = 0; uris[i] != 0; i++)
+		files = g_list_prepend (files, g_file_new_for_uri (uris[i]));
+	files = g_list_reverse (files);
+
 	sync_widgets_with_options (data,
 				   folder,
-			   	   NULL,
+			   	   files,
 			   	   include_files,
 			   	   exclude_files,
 			   	   exclude_folders,
@@ -442,6 +442,7 @@ dlg_add_folder_load_last_options (DialogData *data)
 			   	   no_follow_symlinks);
 
 	_g_object_unref (folder);
+	g_strfreev (uris);
 	g_free (base_dir);
 	g_free (include_files);
 	g_free (exclude_files);
@@ -570,6 +571,7 @@ dlg_add_folder_save_last_options (DialogData *data)
 		char *base_dir = g_file_get_uri (folder);
 
 		g_settings_set_string (data->settings, PREF_ADD_CURRENT_FOLDER, base_dir);
+		g_settings_set_strv (data->settings, PREF_ADD_SELECTED_FILES, (const char * const *) files);
 		g_settings_set_string (data->settings, PREF_ADD_INCLUDE_FILES, include_files);
 		g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FILES, exclude_files);
 		g_settings_set_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS, exclude_folders);
