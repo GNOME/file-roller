@@ -144,6 +144,8 @@ COMMON_SOURCES = 			\
 	gio-utils.h			\
 	glib-utils.c			\
 	glib-utils.h			\
+	gth-icon-cache.c		\
+	gth-icon-cache.h		\
 	gth-menu-button.c		\
 	gth-menu-button.h		\
 	gtk-utils.c			\

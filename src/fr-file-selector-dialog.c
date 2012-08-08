@@ -21,9 +21,10 @@
 
 #include <config.h>
 #include "fr-file-selector-dialog.h"
-#include "gtk-utils.h"
 #include "gio-utils.h"
 #include "glib-utils.h"
+#include "gtk-utils.h"
+#include "gth-icon-cache.h"
 
 
 #define GET_WIDGET(x) (_gtk_builder_get_widget (self->priv->builder, (x)))
@@ -63,10 +64,11 @@ typedef struct {
 
 
 struct _FrFileSelectorDialogPrivate {
-	GtkBuilder *builder;
-	GtkWidget  *extra_widget;
-	GFile      *current_folder;
-	LoadData   *current_operation;
+	GtkBuilder    *builder;
+	GtkWidget     *extra_widget;
+	GFile         *current_folder;
+	LoadData      *current_operation;
+	GthIconCache  *icon_cache;
 };
 
 
@@ -116,6 +118,7 @@ fr_file_selector_dialog_finalize (GObject *object)
 	self = FR_FILE_SELECTOR_DIALOG (object);
 	g_object_unref (self->priv->builder);
 	_g_object_unref (self->priv->current_folder);
+	gth_icon_cache_free (self->priv->icon_cache);
 
 	G_OBJECT_CLASS (fr_file_selector_dialog_parent_class)->finalize (object);
 }
@@ -205,6 +208,8 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	self->priv->current_folder = NULL;
 	self->priv->builder = _gtk_builder_new_from_resource ("file-selector.ui");
 
+	self->priv->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
+
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
 	gtk_window_set_default_size (GTK_WINDOW (self), 830, 510); /* FIXME: find a good size */
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
@@ -254,7 +259,6 @@ get_folder_content_done_cb (GError   *error,
 {
 	LoadData             *load_data = user_data;
 	FrFileSelectorDialog *self = load_data->dialog;
-	int                   file_list_icon_size;
 	GtkListStore         *list_store;
 	GList                *scan;
 	GtkTreeIter           iter;
@@ -265,7 +269,6 @@ get_folder_content_done_cb (GError   *error,
 		return;
 	}
 
-	file_list_icon_size = _gtk_widget_lookup_for_size (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
 	load_data->files = g_list_reverse (load_data->files);
 
 	list_store = GTK_LIST_STORE (GET_WIDGET ("files_liststore"));
@@ -281,7 +284,7 @@ get_folder_content_done_cb (GError   *error,
 
 		gtk_list_store_append (list_store, &iter);
 
-		icon_pixbuf = _g_icon_get_pixbuf (g_file_info_get_icon (file_info->info), file_list_icon_size, gtk_icon_theme_get_default ());
+		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, g_file_info_get_icon (file_info->info));
 		size = g_format_size (g_file_info_get_size (file_info->info));
 		g_file_info_get_modification_time (file_info->info, &timeval);
 		datetime = g_date_time_new_from_timeval_local (&timeval);
