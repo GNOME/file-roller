@@ -25,6 +25,18 @@
       <column type="gboolean"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="places_liststore">
+    <columns>
+      <!-- column-name icon -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name file -->
+      <column type="GObject"/>
+      <!-- column-name is_separator -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
   <object class="GtkBox" id="content">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -232,7 +244,7 @@
                       <object class="GtkTreeViewColumn" id="treeviewcolumn4">
                         <property name="resizable">True</property>
                         <property name="sizing">fixed</property>
-                        <property name="fixed_width">150</property>
+                        <property name="fixed_width">100</property>
                         <property name="title" translatable="yes" context="File">Modified</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">7</property>
@@ -281,17 +293,5 @@
         <property name="position">1</property>
       </packing>
     </child>
-  </object>
-  <object class="GtkListStore" id="places_liststore">
-    <columns>
-      <!-- column-name icon -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name file -->
-      <column type="GObject"/>
-      <!-- column-name is_separator -->
-      <column type="gboolean"/>
-    </columns>
   </object>
 </interface>

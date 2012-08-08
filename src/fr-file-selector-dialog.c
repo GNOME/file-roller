@@ -253,6 +253,20 @@ fr_file_selector_dialog_get_extra_widget (FrFileSelectorDialog *self)
 }
 
 
+static gboolean
+_g_date_time_same_day (GDateTime *dt1,
+		       GDateTime *dt2)
+{
+	int y1, m1, d1;
+	int y2, m2, d2;
+
+	g_date_time_get_ymd (dt1, &y1, &m1, &d1);
+	g_date_time_get_ymd (dt2, &y2, &m2, &d2);
+
+	return (y1 == y2) && (m1 == m2) && (d1 == d2);
+}
+
+
 static void
 get_folder_content_done_cb (GError   *error,
 		            gpointer  user_data)
@@ -262,6 +276,7 @@ get_folder_content_done_cb (GError   *error,
 	GtkListStore         *list_store;
 	GList                *scan;
 	GtkTreeIter           iter;
+	GDateTime            *today;
 
 	if (error != NULL) {
 		g_warning ("%s", error->message);
@@ -270,6 +285,8 @@ get_folder_content_done_cb (GError   *error,
 	}
 
 	load_data->files = g_list_reverse (load_data->files);
+
+	today = g_date_time_new_now_local ();
 
 	list_store = GTK_LIST_STORE (GET_WIDGET ("files_liststore"));
 	gtk_list_store_clear (list_store);
@@ -288,7 +305,7 @@ get_folder_content_done_cb (GError   *error,
 		size = g_format_size (g_file_info_get_size (file_info->info));
 		g_file_info_get_modification_time (file_info->info, &timeval);
 		datetime = g_date_time_new_from_timeval_local (&timeval);
-		modified = g_date_time_format (datetime, "%x %X");
+		modified = g_date_time_format (datetime, _g_date_time_same_day (datetime, today) ? "%X" : "%x");
 		collate_key = g_utf8_collate_key_for_filename (g_file_info_get_display_name (file_info->info), -1);
 
 		gtk_list_store_set (list_store, &iter,
@@ -310,6 +327,7 @@ get_folder_content_done_cb (GError   *error,
 		g_object_unref (icon_pixbuf);
 	}
 
+	g_date_time_unref (today);
 	load_data_free (load_data);
 }
 
