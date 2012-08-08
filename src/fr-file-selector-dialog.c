@@ -73,6 +73,7 @@ typedef struct {
 	GFile                *folder;
 	GCancellable         *cancellable;
 	GList                *files;
+	GList                *files_to_select;
 } LoadData;
 
 
@@ -82,7 +83,7 @@ load_data_new (FrFileSelectorDialog *dialog,
 {
 	LoadData *load_data;
 
-	load_data = g_new (LoadData, 1);
+	load_data = g_slice_new0 (LoadData);
 	load_data->dialog = g_object_ref (dialog);
 	load_data->folder = _g_object_ref (folder);
 	load_data->cancellable = g_cancellable_new ();
@@ -102,7 +103,8 @@ load_data_free (LoadData *load_data)
 	_g_object_unref (load_data->folder);
 	g_object_unref (load_data->cancellable);
 	file_info_list_free (load_data->files);
-	g_free (load_data);
+	_g_object_list_unref (load_data->files_to_select);
+	g_slice_free (LoadData, load_data);
 }
 
 
@@ -370,7 +372,7 @@ update_places_list_ready_cb (GList    *files, /* FileInfo list */
 
 		icon = g_themed_icon_new ("drive-harddisk");
 		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, icon);
-		file = g_file_new_for_path ("file:///");
+		file = g_file_new_for_path ("/");
 		gtk_list_store_set (list_store, &iter,
 				    PLACE_LIST_COLUMN_ICON, icon_pixbuf,
 				    PLACE_LIST_COLUMN_NAME, N_("File System"),
@@ -1086,7 +1088,7 @@ set_current_folder (FrFileSelectorDialog *self,
 	char        *folder_name;
 	GtkTreeIter  iter;
 
-	_g_clear_object (&self->priv->current_folder);
+	_g_object_unref (self->priv->current_folder);
 	self->priv->current_folder = g_object_ref (folder);
 
 	folder_name = g_file_get_parse_name (folder);
@@ -1130,6 +1132,7 @@ get_folder_content_done_cb (GError   *error,
 	GDateTime            *today;
 	int                   sort_column_id;
 	GtkSortType           sort_order;
+	GHashTable           *selected_files;
 
 	if (error != NULL) {
 		if (! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
@@ -1148,6 +1151,10 @@ get_folder_content_done_cb (GError   *error,
 
 	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), &sort_column_id, &sort_order);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, 0);
+
+	selected_files = g_hash_table_new (g_file_hash, (GEqualFunc) g_file_equal);
+	for (scan = load_data->files_to_select; scan; scan = scan->next)
+		g_hash_table_insert(selected_files, scan->data, GINT_TO_POINTER (1));
 
 	list_store = GTK_LIST_STORE (GET_WIDGET ("files_liststore"));
 	gtk_list_store_clear (list_store);
@@ -1184,6 +1191,7 @@ get_folder_content_done_cb (GError   *error,
 				    FILE_LIST_COLUMN_SIZE_ORDER, g_file_info_get_size (file_info->info),
 				    FILE_LIST_COLUMN_MODIFIED_ORDER, timeval.tv_sec,
 				    FILE_LIST_COLUMN_IS_FOLDER, is_folder,
+				    FILE_LIST_COLUMN_IS_SELECTED, (g_hash_table_lookup (selected_files, file_info->file) != NULL),
 				    -1);
 
 		g_free (collate_key);
@@ -1199,6 +1207,7 @@ get_folder_content_done_cb (GError   *error,
 	if (load_data->dialog->priv->current_operation == load_data)
 		load_data->dialog->priv->current_operation = NULL;
 
+	g_hash_table_unref (selected_files);
 	g_date_time_unref (today);
 	load_data_free (load_data);
 }
@@ -1217,16 +1226,16 @@ get_folder_content_for_each_child_cb (GFile     *file,
 }
 
 
-void
-fr_file_selector_dialog_set_current_folder (FrFileSelectorDialog *self,
-					    GFile                *folder)
+static void
+_set_current_folder (FrFileSelectorDialog *self,
+		     GFile                *folder,
+		     GList                *files)
 {
-	g_return_if_fail (folder != NULL);
-
 	if (self->priv->current_operation != NULL)
 		g_cancellable_cancel (self->priv->current_operation->cancellable);
 
 	self->priv->current_operation = load_data_new (self, folder);
+	self->priv->current_operation->files_to_select = _g_object_list_ref (files);
 
 	gtk_list_store_clear (GTK_LIST_STORE (GET_WIDGET ("files_liststore")));
 
@@ -1249,10 +1258,20 @@ fr_file_selector_dialog_set_current_folder (FrFileSelectorDialog *self,
 }
 
 
+void
+fr_file_selector_dialog_set_current_folder (FrFileSelectorDialog *self,
+					    GFile                *folder)
+{
+	g_return_if_fail (folder != NULL);
+
+	_set_current_folder (self, folder, NULL);
+}
+
+
 GFile *
 fr_file_selector_dialog_get_current_folder (FrFileSelectorDialog *self)
 {
-	return NULL;
+	return _g_object_ref (self->priv->current_folder);
 }
 
 
@@ -1260,12 +1279,45 @@ void
 fr_file_selector_dialog_set_selected_files (FrFileSelectorDialog  *self,
 					    GList                 *files)
 {
+	GFile *folder;
 
+	if (files == NULL)
+		return;
+
+	folder = g_file_get_parent (G_FILE (files->data));
+	_set_current_folder (self, folder, files);
+
+	g_object_unref (folder);
 }
 
 
 GList *
 fr_file_selector_dialog_get_selected_files (FrFileSelectorDialog *self)
 {
-	return NULL;
+	GtkListStore *list_store;
+	GtkTreeIter   iter;
+	GList        *list;
+
+	list_store = GTK_LIST_STORE (GET_WIDGET ("files_liststore"));
+	if (! gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
+		return NULL;
+
+	list = NULL;
+	do {
+		GFile    *file;
+		gboolean  is_selected;
+
+	        gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
+	        		    FILE_LIST_COLUMN_FILE, &file,
+	        		    FILE_LIST_COLUMN_IS_SELECTED, &is_selected,
+	                            -1);
+
+	        if (is_selected)
+	        	list = g_list_prepend (list, g_object_ref (file));
+
+	        g_object_unref (file);
+	}
+	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+
+	return g_list_reverse (list);
 }

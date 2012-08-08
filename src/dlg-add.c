@@ -345,8 +345,9 @@ dlg_add_folder_load_options (DialogData *data,
 	char       *file_path;
 	GKeyFile   *key_file;
 	GError     *error = NULL;
-	char       *base_dir = NULL;
-	GList      *files = NULL;
+	char       *folder_uri = NULL;
+	GList      *uris = NULL;
+	GList      *files;
 	char       *include_files = NULL;
 	char       *exclude_files = NULL;
 	char       *exclude_folders = NULL;
@@ -368,15 +369,16 @@ dlg_add_folder_load_options (DialogData *data,
 		return FALSE;
 	}
 
-	base_dir = g_key_file_get_string (key_file, "Options", "base_dir", NULL);
-	folder = g_file_new_for_uri (base_dir);
+	folder_uri = g_key_file_get_string (key_file, "Options", "base_dir", NULL);
+	folder = g_file_new_for_uri (folder_uri);
 
-	files = _g_key_file_get_string_list (key_file, "Options", "files", NULL);
-	if (files == NULL) {
+	uris = _g_key_file_get_string_list (key_file, "Options", "files", NULL);
+	if (uris == NULL) {
 		char *filename = g_key_file_get_string (key_file, "Options", "filename", NULL);
 		if (filename != NULL)
-			files = g_list_append (NULL, filename);
+			uris = g_list_append (NULL, filename);
 	}
+	files = _g_file_list_new_from_uri_list (uris);
 
 	include_files = g_key_file_get_string (key_file, "Options", "include_files", NULL);
 	exclude_files = g_key_file_get_string (key_file, "Options", "exclude_files", NULL);
@@ -386,7 +388,7 @@ dlg_add_folder_load_options (DialogData *data,
 
 	sync_widgets_with_options (data,
 				   folder,
-			   	   files,
+				   files,
 			   	   include_files,
 			   	   exclude_files,
 			   	   exclude_folders,
@@ -396,8 +398,9 @@ dlg_add_folder_load_options (DialogData *data,
 	dlg_add_folder_save_last_used_options (data, file_path);
 
 	_g_object_unref (folder);
-	g_free (base_dir);
-	_g_string_list_free (files);
+	g_free (folder_uri);
+	_g_string_list_free (uris);
+	_g_object_list_unref (files);
 	g_free (include_files);
 	g_free (exclude_files);
 	g_free (exclude_folders);
@@ -456,17 +459,19 @@ get_options_from_widgets (DialogData   *data,
 			  gboolean     *update,
 			  gboolean     *no_symlinks)
 {
-	GList *files;
-	GList *scan;
-	int    i;
+	GList  *files;
+	char  **uris;
+	GList  *scan;
+	int     i;
 
 	*base_dir = fr_file_selector_dialog_get_current_folder (FR_FILE_SELECTOR_DIALOG (data->dialog));
-	files = fr_file_selector_dialog_get_selected_files (FR_FILE_SELECTOR_DIALOG (data->dialog));
 
-	*file_uris = g_new (char *, g_list_length (files) + 1);
-	for (scan = files; scan; scan = scan->next)
-		*file_uris[i++] = g_file_get_uri (G_FILE (scan->data));
-	file_uris[i] = NULL;
+	files = fr_file_selector_dialog_get_selected_files (FR_FILE_SELECTOR_DIALOG (data->dialog));
+	uris = g_new (char *, g_list_length (files) + 1);
+	for (scan = files, i = 0; scan; scan = scan->next)
+		uris[i++] = g_file_get_uri (G_FILE (scan->data));
+	uris[i] = NULL;
+	*file_uris = uris;
 	_g_object_list_unref (files);
 
 	*update = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("update_checkbutton")));
@@ -527,7 +532,7 @@ dlg_add_folder_save_current_options (DialogData *data,
 
 	key_file = g_key_file_new ();
 	_g_key_file_set_file_uri (key_file, "Options", "base_dir", folder);
-	g_key_file_set_string_list (key_file, "Options", "files", (const char * const *) files, -1);
+	g_key_file_set_string_list (key_file, "Options", "files", (const char * const *) files, g_strv_length (files));
 	g_key_file_set_string (key_file, "Options", "include_files", include_files);
 	g_key_file_set_string (key_file, "Options", "exclude_files", exclude_files);
 	g_key_file_set_string (key_file, "Options", "exclude_folders", exclude_folders);
