@@ -270,8 +270,7 @@ for_each_child_close_enumerator (GObject      *source_object,
 	{
 		if (fec->error == NULL)
 			fec->error = g_error_copy (error);
-		else
-			g_clear_error (&error);
+		g_clear_error (&error);
 	}
 
 	if ((fec->error == NULL) && fec->recursive)
@@ -297,20 +296,6 @@ for_each_child_read_next_files (ForEachChildData *fec)
 					    fec->cancellable,
 					    for_each_child_next_files_ready,
 					    fec);
-}
-
-
-static void for_each_child_read_current_child_metadata (ForEachChildData *fec);
-
-
-static void
-for_each_child_read_next_child_metadata (ForEachChildData *fec)
-{
-	fec->current_child = fec->current_child->next;
-	if (fec->current_child != NULL)
-		for_each_child_read_current_child_metadata (fec);
-	else
-		for_each_child_read_next_files (fec);
 }
 
 
@@ -341,44 +326,6 @@ for_each_child_compute_child (ForEachChildData *fec,
 
 
 static void
-for_each_child_metadata_ready_func (GObject      *source_object,
-                		    GAsyncResult *result,
-                		    gpointer      user_data)
-{
-	ForEachChildData *fec = user_data;
-	GFile            *file;
-	GFileInfo        *info;
-	GError           *error = NULL;
-
-	file = G_FILE (source_object);
-	info = g_file_query_info_finish (file, result, &error);
-	if (info != NULL)
-		for_each_child_compute_child (fec, file, info);
-
-	for_each_child_read_next_child_metadata (fec);
-}
-
-
-static void
-for_each_child_read_current_child_metadata (ForEachChildData *fec)
-{
-	GFileInfo *child_info = fec->current_child->data;
-	GFile     *child_file;
-
-	child_file = g_file_get_child (fec->current->file, g_file_info_get_name (child_info));
-	g_file_query_info_async  (child_file,
-				  fec->attributes,
-				  G_FILE_QUERY_INFO_NONE,
-				  G_PRIORITY_DEFAULT,
-				  NULL, /* FIXME: cannot use fec->cancellable here */
-				  for_each_child_metadata_ready_func,
-				  fec);
-
-	g_object_unref (child_file);
-}
-
-
-static void
 for_each_child_next_files_ready (GObject      *source_object,
 				 GAsyncResult *result,
 				 gpointer      user_data)
@@ -393,7 +340,7 @@ for_each_child_next_files_ready (GObject      *source_object,
 	if (fec->children == NULL) {
 		g_file_enumerator_close_async (fec->enumerator,
 					       G_PRIORITY_DEFAULT,
-					       fec->cancellable,
+					       g_cancellable_is_cancelled (fec->cancellable) ? NULL : fec->cancellable,
 					       for_each_child_close_enumerator,
 					       fec);
 		return;
@@ -662,8 +609,11 @@ query_data_info_ready_cb (GObject      *source_object,
 
 	info = g_file_query_info_finish ((GFile *) source_object, result, &error);
 	if (info == NULL) {
+		query_info__query_next (query_data);
+		/*
 		query_data->callback (NULL, error, query_data->user_data);
 		query_data_free (query_data);
+		*/
 		return;
 	}
 
