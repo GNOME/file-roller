@@ -29,6 +29,7 @@
 
 #define GET_WIDGET(x) (_gtk_builder_get_widget (self->priv->builder, (x)))
 #define PREF_FILE_SELECTOR_WINDOW_SIZE "window-size"
+#define PREF_FILE_SELECTOR_SHOW_HIDDEN "show-hidden"
 
 
 G_DEFINE_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, GTK_TYPE_DIALOG)
@@ -149,6 +150,7 @@ struct _FrFileSelectorDialogPrivate {
 	GSettings     *settings;
 	GList         *special_places;
 	GList         *bookmarks;
+	gboolean       show_hidden;
 };
 
 
@@ -690,8 +692,12 @@ fr_file_selector_dialog_unmap (GtkWidget *widget)
 
 	gtk_window_get_size (GTK_WINDOW (self), &width, &height);
 	g_settings_set (self->priv->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", width, height);
+	g_settings_set_boolean (self->priv->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN, self->priv->show_hidden);
 
-	/* FIXME: cancel all operations */
+	if (self->priv->current_operation != NULL)
+		g_cancellable_cancel (self->priv->current_operation->cancellable);
+	if (self->priv->places_operation != NULL)
+		g_cancellable_cancel (self->priv->places_operation->cancellable);
 
 	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->unmap (widget);
 }
@@ -982,6 +988,30 @@ go_up_button_clicked_cb (GtkButton *button,
 
 
 static void
+_set_current_folder (FrFileSelectorDialog *self,
+		     GFile                *folder,
+		     GList                *files);
+
+
+static void
+hidden_files_togglebutton_toggled_cb (GtkToggleButton *toggle_button,
+				      gpointer         user_data)
+{
+	FrFileSelectorDialog *self = user_data;
+	GFile                *folder;
+	GList                *selected_files;
+
+	self->priv->show_hidden = gtk_toggle_button_get_active (toggle_button);
+	folder = fr_file_selector_dialog_get_current_folder (self);
+	selected_files = fr_file_selector_dialog_get_selected_files (self);
+	_set_current_folder (self, folder, selected_files);
+
+	_g_object_list_unref (selected_files);
+	_g_object_unref (folder);
+}
+
+
+static void
 fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 {
 	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialogPrivate);
@@ -990,6 +1020,7 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	self->priv->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
 	self->priv->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
 	self->priv->special_places = NULL;
+	self->priv->show_hidden = g_settings_get_boolean (self->priv->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN);
 
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
@@ -1003,6 +1034,8 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("places_liststore")), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
 	gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (GET_WIDGET ("places_treeview")), places_treeview_row_separator_func, self, NULL);
 
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("hidden_files_togglebutton")), self->priv->show_hidden);
+
 	g_signal_connect (GET_WIDGET ("is_selected_cellrenderertoggle"),
 			  "toggled",
 			  G_CALLBACK (is_selected_cellrenderertoggle_toggled_cb),
@@ -1015,12 +1048,17 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  "clicked",
 			  G_CALLBACK (go_up_button_clicked_cb),
 			  self);
+	g_signal_connect (GET_WIDGET ("hidden_files_togglebutton"),
+			  "toggled",
+			  G_CALLBACK (hidden_files_togglebutton_toggled_cb),
+			  self);
 	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("places_treeview"))),
 			  "changed",
 			  G_CALLBACK (places_treeview_selection_changed_cb),
 			  self);
 
 	_fr_file_selector_dialog_update_size (self);
+	gtk_widget_grab_focus (GET_WIDGET ("files_treeview"));
 }
 
 
@@ -1085,24 +1123,22 @@ static void
 set_current_folder (FrFileSelectorDialog *self,
 		    GFile                *folder)
 {
-	char        *folder_name;
-	GtkTreeIter  iter;
-
+	char             *folder_name;
+	GtkTreeIter       iter;
+	GtkTreeSelection *tree_selection;
 	_g_object_unref (self->priv->current_folder);
 	self->priv->current_folder = g_object_ref (folder);
 
 	folder_name = g_file_get_parse_name (folder);
 	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("location_entry")), folder_name);
 
-	if (_gtk_list_store_get_iter_for_file (GTK_LIST_STORE (GET_WIDGET ("places_liststore")), &iter, folder)) {
-		GtkTreeSelection *tree_selection;
-
-		tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("places_treeview")));
-
-		g_signal_handlers_block_by_func (tree_selection, places_treeview_selection_changed_cb, self);
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("places_treeview")));
+	g_signal_handlers_block_by_func (tree_selection, places_treeview_selection_changed_cb, self);
+	if (_gtk_list_store_get_iter_for_file (GTK_LIST_STORE (GET_WIDGET ("places_liststore")), &iter, folder))
 		gtk_tree_selection_select_iter (tree_selection, &iter);
-		g_signal_handlers_unblock_by_func (tree_selection, places_treeview_selection_changed_cb, self);
-	}
+	else
+		gtk_tree_selection_unselect_all (tree_selection);
+	g_signal_handlers_unblock_by_func (tree_selection, places_treeview_selection_changed_cb, self);
 }
 
 
@@ -1168,7 +1204,7 @@ get_folder_content_done_cb (GError   *error,
 		char      *collate_key;
 		gboolean   is_folder;
 
-		if (g_file_info_get_is_hidden (file_info->info))
+		if (! self->priv->show_hidden && g_file_info_get_is_hidden (file_info->info))
 			continue;
 
 		gtk_list_store_append (list_store, &iter);

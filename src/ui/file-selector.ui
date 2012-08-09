@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkListStore" id="files_liststore">
+    <columns>
+      <!-- column-name icon -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name size -->
+      <column type="gchararray"/>
+      <!-- column-name modified -->
+      <column type="gchararray"/>
+      <!-- column-name file -->
+      <column type="GObject"/>
+      <!-- column-name name_order -->
+      <column type="gchararray"/>
+      <!-- column-name size_order -->
+      <column type="gint64"/>
+      <!-- column-name modified_order -->
+      <column type="gint64"/>
+      <!-- column-name is_folder -->
+      <column type="gboolean"/>
+      <!-- column-name is_selected -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
   <object class="GtkBox" id="content">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -14,54 +38,34 @@
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <child>
-          <object class="GtkBox" id="box1">
+          <object class="GtkBox" id="toolbox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkBox" id="box3">
+              <object class="GtkButton" id="go_up_button">
+                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_markup" translatable="yes">Go up one level</property>
+                <property name="tooltip_text" translatable="yes">Go up one level</property>
+                <property name="use_action_appearance">False</property>
+                <property name="relief">none</property>
                 <child>
-                  <object class="GtkButton" id="go_up_button">
-                    <property name="use_action_appearance">False</property>
+                  <object class="GtkImage" id="image1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">Go up one level</property>
-                    <property name="use_action_appearance">False</property>
-                    <property name="relief">none</property>
-                    <child>
-                      <object class="GtkImage" id="image1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="stock">gtk-go-up</property>
-                      </object>
-                    </child>
+                    <property name="can_focus">False</property>
+                    <property name="stock">gtk-go-up</property>
+                    <property name="icon-size">2</property>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
                 <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparator" id="separator1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -75,7 +79,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -84,9 +88,33 @@
                 <property name="can_focus">True</property>
                 <property name="invisible_char">●</property>
                 <property name="invisible_char_set">True</property>
+                <property name="primary_icon_name">folder</property>
               </object>
               <packing>
                 <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleButton" id="hidden_files_togglebutton">
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes">Show hidden files</property>
+                <property name="use_action_appearance">False</property>
+                <property name="relief">none</property>
+                <child>
+                  <object class="GtkImage" id="image2">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">emblem-system-symbolic</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">3</property>
               </packing>
@@ -257,30 +285,6 @@
       </packing>
     </child>
   </object>
-  <object class="GtkListStore" id="files_liststore">
-    <columns>
-      <!-- column-name icon -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name size -->
-      <column type="gchararray"/>
-      <!-- column-name modified -->
-      <column type="gchararray"/>
-      <!-- column-name file -->
-      <column type="GObject"/>
-      <!-- column-name name_order -->
-      <column type="gchararray"/>
-      <!-- column-name size_order -->
-      <column type="gint64"/>
-      <!-- column-name modified_order -->
-      <column type="gint64"/>
-      <!-- column-name is_folder -->
-      <column type="gboolean"/>
-      <!-- column-name is_selected -->
-      <column type="gboolean"/>
-    </columns>
-  </object>
   <object class="GtkListStore" id="places_liststore">
     <columns>
       <!-- column-name icon -->
@@ -297,4 +301,5 @@
       <column type="gint"/>
     </columns>
   </object>
+  <object class="GtkSizeGroup" id="toolbar_sizegroup"/>
 </interface>

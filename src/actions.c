@@ -206,7 +206,6 @@ void
 activate_action_add (GtkAction *action,
 		     gpointer   data)
 {
-	/* FIXME: dlg_add (FR_WINDOW (data)) */
 	dlg_add (FR_WINDOW (data));
 }
 
