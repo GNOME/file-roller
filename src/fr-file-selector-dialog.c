@@ -54,9 +54,9 @@ enum {
 
 
 typedef enum {
-	PLACE_TYPE_NORMAL,
-	PLACE_TYPE_VOLUME,
-	PLACE_TYPE_BOOKMARK
+	PLACE_TYPE_NORMAL = 1 << 0,
+	PLACE_TYPE_VOLUME = 1 << 1,
+	PLACE_TYPE_BOOKMARK = 1 << 2
 } PlaceType;
 
 
@@ -164,6 +164,9 @@ fr_file_selector_dialog_finalize (GObject *object)
 	FrFileSelectorDialog *self;
 
 	self = FR_FILE_SELECTOR_DIALOG (object);
+
+	g_signal_handlers_disconnect_by_data (g_volume_monitor_get (), self);
+
 	g_object_unref (self->priv->builder);
 	_g_object_unref (self->priv->current_folder);
 	g_object_unref (self->priv->settings);
@@ -235,8 +238,6 @@ _gtk_list_store_clear_type (GtkListStore *list_store,
 	gboolean    iter_is_valid;
 
 	iter_is_valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter);
-		return;
-
 	while (iter_is_valid) {
 		PlaceType item_type;
 
@@ -244,7 +245,7 @@ _gtk_list_store_clear_type (GtkListStore *list_store,
 	        		    PLACE_LIST_COLUMN_TYPE, &item_type,
 	                            -1);
 
-	        if (item_type == type_to_delete)
+	        if (item_type & type_to_delete)
 	        	iter_is_valid = gtk_list_store_remove (list_store, &iter);
 	        else
 	        	iter_is_valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter);
@@ -330,117 +331,6 @@ update_bookmarks (FrFileSelectorDialog *self)
 }
 
 
-static void
-update_places_list_ready_cb (GList    *files, /* FileInfo list */
-			     GError   *error,
-			     gpointer  user_data)
-{
-	LoadData             *load_data = user_data;
-	FrFileSelectorDialog *self = load_data->dialog;
-	GtkListStore         *list_store;
-	GList                *scan;
-	GtkTreeIter           iter;
-	int                   sort_order = 0;
-
-	/* normal places */
-
-	list_store = GTK_LIST_STORE (GET_WIDGET ("places_liststore"));
-	_gtk_list_store_clear_type (list_store, PLACE_TYPE_NORMAL);
-	_gtk_list_store_clear_type (list_store, PLACE_TYPE_VOLUME);
-
-	for (scan = files; scan; scan = scan->next) {
-		FileInfo  *file_info = scan->data;
-		GdkPixbuf *icon_pixbuf;
-
-		gtk_list_store_append (list_store, &iter);
-
-		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, g_file_info_get_icon (file_info->info));
-		gtk_list_store_set (list_store, &iter,
-				    PLACE_LIST_COLUMN_ICON, icon_pixbuf,
-				    PLACE_LIST_COLUMN_NAME, g_file_info_get_display_name (file_info->info),
-				    PLACE_LIST_COLUMN_FILE, file_info->file,
-				    PLACE_LIST_COLUMN_TYPE, PLACE_TYPE_NORMAL,
-				    PLACE_LIST_COLUMN_SORT_ORDER, sort_order++,
-				    -1);
-
-		g_object_unref (icon_pixbuf);
-	}
-
-	/* root filesystem */
-
-	{
-		GIcon     *icon;
-		GdkPixbuf *icon_pixbuf;
-		GFile     *file;
-
-		gtk_list_store_append (list_store, &iter);
-
-		icon = g_themed_icon_new ("drive-harddisk");
-		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, icon);
-		file = g_file_new_for_path ("/");
-		gtk_list_store_set (list_store, &iter,
-				    PLACE_LIST_COLUMN_ICON, icon_pixbuf,
-				    PLACE_LIST_COLUMN_NAME, N_("File System"),
-				    PLACE_LIST_COLUMN_FILE, file,
-				    PLACE_LIST_COLUMN_TYPE, PLACE_TYPE_VOLUME,
-				    PLACE_LIST_COLUMN_SORT_ORDER, sort_order++,
-				    -1);
-
-		g_object_unref (icon_pixbuf);
-		g_object_unref (icon);
-		g_object_unref (file);
-	}
-
-	/* drives / volumes / mounts */
-
-	for (scan = self->priv->special_places; scan; scan = scan->next) {
-		GObject   *place = scan->data;
-		GIcon     *icon;
-		char      *name;
-		GFile     *file;
-		GdkPixbuf *icon_pixbuf;
-
-		gtk_list_store_append (list_store, &iter);
-
-		if (G_IS_DRIVE (place)) {
-			icon = g_drive_get_icon (G_DRIVE (place));
-			name = g_drive_get_name (G_DRIVE (place));
-			file = NULL;
-		}
-		else if (G_IS_VOLUME (place)) {
-			icon = g_volume_get_icon (G_VOLUME (place));
-			name = g_volume_get_name (G_VOLUME (place));
-			file = NULL;
-		}
-		else if (G_IS_MOUNT (place)) {
-			icon = g_mount_get_icon (G_MOUNT (place));
-			name = g_mount_get_name (G_MOUNT (place));
-			file = g_mount_get_root (G_MOUNT (place));
-		}
-		else
-			continue;
-
-		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, icon);
-		gtk_list_store_set (list_store, &iter,
-				    PLACE_LIST_COLUMN_ICON, icon_pixbuf,
-				    PLACE_LIST_COLUMN_NAME, name,
-				    PLACE_LIST_COLUMN_FILE, file,
-				    PLACE_LIST_COLUMN_TYPE, PLACE_TYPE_VOLUME,
-				    PLACE_LIST_COLUMN_SORT_ORDER, sort_order++,
-				    -1);
-
-		g_object_unref (icon_pixbuf);
-		_g_object_unref (icon);
-		g_free (name);
-		_g_object_unref (file);
-	}
-
-	if (load_data->dialog->priv->places_operation == load_data)
-		load_data->dialog->priv->places_operation = NULL;
-
-	load_data_free (load_data);
-}
-
 
 static gboolean
 mount_referenced_by_volume_activation_root (GList *volumes, GMount *mount)
@@ -477,20 +367,90 @@ mount_referenced_by_volume_activation_root (GList *volumes, GMount *mount)
 
 
 static void
-update_places_list (FrFileSelectorDialog *self)
+places_treeview_selection_changed_cb (GtkTreeSelection *treeselection,
+				      gpointer          user_data)
 {
-	GList *places;
+	FrFileSelectorDialog *self = user_data;
+	GtkTreeModel         *tree_model;
+	GtkTreeIter           iter;
+	GFile                *file;
+
+	if (! gtk_tree_selection_get_selected (treeselection, &tree_model, &iter))
+		return;
+
+        gtk_tree_model_get (tree_model, &iter,
+        		    PLACE_LIST_COLUMN_FILE, &file,
+        		    -1);
+       	fr_file_selector_dialog_set_current_folder (self, file);
+
+        g_object_unref (file);
+}
+
+
+static gboolean
+_gtk_list_store_get_iter_for_file (GtkListStore *list_store,
+				   GtkTreeIter  *iter,
+				   GFile        *file)
+{
+	if (! gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), iter))
+		return FALSE;
+
+	do {
+		GFile *item_file;
+
+	        gtk_tree_model_get (GTK_TREE_MODEL (list_store), iter,
+	        		    PLACE_LIST_COLUMN_FILE, &item_file,
+	                            -1);
+
+	        if ((item_file != NULL) && g_file_equal (item_file, file)) {
+	        	_g_object_unref (item_file);
+	        	return TRUE;
+	        }
+
+	        _g_object_unref (item_file);
+	}
+	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), iter));
+
+	return FALSE;
+}
+
+
+static void
+set_current_folder (FrFileSelectorDialog *self,
+		    GFile                *folder)
+{
+	char             *folder_name;
+	GtkTreeIter       iter;
+	GtkTreeSelection *tree_selection;
+
+	if (folder != self->priv->current_folder) {
+		_g_object_unref (self->priv->current_folder);
+		self->priv->current_folder = g_object_ref (folder);
+	}
+
+	if (self->priv->current_folder == NULL)
+		return;
+
+	folder_name = g_file_get_parse_name (folder);
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("location_entry")), folder_name);
+
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("places_treeview")));
+	g_signal_handlers_block_by_func (tree_selection, places_treeview_selection_changed_cb, self);
+	if (_gtk_list_store_get_iter_for_file (GTK_LIST_STORE (GET_WIDGET ("places_liststore")), &iter, folder))
+		gtk_tree_selection_select_iter (tree_selection, &iter);
+	else
+		gtk_tree_selection_unselect_all (tree_selection);
+	g_signal_handlers_unblock_by_func (tree_selection, places_treeview_selection_changed_cb, self);
+}
+
+
+static void
+update_spacial_places_list (FrFileSelectorDialog *self)
+{
 	GList *drives;
 	GList *volumes;
 	GList *mounts;
 	GList *scan;
-
-	if (self->priv->places_operation != NULL)
-		g_cancellable_cancel (self->priv->places_operation->cancellable);
-
-	self->priv->places_operation = load_data_new (self, NULL);
-
-	/* drives / volumes /mounts */
 
 	_g_object_list_unref (self->priv->special_places);
 	self->priv->special_places = NULL;
@@ -568,8 +528,139 @@ update_places_list (FrFileSelectorDialog *self)
 
 	_g_object_list_unref (mounts);
 	_g_object_list_unref (volumes);
+}
 
-	/* other resourses */
+
+static void
+update_places_list_ready_cb (GList    *files, /* FileInfo list */
+			     GError   *error,
+			     gpointer  user_data)
+{
+	LoadData             *load_data = user_data;
+	FrFileSelectorDialog *self = load_data->dialog;
+	GtkTreeSelection     *tree_selection;
+	GtkListStore         *list_store;
+	GList                *scan;
+	GtkTreeIter           iter;
+	int                   sort_order = 0;
+
+	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("places_treeview")));
+	g_signal_handlers_block_by_func (tree_selection, places_treeview_selection_changed_cb, self);
+	gtk_tree_selection_unselect_all (tree_selection);
+
+	/* normal places */
+
+	list_store = GTK_LIST_STORE (GET_WIDGET ("places_liststore"));
+	_gtk_list_store_clear_type (list_store, PLACE_TYPE_NORMAL | PLACE_TYPE_VOLUME);
+
+	for (scan = files; scan; scan = scan->next) {
+		FileInfo  *file_info = scan->data;
+		GdkPixbuf *icon_pixbuf;
+
+		gtk_list_store_append (list_store, &iter);
+
+		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, g_file_info_get_icon (file_info->info));
+		gtk_list_store_set (list_store, &iter,
+				    PLACE_LIST_COLUMN_ICON, icon_pixbuf,
+				    PLACE_LIST_COLUMN_NAME, g_file_info_get_display_name (file_info->info),
+				    PLACE_LIST_COLUMN_FILE, file_info->file,
+				    PLACE_LIST_COLUMN_TYPE, PLACE_TYPE_NORMAL,
+				    PLACE_LIST_COLUMN_SORT_ORDER, sort_order++,
+				    -1);
+
+		g_object_unref (icon_pixbuf);
+	}
+
+	/* root filesystem */
+
+	{
+		GIcon     *icon;
+		GdkPixbuf *icon_pixbuf;
+		GFile     *file;
+
+		gtk_list_store_append (list_store, &iter);
+
+		icon = g_themed_icon_new ("drive-harddisk");
+		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, icon);
+		file = g_file_new_for_path ("/");
+		gtk_list_store_set (list_store, &iter,
+				    PLACE_LIST_COLUMN_ICON, icon_pixbuf,
+				    PLACE_LIST_COLUMN_NAME, N_("File System"),
+				    PLACE_LIST_COLUMN_FILE, file,
+				    PLACE_LIST_COLUMN_TYPE, PLACE_TYPE_VOLUME,
+				    PLACE_LIST_COLUMN_SORT_ORDER, sort_order++,
+				    -1);
+
+		g_object_unref (icon_pixbuf);
+		g_object_unref (icon);
+		g_object_unref (file);
+	}
+
+	/* drives / volumes / mounts */
+
+	update_spacial_places_list (self);
+	for (scan = self->priv->special_places; scan; scan = scan->next) {
+		GObject   *place = scan->data;
+		GIcon     *icon;
+		char      *name;
+		GFile     *file;
+		GdkPixbuf *icon_pixbuf;
+
+		gtk_list_store_append (list_store, &iter);
+
+		if (G_IS_DRIVE (place)) {
+			icon = g_drive_get_icon (G_DRIVE (place));
+			name = g_drive_get_name (G_DRIVE (place));
+			file = NULL;
+		}
+		else if (G_IS_VOLUME (place)) {
+			icon = g_volume_get_icon (G_VOLUME (place));
+			name = g_volume_get_name (G_VOLUME (place));
+			file = NULL;
+		}
+		else if (G_IS_MOUNT (place)) {
+			icon = g_mount_get_icon (G_MOUNT (place));
+			name = g_mount_get_name (G_MOUNT (place));
+			file = g_mount_get_root (G_MOUNT (place));
+		}
+		else
+			continue;
+
+		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, icon);
+		gtk_list_store_set (list_store, &iter,
+				    PLACE_LIST_COLUMN_ICON, icon_pixbuf,
+				    PLACE_LIST_COLUMN_NAME, name,
+				    PLACE_LIST_COLUMN_FILE, file,
+				    PLACE_LIST_COLUMN_TYPE, PLACE_TYPE_VOLUME,
+				    PLACE_LIST_COLUMN_SORT_ORDER, sort_order++,
+				    -1);
+
+		g_object_unref (icon_pixbuf);
+		_g_object_unref (icon);
+		g_free (name);
+		_g_object_unref (file);
+	}
+
+	g_signal_handlers_unblock_by_func (tree_selection, places_treeview_selection_changed_cb, self);
+
+	set_current_folder (self, self->priv->current_folder);
+
+	if (load_data->dialog->priv->places_operation == load_data)
+		load_data->dialog->priv->places_operation = NULL;
+
+	load_data_free (load_data);
+}
+
+
+static void
+update_places_list (FrFileSelectorDialog *self)
+{
+	GList *places;
+
+	if (self->priv->places_operation != NULL)
+		g_cancellable_cancel (self->priv->places_operation->cancellable);
+
+	self->priv->places_operation = load_data_new (self, NULL);
 
 	places = NULL;
 	places = g_list_prepend (places, g_object_ref (_g_file_get_home ()));
@@ -969,27 +1060,6 @@ files_treeview_row_activated_cb (GtkTreeView       *tree_view,
 }
 
 
-static void
-places_treeview_selection_changed_cb (GtkTreeSelection *treeselection,
-				      gpointer          user_data)
-{
-	FrFileSelectorDialog *self = user_data;
-	GtkTreeModel         *tree_model;
-	GtkTreeIter           iter;
-	GFile                *file;
-
-	if (! gtk_tree_selection_get_selected (treeselection, &tree_model, &iter))
-		return;
-
-        gtk_tree_model_get (tree_model, &iter,
-        		    PLACE_LIST_COLUMN_FILE, &file,
-        		    -1);
-       	fr_file_selector_dialog_set_current_folder (self, file);
-
-        g_object_unref (file);
-}
-
-
 static gboolean
 places_treeview_row_separator_func (GtkTreeModel *model,
 				    GtkTreeIter  *iter,
@@ -1050,8 +1120,24 @@ hidden_files_togglebutton_toggled_cb (GtkToggleButton *toggle_button,
 
 
 static void
+volume_list_changed_cb (GVolumeMonitor *volume_monitor,
+			GObject        *drive_mount_volume,
+			gpointer        user_data)
+{
+	FrFileSelectorDialog *self = user_data;
+
+	if (! gtk_widget_get_realized (GTK_WIDGET (self)))
+		return;
+
+	update_places_list (self);
+}
+
+
+static void
 fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 {
+	GVolumeMonitor *monitor;
+
 	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialogPrivate);
 	self->priv->current_folder = NULL;
 	self->priv->builder = _gtk_builder_new_from_resource ("file-selector.ui");
@@ -1095,6 +1181,17 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  G_CALLBACK (places_treeview_selection_changed_cb),
 			  self);
 
+	monitor = g_volume_monitor_get ();
+	g_signal_connect (monitor, "drive-changed", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "drive-connected", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "drive-disconnected", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "mount-added", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "mount-changed", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "mount-removed", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "volume-added", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "volume-changed", G_CALLBACK (volume_list_changed_cb), self);
+	g_signal_connect (monitor, "volume-removed", G_CALLBACK (volume_list_changed_cb), self);
+
 	_fr_file_selector_dialog_update_size (self);
 	gtk_widget_grab_focus (GET_WIDGET ("files_treeview"));
 }
@@ -1126,57 +1223,6 @@ GtkWidget *
 fr_file_selector_dialog_get_extra_widget (FrFileSelectorDialog *self)
 {
 	return self->priv->extra_widget;
-}
-
-
-static gboolean
-_gtk_list_store_get_iter_for_file (GtkListStore *list_store,
-				   GtkTreeIter  *iter,
-				   GFile        *file)
-{
-	if (! gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), iter))
-		return FALSE;
-
-	do {
-		GFile *item_file;
-
-	        gtk_tree_model_get (GTK_TREE_MODEL (list_store), iter,
-	        		    PLACE_LIST_COLUMN_FILE, &item_file,
-	                            -1);
-
-	        if ((item_file != NULL) && g_file_equal (item_file, file)) {
-	        	_g_object_unref (item_file);
-	        	return TRUE;
-	        }
-
-	        _g_object_unref (item_file);
-	}
-	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), iter));
-
-	return FALSE;
-}
-
-
-static void
-set_current_folder (FrFileSelectorDialog *self,
-		    GFile                *folder)
-{
-	char             *folder_name;
-	GtkTreeIter       iter;
-	GtkTreeSelection *tree_selection;
-	_g_object_unref (self->priv->current_folder);
-	self->priv->current_folder = g_object_ref (folder);
-
-	folder_name = g_file_get_parse_name (folder);
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("location_entry")), folder_name);
-
-	tree_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("places_treeview")));
-	g_signal_handlers_block_by_func (tree_selection, places_treeview_selection_changed_cb, self);
-	if (_gtk_list_store_get_iter_for_file (GTK_LIST_STORE (GET_WIDGET ("places_liststore")), &iter, folder))
-		gtk_tree_selection_select_iter (tree_selection, &iter);
-	else
-		gtk_tree_selection_unselect_all (tree_selection);
-	g_signal_handlers_unblock_by_func (tree_selection, places_treeview_selection_changed_cb, self);
 }
 
 
