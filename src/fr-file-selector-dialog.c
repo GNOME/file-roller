@@ -162,7 +162,6 @@ fr_file_selector_dialog_finalize (GObject *object)
 	self = FR_FILE_SELECTOR_DIALOG (object);
 	g_object_unref (self->priv->builder);
 	_g_object_unref (self->priv->current_folder);
-	gth_icon_cache_free (self->priv->icon_cache);
 	g_object_unref (self->priv->settings);
 	_g_object_list_unref (self->priv->special_places);
 	bookmark_list_free (self->priv->bookmarks);
@@ -670,14 +669,35 @@ static void
 fr_file_selector_dialog_realize (GtkWidget *widget)
 {
 	FrFileSelectorDialog *self;
+	GIcon                *icon;
 
 	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->realize (widget);
 
 	self = FR_FILE_SELECTOR_DIALOG (widget);
+
+	self->priv->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
+	icon = g_content_type_get_icon ("text/plain");
+	gth_icon_cache_set_fallback (self->priv->icon_cache, icon);
+	g_object_unref (icon);
+
 	_fr_file_selector_dialog_update_size (self);
 
 	update_places_list (self);
 	update_bookmarks (self);
+}
+
+
+static void
+fr_file_selector_dialog_unrealize (GtkWidget *widget)
+{
+	FrFileSelectorDialog *self;
+
+	self = FR_FILE_SELECTOR_DIALOG (widget);
+
+	gth_icon_cache_free (self->priv->icon_cache);
+	self->priv->icon_cache = NULL;
+
+	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->unrealize (widget);
 }
 
 
@@ -717,6 +737,7 @@ fr_file_selector_dialog_class_init (FrFileSelectorDialogClass *klass)
 
 	widget_class = (GtkWidgetClass *) klass;
 	widget_class->realize = fr_file_selector_dialog_realize;
+	widget_class->unrealize = fr_file_selector_dialog_unrealize;
 	widget_class->unmap = fr_file_selector_dialog_unmap;
 }
 
@@ -1017,7 +1038,7 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialogPrivate);
 	self->priv->current_folder = NULL;
 	self->priv->builder = _gtk_builder_new_from_resource ("file-selector.ui");
-	self->priv->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
+	self->priv->icon_cache = NULL;
 	self->priv->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
 	self->priv->special_places = NULL;
 	self->priv->show_hidden = g_settings_get_boolean (self->priv->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN);
@@ -1234,7 +1255,7 @@ get_folder_content_done_cb (GError   *error,
 		g_free (modified);
 		g_date_time_unref (datetime);
 		g_free (size);
-		g_object_unref (icon_pixbuf);
+		_g_object_unref (icon_pixbuf);
 	}
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), sort_column_id, sort_order);
