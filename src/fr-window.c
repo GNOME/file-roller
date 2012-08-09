@@ -3094,6 +3094,7 @@ _handle_archive_operation_error (FrWindow  *window,
 
 
 static void fr_window_exec_next_batch_action (FrWindow *window);
+static void fr_window_archive_list (FrWindow *window);
 
 
 static void
@@ -3136,6 +3137,10 @@ _archive_operation_completed (FrWindow *window,
 		if (error != NULL) {
 			fr_window_remove_from_recent_list (window, window->priv->archive_file);
 			fr_window_archive_close (window);
+		}
+		else {
+			fr_window_archive_list (window);
+			return;
 		}
 		break;
 
@@ -6169,7 +6174,7 @@ fr_window_archive_new (FrWindow   *window,
 
 
 static void
-archive_load_ready_cb (GObject      *source_object,
+archive_list_ready_cb (GObject      *source_object,
 		       GAsyncResult *result,
 		       gpointer      user_data)
 {
@@ -6184,13 +6189,13 @@ archive_load_ready_cb (GObject      *source_object,
 
 
 static void
-fr_window_archive_load (FrWindow *window)
+fr_window_archive_list (FrWindow *window)
 {
 	_archive_operation_started (window, FR_ACTION_LISTING_CONTENT);
 	fr_archive_list (window->archive,
 			 window->priv->password,
 			 window->priv->cancellable,
-			 archive_load_ready_cb,
+			 archive_list_ready_cb,
 			 window);
 }
 
@@ -6205,22 +6210,16 @@ archive_open_ready_cb (GObject      *source_object,
 	GError    *error = NULL;
 
 	archive = fr_archive_open_finish (G_FILE (source_object), result, &error);
+	_fr_window_set_archive (window, archive);
 
 	g_signal_emit (window,
 		       fr_window_signals[ARCHIVE_LOADED],
 		       0,
-		       archive != NULL);
+		       error == NULL);
 
 	_archive_operation_completed (window, FR_ACTION_LOADING_ARCHIVE, error);
-	if ((archive == NULL) || (error != NULL)) {
-		_g_error_free (error);
-		return;
-	}
-
-	_fr_window_set_archive (window, archive);
-	fr_window_archive_load (window);
-
-	g_object_unref (archive);
+	_g_error_free (error);
+	_g_object_unref (archive);
 }
 
 
@@ -6331,7 +6330,7 @@ fr_window_archive_reload (FrWindow *window)
 	if (window->archive == NULL)
 		return;
 
-	fr_window_archive_load (window);
+	fr_window_archive_list (window);
 }
 
 
