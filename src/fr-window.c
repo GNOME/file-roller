@@ -616,8 +616,6 @@ fr_window_free_private_data (FrWindow *window)
 	g_free (window->priv->pd_last_message);
 	g_free (window->priv->extract_here_dir);
 
-	g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD, window->priv->sort_method);
-	g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE, window->priv->sort_type);
 	g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_LIST_MODE, window->priv->last_list_mode);
 
 	_g_object_unref (window->priv->settings_listing);
@@ -683,45 +681,10 @@ fr_window_finalize (GObject *object)
 }
 
 
-static void
-fr_window_class_init (FrWindowClass *klass)
-{
-	GObjectClass *gobject_class;
 
-	fr_window_parent_class = g_type_class_peek_parent (klass);
-
-	fr_window_signals[ARCHIVE_LOADED] =
-		g_signal_new ("archive-loaded",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
-			      NULL, NULL,
-			      fr_marshal_VOID__BOOLEAN,
-			      G_TYPE_NONE, 1,
-			      G_TYPE_BOOLEAN);
-	fr_window_signals[PROGRESS] =
-		g_signal_new ("progress",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, progress),
-			      NULL, NULL,
-			      fr_marshal_VOID__DOUBLE_STRING,
-			      G_TYPE_NONE, 2,
-			      G_TYPE_DOUBLE,
-			      G_TYPE_STRING);
-	fr_window_signals[READY] =
-		g_signal_new ("ready",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, ready),
-			      NULL, NULL,
-			      fr_marshal_VOID__POINTER,
-			      G_TYPE_NONE, 1,
-			      G_TYPE_POINTER);
-
-	gobject_class = G_OBJECT_CLASS (klass);
-	gobject_class->finalize = fr_window_finalize;
-}
+static void fr_window_update_file_list (FrWindow *window,
+					gboolean  update_view);
+static void fr_window_update_dir_tree  (FrWindow *window);
 
 
 static void
@@ -772,18 +735,14 @@ clipboard_owner_change_cb (GtkClipboard *clipboard,
 }
 
 
-static void fr_window_update_file_list (FrWindow *window,
-					gboolean  update_view);
-static void fr_window_update_dir_tree  (FrWindow *window);
-
-
 static void
-fr_window_realized (GtkWidget *widget,
-		    gpointer  *data)
+fr_window_realize (GtkWidget *widget)
 {
 	FrWindow     *window = FR_WINDOW (widget);
 	GIcon        *icon;
 	GtkClipboard *clipboard;
+
+	GTK_WIDGET_CLASS (fr_window_parent_class)->realize (widget);
 
 	window->priv->list_icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (window), GTK_ICON_SIZE_LARGE_TOOLBAR);
 	window->priv->tree_icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (window), GTK_ICON_SIZE_MENU);
@@ -799,14 +758,17 @@ fr_window_realized (GtkWidget *widget,
 			  G_CALLBACK (clipboard_owner_change_cb),
 			  window);
 
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+					      g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD),
+					      g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE));
+
 	fr_window_update_dir_tree (window);
 	fr_window_update_file_list (window, TRUE);
 }
 
 
 static void
-fr_window_unrealized (GtkWidget *widget,
-		      gpointer  *data)
+fr_window_unrealize (GtkWidget *widget)
 {
 	FrWindow     *window = FR_WINDOW (widget);
 	GtkClipboard *clipboard;
@@ -821,6 +783,74 @@ fr_window_unrealized (GtkWidget *widget,
 	g_signal_handlers_disconnect_by_func (clipboard,
 					      G_CALLBACK (clipboard_owner_change_cb),
 					      window);
+
+	GTK_WIDGET_CLASS (fr_window_parent_class)->unrealize (widget);
+}
+
+
+static void
+fr_window_unmap (GtkWidget *widget)
+{
+	FrWindow    *window = FR_WINDOW (widget);
+	GtkSortType  order;
+	int          column_id;
+
+	if (gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+						  &column_id,
+						  &order))
+	{
+		g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD, column_id);
+		g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE, order);
+	}
+
+	GTK_WIDGET_CLASS (fr_window_parent_class)->unmap (widget);
+}
+
+
+static void
+fr_window_class_init (FrWindowClass *klass)
+{
+	GObjectClass   *gobject_class;
+	GtkWidgetClass *widget_class;
+
+	fr_window_parent_class = g_type_class_peek_parent (klass);
+
+	fr_window_signals[ARCHIVE_LOADED] =
+		g_signal_new ("archive-loaded",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
+			      NULL, NULL,
+			      fr_marshal_VOID__BOOLEAN,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_BOOLEAN);
+	fr_window_signals[PROGRESS] =
+		g_signal_new ("progress",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrWindowClass, progress),
+			      NULL, NULL,
+			      fr_marshal_VOID__DOUBLE_STRING,
+			      G_TYPE_NONE, 2,
+			      G_TYPE_DOUBLE,
+			      G_TYPE_STRING);
+	fr_window_signals[READY] =
+		g_signal_new ("ready",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrWindowClass, ready),
+			      NULL, NULL,
+			      fr_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
+
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_window_finalize;
+
+	widget_class = GTK_WIDGET_CLASS (klass);
+	widget_class->realize = fr_window_realize;
+	widget_class->unrealize = fr_window_unrealize;
+	widget_class->unmap = fr_window_unmap;
 }
 
 
@@ -838,15 +868,6 @@ fr_window_init (FrWindow *window)
 	gtk_window_group_add_window (window->priv->window_group, GTK_WINDOW (window));
 
 	window->archive = NULL;
-
-	g_signal_connect (window,
-			  "realize",
-			  G_CALLBACK (fr_window_realized),
-			  NULL);
-	g_signal_connect (window,
-			  "unrealize",
-			  G_CALLBACK (fr_window_unrealized),
-			  NULL);
 }
 
 
@@ -1233,134 +1254,6 @@ _fr_window_stop_activity_mode (FrWindow *window)
 /* -- window_update_file_list -- */
 
 
-static gint
-sort_by_name (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-
-	return strcmp (fdata1->sort_key, fdata2->sort_key);
-}
-
-
-static gint
-sort_by_size (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2)) {
-		if (fdata1->dir_size > fdata2->dir_size)
-			return 1;
-		else
-			return -1;
-	}
-
-	if (fdata1->size == fdata2->size)
-		return sort_by_name (ptr1, ptr2);
-	else if (fdata1->size > fdata2->size)
-		return 1;
-	else
-		return -1;
-}
-
-
-static gint
-sort_by_type (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData    *fdata1 = *((FileData **) ptr1);
-	FileData    *fdata2 = *((FileData **) ptr2);
-	int          result;
-	const char  *desc1, *desc2;
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
-		return sort_by_name (ptr1, ptr2);
-
-	desc1 = g_content_type_get_description (fdata1->content_type);
-	desc2 = g_content_type_get_description (fdata2->content_type);
-
-	result = strcasecmp (desc1, desc2);
-	if (result == 0)
-		return sort_by_name (ptr1, ptr2);
-	else
-		return result;
-}
-
-
-static gint
-sort_by_time (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
-		return sort_by_name (ptr1, ptr2);
-
-	if (fdata1->modified == fdata2->modified)
-		return sort_by_name (ptr1, ptr2);
-	else if (fdata1->modified > fdata2->modified)
-		return 1;
-	else
-		return -1;
-}
-
-
-static gint
-sort_by_path (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-	int       result;
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
-		return sort_by_name (ptr1, ptr2);
-
-	/* 2 files */
-
-	result = strcasecmp (fdata1->path, fdata2->path);
-	if (result == 0)
-		return sort_by_name (ptr1, ptr2);
-	else
-		return result;
-}
-
-
 static guint64
 get_dir_size (FrWindow   *window,
 	      const char *current_dir,
@@ -1634,40 +1527,6 @@ get_emblem (FrWindow *window,
 }
 
 
-static int
-get_column_from_sort_method (FrWindowSortMethod sort_method)
-{
-	switch (sort_method) {
-	case FR_WINDOW_SORT_BY_NAME: return COLUMN_NAME;
-	case FR_WINDOW_SORT_BY_SIZE: return COLUMN_SIZE;
-	case FR_WINDOW_SORT_BY_TYPE: return COLUMN_TYPE;
-	case FR_WINDOW_SORT_BY_TIME: return COLUMN_TIME;
-	case FR_WINDOW_SORT_BY_PATH: return COLUMN_PATH;
-	default:
-		break;
-	}
-
-	return COLUMN_NAME;
-}
-
-
-static int
-get_sort_method_from_column (int column_id)
-{
-	switch (column_id) {
-	case COLUMN_NAME: return FR_WINDOW_SORT_BY_NAME;
-	case COLUMN_SIZE: return FR_WINDOW_SORT_BY_SIZE;
-	case COLUMN_TYPE: return FR_WINDOW_SORT_BY_TYPE;
-	case COLUMN_TIME: return FR_WINDOW_SORT_BY_TIME;
-	case COLUMN_PATH: return FR_WINDOW_SORT_BY_PATH;
-	default:
-		break;
-	}
-
-	return FR_WINDOW_SORT_BY_NAME;
-}
-
-
 static void
 add_selected_from_list_view (GtkTreeModel *model,
 			     GtkTreePath  *path,
@@ -1704,7 +1563,9 @@ static void
 fr_window_populate_file_list (FrWindow  *window,
 			      GPtrArray *files)
 {
-	int i;
+	int         sort_column_id;
+	GtkSortType order;
+	int         i;
 
 	if (! gtk_widget_get_realized (GTK_WIDGET (window))) {
 		_fr_window_stop_activity_mode (window);
@@ -1713,9 +1574,12 @@ fr_window_populate_file_list (FrWindow  *window,
 
 	gtk_list_store_clear (window->priv->list_store);
 
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+					      &sort_column_id,
+					      &order);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
-	 				      GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
-	 				      GTK_SORT_ASCENDING);
+	 				      GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
+	 				      0);
 
 	for (i = 0; i < files->len; i++) {
 		FileData    *fdata = g_ptr_array_index (files, i);
@@ -1800,8 +1664,8 @@ fr_window_populate_file_list (FrWindow  *window,
 	}
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
-					      get_column_from_sort_method (window->priv->sort_method),
-					      window->priv->sort_type);
+					      sort_column_id,
+					      order);
 
 	_fr_window_stop_activity_mode (window);
 }
@@ -4903,7 +4767,7 @@ add_file_list_columns (FrWindow    *window,
 		w = DEFAULT_NAME_COLUMN_WIDTH;
 	gtk_tree_view_column_set_fixed_width (column, w);
 	gtk_tree_view_column_set_resizable (column, TRUE);
-	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
+	gtk_tree_view_column_set_sort_column_id (column, FR_WINDOW_SORT_BY_NAME);
 	gtk_tree_view_column_set_cell_data_func (column, renderer,
 						 (GtkTreeCellDataFunc) filename_cell_data_func,
 						 window, NULL);
@@ -4925,7 +4789,7 @@ add_file_list_columns (FrWindow    *window,
 		gtk_tree_view_column_set_fixed_width (column, OTHER_COLUMNS_WIDTH);
 		gtk_tree_view_column_set_resizable (column, TRUE);
 
-		gtk_tree_view_column_set_sort_column_id (column, i);
+		gtk_tree_view_column_set_sort_column_id (column, FR_WINDOW_SORT_BY_NAME + 1 + j);
 
 		g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
 		g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
@@ -4943,12 +4807,26 @@ name_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_name (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+		result = strcmp (fdata1->sort_key, fdata2->sort_key);
+	}
+	else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+	}
+
+	return result;
 }
 
 
@@ -4958,12 +4836,29 @@ size_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_size (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+        	if (file_data_is_dir (fdata1))
+                	result = fdata1->dir_size - fdata2->dir_size;
+        	else
+        		result = fdata1->size - fdata2->size;
+        }
+        else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+        }
+
+	return result;
 }
 
 
@@ -4973,12 +4868,39 @@ type_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_type (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+        	if (file_data_is_dir (fdata1)) {
+                	result = strcmp (fdata1->sort_key, fdata2->sort_key);
+                	if (sort_order == GTK_SORT_DESCENDING)
+                		result = -1 * result;
+        	}
+        	else {
+        		const char  *desc1, *desc2;
+
+        		desc1 = g_content_type_get_description (fdata1->content_type);
+        		desc2 = g_content_type_get_description (fdata2->content_type);
+        		result = strcasecmp (desc1, desc2);
+        		if (result == 0)
+        			result = strcmp (fdata1->sort_key, fdata2->sort_key);
+        	}
+        }
+        else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+        }
+
+	return result;
 }
 
 
@@ -4988,12 +4910,32 @@ time_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_time (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+        	if (file_data_is_dir (fdata1)) {
+                	result = strcmp (fdata1->sort_key, fdata2->sort_key);
+                	if (sort_order == GTK_SORT_DESCENDING)
+                		result = -1 * result;
+        	}
+        	else
+        		result = fdata1->modified - fdata2->modified;
+        }
+        else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+        }
+
+	return result;
 }
 
 
@@ -5003,22 +4945,23 @@ path_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData *fdata1;
+	FileData *fdata2;
+	char     *path1;
+	char     *path2;
+	int       result;
 
-	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
-	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
+	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, COLUMN_PATH, &path1, -1);
+	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, COLUMN_PATH, &path2, -1);
 
-	return sort_by_path (&fdata1, &fdata2);
-}
+	result = strcmp (path1, path2);
+	if (result == 0)
+		result = strcmp (fdata1->sort_key, fdata2->sort_key);
 
+	g_free (path1);
+	g_free (path2);
 
-static int
-no_sort_column_sort_func (GtkTreeModel *model,
-			  GtkTreeIter  *a,
-			  GtkTreeIter  *b,
-			  gpointer      user_data)
-{
-	return -1;
+	return result;
 }
 
 
@@ -5031,27 +4974,6 @@ set_active (FrWindow   *window,
 
 	action = gtk_action_group_get_action (window->priv->actions, action_name);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), is_active);
-}
-
-
-static void
-sort_column_changed_cb (GtkTreeSortable *sortable,
-			gpointer         user_data)
-{
-	FrWindow    *window = user_data;
-	GtkSortType  order;
-	int          column_id;
-
-	if (! gtk_tree_sortable_get_sort_column_id (sortable,
-						    &column_id,
-						    &order))
-		return;
-
-	window->priv->sort_method = get_sort_method_from_column (column_id);
-	window->priv->sort_type = order;
-
-	/*set_active (window, get_action_from_sort_method (window->priv->sort_method), TRUE);
-	set_active (window, "SortReverseOrder", (window->priv->sort_type == GTK_SORT_DESCENDING));*/
 }
 
 
@@ -5248,28 +5170,6 @@ view_as_radio_action (GtkAction      *action,
 {
 	FrWindow *window = data;
 	fr_window_set_list_mode (window, gtk_radio_action_get_current_value (current));
-}
-
-
-static void
-fr_window_update_list_order (FrWindow *window)
-{
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
-					      get_column_from_sort_method (window->priv->sort_method),
-					      window->priv->sort_type);
-}
-
-
-static void
-sort_by_radio_action (GtkAction      *action,
-		      GtkRadioAction *current,
-		      gpointer        data)
-{
-	FrWindow *window = data;
-
-	window->priv->sort_method = gtk_radio_action_get_current_value (current);
-	window->priv->sort_type = GTK_SORT_ASCENDING;
-	fr_window_update_list_order (window);
 }
 
 
@@ -5508,9 +5408,6 @@ fr_window_construct (FrWindow *window)
 
 	/* Initialize Data. */
 
-	window->priv->sort_method = g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD);
-	window->priv->sort_type = g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE);
-
 	window->priv->list_mode = window->priv->last_list_mode = g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_LIST_MODE);
 	g_settings_set_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_PATH, (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT));
 
@@ -5597,24 +5494,20 @@ fr_window_construct (FrWindow *window)
 					 COLUMN_NAME);
 
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_NAME, name_column_sort_func,
+					 FR_WINDOW_SORT_BY_NAME, name_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_SIZE, size_column_sort_func,
+					 FR_WINDOW_SORT_BY_SIZE, size_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_TYPE, type_column_sort_func,
+					 FR_WINDOW_SORT_BY_TYPE, type_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_TIME, time_column_sort_func,
+					 FR_WINDOW_SORT_BY_TIME, time_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_PATH, path_column_sort_func,
+					 FR_WINDOW_SORT_BY_PATH, path_column_sort_func,
 					 NULL, NULL);
-
-	gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-						 no_sort_column_sort_func,
-						 NULL, NULL);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
@@ -5627,7 +5520,6 @@ fr_window_construct (FrWindow *window)
 			  "row_activated",
 			  G_CALLBACK (row_activated_cb),
 			  window);
-
 	g_signal_connect (G_OBJECT (window->priv->list_view),
 			  "button_press_event",
 			  G_CALLBACK (file_button_press_cb),
@@ -5644,12 +5536,6 @@ fr_window_construct (FrWindow *window)
 			  "leave_notify_event",
 			  G_CALLBACK (file_leave_notify_callback),
 			  window);
-
-	g_signal_connect (G_OBJECT (window->priv->list_store),
-			  "sort_column_changed",
-			  G_CALLBACK (sort_column_changed_cb),
-			  window);
-
 	g_signal_connect (G_OBJECT (window->priv->list_view),
 			  "drag_begin",
 			  G_CALLBACK (file_list_drag_begin),
@@ -5809,12 +5695,6 @@ fr_window_construct (FrWindow *window)
 					    n_view_as_entries,
 					    window->priv->list_mode,
 					    G_CALLBACK (view_as_radio_action),
-					    window);
-	gtk_action_group_add_radio_actions (actions,
-					    sort_by_entries,
-					    n_sort_by_entries,
-					    window->priv->sort_type,
-					    G_CALLBACK (sort_by_radio_action),
 					    window);
 
 	g_signal_connect (ui, "connect_proxy",
