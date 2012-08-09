@@ -26,8 +26,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "actions.h"
-#include "dlg-add-files.h"
-#include "dlg-add-folder.h"
+#include "dlg-add.h"
 #include "dlg-extract.h"
 #include "dlg-delete.h"
 #include "dlg-open-with.h"
@@ -204,18 +203,10 @@ activate_action_quit (GtkAction *action,
 
 
 void
-activate_action_add_files (GtkAction *action,
-			   gpointer   data)
+activate_action_add (GtkAction *action,
+		     gpointer   data)
 {
-	add_files_cb (NULL, data);
-}
-
-
-void
-activate_action_add_folder (GtkAction *action,
-			    gpointer   data)
-{
-	add_folder_cb (NULL, data);
+	dlg_add (FR_WINDOW (data));
 }
 
 
@@ -446,16 +437,6 @@ activate_action_reload (GtkAction *action,
 	FrWindow *window = data;
 
 	fr_window_archive_reload (window);
-}
-
-
-void
-activate_action_sort_reverse_order (GtkAction *action,
-				    gpointer   data)
-{
-	FrWindow *window = data;
-
-	fr_window_set_sort_type (window, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)) ? GTK_SORT_DESCENDING : GTK_SORT_ASCENDING);
 }
 
 

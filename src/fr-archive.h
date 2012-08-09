@@ -360,6 +360,7 @@ void          fr_archive_add_files               (FrArchive           *archive,
 						  GAsyncReadyCallback  callback,
 						  gpointer             user_data);
 void          fr_archive_add_files_with_filter   (FrArchive           *archive,
+						  GList               *file_list, /* GFile list */
 						  GFile               *base_dir,
 						  const char          *include_files,
 						  const char          *exclude_files,

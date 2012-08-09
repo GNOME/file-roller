@@ -49,6 +49,12 @@ typedef struct {
 	GFileInfo *info;
 } FileInfo;
 
+
+FileInfo *    file_info_new          (GFile             *file,
+				      GFileInfo         *info);
+void          file_info_free         (FileInfo          *file_info);
+void          file_info_list_free    (GList             *list);
+
 /* FileFilter */
 
 typedef struct _FileFilter FileFilter;
@@ -161,20 +167,5 @@ gboolean g_load_file_in_buffer       (GFile                 *file,
 				      void                  *buffer,
 				      gsize                  size,
 				      GError               **error);
-
-/* convenience macros */
-
-/**
- * g_directory_list_all_async:
- * @directory:
- * @base_dir:
- * @recursive:
- * @cancellable:
- * @done_func:
- * @done_data:
- *
- */
-#define g_directory_list_all_async(directory, base_dir, recursive, cancellable, done_func, done_data) \
-    g_directory_list_async ((directory), (base_dir), (recursive), TRUE, FALSE, FALSE, NULL, NULL, NULL, FALSE, (cancellable), (done_func), (done_data))
 
 #endif /* _GIO_UTILS_H */

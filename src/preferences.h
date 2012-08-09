@@ -43,7 +43,6 @@
 #define PREF_LISTING_SHOW_SIZE            "show-size"
 #define PREF_LISTING_SHOW_TIME            "show-time"
 #define PREF_LISTING_SHOW_PATH            "show-path"
-#define PREF_LISTING_USE_MIME_ICONS       "use-mime-icons"
 #define PREF_LISTING_NAME_COLUMN_WIDTH    "name-column-width"
 
 #define PREF_UI_WINDOW_WIDTH              "window-width"
@@ -62,7 +61,7 @@
 #define PREF_EXTRACT_RECREATE_FOLDERS     "recreate-folders"
 
 #define PREF_ADD_CURRENT_FOLDER           "current-folder"
-#define PREF_ADD_FILENAME                 "filename"
+#define PREF_ADD_SELECTED_FILES           "selected-files"
 #define PREF_ADD_INCLUDE_FILES            "include-files"
 #define PREF_ADD_EXCLUDE_FILES            "exclude-files"
 #define PREF_ADD_EXCLUDE_FOLDERS          "exclude-folders"

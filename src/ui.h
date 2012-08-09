@@ -38,22 +38,14 @@ static GtkActionEntry action_entries[] = {
 	  NULL, NULL,
 	  N_("Information about the program"),
 	  G_CALLBACK (activate_action_about) },
-	{ "AddFiles", FR_STOCK_ADD_FILES,
+	{ "Add", FR_STOCK_ADD_FILES,
 	  N_("_Add Files…"), NULL,
 	  N_("Add files to the archive"),
-	  G_CALLBACK (activate_action_add_files) },
-	{ "AddFiles_Toolbar", FR_STOCK_ADD_FILES,
+	  G_CALLBACK (activate_action_add) },
+	{ "Add_Toolbar", FR_STOCK_ADD_FILES,
 	  N_("Add Files"), NULL,
 	  N_("Add files to the archive"),
-	  G_CALLBACK (activate_action_add_files) },
-	{ "AddFolder", FR_STOCK_ADD_FOLDER,
-	  N_("Add a _Folder…"), NULL,
-	  N_("Add a folder to the archive"),
-	  G_CALLBACK (activate_action_add_folder) },
-	{ "AddFolder_Toolbar", FR_STOCK_ADD_FOLDER,
-	  N_("Add Folder"), NULL,
-	  N_("Add a folder to the archive"),
-	  G_CALLBACK (activate_action_add_folder) },
+	  G_CALLBACK (activate_action_add) },
 	{ "Close", GTK_STOCK_CLOSE,
 	  NULL, NULL,
 	  N_("Close the current archive"),
@@ -215,11 +207,6 @@ static GtkToggleActionEntry action_toggle_entries[] = {
 	  N_("View the statusbar"),
 	  G_CALLBACK (activate_action_view_statusbar),
 	  TRUE },
-	{ "SortReverseOrder", NULL,
-	  N_("_Reversed Order"), NULL,
-	  N_("Reverse the list order"),
-	  G_CALLBACK (activate_action_sort_reverse_order),
-	  FALSE },
 	{ "ViewFolders", NULL,
 	  N_("_Folders"), "F9",
 	  N_("View the folders pane"),
@@ -238,28 +225,6 @@ static GtkRadioActionEntry view_as_entries[] = {
 	  " ", FR_WINDOW_LIST_MODE_AS_DIR },
 };
 static guint n_view_as_entries = G_N_ELEMENTS (view_as_entries);
-
-
-static GtkRadioActionEntry sort_by_entries[] = {
-	{ "SortByName", NULL,
-	  N_("by _Name"), NULL,
-	  N_("Sort file list by name"), FR_WINDOW_SORT_BY_NAME },
-	{ "SortBySize", NULL,
-	  N_("by _Size"), NULL,
-	  N_("Sort file list by file size"), FR_WINDOW_SORT_BY_SIZE },
-	{ "SortByType", NULL,
-	  N_("by T_ype"), NULL,
-	  N_("Sort file list by type"), FR_WINDOW_SORT_BY_TYPE },
-	{ "SortByDate", NULL,
-	  N_("by _Date Modified"), NULL,
-	  N_("Sort file list by modification time"), FR_WINDOW_SORT_BY_TIME },
-	{ "SortByLocation", NULL,
-	  /* Translators: this is the "sort by file location" menu item */
-	  N_("by _Location"), NULL,
-	  /* Translators: location is the file location */
-	  N_("Sort file list by location"), FR_WINDOW_SORT_BY_PATH },
-};
-static guint n_sort_by_entries = G_N_ELEMENTS (sort_by_entries);
 
 
 #endif /* UI_H */

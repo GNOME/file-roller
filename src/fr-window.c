@@ -52,6 +52,7 @@
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
+#include "gth-icon-cache.h"
 #include "fr-init.h"
 #include "gtk-utils.h"
 #include "open-file.h"
@@ -82,12 +83,6 @@
 #define DIR_TREE_ICON_SIZE GTK_ICON_SIZE_MENU
 
 #define BAD_CHARS "/\\*"
-
-static GHashTable     *pixbuf_hash = NULL;
-static GHashTable     *tree_pixbuf_hash = NULL;
-static GtkIconTheme   *icon_theme = NULL;
-static int             file_list_icon_size = 0;
-static int             dir_tree_icon_size = 0;
 
 #define XDS_FILENAME "xds.txt"
 #define MAX_XDS_ATOM_VAL_LEN 4096
@@ -408,6 +403,9 @@ struct _FrWindowPrivate {
 
 	GtkWindow        *load_error_parent_window;
 	gboolean          showing_error_dialog;
+
+	GthIconCache     *list_icon_cache;
+	GthIconCache     *tree_icon_cache;
 };
 
 
@@ -433,15 +431,6 @@ fr_window_free_batch_data (FrWindow *window)
 
 	g_free (window->priv->batch_title);
 	window->priv->batch_title = NULL;
-}
-
-
-static void
-gh_unref_pixbuf (gpointer key,
-		 gpointer value,
-		 gpointer user_data)
-{
-	g_object_unref (value);
 }
 
 
@@ -567,7 +556,7 @@ fr_window_free_private_data (FrWindow *window)
 	}
 
 	if (window->priv->theme_changed_handler_id != 0)
-		g_signal_handler_disconnect (icon_theme, window->priv->theme_changed_handler_id);
+		g_signal_handler_disconnect (gtk_icon_theme_get_default (), window->priv->theme_changed_handler_id);
 
 	fr_window_history_clear (window);
 
@@ -627,8 +616,6 @@ fr_window_free_private_data (FrWindow *window)
 	g_free (window->priv->pd_last_message);
 	g_free (window->priv->extract_here_dir);
 
-	g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD, window->priv->sort_method);
-	g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE, window->priv->sort_type);
 	g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_LIST_MODE, window->priv->last_list_mode);
 
 	_g_object_unref (window->priv->settings_listing);
@@ -690,66 +677,14 @@ fr_window_finalize (GObject *object)
 		window->priv = NULL;
 	}
 
-	if (gtk_application_get_windows (GTK_APPLICATION (g_application_get_default ())) == NULL) {
-		if (pixbuf_hash != NULL) {
-			g_hash_table_foreach (pixbuf_hash,
-					      gh_unref_pixbuf,
-					      NULL);
-			g_hash_table_destroy (pixbuf_hash);
-			pixbuf_hash = NULL;
-		}
-		if (tree_pixbuf_hash != NULL) {
-			g_hash_table_foreach (tree_pixbuf_hash,
-					      gh_unref_pixbuf,
-					      NULL);
-			g_hash_table_destroy (tree_pixbuf_hash);
-			tree_pixbuf_hash = NULL;
-		}
-	}
-
 	G_OBJECT_CLASS (fr_window_parent_class)->finalize (object);
 }
 
 
-static void
-fr_window_class_init (FrWindowClass *klass)
-{
-	GObjectClass *gobject_class;
 
-	fr_window_parent_class = g_type_class_peek_parent (klass);
-
-	fr_window_signals[ARCHIVE_LOADED] =
-		g_signal_new ("archive-loaded",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
-			      NULL, NULL,
-			      fr_marshal_VOID__BOOLEAN,
-			      G_TYPE_NONE, 1,
-			      G_TYPE_BOOLEAN);
-	fr_window_signals[PROGRESS] =
-		g_signal_new ("progress",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, progress),
-			      NULL, NULL,
-			      fr_marshal_VOID__DOUBLE_STRING,
-			      G_TYPE_NONE, 2,
-			      G_TYPE_DOUBLE,
-			      G_TYPE_STRING);
-	fr_window_signals[READY] =
-		g_signal_new ("ready",
-			      G_TYPE_FROM_CLASS (klass),
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (FrWindowClass, ready),
-			      NULL, NULL,
-			      fr_marshal_VOID__POINTER,
-			      G_TYPE_NONE, 1,
-			      G_TYPE_POINTER);
-
-	gobject_class = G_OBJECT_CLASS (klass);
-	gobject_class->finalize = fr_window_finalize;
-}
+static void fr_window_update_file_list (FrWindow *window,
+					gboolean  update_view);
+static void fr_window_update_dir_tree  (FrWindow *window);
 
 
 static void
@@ -801,29 +736,121 @@ clipboard_owner_change_cb (GtkClipboard *clipboard,
 
 
 static void
-fr_window_realized (GtkWidget *window,
-		    gpointer  *data)
+fr_window_realize (GtkWidget *widget)
 {
+	FrWindow     *window = FR_WINDOW (widget);
+	GIcon        *icon;
 	GtkClipboard *clipboard;
 
-	clipboard = gtk_widget_get_clipboard (window, FR_CLIPBOARD);
+	GTK_WIDGET_CLASS (fr_window_parent_class)->realize (widget);
+
+	window->priv->list_icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (window), GTK_ICON_SIZE_LARGE_TOOLBAR);
+	window->priv->tree_icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (window), GTK_ICON_SIZE_MENU);
+
+	icon = g_content_type_get_icon ("text/plain");
+	gth_icon_cache_set_fallback (window->priv->list_icon_cache, icon);
+	gth_icon_cache_set_fallback (window->priv->tree_icon_cache, icon);
+	g_object_unref (icon);
+
+	clipboard = gtk_widget_get_clipboard (widget, FR_CLIPBOARD);
 	g_signal_connect (clipboard,
 			  "owner_change",
 			  G_CALLBACK (clipboard_owner_change_cb),
 			  window);
+
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+					      g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD),
+					      g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE));
+
+	fr_window_update_dir_tree (window);
+	fr_window_update_file_list (window, TRUE);
 }
 
 
 static void
-fr_window_unrealized (GtkWidget *window,
-		      gpointer  *data)
+fr_window_unrealize (GtkWidget *widget)
 {
+	FrWindow     *window = FR_WINDOW (widget);
 	GtkClipboard *clipboard;
 
-	clipboard = gtk_widget_get_clipboard (window, FR_CLIPBOARD);
+	gth_icon_cache_free (window->priv->list_icon_cache);
+	window->priv->list_icon_cache = NULL;
+
+	gth_icon_cache_free (window->priv->tree_icon_cache);
+	window->priv->tree_icon_cache = NULL;
+
+	clipboard = gtk_widget_get_clipboard (widget, FR_CLIPBOARD);
 	g_signal_handlers_disconnect_by_func (clipboard,
 					      G_CALLBACK (clipboard_owner_change_cb),
 					      window);
+
+	GTK_WIDGET_CLASS (fr_window_parent_class)->unrealize (widget);
+}
+
+
+static void
+fr_window_unmap (GtkWidget *widget)
+{
+	FrWindow    *window = FR_WINDOW (widget);
+	GtkSortType  order;
+	int          column_id;
+
+	if (gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+						  &column_id,
+						  &order))
+	{
+		g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD, column_id);
+		g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE, order);
+	}
+
+	GTK_WIDGET_CLASS (fr_window_parent_class)->unmap (widget);
+}
+
+
+static void
+fr_window_class_init (FrWindowClass *klass)
+{
+	GObjectClass   *gobject_class;
+	GtkWidgetClass *widget_class;
+
+	fr_window_parent_class = g_type_class_peek_parent (klass);
+
+	fr_window_signals[ARCHIVE_LOADED] =
+		g_signal_new ("archive-loaded",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrWindowClass, archive_loaded),
+			      NULL, NULL,
+			      fr_marshal_VOID__BOOLEAN,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_BOOLEAN);
+	fr_window_signals[PROGRESS] =
+		g_signal_new ("progress",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrWindowClass, progress),
+			      NULL, NULL,
+			      fr_marshal_VOID__DOUBLE_STRING,
+			      G_TYPE_NONE, 2,
+			      G_TYPE_DOUBLE,
+			      G_TYPE_STRING);
+	fr_window_signals[READY] =
+		g_signal_new ("ready",
+			      G_TYPE_FROM_CLASS (klass),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (FrWindowClass, ready),
+			      NULL, NULL,
+			      fr_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
+
+	gobject_class = G_OBJECT_CLASS (klass);
+	gobject_class->finalize = fr_window_finalize;
+
+	widget_class = GTK_WIDGET_CLASS (klass);
+	widget_class->realize = fr_window_realize;
+	widget_class->unrealize = fr_window_unrealize;
+	widget_class->unmap = fr_window_unmap;
 }
 
 
@@ -841,15 +868,6 @@ fr_window_init (FrWindow *window)
 	gtk_window_group_add_window (window->priv->window_group, GTK_WINDOW (window));
 
 	window->archive = NULL;
-
-	g_signal_connect (window,
-			  "realize",
-			  G_CALLBACK (fr_window_realized),
-			  NULL);
-	g_signal_connect (window,
-			  "unrealize",
-			  G_CALLBACK (fr_window_unrealized),
-			  NULL);
 }
 
 
@@ -982,10 +1000,8 @@ fr_window_update_sensitivity (FrWindow *window)
 	one_file_selected    = n_selected == 1;
 	dir_selected         = selection_has_a_dir (window);
 
-	set_sensitive (window, "AddFiles", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFiles_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFolder", ! no_archive && ! ro && ! running && can_store_many_files);
-	set_sensitive (window, "AddFolder_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "Add", ! no_archive && ! ro && ! running && can_store_many_files);
+	set_sensitive (window, "Add_Toolbar", ! no_archive && ! ro && ! running && can_store_many_files);
 	set_sensitive (window, "Copy", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Cut", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
 	set_sensitive (window, "Delete", ! no_archive && ! ro && ! window->priv->archive_new && ! running && can_store_many_files);
@@ -1238,134 +1254,6 @@ _fr_window_stop_activity_mode (FrWindow *window)
 /* -- window_update_file_list -- */
 
 
-static gint
-sort_by_name (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-
-	return strcmp (fdata1->sort_key, fdata2->sort_key);
-}
-
-
-static gint
-sort_by_size (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2)) {
-		if (fdata1->dir_size > fdata2->dir_size)
-			return 1;
-		else
-			return -1;
-	}
-
-	if (fdata1->size == fdata2->size)
-		return sort_by_name (ptr1, ptr2);
-	else if (fdata1->size > fdata2->size)
-		return 1;
-	else
-		return -1;
-}
-
-
-static gint
-sort_by_type (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData    *fdata1 = *((FileData **) ptr1);
-	FileData    *fdata2 = *((FileData **) ptr2);
-	int          result;
-	const char  *desc1, *desc2;
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
-		return sort_by_name (ptr1, ptr2);
-
-	desc1 = g_content_type_get_description (fdata1->content_type);
-	desc2 = g_content_type_get_description (fdata2->content_type);
-
-	result = strcasecmp (desc1, desc2);
-	if (result == 0)
-		return sort_by_name (ptr1, ptr2);
-	else
-		return result;
-}
-
-
-static gint
-sort_by_time (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
-		return sort_by_name (ptr1, ptr2);
-
-	if (fdata1->modified == fdata2->modified)
-		return sort_by_name (ptr1, ptr2);
-	else if (fdata1->modified > fdata2->modified)
-		return 1;
-	else
-		return -1;
-}
-
-
-static gint
-sort_by_path (gconstpointer  ptr1,
-	      gconstpointer  ptr2)
-{
-	FileData *fdata1 = *((FileData **) ptr1);
-	FileData *fdata2 = *((FileData **) ptr2);
-	int       result;
-
-	if (file_data_is_dir (fdata1) != file_data_is_dir (fdata2)) {
-		if (file_data_is_dir (fdata1))
-			return -1;
-		else
-			return 1;
-	}
-	else if (file_data_is_dir (fdata1) && file_data_is_dir (fdata2))
-		return sort_by_name (ptr1, ptr2);
-
-	/* 2 files */
-
-	result = strcasecmp (fdata1->path, fdata2->path);
-	if (result == 0)
-		return sort_by_name (ptr1, ptr2);
-	else
-		return result;
-}
-
-
 static guint64
 get_dir_size (FrWindow   *window,
 	      const char *current_dir,
@@ -1575,136 +1463,67 @@ get_parent_dir (const char *current_dir)
 
 
 static GdkPixbuf *
-get_mime_type_icon (const char *mime_type)
+get_mime_type_icon (FrWindow   *window,
+		    const char *mime_type)
 {
-	GdkPixbuf *pixbuf = NULL;
+	GIcon     *icon;
+	GdkPixbuf *pixbuf;
 
-	pixbuf = g_hash_table_lookup (tree_pixbuf_hash, mime_type);
-	if (pixbuf != NULL) {
-		g_object_ref (G_OBJECT (pixbuf));
-		return pixbuf;
-	}
+	icon = g_content_type_get_icon (mime_type);
+	pixbuf = gth_icon_cache_get_pixbuf (window->priv->tree_icon_cache, icon);
 
-	pixbuf = _g_mime_type_get_icon (mime_type, file_list_icon_size, icon_theme);
-	if (pixbuf == NULL)
-		return NULL;
-
-	pixbuf = gdk_pixbuf_copy (pixbuf);
-	g_hash_table_insert (tree_pixbuf_hash, (gpointer) mime_type, pixbuf);
-	g_object_ref (G_OBJECT (pixbuf));
+	g_object_unref (icon);
 
 	return pixbuf;
 }
 
 
 static GdkPixbuf *
-get_icon (GtkWidget *widget,
+get_icon (FrWindow  *window,
 	  FileData  *fdata)
 {
-	GdkPixbuf  *pixbuf = NULL;
-	const char *content_type;
-	GIcon      *icon;
+	GIcon     *icon = NULL;
+	GdkPixbuf *pixbuf = NULL;
 
-	if (fdata->link != NULL) {
-		pixbuf = g_hash_table_lookup (pixbuf_hash, "emblem-symbolic-link");
-		if (pixbuf != NULL)
-			return g_object_ref (G_OBJECT (pixbuf));
+	if (fdata->link != NULL)
+		icon = g_themed_icon_new ("emblem-symbolic-link");
+	else {
+		const char *content_type;
 
-		pixbuf = gtk_icon_theme_load_icon (icon_theme,
-						   "emblem-symbolic-link",
-						   file_list_icon_size,
-						   0,
-						   NULL);
-		g_hash_table_insert (pixbuf_hash, (gpointer) "emblem-symbolic-link", pixbuf);
-
-		return g_object_ref (G_OBJECT (pixbuf));
+		if (file_data_is_dir (fdata))
+			content_type = MIME_TYPE_DIRECTORY;
+		else
+			content_type = fdata->content_type;
+		icon = g_content_type_get_icon (content_type);
 	}
 
-	if (file_data_is_dir (fdata))
-		content_type = MIME_TYPE_DIRECTORY;
-	else
-		content_type = fdata->content_type;
-
-	/* look in the hash table. */
-
-	pixbuf = g_hash_table_lookup (pixbuf_hash, content_type);
-	if (pixbuf != NULL)
-		return g_object_ref (G_OBJECT (pixbuf));
-
-	icon = g_content_type_get_icon (content_type);
-	pixbuf = _g_icon_get_pixbuf (icon, file_list_icon_size, icon_theme);
+	pixbuf = gth_icon_cache_get_pixbuf (window->priv->list_icon_cache, icon);
 	g_object_unref (icon);
 
-	if (pixbuf == NULL)
-		return NULL;
-
-	g_hash_table_insert (pixbuf_hash, (gpointer) content_type, pixbuf);
-
-	return g_object_ref (G_OBJECT (pixbuf));
+	return pixbuf;
 }
 
 
 static GdkPixbuf *
-get_emblem (GtkWidget *widget,
-	    FileData  *fdata)
+get_emblem (FrWindow *window,
+	    FileData *fdata)
 {
-	const char *emblem_name = NULL;
+	const char *emblem_name;
+	GIcon      *icon;
 	GdkPixbuf  *pixbuf;
 
+	emblem_name = NULL;
 	if (fdata->encrypted)
 		emblem_name = "emblem-nowrite";
 
 	if (emblem_name == NULL)
 		return NULL;
 
-	pixbuf = g_hash_table_lookup (pixbuf_hash, emblem_name);
-	if (pixbuf != NULL) {
-		g_object_ref (G_OBJECT (pixbuf));
-		return pixbuf;
-	}
+	icon = g_themed_icon_new (emblem_name);
+	pixbuf = gth_icon_cache_get_pixbuf (window->priv->list_icon_cache, icon);
+	g_object_unref (icon);
 
-	pixbuf = gtk_icon_theme_load_icon (icon_theme,
-					   emblem_name,
-					   file_list_icon_size,
-					   0,
-					   NULL);
-	g_hash_table_insert (pixbuf_hash, (gpointer) emblem_name, pixbuf);
-
-	return g_object_ref (G_OBJECT (pixbuf));
-}
-
-
-static int
-get_column_from_sort_method (FrWindowSortMethod sort_method)
-{
-	switch (sort_method) {
-	case FR_WINDOW_SORT_BY_NAME: return COLUMN_NAME;
-	case FR_WINDOW_SORT_BY_SIZE: return COLUMN_SIZE;
-	case FR_WINDOW_SORT_BY_TYPE: return COLUMN_TYPE;
-	case FR_WINDOW_SORT_BY_TIME: return COLUMN_TIME;
-	case FR_WINDOW_SORT_BY_PATH: return COLUMN_PATH;
-	default:
-		break;
-	}
-
-	return COLUMN_NAME;
-}
-
-
-static int
-get_sort_method_from_column (int column_id)
-{
-	switch (column_id) {
-	case COLUMN_NAME: return FR_WINDOW_SORT_BY_NAME;
-	case COLUMN_SIZE: return FR_WINDOW_SORT_BY_SIZE;
-	case COLUMN_TYPE: return FR_WINDOW_SORT_BY_TYPE;
-	case COLUMN_TIME: return FR_WINDOW_SORT_BY_TIME;
-	case COLUMN_PATH: return FR_WINDOW_SORT_BY_PATH;
-	default:
-		break;
-	}
-
-	return FR_WINDOW_SORT_BY_NAME;
+	return pixbuf;
 }
 
 
@@ -1744,13 +1563,23 @@ static void
 fr_window_populate_file_list (FrWindow  *window,
 			      GPtrArray *files)
 {
-	int i;
+	int         sort_column_id;
+	GtkSortType order;
+	int         i;
+
+	if (! gtk_widget_get_realized (GTK_WIDGET (window))) {
+		_fr_window_stop_activity_mode (window);
+		return;
+	}
 
 	gtk_list_store_clear (window->priv->list_store);
 
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
+					      &sort_column_id,
+					      &order);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
-	 				      GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
-	 				      GTK_SORT_ASCENDING);
+	 				      GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
+	 				      0);
 
 	for (i = 0; i < files->len; i++) {
 		FileData    *fdata = g_ptr_array_index (files, i);
@@ -1763,9 +1592,9 @@ fr_window_populate_file_list (FrWindow  *window,
 
 		gtk_list_store_append (window->priv->list_store, &iter);
 
-		icon = get_icon (GTK_WIDGET (window), fdata);
+		icon = get_icon (window, fdata);
+		emblem = get_emblem (window, fdata);
 		utf8_name = g_filename_display_name (fdata->list_name);
-		emblem = get_emblem (GTK_WIDGET (window), fdata);
 
 		if (file_data_is_dir (fdata)) {
 			char *utf8_path;
@@ -1828,16 +1657,15 @@ fr_window_populate_file_list (FrWindow  *window,
 			g_free (s_size);
 			g_free (s_time);
 		}
+
 		g_free (utf8_name);
-		if (icon != NULL)
-			g_object_unref (icon);
-		if (emblem != NULL)
-			g_object_unref (emblem);
+		_g_object_unref (icon);
+		_g_object_unref (emblem);
 	}
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
-					      get_column_from_sort_method (window->priv->sort_method),
-					      window->priv->sort_type);
+					      sort_column_id,
+					      order);
 
 	_fr_window_stop_activity_mode (window);
 }
@@ -1943,6 +1771,9 @@ fr_window_update_dir_tree (FrWindow *window)
 	int         i;
 	GdkPixbuf  *icon;
 
+	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
+		return;
+
 	gtk_tree_store_clear (window->priv->tree_store);
 
 	if (! window->priv->view_folders
@@ -2003,7 +1834,7 @@ fr_window_update_dir_tree (FrWindow *window)
 
 	/**/
 
-	icon = get_mime_type_icon (MIME_TYPE_ARCHIVE);
+	icon = get_mime_type_icon (window, MIME_TYPE_ARCHIVE);
 	{
 		GtkTreeIter  node;
 		char        *name;
@@ -2025,7 +1856,7 @@ fr_window_update_dir_tree (FrWindow *window)
 
 	/**/
 
-	icon = get_mime_type_icon (MIME_TYPE_DIRECTORY);
+	icon = get_mime_type_icon (window, MIME_TYPE_DIRECTORY);
 	for (i = 0; i < dirs->len; i++) {
 		char        *dir = g_ptr_array_index (dirs, i);
 		char        *parent_dir;
@@ -2081,6 +1912,9 @@ fr_window_update_file_list (FrWindow *window,
 {
 	GPtrArray  *files;
 	gboolean    free_files = FALSE;
+
+	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
+		return;
 
 	if (gtk_widget_get_realized (window->priv->list_view))
 		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->list_view), 0, 0);
@@ -4881,7 +4715,7 @@ add_file_list_columns (FrWindow    *window,
 {
 	static char       *titles[] = {NC_("File", "Size"),
 				       NC_("File", "Type"),
-				       NC_("File", "Date Modified"),
+				       NC_("File", "Modified"),
 				       NC_("File", "Location")};
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
@@ -4933,7 +4767,7 @@ add_file_list_columns (FrWindow    *window,
 		w = DEFAULT_NAME_COLUMN_WIDTH;
 	gtk_tree_view_column_set_fixed_width (column, w);
 	gtk_tree_view_column_set_resizable (column, TRUE);
-	gtk_tree_view_column_set_sort_column_id (column, COLUMN_NAME);
+	gtk_tree_view_column_set_sort_column_id (column, FR_WINDOW_SORT_BY_NAME);
 	gtk_tree_view_column_set_cell_data_func (column, renderer,
 						 (GtkTreeCellDataFunc) filename_cell_data_func,
 						 window, NULL);
@@ -4955,7 +4789,7 @@ add_file_list_columns (FrWindow    *window,
 		gtk_tree_view_column_set_fixed_width (column, OTHER_COLUMNS_WIDTH);
 		gtk_tree_view_column_set_resizable (column, TRUE);
 
-		gtk_tree_view_column_set_sort_column_id (column, i);
+		gtk_tree_view_column_set_sort_column_id (column, FR_WINDOW_SORT_BY_NAME + 1 + j);
 
 		g_value_init (&value, PANGO_TYPE_ELLIPSIZE_MODE);
 		g_value_set_enum (&value, PANGO_ELLIPSIZE_END);
@@ -4973,12 +4807,26 @@ name_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_name (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+		result = strcmp (fdata1->sort_key, fdata2->sort_key);
+	}
+	else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+	}
+
+	return result;
 }
 
 
@@ -4988,12 +4836,29 @@ size_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_size (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+        	if (file_data_is_dir (fdata1))
+                	result = fdata1->dir_size - fdata2->dir_size;
+        	else
+        		result = fdata1->size - fdata2->size;
+        }
+        else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+        }
+
+	return result;
 }
 
 
@@ -5003,12 +4868,39 @@ type_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_type (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+        	if (file_data_is_dir (fdata1)) {
+                	result = strcmp (fdata1->sort_key, fdata2->sort_key);
+                	if (sort_order == GTK_SORT_DESCENDING)
+                		result = -1 * result;
+        	}
+        	else {
+        		const char  *desc1, *desc2;
+
+        		desc1 = g_content_type_get_description (fdata1->content_type);
+        		desc2 = g_content_type_get_description (fdata2->content_type);
+        		result = strcasecmp (desc1, desc2);
+        		if (result == 0)
+        			result = strcmp (fdata1->sort_key, fdata2->sort_key);
+        	}
+        }
+        else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+        }
+
+	return result;
 }
 
 
@@ -5018,12 +4910,32 @@ time_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData    *fdata1;
+	FileData    *fdata2;
+	GtkSortType  sort_order;
+	int          result;
+
+	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
 	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
 	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
 
-	return sort_by_time (&fdata1, &fdata2);
+	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
+        	if (file_data_is_dir (fdata1)) {
+                	result = strcmp (fdata1->sort_key, fdata2->sort_key);
+                	if (sort_order == GTK_SORT_DESCENDING)
+                		result = -1 * result;
+        	}
+        	else
+        		result = fdata1->modified - fdata2->modified;
+        }
+        else {
+        	result = file_data_is_dir (fdata1) ? -1 : 1;
+        	if (sort_order == GTK_SORT_DESCENDING)
+        		result = -1 * result;
+        }
+
+	return result;
 }
 
 
@@ -5033,22 +4945,23 @@ path_column_sort_func (GtkTreeModel *model,
 		       GtkTreeIter  *b,
 		       gpointer      user_data)
 {
-	FileData *fdata1, *fdata2;
+	FileData *fdata1;
+	FileData *fdata2;
+	char     *path1;
+	char     *path2;
+	int       result;
 
-	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, -1);
-	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, -1);
+	gtk_tree_model_get (model, a, COLUMN_FILE_DATA, &fdata1, COLUMN_PATH, &path1, -1);
+	gtk_tree_model_get (model, b, COLUMN_FILE_DATA, &fdata2, COLUMN_PATH, &path2, -1);
 
-	return sort_by_path (&fdata1, &fdata2);
-}
+	result = strcmp (path1, path2);
+	if (result == 0)
+		result = strcmp (fdata1->sort_key, fdata2->sort_key);
 
+	g_free (path1);
+	g_free (path2);
 
-static int
-no_sort_column_sort_func (GtkTreeModel *model,
-			  GtkTreeIter  *a,
-			  GtkTreeIter  *b,
-			  gpointer      user_data)
-{
-	return -1;
+	return result;
 }
 
 
@@ -5061,27 +4974,6 @@ set_active (FrWindow   *window,
 
 	action = gtk_action_group_get_action (window->priv->actions, action_name);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), is_active);
-}
-
-
-static void
-sort_column_changed_cb (GtkTreeSortable *sortable,
-			gpointer         user_data)
-{
-	FrWindow    *window = user_data;
-	GtkSortType  order;
-	int          column_id;
-
-	if (! gtk_tree_sortable_get_sort_column_id (sortable,
-						    &column_id,
-						    &order))
-		return;
-
-	window->priv->sort_method = get_sort_method_from_column (column_id);
-	window->priv->sort_type = order;
-
-	/*set_active (window, get_action_from_sort_method (window->priv->sort_method), TRUE);
-	set_active (window, "SortReverseOrder", (window->priv->sort_type == GTK_SORT_DESCENDING));*/
 }
 
 
@@ -5188,52 +5080,11 @@ pref_click_policy_changed (GSettings  *settings,
 
 
 static void
-pref_use_mime_icons_changed (GSettings  *settings,
-	  		     const char *key,
-	  		     gpointer    user_data)
+theme_changed_cb (GtkIconTheme *theme,
+		  FrWindow     *window)
 {
-	FrWindow *window = user_data;
-
-	if (pixbuf_hash != NULL) {
-		g_hash_table_foreach (pixbuf_hash,
-				      gh_unref_pixbuf,
-				      NULL);
-		g_hash_table_destroy (pixbuf_hash);
-		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
-	}
-	if (tree_pixbuf_hash != NULL) {
-		g_hash_table_foreach (tree_pixbuf_hash,
-				      gh_unref_pixbuf,
-				      NULL);
-		g_hash_table_destroy (tree_pixbuf_hash);
-		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
-	}
-
-	fr_window_update_file_list (window, FALSE);
-	fr_window_update_dir_tree (window);
-}
-
-
-static void
-theme_changed_cb (GtkIconTheme *theme, FrWindow *window)
-{
-	file_list_icon_size = _gtk_widget_lookup_for_size (GTK_WIDGET (window), FILE_LIST_ICON_SIZE);
-	dir_tree_icon_size = _gtk_widget_lookup_for_size (GTK_WIDGET (window), DIR_TREE_ICON_SIZE);
-
-	if (pixbuf_hash != NULL) {
-		g_hash_table_foreach (pixbuf_hash,
-				      gh_unref_pixbuf,
-				      NULL);
-		g_hash_table_destroy (pixbuf_hash);
-		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
-	}
-	if (tree_pixbuf_hash != NULL) {
-		g_hash_table_foreach (tree_pixbuf_hash,
-				      gh_unref_pixbuf,
-				      NULL);
-		g_hash_table_destroy (tree_pixbuf_hash);
-		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
-	}
+	gth_icon_cache_clear (window->priv->list_icon_cache);
+	gth_icon_cache_clear (window->priv->tree_icon_cache);
 
 	fr_window_update_file_list (window, TRUE);
 	fr_window_update_dir_tree (window);
@@ -5319,28 +5170,6 @@ view_as_radio_action (GtkAction      *action,
 {
 	FrWindow *window = data;
 	fr_window_set_list_mode (window, gtk_radio_action_get_current_value (current));
-}
-
-
-static void
-fr_window_update_list_order (FrWindow *window)
-{
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
-					      get_column_from_sort_method (window->priv->sort_method),
-					      window->priv->sort_type);
-}
-
-
-static void
-sort_by_radio_action (GtkAction      *action,
-		      GtkRadioAction *current,
-		      gpointer        data)
-{
-	FrWindow *window = data;
-
-	window->priv->sort_method = gtk_radio_action_get_current_value (current);
-	window->priv->sort_type = GTK_SORT_ASCENDING;
-	fr_window_update_list_order (window);
 }
 
 
@@ -5511,15 +5340,6 @@ fr_window_construct (FrWindow *window)
 	GError             *error = NULL;
 	const char * const *schemas;
 
-	/* data common to all windows. */
-
-	if (pixbuf_hash == NULL)
-		pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
-	if (tree_pixbuf_hash == NULL)
-		tree_pixbuf_hash = g_hash_table_new (g_str_hash, g_str_equal);
-	if (icon_theme == NULL)
-		icon_theme = gtk_icon_theme_get_default ();
-
 	/* Create the settings objects */
 
 	window->priv->settings_listing = g_settings_new (FILE_ROLLER_SCHEMA_LISTING);
@@ -5558,13 +5378,10 @@ fr_window_construct (FrWindow *window)
 			  window);
 
 	window->priv->theme_changed_handler_id =
-		g_signal_connect (icon_theme,
+		g_signal_connect (gtk_icon_theme_get_default (),
 				  "changed",
 				  G_CALLBACK (theme_changed_cb),
 				  window);
-
-	file_list_icon_size = _gtk_widget_lookup_for_size (GTK_WIDGET (window), FILE_LIST_ICON_SIZE);
-	dir_tree_icon_size = _gtk_widget_lookup_for_size (GTK_WIDGET (window), DIR_TREE_ICON_SIZE);
 
 	gtk_window_set_default_size (GTK_WINDOW (window),
 				     g_settings_get_int (window->priv->settings_ui, PREF_UI_WINDOW_WIDTH),
@@ -5590,9 +5407,6 @@ fr_window_construct (FrWindow *window)
 			  window);
 
 	/* Initialize Data. */
-
-	window->priv->sort_method = g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_METHOD);
-	window->priv->sort_type = g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_SORT_TYPE);
 
 	window->priv->list_mode = window->priv->last_list_mode = g_settings_get_enum (window->priv->settings_listing, PREF_LISTING_LIST_MODE);
 	g_settings_set_boolean (window->priv->settings_listing, PREF_LISTING_SHOW_PATH, (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT));
@@ -5680,24 +5494,20 @@ fr_window_construct (FrWindow *window)
 					 COLUMN_NAME);
 
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_NAME, name_column_sort_func,
+					 FR_WINDOW_SORT_BY_NAME, name_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_SIZE, size_column_sort_func,
+					 FR_WINDOW_SORT_BY_SIZE, size_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_TYPE, type_column_sort_func,
+					 FR_WINDOW_SORT_BY_TYPE, type_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_TIME, time_column_sort_func,
+					 FR_WINDOW_SORT_BY_TIME, time_column_sort_func,
 					 NULL, NULL);
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-					 COLUMN_PATH, path_column_sort_func,
+					 FR_WINDOW_SORT_BY_PATH, path_column_sort_func,
 					 NULL, NULL);
-
-	gtk_tree_sortable_set_default_sort_func (GTK_TREE_SORTABLE (window->priv->list_store),
-						 no_sort_column_sort_func,
-						 NULL, NULL);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
@@ -5710,7 +5520,6 @@ fr_window_construct (FrWindow *window)
 			  "row_activated",
 			  G_CALLBACK (row_activated_cb),
 			  window);
-
 	g_signal_connect (G_OBJECT (window->priv->list_view),
 			  "button_press_event",
 			  G_CALLBACK (file_button_press_cb),
@@ -5727,12 +5536,6 @@ fr_window_construct (FrWindow *window)
 			  "leave_notify_event",
 			  G_CALLBACK (file_leave_notify_callback),
 			  window);
-
-	g_signal_connect (G_OBJECT (window->priv->list_store),
-			  "sort_column_changed",
-			  G_CALLBACK (sort_column_changed_cb),
-			  window);
-
 	g_signal_connect (G_OBJECT (window->priv->list_view),
 			  "drag_begin",
 			  G_CALLBACK (file_list_drag_begin),
@@ -5893,12 +5696,6 @@ fr_window_construct (FrWindow *window)
 					    window->priv->list_mode,
 					    G_CALLBACK (view_as_radio_action),
 					    window);
-	gtk_action_group_add_radio_actions (actions,
-					    sort_by_entries,
-					    n_sort_by_entries,
-					    window->priv->sort_type,
-					    G_CALLBACK (sort_by_radio_action),
-					    window);
 
 	g_signal_connect (ui, "connect_proxy",
 			  G_CALLBACK (connect_proxy_cb), window);
@@ -5928,6 +5725,7 @@ fr_window_construct (FrWindow *window)
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar), GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 	set_action_important (ui, "/ToolBar/Extract_Toolbar");
+	set_action_important (ui, "/ToolBar/Add_Toolbar");
 
 	/* location bar */
 
@@ -6035,8 +5833,6 @@ fr_window_construct (FrWindow *window)
 
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);
-	fr_window_update_file_list (window, FALSE);
-	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 	fr_window_update_columns_visibility (window);
 
@@ -6073,10 +5869,6 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (window->priv->settings_listing,
 			  "changed::" PREF_LISTING_SHOW_PATH,
 			  G_CALLBACK (pref_show_field_changed),
-			  window);
-	g_signal_connect (window->priv->settings_listing,
-			  "changed::" PREF_LISTING_USE_MIME_ICONS,
-			  G_CALLBACK (pref_use_mime_icons_changed),
 			  window);
 
 	if (window->priv->settings_nautilus)
@@ -6506,6 +6298,7 @@ fr_window_archive_add_files (FrWindow   *window,
 
 void
 fr_window_archive_add_with_filter (FrWindow      *window,
+				   GList         *file_list, /* GFile list */
 				   GFile         *base_dir,
 				   const char    *include_files,
 				   const char    *exclude_files,
@@ -6517,6 +6310,7 @@ fr_window_archive_add_with_filter (FrWindow      *window,
 	_archive_operation_started (window, FR_ACTION_ADDING_FILES);
 
 	fr_archive_add_files_with_filter (window->archive,
+					  file_list,
 					  base_dir,
 					  include_files,
 					  exclude_files,
@@ -7341,15 +7135,6 @@ fr_window_unselect_all (FrWindow *window)
 
 
 void
-fr_window_set_sort_type (FrWindow     *window,
-			 GtkSortType   sort_type)
-{
-	window->priv->sort_type = sort_type;
-	fr_window_update_list_order (window);
-}
-
-
-void
 fr_window_stop (FrWindow *window)
 {
 	if (window->priv->stoppable && (window->priv->activity_ref > 0))
@@ -7493,21 +7278,19 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 		return;
 	}
 
-	fr_archive_add_files_with_filter (window->priv->convert_data.new_archive,
-					  window->priv->convert_data.temp_dir,
-					  "*",
-					  NULL,
-					  NULL,
-					  NULL,
-					  FALSE,
-					  FALSE,
-					  window->priv->convert_data.password,
-					  window->priv->convert_data.encrypt_header,
-					  window->priv->compression,
-					  window->priv->convert_data.volume_size,
-					  window->priv->cancellable,
-					  archive_add_ready_for_conversion_cb,
-					  window);
+	fr_archive_add_files (window->priv->convert_data.new_archive,
+			      NULL,
+			      window->priv->convert_data.temp_dir,
+			      NULL,
+			      FALSE,
+			      FALSE,
+			      window->priv->convert_data.password,
+			      window->priv->convert_data.encrypt_header,
+			      window->priv->compression,
+			      window->priv->convert_data.volume_size,
+			      window->priv->cancellable,
+			      archive_add_ready_for_conversion_cb,
+			      window);
 }
 
 

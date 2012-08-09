@@ -23,7 +23,8 @@
 #define DLG_ADD_FOLDER_H
 
 #include <gtk/gtk.h>
+#include "fr-window.h"
 
-void  add_folder_cb (GtkWidget *widget, void *data);
+void  dlg_add (FrWindow *window);
 
 #endif /* DLG_ADD_FOLDER_H */

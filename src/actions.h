@@ -32,8 +32,7 @@ void activate_action_properties (GtkAction *action, gpointer data);
 void activate_action_close (GtkAction *action, gpointer data);
 void activate_action_quit (GtkAction *action, gpointer data);
 
-void activate_action_add_files (GtkAction *action, gpointer data);
-void activate_action_add_folder (GtkAction *action, gpointer data);
+void activate_action_add (GtkAction *action, gpointer data);
 void activate_action_extract (GtkAction *action, gpointer data);
 void activate_action_extract_folder_from_sidebar (GtkAction *action, gpointer data);
 
@@ -63,7 +62,6 @@ void activate_action_view_statusbar (GtkAction *action, gpointer data);
 void activate_action_view_folders (GtkAction *action, gpointer data);
 void activate_action_stop (GtkAction *action, gpointer data);
 void activate_action_reload (GtkAction *action, gpointer data);
-void activate_action_sort_reverse_order (GtkAction *action, gpointer data);
 
 void activate_action_go_back (GtkAction *action, gpointer data);
 void activate_action_go_forward (GtkAction *action, gpointer data);

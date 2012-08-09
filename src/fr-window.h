@@ -124,6 +124,7 @@ void            fr_window_archive_add_files            (FrWindow      *window,
 							GFile         *base_dir,
 							gboolean       update);
 void            fr_window_archive_add_with_filter      (FrWindow      *window,
+							GList         *files, /* GFile list */
 							GFile         *base_dir,
 						        const char    *include_files,
 						        const char    *exclude_files,
@@ -202,8 +203,6 @@ GtkTreeModel *  fr_window_get_list_store               (FrWindow    *window);
 void            fr_window_find                         (FrWindow    *window);
 void            fr_window_select_all                   (FrWindow    *window);
 void            fr_window_unselect_all                 (FrWindow    *window);
-void            fr_window_set_sort_type                (FrWindow    *window,
-						        GtkSortType  sort_type);
 
 /**/
 

@@ -57,10 +57,8 @@ BUILT_SOURCES =			\
 COMMON_SOURCES = 			\
 	actions.h			\
 	actions.c			\
-	dlg-add-files.c			\
-	dlg-add-files.h			\
-	dlg-add-folder.c		\
-	dlg-add-folder.h		\
+	dlg-add.c			\
+	dlg-add.h			\
 	dlg-ask-password.c		\
 	dlg-ask-password.h		\
 	dlg-batch-add.c			\
@@ -128,6 +126,8 @@ COMMON_SOURCES = 			\
 	fr-command-zoo.h		\
 	fr-error.c			\
 	fr-error.h			\
+	fr-file-selector-dialog.c	\
+	fr-file-selector-dialog.h	\
 	fr-init.c			\
 	fr-init.h			\
 	fr-list-model.c			\
@@ -144,6 +144,8 @@ COMMON_SOURCES = 			\
 	gio-utils.h			\
 	glib-utils.c			\
 	glib-utils.h			\
+	gth-icon-cache.c		\
+	gth-icon-cache.h		\
 	gth-menu-button.c		\
 	gth-menu-button.h		\
 	gtk-utils.c			\
