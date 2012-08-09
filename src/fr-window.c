@@ -7255,15 +7255,6 @@ fr_window_unselect_all (FrWindow *window)
 
 
 void
-fr_window_set_sort_type (FrWindow     *window,
-			 GtkSortType   sort_type)
-{
-	window->priv->sort_type = sort_type;
-	fr_window_update_list_order (window);
-}
-
-
-void
 fr_window_stop (FrWindow *window)
 {
 	if (window->priv->stoppable && (window->priv->activity_ref > 0))
