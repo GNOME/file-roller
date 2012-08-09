@@ -6889,29 +6889,18 @@ archive_is_encrypted (FrWindow *window,
 		}
 	}
 	else {
-
-		GHashTable *file_hash;
-		int         i;
-		GList      *scan;
-
-		file_hash = g_hash_table_new (g_str_hash, g_str_equal);
-		for (i = 0; i < window->archive->files->len; i++) {
-			FileData *fdata = g_ptr_array_index (window->archive->files, i);
-			g_hash_table_insert (file_hash, fdata->original_path, fdata);
-		}
+		GList *scan;
 
 		for (scan = file_list; ! encrypted && scan; scan = scan->next) {
 			char     *filename = scan->data;
 			FileData *fdata;
 
-			fdata = g_hash_table_lookup (file_hash, filename);
+			fdata = g_hash_table_lookup (window->archive->files_hash, filename);
 			g_return_val_if_fail (fdata != NULL, FALSE);
 
 			if (fdata->encrypted)
 				encrypted = TRUE;
 		}
-
-		g_hash_table_destroy (file_hash);
 	}
 
 	return encrypted;
