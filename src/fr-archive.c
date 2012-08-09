@@ -46,6 +46,8 @@
 
 #define FILE_ARRAY_INITIAL_SIZE	256
 #define PROGRESS_DELAY          50
+#define BYTES_FRACTION(self)    ((double) (self)->priv->completed_bytes / (self)->priv->total_bytes)
+#define FILES_FRACTION(self)    ((double) (self)->priv->completed_files + 0.5) / ((self)->priv->total_files + 1)
 
 
 char *action_names[] = { "NONE",
@@ -2022,7 +2024,7 @@ fr_archive_progress_inc_completed_files (FrArchive *self,
 	g_mutex_lock (&self->priv->progress_mutex);
 	self->priv->completed_files += new_completed;
 	if (self->priv->total_files > 0)
-		fraction = (double) self->priv->completed_files / (self->priv->total_files + 1);
+		fraction = FILES_FRACTION (self);
 	else
 		fraction = 0.0;
 	/*g_print ("%d / %d  : %f\n", self->priv->completed_files, self->priv->total_files + 1, fraction);*/
@@ -2052,7 +2054,7 @@ _set_completed_bytes (FrArchive *self,
 
 	self->priv->completed_bytes = completed_bytes;
 	if (self->priv->total_bytes > 0)
-		fraction = (double) self->priv->completed_bytes / self->priv->total_bytes;
+		fraction = BYTES_FRACTION (self);
 	else
 		fraction = 0.0;
 	/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
@@ -2094,10 +2096,14 @@ fr_archive_progress_get_fraction (FrArchive *self)
 	double fraction;
 
 	g_mutex_lock (&self->priv->progress_mutex);
-	if ((self->priv->total_bytes > 0) && (self->priv->completed_bytes > 0))
-		fraction = (double) self->priv->completed_bytes / self->priv->total_bytes;
-	else if ((self->priv->total_files > 0) && (self->priv->completed_files > 0))
-		fraction = (double) self->priv->completed_files / (self->priv->total_files + 1);
+	if ((self->priv->total_bytes > 0) && (self->priv->completed_bytes > 0)) {
+		fraction = BYTES_FRACTION (self);
+		/*g_print ("%" G_GSIZE_FORMAT " / %" G_GSIZE_FORMAT "  : %f\n", self->priv->completed_bytes, self->priv->total_bytes + 1, fraction);*/
+	}
+	else if (self->priv->total_files > 0) {
+		fraction = FILES_FRACTION (self);
+		/*g_print ("%d / %d  : %f\n", self->priv->completed_files, self->priv->total_files + 1, fraction);*/
+	}
 	else
 		fraction = 0.0;
 	g_mutex_unlock (&self->priv->progress_mutex);
