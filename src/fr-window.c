@@ -772,6 +772,11 @@ clipboard_owner_change_cb (GtkClipboard *clipboard,
 }
 
 
+static void fr_window_update_file_list (FrWindow *window,
+					gboolean  update_view);
+static void fr_window_update_dir_tree  (FrWindow *window);
+
+
 static void
 fr_window_realized (GtkWidget *widget,
 		    gpointer  *data)
@@ -793,6 +798,9 @@ fr_window_realized (GtkWidget *widget,
 			  "owner_change",
 			  G_CALLBACK (clipboard_owner_change_cb),
 			  window);
+
+	fr_window_update_dir_tree (window);
+	fr_window_update_file_list (window, TRUE);
 }
 
 
@@ -1698,6 +1706,11 @@ fr_window_populate_file_list (FrWindow  *window,
 {
 	int i;
 
+	if (! gtk_widget_get_realized (GTK_WIDGET (window))) {
+		_fr_window_stop_activity_mode (window);
+		return;
+	}
+
 	gtk_list_store_clear (window->priv->list_store);
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
@@ -1894,6 +1907,9 @@ fr_window_update_dir_tree (FrWindow *window)
 	int         i;
 	GdkPixbuf  *icon;
 
+	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
+		return;
+
 	gtk_tree_store_clear (window->priv->tree_store);
 
 	if (! window->priv->view_folders
@@ -2032,6 +2048,9 @@ fr_window_update_file_list (FrWindow *window,
 {
 	GPtrArray  *files;
 	gboolean    free_files = FALSE;
+
+	if (! gtk_widget_get_realized (GTK_WIDGET (window)))
+		return;
 
 	if (gtk_widget_get_realized (window->priv->list_view))
 		gtk_tree_view_scroll_to_point (GTK_TREE_VIEW (window->priv->list_view), 0, 0);
@@ -5949,8 +5968,6 @@ fr_window_construct (FrWindow *window)
 
 	fr_window_update_title (window);
 	fr_window_update_sensitivity (window);
-	fr_window_update_file_list (window, FALSE);
-	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
 	fr_window_update_columns_visibility (window);
 
