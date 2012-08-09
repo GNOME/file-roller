@@ -30,6 +30,10 @@
 #define GET_WIDGET(x) (_gtk_builder_get_widget (self->priv->builder, (x)))
 #define PREF_FILE_SELECTOR_WINDOW_SIZE "window-size"
 #define PREF_FILE_SELECTOR_SHOW_HIDDEN "show-hidden"
+#define PREF_FILE_SELECTOR_SIDEBAR_SIZE "sidebar-size"
+#define FILE_LIST_LINES 45
+#define FILE_LIST_CHARS 60
+#define SIDEBAR_CHARS   12
 
 
 G_DEFINE_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, GTK_TYPE_DIALOG)
@@ -589,43 +593,47 @@ update_places_list (FrFileSelectorDialog *self)
 
 
 /* Taken from the Gtk+ file gtkfilechooserdefault.c
- * Copyright (C) 2003, Red Hat, Inc.  */
-
-
-#define NUM_LINES 45
-#define NUM_CHARS 60
-
-
-/* Guesses a size based upon font sizes */
-static void
-find_good_size_from_style (GtkWidget *widget,
-                           gint      *width,
-                           gint      *height)
+ * Copyright (C) 2003, Red Hat, Inc.
+ *
+ * Guesses a size based upon font sizes */
+static int
+get_font_size (GtkWidget *widget)
 {
-  GtkStyleContext *context;
-  GtkStateFlags state;
-  int font_size;
-  GdkScreen *screen;
-  double resolution;
+	GtkStyleContext *context;
+	GtkStateFlags    state;
+	int              font_size;
+	GdkScreen       *screen;
+	double           resolution;
 
-  context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
+	context = gtk_widget_get_style_context (widget);
+	state = gtk_widget_get_state_flags (widget);
 
-  screen = gtk_widget_get_screen (widget);
-  if (screen)
-    {
-      resolution = gdk_screen_get_resolution (screen);
-      if (resolution < 0.0) /* will be -1 if the resolution is not defined in the GdkScreen */
-        resolution = 96.0;
-    }
-  else
-    resolution = 96.0; /* wheeee */
+	screen = gtk_widget_get_screen (widget);
+	if (screen) {
+		resolution = gdk_screen_get_resolution (screen);
+		if (resolution < 0.0) /* will be -1 if the resolution is not defined in the GdkScreen */
+			resolution = 96.0;
+	}
+	else
+		resolution = 96.0; /* wheeee */
 
-  font_size = pango_font_description_get_size (gtk_style_context_get_font (context, state));
-  font_size = PANGO_PIXELS (font_size) * resolution / 72.0;
+	font_size = pango_font_description_get_size (gtk_style_context_get_font (context, state));
+	font_size = PANGO_PIXELS (font_size) * resolution / 72.0;
 
-  *width = font_size * NUM_CHARS;
-  *height = font_size * NUM_LINES;
+	return font_size;
+}
+
+
+static void
+find_good_window_size_from_style (GtkWidget *widget,
+				  int       *width,
+				  int       *height)
+{
+	int font_size;
+
+	font_size = get_font_size (widget);
+	*width = font_size * FILE_LIST_CHARS;
+	*height = font_size * FILE_LIST_LINES;
 }
 
 
@@ -643,7 +651,7 @@ fr_file_selector_dialog_get_default_size (FrFileSelectorDialog *self,
 		return;
 	}
 
-	find_good_size_from_style (GTK_WIDGET (self), default_width, default_height);
+	find_good_window_size_from_style (GTK_WIDGET (self), default_width, default_height);
 
 	if ((self->priv->extra_widget != NULL) && gtk_widget_get_visible (self->priv->extra_widget)) {
 		GtkRequisition req;
@@ -670,6 +678,7 @@ fr_file_selector_dialog_realize (GtkWidget *widget)
 {
 	FrFileSelectorDialog *self;
 	GIcon                *icon;
+	int                   sidebar_size;
 
 	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->realize (widget);
 
@@ -681,6 +690,11 @@ fr_file_selector_dialog_realize (GtkWidget *widget)
 	g_object_unref (icon);
 
 	_fr_file_selector_dialog_update_size (self);
+
+	sidebar_size = g_settings_get_int (self->priv->settings, PREF_FILE_SELECTOR_SIDEBAR_SIZE);
+	if (sidebar_size <= 0)
+		sidebar_size = get_font_size (widget) * SIDEBAR_CHARS;
+		gtk_paned_set_position (GTK_PANED (GET_WIDGET ("main_paned")), sidebar_size);
 
 	update_places_list (self);
 	update_bookmarks (self);
@@ -713,6 +727,9 @@ fr_file_selector_dialog_unmap (GtkWidget *widget)
 	gtk_window_get_size (GTK_WINDOW (self), &width, &height);
 	g_settings_set (self->priv->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", width, height);
 	g_settings_set_boolean (self->priv->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN, self->priv->show_hidden);
+	g_settings_set_int (self->priv->settings,
+			    PREF_FILE_SELECTOR_SIDEBAR_SIZE,
+			    gtk_paned_get_position (GTK_PANED (GET_WIDGET ("main_paned"))));
 
 	if (self->priv->current_operation != NULL)
 		g_cancellable_cancel (self->priv->current_operation->cancellable);
