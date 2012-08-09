@@ -1178,6 +1178,36 @@ _g_date_time_same_day (GDateTime *dt1,
 
 
 static void
+_get_folder_list (LoadData *load_data);
+
+
+static void
+folder_mount_enclosing_volume_ready_cb (GObject      *source_object,
+					GAsyncResult *result,
+					gpointer      user_data)
+{
+	LoadData             *load_data = user_data;
+	FrFileSelectorDialog *self = load_data->dialog;
+	GError               *error = NULL;
+
+	g_file_mount_enclosing_volume_finish (G_FILE (source_object), result, &error);
+
+	if ((error != NULL) && ! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_ALREADY_MOUNTED)) {
+		if (! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+			_gtk_error_dialog_run (GTK_WINDOW (self), _("Could not load the location"), "%s", error->message);
+
+		if (load_data->dialog->priv->current_operation == load_data)
+			load_data->dialog->priv->current_operation = NULL;
+		load_data_free (load_data);
+
+		return;
+	}
+
+	_get_folder_list (load_data);
+}
+
+
+static void
 get_folder_content_done_cb (GError   *error,
 		            gpointer  user_data)
 {
@@ -1192,6 +1222,22 @@ get_folder_content_done_cb (GError   *error,
 	GHashTable           *selected_files;
 
 	if (error != NULL) {
+		if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED)) {
+			GMountOperation *operation;
+
+			operation = gtk_mount_operation_new (GTK_WINDOW (self));
+			g_file_mount_enclosing_volume (load_data->folder,
+						       G_MOUNT_MOUNT_NONE,
+						       operation,
+						       load_data->cancellable,
+						       folder_mount_enclosing_volume_ready_cb,
+						       load_data);
+
+			g_object_unref (operation);
+
+			return;
+		}
+
 		if (! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 			_gtk_error_dialog_run (GTK_WINDOW (self), _("Could not load the location"), "%s", error->message);
 
@@ -1284,19 +1330,9 @@ get_folder_content_for_each_child_cb (GFile     *file,
 
 
 static void
-_set_current_folder (FrFileSelectorDialog *self,
-		     GFile                *folder,
-		     GList                *files)
+_get_folder_list (LoadData *load_data)
 {
-	if (self->priv->current_operation != NULL)
-		g_cancellable_cancel (self->priv->current_operation->cancellable);
-
-	self->priv->current_operation = load_data_new (self, folder);
-	self->priv->current_operation->files_to_select = _g_object_list_ref (files);
-
-	gtk_list_store_clear (GTK_LIST_STORE (GET_WIDGET ("files_liststore")));
-
-	g_directory_foreach_child (self->priv->current_operation->folder,
+	g_directory_foreach_child (load_data->folder,
 				   FALSE,
 				   TRUE,
 			           (G_FILE_ATTRIBUTE_STANDARD_TYPE ","
@@ -1307,11 +1343,27 @@ _set_current_folder (FrFileSelectorDialog *self,
 			            G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN ","
 			            G_FILE_ATTRIBUTE_TIME_MODIFIED ","
 			            G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC),
-			           self->priv->current_operation->cancellable,
+			            load_data->cancellable,
 			           NULL,
 			           get_folder_content_for_each_child_cb,
 			           get_folder_content_done_cb,
-			           self->priv->current_operation);
+			           load_data);
+}
+
+
+static void
+_set_current_folder (FrFileSelectorDialog *self,
+		     GFile                *folder,
+		     GList                *files)
+{
+	if (self->priv->current_operation != NULL)
+		g_cancellable_cancel (self->priv->current_operation->cancellable);
+
+	gtk_list_store_clear (GTK_LIST_STORE (GET_WIDGET ("files_liststore")));
+
+	self->priv->current_operation = load_data_new (self, folder);
+	self->priv->current_operation->files_to_select = _g_object_list_ref (files);
+	_get_folder_list (self->priv->current_operation);
 }
 
 
