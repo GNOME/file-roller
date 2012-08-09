@@ -25,6 +25,22 @@
       <column type="gboolean"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="places_liststore">
+    <columns>
+      <!-- column-name icon -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name file -->
+      <column type="GObject"/>
+      <!-- column-name is_separator -->
+      <column type="gboolean"/>
+      <!-- column-name type -->
+      <column type="gint"/>
+      <!-- column-name sort_order -->
+      <column type="gint"/>
+    </columns>
+  </object>
   <object class="GtkBox" id="content">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -94,29 +110,6 @@
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleButton" id="hidden_files_togglebutton">
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Show hidden files</property>
-                <property name="use_action_appearance">False</property>
-                <property name="relief">none</property>
-                <child>
-                  <object class="GtkImage" id="image2">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">emblem-system-symbolic</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
               </packing>
             </child>
           </object>
@@ -286,21 +279,42 @@
       </packing>
     </child>
   </object>
-  <object class="GtkListStore" id="places_liststore">
-    <columns>
-      <!-- column-name icon -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name file -->
-      <column type="GObject"/>
-      <!-- column-name is_separator -->
-      <column type="gboolean"/>
-      <!-- column-name type -->
-      <column type="gint"/>
-      <!-- column-name sort_order -->
-      <column type="gint"/>
-    </columns>
+  <object class="GtkMenu" id="file_list_context_menu">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkMenuItem" id="select_all_menuitem">
+        <property name="use_action_appearance">False</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">_Select All</property>
+        <property name="use_underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="unselect_all_menuitem">
+        <property name="use_action_appearance">False</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Dese_lect All</property>
+        <property name="use_underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="menuitem3">
+        <property name="use_action_appearance">False</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkCheckMenuItem" id="show_hidden_files_menuitem">
+        <property name="use_action_appearance">False</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Show Hidden FIles</property>
+      </object>
+    </child>
   </object>
   <object class="GtkSizeGroup" id="toolbar_sizegroup"/>
 </interface>

@@ -1095,6 +1095,65 @@ go_up_button_clicked_cb (GtkButton *button,
 }
 
 
+static gboolean
+files_treeview_button_press_event_cb (GtkWidget      *widget,
+				      GdkEventButton *event,
+				      gpointer        user_data)
+{
+	FrFileSelectorDialog *self = user_data;
+
+	if (event->button == 3) {
+		gtk_menu_popup (GTK_MENU (GET_WIDGET ("file_list_context_menu")),
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				event->button,
+				event->time);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
+static void
+select_all_files (FrFileSelectorDialog *self,
+		  gboolean              value)
+{
+	GtkListStore *list_store;
+	GtkTreeIter   iter;
+
+	list_store = GTK_LIST_STORE (GET_WIDGET ("files_liststore"));
+	if (! gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
+		return;
+
+	do {
+		gtk_list_store_set (list_store, &iter,
+	        		    FILE_LIST_COLUMN_IS_SELECTED, value,
+	                            -1);
+	}
+	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+}
+
+
+static void
+select_all_menuitem_activate_cb (GtkMenuItem *menu_item,
+			  	 gpointer     user_data)
+{
+	select_all_files (FR_FILE_SELECTOR_DIALOG (user_data), TRUE);
+}
+
+
+static void
+unselect_all_menuitem_activate_cb (GtkMenuItem *menu_item,
+				   gpointer     user_data)
+{
+	select_all_files (FR_FILE_SELECTOR_DIALOG (user_data), FALSE);
+}
+
+
 static void
 _set_current_folder (FrFileSelectorDialog *self,
 		     GFile                *folder,
@@ -1102,14 +1161,14 @@ _set_current_folder (FrFileSelectorDialog *self,
 
 
 static void
-hidden_files_togglebutton_toggled_cb (GtkToggleButton *toggle_button,
-				      gpointer         user_data)
+show_hidden_files_menuitem_toggled_cb (GtkCheckMenuItem *checkmenuitem,
+				       gpointer          user_data)
 {
 	FrFileSelectorDialog *self = user_data;
 	GFile                *folder;
 	GList                *selected_files;
 
-	self->priv->show_hidden = gtk_toggle_button_get_active (toggle_button);
+	self->priv->show_hidden = gtk_check_menu_item_get_active (checkmenuitem);
 	folder = fr_file_selector_dialog_get_current_folder (self);
 	selected_files = fr_file_selector_dialog_get_selected_files (self);
 	_set_current_folder (self, folder, selected_files);
@@ -1158,7 +1217,7 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("places_liststore")), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
 	gtk_tree_view_set_row_separator_func (GTK_TREE_VIEW (GET_WIDGET ("places_treeview")), places_treeview_row_separator_func, self, NULL);
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("hidden_files_togglebutton")), self->priv->show_hidden);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (GET_WIDGET ("show_hidden_files_menuitem")), self->priv->show_hidden);
 
 	g_signal_connect (GET_WIDGET ("is_selected_cellrenderertoggle"),
 			  "toggled",
@@ -1172,13 +1231,25 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 			  "clicked",
 			  G_CALLBACK (go_up_button_clicked_cb),
 			  self);
-	g_signal_connect (GET_WIDGET ("hidden_files_togglebutton"),
-			  "toggled",
-			  G_CALLBACK (hidden_files_togglebutton_toggled_cb),
-			  self);
 	g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (GET_WIDGET ("places_treeview"))),
 			  "changed",
 			  G_CALLBACK (places_treeview_selection_changed_cb),
+			  self);
+	g_signal_connect (GET_WIDGET ("files_treeview"),
+			  "button-press-event",
+			  G_CALLBACK (files_treeview_button_press_event_cb),
+			  self);
+	g_signal_connect (GET_WIDGET ("select_all_menuitem"),
+			  "activate",
+			  G_CALLBACK (select_all_menuitem_activate_cb),
+			  self);
+	g_signal_connect (GET_WIDGET ("unselect_all_menuitem"),
+			  "activate",
+			  G_CALLBACK (unselect_all_menuitem_activate_cb),
+			  self);
+	g_signal_connect (GET_WIDGET ("show_hidden_files_menuitem"),
+			  "toggled",
+			  G_CALLBACK (show_hidden_files_menuitem_toggled_cb),
 			  self);
 
 	monitor = g_volume_monitor_get ();
