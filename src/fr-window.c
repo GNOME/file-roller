@@ -785,7 +785,7 @@ fr_window_realized (GtkWidget *widget,
 	GIcon        *icon;
 	GtkClipboard *clipboard;
 
-	window->priv->list_icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (window), GTK_ICON_SIZE_MENU);
+	window->priv->list_icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (window), GTK_ICON_SIZE_LARGE_TOOLBAR);
 	window->priv->tree_icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (window), GTK_ICON_SIZE_MENU);
 
 	icon = g_content_type_get_icon ("text/plain");
