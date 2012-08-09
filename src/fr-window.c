@@ -5158,21 +5158,6 @@ pref_click_policy_changed (GSettings  *settings,
 
 
 static void
-pref_use_mime_icons_changed (GSettings  *settings,
-	  		     const char *key,
-	  		     gpointer    user_data)
-{
-	FrWindow *window = user_data;
-
-	gth_icon_cache_clear (window->priv->list_icon_cache);
-	gth_icon_cache_clear (window->priv->tree_icon_cache);
-
-	fr_window_update_file_list (window, FALSE);
-	fr_window_update_dir_tree (window);
-}
-
-
-static void
 theme_changed_cb (GtkIconTheme *theme,
 		  FrWindow     *window)
 {
@@ -6004,10 +5989,6 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (window->priv->settings_listing,
 			  "changed::" PREF_LISTING_SHOW_PATH,
 			  G_CALLBACK (pref_show_field_changed),
-			  window);
-	g_signal_connect (window->priv->settings_listing,
-			  "changed::" PREF_LISTING_USE_MIME_ICONS,
-			  G_CALLBACK (pref_use_mime_icons_changed),
 			  window);
 
 	if (window->priv->settings_nautilus)

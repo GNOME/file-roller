@@ -43,7 +43,6 @@
 #define PREF_LISTING_SHOW_SIZE            "show-size"
 #define PREF_LISTING_SHOW_TIME            "show-time"
 #define PREF_LISTING_SHOW_PATH            "show-path"
-#define PREF_LISTING_USE_MIME_ICONS       "use-mime-icons"
 #define PREF_LISTING_NAME_COLUMN_WIDTH    "name-column-width"
 
 #define PREF_UI_WINDOW_WIDTH              "window-width"
