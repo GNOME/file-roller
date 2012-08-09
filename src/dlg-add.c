@@ -179,7 +179,7 @@ dlg_add (FrWindow *window)
 	data = g_new0 (DialogData, 1);
 	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_ADD);
 	data->window = window;
-	data->dialog = fr_file_selector_dialog_new (_("Add"), GTK_WINDOW (data->window));
+	data->dialog = fr_file_selector_dialog_new (_("Add Files"), GTK_WINDOW (data->window));
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	data->builder = _gtk_builder_new_from_resource ("add-dialog-options.ui");
