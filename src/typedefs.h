@@ -95,7 +95,6 @@ typedef struct {
 typedef struct {
 	const char    *mime_type;
 	char          *default_ext;
-	char          *name;
 	FrArchiveCaps  capabilities;
 } FrMimeTypeDescription;
 

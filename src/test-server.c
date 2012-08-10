@@ -55,7 +55,6 @@ fileroller_getsupportedtypes_ready_cb (GObject      *source_object,
 		while ((supported_type = g_variant_iter_next_value (&type_iter))) {
 			char         *mime_type = NULL;
 			char         *default_ext = NULL;
-			char         *description = NULL;
 			char         *key;
 			char         *value;
 			GVariantIter  value_iter;
@@ -66,17 +65,14 @@ fileroller_getsupportedtypes_ready_cb (GObject      *source_object,
 					mime_type = g_strdup (value);
 				else if (g_strcmp0 (key, "default-extension") == 0)
 					default_ext = g_strdup (value);
-				else if (g_strcmp0 (key, "description") == 0)
-					description = g_strdup (value);
 
 				g_free (key);
 				g_free (value);
 			}
 
 			n++;
-			g_print ("%d)\tmime-type: %s\n\tdefault-extension: %s\n\tdescription: %s\n", n, mime_type, default_ext, description);
+			g_print ("%d)\tmime-type: %s\n\tdefault-extension: %s\n", n, mime_type, default_ext);
 
-			g_free (description);
 			g_free (default_ext);
 			g_free (mime_type);
 			g_variant_unref (supported_type);

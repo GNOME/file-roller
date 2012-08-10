@@ -363,9 +363,6 @@ handle_method_call (GDBusConnection       *connection,
 				g_variant_builder_add (&builder, "{ss}",
 						       "default-extension",
 						       mime_type_desc[supported_types[i]].default_ext);
-				g_variant_builder_add (&builder, "{ss}",
-						       "description",
-						       _(mime_type_desc[supported_types[i]].name));
 				g_variant_builder_close (&builder);
 			}
 			g_variant_builder_close (&builder);
