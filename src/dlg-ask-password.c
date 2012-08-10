@@ -98,7 +98,7 @@ dlg_ask_password__common (FrWindow       *window,
 	char       *message;
 
 	data = g_new0 (DialogData, 1);
-	data->builder = _gtk_builder_new_from_resource ("batch-password.ui");
+	data->builder = _gtk_builder_new_from_resource ("ask-password.ui");
 	if (data->builder == NULL) {
 		g_free (data);
 		return;
