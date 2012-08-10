@@ -4086,11 +4086,12 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 				else
 					archive_name = g_file_get_basename (first_file);
 
-				dialog = fr_new_archive_dialog_new (_("New"),
+				dialog = fr_new_archive_dialog_new (_("New Archive"),
 								    GTK_WINDOW (window),
 								    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
 								    fr_window_get_open_default_dir (window),
 								    archive_name);
+				gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 				g_signal_connect (G_OBJECT (dialog),
 						  "response",
 						  G_CALLBACK (new_archive_dialog_response_cb),
@@ -7146,11 +7147,13 @@ fr_window_action_new_archive (FrWindow *window)
 {
 	GtkWidget *dialog;
 
-	dialog = fr_new_archive_dialog_new (_("New"),
+	dialog = fr_new_archive_dialog_new (_("New Archive"),
 					    GTK_WINDOW (window),
 					    FR_NEW_ARCHIVE_ACTION_NEW,
 					    fr_window_get_open_default_dir (window),
 					    NULL);
+	if ((fr_window_archive_is_present (window) && ! fr_window_is_batch_mode (window) ? NULL : GTK_WINDOW (window)))
+		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	g_signal_connect (G_OBJECT (dialog),
 			  "response",
 			  G_CALLBACK (new_archive_dialog_response_cb),
@@ -7460,6 +7463,7 @@ fr_window_action_save_as (FrWindow *window)
 					    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
 					    fr_window_get_open_default_dir (window),
 					    archive_name);
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	g_signal_connect (G_OBJECT (dialog),
 			  "response",
 			  G_CALLBACK (save_as_archive_dialog_response_cb),

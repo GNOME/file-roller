@@ -187,7 +187,6 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	int   active_extension_idx;
 	int   i;
 
-	gtk_window_set_modal (GTK_WINDOW (self), (parent != NULL));
 	gtk_window_set_transient_for (GTK_WINDOW (self), parent);
 	gtk_window_set_resizable (GTK_WINDOW (self), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
