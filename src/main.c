@@ -113,6 +113,20 @@ static const GOptionEntry options[] = {
 
 
 static void
+activate_new (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       user_data)
+{
+	GApplication *application = user_data;
+	GList        *windows;
+
+	windows = gtk_application_get_windows (GTK_APPLICATION (application));
+	if (windows != NULL)
+		activate_action_new (NULL, windows->data);
+}
+
+
+static void
 activate_help (GSimpleAction *action,
                GVariant      *parameter,
                gpointer       user_data)
@@ -150,6 +164,7 @@ activate_quit (GSimpleAction *action,
 
 
 static const GActionEntry app_menu_entries[] = {
+	{ "new",  activate_new },
 	{ "help",  activate_help },
 	{ "about", activate_about },
 	{ "quit",  activate_quit }
