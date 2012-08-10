@@ -405,8 +405,6 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		return NULL;
 	}
 
-	g_object_unref (parent_info);
-
 	/* overwrite confirmation */
 
 	if (g_file_query_exists (file, NULL)) {
@@ -446,6 +444,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 
 				gtk_widget_destroy (GTK_WIDGET (dialog));
 				g_error_free (error);
+				g_object_unref (parent_info);
 				g_object_unref (file);
 
 				return NULL;
@@ -454,6 +453,8 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		else
 			g_clear_object (&file);
 	}
+
+	g_object_unref (parent_info);
 
 	return file;
 }
