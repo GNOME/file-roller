@@ -4086,12 +4086,11 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 				else
 					archive_name = g_file_get_basename (first_file);
 
-				dialog = fr_new_archive_dialog_new (GTK_WINDOW (window),
+				dialog = fr_new_archive_dialog_new (_("New"),
+								    GTK_WINDOW (window),
 								    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
+								    fr_window_get_open_default_dir (window),
 								    archive_name);
-				gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (dialog),
-									  fr_window_get_open_default_dir (window),
-									  NULL);
 				g_signal_connect (G_OBJECT (dialog),
 						  "response",
 						  G_CALLBACK (new_archive_dialog_response_cb),
@@ -7147,10 +7146,11 @@ fr_window_action_new_archive (FrWindow *window)
 {
 	GtkWidget *dialog;
 
-	dialog = fr_new_archive_dialog_new (GTK_WINDOW (window),
+	dialog = fr_new_archive_dialog_new (_("New"),
+					    GTK_WINDOW (window),
 					    FR_NEW_ARCHIVE_ACTION_NEW,
+					    fr_window_get_open_default_dir (window),
 					    NULL);
-	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (dialog), fr_window_get_open_default_dir (window), NULL);
 	g_signal_connect (G_OBJECT (dialog),
 			  "response",
 			  G_CALLBACK (new_archive_dialog_response_cb),
@@ -7271,6 +7271,7 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 					    gpointer      user_data)
 {
 	FrWindow *window = user_data;
+	GList    *list;
 	GError   *error = NULL;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
@@ -7278,8 +7279,9 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 		return;
 	}
 
+	list = g_list_prepend (NULL, window->priv->convert_data.temp_dir);
 	fr_archive_add_files (window->priv->convert_data.new_archive,
-			      NULL,
+			      list,
 			      window->priv->convert_data.temp_dir,
 			      NULL,
 			      FALSE,
@@ -7291,6 +7293,8 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 			      window->priv->cancellable,
 			      archive_add_ready_for_conversion_cb,
 			      window);
+
+	g_list_free (list);
 }
 
 
@@ -7420,8 +7424,8 @@ save_as_archive_dialog_response_cb (GtkDialog *dialog,
 	encrypt_header = fr_new_archive_dialog_get_encrypt_header (FR_NEW_ARCHIVE_DIALOG (dialog));
 	volume_size = fr_new_archive_dialog_get_volume_size (FR_NEW_ARCHIVE_DIALOG (dialog));
 
-	settings = g_settings_new (FILE_ROLLER_SCHEMA_BATCH_ADD);
-	g_settings_set_int (settings, PREF_BATCH_ADD_VOLUME_SIZE, volume_size);
+	settings = g_settings_new (FILE_ROLLER_SCHEMA_NEW);
+	g_settings_set_int (settings, PREF_NEW_VOLUME_SIZE, volume_size);
 	g_object_unref (settings);
 
 	fr_window_archive_save_as (window, file, mime_type, password, encrypt_header, volume_size);
@@ -7451,10 +7455,11 @@ fr_window_action_save_as (FrWindow *window)
 		}
 	}
 
-	dialog = fr_new_archive_dialog_new (GTK_WINDOW (window),
+	dialog = fr_new_archive_dialog_new (_("Save"),
+					    GTK_WINDOW (window),
 					    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
+					    fr_window_get_open_default_dir (window),
 					    archive_name);
-	gtk_file_chooser_set_current_folder_file (GTK_FILE_CHOOSER (dialog), fr_window_get_open_default_dir (window), NULL);
 	g_signal_connect (G_OBJECT (dialog),
 			  "response",
 			  G_CALLBACK (save_as_archive_dialog_response_cb),

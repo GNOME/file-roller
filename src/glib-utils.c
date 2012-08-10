@@ -913,30 +913,18 @@ _g_path_remove_ending_separator (const char *path)
 }
 
 
-gchar *
+char *
 _g_path_remove_extension (const gchar *path)
 {
-	int         len;
-	int         p;
-	const char *ptr = path;
-	char       *new_path;
+	const char *ext;
 
-	if (! path)
-		return NULL;
-
-	len = strlen (path);
-	if (len == 1)
+	ext = _g_filename_get_extension (path);
+	if (ext == NULL)
 		return g_strdup (path);
-
-	p = len - 1;
-	while ((p > 0) && (ptr[p] != '.'))
-		p--;
-	if (p == 0)
-		p = len;
-	new_path = g_strndup (path, (guint) p);
-
-	return new_path;
+	else
+		return g_strndup (path, strlen (path) - strlen (ext));
 }
+
 
 /* Check whether the dirname is contained in filename */
 gboolean

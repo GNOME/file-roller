@@ -2,7 +2,6 @@ EXTRA_DIST = 				\
 	add-dialog-options.ui		\
 	add-options.ui			\
 	app-menu.ui			\
-	batch-add-files.ui		\
 	batch-password.ui		\
 	delete.ui			\
 	error-dialog.ui			\
@@ -10,6 +9,7 @@ EXTRA_DIST = 				\
 	file-selector.ui		\
 	menus-toolbars.ui		\
 	message-dialog.ui		\
+	new-archive-dialog.ui		\
 	new-archive-dialog-options.ui	\
 	password.ui			\
 	progress-dialog.ui		\

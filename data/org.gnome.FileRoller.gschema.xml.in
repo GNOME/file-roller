@@ -159,8 +159,8 @@
 
   <schema id="org.gnome.FileRoller.Dialogs" path="/org/gnome/file-roller/dialogs/">
     <child name="extract" schema="org.gnome.FileRoller.Dialogs.Extract"/>
+    <child name="new" schema="org.gnome.FileRoller.Dialogs.New"/>
     <child name="add" schema="org.gnome.FileRoller.Dialogs.Add"/>
-    <child name="batch-add" schema="org.gnome.FileRoller.Dialogs.BatchAdd"/>
     <child name="last-output" schema="org.gnome.FileRoller.Dialogs.LastOutput"/>
   </schema>
 
@@ -172,6 +172,25 @@
     <key name="recreate-folders" type="b">
       <default>true</default>
       <_summary>Recreate the folders stored in the archive</_summary>
+    </key>
+  </schema>
+
+  <schema id="org.gnome.FileRoller.Dialogs.New" path="/org/gnome/file-roller/dialogs/new/" gettext-domain="file-roller">
+    <key name="default-extension" type="s">
+      <default>'.tar.gz'</default>
+    </key>
+    <key name="other-options" type="b">
+      <default>false</default>
+    </key>
+    <key name="encrypt-header" type="b">
+      <default>false</default>
+      <_summary>Encrypt the archive header</_summary>
+      <_description>Whether to encrypt the archive header.  If the header is encrypted the password will be required to list the archive content as well.</_description>
+    </key>
+    <key name="volume-size" type="i">
+      <default>0</default>
+      <_summary>Default volume size</_summary>
+      <_description>The default size for volumes.</_description>
     </key>
   </schema>
 
@@ -202,20 +221,6 @@
     </key>
     <key name="no-symlinks" type="b">
       <default>true</default>
-    </key>
-  </schema>
-
-  <schema id="org.gnome.FileRoller.Dialogs.BatchAdd" path="/org/gnome/file-roller/dialogs/batch-add/" gettext-domain="file-roller">
-    <key name="default-extension" type="s">
-      <default>'.tar.gz'</default>
-    </key>
-    <key name="other-options" type="b">
-      <default>false</default>
-    </key>
-    <key name="volume-size" type="i">
-      <default>0</default>
-      <_summary>Default volume size</_summary>
-      <_description>The default size for volumes.</_description>
     </key>
   </schema>
 

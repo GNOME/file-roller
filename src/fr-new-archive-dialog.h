@@ -41,17 +41,19 @@ typedef struct _FrNewArchiveDialogClass FrNewArchiveDialogClass;
 typedef struct _FrNewArchiveDialogPrivate FrNewArchiveDialogPrivate;
 
 struct _FrNewArchiveDialog {
-	GtkFileChooserDialog parent_instance;
+	GtkDialog parent_instance;
 	FrNewArchiveDialogPrivate *priv;
 };
 
 struct _FrNewArchiveDialogClass {
-	GtkFileChooserDialogClass parent_class;
+	GtkDialogClass parent_class;
 };
 
 GType           fr_new_archive_dialog_get_type            (void);
-GtkWidget *     fr_new_archive_dialog_new                 (GtkWindow           *parent,
+GtkWidget *     fr_new_archive_dialog_new                 (const char          *title,
+							   GtkWindow           *parent,
 							   FrNewArchiveAction   action,
+							   GFile               *folder,
 							   const char          *default_name);
 GFile *         fr_new_archive_dialog_get_file            (FrNewArchiveDialog  *dialog,
 							   const char         **mime_type);

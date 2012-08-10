@@ -31,8 +31,8 @@
 #define FILE_ROLLER_SCHEMA_UI             FILE_ROLLER_SCHEMA ".UI"
 #define FILE_ROLLER_SCHEMA_GENERAL        FILE_ROLLER_SCHEMA ".General"
 #define FILE_ROLLER_SCHEMA_DIALOGS        FILE_ROLLER_SCHEMA ".Dialogs"
+#define FILE_ROLLER_SCHEMA_NEW            FILE_ROLLER_SCHEMA_DIALOGS ".New"
 #define FILE_ROLLER_SCHEMA_ADD            FILE_ROLLER_SCHEMA_DIALOGS ".Add"
-#define FILE_ROLLER_SCHEMA_BATCH_ADD      FILE_ROLLER_SCHEMA_DIALOGS ".BatchAdd"
 #define FILE_ROLLER_SCHEMA_EXTRACT        FILE_ROLLER_SCHEMA_DIALOGS ".Extract"
 #define FILE_ROLLER_SCHEMA_LAST_OUTPUT    FILE_ROLLER_SCHEMA_DIALOGS ".LastOutput"
 
@@ -69,9 +69,9 @@
 #define PREF_ADD_RECURSIVE                "recursive"
 #define PREF_ADD_NO_FOLLOW_SYMLINKS       "no-symlinks"
 
-#define PREF_BATCH_ADD_DEFAULT_EXTENSION  "default-extension"
-#define PREF_BATCH_ADD_OTHER_OPTIONS      "other-options"
-#define PREF_BATCH_ADD_VOLUME_SIZE        "volume-size"
+#define PREF_NEW_DEFAULT_EXTENSION        "default-extension"
+#define PREF_NEW_ENCRYPT_HEADER           "encrypt-header"
+#define PREF_NEW_VOLUME_SIZE              "volume-size"
 
 #define NAUTILUS_SCHEMA                   "org.gnome.nautilus.preferences"
 #define NAUTILUS_CLICK_POLICY             "click-policy"
