@@ -1,39 +1,42 @@
-*Translations
+Roadmap
+-------
 
-  Translations can be updated without asking, just remember to add 
-  an entry in po/ChangeLog
+  *) src/fr-archive.c: here is defined the base class that needs to be
+     specialized to add support for an archive format.
 
-*Patches
+  *) src/fr-archive-libarchive.c:  defines a FrArchive sub-class that adds
+     support for archives that can be read and/or written by the libarchive
+     library.
 
-  Send patches to the maintainer (file-roller-maint@gnome.org) and get 
-  approval before committing.
+  *) src/fr-command.c: defines the FrCommand class which is the base for
+     classes that require an external command to add support for an archive
+     format. For example  fr-command-tar.c adds support for tar archives using
+     the 'tar' utility.
+     FRCommand implements the options that the external utility doesn't support.
+     For example,  you can  extract files from a tar archive without recreating
+     the path even if the 'tar' command does not support this feature.  If an
+     option is supported natively, the command line option is used instead.
+     FrCommand uses a FrProcess object to execute commands.
 
-  Patches must contain a ChangeLog entry.
+  *) src/fr-process.c: defines a class that lets you execute a series of
+     commands.  A command can be defined as 'sticky' if it must be executed
+     even if a previous command has failed.
 
-  You have to follow the style of the rest of the code even if you 
-  don't like it.  The code style is K&R with 8 space tabs.
 
-*Roadmap
+Adding support for an archive format
+------------------------------------
 
-  *) src/fr-process.c : A class that lets you execute commands in 
-     sequence.  You can define a command as sticky if you want that it must
-     be executed even if a previous command has failed.
+To add support for an archive format using an external command create a
+subclass of FrCommand and implement its virtual functions, as done in all the
+fr-command-* files.
 
-  *) src/fr-command.c : An abstract class used as base to define archiving
-     utilities interfaces.  For example fr-command-tar.c implements an 
-     interface for the tar command.  FRCommands use a FRProcess object to
-     execute commands.
+If the format will be supported without using an external utility you need to
+create a FrArchive subclass and implement all of its virtual functions as done
+for example in fr-archive-libarchive.c.
 
-  *) src/fr-archive.c : A class that implements the archive concept.  An
-     FRArchive object can load any archive type of which there is a
-     corrisponding FRCommand interface.  It adds high level operations as
-     add_with_wildcard, add_directory, and implements options not supported
-     by the archiving utility.  For example,  you can extract files from a
-     tar archive without recreating the path even if the tar command does not
-     support this feature.  If an option is supported natively the command 
-     line option is used.
+After creating the new class, modify fr-init.c this way:
 
-  *) src/window.c : Implements the window object.
-
-  *) src/dlg-*.c : All files starting with dlg- implement a dialog. 
-
+ *) register the new archive type in register_archives(), in doing so
+    pay attention to the registration order as described in the comment;
+ *) if you are adding support for a new mime type, add the required entries
+    in mime_type_desc and file_ext_type .
