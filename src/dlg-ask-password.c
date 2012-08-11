@@ -29,6 +29,9 @@
 #include "gtk-utils.h"
 
 
+#define GET_WIDGET(x) (_gtk_builder_get_widget (data->builder, (x)))
+
+
 typedef enum {
 	FR_PASSWORD_TYPE_MAIN_ARCHIVE,
 	FR_PASSWORD_TYPE_SECOND_ARCHIVE
@@ -94,6 +97,7 @@ dlg_ask_password__common (FrWindow       *window,
 {
 	DialogData *data;
 	GFile      *file;
+	const char *old_password;
 	char       *filename;
 	char       *message;
 
@@ -108,23 +112,39 @@ dlg_ask_password__common (FrWindow       *window,
 
 	/* Get the widgets. */
 
-	data->dialog = _gtk_builder_get_widget (data->builder, "password_dialog");
-	data->password_entry = _gtk_builder_get_widget (data->builder, "password_entry");
+	data->dialog = GET_WIDGET ("password_dialog");
+	data->password_entry = GET_WIDGET ("password_entry");
 
 	/* Set widgets data. */
 
-	if (data->pwd_type == FR_PASSWORD_TYPE_MAIN_ARCHIVE)
+	if (data->pwd_type == FR_PASSWORD_TYPE_MAIN_ARCHIVE) {
 		file = fr_window_get_archive_file (window);
-	else if (data->pwd_type == FR_PASSWORD_TYPE_SECOND_ARCHIVE)
+		old_password = fr_window_get_password (window);
+	}
+	else if (data->pwd_type == FR_PASSWORD_TYPE_SECOND_ARCHIVE) {
 		file = fr_window_get_archive_file_for_paste (window);
+		old_password = fr_window_get_password_for_second_archive (window);
+	}
+
 	filename = _g_file_get_display_basename (file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("Password required for \"%s\""), filename);
-	gtk_label_set_label (GTK_LABEL (_gtk_builder_get_widget (data->builder, "title_label")), message);
+	gtk_label_set_label (GTK_LABEL (GET_WIDGET ("title_label")), message);
 
-	if (fr_window_get_password (window) != NULL)
+	if (old_password != NULL) {
+		GtkWidget *info_bar;
+		GtkWidget *label;
+
+		info_bar = gtk_info_bar_new ();
+		label = gtk_label_new (_("Wrong password."));
+		gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar))), label);
+		gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_ERROR);
+		gtk_box_pack_start (GTK_BOX (GET_WIDGET ("error_box")), info_bar, TRUE, TRUE, 0);
+		gtk_widget_show_all (GET_WIDGET ("error_box"));
+
 		_gtk_entry_set_locale_text (GTK_ENTRY (data->password_entry),
 					    fr_window_get_password (window));
+	}
 
 	/* Set the signals handlers. */
 

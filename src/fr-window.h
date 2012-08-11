@@ -158,9 +158,12 @@ void            fr_window_archive_encrypt              (FrWindow      *window,
 
 void            fr_window_set_password                 (FrWindow      *window,
 						        const char    *password);
-void            fr_window_set_password_for_second_archive       (FrWindow      *window,
+void            fr_window_set_password_for_second_archive
+						       (FrWindow      *window,
 						        const char    *password);
 const char *    fr_window_get_password                 (FrWindow      *window);
+const char *    fr_window_get_password_for_second_archive
+						       (FrWindow      *window);
 void            fr_window_set_encrypt_header           (FrWindow      *window,
 						        gboolean       encrypt_header);
 gboolean        fr_window_get_encrypt_header           (FrWindow      *window);

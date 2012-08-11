@@ -6860,6 +6860,7 @@ fr_window_set_password (FrWindow   *window,
 		window->priv->password = g_strdup (password);
 }
 
+
 void
 fr_window_set_password_for_second_archive (FrWindow   *window,
 					   const char *password)
@@ -6875,12 +6876,22 @@ fr_window_set_password_for_second_archive (FrWindow   *window,
 		window->priv->second_password = g_strdup (password);
 }
 
+
 const char *
 fr_window_get_password (FrWindow *window)
 {
 	g_return_val_if_fail (window != NULL, NULL);
 
 	return window->priv->password;
+}
+
+
+const char *
+fr_window_get_password_for_second_archive (FrWindow *window)
+{
+	g_return_val_if_fail (window != NULL, NULL);
+
+	return window->priv->second_password;
 }
 
 
