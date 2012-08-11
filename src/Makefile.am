@@ -110,6 +110,8 @@ COMMON_SOURCES = 			\
 	fr-command-jar.c		\
 	fr-command-lha.c		\
 	fr-command-lha.h		\
+	fr-command-lrzip.c		\
+	fr-command-lrzip.h		\
 	fr-command-rar.c		\
 	fr-command-rar.h		\
 	fr-command-rpm.c		\
@@ -120,8 +122,6 @@ COMMON_SOURCES = 			\
 	fr-command-unstuff.h		\
 	fr-command-zip.c		\
 	fr-command-zip.h		\
-	fr-command-lrzip.c		\
-	fr-command-lrzip.h		\
 	fr-command-zoo.c		\
 	fr-command-zoo.h		\
 	fr-error.c			\
