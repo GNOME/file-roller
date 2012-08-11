@@ -176,6 +176,25 @@ extension_comboboxtext_changed_cb (GtkComboBox *combo_box,
 }
 
 
+static char *
+_g_path_remove_extension_if_archive (const char *filename)
+{
+	const char *ext;
+	int         i;
+
+	ext = _g_filename_get_extension (filename);
+	if (ext == NULL)
+		return g_strdup (filename);
+
+	for (i = 0; file_ext_type[i].ext != NULL; i++) {
+		if (strcmp (ext, file_ext_type[i].ext) == 0)
+			return g_strndup (filename, strlen (filename) - strlen (ext))  ;
+	}
+
+	return g_strdup (filename);
+}
+
+
 static void
 _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 				  GtkWindow          *parent,
@@ -217,7 +236,7 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	if (default_name != NULL) {
 		char *default_name_no_ext;
 
-		default_name_no_ext = _g_path_remove_extension (default_name);
+		default_name_no_ext = _g_path_remove_extension_if_archive (default_name);
 		gtk_entry_set_text (GTK_ENTRY (GET_WIDGET ("filename_entry")), default_name_no_ext);
 
 		g_free (default_name_no_ext);
