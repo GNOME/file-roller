@@ -4085,7 +4085,7 @@ file_list_drag_begin (GtkWidget          *widget,
 	if (window->priv->activity_ref > 0)
 		return FALSE;
 
-	_g_object_clear (&window->priv->drag_destination_folder);
+	_g_clear_object (&window->priv->drag_destination_folder);
 
 	g_free (window->priv->drag_base_dir);
 	window->priv->drag_base_dir = NULL;
