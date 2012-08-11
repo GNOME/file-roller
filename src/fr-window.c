@@ -417,9 +417,6 @@ fr_window_free_batch_data (FrWindow *window)
 	window->priv->batch_action_list = NULL;
 	window->priv->batch_action = NULL;
 
-	g_free (window->priv->batch_title);
-	window->priv->batch_title = NULL;
-
 	fr_window_reset_current_batch_action (window);
 }
 
@@ -572,6 +569,7 @@ fr_window_free_private_data (FrWindow *window)
 	g_free (window->priv->last_location);
 
 	fr_window_free_batch_data (window);
+	g_free (window->priv->batch_title);
 
 	_g_object_unref (window->priv->pd_last_archive);
 	g_free (window->priv->pd_last_message);
