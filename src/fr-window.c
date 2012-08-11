@@ -4087,8 +4087,7 @@ file_list_drag_begin (GtkWidget          *widget,
 	if (window->priv->activity_ref > 0)
 		return FALSE;
 
-	g_free (window->priv->drag_destination_folder);
-	window->priv->drag_destination_folder = NULL;
+	_g_object_clear (&window->priv->drag_destination_folder);
 
 	g_free (window->priv->drag_base_dir);
 	window->priv->drag_base_dir = NULL;
@@ -4288,7 +4287,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	}
 
 	if (window->priv->drag_error == NULL) {
-		g_free (window->priv->drag_destination_folder);
+		_g_object_unref (window->priv->drag_destination_folder);
 		g_free (window->priv->drag_base_dir);
 		_g_string_list_free (window->priv->drag_file_list);
 		window->priv->drag_destination_folder = g_object_ref (destination_folder);
@@ -4372,7 +4371,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	}
 
 	if (window->priv->drag_error == NULL) {
-		g_free (window->priv->drag_destination_folder);
+		_g_object_unref (window->priv->drag_destination_folder);
 		g_free (window->priv->drag_base_dir);
 		_g_string_list_free (window->priv->drag_file_list);
 		window->priv->drag_destination_folder = g_object_ref (destination_folder);
