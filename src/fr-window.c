@@ -6130,7 +6130,6 @@ notify_action_open_archive_cb (NotifyNotification *notification,
 static void
 _fr_window_notify_creation_complete (FrWindow *window)
 {
-	char               *title;
 	char               *basename;
 	char               *message;
 	NotifyNotification *notification;
@@ -6138,7 +6137,6 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	GList              *caps;
 	NotifyData         *notify_data;
 
-	title = get_action_description (window, window->priv->action, window->priv->pd_last_archive);
 	basename = _g_file_get_display_basename (window->priv->saving_file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
@@ -6174,7 +6172,6 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	notify_notification_show (notification, NULL);
 	g_free (message);
 	g_free (basename);
-	g_free (title);
 }
 
 
