@@ -91,7 +91,6 @@ struct _FrArchive {
 
 	/*<protected>*/
 
-	gboolean       extract_here;
 	gssize         files_to_add_size;
 
 	/* features. */

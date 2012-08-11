@@ -190,71 +190,6 @@ copy_archive_to_remote_location (FrArchive          *archive,
 
 
 static void
-move_here (FrArchive    *archive,
-	   GCancellable *cancellable)
-{
-	GFile  *extraction_destination;
-	GFile  *directory_content;
-	GFile  *parent;
-	GFile  *parent_parent;
-	char   *content_name;
-	GFile  *new_directory_content;
-	GError *error = NULL;
-
-	extraction_destination = fr_archive_get_last_extraction_destination (archive);
-	directory_content = _g_file_get_dir_content_if_unique (extraction_destination);
-	if (directory_content == NULL)
-		return;
-
-	parent = g_file_get_parent (directory_content);
-
-	if (g_file_equal (parent, extraction_destination)) {
-		GFile *new_destination;
-
-		new_destination = _g_file_create_alternative_for_file (extraction_destination);
-		if (! g_file_move (extraction_destination, new_destination, 0, cancellable, NULL, NULL, &error)) {
-			g_warning ("%s", error->message);
-			g_clear_error (&error);
-		}
-
-		fr_archive_set_last_extraction_destination (archive, new_destination);
-
-		g_object_unref (directory_content);
-		directory_content = _g_file_get_dir_content_if_unique (new_destination);
-		g_object_unref (new_destination);
-
-		if (directory_content == NULL)
-			return;
-
-		g_object_unref (parent);
-		parent = g_file_get_parent (directory_content);
-	}
-
-	parent_parent = g_file_get_parent (parent);
-	content_name = g_file_get_basename (directory_content);
-	new_directory_content = _g_file_create_alternative (parent_parent, content_name);
-	g_free (content_name);
-
-	if (! g_file_move (directory_content, new_directory_content, 0, cancellable, NULL, NULL, &error)) {
-		g_warning ("%s", error->message);
-		g_clear_error (&error);
-	}
-
-	if (! g_file_delete (parent, cancellable, &error)) {
-		g_warning ("%s", error->message);
-		g_clear_error (&error);
-	}
-
-	fr_archive_set_last_extraction_destination (archive, new_directory_content);
-
-	g_object_unref (new_directory_content);
-	g_object_unref (parent_parent);
-	g_object_unref (parent);
-	g_object_unref (directory_content);
-}
-
-
-static void
 copy_extracted_files_done (GError   *error,
 			   gpointer  user_data)
 {
@@ -266,9 +201,6 @@ copy_extracted_files_done (GError   *error,
 
 	_g_file_remove_directory (self->priv->temp_extraction_dir, NULL, NULL);
 	_g_clear_object (&self->priv->temp_extraction_dir);
-
-	if ((error == NULL) && (xfer_data->archive->extract_here))
-		move_here (xfer_data->archive, xfer_data->cancellable);
 
 	g_simple_async_result_complete_in_idle (xfer_data->result);
 
@@ -2341,8 +2273,6 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 			xfer_data_free (xfer_data);
 			return;
 		}
-		else if (xfer_data->archive->extract_here)
-			move_here (xfer_data->archive, xfer_data->cancellable);
 	}
 	else {
 		g_simple_async_result_set_from_error (xfer_data->result, error);
@@ -2354,12 +2284,8 @@ process_ready_for_extract_to_local_cb (GObject      *source_object,
 			_g_file_remove_directory (self->priv->temp_extraction_dir, NULL, NULL);
 			_g_clear_object (&self->priv->temp_extraction_dir);
 		}
-
-		if (xfer_data->archive->extract_here)
-			_g_file_remove_directory (fr_archive_get_last_extraction_destination (xfer_data->archive), NULL, NULL);
 	}
 
-	xfer_data->archive->extract_here = FALSE;
 	g_simple_async_result_complete_in_idle (xfer_data->result);
 
 	_g_error_free (error);

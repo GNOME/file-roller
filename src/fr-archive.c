@@ -443,7 +443,6 @@ fr_archive_init (FrArchive *self)
         self->multi_volume = FALSE;
         self->volume_size = 0;
 	self->read_only = FALSE;
-        self->extract_here = FALSE;
 
         self->propAddCanUpdate = FALSE;
         self->propAddCanReplace = FALSE;
@@ -1329,6 +1328,110 @@ fr_archive_extract (FrArchive           *archive,
 /* -- fr_archive_extract_here -- */
 
 
+typedef struct {
+	FrArchive          *archive;
+	GCancellable       *cancellable;
+	GSimpleAsyncResult *result;
+} ExtractHereData;
+
+
+static void
+extract_here_data_free (ExtractHereData *e_data)
+{
+	_g_object_unref (e_data->cancellable);
+	g_object_unref (e_data->result);
+	g_free (e_data);
+}
+
+
+static void
+move_here (FrArchive    *archive,
+	   GCancellable *cancellable)
+{
+	GFile  *extraction_destination;
+	GFile  *directory_content;
+	GFile  *parent;
+	GFile  *parent_parent;
+	char   *content_name;
+	GFile  *new_directory_content;
+	GError *error = NULL;
+
+	extraction_destination = fr_archive_get_last_extraction_destination (archive);
+	directory_content = _g_file_get_dir_content_if_unique (extraction_destination);
+	if (directory_content == NULL)
+		return;
+
+	parent = g_file_get_parent (directory_content);
+
+	if (g_file_equal (parent, extraction_destination)) {
+		GFile *new_destination;
+
+		new_destination = _g_file_create_alternative_for_file (extraction_destination);
+		if (! g_file_move (extraction_destination, new_destination, 0, cancellable, NULL, NULL, &error)) {
+			g_warning ("%s", error->message);
+			g_clear_error (&error);
+		}
+
+		fr_archive_set_last_extraction_destination (archive, new_destination);
+
+		g_object_unref (directory_content);
+		directory_content = _g_file_get_dir_content_if_unique (new_destination);
+		g_object_unref (new_destination);
+
+		if (directory_content == NULL)
+			return;
+
+		g_object_unref (parent);
+		parent = g_file_get_parent (directory_content);
+	}
+
+	parent_parent = g_file_get_parent (parent);
+	content_name = g_file_get_basename (directory_content);
+	new_directory_content = _g_file_create_alternative (parent_parent, content_name);
+	g_free (content_name);
+
+	if (! g_file_move (directory_content, new_directory_content, 0, cancellable, NULL, NULL, &error)) {
+		g_warning ("%s", error->message);
+		g_clear_error (&error);
+	}
+
+	if (! g_file_delete (parent, cancellable, &error)) {
+		g_warning ("%s", error->message);
+		g_clear_error (&error);
+	}
+
+	fr_archive_set_last_extraction_destination (archive, new_directory_content);
+
+	g_object_unref (new_directory_content);
+	g_object_unref (parent_parent);
+	g_object_unref (parent);
+	g_object_unref (directory_content);
+}
+
+
+static void
+extract_here_ready_cb (GObject      *source_object,
+		       GAsyncResult *result,
+		       gpointer      user_data)
+{
+	ExtractHereData *e_data = user_data;
+	GError          *error = NULL;
+
+	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
+	if (error != NULL) {
+		_g_file_remove_directory (fr_archive_get_last_extraction_destination (e_data->archive), NULL, NULL);
+		g_simple_async_result_set_from_error (e_data->result, error);
+		g_error_free (error);
+	}
+	else
+		move_here (e_data->archive, e_data->cancellable);
+
+	g_simple_async_result_complete_in_idle (e_data->result);
+
+	extract_here_data_free (e_data);
+}
+
+
 static char *
 get_desired_destination_for_archive (GFile *file)
 {
@@ -1413,26 +1516,31 @@ fr_archive_extract_here (FrArchive           *archive,
 			 GAsyncReadyCallback  callback,
 			 gpointer             user_data)
 {
-	GFile  *destination;
-	GError *error = NULL;
+	GSimpleAsyncResult *result;
+	GFile              *destination;
+	GError             *error = NULL;
+	ExtractHereData    *e_data;
+
+	result = g_simple_async_result_new (G_OBJECT (archive),
+					    callback,
+					    user_data,
+					    fr_archive_extract_here);
 
 	destination = get_extract_here_destination (archive->priv->file, &error);
 	if (error != NULL) {
-		GSimpleAsyncResult *result;
-
-		result = g_simple_async_result_new (G_OBJECT (archive),
-						    callback,
-						    user_data,
-						    fr_archive_extract_here);
 		g_simple_async_result_set_from_error (result, error);
 		g_simple_async_result_complete_in_idle (result);
 
+		g_object_unref (result);
 		g_error_free (error);
-
 		return FALSE;
 	}
 
-	archive->extract_here = TRUE;
+	e_data = g_new0 (ExtractHereData, 1);
+	e_data->archive = archive;
+	e_data->cancellable = _g_object_ref (cancellable);
+	e_data->result = result;
+
 	fr_archive_extract (archive,
 			    NULL,
 			    destination,
@@ -1442,8 +1550,8 @@ fr_archive_extract_here (FrArchive           *archive,
 			    junk_path,
 			    password,
 			    cancellable,
-			    callback,
-			    user_data);
+			    extract_here_ready_cb,
+			    e_data);
 
 	g_object_unref (destination);
 
