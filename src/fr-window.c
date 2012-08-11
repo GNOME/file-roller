@@ -2147,6 +2147,8 @@ progress_dialog_response (GtkDialog *dialog,
 	default:
 		break;
 	}
+
+	_g_clear_object (&window->priv->saving_file);
 }
 
 
@@ -7149,7 +7151,6 @@ convert_data_free (ConvertData *cdata)
 		return;
 	_g_file_remove_directory (cdata->temp_extraction_dir, NULL, NULL);
 	_g_object_unref (cdata->temp_extraction_dir);
-	_g_clear_object (&cdata->window->priv->saving_file);
 	_g_object_unref (cdata->file);
 	_g_object_unref (cdata->new_archive);
 	g_free (cdata->mime_type);
@@ -7209,6 +7210,7 @@ _convertion_completed_with_error (FrWindow *window,
 	if (opens_dialog)
 		return;
 
+	_g_clear_object (&window->priv->saving_file);
 	fr_window_stop_batch (window);
 }
 
@@ -7241,7 +7243,7 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 			      cdata->volume_size,
 			      window->priv->cancellable,
 			      archive_add_ready_for_conversion_cb,
-			      window);
+			      cdata);
 
 	g_list_free (list);
 }
@@ -7289,6 +7291,7 @@ fr_window_archive_save_as (FrWindow   *window,
 	}
 
 	cdata = convert_data_new (file, mime_type, password, encrypt_header, volume_size);
+	cdata->window = window;
 	cdata->new_archive = new_archive;
 
 	_archive_operation_started (window, FR_ACTION_CREATING_ARCHIVE);
