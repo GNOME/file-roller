@@ -117,17 +117,6 @@ typedef struct {
 
 
 typedef struct {
-	guint      converting : 1;
-	GFile     *temp_dir;
-	FrArchive *new_archive;
-	char      *password;
-	gboolean   encrypt_header;
-	guint      volume_size;
-	GFile     *new_file;
-} FrConvertData;
-
-
-typedef struct {
 	GList       *file_list;
 	GFile       *destination;
 	char        *base_dir;
@@ -323,8 +312,6 @@ struct _FrWindowPrivate {
 	guint            update_timeout_handle;     /* update file list
 						     * timeout handle. */
 
-	FrConvertData    convert_data;
-
 	gboolean         stoppable;
 	gboolean         closing;
 	gboolean         notify;
@@ -333,6 +320,7 @@ struct _FrWindowPrivate {
 	FrClipboardData *copy_data;
 
 	FrArchive       *copy_from_archive;
+	GFile           *saving_file;
 
 	GtkActionGroup  *actions;
 
@@ -431,6 +419,8 @@ fr_window_free_batch_data (FrWindow *window)
 
 	g_free (window->priv->batch_title);
 	window->priv->batch_title = NULL;
+
+	fr_window_reset_current_batch_action (window);
 }
 
 
@@ -505,34 +495,6 @@ fr_window_free_open_files (FrWindow *window)
 
 
 static void
-_fr_window_convert_data_free (FrWindow   *window,
-			     gboolean    all)
-{
-	if (all) {
-		_g_object_unref (window->priv->convert_data.new_file);
-		window->priv->convert_data.new_file = NULL;
-	}
-
-	window->priv->convert_data.converting = FALSE;
-
-	if (window->priv->convert_data.temp_dir != NULL) {
-		g_object_unref (window->priv->convert_data.temp_dir);
-		window->priv->convert_data.temp_dir = NULL;
-	}
-
-	if (window->priv->convert_data.new_archive != NULL) {
-		g_object_unref (window->priv->convert_data.new_archive);
-		window->priv->convert_data.new_archive = NULL;
-	}
-
-	if (window->priv->convert_data.password != NULL) {
-		g_free (window->priv->convert_data.password);
-		window->priv->convert_data.password = NULL;
-	}
-}
-
-
-static void
 fr_window_free_private_data (FrWindow *window)
 {
 	if (window->priv->update_timeout_handle != 0) {
@@ -584,9 +546,9 @@ fr_window_free_private_data (FrWindow *window)
 		window->priv->copy_from_archive = NULL;
 	}
 
-	fr_window_free_open_files (window);
+	_g_object_unref (window->priv->saving_file);
 
-	_fr_window_convert_data_free (window, TRUE);
+	fr_window_free_open_files (window);
 
 	g_clear_error (&window->priv->drag_error);
 	_g_string_list_free (window->priv->drag_file_list);
@@ -610,7 +572,6 @@ fr_window_free_private_data (FrWindow *window)
 	g_free (window->priv->last_location);
 
 	fr_window_free_batch_data (window);
-	fr_window_reset_current_batch_action (window);
 
 	_g_object_unref (window->priv->pd_last_archive);
 	g_free (window->priv->pd_last_message);
@@ -2175,7 +2136,7 @@ progress_dialog_response (GtkDialog *dialog,
 	case DIALOG_RESPONSE_OPEN_ARCHIVE:
 		new_window = fr_window_new ();
 		gtk_widget_show (new_window);
-		fr_window_archive_open (FR_WINDOW (new_window), window->priv->convert_data.new_file, GTK_WINDOW (new_window));
+		fr_window_archive_open (FR_WINDOW (new_window), window->priv->saving_file, GTK_WINDOW (new_window));
 		close_progress_dialog (window, TRUE);
 		break;
 	case DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER:
@@ -2246,6 +2207,7 @@ get_action_description (FrWindow *window,
 		message = g_strdup_printf (_("Creating \"%s\""), basename);
 		break;
 	case FR_ACTION_SAVING_REMOTE_ARCHIVE:
+	case FR_ACTION_ENCRYPTING_ARCHIVE:
 		/* Translators: %s is a filename */
 		message = g_strdup_printf (_("Saving \"%s\""), basename);
 		break;
@@ -2260,7 +2222,7 @@ get_action_description (FrWindow *window,
 		/* Translators: %s is a filename */
 		message = g_strdup_printf (_("Updating the files in \"%s\""), basename);
 		break;
-	default:
+	case FR_ACTION_NONE:
 		break;
 	}
 
@@ -2293,8 +2255,8 @@ progress_dialog_update_action_description (FrWindow *window)
 	if (window->priv->progress_dialog == NULL)
 		return;
 
-	if (window->priv->convert_data.converting)
-		current_archive = window->priv->convert_data.new_file;
+	if (window->priv->saving_file != NULL)
+		current_archive = window->priv->saving_file;
 	else if (window->priv->working_archive != NULL)
 		current_archive = window->priv->working_archive;
 	else
@@ -2642,7 +2604,7 @@ open_progress_dialog_with_open_archive (FrWindow *window)
 	fr_archive_progress_cb (NULL, 1.0, window);
 	fr_archive_message_cb (NULL, NULL, window);
 
-	basename = _g_file_get_display_basename (window->priv->convert_data.new_file);
+	basename = _g_file_get_display_basename (window->priv->saving_file);
 	/* Translators: %s is a filename */
 	description = g_strdup_printf (_("\"%s\" created successfully"), basename);
 	progress_dialog_set_action_description (window, description);
@@ -2881,6 +2843,7 @@ _handle_archive_operation_error (FrWindow  *window,
 			break;
 
 		case FR_ACTION_SAVING_REMOTE_ARCHIVE:
+		case FR_ACTION_ENCRYPTING_ARCHIVE:
 			msg = _("An error occurred while saving the archive.");
 			break;
 
@@ -3039,8 +3002,8 @@ _archive_operation_completed (FrWindow *window,
 		window->priv->archive_file = _g_object_ref (fr_archive_get_file (window->archive));
 
 		if (window->priv->notify) {
-			_g_object_unref (window->priv->convert_data.new_file);
-			window->priv->convert_data.new_file = g_object_ref (window->priv->archive_file);
+			_g_object_unref (window->priv->saving_file);
+			window->priv->saving_file = g_object_ref (window->priv->archive_file);
 		}
 
 		if (error == NULL) {
@@ -3123,7 +3086,9 @@ _archive_operation_started (FrWindow *window,
 
 	switch (action) {
 	case FR_ACTION_EXTRACTING_FILES:
-		open_progress_dialog (window, window->priv->ask_to_open_destination_after_extraction || window->priv->convert_data.converting || window->priv->batch_mode);
+		open_progress_dialog (window, (window->priv->ask_to_open_destination_after_extraction
+					       || (window->priv->saving_file != NULL)
+					       || window->priv->batch_mode));
 		break;
 	default:
 		open_progress_dialog (window, window->priv->batch_mode);
@@ -5447,13 +5412,6 @@ fr_window_construct (FrWindow *window)
 	window->priv->encrypt_header = g_settings_get_boolean (window->priv->settings_general, PREF_GENERAL_ENCRYPT_HEADER);
 	window->priv->volume_size = 0;
 
-	window->priv->convert_data.converting = FALSE;
-	window->priv->convert_data.temp_dir = NULL;
-	window->priv->convert_data.new_archive = NULL;
-	window->priv->convert_data.password = NULL;
-	window->priv->convert_data.encrypt_header = FALSE;
-	window->priv->convert_data.volume_size = 0;
-
 	window->priv->stoppable = TRUE;
 
 	window->priv->batch_adding_one_file = FALSE;
@@ -6163,9 +6121,8 @@ notify_action_open_archive_cb (NotifyNotification *notification,
 
 	new_window = fr_window_new ();
 	gtk_widget_show (new_window);
-
 	fr_window_archive_open (FR_WINDOW (new_window),
-				window->priv->convert_data.new_file,
+				window->priv->saving_file,
 				GTK_WINDOW (new_window));
 
 	notify_data->window_closed = TRUE;
@@ -6185,7 +6142,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	NotifyData         *notify_data;
 
 	title = get_action_description (window, window->priv->action, window->priv->pd_last_archive);
-	basename = _g_file_get_display_basename (window->priv->convert_data.new_file);
+	basename = _g_file_get_display_basename (window->priv->saving_file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
 	notification = notify_notification_new (window->priv->batch_title, message, "file-roller");
@@ -6907,6 +6864,9 @@ fr_window_set_password (FrWindow   *window,
 {
 	g_return_if_fail (window != NULL);
 
+	if (window->priv->password == password)
+		return;
+
 	if (window->priv->password != NULL) {
 		g_free (window->priv->password);
 		window->priv->password = NULL;
@@ -7166,45 +7126,53 @@ fr_window_action_new_archive (FrWindow *window)
 
 
 typedef struct {
-	GFile    *file;
-	char     *mime_type;
-	char     *password;
-	gboolean  encrypt_header;
-	guint     volume_size;
-} SaveAsData;
+	FrWindow  *window;
+	FrArchive *new_archive;
+	GFile     *file;
+	char      *mime_type;
+	char      *password;
+	gboolean   encrypt_header;
+	guint      volume_size;
+	GFile     *temp_extraction_dir;
+} ConvertData;
 
 
-static SaveAsData *
-save_as_data_new (GFile      *file,
+static ConvertData *
+convert_data_new (GFile      *file,
 		  const char *mime_type,
 		  const char *password,
 		  gboolean    encrypt_header,
 	  	  guint       volume_size)
 {
-	SaveAsData *sdata;
+	ConvertData *cdata;
 
-	sdata = g_new0 (SaveAsData, 1);
-	sdata->file = _g_object_ref (file);
+	cdata = g_new0 (ConvertData, 1);
+	cdata->file = _g_object_ref (file);
 	if (mime_type != NULL)
-		sdata->mime_type = g_strdup (mime_type);
+		cdata->mime_type = g_strdup (mime_type);
 	if (password != NULL)
-		sdata->password = g_strdup (password);
-	sdata->encrypt_header = encrypt_header;
-	sdata->volume_size = volume_size;
+		cdata->password = g_strdup (password);
+	cdata->encrypt_header = encrypt_header;
+	cdata->volume_size = volume_size;
+	cdata->temp_extraction_dir = _g_file_get_temp_work_dir (NULL);
 
-	return sdata;
+	return cdata;
 }
 
 
 static void
-save_as_data_free (SaveAsData *sdata)
+convert_data_free (ConvertData *cdata)
 {
-	if (sdata == NULL)
+	if (cdata == NULL)
 		return;
-	_g_object_unref (sdata->file);
-	g_free (sdata->mime_type);
-	g_free (sdata->password);
-	g_free (sdata);
+	_g_file_remove_directory (cdata->temp_extraction_dir, NULL, NULL);
+	_g_object_unref (cdata->temp_extraction_dir);
+	_g_clear_object (&cdata->window->priv->saving_file);
+	_g_object_unref (cdata->file);
+	_g_object_unref (cdata->new_archive);
+	g_free (cdata->mime_type);
+	g_free (cdata->password);
+	g_free (cdata);
 }
 
 
@@ -7213,56 +7181,51 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 				     GAsyncResult *result,
 				     gpointer      user_data)
 {
-	FrWindow *window = user_data;
-	GError   *error = NULL;
+	ConvertData *cdata = user_data;
+	FrWindow    *window = cdata->window;
+	GError      *error = NULL;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 
 	_fr_window_stop_activity_mode (window);
 	close_progress_dialog (window, FALSE);
 
-	if (error == NULL)
-		open_progress_dialog_with_open_archive (window);
-	else
+	if (error != NULL) {
 		_handle_archive_operation_error (window,
-						 window->priv->convert_data.new_archive,
+						 cdata->new_archive,
 						 FR_ACTION_ADDING_FILES,
 						 error,
 						 NULL,
 						 NULL);
-
-	_g_file_remove_directory (window->priv->convert_data.temp_dir, NULL, NULL);
-	_fr_window_convert_data_free (window, FALSE);
-
-	if (error == NULL)
-		fr_window_exec_next_batch_action (window);
-	else
 		fr_window_stop_batch (window);
+		g_error_free (error);
+		return;
+	}
 
-	_g_error_free (error);
+	open_progress_dialog_with_open_archive (window);
+	fr_window_exec_next_batch_action (window);
 }
 
 
 static void
-_save_as_operation_completed_with_error (FrWindow *window,
-					 FrAction  action,
-					 GError   *error)
+_convertion_completed_with_error (FrWindow *window,
+				  FrAction  action,
+				  GError   *error)
 {
+	gboolean opens_dialog;
+
 	g_return_if_fail (error != NULL);
 
 #ifdef DEBUG
 	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
 #endif
 
-	_g_file_remove_directory (window->priv->convert_data.temp_dir, NULL, NULL);
-	_fr_window_convert_data_free (window, TRUE);
 	_fr_window_stop_activity_mode (window);
 	close_progress_dialog (window, FALSE);
 
-	if (error->code == FR_ERROR_ASK_PASSWORD) {
-		dlg_ask_password (window);
+	_handle_archive_operation_error (window, window->archive, action, error, NULL, &opens_dialog);
+	if (opens_dialog)
 		return;
-	}
 
 	fr_window_stop_batch (window);
 }
@@ -7273,26 +7236,27 @@ archive_extraction_ready_for_convertion_cb (GObject      *source_object,
 					    GAsyncResult *result,
 					    gpointer      user_data)
 {
-	FrWindow *window = user_data;
-	GList    *list;
-	GError   *error = NULL;
+	ConvertData *cdata = user_data;
+	FrWindow    *window = cdata->window;
+	GList       *list;
+	GError      *error = NULL;
 
 	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
-		_save_as_operation_completed_with_error (window, FR_ACTION_EXTRACTING_FILES, error);
+		_convertion_completed_with_error (window, FR_ACTION_EXTRACTING_FILES, error);
 		return;
 	}
 
-	list = g_list_prepend (NULL, window->priv->convert_data.temp_dir);
-	fr_archive_add_files (window->priv->convert_data.new_archive,
+	list = g_list_prepend (NULL, cdata->temp_extraction_dir);
+	fr_archive_add_files (cdata->new_archive,
 			      list,
-			      window->priv->convert_data.temp_dir,
+			      cdata->temp_extraction_dir,
 			      NULL,
 			      FALSE,
 			      FALSE,
-			      window->priv->convert_data.password,
-			      window->priv->convert_data.encrypt_header,
+			      cdata->password,
+			      cdata->encrypt_header,
 			      window->priv->compression,
-			      window->priv->convert_data.volume_size,
+			      cdata->volume_size,
 			      window->priv->cancellable,
 			      archive_add_ready_for_conversion_cb,
 			      window);
@@ -7309,17 +7273,17 @@ fr_window_archive_save_as (FrWindow   *window,
 			   gboolean    encrypt_header,
 			   guint       volume_size)
 {
+	FrArchive   *new_archive;
+	ConvertData *cdata;
+
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (file != NULL);
 	g_return_if_fail (window->archive != NULL);
 
-	_fr_window_convert_data_free (window, TRUE);
-	window->priv->convert_data.new_file = g_object_ref (file);
-
 	/* create the new archive */
 
-	window->priv->convert_data.new_archive = fr_archive_create (file, mime_type);
-	if (window->priv->convert_data.new_archive == NULL) {
+	new_archive = fr_archive_create (file, mime_type);
+	if (new_archive == NULL) {
 		GtkWidget *d;
 		char      *utf8_name;
 		char      *message;
@@ -7342,58 +7306,51 @@ fr_window_archive_save_as (FrWindow   *window,
 		return;
 	}
 
-	if (password != NULL) {
-		window->priv->convert_data.password = g_strdup (password);
-		window->priv->convert_data.encrypt_header = encrypt_header;
-	}
-	else
-		window->priv->convert_data.encrypt_header = FALSE;
-
-	window->priv->convert_data.volume_size = volume_size;
+	cdata = convert_data_new (file, mime_type, password, encrypt_header, volume_size);
+	cdata->new_archive = new_archive;
 
 	_archive_operation_started (window, FR_ACTION_CREATING_ARCHIVE);
-
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_SAVE_AS,
-					    save_as_data_new (file, mime_type, password, encrypt_header, volume_size),
-					    (GFreeFunc) save_as_data_free);
+					    cdata,
+					    (GFreeFunc) convert_data_free);
 
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+	g_signal_connect (cdata->new_archive,
 			  "progress",
 			  G_CALLBACK (fr_archive_progress_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+	g_signal_connect (cdata->new_archive,
 			  "message",
 			  G_CALLBACK (fr_archive_message_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+	g_signal_connect (cdata->new_archive,
 			  "start",
 			  G_CALLBACK (fr_archive_start_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+	g_signal_connect (cdata->new_archive,
 			  "stoppable",
 			  G_CALLBACK (fr_archive_stoppable_cb),
 			  window);
-	g_signal_connect (G_OBJECT (window->priv->convert_data.new_archive),
+	g_signal_connect (cdata->new_archive,
 			  "working-archive",
 			  G_CALLBACK (fr_window_working_archive_cb),
 			  window);
 
-	window->priv->convert_data.converting = TRUE;
-	window->priv->convert_data.temp_dir = _g_file_get_temp_work_dir (NULL);
+	_g_object_unref (window->priv->saving_file);
+	window->priv->saving_file = g_object_ref (cdata->file);
 
 	fr_archive_action_started (window->archive, FR_ACTION_EXTRACTING_FILES);
 	fr_archive_extract (window->archive,
 			    NULL,
-			    window->priv->convert_data.temp_dir,
+			    cdata->temp_extraction_dir,
 			    NULL,
-			    TRUE,
+			    FALSE,
 			    TRUE,
 			    FALSE,
 			    window->priv->password,
 			    window->priv->cancellable,
 			    archive_extraction_ready_for_convertion_cb,
-			    window);
+			    cdata);
 }
 
 
@@ -7471,6 +7428,288 @@ fr_window_action_save_as (FrWindow *window)
 	gtk_window_present (GTK_WINDOW (dialog));
 
 	g_free (archive_name);
+}
+
+
+/* -- fr_window_archive_encrypt -- */
+
+
+typedef struct {
+	FrWindow  *window;
+	char      *password;
+	gboolean   encrypt_header;
+	GFile     *temp_extraction_dir;
+	GFile     *temp_new_file;
+	FrArchive *new_archive;
+} EncryptData;
+
+
+static EncryptData *
+encrypt_data_new (FrWindow   *window,
+		  const char *password,
+		  gboolean    encrypt_header)
+{
+	EncryptData *edata;
+
+	edata = g_new0 (EncryptData, 1);
+	edata->window = window;
+	if (password != NULL)
+		edata->password = g_strdup (password);
+	edata->encrypt_header = encrypt_header;
+	edata->temp_extraction_dir = _g_file_get_temp_work_dir (NULL);
+
+	return edata;
+}
+
+
+static void
+encrypt_data_free (EncryptData *edata)
+{
+	if (edata == NULL)
+		return;
+
+	if (edata->temp_new_file != NULL) {
+		GFile *parent = g_file_get_parent (edata->temp_new_file);
+		if (parent != NULL)
+			_g_file_remove_directory (parent, NULL, NULL);
+		_g_object_unref (parent);
+	}
+	_g_object_unref (edata->temp_new_file);
+	_g_object_unref (edata->new_archive);
+	_g_file_remove_directory (edata->temp_extraction_dir, NULL, NULL);
+	_g_object_unref (edata->temp_extraction_dir);
+	g_free (edata->password);
+	g_free (edata);
+}
+
+
+static void
+_encrypt_operation_completed_with_error (FrWindow *window,
+					 FrAction  action,
+					 GError   *error)
+{
+	gboolean opens_dialog;
+
+	g_return_if_fail (error != NULL);
+
+#ifdef DEBUG
+	debug (DEBUG_INFO, "%s [DONE] (FR::Window)\n", action_names[action]);
+#endif
+
+	_fr_window_stop_activity_mode (window);
+	_handle_archive_operation_error (window, window->archive, action, error, NULL, &opens_dialog);
+	if (opens_dialog)
+		return;
+
+	close_progress_dialog (window, FALSE);
+	fr_window_stop_batch (window);
+}
+
+
+static void
+ecryption_copy_ready_cb (GObject      *source_object,
+			 GAsyncResult *result,
+			 gpointer      user_data)
+{
+	EncryptData *edata = user_data;
+	FrWindow    *window = edata->window;
+	GError      *error = NULL;
+
+	_fr_window_stop_activity_mode (window);
+	close_progress_dialog (window, FALSE);
+
+	if (! g_file_copy_finish (G_FILE (source_object), result, &error)) {
+		_handle_archive_operation_error (window,
+						 edata->new_archive,
+						 FR_ACTION_CREATING_NEW_ARCHIVE,
+						 error,
+						 NULL,
+						 NULL);
+		fr_window_stop_batch (window);
+
+		g_error_free (error);
+		return;
+	}
+
+	fr_window_set_password (window, edata->password);
+	fr_window_set_encrypt_header (window, edata->encrypt_header);
+	window->priv->reload_archive = TRUE;
+	fr_window_exec_next_batch_action (window);
+}
+
+
+static void
+encryption_copy_progress_cb (goffset  current_num_bytes,
+			     goffset  total_num_bytes,
+			     gpointer user_data)
+{
+	EncryptData *edata = user_data;
+
+	fr_archive_progress (edata->new_archive, (double) current_num_bytes / total_num_bytes);
+}
+
+
+static void
+archive_add_ready_for_encryption_cb (GObject      *source_object,
+				     GAsyncResult *result,
+				     gpointer      user_data)
+{
+	EncryptData *edata = user_data;
+	FrWindow    *window = edata->window;
+	GError      *error = NULL;
+
+	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
+		_encrypt_operation_completed_with_error (window, FR_ACTION_ENCRYPTING_ARCHIVE, error);
+		return;
+	}
+
+	fr_archive_action_started (window->archive, FR_ACTION_SAVING_REMOTE_ARCHIVE);
+	g_file_copy_async (edata->temp_new_file,
+			   fr_archive_get_file (window->archive),
+			   G_FILE_COPY_OVERWRITE,
+			   G_PRIORITY_DEFAULT,
+			   window->priv->cancellable,
+			   encryption_copy_progress_cb,
+			   edata,
+			   ecryption_copy_ready_cb,
+			   edata);
+}
+
+
+static void
+archive_extraction_ready_for_encryption_cb (GObject      *source_object,
+					    GAsyncResult *result,
+					    gpointer      user_data)
+{
+	EncryptData *edata = user_data;
+	FrWindow    *window = edata->window;
+	GList       *list;
+	GError      *error = NULL;
+
+	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
+		_encrypt_operation_completed_with_error (window, FR_ACTION_ENCRYPTING_ARCHIVE, error);
+		return;
+	}
+
+	fr_archive_action_started (window->archive, FR_ACTION_ENCRYPTING_ARCHIVE);
+
+	list = g_list_prepend (NULL, edata->temp_extraction_dir);
+	fr_archive_add_files (edata->new_archive,
+			      list,
+			      edata->temp_extraction_dir,
+			      NULL,
+			      FALSE,
+			      FALSE,
+			      edata->password,
+			      edata->encrypt_header,
+			      window->priv->compression,
+			      0,
+			      window->priv->cancellable,
+			      archive_add_ready_for_encryption_cb,
+			      edata);
+
+	g_list_free (list);
+}
+
+
+void
+fr_window_archive_encrypt (FrWindow   *window,
+			   const char *password,
+			   gboolean    encrypt_header)
+{
+	EncryptData *edata;
+	GFile       *temp_destination_parent;
+	GFile       *temp_destination;
+	char        *basename;
+	GFile       *temp_new_file;
+	FrArchive   *new_archive;
+
+	/* create the new archive */
+
+	if (g_file_is_native (fr_archive_get_file (window->archive)))
+		temp_destination_parent = g_file_get_parent (fr_archive_get_file (window->archive));
+	else
+		temp_destination_parent = NULL;
+	temp_destination = _g_file_get_temp_work_dir (temp_destination_parent);
+	basename = g_file_get_basename (fr_archive_get_file (window->archive));
+	temp_new_file = g_file_get_child (temp_destination, basename);
+
+	g_free (basename);
+	_g_object_unref (temp_destination_parent);
+
+	new_archive = fr_archive_create (temp_new_file, fr_archive_get_mime_type (window->archive));
+	if (new_archive == NULL) {
+		GtkWidget *d;
+		char      *utf8_name;
+		char      *message;
+
+		utf8_name = _g_file_get_display_basename (temp_new_file);
+		message = g_strdup_printf (_("Could not save the archive \"%s\""), utf8_name);
+		g_free (utf8_name);
+
+		d = _gtk_error_dialog_new (GTK_WINDOW (window),
+					   GTK_DIALOG_DESTROY_WITH_PARENT,
+					   NULL,
+					   message,
+					   "%s",
+					   _("Archive type not supported."));
+		gtk_dialog_run (GTK_DIALOG (d));
+		gtk_widget_destroy (d);
+
+		g_free (message);
+		g_object_unref (temp_new_file);
+
+		_g_file_remove_directory (temp_destination, NULL, NULL);
+		g_object_unref (temp_destination);
+
+		return;
+	}
+
+	g_object_unref (temp_destination);
+
+	edata = encrypt_data_new (window, password, encrypt_header);
+	edata->temp_new_file = temp_new_file;
+	edata->new_archive = new_archive;
+
+	g_signal_connect (edata->new_archive,
+			  "progress",
+			  G_CALLBACK (fr_archive_progress_cb),
+			  window);
+	g_signal_connect (edata->new_archive,
+			  "message",
+			  G_CALLBACK (fr_archive_message_cb),
+			  window);
+	g_signal_connect (edata->new_archive,
+			  "start",
+			  G_CALLBACK (fr_archive_start_cb),
+			  window);
+	g_signal_connect (edata->new_archive,
+			  "stoppable",
+			  G_CALLBACK (fr_archive_stoppable_cb),
+			  window);
+	g_signal_connect (edata->new_archive,
+			  "working-archive",
+			  G_CALLBACK (fr_window_working_archive_cb),
+			  window);
+
+	_archive_operation_started (window, FR_ACTION_ENCRYPTING_ARCHIVE);
+	fr_window_set_current_batch_action (window,
+					    FR_BATCH_ACTION_ENCRYPT,
+					    edata,
+					    (GFreeFunc) encrypt_data_free);
+
+	fr_archive_action_started (window->archive, FR_ACTION_EXTRACTING_FILES);
+	fr_archive_extract (window->archive,
+			    NULL,
+			    edata->temp_extraction_dir,
+			    NULL,
+			    FALSE,
+			    TRUE,
+			    FALSE,
+			    window->priv->password,
+			    window->priv->cancellable,
+			    archive_extraction_ready_for_encryption_cb,
+			    edata);
 }
 
 
@@ -8928,7 +9167,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 	ExtractData   *edata;
 	RenameData    *rdata;
 	OpenFilesData *odata;
-	SaveAsData    *sdata;
+	ConvertData   *cdata;
+	EncryptData   *enc_data;
 
 	switch (action->type) {
 	case FR_BATCH_ACTION_LOAD:
@@ -9035,13 +9275,13 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_SAVE_AS:
 		debug (DEBUG_INFO, "[BATCH] SAVE_AS\n");
 
-		sdata = action->data;
+		cdata = action->data;
 		fr_window_archive_save_as (window,
-					   sdata->file,
-					   sdata->mime_type,
-					   sdata->password,
-					   sdata->encrypt_header,
-					   sdata->volume_size);
+					   cdata->file,
+					   cdata->mime_type,
+					   cdata->password,
+					   cdata->encrypt_header,
+					   cdata->volume_size);
 		break;
 
 	case FR_BATCH_ACTION_TEST:
@@ -9049,6 +9289,16 @@ fr_window_exec_batch_action (FrWindow      *window,
 
 		fr_window_archive_test (window);
 		break;
+
+	case FR_BATCH_ACTION_ENCRYPT:
+		debug (DEBUG_INFO, "[BATCH] ENCRYPT\n");
+
+		enc_data = action->data;
+		fr_window_archive_encrypt (window,
+					   enc_data->password,
+					   enc_data->encrypt_header);
+		break;
+
 
 	case FR_BATCH_ACTION_CLOSE:
 		debug (DEBUG_INFO, "[BATCH] CLOSE\n");

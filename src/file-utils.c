@@ -406,6 +406,9 @@ _g_file_remove_directory (GFile         *directory,
 	GFileInfo       *info;
 	gboolean         error_occurred = FALSE;
 
+	if (directory == NULL)
+		return TRUE;
+
 	enumerator = g_file_enumerate_children (directory,
 					        G_FILE_ATTRIBUTE_STANDARD_NAME ","
 					        G_FILE_ATTRIBUTE_STANDARD_TYPE,

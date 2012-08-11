@@ -1838,6 +1838,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 		g_simple_async_result_complete_in_idle (result);
 
 		g_error_free (error);
+		g_object_unref (result);
 		return;
 	}
 
@@ -1851,6 +1852,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 			g_simple_async_result_complete_in_idle (result);
 
 			g_error_free (error);
+			g_object_unref (result);
 			return;
 		}
 	}
@@ -1868,6 +1870,8 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 								    callback,
 								    user_data);
 	add_dropped_items (archive->priv->dropped_items_data);
+
+	g_object_unref (result);
 }
 
 

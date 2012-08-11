@@ -62,6 +62,7 @@ typedef enum {
 	FR_BATCH_ACTION_OPEN_FILES,
 	FR_BATCH_ACTION_SAVE_AS,
 	FR_BATCH_ACTION_TEST,
+	FR_BATCH_ACTION_ENCRYPT,
 	FR_BATCH_ACTION_CLOSE,
 	FR_BATCH_ACTION_QUIT,
 	FR_BATCH_ACTIONS
@@ -149,6 +150,9 @@ void            fr_window_archive_extract_here         (FrWindow      *window,
 						        gboolean       overwrite,
 						        gboolean       junk_paths);
 void            fr_window_archive_test	               (FrWindow      *window);
+void            fr_window_archive_encrypt              (FrWindow      *window,
+							const char    *password,
+							gboolean       encrypt_header);
 
 /**/
 

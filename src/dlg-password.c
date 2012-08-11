@@ -24,16 +24,17 @@
 #include <gtk/gtk.h>
 #include "fr-window.h"
 #include "gtk-utils.h"
+#include "glib-utils.h"
 #include "preferences.h"
 #include "dlg-password.h"
 
 
+#define GET_WIDGET(x) (_gtk_builder_get_widget (data->builder, (x)))
+
+
 typedef struct {
 	GtkBuilder *builder;
-	FrWindow  *window;
-	GtkWidget *dialog;
-	GtkWidget *pw_password_entry;
-	GtkWidget *pw_encrypt_header_checkbutton;
+	FrWindow   *window;
 } DialogData;
 
 
@@ -52,30 +53,18 @@ response_cb (GtkWidget  *dialog,
 	     int         response_id,
 	     DialogData *data)
 {
-	char     *password;
-	gboolean  encrypt_header;
+	if (response_id == GTK_RESPONSE_OK) {
+		char      *password;
+		gboolean   encrypt_header;
 
-	switch (response_id) {
-	case GTK_RESPONSE_OK:
-		password = _gtk_entry_get_locale_text (GTK_ENTRY (data->pw_password_entry));
-		fr_window_set_password (data->window, password);
+		password = _gtk_entry_get_locale_text (GTK_ENTRY (GET_WIDGET ("password_entry")));
+		encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")));
+		fr_window_archive_encrypt (data->window, password, encrypt_header);
+
 		g_free (password);
-
-		encrypt_header = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->pw_encrypt_header_checkbutton));
-		{
-			GSettings *settings;
-
-			settings = g_settings_new (FILE_ROLLER_SCHEMA_GENERAL);
-			g_settings_set_boolean (settings, PREF_GENERAL_ENCRYPT_HEADER, encrypt_header);
-			g_object_unref (settings);
-		}
-		fr_window_set_encrypt_header (data->window, encrypt_header);
-		break;
-	default:
-		break;
 	}
 
-	gtk_widget_destroy (data->dialog);
+	gtk_widget_destroy (GET_WIDGET ("dialog"));
 }
 
 
@@ -85,47 +74,51 @@ dlg_password (GtkWidget *widget,
 {
 	FrWindow   *window = callback_data;
 	DialogData *data;
+	char       *basename;
+	char       *title;
 
 	data = g_new0 (DialogData, 1);
-
+	data->window = window;
 	data->builder = _gtk_builder_new_from_resource ("password.ui");
 	if (data->builder == NULL) {
 		g_free (data);
 		return;
 	}
 
-	data->window = window;
-
-	/* Get the widgets. */
-
-	data->dialog = _gtk_builder_get_widget (data->builder, "password_dialog");
-	data->pw_password_entry = _gtk_builder_get_widget (data->builder, "pw_password_entry");
-	data->pw_encrypt_header_checkbutton = _gtk_builder_get_widget (data->builder, "pw_encrypt_header_checkbutton");
-
 	/* Set widgets data. */
 
-	_gtk_entry_set_locale_text (GTK_ENTRY (data->pw_password_entry), fr_window_get_password (window));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (data->pw_encrypt_header_checkbutton), fr_window_get_encrypt_header (window));
+	basename = _g_file_get_display_basename (fr_archive_get_file (window->archive));
+	title = g_strdup_printf (_("Enter a password for \"%s\""), basename);
+	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("title_label")), title);
+
+	g_free (title);
+	g_free (basename);
+
+	_gtk_entry_set_locale_text (GTK_ENTRY (GET_WIDGET ("password_entry")),
+				    fr_window_get_password (window));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
+				      fr_window_get_encrypt_header (window));
+
+	if (! fr_archive_is_capable_of (window->archive, FR_ARCHIVE_CAN_ENCRYPT_HEADER)) {
+		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), TRUE);
+		gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), FALSE);
+	}
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GET_WIDGET ("dialog"),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-
-	g_signal_connect (G_OBJECT (data->dialog),
+	g_signal_connect (GET_WIDGET ("dialog"),
 			  "response",
 			  G_CALLBACK (response_cb),
 			  data);
 
 	/* Run dialog. */
 
-	gtk_widget_grab_focus (data->pw_password_entry);
-	if (gtk_widget_get_realized (GTK_WIDGET (window)))
-		gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
-					      GTK_WINDOW (window));
-	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
-
-	gtk_widget_show (data->dialog);
+	gtk_widget_grab_focus (GET_WIDGET ("password_entry"));
+	gtk_window_set_transient_for (GTK_WINDOW (GET_WIDGET ("dialog")), GTK_WINDOW (window));
+	gtk_window_set_modal (GTK_WINDOW (GET_WIDGET ("dialog")), TRUE);
+	gtk_widget_show (GET_WIDGET ("dialog"));
 }
