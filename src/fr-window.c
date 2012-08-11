@@ -6195,27 +6195,15 @@ archive_add_files_ready_cb (GObject      *source_object,
 {
 	FrWindow *window = user_data;
 	GError   *error = NULL;
-	gboolean  notify;
-
-	/* get here the value because the window can be destroy after calling
-	 * _archive_operation_completed. */
-	notify = window->priv->notify;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
 
-	if ((error == NULL) && notify) {
-		GtkWidget *main_window;
-
-		if (window->priv->batch_mode)
-			main_window = window->priv->progress_dialog;
-		else
-			main_window = GTK_WIDGET (window);
-
+	if ((error == NULL) && window->priv->notify) {
 		window->priv->quit_with_progress_dialog = TRUE;
 		open_progress_dialog_with_open_archive (window);
 
-		if (! gtk_window_has_toplevel_focus (GTK_WINDOW (main_window)))
+		if (! gtk_window_has_toplevel_focus (GTK_WINDOW (window->priv->progress_dialog)))
 			_fr_window_notify_creation_complete (window);
 	}
 
