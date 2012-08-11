@@ -8678,6 +8678,7 @@ fr_window_open_files_with_application (FrWindow *window,
 
 
 typedef struct {
+	int          ref_count;
 	FrWindow    *window;
 	GList       *file_list;
 	gboolean     ask_application;
@@ -8695,6 +8696,7 @@ open_files_data_new (FrWindow *window,
 	GList         *scan;
 
 	odata = g_new0 (OpenFilesData, 1);
+	odata->ref_count = 1;
 	odata->window = window;
 	odata->file_list = _g_string_list_dup (file_list);
 	odata->ask_application = ask_application;
@@ -8717,9 +8719,20 @@ open_files_data_new (FrWindow *window,
 
 
 static void
-open_files_data_free (OpenFilesData *odata)
+open_files_data_ref (OpenFilesData *odata)
 {
 	g_return_if_fail (odata != NULL);
+	odata->ref_count++;
+}
+
+
+static void
+open_files_data_unref (OpenFilesData *odata)
+{
+	g_return_if_fail (odata != NULL);
+
+	if (--odata->ref_count > 0)
+		return;
 
 	_g_string_list_free (odata->file_list);
 	g_free (odata);
@@ -8954,12 +8967,14 @@ open_files_extract_ready_cb (GObject      *source_object,
 	OpenFilesData *odata = user_data;
 	GError        *error = NULL;
 
+	open_files_data_ref (odata);
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (odata->window, FR_ACTION_EXTRACTING_FILES, error);
 
 	if (error == NULL)
 		fr_window_open_extracted_files (odata);
 
+	open_files_data_unref (odata);
 	_g_error_free (error);
 }
 
@@ -8978,7 +8993,7 @@ fr_window_open_files (FrWindow *window,
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_OPEN_FILES,
 					    odata,
-					    (GFreeFunc) open_files_data_free);
+					    (GFreeFunc) open_files_data_unref);
 
 	_archive_operation_started (odata->window, FR_ACTION_EXTRACTING_FILES);
 
