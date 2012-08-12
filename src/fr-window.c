@@ -6400,9 +6400,11 @@ archive_extraction_ready_cb (GObject      *source_object,
 	ExtractData *edata = user_data;
 	FrWindow    *window = edata->window;
 	gboolean     ask_to_open_destination;
+	gboolean     batch_mode;
 	GError      *error = NULL;
 
 	ask_to_open_destination = edata->ask_to_open_destination;
+	batch_mode = window->priv->batch_mode;
 
 	_g_clear_object (&window->priv->last_extraction_destination);
 	window->priv->last_extraction_destination = _g_object_ref (fr_archive_get_last_extraction_destination (window->archive));
@@ -6412,6 +6414,8 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 	if ((error == NULL) && ask_to_open_destination)
 		open_progress_dialog_with_open_destination (window);
+	else if ((error == NULL) && ! batch_mode && ! gtk_window_has_toplevel_focus (GTK_WINDOW (window->priv->progress_dialog)))
+		gtk_window_present (GTK_WINDOW (window));
 
 	_g_error_free (error);
 }
