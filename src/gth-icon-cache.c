@@ -91,7 +91,8 @@ gth_icon_cache_free (GthIconCache *icon_cache)
 void
 gth_icon_cache_clear (GthIconCache *icon_cache)
 {
-	g_hash_table_remove_all (icon_cache->cache);
+	if (icon_cache != NULL)
+		g_hash_table_remove_all (icon_cache->cache);
 }
 
 

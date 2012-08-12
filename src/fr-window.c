@@ -117,6 +117,7 @@ typedef struct {
 
 
 typedef struct {
+	FrWindow    *window;
 	GList       *file_list;
 	GFile       *destination;
 	char        *base_dir;
@@ -124,7 +125,6 @@ typedef struct {
 	FrOverwrite  overwrite;
 	gboolean     junk_paths;
 	char        *password;
-	gboolean     extract_here;
 	gboolean     ask_to_open_destination;
 } ExtractData;
 
@@ -278,7 +278,6 @@ struct _FrWindowPrivate {
 					       * in the Extract dialog. */
 	gboolean         freeze_default_dir;
 	gboolean         asked_for_password;
-	gboolean         ask_to_open_destination_after_extraction;
 	gboolean         destroy_with_error_dialog;
 	gboolean         quit_with_progress_dialog;
 
@@ -384,7 +383,6 @@ struct _FrWindowPrivate {
 	GSettings        *settings_nautilus;
 
 	gulong            theme_changed_handler_id;
-	char             *extract_here_dir;
 	gboolean          extract_interact_use_default_dir;
 	gboolean          update_dropped_files;
 	gboolean          batch_adding_one_file;
@@ -394,6 +392,8 @@ struct _FrWindowPrivate {
 
 	GthIconCache     *list_icon_cache;
 	GthIconCache     *tree_icon_cache;
+
+	GFile            *last_extraction_destination;
 };
 
 
@@ -523,6 +523,7 @@ fr_window_free_private_data (FrWindow *window)
 	_g_object_unref (window->priv->add_default_dir);
 	_g_object_unref (window->priv->extract_default_dir);
 	_g_object_unref (window->priv->archive_file);
+	_g_object_unref (window->priv->last_extraction_destination);
 
 	g_free (window->priv->password);
 	g_free (window->priv->second_password);
@@ -573,7 +574,6 @@ fr_window_free_private_data (FrWindow *window)
 
 	_g_object_unref (window->priv->pd_last_archive);
 	g_free (window->priv->pd_last_message);
-	g_free (window->priv->extract_here_dir);
 
 	g_settings_set_enum (window->priv->settings_listing, PREF_LISTING_LIST_MODE, window->priv->last_list_mode);
 
@@ -2102,7 +2102,7 @@ open_folder (GtkWindow *parent_window,
 static void
 fr_window_view_extraction_destination_folder (FrWindow *window)
 {
-	open_folder (GTK_WINDOW (window), fr_archive_get_last_extraction_destination (window->archive));
+	open_folder (GTK_WINDOW (window), window->priv->last_extraction_destination);
 }
 
 
@@ -2120,6 +2120,10 @@ progress_dialog_response (GtkDialog *dialog,
 			  FrWindow  *window)
 {
 	GtkWidget *new_window;
+	GFile     *saved_file;
+
+	saved_file = window->priv->saving_file;
+	window->priv->saving_file = NULL;
 
 	switch (response_id) {
 	case GTK_RESPONSE_CANCEL:
@@ -2134,7 +2138,7 @@ progress_dialog_response (GtkDialog *dialog,
 	case DIALOG_RESPONSE_OPEN_ARCHIVE:
 		new_window = fr_window_new ();
 		gtk_widget_show (new_window);
-		fr_window_archive_open (FR_WINDOW (new_window), window->priv->saving_file, GTK_WINDOW (new_window));
+		fr_window_archive_open (FR_WINDOW (new_window), saved_file, GTK_WINDOW (new_window));
 		close_progress_dialog (window, TRUE);
 		break;
 	case DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER:
@@ -2148,7 +2152,7 @@ progress_dialog_response (GtkDialog *dialog,
 		break;
 	}
 
-	_g_clear_object (&window->priv->saving_file);
+	_g_object_unref (saved_file);
 }
 
 
@@ -2439,9 +2443,9 @@ display_progress_dialog (gpointer data)
 						   GTK_RESPONSE_OK,
 						   window->priv->stoppable);
 		if (! window->priv->batch_mode)
-			gtk_widget_show (GTK_WIDGET (window));
+			gtk_window_present (GTK_WINDOW (window));
 		gtk_widget_hide (window->priv->progress_bar);
-		gtk_widget_show (window->priv->progress_dialog);
+		gtk_window_present (GTK_WINDOW (window->priv->progress_dialog));
 		fr_archive_message_cb (NULL, window->priv->pd_last_message, window);
 	}
 
@@ -2553,8 +2557,6 @@ fr_archive_progress_cb (FrArchive *archive,
 static void
 open_progress_dialog_with_open_destination (FrWindow *window)
 {
-	window->priv->ask_to_open_destination_after_extraction = FALSE;
-
 	if (window->priv->hide_progress_timeout != 0) {
 		g_source_remove (window->priv->hide_progress_timeout);
 		window->priv->hide_progress_timeout = 0;
@@ -3024,10 +3026,7 @@ _archive_operation_completed (FrWindow *window,
 		return;
 
 	case FR_ACTION_EXTRACTING_FILES:
-		if (window->priv->ask_to_open_destination_after_extraction)
-			open_progress_dialog_with_open_destination (window);
-		else
-			close_progress_dialog (window, FALSE);
+		close_progress_dialog (window, FALSE);
 		break;
 
 	case FR_ACTION_RENAMING_FILES:
@@ -3086,8 +3085,7 @@ _archive_operation_started (FrWindow *window,
 
 	switch (action) {
 	case FR_ACTION_EXTRACTING_FILES:
-		open_progress_dialog (window, (window->priv->ask_to_open_destination_after_extraction
-					       || (window->priv->saving_file != NULL)
+		open_progress_dialog (window, ((window->priv->saving_file != NULL)
 					       || window->priv->batch_mode));
 		break;
 	default:
@@ -6196,12 +6194,15 @@ archive_add_files_ready_cb (GObject      *source_object,
 			    gpointer      user_data)
 {
 	FrWindow *window = user_data;
+	gboolean  notify;
 	GError   *error = NULL;
+
+	notify = window->priv->notify;
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
 
-	if ((error == NULL) && window->priv->notify) {
+	if ((error == NULL) && notify) {
 		window->priv->quit_with_progress_dialog = TRUE;
 		open_progress_dialog_with_open_archive (window);
 
@@ -6322,7 +6323,8 @@ fr_window_archive_remove (FrWindow *window,
 
 
 static ExtractData*
-extract_data_new (GList       *file_list,
+extract_data_new (FrWindow    *window,
+		  GList       *file_list,
 		  GFile       *destination,
 		  const char  *base_dir,
 		  gboolean     skip_older,
@@ -6334,6 +6336,7 @@ extract_data_new (GList       *file_list,
 	ExtractData *edata;
 
 	edata = g_new0 (ExtractData, 1);
+	edata->window = window;
 	edata->file_list = _g_string_list_dup (file_list);
 	edata->destination = _g_object_ref (destination);
 	edata->skip_older = skip_older;
@@ -6341,7 +6344,6 @@ extract_data_new (GList       *file_list,
 	edata->junk_paths = junk_paths;
 	if (base_dir != NULL)
 		edata->base_dir = g_strdup (base_dir);
-	edata->extract_here = extract_here;
 	edata->ask_to_open_destination = ask_to_open_destination;
 
 	return edata;
@@ -6349,9 +6351,11 @@ extract_data_new (GList       *file_list,
 
 
 static ExtractData *
-extract_to_data_new (GFile *extract_to_dir)
+extract_to_data_new (FrWindow *window,
+		     GFile    *extract_to_dir)
 {
-	return extract_data_new (NULL,
+	return extract_data_new (window,
+				 NULL,
 				 extract_to_dir,
 				 NULL,
 				 FALSE,
@@ -6393,11 +6397,21 @@ archive_extraction_ready_cb (GObject      *source_object,
 			     GAsyncResult *result,
 			     gpointer      user_data)
 {
-	FrWindow *window = user_data;
-	GError   *error = NULL;
+	ExtractData *edata = user_data;
+	FrWindow    *window = edata->window;
+	gboolean     ask_to_open_destination;
+	GError      *error = NULL;
+
+	ask_to_open_destination = edata->ask_to_open_destination;
+
+	_g_clear_object (&window->priv->last_extraction_destination);
+	window->priv->last_extraction_destination = _g_object_ref (fr_archive_get_last_extraction_destination (window->archive));
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
+
+	if ((error == NULL) && ask_to_open_destination)
+		open_progress_dialog_with_open_destination (window);
 
 	_g_error_free (error);
 }
@@ -6424,7 +6438,6 @@ _fr_window_archive_extract_from_edata (FrWindow    *window,
 	fr_archive_progress_set_total_bytes (window->archive, total_size);
 
 	_archive_operation_started (window, FR_ACTION_EXTRACTING_FILES);
-	window->priv->ask_to_open_destination_after_extraction = edata->ask_to_open_destination;
 
 	fr_archive_extract (window->archive,
 			    edata->file_list,
@@ -6436,7 +6449,7 @@ _fr_window_archive_extract_from_edata (FrWindow    *window,
 			    window->priv->password,
 			    window->priv->cancellable,
 			    archive_extraction_ready_cb,
-			    window);
+			    edata);
 }
 
 
@@ -6655,7 +6668,8 @@ fr_window_archive_extract (FrWindow    *window,
 	gboolean     do_not_extract = FALSE;
 	GError      *error = NULL;
 
-	edata = extract_data_new (file_list,
+	edata = extract_data_new (window,
+				  file_list,
 				  destination,
 				  base_dir,
 				  skip_older,
@@ -6776,7 +6790,8 @@ fr_window_archive_extract_here (FrWindow   *window,
 {
 	ExtractData *edata;
 
-	edata = extract_data_new (NULL,
+	edata = extract_data_new (window,
+				  NULL,
 				  NULL,
 				  NULL,
 				  skip_older,
@@ -6795,7 +6810,6 @@ fr_window_archive_extract_here (FrWindow   *window,
 	}
 
 	_archive_operation_started (window, FR_ACTION_EXTRACTING_FILES);
-	window->priv->ask_to_open_destination_after_extraction = edata->ask_to_open_destination;
 
 	fr_archive_extract_here (window->archive,
 				 edata->skip_older,
@@ -6804,7 +6818,7 @@ fr_window_archive_extract_here (FrWindow   *window,
 				 window->priv->password,
 				 window->priv->cancellable,
 				 archive_extraction_ready_cb,
-				 window);
+				 edata);
 }
 
 
@@ -9528,7 +9542,7 @@ fr_window_set_batch__extract_here (FrWindow *window,
 				       (GFreeFunc) g_object_unref);
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_EXTRACT_HERE,
-				       extract_to_data_new (NULL),
+				       extract_to_data_new (window, NULL),
 				       (GFreeFunc) extract_data_free);
 	fr_window_append_batch_action (window,
 				       FR_BATCH_ACTION_CLOSE,
@@ -9552,7 +9566,7 @@ fr_window_set_batch__extract (FrWindow  *window,
 	if (destination != NULL)
 		fr_window_append_batch_action (window,
 					       FR_BATCH_ACTION_EXTRACT,
-					       extract_to_data_new (destination),
+					       extract_to_data_new (window, destination),
 					       (GFreeFunc) extract_data_free);
 	else
 		fr_window_append_batch_action (window,
