@@ -2871,6 +2871,14 @@ fr_command_base_recompress (FrCommand *command)
 
 
 static void
+fr_command_base_handle_error (FrCommand *command,
+			      FrError   *error)
+{
+	/* void */
+}
+
+
+static void
 fr_command_class_init (FrCommandClass *klass)
 {
 	GObjectClass   *gobject_class;
@@ -2903,7 +2911,7 @@ fr_command_class_init (FrCommandClass *klass)
 	klass->test = NULL;
 	klass->uncompress = fr_command_base_uncompress;
 	klass->recompress = fr_command_base_recompress;
-	klass->handle_error = NULL;
+	klass->handle_error = fr_command_base_handle_error;
 
 	/* properties */
 
