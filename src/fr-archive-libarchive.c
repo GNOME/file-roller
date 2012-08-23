@@ -379,6 +379,8 @@ typedef struct {
 	gboolean    junk_paths;
 	GHashTable *files_to_extract;
 	int         n_files_to_extract;
+	GHashTable *usernames;
+	GHashTable *groupnames;
 } ExtractData;
 
 
@@ -389,6 +391,8 @@ extract_data_free (ExtractData *extract_data)
 	_g_object_unref (extract_data->destination);
 	_g_string_list_free (extract_data->file_list);
 	g_hash_table_unref (extract_data->files_to_extract);
+	g_hash_table_unref (extract_data->usernames);
+	g_hash_table_unref (extract_data->groupnames);
 	load_data_free (LOAD_DATA (extract_data));
 }
 
@@ -401,6 +405,76 @@ extract_data_get_extraction_requested (ExtractData *extract_data,
 		return g_hash_table_lookup (extract_data->files_to_extract, pathname) != NULL;
 	else
 		return TRUE;
+}
+
+
+static void
+_g_file_set_attributes_from_entry (GFile                *file,
+				   struct archive_entry *entry,
+				   ExtractData          *extract_data,
+				   GCancellable         *cancellable)
+{
+	GFileInfo *info;
+	GError    *error = NULL;
+
+	info = g_file_info_new ();
+
+	/* times */
+
+	if (archive_entry_ctime_is_set (entry)) {
+		g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_CREATED, archive_entry_ctime (entry));
+		g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_CREATED_USEC, archive_entry_ctime_nsec (entry));
+	}
+
+	if (archive_entry_mtime_is_set (entry)) {
+		g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED, archive_entry_mtime (entry));
+		g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC, archive_entry_mtime_nsec (entry));
+	}
+
+	/* username */
+
+	if (archive_entry_uname (entry) != NULL) {
+		guint32 uid;
+
+		uid = GPOINTER_TO_INT (g_hash_table_lookup (extract_data->usernames, archive_entry_uname (entry)));
+		if (uid == 0) {
+			struct passwd *pwd = getpwnam (archive_entry_uname (entry));
+			if (pwd != NULL) {
+				uid = pwd->pw_uid;
+				g_hash_table_insert (extract_data->usernames, g_strdup (archive_entry_uname (entry)), GINT_TO_POINTER (uid));
+			}
+		}
+		if (uid != 0)
+			g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_UID, uid);
+	}
+
+	/* groupname */
+
+	if (archive_entry_gname (entry) != NULL) {
+		guint32 gid;
+
+		gid = GPOINTER_TO_INT (g_hash_table_lookup (extract_data->groupnames, archive_entry_gname (entry)));
+		if (gid == 0) {
+			struct group *grp = getgrnam (archive_entry_gname (entry));
+			if (grp != NULL) {
+				gid = grp->gr_gid;
+				g_hash_table_insert (extract_data->groupnames, g_strdup (archive_entry_gname (entry)), GINT_TO_POINTER (gid));
+			}
+		}
+		if (gid != 0)
+			g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_GID, gid);
+	}
+
+	/* permsissions */
+
+	g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_MODE, archive_entry_mode (entry));
+
+	if (! g_file_set_attributes_from_info (file, info, 0, cancellable, &error)) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+	}
+
+	g_object_unref (info);
 }
 
 
@@ -532,6 +606,8 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						load_data->error = g_error_copy (local_error);
 					g_error_free (local_error);
 				}
+				else
+					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable);
 				archive_read_data_skip (a);
 				break;
 
@@ -545,11 +621,12 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						break;
 					fr_archive_progress_inc_completed_bytes (load_data->archive, buffer_size);
 				}
+				_g_object_unref (ostream);
 
 				if (r != ARCHIVE_EOF)
 					load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
-
-				_g_object_unref (ostream);
+				else
+					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable);
 				break;
 
 			case AE_IFLNK:
@@ -558,6 +635,8 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						load_data->error = g_error_copy (local_error);
 					g_error_free (local_error);
 				}
+				else
+					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable);
 				archive_read_data_skip (a);
 				break;
 			}
@@ -625,6 +704,9 @@ fr_archive_libarchive_extract_files (FrArchive           *archive,
 	extract_data->junk_paths = junk_paths;
 	extract_data->files_to_extract = g_hash_table_new (g_str_hash, g_str_equal);
 	extract_data->n_files_to_extract = 0;
+	extract_data->usernames = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+	extract_data->groupnames = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+
 	for (scan = extract_data->file_list; scan; scan = scan->next) {
 		g_hash_table_insert (extract_data->files_to_extract, scan->data, GINT_TO_POINTER (1));
 		extract_data->n_files_to_extract++;
