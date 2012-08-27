@@ -80,7 +80,7 @@ dlg_batch_add_files (FrWindow *window,
 
 	dialog = fr_new_archive_dialog_new (_("Compress"),
 					    NULL,
-					    FR_NEW_ARCHIVE_ACTION_NEW,
+					    ((file_list->next == NULL) ? FR_NEW_ARCHIVE_ACTION_NEW_SINGLE_FILE : FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES),
 					    parent,
 					    filename);
 	g_signal_connect (dialog,

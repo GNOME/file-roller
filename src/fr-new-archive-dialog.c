@@ -218,8 +218,12 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	gtk_dialog_add_button (GTK_DIALOG (self), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
 	switch (action) {
-	case FR_NEW_ARCHIVE_ACTION_NEW:
+	case FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES:
 		self->priv->supported_types = create_type;
+		gtk_dialog_add_button (GTK_DIALOG (self), FR_STOCK_CREATE_ARCHIVE, GTK_RESPONSE_OK);
+		break;
+	case FR_NEW_ARCHIVE_ACTION_NEW_SINGLE_FILE:
+		self->priv->supported_types = single_file_save_type;
 		gtk_dialog_add_button (GTK_DIALOG (self), FR_STOCK_CREATE_ARCHIVE, GTK_RESPONSE_OK);
 		break;
 	case FR_NEW_ARCHIVE_ACTION_SAVE_AS:
