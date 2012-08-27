@@ -104,18 +104,18 @@ AC_ARG_ENABLE([nautilus_actions],
 
 if test x"$enable_nautilus_actions" != x"no" ; then
 	PKG_CHECK_MODULES(NAUTILUS,					\
-			  libnautilus-extension >= $NAUTILUS_REQUIRED	\
-			  glib-2.0					\
-			  gio-2.0)
-	AC_SUBST(NAUTILUS_CFLAGS)
-	AC_SUBST(NAUTILUS_LIBS)
+			  		  [libnautilus-extension >= $NAUTILUS_REQUIRED	\
+			 		   glib-2.0					\
+			  		   gio-2.0],
+		  			  [enable_nautilus_actions=yes],
+					  [enable_nautilus_actions=no])
+	NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
 fi
 
-AM_CONDITIONAL(ENABLE_NAUTILUS_ACTIONS, test x"$enable_nautilus_actions" != x"no")
-
-
-NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
+AC_SUBST(NAUTILUS_CFLAGS)
+AC_SUBST(NAUTILUS_LIBS)
 AC_SUBST(NAUTILUS_EXTENSION_DIR)
+AM_CONDITIONAL(ENABLE_NAUTILUS_ACTIONS, test x"$enable_nautilus_actions" != x"no")
 
 dnl ******************************
 dnl
