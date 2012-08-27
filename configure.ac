@@ -221,8 +221,9 @@ dnl ===========================================================================
 dnl
 dnl libarchive
 dnl
-AC_ARG_ENABLE(libarchive,[AC_HELP_STRING([--enable-libarchive],[enable code that requires libarchive [default=yes]])],, [enable_libarchive="yes"])
-AM_CONDITIONAL(ENABLE_LIBARCHIVE, test "x$enable_libarchive" = xyes)
+AC_ARG_ENABLE([libarchive],
+			  [AC_HELP_STRING([--enable-libarchive], [enable code that requires libarchive [default=yes]])],, 
+			  [enable_libarchive="yes"])
 
 LIBARCHIVE_LIBS=""
 LIBARCHIVE_CFLAGS=""
@@ -232,7 +233,7 @@ if test x"$enable_libarchive" = xyes; then
    if pkg-config --atleast-version=$LIBARCHIVE_REQUIRED libarchive; then
       LIBARCHIVE_LIBS=`pkg-config --libs libarchive`
       LIBARCHIVE_CFLAGS=`pkg-config --cflags libarchive`
-      AC_DEFINE(ENABLE_LIBARCHIVE, 1, [Have libarchive])
+      AC_DEFINE(ENABLE_LIBARCHIVE, 1, [define to enable libarchive support])
    else
       enable_libarchive=no
    fi
@@ -240,6 +241,8 @@ fi
 AC_MSG_RESULT($enable_libarchive)
 AC_SUBST(LIBARCHIVE_LIBS)
 AC_SUBST(LIBARCHIVE_CFLAGS)
+AM_CONDITIONAL(ENABLE_LIBARCHIVE, test x"$enable_libarchive" = xyes)
+
 dnl ===========================================================================
 dnl
 dnl SM Client
