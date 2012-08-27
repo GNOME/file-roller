@@ -21,8 +21,6 @@
 
 #include <config.h>
 
-#define USE_SMCLIENT 1
-
 #include <string.h>
 #include <sys/types.h>
 #include <signal.h>
