@@ -201,9 +201,11 @@ int main () { magic_t m = magic_open(MAGIC_NONE); }
 ])],
 		       [AC_MSG_RESULT([yes])],
 		       [AC_MSG_RESULT([no])
-		        AC_MSG_ERROR([libmagic is needed for magic])])
+		        enable_magic=no])
 	LIBS="$save_LIBS"
+fi
 
+if test x"$enable_magic" = x"yes" ; then
 	MAGIC_CFLAGS=
 	MAGIC_LIBS=-lmagic
 
