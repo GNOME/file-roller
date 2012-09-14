@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gu\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=file-roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-08-10 11:37+0000\n"
-"PO-Revision-Date: 2012-08-10 17:21+0530\n"
+"POT-Creation-Date: 2012-08-11 20:48+0000\n"
+"PO-Revision-Date: 2012-09-14 11:24+0530\n"
 "Last-Translator: \n"
 "Language-Team: gu_IN <kde-i18n-doc@kde.org>\n"
 "Language: \n"
@@ -90,8 +90,8 @@ msgstr "સત્ર વ્યવસ્થાપન વિકલ્પો:"
 msgid "Show session management options"
 msgstr "સત્ર વ્યવસ્થાપન વિકલ્પો બતાવો"
 
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1996
-#: ../src/fr-window.c:5367
+#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1955
+#: ../src/fr-window.c:5331
 msgid "Archive Manager"
 msgstr "પેટીનો વ્યવસ્થાપક"
 
@@ -280,11 +280,11 @@ msgstr "સંકોચો..."
 msgid "Create a compressed archive with the selected objects"
 msgstr "પસંદ કરેલ વસ્તુઓ સાથે સંકોચેલ પેટી બનાવો"
 
-#: ../src/actions.c:112 ../src/fr-window.c:5669 ../src/fr-window.c:6211
+#: ../src/actions.c:112 ../src/fr-window.c:5626 ../src/fr-window.c:6165
 msgid "Open"
 msgstr "ખોલો"
 
-#: ../src/actions.c:125 ../src/fr-window.c:5205
+#: ../src/actions.c:125 ../src/fr-window.c:5169
 msgid "All archives"
 msgstr "પેટી (_A)"
 
@@ -341,16 +341,21 @@ msgid "_Options Name:"
 msgstr "વિકલ્પનું નામ (_O):"
 
 #. Translators: %s is a filename
-#: ../src/dlg-ask-password.c:122
+#: ../src/dlg-ask-password.c:131
 #, c-format
 msgid "Password required for \"%s\""
 msgstr "\"%s\" માટે પાસવર્ડ જરૂરી"
+
+#: ../src/dlg-ask-password.c:139
+#| msgid "Password"
+msgid "Wrong password."
+msgstr "ખોટો પાસવર્ડ."
 
 #: ../src/dlg-batch-add.c:81 ../src/main.c:412 ../src/main.c:778
 msgid "Compress"
 msgstr "સંકોચો"
 
-#: ../src/dlg-extract.c:96 ../src/fr-window.c:6749
+#: ../src/dlg-extract.c:96 ../src/fr-window.c:6690
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -361,22 +366,22 @@ msgstr ""
 "\n"
 "શું તમે એને બનાવવા માંગો છો?"
 
-#: ../src/dlg-extract.c:105 ../src/fr-window.c:6758
+#: ../src/dlg-extract.c:105 ../src/fr-window.c:6699
 msgid "Create _Folder"
 msgstr "ફોલ્ડર બનાવો (_F)"
 
 #: ../src/dlg-extract.c:124 ../src/dlg-extract.c:142 ../src/dlg-extract.c:169
-#: ../src/fr-window.c:4154 ../src/fr-window.c:6654 ../src/fr-window.c:6659
-#: ../src/fr-window.c:6779 ../src/fr-window.c:6798 ../src/fr-window.c:6803
+#: ../src/fr-window.c:4118 ../src/fr-window.c:6595 ../src/fr-window.c:6600
+#: ../src/fr-window.c:6720 ../src/fr-window.c:6739 ../src/fr-window.c:6744
 msgid "Extraction not performed"
 msgstr "અર્ક કાઢી શકાયો નહિં"
 
-#: ../src/dlg-extract.c:125 ../src/fr-window.c:6775
+#: ../src/dlg-extract.c:125 ../src/fr-window.c:6716
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "અંતિમ મુકામ માટેની ફાઇલ બનાવી શકાતી નથી: %s."
 
-#: ../src/dlg-extract.c:170 ../src/fr-window.c:4320 ../src/fr-window.c:4404
+#: ../src/dlg-extract.c:170 ../src/fr-window.c:4284 ../src/fr-window.c:4368
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "તમારી પાસે \"%s\" ફોલ્ડરમાં પેટીનો અર્ક કાઢવાની સાચી પરવાનગીઓ નથી"
@@ -391,8 +396,9 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "કાર્યક્રમો માટે શોધવાનું પ્રયત્ન કરતી વખતે ભૂલ હતી:"
 
 #: ../src/dlg-package-installer.c:269 ../src/dlg-package-installer.c:278
-#: ../src/dlg-package-installer.c:306 ../src/fr-archive.c:820
-#: ../src/fr-window.c:3883 ../src/fr-window.c:7336 ../src/fr-window.c:8941
+#: ../src/dlg-package-installer.c:306 ../src/fr-archive.c:819
+#: ../src/fr-window.c:3848 ../src/fr-window.c:7295 ../src/fr-window.c:7651
+#: ../src/fr-window.c:9177
 msgid "Archive type not supported."
 msgstr "પેટીનો પ્રકાર આધાર આપતો નથી."
 
@@ -413,7 +419,13 @@ msgstr "આ ફાઇલ પ્રકારને ખોલી શક્યા �
 msgid "_Search Command"
 msgstr "આદેશને નોંધો (_S)"
 
-#: ../src/dlg-prop.c:89
+#: ../src/dlg-password.c:91
+#, c-format
+#| msgid "Enter the password for the archive '%s'."
+msgid "Enter a password for \"%s\""
+msgstr "\"%s\" માટે પાસવર્ડ દાખલ કરો"
+
+#: ../src/dlg-prop.c:96
 #, c-format
 msgid "%s Properties"
 msgstr "%s ગુણધર્મો"
@@ -444,15 +456,15 @@ msgstr[1] ""
 msgid "Update the files in the archive \"%s\"?"
 msgstr "શું પેટી \"%s\" માં ફાઈલો સુધારવી છે?"
 
-#: ../src/fr-archive.c:1836
+#: ../src/fr-archive.c:1944
 msgid "You don't have the right permissions."
 msgstr "તમારી પાસે તે કરવા માટે ખરી પરવાનગીઓ નથી."
 
-#: ../src/fr-archive.c:1836
+#: ../src/fr-archive.c:1944
 msgid "This archive type cannot be modified"
 msgstr "પેટીનો પ્રકાર ને બદલી શકાતો નથી"
 
-#: ../src/fr-archive.c:1849
+#: ../src/fr-archive.c:1958
 msgid "You can't add an archive to itself."
 msgstr "એક પેટીમાં બીજી પેટી ઉમેરી શકાય નહિં."
 
@@ -470,7 +482,7 @@ msgstr "\"%s\" ઉમેરી રહ્યા છે"
 msgid "Extracting \"%s\""
 msgstr "\"%s\" નો અર્ક કાઢી રહ્યા છે"
 
-#: ../src/fr-command.c:665
+#: ../src/fr-command.c:597
 #, c-format
 msgid "Archive not found"
 msgstr "પેટી મળી નથી"
@@ -503,40 +515,39 @@ msgid "File System"
 msgstr "ફાઇલ સિસ્ટમ"
 
 #: ../src/fr-file-selector-dialog.c:1331 ../src/fr-file-selector-dialog.c:1376
-#| msgid "Could not perform the operation"
 msgid "Could not load the location"
 msgstr "સ્થાનને લાવી શક્યા નહિં"
 
-#: ../src/fr-new-archive-dialog.c:312 ../src/fr-new-archive-dialog.c:331
-#: ../src/fr-new-archive-dialog.c:347 ../src/fr-new-archive-dialog.c:395
-#: ../src/fr-window.c:2850
+#: ../src/fr-new-archive-dialog.c:331 ../src/fr-new-archive-dialog.c:350
+#: ../src/fr-new-archive-dialog.c:366 ../src/fr-new-archive-dialog.c:414
+#: ../src/fr-window.c:2812
 msgid "Could not create the archive"
 msgstr "પેટી બનાવી શકતી નથી"
 
-#: ../src/fr-new-archive-dialog.c:314 ../src/fr-new-archive-dialog.c:333
+#: ../src/fr-new-archive-dialog.c:333 ../src/fr-new-archive-dialog.c:352
 msgid "You have to specify an archive name."
 msgstr "તમારે પેટીનું નામ સ્પષ્ટ કરવું પડશે."
 
-#: ../src/fr-new-archive-dialog.c:397
+#: ../src/fr-new-archive-dialog.c:416
 msgid "You don't have permission to create an archive in this folder"
 msgstr "આ ફોલ્ડરમાં પેટી બનાવવા માટે તમારી પાસે મંજૂરી નથી"
 
-#: ../src/fr-new-archive-dialog.c:416
+#: ../src/fr-new-archive-dialog.c:435
 #, c-format
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
 msgstr "નામ થયેલ ફાઇલ \"%s\" પહેલેથી અસ્તિત્વ ધરાવે છે. શું તેને તમે બદલવા માંગો છો?"
 
-#: ../src/fr-new-archive-dialog.c:417
+#: ../src/fr-new-archive-dialog.c:436
 #, c-format
 msgid "The file already exists in \"%s\".  Replacing it will overwrite its contents."
 msgstr ""
 "ફાઇલ પહેલેથી \"%s\" માં અસ્તિત્વ ધરાવે છે. તેને બદલવાનું તેનાં સમાવિષ્ટો ઉપર લખાઇ જશે."
 
-#: ../src/fr-new-archive-dialog.c:424 ../src/fr-window.c:6592
+#: ../src/fr-new-archive-dialog.c:443 ../src/fr-window.c:6533
 msgid "_Replace"
 msgstr "બદલો (_R)"
 
-#: ../src/fr-new-archive-dialog.c:439
+#: ../src/fr-new-archive-dialog.c:458
 msgid "Could not delete the old archive."
 msgstr "જૂની પેટીને દૂર કરી શક્યા નથી."
 
@@ -552,312 +563,308 @@ msgstr "ઉમેરવું (_A)"
 msgid "_Extract"
 msgstr "અર્ક કાઢવો (_E)"
 
-#: ../src/fr-window.c:1084
+#: ../src/fr-window.c:1043
 msgid "Operation completed"
 msgstr "ક્રિયા સમાપ્ત થયેલ છે"
 
-#: ../src/fr-window.c:1201
+#: ../src/fr-window.c:1160
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "%d ઓબ્જેક્ટ (%s)"
 msgstr[1] "%d ઓબ્જેક્ટો (%s)"
 
-#: ../src/fr-window.c:1206
+#: ../src/fr-window.c:1165
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "%d ઓબ્જેક્ટ પસંદ કરેલ (%s)"
 msgstr[1] "%d ઓબ્જેક્ટો પસંદ કરેલ (%s)"
 
-#: ../src/fr-window.c:1625
+#: ../src/fr-window.c:1584
 msgid "Folder"
 msgstr "ફોલ્ડર"
 
-#: ../src/fr-window.c:2004
+#: ../src/fr-window.c:1963
 msgid "[read only]"
 msgstr "[માત્ર વાંચી શકાય તેવું]"
 
-#: ../src/fr-window.c:2123
+#: ../src/fr-window.c:2082
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "ફોલ્ડર \"%s\" દર્શાવી શકાયુ નથી"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2208 ../src/fr-window.c:2246
+#: ../src/fr-window.c:2169 ../src/fr-window.c:2207
 #, c-format
 msgid "Creating \"%s\""
 msgstr "\"%s\" ને બનાવી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2212
+#: ../src/fr-window.c:2173
 #, c-format
 msgid "Loading \"%s\""
 msgstr "\"%s\" ને લાવી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2216
+#: ../src/fr-window.c:2177
 #, c-format
 msgid "Reading \"%s\""
 msgstr "\"%s\" ને વાંચી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2220
+#: ../src/fr-window.c:2181
 #, c-format
 msgid "Deleting the files from \"%s\""
 msgstr "\"%s\" માંથી ફાઇલોને કાઢી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2224
+#: ../src/fr-window.c:2185
 #, c-format
 msgid "Testing \"%s\""
 msgstr "\"%s\" ની ચકાસણી કરી રહ્યા છે"
 
-#: ../src/fr-window.c:2227
+#: ../src/fr-window.c:2188
 msgid "Getting the file list"
 msgstr "ફાઇલોની યાદી મેળવી રહ્યુ છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2231
+#: ../src/fr-window.c:2192
 #, c-format
 msgid "Copying the files to add to \"%s\""
 msgstr "\"%s\" ને ઉમેરવા માટે ફાઇલોની નકલ કરી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2235
+#: ../src/fr-window.c:2196
 #, c-format
 msgid "Adding the files to \"%s\""
 msgstr "\"%s\" માં ફાઇલોને ઉમેરી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2239
+#: ../src/fr-window.c:2200
 #, c-format
 msgid "Extracting the files from \"%s\""
 msgstr "\"%s\" માંથી ફાઇલોનો અર્ક કાઢી રહ્યા છે"
 
-#: ../src/fr-window.c:2242
+#: ../src/fr-window.c:2203
 msgid "Copying the extracted files to the destination"
 msgstr "અર્ક કાઢેલ ફાઇલો લક્ષ્યમાં નકલ કરી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2250
+#: ../src/fr-window.c:2212
 #, c-format
 msgid "Saving \"%s\""
 msgstr "\"%s\" નો સંગ્રહ કરી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2257
+#: ../src/fr-window.c:2219
 #, c-format
 msgid "Renaming the files in \"%s\""
 msgstr "\"%s\" માં ફાઇલોનું નામ બદલી રહ્યા છે"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2261
+#: ../src/fr-window.c:2223
 #, c-format
 msgid "Updating the files in \"%s\""
 msgstr "\"%s\" માં ફાઇલોને સુધારી રહ્યા છે"
 
-#: ../src/fr-window.c:2436
+#: ../src/fr-window.c:2398
 msgid "_Open the Archive"
 msgstr "પેટીને ખોલો (_O)"
 
-#: ../src/fr-window.c:2437
+#: ../src/fr-window.c:2399
 msgid "_Show the Files"
 msgstr "ફાઇલોને બતાવો (_S)"
 
-#: ../src/fr-window.c:2554
+#: ../src/fr-window.c:2516
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "બાકી રહેલ %d ફાઇલ"
 msgstr[1] "બાકી રહેલ %'d ફાઇલો"
 
-#: ../src/fr-window.c:2558 ../src/fr-window.c:3134
+#: ../src/fr-window.c:2520 ../src/fr-window.c:3099
 msgid "Please wait…"
 msgstr "મહેરબીની કરીને થોભો..."
 
-#: ../src/fr-window.c:2616
+#: ../src/fr-window.c:2578
 msgid "Extraction completed successfully"
 msgstr "અર્ક સફળતાપૂર્વક સમાપ્ત થઇ ગયો"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2647 ../src/fr-window.c:6190
+#: ../src/fr-window.c:2609 ../src/fr-window.c:6144
 #, c-format
 msgid "\"%s\" created successfully"
 msgstr "\"%s\" સફળતાપૂર્વક બનાવેલ છે"
 
-#: ../src/fr-window.c:2737 ../src/fr-window.c:2905
+#: ../src/fr-window.c:2699 ../src/fr-window.c:2868
 msgid "Command exited abnormally."
 msgstr "આદેશ અસામાન્ય રીતે બહાર નીકળી ગયો."
 
-#: ../src/fr-window.c:2855
+#: ../src/fr-window.c:2817
 msgid "An error occurred while extracting files."
 msgstr "ફાઇલોનો અર્ક કાઢતી વખતે ભૂલ આવી."
 
-#: ../src/fr-window.c:2861
+#: ../src/fr-window.c:2823
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "\"%s\" ખોલી શકાયુ નથી"
 
-#: ../src/fr-window.c:2866
+#: ../src/fr-window.c:2828
 msgid "An error occurred while loading the archive."
 msgstr "પેટીને લાવતી વખતે ભૂલ ઉદ઼ભવી."
 
-#: ../src/fr-window.c:2870
+#: ../src/fr-window.c:2832
 msgid "An error occurred while deleting files from the archive."
 msgstr "પેટીમાંથી ફાઇલો કાઢી નાખતી વખતે ભૂલ ઉદ઼ભવી."
 
-#: ../src/fr-window.c:2876
+#: ../src/fr-window.c:2838
 msgid "An error occurred while adding files to the archive."
 msgstr "પેટીમાં ફાઇલો ઉમેરતી વખતે ભૂલ ઉદ઼ભવી."
 
-#: ../src/fr-window.c:2880
+#: ../src/fr-window.c:2842
 msgid "An error occurred while testing archive."
 msgstr "પેટીને ચકાસતી વખતે ભૂલ ઉદ઼ભવી."
 
-#: ../src/fr-window.c:2884
+#: ../src/fr-window.c:2847
 msgid "An error occurred while saving the archive."
 msgstr "પેટીને સંગ્રહ કરી રહ્યા બોય તે વખતે ભૂલ ઉદ઼ભવી."
 
-#: ../src/fr-window.c:2888
+#: ../src/fr-window.c:2851
 msgid "An error occurred while renaming the files."
 msgstr "ભૂલ ઉદ્ભવી જ્યારે ફાઇલોનું નામ બદલી રહ્યા હોય."
 
-#: ../src/fr-window.c:2892
+#: ../src/fr-window.c:2855
 msgid "An error occurred while updating the files."
 msgstr "ભૂલ ઉદ્ભવી જ્યારે ફાઇલોને સુધારી રહ્યા છે."
 
-#: ../src/fr-window.c:2896
+#: ../src/fr-window.c:2859
 msgid "An error occurred."
 msgstr "ભૂલ ઉત્પન્ન થયેલ છે."
 
-#: ../src/fr-window.c:2902
+#: ../src/fr-window.c:2865
 msgid "Command not found."
 msgstr "આદેશ મળ્યો નથી."
 
-#: ../src/fr-window.c:3060
+#: ../src/fr-window.c:3023
 msgid "Test Result"
 msgstr "પરિણામ ચકાસો"
 
-#: ../src/fr-window.c:4001 ../src/fr-window.c:8400 ../src/fr-window.c:8434
-#: ../src/fr-window.c:8700
+#: ../src/fr-window.c:3966 ../src/fr-window.c:8635 ../src/fr-window.c:8669
+#: ../src/fr-window.c:8935
 msgid "Could not perform the operation"
 msgstr "પ્રક્રિયા થઈ શકી નહિ"
 
-#: ../src/fr-window.c:4027
+#: ../src/fr-window.c:3992
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 "શું તમે આ ફાઇલને વર્તમાન પેટીમાં ઉમેરવા માગો છો કે પછી તેને નવી પેટી તરીકે બનાવવા માગે છો?"
 
-#: ../src/fr-window.c:4057
+#: ../src/fr-window.c:4022
 msgid "Do you want to create a new archive with these files?"
 msgstr "શું તમે આ ફાઇલો માટે નવી પેટી બનાવવા માગે છો?"
 
-#: ../src/fr-window.c:4060
+#: ../src/fr-window.c:4025
 msgid "Create _Archive"
 msgstr "પેટી બનાવો (_A)"
 
-#: ../src/fr-window.c:4089 ../src/fr-window.c:7150
-#| msgid "_Archive"
+#: ../src/fr-window.c:4054 ../src/fr-window.c:7105
 msgid "New Archive"
 msgstr "નવી પેટી"
 
-#: ../src/fr-window.c:4678
+#: ../src/fr-window.c:4642
 msgid "Folders"
 msgstr "ફોલ્ડરો"
 
-#: ../src/fr-window.c:4716 ../src/ui/file-selector.ui.h:5
+#: ../src/fr-window.c:4680 ../src/ui/file-selector.ui.h:5
 msgctxt "File"
 msgid "Size"
 msgstr "માપ"
 
-#: ../src/fr-window.c:4717
+#: ../src/fr-window.c:4681
 msgctxt "File"
 msgid "Type"
 msgstr "પ્રકાર"
 
-#: ../src/fr-window.c:4718 ../src/ui/file-selector.ui.h:6
-#| msgid "Modified on:"
+#: ../src/fr-window.c:4682 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Modified"
 msgstr "સુધારેલ"
 
-#: ../src/fr-window.c:4719
+#: ../src/fr-window.c:4683
 msgctxt "File"
 msgid "Location"
 msgstr "સ્થાન"
 
-#: ../src/fr-window.c:4728 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:4692 ../src/ui/file-selector.ui.h:4
 msgctxt "File"
 msgid "Name"
 msgstr "નામ"
 
-#: ../src/fr-window.c:5562
+#: ../src/fr-window.c:5519
 msgid "Find:"
 msgstr "શોધો:"
 
 #. Translators: this is the label for the "open recent file" sub-menu.
-#: ../src/fr-window.c:5657
+#: ../src/fr-window.c:5614
 msgid "Open _Recent"
 msgstr "છેલ્લું ખોલો (_R)"
 
-#: ../src/fr-window.c:5658 ../src/fr-window.c:5670
+#: ../src/fr-window.c:5615 ../src/fr-window.c:5627
 msgid "Open a recently used archive"
 msgstr "છેલ્લે વપરાયેલ પેટી ખોલો"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5742 ../src/ui/file-selector.ui.h:1
+#: ../src/fr-window.c:5699 ../src/ui/file-selector.ui.h:1
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "સ્થાન (_L):"
 
-#: ../src/fr-window.c:6580
+#: ../src/fr-window.c:6521
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "શું \"%s\" ફાઇલને બદલવા માંગો છો?"
 
-#: ../src/fr-window.c:6583
+#: ../src/fr-window.c:6524
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "સરખા નામ સાથે બીજી ફાઇલ \"%s\" માં પહેલેથી જ અસ્તિત્વ ધરાવે છે."
 
-#: ../src/fr-window.c:6590
+#: ../src/fr-window.c:6531
 msgid "Replace _All"
 msgstr "બધુ બદલો (_A)"
 
-#: ../src/fr-window.c:6591
+#: ../src/fr-window.c:6532
 msgid "_Skip"
 msgstr "છોડો (_S)"
 
-#: ../src/fr-window.c:7328
+#: ../src/fr-window.c:7287 ../src/fr-window.c:7643
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "પેટી \"%s\" નો સંગ્રહ કરી શકાયો નથી"
 
-#: ../src/fr-window.c:7461
-#| msgctxt "File"
-#| msgid "Save"
+#: ../src/fr-window.c:7414
 msgid "Save"
 msgstr "સંગ્રહો"
 
-#: ../src/fr-window.c:7502
+#: ../src/fr-window.c:7737
 msgid "Last Output"
 msgstr "છેલ્લો આઉટપુટ"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7724
+#: ../src/fr-window.c:7959
 msgid "New name is void, please type a name."
 msgstr "નવું નામ વ્યર્થ છે. મહેરબાની કરીને નામ લખો."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7729
+#: ../src/fr-window.c:7964
 msgid "New name is the same as old one, please type other name."
 msgstr "નવું નામ એ જૂનાં જેવુ જ છે, મહેરબાની કરીને બીજુ નામ લખો."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7734
+#: ../src/fr-window.c:7969
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
@@ -866,7 +873,7 @@ msgstr ""
 "નામ \"%s\" એ માન્ય નથી કારણ કે તે નીચેનાં અક્ષરોમાંના ઓછામાં ઓછા એકને સમાવે છે: %s, "
 "મહેરબાની કરીને બીજુ નામ લખો."
 
-#: ../src/fr-window.c:7770
+#: ../src/fr-window.c:8005
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -877,11 +884,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7770 ../src/fr-window.c:7772
+#: ../src/fr-window.c:8005 ../src/fr-window.c:8007
 msgid "Please use a different name."
 msgstr "મહેરબાની કરીને અલગ નામ વાપરો."
 
-#: ../src/fr-window.c:7772
+#: ../src/fr-window.c:8007
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -892,55 +899,55 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7842
+#: ../src/fr-window.c:8077
 msgid "Rename"
 msgstr "ફરીથી નામ આપો"
 
-#: ../src/fr-window.c:7843
+#: ../src/fr-window.c:8078
 msgid "_New folder name:"
 msgstr "નવું ફોલ્ડર નામ (_N):"
 
-#: ../src/fr-window.c:7843
+#: ../src/fr-window.c:8078
 msgid "_New file name:"
 msgstr "ફાઈલનુ નવુ નામ (_N):"
 
-#: ../src/fr-window.c:7847
+#: ../src/fr-window.c:8082
 msgid "_Rename"
 msgstr "ફરીથી નામ આપો (_R)"
 
-#: ../src/fr-window.c:7864 ../src/fr-window.c:7883
+#: ../src/fr-window.c:8099 ../src/fr-window.c:8118
 msgid "Could not rename the folder"
 msgstr "ફોલ્ડરને ફરીથી નામ આપી શકાયુ નથી"
 
-#: ../src/fr-window.c:7864 ../src/fr-window.c:7883
+#: ../src/fr-window.c:8099 ../src/fr-window.c:8118
 msgid "Could not rename the file"
 msgstr "ફાઈલને ફરીથી નામ આપી શકાયુ નથી"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8307
+#: ../src/fr-window.c:8542
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "\"%s\" માંથી \"%s\" માં ફાઇલોને ખસેડી રહ્યા છે"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8310
+#: ../src/fr-window.c:8545
 #, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "\"%s\" માંથી \"%s\" માં ફાઇલોની નકલ કરી રહ્યા છે"
 
-#: ../src/fr-window.c:8361
+#: ../src/fr-window.c:8596
 msgid "Paste Selection"
 msgstr "પસંદગીને ચોંટાડો"
 
-#: ../src/fr-window.c:8362
+#: ../src/fr-window.c:8597
 msgid "_Destination folder:"
 msgstr "લક્ષ્ય ફોલ્ડર (_D):"
 
-#: ../src/fr-window.c:8959
+#: ../src/fr-window.c:9195
 msgid "Add files to an archive"
 msgstr "પેટીમાં ફાઇલો ઉમેરો"
 
-#: ../src/fr-window.c:9003 ../src/main.c:448 ../src/main.c:484
+#: ../src/fr-window.c:9239 ../src/main.c:448 ../src/main.c:484
 #: ../src/main.c:510 ../src/main.c:802
 msgid "Extract archive"
 msgstr "પેટીનો અર્ક કાઢવો"
@@ -1017,7 +1024,6 @@ msgid "- Create and modify an archive"
 msgstr "- પેટી બનાવો અને સુધારો"
 
 #: ../src/ui/add-dialog-options.ui.h:1
-#| msgid "_Add"
 msgid "Add"
 msgstr "ઉમેરો"
 
@@ -1050,7 +1056,6 @@ msgid "_Follow symbolic links"
 msgstr "સાંકેતિક ચિહ્નનોને અનુસરો (_F)"
 
 #: ../src/ui/app-menu.ui.h:1
-#| msgid "_Archive"
 msgid "_New Archive"
 msgstr "નવી પેટી (_N)"
 
@@ -1067,7 +1072,7 @@ msgid "_Quit"
 msgstr "બહાર નીકળો (_Q)"
 
 #: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog-options.ui.h:1
-#: ../src/ui/new-archive-dialog.ui.h:4 ../src/ui/password.ui.h:3
+#: ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "પાસવર્ડ (_P):"
 
@@ -1100,7 +1105,6 @@ msgid "_Keep directory structure"
 msgstr "ડિરેક્ટરી બંધારણને રાખો (_K)"
 
 #: ../src/ui/extract-dialog-options.ui.h:8
-#| msgid "Do not overwrite newer files"
 msgid "Do not _overwrite newer files"
 msgstr "નવી ફાઇલો ઉપર લખો નહિં (_o)"
 
@@ -1113,7 +1117,6 @@ msgid "Places"
 msgstr "સ્થાનો"
 
 #: ../src/ui/file-selector.ui.h:7
-#| msgid "Dese_lect All"
 msgid "_Select All"
 msgstr "બધુ પસંદ કરો (_F)"
 
@@ -1122,7 +1125,6 @@ msgid "Dese_lect All"
 msgstr "બધુ નાપસંદ કરો (_l)"
 
 #: ../src/ui/file-selector.ui.h:9
-#| msgid "_Show the Files"
 msgid "Show Hidden Files"
 msgstr "છુપાયેલ ફાઇલોને બતાવો"
 
@@ -1353,16 +1355,6 @@ msgstr "પાસવર્ડ"
 msgid "_Encrypt the file list"
 msgstr "ફાઇલ યાદીને એનક્રિપ્ટ કરો (_E)"
 
-#: ../src/ui/password.ui.h:4
-msgid ""
-"Note: the password will be used to encrypt files you add to the current "
-"archive, and to decrypt files you extract from the current archive. When the "
-"archive is closed the password will be deleted."
-msgstr ""
-"નોંધ: વર્તમાન પેટીમાં ઉમેરાતી ખાનગી ફાઇલ ન વાંચી શકાય તે માટે, વર્તમાન પેટીમાંથી બહાર "
-"કઢાતી ખાનગી ફાઇલ માટે પાસવર્ડનો ઉપયોગ થાય છે. જ્યારે પેટી બંધ કરવામાં આવશે ત્યારે "
-"પાસવર્ડ ભૂંસાઇ જશે."
-
 #: ../src/ui/properties.ui.h:1
 msgctxt "File"
 msgid "Name:"
@@ -1405,6 +1397,15 @@ msgstr "સુધારો (_U)"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "તમે જે ફાઈલો સુધારવા માંગો તે પસંદ કરો (_e):"
+
+#~ msgid ""
+#~ "Note: the password will be used to encrypt files you add to the current "
+#~ "archive, and to decrypt files you extract from the current archive. When "
+#~ "the archive is closed the password will be deleted."
+#~ msgstr ""
+#~ "નોંધ: વર્તમાન પેટીમાં ઉમેરાતી ખાનગી ફાઇલ ન વાંચી શકાય તે માટે, વર્તમાન પેટીમાંથી "
+#~ "બહાર કઢાતી ખાનગી ફાઇલ માટે પાસવર્ડનો ઉપયોગ થાય છે. જ્યારે પેટી બંધ કરવામાં આવશે "
+#~ "ત્યારે પાસવર્ડ ભૂંસાઇ જશે."
 
 #~ msgid "Use mime icons"
 #~ msgstr "માઇમ ચિહ્નોને વાપરો"
@@ -1707,9 +1708,6 @@ msgstr "તમે જે ફાઈલો સુધારવા માંગો �
 
 #~ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
 #~ msgstr "<span weight=\"bold\" size=\"larger\">પાસવર્ડ જરૂરી</span>"
-
-#~ msgid "Enter the password for the archive '%s'."
-#~ msgstr "પેટી '%s' માટે પાસવર્ડ દાખલ કરો."
 
 #~ msgid "Adding file: "
 #~ msgstr "ફાઇલ ઉમેરી રહ્યા છેઃ "
