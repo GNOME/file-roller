@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
-"POT-Creation-Date: 2012-09-04 07:39+0000\n"
-"PO-Revision-Date: 2012-09-05 16:42+0900\n"
+"POT-Creation-Date: 2012-09-15 15:36+0000\n"
+"PO-Revision-Date: 2012-09-08 08:25+0900\n"
 "Last-Translator: Yasumichi Akahoshi <yasumichi@vinelinux.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -284,42 +284,25 @@ msgstr "ファイル名には、ファイルの拡張子を続ける必要があ
 msgid "You can specify in the file chooser dialog whether you want to:"
 msgstr "ファイル選択ダイアログで目的の操作を指定できます。"
 
-# 現在のインターフェースでは Keep directory structure
 #: C/archive-extract-advanced-options.page:61(item/title)
-msgid "<gui>Re-create folders</gui>"
+msgid "<gui>Keep directory structure</gui>"
 msgstr "<gui>フォルダー構造を維持する</gui>"
 
 #: C/archive-extract-advanced-options.page:62(item/p)
 msgid "Tick this option if you want to keep the directory structure as it is in your archive."
 msgstr "フォルダー構造をアーカイブ内と同様に維持したい場合は、このオプションにチェックを入れます。"
 
-# 最新のインターフェースには存在しない?
 #: C/archive-extract-advanced-options.page:66(item/title)
-msgid "<gui>Overwrite existing files</gui>"
-msgstr "<gui>既存のファイルを上書きする</gui>"
-
-#: C/archive-extract-advanced-options.page:67(item/p)
-msgid "If your archive contains files with the same name as those in the destination folder, then <app>Archive Manager</app> will overwrite them during extraction if this option is enabled."
-msgstr "展開先のフォルダーに存在するファイル名と同名のファイルがアーカイブ内に存在する場合、このオプションが有効になっていると<app>アーカイブマネージャー</app>は、展開中に既存のファイルを上書きします。"
-
-# 最新のインターフェースでは、Do not overwrite newer files になっている。
-#: C/archive-extract-advanced-options.page:72(item/title)
-msgid "<gui>Do not extract older files</gui>"
+msgid "<gui>Do not overwrite newer files</gui>"
 msgstr "<gui>より新しいファイルは上書きしない</gui>"
 
-#: C/archive-extract-advanced-options.page:73(item/p)
+#: C/archive-extract-advanced-options.page:67(item/p)
 msgid "This option will not overwrite existing files with the same name, which have a more recent modification date than those which are in the archive."
 msgstr "このオプションを指定するとアーカイブ内の更新日時より新しい更新日時の同名ファイルを上書きしません。"
 
-#: C/archive-extract-advanced-options.page:79(page/p)
+#: C/archive-extract-advanced-options.page:73(page/p)
 msgid "These <gui>Actions</gui> are listed at the bottom of the dialog."
 msgstr "これらの<gui>アクション</gui>は、ダイアログの下部に一覧表示されています。"
-
-# 不要な内容と思われるため削除を提案中である旨を記述
-# https://bugzilla.gnome.org/show_bug.cgi?id=682624
-#: C/archive-extract-advanced-options.page:82(note/p)
-msgid "The option <gui>Do not extract older files</gui> is only available when the option <gui>Overwrite existing files</gui> has been enabled."
-msgstr "The option <gui>Do not extract older files</gui> is only available when the option <gui>Overwrite existing files</gui> has been enabled. (※訳注:原文にあるこのノートは、現状と異なるため削除を提案中です。)"
 
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
@@ -712,7 +695,9 @@ msgid "Supported file formats"
 msgstr "サポートされている形式"
 
 #: C/supported-formats.page:25(page/p)
-msgid "File formats that are support by <app>Archive Manager</app> include:"
+#, fuzzy
+#| msgid "File formats that are support by <app>Archive Manager</app> include:"
+msgid "File formats that are supported by <app>Archive Manager</app> include:"
 msgstr "<app>アーカイブマネージャー</app>がサポートしている形式"
 
 #: C/supported-formats.page:28(item/p)
@@ -838,99 +823,3 @@ msgstr "パスワード設定時の問題"
 #: C/troubleshooting-password.page:27(page/p)
 msgid "<app>Archive Manager</app> does not add password protection for an existing archive. While working with such an archive, you can only set a password for newly added files. To do this, follow instructions on <link xref=\"password-protection\">Password protection</link> page."
 msgstr "<app>アーカイブマネージャー</app>は既存のアーカイブに対しては、パスワードによる保護を保証しません。既存のアーカイブについて作業している間は、新たに追加されたファイルに対してのみパスワードを設定できます。これを行うには、<link xref=\"password-protection\">パスワードによる保護</link>というページの指示に従ってください。"
-
-#~ msgid "majus85@gmail.com"
-#~ msgstr "majus85@gmail.com"
-
-#~ msgid "Check the integrity of an archive"
-#~ msgstr "アーカイブの整合性をテストする"
-
-#~ msgid "The file chooser will open"
-#~ msgstr "ファイル選択ダイアログが開きます"
-
-#~ msgid "Click <gui>Other Options</gui> and type a password"
-#~ msgstr "<gui>その他のオプション</gui>をクリックし、パスワードを入力します"
-
-#~ msgid "Type your password into the password field"
-#~ msgstr "パスワード入力欄にパスワードを入力します"
-
-#~ msgid "Ctrl"
-#~ msgstr "Ctrl"
-
-#~ msgid "N"
-#~ msgstr "N"
-
-#~ msgid "O"
-#~ msgstr "O"
-
-#~ msgid "E"
-#~ msgstr "E"
-
-#~ msgid "Alt"
-#~ msgstr "Alt"
-
-#~ msgid "Return"
-#~ msgstr "Return"
-
-#~ msgid "W"
-#~ msgstr "W"
-
-#~ msgid "X"
-#~ msgstr "X"
-
-#~ msgid "C"
-#~ msgstr "C"
-
-#~ msgid "V"
-#~ msgstr "V"
-
-#~ msgid "F2"
-#~ msgstr "F2"
-
-#~ msgid "A"
-#~ msgstr "A"
-
-#~ msgid "Shift"
-#~ msgstr "Shift"
-
-#~ msgid "F"
-#~ msgstr "F"
-
-#~ msgid "Delete"
-#~ msgstr "Delete"
-
-#~ msgid "F9"
-#~ msgstr "F9"
-
-#~ msgid "1"
-#~ msgstr "1"
-
-#~ msgid "2"
-#~ msgstr "2"
-
-#~ msgid "Esc"
-#~ msgstr "Esc"
-
-#~ msgid "R"
-#~ msgstr "R"
-
-#~ msgid "F1"
-#~ msgstr "F1"
-
-#~ msgid "Create new archive by adding files or folders"
-#~ msgstr "ファイルやフォルダーを追加して新しいアーカイブを作成"
-
-#~ msgid "Select the file"
-#~ msgstr "ファイルを選択"
-
-#~ msgid "Right-click"
-#~ msgstr "右クリック"
-
-#~ msgid "Click the toolbar button <gui>Open</gui>."
-#~ msgstr "<gui>開く</gui>というツールバーボタンをクリックします。"
-
-#~ msgid "Files"
-#~ msgstr "ファイル"
-
-#~ msgid "<gui>Close</gui> - the dialog will be closed and you will see your archive again"
-#~ msgstr "<gui>閉じる</gui> - このダイアログを閉じます。再び、アーカイブを閲覧できます。"
