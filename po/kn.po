@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-08-11 20:48+0000\n"
-"PO-Revision-Date: 2012-09-20 15:11+0530\n"
+"PO-Revision-Date: 2012-09-20 16:25+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <en@li.org>\n"
 "Language: kn\n"
@@ -113,6 +113,8 @@ msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
+"ಏರಿಕೆ ಅಥವ ಇಳಿಕೆ ಕ್ರಮದಲ್ಲಿ ಜೋಡಿಸಬೇಕೆ. ಸಾಧ್ಯವಿರುವ ಮೌಲ್ಯಗಳೆಂದರೆ ascending, "
+"descending."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
 msgid "List Mode"
@@ -164,7 +166,6 @@ msgid "Name column width"
 msgstr "ಹೆಸರಿನ ಕಾಲಂನ ಅಗಲ"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
-#, fuzzy
 #| msgid "The default width of the name column the file list."
 msgid "The default width of the name column in the file list."
 msgstr "ಕಡತದ ಪಟ್ಟಿಯಲ್ಲಿನ ಹೆಸರಿನ ಕಾಲಂನ ಪೂರ್ವನಿಯೋಜಿತ ಅಗಲ."
@@ -210,6 +211,8 @@ msgid ""
 "List of applications entered in the 'Open File' dialog and not associated "
 "with the file type."
 msgstr ""
+"'ಕಡತವನ್ನು ತೆರೆ' ಸಂವಾದಚೌಕದಲ್ಲಿ ನಮೂದಿಸಲಾದ ಮತ್ತು ಕಡತದ ಬಗೆಗೆ ಸಂಬಂಧಿಸಿರದ ಅನ್ವಯಗಳ "
+"ಪಟ್ಟಿ."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
 msgid "Compression level"
@@ -233,6 +236,8 @@ msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
+"ಸಂಗ್ರಹದ ತಲೆಬರಹವನ್ನು ಗೂಢಲಿಪೀಕರಿಸಬೇಕೆ. ತಲೆಬರಹವನ್ನು ಗೂಢಲಿಪೀಕರಿಸಿದಲ್ಲಿ "
+"ಸಂಗ್ರಹದಲ್ಲಿನ ವಿಷಯವನ್ನು ಪಟ್ಟಿ ಮಾಡಲು ಗುಪ್ತಪದದ ಅಗತ್ಯವಿರುತ್ತದೆ."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
 msgid "Do not overwrite newer files"
@@ -423,10 +428,10 @@ msgid "_Search Command"
 msgstr "ಹುಡುಕು ಆಜ್ಞೆ (_S)"
 
 #: ../src/dlg-password.c:91
-#, fuzzy, c-format
+#, c-format
 #| msgid "Enter the password for the archive '%s'."
 msgid "Enter a password for \"%s\""
-msgstr "ಆರ್ಕೈವ್ '%s' ಗೆ ಗುಪ್ತಪದವನ್ನು ನಮೂದಿಸು."
+msgstr "'%s' ಗಾಗಿ ಗುಪ್ತಪದವನ್ನು ನಮೂದಿಸಿ."
 
 #: ../src/dlg-prop.c:96
 #, c-format
@@ -479,28 +484,28 @@ msgstr "ನೀವು ಒಂದು ಆರ್ಕೈವನ್ನು ಅದಕ್ಕ
 #: ../src/fr-command-tar.c:305
 #, c-format
 msgid "Adding \"%s\""
-msgstr ""
+msgstr "\"%s\" ಅನ್ನು ಸೇರಿಸಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:420 ../src/fr-command-rar.c:455
 #: ../src/fr-command-tar.c:426
-#, fuzzy, c-format
+#, c-format
 #| msgid "Starting %s"
 msgid "Extracting \"%s\""
-msgstr "%s ಅನ್ನು ಆರಂಭಿಸಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಅನ್ನು ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ"
 
 #: ../src/fr-command.c:597
-#, fuzzy, c-format
+#, c-format
 #| msgid "File not found."
 msgid "Archive not found"
-msgstr "ಕಡತ ಕಂಡುಬಂದಿಲ್ಲ."
+msgstr "ಸಂಗ್ರಹ ಕಂಡುಬಂದಿಲ್ಲ."
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-rar.c:406 ../src/fr-command-tar.c:371
-#, fuzzy, c-format
+#, c-format
 #| msgid "Removing file: "
 msgid "Removing \"%s\""
-msgstr "ಕಡತವನ್ನು ತೆರೆಯಲಾಗುತ್ತಿದೆ: "
+msgstr "\"%s\" ತೆಗೆಯಲಾಗುತ್ತಿದೆ"
 
 #: ../src/fr-command-rar.c:581
 #, c-format
@@ -521,13 +526,12 @@ msgstr "ಆರ್ಕೈವನ್ನು ಡಿಕಂಪ್ರೆಸ್ ಮಾಡ�
 
 #: ../src/fr-file-selector-dialog.c:588
 msgid "File System"
-msgstr ""
+msgstr "ಕಡತ ವ್ಯವಸ್ಥೆ"
 
 #: ../src/fr-file-selector-dialog.c:1331 ../src/fr-file-selector-dialog.c:1376
-#, fuzzy
 #| msgid "Could not perform the operation"
 msgid "Could not load the location"
-msgstr "ಕಾರ್ಯವನ್ನು ನಿರ್ವಹಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
+msgstr "ಸ್ಥಳವನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ"
 
 #: ../src/fr-new-archive-dialog.c:331 ../src/fr-new-archive-dialog.c:350
 #: ../src/fr-new-archive-dialog.c:366 ../src/fr-new-archive-dialog.c:414
@@ -544,20 +548,23 @@ msgid "You don't have permission to create an archive in this folder"
 msgstr "ಈ ಕಡತಕೋಶದಲ್ಲಿ ಆರ್ಕೈವನ್ನು ನಿರ್ಮಿಸಲು ನಿಮಗೆ ಅನುಮತಿಗಳಿಲ್ಲ"
 
 #: ../src/fr-new-archive-dialog.c:435
-#, fuzzy, c-format
+#, c-format
 #| msgid "The archive is already present.  Do you want to overwrite it?"
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
-msgstr "ಆರ್ಕೈವ್ ಈಗಾಗಲೆ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ. ನೀವದನ್ನು ತಿದ್ದಿಬರೆಯಲು ಬಯಸುತ್ತೀರಾ?"
+msgstr ""
+"\"%s\" ಎಂಬ ಹೆಸರಿನ ಕಡತವು ಈಗಾಗಲೆ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ. ನೀವದನ್ನು ಬದಲಿಸಲು ಬಯಸುವಿರಾ?"
 
 #: ../src/fr-new-archive-dialog.c:436
 #, c-format
 msgid ""
 "The file already exists in \"%s\".  Replacing it will overwrite its contents."
 msgstr ""
+"\"%s\" ಎಂಬ ಹೆಸರಿನ ಕಡತವು ಈಗಾಗಲೆ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ. ಅದನ್ನು ಬದಲಿಸಿದಲ್ಲಿ, ಅದರಲ್ಲಿನ "
+"ವಿಷಯಗಳನ್ನು ತಿದ್ದಿಬರೆಯಲಾಗುತ್ತದೆ."
 
 #: ../src/fr-new-archive-dialog.c:443 ../src/fr-window.c:6533
 msgid "_Replace"
-msgstr ""
+msgstr "ಬದಲಾಯಿಸು (_R)"
 
 #: ../src/fr-new-archive-dialog.c:458
 msgid "Could not delete the old archive."
@@ -576,10 +583,9 @@ msgid "_Extract"
 msgstr "ಹೊರ ತೆಗೆ(_E)"
 
 #: ../src/fr-window.c:1043
-#, fuzzy
 #| msgid "Extraction completed successfully"
 msgid "Operation completed"
-msgstr "ಹೊರತೆಗೆಯುವಿಕೆಯು ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ"
+msgstr "ಕಾರ್ಯವು ಪೂರ್ಣಗೊಂಡಿದೆ"
 
 #: ../src/fr-window.c:1160
 #, c-format
@@ -610,38 +616,38 @@ msgstr "\"%s\" ಕಡತಕೋಶವನ್ನು ತೋರಿಸಲಾಗುತ�
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2169 ../src/fr-window.c:2207
-#, fuzzy, c-format
+#, c-format
 #| msgid "Starting %s"
 msgid "Creating \"%s\""
-msgstr "%s ಅನ್ನು ಆರಂಭಿಸಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಅನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2173
-#, fuzzy, c-format
+#, c-format
 #| msgid "Starting %s"
 msgid "Loading \"%s\""
-msgstr "%s ಅನ್ನು ಆರಂಭಿಸಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಅನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2177
-#, fuzzy, c-format
+#, c-format
 #| msgid "Starting %s"
 msgid "Reading \"%s\""
-msgstr "%s ಅನ್ನು ಆರಂಭಿಸಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಅನ್ನು ಓದಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2181
-#, fuzzy, c-format
+#, c-format
 #| msgid "Deleting files from archive"
 msgid "Deleting the files from \"%s\""
-msgstr "ಕಡತವನ್ನು ಆರ್ಕೈವ್‍ನಿಂದ ತೆರೆಯಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಇಂದ ಕಡತವನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2185
-#, fuzzy, c-format
+#, c-format
 #| msgid "Starting %s"
 msgid "Testing \"%s\""
-msgstr "%s ಅನ್ನು ಆರಂಭಿಸಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಅನ್ನು ಪರೀಕ್ಷಿಸಲಾಗುತ್ತಿದೆ"
 
 #: ../src/fr-window.c:2188
 msgid "Getting the file list"
@@ -649,49 +655,49 @@ msgstr "ಕಡತದ ಪಟ್ಟಿಯನ್ನು ಪಡೆಯಲಾಗುತ�
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2192
-#, fuzzy, c-format
+#, c-format
 #| msgid "Copying the file list"
 msgid "Copying the files to add to \"%s\""
-msgstr "ಕಡತದ ಪಟ್ಟಿಯನ್ನು ಕಾಪಿಮಾಡಲಾಗುತ್ತಿದೆ"
+msgstr "\"%\" ಗೆ ಸೇರಿಸಲು ಕಡತಗಳನ್ನು ಪ್ರತಿಮಾಡಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2196
-#, fuzzy, c-format
+#, c-format
 #| msgid "Adding files to archive"
 msgid "Adding the files to \"%s\""
-msgstr "ಕಡತಗಳನ್ನು ಆರ್ಕೈವ್‍ಗೆ ಸೇರಿಸಲಾಗುತ್ತಿದೆ"
+msgstr "\"%\" ಗೆ ಕಡತಗಳನ್ನು ಸೇರಿಸಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2200
-#, fuzzy, c-format
+#, c-format
 #| msgid "Extracting files from archive"
 msgid "Extracting the files from \"%s\""
-msgstr "ಆರ್ಕೈವ್‍ನಿಂದ ಕಡತಗಳನ್ನು ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಇಂದ ಕಡತಗಳನ್ನು ಹೊರತೆಗೆಯಲಾಗುತ್ತಿದೆ"
 
 #: ../src/fr-window.c:2203
 msgid "Copying the extracted files to the destination"
-msgstr ""
+msgstr "ಹೊರತೆಗೆಯಲಾದ ಕಡತಗಳನ್ನು ನಿರ್ದೇಶಿತ ಸ್ಥಳಕ್ಕೆ ಪ್ರತಿ ಮಾಡಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2212
-#, fuzzy, c-format
+#, c-format
 #| msgid "Starting %s"
 msgid "Saving \"%s\""
-msgstr "%s ಅನ್ನು ಆರಂಭಿಸಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಅನ್ನು ಉಳಿಸಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2219
-#, fuzzy, c-format
+#, c-format
 #| msgid "Getting the file list"
 msgid "Renaming the files in \"%s\""
-msgstr "ಕಡತದ ಪಟ್ಟಿಯನ್ನು ಪಡೆಯಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಎಂಬಲ್ಲಿ ಕಡತಗಳ ಹೆಸರನ್ನು ಬದಲಾಯಿಸಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2223
-#, fuzzy, c-format
+#, c-format
 #| msgid "Update the files in the archive \"%s\"?"
 msgid "Updating the files in \"%s\""
-msgstr "ಕಡತವನ್ನು ಆರ್ಕೈವ್ \"%s\" ಅಲ್ಲಿ ಅಪ್ಡೇಟ್ ಮಾಡಬೇಕೆ?"
+msgstr "\"%s\" ಎಂಬಲ್ಲಿ ಕಡತಗಳನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗುತ್ತಿದೆ"
 
 #: ../src/fr-window.c:2398
 msgid "_Open the Archive"
@@ -705,14 +711,13 @@ msgstr "ಅಯ್ದ ಕಡತಗಳನ್ನು ತೋರಿಸು(_S)"
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d ಕಡತ ಉಳಿದಿದೆ"
+msgstr[1] "%'d ಕಡತಗಳು ಉಳಿದಿವೆ"
 
 #: ../src/fr-window.c:2520 ../src/fr-window.c:3099
-#, fuzzy
 #| msgid "please wait..."
 msgid "Please wait…"
-msgstr "ದಯವಿಟ್ಟು ಕಾಯಿರಿ..."
+msgstr "ದಯವಿಟ್ಟು ಕಾಯಿರಿ…"
 
 #: ../src/fr-window.c:2578
 msgid "Extraction completed successfully"
@@ -720,10 +725,10 @@ msgstr "ಹೊರತೆಗೆಯುವಿಕೆಯು ಯಶಸ್ವಿಯಾ�
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2609 ../src/fr-window.c:6144
-#, fuzzy, c-format
+#, c-format
 #| msgid "Archive created successfully"
 msgid "\"%s\" created successfully"
-msgstr "ಆರ್ಕೈವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ"
+msgstr "\"%s\" ಯಶಸ್ವಿಯಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ"
 
 #: ../src/fr-window.c:2699 ../src/fr-window.c:2868
 msgid "Command exited abnormally."
@@ -759,16 +764,14 @@ msgid "An error occurred while saving the archive."
 msgstr "ಆರ್ಕೈವನ್ನು ಉಳಿಸುವಾಗ ಒಂದು ದೋಷ ಎದುರಾಗಿದೆ."
 
 #: ../src/fr-window.c:2851
-#, fuzzy
 #| msgid "An error occurred while extracting files."
 msgid "An error occurred while renaming the files."
-msgstr "ಕಡತಗಳನ್ನು ಹೊರತೆಗೆಯುವಾಗ ಒಂದು ದೋಷ ಎದುರಾಗಿದೆ."
+msgstr "ಕಡತಗಳನ್ನು ಮರುಹೆಸರಿಸುವಾಗ ಒಂದು ದೋಷ ಎದುರಾಗಿದೆ."
 
 #: ../src/fr-window.c:2855
-#, fuzzy
 #| msgid "An error occurred while extracting files."
 msgid "An error occurred while updating the files."
-msgstr "ಕಡತಗಳನ್ನು ಹೊರತೆಗೆಯುವಾಗ ಒಂದು ದೋಷ ಎದುರಾಗಿದೆ."
+msgstr "ಕಡತಗಳನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡುವಾಗ ಒಂದು ದೋಷ ಎದುರಾಗಿದೆ."
 
 #: ../src/fr-window.c:2859
 msgid "An error occurred."
@@ -805,10 +808,9 @@ msgid "Create _Archive"
 msgstr "ಆರ್ಕೈವನ್ನು ನಿರ್ಮಿಸು(_A)"
 
 #: ../src/fr-window.c:4054 ../src/fr-window.c:7105
-#, fuzzy
 #| msgid "Archive:"
 msgid "New Archive"
-msgstr "ಆರ್ಕೈವ್:"
+msgstr "ಹೊಸ ಸಂಗ್ರಹ"
 
 #: ../src/fr-window.c:4642
 msgid "Folders"
@@ -825,11 +827,10 @@ msgid "Type"
 msgstr "ಬಗೆ"
 
 #: ../src/fr-window.c:4682 ../src/ui/file-selector.ui.h:6
-#, fuzzy
 #| msgid "Modified on:"
 msgctxt "File"
 msgid "Modified"
-msgstr "ಮಾರ್ಪಡಿಸಲಾಗಿದ್ದು:"
+msgstr "ಮಾರ್ಪಡಿಸಲಾಗಿದ್ದು"
 
 #: ../src/fr-window.c:4683
 msgctxt "File"
@@ -861,30 +862,27 @@ msgid "_Location:"
 msgstr "ಸ್ಥಳ (_L):"
 
 #: ../src/fr-window.c:6521
-#, fuzzy, c-format
+#, c-format
 #| msgid "_Selected files"
 msgid "Replace file \"%s\"?"
-msgstr "ಆಯ್ದ ಕಡತಗಳು (_S)"
+msgstr "\"%s\" ಎಂಬ ಕಡತವನ್ನು ಬದಲಾಯಿಸಬೇಕೆ?"
 
 #: ../src/fr-window.c:6524
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "A file named \"%s\" already exists.\n"
 #| "\n"
 #| "%s"
 msgid "Another file with the same name already exists in \"%s\"."
-msgstr ""
-"\"%s\" ಎಂಬ ಹೆಸರಿನ ಕಡತವು ಈಗಾಗಲೆ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ.\n"
-"\n"
-"%s"
+msgstr "\"%s\" ನಲ್ಲಿ ಇದೇ ಹೆಸರಿನ ಬೇರೊಂದು ಕಡತವು ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ."
 
 #: ../src/fr-window.c:6531
 msgid "Replace _All"
-msgstr ""
+msgstr "ಎಲ್ಲವನ್ನೂ ಬದಲಿಸು (_A)"
 
 #: ../src/fr-window.c:6532
 msgid "_Skip"
-msgstr ""
+msgstr "ಕಡೆಗಣಿಸು (_S)"
 
 #: ../src/fr-window.c:7287 ../src/fr-window.c:7643
 #, c-format
@@ -892,7 +890,6 @@ msgid "Could not save the archive \"%s\""
 msgstr "\"%s\" ಆರ್ಕೈವನ್ನು ಉಳಿಸಲಾಗಲಿಲ್ಲ"
 
 #: ../src/fr-window.c:7414
-#, fuzzy
 #| msgctxt "File"
 #| msgid "Save"
 msgid "Save"
@@ -905,16 +902,16 @@ msgstr "ಕೊನೆಯ ಔಟ್‍ಪುಟ್"
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7959
 msgid "New name is void, please type a name."
-msgstr ""
+msgstr "ಹೆಸರಿನ ಜಾಗವು ಖಾಲಿ ಇದ್ದಲ್ಲಿ, ದಯವಿಟ್ಟು ಒಂದು ಹೆಸರನ್ನು ನಮೂದಿಸಿ."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7964
 msgid "New name is the same as old one, please type other name."
-msgstr ""
+msgstr "ಹೊಸ ಹೆಸರು ಹಳೆಯ ಹೆಸರಿನಂತಿದೆ, ದಯವಿಟ್ಟು ಇನ್ನೊಂದು ಹೆಸರನ್ನು ನಮೂದಿಸಿ."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
 #: ../src/fr-window.c:7969
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "The name \"%s\" is not valid because it cannot contain the characters: "
 #| "%s\n"
@@ -924,9 +921,8 @@ msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
-"ಹೆಸರು \"%s\" ಸಮರ್ಪಕವಾದುದಲ್ಲ ಏಕೆಂದರೆ ಅದು ಈ ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರುವಂತಿಲ್ಲ: %s\n"
-"\n"
-"%s"
+"\"%s\" ಎಂಬ ಹೆಸರು ಸಮರ್ಪಕವಾದುದಲ್ಲ ಏಕೆಂದರೆ ಅದು ಈ ಕೆಳಗಿನ ಅಕ್ಷರಗಳಲ್ಲಿ ಒಂದನ್ನು "
+"ಹೊಂದಿದೆ: %s, ದಯವಿಟ್ಟು ಇನ್ನೊಂದು ಹೆಸರನ್ನು ನಮೂದಿಸಿ."
 
 #: ../src/fr-window.c:8005
 #, c-format
@@ -959,16 +955,14 @@ msgid "Rename"
 msgstr "ಹೆಸರು ಬದಲಾಯಿಸು"
 
 #: ../src/fr-window.c:8078
-#, fuzzy
 #| msgid "New folder name"
 msgid "_New folder name:"
-msgstr "ಹೊಸ ಕಡತಕೋಶದ ಹೆಸರು"
+msgstr "ಹೊಸ ಕಡತಕೋಶದ ಹೆಸರು (_N):"
 
 #: ../src/fr-window.c:8078
-#, fuzzy
 #| msgid "New file name"
 msgid "_New file name:"
-msgstr "ಹೊಸ ಕಡತದ ಹೆಸರು"
+msgstr "ಹೊಸ ಕಡತದ ಹೆಸರು (_N):"
 
 #: ../src/fr-window.c:8082
 msgid "_Rename"
@@ -986,24 +980,23 @@ msgstr "ಕಡತದ ಹೆಸರನ್ನು ಬದಲಾಯಿಸಲಾಗಲ�
 #: ../src/fr-window.c:8542
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
-msgstr ""
+msgstr "\"%s\" ಇಂದ \"%s\" ಕ್ಕೆ ಕಡತವನ್ನು ಸ್ಥಳಾಂತರಿಸಲಾಗುತ್ತಿದೆ"
 
 #. Translators: %s are archive filenames
 #: ../src/fr-window.c:8545
-#, fuzzy, c-format
+#, c-format
 #| msgid "Copying the file list"
 msgid "Copying the files from \"%s\" to \"%s\""
-msgstr "ಕಡತದ ಪಟ್ಟಿಯನ್ನು ಕಾಪಿಮಾಡಲಾಗುತ್ತಿದೆ"
+msgstr "\"%s\" ಇಂದ \"%s\" ಕ್ಕೆ ಕಡತವನ್ನು ಪ್ರತಿ ಮಾಡಲಾಗುತ್ತಿದೆ"
 
 #: ../src/fr-window.c:8596
 msgid "Paste Selection"
 msgstr "ಆಯ್ಕೆ ಮಾಡಿದ್ದನ್ನು ಅಂಟಿಸು"
 
 #: ../src/fr-window.c:8597
-#, fuzzy
 #| msgid "Destination folder"
 msgid "_Destination folder:"
-msgstr "ಸೂಚಿಸಲಾದ ಕಡತಕೋಶ"
+msgstr "ನಿರ್ದೇಶಿತ ಕಡತಕೋಶ (_D):"
 
 #: ../src/fr-window.c:9195
 msgid "Add files to an archive"
@@ -1068,14 +1061,15 @@ msgstr "ಖಚಿತಪಡಿಸಲು ಕೇಳದೆ ಉದ್ದೇಶಿತ 
 #: ../src/main.c:96
 msgid "Use the notification system to notify the operation completion"
 msgstr ""
+"ಕಾರ್ಯಾಚರಣೆಯು ಪೂರ್ಣಗೊಂಡಿದೆ ಎನ್ನುವುದನ್ನು ಸೂಚಿಸಲು ಸೂಚನಾ ವ್ಯವಸ್ಥೆಯನ್ನು ಬಳಸು"
 
 #: ../src/main.c:99
 msgid "Start as a service"
-msgstr ""
+msgstr "ಒಂದು ಸೇವೆಯನ್ನು ಆರಂಭಿಸು"
 
 #: ../src/main.c:102
 msgid "Show version"
-msgstr ""
+msgstr "ಆವೃತ್ತಿಯನ್ನು ತೋರಿಸು"
 
 #. manually set name and icon
 #: ../src/main.c:629
@@ -1087,10 +1081,9 @@ msgid "- Create and modify an archive"
 msgstr "- ಆರ್ಕೈವನ್ನು ನಿರ್ಮಿಸಿ ಹಾಗು ಮಾರ್ಪಡಿಸಿ"
 
 #: ../src/ui/add-dialog-options.ui.h:1
-#, fuzzy
 #| msgid "_Add"
 msgid "Add"
-msgstr "ಸೇರಿಸು(_A)"
+msgstr "ಸೇರಿಸು"
 
 #: ../src/ui/add-dialog-options.ui.h:2
 msgid "Include _files:"
@@ -1118,27 +1111,25 @@ msgstr "ಹೊಸದಾಗಿದ್ದಲ್ಲಿ ಮಾತ್ರ ಸೇರಿ�
 
 #: ../src/ui/add-dialog-options.ui.h:8
 msgid "_Follow symbolic links"
-msgstr ""
+msgstr "ಸಾಂಕೇತಿಕ ಕೊಂಡಿಗಳನ್ನು ಅನುಸರಿಸು (_F)"
 
 #: ../src/ui/app-menu.ui.h:1
-#, fuzzy
 #| msgid "_Archive"
 msgid "_New Archive"
-msgstr "ಆರ್ಕೈವ್ (_A):"
+msgstr "ಹೊಸ ಸಂಗ್ರಹ (_N):"
 
 #: ../src/ui/app-menu.ui.h:2 ../src/ui.h:34
 msgid "_Help"
 msgstr "ನೆರವು (_H)"
 
 #: ../src/ui/app-menu.ui.h:3
-#, fuzzy
 #| msgid "Archive Manager"
 msgid "_About Archive Manager"
-msgstr "ಆರ್ಕೈವ್ ನಿರ್ವಾಹಕ"
+msgstr "ಸಂಗ್ರಹ ವ್ಯವಸ್ಥಾಪಕನ ಕುರಿತು (_A)"
 
 #: ../src/ui/app-menu.ui.h:4
 msgid "_Quit"
-msgstr ""
+msgstr "ನಿರ್ಗಮಿಸು (_Q)"
 
 #: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog-options.ui.h:1
 #: ../src/ui/new-archive-dialog.ui.h:4
@@ -1166,20 +1157,18 @@ msgid "_Selected files"
 msgstr "ಆಯ್ದ ಕಡತಗಳು (_S)"
 
 #: ../src/ui/error-dialog.ui.h:1
-#, fuzzy
 #| msgid "Command _Line Output"
 msgid "C_ommand Line Output:"
-msgstr "ಆಜ್ಞೆ ಸಾಲಿನ ಔಟ್‍ಪುಟ್(_L)"
+msgstr "ಆಜ್ಞೆ ಸಾಲಿನ ಔಟ್‍ಪುಟ್ (_o):"
 
 #: ../src/ui/extract-dialog-options.ui.h:7
 msgid "_Keep directory structure"
-msgstr ""
+msgstr "ಕೋಶದ ರಚನೆಯನ್ನು ಇರಿಸಿಕೊ (_K)"
 
 #: ../src/ui/extract-dialog-options.ui.h:8
-#, fuzzy
 #| msgid "Do not overwrite newer files"
 msgid "Do not _overwrite newer files"
-msgstr "ಹೊಸ ಕಡತಗಳನ್ನು ತಿದ್ದಿ ಬರೆಯಬೇಡ (_x)"
+msgstr "ಹೊಸ ಕಡತಗಳನ್ನು ತಿದ್ದಿ ಬರೆಯಬೇಡ (_o)"
 
 #: ../src/ui/file-selector.ui.h:2 ../src/ui.h:188
 msgid "Go up one level"
@@ -1187,23 +1176,21 @@ msgstr "ಒಂದು ಹಂತ ಮೇಲಕ್ಕೆ ತೆರಳು"
 
 #: ../src/ui/file-selector.ui.h:3
 msgid "Places"
-msgstr ""
+msgstr "ಸ್ಥಳಗಳು"
 
 #: ../src/ui/file-selector.ui.h:7
-#, fuzzy
 #| msgid "Dese_lect All"
 msgid "_Select All"
-msgstr "ಎಲ್ಲವನ್ನು ಆಯ್ಕೆಮಾಡದಿರು (_l)"
+msgstr "ಎಲ್ಲವನ್ನು ಆಯ್ಕೆಮಾಡು (_S)"
 
 #: ../src/ui/file-selector.ui.h:8 ../src/ui.h:101
 msgid "Dese_lect All"
 msgstr "ಎಲ್ಲವನ್ನು ಆಯ್ಕೆಮಾಡದಿರು (_l)"
 
 #: ../src/ui/file-selector.ui.h:9
-#, fuzzy
 #| msgid "_Show the Files"
 msgid "Show Hidden Files"
-msgstr "ಅಯ್ದ ಕಡತಗಳನ್ನು ತೋರಿಸು(_S)"
+msgstr "ಅಡಗಿಸಿದ ಕಡತಗಳನ್ನು ತೋರಿಸು"
 
 #: ../src/ui.h:31
 msgid "_Archive"
@@ -1226,10 +1213,9 @@ msgid "Information about the program"
 msgstr "ಈ ಪ್ರೊಗ್ರಾಂ ಬಗೆಗಿನ ಮಾಹಿತಿ"
 
 #: ../src/ui.h:42
-#, fuzzy
 #| msgid "Add Files"
 msgid "_Add Files…"
-msgstr "ಕಡತಗಳನ್ನು ಸೇರಿಸು"
+msgstr "ಕಡತಗಳನ್ನು ಸೇರಿಸು (_A)…"
 
 #: ../src/ui.h:43 ../src/ui.h:47
 msgid "Add files to the archive"
@@ -1260,10 +1246,9 @@ msgid "Paste the clipboard"
 msgstr "ಕ್ಲಿಪ್‌ಬೋರ್ಡಿನಲ್ಲಿರುವದನ್ನು ಆಂಟಿಸು"
 
 #: ../src/ui.h:71 ../src/ui.h:92
-#, fuzzy
 #| msgid "_Rename"
 msgid "_Rename…"
-msgstr "ಹೆಸರನ್ನು ಬದಲಾಯಿಸು(_R)"
+msgstr "ಮರು ಹೆಸರಿಸು (_R)..."
 
 #: ../src/ui.h:72 ../src/ui.h:93
 msgid "Rename the selection"
@@ -1278,41 +1263,37 @@ msgid "Deselect all files"
 msgstr "ಎಲ್ಲ ಕಡತಗಳನ್ನು ಆಯ್ಕೆಮಾಡದಿರು"
 
 #: ../src/ui.h:105 ../src/ui.h:109
-#, fuzzy
 #| msgid "_Extract"
 msgid "_Extract…"
-msgstr "ಹೊರ ತೆಗೆ(_E)"
+msgstr "ಹೊರ ತೆಗೆ (_E)…"
 
 #: ../src/ui.h:106 ../src/ui.h:110 ../src/ui.h:114
 msgid "Extract files from the archive"
 msgstr "ಆಕೈವಿನಿಂದ ಕಡತಗಳನ್ನು ಹೊರತೆಗೆ"
 
 #: ../src/ui.h:117
-#, fuzzy
 #| msgid "Find:"
 msgid "Find…"
-msgstr "ಪತ್ತೆ ಹಚ್ಚು:"
+msgstr "ಪತ್ತೆ ಹಚ್ಚು…"
 
 #: ../src/ui.h:122
 msgid "New…"
-msgstr ""
+msgstr "ಹೊಸ…"
 
 #: ../src/ui.h:123
 msgid "Create a new archive"
 msgstr "ಹೊಸ ಆರ್ಕೈವನ್ನು ನಿರ್ಮಿಸು"
 
 #: ../src/ui.h:126
-#, fuzzy
 #| msgid "Open"
 msgid "Open…"
-msgstr "ತೆರೆ"
+msgstr "ತೆರೆ…"
 
 #: ../src/ui.h:127 ../src/ui.h:131
 msgid "Open archive"
 msgstr "ಆರ್ಕೈವನ್ನು ತೆಗೆ"
 
 #: ../src/ui.h:134
-#, fuzzy
 #| msgid "_Open With..."
 msgid "_Open With…"
 msgstr "ಇದರೊಂದಿಗೆ ತೆರೆ (_O)..."
@@ -1322,10 +1303,9 @@ msgid "Open selected files with an application"
 msgstr "ಆರಿಸಲಾದ ಕಡತವನ್ನು ಒಂದು ಅನ್ವಯದೊಂದಿಗೆ ತೆರೆ"
 
 #: ../src/ui.h:138
-#, fuzzy
 #| msgid "Password"
 msgid "Pass_word…"
-msgstr "ಗುಪ್ತಪದ"
+msgstr "ಗುಪ್ತಪದ (_w)…"
 
 #: ../src/ui.h:139
 msgid "Specify a password for this archive"
@@ -1340,10 +1320,9 @@ msgid "Reload current archive"
 msgstr "ಪ್ರಸಕ್ತ ಆರ್ಕೈವನ್ನು ಪುನಃ ಲೋಡ್ ಮಾಡು"
 
 #: ../src/ui.h:150
-#, fuzzy
 #| msgid "Save As..."
 msgid "Save As…"
-msgstr "ಹೀಗೆ ಉಳಿಸು..."
+msgstr "ಹೀಗೆ ಉಳಿಸು…"
 
 #: ../src/ui.h:151
 msgid "Save the current archive with a different name"
@@ -1445,10 +1424,9 @@ msgid "Password"
 msgstr "ಗುಪ್ತಪದ"
 
 #: ../src/ui/password.ui.h:2
-#, fuzzy
 #| msgid "_Encrypt the file list too"
 msgid "_Encrypt the file list"
-msgstr "ಕಡತದ ಪಟ್ಟಿಯನ್ನೂ ಸಹ ಗೂಢಲಿಪೀಕರಿಸು (_E)"
+msgstr "ಕಡತದ ಪಟ್ಟಿಯನ್ನು ಗೂಢಲಿಪೀಕರಿಸು (_E)"
 
 #: ../src/ui/properties.ui.h:1
 msgctxt "File"
@@ -1469,11 +1447,10 @@ msgid "Compression ratio:"
 msgstr "ಸಂಕುಚನಾ ಅನುಪಾತ:"
 
 #: ../src/ui/properties.ui.h:6
-#, fuzzy
 #| msgctxt "File"
 #| msgid "Date Modified"
 msgid "Last modified:"
-msgstr "ಬದಲಾಯಿಸಲಾದ ದಿನಾಂಕ"
+msgstr "ಕೊನೆಯದಾಗಿ ಮಾರ್ಪಡಿಸಲಾಗಿದ್ದು:"
 
 #: ../src/ui/properties.ui.h:7
 msgid "Content size:"
@@ -1485,11 +1462,10 @@ msgstr "ಕಡತಗಳ ಸಂಖ್ಯೆ:"
 
 #. after the colon there is a file type.
 #: ../src/ui/properties.ui.h:10
-#, fuzzy
 #| msgctxt "File"
 #| msgid "Type"
 msgid "Type:"
-msgstr "ಬಗೆ"
+msgstr "ಬಗೆ:"
 
 #: ../src/ui/update.ui.h:1
 msgid "_Update"
