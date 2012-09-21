@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: file-roller.master.ml\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=file-roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-08-11 20:48+0000\n"
-"PO-Revision-Date: 2012-09-21 09:32+0000\n"
+"POT-Creation-Date: 2012-09-21 04:03+0000\n"
+"PO-Revision-Date: 2012-09-21 09:35+0000\n"
 "Last-Translator: Ani Peter <apeter@redhat.com>\n"
 "Language-Team: Malayalam <discuss@lists.smc.org.in>\n"
 "Language: \n"
@@ -20,8 +20,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-DamnedLies-Scope: partial\n"
 "X-Generator: Lokalize 1.0\n"
+"X-DamnedLies-Scope: partial\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
@@ -50,7 +50,6 @@ msgstr "അപരിചിതമായ ലഭ്യമാക്കുവാന�
 
 #: ../copy-n-paste/eggdesktopfile.c:1385
 #, c-format
-#| msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgid "Can't pass documents to this desktop element"
 msgstr "രേഖ ഈ പണിയിട എലമന്റിലേക്കു് നല്‍കുവാന്‍ സാധ്യമല്ല"
 
@@ -88,7 +87,7 @@ msgid "Show session management options"
 msgstr "സെഷന്‍ മാനേജ്മെന്റ് ഉപാധികള്‍ കാണിക്കുക"
 
 #: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1955
-#: ../src/fr-window.c:5331
+#: ../src/fr-window.c:5329
 msgid "Archive Manager"
 msgstr "ശേഖരപാലകന്‍"
 
@@ -97,42 +96,50 @@ msgid "Create and modify an archive"
 msgstr "ഒരു പുതിയ ശേഖരം നിര്‍മ്മിക്കുകയോ മാറ്റം വരുത്തുകയോ ചെയ്യുക"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
-#| msgid "View the main toolbar"
 msgid "View toolbar"
 msgstr "ഉപകരണപട്ട കാണുക"
 
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
+#| msgid "Whether to display the folders pane."
+msgid "Whether to display the toolbar."
+msgstr "ടൂള്‍ബാര്‍ കാണിയ്ക്കണമോ എന്നു്."
+
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
-#| msgid "View the statusbar"
 msgid "View statusbar"
 msgstr "അവസ്ഥാപട്ട കാണുക"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
+#| msgid "Whether to display the folders pane."
+msgid "Whether to display the statusbar."
+msgstr "അവസ്ഥാപട്ട കാണിയ്ക്കണമോ എന്നു്."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:23 ../src/ui.h:212
 msgid "View the folders pane"
 msgstr "അറകളുള്ള പട്ട കാണിയ്ക്കുക"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
-#| msgid "Close the folders pane"
 msgid "Whether to display the folders pane."
 msgstr "അറകള്‍ കാണിയ്ക്കുന്ന പട്ട കാണിയ്ക്കണമോ എന്നു്."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
-#| msgid "_Edit"
 msgid "Editors"
 msgstr "എഡിറ്ററുകള്‍"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
-#| msgid "Compression ratio:"
 msgid "Compression level"
 msgstr "ചുരുക്കുന്ന തോതു്"
 
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
+#| msgid "_Encrypt the file list"
+msgid "Encrypt the archive header"
+msgstr "ശേഖരത്തിന്റെ ശീര്‍ഷകം എന്‍ക്രിപ്റ്റ് ചെയ്യുക"
+
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
-#| msgid "Do not e_xtract older files"
 msgid "Do not overwrite newer files"
 msgstr "പുതിയ ഫയലുകള്‍ തിരുത്തേണ്ടതില്ല"
 
 # c-format
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
-#| msgid "Update the files in the archive \"%s\"?"
 msgid "Recreate the folders stored in the archive"
 msgstr "ആര്‍ക്കൈവിലെ ഫയലുകള്‍ വീണ്ടും തയ്യാറാക്കുക"
 
@@ -142,7 +149,6 @@ msgstr "ഇവിടേയ്ക്കു് തുറന്നിടുക"
 
 #. Translators: the current position is the current folder
 #: ../nautilus/nautilus-fileroller.c:329
-#| msgid "Extract the selected archive in the current position"
 msgid "Extract the selected archive to the current position"
 msgstr "നിലവിലുളള സ്ഥലത്തു് തെരഞ്ഞെടുത്ത ശേഖരം ഫയല്‍ തുറന്നിടുക"
 
@@ -162,11 +168,11 @@ msgstr "കംപ്രസ്സ് ചെയ്യുക..."
 msgid "Create a compressed archive with the selected objects"
 msgstr "തെരഞ്ഞെടുത്ത വസ്തുക്കളുമായി ഒരു കംപ്രസ്സ് ചെയ്ത ആര്‍ക്കൈവ് നിര്‍മ്മിക്കുക"
 
-#: ../src/actions.c:112 ../src/fr-window.c:5626 ../src/fr-window.c:6165
+#: ../src/actions.c:112 ../src/fr-window.c:5624 ../src/fr-window.c:6163
 msgid "Open"
 msgstr "തുറക്കുക"
 
-#: ../src/actions.c:125 ../src/fr-window.c:5169
+#: ../src/actions.c:125 ../src/fr-window.c:5167
 msgid "All archives"
 msgstr "എല്ലാ ശേഖരങ്ങളും"
 
@@ -175,7 +181,6 @@ msgid "All files"
 msgstr "എല്ലാ ഫയലുകളും"
 
 #: ../src/actions.c:499
-#| msgid "Copyright © 2001-2007 Free Software Foundation, Inc."
 msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
 msgstr "പകര്‍പ്പവകാശം © 2001-2010 Free Software Foundation, Inc."
 
@@ -203,7 +208,6 @@ msgid "Add Files"
 msgstr "ഫയലുകള്‍ ചേര്‍ക്കുക"
 
 #: ../src/dlg-add.c:193
-#| msgid "_Load Options"
 msgid "_Options"
 msgstr "_ഐച്ഛികങ്ങള്‍"
 
@@ -219,12 +223,10 @@ msgstr "സംരക്ഷിക്കുന്നതിനുള്ള  ഐച�
 
 #. clear options
 #: ../src/dlg-add.c:216
-#| msgid "_Reset Options"
 msgid "Reset Options"
 msgstr "ഐച്ഛികങ്ങള്‍ പുനഃസ്ഥാപിക്കുക"
 
 #: ../src/dlg-add.c:825
-#| msgid "Options Name:"
 msgid "_Options Name:"
 msgstr "_ഐച്ഛികത്തിന്റെ പേരു്:"
 
@@ -235,15 +237,14 @@ msgid "Password required for \"%s\""
 msgstr "\"%s\"-നു് രഹസ്യവാക്ക് ആവശ്യമാകുന്നു"
 
 #: ../src/dlg-ask-password.c:139
-#| msgid "Password"
 msgid "Wrong password."
 msgstr "തെറ്റായ രഹസ്യവാക്ക്."
 
-#: ../src/dlg-batch-add.c:81 ../src/main.c:412 ../src/main.c:778
+#: ../src/dlg-batch-add.c:81 ../src/main.c:417 ../src/main.c:783
 msgid "Compress"
 msgstr "കംപ്രസ്സ് ചെയ്യുക"
 
-#: ../src/dlg-extract.c:96 ../src/fr-window.c:6690
+#: ../src/dlg-extract.c:96 ../src/fr-window.c:6708
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -254,22 +255,22 @@ msgstr ""
 "\n"
 "നിങ്ങള്‍ക്ക് ഇതു് ഉണ്ടാക്കണമോ?"
 
-#: ../src/dlg-extract.c:105 ../src/fr-window.c:6699
+#: ../src/dlg-extract.c:105 ../src/fr-window.c:6717
 msgid "Create _Folder"
 msgstr "അറ _നിര്‍മ്മിക്കുക"
 
 #: ../src/dlg-extract.c:124 ../src/dlg-extract.c:142 ../src/dlg-extract.c:169
-#: ../src/fr-window.c:4118 ../src/fr-window.c:6595 ../src/fr-window.c:6600
-#: ../src/fr-window.c:6720 ../src/fr-window.c:6739 ../src/fr-window.c:6744
+#: ../src/fr-window.c:4116 ../src/fr-window.c:6612 ../src/fr-window.c:6617
+#: ../src/fr-window.c:6738 ../src/fr-window.c:6757 ../src/fr-window.c:6762
 msgid "Extraction not performed"
 msgstr "തുറന്നിടാന്‍ സാധ്യമായില്ല"
 
-#: ../src/dlg-extract.c:125 ../src/fr-window.c:6716
+#: ../src/dlg-extract.c:125 ../src/fr-window.c:6734
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "ലക്ഷ്യസ്ഥാന അറ നിര്‍മ്മിക്കുവാന്‍ സാധ്യമായില്ല: %s."
 
-#: ../src/dlg-extract.c:170 ../src/fr-window.c:4284 ../src/fr-window.c:4368
+#: ../src/dlg-extract.c:170 ../src/fr-window.c:4282 ../src/fr-window.c:4366
 #, c-format
 msgid "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "അറ \"%s\"-ല്‍ ശേഖരങ്ങള്‍ തുറന്നിടുവാനുളള അനുവാദം നിങ്ങള്‍ക്കില്ല"
@@ -285,8 +286,8 @@ msgstr "പ്രയോഗങ്ങള്‍ക്കായി തെരയു�
 
 #: ../src/dlg-package-installer.c:269 ../src/dlg-package-installer.c:278
 #: ../src/dlg-package-installer.c:306 ../src/fr-archive.c:819
-#: ../src/fr-window.c:3848 ../src/fr-window.c:7295 ../src/fr-window.c:7651
-#: ../src/fr-window.c:9177
+#: ../src/fr-window.c:3846 ../src/fr-window.c:7313 ../src/fr-window.c:7669
+#: ../src/fr-window.c:9210
 msgid "Archive type not supported."
 msgstr "ശേഖരം പിന്തുണയില്ലാത്ത തരമാണു്"
 
@@ -300,7 +301,6 @@ msgstr ""
 "ഈ ഫയല്‍ തുറക്കുന്നതിനായി നിങ്ങള്‍ക്കു് കമാന്‍ഡ് തെരയണമോ?"
 
 #: ../src/dlg-package-installer.c:293
-#| msgid "Could not rename the file"
 msgid "Could not open this file type"
 msgstr "ഇത്തരം ഫയല്‍ തുറക്കുവാനായില്ല"
 
@@ -311,7 +311,6 @@ msgstr "തെ_രച്ചിലിനുള്ള കമാന്‍ഡ്"
 # c-format
 #: ../src/dlg-password.c:91
 #, c-format
-#| msgid "Enter the password for the archive '%s'."
 msgid "Enter a password for \"%s\""
 msgstr "\"%s\"-നുള്ളൊരു രഹസ്യവാക്ക് നല്‍കുക"
 
@@ -328,13 +327,6 @@ msgstr "\"%s\" ആര്‍ക്കൈവിലെ ഫയല്‍ \"%s\" പ�
 #. secondary text
 #: ../src/dlg-update.c:173 ../src/dlg-update.c:198 ../src/ui/update.ui.h:2
 #, c-format
-#| msgid ""
-#| "The file has been modified with an external application. If you don't "
-#| "update the version in the archive, all of your changes will be lost."
-#| msgid_plural ""
-#| "There are %d files that have been modified with an external application. "
-#| "If you don't update the files in the archive, all of your changes will be "
-#| "lost."
 msgid ""
 "The file has been modified with an external application. If you don't update "
 "the file in the archive, all of your changes will be lost."
@@ -346,8 +338,7 @@ msgstr[0] ""
 "മാറ്റങ്ങള്‍ നഷ്ടമാവും"
 msgstr[1] ""
 "പുറമെയുള്ള ഒരു പ്രയോഗം %d ഫയലുകള്‍ പുതുക്കിയിരിക്കുന്നു. നിങ്ങള്‍ ആര്‍ക്കൈവിലെ ഫയല്‍ പുതുക്കിയില്ലെങ്കില്‍ "
-"ആ "
-"മാറ്റങ്ങള്‍ നഷ്ടമാവും"
+"ആ മാറ്റങ്ങള്‍ നഷ്ടമാവും"
 
 # c-format
 #: ../src/dlg-update.c:188
@@ -378,20 +369,17 @@ msgstr "\"%s\" ചേര്‍ക്കുന്നു"
 #: ../src/fr-command-7z.c:420 ../src/fr-command-rar.c:455
 #: ../src/fr-command-tar.c:426
 #, c-format
-#| msgid "Starting %s"
 msgid "Extracting \"%s\""
 msgstr "\"%s\" ലഭ്യമാക്കുന്നു"
 
 #: ../src/fr-command.c:597
 #, c-format
-#| msgid "Archive not created"
 msgid "Archive not found"
 msgstr "ശേഖരം ലഭ്യമായില്ല"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-rar.c:406 ../src/fr-command-tar.c:371
 #, c-format
-#| msgid "Removing file: "
 msgid "Removing \"%s\""
 msgstr "\"%s\" നീക്കം ചെയ്യുന്നു"
 
@@ -417,42 +405,40 @@ msgid "File System"
 msgstr "ഫയല്‍ സിസ്റ്റം"
 
 #: ../src/fr-file-selector-dialog.c:1331 ../src/fr-file-selector-dialog.c:1376
-#| msgid "Could not perform the operation"
 msgid "Could not load the location"
 msgstr "സ്ഥാനം ലഭ്യമാക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../src/fr-new-archive-dialog.c:331 ../src/fr-new-archive-dialog.c:350
-#: ../src/fr-new-archive-dialog.c:366 ../src/fr-new-archive-dialog.c:414
-#: ../src/fr-window.c:2812
+#: ../src/fr-new-archive-dialog.c:335 ../src/fr-new-archive-dialog.c:354
+#: ../src/fr-new-archive-dialog.c:370 ../src/fr-new-archive-dialog.c:418
+#: ../src/fr-window.c:2814
 msgid "Could not create the archive"
 msgstr "ശേഖരം ഉണ്ടാക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../src/fr-new-archive-dialog.c:333 ../src/fr-new-archive-dialog.c:352
+#: ../src/fr-new-archive-dialog.c:337 ../src/fr-new-archive-dialog.c:356
 msgid "You have to specify an archive name."
 msgstr "ശേഖരത്തിനു് ഒരു് പേരു് പറഞ്ഞിരിയ്ക്കണം."
 
-#: ../src/fr-new-archive-dialog.c:416
+#: ../src/fr-new-archive-dialog.c:420
 msgid "You don't have permission to create an archive in this folder"
 msgstr "ഈ അറയില്‍ ശേഖരം ഉണ്ടാക്കുവാന്‍ നിങ്ങള്‍ക്കു് അനുവാദമില്ല"
 
-#: ../src/fr-new-archive-dialog.c:435
+#: ../src/fr-new-archive-dialog.c:439
 #, c-format
-#| msgid "The archive is already present.  Do you want to overwrite it?"
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
 msgstr "\"%s\" എന്ന പേരില്‍ ഒരു ഫയല്‍ നിലവിലുണ്ടു്. നിങ്ങള്‍ക്ക് ഇതില്‍ വീണ്ടും എഴുതണമോ?"
 
-#: ../src/fr-new-archive-dialog.c:436
+#: ../src/fr-new-archive-dialog.c:440
 #, c-format
 msgid "The file already exists in \"%s\".  Replacing it will overwrite its contents."
 msgstr ""
 "\"%s\" എന്ന പേരില്‍ ഒരു ഫയല്‍ നിലവിലുണ്ടു്. ഇതില്‍ വീണ്ടും എഴുതുന്നതു് ഈ ഫയലിലുള്ളതിനെ "
 "മാറ്റിസ്ഥാപിയ്ക്കുന്നു."
 
-#: ../src/fr-new-archive-dialog.c:443 ../src/fr-window.c:6533
+#: ../src/fr-new-archive-dialog.c:447 ../src/fr-window.c:6550
 msgid "_Replace"
 msgstr "_മാറ്റിസ്ഥാപിയ്ക്കുക"
 
-#: ../src/fr-new-archive-dialog.c:458
+#: ../src/fr-new-archive-dialog.c:462
 msgid "Could not delete the old archive."
 msgstr "പഴയ ശേഖരം നീക്കം ചെയ്യാന്‍ കഴിഞ്ഞില്ല"
 
@@ -469,7 +455,6 @@ msgid "_Extract"
 msgstr "_തുറന്നിടുക"
 
 #: ../src/fr-window.c:1043
-#| msgid "Extraction completed successfully"
 msgid "Operation completed"
 msgstr "പ്രക്രിയ അവസാനിച്ചിരിയ്ക്കുന്നു"
 
@@ -503,315 +488,283 @@ msgid "Could not display the folder \"%s\""
 msgstr "\"%s\" അറ പ്രദര്‍ശിപ്പിയ്ക്കുവാന്‍ സാധ്യമായില്ല"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2169 ../src/fr-window.c:2207
+#: ../src/fr-window.c:2173 ../src/fr-window.c:2211
 #, c-format
-#| msgid "Starting %s"
 msgid "Creating \"%s\""
 msgstr "\"%s\" തയ്യാറാക്കുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2173
+#: ../src/fr-window.c:2177
 #, c-format
-#| msgid "Starting %s"
 msgid "Loading \"%s\""
 msgstr "\"%s\" ലഭ്യമാക്കുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2177
+#: ../src/fr-window.c:2181
 #, c-format
-#| msgid "Starting %s"
 msgid "Reading \"%s\""
 msgstr "\"%s\" കാണിയ്ക്കുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2181
+#: ../src/fr-window.c:2185
 #, c-format
-#| msgid "Deleting files from archive"
 msgid "Deleting the files from \"%s\""
 msgstr "\"%s\"-ല്‍ നിന്നും ഫയലുകള്‍ വെട്ടി നീക്കുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2185
+#: ../src/fr-window.c:2189
 #, c-format
-#| msgid "Starting %s"
 msgid "Testing \"%s\""
 msgstr "\"%s\" പരീക്ഷിയ്ക്കുന്നു"
 
-#: ../src/fr-window.c:2188
+#: ../src/fr-window.c:2192
 msgid "Getting the file list"
 msgstr "ഫയലുകളുടെ പട്ടിക ലഭ്യമാകുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2192
+#: ../src/fr-window.c:2196
 #, c-format
-#| msgid "Copying the file list"
 msgid "Copying the files to add to \"%s\""
 msgstr "\"%s\"-ലിലേക്കു് ചേര്‍ക്കുന്നതിനായി ഫയലുകള്‍ പകര്‍ത്തുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2196
+#: ../src/fr-window.c:2200
 #, c-format
-#| msgid "Adding files to archive"
 msgid "Adding the files to \"%s\""
 msgstr "\"%s\"-ലിലേക്കു് ഫയലുകള്‍ ചേര്‍ക്കുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2200
+#: ../src/fr-window.c:2204
 #, c-format
-#| msgid "Extracting files from archive"
 msgid "Extracting the files from \"%s\""
 msgstr "\"%s\" നിന്നും ഫയലുകള്‍ പുറത്തെടുക്കുന്നു"
 
-#: ../src/fr-window.c:2203
+#: ../src/fr-window.c:2207
 msgid "Copying the extracted files to the destination"
 msgstr "പുറത്തെടുത്ത ഫയലുകള്‍ ലക്ഷ്യത്തിലേക്കു് പകര്‍ത്തുക"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2212
+#: ../src/fr-window.c:2216
 #, c-format
-#| msgid "Starting %s"
 msgid "Saving \"%s\""
 msgstr "\"%s\" സൂക്ഷിയ്ക്കുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2219
+#: ../src/fr-window.c:2223
 #, c-format
-#| msgid "Getting the file list"
 msgid "Renaming the files in \"%s\""
 msgstr "\"%s\"-ലുള്ള ഫയലുകളുടെ പേരു് മാറ്റുന്നു"
 
 # c-format
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2223
+#: ../src/fr-window.c:2227
 #, c-format
-#| msgid "Update the files in the archive \"%s\"?"
 msgid "Updating the files in \"%s\""
 msgstr "\"%s\"-ലുള്ള ഫയലുകള്‍ പരിഷ്കരിയ്ക്കുന്നു"
 
-#: ../src/fr-window.c:2398
+#: ../src/fr-window.c:2402
 msgid "_Open the Archive"
 msgstr "ശേഖരം തുറക്കുക"
 
-#: ../src/fr-window.c:2399
+#: ../src/fr-window.c:2403
 msgid "_Show the Files"
 msgstr "ഫയലുകള്‍ _കാണിക്കുക"
 
-#: ../src/fr-window.c:2516
+#: ../src/fr-window.c:2520
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "%d ഫയല്‍ ബാക്കി"
 msgstr[1] "%'d ഫയലുകള്‍ ബാക്കി"
 
-#: ../src/fr-window.c:2520 ../src/fr-window.c:3099
+#: ../src/fr-window.c:2524 ../src/fr-window.c:3097
 msgid "Please wait…"
 msgstr "ദയവായി കാത്തിരിയ്ക്കുക..."
 
-#: ../src/fr-window.c:2578
+#: ../src/fr-window.c:2580
 msgid "Extraction completed successfully"
 msgstr "തുറന്നിടല്‍ വിജയകരമായി അവസാനിച്ചിരിയ്ക്കുന്നു"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2609 ../src/fr-window.c:6144
+#: ../src/fr-window.c:2611 ../src/fr-window.c:6142
 #, c-format
-#| msgid "Archive created successfully"
 msgid "\"%s\" created successfully"
 msgstr "\"%s\" വിജയകരമായി തയ്യാറാക്കിയിരിയ്ക്കുന്നു"
 
-#: ../src/fr-window.c:2699 ../src/fr-window.c:2868
+#: ../src/fr-window.c:2701 ../src/fr-window.c:2870
 msgid "Command exited abnormally."
 msgstr "നിര്‍ദ്ദേശം അസാധാരണമായി നിന്നിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2817
+#: ../src/fr-window.c:2819
 msgid "An error occurred while extracting files."
 msgstr "ഫയലുകള്‍ തുറന്നിടുമ്പോള്‍ പിശകു് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2823
+#: ../src/fr-window.c:2825
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "\"%s\" തുറക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../src/fr-window.c:2828
+#: ../src/fr-window.c:2830
 msgid "An error occurred while loading the archive."
 msgstr "ശേഖരം ലോഡ് ചെയ്യുമ്പോള്‍ പിശക് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2832
+#: ../src/fr-window.c:2834
 msgid "An error occurred while deleting files from the archive."
 msgstr "ശേഖരത്തില്‍ നിന്നും ഫയലുകള്‍ വെട്ടി നീക്കുമ്പോള്‍ ലോഡ് പിശക് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2838
+#: ../src/fr-window.c:2840
 msgid "An error occurred while adding files to the archive."
 msgstr "ശേഖരത്തിലേയ്ക്കു് ഫയലുകള്‍ ചേര്‍ക്കുമ്പോള്‍ പിശക് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2842
+#: ../src/fr-window.c:2844
 msgid "An error occurred while testing archive."
 msgstr "ശേഖരം പരിശോധിക്കുമ്പോള്‍ പിശക് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2847
+#: ../src/fr-window.c:2849
 msgid "An error occurred while saving the archive."
 msgstr "ശേഖരം സംരക്ഷിക്കുമ്പോള്‍ ചെയ്യുമ്പോള്‍ പിശക് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2851
-#| msgid "An error occurred while extracting files."
+#: ../src/fr-window.c:2853
 msgid "An error occurred while renaming the files."
 msgstr "ഫയലുകളുടെ പേരു് മാറ്റുമ്പോള്‍ പിശകു് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2855
-#| msgid "An error occurred while extracting files."
+#: ../src/fr-window.c:2857
 msgid "An error occurred while updating the files."
 msgstr "ഫയലുകള്‍ പരിഷ്കരിയ്ക്കുമ്പോള്‍ പിശകു് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2859
+#: ../src/fr-window.c:2861
 msgid "An error occurred."
 msgstr "ഒരു പിശകു് സംഭവിച്ചിരിക്കുന്നു."
 
-#: ../src/fr-window.c:2865
+#: ../src/fr-window.c:2867
 msgid "Command not found."
 msgstr "നിര്‍ദ്ദേശം ലഭ്യമല്ല."
 
-#: ../src/fr-window.c:3023
+#: ../src/fr-window.c:3025
 msgid "Test Result"
 msgstr "പരിശോധനാ ഫലം"
 
-#: ../src/fr-window.c:3966 ../src/fr-window.c:8635 ../src/fr-window.c:8669
-#: ../src/fr-window.c:8935
+#: ../src/fr-window.c:3964 ../src/fr-window.c:8653 ../src/fr-window.c:8687
+#: ../src/fr-window.c:8966
 msgid "Could not perform the operation"
 msgstr "പ്രയോഗം പ്രവര്‍ത്തിപ്പിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../src/fr-window.c:3992
+#: ../src/fr-window.c:3990
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "നിങ്ങള്‍ക്ക് ഈ ഫയല്‍ നിലവിലുളള ശേഖരത്തിലേയ്ക്കു് ചേര്‍ക്കണമോ അതോ ഒരു പുതിയ ശേഖരത്തില്‍ തുറക്കണമോ?"
 
-#: ../src/fr-window.c:4022
+#: ../src/fr-window.c:4020
 msgid "Do you want to create a new archive with these files?"
 msgstr "നിങ്ങള്‍ക്കു് ഈ ഫയലുകള്‍ക്കുവേണ്ടി ഒരു പുതിയ ശേഖരം ഉണ്ടാക്കണമോ?"
 
-#: ../src/fr-window.c:4025
+#: ../src/fr-window.c:4023
 msgid "Create _Archive"
 msgstr "_ശേഖരം ഉണ്ടാക്കുക"
 
-#: ../src/fr-window.c:4054 ../src/fr-window.c:7105
-#| msgid "Archive:"
+#: ../src/fr-window.c:4052 ../src/fr-window.c:7123
 msgid "New Archive"
 msgstr "പുതിയ ശേഖരം"
 
-#: ../src/fr-window.c:4642
+#: ../src/fr-window.c:4640
 msgid "Folders"
 msgstr "അറകള്‍"
 
-#: ../src/fr-window.c:4680 ../src/ui/file-selector.ui.h:5
-#| msgid "Size"
+#: ../src/fr-window.c:4678 ../src/ui/file-selector.ui.h:5
 msgctxt "File"
 msgid "Size"
 msgstr "വലിപ്പം"
 
-#: ../src/fr-window.c:4681
-#| msgid "Type"
+#: ../src/fr-window.c:4679
 msgctxt "File"
 msgid "Type"
 msgstr "തരം"
 
-#: ../src/fr-window.c:4682 ../src/ui/file-selector.ui.h:6
-#| msgid "Modified on:"
+#: ../src/fr-window.c:4680 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Modified"
 msgstr "മാറ്റം വരുത്തിയതു്"
 
-#: ../src/fr-window.c:4683
-#| msgid "Location"
+#: ../src/fr-window.c:4681
 msgctxt "File"
 msgid "Location"
 msgstr "സ്ഥാനം"
 
-#: ../src/fr-window.c:4692 ../src/ui/file-selector.ui.h:4
-#| msgid "Name"
+#: ../src/fr-window.c:4690 ../src/ui/file-selector.ui.h:4
 msgctxt "File"
 msgid "Name"
 msgstr "പേരു്"
 
-#: ../src/fr-window.c:5519
+#: ../src/fr-window.c:5517
 msgid "Find:"
 msgstr "കണ്ടെത്തുക:"
 
 #. Translators: this is the label for the "open recent file" sub-menu.
-#: ../src/fr-window.c:5614
+#: ../src/fr-window.c:5612
 msgid "Open _Recent"
 msgstr "അടുത്തിടെ തുറന്നവ"
 
-#: ../src/fr-window.c:5615 ../src/fr-window.c:5627
+#: ../src/fr-window.c:5613 ../src/fr-window.c:5625
 msgid "Open a recently used archive"
 msgstr "ഏറ്റവും പുതുതായി ഉപയോഗിച്ച ശേഖരം തുറക്കുക"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5699 ../src/ui/file-selector.ui.h:1
+#: ../src/fr-window.c:5697 ../src/ui/file-selector.ui.h:1
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_സ്ഥാനം:"
 
-#: ../src/fr-window.c:6521
+#: ../src/fr-window.c:6538
 #, c-format
-#| msgid "_Selected files"
 msgid "Replace file \"%s\"?"
 msgstr "\"%s\" ഫയല്‍ മാറ്റിസ്ഥാപിയ്ക്കണമോ?"
 
-#: ../src/fr-window.c:6524
+#: ../src/fr-window.c:6541
 #, c-format
-#| msgid ""
-#| "A file named \"%s\" already exists.\n"
-#| "\n"
-#| "%s"
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "\"%s\" പേരുളള ഒരു ഫയല്‍ നിലവിലുണ്ട്."
 
-#: ../src/fr-window.c:6531
+#: ../src/fr-window.c:6548
 msgid "Replace _All"
 msgstr "_എല്ലാം മാറ്റിസ്ഥാപിയ്ക്കുക"
 
-#: ../src/fr-window.c:6532
+#: ../src/fr-window.c:6549
 msgid "_Skip"
 msgstr "_ഉപേക്ഷിയ്ക്കുക"
 
-#: ../src/fr-window.c:7287 ../src/fr-window.c:7643
+#: ../src/fr-window.c:7305 ../src/fr-window.c:7661
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "\"%s\" ശേഖരം സംരക്ഷിക്കുവാന്‍ സാധ്യമായില്ല"
 
-#: ../src/fr-window.c:7414
+#: ../src/fr-window.c:7432
 msgid "Save"
 msgstr "സംരക്ഷിക്കുക"
 
-#: ../src/fr-window.c:7737
+#: ../src/fr-window.c:7755
 msgid "Last Output"
 msgstr "അവസാന ഫലം"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7959
+#: ../src/fr-window.c:7977
 msgid "New name is void, please type a name."
 msgstr "ദയവായി പുതിയ പേരു് നല്‍കുക."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7964
+#: ../src/fr-window.c:7982
 msgid "New name is the same as old one, please type other name."
 msgstr "പഴയ പേരു് തന്നെ പുതിയതായി വീണ്ടും നല്‍കിയിരിയ്ക്കുന്നു, ദയവായി വേറൊന്നും നല്‍കുക."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7969
+#: ../src/fr-window.c:7987
 #, c-format
-#| msgid ""
-#| "The name \"%s\" is not valid because it cannot contain the characters: "
-#| "%s\n"
-#| "\n"
-#| "%s"
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
-msgstr ""
-"\"%s\" എന്ന പേരു് അസാധുവാണ്, കാരണം ഇതില്‍ ഈ അക്ഷരങ്ങള്‍ പാടില്ല: %s, "
-"ദയവായി മറ്റൊന്നു് നല്‍കുക."
+msgstr "\"%s\" എന്ന പേരു് അസാധുവാണ്, കാരണം ഇതില്‍ ഈ അക്ഷരങ്ങള്‍ പാടില്ല: %s, ദയവായി മറ്റൊന്നു് നല്‍കുക."
 
-#: ../src/fr-window.c:8005
+#: ../src/fr-window.c:8023
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -822,11 +775,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8005 ../src/fr-window.c:8007
+#: ../src/fr-window.c:8023 ../src/fr-window.c:8025
 msgid "Please use a different name."
 msgstr "ദയവായി മറ്റൊരു പേരു് തെരഞ്ഞെടുക്കുക."
 
-#: ../src/fr-window.c:8007
+#: ../src/fr-window.c:8025
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -837,60 +790,56 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8077
+#: ../src/fr-window.c:8095
 msgid "Rename"
 msgstr "പേരു് മാറ്റുക"
 
-#: ../src/fr-window.c:8078
-#| msgid "New folder name"
+#: ../src/fr-window.c:8096
 msgid "_New folder name:"
 msgstr "പുതി_യ അറയുടെ പേരു്:"
 
-#: ../src/fr-window.c:8078
-#| msgid "New file name"
+#: ../src/fr-window.c:8096
 msgid "_New file name:"
 msgstr "പുതിയ ഫയലിന്റെ _പേരു്:"
 
-#: ../src/fr-window.c:8082
+#: ../src/fr-window.c:8100
 msgid "_Rename"
 msgstr "പേരു് _മാറ്റുക"
 
-#: ../src/fr-window.c:8099 ../src/fr-window.c:8118
+#: ../src/fr-window.c:8117 ../src/fr-window.c:8136
 msgid "Could not rename the folder"
 msgstr "അറയുടെ പേരു് മാറ്റുവാന്‍ സാധ്യമായില്ല."
 
-#: ../src/fr-window.c:8099 ../src/fr-window.c:8118
+#: ../src/fr-window.c:8117 ../src/fr-window.c:8136
 msgid "Could not rename the file"
 msgstr "ഫയലിന്റെ പേരു് മാറ്റുവാന്‍ സാധ്യമായില്ല."
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8542
+#: ../src/fr-window.c:8560
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "\"%s\"-ല്‍ നിന്നും \"%s\"-ലേക്കു് ഫയലുകള്‍ നീക്കുന്നു"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8545
+#: ../src/fr-window.c:8563
 #, c-format
-#| msgid "Copying the file list"
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "\"%s\"-ല്‍ നിന്നും \"%s\"-ലേക്കു് ഫയലുകള്‍ പകര്‍ത്തുന്നു"
 
-#: ../src/fr-window.c:8596
+#: ../src/fr-window.c:8614
 msgid "Paste Selection"
 msgstr "തെരഞ്ഞെടുത്തതു് ഒട്ടിക്കുക"
 
-#: ../src/fr-window.c:8597
-#| msgid "Destination folder"
+#: ../src/fr-window.c:8615
 msgid "_Destination folder:"
 msgstr "_ലക്ഷ്യസ്ഥാന ഫോള്‍ഡര്‍:"
 
-#: ../src/fr-window.c:9195
+#: ../src/fr-window.c:9228
 msgid "Add files to an archive"
 msgstr "ശേഖരത്തിലേയ്ക്കു് ഫയലുകള്‍ ചേര്‍ക്കുക"
 
-#: ../src/fr-window.c:9239 ../src/main.c:448 ../src/main.c:484
-#: ../src/main.c:510 ../src/main.c:802
+#: ../src/fr-window.c:9272 ../src/main.c:453 ../src/main.c:489
+#: ../src/main.c:515 ../src/main.c:807
 msgid "Extract archive"
 msgstr "ശേഖരം തുറന്നിടുക"
 
@@ -905,67 +854,66 @@ msgstr "%d %B %Y, %H:%M"
 msgid "Could not display help"
 msgstr "സഹായത്തിനുളള ഫയല്‍ തുറക്കുവാന്‍ സാധ്യമാകുന്നില്ല"
 
-#: ../src/main.c:68
+#: ../src/main.c:66
 msgid "Add files to the specified archive and quit the program"
 msgstr "പറഞ്ഞിരിക്കുന്ന ശേഖരത്തിലേയ്ക്കു് ഫയലുകളെ ചേര്‍ത്തു് പ്രോഗ്രാമില്‍ നിന്നും പുറത്തു് പോകുക"
 
-#: ../src/main.c:69
+#: ../src/main.c:67
 msgid "ARCHIVE"
 msgstr "ARCHIVE"
 
-#: ../src/main.c:72
+#: ../src/main.c:70
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "ശേഖരത്തിന്റെ പേരു് ആവശ്യപ്പെട്ട് ഫയലുകള്‍ ചേര്‍ത്തു് പ്രോഗ്രാമില്‍ നിന്നും പുറത്തു് പോകുക"
 
-#: ../src/main.c:76
+#: ../src/main.c:74
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "പറഞ്ഞിരിക്കുന്ന അറയിലേയ്ക്കു് ശേഖരങ്ങള്‍ തുറന്നിട്ടശേഷം പ്രോഗ്രാമില്‍ നിന്നും പുറത്തു് പോകുക"
 
-#: ../src/main.c:77 ../src/main.c:89
+#: ../src/main.c:75 ../src/main.c:87
 msgid "FOLDER"
 msgstr "FOLDER"
 
-#: ../src/main.c:80
+#: ../src/main.c:78
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "തുറന്നിടേണ്ട അറ ആവശ്യപ്പെട്ട് ശേഖരങ്ങള്‍ തുറന്നിട്ടു് പ്രോഗ്രാമില്‍ നിന്നും പുറത്തു് പോകുക"
 
-#: ../src/main.c:84
+#: ../src/main.c:82
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "ആര്‍ക്കൈവിലുള്ളവ ആര്‍ക്കൈവ് ഫോള്‍ഡറിലേക്ക് ലഭ്യമാക്കി പ്രോഗ്രമില്‍ നിന്നും പുറത്തു് കടക്കുക"
 
-#: ../src/main.c:88
+#: ../src/main.c:86
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "'--add', '--extract' നിര്‍ദ്ദേശങ്ങള്‍ക്ക് ഉപയോഗിക്കുന്നതിനുളള ഡീഫോള്‍ട്ട്  അറ"
 
-#: ../src/main.c:92
+#: ../src/main.c:90
 msgid "Create destination folder without asking confirmation"
 msgstr "ഉറപ്പ് വരുത്തല്‍ ഇല്ലാതെ ലക്ഷ്യസ്ഥാനത്തു് അറ  ഉണ്ടാക്കുക"
 
-#: ../src/main.c:96
+#: ../src/main.c:94
 msgid "Use the notification system to notify the operation completion"
 msgstr "പ്രക്രിയ പൂര്‍ത്തിയാക്കിയ വിവരം അറിയിയ്ക്കുന്നതിനായി അറിയിപ്പിനുള്ള സിസ്റ്റം ഉപയോഗിയ്ക്കുക"
 
-#: ../src/main.c:99
+#: ../src/main.c:97
 msgid "Start as a service"
 msgstr "ഒരു സര്‍വീസായി ആരംഭിയ്ക്കുക"
 
-#: ../src/main.c:102
+#: ../src/main.c:100
 msgid "Show version"
 msgstr "പതിപ്പു് കാണിയ്ക്കുക"
 
 #. manually set name and icon
-#: ../src/main.c:629
+#: ../src/main.c:634
 msgid "File Roller"
 msgstr "ഫയല്‍ റോളര്‍"
 
-#: ../src/main.c:660
+#: ../src/main.c:665
 msgid "- Create and modify an archive"
 msgstr "- ഒരു പുതിയ ശേഖരം നിര്‍മ്മിയ്ക്കാനും പരിഷ്കരിയ്ക്കാനും"
 
 #: ../src/ui/add-dialog-options.ui.h:1
-#| msgid "_Add"
 msgid "Add"
 msgstr "ചേര്‍ക്കുക"
 
@@ -998,7 +946,6 @@ msgid "_Follow symbolic links"
 msgstr "സിംബോളിക് ലിങ്കുകള്‍ തു_ടരുക"
 
 #: ../src/ui/app-menu.ui.h:1
-#| msgid "Archive:"
 msgid "_New Archive"
 msgstr "പുതി_യ ശേഖരം"
 
@@ -1007,7 +954,6 @@ msgid "_Help"
 msgstr "_സഹായം"
 
 #: ../src/ui/app-menu.ui.h:3
-#| msgid "Archive Manager"
 msgid "_About Archive Manager"
 msgstr "ശേഖരപാല_കനെപ്പറ്റി"
 
@@ -1041,7 +987,6 @@ msgid "_Selected files"
 msgstr "_തെരഞ്ഞെടുത്ത ഫയലുകള്‍"
 
 #: ../src/ui/error-dialog.ui.h:1
-#| msgid "Command _Line Output"
 msgid "C_ommand Line Output:"
 msgstr "ആജ്ഞാമേഖലയില്‍ _നിന്നുളള ഫലം:"
 
@@ -1050,7 +995,6 @@ msgid "_Keep directory structure"
 msgstr "ഡയറക്ടറിയുടെ ശൈലി സൂക്ഷിയ്ക്കു_ക"
 
 #: ../src/ui/extract-dialog-options.ui.h:8
-#| msgid "Do not e_xtract older files"
 msgid "Do not _overwrite newer files"
 msgstr "പുതിയ ഫയലുകല്‍ _ തിരുത്തിയെഴുതേണ്ടതില്ല"
 
@@ -1063,7 +1007,6 @@ msgid "Places"
 msgstr "സ്ഥലങ്ങള്‍"
 
 #: ../src/ui/file-selector.ui.h:7
-#| msgid "Dese_lect All"
 msgid "_Select All"
 msgstr "എല്ലാം _തെരഞ്ഞെടുക്കാതിരിയ്ക്കുക"
 
@@ -1072,12 +1015,10 @@ msgid "Dese_lect All"
 msgstr "ഒന്നും _തെരഞ്ഞെടുക്കാതിരിയ്ക്കുക"
 
 #: ../src/ui/file-selector.ui.h:9
-#| msgid "_Show the Files"
 msgid "Show Hidden Files"
 msgstr "അദൃശ്യ ഫയലുകള്‍ കാണിക്കുക"
 
 #: ../src/ui.h:31
-#| msgid "Archive:"
 msgid "_Archive"
 msgstr "ശേ_ഖരം"
 
@@ -1098,7 +1039,6 @@ msgid "Information about the program"
 msgstr "പ്രോഗ്രാമിനെക്കുറിച്ചുളള വിവരങ്ങള്‍"
 
 #: ../src/ui.h:42
-#| msgid "Add Files"
 msgid "_Add Files…"
 msgstr "ഫയലുകള്‍ ചേര്‍ക്കു_ക..."
 
@@ -1131,7 +1071,6 @@ msgid "Paste the clipboard"
 msgstr "ഓര്‍മ്മച്ചെപ്പിലുള്ളതു് പകര്‍ത്തുക"
 
 #: ../src/ui.h:71 ../src/ui.h:92
-#| msgid "_Rename"
 msgid "_Rename…"
 msgstr "പേരു് _മാറ്റുക..."
 
@@ -1148,7 +1087,6 @@ msgid "Deselect all files"
 msgstr "ഒരു ഫയലും തെരഞ്ഞെടുക്കാതിരിയ്ക്കുക"
 
 #: ../src/ui.h:105 ../src/ui.h:109
-#| msgid "_Extract"
 msgid "_Extract…"
 msgstr "_തുറന്നിടുക..."
 
@@ -1157,7 +1095,6 @@ msgid "Extract files from the archive"
 msgstr "ശേഖരത്തില്‍ നിന്നും ഫയലുകള്‍ തുറന്നിടുക"
 
 #: ../src/ui.h:117
-#| msgid "Find:"
 msgid "Find…"
 msgstr "കണ്ടെത്തുക..."
 
@@ -1170,7 +1107,6 @@ msgid "Create a new archive"
 msgstr "ഒരു പുതിയ ശേഖരം ഉണ്ടാക്കുക"
 
 #: ../src/ui.h:126
-#| msgid "Open"
 msgid "Open…"
 msgstr "തുറക്കുക..."
 
@@ -1179,7 +1115,6 @@ msgid "Open archive"
 msgstr "ശേഖരം തുറക്കുക"
 
 #: ../src/ui.h:134
-#| msgid "_Open With..."
 msgid "_Open With…"
 msgstr "_തുറക്കാനുള്ള പ്രയോഗം..."
 
@@ -1188,7 +1123,6 @@ msgid "Open selected files with an application"
 msgstr "ഒരു പ്രയോഗത്തില്‍ തെരഞ്ഞെടുത്ത ഫയലുകള്‍ തുറക്കുക"
 
 #: ../src/ui.h:138
-#| msgid "Password"
 msgid "Pass_word…"
 msgstr "രഹസ്യവാക്ക്:"
 
@@ -1281,7 +1215,6 @@ msgstr "ഫയലുകളുടെ പട്ടിക അറി _എന്‍�
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
 #: ../src/ui/new-archive-dialog-options.ui.h:3
 #: ../src/ui/new-archive-dialog.ui.h:7
-#| msgid "Split in _volumes of"
 msgid "Split into _volumes of"
 msgstr "ഇത്രയും _വലുപ്പമുള്ള ഭാഗങ്ങളാക്കുക"
 
@@ -1309,12 +1242,10 @@ msgid "Password"
 msgstr "അടയാളവാക്കു്"
 
 #: ../src/ui/password.ui.h:2
-#| msgid "_Encrypt the file list too"
 msgid "_Encrypt the file list"
 msgstr "ഫയലുകളുടെ പട്ടിക _എന്‍ക്രിപ്റ്റ് ചെയ്യുക"
 
 #: ../src/ui/properties.ui.h:1
-#| msgid "Name:"
 msgctxt "File"
 msgid "Name:"
 msgstr "പേരു്:"
@@ -1333,7 +1264,6 @@ msgid "Compression ratio:"
 msgstr "ഫയലുകള്‍ ചുരുക്കുന്ന തോതു്:"
 
 #: ../src/ui/properties.ui.h:6
-#| msgid "Date Modified"
 msgid "Last modified:"
 msgstr "ഒടുവില്‍ മാറ്റം വരുത്തിയ തീയതി:"
 
@@ -1347,7 +1277,6 @@ msgstr "രചനകളുടെ എണ്ണം:"
 
 #. after the colon there is a file type.
 #: ../src/ui/properties.ui.h:10
-#| msgid "Type"
 msgid "Type:"
 msgstr "തരം:"
 
