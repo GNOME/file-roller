@@ -412,12 +412,13 @@ dlg_add_folder_load_last_options (DialogData *data)
 	char      *exclude_folders = NULL;
 	gboolean   update;
 	gboolean   no_follow_symlinks;
-	GFile     *folder;
+	GFile     *folder = NULL;
 	int        i;
 
 	base_dir = g_settings_get_string (data->settings, PREF_ADD_CURRENT_FOLDER);
 	uris = g_settings_get_strv (data->settings, PREF_ADD_SELECTED_FILES);
-	folder = g_file_new_for_uri (base_dir);
+	if (g_strcmp0 (base_dir, "") != 0)
+		folder = g_file_new_for_uri (base_dir);
 	include_files = g_settings_get_string (data->settings, PREF_ADD_INCLUDE_FILES);
 	exclude_files = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FILES);
 	exclude_folders = g_settings_get_string (data->settings, PREF_ADD_EXCLUDE_FOLDERS);
