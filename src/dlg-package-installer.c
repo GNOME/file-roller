@@ -25,23 +25,28 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include "dlg-package-installer.h"
+#include "gio-utils.h"
+#include "glib-utils.h"
 #include "gtk-utils.h"
 #include "fr-init.h"
 
 
+#define BUFFER_SIZE_FOR_PRELOAD 32
+
+
 typedef struct {
-	FrWindow   *window;
-	FrArchive  *archive;
-	FrAction    action;
-	const char *packages;
+	FrWindow     *window;
+	FrAction      action;
+	GCancellable *cancellable;
+	const char   *packages;
 } InstallerData;
 
 
 static void
 installer_data_free (InstallerData *idata)
 {
-	g_object_unref (idata->archive);
 	g_object_unref (idata->window);
+	_g_object_ref (idata->cancellable);
 	g_free (idata);
 }
 
@@ -159,7 +164,7 @@ install_packages (InstallerData *idata)
 	GDBusConnection *connection;
 	GError          *error = NULL;
 
-	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
+	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, idata->cancellable, &error);
 	if (connection != NULL) {
 		GdkWindow  *window;
 		GDBusProxy *proxy;
@@ -180,7 +185,7 @@ install_packages (InstallerData *idata)
 					       "org.freedesktop.PackageKit",
 					       "/org/freedesktop/PackageKit",
 					       "org.freedesktop.PackageKit.Modify",
-					       NULL,
+					       idata->cancellable,
 					       &error);
 
 		if (proxy != NULL) {
@@ -204,7 +209,7 @@ install_packages (InstallerData *idata)
 							  "hide-confirm-search,hide-finished,hide-warning"),
 					   G_DBUS_CALL_FLAGS_NONE,
 					   G_MAXINT,
-					   NULL,
+					   idata->cancellable,
 					   packagekit_install_package_names_ready_cb,
 					   idata);
 
@@ -248,30 +253,50 @@ confirm_search_dialog_response_cb (GtkDialog *dialog,
 #endif /* ENABLE_PACKAGEKIT */
 
 
-void
-dlg_package_installer (FrWindow  *window,
-		       FrArchive *archive,
-		       FrAction   action)
+static void
+file_buffer_ready_cb (GObject      *source_object,
+		      GAsyncResult *result,
+		      gpointer      user_data)
 {
-	InstallerData   *idata;
-	GType            archive_type;
-	FrArchive       *preferred_archive;
+	InstallerData *idata = user_data;
+	GFile         *file;
+	char          *buffer;
+	gsize          buffer_size;
+	GError        *error = NULL;
+	char          *uri;
+	const char    *mime_type;
+	gboolean       result_uncertain;
+	GType          archive_type;
+	FrArchive     *preferred_archive;
 
-	idata = g_new0 (InstallerData, 1);
-	idata->window = g_object_ref (window);
-	idata->archive = g_object_ref (archive);
-	idata->action = action;
+	file = G_FILE (source_object);
+	if (! _g_file_load_buffer_finish (file, result, &buffer, &buffer_size, &error)) {
+		package_installer_terminated (idata, FR_ERROR_GENERIC, error->message);
+		g_error_free (error);
+		return;
+	}
 
-	archive_type = get_preferred_archive_for_mime_type (idata->archive->mime_type, FR_ARCHIVE_CAN_READ_WRITE);
+	uri = g_file_get_uri (file);
+	mime_type = g_content_type_guess (uri, (guchar *) buffer, buffer_size, &result_uncertain);
+	if (result_uncertain) {
+		mime_type = _g_mime_type_get_from_content (buffer, buffer_size);
+		if (mime_type == NULL)
+			mime_type = _g_mime_type_get_from_filename (file);
+	}
+
+	g_free (uri);
+	g_free (buffer);
+
+	archive_type = get_preferred_archive_for_mime_type (mime_type, FR_ARCHIVE_CAN_READ_WRITE);
 	if (archive_type == 0)
-		archive_type = get_preferred_archive_for_mime_type (idata->archive->mime_type, FR_ARCHIVE_CAN_READ);
+		archive_type = get_preferred_archive_for_mime_type (mime_type, FR_ARCHIVE_CAN_READ);
 	if (archive_type == 0) {
 		package_installer_terminated (idata, FR_ERROR_GENERIC, _("Archive type not supported."));
 		return;
 	}
 
 	preferred_archive = g_object_new (archive_type, 0);
-	idata->packages = fr_archive_get_packages (preferred_archive, idata->archive->mime_type);
+	idata->packages = fr_archive_get_packages (preferred_archive, mime_type);
 	g_object_unref (preferred_archive);
 
 	if (idata->packages == NULL) {
@@ -286,7 +311,7 @@ dlg_package_installer (FrWindow  *window,
 		GtkWidget *dialog;
 
 		secondary_text = g_strdup_printf (_("There is no command installed for %s files.\nDo you want to search for a command to open this file?"),
-						  g_content_type_get_description (idata->archive->mime_type));
+						  g_content_type_get_description (mime_type));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
 						  GTK_DIALOG_MODAL,
 						  GTK_STOCK_DIALOG_ERROR,
@@ -306,4 +331,25 @@ dlg_package_installer (FrWindow  *window,
 	package_installer_terminated (idata, FR_ERROR_GENERIC, _("Archive type not supported."));
 
 #endif /* ENABLE_PACKAGEKIT */
+}
+
+
+void
+dlg_package_installer (FrWindow     *window,
+		       GFile        *file,
+		       FrAction      action,
+		       GCancellable *cancellable)
+{
+	InstallerData   *idata;
+
+	idata = g_new0 (InstallerData, 1);
+	idata->window = g_object_ref (window);
+	idata->action = action;
+	idata->cancellable = _g_object_ref (cancellable);
+
+	_g_file_load_buffer_async (file,
+				   BUFFER_SIZE_FOR_PRELOAD,
+				   cancellable,
+				   file_buffer_ready_cb,
+				   idata);
 }

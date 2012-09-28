@@ -24,8 +24,9 @@
 
 #include "fr-window.h"
 
-void dlg_package_installer (FrWindow  *window,
-			    FrArchive *archive,
-			    FrAction   action);
+void dlg_package_installer (FrWindow     *window,
+			    GFile        *file,
+			    FrAction      action,
+			    GCancellable *cancellable);
 
 #endif /* DLG_PACKAGE_INSTALLER_H */

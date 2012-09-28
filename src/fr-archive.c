@@ -547,24 +547,6 @@ fr_archive_set_stoppable (FrArchive *archive,
 /* -- fr_archive_new_for_creating -- */
 
 
-static const char *
-get_mime_type_from_filename (GFile *file)
-{
-	const char *mime_type = NULL;
-	char       *uri;
-
-	if (file == NULL)
-		return NULL;
-
-	uri = g_file_get_uri (file);
-	mime_type = get_mime_type_from_extension (_g_filename_get_extension (uri));
-
-	g_free (uri);
-
-	return mime_type;
-}
-
-
 static FrArchive *
 create_archive_for_mime_type (GType          archive_type,
 			      GFile         *file,
@@ -599,7 +581,7 @@ fr_archive_create (GFile      *file,
 	GFile     *parent;
 
 	if (mime_type == NULL)
-		mime_type = get_mime_type_from_filename (file);
+		mime_type = _g_mime_type_get_from_filename (file);
 	archive_type = get_archive_type_from_mime_type (mime_type, FR_ARCHIVE_CAN_WRITE);
 
 	archive = create_archive_for_mime_type (archive_type,
@@ -656,75 +638,6 @@ open_data_complete_with_error (OpenData *load_data,
 	g_simple_async_result_complete_in_idle (result);
 
 	g_object_unref (result);
-}
-
-
-static const char *
-get_mime_type_from_magic_numbers (char  *buffer,
-				  gsize  buffer_size)
-{
-#if ENABLE_MAGIC
-
-	static magic_t magic = NULL;
-
-	if (magic == NULL) {
-		magic = magic_open (MAGIC_MIME_TYPE);
-		if (magic != NULL)
-			magic_load (magic, NULL);
-		else
-			g_warning ("unable to open magic database");
-	}
-
-	if (magic != NULL) {
-		const char * mime_type;
-
-		mime_type = magic_buffer (magic, buffer, buffer_size);
-		if (mime_type)
-			return mime_type;
-
-		g_warning ("unable to detect filetype from magic: %s", magic_error (magic));
-	}
-
-#else
-
-	static const struct magic {
-		const unsigned int off;
-		const unsigned int len;
-		const char * const id;
-		const char * const mime_type;
-	}
-	magic_ids [] = {
-		/* magic ids taken from magic/Magdir/archive from the file-4.21 tarball */
-		{ 0,  6, "7z\274\257\047\034",                   "application/x-7z-compressed" },
-		{ 7,  7, "**ACE**",                              "application/x-ace"           },
-		{ 0,  2, "\x60\xea",                             "application/x-arj"           },
-		{ 0,  3, "BZh",                                  "application/x-bzip2"         },
-		{ 0,  2, "\037\213",                             "application/x-gzip"          },
-		{ 0,  4, "LZIP",                                 "application/x-lzip"          },
-		{ 0,  9, "\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a", "application/x-lzop",         },
-		{ 0,  4, "Rar!",                                 "application/x-rar"           },
-		{ 0,  4, "RZIP",                                 "application/x-rzip"          },
-		{ 0,  6, "\3757zXZ\000",                         "application/x-xz"            },
-		{ 20, 4, "\xdc\xa7\xc4\xfd",                     "application/x-zoo",          },
-		{ 0,  4, "PK\003\004",                           "application/zip"             },
-		{ 0,  8, "PK00PK\003\004",                       "application/zip"             },
-		{ 0,  4, "LRZI",                                 "application/x-lrzip"         },
-	};
-
-	int  i;
-
-	for (i = 0; i < G_N_ELEMENTS (magic_ids); i++) {
-		const struct magic * const magic = &magic_ids[i];
-
-		if ((magic->off + magic->len) > buffer_size)
-			g_warning ("buffer underrun for mime-type '%s' magic", magic->mime_type);
-		else if (! memcmp (buffer + magic->off, magic->id, magic->len))
-			return magic->mime_type;
-	}
-
-#endif
-
-	return NULL;
 }
 
 
@@ -808,10 +721,10 @@ open_archive_stream_ready_cb (GObject      *source_object,
 		archive = create_archive_to_load_archive (open_data->file, mime_type);
 	}
 	if (archive == NULL) {
-		mime_type = get_mime_type_from_magic_numbers (open_data->buffer, open_data->buffer_size);
+		mime_type = _g_mime_type_get_from_content (open_data->buffer, open_data->buffer_size);
 		archive = create_archive_to_load_archive (open_data->file, mime_type);
 		if (archive == NULL) {
-			mime_type = get_mime_type_from_filename (open_data->file);
+			mime_type = _g_mime_type_get_from_filename (open_data->file);
 			archive = create_archive_to_load_archive (open_data->file, mime_type);
 			if (archive == NULL) {
 				error = g_error_new_literal (FR_ERROR,
@@ -2250,9 +2163,9 @@ _g_file_is_archive (GFile *file)
 		uri = g_file_get_uri (file);
 		mime_type = g_content_type_guess (uri, (guchar *) buffer, buffer_size, &result_uncertain);
 		if (result_uncertain) {
-			mime_type = get_mime_type_from_magic_numbers (buffer, buffer_size);
+			mime_type = _g_mime_type_get_from_content (buffer, buffer_size);
 			if (mime_type == NULL)
-				mime_type = get_mime_type_from_filename (file);
+				mime_type = _g_mime_type_get_from_filename (file);
 		}
 
 		if (mime_type != NULL) {

@@ -2776,7 +2776,10 @@ _handle_archive_operation_error (FrWindow  *window,
 
 	case FR_ERROR_UNSUPPORTED_FORMAT:
 		close_progress_dialog (window, TRUE);
-		dlg_package_installer (window, archive, action);
+		dlg_package_installer (window,
+				       window->priv->archive_file,
+				       action,
+				       window->priv->cancellable);
 		if (opens_dialog) *opens_dialog = TRUE;
 		break;
 

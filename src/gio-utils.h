@@ -167,5 +167,15 @@ gboolean g_load_file_in_buffer       (GFile                 *file,
 				      void                  *buffer,
 				      gsize                  size,
 				      GError               **error);
+void     _g_file_load_buffer_async   (GFile                 *file,
+				      gsize                  requested_size,
+				      GCancellable          *cancellable,
+				      GAsyncReadyCallback    callback,
+				      gpointer               user_data);
+gboolean _g_file_load_buffer_finish  (GFile                 *file,
+				      GAsyncResult          *result,
+				      char                 **buffer,
+				      gsize                 *buffer_size,
+				      GError               **error);
 
 #endif /* _GIO_UTILS_H */

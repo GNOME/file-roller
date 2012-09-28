@@ -447,7 +447,7 @@ update_registered_archives_capabilities (void)
 
 
 const char *
-get_mime_type_from_extension (const char *ext)
+_g_mime_type_get_from_extension (const char *ext)
 {
 	int i;
 
@@ -462,6 +462,24 @@ get_mime_type_from_extension (const char *ext)
 	}
 
 	return NULL;
+}
+
+
+const char *
+_g_mime_type_get_from_filename (GFile *file)
+{
+	const char *mime_type = NULL;
+	char       *uri;
+
+	if (file == NULL)
+		return NULL;
+
+	uri = g_file_get_uri (file);
+	mime_type = _g_mime_type_get_from_extension (_g_filename_get_extension (uri));
+
+	g_free (uri);
+
+	return mime_type;
 }
 
 

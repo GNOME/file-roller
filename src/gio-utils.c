@@ -1306,3 +1306,179 @@ g_load_file_in_buffer (GFile   *file,
 	return (n >= 0);
 }
 
+
+/* -- _g_file_load_buffer_async -- */
+
+
+#define MAX_BUFFER_SIZE_FOR_TMP_BUFFER 4096
+
+
+typedef struct {
+	GFile              *file;
+	GCancellable       *cancellable;
+	GSimpleAsyncResult *result;
+        gsize               requested_buffer_size;
+	char               *buffer;
+        gchar              *tmp_buffer;
+        gsize               tmp_buffer_size;
+        GInputStream       *stream;
+        gsize               buffer_size;
+} LoadBufferData;
+
+
+static void
+load_buffer_data_free (LoadBufferData *load_data)
+{
+	_g_object_unref (load_data->file);
+	_g_object_unref (load_data->cancellable);
+	_g_object_unref (load_data->result);
+	g_free (load_data->buffer);
+	g_free (load_data->tmp_buffer);
+	_g_object_unref (load_data->stream);
+	g_free (load_data);
+}
+
+
+static void
+load_buffer_data_complete_with_error (LoadBufferData *load_data,
+				      GError         *error)
+{
+	GSimpleAsyncResult *result;
+
+	result = g_object_ref (load_data->result);
+	g_simple_async_result_set_from_error (result, error);
+	g_simple_async_result_complete_in_idle (result);
+
+	g_object_unref (result);
+}
+
+
+static void
+load_buffer_stream_read_ready_cb (GObject      *source_object,
+				  GAsyncResult *result,
+				  gpointer      user_data)
+{
+	LoadBufferData *load_data = user_data;
+        GError         *error = NULL;
+        gssize          count;
+
+        count = g_input_stream_read_finish (load_data->stream, result, &error);
+        if (count < 0) {
+        	load_buffer_data_complete_with_error (load_data, error);
+                return;
+        }
+
+        if (count > 0) {
+		load_data->buffer = g_realloc (load_data->buffer, load_data->buffer_size + count + 1);
+		memcpy (load_data->buffer + load_data->buffer_size, load_data->tmp_buffer, count);
+		load_data->buffer_size += count;
+        }
+
+        if ((count == 0) || ((load_data->requested_buffer_size > 0) && (load_data->buffer_size >= load_data->requested_buffer_size))) {
+                if (load_data->buffer != NULL)
+                        ((char *)load_data->buffer)[load_data->buffer_size] = 0;
+                g_simple_async_result_complete_in_idle (load_data->result);
+                return;
+        }
+
+        g_input_stream_read_async (load_data->stream,
+                                   load_data->tmp_buffer,
+                                   load_data->tmp_buffer_size,
+                                   G_PRIORITY_DEFAULT,
+                                   load_data->cancellable,
+                                   load_buffer_stream_read_ready_cb,
+                                   load_data);
+}
+
+
+static void
+load_buffer_read_ready_cb (GObject      *source_object,
+			   GAsyncResult *result,
+			   gpointer      user_data)
+{
+	LoadBufferData *load_data = user_data;
+        GError         *error = NULL;
+
+        load_data->stream = (GInputStream *) g_file_read_finish (G_FILE (source_object), result, &error);
+        if (load_data->stream == NULL) {
+        	load_buffer_data_complete_with_error (load_data, error);
+                return;
+        }
+
+        g_input_stream_read_async (load_data->stream,
+                                   load_data->tmp_buffer,
+                                   load_data->tmp_buffer_size,
+                                   G_PRIORITY_DEFAULT,
+                                   load_data->cancellable,
+                                   load_buffer_stream_read_ready_cb,
+                                   load_data);
+}
+
+
+void
+_g_file_load_buffer_async (GFile               *file,
+			   gsize                requested_size,
+			   GCancellable        *cancellable,
+			   GAsyncReadyCallback  callback,
+			   gpointer             user_data)
+{
+	LoadBufferData *load_data;
+
+	g_return_if_fail (file != NULL);
+
+	load_data = g_new0 (LoadBufferData, 1);
+	load_data->file = g_object_ref (file);
+	load_data->cancellable = _g_object_ref (cancellable);
+	load_data->result = g_simple_async_result_new (G_OBJECT (file),
+						       callback,
+						       user_data,
+						       _g_file_load_buffer_async);
+	load_data->requested_buffer_size = requested_size;
+	load_data->buffer = NULL;
+	load_data->buffer_size = 0;
+	if ((requested_size > 0) && (requested_size < MAX_BUFFER_SIZE_FOR_TMP_BUFFER))
+		load_data->tmp_buffer_size = requested_size;
+	else
+		load_data->tmp_buffer_size = MAX_BUFFER_SIZE_FOR_TMP_BUFFER;
+	load_data->tmp_buffer = g_new (char, load_data->tmp_buffer_size);
+        g_simple_async_result_set_op_res_gpointer (load_data->result,
+        					   load_data,
+                                                   (GDestroyNotify) load_buffer_data_free);
+
+        /* load a few bytes to guess the archive type */
+
+	g_file_read_async (load_data->file,
+			   G_PRIORITY_DEFAULT,
+			   load_data->cancellable,
+			   load_buffer_read_ready_cb,
+			   load_data);
+}
+
+
+gboolean
+_g_file_load_buffer_finish (GFile         *file,
+			    GAsyncResult  *result,
+			    char         **buffer,
+			    gsize         *buffer_size,
+			    GError       **error)
+{
+	GSimpleAsyncResult *simple;
+	LoadBufferData     *load_data;
+
+	g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (file), _g_file_load_buffer_async), FALSE);
+
+	simple = G_SIMPLE_ASYNC_RESULT (result);
+
+	if (g_simple_async_result_propagate_error (simple, error))
+		return FALSE;
+
+	load_data = g_simple_async_result_get_op_res_gpointer (simple);
+	if (buffer != NULL) {
+		*buffer = load_data->buffer;
+		load_data->buffer = NULL;
+	}
+	if (buffer_size != NULL)
+		*buffer_size = load_data->buffer_size;
+
+	return TRUE;
+}

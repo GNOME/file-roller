@@ -146,6 +146,8 @@ char *              _g_filename_get_random         (int                  random_
 						    const char          *suffix);
 gboolean            _g_mime_type_matches           (const char          *type,
 						    const char          *pattern);
+const char *        _g_mime_type_get_from_content  (char                *buffer,
+		  	  	  	  	    gsize                buffer_size);
 
 /* GFile */
 
