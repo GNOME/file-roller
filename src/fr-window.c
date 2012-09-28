@@ -314,6 +314,7 @@ struct _FrWindowPrivate {
 	gboolean         stoppable;
 	gboolean         closing;
 	gboolean         notify;
+	gboolean         populating_file_list;
 
 	FrClipboardData *clipboard_data;
 	FrClipboardData *copy_data;
@@ -824,6 +825,7 @@ fr_window_init (FrWindow *window)
 	window->priv->cancellable = g_cancellable_new ();
 	window->priv->compression = FR_COMPRESSION_NORMAL;
 	window->priv->window_group = gtk_window_group_new ();
+	window->priv->populating_file_list = FALSE;
 	gtk_window_group_add_window (window->priv->window_group, GTK_WINDOW (window));
 
 	window->archive = NULL;
@@ -1531,6 +1533,7 @@ fr_window_populate_file_list (FrWindow  *window,
 		return;
 	}
 
+	window->priv->populating_file_list = TRUE;
 	gtk_list_store_clear (window->priv->list_store);
 
 	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
@@ -1625,6 +1628,8 @@ fr_window_populate_file_list (FrWindow  *window,
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (window->priv->list_store),
 					      sort_column_id,
 					      order);
+
+	window->priv->populating_file_list = FALSE;
 
 	_fr_window_stop_activity_mode (window);
 }
@@ -5048,6 +5053,9 @@ static void
 theme_changed_cb (GtkIconTheme *theme,
 		  FrWindow     *window)
 {
+	if (window->priv->populating_file_list)
+		return;
+
 	gth_icon_cache_clear (window->priv->list_icon_cache);
 	gth_icon_cache_clear (window->priv->tree_icon_cache);
 
