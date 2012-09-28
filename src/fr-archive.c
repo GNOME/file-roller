@@ -690,28 +690,22 @@ open_archive_ready_cb (GObject      *source_object,
 
 
 static void
-open_archive_stream_ready_cb (GObject      *source_object,
+open_archive_buffer_ready_cb (GObject      *source_object,
 			      GAsyncResult *result,
 			      gpointer      user_data)
 {
 	OpenData         *open_data = user_data;
-	GFileInputStream *istream = G_FILE_INPUT_STREAM (source_object);
 	GError           *error = NULL;
-	gssize            bytes_read;
 	const char       *mime_type;
 	gboolean          result_uncertain;
 	FrArchive        *archive;
-	char             *local_mime_type, *uri;
+	char             *uri;
+	char             *local_mime_type;
 
-	bytes_read = g_input_stream_read_finish (G_INPUT_STREAM (istream), result, &error);
-	if (bytes_read == -1) {
-		g_object_unref (istream);
+	if (! _g_file_load_buffer_finish (open_data->file, result, &open_data->buffer, &open_data->buffer_size, &error)) {
 		open_data_complete_with_error (open_data, error);
 		return;
 	}
-
-	open_data->buffer_size = bytes_read;
-	g_object_unref (istream);
 
 	archive = NULL;
 	uri = g_file_get_uri (open_data->file);
@@ -753,31 +747,6 @@ open_archive_stream_ready_cb (GObject      *source_object,
 }
 
 
-static void
-open_archive_read_ready_cb (GObject      *source_object,
-			    GAsyncResult *result,
-			    gpointer      user_data)
-{
-	OpenData         *open_data = user_data;
-	GFileInputStream *istream;
-	GError           *error = NULL;
-
-	istream = g_file_read_finish (G_FILE (source_object), result, &error);
-	if (istream == NULL) {
-		open_data_complete_with_error (open_data, error);
-		return;
-	}
-
-	g_input_stream_read_async (G_INPUT_STREAM (istream),
-				   open_data->buffer,
-				   open_data->buffer_size,
-				   G_PRIORITY_DEFAULT,
-				   open_data->cancellable,
-				   open_archive_stream_ready_cb,
-				   open_data);
-}
-
-
 void
 fr_archive_open (GFile               *file,
 		 GCancellable        *cancellable,
@@ -795,19 +764,19 @@ fr_archive_open (GFile               *file,
 						       callback,
 						       user_data,
 						       fr_archive_open);
-	open_data->buffer_size = BUFFER_SIZE_FOR_PRELOAD;
-	open_data->buffer = g_new (char, open_data->buffer_size);
+	open_data->buffer_size = 0;
+	open_data->buffer = NULL;
         g_simple_async_result_set_op_res_gpointer (open_data->result,
         					   open_data,
                                                    (GDestroyNotify) open_data_free);
 
         /* load a few bytes to guess the archive type */
 
-	g_file_read_async (open_data->file,
-			   G_PRIORITY_DEFAULT,
-			   open_data->cancellable,
-			   open_archive_read_ready_cb,
-			   open_data);
+	_g_file_load_buffer_async (open_data->file,
+				   BUFFER_SIZE_FOR_PRELOAD,
+				   open_data->cancellable,
+				   open_archive_buffer_ready_cb,
+				   open_data);
 }
 
 
