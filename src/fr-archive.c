@@ -576,13 +576,27 @@ FrArchive *
 fr_archive_create (GFile      *file,
 		   const char *mime_type)
 {
-	GType      archive_type;
-	FrArchive *archive;
-	GFile     *parent;
+	FrArchiveCaps  requested_capabilities;
+	GType          archive_type;
+	FrArchive     *archive;
+	GFile         *parent;
 
 	if (mime_type == NULL)
 		mime_type = _g_mime_type_get_from_filename (file);
-	archive_type = get_archive_type_from_mime_type (mime_type, FR_ARCHIVE_CAN_WRITE);
+
+	/* try with the CAN_READ capability as well, this way we give
+	 * priority to the commands that can read and write over commands
+	 * that can only create a specific file format. */
+
+	requested_capabilities = FR_ARCHIVE_CAN_READ_WRITE;
+	archive_type = get_archive_type_from_mime_type (mime_type, requested_capabilities);
+
+	/* if no command was found, remove the read capability and try again */
+
+	if (archive_type == 0) {
+		requested_capabilities ^= FR_ARCHIVE_CAN_READ;
+		archive_type = get_archive_type_from_mime_type (mime_type, requested_capabilities);
+	}
 
 	archive = create_archive_for_mime_type (archive_type,
 						file,
@@ -645,17 +659,17 @@ static FrArchive *
 create_archive_to_load_archive (GFile      *file,
 			        const char *mime_type)
 {
-	FrArchiveCaps requested_capabilities = FR_ARCHIVE_CAN_DO_NOTHING;
+	FrArchiveCaps requested_capabilities;
 	GType         archive_type;
 
 	if (mime_type == NULL)
 		return FALSE;
 
-	/* try with the WRITE capability even when loading, this way we give
+	/* try with the CAN_WRITE capability even when loading, this way we give
 	 * priority to the commands that can read and write over commands
 	 * that can only read a specific file format. */
 
-	requested_capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
+	requested_capabilities = FR_ARCHIVE_CAN_READ_WRITE;
 	archive_type = get_archive_type_from_mime_type (mime_type, requested_capabilities);
 
 	/* if no command was found, remove the write capability and try again */
