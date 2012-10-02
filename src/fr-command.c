@@ -914,6 +914,7 @@ _fr_command_add (FrCommand      *self,
 	char      *tmp_archive_filename = NULL;
 	gboolean   error_occurred = FALSE;
 	int        new_file_list_length;
+	gboolean   use_tmp_subdirectory;
 
 	if (file_list == NULL)
 		return FALSE;
@@ -977,7 +978,9 @@ _fr_command_add (FrCommand      *self,
 	 * to cancel the operation without losing the original archive and
 	 * removing possible temporary files created by the command. */
 
-	{
+	use_tmp_subdirectory = (volume_size == 0) || ! fr_archive_is_capable_of (FR_ARCHIVE (self), FR_ARCHIVE_CAN_CREATE_VOLUMES);
+
+	if (use_tmp_subdirectory) {
 		GFile *local_copy_parent;
 		char  *archive_dir;
 		GFile *tmp_file;
@@ -1102,20 +1105,22 @@ _fr_command_add (FrCommand      *self,
 
 		/* move the new archive to the original position */
 
-		fr_process_begin_command (self->process, "mv");
-		fr_process_add_arg (self->process, "-f");
-		fr_process_add_arg (self->process, tmp_archive_filename);
-		fr_process_add_arg (self->process, archive_filename);
-		fr_process_end_command (self->process);
+		if (use_tmp_subdirectory) {
+			fr_process_begin_command (self->process, "mv");
+			fr_process_add_arg (self->process, "-f");
+			fr_process_add_arg (self->process, tmp_archive_filename);
+			fr_process_add_arg (self->process, archive_filename);
+			fr_process_end_command (self->process);
 
-		/* remove the temp sub-directory */
+			/* remove the temp sub-directory */
 
-		fr_process_begin_command (self->process, "rm");
-		fr_process_set_working_dir (self->process, g_get_tmp_dir ());
-		fr_process_set_sticky (self->process, TRUE);
-		fr_process_add_arg (self->process, "-rf");
-		fr_process_add_arg (self->process, tmp_archive_dir);
-		fr_process_end_command (self->process);
+			fr_process_begin_command (self->process, "rm");
+			fr_process_set_working_dir (self->process, g_get_tmp_dir ());
+			fr_process_set_sticky (self->process, TRUE);
+			fr_process_add_arg (self->process, "-rf");
+			fr_process_add_arg (self->process, tmp_archive_dir);
+			fr_process_end_command (self->process);
+		}
 
 		/* remove the archive dir */
 
