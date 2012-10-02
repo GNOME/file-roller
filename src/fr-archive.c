@@ -127,7 +127,8 @@ static guint fr_archive_signals[LAST_SIGNAL] = { 0 };
 
 static void
 _fr_archive_set_file (FrArchive *self,
-		      GFile     *file)
+		      GFile     *file,
+		      gboolean   reset_mime_type)
 {
 	if (self->priv->file != NULL) {
 		g_object_unref (self->priv->file);
@@ -136,7 +137,8 @@ _fr_archive_set_file (FrArchive *self,
 	if (file != NULL)
 		self->priv->file = g_object_ref (file);
 
-	self->mime_type = NULL;
+	if (reset_mime_type)
+		self->mime_type = NULL;
 
 	g_object_notify (G_OBJECT (self), "file");
 }
@@ -149,7 +151,7 @@ _fr_archive_set_uri (FrArchive  *self,
 	GFile *file;
 
 	file = (uri != NULL) ? g_file_new_for_uri (uri) : NULL;
-	_fr_archive_set_file (self, file);
+	_fr_archive_set_file (self, file, TRUE);
 
 	_g_object_unref (file);
 }
@@ -167,7 +169,7 @@ fr_archive_set_property (GObject      *object,
 
         switch (property_id) {
         case PROP_FILE:
-        	_fr_archive_set_file (self, g_value_get_object (value));
+        	_fr_archive_set_file (self, g_value_get_object (value), TRUE);
         	break;
 	case PROP_MIME_TYPE:
 		fr_archive_set_mime_type (self, g_value_get_string (value));
@@ -1910,7 +1912,7 @@ fr_archive_set_multi_volume (FrArchive *self,
 			     GFile     *file)
 {
 	self->multi_volume = TRUE;
-	_fr_archive_set_file (self, file);
+	_fr_archive_set_file (self, file, FALSE);
 }
 
 
@@ -1926,7 +1928,7 @@ fr_archive_change_name (FrArchive  *archive,
 
 	parent = g_file_get_parent (archive->priv->file);
 	file = g_file_get_child (parent, name);;
-	_fr_archive_set_file (archive, file);
+	_fr_archive_set_file (archive, file, FALSE);
 
 	g_object_unref (parent);
 	g_object_unref (file);
