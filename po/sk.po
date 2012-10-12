@@ -1,25 +1,25 @@
 # Slovak translation for file-roller.
-# Copyright (C) 2003, 2004, 2005, 2006, 2007, 2010, 2011, 2012 Free Software Foundation, Inc.
+# Copyright (C) 2003-2007, 2010-2012 Free Software Foundation, Inc.
 # This file is distributed under the same license as the file-roller package.
 # Stanislav Visnovsky <visnovsky@kde.org>, 2003.
 # Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>, 2004.
 # Peter Tuhársky <tuharsky@misbb.sk>, 2007.
 # Marcel Telka <marcel@telka.sk>, 2005, 2006, 2010.
-# Peter Mráz <etkinator@gmail.com>, 2010, 2011, 2012.
+# Peter Mráz <etkinator@gmail.com>, 2010-2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-10-02 19:09+0000\n"
-"PO-Revision-Date: 2012-05-29 11:55+0100\n"
+"POT-Creation-Date: 2012-10-09 14:25+0000\n"
+"PO-Revision-Date: 2012-10-12 15:14+0200\n"
 "Last-Translator: Peter Mráz <etkinator@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
-"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
@@ -200,7 +200,7 @@ msgstr "Či sa má zobraziť stavová lišta."
 msgid "View the folders pane"
 msgstr "Zobraziť panel priečinkov"
 
-# PK: panel s priecinkami
+# PK: panel s priecinkami?
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
 msgid "Whether to display the folders pane."
 msgstr "Či sa má zobraziť panel priečinkov."
@@ -325,10 +325,8 @@ msgid "Add Files"
 msgstr "Pridať súbory"
 
 #: ../src/dlg-add.c:193
-#, fuzzy
-#| msgid "_Load Options"
 msgid "_Options"
-msgstr "N_ačítať voľby"
+msgstr "_Voľby"
 
 #. load options
 #: ../src/dlg-add.c:202 ../src/ui/add-options.ui.h:1
@@ -342,10 +340,8 @@ msgstr "Uložiť voľby"
 
 #. clear options
 #: ../src/dlg-add.c:216
-#, fuzzy
-#| msgid "_Reset Options"
 msgid "Reset Options"
-msgstr "_Obnoviť voľby"
+msgstr "Obnoviť voľby"
 
 #: ../src/dlg-add.c:826
 msgid "_Options Name:"
@@ -355,13 +351,11 @@ msgstr "Názov pre _voľby:"
 #: ../src/dlg-ask-password.c:131
 #, c-format
 msgid "Password required for \"%s\""
-msgstr ""
+msgstr "Heslo vyžadované pre „%s“"
 
 #: ../src/dlg-ask-password.c:139
-#, fuzzy
-#| msgid "Password"
 msgid "Wrong password."
-msgstr "Heslo"
+msgstr "Nesprávne heslo."
 
 #: ../src/dlg-batch-add.c:85 ../src/main.c:417 ../src/main.c:783
 msgid "Compress"
@@ -433,10 +427,9 @@ msgid "_Search Command"
 msgstr "_Hľadať príkaz"
 
 #: ../src/dlg-password.c:91
-#, fuzzy, c-format
-#| msgid "Enter the password for the archive '%s'."
+#, c-format
 msgid "Enter a password for \"%s\""
-msgstr "Zadajte heslo pre archív „%s“."
+msgstr "Zadajte heslo pre „%s“."
 
 #: ../src/dlg-prop.c:96
 #, c-format
@@ -489,15 +482,14 @@ msgstr "Nemôžete pridať archív do seba samého."
 #: ../src/fr-command-tar.c:305
 #, c-format
 msgid "Adding \"%s\""
-msgstr ""
+msgstr "Pridáva sa „%s“"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:420 ../src/fr-command-rar.c:455
 #: ../src/fr-command-tar.c:426
-#, fuzzy, c-format
-#| msgid "Starting %s"
+#, c-format
 msgid "Extracting \"%s\""
-msgstr "Spúšťa sa %s"
+msgstr "Rozbaľuje sa „%s“"
 
 #: ../src/fr-command.c:597
 #, c-format
@@ -506,10 +498,9 @@ msgstr "Archív nenájdený."
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-rar.c:406 ../src/fr-command-tar.c:371
-#, fuzzy, c-format
-#| msgid "Removing file: "
+#, c-format
 msgid "Removing \"%s\""
-msgstr "Odstraňuje sa súbor: "
+msgstr "Odstraňuje sa „%s“ "
 
 #: ../src/fr-command-rar.c:581
 #, c-format
@@ -530,13 +521,11 @@ msgstr "Archív sa rozbaľuje"
 
 #: ../src/fr-file-selector-dialog.c:588
 msgid "File System"
-msgstr ""
+msgstr "Súborový systém"
 
 #: ../src/fr-file-selector-dialog.c:1331 ../src/fr-file-selector-dialog.c:1376
-#, fuzzy
-#| msgid "Could not perform the operation"
 msgid "Could not load the location"
-msgstr "Operáciu sa nepodarilo vykonať"
+msgstr "Umiestnenie sa nepodarilo načítať"
 
 #: ../src/fr-new-archive-dialog.c:335 ../src/fr-new-archive-dialog.c:354
 #: ../src/fr-new-archive-dialog.c:370 ../src/fr-new-archive-dialog.c:418
@@ -553,16 +542,15 @@ msgid "You don't have permission to create an archive in this folder"
 msgstr "Nemáte oprávnenia na vytvorenie archívu v tomto priečinku"
 
 #: ../src/fr-new-archive-dialog.c:439
-#, fuzzy, c-format
-#| msgid "The archive is already present.  Do you want to overwrite it?"
+#, c-format
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
-msgstr "Archív je už prítomný. Chcete ho prepísať?"
+msgstr "Súbor s názvom „%s“ už existuje. Chcete ho nahradiť?"
 
 #: ../src/fr-new-archive-dialog.c:440
 #, c-format
 msgid ""
 "The file already exists in \"%s\".  Replacing it will overwrite its contents."
-msgstr ""
+msgstr "Súbor už v „%s“ existuje. Nahradenie prepíše jeho obsah."
 
 #: ../src/fr-new-archive-dialog.c:447 ../src/fr-window.c:6567
 msgid "_Replace"
@@ -585,10 +573,8 @@ msgid "_Extract"
 msgstr "_Rozbaliť"
 
 #: ../src/fr-window.c:1045
-#, fuzzy
-#| msgid "Extraction completed successfully"
 msgid "Operation completed"
-msgstr "Rozbaľovanie bolo úspešne dokončené"
+msgstr "Operácia dokončená"
 
 #: ../src/fr-window.c:1162
 #, c-format
@@ -621,88 +607,78 @@ msgstr "Nepodarilo sa zobraziť priečinok „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2178 ../src/fr-window.c:2216
-#, fuzzy, c-format
-#| msgid "Starting %s"
+#, c-format
 msgid "Creating \"%s\""
-msgstr "Spúšťa sa %s"
+msgstr "Vytvára sa „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2182
-#, fuzzy, c-format
-#| msgid "Starting %s"
+#, c-format
 msgid "Loading \"%s\""
-msgstr "Spúšťa sa %s"
+msgstr "Načítava sa „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2186
-#, fuzzy, c-format
-#| msgid "Starting %s"
+#, c-format
 msgid "Reading \"%s\""
-msgstr "Spúšťa sa %s"
+msgstr "Číta sa „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2190
-#, fuzzy, c-format
-#| msgid "Deleting files from archive"
+#, c-format
 msgid "Deleting the files from \"%s\""
-msgstr "Odstraňujú sa súbory z archívu"
+msgstr "Odstraňujú sa súbory z „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2194
-#, fuzzy, c-format
-#| msgid "Starting %s"
+#, c-format
 msgid "Testing \"%s\""
-msgstr "Spúšťa sa %s"
+msgstr "Testuje sa „%s“"
 
 #: ../src/fr-window.c:2197
 msgid "Getting the file list"
 msgstr "Získava sa zoznam súborov"
 
+# PM: pre pridanie mi znelo divne a vsetko ostatné zas bolo dlhé
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2201
-#, fuzzy, c-format
-#| msgid "Copying the file list"
+#, c-format
 msgid "Copying the files to add to \"%s\""
-msgstr "Kopíruje sa zoznam súborov"
+msgstr "Kopírujú sa súbory kvôli pridaniu do „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2205
-#, fuzzy, c-format
-#| msgid "Adding files to archive"
+#, c-format
 msgid "Adding the files to \"%s\""
-msgstr "Pridávajú sa súbory do archívu"
+msgstr "Pridávajú sa súbory do „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2209
-#, fuzzy, c-format
-#| msgid "Extracting files from archive"
+#, c-format
 msgid "Extracting the files from \"%s\""
-msgstr "Rozbaľujú sa súbory z archívu"
+msgstr "Rozbaľujú sa súbory z „%s“"
 
 #: ../src/fr-window.c:2212
 msgid "Copying the extracted files to the destination"
-msgstr ""
+msgstr "Kopírujú sa rozbalené súbory do cieľa"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2221
-#, fuzzy, c-format
-#| msgid "Starting %s"
+#, c-format
 msgid "Saving \"%s\""
-msgstr "Spúšťa sa %s"
+msgstr "Ukladá sa „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2228
-#, fuzzy, c-format
-#| msgid "Getting the file list"
+#, c-format
 msgid "Renaming the files in \"%s\""
-msgstr "Získava sa zoznam súborov"
+msgstr "Premenovávajú sa súbory v „%s“"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2232
-#, fuzzy, c-format
-#| msgid "Update the files in the archive \"%s\"?"
+#, c-format
 msgid "Updating the files in \"%s\""
-msgstr "Aktualizovať súbory v archíve „%s“?"
+msgstr "Aktualizujú sa súbory v „%s“"
 
 #: ../src/fr-window.c:2407
 msgid "_Open the Archive"
@@ -716,15 +692,13 @@ msgstr "_Zobraziť súbory"
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Zostáva %d súborov"
+msgstr[1] "Zostáva %d súbor"
+msgstr[2] "Zostávajú %d súbory"
 
 #: ../src/fr-window.c:2529 ../src/fr-window.c:3105
-#, fuzzy
-#| msgid "please wait…"
 msgid "Please wait…"
-msgstr "prosím, čakajte…"
+msgstr "Prosím, čakajte…"
 
 #: ../src/fr-window.c:2585
 msgid "Extraction completed successfully"
@@ -732,10 +706,9 @@ msgstr "Rozbaľovanie bolo úspešne dokončené"
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2616 ../src/fr-window.c:6159
-#, fuzzy, c-format
-#| msgid "Archive created successfully"
+#, c-format
 msgid "\"%s\" created successfully"
-msgstr "Archív bol úspešne vytvorený"
+msgstr "„%s“ bol úspešne vytvorený"
 
 #: ../src/fr-window.c:2706 ../src/fr-window.c:2878
 msgid "Command exited abnormally."
@@ -771,16 +744,12 @@ msgid "An error occurred while saving the archive."
 msgstr "Pri ukladaní archívu nastala chyba."
 
 #: ../src/fr-window.c:2861
-#, fuzzy
-#| msgid "An error occurred while extracting files."
 msgid "An error occurred while renaming the files."
-msgstr "Pri rozbaľovaní súborov nastala chyba."
+msgstr "Pri premenovávaní súborov nastala chyba."
 
 #: ../src/fr-window.c:2865
-#, fuzzy
-#| msgid "An error occurred while extracting files."
 msgid "An error occurred while updating the files."
-msgstr "Pri rozbaľovaní súborov nastala chyba."
+msgstr "Pri aktualizovaní súborov nastala chyba."
 
 #: ../src/fr-window.c:2869
 msgid "An error occurred."
@@ -816,10 +785,8 @@ msgid "Create _Archive"
 msgstr "_Vytvoriť archív"
 
 #: ../src/fr-window.c:4060 ../src/fr-window.c:7140
-#, fuzzy
-#| msgid "Archive:"
 msgid "New Archive"
-msgstr "Archív:"
+msgstr "Nový archív"
 
 #: ../src/fr-window.c:4648
 msgid "Folders"
@@ -836,11 +803,9 @@ msgid "Type"
 msgstr "Typ"
 
 #: ../src/fr-window.c:4688 ../src/ui/file-selector.ui.h:6
-#, fuzzy
-#| msgid "Modified on:"
 msgctxt "File"
 msgid "Modified"
-msgstr "Zmenený:"
+msgstr "Zmenený"
 
 #: ../src/fr-window.c:4689
 msgctxt "File"
@@ -895,9 +860,6 @@ msgid "Could not save the archive \"%s\""
 msgstr "Nepodarilo sa uložiť archív „%s“"
 
 #: ../src/fr-window.c:7449
-#, fuzzy
-#| msgctxt "File"
-#| msgid "Save"
 msgid "Save"
 msgstr "Uložiť"
 
@@ -979,14 +941,13 @@ msgstr "Nepodarilo sa premenovať súbor"
 #: ../src/fr-window.c:8577
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
-msgstr ""
+msgstr "Presúvajú sa súbory z „%s“ do „%s“"
 
 #. Translators: %s are archive filenames
 #: ../src/fr-window.c:8580
-#, fuzzy, c-format
-#| msgid "Copying the file list"
+#, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
-msgstr "Kopíruje sa zoznam súborov"
+msgstr "Kopírujú sa súbory z „%s“ do „%s“"
 
 #: ../src/fr-window.c:8631
 msgid "Paste Selection"
@@ -1016,71 +977,80 @@ msgstr "%e. %B %Y o %H:%M"
 msgid "Could not display help"
 msgstr "Nepodarilo sa zobraziť pomocníka"
 
+# cmd option
 #: ../src/main.c:66
 msgid "Add files to the specified archive and quit the program"
-msgstr "Pridať súbory do zadaného archívu a ukončiť program"
+msgstr "Pridá súbory do zadaného archívu a ukončí program"
 
 #: ../src/main.c:67
 msgid "ARCHIVE"
 msgstr "ARCHÍV"
 
+# cmd option
 #: ../src/main.c:70
 msgid "Add files asking the name of the archive and quit the program"
-msgstr "Pridať súbory, vyžiadať si názov archívu a ukončiť program"
+msgstr "Pridá súbory, vyžiada názov archívu a ukončí program"
 
+# cmd option
 #: ../src/main.c:74
 msgid "Extract archives to the specified folder and quit the program"
-msgstr "Rozbaliť archívy do zadaného cieľového priečinka a ukončiť program"
+msgstr "Rozbalí archívy do zadaného cieľového priečinka a ukončí program"
 
 #: ../src/main.c:75 ../src/main.c:87
 msgid "FOLDER"
 msgstr "PRIEČINOK"
 
+# cmd option
 #: ../src/main.c:78
 msgid "Extract archives asking the destination folder and quit the program"
-msgstr "Rozbaliť archívy, vyžiadať cieľový priečinok a ukončiť program"
+msgstr "Rozbalí archívy, vyžiada cieľový priečinok a ukončí program"
 
+# cmd option
 #: ../src/main.c:82
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
-msgstr "Rozbaliť obsah archívov v priečinku archívu a ukončiť program"
+msgstr "Rozbalí obsah archívov v priečinku archívu a ukončí program"
 
+# cmd option
 #: ../src/main.c:86
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr ""
-"Predvolený priečinok, ktorý sa má použiť pri príkazoch '--add' a '--extract'"
+"Predvolený priečinok, ktorý sa má použiť pri príkazoch „--add“ a „--extract“"
 
+# cmd option
 #: ../src/main.c:90
 msgid "Create destination folder without asking confirmation"
-msgstr "Vytvoriť cieľový priečinok bez vyžiadania potvrdenia"
+msgstr "Vytvorí cieľový priečinok bez vyžiadania potvrdenia"
 
+# cmd option
 #: ../src/main.c:94
 msgid "Use the notification system to notify the operation completion"
-msgstr ""
+msgstr "Použije systém upozornení na upozornenie o dokončení operácie"
 
+# cmd option
 #: ../src/main.c:97
 msgid "Start as a service"
-msgstr ""
+msgstr "Spustí ako službu"
 
+# cmd option
 #: ../src/main.c:100
 msgid "Show version"
-msgstr ""
+msgstr "Zobrazí verziu"
 
 #. manually set name and icon
 #: ../src/main.c:634
 msgid "File Roller"
 msgstr "File Roller"
 
+# PK: to je nieco ako bublina co robi ten program, ale v cmd, je to spravny tvar?
 #: ../src/main.c:665
 msgid "- Create and modify an archive"
 msgstr "- Vytvoriť a upraviť archív"
 
 #: ../src/ui/add-dialog-options.ui.h:1
-#, fuzzy
-#| msgid "_Add"
 msgid "Add"
-msgstr "_Pridať"
+msgstr "Pridať"
 
 #: ../src/ui/add-dialog-options.ui.h:2
 msgid "Include _files:"
@@ -1108,27 +1078,23 @@ msgstr "Pridať iba ak je _novší"
 
 #: ../src/ui/add-dialog-options.ui.h:8
 msgid "_Follow symbolic links"
-msgstr ""
+msgstr "_Nasledovať symbolické odkazy"
 
 #: ../src/ui/app-menu.ui.h:1
-#, fuzzy
-#| msgid "_Archive"
 msgid "_New Archive"
-msgstr "_Archív"
+msgstr "_Nový archív"
 
 #: ../src/ui/app-menu.ui.h:2 ../src/ui.h:34
 msgid "_Help"
 msgstr "_Pomocník"
 
 #: ../src/ui/app-menu.ui.h:3
-#, fuzzy
-#| msgid "Archive Manager"
 msgid "_About Archive Manager"
-msgstr "Správca archívov"
+msgstr "_O programe Správca archívov"
 
 #: ../src/ui/app-menu.ui.h:4
 msgid "_Quit"
-msgstr ""
+msgstr "U_končiť"
 
 #: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog-options.ui.h:1
 #: ../src/ui/new-archive-dialog.ui.h:4
@@ -1156,20 +1122,16 @@ msgid "_Selected files"
 msgstr "Vy_brané súbory"
 
 #: ../src/ui/error-dialog.ui.h:1
-#, fuzzy
-#| msgid "Command _Line Output"
 msgid "C_ommand Line Output:"
-msgstr "Výstup _príkazového riadka"
+msgstr "Výstup _príkazového riadka:"
 
 #: ../src/ui/extract-dialog-options.ui.h:7
 msgid "_Keep directory structure"
-msgstr ""
+msgstr "_Zachovať šturktúru adresárov"
 
 #: ../src/ui/extract-dialog-options.ui.h:8
-#, fuzzy
-#| msgid "Do not overwrite newer files"
 msgid "Do not _overwrite newer files"
-msgstr "Neprepisovať novšie súbory"
+msgstr "_Neprepisovať novšie súbory"
 
 #: ../src/ui/file-selector.ui.h:2 ../src/ui.h:188
 msgid "Go up one level"
@@ -1177,23 +1139,19 @@ msgstr "Prejde o jednu úroveň vyššie"
 
 #: ../src/ui/file-selector.ui.h:3
 msgid "Places"
-msgstr ""
+msgstr "Miesta"
 
 #: ../src/ui/file-selector.ui.h:7
-#, fuzzy
-#| msgid "Dese_lect All"
 msgid "_Select All"
-msgstr "_Odznačiť všetko"
+msgstr "Vybr_ať všetko"
 
 #: ../src/ui/file-selector.ui.h:8 ../src/ui.h:101
 msgid "Dese_lect All"
 msgstr "_Odznačiť všetko"
 
 #: ../src/ui/file-selector.ui.h:9
-#, fuzzy
-#| msgid "_Show the Files"
 msgid "Show Hidden Files"
-msgstr "_Zobraziť súbory"
+msgstr "Zobraziť skryté súbory"
 
 #: ../src/ui.h:31
 msgid "_Archive"
@@ -1217,7 +1175,7 @@ msgstr "Informácie o programe"
 
 #: ../src/ui.h:42
 msgid "_Add Files…"
-msgstr "Pri_dať súbory…"
+msgstr "_Pridať súbory…"
 
 #: ../src/ui.h:43 ../src/ui.h:47
 msgid "Add files to the archive"
@@ -1360,17 +1318,19 @@ msgstr "Prejde do domovského priečinka"
 msgid "_Toolbar"
 msgstr "_Lišta s nástrojmi"
 
+# tooltip
 #: ../src/ui.h:202
 msgid "View the main toolbar"
-msgstr "Zobraziť hlavnú lištu s nástrojmi"
+msgstr "Zobrazí hlavnú lištu s nástrojmi"
 
 #: ../src/ui.h:206
 msgid "Stat_usbar"
 msgstr "_Stavová lišta"
 
+# tooltip
 #: ../src/ui.h:207
 msgid "View the statusbar"
-msgstr "Zobraziť stavovú lištu"
+msgstr "Zobrazí stavovú lištu"
 
 #: ../src/ui.h:211
 msgid "_Folders"
@@ -1378,7 +1338,7 @@ msgstr "_Priečinky"
 
 #: ../src/ui.h:221
 msgid "View All _Files"
-msgstr "Zobraziť všetky _súbory"
+msgstr "_Zobraziť všetky súbory"
 
 #: ../src/ui.h:224
 msgid "View as a F_older"
@@ -1404,7 +1364,7 @@ msgstr "MB"
 #: ../src/ui/new-archive-dialog-options.ui.h:6
 #: ../src/ui/new-archive-dialog.ui.h:10
 msgid "_Other Options"
-msgstr "Ďalšie _možnosti"
+msgstr "Ďalšie _voľby"
 
 #: ../src/ui/new-archive-dialog.ui.h:1
 msgid "_Filename:"
@@ -1455,11 +1415,8 @@ msgstr "Počet súborov:"
 
 #. after the colon there is a file type.
 #: ../src/ui/properties.ui.h:10
-#, fuzzy
-#| msgctxt "File"
-#| msgid "Type"
 msgid "Type:"
-msgstr "Typ"
+msgstr "Typ:"
 
 #: ../src/ui/update.ui.h:1
 msgid "_Update"
@@ -1468,365 +1425,3 @@ msgstr "_Aktualizovať"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "Vyb_erte súbory, ktoré chcete aktualizovať:"
-
-#~ msgid "Use mime icons"
-#~ msgstr "Použiť ikony mime"
-
-#~ msgid ""
-#~ "If true will display icons depending on the file type (slower), otherwise "
-#~ "will use always the same icon for all files (faster)."
-#~ msgstr ""
-#~ "Ak je hodnota true, zobrazené ikony závisia od typu súboru (pomalšie), v "
-#~ "opačnom prípade sa vždy použije rovnaká ikona pre všetky súbory "
-#~ "(rýchlejšie)."
-
-#~ msgid "Overwrite existing files"
-#~ msgstr "Prepísať existujúce súbory"
-
-#~ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
-#~ msgstr "<span weight=\"bold\" size=\"larger\">Je potrebné heslo</span>"
-
-#~ msgid ""
-#~ "<i><b>Note:</b> the password will be used to encrypt files you add to the "
-#~ "current archive, and to decrypt files you extract from the current "
-#~ "archive. When the archive is closed the password will be deleted.</i>"
-#~ msgstr ""
-#~ "<i><b>Poznámka:</b> heslo bude použité na šifrovanie súborov, ktoré "
-#~ "pridáte do aktuálneho archívu a na dešifrovanie súborov, ktoré "
-#~ "rozbaľujete z aktuálneho archívu. Po zatvorení archívu bude heslo "
-#~ "odstránené.</i>"
-
-#~ msgid "Add a Folder"
-#~ msgstr "Pridať priečinok"
-
-#~ msgid "_Include subfolders"
-#~ msgstr "_Zahrnúť podpriečinky"
-
-#~ msgid "Exclude folders that are symbolic lin_ks"
-#~ msgstr "Vynechať priečinky, ktoré sú symbolickými _odkazmi"
-
-#~ msgid "Sa_ve Options"
-#~ msgstr "_Uložiť voľby"
-
-#~ msgid ""
-#~ "The name \"%s\" is not valid because it cannot contain the characters: "
-#~ "%s\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Názov „%s“ nie je platný, pretože nemôže obsahovať znaky: %s\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "You don't have the right permissions to create an archive in the "
-#~ "destination folder."
-#~ msgstr ""
-#~ "Nemáte dostatočné oprávnenia na vytvorenie archívu v cieľovom priečinku."
-
-#~ msgid "Archive not created"
-#~ msgstr "Archív nebol vytvorený"
-
-#~ msgid "_Overwrite"
-#~ msgstr "_Prepísať"
-
-#~ msgid "Re-crea_te folders"
-#~ msgstr "_Znovu vytvoriť priečiky"
-
-#~ msgid "Over_write existing files"
-#~ msgstr "_Prepísať existujúce súbory"
-
-#~ msgid "Do not e_xtract older files"
-#~ msgstr "_Nerozbaľovať staršie súbory"
-
-#~ msgctxt "File"
-#~ msgid "New"
-#~ msgstr "Nový"
-
-#~ msgid "File _Format: %s"
-#~ msgstr "_Formát súboru: %s"
-
-#~ msgid "All Files"
-#~ msgstr "Všetky súbory"
-
-#~ msgid "All Supported Files"
-#~ msgstr "Všetky podporované súbory"
-
-#~ msgid "By Extension"
-#~ msgstr "Podľa prípony"
-
-#~ msgid "File Format"
-#~ msgstr "Formát súboru"
-
-#~ msgid "Extension(s)"
-#~ msgstr "Prípona(y)"
-
-#~ msgid ""
-#~ "The program was not able to find out the file format you want to use for `"
-#~ "%s'. Please make sure to use a known extension for that file or manually "
-#~ "choose a file format from the list below."
-#~ msgstr ""
-#~ "Program nebol schopný rozpoznať formát súboru, ktorý chcete použiť pre `"
-#~ "%s'. Prosím, uistite sa, že pre tento súbor používate známu príponu, "
-#~ "alebo ručne vyberte formát súboru z nasledujúceho zoznamu."
-
-#~ msgid "File format not recognized"
-#~ msgstr "Formát súboru nebol rozpoznaný"
-
-#~ msgid "File not found."
-#~ msgstr "Súbor nenájdený."
-
-#~ msgid "Adding file: "
-#~ msgstr "Pridáva sa súbor: "
-
-#~ msgid "Extracting file: "
-#~ msgstr "Rozbaľuje sa súbor: "
-
-#~ msgid "7-Zip (.7z)"
-#~ msgstr "7-Zip (.7z)"
-
-#~ msgid "Tar compressed with 7z (.tar.7z)"
-#~ msgstr "Tar komprimovaný pomocou 7z (.tar.7z)"
-
-#~ msgid "Ace (.ace)"
-#~ msgstr "Ace (.ace)"
-
-#~ msgid "Ar (.ar)"
-#~ msgstr "Ar (.ar)"
-
-#~ msgid "Arj (.arj)"
-#~ msgstr "Arj (.arj)"
-
-#~ msgid "Tar compressed with bzip2 (.tar.bz2)"
-#~ msgstr "Tar komprimovaný pomocou bzip2 (.tar.bz2)"
-
-#~ msgid "Tar compressed with bzip (.tar.bz)"
-#~ msgstr "Tar komprimovaný pomocou bzip (.tar.bz)"
-
-#~ msgid "Cabinet (.cab)"
-#~ msgstr "Cabinet (.cab)"
-
-# * http://en.wikipedia.org/wiki/Comic_Book_Archive_file
-#~ msgid "Rar Archived Comic Book (.cbr)"
-#~ msgstr "Komiks v archíve rar (.cbr)"
-
-# * http://en.wikipedia.org/wiki/Comic_Book_Archive_file
-#~ msgid "Zip Archived Comic Book (.cbz)"
-#~ msgstr "Komiks v archíve zip (.cbz)"
-
-#~ msgid "Tar compressed with gzip (.tar.gz)"
-#~ msgstr "Tar komprimovaný pomocou gzip (.tar.gz)"
-
-#~ msgid "Ear (.ear)"
-#~ msgstr "Ear (.ear)"
-
-#~ msgid "Self-extracting zip (.exe)"
-#~ msgstr "Samorozbaľujúci zip (.exe)"
-
-#~ msgid "Jar (.jar)"
-#~ msgstr "Jar (.jar)"
-
-#~ msgid "Lha (.lzh)"
-#~ msgstr "Lha (.lzh)"
-
-#~ msgid "Lrzip (.lrz)"
-#~ msgstr "Lrzip (.lrz)"
-
-#~ msgid "Tar compressed with lrzip (.tar.lrz)"
-#~ msgstr "Tar komprimovaný pomocou lrzip (.tar.lrz)"
-
-#~ msgid "Tar compressed with lzip (.tar.lz)"
-#~ msgstr "Tar komprimovaný pomocou lzip (.tar.lz)"
-
-#~ msgid "Tar compressed with lzma (.tar.lzma)"
-#~ msgstr "Tar komprimovaný pomocou lzma (.tar.lzma)"
-
-#~ msgid "Tar compressed with lzop (.tar.lzo)"
-#~ msgstr "Tar komprimovaný pomocou lzop (.tar.lzo)"
-
-# neviem či toto prekladať
-# PK: podla mna na 99% nie, dal som prec fuzzy
-# PŠ: a podľa mňa zase áno, predchádzajúce reťazce sú podobného typu a sú preložené
-# peter: tak navrhni ako by som to mal preložiť
-# PŠ: nie je náhodou Windows Imaging "Maľovanie" vo Windows a toto jeho vlastný formát?
-#~ msgid "Windows Imaging Format (.wim)"
-#~ msgstr "Windows Imaging Format (.wim)"
-
-#~ msgid "Rar (.rar)"
-#~ msgstr "Rar (.rar)"
-
-#~ msgid "Tar uncompressed (.tar)"
-#~ msgstr "Nekomprimovaný tar (.tar)"
-
-#~ msgid "Tar compressed with compress (.tar.Z)"
-#~ msgstr "Tar komprimovaný pomocou compress (.tar.Z)"
-
-#~ msgid "War (.war)"
-#~ msgstr "War (.war)"
-
-#~ msgid "Xz (.xz)"
-#~ msgstr "Xz (.xz)"
-
-#~ msgid "Tar compressed with xz (.tar.xz)"
-#~ msgstr "Tar komprimovaný pomocou xz (.tar.xz)"
-
-#~ msgid "Zoo (.zoo)"
-#~ msgstr "Zoo (.zoo)"
-
-#~ msgid "Zip (.zip)"
-#~ msgstr "Zip (.zip)"
-
-#~ msgid "Creating archive"
-#~ msgstr "Vytvára sa archív"
-
-#~ msgid "Loading archive"
-#~ msgstr "Načítava sa archív"
-
-#~ msgid "Reading archive"
-#~ msgstr "Číta sa obsah archívu"
-
-#~ msgid "Testing archive"
-#~ msgstr "Testuje sa archív"
-
-#~ msgid "Saving archive"
-#~ msgstr "Ukladá sa archív"
-
-#~ msgctxt "File"
-#~ msgid "Date Modified"
-#~ msgstr "Dátum zmeny"
-
-#~ msgid "Close the folders pane"
-#~ msgstr "Zavrieť panel priečinkov"
-
-#~ msgid "Add a _Folder…"
-#~ msgstr "Pridať _priečinok…"
-
-#~ msgid "Add a folder to the archive"
-#~ msgstr "Pridá priečinok do archívu"
-
-#~ msgid "Add Folder"
-#~ msgstr "Pridať priečinok"
-
-#~ msgid "Stop current operation"
-#~ msgstr "Zastaví aktuálnu operáciu"
-
-#~ msgid "_Reversed Order"
-#~ msgstr "_Opačné poradie"
-
-#~ msgid "Reverse the list order"
-#~ msgstr "Obráti usporiadanie zoznamu"
-
-#~ msgid "by _Name"
-#~ msgstr "podľa _názvu"
-
-#~ msgid "Sort file list by name"
-#~ msgstr "Zoradí zoznam súborov podľa názvu"
-
-#~ msgid "by _Size"
-#~ msgstr "podľa _veľkosti"
-
-#~ msgid "Sort file list by file size"
-#~ msgstr "Zoradí zoznam súborov podľa veľkosti"
-
-#~ msgid "by T_ype"
-#~ msgstr "podľa _typu"
-
-#~ msgid "Sort file list by type"
-#~ msgstr "Zoradí zoznam súborov podľa typu"
-
-#~ msgid "by _Date Modified"
-#~ msgstr "podľa _dátumu zmeny"
-
-#~ msgid "Sort file list by modification time"
-#~ msgstr "Zoradí zoznam súborov podľa času zmeny"
-
-#~ msgid "by _Location"
-#~ msgstr "podľa u_miestnenia"
-
-#~ msgid "Sort file list by location"
-#~ msgstr "Zoradí zoznam súborov podľa ich umiestnenia"
-
-#~ msgid "The file doesn't exist"
-#~ msgstr "Súbor neexistuje"
-
-#~ msgid "The new name is void."
-#~ msgstr "Nový názov je prázdny."
-
-#~ msgid "The new name is equal to the old one."
-#~ msgstr "Nový názov je rovnaký ako starý."
-
-#~ msgid "_Add Files..."
-#~ msgstr "Pridať _súbory..."
-
-#~ msgid "Add a _Folder..."
-#~ msgstr "Pridať p_riečinok..."
-
-#~ msgid "_Rename..."
-#~ msgstr "Pre_menovať..."
-
-#~ msgid "_Extract..."
-#~ msgstr "_Rozbaliť..."
-
-#~ msgid "Find..."
-#~ msgstr "Nájsť..."
-
-#~ msgid "_Last Output"
-#~ msgstr "Posledný _výstup"
-
-#~ msgid "View the output produced by the last executed command"
-#~ msgstr "Zobraziť výstup vyprodukovaný posledným spusteným príkazom"
-
-#~ msgid "New..."
-#~ msgstr "Nový..."
-
-#~ msgid "Open..."
-#~ msgstr "Otvoriť..."
-
-#~ msgid "Pass_word..."
-#~ msgstr "H_eslo..."
-
-#~ msgid "A_vailable application:"
-#~ msgstr "_Dostupná aplikácia:"
-
-#~ msgid "Open Files"
-#~ msgstr "Otvoriť súbory"
-
-#~ msgid "R_ecent applications:"
-#~ msgstr "N_edávne aplikácie:"
-
-#~ msgid "_Application:"
-#~ msgstr "_Aplikácia:"
-
-#~ msgid ""
-#~ "File Roller is free software; you can redistribute it and/or modify it "
-#~ "under the terms of the GNU General Public License as published by the "
-#~ "Free Software Foundation; either version 2 of the License, or (at your "
-#~ "option) any later version."
-#~ msgstr ""
-#~ "File Roller je slobodný softvér; môžete ho ďalej šíriť a/alebo upravovať "
-#~ "podľa ustanovení Všeobecnej verejnej licencie GNU tak, ako bola vydaná "
-#~ "organizáciou Free Software Foundation, a to buď verzie 2 tejto licencie, "
-#~ "alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie."
-
-#~ msgid ""
-#~ "File Roller is distributed in the hope that it will be useful, but "
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of "
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-#~ "Public License for more details."
-#~ msgstr ""
-#~ "Program File Roller je rozširovaný v nádeji, že bude užitočný, avšak BEZ "
-#~ "AKEJKOĽVEK ZÁRUKY. Neposkytujú sa ani odvodené záruky OBCHODOVATEĽNOSTI "
-#~ "alebo VHODNOSTI PRE URČITÝ ÚČEL. Ďalšie podrobnosti hľadajte vo "
-#~ "Všeobecnej verejnej licencii GNU."
-
-#~ msgid ""
-#~ "You should have received a copy of the GNU General Public License along "
-#~ "with File Roller; if not, write to the Free Software Foundation, Inc., 51 "
-#~ "Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
-#~ msgstr ""
-#~ "Kópiu Všeobecnej verejnej licencie GNU ste mali obdržať spolu s programom "
-#~ "File Roller. Ak sa tak nestalo, napíšte na Free Software Foundation, "
-#~ "Inc., 51 Franklin St, Fifth Floor, Boston, MA  02111-1301 USA"
-
-#~ msgid "_File"
-#~ msgstr "_Súbor"
