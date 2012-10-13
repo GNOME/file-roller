@@ -692,6 +692,10 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				}
 				archive_read_data_skip (a);
 				break;
+
+			default:
+				archive_read_data_skip (a);
+				break;
 			}
 		}
 
