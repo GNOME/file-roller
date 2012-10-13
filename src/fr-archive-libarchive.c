@@ -690,8 +690,6 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						load_data->error = g_error_copy (local_error);
 					g_error_free (local_error);
 				}
-				else
-					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable);
 				archive_read_data_skip (a);
 				break;
 			}
