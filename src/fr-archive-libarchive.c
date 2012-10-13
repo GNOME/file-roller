@@ -21,6 +21,7 @@
 
 #include <config.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <pwd.h>
 #include <grp.h>
 #include <glib.h>
@@ -510,6 +511,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		size_t         buffer_size;
 		int64_t        offset;
 		GError        *local_error = NULL;
+		__LA_MODE_T    filetype;
 
 		if (g_cancellable_is_cancelled (cancellable))
 			break;
@@ -598,8 +600,61 @@ extract_archive_thread (GSimpleAsyncResult *result,
 
 		/* create the file */
 
+		filetype = archive_entry_filetype (entry);
+
 		if (load_data->error == NULL) {
-			switch (archive_entry_filetype (entry)) {
+			const char  *linkname;
+
+			linkname = archive_entry_hardlink (entry);
+			if (linkname != NULL) {
+				char  *link_fullpath;
+				GFile *link_file;
+				char  *oldname;
+				char  *newname;
+				int    r;
+
+				link_fullpath = (*linkname == '/') ? g_strdup (linkname) : g_strconcat ("/", linkname, NULL);
+				link_file = g_file_get_child (extract_data->destination, _g_path_get_relative_basename (link_fullpath, extract_data->base_dir, extract_data->junk_paths));
+				oldname = g_file_get_path (link_file);
+				newname = g_file_get_path (file);
+
+				if ((oldname != NULL) && (newname != NULL))
+					r = link (oldname, newname);
+				else
+					r = -1;
+
+				if (r == 0) {
+					__LA_INT64_T filesize;
+
+					if (archive_entry_size_is_set (entry))
+						filesize = archive_entry_size (entry);
+					else
+						filesize = -1;
+
+					if (filesize > 0)
+						filetype = AE_IFREG; /* treat as a regular file to save the data */
+				}
+				else {
+					char *uri;
+					char *msg;
+
+					uri = g_file_get_uri (file);
+					msg = g_strdup_printf ("Could not create the hard link %s", uri);
+					load_data->error = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, msg);
+
+					g_free (msg);
+					g_free (uri);
+				}
+
+				g_free (newname);
+				g_free (oldname);
+				g_object_unref (link_file);
+				g_free (link_fullpath);
+			}
+		}
+
+		if (load_data->error == NULL) {
+			switch (filetype) {
 			case AE_IFDIR:
 				if (! g_file_make_directory (file, cancellable, &local_error)) {
 					if (! g_error_matches (local_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
