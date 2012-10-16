@@ -600,6 +600,7 @@ fr_application_register_archive_manager_service (FrApplication *self)
 	gsize         size;
 	guchar       *buffer;
 	GInputStream *stream;
+	GError       *error = NULL;
 
 	g_application_hold (G_APPLICATION (self));
 
@@ -608,15 +609,21 @@ fr_application_register_archive_manager_service (FrApplication *self)
 	stream = g_resources_open_stream (ORG_GNOME_ARCHIVEMANAGER_XML, 0, NULL);
 	g_input_stream_read_all (stream, buffer, size, NULL, NULL, NULL);
 
-	self->introspection_data = g_dbus_node_info_new_for_xml ((gchar *) buffer, NULL);
-	self->owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
-					 "org.gnome.ArchiveManager1",
-					 G_BUS_NAME_OWNER_FLAGS_NONE,
-					 on_bus_acquired_for_archive_manager,
-					 NULL /*on_name_acquired*/,
-					 NULL /*on_name_lost*/,
-					 self,
-					 NULL);
+	self->introspection_data = g_dbus_node_info_new_for_xml ((gchar *) buffer, &error);
+	if (self->introspection_data != NULL) {
+		self->owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
+						 "org.gnome.ArchiveManager1",
+						 G_BUS_NAME_OWNER_FLAGS_NONE,
+						 on_bus_acquired_for_archive_manager,
+						 NULL /*on_name_acquired*/,
+						 NULL /*on_name_lost*/,
+						 self,
+						 NULL);
+	}
+	else {
+		g_warning ("%s", error->message);
+		g_clear_error (&error);
+	}
 
 	g_timeout_add_seconds (SERVICE_TIMEOUT, service_timeout_cb, self);
 
