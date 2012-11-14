@@ -826,7 +826,10 @@ fr_application_command_line (GApplication            *application,
 
 			g_object_unref (file);
 		}
-		fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		if (! arg_notify)
+			fr_window_append_batch_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
+		else
+			fr_window_set_notify (FR_WINDOW (window), TRUE);
 
 		fr_window_start_batch (FR_WINDOW (window));
 	}

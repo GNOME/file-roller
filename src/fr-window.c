@@ -6429,8 +6429,10 @@ archive_extraction_ready_cb (GObject      *source_object,
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
 
-	if ((error == NULL) && ask_to_open_destination)
+	if ((error == NULL) && ask_to_open_destination) {
+		window->priv->quit_with_progress_dialog = window->priv->batch_mode;
 		open_progress_dialog_with_open_destination (window);
+	}
 	else if ((error == NULL) && ! batch_mode && ! gtk_window_has_toplevel_focus (GTK_WINDOW (window->priv->progress_dialog)))
 		gtk_window_present (GTK_WINDOW (window));
 
@@ -9257,7 +9259,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 					   edata->skip_older,
 					   edata->overwrite,
 					   edata->junk_paths,
-					   TRUE);
+					   ! window->priv->batch_mode || window->priv->notify);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_HERE:
