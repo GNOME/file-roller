@@ -850,7 +850,7 @@ fr_application_command_line (GApplication            *application,
 
 	_g_object_unref (default_directory);
 	_g_object_unref (add_to_archive);
-	g_free (extraction_destination);
+	_g_object_unref (extraction_destination);
 
 	return fr_application_command_line_finished (application, EXIT_SUCCESS);
 }
