@@ -2575,7 +2575,7 @@ open_progress_dialog_with_open_destination (FrWindow *window)
 	gtk_widget_hide (window->priv->pd_cancel_button);
 	gtk_widget_hide (window->priv->pd_open_archive_button);
 	gtk_widget_show (window->priv->pd_open_destination_button);
-	gtk_widget_show (window->priv->pd_quit_button);
+	gtk_widget_set_visible (window->priv->pd_quit_button, ! window->priv->quit_with_progress_dialog);
 	gtk_widget_show (window->priv->pd_close_button);
 	display_progress_dialog (window);
 
@@ -2605,6 +2605,7 @@ open_progress_dialog_with_open_archive (FrWindow *window)
 	gtk_widget_hide (window->priv->pd_cancel_button);
 	gtk_widget_hide (window->priv->pd_open_destination_button);
 	gtk_widget_show (window->priv->pd_open_archive_button);
+	gtk_widget_set_visible (window->priv->pd_quit_button, ! window->priv->quit_with_progress_dialog);
 	gtk_widget_show (window->priv->pd_close_button);
 	display_progress_dialog (window);
 
@@ -6809,7 +6810,8 @@ void
 fr_window_archive_extract_here (FrWindow   *window,
 				gboolean    skip_older,
 				gboolean    overwrite,
-				gboolean    junk_paths)
+				gboolean    junk_paths,
+				gboolean    ask_to_open_destination)
 {
 	ExtractData *edata;
 
@@ -6821,7 +6823,7 @@ fr_window_archive_extract_here (FrWindow   *window,
 				  overwrite,
 				  junk_paths,
 				  TRUE,
-				  FALSE);
+				  ask_to_open_destination);
 	fr_window_set_current_batch_action (window,
 					    FR_BATCH_ACTION_EXTRACT,
 					    edata,
@@ -9269,7 +9271,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 		fr_window_archive_extract_here (window,
 						FALSE,
 						TRUE,
-						FALSE);
+						FALSE,
+						! window->priv->batch_mode || window->priv->notify);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
