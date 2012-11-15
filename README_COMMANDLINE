@@ -1,0 +1,54 @@
+This files contains some instructions on how to use the command line arguments.
+
+
+Extraction
+----------
+
+1) Extract an archive to a specified directory:
+
+	file-roller --extract-to=/path/to/dir archive.tgz
+
+   create the destination folder without asking the user to confirm
+
+   	file-roller --force --extract-to=/path/to/dir archive.tgz
+
+2) Extract an archive letting the user choose the destination directory:
+
+	file-roller --extract archive.tgz
+
+   set the directory to show in the folder chooser dialog:
+
+	file-roller --default-dir=/path/to/show --extract archive.tgz
+
+3) Extract an archive in its parent folder creating a subfolder if the archive
+   contains more than one top level object (that is avoiding the tar-bombing).
+   This is the same command used in the Nautilus context menu to extract
+   archives.
+
+   	file-roller --extract-here archive.tgz
+
+Use the --notify option to show a dialog that notifies the user that the
+operation has completed successfully and allows to open the destination folder.
+
+You can extract a series of archives with a single command.
+
+
+Compression
+-----------
+
+1) Compress a series of files specifing the archive name:
+
+	file-roller --add-to=/path/to/archive.tgz file1 file2 ..
+
+   the archive is created if it doesn't exit.
+
+2) Compress a series of files letting the user choose the archive name:
+
+	file-roller --add file1 file2 ..
+
+   set the directory to show in the folder chooser dialog:
+
+	file-roller --default-dir=/path/to/show --add file1 file2 ..
+
+Use the --notify option to show a dialog that notifies the user that the
+operation has completed successfully and allows to open the created archive.

@@ -25,6 +25,7 @@ EXTRA_DIST = 			\
 	MAINTAINERS		\
 	NEWS			\
 	README			\
+	README_COMMANDLINE	\
 	file-roller.spec	\
 	file-roller.spec.in	\
 	intltool-merge.in	\
