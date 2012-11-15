@@ -276,6 +276,8 @@ sync_widgets_with_options (DialogData *data,
 {
 	if (directory == NULL)
 		directory = fr_window_get_add_default_dir (data->window);
+	if (directory == NULL)
+		directory = _g_file_get_home ();
 
 	if (files != NULL)
 		fr_file_selector_dialog_set_selected_files (FR_FILE_SELECTOR_DIALOG (data->dialog), files);

@@ -69,7 +69,9 @@ dlg_batch_add_files (FrWindow *window,
 	g_return_if_fail (file_list != NULL);
 
 	first_file = G_FILE (file_list->data);
-	parent = g_file_get_parent (first_file);
+	parent = _g_object_ref (fr_window_get_add_default_dir (window));
+	if (parent == NULL)
+		parent = g_file_get_parent (first_file);
 
 	filename = NULL;
 	if (file_list->next == NULL)

@@ -5390,7 +5390,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->action = FR_ACTION_NONE;
 
 	window->priv->open_default_dir = g_object_ref (_g_file_get_home ());
-	window->priv->add_default_dir = g_object_ref (_g_file_get_home ());
+	window->priv->add_default_dir = NULL;
 	window->priv->extract_default_dir = g_object_ref (_g_file_get_home ());
 
 	window->priv->give_focus_to_the_list = FALSE;
@@ -9099,10 +9099,7 @@ fr_window_set_add_default_dir (FrWindow *window,
 GFile *
 fr_window_get_add_default_dir (FrWindow *window)
 {
-	if (window->priv->add_default_dir == NULL)
-		return _g_file_get_home ();
-	else
-		return  window->priv->add_default_dir;
+	return  window->priv->add_default_dir;
 }
 
 
