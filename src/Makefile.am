@@ -201,7 +201,7 @@ fr-enum-types.c: typedefs.h
 		$^> xgen-$(@F) \
 	&& mv -f xgen-$(@F) fr-enum-types.c )
 
-RESOURCES = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies file-roller.gresource.xml)
+RESOURCES = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir=$(srcdir) $(srcdir)/file-roller.gresource.xml)
 
 fr-resources.c: file-roller.gresource.xml $(RESOURCES)
 	$(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name fr $(srcdir)/file-roller.gresource.xml
