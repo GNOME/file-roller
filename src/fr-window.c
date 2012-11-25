@@ -3534,7 +3534,7 @@ fr_window_get_selected_folder_in_tree_view (FrWindow *window)
 
 void
 fr_window_current_folder_activated (FrWindow *window,
-				   gboolean   from_sidebar)
+				    gboolean   from_sidebar)
 {
 	char *dir_path;
 
