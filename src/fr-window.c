@@ -3181,7 +3181,7 @@ get_dir_list_from_path (FrWindow *window,
 
 static GList *
 get_dir_list_from_file_data (FrWindow *window,
-				   FileData *fdata)
+			     FileData *fdata)
 {
 	char  *dirname;
 	GList *list;
