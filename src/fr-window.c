@@ -459,6 +459,7 @@ fr_window_clipboard_remove_file_list (FrWindow *window,
 	if (window->priv->copy_data->files == NULL) {
 		fr_clipboard_data_unref (window->priv->copy_data);
 		window->priv->copy_data = NULL;
+		gtk_clipboard_clear (gtk_widget_get_clipboard (GTK_WIDGET (window), FR_CLIPBOARD));
 	}
 }
 
@@ -4274,6 +4275,9 @@ get_selection_data_from_clipboard_data (FrWindow        *window,
 	GString *list;
 	char    *uri;
 	GList   *scan;
+
+	if (data == NULL)
+		return NULL;
 
 	list = g_string_new (NULL);
 
@@ -8270,12 +8274,14 @@ fr_clipboard_get (GtkClipboard     *clipboard,
 		return;
 
 	data = get_selection_data_from_clipboard_data (window, window->priv->copy_data);
-	gtk_selection_data_set (selection_data,
-				gtk_selection_data_get_target (selection_data),
-				8,
-				(guchar *) data,
-				strlen (data));
-	g_free (data);
+	if (data != NULL) {
+		gtk_selection_data_set (selection_data,
+					gtk_selection_data_get_target (selection_data),
+					8,
+					(guchar *) data,
+					strlen (data));
+		g_free (data);
+	}
 }
 
 
