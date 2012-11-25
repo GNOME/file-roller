@@ -596,6 +596,9 @@ fr_window_close (FrWindow *window)
 	if (window->priv->activity_ref > 0)
 		return;
 
+	if (window->priv->closing)
+		return;
+
 	window->priv->closing = TRUE;
 
 	if (gtk_widget_get_realized (GTK_WIDGET (window))) {
