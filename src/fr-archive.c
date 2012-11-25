@@ -848,6 +848,7 @@ fr_archive_list (FrArchive           *archive,
 		g_hash_table_remove_all (archive->files_hash);
 		_g_ptr_array_free_full (archive->files, (GFunc) file_data_free, NULL);
 		archive->files = g_ptr_array_sized_new (FILE_ARRAY_INITIAL_SIZE);
+		archive->n_regular_files = 0;
 	}
 
 	FR_ARCHIVE_GET_CLASS (archive)->list (archive, password, cancellable, callback, user_data);
