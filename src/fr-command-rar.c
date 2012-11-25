@@ -678,6 +678,7 @@ fr_command_rar_init (FrCommandRar *self)
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder      = TRUE;
 	base->propExtractCanJunkPaths      = TRUE;
+	base->propCanDeleteAllFiles        = FALSE;
 	base->propPassword                 = TRUE;
 	base->propTest                     = TRUE;
 	base->propListFromFile             = TRUE;

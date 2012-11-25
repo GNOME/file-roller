@@ -1029,6 +1029,7 @@ _fr_command_add (FrCommand      *self,
 
 		for (scan = new_file_list; scan != NULL; scan = scan->next) {
 			char *filename = scan->data;
+
 			if (find_file_in_archive (archive, filename))
 				del_list = g_list_prepend (del_list, filename);
 		}
@@ -2444,6 +2445,38 @@ fr_command_test_integrity (FrArchive           *archive,
 
 
 static void
+fr_command_rename__delete (FrArchive   *archive,
+		   	   GList      **file_list,
+		   	   gboolean     is_dir,
+		   	   gboolean     dir_in_archive,
+		   	   const char  *original_path)
+{
+	FrCommand *self = FR_COMMAND (archive);
+	gboolean   added_dir;
+
+	/* temporarily add the dir to rename to the list if it's stored in the
+	 * archive, this way it will be removed from the archive... */
+	added_dir = FALSE;
+	if (is_dir && dir_in_archive && ! g_list_find_custom (*file_list, original_path, (GCompareFunc) strcmp)) {
+		*file_list = g_list_prepend (*file_list, g_strdup (original_path));
+		added_dir = TRUE;
+	}
+
+	_fr_command_remove (self, *file_list, archive->compression);
+
+	/* ...and remove it from the list again */
+	if (added_dir) {
+		GList *tmp;
+
+		tmp = *file_list;
+		*file_list = g_list_remove_link (*file_list, tmp);
+
+		_g_string_list_free (tmp);
+	}
+}
+
+
+static void
 fr_command_rename (FrArchive           *archive,
 		   GList               *file_list,
 		   const char          *old_name,
@@ -2458,7 +2491,6 @@ fr_command_rename (FrArchive           *archive,
 {
 	FrCommand *self = FR_COMMAND (archive);
 	GFile     *tmp_dir;
-	gboolean   added_dir;
 	char      *new_dirname;
 	GList     *new_file_list;
 	GList     *scan;
@@ -2473,6 +2505,9 @@ fr_command_rename (FrArchive           *archive,
 	tmp_dir = _g_file_get_temp_work_dir (NULL);
 
 	fr_process_clear (self->process);
+
+	/* extract the files to rename */
+
 	_fr_command_extract (self,
 			     file_list,
 			     tmp_dir,
@@ -2482,26 +2517,17 @@ fr_command_rename (FrArchive           *archive,
 			     FALSE,
 			     archive->password);
 
-	/* temporarily add the dir to rename to the list if it's stored in the
-	 * archive, this way it will be removed from the archive... */
-	added_dir = FALSE;
-	if (is_dir && dir_in_archive && ! g_list_find_custom (file_list, original_path, (GCompareFunc) strcmp)) {
-		file_list = g_list_prepend (file_list, g_strdup (original_path));
-		added_dir = TRUE;
-	}
+	/* if the command can delete all the files in the archive without
+	 * deleting the archive itself ('rar' deletes the archive), delete the
+	 * files here, that is before adding the renamed files to the archive,
+	 * to make the operation faster. */
 
-	_fr_command_remove (self, file_list, archive->compression);
-
-	/* ...and remove it from the list again */
-	if (added_dir) {
-		GList *tmp;
-
-		tmp = file_list;
-		file_list = g_list_remove_link (file_list, tmp);
-
-		g_free (tmp->data);
-		g_list_free (tmp);
-	}
+	if (archive->propCanDeleteAllFiles)
+		fr_command_rename__delete (archive,
+					   &file_list,
+					   is_dir,
+					   dir_in_archive,
+					   original_path);
 
 	/* rename the files. */
 
@@ -2594,6 +2620,17 @@ fr_command_rename (FrArchive           *archive,
 	g_free (new_dirname);
 	_g_string_list_free (new_file_list);
 
+	/* if the command cannot delete all the files in the archive without
+	 * deleting the archive itself ('rar' deletes the archive), delete
+	 * the old files here to avoid a potential error. */
+
+	if (! archive->propCanDeleteAllFiles)
+		fr_command_rename__delete (archive,
+					   &file_list,
+					   is_dir,
+					   dir_in_archive,
+					   original_path);
+
 	/* remove the tmp dir */
 
 	fr_process_begin_command (self->process, "rm");
@@ -2658,6 +2695,7 @@ fr_command_paste_clipboard (FrArchive           *archive,
 		    && (old_name[strlen (old_name) - 1] != '/'))
 		{
 			fr_process_begin_command (command->process, "mv");
+			fr_process_set_ignore_error (command->process, TRUE);
 			fr_process_set_working_dir_file (command->process, tmp_dir);
 			fr_process_add_arg (command->process, "-f");
 			if (old_name[0] == '/')

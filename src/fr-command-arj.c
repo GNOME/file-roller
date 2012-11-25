@@ -397,6 +397,7 @@ fr_command_arj_init (FrCommandArj *self)
 	base->propExtractCanAvoidOverwrite = TRUE;
 	base->propExtractCanSkipOlder      = TRUE;
 	base->propExtractCanJunkPaths      = TRUE;
+	base->propCanDeleteAllFiles        = FALSE;
 	base->propPassword                 = TRUE;
 	base->propTest                     = TRUE;
 

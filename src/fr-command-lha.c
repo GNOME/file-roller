@@ -375,6 +375,7 @@ fr_command_lha_init (FrCommandLha *self)
 	base->propExtractCanAvoidOverwrite = FALSE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = TRUE;
+	base->propCanDeleteAllFiles        = FALSE;
 	base->propPassword                 = FALSE;
 	base->propTest                     = FALSE;
 }

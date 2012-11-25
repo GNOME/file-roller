@@ -167,6 +167,14 @@ struct _FrArchive {
 	 */
 	guint          propCanDeleteNonEmptyFolders : 1;
 
+	/* propCanDeleteAllFiles:
+	 *
+	 * TRUE if the command does not delete the archive itself if all the
+	 * files in the archive are deleted.
+	 */
+
+	guint          propCanDeleteAllFiles : 1;
+
 	/* propCanExtractNonEmptyFolders:
 	 *
 	 * is used to overcome an issue with tar.  For example if

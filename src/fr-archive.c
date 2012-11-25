@@ -457,6 +457,7 @@ fr_archive_init (FrArchive *self)
         self->propTest = FALSE;
         self->propCanExtractAll = TRUE;
         self->propCanDeleteNonEmptyFolders = TRUE;
+        self->propCanDeleteAllFiles = TRUE;
         self->propCanExtractNonEmptyFolders = TRUE;
         self->propListFromFile = FALSE;
 
