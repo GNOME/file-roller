@@ -814,7 +814,7 @@ check_child (gpointer data)
 
 	if (info->ignore_error) {
 		fr_clear_error (&exec_data->error);
-		debug (DEBUG_INFO, "[ignore error]\n");
+		debug (DEBUG_INFO, "[error ignored]\n");
 	}
 	else if (exec_data->error == NULL) {
 		if (WIFEXITED (status)) {
@@ -960,6 +960,9 @@ execute_current_command (ExecuteData *exec_data)
 
 		if (info->dir != NULL)
 			g_print ("\tcd %s\n", info->dir);
+
+		if (info->ignore_error)
+			g_print ("\t[ignore error]\n");
 
 		g_print ("\t");
 		for (j = 0; j < i; j++)
