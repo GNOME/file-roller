@@ -39,7 +39,7 @@ enum {
 
 typedef struct {
 	FrWindow     *window;
-	GtkBuilder *builder;
+	GtkBuilder   *builder;
 
 	GtkWidget    *update_file_dialog;
 	GtkWidget    *update_file_primary_text_label;
@@ -62,7 +62,8 @@ dlg_update__destroy_cb (GtkWidget  *widget,
 		        DialogData *data)
 {
 	fr_window_update_dialog_closed (data->window);
-	g_object_unref (G_OBJECT (data->builder));
+	g_object_unref (data->window);
+	g_object_unref (data->builder);
 	if (data->file_list != NULL)
 		g_list_free (data->file_list);
 	g_free (data);
@@ -286,7 +287,7 @@ dlg_update (FrWindow *window)
 	}
 
 	data->file_list = NULL;
-	data->window = window;
+	data->window = g_object_ref (window);
 
 	/* Get the widgets. */
 
