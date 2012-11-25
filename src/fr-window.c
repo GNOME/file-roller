@@ -855,6 +855,67 @@ fr_window_history_print (FrWindow *window)
 #endif
 
 
+static gboolean
+fr_window_dir_exists_in_archive (FrWindow   *window,
+				 const char *dir_name)
+{
+	int dir_name_len;
+	int i;
+
+	if (dir_name == NULL)
+		return FALSE;
+
+	dir_name_len = strlen (dir_name);
+	if (dir_name_len == 0)
+		return TRUE;
+
+	if (strcmp (dir_name, "/") == 0)
+		return TRUE;
+
+	for (i = 0; i < window->archive->files->len; i++) {
+		FileData *fdata = g_ptr_array_index (window->archive->files, i);
+
+		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0) {
+			return TRUE;
+		}
+		else if (fdata->dir
+			 && (fdata->full_path[strlen (fdata->full_path) - 1] != '/')
+			 && (strncmp (dir_name, fdata->full_path, dir_name_len - 1) == 0))
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+
+static void
+fr_window_update_history (FrWindow *window)
+{
+	GList *scan;
+
+	/* remove the paths not present in the archive */
+
+	for (scan = window->priv->history; scan; /* void */) {
+		GList *next = scan->next;
+		char  *path = scan->data;
+
+		if (! fr_window_dir_exists_in_archive (window, path)) {
+			if (scan == window->priv->history_current)
+				window->priv->history_current = NULL;
+			window->priv->history = g_list_remove_link (window->priv->history, scan);
+			_g_string_list_free (scan);
+		}
+
+		scan = next;
+	}
+
+	if (window->priv->history_current == NULL)
+		window->priv->history_current = window->priv->history;
+}
+
+
 static void
 fr_window_history_add (FrWindow   *window,
 		       const char *path)
@@ -1375,41 +1436,6 @@ fr_window_compute_list_names (FrWindow  *window,
 	}
 
 	g_hash_table_destroy (names_hash);
-}
-
-
-static gboolean
-fr_window_dir_exists_in_archive (FrWindow   *window,
-				 const char *dir_name)
-{
-	int dir_name_len;
-	int i;
-
-	if (dir_name == NULL)
-		return FALSE;
-
-	dir_name_len = strlen (dir_name);
-	if (dir_name_len == 0)
-		return TRUE;
-
-	if (strcmp (dir_name, "/") == 0)
-		return TRUE;
-
-	for (i = 0; i < window->archive->files->len; i++) {
-		FileData *fdata = g_ptr_array_index (window->archive->files, i);
-
-		if (strncmp (dir_name, fdata->full_path, dir_name_len) == 0) {
-			return TRUE;
-		}
-		else if (fdata->dir
-			 && (fdata->full_path[strlen (fdata->full_path) - 1] != '/')
-			 && (strncmp (dir_name, fdata->full_path, dir_name_len - 1) == 0))
-		{
-			return TRUE;
-		}
-	}
-
-	return FALSE;
 }
 
 
@@ -3010,9 +3036,11 @@ _archive_operation_completed (FrWindow *window,
 		if (! is_temp_dir)
 			fr_window_add_to_recent_list (window, window->priv->archive_file);
 
+		fr_window_update_history (window);
 		fr_window_update_title (window);
 		fr_window_go_to_location (window, fr_window_get_current_location (window), TRUE);
 		fr_window_update_dir_tree (window);
+
 		if (! window->priv->batch_mode)
 			gtk_window_present (GTK_WINDOW (window));
 		break;
