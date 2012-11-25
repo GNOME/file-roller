@@ -69,7 +69,7 @@ ok_clicked_cb (GtkWidget  *widget,
 
 	if (selected_files) {
 		file_list = data->selected_files;
-		data->selected_files = NULL;       /* do not the list when destroying the dialog. */
+		data->selected_files = NULL;       /* do not free the list when destroying the dialog. */
 	}
 	else if (pattern_files) {
 		const char *pattern;
