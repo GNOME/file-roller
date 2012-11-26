@@ -422,6 +422,8 @@ fr_command_rar_delete (FrCommand  *comm,
 	fr_process_begin_command (comm->process, "rar");
 	fr_process_add_arg (comm->process, "d");
 
+	add_password_arg (comm, FR_ARCHIVE (comm)->password, FALSE);
+
 	fr_process_add_arg (comm->process, "--");
 	fr_process_add_arg (comm->process, comm->filename);
 
