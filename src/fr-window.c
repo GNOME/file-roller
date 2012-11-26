@@ -8411,6 +8411,11 @@ _paste_from_archive_operation_completed (FrWindow *window,
 	_handle_archive_operation_error (window, archive, action, error, NULL, NULL);
 
 	if (error != NULL) {
+		if (window->priv->second_password != NULL) {
+			g_free (window->priv->second_password);
+			window->priv->second_password = NULL;
+		}
+
 		fr_clipboard_data_unref (window->priv->clipboard_data);
 		window->priv->clipboard_data = NULL;
 	}
@@ -8418,49 +8423,20 @@ _paste_from_archive_operation_completed (FrWindow *window,
 
 
 static void
-paste_from_archive_paste_clipboard_ready_cb (GObject      *source_object,
-					     GAsyncResult *result,
-					     gpointer      user_data)
+paste_from_archive_completed_successfully (FrWindow *window)
 {
-	FrWindow *window = user_data;
-	GError   *error = NULL;
-
-	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
-	_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, error);
+	_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, NULL);
 
 	fr_clipboard_data_unref (window->priv->clipboard_data);
 	window->priv->clipboard_data = NULL;
 
-	if (error == NULL)
-		fr_window_archive_reload (window);
-
-	_g_error_free (error);
-}
-
-
-static void
-add_pasted_files (FrWindow        *window,
-		  FrClipboardData *data)
-{
 	if (window->priv->second_password != NULL) {
 		g_free (window->priv->second_password);
 		window->priv->second_password = NULL;
 	}
 
-	fr_archive_paste_clipboard (window->archive,
-				    data->file,
-				    data->password,
-				    window->priv->encrypt_header,
-				    window->priv->compression,
-				    window->priv->volume_size,
-				    data->op,
-				    data->base_dir,
-				    data->files,
-				    data->tmp_dir,
-				    data->current_dir,
-				    window->priv->cancellable,
-				    paste_from_archive_paste_clipboard_ready_cb,
-				    window);
+	window->priv->archive_new = FALSE;
+	fr_window_archive_reload (window);
 }
 
 
@@ -8478,14 +8454,14 @@ paste_from_archive_remove_ready_cb (GObject      *source_object,
 		return;
 	}
 
-	add_pasted_files (window, window->priv->clipboard_data);
+	paste_from_archive_completed_successfully (window);
 }
 
 
 static void
-paste_from_archive_extract_ready_cb (GObject      *source_object,
-				     GAsyncResult *result,
-				     gpointer      user_data)
+paste_from_archive_paste_clipboard_ready_cb (GObject      *source_object,
+					     GAsyncResult *result,
+					     gpointer      user_data)
 {
 	FrWindow *window = user_data;
 	GError   *error = NULL;
@@ -8506,7 +8482,38 @@ paste_from_archive_extract_ready_cb (GObject      *source_object,
 				   window);
 	}
 	else
-		add_pasted_files (window, window->priv->clipboard_data);
+		paste_from_archive_completed_successfully (window);
+}
+
+
+static void
+paste_from_archive_extract_ready_cb (GObject      *source_object,
+				     GAsyncResult *result,
+				     gpointer      user_data)
+{
+	FrWindow *window = user_data;
+	GError   *error = NULL;
+
+	if (! fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error)) {
+		_paste_from_archive_operation_completed (window, FR_ACTION_PASTING_FILES, error);
+		g_error_free (error);
+		return;
+	}
+
+	fr_archive_paste_clipboard (window->archive,
+				    window->priv->clipboard_data->file,
+				    window->priv->password,
+				    window->priv->encrypt_header,
+				    window->priv->compression,
+				    window->priv->volume_size,
+				    window->priv->clipboard_data->op,
+				    window->priv->clipboard_data->base_dir,
+				    window->priv->clipboard_data->files,
+				    window->priv->clipboard_data->tmp_dir,
+				    window->priv->clipboard_data->current_dir,
+				    window->priv->cancellable,
+				    paste_from_archive_paste_clipboard_ready_cb,
+				    window);
 }
 
 
