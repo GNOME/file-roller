@@ -1153,10 +1153,14 @@ process_ready_after_changing_archive (GObject      *source_object,
 				      gpointer      user_data)
 {
 	XferData *xfer_data = user_data;
-	FrError  *error = NULL;
+	GError   *error = NULL;
 
-	if (! fr_process_execute_finish (FR_PROCESS (source_object), result, &error)) {
-		g_simple_async_result_set_from_error (xfer_data->result, error->gerror);
+	if (! fr_command_handle_process_error (FR_COMMAND (xfer_data->archive), result, &error))
+		/* command restarted */
+		return;
+
+	if (error != NULL) {
+		g_simple_async_result_set_from_error (xfer_data->result, error);
 	}
 	else {
 		FrArchive *archive = xfer_data->archive;
@@ -1183,7 +1187,7 @@ process_ready_after_changing_archive (GObject      *source_object,
 
 	g_simple_async_result_complete_in_idle (xfer_data->result);
 
-	fr_error_free (error);
+	g_clear_error (&error);
 	xfer_data_free (xfer_data);
 }
 
