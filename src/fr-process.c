@@ -812,7 +812,17 @@ check_child (gpointer data)
 		}
 	}
 
-	if (info->ignore_error) {
+	if (info->ignore_error && (exec_data->error != NULL)) {
+#ifdef DEBUG
+			{
+				GList *scan;
+
+				g_print ("** ERROR **\n");
+				g_print ("%s\n", exec_data->error->gerror->message);
+				for (scan = process->err.raw; scan; scan = scan->next)
+					g_print ("%s\n", (char *)scan->data);
+			}
+#endif
 		fr_clear_error (&exec_data->error);
 		debug (DEBUG_INFO, "[error ignored]\n");
 	}
