@@ -152,8 +152,11 @@ process_line (char     *line,
 					fdata->name = _g_path_get_dir_name (fdata->full_path);
 					fdata->dir = TRUE;
 				}
-				else
+				else {
 					fdata->name = g_strdup (_g_path_get_basename (fdata->full_path));
+					if (fields[5][0] == 'l')
+						fdata->link = g_strdup (_g_path_get_basename (fdata->full_path));
+				}
 
 				fr_archive_add_file (FR_ARCHIVE (comm), fdata);
 				rar_comm->fdata = NULL;
