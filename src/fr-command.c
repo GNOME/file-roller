@@ -1109,6 +1109,7 @@ _fr_command_add (FrCommand      *self,
 		if (use_tmp_subdirectory) {
 			fr_process_begin_command (self->process, "mv");
 			fr_process_add_arg (self->process, "-f");
+			fr_process_add_arg (self->process, "--");
 			fr_process_add_arg (self->process, tmp_archive_filename);
 			fr_process_add_arg (self->process, archive_filename);
 			fr_process_end_command (self->process);
@@ -1657,6 +1658,7 @@ _fr_command_remove (FrCommand     *self,
 
 	fr_process_begin_command (self->process, "mv");
 	fr_process_add_arg (self->process, "-f");
+	fr_process_add_arg (self->process, "--");
 	fr_process_add_arg (self->process, tmp_archive_filename);
 	fr_process_add_arg (self->process, archive_filename);
 	fr_process_end_command (self->process);
@@ -1771,6 +1773,7 @@ move_files_to_dir (FrCommand *self,
 		fr_process_add_arg (self->process, "-f");
 	else
 		fr_process_add_arg (self->process, "-n");
+	fr_process_add_arg (self->process, "--");
 	for (scan = list; scan; scan = scan->next) {
 		char *filename = scan->data;
 
@@ -2546,6 +2549,7 @@ fr_command_rename (FrArchive           *archive,
 
 		fr_process_begin_command (self->process, "mv");
 		fr_process_add_arg (self->process, "-f");
+		fr_process_add_arg (self->process, "--");
 		fr_process_add_arg_file (self->process, old_file);
 		fr_process_add_arg_file (self->process, new_file);
 		fr_process_end_command (self->process);
@@ -2571,6 +2575,7 @@ fr_command_rename (FrArchive           *archive,
 		if (! is_dir) {
 			fr_process_begin_command (self->process, "mv");
 			fr_process_add_arg (self->process, "-f");
+			fr_process_add_arg (self->process, "--");
 			fr_process_add_arg_file (self->process, old_file);
 			fr_process_add_arg_file (self->process, new_file);
 			fr_process_end_command (self->process);
@@ -2702,6 +2707,7 @@ fr_command_paste_clipboard (FrArchive           *archive,
 			fr_process_set_ignore_error (command->process, TRUE);
 			fr_process_set_working_dir_file (command->process, tmp_dir);
 			fr_process_add_arg (command->process, "-f");
+			fr_process_add_arg (command->process, "--");
 			if (old_name[0] == '/')
 				old_name = old_name + 1;
 			fr_process_add_arg (command->process, old_name);

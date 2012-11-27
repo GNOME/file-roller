@@ -695,6 +695,7 @@ fr_command_tar_recompress (FrCommand *comm)
 
 		fr_process_begin_command (comm->process, "mv");
 		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "--");
 		fr_process_add_arg (comm->process, new_name);
 		fr_process_add_arg (comm->process, comm->filename);
 		fr_process_end_command (comm->process);
@@ -862,6 +863,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		if (archive_exists) {
 			fr_process_begin_command (comm->process, "mv");
 			fr_process_add_arg (comm->process, "-f");
+			fr_process_add_arg (comm->process, "--");
 			fr_process_add_arg (comm->process, comm->filename);
 			fr_process_add_arg (comm->process, tmp_name);
 			fr_process_end_command (comm->process);
