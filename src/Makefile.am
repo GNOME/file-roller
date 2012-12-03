@@ -57,6 +57,8 @@ BUILT_SOURCES =			\
 COMMON_SOURCES = 			\
 	actions.h			\
 	actions.c			\
+	app-menu.c			\
+	app-menu.h			\
 	dlg-add.c			\
 	dlg-add.h			\
 	dlg-ask-password.c		\
@@ -84,6 +86,8 @@ COMMON_SOURCES = 			\
 	file-data.h			\
 	file-utils.c			\
 	file-utils.h			\
+	fr-application.c		\
+	fr-application.h		\
 	fr-archive.c			\
 	fr-archive.h			\
 	fr-command.c			\
