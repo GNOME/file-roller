@@ -1730,6 +1730,16 @@ get_tree_iter_from_path (FrWindow    *window,
 
 
 static void
+fr_window_deactivate_filter (FrWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->actions, "Find");
+	g_object_set (action, "active", FALSE, NULL);
+}
+
+
+static void
 fr_window_update_current_location (FrWindow *window)
 {
 	const char *current_dir = fr_window_get_current_location (window);
@@ -1752,6 +1762,8 @@ fr_window_update_current_location (FrWindow *window)
 	gtk_widget_set_sensitive (window->priv->location_entry, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->location_label, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->filter_entry, window->priv->archive_present);
+
+	fr_window_deactivate_filter (window);
 
 #if 0
 	fr_window_history_print (window);
@@ -1900,19 +1912,6 @@ fr_window_update_dir_tree (FrWindow *window)
 	g_ptr_array_free (dirs, TRUE);
 
 	fr_window_update_current_location (window);
-}
-
-
-static void
-fr_window_update_filter_bar_visibility (FrWindow *window)
-{
-	const char *filter;
-
-	filter = gtk_entry_get_text (GTK_ENTRY (window->priv->filter_entry));
-	if ((filter == NULL) || (*filter == '\0'))
-		gtk_widget_hide (window->priv->filter_bar);
-	else
-		gtk_widget_show (window->priv->filter_bar);
 }
 
 
@@ -4497,24 +4496,6 @@ fr_window_update_columns_visibility (FrWindow *window)
 }
 
 
-static void
-fr_window_deactivate_filter (FrWindow *window)
-{
-	window->priv->filter_mode = FALSE;
-	window->priv->list_mode = window->priv->last_list_mode;
-
-	gtk_entry_set_text (GTK_ENTRY (window->priv->filter_entry), "");
-	fr_window_update_filter_bar_visibility (window);
-
-	gtk_list_store_clear (window->priv->list_store);
-
-	fr_window_update_columns_visibility (window);
-	fr_window_update_file_list (window, TRUE);
-	fr_window_update_dir_tree (window);
-	fr_window_update_current_location (window);
-}
-
-
 static gboolean
 key_press_cb (GtkWidget   *widget,
 	      GdkEventKey *event,
@@ -5036,7 +5017,7 @@ fr_window_show_cb (GtkWidget *widget,
 	window->priv->view_folders = g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_FOLDERS);
 	set_active (window, "ViewFolders", window->priv->view_folders);
 
-	fr_window_update_filter_bar_visibility (window);
+	gtk_widget_hide (window->priv->filter_bar);
 
 	return TRUE;
 }
@@ -5275,7 +5256,7 @@ fr_window_activate_filter (FrWindow *window)
 	GtkTreeView       *tree_view = GTK_TREE_VIEW (window->priv->list_view);
 	GtkTreeViewColumn *column;
 
-	fr_window_update_filter_bar_visibility (window);
+	gtk_widget_show (window->priv->filter_bar);
 	window->priv->list_mode = FR_WINDOW_LIST_MODE_FLAT;
 
 	gtk_list_store_clear (window->priv->list_store);
@@ -5332,15 +5313,15 @@ fr_window_attach (FrWindow      *window,
 	case FR_WINDOW_AREA_LOCATIONBAR:
 		position = 2;
 		break;
-	case FR_WINDOW_AREA_CONTENTS:
+	case FR_WINDOW_AREA_FILTERBAR:
 		position = 3;
+		break;
+	case FR_WINDOW_AREA_CONTENTS:
+		position = 4;
 		if (window->priv->contents != NULL)
 			gtk_widget_destroy (window->priv->contents);
 		window->priv->contents = child;
 		gtk_widget_set_vexpand (child, TRUE);
-		break;
-	case FR_WINDOW_AREA_FILTERBAR:
-		position = 4;
 		break;
 	case FR_WINDOW_AREA_STATUSBAR:
 		position = 5;
@@ -5387,6 +5368,7 @@ fr_window_construct (FrWindow *window)
 	GtkAction          *action;
 	GtkAction          *other_actions_action;
 	GtkUIManager       *ui;
+	GtkSizeGroup       *toolbar_size_group;
 	GError             *error = NULL;
 	const char * const *schemas;
 
@@ -5598,6 +5580,7 @@ fr_window_construct (FrWindow *window)
 	/* filter bar */
 
 	window->priv->filter_bar = filter_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	g_object_set (window->priv->filter_bar, "margin-left", 6, NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (filter_box), 3);
 	fr_window_attach (FR_WINDOW (window), window->priv->filter_bar, FR_WINDOW_AREA_FILTERBAR);
 
@@ -5884,6 +5867,12 @@ fr_window_construct (FrWindow *window)
 		gtk_widget_show (window->priv->statusbar);
 	else
 		gtk_widget_hide (window->priv->statusbar);
+
+	/**/
+
+	toolbar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
+	gtk_size_group_add_widget (toolbar_size_group, window->priv->location_bar);
+	gtk_size_group_add_widget (toolbar_size_group, window->priv->filter_bar);
 
 	/**/
 
@@ -7195,11 +7184,30 @@ fr_window_get_list_store (FrWindow *window)
 
 
 void
-fr_window_find (FrWindow *window)
+fr_window_find (FrWindow *window,
+		gboolean  active)
 {
-	window->priv->filter_mode = TRUE;
-	gtk_widget_show (window->priv->filter_bar);
-	gtk_widget_grab_focus (window->priv->filter_entry);
+	if (active) {
+		window->priv->filter_mode = TRUE;
+		gtk_widget_show (window->priv->filter_bar);
+		gtk_widget_hide (window->priv->location_bar);
+		gtk_widget_grab_focus (window->priv->filter_entry);
+	}
+	else {
+		window->priv->filter_mode = FALSE;
+		window->priv->list_mode = window->priv->last_list_mode;
+
+		gtk_entry_set_text (GTK_ENTRY (window->priv->filter_entry), "");
+		gtk_widget_hide (window->priv->filter_bar);
+
+		gtk_list_store_clear (window->priv->list_store);
+
+		fr_window_update_columns_visibility (window);
+		fr_window_update_file_list (window, TRUE);
+		fr_window_update_dir_tree (window);
+		fr_window_update_current_location (window);
+		fr_window_go_to_location (window, gtk_entry_get_text (GTK_ENTRY (window->priv->location_entry)), FALSE);
+	}
 }
 
 

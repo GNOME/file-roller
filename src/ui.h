@@ -114,11 +114,6 @@ static GtkActionEntry action_entries[] = {
 	  N_("Extract"), NULL,
 	  N_("Extract files from the archive"),
 	  G_CALLBACK (activate_action_extract) },
-	{ "Find", GTK_STOCK_FIND,
-	  N_("Find…"), NULL,
-	  NULL,
-	  G_CALLBACK (activate_action_find) },
-
 	{ "New", GTK_STOCK_NEW,
 	  N_("New…"), NULL,
 	  N_("Create a new archive"),
@@ -213,6 +208,12 @@ static GtkToggleActionEntry action_toggle_entries[] = {
 	  N_("View the folders pane"),
 	  G_CALLBACK (activate_action_view_folders),
 	  FALSE },
+	{ "Find", GTK_STOCK_FIND,
+	  N_("Find…"), NULL,
+	  N_("Find files by name"),
+	  G_CALLBACK (activate_action_find),
+	  FALSE },
+
 };
 static guint n_action_toggle_entries = G_N_ELEMENTS (action_toggle_entries);
 

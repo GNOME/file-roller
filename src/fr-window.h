@@ -208,7 +208,8 @@ GList *         fr_window_get_selection                (FrWindow    *window,
 						        gboolean     from_sidebar,
 						        char       **return_base_dir);
 GtkTreeModel *  fr_window_get_list_store               (FrWindow    *window);
-void            fr_window_find                         (FrWindow    *window);
+void            fr_window_find                         (FrWindow    *window,
+							gboolean     active);
 void            fr_window_select_all                   (FrWindow    *window);
 void            fr_window_unselect_all                 (FrWindow    *window);
 

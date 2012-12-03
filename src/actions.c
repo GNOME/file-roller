@@ -312,7 +312,7 @@ activate_action_find (GtkAction *action,
 {
 	FrWindow *window = data;
 
-	fr_window_find (window);
+	fr_window_find (window, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
 
 
