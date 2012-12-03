@@ -42,7 +42,7 @@ typedef enum { /*< skip >*/
 	FR_WINDOW_SORT_BY_PATH = 4
 } FrWindowSortMethod;
 
-typedef enum { /*< skip >*/
+typedef enum {
 	FR_WINDOW_LIST_MODE_FLAT,
 	FR_WINDOW_LIST_MODE_AS_DIR
 } FrWindowListMode;

@@ -52,6 +52,13 @@ void                _g_clear_object                (gpointer             p);
 GList *             _g_object_list_ref             (GList               *list);
 void                _g_object_list_unref           (GList               *list);
 
+/* enum */
+
+GEnumValue *        _g_enum_type_get_value         (GType                enum_type,
+						    int                  value);
+GEnumValue *        _g_enum_type_get_value_by_nick (GType                enum_type,
+						    const char          *nick);
+
 /* error */
 
 void                _g_error_free                  (GError              *error);

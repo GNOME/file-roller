@@ -5090,6 +5090,17 @@ pref_show_field_changed (GSettings  *settings,
 
 
 static void
+pref_list_mode_changed (GSettings  *settings,
+			const char *key,
+			gpointer    user_data)
+{
+	FrWindow *window = user_data;
+
+	fr_window_set_list_mode (window, g_settings_get_enum (settings, key));
+}
+
+
+static void
 pref_click_policy_changed (GSettings  *settings,
 		  	   const char *key,
 		  	   gpointer    user_data)
@@ -5905,6 +5916,10 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (window->priv->settings_listing,
 			  "changed::" PREF_LISTING_SHOW_PATH,
 			  G_CALLBACK (pref_show_field_changed),
+			  window);
+	g_signal_connect (window->priv->settings_listing,
+			  "changed::" PREF_LISTING_LIST_MODE,
+			  G_CALLBACK (pref_list_mode_changed),
 			  window);
 
 	if (window->priv->settings_nautilus)
@@ -7151,6 +7166,9 @@ fr_window_set_list_mode (FrWindow         *window,
 			 FrWindowListMode  list_mode)
 {
 	g_return_if_fail (window != NULL);
+
+	if (list_mode == window->priv->list_mode)
+		return;
 
 	window->priv->list_mode = window->priv->last_list_mode = list_mode;
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {

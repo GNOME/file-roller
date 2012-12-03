@@ -79,6 +79,38 @@ _g_object_list_unref (GList *list)
 	g_list_free (list);
 }
 
+/* enum */
+
+
+GEnumValue *
+_g_enum_type_get_value (GType enum_type,
+			int   value)
+{
+	GEnumClass *class;
+	GEnumValue *enum_value;
+
+	class = G_ENUM_CLASS (g_type_class_ref (enum_type));
+	enum_value = g_enum_get_value (class, value);
+	g_type_class_unref (class);
+
+	return enum_value;
+}
+
+
+GEnumValue *
+_g_enum_type_get_value_by_nick (GType       enum_type,
+				const char *nick)
+{
+	GEnumClass *class;
+	GEnumValue *enum_value;
+
+	class = G_ENUM_CLASS (g_type_class_ref (enum_type));
+	enum_value = g_enum_get_value_by_nick (class, nick);
+	g_type_class_unref (class);
+
+	return enum_value;
+}
+
 
 /* error */
 
