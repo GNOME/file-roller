@@ -148,6 +148,10 @@ COMMON_SOURCES = 			\
 	gth-icon-cache.h		\
 	gth-menu-button.c		\
 	gth-menu-button.h		\
+	gth-toggle-menu-action.c	\
+	gth-toggle-menu-action.h	\
+	gth-toggle-menu-tool-button.c	\
+	gth-toggle-menu-tool-button.h	\
 	gtk-utils.c			\
 	gtk-utils.h			\
 	java-utils.c			\

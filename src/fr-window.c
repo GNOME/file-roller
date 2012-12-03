@@ -53,6 +53,7 @@
 #include "file-utils.h"
 #include "glib-utils.h"
 #include "gth-icon-cache.h"
+#include "gth-toggle-menu-action.h"
 #include "fr-init.h"
 #include "gtk-utils.h"
 #include "open-file.h"
@@ -5384,6 +5385,7 @@ fr_window_construct (FrWindow *window)
 	GtkTreeSelection   *selection;
 	GtkActionGroup     *actions;
 	GtkAction          *action;
+	GtkAction          *other_actions_action;
 	GtkUIManager       *ui;
 	GError             *error = NULL;
 	const char * const *schemas;
@@ -5720,6 +5722,17 @@ fr_window_construct (FrWindow *window)
 	gtk_action_group_add_action (actions, action);
 	g_object_unref (action);
 
+	/* menu actions */
+
+	other_actions_action = action = g_object_new (GTH_TYPE_TOGGLE_MENU_ACTION,
+			       "name", "OtherActions",
+			       /*"label", _("Other Actions"),*/
+			       "tooltip", _("Other actions"),
+			       /*"stock-id", GTK_STOCK_EXECUTE,*/
+			       "menu-halign", GTK_ALIGN_CENTER,
+			       NULL);
+	gtk_action_group_add_action (actions, action);
+
 	/* other actions */
 
 	gtk_action_group_set_translation_domain (actions, NULL);
@@ -5752,14 +5765,16 @@ fr_window_construct (FrWindow *window)
 				 GDK_KEY_q, GDK_CONTROL_MASK, 0,
 				 g_cclosure_new_swap (G_CALLBACK (fr_window_close), window, NULL));
 
-
 	if (! gtk_ui_manager_add_ui_from_resource (ui, "/org/gnome/FileRoller/ui/menus-toolbars.ui", &error)) {
 		g_message ("building menus failed: %s", error->message);
 		g_error_free (error);
 	}
 
+	g_object_set (other_actions_action, "menu", gtk_ui_manager_get_widget (ui, "/OtherActionsMenu"), NULL);
+	g_object_unref (other_actions_action);
+
 	menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
-	fr_window_attach (FR_WINDOW (window), menubar, FR_WINDOW_AREA_MENUBAR);
+	/* fr_window_attach (FR_WINDOW (window), menubar, FR_WINDOW_AREA_MENUBAR); FIXME */
 	gtk_widget_show (menubar);
 
 	window->priv->toolbar = toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");

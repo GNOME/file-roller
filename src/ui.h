@@ -33,6 +33,7 @@ static GtkActionEntry action_entries[] = {
 	{ "ViewMenu", NULL, N_("_View") },
 	{ "HelpMenu", NULL, N_("_Help") },
 	{ "ArrangeFilesMenu", NULL, N_("_Arrange Files") },
+	{ "OtherActionsMenu", NULL, NULL },
 
 	{ "About", GTK_STOCK_ABOUT,
 	  NULL, NULL,
