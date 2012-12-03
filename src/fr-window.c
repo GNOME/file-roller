@@ -5835,19 +5835,10 @@ fr_window_construct (FrWindow *window)
 	window->priv->progress_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->priv->statusbar), "progress");
 
 	statusbar = GTK_STATUSBAR (window->priv->statusbar);
-#if GTK_CHECK_VERSION (2, 19, 1)
 	statusbar_box = gtk_statusbar_get_message_area (statusbar);
 	gtk_box_set_homogeneous (GTK_BOX (statusbar_box), FALSE);
 	gtk_box_set_spacing (GTK_BOX (statusbar_box), 4);
 	gtk_box_set_child_packing (GTK_BOX (statusbar_box), gtk_statusbar_get_message_area (statusbar), TRUE, TRUE, 0, GTK_PACK_START );
-#else
-	statusbar_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-	g_object_ref (statusbar->label);
-	gtk_container_remove (GTK_CONTAINER (statusbar->frame), statusbar->label);
-	gtk_box_pack_start (GTK_BOX (statusbar_box), statusbar->label, TRUE, TRUE, 0);
-	g_object_unref (statusbar->label);
-	gtk_container_add (GTK_CONTAINER (statusbar->frame), statusbar_box);
-#endif
 
 	window->priv->progress_bar = gtk_progress_bar_new ();
 	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->priv->progress_bar), ACTIVITY_PULSE_STEP);
