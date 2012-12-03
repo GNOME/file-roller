@@ -40,13 +40,13 @@ typedef struct _GthMenuButtonPrivate GthMenuButtonPrivate;
 
 struct _GthMenuButton
 {
-	GtkToggleButton parent;
+	GtkMenuButton parent;
 	GthMenuButtonPrivate *priv;
 };
 
 struct _GthMenuButtonClass
 {
-	GtkToggleButtonClass parent_class;
+	GtkMenuButtonClass parent_class;
 
 	/*< signals >*/
 
