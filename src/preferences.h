@@ -49,7 +49,6 @@
 #define PREF_UI_WINDOW_HEIGHT             "window-height"
 #define PREF_UI_SIDEBAR_WIDTH             "sidebar-width"
 #define PREF_UI_HISTORY_LEN               "history-len"
-#define PREF_UI_VIEW_TOOLBAR              "view-toolbar"
 #define PREF_UI_VIEW_STATUSBAR            "view-statusbar"
 #define PREF_UI_VIEW_FOLDERS              "view-folders"
 

@@ -263,8 +263,6 @@ void            fr_window_set_extract_default_dir      (FrWindow   *window,
 							GFile      *default_dir,
 						        gboolean    freeze);
 GFile *         fr_window_get_extract_default_dir      (FrWindow   *window);
-void            fr_window_set_toolbar_visibility       (FrWindow   *window,
-						        gboolean    value);
 void            fr_window_set_statusbar_visibility     (FrWindow   *window,
 						        gboolean    value);
 void            fr_window_set_folders_visibility       (FrWindow   *window,

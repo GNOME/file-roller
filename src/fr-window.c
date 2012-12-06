@@ -5011,7 +5011,6 @@ fr_window_show_cb (GtkWidget *widget,
 {
 	fr_window_update_current_location (window);
 
-	set_active (window, "ViewToolbar", g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_TOOLBAR));
 	set_active (window, "ViewStatusbar", g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_STATUSBAR));
 
 	window->priv->view_folders = g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_FOLDERS);
@@ -5042,17 +5041,6 @@ pref_history_len_changed (GSettings  *settings,
 
 	action = gtk_action_group_get_action (window->priv->actions, "OpenRecent_Toolbar");
 	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (action), limit);
-}
-
-
-static void
-pref_view_toolbar_changed (GSettings  *settings,
-		  	   const char *key,
-		  	   gpointer    user_data)
-{
-	FrWindow *window = user_data;
-
-	fr_window_set_toolbar_visibility (window, g_settings_get_boolean (settings, key));
 }
 
 
@@ -5353,7 +5341,6 @@ set_action_important (GtkUIManager *ui,
 static void
 fr_window_construct (FrWindow *window)
 {
-	GtkWidget          *menubar;
 	GtkWidget          *toolbar;
 	GtkWidget          *list_scrolled_window;
 	GtkWidget          *location_box;
@@ -5752,10 +5739,6 @@ fr_window_construct (FrWindow *window)
 	g_object_set (other_actions_action, "menu", gtk_ui_manager_get_widget (ui, "/OtherActionsMenu"), NULL);
 	g_object_unref (other_actions_action);
 
-	menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
-	/* fr_window_attach (FR_WINDOW (window), menubar, FR_WINDOW_AREA_MENUBAR); FIXME */
-	gtk_widget_show (menubar);
-
 	window->priv->toolbar = toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar), GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
@@ -5814,10 +5797,7 @@ fr_window_construct (FrWindow *window)
 	/**/
 
 	fr_window_attach (FR_WINDOW (window), window->priv->toolbar, FR_WINDOW_AREA_TOOLBAR);
-	if (g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_TOOLBAR))
-		gtk_widget_show (toolbar);
-	else
-		gtk_widget_hide (toolbar);
+	gtk_widget_show (toolbar);
 
 	window->priv->file_popup_menu = gtk_ui_manager_get_widget (ui, "/FilePopupMenu");
 	window->priv->folder_popup_menu = gtk_ui_manager_get_widget (ui, "/FolderPopupMenu");
@@ -5873,10 +5853,6 @@ fr_window_construct (FrWindow *window)
 	g_signal_connect (window->priv->settings_ui,
 			  "changed::" PREF_UI_HISTORY_LEN,
 			  G_CALLBACK (pref_history_len_changed),
-			  window);
-	g_signal_connect (window->priv->settings_ui,
-			  "changed::" PREF_UI_VIEW_TOOLBAR,
-			  G_CALLBACK (pref_view_toolbar_changed),
 			  window);
 	g_signal_connect (window->priv->settings_ui,
 			  "changed::" PREF_UI_VIEW_STATUSBAR,
@@ -9247,21 +9223,6 @@ fr_window_set_default_dir (FrWindow *window,
 	fr_window_set_open_default_dir (window, default_dir);
 	fr_window_set_add_default_dir (window, default_dir);
 	fr_window_set_extract_default_dir (window, default_dir, FALSE);
-}
-
-
-void
-fr_window_set_toolbar_visibility (FrWindow *window,
-				  gboolean  visible)
-{
-	g_return_if_fail (window != NULL);
-
-	if (visible)
-		gtk_widget_show (window->priv->toolbar);
-	else
-		gtk_widget_hide (window->priv->toolbar);
-
-	set_active (window, "ViewToolbar", visible);
 }
 
 

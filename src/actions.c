@@ -386,18 +386,6 @@ activate_action_password (GtkAction *action,
 
 
 void
-activate_action_view_toolbar (GtkAction *action,
-			      gpointer   data)
-{
-	GSettings *settings;
-
-	settings = g_settings_new (FILE_ROLLER_SCHEMA_UI);
-	g_settings_set_boolean (settings, PREF_UI_VIEW_TOOLBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
-	g_object_unref (settings);
-}
-
-
-void
 activate_action_view_statusbar (GtkAction *action,
 				gpointer   data)
 {

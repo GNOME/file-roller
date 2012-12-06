@@ -1,48 +1,42 @@
 <ui>
-  <menubar name="MenuBar">
-    <menu name="Archive" action="FileMenu">
-      <menuitem action="New"/>
-      <menuitem action="Open"/>
-      <menuitem action="OpenRecent"/>
-      <menuitem action="SaveAs"/>
-      <separator/>
-      <menuitem action="Extract"/>
-      <menuitem action="TestArchive"/>
-      <separator/>
-      <menuitem action="Properties"/>
-      <separator/>
-      <menuitem action="Close"/>
-    </menu>
-    <menu action="EditMenu">
-      <menuitem action="Cut"/>
-      <menuitem action="Copy"/>
-      <menuitem action="Paste"/>
-      <menuitem action="Rename"/>
-      <menuitem action="Delete"/>
-      <separator/>
-      <menuitem action="SelectAll"/>
-      <menuitem action="DeselectAll"/>
-      <separator/>
-      <menuitem action="Add"/>
-      <menuitem action="Find"/>
-      <separator/>
-      <menuitem action="Password"/>
-    </menu>
-    <menu action="ViewMenu">
-      <menuitem action="ViewToolbar"/>
-      <menuitem action="ViewStatusbar"/>
-      <menuitem action="ViewFolders"/>
-      <separator/>
-      <menuitem action="ViewAllFiles"/>
-      <menuitem action="ViewAsFolder"/>
-      <separator/>
-      <menuitem action="Reload"/>
-    </menu>
-    <menu action="HelpMenu">
-      <menuitem action="Contents"/>
-      <menuitem action="About"/>
-    </menu>
-  </menubar>
+
+  <!-- Accelerators: File -->
+
+  <accelerator action="New" />
+  <accelerator action="Open" />
+  <accelerator action="SaveAs" />
+  <accelerator action="Extract" />
+  <accelerator action="TestArchive" />
+  <accelerator action="Properties" />
+  <accelerator action="Close" />
+
+  <!-- Accelerators: Edit -->
+
+  <accelerator action="Cut" />
+  <accelerator action="Copy" />
+  <accelerator action="Paste" />
+  <accelerator action="Rename" />
+  <accelerator action="Delete" />
+  <accelerator action="SelectAll" />
+  <accelerator action="DeselectAll" />
+  <accelerator action="Add" />
+  <accelerator action="Find" />
+  <accelerator action="Password" />
+
+  <!-- Accelerators: View -->
+
+  <accelerator action="ViewFolders" />
+  <accelerator action="ViewAllFiles" />
+  <accelerator action="ViewAsFolder" />
+  <accelerator action="Reload" />
+
+  <!-- Accelerators: Help -->
+
+  <accelerator action="Contents" />
+  <accelerator action="About" />
+
+  <!-- Toolbars -->
+
   <toolbar name="ToolBar">
     <toolitem action="New"/>
     <toolitem action="OpenRecent_Toolbar"/>
@@ -54,12 +48,16 @@
     <separator expand="true"/>
     <toolitem action="OtherActions"/>
   </toolbar>
+
   <toolbar name="LocationBar">
     <toolitem action="GoBack"/>
     <toolitem action="GoForward"/>
     <toolitem action="GoUp"/>
     <toolitem action="GoHome"/>
   </toolbar>
+
+  <!-- Popup menus -->
+
   <popup name="FilePopupMenu">
     <menuitem action="ViewSelection"/>
     <menuitem action="OpenSelection"/>
@@ -72,6 +70,7 @@
     <menuitem action="Rename"/>
     <menuitem action="Delete"/>
   </popup>
+
   <popup name="FolderPopupMenu">
     <menuitem action="OpenFolder"/>
     <separator/>
@@ -83,9 +82,11 @@
     <menuitem action="Rename"/>
     <menuitem action="Delete"/>
   </popup>
+
   <popup name="AddMenu">
     <menuitem action="Add"/>
   </popup>
+
   <popup name="SidebarFolderPopupMenu">
     <menuitem action="OpenFolderFromSidebar"/>
     <separator/>
@@ -97,6 +98,7 @@
     <menuitem action="RenameFolderFromSidebar"/>
     <menuitem action="DeleteFolderFromSidebar"/>
   </popup>
+
   <popup action="OtherActionsMenu">
     <menuitem action="SaveAs"/>
     <menuitem action="Password"/>

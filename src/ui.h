@@ -28,11 +28,6 @@
 
 
 static GtkActionEntry action_entries[] = {
-	{ "FileMenu", NULL, N_("_Archive") },
-	{ "EditMenu", NULL, N_("_Edit") },
-	{ "ViewMenu", NULL, N_("_View") },
-	{ "HelpMenu", NULL, N_("_Help") },
-	{ "ArrangeFilesMenu", NULL, N_("_Arrange Files") },
 	{ "OtherActionsMenu", NULL, NULL },
 
 	{ "About", GTK_STOCK_ABOUT,
@@ -193,11 +188,6 @@ static guint n_action_entries = G_N_ELEMENTS (action_entries);
 
 
 static GtkToggleActionEntry action_toggle_entries[] = {
-	{ "ViewToolbar", NULL,
-	  N_("_Toolbar"), NULL,
-	  N_("View the main toolbar"),
-	  G_CALLBACK (activate_action_view_toolbar),
-	  TRUE },
 	{ "ViewStatusbar", NULL,
 	  N_("Stat_usbar"), NULL,
 	  N_("View the statusbar"),
