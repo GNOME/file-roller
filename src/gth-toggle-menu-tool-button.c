@@ -694,6 +694,7 @@ gth_toggle_menu_tool_button_init (GthToggleMenuToolButton *button)
 	button->priv->contents_invalid = TRUE;
 
 	button->priv->menu_button = gtk_menu_button_new ();
+	g_object_ref_sink (button->priv->menu_button);
 	gtk_button_set_focus_on_click (GTK_BUTTON (button->priv->menu_button), FALSE);
 	gtk_container_add (GTK_CONTAINER (button), button->priv->menu_button);
 	gtk_widget_show (button->priv->menu_button);
