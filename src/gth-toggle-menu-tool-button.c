@@ -159,12 +159,12 @@ gth_toggle_menu_tool_button_construct_contents (GtkToolItem *tool_item)
 	style = gtk_tool_item_get_toolbar_style (GTK_TOOL_ITEM (button));
 
 	if (style != GTK_TOOLBAR_TEXT) {
-		if ((button->priv->stock_id != NULL) && (button->priv->icon_name != NULL))
+		if ((button->priv->stock_id != NULL) || (button->priv->icon_name != NULL))
 			need_icon = TRUE;
 	}
 
-	if ((style == GTK_TOOLBAR_TEXT) | (style == GTK_TOOLBAR_BOTH)) {
-		if ((button->priv->stock_id != NULL) && (button->priv->label_text != NULL))
+	if ((style == GTK_TOOLBAR_TEXT) || (style == GTK_TOOLBAR_BOTH)) {
+		if ((button->priv->stock_id != NULL) || (button->priv->label_text != NULL))
 			need_label = TRUE;
 	}
 
@@ -176,27 +176,12 @@ gth_toggle_menu_tool_button_construct_contents (GtkToolItem *tool_item)
 		need_label = TRUE;
 	}
 
-#if 0
-	if ((style == GTK_TOOLBAR_ICONS)
-	    && (button->priv->icon_widget == NULL)
-	    && (button->priv->stock_id == NULL)
-	    && button->priv->icon_name == NULL)
-	{
-		need_label = TRUE;
-		need_icon = FALSE;
-		style = GTK_TOOLBAR_TEXT;
+	if ((style == GTK_TOOLBAR_BOTH) && (! need_label || ! need_icon)) {
+		if (need_icon && ! need_label)
+			style = GTK_TOOLBAR_ICONS;
+		else if (need_label && ! need_icon)
+			style = GTK_TOOLBAR_TEXT;
 	}
-
-	if ((style == GTK_TOOLBAR_TEXT)
-	    && (button->priv->label_widget == NULL)
-	    && (button->priv->stock_id == NULL)
-	    && (button->priv->label_text == NULL))
-	{
-		need_label = FALSE;
-		need_icon = TRUE;
-		style = GTK_TOOLBAR_ICONS;
-	}
-#endif
 
 	if (need_label) {
 		if (button->priv->label_widget) {
@@ -399,6 +384,21 @@ gth_toggle_menu_tool_button_style_updated (GtkWidget *widget)
 
 
 static void
+gth_toggle_menu_tool_button_map (GtkWidget *widget)
+{
+	GthToggleMenuToolButton *button = GTH_TOGGLE_MENU_TOOL_BUTTON (widget);
+
+	GTK_WIDGET_CLASS (gth_toggle_menu_tool_button_parent_class)->map (widget);
+
+	if (gtk_menu_get_attach_widget (button->priv->menu) != NULL)
+		gtk_menu_detach (button->priv->menu);
+
+	g_object_set (button->priv->menu, "halign", button->priv->menu_halign, NULL);
+	g_object_set (button->priv->menu_button, "menu", button->priv->menu, NULL);
+}
+
+
+static void
 gth_toggle_menu_tool_button_set_property (GObject      *object,
 					  guint         prop_id,
 					  const GValue *value,
@@ -547,10 +547,12 @@ gth_toggle_menu_tool_button_create_menu_proxy (GtkToolItem *item)
 	if (menu_image != NULL)
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), menu_image);
 
-	g_object_ref (button->priv->menu);
-	if (gtk_menu_get_attach_widget (button->priv->menu) != NULL)
-		gtk_menu_detach (button->priv->menu);
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), GTK_WIDGET (button->priv->menu));
+	if (button->priv->menu != NULL) {
+		g_object_ref (button->priv->menu);
+		if (gtk_menu_get_attach_widget (button->priv->menu) != NULL)
+			gtk_menu_detach (button->priv->menu);
+		gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), GTK_WIDGET (button->priv->menu));
+	}
 
 	gtk_tool_item_set_proxy_menu_item (item, MENU_ID, menu_item);
 
@@ -583,6 +585,7 @@ gth_toggle_menu_tool_button_class_init (GthToggleMenuToolButtonClass *klass)
 	widget_class = (GtkWidgetClass *) klass;
 	widget_class->state_changed = gth_toggle_menu_tool_button_state_changed;
 	widget_class->style_updated = gth_toggle_menu_tool_button_style_updated;
+	widget_class->map = gth_toggle_menu_tool_button_map;
 
 	tool_item_class = (GtkToolItemClass *) klass;
 	tool_item_class->create_menu_proxy = gth_toggle_menu_tool_button_create_menu_proxy;
@@ -712,6 +715,8 @@ gth_toggle_menu_tool_button_update (GtkActivatable *activatable,
 	if (! GTK_IS_TOGGLE_ACTION (action))
 		return;
 
+	g_print ("property name: %s\n", property_name);
+
 	button = GTH_TOGGLE_MENU_TOOL_BUTTON (activatable);
 
 	if (strcmp (property_name, "active") == 0) {
@@ -734,6 +739,9 @@ gth_toggle_menu_tool_button_update (GtkActivatable *activatable,
 		}
 		else if (strcmp (property_name, "menu-halign") == 0) {
 			gth_toggle_menu_tool_button_set_menu_halign (button, gth_toggle_menu_action_get_menu_halign (GTH_TOGGLE_MENU_ACTION (action)));
+		}
+		else if (strcmp (property_name, "show-arrow") == 0) {
+			gth_toggle_menu_tool_button_set_show_arrow (button, gth_toggle_menu_action_get_show_arrow (GTH_TOGGLE_MENU_ACTION (action)));
 		}
 	}
 }
@@ -963,9 +971,12 @@ gth_toggle_menu_tool_button_set_menu (GthToggleMenuToolButton *button,
 		if ((button->priv->menu != NULL) && gtk_widget_get_visible (GTK_WIDGET (button->priv->menu)))
 			gtk_menu_shell_deactivate (GTK_MENU_SHELL (button->priv->menu));
 
-		button->priv->menu = GTK_MENU (menu);
 		if (button->priv->menu != NULL)
-			g_object_add_weak_pointer (G_OBJECT (button->priv->menu), (gpointer *) &button->priv->menu);
+			g_object_unref (button->priv->menu);
+		button->priv->menu = g_object_ref (menu);
+
+		if (gtk_menu_get_attach_widget (button->priv->menu) != NULL)
+			gtk_menu_detach (button->priv->menu);
 
 		g_object_set (button->priv->menu, "halign", button->priv->menu_halign, NULL);
 		g_object_set (button->priv->menu_button, "menu", button->priv->menu, NULL);

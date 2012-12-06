@@ -56,6 +56,7 @@ void        gth_toggle_menu_action_set_show_menu_func (GthToggleMenuAction *acti
 						       GDestroyNotify       destroy);
 GtkWidget * gth_toggle_menu_action_get_menu           (GthToggleMenuAction *action);
 GtkAlign    gth_toggle_menu_action_get_menu_halign    (GthToggleMenuAction *self);
+gboolean    gth_toggle_menu_action_get_show_arrow     (GthToggleMenuAction *self);
 
 G_END_DECLS
 
