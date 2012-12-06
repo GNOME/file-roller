@@ -5705,10 +5705,10 @@ fr_window_construct (FrWindow *window)
 
 	other_actions_action = action = g_object_new (GTH_TYPE_TOGGLE_MENU_ACTION,
 			       "name", "OtherActions",
-			       /*"label", _("Other Actions"),*/
+			       "label", _("_Other Actions"),
 			       "tooltip", _("Other actions"),
-			       /*"stock-id", GTK_STOCK_EXECUTE,*/
 			       "menu-halign", GTK_ALIGN_CENTER,
+			       "show-arrow", TRUE,
 			       NULL);
 	gtk_action_group_add_action (actions, action);
 
