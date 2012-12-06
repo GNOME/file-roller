@@ -715,8 +715,6 @@ gth_toggle_menu_tool_button_update (GtkActivatable *activatable,
 	if (! GTK_IS_TOGGLE_ACTION (action))
 		return;
 
-	g_print ("property name: %s\n", property_name);
-
 	button = GTH_TOGGLE_MENU_TOOL_BUTTON (activatable);
 
 	if (strcmp (property_name, "active") == 0) {
