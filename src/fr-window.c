@@ -5290,19 +5290,6 @@ filter_entry_activate_cb (GtkEntry *entry,
 
 
 static void
-filter_entry_icon_release_cb (GtkEntry             *entry,
-			      GtkEntryIconPosition  icon_pos,
-			      GdkEventButton       *event,
-			      gpointer              user_data)
-{
-	FrWindow *window = FR_WINDOW (user_data);
-
-	if ((event->button == 1) && (icon_pos == GTK_ENTRY_ICON_SECONDARY))
-		fr_window_deactivate_filter (window);
-}
-
-
-static void
 fr_window_attach (FrWindow      *window,
 		  GtkWidget     *child,
 		  FrWindowArea   area)
@@ -5591,31 +5578,29 @@ fr_window_construct (FrWindow *window)
 	/* filter bar */
 
 	window->priv->filter_bar = filter_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-	g_object_set (window->priv->filter_bar, "margin-left", 6, NULL);
-	gtk_container_set_border_width (GTK_CONTAINER (filter_box), 3);
+	g_object_set (window->priv->filter_bar,
+		      "halign", GTK_ALIGN_CENTER,
+		      "margin-left", 6,
+		      "border-width", 3,
+		      NULL);
 	fr_window_attach (FR_WINDOW (window), window->priv->filter_bar, FR_WINDOW_AREA_FILTERBAR);
-
-	gtk_box_pack_start (GTK_BOX (filter_box),
-			    gtk_label_new (_("Find:")), FALSE, FALSE, 0);
 
 	/* * filter entry */
 
 	window->priv->filter_entry = GTK_WIDGET (gtk_entry_new ());
-	gtk_entry_set_icon_from_stock (GTK_ENTRY (window->priv->filter_entry),
-				       GTK_ENTRY_ICON_SECONDARY,
-				       GTK_STOCK_CLEAR);
-
-	gtk_widget_set_size_request (window->priv->filter_entry, 300, -1);
+	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (window->priv->filter_entry),
+					   GTK_ENTRY_ICON_SECONDARY,
+					   "edit-find-symbolic");
+	gtk_entry_set_icon_activatable (GTK_ENTRY (window->priv->filter_entry),
+					GTK_ENTRY_ICON_SECONDARY,
+					FALSE);
+	gtk_entry_set_width_chars (GTK_ENTRY (window->priv->filter_entry), 40);
 	gtk_box_pack_start (GTK_BOX (filter_box),
 			    window->priv->filter_entry, FALSE, FALSE, 6);
 
 	g_signal_connect (G_OBJECT (window->priv->filter_entry),
 			  "activate",
 			  G_CALLBACK (filter_entry_activate_cb),
-			  window);
-	g_signal_connect (G_OBJECT (window->priv->filter_entry),
-			  "icon-release",
-			  G_CALLBACK (filter_entry_icon_release_cb),
 			  window);
 
 	gtk_widget_show_all (filter_box);
