@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: file-roller MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-23 13:50+0000\n"
-"PO-Revision-Date: 2012-09-23 18:34+0300\n"
+"POT-Creation-Date: 2012-12-05 09:27+0000\n"
+"PO-Revision-Date: 2012-12-05 16:56+0300\n"
 "Last-Translator: Mattias Põldaru <mahfiaz@gmail.com>\n"
 "Language-Team: Estonian <>\n"
 "Language: et\n"
@@ -81,6 +81,9 @@ msgstr "Arhiivihaldur"
 
 msgid "Create and modify an archive"
 msgstr "Arhiivi loomine ja muutmine"
+
+msgid "zip;tar;extract;unpack;"
+msgstr "zip;tar;paki;paki lahti;kompressi;dekompressi;arhiiveeri;"
 
 msgid "How to sort files"
 msgstr "Failide sortimine"
@@ -368,6 +371,59 @@ msgstr[1] ""
 msgid "Update the files in the archive \"%s\"?"
 msgstr "Kas uuendada arhiivis \"%s\" olevaid faile?"
 
+msgid "Add files to the specified archive and quit the program"
+msgstr "Failide lisamine määratud arhiivi ja programmist väljumine"
+
+msgid "ARCHIVE"
+msgstr "ARHIIV"
+
+msgid "Add files asking the name of the archive and quit the program"
+msgstr ""
+"Failide lisamine arhiivi koos arhiivi nime küsimisega ning programmist "
+"väljumine"
+
+msgid "Extract archives to the specified folder and quit the program"
+msgstr "Arhiivide lahtipakkimine määratud kataloogi ja programmist väljumine"
+
+msgid "FOLDER"
+msgstr "KATALOOG"
+
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr ""
+"Arhiivi lahtipakkimine koos sihtkataloogi nime küsimisega ning programmist "
+"väljumine"
+
+msgid ""
+"Extract the contents of the archives in the archive folder and quit the "
+"program"
+msgstr ""
+"Arhiivikataloogis olevate arhiivide lahtipakkimine ja programmist väljumine"
+
+msgid "Default folder to use for the '--add' and '--extract' commands"
+msgstr "Vaikekataloog, mida kasutatakse '--add' ja '--extract' käskude puhul"
+
+msgid "Create destination folder without asking confirmation"
+msgstr "Sihtkataloogi loomine kinnitust küsimata"
+
+msgid "Use the notification system to notify the operation completion"
+msgstr "Teatesüsteemi kasutamine operatsioonide lõpetamisest teatamiseks"
+
+msgid "Start as a service"
+msgstr "Käivitatakse teenusena"
+
+msgid "Show version"
+msgstr "Versiooni näitamine"
+
+msgid "Extract archive"
+msgstr "Arhiivi lahtipakkimine"
+
+msgid "- Create and modify an archive"
+msgstr "- Arhiivi loomine ja muutmine"
+
+#. manually set name and icon
+msgid "File Roller"
+msgstr "File Roller"
+
 msgid "You don't have the right permissions."
 msgstr "Sul pole vajalikke õiguseid."
 
@@ -650,6 +706,10 @@ msgstr "Ava _hiljutine"
 msgid "Open a recently used archive"
 msgstr "Mõne viimatikasutatud arhiivi avamine"
 
+#. "label", _("Other Actions"),
+msgid "Other actions"
+msgstr "Muud tegevused"
+
 #. Translators: after the colon there is a folder name.
 msgid "_Location:"
 msgstr "Asu_koht:"
@@ -755,9 +815,6 @@ msgstr "_Sihtkataloog:"
 msgid "Add files to an archive"
 msgstr "Failide lisamine arhiivi"
 
-msgid "Extract archive"
-msgstr "Arhiivi lahtipakkimine"
-
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
@@ -766,56 +823,6 @@ msgstr "%d. %B %Y, %H:%M"
 
 msgid "Could not display help"
 msgstr "Abiteavet pole võimalik kuvada"
-
-msgid "Add files to the specified archive and quit the program"
-msgstr "Failide lisamine määratud arhiivi ja programmist väljumine"
-
-msgid "ARCHIVE"
-msgstr "ARHIIV"
-
-msgid "Add files asking the name of the archive and quit the program"
-msgstr ""
-"Failide lisamine arhiivi koos arhiivi nime küsimisega ning programmist "
-"väljumine"
-
-msgid "Extract archives to the specified folder and quit the program"
-msgstr "Arhiivide lahtipakkimine määratud kataloogi ja programmist väljumine"
-
-msgid "FOLDER"
-msgstr "KATALOOG"
-
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr ""
-"Arhiivi lahtipakkimine koos sihtkataloogi nime küsimisega ning programmist "
-"väljumine"
-
-msgid ""
-"Extract the contents of the archives in the archive folder and quit the "
-"program"
-msgstr ""
-"Arhiivikataloogis olevate arhiivide lahtipakkimine ja programmist väljumine"
-
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "Vaikekataloog, mida kasutatakse '--add' ja '--extract' käskude puhul"
-
-msgid "Create destination folder without asking confirmation"
-msgstr "Sihtkataloogi loomine kinnitust küsimata"
-
-msgid "Use the notification system to notify the operation completion"
-msgstr "Teatesüsteemi kasutamine operatsioonide lõpetamisest teatamiseks"
-
-msgid "Start as a service"
-msgstr "Käivitatakse teenusena"
-
-msgid "Show version"
-msgstr "Versiooni näitamine"
-
-#. manually set name and icon
-msgid "File Roller"
-msgstr "File Roller"
-
-msgid "- Create and modify an archive"
-msgstr "- Arhiivi loomine ja muutmine"
 
 msgid "Add"
 msgstr "Lisa"
@@ -843,6 +850,15 @@ msgstr "_Sümbolviitade järgimine"
 
 msgid "_New Archive"
 msgstr "_Uus arhiiv"
+
+msgid "View All _Files"
+msgstr "Kõigi _failide kuvamine"
+
+msgid "View as a F_older"
+msgstr "_Kataloogina kuvamine"
+
+msgid "_Folders"
+msgstr "_Kataloogid"
 
 msgid "_Help"
 msgstr "A_bi"
@@ -952,9 +968,6 @@ msgstr "_Paki lahti…"
 msgid "Extract files from the archive"
 msgstr "Failide arhiivist lahtipakkimine"
 
-msgid "Find…"
-msgstr "Otsi…"
-
 msgid "New…"
 msgstr "Uus…"
 
@@ -1028,14 +1041,11 @@ msgstr "_Olekuriba"
 msgid "View the statusbar"
 msgstr "Olekuriba näitamine"
 
-msgid "_Folders"
-msgstr "_Kataloogid"
+msgid "Find…"
+msgstr "Otsi…"
 
-msgid "View All _Files"
-msgstr "Kõigi _failide kuvamine"
-
-msgid "View as a F_older"
-msgstr "_Kataloogina kuvamine"
+msgid "Find files by name"
+msgstr "Failide otsimine nime järgi"
 
 msgid "_Encrypt the file list too"
 msgstr "Krüptitakse ka failide _nimekiri"
@@ -1331,9 +1341,6 @@ msgstr "_Vali failid, mida soovid värskendada:"
 
 #~ msgid "by _Name"
 #~ msgstr "_Nime järgi"
-
-#~ msgid "Sort file list by name"
-#~ msgstr "Loendi sortimine failinimede järgi"
 
 #~ msgid "by _Size"
 #~ msgstr "_Suuruse järgi"
