@@ -6204,6 +6204,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
 	notification = notify_notification_new (window->priv->batch_title, message, "file-roller");
+	notify_notification_set_hint_string (notification, "desktop-entry", "file-roller");
 
 	notify_data = g_new0 (NotifyData, 1);
 	notify_data->window = window;
