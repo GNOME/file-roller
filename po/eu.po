@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the file-roller package.
 #
 # Eneko Lacunza <enlar@enlar.net>, 2003.
-# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012.
-# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2007.
+# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012.
+# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2007, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-03 19:10+0100\n"
-"PO-Revision-Date: 2012-03-03 19:22+0100\n"
-"Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
-"Language-Team: Basque <kde-i18n-doc@kde.org>\n"
+"POT-Creation-Date: 2013-02-02 17:11+0100\n"
+"PO-Revision-Date: 2013-01-06 21:52+0100\n"
+"Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@zundan.com>\n"
+"Language-Team: Basque <itzulpena@euskalgnu.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 1.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "\n"
 "\n"
@@ -86,8 +86,8 @@ msgstr "Saio-kudeaketaren aukerak:"
 msgid "Show session management options"
 msgstr "Erakutsi saio-kudeaketaren aukerak"
 
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1981
-#: ../src/fr-window.c:5452
+#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:2005
+#: ../src/fr-window.c:5384
 msgid "Archive Manager"
 msgstr "Artxibo-kudeatzailea"
 
@@ -95,11 +95,127 @@ msgstr "Artxibo-kudeatzailea"
 msgid "Create and modify an archive"
 msgstr "Sortu eta aldatu artxibo bat"
 
+#: ../data/file-roller.desktop.in.in.h:3
+msgid "zip;tar;extract;unpack;"
+msgstr "zip;tar;erauzi;deskonprimitu;"
+
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
+msgid "How to sort files"
+msgstr "Nola ordenatu fitxategiak"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:2
+msgid ""
+"What criteria must be used to arrange files. Possible values: name, size, "
+"type, time, path."
+msgstr ""
+"Zer irizpide erabili fitxategiak antolatzeko. Balio erabilgarriak: name "
+"(izena), size (tamaina), type (mota), time (denbora), path (bide-izena)."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
+msgid "Sort type"
+msgstr "Ordenatze mota"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:4
+msgid ""
+"Whether to sort in ascending or descending direction. Possible values: "
+"ascending, descending."
+msgstr ""
+"Gorantz edo beherantz ordenatuko den. Balio erabilgarriak: ascending "
+"(gorantz), descending (beherantz)."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:5 ../src/ui/app-menu.ui.h:2
+msgid "List Mode"
+msgstr "Zerrenda modua"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:6
+msgid ""
+"Use 'all-files' to view all the files in the archive in a single list, use "
+"'as-folder' to navigate the archive as a folder."
+msgstr ""
+"Erabili 'fitxategi denak' artxiboko fitxategi guztiak zerrenda bakar batean "
+"ikusteko. Erabili 'karpeta gisa' artxiboa karpeta baten antzera arakatzeko."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
+msgid "Display type"
+msgstr "Bistaratu mota"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:8
+msgid "Display the type column in the main window."
+msgstr "Bistaratu moten zutabea leiho nagusian."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:9
+msgid "Display size"
+msgstr "Bistaratu tamaina"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:10
+msgid "Display the size column in the main window."
+msgstr "Bistaratu tamainen zutabea leiho nagusian."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:11
+msgid "Display time"
+msgstr "Bistaratu denbora"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:12
+msgid "Display the time column in the main window."
+msgstr "Bistaratu denboren zutabea leiho nagusian."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:13
+msgid "Display path"
+msgstr "Bistaratu bide-izena"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:14
+msgid "Display the path column in the main window."
+msgstr "Bistaratu bide-izenen zutabea leiho nagusian."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:15
+msgid "Name column width"
+msgstr "Izena zutabearen zabalera"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
+msgid "The default width of the name column in the file list."
+msgstr "Izena zutabearen zabalera lehenetsia fitxategien zerrendan."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
+msgid "Max history length"
+msgstr "Historiaren gehienezko luzera"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
+msgid "Max number of items in the 'Open Recents' submenu."
+msgstr "Elementuen gehienezko kopurua 'Ireki oraintsukoa' azpimenuan."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
+msgid "View statusbar"
+msgstr "Ikusi egoera-barra"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
+msgid "Whether to display the statusbar."
+msgstr "Egoera-barra bistaratuko den edo ez."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:21 ../src/ui.h:198
+msgid "View the folders pane"
+msgstr "Ikusi karpeten panela"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
+msgid "Whether to display the folders pane."
+msgstr "Karpeten panela bistaratuko den edo ez."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
+msgid "Editors"
+msgstr "Editoreak"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
+msgid ""
+"List of applications entered in the 'Open File' dialog and not associated "
+"with the file type."
+msgstr ""
+"'Ireki fitxategia' elkarrizketa-koadroan sartutako, baina fitxategi "
+"motarekin esleituta ez dauden, aplikazioen zerrenda."
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
 msgid "Compression level"
 msgstr "Konpresio-maila"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:2
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
 msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
@@ -108,155 +224,11 @@ msgstr ""
 "erabilgarriak: very-fast (oso-azkar), fast (azkar), normal (arrunta), "
 "maximum (gehienezkoa)."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
-msgid "Default volume size"
-msgstr "Bolumenaren tamaina lehenetsia"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:4
-msgid "Display path"
-msgstr "Bistaratu bide-izena"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
-msgid "Display size"
-msgstr "Bistaratu tamaina"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:6
-msgid "Display the path column in the main window."
-msgstr "Bistaratu bide-izenen zutabea leiho nagusian."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
-msgid "Display the size column in the main window."
-msgstr "Bistaratu tamainen zutabea leiho nagusian."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:8
-msgid "Display the time column in the main window."
-msgstr "Bistaratu denboren zutabea leiho nagusian."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:9
-msgid "Display the type column in the main window."
-msgstr "Bistaratu moten zutabea leiho nagusian."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:10
-msgid "Display time"
-msgstr "Bistaratu denbora"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:11
-msgid "Display type"
-msgstr "Bistaratu mota"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:12
-msgid "Do not overwrite newer files"
-msgstr "Ez gainidatzi fitxategi berriagoak"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:13
-msgid "Editors"
-msgstr "Editoreak"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:14
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
 msgid "Encrypt the archive header"
 msgstr "Enkriptatu artxiboaren goiburua"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:15
-msgid "How to sort files"
-msgstr "Nola ordenatu fitxategiak"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
-msgid ""
-"If true will display icons depending on the file type (slower), otherwise "
-"will use always the same icon for all files (faster)."
-msgstr ""
-"Egia bada, ikonoak bistaratuko ditu fitxategi motaren arabera (motelagoa), "
-"bestela ikono berdina erabiliko du fitxategi guztientzako (azkarragoa)."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
-msgid "List Mode"
-msgstr "Zerrenda modua"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
-msgid ""
-"List of applications entered in the 'Open File' dialog and not associated "
-"with the file type."
-msgstr ""
-"'Ireki fitxategia' elkarrizketa-koadroan sartutako, baina fitxategi "
-"motarekin esleituta ez dauden, aplikazioen zerrenda."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
-msgid "Max history length"
-msgstr "Historiaren gehienezko luzera"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
-msgid "Max number of items in the 'Open Recents' submenu."
-msgstr "Elementuen gehienezko kopurua 'Ireki oraintsukoa' azpimenuan."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
-msgid "Name column width"
-msgstr "Izena zutabearen zabalera"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
-msgid "Overwrite existing files"
-msgstr "Gainidatzi existitzen diren fitxategiak"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
-msgid "Recreate the folders stored in the archive"
-msgstr "Sortu berriro artxiboan gordetako karpetak"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
-msgid "Sort type"
-msgstr "Ordenatze mota"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
-msgid "The default size for volumes."
-msgstr "Bolumenen tamaina lehenetsia."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
-msgid "The default width of the name column in the file list."
-msgstr "Izena zutabearen zabalera lehenetsia fitxategien zerrendan."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
-msgid ""
-"Use 'all-files' to view all the files in the archive in a single list, use "
-"'as-folder' to navigate the archive as a folder."
-msgstr ""
-"Erabili 'fitxategi denak' artxiboko fitxategi guztiak zerrenda bakar batean "
-"ikusteko. Erabili 'karpeta gisa' artxiboa karpeta baten antzera arakatzeko."
-
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
-msgid "Use mime icons"
-msgstr "Erabili MIME ikonoak"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
-msgid "View statusbar"
-msgstr "Ikusi egoera-barra"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30 ../src/ui.h:229
-msgid "View the folders pane"
-msgstr "Ikusi karpeten panela"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
-msgid "View toolbar"
-msgstr "Ikusi tresna-barra"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
-msgid ""
-"What criteria must be used to arrange files. Possible values: name, size, "
-"type, time, path."
-msgstr ""
-"Zer irizpide erabili fitxategiak antolatzeko. Balio erabilgarriak: name "
-"(izena), size (tamaina), type (mota), time (denbora), path (bide-izena)."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
-msgid "Whether to display the folders pane."
-msgstr "Karpeten panela bistaratuko den edo ez."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:34
-msgid "Whether to display the statusbar."
-msgstr "Egoera-barra bistaratuko den edo ez."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:35
-msgid "Whether to display the toolbar."
-msgstr "Tresna-barra bistaratuko den edo ez."
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:36
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
@@ -264,106 +236,207 @@ msgstr ""
 "Artxiboaren goiburua enkriptatuko den edo ez. Goiburua enkriptatzen bada, "
 "pasahitza beharko da baita ere artxiboaren edukia bistaratzeko."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:37
-msgid ""
-"Whether to sort in ascending or descending direction. Possible values: "
-"ascending, descending."
-msgstr ""
-"Gorantz edo beherantz ordenatuko den. Balio erabilgarriak: ascending "
-"(gorantz), descending (beherantz)."
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
+msgid "Do not overwrite newer files"
+msgstr "Ez gainidatzi fitxategi berriagoak"
 
-#: ../data/ui/add-options.ui.h:1
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30
+msgid "Recreate the folders stored in the archive"
+msgstr "Sortu berriro artxiboan gordetako karpetak"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
+msgid "Default volume size"
+msgstr "Bolumenaren tamaina lehenetsia"
+
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
+msgid "The default size for volumes."
+msgstr "Bolumenen tamaina lehenetsia."
+
+#: ../nautilus/nautilus-fileroller.c:327
+msgid "Extract Here"
+msgstr "Erauzi hemen"
+
+#. Translators: the current position is the current folder
+#: ../nautilus/nautilus-fileroller.c:329
+msgid "Extract the selected archive to the current position"
+msgstr "Erauzi hautatutako artxiboa uneko kokapenera"
+
+#: ../nautilus/nautilus-fileroller.c:346
+msgid "Extract To..."
+msgstr "Erauzi hona..."
+
+#: ../nautilus/nautilus-fileroller.c:347
+msgid "Extract the selected archive"
+msgstr "Erauzi hautatutako artxiboa"
+
+#: ../nautilus/nautilus-fileroller.c:366
+msgid "Compress..."
+msgstr "Konpresioa..."
+
+#: ../nautilus/nautilus-fileroller.c:367
+msgid "Create a compressed archive with the selected objects"
+msgstr "Sortu konprimitutako artxiboa hautatutako objektuekin"
+
+#: ../src/actions.c:112 ../src/fr-window.c:5678 ../src/fr-window.c:6227
+msgid "Open"
+msgstr "Ireki"
+
+#: ../src/actions.c:125 ../src/fr-window.c:5235
+msgid "All archives"
+msgstr "Artxibo guztiak"
+
+#: ../src/actions.c:132
+msgid "All files"
+msgstr "Fitxategi guztiak"
+
+#: ../src/actions.c:487
+msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
+msgstr "Copyright-a © 2001-2010 Free Software Foundation, Inc."
+
+#: ../src/actions.c:488
+msgid "An archive manager for GNOME."
+msgstr "Artxibo-kudeatzaile bat GNOMErako."
+
+#: ../src/actions.c:491
+msgid "translator-credits"
+msgstr ""
+"Mikel Olasagasti <hey_neken@mundurat.net>\n"
+"Eneko Lacunza <enlar@enlar.net>\n"
+"Iñaki Larrañaga Murgoitio <dooteo@zundan.com>"
+
+#: ../src/dlg-add.c:116
+msgid "Could not add the files to the archive"
+msgstr "Ezin izan dira fitxategiak artxiboari gehitu"
+
+#: ../src/dlg-add.c:117
+#, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "Ez duzu \"%s\" karpetako fitxategiak irakurtzeko baimenik"
+
+#: ../src/dlg-add.c:182 ../src/ui.h:42
+msgid "Add Files"
+msgstr "Gehitu fitxategiak"
+
+#: ../src/dlg-add.c:193
+msgid "_Options"
+msgstr "_Aukerak"
+
+#. load options
+#: ../src/dlg-add.c:202 ../src/ui/add-options.ui.h:1
 msgid "Load Options"
 msgstr "Kargatu aukerak"
 
-#: ../data/ui/batch-add-files.ui.h:1
+#. save options
+#: ../src/dlg-add.c:209 ../src/dlg-add.c:827
+msgid "Save Options"
+msgstr "Gorde aukerak"
+
+#. clear options
+#: ../src/dlg-add.c:216
+msgid "Reset Options"
+msgstr "_Berrezarri aukerak"
+
+#: ../src/dlg-add.c:828
+msgid "_Options Name:"
+msgstr "_Aukeren izena:"
+
+#. Translators: %s is a filename
+#: ../src/dlg-ask-password.c:131
+#, c-format
+msgid "Password required for \"%s\""
+msgstr "Pasahitza behar da \"%s\"(e)n"
+
+#: ../src/dlg-ask-password.c:139
+msgid "Wrong password."
+msgstr "Okerreko pasahitza."
+
+#: ../src/dlg-batch-add.c:87 ../src/fr-application.c:329
+#: ../src/fr-application.c:683
 msgid "Compress"
 msgstr "Konpresioa"
 
-#: ../data/ui/batch-add-files.ui.h:2
-msgid "Location"
-msgstr "Kokapena"
-
-#. MB means megabytes
-#: ../data/ui/batch-add-files.ui.h:4 ../data/ui/new.ui.h:2
-msgid "MB"
-msgstr "MB"
-
-#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:3
-msgid "Split into _volumes of"
-msgstr "Zatitu _bolumenetan: "
-
-#: ../data/ui/batch-add-files.ui.h:7 ../data/ui/new.ui.h:4
-msgid "_Encrypt the file list too"
-msgstr "_Enkriptatu fitxategi-zerrenda ere"
-
-#: ../data/ui/batch-add-files.ui.h:8
-msgid "_Filename:"
-msgstr "_Fitxategi-izena:"
-
-#. Translators: after the colon there is a folder name.
-#: ../data/ui/batch-add-files.ui.h:9 ../src/fr-window.c:5905
-msgid "_Location:"
-msgstr "_Kokalekua:"
-
-#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:5
-msgid "_Other Options"
-msgstr "_Bestelako aukerak"
-
-#: ../data/ui/batch-add-files.ui.h:11 ../data/ui/batch-password.ui.h:2
-#: ../data/ui/new.ui.h:6 ../data/ui/password.ui.h:4
-msgid "_Password:"
-msgstr "_Pasahitza:"
-
-#: ../data/ui/batch-password.ui.h:1
-msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
-msgstr "<span weight=\"bold\" size=\"larger\">Pasahitza behar da</span>"
-
-#: ../data/ui/delete.ui.h:1
-msgid "Delete"
-msgstr "Ezabatu"
-
-#: ../data/ui/delete.ui.h:2 ../src/dlg-extract.c:362
-msgid "_All files"
-msgstr "Fitxategi _denak"
-
-#: ../data/ui/delete.ui.h:3 ../src/dlg-extract.c:348
-msgid "_Files:"
-msgstr "_Fitxategiak:"
-
-#: ../data/ui/delete.ui.h:4 ../src/dlg-extract.c:369
-msgid "_Selected files"
-msgstr "_Hautatutako fitxategiak"
-
-#: ../data/ui/delete.ui.h:5 ../src/dlg-extract.c:359
-msgid "example: *.txt; *.doc"
-msgstr "adibidea: *.txt, *.doc"
-
-#: ../data/ui/password.ui.h:1
+#: ../src/dlg-extract.c:96 ../src/fr-window.c:6774
+#, c-format
 msgid ""
-"<i><b>Note:</b> the password will be used to encrypt files you add to the "
-"current archive, and to decrypt files you extract from the current archive. "
-"When the archive is closed the password will be deleted.</i>"
+"Destination folder \"%s\" does not exist.\n"
+"\n"
+"Do you want to create it?"
 msgstr ""
-"<i><b>Oharra</b>: pasahitza oraingo artxibora gehitutako fitxategiak zifratu "
-"eta bertatik erauzitakoak desenkriptatzeko erabiliko da. Artxiboa ixtean "
-"pasahitza ezabatuko da.</i>"
+"Helburuko \"%s\" karpeta ez dago\n"
+".\n"
+"Sortu nahi duzu?"
 
-#: ../data/ui/password.ui.h:2
-msgid "Password"
-msgstr "Pasahitza"
+#: ../src/dlg-extract.c:105 ../src/fr-window.c:6783
+msgid "Create _Folder"
+msgstr "Sortu _karpeta"
 
-#: ../data/ui/password.ui.h:3
-msgid "_Encrypt the file list"
-msgstr "_Enkriptatu fitxategi-zerrenda"
+#: ../src/dlg-extract.c:124 ../src/dlg-extract.c:142 ../src/dlg-extract.c:169
+#: ../src/fr-window.c:4197 ../src/fr-window.c:6678 ../src/fr-window.c:6683
+#: ../src/fr-window.c:6804 ../src/fr-window.c:6823 ../src/fr-window.c:6828
+msgid "Extraction not performed"
+msgstr "Erauztea ez da burutu"
 
-#: ../data/ui/update.ui.h:1
-msgid "S_elect the files you want to update:"
-msgstr "_Hautatu fitxategiak eguneratzeko:"
+#: ../src/dlg-extract.c:125 ../src/fr-window.c:6800
+#, c-format
+msgid "Could not create the destination folder: %s."
+msgstr "Ezin izan da \"%s\" helburu karpeta sortu."
+
+#: ../src/dlg-extract.c:170 ../src/fr-window.c:4366 ../src/fr-window.c:4450
+#, c-format
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr "Ez dituzu artxiboak \"%s\" karpetan erauzteko baimen egokiak"
+
+#: ../src/dlg-extract.c:283 ../src/ui/extract-dialog-options.ui.h:1
+#: ../src/ui.h:109
+msgid "Extract"
+msgstr "Erauzi"
+
+#: ../src/dlg-package-installer.c:112 ../src/dlg-package-installer.c:225
+msgid "There was an internal error trying to search for applications:"
+msgstr "Barneko errorea gertatu da aplikazioak bilatzean:"
+
+#: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
+#: ../src/dlg-package-installer.c:331 ../src/fr-archive.c:743
+#: ../src/fr-window.c:3927 ../src/fr-window.c:7402 ../src/fr-window.c:7758
+#: ../src/fr-window.c:9290
+msgid "Archive type not supported."
+msgstr "Artxibo mota ez da ezagutzen."
+
+#: ../src/dlg-package-installer.c:313
+#, c-format
+msgid ""
+"There is no command installed for %s files.\n"
+"Do you want to search for a command to open this file?"
+msgstr ""
+"Ez dago komandorik instalatuta %s fitxategientzako.\n"
+"Nahi duzu komando bat bilatzea fitxategi hau irekitzeko?"
+
+#: ../src/dlg-package-installer.c:318
+msgid "Could not open this file type"
+msgstr "Ezin izan da fitxategi mota hau ireki"
+
+#: ../src/dlg-package-installer.c:321
+msgid "_Search Command"
+msgstr "_Bilatu komandoa"
+
+#: ../src/dlg-password.c:91
+#, c-format
+msgid "Enter a password for \"%s\""
+msgstr "Idatzi \"%s\"(r)en pasahitza"
+
+#: ../src/dlg-prop.c:96
+#, c-format
+msgid "%s Properties"
+msgstr "%s-ren propietateak"
+
+#: ../src/dlg-update.c:163
+#, c-format
+msgid "Update the file \"%s\" in the archive \"%s\"?"
+msgstr "Eguneratu \"%s\" fitxategia \"%s\" artxiboan?"
 
 #. secondary text
-#: ../data/ui/update.ui.h:2 ../src/dlg-update.c:175 ../src/dlg-update.c:203
+#: ../src/dlg-update.c:174 ../src/dlg-update.c:199 ../src/ui/update.ui.h:2
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don't update "
@@ -378,531 +451,173 @@ msgstr[1] ""
 "%d fitxategi aldatuta daude kanpoko aplikazio batekin. Ez badituzu artxiboko "
 "fitxategiak eguneratzen, egindako aldaketa guztiak galdu egingo dira."
 
-#: ../data/ui/update.ui.h:3
-msgid "_Update"
-msgstr "_Eguneratu"
-
-#: ../nautilus/nautilus-fileroller.c:325
-msgid "Extract Here"
-msgstr "Erauzi hemen"
-
-#. Translators: the current position is the current folder
-#: ../nautilus/nautilus-fileroller.c:327
-msgid "Extract the selected archive to the current position"
-msgstr "Erauzi hautatutako artxiboa uneko kokapenera"
-
-#: ../nautilus/nautilus-fileroller.c:344
-msgid "Extract To..."
-msgstr "Erauzi hona..."
-
-#: ../nautilus/nautilus-fileroller.c:345
-msgid "Extract the selected archive"
-msgstr "Erauzi hautatutako artxiboa"
-
-#: ../nautilus/nautilus-fileroller.c:364
-msgid "Compress..."
-msgstr "Konpresioa..."
-
-#: ../nautilus/nautilus-fileroller.c:365
-msgid "Create a compressed archive with the selected objects"
-msgstr "Sortu konprimitutako artxiboa hautatutako objektuekin"
-
-#: ../src/actions.c:156 ../src/actions.c:195 ../src/actions.c:231
-#: ../src/dlg-batch-add.c:157 ../src/dlg-batch-add.c:173
-#: ../src/dlg-batch-add.c:202 ../src/dlg-batch-add.c:247
-#: ../src/dlg-batch-add.c:293 ../src/fr-window.c:2980
-msgid "Could not create the archive"
-msgstr "Ezin izan da artxiboa sortu"
-
-#: ../src/actions.c:158 ../src/dlg-batch-add.c:159 ../src/dlg-batch-add.c:295
-msgid "You have to specify an archive name."
-msgstr "Artxibo-izen bat zehaztu behar duzu."
-
-#: ../src/actions.c:197
-msgid "You don't have permission to create an archive in this folder"
-msgstr "Ez duzu baimenik karpeta honetan artxibo bat sortzeko"
-
-#: ../src/actions.c:233 ../src/dlg-package-installer.c:268
-#: ../src/dlg-package-installer.c:277 ../src/dlg-package-installer.c:305
-#: ../src/fr-archive.c:1178 ../src/fr-window.c:6090 ../src/fr-window.c:6266
-msgid "Archive type not supported."
-msgstr "Artxibo mota ez da ezagutzen."
-
-#: ../src/actions.c:247
-msgid "Could not delete the old archive."
-msgstr "Ezin izan da artxibo zaharra ezabatu."
-
-#: ../src/actions.c:381 ../src/fr-window.c:5827
-msgid "Open"
-msgstr "Ireki"
-
-#: ../src/actions.c:392 ../src/fr-window.c:5266
-msgid "All archives"
-msgstr "Artxibo guztiak"
-
-#: ../src/actions.c:399
-msgid "All files"
-msgstr "Fitxategi guztiak"
-
-#: ../src/actions.c:844
-msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
-msgstr "Copyright-a © 2001-2010 Free Software Foundation, Inc."
-
-#: ../src/actions.c:845
-msgid "An archive manager for GNOME."
-msgstr "Artxibo-kudeatzaile bat GNOMErako."
-
-#: ../src/actions.c:848
-msgid "translator-credits"
-msgstr ""
-"Mikel Olasagasti <hey_neken@mundurat.net>\n"
-"Eneko Lacunza <enlar@enlar.net>\n"
-"Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>"
-
-#: ../src/dlg-add-files.c:99 ../src/dlg-add-folder.c:129
-msgid "Could not add the files to the archive"
-msgstr "Ezin izan dira fitxategiak artxiboari gehitu"
-
-#: ../src/dlg-add-files.c:100 ../src/dlg-add-folder.c:130
-#, c-format
-msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Ez duzu \"%s\" karpetako fitxategiak irakurtzeko baimenik"
-
-#: ../src/dlg-add-files.c:148 ../src/ui.h:46
-msgid "Add Files"
-msgstr "Gehitu fitxategiak"
-
-#. Translators: add a file to the archive only if the disk version is
-#. * newer than the archive version.
-#: ../src/dlg-add-files.c:164 ../src/dlg-add-folder.c:230
-msgid "Add only if _newer"
-msgstr "Gehitu soilik _berriagoa bada"
-
-#: ../src/dlg-add-folder.c:216
-msgid "Add a Folder"
-msgstr "Gehitu karpeta bat"
-
-#: ../src/dlg-add-folder.c:231
-msgid "_Include subfolders"
-msgstr "_Txertatu azpikarpetak"
-
-#: ../src/dlg-add-folder.c:232
-msgid "Exclude folders that are symbolic lin_ks"
-msgstr "Baztertu este_ka sinbolikoak diren karpetak"
-
-#: ../src/dlg-add-folder.c:235 ../src/dlg-add-folder.c:241
-#: ../src/dlg-add-folder.c:247
-msgid "example: *.o; *.bak"
-msgstr "Adibidea: *.o, *.bak"
-
-#: ../src/dlg-add-folder.c:236
-msgid "Include _files:"
-msgstr "Txertatu _fitxategiak:"
-
-#: ../src/dlg-add-folder.c:242
-msgid "E_xclude files:"
-msgstr "Baztertu fit_xategiak:"
-
-#: ../src/dlg-add-folder.c:248
-msgid "_Exclude folders:"
-msgstr "_Baztertu karpetak:"
-
-#: ../src/dlg-add-folder.c:252
-msgid "_Load Options"
-msgstr "_Kargatu aukerak"
-
-#: ../src/dlg-add-folder.c:253
-msgid "Sa_ve Options"
-msgstr "_Gorde aukerak"
-
-#: ../src/dlg-add-folder.c:254
-msgid "_Reset Options"
-msgstr "_Berrezarri aukerak"
-
-#: ../src/dlg-add-folder.c:882
-msgid "Save Options"
-msgstr "Gorde aukerak"
-
-#: ../src/dlg-add-folder.c:883
-msgid "_Options Name:"
-msgstr "_Aukeren izena:"
-
-#: ../src/dlg-ask-password.c:122
-#, c-format
-msgid "Enter the password for the archive '%s'."
-msgstr "Sartu '%s' artxiboaren pasahitza."
-
-#: ../src/dlg-batch-add.c:174
-#, c-format
-msgid ""
-"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
-"\n"
-"%s"
-msgstr ""
-"\"%s\" izena baliogabea da, ezin baititu honako karaktereak eduki: %s\n"
-"\n"
-"%s"
-
-#: ../src/dlg-batch-add.c:177 ../src/fr-window.c:7644 ../src/fr-window.c:7646
-msgid "Please use a different name."
-msgstr "Erabil ezazu beste izen bat."
-
-#: ../src/dlg-batch-add.c:204
-msgid ""
-"You don't have the right permissions to create an archive in the destination "
-"folder."
-msgstr "Ez duzu baimenik helburuko karpetan artxibo bat sortzeko"
-
-#: ../src/dlg-batch-add.c:220 ../src/dlg-extract.c:102 ../src/fr-window.c:6865
-#, c-format
-msgid ""
-"Destination folder \"%s\" does not exist.\n"
-"\n"
-"Do you want to create it?"
-msgstr ""
-"Helburuko \"%s\" karpeta ez dago\n"
-".\n"
-"Sortu nahi duzu?"
-
-#: ../src/dlg-batch-add.c:229 ../src/dlg-extract.c:111 ../src/fr-window.c:6874
-msgid "Create _Folder"
-msgstr "Sortu _karpeta"
-
-#: ../src/dlg-batch-add.c:248 ../src/dlg-extract.c:131 ../src/fr-window.c:6891
-#, c-format
-msgid "Could not create the destination folder: %s."
-msgstr "Ezin izan da \"%s\" helburu karpeta sortu."
-
-#: ../src/dlg-batch-add.c:265
-msgid "Archive not created"
-msgstr "Artxiboa ez da sortu"
-
-#: ../src/dlg-batch-add.c:313
-msgid "The archive is already present.  Do you want to overwrite it?"
-msgstr "Artxiboa badago lehendik ere. Gainidaztea nahi duzu?"
-
-#: ../src/dlg-batch-add.c:316
-msgid "_Overwrite"
-msgstr "_Gainidatzi"
-
-#: ../src/dlg-extract.c:130 ../src/dlg-extract.c:148 ../src/dlg-extract.c:175
-#: ../src/fr-window.c:4205 ../src/fr-window.c:6895 ../src/fr-window.c:6914
-#: ../src/fr-window.c:6919
-msgid "Extraction not performed"
-msgstr "Erauztea ez da burutu"
-
-#: ../src/dlg-extract.c:176 ../src/fr-window.c:4368 ../src/fr-window.c:4448
-#, c-format
-msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "Ez dituzu artxiboak \"%s\" karpetan erauzteko baimen egokiak"
-
-#: ../src/dlg-extract.c:331 ../src/dlg-extract.c:429 ../src/ui.h:121
-msgid "Extract"
-msgstr "Erauzi"
-
-#: ../src/dlg-extract.c:380
-msgid "Actions"
-msgstr "Ekintzak"
-
-#: ../src/dlg-extract.c:396
-msgid "Re-crea_te folders"
-msgstr "Sortu _berriro karpetak"
-
-#: ../src/dlg-extract.c:400
-msgid "Over_write existing files"
-msgstr "Gainidatzi existitzen diren fitxategiak"
-
-#: ../src/dlg-extract.c:404
-msgid "Do not e_xtract older files"
-msgstr "Ez _erauzi fitxategi zaharragoak"
-
-#: ../src/dlg-new.c:427
-msgctxt "File"
-msgid "New"
-msgstr "Berria..."
-
-#: ../src/dlg-new.c:440
-msgctxt "File"
-msgid "Save"
-msgstr "Gorde"
-
-#: ../src/dlg-package-installer.c:107 ../src/dlg-package-installer.c:219
-msgid "There was an internal error trying to search for applications:"
-msgstr "Barneko errorea gertatu da aplikazioak bilatzean:"
-
-#: ../src/dlg-package-installer.c:287
-#, c-format
-msgid ""
-"There is no command installed for %s files.\n"
-"Do you want to search for a command to open this file?"
-msgstr ""
-"Ez dago komandorik instalatuta %s fitxategientzako.\n"
-"Nahi duzu komando bat bilatzea fitxategi hau irekitzeko?"
-
-#: ../src/dlg-package-installer.c:292
-msgid "Could not open this file type"
-msgstr "Ezin izan da fitxategi mota hau ireki"
-
-#: ../src/dlg-package-installer.c:295
-msgid "_Search Command"
-msgstr "_Bilatu komandoa"
-
-#. Translators: after the colon there is a folder name.
-#: ../src/dlg-prop.c:106
-msgid "Location:"
-msgstr "Kokapena:"
-
-#: ../src/dlg-prop.c:118
-msgctxt "File"
-msgid "Name:"
-msgstr "Izena:"
-
-#: ../src/dlg-prop.c:124
-#, c-format
-msgid "%s Properties"
-msgstr "%s-ren propietateak"
-
-#: ../src/dlg-prop.c:133
-msgid "Last modified:"
-msgstr "Azken aldaketa:"
-
-#: ../src/dlg-prop.c:143
-msgid "Archive size:"
-msgstr "Artxiboaren tamaina:"
-
-#: ../src/dlg-prop.c:154
-msgid "Content size:"
-msgstr "Edukiaren tamaina:"
-
-#: ../src/dlg-prop.c:174
-msgid "Compression ratio:"
-msgstr "Konpresio-maila:"
-
-#: ../src/dlg-prop.c:189
-msgid "Number of files:"
-msgstr "Fitxategi kopurua:"
-
-#: ../src/dlg-update.c:163
-#, c-format
-msgid "Update the file \"%s\" in the archive \"%s\"?"
-msgstr "Eguneratu \"%s\" fitxategia \"%s\" artxiboan?"
-
-#: ../src/dlg-update.c:192
+#: ../src/dlg-update.c:189
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
 msgstr "Eguneratu fitxategiak \"%s\" artxiboan?"
 
-#: ../src/eggfileformatchooser.c:236
-#, c-format
-msgid "File _Format: %s"
-msgstr "Fitxategi-formatua: %s"
+#: ../src/fr-application.c:65
+msgid "Add files to the specified archive and quit the program"
+msgstr "Gehitu fitxategiak zehaztutako artxibora eta programatik irten"
 
-#: ../src/eggfileformatchooser.c:397
-msgid "All Files"
-msgstr "Fitxategi guztiak"
+#: ../src/fr-application.c:66
+msgid "ARCHIVE"
+msgstr "ARTXIBOA"
 
-#: ../src/eggfileformatchooser.c:398
-msgid "All Supported Files"
-msgstr "Onartutako fitxategi guztiak"
+#: ../src/fr-application.c:69
+msgid "Add files asking the name of the archive and quit the program"
+msgstr "Gehitu fitxategiak artxiboaren izena eskatuz eta programatik irten"
 
-#: ../src/eggfileformatchooser.c:407
-msgid "By Extension"
-msgstr "Luzapenaren arabera"
+#: ../src/fr-application.c:73
+msgid "Extract archives to the specified folder and quit the program"
+msgstr "Erauzi artxiboak zehaztutako karpetara eta programatik irten"
 
-#: ../src/eggfileformatchooser.c:422
-msgid "File Format"
-msgstr "Fitxategi-formatua"
+#: ../src/fr-application.c:74 ../src/fr-application.c:86
+msgid "FOLDER"
+msgstr "KARPETA"
 
-#: ../src/eggfileformatchooser.c:440
-msgid "Extension(s)"
-msgstr "Hedapena(k)"
+#: ../src/fr-application.c:77
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr "Erauzi artxiboak helburuko karpeta eskatuz eta programatik irten"
 
-#: ../src/eggfileformatchooser.c:675
-#, c-format
+#: ../src/fr-application.c:81
 msgid ""
-"The program was not able to find out the file format you want to use for `"
-"%s'. Please make sure to use a known extension for that file or manually "
-"choose a file format from the list below."
+"Extract the contents of the archives in the archive folder and quit the "
+"program"
+msgstr "Erauzi artxiboen edukia artxiboaren karpetan eta programatik irten"
+
+#: ../src/fr-application.c:85
+msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr ""
-"Programak ezin izan du '%s'(r)ekin erabiltzea nahi duzun fitxategi-formatua "
-"aurkitu. Ziurtatu zaitez hedapen ezagun bat erabiltzen fitxategi "
-"horrentzako, edo aukeratu eskuz fitxategi-formatu bat azpiko zerrendatik."
+"Karpeta lehenetsia, \"--add\" eta \"--extract\" komandoekin erabiltzeko"
 
-#: ../src/eggfileformatchooser.c:682
-msgid "File format not recognized"
-msgstr "Fitxategi-formatua ez da ezaguna"
+#: ../src/fr-application.c:89
+msgid "Create destination folder without asking confirmation"
+msgstr "Sortu helburuko karpeta berrespenik eskatu gabe"
 
-#: ../src/fr-archive.c:1158
-msgid "File not found."
-msgstr "Ez da fitxategia aurkitu."
+#: ../src/fr-application.c:93
+msgid "Use the notification system to notify the operation completion"
+msgstr "Erabili jakinarazpenen sistema eragiketa osatzean jakinarazteko"
 
-#: ../src/fr-archive.c:1261
+#: ../src/fr-application.c:96
+msgid "Start as a service"
+msgstr "Abiarazi zerbitzu gisa"
+
+#: ../src/fr-application.c:99
+msgid "Show version"
+msgstr "Erakutsi bertsioa"
+
+#: ../src/fr-application.c:365 ../src/fr-application.c:401
+#: ../src/fr-application.c:427 ../src/fr-application.c:707
+#: ../src/fr-window.c:9353
+msgid "Extract archive"
+msgstr "Erauzi artxiboa"
+
+#: ../src/fr-application.c:565
+msgid "- Create and modify an archive"
+msgstr "- Sortu eta aldatu artxibo bat"
+
+#. manually set name and icon
+#: ../src/fr-application.c:833
+msgid "File Roller"
+msgstr "File Roller"
+
+#: ../src/fr-archive.c:1844
+msgid "You don't have the right permissions."
+msgstr "Ez dituzu baimen egokiak."
+
+#: ../src/fr-archive.c:1844
+msgid "This archive type cannot be modified"
+msgstr "Artxibo mota hau ezin da eraldatu"
+
+#: ../src/fr-archive.c:1858
+msgid "You can't add an archive to itself."
+msgstr "Ezin duzu artxibo bat bere buruari gehitu."
+
+#. Translators: %s is a filename.
+#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:328
+#: ../src/fr-command-tar.c:305
+#, c-format
+msgid "Adding \"%s\""
+msgstr "\"%s\" gehitzen"
+
+#. Translators: %s is a filename.
+#: ../src/fr-command-7z.c:424 ../src/fr-command-rar.c:460
+#: ../src/fr-command-tar.c:426
+#, c-format
+msgid "Extracting \"%s\""
+msgstr "\"%s\" erauzten"
+
+#: ../src/fr-command.c:597
 #, c-format
 msgid "Archive not found"
 msgstr "Ez da artxiboa aurkitu."
 
-#: ../src/fr-archive.c:2427
-msgid "You don't have the right permissions."
-msgstr "Ez dituzu baimen egokiak."
+#. Translators: %s is a filename.
+#: ../src/fr-command-rar.c:409 ../src/fr-command-tar.c:371
+#, c-format
+msgid "Removing \"%s\""
+msgstr "\"%s\" ezabatzen"
 
-#: ../src/fr-archive.c:2427
-msgid "This archive type cannot be modified"
-msgstr "Artxibo mota hau ezin da eraldatu"
-
-#: ../src/fr-archive.c:2439
-msgid "You can't add an archive to itself."
-msgstr "Ezin duzu artxibo bat bere buruari gehitu."
-
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:324
-#: ../src/fr-command-tar.c:307
-msgid "Adding file: "
-msgstr "Fitxategia gehitzen:"
-
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-7z.c:418 ../src/fr-command-rar.c:451
-#: ../src/fr-command-tar.c:426
-msgid "Extracting file: "
-msgstr "Fitxategia erauzten:"
-
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-rar.c:402 ../src/fr-command-tar.c:372
-msgid "Removing file: "
-msgstr "Fitxategia ezabatzen:"
-
-#: ../src/fr-command-rar.c:584
+#: ../src/fr-command-rar.c:586
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "Ezin izan da bolumena aurkitu: %s"
 
-#: ../src/fr-command-tar.c:381 ../src/fr-window.c:2315
+#: ../src/fr-command-tar.c:381
 msgid "Deleting files from archive"
 msgstr "Artxibotik fitxategiak ezabatzen"
 
-#: ../src/fr-command-tar.c:485
+#: ../src/fr-command-tar.c:486
 msgid "Recompressing archive"
 msgstr "Artxiboa birkonprimitzen"
 
-#: ../src/fr-command-tar.c:736
+#: ../src/fr-command-tar.c:726
 msgid "Decompressing archive"
 msgstr "Artxiboa deskonprimitzen"
 
-#: ../src/fr-init.c:58
-msgid "7-Zip (.7z)"
-msgstr "7-Zip (.7z)"
+#: ../src/fr-file-selector-dialog.c:588
+msgid "File System"
+msgstr "Fitxategi-sistema"
 
-#: ../src/fr-init.c:59
-msgid "Tar compressed with 7z (.tar.7z)"
-msgstr "Tar 7z-rekin konprimitua (.tar.7z)"
+#: ../src/fr-file-selector-dialog.c:1331 ../src/fr-file-selector-dialog.c:1376
+msgid "Could not load the location"
+msgstr "Ezin izan da kokalekua kargatu"
 
-#: ../src/fr-init.c:60
-msgid "Ace (.ace)"
-msgstr "Ace (.ace)"
+#: ../src/fr-new-archive-dialog.c:335 ../src/fr-new-archive-dialog.c:354
+#: ../src/fr-new-archive-dialog.c:370 ../src/fr-new-archive-dialog.c:418
+#: ../src/fr-window.c:2868
+msgid "Could not create the archive"
+msgstr "Ezin izan da artxiboa sortu"
 
-#: ../src/fr-init.c:62
-msgid "Ar (.ar)"
-msgstr "Ar (.ar)"
+#: ../src/fr-new-archive-dialog.c:337 ../src/fr-new-archive-dialog.c:356
+msgid "You have to specify an archive name."
+msgstr "Artxibo-izen bat zehaztu behar duzu."
 
-#: ../src/fr-init.c:63
-msgid "Arj (.arj)"
-msgstr "Arj (.arj)"
+#: ../src/fr-new-archive-dialog.c:420
+msgid "You don't have permission to create an archive in this folder"
+msgstr "Ez duzu baimenik karpeta honetan artxibo bat sortzeko"
 
-#: ../src/fr-init.c:65
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "Tar bzip2-rekin konprimitua (.tar.bz2)"
+#: ../src/fr-new-archive-dialog.c:439
+#, c-format
+msgid "A file named \"%s\" already exists.  Do you want to replace it?"
+msgstr " \"%s\" izeneko fitxategia badago lehendik. Ordeztea nahi duzu?"
 
-#: ../src/fr-init.c:67
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "Tar bzip-ekin konprimitua (.tar.bz)"
+#: ../src/fr-new-archive-dialog.c:440
+#, c-format
+msgid ""
+"The file already exists in \"%s\".  Replacing it will overwrite its contents."
+msgstr ""
+"\"%s\"(e)n badago fitxategia lehendik. Hau ordeztean bere eduki guztia "
+"gainidatziko da."
 
-#: ../src/fr-init.c:68
-msgid "Cabinet (.cab)"
-msgstr "Cabinet (.cab)"
+#: ../src/fr-new-archive-dialog.c:447 ../src/fr-window.c:6616
+msgid "_Replace"
+msgstr "_Ordeztu"
 
-#: ../src/fr-init.c:69
-msgid "Rar Archived Comic Book (.cbr)"
-msgstr "Rar-ekin konprimitutako komikia (.cbr)"
-
-#: ../src/fr-init.c:70
-msgid "Zip Archived Comic Book (.cbz)"
-msgstr "Zip-ekin konprimitutako komikia (.cbz)"
-
-#: ../src/fr-init.c:73
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "Tar gzip-ekin konprimitua (.tar.gz)"
-
-#: ../src/fr-init.c:76
-msgid "Ear (.ear)"
-msgstr "Ear (.ear)"
-
-#: ../src/fr-init.c:77
-msgid "Self-extracting zip (.exe)"
-msgstr "Auto-erauzketadun zip (.exe)"
-
-#: ../src/fr-init.c:79
-msgid "Jar (.jar)"
-msgstr "Jar (.jar)"
-
-#: ../src/fr-init.c:80
-msgid "Lha (.lzh)"
-msgstr "Lha (.lhz)"
-
-#: ../src/fr-init.c:81
-msgid "Lrzip (.lrz)"
-msgstr "Lrzip (.lrz)"
-
-#: ../src/fr-init.c:82
-msgid "Tar compressed with lrzip (.tar.lrz)"
-msgstr "Tar lrzip-ekin konprimitua (.tar.lrz)"
-
-#: ../src/fr-init.c:84
-msgid "Tar compressed with lzip (.tar.lz)"
-msgstr "Tar lzip-ekin konprimitua (.tar.lz)"
-
-#: ../src/fr-init.c:86
-msgid "Tar compressed with lzma (.tar.lzma)"
-msgstr "Tar lzma-rekin konprimitua (.tar.lzma)"
-
-#: ../src/fr-init.c:88
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "Tar lzop-ekin konprimitua (.tar.lzo)"
-
-#: ../src/fr-init.c:89
-msgid "Windows Imaging Format (.wim)"
-msgstr "Windows-eko Irudien Formatua (.wim)"
-
-#: ../src/fr-init.c:90
-msgid "Rar (.rar)"
-msgstr "Rar (.rar)"
-
-#: ../src/fr-init.c:93
-msgid "Tar uncompressed (.tar)"
-msgstr "Tar konprimitu gabea (.tar)"
-
-#: ../src/fr-init.c:94
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "Tar compress-ekin konprimitua (.tar.Z)"
-
-#: ../src/fr-init.c:96
-msgid "War (.war)"
-msgstr "War (.war)"
-
-#: ../src/fr-init.c:97
-msgid "Xz (.xz)"
-msgstr "Xz (.xz)"
-
-#: ../src/fr-init.c:98
-msgid "Tar compressed with xz (.tar.xz)"
-msgstr "Tar xz-rekin konprimitua (.tar.xz)"
-
-#: ../src/fr-init.c:99
-msgid "Zoo (.zoo)"
-msgstr "Zoo (.zoo)"
-
-#: ../src/fr-init.c:100
-msgid "Zip (.zip)"
-msgstr "Zip (.zip)"
+#: ../src/fr-new-archive-dialog.c:462
+msgid "Could not delete the old archive."
+msgstr "Ezin izan da artxibo zaharra ezabatu."
 
 #: ../src/fr-stock.c:41
 msgid "C_reate"
@@ -916,144 +631,199 @@ msgstr "_Gehitu"
 msgid "_Extract"
 msgstr "_Erauzi"
 
-#: ../src/fr-window.c:1517
+#: ../src/fr-window.c:1126
+msgid "Operation completed"
+msgstr "Eragiketa burututa"
+
+#: ../src/fr-window.c:1243
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "Objektu %d (%s)"
 msgstr[1] "%d objektu (%s)"
 
-#: ../src/fr-window.c:1522
+#: ../src/fr-window.c:1248
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "Objektu %d hautatua (%s)"
 msgstr[1] "%d objektu hautatuak (%s)"
 
-#: ../src/fr-window.c:1592
+#: ../src/fr-window.c:1633
 msgid "Folder"
 msgstr "Karpeta"
 
-#: ../src/fr-window.c:1989
+#: ../src/fr-window.c:2013
 msgid "[read only]"
 msgstr "[irakurtzeko soilik]"
 
-#: ../src/fr-window.c:2238
+#: ../src/fr-window.c:2132
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Ezin izan da \"%s\" karpeta erakutsi"
 
-#: ../src/fr-window.c:2306 ../src/fr-window.c:2336
-msgid "Creating archive"
-msgstr "Artxiboa sortzen"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2223 ../src/fr-window.c:2261
+#, c-format
+msgid "Creating \"%s\""
+msgstr "\"%s\" sortzen"
 
-#: ../src/fr-window.c:2309
-msgid "Loading archive"
-msgstr "Artxiboa kargatzen"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2227
+#, c-format
+msgid "Loading \"%s\""
+msgstr "\"%s\" kargatzen"
 
-#: ../src/fr-window.c:2312
-msgid "Reading archive"
-msgstr "Artxiboa irakurtzen"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2231
+#, c-format
+msgid "Reading \"%s\""
+msgstr "\"%s\" irakurtzen"
 
-#: ../src/fr-window.c:2318
-msgid "Testing archive"
-msgstr "Artxiboa probatzen"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2235
+#, c-format
+msgid "Deleting the files from \"%s\""
+msgstr "\"%s\"(e)tik fitxategiak ezabatzen"
 
-#: ../src/fr-window.c:2321
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2239
+#, c-format
+msgid "Testing \"%s\""
+msgstr "\"%s\" probatzen"
+
+#: ../src/fr-window.c:2242
 msgid "Getting the file list"
 msgstr "Fitxategi-zerrenda lortzen"
 
-#: ../src/fr-window.c:2324 ../src/fr-window.c:2333
-msgid "Copying the file list"
-msgstr "Fitxategi-zerrenda kopiatzen"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2246
+#, c-format
+msgid "Copying the files to add to \"%s\""
+msgstr "Fitxategiak kopiatzen \"%s\"(r)i gehitzeko"
 
-#: ../src/fr-window.c:2327
-msgid "Adding files to archive"
-msgstr "Fitxategiak artxibora gehitzen"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2250
+#, c-format
+msgid "Adding the files to \"%s\""
+msgstr "Fitxategiak \"%s\"(r)i gehitzen"
 
-#: ../src/fr-window.c:2330
-msgid "Extracting files from archive"
-msgstr "Fitxategiak artxibotik erauzten"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2254
+#, c-format
+msgid "Extracting the files from \"%s\""
+msgstr "Fitxategiak \"%s\"(e)tik erauzten"
 
-#: ../src/fr-window.c:2339
-msgid "Saving archive"
-msgstr "Artxiboa gordetzen"
+#: ../src/fr-window.c:2257
+msgid "Copying the extracted files to the destination"
+msgstr "Erauzitako fitxategiak helburuan kopiatzen"
 
-#: ../src/fr-window.c:2509
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2266
+#, c-format
+msgid "Saving \"%s\""
+msgstr "\"%s\" gordetzen"
+
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2273
+#, c-format
+msgid "Renaming the files in \"%s\""
+msgstr "\"%s\"(e)ko fitxategien izenak aldatzen"
+
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2277
+#, c-format
+msgid "Updating the files in \"%s\""
+msgstr "\"%s\"(e)ko fitxategiak eguneratzen"
+
+#: ../src/fr-window.c:2452
 msgid "_Open the Archive"
 msgstr "_Ireki artxiboa"
 
-#: ../src/fr-window.c:2510
+#: ../src/fr-window.c:2453
 msgid "_Show the Files"
 msgstr "_Erakutsi fitxategiak"
 
-#: ../src/fr-window.c:2565
-msgid "Archive:"
-msgstr "Artxiboa:"
+#: ../src/fr-window.c:2570
+#, c-format
+msgid "%d file remaining"
+msgid_plural "%'d files remaining"
+msgstr[0] "fitxategi %d falta da"
+msgstr[1] "%d fitxategi falta dira"
 
-#: ../src/fr-window.c:2736
+#: ../src/fr-window.c:2574 ../src/fr-window.c:3153
+msgid "Please wait…"
+msgstr "itxaron…"
+
+#: ../src/fr-window.c:2630
 msgid "Extraction completed successfully"
 msgstr "Erauzketa ongi burutu da"
 
-#: ../src/fr-window.c:2759
-msgid "Archive created successfully"
-msgstr "Artxiboa ongi sortu da"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2662 ../src/fr-window.c:6205
+#, c-format
+msgid "\"%s\" created successfully"
+msgstr "\"%s\" ongi sortu da"
 
-#: ../src/fr-window.c:2807
-msgid "please wait…"
-msgstr "itxaron..."
-
-#: ../src/fr-window.c:2892 ../src/fr-window.c:3027
+#: ../src/fr-window.c:2752 ../src/fr-window.c:2924
 msgid "Command exited abnormally."
 msgstr "Komandoa gaizki bukatu da."
 
-#: ../src/fr-window.c:2985
+#: ../src/fr-window.c:2873
 msgid "An error occurred while extracting files."
 msgstr "Errorea gertatu da fitxategiak erauztean."
 
-#: ../src/fr-window.c:2991
+#: ../src/fr-window.c:2879
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Ezin dut \"%s\" ireki"
 
-#: ../src/fr-window.c:2996
+#: ../src/fr-window.c:2884
 msgid "An error occurred while loading the archive."
 msgstr "Errorea gertatu da artxiboa irakurtzean."
 
-#: ../src/fr-window.c:3000
+#: ../src/fr-window.c:2888
 msgid "An error occurred while deleting files from the archive."
 msgstr "Errorea gertatu da artxibotik fitxategiak ezabatzean."
 
-#: ../src/fr-window.c:3006
+#: ../src/fr-window.c:2894
 msgid "An error occurred while adding files to the archive."
 msgstr "Errorea gertatu da fitxategiak artxiboan gehitzean."
 
-#: ../src/fr-window.c:3010
+#: ../src/fr-window.c:2898
 msgid "An error occurred while testing archive."
 msgstr "Errorea gertatu da artxiboa probatzean."
 
-#: ../src/fr-window.c:3014
+#: ../src/fr-window.c:2903
 msgid "An error occurred while saving the archive."
 msgstr "Errorea gertatu da artxiboa gordetzean."
 
-#: ../src/fr-window.c:3018
+#: ../src/fr-window.c:2907
+msgid "An error occurred while renaming the files."
+msgstr "Errorea gertatu da fitxategien izenak aldatzean."
+
+#: ../src/fr-window.c:2911
+msgid "An error occurred while updating the files."
+msgstr "Errorea gertatu da fitxategiak eguneratzean."
+
+#: ../src/fr-window.c:2915
 msgid "An error occurred."
 msgstr "Errorea gertatu da."
 
-#: ../src/fr-window.c:3024
+#: ../src/fr-window.c:2921
 msgid "Command not found."
 msgstr "Ez da komandoa aurkitu"
 
-#: ../src/fr-window.c:3226
+#: ../src/fr-window.c:3081
 msgid "Test Result"
 msgstr "Probaren emaitza"
 
-#: ../src/fr-window.c:4048 ../src/fr-window.c:8197 ../src/fr-window.c:8231
-#: ../src/fr-window.c:8481
+#: ../src/fr-window.c:4045 ../src/fr-window.c:8751 ../src/fr-window.c:8785
+#: ../src/fr-window.c:9064
 msgid "Could not perform the operation"
 msgstr "Ezin izan da eragiketa burutu"
 
-#: ../src/fr-window.c:4074
+#: ../src/fr-window.c:4071
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1061,112 +831,122 @@ msgstr ""
 "Fitxategi hau uneko artxiboan gehitu ala artxibo berri bat bezala ireki nahi "
 "duzu?"
 
-#: ../src/fr-window.c:4104
+#: ../src/fr-window.c:4101
 msgid "Do you want to create a new archive with these files?"
 msgstr "Artxibo berri bat sortu nahi duzu fitxategi hauekin?"
 
-#: ../src/fr-window.c:4107
+#: ../src/fr-window.c:4104
 msgid "Create _Archive"
 msgstr "Sortu _artxiboa"
 
-#: ../src/fr-window.c:4700 ../src/fr-window.c:5776
+#: ../src/fr-window.c:4133 ../src/fr-window.c:7212
+msgid "New Archive"
+msgstr "Artxibo berria"
+
+#: ../src/fr-window.c:4706
 msgid "Folders"
 msgstr "Karpetak"
 
-#: ../src/fr-window.c:4738
+#: ../src/fr-window.c:4744 ../src/ui/file-selector.ui.h:5
 msgctxt "File"
 msgid "Size"
 msgstr "Tamaina"
 
-#: ../src/fr-window.c:4739
+#: ../src/fr-window.c:4745
 msgctxt "File"
 msgid "Type"
 msgstr "Mota"
 
-#: ../src/fr-window.c:4740
+#: ../src/fr-window.c:4746 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
-msgid "Date Modified"
-msgstr "Aldaketa-data"
+msgid "Modified"
+msgstr "Aldatuta"
 
-#: ../src/fr-window.c:4741
+#: ../src/fr-window.c:4747
 msgctxt "File"
 msgid "Location"
 msgstr "Kokalekua"
 
-#: ../src/fr-window.c:4750
+#: ../src/fr-window.c:4756 ../src/ui/file-selector.ui.h:4
 msgctxt "File"
 msgid "Name"
 msgstr "Izena"
 
-#: ../src/fr-window.c:5697
-msgid "Find:"
-msgstr "Bilatu:"
-
-#: ../src/fr-window.c:5784
-msgid "Close the folders pane"
-msgstr "Itxi karpeten panela"
-
 #. Translators: this is the label for the "open recent file" sub-menu.
-#: ../src/fr-window.c:5815
+#: ../src/fr-window.c:5666
 msgid "Open _Recent"
 msgstr "Ireki _oraintsukoa"
 
-#: ../src/fr-window.c:5816 ../src/fr-window.c:5828
+#: ../src/fr-window.c:5667 ../src/fr-window.c:5679
 msgid "Open a recently used archive"
 msgstr "Ireki erabilitako azken artxiboa"
 
-#: ../src/fr-window.c:6258
-#, c-format
-msgid "Could not save the archive \"%s\""
-msgstr "Ezin izan da \"%s\" artxiboa gorde"
+#: ../src/fr-window.c:5695
+msgid "_Other Actions"
+msgstr "_Bestelako ekintzak"
 
-#: ../src/fr-window.c:6774
+#: ../src/fr-window.c:5696
+msgid "Other actions"
+msgstr "Bestelako ekintzak"
+
+#. Translators: after the colon there is a folder name.
+#: ../src/fr-window.c:5760 ../src/ui/file-selector.ui.h:1
+#: ../src/ui/new-archive-dialog.ui.h:2
+msgid "_Location:"
+msgstr "_Kokalekua:"
+
+#: ../src/fr-window.c:6604
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "Ordeztu '%s' fitxategia?"
 
-#: ../src/fr-window.c:6777
+#: ../src/fr-window.c:6607
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "'%s' izeneko fitxategia badago lehendik ere."
 
-#: ../src/fr-window.c:6784
+#: ../src/fr-window.c:6614
 msgid "Replace _All"
 msgstr "Ordeztu _guztiak"
 
-#: ../src/fr-window.c:6785
+#: ../src/fr-window.c:6615
 msgid "_Skip"
 msgstr "_Saltatu"
 
-#: ../src/fr-window.c:6786
-msgid "_Replace"
-msgstr "_Ordeztu"
+#: ../src/fr-window.c:7394 ../src/fr-window.c:7750
+#, c-format
+msgid "Could not save the archive \"%s\""
+msgstr "Ezin izan da \"%s\" artxiboa gorde"
 
-#: ../src/fr-window.c:7293
+#: ../src/fr-window.c:7521
+msgid "Save"
+msgstr "Gorde"
+
+#: ../src/fr-window.c:7844
 msgid "Last Output"
 msgstr "Azken emaitza"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7598
+#: ../src/fr-window.c:8066
 msgid "New name is void, please type a name."
 msgstr "Izen berria hutsik dago, idatzi izen bat."
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7603
+#: ../src/fr-window.c:8071
 msgid "New name is the same as old one, please type other name."
 msgstr "Izen berria zaharraren berdina da, idatzi bestelako izena."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7608
+#: ../src/fr-window.c:8076
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
-"\"%s\" izena baliogabea da, gutxienez honako karaktereetariko "
-"bat duelako: %s. Idatzi beste izen bat."
+"\"%s\" izena baliogabea da, gutxienez honako karaktereetariko bat duelako: "
+"%s. Idatzi beste izen bat."
 
-#: ../src/fr-window.c:7644
+#: ../src/fr-window.c:8112
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1177,7 +957,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7646
+#: ../src/fr-window.c:8112 ../src/fr-window.c:8114
+msgid "Please use a different name."
+msgstr "Erabil ezazu beste izen bat."
+
+#: ../src/fr-window.c:8114
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1188,378 +972,708 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7716
+#: ../src/fr-window.c:8184
 msgid "Rename"
 msgstr "Berrizendatu"
 
-#: ../src/fr-window.c:7717
+#: ../src/fr-window.c:8185
 msgid "_New folder name:"
 msgstr "_Karpeta berriaren izena:"
 
-#: ../src/fr-window.c:7717
+#: ../src/fr-window.c:8185
 msgid "_New file name:"
 msgstr "_Fitxategi berriaren izena:"
 
-#: ../src/fr-window.c:7721
+#: ../src/fr-window.c:8189
 msgid "_Rename"
 msgstr "Be_rrizendatu"
 
-#: ../src/fr-window.c:7738 ../src/fr-window.c:7758
+#: ../src/fr-window.c:8206 ../src/fr-window.c:8225
 msgid "Could not rename the folder"
 msgstr "Ezin izan da karpeta izenez aldatu"
 
-#: ../src/fr-window.c:7738 ../src/fr-window.c:7758
+#: ../src/fr-window.c:8206 ../src/fr-window.c:8225
 msgid "Could not rename the file"
 msgstr "Ezin izan da fitxategia izenez aldatu"
 
-#: ../src/fr-window.c:8158
+#. Translators: %s are archive filenames
+#: ../src/fr-window.c:8658
+#, c-format
+msgid "Moving the files from \"%s\" to \"%s\""
+msgstr "\"%s\"(e)ko fitxategiak \"%s\"(e)ra lekuz aldatzen"
+
+#. Translators: %s are archive filenames
+#: ../src/fr-window.c:8661
+#, c-format
+msgid "Copying the files from \"%s\" to \"%s\""
+msgstr "\"%s\"(e)ko fitxategiak \"%s\"(e)ra kopiatzen"
+
+#: ../src/fr-window.c:8712
 msgid "Paste Selection"
 msgstr "Itsatsi hautapena"
 
-#: ../src/fr-window.c:8159
+#: ../src/fr-window.c:8713
 msgid "_Destination folder:"
 msgstr "_Helburuko karpeta:"
 
-#: ../src/fr-window.c:8760
+#: ../src/fr-window.c:9308
 msgid "Add files to an archive"
 msgstr "Gehitu fitxategiak artxiboan"
-
-#: ../src/fr-window.c:8804
-msgid "Extract archive"
-msgstr "Erauzi artxiboa"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: ../src/glib-utils.c:560
+#: ../src/glib-utils.c:765
 msgid "%d %B %Y, %H:%M"
 msgstr "%Y %B %d, %H:%M"
 
-#. Expander
-#: ../src/gtk-utils.c:421
-msgid "Command _Line Output"
-msgstr "Komando _lerro irteera"
-
-#: ../src/gtk-utils.c:750
+#: ../src/gtk-utils.c:557
 msgid "Could not display help"
 msgstr "Ezin izan da laguntza erakutsi"
 
-#: ../src/main.c:51
-msgid "Add files to the specified archive and quit the program"
-msgstr "Gehitu fitxategiak zehaztutako artxibora eta programatik irten"
-
-#: ../src/main.c:52
-msgid "ARCHIVE"
-msgstr "ARTXIBOA"
-
-#: ../src/main.c:55
-msgid "Add files asking the name of the archive and quit the program"
-msgstr "Gehitu fitxategiak artxiboaren izena eskatuz eta programatik irten"
-
-#: ../src/main.c:59
-msgid "Extract archives to the specified folder and quit the program"
-msgstr "Erauzi artxiboak zehaztutako karpetara eta programatik irten"
-
-#: ../src/main.c:60 ../src/main.c:72
-msgid "FOLDER"
-msgstr "KARPETA"
-
-#: ../src/main.c:63
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr "Erauzi artxiboak helburuko karpeta eskatuz eta programatik irten"
-
-#: ../src/main.c:67
-msgid ""
-"Extract the contents of the archives in the archive folder and quit the "
-"program"
-msgstr "Erauzi artxiboen edukia artxiboaren karpetan eta programatik irten"
-
-#: ../src/main.c:71
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr ""
-"Karpeta lehenetsia, \"--add\" eta \"--extract\" komandoekin erabiltzeko"
-
-#: ../src/main.c:75
-msgid "Create destination folder without asking confirmation"
-msgstr "Sortu helburuko karpeta berrespenik eskatu gabe"
-
-#: ../src/main.c:296 ../src/server.c:444
-msgid "- Create and modify an archive"
-msgstr "- Sortu eta aldatu artxibo bat"
-
-#: ../src/main.c:312 ../src/server.c:457
-msgid "File Roller"
-msgstr "File Roller"
-
-#: ../src/ui.h:31
-msgid "_Archive"
-msgstr "_Artxiboa"
-
-#: ../src/ui.h:32
-msgid "_Edit"
-msgstr "_Editatu"
-
-#: ../src/ui.h:33
-msgid "_View"
-msgstr "_Ikusi"
-
-#: ../src/ui.h:34
-msgid "_Help"
-msgstr "_Laguntza"
-
-#: ../src/ui.h:35
-msgid "_Arrange Files"
-msgstr "_Antolatu fitxategiak"
-
-#: ../src/ui.h:39
-msgid "Information about the program"
-msgstr "Programari buruzko informazioa"
-
-#: ../src/ui.h:42
-msgid "_Add Files…"
-msgstr "_Gehitu fitxategiak..."
-
-#: ../src/ui.h:43 ../src/ui.h:47
-msgid "Add files to the archive"
-msgstr "Gehitu fitxategiak artxiboari"
-
-#: ../src/ui.h:50
-msgid "Add a _Folder…"
-msgstr "Gehitu _karpeta bat..."
-
-#: ../src/ui.h:51 ../src/ui.h:55
-msgid "Add a folder to the archive"
-msgstr "Gehitu karpeta bat artxiboari"
-
-#: ../src/ui.h:54
-msgid "Add Folder"
-msgstr "Gehitu karpeta"
-
-#: ../src/ui.h:59
-msgid "Close the current archive"
-msgstr "Itxi uneko artxiboa"
-
-#: ../src/ui.h:62
-msgid "Contents"
-msgstr "Edukia"
-
-#: ../src/ui.h:63
-msgid "Display the File Roller Manual"
-msgstr "Erakutsi 'File Roller'-en eskuliburua"
-
-#: ../src/ui.h:68 ../src/ui.h:89
-msgid "Copy the selection"
-msgstr "Kopiatu hautapena"
-
-#: ../src/ui.h:72 ../src/ui.h:93
-msgid "Cut the selection"
-msgstr "Ebaki hautapena"
-
-#: ../src/ui.h:76 ../src/ui.h:97
-msgid "Paste the clipboard"
-msgstr "Arbelaren edukia itsasten du"
-
-#: ../src/ui.h:79 ../src/ui.h:100
-msgid "_Rename…"
-msgstr "Be_rrizendatu..."
-
-#: ../src/ui.h:80 ../src/ui.h:101
-msgid "Rename the selection"
-msgstr "Hautapena izenez aldatzen du"
-
-#: ../src/ui.h:84 ../src/ui.h:105
-msgid "Delete the selection from the archive"
-msgstr "Ezabatu hautapena artxibotik"
-
-#: ../src/ui.h:109
-msgid "Dese_lect All"
-msgstr "_Desautatu denak"
-
-#: ../src/ui.h:110
-msgid "Deselect all files"
-msgstr "Desautatu fitxategi denak"
-
-#: ../src/ui.h:113 ../src/ui.h:117
-msgid "_Extract…"
-msgstr "_Erauzi..."
-
-#: ../src/ui.h:114 ../src/ui.h:118 ../src/ui.h:122
-msgid "Extract files from the archive"
-msgstr "Erauzi fitxategiak artxibotik"
-
-#: ../src/ui.h:125
-msgid "Find…"
-msgstr "Bilatu..."
-
-#: ../src/ui.h:130
-msgid "New…"
-msgstr "Berria..."
-
-#: ../src/ui.h:131
-msgid "Create a new archive"
-msgstr "Sortu artxibo berri bat"
-
-#: ../src/ui.h:134
-msgid "Open…"
-msgstr "Ireki..."
-
-#: ../src/ui.h:135 ../src/ui.h:139
-msgid "Open archive"
-msgstr "Ireki artxiboa"
-
-#: ../src/ui.h:142
-msgid "_Open With…"
-msgstr "Ireki _honekin..."
-
-#: ../src/ui.h:143
-msgid "Open selected files with an application"
-msgstr "Ireki hautatutako fitxategiak aplikazio batekin"
-
-#: ../src/ui.h:146
-msgid "Pass_word…"
-msgstr "_Pasahitza..."
-
-#: ../src/ui.h:147
-msgid "Specify a password for this archive"
-msgstr "Zehaztu artxiboaren pasahitza"
-
-#: ../src/ui.h:151
-msgid "Show archive properties"
-msgstr "Erakutsi artxiboen propietateak"
-
-#: ../src/ui.h:155
-msgid "Reload current archive"
-msgstr "Birkargatu uneko artxiboa"
-
-#: ../src/ui.h:158
-msgid "Save As…"
-msgstr "Gorde honela..."
-
-#: ../src/ui.h:159
-msgid "Save the current archive with a different name"
-msgstr "Gorde uneko artxiboa beste izen batekin"
-
-#: ../src/ui.h:163
-msgid "Select all files"
-msgstr "Hautatu fitxategi denak"
-
-#: ../src/ui.h:167
-msgid "Stop current operation"
-msgstr "Gelditu uneko eragiketa"
-
-#: ../src/ui.h:170
-msgid "_Test Integrity"
-msgstr "_Probatu osotasuna"
-
-#: ../src/ui.h:171
-msgid "Test whether the archive contains errors"
-msgstr "Proba egin paketeak erroreak dituen edo ez ikusteko"
-
-#: ../src/ui.h:175 ../src/ui.h:179
-msgid "Open the selected file"
-msgstr "Ireki hautatutako fitxategia"
-
-#: ../src/ui.h:183 ../src/ui.h:187
-msgid "Open the selected folder"
-msgstr "Ireki hautatutako karpeta"
-
-#: ../src/ui.h:192
-msgid "Go to the previous visited location"
-msgstr "Joan bisitatutako aurreko kokapenera"
-
-#: ../src/ui.h:196
-msgid "Go to the next visited location"
-msgstr "Joan bisitatutako hurrengo kokapenera"
-
-#: ../src/ui.h:200
-msgid "Go up one level"
-msgstr "Joan maila bat gora"
-
-#. Translators: the home location is the home folder.
-#: ../src/ui.h:205
-msgid "Go to the home location"
-msgstr "Joan etxera"
-
-#: ../src/ui.h:213
-msgid "_Toolbar"
-msgstr "_Tresna-barra"
-
-#: ../src/ui.h:214
-msgid "View the main toolbar"
-msgstr "Ikusi tresna-barra nagusia"
-
-#: ../src/ui.h:218
-msgid "Stat_usbar"
-msgstr "_Egoera-barra"
-
-#: ../src/ui.h:219
-msgid "View the statusbar"
-msgstr "Ikusi egoera-barra"
-
-#: ../src/ui.h:223
-msgid "_Reversed Order"
-msgstr "_Alderantzikatu ordena"
-
-#: ../src/ui.h:224
-msgid "Reverse the list order"
-msgstr "Zerrendaren ordena alderantzikatu"
-
-#: ../src/ui.h:228
-msgid "_Folders"
-msgstr "_Karpetak"
-
-#: ../src/ui.h:238
+#: ../src/ui/add-dialog-options.ui.h:1
+msgid "Add"
+msgstr "Gehitu"
+
+#: ../src/ui/add-dialog-options.ui.h:2
+msgid "Include _files:"
+msgstr "Txertatu _fitxategiak:"
+
+#: ../src/ui/add-dialog-options.ui.h:3
+msgid "E_xclude files:"
+msgstr "Baztertu fit_xategiak:"
+
+#: ../src/ui/add-dialog-options.ui.h:4
+msgid "_Exclude folders:"
+msgstr "_Baztertu karpetak:"
+
+#: ../src/ui/add-dialog-options.ui.h:5 ../src/ui/extract-dialog-options.ui.h:5
+msgid "example: *.o; *.bak"
+msgstr "Adibidea: *.o, *.bak"
+
+#: ../src/ui/add-dialog-options.ui.h:6 ../src/ui/extract-dialog-options.ui.h:6
+msgid "Actions"
+msgstr "Ekintzak"
+
+#: ../src/ui/add-dialog-options.ui.h:7
+msgid "Add only if _newer"
+msgstr "Gehitu soilik _berriagoa bada"
+
+#: ../src/ui/add-dialog-options.ui.h:8
+msgid "_Follow symbolic links"
+msgstr "_Jarraitu esteka sinbolikoei"
+
+#: ../src/ui/app-menu.ui.h:1
+msgid "_New Archive"
+msgstr "_Artxibo berria"
+
+#: ../src/ui/app-menu.ui.h:3 ../src/ui.h:213
 msgid "View All _Files"
 msgstr "Ikusi _fitxategi guztiak"
 
-#: ../src/ui.h:241
+#: ../src/ui/app-menu.ui.h:4 ../src/ui.h:216
 msgid "View as a F_older"
 msgstr "Ikusi _karpeta bezala"
 
-#: ../src/ui.h:249
-msgid "by _Name"
-msgstr "_Izenaren arabera"
+#: ../src/ui/app-menu.ui.h:5 ../src/ui.h:197
+msgid "_Folders"
+msgstr "_Karpetak"
 
-#: ../src/ui.h:250
-msgid "Sort file list by name"
-msgstr "Fitxategi-zerrenda izenaren arabera ordenatu"
+#: ../src/ui/app-menu.ui.h:6
+msgid "_Help"
+msgstr "_Laguntza"
 
-#: ../src/ui.h:252
-msgid "by _Size"
-msgstr "_Tamainaren arabera"
+#: ../src/ui/app-menu.ui.h:7
+msgid "_About Archive Manager"
+msgstr "Artxibo-kudeatzaileari _buruz"
 
-#: ../src/ui.h:253
-msgid "Sort file list by file size"
-msgstr "Fitxategi-zerrenda fitxategi tamainaren arabera ordenatu"
+#: ../src/ui/app-menu.ui.h:8
+msgid "_Quit"
+msgstr "I_rten"
 
-#: ../src/ui.h:255
-msgid "by T_ype"
-msgstr "_Motaren arabera"
+#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog-options.ui.h:1
+#: ../src/ui/new-archive-dialog.ui.h:4
+msgid "_Password:"
+msgstr "_Pasahitza:"
 
-#: ../src/ui.h:256
-msgid "Sort file list by type"
-msgstr "Fitxategi-zerrenda motaren arabera ordenatu"
+#: ../src/ui/delete.ui.h:1
+msgid "Delete"
+msgstr "Ezabatu"
 
-#: ../src/ui.h:258
-msgid "by _Date Modified"
-msgstr "Aldaketa _dataren arabera"
+#: ../src/ui/delete.ui.h:2 ../src/ui/extract-dialog-options.ui.h:4
+msgid "_Files:"
+msgstr "_Fitxategiak:"
 
-#: ../src/ui.h:259
-msgid "Sort file list by modification time"
-msgstr "Fitxategi-zerrenda aldaketa dataren arabera ordenatu"
+#: ../src/ui/delete.ui.h:3
+msgid "example: *.txt; *.doc"
+msgstr "adibidea: *.txt, *.doc"
 
-#. Translators: this is the "sort by file location" menu item
-#: ../src/ui.h:262
-msgid "by _Location"
-msgstr "_Kokapenaren arabera"
+#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:2
+msgid "_All files"
+msgstr "Fitxategi _denak"
 
-#. Translators: location is the file location
-#: ../src/ui.h:264
-msgid "Sort file list by location"
-msgstr "Fitxategi-zerrenda kokapenaren arabera ordenatu"
+#: ../src/ui/delete.ui.h:5 ../src/ui/extract-dialog-options.ui.h:3
+msgid "_Selected files"
+msgstr "_Hautatutako fitxategiak"
 
-#~ msgid "Modified on:"
-#~ msgstr "Aldatze-data:"
+#: ../src/ui/error-dialog.ui.h:1
+msgid "C_ommand Line Output:"
+msgstr "_Komando-lerroaren irteera:"
+
+#: ../src/ui/extract-dialog-options.ui.h:7
+msgid "_Keep directory structure"
+msgstr "_Mantendu direktorioaren egitura"
+
+#: ../src/ui/extract-dialog-options.ui.h:8
+msgid "Do not _overwrite newer files"
+msgstr "_Ez gainidatzi fitxategi berriagoak"
+
+#: ../src/ui/file-selector.ui.h:2 ../src/ui.h:179
+msgid "Go up one level"
+msgstr "Joan maila bat gora"
+
+#: ../src/ui/file-selector.ui.h:3
+msgid "Places"
+msgstr "Lekuak"
+
+#: ../src/ui/file-selector.ui.h:7
+msgid "_Select All"
+msgstr "_Hautatu denak"
+
+#: ../src/ui/file-selector.ui.h:8 ../src/ui.h:97
+msgid "Dese_lect All"
+msgstr "_Desautatu denak"
+
+#: ../src/ui/file-selector.ui.h:9
+msgid "Show Hidden Files"
+msgstr "Erakutsi ezkutuko fitxategiak"
+
+#: ../src/ui.h:35
+msgid "Information about the program"
+msgstr "Programari buruzko informazioa"
+
+#: ../src/ui.h:38
+msgid "_Add Files…"
+msgstr "_Gehitu fitxategiak..."
+
+#: ../src/ui.h:39 ../src/ui.h:43
+msgid "Add files to the archive"
+msgstr "Gehitu fitxategiak artxiboari"
+
+#: ../src/ui.h:47
+msgid "Close the current archive"
+msgstr "Itxi uneko artxiboa"
+
+#: ../src/ui.h:50
+msgid "Contents"
+msgstr "Edukia"
+
+#: ../src/ui.h:51
+msgid "Display the File Roller Manual"
+msgstr "Erakutsi 'File Roller'-en eskuliburua"
+
+#: ../src/ui.h:56 ../src/ui.h:77
+msgid "Copy the selection"
+msgstr "Kopiatu hautapena"
+
+#: ../src/ui.h:60 ../src/ui.h:81
+msgid "Cut the selection"
+msgstr "Ebaki hautapena"
+
+#: ../src/ui.h:64 ../src/ui.h:85
+msgid "Paste the clipboard"
+msgstr "Arbelaren edukia itsasten du"
+
+#: ../src/ui.h:67 ../src/ui.h:88
+msgid "_Rename…"
+msgstr "Be_rrizendatu..."
+
+#: ../src/ui.h:68 ../src/ui.h:89
+msgid "Rename the selection"
+msgstr "Hautapena izenez aldatzen du"
+
+#: ../src/ui.h:72 ../src/ui.h:93
+msgid "Delete the selection from the archive"
+msgstr "Ezabatu hautapena artxibotik"
+
+#: ../src/ui.h:98
+msgid "Deselect all files"
+msgstr "Desautatu fitxategi denak"
+
+#: ../src/ui.h:101 ../src/ui.h:105
+msgid "_Extract…"
+msgstr "_Erauzi..."
+
+#: ../src/ui.h:102 ../src/ui.h:106 ../src/ui.h:110
+msgid "Extract files from the archive"
+msgstr "Erauzi fitxategiak artxibotik"
+
+#: ../src/ui.h:113
+msgid "New…"
+msgstr "Berria..."
+
+#: ../src/ui.h:114
+msgid "Create a new archive"
+msgstr "Sortu artxibo berri bat"
+
+#: ../src/ui.h:117
+msgid "Open…"
+msgstr "Ireki..."
+
+#: ../src/ui.h:118 ../src/ui.h:122
+msgid "Open archive"
+msgstr "Ireki artxiboa"
+
+#: ../src/ui.h:125
+msgid "_Open With…"
+msgstr "Ireki _honekin..."
+
+#: ../src/ui.h:126
+msgid "Open selected files with an application"
+msgstr "Ireki hautatutako fitxategiak aplikazio batekin"
+
+#: ../src/ui.h:129
+msgid "Pass_word…"
+msgstr "_Pasahitza..."
+
+#: ../src/ui.h:130
+msgid "Specify a password for this archive"
+msgstr "Zehaztu artxiboaren pasahitza"
+
+#: ../src/ui.h:134
+msgid "Show archive properties"
+msgstr "Erakutsi artxiboen propietateak"
+
+#: ../src/ui.h:138
+msgid "Reload current archive"
+msgstr "Birkargatu uneko artxiboa"
+
+#: ../src/ui.h:141
+msgid "Save As…"
+msgstr "Gorde honela..."
+
+#: ../src/ui.h:142
+msgid "Save the current archive with a different name"
+msgstr "Gorde uneko artxiboa beste izen batekin"
+
+#: ../src/ui.h:146
+msgid "Select all files"
+msgstr "Hautatu fitxategi denak"
+
+#: ../src/ui.h:149
+msgid "_Test Integrity"
+msgstr "_Probatu osotasuna"
+
+#: ../src/ui.h:150
+msgid "Test whether the archive contains errors"
+msgstr "Proba egin paketeak erroreak dituen edo ez ikusteko"
+
+#: ../src/ui.h:154 ../src/ui.h:158
+msgid "Open the selected file"
+msgstr "Ireki hautatutako fitxategia"
+
+#: ../src/ui.h:162 ../src/ui.h:166
+msgid "Open the selected folder"
+msgstr "Ireki hautatutako karpeta"
+
+#: ../src/ui.h:171
+msgid "Go to the previous visited location"
+msgstr "Joan bisitatutako aurreko kokapenera"
+
+#: ../src/ui.h:175
+msgid "Go to the next visited location"
+msgstr "Joan bisitatutako hurrengo kokapenera"
+
+#. Translators: the home location is the home folder.
+#: ../src/ui.h:184
+msgid "Go to the home location"
+msgstr "Joan etxera"
+
+#: ../src/ui.h:192
+msgid "Stat_usbar"
+msgstr "_Egoera-barra"
+
+#: ../src/ui.h:193
+msgid "View the statusbar"
+msgstr "Ikusi egoera-barra"
+
+#: ../src/ui.h:202
+msgid "Find…"
+msgstr "Bilatu..."
+
+#: ../src/ui.h:203
+msgid "Find files by name"
+msgstr "Bilatu fitxategiak izenaren arabera"
+
+#: ../src/ui/new-archive-dialog-options.ui.h:2
+#: ../src/ui/new-archive-dialog.ui.h:5
+msgid "_Encrypt the file list too"
+msgstr "_Enkriptatu fitxategi-zerrenda ere"
+
+#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
+#: ../src/ui/new-archive-dialog-options.ui.h:3
+#: ../src/ui/new-archive-dialog.ui.h:7
+msgid "Split into _volumes of"
+msgstr "Zatitu _bolumenetan: "
+
+#. MB means megabytes
+#: ../src/ui/new-archive-dialog-options.ui.h:5
+#: ../src/ui/new-archive-dialog.ui.h:9
+msgid "MB"
+msgstr "MB"
+
+#: ../src/ui/new-archive-dialog-options.ui.h:6
+#: ../src/ui/new-archive-dialog.ui.h:10
+msgid "_Other Options"
+msgstr "_Bestelako aukerak"
+
+#: ../src/ui/new-archive-dialog.ui.h:1
+msgid "_Filename:"
+msgstr "_Fitxategi-izena:"
+
+#: ../src/ui/new-archive-dialog.ui.h:3
+msgid "Location"
+msgstr "Kokapena"
+
+#: ../src/ui/password.ui.h:1
+msgid "Password"
+msgstr "Pasahitza"
+
+#: ../src/ui/password.ui.h:2
+msgid "_Encrypt the file list"
+msgstr "_Enkriptatu fitxategi-zerrenda"
+
+#: ../src/ui/properties.ui.h:1
+msgctxt "File"
+msgid "Name:"
+msgstr "Izena:"
+
+#: ../src/ui/properties.ui.h:2
+msgid "Archive size:"
+msgstr "Artxiboaren tamaina:"
+
+#. after the colon there is a folder name.
+#: ../src/ui/properties.ui.h:4
+msgid "Location:"
+msgstr "Kokapena:"
+
+#: ../src/ui/properties.ui.h:5
+msgid "Compression ratio:"
+msgstr "Konpresio-maila:"
+
+#: ../src/ui/properties.ui.h:6
+msgid "Last modified:"
+msgstr "Azken aldaketa:"
+
+#: ../src/ui/properties.ui.h:7
+msgid "Content size:"
+msgstr "Edukiaren tamaina:"
+
+#: ../src/ui/properties.ui.h:8
+msgid "Number of files:"
+msgstr "Fitxategi kopurua:"
+
+#. after the colon there is a file type.
+#: ../src/ui/properties.ui.h:10
+msgid "Type:"
+msgstr "Mota:"
+
+#: ../src/ui/update.ui.h:1
+msgid "_Update"
+msgstr "_Eguneratu"
+
+#: ../src/ui/update.ui.h:3
+msgid "S_elect the files you want to update:"
+msgstr "_Hautatu fitxategiak eguneratzeko:"
+
+#~ msgid ""
+#~ "If true will display icons depending on the file type (slower), otherwise "
+#~ "will use always the same icon for all files (faster)."
+#~ msgstr ""
+#~ "Egia bada, ikonoak bistaratuko ditu fitxategi motaren arabera "
+#~ "(motelagoa), bestela ikono berdina erabiliko du fitxategi guztientzako "
+#~ "(azkarragoa)."
+
+#~ msgid "Overwrite existing files"
+#~ msgstr "Gainidatzi existitzen diren fitxategiak"
+
+#~ msgid "Use mime icons"
+#~ msgstr "Erabili MIME ikonoak"
+
+#~ msgid "View toolbar"
+#~ msgstr "Ikusi tresna-barra"
+
+#~ msgid "Whether to display the toolbar."
+#~ msgstr "Tresna-barra bistaratuko den edo ez."
+
+#~ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+#~ msgstr "<span weight=\"bold\" size=\"larger\">Pasahitza behar da</span>"
+
+#~ msgid ""
+#~ "<i><b>Note:</b> the password will be used to encrypt files you add to the "
+#~ "current archive, and to decrypt files you extract from the current "
+#~ "archive. When the archive is closed the password will be deleted.</i>"
+#~ msgstr ""
+#~ "<i><b>Oharra</b>: pasahitza oraingo artxibora gehitutako fitxategiak "
+#~ "zifratu eta bertatik erauzitakoak desenkriptatzeko erabiliko da. Artxiboa "
+#~ "ixtean pasahitza ezabatuko da.</i>"
+
+#~ msgid "Add a Folder"
+#~ msgstr "Gehitu karpeta bat"
+
+#~ msgid "_Include subfolders"
+#~ msgstr "_Txertatu azpikarpetak"
+
+#~ msgid "Exclude folders that are symbolic lin_ks"
+#~ msgstr "Baztertu este_ka sinbolikoak diren karpetak"
+
+#~ msgid "Sa_ve Options"
+#~ msgstr "_Gorde aukerak"
+
+#~ msgid ""
+#~ "The name \"%s\" is not valid because it cannot contain the characters: "
+#~ "%s\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "\"%s\" izena baliogabea da, ezin baititu honako karaktereak eduki: %s\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "You don't have the right permissions to create an archive in the "
+#~ "destination folder."
+#~ msgstr "Ez duzu baimenik helburuko karpetan artxibo bat sortzeko"
+
+#~ msgid "Archive not created"
+#~ msgstr "Artxiboa ez da sortu"
+
+#~ msgid "_Overwrite"
+#~ msgstr "_Gainidatzi"
+
+#~ msgid "Re-crea_te folders"
+#~ msgstr "Sortu _berriro karpetak"
+
+#~ msgid "Over_write existing files"
+#~ msgstr "Gainidatzi existitzen diren fitxategiak"
+
+#~ msgid "Do not e_xtract older files"
+#~ msgstr "Ez _erauzi fitxategi zaharragoak"
+
+#~ msgctxt "File"
+#~ msgid "New"
+#~ msgstr "Berria..."
+
+#~ msgid "File _Format: %s"
+#~ msgstr "Fitxategi-formatua: %s"
+
+#~ msgid "All Files"
+#~ msgstr "Fitxategi guztiak"
+
+#~ msgid "All Supported Files"
+#~ msgstr "Onartutako fitxategi guztiak"
+
+#~ msgid "By Extension"
+#~ msgstr "Luzapenaren arabera"
+
+#~ msgid "File Format"
+#~ msgstr "Fitxategi-formatua"
+
+#~ msgid "Extension(s)"
+#~ msgstr "Hedapena(k)"
+
+#~ msgid ""
+#~ "The program was not able to find out the file format you want to use for `"
+#~ "%s'. Please make sure to use a known extension for that file or manually "
+#~ "choose a file format from the list below."
+#~ msgstr ""
+#~ "Programak ezin izan du '%s'(r)ekin erabiltzea nahi duzun fitxategi-"
+#~ "formatua aurkitu. Ziurtatu zaitez hedapen ezagun bat erabiltzen fitxategi "
+#~ "horrentzako, edo aukeratu eskuz fitxategi-formatu bat azpiko zerrendatik."
+
+#~ msgid "File format not recognized"
+#~ msgstr "Fitxategi-formatua ez da ezaguna"
+
+#~ msgid "File not found."
+#~ msgstr "Ez da fitxategia aurkitu."
+
+#~ msgid "Adding file: "
+#~ msgstr "Fitxategia gehitzen:"
+
+#~ msgid "Extracting file: "
+#~ msgstr "Fitxategia erauzten:"
+
+#~ msgid "7-Zip (.7z)"
+#~ msgstr "7-Zip (.7z)"
+
+#~ msgid "Tar compressed with 7z (.tar.7z)"
+#~ msgstr "Tar 7z-rekin konprimitua (.tar.7z)"
+
+#~ msgid "Ace (.ace)"
+#~ msgstr "Ace (.ace)"
+
+#~ msgid "Ar (.ar)"
+#~ msgstr "Ar (.ar)"
+
+#~ msgid "Arj (.arj)"
+#~ msgstr "Arj (.arj)"
+
+#~ msgid "Tar compressed with bzip2 (.tar.bz2)"
+#~ msgstr "Tar bzip2-rekin konprimitua (.tar.bz2)"
+
+#~ msgid "Tar compressed with bzip (.tar.bz)"
+#~ msgstr "Tar bzip-ekin konprimitua (.tar.bz)"
+
+#~ msgid "Cabinet (.cab)"
+#~ msgstr "Cabinet (.cab)"
+
+#~ msgid "Rar Archived Comic Book (.cbr)"
+#~ msgstr "Rar-ekin konprimitutako komikia (.cbr)"
+
+#~ msgid "Zip Archived Comic Book (.cbz)"
+#~ msgstr "Zip-ekin konprimitutako komikia (.cbz)"
+
+#~ msgid "Tar compressed with gzip (.tar.gz)"
+#~ msgstr "Tar gzip-ekin konprimitua (.tar.gz)"
+
+#~ msgid "Ear (.ear)"
+#~ msgstr "Ear (.ear)"
+
+#~ msgid "Self-extracting zip (.exe)"
+#~ msgstr "Auto-erauzketadun zip (.exe)"
+
+#~ msgid "Jar (.jar)"
+#~ msgstr "Jar (.jar)"
+
+#~ msgid "Lha (.lzh)"
+#~ msgstr "Lha (.lhz)"
+
+#~ msgid "Lrzip (.lrz)"
+#~ msgstr "Lrzip (.lrz)"
+
+#~ msgid "Tar compressed with lrzip (.tar.lrz)"
+#~ msgstr "Tar lrzip-ekin konprimitua (.tar.lrz)"
+
+#~ msgid "Tar compressed with lzip (.tar.lz)"
+#~ msgstr "Tar lzip-ekin konprimitua (.tar.lz)"
+
+#~ msgid "Tar compressed with lzma (.tar.lzma)"
+#~ msgstr "Tar lzma-rekin konprimitua (.tar.lzma)"
+
+#~ msgid "Tar compressed with lzop (.tar.lzo)"
+#~ msgstr "Tar lzop-ekin konprimitua (.tar.lzo)"
+
+#~ msgid "Windows Imaging Format (.wim)"
+#~ msgstr "Windows-eko Irudien Formatua (.wim)"
+
+#~ msgid "Rar (.rar)"
+#~ msgstr "Rar (.rar)"
+
+#~ msgid "Tar uncompressed (.tar)"
+#~ msgstr "Tar konprimitu gabea (.tar)"
+
+#~ msgid "Tar compressed with compress (.tar.Z)"
+#~ msgstr "Tar compress-ekin konprimitua (.tar.Z)"
+
+#~ msgid "War (.war)"
+#~ msgstr "War (.war)"
+
+#~ msgid "Xz (.xz)"
+#~ msgstr "Xz (.xz)"
+
+#~ msgid "Tar compressed with xz (.tar.xz)"
+#~ msgstr "Tar xz-rekin konprimitua (.tar.xz)"
+
+#~ msgid "Zoo (.zoo)"
+#~ msgstr "Zoo (.zoo)"
+
+#~ msgid "Zip (.zip)"
+#~ msgstr "Zip (.zip)"
+
+#~ msgid "Creating archive"
+#~ msgstr "Artxiboa sortzen"
+
+#~ msgid "Loading archive"
+#~ msgstr "Artxiboa kargatzen"
+
+#~ msgid "Reading archive"
+#~ msgstr "Artxiboa irakurtzen"
+
+#~ msgid "Testing archive"
+#~ msgstr "Artxiboa probatzen"
+
+#~ msgid "Saving archive"
+#~ msgstr "Artxiboa gordetzen"
+
+#~ msgctxt "File"
+#~ msgid "Date Modified"
+#~ msgstr "Aldaketa-data"
+
+#~ msgid "Find:"
+#~ msgstr "Bilatu:"
+
+#~ msgid "Close the folders pane"
+#~ msgstr "Itxi karpeten panela"
+
+#~ msgid "_Edit"
+#~ msgstr "_Editatu"
+
+#~ msgid "_View"
+#~ msgstr "_Ikusi"
+
+#~ msgid "_Arrange Files"
+#~ msgstr "_Antolatu fitxategiak"
+
+#~ msgid "Add a _Folder…"
+#~ msgstr "Gehitu _karpeta bat..."
+
+#~ msgid "Add a folder to the archive"
+#~ msgstr "Gehitu karpeta bat artxiboari"
+
+#~ msgid "Add Folder"
+#~ msgstr "Gehitu karpeta"
+
+#~ msgid "Stop current operation"
+#~ msgstr "Gelditu uneko eragiketa"
+
+#~ msgid "_Toolbar"
+#~ msgstr "_Tresna-barra"
+
+#~ msgid "View the main toolbar"
+#~ msgstr "Ikusi tresna-barra nagusia"
+
+#~ msgid "_Reversed Order"
+#~ msgstr "_Alderantzikatu ordena"
+
+#~ msgid "Reverse the list order"
+#~ msgstr "Zerrendaren ordena alderantzikatu"
+
+#~ msgid "by _Name"
+#~ msgstr "_Izenaren arabera"
+
+#~ msgid "by _Size"
+#~ msgstr "_Tamainaren arabera"
+
+#~ msgid "Sort file list by file size"
+#~ msgstr "Fitxategi-zerrenda fitxategi tamainaren arabera ordenatu"
+
+#~ msgid "by T_ype"
+#~ msgstr "_Motaren arabera"
+
+#~ msgid "Sort file list by type"
+#~ msgstr "Fitxategi-zerrenda motaren arabera ordenatu"
+
+#~ msgid "by _Date Modified"
+#~ msgstr "Aldaketa _dataren arabera"
+
+#~ msgid "Sort file list by modification time"
+#~ msgstr "Fitxategi-zerrenda aldaketa dataren arabera ordenatu"
+
+#~ msgid "by _Location"
+#~ msgstr "_Kokapenaren arabera"
+
+#~ msgid "Sort file list by location"
+#~ msgstr "Fitxategi-zerrenda kokapenaren arabera ordenatu"
 
 #~ msgid "The file doesn't exist"
 #~ msgstr "Fitxategia ez da existitzen"
