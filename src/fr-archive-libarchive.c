@@ -1247,6 +1247,7 @@ save_archive_thread (GSimpleAsyncResult *result,
 	save_data->b = b = archive_write_new ();
 	_archive_write_set_format_from_context (b, save_data);
 	archive_write_open (b, save_data, save_data_open, save_data_write, save_data_close);
+	archive_write_set_bytes_in_last_block (b, 1);
 
 	a = archive_read_new ();
 	archive_read_support_filter_all (a);
