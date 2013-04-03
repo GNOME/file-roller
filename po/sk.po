@@ -1,19 +1,20 @@
 # Slovak translation for file-roller.
-# Copyright (C) 2003-2007, 2010-2012 Free Software Foundation, Inc.
+# Copyright (C) 2003-2007, 2010-2013 Free Software Foundation, Inc.
 # This file is distributed under the same license as the file-roller package.
 # Stanislav Visnovsky <visnovsky@kde.org>, 2003.
 # Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>, 2004.
 # Peter Tuhársky <tuharsky@misbb.sk>, 2007.
 # Marcel Telka <marcel@telka.sk>, 2005, 2006, 2010.
 # Peter Mráz <etkinator@gmail.com>, 2010-2012.
+# Dušan Kazik <prescott66@gmail.com>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-01-14 20:47+0000\n"
-"PO-Revision-Date: 2013-01-16 10:32+0100\n"
+"POT-Creation-Date: 2013-03-28 17:34+0000\n"
+"PO-Revision-Date: 2013-04-03 19:15+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -26,7 +27,7 @@ msgstr ""
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
 msgid "File is not a valid .desktop file"
-msgstr "Súbor nie je platný súbor .desktop"
+msgstr "Súbor nie je platným súborom typu .desktop"
 
 #: ../copy-n-paste/eggdesktopfile.c:190
 #, c-format
@@ -270,8 +271,8 @@ msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
-"Či sa má zašifrovať hlavička archívu. Ak je hlavička zašifrovaná, bude sa vyžadovať heslo aj na "
-"zobrazenie obsahu archívu."
+"Či sa má zašifrovať hlavička archívu. Ak je hlavička zašifrovaná, bude sa "
+"vyžadovať heslo aj na zobrazenie obsahu archívu."
 
 # gsetting summary
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
@@ -325,6 +326,7 @@ msgid "Create a compressed archive with the selected objects"
 msgstr "Vytvorí komprimovaný archív so zvolenými objektmi"
 
 # gtk_file_chooser_dialog; action;
+# DK: https://bugzilla.gnome.org/show_bug.cgi?id=696846
 #: ../src/actions.c:112 ../src/fr-window.c:5678 ../src/fr-window.c:6227
 msgid "Open"
 msgstr "Otvoriť"
@@ -365,6 +367,7 @@ msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Nemáte dostatočné oprávnenia na čítanie súborov z priečinka „%s“"
 
 # file_selector_dialog;action entry
+# DK: https://bugzilla.gnome.org/show_bug.cgi?id=696846
 #: ../src/dlg-add.c:182 ../src/ui.h:42
 msgid "Add Files"
 msgstr "Pridať súbory"
@@ -374,13 +377,15 @@ msgstr "Pridať súbory"
 msgid "_Options"
 msgstr "_Voľby"
 
-# menu item
+# menu item;dialog title
+# DK: https://bugzilla.gnome.org/show_bug.cgi?id=696846
 #. load options
 #: ../src/dlg-add.c:202 ../src/ui/add-options.ui.h:1
 msgid "Load Options"
 msgstr "Načítať voľby"
 
-# menu item
+# menu item;dialog title
+# DK: https://bugzilla.gnome.org/show_bug.cgi?id=696846
 #. save options
 #: ../src/dlg-add.c:209 ../src/dlg-add.c:827
 msgid "Save Options"
@@ -400,16 +405,17 @@ msgstr "Názov pre _voľby:"
 #: ../src/dlg-ask-password.c:131
 #, c-format
 msgid "Password required for \"%s\""
-msgstr "Heslo vyžadované pre „%s“"
+msgstr "Je vyžadované heslo pre súbor „%s“"
 
 #: ../src/dlg-ask-password.c:139
 msgid "Wrong password."
 msgstr "Nesprávne heslo."
 
+# dialog title
 #: ../src/dlg-batch-add.c:87 ../src/fr-application.c:329
 #: ../src/fr-application.c:683
 msgid "Compress"
-msgstr "Komprimovať"
+msgstr "Komprimácia"
 
 #: ../src/dlg-extract.c:96 ../src/fr-window.c:6774
 #, c-format
@@ -431,7 +437,7 @@ msgstr "Vytvoriť _priečinok"
 #: ../src/fr-window.c:4197 ../src/fr-window.c:6678 ../src/fr-window.c:6683
 #: ../src/fr-window.c:6804 ../src/fr-window.c:6823 ../src/fr-window.c:6828
 msgid "Extraction not performed"
-msgstr "Rozbalenie sa neuskutočnilo"
+msgstr "Rozbalenie nebolo uskutočnené"
 
 #: ../src/dlg-extract.c:125 ../src/fr-window.c:6800
 #, c-format
@@ -445,6 +451,7 @@ msgid ""
 msgstr "Nemáte dostatočné oprávnenia na rozbalenie archívu v priečinku „%s“."
 
 # file_chooser_dialog; action entry;
+# DK: https://bugzilla.gnome.org/show_bug.cgi?id=696846
 #: ../src/dlg-extract.c:283 ../src/ui/extract-dialog-options.ui.h:1
 #: ../src/ui.h:109
 msgid "Extract"
@@ -467,7 +474,7 @@ msgid ""
 "There is no command installed for %s files.\n"
 "Do you want to search for a command to open this file?"
 msgstr ""
-"Pre súbory %s nie je nainštalovaný žiadny príkaz.\n"
+"Pre súbory typu %s nie je nainštalovaný žiadny príkaz.\n"
 "Chcete vyhľadať príkaz na otvorenie tohto súboru?"
 
 #: ../src/dlg-package-installer.c:318
@@ -482,9 +489,9 @@ msgstr "_Hľadať príkaz"
 #: ../src/dlg-password.c:91
 #, c-format
 msgid "Enter a password for \"%s\""
-msgstr "Zadajte heslo pre „%s“."
+msgstr "Zadajte heslo pre archív „%s“."
 
-# window title 
+# window title
 #: ../src/dlg-prop.c:96
 #, c-format
 msgid "%s Properties"
@@ -581,6 +588,7 @@ msgid "Show version"
 msgstr "Zobrazí verziu"
 
 # window title
+# DK: https://bugzilla.gnome.org/show_bug.cgi?id=696846
 #: ../src/fr-application.c:365 ../src/fr-application.c:401
 #: ../src/fr-application.c:427 ../src/fr-application.c:707
 #: ../src/fr-window.c:9353
@@ -614,14 +622,14 @@ msgstr "Nemôžete pridať archív do seba samého."
 #: ../src/fr-command-tar.c:305
 #, c-format
 msgid "Adding \"%s\""
-msgstr "Pridáva sa „%s“"
+msgstr "Pridáva sa súbor „%s“"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:424 ../src/fr-command-rar.c:460
 #: ../src/fr-command-tar.c:426
 #, c-format
 msgid "Extracting \"%s\""
-msgstr "Rozbaľuje sa „%s“"
+msgstr "Rozbaľuje sa súbor „%s“"
 
 #: ../src/fr-command.c:597
 #, c-format
@@ -632,7 +640,7 @@ msgstr "Archív nenájdený."
 #: ../src/fr-command-rar.c:409 ../src/fr-command-tar.c:371
 #, c-format
 msgid "Removing \"%s\""
-msgstr "Odstraňuje sa „%s“"
+msgstr "Odstraňuje sa súbor „%s“"
 
 #: ../src/fr-command-rar.c:586
 #, c-format
@@ -967,7 +975,7 @@ msgstr "Názov"
 #. Translators: this is the label for the "open recent file" sub-menu.
 #: ../src/fr-window.c:5666
 msgid "Open _Recent"
-msgstr "Otvoriť n_edávny"
+msgstr "Otvoriť n_edávno použitý"
 
 # action tooltip
 #: ../src/fr-window.c:5667 ../src/fr-window.c:5679
@@ -1009,7 +1017,7 @@ msgstr "Nahr_adiť všetky"
 # button
 #: ../src/fr-window.c:6615
 msgid "_Skip"
-msgstr "Pre_kočiť"
+msgstr "Pre_skočiť"
 
 #: ../src/fr-window.c:7394 ../src/fr-window.c:7750
 #, c-format
@@ -1075,7 +1083,7 @@ msgstr ""
 # dialog title
 #: ../src/fr-window.c:8184
 msgid "Rename"
-msgstr "Premenovať"
+msgstr "Premenovanie"
 
 # label
 #: ../src/fr-window.c:8185
@@ -1122,11 +1130,9 @@ msgstr "Vložiť výber"
 msgid "_Destination folder:"
 msgstr "_Cieľový priečinok:"
 
-# PM: tu je fr_window_push_message čo ma privádza k otázke, nemá tu byť "Pridajte"?
 #: ../src/fr-window.c:9308
-#, fuzzy
 msgid "Add files to an archive"
-msgstr "Pridať súbory do archívu"
+msgstr "Pridajte súbory do archívu"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
@@ -1428,7 +1434,7 @@ msgstr "Vyberie všetky súbory"
 # action entry
 #: ../src/ui.h:149
 msgid "_Test Integrity"
-msgstr "_Kontrola integrity"
+msgstr "_Skontrolovať integritu"
 
 # action entry tooltip
 #: ../src/ui.h:150
@@ -1579,27 +1585,3 @@ msgstr "_Aktualizovať"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "Vyb_erte súbory, ktoré chcete aktualizovať:"
-
-#~ msgid "View toolbar"
-#~ msgstr "Zobraziť lištu s nástrojmi"
-
-#~ msgid "Whether to display the toolbar."
-#~ msgstr "Či sa má zobraziť lišta s nástrojmi."
-
-#~ msgid "Find:"
-#~ msgstr "Nájsť:"
-
-#~ msgid "_Archive"
-#~ msgstr "_Archív"
-
-#~ msgid "_Edit"
-#~ msgstr "_Upraviť"
-
-#~ msgid "_View"
-#~ msgstr "_Zobraziť"
-
-#~ msgid "_Arrange Files"
-#~ msgstr "_Usporiadať súbory"
-
-#~ msgid "_Toolbar"
-#~ msgstr "_Lišta s nástrojmi"
