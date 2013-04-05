@@ -394,7 +394,7 @@ gth_toggle_menu_tool_button_map (GtkWidget *widget)
 		gtk_menu_detach (button->priv->menu);
 
 	g_object_set (button->priv->menu, "halign", button->priv->menu_halign, NULL);
-	g_object_set (button->priv->menu_button, "menu", button->priv->menu, NULL);
+	g_object_set (button->priv->menu_button, "popup", button->priv->menu, NULL);
 }
 
 
@@ -978,7 +978,7 @@ gth_toggle_menu_tool_button_set_menu (GthToggleMenuToolButton *button,
 			gtk_menu_detach (button->priv->menu);
 
 		g_object_set (button->priv->menu, "halign", button->priv->menu_halign, NULL);
-		g_object_set (button->priv->menu_button, "menu", button->priv->menu, NULL);
+		g_object_set (button->priv->menu_button, "popup", button->priv->menu, NULL);
 	}
 
 	g_object_notify (G_OBJECT (button), "menu");
