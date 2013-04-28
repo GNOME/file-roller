@@ -380,7 +380,7 @@ gth_menu_button_set_menu (GthMenuButton *self,
 	g_return_if_fail (GTH_IS_MENU_BUTTON (self));
 	g_return_if_fail (GTK_IS_MENU (menu) || menu == NULL);
 
-	g_object_set (self, "menu", menu, NULL);
+	g_object_set (self, "popup", menu, NULL);
 }
 
 
@@ -391,7 +391,7 @@ gth_menu_button_get_menu (GthMenuButton *self)
 
 	g_return_val_if_fail (GTH_IS_MENU_BUTTON (self), NULL);
 
-	g_object_get (self, "menu", &menu, NULL);
+	g_object_get (self, "popup", &menu, NULL);
 
 	return menu;
 }
