@@ -20,17 +20,14 @@
  */
 
 #include <config.h>
-
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-
 #include <glib.h>
 #include <glib/gi18n.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
@@ -268,7 +265,7 @@ fr_command_tar_list (FrCommand *comm)
 static gboolean
 can_create_a_compressed_archive (FrCommand *comm)
 {
-	return comm->creating_archive && 
+	return comm->creating_archive &&
 		! _g_mime_type_matches (FR_ARCHIVE (comm)->mime_type, "application/x-7z-compressed-tar") &&
 		! _g_mime_type_matches (FR_ARCHIVE (comm)->mime_type, "application/x-rzip-compressed-tar");
 }

@@ -19,6 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <config.h>
 #define _XOPEN_SOURCE       /* See feature_test_macros(7) */
 #include <time.h>
 #include <stdio.h>
