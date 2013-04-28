@@ -23,7 +23,7 @@ shdir = $(libexecdir)/file-roller/
 applications_dir = $(datadir)/applications
 endif
 
-INCLUDES =						\
+AM_CPPFLAGS =						\
 	-I$(top_srcdir)/copy-n-paste/			\
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
