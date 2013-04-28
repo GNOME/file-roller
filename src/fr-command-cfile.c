@@ -509,7 +509,8 @@ fr_command_cfile_get_capabilities (FrArchive  *archive,
 		if (_g_program_is_available ("lzop", check_command))
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
-	else if (_g_mime_type_matches (mime_type, "application/x-rzip")) {
+	else if (_g_mime_type_matches (mime_type, "application/x-rzip") || 
+		 _g_mime_type_matches (mime_type, "application/x-rzip-compressed-tar")) {
 		if (_g_program_is_available ("rzip", check_command))
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
