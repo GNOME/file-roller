@@ -22,7 +22,6 @@
 #include <config.h>
 #include <math.h>
 #include <string.h>
-
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>

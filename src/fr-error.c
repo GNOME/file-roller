@@ -20,6 +20,7 @@
  */
 
 
+#include <config.h>
 #include "fr-error.h"
 
 

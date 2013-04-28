@@ -20,17 +20,14 @@
  */
 
 #include <config.h>
-
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-
 #include <glib.h>
 #include <glib/gi18n.h>
-
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
