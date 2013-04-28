@@ -1052,7 +1052,7 @@ _g_filename_get_extension (const char *filename)
 	if (ext - 4 > filename) {
 		const char *test = ext - 4;
 		/* .tar.rz cannot be uncompressed in one step */
-		if (strncmp (test, ".tar", 4) == 0 && strncmp(ext, ".rz", 2) != 0)
+		if ((strncmp (test, ".tar", 4) == 0) && (strncmp (ext, ".rz", 2) != 0))
 			ext = ext - 4;
 	}
 	return ext;
