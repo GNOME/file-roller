@@ -19,6 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <config.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
@@ -27,6 +28,9 @@
 #include <glib/gprintf.h>
 #include <glib-object.h>
 #include "glib-utils.h"
+#if ENABLE_MAGIC
+#  include <magic.h>
+#endif
 
 
 #define MAX_PATTERNS 128

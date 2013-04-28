@@ -686,15 +686,18 @@ update_places_list (FrFileSelectorDialog *self)
 /* Taken from the Gtk+ file gtkfilechooserdefault.c
  * Copyright (C) 2003, Red Hat, Inc.
  *
+ * Changed by File-Roller authors
+ *
  * Guesses a size based upon font sizes */
 static int
 get_font_size (GtkWidget *widget)
 {
-	GtkStyleContext *context;
-	GtkStateFlags    state;
-	int              font_size;
-	GdkScreen       *screen;
-	double           resolution;
+	GtkStyleContext      *context;
+	GtkStateFlags         state;
+	int                   font_size;
+	GdkScreen            *screen;
+	double                resolution;
+	PangoFontDescription *font;
 
 	context = gtk_widget_get_style_context (widget);
 	state = gtk_widget_get_state_flags (widget);
@@ -708,7 +711,8 @@ get_font_size (GtkWidget *widget)
 	else
 		resolution = 96.0; /* wheeee */
 
-	font_size = pango_font_description_get_size (gtk_style_context_get_font (context, state));
+	gtk_style_context_get (context, state, "font", &font, NULL);
+	font_size = pango_font_description_get_size (font);
 	font_size = PANGO_PIXELS (font_size) * resolution / 72.0;
 
 	return font_size;

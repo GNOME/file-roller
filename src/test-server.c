@@ -135,8 +135,6 @@ main (int argc, char *argv[])
 	GDBusConnection *connection;
 	GError          *error = NULL;
 
-	g_type_init ();
-
 	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
 	if (connection != NULL) {
 		GDBusProxy *proxy;

@@ -511,7 +511,7 @@ _g_icon_get_pixbuf (GIcon        *icon,
 			g_error_free (error);
 		}
 
-		gtk_icon_info_free (icon_info);
+		g_object_unref (icon_info);
 	}
 
 	return pixbuf;
