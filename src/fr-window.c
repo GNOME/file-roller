@@ -3046,10 +3046,6 @@ _archive_operation_completed (FrWindow *window,
 		break;
 
 	case FR_ACTION_DELETING_FILES:
-		close_progress_dialog (window, FALSE);
-		if (! window->priv->batch_mode && ! operation_canceled)
-			window->priv->reload_archive = TRUE;
-
 	case FR_ACTION_ADDING_FILES:
 		close_progress_dialog (window, FALSE);
 
