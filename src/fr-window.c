@@ -6683,26 +6683,35 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 static void
 _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 {
+	gboolean perform_extraction = TRUE;
+
 	if ((odata->edata->overwrite == FR_OVERWRITE_ASK) && (odata->current_file != NULL)) {
 		const char *base_name;
 		GFile      *destination;
 
-		base_name = _g_path_get_relative_basename ((char *) odata->current_file->data, odata->edata->base_dir, odata->edata->junk_paths);
-		destination = g_file_get_child (odata->edata->destination, base_name);
-		g_file_query_info_async (destination,
-					 G_FILE_ATTRIBUTE_STANDARD_TYPE "," G_FILE_ATTRIBUTE_STANDARD_NAME "," G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
-					 G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
-					 G_PRIORITY_DEFAULT,
-					 odata->window->priv->cancellable,
-					 query_info_ready_for_overwrite_dialog_cb,
-					 odata);
+		base_name = _g_path_get_relative_basename_safe ((char *) odata->current_file->data, odata->edata->base_dir, odata->edata->junk_paths);
+		if (base_name != NULL) {
+			destination = g_file_get_child (odata->edata->destination, base_name);
+			g_file_query_info_async (destination,
+						 G_FILE_ATTRIBUTE_STANDARD_TYPE "," G_FILE_ATTRIBUTE_STANDARD_NAME "," G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+						 G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+						 G_PRIORITY_DEFAULT,
+						 odata->window->priv->cancellable,
+						 query_info_ready_for_overwrite_dialog_cb,
+						 odata);
 
-		g_object_unref (destination);
+			g_object_unref (destination);
 
-		return;
+			return;
+		}
+		else
+			perform_extraction = FALSE;
 	}
 
-	if (odata->edata->file_list != NULL) {
+	if (odata->edata->file_list == NULL)
+		perform_extraction = FALSE;
+
+	if (perform_extraction) {
 		/* speed optimization: passing NULL when extracting all the
 		 * files is faster if the command supports the
 		 * propCanExtractAll property. */

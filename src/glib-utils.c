@@ -1020,6 +1020,46 @@ _g_path_get_relative_basename (const char *path,
 }
 
 
+#define ISDOT(c) ((c) == '.')
+#define ISSLASH(c) ((c) == '/')
+
+
+static const char *
+sanitize_filename (const char *file_name)
+{
+	size_t      prefix_len;
+	char const *p;
+
+	prefix_len = 0;
+	for (p = file_name; *p; ) {
+		if (ISDOT (p[0]) && ISDOT (p[1]) && (ISSLASH (p[2]) || !p[2]))
+			prefix_len = p + 2 - file_name;
+
+		do {
+			char c = *p++;
+			if (ISSLASH (c))
+				break;
+		}
+		while (*p);
+	}
+
+	p = file_name + prefix_len;
+	while (ISSLASH (*p))
+		p++;
+
+	return p;
+}
+
+
+const char *
+_g_path_get_relative_basename_safe (const char *path,
+				    const char *base_dir,
+				    gboolean    junk_paths)
+{
+	return sanitize_filename (_g_path_get_relative_basename (path, base_dir, junk_paths));
+}
+
+
 gboolean
 _g_filename_is_hidden (const gchar *name)
 {
