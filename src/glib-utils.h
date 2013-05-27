@@ -138,6 +138,10 @@ gboolean            _g_path_is_parent_of           (const char          *dirname
 const char *        _g_path_get_relative_basename  (const char          *path,
 						    const char          *base_dir,
 						    gboolean             junk_paths);
+const char *        _g_path_get_relative_basename_safe
+						   (const char          *path,
+						    const char          *base_dir,
+						    gboolean             junk_paths);
 gboolean            _g_filename_is_hidden          (const char          *name);
 const char *        _g_filename_get_extension      (const char          *filename);
 gboolean            _g_filename_has_extension      (const char          *filename,

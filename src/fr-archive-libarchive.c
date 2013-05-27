@@ -512,6 +512,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	while ((r = archive_read_next_header (a, &entry)) == ARCHIVE_OK) {
 		const char    *pathname;
 		char          *fullpath;
+		const char    *relative_path;
 		GFile         *file;
 		GFile         *parent;
 		GOutputStream *ostream;
@@ -531,7 +532,12 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		}
 
 		fullpath = (*pathname == '/') ? g_strdup (pathname) : g_strconcat ("/", pathname, NULL);
-		file = g_file_get_child (extract_data->destination, _g_path_get_relative_basename (fullpath, extract_data->base_dir, extract_data->junk_paths));
+		relative_path = _g_path_get_relative_basename_safe (fullpath, extract_data->base_dir, extract_data->junk_paths);
+		if (relative_path == NULL) {
+			archive_read_data_skip (a);
+			continue;
+		}
+		file = g_file_get_child (extract_data->destination, relative_path);
 
 		/* honor the skip_older and overwrite options */
 
@@ -615,14 +621,22 @@ extract_archive_thread (GSimpleAsyncResult *result,
 
 			linkname = archive_entry_hardlink (entry);
 			if (linkname != NULL) {
-				char  *link_fullpath;
-				GFile *link_file;
-				char  *oldname;
-				char  *newname;
-				int    r;
+				char        *link_fullpath;
+				const char  *relative_path;
+				GFile       *link_file;
+				char        *oldname;
+				char        *newname;
+				int          r;
 
 				link_fullpath = (*linkname == '/') ? g_strdup (linkname) : g_strconcat ("/", linkname, NULL);
-				link_file = g_file_get_child (extract_data->destination, _g_path_get_relative_basename (link_fullpath, extract_data->base_dir, extract_data->junk_paths));
+				relative_path = _g_path_get_relative_basename_safe (link_fullpath, extract_data->base_dir, extract_data->junk_paths);
+				if (relative_path == NULL) {
+					g_free (link_fullpath);
+					archive_read_data_skip (a);
+					continue;
+				}
+
+				link_file = g_file_get_child (extract_data->destination, relative_path);
 				oldname = g_file_get_path (link_file);
 				newname = g_file_get_path (file);
 
