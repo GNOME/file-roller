@@ -46,6 +46,7 @@ struct _FrNewArchiveDialogPrivate {
 	gboolean    can_encrypt;
 	gboolean    can_encrypt_header;
 	gboolean    can_create_volumes;
+	GFile      *original_file;
 };
 
 
@@ -59,6 +60,7 @@ fr_new_archive_dialog_finalize (GObject *object)
 
 	self = FR_NEW_ARCHIVE_DIALOG (object);
 
+	_g_object_unref (self->priv->original_file);
 	g_object_unref (self->priv->settings);
 	g_object_unref (self->priv->builder);
 	g_hash_table_unref (self->priv->supported_ext);
@@ -102,7 +104,6 @@ fr_new_archive_dialog_class_init (FrNewArchiveDialogClass *klass)
 
 	object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = fr_new_archive_dialog_finalize;
-	object_class->finalize = fr_new_archive_dialog_finalize;
 
 	widget_class = GTK_WIDGET_CLASS (klass);
 	widget_class->unmap = fr_new_archive_dialog_unmap;
@@ -116,6 +117,7 @@ fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 	self->priv->settings = g_settings_new (FILE_ROLLER_SCHEMA_NEW);
 	self->priv->builder = NULL;
 	self->priv->supported_ext = g_hash_table_new (g_str_hash, g_str_equal);
+	self->priv->original_file = NULL;
 }
 
 
@@ -200,7 +202,8 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 				  GtkWindow          *parent,
 				  FrNewArchiveAction  action,
 				  GFile              *folder,
-				  const char         *default_name)
+				  const char         *default_name,
+				  GFile              *original_file)
 {
 	char *active_extension;
 	int   active_extension_idx;
@@ -213,6 +216,9 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	self->priv->builder = _gtk_builder_new_from_resource ("new-archive-dialog.ui");
 	if (self->priv->builder == NULL)
 		return;
+
+	_g_object_unref (self->priv->original_file);
+	self->priv->original_file = _g_object_ref (original_file);
 
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
 
@@ -298,12 +304,13 @@ fr_new_archive_dialog_new (const char         *title,
 			   GtkWindow          *parent,
 			   FrNewArchiveAction  action,
 			   GFile              *folder,
-			   const char         *default_name)
+			   const char         *default_name,
+			   GFile              *original_file)
 {
 	FrNewArchiveDialog *self;
 
 	self = g_object_new (FR_TYPE_NEW_ARCHIVE_DIALOG, "title", title, NULL);
-	_fr_new_archive_dialog_construct (self, parent, action, folder, default_name);
+	_fr_new_archive_dialog_construct (self, parent, action, folder, default_name, original_file);
 
 	return (GtkWidget *) self;
 }
@@ -418,6 +425,24 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 						_("Could not create the archive"),
 						"%s",
 						_("You don't have permission to create an archive in this folder"));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		g_object_unref (parent_info);
+		g_object_unref (file);
+
+		return NULL;
+	}
+
+	/* check whehter the file is equal to the original file */
+
+	if ((self->priv->original_file != NULL) && (g_file_equal (file, self->priv->original_file))) {
+		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
+						GTK_DIALOG_MODAL,
+						NULL,
+						_("Could not create the archive"),
+						"%s",
+						_("New name is the same as old one, please type other name."));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 
 		gtk_widget_destroy (GTK_WIDGET (dialog));

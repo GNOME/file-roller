@@ -4133,7 +4133,8 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 								    GTK_WINDOW (window),
 								    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
 								    fr_window_get_open_default_dir (window),
-								    archive_name);
+								    archive_name,
+								    NULL);
 				gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 				g_signal_connect (G_OBJECT (dialog),
 						  "response",
@@ -7212,6 +7213,7 @@ fr_window_action_new_archive (FrWindow *window)
 					    GTK_WINDOW (window),
 					    FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES,
 					    fr_window_get_open_default_dir (window),
+					    NULL,
 					    NULL);
 	if ((fr_window_archive_is_present (window) && ! fr_window_is_batch_mode (window) ? NULL : GTK_WINDOW (window)))
 		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
@@ -7521,7 +7523,8 @@ fr_window_action_save_as (FrWindow *window)
 					    GTK_WINDOW (window),
 					    FR_NEW_ARCHIVE_ACTION_SAVE_AS,
 					    fr_window_get_open_default_dir (window),
-					    archive_name);
+					    archive_name,
+					    window->priv->archive_file);
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	g_signal_connect (G_OBJECT (dialog),
 			  "response",

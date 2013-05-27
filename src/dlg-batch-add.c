@@ -88,7 +88,8 @@ dlg_batch_add_files (FrWindow *window,
 					    NULL,
 					    ((file_list->next == NULL) ? FR_NEW_ARCHIVE_ACTION_NEW_SINGLE_FILE : FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES),
 					    parent,
-					    filename);
+					    filename,
+					    NULL);
 	g_signal_connect (dialog,
 			  "response",
 			  G_CALLBACK (dialog_response_cb),
