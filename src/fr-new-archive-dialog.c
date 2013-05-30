@@ -351,7 +351,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 	/* file */
 
 	n_format = get_selected_format (self);
-	parent = gtk_file_chooser_get_current_folder_file (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")));
+	parent = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (GET_WIDGET ("parent_filechooserbutton")));
 	if (parent == NULL) {
 		GtkWidget *d;
 
