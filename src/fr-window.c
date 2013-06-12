@@ -248,6 +248,7 @@ struct _FrWindowPrivate {
 	GtkTreePath       *list_hover_path;
 	GtkTreeViewColumn *filename_column;
 	GtkWindowGroup    *window_group;
+	GHashTable        *named_dialogs;
 
 	gboolean         filter_mode;
 	gint             current_view_length;
@@ -586,7 +587,7 @@ fr_window_free_private_data (FrWindow *window)
 	_g_object_unref (window->priv->settings_nautilus);
 
 	_g_object_unref (window->priv->cancellable);
-
+	g_hash_table_unref (window->priv->named_dialogs);
 	g_object_unref (window->priv->window_group);
 }
 
@@ -620,6 +621,52 @@ fr_window_close (FrWindow *window)
 	}
 
 	gtk_widget_destroy (GTK_WIDGET (window));
+}
+
+
+#define DIALOG_NAME_KEY "fr_dialog_name"
+
+
+static void
+unset_dialog (GtkWidget *object,
+              gpointer   user_data)
+{
+	FrWindow   *window = user_data;
+	const char *dialog_name;
+
+	dialog_name = g_object_get_data (G_OBJECT (object), DIALOG_NAME_KEY);
+	if (dialog_name != NULL)
+		g_hash_table_remove (window->priv->named_dialogs, dialog_name);
+}
+
+
+void
+fr_window_set_dialog (FrWindow   *window,
+		      const char *dialog_name,
+		      GtkWidget  *dialog)
+{
+	g_object_set_data (G_OBJECT (dialog), DIALOG_NAME_KEY, (gpointer) _g_str_get_static (dialog_name));
+	g_hash_table_insert (window->priv->named_dialogs, (gpointer) dialog_name, dialog);
+	g_signal_connect (dialog,
+			  "destroy",
+			  G_CALLBACK (unset_dialog),
+			  window);
+}
+
+
+gboolean
+fr_window_present_dialog_if_created (FrWindow   *window,
+				     const char *dialog_name)
+{
+	GtkWidget *dialog;
+
+	dialog = g_hash_table_lookup (window->priv->named_dialogs, dialog_name);
+	if (dialog != NULL) {
+		gtk_window_present (GTK_WINDOW (dialog));
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 
@@ -830,6 +877,7 @@ fr_window_init (FrWindow *window)
 	window->priv->compression = FR_COMPRESSION_NORMAL;
 	window->priv->window_group = gtk_window_group_new ();
 	window->priv->populating_file_list = FALSE;
+	window->priv->named_dialogs = g_hash_table_new (g_str_hash, g_str_equal);
 	gtk_window_group_add_window (window->priv->window_group, GTK_WINDOW (window));
 
 	window->archive = NULL;
@@ -7218,6 +7266,9 @@ fr_window_action_new_archive (FrWindow *window)
 {
 	GtkWidget *dialog;
 
+	if (fr_window_present_dialog_if_created (window, "new_archive"))
+		return;
+
 	dialog = fr_new_archive_dialog_new (_("New Archive"),
 					    GTK_WINDOW (window),
 					    FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES,
@@ -7230,6 +7281,7 @@ fr_window_action_new_archive (FrWindow *window)
 			  "response",
 			  G_CALLBACK (new_archive_dialog_response_cb),
 			  window);
+	fr_window_set_dialog (window, "new_archive", dialog);
 	gtk_window_present (GTK_WINDOW (dialog));
 }
 
