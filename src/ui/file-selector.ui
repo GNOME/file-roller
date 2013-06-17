@@ -1,6 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <!-- interface-requires gtk+ 3.10 -->
+  <object class="GtkMenu" id="file_list_context_menu">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkMenuItem" id="select_all_menuitem">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">_Select All</property>
+        <property name="use_underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="unselect_all_menuitem">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Dese_lect All</property>
+        <property name="use_underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="menuitem3">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkCheckMenuItem" id="show_hidden_files_menuitem">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Show Hidden Files</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkListStore" id="files_liststore">
+    <columns>
+      <!-- column-name icon -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name size -->
+      <column type="gchararray"/>
+      <!-- column-name modified -->
+      <column type="gchararray"/>
+      <!-- column-name file -->
+      <column type="GObject"/>
+      <!-- column-name name_order -->
+      <column type="gchararray"/>
+      <!-- column-name size_order -->
+      <column type="gint64"/>
+      <!-- column-name modified_order -->
+      <column type="glong"/>
+      <!-- column-name is_folder -->
+      <column type="gboolean"/>
+      <!-- column-name is_selected -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="places_liststore">
+    <columns>
+      <!-- column-name icon -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name file -->
+      <column type="GObject"/>
+      <!-- column-name is_separator -->
+      <column type="gboolean"/>
+      <!-- column-name type -->
+      <column type="gint"/>
+      <!-- column-name sort_order -->
+      <column type="gint"/>
+    </columns>
+  </object>
   <object class="GtkBox" id="content">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -37,7 +110,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">●</property>
-                <property name="invisible_char_set">True</property>
                 <property name="primary_icon_name">folder</property>
               </object>
               <packing>
@@ -48,21 +120,19 @@
             </child>
             <child>
               <object class="GtkButton" id="go_up_button">
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
                 <property name="tooltip_markup" translatable="yes">Go up one level</property>
                 <property name="tooltip_text" translatable="yes">Go up one level</property>
-                <property name="use_action_appearance">False</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage" id="image1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="stock">gtk-go-up</property>
-                    <property name="icon-size">2</property>
+                    <property name="icon_size">2</property>
                   </object>
                 </child>
               </object>
@@ -84,39 +154,13 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkScrolledWindow" id="scrolledwindow1">
+              <object class="GtkPlacesSidebar" id="places_sidebar">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin_right">2</property>
+                <property name="hscrollbar_policy">never</property>
                 <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkTreeView" id="places_treeview">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="model">places_liststore</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection" id="treeview-selection1"/>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="treeviewcolumn1">
-                        <property name="title" translatable="yes">Places</property>
-                        <child>
-                          <object class="GtkCellRendererPixbuf" id="cellrendererpixbuf1"/>
-                          <attributes>
-                            <attribute name="pixbuf">0</attribute>
-                          </attributes>
-                        </child>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext1">
-                            <property name="ellipsize">end</property>
-                          </object>
-                          <attributes>
-                            <attribute name="text">1</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="show_desktop">True</property>
               </object>
               <packing>
                 <property name="resize">False</property>
@@ -238,83 +282,6 @@
         <property name="position">1</property>
       </packing>
     </child>
-  </object>
-  <object class="GtkMenu" id="file_list_context_menu">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkMenuItem" id="select_all_menuitem">
-        <property name="use_action_appearance">False</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">_Select All</property>
-        <property name="use_underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="unselect_all_menuitem">
-        <property name="use_action_appearance">False</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Dese_lect All</property>
-        <property name="use_underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSeparatorMenuItem" id="menuitem3">
-        <property name="use_action_appearance">False</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkCheckMenuItem" id="show_hidden_files_menuitem">
-        <property name="use_action_appearance">False</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Show Hidden Files</property>
-      </object>
-    </child>
-  </object>
-  <object class="GtkListStore" id="files_liststore">
-    <columns>
-      <!-- column-name icon -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name size -->
-      <column type="gchararray"/>
-      <!-- column-name modified -->
-      <column type="gchararray"/>
-      <!-- column-name file -->
-      <column type="GObject"/>
-      <!-- column-name name_order -->
-      <column type="gchararray"/>
-      <!-- column-name size_order -->
-      <column type="gint64"/>
-      <!-- column-name modified_order -->
-      <column type="glong"/>
-      <!-- column-name is_folder -->
-      <column type="gboolean"/>
-      <!-- column-name is_selected -->
-      <column type="gboolean"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="places_liststore">
-    <columns>
-      <!-- column-name icon -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name file -->
-      <column type="GObject"/>
-      <!-- column-name is_separator -->
-      <column type="gboolean"/>
-      <!-- column-name type -->
-      <column type="gint"/>
-      <!-- column-name sort_order -->
-      <column type="gint"/>
-    </columns>
   </object>
   <object class="GtkSizeGroup" id="toolbar_sizegroup"/>
 </interface>

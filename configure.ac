@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
 
-AC_INIT([file-roller],[3.9.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller],[file-roller])
+AC_INIT([file-roller],[3.9.3],[http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller],[file-roller])
 AM_INIT_AUTOMAKE([1.11 foreign no-dist-gzip dist-xz tar-ustar])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -21,7 +21,7 @@ AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
 GLIB_REQUIRED=2.29.14
 GIO_REQUIRED=2.25.5
-GTK_REQUIRED=3.6.0
+GTK_REQUIRED=3.9.3
 NAUTILUS_REQUIRED=2.22.2
 JSON_GLIB_REQUIRED=0.14.0
 LIBNOTIFY_REQUIRED=0.4.3
