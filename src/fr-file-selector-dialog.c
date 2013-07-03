@@ -442,6 +442,40 @@ files_modified_column_sort_func (GtkTreeModel *model,
 }
 
 
+static gboolean
+_fr_file_selector_dialog_is_file_selected (FrFileSelectorDialog *self)
+{
+	GtkListStore *list_store;
+	GtkTreeIter   iter;
+
+	list_store = GTK_LIST_STORE (GET_WIDGET ("files_liststore"));
+	if (! gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
+		return FALSE;
+
+	do {
+		gboolean is_selected;
+
+		gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter,
+				    FILE_LIST_COLUMN_IS_SELECTED, &is_selected,
+				    -1);
+		if (is_selected)
+			return TRUE;
+	}
+	while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+
+	return FALSE;
+}
+
+
+static void
+_update_sensitivity (FrFileSelectorDialog *self)
+{
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (self),
+					   GTK_RESPONSE_OK,
+					   _fr_file_selector_dialog_is_file_selected (self));
+}
+
+
 static void
 is_selected_cellrenderertoggle_toggled_cb (GtkCellRendererToggle *cell_renderer,
 					   gchar                 *path,
@@ -467,6 +501,8 @@ is_selected_cellrenderertoggle_toggled_cb (GtkCellRendererToggle *cell_renderer,
 	gtk_list_store_set (list_store, &iter,
 			    FILE_LIST_COLUMN_IS_SELECTED, ! is_selected,
 			    -1);
+
+	_update_sensitivity (self);
 
 	gtk_tree_path_free (tree_path);
 }
@@ -899,6 +935,7 @@ _set_current_folder (FrFileSelectorDialog *self,
 		g_cancellable_cancel (self->priv->current_operation->cancellable);
 
 	gtk_list_store_clear (GTK_LIST_STORE (GET_WIDGET ("files_liststore")));
+	_update_sensitivity (self);
 
 	self->priv->current_operation = load_data_new (self, folder);
 	self->priv->current_operation->files_to_select = _g_object_list_ref (files);
