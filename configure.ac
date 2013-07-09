@@ -313,6 +313,11 @@ AC_SUBST(DISABLE_DEPRECATED)
 
 dnl ******************************
 
+AC_CHECK_PROG(desktop_validate, desktop-file-validate, true)
+AM_CONDITIONAL([DESKTOP_VALIDATE], [test "$desktop_validate" = "true"])
+
+dnl ******************************
+
 AC_CONFIG_FILES([Makefile
 		 file-roller.spec
 		 data/Makefile
