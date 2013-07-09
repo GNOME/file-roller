@@ -62,6 +62,9 @@ CLEANFILES = 				\
         $(NULL)
 
 dist-hook:
+if DESKTOP_VALIDATE
+	desktop-file-validate $(desktop_DATA)
+endif
 	cd $(distdir); rm -f $(CLEANFILES)
 
 -include $(top_srcdir)/git.mk
