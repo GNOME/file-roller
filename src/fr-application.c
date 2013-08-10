@@ -656,13 +656,13 @@ fr_application_command_line (GApplication            *application,
 	}
 
 	if (arg_extract_to != NULL)
-		extraction_destination = g_file_new_for_commandline_arg (arg_extract_to);
+		extraction_destination = g_application_command_line_create_file_for_arg (command_line, arg_extract_to);
 
 	if (arg_add_to != NULL)
-		add_to_archive = g_file_new_for_commandline_arg (arg_add_to);
+		add_to_archive = g_application_command_line_create_file_for_arg (command_line, arg_add_to);
 
 	if (arg_default_dir != NULL)
-		default_directory = g_file_new_for_commandline_arg (arg_default_dir);
+		default_directory = g_application_command_line_create_file_for_arg (command_line, arg_default_dir);
 
 	if ((arg_add_to != NULL) || (arg_add == 1)) { /* Add files to an archive */
 		GtkWidget   *window;
@@ -677,7 +677,7 @@ fr_application_command_line (GApplication            *application,
 
 		file_list = NULL;
 		while ((filename = remaining_args[i++]) != NULL)
-			file_list = g_list_prepend (file_list, g_file_new_for_commandline_arg (filename));
+			file_list = g_list_prepend (file_list, g_application_command_line_create_file_for_arg (command_line, filename));
 		file_list = g_list_reverse (file_list);
 
 		fr_window_new_batch (FR_WINDOW (window), _("Compress"));
@@ -708,7 +708,7 @@ fr_application_command_line (GApplication            *application,
 		while ((archive = remaining_args[i++]) != NULL) {
 			GFile *file;
 
-			file = g_file_new_for_commandline_arg (archive);
+			file = g_application_command_line_create_file_for_arg (command_line, archive);
 			if (arg_extract_here == 1)
 				fr_window_set_batch__extract_here (FR_WINDOW (window), file);
 			else
@@ -734,7 +734,7 @@ fr_application_command_line (GApplication            *application,
 			window = fr_window_new ();
 			gtk_widget_show (window);
 
-			file = g_file_new_for_commandline_arg (filename);
+			file = g_application_command_line_create_file_for_arg (command_line, filename);
 			fr_window_archive_open (FR_WINDOW (window), file, GTK_WINDOW (window));
 
 			g_object_unref (file);
