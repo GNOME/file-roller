@@ -79,5 +79,6 @@ GtkWidget *   _gtk_builder_get_widget              (GtkBuilder       *builder,
 						    const char       *name);
 int           _gtk_widget_lookup_for_size          (GtkWidget        *widget,
 						    GtkIconSize       icon_size);
+void          _gtk_entry_use_as_password_entry     (GtkEntry         *entry);
 
 #endif

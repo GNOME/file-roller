@@ -630,3 +630,28 @@ _gtk_widget_lookup_for_size (GtkWidget   *widget,
 					   &w, &h);
 	return MAX (w, h);
 }
+
+
+static void
+password_entry_icon_press_cb (GtkEntry            *entry,
+			      GtkEntryIconPosition icon_pos,
+			      GdkEvent            *event,
+			      gpointer             user_data)
+{
+	gtk_entry_set_visibility (entry, ! gtk_entry_get_visibility (entry));
+}
+
+
+void
+_gtk_entry_use_as_password_entry (GtkEntry *entry)
+{
+	gtk_entry_set_visibility (entry, FALSE);
+	gtk_entry_set_icon_from_icon_name (entry, GTK_ENTRY_ICON_SECONDARY, "security-medium-symbolic");
+	gtk_entry_set_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY, TRUE);
+	gtk_entry_set_icon_tooltip_text (entry, GTK_ENTRY_ICON_SECONDARY, _("Change password visibility"));
+
+	g_signal_connect (entry,
+			  "icon-press",
+			  G_CALLBACK (password_entry_icon_press_cb),
+			  NULL);
+}

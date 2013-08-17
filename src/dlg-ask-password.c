@@ -131,6 +131,7 @@ dlg_ask_password__common (FrWindow       *window,
 	message = g_strdup_printf (_("Password required for \"%s\""), filename);
 	gtk_label_set_label (GTK_LABEL (GET_WIDGET ("title_label")), message);
 
+	_gtk_entry_use_as_password_entry (GTK_ENTRY (data->password_entry));
 	if (old_password != NULL) {
 		GtkWidget *info_bar;
 		GtkWidget *label;

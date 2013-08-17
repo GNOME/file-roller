@@ -282,6 +282,8 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	_fr_new_archive_dialog_update_sensitivity (self);
 	extension_comboboxtext_changed_cb (GTK_COMBO_BOX (GET_WIDGET ("extension_comboboxtext")), self);
 
+	_gtk_entry_use_as_password_entry (GTK_ENTRY (GET_WIDGET ("password_entry")));
+
 	/* Set the signals handlers. */
 
 	g_signal_connect (GET_WIDGET ("password_entry"),

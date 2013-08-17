@@ -94,6 +94,7 @@ dlg_password (GtkWidget *widget,
 	g_free (title);
 	g_free (basename);
 
+	_gtk_entry_use_as_password_entry (GTK_ENTRY (GET_WIDGET ("password_entry")));
 	_gtk_entry_set_locale_text (GTK_ENTRY (GET_WIDGET ("password_entry")),
 				    fr_window_get_password (window));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
