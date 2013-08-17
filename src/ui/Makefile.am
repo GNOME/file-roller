@@ -10,7 +10,6 @@ EXTRA_DIST = 				\
 	menus-toolbars.ui		\
 	message-dialog.ui		\
 	new-archive-dialog.ui		\
-	new-archive-dialog-options.ui	\
 	password.ui			\
 	progress-dialog.ui		\
 	properties.ui			\
