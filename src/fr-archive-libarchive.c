@@ -417,14 +417,11 @@ extract_data_get_extraction_requested (ExtractData *extract_data,
 }
 
 
-static void
-_g_file_set_attributes_from_entry (GFile                *file,
-				   struct archive_entry *entry,
-				   ExtractData          *extract_data,
-				   GCancellable         *cancellable)
+static GFileInfo *
+_g_file_info_create_from_entry (struct archive_entry *entry,
+			        ExtractData          *extract_data)
 {
 	GFileInfo *info;
-	GError    *error = NULL;
 
 	info = g_file_info_new ();
 
@@ -478,12 +475,66 @@ _g_file_set_attributes_from_entry (GFile                *file,
 
 	g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_UNIX_MODE, archive_entry_mode (entry));
 
-	if (! g_file_set_attributes_from_info (file, info, 0, cancellable, &error)) {
-		g_warning ("%s", error->message);
-		g_error_free (error);
-	}
+	return info;
+}
+
+
+static gboolean
+_g_file_set_attributes_from_info (GFile         *file,
+				  GFileInfo     *info,
+				  GCancellable  *cancellable,
+				  GError       **error)
+{
+	return g_file_set_attributes_from_info (file, info, G_FILE_QUERY_INFO_NONE, cancellable, error);
+}
+
+
+static gboolean
+_g_file_set_attributes_from_entry (GFile                 *file,
+				   struct archive_entry  *entry,
+				   ExtractData           *extract_data,
+				   GCancellable          *cancellable,
+				   GError               **error)
+{
+	GFileInfo *info;
+	gboolean   result;
+
+	info = _g_file_info_create_from_entry (entry, extract_data);
+	result = _g_file_set_attributes_from_info (file, info, cancellable, error);
 
 	g_object_unref (info);
+
+	return result;
+}
+
+
+static gboolean
+restore_modification_time (GHashTable    *created_folders,
+			   GCancellable  *cancellable,
+			   GError       **error)
+{
+	GHashTableIter iter;
+	gpointer       key, value;
+	gboolean       result = TRUE;
+
+	g_hash_table_iter_init (&iter, created_folders);
+	while (result && g_hash_table_iter_next (&iter, &key, &value)) {
+		GFile     *file = key;
+		GFileInfo *original_info = value;
+		GFileInfo *info;
+
+		if (g_file_info_get_attribute_status (original_info, G_FILE_ATTRIBUTE_TIME_MODIFIED) != G_FILE_ATTRIBUTE_STATUS_SET)
+			continue;
+
+		info = g_file_info_new ();
+		g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED, g_file_info_get_attribute_uint64 (original_info, G_FILE_ATTRIBUTE_TIME_MODIFIED));
+		g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC, g_file_info_get_attribute_uint32 (original_info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC));
+		result = _g_file_set_attributes_from_info (file, info, cancellable, error);
+
+		g_object_unref (info);
+	}
+
+	return result;
 }
 
 
@@ -495,6 +546,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	ExtractData          *extract_data;
 	LoadData             *load_data;
 	GHashTable           *checked_folders;
+	GHashTable           *created_folders;
 	struct archive       *a;
 	struct archive_entry *entry;
 	int                   r;
@@ -503,6 +555,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	load_data = LOAD_DATA (extract_data);
 
 	checked_folders = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
+	created_folders = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, g_object_unref);
 	fr_archive_progress_set_total_files (load_data->archive, extract_data->n_files_to_extract);
 
 	a = archive_read_new ();
@@ -683,8 +736,15 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						load_data->error = g_error_copy (local_error);
 					g_error_free (local_error);
 				}
-				else
-					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable);
+				else {
+					GFileInfo *info;
+
+					info = _g_file_info_create_from_entry (entry, extract_data);
+					_g_file_set_attributes_from_info (file, info, cancellable, &load_data->error);
+					g_hash_table_insert (created_folders, g_object_ref (file), g_object_ref (info));
+
+					g_object_unref (info);
+				}
 				archive_read_data_skip (a);
 				break;
 
@@ -703,7 +763,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				if (r != ARCHIVE_EOF)
 					load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
 				else
-					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable);
+					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable, &load_data->error);
 				break;
 
 			case AE_IFLNK:
@@ -733,6 +793,9 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		}
 	}
 
+	if (load_data->error == NULL)
+		restore_modification_time (created_folders, cancellable, &load_data->error);
+
 	if ((load_data->error == NULL) && (r != ARCHIVE_EOF))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
 	if (load_data->error == NULL)
@@ -740,6 +803,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
 
+	g_hash_table_unref (created_folders);
 	g_hash_table_unref (checked_folders);
 	archive_read_free (a);
 	extract_data_free (extract_data);
