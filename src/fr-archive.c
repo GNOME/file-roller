@@ -450,6 +450,7 @@ fr_archive_init (FrArchive *self)
         self->propAddCanReplace = FALSE;
         self->propAddCanStoreFolders = FALSE;
         self->propAddCanStoreLinks = FALSE;
+        self->propAddCanFollowDirectoryLinksWithoutDereferencing = TRUE;
         self->propExtractCanAvoidOverwrite = FALSE;
         self->propExtractCanSkipOlder = FALSE;
         self->propExtractCanJunkPaths = FALSE;

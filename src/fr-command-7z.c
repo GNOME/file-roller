@@ -679,6 +679,7 @@ fr_command_7z_init (FrCommand7z *self)
 	base->propAddCanReplace            = TRUE;
 	base->propAddCanStoreFolders       = TRUE;
 	base->propAddCanStoreLinks         = TRUE;
+	base->propAddCanFollowDirectoryLinksWithoutDereferencing = FALSE;
 	base->propExtractCanAvoidOverwrite = FALSE;
 	base->propExtractCanSkipOlder      = FALSE;
 	base->propExtractCanJunkPaths      = TRUE;

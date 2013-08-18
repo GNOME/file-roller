@@ -121,6 +121,31 @@ struct _FrArchive {
 	 */
 	guint          propAddCanStoreLinks : 1;
 
+	/* propAddCanFollowDirectoryLinksWithoutDereferencing:
+	 *
+	 * is used to overcome an issue with 7zip when adding a file in a
+	 * subfolder.  For example if we want to add to an archive
+	 *
+	 * /home/user/index.html
+	 *
+	 * in the folder 'doc'
+	 *
+	 * we create a symbolic link doc -> /home/user
+	 *
+	 * and use the following command to add the file
+	 *
+	 * 7z a -bd -y -mx=7 -- /home/user/archive.7z doc/index.html
+	 *
+	 * this gives an error because 7zip doesn't see the doc/index.html file
+	 * for some reason, in this case we have to add the -l option to always
+	 * deference the links.
+	 *
+	 * This means that when adding files to a subfolder in an 7zip archive
+	 * we cannot store symbolic links as such, suboptimal but more
+	 * acceptable than an error.
+	 */
+	guint          propAddCanFollowDirectoryLinksWithoutDereferencing : 1;
+
 	/* propExtractCanAvoidOverwrite:
 	 *
 	 * TRUE if the command can avoid to overwrite the files on disk.
