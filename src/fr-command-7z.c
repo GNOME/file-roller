@@ -390,7 +390,8 @@ fr_command_7z_delete (FrCommand  *command,
 		      const char *from_file,
 		      GList      *file_list)
 {
-	GList *scan;
+	FrArchive *archive = FR_ARCHIVE (command);
+	GList     *scan;
 
 	fr_command_7z_begin_command (command);
 	fr_process_add_arg (command->process, "d");
@@ -398,6 +399,12 @@ fr_command_7z_delete (FrCommand  *command,
 	fr_process_add_arg (command->process, "-y");
 	if (_g_mime_type_matches (FR_ARCHIVE (command)->mime_type, "application/x-ms-dos-executable"))
 		fr_process_add_arg (command->process, "-sfx");
+
+	if (_g_mime_type_matches (archive->mime_type, "application/zip")
+	    || _g_mime_type_matches (archive->mime_type, "application/x-cbz"))
+	{
+		fr_process_add_arg (command->process, "-tzip");
+	}
 
 	if (from_file != NULL)
 		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);
