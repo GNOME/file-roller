@@ -721,7 +721,7 @@ create_tmp_base_dir (GFile      *base_dir,
 
 	temp_dir = _g_file_get_temp_work_dir (NULL);
 	destination_parent = _g_path_remove_level (destination);
-	parent_dir =  _g_file_append_path (temp_dir, destination_parent, NULL);
+	parent_dir = _g_file_append_path (temp_dir, destination_parent, NULL);
 
 	debug (DEBUG_INFO, "mkdir %s\n", g_file_get_path (parent_dir));
 	_g_file_make_directory_tree (parent_dir, 0700, NULL);
@@ -950,6 +950,11 @@ _fr_command_add (FrCommand      *self,
 		tmp_base_dir = g_object_ref (base_dir);
 		new_file_list = _g_string_list_dup (file_list);
 	}
+
+	/* see fr-archive.h for an explanation of the following code */
+
+	if (base_dir_created && ! archive->propAddCanFollowDirectoryLinksWithoutDereferencing)
+		follow_links = TRUE;
 
 	/* if the command cannot update,  get the list of files that are
 	 * newer than the ones in the archive. */
