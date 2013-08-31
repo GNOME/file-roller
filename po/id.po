@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-11 22:11+0000\n"
-"PO-Revision-Date: 2013-03-15 13:56+0700\n"
+"POT-Creation-Date: 2013-08-17 18:37+0000\n"
+"PO-Revision-Date: 2013-08-31 13:30+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
@@ -86,8 +86,8 @@ msgstr "Opsi manajemen sesi:"
 msgid "Show session management options"
 msgstr "Menampilkan opsi manajemen sesi"
 
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:2005
-#: ../src/fr-window.c:5384
+#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:2052
+#: ../src/fr-window.c:5428
 msgid "Archive Manager"
 msgstr "Manajer Arsip"
 
@@ -275,11 +275,11 @@ msgstr "Kompres..."
 msgid "Create a compressed archive with the selected objects"
 msgstr "Membuat arsip yang dikompres dari objek yang dipilih"
 
-#: ../src/actions.c:112 ../src/fr-window.c:5678 ../src/fr-window.c:6227
+#: ../src/actions.c:112 ../src/fr-window.c:5722 ../src/fr-window.c:6271
 msgid "Open"
 msgstr "Buka"
 
-#: ../src/actions.c:125 ../src/fr-window.c:5235
+#: ../src/actions.c:125 ../src/fr-window.c:5279
 msgid "All archives"
 msgstr "Semua arsip"
 
@@ -346,7 +346,7 @@ msgstr "Nama _Opsi:"
 msgid "Password required for \"%s\""
 msgstr "Diperlukan sandi untuk \"%s\""
 
-#: ../src/dlg-ask-password.c:139
+#: ../src/dlg-ask-password.c:140
 msgid "Wrong password."
 msgstr "Sandi salah."
 
@@ -355,7 +355,7 @@ msgstr "Sandi salah."
 msgid "Compress"
 msgstr "Kompres"
 
-#: ../src/dlg-extract.c:96 ../src/fr-window.c:6774
+#: ../src/dlg-extract.c:96 ../src/fr-window.c:6827
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -366,22 +366,22 @@ msgstr ""
 "\n"
 "Buat sekarang?"
 
-#: ../src/dlg-extract.c:105 ../src/fr-window.c:6783
+#: ../src/dlg-extract.c:105 ../src/fr-window.c:6836
 msgid "Create _Folder"
 msgstr "Buat _Folder"
 
 #: ../src/dlg-extract.c:124 ../src/dlg-extract.c:142 ../src/dlg-extract.c:169
-#: ../src/fr-window.c:4197 ../src/fr-window.c:6678 ../src/fr-window.c:6683
-#: ../src/fr-window.c:6804 ../src/fr-window.c:6823 ../src/fr-window.c:6828
+#: ../src/fr-window.c:4241 ../src/fr-window.c:6731 ../src/fr-window.c:6736
+#: ../src/fr-window.c:6857 ../src/fr-window.c:6876 ../src/fr-window.c:6881
 msgid "Extraction not performed"
 msgstr "Ekstraksi tidak dilakukan"
 
-#: ../src/dlg-extract.c:125 ../src/fr-window.c:6800
+#: ../src/dlg-extract.c:125 ../src/fr-window.c:6853
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Tidak dapat membuat folder yang dituju: %s."
 
-#: ../src/dlg-extract.c:170 ../src/fr-window.c:4366 ../src/fr-window.c:4450
+#: ../src/dlg-extract.c:170 ../src/fr-window.c:4410 ../src/fr-window.c:4494
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
@@ -399,8 +399,8 @@ msgstr "Galat sewaktu mencoba mencari aplikasi:"
 
 #: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
 #: ../src/dlg-package-installer.c:331 ../src/fr-archive.c:743
-#: ../src/fr-window.c:3927 ../src/fr-window.c:7402 ../src/fr-window.c:7758
-#: ../src/fr-window.c:9290
+#: ../src/fr-window.c:3970 ../src/fr-window.c:7460 ../src/fr-window.c:7817
+#: ../src/fr-window.c:9349
 msgid "Archive type not supported."
 msgstr "Jenis arsip tidak didukung."
 
@@ -512,7 +512,7 @@ msgstr "Menampilkan versi"
 
 #: ../src/fr-application.c:365 ../src/fr-application.c:401
 #: ../src/fr-application.c:427 ../src/fr-application.c:707
-#: ../src/fr-window.c:9353
+#: ../src/fr-window.c:9412
 msgid "Extract archive"
 msgstr "Mengekstrak arsip"
 
@@ -538,15 +538,15 @@ msgid "You can't add an archive to itself."
 msgstr "Anda tidak dapat menambahkan arsip ke dalam dirinya sendiri."
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:328
-#: ../src/fr-command-tar.c:305
+#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:329
+#: ../src/fr-command-tar.c:304
 #, c-format
 msgid "Adding \"%s\""
 msgstr "Menambahkan \"%s\""
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:424 ../src/fr-command-rar.c:460
-#: ../src/fr-command-tar.c:426
+#: ../src/fr-command-7z.c:424 ../src/fr-command-rar.c:461
+#: ../src/fr-command-tar.c:425
 #, c-format
 msgid "Extracting \"%s\""
 msgstr "Mengekstrak \"%s\""
@@ -557,67 +557,68 @@ msgid "Archive not found"
 msgstr "Arsip tak ditemukan"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-rar.c:409 ../src/fr-command-tar.c:371
+#: ../src/fr-command-rar.c:410 ../src/fr-command-tar.c:370
 #, c-format
 msgid "Removing \"%s\""
 msgstr "Menghapus \"%s\""
 
-#: ../src/fr-command-rar.c:586
+#: ../src/fr-command-rar.c:587
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "Tidak menemukan volume: %s"
 
-#: ../src/fr-command-tar.c:381
+#: ../src/fr-command-tar.c:380
 msgid "Deleting files from archive"
 msgstr "Menghapus berkas dari arsip"
 
-#: ../src/fr-command-tar.c:486
+#: ../src/fr-command-tar.c:485
 msgid "Recompressing archive"
 msgstr "Mengompres ulang arsip"
 
-#: ../src/fr-command-tar.c:726
+#: ../src/fr-command-tar.c:744
 msgid "Decompressing archive"
 msgstr "Mendekompres arsip"
 
-#: ../src/fr-file-selector-dialog.c:588
-msgid "File System"
-msgstr "Sistem Berkas"
-
-#: ../src/fr-file-selector-dialog.c:1331 ../src/fr-file-selector-dialog.c:1376
+#: ../src/fr-file-selector-dialog.c:772 ../src/fr-file-selector-dialog.c:817
 msgid "Could not load the location"
 msgstr "Tidak dapat memuat lokasi"
 
-#: ../src/fr-new-archive-dialog.c:335 ../src/fr-new-archive-dialog.c:354
-#: ../src/fr-new-archive-dialog.c:370 ../src/fr-new-archive-dialog.c:418
-#: ../src/fr-window.c:2868
+#: ../src/fr-new-archive-dialog.c:344 ../src/fr-new-archive-dialog.c:363
+#: ../src/fr-new-archive-dialog.c:379 ../src/fr-new-archive-dialog.c:427
+#: ../src/fr-new-archive-dialog.c:445 ../src/fr-window.c:2915
 msgid "Could not create the archive"
 msgstr "Tidak dapat membuat arsip"
 
-#: ../src/fr-new-archive-dialog.c:337 ../src/fr-new-archive-dialog.c:356
+#: ../src/fr-new-archive-dialog.c:346 ../src/fr-new-archive-dialog.c:365
 msgid "You have to specify an archive name."
 msgstr "Anda harus menentukan nama arsip."
 
-#: ../src/fr-new-archive-dialog.c:420
+#: ../src/fr-new-archive-dialog.c:429
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Anda tidak memiliki hak akses untuk membuat arsip di dalam folder ini"
 
-#: ../src/fr-new-archive-dialog.c:439
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
+#: ../src/fr-new-archive-dialog.c:447 ../src/fr-window.c:8130
+msgid "New name is the same as old one, please type other name."
+msgstr "Nama baru sama dengan yang lama, silakan ketik nama lain."
+
+#: ../src/fr-new-archive-dialog.c:466
 #, c-format
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
 msgstr "Berkas dengan nama \"%s\" sudah ada. Timpa?"
 
-#: ../src/fr-new-archive-dialog.c:440
+#: ../src/fr-new-archive-dialog.c:467
 #, c-format
 msgid ""
 "The file already exists in \"%s\".  Replacing it will overwrite its contents."
 msgstr ""
 "Berkas sudah ada di dalam \"%s\". Menimpanya akan mengganti semua isinya."
 
-#: ../src/fr-new-archive-dialog.c:447 ../src/fr-window.c:6616
+#: ../src/fr-new-archive-dialog.c:474 ../src/fr-window.c:6660
 msgid "_Replace"
 msgstr "_Timpa"
 
-#: ../src/fr-new-archive-dialog.c:462
+#: ../src/fr-new-archive-dialog.c:489
 msgid "Could not delete the old archive."
 msgstr "Tidak dapat menghapus arsip lama."
 
@@ -633,196 +634,196 @@ msgstr "T_ambah"
 msgid "_Extract"
 msgstr "_Ekstrak"
 
-#: ../src/fr-window.c:1126
+#: ../src/fr-window.c:1173
 msgid "Operation completed"
 msgstr "Operasi berhasil"
 
-#: ../src/fr-window.c:1243
+#: ../src/fr-window.c:1290
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "%d objek (%s)"
 
-#: ../src/fr-window.c:1248
+#: ../src/fr-window.c:1295
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "%d objek dipilih (%s)"
 
-#: ../src/fr-window.c:1633
+#: ../src/fr-window.c:1680
 msgid "Folder"
 msgstr "Folder"
 
-#: ../src/fr-window.c:2013
+#: ../src/fr-window.c:2060
 msgid "[read only]"
 msgstr "[hanya bisa dibaca]"
 
-#: ../src/fr-window.c:2132
+#: ../src/fr-window.c:2179
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Tidak dapat menampilkan folder \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2223 ../src/fr-window.c:2261
+#: ../src/fr-window.c:2270 ../src/fr-window.c:2308
 #, c-format
 msgid "Creating \"%s\""
 msgstr "Membuat \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2227
+#: ../src/fr-window.c:2274
 #, c-format
 msgid "Loading \"%s\""
 msgstr "Memuat \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2231
+#: ../src/fr-window.c:2278
 #, c-format
 msgid "Reading \"%s\""
 msgstr "Membaca \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2235
+#: ../src/fr-window.c:2282
 #, c-format
 msgid "Deleting the files from \"%s\""
 msgstr "Menghapus berkas dari \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2239
+#: ../src/fr-window.c:2286
 #, c-format
 msgid "Testing \"%s\""
 msgstr "Menguji \"%s\""
 
-#: ../src/fr-window.c:2242
+#: ../src/fr-window.c:2289
 msgid "Getting the file list"
 msgstr "Memperoleh daftar berkas"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2246
+#: ../src/fr-window.c:2293
 #, c-format
 msgid "Copying the files to add to \"%s\""
 msgstr "Menyalin berkas untuk ditambahkan pada \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2250
+#: ../src/fr-window.c:2297
 #, c-format
 msgid "Adding the files to \"%s\""
 msgstr "Menambahkan berkas pada \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2254
+#: ../src/fr-window.c:2301
 #, c-format
 msgid "Extracting the files from \"%s\""
 msgstr "Mengekstrak berkas dari \"%s\""
 
-#: ../src/fr-window.c:2257
+#: ../src/fr-window.c:2304
 msgid "Copying the extracted files to the destination"
 msgstr "Menyalin berkas yang diekstrak pada lokasi yang dituju"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2266
+#: ../src/fr-window.c:2313
 #, c-format
 msgid "Saving \"%s\""
 msgstr "Menyimpan \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2273
+#: ../src/fr-window.c:2320
 #, c-format
 msgid "Renaming the files in \"%s\""
 msgstr "Mengubah nama berkas dalam \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2277
+#: ../src/fr-window.c:2324
 #, c-format
 msgid "Updating the files in \"%s\""
 msgstr "Memperbaharui berkas dalam \"%s\""
 
-#: ../src/fr-window.c:2452
+#: ../src/fr-window.c:2499
 msgid "_Open the Archive"
 msgstr "_Buka Arsip"
 
-#: ../src/fr-window.c:2453
+#: ../src/fr-window.c:2500
 msgid "_Show the Files"
 msgstr "_Tampilkan Berkas"
 
-#: ../src/fr-window.c:2570
+#: ../src/fr-window.c:2617
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "%'d berkas lagi"
 
-#: ../src/fr-window.c:2574 ../src/fr-window.c:3153
+#: ../src/fr-window.c:2621 ../src/fr-window.c:3196
 msgid "Please wait…"
 msgstr "Mohon tunggu..."
 
-#: ../src/fr-window.c:2630
+#: ../src/fr-window.c:2677
 msgid "Extraction completed successfully"
 msgstr "Berhasil mengekstrak arsip"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2662 ../src/fr-window.c:6205
+#: ../src/fr-window.c:2709 ../src/fr-window.c:6249
 #, c-format
 msgid "\"%s\" created successfully"
 msgstr "\"%s\" berhasil dibuat"
 
-#: ../src/fr-window.c:2752 ../src/fr-window.c:2924
+#: ../src/fr-window.c:2799 ../src/fr-window.c:2971
 msgid "Command exited abnormally."
 msgstr "Perintah berhenti secara abnormal."
 
-#: ../src/fr-window.c:2873
+#: ../src/fr-window.c:2920
 msgid "An error occurred while extracting files."
 msgstr "Terjadi galat sewaktu mengekstrak berkas."
 
-#: ../src/fr-window.c:2879
+#: ../src/fr-window.c:2926
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Tidak dapat membuka \"%s\""
 
-#: ../src/fr-window.c:2884
+#: ../src/fr-window.c:2931
 msgid "An error occurred while loading the archive."
 msgstr "Terjadi galat sewaktu memuat arsip."
 
-#: ../src/fr-window.c:2888
+#: ../src/fr-window.c:2935
 msgid "An error occurred while deleting files from the archive."
 msgstr "Terjadi galat sewaktu menghapus berkas dari arsip."
 
-#: ../src/fr-window.c:2894
+#: ../src/fr-window.c:2941
 msgid "An error occurred while adding files to the archive."
 msgstr "Terjadi galat sewaktu menambah berkas ke dalam arsip."
 
-#: ../src/fr-window.c:2898
+#: ../src/fr-window.c:2945
 msgid "An error occurred while testing archive."
 msgstr "Terjadi galat sewaktu menguji arsip."
 
-#: ../src/fr-window.c:2903
+#: ../src/fr-window.c:2950
 msgid "An error occurred while saving the archive."
 msgstr "Terjadi galat sewaktu menyimpan arsip."
 
-#: ../src/fr-window.c:2907
+#: ../src/fr-window.c:2954
 msgid "An error occurred while renaming the files."
 msgstr "Terjadi galat sewaktu mengubah nama berkas."
 
-#: ../src/fr-window.c:2911
+#: ../src/fr-window.c:2958
 msgid "An error occurred while updating the files."
 msgstr "Terjadi galat sewaktu memperbaharui berkas."
 
-#: ../src/fr-window.c:2915
+#: ../src/fr-window.c:2962
 msgid "An error occurred."
 msgstr "Terjadi galat."
 
-#: ../src/fr-window.c:2921
+#: ../src/fr-window.c:2968
 msgid "Command not found."
 msgstr "Perintah tidak ditemukan."
 
-#: ../src/fr-window.c:3081
+#: ../src/fr-window.c:3124
 msgid "Test Result"
 msgstr "Hasil Pemeriksaan"
 
-#: ../src/fr-window.c:4045 ../src/fr-window.c:8751 ../src/fr-window.c:8785
-#: ../src/fr-window.c:9064
+#: ../src/fr-window.c:4088 ../src/fr-window.c:8810 ../src/fr-window.c:8844
+#: ../src/fr-window.c:9123
 msgid "Could not perform the operation"
 msgstr "Operasi tidak dapat dilakukan"
 
-#: ../src/fr-window.c:4071
+#: ../src/fr-window.c:4114
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -830,113 +831,108 @@ msgstr ""
 "Tambahkan berkas ini pada arsip yang telah dibuka atau jadikan sebagai arsip "
 "baru?"
 
-#: ../src/fr-window.c:4101
+#: ../src/fr-window.c:4144
 msgid "Do you want to create a new archive with these files?"
 msgstr "Buat arsip baru dengan berkas ini?"
 
-#: ../src/fr-window.c:4104
+#: ../src/fr-window.c:4147
 msgid "Create _Archive"
 msgstr "Buat _Arsip"
 
-#: ../src/fr-window.c:4133 ../src/fr-window.c:7212
+#: ../src/fr-window.c:4176 ../src/fr-window.c:7268
 msgid "New Archive"
 msgstr "Arsip Baru"
 
-#: ../src/fr-window.c:4706
+#: ../src/fr-window.c:4750
 msgid "Folders"
 msgstr "Folders"
 
-#: ../src/fr-window.c:4744 ../src/ui/file-selector.ui.h:5
+#: ../src/fr-window.c:4788 ../src/ui/file-selector.ui.h:7
 msgctxt "File"
 msgid "Size"
 msgstr "Ukuran"
 
-#: ../src/fr-window.c:4745
+#: ../src/fr-window.c:4789
 msgctxt "File"
 msgid "Type"
 msgstr "Jenis"
 
-#: ../src/fr-window.c:4746 ../src/ui/file-selector.ui.h:6
+#: ../src/fr-window.c:4790 ../src/ui/file-selector.ui.h:8
 msgctxt "File"
 msgid "Modified"
 msgstr "Diubah"
 
-#: ../src/fr-window.c:4747
+#: ../src/fr-window.c:4791
 msgctxt "File"
 msgid "Location"
 msgstr "Lokasi"
 
-#: ../src/fr-window.c:4756 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:4800 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Name"
 msgstr "Nama"
 
 #. Translators: this is the label for the "open recent file" sub-menu.
-#: ../src/fr-window.c:5666
+#: ../src/fr-window.c:5710
 msgid "Open _Recent"
 msgstr "Buka Te_rkini"
 
-#: ../src/fr-window.c:5667 ../src/fr-window.c:5679
+#: ../src/fr-window.c:5711 ../src/fr-window.c:5723
 msgid "Open a recently used archive"
 msgstr "Membuka arsip yang baru-baru ini digunakan"
 
-#: ../src/fr-window.c:5695
+#: ../src/fr-window.c:5739
 msgid "_Other Actions"
 msgstr "_Aksi Lain"
 
-#: ../src/fr-window.c:5696
+#: ../src/fr-window.c:5740
 msgid "Other actions"
 msgstr "Aksi lain"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5760 ../src/ui/file-selector.ui.h:1
+#: ../src/fr-window.c:5804 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Lokasi:"
 
-#: ../src/fr-window.c:6604
+#: ../src/fr-window.c:6648
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "Timpa berkas \"%s\"?"
 
-#: ../src/fr-window.c:6607
+#: ../src/fr-window.c:6651
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "Berkas lain dengan nama sama sudah ada di \"%s\"."
 
-#: ../src/fr-window.c:6614
+#: ../src/fr-window.c:6658
 msgid "Replace _All"
 msgstr "Ganti Semu_a"
 
-#: ../src/fr-window.c:6615
+#: ../src/fr-window.c:6659
 msgid "_Skip"
 msgstr "_Lewati"
 
-#: ../src/fr-window.c:7394 ../src/fr-window.c:7750
+#: ../src/fr-window.c:7452 ../src/fr-window.c:7809
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Tidak dapat menyimpan arsip \"%s\""
 
-#: ../src/fr-window.c:7521
+#: ../src/fr-window.c:7579
 msgid "Save"
 msgstr "Simpan"
 
-#: ../src/fr-window.c:7844
+#: ../src/fr-window.c:7903
 msgid "Last Output"
 msgstr "Keluaran Terakhir"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:8066
+#: ../src/fr-window.c:8125
 msgid "New name is void, please type a name."
 msgstr "Nama baru kosong, silakan ketikkan suatu nama."
 
-#. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:8071
-msgid "New name is the same as old one, please type other name."
-msgstr "Nama baru sama dengan yang lama, silakan ketik nama lain."
-
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:8076
+#: ../src/fr-window.c:8135
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
@@ -945,7 +941,7 @@ msgstr ""
 "Nama \"%s\" tak valid karena mengandung paling tidak satu dari karakter "
 "berikut: %s, silakan ketik nama lain."
 
-#: ../src/fr-window.c:8112
+#: ../src/fr-window.c:8171
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -956,11 +952,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8112 ../src/fr-window.c:8114
+#: ../src/fr-window.c:8171 ../src/fr-window.c:8173
 msgid "Please use a different name."
 msgstr "Gunakanlah nama yang lain."
 
-#: ../src/fr-window.c:8114
+#: ../src/fr-window.c:8173
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -971,64 +967,68 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8184
+#: ../src/fr-window.c:8243
 msgid "Rename"
 msgstr "Ubah Nama"
 
-#: ../src/fr-window.c:8185
+#: ../src/fr-window.c:8244
 msgid "_New folder name:"
 msgstr "_Nama folder baru:"
 
-#: ../src/fr-window.c:8185
+#: ../src/fr-window.c:8244
 msgid "_New file name:"
 msgstr "_Nama berkas baru:"
 
-#: ../src/fr-window.c:8189
+#: ../src/fr-window.c:8248
 msgid "_Rename"
 msgstr "_Ubah Nama"
 
-#: ../src/fr-window.c:8206 ../src/fr-window.c:8225
+#: ../src/fr-window.c:8265 ../src/fr-window.c:8284
 msgid "Could not rename the folder"
 msgstr "Tidak dapat menguah nama folder"
 
-#: ../src/fr-window.c:8206 ../src/fr-window.c:8225
+#: ../src/fr-window.c:8265 ../src/fr-window.c:8284
 msgid "Could not rename the file"
 msgstr "Tidak dapat mengubah nama berkas"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8658
+#: ../src/fr-window.c:8717
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "Memindahkan berkas dari \"%s\" ke \"%s\""
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8661
+#: ../src/fr-window.c:8720
 #, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "Menyalin berkas dari \"%s\" ke \"%s\""
 
-#: ../src/fr-window.c:8712
+#: ../src/fr-window.c:8771
 msgid "Paste Selection"
 msgstr "Tempel Seleksi"
 
-#: ../src/fr-window.c:8713
+#: ../src/fr-window.c:8772
 msgid "_Destination folder:"
 msgstr "Fol_der tujuan:"
 
-#: ../src/fr-window.c:9308
+#: ../src/fr-window.c:9367
 msgid "Add files to an archive"
 msgstr "Menambahkan berkas ke dalam arsip"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: ../src/glib-utils.c:765
+#: ../src/glib-utils.c:769
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
 #: ../src/gtk-utils.c:557
 msgid "Could not display help"
 msgstr "Tidak dapat menampilkan bantuan"
+
+#: ../src/gtk-utils.c:651
+msgid "Change password visibility"
+msgstr "Ubah kenampakan sandi"
 
 #: ../src/ui/add-dialog-options.ui.h:1
 msgid "Add"
@@ -1090,8 +1090,7 @@ msgstr "Tent_ang Manajer Arsip"
 msgid "_Quit"
 msgstr "_Keluar"
 
-#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog-options.ui.h:1
-#: ../src/ui/new-archive-dialog.ui.h:4
+#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "_Sandi:"
 
@@ -1127,25 +1126,21 @@ msgstr "Pertahan_kan struktur direktori"
 msgid "Do not _overwrite newer files"
 msgstr "_Jangan timpa berkas yang lebih baru"
 
-#: ../src/ui/file-selector.ui.h:2 ../src/ui.h:179
-msgid "Go up one level"
-msgstr "Naik satu tingkat"
-
-#: ../src/ui/file-selector.ui.h:3
-msgid "Places"
-msgstr "Tempat"
-
-#: ../src/ui/file-selector.ui.h:7
+#: ../src/ui/file-selector.ui.h:1
 msgid "_Select All"
 msgstr "Pilih _Semua"
 
-#: ../src/ui/file-selector.ui.h:8 ../src/ui.h:97
+#: ../src/ui/file-selector.ui.h:2 ../src/ui.h:97
 msgid "Dese_lect All"
 msgstr "Tidak Memi_lih Semua"
 
-#: ../src/ui/file-selector.ui.h:9
+#: ../src/ui/file-selector.ui.h:3
 msgid "Show Hidden Files"
 msgstr "Tampilkan Berkas Tersembunyi"
+
+#: ../src/ui/file-selector.ui.h:5 ../src/ui.h:179
+msgid "Go up one level"
+msgstr "Naik satu tingkat"
 
 #: ../src/ui.h:35
 msgid "Information about the program"
@@ -1304,28 +1299,6 @@ msgstr "Cari..."
 msgid "Find files by name"
 msgstr "Cari berkas berdasar nama"
 
-#: ../src/ui/new-archive-dialog-options.ui.h:2
-#: ../src/ui/new-archive-dialog.ui.h:5
-msgid "_Encrypt the file list too"
-msgstr "_Enkripsi daftar berkasnya juga"
-
-#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: ../src/ui/new-archive-dialog-options.ui.h:3
-#: ../src/ui/new-archive-dialog.ui.h:7
-msgid "Split into _volumes of"
-msgstr "Dipecah _dengan ukuran"
-
-#. MB means megabytes
-#: ../src/ui/new-archive-dialog-options.ui.h:5
-#: ../src/ui/new-archive-dialog.ui.h:9
-msgid "MB"
-msgstr "MB"
-
-#: ../src/ui/new-archive-dialog-options.ui.h:6
-#: ../src/ui/new-archive-dialog.ui.h:10
-msgid "_Other Options"
-msgstr "_Opsi Lain"
-
 #: ../src/ui/new-archive-dialog.ui.h:1
 msgid "_Filename:"
 msgstr "Nama _Berkas:"
@@ -1333,6 +1306,24 @@ msgstr "Nama _Berkas:"
 #: ../src/ui/new-archive-dialog.ui.h:3
 msgid "Location"
 msgstr "Lokasi"
+
+#: ../src/ui/new-archive-dialog.ui.h:5
+msgid "_Encrypt the file list too"
+msgstr "_Enkripsi daftar berkasnya juga"
+
+#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
+#: ../src/ui/new-archive-dialog.ui.h:7
+msgid "Split into _volumes of"
+msgstr "Dipecah _dengan ukuran"
+
+#. MB means megabytes
+#: ../src/ui/new-archive-dialog.ui.h:9
+msgid "MB"
+msgstr "MB"
+
+#: ../src/ui/new-archive-dialog.ui.h:10
+msgid "_Other Options"
+msgstr "_Opsi Lain"
 
 #: ../src/ui/password.ui.h:1
 msgid "Password"
