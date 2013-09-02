@@ -349,9 +349,7 @@ fr_command_zip_handle_error (FrCommand *comm,
 	if (error->type == FR_ERROR_NONE)
 		return;
 
-	if (error->status <= 1)
-		fr_error_clear_gerror (error);
-	else if ((error->status == 82) || (error->status == 5))
+	if ((error->status == 82) || (error->status == 5))
 		fr_error_take_gerror (error, g_error_new_literal (FR_ERROR, FR_ERROR_ASK_PASSWORD, ""));
 	else {
 		int i;
@@ -371,6 +369,11 @@ fr_command_zip_handle_error (FrCommand *comm,
 				}
 			}
 		}
+
+		/* ignore warnings */
+
+		if (error->status <= 1)
+			fr_error_clear_gerror (error);
 	}
 }
 
