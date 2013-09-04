@@ -33,6 +33,7 @@
 #include "file-utils.h"
 #include "fr-error.h"
 #include "fr-archive-libarchive.h"
+#include "gio-utils.h"
 #include "glib-utils.h"
 #include "typedefs.h"
 
@@ -547,6 +548,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	LoadData             *load_data;
 	GHashTable           *checked_folders;
 	GHashTable           *created_folders;
+	GHashTable           *folders_created_during_extraction;
 	struct archive       *a;
 	struct archive_entry *entry;
 	int                   r;
@@ -556,6 +558,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 
 	checked_folders = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
 	created_folders = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, g_object_unref);
+	folders_created_during_extraction = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
 	fr_archive_progress_set_total_files (load_data->archive, extract_data->n_files_to_extract);
 
 	a = archive_read_new ();
@@ -590,11 +593,14 @@ extract_archive_thread (GSimpleAsyncResult *result,
 			archive_read_data_skip (a);
 			continue;
 		}
+
 		file = g_file_get_child (extract_data->destination, relative_path);
 
 		/* honor the skip_older and overwrite options */
 
-		if (extract_data->skip_older || ! extract_data->overwrite) {
+		if ((g_hash_table_lookup (folders_created_during_extraction, file) == NULL)
+		    && (extract_data->skip_older || ! extract_data->overwrite))
+		{
 			GFileInfo *info;
 
 			info = g_file_query_info (file,
@@ -652,7 +658,18 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		    && (g_hash_table_lookup (checked_folders, parent) == NULL)
 		    && ! g_file_query_exists (parent, cancellable))
 		{
-			if (g_file_make_directory_with_parents (parent, cancellable, &load_data->error)) {
+			if (! _g_file_make_directory_with_parents (parent,
+								   folders_created_during_extraction,
+								   cancellable,
+								   &local_error))
+			{
+				if (! g_error_matches (local_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
+					load_data->error = local_error;
+				else
+					g_clear_error (&local_error);
+			}
+
+			if (load_data->error == NULL) {
 				GFile *grandparent;
 
 				grandparent = g_object_ref (parent);
@@ -736,7 +753,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 						load_data->error = g_error_copy (local_error);
 					g_error_free (local_error);
 				}
-				else {
+				if (load_data->error == NULL) {
 					GFileInfo *info;
 
 					info = _g_file_info_create_from_entry (entry, extract_data);
@@ -803,6 +820,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	if (load_data->error != NULL)
 		g_simple_async_result_set_from_error (result, load_data->error);
 
+	g_hash_table_unref (folders_created_during_extraction);
 	g_hash_table_unref (created_folders);
 	g_hash_table_unref (checked_folders);
 	archive_read_free (a);

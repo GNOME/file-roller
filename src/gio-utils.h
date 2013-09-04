@@ -177,5 +177,10 @@ gboolean _g_file_load_buffer_finish  (GFile                 *file,
 				      char                 **buffer,
 				      gsize                 *buffer_size,
 				      GError               **error);
+gboolean _g_file_make_directory_with_parents
+				     (GFile        	    *file,
+				      GHashTable            *created_folders,
+				      GCancellable          *cancellable,
+				      GError               **error);
 
 #endif /* _GIO_UTILS_H */
