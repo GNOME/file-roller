@@ -1483,3 +1483,73 @@ _g_file_load_buffer_finish (GFile         *file,
 
 	return TRUE;
 }
+
+
+static gboolean
+_g_file_make_directory_and_add_to_created_folders (GFile         *file,
+						   GHashTable    *created_folders,
+						   GCancellable  *cancellable,
+						   GError       **error)
+{
+	gboolean result;
+
+	result = g_file_make_directory (file, cancellable, error);
+	if (result && (g_hash_table_lookup (created_folders, file) == NULL))
+		g_hash_table_insert (created_folders, g_object_ref (file), GINT_TO_POINTER (1));
+
+	return result;
+}
+
+
+gboolean
+_g_file_make_directory_with_parents (GFile         *file,
+				     GHashTable    *created_folders,
+				     GCancellable  *cancellable,
+				     GError       **error)
+{
+	GError *local_error = NULL;
+	GFile  *work_file = NULL;
+	GList  *list = NULL, *l;
+
+	g_return_val_if_fail (G_IS_FILE (file), FALSE);
+
+	_g_file_make_directory_and_add_to_created_folders (file, created_folders, cancellable, &local_error);
+	if ((local_error == NULL) || (local_error->code != G_IO_ERROR_NOT_FOUND)) {
+		if (local_error != NULL)
+			g_propagate_error (error, local_error);
+		return local_error == NULL;
+	}
+
+	work_file = g_object_ref (file);
+	while ((local_error != NULL) && (local_error->code == G_IO_ERROR_NOT_FOUND)) {
+		GFile *parent_file;
+
+		parent_file = g_file_get_parent (work_file);
+		if (parent_file == NULL)
+			break;
+
+		g_clear_error (&local_error);
+		_g_file_make_directory_and_add_to_created_folders (parent_file, created_folders, cancellable, &local_error);
+
+		g_object_unref (work_file);
+		work_file = g_object_ref (parent_file);
+
+		if ((local_error != NULL) && (local_error->code == G_IO_ERROR_NOT_FOUND))
+			list = g_list_prepend (list, parent_file);  /* Transfer ownership of ref */
+		else
+			g_object_unref (parent_file);
+	}
+
+	for (l = list; (local_error == NULL) && (l != NULL); l = l->next)
+		_g_file_make_directory_and_add_to_created_folders ((GFile *) l->data, created_folders, cancellable, &local_error);
+
+	_g_object_unref (work_file);
+	_g_object_list_unref (list);
+
+	if (local_error != NULL) {
+		g_propagate_error (error, local_error);
+		return FALSE;
+	}
+
+	return _g_file_make_directory_and_add_to_created_folders (file, created_folders, cancellable, error);
+}
