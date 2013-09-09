@@ -50,8 +50,8 @@ have_rar (void)
 
 
 static time_t
-mktime_from_string (char *date_s,
-		    char *time_s)
+mktime_from_string (const char *date_s,
+		    const char *time_s)
 {
 	struct tm   tm = {0, };
 	char      **fields;
@@ -121,8 +121,8 @@ static void
 parse_name_field (char         *line,
 		  FrCommandRar *rar_comm)
 {
-	const char *name_field;
-	FileData   *fdata;
+	char     *name_field;
+	FileData *fdata;
 
 	rar_comm->fdata = fdata = file_data_new ();
 
@@ -131,10 +131,10 @@ parse_name_field (char         *line,
 	fdata->encrypted = (line[0] == '*') ? TRUE : FALSE;
 
 	if (rar_comm->rar4_odd_line)
-		name_field = line + 1;
+		name_field = g_strdup (line + 1);
 	else
 		/* rar-5 output adds trailing spaces to short file names :( */
-		name_field = g_strchomp (_g_str_get_last_field (line, 8));
+		name_field = g_strchomp (g_strdup (_g_str_get_last_field (line, 8)));
 
 	if (*name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
@@ -147,6 +147,8 @@ parse_name_field (char         *line,
 
 	fdata->link = NULL;
 	fdata->path = _g_path_remove_level (fdata->full_path);
+
+	g_free (name_field);
 }
 
 static gboolean
