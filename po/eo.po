@@ -6,6 +6,7 @@
 # Patrick (Petriko) OUDEJANS < >, 2011.
 # Tiffany Antopolski <tiffany.antopolski@gmail.com>, 2011, 2012.
 # Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>, 2010, 2011, 2012.
+# Ryan Lortie <desrt@desrt.ca>, 2013.
 #
 msgid ""
 msgstr ""
@@ -13,18 +14,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-03-12 09:01+0000\n"
-"PO-Revision-Date: 2012-03-22 18:37+0100\n"
-"Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
+"PO-Revision-Date: 2013-08-29 18:48+0200\n"
+"Last-Translator: Ryan Lortie <desrt@desrt.ca>\n"
 "Language-Team: Esperanto <gnome-l10n-eo@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: eo\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Virtaal 0.7.1\n"
-"X-DamnedLies-Scope: partial\n"
-"X-Launchpad-Export-Date: 2011-05-27 18:08+0000\n"
-"X-Project-Style: gnome\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
@@ -89,14 +86,18 @@ msgstr "Opcioj de seancoadministrilo:"
 msgid "Show session management options"
 msgstr "Montri opciojn de la seancoadministrilo"
 
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1981
-#: ../src/fr-window.c:5452
+#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:2052
+#: ../src/fr-window.c:5428
 msgid "Archive Manager"
 msgstr "Arkivo-administrilo"
 
 #: ../data/file-roller.desktop.in.in.h:2
 msgid "Create and modify an archive"
 msgstr "Krei kaj modifi arkivon"
+
+#: ../data/file-roller.desktop.in.in.h:3
+msgid "zip;tar;extract;unpack;"
+msgstr "zip;tar;eltiri;malkompaktigi;malpaki;elpaki;"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
 msgid "How to sort files"
@@ -107,6 +108,8 @@ msgid ""
 "What criteria must be used to arrange files. Possible values: name, size, "
 "type, time, path."
 msgstr ""
+"Kiun kriterion uzi por aranĝi dosierojn. Eblaj valoroj: 'name' (nomo), "
+"'size' (grando), 'type' (speco), 'time' (tempo), 'path' (vojo)."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
 msgid "Sort type"
@@ -117,8 +120,10 @@ msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
+"Ĉu ordigi kreske aŭ malkreske. Eblaj valoroj: 'ascending' (kreske), "
+"'descending' (malkreske)."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:5 ../src/ui/app-menu.ui.h:2
 msgid "List Mode"
 msgstr "Lista reĝimo"
 
@@ -127,6 +132,8 @@ msgid ""
 "Use 'all-files' to view all the files in the archive in a single list, use "
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
+"Uzi 'all-files' por vidi ciujn dosierojn en arkivo kiel unuobla listo.  Uzi "
+"'as-folder' por navigi arkivon kiel dosierujoj."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
 msgid "Display type"
@@ -161,81 +168,67 @@ msgid "Display the path column in the main window."
 msgstr "Montri la vojo-kolumnon en la ĉefa fenstro."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:15
-msgid "Use mime icons"
-msgstr ""
+msgid "Name column width"
+msgstr "Noma kolumna larĝo"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
-msgid ""
-"If true will display icons depending on the file type (slower), otherwise "
-"will use always the same icon for all files (faster)."
-msgstr ""
+msgid "The default width of the name column in the file list."
+msgstr "La defaŭlta larĝo de la noma kolumno en la dosiera listo."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
-msgid "Name column width"
-msgstr ""
+msgid "Max history length"
+msgstr "Maksimuma historia longo"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
-msgid "The default width of the name column in the file list."
-msgstr ""
+msgid "Max number of items in the 'Open Recents' submenu."
+msgstr "Maksimuma kiomo de elemenoj en la 'Malfermi lastatempe' submenuo."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
-msgid "Max history length"
-msgstr ""
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
-msgid "Max number of items in the 'Open Recents' submenu."
-msgstr ""
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
-msgid "View toolbar"
-msgstr "Montri la ilobreton"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
-msgid "Whether to display the toolbar."
-msgstr "Ĉu montri la ilobreton?"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
 msgid "View statusbar"
 msgstr "Montri la statobreton"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
 msgid "Whether to display the statusbar."
 msgstr "Ĉu montri la statobreton?"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25 ../src/ui.h:229
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:21 ../src/ui.h:198
 msgid "View the folders pane"
 msgstr "Montri la dosierujan panelon"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
 msgid "Whether to display the folders pane."
 msgstr "Ĉu montri la dosierujan panelon?"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
 msgid "Editors"
 msgstr "Redaktintoj"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
 msgid ""
 "List of applications entered in the 'Open File' dialog and not associated "
 "with the file type."
 msgstr ""
+"Listo de aplikaĵoj eniritaj en la 'Malfermi dosieron' dialogujo kaj ne "
+"asocigita kun la dosiero speco."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
 msgid "Compression level"
 msgstr "Nivelo de densigo"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
 msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
 msgstr ""
+"Nivelo de densigo uzita kiam aldoni dosierojn al arkivo. Eblaj valoraj: "
+"'very-fast' (rapidege), 'fast' (rapide), 'normal' (norme), "
+"'maximum' (maksimume)."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
-#| msgid "_Encrypt the file list"
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
 msgid "Encrypt the archive header"
 msgstr "Ĉifri la arkivan kapon"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
@@ -243,114 +236,212 @@ msgstr ""
 "Ĉu ĉifri la arkivan kapon? Se la kapo estas ĉifrita, la pasvorto ankaŭ estas "
 "bezonata por listigi la arkivan enhavon."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
-msgid "Overwrite existing files"
-msgstr "Anstataŭigi ekzistantajn dosierojn"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:34
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
 msgid "Do not overwrite newer files"
 msgstr "Ne anstataŭigi pli novajn dosierojn"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:35
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30
 msgid "Recreate the folders stored in the archive"
 msgstr "Rekrei la dosierujojn konservite en la arkivo"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:36
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
 msgid "Default volume size"
 msgstr "Defaŭlta grando de datumportiloj"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:37
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
 msgid "The default size for volumes."
 msgstr "La defaŭlta grando de datumportiloj."
 
-#: ../data/ui/add-options.ui.h:1
+#: ../nautilus/nautilus-fileroller.c:327
+msgid "Extract Here"
+msgstr "Elpaki tien ĉi"
+
+#. Translators: the current position is the current folder
+#: ../nautilus/nautilus-fileroller.c:329
+msgid "Extract the selected archive to the current position"
+msgstr "Elpaki la elektitan arkivon en la nunan lokon"
+
+#: ../nautilus/nautilus-fileroller.c:346
+msgid "Extract To..."
+msgstr "Elpaki al..."
+
+#: ../nautilus/nautilus-fileroller.c:347
+msgid "Extract the selected archive"
+msgstr "Elpaki la elektitan dosieron"
+
+#: ../nautilus/nautilus-fileroller.c:366
+msgid "Compress..."
+msgstr "Densigi..."
+
+#: ../nautilus/nautilus-fileroller.c:367
+msgid "Create a compressed archive with the selected objects"
+msgstr "Krei densigitan arkivon kun la elektitaj objektoj"
+
+#: ../src/actions.c:112 ../src/fr-window.c:5722 ../src/fr-window.c:6271
+msgid "Open"
+msgstr "Malfermi"
+
+#: ../src/actions.c:125 ../src/fr-window.c:5279
+msgid "All archives"
+msgstr "Ĉiuj arkivoj"
+
+#: ../src/actions.c:132
+msgid "All files"
+msgstr "Ĉiuj dosieroj"
+
+#: ../src/actions.c:487
+msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
+msgstr "Kopirajto © 2001-2010 Free Software Foundation, Inc."
+
+#: ../src/actions.c:488
+msgid "An archive manager for GNOME."
+msgstr "Arkiv-administrilo por GNOME."
+
+#: ../src/actions.c:491
+msgid "translator-credits"
+msgstr ""
+"Ed GLEZ <herzo2@gmail.com>\n"
+"Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
+"Ryan Lortie <desrt@desrt.ca>\n"
+"Launchpad Contributions:\n"
+"  Kristjan SCHMIDT https://launchpad.net/~kristjan-eo\n"
+"  Michael Moroni https://launchpad.net/~airon90\n"
+"  Patrick (Petriko) Oudejans https://launchpad.net/~patrickoudejans"
+
+#: ../src/dlg-add.c:116
+msgid "Could not add the files to the archive"
+msgstr "Ne eblis aldoni la dosierojn al la arkivo"
+
+#: ../src/dlg-add.c:117
+#, c-format
+msgid "You don't have the right permissions to read files from folder \"%s\""
+msgstr "Vi ne havas la ĝustajn rajtojn por legi dosierojn el dosierujo \"%s\""
+
+#: ../src/dlg-add.c:182 ../src/ui.h:42
+msgid "Add Files"
+msgstr "Aldoni dosierojn"
+
+#: ../src/dlg-add.c:193
+msgid "_Options"
+msgstr "_Opcioj"
+
+#. load options
+#: ../src/dlg-add.c:202 ../src/ui/add-options.ui.h:1
 msgid "Load Options"
 msgstr "Ŝargi agordojn"
 
-#: ../data/ui/batch-add-files.ui.h:1
+#. save options
+#: ../src/dlg-add.c:209 ../src/dlg-add.c:827
+msgid "Save Options"
+msgstr "Konservi opciojn"
+
+#. clear options
+#: ../src/dlg-add.c:216
+msgid "Reset Options"
+msgstr "Reagordi opciojn"
+
+#: ../src/dlg-add.c:828
+msgid "_Options Name:"
+msgstr "_Opcinomo:"
+
+#. Translators: %s is a filename
+#: ../src/dlg-ask-password.c:131
+#, c-format
+msgid "Password required for \"%s\""
+msgstr "Pasvorto bezonatas por \"%s\""
+
+#: ../src/dlg-ask-password.c:140
+msgid "Wrong password."
+msgstr "Malĝusta pasvorto"
+
+#: ../src/dlg-batch-add.c:87 ../src/fr-application.c:329
+#: ../src/fr-application.c:683
 msgid "Compress"
 msgstr "Densigi"
 
-#: ../data/ui/batch-add-files.ui.h:2
-msgid "_Filename:"
-msgstr "_Dosiernomo:"
-
-#. Translators: after the colon there is a folder name.
-#: ../data/ui/batch-add-files.ui.h:3 ../src/fr-window.c:5905
-msgid "_Location:"
-msgstr "_Loko:"
-
-#: ../data/ui/batch-add-files.ui.h:4
-msgid "Location"
-msgstr "Loko"
-
-#: ../data/ui/batch-add-files.ui.h:5 ../data/ui/batch-password.ui.h:2
-#: ../data/ui/new.ui.h:1 ../data/ui/password.ui.h:3
-msgid "_Password:"
-msgstr "_Pasvorto:"
-
-#: ../data/ui/batch-add-files.ui.h:6 ../data/ui/new.ui.h:2
-msgid "_Encrypt the file list too"
-msgstr "Ĉ_ifri ankaŭ la dosierliston"
-
-#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: ../data/ui/batch-add-files.ui.h:8 ../data/ui/new.ui.h:3
-msgid "Split into _volumes of"
-msgstr "Disdi_vidi en partojn de"
-
-#. MB means megabytes
-#: ../data/ui/batch-add-files.ui.h:10 ../data/ui/new.ui.h:5
-msgid "MB"
-msgstr "MB"
-
-#: ../data/ui/batch-add-files.ui.h:11 ../data/ui/new.ui.h:6
-msgid "_Other Options"
-msgstr "Aliaj _opcioj:"
-
-#: ../data/ui/batch-password.ui.h:1
-msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
-msgstr "<span weight=\"bold\" size=\"larger\">Pasvorto postulata</span>"
-
-#: ../data/ui/delete.ui.h:1
-msgid "Delete"
-msgstr "Forigi"
-
-#: ../data/ui/delete.ui.h:2 ../src/dlg-extract.c:348
-msgid "_Files:"
-msgstr "_Dosieroj:"
-
-#: ../data/ui/delete.ui.h:3 ../src/dlg-extract.c:359
-msgid "example: *.txt; *.doc"
-msgstr "ekzemplo: *.txt; *.doc"
-
-#: ../data/ui/delete.ui.h:4 ../src/dlg-extract.c:362
-msgid "_All files"
-msgstr "Ĉiuj d_osieroj"
-
-#: ../data/ui/delete.ui.h:5 ../src/dlg-extract.c:369
-msgid "_Selected files"
-msgstr "_Elektitaj dosieroj"
-
-#: ../data/ui/password.ui.h:1
-msgid "Password"
-msgstr "Pasvorto"
-
-#: ../data/ui/password.ui.h:2
-msgid "_Encrypt the file list"
-msgstr "Ĉ_ifri la dosierliston"
-
-#: ../data/ui/password.ui.h:4
+#: ../src/dlg-extract.c:96 ../src/fr-window.c:6827
+#, c-format
 msgid ""
-"<i><b>Note:</b> the password will be used to encrypt files you add to the "
-"current archive, and to decrypt files you extract from the current archive. "
-"When the archive is closed the password will be deleted.</i>"
+"Destination folder \"%s\" does not exist.\n"
+"\n"
+"Do you want to create it?"
 msgstr ""
-"<i><b>Noto:</b> la pasvorto estos uzata por ĉifri dosierojn kiujn vi aldonas "
-"al la nuna arkivo, kaj por malĉifri dosierojn kiujn vi elpakas el la nuna "
-"arkivo. Kiam la arkivo estos fermita la pasvorto estos forigita.</i>"
+"Celdosierujo \"%s\" ne ekzistas.\n"
+"\n"
+"Ĉu vi volas krei ĝin?"
+
+#: ../src/dlg-extract.c:105 ../src/fr-window.c:6836
+msgid "Create _Folder"
+msgstr "Krei _dosierujon"
+
+#: ../src/dlg-extract.c:124 ../src/dlg-extract.c:142 ../src/dlg-extract.c:169
+#: ../src/fr-window.c:4241 ../src/fr-window.c:6731 ../src/fr-window.c:6736
+#: ../src/fr-window.c:6857 ../src/fr-window.c:6876 ../src/fr-window.c:6881
+msgid "Extraction not performed"
+msgstr "Elpako ne plenumiĝis"
+
+#: ../src/dlg-extract.c:125 ../src/fr-window.c:6853
+#, c-format
+msgid "Could not create the destination folder: %s."
+msgstr "Ne eblis krei la celdosierujon: %s."
+
+#: ../src/dlg-extract.c:170 ../src/fr-window.c:4410 ../src/fr-window.c:4494
+#, c-format
+msgid ""
+"You don't have the right permissions to extract archives in the folder \"%s\""
+msgstr ""
+"Vi ne havas la ĝustajn rajtojn por elpaki arkivojn en la dosierujo \"%s\""
+
+#: ../src/dlg-extract.c:283 ../src/ui/extract-dialog-options.ui.h:1
+#: ../src/ui.h:109
+msgid "Extract"
+msgstr "Elpaki"
+
+#: ../src/dlg-package-installer.c:112 ../src/dlg-package-installer.c:225
+msgid "There was an internal error trying to search for applications:"
+msgstr "Okazis interna eraro dum la provo serĉi programojn:"
+
+#: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
+#: ../src/dlg-package-installer.c:331 ../src/fr-archive.c:744
+#: ../src/fr-window.c:3970 ../src/fr-window.c:7460 ../src/fr-window.c:7817
+#: ../src/fr-window.c:9349
+msgid "Archive type not supported."
+msgstr "Arkivtipo ne subtenata."
+
+#: ../src/dlg-package-installer.c:313
+#, c-format
+msgid ""
+"There is no command installed for %s files.\n"
+"Do you want to search for a command to open this file?"
+msgstr ""
+"Ne ekzistas instalita komando por %s-dosieroj.\n"
+"Ĉu vi volas serĉi komandon por malfermi tiun dosieron?"
+
+#: ../src/dlg-package-installer.c:318
+msgid "Could not open this file type"
+msgstr "Ne eblis malfermi tiun dosiertipon"
+
+#: ../src/dlg-package-installer.c:321
+msgid "_Search Command"
+msgstr "_Serĉi komandon"
+
+#: ../src/dlg-password.c:91
+#, c-format
+msgid "Enter a password for \"%s\""
+msgstr "Entajpu la pasvorton por \"%s\""
+
+#: ../src/dlg-prop.c:96
+#, c-format
+msgid "%s Properties"
+msgstr "Ecoj de %s"
+
+#: ../src/dlg-update.c:163
+#, c-format
+msgid "Update the file \"%s\" in the archive \"%s\"?"
+msgstr "Ĉu ĝisdatigi la dosieron \"%s\" en arkivo \"%s\"?"
 
 #. secondary text
-#: ../data/ui/update.ui.h:1 ../src/dlg-update.c:175 ../src/dlg-update.c:203
+#: ../src/dlg-update.c:174 ../src/dlg-update.c:199 ../src/ui/update.ui.h:2
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don't update "
@@ -365,414 +456,120 @@ msgstr[1] ""
 "%d dosieroj modifitis per ekstera aplikaĵo. Se vi ne ĝisdatigas la dosieron "
 "en la arkivo, ĉiuj ŝanĝoj estos perditaj."
 
-#: ../data/ui/update.ui.h:2
-msgid "_Update"
-msgstr "Ĝ_isdatigi"
-
-#: ../data/ui/update.ui.h:3
-msgid "S_elect the files you want to update:"
-msgstr "_Elektu la dosierojn kiujn vi volas ĝisdatigi:"
-
-#: ../nautilus/nautilus-fileroller.c:325
-msgid "Extract Here"
-msgstr "Elpaki tien ĉi"
-
-#. Translators: the current position is the current folder
-#: ../nautilus/nautilus-fileroller.c:327
-msgid "Extract the selected archive to the current position"
-msgstr "Elpaki la elektitan arkivon en la nunan lokon"
-
-#: ../nautilus/nautilus-fileroller.c:344
-msgid "Extract To..."
-msgstr "Elpaki al..."
-
-#: ../nautilus/nautilus-fileroller.c:345
-msgid "Extract the selected archive"
-msgstr "Elpaki la elektitan dosieron"
-
-#: ../nautilus/nautilus-fileroller.c:364
-msgid "Compress..."
-msgstr "Densigi..."
-
-#: ../nautilus/nautilus-fileroller.c:365
-msgid "Create a compressed archive with the selected objects"
-msgstr "Krei densigitan arkivon kun la elektitaj objektoj"
-
-#: ../src/actions.c:156 ../src/actions.c:195 ../src/actions.c:231
-#: ../src/dlg-batch-add.c:157 ../src/dlg-batch-add.c:173
-#: ../src/dlg-batch-add.c:202 ../src/dlg-batch-add.c:247
-#: ../src/dlg-batch-add.c:293 ../src/fr-window.c:2980
-msgid "Could not create the archive"
-msgstr "Ne eblis kreii la arkivon"
-
-#: ../src/actions.c:158 ../src/dlg-batch-add.c:159 ../src/dlg-batch-add.c:295
-msgid "You have to specify an archive name."
-msgstr "Necesas specifigi arkiv-nomon."
-
-#: ../src/actions.c:197
-msgid "You don't have permission to create an archive in this folder"
-msgstr "Vi ne havas rajton krei arkivon en tiu dosierujo"
-
-#: ../src/actions.c:233 ../src/dlg-package-installer.c:268
-#: ../src/dlg-package-installer.c:277 ../src/dlg-package-installer.c:305
-#: ../src/fr-archive.c:1178 ../src/fr-window.c:6090 ../src/fr-window.c:6266
-msgid "Archive type not supported."
-msgstr "Arkivtipo ne subtenata."
-
-#: ../src/actions.c:247
-msgid "Could not delete the old archive."
-msgstr "Ne eblis forigi la malnovan arkivon."
-
-#: ../src/actions.c:381 ../src/fr-window.c:5827
-msgid "Open"
-msgstr "Malfermi"
-
-#: ../src/actions.c:392 ../src/fr-window.c:5266
-msgid "All archives"
-msgstr "Ĉiuj arkivoj"
-
-#: ../src/actions.c:399
-msgid "All files"
-msgstr "Ĉiuj dosieroj"
-
-#: ../src/actions.c:844
-msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
-msgstr "Kopirajto © 2001-2010 Free Software Foundation, Inc."
-
-#: ../src/actions.c:845
-msgid "An archive manager for GNOME."
-msgstr "Arkiv-administrilo por GNOME."
-
-#: ../src/actions.c:848
-msgid "translator-credits"
-msgstr ""
-"Ed GLEZ <herzo2@gmail.com>\n"
-"Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
-"Launchpad Contributions:\n"
-"  Kristjan SCHMIDT https://launchpad.net/~kristjan-eo\n"
-"  Michael Moroni https://launchpad.net/~airon90\n"
-"  Patrick (Petriko) Oudejans https://launchpad.net/~patrickoudejans"
-
-#: ../src/dlg-add-files.c:99 ../src/dlg-add-folder.c:129
-msgid "Could not add the files to the archive"
-msgstr "Ne eblis aldoni la dosierojn al la arkivo"
-
-#: ../src/dlg-add-files.c:100 ../src/dlg-add-folder.c:130
-#, c-format
-msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Vi ne havas la ĝustajn rajtojn por legi dosierojn el dosierujo \"%s\""
-
-#: ../src/dlg-add-files.c:148 ../src/ui.h:46
-msgid "Add Files"
-msgstr "Aldoni dosierojn"
-
-#. Translators: add a file to the archive only if the disk version is
-#. * newer than the archive version.
-#: ../src/dlg-add-files.c:164 ../src/dlg-add-folder.c:230
-msgid "Add only if _newer"
-msgstr "Nu aldoni se _pli nova"
-
-#: ../src/dlg-add-folder.c:216
-msgid "Add a Folder"
-msgstr "Aldoni dosierujon"
-
-#: ../src/dlg-add-folder.c:231
-msgid "_Include subfolders"
-msgstr "_Inkluzivi subdosierujojn"
-
-#: ../src/dlg-add-folder.c:232
-msgid "Exclude folders that are symbolic lin_ks"
-msgstr "Ekskluzivi dosierujojn kiuj estas simbolaj li_giloj"
-
-#: ../src/dlg-add-folder.c:235 ../src/dlg-add-folder.c:241
-#: ../src/dlg-add-folder.c:247
-msgid "example: *.o; *.bak"
-msgstr "ekzemplo: *.o; *.bak"
-
-#: ../src/dlg-add-folder.c:236
-msgid "Include _files:"
-msgstr "Inkluzivi _dosierojn:"
-
-#: ../src/dlg-add-folder.c:242
-msgid "E_xclude files:"
-msgstr "E_kskluzi dosierojn:"
-
-#: ../src/dlg-add-folder.c:248
-msgid "_Exclude folders:"
-msgstr "Eksk_luzivi dosierujojn:"
-
-#: ../src/dlg-add-folder.c:252
-msgid "_Load Options"
-msgstr "Ŝ_argi opciojn"
-
-#: ../src/dlg-add-folder.c:253
-msgid "Sa_ve Options"
-msgstr "Konser_vi opciojn"
-
-#: ../src/dlg-add-folder.c:254
-msgid "_Reset Options"
-msgstr "_Reagordi opciojn"
-
-#: ../src/dlg-add-folder.c:882
-msgid "Save Options"
-msgstr "Konservi opciojn"
-
-#: ../src/dlg-add-folder.c:883
-msgid "_Options Name:"
-msgstr "_Opcinomo:"
-
-#: ../src/dlg-ask-password.c:122
-#, c-format
-msgid "Enter the password for the archive '%s'."
-msgstr "Entajpu la pasvorton por la arkivo '%s'."
-
-#: ../src/dlg-batch-add.c:174
-#, c-format
-msgid ""
-"The name \"%s\" is not valid because it cannot contain the characters: %s\n"
-"\n"
-"%s"
-msgstr ""
-"La nomo \"%s\" ne estas valida ĉar ĝi ne rajtas enhavi la sekvajn signojn: "
-"%s\n"
-"\n"
-"%s"
-
-#: ../src/dlg-batch-add.c:177 ../src/fr-window.c:7644 ../src/fr-window.c:7646
-msgid "Please use a different name."
-msgstr "Bonvolu uzi alian nomon."
-
-#: ../src/dlg-batch-add.c:204
-msgid ""
-"You don't have the right permissions to create an archive in the destination "
-"folder."
-msgstr "Vi ne havas la ĝustajn rajtojn por krei arkivon en la celdosierujo."
-
-#: ../src/dlg-batch-add.c:220 ../src/dlg-extract.c:102 ../src/fr-window.c:6865
-#, c-format
-msgid ""
-"Destination folder \"%s\" does not exist.\n"
-"\n"
-"Do you want to create it?"
-msgstr ""
-"Celdosierujo \"%s\" ne ekzistas.\n"
-"\n"
-"Ĉu vi volas krei ĝin?"
-
-#: ../src/dlg-batch-add.c:229 ../src/dlg-extract.c:111 ../src/fr-window.c:6874
-msgid "Create _Folder"
-msgstr "Krei _dosierujon"
-
-#: ../src/dlg-batch-add.c:248 ../src/dlg-extract.c:131 ../src/fr-window.c:6891
-#, c-format
-msgid "Could not create the destination folder: %s."
-msgstr "Ne eblis krei la celdosierujon: %s."
-
-#: ../src/dlg-batch-add.c:265
-msgid "Archive not created"
-msgstr "Arkivo ne kreiĝis"
-
-#: ../src/dlg-batch-add.c:313
-msgid "The archive is already present.  Do you want to overwrite it?"
-msgstr "La arkivo jam ekzistas. Ĉu vi volas anstataŭigi ĝin?"
-
-#: ../src/dlg-batch-add.c:316
-msgid "_Overwrite"
-msgstr "_Anstataŭigi"
-
-#: ../src/dlg-extract.c:130 ../src/dlg-extract.c:148 ../src/dlg-extract.c:175
-#: ../src/fr-window.c:4205 ../src/fr-window.c:6895 ../src/fr-window.c:6914
-#: ../src/fr-window.c:6919
-msgid "Extraction not performed"
-msgstr "Elpako ne plenumiĝis"
-
-#: ../src/dlg-extract.c:176 ../src/fr-window.c:4368 ../src/fr-window.c:4448
-#, c-format
-msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr ""
-"Vi ne havas la ĝustajn rajtojn por elpaki arkivojn en la dosierujo \"%s\""
-
-#: ../src/dlg-extract.c:331 ../src/dlg-extract.c:429 ../src/ui.h:121
-msgid "Extract"
-msgstr "Elpaki"
-
-#: ../src/dlg-extract.c:380
-msgid "Actions"
-msgstr "Agoj"
-
-#: ../src/dlg-extract.c:396
-msgid "Re-crea_te folders"
-msgstr "Re-krei dos_ierujojn"
-
-#: ../src/dlg-extract.c:400
-msgid "Over_write existing files"
-msgstr "Anstataŭigi ekzistantajn dosiero_jn"
-
-#: ../src/dlg-extract.c:404
-msgid "Do not e_xtract older files"
-msgstr "Ne elpaki pli _malnovajn dosierojn"
-
-#: ../src/dlg-new.c:427
-msgctxt "File"
-msgid "New"
-msgstr "Nova"
-
-#: ../src/dlg-new.c:440
-msgctxt "File"
-msgid "Save"
-msgstr "Konservi"
-
-#: ../src/dlg-package-installer.c:107 ../src/dlg-package-installer.c:219
-msgid "There was an internal error trying to search for applications:"
-msgstr "Okazis interna eraro dum la provo serĉi programojn:"
-
-#: ../src/dlg-package-installer.c:287
-#, c-format
-msgid ""
-"There is no command installed for %s files.\n"
-"Do you want to search for a command to open this file?"
-msgstr ""
-"Ne ekzistas instalita komando por %s-dosieroj.\n"
-"Ĉu vi volas serĉi komandon por malfermi tiun dosieron?"
-
-#: ../src/dlg-package-installer.c:292
-msgid "Could not open this file type"
-msgstr "Ne eblis malfermi tiun dosiertipon"
-
-#: ../src/dlg-package-installer.c:295
-msgid "_Search Command"
-msgstr "_Serĉi komandon"
-
-#. Translators: after the colon there is a folder name.
-#: ../src/dlg-prop.c:106
-msgid "Location:"
-msgstr "Loko:"
-
-#: ../src/dlg-prop.c:118
-msgctxt "File"
-msgid "Name:"
-msgstr "Nomo:"
-
-#: ../src/dlg-prop.c:124
-#, c-format
-msgid "%s Properties"
-msgstr "Ecoj de %s"
-
-#: ../src/dlg-prop.c:133
-msgid "Last modified:"
-msgstr "Laste modifita:"
-
-#: ../src/dlg-prop.c:143
-msgid "Archive size:"
-msgstr "Arkivogrando:"
-
-#: ../src/dlg-prop.c:154
-msgid "Content size:"
-msgstr "Enhavogrando:"
-
-#: ../src/dlg-prop.c:174
-msgid "Compression ratio:"
-msgstr "densiga proporcio:"
-
-#: ../src/dlg-prop.c:189
-msgid "Number of files:"
-msgstr "Nombro da dosieroj:"
-
-#: ../src/dlg-update.c:163
-#, c-format
-msgid "Update the file \"%s\" in the archive \"%s\"?"
-msgstr "Ĉu ĝisdatigi la dosieron \"%s\" en arkivo \"%s\"?"
-
-#: ../src/dlg-update.c:192
+#: ../src/dlg-update.c:189
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
 msgstr "Ĉu ĝisdatigi la dosierojn en arkivo \"%s\"?"
 
-#: ../src/eggfileformatchooser.c:236
-#, c-format
-msgid "File _Format: %s"
-msgstr "Dosier_formo: %s"
+#: ../src/fr-application.c:65
+msgid "Add files to the specified archive and quit the program"
+msgstr "Aldoni dosierojn al la specifita arkivo kaj fermi la programon"
 
-#: ../src/eggfileformatchooser.c:397
-msgid "All Files"
-msgstr "Ĉiuj dosieroj"
+#: ../src/fr-application.c:66
+msgid "ARCHIVE"
+msgstr "ARKIVO"
 
-#: ../src/eggfileformatchooser.c:398
-msgid "All Supported Files"
-msgstr "Ĉiuj subtenataj dosieroj"
+#: ../src/fr-application.c:69
+msgid "Add files asking the name of the archive and quit the program"
+msgstr "Peti la nomon por la arkivo, aldoni dosierojn  kaj fermi la programon"
 
-#: ../src/eggfileformatchooser.c:407
-msgid "By Extension"
-msgstr "Laŭ finaĵo"
+#: ../src/fr-application.c:73
+msgid "Extract archives to the specified folder and quit the program"
+msgstr "Elpaki arkivojn al la specifita dosierujo kaj fermi la programon"
 
-#: ../src/eggfileformatchooser.c:422
-msgid "File Format"
-msgstr "Dosierformo"
+#: ../src/fr-application.c:74 ../src/fr-application.c:86
+msgid "FOLDER"
+msgstr "DOSIERUJO"
 
-#: ../src/eggfileformatchooser.c:440
-msgid "Extension(s)"
-msgstr "Finaĵo(j)"
+#: ../src/fr-application.c:77
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr "Demandinte la celdosierujon elpaki arkivojn kaj fermi la programon"
 
-#: ../src/eggfileformatchooser.c:675
-#, c-format
+#: ../src/fr-application.c:81
 msgid ""
-"The program was not able to find out the file format you want to use for `"
-"%s'. Please make sure to use a known extension for that file or manually "
-"choose a file format from the list below."
+"Extract the contents of the archives in the archive folder and quit the "
+"program"
 msgstr ""
-"La programo ne povis eltrovi la dosierformon kiun vi volas uzi por '%s'. "
-"Bonvolu uzi konatan finaĵon por tiu dosiero aŭ mane elektu dosierformon el "
-"la suba listo."
+"Elpaki la enhavon de la arkivoj en la arkiv-dosierujo kaj fermi la programon"
 
-#: ../src/eggfileformatchooser.c:682
-msgid "File format not recognized"
-msgstr "Dosierformo ne rekonita"
+#: ../src/fr-application.c:85
+msgid "Default folder to use for the '--add' and '--extract' commands"
+msgstr "Defaŭlte uzenda dosierujo por la komandoj '--add' kaj '--extract'"
 
-#: ../src/fr-archive.c:1158
-msgid "File not found."
-msgstr "Dosiero ne trovita."
+#: ../src/fr-application.c:89
+msgid "Create destination folder without asking confirmation"
+msgstr "Krei celdosierujon sen peti permeson"
 
-#: ../src/fr-archive.c:1261
+#: ../src/fr-application.c:93
+msgid "Use the notification system to notify the operation completion"
+msgstr "Uzi la sciiga sistemo por sciigi pri operacia kompleteco"
+
+#: ../src/fr-application.c:96
+msgid "Start as a service"
+msgstr "Starti kiel servo"
+
+#: ../src/fr-application.c:99
+msgid "Show version"
+msgstr "Montri versio"
+
+#: ../src/fr-application.c:365 ../src/fr-application.c:401
+#: ../src/fr-application.c:427 ../src/fr-application.c:707
+#: ../src/fr-window.c:9412
+msgid "Extract archive"
+msgstr "Elpaki arkivon"
+
+#: ../src/fr-application.c:565
+msgid "- Create and modify an archive"
+msgstr "- Krei kaj modifi arkivon"
+
+#. manually set name and icon
+#: ../src/fr-application.c:833
+msgid "File Roller"
+msgstr "Arkivo-administrilo"
+
+#: ../src/fr-archive.c:1845
+msgid "You don't have the right permissions."
+msgstr "Vi ne havas la ĝustajn rajtojn."
+
+#: ../src/fr-archive.c:1845
+msgid "This archive type cannot be modified"
+msgstr "Ne eblas modifi tiun arkivotipon"
+
+#: ../src/fr-archive.c:1859
+msgid "You can't add an archive to itself."
+msgstr "Ne eblas aldoni arkivon al si mem."
+
+#. Translators: %s is a filename.
+#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:410
+#: ../src/fr-command-tar.c:304
+#, c-format
+msgid "Adding \"%s\""
+msgstr "Aldonanta \"%s\""
+
+#. Translators: %s is a filename.
+#: ../src/fr-command-7z.c:429 ../src/fr-command-rar.c:542
+#: ../src/fr-command-tar.c:425
+#, c-format
+msgid "Extracting \"%s\""
+msgstr "Eltiranta \"%s\""
+
+#: ../src/fr-command.c:597
 #, c-format
 msgid "Archive not found"
 msgstr "Arkivo ne trovita"
 
-#: ../src/fr-archive.c:2427
-msgid "You don't have the right permissions."
-msgstr "Vi ne havas la ĝustajn rajtojn."
+#. Translators: %s is a filename.
+#: ../src/fr-command-rar.c:491 ../src/fr-command-tar.c:370
+#, c-format
+msgid "Removing \"%s\""
+msgstr "Foriganta \"%s\""
 
-#: ../src/fr-archive.c:2427
-msgid "This archive type cannot be modified"
-msgstr "Ne eblas modifi tiun arkivotipon"
-
-#: ../src/fr-archive.c:2439
-msgid "You can't add an archive to itself."
-msgstr "Ne eblas aldoni arkivon al si mem."
-
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:324
-#: ../src/fr-command-tar.c:307
-msgid "Adding file: "
-msgstr "Aldoni dosieron: "
-
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-7z.c:418 ../src/fr-command-rar.c:451
-#: ../src/fr-command-tar.c:426
-msgid "Extracting file: "
-msgstr "Elpaki dosieron: "
-
-#. Translators: after the colon there is a filename.
-#: ../src/fr-command-rar.c:402 ../src/fr-command-tar.c:372
-msgid "Removing file: "
-msgstr "Forigi dosieron: "
-
-#: ../src/fr-command-rar.c:584
+#: ../src/fr-command-rar.c:668
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "Ne eblis trovi la datumportilon: %s"
 
-#: ../src/fr-command-tar.c:381 ../src/fr-window.c:2315
+#: ../src/fr-command-tar.c:380
 msgid "Deleting files from archive"
 msgstr "Forigas dosierojn el arkivo"
 
@@ -780,125 +577,53 @@ msgstr "Forigas dosierojn el arkivo"
 msgid "Recompressing archive"
 msgstr "Redensigas arkivon"
 
-#: ../src/fr-command-tar.c:736
+#: ../src/fr-command-tar.c:744
 msgid "Decompressing archive"
 msgstr "Maldensigas arkivon"
 
-#: ../src/fr-init.c:58
-msgid "7-Zip (.7z)"
-msgstr "7z (.7z)"
+#: ../src/fr-file-selector-dialog.c:772 ../src/fr-file-selector-dialog.c:817
+msgid "Could not load the location"
+msgstr "Ne povis ŝargi la lokon"
 
-#: ../src/fr-init.c:59
-msgid "Tar compressed with 7z (.tar.7z)"
-msgstr "Tar densigita per 7z (.tar.7z)"
+#: ../src/fr-new-archive-dialog.c:344 ../src/fr-new-archive-dialog.c:363
+#: ../src/fr-new-archive-dialog.c:379 ../src/fr-new-archive-dialog.c:427
+#: ../src/fr-new-archive-dialog.c:445 ../src/fr-window.c:2915
+msgid "Could not create the archive"
+msgstr "Ne eblis kreii la arkivon"
 
-#: ../src/fr-init.c:60
-msgid "Ace (.ace)"
-msgstr "Ace (.ace)"
+#: ../src/fr-new-archive-dialog.c:346 ../src/fr-new-archive-dialog.c:365
+msgid "You have to specify an archive name."
+msgstr "Necesas specifigi arkiv-nomon."
 
-#: ../src/fr-init.c:62
-msgid "Ar (.ar)"
-msgstr "Ar (.ar)"
+#: ../src/fr-new-archive-dialog.c:429
+msgid "You don't have permission to create an archive in this folder"
+msgstr "Vi ne havas rajton krei arkivon en tiu dosierujo"
 
-#: ../src/fr-init.c:63
-msgid "Arj (.arj)"
-msgstr "Arj (.arj)"
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
+#: ../src/fr-new-archive-dialog.c:447 ../src/fr-window.c:8130
+msgid "New name is the same as old one, please type other name."
+msgstr "Nova nomo estas sama kiel la malnova nomo, bonvolu tajpi alian nomon."
 
-#: ../src/fr-init.c:65
-msgid "Tar compressed with bzip2 (.tar.bz2)"
-msgstr "Tar densigita per bzip2 (.tar.bz2)"
+#: ../src/fr-new-archive-dialog.c:466
+#, c-format
+msgid "A file named \"%s\" already exists.  Do you want to replace it?"
+msgstr "Dosiero nomita \"%s\" jam ekzistas. Ĉu vi volas anstataŭigi ĝin?"
 
-#: ../src/fr-init.c:67
-msgid "Tar compressed with bzip (.tar.bz)"
-msgstr "Tar densigita per bzip (.tar.bz)"
+#: ../src/fr-new-archive-dialog.c:467
+#, c-format
+msgid ""
+"The file already exists in \"%s\".  Replacing it will overwrite its contents."
+msgstr ""
+"La dosiero jam ekzistas en \"%s\".  Anstataŭigi ĝin anstataŭigos sian "
+"enhavon."
 
-#: ../src/fr-init.c:68
-msgid "Cabinet (.cab)"
-msgstr "Cabinet (.cab)"
+#: ../src/fr-new-archive-dialog.c:474 ../src/fr-window.c:6660
+msgid "_Replace"
+msgstr "_Anstataŭigi"
 
-#: ../src/fr-init.c:69
-msgid "Rar Archived Comic Book (.cbr)"
-msgstr "Bildrakonto en rar-formo (.cbr)"
-
-#: ../src/fr-init.c:70
-msgid "Zip Archived Comic Book (.cbz)"
-msgstr "Bildrakonto en zip-formo (.cbz)"
-
-#: ../src/fr-init.c:73
-msgid "Tar compressed with gzip (.tar.gz)"
-msgstr "Tar densigita per gzip (.tar.gz)"
-
-#: ../src/fr-init.c:76
-msgid "Ear (.ear)"
-msgstr "Ear (.ear)"
-
-#: ../src/fr-init.c:77
-msgid "Self-extracting zip (.exe)"
-msgstr "Mem-malpakanta zip (.exe)"
-
-#: ../src/fr-init.c:79
-msgid "Jar (.jar)"
-msgstr "Jar (.jar)"
-
-#: ../src/fr-init.c:80
-msgid "Lha (.lzh)"
-msgstr "Lha (.lzh)"
-
-#: ../src/fr-init.c:81
-msgid "Lrzip (.lrz)"
-msgstr "Lrzip (.lrz)"
-
-#: ../src/fr-init.c:82
-msgid "Tar compressed with lrzip (.tar.lrz)"
-msgstr "Tar densigita per lrzip (.tar.lrz)"
-
-#: ../src/fr-init.c:84
-msgid "Tar compressed with lzip (.tar.lz)"
-msgstr "Tar densigita per lzip (.tar.lz)"
-
-#: ../src/fr-init.c:86
-msgid "Tar compressed with lzma (.tar.lzma)"
-msgstr "Tar densigita per lzma (.tar.lzma)"
-
-#: ../src/fr-init.c:88
-msgid "Tar compressed with lzop (.tar.lzo)"
-msgstr "Tar densigita per lzop (.tar.lzo)"
-
-#: ../src/fr-init.c:89
-msgid "Windows Imaging Format (.wim)"
-msgstr "Vindoza bildigo-Formo (.wim)"
-
-#: ../src/fr-init.c:90
-msgid "Rar (.rar)"
-msgstr "Rar (.rar)"
-
-#: ../src/fr-init.c:93
-msgid "Tar uncompressed (.tar)"
-msgstr "Nedensigita tar (.tar)"
-
-#: ../src/fr-init.c:94
-msgid "Tar compressed with compress (.tar.Z)"
-msgstr "Tar densigita per compress (.tar.Z)"
-
-#: ../src/fr-init.c:96
-msgid "War (.war)"
-msgstr "War (.war)"
-
-#: ../src/fr-init.c:97
-msgid "Xz (.xz)"
-msgstr "Xz (.xz)"
-
-#: ../src/fr-init.c:98
-msgid "Tar compressed with xz (.tar.xz)"
-msgstr "Tar densigita per xz (.tar.xz)"
-
-#: ../src/fr-init.c:99
-msgid "Zoo (.zoo)"
-msgstr "Zoo (.zoo)"
-
-#: ../src/fr-init.c:100
-msgid "Zip (.zip)"
-msgstr "Zip (.zip)"
+#: ../src/fr-new-archive-dialog.c:489
+msgid "Could not delete the old archive."
+msgstr "Ne eblis forigi la malnovan arkivon."
 
 #: ../src/fr-stock.c:41
 msgid "C_reate"
@@ -912,144 +637,199 @@ msgstr "_Aldoni"
 msgid "_Extract"
 msgstr "_Elpaki"
 
-#: ../src/fr-window.c:1517
+#: ../src/fr-window.c:1173
+msgid "Operation completed"
+msgstr "Operacio kompletas"
+
+#: ../src/fr-window.c:1290
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "%d objekto (%s)"
 msgstr[1] "%d objektoj (%s)"
 
-#: ../src/fr-window.c:1522
+#: ../src/fr-window.c:1295
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "%d elektita objekto (%s)"
 msgstr[1] "%d elektitaj objektoj (%s)"
 
-#: ../src/fr-window.c:1592
+#: ../src/fr-window.c:1680
 msgid "Folder"
 msgstr "Dosierujo"
 
-#: ../src/fr-window.c:1989
+#: ../src/fr-window.c:2060
 msgid "[read only]"
 msgstr "[nur legi]"
 
-#: ../src/fr-window.c:2238
+#: ../src/fr-window.c:2179
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Ne eblis montri la dosierujon \"%s\""
 
-#: ../src/fr-window.c:2306 ../src/fr-window.c:2336
-msgid "Creating archive"
-msgstr "Kreii arkivon"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2270 ../src/fr-window.c:2308
+#, c-format
+msgid "Creating \"%s\""
+msgstr "Kreanta \"%s\""
 
-#: ../src/fr-window.c:2309
-msgid "Loading archive"
-msgstr "Ŝargas arkivon"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2274
+#, c-format
+msgid "Loading \"%s\""
+msgstr "Ŝarganta \"%s\""
 
-#: ../src/fr-window.c:2312
-msgid "Reading archive"
-msgstr "Legi arkivon"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2278
+#, c-format
+msgid "Reading \"%s\""
+msgstr "Leganta \"%s\""
 
-#: ../src/fr-window.c:2318
-msgid "Testing archive"
-msgstr "Kontrolas arkivon"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2282
+#, c-format
+msgid "Deleting the files from \"%s\""
+msgstr "Foriganta la dosierojn from \"%s\""
 
-#: ../src/fr-window.c:2321
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2286
+#, c-format
+msgid "Testing \"%s\""
+msgstr "Testanta \"%s\""
+
+#: ../src/fr-window.c:2289
 msgid "Getting the file list"
 msgstr "Ricevas la dosierliston"
 
-#: ../src/fr-window.c:2324 ../src/fr-window.c:2333
-msgid "Copying the file list"
-msgstr "Kopias la dosierliston"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2293
+#, c-format
+msgid "Copying the files to add to \"%s\""
+msgstr "Kopianta la dosierojn por aldoni al \"%s\""
 
-#: ../src/fr-window.c:2327
-msgid "Adding files to archive"
-msgstr "Aldonas dosierojn al arkivo"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2297
+#, c-format
+msgid "Adding the files to \"%s\""
+msgstr "Aldonanta la dosierojn al \"%s\""
 
-#: ../src/fr-window.c:2330
-msgid "Extracting files from archive"
-msgstr "Elpakas dosierojn el arkivo"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2301
+#, c-format
+msgid "Extracting the files from \"%s\""
+msgstr "Elpakanta la dosierojn de \"%s\""
 
-#: ../src/fr-window.c:2339
-msgid "Saving archive"
-msgstr "Konservas arkivon"
+#: ../src/fr-window.c:2304
+msgid "Copying the extracted files to the destination"
+msgstr "Kopianta la elpankantajn dosierojn al la celo"
 
-#: ../src/fr-window.c:2509
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2313
+#, c-format
+msgid "Saving \"%s\""
+msgstr "Konservanta \"%s\""
+
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2320
+#, c-format
+msgid "Renaming the files in \"%s\""
+msgstr "Renomanta la dosierojn en \"%s\""
+
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2324
+#, c-format
+msgid "Updating the files in \"%s\""
+msgstr "Ĝisdatiganta la dosierojn en \"%s\""
+
+#: ../src/fr-window.c:2499
 msgid "_Open the Archive"
 msgstr "_Malfermi la arkivon"
 
-#: ../src/fr-window.c:2510
+#: ../src/fr-window.c:2500
 msgid "_Show the Files"
 msgstr "M_ontri la dosierojn"
 
-#: ../src/fr-window.c:2565
-msgid "Archive:"
-msgstr "Arkivo:"
+#: ../src/fr-window.c:2617
+#, c-format
+msgid "%d file remaining"
+msgid_plural "%'d files remaining"
+msgstr[0] "%d dosiero restanta"
+msgstr[1] "%d dosieroj restantaj"
 
-#: ../src/fr-window.c:2736
+#: ../src/fr-window.c:2621 ../src/fr-window.c:3196
+msgid "Please wait…"
+msgstr "Bonvolu atendi…"
+
+#: ../src/fr-window.c:2677
 msgid "Extraction completed successfully"
 msgstr "Elpako sukcese efektiviĝis"
 
-#: ../src/fr-window.c:2759
-msgid "Archive created successfully"
-msgstr "Arkivo sukcese kreiĝis"
+#. Translators: %s is a filename
+#: ../src/fr-window.c:2709 ../src/fr-window.c:6249
+#, c-format
+msgid "\"%s\" created successfully"
+msgstr "\"%s\" kreita sukcese"
 
-#: ../src/fr-window.c:2807
-msgid "please wait…"
-msgstr "bonvolu atendi…"
-
-#: ../src/fr-window.c:2892 ../src/fr-window.c:3027
+#: ../src/fr-window.c:2799 ../src/fr-window.c:2971
 msgid "Command exited abnormally."
 msgstr "Komando fermiĝis nenormale."
 
-#: ../src/fr-window.c:2985
+#: ../src/fr-window.c:2920
 msgid "An error occurred while extracting files."
 msgstr "Okazis eraro dum elpakado de dosieroj."
 
-#: ../src/fr-window.c:2991
+#: ../src/fr-window.c:2926
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Ne eblis malfermi \"%s\""
 
-#: ../src/fr-window.c:2996
+#: ../src/fr-window.c:2931
 msgid "An error occurred while loading the archive."
 msgstr "Okazis eraro dum ŝargo de la arkivo."
 
-#: ../src/fr-window.c:3000
+#: ../src/fr-window.c:2935
 msgid "An error occurred while deleting files from the archive."
 msgstr "Okazis eraro dum forigo de dosieroj el la arkivo."
 
-#: ../src/fr-window.c:3006
+#: ../src/fr-window.c:2941
 msgid "An error occurred while adding files to the archive."
 msgstr "Okazis eraro dum aldono de dosieroj al la arkivo."
 
-#: ../src/fr-window.c:3010
+#: ../src/fr-window.c:2945
 msgid "An error occurred while testing archive."
 msgstr "Okazis eraro dum testado de la arkivo."
 
-#: ../src/fr-window.c:3014
+#: ../src/fr-window.c:2950
 msgid "An error occurred while saving the archive."
 msgstr "Okazis eraro dum konservo de la arkivo."
 
-#: ../src/fr-window.c:3018
+#: ../src/fr-window.c:2954
+msgid "An error occurred while renaming the files."
+msgstr "Okazis eraro dum la renomo de la dosieroj."
+
+#: ../src/fr-window.c:2958
+msgid "An error occurred while updating the files."
+msgstr "Okazis eraro dum la ĝisdatigo de la dosieroj."
+
+#: ../src/fr-window.c:2962
 msgid "An error occurred."
 msgstr "Eraro okazis."
 
-#: ../src/fr-window.c:3024
+#: ../src/fr-window.c:2968
 msgid "Command not found."
 msgstr "Komando ne trovita."
 
-#: ../src/fr-window.c:3226
+#: ../src/fr-window.c:3124
 msgid "Test Result"
 msgstr "Testrezulto"
 
-#: ../src/fr-window.c:4048 ../src/fr-window.c:8197 ../src/fr-window.c:8231
-#: ../src/fr-window.c:8481
+#: ../src/fr-window.c:4088 ../src/fr-window.c:8810 ../src/fr-window.c:8844
+#: ../src/fr-window.c:9123
 msgid "Could not perform the operation"
 msgstr "Ne eblis lanĉi la operacion"
 
-#: ../src/fr-window.c:4074
+#: ../src/fr-window.c:4114
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -1057,103 +837,108 @@ msgstr ""
 "Ĉu vi volas aldoni tiun dosieron al la nuna arkivo aŭ malfermi ĝin kiel "
 "novan arkivon?"
 
-#: ../src/fr-window.c:4104
+#: ../src/fr-window.c:4144
 msgid "Do you want to create a new archive with these files?"
 msgstr "Ĉu vi volas krei novan arkivon per tiuj dosieroj?"
 
-#: ../src/fr-window.c:4107
+#: ../src/fr-window.c:4147
 msgid "Create _Archive"
 msgstr "Krei _arkivon"
 
-#: ../src/fr-window.c:4700 ../src/fr-window.c:5776
+#: ../src/fr-window.c:4176 ../src/fr-window.c:7268
+msgid "New Archive"
+msgstr "Nova arkivo"
+
+#: ../src/fr-window.c:4750
 msgid "Folders"
 msgstr "Dosierujoj"
 
-#: ../src/fr-window.c:4738
+#: ../src/fr-window.c:4788 ../src/ui/file-selector.ui.h:7
 msgctxt "File"
 msgid "Size"
 msgstr "Grando"
 
-#: ../src/fr-window.c:4739
+#: ../src/fr-window.c:4789
 msgctxt "File"
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/fr-window.c:4740
+#: ../src/fr-window.c:4790 ../src/ui/file-selector.ui.h:8
 msgctxt "File"
-msgid "Date Modified"
-msgstr "Dato de modifo"
+msgid "Modified"
+msgstr "Ŝanĝita"
 
-#: ../src/fr-window.c:4741
+#: ../src/fr-window.c:4791
 msgctxt "File"
 msgid "Location"
 msgstr "Loko"
 
-#: ../src/fr-window.c:4750
+#: ../src/fr-window.c:4800 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Name"
 msgstr "Nomo"
 
-#: ../src/fr-window.c:5697
-msgid "Find:"
-msgstr "Trovi:"
-
-#: ../src/fr-window.c:5784
-msgid "Close the folders pane"
-msgstr "Fermi la dosierujan panelon"
-
 #. Translators: this is the label for the "open recent file" sub-menu.
-#: ../src/fr-window.c:5815
+#: ../src/fr-window.c:5710
 msgid "Open _Recent"
 msgstr "Malfermi _lastatempan"
 
-#: ../src/fr-window.c:5816 ../src/fr-window.c:5828
+#: ../src/fr-window.c:5711 ../src/fr-window.c:5723
 msgid "Open a recently used archive"
 msgstr "Malfermi lastatempe uzitan arkivon"
 
-#: ../src/fr-window.c:6258
-#, c-format
-msgid "Could not save the archive \"%s\""
-msgstr "Ne eblis konservi la arkivon \"%s\""
+#: ../src/fr-window.c:5739
+msgid "_Other Actions"
+msgstr "Aliaj _agoj"
 
-#: ../src/fr-window.c:6774
+#: ../src/fr-window.c:5740
+msgid "Other actions"
+msgstr "Aliaj agoj"
+
+#. Translators: after the colon there is a folder name.
+#: ../src/fr-window.c:5804 ../src/ui/file-selector.ui.h:4
+#: ../src/ui/new-archive-dialog.ui.h:2
+msgid "_Location:"
+msgstr "_Loko:"
+
+#: ../src/fr-window.c:6648
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "Ĉu anstataŭigi dosieron \"%s\"?"
 
-#: ../src/fr-window.c:6777
+#: ../src/fr-window.c:6651
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "Alia dosiero kun la sama nomo jam ekzistas en \"%s\"."
 
-#: ../src/fr-window.c:6784
+#: ../src/fr-window.c:6658
 msgid "Replace _All"
 msgstr "Anstataŭigi _ĉiujn"
 
-#: ../src/fr-window.c:6785
+#: ../src/fr-window.c:6659
 msgid "_Skip"
 msgstr "_Preterpasi"
 
-#: ../src/fr-window.c:6786
-msgid "_Replace"
-msgstr "_Anstataŭigi"
+#: ../src/fr-window.c:7452 ../src/fr-window.c:7809
+#, c-format
+msgid "Could not save the archive \"%s\""
+msgstr "Ne eblis konservi la arkivon \"%s\""
 
-#: ../src/fr-window.c:7293
+#: ../src/fr-window.c:7579
+msgid "Save"
+msgstr "Konservi"
+
+#: ../src/fr-window.c:7903
 msgid "Last Output"
 msgstr "Lasta eligo"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7598
+#: ../src/fr-window.c:8125
 msgid "New name is void, please type a name."
 msgstr "Nova nomo estas vaka, bonvolu tajpi nomon."
 
-#. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7603
-msgid "New name is the same as old one, please type other name."
-msgstr "Nova nomo estas sama kiel la malnova nomo, bonvolu tajpi alian nomon."
-
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7608
+#: ../src/fr-window.c:8135
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
@@ -1162,7 +947,7 @@ msgstr ""
 "Nomo \"%s\" ne estas valida ĉar ĝi enhavas almenaŭ uno de la sekvajn "
 "signojn: %s, bonvolu tajpi alian nomon."
 
-#: ../src/fr-window.c:7644
+#: ../src/fr-window.c:8171
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -1173,7 +958,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7646
+#: ../src/fr-window.c:8171 ../src/fr-window.c:8173
+msgid "Please use a different name."
+msgstr "Bonvolu uzi alian nomon."
+
+#: ../src/fr-window.c:8173
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -1184,378 +973,694 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7716
+#: ../src/fr-window.c:8243
 msgid "Rename"
 msgstr "Alinomi"
 
-#: ../src/fr-window.c:7717
+#: ../src/fr-window.c:8244
 msgid "_New folder name:"
 msgstr "_Nova dosieruja nomo:"
 
-#: ../src/fr-window.c:7717
+#: ../src/fr-window.c:8244
 msgid "_New file name:"
 msgstr "_Nova dosiernomo"
 
-#: ../src/fr-window.c:7721
+#: ../src/fr-window.c:8248
 msgid "_Rename"
 msgstr "_Alinomi"
 
-#: ../src/fr-window.c:7738 ../src/fr-window.c:7758
+#: ../src/fr-window.c:8265 ../src/fr-window.c:8284
 msgid "Could not rename the folder"
 msgstr "Ne eblis alinomi la dosierujon"
 
-#: ../src/fr-window.c:7738 ../src/fr-window.c:7758
+#: ../src/fr-window.c:8265 ../src/fr-window.c:8284
 msgid "Could not rename the file"
 msgstr "Ne eblis alinomi la dosieron"
 
-#: ../src/fr-window.c:8158
+#. Translators: %s are archive filenames
+#: ../src/fr-window.c:8717
+#, c-format
+msgid "Moving the files from \"%s\" to \"%s\""
+msgstr "Movanta la dosierojn de \"%s\" al \"%s\""
+
+#. Translators: %s are archive filenames
+#: ../src/fr-window.c:8720
+#, c-format
+msgid "Copying the files from \"%s\" to \"%s\""
+msgstr "Kopianta la dosierojn de \"%s\" al \"%s\""
+
+#: ../src/fr-window.c:8771
 msgid "Paste Selection"
 msgstr "Enmeti la elektaĵon"
 
-#: ../src/fr-window.c:8159
+#: ../src/fr-window.c:8772
 msgid "_Destination folder:"
 msgstr "_Cela dosierujo"
 
-#: ../src/fr-window.c:8760
+#: ../src/fr-window.c:9367
 msgid "Add files to an archive"
 msgstr "Aldoni dosierojn al arkivo"
-
-#: ../src/fr-window.c:8804
-msgid "Extract archive"
-msgstr "Elpaki arkivon"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: ../src/glib-utils.c:560
+#: ../src/glib-utils.c:769
 msgid "%d %B %Y, %H:%M"
 msgstr "%da de %B %Y, %H:%M"
 
-#. Expander
-#: ../src/gtk-utils.c:421
-msgid "Command _Line Output"
-msgstr "Komandlinia _eligo"
-
-#: ../src/gtk-utils.c:750
+#: ../src/gtk-utils.c:557
 msgid "Could not display help"
 msgstr "Ne eblis montri helpon"
 
-#: ../src/main.c:51
-msgid "Add files to the specified archive and quit the program"
-msgstr "Aldoni dosierojn al la specifita arkivo kaj fermi la programon"
-
-#: ../src/main.c:52
-msgid "ARCHIVE"
-msgstr "ARKIVO"
-
-#: ../src/main.c:55
-msgid "Add files asking the name of the archive and quit the program"
-msgstr "Peti la nomon por la arkivo, aldoni dosierojn  kaj fermi la programon"
-
-#: ../src/main.c:59
-msgid "Extract archives to the specified folder and quit the program"
-msgstr "Elpaki arkivojn al la specifita dosierujo kaj fermi la programon"
-
-#: ../src/main.c:60 ../src/main.c:72
-msgid "FOLDER"
-msgstr "DOSIERUJO"
-
-#: ../src/main.c:63
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr "Demandinte la celdosierujon elpaki arkivojn kaj fermi la programon"
-
-#: ../src/main.c:67
-msgid ""
-"Extract the contents of the archives in the archive folder and quit the "
-"program"
-msgstr ""
-"Elpaki la enhavon de la arkivoj en la arkiv-dosierujo kaj fermi la programon"
-
-#: ../src/main.c:71
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "Defaŭlte uzenda dosierujo por la komandoj '--add' kaj '--extract'"
-
-#: ../src/main.c:75
-msgid "Create destination folder without asking confirmation"
-msgstr "Krei celdosierujon sen peti permeson"
-
-#: ../src/main.c:296 ../src/server.c:444
-msgid "- Create and modify an archive"
-msgstr "- Krei kaj modifi arkivon"
-
-#: ../src/main.c:312 ../src/server.c:457
-msgid "File Roller"
-msgstr "Arkivo-administrilo"
-
-#: ../src/ui.h:31
-msgid "_Archive"
-msgstr "_Arkivo"
-
-#: ../src/ui.h:32
-msgid "_Edit"
-msgstr "R_edakti"
-
-#: ../src/ui.h:33
-msgid "_View"
-msgstr "_Vidi"
-
-#: ../src/ui.h:34
-msgid "_Help"
-msgstr "_Helpo"
-
-#: ../src/ui.h:35
-msgid "_Arrange Files"
-msgstr "_Aranĝi dosierojn"
-
-#: ../src/ui.h:39
-msgid "Information about the program"
-msgstr "Informoj pri la programo"
-
-#: ../src/ui.h:42
-msgid "_Add Files…"
-msgstr "_Aldoni dosierojn…"
-
-#: ../src/ui.h:43 ../src/ui.h:47
-msgid "Add files to the archive"
-msgstr "Aldoni dosierojn al la arkivo"
-
-#: ../src/ui.h:50
-msgid "Add a _Folder…"
-msgstr "Aldoni _dosierujon…"
-
-#: ../src/ui.h:51 ../src/ui.h:55
-msgid "Add a folder to the archive"
-msgstr "Aldoni dosierujon al la arkivo"
-
-#: ../src/ui.h:54
-msgid "Add Folder"
-msgstr "Aldoni dosierujon"
-
-#: ../src/ui.h:59
-msgid "Close the current archive"
-msgstr "Fermi la nunan arkivon"
-
-#: ../src/ui.h:62
-msgid "Contents"
-msgstr "Enhavoj"
-
-#: ../src/ui.h:63
-msgid "Display the File Roller Manual"
-msgstr "Montri la manlibron de la arkivo-administrilo"
-
-#: ../src/ui.h:68 ../src/ui.h:89
-msgid "Copy the selection"
-msgstr "Kopii la elektaĵon"
-
-#: ../src/ui.h:72 ../src/ui.h:93
-msgid "Cut the selection"
-msgstr "Eltondi la elektaĵon"
-
-#: ../src/ui.h:76 ../src/ui.h:97
-msgid "Paste the clipboard"
-msgstr "Enmeti la tondujon"
-
-#: ../src/ui.h:79 ../src/ui.h:100
-msgid "_Rename…"
-msgstr "_Alinomi…"
-
-#: ../src/ui.h:80 ../src/ui.h:101
-msgid "Rename the selection"
-msgstr "Alinomi la elektaĵon"
-
-#: ../src/ui.h:84 ../src/ui.h:105
-msgid "Delete the selection from the archive"
-msgstr "Forigi la elektaĵon el la arkivo"
-
-#: ../src/ui.h:109
-msgid "Dese_lect All"
-msgstr "_Malelekti ĉion"
-
-#: ../src/ui.h:110
-msgid "Deselect all files"
-msgstr "Malelekti ĉiujn dosierojn"
-
-#: ../src/ui.h:113 ../src/ui.h:117
-msgid "_Extract…"
-msgstr "_Elpaki…"
-
-#: ../src/ui.h:114 ../src/ui.h:118 ../src/ui.h:122
-msgid "Extract files from the archive"
-msgstr "Elpaki dosierojn el la arkivo"
-
-#: ../src/ui.h:125
-msgid "Find…"
-msgstr "Trovi…"
-
-#: ../src/ui.h:130
-msgid "New…"
-msgstr "Nova…"
-
-#: ../src/ui.h:131
-msgid "Create a new archive"
-msgstr "Krei novan arkivon"
-
-#: ../src/ui.h:134
-msgid "Open…"
-msgstr "Malfermi…"
-
-#: ../src/ui.h:135 ../src/ui.h:139
-msgid "Open archive"
-msgstr "Malfermi arkivon"
-
-#: ../src/ui.h:142
-msgid "_Open With…"
-msgstr "Mal_fermi per…"
-
-#: ../src/ui.h:143
-msgid "Open selected files with an application"
-msgstr "Malfermi elektitajn dosierojn per aplikaĵo"
-
-#: ../src/ui.h:146
-msgid "Pass_word…"
-msgstr "Pas_vorto…"
-
-#: ../src/ui.h:147
-msgid "Specify a password for this archive"
-msgstr "Specifi pasvorton por tiu arkivo"
-
-#: ../src/ui.h:151
-msgid "Show archive properties"
-msgstr "Montri ecojn de la arkivo"
-
-#: ../src/ui.h:155
-msgid "Reload current archive"
-msgstr "Reŝargi nunan arkivon"
-
-#: ../src/ui.h:158
-msgid "Save As…"
-msgstr "Konservi kiel…"
-
-#: ../src/ui.h:159
-msgid "Save the current archive with a different name"
-msgstr "Konservi la nunan arkivon per alia nomo"
-
-#: ../src/ui.h:163
-msgid "Select all files"
-msgstr "Elekti ĉiujn dosierojn"
-
-#: ../src/ui.h:167
-msgid "Stop current operation"
-msgstr "Haltigi nunan agon"
-
-#: ../src/ui.h:170
-msgid "_Test Integrity"
-msgstr "_Testi integrecon"
-
-#: ../src/ui.h:171
-msgid "Test whether the archive contains errors"
-msgstr "Testi ĉu la arkivo enhavas erarojn"
-
-#: ../src/ui.h:175 ../src/ui.h:179
-msgid "Open the selected file"
-msgstr "Malfermi la elektitan dosieron"
-
-#: ../src/ui.h:183 ../src/ui.h:187
-msgid "Open the selected folder"
-msgstr "Malfermi la elektitan dosierujon"
-
-#: ../src/ui.h:192
-msgid "Go to the previous visited location"
-msgstr "Iri al la antaŭe vizitita loko"
-
-#: ../src/ui.h:196
-msgid "Go to the next visited location"
-msgstr "Iri al la sekve vizita loko"
-
-#: ../src/ui.h:200
-msgid "Go up one level"
-msgstr "Iri supren ununivele"
-
-#. Translators: the home location is the home folder.
-#: ../src/ui.h:205
-msgid "Go to the home location"
-msgstr "Iri al la hejmujo"
-
-#: ../src/ui.h:213
-msgid "_Toolbar"
-msgstr "_Ilobreto"
-
-#: ../src/ui.h:214
-msgid "View the main toolbar"
-msgstr "Montri la ĉefilobreton"
-
-#: ../src/ui.h:218
-msgid "Stat_usbar"
-msgstr "Stat_obreto"
-
-#: ../src/ui.h:219
-msgid "View the statusbar"
-msgstr "Montri la statobreton"
-
-#: ../src/ui.h:223
-msgid "_Reversed Order"
-msgstr "_Renversita ordo"
-
-#: ../src/ui.h:224
-msgid "Reverse the list order"
-msgstr "Renversi la listan ordon"
-
-#: ../src/ui.h:228
-msgid "_Folders"
-msgstr "_Dosierujoj"
-
-#: ../src/ui.h:238
+#: ../src/gtk-utils.c:651
+msgid "Change password visibility"
+msgstr "Ŝangi pasvorta videblo"
+
+#: ../src/ui/add-dialog-options.ui.h:1
+msgid "Add"
+msgstr "Aldoni"
+
+#: ../src/ui/add-dialog-options.ui.h:2
+msgid "Include _files:"
+msgstr "Inkluzivi _dosierojn:"
+
+#: ../src/ui/add-dialog-options.ui.h:3
+msgid "E_xclude files:"
+msgstr "E_kskluzi dosierojn:"
+
+#: ../src/ui/add-dialog-options.ui.h:4
+msgid "_Exclude folders:"
+msgstr "Eksk_luzivi dosierujojn:"
+
+#: ../src/ui/add-dialog-options.ui.h:5 ../src/ui/extract-dialog-options.ui.h:5
+msgid "example: *.o; *.bak"
+msgstr "ekzemplo: *.o; *.bak"
+
+#: ../src/ui/add-dialog-options.ui.h:6 ../src/ui/extract-dialog-options.ui.h:6
+msgid "Actions"
+msgstr "Agoj"
+
+#: ../src/ui/add-dialog-options.ui.h:7
+msgid "Add only if _newer"
+msgstr "Nu aldoni se _pli nova"
+
+#: ../src/ui/add-dialog-options.ui.h:8
+msgid "_Follow symbolic links"
+msgstr "_Sekvi simbolan ligilon"
+
+#: ../src/ui/app-menu.ui.h:1
+msgid "_New Archive"
+msgstr "_Nova arkivo"
+
+#: ../src/ui/app-menu.ui.h:3 ../src/ui.h:213
 msgid "View All _Files"
 msgstr "Montri ĉ_iujn dosierojn"
 
-#: ../src/ui.h:241
+#: ../src/ui/app-menu.ui.h:4 ../src/ui.h:216
 msgid "View as a F_older"
 msgstr "Montri kiel dosier_ujon"
 
-#: ../src/ui.h:249
-msgid "by _Name"
-msgstr "laŭ _nomo"
+#: ../src/ui/app-menu.ui.h:5 ../src/ui.h:197
+msgid "_Folders"
+msgstr "_Dosierujoj"
 
-#: ../src/ui.h:250
-msgid "Sort file list by name"
-msgstr "Ordigi dosierliston laŭnome"
+#: ../src/ui/app-menu.ui.h:6
+msgid "_Help"
+msgstr "_Helpo"
 
-#: ../src/ui.h:252
-msgid "by _Size"
-msgstr "laŭ _grando"
+#: ../src/ui/app-menu.ui.h:7
+msgid "_About Archive Manager"
+msgstr "_Pri Arkivo-administrilo"
 
-#: ../src/ui.h:253
-msgid "Sort file list by file size"
-msgstr "Ordigi dosierliston laŭ dosiergrando"
+#: ../src/ui/app-menu.ui.h:8
+msgid "_Quit"
+msgstr "_Ĉesi"
 
-#: ../src/ui.h:255
-msgid "by T_ype"
-msgstr "laŭ t_ipo"
+#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
+msgid "_Password:"
+msgstr "_Pasvorto:"
 
-#: ../src/ui.h:256
-msgid "Sort file list by type"
-msgstr "Ordigi dosierliston laŭ tipo"
+#: ../src/ui/delete.ui.h:1
+msgid "Delete"
+msgstr "Forigi"
 
-#: ../src/ui.h:258
-msgid "by _Date Modified"
-msgstr "laŭ _modifo-dato"
+#: ../src/ui/delete.ui.h:2 ../src/ui/extract-dialog-options.ui.h:4
+msgid "_Files:"
+msgstr "_Dosieroj:"
 
-#: ../src/ui.h:259
-msgid "Sort file list by modification time"
-msgstr "Ordigi dosierliston laŭ modifo-tempo"
+#: ../src/ui/delete.ui.h:3
+msgid "example: *.txt; *.doc"
+msgstr "ekzemplo: *.txt; *.doc"
 
-#. Translators: this is the "sort by file location" menu item
-#: ../src/ui.h:262
-msgid "by _Location"
-msgstr "laŭ _loko"
+#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:2
+msgid "_All files"
+msgstr "Ĉiuj d_osieroj"
 
-#. Translators: location is the file location
-#: ../src/ui.h:264
-msgid "Sort file list by location"
-msgstr "Ordigi dosierliston laŭloke"
+#: ../src/ui/delete.ui.h:5 ../src/ui/extract-dialog-options.ui.h:3
+msgid "_Selected files"
+msgstr "_Elektitaj dosieroj"
 
-#~ msgid "Modified on:"
-#~ msgstr "Modifodato:"
+#: ../src/ui/error-dialog.ui.h:1
+msgid "C_ommand Line Output:"
+msgstr "Komandlinia _eligo:"
+
+#: ../src/ui/extract-dialog-options.ui.h:7
+msgid "_Keep directory structure"
+msgstr "_Teni dosierujan strukturon"
+
+#: ../src/ui/extract-dialog-options.ui.h:8
+msgid "Do not _overwrite newer files"
+msgstr "Ne _anstataŭigi pli novajn dosierojn"
+
+#: ../src/ui/file-selector.ui.h:1
+msgid "_Select All"
+msgstr "_Elekti ĉion"
+
+#: ../src/ui/file-selector.ui.h:2 ../src/ui.h:97
+msgid "Dese_lect All"
+msgstr "_Malelekti ĉion"
+
+#: ../src/ui/file-selector.ui.h:3
+msgid "Show Hidden Files"
+msgstr "M_ontri kaŝitajn dosierojn"
+
+#: ../src/ui/file-selector.ui.h:5 ../src/ui.h:179
+msgid "Go up one level"
+msgstr "Iri supren ununivele"
+
+#: ../src/ui.h:35
+msgid "Information about the program"
+msgstr "Informoj pri la programo"
+
+#: ../src/ui.h:38
+msgid "_Add Files…"
+msgstr "_Aldoni dosierojn…"
+
+#: ../src/ui.h:39 ../src/ui.h:43
+msgid "Add files to the archive"
+msgstr "Aldoni dosierojn al la arkivo"
+
+#: ../src/ui.h:47
+msgid "Close the current archive"
+msgstr "Fermi la nunan arkivon"
+
+#: ../src/ui.h:50
+msgid "Contents"
+msgstr "Enhavoj"
+
+#: ../src/ui.h:51
+msgid "Display the File Roller Manual"
+msgstr "Montri la manlibron de la arkivo-administrilo"
+
+#: ../src/ui.h:56 ../src/ui.h:77
+msgid "Copy the selection"
+msgstr "Kopii la elektaĵon"
+
+#: ../src/ui.h:60 ../src/ui.h:81
+msgid "Cut the selection"
+msgstr "Eltondi la elektaĵon"
+
+#: ../src/ui.h:64 ../src/ui.h:85
+msgid "Paste the clipboard"
+msgstr "Enmeti la tondujon"
+
+#: ../src/ui.h:67 ../src/ui.h:88
+msgid "_Rename…"
+msgstr "_Alinomi…"
+
+#: ../src/ui.h:68 ../src/ui.h:89
+msgid "Rename the selection"
+msgstr "Alinomi la elektaĵon"
+
+#: ../src/ui.h:72 ../src/ui.h:93
+msgid "Delete the selection from the archive"
+msgstr "Forigi la elektaĵon el la arkivo"
+
+#: ../src/ui.h:98
+msgid "Deselect all files"
+msgstr "Malelekti ĉiujn dosierojn"
+
+#: ../src/ui.h:101 ../src/ui.h:105
+msgid "_Extract…"
+msgstr "_Elpaki…"
+
+#: ../src/ui.h:102 ../src/ui.h:106 ../src/ui.h:110
+msgid "Extract files from the archive"
+msgstr "Elpaki dosierojn el la arkivo"
+
+#: ../src/ui.h:113
+msgid "New…"
+msgstr "Nova…"
+
+#: ../src/ui.h:114
+msgid "Create a new archive"
+msgstr "Krei novan arkivon"
+
+#: ../src/ui.h:117
+msgid "Open…"
+msgstr "Malfermi…"
+
+#: ../src/ui.h:118 ../src/ui.h:122
+msgid "Open archive"
+msgstr "Malfermi arkivon"
+
+#: ../src/ui.h:125
+msgid "_Open With…"
+msgstr "Mal_fermi per…"
+
+#: ../src/ui.h:126
+msgid "Open selected files with an application"
+msgstr "Malfermi elektitajn dosierojn per aplikaĵo"
+
+#: ../src/ui.h:129
+msgid "Pass_word…"
+msgstr "Pas_vorto…"
+
+#: ../src/ui.h:130
+msgid "Specify a password for this archive"
+msgstr "Specifi pasvorton por tiu arkivo"
+
+#: ../src/ui.h:134
+msgid "Show archive properties"
+msgstr "Montri ecojn de la arkivo"
+
+#: ../src/ui.h:138
+msgid "Reload current archive"
+msgstr "Reŝargi nunan arkivon"
+
+#: ../src/ui.h:141
+msgid "Save As…"
+msgstr "Konservi kiel…"
+
+#: ../src/ui.h:142
+msgid "Save the current archive with a different name"
+msgstr "Konservi la nunan arkivon per alia nomo"
+
+#: ../src/ui.h:146
+msgid "Select all files"
+msgstr "Elekti ĉiujn dosierojn"
+
+#: ../src/ui.h:149
+msgid "_Test Integrity"
+msgstr "_Testi integrecon"
+
+#: ../src/ui.h:150
+msgid "Test whether the archive contains errors"
+msgstr "Testi ĉu la arkivo enhavas erarojn"
+
+#: ../src/ui.h:154 ../src/ui.h:158
+msgid "Open the selected file"
+msgstr "Malfermi la elektitan dosieron"
+
+#: ../src/ui.h:162 ../src/ui.h:166
+msgid "Open the selected folder"
+msgstr "Malfermi la elektitan dosierujon"
+
+#: ../src/ui.h:171
+msgid "Go to the previous visited location"
+msgstr "Iri al la antaŭe vizitita loko"
+
+#: ../src/ui.h:175
+msgid "Go to the next visited location"
+msgstr "Iri al la sekve vizita loko"
+
+#. Translators: the home location is the home folder.
+#: ../src/ui.h:184
+msgid "Go to the home location"
+msgstr "Iri al la hejmujo"
+
+#: ../src/ui.h:192
+msgid "Stat_usbar"
+msgstr "Stat_obreto"
+
+#: ../src/ui.h:193
+msgid "View the statusbar"
+msgstr "Montri la statobreton"
+
+#: ../src/ui.h:202
+msgid "Find…"
+msgstr "Trovi…"
+
+#: ../src/ui.h:203
+msgid "Find files by name"
+msgstr "Trovi dosierojn laŭnome"
+
+#: ../src/ui/new-archive-dialog.ui.h:1
+msgid "_Filename:"
+msgstr "_Dosiernomo:"
+
+#: ../src/ui/new-archive-dialog.ui.h:3
+msgid "Location"
+msgstr "Loko"
+
+#: ../src/ui/new-archive-dialog.ui.h:5
+msgid "_Encrypt the file list too"
+msgstr "Ĉ_ifri ankaŭ la dosierliston"
+
+#. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
+#: ../src/ui/new-archive-dialog.ui.h:7
+msgid "Split into _volumes of"
+msgstr "Disdi_vidi en partojn de"
+
+#. MB means megabytes
+#: ../src/ui/new-archive-dialog.ui.h:9
+msgid "MB"
+msgstr "MB"
+
+#: ../src/ui/new-archive-dialog.ui.h:10
+msgid "_Other Options"
+msgstr "Aliaj _opcioj:"
+
+#: ../src/ui/password.ui.h:1
+msgid "Password"
+msgstr "Pasvorto"
+
+#: ../src/ui/password.ui.h:2
+msgid "_Encrypt the file list"
+msgstr "Ĉ_ifri la dosierliston"
+
+#: ../src/ui/properties.ui.h:1
+msgctxt "File"
+msgid "Name:"
+msgstr "Nomo:"
+
+#: ../src/ui/properties.ui.h:2
+msgid "Archive size:"
+msgstr "Arkivogrando:"
+
+#. after the colon there is a folder name.
+#: ../src/ui/properties.ui.h:4
+msgid "Location:"
+msgstr "Loko:"
+
+#: ../src/ui/properties.ui.h:5
+msgid "Compression ratio:"
+msgstr "densiga proporcio:"
+
+#: ../src/ui/properties.ui.h:6
+msgid "Last modified:"
+msgstr "Laste modifita:"
+
+#: ../src/ui/properties.ui.h:7
+msgid "Content size:"
+msgstr "Enhavogrando:"
+
+#: ../src/ui/properties.ui.h:8
+msgid "Number of files:"
+msgstr "Nombro da dosieroj:"
+
+#. after the colon there is a file type.
+#: ../src/ui/properties.ui.h:10
+msgid "Type:"
+msgstr "Speco:"
+
+#: ../src/ui/update.ui.h:1
+msgid "_Update"
+msgstr "Ĝ_isdatigi"
+
+#: ../src/ui/update.ui.h:3
+msgid "S_elect the files you want to update:"
+msgstr "_Elektu la dosierojn kiujn vi volas ĝisdatigi:"
+
+#~ msgid "View toolbar"
+#~ msgstr "Montri la ilobreton"
+
+#~ msgid "Whether to display the toolbar."
+#~ msgstr "Ĉu montri la ilobreton?"
+
+#~ msgid "Overwrite existing files"
+#~ msgstr "Anstataŭigi ekzistantajn dosierojn"
+
+#~ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
+#~ msgstr "<span weight=\"bold\" size=\"larger\">Pasvorto postulata</span>"
+
+#~ msgid ""
+#~ "<i><b>Note:</b> the password will be used to encrypt files you add to the "
+#~ "current archive, and to decrypt files you extract from the current "
+#~ "archive. When the archive is closed the password will be deleted.</i>"
+#~ msgstr ""
+#~ "<i><b>Noto:</b> la pasvorto estos uzata por ĉifri dosierojn kiujn vi "
+#~ "aldonas al la nuna arkivo, kaj por malĉifri dosierojn kiujn vi elpakas el "
+#~ "la nuna arkivo. Kiam la arkivo estos fermita la pasvorto estos forigita.</"
+#~ "i>"
+
+#~ msgid "Add a Folder"
+#~ msgstr "Aldoni dosierujon"
+
+#~ msgid "_Include subfolders"
+#~ msgstr "_Inkluzivi subdosierujojn"
+
+#~ msgid "Exclude folders that are symbolic lin_ks"
+#~ msgstr "Ekskluzivi dosierujojn kiuj estas simbolaj li_giloj"
+
+#~ msgid "Sa_ve Options"
+#~ msgstr "Konser_vi opciojn"
+
+#~ msgid ""
+#~ "The name \"%s\" is not valid because it cannot contain the characters: "
+#~ "%s\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "La nomo \"%s\" ne estas valida ĉar ĝi ne rajtas enhavi la sekvajn "
+#~ "signojn: %s\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "You don't have the right permissions to create an archive in the "
+#~ "destination folder."
+#~ msgstr "Vi ne havas la ĝustajn rajtojn por krei arkivon en la celdosierujo."
+
+#~ msgid "Archive not created"
+#~ msgstr "Arkivo ne kreiĝis"
+
+#~ msgid "_Overwrite"
+#~ msgstr "_Anstataŭigi"
+
+#~ msgid "Re-crea_te folders"
+#~ msgstr "Re-krei dos_ierujojn"
+
+#~ msgid "Over_write existing files"
+#~ msgstr "Anstataŭigi ekzistantajn dosiero_jn"
+
+#~ msgid "Do not e_xtract older files"
+#~ msgstr "Ne elpaki pli _malnovajn dosierojn"
+
+#~ msgctxt "File"
+#~ msgid "New"
+#~ msgstr "Nova"
+
+#~ msgid "File _Format: %s"
+#~ msgstr "Dosier_formo: %s"
+
+#~ msgid "All Files"
+#~ msgstr "Ĉiuj dosieroj"
+
+#~ msgid "All Supported Files"
+#~ msgstr "Ĉiuj subtenataj dosieroj"
+
+#~ msgid "By Extension"
+#~ msgstr "Laŭ finaĵo"
+
+#~ msgid "File Format"
+#~ msgstr "Dosierformo"
+
+#~ msgid "Extension(s)"
+#~ msgstr "Finaĵo(j)"
+
+#~ msgid ""
+#~ "The program was not able to find out the file format you want to use for `"
+#~ "%s'. Please make sure to use a known extension for that file or manually "
+#~ "choose a file format from the list below."
+#~ msgstr ""
+#~ "La programo ne povis eltrovi la dosierformon kiun vi volas uzi por '%s'. "
+#~ "Bonvolu uzi konatan finaĵon por tiu dosiero aŭ mane elektu dosierformon "
+#~ "el la suba listo."
+
+#~ msgid "File format not recognized"
+#~ msgstr "Dosierformo ne rekonita"
+
+#~ msgid "File not found."
+#~ msgstr "Dosiero ne trovita."
+
+#~ msgid "Adding file: "
+#~ msgstr "Aldoni dosieron: "
+
+#~ msgid "Extracting file: "
+#~ msgstr "Elpaki dosieron: "
+
+#~ msgid "7-Zip (.7z)"
+#~ msgstr "7z (.7z)"
+
+#~ msgid "Tar compressed with 7z (.tar.7z)"
+#~ msgstr "Tar densigita per 7z (.tar.7z)"
+
+#~ msgid "Ace (.ace)"
+#~ msgstr "Ace (.ace)"
+
+#~ msgid "Ar (.ar)"
+#~ msgstr "Ar (.ar)"
+
+#~ msgid "Arj (.arj)"
+#~ msgstr "Arj (.arj)"
+
+#~ msgid "Tar compressed with bzip2 (.tar.bz2)"
+#~ msgstr "Tar densigita per bzip2 (.tar.bz2)"
+
+#~ msgid "Tar compressed with bzip (.tar.bz)"
+#~ msgstr "Tar densigita per bzip (.tar.bz)"
+
+#~ msgid "Cabinet (.cab)"
+#~ msgstr "Cabinet (.cab)"
+
+#~ msgid "Rar Archived Comic Book (.cbr)"
+#~ msgstr "Bildrakonto en rar-formo (.cbr)"
+
+#~ msgid "Zip Archived Comic Book (.cbz)"
+#~ msgstr "Bildrakonto en zip-formo (.cbz)"
+
+#~ msgid "Tar compressed with gzip (.tar.gz)"
+#~ msgstr "Tar densigita per gzip (.tar.gz)"
+
+#~ msgid "Ear (.ear)"
+#~ msgstr "Ear (.ear)"
+
+#~ msgid "Self-extracting zip (.exe)"
+#~ msgstr "Mem-malpakanta zip (.exe)"
+
+#~ msgid "Jar (.jar)"
+#~ msgstr "Jar (.jar)"
+
+#~ msgid "Lha (.lzh)"
+#~ msgstr "Lha (.lzh)"
+
+#~ msgid "Lrzip (.lrz)"
+#~ msgstr "Lrzip (.lrz)"
+
+#~ msgid "Tar compressed with lrzip (.tar.lrz)"
+#~ msgstr "Tar densigita per lrzip (.tar.lrz)"
+
+#~ msgid "Tar compressed with lzip (.tar.lz)"
+#~ msgstr "Tar densigita per lzip (.tar.lz)"
+
+#~ msgid "Tar compressed with lzma (.tar.lzma)"
+#~ msgstr "Tar densigita per lzma (.tar.lzma)"
+
+#~ msgid "Tar compressed with lzop (.tar.lzo)"
+#~ msgstr "Tar densigita per lzop (.tar.lzo)"
+
+#~ msgid "Windows Imaging Format (.wim)"
+#~ msgstr "Vindoza bildigo-Formo (.wim)"
+
+#~ msgid "Rar (.rar)"
+#~ msgstr "Rar (.rar)"
+
+#~ msgid "Tar uncompressed (.tar)"
+#~ msgstr "Nedensigita tar (.tar)"
+
+#~ msgid "Tar compressed with compress (.tar.Z)"
+#~ msgstr "Tar densigita per compress (.tar.Z)"
+
+#~ msgid "War (.war)"
+#~ msgstr "War (.war)"
+
+#~ msgid "Xz (.xz)"
+#~ msgstr "Xz (.xz)"
+
+#~ msgid "Tar compressed with xz (.tar.xz)"
+#~ msgstr "Tar densigita per xz (.tar.xz)"
+
+#~ msgid "Zoo (.zoo)"
+#~ msgstr "Zoo (.zoo)"
+
+#~ msgid "Zip (.zip)"
+#~ msgstr "Zip (.zip)"
+
+#~ msgid "Creating archive"
+#~ msgstr "Kreii arkivon"
+
+#~ msgid "Loading archive"
+#~ msgstr "Ŝargas arkivon"
+
+#~ msgid "Reading archive"
+#~ msgstr "Legi arkivon"
+
+#~ msgid "Testing archive"
+#~ msgstr "Kontrolas arkivon"
+
+#~ msgid "Saving archive"
+#~ msgstr "Konservas arkivon"
+
+#~ msgctxt "File"
+#~ msgid "Date Modified"
+#~ msgstr "Dato de modifo"
+
+#~ msgid "Find:"
+#~ msgstr "Trovi:"
+
+#~ msgid "Close the folders pane"
+#~ msgstr "Fermi la dosierujan panelon"
+
+#~ msgid "_Edit"
+#~ msgstr "R_edakti"
+
+#~ msgid "_View"
+#~ msgstr "_Vidi"
+
+#~ msgid "_Arrange Files"
+#~ msgstr "_Aranĝi dosierojn"
+
+#~ msgid "Add a _Folder…"
+#~ msgstr "Aldoni _dosierujon…"
+
+#~ msgid "Add a folder to the archive"
+#~ msgstr "Aldoni dosierujon al la arkivo"
+
+#~ msgid "Add Folder"
+#~ msgstr "Aldoni dosierujon"
+
+#~ msgid "Stop current operation"
+#~ msgstr "Haltigi nunan agon"
+
+#~ msgid "_Toolbar"
+#~ msgstr "_Ilobreto"
+
+#~ msgid "View the main toolbar"
+#~ msgstr "Montri la ĉefilobreton"
+
+#~ msgid "_Reversed Order"
+#~ msgstr "_Renversita ordo"
+
+#~ msgid "Reverse the list order"
+#~ msgstr "Renversi la listan ordon"
+
+#~ msgid "by _Name"
+#~ msgstr "laŭ _nomo"
+
+#~ msgid "by _Size"
+#~ msgstr "laŭ _grando"
+
+#~ msgid "Sort file list by file size"
+#~ msgstr "Ordigi dosierliston laŭ dosiergrando"
+
+#~ msgid "by T_ype"
+#~ msgstr "laŭ t_ipo"
+
+#~ msgid "Sort file list by type"
+#~ msgstr "Ordigi dosierliston laŭ tipo"
+
+#~ msgid "by _Date Modified"
+#~ msgstr "laŭ _modifo-dato"
+
+#~ msgid "Sort file list by modification time"
+#~ msgstr "Ordigi dosierliston laŭ modifo-tempo"
+
+#~ msgid "by _Location"
+#~ msgstr "laŭ _loko"
+
+#~ msgid "Sort file list by location"
+#~ msgstr "Ordigi dosierliston laŭloke"
 
 #~ msgid "The file doesn't exist"
 #~ msgstr "La dosiero ne ekzistas"
