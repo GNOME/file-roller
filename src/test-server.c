@@ -22,10 +22,16 @@
 #include <config.h>
 #include <gio/gio.h>
 
+/* Decide what to run... */
+#define GET_SUPPORTED_TYPES 0
+#define ADD_TO_ARCHIVE      0
+#define COMPRESS            1
+#define EXTRACT             0
+#define EXTRACT_HERE        0
 
 GMainLoop *loop;
 
-
+#if GET_SUPPORTED_TYPES
 static void
 fileroller_getsupportedtypes_ready_cb (GObject      *source_object,
 		  	  	       GAsyncResult *res,
@@ -84,7 +90,7 @@ fileroller_getsupportedtypes_ready_cb (GObject      *source_object,
 	g_object_unref (proxy);
 	g_main_loop_quit (loop);
 }
-
+#endif
 
 static void
 fileroller_addtoarchive_ready_cb (GObject      *source_object,
@@ -155,7 +161,7 @@ main (int argc, char *argv[])
 			                  G_CALLBACK (on_signal),
 			                  NULL);
 
-#if 0
+#if GET_SUPPORTED_TYPES
 			/* -- GetSupportedTypes -- */
 
 			g_dbus_proxy_call (proxy,
@@ -168,7 +174,7 @@ main (int argc, char *argv[])
 					   NULL);
 #endif
 
-#if 0
+#if ADD_TO_ARCHIVE
 			/* -- AddToArchive -- */
 
 			char  *archive;
@@ -195,7 +201,7 @@ main (int argc, char *argv[])
 			g_strfreev (files);
 #endif
 
-#if 1
+#if COMPRESS
 
 			/* -- Compress -- */
 
@@ -224,7 +230,7 @@ main (int argc, char *argv[])
 
 #endif
 
-#if 0
+#if EXTRACT
 
 			/* -- Extract -- */
 
@@ -242,7 +248,7 @@ main (int argc, char *argv[])
 
 #endif
 
-#if 0
+#if EXTRACT_HERE
 
 			/* -- ExtractHere -- */
 
