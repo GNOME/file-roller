@@ -287,6 +287,12 @@ fr_command_cfile_add (FrCommand  *comm,
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 		compressed_filename = g_strconcat (filename, ".rz", NULL);
+	} else {
+		g_warning ("Unhandled mime type: '%s'", archive->mime_type);
+		g_warn_if_reached ();
+		g_free (temp_file);
+		g_free (temp_dir);
+		return;
 	}
 
       	/* copy compressed file to the dest dir */
