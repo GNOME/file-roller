@@ -375,11 +375,20 @@ fr_command_7z_add (FrCommand  *command,
 	if (from_file != NULL)
 		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);
 
-	fr_process_add_arg (command->process, "--");
-	fr_process_add_arg (command->process, command->filename);
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
-			fr_process_add_arg (command->process, scan->data);
+			/* Files prefixed with '@' need to be handled specially */
+			if (g_str_has_prefix (scan->data, "@"))
+				fr_process_add_arg_concat (command->process, "-i!", scan->data, NULL);
+
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
+
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			/* Skip files prefixed with '@', already added */
+			if (!g_str_has_prefix (scan->data, "@"))
+				fr_process_add_arg (command->process, scan->data);
 
 	fr_process_end_command (command->process);
 }
@@ -409,11 +418,20 @@ fr_command_7z_delete (FrCommand  *command,
 	if (from_file != NULL)
 		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);
 
-	fr_process_add_arg (command->process, "--");
-	fr_process_add_arg (command->process, command->filename);
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
-			fr_process_add_arg (command->process, scan->data);
+			/* Files prefixed with '@' need to be handled specially */
+			if (g_str_has_prefix (scan->data, "@"))
+				fr_process_add_arg_concat (command->process, "-i!", scan->data, NULL);
+
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
+
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			/* Skip files prefixed with '@', already added */
+			if (!g_str_has_prefix (scan->data, "@"))
+				fr_process_add_arg (command->process, scan->data);
 
 	fr_process_end_command (command->process);
 }
@@ -463,11 +481,21 @@ fr_command_7z_extract (FrCommand  *command,
 	if (from_file != NULL)
 		fr_process_add_arg_concat (command->process, "-i@", from_file, NULL);
 
-	fr_process_add_arg (command->process, "--");
-	fr_process_add_arg (command->process, command->filename);
 	if (from_file == NULL)
 		for (scan = file_list; scan; scan = scan->next)
-			fr_process_add_arg (command->process, scan->data);
+			/* Files prefixed with '@' need to be handled specially */
+			if (g_str_has_prefix (scan->data, "@"))
+				fr_process_add_arg_concat (command->process, "-i!", scan->data, NULL);
+
+
+	fr_process_add_arg (command->process, "--");
+	fr_process_add_arg (command->process, command->filename);
+
+	if (from_file == NULL)
+		for (scan = file_list; scan; scan = scan->next)
+			/* Skip files prefixed with '@', already added */
+			if (!g_str_has_prefix (scan->data, "@"))
+				fr_process_add_arg (command->process, scan->data);
 
 	fr_process_end_command (command->process);
 }
