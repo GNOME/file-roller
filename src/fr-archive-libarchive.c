@@ -1335,7 +1335,7 @@ save_archive_thread (GSimpleAsyncResult *result,
 	LoadData             *load_data;
 	struct archive       *a, *b;
 	struct archive_entry *r_entry;
-	int                   ra, rb;
+	int                   ra = ARCHIVE_OK, rb = ARCHIVE_OK;
 
 	save_data = g_simple_async_result_get_op_res_gpointer (result);
 	load_data = LOAD_DATA (save_data);
