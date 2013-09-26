@@ -124,7 +124,8 @@ dlg_ask_password__common (FrWindow       *window,
 	else if (data->pwd_type == FR_PASSWORD_TYPE_SECOND_ARCHIVE) {
 		file = fr_window_get_archive_file_for_paste (window);
 		old_password = fr_window_get_password_for_second_archive (window);
-	}
+	} else
+		g_assert_not_reached ();
 
 	filename = _g_file_get_display_basename (file);
 	/* Translators: %s is a filename */
