@@ -118,6 +118,8 @@ process_line (char     *line,
 		fields = g_strsplit (line, "|", 6);
 	else if (ace_comm->command_type == FR_ACE_COMMAND_NONFREE)
 		fields = _g_str_split_line (line, 5);
+	else
+		fields = NULL;
 
 	if ((fields == NULL) || (fields[0] == NULL) || (g_strv_length (fields) < 5))
 		return;
@@ -131,6 +133,8 @@ process_line (char     *line,
 	}
 	else if (ace_comm->command_type == FR_ACE_COMMAND_NONFREE)
 		field_name = _g_str_get_last_field (line, 6);
+	else
+		g_assert_not_reached ();
 
 	if (field_name[0] != '/') {
 		fdata->full_path = g_strconcat ("/", field_name, NULL);
