@@ -4204,6 +4204,10 @@ file_list_drag_begin (GtkWidget          *widget,
 		      gpointer            data)
 {
 	FrWindow *window = data;
+	GtkTreeSelection *selection;
+	GtkTreeIter  iter;
+	GList *selected_tree_paths;
+	char *xds_filename;
 
 	debug (DEBUG_INFO, "::DragBegin -->\n");
 
@@ -4215,11 +4219,29 @@ file_list_drag_begin (GtkWidget          *widget,
 	g_free (window->priv->drag_base_dir);
 	window->priv->drag_base_dir = NULL;
 
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	selected_tree_paths = gtk_tree_selection_get_selected_rows (selection, NULL);
+
+	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
+				     &iter, (GtkTreePath *) selected_tree_paths->data)) {
+
+		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->list_store),
+				    &iter,
+				    TREE_COLUMN_NAME, &xds_filename,
+				    -1);
+
+	} else {
+		xds_filename = g_strdup (XDS_FILENAME);
+	}
+
 	gdk_property_change (gdk_drag_context_get_source_window (context),
 			     XDS_ATOM, TEXT_ATOM,
 			     8, GDK_PROP_MODE_REPLACE,
-			     (guchar *) XDS_FILENAME,
-			     strlen (XDS_FILENAME));
+			     (guchar *) xds_filename,
+			     strlen (xds_filename));
+
+	g_free (xds_filename);
+	g_list_free_full (selected_tree_paths, (GDestroyNotify) gtk_tree_path_free);
 
 	return TRUE;
 }
