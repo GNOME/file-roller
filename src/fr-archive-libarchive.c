@@ -751,7 +751,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 					GFileInfo *info;
 
 					info = _g_file_info_create_from_entry (entry, extract_data);
-					_g_file_set_attributes_from_info (file, info, cancellable, &load_data->error);
+					_g_file_set_attributes_from_info (file, info, cancellable, NULL);
 					g_hash_table_insert (created_folders, g_object_ref (file), g_object_ref (info));
 
 					g_object_unref (info);
@@ -774,7 +774,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				if (r != ARCHIVE_EOF)
 					load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
 				else
-					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable, &load_data->error);
+					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable, NULL);
 				break;
 
 			case AE_IFLNK:
@@ -805,7 +805,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	}
 
 	if (load_data->error == NULL)
-		restore_modification_time (created_folders, cancellable, &load_data->error);
+		restore_modification_time (created_folders, cancellable, NULL);
 
 	if ((load_data->error == NULL) && (r != ARCHIVE_EOF))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
