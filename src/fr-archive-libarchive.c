@@ -268,6 +268,23 @@ _g_file_get_size (GFile        *file,
 }
 
 
+static GError *
+_g_error_new_from_archive_error (const char *s)
+{
+	char   *msg;
+	GError *error;
+
+	msg = g_locale_to_utf8 (s, -1, NULL, NULL, NULL);
+	if (msg == NULL)
+		msg = g_strdup ("Fatal error");
+	error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, msg);
+
+	g_free (msg);
+
+	return error;
+}
+
+
 static void
 list_archive_thread (GSimpleAsyncResult *result,
 		     GObject            *object,
@@ -339,7 +356,7 @@ list_archive_thread (GSimpleAsyncResult *result,
 	archive_read_free (a);
 
 	if ((load_data->error == NULL) && (r != ARCHIVE_EOF) && (archive_error_string (a) != NULL))
-		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
+		load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
 	if (load_data->error == NULL)
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
 	if (load_data->error != NULL)
@@ -772,7 +789,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				_g_object_unref (ostream);
 
 				if (r != ARCHIVE_EOF)
-					load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
+					load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
 				else
 					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable, NULL);
 				break;
@@ -808,7 +825,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		restore_modification_time (created_folders, cancellable, NULL);
 
 	if ((load_data->error == NULL) && (r != ARCHIVE_EOF))
-		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
+		load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
 	if (load_data->error == NULL)
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
 	if (load_data->error != NULL)
@@ -1310,7 +1327,7 @@ _archive_write_file (struct archive       *b,
 
 	rb = archive_write_finish_entry (b);
 
-	if ((load_data->error == NULL) && (rb != ARCHIVE_OK))
+	if ((load_data->error == NULL) && (rb <= ARCHIVE_FAILED))
 		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (b));
 
 	archive_entry_free (w_entry);
@@ -1365,8 +1382,10 @@ save_archive_thread (GSimpleAsyncResult *result,
 			__LA_INT64_T  offset;
 
 			rb = archive_write_header (b, w_entry);
-			if (rb != ARCHIVE_OK)
+			if (rb <= ARCHIVE_FAILED) {
+				load_data->error = _g_error_new_from_archive_error (archive_error_string (b));
 				break;
+			}
 
 			switch (archive_entry_filetype (r_entry)) {
 			case AE_IFREG:
@@ -1375,8 +1394,10 @@ save_archive_thread (GSimpleAsyncResult *result,
 					fr_archive_progress_inc_completed_bytes (load_data->archive, buffer_size);
 				}
 
-				if (ra != ARCHIVE_EOF)
-					load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
+				if (ra <= ARCHIVE_FAILED) {
+					load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
+					break;
+				}
 				break;
 
 			default:
@@ -1400,9 +1421,9 @@ save_archive_thread (GSimpleAsyncResult *result,
 	rb = archive_write_close (b);
 
 	if ((load_data->error == NULL) && (ra != ARCHIVE_EOF))
-		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (a));
-	if ((load_data->error == NULL) && (rb != ARCHIVE_OK))
-		load_data->error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, archive_error_string (b));
+		load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
+	if ((load_data->error == NULL) && (rb <= ARCHIVE_FAILED))
+		load_data->error =  _g_error_new_from_archive_error (archive_error_string (b));
 	if (load_data->error == NULL)
 		g_cancellable_set_error_if_cancelled (cancellable, &load_data->error);
 	if (load_data->error != NULL)
@@ -1697,7 +1718,7 @@ _remove_files_entry_action (SaveData             *save_data,
 
 	action = WRITE_ACTION_WRITE_ENTRY;
 	pathname = archive_entry_pathname (w_entry);
-	if (g_hash_table_lookup (remove_data->files_to_remove, pathname)) {
+	if (g_hash_table_lookup (remove_data->files_to_remove, pathname) != NULL) {
 		action = WRITE_ACTION_SKIP_ENTRY;
 		remove_data->n_files_to_remove--;
 		fr_archive_progress_inc_completed_files (load_data->archive, 1);
