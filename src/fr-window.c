@@ -6601,6 +6601,7 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 	if (info == NULL) {
 		odata->current_file = odata->current_file->next;
 		_fr_window_ask_overwrite_dialog (odata);
+		g_object_unref (destination);
 		return;
 	}
 
@@ -6636,11 +6637,13 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 		g_free (parent_name);
 		g_object_unref (parent);
 		g_object_unref (info);
+		g_object_unref (destination);
 
 		return;
 	}
 
 	g_object_unref (info);
+	g_object_unref (destination);
 
 	odata->current_file = odata->current_file->next;
 	_fr_window_ask_overwrite_dialog (odata);
@@ -6667,7 +6670,6 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 						 query_info_ready_for_overwrite_dialog_cb,
 						 odata);
 
-			g_object_unref (destination);
 
 			return;
 		}
