@@ -337,6 +337,8 @@ struct _FrWindowPrivate {
 	GError           *drag_error;
 	GList            *drag_file_list;        /* the list of files we are
 					 	  * dragging*/
+	gboolean	dnd_extract_is_running;
+	gboolean	dnd_extract_finished_with_error;
 
 	/* progress dialog data */
 
@@ -870,6 +872,8 @@ fr_window_init (FrWindow *window)
 {
 	window->priv = g_new0 (FrWindowPrivate, 1);
 	window->priv->update_dropped_files = FALSE;
+	window->priv->dnd_extract_is_running = FALSE;
+	window->priv->dnd_extract_finished_with_error = FALSE;
 	window->priv->filter_mode = FALSE;
 	window->priv->use_progress_dialog = TRUE;
 	window->priv->batch_title = NULL;
@@ -4266,14 +4270,6 @@ file_list_drag_end (GtkWidget      *widget,
 		g_clear_error (&window->priv->drag_error);
 	}
 	else if (window->priv->drag_destination_folder != NULL) {
-		fr_window_archive_extract (window,
-					   window->priv->drag_file_list,
-					   window->priv->drag_destination_folder,
-					   window->priv->drag_base_dir,
-					   FALSE,
-					   FR_OVERWRITE_ASK,
-					   FALSE,
-					   FALSE);
 		_g_string_list_free (window->priv->drag_file_list);
 		window->priv->drag_file_list = NULL;
 	}
@@ -4454,6 +4450,30 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	return TRUE;
 }
 
+typedef struct
+{
+  FrWindow *window;
+  GMainLoop *loop;
+} DndWaitInfo;
+
+gboolean
+extraction_is_finished (gpointer *data)
+{
+	DndWaitInfo *wait_info;
+	wait_info = (DndWaitInfo *) data;
+
+	return wait_info->window->priv->dnd_extract_is_running;
+}
+
+void
+notify_extraction_finished (gpointer *data)
+{
+	DndWaitInfo *wait_info;
+	wait_info = (DndWaitInfo *) data;
+
+	if (g_main_loop_is_running (wait_info->loop))
+		g_main_loop_quit (wait_info->loop);
+}
 
 gboolean
 fr_window_file_list_drag_data_get (FrWindow         *window,
@@ -4462,6 +4482,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 				   GList            *path_list)
 {
 	char  *uri;
+	char  *xds_response;
 	GFile *destination;
 	GFile *destination_folder;
 
@@ -4525,13 +4546,44 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 		window->priv->drag_destination_folder = g_object_ref (destination_folder);
 		window->priv->drag_base_dir = g_strdup (fr_window_get_current_location (window));
 		window->priv->drag_file_list = fr_window_get_file_list_from_path_list (window, path_list, NULL);
+
+		window->priv->dnd_extract_is_running = TRUE;
+		window->priv->dnd_extract_finished_with_error = FALSE;
+		fr_window_archive_extract (window,
+					   window->priv->drag_file_list,
+					   window->priv->drag_destination_folder,
+					   window->priv->drag_base_dir,
+					   FALSE,
+					   FR_OVERWRITE_ASK,
+					   FALSE,
+					   FALSE);
+
+		DndWaitInfo wait_info = { NULL, NULL };
+		wait_info.loop = g_main_loop_new (NULL, FALSE);
+		wait_info.window = window;
+		g_timeout_add_full (G_PRIORITY_DEFAULT,
+				    500,
+				    (GSourceFunc) extraction_is_finished,
+				    &wait_info,
+				    (GDestroyNotify) notify_extraction_finished);
+
+		gdk_threads_leave ();
+		g_main_loop_run (wait_info.loop);
+		gdk_threads_enter ();
+
+		g_main_loop_unref (wait_info.loop);
+		wait_info.loop = NULL;
+		wait_info.window = NULL;
+		window->priv->dnd_extract_is_running = FALSE;
 	}
 
 	g_object_unref (destination_folder);
 
 	/* sends back the response */
+	xds_response = ((window->priv->drag_error == NULL && !window->priv->dnd_extract_finished_with_error) ? "S" : "E");
+	gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8, (guchar *) xds_response, 1);
 
-	gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8, (guchar *) ((window->priv->drag_error == NULL) ? "S" : "E"), 1);
+	window->priv->dnd_extract_finished_with_error = FALSE;
 
 	debug (DEBUG_INFO, "::DragDataGet <--\n");
 
@@ -6508,6 +6560,11 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
+
+	if (window->priv->dnd_extract_is_running == TRUE) {
+		window->priv->dnd_extract_is_running = FALSE;
+		window->priv->dnd_extract_finished_with_error = error != NULL;
+	}
 
 	if ((error == NULL) && ask_to_open_destination) {
 		window->priv->quit_with_progress_dialog = window->priv->batch_mode;
