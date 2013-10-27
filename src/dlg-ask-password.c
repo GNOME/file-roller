@@ -80,6 +80,7 @@ ask_password__response_cb (GtkWidget  *dialog,
 		break;
 
 	default:
+		fr_window_dnd_extraction_finished (data->window, TRUE);
 		if (fr_window_is_batch_mode (data->window))
 			gtk_widget_destroy (GTK_WIDGET (data->window));
 		else

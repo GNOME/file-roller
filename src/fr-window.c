@@ -4203,8 +4203,10 @@ fr_window_drag_data_received  (GtkWidget          *widget,
 
 
 static gboolean
-file_list_drag_begin (GtkWidget          *widget,
+tree_view_drag_begin (GtkWidget          *widget,
 		      GdkDragContext     *context,
+		      GtkTreeModel	 *tree_model,
+		      int		  filename_column,
 		      gpointer            data)
 {
 	FrWindow         *window = data;
@@ -4226,13 +4228,13 @@ file_list_drag_begin (GtkWidget          *widget,
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
 	selected_tree_paths = gtk_tree_selection_get_selected_rows (selection, NULL);
 
-	if (gtk_tree_model_get_iter (GTK_TREE_MODEL (window->priv->list_store),
+	if (gtk_tree_model_get_iter (tree_model,
 				     &iter,
 				     (GtkTreePath *) selected_tree_paths->data))
 	{
-		gtk_tree_model_get (GTK_TREE_MODEL (window->priv->list_store),
+		gtk_tree_model_get (tree_model,
 				    &iter,
-				    TREE_COLUMN_NAME, &xds_filename,
+				    filename_column, &xds_filename,
 				    -1);
 	}
 	else
@@ -4248,6 +4250,34 @@ file_list_drag_begin (GtkWidget          *widget,
 	g_list_free_full (selected_tree_paths, (GDestroyNotify) gtk_tree_path_free);
 
 	return TRUE;
+}
+
+
+static gboolean
+file_list_drag_begin (GtkWidget          *widget,
+		      GdkDragContext     *context,
+		      gpointer            data)
+{
+	FrWindow *window = data;
+	return tree_view_drag_begin (widget,
+				     context,
+				     GTK_TREE_MODEL (window->priv->list_store),
+				     COLUMN_NAME,
+				     data);
+}
+
+
+static gboolean
+folde_tree_drag_begin (GtkWidget          *widget,
+		       GdkDragContext     *context,
+		       gpointer            data)
+{
+	FrWindow *window = data;
+	return tree_view_drag_begin (widget,
+				     context,
+				     GTK_TREE_MODEL (window->priv->tree_store),
+				     TREE_COLUMN_NAME,
+				     data);
 }
 
 
@@ -4364,6 +4394,70 @@ get_selection_data_from_clipboard_data (FrWindow        *window,
 }
 
 
+/* --  wait_dnd_extraction -- */
+
+
+typedef struct {
+	FrWindow *window;
+	GMainLoop *loop;
+} DndWaitInfo;
+
+
+static gboolean
+extraction_is_finished (gpointer *data)
+{
+	DndWaitInfo *wait_info;
+	wait_info = (DndWaitInfo *) data;
+
+	return wait_info->window->priv->dnd_extract_is_running;
+}
+
+
+static void
+notify_extraction_finished (gpointer *data)
+{
+	DndWaitInfo *wait_info;
+	wait_info = (DndWaitInfo *) data;
+
+	if (g_main_loop_is_running (wait_info->loop))
+		g_main_loop_quit (wait_info->loop);
+}
+
+
+static void
+wait_dnd_extraction (FrWindow *window)
+{
+	window->priv->dnd_extract_is_running = TRUE;
+	window->priv->dnd_extract_finished_with_error = FALSE;
+	fr_window_archive_extract (window,
+				   window->priv->drag_file_list,
+				   window->priv->drag_destination_folder,
+				   window->priv->drag_base_dir,
+				   FALSE,
+				   FR_OVERWRITE_ASK,
+				   FALSE,
+				   FALSE);
+
+	DndWaitInfo wait_info = { NULL, NULL };
+	wait_info.loop = g_main_loop_new (NULL, FALSE);
+	wait_info.window = window;
+	g_timeout_add_full (G_PRIORITY_DEFAULT,
+			    500,
+			    (GSourceFunc) extraction_is_finished,
+			    &wait_info,
+			    (GDestroyNotify) notify_extraction_finished);
+
+	gdk_threads_leave ();
+	g_main_loop_run (wait_info.loop);
+	gdk_threads_enter ();
+
+	g_main_loop_unref (wait_info.loop);
+	wait_info.loop = NULL;
+	wait_info.window = NULL;
+	window->priv->dnd_extract_is_running = FALSE;
+}
+
+
 static gboolean
 fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 				     GdkDragContext   *context,
@@ -4377,6 +4471,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	char     *uri;
 	GFile    *destination;
 	GFile    *destination_folder;
+	char     *xds_response;
 
 	debug (DEBUG_INFO, "::DragDataGet -->\n");
 
@@ -4431,50 +4526,33 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	}
 
 	if (window->priv->drag_error == NULL) {
+		char *selected_folder;
+
 		_g_object_unref (window->priv->drag_destination_folder);
 		g_free (window->priv->drag_base_dir);
 		_g_string_list_free (window->priv->drag_file_list);
 		window->priv->drag_destination_folder = g_object_ref (destination_folder);
-		window->priv->drag_base_dir = fr_window_get_selected_folder_in_tree_view (window);
+		selected_folder = fr_window_get_selected_folder_in_tree_view (window);
+		window->priv->drag_base_dir = _g_path_remove_level (selected_folder);
 		window->priv->drag_file_list = file_list;
+
+		wait_dnd_extraction (window);
+
+		g_free (selected_folder);
 	}
 
 	g_object_unref (destination_folder);
 
 	/* sends back the response */
 
-	gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8, (guchar *) ((window->priv->drag_error == NULL) ? "S" : "E"), 1);
+	xds_response = ((window->priv->drag_error == NULL && !window->priv->dnd_extract_finished_with_error) ? "S" : "E");
+	gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8, (guchar *) xds_response, 1);
+
+	window->priv->dnd_extract_finished_with_error = FALSE;
 
 	debug (DEBUG_INFO, "::DragDataGet <--\n");
 
 	return TRUE;
-}
-
-
-typedef struct {
-	FrWindow *window;
-	GMainLoop *loop;
-} DndWaitInfo;
-
-
-static gboolean
-extraction_is_finished (gpointer *data)
-{
-	DndWaitInfo *wait_info;
-	wait_info = (DndWaitInfo *) data;
-
-	return wait_info->window->priv->dnd_extract_is_running;
-}
-
-
-static void
-notify_extraction_finished (gpointer *data)
-{
-	DndWaitInfo *wait_info;
-	wait_info = (DndWaitInfo *) data;
-
-	if (g_main_loop_is_running (wait_info->loop))
-		g_main_loop_quit (wait_info->loop);
 }
 
 
@@ -4550,34 +4628,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 		window->priv->drag_base_dir = g_strdup (fr_window_get_current_location (window));
 		window->priv->drag_file_list = fr_window_get_file_list_from_path_list (window, path_list, NULL);
 
-		window->priv->dnd_extract_is_running = TRUE;
-		window->priv->dnd_extract_finished_with_error = FALSE;
-		fr_window_archive_extract (window,
-					   window->priv->drag_file_list,
-					   window->priv->drag_destination_folder,
-					   window->priv->drag_base_dir,
-					   FALSE,
-					   FR_OVERWRITE_ASK,
-					   FALSE,
-					   FALSE);
-
-		DndWaitInfo wait_info = { NULL, NULL };
-		wait_info.loop = g_main_loop_new (NULL, FALSE);
-		wait_info.window = window;
-		g_timeout_add_full (G_PRIORITY_DEFAULT,
-				    500,
-				    (GSourceFunc) extraction_is_finished,
-				    &wait_info,
-				    (GDestroyNotify) notify_extraction_finished);
-
-		gdk_threads_leave ();
-		g_main_loop_run (wait_info.loop);
-		gdk_threads_enter ();
-
-		g_main_loop_unref (wait_info.loop);
-		wait_info.loop = NULL;
-		wait_info.window = NULL;
-		window->priv->dnd_extract_is_running = FALSE;
+		wait_dnd_extraction (window);
 	}
 
 	g_object_unref (destination_folder);
@@ -5738,7 +5789,7 @@ fr_window_construct (FrWindow *window)
 
 	g_signal_connect (G_OBJECT (window->priv->tree_view),
 			  "drag_begin",
-			  G_CALLBACK (file_list_drag_begin),
+			  G_CALLBACK (folde_tree_drag_begin),
 			  window);
 	g_signal_connect (G_OBJECT (window->priv->tree_view),
 			  "drag_end",
@@ -6564,11 +6615,8 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
-
-	if (window->priv->dnd_extract_is_running == TRUE) {
-		window->priv->dnd_extract_is_running = FALSE;
-		window->priv->dnd_extract_finished_with_error = error != NULL;
-	}
+	if ((error == NULL) || (error->code != FR_ERROR_ASK_PASSWORD))
+		fr_window_dnd_extraction_finished (window, error != NULL);
 
 	if ((error == NULL) && ask_to_open_destination) {
 		window->priv->quit_with_progress_dialog = window->priv->batch_mode;
@@ -6620,6 +6668,19 @@ _fr_window_archive_extract_from_edata (FrWindow    *window,
 static void _fr_window_ask_overwrite_dialog (OverwriteData *odata);
 
 
+/* remove the file from the list to extract */
+static void
+overwrite_data_skip_current (OverwriteData *odata)
+{
+	GList *next = odata->current_file->next;
+
+	odata->edata->file_list = g_list_remove_link (odata->edata->file_list, odata->current_file);
+	_g_string_list_free (odata->current_file);
+	odata->current_file = next;
+	odata->extract_all = FALSE;
+}
+
+
 static void
 overwrite_dialog_response_cb (GtkDialog *dialog,
 			      int        response_id,
@@ -6638,15 +6699,7 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 		break;
 
 	case _FR_RESPONSE_OVERWRITE_NO:
-		{
-			/* remove the file from the list to extract */
-			GList *next = odata->current_file->next;
-
-			odata->edata->file_list = g_list_remove_link (odata->edata->file_list, odata->current_file);
-			_g_string_list_free (odata->current_file);
-			odata->current_file = next;
-			odata->extract_all = FALSE;
-		}
+		overwrite_data_skip_current (odata);
 		break;
 
 	case GTK_RESPONSE_DELETE_EVENT:
@@ -6755,8 +6808,11 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 
 			return;
 		}
-		else
-			perform_extraction = FALSE;
+		else {
+			overwrite_data_skip_current (odata);
+			_fr_window_ask_overwrite_dialog (odata);
+			return;
+		}
 	}
 
 	if (odata->edata->file_list == NULL)
@@ -6787,6 +6843,7 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 		fr_window_show_error_dialog (odata->window, d, GTK_WINDOW (odata->window), _("Extraction not performed"));
 
 		fr_window_stop_batch (odata->window);
+		fr_window_dnd_extraction_finished (odata->window, TRUE);
 	}
 
 	g_free (odata);
@@ -6911,6 +6968,7 @@ fr_window_archive_extract (FrWindow    *window,
 			g_clear_error (&error);
 			fr_window_show_error_dialog (window, d, GTK_WINDOW (window), details);
 			fr_window_stop_batch (window);
+			fr_window_dnd_extraction_finished (window, TRUE);
 
 			g_free (details);
 
@@ -6931,6 +6989,7 @@ fr_window_archive_extract (FrWindow    *window,
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		fr_window_show_error_dialog (window, d, GTK_WINDOW (window), _("Extraction not performed"));
 		fr_window_stop_batch (window);
+		fr_window_dnd_extraction_finished (window, TRUE);
 
 		return;
 	}
@@ -9800,4 +9859,15 @@ fr_window_set_batch__add (FrWindow *window,
 				       FR_BATCH_ACTION_CLOSE,
 				       NULL,
 				       NULL);
+}
+
+
+void
+fr_window_dnd_extraction_finished (FrWindow *window,
+				   gboolean  error)
+{
+	if (window->priv->dnd_extract_is_running == TRUE) {
+		window->priv->dnd_extract_is_running = FALSE;
+		window->priv->dnd_extract_finished_with_error = TRUE;
+	}
 }
