@@ -337,8 +337,8 @@ struct _FrWindowPrivate {
 	GError           *drag_error;
 	GList            *drag_file_list;        /* the list of files we are
 					 	  * dragging*/
-	gboolean	dnd_extract_is_running;
-	gboolean	dnd_extract_finished_with_error;
+	gboolean	  dnd_extract_is_running;
+	gboolean	  dnd_extract_finished_with_error;
 
 	/* progress dialog data */
 
@@ -4450,13 +4450,14 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	return TRUE;
 }
 
-typedef struct
-{
-  FrWindow *window;
-  GMainLoop *loop;
+
+typedef struct {
+	FrWindow *window;
+	GMainLoop *loop;
 } DndWaitInfo;
 
-gboolean
+
+static gboolean
 extraction_is_finished (gpointer *data)
 {
 	DndWaitInfo *wait_info;
@@ -4465,7 +4466,8 @@ extraction_is_finished (gpointer *data)
 	return wait_info->window->priv->dnd_extract_is_running;
 }
 
-void
+
+static void
 notify_extraction_finished (gpointer *data)
 {
 	DndWaitInfo *wait_info;
@@ -4474,6 +4476,7 @@ notify_extraction_finished (gpointer *data)
 	if (g_main_loop_is_running (wait_info->loop))
 		g_main_loop_quit (wait_info->loop);
 }
+
 
 gboolean
 fr_window_file_list_drag_data_get (FrWindow         *window,
@@ -4580,6 +4583,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	g_object_unref (destination_folder);
 
 	/* sends back the response */
+
 	xds_response = ((window->priv->drag_error == NULL && !window->priv->dnd_extract_finished_with_error) ? "S" : "E");
 	gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8, (guchar *) xds_response, 1);
 
