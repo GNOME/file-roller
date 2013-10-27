@@ -6194,43 +6194,19 @@ fr_window_archive_reload (FrWindow *window)
 #ifdef ENABLE_NOTIFICATION
 
 
-typedef struct {
-	FrWindow *window;
-	gboolean  window_closed;
-} NotifyData;
-
-
-static void
-notification_closed_cb  (NotifyNotification *notification,
-			 gpointer            user_data)
-{
-	NotifyData *notify_data = user_data;
-	FrWindow   *window = notify_data->window;
-
-	if (! notify_data->window_closed)
-		gtk_window_present (GTK_WINDOW (window->priv->progress_dialog));
-
-	g_free (notify_data);
-}
-
-
 static void
 notify_action_open_archive_cb (NotifyNotification *notification,
 			       char               *action,
 			       gpointer            user_data)
 {
-	NotifyData *notify_data = user_data;
-	FrWindow   *window = notify_data->window;
-	GtkWidget  *new_window;
+	GFile     *saved_file = user_data;
+	GtkWidget *new_window;
 
 	new_window = fr_window_new ();
 	gtk_widget_show (new_window);
 	fr_window_archive_open (FR_WINDOW (new_window),
-				window->priv->saving_file,
+				saved_file,
 				GTK_WINDOW (new_window));
-
-	notify_data->window_closed = TRUE;
-	_fr_window_close_after_notification (window);
 }
 
 
@@ -6242,21 +6218,12 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	NotifyNotification *notification;
 	gboolean            notification_supports_actions;
 	GList              *caps;
-	NotifyData         *notify_data;
 
 	basename = _g_file_get_display_basename (window->priv->saving_file);
 	/* Translators: %s is a filename */
 	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
 	notification = notify_notification_new (window->priv->batch_title, message, "file-roller");
 	notify_notification_set_hint_string (notification, "desktop-entry", "file-roller");
-
-	notify_data = g_new0 (NotifyData, 1);
-	notify_data->window = window;
-	notify_data->window_closed = FALSE;
-	g_signal_connect (notification,
-			  "closed",
-			  G_CALLBACK (notification_closed_cb),
-			  notify_data);
 
 	notification_supports_actions = FALSE;
 	caps = notify_get_server_caps ();
@@ -6270,8 +6237,8 @@ _fr_window_notify_creation_complete (FrWindow *window)
 						"document-open-symbolic",
 						_("Open"),
 						notify_action_open_archive_cb,
-						notify_data,
-						NULL);
+						g_object_ref (window->priv->saving_file),
+						g_object_unref);
 		/*notify_notification_set_hint (notification,
 					      "action-icons",
 					      g_variant_new_boolean (TRUE));*/
