@@ -203,8 +203,11 @@ egg_desktop_file_new_from_key_file (GKeyFile    *key_file,
   else
     desktop_file->source = g_strdup (source);
 
-  desktop_file->name = g_key_file_get_string (key_file, EGG_DESKTOP_FILE_GROUP,
-					      EGG_DESKTOP_FILE_KEY_NAME, error);
+  desktop_file->name = g_key_file_get_locale_string (key_file,
+						     EGG_DESKTOP_FILE_GROUP,
+						     EGG_DESKTOP_FILE_KEY_NAME,
+						     NULL,
+						     error);
   if (!desktop_file->name)
     {
       egg_desktop_file_free (desktop_file);
