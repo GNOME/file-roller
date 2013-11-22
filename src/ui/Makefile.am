@@ -2,6 +2,7 @@ EXTRA_DIST = 				\
 	add-dialog-options.ui		\
 	add-options.ui			\
 	app-menu.ui			\
+	app-menubar.ui			\
 	ask-password.ui			\
 	delete.ui			\
 	error-dialog.ui			\

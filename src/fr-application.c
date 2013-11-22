@@ -548,11 +548,25 @@ fr_application_register_archive_manager_service (FrApplication *self)
 static void
 fr_application_startup (GApplication *application)
 {
+	GtkSettings	*gtk_settings;
+	gboolean	 show_app_menu;
+	gboolean	 show_menubar;
+
 	G_APPLICATION_CLASS (fr_application_parent_class)->startup (application);
 
 	fr_application_register_archive_manager_service (FR_APPLICATION (application));
 	initialize_data ();
-	initialize_app_menu (application);
+
+	gtk_settings = gtk_settings_get_default ();
+	g_object_get (G_OBJECT (gtk_settings),
+		      "gtk-shell-shows-app-menu", &show_app_menu,
+		      "gtk-shell-shows-menubar", &show_menubar,
+		      NULL);
+
+	if (show_menubar)
+		initialize_app_menubar (application);
+	else if (show_app_menu)
+		initialize_app_menu (application);
 }
 
 
