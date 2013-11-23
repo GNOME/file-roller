@@ -26,6 +26,6 @@ HELP_FILES = \
 	troubleshooting-archive-open.page \
 	troubleshooting-password.page
 
-HELP_LINGUAS = ca cs da de el es fr gl hu ja pt_BR ru sl te zh_CN
+HELP_LINGUAS = ca cs da de el es fr gl hu id ja pt_BR ru sl te zh_CN
 
 -include $(top_srcdir)/git.mk
