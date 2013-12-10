@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Tajik Gnome\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-11-22 16:42+0000\n"
-"PO-Revision-Date: 2013-12-03 12:31+0500\n"
+"POT-Creation-Date: 2013-12-10 10:20+0000\n"
+"PO-Revision-Date: 2013-12-10 16:02+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: \n"
-"Language: Tajik\n"
+"Language: tg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=1;\n"
-"X-Generator: Poedit 1.5.7\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.1\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
@@ -189,12 +189,14 @@ msgid "Whether to display the statusbar."
 msgstr "Оё навори вазъият намоиш дода шавад."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21 ../src/ui.h:198
-msgid "View the folders pane"
-msgstr "Намоиш додани панҷараки ҷузвдонҳо"
+#| msgid "View the statusbar"
+msgid "View the sidebar"
+msgstr "Намоиши навори ҷонибӣ"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
-msgid "Whether to display the folders pane."
-msgstr "Оё панҷараки ҷузвдонҳо намоиш дода шавад."
+#| msgid "Whether to display the statusbar."
+msgid "Whether to display the sidebar."
+msgstr "Интихоби намоиши навори ҷонибӣ."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
 msgid "Editors"
@@ -544,7 +546,7 @@ msgid "Adding \"%s\""
 msgstr "Илова кардани \"%s\""
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:447 ../src/fr-command-rar.c:554
+#: ../src/fr-command-7z.c:453 ../src/fr-command-rar.c:554
 #: ../src/fr-command-tar.c:425
 #, c-format
 msgid "Extracting \"%s\""
@@ -1068,7 +1070,6 @@ msgid "_Follow symbolic links"
 msgstr "_Пайгирии пайвандҳои рамзӣ"
 
 #: ../src/ui/app-menubar.ui.h:1
-#| msgid "_Files:"
 msgid "_File"
 msgstr "_Файл"
 
@@ -1092,7 +1093,7 @@ msgstr "Намоиши ҳамаи _файлҳо"
 msgid "View as a F_older"
 msgstr "Намоиш ҳамчун Ҷ_узвдон"
 
-#: ../src/ui/app-menubar.ui.h:7 ../src/ui/app-menu.ui.h:5 ../src/ui.h:197
+#: ../src/ui/app-menubar.ui.h:7
 msgid "_Folders"
 msgstr "_Ҷузвдонҳо"
 
@@ -1100,9 +1101,17 @@ msgstr "_Ҷузвдонҳо"
 msgid "_Help"
 msgstr "_Кӯмак"
 
-#: ../src/ui/app-menubar.ui.h:9 ../src/ui/app-menu.ui.h:7
+#: ../src/ui/app-menubar.ui.h:9
 msgid "_About Archive Manager"
 msgstr "_Дар бораи мудири бойгонӣ"
+
+#: ../src/ui/app-menu.ui.h:5
+msgid "Sidebar"
+msgstr "Навори ҷонибӣ"
+
+#: ../src/ui/app-menu.ui.h:7
+msgid "_About"
+msgstr "_Дар бораи барнома"
 
 #: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
@@ -1305,6 +1314,10 @@ msgstr "Навори_вазъият"
 msgid "View the statusbar"
 msgstr "Намоиши навори вазъият"
 
+#: ../src/ui.h:197
+msgid "_Sidebar"
+msgstr "_Навори ҷонибӣ"
+
 #: ../src/ui.h:202
 msgid "Find…"
 msgstr "Ёфтан..."
@@ -1389,6 +1402,12 @@ msgstr "_Навсозӣ кардан"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "Ин_тихоби файлҳое, ки навсозӣ кардан мехоҳед:"
+
+#~ msgid "View the folders pane"
+#~ msgstr "Намоиш додани панҷараки ҷузвдонҳо"
+
+#~ msgid "Whether to display the folders pane."
+#~ msgstr "Оё панҷараки ҷузвдонҳо намоиш дода шавад."
 
 #~ msgid "File System"
 #~ msgstr "Системаи файл"
