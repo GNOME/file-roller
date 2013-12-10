@@ -398,13 +398,13 @@ activate_action_view_statusbar (GtkAction *action,
 
 
 void
-activate_action_view_folders (GtkAction *action,
+activate_action_view_sidebar (GtkAction *action,
 			      gpointer   data)
 {
 	GSettings *settings;
 
 	settings = g_settings_new (FILE_ROLLER_SCHEMA_UI);
-	g_settings_set_boolean (settings, PREF_UI_VIEW_FOLDERS, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
+	g_settings_set_boolean (settings, PREF_UI_VIEW_SIDEBAR, gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 	g_object_unref (settings);
 }
 

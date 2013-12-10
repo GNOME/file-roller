@@ -43,7 +43,7 @@ update_app_menu_sensitivity (GApplication *application)
 	list_mode = _g_enum_type_get_value_by_nick (FR_TYPE_WINDOW_LIST_MODE, g_variant_get_string (state, NULL))->value;
 	g_variant_unref (state);
 
-	g_simple_action_set_enabled (GET_ACTION (PREF_UI_VIEW_FOLDERS), list_mode == FR_WINDOW_LIST_MODE_AS_DIR);
+	g_simple_action_set_enabled (GET_ACTION (PREF_UI_VIEW_SIDEBAR), list_mode == FR_WINDOW_LIST_MODE_AS_DIR);
 }
 
 
@@ -76,7 +76,7 @@ activate_new (GSimpleAction *action,
 
 
 static void
-activate_view_folders (GSimpleAction *action,
+activate_view_sidebar (GSimpleAction *action,
 		       GVariant      *parameter,
 		       gpointer       user_data)
 {
@@ -84,7 +84,7 @@ activate_view_folders (GSimpleAction *action,
 	GSettings     *settings;
 
 	settings = fr_application_get_settings (application, FILE_ROLLER_SCHEMA_UI);
-	g_settings_set_boolean (settings, PREF_UI_VIEW_FOLDERS, g_variant_get_boolean (parameter));
+	g_settings_set_boolean (settings, PREF_UI_VIEW_SIDEBAR, g_variant_get_boolean (parameter));
 }
 
 
@@ -146,7 +146,7 @@ activate_quit (GSimpleAction *action,
 
 static const GActionEntry app_menu_entries[] = {
 	{ "new",  activate_new },
-	{ PREF_UI_VIEW_FOLDERS, toggle_action_activated, NULL, "true", activate_view_folders },
+	{ PREF_UI_VIEW_SIDEBAR, toggle_action_activated, NULL, "true", activate_view_sidebar },
 	{ PREF_LISTING_LIST_MODE, activate_list_mode, "s", "'as-dir'", NULL },
 	{ "help",  activate_help },
 	{ "about", activate_about },
@@ -155,14 +155,14 @@ static const GActionEntry app_menu_entries[] = {
 
 
 static void
-pref_view_folders_changed (GSettings  *settings,
+pref_view_sidebar_changed (GSettings  *settings,
 		  	   const char *key,
 		  	   gpointer    user_data)
 {
 	GApplication *application = user_data;
 
-	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_FOLDERS),
-				   g_variant_new_boolean (g_settings_get_boolean (settings, PREF_UI_VIEW_FOLDERS)));
+	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_SIDEBAR),
+				   g_variant_new_boolean (g_settings_get_boolean (settings, PREF_UI_VIEW_SIDEBAR)));
 	update_app_menu_sensitivity (application);
 }
 
@@ -198,8 +198,8 @@ initialize_app_menu (GApplication *application)
 	g_object_unref (builder);
 
 	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI);
-	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_FOLDERS),
-				   g_variant_new_boolean (g_settings_get_boolean (settings, PREF_UI_VIEW_FOLDERS)));
+	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_SIDEBAR),
+				   g_variant_new_boolean (g_settings_get_boolean (settings, PREF_UI_VIEW_SIDEBAR)));
 
 	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_LISTING);
 	g_simple_action_set_state (GET_ACTION (PREF_LISTING_LIST_MODE),
@@ -207,8 +207,8 @@ initialize_app_menu (GApplication *application)
 						   	 g_settings_get_enum (settings, PREF_LISTING_LIST_MODE))->value_nick));
 
 	g_signal_connect (fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI),
-			  "changed::" PREF_UI_VIEW_FOLDERS,
-			  G_CALLBACK (pref_view_folders_changed),
+			  "changed::" PREF_UI_VIEW_SIDEBAR,
+			  G_CALLBACK (pref_view_sidebar_changed),
 			  application);
 	g_signal_connect (fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_LISTING),
 			  "changed::" PREF_LISTING_LIST_MODE,
@@ -234,8 +234,8 @@ initialize_app_menubar (GApplication *application)
 	g_object_unref (builder);
 
 	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI);
-	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_FOLDERS),
-				   g_variant_new_boolean (g_settings_get_boolean (settings, PREF_UI_VIEW_FOLDERS)));
+	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_SIDEBAR),
+				   g_variant_new_boolean (g_settings_get_boolean (settings, PREF_UI_VIEW_SIDEBAR)));
 
 	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_LISTING);
 	g_simple_action_set_state (GET_ACTION (PREF_LISTING_LIST_MODE),
@@ -243,8 +243,8 @@ initialize_app_menubar (GApplication *application)
 						   	 g_settings_get_enum (settings, PREF_LISTING_LIST_MODE))->value_nick));
 
 	g_signal_connect (fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI),
-			  "changed::" PREF_UI_VIEW_FOLDERS,
-			  G_CALLBACK (pref_view_folders_changed),
+			  "changed::" PREF_UI_VIEW_SIDEBAR,
+			  G_CALLBACK (pref_view_sidebar_changed),
 			  application);
 	g_signal_connect (fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_LISTING),
 			  "changed::" PREF_LISTING_LIST_MODE,

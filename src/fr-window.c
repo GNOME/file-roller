@@ -293,7 +293,7 @@ struct _FrWindowPrivate {
 
 	char *           last_location;
 
-	gboolean         view_folders;
+	gboolean         view_sidebar;
 	FrWindowListMode list_mode;
 	FrWindowListMode last_list_mode;
 	GList *          history;
@@ -1130,7 +1130,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "OpenRecent", ! running);
 	set_sensitive (window, "OpenRecent_Toolbar", ! running);
 
-	set_sensitive (window, "ViewFolders", (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR));
+	set_sensitive (window, "ViewSidebar", (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR));
 
 	set_sensitive (window, "ViewAllFiles", ! window->priv->filter_mode);
 	set_sensitive (window, "ViewAsFolder", ! window->priv->filter_mode);
@@ -1849,7 +1849,7 @@ fr_window_update_dir_tree (FrWindow *window)
 
 	gtk_tree_store_clear (window->priv->tree_store);
 
-	if (! window->priv->view_folders
+	if (! window->priv->view_sidebar
 	    || ! window->priv->archive_present
 	    || (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT))
 	{
@@ -5186,8 +5186,8 @@ fr_window_show_cb (GtkWidget *widget,
 
 	set_active (window, "ViewStatusbar", g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_STATUSBAR));
 
-	window->priv->view_folders = g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_FOLDERS);
-	set_active (window, "ViewFolders", window->priv->view_folders);
+	window->priv->view_sidebar = g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_SIDEBAR);
+	set_active (window, "ViewSidebar", window->priv->view_sidebar);
 
 	gtk_widget_hide (window->priv->filter_bar);
 
@@ -6032,7 +6032,7 @@ fr_window_construct (FrWindow *window)
 			  G_CALLBACK (pref_view_statusbar_changed),
 			  window);
 	g_signal_connect (window->priv->settings_ui,
-			  "changed::" PREF_UI_VIEW_FOLDERS,
+			  "changed::" PREF_UI_VIEW_SIDEBAR,
 			  G_CALLBACK (pref_view_folders_changed),
 			  window);
 	g_signal_connect (window->priv->settings_listing,
@@ -9417,10 +9417,10 @@ fr_window_set_folders_visibility (FrWindow   *window,
 {
 	g_return_if_fail (window != NULL);
 
-	window->priv->view_folders = value;
+	window->priv->view_sidebar = value;
 	fr_window_update_dir_tree (window);
 
-	set_active (window, "ViewFolders", window->priv->view_folders);
+	set_active (window, "ViewSidebar", window->priv->view_sidebar);
 }
 
 
