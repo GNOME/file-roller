@@ -1687,12 +1687,10 @@ fr_window_update_current_location (FrWindow *window)
 	char       *path;
 	GtkTreeIter iter;
 
-	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
-		gtk_widget_hide (window->priv->location_bar);
-		return;
-	}
+	gtk_widget_set_visible (window->priv->location_bar, window->priv->archive_present && (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR));
 
-	gtk_widget_show (window->priv->location_bar);
+	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT)
+		return;
 
 	gtk_entry_set_text (GTK_ENTRY (window->priv->location_entry), window->priv->archive_present? current_dir: "");
 
