@@ -48,7 +48,6 @@
 #define PREF_UI_WINDOW_WIDTH              "window-width"
 #define PREF_UI_WINDOW_HEIGHT             "window-height"
 #define PREF_UI_SIDEBAR_WIDTH             "sidebar-width"
-#define PREF_UI_VIEW_STATUSBAR            "view-statusbar"
 #define PREF_UI_VIEW_SIDEBAR              "view-sidebar"
 
 #define PREF_GENERAL_EDITORS              "editors"

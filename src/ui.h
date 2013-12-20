@@ -186,11 +186,6 @@ static guint n_action_entries = G_N_ELEMENTS (action_entries);
 
 
 static GtkToggleActionEntry action_toggle_entries[] = {
-	{ "ViewStatusbar", NULL,
-	  N_("Stat_usbar"), NULL,
-	  N_("View the statusbar"),
-	  G_CALLBACK (activate_action_view_statusbar),
-	  TRUE },
 	{ "ViewSidebar", NULL,
 	  N_("_Sidebar"), "F9",
 	  N_("View the sidebar"),

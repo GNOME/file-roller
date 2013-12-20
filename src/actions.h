@@ -57,7 +57,6 @@ void activate_action_open_folder (GtkAction *action, gpointer data);
 void activate_action_open_folder_from_sidebar (GtkAction *action, gpointer data);
 void activate_action_password (GtkAction *action, gpointer data);
 
-void activate_action_view_statusbar (GtkAction *action, gpointer data);
 void activate_action_view_sidebar (GtkAction *action, gpointer data);
 void activate_action_stop (GtkAction *action, gpointer data);
 void activate_action_reload (GtkAction *action, gpointer data);

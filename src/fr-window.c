@@ -236,8 +236,6 @@ struct _FrWindowPrivate {
 	GtkWidget         *tree_view;
 	GtkTreeStore      *tree_store;
 	GtkWidget         *headerbar;
-	GtkWidget         *statusbar;
-	GtkWidget         *progress_bar;
 	GtkWidget         *location_bar;
 	GtkWidget         *location_entry;
 	GtkWidget         *location_label;
@@ -253,10 +251,6 @@ struct _FrWindowPrivate {
 
 	gboolean         filter_mode;
 	gint             current_view_length;
-
-	guint            help_message_cid;
-	guint            list_info_cid;
-	guint            progress_cid;
 
 	GtkWidget *      up_arrows[5];
 	GtkWidget *      down_arrows[5];
@@ -1164,8 +1158,6 @@ activity_cb (gpointer data)
 
 	if ((window->priv->pd_progress_bar != NULL) && window->priv->progress_pulse)
 		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->priv->pd_progress_bar));
-	if (window->priv->progress_pulse)
-		gtk_progress_bar_pulse (GTK_PROGRESS_BAR (window->priv->progress_bar));
 
 	return TRUE;
 }
@@ -1192,44 +1184,8 @@ fr_window_pop_message (FrWindow *window)
 	if (! gtk_widget_get_mapped (GTK_WIDGET (window)))
 		return;
 
-	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->progress_cid);
 	if (window->priv->progress_dialog != NULL)
 		gtk_label_set_text (GTK_LABEL (window->priv->pd_message), _("Operation completed"));
-}
-
-
-static void
-add_selected_fd (GtkTreeModel *model,
-		 GtkTreePath  *path,
-		 GtkTreeIter  *iter,
-		 gpointer      data)
-{
-	GList    **list = data;
-	FileData  *fdata;
-
-	gtk_tree_model_get (model, iter,
-			    COLUMN_FILE_DATA, &fdata,
-			    -1);
-	if (! fdata->list_dir)
-		*list = g_list_prepend (*list, fdata);
-}
-
-
-static GList *
-get_selection_as_fd (FrWindow *window)
-{
-	GtkTreeSelection *selection;
-	GList            *list = NULL;
-
-	if (! gtk_widget_get_realized (window->priv->list_view))
-		return NULL;
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->priv->list_view));
-	if (selection == NULL)
-		return NULL;
-	gtk_tree_selection_selected_foreach (selection, add_selected_fd, &list);
-
-	return list;
 }
 
 
@@ -1254,86 +1210,6 @@ fr_window_get_current_dir_list (FrWindow *window)
 
 
 static void
-fr_window_update_statusbar_list_info (FrWindow *window)
-{
-	char    *info, *archive_info, *selected_info;
-	char    *size_txt, *sel_size_txt;
-	int      tot_n, sel_n;
-	goffset  tot_size, sel_size;
-	GList   *scan;
-
-	if ((window == NULL) || window->priv->batch_mode)
-		return;
-
-	if (window->archive == NULL) {
-		gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar), window->priv->list_info_cid);
-		return;
-	}
-
-	tot_n = 0;
-	tot_size = 0;
-
-	if (window->priv->archive_present) {
-		GPtrArray *files = fr_window_get_current_dir_list (window);
-		int        i;
-
-		for (i = 0; i < files->len; i++) {
-			FileData *fd = g_ptr_array_index (files, i);
-
-			tot_n++;
-			if (! file_data_is_dir (fd))
-				tot_size += fd->size;
-			else
-				tot_size += fd->dir_size;
-		}
-		g_ptr_array_free (files, TRUE);
-	}
-
-	sel_n = 0;
-	sel_size = 0;
-
-	if (window->priv->archive_present) {
-		GList *selection = get_selection_as_fd (window);
-
-		for (scan = selection; scan; scan = scan->next) {
-			FileData *fd = scan->data;
-
-			sel_n++;
-			if (! file_data_is_dir (fd))
-				sel_size += fd->size;
-		}
-		g_list_free (selection);
-	}
-
-	size_txt = g_format_size (tot_size);
-	sel_size_txt = g_format_size (sel_size);
-
-	if (tot_n == 0)
-		archive_info = g_strdup ("");
-	else
-		archive_info = g_strdup_printf (ngettext ("%d object (%s)", "%d objects (%s)", tot_n), tot_n, size_txt);
-
-	if (sel_n == 0)
-		selected_info = g_strdup ("");
-	else
-		selected_info = g_strdup_printf (ngettext ("%d object selected (%s)", "%d objects selected (%s)", sel_n), sel_n, sel_size_txt);
-
-	info = g_strconcat (archive_info,
-			    ((sel_n == 0) ? NULL : ", "),
-			    selected_info,
-			    NULL);
-
-	gtk_statusbar_push (GTK_STATUSBAR (window->priv->statusbar), window->priv->list_info_cid, info);
-
-	g_free (size_txt);
-	g_free (sel_size_txt);
-	g_free (archive_info);
-	g_free (selected_info);
-	g_free (info);
-}
-
-
-static void
 _fr_window_stop_activity_mode (FrWindow *window)
 {
 	g_return_if_fail (window != NULL);
@@ -1354,13 +1230,7 @@ _fr_window_stop_activity_mode (FrWindow *window)
 	if (window->priv->progress_dialog != NULL)
 		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), 0.0);
 
-	if (! window->priv->batch_mode) {
-		if (window->priv->progress_bar != NULL)
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), 0.0);
-	}
-
 	fr_window_update_sensitivity (window);
-	fr_window_update_statusbar_list_info (window);
 }
 
 
@@ -2157,9 +2027,6 @@ close_progress_dialog (FrWindow *window,
 		window->priv->progress_timeout = 0;
 	}
 
-	if (! window->priv->batch_mode)
-		gtk_widget_hide (window->priv->progress_bar);
-
 	if (window->priv->progress_dialog == NULL)
 		return;
 
@@ -2579,7 +2446,6 @@ display_progress_dialog (gpointer data)
 						   window->priv->stoppable);
 		if (! window->priv->batch_mode)
 			gtk_window_present (GTK_WINDOW (window));
-		gtk_widget_hide (window->priv->progress_bar);
 		gtk_window_present (GTK_WINDOW (window->priv->progress_dialog));
 		fr_archive_message_cb (NULL, window->priv->pd_last_message, window);
 	}
@@ -2609,9 +2475,6 @@ open_progress_dialog (FrWindow *window,
 	    || ((window->priv->progress_dialog != NULL) && gtk_widget_get_visible (window->priv->progress_dialog)))
 		return;
 
-	if (! window->priv->batch_mode && ! open_now)
-		gtk_widget_show (window->priv->progress_bar);
-
 	create_the_progress_dialog (window);
 	gtk_widget_show (window->priv->pd_cancel_button);
 	gtk_widget_hide (window->priv->pd_open_archive_button);
@@ -2638,7 +2501,6 @@ fr_archive_progress_cb (FrArchive *archive,
 		fraction = CLAMP (fraction, 0.0, 1.0);
 		if (window->priv->progress_dialog != NULL)
 			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->pd_progress_bar), fraction);
-		gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (window->priv->progress_bar), fraction);
 
 		if ((archive != NULL) && (fr_archive_progress_get_total_files (archive) > 0)) {
 			char *message = NULL;
@@ -2749,19 +2611,6 @@ open_progress_dialog_with_open_archive (FrWindow *window)
 
 	g_free (description);
 	g_free (basename);
-}
-
-
-static void
-fr_window_push_message (FrWindow   *window,
-			const char *msg)
-{
-	if (! gtk_widget_get_mapped (GTK_WIDGET (window)))
-		return;
-
-	gtk_statusbar_push (GTK_STATUSBAR (window->priv->statusbar),
-			    window->priv->progress_cid,
-			    msg);
 }
 
 
@@ -3204,7 +3053,6 @@ _archive_operation_started (FrWindow *window,
 			    FrAction  action)
 {
 	GFile *archive;
-	char  *message;
 
 	window->priv->action = action;
 	_fr_window_start_activity_mode (window);
@@ -3216,9 +3064,6 @@ _archive_operation_started (FrWindow *window,
 	archive = window->priv->pd_last_archive;
 	if (archive == NULL)
 		archive =  window->priv->archive_file;
-	message = get_action_description (window, action, archive);
-	fr_window_push_message (window, message);
-	g_free (message);
 
 	switch (action) {
 	case FR_ACTION_EXTRACTING_FILES:
@@ -4827,7 +4672,6 @@ selection_changed_cb (GtkTreeSelection *selection,
 {
 	FrWindow *window = user_data;
 
-	fr_window_update_statusbar_list_info (window);
 	fr_window_update_sensitivity (window);
 
 	return FALSE;
@@ -5218,8 +5062,6 @@ fr_window_show_cb (GtkWidget *widget,
 {
 	fr_window_update_current_location (window);
 
-	set_active (window, "ViewStatusbar", g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_STATUSBAR));
-
 	window->priv->view_sidebar = g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_SIDEBAR);
 	set_active (window, "ViewSidebar", window->priv->view_sidebar);
 
@@ -5230,17 +5072,6 @@ fr_window_show_cb (GtkWidget *widget,
 
 
 /* preferences changes notification callbacks */
-
-
-static void
-pref_view_statusbar_changed (GSettings  *settings,
-		  	     const char *key,
-		  	     gpointer    user_data)
-{
-	FrWindow *window = user_data;
-
-	fr_window_set_statusbar_visibility (window, g_settings_get_boolean (settings, key));
-}
 
 
 static void
@@ -5320,64 +5151,6 @@ fr_archive_stoppable_cb (FrArchive *archive,
 						   GTK_RESPONSE_OK,
 						   stoppable);
 	return TRUE;
-}
-
-
-static void
-menu_item_select_cb (GtkMenuItem *proxy,
-		     FrWindow    *window)
-{
-	GtkAction *action;
-	char      *message;
-
-	action = gtk_activatable_get_related_action (GTK_ACTIVATABLE (proxy));
-	g_return_if_fail (action != NULL);
-
-	g_object_get (G_OBJECT (action), "tooltip", &message, NULL);
-	if (message) {
-		gtk_statusbar_push (GTK_STATUSBAR (window->priv->statusbar),
-				    window->priv->help_message_cid, message);
-		g_free (message);
-	}
-}
-
-
-static void
-menu_item_deselect_cb (GtkMenuItem *proxy,
-		       FrWindow    *window)
-{
-	gtk_statusbar_pop (GTK_STATUSBAR (window->priv->statusbar),
-			   window->priv->help_message_cid);
-}
-
-
-static void
-disconnect_proxy_cb (GtkUIManager *manager,
-		     GtkAction    *action,
-		     GtkWidget    *proxy,
-		     FrWindow     *window)
-{
-	if (GTK_IS_MENU_ITEM (proxy)) {
-		g_signal_handlers_disconnect_by_func
-			(proxy, G_CALLBACK (menu_item_select_cb), window);
-		g_signal_handlers_disconnect_by_func
-			(proxy, G_CALLBACK (menu_item_deselect_cb), window);
-	}
-}
-
-
-static void
-connect_proxy_cb (GtkUIManager *manager,
-		  GtkAction    *action,
-		  GtkWidget    *proxy,
-		  FrWindow     *window)
-{
-	if (GTK_IS_MENU_ITEM (proxy)) {
-		g_signal_connect (proxy, "select",
-				  G_CALLBACK (menu_item_select_cb), window);
-		g_signal_connect (proxy, "deselect",
-				  G_CALLBACK (menu_item_deselect_cb), window);
-	}
 }
 
 
@@ -5475,8 +5248,6 @@ fr_window_construct (FrWindow *window)
 	gboolean            rtl;
 	GtkWidget          *navigation_commands;
 	GtkWidget          *location_box;
-	GtkStatusbar       *statusbar;
-	GtkWidget          *statusbar_box;
 	GtkWidget          *filter_box;
 	GtkWidget          *tree_scrolled_window;
 	GtkTreeSelection   *selection;
@@ -5815,11 +5586,6 @@ fr_window_construct (FrWindow *window)
 					    G_CALLBACK (view_as_radio_action),
 					    window);
 
-	g_signal_connect (ui, "connect_proxy",
-			  G_CALLBACK (connect_proxy_cb), window);
-	g_signal_connect (ui, "disconnect_proxy",
-			  G_CALLBACK (disconnect_proxy_cb), window);
-
 	gtk_ui_manager_insert_action_group (ui, actions, 0);
 	gtk_window_add_accel_group (GTK_WINDOW (window),
 				    gtk_ui_manager_get_accel_group (ui));
@@ -5932,38 +5698,6 @@ fr_window_construct (FrWindow *window)
 	window->priv->folder_popup_menu = gtk_ui_manager_get_widget (ui, "/FolderPopupMenu");
 	window->priv->sidebar_folder_popup_menu = gtk_ui_manager_get_widget (ui, "/SidebarFolderPopupMenu");
 
-	/* Create the statusbar. */
-
-	window->priv->statusbar = gtk_statusbar_new ();
-	window->priv->help_message_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->priv->statusbar), "help_message");
-	window->priv->list_info_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->priv->statusbar), "list_info");
-	window->priv->progress_cid = gtk_statusbar_get_context_id (GTK_STATUSBAR (window->priv->statusbar), "progress");
-
-	statusbar = GTK_STATUSBAR (window->priv->statusbar);
-	statusbar_box = gtk_statusbar_get_message_area (statusbar);
-	gtk_box_set_homogeneous (GTK_BOX (statusbar_box), FALSE);
-	gtk_box_set_spacing (GTK_BOX (statusbar_box), 4);
-	gtk_box_set_child_packing (GTK_BOX (statusbar_box), gtk_statusbar_get_message_area (statusbar), TRUE, TRUE, 0, GTK_PACK_START );
-
-	window->priv->progress_bar = gtk_progress_bar_new ();
-	gtk_progress_bar_set_pulse_step (GTK_PROGRESS_BAR (window->priv->progress_bar), ACTIVITY_PULSE_STEP);
-	gtk_widget_set_size_request (window->priv->progress_bar, -1, PROGRESS_BAR_HEIGHT);
-	{
-		GtkWidget *vbox;
-
-		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-		gtk_box_pack_start (GTK_BOX (statusbar_box), vbox, FALSE, FALSE, 0);
-		gtk_box_pack_start (GTK_BOX (vbox), window->priv->progress_bar, TRUE, TRUE, 1);
-		gtk_widget_show (vbox);
-	}
-	gtk_widget_show (statusbar_box);
-
-	fr_window_attach (FR_WINDOW (window), window->priv->statusbar, FR_WINDOW_AREA_STATUSBAR);
-	if (g_settings_get_boolean (window->priv->settings_ui, PREF_UI_VIEW_STATUSBAR))
-		gtk_widget_show (window->priv->statusbar);
-	else
-		gtk_widget_hide (window->priv->statusbar);
-
 	/**/
 
 	toolbar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
@@ -5979,10 +5713,6 @@ fr_window_construct (FrWindow *window)
 
 	/* Add notification callbacks. */
 
-	g_signal_connect (window->priv->settings_ui,
-			  "changed::" PREF_UI_VIEW_STATUSBAR,
-			  G_CALLBACK (pref_view_statusbar_changed),
-			  window);
 	g_signal_connect (window->priv->settings_ui,
 			  "changed::" PREF_UI_VIEW_SIDEBAR,
 			  G_CALLBACK (pref_view_folders_changed),
@@ -6219,7 +5949,6 @@ fr_window_archive_close (FrWindow *window)
 	fr_window_update_file_list (window, FALSE);
 	fr_window_update_dir_tree (window);
 	fr_window_update_current_location (window);
-	fr_window_update_statusbar_list_info (window);
 }
 
 
@@ -9349,21 +9078,6 @@ fr_window_set_default_dir (FrWindow *window,
 
 
 void
-fr_window_set_statusbar_visibility  (FrWindow *window,
-				     gboolean  visible)
-{
-	g_return_if_fail (window != NULL);
-
-	if (visible)
-		gtk_widget_show (window->priv->statusbar);
-	else
-		gtk_widget_hide (window->priv->statusbar);
-
-	set_active (window, "ViewStatusbar", visible);
-}
-
-
-void
 fr_window_set_folders_visibility (FrWindow   *window,
 				  gboolean    value)
 {
@@ -9426,7 +9140,6 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_OPEN:
 		debug (DEBUG_INFO, "[BATCH] OPEN\n");
 
-		fr_window_push_message (window, _("Add files to an archive"));
 		dlg_batch_add_files (window, (GList *) action->data);
 		break;
 
@@ -9470,10 +9183,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 						   FALSE,
 						   TRUE);
 		}
-		else {
-			fr_window_push_message (window, _("Extract archive"));
+		else
 			dlg_extract (NULL, window);
-		}
 		break;
 
 	case FR_BATCH_ACTION_RENAME:
