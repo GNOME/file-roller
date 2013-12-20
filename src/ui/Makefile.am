@@ -8,6 +8,7 @@ EXTRA_DIST = 				\
 	error-dialog.ui			\
 	extract-dialog-options.ui	\
 	file-selector.ui		\
+	gears-menu.ui			\
 	menus-toolbars.ui		\
 	message-dialog.ui		\
 	new-archive-dialog.ui		\

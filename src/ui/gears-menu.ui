@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <menu id="menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Save As…</attribute>
+        <attribute name="action">win.save-as</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Pass_word…</attribute>
+        <attribute name="action">win.edit-password</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Test Integrity</attribute>
+        <attribute name="action">win.test-archive</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Properties</attribute>
+        <attribute name="action">win.view-properties</attribute>
+        <attribute name="accel"><![CDATA[<Alt>Return]]></attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Close</attribute>
+        <attribute name="action">win.close</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

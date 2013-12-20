@@ -48,6 +48,7 @@
 #include "fr-new-archive-dialog.h"
 #include "fr-stock.h"
 #include "fr-window.h"
+#include "fr-window-actions-entries.h"
 #include "file-data.h"
 #include "file-utils.h"
 #include "glib-utils.h"
@@ -234,7 +235,7 @@ struct _FrWindowPrivate {
 	GtkListStore      *list_store;
 	GtkWidget         *tree_view;
 	GtkTreeStore      *tree_store;
-	GtkWidget         *toolbar;
+	GtkWidget         *headerbar;
 	GtkWidget         *statusbar;
 	GtkWidget         *progress_bar;
 	GtkWidget         *location_bar;
@@ -701,6 +702,18 @@ static void fr_window_update_dir_tree  (FrWindow *window);
 
 
 static void
+fr_window_enable_action (FrWindow   *window,
+			 const char *action_name,
+			 gboolean    enabled)
+{
+	GAction *action;
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (window), action_name);
+	g_object_set (action, "enabled", enabled, NULL);
+}
+
+
+static void
 set_sensitive (FrWindow   *window,
 	       const char *action_name,
 	       gboolean    sensitive)
@@ -1127,13 +1140,20 @@ fr_window_update_sensitivity (FrWindow *window)
 
 	set_sensitive (window, "SelectAll", (window->priv->current_view_length > 0) && (window->priv->current_view_length != n_selected));
 	set_sensitive (window, "DeselectAll", n_selected > 0);
-	set_sensitive (window, "OpenRecent", ! running);
-	set_sensitive (window, "OpenRecent_Toolbar", ! running);
 
 	set_sensitive (window, "ViewSidebar", (window->priv->list_mode == FR_WINDOW_LIST_MODE_AS_DIR));
 
 	set_sensitive (window, "ViewAllFiles", ! window->priv->filter_mode);
 	set_sensitive (window, "ViewAsFolder", ! window->priv->filter_mode);
+
+	fr_window_enable_action (window, "add-files", ! no_archive && ! ro && ! running && can_store_many_files);
+	fr_window_enable_action (window, "close", ! running || window->priv->stoppable);
+	fr_window_enable_action (window, "edit-password", ! running && (window->priv->asked_for_password || (! no_archive && window->archive->propPassword)));
+	fr_window_enable_action (window, "extract-files", file_op);
+	fr_window_enable_action (window, "edit-find", ! no_archive);
+	fr_window_enable_action (window, "save-as", ! no_archive && can_store_many_files && ! running);
+	fr_window_enable_action (window, "test-archive", ! no_archive && ! running && window->archive->propTest);
+	fr_window_enable_action (window, "view-properties", file_op);
 }
 
 
@@ -1810,6 +1830,10 @@ fr_window_update_current_location (FrWindow *window)
 	set_sensitive (window, "GoForward", window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
 	set_sensitive (window, "GoUp", window->priv->archive_present && (current_dir != NULL) && (strcmp (current_dir, "/") != 0));
 	set_sensitive (window, "GoHome", window->priv->archive_present);
+
+	fr_window_enable_action (window, "go-back", window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->next != NULL));
+	fr_window_enable_action (window, "go-forward", window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
+
 	gtk_widget_set_sensitive (window->priv->location_entry, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->location_label, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->filter_entry, window->priv->archive_present);
@@ -2050,23 +2074,33 @@ fr_window_update_file_list (FrWindow *window,
 
 
 static void
+fr_window_set_title (FrWindow   *window,
+		     const char *title)
+{
+	gtk_window_set_title (GTK_WINDOW (window), title);
+	gtk_header_bar_set_title (GTK_HEADER_BAR (window->priv->headerbar), title);
+}
+
+
+static void
 fr_window_update_title (FrWindow *window)
 {
-	if (! window->priv->archive_present)
-		gtk_window_set_title (GTK_WINDOW (window), _("Archive Manager"));
-	else {
-		char *title;
-		char *name;
+	char *title;
+	char *name;
 
-		name = _g_file_get_display_basename (fr_window_get_archive_file (window));
-		title = g_strdup_printf ("%s %s",
-					 name,
-					 window->archive->read_only ? _("[read only]") : "");
-
-		gtk_window_set_title (GTK_WINDOW (window), title);
-		g_free (title);
-		g_free (name);
+	if (! window->priv->archive_present) {
+		fr_window_set_title (window, _("Archive Manager"));
+		return;
 	}
+
+	name = _g_file_get_display_basename (fr_window_get_archive_file (window));
+	title = g_strdup_printf ("%s %s",
+				 name,
+				 window->archive->read_only ? _("[read only]") : "");
+	fr_window_set_title (window, title);
+
+	g_free (title);
+	g_free (name);
 }
 
 
@@ -5199,25 +5233,6 @@ fr_window_show_cb (GtkWidget *widget,
 
 
 static void
-pref_history_len_changed (GSettings  *settings,
-			  const char *key,
-			  gpointer    user_data)
-{
-	FrWindow  *window = user_data;
-	int        limit;
-	GtkAction *action;
-
-	limit = g_settings_get_int (settings, PREF_UI_HISTORY_LEN);
-
-	action = gtk_action_group_get_action (window->priv->actions, "OpenRecent");
-	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (action), limit);
-
-	action = gtk_action_group_get_action (window->priv->actions, "OpenRecent_Toolbar");
-	gtk_recent_chooser_set_limit (GTK_RECENT_CHOOSER (action), limit);
-}
-
-
-static void
 pref_view_statusbar_changed (GSettings  *settings,
 		  	     const char *key,
 		  	     gpointer    user_data)
@@ -5377,52 +5392,6 @@ view_as_radio_action (GtkAction      *action,
 
 
 static void
-recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
-				  FrWindow         *window)
-{
-	char  *uri;
-	GFile *file;
-
-	uri = gtk_recent_chooser_get_current_uri (chooser);
-	if (uri == NULL)
-		return;
-
-	file = g_file_new_for_uri (uri);
-	fr_window_archive_open (window, file, GTK_WINDOW (window));
-
-	g_object_unref (file);
-	g_free (uri);
-}
-
-
-static void
-fr_window_init_recent_chooser (FrWindow         *window,
-			       GtkRecentChooser *chooser)
-{
-	GtkRecentFilter *filter;
-	int              i;
-
-	g_return_if_fail (chooser != NULL);
-
-	filter = gtk_recent_filter_new ();
-	gtk_recent_filter_set_name (filter, _("All archives"));
-	for (i = 0; open_type[i] != -1; i++)
-		gtk_recent_filter_add_mime_type (filter, mime_type_desc[open_type[i]].mime_type);
-	gtk_recent_chooser_add_filter (chooser, filter);
-
-	gtk_recent_chooser_set_local_only (chooser, FALSE);
-	gtk_recent_chooser_set_limit (chooser, g_settings_get_int (window->priv->settings_ui, PREF_UI_HISTORY_LEN));
-	gtk_recent_chooser_set_show_not_found (chooser, TRUE);
-	gtk_recent_chooser_set_sort_type (chooser, GTK_RECENT_SORT_MRU);
-
-	g_signal_connect (G_OBJECT (chooser),
-			  "item_activated",
-			  G_CALLBACK (recent_chooser_item_activated_cb),
-			  window);
-}
-
-
-static void
 fr_window_activate_filter (FrWindow *window)
 {
 	GtkTreeView       *tree_view = GTK_TREE_VIEW (window->priv->list_view);
@@ -5500,22 +5469,11 @@ fr_window_attach (FrWindow      *window,
 
 
 static void
-set_action_important (GtkUIManager *ui,
-		      const char   *action_name)
-{
-	GtkAction *action;
-
-	action = gtk_ui_manager_get_action (ui, action_name);
-	g_object_set (action, "is_important", TRUE, NULL);
-	g_object_unref (action);
-}
-
-
-static void
 fr_window_construct (FrWindow *window)
 {
-	GtkWidget          *toolbar;
 	GtkWidget          *list_scrolled_window;
+	gboolean            rtl;
+	GtkWidget          *navigation_commands;
 	GtkWidget          *location_box;
 	GtkStatusbar       *statusbar;
 	GtkWidget          *statusbar_box;
@@ -5523,8 +5481,6 @@ fr_window_construct (FrWindow *window)
 	GtkWidget          *tree_scrolled_window;
 	GtkTreeSelection   *selection;
 	GtkActionGroup     *actions;
-	GtkAction          *action;
-	GtkAction          *other_actions_action;
 	GtkUIManager       *ui;
 	GtkSizeGroup       *toolbar_size_group;
 	GError             *error = NULL;
@@ -5825,52 +5781,21 @@ fr_window_construct (FrWindow *window)
 	fr_window_attach (FR_WINDOW (window), window->priv->paned, FR_WINDOW_AREA_CONTENTS);
 	gtk_widget_show_all (window->priv->paned);
 
-	/* Build the menu and the toolbar. */
+        /* ui actions */
+
+        g_action_map_add_action_entries (G_ACTION_MAP (window),
+                                         fr_window_actions,
+                                         G_N_ELEMENTS (fr_window_actions),
+                                         window);
+        /*fr_window_add_accelerators (window,
+                                     fr_window_accelerators,
+                                     G_N_ELEMENTS (fr_window_accelerators)); FIXME */
+
+	/* Build the menu. */
 
 	ui = gtk_ui_manager_new ();
 
 	window->priv->actions = actions = gtk_action_group_new ("Actions");
-
-	/* open recent menu item action  */
-
-	action = g_object_new (GTK_TYPE_RECENT_ACTION,
-			       "name", "OpenRecent",
-			       /* Translators: this is the label for the "open recent file" sub-menu. */
-			       "label", _("Open _Recent"),
-			       "tooltip", _("Open a recently used archive"),
-			       "stock-id", GTK_STOCK_OPEN,
-			       NULL);
-	fr_window_init_recent_chooser (window, GTK_RECENT_CHOOSER (action));
-	gtk_action_group_add_action (actions, action);
-	g_object_unref (action);
-
-	/* open recent toolbar item action  */
-
-	action = g_object_new (GTK_TYPE_RECENT_ACTION,
-			       "name", "OpenRecent_Toolbar",
-			       "label", _("Open"),
-			       "tooltip", _("Open a recently used archive"),
-			       "stock-id", GTK_STOCK_OPEN,
-			       "is-important", TRUE,
-			       NULL);
-	fr_window_init_recent_chooser (window, GTK_RECENT_CHOOSER (action));
-	g_signal_connect (action,
-			  "activate",
-			  G_CALLBACK (activate_action_open),
-			  window);
-	gtk_action_group_add_action (actions, action);
-	g_object_unref (action);
-
-	/* menu actions */
-
-	other_actions_action = action = g_object_new (GTH_TYPE_TOGGLE_MENU_ACTION,
-			       "name", "OtherActions",
-			       "label", _("_Other Actions"),
-			       "tooltip", _("Other actions"),
-			       "menu-halign", GTK_ALIGN_CENTER,
-			       "show-arrow", TRUE,
-			       NULL);
-	gtk_action_group_add_action (actions, action);
 
 	/* other actions */
 
@@ -5909,68 +5834,99 @@ fr_window_construct (FrWindow *window)
 		g_error_free (error);
 	}
 
-	g_object_set (other_actions_action, "menu", gtk_ui_manager_get_widget (ui, "/OtherActionsMenu"), NULL);
-	g_object_unref (other_actions_action);
+	/* header bar */
 
-	window->priv->toolbar = toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
-	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
-	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar), GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
-	set_action_important (ui, "/ToolBar/Extract_Toolbar");
-	set_action_important (ui, "/ToolBar/Add_Toolbar");
+	window->priv->headerbar = gtk_header_bar_new ();
+	gtk_widget_show (window->priv->headerbar);
+	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (window->priv->headerbar), TRUE);
+	gtk_window_set_titlebar (GTK_WINDOW (window), window->priv->headerbar);
+
+	/* header bar buttons */
+
+	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar),
+				   _gtk_header_bar_create_text_button (_("Extract"),
+						   	   	       NULL,
+						 	 	       "win.extract-files"));
+	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar),
+				   _gtk_header_bar_create_image_button ("list-add-symbolic",
+						 	 	        _("Add Files"),
+						 	 	        "win.add-files"));
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar),
+				 _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic",
+						 	 	 	     _("Find files by name"),
+						 	 	 	     "win.edit-find"));
+
+        /* gears menu button */
+
+        {
+                GtkBuilder *builder;
+                GMenuModel *menu;
+                GtkWidget  *button;
+
+                builder = _gtk_builder_new_from_resource ("gears-menu.ui");
+                menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
+                button = _gtk_menu_button_new_for_header_bar ();
+                gtk_container_add (GTK_CONTAINER (button), gtk_image_new_from_icon_name ("emblem-system-symbolic", GTK_ICON_SIZE_MENU));
+                gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
+                gtk_widget_show_all (button);
+                gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar), button);
+
+                _gtk_window_add_accelerators_from_menu ((GTK_WINDOW (window)), menu);
+
+                g_object_unref (builder);
+        }
 
 	/* location bar */
 
-	window->priv->location_bar = gtk_ui_manager_get_widget (ui, "/LocationBar");
-	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (window->priv->location_bar), FALSE);
-	gtk_toolbar_set_style (GTK_TOOLBAR (window->priv->location_bar), GTK_TOOLBAR_BOTH_HORIZ);
-	gtk_style_context_add_class (gtk_widget_get_style_context (window->priv->location_bar), GTK_STYLE_CLASS_TOOLBAR);
-	set_action_important (ui, "/LocationBar/GoBack");
+	window->priv->location_bar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_widget_set_margin_top (window->priv->location_bar, 5);
+	gtk_widget_set_margin_bottom (window->priv->location_bar, 5);
+	gtk_style_context_add_class (gtk_widget_get_style_context (window->priv->location_bar), GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+
+	rtl = gtk_widget_get_direction (window->priv->headerbar) == GTK_TEXT_DIR_RTL;
+	navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_box_pack_start (GTK_BOX (navigation_commands),
+			    _gtk_header_bar_create_image_button (rtl ? "go-previous-rtl-symbolic" :  "go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"),
+			    FALSE,
+			    FALSE,
+			    0);
+	gtk_box_pack_start (GTK_BOX (navigation_commands),
+			    _gtk_header_bar_create_image_button (rtl ? "go-next-rtl-symbolic" : "go-next-symbolic", _("Go to the next visited location"), "win.go-forward"),
+			    FALSE,
+			    FALSE,
+			    0);
+	/*gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), GTK_STYLE_CLASS_LINKED);*/
+	gtk_widget_show_all (navigation_commands);
+	gtk_widget_set_margin_right (navigation_commands, 12);
+	gtk_box_pack_start (GTK_BOX (window->priv->location_bar), navigation_commands, FALSE, FALSE, 5);
 
 	/* current location */
 
-	location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	location_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	/* Translators: after the colon there is a folder name. */
 	window->priv->location_label = gtk_label_new_with_mnemonic (_("_Location:"));
-	gtk_box_pack_start (GTK_BOX (location_box),
-			    window->priv->location_label, FALSE, FALSE, 5);
+	gtk_box_pack_start (GTK_BOX (location_box), window->priv->location_label, FALSE, FALSE, 5);
 
 	window->priv->location_entry = gtk_entry_new ();
-	gtk_entry_set_icon_from_stock (GTK_ENTRY (window->priv->location_entry),
-				       GTK_ENTRY_ICON_PRIMARY,
-				       GTK_STOCK_DIRECTORY);
-
-	gtk_box_pack_start (GTK_BOX (location_box),
-			    window->priv->location_entry, TRUE, TRUE, 5);
-
+	gtk_entry_set_has_frame (GTK_ENTRY (window->priv->location_entry), FALSE);
+	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (window->priv->location_entry),
+					   GTK_ENTRY_ICON_PRIMARY,
+					   "folder-symbolic");
 	g_signal_connect (G_OBJECT (window->priv->location_entry),
 			  "key_press_event",
 			  G_CALLBACK (location_entry_key_press_event_cb),
 			  window);
+	gtk_box_pack_start (GTK_BOX (location_box), window->priv->location_entry, TRUE, TRUE, 5);
+	gtk_box_pack_start (GTK_BOX (window->priv->location_bar), location_box, TRUE, TRUE, 0);
 
-	{
-		GtkToolItem *tool_item;
-
-		tool_item = gtk_separator_tool_item_new ();
-		gtk_widget_show_all (GTK_WIDGET (tool_item));
-		gtk_toolbar_insert (GTK_TOOLBAR (window->priv->location_bar), tool_item, -1);
-
-		tool_item = gtk_tool_item_new ();
-		gtk_tool_item_set_expand (tool_item, TRUE);
-		gtk_container_add (GTK_CONTAINER (tool_item), location_box);
-		gtk_widget_show_all (GTK_WIDGET (tool_item));
-		gtk_toolbar_insert (GTK_TOOLBAR (window->priv->location_bar), tool_item, -1);
-	}
-
+	gtk_widget_show_all (window->priv->location_bar);
 	fr_window_attach (FR_WINDOW (window), window->priv->location_bar, FR_WINDOW_AREA_LOCATIONBAR);
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT)
 		gtk_widget_hide (window->priv->location_bar);
 	else
 		gtk_widget_show (window->priv->location_bar);
 
-	/**/
-
-	fr_window_attach (FR_WINDOW (window), window->priv->toolbar, FR_WINDOW_AREA_TOOLBAR);
-	gtk_widget_show (toolbar);
+	/* popup menus */
 
 	window->priv->file_popup_menu = gtk_ui_manager_get_widget (ui, "/FilePopupMenu");
 	window->priv->folder_popup_menu = gtk_ui_manager_get_widget (ui, "/FolderPopupMenu");
@@ -6023,10 +5979,6 @@ fr_window_construct (FrWindow *window)
 
 	/* Add notification callbacks. */
 
-	g_signal_connect (window->priv->settings_ui,
-			  "changed::" PREF_UI_HISTORY_LEN,
-			  G_CALLBACK (pref_history_len_changed),
-			  window);
 	g_signal_connect (window->priv->settings_ui,
 			  "changed::" PREF_UI_VIEW_STATUSBAR,
 			  G_CALLBACK (pref_view_statusbar_changed),

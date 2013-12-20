@@ -26,6 +26,11 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
+typedef struct {
+	const char *action_name;
+	const char *accelerator;
+} FrAccelerator;
+
 int           _gtk_tree_selection_count_selected   (GtkTreeSelection *selection);
 GtkWidget *   _gtk_message_dialog_new              (GtkWindow        *parent,
 						    GtkDialogFlags    flags,
@@ -80,5 +85,26 @@ GtkWidget *   _gtk_builder_get_widget              (GtkBuilder       *builder,
 int           _gtk_widget_lookup_for_size          (GtkWidget        *widget,
 						    GtkIconSize       icon_size);
 void          _gtk_entry_use_as_password_entry     (GtkEntry         *entry);
+GtkWidget *   _gtk_menu_button_new_for_header_bar  (void);
+GtkWidget *   _gtk_image_button_new_for_header_bar (const char       *icon_name);
+GtkWidget *   _gtk_header_bar_create_text_button   (const char       *icon_name,
+						    const char       *tooltip,
+						    const char       *action_name);
+GtkWidget *   _gtk_header_bar_create_image_button  (const char       *icon_name,
+						    const char       *tooltip,
+						    const char       *action_name);
+GtkWidget *   _gtk_header_bar_create_image_toggle_button
+						   (const char       *icon_name,
+						    const char       *tooltip,
+						    const char       *action_name);
+void          _gtk_window_add_accelerator_for_action
+						   (GtkWindow	     *window,
+						    GtkAccelGroup    *accel_group,
+						    const char       *action_name,
+						    const char       *accel,
+						    GVariant         *target);
+void          _gtk_window_add_accelerators_from_menu
+						   (GtkWindow        *window,
+						    GMenuModel       *menu);
 
 #endif

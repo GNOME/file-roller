@@ -144,6 +144,9 @@ COMMON_SOURCES = 			\
 	fr-process.h			\
 	fr-window.c			\
 	fr-window.h			\
+	fr-window-actions-callbacks.c	\
+	fr-window-actions-callbacks.h	\
+	fr-window-actions-entries.h	\
 	gio-utils.c			\
 	gio-utils.h			\
 	glib-utils.c			\

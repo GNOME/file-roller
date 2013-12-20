@@ -28,8 +28,6 @@
 
 
 static GtkActionEntry action_entries[] = {
-	{ "OtherActionsMenu", NULL, NULL },
-
 	{ "About", GTK_STOCK_ABOUT,
 	  NULL, NULL,
 	  N_("Information about the program"),

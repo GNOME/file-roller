@@ -655,3 +655,259 @@ _gtk_entry_use_as_password_entry (GtkEntry *entry)
 			  G_CALLBACK (password_entry_icon_press_cb),
 			  NULL);
 }
+
+
+static void
+_gtk_menu_button_set_style_for_header_bar (GtkWidget *button)
+{
+	GtkStyleContext *context;
+
+	gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+	context = gtk_widget_get_style_context (button);
+	gtk_style_context_add_class (context, "image-button");
+	gtk_style_context_remove_class (context, "text-button");
+}
+
+
+GtkWidget *
+_gtk_menu_button_new_for_header_bar (void)
+{
+	GtkWidget *button;
+
+	button = gtk_menu_button_new ();
+	_gtk_menu_button_set_style_for_header_bar (button);
+
+	return button;
+}
+
+
+GtkWidget *
+_gtk_image_button_new_for_header_bar (const char *icon_name)
+{
+	GtkWidget *button;
+
+	button = gtk_button_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+	_gtk_menu_button_set_style_for_header_bar (button);
+
+	return button;
+}
+
+
+GtkWidget *
+_gtk_header_bar_create_text_button (const char       *label,
+				    const char       *tooltip,
+				    const char       *action_name)
+{
+	GtkWidget *button;
+
+	g_return_if_fail (label != NULL);
+	g_return_if_fail (action_name != NULL);
+
+	button = gtk_button_new_with_label (label);
+	gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+	gtk_style_context_add_class (gtk_widget_get_style_context (button), "text-button");
+	gtk_style_context_remove_class (gtk_widget_get_style_context (button), "image-button");
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
+	if (tooltip != NULL)
+		gtk_widget_set_tooltip_text (button, tooltip);
+	gtk_widget_show (button);
+
+	return button;
+}
+
+
+GtkWidget *
+_gtk_header_bar_create_image_button (const char       *icon_name,
+				     const char       *tooltip,
+				     const char       *action_name)
+{
+	GtkWidget *button;
+
+	g_return_if_fail (icon_name != NULL);
+	g_return_if_fail (action_name != NULL);
+
+	button = _gtk_image_button_new_for_header_bar (icon_name);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
+	if (tooltip != NULL)
+		gtk_widget_set_tooltip_text (button, tooltip);
+	gtk_widget_show (button);
+
+	return button;
+}
+
+
+GtkWidget *
+_gtk_header_bar_create_image_toggle_button (const char       *icon_name,
+					    const char       *tooltip,
+					    const char       *action_name)
+{
+	GtkWidget *button;
+
+	g_return_if_fail (icon_name != NULL);
+	g_return_if_fail (action_name != NULL);
+
+	button = gtk_toggle_button_new ();
+	gtk_container_add (GTK_CONTAINER (button), gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU));
+	_gtk_menu_button_set_style_for_header_bar (button);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
+	if (tooltip != NULL)
+		gtk_widget_set_tooltip_text (button, tooltip);
+	gtk_widget_show_all (button);
+
+	return button;
+}
+
+
+/* -- _gtk_window_add_accelerator_for_action -- */
+
+
+typedef struct {
+	GtkWindow *window;
+	char      *action_name;
+	GVariant  *target;
+} AccelData;
+
+
+static void
+accel_data_free (gpointer  user_data,
+                 GClosure *closure)
+{
+	AccelData *accel_data = user_data;
+
+	g_return_if_fail (accel_data != NULL);
+
+	if (accel_data->target != NULL)
+		g_variant_unref (accel_data->target);
+	g_free (accel_data->action_name);
+	g_free (accel_data);
+}
+
+
+static void
+window_accelerator_activated_cb (GtkAccelGroup	*accel_group,
+				 GObject		*object,
+				 guint		 key,
+				 GdkModifierType	 mod,
+				 gpointer		 user_data)
+{
+	AccelData *accel_data = user_data;
+	GAction   *action;
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (accel_data->window), accel_data->action_name);
+	if (action != NULL)
+		g_action_activate (action, accel_data->target);
+}
+
+
+void
+_gtk_window_add_accelerator_for_action (GtkWindow	*window,
+					GtkAccelGroup	*accel_group,
+					const char	*action_name,
+					const char	*accel,
+					GVariant	*target)
+{
+	AccelData	*accel_data;
+	guint		 key;
+	GdkModifierType  mods;
+	GClosure	*closure;
+
+	if ((action_name == NULL) || (accel == NULL))
+		return;
+
+	if (g_str_has_prefix (action_name, "app."))
+		return;
+
+	accel_data = g_new0 (AccelData, 1);
+	accel_data->window = window;
+	/* remove the win. prefix from the action name */
+	if (g_str_has_prefix (action_name, "win."))
+		accel_data->action_name = g_strdup (action_name + strlen ("win."));
+	else
+		accel_data->action_name = g_strdup (action_name);
+	if (target != NULL)
+		accel_data->target = g_variant_ref (target);
+
+	gtk_accelerator_parse (accel, &key, &mods);
+	closure = g_cclosure_new (G_CALLBACK (window_accelerator_activated_cb),
+				  accel_data,
+				  accel_data_free);
+	gtk_accel_group_connect (accel_group,
+				 key,
+				 mods,
+				 0,
+				 closure);
+}
+
+
+/* -- _gtk_window_add_accelerators_from_menu --  */
+
+
+static void
+add_accelerators_from_menu_item (GtkWindow      *window,
+				 GtkAccelGroup  *accel_group,
+				 GMenuModel     *model,
+				 int             item)
+{
+	GMenuAttributeIter	*iter;
+	const char		*key;
+	GVariant		*value;
+	const char		*accel = NULL;
+	const char		*action = NULL;
+	GVariant		*target = NULL;
+
+	iter = g_menu_model_iterate_item_attributes (model, item);
+	while (g_menu_attribute_iter_get_next (iter, &key, &value)) {
+		if (g_str_equal (key, "action") && g_variant_is_of_type (value, G_VARIANT_TYPE_STRING))
+			action = g_variant_get_string (value, NULL);
+		else if (g_str_equal (key, "accel") && g_variant_is_of_type (value, G_VARIANT_TYPE_STRING))
+			accel = g_variant_get_string (value, NULL);
+		else if (g_str_equal (key, "target"))
+			target = g_variant_ref (value);
+		g_variant_unref (value);
+	}
+	g_object_unref (iter);
+
+	_gtk_window_add_accelerator_for_action (window,
+						accel_group,
+						action,
+						accel,
+						target);
+
+	if (target != NULL)
+		g_variant_unref (target);
+}
+
+
+static void
+add_accelerators_from_menu (GtkWindow      *window,
+			    GtkAccelGroup  *accel_group,
+			    GMenuModel     *model)
+{
+	int		 i;
+	GMenuLinkIter	*iter;
+	const char	*key;
+	GMenuModel	*m;
+
+	for (i = 0; i < g_menu_model_get_n_items (model); i++) {
+		add_accelerators_from_menu_item (window, accel_group, model, i);
+
+		iter = g_menu_model_iterate_item_links (model, i);
+		while (g_menu_link_iter_get_next (iter, &key, &m)) {
+			add_accelerators_from_menu (window, accel_group, m);
+			g_object_unref (m);
+		}
+		g_object_unref (iter);
+	}
+}
+
+
+void
+_gtk_window_add_accelerators_from_menu (GtkWindow  *window,
+					GMenuModel *menu)
+{
+	GtkAccelGroup *accel_group;
+
+	accel_group = gtk_accel_group_new ();
+	add_accelerators_from_menu (window, accel_group, menu);
+	gtk_window_add_accel_group (window, accel_group);
+}

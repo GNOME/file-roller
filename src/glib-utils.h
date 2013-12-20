@@ -33,6 +33,7 @@
 #define DEBUG_INFO __FILE__, __LINE__, __FUNCTION__
 #define MIME_TYPE_DIRECTORY "folder"
 #define MIME_TYPE_ARCHIVE "application/x-archive"
+#define DEF_ACTION_CALLBACK(x) void x (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 #define get_home_relative_path(x)        \
 	g_strconcat (g_get_home_dir (), \

@@ -76,6 +76,20 @@ activate_new (GSimpleAction *action,
 
 
 static void
+activate_open (GSimpleAction *action,
+	       GVariant      *parameter,
+	       gpointer       user_data)
+{
+	GApplication *application = user_data;
+	GList        *windows;
+
+	windows = gtk_application_get_windows (GTK_APPLICATION (application));
+	if (windows != NULL)
+		activate_action_open (NULL, windows->data);
+}
+
+
+static void
 activate_view_sidebar (GSimpleAction *action,
 		       GVariant      *parameter,
 		       gpointer       user_data)
@@ -146,6 +160,7 @@ activate_quit (GSimpleAction *action,
 
 static const GActionEntry app_menu_entries[] = {
 	{ "new",  activate_new },
+	{ "open",  activate_open },
 	{ PREF_UI_VIEW_SIDEBAR, toggle_action_activated, NULL, "true", activate_view_sidebar },
 	{ PREF_LISTING_LIST_MODE, activate_list_mode, "s", "'as-dir'", NULL },
 	{ "help",  activate_help },
