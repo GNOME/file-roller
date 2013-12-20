@@ -123,6 +123,15 @@ fr_window_activate_go_forward (GSimpleAction *action,
 
 
 void
+fr_window_activate_go_home (GSimpleAction *action,
+		            GVariant      *parameter,
+		            gpointer       user_data)
+{
+	fr_window_go_to_location (FR_WINDOW (user_data), "/", FALSE);
+}
+
+
+void
 fr_window_activate_save_as (GSimpleAction *action,
 			    GVariant      *parameter,
 			    gpointer       user_data)

@@ -36,6 +36,7 @@ static const GActionEntry fr_window_actions[] = {
 	{ "extract-files", fr_window_activate_extract_files },
 	{ "go-back", fr_window_activate_go_back },
 	{ "go-forward", fr_window_activate_go_forward },
+	{ "go-home", fr_window_activate_go_home },
 	{ "save-as", fr_window_activate_save_as },
 	{ "test-archive", fr_window_activate_test_archive },
 	{ "view-properties", fr_window_activate_view_properties },

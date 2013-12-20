@@ -1701,6 +1701,7 @@ fr_window_update_current_location (FrWindow *window)
 
 	fr_window_enable_action (window, "go-back", window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->next != NULL));
 	fr_window_enable_action (window, "go-forward", window->priv->archive_present && (current_dir != NULL) && (window->priv->history_current != NULL) && (window->priv->history_current->prev != NULL));
+	fr_window_enable_action (window, "go-home", window->priv->archive_present);
 
 	gtk_widget_set_sensitive (window->priv->location_entry, window->priv->archive_present);
 	gtk_widget_set_sensitive (window->priv->location_label, window->priv->archive_present);
@@ -5656,6 +5657,11 @@ fr_window_construct (FrWindow *window)
 			    0);
 	gtk_box_pack_start (GTK_BOX (navigation_commands),
 			    _gtk_header_bar_create_image_button (rtl ? "go-next-rtl-symbolic" : "go-next-symbolic", _("Go to the next visited location"), "win.go-forward"),
+			    FALSE,
+			    FALSE,
+			    0);
+	gtk_box_pack_start (GTK_BOX (navigation_commands),
+			    _gtk_header_bar_create_image_button ("user-home-symbolic", _("Go to the home location"), "win.go-home"),
 			    FALSE,
 			    FALSE,
 			    0);
