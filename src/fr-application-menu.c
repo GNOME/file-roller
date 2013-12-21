@@ -21,10 +21,10 @@
 
 
 #include <config.h>
-#include "actions.h"
-#include "app-menu.h"
 #include "fr-application.h"
+#include "fr-application-menu.h"
 #include "fr-enum-types.h"
+#include "fr-window-actions-callbacks.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
@@ -48,51 +48,35 @@ update_app_menu_sensitivity (GApplication *application)
 
 
 static void
-toggle_action_activated (GSimpleAction *action,
-                         GVariant      *parameter,
-                         gpointer       data)
+fr_application_activate_new (GSimpleAction *action,
+			     GVariant      *parameter,
+			     gpointer       user_data)
 {
-	GVariant *state;
+	GtkWidget *window;
 
-	state = g_action_get_state (G_ACTION (action));
-	g_action_change_state (G_ACTION (action), g_variant_new_boolean (! g_variant_get_boolean (state)));
-
-	g_variant_unref (state);
+	window = _gtk_application_get_current_window (G_APPLICATION (user_data));
+	if (window != NULL)
+		fr_window_activate_new (action, parameter, window);
 }
 
 
 static void
-activate_new (GSimpleAction *action,
-              GVariant      *parameter,
-              gpointer       user_data)
+fr_application_activate_open (GSimpleAction *action,
+			      GVariant      *parameter,
+			      gpointer       user_data)
 {
-	GApplication *application = user_data;
-	GList        *windows;
+	GtkWidget *window;
 
-	windows = gtk_application_get_windows (GTK_APPLICATION (application));
-	if (windows != NULL)
-		activate_action_new (NULL, windows->data);
+	window = _gtk_application_get_current_window (G_APPLICATION (user_data));
+	if (window != NULL)
+		fr_window_activate_open (action, parameter, window);
 }
 
 
 static void
-activate_open (GSimpleAction *action,
-	       GVariant      *parameter,
-	       gpointer       user_data)
-{
-	GApplication *application = user_data;
-	GList        *windows;
-
-	windows = gtk_application_get_windows (GTK_APPLICATION (application));
-	if (windows != NULL)
-		activate_action_open (NULL, windows->data);
-}
-
-
-static void
-activate_view_sidebar (GSimpleAction *action,
-		       GVariant      *parameter,
-		       gpointer       user_data)
+fr_application_activate_view_sidebar (GSimpleAction *action,
+		       	       	      GVariant      *parameter,
+		       	       	      gpointer       user_data)
 {
 	FrApplication *application = user_data;
 	GSettings     *settings;
@@ -103,9 +87,9 @@ activate_view_sidebar (GSimpleAction *action,
 
 
 static void
-activate_list_mode (GSimpleAction *action,
-		    GVariant      *parameter,
-		    gpointer       user_data)
+fr_application_activate_list_mode (GSimpleAction *action,
+				   GVariant      *parameter,
+				   gpointer       user_data)
 {
 	FrApplication    *application = user_data;
 	GSettings        *settings;
@@ -122,50 +106,56 @@ activate_list_mode (GSimpleAction *action,
 
 
 static void
-activate_help (GSimpleAction *action,
-               GVariant      *parameter,
-               gpointer       user_data)
+fr_application_activate_help (GSimpleAction *action,
+			      GVariant      *parameter,
+			      gpointer       user_data)
 {
-	GApplication *application = user_data;
-	GList        *windows;
+	GtkWidget *window;
 
-	windows = gtk_application_get_windows (GTK_APPLICATION (application));
-	if (windows != NULL)
-		activate_action_manual (NULL, windows->data);
+	window = _gtk_application_get_current_window (G_APPLICATION (user_data));
+	_gtk_show_help_dialog (GTK_WINDOW (window) , NULL);
 }
 
 
 static void
-activate_about (GSimpleAction *action,
-		GVariant      *parameter,
-		gpointer       user_data)
+fr_application_activate_about (GSimpleAction *action,
+			       GVariant      *parameter,
+			       gpointer       user_data)
 {
-	GApplication *application = user_data;
-	GList        *windows;
+	const char *authors[] = { "Paolo Bacchilega <paolo.bacchilega@libero.it>", NULL	};
+	const char *documenters [] = { "Alexander Kirillov", "Breda McColgan", NULL };
 
-	windows = gtk_application_get_windows (GTK_APPLICATION (application));
-	if (windows != NULL)
-		activate_action_about (NULL, windows->data);
+	gtk_show_about_dialog (GTK_WINDOW (_gtk_application_get_current_window (G_APPLICATION (user_data))),
+			       "version", VERSION,
+			       "copyright", _("Copyright \xc2\xa9 2001–2014 Free Software Foundation, Inc."),
+			       "comments", _("An archive manager for GNOME."),
+			       "authors", authors,
+			       "documenters", documenters,
+			       "translator-credits", _("translator-credits"),
+			       "logo-icon-name", "file-roller",
+			       "license-type", GTK_LICENSE_GPL_2_0,
+			       "wrap-license", TRUE,
+			       NULL);
 }
 
 
 static void
-activate_quit (GSimpleAction *action,
-               GVariant      *parameter,
-               gpointer       user_data)
+fr_application_activate_quit (GSimpleAction *action,
+			      GVariant      *parameter,
+			      gpointer       user_data)
 {
-	activate_action_quit (NULL, NULL);
+	g_application_quit (G_APPLICATION (user_data));
 }
 
 
 static const GActionEntry app_menu_entries[] = {
-	{ "new",  activate_new },
-	{ "open",  activate_open },
-	{ PREF_UI_VIEW_SIDEBAR, toggle_action_activated, NULL, "true", activate_view_sidebar },
-	{ PREF_LISTING_LIST_MODE, activate_list_mode, "s", "'as-dir'", NULL },
-	{ "help",  activate_help },
-	{ "about", activate_about },
-	{ "quit",  activate_quit }
+	{ "new",  fr_application_activate_new },
+	{ "open",  fr_application_activate_open },
+	{ PREF_UI_VIEW_SIDEBAR, toggle_action_activated, NULL, "true", fr_application_activate_view_sidebar },
+	{ PREF_LISTING_LIST_MODE, fr_application_activate_list_mode, "s", "'as-dir'", NULL },
+	{ "help",  fr_application_activate_help },
+	{ "about", fr_application_activate_about },
+	{ "quit",  fr_application_activate_quit }
 };
 
 

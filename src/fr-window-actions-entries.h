@@ -27,24 +27,54 @@
 #include "gtk-utils.h"
 #include "fr-window-actions-callbacks.h"
 
-
 static const GActionEntry fr_window_actions[] = {
 	{ "add-files", fr_window_activate_add_files },
 	{ "close", fr_window_activate_close },
-	{ "edit-find", toggle_action_activated, NULL, "false", fr_window_activate_edit_find },
+	{ "delete", fr_window_activate_delete },
+	{ "deselect-all", fr_window_activate_deselect_all },
+	{ "edit-copy", fr_window_activate_edit_copy },
+	{ "edit-cut", fr_window_activate_edit_cut },
 	{ "edit-password", fr_window_activate_edit_password },
+	{ "edit-paste", fr_window_activate_edit_paste },
 	{ "extract-files", fr_window_activate_extract_files },
+	{ "find", toggle_action_activated, NULL, "false", fr_window_activate_find },
 	{ "go-back", fr_window_activate_go_back },
 	{ "go-forward", fr_window_activate_go_forward },
 	{ "go-home", fr_window_activate_go_home },
+	{ "open-folder", fr_window_activate_open_folder },
+	{ "open-selection", fr_window_activate_open_selection },
+	{ "open-with", fr_window_activate_open_with },
+	{ "reload", fr_window_activate_reload },
+	{ "rename", fr_window_activate_rename },
 	{ "save-as", fr_window_activate_save_as },
+	{ "select-all", fr_window_activate_select_all },
+	{ "sidebar-delete", fr_window_activate_sidebar_delete },
+	{ "sidebar-edit-copy", fr_window_activate_sidebar_edit_copy },
+	{ "sidebar-edit-cut", fr_window_activate_sidebar_edit_cut },
+	{ "sidebar-edit-paste", fr_window_activate_sidebar_edit_paste },
+	{ "sidebar-extract-files", fr_window_activate_sidebar_extract_files },
+	{ "sidebar-open-folder", fr_window_activate_sidebar_open_folder },
+	{ "sidebar-rename", fr_window_activate_sidebar_rename },
+	{ "stop", fr_window_activate_stop },
 	{ "test-archive", fr_window_activate_test_archive },
 	{ "view-properties", fr_window_activate_view_properties },
+	{ "view-selection", fr_window_activate_view_selection },
+	{ "view-sidebar", toggle_action_activated, NULL, "false", fr_window_activate_view_sidebar }
 };
 
 
 static const FrAccelerator fr_window_accelerators[] = {
-	{ "close", "<Control>w" }
+	{ "close", "<Control>w" },
+	{ "delete", "Delete" },
+	{ "deselect-all", "<Shift><Control>a" },
+	{ "edit-copy", "<Control>c" },
+	{ "extract-files", "<Control>e" },
+	{ "find", "<Control>f" },
+	{ "reload", "<Control>r" },
+	{ "rename", "F2" },
+	{ "select-all", "<control>a" },
+	{ "view-properties", "<alt>Return" },
+	{ "view-sidebar", "F9" }
 };
 
 

@@ -55,10 +55,6 @@ BUILT_SOURCES =			\
 	$(NULL)
 
 COMMON_SOURCES = 			\
-	actions.h			\
-	actions.c			\
-	app-menu.c			\
-	app-menu.h			\
 	dlg-add.c			\
 	dlg-add.h			\
 	dlg-ask-password.c		\
@@ -88,6 +84,8 @@ COMMON_SOURCES = 			\
 	file-utils.h			\
 	fr-application.c		\
 	fr-application.h		\
+	fr-application-menu.c		\
+	fr-application-menu.h		\
 	fr-archive.c			\
 	fr-archive.h			\
 	fr-command.c			\
@@ -138,8 +136,6 @@ COMMON_SOURCES = 			\
 	fr-list-model.h			\
 	fr-new-archive-dialog.c		\
 	fr-new-archive-dialog.h		\
-	fr-stock.c			\
-	fr-stock.h			\
 	fr-process.c			\
 	fr-process.h			\
 	fr-window.c			\
@@ -153,12 +149,6 @@ COMMON_SOURCES = 			\
 	glib-utils.h			\
 	gth-icon-cache.c		\
 	gth-icon-cache.h		\
-	gth-menu-button.c		\
-	gth-menu-button.h		\
-	gth-toggle-menu-action.c	\
-	gth-toggle-menu-action.h	\
-	gth-toggle-menu-tool-button.c	\
-	gth-toggle-menu-tool-button.h	\
 	gtk-utils.c			\
 	gtk-utils.h			\
 	java-utils.c			\
@@ -170,7 +160,6 @@ COMMON_SOURCES = 			\
 	rar-utils.c			\
 	rar-utils.h			\
 	typedefs.h			\
-	ui.h				\
 	$(MKDTEMP_FILES)		\
 	$(BUILT_SOURCES)
 

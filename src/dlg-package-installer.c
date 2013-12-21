@@ -314,10 +314,10 @@ file_buffer_ready_cb (GObject      *source_object,
 						  g_content_type_get_description (mime_type));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
 						  GTK_DIALOG_MODAL,
-						  GTK_STOCK_DIALOG_ERROR,
+						  _GTK_ICON_NAME_DIALOG_ERROR,
 						  _("Could not open this file type"),
 						  secondary_text,
-						  GTK_STOCK_CANCEL, GTK_RESPONSE_NO,
+						  _GTK_LABEL_CANCEL, GTK_RESPONSE_NO,
 						  _("_Search Command"), GTK_RESPONSE_YES,
 						  NULL);
 		g_signal_connect (dialog, "response", G_CALLBACK (confirm_search_dialog_response_cb), idata);

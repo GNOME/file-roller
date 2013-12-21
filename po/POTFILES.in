@@ -12,10 +12,6 @@ data/org.gnome.FileRoller.gschema.xml.in
 nautilus/fileroller-module.c
 nautilus/nautilus-fileroller.c
 nautilus/nautilus-fileroller.h
-src/actions.c
-src/actions.h
-src/app-menu.c
-src/app-menu.h
 src/commands/rpm2cpio.c
 src/dlg-add.c
 src/dlg-add.h
@@ -46,6 +42,8 @@ src/file-utils.c
 src/file-utils.h
 src/fr-application.c
 src/fr-application.h
+src/fr-application-menu.c
+src/fr-application-menu.h
 src/fr-archive.c
 src/fr-archive.h
 src/fr-archive-libarchive.c
@@ -102,8 +100,6 @@ src/fr-new-archive-dialog.c
 src/fr-new-archive-dialog.h
 src/fr-process.c
 src/fr-process.h
-src/fr-stock.c
-src/fr-stock.h
 src/fr-window-actions-callbacks.c
 src/fr-window-actions-callbacks.h
 src/fr-window-actions-entries.h
@@ -115,12 +111,6 @@ src/glib-utils.c
 src/glib-utils.h
 src/gth-icon-cache.c
 src/gth-icon-cache.h
-src/gth-menu-button.c
-src/gth-menu-button.h
-src/gth-toggle-menu-action.c
-src/gth-toggle-menu-action.h
-src/gth-toggle-menu-tool-button.c
-src/gth-toggle-menu-tool-button.h
 src/gtk-utils.c
 src/gtk-utils.h
 src/java-utils.c
@@ -146,8 +136,8 @@ src/typedefs.h
 [type: gettext/glade]src/ui/extract-dialog-options.ui
 [type: gettext/glade]src/ui/file-selector.ui
 [type: gettext/glade]src/ui/gears-menu.ui
-src/ui.h
 [type: gettext/glade]src/ui/menus-toolbars.ui
+[type: gettext/glade]src/ui/menus.ui
 [type: gettext/glade]src/ui/message-dialog.ui
 [type: gettext/glade]src/ui/new-archive-dialog.ui
 [type: gettext/glade]src/ui/password.ui

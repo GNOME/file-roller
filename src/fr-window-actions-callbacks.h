@@ -25,17 +25,42 @@
 #include <gtk/gtk.h>
 #include "glib-utils.h"
 
+GtkWidget * _gtk_application_get_current_window (GApplication *application);
+
 DEF_ACTION_CALLBACK (toggle_action_activated)
 DEF_ACTION_CALLBACK (fr_window_activate_add_files)
 DEF_ACTION_CALLBACK (fr_window_activate_close)
-DEF_ACTION_CALLBACK (fr_window_activate_edit_find)
+DEF_ACTION_CALLBACK (fr_window_activate_delete)
+DEF_ACTION_CALLBACK (fr_window_activate_deselect_all)
+DEF_ACTION_CALLBACK (fr_window_activate_edit_copy)
+DEF_ACTION_CALLBACK (fr_window_activate_edit_cut)
 DEF_ACTION_CALLBACK (fr_window_activate_edit_password)
+DEF_ACTION_CALLBACK (fr_window_activate_edit_paste)
 DEF_ACTION_CALLBACK (fr_window_activate_extract_files)
+DEF_ACTION_CALLBACK (fr_window_activate_find)
 DEF_ACTION_CALLBACK (fr_window_activate_go_back)
 DEF_ACTION_CALLBACK (fr_window_activate_go_forward)
 DEF_ACTION_CALLBACK (fr_window_activate_go_home)
+DEF_ACTION_CALLBACK (fr_window_activate_new)
+DEF_ACTION_CALLBACK (fr_window_activate_open)
+DEF_ACTION_CALLBACK (fr_window_activate_open_folder)
+DEF_ACTION_CALLBACK (fr_window_activate_open_selection)
+DEF_ACTION_CALLBACK (fr_window_activate_open_with)
+DEF_ACTION_CALLBACK (fr_window_activate_reload)
+DEF_ACTION_CALLBACK (fr_window_activate_rename)
 DEF_ACTION_CALLBACK (fr_window_activate_save_as)
+DEF_ACTION_CALLBACK (fr_window_activate_select_all)
+DEF_ACTION_CALLBACK (fr_window_activate_sidebar_delete)
+DEF_ACTION_CALLBACK (fr_window_activate_sidebar_edit_copy)
+DEF_ACTION_CALLBACK (fr_window_activate_sidebar_edit_cut)
+DEF_ACTION_CALLBACK (fr_window_activate_sidebar_edit_paste)
+DEF_ACTION_CALLBACK (fr_window_activate_sidebar_extract_files)
+DEF_ACTION_CALLBACK (fr_window_activate_sidebar_open_folder)
+DEF_ACTION_CALLBACK (fr_window_activate_sidebar_rename)
+DEF_ACTION_CALLBACK (fr_window_activate_stop)
 DEF_ACTION_CALLBACK (fr_window_activate_test_archive)
 DEF_ACTION_CALLBACK (fr_window_activate_view_properties)
+DEF_ACTION_CALLBACK (fr_window_activate_view_selection)
+DEF_ACTION_CALLBACK (fr_window_activate_view_sidebar)
 
 #endif /* FR_WINDOW_ACTION_CALLBACKS_H */

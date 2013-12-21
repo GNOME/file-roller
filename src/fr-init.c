@@ -52,7 +52,6 @@
 #include "fr-command-7z.h"
 #include "fr-init.h"
 #include "fr-process.h"
-#include "fr-stock.h"
 #include "fr-window.h"
 #include "typedefs.h"
 #include "preferences.h"
@@ -630,7 +629,6 @@ initialize_data (void)
 	migrate_options_directory ();
 	register_archives ();
 	compute_supported_archive_types ();
-	fr_stock_init ();
 }
 
 

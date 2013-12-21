@@ -30,13 +30,13 @@
 #ifdef ENABLE_NOTIFICATION
 #  include <libnotify/notify.h>
 #endif
-#include "app-menu.h"
 #ifdef USE_SMCLIENT
 #  include "eggsmclient.h"
 #endif
 #include "eggdesktopfile.h"
 #include "file-utils.h"
 #include "fr-application.h"
+#include "fr-application-menu.h"
 #include "fr-init.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"

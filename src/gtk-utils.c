@@ -54,7 +54,7 @@ _gtk_tree_selection_count_selected (GtkTreeSelection *selection)
 GtkWidget *
 _gtk_message_dialog_new (GtkWindow      *parent,
 			 GtkDialogFlags  flags,
-			 const char     *stock_id,
+			 const char     *icon_name,
 			 const char     *message,
 			 const char     *secondary_message,
 			 const gchar    *first_button_text,
@@ -80,9 +80,9 @@ _gtk_message_dialog_new (GtkWindow      *parent,
 
 	/* set the icon */
 
-	gtk_image_set_from_stock (GTK_IMAGE (_gtk_builder_get_widget (builder, "icon_image")),
-				  stock_id,
-				  GTK_ICON_SIZE_DIALOG);
+	gtk_image_set_from_icon_name (GTK_IMAGE (_gtk_builder_get_widget (builder, "icon_image")),
+				      icon_name,
+				      GTK_ICON_SIZE_DIALOG);
 
 	/* set the message */
 
@@ -139,33 +139,12 @@ _gtk_message_dialog_new (GtkWindow      *parent,
 
 
 static GtkWidget *
-create_button (const char *stock_id,
-	       const char *text)
+create_button (const char *text)
 {
-	GtkWidget    *button;
-	GtkWidget    *image;
-	const char   *label_text;
-	gboolean      text_is_stock;
-	GtkStockItem  stock_item;
+	GtkWidget *button;
 
-	if (gtk_stock_lookup (text, &stock_item)) {
-		label_text = stock_item.label;
-		text_is_stock = TRUE;
-	}
-	else {
-		label_text = text;
-		text_is_stock = FALSE;
-	}
-
-	if (text_is_stock)
-		image = gtk_image_new_from_stock (text, GTK_ICON_SIZE_BUTTON);
-	else
-		image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON);
-	button = gtk_button_new_with_mnemonic (label_text);
-	gtk_button_set_image (GTK_BUTTON (button), image);
-
+	button = gtk_button_new_with_mnemonic (text);
 	gtk_widget_set_can_default (button, TRUE);
-
 	gtk_widget_show (button);
 
 	return button;
@@ -210,10 +189,10 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	/* Add buttons */
 
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      create_button (GTK_STOCK_CANCEL, no_button_text),
+				      create_button (no_button_text),
 				      GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      create_button (GTK_STOCK_OK, yes_button_text),
+				      create_button (yes_button_text),
 				      GTK_RESPONSE_YES);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
 
@@ -335,10 +314,10 @@ _gtk_error_dialog_run (GtkWindow  *parent,
 
 	d =  _gtk_message_dialog_new (parent,
 				      GTK_DIALOG_MODAL,
-				      GTK_STOCK_DIALOG_ERROR,
+				      _GTK_ICON_NAME_DIALOG_ERROR,
 				      main_message,
 				      message,
-				      GTK_STOCK_CLOSE, GTK_RESPONSE_CANCEL,
+				      _GTK_LABEL_CLOSE, GTK_RESPONSE_CANCEL,
 				      NULL);
 	g_free (message);
 
@@ -553,10 +532,10 @@ _gtk_show_help_dialog (GtkWindow  *parent,
 
 		dialog = _gtk_message_dialog_new (parent,
 						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  GTK_STOCK_DIALOG_ERROR,
+						  _GTK_ICON_NAME_DIALOG_ERROR,
 						  _("Could not display help"),
 						  error->message,
-						  GTK_STOCK_OK, GTK_RESPONSE_OK,
+						  _GTK_LABEL_OK, GTK_RESPONSE_OK,
 						  NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
@@ -625,9 +604,10 @@ _gtk_widget_lookup_for_size (GtkWidget   *widget,
 			     GtkIconSize  icon_size)
 {
 	int w, h;
-	gtk_icon_size_lookup_for_settings (gtk_widget_get_settings (widget),
-					   icon_size,
-					   &w, &h);
+
+	if (! gtk_icon_size_lookup (icon_size, &w, &h))
+		w = h = 16;
+
 	return MAX (w, h);
 }
 

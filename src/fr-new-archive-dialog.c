@@ -27,7 +27,6 @@
 #include "file-utils.h"
 #include "fr-init.h"
 #include "fr-new-archive-dialog.h"
-#include "fr-stock.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
 #include "preferences.h"
@@ -222,19 +221,19 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
 
-	gtk_dialog_add_button (GTK_DIALOG (self), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
 	switch (action) {
 	case FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES:
 		self->priv->supported_types = create_type;
-		gtk_dialog_add_button (GTK_DIALOG (self), FR_STOCK_CREATE_ARCHIVE, GTK_RESPONSE_OK);
+		gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CREATE_ARCHIVE, GTK_RESPONSE_OK);
 		break;
 	case FR_NEW_ARCHIVE_ACTION_NEW_SINGLE_FILE:
 		self->priv->supported_types = single_file_save_type;
-		gtk_dialog_add_button (GTK_DIALOG (self), FR_STOCK_CREATE_ARCHIVE, GTK_RESPONSE_OK);
+		gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CREATE_ARCHIVE, GTK_RESPONSE_OK);
 		break;
 	case FR_NEW_ARCHIVE_ACTION_SAVE_AS:
 		self->priv->supported_types = save_type;
-		gtk_dialog_add_button (GTK_DIALOG (self), GTK_STOCK_SAVE, GTK_RESPONSE_OK);
+		gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_SAVE, GTK_RESPONSE_OK);
 		break;
 	}
 	gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
@@ -467,10 +466,10 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		secondary_message = g_strdup_printf (_("The file already exists in \"%s\".  Replacing it will overwrite its contents."), g_file_info_get_display_name (parent_info));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (self),
 						  GTK_DIALOG_MODAL,
-						  GTK_STOCK_DIALOG_QUESTION,
+						  _GTK_ICON_NAME_DIALOG_QUESTION,
 						  message,
 						  secondary_message,
-						  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						  _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 						  _("_Replace"), GTK_RESPONSE_OK,
 						  NULL);
 		overwrite = gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_OK;

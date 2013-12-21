@@ -23,7 +23,6 @@
 #include <string.h>
 #include <unistd.h>
 #include "file-utils.h"
-#include "fr-stock.h"
 #include "fr-init.h"
 #include "glib-utils.h"
 #include "gtk-utils.h"
@@ -98,10 +97,10 @@ extract_cb (GtkWidget   *w,
 
 			d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
 						     GTK_DIALOG_MODAL,
-						     GTK_STOCK_DIALOG_QUESTION,
+						     _GTK_ICON_NAME_DIALOG_QUESTION,
 						     msg,
 						     NULL,
-						     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						     _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 						     _("Create _Folder"), GTK_RESPONSE_YES,
 						     NULL);
 
@@ -138,10 +137,10 @@ extract_cb (GtkWidget   *w,
 
 		d = _gtk_message_dialog_new (GTK_WINDOW (window),
 					     GTK_DIALOG_DESTROY_WITH_PARENT,
-					     GTK_STOCK_DIALOG_WARNING,
+					     _GTK_ICON_NAME_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
-					     GTK_STOCK_OK, GTK_RESPONSE_OK,
+					     _GTK_LABEL_OK, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));
@@ -283,8 +282,8 @@ dlg_extract__common (FrWindow *window,
 	data->dialog = gtk_file_chooser_dialog_new (_("Extract"),
 						    GTK_WINDOW (data->window),
 						    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-						    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						    FR_STOCK_EXTRACT, GTK_RESPONSE_OK,
+						    _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+						    _GTK_LABEL_EXTRACT, GTK_RESPONSE_OK,
 						    NULL);
 
 	gtk_window_set_default_size (GTK_WINDOW (data->dialog), 530, 510);

@@ -28,10 +28,8 @@
 #include "dlg-add.h"
 #include "file-utils.h"
 #include "fr-file-selector-dialog.h"
-#include "fr-stock.h"
 #include "fr-window.h"
 #include "glib-utils.h"
-#include "gth-menu-button.h"
 #include "gtk-utils.h"
 #include "preferences.h"
 
@@ -189,13 +187,12 @@ dlg_add (FrWindow *window)
 
 	/* options menu button */
 
-	options_button = gth_menu_button_new ();
-	gth_menu_button_set_label (GTH_MENU_BUTTON (options_button), _("_Options"));
-	gth_menu_button_set_use_underline (GTH_MENU_BUTTON (options_button), TRUE);
+	options_button = gtk_menu_button_new ();
+	gtk_button_set_label (GTK_BUTTON (options_button), _("_Options"));
+	gtk_button_set_use_underline (GTK_BUTTON (options_button), TRUE);
 	gtk_widget_show (options_button);
 
 	options_menu = gtk_menu_new ();
-	gth_menu_button_set_menu (GTH_MENU_BUTTON (options_button), options_menu);
 
 	/* load options */
 
@@ -218,6 +215,8 @@ dlg_add (FrWindow *window)
 	g_signal_connect (menu_item, "activate", G_CALLBACK (clear_options_activate_cb), data);
 	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
 
+	gtk_menu_button_set_popup (GTK_MENU_BUTTON (options_button), options_menu);
+
 	/* add the buttons */
 
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (data->dialog))),
@@ -226,10 +225,10 @@ dlg_add (FrWindow *window)
 			    FALSE,
 			    0);
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
-			       GTK_STOCK_CANCEL,
+			       _GTK_LABEL_CANCEL,
 			       GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
-			       FR_STOCK_ADD_FOLDER,
+			       _GTK_LABEL_ADD,
 			       GTK_RESPONSE_OK);
 
 	/* set data */
@@ -821,15 +820,14 @@ save_options_activate_cb (GtkMenuItem *menu_item,
 	options_dir = _g_file_new_user_config_subdir (ADD_FOLDER_OPTIONS_DIR, TRUE);
 	_g_file_make_directory_tree (options_dir, 0700, NULL);
 
-	opt_filename = _gtk_request_dialog_run (
-				GTK_WINDOW (data->dialog),
-				GTK_DIALOG_MODAL,
-				_("Save Options"),
-				_("_Options Name:"),
-				(data->last_options != NULL) ? data->last_options : "",
-				1024,
-				GTK_STOCK_CANCEL,
-				GTK_STOCK_SAVE);
+	opt_filename = _gtk_request_dialog_run (GTK_WINDOW (data->dialog),
+						GTK_DIALOG_MODAL,
+						_("Save Options"),
+						_("_Options Name:"),
+						(data->last_options != NULL) ? data->last_options : "",
+						1024,
+						_GTK_LABEL_CANCEL,
+						_GTK_LABEL_SAVE);
 	if (opt_filename == NULL)
 		return;
 
