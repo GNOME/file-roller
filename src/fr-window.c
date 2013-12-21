@@ -581,6 +581,7 @@ fr_window_free_private_data (FrWindow *window)
 	_g_object_unref (window->priv->cancellable);
 	g_hash_table_unref (window->priv->named_dialogs);
 	g_object_unref (window->priv->window_group);
+	g_object_unref (window->priv->accel_group);
 }
 
 
@@ -668,9 +669,6 @@ fr_window_finalize (GObject *object)
 	FrWindow *window = FR_WINDOW (object);
 
 	fr_window_free_open_files (window);
-
-	g_object_unref (window->priv->window_group);
-	g_object_unref (window->priv->accel_group);
 
 	if (window->archive != NULL) {
 		g_object_unref (window->archive);
