@@ -5296,8 +5296,10 @@ fr_window_construct (FrWindow *window)
 	GtkWidget          *location_box;
 	GtkWidget          *filter_box;
 	GtkWidget          *tree_scrolled_window;
+	GtkWidget          *button;
 	GtkTreeSelection   *selection;
 	GtkSizeGroup       *toolbar_size_group;
+	GtkSizeGroup       *header_bar_size_group;
 	const char * const *schemas;
 
 	/* Create the settings objects */
@@ -5614,29 +5616,30 @@ fr_window_construct (FrWindow *window)
 
 	/* header bar buttons */
 
-	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar),
-				   _gtk_header_bar_create_text_button (_("Extract"),
-						   	   	       NULL,
-						 	 	       "win.extract-files"));
-	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar),
-				   _gtk_header_bar_create_image_button ("list-add-symbolic",
-						 	 	        _("Add Files"),
-						 	 	        "win.add-files"));
-	gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar),
-				 _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic",
-						 	 	 	     _("Find files by name"),
-						 	 	 	     "win.find"));
+	header_bar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
+
+	button = _gtk_header_bar_create_text_button (_("Extract"), NULL, "win.extract-files");
+	gtk_size_group_add_widget (header_bar_size_group, button);
+	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar), button);
+
+	button = _gtk_header_bar_create_image_button ("list-add-symbolic", _("Add Files"), "win.add-files");
+	gtk_size_group_add_widget (header_bar_size_group, button);
+	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar), button);
+
+	button = _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic", _("Find files by name"), "win.find");
+	gtk_size_group_add_widget (header_bar_size_group, button);
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar), button);
 
         /* gears menu button */
 
         {
                 GtkBuilder *builder;
                 GMenuModel *menu;
-                GtkWidget  *button;
 
                 builder = _gtk_builder_new_from_resource ("gears-menu.ui");
                 menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
                 button = _gtk_menu_button_new_for_header_bar ();
+                gtk_size_group_add_widget (header_bar_size_group, button);
                 gtk_container_add (GTK_CONTAINER (button), gtk_image_new_from_icon_name ("emblem-system-symbolic", GTK_ICON_SIZE_MENU));
                 gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
                 gtk_widget_show_all (button);
@@ -5646,6 +5649,8 @@ fr_window_construct (FrWindow *window)
 
                 g_object_unref (builder);
         }
+
+        g_object_unref (header_bar_size_group);
 
 	/* location bar */
 
