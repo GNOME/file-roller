@@ -326,12 +326,10 @@ AC_CONFIG_FILES([Makefile
 		 data/file-roller.desktop.in
 		 data/icons/Makefile
 		 data/icons/16x16/Makefile
-		 data/icons/16x16/actions/Makefile
 		 data/icons/16x16/apps/Makefile
 		 data/icons/22x22/Makefile
 		 data/icons/22x22/apps/Makefile
 		 data/icons/24x24/Makefile
-		 data/icons/24x24/actions/Makefile
 		 data/icons/24x24/apps/Makefile
 		 data/icons/256x256/Makefile
 		 data/icons/256x256/apps/Makefile
