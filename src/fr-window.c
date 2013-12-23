@@ -41,6 +41,7 @@
 #include "eggtreemultidnd.h"
 #include "fr-marshal.h"
 #include "fr-list-model.h"
+#include "fr-location-bar.h"
 #include "fr-archive.h"
 #include "fr-command.h"
 #include "fr-error.h"
@@ -5293,6 +5294,7 @@ fr_window_construct (FrWindow *window)
 	GtkWidget          *list_scrolled_window;
 	gboolean            rtl;
 	GtkWidget          *navigation_commands;
+	GtkWidget          *location_bar_content;
 	GtkWidget          *location_box;
 	GtkWidget          *filter_box;
 	GtkWidget          *tree_scrolled_window;
@@ -5654,10 +5656,11 @@ fr_window_construct (FrWindow *window)
 
 	/* location bar */
 
-	window->priv->location_bar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-	gtk_widget_set_margin_top (window->priv->location_bar, 5);
-	gtk_widget_set_margin_bottom (window->priv->location_bar, 5);
-	gtk_style_context_add_class (gtk_widget_get_style_context (window->priv->location_bar), GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+	window->priv->location_bar = fr_location_bar_new ();
+
+	location_bar_content = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_container_set_border_width (GTK_CONTAINER (location_bar_content), 4);
+	gtk_box_pack_start (GTK_BOX (window->priv->location_bar), location_bar_content, TRUE, TRUE, 0);
 
 	rtl = gtk_widget_get_direction (window->priv->headerbar) == GTK_TEXT_DIR_RTL;
 	navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -5676,10 +5679,9 @@ fr_window_construct (FrWindow *window)
 			    FALSE,
 			    FALSE,
 			    0);
-	/*gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), GTK_STYLE_CLASS_LINKED);*/
 	gtk_widget_show_all (navigation_commands);
 	gtk_widget_set_margin_right (navigation_commands, 12);
-	gtk_box_pack_start (GTK_BOX (window->priv->location_bar), navigation_commands, FALSE, FALSE, 5);
+	gtk_box_pack_start (GTK_BOX (location_bar_content), navigation_commands, FALSE, FALSE, 5);
 
 	/* current location */
 
@@ -5689,7 +5691,6 @@ fr_window_construct (FrWindow *window)
 	gtk_box_pack_start (GTK_BOX (location_box), window->priv->location_label, FALSE, FALSE, 5);
 
 	window->priv->location_entry = gtk_entry_new ();
-	gtk_entry_set_has_frame (GTK_ENTRY (window->priv->location_entry), FALSE);
 	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (window->priv->location_entry),
 					   GTK_ENTRY_ICON_PRIMARY,
 					   "folder-symbolic");
@@ -5698,7 +5699,7 @@ fr_window_construct (FrWindow *window)
 			  G_CALLBACK (location_entry_key_press_event_cb),
 			  window);
 	gtk_box_pack_start (GTK_BOX (location_box), window->priv->location_entry, TRUE, TRUE, 5);
-	gtk_box_pack_start (GTK_BOX (window->priv->location_bar), location_box, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (location_bar_content), location_box, TRUE, TRUE, 0);
 
 	gtk_widget_show_all (window->priv->location_bar);
 	fr_window_attach (FR_WINDOW (window), window->priv->location_bar, FR_WINDOW_AREA_LOCATIONBAR);

@@ -134,6 +134,8 @@ COMMON_SOURCES = 			\
 	fr-init.h			\
 	fr-list-model.c			\
 	fr-list-model.h			\
+	fr-location-bar.c		\
+	fr-location-bar.h		\
 	fr-new-archive-dialog.c		\
 	fr-new-archive-dialog.h		\
 	fr-process.c			\
