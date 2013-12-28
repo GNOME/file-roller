@@ -6098,6 +6098,7 @@ archive_add_files_ready_cb (GObject      *source_object,
 
 	notify = window->priv->notify;
 
+	g_object_ref (window);
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
 
@@ -6110,6 +6111,7 @@ archive_add_files_ready_cb (GObject      *source_object,
 	}
 
 	_g_error_free (error);
+	g_object_unref (window);
 }
 
 
@@ -6304,6 +6306,7 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 	ask_to_open_destination = edata->ask_to_open_destination;
 	batch_mode = window->priv->batch_mode;
+	g_object_ref (window);
 
 	_g_clear_object (&window->priv->last_extraction_destination);
 	window->priv->last_extraction_destination = _g_object_ref (fr_archive_get_last_extraction_destination (window->archive));
@@ -6321,6 +6324,7 @@ archive_extraction_ready_cb (GObject      *source_object,
 		gtk_window_present (GTK_WINDOW (window));
 
 	_g_error_free (error);
+	g_object_unref (window);
 }
 
 
@@ -8677,7 +8681,7 @@ open_files_data_new (FrWindow *window,
 
 	odata = g_new0 (OpenFilesData, 1);
 	odata->ref_count = 1;
-	odata->window = window;
+	odata->window = g_object_ref (window);
 	odata->file_list = _g_string_list_dup (file_list);
 	odata->ask_application = ask_application;
 	odata->cdata = g_new0 (CommandData, 1);
@@ -8715,6 +8719,7 @@ open_files_data_unref (OpenFilesData *odata)
 		return;
 
 	_g_string_list_free (odata->file_list);
+	g_object_unref (odata->window);
 	g_free (odata);
 }
 
