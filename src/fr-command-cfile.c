@@ -113,7 +113,7 @@ list__process_line (char     *line,
 
 	filename = get_uncompressed_name_from_archive (comm, comm->filename);
 	if (filename == NULL)
-		filename = _g_path_remove_extension (comm->filename);
+		filename = _g_path_remove_first_extension (comm->filename);
 
 	fdata->full_path = g_strconcat ("/", _g_path_get_basename (filename), NULL);
 	g_free (filename);
@@ -161,7 +161,7 @@ fr_command_cfile_list (FrCommand *comm)
 
 		fdata = file_data_new ();
 
-		filename = _g_path_remove_extension (comm->filename);
+		filename = _g_path_remove_first_extension (comm->filename);
 		fdata->full_path = g_strconcat ("/",
 						_g_path_get_basename (filename),
 						NULL);
@@ -428,11 +428,11 @@ fr_command_cfile_extract (FrCommand  *comm,
 
 	/* copy uncompress file to the dest dir */
 
-	uncompr_file = _g_path_remove_extension (temp_file);
+	uncompr_file = _g_path_remove_first_extension (temp_file);
 
 	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
 	if (compr_file == NULL)
-		compr_file = _g_path_remove_extension (_g_path_get_basename (comm->filename));
+		compr_file = _g_path_remove_first_extension (_g_path_get_basename (comm->filename));
 	dest_file = g_strconcat (dest_dir,
 				 "/",
 				 compr_file,
@@ -516,7 +516,7 @@ fr_command_cfile_get_capabilities (FrArchive  *archive,
 		if (_g_program_is_available ("lzop", check_command))
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
-	else if (_g_mime_type_matches (mime_type, "application/x-rzip") || 
+	else if (_g_mime_type_matches (mime_type, "application/x-rzip") ||
 		 _g_mime_type_matches (mime_type, "application/x-rzip-compressed-tar")) {
 		if (_g_program_is_available ("rzip", check_command))
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
