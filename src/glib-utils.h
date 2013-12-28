@@ -140,6 +140,7 @@ char *              _g_path_get_dir_name           (const char          *path);
 char *              _g_path_remove_level           (const char          *path);
 char *              _g_path_remove_ending_separator(const char          *path);
 char *              _g_path_remove_extension       (const char          *path);
+char *		    _g_path_remove_first_extension (const gchar		*path);
 gboolean            _g_path_is_parent_of           (const char          *dirname,
 						    const char          *filename);
 const char *        _g_path_get_relative_basename  (const char          *path,
