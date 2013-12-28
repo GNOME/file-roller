@@ -500,53 +500,20 @@ _g_file_set_attributes_from_info (GFile         *file,
 }
 
 
-static gboolean
-_g_file_set_attributes_from_entry (GFile                 *file,
-				   struct archive_entry  *entry,
-				   ExtractData           *extract_data,
-				   GCancellable          *cancellable,
-				   GError               **error)
-{
-	GFileInfo *info;
-	gboolean   result;
-
-	info = _g_file_info_create_from_entry (entry, extract_data);
-	result = _g_file_set_attributes_from_info (file, info, cancellable, error);
-
-	g_object_unref (info);
-
-	return result;
-}
-
-
-static gboolean
-restore_modification_time (GHashTable    *created_folders,
-			   GCancellable  *cancellable,
-			   GError       **error)
+static void
+restore_original_file_attributes (GHashTable    *created_files,
+				  GCancellable  *cancellable)
 {
 	GHashTableIter iter;
 	gpointer       key, value;
-	gboolean       result = TRUE;
 
-	g_hash_table_iter_init (&iter, created_folders);
-	while (result && g_hash_table_iter_next (&iter, &key, &value)) {
+	g_hash_table_iter_init (&iter, created_files);
+	while (g_hash_table_iter_next (&iter, &key, &value)) {
 		GFile     *file = key;
-		GFileInfo *original_info = value;
-		GFileInfo *info;
+		GFileInfo *info = value;
 
-		if (g_file_info_get_attribute_status (original_info, G_FILE_ATTRIBUTE_TIME_MODIFIED) != G_FILE_ATTRIBUTE_STATUS_SET)
-			continue;
-
-		info = g_file_info_new ();
-		g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED, g_file_info_get_attribute_uint64 (original_info, G_FILE_ATTRIBUTE_TIME_MODIFIED));
-		if (g_file_info_get_attribute_status (original_info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC) == G_FILE_ATTRIBUTE_STATUS_SET)
-			g_file_info_set_attribute_uint32 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC, g_file_info_get_attribute_uint32 (original_info, G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC));
-		result = _g_file_set_attributes_from_info (file, info, cancellable, error);
-
-		g_object_unref (info);
+		_g_file_set_attributes_from_info (file, info, cancellable, NULL);
 	}
-
-	return result;
 }
 
 
@@ -558,7 +525,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	ExtractData          *extract_data;
 	LoadData             *load_data;
 	GHashTable           *checked_folders;
-	GHashTable           *created_folders;
+	GHashTable           *created_files;
 	GHashTable           *folders_created_during_extraction;
 	struct archive       *a;
 	struct archive_entry *entry;
@@ -568,7 +535,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	load_data = LOAD_DATA (extract_data);
 
 	checked_folders = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
-	created_folders = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, g_object_unref);
+	created_files = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, g_object_unref);
 	folders_created_during_extraction = g_hash_table_new_full (g_file_hash, (GEqualFunc) g_file_equal, g_object_unref, NULL);
 	fr_archive_progress_set_total_files (load_data->archive, extract_data->n_files_to_extract);
 
@@ -655,7 +622,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 					g_object_unref (info);
 					break;
 				}
-				g_error_free (local_error);
+				g_clear_error (&local_error);
 			}
 		}
 
@@ -762,17 +729,10 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				if (! g_file_make_directory (file, cancellable, &local_error)) {
 					if (! g_error_matches (local_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
 						load_data->error = g_error_copy (local_error);
-					g_error_free (local_error);
+					g_clear_error (&local_error);
 				}
-				if (load_data->error == NULL) {
-					GFileInfo *info;
-
-					info = _g_file_info_create_from_entry (entry, extract_data);
-					_g_file_set_attributes_from_info (file, info, cancellable, NULL);
-					g_hash_table_insert (created_folders, g_object_ref (file), g_object_ref (info));
-
-					g_object_unref (info);
-				}
+				if (load_data->error == NULL)
+					g_hash_table_insert (created_files, g_object_ref (file), _g_file_info_create_from_entry (entry, extract_data));
 				archive_read_data_skip (a);
 				break;
 
@@ -791,14 +751,14 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				if (r != ARCHIVE_EOF)
 					load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
 				else
-					_g_file_set_attributes_from_entry (file, entry, extract_data, cancellable, NULL);
+					g_hash_table_insert (created_files, g_object_ref (file), _g_file_info_create_from_entry (entry, extract_data));
 				break;
 
 			case AE_IFLNK:
 				if (! g_file_make_symbolic_link (file, archive_entry_symlink (entry), cancellable, &local_error)) {
 					if (! g_error_matches (local_error, G_IO_ERROR, G_IO_ERROR_EXISTS))
 						load_data->error = g_error_copy (local_error);
-					g_error_free (local_error);
+					g_clear_error (&local_error);
 				}
 				archive_read_data_skip (a);
 				break;
@@ -822,7 +782,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 	}
 
 	if (load_data->error == NULL)
-		restore_modification_time (created_folders, cancellable, NULL);
+		restore_original_file_attributes (created_files, cancellable);
 
 	if ((load_data->error == NULL) && (r != ARCHIVE_EOF))
 		load_data->error = _g_error_new_from_archive_error (archive_error_string (a));
@@ -832,7 +792,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		g_simple_async_result_set_from_error (result, load_data->error);
 
 	g_hash_table_unref (folders_created_during_extraction);
-	g_hash_table_unref (created_folders);
+	g_hash_table_unref (created_files);
 	g_hash_table_unref (checked_folders);
 	archive_read_free (a);
 	extract_data_free (extract_data);
