@@ -5614,6 +5614,12 @@ fr_window_construct (FrWindow *window)
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar), button);
 
+#if ! GTK_CHECK_VERSION(3,11,4)
+	button = _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic", _("Find files by name"), "win.find");
+	gtk_size_group_add_widget (header_bar_size_group, button);
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar), button);
+#endif
+
         /* gears menu button */
 
         {
@@ -5634,9 +5640,11 @@ fr_window_construct (FrWindow *window)
                 g_object_unref (builder);
         }
 
+#if GTK_CHECK_VERSION(3,11,4)
 	button = _gtk_header_bar_create_image_toggle_button ("edit-find-symbolic", _("Find files by name"), "win.find");
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar), button);
+#endif
 
         g_object_unref (header_bar_size_group);
 
