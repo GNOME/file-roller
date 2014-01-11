@@ -680,8 +680,8 @@ _gtk_header_bar_create_text_button (const char       *label,
 {
 	GtkWidget *button;
 
-	g_return_if_fail (label != NULL);
-	g_return_if_fail (action_name != NULL);
+	g_return_val_if_fail (label != NULL, NULL);
+	g_return_val_if_fail (action_name != NULL, NULL);
 
 	button = gtk_button_new_with_label (label);
 	gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
@@ -703,8 +703,8 @@ _gtk_header_bar_create_image_button (const char       *icon_name,
 {
 	GtkWidget *button;
 
-	g_return_if_fail (icon_name != NULL);
-	g_return_if_fail (action_name != NULL);
+	g_return_val_if_fail (icon_name != NULL, NULL);
+	g_return_val_if_fail (action_name != NULL, NULL);
 
 	button = _gtk_image_button_new_for_header_bar (icon_name);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
@@ -723,8 +723,8 @@ _gtk_header_bar_create_image_toggle_button (const char       *icon_name,
 {
 	GtkWidget *button;
 
-	g_return_if_fail (icon_name != NULL);
-	g_return_if_fail (action_name != NULL);
+	g_return_val_if_fail (icon_name != NULL, NULL);
+	g_return_val_if_fail (action_name != NULL, NULL);
 
 	button = gtk_toggle_button_new ();
 	gtk_container_add (GTK_CONTAINER (button), gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU));
