@@ -535,7 +535,7 @@ _gtk_show_help_dialog (GtkWindow  *parent,
 						  _GTK_ICON_NAME_DIALOG_ERROR,
 						  _("Could not display help"),
 						  error->message,
-						  _GTK_LABEL_OK, GTK_RESPONSE_OK,
+						  _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
 						  NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 

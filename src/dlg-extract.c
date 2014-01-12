@@ -140,7 +140,7 @@ extract_cb (GtkWidget   *w,
 					     _GTK_ICON_NAME_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
-					     _GTK_LABEL_OK, GTK_RESPONSE_OK,
+					     _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		gtk_dialog_run (GTK_DIALOG (d));

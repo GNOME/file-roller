@@ -36,7 +36,6 @@
 #define _GTK_LABEL_CLOSE _("_Close")
 #define _GTK_LABEL_CREATE_ARCHIVE _("C_reate")
 #define _GTK_LABEL_EXTRACT _("_Extract")
-#define _GTK_LABEL_OK _("_Ok")
 #define _GTK_LABEL_OPEN _("_Open")
 #define _GTK_LABEL_SAVE _("_Save")
 

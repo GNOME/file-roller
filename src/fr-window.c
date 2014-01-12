@@ -6544,7 +6544,7 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 					     _GTK_ICON_NAME_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
-					     _GTK_LABEL_OK, GTK_RESPONSE_OK,
+					     _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		fr_window_show_error_dialog (odata->window, d, GTK_WINDOW (odata->window), _("Extraction not performed"));
@@ -6691,7 +6691,7 @@ fr_window_archive_extract (FrWindow    *window,
 					     _GTK_ICON_NAME_DIALOG_WARNING,
 					     _("Extraction not performed"),
 					     NULL,
-					     _GTK_LABEL_OK, GTK_RESPONSE_OK,
+					     _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,
 					     NULL);
 		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_OK);
 		fr_window_show_error_dialog (window, d, GTK_WINDOW (window), _("Extraction not performed"));
