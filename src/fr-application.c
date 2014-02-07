@@ -563,9 +563,9 @@ fr_application_startup (GApplication *application)
 		      "gtk-shell-shows-menubar", &show_menubar,
 		      NULL);
 
-	if (show_menubar)
+	if (!show_app_menu || show_menubar)
 		initialize_app_menubar (application);
-	else if (show_app_menu)
+	else
 		initialize_app_menu (application);
 }
 

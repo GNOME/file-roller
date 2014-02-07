@@ -2,35 +2,127 @@
   <menu id="app-menubar">
     <submenu>
       <attribute name="label" translatable="yes">_File</attribute>
-      <item>
-        <attribute name="action">app.new</attribute>
-        <attribute name="label" translatable="yes">_New Archive</attribute>
-        <attribute name="accel"><![CDATA[<Ctrl>n]]></attribute>
-      </item>
-      <item>
-        <attribute name="action">app.quit</attribute>
-        <attribute name="label" translatable="yes">_Quit</attribute>
-        <attribute name="accel"><![CDATA[<Ctrl>q]]></attribute>
-      </item>
+      <section>
+        <item>
+          <attribute name="action">app.new</attribute>
+          <attribute name="label" translatable="yes">_New Archive…</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>n]]></attribute>
+        </item>
+        <item>
+          <attribute name="action">app.open</attribute>
+          <attribute name="label" translatable="yes">_Open…</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>O]]></attribute>
+        </item>
+        <item>
+          <attribute name="action">win.extract-files</attribute>
+          <attribute name="label" translatable="yes">_Extract Files…</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>E]]></attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="action">win.save-as</attribute>
+          <attribute name="label" translatable="yes">Save _As…</attribute>
+          <attribute name="accel"><![CDATA[<Shift><Ctrl>S]]></attribute>
+        </item>
+        <item>
+          <attribute name="action">win.test-archive</attribute>
+          <attribute name="label" translatable="yes">_Test Integrity</attribute>
+        </item>
+        <item>
+          <attribute name="action">win.properties</attribute>
+          <attribute name="label" translatable="yes">Properties</attribute>
+          <attribute name="accel"><![CDATA[<Alt>Return]]></attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="action">win.close</attribute>
+          <attribute name="label" translatable="yes">_Close</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>W]]></attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Edit</attribute>
+      <section>
+        <item>
+          <attribute name="action">win.edit-cut</attribute>
+          <attribute name="label" translatable="yes">Cu_t</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>X]]></attribute>
+        </item>
+        <item>
+          <attribute name="action">win.edit-copy</attribute>
+          <attribute name="label" translatable="yes">_Copy</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>C]]></attribute>
+        </item>
+        <item>
+          <attribute name="action">win.edit-paste</attribute>
+          <attribute name="label" translatable="yes">_Paste</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>V]]></attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="action">win.add-files</attribute>
+          <attribute name="label" translatable="yes">_Add Files…</attribute>
+        </item>
+        <item>
+          <attribute name="action">win.rename</attribute>
+          <attribute name="label" translatable="yes">_Rename…</attribute>
+          <attribute name="accel">F2</attribute>
+        </item>
+        <item>
+          <attribute name="action">win.delete</attribute>
+          <attribute name="label" translatable="yes">_Delete Files…</attribute>
+          <attribute name="accel">Delete</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="action">win.select-all</attribute>
+          <attribute name="label" translatable="yes">_Select All</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>A]]></attribute>
+        </item>
+        <item>
+          <attribute name="action">win.deselect-all</attribute>
+          <attribute name="label" translatable="yes">D_eselect All</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl><Shift>A]]></attribute>
+        </item>
+        <item>
+          <attribute name="action">win.find</attribute>
+          <attribute name="label" translatable="yes">_Find</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>F]]></attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="action">win.edit-password</attribute>
+          <attribute name="label" translatable="yes">Set Pass_word…</attribute>
+        </item>
+      </section>
     </submenu>
     <submenu>
       <attribute name="label" translatable="yes">_View</attribute>
       <section>
         <item>
-          <attribute name="label" translatable="yes">View All _Files</attribute>
-          <attribute name="action">app.list-mode</attribute>
-          <attribute name="target">flat</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">View as a F_older</attribute>
-          <attribute name="action">app.list-mode</attribute>
-          <attribute name="target">as-dir</attribute>
+          <attribute name="action">app.view-sidebar</attribute>
+          <attribute name="label" translatable="yes">_Folders as Sidebar</attribute>
+          <attribute name="accel">F9</attribute>
         </item>
       </section>
       <section>
         <item>
-          <attribute name="action">app.view-sidebar</attribute>
-          <attribute name="label" translatable="yes">_Folders</attribute>
+          <attribute name="label" translatable="yes">as Complete _Listing</attribute>
+          <attribute name="action">app.list-mode</attribute>
+          <attribute name="target">flat</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>1]]></attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">as F_older</attribute>
+          <attribute name="action">app.list-mode</attribute>
+          <attribute name="target">as-dir</attribute>
+          <attribute name="accel"><![CDATA[<Ctrl>2]]></attribute>
         </item>
       </section>
     </submenu>
@@ -38,12 +130,12 @@
       <attribute name="label" translatable="yes">_Help</attribute>
       <item>
         <attribute name="action">app.help</attribute>
-        <attribute name="label" translatable="yes">Contents</attribute>
+        <attribute name="label" translatable="yes">Archive Manager _Help</attribute>
         <attribute name="accel">F1</attribute>
       </item>
       <item>
         <attribute name="action">app.about</attribute>
-        <attribute name="label" translatable="yes">_About Archive Manager</attribute>
+        <attribute name="label" translatable="yes">_About</attribute>
       </item>
     </submenu>
   </menu>
