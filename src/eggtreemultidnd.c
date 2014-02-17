@@ -40,10 +40,10 @@ typedef struct
   gint    x;
   gint    y;
   guint   motion_notify_handler;
-  guint   button_release_handler;
   guint   drag_data_get_handler;
   GSList *event_list;
   gboolean pending_event;
+  gboolean button_released;
 } EggTreeMultiDndData;
 
 
@@ -161,10 +161,6 @@ stop_drag_check (GtkWidget *widget)
     g_signal_handler_disconnect (widget, priv_data->motion_notify_handler);
     priv_data->motion_notify_handler = 0;
   }
-  if (priv_data->button_release_handler) {
-    g_signal_handler_disconnect (widget, priv_data->button_release_handler);
-    priv_data->button_release_handler = 0;
-  }
 }
 
 
@@ -177,6 +173,10 @@ egg_tree_multi_drag_button_release_event (GtkWidget      *widget,
   GSList *l;
 
   priv_data = g_object_get_data (G_OBJECT (widget), EGG_TREE_MULTI_DND_STRING);
+  if (priv_data == NULL)
+    return FALSE;
+
+  priv_data->button_released = TRUE;
 
   for (l = priv_data->event_list; l != NULL; l = l->next)
     gtk_propagate_event (widget, l->data);
@@ -271,6 +271,9 @@ egg_tree_multi_drag_motion_event (GtkWidget      *widget,
   EggTreeMultiDndData *priv_data;
 
   priv_data = g_object_get_data (G_OBJECT (widget), EGG_TREE_MULTI_DND_STRING);
+
+  if (! priv_data->pending_event)
+    return FALSE;
 
   if (gtk_drag_check_threshold (widget,
 				priv_data->x,
@@ -398,10 +401,12 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
 			      !gtk_tree_selection_path_is_selected (selection, path) ||
 			      event->button != 1);
 
+      /* calling the parent the button_release event could be emitted */
+      priv_data->button_released = FALSE;
       if (call_parent)
 	(GTK_WIDGET_GET_CLASS (tree_view))->button_press_event (widget, event);
 
-      if (gtk_tree_selection_path_is_selected (selection, path))
+      if (! priv_data->button_released && gtk_tree_selection_path_is_selected (selection, path))
     {
       priv_data->pressed_button = event->button;
       priv_data->x = event->x;
@@ -421,15 +426,6 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
 			      NULL);
         }
 
-      if (priv_data->button_release_handler == 0)
-        {
-          priv_data->button_release_handler =
-	    g_signal_connect (G_OBJECT (tree_view),
-	 		      "button_release_event",
-			      G_CALLBACK (egg_tree_multi_drag_button_release_event),
-			      NULL);
-        }
-
       if (priv_data->drag_data_get_handler == 0)
 	{
 	  priv_data->drag_data_get_handler =
@@ -440,6 +436,7 @@ egg_tree_multi_drag_button_press_event (GtkWidget      *widget,
 	}
     }
 
+      priv_data->button_released = FALSE;
       gtk_tree_path_free (path);
       /* We called the default handler so we don't let the default handler run */
       return TRUE;
@@ -457,5 +454,8 @@ egg_tree_multi_drag_add_drag_support (GtkTreeView *tree_view)
 		    "button_press_event",
 		    G_CALLBACK (egg_tree_multi_drag_button_press_event),
 		    NULL);
+  g_signal_connect (G_OBJECT (tree_view),
+		    "button_release_event",
+		    G_CALLBACK (egg_tree_multi_drag_button_release_event),
+		    NULL);
 }
-
