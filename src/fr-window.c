@@ -302,9 +302,6 @@ struct _FrWindowPrivate {
 	gint             activity_ref;              /* when > 0 some activity
 						     * is present. */
 
-	guint            update_timeout_handle;     /* update file list
-						     * timeout handle. */
-
 	gboolean         stoppable;
 	gboolean         closing;
 	gboolean         notify;
@@ -490,11 +487,6 @@ fr_window_free_open_files (FrWindow *window)
 static void
 fr_window_free_private_data (FrWindow *window)
 {
-	if (window->priv->update_timeout_handle != 0) {
-		g_source_remove (window->priv->update_timeout_handle);
-		window->priv->update_timeout_handle = 0;
-	}
-
 	if (window->priv->activity_timeout_handle != 0) {
 		g_source_remove (window->priv->activity_timeout_handle);
 		window->priv->activity_timeout_handle = 0;
@@ -5388,8 +5380,6 @@ fr_window_construct (FrWindow *window)
 
 	window->priv->activity_ref = 0;
 	window->priv->activity_timeout_handle = 0;
-
-	window->priv->update_timeout_handle = 0;
 
 	window->priv->archive_present = FALSE;
 	window->priv->archive_new = FALSE;
