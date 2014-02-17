@@ -24,6 +24,7 @@
 
 
 #include <string.h>
+#include <math.h>
 #include <gtk/gtk.h>
 #include "eggtreemultidnd.h"
 
@@ -264,6 +265,47 @@ egg_tree_multi_drag_drag_data_get (GtkWidget        *widget,
 
 
 static gboolean
+_gtk_cairo_surface_extents (cairo_surface_t *surface,
+                            GdkRectangle *extents)
+{
+  double x1, x2, y1, y2;
+  cairo_t *cr;
+
+  g_return_val_if_fail (surface != NULL, FALSE);
+  g_return_val_if_fail (extents != NULL, FALSE);
+
+  cr = cairo_create (surface);
+  cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
+
+  x1 = floor (x1);
+  y1 = floor (y1);
+  x2 = ceil (x2);
+  y2 = ceil (y2);
+  x2 -= x1;
+  y2 -= y1;
+
+  if (x1 < G_MININT || x1 > G_MAXINT ||
+      y1 < G_MININT || y1 > G_MAXINT ||
+      x2 > G_MAXINT || y2 > G_MAXINT)
+    {
+      extents->x = extents->y = extents->width = extents->height = 0;
+      return FALSE;
+    }
+
+  extents->x = x1;
+  extents->y = y1;
+  extents->width = x2;
+  extents->height = y2;
+
+  return TRUE;
+}
+
+
+#define DRAG_ICON_MAX_ROWS 3
+#define DRAG_ICON_OFFSET 5
+
+
+static gboolean
 egg_tree_multi_drag_motion_event (GtkWidget      *widget,
 				  GdkEventMotion *event,
 				  gpointer        data)
@@ -324,8 +366,50 @@ egg_tree_multi_drag_motion_event (GtkWidget      *widget,
 		  cairo_surface_t *drag_icon;
 
 		  drag_icon = gtk_tree_view_create_row_drag_icon (GTK_TREE_VIEW (widget), tree_path);
-		  cairo_surface_set_device_offset (drag_icon, -cell_x, -cell_y);
-		  gtk_drag_set_icon_surface (context, drag_icon);
+
+		  if (path_list->next != NULL) {
+
+			  /* create a multi row drag icon */
+
+			  const int        icon_offset = DRAG_ICON_OFFSET;
+			  GdkRectangle     icon_extents;
+			  cairo_surface_t *multi_drag_icon;
+			  cairo_t         *cr;
+			  int              n_icons, i, offset;
+
+			  n_icons = MIN (DRAG_ICON_MAX_ROWS, g_list_length (path_list));
+			  _gtk_cairo_surface_extents (drag_icon, &icon_extents);
+
+			  multi_drag_icon = gdk_window_create_similar_surface (gtk_tree_view_get_bin_window (GTK_TREE_VIEW (widget)),
+									       CAIRO_CONTENT_COLOR_ALPHA,
+									       icon_extents.width + (icon_offset * (n_icons - 1)),
+									       icon_extents.height + (icon_offset * (n_icons - 1)));
+
+			  cr = cairo_create (multi_drag_icon);
+
+			  cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.0);
+			  cairo_rectangle(cr, 0, 0, icon_extents.width + icon_offset, icon_extents.height + icon_offset);
+			  cairo_fill (cr);
+
+			  offset = icon_offset * (n_icons - 1);
+			  for (i = 0; i < n_icons; i++) {
+				  cairo_set_source_surface (cr, drag_icon, -icon_extents.x + offset, -icon_extents.y + offset);
+				  cairo_rectangle (cr, offset, offset, icon_extents.width, icon_extents.height);
+				  cairo_fill (cr);
+				  offset -= icon_offset;
+			  }
+
+			  cairo_destroy (cr);
+
+			  cairo_surface_set_device_offset (multi_drag_icon, - (cell_x + 1), - (cell_y + 1));
+			  gtk_drag_set_icon_surface (context, multi_drag_icon);
+
+			  cairo_surface_destroy (multi_drag_icon);
+		  }
+		  else {
+			  cairo_surface_set_device_offset (drag_icon, - (cell_x + 1), - (cell_y + 1));
+			  gtk_drag_set_icon_surface (context, drag_icon);
+		  }
 
 		  cairo_surface_destroy (drag_icon);
 		  gtk_tree_path_free (tree_path);
