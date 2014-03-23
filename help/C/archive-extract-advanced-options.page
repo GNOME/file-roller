@@ -1,4 +1,5 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="guide"
       id="archive-extract-advanced-options">
 
@@ -7,26 +8,28 @@
     <revision pkgversion="3.4" date="2012-03-06" status="review"/>
     <revision pkgversion="3.6" date="2012-08-05" status="review"/>
     <revision pkgversion="3.8" date="2013-03-25" status="candidate"/>
+    <revision pkgversion="3.12" date="2014-03-23" status="candidate"/>
+
     <credit type="author">
       <name>Marta Bogdanowicz</name>
-      <email>majus85@gmail.com</email>
+      <email its:translate="no">majus85@gmail.com</email>
     </credit>
     <credit type="editor">
       <name>Ekaterina Gerasimova</name>
-      <email>kittykat3756@gmail.com</email>
+      <email its:translate="no">kittykat3756@gmail.com</email>
     </credit>
-    <license>
-      <p>Creative Commons Share Alike 3.0</p>
-    </license>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
     <desc>Specify your preferences for archive extraction.</desc>
   </info>
 
   <title>Advanced options for archive extracting</title>
 
-  <p><app>Archive Manager</app> offers different options for extracting an
-  archive. You can see these options in the file chooser dialog, that is used
-  for choosing the location for the extracted files. At the bottom of this
-  dialog, you can decide if you want to extract:</p>
+  <p><app>Archive Manager</app> offers different options for
+  <link xref="archive-extract">extracting an archive</link>. You can see these
+  options in the <gui>Extract</gui> dialog. At the bottom of this dialog, you
+  can decide if you want to extract:</p>
 
   <terms>
     <item>
@@ -38,8 +41,7 @@
       <p><app>Archive Manager</app> extracts only the selected files.</p>
       <note>
         <p>You need to select the files that you wish to extract before
-        you click <guiseq><gui style="menu">Archive</gui>
-        <gui style="menuitem">Extract…</gui></guiseq>. Do this by clicking on
+        you click <gui style="button">Extract</gui>. Do this by clicking on
         the file name. Use <key>Ctrl</key> and <key>Shift</key> keys, to select
         more than one file.</p>
       </note>
@@ -47,7 +49,7 @@
     <item>
       <title><gui>Files</gui></title>
       <p>You can type in the names of the files that you want to extract.
-      Separate individual files using a semicolon (<key>;</key>)</p>
+      Separate individual files using a semicolon (<key>;</key>).</p>
       <note>
         <p>The file name needs to be followed by a file extension. You can use
         the asterisk (<key>*</key>) as a wild card. For example, to select all

@@ -1,4 +1,5 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="guide"
       id="archive-extract">
 
@@ -10,17 +11,19 @@
     <revision pkgversion="3.4" date="2011-12-12" status="review"/>
     <revision pkgversion="3.6" date="2012-08-05" status="review"/>
     <revision pkgversion="3.8" date="2013-03-25" status="candidate"/>
+    <revision pkgversion="3.12" date="2014-03-23" status="review"/>
+
     <credit type="author">
       <name>Marta Bogdanowicz</name>
-      <email>majus85@gmail.com</email>
+      <email its:translate="no">majus85@gmail.com</email>
     </credit>
     <credit type="editor">
       <name>Ekaterina Gerasimova</name>
-      <email>kittykat3756@gmail.com</email>
+      <email its:translate="no">kittykat3756@gmail.com</email>
     </credit>
-    <license>
-      <p>Creative Commons Share Alike 3.0</p>
-    </license>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
     <desc>Extract files or folders from your archive.</desc>
   </info>
 
@@ -34,17 +37,13 @@
       <p><link xref="archive-open">Open</link> an archive.</p>
     </item>
     <item>
-      <p>Click <guiseq><gui style="menu">Archive</gui>
-      <gui style="menuitem">Extract…</gui></guiseq> or click <gui>Extract</gui>
-      in the toolbar button.</p>
+      <p>Click <gui style="button">Extract</gui>.</p>
     </item>
     <item>
       <p>Choose where you want the archive to be extracted to in the file
-      chooser. This will be the destination folder.</p>
-      <note style="tip">
-	<p>See <link xref="archive-extract-advanced-options">advanced options
-	for extracting archives</link> for more extraction options.</p>
-      </note>
+      chooser. This will be the destination folder. See
+      <link xref="archive-extract-advanced-options">advanced options for
+      extracting archives</link> for more extraction options.</p>
     </item>
     <item>
       <p>Click <gui>Extract</gui>.</p>
