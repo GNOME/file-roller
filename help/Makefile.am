@@ -19,6 +19,7 @@ HELP_FILES = \
 	archive-view.page \
 	index.page \
 	introduction.page \
+	legal.xml \
 	keyboard-shortcuts.page \
 	password-protection.page \
 	supported-formats.page \
