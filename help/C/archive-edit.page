@@ -1,4 +1,5 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="guide"
       id="archive-edit">
 
@@ -8,17 +9,19 @@
     <revision pkgversion="3.4" date="2011-12-08" status="review"/>
     <revision pkgversion="3.6" date="2012-08-05" status="review"/>
     <revision pkgversion="3.8" date="2013-03-25" status="candidate"/>
+    <revision pkgversion="3.12" date="2014-03-23" status="candidate"/>
+
     <credit type="author">
       <name>Marta Bogdanowicz</name>
-      <email>majus85@gmail.com</email>
+      <email its:translate="no">majus85@gmail.com</email>
     </credit>
     <credit type="editor">
       <name>Ekaterina Gerasimova</name>
-      <email>kittykat3756@gmail.com</email>
+      <email its:translate="no">kittykat3756@gmail.com</email>
     </credit>
-    <license>
-      <p>Creative Commons Share Alike 3.0</p>
-    </license>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
     <desc>Change the content of your archive.</desc>
   </info>
 
@@ -30,30 +33,20 @@
 
   <terms>
     <item>
-    <title>Add files</title>
-    <p>Add files to an existing archive by following the instructions for
-    <link xref="archive-create">creating an archive</link>.</p>
+      <title>Add files</title>
+      <p>Add files to an existing archive by following the instructions for
+      <link xref="archive-create">creating an archive</link>.</p>
     </item>
     <item>
-    <title>Remove files</title>
-      <steps>
-        <item><p>Select the file.</p></item>
-        <item><p>Click <guiseq><gui style="menu">Edit</gui>
-        <gui style="menuitem">Delete</gui></guiseq>, or right-click on the
-        selected file, and choose <gui>Delete</gui>.</p></item>
-      </steps>
+      <title>Remove files</title>
+      <p>Right-click on the file and chose <gui style="menuitem">Delete</gui>,
+      or press <key>Delete</key>.</p>
     </item>
     <item>
     <title>Rename files</title>
-      <steps>
-        <item><p>Select the file.</p></item>
-        <item><p>Click <guiseq><gui style="menu">Edit</gui>
-        <gui style="menuitem">Rename…</gui></guiseq>, or right-click on the
-        selected file, and choose <gui>Rename…</gui>.</p></item>
-        <item><p>Enter the new file name into the dialog which has
-	opened.</p></item>
-        <item><p>Confirm the name by clicking <gui>Rename</gui>.</p></item>
-      </steps>
+      <p>Right-click on the file and chose <gui style="menuitem">Rename…</gui>.
+      Enter the new file name into the dialog which has opened and confirm the
+      new name.</p>
     </item>
   </terms>
 
