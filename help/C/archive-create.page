@@ -1,4 +1,5 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="guide"
       id="archive-create">
 
@@ -7,17 +8,19 @@
     <revision pkgversion="3.4" date="2012-01-18" status="review"/>
     <revision pkgversion="3.6" date="2012-08-05" status="review"/>
     <revision pkgversion="3.8" date="2013-03-25" status="candidate"/>
+    <revision pkgversion="3.12" date="2014-03-23" status="candidate"/>
+
     <credit type="author">
       <name>Marta Bogdanowicz</name>
-      <email>majus85@gmail.com</email>
+      <email its:translate="no">majus85@gmail.com</email>
     </credit>
     <credit type="editor">
       <name>Ekaterina Gerasimova</name>
-      <email>kittykat3756@gmail.com</email>
+      <email its:translate="no">kittykat3756@gmail.com</email>
     </credit>
-    <license>
-      <p>Creative Commons Share Alike 3.0</p>
-    </license>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
     <desc>Add files or folders to a new archive.</desc>
   </info>
 
@@ -28,40 +31,24 @@
 
   <steps>
     <item>
-      <p>Click the <gui>Create a new archive</gui> toolbar button, or click
-      <guiseq><gui style="menu">Archive</gui>
-      <gui style="menuitem">New…</gui></guiseq>.</p>
+      <p>Select <guiseq><gui style="menu">Archive
+      Manager</gui><gui style="menuitem">New Archive</gui></guiseq>.</p>
     </item>
     <item>
-      <p>The file chooser will open: name your new archive file and choose the
-      location where it will be saved, then click <gui>Create</gui> to
-      continue.</p>
+      <p>Name your new archive file and choose the location where it will be
+      saved, then click <gui>Create</gui> to continue.</p>
       <note style="tip">
-	<p>In this dialog, you may also choose the file format that you want to
-	use: available extensions are listed at the bottom. If you do not choose
-	a file format, the new archive will be a <file>tar.gz</file>.</p>
-	<p>By clicking <gui>Other Options</gui> you can set a password, or
+	<p>By clicking <gui>Other Options</gui> you can set a password or
 	split your new archive into smaller, individual files by selecting the
 	relevant option and specifying the volume for each part in
 	<gui>MB</gui>.</p>
       </note>
     </item>
     <item>
-      <p>Add the desired files to your archive by clicking the <gui>Add files
-      to the archive</gui> toolbar button, or by clicking
-      <guiseq><gui style="menu">Edit</gui><gui style="menuitem">Add
-      files…</gui></guiseq>. <app>Archive Manager</app> also allows you to add
-      whole folders by clicking the <gui>Add a folder to the archive</gui>
-      toolbar button, or selecting <guiseq><gui style="menu">Edit</gui>
-      <gui style="menuitem">Add a folder</gui></guiseq>.</p>
+      <p>Add the desired files and folders to your archive by pressing
+      <gui>+</gui> in the toolbar button. Check the box next to the files and
+      folders that you want to add.</p>
       <note style="tip">
-        <p>When you add a folder to your archive, you will be offered some
-        options:</p>
-        <list>
-          <item><p>Whether to include subfolders or not.</p></item>
-          <item><p>Choose which files should be included.</p></item>
-          <item><p>Select which subfolders or files are to be excluded.</p></item>
-        </list>
 	<p>Not all archive file formats support folders — if the file format
 	that you are using does not, you will not be warned. If the file format
 	that you are using does not support folders, the files from the folders
