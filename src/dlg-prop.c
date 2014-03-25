@@ -49,7 +49,6 @@ void
 dlg_prop (FrWindow *window)
 {
 	DialogData *data;
-	GtkWidget  *ok_button;
 	GtkWidget  *label;
 	GFile      *parent;
 	char       *uri;
@@ -71,7 +70,6 @@ dlg_prop (FrWindow *window)
 	/* Get the widgets. */
 
 	data->dialog = _gtk_builder_get_widget (data->builder, "prop_dialog");
-	ok_button = _gtk_builder_get_widget (data->builder, "p_ok_button");
 
 	/* Set widgets data. */
 
@@ -161,10 +159,6 @@ dlg_prop (FrWindow *window)
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect_swapped (G_OBJECT (ok_button),
-				  "clicked",
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (data->dialog));
 
 	/* Run dialog. */
 
