@@ -310,7 +310,7 @@ fr_new_archive_dialog_new (const char         *title,
 {
 	FrNewArchiveDialog *self;
 
-	self = g_object_new (FR_TYPE_NEW_ARCHIVE_DIALOG, "title", title, NULL);
+	self = g_object_new (FR_TYPE_NEW_ARCHIVE_DIALOG, "title", title, "use-header-bar", TRUE, NULL);
 	_fr_new_archive_dialog_construct (self, parent, action, folder, default_name, original_file);
 
 	return (GtkWidget *) self;
