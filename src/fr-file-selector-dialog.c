@@ -715,6 +715,7 @@ fr_file_selector_dialog_new (const char *title,
 	return (GtkWidget *) g_object_new (FR_TYPE_FILE_SELECTOR_DIALOG,
 					   "title", title,
 					   "transient-for", parent,
+					   "use-header-bar", TRUE,
 					   NULL);
 }
 

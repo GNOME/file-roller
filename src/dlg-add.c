@@ -219,17 +219,14 @@ dlg_add (FrWindow *window)
 
 	/* add the buttons */
 
-	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (data->dialog))),
-			    options_button,
-			    FALSE,
-			    FALSE,
-			    0);
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
 			       _GTK_LABEL_CANCEL,
 			       GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
 			       _GTK_LABEL_ADD,
 			       GTK_RESPONSE_OK);
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (gtk_dialog_get_header_bar (GTK_DIALOG (data->dialog))),
+				 options_button);
 
 	/* set data */
 
