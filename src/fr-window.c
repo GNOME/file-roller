@@ -7714,11 +7714,12 @@ fr_window_view_last_output (FrWindow   *window,
 	if (title == NULL)
 		title = _("Last Output");
 
-	dialog = gtk_dialog_new_with_buttons (title,
-					      GTK_WINDOW (window),
-					      GTK_DIALOG_DESTROY_WITH_PARENT,
-					      _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
-					      NULL);
+	dialog = g_object_new (GTK_TYPE_DIALOG,
+			       "title", title,
+			       "transient-for", window,
+			       "destroy-with-parent", TRUE,
+			       "use-header-bar", TRUE,
+			       NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_widget_set_size_request (dialog, 500, 300);
