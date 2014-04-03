@@ -190,15 +190,6 @@ fr_window_activate_open_folder (GSimpleAction *action,
 
 
 void
-fr_window_activate_open_selection (GSimpleAction *action,
-	            GVariant      *parameter,
-	            gpointer       user_data)
-{
-// TODO
-}
-
-
-void
 fr_window_activate_open_with (GSimpleAction *action,
 			      GVariant      *parameter,
 			      gpointer       user_data)

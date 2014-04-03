@@ -1177,7 +1177,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	fr_window_enable_action (window, "extract-files", file_op);
 	fr_window_enable_action (window, "find", ! no_archive);
 	fr_window_enable_action (window, "open-folder", file_op && one_file_selected && dir_selected);
-	fr_window_enable_action (window, "open-selection", file_op && sel_not_null && ! dir_selected);
+	fr_window_enable_action (window, "open-with", file_op && sel_not_null && ! dir_selected);
 	fr_window_enable_action (window, "rename", ! no_archive && ! ro && ! running && can_store_many_files && one_file_selected);
 	fr_window_enable_action (window, "save-as", ! no_archive && can_store_many_files && ! running);
 	fr_window_enable_action (window, "test-archive", ! no_archive && ! running && window->archive->propTest);

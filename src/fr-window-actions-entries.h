@@ -42,7 +42,6 @@ static const GActionEntry fr_window_actions[] = {
 	{ "go-forward", fr_window_activate_go_forward },
 	{ "go-home", fr_window_activate_go_home },
 	{ "open-folder", fr_window_activate_open_folder },
-	{ "open-selection", fr_window_activate_open_selection },
 	{ "open-with", fr_window_activate_open_with },
 	{ "reload", fr_window_activate_reload },
 	{ "rename", fr_window_activate_rename },
