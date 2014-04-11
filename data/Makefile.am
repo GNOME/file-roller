@@ -10,9 +10,9 @@ matchdir = $(datadir)/file-roller
 match_DATA = packages.match
 
 servicedir = $(datadir)/dbus-1/services
-service_in_files = org.gnome.FileRoller.service.in
+service_in_files = org.gnome.FileRoller.service.in org.gnome.FileRoller.ArchiveManager1.service.in
 service_DATA = $(service_in_files:.service.in=.service)
-$(service_DATA): $(service_in_files) Makefile
+%.service : %.service.in Makefile
 	$(AM_V_GEN) $(SED) -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 gsettingsschema_in_files = org.gnome.FileRoller.gschema.xml.in
