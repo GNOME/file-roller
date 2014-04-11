@@ -323,7 +323,7 @@ dnl ******************************
 AC_CONFIG_FILES([Makefile
 		 file-roller.spec
 		 data/Makefile
-		 data/file-roller.desktop.in
+		 data/org.gnome.FileRoller.desktop.in
 		 data/icons/Makefile
 		 data/icons/16x16/Makefile
 		 data/icons/16x16/apps/Makefile
