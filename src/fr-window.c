@@ -5299,7 +5299,6 @@ fr_window_construct (FrWindow *window)
 	GtkTreeSelection   *selection;
 	GtkSizeGroup       *toolbar_size_group;
 	GtkSizeGroup       *header_bar_size_group;
-	const char * const *schemas;
 
 	/* Create the settings objects */
 
@@ -5307,17 +5306,7 @@ fr_window_construct (FrWindow *window)
 	window->priv->settings_ui = g_settings_new (FILE_ROLLER_SCHEMA_UI);
 	window->priv->settings_general = g_settings_new (FILE_ROLLER_SCHEMA_GENERAL);
 	window->priv->settings_dialogs = g_settings_new (FILE_ROLLER_SCHEMA_DIALOGS);
-
-	/* Only use the nautilus schema if it's installed */
-	for (schemas = g_settings_list_schemas ();
-	     *schemas != NULL;
-	     schemas++)
-	{
-		if (g_strcmp0 (*schemas, NAUTILUS_SCHEMA) == 0) {
-			window->priv->settings_nautilus = g_settings_new (NAUTILUS_SCHEMA);
-			break;
-		}
-	}
+	window->priv->settings_nautilus = _g_settings_new_if_schema_installed (NAUTILUS_SCHEMA);
 
 	/* Create the application. */
 
@@ -5669,7 +5658,7 @@ fr_window_construct (FrWindow *window)
 			    FALSE,
 			    0);
 	gtk_widget_show_all (navigation_commands);
-	gtk_widget_set_margin_right (navigation_commands, 12);
+	gtk_widget_set_margin_end (navigation_commands, 12);
 	gtk_box_pack_start (GTK_BOX (location_bar_content), navigation_commands, FALSE, FALSE, 5);
 
 	/* current location */

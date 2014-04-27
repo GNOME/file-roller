@@ -183,6 +183,11 @@ GList *             _g_key_file_get_string_list    (GKeyFile            *key_fil
 						    const char          *key,
 						    GError             **error);
 
+/* GSettings utils */
+
+GSettings *         _g_settings_new_if_schema_installed
+						   (const char          *schema_id);
+
 /* functions used to parse a command output lines. */
 
 gboolean            _g_line_matches_pattern        (const char          *line,
