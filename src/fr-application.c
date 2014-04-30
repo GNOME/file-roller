@@ -841,7 +841,7 @@ static void
 fr_application_init (FrApplication *self)
 {
 #ifdef GDK_WINDOWING_X11
-	egg_set_desktop_file (APPLICATIONS_DIR "/file-roller.desktop");
+	egg_set_desktop_file (APPLICATIONS_DIR "/org.gnome.FileRoller.desktop");
 #else
 	/* manually set name and icon */
 	g_set_application_name (_("File Roller"));
