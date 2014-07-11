@@ -310,6 +310,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 			parent = nautilus_file_info_get_parent_info (file);
  			can_write = nautilus_file_info_can_write (parent);
+			g_object_unref (parent);
 		}
 	}
 
