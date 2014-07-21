@@ -19,6 +19,12 @@ gsettingsschema_in_files = org.gnome.FileRoller.gschema.xml.in
 gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 .PRECIOUS: $(gsettings_SCHEMAS)
 
+appdatadir = $(datadir)/appdata
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_in_files = org.gnome.FileRoller.appdata.xml.in
+
+@INTLTOOL_XML_RULE@
+
 @INTLTOOL_XML_NOMERGE_RULE@
 
 @GSETTINGS_RULES@
@@ -44,6 +50,8 @@ EXTRA_DIST = 				\
 	org.gnome.ArchiveManager1.xml	\
 	packages.match.in		\
 	packages.match			\
+	$(appdata_in_files)		\
+	$(appdata_DATA)			\
 	$(desktop_in_in_files)		\
 	$(desktop_in_files)		\
 	$(desktop_DATA)			\
@@ -53,6 +61,7 @@ EXTRA_DIST = 				\
 
 DISTCLEANFILES =			\
 	$(desktop_in_files)		\
+	$(appdata_DATA)			\
 	$(desktop_DATA)			\
 	$(service_DATA)			\
 	$(NULL)
