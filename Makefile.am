@@ -7,7 +7,6 @@ NAUTILUS =
 endif
 
 SUBDIRS =		\
-	copy-n-paste	\
 	data		\
 	src		\
 	help		\

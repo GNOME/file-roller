@@ -24,7 +24,6 @@ applications_dir = $(datadir)/applications
 endif
 
 AM_CPPFLAGS =						\
-	-I$(top_srcdir)/copy-n-paste/			\
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
 	-DFR_PREFIX=\"$(prefix)\"           		\
@@ -216,7 +215,6 @@ file_roller_SOURCES = 			\
 	main.c
 
 file_roller_LDADD =					\
-	$(top_builddir)/copy-n-paste/libeggsmclient.la	\
 	$(FR_LIBS)					\
 	$(JSON_GLIB_LIBS)				\
 	$(LIBNOTIFY_LIBS)				\

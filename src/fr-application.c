@@ -30,10 +30,6 @@
 #ifdef ENABLE_NOTIFICATION
 #  include <libnotify/notify.h>
 #endif
-#ifdef USE_SMCLIENT
-#  include "eggsmclient.h"
-#endif
-#include "eggdesktopfile.h"
 #include "file-utils.h"
 #include "fr-application.h"
 #include "fr-application-menu.h"
@@ -104,105 +100,6 @@ static const GOptionEntry options[] = {
 
 	{ NULL }
 };
-
-
-/* -- session management -- */
-
-
-#ifdef USE_SMCLIENT
-
-
-static void
-client_save_state (EggSMClient *client,
-		   GKeyFile    *state,
-		   gpointer     user_data)
-{
-	/* discard command is automatically set by EggSMClient */
-
-	GApplication *application;
-	const char   *argv[2] = { NULL };
-	guint         i;
-
-	/* restart command */
-	argv[0] = program_argv0;
-	argv[1] = NULL;
-
-	egg_sm_client_set_restart_command (client, 1, argv);
-
-	/* state */
-	application = g_application_get_default ();
-	if (application != NULL) {
-		GList *window;
-
-		for (window = gtk_application_get_windows (GTK_APPLICATION (application)), i = 0;
-		     window != NULL;
-		     window = window->next, i++)
-		{
-			FrWindow *session = window->data;
-			gchar    *key;
-
-			key = g_strdup_printf ("archive%d", i);
-			if ((session->archive == NULL) || (fr_archive_get_file (session->archive) == NULL)) {
-				g_key_file_set_string (state, "Session", key, "");
-			}
-			else {
-				gchar *uri;
-
-				uri = g_file_get_uri (fr_archive_get_file (session->archive));
-				g_key_file_set_string (state, "Session", key, uri);
-				g_free (uri);
-			}
-			g_free (key);
-		}
-	}
-
-	g_key_file_set_integer (state, "Session", "archives", i);
-}
-
-
-static void
-client_quit_cb (EggSMClient *client,
-		gpointer     data)
-{
-	gtk_main_quit ();
-}
-
-
-static void
-fr_restore_session (EggSMClient *client)
-{
-	GKeyFile *state = NULL;
-	guint i;
-
-	state = egg_sm_client_get_state_file (client);
-
-	i = g_key_file_get_integer (state, "Session", "archives", NULL);
-
-	for (; i > 0; i--) {
-		GtkWidget *window;
-		char      *key;
-		char      *uri;
-
-		key = g_strdup_printf ("archive%d", i);
-		uri = g_key_file_get_string (state, "Session", key, NULL);
-
-		window = fr_window_new ();
-		if (strlen (uri) > 0) {
-			GFile *file;
-
-			file = g_file_new_for_uri (uri);
-			fr_window_archive_open (FR_WINDOW (window), file, GTK_WINDOW (window));
-
-			g_object_unref (file);
-		}
-
-		g_free (uri);
-		g_free (key);
-	}
-}
-
-
-#endif /* USE_SMCLIENT */
 
 
 /* -- service -- */
@@ -583,9 +480,6 @@ fr_application_create_option_context (void)
 
 	if (g_once_init_enter (&initialized)) {
 		g_option_context_add_group (context, gtk_get_option_group (TRUE));
-#ifdef USE_SMCLIENT
-		g_option_context_add_group (context, egg_sm_client_get_option_group ());
-#endif
 		g_once_init_leave (&initialized, TRUE);
 	}
 
@@ -640,28 +534,6 @@ fr_application_command_line (GApplication            *application,
 		return fr_application_command_line_finished (application, EXIT_FAILURE);
 	}
 	g_option_context_free (context);
-
-	/* restore the session */
-
-#ifdef USE_SMCLIENT
-	{
-		EggSMClient *client;
-
-		client = egg_sm_client_get ();
-		g_signal_connect (client,
-				  "save_state",
-				  G_CALLBACK (client_save_state),
-				  NULL);
-		g_signal_connect (client,
-				  "quit",
-				  G_CALLBACK (client_quit_cb),
-				  NULL);
-		if (egg_sm_client_is_resumed (client)) {
-			fr_restore_session (client);
-			return fr_application_command_line_finished (application, EXIT_SUCCESS);
-		}
-	}
-#endif
 
 	if (remaining_args == NULL) { /* No archive specified. */
 		if (! arg_service)
@@ -840,13 +712,10 @@ fr_application_class_init (FrApplicationClass *klass)
 static void
 fr_application_init (FrApplication *self)
 {
-#ifdef GDK_WINDOWING_X11
-	egg_set_desktop_file (APPLICATIONS_DIR "/file-roller.desktop");
-#else
-	/* manually set name and icon */
-	g_set_application_name (_("File Roller"));
+	/* set the name and icon */
+
+	g_set_application_name (_("Archive Manager"));
 	gtk_window_set_default_icon_name ("file-roller");
-#endif
 
 #ifdef ENABLE_NOTIFICATION
 	if (! notify_init (g_get_application_name ()))
