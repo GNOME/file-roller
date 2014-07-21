@@ -314,7 +314,7 @@ list_archive_thread (GSimpleAsyncResult *result,
 		file_data = file_data_new ();
 
 		if (archive_entry_size_is_set (entry)) {
-			file_data->size =  archive_entry_size (entry);
+			file_data->size = archive_entry_size (entry);
 			FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size += file_data->size;
 		}
 
