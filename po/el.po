@@ -33,16 +33,16 @@ msgstr ""
 "Project-Id-Version: el\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-16 17:51+0000\n"
-"PO-Revision-Date: 2014-03-16 21:17+0300\n"
-"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"POT-Creation-Date: 2014-06-27 16:45+0000\n"
+"PO-Revision-Date: 2014-07-18 13:14+0200\n"
+"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.0\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Project-Style: gnome\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:164
@@ -96,11 +96,11 @@ msgstr "ΑΡΧΕΙΟ"
 
 #: ../copy-n-paste/eggsmclient.c:230
 msgid "Specify session management ID"
-msgstr "Καθορίστε το ID της διαχείρισης συνεδρίας"
+msgstr "Καθορίστε το αναγνωριστικό της διαχείρισης συνεδρίας"
 
 #: ../copy-n-paste/eggsmclient.c:230
 msgid "ID"
-msgstr "ID"
+msgstr "Αναγνωριστικό"
 
 #: ../copy-n-paste/eggsmclient.c:251
 msgid "Session management options:"
@@ -110,18 +110,18 @@ msgstr "Επιλογές διαχείρισης συνεδρίας:"
 msgid "Show session management options"
 msgstr "Προβολή επιλογών διαχείρισης συνεδρίας"
 
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1989
-#: ../src/fr-window.c:5328
+#: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-window.c:1989
+#: ../src/fr-window.c:5317
 msgid "Archive Manager"
 msgstr "Διαχειριστής συμπιεσμένων αρχείων"
 
-#: ../data/file-roller.desktop.in.in.h:2
+#: ../data/org.gnome.FileRoller.desktop.in.in.h:2
 msgid "Create and modify an archive"
 msgstr "Δημιουργία και τροποποίηση ενός συμπιεσμένου αρχείου"
 
-#: ../data/file-roller.desktop.in.in.h:3
+#: ../data/org.gnome.FileRoller.desktop.in.in.h:3
 msgid "zip;tar;extract;unpack;"
-msgstr "zip;tar;εξαγωγή;αποσυμπίεση;"
+msgstr "zip;tar;εξαγωγή;αποσυμπίεση;extract;unpack;"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
 msgid "How to sort files"
@@ -133,7 +133,7 @@ msgid ""
 "type, time, path."
 msgstr ""
 "Τι κριτήρια πρέπει να χρησιμοποιηθούν κατά την τακτοποίηση των αρχείων. "
-"Δυνατές τιμές: όνομα, μέγεθος, τύπος, ώρα, διαδρομή."
+"Πιθανές τιμές: name, size, type, time, path."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
 msgid "Sort type"
@@ -144,8 +144,8 @@ msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
-"Αν θα γίνει ταξινόμηση κατ' αύξουσα ή φθίνουσα κατεύθυνση. Δυνατές τιμές: "
-"αύξουσα, φθίνουσα."
+"Αν θα γίνει ταξινόμηση κατ' αύξουσα ή φθίνουσα κατεύθυνση. Πιθανές τιμές: "
+"ascending, descending."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
 msgid "List Mode"
@@ -156,9 +156,9 @@ msgid ""
 "Use 'all-files' to view all the files in the archive in a single list, use "
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
-"Χρησιμοποιήστε το 'όλα τα αρχεία' για να προβάλετε όλα τα αρχεία σε μια "
-"ενιαία λίστα, χρησιμοποιήστε το 'κατά φάκελο' για περιηγηθείτε στο "
-"συμπιεσμένο αρχείο σαν σε φάκελο."
+"Χρησιμοποιήστε το 'all-files' για να προβάλετε όλα τα αρχεία σε μια ενιαία "
+"λίστα, χρησιμοποιήστε το 'as-folder' για να περιηγηθείτε στο συμπιεσμένο "
+"αρχείο σαν σε φάκελο."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
 msgid "Display type"
@@ -230,7 +230,7 @@ msgid ""
 "very-fast, fast, normal, maximum."
 msgstr ""
 "Το επίπεδο συμπίεσης που θα χρησιμοποιηθεί κατά την προσθήκη αρχείων σε μια "
-"αρχειοθήκη. Πιθανές τιμές: πολύ-γρήγορο, γρήγορο, κανονικό, μέγιστο."
+"αρχειοθήκη. Πιθανές τιμές: very-fast, fast, normal, maximum."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
 msgid "Encrypt the archive header"
@@ -241,8 +241,8 @@ msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
-"Αν θα κρυπτογραφηθεί η επικεφαλίδα. Αν κρυπτογραφηθεί το συνθηματικό θα "
-"είναι επίσης απαραίτητο για την εμφάνιση των περιεχομένων του συμπιεσμένου "
+"Αν θα κρυπτογραφηθεί η επικεφαλίδα. Αν κρυπτογραφηθεί ο κωδικός πρόσβασης θα "
+"είναι επίσης απαραίτητος για την εμφάνιση των περιεχομένων του συμπιεσμένου "
 "αρχείου."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
@@ -260,7 +260,7 @@ msgstr "Προεπιλεγμένο μέγεθος τόμου"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
 msgid "The default size for volumes."
-msgstr "Το προεπιλεγμένο μέγεθος τόμων."
+msgstr "Το προεπιλεγμένο μέγεθος των τόμων."
 
 #: ../nautilus/nautilus-fileroller.c:327
 msgid "Extract Here"
@@ -297,7 +297,7 @@ msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr ""
 "Δεν έχετε τα απαραίτητα δικαιώματα ανάγνωσης αρχείων από το φάκελο \"%s\""
 
-#: ../src/dlg-add.c:180 ../src/fr-window.c:5608
+#: ../src/dlg-add.c:180 ../src/fr-window.c:5597
 msgid "Add Files"
 msgstr "Προσθήκη αρχείων"
 
@@ -313,16 +313,16 @@ msgid "Load Options"
 msgstr "Επιλογές φόρτωσης"
 
 #. save options
-#: ../src/dlg-add.c:206 ../src/dlg-add.c:825
+#: ../src/dlg-add.c:206 ../src/dlg-add.c:822
 msgid "Save Options"
 msgstr "Επιλογές αποθήκευσης"
 
 #. clear options
 #: ../src/dlg-add.c:213
 msgid "Reset Options"
-msgstr "Επιλογές επανατοποθέτησης"
+msgstr "Επιλογές επαναφοράς"
 
-#: ../src/dlg-add.c:826
+#: ../src/dlg-add.c:823
 msgid "_Options Name:"
 msgstr "Όνομα ­_επιλογών:"
 
@@ -330,18 +330,18 @@ msgstr "Όνομα ­_επιλογών:"
 #: ../src/dlg-ask-password.c:133
 #, c-format
 msgid "Password required for \"%s\""
-msgstr "Απαιτείται κωδικός για το \"%s\""
+msgstr "Απαιτείται κωδικός πρόσβασης για το \"%s\""
 
 #: ../src/dlg-ask-password.c:142
 msgid "Wrong password."
-msgstr "Λάθος κωδικός."
+msgstr "Λάθος κωδικός πρόσβασης."
 
 #: ../src/dlg-batch-add.c:87 ../src/fr-application.c:329
 #: ../src/fr-application.c:697
 msgid "Compress"
 msgstr "Συμπίεση"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6637
+#: ../src/dlg-extract.c:95 ../src/fr-window.c:6626
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -352,17 +352,17 @@ msgstr ""
 "\n"
 "Θέλετε να δημιουργηθεί;"
 
-#: ../src/dlg-extract.c:104 ../src/fr-window.c:6646
+#: ../src/dlg-extract.c:104 ../src/fr-window.c:6635
 msgid "Create _Folder"
 msgstr "Δημιουργία _φακέλου"
 
 #: ../src/dlg-extract.c:123 ../src/dlg-extract.c:141 ../src/dlg-extract.c:168
-#: ../src/fr-window.c:4208 ../src/fr-window.c:6540 ../src/fr-window.c:6545
-#: ../src/fr-window.c:6667 ../src/fr-window.c:6687 ../src/fr-window.c:6692
+#: ../src/fr-window.c:4208 ../src/fr-window.c:6529 ../src/fr-window.c:6534
+#: ../src/fr-window.c:6656 ../src/fr-window.c:6676 ../src/fr-window.c:6681
 msgid "Extraction not performed"
-msgstr "Η αποσυμπίεση δεν πραγματοποιήθηκε"
+msgstr "Δεν πραγματοποιήθηκε η αποσυμπίεση"
 
-#: ../src/dlg-extract.c:124 ../src/fr-window.c:6663
+#: ../src/dlg-extract.c:124 ../src/fr-window.c:6652
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Αδυναμία δημιουργίας φακέλου προορισμού: %s."
@@ -374,7 +374,7 @@ msgid ""
 msgstr ""
 "Δεν έχετε τα σωστά δικαιώματα για την αποσυμπίεση αρχείων στο φάκελο \"%s\""
 
-#: ../src/dlg-extract.c:282 ../src/fr-window.c:5604
+#: ../src/dlg-extract.c:282 ../src/fr-window.c:5593
 #: ../src/ui/extract-dialog-options.ui.h:1
 msgid "Extract"
 msgstr "Αποσυμπίεση"
@@ -385,10 +385,10 @@ msgstr "Συνέβη ένα εσωτερικό σφάλμα κατά την πρ
 
 #: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
 #: ../src/dlg-package-installer.c:331 ../src/fr-archive.c:744
-#: ../src/fr-window.c:3880 ../src/fr-window.c:7272 ../src/fr-window.c:7629
-#: ../src/fr-window.c:9147
+#: ../src/fr-window.c:3880 ../src/fr-window.c:7261 ../src/fr-window.c:7618
+#: ../src/fr-window.c:9137
 msgid "Archive type not supported."
-msgstr "Ο τύπος αρχείου δεν υποστηρίζεται."
+msgstr "Δεν υποστηρίζεται ο τύπος αρχείου."
 
 #: ../src/dlg-package-installer.c:313
 #, c-format
@@ -413,7 +413,7 @@ msgstr "Ανα_ζήτηση εντολής"
 msgid "Enter a password for \"%s\""
 msgstr "Εισάγετε κωδικό πρόσβασης για το \"%s\""
 
-#: ../src/dlg-prop.c:96
+#: ../src/dlg-prop.c:94
 #, c-format
 msgid "%s Properties"
 msgstr "Ιδιότητες %s"
@@ -536,7 +536,10 @@ msgstr ""
 " Κώστας Παπαδήμας <pkst@gnome.org>\n"
 " Κωνσταντίνος Κουράτορας <kouratoras@gmail.com>\n"
 " Μαρία Θουκυδίδου <marablack3@gmail.com>\n"
-"Για περισσότερες πληροφορίες, επισκεφθείτε την σελίδα http://www.gnome.gr/"
+" Μαρία Μαυρίδου <mavridou@gmail.com>\n"
+"\n"
+"Για περισσότερες πληροφορίες, επισκεφθείτε τη σελίδα\n"
+"http://gnome.gr/"
 
 #: ../src/fr-archive.c:1845
 msgid "You don't have the right permissions."
@@ -567,18 +570,18 @@ msgstr "Αποσυμπίεση του \"%s\""
 #: ../src/fr-command.c:597
 #, c-format
 msgid "Archive not found"
-msgstr "Το αρχείο δε βρέθηκε"
+msgstr "Δε βρέθηκε το αρχείο"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-rar.c:503 ../src/fr-command-tar.c:370
 #, c-format
 msgid "Removing \"%s\""
-msgstr "Απομάκρυνση του \"%s\""
+msgstr "Αφαίρεση του \"%s\""
 
 #: ../src/fr-command-rar.c:685
 #, c-format
 msgid "Could not find the volume: %s"
-msgstr "Αδυναμία εύρεσης ενότητας: %s"
+msgstr "Αδυναμία εύρεσης του τόμου: %s"
 
 #: ../src/fr-command-tar.c:380
 msgid "Deleting files from archive"
@@ -592,7 +595,7 @@ msgstr "Επανασυμπίεση αρχείου"
 msgid "Decompressing archive"
 msgstr "Αποσυμπίεση αρχείου"
 
-#: ../src/fr-file-selector-dialog.c:772 ../src/fr-file-selector-dialog.c:817
+#: ../src/fr-file-selector-dialog.c:773 ../src/fr-file-selector-dialog.c:818
 msgid "Could not load the location"
 msgstr "Αδυναμία φόρτωσης της τοποθεσίας"
 
@@ -612,10 +615,10 @@ msgstr ""
 "Δεν έχετε δικαίωμα να δημιουργήσετε ένα συμπιεσμένο αρχείο σε αυτόν το φάκελο"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:446 ../src/fr-window.c:7942
+#: ../src/fr-new-archive-dialog.c:446 ../src/fr-window.c:7932
 msgid "New name is the same as old one, please type other name."
 msgstr ""
-"Το νέο όνομα είναι ίδιο με το παλιό, παρακαλώ πληκτρολογείστε άλλο όνομα."
+"Το νέο όνομα είναι ίδιο με το παλιό, παρακαλούμε πληκτρολογήστε άλλο όνομα."
 
 #: ../src/fr-new-archive-dialog.c:465
 #, c-format
@@ -630,7 +633,7 @@ msgstr ""
 "Το αρχείο υπάρχει ήδη στο \"%s\". Η αντικατάσταση του θα αλλάξει τα "
 "περιεχόμενα του."
 
-#: ../src/fr-new-archive-dialog.c:473 ../src/fr-window.c:6466
+#: ../src/fr-new-archive-dialog.c:473 ../src/fr-window.c:6455
 msgid "_Replace"
 msgstr "Α_ντικατάσταση"
 
@@ -638,16 +641,16 @@ msgstr "Α_ντικατάσταση"
 msgid "Could not delete the old archive."
 msgstr "Αδυναμία διαγραφής παλιού συμπιεσμένου αρχείου."
 
-#: ../src/fr-window-actions-callbacks.c:298 ../src/fr-window.c:6065
+#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6054
 #: ../src/ui/menus.ui.h:1
 msgid "Open"
 msgstr "Άνοιγμα"
 
-#: ../src/fr-window-actions-callbacks.c:311
+#: ../src/fr-window-actions-callbacks.c:302
 msgid "All archives"
 msgstr "Όλα τα συμπιεσμένα αρχεία"
 
-#: ../src/fr-window-actions-callbacks.c:318
+#: ../src/fr-window-actions-callbacks.c:309
 msgid "All files"
 msgstr "Όλα τα αρχεία"
 
@@ -666,7 +669,7 @@ msgstr "[μόνο για ανάγνωση]"
 #: ../src/fr-window.c:2111
 #, c-format
 msgid "Could not display the folder \"%s\""
-msgstr "Αδυναμία προβολής του φακέλου \"%s\""
+msgstr "Αδυναμία εμφάνισης του φακέλου \"%s\""
 
 #. Translators: %s is a filename
 #: ../src/fr-window.c:2202 ../src/fr-window.c:2240
@@ -770,7 +773,7 @@ msgid "Extraction completed successfully"
 msgstr "Η αποσυμπίεση ολοκληρώθηκε επιτυχώς"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2636 ../src/fr-window.c:6051
+#: ../src/fr-window.c:2636 ../src/fr-window.c:6040
 #, c-format
 msgid "\"%s\" created successfully"
 msgstr "Το \"%s\" δημιουργήθηκε με επιτυχία"
@@ -829,8 +832,8 @@ msgstr "Η εντολή δε βρέθηκε."
 msgid "Test Result"
 msgstr "Αποτέλεσμα δοκιμής"
 
-#: ../src/fr-window.c:3998 ../src/fr-window.c:8622 ../src/fr-window.c:8656
-#: ../src/fr-window.c:8936
+#: ../src/fr-window.c:3998 ../src/fr-window.c:8612 ../src/fr-window.c:8646
+#: ../src/fr-window.c:8926
 msgid "Could not perform the operation"
 msgstr "Αδυναμία εκτέλεσης της λειτουργίας"
 
@@ -850,7 +853,7 @@ msgstr "Θέλετε να δημιουργήσετε ένα νέο συμπιε�
 msgid "Create _Archive"
 msgstr "Δημιουργία συμπιεσμένου _αρχείου"
 
-#: ../src/fr-window.c:4086 ../src/fr-window.c:7080
+#: ../src/fr-window.c:4086 ../src/fr-window.c:7069
 msgid "New Archive"
 msgstr "Νέο συμπιεσμένο αρχείο"
 
@@ -884,67 +887,67 @@ msgctxt "File"
 msgid "Name"
 msgstr "Όνομα"
 
-#: ../src/fr-window.c:5613 ../src/fr-window.c:5639
+#: ../src/fr-window.c:5602 ../src/fr-window.c:5628
 msgid "Find files by name"
-msgstr "Εύρεση αρχείων κατ' όνομα"
+msgstr "Εύρεση αρχείων κατά όνομα"
 
-#: ../src/fr-window.c:5657
+#: ../src/fr-window.c:5646
 msgid "Go to the previous visited location"
 msgstr "Μετάβαση στην προηγούμενη τοποθεσία"
 
-#: ../src/fr-window.c:5662
+#: ../src/fr-window.c:5651
 msgid "Go to the next visited location"
 msgstr "Μετάβαση στην επόμενη τοποθεσία"
 
-#: ../src/fr-window.c:5667
+#: ../src/fr-window.c:5656
 msgid "Go to the home location"
 msgstr "Μετάβαση στην αρχική τοποθεσία"
 
 #
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5679 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:5668 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Τοποθεσία:"
 
-#: ../src/fr-window.c:6454
+#: ../src/fr-window.c:6443
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "Αντικατάσταση αρχείου \"%s\";"
 
-#: ../src/fr-window.c:6457
+#: ../src/fr-window.c:6446
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "Ένα αρχείο με το όνομα \"%s\" υπάρχει ήδη."
 
-#: ../src/fr-window.c:6464
+#: ../src/fr-window.c:6453
 msgid "Replace _All"
 msgstr "Αντικατάσταση ό_λων"
 
-#: ../src/fr-window.c:6465
+#: ../src/fr-window.c:6454
 msgid "_Skip"
 msgstr "Παράλει_ψη"
 
-#: ../src/fr-window.c:7264 ../src/fr-window.c:7621
+#: ../src/fr-window.c:7253 ../src/fr-window.c:7610
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Αδυναμία αποθήκευσης συμπιεσμένου αρχείου \"%s\""
 
-#: ../src/fr-window.c:7391
+#: ../src/fr-window.c:7380
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: ../src/fr-window.c:7715
+#: ../src/fr-window.c:7704
 msgid "Last Output"
 msgstr "Τελευταία έξοδος"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7937
+#: ../src/fr-window.c:7927
 msgid "New name is void, please type a name."
-msgstr "Το όνομα μου είναι κενό, παρακαλώ πληκτρολογείστε ένα όνομα."
+msgstr "Το νέο όνομα είναι κενό, παρακαλώ πληκτρολογείστε ένα όνομα."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7947
+#: ../src/fr-window.c:7937
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
@@ -953,7 +956,7 @@ msgstr ""
 "Το όνομα \"%s\" δεν είναι έγκυρο επειδή περιέχει τους χαρακτήρες: %s, "
 "παρακαλώ πληκτρολογείστε άλλο όνομα."
 
-#: ../src/fr-window.c:7983
+#: ../src/fr-window.c:7973
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -964,11 +967,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7983 ../src/fr-window.c:7985
+#: ../src/fr-window.c:7973 ../src/fr-window.c:7975
 msgid "Please use a different name."
-msgstr "Παρακαλώ κάντε χρήση ενός διαφορετικού ονόματος."
+msgstr "Παρακαλούμε κάντε χρήση ενός διαφορετικού ονόματος."
 
-#: ../src/fr-window.c:7985
+#: ../src/fr-window.c:7975
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -979,51 +982,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8055
+#: ../src/fr-window.c:8045
 msgid "Rename"
 msgstr "Μετονομασία"
 
-#: ../src/fr-window.c:8056
+#: ../src/fr-window.c:8046
 msgid "_New folder name:"
 msgstr "_Νέο όνομα φακέλου:"
 
-#: ../src/fr-window.c:8056
+#: ../src/fr-window.c:8046
 msgid "_New file name:"
 msgstr "_Νέο όνομα αρχείου:"
 
-#: ../src/fr-window.c:8060
+#: ../src/fr-window.c:8050
 msgid "_Rename"
 msgstr "_Μετονομασία"
 
-#: ../src/fr-window.c:8077 ../src/fr-window.c:8096
+#: ../src/fr-window.c:8067 ../src/fr-window.c:8086
 msgid "Could not rename the folder"
 msgstr "Αδυναμία μετονομασίας του φακέλου"
 
-#: ../src/fr-window.c:8077 ../src/fr-window.c:8096
+#: ../src/fr-window.c:8067 ../src/fr-window.c:8086
 msgid "Could not rename the file"
 msgstr "Αδυναμία μετονομασίας του αρχείου"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8529
+#: ../src/fr-window.c:8519
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "Μετακίνηση των αρχείων από το \"%s\" στο \"%s\""
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8532
+#: ../src/fr-window.c:8522
 #, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "Αντιγραφή των αρχείων από το \"%s\" στο \"%s\""
 
-#: ../src/fr-window.c:8583
+#: ../src/fr-window.c:8573
 msgid "Paste Selection"
 msgstr "Επικόλληση επιλογής"
 
-#: ../src/fr-window.c:8584
+#: ../src/fr-window.c:8574
 msgid "_Destination folder:"
 msgstr "Φάκελος _προορισμού:"
 
-#: ../src/fr-window.c:8588 ../src/ui/app-menubar.ui.h:12
+#: ../src/fr-window.c:8578 ../src/ui/app-menubar.ui.h:12
 msgid "_Paste"
 msgstr "Επι_κόλληση"
 
@@ -1040,13 +1043,14 @@ msgstr "Αδυναμία προβολής βοήθειας"
 
 #: ../src/gtk-utils.c:631
 msgid "Change password visibility"
-msgstr "Αλλαγή ορατότητας συνθηματικού"
+msgstr "Αλλαγή ορατότητας κωδικού πρόσβασης"
 
 #: ../src/gtk-utils.h:34
 msgid "_Add"
 msgstr "Προσ_θήκη"
 
-#: ../src/gtk-utils.h:35
+#: ../src/gtk-utils.h:35 ../src/ui/ask-password.ui.h:1 ../src/ui/delete.ui.h:2
+#: ../src/ui/password.ui.h:2
 msgid "_Cancel"
 msgstr "Ακύ_ρωση"
 
@@ -1066,7 +1070,7 @@ msgstr "Αποσυ_μπίεση"
 msgid "_Open"
 msgstr "Ά_νοιγμα"
 
-#: ../src/gtk-utils.h:40
+#: ../src/gtk-utils.h:40 ../src/ui/password.ui.h:3
 msgid "_Save"
 msgstr "Αποθήκευ_ση"
 
@@ -1156,7 +1160,7 @@ msgstr "_Διαγραφή αρχείων…"
 
 #: ../src/ui/app-menubar.ui.h:16 ../src/ui/file-selector.ui.h:1
 msgid "_Select All"
-msgstr "_Επιλογή Όλων"
+msgstr "_Επιλογή όλων"
 
 #: ../src/ui/app-menubar.ui.h:17
 msgid "D_eselect All"
@@ -1168,7 +1172,7 @@ msgstr "_Εύρεση"
 
 #: ../src/ui/app-menubar.ui.h:19
 msgid "Set Pass_word…"
-msgstr "Καθορισμός Κ_ωδικού πρόσβασης…"
+msgstr "Καθορισμός κ_ωδικού πρόσβασης…"
 
 #: ../src/ui/app-menubar.ui.h:20
 msgid "_View"
@@ -1202,7 +1206,11 @@ msgstr "_Περί"
 msgid "_New Archive"
 msgstr "_Νέο συμπιεσμένο αρχείο"
 
-#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
+#: ../src/ui/ask-password.ui.h:2
+msgid "_OK"
+msgstr "Εν_τάξει"
+
+#: ../src/ui/ask-password.ui.h:3 ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "_Κωδικός πρόσβασης:"
 
@@ -1210,25 +1218,29 @@ msgstr "_Κωδικός πρόσβασης:"
 msgid "Delete"
 msgstr "Διαγραφή"
 
-#: ../src/ui/delete.ui.h:2 ../src/ui/extract-dialog-options.ui.h:4
+#: ../src/ui/delete.ui.h:3
+msgid "_Delete"
+msgstr "_Διαγραφή"
+
+#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:4
 msgid "_Files:"
 msgstr "Αρ_χεία:"
 
-#: ../src/ui/delete.ui.h:3
+#: ../src/ui/delete.ui.h:5
 msgid "example: *.txt; *.doc"
 msgstr "παράδειγμα: *.txt; *.doc"
 
-#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:2
+#: ../src/ui/delete.ui.h:6 ../src/ui/extract-dialog-options.ui.h:2
 msgid "_All files"
 msgstr "Ό_λα τα αρχεία"
 
-#: ../src/ui/delete.ui.h:5 ../src/ui/extract-dialog-options.ui.h:3
+#: ../src/ui/delete.ui.h:7 ../src/ui/extract-dialog-options.ui.h:3
 msgid "_Selected files"
 msgstr "Επι_λεγμένα αρχεία"
 
 #: ../src/ui/error-dialog.ui.h:1
 msgid "C_ommand Line Output:"
-msgstr "Αποτέλεσμα Γραμμής _Εντολών:"
+msgstr "Αποτέλεσμα γραμμής _εντολών:"
 
 #: ../src/ui/extract-dialog-options.ui.h:7
 msgid "_Keep directory structure"
@@ -1313,7 +1325,7 @@ msgstr "Ά_λλες επιλογές"
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
 
-#: ../src/ui/password.ui.h:2
+#: ../src/ui/password.ui.h:4
 msgid "_Encrypt the file list"
 msgstr "_Κρυπτογράφηση της λίστας αρχείων"
 
@@ -1360,9 +1372,6 @@ msgstr "_Ενημέρωση"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "_Επιλέξτε τα αρχεία που θέλετε να ενημερώσετε:"
-
-#~ msgid "_Ok"
-#~ msgstr "Εν_τάξει"
 
 #~ msgid "_Folders"
 #~ msgstr "_Φάκελοι"
