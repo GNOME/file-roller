@@ -5614,7 +5614,11 @@ fr_window_construct (FrWindow *window)
                 menu = G_MENU_MODEL (gtk_builder_get_object (builder, "menu"));
                 button = _gtk_menu_button_new_for_header_bar ();
                 gtk_size_group_add_widget (header_bar_size_group, button);
+#if ! GTK_CHECK_VERSION(3,13,0)
+		gtk_container_add (GTK_CONTAINER (button), gtk_image_new_from_icon_name ("emblem-system-symbolic", GTK_ICON_SIZE_MENU));
+#else
                 gtk_menu_button_set_direction (GTK_MENU_BUTTON (button), GTK_ARROW_NONE);
+#endif
                 gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
                 gtk_widget_show_all (button);
                 gtk_header_bar_pack_end (GTK_HEADER_BAR (window->priv->headerbar), button);
