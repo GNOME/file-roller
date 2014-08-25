@@ -5656,14 +5656,16 @@ fr_window_construct (FrWindow *window)
 			    FALSE,
 			    FALSE,
 			    0);
-	gtk_box_pack_start (GTK_BOX (navigation_commands),
+	gtk_widget_show_all (navigation_commands);
+	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
+	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
+	gtk_box_pack_start (GTK_BOX (location_bar_content), navigation_commands, FALSE, FALSE, 0);
+
+	gtk_box_pack_start (GTK_BOX (location_bar_content),
 			    _gtk_header_bar_create_image_button ("user-home-symbolic", _("Go to the home location"), "win.go-home"),
 			    FALSE,
 			    FALSE,
 			    0);
-	gtk_widget_show_all (navigation_commands);
-	gtk_widget_set_margin_end (navigation_commands, 12);
-	gtk_box_pack_start (GTK_BOX (location_bar_content), navigation_commands, FALSE, FALSE, 5);
 
 	/* current location */
 
