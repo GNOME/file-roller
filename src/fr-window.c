@@ -5289,7 +5289,6 @@ static void
 fr_window_construct (FrWindow *window)
 {
 	GtkWidget          *list_scrolled_window;
-	gboolean            rtl;
 	GtkWidget          *navigation_commands;
 	GtkWidget          *location_bar_content;
 	GtkWidget          *location_box;
@@ -5644,15 +5643,14 @@ fr_window_construct (FrWindow *window)
 	gtk_container_set_border_width (GTK_CONTAINER (location_bar_content), 4);
 	gtk_box_pack_start (GTK_BOX (window->priv->location_bar), location_bar_content, TRUE, TRUE, 0);
 
-	rtl = gtk_widget_get_direction (window->priv->headerbar) == GTK_TEXT_DIR_RTL;
 	navigation_commands = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (navigation_commands),
-			    _gtk_header_bar_create_image_button (rtl ? "go-previous-rtl-symbolic" :  "go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"),
+			    _gtk_header_bar_create_image_button ("go-previous-symbolic", _("Go to the previous visited location"), "win.go-back"),
 			    FALSE,
 			    FALSE,
 			    0);
 	gtk_box_pack_start (GTK_BOX (navigation_commands),
-			    _gtk_header_bar_create_image_button (rtl ? "go-next-rtl-symbolic" : "go-next-symbolic", _("Go to the next visited location"), "win.go-forward"),
+			    _gtk_header_bar_create_image_button ("go-next-symbolic", _("Go to the next visited location"), "win.go-forward"),
 			    FALSE,
 			    FALSE,
 			    0);
