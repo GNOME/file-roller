@@ -54,64 +54,26 @@ _gtk_tree_selection_count_selected (GtkTreeSelection *selection)
 GtkWidget *
 _gtk_message_dialog_new (GtkWindow      *parent,
 			 GtkDialogFlags  flags,
-			 const char     *icon_name,
 			 const char     *message,
 			 const char     *secondary_message,
 			 const gchar    *first_button_text,
 			 ...)
 {
-	GtkBuilder  *builder;
 	GtkWidget   *dialog;
-	GtkWidget   *label;
 	va_list      args;
 	const gchar *text;
 	int          response_id;
-	char        *markup_text;
 
-	builder = _gtk_builder_new_from_resource ("message-dialog.ui");
-	dialog = _gtk_builder_get_widget (builder, "message_dialog");
-	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
-	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
-	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
-	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
+	dialog = gtk_message_dialog_new (parent,
+					 flags,
+					 GTK_MESSAGE_OTHER,
+					 GTK_BUTTONS_NONE,
+					 "%s", message);
+
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), secondary_message);
 
 	if (flags & GTK_DIALOG_MODAL)
 		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
-
-	/* set the icon */
-
-	gtk_image_set_from_icon_name (GTK_IMAGE (_gtk_builder_get_widget (builder, "icon_image")),
-				      icon_name,
-				      GTK_ICON_SIZE_DIALOG);
-
-	/* set the message */
-
-	label = _gtk_builder_get_widget (builder, "message_label");
-
-	if (message != NULL) {
-		char *escaped_message;
-
-		escaped_message = g_markup_escape_text (message, -1);
-		if (secondary_message != NULL) {
-			char *escaped_secondary_message;
-
-			escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
-			markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
-						       escaped_message,
-						       escaped_secondary_message);
-
-			g_free (escaped_secondary_message);
-		}
-		else
-			markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>", escaped_message);
-
-		g_free (escaped_message);
-	}
-	else
-		markup_text = g_markup_escape_text (secondary_message, -1);
-
-	gtk_label_set_markup (GTK_LABEL (label), markup_text);
-	g_free (markup_text);
 
 	/* add the buttons */
 
@@ -314,7 +276,6 @@ _gtk_error_dialog_run (GtkWindow  *parent,
 
 	d =  _gtk_message_dialog_new (parent,
 				      GTK_DIALOG_MODAL,
-				      _GTK_ICON_NAME_DIALOG_ERROR,
 				      main_message,
 				      message,
 				      _GTK_LABEL_CLOSE, GTK_RESPONSE_CANCEL,
@@ -532,7 +493,6 @@ _gtk_show_help_dialog (GtkWindow  *parent,
 
 		dialog = _gtk_message_dialog_new (parent,
 						  GTK_DIALOG_DESTROY_WITH_PARENT,
-						  _GTK_ICON_NAME_DIALOG_ERROR,
 						  _("Could not display help"),
 						  error->message,
 						  _GTK_LABEL_CLOSE, GTK_RESPONSE_OK,

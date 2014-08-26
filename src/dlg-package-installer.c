@@ -314,7 +314,6 @@ file_buffer_ready_cb (GObject      *source_object,
 						  g_content_type_get_description (mime_type));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (idata->window),
 						  GTK_DIALOG_MODAL,
-						  _GTK_ICON_NAME_DIALOG_ERROR,
 						  _("Could not open this file type"),
 						  secondary_text,
 						  _GTK_LABEL_CANCEL, GTK_RESPONSE_NO,

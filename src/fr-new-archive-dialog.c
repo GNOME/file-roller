@@ -466,7 +466,6 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		secondary_message = g_strdup_printf (_("The file already exists in \"%s\".  Replacing it will overwrite its contents."), g_file_info_get_display_name (parent_info));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (self),
 						  GTK_DIALOG_MODAL,
-						  _GTK_ICON_NAME_DIALOG_QUESTION,
 						  message,
 						  secondary_message,
 						  _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,

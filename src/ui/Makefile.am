@@ -11,7 +11,6 @@ EXTRA_DIST = 				\
 	gears-menu.ui			\
 	menus.ui			\
 	menus-toolbars.ui		\
-	message-dialog.ui		\
 	new-archive-dialog.ui		\
 	password.ui			\
 	progress-dialog.ui		\
