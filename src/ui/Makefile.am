@@ -5,7 +5,6 @@ EXTRA_DIST = 				\
 	app-menubar.ui			\
 	ask-password.ui			\
 	delete.ui			\
-	error-dialog.ui			\
 	extract-dialog-options.ui	\
 	file-selector.ui		\
 	gears-menu.ui			\

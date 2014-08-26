@@ -181,58 +181,63 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 		       const char     *secondary_text_format,
 		       ...)
 {
-	GtkBuilder *builder;
-	GtkWidget  *dialog;
-	char       *escaped_message;
-	char       *markup_text;
-	gboolean    view_output;
+	GtkWidget *dialog;
 
-	builder = _gtk_builder_new_from_resource ("error-dialog.ui");
-	dialog = _gtk_builder_get_widget (builder, "error_dialog");
-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
-	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
-	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
-	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
+	dialog = gtk_message_dialog_new (parent,
+					 flags,
+					 GTK_MESSAGE_ERROR,
+					 GTK_BUTTONS_CLOSE,
+					 "%s", primary_text);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 
 	if (flags & GTK_DIALOG_MODAL)
 		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
 
 	/* label */
 
-	escaped_message = g_markup_escape_text (primary_text, -1);
 	if (secondary_text_format != NULL) {
 		va_list  args;
 		char    *secondary_message;
-		char    *escaped_secondary_message;
 
 		va_start (args, secondary_text_format);
 		secondary_message = g_strdup_vprintf (secondary_text_format, args);
 		va_end (args);
-		escaped_secondary_message = g_markup_escape_text (secondary_message, -1);
 
-		markup_text = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s",
-					       escaped_message,
-					       escaped_secondary_message);
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), secondary_message);
 
-		g_free (escaped_secondary_message);
 		g_free (secondary_message);
 	}
-	else
-		markup_text = g_strdup (escaped_message);
-	gtk_label_set_markup (GTK_LABEL (_gtk_builder_get_widget (builder, "message_label")), markup_text);
-	g_free (markup_text);
-	g_free (escaped_message);
 
 	/* output */
 
-	view_output = (row_output != NULL) && (secondary_text_format == NULL);
-	if (view_output) {
+	if ((row_output != NULL) && (secondary_text_format == NULL)) {
+		GtkWidget     *output_box;
+		GtkWidget     *label;
+		GtkWidget     *scrolled_window;
+		GtkWidget     *text_view;
 		GtkTextBuffer *text_buffer;
 		GtkTextIter    iter;
 		GList         *scan;
 
-		text_buffer = (GtkTextBuffer *) gtk_builder_get_object (builder, "output_textbuffer");
+		output_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+		gtk_box_pack_end (GTK_BOX (gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (dialog))),
+				  output_box, TRUE, TRUE, 0);
+
+		label = gtk_label_new_with_mnemonic (_("C_ommand Line Output:"));
+		gtk_box_pack_start (GTK_BOX (output_box), label, FALSE, FALSE, 0);
+
+		scrolled_window = g_object_new (GTK_TYPE_SCROLLED_WINDOW,
+						"shadow-type", GTK_SHADOW_IN,
+						"width-request", 450,
+						"height-request", 200,
+						NULL);
+		gtk_box_pack_start (GTK_BOX (output_box), scrolled_window, TRUE, TRUE, 0);
+
+		text_view = gtk_text_view_new ();
+		gtk_label_set_mnemonic_widget (GTK_LABEL (label), text_view);
+		gtk_container_add (GTK_CONTAINER (scrolled_window), text_view);
+
+		text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
 		gtk_text_buffer_create_tag (text_buffer, "monospace",
 					    "family", "monospace",
 					    NULL);
@@ -252,9 +257,9 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 
 			gtk_text_buffer_insert (text_buffer, &iter, "\n", 1);
 		}
-	}
 
-	gtk_widget_set_visible (_gtk_builder_get_widget (builder, "output_box"), view_output);
+		gtk_widget_show_all (output_box);
+	}
 
 	return dialog;
 }
