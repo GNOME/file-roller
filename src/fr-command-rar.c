@@ -147,7 +147,7 @@ parse_name_field (char         *line,
 		name_field = g_strdup (line + 1);
 
 	if (name_field == NULL)
-		return NULL;
+		return;
 
 	if (*name_field == '/') {
 		fdata->full_path = g_strdup (name_field);
