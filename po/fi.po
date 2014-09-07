@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-16 17:51+0000\n"
-"PO-Revision-Date: 2014-03-16 21:41+0200\n"
+"POT-Creation-Date: 2014-09-06 04:49+0000\n"
+"PO-Revision-Date: 2014-09-06 17:05+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -26,79 +26,52 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 "X-POT-Import-Date: 2012-03-05 14:50:08+0000\n"
 
-#: ../copy-n-paste/eggdesktopfile.c:164
-#, c-format
-msgid "File is not a valid .desktop file"
-msgstr "Tiedosto ei ole kelvollinen .desktop-tiedosto"
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:1
+msgid "Open, modify and create compressed archive files"
+msgstr "Avaa, muokkaa ja luo pakattuja arkistotiedostoja"
 
-#: ../copy-n-paste/eggdesktopfile.c:189
-#, c-format
-msgid "Unrecognized desktop file Version '%s'"
-msgstr "Tuntematon työpöytätiedoston versio ”%s”"
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:2
+msgid ""
+"Archive Manager (also known as File Roller) is the default GNOME application "
+"for opening, creating, and modifying archive and compressed archive files."
+msgstr ""
+"Arkistonhallinta (tuttavallisemmin Pakettienkäsittely) on Gnomen "
+"oletussovellus pakattujen arkistotiedostojen avaamiseen, luomiseen ja "
+"muokkaamiseen."
 
-#: ../copy-n-paste/eggdesktopfile.c:972
-#, c-format
-msgid "Starting %s"
-msgstr "Käynnistetään %s"
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:3
+msgid ""
+"Archive Manager supports a wide range of different archive files, including:"
+msgstr "Arkistonhallinta tukee lukuisia eri arkistotiedostoja, muun muassa:"
 
-#: ../copy-n-paste/eggdesktopfile.c:1114
-#, c-format
-msgid "Application does not accept documents on command line"
-msgstr "Sovellus ei hyväksy asiakirjoja komentoriviltä"
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:4
+msgid "gzip archives (.tar.gz, .tgz)"
+msgstr "gzip-arkistot (.tar.gz, .tgz)"
 
-#: ../copy-n-paste/eggdesktopfile.c:1182
-#, c-format
-msgid "Unrecognized launch option: %d"
-msgstr "Tuntematon käynnistysvalitsin: %d"
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:5
+msgid "bzip archives (.tar.bz, .tbz)"
+msgstr "bzip-arkistot (.tar.bz, .tbz)"
 
-#: ../copy-n-paste/eggdesktopfile.c:1387
-#, c-format
-msgid "Can't pass documents to this desktop element"
-msgstr "Ei voida välittää asiakirjoja tälle työpöytäelementille"
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:6
+#| msgid "Zip (.zip)"
+msgid "zip archives (.zip)"
+msgstr "zip-arkistot (.zip)"
 
-#: ../copy-n-paste/eggdesktopfile.c:1408
-#, c-format
-msgid "Not a launchable item"
-msgstr "Ei käynnistettävä kohde"
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:7
+msgid "xz archives (.tar.xz)"
+msgstr "xz-arkistot (.tar.xz)"
 
-#: ../copy-n-paste/eggsmclient.c:224
-msgid "Disable connection to session manager"
-msgstr "Estä yhteys istunnonhallintaan"
-
-#: ../copy-n-paste/eggsmclient.c:227
-msgid "Specify file containing saved configuration"
-msgstr "Anna tallennetun määrittelyn sisältävä tiedosto"
-
-#: ../copy-n-paste/eggsmclient.c:227
-msgid "FILE"
-msgstr "TIEDOSTO"
-
-#: ../copy-n-paste/eggsmclient.c:230
-msgid "Specify session management ID"
-msgstr "Anna istunnonhallinan tunniste"
-
-#: ../copy-n-paste/eggsmclient.c:230
-msgid "ID"
-msgstr "TUNNISTE"
-
-#: ../copy-n-paste/eggsmclient.c:251
-msgid "Session management options:"
-msgstr "Istunnonhallinan valitsimet:"
-
-#: ../copy-n-paste/eggsmclient.c:252
-msgid "Show session management options"
-msgstr "Näytä istunnonhallinan valitsimet"
-
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1989
-#: ../src/fr-window.c:5328
+#. set the name and icon
+#: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:717
+#: ../src/fr-window.c:1989 ../src/fr-window.c:5316
 msgid "Archive Manager"
 msgstr "Pakettienkäsittely"
 
-#: ../data/file-roller.desktop.in.in.h:2
+#: ../data/org.gnome.FileRoller.desktop.in.in.h:2
 msgid "Create and modify an archive"
 msgstr "Luo arkisto tai muokkaa arkistoa"
 
-#: ../data/file-roller.desktop.in.in.h:3
+#: ../data/org.gnome.FileRoller.desktop.in.in.h:3
 msgid "zip;tar;extract;unpack;"
 msgstr "zip;tar;extract;unpack;pura;pakkaa;"
 
@@ -238,28 +211,28 @@ msgstr "Oletustaltiokoko"
 msgid "The default size for volumes."
 msgstr "Oletuskoko taltioille."
 
-#: ../nautilus/nautilus-fileroller.c:327
+#: ../nautilus/nautilus-fileroller.c:328
 msgid "Extract Here"
 msgstr "Pura tähän"
 
 #. Translators: the current position is the current folder
-#: ../nautilus/nautilus-fileroller.c:329
+#: ../nautilus/nautilus-fileroller.c:330
 msgid "Extract the selected archive to the current position"
 msgstr "Pura valittu arkisto nykyiseen sijaintiin"
 
-#: ../nautilus/nautilus-fileroller.c:346
+#: ../nautilus/nautilus-fileroller.c:347
 msgid "Extract To..."
 msgstr "Pura kohteeseen…"
 
-#: ../nautilus/nautilus-fileroller.c:347
+#: ../nautilus/nautilus-fileroller.c:348
 msgid "Extract the selected archive"
 msgstr "Pura valittu arkisto"
 
-#: ../nautilus/nautilus-fileroller.c:366
+#: ../nautilus/nautilus-fileroller.c:367
 msgid "Compress..."
 msgstr "Tiivistä…"
 
-#: ../nautilus/nautilus-fileroller.c:367
+#: ../nautilus/nautilus-fileroller.c:368
 msgid "Create a compressed archive with the selected objects"
 msgstr "Luo tiivistetty arkisto valituista tiedostoista"
 
@@ -272,7 +245,7 @@ msgstr "Tiedostojen lisääminen arkistoon epäonnistui"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Sinulla ei ole oikeuksia lukea tiedostoja kansiosta ”%s”"
 
-#: ../src/dlg-add.c:180 ../src/fr-window.c:5608
+#: ../src/dlg-add.c:180 ../src/fr-window.c:5596
 msgid "Add Files"
 msgstr "Lisää tiedostoja"
 
@@ -286,7 +259,7 @@ msgid "Load Options"
 msgstr "Lataa asetukset"
 
 #. save options
-#: ../src/dlg-add.c:206 ../src/dlg-add.c:825
+#: ../src/dlg-add.c:206 ../src/dlg-add.c:822
 msgid "Save Options"
 msgstr "Tallenna asetukset"
 
@@ -295,7 +268,7 @@ msgstr "Tallenna asetukset"
 msgid "Reset Options"
 msgstr "Nollaa asetukset"
 
-#: ../src/dlg-add.c:826
+#: ../src/dlg-add.c:823
 msgid "_Options Name:"
 msgstr "_Asetuksen nimi:"
 
@@ -309,12 +282,12 @@ msgstr "\"%s\" vaatii salasanan"
 msgid "Wrong password."
 msgstr "Väärä salasana."
 
-#: ../src/dlg-batch-add.c:87 ../src/fr-application.c:329
-#: ../src/fr-application.c:697
+#: ../src/dlg-batch-add.c:87 ../src/fr-application.c:226
+#: ../src/fr-application.c:569
 msgid "Compress"
 msgstr "Tiivistä"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6637
+#: ../src/dlg-extract.c:95 ../src/fr-window.c:6630
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -325,17 +298,17 @@ msgstr ""
 "\n"
 "Haluatko luoda sen?"
 
-#: ../src/dlg-extract.c:104 ../src/fr-window.c:6646
+#: ../src/dlg-extract.c:104 ../src/fr-window.c:6639
 msgid "Create _Folder"
 msgstr "_Luo kansio"
 
 #: ../src/dlg-extract.c:123 ../src/dlg-extract.c:141 ../src/dlg-extract.c:168
-#: ../src/fr-window.c:4208 ../src/fr-window.c:6540 ../src/fr-window.c:6545
-#: ../src/fr-window.c:6667 ../src/fr-window.c:6687 ../src/fr-window.c:6692
+#: ../src/fr-window.c:4208 ../src/fr-window.c:6533 ../src/fr-window.c:6538
+#: ../src/fr-window.c:6660 ../src/fr-window.c:6680 ../src/fr-window.c:6685
 msgid "Extraction not performed"
 msgstr "Mitään ei purettu"
 
-#: ../src/dlg-extract.c:124 ../src/fr-window.c:6663
+#: ../src/dlg-extract.c:124 ../src/fr-window.c:6656
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Kohdekansion luonti ei onnistunut: %s."
@@ -346,7 +319,7 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Sinulla ei ole oikeuksia purkaa arkistoja kansioon ”%s”"
 
-#: ../src/dlg-extract.c:282 ../src/fr-window.c:5604
+#: ../src/dlg-extract.c:282 ../src/fr-window.c:5592
 #: ../src/ui/extract-dialog-options.ui.h:1
 msgid "Extract"
 msgstr "Pura"
@@ -357,8 +330,8 @@ msgstr "Tapahtui sisäinen virhe yritettäessä etsiä sovelluksia:"
 
 #: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
 #: ../src/dlg-package-installer.c:331 ../src/fr-archive.c:744
-#: ../src/fr-window.c:3880 ../src/fr-window.c:7272 ../src/fr-window.c:7629
-#: ../src/fr-window.c:9147
+#: ../src/fr-window.c:3880 ../src/fr-window.c:7265 ../src/fr-window.c:7622
+#: ../src/fr-window.c:9141
 msgid "Archive type not supported."
 msgstr "Arkistotyyppi ei ole tuettu."
 
@@ -384,7 +357,7 @@ msgstr "_Etsi komento"
 msgid "Enter a password for \"%s\""
 msgstr "Anna salasana arkistolle ”%s”."
 
-#: ../src/dlg-prop.c:96
+#: ../src/dlg-prop.c:94
 #, c-format
 msgid "%s Properties"
 msgstr "%s - ominaisuudet"
@@ -415,70 +388,65 @@ msgstr[1] ""
 msgid "Update the files in the archive \"%s\"?"
 msgstr "Päivitetäänkö tiedostot arkistossa ”%s”?"
 
-#: ../src/fr-application.c:65
+#: ../src/fr-application.c:61
 msgid "Add files to the specified archive and quit the program"
 msgstr "Lisää tiedostot annettuun arkistoon ja lopeta"
 
-#: ../src/fr-application.c:66
+#: ../src/fr-application.c:62
 msgid "ARCHIVE"
 msgstr "ARKISTO"
 
-#: ../src/fr-application.c:69
+#: ../src/fr-application.c:65
 msgid "Add files asking the name of the archive and quit the program"
 msgstr "Kysy arkiston nimeä, lisää tiedostot siihen ja lopeta"
 
-#: ../src/fr-application.c:73
+#: ../src/fr-application.c:69
 msgid "Extract archives to the specified folder and quit the program"
 msgstr "Pura arkistot annettuun kansioon ja lopeta"
 
-#: ../src/fr-application.c:74 ../src/fr-application.c:86
+#: ../src/fr-application.c:70 ../src/fr-application.c:82
 msgid "FOLDER"
 msgstr "KANSIO"
 
-#: ../src/fr-application.c:77
+#: ../src/fr-application.c:73
 msgid "Extract archives asking the destination folder and quit the program"
 msgstr "Kysy kansion nimeä, pura arkistot sinne ja lopeta"
 
-#: ../src/fr-application.c:81
+#: ../src/fr-application.c:77
 msgid ""
 "Extract the contents of the archives in the archive folder and quit the "
 "program"
 msgstr "Pura arkiston sisältö arkistokansioon ja lopeta ohjelma"
 
-#: ../src/fr-application.c:85
+#: ../src/fr-application.c:81
 msgid "Default folder to use for the '--add' and '--extract' commands"
 msgstr "”--add” ja ”--extract”-komentojen oletusarvoinen kansio"
 
-#: ../src/fr-application.c:89
+#: ../src/fr-application.c:85
 msgid "Create destination folder without asking confirmation"
 msgstr "Luo kohdekansio kysymättä"
 
-#: ../src/fr-application.c:93
+#: ../src/fr-application.c:89
 msgid "Use the notification system to notify the operation completion"
 msgstr ""
 "Käytä ilmoitusjärjestelmää toimenpiteiden valmistumisesta ilmoittamiseen"
 
-#: ../src/fr-application.c:96
+#: ../src/fr-application.c:92
 msgid "Start as a service"
 msgstr "Käynnistä palveluna"
 
-#: ../src/fr-application.c:99
+#: ../src/fr-application.c:95
 msgid "Show version"
 msgstr "Näytä versio"
 
-#: ../src/fr-application.c:365 ../src/fr-application.c:401
-#: ../src/fr-application.c:427 ../src/fr-application.c:721
+#: ../src/fr-application.c:262 ../src/fr-application.c:298
+#: ../src/fr-application.c:324 ../src/fr-application.c:593
 msgid "Extract archive"
 msgstr "Pura arkisto"
 
-#: ../src/fr-application.c:579
+#: ../src/fr-application.c:476
 msgid "- Create and modify an archive"
 msgstr "- Luo arkisto tai muokkaa arkistoa"
-
-#. manually set name and icon
-#: ../src/fr-application.c:847
-msgid "File Roller"
-msgstr "Tiedostokäärin"
 
 #: ../src/fr-application-menu.c:130
 msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
@@ -510,14 +478,14 @@ msgid "You can't add an archive to itself."
 msgstr "Arkistoa ei voi lisätä itseensä."
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:422
+#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:425
 #: ../src/fr-command-tar.c:304
 #, c-format
 msgid "Adding \"%s\""
 msgstr "Lisätään \"%s\""
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:453 ../src/fr-command-rar.c:554
+#: ../src/fr-command-7z.c:453 ../src/fr-command-rar.c:557
 #: ../src/fr-command-tar.c:425
 #, c-format
 msgid "Extracting \"%s\""
@@ -529,12 +497,12 @@ msgid "Archive not found"
 msgstr "Arkistoa ei löydy."
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-rar.c:503 ../src/fr-command-tar.c:370
+#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:370
 #, c-format
 msgid "Removing \"%s\""
 msgstr "Poistetaan \"%s\""
 
-#: ../src/fr-command-rar.c:685
+#: ../src/fr-command-rar.c:688
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "Arkiston osaa ei löytynyt: ”%s”"
@@ -551,7 +519,7 @@ msgstr "Tiivistetään arkisto uudelleen"
 msgid "Decompressing archive"
 msgstr "Puretaan arkiston tiivistys"
 
-#: ../src/fr-file-selector-dialog.c:772 ../src/fr-file-selector-dialog.c:817
+#: ../src/fr-file-selector-dialog.c:773 ../src/fr-file-selector-dialog.c:818
 msgid "Could not load the location"
 msgstr "Sijainnin lataus ei onnistunut"
 
@@ -570,7 +538,7 @@ msgid "You don't have permission to create an archive in this folder"
 msgstr "Sinulla ei ole oikeuksia luoda arkistoa tähän kansioon"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:446 ../src/fr-window.c:7942
+#: ../src/fr-new-archive-dialog.c:446 ../src/fr-window.c:7936
 msgid "New name is the same as old one, please type other name."
 msgstr "Uusi nimi on sama kuin vanha nimi, yritä antaa toinen nimi."
 
@@ -587,7 +555,7 @@ msgstr ""
 "Tiedosto on olemassa kohteessa \"%s\". Tiedoston korvaaminen korvaa nykyisen "
 "tiedoston sisällön."
 
-#: ../src/fr-new-archive-dialog.c:473 ../src/fr-window.c:6466
+#: ../src/fr-new-archive-dialog.c:473 ../src/fr-window.c:6459
 msgid "_Replace"
 msgstr "_Korvaa"
 
@@ -595,16 +563,16 @@ msgstr "_Korvaa"
 msgid "Could not delete the old archive."
 msgstr "Vanhan arkiston poisto ei onnistunut."
 
-#: ../src/fr-window-actions-callbacks.c:298 ../src/fr-window.c:6065
+#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6058
 #: ../src/ui/menus.ui.h:1
 msgid "Open"
 msgstr "Avaa"
 
-#: ../src/fr-window-actions-callbacks.c:311
+#: ../src/fr-window-actions-callbacks.c:302
 msgid "All archives"
 msgstr "Kaikki arkistot"
 
-#: ../src/fr-window-actions-callbacks.c:318
+#: ../src/fr-window-actions-callbacks.c:309
 msgid "All files"
 msgstr "Kaikki tiedostot"
 
@@ -727,7 +695,7 @@ msgid "Extraction completed successfully"
 msgstr "Purkaminen valmistui onnistuneesti"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2636 ../src/fr-window.c:6051
+#: ../src/fr-window.c:2636 ../src/fr-window.c:6044
 #, c-format
 msgid "\"%s\" created successfully"
 msgstr "\"%s\" luotiin onnistuneesti"
@@ -785,8 +753,8 @@ msgstr "Komentoa ei löydy."
 msgid "Test Result"
 msgstr "Testin tulos"
 
-#: ../src/fr-window.c:3998 ../src/fr-window.c:8622 ../src/fr-window.c:8656
-#: ../src/fr-window.c:8936
+#: ../src/fr-window.c:3998 ../src/fr-window.c:8616 ../src/fr-window.c:8650
+#: ../src/fr-window.c:8930
 msgid "Could not perform the operation"
 msgstr "Toiminto ei onnistunut"
 
@@ -806,7 +774,7 @@ msgstr "Haluatko luoda uuden arkiston näistä tiedostoista?"
 msgid "Create _Archive"
 msgstr "Luo _arkisto"
 
-#: ../src/fr-window.c:4086 ../src/fr-window.c:7080
+#: ../src/fr-window.c:4086 ../src/fr-window.c:7073
 msgid "New Archive"
 msgstr "Uusi arkisto"
 
@@ -839,66 +807,66 @@ msgctxt "File"
 msgid "Name"
 msgstr "Nimi"
 
-#: ../src/fr-window.c:5613 ../src/fr-window.c:5639
+#: ../src/fr-window.c:5601 ../src/fr-window.c:5631
 msgid "Find files by name"
 msgstr "Etsi tiedostoja nimen perusteella"
 
-#: ../src/fr-window.c:5657
+#: ../src/fr-window.c:5648
 msgid "Go to the previous visited location"
 msgstr "Siirry viimeksi käytyyn sijaintiin"
 
-#: ../src/fr-window.c:5662
+#: ../src/fr-window.c:5653
 msgid "Go to the next visited location"
 msgstr "Siirry seuraavana käytyyn sijaintiin"
 
-#: ../src/fr-window.c:5667
+#: ../src/fr-window.c:5663
 msgid "Go to the home location"
 msgstr "Siirry kotisijaintiin"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5679 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:5672 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Sijainti:"
 
-#: ../src/fr-window.c:6454
+#: ../src/fr-window.c:6447
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "Korvataanko tiedosto ”%s”?"
 
-#: ../src/fr-window.c:6457
+#: ../src/fr-window.c:6450
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "Toinen tiedosto samalla nimellä on jo olemassa kansiossa ”%s”."
 
-#: ../src/fr-window.c:6464
+#: ../src/fr-window.c:6457
 msgid "Replace _All"
 msgstr "Korvaa k_aikki"
 
-#: ../src/fr-window.c:6465
+#: ../src/fr-window.c:6458
 msgid "_Skip"
 msgstr "_Ohita"
 
-#: ../src/fr-window.c:7264 ../src/fr-window.c:7621
+#: ../src/fr-window.c:7257 ../src/fr-window.c:7614
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Arkiston ”%s” tallentaminen epäonnistui"
 
-#: ../src/fr-window.c:7391
+#: ../src/fr-window.c:7384
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../src/fr-window.c:7715
+#: ../src/fr-window.c:7708
 msgid "Last Output"
 msgstr "Viimeisin tuloste"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7937
+#: ../src/fr-window.c:7931
 msgid "New name is void, please type a name."
 msgstr "Uusi nimi ei ole kelvollinen, yritä antaa toinen nimi."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7947
+#: ../src/fr-window.c:7941
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
@@ -907,7 +875,7 @@ msgstr ""
 "Nimi ”%s” ei kelpaa, koska nimi sisältää seuraavia merkkejä: %s. Anna "
 "tiedostolle toinen nimi."
 
-#: ../src/fr-window.c:7983
+#: ../src/fr-window.c:7977
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -918,11 +886,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7983 ../src/fr-window.c:7985
+#: ../src/fr-window.c:7977 ../src/fr-window.c:7979
 msgid "Please use a different name."
 msgstr "Käytä eri nimeä."
 
-#: ../src/fr-window.c:7985
+#: ../src/fr-window.c:7979
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -933,51 +901,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8055
+#: ../src/fr-window.c:8049
 msgid "Rename"
 msgstr "Nimeä uudelleen"
 
-#: ../src/fr-window.c:8056
+#: ../src/fr-window.c:8050
 msgid "_New folder name:"
 msgstr "Kansion _uusi nimi:"
 
-#: ../src/fr-window.c:8056
+#: ../src/fr-window.c:8050
 msgid "_New file name:"
 msgstr "_Tiedoston uusi nimi:"
 
-#: ../src/fr-window.c:8060
+#: ../src/fr-window.c:8054
 msgid "_Rename"
 msgstr "_Nimeä uudelleen"
 
-#: ../src/fr-window.c:8077 ../src/fr-window.c:8096
+#: ../src/fr-window.c:8071 ../src/fr-window.c:8090
 msgid "Could not rename the folder"
 msgstr "Kansion nimen muuttaminen epäonnistui"
 
-#: ../src/fr-window.c:8077 ../src/fr-window.c:8096
+#: ../src/fr-window.c:8071 ../src/fr-window.c:8090
 msgid "Could not rename the file"
 msgstr "Tiedoston nimen muuttaminen epäonnistui"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8529
+#: ../src/fr-window.c:8523
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "Siirretään  tiedostoja arkistosta \"%s\" arkistoon \"%s\""
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8532
+#: ../src/fr-window.c:8526
 #, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "Kopioidaan  tiedostoja arkistosta \"%s\" arkistoon \"%s\""
 
-#: ../src/fr-window.c:8583
+#: ../src/fr-window.c:8577
 msgid "Paste Selection"
 msgstr "Liitä valinta"
 
-#: ../src/fr-window.c:8584
+#: ../src/fr-window.c:8578
 msgid "_Destination folder:"
 msgstr "_Kohdekansio:"
 
-#: ../src/fr-window.c:8588 ../src/ui/app-menubar.ui.h:12
+#: ../src/fr-window.c:8582 ../src/ui/app-menubar.ui.h:12
 msgid "_Paste"
 msgstr "_Liitä"
 
@@ -1000,7 +968,8 @@ msgstr "Muuta salasanan näkyvyyttä"
 msgid "_Add"
 msgstr "_Lisää"
 
-#: ../src/gtk-utils.h:35
+#: ../src/gtk-utils.h:35 ../src/ui/ask-password.ui.h:1 ../src/ui/delete.ui.h:2
+#: ../src/ui/password.ui.h:2
 msgid "_Cancel"
 msgstr "_Peru"
 
@@ -1020,7 +989,7 @@ msgstr "_Pura"
 msgid "_Open"
 msgstr "_Avaa"
 
-#: ../src/gtk-utils.h:40
+#: ../src/gtk-utils.h:40 ../src/ui/password.ui.h:3
 msgid "_Save"
 msgstr "_Tallenna"
 
@@ -1060,8 +1029,7 @@ msgstr "_Seuraa symbolisia linkkejä"
 msgid "_File"
 msgstr "_Tiedosto"
 
-#: ../src/ui/app-menubar.ui.h:2
-#| msgid "_New Archive"
+#: ../src/ui/app-menubar.ui.h:2 ../src/ui/app-menu.ui.h:1
 msgid "_New Archive…"
 msgstr "_Uusi arkisto…"
 
@@ -1070,12 +1038,10 @@ msgid "_Open…"
 msgstr "_Avaa…"
 
 #: ../src/ui/app-menubar.ui.h:4
-#| msgid "_Extract…"
 msgid "_Extract Files…"
 msgstr "_Pura tiedostot…"
 
 #: ../src/ui/app-menubar.ui.h:5
-#| msgid "Save As…"
 msgid "Save _As…"
 msgstr "Tallenna _nimellä…"
 
@@ -1096,7 +1062,6 @@ msgid "Cu_t"
 msgstr "_Leikkaa"
 
 #: ../src/ui/app-menubar.ui.h:11
-#| msgid "Copy"
 msgid "_Copy"
 msgstr "_Kopioi"
 
@@ -1109,7 +1074,6 @@ msgid "_Rename…"
 msgstr "_Nimeä uudelleen..."
 
 #: ../src/ui/app-menubar.ui.h:15
-#| msgid "_Selected files"
 msgid "_Delete Files…"
 msgstr "_Poista tiedostot…"
 
@@ -1118,17 +1082,14 @@ msgid "_Select All"
 msgstr "_Valitse kaikki"
 
 #: ../src/ui/app-menubar.ui.h:17
-#| msgid "Dese_lect All"
 msgid "D_eselect All"
 msgstr "_Älä valitse mitään"
 
 #: ../src/ui/app-menubar.ui.h:18
-#| msgid "Find:"
 msgid "_Find"
 msgstr "_Etsi"
 
 #: ../src/ui/app-menubar.ui.h:19
-#| msgid "Pass_word…"
 msgid "Set Pass_word…"
 msgstr "_Aseta salasana…"
 
@@ -1160,11 +1121,12 @@ msgstr "Sisältö"
 msgid "_About"
 msgstr "Ti_etoja"
 
-#: ../src/ui/app-menu.ui.h:1
-msgid "_New Archive"
-msgstr "_Uusi arkisto"
+#: ../src/ui/ask-password.ui.h:2
+#| msgid "_Ok"
+msgid "_OK"
+msgstr "_OK"
 
-#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
+#: ../src/ui/ask-password.ui.h:3 ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "Salasa_na:"
 
@@ -1172,19 +1134,24 @@ msgstr "Salasa_na:"
 msgid "Delete"
 msgstr "Poista"
 
-#: ../src/ui/delete.ui.h:2 ../src/ui/extract-dialog-options.ui.h:4
+#: ../src/ui/delete.ui.h:3
+#| msgid "Delete"
+msgid "_Delete"
+msgstr "_Poista"
+
+#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:4
 msgid "_Files:"
 msgstr "_Tiedostot:"
 
-#: ../src/ui/delete.ui.h:3
+#: ../src/ui/delete.ui.h:5
 msgid "example: *.txt; *.doc"
 msgstr "esimerkki: *.txt; *.doc"
 
-#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:2
+#: ../src/ui/delete.ui.h:6 ../src/ui/extract-dialog-options.ui.h:2
 msgid "_All files"
 msgstr "_Kaikki tiedostot"
 
-#: ../src/ui/delete.ui.h:5 ../src/ui/extract-dialog-options.ui.h:3
+#: ../src/ui/delete.ui.h:7 ../src/ui/extract-dialog-options.ui.h:3
 msgid "_Selected files"
 msgstr "_Valitut tiedostot"
 
@@ -1219,10 +1186,6 @@ msgstr "Tallenna nimellä…"
 #: ../src/ui/gears-menu.ui.h:2
 msgid "Pass_word…"
 msgstr "_Salasana..."
-
-#: ../src/ui/gears-menu.ui.h:5
-msgid "Close"
-msgstr "Sulje"
 
 #: ../src/ui/menus.ui.h:2
 msgid "_Open With…"
@@ -1274,7 +1237,7 @@ msgstr "_Muut valinnat"
 msgid "Password"
 msgstr "Salasana"
 
-#: ../src/ui/password.ui.h:2
+#: ../src/ui/password.ui.h:4
 msgid "_Encrypt the file list"
 msgstr "Salaa _tiedostolista"
 
@@ -1321,8 +1284,56 @@ msgstr "_Päivitä"
 msgid "S_elect the files you want to update:"
 msgstr "_Valitse päivitettävät tiedostot:"
 
-#~ msgid "_Ok"
-#~ msgstr "_OK"
+#~ msgid "File is not a valid .desktop file"
+#~ msgstr "Tiedosto ei ole kelvollinen .desktop-tiedosto"
+
+#~ msgid "Unrecognized desktop file Version '%s'"
+#~ msgstr "Tuntematon työpöytätiedoston versio ”%s”"
+
+#~ msgid "Starting %s"
+#~ msgstr "Käynnistetään %s"
+
+#~ msgid "Application does not accept documents on command line"
+#~ msgstr "Sovellus ei hyväksy asiakirjoja komentoriviltä"
+
+#~ msgid "Unrecognized launch option: %d"
+#~ msgstr "Tuntematon käynnistysvalitsin: %d"
+
+#~ msgid "Can't pass documents to this desktop element"
+#~ msgstr "Ei voida välittää asiakirjoja tälle työpöytäelementille"
+
+#~ msgid "Not a launchable item"
+#~ msgstr "Ei käynnistettävä kohde"
+
+#~ msgid "Disable connection to session manager"
+#~ msgstr "Estä yhteys istunnonhallintaan"
+
+#~ msgid "Specify file containing saved configuration"
+#~ msgstr "Anna tallennetun määrittelyn sisältävä tiedosto"
+
+#~ msgid "FILE"
+#~ msgstr "TIEDOSTO"
+
+#~ msgid "Specify session management ID"
+#~ msgstr "Anna istunnonhallinan tunniste"
+
+#~ msgid "ID"
+#~ msgstr "TUNNISTE"
+
+#~ msgid "Session management options:"
+#~ msgstr "Istunnonhallinan valitsimet:"
+
+#~ msgid "Show session management options"
+#~ msgstr "Näytä istunnonhallinan valitsimet"
+
+#~ msgid "File Roller"
+#~ msgstr "Tiedostokäärin"
+
+#~ msgid "_New Archive"
+#~ msgstr "_Uusi arkisto"
+
+#~ msgid "Close"
+#~ msgstr "Sulje"
 
 #~ msgid "_Folders"
 #~ msgstr "_Kansiot"
@@ -1663,9 +1674,6 @@ msgstr "_Valitse päivitettävät tiedostot:"
 
 #~ msgid "Zoo (.zoo)"
 #~ msgstr "Zoo (.zoo)"
-
-#~ msgid "Zip (.zip)"
-#~ msgstr "Zip (.zip)"
 
 #~ msgid "Creating archive"
 #~ msgstr "Luodaan arkistoa"
