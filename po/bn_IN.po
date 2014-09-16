@@ -1,30 +1,31 @@
 # translation of bn_IN.po to Bengali INDIA
 # Copyright (C) 2003 Rupak Sinha
 # This file is distributed under the same license as the file-roller package.
-#
+# 
 # Rupak Sinha <rupak.sinha@softhome.net>, 2003.
 # Mahay Alam Khan <makl10n@yahoo.com>, 2005.
 # Samia Niamatullah <mailsamia2001@yahoo.com>, 2005.
 # Runa Bhattacharjee <runabh@gmail.com>, 2006, 2007.
 # Runa Bhattacharjee <runab@fedoraproject.org>, 2008.
 # Runa Bhattacharjee <runab@redhat.com>, 2009, 2010, 2011, 2012.
+# sray <sray@redhat.com>, 2013. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: bn_IN\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-08-11 20:48+0000\n"
-"PO-Revision-Date: 2012-09-22 15:39+0530\n"
-"Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
+"PO-Revision-Date: 2013-10-03 02:15-0400\n"
+"Last-Translator: sray <sray@redhat.com>\n"
 "Language-Team: Bengali (India) <anubad@lists.ankur.org.in>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: bn-IN\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "\n"
 "\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Zanata 3.1.2\n"
 
 #: ../copy-n-paste/eggdesktopfile.c:165
 #, c-format
@@ -89,14 +90,19 @@ msgstr "সেশান পরিচালনা সংক্রান্ত ব
 msgid "Show session management options"
 msgstr "সেশান পরিচালনা সংক্রান্ত বিকল্প প্রদর্শন করা হবে"
 
-#: ../data/file-roller.desktop.in.in.h:1 ../src/fr-window.c:1955
-#: ../src/fr-window.c:5331
+#: ../data/file-roller.desktop.in.in.h:1
+#: ../src/fr-window.c:2004
+#: ../src/fr-window.c:5384
 msgid "Archive Manager"
 msgstr "আর্কাইভ পরিচালন ব্যবস্থা"
 
 #: ../data/file-roller.desktop.in.in.h:2
 msgid "Create and modify an archive"
 msgstr "আর্কাইভ নির্মাণ ও পরিবর্তন করুন"
+
+#: ../data/file-roller.desktop.in.in.h:3
+msgid "zip;tar;extract;unpack;"
+msgstr "জিপ;টার;এক্সট্র্যাক্ট;অান-প্যাক;"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
 msgid "How to sort files"
@@ -108,8 +114,7 @@ msgid ""
 "type, time, path."
 msgstr ""
 "ফাইলের ক্রমবিন্যাসের জন্য ব্যবহারযোগ্য মান। সম্ভাব্য মানগুলি হল: নাম, মাপ, "
-"ধরন, সময়, "
-"পাথ।"
+"ধরন, সময়, পাথ।"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
 msgid "Sort type"
@@ -120,10 +125,11 @@ msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
-"ছোট-থেকে-বড় অথবা বড়-থেকে-ছোট, কোন দিশায় ক্রমবিন্যাস করা হবে। সম্ভাব্য মান হল: "
-"ছোট-থেকে-বড়, বড়-থেকে-ছোট।"
+"ছোট-থেকে-বড় অথবা বড়-থেকে-ছোট, কোন দিশায় ক্রমবিন্যাস করা হবে। সম্ভাব্য মান হল:"
+" ছোট-থেকে-বড়, বড়-থেকে-ছোট।"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
+#: ../src/ui/app-menu.ui.h:2
 msgid "List Mode"
 msgstr "লিস্টের মোড"
 
@@ -133,8 +139,7 @@ msgid ""
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
 "আর্কাইভের মধ্যে উপস্থিত সকল ফাইলের তালিকা দেখার জন্য 'all-files' ব্যবহার "
-"করুন। "
-"ফোল্ডার রূপে আর্কাইভ দেখার জন্য 'as-folder' ব্যবহার করুন।"
+"করুন। ফোল্ডার রূপে আর্কাইভ দেখার জন্য 'as-folder' ব্যবহার করুন।"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
 msgid "Display type"
@@ -173,7 +178,6 @@ msgid "Name column width"
 msgstr "নামের কলামের প্রস্থ"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
-#| msgid "The default width of the name column the file list."
 msgid "The default width of the name column in the file list."
 msgstr "ফাইল তালিকার মধ্যে নামের কলামের ডিফল্ট প্রস্থ।"
 
@@ -188,81 +192,71 @@ msgstr ""
 "সংখ্যা।"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
-msgid "View toolbar"
-msgstr "টুল-বার প্রদর্শন"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
-msgid "Whether to display the toolbar."
-msgstr "টুল-বার প্রদর্শন করা হবে কি না।"
-
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
 msgid "View statusbar"
 msgstr "স্ট্যাটাস-বার প্রদর্শন"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
 msgid "Whether to display the statusbar."
 msgstr "স্ট্যাটাস-বার প্রদর্শন করা হবে কি না।"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23 ../src/ui.h:212
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
+#: ../src/ui.h:198
 msgid "View the folders pane"
 msgstr "ফোল্ডারের পেইন প্রদর্শন করুন"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
 msgid "Whether to display the folders pane."
 msgstr "ফোল্ডারের পেইন প্রদর্শন করা হবে কি না।"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
 msgid "Editors"
 msgstr "এডিটর"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
 msgid ""
 "List of applications entered in the 'Open File' dialog and not associated "
 "with the file type."
 msgstr ""
 "'ফাইল খুলুন' ডায়লগের মধ্যে অন্তর্ভুক্ত অ্যাপ্লিকেশনের তালিকা যেগুলির সাথে "
-"কোনো ধরনের "
-"ফাইল যুক্ত নয়।"
+"কোনো ধরনের ফাইল যুক্ত নয়।"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
 msgid "Compression level"
 msgstr "সংকুচনের মাত্রা"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
 msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
 msgstr ""
 "আর্কাইভের মধ্যে ফাইল সংযোজনের সময় ব্যবহৃত সংকুচনের মাত্রা। সম্ভাব্য মান হল: "
-"very-"
-"fast, fast, normal, maximum."
+"very-fast, fast, normal, maximum."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
 msgid "Encrypt the archive header"
 msgstr "আর্কাইভের হেডার এনক্রিপ্ট করা হবে"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
 "আর্কাইভের হেডার এনক্রিপ্ট করা হবে কি না। হেডার এনক্রিপ্ট করা হলে, আর্কাইভের "
-"তথ্যের "
-"তালিকা প্রাপ্ত করার জন্যও পাসওয়ার্ড ব্যবহার করা আবশ্যক হবে।"
+"তথ্যের তালিকা প্রাপ্ত করার জন্যও পাসওয়ার্ড ব্যবহার করা আবশ্যক হবে।"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:29
 msgid "Do not overwrite newer files"
 msgstr "নতুন ফাইল প্রতিস্থাপন করা হবে না"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:30
 msgid "Recreate the folders stored in the archive"
 msgstr "আর্কাইভের মধ্যে উপস্থিত ফোল্ডার নতুন করে প্রস্তুত করুন"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:33
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:31
 msgid "Default volume size"
 msgstr "ভলিউমের ডিফল্ট মাপ"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:34
+#: ../data/org.gnome.FileRoller.gschema.xml.in.h:32
 msgid "The default size for volumes."
 msgstr "ভলিউমের ডিফল্ট মাপ।"
 
@@ -291,11 +285,14 @@ msgstr "আর্কাইভে সংকুচন করুন..."
 msgid "Create a compressed archive with the selected objects"
 msgstr "নির্বাচিত বস্তুগুলি সহ একটি সংকুচিত আর্কাইভ নির্মাণ করুন"
 
-#: ../src/actions.c:112 ../src/fr-window.c:5626 ../src/fr-window.c:6165
+#: ../src/actions.c:112
+#: ../src/fr-window.c:5678
+#: ../src/fr-window.c:6227
 msgid "Open"
 msgstr "খুলুন"
 
-#: ../src/actions.c:125 ../src/fr-window.c:5169
+#: ../src/actions.c:125
+#: ../src/fr-window.c:5235
 msgid "All archives"
 msgstr "সব আর্কাইভ"
 
@@ -303,15 +300,15 @@ msgstr "সব আর্কাইভ"
 msgid "All files"
 msgstr "সব ফাইল"
 
-#: ../src/actions.c:499
+#: ../src/actions.c:487
 msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
 msgstr "স্বত্বাধিকার © ২০০১-২০১০ Free Software Foundation, Inc."
 
-#: ../src/actions.c:500
+#: ../src/actions.c:488
 msgid "An archive manager for GNOME."
 msgstr "GNOME-এ ব্যবহারযোগ্য আর্কাইভ পরিচালনব্যবস্থা"
 
-#: ../src/actions.c:503
+#: ../src/actions.c:491
 msgid "translator-credits"
 msgstr ""
 "রূপক সিংহ <rupak.sinha@softhome.net>\n"
@@ -328,34 +325,34 @@ msgstr "আর্কাইভে ফাইল সংযোজন করা য�
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "\"%s\" ফোল্ডারের ফাইল পড়ার অনুমতি আপনার নেই"
 
-#: ../src/dlg-add.c:182 ../src/ui.h:46
+#: ../src/dlg-add.c:182
+#: ../src/ui.h:42
 msgid "Add Files"
 msgstr "ফাইল যোগ করুন"
 
 #: ../src/dlg-add.c:193
-#| msgid "_Load Options"
 msgid "_Options"
 msgstr "বিকল্প (_O)"
 
 # msgstr "_সংরক্ষণ করবার বৈশিষ্ঠ্য"
 #. load options
-#: ../src/dlg-add.c:202 ../src/ui/add-options.ui.h:1
+#: ../src/dlg-add.c:202
+#: ../src/ui/add-options.ui.h:1
 msgid "Load Options"
 msgstr "বিকল্প লোড করা হবে"
 
 #. save options
-#: ../src/dlg-add.c:209 ../src/dlg-add.c:824
+#: ../src/dlg-add.c:209
+#: ../src/dlg-add.c:827
 msgid "Save Options"
 msgstr "বিকল্প সংরক্ষণ"
 
 #. clear options
 #: ../src/dlg-add.c:216
-#| msgid "_Reset Options"
 msgid "Reset Options"
 msgstr "বিকল্পের মান পুনরায় নির্ধারণ করুন"
 
-#: ../src/dlg-add.c:825
-#| msgid "Options Name:"
+#: ../src/dlg-add.c:828
 msgid "_Options Name:"
 msgstr "বিকল্পের নাম: (_O)"
 
@@ -366,64 +363,81 @@ msgid "Password required for \"%s\""
 msgstr "\"%s\"-র জন্য আবশ্যক পাসওয়ার্ড"
 
 #: ../src/dlg-ask-password.c:139
-#| msgid "Password"
 msgid "Wrong password."
 msgstr "ভুল পাসওয়ার্ড"
 
-#: ../src/dlg-batch-add.c:81 ../src/main.c:412 ../src/main.c:778
+#: ../src/dlg-batch-add.c:87
+#: ../src/fr-application.c:329
+#: ../src/fr-application.c:683
 msgid "Compress"
 msgstr "সংকুচন করুন"
 
-#: ../src/dlg-extract.c:96 ../src/fr-window.c:6690
+#: ../src/dlg-extract.c:96
+#: ../src/fr-window.c:6783
 #, c-format
-msgid ""
-"Destination folder \"%s\" does not exist.\n"
+msgid "Destination folder \"%s\" does not exist.\n"
 "\n"
 "Do you want to create it?"
-msgstr ""
-"উদ্দিষ্ট ফোল্ডার \"%s\" বর্তমানে অনুপস্থিত।\n"
+msgstr "উদ্দিষ্ট ফোল্ডার \"%s\" বর্তমানে অনুপস্থিত।\n"
 "\n"
 "নির্মাণ করা হবে কি?"
 
-#: ../src/dlg-extract.c:105 ../src/fr-window.c:6699
+#: ../src/dlg-extract.c:105
+#: ../src/fr-window.c:6792
 msgid "Create _Folder"
 msgstr "ফোল্ডার নির্মাণ করুন (_F)"
 
-#: ../src/dlg-extract.c:124 ../src/dlg-extract.c:142 ../src/dlg-extract.c:169
-#: ../src/fr-window.c:4118 ../src/fr-window.c:6595 ../src/fr-window.c:6600
-#: ../src/fr-window.c:6720 ../src/fr-window.c:6739 ../src/fr-window.c:6744
+#: ../src/dlg-extract.c:124
+#: ../src/dlg-extract.c:142
+#: ../src/dlg-extract.c:169
+#: ../src/fr-window.c:4197
+#: ../src/fr-window.c:6687
+#: ../src/fr-window.c:6692
+#: ../src/fr-window.c:6813
+#: ../src/fr-window.c:6832
+#: ../src/fr-window.c:6837
 msgid "Extraction not performed"
 msgstr "এক্সট্র্যাক্ট করা সম্ভব হয়নি।"
 
-#: ../src/dlg-extract.c:125 ../src/fr-window.c:6716
+#: ../src/dlg-extract.c:125
+#: ../src/fr-window.c:6809
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "উদ্দিষ্ট ফোল্ডার তৈরি করা যায়নি: %s।"
 
-#: ../src/dlg-extract.c:170 ../src/fr-window.c:4284 ../src/fr-window.c:4368
+#: ../src/dlg-extract.c:170
+#: ../src/fr-window.c:4366
+#: ../src/fr-window.c:4450
 #, c-format
 msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
+"You don't have the right permissions to extract archives in the folder "
+"\"%s\""
 msgstr ""
 "\"%s\" ফোল্ডারে আর্কাইভ এক্সট্র্যাক্ট করার জন্য আপনার পর্যাপ্ত অনুমতি নেই"
 
-#: ../src/dlg-extract.c:283 ../src/ui/extract-dialog-options.ui.h:1
-#: ../src/ui.h:113
+#: ../src/dlg-extract.c:283
+#: ../src/ui/extract-dialog-options.ui.h:1
+#: ../src/ui.h:109
 msgid "Extract"
 msgstr "এক্সট্র্যাক্ট করুন"
 
-#: ../src/dlg-package-installer.c:107 ../src/dlg-package-installer.c:220
+#: ../src/dlg-package-installer.c:112
+#: ../src/dlg-package-installer.c:225
 msgid "There was an internal error trying to search for applications:"
 msgstr "অ্যাপ্লিকেশন অনুসন্ধানকালে অভ্যন্তররীণ সমস্যা দেখা দিয়েছিল:"
 
-#: ../src/dlg-package-installer.c:269 ../src/dlg-package-installer.c:278
-#: ../src/dlg-package-installer.c:306 ../src/fr-archive.c:819
-#: ../src/fr-window.c:3848 ../src/fr-window.c:7295 ../src/fr-window.c:7651
-#: ../src/fr-window.c:9177
+#: ../src/dlg-package-installer.c:294
+#: ../src/dlg-package-installer.c:303
+#: ../src/dlg-package-installer.c:331
+#: ../src/fr-archive.c:743
+#: ../src/fr-window.c:3926
+#: ../src/fr-window.c:7412
+#: ../src/fr-window.c:7769
+#: ../src/fr-window.c:9301
 msgid "Archive type not supported."
 msgstr "এই ধরনের আর্কাইভ সমর্থিত নয়।"
 
-#: ../src/dlg-package-installer.c:288
+#: ../src/dlg-package-installer.c:313
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -432,17 +446,16 @@ msgstr ""
 "%s ফাইলের জন্য কোনো কমান্ড ইনস্টল করা হয়নি।\n"
 "এই ফাইলটি খুলতে ব্যবহারের জন্য কোনো কমান্ড অনুসন্ধান করা হবে কি?"
 
-#: ../src/dlg-package-installer.c:293
+#: ../src/dlg-package-installer.c:318
 msgid "Could not open this file type"
 msgstr "এই ধরনের ফাইল খোলা যায়নি"
 
-#: ../src/dlg-package-installer.c:296
+#: ../src/dlg-package-installer.c:321
 msgid "_Search Command"
 msgstr "অনুসন্ধানের কমান্ড (_S)"
 
 #: ../src/dlg-password.c:91
 #, c-format
-#| msgid "Enter the password for the archive '%s'."
 msgid "Enter a password for \"%s\""
 msgstr "\"%s\"-র জন্য পাসওয়ার্ড লিখুন"
 
@@ -451,13 +464,15 @@ msgstr "\"%s\"-র জন্য পাসওয়ার্ড লিখুন"
 msgid "%s Properties"
 msgstr "%s-র বৈশিষ্ট্য"
 
-#: ../src/dlg-update.c:162
+#: ../src/dlg-update.c:163
 #, c-format
 msgid "Update the file \"%s\" in the archive \"%s\"?"
 msgstr "\"%s\" ফাইলটি, \"%s\" আর্কাইভের মধ্যে আপডেট করা হবে কি?"
 
 #. secondary text
-#: ../src/dlg-update.c:173 ../src/dlg-update.c:198 ../src/ui/update.ui.h:2
+#: ../src/dlg-update.c:174
+#: ../src/dlg-update.c:199
+#: ../src/ui/update.ui.h:2
 #, c-format
 msgid ""
 "The file has been modified with an external application. If you don't update "
@@ -467,74 +482,146 @@ msgid_plural ""
 "update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
 "ফাইলটি কোনো পৃথক অ্যাপ্লিকেশন সহযোগে পরিবর্তন করা হয়েছে। বর্তমান আর্কাইভের "
-"মধ্যে "
-"উপস্থিত ফাইলের সংস্করণ আপডেট না করা হলে, আপনার করা সব পরিবর্তন বর্জন করা হবে।"
+"মধ্যে উপস্থিত ফাইলের সংস্করণ আপডেট না করা হলে, আপনার করা সব পরিবর্তন বর্জন "
+"করা হবে।"
 msgstr[1] ""
 "%d-টি ফাইল কোনো পৃথক অ্যাপ্লিকেশন সহযোগে পরিবর্তন করা হয়েছে। বর্তমান "
-"আর্কাইভের "
-"মধ্যে উপস্থিত ফাইলের সংস্করণ আপডেট না করা হলে, আপনার করা সব পরিবর্তন বর্জন "
-"করা "
-"হবে।"
+"আর্কাইভের মধ্যে উপস্থিত ফাইলের সংস্করণ আপডেট না করা হলে, আপনার করা সব "
+"পরিবর্তন বর্জন করা হবে।"
 
-#: ../src/dlg-update.c:188
+#: ../src/dlg-update.c:189
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
 msgstr "\"%s\" আর্কাইভের মধ্যে ফাইল আপডেট করা হবে কি?"
 
-#: ../src/fr-archive.c:1944
+#: ../src/fr-application.c:65
+msgid "Add files to the specified archive and quit the program"
+msgstr "নির্বাচিত আর্কাইভে ফাইলগুলি যোগ করে প্রোগ্রাম থেকে প্রস্থান করা হবে"
+
+#: ../src/fr-application.c:66
+msgid "ARCHIVE"
+msgstr "আর্কাইভ"
+
+#: ../src/fr-application.c:69
+msgid "Add files asking the name of the archive and quit the program"
+msgstr ""
+"আর্কাইভের নাম জিজ্ঞাসা করে ফাইল যোগ করা হবে ও প্রোগ্রাম থেকে প্রস্থান করা "
+"হবে"
+
+#: ../src/fr-application.c:73
+msgid "Extract archives to the specified folder and quit the program"
+msgstr ""
+"উল্লিখিত ফোল্ডারে আর্কাইভ এক্সট্র্যাক্ট করে প্রোগ্রাম থেকে প্রস্থান করা হবে"
+
+#: ../src/fr-application.c:74
+#: ../src/fr-application.c:86
+msgid "FOLDER"
+msgstr "ফোল্ডার"
+
+#: ../src/fr-application.c:77
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr ""
+"আর্কাইভ এক্সট্র্যাক্ট করার সময় উদ্দিষ্ট ফোল্ডারের নাম জিজ্ঞাসা প্রোগ্রাম "
+"বন্ধ করা হবে"
+
+#: ../src/fr-application.c:81
+msgid ""
+"Extract the contents of the archives in the archive folder and quit the "
+"program"
+msgstr ""
+"আর্কাইভ ফোল্ডারে আর্কাইভ এক্সট্র্যাক্ট করে প্রোগ্রাম থেকে প্রস্থান করা হবে"
+
+#: ../src/fr-application.c:85
+msgid "Default folder to use for the '--add' and '--extract' commands"
+msgstr "'--add' এবং '--extract' কমান্ডের জন্যে ব্যবহৃত ডিফল্ট ফোল্ডার"
+
+#: ../src/fr-application.c:89
+msgid "Create destination folder without asking confirmation"
+msgstr "সম্মতি জিজ্ঞাসা বিনা উদ্দিষ্ট ফোল্ডার নির্মাণ করা হবে"
+
+#: ../src/fr-application.c:93
+msgid "Use the notification system to notify the operation completion"
+msgstr "কর্ম সমাপ্তির সূচনা প্রদানের জন্য সূচনাপ্রদান ব্যবস্থা ব্যবহার করুন"
+
+#: ../src/fr-application.c:96
+msgid "Start as a service"
+msgstr "পরিসেবা রূপে আরম্ভ করা হবে"
+
+#: ../src/fr-application.c:99
+msgid "Show version"
+msgstr "সংস্করণ প্রদর্শন করা হবে"
+
+#: ../src/fr-application.c:365
+#: ../src/fr-application.c:401
+#: ../src/fr-application.c:427
+#: ../src/fr-application.c:707
+#: ../src/fr-window.c:9364
+msgid "Extract archive"
+msgstr "আর্কাইভ এক্সট্র্যাক্ট করুন"
+
+#: ../src/fr-application.c:565
+msgid "- Create and modify an archive"
+msgstr "- আর্কাইভ নির্মাণ ও পরিবর্তন করুন"
+
+#. manually set name and icon
+#: ../src/fr-application.c:833
+msgid "File Roller"
+msgstr "File Roller"
+
+#: ../src/fr-archive.c:1844
 msgid "You don't have the right permissions."
 msgstr "আপনার পর্যাপ্ত অনুমতি নেই।"
 
-#: ../src/fr-archive.c:1944
+#: ../src/fr-archive.c:1844
 msgid "This archive type cannot be modified"
 msgstr "আর্কাইভের ধরন পরিবর্তন করা সম্ভব নয়"
 
-#: ../src/fr-archive.c:1958
+#: ../src/fr-archive.c:1858
 msgid "You can't add an archive to itself."
 msgstr "একটি আর্কাইভকে নিজের মধ্যে সংযোজন করা সম্ভব নয়।"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:325
-#: ../src/fr-command-tar.c:305
+#: ../src/fr-command-7z.c:297
+#: ../src/fr-command-rar.c:329
+#: ../src/fr-command-tar.c:302
 #, c-format
 msgid "Adding \"%s\""
 msgstr "\"%s\" যোগ করা হচ্ছে"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:420 ../src/fr-command-rar.c:455
-#: ../src/fr-command-tar.c:426
+#: ../src/fr-command-7z.c:424
+#: ../src/fr-command-rar.c:461
+#: ../src/fr-command-tar.c:423
 #, c-format
-#| msgid "Starting %s"
 msgid "Extracting \"%s\""
 msgstr "\"%s\" উদ্ধার করা হচ্ছে"
 
 #: ../src/fr-command.c:597
 #, c-format
-#| msgid "File not found."
 msgid "Archive not found"
 msgstr "আর্কাইভ পাওয়া যায়নি"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-rar.c:406 ../src/fr-command-tar.c:371
+#: ../src/fr-command-rar.c:410
+#: ../src/fr-command-tar.c:368
 #, c-format
-#| msgid "Removing file: "
 msgid "Removing \"%s\""
 msgstr "\"%s\" ফাইল সরানো হচ্ছে"
 
-#: ../src/fr-command-rar.c:581
+#: ../src/fr-command-rar.c:587
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "উল্লিখিত ভলিউম পাওয়া যায়নি: %s"
 
-#: ../src/fr-command-tar.c:381
+#: ../src/fr-command-tar.c:378
 msgid "Deleting files from archive"
 msgstr "আর্কাইভ থেকে ফাইল মুছে দেওয়া হচ্ছে"
 
-#: ../src/fr-command-tar.c:486
+#: ../src/fr-command-tar.c:483
 msgid "Recompressing archive"
 msgstr "আর্কাইভ পুনরায় সংকুচিত করা হচ্ছে"
 
-#: ../src/fr-command-tar.c:725
+#: ../src/fr-command-tar.c:723
 msgid "Decompressing archive"
 msgstr "আর্কাইভ প্রসারণ করা হচ্ছে"
 
@@ -542,45 +629,56 @@ msgstr "আর্কাইভ প্রসারণ করা হচ্ছে"
 msgid "File System"
 msgstr "ফাইল সিস্টেম"
 
-#: ../src/fr-file-selector-dialog.c:1331 ../src/fr-file-selector-dialog.c:1376
-#| msgid "Could not perform the operation"
+#: ../src/fr-file-selector-dialog.c:1331
+#: ../src/fr-file-selector-dialog.c:1376
 msgid "Could not load the location"
 msgstr "অবস্থানের তথ্য লোড করা যায়নি"
 
-#: ../src/fr-new-archive-dialog.c:331 ../src/fr-new-archive-dialog.c:350
-#: ../src/fr-new-archive-dialog.c:366 ../src/fr-new-archive-dialog.c:414
-#: ../src/fr-window.c:2812
+#: ../src/fr-new-archive-dialog.c:342
+#: ../src/fr-new-archive-dialog.c:361
+#: ../src/fr-new-archive-dialog.c:377
+#: ../src/fr-new-archive-dialog.c:425
+#: ../src/fr-new-archive-dialog.c:443
+#: ../src/fr-window.c:2867
 msgid "Could not create the archive"
 msgstr "আর্কাইভ তৈরি করা যায়নি"
 
-#: ../src/fr-new-archive-dialog.c:333 ../src/fr-new-archive-dialog.c:352
+#: ../src/fr-new-archive-dialog.c:344
+#: ../src/fr-new-archive-dialog.c:363
 msgid "You have to specify an archive name."
 msgstr "আর্কাইভের নাম নির্ধারণ করা আবশ্যক।"
 
-#: ../src/fr-new-archive-dialog.c:416
+#: ../src/fr-new-archive-dialog.c:427
 msgid "You don't have permission to create an archive in this folder"
 msgstr "এই ফোল্ডারে আর্কাইভ তৈরি করার জন্যে আপনার পর্যাপ্ত অনুমতি নেই"
 
-#: ../src/fr-new-archive-dialog.c:435
+#. Translators: the name references to a filename.  This message can appear when renaming a file.
+#: ../src/fr-new-archive-dialog.c:445
+#: ../src/fr-window.c:8082
+msgid "New name is the same as old one, please type other name."
+msgstr "নতুন ও পুরোনো নাম এক, অনুগ্রহ করে একটি ভিন্ন নাম লিখুন।"
+
+#: ../src/fr-new-archive-dialog.c:464
 #, c-format
-#| msgid "The archive is already present.  Do you want to overwrite it?"
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
 msgstr ""
 "\"%s\" নামের একটি ফাইল বর্তমানে উপস্থিত রয়েছে।  এটি নতুন করে লেখা হবে কি?"
 
-#: ../src/fr-new-archive-dialog.c:436
+#: ../src/fr-new-archive-dialog.c:465
 #, c-format
 msgid ""
 "The file already exists in \"%s\".  Replacing it will overwrite its contents."
+""
 msgstr ""
 "\"%s\"-র মধ্যে ফাইলটি বর্তমানে উপস্থিত রয়েছে।  এটি প্রতিস্থাপিত হলে পুরোনো "
 "ফাইলের তথ্য মুছে যাবে।"
 
-#: ../src/fr-new-archive-dialog.c:443 ../src/fr-window.c:6533
+#: ../src/fr-new-archive-dialog.c:472
+#: ../src/fr-window.c:6616
 msgid "_Replace"
 msgstr "প্রতিস্থাপন (_R)"
 
-#: ../src/fr-new-archive-dialog.c:458
+#: ../src/fr-new-archive-dialog.c:487
 msgid "Could not delete the old archive."
 msgstr "পুরোনো আর্কাইভ মুছে ফেলা যায়নি।"
 
@@ -588,7 +686,8 @@ msgstr "পুরোনো আর্কাইভ মুছে ফেলা য�
 msgid "C_reate"
 msgstr "নির্মাণ করুন (_r)"
 
-#: ../src/fr-stock.c:42 ../src/fr-stock.c:43
+#: ../src/fr-stock.c:42
+#: ../src/fr-stock.c:43
 msgid "_Add"
 msgstr "যোগ করুন (_A)"
 
@@ -596,340 +695,322 @@ msgstr "যোগ করুন (_A)"
 msgid "_Extract"
 msgstr "এক্সট্র্যাক্ট করুন (_E)"
 
-#: ../src/fr-window.c:1043
-#| msgid "Extraction completed successfully"
+#: ../src/fr-window.c:1125
 msgid "Operation completed"
 msgstr "কাজ সমাপ্ত হয়েছে"
 
-#: ../src/fr-window.c:1160
+#: ../src/fr-window.c:1242
 #, c-format
 msgid "%d object (%s)"
 msgid_plural "%d objects (%s)"
 msgstr[0] "%d-টি বস্তু (%s)"
 msgstr[1] "%d-টি বস্তু (%s)"
 
-#: ../src/fr-window.c:1165
+#: ../src/fr-window.c:1247
 #, c-format
 msgid "%d object selected (%s)"
 msgid_plural "%d objects selected (%s)"
 msgstr[0] "%d-টি বস্তু নির্বাচিত (%s)"
 msgstr[1] "%d-টি বস্তু নির্বাচিত (%s)"
 
-#: ../src/fr-window.c:1584
+#: ../src/fr-window.c:1632
 msgid "Folder"
 msgstr "ফোল্ডার"
 
-#: ../src/fr-window.c:1963
+#: ../src/fr-window.c:2012
 msgid "[read only]"
 msgstr "[শুধুমাত্র পাঠযোগ্য]"
 
-#: ../src/fr-window.c:2082
+#: ../src/fr-window.c:2131
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "ফোল্ডার \"%s\" প্রদর্শন করা সম্ভব হয়নি"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2169 ../src/fr-window.c:2207
+#: ../src/fr-window.c:2222
+#: ../src/fr-window.c:2260
 #, c-format
-#| msgid "Starting %s"
 msgid "Creating \"%s\""
 msgstr "\"%s\" তৈরি করা হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2173
+#: ../src/fr-window.c:2226
 #, c-format
-#| msgid "Starting %s"
 msgid "Loading \"%s\""
 msgstr "\"%s\" লোড করা হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2177
+#: ../src/fr-window.c:2230
 #, c-format
-#| msgid "Starting %s"
 msgid "Reading \"%s\""
 msgstr "\"%s\" পড়া হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2181
+#: ../src/fr-window.c:2234
 #, c-format
-#| msgid "Deleting files from archive"
 msgid "Deleting the files from \"%s\""
 msgstr "\"%s\" থেকে ফাইল মুছে ফেলা হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2185
+#: ../src/fr-window.c:2238
 #, c-format
-#| msgid "Starting %s"
 msgid "Testing \"%s\""
 msgstr "\"%s\" পরীক্ষা করা হচ্ছে"
 
-#: ../src/fr-window.c:2188
+#: ../src/fr-window.c:2241
 msgid "Getting the file list"
 msgstr "ফাইলের তালিকা পড়া হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2192
+#: ../src/fr-window.c:2245
 #, c-format
-#| msgid "Copying the file list"
 msgid "Copying the files to add to \"%s\""
 msgstr "\"%s\"-এ সংযোজনের উদ্দেশ্যে ফাইল কপি করা হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2196
+#: ../src/fr-window.c:2249
 #, c-format
-#| msgid "Adding files to archive"
 msgid "Adding the files to \"%s\""
 msgstr "\"%s\"-র মধ্যে ফাইল যোগ করা হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2200
+#: ../src/fr-window.c:2253
 #, c-format
-#| msgid "Extracting files from archive"
 msgid "Extracting the files from \"%s\""
 msgstr "\"%s\" থেকে ফাইল উদ্ধার করা হচ্ছে"
 
-#: ../src/fr-window.c:2203
+#: ../src/fr-window.c:2256
 msgid "Copying the extracted files to the destination"
 msgstr "উদ্ধার করা ফাইলগুলি উদ্দিষ্ট স্থানে কপি করুন"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2212
+#: ../src/fr-window.c:2265
 #, c-format
-#| msgid "Starting %s"
 msgid "Saving \"%s\""
 msgstr "\"%s\" সংরক্ষণ করা হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2219
+#: ../src/fr-window.c:2272
 #, c-format
-#| msgid "Getting the file list"
 msgid "Renaming the files in \"%s\""
 msgstr "\"%s\"-র মধ্যে উপস্থিত ফাইলের নাম পরিবর্তন করা হচ্ছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2223
+#: ../src/fr-window.c:2276
 #, c-format
-#| msgid "Update the files in the archive \"%s\"?"
 msgid "Updating the files in \"%s\""
 msgstr "\"%s\"-র মধ্যে উপস্থিত ফাইল আপডেট করা হচ্ছে"
 
-#: ../src/fr-window.c:2398
+#: ../src/fr-window.c:2451
 msgid "_Open the Archive"
 msgstr "আর্কাইভ খুলুন (_O)"
 
-#: ../src/fr-window.c:2399
+#: ../src/fr-window.c:2452
 msgid "_Show the Files"
 msgstr "ফাইল প্রদর্শিত হবে (_S)"
 
-#: ../src/fr-window.c:2516
+#: ../src/fr-window.c:2569
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "%d-টি ফাইল অবশিষ্ট"
 msgstr[1] "%d-টি ফাইল অবশিষ্ট"
 
-#: ../src/fr-window.c:2520 ../src/fr-window.c:3099
-#| msgid "please wait..."
+#: ../src/fr-window.c:2573
+#: ../src/fr-window.c:3152
 msgid "Please wait…"
 msgstr "অনুগ্রহ করে অপেক্ষা করুন..."
 
-#: ../src/fr-window.c:2578
+#: ../src/fr-window.c:2629
 msgid "Extraction completed successfully"
 msgstr "সাফল্যের সাথে সকল বস্তু এক্সট্র্যাক্ট করা হয়েছে"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2609 ../src/fr-window.c:6144
+#: ../src/fr-window.c:2661
+#: ../src/fr-window.c:6205
 #, c-format
-#| msgid "Archive created successfully"
 msgid "\"%s\" created successfully"
 msgstr "সাফল্যের সাথে \"%s\" তৈরি করা হয়েছে"
 
-#: ../src/fr-window.c:2699 ../src/fr-window.c:2868
+#: ../src/fr-window.c:2751
+#: ../src/fr-window.c:2923
 msgid "Command exited abnormally."
 msgstr "কমান্ড অস্বাভাবিকভাবে বন্ধ হয়ে গেছে।"
 
-#: ../src/fr-window.c:2817
+#: ../src/fr-window.c:2872
 msgid "An error occurred while extracting files."
 msgstr "ফাইল এক্সট্র্যাক্ট করতে সমস্যা।"
 
-#: ../src/fr-window.c:2823
+#: ../src/fr-window.c:2878
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "\"%s\" খোলার প্রচেষ্টা ব্যর্থ"
 
-#: ../src/fr-window.c:2828
+#: ../src/fr-window.c:2883
 msgid "An error occurred while loading the archive."
 msgstr "আর্কাইভ লোড করতে সমস্যা।"
 
-#: ../src/fr-window.c:2832
+#: ../src/fr-window.c:2887
 msgid "An error occurred while deleting files from the archive."
 msgstr "আর্কাইভ থেকে ফাইল মুছতে সমস্যা।"
 
-#: ../src/fr-window.c:2838
+#: ../src/fr-window.c:2893
 msgid "An error occurred while adding files to the archive."
 msgstr "আর্কাইভে ফাইল সংযোজন করতে সমস্যা।"
 
-#: ../src/fr-window.c:2842
+#: ../src/fr-window.c:2897
 msgid "An error occurred while testing archive."
 msgstr "আর্কাইভ পরীক্ষা করতে সমস্যা।"
 
-#: ../src/fr-window.c:2847
+#: ../src/fr-window.c:2902
 msgid "An error occurred while saving the archive."
 msgstr "আর্কাইভ সংরক্ষণ করতে সমস্যা।"
 
-#: ../src/fr-window.c:2851
-#| msgid "An error occurred while extracting files."
+#: ../src/fr-window.c:2906
 msgid "An error occurred while renaming the files."
 msgstr "ফাইলের নাম পরিবর্তনের সময় ত্রুটি দেখা দিয়েছে।"
 
-#: ../src/fr-window.c:2855
-#| msgid "An error occurred while extracting files."
+#: ../src/fr-window.c:2910
 msgid "An error occurred while updating the files."
 msgstr "ফাইল আপডেট করতে সমস্যা দেখা দিয়েছে।"
 
-#: ../src/fr-window.c:2859
+#: ../src/fr-window.c:2914
 msgid "An error occurred."
 msgstr "সমস্যা দেখা দিয়েছে।"
 
-#: ../src/fr-window.c:2865
+#: ../src/fr-window.c:2920
 msgid "Command not found."
 msgstr "কমান্ড পাওয়া যায়নি।"
 
-#: ../src/fr-window.c:3023
+#: ../src/fr-window.c:3080
 msgid "Test Result"
 msgstr "পরীক্ষার ফলাফল"
 
-#: ../src/fr-window.c:3966 ../src/fr-window.c:8635 ../src/fr-window.c:8669
-#: ../src/fr-window.c:8935
+#: ../src/fr-window.c:4044
+#: ../src/fr-window.c:8762
+#: ../src/fr-window.c:8796
+#: ../src/fr-window.c:9075
 msgid "Could not perform the operation"
 msgstr "কাজ সম্পন্ন করতে ব্যর্থ"
 
-#: ../src/fr-window.c:3992
+#: ../src/fr-window.c:4070
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
-"চিহ্নিত ফাইলটি বর্তমান আর্কাইভে সংযোজন করা হবে কি অথবা নতুন আর্কাইভ রূপে খোলা "
-"হবে?"
+"চিহ্নিত ফাইলটি বর্তমান আর্কাইভে সংযোজন করা হবে কি অথবা নতুন আর্কাইভ রূপে "
+"খোলা হবে?"
 
-#: ../src/fr-window.c:4022
+#: ../src/fr-window.c:4100
 msgid "Do you want to create a new archive with these files?"
 msgstr "চিহ্নিত ফাইলগুলি সহ একটি নতুন আর্কাইভ তৈরি করা হবে কি?"
 
-#: ../src/fr-window.c:4025
+#: ../src/fr-window.c:4103
 msgid "Create _Archive"
 msgstr "আর্কাইভ নির্মাণ করুন (_A)"
 
-#: ../src/fr-window.c:4054 ../src/fr-window.c:7105
-#| msgid "Archive:"
+#: ../src/fr-window.c:4132
+#: ../src/fr-window.c:7221
 msgid "New Archive"
 msgstr "নতুন আর্কাইভ"
 
-#: ../src/fr-window.c:4642
+#: ../src/fr-window.c:4706
 msgid "Folders"
 msgstr "ফোল্ডার"
 
-#: ../src/fr-window.c:4680 ../src/ui/file-selector.ui.h:5
+#: ../src/fr-window.c:4744
+#: ../src/ui/file-selector.ui.h:5
 msgctxt "File"
 msgid "Size"
 msgstr "মাপ"
 
-#: ../src/fr-window.c:4681
+#: ../src/fr-window.c:4745
 msgctxt "File"
 msgid "Type"
 msgstr "ধরন"
 
-#: ../src/fr-window.c:4682 ../src/ui/file-selector.ui.h:6
-#| msgid "Modified on:"
+#: ../src/fr-window.c:4746
+#: ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Modified"
 msgstr "পরিবর্তিত"
 
-#: ../src/fr-window.c:4683
+#: ../src/fr-window.c:4747
 msgctxt "File"
 msgid "Location"
 msgstr "অবস্থান"
 
-#: ../src/fr-window.c:4692 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:4756
+#: ../src/ui/file-selector.ui.h:4
 msgctxt "File"
 msgid "Name"
 msgstr "নাম"
 
-#: ../src/fr-window.c:5519
-msgid "Find:"
-msgstr "অনুসন্ধান:"
-
 #. Translators: this is the label for the "open recent file" sub-menu.
-#: ../src/fr-window.c:5614
+#: ../src/fr-window.c:5666
 msgid "Open _Recent"
 msgstr "সম্প্রতি ব্যবহৃত ফাইল খুলুন (_R)"
 
-#: ../src/fr-window.c:5615 ../src/fr-window.c:5627
+#: ../src/fr-window.c:5667
+#: ../src/fr-window.c:5679
 msgid "Open a recently used archive"
 msgstr "সম্প্রতি ব্যবহৃত আর্কাইভ খুলুন"
 
+#: ../src/fr-window.c:5695
+msgid "_Other Actions"
+msgstr "অন্যান্য কাজ (_O)"
+
+#: ../src/fr-window.c:5696
+msgid "Other actions"
+msgstr "অন্যান্য কাজ"
+
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5699 ../src/ui/file-selector.ui.h:1
+#: ../src/fr-window.c:5760
+#: ../src/ui/file-selector.ui.h:1
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "অবস্থান: (_L)"
 
-#: ../src/fr-window.c:6521
+#: ../src/fr-window.c:6604
 #, c-format
-#| msgid "_Selected files"
 msgid "Replace file \"%s\"?"
 msgstr "\"%s\" ফাইলটি প্রতিস্থাপন করা হবে কি?"
 
-#: ../src/fr-window.c:6524
+#: ../src/fr-window.c:6607
 #, c-format
-#| msgid ""
-#| "A file named \"%s\" already exists.\n"
-#| "\n"
-#| "%s"
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "একই নামের অন্য একটি ফাইল \"%s\"-র মধ্যে বর্তমানে উপস্থিত রয়েছে।"
 
-#: ../src/fr-window.c:6531
+#: ../src/fr-window.c:6614
 msgid "Replace _All"
 msgstr "সমস্ত প্রতিস্থাপন করুন (_A)"
 
-#: ../src/fr-window.c:6532
+#: ../src/fr-window.c:6615
 msgid "_Skip"
 msgstr "উপেক্ষা করুন (_S)"
 
-#: ../src/fr-window.c:7287 ../src/fr-window.c:7643
+#: ../src/fr-window.c:7404
+#: ../src/fr-window.c:7761
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "\"%s\" আর্কাইভ সংরক্ষণ করতে ব্যর্থ"
 
-#: ../src/fr-window.c:7414
-#| msgctxt "File"
-#| msgid "Save"
+#: ../src/fr-window.c:7531
 msgid "Save"
 msgstr "সংরক্ষণ করুন"
 
-#: ../src/fr-window.c:7737
+#: ../src/fr-window.c:7855
 msgid "Last Output"
 msgstr "শেষ আউটপুট"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7959
+#: ../src/fr-window.c:8077
 msgid "New name is void, please type a name."
 msgstr "নতুন নামটি ফাঁকা রয়েছে, অনুগ্রহ করে একটি নাম লিখুন।"
 
-#. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7964
-msgid "New name is the same as old one, please type other name."
-msgstr "নতুন ও পুরোনো নাম এক, অনুগ্রহ করে একটি ভিন্ন নাম লিখুন।"
-
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7969
+#: ../src/fr-window.c:8087
 #, c-format
-#| msgid ""
-#| "The name \"%s\" is not valid because it cannot contain the characters: "
-#| "%s\n"
-#| "\n"
-#| "%s"
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
@@ -937,93 +1018,83 @@ msgstr ""
 "চিহ্নিত অক্ষরগুলির মধ্যে অন্তত একটি অক্ষর অন্তর্ভুক্ত করার ফলে \"%s\" নামটি "
 "বৈধ নয়: %s, অনুগ্রহ"
 
-#: ../src/fr-window.c:8005
+#: ../src/fr-window.c:8123
 #, c-format
-msgid ""
-"A folder named \"%s\" already exists.\n"
+msgid "A folder named \"%s\" already exists.\n"
 "\n"
 "%s"
-msgstr ""
-"\"%s\" নামে একটি ফোল্ডার উপস্থিত রয়েছে।\n"
+msgstr "\"%s\" নামে একটি ফোল্ডার উপস্থিত রয়েছে।\n"
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8005 ../src/fr-window.c:8007
+#: ../src/fr-window.c:8123
+#: ../src/fr-window.c:8125
 msgid "Please use a different name."
 msgstr "অনুগ্রহ করে একটি ভিন্ন নাম ব্যবহার করুন"
 
-#: ../src/fr-window.c:8007
+#: ../src/fr-window.c:8125
 #, c-format
-msgid ""
-"A file named \"%s\" already exists.\n"
+msgid "A file named \"%s\" already exists.\n"
 "\n"
 "%s"
-msgstr ""
-"\"%s\" নামে একটি ফাইল উপস্থিত রয়েছে।\n"
+msgstr "\"%s\" নামে একটি ফাইল উপস্থিত রয়েছে।\n"
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8077
+#: ../src/fr-window.c:8195
 msgid "Rename"
 msgstr "নাম পরিবর্তন"
 
-#: ../src/fr-window.c:8078
-#| msgid "New folder name"
+#: ../src/fr-window.c:8196
 msgid "_New folder name:"
 msgstr "নতুন ফোল্ডারের নাম: (_N)"
 
-#: ../src/fr-window.c:8078
-#| msgid "New file name"
+#: ../src/fr-window.c:8196
 msgid "_New file name:"
 msgstr "নতুন ফাইলের নাম: (_N)"
 
-#: ../src/fr-window.c:8082
+#: ../src/fr-window.c:8200
 msgid "_Rename"
 msgstr "নাম পরিবর্তন (_R)"
 
-#: ../src/fr-window.c:8099 ../src/fr-window.c:8118
+#: ../src/fr-window.c:8217
+#: ../src/fr-window.c:8236
 msgid "Could not rename the folder"
 msgstr "ফোল্ডারের নাম পুনরায় নির্ধারণ করা সম্ভব হয়নি"
 
-#: ../src/fr-window.c:8099 ../src/fr-window.c:8118
+#: ../src/fr-window.c:8217
+#: ../src/fr-window.c:8236
 msgid "Could not rename the file"
 msgstr "ফাইলের নাম পুনরায় নির্ধারণ করা সম্ভব হয়নি"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8542
+#: ../src/fr-window.c:8669
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "\"%s\" থেকে ফাইল \"%s\"-এ সরানো হচ্ছে"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8545
+#: ../src/fr-window.c:8672
 #, c-format
-#| msgid "Copying the file list"
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "\"%s\" থেকে ফাইল \"%s\"-র কপি করা হচ্ছে"
 
-#: ../src/fr-window.c:8596
+#: ../src/fr-window.c:8723
 msgid "Paste Selection"
 msgstr "নির্বাচিত অংশ পেস্ট করুন"
 
-#: ../src/fr-window.c:8597
-#| msgid "Destination folder"
+#: ../src/fr-window.c:8724
 msgid "_Destination folder:"
 msgstr "উদ্দিষ্ট ফোল্ডার: (_D)"
 
-#: ../src/fr-window.c:9195
+#: ../src/fr-window.c:9319
 msgid "Add files to an archive"
 msgstr "আর্কাইভে ফাইল সংযোজন করুন"
-
-#: ../src/fr-window.c:9239 ../src/main.c:448 ../src/main.c:484
-#: ../src/main.c:510 ../src/main.c:802
-msgid "Extract archive"
-msgstr "আর্কাইভ এক্সট্র্যাক্ট করুন"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: ../src/glib-utils.c:733
+#: ../src/glib-utils.c:765
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
@@ -1031,72 +1102,7 @@ msgstr "%d %B %Y, %H:%M"
 msgid "Could not display help"
 msgstr "সহায়িকা প্রদর্শনে ব্যর্থ"
 
-#: ../src/main.c:68
-msgid "Add files to the specified archive and quit the program"
-msgstr "নির্বাচিত আর্কাইভে ফাইলগুলি যোগ করে প্রোগ্রাম থেকে প্রস্থান করা হবে"
-
-#: ../src/main.c:69
-msgid "ARCHIVE"
-msgstr "আর্কাইভ"
-
-#: ../src/main.c:72
-msgid "Add files asking the name of the archive and quit the program"
-msgstr ""
-"আর্কাইভের নাম জিজ্ঞাসা করে ফাইল যোগ করা হবে ও প্রোগ্রাম থেকে প্রস্থান করা হবে"
-
-#: ../src/main.c:76
-msgid "Extract archives to the specified folder and quit the program"
-msgstr ""
-"উল্লিখিত ফোল্ডারে আর্কাইভ এক্সট্র্যাক্ট করে প্রোগ্রাম থেকে প্রস্থান করা হবে"
-
-#: ../src/main.c:77 ../src/main.c:89
-msgid "FOLDER"
-msgstr "ফোল্ডার"
-
-#: ../src/main.c:80
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr ""
-"আর্কাইভ এক্সট্র্যাক্ট করার সময় উদ্দিষ্ট ফোল্ডারের নাম জিজ্ঞাসা প্রোগ্রাম বন্ধ "
-"করা হবে"
-
-#: ../src/main.c:84
-msgid ""
-"Extract the contents of the archives in the archive folder and quit the "
-"program"
-msgstr ""
-"আর্কাইভ ফোল্ডারে আর্কাইভ এক্সট্র্যাক্ট করে প্রোগ্রাম থেকে প্রস্থান করা হবে"
-
-#: ../src/main.c:88
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "'--add' এবং '--extract' কমান্ডের জন্যে ব্যবহৃত ডিফল্ট ফোল্ডার"
-
-#: ../src/main.c:92
-msgid "Create destination folder without asking confirmation"
-msgstr "সম্মতি জিজ্ঞাসা বিনা উদ্দিষ্ট ফোল্ডার নির্মাণ করা হবে"
-
-#: ../src/main.c:96
-msgid "Use the notification system to notify the operation completion"
-msgstr "কর্ম সমাপ্তির সূচনা প্রদানের জন্য সূচনাপ্রদান ব্যবস্থা ব্যবহার করুন"
-
-#: ../src/main.c:99
-msgid "Start as a service"
-msgstr "পরিসেবা রূপে আরম্ভ করা হবে"
-
-#: ../src/main.c:102
-msgid "Show version"
-msgstr "সংস্করণ প্রদর্শন করা হবে"
-
-#. manually set name and icon
-#: ../src/main.c:629
-msgid "File Roller"
-msgstr "File Roller"
-
-#: ../src/main.c:660
-msgid "- Create and modify an archive"
-msgstr "- আর্কাইভ নির্মাণ ও পরিবর্তন করুন"
-
 #: ../src/ui/add-dialog-options.ui.h:1
-#| msgid "_Add"
 msgid "Add"
 msgstr "যোগ করুন"
 
@@ -1112,11 +1118,13 @@ msgstr "চিহ্নিত ফাইল অগ্রাহ্য করা �
 msgid "_Exclude folders:"
 msgstr "চিহ্নিত ফোল্ডার অগ্রাহ্য করা হবে: (_E)"
 
-#: ../src/ui/add-dialog-options.ui.h:5 ../src/ui/extract-dialog-options.ui.h:5
+#: ../src/ui/add-dialog-options.ui.h:5
+#: ../src/ui/extract-dialog-options.ui.h:5
 msgid "example: *.o; *.bak"
 msgstr "উদাহরণ: *.o; *.bak"
 
-#: ../src/ui/add-dialog-options.ui.h:6 ../src/ui/extract-dialog-options.ui.h:6
+#: ../src/ui/add-dialog-options.ui.h:6
+#: ../src/ui/extract-dialog-options.ui.h:6
 msgid "Actions"
 msgstr "কাজ"
 
@@ -1129,24 +1137,38 @@ msgid "_Follow symbolic links"
 msgstr "সিম্বলিক লিংক অনুসরণ করুন (_F)"
 
 #: ../src/ui/app-menu.ui.h:1
-#| msgid "_Archive"
 msgid "_New Archive"
 msgstr "নতুন আর্কাইভ (_N)"
 
-#: ../src/ui/app-menu.ui.h:2 ../src/ui.h:34
+#: ../src/ui/app-menu.ui.h:3
+#: ../src/ui.h:213
+msgid "View All _Files"
+msgstr "সব ফাইল প্রদর্শন (_F)"
+
+#: ../src/ui/app-menu.ui.h:4
+#: ../src/ui.h:216
+msgid "View as a F_older"
+msgstr "ফোল্ডার হিসাবে প্রদর্শন (_o)"
+
+#: ../src/ui/app-menu.ui.h:5
+#: ../src/ui.h:197
+msgid "_Folders"
+msgstr "ফোল্ডার (_F)"
+
+#: ../src/ui/app-menu.ui.h:6
 msgid "_Help"
 msgstr "সাহায্য (_H)"
 
-#: ../src/ui/app-menu.ui.h:3
-#| msgid "Archive Manager"
+#: ../src/ui/app-menu.ui.h:7
 msgid "_About Archive Manager"
 msgstr "আর্কাইভ পরিচালন ব্যবস্থা পরিচিতি (_A)"
 
-#: ../src/ui/app-menu.ui.h:4
+#: ../src/ui/app-menu.ui.h:8
 msgid "_Quit"
 msgstr "প্রস্থান (_Q)"
 
-#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog-options.ui.h:1
+#: ../src/ui/ask-password.ui.h:1
+#: ../src/ui/new-archive-dialog-options.ui.h:1
 #: ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "পাসওয়ার্ড: (_P)"
@@ -1155,7 +1177,8 @@ msgstr "পাসওয়ার্ড: (_P)"
 msgid "Delete"
 msgstr "মুছে ফেলুন"
 
-#: ../src/ui/delete.ui.h:2 ../src/ui/extract-dialog-options.ui.h:4
+#: ../src/ui/delete.ui.h:2
+#: ../src/ui/extract-dialog-options.ui.h:4
 msgid "_Files:"
 msgstr "ফাইল: (_F)"
 
@@ -1163,16 +1186,17 @@ msgstr "ফাইল: (_F)"
 msgid "example: *.txt; *.doc"
 msgstr "উদাহরণ: *.txt; *.doc"
 
-#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:2
+#: ../src/ui/delete.ui.h:4
+#: ../src/ui/extract-dialog-options.ui.h:2
 msgid "_All files"
 msgstr "সব ফাইল (_A)"
 
-#: ../src/ui/delete.ui.h:5 ../src/ui/extract-dialog-options.ui.h:3
+#: ../src/ui/delete.ui.h:5
+#: ../src/ui/extract-dialog-options.ui.h:3
 msgid "_Selected files"
 msgstr "নির্বাচিত ফাইল (_S)"
 
 #: ../src/ui/error-dialog.ui.h:1
-#| msgid "Command _Line Output"
 msgid "C_ommand Line Output:"
 msgstr "কমান্ড লাইনের আউটপুট (_o):"
 
@@ -1181,11 +1205,11 @@ msgid "_Keep directory structure"
 msgstr "ডিরেক্টরির গঠন বজায় রাখা হবে (_K)"
 
 #: ../src/ui/extract-dialog-options.ui.h:8
-#| msgid "Do not overwrite newer files"
 msgid "Do not _overwrite newer files"
 msgstr "নতুন ফাইল প্রতিস্থাপন করা হবে না (_o)"
 
-#: ../src/ui/file-selector.ui.h:2 ../src/ui.h:188
+#: ../src/ui/file-selector.ui.h:2
+#: ../src/ui.h:179
 msgid "Go up one level"
 msgstr "এক স্তর উপরে চলুন"
 
@@ -1194,217 +1218,188 @@ msgid "Places"
 msgstr "অবস্থান"
 
 #: ../src/ui/file-selector.ui.h:7
-#| msgid "Dese_lect All"
 msgid "_Select All"
 msgstr "সমগ্র নির্বাচন (_S)"
 
-#: ../src/ui/file-selector.ui.h:8 ../src/ui.h:101
+#: ../src/ui/file-selector.ui.h:8
+#: ../src/ui.h:97
 msgid "Dese_lect All"
 msgstr "নির্বাচন থেকে সব সরিয়ে নিন (_l)"
 
 #: ../src/ui/file-selector.ui.h:9
-#| msgid "_Show the Files"
 msgid "Show Hidden Files"
 msgstr "আড়াল করা ফাইল প্রদর্শন করা হবে"
 
-#: ../src/ui.h:31
-msgid "_Archive"
-msgstr "আর্কাইভ: (_A)"
-
-#: ../src/ui.h:32
-msgid "_Edit"
-msgstr "সম্পাদনা (_E)"
-
-#: ../src/ui.h:33
-msgid "_View"
-msgstr "প্রদর্শন (_V)"
-
 #: ../src/ui.h:35
-msgid "_Arrange Files"
-msgstr "ফাইলের ক্রমবিন্যাস (_A)"
-
-#: ../src/ui.h:39
 msgid "Information about the program"
 msgstr "প্রোগ্রাম বিষয়ক তথ্য"
 
-#: ../src/ui.h:42
-#| msgid "Add Files"
+#: ../src/ui.h:38
 msgid "_Add Files…"
 msgstr "ফাইল যোগ করুন…(_A)"
 
-#: ../src/ui.h:43 ../src/ui.h:47
+#: ../src/ui.h:39
+#: ../src/ui.h:43
 msgid "Add files to the archive"
 msgstr "আর্কাইভে ফাইল যোগ করুন"
 
-#: ../src/ui.h:51
+#: ../src/ui.h:47
 msgid "Close the current archive"
 msgstr "বর্তমান আর্কাইভ বন্ধ করুন"
 
-#: ../src/ui.h:54
+#: ../src/ui.h:50
 msgid "Contents"
 msgstr "সূচি"
 
-#: ../src/ui.h:55
+#: ../src/ui.h:51
 msgid "Display the File Roller Manual"
 msgstr "File Roller সংক্রান্ত সহায়ক নথিপত্র প্রদর্শন করা হবে"
 
-#: ../src/ui.h:60 ../src/ui.h:81
+#: ../src/ui.h:56
+#: ../src/ui.h:77
 msgid "Copy the selection"
 msgstr "নির্বাচিত অংশ কপি করুন"
 
-#: ../src/ui.h:64 ../src/ui.h:85
+#: ../src/ui.h:60
+#: ../src/ui.h:81
 msgid "Cut the selection"
 msgstr "নির্বাচিত অংশ কাট করুন"
 
-#: ../src/ui.h:68 ../src/ui.h:89
+#: ../src/ui.h:64
+#: ../src/ui.h:85
 msgid "Paste the clipboard"
 msgstr "ক্লিপ-বোর্ড থেকে পেস্ট করুন"
 
-#: ../src/ui.h:71 ../src/ui.h:92
-#| msgid "_Rename"
+#: ../src/ui.h:67
+#: ../src/ui.h:88
 msgid "_Rename…"
 msgstr "নাম পরিবর্তন... (_R)"
 
-#: ../src/ui.h:72 ../src/ui.h:93
+#: ../src/ui.h:68
+#: ../src/ui.h:89
 msgid "Rename the selection"
 msgstr "নির্বাচিত অংশের নাম পরিবর্তন করুন"
 
-#: ../src/ui.h:76 ../src/ui.h:97
+#: ../src/ui.h:72
+#: ../src/ui.h:93
 msgid "Delete the selection from the archive"
 msgstr "আর্কাইভ থেকে নির্বাচিত ফাইল মুছে ফেলুন"
 
-#: ../src/ui.h:102
+#: ../src/ui.h:98
 msgid "Deselect all files"
 msgstr "সব ফাইল নির্বাচন থেকে সরিয়ে নিন"
 
-#: ../src/ui.h:105 ../src/ui.h:109
-#| msgid "_Extract"
+#: ../src/ui.h:101
+#: ../src/ui.h:105
 msgid "_Extract…"
 msgstr "উদ্ধার করুন…(_E)"
 
-#: ../src/ui.h:106 ../src/ui.h:110 ../src/ui.h:114
+#: ../src/ui.h:102
+#: ../src/ui.h:106
+#: ../src/ui.h:110
 msgid "Extract files from the archive"
 msgstr "আর্কাইভ থেকে ফাইল এক্সট্র্যাক্ট করুন"
 
-#: ../src/ui.h:117
-#| msgid "Find:"
-msgid "Find…"
-msgstr "অনুসন্ধান..."
-
-#: ../src/ui.h:122
+#: ../src/ui.h:113
 msgid "New…"
 msgstr "নতুন..."
 
-#: ../src/ui.h:123
+#: ../src/ui.h:114
 msgid "Create a new archive"
 msgstr "নতুন আর্কাইভ তৈরি করুন"
 
-#: ../src/ui.h:126
-#| msgid "Open"
+#: ../src/ui.h:117
 msgid "Open…"
 msgstr "খুলুন..."
 
-#: ../src/ui.h:127 ../src/ui.h:131
+#: ../src/ui.h:118
+#: ../src/ui.h:122
 msgid "Open archive"
 msgstr "আর্কাইভ খুলুন"
 
-#: ../src/ui.h:134
-#| msgid "_Open With..."
+#: ../src/ui.h:125
 msgid "_Open With…"
 msgstr "চিহ্নিত অ্যাপ্লিকেশন সহযোগে খুলুন...(_O)"
 
-#: ../src/ui.h:135
+#: ../src/ui.h:126
 msgid "Open selected files with an application"
 msgstr "বাছাই করা ফাইল একটি অ্যাপ্লিকেশন সহযোগে খুলুন"
 
-#: ../src/ui.h:138
-#| msgid "Password"
+#: ../src/ui.h:129
 msgid "Pass_word…"
 msgstr "পাসওয়ার্ড...(_w)"
 
-#: ../src/ui.h:139
+#: ../src/ui.h:130
 msgid "Specify a password for this archive"
 msgstr "আর্কাইভের জন্য পাসওয়ার্ড লিখুন"
 
 # msgstr "_বৈশিষ্ঠ্য"
-#: ../src/ui.h:143
+#: ../src/ui.h:134
 msgid "Show archive properties"
 msgstr "আর্কাইভের বৈশিষ্ট্য প্রদর্শন"
 
-#: ../src/ui.h:147
+#: ../src/ui.h:138
 msgid "Reload current archive"
 msgstr "বর্তমান আর্কাইভ পুনরায় লোড করা হবে"
 
-#: ../src/ui.h:150
-#| msgctxt "File"
-#| msgid "Save As..."
+#: ../src/ui.h:141
 msgid "Save As…"
 msgstr "নতুন রূপে সংরক্ষণ..."
 
-#: ../src/ui.h:151
+#: ../src/ui.h:142
 msgid "Save the current archive with a different name"
 msgstr "পৃথক নামে বর্তমান আর্কাইভ সংরক্ষণ করুন"
 
-#: ../src/ui.h:155
+#: ../src/ui.h:146
 msgid "Select all files"
 msgstr "সব ফাইল নির্বাচন করুন"
 
-#: ../src/ui.h:158
+#: ../src/ui.h:149
 msgid "_Test Integrity"
 msgstr "অক্ষণ্ডতা পরীক্ষণ (_T)"
 
-#: ../src/ui.h:159
+#: ../src/ui.h:150
 msgid "Test whether the archive contains errors"
 msgstr "আর্কাইভে কোনো ত্রুটি রয়েছে কিনা তা পরীক্ষা করুন"
 
-#: ../src/ui.h:163 ../src/ui.h:167
+#: ../src/ui.h:154
+#: ../src/ui.h:158
 msgid "Open the selected file"
 msgstr "নির্বাচিত ফাইল খুলুন"
 
-#: ../src/ui.h:171 ../src/ui.h:175
+#: ../src/ui.h:162
+#: ../src/ui.h:166
 msgid "Open the selected folder"
 msgstr "নির্বাচিত ফোল্ডার প্রদর্শন করা হবে"
 
-#: ../src/ui.h:180
+#: ../src/ui.h:171
 msgid "Go to the previous visited location"
 msgstr "পরিদর্শিত পূর্ববর্তী অবস্থানে চলুন"
 
-#: ../src/ui.h:184
+#: ../src/ui.h:175
 msgid "Go to the next visited location"
 msgstr "পরিদর্শিত পরবর্তী অবস্থানে চলুন"
 
 #. Translators: the home location is the home folder.
-#: ../src/ui.h:193
+#: ../src/ui.h:184
 msgid "Go to the home location"
 msgstr "home অবস্থানে চলুন"
 
-#: ../src/ui.h:201
-msgid "_Toolbar"
-msgstr "টুল-বার (_T)"
-
-#: ../src/ui.h:202
-msgid "View the main toolbar"
-msgstr "প্রধান টুল-বার প্রদর্শন"
-
-#: ../src/ui.h:206
+#: ../src/ui.h:192
 msgid "Stat_usbar"
 msgstr "স্ট্যাটাস-বার (_u)"
 
-#: ../src/ui.h:207
+#: ../src/ui.h:193
 msgid "View the statusbar"
 msgstr "স্ট্যাটাস-বার প্রদর্শন"
 
-#: ../src/ui.h:211
-msgid "_Folders"
-msgstr "ফোল্ডার (_F)"
+#: ../src/ui.h:202
+msgid "Find…"
+msgstr "অনুসন্ধান..."
 
-#: ../src/ui.h:221
-msgid "View All _Files"
-msgstr "সব ফাইল প্রদর্শন (_F)"
-
-#: ../src/ui.h:224
-msgid "View as a F_older"
-msgstr "ফোল্ডার হিসাবে প্রদর্শন (_o)"
+#: ../src/ui.h:203
+msgid "Find files by name"
+msgstr "নাম দিয়ে ফাইলগুলি খুঁজুন"
 
 #: ../src/ui/new-archive-dialog-options.ui.h:2
 #: ../src/ui/new-archive-dialog.ui.h:5
@@ -1441,7 +1436,6 @@ msgid "Password"
 msgstr "পাসওয়ার্ড"
 
 #: ../src/ui/password.ui.h:2
-#| msgid "_Encrypt the file list too"
 msgid "_Encrypt the file list"
 msgstr "ফাইলের তালিকা এনক্রিপ্ট করা হবে (_E)"
 
@@ -1464,8 +1458,6 @@ msgid "Compression ratio:"
 msgstr "সংকুচনের অনুপাত:"
 
 #: ../src/ui/properties.ui.h:6
-#| msgctxt "File"
-#| msgid "Date Modified"
 msgid "Last modified:"
 msgstr "সর্বশেষ পরিবর্তন:"
 
@@ -1479,8 +1471,6 @@ msgstr "ফাইলের সংখ্যা:"
 
 #. after the colon there is a file type.
 #: ../src/ui/properties.ui.h:10
-#| msgctxt "File"
-#| msgid "Type"
 msgid "Type:"
 msgstr "ধরন:"
 
@@ -1491,335 +1481,3 @@ msgstr "আপডেট করুন (_U)"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "আপডেট করার উদ্দেশ্যে ফাইল নির্বাচন করুন: (_e)"
-
-#~ msgid ""
-#~ "If true will display icons depending on the file type (slower), otherwise "
-#~ "will use always the same icon for all files (faster)."
-#~ msgstr ""
-#~ "মান true (সত্য) হলে ফাইলের ধরন অনুযায়ী আইকন প্রদর্শন করা হবে (ধীর), অথবা সকল "
-#~ "ফাইলের জন্য একই আইকন ব্যবহার করা হবে (দ্রুত)।"
-
-#~| msgid "Over_write existing files"
-#~ msgid "Overwrite existing files"
-#~ msgstr "উপস্থিত ফাইল নতুন করে লিখুন"
-
-#~ msgid "Use mime icons"
-#~ msgstr "mime আইকন ব্যবহার করা হবে"
-
-#~ msgid "<span weight=\"bold\" size=\"larger\">Password required</span>"
-#~ msgstr "<span weight=\"bold\" size=\"larger\">পাসওয়ার্ড আবশ্যক</span>"
-
-#~ msgid ""
-#~ "<i><b>Note:</b> the password will be used to encrypt files you add to the "
-#~ "current archive, and to decrypt files you extract from the current "
-#~ "archive. When the archive is closed the password will be deleted.</i>"
-#~ msgstr ""
-#~ "<i><b>উল্লেখ্য:</b> বর্তমান আর্কাইভে সংযোজিত ফাইলগুলি এনক্রিপ্ট করতে এবং আর্কাইভে "
-#~ "থেকে এক্সট্র্যাক্ট করা ফাইল ডিক্রিপ্ট করতে এই পাসওয়ার্ডটি ব্যবহৃত হবে। আর্কাইভ বন্ধ "
-#~ "করা হলে পাসওয়ার্ড মুছে ফেলা হবে।</i>"
-
-#~ msgid "Add a Folder"
-#~ msgstr "ফোল্ডার যোগ করুন"
-
-#~ msgid "_Include subfolders"
-#~ msgstr "সাব-ফোল্ডার সংযোজন করা হবে (_I)"
-
-#~ msgid "Exclude folders that are symbolic lin_ks"
-#~ msgstr "সিম্বলিক লিংক ফোল্ডারগুলি অন্তর্ভুক্ত করা হবে না (_k)"
-
-#~ msgid "Sa_ve Options"
-#~ msgstr "বিকল্প সংরক্ষণ (_v)"
-
-#~ msgid ""
-#~ "You don't have the right permissions to create an archive in the "
-#~ "destination folder."
-#~ msgstr "চিহ্নিত ফোল্ডারে আর্কাইভ তৈরি করার জন্যে আপনার পর্যাপ্ত অনুমতি নেই।"
-
-#~ msgid "Archive not created"
-#~ msgstr "আর্কাইভ তৈরি করা হয়নি"
-
-#~ msgid "_Overwrite"
-#~ msgstr "নতুন করে লেখা হবে (_O)"
-
-#~ msgid "Re-crea_te folders"
-#~ msgstr "ফোল্ডার পুনরায় নির্মাণ (_t)"
-
-#~ msgid "Over_write existing files"
-#~ msgstr "উপস্থিত ফাইল নতুন করে লিখুন (_w)"
-
-#~ msgid "Do not e_xtract older files"
-#~ msgstr "পুরোনো ফাইল এক্সট্র্যাক্ট করা হবে না (_x)"
-
-#~ msgctxt "File"
-#~ msgid "New"
-#~ msgstr "নতুন"
-
-#~ msgid "File _Format: %s"
-#~ msgstr "ফাইলের বিন্যাস: %s (_F)"
-
-#~ msgid "All Files"
-#~ msgstr "সর্বধরনের ফাইল"
-
-#~ msgid "All Supported Files"
-#~ msgstr "সকল সমর্থিত ফাইল"
-
-#~ msgid "By Extension"
-#~ msgstr "এক্সটেনশন অনুযায়ী"
-
-#~ msgid "File Format"
-#~ msgstr "ফাইলের বিন্যাস"
-
-#~ msgid "Extension(s)"
-#~ msgstr "এক্সটেনশন"
-
-#~ msgid ""
-#~ "The program was not able to find out the file format you want to use for `"
-#~ "%s'. Please make sure to use a known extension for that file or manually "
-#~ "choose a file format from the list below."
-#~ msgstr ""
-#~ "`%s'-র সাথে ব্যবহারযোগ্য ফাইলের বিন্যাসটি এই প্রোগ্রাম দ্বারা সনাক্ত করা সম্ভব "
-#~ "হয়নি। অনুগ্রহ করপ, সংশ্লিষ্ট ফাইলের জন্য একটি পরিচিত এক্সটেনশন ব্যবহার করুন অথবা "
-#~ "নিম্নলিখিত তালিকা থেকে একটি ফাইলের বিন্যাস নির্বাচন করুন।"
-
-#~ msgid "File format not recognized"
-#~ msgstr "ফাইলের বিন্যাস অজানা"
-
-#~ msgid "The file doesn't exist"
-#~ msgstr "ফাইল উপস্থিত নেই"
-
-#~ msgid "Adding file: "
-#~ msgstr "ফাইল সংযোজন করা হচ্ছে: "
-
-#~ msgid "Extracting file: "
-#~ msgstr "ফাইল এক্সট্র্যাক্ট করা হচ্ছে: "
-
-#~ msgid "7-Zip (.7z)"
-#~ msgstr "7-Zip (.7z)"
-
-#~ msgid "Tar compressed with 7z (.tar.7z)"
-#~ msgstr "7z দ্বারা সংকুচিত tar (.tar.7z)"
-
-#~ msgid "Ace (.ace)"
-#~ msgstr "Ace (.ace)"
-
-#~ msgid "Ar (.ar)"
-#~ msgstr "Ar (.ar)"
-
-#~ msgid "Arj (.arj)"
-#~ msgstr "Arj (.arj)"
-
-#~ msgid "Tar compressed with bzip2 (.tar.bz2)"
-#~ msgstr "bzip2 দ্বারা সংকুচিত tar (.tar.bz2)"
-
-#~ msgid "Tar compressed with bzip (.tar.bz)"
-#~ msgstr "bzip দ্বারা সংকুচিত tar (.tar.bz)"
-
-#~ msgid "Cabinet (.cab)"
-#~ msgstr "Cabinet (.cab)"
-
-#~ msgid "Rar Archived Comic Book (.cbr)"
-#~ msgstr "Rar Archived Comic Book (.cbr)"
-
-#~ msgid "Zip Archived Comic Book (.cbz)"
-#~ msgstr "Zip Archived Comic Book (.cbz)"
-
-#~ msgid "Tar compressed with gzip (.tar.gz)"
-#~ msgstr "gzip দ্বারা সংকুচিত tar (.tar.gz)"
-
-#~ msgid "Ear (.ear)"
-#~ msgstr "Ear (.ear)"
-
-#~ msgid "Self-extracting zip (.exe)"
-#~ msgstr "Self-extracting zip (.exe)"
-
-#~ msgid "Jar (.jar)"
-#~ msgstr "Jar (.jar)"
-
-#~ msgid "Lha (.lzh)"
-#~ msgstr "Lha (.lzh)"
-
-#~ msgid "Lrzip (.lrz)"
-#~ msgstr "Lrzip (.lrz)"
-
-#~ msgid "Tar compressed with lrzip (.tar.lrz)"
-#~ msgstr "lrzip দ্বারা সংকুচিত tar (.tar.lrz)"
-
-#~ msgid "Tar compressed with lzip (.tar.lz)"
-#~ msgstr "lzip দ্বারা সংকুচিত tar (.tar.lz)"
-
-#~ msgid "Tar compressed with lzma (.tar.lzma)"
-#~ msgstr "lzma দ্বারা সংকুচিত tar (.tar.lzma)"
-
-#~ msgid "Tar compressed with lzop (.tar.lzo)"
-#~ msgstr "lzop দ্বারা সংকুচিত tar (.tar.lzo)"
-
-#~ msgid "Windows Imaging Format (.wim)"
-#~ msgstr "Windows Imaging Format (.wim)"
-
-#~ msgid "Rar (.rar)"
-#~ msgstr "Rar (.rar)"
-
-#~ msgid "Tar uncompressed (.tar)"
-#~ msgstr "কম্প্রেশন-বিহীন Tar (.tar)"
-
-#~ msgid "Tar compressed with compress (.tar.Z)"
-#~ msgstr "compress দ্বারা সংকুচিত tar (.tar.Z)"
-
-#~ msgid "War (.war)"
-#~ msgstr "War (.war)"
-
-#~ msgid "Xz (.xz)"
-#~ msgstr "Xz (.xz)"
-
-#~ msgid "Tar compressed with xz (.tar.xz)"
-#~ msgstr "xz দ্বারা সংকুচিত tar (.tar.xz)"
-
-#~ msgid "Zoo (.zoo)"
-#~ msgstr "Zoo (.zoo)"
-
-#~ msgid "Zip (.zip)"
-#~ msgstr "Zip (.zip)"
-
-#~ msgid "Creating archive"
-#~ msgstr "আর্কাইভ নির্মিত হচ্ছে"
-
-#~ msgid "Loading archive"
-#~ msgstr "আর্কাইভ লোড করা হচ্ছে"
-
-#~ msgid "Reading archive"
-#~ msgstr "আর্কাইভ পড়া হচ্ছে"
-
-#~ msgid "Testing archive"
-#~ msgstr "আর্কাইভ পরীক্ষা করা হচ্ছে"
-
-#~ msgid "Saving archive"
-#~ msgstr "আর্কাইভ সংরক্ষণ করা হচ্ছে"
-
-#~ msgid "Close the folders pane"
-#~ msgstr "ফোল্ডারের পেইন বন্ধ করুন"
-
-#~ msgid "The new name is void."
-#~ msgstr "নতুন নামটি সঠিক নয়।"
-
-#~ msgid "The new name is equal to the old one."
-#~ msgstr "নতুন নামটি পুরোনো নামের অনুরূপ।"
-
-#~ msgid "_Add Files..."
-#~ msgstr "ফাইল সংযোজন... (_A)"
-
-#~ msgid "Add a _Folder..."
-#~ msgstr "ফোল্ডার সংযোজন... (_F)"
-
-#~ msgid "Add a folder to the archive"
-#~ msgstr "আর্কাইভে ফোল্ডার যোগ করুন"
-
-#~ msgid "Add Folder"
-#~ msgstr "ফোল্ডার যোগ করুন"
-
-#~ msgid "_Rename..."
-#~ msgstr "নাম পরিবর্তন...(_R)"
-
-#~ msgid "_Extract..."
-#~ msgstr "এক্সট্র্যাক্ট করুন...(_E)"
-
-#~ msgid "Find..."
-#~ msgstr "অনুসন্ধান..."
-
-#~ msgid "_Last Output"
-#~ msgstr "শেষ আউটপুট (_L)"
-
-#~ msgid "View the output produced by the last executed command"
-#~ msgstr "সর্বশেষ সঞ্চালিত কমান্ডের আউটপুট দেখুন"
-
-#~ msgctxt "File"
-#~ msgid "New..."
-#~ msgstr "নতুন..."
-
-#~ msgctxt "File"
-#~ msgid "Open..."
-#~ msgstr "খুলুন..."
-
-#~ msgid "Pass_word..."
-#~ msgstr "পাসওয়ার্ড... (_w)"
-
-#~ msgid "Stop current operation"
-#~ msgstr "বর্তমান কাজ স্থগিত করুন"
-
-#~ msgid "_Reversed Order"
-#~ msgstr "বিপরীত অনুক্রম (_R)"
-
-#~ msgid "Reverse the list order"
-#~ msgstr "বিপরীত দিশায় তালিকার অনুক্রম"
-
-#~ msgid "by _Name"
-#~ msgstr "নাম অনুযায়ী (_N)"
-
-#~ msgid "Sort file list by name"
-#~ msgstr "নাম অনুযায়ী ফাইলের অনুক্রম"
-
-#~ msgid "by _Size"
-#~ msgstr "মাপ অনুযায়ী (_S)"
-
-#~ msgid "Sort file list by file size"
-#~ msgstr "ফাইলের মাপ অনুযায়ী ক্রমবিন্যাস"
-
-#~ msgid "by T_ype"
-#~ msgstr "ধরন অনুযায়ী (_y)"
-
-#~ msgid "Sort file list by type"
-#~ msgstr "ফাইলের ধরন অনুযায়ী ক্রমবিন্যাস"
-
-#~ msgid "by _Date Modified"
-#~ msgstr "পরিবর্তনের তারিখ অনুযায়ী (_D)"
-
-#~ msgid "Sort file list by modification time"
-#~ msgstr "ফাইলের পরিবর্তনের সময় অনুযায়ী ক্রমবিন্যাস"
-
-#~ msgid "by _Location"
-#~ msgstr "অবস্থান অনুযায়ী (_L)"
-
-#~ msgid "Sort file list by location"
-#~ msgstr "ফাইলের অবস্থান অনুযায়ী ক্রমবিন্যাস"
-
-#~ msgid "A_vailable application:"
-#~ msgstr "উপস্থিত অ্যাপ্লিকেশন: (_v)"
-
-#~ msgid "Open Files"
-#~ msgstr "ফাইল খুলুন"
-
-#~ msgid "R_ecent applications:"
-#~ msgstr "সম্প্রতি ব্যবহৃত অ্যাপ্লিকেশন: (_e)"
-
-#~ msgid "_Application:"
-#~ msgstr "অ্যাপ্লিকেশন: (_A)"
-
-#~ msgid ""
-#~ "File Roller is free software; you can redistribute it and/or modify it "
-#~ "under the terms of the GNU General Public License as published by the "
-#~ "Free Software Foundation; either version 2 of the License, or (at your "
-#~ "option) any later version."
-#~ msgstr ""
-#~ "File Roller একটি মুক্ত সফ্টওয়্যার; Free Software Foundation দ্বারা প্রকাশিত GNU "
-#~ "General Public License'র শর্তানুযায়ী এটি বিতরণ ও পরিবর্তন করা যাবে; "
-#~ "লাইনসেন্সের সংস্করণ ২ অথবা (আপনার সুবিধানুযায়ী) ঊর্ধ্বতন কোনো সংস্করণের অধীন।"
-
-#~ msgid ""
-#~ "File Roller is distributed in the hope that it will be useful, but "
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of "
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-#~ "Public License for more details."
-#~ msgstr ""
-#~ "File Roller বিতরণ করার মূল উদ্দেশ্য যে ব্যবহারকারীরা এর দ্বারা উপকৃত হবেন, কিন্তু "
-#~ "এটির জন্য কোনো সুস্পষ্ট ওয়ারেন্টি উপস্থিত নেই; বাণিজ্যিক ও কোনো সুনির্দিষ্ট কর্ম "
-#~ "সাধনের জন্য অন্তর্নিহীত ওয়ারেন্টিও অনুপস্থিত। অধিক জানতে GNU General Public "
-#~ "License পড়ুন।"
-
-#~ msgid ""
-#~ "You should have received a copy of the GNU General Public License along "
-#~ "with File Roller; if not, write to the Free Software Foundation, Inc., 51 "
-#~ "Franklin St, Fifth Floor, Boston, MA  02110-1301 USA"
-#~ msgstr ""
-#~ "File Roller'র সাথে GNU General Public License'র একটি প্রতিলিপি উপলব্ধ হওয়া "
-#~ "উচিত; না থাকলে নিম্নলিখিত ঠিকানায় লিখে তা সংগ্রহ করুন Free Software "
-#~ "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
-#~ "USA"
