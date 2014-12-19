@@ -98,9 +98,11 @@ dlg_ask_password__common (FrWindow       *window,
 {
 	DialogData *data;
 	GFile      *file;
+	GtkWidget  *content_area;
 	const char *old_password;
 	char       *filename;
 	char       *message;
+	gboolean   use_header;
 
 	data = g_new0 (DialogData, 1);
 	data->builder = _gtk_builder_new_from_resource ("ask-password.ui");
@@ -111,9 +113,25 @@ dlg_ask_password__common (FrWindow       *window,
 	data->window = window;
 	data->pwd_type = pwd_type;
 
-	/* Get the widgets. */
+	/* Make the widgets. */
+	g_object_get (gtk_settings_get_default (),
+				  "gtk-dialogs-use-header", &use_header,
+				  NULL);
 
-	data->dialog = GET_WIDGET ("password_dialog");
+	data->dialog = g_object_new (GTK_TYPE_DIALOG,
+						   "transient-for", GTK_WINDOW (window),
+						   "modal", TRUE,
+						   "use-header-bar", use_header,
+						   NULL);
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
+	gtk_container_add (GTK_CONTAINER (content_area),
+					   GET_WIDGET ("password_vbox"));
+	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
+							_("_Cancel"), GTK_RESPONSE_CANCEL,
+							_("_OK"), GTK_RESPONSE_OK,
+							NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog),
+			GTK_RESPONSE_OK);
 	data->password_entry = GET_WIDGET ("password_entry");
 
 	/* Set widgets data. */
