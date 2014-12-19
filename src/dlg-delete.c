@@ -39,22 +39,21 @@ typedef struct {
 	GtkWidget *d_files_entry;
 } DialogData;
 
-
 /* called when the main dialog is closed. */
 static void
 destroy_cb (GtkWidget  *widget,
-	    DialogData *data)
+           DialogData *data)
 {
-	_g_string_list_free (data->selected_files);
-	g_object_unref (G_OBJECT (data->builder));
-	g_free (data);
+       _g_string_list_free (data->selected_files);
+       g_object_unref (G_OBJECT (data->builder));
+       g_free (data);
 }
 
-
-/* called when the "ok" button is pressed. */
+/* called when the dialog is dismissed. */
 static void
-ok_clicked_cb (GtkWidget  *widget,
-	       DialogData *data)
+response_cb (GtkWidget  *widget,
+			int         response_id,
+			DialogData *data)
 {
 	gboolean  selected_files;
 	gboolean  pattern_files;
@@ -62,34 +61,37 @@ ok_clicked_cb (GtkWidget  *widget,
 	GList    *file_list = NULL;
 	gboolean  do_not_remove_if_null = FALSE;
 
-	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio));
-	pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_files_radio));
+	switch (response_id) {
+	case GTK_RESPONSE_OK:
+		selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_selected_files_radio));
+		pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (data->d_files_radio));
 
-	/* create the file list. */
+		/* create the file list. */
 
-	if (selected_files) {
-		file_list = data->selected_files;
-		data->selected_files = NULL;       /* do not free the list when destroying the dialog. */
-	}
-	else if (pattern_files) {
-		const char *pattern;
+		if (selected_files) {
+			file_list = data->selected_files;
+			data->selected_files = NULL;       /* do not free the list when destroying the dialog. */
+		}
+		else if (pattern_files) {
+			const char *pattern;
 
-		pattern = gtk_entry_get_text (GTK_ENTRY (data->d_files_entry));
-		file_list = fr_window_get_file_list_pattern (window, pattern);
-		if (file_list == NULL)
-			do_not_remove_if_null = TRUE;
+			pattern = gtk_entry_get_text (GTK_ENTRY (data->d_files_entry));
+			file_list = fr_window_get_file_list_pattern (window, pattern);
+			if (file_list == NULL)
+				do_not_remove_if_null = TRUE;
+		}
+
+		/* remove ! */
+
+		if (! do_not_remove_if_null || (file_list != NULL))
+			fr_window_archive_remove (window, file_list);
+
+		_g_string_list_free (file_list);
+		break;
 	}
 
 	/* close the dialog. */
-
 	gtk_widget_destroy (data->dialog);
-
-	/* remove ! */
-
-	if (! do_not_remove_if_null || (file_list != NULL))
-		fr_window_archive_remove (window, file_list);
-
-	_g_string_list_free (file_list);
 }
 
 
@@ -107,8 +109,10 @@ dlg_delete__common (FrWindow *window,
 	            GList    *selected_files)
 {
 	DialogData *data;
-	GtkWidget  *cancel_button;
+	GtkWidget  *content_area;
+	GtkWidget  *delete_box;
 	GtkWidget  *ok_button;
+	gboolean   use_header;
 
 	data = g_new (DialogData, 1);
 	data->window = window;
@@ -121,15 +125,35 @@ dlg_delete__common (FrWindow *window,
 	}
 
 	/* Get the widgets. */
+	g_object_get (gtk_settings_get_default (),
+				  "gtk-dialogs-use-header", &use_header,
+				  NULL);
 
-	data->dialog = _gtk_builder_get_widget (data->builder, "delete_dialog");
+	data->dialog = g_object_new (GTK_TYPE_DIALOG,
+						   "transient-for", GTK_WINDOW (window),
+						   "modal", TRUE,
+						   "use-header-bar", use_header,
+						   NULL);
+
+	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
+							_("_Cancel"), GTK_RESPONSE_CANCEL,
+							_("_Delete"), GTK_RESPONSE_OK,
+							NULL);
+
+	ok_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (data->dialog),
+			GTK_RESPONSE_OK);
+	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button),
+			"destructive-action");
+
+	delete_box = _gtk_builder_get_widget (data->builder, "delete_box");
+
 	data->d_all_files_radio = _gtk_builder_get_widget (data->builder, "d_all_files_radio");
 	data->d_selected_files_radio = _gtk_builder_get_widget (data->builder, "d_selected_files_radio");
 	data->d_files_radio = _gtk_builder_get_widget (data->builder, "d_files_radio");
 	data->d_files_entry = _gtk_builder_get_widget (data->builder, "d_files_entry");
 
-	ok_button = _gtk_builder_get_widget (data->builder, "d_ok_button");
-	cancel_button = _gtk_builder_get_widget (data->builder, "d_cancel_button");
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
+	gtk_container_add (GTK_CONTAINER (content_area), delete_box);
 
 	/* Set widgets data. */
 
@@ -146,25 +170,24 @@ dlg_delete__common (FrWindow *window,
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect_swapped (G_OBJECT (cancel_button),
-				  "clicked",
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (data->dialog));
-	g_signal_connect (G_OBJECT (ok_button),
-			  "clicked",
-			  G_CALLBACK (ok_clicked_cb),
+	g_signal_connect (G_OBJECT (data->dialog),
+			  "response",
+			  G_CALLBACK (response_cb),
 			  data);
+//	g_signal_connect_swapped (G_OBJECT (cancel_button),
+//				  "clicked",
+//				  G_CALLBACK (gtk_widget_destroy),
+//				  G_OBJECT (data->dialog));
+//	g_signal_connect (G_OBJECT (ok_button),
+//			  "clicked",
+//			  G_CALLBACK (ok_clicked_cb),
+//			  data);
 	g_signal_connect (G_OBJECT (data->d_files_entry),
 			  "changed",
 			  G_CALLBACK (entry_changed_cb),
 			  data);
 
 	/* Run dialog. */
-
-	gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
-				      GTK_WINDOW (window));
-	gtk_window_set_modal         (GTK_WINDOW (data->dialog), TRUE);
-
 	gtk_widget_show (data->dialog);
 }
 
