@@ -49,7 +49,9 @@ void
 dlg_prop (FrWindow *window)
 {
 	DialogData *data;
+	GtkWidget  *content_area;
 	GtkWidget  *label;
+	GtkWidget  *table;
 	GFile      *parent;
 	char       *uri;
 	char       *markup;
@@ -58,6 +60,7 @@ dlg_prop (FrWindow *window)
 	char       *utf8_name;
 	char       *title_txt;
 	double      ratio;
+	gboolean   use_header;
 
 	data = g_new (DialogData, 1);
 
@@ -68,8 +71,23 @@ dlg_prop (FrWindow *window)
 	}
 
 	/* Get the widgets. */
+	table = _gtk_builder_get_widget (data->builder, "prefs_table");
 
-	data->dialog = _gtk_builder_get_widget (data->builder, "prop_dialog");
+
+	/* Make the dialog */
+	g_object_get (gtk_settings_get_default (),
+				  "gtk-dialogs-use-header", &use_header,
+				  NULL);
+
+	data->dialog = gtk_widget_new (GTK_TYPE_DIALOG,
+								   "transient-for", GTK_WINDOW (window),
+								   "modal", TRUE,
+								   "use-header-bar",  use_header,
+								   NULL);
+
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
+	gtk_container_add (GTK_CONTAINER (content_area), table);
+
 
 	/* Set widgets data. */
 
@@ -161,10 +179,5 @@ dlg_prop (FrWindow *window)
 			  data);
 
 	/* Run dialog. */
-
-	gtk_window_set_transient_for (GTK_WINDOW (data->dialog),
-				      GTK_WINDOW (window));
-	gtk_window_set_modal (GTK_WINDOW (data->dialog), TRUE);
-
 	gtk_widget_show (data->dialog);
 }
