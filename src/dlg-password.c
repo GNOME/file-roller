@@ -35,6 +35,7 @@
 typedef struct {
 	GtkBuilder *builder;
 	FrWindow   *window;
+	GtkWidget  *dialog;
 } DialogData;
 
 
@@ -64,7 +65,7 @@ response_cb (GtkWidget  *dialog,
 		g_free (password);
 	}
 
-	gtk_widget_destroy (GET_WIDGET ("dialog"));
+	gtk_widget_destroy (data->dialog);
 }
 
 
@@ -74,8 +75,10 @@ dlg_password (GtkWidget *widget,
 {
 	FrWindow   *window = callback_data;
 	DialogData *data;
+	GtkWidget  *content_area;
 	char       *basename;
 	char       *title;
+	gboolean   use_header;
 
 	data = g_new0 (DialogData, 1);
 	data->window = window;
@@ -86,6 +89,24 @@ dlg_password (GtkWidget *widget,
 	}
 
 	/* Set widgets data. */
+	g_object_get (gtk_settings_get_default (),
+				  "gtk-dialogs-use-header", &use_header,
+				  NULL);
+
+	data->dialog = g_object_new (GTK_TYPE_DIALOG,
+						   "transient-for", GTK_WINDOW (window),
+						   "modal", TRUE,
+						   "use-header-bar", use_header,
+						   NULL);
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
+	gtk_container_add (GTK_CONTAINER (content_area),
+			GET_WIDGET ("password_vbox"));
+	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
+			_("_Cancel"), GTK_RESPONSE_CANCEL,
+			_("_Save"), GTK_RESPONSE_OK,
+			NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog),
+			GTK_RESPONSE_OK);
 
 	basename = _g_file_get_display_basename (fr_archive_get_file (window->archive));
 	title = g_strdup_printf (_("Enter a password for \"%s\""), basename);
@@ -107,11 +128,11 @@ dlg_password (GtkWidget *widget,
 
 	/* Set the signals handlers. */
 
-	g_signal_connect (GET_WIDGET ("dialog"),
+	g_signal_connect ((data->dialog),
 			  "destroy",
 			  G_CALLBACK (destroy_cb),
 			  data);
-	g_signal_connect (GET_WIDGET ("dialog"),
+	g_signal_connect ((data->dialog),
 			  "response",
 			  G_CALLBACK (response_cb),
 			  data);
@@ -119,7 +140,5 @@ dlg_password (GtkWidget *widget,
 	/* Run dialog. */
 
 	gtk_widget_grab_focus (GET_WIDGET ("password_entry"));
-	gtk_window_set_transient_for (GTK_WINDOW (GET_WIDGET ("dialog")), GTK_WINDOW (window));
-	gtk_window_set_modal (GTK_WINDOW (GET_WIDGET ("dialog")), TRUE);
-	gtk_widget_show (GET_WIDGET ("dialog"));
+	gtk_widget_show (data->dialog);
 }
