@@ -127,16 +127,29 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	GtkWidget  *dialog;
 	GtkWidget  *label;
 	GtkWidget  *entry;
+	GtkWidget  *content_area;
+	GtkWidget  *request_box;
 	char       *result;
+	gboolean   use_header;
+
+	g_object_get (gtk_settings_get_default (),
+				  "gtk-dialogs-use-header", &use_header,
+				  NULL);
 
 	builder = _gtk_builder_new_from_resource ("request-dialog.ui");
-	dialog = _gtk_builder_get_widget (builder, "request_dialog");
+	request_box = _gtk_builder_get_widget (builder, "request_box");
+
+	dialog = g_object_new (GTK_TYPE_DIALOG,
+						   "transient-for", parent,
+						   "modal", flags & GTK_DIALOG_MODAL,
+						   "use-header-bar", use_header,
+						   NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
-	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
-	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	gtk_container_add (GTK_CONTAINER (content_area), request_box);
+	g_object_weak_ref (G_OBJECT (request_box), (GWeakNotify) g_object_unref, builder);
 
 	if (flags & GTK_DIALOG_MODAL)
 		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
