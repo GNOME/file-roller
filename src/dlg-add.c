@@ -173,12 +173,15 @@ dlg_add (FrWindow *window)
 	GtkWidget  *options_button;
 	GtkWidget  *options_menu;
 	GtkWidget  *menu_item;
+	gboolean   use_header;
 
 	data = g_new0 (DialogData, 1);
 	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_ADD);
 	data->window = window;
 	data->dialog = fr_file_selector_dialog_new (_("Add Files"), GTK_WINDOW (data->window));
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
+
+	g_object_get (data->dialog, "use-header-bar", &use_header, NULL);
 
 	data->builder = _gtk_builder_new_from_resource ("add-dialog-options.ui");
 	if (data->builder == NULL)
@@ -219,14 +222,23 @@ dlg_add (FrWindow *window)
 
 	/* add the buttons */
 
+	if (!use_header)
+		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_action_area (GTK_DIALOG (data->dialog))),
+				     options_button,
+				     FALSE,
+				     FALSE,
+				     0);
+
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
 			       _GTK_LABEL_CANCEL,
 			       GTK_RESPONSE_CANCEL);
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
 			       _GTK_LABEL_ADD,
 			       GTK_RESPONSE_OK);
-	gtk_header_bar_pack_end (GTK_HEADER_BAR (gtk_dialog_get_header_bar (GTK_DIALOG (data->dialog))),
-				 options_button);
+
+	if (use_header)
+		gtk_header_bar_pack_end (GTK_HEADER_BAR (gtk_dialog_get_header_bar (
+						GTK_DIALOG (data->dialog))), options_button);
 
 	/* set data */
 
