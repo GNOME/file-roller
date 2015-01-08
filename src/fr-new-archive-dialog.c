@@ -309,8 +309,13 @@ fr_new_archive_dialog_new (const char         *title,
 			   GFile              *original_file)
 {
 	FrNewArchiveDialog *self;
+	gboolean use_header;
 
-	self = g_object_new (FR_TYPE_NEW_ARCHIVE_DIALOG, "title", title, "use-header-bar", TRUE, NULL);
+	g_object_get (gtk_settings_get_default (),
+				  "gtk-dialogs-use-header", &use_header,
+				  NULL);
+
+	self = g_object_new (FR_TYPE_NEW_ARCHIVE_DIALOG, "title", title, "use-header-bar", use_header, NULL);
 	_fr_new_archive_dialog_construct (self, parent, action, folder, default_name, original_file);
 
 	return (GtkWidget *) self;
