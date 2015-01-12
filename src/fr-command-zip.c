@@ -400,12 +400,12 @@ fr_command_zip_get_capabilities (FrArchive  *archive,
 {
 	FrArchiveCap capabilities;
 
-	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES | FR_ARCHIVE_CAN_ENCRYPT;
+	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
 	if (_g_program_is_available ("zip", check_command)) {
 		if (strcmp (mime_type, "application/x-ms-dos-executable") == 0)
 			capabilities |= FR_ARCHIVE_CAN_READ;
 		else
-			capabilities |= FR_ARCHIVE_CAN_WRITE;
+			capabilities |= FR_ARCHIVE_CAN_WRITE | FR_ARCHIVE_CAN_ENCRYPT;
 	}
 	if (_g_program_is_available ("unzip", check_command))
 		capabilities |= FR_ARCHIVE_CAN_READ;

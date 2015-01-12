@@ -70,17 +70,25 @@ const char *libarchiver_mime_types[] = {
 		"application/vnd.ms-cab-compressed",
 		"application/x-7z-compressed",
 		"application/x-ar",
+		"application/x-bzip-compressed-tar",
+		"application/x-cbr",
+		"application/x-cbz",
 		"application/x-cd-image",
 		"application/x-compressed-tar",
 		"application/x-cpio",
-		"application/x-bzip-compressed-tar",
+		"application/x-deb",
 		"application/x-lha",
+		"application/x-lrzip-compressed-tar",
 		"application/x-lzip-compressed-tar",
 		"application/x-lzma-compressed-tar",
+		"application/x-lzop-compressed-tar",
+		"application/x-rar",
+		"application/x-rpm",
 		"application/x-tar",
 		"application/x-tarz",
 		"application/x-xar",
 		"application/x-xz-compressed-tar",
+		"application/zip",
 		NULL };
 
 
@@ -113,11 +121,37 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 		return capabilities;
 	}
 
+	/* give priority to 7z, unzip and zip that supports ZIP files better. */
+	if ((strcmp (mime_type, "application/zip") == 0)
+	    || (strcmp (mime_type, "application/x-cbz") == 0))
+	{
+		if (_g_program_is_available ("7z", check_command)) {
+			return capabilities;
+		}
+		if (!_g_program_is_available ("unzip", check_command)) {
+			capabilities |= FR_ARCHIVE_CAN_READ;
+		}
+		if (!_g_program_is_available ("zip", check_command)) {
+			capabilities |= FR_ARCHIVE_CAN_WRITE;
+		}
+		return capabilities;
+	}
+
+	/* tar.lrz format requires external lrzip */
+	if (strcmp (mime_type, "application/x-lrzip-compressed-tar") == 0) {
+		if (!_g_program_is_available ("lrzip", check_command))
+			return capabilities;
+	}
+
 	capabilities |= FR_ARCHIVE_CAN_READ;
 
 	/* read-only formats */
 	if ((strcmp (mime_type, "application/vnd.ms-cab-compressed") == 0)
+	    || (strcmp (mime_type, "application/x-cbr") == 0)
+	    || (strcmp (mime_type, "application/x-deb") == 0)
 	    || (strcmp (mime_type, "application/x-lha") == 0)
+	    || (strcmp (mime_type, "application/x-rar") == 0)
+	    || (strcmp (mime_type, "application/x-rpm") == 0)
 	    || (strcmp (mime_type, "application/x-xar") == 0))
 	{
 		return capabilities;
@@ -1049,6 +1083,10 @@ _archive_write_set_format_from_context (struct archive *a,
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_GZIP;
 	}
+	else if (_g_str_equal (mime_type, "application/x-lrzip-compressed-tar")) {
+		archive_write_set_format_pax_restricted (a);
+		archive_filter = ARCHIVE_FILTER_LRZIP;
+	}
 	else if (_g_str_equal (mime_type, "application/x-lzip-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZIP;
@@ -1056,6 +1094,10 @@ _archive_write_set_format_from_context (struct archive *a,
 	else if (_g_str_equal (mime_type, "application/x-lzma-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
 		archive_filter = ARCHIVE_FILTER_LZMA;
+	}
+	else if (_g_str_equal (mime_type, "application/x-lzop-compressed-tar")) {
+		archive_write_set_format_pax_restricted (a);
+		archive_filter = ARCHIVE_FILTER_LZOP;
 	}
 	else if (_g_str_equal (mime_type, "application/x-xz-compressed-tar")) {
 		archive_write_set_format_pax_restricted (a);
@@ -1080,6 +1122,10 @@ _archive_write_set_format_from_context (struct archive *a,
 	else if (_g_str_equal (mime_type, "application/x-7z-compressed")) {
 		archive_write_set_format_7zip (a);
 	}
+	else if (_g_str_equal (mime_type, "application/zip")
+	    || _g_str_equal (mime_type, "application/x-cbz")) {
+		archive_write_set_format_zip (a);
+	}
 
 	/* set the filter */
 
@@ -1096,11 +1142,17 @@ _archive_write_set_format_from_context (struct archive *a,
 		case ARCHIVE_FILTER_GZIP:
 			archive_write_add_filter_gzip (a);
 			break;
+		case ARCHIVE_FILTER_LRZIP:
+			archive_write_add_filter_lrzip (a);
+			break;
 		case ARCHIVE_FILTER_LZIP:
 			archive_write_add_filter_lzip (a);
 			break;
 		case ARCHIVE_FILTER_LZMA:
 			archive_write_add_filter_lzma (a);
+			break;
+		case ARCHIVE_FILTER_LZOP:
+			archive_write_add_filter_lzop (a);
 			break;
 		case ARCHIVE_FILTER_XZ:
 			archive_write_add_filter_xz (a);
