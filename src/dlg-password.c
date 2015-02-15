@@ -102,6 +102,8 @@ dlg_password (GtkWidget *widget,
 				_GTK_LABEL_SAVE, GTK_RESPONSE_OK,
 				NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
+	gtk_style_context_add_class (gtk_widget_get_style_context (gtk_dialog_get_widget_for_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK)),
+				     GTK_STYLE_CLASS_SUGGESTED_ACTION);
 
 	basename = _g_file_get_display_basename (fr_archive_get_file (window->archive));
 	title = g_strdup_printf (_("Enter a password for \"%s\""), basename);
