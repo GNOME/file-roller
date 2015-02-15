@@ -1641,6 +1641,7 @@ fr_archive_libarchive_add_files (FrArchive           *archive,
 
 typedef struct {
 	GHashTable *files_to_remove;
+	gboolean    remove_all_files;
 	int         n_files_to_remove;
 } RemoveData;
 
@@ -1648,7 +1649,8 @@ typedef struct {
 static void
 remove_data_free (RemoveData *remove_data)
 {
-	g_hash_table_unref (remove_data->files_to_remove);
+	if (remove_data->files_to_remove != NULL)
+		g_hash_table_unref (remove_data->files_to_remove);
 	g_free (remove_data);
 }
 
@@ -1662,7 +1664,7 @@ _remove_files_begin (SaveData *save_data,
 
 	fr_archive_progress_set_total_files (load_data->archive, remove_data->n_files_to_remove);
 	fr_archive_progress_set_total_bytes (load_data->archive,
-				FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size);
+					     FR_ARCHIVE_LIBARCHIVE (load_data->archive)->priv->uncompressed_size);
 }
 
 
@@ -1675,6 +1677,9 @@ _remove_files_entry_action (SaveData             *save_data,
 	LoadData    *load_data = LOAD_DATA (save_data);
 	WriteAction  action;
 	const char  *pathname;
+
+	if (remove_data->remove_all_files)
+		return WRITE_ACTION_SKIP_ENTRY;
 
 	action = WRITE_ACTION_WRITE_ENTRY;
 	pathname = archive_entry_pathname (w_entry);
@@ -1701,12 +1706,17 @@ fr_archive_libarchive_remove_files (FrArchive           *archive,
 	GList      *scan;
 
 	remove_data = g_new0 (RemoveData, 1);
-	remove_data->files_to_remove = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
-	remove_data->n_files_to_remove = 0;
-	for (scan = file_list; scan; scan = scan->next) {
-		g_hash_table_insert (remove_data->files_to_remove, g_strdup (scan->data), GINT_TO_POINTER (1));
-		remove_data->n_files_to_remove++;
+	remove_data->remove_all_files = (file_list == NULL);
+	if (! remove_data->remove_all_files) {
+		remove_data->files_to_remove = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+		remove_data->n_files_to_remove = 0;
+		for (scan = file_list; scan; scan = scan->next) {
+			g_hash_table_insert (remove_data->files_to_remove, g_strdup (scan->data), GINT_TO_POINTER (1));
+			remove_data->n_files_to_remove++;
+		}
 	}
+	else
+		remove_data->n_files_to_remove = archive->files->len;
 
 	_fr_archive_libarchive_save (archive,
 				     FALSE,
