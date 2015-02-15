@@ -4515,9 +4515,14 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	g_return_val_if_fail (uri != NULL, FALSE);
 
 	destination = g_file_new_for_uri (uri);
-	destination_folder = g_file_get_parent (destination);
+	if (destination == NULL)
+		return FALSE;
 
+	destination_folder = g_file_get_parent (destination);
 	g_object_unref (destination);
+
+	if (destination_folder == NULL)
+		return FALSE;
 
 	/* check whether the extraction can be performed in the destination
 	 * folder */
