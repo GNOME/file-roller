@@ -174,6 +174,7 @@ dlg_add (FrWindow *window)
 	GtkWidget  *options_menu;
 	GtkWidget  *menu_item;
 	gboolean    use_header;
+	GtkWidget  *button;
 
 	data = g_new0 (DialogData, 1);
 	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_ADD);
@@ -193,6 +194,7 @@ dlg_add (FrWindow *window)
 	options_button = gtk_menu_button_new ();
 	gtk_button_set_label (GTK_BUTTON (options_button), _("_Options"));
 	gtk_button_set_use_underline (GTK_BUTTON (options_button), TRUE);
+	gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (options_button), TRUE);
 	gtk_widget_show (options_button);
 
 	options_menu = gtk_menu_new ();
@@ -232,9 +234,10 @@ dlg_add (FrWindow *window)
 	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
 			       _GTK_LABEL_CANCEL,
 			       GTK_RESPONSE_CANCEL);
-	gtk_dialog_add_button (GTK_DIALOG (data->dialog),
-			       _GTK_LABEL_ADD,
-			       GTK_RESPONSE_OK);
+	button = gtk_dialog_add_button (GTK_DIALOG (data->dialog),
+					_GTK_LABEL_ADD,
+					GTK_RESPONSE_OK);
+	gtk_style_context_add_class (gtk_widget_get_style_context (button), GTK_STYLE_CLASS_SUGGESTED_ACTION);
 
 	if (use_header)
 		gtk_header_bar_pack_end (GTK_HEADER_BAR (gtk_dialog_get_header_bar (GTK_DIALOG (data->dialog))),
