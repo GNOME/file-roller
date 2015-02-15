@@ -632,6 +632,10 @@ _fr_command_load_complete (XferData *xfer_data,
 		 * original name */
 		if (archive->multi_volume)
 			fr_archive_change_name (archive, FR_COMMAND (archive)->filename);
+
+		/* the header is encrypted if the load is successful and the password is not void */
+		archive->encrypt_header = (xfer_data->password != NULL) && (*xfer_data->password != '\0');
+
 		fr_archive_update_capabilities (archive);
 	}
 	else
