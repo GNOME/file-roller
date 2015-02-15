@@ -98,7 +98,6 @@ dlg_ask_password__common (FrWindow       *window,
 {
 	DialogData *data;
 	GFile      *file;
-	GtkWidget  *content_area;
 	const char *old_password;
 	char       *filename;
 	char       *message;
@@ -119,8 +118,7 @@ dlg_ask_password__common (FrWindow       *window,
 				     "modal", TRUE,
 				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
-	gtk_container_add (GTK_CONTAINER (content_area),
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (data->dialog))),
 			   GET_WIDGET ("password_vbox"));
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
