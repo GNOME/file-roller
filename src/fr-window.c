@@ -2400,6 +2400,7 @@ create_the_progress_dialog (FrWindow *window)
 	GtkDialogFlags  flags;
 	const char     *title;
 	GtkBuilder     *builder;
+	gboolean        use_header_bar;
 	GtkWidget      *dialog;
 
 	if (window->priv->progress_dialog != NULL)
@@ -2417,21 +2418,40 @@ create_the_progress_dialog (FrWindow *window)
 	}
 
 	builder = _gtk_builder_new_from_resource ("progress-dialog.ui");
-	dialog = _gtk_builder_get_widget (builder, "progress_dialog");
+	use_header_bar = _gtk_settings_get_dialogs_use_header ();
+	dialog = g_object_new (GTK_TYPE_DIALOG, "use-header-bar", use_header_bar, NULL);
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
+			   _gtk_builder_get_widget (builder, "progress_dialog_content"));
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 	gtk_window_set_title (GTK_WINDOW (dialog), title);
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
 	gtk_window_set_modal (GTK_WINDOW (dialog), (flags & GTK_DIALOG_MODAL));
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (gtk_dialog_get_action_area (GTK_DIALOG (dialog))), GTK_BUTTONBOX_EXPAND);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
 	g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify) g_object_unref, builder);
 
 	_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
 
-	window->priv->pd_quit_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Quit"), DIALOG_RESPONSE_QUIT);
-	window->priv->pd_open_archive_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE);
-	window->priv->pd_open_destination_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
-	window->priv->pd_close_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE);
-	window->priv->pd_cancel_button = gtk_dialog_add_button (GTK_DIALOG (dialog), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+				_GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
+				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+				_("_Quit"), DIALOG_RESPONSE_QUIT,
+				_("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE,
+				_("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
+				NULL);
+
+	window->priv->pd_quit_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), DIALOG_RESPONSE_QUIT);
+	window->priv->pd_open_archive_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), DIALOG_RESPONSE_OPEN_ARCHIVE);
+	window->priv->pd_open_destination_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
+	window->priv->pd_close_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
+	window->priv->pd_cancel_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
+
+	if (use_header_bar) {
+		GtkWidget *header_bar = gtk_dialog_get_header_bar (GTK_DIALOG (dialog));
+		gtk_container_child_set (GTK_CONTAINER (header_bar), window->priv->pd_close_button, "pack-type", GTK_PACK_START, NULL);
+		gtk_container_child_set (GTK_CONTAINER (header_bar), window->priv->pd_cancel_button, "pack-type", GTK_PACK_START, NULL);
+	}
+
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
 	window->priv->progress_dialog = dialog;
@@ -5662,8 +5682,8 @@ fr_window_construct (FrWindow *window)
 			    FALSE,
 			    0);
 	gtk_widget_show_all (navigation_commands);
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "raised");
-	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), "linked");
+	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), GTK_STYLE_CLASS_RAISED);
+	gtk_style_context_add_class (gtk_widget_get_style_context (navigation_commands), GTK_STYLE_CLASS_LINKED);
 	gtk_box_pack_start (GTK_BOX (location_bar_content), navigation_commands, FALSE, FALSE, 0);
 
 	gtk_box_pack_start (GTK_BOX (location_bar_content),
