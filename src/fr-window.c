@@ -4226,6 +4226,7 @@ static char *
 get_xds_atom_value (GdkDragContext *context)
 {
 	char *ret;
+	int   len;
 
 	g_return_val_if_fail (context != NULL, NULL);
 	g_return_val_if_fail (gdk_drag_context_get_source_window (context) != NULL, NULL);
@@ -4233,9 +4234,12 @@ get_xds_atom_value (GdkDragContext *context)
 	if (gdk_property_get (gdk_drag_context_get_source_window (context),
 			      XDS_ATOM, TEXT_ATOM,
 			      0, MAX_XDS_ATOM_VAL_LEN,
-			      FALSE, NULL, NULL, NULL,
+			      FALSE, NULL, NULL, &len,
 			      (unsigned char **) &ret))
+	{
+		ret[len] = '\0';
 		return ret;
+	}
 
 	return NULL;
 }
