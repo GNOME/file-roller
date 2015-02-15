@@ -57,6 +57,8 @@ GtkWidget *     fr_new_archive_dialog_new                 (const char          *
 							   GFile               *folder,
 							   const char          *default_name,
 							   GFile               *original_file);
+void		fr_new_archive_dialog_set_files_to_add    (FrNewArchiveDialog  *dialog,
+							   GList               *file_list /* GFile list */);
 GFile *         fr_new_archive_dialog_get_file            (FrNewArchiveDialog  *dialog,
 							   const char         **mime_type);
 const char *    fr_new_archive_dialog_get_password        (FrNewArchiveDialog  *dialog);

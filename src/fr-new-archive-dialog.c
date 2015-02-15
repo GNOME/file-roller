@@ -46,6 +46,7 @@ struct _FrNewArchiveDialogPrivate {
 	gboolean    can_encrypt_header;
 	gboolean    can_create_volumes;
 	GFile      *original_file;
+	GList      *files_to_add;
 };
 
 
@@ -59,6 +60,7 @@ fr_new_archive_dialog_finalize (GObject *object)
 
 	self = FR_NEW_ARCHIVE_DIALOG (object);
 
+	_g_object_list_unref (self->priv->files_to_add);
 	_g_object_unref (self->priv->original_file);
 	g_object_unref (self->priv->settings);
 	g_object_unref (self->priv->builder);
@@ -117,6 +119,7 @@ fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 	self->priv->builder = NULL;
 	self->priv->supported_ext = g_hash_table_new (g_str_hash, g_str_equal);
 	self->priv->original_file = NULL;
+	self->priv->files_to_add = NULL;
 }
 
 
@@ -320,6 +323,15 @@ fr_new_archive_dialog_new (const char         *title,
 }
 
 
+void
+fr_new_archive_dialog_set_files_to_add (FrNewArchiveDialog  *self,
+					GList               *file_list /* GFile list */)
+{
+	_g_object_list_unref (self->priv->files_to_add);
+	self->priv->files_to_add = _g_object_list_ref (file_list);
+}
+
+
 GFile *
 fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 			        const char         **mime_type)
@@ -454,6 +466,30 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		g_object_unref (file);
 
 		return NULL;
+	}
+
+	/* check whether the file is included in the files to add */
+
+	{
+		GList *scan;
+
+		for (scan = self->priv->files_to_add; scan; scan = scan->next) {
+			if (_g_file_cmp_uris (G_FILE (scan->data), file) == 0) {
+				dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
+							        GTK_DIALOG_MODAL,
+								NULL,
+								_("Could not create the archive"),
+								"%s",
+								_("You can't add an archive to itself."));
+				gtk_dialog_run (GTK_DIALOG (dialog));
+
+				gtk_widget_destroy (GTK_WIDGET (dialog));
+				g_object_unref (parent_info);
+				g_object_unref (file);
+
+				return NULL;
+			}
+		}
 	}
 
 	/* overwrite confirmation */
