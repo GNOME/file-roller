@@ -38,7 +38,6 @@ dialog_response_cb (GtkDialog *dialog,
 
 	if (response_id == GTK_RESPONSE_OK) {
 		GFile      *file;
-		GList      *scan;
 		const char *mime_type;
 
 		file = fr_new_archive_dialog_get_file (FR_NEW_ARCHIVE_DIALOG (dialog), &mime_type);
