@@ -102,7 +102,6 @@ dlg_ask_password__common (FrWindow       *window,
 	const char *old_password;
 	char       *filename;
 	char       *message;
-	gboolean   use_header;
 
 	data = g_new0 (DialogData, 1);
 	data->builder = _gtk_builder_new_from_resource ("ask-password.ui");
@@ -115,14 +114,10 @@ dlg_ask_password__common (FrWindow       *window,
 
 	/* Make the widgets. */
 
-	g_object_get (gtk_settings_get_default (),
-		      "gtk-dialogs-use-header", &use_header,
-		      NULL);
-
 	data->dialog = g_object_new (GTK_TYPE_DIALOG,
 				     "transient-for", GTK_WINDOW (window),
 				     "modal", TRUE,
-				     "use-header-bar", use_header,
+				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
 	gtk_container_add (GTK_CONTAINER (content_area),

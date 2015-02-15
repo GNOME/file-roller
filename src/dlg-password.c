@@ -78,7 +78,6 @@ dlg_password (GtkWidget *widget,
 	GtkWidget  *content_area;
 	char       *basename;
 	char       *title;
-	gboolean    use_header;
 
 	data = g_new0 (DialogData, 1);
 	data->window = window;
@@ -90,14 +89,10 @@ dlg_password (GtkWidget *widget,
 
 	/* Set widgets data. */
 
-	g_object_get (gtk_settings_get_default (),
-		      "gtk-dialogs-use-header", &use_header,
-		      NULL);
-
 	data->dialog = g_object_new (GTK_TYPE_DIALOG,
 				     "transient-for", GTK_WINDOW (window),
 				     "modal", TRUE,
-				     "use-header-bar", use_header,
+				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
 	gtk_container_add (GTK_CONTAINER (content_area),

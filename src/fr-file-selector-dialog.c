@@ -712,16 +712,10 @@ GtkWidget *
 fr_file_selector_dialog_new (const char *title,
 			     GtkWindow  *parent)
 {
-	gboolean use_header;
-
-	g_object_get (gtk_settings_get_default (),
-		      "gtk-dialogs-use-header", &use_header,
-		      NULL);
-
 	return (GtkWidget *) g_object_new (FR_TYPE_FILE_SELECTOR_DIALOG,
 					   "title", title,
 					   "transient-for", parent,
-					   "use-header-bar", use_header,
+					   "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 					   NULL);
 }
 

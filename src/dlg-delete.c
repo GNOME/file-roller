@@ -112,7 +112,6 @@ dlg_delete__common (FrWindow *window,
 	GtkWidget  *content_area;
 	GtkWidget  *delete_box;
 	GtkWidget  *ok_button;
-	gboolean    use_header;
 
 	data = g_new (DialogData, 1);
 	data->window = window;
@@ -125,14 +124,11 @@ dlg_delete__common (FrWindow *window,
 	}
 
 	/* Get the widgets. */
-	g_object_get (gtk_settings_get_default (),
-		      "gtk-dialogs-use-header", &use_header,
-		      NULL);
 
 	data->dialog = g_object_new (GTK_TYPE_DIALOG,
 				     "transient-for", GTK_WINDOW (window),
 				     "modal", TRUE,
-				     "use-header-bar", use_header,
+				     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 				     NULL);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),

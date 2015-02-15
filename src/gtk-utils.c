@@ -130,11 +130,6 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	GtkWidget  *content_area;
 	GtkWidget  *request_box;
 	char       *result;
-	gboolean    use_header;
-
-	g_object_get (gtk_settings_get_default (),
-		      "gtk-dialogs-use-header", &use_header,
-		      NULL);
 
 	builder = _gtk_builder_new_from_resource ("request-dialog.ui");
 	request_box = _gtk_builder_get_widget (builder, "request_box");
@@ -142,7 +137,7 @@ _gtk_request_dialog_run (GtkWindow      *parent,
 	dialog = g_object_new (GTK_TYPE_DIALOG,
 			      "transient-for", parent,
 			      "modal", flags & GTK_DIALOG_MODAL,
-			      "use-header-bar", use_header,
+			      "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 			      NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), (flags & GTK_DIALOG_DESTROY_WITH_PARENT));
@@ -868,4 +863,17 @@ _gtk_window_add_accelerators_from_menu (GtkWindow  *window,
 	accel_group = gtk_accel_group_new ();
 	add_accelerators_from_menu (window, accel_group, menu);
 	gtk_window_add_accel_group (window, accel_group);
+}
+
+
+gboolean
+_gtk_settings_get_dialogs_use_header (void)
+{
+	gboolean use_header;
+
+	g_object_get (gtk_settings_get_default (),
+		      "gtk-dialogs-use-header", &use_header,
+		      NULL);
+
+	return use_header;
 }
