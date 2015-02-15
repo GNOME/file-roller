@@ -112,7 +112,7 @@ dlg_delete__common (FrWindow *window,
 	GtkWidget  *content_area;
 	GtkWidget  *delete_box;
 	GtkWidget  *ok_button;
-	gboolean   use_header;
+	gboolean    use_header;
 
 	data = g_new (DialogData, 1);
 	data->window = window;
@@ -126,24 +126,22 @@ dlg_delete__common (FrWindow *window,
 
 	/* Get the widgets. */
 	g_object_get (gtk_settings_get_default (),
-				  "gtk-dialogs-use-header", &use_header,
-				  NULL);
+		      "gtk-dialogs-use-header", &use_header,
+		      NULL);
 
 	data->dialog = g_object_new (GTK_TYPE_DIALOG,
-						   "transient-for", GTK_WINDOW (window),
-						   "modal", TRUE,
-						   "use-header-bar", use_header,
-						   NULL);
+				     "transient-for", GTK_WINDOW (window),
+				     "modal", TRUE,
+				     "use-header-bar", use_header,
+				     NULL);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
-							_("_Cancel"), GTK_RESPONSE_CANCEL,
-							_("_Delete"), GTK_RESPONSE_OK,
-							NULL);
+				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+				_("_Delete"), GTK_RESPONSE_OK,
+				NULL);
 
-	ok_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (data->dialog),
-			GTK_RESPONSE_OK);
-	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button),
-			"destructive-action");
+	ok_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
+	gtk_style_context_add_class (gtk_widget_get_style_context (ok_button), "destructive-action");
 
 	delete_box = _gtk_builder_get_widget (data->builder, "delete_box");
 

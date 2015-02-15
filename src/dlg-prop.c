@@ -60,7 +60,7 @@ dlg_prop (FrWindow *window)
 	char       *utf8_name;
 	char       *title_txt;
 	double      ratio;
-	gboolean   use_header;
+	gboolean    use_header;
 
 	data = g_new (DialogData, 1);
 
@@ -76,18 +76,17 @@ dlg_prop (FrWindow *window)
 
 	/* Make the dialog */
 	g_object_get (gtk_settings_get_default (),
-				  "gtk-dialogs-use-header", &use_header,
-				  NULL);
+		      "gtk-dialogs-use-header", &use_header,
+		      NULL);
 
 	data->dialog = gtk_widget_new (GTK_TYPE_DIALOG,
-								   "transient-for", GTK_WINDOW (window),
-								   "modal", TRUE,
-								   "use-header-bar",  use_header,
-								   NULL);
+				       "transient-for", GTK_WINDOW (window),
+				       "modal", TRUE,
+				       "use-header-bar",  use_header,
+				       NULL);
 
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
 	gtk_container_add (GTK_CONTAINER (content_area), table);
-
 
 	/* Set widgets data. */
 

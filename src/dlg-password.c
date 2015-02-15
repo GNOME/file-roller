@@ -78,7 +78,7 @@ dlg_password (GtkWidget *widget,
 	GtkWidget  *content_area;
 	char       *basename;
 	char       *title;
-	gboolean   use_header;
+	gboolean    use_header;
 
 	data = g_new0 (DialogData, 1);
 	data->window = window;
@@ -89,24 +89,24 @@ dlg_password (GtkWidget *widget,
 	}
 
 	/* Set widgets data. */
+
 	g_object_get (gtk_settings_get_default (),
-				  "gtk-dialogs-use-header", &use_header,
-				  NULL);
+		      "gtk-dialogs-use-header", &use_header,
+		      NULL);
 
 	data->dialog = g_object_new (GTK_TYPE_DIALOG,
-						   "transient-for", GTK_WINDOW (window),
-						   "modal", TRUE,
-						   "use-header-bar", use_header,
-						   NULL);
+				     "transient-for", GTK_WINDOW (window),
+				     "modal", TRUE,
+				     "use-header-bar", use_header,
+				     NULL);
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (data->dialog));
 	gtk_container_add (GTK_CONTAINER (content_area),
-			GET_WIDGET ("password_vbox"));
+			   GET_WIDGET ("password_vbox"));
 	gtk_dialog_add_buttons (GTK_DIALOG (data->dialog),
-			_("_Cancel"), GTK_RESPONSE_CANCEL,
-			_("_Save"), GTK_RESPONSE_OK,
-			NULL);
-	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog),
-			GTK_RESPONSE_OK);
+				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+				_GTK_LABEL_SAVE, GTK_RESPONSE_OK,
+				NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	basename = _g_file_get_display_basename (fr_archive_get_file (window->archive));
 	title = g_strdup_printf (_("Enter a password for \"%s\""), basename);
