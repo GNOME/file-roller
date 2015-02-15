@@ -424,11 +424,7 @@ fr_command_7z_delete (FrCommand  *command,
 			if (g_str_has_prefix (scan->data, "@"))
 				fr_process_add_arg_concat (command->process, "-i!", scan->data, NULL);
 
-	if (archive->encrypt_header
-	    && fr_archive_is_capable_of (archive, FR_ARCHIVE_CAN_ENCRYPT_HEADER))
-	{
-		add_password_arg (command, FR_ARCHIVE (command)->password, FALSE);
-	}
+	add_password_arg (command, FR_ARCHIVE (command)->password, FALSE);
 
 	fr_process_add_arg (command->process, "--");
 	fr_process_add_arg (command->process, command->filename);

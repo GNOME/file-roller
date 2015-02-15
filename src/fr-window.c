@@ -6195,6 +6195,9 @@ fr_window_archive_add_dropped_items (FrWindow *window,
 }
 
 
+/* -- fr_window_archive_remove -- */
+
+
 static void
 archive_remove_ready_cb (GObject      *source_object,
 			 GAsyncResult *result,
@@ -6214,10 +6217,26 @@ void
 fr_window_archive_remove (FrWindow *window,
 			  GList    *file_list)
 {
+	GList *new_file_list;
+
+	new_file_list = _g_string_list_dup (file_list);
+	fr_window_set_current_batch_action (window,
+					    FR_BATCH_ACTION_REMOVE,
+					    new_file_list,
+					    (GFreeFunc) _g_string_list_free);
+
 	_archive_operation_started (window, FR_ACTION_DELETING_FILES);
+
+	g_object_set (window->archive,
+		      "compression", window->priv->compression,
+		      "encrypt-header", window->priv->encrypt_header,
+		      "password", window->priv->password,
+		      "volume-size", window->priv->volume_size,
+		      NULL);
+
 	fr_window_clipboard_remove_file_list (window, file_list);
 	fr_archive_remove (window->archive,
-			   file_list,
+			   new_file_list,
 			   window->priv->compression,
 			   window->priv->cancellable,
 			   archive_remove_ready_cb,
@@ -9160,6 +9179,11 @@ fr_window_exec_batch_action (FrWindow      *window,
 		debug (DEBUG_INFO, "[BATCH] ADD\n");
 
 		fr_window_archive_add_dropped_items (window, (GList *) action->data);
+		break;
+
+	case FR_BATCH_ACTION_REMOVE:
+		debug (DEBUG_INFO, "[BATCH] REMOVE\n");
+		fr_window_archive_remove (window, (GList *) action->data);
 		break;
 
 	case FR_BATCH_ACTION_OPEN:
