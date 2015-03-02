@@ -23,7 +23,7 @@
 
 #include <config.h>
 #include <string.h>
-#include <glib/gi18n-lib.h>
+#include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
