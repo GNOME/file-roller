@@ -253,7 +253,7 @@ unsupported_scheme (NautilusFileInfo *file)
 	scheme = g_file_get_uri_scheme (location);
 
 	if (scheme != NULL) {
-		const char *unsupported[] = { "trash", "computer", NULL };
+		const char *unsupported[] = { "trash", "computer", "x-nautilus-desktop", NULL };
 		int         i;
 
 		for (i = 0; unsupported[i] != NULL; i++)
@@ -287,12 +287,12 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	if (files == NULL)
 		return NULL;
 
-	if (unsupported_scheme ((NautilusFileInfo *) files->data))
-		return NULL;
-
 	for (scan = files; scan; scan = scan->next) {
 		NautilusFileInfo *file = scan->data;
 		FileMimeInfo      file_mime_info;
+
+		if (unsupported_scheme (file))
+			return NULL;
 
 		file_mime_info = get_file_mime_info (file);
 
