@@ -70,7 +70,7 @@ _gtk_message_dialog_new (GtkWindow      *parent,
 					 GTK_BUTTONS_NONE,
 					 "%s", message);
 
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), secondary_message);
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s", secondary_message);
 
 	if (flags & GTK_DIALOG_MODAL)
 		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
@@ -211,7 +211,7 @@ _gtk_error_dialog_new (GtkWindow      *parent,
 		secondary_message = g_strdup_vprintf (secondary_text_format, args);
 		va_end (args);
 
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), secondary_message);
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s", secondary_message);
 
 		g_free (secondary_message);
 	}
