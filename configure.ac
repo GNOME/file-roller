@@ -298,6 +298,8 @@ AC_CONFIG_FILES([Makefile
 		 data/icons/32x32/apps/Makefile
 		 data/icons/48x48/Makefile
 		 data/icons/48x48/apps/Makefile
+ 		 data/icons/scalable/Makefile
+		 data/icons/scalable/apps/Makefile
 		 src/Makefile
 		 src/commands/Makefile
 		 src/sh/Makefile
