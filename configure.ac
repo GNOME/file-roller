@@ -51,7 +51,7 @@ fi
 dnl ===========================================================================
 
 if test x$ENABLE_DEBUG = xyes; then
-WARN_CFLAGS="-Wall -Wcast-align -Wtype-limits -Wclobbered -Wempty-body -Wignored-qualifiers -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wno-sign-compare"
+WARN_CFLAGS="-Wall -Wcast-align -Wtype-limits -Wclobbered -Wempty-body -Wignored-qualifiers -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wno-sign-compare -Wformat-security"
 else
 WARN_CFLAGS="-Wall"
 fi
