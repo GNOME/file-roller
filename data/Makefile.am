@@ -29,6 +29,9 @@ appdata_in_files = org.gnome.FileRoller.appdata.xml.in
 
 @GSETTINGS_RULES@
 
+%.gschema.xml: %.gschema.xml.in
+	$(AM_V_GEN) $(INTLTOOL_MERGE) -x -u --no-translations $< $@
+
 convertdir = $(datadir)/GConf/gsettings
 convert_DATA = file-roller.convert
 
