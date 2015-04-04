@@ -325,9 +325,9 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_here",
-					       _("Extract Here"),
+					       g_dgettext ("file-roller", "Extract Here"),
 					       /* Translators: the current position is the current folder */
-					       _("Extract the selected archive to the current position"),
+					       g_dgettext ("file-roller", "Extract the selected archive to the current position"),
 					       "drive-harddisk");
 		g_signal_connect (item,
 				  "activate",
@@ -344,8 +344,8 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_to",
-					       _("Extract To..."),
-					       _("Extract the selected archive"),
+					       g_dgettext ("file-roller", "Extract To..."),
+					       g_dgettext ("file-roller", "Extract the selected archive"),
 					       "drive-harddisk");
 		g_signal_connect (item,
 				  "activate",
@@ -364,8 +364,8 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::add",
-					       _("Compress..."),
-					       _("Create a compressed archive with the selected objects"),
+					       g_dgettext ("file-roller", "Compress..."),
+					       g_dgettext ("file-roller", "Create a compressed archive with the selected objects"),
 					       "gnome-mime-application-x-archive");
 		g_signal_connect (item,
 				  "activate",
