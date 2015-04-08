@@ -10,15 +10,15 @@
 # Martin Anderson <martin all-tec ee>, 2004.
 # Ivar Smolin <okul linux ee>, 2005–2011.
 # Priit Laes <plaes plaes org>, 2010, 2011.
-# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2012, 2013.
+# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2012, 2013, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-09-11 19:48+0000\n"
-"PO-Revision-Date: 2013-09-11 22:51+0300\n"
+"POT-Creation-Date: 2014-04-18 05:09+0000\n"
+"PO-Revision-Date: 2014-04-18 13:06+0300\n"
 "Last-Translator: Mattias Põldaru <mahfiaz@gmail.com>\n"
 "Language-Team: Estonian <>\n"
 "Language: et\n"
@@ -146,23 +146,11 @@ msgstr "Nimeveeru laius"
 msgid "The default width of the name column in the file list."
 msgstr "Nime tulba vaikimisi laius failide loendis."
 
-msgid "Max history length"
-msgstr "Ajaloo suurim pikkus"
+msgid "View the sidebar"
+msgstr "Külgriba näitamine"
 
-msgid "Max number of items in the 'Open Recents' submenu."
-msgstr "'Ava hiljutine' alammenüüs olevate kirjete suurim arv."
-
-msgid "View statusbar"
-msgstr "Olekuriba näitamine"
-
-msgid "Whether to display the statusbar."
-msgstr "Kas olekuriba kuvatakse või mitte."
-
-msgid "View the folders pane"
-msgstr "Kataloogide paani näitamine"
-
-msgid "Whether to display the folders pane."
-msgstr "Kas kataloogide paani kuvatakse või mitte."
+msgid "Whether to display the sidebar."
+msgstr "Kas külgriba kuvatakse või mitte."
 
 msgid "Editors"
 msgstr "Redaktorid"
@@ -223,30 +211,6 @@ msgstr "Paki..."
 
 msgid "Create a compressed archive with the selected objects"
 msgstr "Pakitud arhiivi loomine valitud objektidest"
-
-msgid "Open"
-msgstr "Avamine"
-
-msgid "All archives"
-msgstr "Kõik arhiivid"
-
-msgid "All files"
-msgstr "Kõik failid"
-
-msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
-msgstr "Autoriõigused © 2001–2010 Free Software Foundation, Inc."
-
-msgid "An archive manager for GNOME."
-msgstr "GNOME-keskkonna arhiivihaldur."
-
-msgid "translator-credits"
-msgstr ""
-"Ilmar Kerm <ikerm hot ee>, 2002.\n"
-"Tõivo Leedjärv <toivo linux ee>, 2002, 2003.\n"
-"Martin Anderson <martin all-tec ee>, 2004.\n"
-"Ivar Smolin <okul linux ee>, 2005–2011.\n"
-"Priit Laes <plaes plaes org>, 2010, 2011.\n"
-"Mattias Põldaru <mahfiaz gmail com>, 2010."
 
 msgid "Could not add the files to the archive"
 msgstr "Faile pole võimalik arhiivi lisada"
@@ -419,6 +383,21 @@ msgstr "- Arhiivi loomine ja muutmine"
 msgid "File Roller"
 msgstr "File Roller"
 
+msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
+msgstr "Autoriõigused © 2001–2014 Free Software Foundation, Inc."
+
+msgid "An archive manager for GNOME."
+msgstr "GNOME töölaua arhiivihaldur."
+
+msgid "translator-credits"
+msgstr ""
+"Ilmar Kerm <ikerm hot ee>, 2002.\n"
+"Tõivo Leedjärv <toivo linux ee>, 2002, 2003.\n"
+"Martin Anderson <martin all-tec ee>, 2004.\n"
+"Ivar Smolin <okul linux ee>, 2005–2011.\n"
+"Priit Laes <plaes plaes org>, 2010, 2011.\n"
+"Mattias Põldaru <mahfiaz gmail com>, 2010."
+
 msgid "You don't have the right permissions."
 msgstr "Sul pole vajalikke õiguseid."
 
@@ -493,29 +472,17 @@ msgstr "_Asenda"
 msgid "Could not delete the old archive."
 msgstr "Vana arhiivi pole võimalik kustutada."
 
-msgid "C_reate"
-msgstr "_Paki"
+msgid "Open"
+msgstr "Avamine"
 
-msgid "_Add"
-msgstr "_Lisa"
+msgid "All archives"
+msgstr "Kõik arhiivid"
 
-msgid "_Extract"
-msgstr "_Paki lahti"
+msgid "All files"
+msgstr "Kõik failid"
 
 msgid "Operation completed"
 msgstr "Operatsioon lõppes edukalt"
-
-#, c-format
-msgid "%d object (%s)"
-msgid_plural "%d objects (%s)"
-msgstr[0] "%d objekt (%s)"
-msgstr[1] "%d objekti (%s)"
-
-#, c-format
-msgid "%d object selected (%s)"
-msgid_plural "%d objects selected (%s)"
-msgstr[0] "%d objekt valitud (%s)"
-msgstr[1] "%d objekti valitud (%s)"
 
 msgid "Folder"
 msgstr "Kataloog"
@@ -587,6 +554,9 @@ msgstr "Failinimede muutmine kohas \"%s\""
 #, c-format
 msgid "Updating the files in \"%s\""
 msgstr "Failide uuendamine kohas \"%s\""
+
+msgid "_Quit"
+msgstr "_Lõpeta"
 
 msgid "_Open the Archive"
 msgstr "_Ava arhiiv"
@@ -692,18 +662,17 @@ msgctxt "File"
 msgid "Name"
 msgstr "Nimi"
 
-#. Translators: this is the label for the "open recent file" sub-menu.
-msgid "Open _Recent"
-msgstr "Ava _hiljutine"
+msgid "Find files by name"
+msgstr "Failide otsimine nime järgi"
 
-msgid "Open a recently used archive"
-msgstr "Mõne viimatikasutatud arhiivi avamine"
+msgid "Go to the previous visited location"
+msgstr "Liikumine eelmisesse külastatud kohta"
 
-msgid "_Other Actions"
-msgstr "_Muud tegevused"
+msgid "Go to the next visited location"
+msgstr "Liikumine järgmisesse külastatud kohta"
 
-msgid "Other actions"
-msgstr "Muud tegevused"
+msgid "Go to the home location"
+msgstr "Liikumine kodukataloogi"
 
 #. Translators: after the colon there is a folder name.
 msgid "_Location:"
@@ -803,8 +772,8 @@ msgstr "Valiku asetamine"
 msgid "_Destination folder:"
 msgstr "_Sihtkataloog:"
 
-msgid "Add files to an archive"
-msgstr "Failide lisamine arhiivi"
+msgid "_Paste"
+msgstr "_Aseta"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
@@ -817,6 +786,27 @@ msgstr "Abiteavet pole võimalik kuvada"
 
 msgid "Change password visibility"
 msgstr "Parooli nähtavuse muutmine"
+
+msgid "_Add"
+msgstr "_Lisa"
+
+msgid "_Cancel"
+msgstr "_Loobu"
+
+msgid "_Close"
+msgstr "_Sulge"
+
+msgid "C_reate"
+msgstr "_Paki"
+
+msgid "_Extract"
+msgstr "_Paki lahti"
+
+msgid "_Open"
+msgstr "_Ava"
+
+msgid "_Save"
+msgstr "_Salvesta"
 
 msgid "Add"
 msgstr "Lisa"
@@ -842,8 +832,62 @@ msgstr "Lisatakse, kui on _uuem"
 msgid "_Follow symbolic links"
 msgstr "_Sümbolviitade järgimine"
 
-msgid "_New Archive"
-msgstr "_Uus arhiiv"
+msgid "_File"
+msgstr "_Fail"
+
+msgid "_New Archive…"
+msgstr "_Uus arhiiv…"
+
+msgid "_Open…"
+msgstr "_Ava…"
+
+msgid "_Extract Files…"
+msgstr "_Paki lahti…"
+
+msgid "Save _As…"
+msgstr "Salvesta _kui…"
+
+msgid "_Test Integrity"
+msgstr "Kontrolli _terviklust"
+
+msgid "Properties"
+msgstr "Omadused"
+
+msgid "_Edit"
+msgstr "_Redaktor"
+
+msgid "Cu_t"
+msgstr "_Lõika"
+
+msgid "_Copy"
+msgstr "_Kopeeri"
+
+msgid "_Add Files…"
+msgstr "_Lisa faile…"
+
+msgid "_Rename…"
+msgstr "Muuda _nime…"
+
+msgid "_Delete Files…"
+msgstr "_Failide kustutamine…"
+
+msgid "_Select All"
+msgstr "_Vali kõik"
+
+msgid "D_eselect All"
+msgstr "Tü_hista valik"
+
+msgid "_Find"
+msgstr "_Otsi"
+
+msgid "Set Pass_word…"
+msgstr "_Määra salasõna…"
+
+msgid "_View"
+msgstr "_Vaade"
+
+msgid "Sidebar"
+msgstr "Külgriba"
 
 msgid "View All _Files"
 msgstr "Kõigi _failide kuvamine"
@@ -851,17 +895,17 @@ msgstr "Kõigi _failide kuvamine"
 msgid "View as a F_older"
 msgstr "_Kataloogina kuvamine"
 
-msgid "_Folders"
-msgstr "_Kataloogid"
-
 msgid "_Help"
 msgstr "A_bi"
 
-msgid "_About Archive Manager"
-msgstr "_Arhiivihaldurist"
+msgid "Contents"
+msgstr "Sisukord"
 
-msgid "_Quit"
-msgstr "_Lõpeta"
+msgid "_About"
+msgstr "_Lähemalt"
+
+msgid "_New Archive"
+msgstr "_Uus arhiiv"
 
 msgid "_Password:"
 msgstr "_Salasõna:"
@@ -890,9 +934,6 @@ msgstr "_Kataloogistruktuuri säilitamine"
 msgid "Do not _overwrite newer files"
 msgstr "Uuemaid faile ei _kirjutata üle"
 
-msgid "_Select All"
-msgstr "_Vali kõik"
-
 msgid "Dese_lect All"
 msgstr "Tü_hista valik"
 
@@ -902,123 +943,29 @@ msgstr "Näita varjatud faile"
 msgid "Go up one level"
 msgstr "Liikumine sammu võrra üles"
 
-msgid "Information about the program"
-msgstr "Lähem teave programmi kohta"
-
-msgid "_Add Files…"
-msgstr "_Lisa faile…"
-
-msgid "Add files to the archive"
-msgstr "Failide lisamine arhiivi"
-
-msgid "Close the current archive"
-msgstr "Käesoleva arhiivi sulgemine"
-
-msgid "Contents"
-msgstr "Sisukord"
-
-msgid "Display the File Roller Manual"
-msgstr "File Rolleri kasutajajuhendi kuvamine"
-
-msgid "Copy the selection"
-msgstr "Valiku kopeerimine"
-
-msgid "Cut the selection"
-msgstr "Valiku lõikamine"
-
-msgid "Paste the clipboard"
-msgstr "Lõikepuhvri asetamine"
-
-msgid "_Rename…"
-msgstr "Muuda _nime…"
-
-msgid "Rename the selection"
-msgstr "Valiku nime muutmine"
-
-msgid "Delete the selection from the archive"
-msgstr "Valitud failide arhiivist kustutamine"
-
-msgid "Deselect all files"
-msgstr "Kõikide failide valiku tühistamine"
-
-msgid "_Extract…"
-msgstr "_Paki lahti…"
-
-msgid "Extract files from the archive"
-msgstr "Failide arhiivist lahtipakkimine"
-
-msgid "New…"
-msgstr "Uus…"
-
-msgid "Create a new archive"
-msgstr "Uue arhiivi loomine"
-
-msgid "Open…"
-msgstr "Avamine…"
-
-msgid "Open archive"
-msgstr "Arhiivi avamine"
-
-msgid "_Open With…"
-msgstr "Ava _rakendusega…"
-
-msgid "Open selected files with an application"
-msgstr "Valitud failide avamine rakendusega"
+msgid "Save As…"
+msgstr "Salvesta kui…"
 
 msgid "Pass_word…"
 msgstr "_Salasõna…"
 
-msgid "Specify a password for this archive"
-msgstr "Salasõna määramine selle arhiivi jaoks"
+msgid "Close"
+msgstr "Sulge"
 
-msgid "Show archive properties"
-msgstr "Arhiivi omaduste näitamine"
+msgid "_Open With…"
+msgstr "Ava _rakendusega…"
 
-msgid "Reload current archive"
-msgstr "Käesoleva arhiivi uuestilaadimine"
+msgid "_Extract…"
+msgstr "_Paki lahti…"
 
-msgid "Save As…"
-msgstr "Salvesta kui…"
+msgid "Cut"
+msgstr "Lõika"
 
-msgid "Save the current archive with a different name"
-msgstr "Käesoleva arhiivi salvestamine teise nime alla"
+msgid "Copy"
+msgstr "Kopeeri"
 
-msgid "Select all files"
-msgstr "Kõigi failide valimine"
-
-msgid "_Test Integrity"
-msgstr "Kontrolli _terviklust"
-
-msgid "Test whether the archive contains errors"
-msgstr "Kontroll, kas arhiivis esineb vigu"
-
-msgid "Open the selected file"
-msgstr "Valitud faili avamine"
-
-msgid "Open the selected folder"
-msgstr "Valitud kataloogi avamine"
-
-msgid "Go to the previous visited location"
-msgstr "Liikumine eelmisesse külastatud kohta"
-
-msgid "Go to the next visited location"
-msgstr "Liikumine järgmisesse külastatud kohta"
-
-#. Translators: the home location is the home folder.
-msgid "Go to the home location"
-msgstr "Liikumine kodukataloogi"
-
-msgid "Stat_usbar"
-msgstr "_Olekuriba"
-
-msgid "View the statusbar"
-msgstr "Olekuriba näitamine"
-
-msgid "Find…"
-msgstr "Otsi…"
-
-msgid "Find files by name"
-msgstr "Failide otsimine nime järgi"
+msgid "Paste"
+msgstr "Aseta"
 
 msgid "_Filename:"
 msgstr "_Failinimi:"
@@ -1079,6 +1026,127 @@ msgstr "_Värskenda"
 msgid "S_elect the files you want to update:"
 msgstr "_Vali failid, mida soovid värskendada:"
 
+#~ msgid "Max history length"
+#~ msgstr "Ajaloo suurim pikkus"
+
+#~ msgid "Max number of items in the 'Open Recents' submenu."
+#~ msgstr "'Ava hiljutine' alammenüüs olevate kirjete suurim arv."
+
+#~ msgid "View statusbar"
+#~ msgstr "Olekuriba näitamine"
+
+#~ msgid "View the folders pane"
+#~ msgstr "Kataloogide paani näitamine"
+
+#~ msgid "Whether to display the folders pane."
+#~ msgstr "Kas kataloogide paani kuvatakse või mitte."
+
+#~ msgid "%d object (%s)"
+#~ msgid_plural "%d objects (%s)"
+#~ msgstr[0] "%d objekt (%s)"
+#~ msgstr[1] "%d objekti (%s)"
+
+#~ msgid "%d object selected (%s)"
+#~ msgid_plural "%d objects selected (%s)"
+#~ msgstr[0] "%d objekt valitud (%s)"
+#~ msgstr[1] "%d objekti valitud (%s)"
+
+#~ msgid "Open _Recent"
+#~ msgstr "Ava _hiljutine"
+
+#~ msgid "Open a recently used archive"
+#~ msgstr "Mõne viimatikasutatud arhiivi avamine"
+
+#~ msgid "_Other Actions"
+#~ msgstr "_Muud tegevused"
+
+#~ msgid "Other actions"
+#~ msgstr "Muud tegevused"
+
+#~ msgid "Add files to an archive"
+#~ msgstr "Failide lisamine arhiivi"
+
+#~ msgid "_Folders"
+#~ msgstr "_Kataloogid"
+
+#~ msgid "_About Archive Manager"
+#~ msgstr "_Arhiivihaldurist"
+
+#~ msgid "Information about the program"
+#~ msgstr "Lähem teave programmi kohta"
+
+#~ msgid "Add files to the archive"
+#~ msgstr "Failide lisamine arhiivi"
+
+#~ msgid "Close the current archive"
+#~ msgstr "Käesoleva arhiivi sulgemine"
+
+#~ msgid "Display the File Roller Manual"
+#~ msgstr "File Rolleri kasutajajuhendi kuvamine"
+
+#~ msgid "Copy the selection"
+#~ msgstr "Valiku kopeerimine"
+
+#~ msgid "Cut the selection"
+#~ msgstr "Valiku lõikamine"
+
+#~ msgid "Paste the clipboard"
+#~ msgstr "Lõikepuhvri asetamine"
+
+#~ msgid "Rename the selection"
+#~ msgstr "Valiku nime muutmine"
+
+#~ msgid "Delete the selection from the archive"
+#~ msgstr "Valitud failide arhiivist kustutamine"
+
+#~ msgid "Deselect all files"
+#~ msgstr "Kõikide failide valiku tühistamine"
+
+#~ msgid "Extract files from the archive"
+#~ msgstr "Failide arhiivist lahtipakkimine"
+
+#~ msgid "New…"
+#~ msgstr "Uus…"
+
+#~ msgid "Create a new archive"
+#~ msgstr "Uue arhiivi loomine"
+
+#~ msgid "Open archive"
+#~ msgstr "Arhiivi avamine"
+
+#~ msgid "Open selected files with an application"
+#~ msgstr "Valitud failide avamine rakendusega"
+
+#~ msgid "Specify a password for this archive"
+#~ msgstr "Salasõna määramine selle arhiivi jaoks"
+
+#~ msgid "Show archive properties"
+#~ msgstr "Arhiivi omaduste näitamine"
+
+#~ msgid "Reload current archive"
+#~ msgstr "Käesoleva arhiivi uuestilaadimine"
+
+#~ msgid "Save the current archive with a different name"
+#~ msgstr "Käesoleva arhiivi salvestamine teise nime alla"
+
+#~ msgid "Select all files"
+#~ msgstr "Kõigi failide valimine"
+
+#~ msgid "Test whether the archive contains errors"
+#~ msgstr "Kontroll, kas arhiivis esineb vigu"
+
+#~ msgid "Open the selected file"
+#~ msgstr "Valitud faili avamine"
+
+#~ msgid "Open the selected folder"
+#~ msgstr "Valitud kataloogi avamine"
+
+#~ msgid "Stat_usbar"
+#~ msgstr "_Olekuriba"
+
+#~ msgid "Find…"
+#~ msgstr "Otsi…"
+
 #~ msgid "File System"
 #~ msgstr "Failisüsteem"
 
@@ -1091,17 +1159,8 @@ msgstr "_Vali failid, mida soovid värskendada:"
 #~ msgid "Whether to display the toolbar."
 #~ msgstr "Kas tööriistariba kuvatakse või mitte."
 
-#~ msgid "Find:"
-#~ msgstr "Otsing:"
-
 #~ msgid "_Archive"
 #~ msgstr "_Arhiiv"
-
-#~ msgid "_Edit"
-#~ msgstr "_Redaktor"
-
-#~ msgid "_View"
-#~ msgstr "_Vaade"
 
 #~ msgid "_Arrange Files"
 #~ msgstr "Ko_rrasta failid"
