@@ -4276,18 +4276,15 @@ context_offers_target (GdkDragContext *context,
 static gboolean
 nautilus_xds_dnd_is_valid_xds_context (GdkDragContext *context)
 {
-	char *tmp;
-	gboolean ret;
+	gboolean ret = FALSE;
 
 	g_return_val_if_fail (context != NULL, FALSE);
 
-	tmp = NULL;
 	if (context_offers_target (context, XDS_ATOM)) {
-		tmp = get_xds_atom_value (context);
+		char *tmp = get_xds_atom_value (context);
+		ret = (tmp != NULL);
+		g_free (tmp);
 	}
-
-	ret = (tmp != NULL);
-	g_free (tmp);
 
 	return ret;
 }
@@ -4441,6 +4438,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 	destination_folder = g_file_get_parent (destination);
 
 	g_object_unref (destination);
+	g_free (uri);
 
 	/* check whether the extraction can be performed in the destination
 	 * folder */
@@ -4533,6 +4531,8 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 	g_return_val_if_fail (uri != NULL, FALSE);
 
 	destination = g_file_new_for_uri (uri);
+	g_free (uri);
+
 	if (destination == NULL)
 		return FALSE;
 
