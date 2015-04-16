@@ -234,7 +234,7 @@ fr_command_rpm_get_capabilities (FrArchive  *archive,
 	FrArchiveCap capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
-	if (_g_program_is_available ("cpio", check_command))
+	if (_g_program_is_available (CPIO_PATH, check_command))
 		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
@@ -245,7 +245,7 @@ static const char *
 fr_command_rpm_get_packages (FrArchive  *archive,
 			     const char *mime_type)
 {
-	return PACKAGES ("cpio,rpm");
+	return PACKAGES (CPIO_PATH ",rpm");
 }
 
 

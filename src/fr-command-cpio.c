@@ -168,7 +168,7 @@ fr_command_cpio_list (FrCommand  *comm)
 
 	fr_process_begin_command (comm->process, "sh");
 	fr_process_add_arg (comm->process, "-c");
-	fr_process_add_arg_concat (comm->process, "cpio -itv < ", comm->e_filename, NULL);
+	fr_process_add_arg_concat (comm->process, CPIO_PATH " -itv < ", comm->e_filename, NULL);
 	fr_process_end_command (comm->process);
 
 	return TRUE;
@@ -233,7 +233,7 @@ fr_command_cpio_get_capabilities (FrArchive  *archive,
 	FrArchiveCap capabilities;
 
 	capabilities = FR_ARCHIVE_CAN_STORE_MANY_FILES;
-	if (_g_program_is_available ("cpio", check_command))
+	if (_g_program_is_available (CPIO_PATH, check_command))
 		capabilities |= FR_ARCHIVE_CAN_READ;
 
 	return capabilities;
