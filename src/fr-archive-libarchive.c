@@ -137,6 +137,16 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 		return capabilities;
 	}
 
+	/* give priority to rar and unrar that supports RAR files better. */
+	if ((strcmp (mime_type, "application/x-rar") == 0)
+	    || (strcmp (mime_type, "application/x-cbr") == 0))
+	{
+		if (_g_program_is_available ("rar", check_command)
+		    || _g_program_is_available ("unrar", check_command)) {
+			return capabilities;
+		}
+	}
+
 	/* tar.lrz format requires external lrzip */
 	if (strcmp (mime_type, "application/x-lrzip-compressed-tar") == 0) {
 		if (!_g_program_is_available ("lrzip", check_command))

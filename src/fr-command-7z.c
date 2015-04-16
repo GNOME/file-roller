@@ -616,7 +616,10 @@ fr_command_7z_get_capabilities (FrArchive  *archive,
 		if (_g_mime_type_matches (mime_type, "application/x-rar")
 		    || _g_mime_type_matches (mime_type, "application/x-cbr"))
 		{
-			if (! check_command || g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
+			/* give priority to rar and unrar that supports RAR files better. */
+			if (!_g_program_is_available ("rar", check_command)
+			    && !_g_program_is_available ("unrar", check_command)
+			    && g_file_test ("/usr/lib/p7zip/Codecs/Rar29.so", G_FILE_TEST_EXISTS))
 				capabilities |= FR_ARCHIVE_CAN_READ;
 		}
 		else
