@@ -4,18 +4,17 @@
 # Ed GLEZ <herzo2@gmail.com>, 2006.
 # Michael MORONI < >, 2011.
 # Patrick (Petriko) OUDEJANS < >, 2011.
-# Tiffany Antopolski <tiffany.antopolski@gmail.com>, 2011, 2012.
+# Tiffany ANTOLPOLSKI <tiffany.antopolski@gmail.com>, 2011, 2012.
 # Ryan LORTIE <desrt@desrt.ca>, 2013.
 # Daniel PUENTES <blatberk@openmailbox.org>, 2015.
 # Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>, 2010, 2011, 2012, 2015.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-11 05:41+0000\n"
-"PO-Revision-Date: 2015-02-12 21:01+0100\n"
+"POT-Creation-Date: 2015-04-20 16:59+0000\n"
+"PO-Revision-Date: 2015-04-23 21:34+0200\n"
 "Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
 "Language-Team: Esperanto <gnome-l10n-eo@lists.launchpad.net>\n"
 "Language: eo\n"
@@ -53,7 +52,6 @@ msgid "bzip archives (.tar.bz, .tbz)"
 msgstr "bzip-arkivoj (.tar.bz, .tbz)"
 
 #: ../data/org.gnome.FileRoller.appdata.xml.in.h:6
-#| msgid "Zip (.zip)"
 msgid "zip archives (.zip)"
 msgstr "zip-arkivoj (.zip)"
 
@@ -63,7 +61,7 @@ msgstr "xz-arkivoj (.tar.xz)"
 
 #. set the name and icon
 #: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:717
-#: ../src/fr-window.c:1989 ../src/fr-window.c:5314
+#: ../src/fr-window.c:1989 ../src/fr-window.c:5343
 msgid "Archive Manager"
 msgstr "Arkivo-administrilo"
 
@@ -152,12 +150,10 @@ msgid "The default width of the name column in the file list."
 msgstr "La defaŭlta larĝo de la noma kolumno en la dosiera listo."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
-#| msgid "View the statusbar"
 msgid "View the sidebar"
 msgstr "Montri la statobreton"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
-#| msgid "Whether to display the statusbar."
 msgid "Whether to display the sidebar."
 msgstr "Ĉu montri la statobreton?"
 
@@ -183,8 +179,8 @@ msgid ""
 "very-fast, fast, normal, maximum."
 msgstr ""
 "Nivelo de densigo uzita kiam aldoni dosierojn al arkivo. Eblaj valoroj: "
-"'very-fast' (rapidege), 'fast' (rapide), 'normal' (norme), "
-"'maximum' (maksimume)."
+"'very-fast' (rapidege), 'fast' (rapide), 'normal' (norme), 'maximum' "
+"(maksimume)."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
 msgid "Encrypt the archive header"
@@ -248,49 +244,61 @@ msgstr "Ne eblis aldoni la dosierojn al la arkivo"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Vi ne havas la ĝustajn rajtojn por legi dosierojn el dosierujo \"%s\""
 
-#: ../src/dlg-add.c:180 ../src/fr-window.c:5594
+#: ../src/dlg-add.c:182 ../src/fr-window.c:5623
 msgid "Add Files"
 msgstr "Aldoni dosierojn"
 
-#: ../src/dlg-add.c:191
+#: ../src/dlg-add.c:195
 msgid "_Options"
 msgstr "_Opcioj"
 
 #. load options
-#: ../src/dlg-add.c:199 ../src/ui/add-options.ui.h:1
+#: ../src/dlg-add.c:204 ../src/dlg-add.c:763
 msgid "Load Options"
 msgstr "Ŝargi agordojn"
 
 #. save options
-#: ../src/dlg-add.c:206 ../src/dlg-add.c:822
+#: ../src/dlg-add.c:211 ../src/dlg-add.c:855
 msgid "Save Options"
 msgstr "Konservi opciojn"
 
 #. clear options
-#: ../src/dlg-add.c:213
+#: ../src/dlg-add.c:218
 msgid "Reset Options"
 msgstr "Reagordi opciojn"
 
-#: ../src/dlg-add.c:823
+#: ../src/dlg-add.c:772
+msgid "_Apply"
+msgstr "_Apliki"
+
+#: ../src/dlg-add.c:773 ../src/dlg-delete.c:136
+msgid "_Delete"
+msgstr "_Forigi"
+
+#: ../src/dlg-add.c:856
 msgid "_Options Name:"
 msgstr "_Opcinomo:"
 
+#: ../src/dlg-ask-password.c:125
+msgid "_OK"
+msgstr "_Akcepti"
+
 #. Translators: %s is a filename
-#: ../src/dlg-ask-password.c:133
+#: ../src/dlg-ask-password.c:148
 #, c-format
 msgid "Password required for \"%s\""
 msgstr "Pasvorto bezonatas por \"%s\""
 
-#: ../src/dlg-ask-password.c:142
+#: ../src/dlg-ask-password.c:157
 msgid "Wrong password."
 msgstr "Malĝusta pasvorto."
 
-#: ../src/dlg-batch-add.c:87 ../src/fr-application.c:226
+#: ../src/dlg-batch-add.c:88 ../src/fr-application.c:226
 #: ../src/fr-application.c:569
 msgid "Compress"
 msgstr "Densigi"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6626
+#: ../src/dlg-extract.c:95 ../src/fr-window.c:6674
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -301,29 +309,29 @@ msgstr ""
 "\n"
 "Ĉu vi volas krei ĝin?"
 
-#: ../src/dlg-extract.c:103 ../src/fr-window.c:6634
+#: ../src/dlg-extract.c:103 ../src/fr-window.c:6682
 msgid "Create _Folder"
 msgstr "Krei _dosierujon"
 
 #: ../src/dlg-extract.c:122 ../src/dlg-extract.c:139 ../src/dlg-extract.c:166
-#: ../src/fr-window.c:4206 ../src/fr-window.c:6529 ../src/fr-window.c:6534
-#: ../src/fr-window.c:6655 ../src/fr-window.c:6674 ../src/fr-window.c:6679
+#: ../src/fr-window.c:4226 ../src/fr-window.c:6577 ../src/fr-window.c:6582
+#: ../src/fr-window.c:6703 ../src/fr-window.c:6722 ../src/fr-window.c:6727
 msgid "Extraction not performed"
 msgstr "Elpako ne plenumiĝis"
 
-#: ../src/dlg-extract.c:123 ../src/fr-window.c:6651
+#: ../src/dlg-extract.c:123 ../src/fr-window.c:6699
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Ne eblis krei la celdosierujon: %s."
 
-#: ../src/dlg-extract.c:167 ../src/fr-window.c:4430 ../src/fr-window.c:4525
+#: ../src/dlg-extract.c:167 ../src/fr-window.c:4452 ../src/fr-window.c:4554
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr ""
 "Vi ne havas la ĝustajn rajtojn por elpaki arkivojn en la dosierujo \"%s\""
 
-#: ../src/dlg-extract.c:280 ../src/fr-window.c:5590
+#: ../src/dlg-extract.c:280 ../src/fr-window.c:5619
 #: ../src/ui/extract-dialog-options.ui.h:1
 msgid "Extract"
 msgstr "Elpaki"
@@ -334,8 +342,8 @@ msgstr "Okazis interna eraro dum la provo serĉi programojn:"
 
 #: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
 #: ../src/dlg-package-installer.c:330 ../src/fr-archive.c:744
-#: ../src/fr-window.c:3880 ../src/fr-window.c:7259 ../src/fr-window.c:7616
-#: ../src/fr-window.c:9134
+#: ../src/fr-window.c:3900 ../src/fr-window.c:7307 ../src/fr-window.c:7664
+#: ../src/fr-window.c:9182
 msgid "Archive type not supported."
 msgstr "Arkivtipo ne subtenata."
 
@@ -356,12 +364,12 @@ msgstr "Ne eblis malfermi tiun dosiertipon"
 msgid "_Search Command"
 msgstr "_Serĉi komandon"
 
-#: ../src/dlg-password.c:91
+#: ../src/dlg-password.c:109
 #, c-format
 msgid "Enter a password for \"%s\""
 msgstr "Entajpu la pasvorton por \"%s\""
 
-#: ../src/dlg-prop.c:94
+#: ../src/dlg-prop.c:107
 #, c-format
 msgid "%s Properties"
 msgstr "Ecoj de %s"
@@ -453,7 +461,6 @@ msgid "- Create and modify an archive"
 msgstr "- Krei kaj modifi arkivon"
 
 #: ../src/fr-application-menu.c:130
-#| msgid "Copyright © 2001–2010 Free Software Foundation, Inc."
 msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
 msgstr "Kopirajto © 2001-2014 Free Software Foundation, Inc."
 
@@ -464,13 +471,8 @@ msgstr "Arkiv-administrilo por GNOME."
 #: ../src/fr-application-menu.c:134
 msgid "translator-credits"
 msgstr ""
-"Ed GLEZ <herzo2@gmail.com>\n"
-"Michael MORONI https://launchpad.net/~airon90\n"
-"Patrick (Petriko) OUDEJANS https://launchpad.net/~patrickoudejans\n"
-"Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
-"Tiffany ANTOPOLSKI <tiffany.antopolski@gmail.com>\n"
-"Ryan LORTIE <desrt@desrt.ca>\n"
-"Daniel PUENTES <blatberk@openmailbox.org>"
+"Ed GLEZ, Michael MORONI, Patrick (Petriko) OUDEJANS, Kristjan SCHMIDT, "
+"Tiffany ANTOPOLSKI, Ryan LORTIE, Daniel PUENTES"
 
 #: ../src/fr-archive.c:1845
 msgid "You don't have the right permissions."
@@ -480,7 +482,7 @@ msgstr "Vi ne havas la ĝustajn rajtojn."
 msgid "This archive type cannot be modified"
 msgstr "Ne eblas modifi tiun arkivotipon"
 
-#: ../src/fr-archive.c:1859
+#: ../src/fr-archive.c:1859 ../src/fr-new-archive-dialog.c:483
 msgid "You can't add an archive to itself."
 msgstr "Ne eblas aldoni arkivon al si mem."
 
@@ -492,7 +494,7 @@ msgid "Adding \"%s\""
 msgstr "Aldonanta \"%s\""
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:453 ../src/fr-command-rar.c:557
+#: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
 #: ../src/fr-command-tar.c:425
 #, c-format
 msgid "Extracting \"%s\""
@@ -530,31 +532,32 @@ msgstr "Maldensigas arkivon"
 msgid "Could not load the location"
 msgstr "Ne povis ŝargi la lokon"
 
-#: ../src/fr-new-archive-dialog.c:343 ../src/fr-new-archive-dialog.c:362
-#: ../src/fr-new-archive-dialog.c:378 ../src/fr-new-archive-dialog.c:426
-#: ../src/fr-new-archive-dialog.c:444 ../src/fr-window.c:2829
+#: ../src/fr-new-archive-dialog.c:358 ../src/fr-new-archive-dialog.c:377
+#: ../src/fr-new-archive-dialog.c:393 ../src/fr-new-archive-dialog.c:441
+#: ../src/fr-new-archive-dialog.c:459 ../src/fr-new-archive-dialog.c:481
+#: ../src/fr-window.c:2849
 msgid "Could not create the archive"
 msgstr "Ne eblis kreii la arkivon"
 
-#: ../src/fr-new-archive-dialog.c:345 ../src/fr-new-archive-dialog.c:364
+#: ../src/fr-new-archive-dialog.c:360 ../src/fr-new-archive-dialog.c:379
 msgid "You have to specify an archive name."
 msgstr "Necesas specifigi arkiv-nomon."
 
-#: ../src/fr-new-archive-dialog.c:428
+#: ../src/fr-new-archive-dialog.c:443
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Vi ne havas rajton krei arkivon en tiu dosierujo"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:446 ../src/fr-window.c:7930
+#: ../src/fr-new-archive-dialog.c:461 ../src/fr-window.c:7978
 msgid "New name is the same as old one, please type other name."
 msgstr "Nova nomo estas sama kiel la malnova nomo, bonvolu tajpi alian nomon."
 
-#: ../src/fr-new-archive-dialog.c:465
+#: ../src/fr-new-archive-dialog.c:504
 #, c-format
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
 msgstr "Dosiero nomita \"%s\" jam ekzistas.  Ĉu vi volas anstataŭigi ĝin?"
 
-#: ../src/fr-new-archive-dialog.c:466
+#: ../src/fr-new-archive-dialog.c:505
 #, c-format
 msgid ""
 "The file already exists in \"%s\".  Replacing it will overwrite its contents."
@@ -562,15 +565,15 @@ msgstr ""
 "La dosiero jam ekzistas en \"%s\".  Anstataŭigi ĝin anstataŭigos sian "
 "enhavon."
 
-#: ../src/fr-new-archive-dialog.c:472 ../src/fr-window.c:6456
+#: ../src/fr-new-archive-dialog.c:511 ../src/fr-window.c:6504
 msgid "_Replace"
 msgstr "_Anstataŭigi"
 
-#: ../src/fr-new-archive-dialog.c:487
+#: ../src/fr-new-archive-dialog.c:526
 msgid "Could not delete the old archive."
 msgstr "Ne eblis forigi la malnovan arkivon."
 
-#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6056
+#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6085
 #: ../src/ui/menus.ui.h:1
 msgid "Open"
 msgstr "Malfermi"
@@ -674,98 +677,98 @@ msgstr "Renomanta la dosierojn en \"%s\""
 msgid "Updating the files in \"%s\""
 msgstr "Ĝisdatiganta la dosierojn en \"%s\""
 
-#: ../src/fr-window.c:2430 ../src/ui/app-menu.ui.h:8
+#: ../src/fr-window.c:2438 ../src/ui/app-menu.ui.h:8
 msgid "_Quit"
 msgstr "Ĉ_esi"
 
-#: ../src/fr-window.c:2431
+#: ../src/fr-window.c:2439
 msgid "_Open the Archive"
 msgstr "_Malfermi la arkivon"
 
-#: ../src/fr-window.c:2432
+#: ../src/fr-window.c:2440
 msgid "_Show the Files"
 msgstr "M_ontri la dosierojn"
 
-#: ../src/fr-window.c:2544
+#: ../src/fr-window.c:2564
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "%d dosiero restanta"
 msgstr[1] "%d dosieroj restantaj"
 
-#: ../src/fr-window.c:2548 ../src/fr-window.c:3106
+#: ../src/fr-window.c:2568 ../src/fr-window.c:3126
 msgid "Please wait…"
 msgstr "Bonvolu atendi…"
 
-#: ../src/fr-window.c:2604
+#: ../src/fr-window.c:2624
 msgid "Extraction completed successfully"
 msgstr "Elpako sukcese efektiviĝis"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2636 ../src/fr-window.c:6042
+#: ../src/fr-window.c:2656 ../src/fr-window.c:6071
 #, c-format
 msgid "\"%s\" created successfully"
 msgstr "\"%s\" kreita sukcese"
 
-#: ../src/fr-window.c:2713 ../src/fr-window.c:2885
+#: ../src/fr-window.c:2733 ../src/fr-window.c:2905
 msgid "Command exited abnormally."
 msgstr "Komando fermiĝis nenormale."
 
-#: ../src/fr-window.c:2834
+#: ../src/fr-window.c:2854
 msgid "An error occurred while extracting files."
 msgstr "Okazis eraro dum elpakado de dosieroj."
 
-#: ../src/fr-window.c:2840
+#: ../src/fr-window.c:2860
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Ne eblis malfermi \"%s\""
 
-#: ../src/fr-window.c:2845
+#: ../src/fr-window.c:2865
 msgid "An error occurred while loading the archive."
 msgstr "Okazis eraro dum ŝargo de la arkivo."
 
-#: ../src/fr-window.c:2849
+#: ../src/fr-window.c:2869
 msgid "An error occurred while deleting files from the archive."
 msgstr "Okazis eraro dum forigo de dosieroj el la arkivo."
 
-#: ../src/fr-window.c:2855
+#: ../src/fr-window.c:2875
 msgid "An error occurred while adding files to the archive."
 msgstr "Okazis eraro dum aldono de dosieroj al la arkivo."
 
-#: ../src/fr-window.c:2859
+#: ../src/fr-window.c:2879
 msgid "An error occurred while testing archive."
 msgstr "Okazis eraro dum testado de la arkivo."
 
-#: ../src/fr-window.c:2864
+#: ../src/fr-window.c:2884
 msgid "An error occurred while saving the archive."
 msgstr "Okazis eraro dum konservo de la arkivo."
 
-#: ../src/fr-window.c:2868
+#: ../src/fr-window.c:2888
 msgid "An error occurred while renaming the files."
 msgstr "Okazis eraro dum la renomo de la dosieroj."
 
-#: ../src/fr-window.c:2872
+#: ../src/fr-window.c:2892
 msgid "An error occurred while updating the files."
 msgstr "Okazis eraro dum la ĝisdatigo de la dosieroj."
 
-#: ../src/fr-window.c:2876
+#: ../src/fr-window.c:2896
 msgid "An error occurred."
 msgstr "Eraro okazis."
 
-#: ../src/fr-window.c:2882
+#: ../src/fr-window.c:2902
 msgid "Command not found."
 msgstr "Komando ne trovita."
 
-#: ../src/fr-window.c:3038
+#: ../src/fr-window.c:3058
 msgid "Test Result"
 msgstr "Testrezulto"
 
-#: ../src/fr-window.c:3998 ../src/fr-window.c:8609 ../src/fr-window.c:8643
-#: ../src/fr-window.c:8923
+#: ../src/fr-window.c:4018 ../src/fr-window.c:8657 ../src/fr-window.c:8691
+#: ../src/fr-window.c:8971
 msgid "Could not perform the operation"
 msgstr "Ne eblis lanĉi la operacion"
 
-#: ../src/fr-window.c:4023
+#: ../src/fr-window.c:4043
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -773,107 +776,107 @@ msgstr ""
 "Ĉu vi volas aldoni tiun dosieron al la nuna arkivo aŭ malfermi ĝin kiel "
 "novan arkivon?"
 
-#: ../src/fr-window.c:4052
+#: ../src/fr-window.c:4072
 msgid "Do you want to create a new archive with these files?"
 msgstr "Ĉu vi volas krei novan arkivon per tiuj dosieroj?"
 
-#: ../src/fr-window.c:4055
+#: ../src/fr-window.c:4075
 msgid "Create _Archive"
 msgstr "Krei _arkivon"
 
-#: ../src/fr-window.c:4084 ../src/fr-window.c:7067
+#: ../src/fr-window.c:4104 ../src/fr-window.c:7115
 msgid "New Archive"
 msgstr "Nova arkivo"
 
-#: ../src/fr-window.c:4785
+#: ../src/fr-window.c:4814
 msgid "Folders"
 msgstr "Dosierujoj"
 
-#: ../src/fr-window.c:4823 ../src/ui/file-selector.ui.h:7
+#: ../src/fr-window.c:4852 ../src/ui/file-selector.ui.h:7
 msgctxt "File"
 msgid "Size"
 msgstr "Grando"
 
-#: ../src/fr-window.c:4824
+#: ../src/fr-window.c:4853
 msgctxt "File"
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/fr-window.c:4825 ../src/ui/file-selector.ui.h:8
+#: ../src/fr-window.c:4854 ../src/ui/file-selector.ui.h:8
 msgctxt "File"
 msgid "Modified"
 msgstr "Ŝanĝita"
 
-#: ../src/fr-window.c:4826
+#: ../src/fr-window.c:4855
 msgctxt "File"
 msgid "Location"
 msgstr "Loko"
 
-#: ../src/fr-window.c:4835 ../src/ui/file-selector.ui.h:6
+#: ../src/fr-window.c:4864 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Name"
 msgstr "Nomo"
 
-#: ../src/fr-window.c:5599 ../src/fr-window.c:5629
+#: ../src/fr-window.c:5628 ../src/fr-window.c:5658
 msgid "Find files by name"
 msgstr "Trovi dosierojn laŭnome"
 
-#: ../src/fr-window.c:5646
+#: ../src/fr-window.c:5675
 msgid "Go to the previous visited location"
 msgstr "Iri al la antaŭe vizitita loko"
 
-#: ../src/fr-window.c:5651
+#: ../src/fr-window.c:5680
 msgid "Go to the next visited location"
 msgstr "Iri al la sekve vizita loko"
 
-#: ../src/fr-window.c:5661
+#: ../src/fr-window.c:5690
 msgid "Go to the home location"
 msgstr "Iri al la hejmujo"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5670 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:5699 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Loko:"
 
-#: ../src/fr-window.c:6445
+#: ../src/fr-window.c:6493
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "Ĉu anstataŭigi dosieron \"%s\"?"
 
-#: ../src/fr-window.c:6448
+#: ../src/fr-window.c:6496
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "Alia dosiero kun la sama nomo jam ekzistas en \"%s\"."
 
-#: ../src/fr-window.c:6454
+#: ../src/fr-window.c:6502
 msgid "Replace _All"
 msgstr "Anstataŭigi ĉ_iujn"
 
-#: ../src/fr-window.c:6455
+#: ../src/fr-window.c:6503
 msgid "_Skip"
 msgstr "_Preterpasi"
 
-#: ../src/fr-window.c:7251 ../src/fr-window.c:7608
+#: ../src/fr-window.c:7299 ../src/fr-window.c:7656
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Ne eblis konservi la arkivon \"%s\""
 
-#: ../src/fr-window.c:7378
+#: ../src/fr-window.c:7426
 msgid "Save"
 msgstr "Konservi"
 
-#: ../src/fr-window.c:7702
+#: ../src/fr-window.c:7750
 msgid "Last Output"
 msgstr "Lasta eligo"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7925
+#: ../src/fr-window.c:7973
 msgid "New name is void, please type a name."
 msgstr "Nova nomo estas vaka, bonvolu tajpi nomon."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7935
+#: ../src/fr-window.c:7983
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
@@ -882,7 +885,7 @@ msgstr ""
 "Nomo \"%s\" ne estas valida ĉar ĝi enhavas almenaŭ uno de la sekvajn "
 "signojn: %s, bonvolu tajpi alian nomon."
 
-#: ../src/fr-window.c:7971
+#: ../src/fr-window.c:8019
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -893,11 +896,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7971 ../src/fr-window.c:7973
+#: ../src/fr-window.c:8019 ../src/fr-window.c:8021
 msgid "Please use a different name."
 msgstr "Bonvolu uzi alian nomon."
 
-#: ../src/fr-window.c:7973
+#: ../src/fr-window.c:8021
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -908,51 +911,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8043
+#: ../src/fr-window.c:8091
 msgid "Rename"
 msgstr "Alinomi"
 
-#: ../src/fr-window.c:8044
+#: ../src/fr-window.c:8092
 msgid "_New folder name:"
 msgstr "_Nova dosieruja nomo:"
 
-#: ../src/fr-window.c:8044
+#: ../src/fr-window.c:8092
 msgid "_New file name:"
 msgstr "_Nova dosiernomo:"
 
-#: ../src/fr-window.c:8048
+#: ../src/fr-window.c:8096
 msgid "_Rename"
 msgstr "_Alinomi"
 
-#: ../src/fr-window.c:8065 ../src/fr-window.c:8083
+#: ../src/fr-window.c:8113 ../src/fr-window.c:8131
 msgid "Could not rename the folder"
 msgstr "Ne eblis alinomi la dosierujon"
 
-#: ../src/fr-window.c:8065 ../src/fr-window.c:8083
+#: ../src/fr-window.c:8113 ../src/fr-window.c:8131
 msgid "Could not rename the file"
 msgstr "Ne eblis alinomi la dosieron"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8516
+#: ../src/fr-window.c:8564
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "Movanta la dosierojn de \"%s\" al \"%s\""
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8519
+#: ../src/fr-window.c:8567
 #, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "Kopianta la dosierojn de \"%s\" al \"%s\""
 
-#: ../src/fr-window.c:8570
+#: ../src/fr-window.c:8618
 msgid "Paste Selection"
 msgstr "Enmeti la elektaĵon"
 
-#: ../src/fr-window.c:8571
+#: ../src/fr-window.c:8619
 msgid "_Destination folder:"
 msgstr "_Celdosierujo:"
 
-#: ../src/fr-window.c:8575 ../src/ui/app-menubar.ui.h:12
+#: ../src/fr-window.c:8623 ../src/ui/app-menubar.ui.h:12
 msgid "_Paste"
 msgstr "_Alglui"
 
@@ -963,15 +966,15 @@ msgstr "_Alglui"
 msgid "%d %B %Y, %H:%M"
 msgstr "%da de %B %Y, %H:%M"
 
-#: ../src/gtk-utils.c:226
+#: ../src/gtk-utils.c:234
 msgid "C_ommand Line Output:"
 msgstr "Komandlinia _eligo:"
 
-#: ../src/gtk-utils.c:501
+#: ../src/gtk-utils.c:509
 msgid "Could not display help"
 msgstr "Ne eblis montri helpon"
 
-#: ../src/gtk-utils.c:596
+#: ../src/gtk-utils.c:604
 msgid "Change password visibility"
 msgstr "Ŝangi pasvorta videblo"
 
@@ -979,8 +982,7 @@ msgstr "Ŝangi pasvorta videblo"
 msgid "_Add"
 msgstr "_Aldoni"
 
-#: ../src/gtk-utils.h:30 ../src/ui/ask-password.ui.h:1 ../src/ui/delete.ui.h:2
-#: ../src/ui/password.ui.h:2
+#: ../src/gtk-utils.h:30
 msgid "_Cancel"
 msgstr "_Rezigni"
 
@@ -997,12 +999,10 @@ msgid "_Extract"
 msgstr "_Elpaki"
 
 #: ../src/gtk-utils.h:34
-#| msgid "Open"
 msgid "_Open"
 msgstr "_Malfermi"
 
-#: ../src/gtk-utils.h:35 ../src/ui/password.ui.h:3
-#| msgid "Save"
+#: ../src/gtk-utils.h:35
 msgid "_Save"
 msgstr "Kon_servi"
 
@@ -1039,27 +1039,22 @@ msgid "_Follow symbolic links"
 msgstr "_Sekvi simbolan ligilon"
 
 #: ../src/ui/app-menubar.ui.h:1
-#| msgid "_Files:"
 msgid "_File"
 msgstr "_Dosieroj"
 
 #: ../src/ui/app-menubar.ui.h:2 ../src/ui/app-menu.ui.h:1
-#| msgid "_New Archive"
 msgid "_New Archive…"
 msgstr "_Nova arkivo…"
 
 #: ../src/ui/app-menubar.ui.h:3 ../src/ui/app-menu.ui.h:2
-#| msgid "Open…"
 msgid "_Open…"
 msgstr "_Malfermi…"
 
 #: ../src/ui/app-menubar.ui.h:4
-#| msgid "_Extract…"
 msgid "_Extract Files…"
 msgstr "_Elpaki dosierojn…"
 
 #: ../src/ui/app-menubar.ui.h:5
-#| msgid "Save As…"
 msgid "Save _As…"
 msgstr "Konservi _kiel…"
 
@@ -1068,7 +1063,6 @@ msgid "_Test Integrity"
 msgstr "_Testi integrecon"
 
 #: ../src/ui/app-menubar.ui.h:7 ../src/ui/gears-menu.ui.h:4
-#| msgid "%s Properties"
 msgid "Properties"
 msgstr "Atributoj"
 
@@ -1093,7 +1087,6 @@ msgid "_Rename…"
 msgstr "_Alinomi…"
 
 #: ../src/ui/app-menubar.ui.h:15
-#| msgid "_Selected files"
 msgid "_Delete Files…"
 msgstr "_Forigi dosierojn…"
 
@@ -1102,17 +1095,14 @@ msgid "_Select All"
 msgstr "_Elekti ĉion"
 
 #: ../src/ui/app-menubar.ui.h:17
-#| msgid "Dese_lect All"
 msgid "D_eselect All"
 msgstr "_Malelekti ĉion"
 
 #: ../src/ui/app-menubar.ui.h:18
-#| msgid "Find:"
 msgid "_Find"
 msgstr "_Trovi"
 
 #: ../src/ui/app-menubar.ui.h:19
-#| msgid "Pass_word…"
 msgid "Set Pass_word…"
 msgstr "Agordi pas_vorton…"
 
@@ -1144,36 +1134,23 @@ msgstr "Enhavoj"
 msgid "_About"
 msgstr "_Pri"
 
-#: ../src/ui/ask-password.ui.h:2
-msgid "_OK"
-msgstr "_Akcepti"
-
-#: ../src/ui/ask-password.ui.h:3 ../src/ui/new-archive-dialog.ui.h:4
+#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "_Pasvorto:"
 
-#: ../src/ui/delete.ui.h:1 ../src/ui/menus.ui.h:8
-msgid "Delete"
-msgstr "Forigi"
-
-#: ../src/ui/delete.ui.h:3
-#| msgid "Delete"
-msgid "_Delete"
-msgstr "_Forigi"
-
-#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:4
+#: ../src/ui/delete.ui.h:1 ../src/ui/extract-dialog-options.ui.h:4
 msgid "_Files:"
 msgstr "_Dosieroj:"
 
-#: ../src/ui/delete.ui.h:5
+#: ../src/ui/delete.ui.h:2
 msgid "example: *.txt; *.doc"
 msgstr "ekzemplo: *.txt; *.doc"
 
-#: ../src/ui/delete.ui.h:6 ../src/ui/extract-dialog-options.ui.h:2
+#: ../src/ui/delete.ui.h:3 ../src/ui/extract-dialog-options.ui.h:2
 msgid "_All files"
 msgstr "Ĉiuj d_osieroj"
 
-#: ../src/ui/delete.ui.h:7 ../src/ui/extract-dialog-options.ui.h:3
+#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:3
 msgid "_Selected files"
 msgstr "_Elektitaj dosieroj"
 
@@ -1225,6 +1202,10 @@ msgstr "Kopii"
 msgid "Paste"
 msgstr "Alglui"
 
+#: ../src/ui/menus.ui.h:8
+msgid "Delete"
+msgstr "Forigi"
+
 #: ../src/ui/new-archive-dialog.ui.h:1
 msgid "_Filename:"
 msgstr "_Dosiernomo:"
@@ -1252,10 +1233,6 @@ msgid "_Other Options"
 msgstr "Aliaj _opcioj"
 
 #: ../src/ui/password.ui.h:1
-msgid "Password"
-msgstr "Pasvorto"
-
-#: ../src/ui/password.ui.h:4
 msgid "_Encrypt the file list"
 msgstr "Ĉ_ifri la dosierliston"
 
@@ -1301,6 +1278,9 @@ msgstr "Ĝ_isdatigi"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "_Elektu la dosierojn kiujn vi volas ĝisdatigi:"
+
+#~ msgid "Password"
+#~ msgstr "Pasvorto"
 
 #~ msgid "File is not a valid .desktop file"
 #~ msgstr "Dosiero ne estas valida .desktop-dosiero"
