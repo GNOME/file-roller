@@ -21,6 +21,7 @@
 
 #include <config.h>
 #define _XOPEN_SOURCE       /* See feature_test_macros(7) */
+#define _XOPEN_SOURCE_EXTENDED 1  /* for strptime */
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
