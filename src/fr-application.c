@@ -531,9 +531,11 @@ fr_application_command_line (GApplication            *application,
 		g_critical ("Failed to parse arguments: %s", error->message);
 		g_error_free (error);
 		g_option_context_free (context);
+		g_strfreev (argv);
 
 		return fr_application_command_line_finished (application, EXIT_FAILURE);
 	}
+	g_strfreev (argv);
 	g_option_context_free (context);
 
 	if (remaining_args == NULL) { /* No archive specified. */
