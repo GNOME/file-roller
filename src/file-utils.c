@@ -109,6 +109,7 @@ _g_path_get_temp_work_dir (const char *parent_folder)
 
         template = g_strconcat (best_folder, "/.fr-XXXXXX", NULL);
         result = mkdtemp (template);
+        g_free (best_folder);
 
         if ((result == NULL) || (*result == '\0')) {
                 g_free (template);
