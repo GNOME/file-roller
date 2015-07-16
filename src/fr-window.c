@@ -709,6 +709,8 @@ fr_window_change_action_state (FrWindow   *window,
 	new_state = g_variant_new_boolean (value);
 	if ((old_state == NULL) || ! g_variant_equal (old_state, new_state))
 		g_action_change_state (action, new_state);
+	else
+		g_variant_unref (new_state);
 
 	if (old_state != NULL)
 		g_variant_unref (old_state);
