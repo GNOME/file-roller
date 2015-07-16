@@ -6500,7 +6500,9 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 				  odata);
 		gtk_widget_show (d);
 
+		g_free (msg);
 		g_free (parent_name);
+		g_free (details);
 		g_object_unref (parent);
 		g_object_unref (info);
 		g_object_unref (destination);
