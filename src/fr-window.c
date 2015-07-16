@@ -2668,6 +2668,7 @@ fr_window_add_to_recent_list (FrWindow *window,
 		recent_data->app_exec = "file-roller";
 		gtk_recent_manager_add_full (gtk_recent_manager_get_default (), uri, recent_data);
 
+		g_free (recent_data->mime_type);
 		g_free (recent_data);
 	}
 	else
