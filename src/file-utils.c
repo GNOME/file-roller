@@ -574,8 +574,10 @@ _g_file_is_temp_work_dir (GFile *file)
 	int       i;
 
 	path = g_file_get_path (file);
-	if (path[0] != '/')
+	if (path[0] != '/') {
+		g_free (path);
 		return FALSE;
+	}
 
 	for (i = 0; try_folder[i] != NULL; i++) {
 		const char *folder;
@@ -588,6 +590,8 @@ _g_file_is_temp_work_dir (GFile *file)
 			}
 		}
 	}
+
+	g_free (path);
 
 	return result;
 }
