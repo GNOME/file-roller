@@ -5729,6 +5729,7 @@ fr_window_construct (FrWindow *window)
 	toolbar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
 	gtk_size_group_add_widget (toolbar_size_group, window->priv->location_bar);
 	gtk_size_group_add_widget (toolbar_size_group, window->priv->filter_bar);
+	g_object_unref (toolbar_size_group);
 
 	/**/
 
