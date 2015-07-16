@@ -438,6 +438,7 @@ fr_application_register_archive_manager_service (FrApplication *self)
 
 	g_timeout_add_seconds (SERVICE_TIMEOUT, service_timeout_cb, self);
 
+	_g_object_unref (stream);
 	g_free (buffer);
 }
 
