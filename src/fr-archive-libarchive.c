@@ -137,7 +137,7 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 		return capabilities;
 	}
 
-	/* give priority to rar, unrar and that support RAR files better. */
+	/* give priority to utilities that support RAR files better. */
 	if ((strcmp (mime_type, "application/x-rar") == 0)
 	    || (strcmp (mime_type, "application/x-cbr") == 0))
 	{
