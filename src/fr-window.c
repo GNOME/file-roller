@@ -540,21 +540,6 @@ fr_window_free_private_data (FrWindow *window)
 	_g_string_list_free (window->priv->drag_file_list);
 	window->priv->drag_file_list = NULL;
 
-	if (window->priv->file_popup_menu != NULL) {
-		gtk_widget_destroy (window->priv->file_popup_menu);
-		window->priv->file_popup_menu = NULL;
-	}
-
-	if (window->priv->folder_popup_menu != NULL) {
-		gtk_widget_destroy (window->priv->folder_popup_menu);
-		window->priv->folder_popup_menu = NULL;
-	}
-
-	if (window->priv->sidebar_folder_popup_menu != NULL) {
-		gtk_widget_destroy (window->priv->sidebar_folder_popup_menu);
-		window->priv->sidebar_folder_popup_menu = NULL;
-	}
-
 	g_free (window->priv->last_location);
 
 	fr_window_free_batch_data (window);
