@@ -9,16 +9,16 @@
 # Artur Flinta <aflinta@at.kernel.pl>, 2003-2006.
 # Wadim Dziedzic <wdziedzic@aviary.pl>, 2007-2008.
 # Tomasz Dominikowski <dominikowski@gmail.com>, 2007-2009.
-# Piotr Drąg <piotrdrag@gmail.com>, 2009-2013.
+# Piotr Drąg <piotrdrag@gmail.com>, 2009-2015.
 # Paweł Żołnowski <pawel@zolnowski.name>, 2014-2015.
 # Aviary.pl <gnomepl@aviary.pl>, 2007-2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-04 22:19+0100\n"
-"PO-Revision-Date: 2015-03-04 20:45+0100\n"
-"Last-Translator: Paweł Żołnowski <pawel@zolnowski.name>\n"
+"POT-Creation-Date: 2015-08-24 16:34+0200\n"
+"PO-Revision-Date: 2015-08-24 16:35+0200\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgstr "archiwa xz (.tar.xz)"
 
 #. set the name and icon
 #: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:717
-#: ../src/fr-window.c:1989 ../src/fr-window.c:5343
+#: ../src/fr-window.c:1974 ../src/fr-window.c:5328
 msgid "Archive Manager"
 msgstr "Menedżer archiwów"
 
@@ -75,7 +75,9 @@ msgstr "Tworzenie i modyfikowanie archiwów"
 
 #: ../data/org.gnome.FileRoller.desktop.in.in.h:3
 msgid "zip;tar;extract;unpack;"
-msgstr "zip;tar;rozpakuj;rozpakowanie;rozpakowywanie;"
+msgstr ""
+"zip;tar;rozpakuj;rozpakowanie;rozpakowywanie;dekompresja;dekompresowanie;"
+"zdekompresuj;"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
 msgid "How to sort files"
@@ -110,8 +112,8 @@ msgid ""
 "Use 'all-files' to view all the files in the archive in a single list, use "
 "'as-folder' to navigate the archive as a folder."
 msgstr ""
-"Użycie wartości \"all-files\" wyświetli wszystkie pliki w archiwum na "
-"pojedynczej liście, użycie wartości \"as-folder\" wyświetli archiwum jako "
+"Użycie wartości „all-files” wyświetli wszystkie pliki w archiwum na "
+"pojedynczej liście, użycie wartości „as-folder” wyświetli archiwum jako "
 "katalog."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
@@ -171,8 +173,7 @@ msgid ""
 "List of applications entered in the 'Open File' dialog and not associated "
 "with the file type."
 msgstr ""
-"Lista programów podanych w oknie \"Otwórz plik\", niepowiązanych z typem "
-"pliku."
+"Lista programów podanych w oknie „Otwórz plik”, niepowiązanych z typem pliku."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
 msgid "Compression level"
@@ -225,7 +226,7 @@ msgstr "Rozpakowuje wybrane archiwum w bieżącym położeniu"
 
 #: ../nautilus/nautilus-fileroller.c:347
 msgid "Extract To..."
-msgstr "Rozpakuj do..."
+msgstr "Rozpakuj do…"
 
 #: ../nautilus/nautilus-fileroller.c:348
 msgid "Extract the selected archive"
@@ -233,7 +234,7 @@ msgstr "Rozpakowuje wybrane archiwum"
 
 #: ../nautilus/nautilus-fileroller.c:367
 msgid "Compress..."
-msgstr "Utwórz archiwum..."
+msgstr "Utwórz archiwum…"
 
 #: ../nautilus/nautilus-fileroller.c:368
 msgid "Create a compressed archive with the selected objects"
@@ -246,9 +247,9 @@ msgstr "Nie można dodać plików do archiwum"
 #: ../src/dlg-add.c:115
 #, c-format
 msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Brak uprawnień do odczytu plików z katalogu \"%s\""
+msgstr "Brak uprawnień do odczytu plików z katalogu „%s”"
 
-#: ../src/dlg-add.c:182 ../src/fr-window.c:5623
+#: ../src/dlg-add.c:182 ../src/fr-window.c:5608
 msgid "Add Files"
 msgstr "Dodaj pliki"
 
@@ -291,7 +292,7 @@ msgstr "_OK"
 #: ../src/dlg-ask-password.c:148
 #, c-format
 msgid "Password required for \"%s\""
-msgstr "Wymagane jest hasło dla \"%s\""
+msgstr "Wymagane jest hasło dla „%s”"
 
 #: ../src/dlg-ask-password.c:157
 msgid "Wrong password."
@@ -302,39 +303,39 @@ msgstr "Błędne hasło."
 msgid "Compress"
 msgstr "Kompresja"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6674
+#: ../src/dlg-extract.c:95 ../src/fr-window.c:6659
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
 "\n"
 "Do you want to create it?"
 msgstr ""
-"Katalog docelowy \"%s\" nie istnieje.\n"
+"Katalog docelowy „%s” nie istnieje.\n"
 "\n"
 "Utworzyć go?"
 
-#: ../src/dlg-extract.c:103 ../src/fr-window.c:6682
+#: ../src/dlg-extract.c:103 ../src/fr-window.c:6667
 msgid "Create _Folder"
 msgstr "U_twórz katalog"
 
 #: ../src/dlg-extract.c:122 ../src/dlg-extract.c:139 ../src/dlg-extract.c:166
-#: ../src/fr-window.c:4226 ../src/fr-window.c:6577 ../src/fr-window.c:6582
-#: ../src/fr-window.c:6703 ../src/fr-window.c:6722 ../src/fr-window.c:6727
+#: ../src/fr-window.c:4211 ../src/fr-window.c:6562 ../src/fr-window.c:6567
+#: ../src/fr-window.c:6688 ../src/fr-window.c:6707 ../src/fr-window.c:6712
 msgid "Extraction not performed"
 msgstr "Nie przeprowadzono rozpakowania plików"
 
-#: ../src/dlg-extract.c:123 ../src/fr-window.c:6699
+#: ../src/dlg-extract.c:123 ../src/fr-window.c:6684
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Nie można utworzyć katalogu docelowego: %s."
 
-#: ../src/dlg-extract.c:167 ../src/fr-window.c:4454 ../src/fr-window.c:4554
+#: ../src/dlg-extract.c:167 ../src/fr-window.c:4437 ../src/fr-window.c:4539
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "Brak uprawnień do rozpakowania plików do katalogu \"%s\""
+msgstr "Brak uprawnień do rozpakowania plików do katalogu „%s”"
 
-#: ../src/dlg-extract.c:280 ../src/fr-window.c:5619
+#: ../src/dlg-extract.c:280 ../src/fr-window.c:5604
 #: ../src/ui/extract-dialog-options.ui.h:1
 msgid "Extract"
 msgstr "Rozpakuj"
@@ -345,8 +346,8 @@ msgstr "Wystąpił wewnętrzny błąd podczas próby wyszukania programów:"
 
 #: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
 #: ../src/dlg-package-installer.c:330 ../src/fr-archive.c:744
-#: ../src/fr-window.c:3900 ../src/fr-window.c:7307 ../src/fr-window.c:7664
-#: ../src/fr-window.c:9182
+#: ../src/fr-window.c:3885 ../src/fr-window.c:7292 ../src/fr-window.c:7649
+#: ../src/fr-window.c:9167
 msgid "Archive type not supported."
 msgstr "Nieobsługiwany typ archiwum."
 
@@ -370,7 +371,7 @@ msgstr "Wy_szukaj polecenie"
 #: ../src/dlg-password.c:109
 #, c-format
 msgid "Enter a password for \"%s\""
-msgstr "Proszę wprowadzić hasło dla \"%s\""
+msgstr "Proszę wprowadzić hasło dla „%s”"
 
 #: ../src/dlg-prop.c:107
 #, c-format
@@ -380,7 +381,7 @@ msgstr "Właściwości archiwum %s"
 #: ../src/dlg-update.c:163
 #, c-format
 msgid "Update the file \"%s\" in the archive \"%s\"?"
-msgstr "Zaktualizować plik \"%s\" w archiwum \"%s\"?"
+msgstr "Zaktualizować plik „%s” w archiwum „%s”?"
 
 #. secondary text
 #: ../src/dlg-update.c:174 ../src/dlg-update.c:199 ../src/ui/update.ui.h:2
@@ -405,7 +406,7 @@ msgstr[2] ""
 #: ../src/dlg-update.c:189
 #, c-format
 msgid "Update the files in the archive \"%s\"?"
-msgstr "Zaktualizować pliki w archiwum \"%s\"?"
+msgstr "Zaktualizować pliki w archiwum „%s”?"
 
 #: ../src/fr-application.c:61
 msgid "Add files to the specified archive and quit the program"
@@ -443,7 +444,7 @@ msgstr ""
 
 #: ../src/fr-application.c:81
 msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "Domyślny katalog, używany przy poleceniach \"--add\" i \"--extract\""
+msgstr "Domyślny katalog, używany przy poleceniach „--add” i „--extract”"
 
 #: ../src/fr-application.c:85
 msgid "Create destination folder without asking confirmation"
@@ -468,7 +469,7 @@ msgstr "Rozpakowanie plików z archiwum"
 
 #: ../src/fr-application.c:476
 msgid "- Create and modify an archive"
-msgstr "- Tworzenie i modyfikowanie archiwów"
+msgstr "— tworzenie i modyfikowanie archiwów"
 
 #: ../src/fr-application-menu.c:130
 msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
@@ -486,7 +487,7 @@ msgstr ""
 "Artur Flinta <aflinta@at.kernel.pl>, 2003-2006\n"
 "Wadim Dziedzic <wdziedzic@aviary.pl>, 2007-2008\n"
 "Tomasz Dominikowski <dominikowski@gmail.com>, 2007-2009\n"
-"Piotr Drąg <piotrdrag@gmail.com>, 2009-2013\n"
+"Piotr Drąg <piotrdrag@gmail.com>, 2009-2015\n"
 "Paweł Żołnowski <pawel@zolnowski.name>, 2014-2015\n"
 "Aviary.pl <gnomepl@aviary.pl>, 2007-2015"
 
@@ -507,14 +508,14 @@ msgstr "Nie można dodać pliku archiwum do niego samego."
 #: ../src/fr-command-tar.c:304
 #, c-format
 msgid "Adding \"%s\""
-msgstr "Dodawanie pliku \"%s\""
+msgstr "Dodawanie pliku „%s”"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
 #: ../src/fr-command-tar.c:425
 #, c-format
 msgid "Extracting \"%s\""
-msgstr "Rozpakowywanie pliku \"%s\""
+msgstr "Rozpakowywanie pliku „%s”"
 
 #: ../src/fr-command.c:597
 #, c-format
@@ -525,12 +526,12 @@ msgstr "Nie odnaleziono archiwum"
 #: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:370
 #, c-format
 msgid "Removing \"%s\""
-msgstr "Usuwanie pliku \"%s\""
+msgstr "Usuwanie pliku „%s”"
 
 #: ../src/fr-command-rar.c:688
 #, c-format
 msgid "Could not find the volume: %s"
-msgstr "Nie można odnaleźć woluminu: \"%s\""
+msgstr "Nie można odnaleźć woluminu: %s"
 
 #: ../src/fr-command-tar.c:380
 msgid "Deleting files from archive"
@@ -551,7 +552,7 @@ msgstr "Nie można wczytać położenia"
 #: ../src/fr-new-archive-dialog.c:358 ../src/fr-new-archive-dialog.c:377
 #: ../src/fr-new-archive-dialog.c:393 ../src/fr-new-archive-dialog.c:441
 #: ../src/fr-new-archive-dialog.c:459 ../src/fr-new-archive-dialog.c:481
-#: ../src/fr-window.c:2849
+#: ../src/fr-window.c:2834
 msgid "Could not create the archive"
 msgstr "Nie można utworzyć archiwum"
 
@@ -564,22 +565,22 @@ msgid "You don't have permission to create an archive in this folder"
 msgstr "Brak uprawnień do utworzenia archiwum w tym katalogu"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:461 ../src/fr-window.c:7978
+#: ../src/fr-new-archive-dialog.c:461 ../src/fr-window.c:7963
 msgid "New name is the same as old one, please type other name."
 msgstr "Nowa nazwa jest taka sama jak poprzednia. Proszę wpisać inną."
 
 #: ../src/fr-new-archive-dialog.c:504
 #, c-format
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
-msgstr "Plik o nazwie \"%s\" już istnieje. Zastąpić go?"
+msgstr "Plik o nazwie „%s” już istnieje. Zastąpić go?"
 
 #: ../src/fr-new-archive-dialog.c:505
 #, c-format
 msgid ""
 "The file already exists in \"%s\".  Replacing it will overwrite its contents."
-msgstr "Plik już istnieje w \"%s\". Zastąpienie go nadpisze jego zawartość."
+msgstr "Plik już istnieje w „%s”. Zastąpienie go nadpisze jego zawartość."
 
-#: ../src/fr-new-archive-dialog.c:511 ../src/fr-window.c:6504
+#: ../src/fr-new-archive-dialog.c:511 ../src/fr-window.c:6489
 msgid "_Replace"
 msgstr "_Zastąp"
 
@@ -587,7 +588,7 @@ msgstr "_Zastąp"
 msgid "Could not delete the old archive."
 msgstr "Nie można usunąć starego archiwum."
 
-#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6085
+#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6070
 #: ../src/ui/menus.ui.h:1
 msgid "Open"
 msgstr "Otwórz"
@@ -600,110 +601,110 @@ msgstr "Wszystkie archiwa"
 msgid "All files"
 msgstr "Wszystkie pliki"
 
-#: ../src/fr-window.c:1223
+#: ../src/fr-window.c:1208
 msgid "Operation completed"
 msgstr "Ukończono działanie"
 
-#: ../src/fr-window.c:1609
+#: ../src/fr-window.c:1594
 msgid "Folder"
 msgstr "Katalog"
 
-#: ../src/fr-window.c:1996
+#: ../src/fr-window.c:1981
 msgid "[read only]"
 msgstr "[tylko do odczytu]"
 
-#: ../src/fr-window.c:2111
+#: ../src/fr-window.c:2096
 #, c-format
 msgid "Could not display the folder \"%s\""
-msgstr "Nie można wyświetlić katalogu \"%s\""
+msgstr "Nie można wyświetlić katalogu „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2202 ../src/fr-window.c:2240
+#: ../src/fr-window.c:2187 ../src/fr-window.c:2225
 #, c-format
 msgid "Creating \"%s\""
-msgstr "Tworzenie pliku \"%s\""
+msgstr "Tworzenie pliku „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2206
+#: ../src/fr-window.c:2191
 #, c-format
 msgid "Loading \"%s\""
-msgstr "Wczytywanie pliku \"%s\""
+msgstr "Wczytywanie pliku „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2210
+#: ../src/fr-window.c:2195
 #, c-format
 msgid "Reading \"%s\""
-msgstr "Odczytywanie pliku \"%s\""
+msgstr "Odczytywanie pliku „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2214
+#: ../src/fr-window.c:2199
 #, c-format
 msgid "Deleting the files from \"%s\""
-msgstr "Usuwanie plików z \"%s\""
+msgstr "Usuwanie plików z „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2218
+#: ../src/fr-window.c:2203
 #, c-format
 msgid "Testing \"%s\""
-msgstr "Testowanie pliku \"%s\""
+msgstr "Testowanie pliku „%s”"
 
-#: ../src/fr-window.c:2221
+#: ../src/fr-window.c:2206
 msgid "Getting the file list"
 msgstr "Pobieranie listy plików"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2225
+#: ../src/fr-window.c:2210
 #, c-format
 msgid "Copying the files to add to \"%s\""
-msgstr "Kopiowanie plików do dodania do \"%s\""
+msgstr "Kopiowanie plików do dodania do „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2229
+#: ../src/fr-window.c:2214
 #, c-format
 msgid "Adding the files to \"%s\""
-msgstr "Dodawanie plików do \"%s\""
+msgstr "Dodawanie plików do „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2233
+#: ../src/fr-window.c:2218
 #, c-format
 msgid "Extracting the files from \"%s\""
-msgstr "Rozpakowywanie plików z \"%s\""
+msgstr "Rozpakowywanie plików z „%s”"
 
-#: ../src/fr-window.c:2236
+#: ../src/fr-window.c:2221
 msgid "Copying the extracted files to the destination"
 msgstr "Kopiowanie rozpakowanych plików do miejsca docelowego"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2245
+#: ../src/fr-window.c:2230
 #, c-format
 msgid "Saving \"%s\""
-msgstr "Zapisywanie pliku \"%s\""
+msgstr "Zapisywanie pliku „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2252
+#: ../src/fr-window.c:2237
 #, c-format
 msgid "Renaming the files in \"%s\""
-msgstr "Zmienianie nazw plików w \"%s\""
+msgstr "Zmienianie nazw plików w „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2256
+#: ../src/fr-window.c:2241
 #, c-format
 msgid "Updating the files in \"%s\""
-msgstr "Aktualizowanie plików w \"%s\""
+msgstr "Aktualizowanie plików w „%s”"
 
-#: ../src/fr-window.c:2438 ../src/ui/app-menu.ui.h:8
+#: ../src/fr-window.c:2423 ../src/ui/app-menu.ui.h:8
 msgid "_Quit"
 msgstr "Za_kończ"
 
-#: ../src/fr-window.c:2439
+#: ../src/fr-window.c:2424
 msgid "_Open the Archive"
 msgstr "_Otwórz archiwum"
 
-#: ../src/fr-window.c:2440
+#: ../src/fr-window.c:2425
 msgid "_Show the Files"
 msgstr "_Wyświetl pliki"
 
-#: ../src/fr-window.c:2564
+#: ../src/fr-window.c:2549
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
@@ -711,265 +712,265 @@ msgstr[0] "Pozostał %d plik"
 msgstr[1] "Pozostały %'d pliki"
 msgstr[2] "Pozostało %'d plików"
 
-#: ../src/fr-window.c:2568 ../src/fr-window.c:3126
+#: ../src/fr-window.c:2553 ../src/fr-window.c:3111
 msgid "Please wait…"
 msgstr "Proszę czekać…"
 
-#: ../src/fr-window.c:2624
+#: ../src/fr-window.c:2609
 msgid "Extraction completed successfully"
 msgstr "Pomyślnie ukończono rozpakowywanie"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2656 ../src/fr-window.c:6071
+#: ../src/fr-window.c:2641 ../src/fr-window.c:6056
 #, c-format
 msgid "\"%s\" created successfully"
-msgstr "Pomyślnie utworzono \"%s\""
+msgstr "Pomyślnie utworzono „%s”"
 
-#: ../src/fr-window.c:2733 ../src/fr-window.c:2905
+#: ../src/fr-window.c:2718 ../src/fr-window.c:2890
 msgid "Command exited abnormally."
 msgstr "Polecenie zakończyło się z kodem błędu."
 
-#: ../src/fr-window.c:2854
+#: ../src/fr-window.c:2839
 msgid "An error occurred while extracting files."
 msgstr "Wystąpił błąd podczas rozpakowywania plików."
 
-#: ../src/fr-window.c:2860
+#: ../src/fr-window.c:2845
 #, c-format
 msgid "Could not open \"%s\""
-msgstr "Nie można otworzyć \"%s\""
+msgstr "Nie można otworzyć „%s”"
 
-#: ../src/fr-window.c:2865
+#: ../src/fr-window.c:2850
 msgid "An error occurred while loading the archive."
 msgstr "Wystąpił błąd podczas wczytywania archiwum."
 
-#: ../src/fr-window.c:2869
+#: ../src/fr-window.c:2854
 msgid "An error occurred while deleting files from the archive."
 msgstr "Wystąpił błąd podczas usuwania plików z archiwum."
 
-#: ../src/fr-window.c:2875
+#: ../src/fr-window.c:2860
 msgid "An error occurred while adding files to the archive."
 msgstr "Wystąpił błąd podczas dodawania plików do archiwum."
 
-#: ../src/fr-window.c:2879
+#: ../src/fr-window.c:2864
 msgid "An error occurred while testing archive."
 msgstr "Wystąpił błąd podczas testowania archiwum."
 
-#: ../src/fr-window.c:2884
+#: ../src/fr-window.c:2869
 msgid "An error occurred while saving the archive."
 msgstr "Wystąpił błąd podczas zapisywania archiwum."
 
-#: ../src/fr-window.c:2888
+#: ../src/fr-window.c:2873
 msgid "An error occurred while renaming the files."
 msgstr "Wystąpił błąd podczas zmieniania nazw plików."
 
-#: ../src/fr-window.c:2892
+#: ../src/fr-window.c:2877
 msgid "An error occurred while updating the files."
 msgstr "Wystąpił błąd podczas aktualizowania plików."
 
-#: ../src/fr-window.c:2896
+#: ../src/fr-window.c:2881
 msgid "An error occurred."
 msgstr "Wystąpił błąd."
 
-#: ../src/fr-window.c:2902
+#: ../src/fr-window.c:2887
 msgid "Command not found."
 msgstr "Nie odnaleziono polecenia."
 
-#: ../src/fr-window.c:3058
+#: ../src/fr-window.c:3043
 msgid "Test Result"
 msgstr "Wyniki testu"
 
-#: ../src/fr-window.c:4018 ../src/fr-window.c:8657 ../src/fr-window.c:8691
-#: ../src/fr-window.c:8971
+#: ../src/fr-window.c:4003 ../src/fr-window.c:8642 ../src/fr-window.c:8676
+#: ../src/fr-window.c:8956
 msgid "Could not perform the operation"
 msgstr "Nie można wykonać działania"
 
-#: ../src/fr-window.c:4043
+#: ../src/fr-window.c:4028
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr ""
 "Dodać ten plik do bieżącego archiwum, czy też otworzyć go jako nowe archiwum?"
 
-#: ../src/fr-window.c:4072
+#: ../src/fr-window.c:4057
 msgid "Do you want to create a new archive with these files?"
 msgstr "Utworzyć nowe archiwum z użyciem tych plików?"
 
-#: ../src/fr-window.c:4075
+#: ../src/fr-window.c:4060
 msgid "Create _Archive"
 msgstr "U_twórz archiwum"
 
-#: ../src/fr-window.c:4104 ../src/fr-window.c:7115
+#: ../src/fr-window.c:4089 ../src/fr-window.c:7100
 msgid "New Archive"
 msgstr "Nowe archiwum"
 
-#: ../src/fr-window.c:4814
+#: ../src/fr-window.c:4799
 msgid "Folders"
 msgstr "Katalogi"
 
-#: ../src/fr-window.c:4852 ../src/ui/file-selector.ui.h:7
+#: ../src/fr-window.c:4837 ../src/ui/file-selector.ui.h:7
 msgctxt "File"
 msgid "Size"
 msgstr "Rozmiar"
 
-#: ../src/fr-window.c:4853
+#: ../src/fr-window.c:4838
 msgctxt "File"
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/fr-window.c:4854 ../src/ui/file-selector.ui.h:8
+#: ../src/fr-window.c:4839 ../src/ui/file-selector.ui.h:8
 msgctxt "File"
 msgid "Modified"
 msgstr "Zmodyfikowany"
 
-#: ../src/fr-window.c:4855
+#: ../src/fr-window.c:4840
 msgctxt "File"
 msgid "Location"
 msgstr "Położenie"
 
-#: ../src/fr-window.c:4864 ../src/ui/file-selector.ui.h:6
+#: ../src/fr-window.c:4849 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Name"
 msgstr "Nazwa"
 
-#: ../src/fr-window.c:5628 ../src/fr-window.c:5658
+#: ../src/fr-window.c:5613 ../src/fr-window.c:5643
 msgid "Find files by name"
 msgstr "Wyszukuje pliki według nazwy"
 
-#: ../src/fr-window.c:5675
+#: ../src/fr-window.c:5660
 msgid "Go to the previous visited location"
 msgstr "Przechodzi do poprzednio odwiedzonego położenia"
 
-#: ../src/fr-window.c:5680
+#: ../src/fr-window.c:5665
 msgid "Go to the next visited location"
 msgstr "Przechodzi do następnego odwiedzonego położenia"
 
-#: ../src/fr-window.c:5690
+#: ../src/fr-window.c:5675
 msgid "Go to the home location"
 msgstr "Przechodzi do położenia początkowego"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5699 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:5684 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Położenie:"
 
-#: ../src/fr-window.c:6493
+#: ../src/fr-window.c:6478
 #, c-format
 msgid "Replace file \"%s\"?"
-msgstr "Zastąpić plik \"%s\"?"
+msgstr "Zastąpić plik „%s”?"
 
-#: ../src/fr-window.c:6496
+#: ../src/fr-window.c:6481
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
-msgstr "Inny plik o tej samej nazwie już istnieje w \"%s\"."
+msgstr "Inny plik o tej samej nazwie już istnieje w „%s”."
 
-#: ../src/fr-window.c:6502
+#: ../src/fr-window.c:6487
 msgid "Replace _All"
 msgstr "Z_astąp wszystkie"
 
-#: ../src/fr-window.c:6503
+#: ../src/fr-window.c:6488
 msgid "_Skip"
 msgstr "_Pomiń"
 
-#: ../src/fr-window.c:7299 ../src/fr-window.c:7656
+#: ../src/fr-window.c:7284 ../src/fr-window.c:7641
 #, c-format
 msgid "Could not save the archive \"%s\""
-msgstr "Nie można zapisać archiwum \"%s\""
+msgstr "Nie można zapisać archiwum „%s”"
 
-#: ../src/fr-window.c:7426
+#: ../src/fr-window.c:7411
 msgid "Save"
 msgstr "Zapisz"
 
-#: ../src/fr-window.c:7750
+#: ../src/fr-window.c:7735
 msgid "Last Output"
 msgstr "Ostatnie dane"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7973
+#: ../src/fr-window.c:7958
 msgid "New name is void, please type a name."
 msgstr "Nowa nazwa jest pusta. Proszę wpisać nazwę."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7983
+#: ../src/fr-window.c:7968
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
-"Nazwa \"%s\" jest nieprawidłowa, ponieważ zawiera co najmniej jeden z "
+"Nazwa „%s” jest nieprawidłowa, ponieważ zawiera co najmniej jeden z "
 "następujących znaków: %s. Proszę wpisać inną nazwę."
 
-#: ../src/fr-window.c:8019
+#: ../src/fr-window.c:8004
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
 "\n"
 "%s"
 msgstr ""
-"Katalog o nazwie \"%s\" już istnieje.\n"
+"Katalog o nazwie „%s” już istnieje.\n"
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8019 ../src/fr-window.c:8021
+#: ../src/fr-window.c:8004 ../src/fr-window.c:8006
 msgid "Please use a different name."
 msgstr "Proszę użyć innej nazwy."
 
-#: ../src/fr-window.c:8021
+#: ../src/fr-window.c:8006
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
 "\n"
 "%s"
 msgstr ""
-"Plik o nazwie \"%s\" już istnieje.\n"
+"Plik o nazwie „%s” już istnieje.\n"
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8091
+#: ../src/fr-window.c:8076
 msgid "Rename"
 msgstr "Zmień nazwę"
 
-#: ../src/fr-window.c:8092
+#: ../src/fr-window.c:8077
 msgid "_New folder name:"
 msgstr "_Nowa nazwa katalogu:"
 
-#: ../src/fr-window.c:8092
+#: ../src/fr-window.c:8077
 msgid "_New file name:"
 msgstr "_Nowa nazwa pliku:"
 
-#: ../src/fr-window.c:8096
+#: ../src/fr-window.c:8081
 msgid "_Rename"
 msgstr "Zmień n_azwę"
 
-#: ../src/fr-window.c:8113 ../src/fr-window.c:8131
+#: ../src/fr-window.c:8098 ../src/fr-window.c:8116
 msgid "Could not rename the folder"
 msgstr "Nie można zmienić nazwy katalogu"
 
-#: ../src/fr-window.c:8113 ../src/fr-window.c:8131
+#: ../src/fr-window.c:8098 ../src/fr-window.c:8116
 msgid "Could not rename the file"
 msgstr "Nie można zmienić nazwy pliku"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8564
+#: ../src/fr-window.c:8549
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
-msgstr "Przenoszenie plików z \"%s\" do \"%s\""
+msgstr "Przenoszenie plików z „%s” do „%s”"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8567
+#: ../src/fr-window.c:8552
 #, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
-msgstr "Kopiowanie plików z \"%s\" do \"%s\""
+msgstr "Kopiowanie plików z „%s” do „%s”"
 
-#: ../src/fr-window.c:8618
+#: ../src/fr-window.c:8603
 msgid "Paste Selection"
 msgstr "Wklejanie zaznaczenia"
 
-#: ../src/fr-window.c:8619
+#: ../src/fr-window.c:8604
 msgid "_Destination folder:"
 msgstr "Katalog _docelowy:"
 
-#: ../src/fr-window.c:8623 ../src/ui/app-menubar.ui.h:12
+#: ../src/fr-window.c:8608 ../src/ui/app-menubar.ui.h:12
 msgid "_Paste"
 msgstr "Wk_lej"
 
