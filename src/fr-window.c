@@ -4230,6 +4230,7 @@ file_list_drag_end (GtkWidget      *widget,
 static char *
 get_xds_atom_value (GdkDragContext *context)
 {
+	char *data = NULL;
 	char *ret;
 	int   len;
 
@@ -4242,11 +4243,11 @@ get_xds_atom_value (GdkDragContext *context)
 			      FALSE, NULL, NULL, &len,
 			      (unsigned char **) &ret))
 	{
-		ret[len] = '\0';
-		return ret;
+		data = g_strndup (ret, len);
+		g_free (ret);
 	}
 
-	return NULL;
+	return data;
 }
 
 
