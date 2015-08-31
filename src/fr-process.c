@@ -951,7 +951,7 @@ execute_current_command (ExecuteData *exec_data)
 	char          **argv;
 	int             out_fd, err_fd;
 	int             i = 0;
-	GError         *error;
+	GError         *error = NULL;
 
 	debug (DEBUG_INFO, "%d/%d) ", process->priv->current_command, process->priv->n_comm);
 
