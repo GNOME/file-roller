@@ -45,7 +45,11 @@ list__process_line (char     *line,
 
 	struct stat st;
 	if (stat (comm->filename, &st) == 0)
+#ifdef __APPLE__
+		fdata->modified = st.st_mtime;
+#else
 		fdata->modified = st.st_mtim.tv_sec;
+#endif
 	else
 		time(&(fdata->modified));
 

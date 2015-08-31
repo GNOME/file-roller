@@ -22,7 +22,9 @@
 #include <config.h>
 #include <string.h>
 #include <glib/gi18n.h>
+#ifdef ENABLE_PACKAGEKIT
 #include <gdk/gdkx.h>
+#endif
 #include <gtk/gtk.h>
 #include "dlg-package-installer.h"
 #include "gio-utils.h"
