@@ -171,9 +171,9 @@ LIBNOTIFY_CFLAGS=""
 if test x"$enable_notification" = xyes; then
    AC_MSG_CHECKING(for notification support)
 
-   if pkg-config --atleast-version=$LIBNOTIFY_REQUIRED libnotify; then
-      LIBNOTIFY_LIBS=`pkg-config --libs libnotify`
-      LIBNOTIFY_CFLAGS=`pkg-config --cflags libnotify`
+   if ${PKG_CONFIG} --atleast-version=$LIBNOTIFY_REQUIRED libnotify; then
+      LIBNOTIFY_LIBS=`${PKG_CONFIG} --libs libnotify`
+      LIBNOTIFY_CFLAGS=`${PKG_CONFIG} --cflags libnotify`
       AC_DEFINE(ENABLE_NOTIFICATION, 1, [Have libnotify])
    else
       enable_notification=no
@@ -230,9 +230,9 @@ LIBARCHIVE_CFLAGS=""
 if test x"$enable_libarchive" = xyes; then
    AC_MSG_CHECKING(for libarchive support)
 
-   if pkg-config --atleast-version=$LIBARCHIVE_REQUIRED libarchive; then
-      LIBARCHIVE_LIBS=`pkg-config --libs libarchive`
-      LIBARCHIVE_CFLAGS=`pkg-config --cflags libarchive`
+   if ${PKG_CONFIG} --atleast-version=$LIBARCHIVE_REQUIRED libarchive; then
+      LIBARCHIVE_LIBS=`${PKG_CONFIG} --libs libarchive`
+      LIBARCHIVE_CFLAGS=`${PKG_CONFIG} --cflags libarchive`
       AC_DEFINE(ENABLE_LIBARCHIVE, 1, [define to enable libarchive support])
    else
       enable_libarchive=no
