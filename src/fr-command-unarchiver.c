@@ -39,6 +39,7 @@
 
 #define LSAR_SUPPORTED_FORMAT 2
 #define LSAR_DATE_FORMAT "%Y-%m-%d %H:%M:%S %z"
+#define UNARCHIVER_SPECIAL_CHARACTERS "["
 
 
 G_DEFINE_TYPE (FrCommandUnarchiver, fr_command_unarchiver, FR_TYPE_COMMAND)
@@ -205,8 +206,13 @@ fr_command_unarchiver_extract (FrCommand  *comm,
 
 	fr_process_add_arg (comm->process, comm->filename);
 
-	for (scan = file_list; scan; scan = scan->next)
-		fr_process_add_arg (comm->process, scan->data);
+	for (scan = file_list; scan; scan = scan->next) {
+		char *escaped;
+
+		escaped = _g_str_escape (scan->data, UNARCHIVER_SPECIAL_CHARACTERS);
+		fr_process_add_arg (comm->process, escaped);
+		g_free (escaped);
+	}
 
 	fr_process_end_command (comm->process);
 }
