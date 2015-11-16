@@ -1,14 +1,14 @@
 # Scottish Gaelic translation for file-roller.
 # Copyright (C) 2014 file-roller's COPYRIGHT HOLDER
 # This file is distributed under the same license as the file-roller package.
-# GunChleoc <fios@foramnagaidhlig.net>, 2014.
+# GunChleoc <fios@foramnagaidhlig.net>, 2014, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-23 04:51+0000\n"
-"PO-Revision-Date: 2014-09-23 11:12+0100\n"
+"POT-Creation-Date: 2015-11-16 06:23+0000\n"
+"PO-Revision-Date: 2015-11-16 15:47+0100\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig\n"
 "Language: gd\n"
@@ -59,7 +59,7 @@ msgstr "tasglannan xz (.tar.xz)"
 
 #. set the name and icon
 #: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:717
-#: ../src/fr-window.c:1989 ../src/fr-window.c:5316
+#: ../src/fr-window.c:1974 ../src/fr-window.c:5329
 msgid "Archive Manager"
 msgstr "Manaidsear nan tasglann"
 
@@ -244,49 +244,61 @@ msgstr "Cha deach leinn na faidhlichean a chur ris an tasglann"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "Chan eil cead agad gus faidhlichean a leughadh on phasgan \"%s\""
 
-#: ../src/dlg-add.c:180 ../src/fr-window.c:5596
+#: ../src/dlg-add.c:182 ../src/fr-window.c:5609
 msgid "Add Files"
 msgstr "Cuir faidhlichean ris"
 
-#: ../src/dlg-add.c:191
+#: ../src/dlg-add.c:195
 msgid "_Options"
 msgstr "R_oghainnean"
 
 #. load options
-#: ../src/dlg-add.c:199 ../src/ui/add-options.ui.h:1
+#: ../src/dlg-add.c:204 ../src/dlg-add.c:763
 msgid "Load Options"
 msgstr "Luchdaich roghainnean"
 
 #. save options
-#: ../src/dlg-add.c:206 ../src/dlg-add.c:822
+#: ../src/dlg-add.c:211 ../src/dlg-add.c:855
 msgid "Save Options"
 msgstr "Sàbhail na roghainnean"
 
 #. clear options
-#: ../src/dlg-add.c:213
+#: ../src/dlg-add.c:218
 msgid "Reset Options"
 msgstr "Ath-shuidhich na roghainnean"
 
-#: ../src/dlg-add.c:823
+#: ../src/dlg-add.c:772
+msgid "_Apply"
+msgstr "Cuir _an sàs"
+
+#: ../src/dlg-add.c:773 ../src/dlg-delete.c:136
+msgid "_Delete"
+msgstr "_Sguab às"
+
+#: ../src/dlg-add.c:856
 msgid "_Options Name:"
 msgstr "Ainm nan r_oghainnean:"
 
+#: ../src/dlg-ask-password.c:125
+msgid "_OK"
+msgstr "_Ceart ma-thà"
+
 #. Translators: %s is a filename
-#: ../src/dlg-ask-password.c:133
+#: ../src/dlg-ask-password.c:148
 #, c-format
 msgid "Password required for \"%s\""
 msgstr "Tha feum air facal-faire airson \"%s\""
 
-#: ../src/dlg-ask-password.c:142
+#: ../src/dlg-ask-password.c:157
 msgid "Wrong password."
 msgstr "Facal-faire cearr."
 
-#: ../src/dlg-batch-add.c:87 ../src/fr-application.c:226
+#: ../src/dlg-batch-add.c:88 ../src/fr-application.c:226
 #: ../src/fr-application.c:569
 msgid "Compress"
 msgstr "Dùmhlaich"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6630
+#: ../src/dlg-extract.c:95 ../src/fr-window.c:6660
 #, c-format
 msgid ""
 "Destination folder \"%s\" does not exist.\n"
@@ -297,44 +309,44 @@ msgstr ""
 "\n"
 "A bheil thu airson a chruthachadh?"
 
-#: ../src/dlg-extract.c:104 ../src/fr-window.c:6639
+#: ../src/dlg-extract.c:103 ../src/fr-window.c:6668
 msgid "Create _Folder"
 msgstr "Cruthaich _pasgan"
 
-#: ../src/dlg-extract.c:123 ../src/dlg-extract.c:141 ../src/dlg-extract.c:168
-#: ../src/fr-window.c:4208 ../src/fr-window.c:6533 ../src/fr-window.c:6538
-#: ../src/fr-window.c:6660 ../src/fr-window.c:6680 ../src/fr-window.c:6685
+#: ../src/dlg-extract.c:122 ../src/dlg-extract.c:139 ../src/dlg-extract.c:166
+#: ../src/fr-window.c:4211 ../src/fr-window.c:6563 ../src/fr-window.c:6568
+#: ../src/fr-window.c:6689 ../src/fr-window.c:6708 ../src/fr-window.c:6713
 msgid "Extraction not performed"
 msgstr "Cha deach an dì-dhùmhlachadh a dhèanamh"
 
-#: ../src/dlg-extract.c:124 ../src/fr-window.c:6656
+#: ../src/dlg-extract.c:123 ../src/fr-window.c:6685
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Cha b' urrainn dhuinn am pasgan-uidhe a chruthachadh: %s."
 
-#: ../src/dlg-extract.c:169 ../src/fr-window.c:4432 ../src/fr-window.c:4527
+#: ../src/dlg-extract.c:167 ../src/fr-window.c:4438 ../src/fr-window.c:4540
 #, c-format
 msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "Chan eil cead agad gus tasglannan a dhì-dhùmhlachadh sa phasgan \"%s\""
 
-#: ../src/dlg-extract.c:282 ../src/fr-window.c:5592
+#: ../src/dlg-extract.c:280 ../src/fr-window.c:5605
 #: ../src/ui/extract-dialog-options.ui.h:1
 msgid "Extract"
 msgstr "Dì-dhùmhlaich"
 
-#: ../src/dlg-package-installer.c:112 ../src/dlg-package-installer.c:225
+#: ../src/dlg-package-installer.c:114 ../src/dlg-package-installer.c:227
 msgid "There was an internal error trying to search for applications:"
 msgstr "Thachair mearachd inntearnail fhad 's a bha sinn a' lorg aplacaidean:"
 
-#: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
-#: ../src/dlg-package-installer.c:331 ../src/fr-archive.c:744
-#: ../src/fr-window.c:3880 ../src/fr-window.c:7265 ../src/fr-window.c:7622
-#: ../src/fr-window.c:9141
+#: ../src/dlg-package-installer.c:296 ../src/dlg-package-installer.c:305
+#: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:744
+#: ../src/fr-window.c:3885 ../src/fr-window.c:7293 ../src/fr-window.c:7650
+#: ../src/fr-window.c:9168
 msgid "Archive type not supported."
 msgstr "Cha chuirear taic ris an seòrsa tasglainn."
 
-#: ../src/dlg-package-installer.c:313
+#: ../src/dlg-package-installer.c:315
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -343,20 +355,20 @@ msgstr ""
 "Cha deach àithne a stàladh airson faidhlichean dhen t-seòrsa \"%s\"\n"
 "A bheil thu airson àithne a lorg a dh'fhosglas am faidhle seo?"
 
-#: ../src/dlg-package-installer.c:318
+#: ../src/dlg-package-installer.c:319
 msgid "Could not open this file type"
 msgstr "Cha b' urrainn dhuinn an seòrsa faidhle seo fhosgladh"
 
-#: ../src/dlg-package-installer.c:321
+#: ../src/dlg-package-installer.c:322
 msgid "_Search Command"
 msgstr "_Lorg àithne"
 
-#: ../src/dlg-password.c:91
+#: ../src/dlg-password.c:109
 #, c-format
 msgid "Enter a password for \"%s\""
 msgstr "Cuir a-steach facal-faire agad airson \"%s\""
 
-#: ../src/dlg-prop.c:94
+#: ../src/dlg-prop.c:107
 #, c-format
 msgid "%s Properties"
 msgstr "Roghainnean %s"
@@ -480,7 +492,7 @@ msgstr "Chan eil na ceadan iomchaidh agad."
 msgid "This archive type cannot be modified"
 msgstr "Cha ghabh an seòrsa tasglainn seo atharrachadh"
 
-#: ../src/fr-archive.c:1859
+#: ../src/fr-archive.c:1859 ../src/fr-new-archive-dialog.c:483
 msgid "You can't add an archive to itself."
 msgstr "Chan urrainn dhut tasglann a chur na broinn fhèin."
 
@@ -492,7 +504,7 @@ msgid "Adding \"%s\""
 msgstr "A' cur ris \"%s\""
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:453 ../src/fr-command-rar.c:557
+#: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
 #: ../src/fr-command-tar.c:425
 #, c-format
 msgid "Extracting \"%s\""
@@ -530,34 +542,35 @@ msgstr "A' dì-dhùmhlachadh na tasglainn"
 msgid "Could not load the location"
 msgstr "Cha b' urrainn dhuinn an t-ionad a luchdadh"
 
-#: ../src/fr-new-archive-dialog.c:343 ../src/fr-new-archive-dialog.c:362
-#: ../src/fr-new-archive-dialog.c:378 ../src/fr-new-archive-dialog.c:426
-#: ../src/fr-new-archive-dialog.c:444 ../src/fr-window.c:2829
+#: ../src/fr-new-archive-dialog.c:358 ../src/fr-new-archive-dialog.c:377
+#: ../src/fr-new-archive-dialog.c:393 ../src/fr-new-archive-dialog.c:441
+#: ../src/fr-new-archive-dialog.c:459 ../src/fr-new-archive-dialog.c:481
+#: ../src/fr-window.c:2834
 msgid "Could not create the archive"
 msgstr "Cha b' urrainn dhuinn an tasglann a chruthachadh"
 
-#: ../src/fr-new-archive-dialog.c:345 ../src/fr-new-archive-dialog.c:364
+#: ../src/fr-new-archive-dialog.c:360 ../src/fr-new-archive-dialog.c:379
 msgid "You have to specify an archive name."
 msgstr "Feumaidh tu ainm na tasglainn a thoirt seachad."
 
-#: ../src/fr-new-archive-dialog.c:428
+#: ../src/fr-new-archive-dialog.c:443
 msgid "You don't have permission to create an archive in this folder"
 msgstr "Chan eil cead agad gus tasglann a chruthachadh sa phasgan seo"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:446 ../src/fr-window.c:7936
+#: ../src/fr-new-archive-dialog.c:461 ../src/fr-window.c:7964
 msgid "New name is the same as old one, please type other name."
 msgstr ""
 "Cha an t-ainm ùr co-ionnann ris an seann ainm, cuir a-steach ainm eile."
 
-#: ../src/fr-new-archive-dialog.c:465
+#: ../src/fr-new-archive-dialog.c:504
 #, c-format
 msgid "A file named \"%s\" already exists.  Do you want to replace it?"
 msgstr ""
 "Tha faidhle air a bheil \"%s\" ann mu thràth. A bheil thu airson a chur 'na "
 "àite?"
 
-#: ../src/fr-new-archive-dialog.c:466
+#: ../src/fr-new-archive-dialog.c:505
 #, c-format
 msgid ""
 "The file already exists in \"%s\".  Replacing it will overwrite its contents."
@@ -565,15 +578,15 @@ msgstr ""
 "Tha am faidhle ann an \"%s\" mar-thà. Ma chuireas tu seo na àite, thèid "
 "sgrìobhadh thairis air an t-susbaint a tha ann."
 
-#: ../src/fr-new-archive-dialog.c:473 ../src/fr-window.c:6459
+#: ../src/fr-new-archive-dialog.c:511 ../src/fr-window.c:6490
 msgid "_Replace"
 msgstr "Cui_r 'na àite"
 
-#: ../src/fr-new-archive-dialog.c:488
+#: ../src/fr-new-archive-dialog.c:526
 msgid "Could not delete the old archive."
 msgstr "Cha b' urrainn dhuinn an t-seann tasglann a sguabadh às."
 
-#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6058
+#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6071
 #: ../src/ui/menus.ui.h:1
 msgid "Open"
 msgstr "Fosgail"
@@ -586,112 +599,112 @@ msgstr "Na h-uile tasglann"
 msgid "All files"
 msgstr "Na h-uile faidhle"
 
-#: ../src/fr-window.c:1223
+#: ../src/fr-window.c:1208
 msgid "Operation completed"
 msgstr "Chaidh an t-obrachadh a choileanadh"
 
-#: ../src/fr-window.c:1609
+#: ../src/fr-window.c:1594
 msgid "Folder"
 msgstr "Pasgan"
 
-#: ../src/fr-window.c:1996
+#: ../src/fr-window.c:1981
 msgid "[read only]"
 msgstr "[ri leughadh a-mhàin]"
 
-#: ../src/fr-window.c:2111
+#: ../src/fr-window.c:2096
 #, c-format
 msgid "Could not display the folder \"%s\""
 msgstr "Cha deach leinn am pasgan \"%s\" a shealltainn"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2202 ../src/fr-window.c:2240
+#: ../src/fr-window.c:2187 ../src/fr-window.c:2225
 #, c-format
 msgid "Creating \"%s\""
 msgstr "A' cruthachadh \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2206
+#: ../src/fr-window.c:2191
 #, c-format
 msgid "Loading \"%s\""
 msgstr "A' luchdadh \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2210
+#: ../src/fr-window.c:2195
 #, c-format
 msgid "Reading \"%s\""
 msgstr "A' leughadh \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2214
+#: ../src/fr-window.c:2199
 #, c-format
 msgid "Deleting the files from \"%s\""
 msgstr "A' sguabadh às na faidhlichean o \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2218
+#: ../src/fr-window.c:2203
 #, c-format
 msgid "Testing \"%s\""
 msgstr "A' dearbhadh \"%s\""
 
-#: ../src/fr-window.c:2221
+#: ../src/fr-window.c:2206
 msgid "Getting the file list"
 msgstr "A' faighinn liosta nam faidhlichean"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2225
+#: ../src/fr-window.c:2210
 #, c-format
 msgid "Copying the files to add to \"%s\""
 msgstr "A' dèanamh lethbhreac de dh'fhaidhlichean gus an cur ri \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2229
+#: ../src/fr-window.c:2214
 #, c-format
 msgid "Adding the files to \"%s\""
 msgstr "A' cur na faidhlichean ri \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2233
+#: ../src/fr-window.c:2218
 #, c-format
 msgid "Extracting the files from \"%s\""
 msgstr "A' dì-dhùmhlachadh na faidhlichean o \"%s\""
 
-#: ../src/fr-window.c:2236
+#: ../src/fr-window.c:2221
 msgid "Copying the extracted files to the destination"
 msgstr ""
 "A' cur lethbhreac dhe na faidhlichean air an dì-dhùmhlachadh dhan cheann-"
 "uidhe"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2245
+#: ../src/fr-window.c:2230
 #, c-format
 msgid "Saving \"%s\""
 msgstr "A' sàbhaladh \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2252
+#: ../src/fr-window.c:2237
 #, c-format
 msgid "Renaming the files in \"%s\""
 msgstr "A' toirt ainm ùr air na faidhlichean ann an \"%s\""
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2256
+#: ../src/fr-window.c:2241
 #, c-format
 msgid "Updating the files in \"%s\""
 msgstr "Ag ùrachadh na faidhlichean ann an \"%s\""
 
-#: ../src/fr-window.c:2430 ../src/ui/app-menu.ui.h:8
+#: ../src/fr-window.c:2423 ../src/ui/app-menu.ui.h:8
 msgid "_Quit"
 msgstr "_Fàg an-seo"
 
-#: ../src/fr-window.c:2431
+#: ../src/fr-window.c:2424
 msgid "_Open the Archive"
 msgstr "F_osgail an tasglann"
 
-#: ../src/fr-window.c:2432
+#: ../src/fr-window.c:2425
 msgid "_Show the Files"
 msgstr "_Seall na faidhlichean"
 
-#: ../src/fr-window.c:2544
+#: ../src/fr-window.c:2549
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
@@ -700,79 +713,79 @@ msgstr[1] "%d fhaidhle air am fàgail"
 msgstr[2] "%d faidhlichean air am fàgail"
 msgstr[3] "%d faidhlichean air am fàgail"
 
-#: ../src/fr-window.c:2548 ../src/fr-window.c:3106
+#: ../src/fr-window.c:2553 ../src/fr-window.c:3111
 msgid "Please wait…"
 msgstr "Fuirich greiseag…"
 
-#: ../src/fr-window.c:2604
+#: ../src/fr-window.c:2609
 msgid "Extraction completed successfully"
 msgstr "Chaidh an dì-dhùmhlachadh a choileanadh"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2636 ../src/fr-window.c:6044
+#: ../src/fr-window.c:2641 ../src/fr-window.c:6057
 #, c-format
 msgid "\"%s\" created successfully"
 msgstr "Chaidh \"%s\" a chruthachadh"
 
-#: ../src/fr-window.c:2713 ../src/fr-window.c:2885
+#: ../src/fr-window.c:2718 ../src/fr-window.c:2890
 msgid "Command exited abnormally."
 msgstr "Dh'fhàgadh an àithne gu mì-ghnàthach."
 
-#: ../src/fr-window.c:2834
+#: ../src/fr-window.c:2839
 msgid "An error occurred while extracting files."
 msgstr "Tachair mearachd le dì-dhùmhlachadh nam faidhlichean."
 
-#: ../src/fr-window.c:2840
+#: ../src/fr-window.c:2845
 #, c-format
 msgid "Could not open \"%s\""
 msgstr "Cha deach leinn \"%s\" fhosgladh"
 
-#: ../src/fr-window.c:2845
+#: ../src/fr-window.c:2850
 msgid "An error occurred while loading the archive."
 msgstr "Thachair mearachd le luchdadh na tasglainn."
 
-#: ../src/fr-window.c:2849
+#: ../src/fr-window.c:2854
 msgid "An error occurred while deleting files from the archive."
 msgstr "Thachair mearachd le sguabadh às fhaidhlichean on tasglann."
 
-#: ../src/fr-window.c:2855
+#: ../src/fr-window.c:2860
 msgid "An error occurred while adding files to the archive."
 msgstr "Thachair mearachd le cur faidhlichean ris an tasglann."
 
-#: ../src/fr-window.c:2859
+#: ../src/fr-window.c:2864
 msgid "An error occurred while testing archive."
 msgstr "Thachair mearachd le dearbhadh na tasglainn."
 
-#: ../src/fr-window.c:2864
+#: ../src/fr-window.c:2869
 msgid "An error occurred while saving the archive."
 msgstr "Thachair mearachd le sàbhaladh na tasglainn."
 
-#: ../src/fr-window.c:2868
+#: ../src/fr-window.c:2873
 msgid "An error occurred while renaming the files."
 msgstr "Thachair mearachd le toirt ainm ùr air na faidhlichean."
 
-#: ../src/fr-window.c:2872
+#: ../src/fr-window.c:2877
 msgid "An error occurred while updating the files."
 msgstr "Tachair mearachd le ùrachadh nam faidhlichean."
 
-#: ../src/fr-window.c:2876
+#: ../src/fr-window.c:2881
 msgid "An error occurred."
 msgstr "Thachair mearachd."
 
-#: ../src/fr-window.c:2882
+#: ../src/fr-window.c:2887
 msgid "Command not found."
 msgstr "Cha deach an àithne a lorg."
 
-#: ../src/fr-window.c:3038
+#: ../src/fr-window.c:3043
 msgid "Test Result"
 msgstr "Toradh an dearbhaidh"
 
-#: ../src/fr-window.c:3998 ../src/fr-window.c:8616 ../src/fr-window.c:8650
-#: ../src/fr-window.c:8930
+#: ../src/fr-window.c:4003 ../src/fr-window.c:8643 ../src/fr-window.c:8677
+#: ../src/fr-window.c:8957
 msgid "Could not perform the operation"
 msgstr "Cha b' urrainn dhuinn an t-obrachadh a dhèanamh"
 
-#: ../src/fr-window.c:4024
+#: ../src/fr-window.c:4028
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -780,108 +793,108 @@ msgstr ""
 "A bheil thu airson am faidhle seo a chur ris an tasglann làithreach no "
 "fhosgladh na thasglann ùr?"
 
-#: ../src/fr-window.c:4054
+#: ../src/fr-window.c:4057
 msgid "Do you want to create a new archive with these files?"
 msgstr ""
 "A bheil thu airson tasglann ùr a chruthachadh leis na faidhlichean seo?"
 
-#: ../src/fr-window.c:4057
+#: ../src/fr-window.c:4060
 msgid "Create _Archive"
 msgstr "Cruthaich t_asglann"
 
-#: ../src/fr-window.c:4086 ../src/fr-window.c:7073
+#: ../src/fr-window.c:4089 ../src/fr-window.c:7101
 msgid "New Archive"
 msgstr "Tasglann ùr"
 
-#: ../src/fr-window.c:4787
+#: ../src/fr-window.c:4800
 msgid "Folders"
 msgstr "Pasganan"
 
-#: ../src/fr-window.c:4825 ../src/ui/file-selector.ui.h:7
+#: ../src/fr-window.c:4838 ../src/ui/file-selector.ui.h:7
 msgctxt "File"
 msgid "Size"
 msgstr "Meud"
 
-#: ../src/fr-window.c:4826
+#: ../src/fr-window.c:4839
 msgctxt "File"
 msgid "Type"
 msgstr "Seòrsa"
 
-#: ../src/fr-window.c:4827 ../src/ui/file-selector.ui.h:8
+#: ../src/fr-window.c:4840 ../src/ui/file-selector.ui.h:8
 msgctxt "File"
 msgid "Modified"
 msgstr "Air atharrachadh"
 
-#: ../src/fr-window.c:4828
+#: ../src/fr-window.c:4841
 msgctxt "File"
 msgid "Location"
 msgstr "Ionad"
 
-#: ../src/fr-window.c:4837 ../src/ui/file-selector.ui.h:6
+#: ../src/fr-window.c:4850 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Name"
 msgstr "Ainm"
 
-#: ../src/fr-window.c:5601 ../src/fr-window.c:5631
+#: ../src/fr-window.c:5614 ../src/fr-window.c:5644
 msgid "Find files by name"
 msgstr "Lorg faidhlichean le ainm"
 
-#: ../src/fr-window.c:5648
+#: ../src/fr-window.c:5661
 msgid "Go to the previous visited location"
 msgstr "Rach gun ionad air an do thadhail thu roimhe"
 
-#: ../src/fr-window.c:5653
+#: ../src/fr-window.c:5666
 msgid "Go to the next visited location"
 msgstr "Rach gun ath-ionad air an do thadhail thu"
 
-#: ../src/fr-window.c:5663
+#: ../src/fr-window.c:5676
 msgid "Go to the home location"
 msgstr "Rach gun ionad dachaigh"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5672 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:5685 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Ionad:"
 
-#: ../src/fr-window.c:6447
+#: ../src/fr-window.c:6479
 #, c-format
 msgid "Replace file \"%s\"?"
 msgstr "A bheil thu airson a chur an àite an fhaidhle \"%s\"?"
 
-#: ../src/fr-window.c:6450
+#: ../src/fr-window.c:6482
 #, c-format
 msgid "Another file with the same name already exists in \"%s\"."
 msgstr "Tha faidhle eile ann an \"%s\" mar-thà air a bheil an aon ainm."
 
-#: ../src/fr-window.c:6457
+#: ../src/fr-window.c:6488
 msgid "Replace _All"
 msgstr "Cuir an àite n_a h-uile"
 
-#: ../src/fr-window.c:6458
+#: ../src/fr-window.c:6489
 msgid "_Skip"
 msgstr "Gearr leum thairi_s air"
 
-#: ../src/fr-window.c:7257 ../src/fr-window.c:7614
+#: ../src/fr-window.c:7285 ../src/fr-window.c:7642
 #, c-format
 msgid "Could not save the archive \"%s\""
 msgstr "Cha b' urrainn dhuinn an tasglann \"%s\" a shàbhaladh"
 
-#: ../src/fr-window.c:7384
+#: ../src/fr-window.c:7412
 msgid "Save"
 msgstr "Sàbhail"
 
-#: ../src/fr-window.c:7708
+#: ../src/fr-window.c:7736
 msgid "Last Output"
 msgstr "An t-às-chur mu dheireadh"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7931
+#: ../src/fr-window.c:7959
 msgid "New name is void, please type a name."
 msgstr "Tha an t-ainm ùr falamh, cuir a-steach ainm."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7941
+#: ../src/fr-window.c:7969
 #, c-format
 msgid ""
 "Name \"%s\" is not valid because it contains at least one of the following "
@@ -890,7 +903,7 @@ msgstr ""
 "Chan eil an t-ainm \"%s\" dlìgheach on a tha co-dhiù aon dhe na caractaran a "
 "leanas na bhroinn: %s, cuir a-steach ainm eile."
 
-#: ../src/fr-window.c:7977
+#: ../src/fr-window.c:8005
 #, c-format
 msgid ""
 "A folder named \"%s\" already exists.\n"
@@ -901,11 +914,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:7977 ../src/fr-window.c:7979
+#: ../src/fr-window.c:8005 ../src/fr-window.c:8007
 msgid "Please use a different name."
 msgstr "Feuch an cleachd thu ainm eile."
 
-#: ../src/fr-window.c:7979
+#: ../src/fr-window.c:8007
 #, c-format
 msgid ""
 "A file named \"%s\" already exists.\n"
@@ -916,51 +929,51 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8049
+#: ../src/fr-window.c:8077
 msgid "Rename"
 msgstr "Thoir ainm ùr air"
 
-#: ../src/fr-window.c:8050
+#: ../src/fr-window.c:8078
 msgid "_New folder name:"
 msgstr "Ai_nm ùr a' phasgain:"
 
-#: ../src/fr-window.c:8050
+#: ../src/fr-window.c:8078
 msgid "_New file name:"
 msgstr "Ai_nm ùr an fhaidhle:"
 
-#: ../src/fr-window.c:8054
+#: ../src/fr-window.c:8082
 msgid "_Rename"
 msgstr "Thoi_r ainm ùr air"
 
-#: ../src/fr-window.c:8071 ../src/fr-window.c:8090
+#: ../src/fr-window.c:8099 ../src/fr-window.c:8117
 msgid "Could not rename the folder"
 msgstr "Cha b' urrainn dhuinn ainm ùr a thoirt air a' phasgan"
 
-#: ../src/fr-window.c:8071 ../src/fr-window.c:8090
+#: ../src/fr-window.c:8099 ../src/fr-window.c:8117
 msgid "Could not rename the file"
 msgstr "Cha b' urrainn dhuinn ainm ùr a thoirt air an fhaidhle"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8523
+#: ../src/fr-window.c:8550
 #, c-format
 msgid "Moving the files from \"%s\" to \"%s\""
 msgstr "A' gluasad nam faidhlichean o \"%s\" gu \"%s\""
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8526
+#: ../src/fr-window.c:8553
 #, c-format
 msgid "Copying the files from \"%s\" to \"%s\""
 msgstr "A' cur lethbhreac dhe na faidhlichean o \"%s\" gu \"%s\""
 
-#: ../src/fr-window.c:8577
+#: ../src/fr-window.c:8604
 msgid "Paste Selection"
 msgstr "Cuir ann na thagh thu"
 
-#: ../src/fr-window.c:8578
+#: ../src/fr-window.c:8605
 msgid "_Destination folder:"
 msgstr "_Pasgan-uidhe:"
 
-#: ../src/fr-window.c:8582 ../src/ui/app-menubar.ui.h:12
+#: ../src/fr-window.c:8609 ../src/ui/app-menubar.ui.h:12
 msgid "_Paste"
 msgstr "_Cuir ann"
 
@@ -971,40 +984,43 @@ msgstr "_Cuir ann"
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
-#: ../src/gtk-utils.c:536
+#: ../src/gtk-utils.c:234
+msgid "C_ommand Line Output:"
+msgstr "Às-chur na l_oidhne-àithne:"
+
+#: ../src/gtk-utils.c:509
 msgid "Could not display help"
 msgstr "Cha b' urrainn dhuinn a' chobhair a shealltainn"
 
-#: ../src/gtk-utils.c:631
+#: ../src/gtk-utils.c:604
 msgid "Change password visibility"
 msgstr "Atharraich faicsinneachd an fhacail-fhaire"
 
-#: ../src/gtk-utils.h:34
+#: ../src/gtk-utils.h:29
 msgid "_Add"
 msgstr "_Cuir ris"
 
-#: ../src/gtk-utils.h:35 ../src/ui/ask-password.ui.h:1 ../src/ui/delete.ui.h:2
-#: ../src/ui/password.ui.h:2
+#: ../src/gtk-utils.h:30
 msgid "_Cancel"
 msgstr "_Sguir dheth"
 
-#: ../src/gtk-utils.h:36 ../src/ui/app-menubar.ui.h:8
+#: ../src/gtk-utils.h:31 ../src/ui/app-menubar.ui.h:8
 msgid "_Close"
 msgstr "_Dùin"
 
-#: ../src/gtk-utils.h:37
+#: ../src/gtk-utils.h:32
 msgid "C_reate"
 msgstr "C_ruthaich"
 
-#: ../src/gtk-utils.h:38
+#: ../src/gtk-utils.h:33
 msgid "_Extract"
 msgstr "Dì-dhù_mhlaich"
 
-#: ../src/gtk-utils.h:39
+#: ../src/gtk-utils.h:34
 msgid "_Open"
 msgstr "F_osgail"
 
-#: ../src/gtk-utils.h:40 ../src/ui/password.ui.h:3
+#: ../src/gtk-utils.h:35
 msgid "_Save"
 msgstr "_Sàbhail"
 
@@ -1136,41 +1152,25 @@ msgstr "Clàr-innse"
 msgid "_About"
 msgstr "_Mu dhèidhinn"
 
-#: ../src/ui/ask-password.ui.h:2
-msgid "_OK"
-msgstr "_Ceart ma-thà"
-
-#: ../src/ui/ask-password.ui.h:3 ../src/ui/new-archive-dialog.ui.h:4
+#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "_Facal-faire:"
 
-#: ../src/ui/delete.ui.h:1 ../src/ui/menus.ui.h:8
-msgid "Delete"
-msgstr "Sguab às"
-
-#: ../src/ui/delete.ui.h:3
-msgid "_Delete"
-msgstr "_Sguab às"
-
-#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:4
+#: ../src/ui/delete.ui.h:1 ../src/ui/extract-dialog-options.ui.h:4
 msgid "_Files:"
 msgstr "_Faidhlichean:"
 
-#: ../src/ui/delete.ui.h:5
+#: ../src/ui/delete.ui.h:2
 msgid "example: *.txt; *.doc"
 msgstr "ball-eisimpleir: *.txt; *.doc"
 
-#: ../src/ui/delete.ui.h:6 ../src/ui/extract-dialog-options.ui.h:2
+#: ../src/ui/delete.ui.h:3 ../src/ui/extract-dialog-options.ui.h:2
 msgid "_All files"
 msgstr "N_a h-uile faidhle"
 
-#: ../src/ui/delete.ui.h:7 ../src/ui/extract-dialog-options.ui.h:3
+#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:3
 msgid "_Selected files"
 msgstr "Na _faidhlichean a thagh thu"
-
-#: ../src/ui/error-dialog.ui.h:1
-msgid "C_ommand Line Output:"
-msgstr "Às-chur na l_oidhne-àithne:"
 
 #: ../src/ui/extract-dialog-options.ui.h:7
 msgid "_Keep directory structure"
@@ -1220,6 +1220,10 @@ msgstr "Dèan lethbhreac"
 msgid "Paste"
 msgstr "Cuir ann"
 
+#: ../src/ui/menus.ui.h:8
+msgid "Delete"
+msgstr "Sguab às"
+
 #: ../src/ui/new-archive-dialog.ui.h:1
 msgid "_Filename:"
 msgstr "Ainm an _fhaidhle:"
@@ -1247,10 +1251,6 @@ msgid "_Other Options"
 msgstr "R_oghainnean eile"
 
 #: ../src/ui/password.ui.h:1
-msgid "Password"
-msgstr "Facal-faire"
-
-#: ../src/ui/password.ui.h:4
 msgid "_Encrypt the file list"
 msgstr "Crioptaich liosta nam faidhlich_ean"
 
@@ -1296,6 +1296,9 @@ msgstr "Ùraic_h"
 #: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "Tagh na faidhlich_ean a tha thu airson ùrachadh:"
+
+#~ msgid "Password"
+#~ msgstr "Facal-faire"
 
 #~ msgid "File is not a valid .desktop file"
 #~ msgstr "Chan eil am faidhle seo 'na fhaidhle .desktop dligheach"
