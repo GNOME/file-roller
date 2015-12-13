@@ -244,7 +244,7 @@ AC_SUBST(LIBARCHIVE_CFLAGS)
 AM_CONDITIONAL(ENABLE_LIBARCHIVE, test x"$enable_libarchive" = xyes)
 
 AC_ARG_VAR([CPIO], [Path to the `cpio` command])
-AC_PATH_PROGS(CPIO, gcpio cpio)
+AC_PATH_PROGS(CPIO, gcpio cpio, cpio)
 AC_DEFINE_UNQUOTED(CPIO_PATH, "${CPIO}", [Path to cpio])
 
 dnl ******************************
