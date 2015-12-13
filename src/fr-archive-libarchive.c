@@ -443,6 +443,9 @@ fr_archive_libarchive_list (FrArchive           *archive,
 /* -- extract -- */
 
 
+#define NULL_BUFFER_SIZE (16 * 1024)
+
+
 typedef struct {
 	LoadData    parent;
 	GList      *file_list;
@@ -455,6 +458,7 @@ typedef struct {
 	int         n_files_to_extract;
 	GHashTable *usernames;
 	GHashTable *groupnames;
+	char       *null_buffer;
 } ExtractData;
 
 
@@ -467,6 +471,7 @@ extract_data_free (ExtractData *extract_data)
 	g_hash_table_unref (extract_data->files_to_extract);
 	g_hash_table_unref (extract_data->usernames);
 	g_hash_table_unref (extract_data->groupnames);
+	g_free (extract_data->null_buffer);
 	load_data_free (LOAD_DATA (extract_data));
 }
 
@@ -564,6 +569,37 @@ restore_original_file_attributes (GHashTable    *created_files,
 }
 
 
+static gboolean
+_g_output_stream_add_padding (ExtractData    *extract_data,
+			      GOutputStream  *ostream,
+			      gssize          target_offset,
+			      gssize          actual_offset,
+			      GCancellable   *cancellable,
+			      GError        **error)
+{
+	gboolean success = TRUE;
+	gsize    count;
+	gsize    bytes_written;
+
+	if (extract_data->null_buffer == NULL)
+		extract_data->null_buffer = g_malloc0 (NULL_BUFFER_SIZE);
+
+	while (target_offset > actual_offset) {
+		count = NULL_BUFFER_SIZE;
+		if (target_offset < actual_offset + NULL_BUFFER_SIZE)
+			count = target_offset - actual_offset;
+
+		success = g_output_stream_write_all (ostream, extract_data->null_buffer, count, &bytes_written, cancellable, error);
+		if (! success)
+			break;
+
+		actual_offset += bytes_written;
+	}
+
+	return success;
+}
+
+
 static void
 extract_archive_thread (GSimpleAsyncResult *result,
 			GObject            *object,
@@ -599,7 +635,7 @@ extract_archive_thread (GSimpleAsyncResult *result,
 		GOutputStream *ostream;
 		const void    *buffer;
 		size_t         buffer_size;
-		int64_t        offset;
+		int64_t        target_offset, actual_offset;
 		GError        *local_error = NULL;
 		__LA_MODE_T    filetype;
 
@@ -788,11 +824,27 @@ extract_archive_thread (GSimpleAsyncResult *result,
 				if (ostream == NULL)
 					break;
 
-				while ((r = archive_read_data_block (a, &buffer, &buffer_size, &offset)) == ARCHIVE_OK) {
-					if (g_output_stream_write (ostream, buffer, buffer_size, cancellable, &load_data->error) == -1)
+				actual_offset = 0;
+				while ((r = archive_read_data_block (a, &buffer, &buffer_size, &target_offset)) == ARCHIVE_OK) {
+					gsize bytes_written;
+
+					if (target_offset > actual_offset) {
+						if (! _g_output_stream_add_padding (extract_data, ostream, target_offset, actual_offset, cancellable, &load_data->error))
+							break;
+						actual_offset = target_offset;
+						fr_archive_progress_set_completed_bytes (load_data->archive, actual_offset);
+					}
+
+					if (! g_output_stream_write_all (ostream, buffer, buffer_size, &bytes_written, cancellable, &load_data->error))
 						break;
-					fr_archive_progress_inc_completed_bytes (load_data->archive, buffer_size);
+
+					actual_offset += bytes_written;
+					fr_archive_progress_set_completed_bytes (load_data->archive, actual_offset);
 				}
+
+				if ((r == ARCHIVE_EOF) && (target_offset > actual_offset))
+					_g_output_stream_add_padding (extract_data, ostream, target_offset, actual_offset, cancellable, &load_data->error);
+
 				_g_object_unref (ostream);
 
 				if (r != ARCHIVE_EOF)
