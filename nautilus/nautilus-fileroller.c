@@ -164,6 +164,7 @@ static struct {
 		{ "application/x-compressed-tar", TRUE },
 		{ "application/x-cpio", TRUE },
 		{ "application/x-deb", TRUE },
+		{ "application/vnd.debian.binary-package", TRUE },
 		{ "application/x-ear", TRUE },
 		{ "application/x-ms-dos-executable", FALSE },
 		{ "application/x-gtar", FALSE },

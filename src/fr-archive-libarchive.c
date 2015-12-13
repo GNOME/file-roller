@@ -67,6 +67,7 @@ fr_archive_libarchive_finalize (GObject *object)
 
 
 const char *libarchiver_mime_types[] = {
+		"application/vnd.debian.binary-package",
 		"application/vnd.ms-cab-compressed",
 		"application/x-7z-compressed",
 		"application/x-ar",
@@ -160,6 +161,7 @@ fr_archive_libarchive_get_capabilities (FrArchive  *archive,
 	if ((strcmp (mime_type, "application/vnd.ms-cab-compressed") == 0)
 	    || (strcmp (mime_type, "application/x-cbr") == 0)
 	    || (strcmp (mime_type, "application/x-deb") == 0)
+	    || (strcmp (mime_type, "application/vnd.debian.binary-package") == 0)
 	    || (strcmp (mime_type, "application/x-lha") == 0)
 	    || (strcmp (mime_type, "application/x-rar") == 0)
 	    || (strcmp (mime_type, "application/x-rpm") == 0)

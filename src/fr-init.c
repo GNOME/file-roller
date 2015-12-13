@@ -78,6 +78,8 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-compressed-tar",       ".tar.gz",   0 },
 	{ "application/x-cpio",                 ".cpio",     0 },
 	{ "application/x-deb",                  ".deb",      0 },
+	{ "application/x-debian-package",	".deb",      0 },
+	{ "application/vnd.debian.binary-package",	".deb",      0 },
 	{ "application/x-ear",                  ".ear",      0 },
 	{ "application/x-ms-dos-executable",    ".exe",      0 },
 	{ "application/x-gzip",                 ".gz",       0 },
