@@ -1203,7 +1203,10 @@ _g_mime_type_get_from_content (char  *buffer,
 		const char * mime_type;
 
 		mime_type = magic_buffer (magic, buffer, buffer_size);
-		if (mime_type)
+		if ((mime_type != NULL) && (strcmp (mime_type, "application/octet-stream") == 0))
+			return NULL;
+
+		if (mime_type != NULL)
 			return mime_type;
 
 		g_warning ("unable to detect filetype from magic: %s", magic_error (magic));
