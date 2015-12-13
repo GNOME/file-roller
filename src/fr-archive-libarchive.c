@@ -831,15 +831,15 @@ extract_archive_thread (GSimpleAsyncResult *result,
 					if (target_offset > actual_offset) {
 						if (! _g_output_stream_add_padding (extract_data, ostream, target_offset, actual_offset, cancellable, &load_data->error))
 							break;
+						fr_archive_progress_inc_completed_bytes (load_data->archive, target_offset - actual_offset);
 						actual_offset = target_offset;
-						fr_archive_progress_set_completed_bytes (load_data->archive, actual_offset);
 					}
 
 					if (! g_output_stream_write_all (ostream, buffer, buffer_size, &bytes_written, cancellable, &load_data->error))
 						break;
 
 					actual_offset += bytes_written;
-					fr_archive_progress_set_completed_bytes (load_data->archive, actual_offset);
+					fr_archive_progress_inc_completed_bytes (load_data->archive, bytes_written);
 				}
 
 				if ((r == ARCHIVE_EOF) && (target_offset > actual_offset))
