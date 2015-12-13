@@ -70,7 +70,8 @@ _gtk_message_dialog_new (GtkWindow      *parent,
 					 GTK_BUTTONS_NONE,
 					 "%s", message);
 
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s", secondary_message);
+	if (secondary_message != NULL)
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s", secondary_message);
 
 	if (flags & GTK_DIALOG_MODAL)
 		_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
