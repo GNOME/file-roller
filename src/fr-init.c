@@ -122,6 +122,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".cab", "application/vnd.ms-cab-compressed" },
 	{ ".cbr", "application/x-cbr" },
 	{ ".cbz", "application/x-cbz" },
+	{ ".click", "application/x-deb" },
 	{ ".cpio", "application/x-cpio" },
 	{ ".deb", "application/x-deb" },
 	{ ".ear", "application/x-ear" },
