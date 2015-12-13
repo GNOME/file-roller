@@ -335,12 +335,6 @@ struct _FrWindowPrivate {
 	GtkWidget        *pd_message;
 	GtkWidget        *pd_progress_bar;
 	GtkWidget        *pd_progress_box;
-	GtkWidget        *pd_cancel_button;
-	GtkWidget        *pd_close_button;
-	GtkWidget        *pd_open_archive_button;
-	GtkWidget        *pd_open_destination_button;
-	GtkWidget        *pd_quit_button;
-	GtkWidget        *pd_icon;
 	gboolean          progress_pulse;
 	guint             progress_timeout;  /* Timeout to display the progress dialog. */
 	guint             hide_progress_timeout;  /* Timeout to hide the progress dialog. */
@@ -2420,29 +2414,16 @@ create_the_progress_dialog (FrWindow *window)
 	_gtk_dialog_add_to_window_group (GTK_DIALOG (dialog));
 
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-				_GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
 				_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
-				_("_Quit"), DIALOG_RESPONSE_QUIT,
-				_("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE,
-				_("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
 				NULL);
-
-	window->priv->pd_quit_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), DIALOG_RESPONSE_QUIT);
-	window->priv->pd_open_archive_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), DIALOG_RESPONSE_OPEN_ARCHIVE);
-	window->priv->pd_open_destination_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER);
-	window->priv->pd_close_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
-	window->priv->pd_cancel_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
 
 	if (use_header_bar) {
 		GtkWidget *header_bar = gtk_dialog_get_header_bar (GTK_DIALOG (dialog));
-		gtk_container_child_set (GTK_CONTAINER (header_bar), window->priv->pd_close_button, "pack-type", GTK_PACK_START, NULL);
-		gtk_container_child_set (GTK_CONTAINER (header_bar), window->priv->pd_cancel_button, "pack-type", GTK_PACK_START, NULL);
+		GtkWidget *cancel_button = gtk_dialog_get_widget_for_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
+		gtk_container_child_set (GTK_CONTAINER (header_bar), cancel_button, "pack-type", GTK_PACK_END, NULL);
 	}
 
-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-
 	window->priv->progress_dialog = dialog;
-	window->priv->pd_icon = _gtk_builder_get_widget (builder, "icon_image");
 	window->priv->pd_action = _gtk_builder_get_widget (builder, "action_label");
 	window->priv->pd_progress_bar = _gtk_builder_get_widget (builder, "progress_progressbar");
 	window->priv->pd_message = _gtk_builder_get_widget (builder, "message_label");
@@ -2510,12 +2491,6 @@ open_progress_dialog (FrWindow *window,
 		return;
 
 	create_the_progress_dialog (window);
-	gtk_widget_show (window->priv->pd_cancel_button);
-	gtk_widget_hide (window->priv->pd_open_archive_button);
-	gtk_widget_hide (window->priv->pd_open_destination_button);
-	gtk_widget_hide (window->priv->pd_quit_button);
-	gtk_widget_hide (window->priv->pd_close_button);
-
 	if (open_now)
 		display_progress_dialog (window);
 	else
@@ -2585,66 +2560,124 @@ fr_archive_progress_cb (FrArchive *archive,
 }
 
 
+/* -- confirmation dialog -- */
+
+
 static void
-open_progress_dialog_with_open_destination (FrWindow *window)
+fr_window_close_confirmation_dialog (FrWindow  *window,
+				     GtkWidget *dialog)
 {
-	if (window->priv->hide_progress_timeout != 0) {
-		g_source_remove (window->priv->hide_progress_timeout);
-		window->priv->hide_progress_timeout = 0;
-	}
-	if (window->priv->progress_timeout != 0) {
-		g_source_remove (window->priv->progress_timeout);
-		window->priv->progress_timeout = 0;
-	}
-
-	create_the_progress_dialog (window);
-	gtk_widget_hide (window->priv->pd_cancel_button);
-	gtk_widget_hide (window->priv->pd_open_archive_button);
-	gtk_widget_show (window->priv->pd_open_destination_button);
-	gtk_widget_set_visible (window->priv->pd_quit_button, ! window->priv->quit_with_progress_dialog);
-	gtk_widget_show (window->priv->pd_close_button);
-	display_progress_dialog (window);
-
-	fr_archive_progress_cb (NULL, 1.0, window);
-	fr_archive_message_cb (NULL, NULL, window);
-
-	progress_dialog_set_action_description (window, _("Extraction completed successfully"));
+	gtk_widget_destroy (dialog);
+	if (window->priv->batch_mode && window->priv->quit_with_progress_dialog)
+		_fr_window_close_after_notification (window);
 }
 
 
 static void
-open_progress_dialog_with_open_archive (FrWindow *window)
+confirmation_dialog_response (GtkWidget *dialog,
+			      int        response_id,
+			      FrWindow  *window)
 {
-	char *basename;
-	char *description;
+	GtkWidget *new_window;
+	GFile     *saved_file;
 
-	if (window->priv->hide_progress_timeout != 0) {
-		g_source_remove (window->priv->hide_progress_timeout);
-		window->priv->hide_progress_timeout = 0;
+	saved_file = window->priv->saving_file;
+	window->priv->saving_file = NULL;
+
+	switch (response_id) {
+	case GTK_RESPONSE_CLOSE:
+		fr_window_close_confirmation_dialog (window, dialog);
+		break;
+
+	case DIALOG_RESPONSE_OPEN_ARCHIVE:
+		new_window = fr_window_new ();
+		gtk_widget_show (new_window);
+		fr_window_archive_open (FR_WINDOW (new_window), saved_file, GTK_WINDOW (new_window));
+		fr_window_close_confirmation_dialog (window, dialog);
+		break;
+
+	case DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER:
+		fr_window_view_extraction_destination_folder (window);
+		fr_window_close_confirmation_dialog (window, dialog);
+		break;
+
+	case DIALOG_RESPONSE_QUIT:
+		gtk_widget_destroy (dialog);
+		g_idle_add (close_window_cb, window);
+		break;
+
+	default:
+		break;
 	}
-	if (window->priv->progress_timeout != 0) {
-		g_source_remove (window->priv->progress_timeout);
-		window->priv->progress_timeout = 0;
-	}
 
-	create_the_progress_dialog (window);
-	gtk_widget_hide (window->priv->pd_cancel_button);
-	gtk_widget_hide (window->priv->pd_open_destination_button);
-	gtk_widget_show (window->priv->pd_open_archive_button);
-	gtk_widget_set_visible (window->priv->pd_quit_button, ! window->priv->quit_with_progress_dialog);
-	gtk_widget_show (window->priv->pd_close_button);
-	display_progress_dialog (window);
+	_g_object_unref (saved_file);
+}
 
-	fr_archive_progress_cb (NULL, 1.0, window);
-	fr_archive_message_cb (NULL, NULL, window);
 
-	basename = _g_file_get_display_basename (window->priv->saving_file);
-	/* Translators: %s is a filename */
-	description = g_strdup_printf (_("\"%s\" created successfully"), basename);
-	progress_dialog_set_action_description (window, description);
+static gboolean
+confirmation_dialog_delete_event (GtkWidget *dialog,
+				  GdkEvent  *event,
+				  FrWindow  *window)
+{
+	fr_window_close_confirmation_dialog (window, dialog);
+	return TRUE;
+}
 
-	g_free (description);
-	g_free (basename);
+
+static void
+fr_window_show_confirmation_dialog (FrWindow  *window,
+				    GtkWidget *dialog)
+{
+	close_progress_dialog (window, TRUE);
+
+	g_signal_connect (G_OBJECT (dialog),
+			  "response",
+			  G_CALLBACK (confirmation_dialog_response),
+			  window);
+	g_signal_connect (G_OBJECT (dialog),
+			  "delete_event",
+			  G_CALLBACK (confirmation_dialog_delete_event),
+			  window);
+
+	gtk_widget_show (dialog);
+}
+
+
+static void
+fr_window_show_confirmation_dialog_with_open_destination (FrWindow *window)
+{
+	GtkWidget *dialog;
+
+	dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
+					  GTK_DIALOG_MODAL,
+					  _("Extraction completed successfully"),
+					  NULL,
+					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
+					  _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
+					  (window->priv->quit_with_progress_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
+					  NULL);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
+	fr_window_show_confirmation_dialog (window, dialog);
+}
+
+
+static void
+fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
+{
+	GtkWidget *dialog;
+
+	dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
+					  GTK_DIALOG_MODAL,
+					  _("Extraction completed successfully"),
+					  NULL,
+					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
+					  _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE,
+					  (window->priv->quit_with_progress_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
+					  NULL);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
+	fr_window_show_confirmation_dialog (window, dialog);
 }
 
 
@@ -6117,7 +6150,7 @@ archive_add_files_ready_cb (GObject      *source_object,
 
 	if ((error == NULL) && notify) {
 		window->priv->quit_with_progress_dialog = TRUE;
-		open_progress_dialog_with_open_archive (window);
+		fr_window_show_confirmation_dialog_with_open_archive (window);
 
 		if (! gtk_window_has_toplevel_focus (GTK_WINDOW (window->priv->progress_dialog)))
 			_fr_window_notify_creation_complete (window);
@@ -6350,7 +6383,7 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 	if ((error == NULL) && ask_to_open_destination) {
 		window->priv->quit_with_progress_dialog = window->priv->batch_mode;
-		open_progress_dialog_with_open_destination (window);
+		fr_window_show_confirmation_dialog_with_open_destination (window);
 	}
 	else if ((error == NULL) && ! batch_mode && ! gtk_window_has_toplevel_focus (GTK_WINDOW (window->priv->progress_dialog)))
 		gtk_window_present (GTK_WINDOW (window));
@@ -7200,7 +7233,7 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 		return;
 	}
 
-	open_progress_dialog_with_open_archive (window);
+	fr_window_show_confirmation_dialog_with_open_archive (window);
 	fr_window_exec_next_batch_action (window);
 }
 
