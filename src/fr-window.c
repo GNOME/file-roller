@@ -6295,7 +6295,6 @@ extract_data_new (FrWindow    *window,
 		  gboolean     skip_older,
 		  FrOverwrite  overwrite,
 		  gboolean     junk_paths,
-		  gboolean     extract_here,
 		  gboolean     ask_to_open_destination)
 {
 	ExtractData *edata;
@@ -6324,8 +6323,7 @@ extract_to_data_new (FrWindow *window,
 				 extract_to_dir,
 				 NULL,
 				 FALSE,
-				 TRUE,
-				 FALSE,
+				 FR_OVERWRITE_ASK,
 				 FALSE,
 				 FALSE);
 }
@@ -6669,7 +6667,6 @@ fr_window_archive_extract (FrWindow    *window,
 				  skip_older,
 				  overwrite,
 				  junk_paths,
-				  FALSE,
 				  ask_to_open_destination);
 
 	fr_window_set_current_batch_action (window,
