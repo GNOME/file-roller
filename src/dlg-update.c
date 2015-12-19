@@ -30,6 +30,11 @@
 #include "fr-window.h"
 
 
+typedef enum {
+	DIALOG_RESPONSE_UPDATE = 1
+} DialogResponse;
+
+
 enum {
 	IS_SELECTED_COLUMN,
 	NAME_COLUMN,
@@ -42,24 +47,20 @@ typedef struct {
 	GtkBuilder   *builder;
 
 	GtkWidget    *update_file_dialog;
-	GtkWidget    *update_file_primary_text_label;
-	GtkWidget    *update_file_secondary_text_label;
 
 	GtkWidget    *update_files_dialog;
 	GtkWidget    *update_files_primary_text_label;
 	GtkWidget    *update_files_secondary_text_label;
 	GtkWidget    *update_files_treeview;
-	GtkWidget    *update_files_ok_button;
 
 	GList        *file_list;
 	GtkTreeModel *list_model;
 } DialogData;
 
 
-/* called when the main dialog is closed. */
 static void
-dlg_update__destroy_cb (GtkWidget  *widget,
-		        DialogData *data)
+update_dialog_destroy (GtkWidget  *widget,
+		       DialogData *data)
 {
 	fr_window_update_dialog_closed (data->window);
 	g_object_unref (data->window);
@@ -96,11 +97,9 @@ get_selected_files (DialogData *data)
 
 
 static void
-update_cb (GtkWidget *widget,
-	   gpointer   callback_data)
+execute_update (DialogData *data)
 {
-	DialogData *data = callback_data;
-	GList      *selection;
+	GList *selection;
 
 	selection = get_selected_files (data);
 	if (fr_window_update_files (data->window, selection)) {
@@ -162,7 +161,8 @@ update_file_list (DialogData *data)
 		archive_name = _g_file_get_display_basename (fr_window_get_archive_file (data->window));
 		label = g_markup_printf_escaped (_("Update the file \"%s\" in the archive \"%s\"?"), file_name, archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
-		gtk_label_set_markup (GTK_LABEL (data->update_file_primary_text_label), markup);
+		/*gtk_label_set_markup (GTK_LABEL (data->update_file_primary_text_label), markup);*/
+		g_object_set (data->update_file_dialog , "text", markup, "use-markup", TRUE, NULL);
 
 		g_free (markup);
 		g_free (label);
@@ -175,7 +175,8 @@ update_file_list (DialogData *data)
 						   "%d files have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.",
 						   n_files),
 					 n_files);
-		gtk_label_set_text (GTK_LABEL (data->update_file_secondary_text_label), label);
+		/*gtk_label_set_text (GTK_LABEL (data->update_file_secondary_text_label), label);*/
+		g_object_set (data->update_file_dialog , "secondary-text", label, NULL);
 		g_free (label);
 	}
 	else if (n_files > 1) {
@@ -264,7 +265,28 @@ is_selected_toggled (GtkCellRendererToggle *cell,
 
 	gtk_tree_path_free (path);
 
-	gtk_widget_set_sensitive (data->update_files_ok_button, n_selected (data) > 0);
+	gtk_dialog_set_response_sensitive (GTK_DIALOG( data->update_files_dialog), DIALOG_RESPONSE_UPDATE, n_selected (data) > 0);
+}
+
+
+static void
+update_dialog_response (GtkDialog   *dialog,
+			int          response_id,
+			DialogData  *data)
+{
+	switch (response_id) {
+	case GTK_RESPONSE_CANCEL:
+	case GTK_RESPONSE_DELETE_EVENT:
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		break;
+
+	case DIALOG_RESPONSE_UPDATE:
+		execute_update (data);
+		break;
+
+	default:
+		break;
+	}
 }
 
 
@@ -272,9 +294,7 @@ gpointer
 dlg_update (FrWindow *window)
 {
 	DialogData        *data;
-	GtkWidget         *update_file_ok_button;
-	GtkWidget         *update_file_cancel_button;
-	GtkWidget         *update_files_cancel_button;
+	GtkWidget         *content;
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 
@@ -291,46 +311,48 @@ dlg_update (FrWindow *window)
 
 	/* Get the widgets. */
 
-	data->update_file_dialog = _gtk_builder_get_widget (data->builder, "update_file_dialog");
-	data->update_file_primary_text_label = _gtk_builder_get_widget (data->builder, "update_file_primary_text_label");
-	data->update_file_secondary_text_label = _gtk_builder_get_widget (data->builder, "update_file_secondary_text_label");
+	data->update_file_dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
+							    0,
+							    "",
+							    NULL,
+							    _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
+							    _("_Update"), DIALOG_RESPONSE_UPDATE,
+							    NULL);
 
-	update_file_ok_button = _gtk_builder_get_widget (data->builder, "update_file_ok_button");
-	update_file_cancel_button = _gtk_builder_get_widget (data->builder, "update_file_cancel_button");
+	data->update_files_dialog = g_object_new (GTK_TYPE_DIALOG,
+						  "title", _("Update Files"),
+						  "transient-for", GTK_WINDOW (window),
+						  "use-header-bar", _gtk_settings_get_dialogs_use_header (),
+						  NULL);
+	content = _gtk_builder_get_widget (data->builder, "update_files_dialog_content");
+	gtk_widget_set_vexpand (content, TRUE);
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (data->update_files_dialog))), content);
 
-	data->update_files_dialog = _gtk_builder_get_widget (data->builder, "update_files_dialog");
+	gtk_dialog_add_button (GTK_DIALOG (data->update_files_dialog ), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button (GTK_DIALOG (data->update_files_dialog ), _("_Update"), DIALOG_RESPONSE_UPDATE);
+
 	data->update_files_primary_text_label = _gtk_builder_get_widget (data->builder, "update_files_primary_text_label");
 	data->update_files_secondary_text_label = _gtk_builder_get_widget (data->builder, "update_files_secondary_text_label");
 	data->update_files_treeview = _gtk_builder_get_widget (data->builder, "update_files_treeview");
-	data->update_files_ok_button = _gtk_builder_get_widget (data->builder, "update_files_ok_button");
-	update_files_cancel_button = _gtk_builder_get_widget (data->builder, "update_files_cancel_button");
 
 	/* Set the signals handlers. */
 
 	g_signal_connect (G_OBJECT (data->update_file_dialog),
 			  "destroy",
-			  G_CALLBACK (dlg_update__destroy_cb),
+			  G_CALLBACK (update_dialog_destroy),
 			  data);
-	g_signal_connect (G_OBJECT (update_file_ok_button),
-			  "clicked",
-			  G_CALLBACK (update_cb),
+	g_signal_connect (G_OBJECT (data->update_file_dialog),
+			  "response",
+			  G_CALLBACK (update_dialog_response),
 			  data);
-	g_signal_connect_swapped (G_OBJECT (update_file_cancel_button),
-				  "clicked",
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (data->update_file_dialog));
 	g_signal_connect (G_OBJECT (data->update_files_dialog),
 			  "destroy",
-			  G_CALLBACK (dlg_update__destroy_cb),
+			  G_CALLBACK (update_dialog_destroy),
 			  data);
-	g_signal_connect (G_OBJECT (data->update_files_ok_button),
-			  "clicked",
-			  G_CALLBACK (update_cb),
+	g_signal_connect (G_OBJECT (data->update_files_dialog),
+			  "response",
+			  G_CALLBACK (update_dialog_response),
 			  data);
-	g_signal_connect_swapped (G_OBJECT (update_files_cancel_button),
-				  "clicked",
-				  G_CALLBACK (gtk_widget_destroy),
-				  G_OBJECT (data->update_files_dialog));
 
 	/* Set dialog data. */
 
