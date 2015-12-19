@@ -272,7 +272,7 @@ struct _FrWindowPrivate {
 					       * in the Extract dialog. */
 	gboolean         freeze_default_dir;
 	gboolean         destroy_with_error_dialog;
-	gboolean         quit_with_progress_dialog;
+	gboolean         destroy_with_confirmation_dialog;
 
 	FrBatchAction    current_batch_action;
 
@@ -2018,9 +2018,6 @@ real_close_progress_dialog (gpointer data)
 	if (window->priv->progress_dialog != NULL)
 		gtk_widget_hide (window->priv->progress_dialog);
 
-	if (window->priv->batch_mode && window->priv->quit_with_progress_dialog)
-		_fr_window_close_after_notification (window);
-
 	return FALSE;
 }
 
@@ -2567,7 +2564,7 @@ fr_window_close_confirmation_dialog (FrWindow  *window,
 				     GtkWidget *dialog)
 {
 	gtk_widget_destroy (dialog);
-	if (window->priv->batch_mode && window->priv->quit_with_progress_dialog)
+	if (window->priv->batch_mode && window->priv->destroy_with_confirmation_dialog)
 		_fr_window_close_after_notification (window);
 }
 
@@ -2653,7 +2650,7 @@ fr_window_show_confirmation_dialog_with_open_destination (FrWindow *window)
 					  NULL,
 					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
 					  _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
-					  (window->priv->quit_with_progress_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
+					  (window->priv->destroy_with_confirmation_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
@@ -2672,7 +2669,7 @@ fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
 					  NULL,
 					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
 					  _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE,
-					  (window->priv->quit_with_progress_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
+					  (window->priv->destroy_with_confirmation_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
@@ -2736,8 +2733,15 @@ error_dialog_response_cb (GtkDialog *dialog,
 	window->priv->showing_error_dialog = FALSE;
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 
-	if (window->priv->destroy_with_error_dialog)
+	if (window->priv->destroy_with_error_dialog) {
+		if (window->priv->batch_mode) {
+			g_signal_emit (window,
+				       fr_window_signals[READY],
+				       0,
+				       NULL);
+		}
 		gtk_widget_destroy (GTK_WIDGET (window));
+	}
 }
 
 
@@ -6148,7 +6152,7 @@ archive_add_files_ready_cb (GObject      *source_object,
 	_archive_operation_completed (window, FR_ACTION_ADDING_FILES, error);
 
 	if ((error == NULL) && notify) {
-		window->priv->quit_with_progress_dialog = TRUE;
+		window->priv->destroy_with_confirmation_dialog = TRUE;
 		fr_window_show_confirmation_dialog_with_open_archive (window);
 
 		if (! gtk_window_has_toplevel_focus (GTK_WINDOW (window->priv->progress_dialog)))
@@ -6379,7 +6383,7 @@ archive_extraction_ready_cb (GObject      *source_object,
 		fr_window_dnd_extraction_finished (window, error != NULL);
 
 	if ((error == NULL) && ask_to_open_destination) {
-		window->priv->quit_with_progress_dialog = window->priv->batch_mode;
+		window->priv->destroy_with_confirmation_dialog = window->priv->batch_mode;
 		fr_window_show_confirmation_dialog_with_open_destination (window);
 	}
 	else if ((error == NULL) && ! batch_mode && ! gtk_window_has_toplevel_focus (GTK_WINDOW (window->priv->progress_dialog)))
