@@ -271,7 +271,6 @@ struct _FrWindowPrivate {
 	GFile *          extract_default_dir; /* default directory to be used
 					       * in the Extract dialog. */
 	gboolean         freeze_default_dir;
-	gboolean         asked_for_password;
 	gboolean         destroy_with_error_dialog;
 	gboolean         quit_with_progress_dialog;
 
@@ -1120,7 +1119,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	set_sensitive (window, "Open_Toolbar", ! running);
 	set_sensitive (window, "OpenSelection", file_op && sel_not_null && ! dir_selected);
 	set_sensitive (window, "OpenFolder", file_op && one_file_selected && dir_selected);
-	set_sensitive (window, "Password", ! running && (window->priv->asked_for_password || (! no_archive && window->archive->propPassword)));
+	set_sensitive (window, "Password", ! running && (! no_archive && window->archive->propPassword));
 	set_sensitive (window, "Properties", file_op);
 	set_sensitive (window, "Close", !running || window->priv->stoppable);
 	set_sensitive (window, "Reload", ! (no_archive || running));
@@ -1154,7 +1153,7 @@ fr_window_update_sensitivity (FrWindow *window)
 	fr_window_enable_action (window, "delete", ! no_archive && ! ro && ! window->priv->archive_new && ! running && can_store_many_files);
 	fr_window_enable_action (window, "edit-copy", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
 	fr_window_enable_action (window, "edit-cut", ! no_archive && ! ro && ! running && can_store_many_files && sel_not_null && (window->priv->list_mode != FR_WINDOW_LIST_MODE_FLAT));
-	fr_window_enable_action (window, "edit-password", ! running && (window->priv->asked_for_password || (! no_archive && window->archive->propPassword)));
+	fr_window_enable_action (window, "edit-password", ! running && (! no_archive && window->archive->propPassword));
 	fr_window_enable_action (window, "extract-files", file_op);
 	fr_window_enable_action (window, "find", ! no_archive);
 	fr_window_enable_action (window, "open-folder", file_op && one_file_selected && dir_selected);
