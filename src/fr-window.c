@@ -2662,10 +2662,16 @@ static void
 fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
 {
 	GtkWidget *dialog;
+	char      *basename;
+	char      *message;
+
+	basename = _g_file_get_display_basename (window->priv->saving_file);
+	/* Translators: %s is a filename */
+	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
 
 	dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
 					  GTK_DIALOG_MODAL,
-					  _("Extraction completed successfully"),
+					  message,
 					  NULL,
 					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
 					  _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE,
@@ -2674,6 +2680,9 @@ fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
 
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 	fr_window_show_confirmation_dialog (window, dialog);
+
+	g_free (message);
+	g_free (basename);
 }
 
 
