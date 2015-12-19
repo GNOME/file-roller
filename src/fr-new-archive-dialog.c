@@ -154,7 +154,6 @@ extension_comboboxtext_changed_cb (GtkComboBox *combo_box,
 {
 	FrNewArchiveDialog *self = user_data;
 	int                 n_format;
-	GdkPixbuf          *icon_pixbuf;
 
 	n_format = get_selected_format (self);
 
@@ -167,14 +166,6 @@ extension_comboboxtext_changed_cb (GtkComboBox *combo_box,
 
 	self->priv->can_create_volumes = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES;
 	gtk_widget_set_sensitive (GET_WIDGET ("volume_box"), self->priv->can_create_volumes);
-
-	icon_pixbuf = _g_mime_type_get_icon (mime_type_desc[n_format].mime_type,
-					     ARCHIVE_ICON_SIZE,
-					     gtk_icon_theme_get_for_screen (gtk_widget_get_screen (GTK_WIDGET (self))));
-	if (icon_pixbuf != NULL) {
-		gtk_image_set_from_pixbuf (GTK_IMAGE (GET_WIDGET ("archive_icon")), icon_pixbuf);
-		g_object_unref (icon_pixbuf);
-	}
 
 	_fr_new_archive_dialog_update_sensitivity (self);
 }

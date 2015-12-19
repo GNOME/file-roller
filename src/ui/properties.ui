@@ -1,279 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.19.0 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkTable" id="prefs_table">
+  <requires lib="gtk+" version="3.16"/>
+  <object class="GtkGrid" id="content">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="n_rows">8</property>
-    <property name="n_columns">2</property>
-    <property name="column_spacing">12</property>
+    <property name="border_width">15</property>
     <property name="row_spacing">6</property>
+    <property name="column_spacing">6</property>
     <child>
       <object class="GtkLabel" id="p_name_label_label">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="xalign">1</property>
         <property name="label" translatable="yes" context="File">Name:</property>
         <property name="justify">center</property>
+        <property name="xalign">1</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
       </object>
       <packing>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
+        <property name="left_attach">0</property>
+        <property name="top_attach">0</property>
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="p_size_label_label">
+      <object class="GtkLabel" id="p_name_label">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="xalign">1</property>
-        <property name="label" translatable="yes">Archive size:</property>
-        <property name="justify">center</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
-      </object>
-      <packing>
-        <property name="top_attach">4</property>
-        <property name="bottom_attach">5</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_size_label">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="xalign">0</property>
         <property name="selectable">True</property>
+        <property name="ellipsize">end</property>
+        <property name="width_chars">30</property>
+        <property name="xalign">0</property>
       </object>
       <packing>
         <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
-        <property name="top_attach">4</property>
-        <property name="bottom_attach">5</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
+        <property name="top_attach">0</property>
       </packing>
     </child>
     <child>
       <object class="GtkLabel" id="p_path_label_label">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="xalign">1</property>
         <property name="label" translatable="yes" comments="after the colon there is a folder name.">Location:</property>
         <property name="justify">center</property>
+        <property name="xalign">1</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
       </object>
       <packing>
+        <property name="left_attach">0</property>
         <property name="top_attach">1</property>
-        <property name="bottom_attach">2</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_cratio_label">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="xalign">0</property>
-        <property name="selectable">True</property>
-      </object>
-      <packing>
-        <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
-        <property name="top_attach">6</property>
-        <property name="bottom_attach">7</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_cratio_label_label">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="xalign">1</property>
-        <property name="label" translatable="yes">Compression ratio:</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
-      </object>
-      <packing>
-        <property name="top_attach">6</property>
-        <property name="bottom_attach">7</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_date_label">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="xalign">0</property>
-        <property name="selectable">True</property>
-      </object>
-      <packing>
-        <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
-        <property name="top_attach">3</property>
-        <property name="bottom_attach">4</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_date_label_label">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="xalign">1</property>
-        <property name="label" translatable="yes">Last modified:</property>
-        <property name="justify">center</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
-      </object>
-      <packing>
-        <property name="top_attach">3</property>
-        <property name="bottom_attach">4</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_uncomp_size_label_label">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="xalign">1</property>
-        <property name="label" translatable="yes">Content size:</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
-      </object>
-      <packing>
-        <property name="top_attach">5</property>
-        <property name="bottom_attach">6</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_uncomp_size_label">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="xalign">0</property>
-        <property name="selectable">True</property>
-      </object>
-      <packing>
-        <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
-        <property name="top_attach">5</property>
-        <property name="bottom_attach">6</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_files_label">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="xalign">0</property>
-        <property name="selectable">True</property>
-      </object>
-      <packing>
-        <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
-        <property name="top_attach">7</property>
-        <property name="bottom_attach">8</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_files_label_label">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="xalign">1</property>
-        <property name="label" translatable="yes">Number of files:</property>
-        <property name="justify">center</property>
-        <attributes>
-          <attribute name="weight" value="bold"/>
-        </attributes>
-      </object>
-      <packing>
-        <property name="top_attach">7</property>
-        <property name="bottom_attach">8</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
       </packing>
     </child>
     <child>
       <object class="GtkLabel" id="p_path_label">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="xalign">0</property>
+        <property name="can_focus">False</property>
         <property name="selectable">True</property>
         <property name="ellipsize">start</property>
-      </object>
-      <packing>
-        <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
-        <property name="top_attach">1</property>
-        <property name="bottom_attach">2</property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel" id="p_name_label">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
         <property name="xalign">0</property>
-        <property name="selectable">True</property>
-        <property name="ellipsize">end</property>
-        <property name="width_chars">30</property>
       </object>
       <packing>
         <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
-        <property name="y_options"></property>
+        <property name="top_attach">1</property>
       </packing>
     </child>
     <child>
       <object class="GtkLabel" id="p_mime_type_label_label">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="xalign">1</property>
         <property name="label" translatable="yes" comments="after the colon there is a file type.">Type:</property>
         <property name="justify">center</property>
+        <property name="xalign">1</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
       </object>
       <packing>
+        <property name="left_attach">0</property>
         <property name="top_attach">2</property>
-        <property name="bottom_attach">3</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options"></property>
       </packing>
     </child>
     <child>
       <object class="GtkLabel" id="p_mime_type_label">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="xalign">0</property>
+        <property name="can_focus">False</property>
         <property name="selectable">True</property>
         <property name="ellipsize">start</property>
+        <property name="xalign">0</property>
       </object>
       <packing>
         <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
         <property name="top_attach">2</property>
-        <property name="bottom_attach">3</property>
-        <property name="y_options"></property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_date_label_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Last modified:</property>
+        <property name="justify">center</property>
+        <property name="xalign">1</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_date_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="selectable">True</property>
+        <property name="xalign">0</property>
+      </object>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="top_attach">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_size_label_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Archive size:</property>
+        <property name="justify">center</property>
+        <property name="xalign">1</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">4</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_size_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="selectable">True</property>
+        <property name="xalign">0</property>
+      </object>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="top_attach">4</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_uncomp_size_label_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Content size:</property>
+        <property name="xalign">1</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">5</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_uncomp_size_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="selectable">True</property>
+        <property name="xalign">0</property>
+      </object>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="top_attach">5</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_cratio_label_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Compression ratio:</property>
+        <property name="xalign">1</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_cratio_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="selectable">True</property>
+        <property name="xalign">0</property>
+      </object>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="top_attach">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_files_label_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Number of files:</property>
+        <property name="justify">center</property>
+        <property name="xalign">1</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">7</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="p_files_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="selectable">True</property>
+        <property name="xalign">0</property>
+      </object>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="top_attach">7</property>
       </packing>
     </child>
   </object>

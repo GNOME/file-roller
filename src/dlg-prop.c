@@ -70,7 +70,7 @@ dlg_prop (FrWindow *window)
 	}
 
 	/* Get the widgets. */
-	table = _gtk_builder_get_widget (data->builder, "prefs_table");
+	table = _gtk_builder_get_widget (data->builder, "content");
 
 
 	/* Make the dialog */
