@@ -131,7 +131,7 @@ window_progress_cb (FrWindow *window,
 
 	g_dbus_connection_emit_signal (connection,
 				       NULL,
-				       "org/gnome/ArchiveManager1",
+				       "/org/gnome/ArchiveManager1",
 				       "org.gnome.ArchiveManager1",
 				       "Progress",
 				       g_variant_new ("(ds)",
