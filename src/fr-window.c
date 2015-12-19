@@ -141,7 +141,6 @@ typedef enum {
 	DIALOG_RESPONSE_NONE = 1,
 	DIALOG_RESPONSE_OPEN_ARCHIVE,
 	DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
-	DIALOG_RESPONSE_QUIT
 } DialogResponse;
 
 
@@ -2112,14 +2111,6 @@ fr_window_view_extraction_destination_folder (FrWindow *window)
 }
 
 
-static gboolean
-close_window_cb (gpointer data)
-{
-	fr_window_close (FR_WINDOW (data));
-	return FALSE;
-}
-
-
 static void
 progress_dialog_response (GtkDialog *dialog,
 			  int        response_id,
@@ -2150,9 +2141,6 @@ progress_dialog_response (GtkDialog *dialog,
 	case DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER:
 		fr_window_view_extraction_destination_folder (window);
 		close_progress_dialog (window, TRUE);
-		break;
-	case DIALOG_RESPONSE_QUIT:
-		g_idle_add (close_window_cb, window);
 		break;
 	default:
 		break;
@@ -2597,11 +2585,6 @@ confirmation_dialog_response (GtkWidget *dialog,
 		fr_window_close_confirmation_dialog (window, dialog);
 		break;
 
-	case DIALOG_RESPONSE_QUIT:
-		gtk_widget_destroy (dialog);
-		g_idle_add (close_window_cb, window);
-		break;
-
 	default:
 		break;
 	}
@@ -2650,7 +2633,6 @@ fr_window_show_confirmation_dialog_with_open_destination (FrWindow *window)
 					  NULL,
 					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
 					  _("_Show the Files"), DIALOG_RESPONSE_OPEN_DESTINATION_FOLDER,
-					  (window->priv->destroy_with_confirmation_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
@@ -2675,7 +2657,6 @@ fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
 					  NULL,
 					  _GTK_LABEL_CLOSE, GTK_RESPONSE_CLOSE,
 					  _("_Open the Archive"), DIALOG_RESPONSE_OPEN_ARCHIVE,
-					  (window->priv->destroy_with_confirmation_dialog ? NULL :  _("_Quit")), DIALOG_RESPONSE_QUIT,
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
