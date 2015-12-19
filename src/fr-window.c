@@ -9258,9 +9258,9 @@ fr_window_exec_batch_action (FrWindow      *window,
 
 		edata = action->data;
 		fr_window_archive_extract_here (window,
-						FALSE,
-						TRUE,
-						FALSE,
+						edata->skip_older,
+						edata->overwrite,
+						edata->junk_paths,
 						! window->priv->batch_mode || window->priv->notify);
 		break;
 
