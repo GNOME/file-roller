@@ -276,28 +276,29 @@ void            fr_window_use_progress_dialog          (FrWindow   *window,
 
 /* batch mode procedures. */
 
-void            fr_window_new_batch                    (FrWindow      *window,
+void            fr_window_set_current_action  	       (FrWindow      *window,
+						        FrBatchActionType
+								       action,
+						        void          *data,
+						        GFreeFunc      free_func);
+void            fr_window_reset_current_action         (FrWindow      *window);
+void            fr_window_restart_current_action       (FrWindow      *window);
+
+void            fr_window_batch_new                    (FrWindow      *window,
 						        const char    *title);
-const char *    fr_window_get_batch_title              (FrWindow      *window);
-void            fr_window_set_current_batch_action     (FrWindow      *window,
+const char *    fr_window_batch_get_title              (FrWindow      *window);
+void            fr_window_batch_append_action          (FrWindow      *window,
 						        FrBatchActionType
 						        	       action,
 						        void          *data,
 						        GFreeFunc      free_func);
-void            fr_window_reset_current_batch_action   (FrWindow      *window);
-void            fr_window_restart_current_batch_action (FrWindow      *window);
-void            fr_window_append_batch_action          (FrWindow      *window,
-						        FrBatchActionType
-						        	       action,
-						        void          *data,
-						        GFreeFunc      free_func);
-void            fr_window_start_batch                  (FrWindow      *window);
-void            fr_window_stop_batch                   (FrWindow      *window);
-void            fr_window_stop_batch_with_error        (FrWindow     *window,
-							FrAction      action,
-							FrErrorType   error_type,
-							const char   *error_message);
-void            fr_window_resume_batch                 (FrWindow      *window);
+void            fr_window_batch_start                  (FrWindow      *window);
+void            fr_window_batch_stop                   (FrWindow      *window);
+void            fr_window_batch_stop_with_error        (FrWindow      *window,
+							FrAction       action,
+							FrErrorType    error_type,
+							const char    *error_message);
+void            fr_window_batch_resume                 (FrWindow      *window);
 gboolean        fr_window_is_batch_mode                (FrWindow      *window);
 void            fr_window_set_batch__extract           (FrWindow      *window,
 						        GFile         *archive,

@@ -74,9 +74,9 @@ ask_password__response_cb (GtkWidget  *dialog,
 		g_free (password);
 
 		if (fr_window_is_batch_mode (data->window))
-			fr_window_resume_batch (data->window);
+			fr_window_batch_resume (data->window);
 		else
-			fr_window_restart_current_batch_action (data->window);
+			fr_window_restart_current_action (data->window);
 		break;
 
 	default:
@@ -84,7 +84,7 @@ ask_password__response_cb (GtkWidget  *dialog,
 		if (fr_window_is_batch_mode (data->window))
 			gtk_widget_destroy (GTK_WIDGET (data->window));
 		else
-			fr_window_reset_current_batch_action (data->window);
+			fr_window_reset_current_action (data->window);
 		break;
 	}
 
@@ -185,7 +185,7 @@ dlg_ask_password__common (FrWindow       *window,
 	}
 	else
 		gtk_window_set_title (GTK_WINDOW (data->dialog),
-				      fr_window_get_batch_title (window));
+				      fr_window_batch_get_title (window));
 	gtk_widget_show (data->dialog);
 
 	g_free (message);

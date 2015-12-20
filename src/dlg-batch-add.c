@@ -52,7 +52,7 @@ dialog_response_cb (GtkDialog *dialog,
 		g_object_unref (file);
 	}
 	else
-		fr_window_stop_batch (window);
+		fr_window_batch_stop (window);
 
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }

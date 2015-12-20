@@ -51,7 +51,7 @@ file_selector_destroy_cb (GtkWidget  *widget,
 			  DialogData *data)
 {
 	if (! data->extract_clicked)
-		fr_window_stop_batch (data->window);
+		fr_window_batch_stop (data->window);
 
 	g_object_unref (data->builder);
 	_g_string_list_free (data->selected_files);

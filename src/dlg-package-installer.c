@@ -65,7 +65,7 @@ package_installer_terminated (InstallerData *idata,
 		gdk_window_set_cursor (window, NULL);
 
 	if (error_type != FR_ERROR_NONE) {
-		fr_window_stop_batch_with_error (idata->window,
+		fr_window_batch_stop_with_error (idata->window,
 						 idata->action,
 						 error_type,
 						 error_message);
@@ -73,9 +73,9 @@ package_installer_terminated (InstallerData *idata,
 	else {
 		update_registered_archives_capabilities ();
 		if (fr_window_is_batch_mode (idata->window))
-			fr_window_resume_batch (idata->window);
+			fr_window_batch_resume (idata->window);
 		else
-			fr_window_restart_current_batch_action (idata->window);
+			fr_window_restart_current_action (idata->window);
 	}
 
 	installer_data_free (idata);
@@ -246,7 +246,7 @@ confirm_search_dialog_response_cb (GtkDialog *dialog,
 		install_packages (idata);
 	}
 	else {
-		fr_window_stop_batch (idata->window);
+		fr_window_batch_stop (idata->window);
 		installer_data_free (idata);
 	}
 }
