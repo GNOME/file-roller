@@ -9470,8 +9470,8 @@ fr_window_batch_get_title (FrWindow *window)
 
 
 void
-fr_window_set_batch__extract_here (FrWindow *window,
-				   GFile    *archive)
+fr_window_batch__extract_here (FrWindow *window,
+			       GFile    *archive)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (archive != NULL);
@@ -9498,9 +9498,9 @@ fr_window_set_batch__extract_here (FrWindow *window,
 
 
 void
-fr_window_set_batch__extract (FrWindow  *window,
-			      GFile     *archive,
-			      GFile     *destination)
+fr_window_batch__extract (FrWindow  *window,
+			  GFile     *archive,
+			  GFile     *destination)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (archive != NULL);
@@ -9533,9 +9533,9 @@ fr_window_set_batch__extract (FrWindow  *window,
 
 
 void
-fr_window_set_batch__add (FrWindow *window,
-			  GFile    *archive,
-			  GList    *file_list)
+fr_window_batch__add_files (FrWindow *window,
+			    GFile    *archive,
+			    GList    *file_list)
 {
 	window->priv->batch_adding_one_file = (file_list->next == NULL) && (_g_file_query_is_file (file_list->data));
 

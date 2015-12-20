@@ -224,7 +224,7 @@ handle_method_call (GDBusConnection       *connection,
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), _("Compress"));
-		fr_window_set_batch__add (FR_WINDOW (window), file, file_list);
+		fr_window_batch__add_files (FR_WINDOW (window), file, file_list);
 		fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_batch_start (FR_WINDOW (window));
 
@@ -259,8 +259,8 @@ handle_method_call (GDBusConnection       *connection,
 		g_signal_connect (window, "progress", G_CALLBACK (window_progress_cb), connection);
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
 
-		fr_window_batch_new (FR_WINDOW (window), _("Extract archive"));
-		fr_window_set_batch__add (FR_WINDOW (window), NULL, file_list);
+		fr_window_batch_new (FR_WINDOW (window), _("Compress"));
+		fr_window_batch__add_files (FR_WINDOW (window), NULL, file_list);
 		fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_batch_start (FR_WINDOW (window));
 
@@ -296,7 +296,7 @@ handle_method_call (GDBusConnection       *connection,
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), _("Extract archive"));
-		fr_window_set_batch__extract (FR_WINDOW (window), archive, destination);
+		fr_window_batch__extract (FR_WINDOW (window), archive, destination);
 		fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_batch_start (FR_WINDOW (window));
 
@@ -322,7 +322,7 @@ handle_method_call (GDBusConnection       *connection,
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), _("Extract archive"));
-		fr_window_set_batch__extract_here (FR_WINDOW (window), archive);
+		fr_window_batch__extract_here (FR_WINDOW (window), archive);
 		fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_batch_start (FR_WINDOW (window));
 
@@ -570,7 +570,7 @@ fr_application_command_line (GApplication            *application,
 		file_list = g_list_reverse (file_list);
 
 		fr_window_batch_new (FR_WINDOW (window), _("Compress"));
-		fr_window_set_batch__add (FR_WINDOW (window), add_to_archive, file_list);
+		fr_window_batch__add_files (FR_WINDOW (window), add_to_archive, file_list);
 		if (! arg_notify)
 			fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		else
@@ -598,9 +598,9 @@ fr_application_command_line (GApplication            *application,
 
 			file = g_application_command_line_create_file_for_arg (command_line, archive);
 			if (arg_extract_here == 1)
-				fr_window_set_batch__extract_here (FR_WINDOW (window), file);
+				fr_window_batch__extract_here (FR_WINDOW (window), file);
 			else
-				fr_window_set_batch__extract (FR_WINDOW (window), file, extraction_destination);
+				fr_window_batch__extract (FR_WINDOW (window), file, extraction_destination);
 
 			g_object_unref (file);
 		}
