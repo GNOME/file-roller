@@ -175,7 +175,7 @@ extract_cb (GtkWidget   *w,
 		return FALSE;
 	}
 
-	fr_window_set_extract_default_dir (window, destination, TRUE);
+	fr_window_set_extract_default_dir (window, destination);
 
 	skip_newer = ! gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))) && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton")));
 	junk_paths = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_structure_checkbutton")));
@@ -220,14 +220,31 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
-	fr_window_archive_extract (window,
-				   file_list,
-				   destination,
-				   base_dir,
-				   skip_newer,
-				   FR_OVERWRITE_ASK,
-				   junk_paths,
-				   TRUE);
+	if (fr_window_batch_get_current_action_type (window) == FR_BATCH_ACTION_EXTRACT_INTERACT) {
+
+		/* no need to ask the user the extract options again if the
+		 * action is re-executed (for example when asking the password) */
+
+		fr_window_batch_replace_current_action (window,
+							FR_BATCH_ACTION_EXTRACT,
+							extract_data_new (window,
+									  file_list,
+									  destination,
+									  base_dir,
+									  skip_newer,
+									  FR_OVERWRITE_ASK,
+									  junk_paths),
+							(GFreeFunc) extract_data_free);
+		fr_window_batch_resume (window);
+	}
+	else
+		fr_window_archive_extract (window,
+					   file_list,
+					   destination,
+					   base_dir,
+					   skip_newer,
+					   FR_OVERWRITE_ASK,
+					   junk_paths);
 
 	_g_string_list_free (file_list);
 	g_object_unref (destination);

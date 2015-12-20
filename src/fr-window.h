@@ -28,7 +28,6 @@
 #include "fr-archive.h"
 #include "fr-error.h"
 
-
 enum {
 	COLUMN_FILE_DATA,
 	COLUMN_ICON,
@@ -264,8 +263,7 @@ void            fr_window_set_add_default_dir          (FrWindow   *window,
 							GFile      *default_dir);
 GFile *         fr_window_get_add_default_dir          (FrWindow   *window);
 void            fr_window_set_extract_default_dir      (FrWindow   *window,
-							GFile      *default_dir,
-						        gboolean    freeze);
+							GFile      *default_dir);
 GFile *         fr_window_get_extract_default_dir      (FrWindow   *window);
 void            fr_window_set_folders_visibility       (FrWindow   *window,
 						        gboolean    value);
@@ -273,6 +271,17 @@ void            fr_window_use_progress_dialog          (FrWindow   *window,
 						        gboolean    value);
 
 /* batch mode procedures. */
+
+typedef struct _ExtractData ExtractData;
+
+ExtractData *   extract_data_new		       (FrWindow      *window,
+							GList         *file_list,
+							GFile         *destination,
+							const char    *base_dir,
+							gboolean       skip_older,
+							FrOverwrite    overwrite,
+							gboolean       junk_paths);
+void		extract_data_free		       (ExtractData   *edata);
 
 void            fr_window_set_current_action  	       (FrWindow      *window,
 						        FrBatchActionType
@@ -290,6 +299,13 @@ void            fr_window_batch_append_action          (FrWindow      *window,
 						        	       action,
 						        void          *data,
 						        GFreeFunc      free_func);
+void            fr_window_batch_replace_current_action (FrWindow      *window,
+							FrBatchActionType
+								       action,
+							void          *data,
+							GFreeFunc      free_func);
+FrBatchActionType
+		fr_window_batch_get_current_action_type(FrWindow      *window);
 void            fr_window_batch_start                  (FrWindow      *window);
 void            fr_window_batch_stop                   (FrWindow      *window);
 void            fr_window_batch_stop_with_error        (FrWindow      *window,

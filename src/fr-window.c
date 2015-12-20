@@ -114,7 +114,7 @@ typedef struct {
 } FrBatchAction;
 
 
-typedef struct {
+struct _ExtractData {
 	FrWindow    *window;
 	GList       *file_list;
 	GFile       *destination;
@@ -123,7 +123,7 @@ typedef struct {
 	FrOverwrite  overwrite;
 	gboolean     junk_paths;
 	char        *password;
-} ExtractData;
+};
 
 
 typedef enum {
@@ -366,7 +366,6 @@ struct _FrWindowPrivate {
 	GSettings        *settings_nautilus;
 
 	gulong            theme_changed_handler_id;
-	gboolean          extract_interact_use_default_dir;
 	gboolean          update_dropped_files;
 	gboolean          batch_adding_one_file;
 
@@ -384,18 +383,20 @@ struct _FrWindowPrivate {
 
 
 static void
+fr_batch_action_free (FrBatchAction *action) {
+	if ((action->data != NULL) && (action->free_func != NULL))
+		(*action->free_func) (action->data);
+	g_free (action);
+}
+
+
+static void
 fr_window_free_batch_data (FrWindow *window)
 {
 	GList *scan;
 
-	for (scan = window->priv->batch_action_list; scan; scan = scan->next) {
-		FrBatchAction *adata = scan->data;
-
-		if ((adata->data != NULL) && (adata->free_func != NULL))
-			(*adata->free_func) (adata->data);
-		g_free (adata);
-	}
-
+	for (scan = window->priv->batch_action_list; scan; scan = scan->next)
+		fr_batch_action_free ((FrBatchAction *) scan->data);
 	g_list_free (window->priv->batch_action_list);
 	window->priv->batch_action_list = NULL;
 	window->priv->batch_action = NULL;
@@ -2940,7 +2941,7 @@ _handle_archive_operation_error (FrWindow  *window,
 }
 
 
-static void fr_window_exec_next_batch_action (FrWindow *window);
+static void fr_window_batch_exec_next_action (FrWindow *window);
 static void fr_window_archive_list (FrWindow *window);
 
 
@@ -3021,7 +3022,7 @@ _archive_operation_completed (FrWindow *window,
 				fr_window_set_open_default_dir (window, archive_dir);
 				fr_window_set_add_default_dir (window, archive_dir);
 				if (! window->priv->freeze_default_dir)
-					fr_window_set_extract_default_dir (window, archive_dir, FALSE);
+					fr_window_set_extract_default_dir (window, archive_dir);
 			}
 
 			window->priv->archive_new = FALSE;
@@ -3089,7 +3090,7 @@ _archive_operation_completed (FrWindow *window,
 	}
 
 	if (continue_batch)
-		fr_window_exec_next_batch_action (window);
+		fr_window_batch_exec_next_action (window);
 	else
 		fr_window_batch_stop (window);
 }
@@ -5427,7 +5428,6 @@ fr_window_construct (FrWindow *window)
 	window->priv->batch_mode = FALSE;
 	window->priv->batch_action_list = NULL;
 	window->priv->batch_action = NULL;
-	window->priv->extract_interact_use_default_dir = FALSE;
 
 	window->priv->password = NULL;
 	window->priv->compression = g_settings_get_enum (window->priv->settings_general, PREF_GENERAL_COMPRESSION_LEVEL);
@@ -6279,7 +6279,7 @@ fr_window_archive_remove (FrWindow *window,
 /* -- fr_window_archive_extract -- */
 
 
-static ExtractData*
+ExtractData *
 extract_data_new (FrWindow    *window,
 		  GList       *file_list,
 		  GFile       *destination,
@@ -6304,7 +6304,7 @@ extract_data_new (FrWindow    *window,
 }
 
 
-static void
+void
 extract_data_free (ExtractData *edata)
 {
 	g_return_if_fail (edata != NULL);
@@ -7183,7 +7183,7 @@ archive_add_ready_for_conversion_cb (GObject      *source_object,
 	}
 
 	fr_window_show_confirmation_dialog_with_open_archive (window);
-	fr_window_exec_next_batch_action (window);
+	fr_window_batch_exec_next_action (window);
 }
 
 
@@ -7517,7 +7517,7 @@ ecryption_copy_ready_cb (GObject      *source_object,
 	fr_window_set_password (window, edata->password);
 	fr_window_set_encrypt_header (window, edata->encrypt_header);
 	window->priv->reload_archive = TRUE;
-	fr_window_exec_next_batch_action (window);
+	fr_window_batch_exec_next_action (window);
 }
 
 
@@ -9064,18 +9064,10 @@ fr_window_get_add_default_dir (FrWindow *window)
 
 void
 fr_window_set_extract_default_dir (FrWindow *window,
-				   GFile    *default_dir,
-				   gboolean  freeze)
+				   GFile    *default_dir)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (default_dir != NULL);
-
-	/* do not change this dir while it's used by the non-interactive
-	 * extraction operation. */
-	if (window->priv->extract_interact_use_default_dir)
-		return;
-
-	window->priv->extract_interact_use_default_dir = freeze;
 
 	_g_object_unref (window->priv->extract_default_dir);
 	window->priv->extract_default_dir = _get_default_dir (default_dir);
@@ -9104,7 +9096,7 @@ fr_window_set_default_dir (FrWindow *window,
 
 	fr_window_set_open_default_dir (window, default_dir);
 	fr_window_set_add_default_dir (window, default_dir);
-	fr_window_set_extract_default_dir (window, default_dir, FALSE);
+	fr_window_set_extract_default_dir (window, default_dir);
 }
 
 
@@ -9132,7 +9124,7 @@ fr_window_use_progress_dialog (FrWindow *window,
 /* -- batch mode procedures -- */
 
 
-static void fr_window_exec_current_batch_action (FrWindow *window);
+static void fr_window_batch_exec_current_action (FrWindow *window);
 
 
 static void
@@ -9205,8 +9197,6 @@ fr_window_exec_batch_action (FrWindow      *window,
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
 		debug (DEBUG_INFO, "[BATCH] EXTRACT_INTERACT\n");
 
-		if (window->priv->extract_interact_use_default_dir
-						   NULL,
 		dlg_extract (NULL, window);
 		break;
 
@@ -9269,7 +9259,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 		debug (DEBUG_INFO, "[BATCH] CLOSE\n");
 
 		fr_window_archive_close (window);
-		fr_window_exec_next_batch_action (window);
+		fr_window_batch_exec_next_action (window);
 		break;
 
 	case FR_BATCH_ACTION_QUIT:
@@ -9349,8 +9339,29 @@ fr_window_batch_append_action (FrWindow          *window,
 }
 
 
+void
+fr_window_batch_replace_current_action (FrWindow          *window,
+					FrBatchActionType  action,
+					void              *data,
+					GFreeFunc          free_func)
+{
+	FrBatchAction *a_desc;
+
+	g_return_if_fail (window != NULL);
+	g_return_if_fail (window->priv->batch_action != NULL);
+
+	a_desc = g_new0 (FrBatchAction, 1);
+	a_desc->type = action;
+	a_desc->data = data;
+	a_desc->free_func = free_func;
+
+	fr_batch_action_free ((FrBatchAction *) window->priv->batch_action->data);
+	window->priv->batch_action->data = a_desc;
+}
+
+
 static void
-fr_window_exec_current_batch_action (FrWindow *window)
+fr_window_batch_exec_current_action (FrWindow *window)
 {
 	FrBatchAction *action;
 
@@ -9369,13 +9380,13 @@ fr_window_exec_current_batch_action (FrWindow *window)
 
 
 static void
-fr_window_exec_next_batch_action (FrWindow *window)
+fr_window_batch_exec_next_action (FrWindow *window)
 {
 	if (window->priv->batch_action != NULL)
 		window->priv->batch_action = g_list_next (window->priv->batch_action);
 	else
 		window->priv->batch_action = window->priv->batch_action_list;
-	fr_window_exec_current_batch_action (window);
+	fr_window_batch_exec_current_action (window);
 }
 
 
@@ -9398,7 +9409,7 @@ fr_window_batch_start (FrWindow *window)
 	window->priv->batch_action = window->priv->batch_action_list;
 	gtk_widget_hide (GTK_WIDGET (window));
 
-	fr_window_exec_current_batch_action (window);
+	fr_window_batch_exec_current_action (window);
 }
 
 
@@ -9410,8 +9421,6 @@ fr_window_batch_stop (FrWindow *window)
 		window->priv->reload_archive = FALSE;
 		return;
 	}
-
-	window->priv->extract_interact_use_default_dir = FALSE;
 
 	if (! window->priv->showing_error_dialog) {
 		g_signal_emit (window,
@@ -9441,7 +9450,7 @@ fr_window_batch_stop_with_error (FrWindow     *window,
 void
 fr_window_batch_resume (FrWindow *window)
 {
-	fr_window_exec_current_batch_action (window);
+	fr_window_batch_exec_current_action (window);
 }
 
 
@@ -9449,6 +9458,22 @@ gboolean
 fr_window_is_batch_mode (FrWindow *window)
 {
 	return window->priv->batch_mode;
+}
+
+
+FrBatchActionType
+fr_window_batch_get_current_action_type (FrWindow *window)
+{
+	FrBatchAction *action;
+
+	if (! window->priv->batch_mode || (window->priv->batch_action == NULL))
+		return FR_BATCH_ACTION_NONE;
+
+	action = (FrBatchAction *) window->priv->batch_action->data;
+	if (action == NULL)
+		return FR_BATCH_ACTION_NONE;
+
+	return action->type;
 }
 
 
