@@ -376,6 +376,7 @@ struct _FrWindowPrivate {
 	GthIconCache     *tree_icon_cache;
 
 	GFile            *last_extraction_destination;
+	GList            *last_extraction_files_first_level; /* GFile list */
 };
 
 
@@ -504,6 +505,9 @@ fr_window_free_private_data (FrWindow *window)
 	_g_object_unref (window->priv->extract_default_dir);
 	_g_object_unref (window->priv->archive_file);
 	_g_object_unref (window->priv->last_extraction_destination);
+
+	_g_object_list_unref (window->priv->last_extraction_files_first_level);
+	window->priv->last_extraction_files_first_level = NULL;
 
 	g_free (window->priv->password);
 	g_free (window->priv->second_password);
@@ -2064,15 +2068,44 @@ progress_dialog_delete_event (GtkWidget *caller,
 }
 
 
+/* -- open_folder -- */
+
+
+typedef struct {
+	GtkWindow *window;
+	GFile     *folder;
+} OpenFolderData;
+
+
+static OpenFolderData *
+open_folder_data_new (GtkWindow *window,
+		      GFile     *folder)
+{
+	OpenFolderData *data;
+
+	data = g_new (OpenFolderData, 1);
+	data->window = g_object_ref (window);
+	data->folder = g_object_ref (folder);
+
+	return data;
+}
+
+
 static void
-open_folder (GtkWindow *parent_window,
+open_folder_data_free (OpenFolderData *data)
+{
+	_g_object_unref (data->window);
+	_g_object_unref (data->folder);
+	g_free (data);
+}
+
+
+static void
+show_folder (GtkWindow *parent_window,
 	     GFile     *folder)
 {
 	GError *error = NULL;
 	char   *uri;
-
-	if (folder == NULL)
-		return;
 
 	uri = g_file_get_uri (folder);
 	if (! gtk_show_uri (parent_window != NULL ? gtk_window_get_screen (parent_window) : NULL,
@@ -2105,9 +2138,102 @@ open_folder (GtkWindow *parent_window,
 
 
 static void
+file_manager_show_items_cb (GObject      *source_object,
+			    GAsyncResult *res,
+			    gpointer      user_data)
+{
+	OpenFolderData *data = user_data;
+	GDBusProxy     *proxy;
+	GVariant       *values;
+	GError         *error = NULL;
+
+	proxy = G_DBUS_PROXY (source_object);
+	values = g_dbus_proxy_call_finish (proxy, res, &error);
+	if (values == NULL) {
+		show_folder (data->window, data->folder);
+		g_clear_error (&error);
+	}
+
+	if (values != NULL)
+		g_variant_unref (values);
+	g_object_unref (proxy);
+	open_folder_data_free (data);
+}
+
+
+static void
+open_folder (GtkWindow    *parent_window,
+	     GFile        *folder,
+	     GList        *files)
+{
+	GDBusConnection *connection;
+	GError          *error = NULL;
+
+	if (folder == NULL)
+		return;
+
+	/* only use ShowItems if its a single file to avoid Nautilus to open
+	 * multiple windows */
+
+	if ((files == NULL) || (files->next != NULL)) {
+		show_folder (parent_window, folder);
+		return;
+	}
+
+	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
+	if (connection != NULL) {
+		GDBusProxy *proxy;
+
+		proxy = g_dbus_proxy_new_sync (connection,
+					       G_DBUS_PROXY_FLAGS_NONE,
+					       NULL,
+					       "org.freedesktop.FileManager1",
+					       "/org/freedesktop/FileManager1",
+					       "org.freedesktop.FileManager1",
+					       NULL,
+					       &error);
+
+		if (proxy != NULL) {
+			static int   sequence = 0;
+			char       **uris;
+			char        *startup_id;
+
+			uris = g_new (char *, 2);
+			uris[0] = g_file_get_uri ((GFile *) files->data);
+			uris[1] = NULL;
+
+			startup_id = g_strdup_printf ("%s-%lu-%s-%s-%d_TIME%lu",
+						      g_get_prgname (),
+						      (unsigned long) getpid (),
+						      g_get_host_name (),
+						      "org.freedesktop.FileManager1",
+						      sequence++,
+						      (unsigned long) g_get_real_time ());
+
+			g_dbus_proxy_call (proxy,
+					   "ShowItems",
+					   g_variant_new ("(^ass)", uris, startup_id),
+					   G_DBUS_CALL_FLAGS_NONE,
+					   G_MAXINT,
+					   NULL,
+					   file_manager_show_items_cb,
+					   open_folder_data_new (parent_window, folder));
+
+			g_free (startup_id);
+			g_strfreev (uris);
+
+			return;
+		}
+	}
+
+	show_folder (parent_window, folder);
+}
+
+
+static void
 fr_window_view_extraction_destination_folder (FrWindow *window)
 {
-	open_folder (GTK_WINDOW (window), window->priv->last_extraction_destination);
+	open_folder (GTK_WINDOW (window), window->priv->last_extraction_destination, window->priv->last_extraction_files_first_level);
 }
 
 
@@ -6347,6 +6473,56 @@ archive_extraction_ready_cb (GObject      *source_object,
 
 	_g_clear_object (&window->priv->last_extraction_destination);
 	window->priv->last_extraction_destination = _g_object_ref (fr_archive_get_last_extraction_destination (window->archive));
+
+	if (ask_to_open_destination) {
+		/* collect the files to show in the file manager */
+
+		GHashTable *names_hash;
+		gboolean    stop = FALSE;
+		int         i;
+
+		_g_object_list_unref (window->priv->last_extraction_files_first_level);
+		window->priv->last_extraction_files_first_level = NULL;
+
+		names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+		for (i = 0; ! stop && (i < window->archive->files->len); i++) {
+			FileData *fdata = g_ptr_array_index (window->archive->files, i);
+			char     *first_level;
+			char     *second_slash;
+
+			if ((fdata->full_path == NULL) || (fdata->full_path[0] == 0))
+				continue;
+
+			second_slash = strchr (fdata->full_path + 1, '/');
+			if (second_slash != NULL)
+				first_level = g_strndup (fdata->full_path, second_slash - fdata->full_path);
+			else
+				first_level = g_strdup (fdata->full_path);
+
+			/* avoid to insert duplicated entries */
+
+			if (g_hash_table_lookup (names_hash, first_level) == NULL) {
+
+				/* only use this list if there is a single entry,
+				 * because Nautilus opens a window for each file
+				 * even when the files are all in the same folder.  */
+
+				if (window->priv->last_extraction_files_first_level != NULL) {
+					_g_object_list_unref (window->priv->last_extraction_files_first_level);
+					window->priv->last_extraction_files_first_level = NULL;
+					stop = TRUE;
+				}
+				else {
+					g_hash_table_insert (names_hash, g_strdup (first_level), GINT_TO_POINTER (1));
+					window->priv->last_extraction_files_first_level = g_list_prepend (window->priv->last_extraction_files_first_level, _g_file_append_path (window->priv->last_extraction_destination, first_level, NULL));
+				}
+			}
+
+			g_free (first_level);
+		}
+
+		g_hash_table_destroy (names_hash);
+	}
 
 	fr_archive_operation_finish (FR_ARCHIVE (source_object), result, &error);
 	_archive_operation_completed (window, FR_ACTION_EXTRACTING_FILES, error);
