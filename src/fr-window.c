@@ -9194,8 +9194,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 						edata->junk_paths);
 		break;
 
-	case FR_BATCH_ACTION_EXTRACT_INTERACT:
-		debug (DEBUG_INFO, "[BATCH] EXTRACT_INTERACT\n");
+	case FR_BATCH_ACTION_EXTRACT_ASK_OPTIONS:
+		debug (DEBUG_INFO, "[BATCH] EXTRACT ASK OPTIONS\n");
 
 		dlg_extract (NULL, window);
 		break;
@@ -9547,7 +9547,7 @@ fr_window_batch__extract (FrWindow  *window,
 					       (GFreeFunc) extract_data_free);
 	else
 		fr_window_batch_append_action (window,
-					       FR_BATCH_ACTION_EXTRACT_INTERACT,
+					       FR_BATCH_ACTION_EXTRACT_ASK_OPTIONS,
 					       NULL,
 					       NULL);
 	fr_window_batch_append_action (window,

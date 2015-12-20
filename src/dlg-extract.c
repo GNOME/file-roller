@@ -220,7 +220,7 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
-	if (fr_window_batch_get_current_action_type (window) == FR_BATCH_ACTION_EXTRACT_INTERACT) {
+	if (fr_window_batch_get_current_action_type (window) == FR_BATCH_ACTION_EXTRACT_ASK_OPTIONS) {
 
 		/* no need to ask the user the extract options again if the
 		 * action is re-executed (for example when asking the password) */
