@@ -220,31 +220,13 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
-	if (fr_window_batch_get_current_action_type (window) == FR_BATCH_ACTION_EXTRACT_ASK_OPTIONS) {
-
-		/* no need to ask the user the extract options again if the
-		 * action is re-executed (for example when asking the password) */
-
-		fr_window_batch_replace_current_action (window,
-							FR_BATCH_ACTION_EXTRACT,
-							extract_data_new (window,
-									  file_list,
-									  destination,
-									  base_dir,
-									  skip_newer,
-									  FR_OVERWRITE_ASK,
-									  junk_paths),
-							(GFreeFunc) extract_data_free);
-		fr_window_batch_resume (window);
-	}
-	else
-		fr_window_archive_extract (window,
-					   file_list,
-					   destination,
-					   base_dir,
-					   skip_newer,
-					   FR_OVERWRITE_ASK,
-					   junk_paths);
+	fr_window_extract_archive_and_continue (window,
+				       	        file_list,
+						destination,
+						base_dir,
+						skip_newer,
+						FR_OVERWRITE_ASK,
+						junk_paths);
 
 	_g_string_list_free (file_list);
 	g_object_unref (destination);

@@ -148,7 +148,8 @@ void            fr_window_archive_extract              (FrWindow      *window,
 						        const char    *base_dir,
 						        gboolean       skip_older,
 						        FrOverwrite    overwrite,
-						        gboolean       junk_paths);
+						        gboolean       junk_paths,
+							gboolean       ask_to_open_destination);
 void            fr_window_archive_extract_here         (FrWindow      *window,
 						        gboolean       skip_older,
 						        gboolean       overwrite,
@@ -272,17 +273,6 @@ void            fr_window_use_progress_dialog          (FrWindow   *window,
 
 /* batch mode procedures. */
 
-typedef struct _ExtractData ExtractData;
-
-ExtractData *   extract_data_new		       (FrWindow      *window,
-							GList         *file_list,
-							GFile         *destination,
-							const char    *base_dir,
-							gboolean       skip_older,
-							FrOverwrite    overwrite,
-							gboolean       junk_paths);
-void		extract_data_free		       (ExtractData   *edata);
-
 void            fr_window_set_current_action  	       (FrWindow      *window,
 						        FrBatchActionType
 								       action,
@@ -335,5 +325,12 @@ gboolean        fr_window_file_list_drag_data_get      (FrWindow         *window
 void            fr_window_update_dialog_closed         (FrWindow         *window);
 void		fr_window_dnd_extraction_finished      (FrWindow	 *window,
 							gboolean	  error);
+void            fr_window_extract_archive_and_continue (FrWindow   *window,
+							GList      *file_list,
+							GFile      *destination,
+							const char *base_dir,
+							gboolean    skip_older,
+							FrOverwrite overwrite,
+							gboolean    junk_paths);
 
 #endif /* FR_WINDOW_H */

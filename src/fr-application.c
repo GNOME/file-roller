@@ -564,6 +564,8 @@ fr_application_command_line (GApplication            *application,
 		if (default_directory != NULL)
 			fr_window_set_default_dir (FR_WINDOW (window), default_directory, TRUE);
 
+		fr_window_set_notify (FR_WINDOW (window), arg_notify);
+
 		file_list = NULL;
 		while ((filename = remaining_args[i++]) != NULL)
 			file_list = g_list_prepend (file_list, g_application_command_line_create_file_for_arg (command_line, filename));
@@ -573,8 +575,6 @@ fr_application_command_line (GApplication            *application,
 		fr_window_batch__add_files (FR_WINDOW (window), add_to_archive, file_list);
 		if (! arg_notify)
 			fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
-		else
-			fr_window_set_notify (FR_WINDOW (window), TRUE);
 		fr_window_batch_start (FR_WINDOW (window));
 
 		_g_object_list_unref (file_list);
@@ -592,6 +592,8 @@ fr_application_command_line (GApplication            *application,
 		if (default_directory != NULL)
 			fr_window_set_default_dir (FR_WINDOW (window), default_directory, TRUE);
 
+		fr_window_set_notify (FR_WINDOW (window), arg_notify);
+
 		fr_window_batch_new (FR_WINDOW (window), _("Extract archive"));
 		while ((archive = remaining_args[i++]) != NULL) {
 			GFile *file;
@@ -606,8 +608,6 @@ fr_application_command_line (GApplication            *application,
 		}
 		if (! arg_notify)
 			fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
-		else
-			fr_window_set_notify (FR_WINDOW (window), TRUE);
 		fr_window_batch_start (FR_WINDOW (window));
 	}
 	else { /* Open each archive in a window */

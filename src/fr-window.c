@@ -114,7 +114,7 @@ typedef struct {
 } FrBatchAction;
 
 
-struct _ExtractData {
+typedef struct {
 	FrWindow    *window;
 	GList       *file_list;
 	GFile       *destination;
@@ -123,7 +123,8 @@ struct _ExtractData {
 	FrOverwrite  overwrite;
 	gboolean     junk_paths;
 	char        *password;
-};
+	gboolean     ask_to_open_destination;
+} ExtractData;
 
 
 typedef enum {
@@ -4050,6 +4051,13 @@ fr_window_create_archive_and_continue (FrWindow   *window,
 }
 
 
+static gboolean
+_fr_window_get_ask_to_open_destination (FrWindow *window)
+{
+	return ! window->priv->batch_mode || window->priv->notify;
+}
+
+
 static void
 new_archive_dialog_response_cb (GtkDialog *dialog,
 				int        response,
@@ -4506,6 +4514,7 @@ wait_dnd_extraction (FrWindow *window)
 				   window->priv->drag_base_dir,
 				   FALSE,
 				   FR_OVERWRITE_ASK,
+				   FALSE,
 				   FALSE);
 
 	DndWaitInfo wait_info = { NULL, NULL };
@@ -6405,14 +6414,15 @@ fr_window_archive_remove (FrWindow *window,
 /* -- fr_window_archive_extract -- */
 
 
-ExtractData *
+static ExtractData *
 extract_data_new (FrWindow    *window,
 		  GList       *file_list,
 		  GFile       *destination,
 		  const char  *base_dir,
 		  gboolean     skip_older,
 		  FrOverwrite  overwrite,
-		  gboolean     junk_paths)
+		  gboolean     junk_paths,
+		  gboolean     ask_to_open_destination)
 {
 	ExtractData *edata;
 
@@ -6425,12 +6435,13 @@ extract_data_new (FrWindow    *window,
 	edata->junk_paths = junk_paths;
 	if (base_dir != NULL)
 		edata->base_dir = g_strdup (base_dir);
+	edata->ask_to_open_destination = ask_to_open_destination;
 
 	return edata;
 }
 
 
-void
+static void
 extract_data_free (ExtractData *edata)
 {
 	g_return_if_fail (edata != NULL);
@@ -6468,7 +6479,7 @@ archive_extraction_ready_cb (GObject      *source_object,
 	GError      *error = NULL;
 
 	batch_mode = window->priv->batch_mode;
-	ask_to_open_destination = ! batch_mode || window->priv->notify;
+	ask_to_open_destination = edata->ask_to_open_destination;
 	g_object_ref (window);
 
 	_g_clear_object (&window->priv->last_extraction_destination);
@@ -6804,7 +6815,8 @@ fr_window_archive_extract (FrWindow    *window,
 			   const char  *base_dir,
 			   gboolean     skip_older,
 			   FrOverwrite  overwrite,
-			   gboolean     junk_paths)
+			   gboolean     junk_paths,
+			   gboolean     ask_to_open_destination)
 {
 	ExtractData *edata;
 	gboolean     do_not_extract = FALSE;
@@ -6816,7 +6828,8 @@ fr_window_archive_extract (FrWindow    *window,
 				  base_dir,
 				  skip_older,
 				  overwrite,
-				  junk_paths);
+				  junk_paths,
+				  ask_to_open_destination);
 
 	fr_window_set_current_action (window,
 					    FR_BATCH_ACTION_EXTRACT,
@@ -6937,7 +6950,8 @@ fr_window_archive_extract_here (FrWindow   *window,
 				   NULL,
 				   skip_older,
 				   overwrite,
-				   junk_paths);
+				   junk_paths,
+				   _fr_window_get_ask_to_open_destination (window));
 
 	g_object_unref (destination);
 }
@@ -9357,7 +9371,8 @@ fr_window_exec_batch_action (FrWindow      *window,
 					   edata->base_dir,
 					   edata->skip_older,
 					   edata->overwrite,
-					   edata->junk_paths);
+					   edata->junk_paths,
+					   edata->ask_to_open_destination);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_HERE:
@@ -9689,7 +9704,8 @@ fr_window_batch__extract_here (FrWindow *window,
 							 NULL,
 							 FALSE,
 							 FR_OVERWRITE_ASK,
-							 FALSE),
+							 FALSE,
+							 _fr_window_get_ask_to_open_destination (window)),
 				       (GFreeFunc) extract_data_free);
 	fr_window_batch_append_action (window,
 				       FR_BATCH_ACTION_CLOSE,
@@ -9719,7 +9735,8 @@ fr_window_batch__extract (FrWindow  *window,
 								 NULL,
 								 FALSE,
 								 FR_OVERWRITE_ASK,
-								 FALSE),
+								 FALSE,
+								 _fr_window_get_ask_to_open_destination (window)),
 					       (GFreeFunc) extract_data_free);
 	else
 		fr_window_batch_append_action (window,
@@ -9769,4 +9786,43 @@ fr_window_dnd_extraction_finished (FrWindow *window,
 		window->priv->dnd_extract_is_running = FALSE;
 		window->priv->dnd_extract_finished_with_error = TRUE;
 	}
+}
+
+
+void
+fr_window_extract_archive_and_continue (FrWindow      *window,
+					GList         *file_list,
+					GFile         *destination,
+					const char    *base_dir,
+					gboolean       skip_older,
+					FrOverwrite    overwrite,
+					gboolean       junk_paths)
+{
+	if (fr_window_batch_get_current_action_type (window) == FR_BATCH_ACTION_EXTRACT_ASK_OPTIONS) {
+
+		/* no need to ask the user the extract options again if the
+		 * action is re-executed (for example when asking the password) */
+
+		fr_window_batch_replace_current_action (window,
+							FR_BATCH_ACTION_EXTRACT,
+							extract_data_new (window,
+									  file_list,
+									  destination,
+									  base_dir,
+									  skip_older,
+									  FR_OVERWRITE_ASK,
+									  junk_paths,
+									  _fr_window_get_ask_to_open_destination (window)),
+							(GFreeFunc) extract_data_free);
+		fr_window_batch_resume (window);
+	}
+	else
+		fr_window_archive_extract (window,
+					   file_list,
+					   destination,
+					   base_dir,
+					   skip_older,
+					   FR_OVERWRITE_ASK,
+					   junk_paths,
+					   _fr_window_get_ask_to_open_destination (window));
 }
