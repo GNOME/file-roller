@@ -123,7 +123,6 @@ typedef struct {
 	FrOverwrite  overwrite;
 	gboolean     junk_paths;
 	char        *password;
-	gboolean     ask_to_open_destination;
 } ExtractData;
 
 
@@ -4380,7 +4379,6 @@ wait_dnd_extraction (FrWindow *window)
 				   window->priv->drag_base_dir,
 				   FALSE,
 				   FR_OVERWRITE_ASK,
-				   FALSE,
 				   FALSE);
 
 	DndWaitInfo wait_info = { NULL, NULL };
@@ -6288,8 +6286,7 @@ extract_data_new (FrWindow    *window,
 		  const char  *base_dir,
 		  gboolean     skip_older,
 		  FrOverwrite  overwrite,
-		  gboolean     junk_paths,
-		  gboolean     ask_to_open_destination)
+		  gboolean     junk_paths)
 {
 	ExtractData *edata;
 
@@ -6302,24 +6299,8 @@ extract_data_new (FrWindow    *window,
 	edata->junk_paths = junk_paths;
 	if (base_dir != NULL)
 		edata->base_dir = g_strdup (base_dir);
-	edata->ask_to_open_destination = ask_to_open_destination;
 
 	return edata;
-}
-
-
-static ExtractData *
-extract_to_data_new (FrWindow *window,
-		     GFile    *extract_to_dir)
-{
-	return extract_data_new (window,
-				 NULL,
-				 extract_to_dir,
-				 NULL,
-				 FALSE,
-				 FR_OVERWRITE_ASK,
-				 FALSE,
-				 FALSE);
 }
 
 
@@ -6360,8 +6341,8 @@ archive_extraction_ready_cb (GObject      *source_object,
 	gboolean     batch_mode;
 	GError      *error = NULL;
 
-	ask_to_open_destination = edata->ask_to_open_destination;
 	batch_mode = window->priv->batch_mode;
+	ask_to_open_destination = ! batch_mode || window->priv->notify;
 	g_object_ref (window);
 
 	_g_clear_object (&window->priv->last_extraction_destination);
@@ -6647,8 +6628,7 @@ fr_window_archive_extract (FrWindow    *window,
 			   const char  *base_dir,
 			   gboolean     skip_older,
 			   FrOverwrite  overwrite,
-			   gboolean     junk_paths,
-			   gboolean     ask_to_open_destination)
+			   gboolean     junk_paths)
 {
 	ExtractData *edata;
 	gboolean     do_not_extract = FALSE;
@@ -6660,8 +6640,7 @@ fr_window_archive_extract (FrWindow    *window,
 				  base_dir,
 				  skip_older,
 				  overwrite,
-				  junk_paths,
-				  ask_to_open_destination);
+				  junk_paths);
 
 	fr_window_set_current_action (window,
 					    FR_BATCH_ACTION_EXTRACT,
@@ -6771,8 +6750,7 @@ void
 fr_window_archive_extract_here (FrWindow   *window,
 				gboolean    skip_older,
 				gboolean    overwrite,
-				gboolean    junk_paths,
-				gboolean    ask_to_open_destination)
+				gboolean    junk_paths)
 {
 	GFile *destination;
 
@@ -6783,8 +6761,7 @@ fr_window_archive_extract_here (FrWindow   *window,
 				   NULL,
 				   skip_older,
 				   overwrite,
-				   junk_paths,
-				   ask_to_open_destination);
+				   junk_paths);
 
 	g_object_unref (destination);
 }
@@ -9212,8 +9189,7 @@ fr_window_exec_batch_action (FrWindow      *window,
 					   edata->base_dir,
 					   edata->skip_older,
 					   edata->overwrite,
-					   edata->junk_paths,
-					   ! window->priv->batch_mode || window->priv->notify);
+					   edata->junk_paths);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_HERE:
@@ -9223,27 +9199,15 @@ fr_window_exec_batch_action (FrWindow      *window,
 		fr_window_archive_extract_here (window,
 						edata->skip_older,
 						edata->overwrite,
-						edata->junk_paths,
-						! window->priv->batch_mode || window->priv->notify);
+						edata->junk_paths);
 		break;
 
 	case FR_BATCH_ACTION_EXTRACT_INTERACT:
 		debug (DEBUG_INFO, "[BATCH] EXTRACT_INTERACT\n");
 
 		if (window->priv->extract_interact_use_default_dir
-		    && (window->priv->extract_default_dir != NULL))
-		{
-			fr_window_archive_extract (window,
 						   NULL,
-						   window->priv->extract_default_dir,
-						   NULL,
-						   FALSE,
-						   FR_OVERWRITE_ASK,
-						   FALSE,
-						   TRUE);
-		}
-		else
-			dlg_extract (NULL, window);
+		dlg_extract (NULL, window);
 		break;
 
 	case FR_BATCH_ACTION_RENAME:
@@ -9518,7 +9482,13 @@ fr_window_set_batch__extract_here (FrWindow *window,
 				       (GFreeFunc) g_object_unref);
 	fr_window_batch_append_action (window,
 				       FR_BATCH_ACTION_EXTRACT_HERE,
-				       extract_to_data_new (window, NULL),
+				       extract_data_new (window,
+							 NULL,
+							 NULL,
+							 NULL,
+							 FALSE,
+							 FR_OVERWRITE_ASK,
+							 FALSE),
 				       (GFreeFunc) extract_data_free);
 	fr_window_batch_append_action (window,
 				       FR_BATCH_ACTION_CLOSE,
@@ -9542,7 +9512,13 @@ fr_window_set_batch__extract (FrWindow  *window,
 	if (destination != NULL)
 		fr_window_batch_append_action (window,
 					       FR_BATCH_ACTION_EXTRACT,
-					       extract_to_data_new (window, destination),
+					       extract_data_new (window,
+								 NULL,
+								 destination,
+								 NULL,
+								 FALSE,
+								 FR_OVERWRITE_ASK,
+								 FALSE),
 					       (GFreeFunc) extract_data_free);
 	else
 		fr_window_batch_append_action (window,

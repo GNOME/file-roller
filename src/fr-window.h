@@ -149,13 +149,11 @@ void            fr_window_archive_extract              (FrWindow      *window,
 						        const char    *base_dir,
 						        gboolean       skip_older,
 						        FrOverwrite    overwrite,
-						        gboolean       junk_paths,
-						        gboolean       ask_to_open_destination);
+						        gboolean       junk_paths);
 void            fr_window_archive_extract_here         (FrWindow      *window,
 						        gboolean       skip_older,
 						        gboolean       overwrite,
-						        gboolean       junk_paths,
-							gboolean       ask_to_open_destination);
+						        gboolean       junk_paths);
 void            fr_window_archive_test	               (FrWindow      *window);
 void            fr_window_archive_encrypt              (FrWindow      *window,
 							const char    *password,
