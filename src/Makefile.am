@@ -38,6 +38,7 @@ AM_CPPFLAGS =						\
 	-DPRIVEXECDIR=\"$(privexecdir)\"		\
 	-DSHDIR=\"$(shdir)\"				\
 	-DAPPLICATIONS_DIR=\"$(applications_dir)\"	\
+	-DLOCALEDIR=\"$(localedir)\" 			\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)					\
 	$(JSON_GLIB_CFLAGS)				\

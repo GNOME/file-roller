@@ -1,6 +1,6 @@
 /*
  *  File-Roller
- * 
+ *
  *  Copyright (C) 2004 Free Software Foundation, Inc.
  *
  *  This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Author: Paolo Bacchilega <paobac@cvs.gnome.org>
- * 
+ *
  */
 
 #include <config.h>
@@ -33,7 +33,7 @@ nautilus_module_initialize (GTypeModule*module)
 {
 	nautilus_fr_register_type (module);
 
-	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 }
 
@@ -44,12 +44,12 @@ nautilus_module_shutdown (void)
 }
 
 
-void 
+void
 nautilus_module_list_types (const GType **types,
 			    int          *num_types)
 {
 	static GType type_list[1];
-	
+
 	type_list[0] = NAUTILUS_TYPE_FR;
 	*types = type_list;
 	*num_types = 1;

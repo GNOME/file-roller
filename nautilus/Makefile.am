@@ -1,6 +1,6 @@
 AM_CPPFLAGS =						\
 	-DFR_DATADIR=\"$(datadir)\"			\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" 	\
+	-DLOCALEDIR=\"$(localedir)\" 			\
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
 	$(DISABLE_DEPRECATED)				\

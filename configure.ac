@@ -255,12 +255,6 @@ GETTEXT_PACKAGE=file-roller
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GetText Package])
 
-if test "x${prefix}" = "xNONE"; then
-  AC_DEFINE_UNQUOTED(LOCALEDIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Locale dir])
-else
-  AC_DEFINE_UNQUOTED(LOCALEDIR, "${prefix}/${DATADIRNAME}/locale", [Locale dir])
-fi
-
 dnl ******************************
 
 YELP_HELP_INIT
