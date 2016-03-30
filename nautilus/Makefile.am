@@ -1,5 +1,4 @@
 AM_CPPFLAGS =						\
-	-DFR_DATADIR=\"$(datadir)\"			\
 	-DLOCALEDIR=\"$(localedir)\" 			\
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\

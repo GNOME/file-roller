@@ -26,18 +26,11 @@ endif
 AM_CPPFLAGS =						\
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
-	-DFR_PREFIX=\"$(prefix)\"           		\
-        -DFR_SYSCONFDIR=\"$(sysconfdir)\"   		\
-        -DFR_DATADIR=\"$(datadir)\"     	    	\
         -DPRIVDATADIR=\"$(privdatadir)\"		\
         -DUI_DIR=\"$(uidir)\"				\
-        -DFR_LIBDIR=\"$(libdir)\"  	         	\
         -DPKG_DATA_DIR=\"$(pkgdatadir)\"                \
-	-DPIXMAPSDIR=\""$(datadir)/pixmaps"\"		\
-	-DGLADEDIR=\""$(gladedir)"\" 			\
 	-DPRIVEXECDIR=\"$(privexecdir)\"		\
 	-DSHDIR=\"$(shdir)\"				\
-	-DAPPLICATIONS_DIR=\"$(applications_dir)\"	\
 	-DLOCALEDIR=\"$(localedir)\" 			\
 	$(DISABLE_DEPRECATED)				\
 	$(FR_CFLAGS)					\
