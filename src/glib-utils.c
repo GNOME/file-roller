@@ -1034,7 +1034,7 @@ _g_path_get_relative_basename (const char *path,
 		return (path[0] == '/') ? path + 1 : path;
 
 	base_dir_len = strlen (base_dir);
-	if (strlen (path) <= base_dir_len)
+	if (strlen (path) < base_dir_len)
 		return NULL;
 
 	base_path = path + base_dir_len;
