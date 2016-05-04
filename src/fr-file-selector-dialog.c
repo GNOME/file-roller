@@ -882,6 +882,7 @@ get_folder_content_done_cb (GError   *error,
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), sort_column_id, sort_order);
 	set_current_folder (self, load_data->folder);
+	_update_sensitivity (self);
 
 	if (load_data->dialog->priv->current_operation == load_data)
 		load_data->dialog->priv->current_operation = NULL;
