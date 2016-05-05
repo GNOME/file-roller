@@ -249,7 +249,7 @@ AC_DEFINE_UNQUOTED(CPIO_PATH, "${CPIO}", [Path to cpio])
 
 dnl ******************************
 
-IT_PROG_INTLTOOL([0.40.0])
+IT_PROG_INTLTOOL([0.50.1])
 
 GETTEXT_PACKAGE=file-roller
 AC_SUBST(GETTEXT_PACKAGE)
