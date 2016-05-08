@@ -2884,10 +2884,8 @@ fr_window_show_error_dialog (FrWindow   *window,
 
 	close_progress_dialog (window, TRUE);
 
-	if (window->priv->batch_mode) {
-		gtk_window_set_title (GTK_WINDOW (dialog), window->priv->batch_title);
+	if (window->priv->batch_mode)
 		fr_window_destroy_with_error_dialog (window);
-	}
 
 	g_signal_connect (dialog,
 			  "response",
