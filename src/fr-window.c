@@ -124,6 +124,7 @@ typedef struct {
 	gboolean     junk_paths;
 	char        *password;
 	gboolean     ask_to_open_destination;
+	gboolean     avoid_tarbombs;
 } ExtractData;
 
 
@@ -6421,7 +6422,8 @@ extract_data_new (FrWindow    *window,
 		  gboolean     skip_older,
 		  FrOverwrite  overwrite,
 		  gboolean     junk_paths,
-		  gboolean     ask_to_open_destination)
+		  gboolean     ask_to_open_destination,
+		  gboolean     avoid_tarbombs)
 {
 	ExtractData *edata;
 
@@ -6435,6 +6437,7 @@ extract_data_new (FrWindow    *window,
 	if (base_dir != NULL)
 		edata->base_dir = g_strdup (base_dir);
 	edata->ask_to_open_destination = ask_to_open_destination;
+	edata->avoid_tarbombs = avoid_tarbombs;
 
 	return edata;
 }
@@ -6807,33 +6810,13 @@ archive_is_encrypted (FrWindow *window,
 }
 
 
-void
-fr_window_archive_extract (FrWindow    *window,
-			   GList       *file_list,
-			   GFile       *destination,
-			   const char  *base_dir,
-			   gboolean     skip_older,
-			   FrOverwrite  overwrite,
-			   gboolean     junk_paths,
-			   gboolean     ask_to_open_destination)
+/* ask some questions to the user before calling _fr_window_archive_extract_from_edata */
+static void
+_fr_window_archive_extract_from_edata_maybe (FrWindow    *window,
+					     ExtractData *edata)
 {
-	ExtractData *edata;
-	gboolean     do_not_extract = FALSE;
-	GError      *error = NULL;
-
-	edata = extract_data_new (window,
-				  file_list,
-				  destination,
-				  base_dir,
-				  skip_older,
-				  overwrite,
-				  junk_paths,
-				  ask_to_open_destination);
-
-	fr_window_set_current_action (window,
-					    FR_BATCH_ACTION_EXTRACT,
-					    edata,
-					    (GFreeFunc) extract_data_free);
+	gboolean  do_not_extract = FALSE;
+	GError   *error = NULL;
 
 	if (archive_is_encrypted (window, edata->file_list) && (window->priv->password == NULL)) {
 		dlg_ask_password (window);
@@ -6846,7 +6829,7 @@ fr_window_archive_extract (FrWindow    *window,
 		if (edata->overwrite == FR_OVERWRITE_ASK)
 			edata->overwrite = FR_OVERWRITE_YES;
 
-		if (! ForceDirectoryCreation) {
+		if (! ForceDirectoryCreation && ! edata->avoid_tarbombs) {
 			GtkWidget *d;
 			int        r;
 			char      *folder_name;
@@ -6931,7 +6914,112 @@ fr_window_archive_extract (FrWindow    *window,
 }
 
 
+void
+fr_window_archive_extract (FrWindow    *window,
+			   GList       *file_list,
+			   GFile       *destination,
+			   const char  *base_dir,
+			   gboolean     skip_older,
+			   FrOverwrite  overwrite,
+			   gboolean     junk_paths,
+			   gboolean     ask_to_open_destination)
+{
+	ExtractData *edata;
+
+	edata = extract_data_new (window,
+				  file_list,
+				  destination,
+				  base_dir,
+				  skip_older,
+				  overwrite,
+				  junk_paths,
+				  ask_to_open_destination,
+				  FALSE);
+
+	fr_window_set_current_action (window,
+				      FR_BATCH_ACTION_EXTRACT,
+				      edata,
+				      (GFreeFunc) extract_data_free);
+
+	_fr_window_archive_extract_from_edata_maybe (window, edata);
+}
+
+
 /* -- fr_window_archive_extract_here -- */
+
+
+#define MIN_TOPLEVEL_ITEMS_FOR_A_TARBOMB 2
+
+
+static gboolean
+_archive_extraction_generates_a_tarbomb (FrArchive *archive)
+{
+	gboolean    tarbomb = FALSE;
+	GHashTable *names_hash;
+	int         n_toplevel_items, i;
+
+	names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+	n_toplevel_items = 0;
+	for (i = 0; ! tarbomb && (i < archive->files->len); i++) {
+		FileData *fdata = g_ptr_array_index (archive->files, i);
+		char     *second_separator;
+		char     *name = NULL;
+		gboolean  name_created;
+
+		if ((fdata->full_path == NULL) || (fdata->full_path[0] == '\0'))
+			continue;
+
+		second_separator = strchr (fdata->full_path + 1 /* skip the first separator */, '/');
+		if (second_separator != NULL) {
+			name = g_strndup (fdata->full_path, second_separator - fdata->full_path);
+			name_created = TRUE;
+		}
+		else {
+			name = fdata->full_path;
+			name_created = FALSE;
+		}
+
+		if (g_hash_table_lookup (names_hash, name) == NULL) {
+			g_hash_table_insert (names_hash, name_created ? name : g_strdup (name), GINT_TO_POINTER (1));
+			n_toplevel_items++;
+			if (n_toplevel_items >= MIN_TOPLEVEL_ITEMS_FOR_A_TARBOMB)
+				tarbomb = TRUE;
+		}
+		else if (name_created)
+			g_free (name);
+	}
+	g_hash_table_destroy (names_hash);
+
+	return tarbomb;
+}
+
+
+static GFile *
+_get_destination_to_avoid_tarbomb (GFile *file)
+{
+	GFile      *directory;
+	char       *name;
+	const char *ext;
+	char       *new_name;
+	GFile      *destination;
+
+	directory = g_file_get_parent (file);
+	name = g_file_get_basename (file);
+	ext = get_archive_filename_extension (name);
+	if (ext == NULL)
+		/* if no extension is present add a suffix to the name... */
+		new_name = g_strconcat (name, "_FILES", NULL);
+	else
+		/* ...else use the name without the extension */
+		new_name = g_strndup (name, strlen (name) - strlen (ext));
+	destination = g_file_get_child (directory, new_name);
+
+	g_free (new_name);
+	g_free (name);
+	g_object_unref (directory);
+
+	return destination;
+}
 
 
 void
@@ -6940,17 +7028,30 @@ fr_window_archive_extract_here (FrWindow   *window,
 				gboolean    overwrite,
 				gboolean    junk_paths)
 {
-	GFile *destination;
+	GFile       *destination;
+	ExtractData *edata;
 
-	destination = g_file_get_parent (fr_archive_get_file (window->archive));
-	fr_window_archive_extract (window,
-				   NULL,
-				   destination,
-				   NULL,
-				   skip_older,
-				   overwrite,
-				   junk_paths,
-				   _fr_window_get_ask_to_open_destination (window));
+	if (_archive_extraction_generates_a_tarbomb (window->archive))
+		destination = _get_destination_to_avoid_tarbomb (fr_archive_get_file (window->archive));
+	else
+		destination = g_file_get_parent (fr_archive_get_file (window->archive));
+
+	edata = extract_data_new (window,
+				  NULL,
+				  destination,
+				  NULL,
+				  skip_older,
+				  overwrite,
+				  junk_paths,
+				  _fr_window_get_ask_to_open_destination (window),
+				  TRUE);
+
+	fr_window_set_current_action (window,
+				      FR_BATCH_ACTION_EXTRACT,
+				      edata,
+				      (GFreeFunc) extract_data_free);
+
+	_fr_window_archive_extract_from_edata_maybe (window, edata);
 
 	g_object_unref (destination);
 }
@@ -9704,7 +9805,8 @@ fr_window_batch__extract_here (FrWindow *window,
 							 FALSE,
 							 FR_OVERWRITE_ASK,
 							 FALSE,
-							 _fr_window_get_ask_to_open_destination (window)),
+							 _fr_window_get_ask_to_open_destination (window),
+							 TRUE),
 				       (GFreeFunc) extract_data_free);
 	fr_window_batch_append_action (window,
 				       FR_BATCH_ACTION_CLOSE,
@@ -9735,7 +9837,8 @@ fr_window_batch__extract (FrWindow  *window,
 								 FALSE,
 								 FR_OVERWRITE_ASK,
 								 FALSE,
-								 _fr_window_get_ask_to_open_destination (window)),
+								 _fr_window_get_ask_to_open_destination (window),
+								 FALSE),
 					       (GFreeFunc) extract_data_free);
 	else
 		fr_window_batch_append_action (window,
@@ -9811,7 +9914,8 @@ fr_window_extract_archive_and_continue (FrWindow      *window,
 									  skip_older,
 									  FR_OVERWRITE_ASK,
 									  junk_paths,
-									  _fr_window_get_ask_to_open_destination (window)),
+									  _fr_window_get_ask_to_open_destination (window),
+									  FALSE),
 							(GFreeFunc) extract_data_free);
 		fr_window_batch_resume (window);
 	}
