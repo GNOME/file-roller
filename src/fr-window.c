@@ -8813,6 +8813,7 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 
 			g_hash_table_replace (created_dirs, g_strdup (dir), GINT_TO_POINTER (1));
 
+			g_object_unref (directory);
 			g_free (uri);
 		}
 
