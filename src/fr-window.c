@@ -8804,12 +8804,16 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 		dir = _g_path_remove_level (new_name);
 		if ((dir != NULL) && (g_hash_table_lookup (created_dirs, dir) == NULL)) {
 			GFile *directory;
+			char *uri;
 
 			directory = _g_file_append_path (data->tmp_dir, dir, NULL);
-			debug (DEBUG_INFO, "mktree %s\n", g_file_get_uri (directory));
+			uri = g_file_get_uri (directory);
+			debug (DEBUG_INFO, "mktree %s\n", uri);
 			_g_file_make_directory_tree (directory, 0700, NULL);
 
 			g_hash_table_replace (created_dirs, g_strdup (dir), GINT_TO_POINTER (1));
+
+			g_free (uri);
 		}
 
 		g_free (dir);
