@@ -1600,10 +1600,10 @@ fr_window_populate_file_list (FrWindow  *window,
 			g_free (s_time);
 		}
 		else {
-			char       *utf8_path;
-			char       *s_size;
-			char       *s_time;
-			const char *desc;
+			char *utf8_path;
+			char *s_size;
+			char *s_time;
+			char *desc;
 
 			utf8_path = g_filename_display_name (fdata->path);
 
@@ -1624,6 +1624,7 @@ fr_window_populate_file_list (FrWindow  *window,
 			g_free (utf8_path);
 			g_free (s_size);
 			g_free (s_time);
+			g_free (desc);
 		}
 
 		g_free (utf8_name);
