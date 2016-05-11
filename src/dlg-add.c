@@ -458,6 +458,7 @@ dlg_add_folder_load_last_options (DialogData *data)
 	g_free (include_files);
 	g_free (exclude_files);
 	g_free (exclude_folders);
+	g_list_free_full (files, (GDestroyNotify) g_object_unref);
 }
 
 
