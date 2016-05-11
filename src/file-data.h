@@ -38,7 +38,7 @@ typedef struct {
 	gboolean    encrypted;        /* Whether the file is encrypted. */
 	gboolean    dir;              /* Whether this is a directory listed in the archive */
 	goffset     dir_size;
-	const char *content_type;
+	char       *content_type;
 
 	/* Additional data. */
 

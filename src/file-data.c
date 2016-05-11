@@ -54,6 +54,7 @@ file_data_free (FileData *fdata)
 	g_free (fdata->full_path);
 	g_free (fdata->name);
 	g_free (fdata->path);
+	g_free (fdata->content_type);
 	g_free (fdata->link);
 	g_free (fdata->list_name);
 	g_free (fdata->sort_key);
@@ -77,7 +78,7 @@ file_data_copy (FileData *src)
 	fdata->modified = src->modified;
 	fdata->name = g_strdup (src->name);
 	fdata->path = g_strdup (src->path);
-	fdata->content_type = src->content_type;
+	fdata->content_type = g_strdup (src->content_type);
 	fdata->encrypted = src->encrypted;
 	fdata->dir = src->dir;
 	fdata->dir_size = src->dir_size;
@@ -93,10 +94,12 @@ file_data_copy (FileData *src)
 void
 file_data_update_content_type (FileData *fdata)
 {
+	g_free (fdata->content_type);
+
 	if (fdata->dir)
-		fdata->content_type = MIME_TYPE_DIRECTORY;
+		fdata->content_type = g_strdup (MIME_TYPE_DIRECTORY);
 	else
-		fdata->content_type = _g_str_get_static (g_content_type_guess (fdata->full_path, NULL, 0, NULL));
+		fdata->content_type = g_content_type_guess (fdata->full_path, NULL, 0, NULL);
 }
 
 
