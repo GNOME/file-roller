@@ -425,7 +425,8 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		return NULL;
 	}
 
-	if (! g_file_info_get_attribute_boolean (parent_info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE)) {
+	if (g_file_info_has_attribute (parent_info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE) &&
+				       ! g_file_info_get_attribute_boolean (parent_info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE)) {
 		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
 						GTK_DIALOG_MODAL,
 						NULL,
