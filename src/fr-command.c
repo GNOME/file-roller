@@ -369,7 +369,7 @@ fr_command_handle_process_error (FrCommand     *self,
 		 * 'restart' flag */
 		FR_COMMAND_GET_CLASS (G_OBJECT (self))->handle_error (self, process_error);
 
-	if ((error != NULL) && (process_error->gerror != NULL))
+	if ((error != NULL) && (process_error->gerror != NULL) && (process_error->type != FR_ERROR_NONE))
 		*error = g_error_copy (process_error->gerror);
 	fr_error_free (process_error);
 

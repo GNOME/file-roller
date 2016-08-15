@@ -552,7 +552,8 @@ fr_command_7z_handle_error (FrCommand *command,
 	}
 
 	if (error->status <= 1) {
-		error->type = FR_ERROR_NONE;
+		/* ignore warnings */
+		fr_error_clear_gerror (error);
 	}
 	else {
 		GList *scan;
