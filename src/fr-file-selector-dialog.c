@@ -255,7 +255,7 @@ fr_file_selector_dialog_realize (GtkWidget *widget)
 	sidebar_size = g_settings_get_int (self->priv->settings, PREF_FILE_SELECTOR_SIDEBAR_SIZE);
 	if (sidebar_size <= 0)
 		sidebar_size = get_font_size (widget) * SIDEBAR_CHARS;
-		gtk_paned_set_position (GTK_PANED (GET_WIDGET ("main_paned")), sidebar_size);
+	gtk_paned_set_position (GTK_PANED (GET_WIDGET ("main_paned")), sidebar_size);
 }
 
 
