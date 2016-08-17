@@ -46,6 +46,8 @@ AC_ARG_ENABLE(debug,
 if test x$ENABLE_DEBUG = xyes; then
 	AC_DEFINE(DEBUG, 1, [enable compilation of debugging messages])
 	CFLAGS="$CFLAGS -g -O0 -DDEBUG"
+else
+	CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 fi
 
 dnl ===========================================================================
@@ -267,8 +269,6 @@ AC_ARG_ENABLE(deprecated,
               [disable_deprecated=no])
 if test "x$disable_deprecated" = "xyes"; then
         DISABLE_DEPRECATED="-DGSEAL_ENABLE -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
-else
-        CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 fi
 AC_SUBST(DISABLE_DEPRECATED)
 
