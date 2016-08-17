@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
 
-AC_INIT([file-roller],[3.20.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller],[file-roller])
+AC_INIT([file-roller],[3.21.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=file-roller],[file-roller])
 AM_INIT_AUTOMAKE([1.11 foreign no-dist-gzip dist-xz tar-ustar])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -47,6 +47,8 @@ AC_ARG_ENABLE(debug,
 if test x$ENABLE_DEBUG = xyes; then
 	AC_DEFINE(DEBUG, 1, [enable compilation of debugging messages])
 	CFLAGS="$CFLAGS -g -O0 -DDEBUG"
+else
+	CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 fi
 
 dnl ===========================================================================
@@ -268,8 +270,6 @@ AC_ARG_ENABLE(deprecated,
               [disable_deprecated=no])
 if test "x$disable_deprecated" = "xyes"; then
         DISABLE_DEPRECATED="-DGSEAL_ENABLE -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
-else
-        CFLAGS="$CFLAGS -Wno-deprecated-declarations"
 fi
 AC_SUBST(DISABLE_DEPRECATED)
 
