@@ -286,7 +286,7 @@ fr_window_activate_open (GSimpleAction *action,
 	GtkFileFilter *filter;
 	int            i;
 
-	file_sel = gtk_file_chooser_dialog_new (_("Open"),
+	file_sel = gtk_file_chooser_dialog_new (C_("Window title", "Open"),
 						GTK_WINDOW (window),
 						GTK_FILE_CHOOSER_ACTION_OPEN,
 						_GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,

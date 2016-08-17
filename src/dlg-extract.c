@@ -276,7 +276,7 @@ dlg_extract__common (FrWindow *window,
 	data->base_dir_for_selection = base_dir_for_selection;
 	data->extract_clicked = FALSE;
 
-	data->dialog = gtk_file_chooser_dialog_new (_("Extract"),
+	data->dialog = gtk_file_chooser_dialog_new (C_("Window title", "Extract"),
 						    GTK_WINDOW (data->window),
 						    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 						    _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,

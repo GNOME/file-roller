@@ -5762,11 +5762,11 @@ fr_window_construct (FrWindow *window)
 
 	header_bar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
 
-	button = _gtk_header_bar_create_text_button (_("Extract"), NULL, "win.extract-files");
+	button = _gtk_header_bar_create_text_button (C_("Action", "Extract"), NULL, "win.extract-files");
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar), button);
 
-	button = _gtk_header_bar_create_image_button ("list-add-symbolic", _("Add Files"), "win.add-files");
+	button = _gtk_header_bar_create_image_button ("list-add-symbolic", C_("Action", "Add Files"), "win.add-files");
 	gtk_size_group_add_widget (header_bar_size_group, button);
 	gtk_header_bar_pack_start (GTK_HEADER_BAR (window->priv->headerbar), button);
 
@@ -6229,7 +6229,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 	if (notification_supports_actions) {
 		notify_notification_add_action (notification,
 						"document-open-symbolic",
-						_("Open"),
+						C_("Action", "Open"),
 						notify_action_open_archive_cb,
 						g_object_ref (window->priv->saving_file),
 						g_object_unref);

@@ -179,7 +179,7 @@ dlg_add (FrWindow *window)
 	data = g_new0 (DialogData, 1);
 	data->settings = g_settings_new (FILE_ROLLER_SCHEMA_ADD);
 	data->window = window;
-	data->dialog = fr_file_selector_dialog_new (_("Add Files"), GTK_WINDOW (data->window));
+	data->dialog = fr_file_selector_dialog_new (C_("Window title", "Add Files"), GTK_WINDOW (data->window));
 	gtk_dialog_set_default_response (GTK_DIALOG (data->dialog), GTK_RESPONSE_OK);
 
 	g_object_get (data->dialog, "use-header-bar", &use_header, NULL);
@@ -201,14 +201,14 @@ dlg_add (FrWindow *window)
 
 	/* load options */
 
-	menu_item = gtk_menu_item_new_with_label (_("Load Options"));
+	menu_item = gtk_menu_item_new_with_label (C_("Action", "Load Options"));
 	gtk_widget_show (menu_item);
 	g_signal_connect (menu_item, "activate", G_CALLBACK (load_options_activate_cb), data);
 	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
 
 	/* save options */
 
-	menu_item = gtk_menu_item_new_with_label (_("Save Options"));
+	menu_item = gtk_menu_item_new_with_label (C_("Action", "Save Options"));
 	gtk_widget_show (menu_item);
 	g_signal_connect (menu_item, "activate", G_CALLBACK (save_options_activate_cb), data);
 	gtk_menu_shell_append (GTK_MENU_SHELL (options_menu), menu_item);
@@ -760,7 +760,7 @@ load_options_activate_cb (GtkMenuItem *menu_item,
 	/* Get the widgets. */
 
 	aod_data->dialog = g_object_new (GTK_TYPE_DIALOG,
-					 "title", _("Load Options"),
+					 "title", C_("Window title", "Load Options"),
 					 "modal", TRUE,
 					 "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 					 NULL);
@@ -852,7 +852,7 @@ save_options_activate_cb (GtkMenuItem *menu_item,
 
 	opt_filename = _gtk_request_dialog_run (GTK_WINDOW (data->dialog),
 						GTK_DIALOG_MODAL,
-						_("Save Options"),
+						C_("Window title", "Save Options"),
 						_("_Options Name:"),
 						(data->last_options != NULL) ? data->last_options : "",
 						1024,
