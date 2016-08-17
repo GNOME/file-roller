@@ -394,6 +394,7 @@ list_archive_thread (GSimpleAsyncResult *result,
 		g_print ("\toriginal_path: %s\n", file_data->original_path);
 		g_print ("\tname: %s\n", file_data->name);
 		g_print ("\tpath: %s\n", file_data->path);
+		g_print ("\tlink: %s\n", file_data->link);
 		*/
 
 		fr_archive_add_file (load_data->archive, file_data);
