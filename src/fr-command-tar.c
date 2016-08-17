@@ -902,6 +902,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 	FrCommandTar *c_tar = FR_COMMAND_TAR (comm);
 	FrArchive    *archive = FR_ARCHIVE (comm);
 	char         *tmp_name;
+	char         *tmp_dir;
 	gboolean      archive_exists;
 
 	if (can_create_a_compressed_archive (comm))
@@ -928,12 +929,14 @@ fr_command_tar_uncompress (FrCommand *comm)
 	}
 	else
 		tmp_name = g_strdup (comm->filename);
+	tmp_dir = _g_path_remove_level (tmp_name);
 
 	c_tar->uncomp_filename = get_uncompressed_name (c_tar, tmp_name);
 
 	if (archive_exists) {
 		if (_g_mime_type_matches (archive->mime_type, "application/x-compressed-tar")) {
 			fr_process_begin_command (comm->process, "gzip");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_set_continue_func (comm->process, gzip_continue_func, comm);
 			fr_process_add_arg (comm->process, "-f");
@@ -943,6 +946,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip-compressed-tar")) {
 			fr_process_begin_command (comm->process, "bzip2");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
@@ -956,6 +960,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 			}
 			else
 				fr_process_begin_command (comm->process, "uncompress");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, tmp_name);
@@ -963,6 +968,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-lrzip-compressed-tar")) {
 			fr_process_begin_command (comm->process, "lrzip");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
@@ -981,6 +987,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-lzip-compressed-tar")) {
 			fr_process_begin_command (comm->process, "lzip");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
@@ -989,6 +996,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-lzma-compressed-tar")) {
 			fr_process_begin_command (comm->process, "lzma");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
@@ -997,6 +1005,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-xz-compressed-tar")) {
 			fr_process_begin_command (comm->process, "xz");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-f");
 			fr_process_add_arg (comm->process, "-d");
@@ -1005,6 +1014,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-lzop-compressed-tar")) {
 			fr_process_begin_command (comm->process, "lzop");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-dfU");
 			fr_process_add_arg (comm->process, "--no-stdin");
@@ -1015,6 +1025,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 			FrCommandTar *comm_tar = (FrCommandTar*) comm;
 
 			fr_process_begin_command (comm->process, comm_tar->compress_command);
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "e");
 			fr_process_add_arg (comm->process, "-bd");
@@ -1031,6 +1042,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 		else if (_g_mime_type_matches (archive->mime_type, "application/x-rzip-compressed-tar")) {
 			fr_process_begin_command (comm->process, "rzip");
+			fr_process_set_working_dir (comm->process, tmp_dir);
 			fr_process_set_begin_func (comm->process, begin_func__uncompress, comm);
 			fr_process_add_arg (comm->process, "-df");
 			fr_process_add_arg (comm->process, tmp_name);
@@ -1038,6 +1050,7 @@ fr_command_tar_uncompress (FrCommand *comm)
 		}
 	}
 
+	g_free (tmp_dir);
 	g_free (tmp_name);
 }
 

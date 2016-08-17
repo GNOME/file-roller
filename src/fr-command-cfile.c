@@ -376,6 +376,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 
 	if (_g_mime_type_matches (archive->mime_type, "application/x-gzip")) {
 		fr_process_begin_command (comm->process, "gzip");
+		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, "-n");
@@ -384,6 +385,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip")) {
 		fr_process_begin_command (comm->process, "bzip2");
+		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, temp_file);
@@ -397,12 +399,14 @@ fr_command_cfile_extract (FrCommand  *comm,
 		}
 		else
 			fr_process_begin_command (comm->process, "uncompress");
+		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
 	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-lzip")) {
 		fr_process_begin_command (comm->process, "lzip");
+		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, temp_file);
@@ -410,6 +414,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-lzma")) {
 		fr_process_begin_command (comm->process, "lzma");
+		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, temp_file);
@@ -417,6 +422,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-xz")) {
 		fr_process_begin_command (comm->process, "xz");
+		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, temp_file);
@@ -433,6 +439,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 	}
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-rzip")) {
 		fr_process_begin_command (comm->process, "rzip");
+		fr_process_set_working_dir (comm->process, temp_dir);
 		fr_process_add_arg (comm->process, "-f");
 		fr_process_add_arg (comm->process, "-d");
 		fr_process_add_arg (comm->process, temp_file);
