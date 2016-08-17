@@ -729,7 +729,14 @@ open_archive_buffer_ready_cb (GObject      *source_object,
 	uri = g_file_get_uri (open_data->file);
 	local_mime_type = g_content_type_guess (uri, (guchar *) open_data->buffer, open_data->buffer_size, &result_uncertain);
 	if (! result_uncertain) {
-		mime_type = _g_str_get_static (local_mime_type);
+		const char const *mime_type_from_filename;
+
+		/* for example: "application/x-lrzip" --> "application/x-lrzip-compressed-tar" */
+		mime_type_from_filename = _g_mime_type_get_from_filename (open_data->file);
+		if ((mime_type_from_filename != NULL) && g_str_has_prefix (mime_type_from_filename, local_mime_type) && g_str_has_suffix (mime_type_from_filename, "-compressed-tar"))
+			mime_type = _g_str_get_static (mime_type_from_filename);
+		else
+			mime_type = _g_str_get_static (local_mime_type);
 		archive = create_archive_to_load_archive (open_data->file, mime_type);
 	}
 	if (archive == NULL) {
