@@ -287,7 +287,18 @@ fr_command_cfile_add (FrCommand  *comm,
 		fr_process_add_arg (comm->process, filename);
 		fr_process_end_command (comm->process);
 		compressed_filename = g_strconcat (filename, ".rz", NULL);
-	} else {
+	}
+	else if (_g_mime_type_matches (archive->mime_type, "application/x-lz4")) {
+		compressed_filename = g_strconcat (filename, ".lz4", NULL);
+		fr_process_begin_command (comm->process, "lz4");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "-z");
+		fr_process_add_arg (comm->process, filename);
+		fr_process_add_arg (comm->process, compressed_filename);
+		fr_process_end_command (comm->process);
+	}
+	else {
 		g_warning ("Unhandled mime type: '%s'", archive->mime_type);
 		g_warn_if_reached ();
 		g_free (temp_file);
@@ -361,6 +372,8 @@ fr_command_cfile_extract (FrCommand  *comm,
 
 	/* uncompress the file */
 
+	uncompr_file = _g_path_remove_first_extension (temp_file);
+
 	if (_g_mime_type_matches (archive->mime_type, "application/x-gzip")) {
 		fr_process_begin_command (comm->process, "gzip");
 		fr_process_add_arg (comm->process, "-f");
@@ -425,10 +438,17 @@ fr_command_cfile_extract (FrCommand  *comm,
 		fr_process_add_arg (comm->process, temp_file);
 		fr_process_end_command (comm->process);
 	}
+	else if (_g_mime_type_matches (archive->mime_type, "application/x-lz4")) {
+		fr_process_begin_command (comm->process, "lz4");
+		fr_process_set_working_dir (comm->process, temp_dir);
+		fr_process_add_arg (comm->process, "-f");
+		fr_process_add_arg (comm->process, "-d");
+		fr_process_add_arg (comm->process, temp_file);
+		fr_process_add_arg (comm->process, uncompr_file);
+		fr_process_end_command (comm->process);
+	}
 
 	/* copy uncompress file to the dest dir */
-
-	uncompr_file = _g_path_remove_first_extension (temp_file);
 
 	compr_file = get_uncompressed_name_from_archive (comm, comm->filename);
 	if (compr_file == NULL)
@@ -463,6 +483,7 @@ fr_command_cfile_extract (FrCommand  *comm,
 const char *cfile_mime_type[] = { "application/x-gzip",
 				  "application/x-bzip",
 				  "application/x-compress",
+				  "application/x-lz4",
 				  "application/x-lzip",
 				  "application/x-lzma",
 				  "application/x-lzop",
@@ -521,7 +542,10 @@ fr_command_cfile_get_capabilities (FrArchive  *archive,
 		if (_g_program_is_available ("rzip", check_command))
 			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
 	}
-
+	else if (_g_mime_type_matches (mime_type, "application/x-lz4")) {
+		if (_g_program_is_available ("lz4", check_command))
+			capabilities |= FR_ARCHIVE_CAN_READ_WRITE;
+	}
 	return capabilities;
 }
 
@@ -546,6 +570,8 @@ fr_command_cfile_get_packages (FrArchive  *archive,
 		return PACKAGES ("lzop");
 	else if (_g_mime_type_matches (mime_type, "application/x-rzip"))
 		return PACKAGES ("rzip");
+	else if (_g_mime_type_matches (mime_type, "application/x-lz4"))
+		return PACKAGES ("lz4");
 
 	return NULL;
 }
