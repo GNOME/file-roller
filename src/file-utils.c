@@ -411,9 +411,8 @@ _g_file_remove_directory (GFile         *directory,
 		return TRUE;
 
 	enumerator = g_file_enumerate_children (directory,
-					        G_FILE_ATTRIBUTE_STANDARD_NAME ","
-					        G_FILE_ATTRIBUTE_STANDARD_TYPE,
-					        0,
+					        G_FILE_ATTRIBUTE_STANDARD_NAME "," G_FILE_ATTRIBUTE_STANDARD_TYPE,
+						G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
 					        cancellable,
 					        error);
 
