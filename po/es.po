@@ -5,15 +5,15 @@
 # Spanish localization for File Roller.
 # Copyright © 2002, 2006, 2007, 2008 the Free Software Foundation, Inc.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2009, 2010, 2011, 2012.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-07-16 14:32+0000\n"
-"PO-Revision-Date: 2015-12-21 09:33+0100\n"
+"POT-Creation-Date: 2016-08-20 23:15+0000\n"
+"PO-Revision-Date: 2016-08-22 12:00+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -246,7 +246,9 @@ msgstr "No se pudieron añadir los archivos al archivador"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "No tiene los permisos apropiados para leer archivos de la carpeta «%s»"
 
-#: ../src/dlg-add.c:182 ../src/fr-window.c:5769
+#: ../src/dlg-add.c:182
+#| msgid "Add Files"
+msgctxt "Window title"
 msgid "Add Files"
 msgstr "Añadir archivos"
 
@@ -255,12 +257,16 @@ msgid "_Options"
 msgstr "_Opciones"
 
 #. load options
-#: ../src/dlg-add.c:204 ../src/dlg-add.c:763
+#: ../src/dlg-add.c:204
+#| msgid "Load Options"
+msgctxt "Action"
 msgid "Load Options"
 msgstr "Carga las opciones"
 
 #. save options
-#: ../src/dlg-add.c:211 ../src/dlg-add.c:855
+#: ../src/dlg-add.c:211
+#| msgid "Save Options"
+msgctxt "Action"
 msgid "Save Options"
 msgstr "Guarda las opciones"
 
@@ -269,6 +275,12 @@ msgstr "Guarda las opciones"
 msgid "Reset Options"
 msgstr "Restablecer las opciones"
 
+#: ../src/dlg-add.c:763
+#| msgid "Load Options"
+msgctxt "Window title"
+msgid "Load Options"
+msgstr "Carga las opciones"
+
 #: ../src/dlg-add.c:772
 msgid "_Apply"
 msgstr "_Aplicar"
@@ -276,6 +288,12 @@ msgstr "_Aplicar"
 #: ../src/dlg-add.c:773 ../src/dlg-delete.c:136
 msgid "_Delete"
 msgstr "_Eliminar"
+
+#: ../src/dlg-add.c:855
+#| msgid "Save Options"
+msgctxt "Window title"
+msgid "Save Options"
+msgstr "Guarda las opciones"
 
 #: ../src/dlg-add.c:856
 msgid "_Options Name:"
@@ -332,8 +350,9 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "No tiene permisos para extraer archivadores en la carpeta «%s»"
 
-#: ../src/dlg-extract.c:279 ../src/fr-window.c:5765
-#: ../src/ui/extract-dialog-options.ui.h:1
+#: ../src/dlg-extract.c:279
+#| msgid "Extract"
+msgctxt "Window title"
 msgid "Extract"
 msgstr "Extraer"
 
@@ -342,7 +361,7 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "Hubo un error interno al intentar buscar aplicaciones:"
 
 #: ../src/dlg-package-installer.c:296 ../src/dlg-package-installer.c:305
-#: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:744
+#: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:751
 #: ../src/fr-window.c:4039 ../src/fr-window.c:7569 ../src/fr-window.c:7926
 #: ../src/fr-window.c:9436
 msgid "Archive type not supported."
@@ -466,6 +485,8 @@ msgstr "Mostrar versión"
 
 #: ../src/fr-application.c:298 ../src/fr-application.c:324
 #: ../src/fr-application.c:597
+#| msgid "Extract archive"
+msgctxt "Window title"
 msgid "Extract archive"
 msgstr "Extraer archivador"
 
@@ -490,28 +511,28 @@ msgstr ""
 "Francisco Javier F. <serrador@cvs.gnome.org>\n"
 "Rodrigo Marcos Fombellida <rodrifom@gmail.com>"
 
-#: ../src/fr-archive.c:1845
+#: ../src/fr-archive.c:1852
 msgid "You don't have the right permissions."
 msgstr "No tiene los permisos apropiados."
 
-#: ../src/fr-archive.c:1845
+#: ../src/fr-archive.c:1852
 msgid "This archive type cannot be modified"
 msgstr "Este tipo de archivador no se puede modificar"
 
-#: ../src/fr-archive.c:1859 ../src/fr-new-archive-dialog.c:474
+#: ../src/fr-archive.c:1866 ../src/fr-new-archive-dialog.c:474
 msgid "You can't add an archive to itself."
 msgstr "No puede añadir un archivador a sí mismo."
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:425
-#: ../src/fr-command-tar.c:304
+#: ../src/fr-command-tar.c:307
 #, c-format
 msgid "Adding \"%s\""
 msgstr "Añadiendo «%s»"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
-#: ../src/fr-command-tar.c:425
+#: ../src/fr-command-tar.c:428
 #, c-format
 msgid "Extracting \"%s\""
 msgstr "Extrayendo «%s»"
@@ -522,7 +543,7 @@ msgid "Archive not found"
 msgstr "No se encontró el archivo"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:370
+#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:373
 #, c-format
 msgid "Removing \"%s\""
 msgstr "Quitando «%s»"
@@ -532,15 +553,15 @@ msgstr "Quitando «%s»"
 msgid "Could not find the volume: %s"
 msgstr "No se pudo encontrar el volumen: %s"
 
-#: ../src/fr-command-tar.c:380
+#: ../src/fr-command-tar.c:383
 msgid "Deleting files from archive"
 msgstr "Borrando archivos del archivador"
 
-#: ../src/fr-command-tar.c:485
+#: ../src/fr-command-tar.c:488
 msgid "Recompressing archive"
 msgstr "Recomprimiendo archivador"
 
-#: ../src/fr-command-tar.c:744
+#: ../src/fr-command-tar.c:767
 msgid "Decompressing archive"
 msgstr "Descomprimiendo archivador"
 
@@ -588,8 +609,9 @@ msgstr "_Reemplazar"
 msgid "Could not delete the old archive."
 msgstr "No se pudo eliminar el archivador anterior."
 
-#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6232
-#: ../src/ui/menus.ui.h:1
+#: ../src/fr-window-actions-callbacks.c:289
+#| msgid "Open"
+msgctxt "Window title"
 msgid "Open"
 msgstr "Abrir"
 
@@ -828,6 +850,18 @@ msgctxt "File"
 msgid "Name"
 msgstr "Nombre"
 
+#: ../src/fr-window.c:5765 ../src/ui/extract-dialog-options.ui.h:1
+#| msgid "Extract"
+msgctxt "Action"
+msgid "Extract"
+msgstr "Extraer"
+
+#: ../src/fr-window.c:5769
+#| msgid "Add Files"
+msgctxt "Action"
+msgid "Add Files"
+msgstr "Añadir archivos"
+
 #: ../src/fr-window.c:5774 ../src/fr-window.c:5804
 msgid "Find files by name"
 msgstr "Buscar archivos por nombre"
@@ -849,6 +883,12 @@ msgstr "Ir al lugar inicial"
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Lugar:"
+
+#: ../src/fr-window.c:6232 ../src/ui/menus.ui.h:1
+#| msgid "Open"
+msgctxt "Action"
+msgid "Open"
+msgstr "Abrir"
 
 #: ../src/fr-window.c:6675
 #, c-format
