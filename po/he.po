@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: file-roller.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-09 21:26+0300\n"
-"PO-Revision-Date: 2016-08-09 21:26+0300\n"
+"POT-Creation-Date: 2016-09-06 12:33+0300\n"
+"PO-Revision-Date: 2016-09-06 12:35+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
@@ -205,31 +205,6 @@ msgstr "Default volume size"
 msgid "The default size for volumes."
 msgstr "The default size for volumes."
 
-#: ../nautilus/nautilus-fileroller.c:329
-msgid "Extract Here"
-msgstr "חילוץ לכאן"
-
-#. Translators: the current position is the current folder
-#: ../nautilus/nautilus-fileroller.c:331
-msgid "Extract the selected archive to the current position"
-msgstr "חילוץ הארכיון הנבחר במיקום הנוכחי"
-
-#: ../nautilus/nautilus-fileroller.c:348
-msgid "Extract To..."
-msgstr "_חילוץ אל..."
-
-#: ../nautilus/nautilus-fileroller.c:349
-msgid "Extract the selected archive"
-msgstr "חילוץ הארכיון הנבחר"
-
-#: ../nautilus/nautilus-fileroller.c:368
-msgid "Compress..."
-msgstr "דחיסה..."
-
-#: ../nautilus/nautilus-fileroller.c:369
-msgid "Create a compressed archive with the selected objects"
-msgstr "יצירת ארכיון דחוס עם הפריטים הנבחרים"
-
 #: ../src/dlg-add.c:114
 msgid "Could not add the files to the archive"
 msgstr "לא ניתן להוסיף את הקבצים לארכיון"
@@ -239,7 +214,8 @@ msgstr "לא ניתן להוסיף את הקבצים לארכיון"
 msgid "You don't have the right permissions to read files from folder \"%s\""
 msgstr "אין לך את ההרשאות הנכונות לקריאת קבצים מהתיקייה „%s“"
 
-#: ../src/dlg-add.c:182 ../src/fr-window.c:5769
+#: ../src/dlg-add.c:182
+msgctxt "Window title"
 msgid "Add Files"
 msgstr "הוספת קבצים"
 
@@ -248,12 +224,14 @@ msgid "_Options"
 msgstr "_אפשרויות"
 
 #. load options
-#: ../src/dlg-add.c:204 ../src/dlg-add.c:763
+#: ../src/dlg-add.c:204
+msgctxt "Action"
 msgid "Load Options"
 msgstr "טעינת אפשרויות"
 
 #. save options
-#: ../src/dlg-add.c:211 ../src/dlg-add.c:855
+#: ../src/dlg-add.c:211
+msgctxt "Action"
 msgid "Save Options"
 msgstr "שמירת האפשרויות"
 
@@ -262,6 +240,11 @@ msgstr "שמירת האפשרויות"
 msgid "Reset Options"
 msgstr "איפוס האפשרויות"
 
+#: ../src/dlg-add.c:763
+msgctxt "Window title"
+msgid "Load Options"
+msgstr "טעינת אפשרויות"
+
 #: ../src/dlg-add.c:772
 msgid "_Apply"
 msgstr "ה_חלה"
@@ -269,6 +252,11 @@ msgstr "ה_חלה"
 #: ../src/dlg-add.c:773 ../src/dlg-delete.c:136
 msgid "_Delete"
 msgstr "_מחיקה"
+
+#: ../src/dlg-add.c:855
+msgctxt "Window title"
+msgid "Save Options"
+msgstr "שמירת האפשרויות"
 
 #: ../src/dlg-add.c:856
 msgid "_Options Name:"
@@ -325,8 +313,8 @@ msgid ""
 "You don't have the right permissions to extract archives in the folder \"%s\""
 msgstr "אין לך את ההרשאות המתאימות לחלץ ארכיונים לתיקייה „%s“"
 
-#: ../src/dlg-extract.c:279 ../src/fr-window.c:5765
-#: ../src/ui/extract-dialog-options.ui.h:1
+#: ../src/dlg-extract.c:279
+msgctxt "Window title"
 msgid "Extract"
 msgstr "חילוץ"
 
@@ -335,7 +323,7 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "אירעה שגיאה פנימית במהלך חיפוש יישומים:"
 
 #: ../src/dlg-package-installer.c:296 ../src/dlg-package-installer.c:305
-#: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:744
+#: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:751
 #: ../src/fr-window.c:4039 ../src/fr-window.c:7569 ../src/fr-window.c:7926
 #: ../src/fr-window.c:9436
 msgid "Archive type not supported."
@@ -456,8 +444,9 @@ msgstr "Show version"
 
 #: ../src/fr-application.c:298 ../src/fr-application.c:324
 #: ../src/fr-application.c:597
+msgctxt "Window title"
 msgid "Extract archive"
-msgstr "חילוץ הארכיון"
+msgstr "חילוץ ארכיון"
 
 #: ../src/fr-application.c:477
 msgid "- Create and modify an archive"
@@ -481,28 +470,28 @@ msgstr ""
 "מיזם תרגום GNOME לעברית:\n"
 "‏http://gnome-il.berlios.de"
 
-#: ../src/fr-archive.c:1845
+#: ../src/fr-archive.c:1852
 msgid "You don't have the right permissions."
 msgstr "אין לך את ההרשאות הנכונות."
 
-#: ../src/fr-archive.c:1845
+#: ../src/fr-archive.c:1852
 msgid "This archive type cannot be modified"
 msgstr "לא ניתן לשנות ארכיון זה"
 
-#: ../src/fr-archive.c:1859 ../src/fr-new-archive-dialog.c:474
+#: ../src/fr-archive.c:1866 ../src/fr-new-archive-dialog.c:474
 msgid "You can't add an archive to itself."
 msgstr "אין אפשרות להוסיף ארכיון לעצמו."
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:425
-#: ../src/fr-command-tar.c:304
+#: ../src/fr-command-tar.c:307
 #, c-format
 msgid "Adding \"%s\""
 msgstr "„%s“ נוסף"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
-#: ../src/fr-command-tar.c:425
+#: ../src/fr-command-tar.c:428
 #, c-format
 msgid "Extracting \"%s\""
 msgstr "„%s“ מחולץ"
@@ -513,7 +502,7 @@ msgid "Archive not found"
 msgstr "הארכיון לא נמצא"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:370
+#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:373
 #, c-format
 msgid "Removing \"%s\""
 msgstr "„%s“ מוסר"
@@ -523,15 +512,15 @@ msgstr "„%s“ מוסר"
 msgid "Could not find the volume: %s"
 msgstr "הכרך לא נמצא: %s"
 
-#: ../src/fr-command-tar.c:380
+#: ../src/fr-command-tar.c:383
 msgid "Deleting files from archive"
 msgstr "קבצים נמחקים מהארכיון"
 
-#: ../src/fr-command-tar.c:485
+#: ../src/fr-command-tar.c:488
 msgid "Recompressing archive"
 msgstr "הארכיון מכווץ מחדש"
 
-#: ../src/fr-command-tar.c:744
+#: ../src/fr-command-tar.c:767
 msgid "Decompressing archive"
 msgstr "הארכיון מורחב"
 
@@ -578,8 +567,8 @@ msgstr "ה_חלפה"
 msgid "Could not delete the old archive."
 msgstr "לא ניתן למחוק את הארכיון הישן."
 
-#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6232
-#: ../src/ui/menus.ui.h:1
+#: ../src/fr-window-actions-callbacks.c:289
+msgctxt "Window title"
 msgid "Open"
 msgstr "פתיחה"
 
@@ -816,6 +805,16 @@ msgctxt "File"
 msgid "Name"
 msgstr "שם"
 
+#: ../src/fr-window.c:5765 ../src/ui/extract-dialog-options.ui.h:1
+msgctxt "Action"
+msgid "Extract"
+msgstr "חילוץ"
+
+#: ../src/fr-window.c:5769
+msgctxt "Action"
+msgid "Add Files"
+msgstr "הוספת קבצים"
+
 #: ../src/fr-window.c:5774 ../src/fr-window.c:5804
 msgid "Find files by name"
 msgstr "חיפוש קבצים לפי שם"
@@ -837,6 +836,11 @@ msgstr "מעבר לתיקיית הבית"
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "מי_קום:"
+
+#: ../src/fr-window.c:6232 ../src/ui/menus.ui.h:1
+msgctxt "Action"
+msgid "Open"
+msgstr "פתיחה"
 
 #: ../src/fr-window.c:6675
 #, c-format
@@ -1281,6 +1285,24 @@ msgstr "מספר הקבצים:"
 #: ../src/ui/update.ui.h:1
 msgid "S_elect the files you want to update:"
 msgstr "נא ל_בחור את הקבצים שברצונך לעדכן:"
+
+#~ msgid "Extract Here"
+#~ msgstr "חילוץ לכאן"
+
+#~ msgid "Extract the selected archive to the current position"
+#~ msgstr "חילוץ הארכיון הנבחר במיקום הנוכחי"
+
+#~ msgid "Extract To..."
+#~ msgstr "_חילוץ אל..."
+
+#~ msgid "Extract the selected archive"
+#~ msgstr "חילוץ הארכיון הנבחר"
+
+#~ msgid "Compress..."
+#~ msgstr "דחיסה..."
+
+#~ msgid "Create a compressed archive with the selected objects"
+#~ msgstr "יצירת ארכיון דחוס עם הפריטים הנבחרים"
 
 #~ msgid "_New Archive"
 #~ msgstr "_ארכיון חדש"
