@@ -641,19 +641,21 @@ fr_application_local_command_line (GApplication   *application,
                                    char         ***arguments,
                                    int            *exit_status)
 {
+        char           **local_argv;
         int              local_argc;
         GOptionContext  *context;
         GError          *error = NULL;
         gboolean         handled_locally = FALSE;
 
-        local_argc = g_strv_length (*arguments);
+        local_argv = g_strdupv (*arguments);
+        local_argc = g_strv_length (local_argv);
 
-        program_argv0 = *arguments[0];
+        program_argv0 = local_argv[0];
         *exit_status = 0;
 
         context = fr_application_create_option_context ();
         g_option_context_set_ignore_unknown_options (context, TRUE);
-	if (! g_option_context_parse (context, &local_argc, arguments, &error)) {
+	if (! g_option_context_parse (context, &local_argc, &local_argv, &error)) {
 		*exit_status = EXIT_FAILURE;
 		g_critical ("Failed to parse arguments: %s", error->message);
                 g_clear_error (&error);
@@ -666,6 +668,7 @@ fr_application_local_command_line (GApplication   *application,
 	}
 
 	g_option_context_free (context);
+        g_strfreev (local_argv);
 
         return handled_locally;
 }
