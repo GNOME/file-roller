@@ -79,7 +79,7 @@ xfer_data_free (XferData *data)
 	_g_object_list_unref (data->file_list);
 	_g_object_unref (data->base_dir);
 	g_free (data->dest_dir);
-	_g_object_unref (data->tmp_dir);
+	g_free (data->tmp_dir);
 	_g_object_unref (data->cancellable);
 	_g_object_unref (data->result);
 	g_free (data);
