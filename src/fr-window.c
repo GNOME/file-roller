@@ -3887,15 +3887,11 @@ file_motion_notify_callback (GtkWidget *widget,
 				       NULL, NULL, NULL);
 
 	if (window->priv->list_hover_path != NULL)
-		cursor = gdk_cursor_new_for_display (gtk_widget_get_display (GTK_WIDGET (window)),
-						     GDK_HAND2);
+		cursor = gdk_cursor_new (GDK_HAND2);
 	else
 		cursor = NULL;
 
 	gdk_window_set_cursor (event->window, cursor);
-
-	if (cursor != NULL)
-		g_object_unref (cursor);
 
 	/* only redraw if the hover row has changed */
 	if (!(last_hover_path == NULL && window->priv->list_hover_path == NULL) &&
