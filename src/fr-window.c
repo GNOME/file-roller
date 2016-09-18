@@ -5515,6 +5515,20 @@ fr_window_construct (FrWindow *window)
 				     g_settings_get_int (window->priv->settings_ui, PREF_UI_WINDOW_WIDTH),
 				     g_settings_get_int (window->priv->settings_ui, PREF_UI_WINDOW_HEIGHT));
 
+	gtk_drag_dest_set (GTK_WIDGET (window),
+			   GTK_DEST_DEFAULT_ALL,
+			   target_table, G_N_ELEMENTS (target_table),
+			   GDK_ACTION_COPY);
+
+	g_signal_connect (G_OBJECT (window),
+			  "drag_data_received",
+			  G_CALLBACK (fr_window_drag_data_received),
+			  window);
+	g_signal_connect (G_OBJECT (window),
+			  "drag_motion",
+			  G_CALLBACK (fr_window_drag_motion),
+			  window);
+
 	g_signal_connect (G_OBJECT (window),
 			  "key_press_event",
 			  G_CALLBACK (key_press_cb),
@@ -5728,19 +5742,6 @@ fr_window_construct (FrWindow *window)
 	gtk_paned_pack1 (GTK_PANED (window->priv->paned), window->priv->sidepane, FALSE, TRUE);
 	gtk_paned_pack2 (GTK_PANED (window->priv->paned), list_scrolled_window, TRUE, TRUE);
 	gtk_paned_set_position (GTK_PANED (window->priv->paned), g_settings_get_int (window->priv->settings_ui, PREF_UI_SIDEBAR_WIDTH));
-	gtk_drag_dest_set (GTK_WIDGET (window->priv->paned),
-			   GTK_DEST_DEFAULT_ALL,
-			   target_table, G_N_ELEMENTS (target_table),
-			   GDK_ACTION_COPY);
-
-	g_signal_connect (G_OBJECT (window->priv->paned),
-			  "drag_data_received",
-			  G_CALLBACK (fr_window_drag_data_received),
-			  window);
-	g_signal_connect (G_OBJECT (window->priv->paned),
-			  "drag_motion",
-			  G_CALLBACK (fr_window_drag_motion),
-			  window);
 
 	fr_window_attach (FR_WINDOW (window), window->priv->paned, FR_WINDOW_AREA_CONTENTS);
 	gtk_widget_show_all (window->priv->paned);
