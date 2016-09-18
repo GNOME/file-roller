@@ -89,7 +89,7 @@
 #define OCTET_ATOM gdk_atom_intern  ("application/octet-stream", FALSE)
 #define XFR_ATOM   gdk_atom_intern  ("XdndFileRoller0", FALSE)
 
-#define FR_CLIPBOARD (gdk_atom_intern_static_string ("_FILE_ROLLER_SPECIAL_CLIPBOARD"))
+#define FR_CLIPBOARD GDK_SELECTION_CLIPBOARD
 #define FR_SPECIAL_URI_LIST (gdk_atom_intern_static_string ("application/file-roller-uri-list"))
 
 static GtkTargetEntry clipboard_targets[] = {
