@@ -454,6 +454,11 @@ fr_application_startup (GApplication *application)
 	g_set_application_name (_("Archive Manager"));
 	gtk_window_set_default_icon_name ("file-roller");
 
+#ifdef ENABLE_NOTIFICATION
+	if (! notify_init (g_get_application_name ()))
+                g_warning ("Cannot initialize notification system.");
+#endif /* ENABLE_NOTIFICATION */
+
 	fr_application_register_archive_manager_service (FR_APPLICATION (application));
 	initialize_data ();
 
@@ -716,11 +721,6 @@ fr_application_class_init (FrApplicationClass *klass)
 static void
 fr_application_init (FrApplication *self)
 {
-#ifdef ENABLE_NOTIFICATION
-	if (! notify_init (g_get_application_name ()))
-                g_warning ("Cannot initialize notification system.");
-#endif /* ENABLE_NOTIFICATION */
-
 	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_APPLICATION, FrApplicationPrivate);
 	self->priv->owner_id = 0;
 	self->priv->introspection_data = NULL;
