@@ -5123,6 +5123,7 @@ size_column_sort_func (GtkTreeModel *model,
 	FileData    *fdata2;
 	GtkSortType  sort_order;
 	int          result;
+	goffset      size_difference;
 
 	gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model), NULL, &sort_order);
 
@@ -5131,9 +5132,10 @@ size_column_sort_func (GtkTreeModel *model,
 
 	if (file_data_is_dir (fdata1) == file_data_is_dir (fdata2)) {
         	if (file_data_is_dir (fdata1))
-                	result = fdata1->dir_size - fdata2->dir_size;
+			size_difference = fdata1->dir_size - fdata2->dir_size;
         	else
-        		result = fdata1->size - fdata2->size;
+			size_difference = fdata1->size - fdata2->size;
+		result = (size_difference > 0) - (size_difference < 0);
         }
         else {
         	result = file_data_is_dir (fdata1) ? -1 : 1;
