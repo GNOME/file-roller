@@ -92,7 +92,7 @@ extract_cb (GtkWidget   *w,
 			char      *msg;
 
 			folder_name = _g_file_get_display_basename (destination);
-			msg = g_strdup_printf (_("Destination folder \"%s\" does not exist.\n\nDo you want to create it?"), folder_name);
+			msg = g_strdup_printf (_("Destination folder “%s” does not exist.\n\nDo you want to create it?"), folder_name);
 			g_free (folder_name);
 
 			d = _gtk_message_dialog_new (GTK_WINDOW (data->dialog),
@@ -164,7 +164,7 @@ extract_cb (GtkWidget   *w,
 					   GTK_DIALOG_DESTROY_WITH_PARENT,
 					   NULL,
 					   _("Extraction not performed"),
-					   _("You don't have the right permissions to extract archives in the folder \"%s\""),
+					   _("You don’t have the right permissions to extract archives in the folder “%s”"),
 					   utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));

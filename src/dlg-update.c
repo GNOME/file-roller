@@ -159,7 +159,7 @@ update_file_list (DialogData *data)
 
 		file_name = _g_file_get_display_basename (file->extracted_file);
 		archive_name = _g_file_get_display_basename (fr_window_get_archive_file (data->window));
-		label = g_markup_printf_escaped (_("Update the file \"%s\" in the archive \"%s\"?"), file_name, archive_name);
+		label = g_markup_printf_escaped (_("Update the file “%s” in the archive “%s”?"), file_name, archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		/*gtk_label_set_markup (GTK_LABEL (data->update_file_primary_text_label), markup);*/
 		g_object_set (data->update_file_dialog , "text", markup, "use-markup", TRUE, NULL);
@@ -171,8 +171,8 @@ update_file_list (DialogData *data)
 
 		/* secondary text */
 
-		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don't update the file in the archive, all of your changes will be lost.",
-						   "%d files have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.",
+		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don’t update the file in the archive, all of your changes will be lost.",
+						   "%d files have been modified with an external application. If you don’t update the files in the archive, all of your changes will be lost.",
 						   n_files),
 					 n_files);
 		/*gtk_label_set_text (GTK_LABEL (data->update_file_secondary_text_label), label);*/
@@ -187,7 +187,7 @@ update_file_list (DialogData *data)
 		/* primary text */
 
 		archive_name = _g_file_get_display_basename (fr_window_get_archive_file (data->window));
-		label = g_markup_printf_escaped (_("Update the files in the archive \"%s\"?"), archive_name);
+		label = g_markup_printf_escaped (_("Update the files in the archive “%s”?"), archive_name);
 		markup = g_strdup_printf ("<big><b>%s</b></big>", label);
 		gtk_label_set_markup (GTK_LABEL (data->update_files_primary_text_label), markup);
 
@@ -197,8 +197,8 @@ update_file_list (DialogData *data)
 
 		/* secondary text */
 
-		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don't update the file in the archive, all of your changes will be lost.",
-						   "%d files have been modified with an external application. If you don't update the files in the archive, all of your changes will be lost.",
+		label = g_strdup_printf (ngettext ("The file has been modified with an external application. If you don’t update the file in the archive, all of your changes will be lost.",
+						   "%d files have been modified with an external application. If you don’t update the files in the archive, all of your changes will be lost.",
 						   n_files),
 					 n_files);
 		gtk_label_set_text (GTK_LABEL (data->update_files_secondary_text_label), label);

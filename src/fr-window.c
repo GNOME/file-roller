@@ -2133,7 +2133,7 @@ show_folder (GtkWindow *parent_window,
 		char      *message;
 
 		utf8_name = _g_file_get_display_basename (folder);
-		message = g_strdup_printf (_("Could not display the folder \"%s\""), utf8_name);
+		message = g_strdup_printf (_("Could not display the folder “%s”"), utf8_name);
 		g_free (utf8_name);
 
 		d = _gtk_error_dialog_new (parent_window,
@@ -2306,61 +2306,61 @@ get_action_description (FrWindow *window,
 	switch (action) {
 	case FR_ACTION_CREATING_NEW_ARCHIVE:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Creating \"%s\""), basename);
+		message = g_strdup_printf (_("Creating “%s”"), basename);
 		break;
 	case FR_ACTION_LOADING_ARCHIVE:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Loading \"%s\""), basename);
+		message = g_strdup_printf (_("Loading “%s”"), basename);
 		break;
 	case FR_ACTION_LISTING_CONTENT:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Reading \"%s\""), basename);
+		message = g_strdup_printf (_("Reading “%s”"), basename);
 		break;
 	case FR_ACTION_DELETING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Deleting the files from \"%s\""), basename);
+		message = g_strdup_printf (_("Deleting the files from “%s”"), basename);
 		break;
 	case FR_ACTION_TESTING_ARCHIVE:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Testing \"%s\""), basename);
+		message = g_strdup_printf (_("Testing “%s”"), basename);
 		break;
 	case FR_ACTION_GETTING_FILE_LIST:
 		message = g_strdup (_("Getting the file list"));
 		break;
 	case FR_ACTION_COPYING_FILES_FROM_REMOTE:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Copying the files to add to \"%s\""), basename);
+		message = g_strdup_printf (_("Copying the files to add to “%s”"), basename);
 		break;
 	case FR_ACTION_ADDING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Adding the files to \"%s\""), basename);
+		message = g_strdup_printf (_("Adding the files to “%s”"), basename);
 		break;
 	case FR_ACTION_EXTRACTING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Extracting the files from \"%s\""), basename);
+		message = g_strdup_printf (_("Extracting the files from “%s”"), basename);
 		break;
 	case FR_ACTION_COPYING_FILES_TO_REMOTE:
 		message = g_strdup (_("Copying the extracted files to the destination"));
 		break;
 	case FR_ACTION_CREATING_ARCHIVE:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Creating \"%s\""), basename);
+		message = g_strdup_printf (_("Creating “%s”"), basename);
 		break;
 	case FR_ACTION_SAVING_REMOTE_ARCHIVE:
 	case FR_ACTION_ENCRYPTING_ARCHIVE:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Saving \"%s\""), basename);
+		message = g_strdup_printf (_("Saving “%s”"), basename);
 		break;
 	case FR_ACTION_PASTING_FILES:
 		message = g_strdup (window->priv->custom_action_message);
 		break;
 	case FR_ACTION_RENAMING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Renaming the files in \"%s\""), basename);
+		message = g_strdup_printf (_("Renaming the files in “%s”"), basename);
 		break;
 	case FR_ACTION_UPDATING_FILES:
 		/* Translators: %s is a filename */
-		message = g_strdup_printf (_("Updating the files in \"%s\""), basename);
+		message = g_strdup_printf (_("Updating the files in “%s”"), basename);
 		break;
 	case FR_ACTION_NONE:
 		break;
@@ -2791,7 +2791,7 @@ fr_window_show_confirmation_dialog_with_open_archive (FrWindow *window)
 
 	basename = _g_file_get_display_basename (window->priv->saving_file);
 	/* Translators: %s is a filename */
-	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
+	message = g_strdup_printf (_("“%s” created successfully"), basename);
 
 	dialog = _gtk_message_dialog_new (GTK_WINDOW (window),
 					  GTK_DIALOG_MODAL,
@@ -3011,7 +3011,7 @@ _handle_archive_operation_error (FrWindow  *window,
 		case FR_ACTION_LOADING_ARCHIVE:
 			dialog_parent = window->priv->load_error_parent_window;
 			utf8_name = _g_file_get_display_basename (window->priv->archive_file);
-			msg = g_strdup_printf (_("Could not open \"%s\""), utf8_name);
+			msg = g_strdup_printf (_("Could not open “%s”"), utf8_name);
 			g_free (utf8_name);
 			break;
 
@@ -4615,7 +4615,7 @@ fr_window_folder_tree_drag_data_get (GtkWidget        *widget,
 		char *display_name;
 
 		display_name = _g_file_get_display_basename (destination_folder);
-		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("You don't have the right permissions to extract archives in the folder \"%s\""), display_name);
+		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("You don’t have the right permissions to extract archives in the folder “%s”"), display_name);
 
 		g_free (display_name);
 	}
@@ -4717,7 +4717,7 @@ fr_window_file_list_drag_data_get (FrWindow         *window,
 		char *display_name;
 
 		display_name = _g_file_get_display_basename (destination_folder);
-		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("You don't have the right permissions to extract archives in the folder \"%s\""), display_name);
+		window->priv->drag_error = g_error_new (FR_ERROR, 0, _("You don’t have the right permissions to extract archives in the folder “%s”"), display_name);
 
 		g_free (display_name);
 	}
@@ -6235,7 +6235,7 @@ _fr_window_notify_creation_complete (FrWindow *window)
 
 	basename = _g_file_get_display_basename (window->priv->saving_file);
 	/* Translators: %s is a filename */
-	message = g_strdup_printf (_("\"%s\" created successfully"), basename);
+	message = g_strdup_printf (_("“%s” created successfully"), basename);
 	notification = notify_notification_new (window->priv->batch_title, message, "file-roller");
 	notify_notification_set_hint_string (notification, "desktop-entry", "file-roller");
 
@@ -6716,10 +6716,10 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 		char      *details;
 		GtkWidget *d;
 
-		msg = g_strdup_printf (_("Replace file \"%s\"?"), g_file_info_get_display_name (info));
+		msg = g_strdup_printf (_("Replace file “%s”?"), g_file_info_get_display_name (info));
 		parent = g_file_get_parent (destination);
 		parent_name = g_file_get_parse_name (parent);
-		details = g_strdup_printf (_("Another file with the same name already exists in \"%s\"."), parent_name);
+		details = g_strdup_printf (_("Another file with the same name already exists in “%s”."), parent_name);
 		d = _gtk_message_dialog_new (GTK_WINDOW (odata->window),
 					     GTK_DIALOG_MODAL,
 					     msg,
@@ -6878,7 +6878,7 @@ _fr_window_archive_extract_from_edata_maybe (FrWindow    *window,
 			char      *msg;
 
 			folder_name = _g_file_get_display_basename (edata->destination);
-			msg = g_strdup_printf (_("Destination folder \"%s\" does not exist.\n\nDo you want to create it?"), folder_name);
+			msg = g_strdup_printf (_("Destination folder “%s” does not exist.\n\nDo you want to create it?"), folder_name);
 			g_free (folder_name);
 
 			d = _gtk_message_dialog_new (GTK_WINDOW (window),
@@ -7601,7 +7601,7 @@ fr_window_archive_save_as (FrWindow   *window,
 		char      *message;
 
 		utf8_name = _g_file_get_display_basename (file);
-		message = g_strdup_printf (_("Could not save the archive \"%s\""), utf8_name);
+		message = g_strdup_printf (_("Could not save the archive “%s”"), utf8_name);
 		g_free (utf8_name);
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -7958,7 +7958,7 @@ fr_window_archive_encrypt (FrWindow   *window,
 		char      *message;
 
 		utf8_name = _g_file_get_display_basename (temp_new_file);
-		message = g_strdup_printf (_("Could not save the archive \"%s\""), utf8_name);
+		message = g_strdup_printf (_("Could not save the archive “%s”"), utf8_name);
 		g_free (utf8_name);
 
 		d = _gtk_error_dialog_new (GTK_WINDOW (window),
@@ -8285,7 +8285,7 @@ valid_name (const char  *new_name,
 	}
 	else if (_g_strchrs (new_name, BAD_CHARS)) {
 		/* Translators: the %s references to a filename.  This message can appear when renaming a file. */
-		*reason = g_strdup_printf (_("Name \"%s\" is not valid because it contains at least one of the following characters: %s, please type other name."), utf8_new_name, BAD_CHARS);
+		*reason = g_strdup_printf (_("Name “%s” is not valid because it contains at least one of the following characters: %s, please type other name."), utf8_new_name, BAD_CHARS);
 		retval = FALSE;
 	}
 
@@ -8321,9 +8321,9 @@ name_is_present (FrWindow    *window,
 			char *utf8_name = g_filename_display_name (new_name);
 
 			if (filename[new_filename_l] == G_DIR_SEPARATOR)
-				*reason = g_strdup_printf (_("A folder named \"%s\" already exists.\n\n%s"), utf8_name, _("Please use a different name."));
+				*reason = g_strdup_printf (_("A folder named “%s” already exists.\n\n%s"), utf8_name, _("Please use a different name."));
 			else
-				*reason = g_strdup_printf (_("A file named \"%s\" already exists.\n\n%s"), utf8_name, _("Please use a different name."));
+				*reason = g_strdup_printf (_("A file named “%s” already exists.\n\n%s"), utf8_name, _("Please use a different name."));
 
 			retval = TRUE;
 			break;
@@ -8871,10 +8871,10 @@ fr_window_paste_from_clipboard_data (FrWindow        *window,
 	to_archive = _g_file_get_display_basename (window->priv->archive_file);
 	if (data->op == FR_CLIPBOARD_OP_CUT)
 		/* Translators: %s are archive filenames */
-		window->priv->custom_action_message = g_strdup_printf (_("Moving the files from \"%s\" to \"%s\""), from_archive, to_archive);
+		window->priv->custom_action_message = g_strdup_printf (_("Moving the files from “%s” to “%s”"), from_archive, to_archive);
 	else
 		/* Translators: %s are archive filenames */
-		window->priv->custom_action_message = g_strdup_printf (_("Copying the files from \"%s\" to \"%s\""), from_archive, to_archive);
+		window->priv->custom_action_message = g_strdup_printf (_("Copying the files from “%s” to “%s”"), from_archive, to_archive);
 	_archive_operation_started (window, FR_ACTION_PASTING_FILES);
 
 	_window_started_loading_file (window, data->file);

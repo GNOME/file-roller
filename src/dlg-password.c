@@ -106,7 +106,7 @@ dlg_password (GtkWidget *widget,
 				     GTK_STYLE_CLASS_SUGGESTED_ACTION);
 
 	basename = _g_file_get_display_basename (fr_archive_get_file (window->archive));
-	title = g_strdup_printf (_("Enter a password for \"%s\""), basename);
+	title = g_strdup_printf (_("Enter a password for “%s”"), basename);
 	gtk_label_set_text (GTK_LABEL (GET_WIDGET ("title_label")), title);
 
 	g_free (title);

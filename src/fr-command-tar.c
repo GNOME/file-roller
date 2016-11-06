@@ -304,7 +304,7 @@ process_line__add (char     *line,
 		   gpointer  data)
 {
 	/* Translators: %s is a filename. */
-	process_line__generic (line, data, _("Adding \"%s\""));
+	process_line__generic (line, data, _("Adding “%s”"));
 }
 
 
@@ -370,7 +370,7 @@ process_line__delete (char     *line,
 		      gpointer  data)
 {
 	/* Translators: %s is a filename. */
-	process_line__generic (line, data, _("Removing \"%s\""));
+	process_line__generic (line, data, _("Removing “%s”"));
 }
 
 
@@ -425,7 +425,7 @@ process_line__extract (char     *line,
 		       gpointer  data)
 {
 	/* Translators: %s is a filename. */
-	process_line__generic (line, data, _("Extracting \"%s\""));
+	process_line__generic (line, data, _("Extracting “%s”"));
 }
 
 

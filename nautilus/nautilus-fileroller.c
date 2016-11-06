@@ -276,7 +276,7 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_to",
-					       g_dgettext ("file-roller", "Extract To..."),
+					       g_dgettext ("file-roller", "Extract To…"),
 					       g_dgettext ("file-roller", "Extract the selected archive"),
 					       "drive-harddisk");
 		g_signal_connect (item,

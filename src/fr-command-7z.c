@@ -294,7 +294,7 @@ process_line__add (char     *line,
 	}
 
 	if (fr_archive_progress_get_total_files (archive) > 0)
-		parse_progress_line (archive, "Compressing  ", _("Adding \"%s\""), line);
+		parse_progress_line (archive, "Compressing  ", _("Adding “%s”"), line);
 }
 
 
@@ -446,7 +446,7 @@ process_line__extract (char     *line,
 	FrArchive *archive = FR_ARCHIVE (data);
 
 	if (fr_archive_progress_get_total_files (archive) > 0)
-		parse_progress_line (archive, "Extracting  ", _("Extracting \"%s\""), line);
+		parse_progress_line (archive, "Extracting  ", _("Extracting “%s”"), line);
 }
 
 

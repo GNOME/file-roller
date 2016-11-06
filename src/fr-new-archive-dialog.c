@@ -432,7 +432,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 						NULL,
 						_("Could not create the archive"),
 						"%s",
-						_("You don't have permission to create an archive in this folder"));
+						_("You don’t have permission to create an archive in this folder"));
 		gtk_dialog_run (GTK_DIALOG (dialog));
 
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -472,7 +472,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 								NULL,
 								_("Could not create the archive"),
 								"%s",
-								_("You can't add an archive to itself."));
+								_("You can’t add an archive to itself."));
 				gtk_dialog_run (GTK_DIALOG (dialog));
 
 				gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -493,8 +493,8 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 		gboolean  overwrite;
 
 		filename = _g_file_get_display_basename (file);
-		message = g_strdup_printf (_("A file named \"%s\" already exists.  Do you want to replace it?"), filename);
-		secondary_message = g_strdup_printf (_("The file already exists in \"%s\".  Replacing it will overwrite its contents."), g_file_info_get_display_name (parent_info));
+		message = g_strdup_printf (_("A file named “%s” already exists.  Do you want to replace it?"), filename);
+		secondary_message = g_strdup_printf (_("The file already exists in “%s”.  Replacing it will overwrite its contents."), g_file_info_get_display_name (parent_info));
 		dialog = _gtk_message_dialog_new (GTK_WINDOW (self),
 						  GTK_DIALOG_MODAL,
 						  message,

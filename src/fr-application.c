@@ -78,7 +78,7 @@ static const GOptionEntry options[] = {
 	  NULL },
 
 	{ "default-dir", '\0', 0, G_OPTION_ARG_STRING, &arg_default_dir,
-	  N_("Default folder to use for the '--add' and '--extract' commands"),
+	  N_("Default folder to use for the “--add” and “--extract” commands"),
 	  N_("FOLDER") },
 
 	{ "force", '\0', 0, G_OPTION_ARG_NONE, &ForceDirectoryCreation,
@@ -482,7 +482,7 @@ fr_application_create_option_context (void)
 	GOptionContext *context;
 	static gsize    initialized = FALSE;
 
-	context = g_option_context_new (N_("- Create and modify an archive"));
+	context = g_option_context_new (N_("— Create and modify an archive"));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 	g_option_context_set_ignore_unknown_options (context, TRUE);

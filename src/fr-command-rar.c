@@ -422,7 +422,7 @@ process_line__add (char     *line,
 	}
 
 	if (fr_archive_progress_get_total_files (archive) > 0)
-		parse_progress_line (comm, "Adding    ", _("Adding \"%s\""), line);
+		parse_progress_line (comm, "Adding    ", _("Adding “%s”"), line);
 }
 
 
@@ -503,7 +503,7 @@ process_line__delete (char     *line,
 	}
 
 	if (fr_archive_progress_get_total_files (FR_ARCHIVE (comm)) > 0)
-		parse_progress_line (comm, "Deleting ", _("Removing \"%s\""), line);
+		parse_progress_line (comm, "Deleting ", _("Removing “%s”"), line);
 }
 
 
@@ -554,7 +554,7 @@ process_line__extract (char     *line,
 	}
 
 	if (fr_archive_progress_get_total_files (FR_ARCHIVE (comm)) > 0)
-		parse_progress_line (comm, "Extracting  ", _("Extracting \"%s\""), line);
+		parse_progress_line (comm, "Extracting  ", _("Extracting “%s”"), line);
 }
 
 

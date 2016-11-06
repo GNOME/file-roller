@@ -112,7 +112,7 @@ file_selector_response_cb (GtkWidget    *widget,
 					   GTK_DIALOG_MODAL,
 					   NULL,
 					   _("Could not add the files to the archive"),
-					   _("You don't have the right permissions to read files from folder \"%s\""),
+					   _("You don’t have the right permissions to read files from folder “%s”"),
 					   utf8_path);
 		gtk_dialog_run (GTK_DIALOG (d));
 		gtk_widget_destroy (GTK_WIDGET (d));

@@ -1849,7 +1849,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 	if (archive->read_only) {
 		GError *error;
 
-		error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, ! archive->priv->have_write_permissions ? _("You don't have the right permissions.") : _("This archive type cannot be modified"));
+		error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, ! archive->priv->have_write_permissions ? _("You don’t have the right permissions.") : _("This archive type cannot be modified"));
 		g_simple_async_result_set_from_error (result, error);
 		g_simple_async_result_complete_in_idle (result);
 
@@ -1863,7 +1863,7 @@ fr_archive_add_dropped_items (FrArchive           *archive,
 		if (_g_file_cmp_uris (G_FILE (scan->data), archive->priv->file) == 0) {
 			GError *error;
 
-			error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("You can't add an archive to itself."));
+			error = g_error_new_literal (FR_ERROR, FR_ERROR_GENERIC, _("You can’t add an archive to itself."));
 			g_simple_async_result_set_from_error (result, error);
 			g_simple_async_result_complete_in_idle (result);
 
