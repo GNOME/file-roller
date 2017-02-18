@@ -306,10 +306,12 @@ void            fr_window_batch_resume                 (FrWindow      *window);
 gboolean        fr_window_is_batch_mode                (FrWindow      *window);
 void            fr_window_batch__extract               (FrWindow      *window,
 						        GFile         *archive,
-						        GFile         *destination);
+						        GFile         *destination,
+							gboolean       ask_to_open_destination);
 void            fr_window_batch__extract_here          (FrWindow      *window,
-							GFile         *archive);
-void            fr_window_batch__add_files               (FrWindow      *window,
+							GFile         *archive,
+							gboolean       ask_to_open_destination);
+void            fr_window_batch__add_files             (FrWindow      *window,
 							GFile         *archive,
 						        GList         *file_list);
 void            fr_window_destroy_with_error_dialog    (FrWindow      *window);
