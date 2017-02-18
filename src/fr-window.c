@@ -6432,7 +6432,7 @@ extract_data_new (FrWindow    *window,
 	ExtractData *edata;
 
 	edata = g_new0 (ExtractData, 1);
-	edata->window = window;
+	edata->window = _g_object_ref (window);
 	edata->file_list = _g_string_list_dup (file_list);
 	edata->destination = _g_object_ref (destination);
 	edata->skip_older = skip_older;
@@ -6454,6 +6454,7 @@ extract_data_free (ExtractData *edata)
 
 	_g_string_list_free (edata->file_list);
 	_g_object_unref (edata->destination);
+	_g_object_unref (edata->window);
 	g_free (edata->base_dir);
 
 	g_free (edata);
@@ -6597,6 +6598,29 @@ _fr_window_archive_extract_from_edata (FrWindow    *window,
 static void _fr_window_ask_overwrite_dialog (OverwriteData *odata);
 
 
+static OverwriteData *
+overwrite_data_new (FrWindow *window)
+{
+	OverwriteData *odata;
+
+	odata = g_new0 (OverwriteData, 1);
+	odata->window = _g_object_ref (window);
+	odata->edata = NULL;
+	odata->current_file = NULL;
+	odata->extract_all = FALSE;
+
+	return odata;
+}
+
+
+static void
+overwrite_data_free (OverwriteData *odata)
+{
+	_g_object_unref (odata->window);
+	g_free (odata);
+}
+
+
 /* remove the file from the list to extract */
 static void
 overwrite_data_skip_current (OverwriteData *odata)
@@ -6644,7 +6668,7 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 
 	if (do_not_extract) {
 		fr_window_batch_stop (odata->window);
-		g_free (odata);
+		overwrite_data_free (odata);
 		return;
 	}
 
@@ -6775,7 +6799,7 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 		fr_window_dnd_extraction_finished (odata->window, TRUE);
 	}
 
-	g_free (odata);
+	overwrite_data_free (odata);
 }
 
 
@@ -6903,8 +6927,7 @@ _fr_window_archive_extract_from_edata_maybe (FrWindow    *window,
 	if (edata->overwrite == FR_OVERWRITE_ASK) {
 		OverwriteData *odata;
 
-		odata = g_new0 (OverwriteData, 1);
-		odata->window = window;
+		odata = overwrite_data_new (window);
 		odata->edata = edata;
 		odata->extract_all = (edata->file_list == NULL) || (g_list_length (edata->file_list) == window->archive->files->len);
 		if (edata->file_list == NULL)
