@@ -321,7 +321,7 @@ _g_error_new_from_archive_error (const char *s)
 	char   *msg;
 	GError *error;
 
-	msg = g_locale_to_utf8 (s, -1, NULL, NULL, NULL);
+	msg = (s != NULL) ? g_locale_to_utf8 (s, -1, NULL, NULL, NULL) : NULL;
 	if (msg == NULL)
 		msg = g_strdup ("Fatal error");
 	error = g_error_new_literal (FR_ERROR, FR_ERROR_COMMAND_ERROR, msg);
