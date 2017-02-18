@@ -9819,7 +9819,8 @@ fr_window_batch_get_title (FrWindow *window)
 
 void
 fr_window_batch__extract_here (FrWindow *window,
-			       GFile    *archive)
+			       GFile    *archive,
+			       gboolean  ask_to_open_destination)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (archive != NULL);
@@ -9837,7 +9838,7 @@ fr_window_batch__extract_here (FrWindow *window,
 							 FALSE,
 							 FR_OVERWRITE_ASK,
 							 FALSE,
-							 _fr_window_get_ask_to_open_destination (window),
+							 ask_to_open_destination,
 							 TRUE),
 				       (GFreeFunc) extract_data_free);
 	fr_window_batch_append_action (window,
@@ -9850,7 +9851,8 @@ fr_window_batch__extract_here (FrWindow *window,
 void
 fr_window_batch__extract (FrWindow  *window,
 			  GFile     *archive,
-			  GFile     *destination)
+			  GFile     *destination,
+			  gboolean   ask_to_open_destination)
 {
 	g_return_if_fail (window != NULL);
 	g_return_if_fail (archive != NULL);
@@ -9869,7 +9871,7 @@ fr_window_batch__extract (FrWindow  *window,
 								 FALSE,
 								 FR_OVERWRITE_ASK,
 								 FALSE,
-								 _fr_window_get_ask_to_open_destination (window),
+								 ask_to_open_destination,
 								 FALSE),
 					       (GFreeFunc) extract_data_free);
 	else

@@ -296,7 +296,7 @@ handle_method_call (GDBusConnection       *connection,
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), C_("Window title", "Extract archive"));
-		fr_window_batch__extract (FR_WINDOW (window), archive, destination);
+		fr_window_batch__extract (FR_WINDOW (window), archive, destination, use_progress_dialog);
 		fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_batch_start (FR_WINDOW (window));
 
@@ -322,7 +322,7 @@ handle_method_call (GDBusConnection       *connection,
 		g_signal_connect (window, "ready", G_CALLBACK (window_ready_cb), invocation);
 
 		fr_window_batch_new (FR_WINDOW (window), C_("Window title", "Extract archive"));
-		fr_window_batch__extract_here (FR_WINDOW (window), archive);
+		fr_window_batch__extract_here (FR_WINDOW (window), archive, use_progress_dialog);
 		fr_window_batch_append_action (FR_WINDOW (window), FR_BATCH_ACTION_QUIT, NULL, NULL);
 		fr_window_batch_start (FR_WINDOW (window));
 
@@ -604,13 +604,16 @@ fr_application_command_line (GApplication            *application,
 
 		fr_window_batch_new (FR_WINDOW (window), C_("Window title", "Extract archive"));
 		while ((archive = remaining_args[i++]) != NULL) {
-			GFile *file;
+			GFile    *file;
+			gboolean  last_archive;
 
 			file = g_application_command_line_create_file_for_arg (command_line, archive);
+			last_archive = (remaining_args[i] == NULL);
+
 			if (arg_extract_here == 1)
-				fr_window_batch__extract_here (FR_WINDOW (window), file);
+				fr_window_batch__extract_here (FR_WINDOW (window), file, arg_notify && last_archive);
 			else
-				fr_window_batch__extract (FR_WINDOW (window), file, extraction_destination);
+				fr_window_batch__extract (FR_WINDOW (window), file, extraction_destination, arg_notify && last_archive);
 
 			g_object_unref (file);
 		}
