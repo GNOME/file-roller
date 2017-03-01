@@ -1,9 +1,16 @@
 ACLOCAL_AMFLAGS=-I m4 ${ACLOCAL_FLAGS}
 
+if ENABLE_NAUTILUS_ACTIONS
+NAUTILUS = nautilus
+else
+NAUTILUS =
+endif
+
 SUBDIRS =		\
 	data		\
 	src		\
 	help		\
+	$(NAUTILUS)	\
 	po
 
 distcleancheck_listfiles = find . -type f -print | grep -v 'omf\.out'

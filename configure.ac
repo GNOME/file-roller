@@ -23,6 +23,7 @@ AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 GLIB_REQUIRED=2.36.0
 GIO_REQUIRED=2.36.0
 GTK_REQUIRED=3.13.2
+NAUTILUS_REQUIRED=2.22.2
 JSON_GLIB_REQUIRED=0.14.0
 LIBNOTIFY_REQUIRED=0.4.3
 LIBARCHIVE_REQUIRED=3.0.0
@@ -94,6 +95,30 @@ PKG_CHECK_MODULES(FR,			\
 	gtk+-3.0 >= $GTK_REQUIRED)
 AC_SUBST(FR_CFLAGS)
 AC_SUBST(FR_LIBS)
+
+dnl ******************************
+dnl
+dnl nautilus actions
+dnl
+AC_ARG_ENABLE([nautilus_actions],
+	      [AS_HELP_STRING([--disable-nautilus-actions],
+			      [do not build the nautilus context menu actions])],,
+	      [enable_nautilus_actions=yes])
+
+if test x"$enable_nautilus_actions" != x"no" ; then
+	PKG_CHECK_MODULES(NAUTILUS,					\
+			  		  [libnautilus-extension >= $NAUTILUS_REQUIRED	\
+			 		   glib-2.0					\
+			  		   gio-2.0],
+		  			  [enable_nautilus_actions=yes],
+					  [enable_nautilus_actions=no])
+	NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
+fi
+
+AC_SUBST(NAUTILUS_CFLAGS)
+AC_SUBST(NAUTILUS_LIBS)
+AC_SUBST(NAUTILUS_EXTENSION_DIR)
+AM_CONDITIONAL(ENABLE_NAUTILUS_ACTIONS, test x"$enable_nautilus_actions" != x"no")
 
 dnl ******************************
 dnl
@@ -278,6 +303,7 @@ AC_CONFIG_FILES([Makefile
 		 src/commands/Makefile
 		 src/sh/Makefile
 		 src/ui/Makefile
+		 nautilus/Makefile
 		 help/Makefile
 		 po/Makefile.in])
 AC_OUTPUT
@@ -293,6 +319,7 @@ Configuration:
 	Disable deprecated code : ${disable_deprecated}
 	Run in place            : ${enable_run_in_place}
 	Internal mkdtemp        : ${mkdtemp_missing}
+	Nautilus module         : ${enable_nautilus_actions}
 	PackageKit support      : ${enable_packagekit}
 	Use libmagic            : ${enable_magic}
 	JSON support            : ${enable_json_glib}
