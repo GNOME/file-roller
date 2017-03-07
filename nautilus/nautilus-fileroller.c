@@ -104,44 +104,6 @@ extract_here_callback (NautilusMenuItem *item,
 	g_string_free (cmd, TRUE);
 }
 
-
-static void
-add_callback (NautilusMenuItem *item,
-	      gpointer          user_data)
-{
-	GList            *files, *scan;
-	NautilusFileInfo *file;
-	char             *uri, *dir;
-	GString          *cmd;
-
-	files = g_object_get_data (G_OBJECT (item), "files");
-	file = files->data;
-
-	uri = nautilus_file_info_get_uri (file);
-	dir = g_path_get_dirname (uri);
-
-	cmd = g_string_new ("file-roller");
-	g_string_append (cmd, " --notify");
-	g_string_append_printf (cmd," --default-dir=%s", g_shell_quote (dir));
-	g_string_append (cmd," --add");
-
-	g_free (dir);
-	g_free (uri);
-
-	for (scan = files; scan; scan = scan->next) {
-		NautilusFileInfo *file = scan->data;
-
-		uri = nautilus_file_info_get_uri (file);
-		g_string_append_printf (cmd, " %s", g_shell_quote (uri));
-		g_free (uri);
-	}
-
-	g_spawn_command_line_async (cmd->str, NULL);
-
-	g_string_free (cmd, TRUE);
-}
-
-
 static struct {
 	char     *mime_type;
 	gboolean  is_compressed;
@@ -255,10 +217,6 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	GList    *items = NULL;
 	GList    *scan;
 	gboolean  can_write = TRUE;
-	gboolean  one_item;
-	gboolean  one_archive = FALSE;
-	gboolean  one_derived_archive = FALSE;
-	gboolean  one_compressed_archive = FALSE;
 	gboolean  all_archives = TRUE;
 	gboolean  all_archives_derived = TRUE;
 	gboolean  all_archives_compressed = TRUE;
@@ -294,11 +252,6 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 	}
 
 	/**/
-
-	one_item = (files != NULL) && (files->next == NULL);
-	one_archive = one_item && all_archives;
-	one_derived_archive = one_archive && all_archives_derived;
-	one_compressed_archive = one_archive && all_archives_compressed;
 
 	if (all_archives && can_write) {
 		NautilusMenuItem *item;
@@ -337,25 +290,6 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 
 		items = g_list_append (items, item);
 
-	}
-
-	if (! one_compressed_archive || one_derived_archive) {
-		NautilusMenuItem *item;
-
-		item = nautilus_menu_item_new ("NautilusFr::add",
-					       g_dgettext ("file-roller", "Compress..."),
-					       g_dgettext ("file-roller", "Create a compressed archive with the selected objects"),
-					       "gnome-mime-application-x-archive");
-		g_signal_connect (item,
-				  "activate",
-				  G_CALLBACK (add_callback),
-				  provider);
-		g_object_set_data_full (G_OBJECT (item),
-					"files",
-					nautilus_file_info_list_copy (files),
-					(GDestroyNotify) nautilus_file_info_list_free);
-
-		items = g_list_append (items, item);
 	}
 
 	return items;
