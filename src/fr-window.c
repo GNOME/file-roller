@@ -26,6 +26,9 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#ifdef GDK_WINDOWING_X11
+# include <gdk/gdkx.h>
+#endif
 #include <gdk/gdkkeysyms.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #ifdef ENABLE_NOTIFICATION
@@ -408,6 +411,17 @@ fr_window_free_batch_data (FrWindow *window)
 }
 
 
+static GdkAtom
+_fr_window_get_clipboard_name (FrWindow *window)
+{
+#ifdef GDK_WINDOWING_X11
+	if (GDK_IS_X11_DISPLAY (gtk_widget_get_display (GTK_WIDGET (window))))
+		return FR_CLIPBOARD;
+#endif
+	return GDK_SELECTION_CLIPBOARD;
+}
+
+
 static void
 fr_window_clipboard_remove_file_list (FrWindow *window,
 				      GList    *file_list)
@@ -445,7 +459,7 @@ fr_window_clipboard_remove_file_list (FrWindow *window,
 	if (window->priv->copy_data->files == NULL) {
 		fr_clipboard_data_unref (window->priv->copy_data);
 		window->priv->copy_data = NULL;
-		gtk_clipboard_clear (gtk_widget_get_clipboard (GTK_WIDGET (window), FR_CLIPBOARD));
+		gtk_clipboard_clear (gtk_widget_get_clipboard (GTK_WIDGET (window), _fr_window_get_clipboard_name (window)));
 	}
 }
 
@@ -726,7 +740,7 @@ fr_window_update_paste_command_sensitivity (FrWindow     *window,
 		return;
 
 	if (clipboard == NULL)
-		clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window), FR_CLIPBOARD);
+		clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window), _fr_window_get_clipboard_name (window));
 	running    = window->priv->activity_ref > 0;
 	no_archive = (window->archive == NULL) || ! window->priv->archive_present;
 	ro         = ! no_archive && window->archive->read_only;
@@ -777,7 +791,7 @@ fr_window_realize (GtkWidget *widget)
 	gth_icon_cache_set_fallback (window->priv->tree_icon_cache, icon);
 	g_object_unref (icon);
 
-	clipboard = gtk_widget_get_clipboard (widget, FR_CLIPBOARD);
+	clipboard = gtk_widget_get_clipboard (widget, _fr_window_get_clipboard_name (window));
 	g_signal_connect (clipboard,
 			  "owner_change",
 			  G_CALLBACK (clipboard_owner_change_cb),
@@ -804,7 +818,7 @@ fr_window_unrealize (GtkWidget *widget)
 	gth_icon_cache_free (window->priv->tree_icon_cache);
 	window->priv->tree_icon_cache = NULL;
 
-	clipboard = gtk_widget_get_clipboard (widget, FR_CLIPBOARD);
+	clipboard = gtk_widget_get_clipboard (widget, _fr_window_get_clipboard_name (window));
 	g_signal_handlers_disconnect_by_func (clipboard,
 					      G_CALLBACK (clipboard_owner_change_cb),
 					      window);
@@ -8545,7 +8559,7 @@ fr_window_copy_or_cut_selection (FrWindow      *window,
 	window->priv->copy_data->op = op;
 	window->priv->copy_data->base_dir = base_dir;
 
-	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
+	clipboard = gtk_clipboard_get (_fr_window_get_clipboard_name (window));
 	gtk_clipboard_set_with_owner (clipboard,
 				      clipboard_targets,
 				      G_N_ELEMENTS (clipboard_targets),
@@ -8882,7 +8896,7 @@ fr_window_paste_selection_to (FrWindow   *window,
 	GtkSelectionData *selection_data;
 	FrClipboardData  *paste_data;
 
-	clipboard = gtk_clipboard_get (FR_CLIPBOARD);
+	clipboard = gtk_clipboard_get (_fr_window_get_clipboard_name (window));
 	selection_data = gtk_clipboard_wait_for_contents (clipboard, FR_SPECIAL_URI_LIST);
 	if (selection_data == NULL)
 		return;
