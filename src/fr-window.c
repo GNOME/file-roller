@@ -1299,23 +1299,22 @@ get_dir_size (FrWindow   *window,
 
 static gboolean
 file_data_respects_filter (FrWindow *window,
+			   GRegex   *filter,
 			   FileData *fdata)
 {
-	const char *filter;
-
-	filter = gtk_entry_get_text (GTK_ENTRY (window->priv->filter_entry));
-	if ((fdata == NULL) || (filter == NULL) || (*filter == '\0'))
+	if ((fdata == NULL) || (filter == NULL))
 		return TRUE;
 
 	if (fdata->dir || (fdata->name == NULL))
 		return FALSE;
 
-	return strncasecmp (fdata->name, filter, strlen (filter)) == 0;
+	return g_regex_match (filter, fdata->name, 0, NULL);
 }
 
 
 static gboolean
 compute_file_list_name (FrWindow   *window,
+			GRegex     *filter,
 			FileData   *fdata,
 			const char *current_dir,
 			int         current_dir_len,
@@ -1326,7 +1325,7 @@ compute_file_list_name (FrWindow   *window,
 
 	*different_name = FALSE;
 
-	if (! file_data_respects_filter (window, fdata))
+	if (! file_data_respects_filter (window, filter, fdata))
 		return FALSE;
 
 	if (window->priv->list_mode == FR_WINDOW_LIST_MODE_FLAT) {
@@ -1374,6 +1373,30 @@ compute_file_list_name (FrWindow   *window,
 }
 
 
+static GRegex *
+_fr_window_create_filter (FrWindow *window)
+{
+	GRegex     *filter;
+	const char *filter_str;
+
+	filter = NULL;
+	filter_str = gtk_entry_get_text (GTK_ENTRY (window->priv->filter_entry));
+	if ((filter_str != NULL) && (*filter_str != '\0')) {
+		char *escaped;
+		char *pattern;
+
+		escaped = g_regex_escape_string (filter_str, -1);
+		pattern = g_strdup_printf (".*%s.*", escaped);
+		filter = g_regex_new (pattern, G_REGEX_CASELESS | G_REGEX_OPTIMIZE, G_REGEX_MATCH_NOTEMPTY, NULL);
+
+		g_free (pattern);
+		g_free (escaped);
+	}
+
+	return filter;
+}
+
+
 static void
 fr_window_compute_list_names (FrWindow  *window,
 			      GPtrArray *files)
@@ -1381,6 +1404,7 @@ fr_window_compute_list_names (FrWindow  *window,
 	const char *current_dir;
 	int         current_dir_len;
 	GHashTable *names_hash;
+	GRegex     *filter;
 	int         i;
 	gboolean    visible_list_started = FALSE;
 	gboolean    visible_list_completed = FALSE;
@@ -1390,6 +1414,7 @@ fr_window_compute_list_names (FrWindow  *window,
 	current_dir_len = strlen (current_dir);
 	names_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
+	filter = _fr_window_create_filter (window);
 	for (i = 0; i < files->len; i++) {
 		FileData *fdata = g_ptr_array_index (files, i);
 
@@ -1404,13 +1429,15 @@ fr_window_compute_list_names (FrWindow  *window,
 		if (visible_list_completed)
 			continue;
 
-		if (compute_file_list_name (window, fdata, current_dir, current_dir_len, names_hash, &different_name)) {
+		if (compute_file_list_name (window, filter, fdata, current_dir, current_dir_len, names_hash, &different_name)) {
 			visible_list_started = TRUE;
 		}
 		else if (visible_list_started && different_name)
 			visible_list_completed = TRUE;
 	}
 
+	if (filter != NULL)
+		g_regex_unref (filter);
 	g_hash_table_destroy (names_hash);
 }
 
@@ -1760,6 +1787,7 @@ static void
 fr_window_update_dir_tree (FrWindow *window)
 {
 	GPtrArray  *dirs;
+	GRegex     *filter;
 	GHashTable *dir_cache;
 	int         i;
 	GdkPixbuf  *icon;
@@ -1790,15 +1818,14 @@ fr_window_update_dir_tree (FrWindow *window)
 
 	dirs = g_ptr_array_sized_new (128);
 
+	filter = _fr_window_create_filter (window);
 	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, NULL);
 	for (i = 0; i < window->archive->files->len; i++) {
 		FileData *fdata = g_ptr_array_index (window->archive->files, i);
 		char     *dir;
 
-		if (gtk_entry_get_text (GTK_ENTRY (window->priv->filter_entry)) != NULL) {
-			if (! file_data_respects_filter (window, fdata))
-				continue;
-		}
+		if (! file_data_respects_filter (window, filter, fdata))
+			continue;
 
 		if (fdata->dir)
 			dir = _g_path_remove_ending_separator (fdata->full_path);
@@ -1821,6 +1848,8 @@ fr_window_update_dir_tree (FrWindow *window)
 		g_free (dir);
 	}
 	g_hash_table_destroy (dir_cache);
+	if (filter != NULL)
+		g_regex_unref (filter);
 
 	g_ptr_array_sort (dirs, path_compare);
 	dir_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) gtk_tree_path_free);
