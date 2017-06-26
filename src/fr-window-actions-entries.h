@@ -64,7 +64,6 @@ static const GActionEntry fr_window_actions[] = {
 
 static const FrAccelerator fr_window_accelerators[] = {
 	{ "close", "<Control>w" },
-	{ "delete", "Delete" },
 	{ "deselect-all", "<Shift><Control>a" },
 	{ "edit-copy", "<Control>c" },
 	{ "extract-files", "<Control>e" },
