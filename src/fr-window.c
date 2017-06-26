@@ -4890,7 +4890,7 @@ key_press_cb (GtkWidget   *widget,
 
 	case GDK_KEY_Delete:
 		if (! gtk_widget_has_focus (window->priv->filter_entry)) {
-			fr_window_activate_delete (window, NULL, NULL);
+			fr_window_activate_delete (NULL, NULL, window);
 			retval = TRUE;
 		}
 		break;
