@@ -5425,7 +5425,7 @@ fr_window_activate_filter (FrWindow *window)
 
 static void
 filter_entry_search_changed_cb (GtkEntry *entry,
-			  FrWindow *window)
+				FrWindow *window)
 {
 	fr_window_activate_filter (window);
 }
@@ -5527,7 +5527,6 @@ fr_window_construct (FrWindow *window)
 	GtkWidget          *tree_scrolled_window;
 	GtkWidget          *button;
 	GtkTreeSelection   *selection;
-	GtkSizeGroup       *toolbar_size_group;
 	GtkSizeGroup       *header_bar_size_group;
 
 	/* Create the settings objects */
@@ -5936,13 +5935,6 @@ fr_window_construct (FrWindow *window)
 
 		g_object_unref (builder);
 	}
-
-	/**/
-
-	toolbar_size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
-	gtk_size_group_add_widget (toolbar_size_group, window->priv->location_bar);
-	gtk_size_group_add_widget (toolbar_size_group, window->priv->filter_bar);
-	g_object_unref (toolbar_size_group);
 
 	/**/
 
