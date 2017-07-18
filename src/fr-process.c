@@ -242,7 +242,7 @@ enum {
 
 
 static guint       fr_process_signals[LAST_SIGNAL] = { 0 };
-static const char *try_charsets[] = { "UTF-8", "ISO-8859-1", "WINDOW-1252" };
+static const char *try_charsets[] = { "UTF-8", "ISO-8859-1", "WINDOWS-1252" };
 static int         n_charsets = G_N_ELEMENTS (try_charsets);
 
 
