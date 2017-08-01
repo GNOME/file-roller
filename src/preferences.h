@@ -56,6 +56,7 @@
 
 #define PREF_EXTRACT_SKIP_NEWER           "skip-newer"
 #define PREF_EXTRACT_RECREATE_FOLDERS     "recreate-folders"
+#define PREF_EXTRACT_CREATE_PARENT        "create-parent"
 
 #define PREF_ADD_CURRENT_FOLDER           "current-folder"
 #define PREF_ADD_SELECTED_FILES           "selected-files"
