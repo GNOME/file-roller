@@ -68,13 +68,17 @@ extract_cb (GtkWidget   *w,
 	FrWindow   *window = data->window;
 	gboolean    do_not_extract = FALSE;
 	GFile      *destination;
+	GFile      *parent = NULL;
 	gboolean    skip_newer;
 	gboolean    selected_files;
 	gboolean    pattern_files;
 	gboolean    junk_paths;
+	gboolean    create_parent;
 	GList      *file_list;
 	char       *base_dir = NULL;
 	GError     *error = NULL;
+	gboolean original_force_directory_creation = ForceDirectoryCreation;
+	gboolean force_directory_creation_when_extracting = ForceDirectoryCreation;
 
 	data->extract_clicked = TRUE;
 
@@ -82,16 +86,43 @@ extract_cb (GtkWidget   *w,
 
 	destination = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (data->dialog));
 
+	/* append parent directory if selected */
+
+	create_parent = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("create_parent_checkbutton")));
+	if (create_parent)
+	{
+		GFile *archive = fr_window_get_archive_file (window);
+		GFile *new_destination = NULL;
+
+		/* get the base name of the archive and clear all file extensions */
+		char *basename = g_file_get_basename (archive);
+		gchar *extension = g_strstr_len (basename, -1, ".");
+		if (extension && extension != basename) {
+			*extension = '\0';
+		}
+		new_destination = g_file_get_child (destination, basename);
+		g_free (basename);
+		parent = destination;
+		destination = new_destination;
+	} else {
+		parent = destination;
+	}
+
 	/* check directory existence. */
 
-	if (! _g_file_query_is_dir (destination)) {
+	if (_g_file_query_is_dir (parent)) {
+		if (parent != destination) {
+			/* the parent directory already exists, we want to create the wrapper directory */
+			force_directory_creation_when_extracting = TRUE;
+		}
+	} else {
 		if (! ForceDirectoryCreation) {
 			GtkWidget *d;
 			int        r;
 			char      *folder_name;
 			char      *msg;
 
-			folder_name = _g_file_get_display_basename (destination);
+			folder_name = _g_file_get_display_basename (parent);
 			msg = g_strdup_printf (_("Destination folder “%s” does not exist.\n\nDo you want to create it?"), folder_name);
 			g_free (folder_name);
 
@@ -129,6 +160,10 @@ extract_cb (GtkWidget   *w,
 
 			return FALSE;
 		}
+	}
+
+	if (parent != destination) {
+		g_object_unref (parent);
 	}
 
 	if (do_not_extract) {
@@ -183,6 +218,7 @@ extract_cb (GtkWidget   *w,
 	if (! gtk_toggle_button_get_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton"))))
 		g_settings_set_boolean (data->settings, PREF_EXTRACT_SKIP_NEWER, skip_newer);
 	g_settings_set_boolean (data->settings, PREF_EXTRACT_RECREATE_FOLDERS, ! junk_paths);
+	g_settings_set_boolean (data->settings, PREF_EXTRACT_CREATE_PARENT, create_parent);
 
 	selected_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("selected_files_radiobutton")));
 	pattern_files = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("file_pattern_radiobutton")));
@@ -220,6 +256,7 @@ extract_cb (GtkWidget   *w,
 
 	/* extract ! */
 
+	ForceDirectoryCreation = force_directory_creation_when_extracting;
 	fr_window_extract_archive_and_continue (window,
 				       	        file_list,
 						destination,
@@ -227,6 +264,7 @@ extract_cb (GtkWidget   *w,
 						skip_newer,
 						FR_OVERWRITE_ASK,
 						junk_paths);
+	ForceDirectoryCreation = original_force_directory_creation;
 
 	_g_string_list_free (file_list);
 	g_object_unref (destination);
@@ -307,6 +345,7 @@ dlg_extract__common (FrWindow *window,
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_newer_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_SKIP_NEWER));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("keep_structure_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_RECREATE_FOLDERS));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("create_parent_checkbutton")), g_settings_get_boolean (data->settings, PREF_EXTRACT_CREATE_PARENT));
 
 	/* Set the signals handlers. */
 
