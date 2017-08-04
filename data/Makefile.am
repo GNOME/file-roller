@@ -17,7 +17,7 @@ service_DATA = $(service_in_files:.service.in=.service)
 
 gsettings_SCHEMAS = org.gnome.FileRoller.gschema.xml
 
-appdatadir = $(datadir)/appdata
+appdatadir = $(datadir)/metainfo
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 appdata_in_files = org.gnome.FileRoller.appdata.xml.in
 

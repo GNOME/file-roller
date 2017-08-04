@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Richard Hughes <richard@hughsie.com>
      Copyright 2014 Paolo Bacchilega <paobac@src.gnome.org> -->
-<application>
-  <id type="desktop">org.gnome.FileRoller.desktop</id>
+<component type="desktop-application">
+  <id>org.gnome.FileRoller</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
+
+  <_name>File Roller</_name>
   <_summary>Open, modify and create compressed archive files</_summary>
   <description>
     <_p>
@@ -21,11 +23,16 @@
       <_li>xz archives (.tar.xz)</_li>
     </ul>
   </description>
+
+  <launchable type="desktop-id">org.gnome.FileRoller.desktop</launchable>
   <url type="homepage">https://wiki.gnome.org/Apps/FileRoller</url>
   <screenshots>
-    <screenshot type="default">https://wiki.gnome.org/Apps/FileRoller?action=AttachFile&amp;do=get&amp;target=file-roller.png</screenshot>
+    <screenshot type="default">
+      <image>https://wiki.gnome.org/Apps/FileRoller?action=AttachFile&amp;do=get&amp;target=file-roller.png</image>
+    </screenshot>
   </screenshots>
-  <updatecontact>paobac_at_src.gnome.org</updatecontact>
+
+  <update_contact>paobac_at_src.gnome.org</update_contact>
   <kudos>
     <kudo>AppMenu</kudo>
     <kudo>HiDpiIcon</kudo>
@@ -35,4 +42,8 @@
   </kudos>
   <project_group>GNOME</project_group>
   <translation type="gettext">file-roller</translation>
-</application>
+
+  <provides>
+    <id>org.gnome.FileRoller.desktop</id>
+  </provides>
+</component>
