@@ -6,7 +6,6 @@ HELP_ID = file-roller
 # List of figures to be included
 HELP_MEDIA = \
 	figures/file-roller-3-12.png \
-	figures/file-roller-open-recent.png \
 	figures/file-roller-icon.png
 
 # List of pages
