@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=file-ro"
 "ller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-08 08:31+0000\n"
-"PO-Revision-Date: 2017-03-19 19:35+0200\n"
+"POT-Creation-Date: 2017-08-04 01:02+0000\n"
+"PO-Revision-Date: 2017-08-28 12:12+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -25,10 +25,14 @@ msgstr ""
 "X-Generator: Lokalize 2.0\n"
 
 #: ../data/org.gnome.FileRoller.appdata.xml.in.h:1
+msgid "File Roller"
+msgstr "Datņu rullis"
+
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:2
 msgid "Open, modify and create compressed archive files"
 msgstr "Atvērt, modificēt un izveidot saspiestas arhīva datnes"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:2
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:3
 msgid ""
 "Archive Manager (also known as File Roller) is the default GNOME application "
 "for opening, creating, and modifying archive and compressed archive files."
@@ -36,29 +40,29 @@ msgstr ""
 "Arhīvu pārvaldnieks (zināms arī kā File Roller), ir GNOME noklusējuma "
 "lietotne arhīva datņu atvēršanai, veidošanai un mainīšanai."
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:3
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:4
 msgid ""
 "Archive Manager supports a wide range of different archive files, including:"
 msgstr "Arhīvu pārvaldnieks atbalsta plašu arhīva datņu klāstu, tai skaitā:"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:4
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:5
 msgid "gzip archives (.tar.gz, .tgz)"
 msgstr "gzip arhīvus (.tar.gz, .tgz)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:5
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:6
 msgid "bzip archives (.tar.bz, .tbz)"
 msgstr "bzip arhīvus (.tar.bz, .tbz)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:6
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:7
 msgid "zip archives (.zip)"
 msgstr "zip arhīvus (.zip)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:7
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:8
 msgid "xz archives (.tar.xz)"
 msgstr "xz arhīvus (.tar.xz)"
 
 #: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:454
-#: ../src/fr-window.c:1974 ../src/fr-window.c:5497
+#: ../src/fr-window.c:2017 ../src/fr-window.c:5546
 msgid "Archive Manager"
 msgstr "Arhīvu pārvaldnieks"
 
@@ -99,12 +103,15 @@ msgid "List Mode"
 msgstr "Saraksta režīms"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.h:6
+#| msgid ""
+#| "Use 'all-files' to view all the files in the archive in a single list, "
+#| "use 'as-folder' to navigate the archive as a folder."
 msgid ""
-"Use 'all-files' to view all the files in the archive in a single list, use "
-"'as-folder' to navigate the archive as a folder."
+"Use “all-files” to view all the files in the archive in a single list, use "
+"“as-folder” to navigate the archive as a folder."
 msgstr ""
-"Izmantojiet 'all-files', lai skatītu visas datnes arhīvā kā vienu sarakstu. "
-"Izmantojiet 'as-folder', lai pārvietotos pa arhīvu kā pa mapi."
+"Izmantojiet “all-files”, lai skatītu visas datnes arhīvā kā vienu sarakstu. "
+"Izmantojiet “as-folder”, lai pārvietotos pa arhīvu kā pa mapi."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.h:7
 msgid "Display type"
@@ -159,11 +166,14 @@ msgid "Editors"
 msgstr "Redaktori"
 
 #: ../data/org.gnome.FileRoller.gschema.xml.h:20
+#| msgid ""
+#| "List of applications entered in the 'Open File' dialog and not associated "
+#| "with the file type."
 msgid ""
-"List of applications entered in the 'Open File' dialog and not associated "
+"List of applications entered in the “Open File” dialog and not associated "
 "with the file type."
 msgstr ""
-"Saraksts ar lietotnēm, kuras ir ievadītas “Atvērt datni\" dialoglodziņā un "
+"Saraksts ar lietotnēm, kuras ir ievadītas “Atvērt datni” dialoglodziņā un "
 "nav saistītas ar datnes tipu."
 
 #: ../data/org.gnome.FileRoller.gschema.xml.h:21
@@ -207,8 +217,6 @@ msgid "The default size for volumes."
 msgstr "Sējumu noklusējuma izmērs."
 
 #: ../nautilus/nautilus-fileroller.c:260
-#| msgctxt "Window title"
-#| msgid "Extract archive"
 msgid "Extract Here"
 msgstr "Atspiest šeit"
 
@@ -218,14 +226,11 @@ msgid "Extract the selected archive to the current position"
 msgstr "Atspiest izvēlēto arhīvu šajā vietā"
 
 #: ../nautilus/nautilus-fileroller.c:279
-#| msgctxt "Window title"
-#| msgid "Extract"
-msgid "Extract To..."
-msgstr "Atspiest..."
+#| msgid "_Extract…"
+msgid "Extract To…"
+msgstr "Atspiest mapē…"
 
 #: ../nautilus/nautilus-fileroller.c:280
-#| msgctxt "Window title"
-#| msgid "Extract archive"
 msgid "Extract the selected archive"
 msgstr "Atspiest izvēlēto arhīvu"
 
@@ -235,7 +240,9 @@ msgstr "Nevarēja pievienot datnes arhīvam"
 
 #: ../src/dlg-add.c:115
 #, c-format
-msgid "You don't have the right permissions to read files from folder \"%s\""
+#| msgid ""
+#| "You don't have the right permissions to read files from folder \"%s\""
+msgid "You don’t have the right permissions to read files from folder “%s”"
 msgstr "Jums nav nepieciešamās atļaujas, lai nolasītu datnes no mapes “%s”"
 
 #: ../src/dlg-add.c:182
@@ -293,8 +300,9 @@ msgstr "_Labi"
 #. Translators: %s is a filename
 #: ../src/dlg-ask-password.c:148
 #, c-format
-msgid "Password required for \"%s\""
-msgstr "Nepieciešama parole \"%s\""
+#| msgid "Password required for \"%s\""
+msgid "Password required for “%s”"
+msgstr "Nepieciešama parole “%s”"
 
 #: ../src/dlg-ask-password.c:157
 msgid "Wrong password."
@@ -305,10 +313,14 @@ msgstr "Nepareiza parole."
 msgid "Compress"
 msgstr "Saspiest"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6867
+#: ../src/dlg-extract.c:95 ../src/fr-window.c:6909
 #, c-format
+#| msgid ""
+#| "Destination folder \"%s\" does not exist.\n"
+#| "\n"
+#| "Do you want to create it?"
 msgid ""
-"Destination folder \"%s\" does not exist.\n"
+"Destination folder “%s” does not exist.\n"
 "\n"
 "Do you want to create it?"
 msgstr ""
@@ -316,25 +328,28 @@ msgstr ""
 "\n"
 "Vai vēlaties to izveidot?"
 
-#: ../src/dlg-extract.c:103 ../src/fr-window.c:6875
+#: ../src/dlg-extract.c:103 ../src/fr-window.c:6917
 msgid "Create _Folder"
 msgstr "Izveidot _mapi"
 
 #: ../src/dlg-extract.c:122 ../src/dlg-extract.c:139 ../src/dlg-extract.c:166
-#: ../src/fr-window.c:4377 ../src/fr-window.c:6791 ../src/fr-window.c:6796
-#: ../src/fr-window.c:6896 ../src/fr-window.c:6915 ../src/fr-window.c:6920
+#: ../src/fr-window.c:4420 ../src/fr-window.c:6833 ../src/fr-window.c:6838
+#: ../src/fr-window.c:6938 ../src/fr-window.c:6957 ../src/fr-window.c:6962
 msgid "Extraction not performed"
 msgstr "Atspiešana nav veikta"
 
-#: ../src/dlg-extract.c:123 ../src/fr-window.c:6892
+#: ../src/dlg-extract.c:123 ../src/fr-window.c:6934
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "Nevarēja izveidot mērķa mapi — %s."
 
-#: ../src/dlg-extract.c:167 ../src/fr-window.c:4604 ../src/fr-window.c:4706
+#: ../src/dlg-extract.c:167 ../src/fr-window.c:4647 ../src/fr-window.c:4749
 #, c-format
+#| msgid ""
+#| "You don't have the right permissions to extract archives in the folder "
+#| "\"%s\""
 msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
+"You don’t have the right permissions to extract archives in the folder “%s”"
 msgstr "Jums nav nepieciešamo atļauju, lai atspiestu arhīvus mapē “%s”"
 
 #: ../src/dlg-extract.c:279
@@ -348,8 +363,8 @@ msgstr "Gadījās iekšēja kļūda, mēģinot meklēt lietotnes:"
 
 #: ../src/dlg-package-installer.c:296 ../src/dlg-package-installer.c:305
 #: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:751
-#: ../src/fr-window.c:4044 ../src/fr-window.c:7598 ../src/fr-window.c:7955
-#: ../src/fr-window.c:9470
+#: ../src/fr-window.c:4087 ../src/fr-window.c:7640 ../src/fr-window.c:7997
+#: ../src/fr-window.c:9512
 msgid "Archive type not supported."
 msgstr "Arhīva veids nav atbalstīts."
 
@@ -372,7 +387,8 @@ msgstr "_Meklēt komandu"
 
 #: ../src/dlg-password.c:109
 #, c-format
-msgid "Enter a password for \"%s\""
+#| msgid "Enter a password for \"%s\""
+msgid "Enter a password for “%s”"
 msgstr "Ievadiet paroli “%s”"
 
 #: ../src/dlg-prop.c:107
@@ -382,17 +398,24 @@ msgstr "%s īpašības"
 
 #: ../src/dlg-update.c:162
 #, c-format
-msgid "Update the file \"%s\" in the archive \"%s\"?"
+#| msgid "Update the file \"%s\" in the archive \"%s\"?"
+msgid "Update the file “%s” in the archive “%s”?"
 msgstr "Atjaunināt datni “%s” arhīvā “%s”?"
 
 #. secondary text
 #: ../src/dlg-update.c:174 ../src/dlg-update.c:200
 #, c-format
+#| msgid ""
+#| "The file has been modified with an external application. If you don't "
+#| "update the file in the archive, all of your changes will be lost."
+#| msgid_plural ""
+#| "%d files have been modified with an external application. If you don't "
+#| "update the files in the archive, all of your changes will be lost."
 msgid ""
-"The file has been modified with an external application. If you don't update "
+"The file has been modified with an external application. If you don’t update "
 "the file in the archive, all of your changes will be lost."
 msgid_plural ""
-"%d files have been modified with an external application. If you don't "
+"%d files have been modified with an external application. If you don’t "
 "update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
 "%d datni ir izmainījusi ārēja lietotne. Ja jūs neatjaunināsiet datni arhīvā, "
@@ -406,7 +429,8 @@ msgstr[2] ""
 
 #: ../src/dlg-update.c:190
 #, c-format
-msgid "Update the files in the archive \"%s\"?"
+#| msgid "Update the files in the archive \"%s\"?"
+msgid "Update the files in the archive “%s”?"
 msgstr "Atjaunināt datnes arhīvā “%s”?"
 
 #: ../src/dlg-update.c:319 ../src/dlg-update.c:332
@@ -449,8 +473,9 @@ msgid ""
 msgstr "Atspiest arhīvu saturu arhīvu mapē un iziet no programmas"
 
 #: ../src/fr-application.c:81
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "Noklusējuma mape, kuru lietot kopā ar '--add' un '--extract' komandām"
+#| msgid "Default folder to use for the '--add' and '--extract' commands"
+msgid "Default folder to use for the “--add” and “--extract” commands"
+msgstr "Noklusējuma mape, kuru lietot kopā ar “--add” un “--extract” komandām"
 
 #: ../src/fr-application.c:85
 msgid "Create destination folder without asking confirmation"
@@ -475,8 +500,9 @@ msgid "Extract archive"
 msgstr "Atspiest arhīvu"
 
 #: ../src/fr-application.c:485
-msgid "- Create and modify an archive"
-msgstr "- Izveidot arhīvus un mainīt to saturu"
+#| msgid "- Create and modify an archive"
+msgid "— Create and modify an archive"
+msgstr "— Izveidot arhīvus un mainīt to saturu"
 
 #: ../src/fr-application-menu.c:130
 msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
@@ -495,7 +521,8 @@ msgstr ""
 "Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
 
 #: ../src/fr-archive.c:1852
-msgid "You don't have the right permissions."
+#| msgid "You don't have the right permissions."
+msgid "You don’t have the right permissions."
 msgstr "Jums nav nepieciešamo atļauju."
 
 #: ../src/fr-archive.c:1852
@@ -503,22 +530,25 @@ msgid "This archive type cannot be modified"
 msgstr "Šāda veida arhīvu nevar mainīt"
 
 #: ../src/fr-archive.c:1866 ../src/fr-new-archive-dialog.c:475
-msgid "You can't add an archive to itself."
+#| msgid "You can't add an archive to itself."
+msgid "You can’t add an archive to itself."
 msgstr "Jūs nevarat pievienot arhīvu sev pašam."
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:425
 #: ../src/fr-command-tar.c:307
 #, c-format
-msgid "Adding \"%s\""
-msgstr "Pievieno \"%s\""
+#| msgid "Adding \"%s\""
+msgid "Adding “%s”"
+msgstr "Pievieno “%s”"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
 #: ../src/fr-command-tar.c:428
 #, c-format
-msgid "Extracting \"%s\""
-msgstr "Atspiež \"%s\""
+#| msgid "Extracting \"%s\""
+msgid "Extracting “%s”"
+msgstr "Atspiež “%s”"
 
 #: ../src/fr-command.c:597
 #, c-format
@@ -528,8 +558,9 @@ msgstr "Arhīvs nav atrasts"
 #. Translators: %s is a filename.
 #: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:373
 #, c-format
-msgid "Removing \"%s\""
-msgstr "Dzēš \"%s\""
+#| msgid "Removing \"%s\""
+msgid "Removing “%s”"
+msgstr "Dzēš “%s”"
 
 #: ../src/fr-command-rar.c:688
 #, c-format
@@ -555,7 +586,7 @@ msgstr "Nevarēja ielādēt atrašanās vietu"
 #: ../src/fr-new-archive-dialog.c:349 ../src/fr-new-archive-dialog.c:368
 #: ../src/fr-new-archive-dialog.c:384 ../src/fr-new-archive-dialog.c:433
 #: ../src/fr-new-archive-dialog.c:451 ../src/fr-new-archive-dialog.c:473
-#: ../src/fr-window.c:2989
+#: ../src/fr-window.c:3032
 msgid "Could not create the archive"
 msgstr "Nevarēja izveidot arhīvu"
 
@@ -564,27 +595,31 @@ msgid "You have to specify an archive name."
 msgstr "Jums jānorāda arhīva nosaukums."
 
 #: ../src/fr-new-archive-dialog.c:435
-msgid "You don't have permission to create an archive in this folder"
+#| msgid "You don't have permission to create an archive in this folder"
+msgid "You don’t have permission to create an archive in this folder"
 msgstr "Jums nav atļaujas izveidot arhīvu šajā mapē"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:453 ../src/fr-window.c:8269
+#: ../src/fr-new-archive-dialog.c:453 ../src/fr-window.c:8311
 msgid "New name is the same as old one, please type other name."
 msgstr "Jaunais nosaukums sakrīt ar veco. Lūdzu, ierakstiet citu nosaukumu."
 
 #: ../src/fr-new-archive-dialog.c:496
 #, c-format
-msgid "A file named \"%s\" already exists.  Do you want to replace it?"
-msgstr "Datne ar nosaukumu \"%s\" jau eksistē.  Vai vēlaties to pārrakstīt?"
+#| msgid "A file named \"%s\" already exists.  Do you want to replace it?"
+msgid "A file named “%s” already exists.  Do you want to replace it?"
+msgstr "Datne ar nosaukumu “%s” jau eksistē.  Vai vēlaties to pārrakstīt?"
 
 #: ../src/fr-new-archive-dialog.c:497
 #, c-format
+#| msgid ""
+#| "The file already exists in \"%s\".  Replacing it will overwrite its "
+#| "contents."
 msgid ""
-"The file already exists in \"%s\".  Replacing it will overwrite its contents."
-msgstr ""
-"Datne jau eksistē \"%s\".  Aizvietojot to, tiks pārrakstīts tās saturs."
+"The file already exists in “%s”.  Replacing it will overwrite its contents."
+msgstr "Datne jau eksistē “%s”. Aizvietojot to, tiks pārrakstīts tās saturs."
 
-#: ../src/fr-new-archive-dialog.c:503 ../src/fr-window.c:6716
+#: ../src/fr-new-archive-dialog.c:503 ../src/fr-window.c:6758
 msgid "_Replace"
 msgstr "_Aizvietot"
 
@@ -605,98 +640,110 @@ msgstr "Visi arhīvi"
 msgid "All files"
 msgstr "Visas datnes"
 
-#: ../src/fr-window.c:1207
+#: ../src/fr-window.c:1221
 msgid "Operation completed"
 msgstr "Darbība pabeigta"
 
-#: ../src/fr-window.c:1593
+#: ../src/fr-window.c:1634
 msgid "Folder"
 msgstr "Mape"
 
-#: ../src/fr-window.c:1981
+#: ../src/fr-window.c:2024
 msgid "[read only]"
 msgstr "[tikai lasāms]"
 
-#: ../src/fr-window.c:2122
+#: ../src/fr-window.c:2165
 #, c-format
-msgid "Could not display the folder \"%s\""
+#| msgid "Could not display the folder \"%s\""
+msgid "Could not display the folder “%s”"
 msgstr "Nevarēja parādīt mapi “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2295 ../src/fr-window.c:2333
+#: ../src/fr-window.c:2338 ../src/fr-window.c:2376
 #, c-format
-msgid "Creating \"%s\""
-msgstr "Izveido \"%s\""
+#| msgid "Creating \"%s\""
+msgid "Creating “%s”"
+msgstr "Izveido “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2299
+#: ../src/fr-window.c:2342
 #, c-format
-msgid "Loading \"%s\""
-msgstr "Ielādē \"%s\""
+#| msgid "Loading \"%s\""
+msgid "Loading “%s”"
+msgstr "Ielādē “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2303
+#: ../src/fr-window.c:2346
 #, c-format
-msgid "Reading \"%s\""
-msgstr "Lasa \"%s\""
+#| msgid "Reading \"%s\""
+msgid "Reading “%s”"
+msgstr "Lasa “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2307
+#: ../src/fr-window.c:2350
 #, c-format
-msgid "Deleting the files from \"%s\""
-msgstr "Dzēš datnes no \"%s\""
+#| msgid "Deleting the files from \"%s\""
+msgid "Deleting the files from “%s”"
+msgstr "Dzēš datnes no “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2311
+#: ../src/fr-window.c:2354
 #, c-format
-msgid "Testing \"%s\""
-msgstr "Testē \"%s\""
+#| msgid "Testing \"%s\""
+msgid "Testing “%s”"
+msgstr "Testē “%s”"
 
-#: ../src/fr-window.c:2314
+#: ../src/fr-window.c:2357
 msgid "Getting the file list"
 msgstr "Iegūst datņu sarakstu"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2318
+#: ../src/fr-window.c:2361
 #, c-format
-msgid "Copying the files to add to \"%s\""
-msgstr "Kopē datnes, ko pievienot \"%s\""
+#| msgid "Copying the files to add to \"%s\""
+msgid "Copying the files to add to “%s”"
+msgstr "Kopē datnes, ko pievienot “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2322
+#: ../src/fr-window.c:2365
 #, c-format
-msgid "Adding the files to \"%s\""
-msgstr "Pievieno datnes \"%s\""
+#| msgid "Adding the files to \"%s\""
+msgid "Adding the files to “%s”"
+msgstr "Pievieno datnes “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2326
+#: ../src/fr-window.c:2369
 #, c-format
-msgid "Extracting the files from \"%s\""
-msgstr "Atspiež datnes no \"%s\""
+#| msgid "Extracting the files from \"%s\""
+msgid "Extracting the files from “%s”"
+msgstr "Atspiež datnes no “%s”"
 
-#: ../src/fr-window.c:2329
+#: ../src/fr-window.c:2372
 msgid "Copying the extracted files to the destination"
 msgstr "Kopē atspiestās datnes uz mērķi"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2338
+#: ../src/fr-window.c:2381
 #, c-format
-msgid "Saving \"%s\""
-msgstr "Saglabā \"%s\""
+#| msgid "Saving \"%s\""
+msgid "Saving “%s”"
+msgstr "Saglabā “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2345
+#: ../src/fr-window.c:2388
 #, c-format
-msgid "Renaming the files in \"%s\""
-msgstr "Pārsauc datnes \"%s\""
+#| msgid "Renaming the files in \"%s\""
+msgid "Renaming the files in “%s”"
+msgstr "Pārsauc datnes “%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2349
+#: ../src/fr-window.c:2392
 #, c-format
-msgid "Updating the files in \"%s\""
-msgstr "Atjaunina datnes \"%s\""
+#| msgid "Updating the files in \"%s\""
+msgid "Updating the files in “%s”"
+msgstr "Atjaunina datnes “%s”"
 
-#: ../src/fr-window.c:2638
+#: ../src/fr-window.c:2681
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
@@ -704,87 +751,89 @@ msgstr[0] "atlikusi %d datne"
 msgstr[1] "atlikušas %d datnes"
 msgstr[2] "atlikusi %d datne"
 
-#: ../src/fr-window.c:2642 ../src/fr-window.c:3266
+#: ../src/fr-window.c:2685 ../src/fr-window.c:3309
 msgid "Please wait…"
 msgstr "Lūdzu, uzgaidiet..."
 
-#: ../src/fr-window.c:2760
+#: ../src/fr-window.c:2803
 msgid "Extraction completed successfully"
 msgstr "Atspiešana pabeigta sekmīgi"
 
-#: ../src/fr-window.c:2763
+#: ../src/fr-window.c:2806
 msgid "_Show the Files"
 msgstr "_Rādīt datnes"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2780 ../src/fr-window.c:6224
+#: ../src/fr-window.c:2823 ../src/fr-window.c:6266
 #, c-format
-msgid "\"%s\" created successfully"
-msgstr "\"%s\" izveidots veiksmīgi"
+#| msgid "\"%s\" created successfully"
+msgid "“%s” created successfully"
+msgstr "“%s” izveidots veiksmīgi"
 
-#: ../src/fr-window.c:2787
+#: ../src/fr-window.c:2830
 msgid "_Open the Archive"
 msgstr "_Atvērt arhīvu"
 
-#: ../src/fr-window.c:2875 ../src/fr-window.c:3045
+#: ../src/fr-window.c:2918 ../src/fr-window.c:3088
 msgid "Command exited abnormally."
 msgstr "Komandas darbība beidzās nekorekti."
 
-#: ../src/fr-window.c:2994
+#: ../src/fr-window.c:3037
 msgid "An error occurred while extracting files."
 msgstr "Datņu atspiešanas laikā gadījās kļūda."
 
-#: ../src/fr-window.c:3000
+#: ../src/fr-window.c:3043
 #, c-format
-msgid "Could not open \"%s\""
+#| msgid "Could not open \"%s\""
+msgid "Could not open “%s”"
 msgstr "Nevarēja atvērt “%s”"
 
-#: ../src/fr-window.c:3005
+#: ../src/fr-window.c:3048
 msgid "An error occurred while loading the archive."
 msgstr "Gadījās kļūda, ielādējot arhīvu."
 
-#: ../src/fr-window.c:3009
+#: ../src/fr-window.c:3052
 msgid "An error occurred while deleting files from the archive."
 msgstr "Gadījās kļūda, dzēšot datnes no arhīva."
 
-#: ../src/fr-window.c:3015
+#: ../src/fr-window.c:3058
 msgid "An error occurred while adding files to the archive."
 msgstr "Gadījās kļūda, pievienojot datnes arhīvam."
 
-#: ../src/fr-window.c:3019
+#: ../src/fr-window.c:3062
 msgid "An error occurred while testing archive."
 msgstr "Gadījās kļūda, testējot arhīvu."
 
-#: ../src/fr-window.c:3024
+#: ../src/fr-window.c:3067
 msgid "An error occurred while saving the archive."
 msgstr "Gadījās kļūda, saglabājot arhīvu."
 
-#: ../src/fr-window.c:3028
+#: ../src/fr-window.c:3071
 msgid "An error occurred while renaming the files."
 msgstr "Datņu pārsaukšanās laikā gadījās kļūda."
 
-#: ../src/fr-window.c:3032
+#: ../src/fr-window.c:3075
 msgid "An error occurred while updating the files."
 msgstr "Datņu atjaunināšanas laikā gadījās kļūda."
 
-#: ../src/fr-window.c:3036
+#: ../src/fr-window.c:3079
 msgid "An error occurred."
 msgstr "Gadījās kļūda."
 
-#: ../src/fr-window.c:3042
+#: ../src/fr-window.c:3085
 msgid "Command not found."
 msgstr "Komanda nav atrasta."
 
-#: ../src/fr-window.c:3198
+#: ../src/fr-window.c:3241
 msgid "Test Result"
 msgstr "Testa rezultāts"
 
-#: ../src/fr-window.c:4169 ../src/fr-window.c:8953 ../src/fr-window.c:8987
-#: ../src/fr-window.c:9267
+#: ../src/fr-window.c:4212 ../src/fr-window.c:8995 ../src/fr-window.c:9029
+#: ../src/fr-window.c:9309
 msgid "Could not perform the operation"
 msgstr "Nevarēja veikt darbību"
 
-#: ../src/fr-window.c:4194
+#: ../src/fr-window.c:4237
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -792,134 +841,144 @@ msgstr ""
 "Vai vēlaties pievienot šo datni pašreizējam arhīvam, vai arī atvērt to kā "
 "jaunu arhīvu?"
 
-#: ../src/fr-window.c:4223
+#: ../src/fr-window.c:4266
 msgid "Do you want to create a new archive with these files?"
 msgstr "Vai vēlaties izveidot jaunu arhīvu ar šīm datnēm?"
 
-#: ../src/fr-window.c:4226
+#: ../src/fr-window.c:4269
 msgid "Create _Archive"
 msgstr "Izveidot _arhīvu"
 
-#: ../src/fr-window.c:4255 ../src/fr-window.c:7406
+#: ../src/fr-window.c:4298 ../src/fr-window.c:7448
 msgid "New Archive"
 msgstr "Jauns arhīvs"
 
-#: ../src/fr-window.c:4966
+#: ../src/fr-window.c:5016
 msgid "Folders"
 msgstr "Mapes"
 
-#: ../src/fr-window.c:5004 ../src/ui/file-selector.ui.h:7
+#: ../src/fr-window.c:5054 ../src/ui/file-selector.ui.h:7
 msgctxt "File"
 msgid "Size"
 msgstr "Izmērs"
 
-#: ../src/fr-window.c:5005
+#: ../src/fr-window.c:5055
 msgctxt "File"
 msgid "Type"
 msgstr "Tips"
 
-#: ../src/fr-window.c:5006 ../src/ui/file-selector.ui.h:8
+#: ../src/fr-window.c:5056 ../src/ui/file-selector.ui.h:8
 msgctxt "File"
 msgid "Modified"
 msgstr "Izmainīts"
 
-#: ../src/fr-window.c:5007
+#: ../src/fr-window.c:5057
 msgctxt "File"
 msgid "Location"
 msgstr "Vieta"
 
-#: ../src/fr-window.c:5016 ../src/ui/file-selector.ui.h:6
+#: ../src/fr-window.c:5066 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Name"
 msgstr "Nosaukums"
 
-#: ../src/fr-window.c:5771 ../src/ui/extract-dialog-options.ui.h:1
+#: ../src/fr-window.c:5820 ../src/ui/extract-dialog-options.ui.h:1
 msgctxt "Action"
 msgid "Extract"
 msgstr "Atspiest"
 
-#: ../src/fr-window.c:5775
+#: ../src/fr-window.c:5824
 msgctxt "Action"
 msgid "Add Files"
 msgstr "Pievienot datnes"
 
-#: ../src/fr-window.c:5780 ../src/fr-window.c:5810
+#: ../src/fr-window.c:5829 ../src/fr-window.c:5859
 msgid "Find files by name"
 msgstr "Meklēt datnes pēc nosaukuma"
 
-#: ../src/fr-window.c:5827
+#: ../src/fr-window.c:5876
 msgid "Go to the previous visited location"
 msgstr "Iet uz iepriekš apmeklēto atrašanās vietu"
 
-#: ../src/fr-window.c:5832
+#: ../src/fr-window.c:5881
 msgid "Go to the next visited location"
 msgstr "Iet uz nākamo apmeklēto atrašanās vietu"
 
-#: ../src/fr-window.c:5842
+#: ../src/fr-window.c:5891
 msgid "Go to the home location"
 msgstr "Iet uz uz mājas vietu"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5851 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:5900 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Vieta:"
 
-#: ../src/fr-window.c:6238 ../src/ui/menus.ui.h:1
+#: ../src/fr-window.c:6280 ../src/ui/menus.ui.h:1
 msgctxt "Action"
 msgid "Open"
 msgstr "Atvērt"
 
-#: ../src/fr-window.c:6705
+#: ../src/fr-window.c:6747
 #, c-format
-msgid "Replace file \"%s\"?"
+#| msgid "Replace file \"%s\"?"
+msgid "Replace file “%s”?"
 msgstr "Aizvietot datni “%s”?"
 
-#: ../src/fr-window.c:6708
+#: ../src/fr-window.c:6750
 #, c-format
-msgid "Another file with the same name already exists in \"%s\"."
-msgstr "Cita datne ar šādu nosaukumu jau ir mapē “%s“."
+#| msgid "Another file with the same name already exists in \"%s\"."
+msgid "Another file with the same name already exists in “%s”."
+msgstr "Cita datne ar šādu nosaukumu jau ir mapē “%s”."
 
-#: ../src/fr-window.c:6714
+#: ../src/fr-window.c:6756
 msgid "Replace _All"
 msgstr "Aizvietot _visus"
 
-#: ../src/fr-window.c:6715
+#: ../src/fr-window.c:6757
 msgid "_Skip"
 msgstr "Izlai_st"
 
-#: ../src/fr-window.c:7590 ../src/fr-window.c:7947
+#: ../src/fr-window.c:7632 ../src/fr-window.c:7989
 #, c-format
-msgid "Could not save the archive \"%s\""
+#| msgid "Could not save the archive \"%s\""
+msgid "Could not save the archive “%s”"
 msgstr "Nevarēja saglabāt arhīvu “%s”"
 
-#: ../src/fr-window.c:7717
+#: ../src/fr-window.c:7759
 msgid "Save"
 msgstr "Saglabāt"
 
-#: ../src/fr-window.c:8041
+#: ../src/fr-window.c:8083
 msgid "Last Output"
 msgstr "Pēdējā izvade"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:8264
+#: ../src/fr-window.c:8306
 msgid "New name is void, please type a name."
 msgstr "Jaunais nosaukums ir tukšs. Lūdzu, ierakstiet nosaukumu."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:8274
+#: ../src/fr-window.c:8316
 #, c-format
+#| msgid ""
+#| "Name \"%s\" is not valid because it contains at least one of the "
+#| "following characters: %s, please type other name."
 msgid ""
-"Name \"%s\" is not valid because it contains at least one of the following "
+"Name “%s” is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
 "Nosaukums “%s” nav derīgs, jo satur kādu no šīm rakstzīmēm — %s. Lūdzu, "
 "ierakstiet citu nosaukumu."
 
-#: ../src/fr-window.c:8310
+#: ../src/fr-window.c:8352
 #, c-format
+#| msgid ""
+#| "A folder named \"%s\" already exists.\n"
+#| "\n"
+#| "%s"
 msgid ""
-"A folder named \"%s\" already exists.\n"
+"A folder named “%s” already exists.\n"
 "\n"
 "%s"
 msgstr ""
@@ -927,14 +986,18 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8310 ../src/fr-window.c:8312
+#: ../src/fr-window.c:8352 ../src/fr-window.c:8354
 msgid "Please use a different name."
 msgstr "Lūdzu, lietojiet citu nosaukumu."
 
-#: ../src/fr-window.c:8312
+#: ../src/fr-window.c:8354
 #, c-format
+#| msgid ""
+#| "A file named \"%s\" already exists.\n"
+#| "\n"
+#| "%s"
 msgid ""
-"A file named \"%s\" already exists.\n"
+"A file named “%s” already exists.\n"
 "\n"
 "%s"
 msgstr ""
@@ -942,51 +1005,53 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8382
+#: ../src/fr-window.c:8424
 msgid "Rename"
 msgstr "Pārsaukt"
 
-#: ../src/fr-window.c:8383
+#: ../src/fr-window.c:8425
 msgid "_New folder name:"
 msgstr "Jau_nais mapes nosaukums:"
 
-#: ../src/fr-window.c:8383
+#: ../src/fr-window.c:8425
 msgid "_New file name:"
 msgstr "Jau_nais datnes nosaukums:"
 
-#: ../src/fr-window.c:8387
+#: ../src/fr-window.c:8429
 msgid "_Rename"
 msgstr "Pā_rsaukt"
 
-#: ../src/fr-window.c:8404 ../src/fr-window.c:8422
+#: ../src/fr-window.c:8446 ../src/fr-window.c:8464
 msgid "Could not rename the folder"
 msgstr "Nevarēja pārsaukt mapi"
 
-#: ../src/fr-window.c:8404 ../src/fr-window.c:8422
+#: ../src/fr-window.c:8446 ../src/fr-window.c:8464
 msgid "Could not rename the file"
 msgstr "Nevarēja pārsaukt datni"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8860
+#: ../src/fr-window.c:8902
 #, c-format
-msgid "Moving the files from \"%s\" to \"%s\""
-msgstr "Pārvieto datnes no \"%s\" uz \"%s\""
+#| msgid "Moving the files from \"%s\" to \"%s\""
+msgid "Moving the files from “%s” to “%s”"
+msgstr "Pārvieto datnes no “%s” uz “%s”"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8863
+#: ../src/fr-window.c:8905
 #, c-format
-msgid "Copying the files from \"%s\" to \"%s\""
-msgstr "Kopē datnes no \"%s\" no \"%s\""
+#| msgid "Copying the files from \"%s\" to \"%s\""
+msgid "Copying the files from “%s” to “%s”"
+msgstr "Kopē datnes no “%s” no “%s”"
 
-#: ../src/fr-window.c:8914
+#: ../src/fr-window.c:8956
 msgid "Paste Selection"
 msgstr "Ielīmēt izvēlēto"
 
-#: ../src/fr-window.c:8915
+#: ../src/fr-window.c:8957
 msgid "_Destination folder:"
 msgstr "_Mērķa mape:"
 
-#: ../src/fr-window.c:8919 ../src/ui/app-menubar.ui.h:12
+#: ../src/fr-window.c:8961 ../src/ui/app-menubar.ui.h:12
 msgid "_Paste"
 msgstr "_Ielīmēt"
 
@@ -1314,3 +1379,7 @@ msgstr "Datņu skaits:"
 msgid "S_elect the files you want to update:"
 msgstr "Iz_vēlieties datnes, kuras vēlaties atjaunināt:"
 
+#~| msgctxt "Window title"
+#~| msgid "Extract"
+#~ msgid "Extract To..."
+#~ msgstr "Atspiest..."
