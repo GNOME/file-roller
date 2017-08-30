@@ -6,14 +6,14 @@
 # Lucian Adrian Grijincu <lucian.grijincu@gmail.com>, 2009, 2010, 2011.
 # Damian Petrișor Alin <aalin.damian@yahoo.com>, 2011.
 # Bogdan Mințoi <mintoi.bogdan@gmail.com>, 2014.
-# Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>, 2014, 2015.
+# Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>, 2014, 2015, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=file-"
 "roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-19 16:55+0000\n"
-"PO-Revision-Date: 2015-06-19 20:26+0200\n"
+"POT-Creation-Date: 2017-08-04 01:02+0000\n"
+"PO-Revision-Date: 2017-08-22 21:26+0200\n"
 "Last-Translator: Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
 "Language-Team: Gnome Romanian Translation Team\n"
 "Language: ro\n"
@@ -26,10 +26,14 @@ msgstr ""
 "X-Project-Style: gnome\n"
 
 #: ../data/org.gnome.FileRoller.appdata.xml.in.h:1
+msgid "File Roller"
+msgstr "File Roller"
+
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:2
 msgid "Open, modify and create compressed archive files"
 msgstr "Deschide, modifică și creează fișiere arhivă comprimate"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:2
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:3
 msgid ""
 "Archive Manager (also known as File Roller) is the default GNOME application "
 "for opening, creating, and modifying archive and compressed archive files."
@@ -38,32 +42,31 @@ msgstr ""
 "implicită GNOME pentru deschiderea, creearea și alterarea conținutului "
 "arhivelor și fișierelor arhivă comprimate."
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:3
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:4
 msgid ""
 "Archive Manager supports a wide range of different archive files, including:"
 msgstr ""
 "Administratorul de arhive suportă o gamă largă de fișiere arhivă, printre "
 "care:"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:4
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:5
 msgid "gzip archives (.tar.gz, .tgz)"
 msgstr "arhive gzip (.tar.gz, .tgz)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:5
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:6
 msgid "bzip archives (.tar.bz, .tbz)"
 msgstr "arhive bzip (.tar.bz, .tbz)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:6
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:7
 msgid "zip archives (.zip)"
 msgstr "arhive zip (.zip)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:7
+#: ../data/org.gnome.FileRoller.appdata.xml.in.h:8
 msgid "xz archives (.tar.xz)"
 msgstr "arhive xz (.tar.xz)"
 
-#. set the name and icon
-#: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:717
-#: ../src/fr-window.c:1989 ../src/fr-window.c:5343
+#: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:454
+#: ../src/fr-window.c:2017 ../src/fr-window.c:5546
 msgid "Archive Manager"
 msgstr "Administrator de arhive"
 
@@ -73,13 +76,13 @@ msgstr "Creează și modifică o arhivă"
 
 #: ../data/org.gnome.FileRoller.desktop.in.in.h:3
 msgid "zip;tar;extract;unpack;"
-msgstr "zip;tar;extract;unpack;extrage;dezarhivează;"
+msgstr "zip;tar;extract;unpack;extrage;arhivează;dezarhivează;"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:1
+#: ../data/org.gnome.FileRoller.gschema.xml.h:1
 msgid "How to sort files"
 msgstr "Cum se sortează fișierele"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:2
+#: ../data/org.gnome.FileRoller.gschema.xml.h:2
 msgid ""
 "What criteria must be used to arrange files. Possible values: name, size, "
 "type, time, path."
@@ -87,11 +90,11 @@ msgstr ""
 "Ce criterii trebuie folosite pentru a aranja fișierele. Valori posibile: "
 "„name”, „size”, „type”, „time”, „path”."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:3
+#: ../data/org.gnome.FileRoller.gschema.xml.h:3
 msgid "Sort type"
 msgstr "Tipul de sortare"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:4
+#: ../data/org.gnome.FileRoller.gschema.xml.h:4
 msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
@@ -99,84 +102,90 @@ msgstr ""
 "Dacă se sortează în ordine crescătoare sau descrescătoare. Valori posibile: "
 "„ascending”, „descending”."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:5
+#: ../data/org.gnome.FileRoller.gschema.xml.h:5
 msgid "List Mode"
 msgstr "Modul de listare"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:6
+#: ../data/org.gnome.FileRoller.gschema.xml.h:6
+#| msgid ""
+#| "Use 'all-files' to view all the files in the archive in a single list, "
+#| "use 'as-folder' to navigate the archive as a folder."
 msgid ""
-"Use 'all-files' to view all the files in the archive in a single list, use "
-"'as-folder' to navigate the archive as a folder."
+"Use “all-files” to view all the files in the archive in a single list, use "
+"“as-folder” to navigate the archive as a folder."
 msgstr ""
 "Folosiți „all-files” pentru a vizualiza toate fișierele din arhivă într-o "
 "singură listă, folosiți „as-folder” pentru a naviga arhiva ca un dosar."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:7
+#: ../data/org.gnome.FileRoller.gschema.xml.h:7
 msgid "Display type"
 msgstr "Afișează tipul"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:8
+#: ../data/org.gnome.FileRoller.gschema.xml.h:8
 msgid "Display the type column in the main window."
 msgstr "Afișează coloana de tip în fereastra principală."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:9
+#: ../data/org.gnome.FileRoller.gschema.xml.h:9
 msgid "Display size"
 msgstr "Dimensiunea afișajului"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:10
+#: ../data/org.gnome.FileRoller.gschema.xml.h:10
 msgid "Display the size column in the main window."
 msgstr "Afișează coloana de dimensiune în fereastra principală."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:11
+#: ../data/org.gnome.FileRoller.gschema.xml.h:11
 msgid "Display time"
 msgstr "Afișează timpul"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:12
+#: ../data/org.gnome.FileRoller.gschema.xml.h:12
 msgid "Display the time column in the main window."
 msgstr "Afișează coloana de timp în fereastra principală."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:13
+#: ../data/org.gnome.FileRoller.gschema.xml.h:13
 msgid "Display path"
 msgstr "Afișează calea"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:14
+#: ../data/org.gnome.FileRoller.gschema.xml.h:14
 msgid "Display the path column in the main window."
 msgstr "Afișează coloana de cale în fereastra principală."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:15
+#: ../data/org.gnome.FileRoller.gschema.xml.h:15
 msgid "Name column width"
 msgstr "Lățimea coloanei nume"
 
 # LG: trimis bug pentru exprimare: https://bugzilla.gnome.org/show_bug.cgi?id=644683
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:16
+#: ../data/org.gnome.FileRoller.gschema.xml.h:16
 msgid "The default width of the name column in the file list."
 msgstr "Lățimea implicită a numelui coloanei în lista de fișiere."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:17
+#: ../data/org.gnome.FileRoller.gschema.xml.h:17
 msgid "View the sidebar"
 msgstr "Arată bara laterală"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:18
+#: ../data/org.gnome.FileRoller.gschema.xml.h:18
 msgid "Whether to display the sidebar."
 msgstr "Dacă se afișează bara laterală."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:19
+#: ../data/org.gnome.FileRoller.gschema.xml.h:19
 msgid "Editors"
 msgstr "Editoare"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:20
+#: ../data/org.gnome.FileRoller.gschema.xml.h:20
+#| msgid ""
+#| "List of applications entered in the 'Open File' dialog and not associated "
+#| "with the file type."
 msgid ""
-"List of applications entered in the 'Open File' dialog and not associated "
+"List of applications entered in the “Open File” dialog and not associated "
 "with the file type."
 msgstr ""
 "Listă de aplicații introduse în dialogul „Deschide fișier” și neasociate cu "
 "tipul de fișier."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:21
+#: ../data/org.gnome.FileRoller.gschema.xml.h:21
 msgid "Compression level"
 msgstr "Nivel de compresie"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:22
+#: ../data/org.gnome.FileRoller.gschema.xml.h:22
 msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
@@ -184,58 +193,51 @@ msgstr ""
 "Nivelul de compresie folosit atunci când se adaugă fișiere la o arhivă. "
 "Valori posibile: foarte-rapid, rapid, normal, maxim."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:23
+#: ../data/org.gnome.FileRoller.gschema.xml.h:23
 msgid "Encrypt the archive header"
 msgstr "Criptează antetul arhivei"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:24
+#: ../data/org.gnome.FileRoller.gschema.xml.h:24
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
 msgstr ""
 "Dacă să se cripteze antetul arhivei. Dacă antetul este criptat va fi "
-"necesară și parola pentru a lista conținutul arhivei."
+"necesară parola pentru a lista conținutul arhivei."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:25
+#: ../data/org.gnome.FileRoller.gschema.xml.h:25
 msgid "Do not overwrite newer files"
 msgstr "Nu suprascrie fișierele mai noi"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:26
+#: ../data/org.gnome.FileRoller.gschema.xml.h:26
 msgid "Recreate the folders stored in the archive"
 msgstr "Recreează dosarele stocate în arhivă"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:27
+#: ../data/org.gnome.FileRoller.gschema.xml.h:27
 msgid "Default volume size"
 msgstr "Mărimea volumului implicită"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.in.h:28
+#: ../data/org.gnome.FileRoller.gschema.xml.h:28
 msgid "The default size for volumes."
 msgstr "Dimensiunea implicită pentru volume."
 
-#: ../nautilus/nautilus-fileroller.c:328
+#: ../nautilus/nautilus-fileroller.c:260
 msgid "Extract Here"
 msgstr "Dezarhivează aici"
 
 #. Translators: the current position is the current folder
-#: ../nautilus/nautilus-fileroller.c:330
+#: ../nautilus/nautilus-fileroller.c:262
 msgid "Extract the selected archive to the current position"
-msgstr "Extrage arhiva selectată în poziția curentă"
+msgstr "Dezarhivează arhiva selectată în poziția curentă"
 
-#: ../nautilus/nautilus-fileroller.c:347
-msgid "Extract To..."
-msgstr "Dezarhivează în..."
+#: ../nautilus/nautilus-fileroller.c:279
+#| msgid "_Extract…"
+msgid "Extract To…"
+msgstr "Dezarhivează în…"
 
-#: ../nautilus/nautilus-fileroller.c:348
+#: ../nautilus/nautilus-fileroller.c:280
 msgid "Extract the selected archive"
 msgstr "Dezarhivează arhiva selectată"
-
-#: ../nautilus/nautilus-fileroller.c:367
-msgid "Compress..."
-msgstr "Comprimă..."
-
-#: ../nautilus/nautilus-fileroller.c:368
-msgid "Create a compressed archive with the selected objects"
-msgstr "Creează o arhivă comprimată din obiectele selectate"
 
 #: ../src/dlg-add.c:114
 msgid "Could not add the files to the archive"
@@ -243,10 +245,13 @@ msgstr "Nu s-au putut adăuga fișierele la arhivă"
 
 #: ../src/dlg-add.c:115
 #, c-format
-msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "Nu aveți drepturile necesare pentru a citi din dosarul „%s”"
+#| msgid ""
+#| "You don't have the right permissions to read files from folder \"%s\""
+msgid "You don’t have the right permissions to read files from folder “%s”"
+msgstr "Nu aveți drepturile necesare pentru a citi fișiere din dosarul „%s”"
 
-#: ../src/dlg-add.c:182 ../src/fr-window.c:5623
+#: ../src/dlg-add.c:182
+msgctxt "Window title"
 msgid "Add Files"
 msgstr "Adaugă fișiere"
 
@@ -255,29 +260,41 @@ msgid "_Options"
 msgstr "_Opțiuni"
 
 #. load options
-#: ../src/dlg-add.c:204 ../src/dlg-add.c:763
+#: ../src/dlg-add.c:204
+msgctxt "Action"
 msgid "Load Options"
 msgstr "Opțiuni de încărcare"
 
 #. save options
-#: ../src/dlg-add.c:211 ../src/dlg-add.c:855
+#: ../src/dlg-add.c:211
+msgctxt "Action"
 msgid "Save Options"
-msgstr "Salvare opțiuni"
+msgstr "Salvează opțiuni"
 
 #. clear options
 #: ../src/dlg-add.c:218
 msgid "Reset Options"
 msgstr "Restabilește opțiuni"
 
-#: ../src/dlg-add.c:772
+#: ../src/dlg-add.c:764
+msgctxt "Window title"
+msgid "Load Options"
+msgstr "Opțiuni de încărcare"
+
+#: ../src/dlg-add.c:773
 msgid "_Apply"
 msgstr "_Aplică"
 
-#: ../src/dlg-add.c:773 ../src/dlg-delete.c:136
+#: ../src/dlg-add.c:774 ../src/dlg-delete.c:136
 msgid "_Delete"
 msgstr "Șt_erge"
 
 #: ../src/dlg-add.c:856
+msgctxt "Window title"
+msgid "Save Options"
+msgstr "Salvare opțiuni"
+
+#: ../src/dlg-add.c:857
 msgid "_Options Name:"
 msgstr "Nume _opțiuni:"
 
@@ -288,7 +305,8 @@ msgstr "_OK"
 #. Translators: %s is a filename
 #: ../src/dlg-ask-password.c:148
 #, c-format
-msgid "Password required for \"%s\""
+#| msgid "Password required for \"%s\""
+msgid "Password required for “%s”"
 msgstr "Parolă necesară pentru „%s”"
 
 #: ../src/dlg-ask-password.c:157
@@ -296,59 +314,67 @@ msgid "Wrong password."
 msgstr "Parolă eronată."
 
 #: ../src/dlg-batch-add.c:88 ../src/fr-application.c:226
-#: ../src/fr-application.c:569
+#: ../src/fr-application.c:262 ../src/fr-application.c:582
 msgid "Compress"
 msgstr "Comprimă"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6674
+#: ../src/dlg-extract.c:95 ../src/fr-window.c:6909
 #, c-format
+#| msgid ""
+#| "Destination folder \"%s\" does not exist.\n"
+#| "\n"
+#| "Do you want to create it?"
 msgid ""
-"Destination folder \"%s\" does not exist.\n"
+"Destination folder “%s” does not exist.\n"
 "\n"
 "Do you want to create it?"
 msgstr ""
-"Dosarul de destinație „%s” nu există.\n"
+"Dosarul destinație „%s” nu există.\n"
 "\n"
 "Doriți să-l creați?"
 
-#: ../src/dlg-extract.c:103 ../src/fr-window.c:6682
+#: ../src/dlg-extract.c:103 ../src/fr-window.c:6917
 msgid "Create _Folder"
 msgstr "Creează _dosar"
 
 #: ../src/dlg-extract.c:122 ../src/dlg-extract.c:139 ../src/dlg-extract.c:166
-#: ../src/fr-window.c:4226 ../src/fr-window.c:6577 ../src/fr-window.c:6582
-#: ../src/fr-window.c:6703 ../src/fr-window.c:6722 ../src/fr-window.c:6727
+#: ../src/fr-window.c:4420 ../src/fr-window.c:6833 ../src/fr-window.c:6838
+#: ../src/fr-window.c:6938 ../src/fr-window.c:6957 ../src/fr-window.c:6962
 msgid "Extraction not performed"
 msgstr "Dezarhivarea nu a avut loc"
 
-#: ../src/dlg-extract.c:123 ../src/fr-window.c:6699
+#: ../src/dlg-extract.c:123 ../src/fr-window.c:6934
 #, c-format
 msgid "Could not create the destination folder: %s."
-msgstr "Nu s-a putut crea dosarul de destinație: %s."
+msgstr "Nu s-a putut crea dosarul destinație: %s."
 
-#: ../src/dlg-extract.c:167 ../src/fr-window.c:4452 ../src/fr-window.c:4554
+#: ../src/dlg-extract.c:167 ../src/fr-window.c:4647 ../src/fr-window.c:4749
 #, c-format
+#| msgid ""
+#| "You don't have the right permissions to extract archives in the folder "
+#| "\"%s\""
 msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "Nu aveți drepturile necesare pentru a extrage arhivele în dosarul „%s”"
+"You don’t have the right permissions to extract archives in the folder “%s”"
+msgstr ""
+"Nu aveți drepturile necesare pentru a dezarhiva arhivele în dosarul „%s”"
 
-#: ../src/dlg-extract.c:280 ../src/fr-window.c:5619
-#: ../src/ui/extract-dialog-options.ui.h:1
+#: ../src/dlg-extract.c:279
+msgctxt "Window title"
 msgid "Extract"
-msgstr "Dezarhivează"
+msgstr "Dezarhivare"
 
-#: ../src/dlg-package-installer.c:112 ../src/dlg-package-installer.c:225
+#: ../src/dlg-package-installer.c:114 ../src/dlg-package-installer.c:227
 msgid "There was an internal error trying to search for applications:"
 msgstr "S-a produs o eroare internă în timpul căutarii după aplicații:"
 
-#: ../src/dlg-package-installer.c:294 ../src/dlg-package-installer.c:303
-#: ../src/dlg-package-installer.c:330 ../src/fr-archive.c:744
-#: ../src/fr-window.c:3900 ../src/fr-window.c:7307 ../src/fr-window.c:7664
-#: ../src/fr-window.c:9182
+#: ../src/dlg-package-installer.c:296 ../src/dlg-package-installer.c:305
+#: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:751
+#: ../src/fr-window.c:4087 ../src/fr-window.c:7640 ../src/fr-window.c:7997
+#: ../src/fr-window.c:9512
 msgid "Archive type not supported."
 msgstr "Tip nesuportat de arhivă."
 
-#: ../src/dlg-package-installer.c:313
+#: ../src/dlg-package-installer.c:315
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -357,17 +383,18 @@ msgstr ""
 "Nu există nici o comandă instalată pentru fișiere %s.\n"
 "Doriți să căutați după o comandă pentru a deschide acest fișier?"
 
-#: ../src/dlg-package-installer.c:317
+#: ../src/dlg-package-installer.c:319
 msgid "Could not open this file type"
 msgstr "Nu s-a putut deschide acest tip de fișier"
 
-#: ../src/dlg-package-installer.c:320
+#: ../src/dlg-package-installer.c:322
 msgid "_Search Command"
-msgstr "_Comandă căutare"
+msgstr "_Caută comandă"
 
 #: ../src/dlg-password.c:109
 #, c-format
-msgid "Enter a password for \"%s\""
+#| msgid "Enter a password for \"%s\""
+msgid "Enter a password for “%s”"
 msgstr "Introduceți parola pentru „%s”"
 
 #: ../src/dlg-prop.c:107
@@ -375,19 +402,26 @@ msgstr "Introduceți parola pentru „%s”"
 msgid "%s Properties"
 msgstr "Proprietăți %s"
 
-#: ../src/dlg-update.c:163
+#: ../src/dlg-update.c:162
 #, c-format
-msgid "Update the file \"%s\" in the archive \"%s\"?"
+#| msgid "Update the file \"%s\" in the archive \"%s\"?"
+msgid "Update the file “%s” in the archive “%s”?"
 msgstr "Actualizați fișierul „%s” din arhiva „%s”?"
 
 #. secondary text
-#: ../src/dlg-update.c:174 ../src/dlg-update.c:199 ../src/ui/update.ui.h:2
+#: ../src/dlg-update.c:174 ../src/dlg-update.c:200
 #, c-format
+#| msgid ""
+#| "The file has been modified with an external application. If you don't "
+#| "update the file in the archive, all of your changes will be lost."
+#| msgid_plural ""
+#| "%d files have been modified with an external application. If you don't "
+#| "update the files in the archive, all of your changes will be lost."
 msgid ""
-"The file has been modified with an external application. If you don't update "
+"The file has been modified with an external application. If you don’t update "
 "the file in the archive, all of your changes will be lost."
 msgid_plural ""
-"%d files have been modified with an external application. If you don't "
+"%d files have been modified with an external application. If you don’t "
 "update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
 "Fișierul a fost modificat de către o aplicație externă. Dacă nu actualizați "
@@ -399,10 +433,19 @@ msgstr[2] ""
 "%d de fișiere au fost modificate de către o aplicație externă. Dacă nu "
 "actualizați fișierele din arhivă, toate modificările vor fi pierdute."
 
-#: ../src/dlg-update.c:189
+#: ../src/dlg-update.c:190
 #, c-format
-msgid "Update the files in the archive \"%s\"?"
+#| msgid "Update the files in the archive \"%s\"?"
+msgid "Update the files in the archive “%s”?"
 msgstr "Actualizați fișierele din arhiva „%s”?"
+
+#: ../src/dlg-update.c:319 ../src/dlg-update.c:332
+msgid "_Update"
+msgstr "Act_ualizează"
+
+#: ../src/dlg-update.c:323
+msgid "Update Files"
+msgstr "Actualizați fișierele"
 
 #: ../src/fr-application.c:61
 msgid "Add files to the specified archive and quit the program"
@@ -437,7 +480,8 @@ msgstr ""
 "programului"
 
 #: ../src/fr-application.c:81
-msgid "Default folder to use for the '--add' and '--extract' commands"
+#| msgid "Default folder to use for the '--add' and '--extract' commands"
+msgid "Default folder to use for the “--add” and “--extract” commands"
 msgstr "Dosarul implicit folosit pentru comenzile „--add” și „--extract”"
 
 #: ../src/fr-application.c:85
@@ -447,7 +491,7 @@ msgstr "Creează dosarul destinație fără a cere confirmarea"
 #: ../src/fr-application.c:89
 msgid "Use the notification system to notify the operation completion"
 msgstr ""
-"Folosiți sistemul de notficare pentru a vă înștiința despre completarea "
+"Folosește sistemul de notficare pentru a notifica despre completarea "
 "operației"
 
 #: ../src/fr-application.c:92
@@ -458,14 +502,16 @@ msgstr "Pornește ca un serviciu"
 msgid "Show version"
 msgstr "Afișează versiunea"
 
-#: ../src/fr-application.c:262 ../src/fr-application.c:298
-#: ../src/fr-application.c:324 ../src/fr-application.c:593
+#: ../src/fr-application.c:298 ../src/fr-application.c:324
+#: ../src/fr-application.c:605
+msgctxt "Window title"
 msgid "Extract archive"
-msgstr "Extrage conținutul arhivei"
+msgstr "Extrage arhiva"
 
-#: ../src/fr-application.c:476
-msgid "- Create and modify an archive"
-msgstr "- Creați sau modificați o arhivă"
+#: ../src/fr-application.c:485
+#| msgid "- Create and modify an archive"
+msgid "— Create and modify an archive"
+msgstr "— Creează sau modifică o arhivă"
 
 #: ../src/fr-application-menu.c:130
 msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
@@ -481,6 +527,7 @@ msgstr ""
 "Mișu Moldovan <dumol@gnome.ro>\n"
 "Mugurel Tudor <mugurelu@gnome.ro>\n"
 "Bogdan Mințoi <mintoi.bogdan@gmail.com>\n"
+"Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
 "\n"
 "Contribuții Launchpad:\n"
 "  Adi Roiban https://launchpad.net/~adiroiban\n"
@@ -488,31 +535,35 @@ msgstr ""
 "  Lucian Adrian Grijincu https://launchpad.net/~lucian.grijincu\n"
 "  Mircea MITU https://launchpad.net/~mache"
 
-#: ../src/fr-archive.c:1845
-msgid "You don't have the right permissions."
+#: ../src/fr-archive.c:1852
+#| msgid "You don't have the right permissions."
+msgid "You don’t have the right permissions."
 msgstr "Nu aveți drepturile necesare."
 
-#: ../src/fr-archive.c:1845
+#: ../src/fr-archive.c:1852
 msgid "This archive type cannot be modified"
 msgstr "Tipul arhivei nu poate fi modificat"
 
-#: ../src/fr-archive.c:1859 ../src/fr-new-archive-dialog.c:483
-msgid "You can't add an archive to itself."
+#: ../src/fr-archive.c:1866 ../src/fr-new-archive-dialog.c:475
+#| msgid "You can't add an archive to itself."
+msgid "You can’t add an archive to itself."
 msgstr "Nu puteți adăuga o arhivă la ea însăși."
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:425
-#: ../src/fr-command-tar.c:304
+#: ../src/fr-command-tar.c:307
 #, c-format
-msgid "Adding \"%s\""
+#| msgid "Adding \"%s\""
+msgid "Adding “%s”"
 msgstr "Se adaugă „%s”"
 
 #. Translators: %s is a filename.
 #: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
-#: ../src/fr-command-tar.c:425
+#: ../src/fr-command-tar.c:428
 #, c-format
-msgid "Extracting \"%s\""
-msgstr "Se extrage „%s”"
+#| msgid "Extracting \"%s\""
+msgid "Extracting “%s”"
+msgstr "Se dezarhivează „%s”"
 
 #: ../src/fr-command.c:597
 #, c-format
@@ -520,9 +571,10 @@ msgid "Archive not found"
 msgstr "Arhiva nu a fost găsită"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:370
+#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:373
 #, c-format
-msgid "Removing \"%s\""
+#| msgid "Removing \"%s\""
+msgid "Removing “%s”"
 msgstr "Se elimină „%s”"
 
 #: ../src/fr-command-rar.c:688
@@ -530,65 +582,70 @@ msgstr "Se elimină „%s”"
 msgid "Could not find the volume: %s"
 msgstr "Nu s-a putut găsi volumul: %s"
 
-#: ../src/fr-command-tar.c:380
+#: ../src/fr-command-tar.c:383
 msgid "Deleting files from archive"
-msgstr "Se șterg fișierele din arhivă"
+msgstr "Se șterg fișiere din arhivă"
 
-#: ../src/fr-command-tar.c:485
+#: ../src/fr-command-tar.c:488
 msgid "Recompressing archive"
-msgstr "Se reface arhiva"
+msgstr "Se recompresează arhiva"
 
-#: ../src/fr-command-tar.c:744
+#: ../src/fr-command-tar.c:767
 msgid "Decompressing archive"
-msgstr "Se desface arhiva"
+msgstr "Se decompresează arhiva"
 
 #: ../src/fr-file-selector-dialog.c:773 ../src/fr-file-selector-dialog.c:818
 msgid "Could not load the location"
 msgstr "Nu s-a putut încărca locația"
 
-#: ../src/fr-new-archive-dialog.c:358 ../src/fr-new-archive-dialog.c:377
-#: ../src/fr-new-archive-dialog.c:393 ../src/fr-new-archive-dialog.c:441
-#: ../src/fr-new-archive-dialog.c:459 ../src/fr-new-archive-dialog.c:481
-#: ../src/fr-window.c:2849
+#: ../src/fr-new-archive-dialog.c:349 ../src/fr-new-archive-dialog.c:368
+#: ../src/fr-new-archive-dialog.c:384 ../src/fr-new-archive-dialog.c:433
+#: ../src/fr-new-archive-dialog.c:451 ../src/fr-new-archive-dialog.c:473
+#: ../src/fr-window.c:3032
 msgid "Could not create the archive"
-msgstr "Nu s-a putut crea arhiva"
+msgstr "Nu s-a putut creea arhiva"
 
-#: ../src/fr-new-archive-dialog.c:360 ../src/fr-new-archive-dialog.c:379
+#: ../src/fr-new-archive-dialog.c:351 ../src/fr-new-archive-dialog.c:370
 msgid "You have to specify an archive name."
 msgstr "Trebuie să specificați un nume pentru arhivă."
 
-#: ../src/fr-new-archive-dialog.c:443
-msgid "You don't have permission to create an archive in this folder"
+#: ../src/fr-new-archive-dialog.c:435
+#| msgid "You don't have permission to create an archive in this folder"
+msgid "You don’t have permission to create an archive in this folder"
 msgstr "Nu aveți drepturile necesare creării unei arhive în acest dosar"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:461 ../src/fr-window.c:7978
+#: ../src/fr-new-archive-dialog.c:453 ../src/fr-window.c:8311
 msgid "New name is the same as old one, please type other name."
-msgstr "Noul nume este identic cu cel vechi, vă rugăm să alegeți un alt nume."
+msgstr "Noul nume este identic cu cel vechi, alegeți un alt nume."
 
-#: ../src/fr-new-archive-dialog.c:504
+#: ../src/fr-new-archive-dialog.c:496
 #, c-format
-msgid "A file named \"%s\" already exists.  Do you want to replace it?"
+#| msgid "A file named \"%s\" already exists.  Do you want to replace it?"
+msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Un fișier cu numele „%s” există deja.  Doriți să-l înlocuiți?"
 
-#: ../src/fr-new-archive-dialog.c:505
+#: ../src/fr-new-archive-dialog.c:497
 #, c-format
+#| msgid ""
+#| "The file already exists in \"%s\".  Replacing it will overwrite its "
+#| "contents."
 msgid ""
-"The file already exists in \"%s\".  Replacing it will overwrite its contents."
+"The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr "Fișierul există deja în „%s”.  Înlocuirea sa va suprascrie conținutul."
 
-#: ../src/fr-new-archive-dialog.c:511 ../src/fr-window.c:6504
+#: ../src/fr-new-archive-dialog.c:503 ../src/fr-window.c:6758
 msgid "_Replace"
 msgstr "Înlo_cuiește"
 
-#: ../src/fr-new-archive-dialog.c:526
+#: ../src/fr-new-archive-dialog.c:518
 msgid "Could not delete the old archive."
 msgstr "Nu s-a putut șterge vechea arhivă."
 
-#: ../src/fr-window-actions-callbacks.c:289 ../src/fr-window.c:6085
-#: ../src/ui/menus.ui.h:1
+#: ../src/fr-window-actions-callbacks.c:289
+msgctxt "Window title"
 msgid "Open"
-msgstr "Deschide"
+msgstr "Deschidere"
 
 #: ../src/fr-window-actions-callbacks.c:302
 msgid "All archives"
@@ -598,190 +655,200 @@ msgstr "Toate arhivele"
 msgid "All files"
 msgstr "Toate fișierele"
 
-#: ../src/fr-window.c:1223
+#: ../src/fr-window.c:1221
 msgid "Operation completed"
 msgstr "Operație completă"
 
-#: ../src/fr-window.c:1609
+#: ../src/fr-window.c:1634
 msgid "Folder"
 msgstr "Dosar"
 
-#: ../src/fr-window.c:1996
+#: ../src/fr-window.c:2024
 msgid "[read only]"
 msgstr "[doar citire]"
 
-#: ../src/fr-window.c:2111
+#: ../src/fr-window.c:2165
 #, c-format
-msgid "Could not display the folder \"%s\""
+#| msgid "Could not display the folder \"%s\""
+msgid "Could not display the folder “%s”"
 msgstr "Nu s-a putut afișa dosarul „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2202 ../src/fr-window.c:2240
+#: ../src/fr-window.c:2338 ../src/fr-window.c:2376
 #, c-format
-msgid "Creating \"%s\""
+#| msgid "Creating \"%s\""
+msgid "Creating “%s”"
 msgstr "Se creează „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2206
+#: ../src/fr-window.c:2342
 #, c-format
-msgid "Loading \"%s\""
+#| msgid "Loading \"%s\""
+msgid "Loading “%s”"
 msgstr "Se încarcă „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2210
+#: ../src/fr-window.c:2346
 #, c-format
-msgid "Reading \"%s\""
+#| msgid "Reading \"%s\""
+msgid "Reading “%s”"
 msgstr "Se citește „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2214
+#: ../src/fr-window.c:2350
 #, c-format
-msgid "Deleting the files from \"%s\""
+#| msgid "Deleting the files from \"%s\""
+msgid "Deleting the files from “%s”"
 msgstr "Se șterg fișierele din „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2218
+#: ../src/fr-window.c:2354
 #, c-format
-msgid "Testing \"%s\""
+#| msgid "Testing \"%s\""
+msgid "Testing “%s”"
 msgstr "Se testează „%s”"
 
-#: ../src/fr-window.c:2221
+#: ../src/fr-window.c:2357
 msgid "Getting the file list"
 msgstr "Se obține lista de fișiere"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2225
+#: ../src/fr-window.c:2361
 #, c-format
-msgid "Copying the files to add to \"%s\""
+#| msgid "Copying the files to add to \"%s\""
+msgid "Copying the files to add to “%s”"
 msgstr "Se copiază fișierele de adăugat la „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2229
+#: ../src/fr-window.c:2365
 #, c-format
-msgid "Adding the files to \"%s\""
+#| msgid "Adding the files to \"%s\""
+msgid "Adding the files to “%s”"
 msgstr "Se adaugă fișierele la „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2233
+#: ../src/fr-window.c:2369
 #, c-format
-msgid "Extracting the files from \"%s\""
+#| msgid "Extracting the files from \"%s\""
+msgid "Extracting the files from “%s”"
 msgstr "Se dezarhivează fișierele din „%s”"
 
-#: ../src/fr-window.c:2236
+#: ../src/fr-window.c:2372
 msgid "Copying the extracted files to the destination"
 msgstr "Se copiază fișierele dezarhivate la destinație"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2245
+#: ../src/fr-window.c:2381
 #, c-format
-msgid "Saving \"%s\""
+#| msgid "Saving \"%s\""
+msgid "Saving “%s”"
 msgstr "Se salvează „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2252
+#: ../src/fr-window.c:2388
 #, c-format
-msgid "Renaming the files in \"%s\""
+#| msgid "Renaming the files in \"%s\""
+msgid "Renaming the files in “%s”"
 msgstr "Se redenumesc fișierele în „%s”"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2256
+#: ../src/fr-window.c:2392
 #, c-format
-msgid "Updating the files in \"%s\""
+#| msgid "Updating the files in \"%s\""
+msgid "Updating the files in “%s”"
 msgstr "Se actualizează fișierele din „%s”"
 
-#: ../src/fr-window.c:2438 ../src/ui/app-menu.ui.h:8
-msgid "_Quit"
-msgstr "_Ieșire"
-
-#: ../src/fr-window.c:2439
-msgid "_Open the Archive"
-msgstr "Deschide ar_hiva"
-
-#: ../src/fr-window.c:2440
-msgid "_Show the Files"
-msgstr "Ara_tă fișierele"
-
-#: ../src/fr-window.c:2564
+#: ../src/fr-window.c:2681
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "%d fișier rămas"
-msgstr[1] "%d fișiere rămase"
-msgstr[2] "%d de fișiere rămase"
+msgstr[1] "%'d fișiere rămase"
+msgstr[2] "%'d de fișiere rămase"
 
-#: ../src/fr-window.c:2568 ../src/fr-window.c:3126
+#: ../src/fr-window.c:2685 ../src/fr-window.c:3309
 msgid "Please wait…"
-msgstr "Vă rugăm așteptați…"
+msgstr "Așteptați…"
 
-#: ../src/fr-window.c:2624
+#: ../src/fr-window.c:2803
 msgid "Extraction completed successfully"
-msgstr "Extragerea s-a terminat cu succes"
+msgstr "Dezarhivarea s-a încheiat cu succes"
+
+#: ../src/fr-window.c:2806
+msgid "_Show the Files"
+msgstr "Ara_tă fișierele"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2656 ../src/fr-window.c:6071
+#: ../src/fr-window.c:2823 ../src/fr-window.c:6266
 #, c-format
-msgid "\"%s\" created successfully"
+#| msgid "\"%s\" created successfully"
+msgid "“%s” created successfully"
 msgstr "„%s” creată cu succes"
 
-#: ../src/fr-window.c:2733 ../src/fr-window.c:2905
+#: ../src/fr-window.c:2830
+msgid "_Open the Archive"
+msgstr "Deschide ar_hiva"
+
+#: ../src/fr-window.c:2918 ../src/fr-window.c:3088
 msgid "Command exited abnormally."
 msgstr "Comanda s-a terminat în mod anormal."
 
-#: ../src/fr-window.c:2854
+#: ../src/fr-window.c:3037
 msgid "An error occurred while extracting files."
 msgstr "A intervenit o eroare la extragerea fișierelor."
 
-#: ../src/fr-window.c:2860
+#: ../src/fr-window.c:3043
 #, c-format
-msgid "Could not open \"%s\""
+#| msgid "Could not open \"%s\""
+msgid "Could not open “%s”"
 msgstr "Nu s-a putut deschide „%s”"
 
-#: ../src/fr-window.c:2865
+#: ../src/fr-window.c:3048
 msgid "An error occurred while loading the archive."
 msgstr "A intervenit o eroare la încărcarea arhivei."
 
-#: ../src/fr-window.c:2869
+#: ../src/fr-window.c:3052
 msgid "An error occurred while deleting files from the archive."
 msgstr "A intervenit o eroare la ștergerea fișierelor din arhivă."
 
-#: ../src/fr-window.c:2875
+#: ../src/fr-window.c:3058
 msgid "An error occurred while adding files to the archive."
 msgstr "A intervenit o eroare la adăugarea fișierelor la arhivă."
 
-#: ../src/fr-window.c:2879
+#: ../src/fr-window.c:3062
 msgid "An error occurred while testing archive."
 msgstr "A intervenit o eroare la testarea arhivei."
 
-#: ../src/fr-window.c:2884
+#: ../src/fr-window.c:3067
 msgid "An error occurred while saving the archive."
 msgstr "S-a produs o eroare la salvarea arhivei."
 
-#: ../src/fr-window.c:2888
+#: ../src/fr-window.c:3071
 msgid "An error occurred while renaming the files."
 msgstr "A intervenit o eroare la redenumirea fișierelor."
 
-#: ../src/fr-window.c:2892
+#: ../src/fr-window.c:3075
 msgid "An error occurred while updating the files."
 msgstr "A intervenit o eroare la actualizarea fișierelor."
 
-#: ../src/fr-window.c:2896
+#: ../src/fr-window.c:3079
 msgid "An error occurred."
 msgstr "S-a produs o eroare."
 
-#: ../src/fr-window.c:2902
+#: ../src/fr-window.c:3085
 msgid "Command not found."
 msgstr "Comanda nu a fost găsită."
 
-#: ../src/fr-window.c:3058
+#: ../src/fr-window.c:3241
 msgid "Test Result"
 msgstr "Rezultatul testului"
 
-#: ../src/fr-window.c:4018 ../src/fr-window.c:8657 ../src/fr-window.c:8691
-#: ../src/fr-window.c:8971
+#: ../src/fr-window.c:4212 ../src/fr-window.c:8995 ../src/fr-window.c:9029
+#: ../src/fr-window.c:9309
 msgid "Could not perform the operation"
 msgstr "Nu s-a putut efectua operațiunea"
 
-#: ../src/fr-window.c:4043
+#: ../src/fr-window.c:4237
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
@@ -789,119 +856,144 @@ msgstr ""
 "Doriți să adăugați acest fișier la arhiva curentă sau să-l deschideți ca pe "
 "o nouă arhivă?"
 
-#: ../src/fr-window.c:4072
+#: ../src/fr-window.c:4266
 msgid "Do you want to create a new archive with these files?"
 msgstr "Doriți să creați o nouă arhivă cu aceste fișiere?"
 
-#: ../src/fr-window.c:4075
+#: ../src/fr-window.c:4269
 msgid "Create _Archive"
 msgstr "Creează _arhivă"
 
-#: ../src/fr-window.c:4104 ../src/fr-window.c:7115
+#: ../src/fr-window.c:4298 ../src/fr-window.c:7448
 msgid "New Archive"
 msgstr "Arhivă nouă"
 
-#: ../src/fr-window.c:4814
+#: ../src/fr-window.c:5016
 msgid "Folders"
 msgstr "Dosare"
 
-#: ../src/fr-window.c:4852 ../src/ui/file-selector.ui.h:7
+#: ../src/fr-window.c:5054 ../src/ui/file-selector.ui.h:7
 msgctxt "File"
 msgid "Size"
 msgstr "Dimensiune"
 
-#: ../src/fr-window.c:4853
+#: ../src/fr-window.c:5055
 msgctxt "File"
 msgid "Type"
 msgstr "Tip"
 
-#: ../src/fr-window.c:4854 ../src/ui/file-selector.ui.h:8
+#: ../src/fr-window.c:5056 ../src/ui/file-selector.ui.h:8
 msgctxt "File"
 msgid "Modified"
 msgstr "Modificat"
 
-#: ../src/fr-window.c:4855
+#: ../src/fr-window.c:5057
 msgctxt "File"
 msgid "Location"
 msgstr "Locație"
 
-#: ../src/fr-window.c:4864 ../src/ui/file-selector.ui.h:6
+#: ../src/fr-window.c:5066 ../src/ui/file-selector.ui.h:6
 msgctxt "File"
 msgid "Name"
 msgstr "Nume"
 
-#: ../src/fr-window.c:5628 ../src/fr-window.c:5658
+#: ../src/fr-window.c:5820 ../src/ui/extract-dialog-options.ui.h:1
+msgctxt "Action"
+msgid "Extract"
+msgstr "Dezarhivează"
+
+#: ../src/fr-window.c:5824
+msgctxt "Action"
+msgid "Add Files"
+msgstr "Adaugă fișiere"
+
+#: ../src/fr-window.c:5829 ../src/fr-window.c:5859
 msgid "Find files by name"
-msgstr "Găsește fișiere după nume"
+msgstr "Caută fișiere după nume"
 
-#: ../src/fr-window.c:5675
+#: ../src/fr-window.c:5876
 msgid "Go to the previous visited location"
-msgstr "Du-te la locația precedentă"
+msgstr "Du-te la locația vizitată anterior"
 
-#: ../src/fr-window.c:5680
+#: ../src/fr-window.c:5881
 msgid "Go to the next visited location"
-msgstr "Du-te la locația următoare"
+msgstr "Du-te la locația vizitată posterior"
 
-#: ../src/fr-window.c:5690
+#: ../src/fr-window.c:5891
 msgid "Go to the home location"
 msgstr "Du-te la locația „Acasă”"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5699 ../src/ui/file-selector.ui.h:4
+#: ../src/fr-window.c:5900 ../src/ui/file-selector.ui.h:4
 #: ../src/ui/new-archive-dialog.ui.h:2
 msgid "_Location:"
 msgstr "_Locație:"
 
-#: ../src/fr-window.c:6493
+#: ../src/fr-window.c:6280 ../src/ui/menus.ui.h:1
+msgctxt "Action"
+msgid "Open"
+msgstr "Deschide"
+
+#: ../src/fr-window.c:6747
 #, c-format
-msgid "Replace file \"%s\"?"
+#| msgid "Replace file \"%s\"?"
+msgid "Replace file “%s”?"
 msgstr "Înlocuiesc fișierul „%s”?"
 
-#: ../src/fr-window.c:6496
+#: ../src/fr-window.c:6750
 #, c-format
-msgid "Another file with the same name already exists in \"%s\"."
+#| msgid "Another file with the same name already exists in \"%s\"."
+msgid "Another file with the same name already exists in “%s”."
 msgstr "Există deja un fișier cu același nume în „%s”."
 
-#: ../src/fr-window.c:6502
+#: ../src/fr-window.c:6756
 msgid "Replace _All"
 msgstr "Înl_ocuiește tot"
 
-#: ../src/fr-window.c:6503
+#: ../src/fr-window.c:6757
 msgid "_Skip"
 msgstr "_Omite"
 
-#: ../src/fr-window.c:7299 ../src/fr-window.c:7656
+#: ../src/fr-window.c:7632 ../src/fr-window.c:7989
 #, c-format
-msgid "Could not save the archive \"%s\""
+#| msgid "Could not save the archive \"%s\""
+msgid "Could not save the archive “%s”"
 msgstr "Nu s-a putut salva arhiva „%s”"
 
-#: ../src/fr-window.c:7426
+#: ../src/fr-window.c:7759
 msgid "Save"
 msgstr "Salvează"
 
-#: ../src/fr-window.c:7750
+#: ../src/fr-window.c:8083
 msgid "Last Output"
 msgstr "Ultima ieșire"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7973
+#: ../src/fr-window.c:8306
 msgid "New name is void, please type a name."
-msgstr "Noul nume este gol, vă rugăm să alegeți un nume."
+msgstr "Noul nume este gol, alegeți un nume."
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:7983
+#: ../src/fr-window.c:8316
 #, c-format
+#| msgid ""
+#| "Name \"%s\" is not valid because it contains at least one of the "
+#| "following characters: %s, please type other name."
 msgid ""
-"Name \"%s\" is not valid because it contains at least one of the following "
+"Name “%s” is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
 "Numele „%s” nu este valid deoarece conține cel puțin unul din următoarele "
-"caracterele: %s, vă rugăm să introduceți alt nume."
+"caracterele: %s, introduceți alt nume."
 
-#: ../src/fr-window.c:8019
+#: ../src/fr-window.c:8352
 #, c-format
+#| msgid ""
+#| "A folder named \"%s\" already exists.\n"
+#| "\n"
+#| "%s"
 msgid ""
-"A folder named \"%s\" already exists.\n"
+"A folder named “%s” already exists.\n"
 "\n"
 "%s"
 msgstr ""
@@ -909,14 +1001,18 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8019 ../src/fr-window.c:8021
+#: ../src/fr-window.c:8352 ../src/fr-window.c:8354
 msgid "Please use a different name."
-msgstr "E nevoie să folosiți un alt nume."
+msgstr "Folosiți un nume diferit."
 
-#: ../src/fr-window.c:8021
+#: ../src/fr-window.c:8354
 #, c-format
+#| msgid ""
+#| "A file named \"%s\" already exists.\n"
+#| "\n"
+#| "%s"
 msgid ""
-"A file named \"%s\" already exists.\n"
+"A file named “%s” already exists.\n"
 "\n"
 "%s"
 msgstr ""
@@ -924,51 +1020,53 @@ msgstr ""
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8091
+#: ../src/fr-window.c:8424
 msgid "Rename"
 msgstr "Redenumește"
 
-#: ../src/fr-window.c:8092
+#: ../src/fr-window.c:8425
 msgid "_New folder name:"
 msgstr "_Nume dosar nou:"
 
-#: ../src/fr-window.c:8092
+#: ../src/fr-window.c:8425
 msgid "_New file name:"
 msgstr "_Nume fișier nou:"
 
-#: ../src/fr-window.c:8096
+#: ../src/fr-window.c:8429
 msgid "_Rename"
 msgstr "_Redenumește"
 
-#: ../src/fr-window.c:8113 ../src/fr-window.c:8131
+#: ../src/fr-window.c:8446 ../src/fr-window.c:8464
 msgid "Could not rename the folder"
 msgstr "Nu s-a putut redenumi dosarul"
 
-#: ../src/fr-window.c:8113 ../src/fr-window.c:8131
+#: ../src/fr-window.c:8446 ../src/fr-window.c:8464
 msgid "Could not rename the file"
 msgstr "Nu s-a putut redenumi fișierul"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8564
+#: ../src/fr-window.c:8902
 #, c-format
-msgid "Moving the files from \"%s\" to \"%s\""
+#| msgid "Moving the files from \"%s\" to \"%s\""
+msgid "Moving the files from “%s” to “%s”"
 msgstr "Se mută fișierele de la „%s” la „%s”"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8567
+#: ../src/fr-window.c:8905
 #, c-format
-msgid "Copying the files from \"%s\" to \"%s\""
+#| msgid "Copying the files from \"%s\" to \"%s\""
+msgid "Copying the files from “%s” to “%s”"
 msgstr "Se copiază fișierele de la „%s” la „%s”"
 
-#: ../src/fr-window.c:8618
+#: ../src/fr-window.c:8956
 msgid "Paste Selection"
 msgstr "Lipește selecția"
 
-#: ../src/fr-window.c:8619
+#: ../src/fr-window.c:8957
 msgid "_Destination folder:"
 msgstr "_Dosarul destinație:"
 
-#: ../src/fr-window.c:8623 ../src/ui/app-menubar.ui.h:12
+#: ../src/fr-window.c:8961 ../src/ui/app-menubar.ui.h:12
 msgid "_Paste"
 msgstr "Li_pește"
 
@@ -979,15 +1077,15 @@ msgstr "Li_pește"
 msgid "%d %B %Y, %H:%M"
 msgstr "%d %B %Y, %H:%M"
 
-#: ../src/gtk-utils.c:234
+#: ../src/gtk-utils.c:235
 msgid "C_ommand Line Output:"
 msgstr "Ieșire în linie de c_omandă:"
 
-#: ../src/gtk-utils.c:509
+#: ../src/gtk-utils.c:510
 msgid "Could not display help"
 msgstr "Nu s-a putut afișa ajutorul"
 
-#: ../src/gtk-utils.c:604
+#: ../src/gtk-utils.c:605
 msgid "Change password visibility"
 msgstr "Schimbă vizibilitatea parolei"
 
@@ -1069,11 +1167,11 @@ msgstr "_Extrage fișierele…"
 
 #: ../src/ui/app-menubar.ui.h:5
 msgid "Save _As…"
-msgstr "S_alvează ca…"
+msgstr "Salvează c_a…"
 
 #: ../src/ui/app-menubar.ui.h:6 ../src/ui/gears-menu.ui.h:3
 msgid "_Test Integrity"
-msgstr "_Test integritate"
+msgstr "_Testează integritatea"
 
 #: ../src/ui/app-menubar.ui.h:7 ../src/ui/gears-menu.ui.h:4
 msgid "Properties"
@@ -1113,11 +1211,11 @@ msgstr "D_eselectează tot"
 
 #: ../src/ui/app-menubar.ui.h:18
 msgid "_Find"
-msgstr "Găs_ește"
+msgstr "Ca_ută"
 
 #: ../src/ui/app-menubar.ui.h:19
 msgid "Set Pass_word…"
-msgstr "S_etează o parolă…"
+msgstr "Stabilește o _parolă…"
 
 #: ../src/ui/app-menubar.ui.h:20
 msgid "_View"
@@ -1147,25 +1245,29 @@ msgstr "Conținut"
 msgid "_About"
 msgstr "D_espre"
 
+#: ../src/ui/app-menu.ui.h:8
+msgid "_Quit"
+msgstr "_Ieșire"
+
 #: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
 msgid "_Password:"
 msgstr "_Parolă:"
 
-#: ../src/ui/delete.ui.h:1 ../src/ui/extract-dialog-options.ui.h:4
-msgid "_Files:"
-msgstr "_Fișierele:"
-
-#: ../src/ui/delete.ui.h:2
-msgid "example: *.txt; *.doc"
-msgstr "exemplu: *.txt, *.doc"
-
-#: ../src/ui/delete.ui.h:3 ../src/ui/extract-dialog-options.ui.h:2
+#: ../src/ui/delete.ui.h:1 ../src/ui/extract-dialog-options.ui.h:2
 msgid "_All files"
 msgstr "To_ate fișierele"
 
-#: ../src/ui/delete.ui.h:4 ../src/ui/extract-dialog-options.ui.h:3
+#: ../src/ui/delete.ui.h:2 ../src/ui/extract-dialog-options.ui.h:3
 msgid "_Selected files"
 msgstr "Fișierele _selectate"
+
+#: ../src/ui/delete.ui.h:3 ../src/ui/extract-dialog-options.ui.h:4
+msgid "_Files:"
+msgstr "_Fișierele:"
+
+#: ../src/ui/delete.ui.h:4
+msgid "example: *.txt; *.doc"
+msgstr "exemplu: *.txt, *.doc"
 
 #: ../src/ui/extract-dialog-options.ui.h:7
 msgid "_Keep directory structure"
@@ -1201,7 +1303,7 @@ msgstr "De_schide cu…"
 
 #: ../src/ui/menus.ui.h:3
 msgid "_Extract…"
-msgstr "_Extrage…"
+msgstr "D_ezarhivează…"
 
 #: ../src/ui/menus.ui.h:4
 msgid "Cut"
@@ -1236,12 +1338,16 @@ msgstr "Cript_ează și lista de fișiere"
 msgid "Split into _volumes of"
 msgstr "Împarte în _volume de"
 
+#: ../src/ui/new-archive-dialog.ui.h:8
+msgid "10,0"
+msgstr "10,0"
+
 #. MB means megabytes
-#: ../src/ui/new-archive-dialog.ui.h:9
+#: ../src/ui/new-archive-dialog.ui.h:10
 msgid "MB"
 msgstr "MB"
 
-#: ../src/ui/new-archive-dialog.ui.h:10
+#: ../src/ui/new-archive-dialog.ui.h:11
 msgid "_Other Options"
 msgstr "Alte _opțiuni"
 
@@ -1254,43 +1360,66 @@ msgctxt "File"
 msgid "Name:"
 msgstr "Nume:"
 
-#: ../src/ui/properties.ui.h:2
-msgid "Archive size:"
-msgstr "Mărime arhivă:"
-
 #. after the colon there is a folder name.
-#: ../src/ui/properties.ui.h:4
+#: ../src/ui/properties.ui.h:3
 msgid "Location:"
 msgstr "Locație:"
 
+#. after the colon there is a file type.
 #: ../src/ui/properties.ui.h:5
-msgid "Compression ratio:"
-msgstr "Rată de compresie:"
+msgid "Type:"
+msgstr "Tip:"
 
 #: ../src/ui/properties.ui.h:6
 msgid "Last modified:"
 msgstr "Ultima modificare:"
 
 #: ../src/ui/properties.ui.h:7
+msgid "Archive size:"
+msgstr "Mărime arhivă:"
+
+#: ../src/ui/properties.ui.h:8
 msgid "Content size:"
 msgstr "Mărime conținut:"
 
-#: ../src/ui/properties.ui.h:8
+#: ../src/ui/properties.ui.h:9
+msgid "Compression ratio:"
+msgstr "Rată de compresie:"
+
+#: ../src/ui/properties.ui.h:10
 msgid "Number of files:"
 msgstr "Număr fișiere:"
 
-#. after the colon there is a file type.
-#: ../src/ui/properties.ui.h:10
-msgid "Type:"
-msgstr "Tip:"
-
 #: ../src/ui/update.ui.h:1
-msgid "_Update"
-msgstr "Act_ualizează"
-
-#: ../src/ui/update.ui.h:3
 msgid "S_elect the files you want to update:"
 msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
+
+#~ msgid "Extract To..."
+#~ msgstr "Dezarhivează în..."
+
+#~ msgid "Compress..."
+#~ msgstr "Comprimă..."
+
+#~ msgid "Create a compressed archive with the selected objects"
+#~ msgstr "Creează o arhivă comprimată din obiectele selectate"
+
+#~ msgid "Add Files"
+#~ msgstr "Adaugă fișiere"
+
+#~ msgid "Load Options"
+#~ msgstr "Opțiuni de încărcare"
+
+#~ msgid "Save Options"
+#~ msgstr "Salvare opțiuni"
+
+#~ msgid "Extract"
+#~ msgstr "Dezarhivează"
+
+#~ msgid "Extract archive"
+#~ msgstr "Extrage conținutul arhivei"
+
+#~ msgid "Open"
+#~ msgstr "Deschide"
 
 #~ msgid "Password"
 #~ msgstr "Parolă"
@@ -1582,9 +1711,6 @@ msgstr "Al_egeți fișierele pe care doriți să le actualizați:"
 
 #~ msgid "Add files to an archive"
 #~ msgstr "Adaugă fișiere la o arhivă"
-
-#~ msgid "File Roller"
-#~ msgstr "File Roller"
 
 #~ msgid "_Arrange Files"
 #~ msgstr "_Aranjează fișierele"
