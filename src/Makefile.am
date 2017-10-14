@@ -113,6 +113,8 @@ COMMON_SOURCES = 			\
 	fr-command-rpm.h		\
 	fr-command-tar.c		\
 	fr-command-tar.h		\
+	fr-command-unsquashfs.c		\
+	fr-command-unsquashfs.h		\
 	fr-command-unstuff.c		\
 	fr-command-unstuff.h		\
 	fr-command-zip.c		\

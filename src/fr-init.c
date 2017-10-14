@@ -46,6 +46,7 @@
 #if HAVE_JSON_GLIB
   #include "fr-command-unarchiver.h"
 #endif
+#include "fr-command-unsquashfs.h"
 #include "fr-command-unstuff.h"
 #include "fr-command-zip.h"
 #include "fr-command-zoo.h"
@@ -80,6 +81,8 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-deb",                  ".deb",      0 },
 	{ "application/x-debian-package",	".deb",      0 },
 	{ "application/vnd.debian.binary-package",	".deb",      0 },
+	{ "application/vnd.snap",		".snap",     0 },
+	{ "application/vnd.squashfs",		".sqsh",     0 },
 	{ "application/x-ear",                  ".ear",      0 },
 	{ "application/x-ms-dos-executable",    ".exe",      0 },
 	{ "application/x-gzip",                 ".gz",       0 },
@@ -143,6 +146,8 @@ FrExtensionType file_ext_type[] = {
 	{ ".rpm", "application/x-rpm" },
 	{ ".rz", "application/x-rzip" },
 	{ ".sit", "application/x-stuffit" },
+	{ ".snap", "application/vnd.snap" },
+	{ ".sqsh", "application/vnd.squashfs" },
 	{ ".swm", "application/x-ms-wim" },
 	{ ".tar", "application/x-tar" },
 	{ ".tar.bz", "application/x-bzip-compressed-tar" },
@@ -372,6 +377,7 @@ register_archives (void)
 	register_archive (FR_TYPE_COMMAND_LHA);
 	register_archive (FR_TYPE_COMMAND_RAR);
 	register_archive (FR_TYPE_COMMAND_RPM);
+	register_archive (FR_TYPE_COMMAND_UNSQUASHFS);
 	register_archive (FR_TYPE_COMMAND_UNSTUFF);
 	register_archive (FR_TYPE_COMMAND_ZIP);
 	register_archive (FR_TYPE_COMMAND_LRZIP);
