@@ -534,7 +534,7 @@ _gtk_builder_new_from_file (const char *ui_file)
 	GtkBuilder *builder;
 	GError     *error = NULL;
 
-	filename = g_build_filename (UI_DIR, ui_file, NULL);
+	filename = g_build_filename (UIDIR, ui_file, NULL);
 	builder = gtk_builder_new ();
         if (! gtk_builder_add_from_file (builder, filename, &error)) {
                 g_warning ("%s\n", error->message);

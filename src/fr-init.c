@@ -638,7 +638,7 @@ initialize_data (void)
 					       NULL);
 
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-					   PKG_DATA_DIR G_DIR_SEPARATOR_S "icons");
+					   PRIVDATADIR G_DIR_SEPARATOR_S "icons");
 
 	migrate_options_directory ();
 	register_archives ();

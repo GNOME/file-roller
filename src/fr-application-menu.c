@@ -126,7 +126,7 @@ fr_application_activate_about (GSimpleAction *action,
 	const char *documenters [] = { "Alexander Kirillov", "Breda McColgan", NULL };
 
 	gtk_show_about_dialog (GTK_WINDOW (_gtk_application_get_current_window (G_APPLICATION (user_data))),
-			       "version", VERSION,
+			       "version", PACKAGE_VERSION,
 			       "copyright", _("Copyright \xc2\xa9 2001–2014 Free Software Foundation, Inc."),
 			       "comments", _("An archive manager for GNOME."),
 			       "authors", authors,
