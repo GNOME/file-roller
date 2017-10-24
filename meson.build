@@ -55,6 +55,7 @@ else
   use_libarchive = false
 endif
 
+use_magic = false
 if get_option('magic')
   libmagic_dep = c_comp.find_library('magic')
   if c_comp.compiles('''#include <magic.h>

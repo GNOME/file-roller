@@ -10,8 +10,8 @@ shared_module('nautilus-fileroller',
     gthread_dep, 
     gtk_dep, 
     libnautilus_extension_dep,
-    libjson_glib_dep,
-    libnotify_dep    
+    use_json_glib ? libjson_glib_dep : [],
+    use_libnotify ? libnotify_dep : []    
   ],  
   include_directories : config_inc,
   c_args : c_args,
