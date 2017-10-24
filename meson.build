@@ -19,6 +19,8 @@ datadir = join_paths(prefix, get_option('datadir'))
 privexecdir = join_paths(prefix, get_option('libexecdir'), meson.project_name())
 c_comp = meson.get_compiler('c')
 
+meson.add_install_script('postinstall.py')
+
 # Dependencies
 
 libm_dep = c_comp.find_library('m')
