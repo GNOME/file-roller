@@ -84,6 +84,61 @@ mktime_from_string (const char *date_s,
 	return mktime (&tm);
 }
 
+
+static time_t
+mktime_from_string_rar_5_30 (const char *date_s,
+			     const char *time_s)
+{
+	struct tm   tm = {0, };
+	char      **fields;
+
+	tm.tm_isdst = -1;
+
+	/* date */
+
+	fields = g_strsplit (date_s, "-", 3);
+	if (fields[0] != NULL) {
+		tm.tm_year = atoi (fields[0]) - 1900;
+		if (fields[1] != NULL) {
+			tm.tm_mon = atoi (fields[1]) - 1;
+			if (fields[2] != NULL)
+				tm.tm_mday = atoi (fields[2]);
+		}
+	}
+	g_strfreev (fields);
+
+	/* time */
+
+	fields = g_strsplit (time_s, ":", 2);
+	if (fields[0] != NULL) {
+		tm.tm_hour = atoi (fields[0]);
+		if (fields[1] != NULL)
+			tm.tm_min = atoi (fields[1]);
+	}
+	g_strfreev (fields);
+
+	return mktime (&tm);
+}
+
+
+/*
+ * Sample rar 5.30 or higher output:
+ *
+
+RAR 5.30   Copyright (c) 1993-2017 Alexander Roshal   11 Aug 2017
+Trial version             Type 'rar -?' for help
+
+Archive: test.rar
+Details: RAR 5
+
+ Attributes      Size    Packed Ratio    Date    Time   Checksum  Name
+----------- ---------  -------- ----- ---------- -----  --------  ----
+ -rw-r--r--        51        47  92%  2017-11-19 16:20  80179DAB  loremipsum.txt
+----------- ---------  -------- ----- ---------- -----  --------  ----
+                   51        47  92%                              1
+
+ */
+
 /* Sample rar-5 listing output:
 
 RAR 5.00 beta 8   Copyright (c) 1993-2013 Alexander Roshal   22 Aug 2013
@@ -187,15 +242,17 @@ process_line (char     *line,
 	g_return_if_fail (line != NULL);
 
 	if (! rar_comm->list_started) {
-		if (strncmp (line, "RAR ", 4) == 0) {
-			int version;
-			sscanf (line, "RAR %d.", &version);
-			rar_comm->rar5 = (version >= 5);
-		}
-		else if (strncmp (line, "UNRAR ", 6) == 0) {
-			int version;
-			sscanf (line, "UNRAR %d.", &version);
-			rar_comm->rar5 = (version >= 5);
+		if ((strncmp (line, "RAR ", 4) == 0) || (strncmp (line, "UNRAR ", 6) == 0)) {
+			int major_version;
+			int minor_version;
+
+			if (strncmp (line, "RAR ", 4) == 0)
+				sscanf (line, "RAR %d.%d", &major_version, &minor_version);
+			else
+				sscanf (line, "UNRAR %d.%d", &major_version, &minor_version);
+
+			rar_comm->rar5 = (major_version >= 5);
+			rar_comm->rar5_30 = ((major_version == 5) && (minor_version >= 30)) || (major_version >= 6);
 		}
 		else if (strncmp (line, "--------", 8) == 0) {
 			rar_comm->list_started = TRUE;
@@ -259,7 +316,8 @@ process_line (char     *line,
 			}
 			else {
 				fdata->size = g_ascii_strtoull (size_field, NULL, 10);
-				fdata->modified = mktime_from_string (date_field, time_field);
+
+				fdata->modified = rar_comm->rar5_30 ? mktime_from_string_rar_5_30 (date_field, time_field) : mktime_from_string (date_field, time_field);
 
 				if (attr_field_is_dir (attr_field, rar_comm)) {
 					char *tmp;
