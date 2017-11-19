@@ -28,6 +28,7 @@
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
+#include <locale.h>
 #include "nautilus-fileroller.h"
 
 
@@ -257,9 +258,9 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_here",
-					       g_dgettext ("file-roller", "Extract Here"),
+					       g_dcgettext ("file-roller", "Extract Here", LC_MESSAGES),
 					       /* Translators: the current position is the current folder */
-					       g_dgettext ("file-roller", "Extract the selected archive to the current position"),
+					       g_dcgettext ("file-roller", "Extract the selected archive to the current position", LC_MESSAGES),
 					       "drive-harddisk");
 		g_signal_connect (item,
 				  "activate",
@@ -276,8 +277,8 @@ nautilus_fr_get_file_items (NautilusMenuProvider *provider,
 		NautilusMenuItem *item;
 
 		item = nautilus_menu_item_new ("NautilusFr::extract_to",
-					       g_dgettext ("file-roller", "Extract To…"),
-					       g_dgettext ("file-roller", "Extract the selected archive"),
+					       g_dcgettext ("file-roller", "Extract To…", LC_MESSAGES),
+					       g_dcgettext ("file-roller", "Extract the selected archive", LC_MESSAGES),
 					       "drive-harddisk");
 		g_signal_connect (item,
 				  "activate",
