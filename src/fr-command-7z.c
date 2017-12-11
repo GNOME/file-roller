@@ -574,13 +574,17 @@ fr_command_7z_handle_error (FrCommand *command,
 
 const char *sevenz_mime_types[] = { "application/x-7z-compressed",
 				    "application/x-arj",
+				    "application/vnd.android.package-archive",
 				    "application/vnd.ms-cab-compressed",
 				    "application/x-cd-image",
+				    "application/x-disk-image",
 				    /*"application/x-cbr",*/
 				    "application/x-cbz",
+				    "application/x-iso9660-appimage",
 				    "application/x-ms-dos-executable",
 				    "application/x-ms-wim",
 				    "application/x-rar",
+				    "application/x-xpinstall",
 				    "application/zip",
 				    NULL };
 
