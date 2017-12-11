@@ -12,20 +12,23 @@
   archive.
 
   File Roller is only a front-end (a graphical interface) to archiving programs
-  like tar and zip. The supported file types are :
+  like tar, zip and p7zip. The supported file types are :
     * 7-Zip Compressed File (.7z)
     * WinAce Compressed File (.ace)
     * ALZip Compressed File (.alz)
     * AIX Small Indexed Archive  (.ar)
     * ARJ Compressed Archive (.arj)
+    * Android Package Kit (.apk)
+    * AppImage file (.AppImage)
     * Cabinet File (.cab)
     * UNIX CPIO Archive (.cpio)
     * Debian Linux Package (.deb) [Read-only mode]
-    * ISO-9660 CD Disc Image (.iso) [Read-only mode]
+    * ISO-9660 CD Disc Image (.iso) [Read-write mode (slower than read-only)]
     * Java Archive (.jar)
     * Java Enterprise archive (.ear)
     * Java Web Archive (.war)
     * LHA Archive (.lzh, .lha)
+    * Mozilla XPInstall extension (.xpi)
     * WinRAR Compressed Archive (.rar)
     * RAR Archived Comic Book (.cbr)
     * RPM Linux Package (.rpm) [Read-only mode]
@@ -41,9 +44,10 @@
           * lzop (.tar.lzo , .tzo)
           * 7zip (.tar.7z)
           * xz (.tar.xz)
-    * Snap packages (.snap)
-    * Squashfs images (.sqsh)
-    * Stuffit Archives (.bin, .sit)
+    * Snap package (.snap)
+    * Squashfs image (.sqsh, .sqfm, .sqfs, .SQFS, .squashfs, .sb, .sfs, .sxz, .xzm)
+    * Stuffit Archive (.bin, .sit)
+    * Virtual disk image (.vdi, .vhd, .vhdx, .vmdk)
     * ZIP Archive (.zip)
     * ZIP Archived Comic Book (.cbz)
     * ZOO Compressed Archive File (.zoo)
@@ -74,8 +78,7 @@
 
 * Install
 
-  mkdir build
-  cd build
-  meson ..
+  mkdir build && cd build
+  meson --prefix /usr/local ..
   ninja
-  ninja install
+  DESTDIR=/ ninja install
