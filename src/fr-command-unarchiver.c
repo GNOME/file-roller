@@ -91,7 +91,8 @@ list_command_completed (gpointer data)
 
 				entry = json_array_get_object_element (content, i);
 				fdata = file_data_new ();
-				fdata->size = json_object_get_int_member (entry, "XADFileSize");
+				if (json_object_has_member (entry, "XADFileSize"))
+					fdata->size = json_object_get_int_member (entry, "XADFileSize");
 				fdata->modified = mktime_from_string (json_object_get_string_member (entry, "XADLastModificationDate"));
 				if (json_object_has_member (entry, "XADIsEncrypted"))
 					fdata->encrypted = json_object_get_int_member (entry, "XADIsEncrypted") == 1;
