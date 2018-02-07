@@ -1,3 +1,47 @@
+version 3.27.1
+--------------
+
+ New features and user visibile changes:
+
+  * Ported to meson.
+
+ Bugs fixed:
+
+  * unarchiver: check that XADFileSize is set before reading it. Lsar
+    does not set XADFileSize for directories, so we would output a
+    critical when encountering one. (Mike Gorse) (#791505)
+  * nautilus-fileroller: Avoid the use of g_dgettext.
+    nautilus-fileroller is using g_dgettext which may cause problems
+    when extracting strings on some systems. This patch replaces
+    g_dgettext for g_dcgettext, which has the same behaviour when the
+    category is LC_MESSAGES. (Iñigo Martínez) (#790569)
+  * rar archives: wrong file date when using rar 5.30 or higher. adapt
+    to the new format. (#758121)
+  * Support squashfs filesystems and .snap files (Robert Ancell)
+    (#662519)
+
+ New or updated application translations:
+
+  * Catalan (Xavi Ivars)
+  * Chinese Simplified (Mingcong Bai)
+  * Deutsch (Mario Blättermann)
+  * es (Daniel Mustieles)
+  * Friulian (Fabio Tomat)
+  * Hungarian (Balázs Úr)
+  * Icelandic (Sveinn í Felli)
+  * Indonesian (Kukuh Syafaat)
+  * Norwegian bokmål (Åka Sikrom)
+  * Polish (Piotr Drąg)
+  * Slovenian (Matej Urbančič)
+  * suomi (Jiri Grönroos)
+  * Swedish (Anders Jonsson)
+  * čeština (Marek Černocký)
+  * српски (Марко М. Костић)
+
+ New or updated manual translations:
+
+  * Polish (Piotr Drąg)
+
 version 3.26.1
 --------------
 
