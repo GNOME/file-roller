@@ -37,7 +37,7 @@ configure_file(
   output : 'org.gnome.FileRoller.service',
   configuration : service_data,
   install : true,
-  install_dir : join_paths(datadir, 'applications')
+  install_dir : join_paths(datadir, 'dbus-1/services')
 )
 
 configure_file(
@@ -45,7 +45,7 @@ configure_file(
   output : 'org.gnome.FileRoller.ArchiveManager1.service',
   configuration : service_data,
   install : true,
-  install_dir : join_paths(datadir, 'applications')
+  install_dir : join_paths(datadir, 'dbus-1/services')
 )
 
 # .appdata file
