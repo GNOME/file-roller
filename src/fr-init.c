@@ -33,6 +33,7 @@
 #include "fr-command-alz.h"
 #include "fr-command-ar.h"
 #include "fr-command-arj.h"
+#include "fr-command-apk.h"
 #include "fr-command-cfile.h"
 #include "fr-command-cpio.h"
 #include "fr-command-dpkg.h"
@@ -80,6 +81,7 @@ FrMimeTypeDescription mime_type_desc[] = {
 	{ "application/x-cpio",                 ".cpio",     0 },
 	{ "application/x-deb",                  ".deb",      0 },
 	{ "application/x-debian-package",	".deb",      0 },
+	{ "application/vnd.android.package-archive",	".apk",      0 },
 	{ "application/vnd.debian.binary-package",	".deb",      0 },
 	{ "application/vnd.snap",		".snap",     0 },
 	{ "application/vnd.squashfs",		".sqsh",     0 },
@@ -121,6 +123,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".alz", "application/x-alz" },
 	{ ".ar", "application/x-ar" },
 	{ ".arj", "application/x-arj" },
+	{ ".apk", "application/x-apk" },
 	{ ".bin", "application/x-stuffit" },
 	{ ".bz", "application/x-bzip" },
 	{ ".bz2", "application/x-bzip" },
@@ -371,6 +374,7 @@ register_archives (void)
 	register_archive (FR_TYPE_COMMAND_ALZ);
 	register_archive (FR_TYPE_COMMAND_AR);
 	register_archive (FR_TYPE_COMMAND_ARJ);
+	register_archive (FR_TYPE_COMMAND_APK);
 	register_archive (FR_TYPE_COMMAND_CPIO);
 	register_archive (FR_TYPE_COMMAND_ISO);
 	register_archive (FR_TYPE_COMMAND_JAR);
