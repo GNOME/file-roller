@@ -22,6 +22,7 @@ source_files = files(
   'fr-command-alz.c',
   'fr-command-ar.c',
   'fr-command-arj.c',
+  'fr-command-apk.c',
   'fr-command.c',
   'fr-command-cfile.c',
   'fr-command-cpio.c',
