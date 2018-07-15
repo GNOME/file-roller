@@ -57,24 +57,6 @@ file_selector_destroy_cb (GtkWidget  *widget,
 }
 
 
-static gboolean
-utf8_only_spaces (const char *text)
-{
-	const char *scan;
-
-	if (text == NULL)
-		return TRUE;
-
-	for (scan = text; *scan != 0; scan = g_utf8_next_char (scan)) {
-		gunichar c = g_utf8_get_char (scan);
-		if (! g_unichar_isspace (c))
-			return FALSE;
-	}
-
-	return TRUE;
-}
-
-
 static void dlg_add_folder_save_last_options (DialogData *data);
 
 
@@ -127,15 +109,15 @@ file_selector_response_cb (GtkWidget    *widget,
 	follow_links = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
 
 	include_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("include_files_entry")));
-	if (utf8_only_spaces (include_files))
+	if (_g_utf8_all_spaces (include_files))
 		include_files = "*";
 
 	exclude_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_files_entry")));
-	if (utf8_only_spaces (exclude_files))
+	if (_g_utf8_all_spaces (exclude_files))
 		exclude_files = NULL;
 
 	exclude_folders = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_folders_entry")));
-	if (utf8_only_spaces (exclude_folders))
+	if (_g_utf8_all_spaces (exclude_folders))
 		exclude_folders = NULL;
 
 	files = fr_file_selector_dialog_get_selected_files (FR_FILE_SELECTOR_DIALOG (data->dialog));
@@ -491,15 +473,15 @@ get_options_from_widgets (DialogData   *data,
 	*no_symlinks = ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("follow_links_checkbutton")));
 
 	*include_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("include_files_entry")));
-	if (utf8_only_spaces (*include_files))
+	if (_g_utf8_all_spaces (*include_files))
 		*include_files = "";
 
 	*exclude_files = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_files_entry")));
-	if (utf8_only_spaces (*exclude_files))
+	if (_g_utf8_all_spaces (*exclude_files))
 		*exclude_files = "";
 
 	*exclude_folders = gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("exclude_folders_entry")));
-	if (utf8_only_spaces (*exclude_folders))
+	if (_g_utf8_all_spaces (*exclude_folders))
 		*exclude_folders = "";
 }
 
