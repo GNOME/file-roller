@@ -90,6 +90,10 @@ const char *        _g_str_get_last_field          (const char          *line,
 						    int                  last_field);
 const char *        _g_str_get_static              (const char          *s);
 
+/* utf8 */
+
+gboolean            _g_utf8_all_spaces             (const char          *text);
+
 /* string vector */
 
 char **             _g_strv_prepend                (char               **str_array,
