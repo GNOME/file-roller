@@ -878,3 +878,31 @@ _gtk_settings_get_dialogs_use_header (void)
 
 	return use_header;
 }
+
+
+void
+_gtk_application_add_accelerator_for_action (GtkApplication   *app,
+					     const char       *action_name,
+					     const char       *accel)
+{
+	const char *accels[2];
+
+	accels[0] = accel;
+	accels[1] = NULL;
+	gtk_application_set_accels_for_action (app, action_name, accels);
+}
+
+
+void
+_gtk_application_add_accelerators (GtkApplication *app,
+				   FrAccelerator  *accelerators)
+{
+	int i;
+
+	for (i = 0; i < G_N_ELEMENTS (accelerators); i++) {
+		const FrAccelerator *acc = accelerators + i;
+		_gtk_application_add_accelerator_for_action (GTK_APPLICATION (app),
+							     acc->action_name,
+							     acc->accelerator);
+	}
+}
