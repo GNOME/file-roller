@@ -159,14 +159,6 @@ static const GActionEntry app_menu_entries[] = {
 };
 
 
-static const FrAccelerator fr_app_accelerators[] = {
-	{ "app.new", "<Control>n" },
-	{ "app.open", "<Control>o" },
-	{ "app.help", "F1" },
-	{ "app.quit", "<Control>q" }
-};
-
-
 static void
 pref_view_sidebar_changed (GSettings  *settings,
 		  	   const char *key,
@@ -197,13 +189,18 @@ pref_list_mode_changed (GSettings  *settings,
 void
 initialize_app_menu (GApplication *application)
 {
-	GSettings *settings;
+	GtkBuilder *builder;
+	GSettings  *settings;
 
 	g_action_map_add_action_entries (G_ACTION_MAP (application),
 					 app_menu_entries,
 					 G_N_ELEMENTS (app_menu_entries),
 					 application);
-	_gtk_application_add_accelerators (GTK_APPLICATION (application), fr_app_accelerators);
+
+	builder = _gtk_builder_new_from_resource ("app-menu.ui");
+	gtk_application_set_app_menu (GTK_APPLICATION (application),
+				      G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
+	g_object_unref (builder);
 
 	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI);
 	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_SIDEBAR),
