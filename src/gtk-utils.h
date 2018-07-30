@@ -120,7 +120,6 @@ void          _gtk_application_add_accelerator_for_action
 						    const char       *action_name,
 						    const char       *accel);
 void	      _gtk_application_add_accelerators    (GtkApplication   *app,
-						    const FrAccelerator *accelerators,
-						    int               n_accelerators);
+						    FrAccelerator    *accelerators);
 
 #endif

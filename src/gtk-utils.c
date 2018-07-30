@@ -895,12 +895,11 @@ _gtk_application_add_accelerator_for_action (GtkApplication   *app,
 
 void
 _gtk_application_add_accelerators (GtkApplication *app,
-				   const FrAccelerator  *accelerators,
-				   int             n_accelerators)
+				   FrAccelerator  *accelerators)
 {
 	int i;
 
-	for (i = 0; i < n_accelerators; i++) {
+	for (i = 0; i < G_N_ELEMENTS (accelerators); i++) {
 		const FrAccelerator *acc = accelerators + i;
 		_gtk_application_add_accelerator_for_action (GTK_APPLICATION (app),
 							     acc->action_name,

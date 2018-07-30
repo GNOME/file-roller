@@ -203,7 +203,7 @@ initialize_app_menu (GApplication *application)
 					 app_menu_entries,
 					 G_N_ELEMENTS (app_menu_entries),
 					 application);
-	_gtk_application_add_accelerators (GTK_APPLICATION (application), fr_app_accelerators, G_N_ELEMENTS (fr_app_accelerators));
+	_gtk_application_add_accelerators (GTK_APPLICATION (application), fr_app_accelerators);
 
 	settings = fr_application_get_settings (FR_APPLICATION (application), FILE_ROLLER_SCHEMA_UI);
 	g_simple_action_set_state (GET_ACTION (PREF_UI_VIEW_SIDEBAR),
