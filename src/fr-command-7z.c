@@ -572,7 +572,8 @@ fr_command_7z_handle_error (FrCommand *command,
 }
 
 
-const char *sevenz_mime_types[] = { "application/x-7z-compressed",
+const char *sevenz_mime_types[] = { "application/epub+zip",
+				    "application/x-7z-compressed",
 				    "application/x-arj",
 				    "application/vnd.ms-cab-compressed",
 				    "application/x-cd-image",

@@ -61,6 +61,7 @@
 /* The capabilities are computed automatically in
  * compute_supported_archive_types() so it's correct to initialize to 0 here. */
 FrMimeTypeDescription mime_type_desc[] = {
+	{ "application/epub+zip",               ".epub",     0 },
 	{ "application/x-7z-compressed",        ".7z",       0 },
 	{ "application/x-7z-compressed-tar",    ".tar.7z",   0 },
 	{ "application/x-ace",                  ".ace",      0 },
@@ -131,6 +132,7 @@ FrExtensionType file_ext_type[] = {
 	{ ".cpio", "application/x-cpio" },
 	{ ".deb", "application/x-deb" },
 	{ ".ear", "application/x-ear" },
+	{ ".epub", "application/epub+zip" },
 	{ ".exe", "application/x-ms-dos-executable" },
 	{ ".gz", "application/x-gzip" },
 	{ ".iso", "application/x-cd-image" },

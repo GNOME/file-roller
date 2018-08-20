@@ -67,6 +67,7 @@ fr_archive_libarchive_finalize (GObject *object)
 
 
 const char *libarchiver_mime_types[] = {
+		"application/epub+zip",
 		"application/vnd.debian.binary-package",
 		"application/vnd.ms-cab-compressed",
 		"application/x-7z-compressed",
