@@ -28,9 +28,6 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
-#if ENABLE_MAGIC
-#  include <magic.h>
-#endif
 #include "glib-utils.h"
 #include "file-utils.h"
 #include "gio-utils.h"

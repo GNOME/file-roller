@@ -28,9 +28,6 @@
 #include <glib/gprintf.h>
 #include <glib-object.h>
 #include "glib-utils.h"
-#if ENABLE_MAGIC
-#  include <magic.h>
-#endif
 
 
 #define MAX_PATTERNS 128
@@ -1208,33 +1205,6 @@ const char *
 _g_mime_type_get_from_content (char  *buffer,
 			       gsize  buffer_size)
 {
-#if ENABLE_MAGIC
-
-	static magic_t magic = NULL;
-
-	if (magic == NULL) {
-		magic = magic_open (MAGIC_MIME_TYPE);
-		if (magic != NULL)
-			magic_load (magic, NULL);
-		else
-			g_warning ("unable to open magic database");
-	}
-
-	if (magic != NULL) {
-		const char * mime_type;
-
-		mime_type = magic_buffer (magic, buffer, buffer_size);
-		if ((mime_type != NULL) && (strcmp (mime_type, "application/octet-stream") == 0))
-			return NULL;
-
-		if (mime_type != NULL)
-			return mime_type;
-
-		g_warning ("unable to detect filetype from magic: %s", magic_error (magic));
-	}
-
-#else
-
 	static const struct magic {
 		const unsigned int off;
 		const unsigned int len;
@@ -1269,8 +1239,6 @@ _g_mime_type_get_from_content (char  *buffer,
 		else if (! memcmp (buffer + magic->off, magic->id, magic->len))
 			return magic->mime_type;
 	}
-
-#endif
 
 	return NULL;
 }

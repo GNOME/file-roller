@@ -55,16 +55,6 @@ else
   use_libarchive = false
 endif
 
-use_magic = false
-if get_option('magic')
-  libmagic_dep = c_comp.find_library('magic')
-  if c_comp.compiles('''#include <magic.h>
-                        int main () { magic_t m = magic_open(MAGIC_NONE); }''', 
-                     dependencies : libmagic_dep)
-    use_magic = true    
-  endif
-endif
-
 have_mkdtemp = c_comp.has_function('mkdtemp')
 
 cpio_path = 'cpio'
@@ -110,9 +100,6 @@ if get_option('buildtype').contains('debug')
 endif
 if have_mkdtemp
   config_data.set('HAVE_MKDTEMP', 1)
-endif
-if use_magic
-  config_data.set('ENABLE_MAGIC', 1)
 endif
 config_data.set_quoted('CPIO_PATH', cpio_path)
 config_file = configure_file(output : 'config.h', configuration : config_data)
@@ -162,7 +149,6 @@ summary = [
   '     notifications: @0@'.format(use_libnotify),
   '        packagekit: @0@'.format(get_option('packagekit')),
   '        libarchive: @0@'.format(use_libarchive),
-  '             magic: @0@'.format(use_magic),
   '      have mkdtemp: @0@'.format(have_mkdtemp),
   '              cpio: @0@'.format(cpio_path),
   ''

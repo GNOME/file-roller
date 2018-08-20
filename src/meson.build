@@ -92,8 +92,7 @@ executable('file-roller',
     gtk_dep, 
     use_json_glib ? libjson_glib_dep : [],
     use_libnotify ? libnotify_dep : [],
-    use_libarchive ? libarchive_dep : [],
-    use_magic ? libmagic_dep : []
+    use_libarchive ? libarchive_dep : []
   ],
   include_directories : config_inc,
   c_args : c_args,
