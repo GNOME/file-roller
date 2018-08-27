@@ -1079,7 +1079,7 @@ sanitize_filename (const char *file_name)
 	prefix_len = 0;
 	for (p = file_name; *p; ) {
 		if (ISDOT (p[0]) && ISDOT (p[1]) && (ISSLASH (p[2]) || !p[2]))
-			prefix_len = p + 2 - file_name;
+			return NULL;
 
 		do {
 			char c = *p++;
