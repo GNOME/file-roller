@@ -578,6 +578,7 @@ const char *sevenz_mime_types[] = {
 	"application/x-arj",
 	"application/vnd.ms-cab-compressed",
 	"application/x-cd-image",
+	"application/x-chrome-extension",
 	/*"application/x-cbr",*/
 	"application/x-cbz",
 	"application/x-ms-dos-executable",
