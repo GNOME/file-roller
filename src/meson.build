@@ -113,6 +113,24 @@ executable('test-server', 'test-server.c',
   install : false
 )
 
+test('safe-path', 
+  executable('test-safe-path',
+    sources : [ 
+      'test-safe-path.c', 
+      'glib-utils.c'
+    ],
+    dependencies : [ 
+      libm_dep, 
+      thread_dep,
+      glib_dep, 
+      gthread_dep,
+      gtk_dep, 
+    ],
+    include_directories : config_inc,
+    c_args : c_args,
+  )
+)
+
 # Subdirectories
 
 subdir('commands')
