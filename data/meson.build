@@ -10,12 +10,12 @@ install_data('packages.match',
 
 # .desktop file
 
-desktop_data = configuration_data()
-desktop_data.set('VERSION', meson.project_version())            
-desktop_in_file = configure_file(
-  input : 'org.gnome.FileRoller.desktop.in.in',
+desktop_in_file = custom_target('org.gnome.FileRoller.desktop.in',
+  input : [ 'supported-mime-types', 'org.gnome.FileRoller.desktop.in.in' ],
   output : 'org.gnome.FileRoller.desktop.in',
-  configuration : desktop_data
+  command : [ find_program('set-mime-type-entry.py'), '@INPUT@' ],
+  capture: true,
+  install : false
 )
 
 i18n.merge_file(
