@@ -388,6 +388,7 @@ fr_command_zip_handle_error (FrCommand *comm,
 
 const char *zip_mime_type[] = {
 	"application/epub+zip",
+	"application/vnd.android.package-archive",
 	"application/x-cbz",
 	"application/x-chrome-extension",
 	"application/x-ear",
