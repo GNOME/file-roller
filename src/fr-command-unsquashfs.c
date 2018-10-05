@@ -31,7 +31,13 @@
 #include "fr-command-unsquashfs.h"
 
 
-G_DEFINE_TYPE (FrCommandUnsquashfs, fr_command_unsquashfs, FR_TYPE_COMMAND)
+struct _FrCommandUnsquashfs
+{
+	FrCommand  parent_instance;
+};
+
+
+G_DEFINE_TYPE (FrCommandUnsquashfs, fr_command_unsquashfs, fr_command_get_type ())
 
 typedef struct {
         FrCommand *command;

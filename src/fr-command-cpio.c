@@ -31,7 +31,14 @@
 #include "fr-command-cpio.h"
 
 
-G_DEFINE_TYPE (FrCommandCpio, fr_command_cpio, FR_TYPE_COMMAND)
+struct _FrCommandCpio
+{
+	FrCommand  parent_instance;
+	gboolean   is_empty;
+};
+
+
+G_DEFINE_TYPE (FrCommandCpio, fr_command_cpio, fr_command_get_type ())
 
 
 /* -- list -- */

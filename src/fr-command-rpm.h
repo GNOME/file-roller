@@ -22,31 +22,8 @@
 #ifndef FR_COMMAND_RPM_H
 #define FR_COMMAND_RPM_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_RPM            (fr_command_rpm_get_type ())
-#define FR_COMMAND_RPM(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_RPM, FrCommandRpm))
-#define FR_COMMAND_RPM_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_RPM, FrCommandRpmClass))
-#define FR_IS_COMMAND_RPM(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_RPM))
-#define FR_IS_COMMAND_RPM_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_RPM))
-#define FR_COMMAND_RPM_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_RPM, FrCommandRpmClass))
-
-typedef struct _FrCommandRpm       FrCommandRpm;
-typedef struct _FrCommandRpmClass  FrCommandRpmClass;
-
-struct _FrCommandRpm
-{
-	FrCommand  __parent;
-	gboolean   is_empty;
-};
-
-struct _FrCommandRpmClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_rpm_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandRpm, fr_command_rpm, FR, COMMAND_RPM, FrCommand)
 
 #endif /* FR_COMMAND_RPM_H */

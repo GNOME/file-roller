@@ -22,30 +22,8 @@
 #ifndef FR_COMMAND_UNSQUASHFS_H
 #define FR_COMMAND_UNSQUASHFS_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_UNSQUASHFS            (fr_command_unsquashfs_get_type ())
-#define FR_COMMAND_UNSQUASHFS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_UNSQUASHFS, FrCommandUnsquashfs))
-#define FR_COMMAND_UNSQUASHFS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_UNSQUASHFS, FrCommandUnsquashfsClass))
-#define FR_IS_COMMAND_UNSQUASHFS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_UNSQUASHFS))
-#define FR_IS_COMMAND_UNSQUASHFS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_UNSQUASHFS))
-#define FR_COMMAND_UNSQUASHFS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_UNSQUASHFS, FrCommandUnsquashfsClass))
-
-typedef struct _FrCommandUnsquashfs       FrCommandUnsquashfs;
-typedef struct _FrCommandUnsquashfsClass  FrCommandUnsquashfsClass;
-
-struct _FrCommandUnsquashfs
-{
-	FrCommand  __parent;
-};
-
-struct _FrCommandUnsquashfsClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_unsquashfs_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandUnsquashfs, fr_command_unsquashfs, FR, COMMAND_UNSQUASHFS, FrCommand)
 
 #endif /* FR_COMMAND_UNSQUASHFS_H */

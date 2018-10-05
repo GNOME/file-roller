@@ -31,7 +31,18 @@
 #include "fr-command-arj.h"
 
 
-G_DEFINE_TYPE (FrCommandArj, fr_command_arj, FR_TYPE_COMMAND)
+struct _FrCommandArj
+{
+	FrCommand parent_instance;
+
+	gboolean  list_started;
+	int       line_no;
+	FileData *fdata;
+	GRegex   *filename_line_regex;
+};
+
+
+G_DEFINE_TYPE (FrCommandArj, fr_command_arj, fr_command_get_type ())
 
 
 /* -- list -- */

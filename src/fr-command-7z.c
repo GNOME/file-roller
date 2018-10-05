@@ -34,7 +34,16 @@
 #include "rar-utils.h"
 
 
-G_DEFINE_TYPE (FrCommand7z, fr_command_7z, FR_TYPE_COMMAND)
+struct _FrCommand7z
+{
+	FrCommand  parent_instance;
+	gboolean   list_started;
+	gboolean   old_style;
+	FileData  *fdata;
+};
+
+
+G_DEFINE_TYPE (FrCommand7z, fr_command_7z, fr_command_get_type ())
 
 
 /* -- list -- */

@@ -22,34 +22,8 @@
 #ifndef FR_COMMAND_UNSTUFF_H
 #define FR_COMMAND_UNSTUFF_H
 
-#include <glib.h>
-#include "file-data.h"
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_UNSTUFF            (fr_command_unstuff_get_type ())
-#define FR_COMMAND_UNSTUFF(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuff))
-#define FR_COMMAND_UNSTUFF_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuffClass))
-#define FR_IS_COMMAND_UNSTUFF(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_UNSTUFF))
-#define FR_IS_COMMAND_UNSTUFF_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_UNSTUFF))
-#define FR_COMMAND_UNSTUFF_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_UNSTUFF, FrCommandUnstuffClass))
-
-typedef struct _FrCommandUnstuff       FrCommandUnstuff;
-typedef struct _FrCommandUnstuffClass  FrCommandUnstuffClass;
-
-struct _FrCommandUnstuff
-{
-	FrCommand  __parent;
-
-	char      *target_dir;
-	FileData  *fdata;
-};
-
-struct _FrCommandUnstuffClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_unstuff_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandUnstuff, fr_command_unstuff, FR, COMMAND_UNSTUFF, FrCommand)
 
 #endif /* FR_COMMAND_UNSTUFF_H */

@@ -22,31 +22,8 @@
 #ifndef FR_COMMAND_ZOO_H
 #define FR_COMMAND_ZOO_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
-#include "typedefs.h"
 
-#define FR_TYPE_COMMAND_ZOO            (fr_command_zoo_get_type ())
-#define FR_COMMAND_ZOO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ZOO, FrCommandZoo))
-#define FR_COMMAND_ZOO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ZOO, FrCommandZooClass))
-#define FR_IS_COMMAND_ZOO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_ZOO))
-#define FR_IS_COMMAND_ZOO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ZOO))
-#define FR_COMMAND_ZOO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ZOO, FrCommandZooClass))
-
-typedef struct _FrCommandZoo       FrCommandZoo;
-typedef struct _FrCommandZooClass  FrCommandZooClass;
-
-struct _FrCommandZoo
-{
-	FrCommand  __parent;
-};
-
-struct _FrCommandZooClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_zoo_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandZoo, fr_command_zoo, FR, COMMAND_ZOO, FrCommand)
 
 #endif /* FR_COMMAND_ZOO_H */

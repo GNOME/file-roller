@@ -31,7 +31,16 @@
 #include "fr-command-ace.h"
 
 
-G_DEFINE_TYPE (FrCommandAce, fr_command_ace, FR_TYPE_COMMAND)
+struct _FrCommandAce
+{
+	FrCommand    parent_instance;
+
+	gboolean     list_started;
+	FrAceCommand command_type;
+};
+
+
+G_DEFINE_TYPE (FrCommandAce, fr_command_ace, fr_command_get_type ())
 
 /* -- list -- */
 

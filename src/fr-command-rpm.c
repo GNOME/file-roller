@@ -31,7 +31,14 @@
 #include "fr-command-rpm.h"
 
 
-G_DEFINE_TYPE (FrCommandRpm, fr_command_rpm, FR_TYPE_COMMAND)
+struct _FrCommandRpm
+{
+	FrCommand  parent_instance;
+	gboolean   is_empty;
+};
+
+
+G_DEFINE_TYPE (FrCommandRpm, fr_command_rpm, fr_command_get_type ())
 
 
 /* -- list -- */

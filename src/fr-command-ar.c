@@ -31,7 +31,13 @@
 #include "glib-utils.h"
 
 
-G_DEFINE_TYPE (FrCommandAr, fr_command_ar, FR_TYPE_COMMAND)
+struct _FrCommandAr
+{
+	FrCommand  parent_instance;
+};
+
+
+G_DEFINE_TYPE (FrCommandAr, fr_command_ar, fr_command_get_type ())
 
 
 /* -- list -- */

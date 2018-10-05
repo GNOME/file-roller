@@ -22,30 +22,8 @@
 #ifndef FR_COMMAND_AR_H
 #define FR_COMMAND_AR_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_AR            (fr_command_ar_get_type ())
-#define FR_COMMAND_AR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_AR, FrCommandAr))
-#define FR_COMMAND_AR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_AR, FrCommandArClass))
-#define FR_IS_COMMAND_AR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_AR))
-#define FR_IS_COMMAND_AR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_AR))
-#define FR_COMMAND_AR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_AR, FrCommandArClass))
-
-typedef struct _FrCommandAr       FrCommandAr;
-typedef struct _FrCommandArClass  FrCommandArClass;
-
-struct _FrCommandAr
-{
-	FrCommand  __parent;
-};
-
-struct _FrCommandArClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_ar_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandAr, fr_command_ar, FR, COMMAND_AR, FrCommand)
 
 #endif /* FR_COMMAND_AR_H */

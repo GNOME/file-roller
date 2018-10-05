@@ -22,33 +22,8 @@
 #ifndef FR_COMMAND_7Z_H
 #define FR_COMMAND_7Z_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_7Z            (fr_command_7z_get_type ())
-#define FR_COMMAND_7Z(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_7Z, FrCommand7z))
-#define FR_COMMAND_7Z_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_7Z, FrCommand7zClass))
-#define FR_IS_COMMAND_7Z(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_7Z))
-#define FR_IS_COMMAND_7Z_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_7Z))
-#define FR_COMMAND_7Z_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_7Z, FrCommand7zClass))
-
-typedef struct _FrCommand7z       FrCommand7z;
-typedef struct _FrCommand7zClass  FrCommand7zClass;
-
-struct _FrCommand7z
-{
-	FrCommand __parent;
-	gboolean   list_started;
-	gboolean   old_style;
-	FileData  *fdata;
-};
-
-struct _FrCommand7zClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_7z_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommand7z, fr_command_7z, FR, COMMAND_7Z, FrCommand)
 
 #endif /* FR_COMMAND_7Z_H */

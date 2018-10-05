@@ -22,35 +22,8 @@
 #ifndef FR_COMMAND_ARJ_H
 #define FR_COMMAND_ARJ_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_ARJ            (fr_command_arj_get_type ())
-#define FR_COMMAND_ARJ(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ARJ, FrCommandArj))
-#define FR_COMMAND_ARJ_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ARJ, FrCommandArjClass))
-#define FR_IS_COMMAND_ARJ(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_ARJ))
-#define FR_IS_COMMAND_ARJ_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ARJ))
-#define FR_COMMAND_ARJ_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ARJ, FrCommandArjClass))
-
-typedef struct _FrCommandArj       FrCommandArj;
-typedef struct _FrCommandArjClass  FrCommandArjClass;
-
-struct _FrCommandArj
-{
-	FrCommand  __parent;
-
-	gboolean  list_started;
-	int       line_no;
-	FileData *fdata;
-	GRegex   *filename_line_regex;
-};
-
-struct _FrCommandArjClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_arj_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandArj, fr_command_arj, FR, COMMAND_ARJ, FrCommand)
 
 #endif /* FR_COMMAND_ARJ_H */

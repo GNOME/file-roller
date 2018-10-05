@@ -19,7 +19,13 @@
 #include "fr-command-lrzip.h"
 
 
-G_DEFINE_TYPE (FrCommandLrzip, fr_command_lrzip, FR_TYPE_COMMAND)
+struct _FrCommandLrzip
+{
+	FrCommand  parent_instance;
+};
+
+
+G_DEFINE_TYPE (FrCommandLrzip, fr_command_lrzip, fr_command_get_type ())
 
 
 /* -- list -- */

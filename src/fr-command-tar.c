@@ -37,7 +37,19 @@
 #define ACTIVITY_DELAY 20
 
 
-G_DEFINE_TYPE (FrCommandTar, fr_command_tar, FR_TYPE_COMMAND)
+struct _FrCommandTar
+{
+	FrCommand  parent_instance;
+
+	char      *uncomp_filename;
+	gboolean   name_modified;
+	char      *compress_command;
+
+	char      *msg;
+};
+
+
+G_DEFINE_TYPE (FrCommandTar, fr_command_tar, fr_command_get_type ())
 
 
 /* -- list -- */

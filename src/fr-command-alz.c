@@ -32,7 +32,17 @@
 #include "glib-utils.h"
 
 
-G_DEFINE_TYPE (FrCommandAlz, fr_command_alz, FR_TYPE_COMMAND)
+struct _FrCommandAlz
+{
+	FrCommand  parent_instance;
+
+	gboolean   extract_none;
+	gboolean   invalid_password;
+	gboolean   list_started;
+};
+
+
+G_DEFINE_TYPE (FrCommandAlz, fr_command_alz, fr_command_get_type ())
 
 
 /* -- list -- */

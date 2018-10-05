@@ -363,31 +363,31 @@ register_archives (void)
 	 * format, regardless of the registration order. */
 
 #if ENABLE_LIBARCHIVE
-	register_archive (FR_TYPE_ARCHIVE_LIBARCHIVE);
+	register_archive (fr_archive_libarchive_get_type ());
 #endif
 
-	register_archive (FR_TYPE_COMMAND_TAR);
-	register_archive (FR_TYPE_COMMAND_CFILE);
-	register_archive (FR_TYPE_COMMAND_7Z);
-	register_archive (FR_TYPE_COMMAND_DPKG);
+	register_archive (fr_command_tar_get_type ());
+	register_archive (fr_command_cfile_get_type ());
+	register_archive (fr_command_7z_get_type ());
+	register_archive (fr_command_dpkg_get_type ());
 
-	register_archive (FR_TYPE_COMMAND_ACE);
-	register_archive (FR_TYPE_COMMAND_ALZ);
-	register_archive (FR_TYPE_COMMAND_AR);
-	register_archive (FR_TYPE_COMMAND_ARJ);
-	register_archive (FR_TYPE_COMMAND_CPIO);
-	register_archive (FR_TYPE_COMMAND_ISO);
-	register_archive (FR_TYPE_COMMAND_JAR);
-	register_archive (FR_TYPE_COMMAND_LHA);
-	register_archive (FR_TYPE_COMMAND_RAR);
-	register_archive (FR_TYPE_COMMAND_RPM);
-	register_archive (FR_TYPE_COMMAND_UNSQUASHFS);
-	register_archive (FR_TYPE_COMMAND_UNSTUFF);
-	register_archive (FR_TYPE_COMMAND_ZIP);
-	register_archive (FR_TYPE_COMMAND_LRZIP);
-	register_archive (FR_TYPE_COMMAND_ZOO);
+	register_archive (fr_command_ace_get_type ());
+	register_archive (fr_command_alz_get_type ());
+	register_archive (fr_command_ar_get_type ());
+	register_archive (fr_command_arj_get_type ());
+	register_archive (fr_command_cpio_get_type ());
+	register_archive (fr_command_iso_get_type ());
+	register_archive (fr_command_jar_get_type ());
+	register_archive (fr_command_lha_get_type ());
+	register_archive (fr_command_rar_get_type ());
+	register_archive (fr_command_rpm_get_type ());
+	register_archive (fr_command_unsquashfs_get_type ());
+	register_archive (fr_command_unstuff_get_type ());
+	register_archive (fr_command_zip_get_type ());
+	register_archive (fr_command_lrzip_get_type ());
+	register_archive (fr_command_zoo_get_type ());
 #if HAVE_JSON_GLIB
-	register_archive (FR_TYPE_COMMAND_UNARCHIVER);
+	register_archive (fr_command_unarchiver_get_type ());
 #endif
 }
 

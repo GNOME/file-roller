@@ -22,31 +22,8 @@
 #ifndef FR_COMMAND_CPIO_H
 #define FR_COMMAND_CPIO_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_CPIO            (fr_command_cpio_get_type ())
-#define FR_COMMAND_CPIO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_CPIO, FrCommandCpio))
-#define FR_COMMAND_CPIO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_CPIO, FrCommandCpioClass))
-#define FR_IS_COMMAND_CPIO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_CPIO))
-#define FR_IS_COMMAND_CPIO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_CPIO))
-#define FR_COMMAND_CPIO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_CPIO, FrCommandCpioClass))
-
-typedef struct _FrCommandCpio       FrCommandCpio;
-typedef struct _FrCommandCpioClass  FrCommandCpioClass;
-
-struct _FrCommandCpio
-{
-	FrCommand  __parent;
-	gboolean   is_empty;
-};
-
-struct _FrCommandCpioClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_cpio_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandCpio, fr_command_cpio, FR, COMMAND_CPIO, FrCommand)
 
 #endif /* FR_COMMAND_CPIO_H */
