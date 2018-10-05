@@ -22,31 +22,13 @@
 #ifndef FR_COMMAND_ZIP_H
 #define FR_COMMAND_ZIP_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_ZIP            (fr_command_zip_get_type ())
-#define FR_COMMAND_ZIP(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_ZIP, FrCommandZip))
-#define FR_COMMAND_ZIP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_ZIP, FrCommandZipClass))
-#define FR_IS_COMMAND_ZIP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_ZIP))
-#define FR_IS_COMMAND_ZIP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_ZIP))
-#define FR_COMMAND_ZIP_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_ZIP, FrCommandZipClass))
-
-typedef struct _FrCommandZip       FrCommandZip;
-typedef struct _FrCommandZipClass  FrCommandZipClass;
-
-struct _FrCommandZip
-{
-	FrCommand  __parent;
-	gboolean   is_empty;
-};
+G_DECLARE_DERIVABLE_TYPE (FrCommandZip, fr_command_zip, FR, COMMAND_ZIP, FrCommand)
 
 struct _FrCommandZipClass
 {
-	FrCommandClass __parent_class;
+	FrCommandClass parent_class;
 };
-
-GType fr_command_zip_get_type (void);
 
 #endif /* FR_COMMAND_ZIP_H */

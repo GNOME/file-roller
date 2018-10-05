@@ -34,7 +34,13 @@
 #define ZIP_SPECIAL_CHARACTERS "[]*?!^-\\"
 
 
-G_DEFINE_TYPE (FrCommandZip, fr_command_zip, FR_TYPE_COMMAND)
+typedef struct
+{
+	gboolean   is_empty;
+} FrCommandZipPrivate;
+
+
+G_DEFINE_TYPE_WITH_PRIVATE (FrCommandZip, fr_command_zip, fr_command_get_type ())
 
 
 /* -- list -- */
@@ -88,17 +94,18 @@ static void
 list__process_line (char     *line,
 		    gpointer  data)
 {
-	FileData    *fdata;
-	FrCommand   *comm = FR_COMMAND (data);
-	char       **fields;
-	const char  *name_field;
-	gint         line_l;
+	FrCommandZip        *comm = data;
+	FrCommandZipPrivate *priv = fr_command_zip_get_instance_private (comm);
+	FileData            *fdata;
+	char               **fields;
+	const char          *name_field;
+	gint                 line_l;
 
 	g_return_if_fail (line != NULL);
 
 	/* check whether unzip gave the empty archive warning. */
 
-	if (FR_COMMAND_ZIP (comm)->is_empty)
+	if (priv->is_empty)
 		return;
 
 	line_l = strlen (line);
@@ -107,7 +114,7 @@ list__process_line (char     *line,
 		return;
 
 	if (strcmp (line, EMPTY_ARCHIVE_WARNING) == 0) {
-		FR_COMMAND_ZIP (comm)->is_empty = TRUE;
+		priv->is_empty = TRUE;
 		return;
 	}
 
@@ -168,9 +175,10 @@ add_password_arg (FrCommand  *comm,
 static void
 list__begin (gpointer data)
 {
-	FrCommandZip *comm = data;
+	FrCommandZip        *comm = data;
+	FrCommandZipPrivate *priv = fr_command_zip_get_instance_private (comm);
 
-	comm->is_empty = FALSE;
+	priv->is_empty = FALSE;
 }
 
 
@@ -467,7 +475,8 @@ fr_command_zip_class_init (FrCommandZipClass *klass)
 static void
 fr_command_zip_init (FrCommandZip *self)
 {
-	FrArchive *base = FR_ARCHIVE (self);
+	FrCommandZipPrivate *priv = fr_command_zip_get_instance_private (self);
+	FrArchive           *base = FR_ARCHIVE (self);
 
 	base->propAddCanUpdate             = TRUE;
 	base->propAddCanReplace            = TRUE;
@@ -479,5 +488,5 @@ fr_command_zip_init (FrCommandZip *self)
 	base->propPassword                 = TRUE;
 	base->propTest                     = TRUE;
 
-	self->is_empty = FALSE;
+	priv->is_empty = FALSE;
 }

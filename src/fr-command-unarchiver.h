@@ -22,34 +22,8 @@
 #ifndef FR_COMMAND_UNARCHIVER_H
 #define FR_COMMAND_UNARCHIVER_H
 
-#include <glib.h>
-#include "file-data.h"
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_UNARCHIVER            (fr_command_unarchiver_get_type ())
-#define FR_COMMAND_UNARCHIVER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_UNARCHIVER, FrCommandUnarchiver))
-#define FR_COMMAND_UNARCHIVER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_UNARCHIVER, FrCommandUnarchiverClass))
-#define FR_IS_COMMAND_UNARCHIVER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_UNARCHIVER))
-#define FR_IS_COMMAND_UNARCHIVER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_UNARCHIVER))
-#define FR_COMMAND_UNARCHIVER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_UNARCHIVER, FrCommandUnarchiverClass))
-
-typedef struct _FrCommandUnarchiver       FrCommandUnarchiver;
-typedef struct _FrCommandUnarchiverClass  FrCommandUnarchiverClass;
-
-struct _FrCommandUnarchiver
-{
-	FrCommand  __parent;
-
-	GInputStream *stream;
-	int           n_line;
-};
-
-struct _FrCommandUnarchiverClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_unarchiver_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandUnarchiver, fr_command_unarchiver, FR, COMMAND_UNARCHIVER, FrCommand)
 
 #endif /* FR_COMMAND_UNARCHIVER_H */

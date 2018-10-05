@@ -31,7 +31,13 @@
 #include "fr-command-zoo.h"
 
 
-G_DEFINE_TYPE (FrCommandZoo, fr_command_zoo, FR_TYPE_COMMAND)
+struct _FrCommandZoo
+{
+	FrCommand  parent_instance;
+};
+
+
+G_DEFINE_TYPE (FrCommandZoo, fr_command_zoo, fr_command_get_type ())
 
 
 /* -- list -- */

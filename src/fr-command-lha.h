@@ -22,30 +22,8 @@
 #ifndef FR_COMMAND_LHA_H
 #define FR_COMMAND_LHA_H
 
-#include <glib.h>
 #include "fr-command.h"
-#include "fr-process.h"
 
-#define FR_TYPE_COMMAND_LHA            (fr_command_lha_get_type ())
-#define FR_COMMAND_LHA(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_LHA, FrCommandLha))
-#define FR_COMMAND_LHA_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_LHA, FrCommandLhaClass))
-#define FR_IS_COMMAND_LHA(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_LHA))
-#define FR_IS_COMMAND_LHA_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_LHA))
-#define FR_COMMAND_LHA_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_LHA, FrCommandLhaClass))
-
-typedef struct _FrCommandLha       FrCommandLha;
-typedef struct _FrCommandLhaClass  FrCommandLhaClass;
-
-struct _FrCommandLha
-{
-	FrCommand  __parent;
-};
-
-struct _FrCommandLhaClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_lha_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandLha, fr_command_lha, FR, COMMAND_LHA, FrCommand)
 
 #endif /* FR_COMMAND_LHA_H */

@@ -31,7 +31,14 @@
 #include "fr-command-dpkg.h"
 
 
-G_DEFINE_TYPE (FrCommandDpkg, fr_command_dpkg, FR_TYPE_COMMAND)
+struct _FrCommandDpkg
+{
+	FrCommand  parent_instance;
+	gboolean   is_empty;
+};
+
+
+G_DEFINE_TYPE (FrCommandDpkg, fr_command_dpkg, fr_command_get_type ())
 
 
 static void

@@ -42,7 +42,15 @@
 #define UNARCHIVER_SPECIAL_CHARACTERS "["
 
 
-G_DEFINE_TYPE (FrCommandUnarchiver, fr_command_unarchiver, FR_TYPE_COMMAND)
+struct _FrCommandUnarchiver
+{
+	FrCommand     parent_instance;
+	GInputStream *stream;
+	int           n_line;
+};
+
+
+G_DEFINE_TYPE (FrCommandUnarchiver, fr_command_unarchiver, fr_command_get_type ())
 
 
 /* -- list -- */

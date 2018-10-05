@@ -34,7 +34,15 @@
 #include "fr-command-cfile.h"
 
 
-G_DEFINE_TYPE (FrCommandCFile, fr_command_cfile, FR_TYPE_COMMAND)
+struct _FrCommandCFile
+{
+	FrCommand  parent_instance;
+
+	FrError    error;
+};
+
+
+G_DEFINE_TYPE (FrCommandCFile, fr_command_cfile, fr_command_get_type ())
 
 
 static char *

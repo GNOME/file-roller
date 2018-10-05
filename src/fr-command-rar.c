@@ -36,7 +36,19 @@
 #include "rar-utils.h"
 
 
-G_DEFINE_TYPE (FrCommandRar, fr_command_rar, FR_TYPE_COMMAND)
+struct _FrCommandRar
+{
+	FrCommand  parent_instance;
+
+	gboolean   list_started;
+	gboolean   rar4_odd_line;
+	gboolean   rar5;
+	gboolean   rar5_30;
+	FileData  *fdata;
+};
+
+
+G_DEFINE_TYPE (FrCommandRar, fr_command_rar, fr_command_get_type ())
 
 
 static gboolean

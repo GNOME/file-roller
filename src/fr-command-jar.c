@@ -32,7 +32,13 @@
 #include "java-utils.h"
 
 
-G_DEFINE_TYPE (FrCommandJar, fr_command_jar, FR_TYPE_COMMAND_ZIP)
+struct _FrCommandJar
+{
+	FrCommandZip  parent_instance;
+};
+
+
+G_DEFINE_TYPE (FrCommandJar, fr_command_jar, fr_command_zip_get_type ())
 
 
 typedef struct {

@@ -31,7 +31,15 @@
 #include "fr-command-iso.h"
 
 
-G_DEFINE_TYPE (FrCommandIso, fr_command_iso, FR_TYPE_COMMAND)
+struct _FrCommandIso
+{
+	FrCommand  parent_instance;
+	char      *cur_path;
+	gboolean   joliet;
+};
+
+
+G_DEFINE_TYPE (FrCommandIso, fr_command_iso, fr_command_get_type ())
 
 
 static time_t

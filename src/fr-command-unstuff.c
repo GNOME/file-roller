@@ -32,7 +32,16 @@
 #include "glib-utils.h"
 
 
-G_DEFINE_TYPE (FrCommandUnstuff, fr_command_unstuff, FR_TYPE_COMMAND)
+struct _FrCommandUnstuff
+{
+	FrCommand  parent_instance;
+
+	char      *target_dir;
+	FileData  *fdata;
+};
+
+
+G_DEFINE_TYPE (FrCommandUnstuff, fr_command_unstuff, fr_command_get_type ())
 
 
 /* recursive rmdir to remove the left-overs from unstuff */

@@ -31,7 +31,13 @@
 #include "fr-command-lha.h"
 
 
-G_DEFINE_TYPE (FrCommandLha, fr_command_lha, FR_TYPE_COMMAND)
+struct _FrCommandLha
+{
+	FrCommand  parent_instance;
+};
+
+
+G_DEFINE_TYPE (FrCommandLha, fr_command_lha, fr_command_get_type ())
 
 
 /* -- list -- */

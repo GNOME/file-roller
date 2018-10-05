@@ -22,34 +22,8 @@
 #ifndef FR_COMMAND_CFILE_H
 #define FR_COMMAND_CFILE_H
 
-#include <gtk/gtk.h>
 #include "fr-command.h"
-#include "typedefs.h"
 
-#define FR_TYPE_COMMAND_CFILE            (fr_command_cfile_get_type ())
-#define FR_COMMAND_CFILE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_COMMAND_CFILE, FrCommandCFile))
-#define FR_COMMAND_CFILE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_COMMAND_CFILE, FrCommandCFileClass))
-#define FR_IS_COMMAND_CFILE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_COMMAND_CFILE))
-#define FR_IS_COMMAND_CFILE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_COMMAND_CFILE))
-#define FR_COMMAND_CFILE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_COMMAND_CFILE, FrCommandCFileClass))
-
-typedef struct _FrCommandCFile       FrCommandCFile;
-typedef struct _FrCommandCFileClass  FrCommandCFileClass;
-
-struct _FrCommandCFile
-{
-	FrCommand  __parent;
-
-	/*<private>*/
-
-	FrError error;
-};
-
-struct _FrCommandCFileClass
-{
-	FrCommandClass __parent_class;
-};
-
-GType fr_command_cfile_get_type (void);
+G_DECLARE_FINAL_TYPE (FrCommandCFile, fr_command_cfile, FR, COMMAND_CFILE, FrCommand)
 
 #endif /* FR_COMMAND_CFILE_H */

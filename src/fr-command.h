@@ -39,6 +39,8 @@ typedef struct _FrCommand        FrCommand;
 typedef struct _FrCommandClass   FrCommandClass;
 typedef struct _FrCommandPrivate FrCommandPrivate;
 
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (FrCommand, g_object_unref)
+
 struct _FrCommand {
 	FrArchive  __parent;
 	FrCommandPrivate *priv;
