@@ -32,12 +32,13 @@
 #include "preferences.h"
 
 
-#define GET_WIDGET(x)		(_gtk_builder_get_widget (self->priv->builder, (x)))
+#define GET_WIDGET(x)		(_gtk_builder_get_widget (self->builder, (x)))
 #define MEGABYTE		(1024 * 1024)
 #define ARCHIVE_ICON_SIZE	48
 
 
-struct _FrNewArchiveDialogPrivate {
+struct _FrNewArchiveDialog {
+	GtkDialog   parent_instance;
 	GSettings  *settings;
 	GtkBuilder *builder;
 	int        *supported_types;
@@ -60,11 +61,11 @@ fr_new_archive_dialog_finalize (GObject *object)
 
 	self = FR_NEW_ARCHIVE_DIALOG (object);
 
-	_g_object_list_unref (self->priv->files_to_add);
-	_g_object_unref (self->priv->original_file);
-	g_object_unref (self->priv->settings);
-	g_object_unref (self->priv->builder);
-	g_hash_table_unref (self->priv->supported_ext);
+	_g_object_list_unref (self->files_to_add);
+	_g_object_unref (self->original_file);
+	g_object_unref (self->settings);
+	g_object_unref (self->builder);
+	g_hash_table_unref (self->supported_ext);
 
 	G_OBJECT_CLASS (fr_new_archive_dialog_parent_class)->finalize (object);
 }
@@ -73,7 +74,7 @@ fr_new_archive_dialog_finalize (GObject *object)
 static int
 get_selected_format (FrNewArchiveDialog *self)
 {
-	return self->priv->supported_types[gtk_combo_box_get_active (GTK_COMBO_BOX (GET_WIDGET ("extension_comboboxtext")))];
+	return self->supported_types[gtk_combo_box_get_active (GTK_COMBO_BOX (GET_WIDGET ("extension_comboboxtext")))];
 }
 
 
@@ -85,11 +86,11 @@ fr_new_archive_dialog_unmap (GtkWidget *widget)
 
 	self = FR_NEW_ARCHIVE_DIALOG (widget);
 
-	g_settings_set_boolean (self->priv->settings, PREF_NEW_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton"))));
-	g_settings_set_int (self->priv->settings, PREF_NEW_VOLUME_SIZE, gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton"))) * MEGABYTE);
+	g_settings_set_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton"))));
+	g_settings_set_int (self->settings, PREF_NEW_VOLUME_SIZE, gtk_spin_button_get_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton"))) * MEGABYTE);
 
 	n_format = get_selected_format (self);
-	g_settings_set_string (self->priv->settings, PREF_NEW_DEFAULT_EXTENSION, mime_type_desc[n_format].default_ext);
+	g_settings_set_string (self->settings, PREF_NEW_DEFAULT_EXTENSION, mime_type_desc[n_format].default_ext);
 
 	GTK_WIDGET_CLASS (fr_new_archive_dialog_parent_class)->unmap (widget);
 }
@@ -100,8 +101,6 @@ fr_new_archive_dialog_class_init (FrNewArchiveDialogClass *klass)
 {
 	GObjectClass   *object_class;
 	GtkWidgetClass *widget_class;
-
-	g_type_class_add_private (klass, sizeof (FrNewArchiveDialogPrivate));
 
 	object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = fr_new_archive_dialog_finalize;
@@ -114,12 +113,11 @@ fr_new_archive_dialog_class_init (FrNewArchiveDialogClass *klass)
 static void
 fr_new_archive_dialog_init (FrNewArchiveDialog *self)
 {
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_NEW_ARCHIVE_DIALOG, FrNewArchiveDialogPrivate);
-	self->priv->settings = g_settings_new (FILE_ROLLER_SCHEMA_NEW);
-	self->priv->builder = NULL;
-	self->priv->supported_ext = g_hash_table_new (g_str_hash, g_str_equal);
-	self->priv->original_file = NULL;
-	self->priv->files_to_add = NULL;
+	self->settings = g_settings_new (FILE_ROLLER_SCHEMA_NEW);
+	self->builder = NULL;
+	self->supported_ext = g_hash_table_new (g_str_hash, g_str_equal);
+	self->original_file = NULL;
+	self->files_to_add = NULL;
 }
 
 
@@ -127,9 +125,9 @@ static void
 _fr_new_archive_dialog_update_sensitivity (FrNewArchiveDialog *self)
 {
 	gtk_widget_set_sensitive (gtk_dialog_get_widget_for_response (GTK_DIALOG (self), GTK_RESPONSE_OK), ! _g_utf8_all_spaces (gtk_entry_get_text (GTK_ENTRY (GET_WIDGET ("filename_entry")))));
-	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), ! self->priv->can_encrypt_header);
-	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->priv->can_encrypt_header);
-	gtk_widget_set_sensitive (GET_WIDGET ("volume_spinbutton"), ! self->priv->can_create_volumes || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("volume_checkbutton"))));
+	gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")), ! self->can_encrypt_header);
+	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->can_encrypt_header);
+	gtk_widget_set_sensitive (GET_WIDGET ("volume_spinbutton"), ! self->can_create_volumes || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("volume_checkbutton"))));
 }
 
 
@@ -158,15 +156,15 @@ extension_comboboxtext_changed_cb (GtkComboBox *combo_box,
 
 	n_format = get_selected_format (self);
 
-	self->priv->can_encrypt = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT;
-	gtk_widget_set_sensitive (GET_WIDGET ("password_entry"), self->priv->can_encrypt);
-	gtk_widget_set_sensitive (GET_WIDGET ("password_label"), self->priv->can_encrypt);
+	self->can_encrypt = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT;
+	gtk_widget_set_sensitive (GET_WIDGET ("password_entry"), self->can_encrypt);
+	gtk_widget_set_sensitive (GET_WIDGET ("password_label"), self->can_encrypt);
 
-	self->priv->can_encrypt_header = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER;
-	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->priv->can_encrypt_header);
+	self->can_encrypt_header = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_ENCRYPT_HEADER;
+	gtk_widget_set_sensitive (GET_WIDGET ("encrypt_header_checkbutton"), self->can_encrypt_header);
 
-	self->priv->can_create_volumes = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES;
-	gtk_widget_set_sensitive (GET_WIDGET ("volume_box"), self->priv->can_create_volumes);
+	self->can_create_volumes = mime_type_desc[n_format].capabilities & FR_ARCHIVE_CAN_CREATE_VOLUMES;
+	gtk_widget_set_sensitive (GET_WIDGET ("volume_box"), self->can_create_volumes);
 
 	_fr_new_archive_dialog_update_sensitivity (self);
 }
@@ -207,33 +205,33 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	gtk_window_set_resizable (GTK_WINDOW (self), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
 
-	self->priv->builder = _gtk_builder_new_from_resource ("new-archive-dialog.ui");
-	if (self->priv->builder == NULL)
+	self->builder = _gtk_builder_new_from_resource ("new-archive-dialog.ui");
+	if (self->builder == NULL)
 		return;
 
-	_g_object_unref (self->priv->original_file);
-	self->priv->original_file = _g_object_ref (original_file);
+	_g_object_unref (self->original_file);
+	self->original_file = _g_object_ref (original_file);
 
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"));
 
 	gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL);
 	switch (action) {
 	case FR_NEW_ARCHIVE_ACTION_NEW_MANY_FILES:
-		self->priv->supported_types = create_type;
+		self->supported_types = create_type;
 		gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CREATE_ARCHIVE, GTK_RESPONSE_OK);
 		break;
 	case FR_NEW_ARCHIVE_ACTION_NEW_SINGLE_FILE:
-		self->priv->supported_types = single_file_save_type;
+		self->supported_types = single_file_save_type;
 		gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_CREATE_ARCHIVE, GTK_RESPONSE_OK);
 		break;
 	case FR_NEW_ARCHIVE_ACTION_SAVE_AS:
-		self->priv->supported_types = save_type;
+		self->supported_types = save_type;
 		gtk_dialog_add_button (GTK_DIALOG (self), _GTK_LABEL_SAVE, GTK_RESPONSE_OK);
 		break;
 	}
 	gtk_dialog_set_default_response (GTK_DIALOG (self), GTK_RESPONSE_OK);
 
-	sort_mime_types_by_extension (self->priv->supported_types);
+	sort_mime_types_by_extension (self->supported_types);
 
 	/* Set widgets data. */
 
@@ -255,18 +253,18 @@ _fr_new_archive_dialog_construct (FrNewArchiveDialog *self,
 	gtk_expander_set_expanded (GTK_EXPANDER (GET_WIDGET ("other_options_expander")), FALSE);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (GET_WIDGET ("encrypt_header_checkbutton")),
-				      g_settings_get_boolean (self->priv->settings, PREF_NEW_ENCRYPT_HEADER));
+				      g_settings_get_boolean (self->settings, PREF_NEW_ENCRYPT_HEADER));
 
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (GET_WIDGET ("volume_spinbutton")),
-				   (double) g_settings_get_int (self->priv->settings, PREF_NEW_VOLUME_SIZE) / MEGABYTE);
+				   (double) g_settings_get_int (self->settings, PREF_NEW_VOLUME_SIZE) / MEGABYTE);
 
-	active_extension = g_settings_get_string (self->priv->settings, PREF_NEW_DEFAULT_EXTENSION);
+	active_extension = g_settings_get_string (self->settings, PREF_NEW_DEFAULT_EXTENSION);
 	active_extension_idx = 0;
-	for (i = 0; self->priv->supported_types[i] != -1; i++) {
-		if (strcmp (active_extension, mime_type_desc[self->priv->supported_types[i]].default_ext) == 0)
+	for (i = 0; self->supported_types[i] != -1; i++) {
+		if (strcmp (active_extension, mime_type_desc[self->supported_types[i]].default_ext) == 0)
 			active_extension_idx = i;
 		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (GET_WIDGET ("extension_comboboxtext")),
-					        mime_type_desc[self->priv->supported_types[i]].default_ext);
+					        mime_type_desc[self->supported_types[i]].default_ext);
 	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (GET_WIDGET ("extension_comboboxtext")), active_extension_idx);
 	g_free (active_extension);
@@ -309,7 +307,7 @@ fr_new_archive_dialog_new (const char         *title,
 {
 	FrNewArchiveDialog *self;
 
-	self = g_object_new (FR_TYPE_NEW_ARCHIVE_DIALOG,
+	self = g_object_new (fr_new_archive_dialog_get_type (),
 			     "title", title,
 			     "use-header-bar", _gtk_settings_get_dialogs_use_header (),
 			     NULL);
@@ -323,8 +321,8 @@ void
 fr_new_archive_dialog_set_files_to_add (FrNewArchiveDialog  *self,
 					GList               *file_list /* GFile list */)
 {
-	_g_object_list_unref (self->priv->files_to_add);
-	self->priv->files_to_add = _g_object_list_ref (file_list);
+	_g_object_list_unref (self->files_to_add);
+	self->files_to_add = _g_object_list_ref (file_list);
 }
 
 
@@ -449,7 +447,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 
 	/* check whehter the file is equal to the original file */
 
-	if ((self->priv->original_file != NULL) && (g_file_equal (file, self->priv->original_file))) {
+	if ((self->original_file != NULL) && (g_file_equal (file, self->original_file))) {
 		dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
 						GTK_DIALOG_MODAL,
 						NULL,
@@ -470,7 +468,7 @@ fr_new_archive_dialog_get_file (FrNewArchiveDialog  *self,
 	{
 		GList *scan;
 
-		for (scan = self->priv->files_to_add; scan; scan = scan->next) {
+		for (scan = self->files_to_add; scan; scan = scan->next) {
 			if (_g_file_cmp_uris (G_FILE (scan->data), file) == 0) {
 				dialog = _gtk_error_dialog_new (GTK_WINDOW (self),
 							        GTK_DIALOG_MODAL,

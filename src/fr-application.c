@@ -342,15 +342,16 @@ static const GDBusInterfaceVTable interface_vtable = {
 /* -- main application -- */
 
 
-G_DEFINE_TYPE (FrApplication, fr_application, GTK_TYPE_APPLICATION)
-
-
-struct _FrApplicationPrivate {
-	GDBusNodeInfo *introspection_data;
-	guint          owner_id;
-	GSettings     *listing_settings;
-	GSettings     *ui_settings;
+struct _FrApplication {
+	GtkApplication  parent_instance;
+	GDBusNodeInfo  *introspection_data;
+	guint           owner_id;
+	GSettings      *listing_settings;
+	GSettings      *ui_settings;
 };
+
+
+G_DEFINE_TYPE (FrApplication, fr_application, GTK_TYPE_APPLICATION)
 
 
 static void
@@ -358,12 +359,12 @@ fr_application_finalize (GObject *object)
 {
 	FrApplication *self = FR_APPLICATION (object);
 
-	if (self->priv->introspection_data != NULL)
-		g_dbus_node_info_unref (self->priv->introspection_data);
-	if (self->priv->owner_id != 0)
-		g_bus_unown_name (self->priv->owner_id);
-	_g_object_unref (self->priv->listing_settings);
-	_g_object_unref (self->priv->ui_settings);
+	if (self->introspection_data != NULL)
+		g_dbus_node_info_unref (self->introspection_data);
+	if (self->owner_id != 0)
+		g_bus_unown_name (self->owner_id);
+	_g_object_unref (self->listing_settings);
+	_g_object_unref (self->ui_settings);
 
 	release_data ();
 
@@ -382,7 +383,7 @@ on_bus_acquired_for_archive_manager (GDBusConnection *connection,
 
 	registration_id = g_dbus_connection_register_object (connection,
 							     "/org/gnome/ArchiveManager1",
-							     self->priv->introspection_data->interfaces[0],
+							     self->introspection_data->interfaces[0],
 							     &interface_vtable,
 							     NULL,
 							     NULL,  /* user_data_free_func */
@@ -419,9 +420,9 @@ fr_application_register_archive_manager_service (FrApplication *self)
 	if (g_input_stream_read_all (stream, buffer, size, &bytes_read, NULL, NULL)) {
 		buffer[bytes_read] = '\0';
 
-		self->priv->introspection_data = g_dbus_node_info_new_for_xml ((gchar *) buffer, &error);
-		if (self->priv->introspection_data != NULL) {
-			self->priv->owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
+		self->introspection_data = g_dbus_node_info_new_for_xml ((gchar *) buffer, &error);
+		if (self->introspection_data != NULL) {
+			self->owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
 							 "org.gnome.ArchiveManager1",
 							 G_BUS_NAME_OWNER_FLAGS_NONE,
 							 on_bus_acquired_for_archive_manager,
@@ -708,8 +709,6 @@ fr_application_class_init (FrApplicationClass *klass)
 	GObjectClass      *object_class;
 	GApplicationClass *application_class;
 
-	g_type_class_add_private (klass, sizeof (FrApplicationPrivate));
-
 	object_class = G_OBJECT_CLASS (klass);
 	object_class->finalize = fr_application_finalize;
 
@@ -724,11 +723,10 @@ fr_application_class_init (FrApplicationClass *klass)
 static void
 fr_application_init (FrApplication *self)
 {
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_APPLICATION, FrApplicationPrivate);
-	self->priv->owner_id = 0;
-	self->priv->introspection_data = NULL;
-	self->priv->listing_settings = g_settings_new (FILE_ROLLER_SCHEMA_LISTING);
-	self->priv->ui_settings = g_settings_new (FILE_ROLLER_SCHEMA_UI);
+	self->owner_id = 0;
+	self->introspection_data = NULL;
+	self->listing_settings = g_settings_new (FILE_ROLLER_SCHEMA_LISTING);
+	self->ui_settings = g_settings_new (FILE_ROLLER_SCHEMA_UI);
 }
 
 
@@ -747,9 +745,9 @@ fr_application_get_settings (FrApplication *app,
 			     const char    *schema)
 {
 	if (strcmp (schema, FILE_ROLLER_SCHEMA_LISTING) == 0)
-		return app->priv->listing_settings;
+		return app->listing_settings;
 	else if (strcmp (schema, FILE_ROLLER_SCHEMA_UI) == 0)
-		return app->priv->ui_settings;
+		return app->ui_settings;
 	else
 		return NULL;
 }

@@ -25,27 +25,8 @@
 
 #include <gtk/gtk.h>
 
-#define FR_TYPE_APPLICATION            (fr_application_get_type ())
-#define FR_APPLICATION(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_APPLICATION, FrApplication))
-#define FR_APPLICATION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_APPLICATION, FrApplicationClass))
-#define FR_IS_APPLICATION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_APPLICATION))
-#define FR_IS_APPLICATION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_APPLICATION))
-#define FR_APPLICATION_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_APPLICATION, FrApplicationClass))
+G_DECLARE_FINAL_TYPE (FrApplication, fr_application, FR, APPLICATION, GtkApplication)
 
-typedef struct _FrApplication         FrApplication;
-typedef struct _FrApplicationClass    FrApplicationClass;
-typedef struct _FrApplicationPrivate  FrApplicationPrivate;
-
-struct _FrApplication {
-	GtkApplication __parent;
-	FrApplicationPrivate *priv;
-};
-
-struct _FrApplicationClass {
-	GtkApplicationClass __parent_class;
-};
-
-GType            fr_application_get_type      (void);
 GtkApplication * fr_application_new           (void);
 GSettings *      fr_application_get_settings  (FrApplication *app,
 		     	     	     	       const char    *schema);

@@ -24,22 +24,8 @@
 
 #include <gtk/gtk.h>
 
-#define FR_TYPE_LIST_MODEL            (fr_list_model_get_type ())
-#define FR_LIST_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_LIST_MODEL, FrListModel))
-#define FR_LIST_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_LIST_MODEL, FrListModelClass))
-#define FR_IS_LIST_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_LIST_MODEL))
-#define FR_IS_LIST_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_LIST_MODEL))
-#define FR_LIST_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), FR_TYPE_LIST_MODEL, FrListModelClass))
+G_DECLARE_FINAL_TYPE (FrListModel, fr_list_model, FR, LIST_MODEL, GtkListStore)
 
-typedef struct FrListModel {
-	GtkListStore __parent;
-} FrListModel;
-
-typedef struct FrListModelClass {
-	GtkListStoreClass __parent_class;
-} FrListModelClass;
-
-GType         fr_list_model_get_type (void);
 GtkListStore *fr_list_model_new      (int n_columns, ...);
 
 #endif /* FR_LIST_MODEL_H */
