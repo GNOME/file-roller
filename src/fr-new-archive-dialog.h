@@ -30,27 +30,8 @@ typedef enum {
 	FR_NEW_ARCHIVE_ACTION_SAVE_AS
 } FrNewArchiveAction;
 
-#define FR_TYPE_NEW_ARCHIVE_DIALOG            (fr_new_archive_dialog_get_type ())
-#define FR_NEW_ARCHIVE_DIALOG(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_NEW_ARCHIVE_DIALOG, FrNewArchiveDialog))
-#define FR_NEW_ARCHIVE_DIALOG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_NEW_ARCHIVE_DIALOG, FrNewArchiveDialogClass))
-#define FR_IS_NEW_ARCHIVE_DIALOG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_NEW_ARCHIVE_DIALOG))
-#define FR_IS_NEW_ARCHIVE_DIALOG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_NEW_ARCHIVE_DIALOG))
-#define FR_NEW_ARCHIVE_DIALOG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), FR_TYPE_NEW_ARCHIVE_DIALOG, FrNewArchiveDialogClass))
+G_DECLARE_FINAL_TYPE (FrNewArchiveDialog, fr_new_archive_dialog, FR, NEW_ARCHIVE_DIALOG, GtkDialog)
 
-typedef struct _FrNewArchiveDialog FrNewArchiveDialog;
-typedef struct _FrNewArchiveDialogClass FrNewArchiveDialogClass;
-typedef struct _FrNewArchiveDialogPrivate FrNewArchiveDialogPrivate;
-
-struct _FrNewArchiveDialog {
-	GtkDialog parent_instance;
-	FrNewArchiveDialogPrivate *priv;
-};
-
-struct _FrNewArchiveDialogClass {
-	GtkDialogClass parent_class;
-};
-
-GType           fr_new_archive_dialog_get_type            (void);
 GtkWidget *     fr_new_archive_dialog_new                 (const char          *title,
 							   GtkWindow           *parent,
 							   FrNewArchiveAction   action,

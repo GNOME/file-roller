@@ -24,27 +24,8 @@
 
 #include <gtk/gtk.h>
 
-#define FR_TYPE_FILE_SELECTOR_DIALOG            (fr_file_selector_dialog_get_type ())
-#define FR_FILE_SELECTOR_DIALOG(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialog))
-#define FR_FILE_SELECTOR_DIALOG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialogClass))
-#define FR_IS_FILE_SELECTOR_DIALOG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_FILE_SELECTOR_DIALOG))
-#define FR_IS_FILE_SELECTOR_DIALOG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_FILE_SELECTOR_DIALOG))
-#define FR_FILE_SELECTOR_DIALOG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialogClass))
+G_DECLARE_FINAL_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, FR, FILE_SELECTOR_DIALOG, GtkDialog)
 
-typedef struct _FrFileSelectorDialog FrFileSelectorDialog;
-typedef struct _FrFileSelectorDialogClass FrFileSelectorDialogClass;
-typedef struct _FrFileSelectorDialogPrivate FrFileSelectorDialogPrivate;
-
-struct _FrFileSelectorDialog {
-	GtkDialog parent_instance;
-	FrFileSelectorDialogPrivate *priv;
-};
-
-struct _FrFileSelectorDialogClass {
-	GtkDialogClass parent_class;
-};
-
-GType           fr_file_selector_dialog_get_type            (void);
 GtkWidget *     fr_file_selector_dialog_new                 (const char             *title,
 							     GtkWindow              *parent);
 void            fr_file_selector_dialog_set_extra_widget    (FrFileSelectorDialog   *dialog,

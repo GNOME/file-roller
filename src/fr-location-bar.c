@@ -23,8 +23,8 @@
 #include "fr-location-bar.h"
 
 
-struct _FrLocationBarPrivate {
-	int dummy;
+struct _FrLocationBar {
+       GtkBox parent_instance;
 };
 
 
@@ -64,8 +64,6 @@ fr_location_bar_class_init (FrLocationBarClass *klass)
 {
 	GtkWidgetClass *widget_class;
 
-	g_type_class_add_private (klass, sizeof (FrLocationBarPrivate));
-
 	widget_class = GTK_WIDGET_CLASS (klass);
 	widget_class->draw = fr_location_bar_draw;
 }
@@ -82,9 +80,6 @@ fr_location_bar_init (FrLocationBar *self)
 {
 	GtkStyleContext *style_context;
 	GtkCssProvider  *css_provider;
-
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_LOCATION_BAR, FrLocationBarPrivate);
-	self->priv->dummy = 0;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (self), GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_set_spacing (GTK_BOX (self), 6);
@@ -105,5 +100,5 @@ fr_location_bar_init (FrLocationBar *self)
 GtkWidget *
 fr_location_bar_new (void)
 {
-	return (GtkWidget *) g_object_new (FR_TYPE_LOCATION_BAR, NULL);
+	return (GtkWidget *) g_object_new (fr_location_bar_get_type (), NULL);
 }

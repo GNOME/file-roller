@@ -27,16 +27,13 @@
 #include "gth-icon-cache.h"
 
 
-#define GET_WIDGET(x) (_gtk_builder_get_widget (self->priv->builder, (x)))
+#define GET_WIDGET(x) (_gtk_builder_get_widget (self->builder, (x)))
 #define PREF_FILE_SELECTOR_WINDOW_SIZE "window-size"
 #define PREF_FILE_SELECTOR_SHOW_HIDDEN "show-hidden"
 #define PREF_FILE_SELECTOR_SIDEBAR_SIZE "sidebar-size"
 #define FILE_LIST_LINES 45
 #define FILE_LIST_CHARS 60
 #define SIDEBAR_CHARS   12
-
-
-G_DEFINE_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, GTK_TYPE_DIALOG)
 
 
 enum {
@@ -99,7 +96,8 @@ load_data_free (LoadData *load_data)
 /* -- fr_file_selector_dialog -- */
 
 
-struct _FrFileSelectorDialogPrivate {
+struct _FrFileSelectorDialog {
+	GtkDialog      parent_instance;
 	GtkBuilder    *builder;
 	GtkWidget     *extra_widget;
 	GFile         *current_folder;
@@ -108,6 +106,9 @@ struct _FrFileSelectorDialogPrivate {
 	GSettings     *settings;
 	gboolean       show_hidden;
 };
+
+
+G_DEFINE_TYPE (FrFileSelectorDialog, fr_file_selector_dialog, GTK_TYPE_DIALOG)
 
 
 static void
@@ -119,9 +120,9 @@ fr_file_selector_dialog_finalize (GObject *object)
 
 	g_signal_handlers_disconnect_by_data (g_volume_monitor_get (), self);
 
-	g_object_unref (self->priv->builder);
-	_g_object_unref (self->priv->current_folder);
-	g_object_unref (self->priv->settings);
+	g_object_unref (self->builder);
+	_g_object_unref (self->current_folder);
+	g_object_unref (self->settings);
 
 	G_OBJECT_CLASS (fr_file_selector_dialog_parent_class)->finalize (object);
 }
@@ -133,12 +134,12 @@ set_current_folder (FrFileSelectorDialog *self,
 {
 	char *folder_name;
 
-	if (folder != self->priv->current_folder) {
-		_g_object_unref (self->priv->current_folder);
-		self->priv->current_folder = g_object_ref (folder);
+	if (folder != self->current_folder) {
+		_g_object_unref (self->current_folder);
+		self->current_folder = g_object_ref (folder);
 	}
 
-	if (self->priv->current_folder == NULL)
+	if (self->current_folder == NULL)
 		return;
 
 	folder_name = g_file_get_parse_name (folder);
@@ -205,7 +206,7 @@ fr_file_selector_dialog_get_default_size (FrFileSelectorDialog *self,
 {
 	int width, height;
 
-	g_settings_get (self->priv->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", &width, &height);
+	g_settings_get (self->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", &width, &height);
 	if ((width > 0) && (height > 0)) {
 		*default_width = width;
 		*default_height = height;
@@ -214,7 +215,7 @@ fr_file_selector_dialog_get_default_size (FrFileSelectorDialog *self,
 
 	find_good_window_size_from_style (GTK_WIDGET (self), default_width, default_height);
 
-	if ((self->priv->extra_widget != NULL) && gtk_widget_get_visible (self->priv->extra_widget)) {
+	if ((self->extra_widget != NULL) && gtk_widget_get_visible (self->extra_widget)) {
 		GtkRequisition req;
 
 		gtk_widget_get_preferred_size (GET_WIDGET ("extra_widget_container"),  &req, NULL);
@@ -245,14 +246,14 @@ fr_file_selector_dialog_realize (GtkWidget *widget)
 
 	self = FR_FILE_SELECTOR_DIALOG (widget);
 
-	self->priv->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
+	self->icon_cache = gth_icon_cache_new_for_widget (GTK_WIDGET (self), GTK_ICON_SIZE_MENU);
 	icon = g_content_type_get_icon ("text/plain");
-	gth_icon_cache_set_fallback (self->priv->icon_cache, icon);
+	gth_icon_cache_set_fallback (self->icon_cache, icon);
 	g_object_unref (icon);
 
 	_fr_file_selector_dialog_update_size (self);
 
-	sidebar_size = g_settings_get_int (self->priv->settings, PREF_FILE_SELECTOR_SIDEBAR_SIZE);
+	sidebar_size = g_settings_get_int (self->settings, PREF_FILE_SELECTOR_SIDEBAR_SIZE);
 	if (sidebar_size <= 0)
 		sidebar_size = get_font_size (widget) * SIDEBAR_CHARS;
 	gtk_paned_set_position (GTK_PANED (GET_WIDGET ("main_paned")), sidebar_size);
@@ -266,8 +267,8 @@ fr_file_selector_dialog_unrealize (GtkWidget *widget)
 
 	self = FR_FILE_SELECTOR_DIALOG (widget);
 
-	gth_icon_cache_free (self->priv->icon_cache);
-	self->priv->icon_cache = NULL;
+	gth_icon_cache_free (self->icon_cache);
+	self->icon_cache = NULL;
 
 	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->unrealize (widget);
 }
@@ -283,14 +284,14 @@ fr_file_selector_dialog_unmap (GtkWidget *widget)
 	self = FR_FILE_SELECTOR_DIALOG (widget);
 
 	gtk_window_get_size (GTK_WINDOW (self), &width, &height);
-	g_settings_set (self->priv->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", width, height);
-	g_settings_set_boolean (self->priv->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN, self->priv->show_hidden);
-	g_settings_set_int (self->priv->settings,
+	g_settings_set (self->settings, PREF_FILE_SELECTOR_WINDOW_SIZE, "(ii)", width, height);
+	g_settings_set_boolean (self->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN, self->show_hidden);
+	g_settings_set_int (self->settings,
 			    PREF_FILE_SELECTOR_SIDEBAR_SIZE,
 			    gtk_paned_get_position (GTK_PANED (GET_WIDGET ("main_paned"))));
 
-	if (self->priv->current_operation != NULL)
-		g_cancellable_cancel (self->priv->current_operation->cancellable);
+	if (self->current_operation != NULL)
+		g_cancellable_cancel (self->current_operation->cancellable);
 
 	GTK_WIDGET_CLASS (fr_file_selector_dialog_parent_class)->unmap (widget);
 }
@@ -302,8 +303,6 @@ fr_file_selector_dialog_class_init (FrFileSelectorDialogClass *klass)
 {
 	GObjectClass   *object_class;
 	GtkWidgetClass *widget_class;
-
-	g_type_class_add_private (klass, sizeof (FrFileSelectorDialogPrivate));
 
 	object_class = (GObjectClass*) klass;
 	object_class->finalize = fr_file_selector_dialog_finalize;
@@ -542,10 +541,10 @@ go_up_button_clicked_cb (GtkButton *button,
 	FrFileSelectorDialog *self = user_data;
 	GFile                *parent;
 
-	if (self->priv->current_folder == NULL)
+	if (self->current_folder == NULL)
 		return;
 
-	parent = g_file_get_parent (self->priv->current_folder);
+	parent = g_file_get_parent (self->current_folder);
 	if (parent == NULL)
 		return;
 
@@ -640,7 +639,7 @@ show_hidden_files_menuitem_toggled_cb (GtkCheckMenuItem *checkmenuitem,
 	GFile                *folder;
 	GList                *selected_files;
 
-	self->priv->show_hidden = gtk_check_menu_item_get_active (checkmenuitem);
+	self->show_hidden = gtk_check_menu_item_get_active (checkmenuitem);
 	folder = fr_file_selector_dialog_get_current_folder (self);
 	selected_files = fr_file_selector_dialog_get_selected_files (self);
 	_set_current_folder (self, folder, selected_files);
@@ -653,12 +652,11 @@ show_hidden_files_menuitem_toggled_cb (GtkCheckMenuItem *checkmenuitem,
 static void
 fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 {
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, FR_TYPE_FILE_SELECTOR_DIALOG, FrFileSelectorDialogPrivate);
-	self->priv->current_folder = NULL;
-	self->priv->builder = _gtk_builder_new_from_resource ("file-selector.ui");
-	self->priv->icon_cache = NULL;
-	self->priv->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
-	self->priv->show_hidden = g_settings_get_boolean (self->priv->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN);
+	self->current_folder = NULL;
+	self->builder = _gtk_builder_new_from_resource ("file-selector.ui");
+	self->icon_cache = NULL;
+	self->settings = g_settings_new ("org.gnome.FileRoller.FileSelector");
+	self->show_hidden = g_settings_get_boolean (self->settings, PREF_FILE_SELECTOR_SHOW_HIDDEN);
 
 	gtk_container_set_border_width (GTK_CONTAINER (self), 5);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (self))), GET_WIDGET ("content"), TRUE, TRUE, 0);
@@ -668,7 +666,7 @@ fr_file_selector_dialog_init (FrFileSelectorDialog *self)
 	gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_MODIFIED, files_modified_column_sort_func, self, NULL);
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (GET_WIDGET ("files_liststore")), FILE_LIST_COLUMN_NAME, GTK_SORT_ASCENDING);
 
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (GET_WIDGET ("show_hidden_files_menuitem")), self->priv->show_hidden);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (GET_WIDGET ("show_hidden_files_menuitem")), self->show_hidden);
 
 	g_signal_connect (GET_WIDGET ("is_selected_cellrenderertoggle"),
 			  "toggled",
@@ -712,7 +710,7 @@ GtkWidget *
 fr_file_selector_dialog_new (const char *title,
 			     GtkWindow  *parent)
 {
-	return (GtkWidget *) g_object_new (FR_TYPE_FILE_SELECTOR_DIALOG,
+	return (GtkWidget *) g_object_new (fr_file_selector_dialog_get_type (),
 					   "title", title,
 					   "transient-for", parent,
 					   "use-header-bar", _gtk_settings_get_dialogs_use_header (),
@@ -724,18 +722,18 @@ void
 fr_file_selector_dialog_set_extra_widget (FrFileSelectorDialog *self,
 					  GtkWidget            *extra_widget)
 {
-	if (self->priv->extra_widget != NULL)
-		gtk_container_remove (GTK_CONTAINER (GET_WIDGET ("extra_widget_container")), self->priv->extra_widget);
-	self->priv->extra_widget = extra_widget;
-	if (self->priv->extra_widget != NULL)
-		gtk_container_add (GTK_CONTAINER (GET_WIDGET ("extra_widget_container")), self->priv->extra_widget);
+	if (self->extra_widget != NULL)
+		gtk_container_remove (GTK_CONTAINER (GET_WIDGET ("extra_widget_container")), self->extra_widget);
+	self->extra_widget = extra_widget;
+	if (self->extra_widget != NULL)
+		gtk_container_add (GTK_CONTAINER (GET_WIDGET ("extra_widget_container")), self->extra_widget);
 }
 
 
 GtkWidget *
 fr_file_selector_dialog_get_extra_widget (FrFileSelectorDialog *self)
 {
-	return self->priv->extra_widget;
+	return self->extra_widget;
 }
 
 
@@ -772,8 +770,8 @@ folder_mount_enclosing_volume_ready_cb (GObject      *source_object,
 		if (! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 			_gtk_error_dialog_run (GTK_WINDOW (self), _("Could not load the location"), "%s", error->message);
 
-		if (load_data->dialog->priv->current_operation == load_data)
-			load_data->dialog->priv->current_operation = NULL;
+		if (load_data->dialog->current_operation == load_data)
+			load_data->dialog->current_operation = NULL;
 		load_data_free (load_data);
 
 		return;
@@ -817,8 +815,8 @@ get_folder_content_done_cb (GError   *error,
 		if (! g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 			_gtk_error_dialog_run (GTK_WINDOW (self), _("Could not load the location"), "%s", error->message);
 
-		if (load_data->dialog->priv->current_operation == load_data)
-			load_data->dialog->priv->current_operation = NULL;
+		if (load_data->dialog->current_operation == load_data)
+			load_data->dialog->current_operation = NULL;
 		load_data_free (load_data);
 
 		return;
@@ -847,12 +845,12 @@ get_folder_content_done_cb (GError   *error,
 		char      *collate_key;
 		gboolean   is_folder;
 
-		if (! self->priv->show_hidden && g_file_info_get_is_hidden (file_info->info))
+		if (! self->show_hidden && g_file_info_get_is_hidden (file_info->info))
 			continue;
 
 		gtk_list_store_append (list_store, &iter);
 
-		icon_pixbuf = gth_icon_cache_get_pixbuf (self->priv->icon_cache, g_file_info_get_icon (file_info->info));
+		icon_pixbuf = gth_icon_cache_get_pixbuf (self->icon_cache, g_file_info_get_icon (file_info->info));
 		size = g_format_size (g_file_info_get_size (file_info->info));
 		g_file_info_get_modification_time (file_info->info, &timeval);
 		datetime = g_date_time_new_from_timeval_local (&timeval);
@@ -884,8 +882,8 @@ get_folder_content_done_cb (GError   *error,
 	set_current_folder (self, load_data->folder);
 	_update_sensitivity (self);
 
-	if (load_data->dialog->priv->current_operation == load_data)
-		load_data->dialog->priv->current_operation = NULL;
+	if (load_data->dialog->current_operation == load_data)
+		load_data->dialog->current_operation = NULL;
 
 	g_hash_table_unref (selected_files);
 	g_date_time_unref (today);
@@ -933,15 +931,15 @@ _set_current_folder (FrFileSelectorDialog *self,
 		     GFile                *folder,
 		     GList                *files)
 {
-	if (self->priv->current_operation != NULL)
-		g_cancellable_cancel (self->priv->current_operation->cancellable);
+	if (self->current_operation != NULL)
+		g_cancellable_cancel (self->current_operation->cancellable);
 
 	gtk_list_store_clear (GTK_LIST_STORE (GET_WIDGET ("files_liststore")));
 	_update_sensitivity (self);
 
-	self->priv->current_operation = load_data_new (self, folder);
-	self->priv->current_operation->files_to_select = _g_object_list_ref (files);
-	_get_folder_list (self->priv->current_operation);
+	self->current_operation = load_data_new (self, folder);
+	self->current_operation->files_to_select = _g_object_list_ref (files);
+	_get_folder_list (self->current_operation);
 }
 
 
@@ -958,7 +956,7 @@ fr_file_selector_dialog_set_current_folder (FrFileSelectorDialog *self,
 GFile *
 fr_file_selector_dialog_get_current_folder (FrFileSelectorDialog *self)
 {
-	return _g_object_ref (self->priv->current_folder);
+	return _g_object_ref (self->current_folder);
 }
 
 

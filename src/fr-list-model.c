@@ -28,6 +28,11 @@
 static void fr_list_model_multi_drag_source_init (EggTreeMultiDragSourceInterface *iface);
 
 
+struct _FrListModel {
+	GtkListStore  parent_instance;
+};
+
+
 G_DEFINE_TYPE_WITH_CODE (FrListModel,
 			 fr_list_model,
 			 GTK_TYPE_LIST_STORE,
@@ -144,7 +149,7 @@ fr_list_model_new (int n_columns, ...)
 
 	g_return_val_if_fail (n_columns > 0, NULL);
 
-	retval = g_object_new (FR_TYPE_LIST_MODEL, NULL);
+	retval = g_object_new (fr_list_model_get_type (), NULL);
 
 	va_start (args, n_columns);
 	types = g_new0 (GType, n_columns);

@@ -24,27 +24,8 @@
 
 #include <gtk/gtk.h>
 
-#define FR_TYPE_LOCATION_BAR            (fr_location_bar_get_type ())
-#define FR_LOCATION_BAR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), FR_TYPE_LOCATION_BAR, FrLocationBar))
-#define FR_LOCATION_BAR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), FR_TYPE_LOCATION_BAR, FrLocationBarClass))
-#define FR_IS_LOCATION_BAR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), FR_TYPE_LOCATION_BAR))
-#define FR_IS_LOCATION_BAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), FR_TYPE_LOCATION_BAR))
-#define FR_LOCATION_BAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), FR_TYPE_LOCATION_BAR, FrLocationBarClass))
+G_DECLARE_FINAL_TYPE (FrLocationBar, fr_location_bar, FR, LOCATION_BAR, GtkBox)
 
-typedef struct _FrLocationBar FrLocationBar;
-typedef struct _FrLocationBarClass FrLocationBarClass;
-typedef struct _FrLocationBarPrivate FrLocationBarPrivate;
-
-struct _FrLocationBar {
-	GtkBox parent_instance;
-	FrLocationBarPrivate *priv;
-};
-
-struct _FrLocationBarClass {
-	GtkBoxClass parent_class;
-};
-
-GType		fr_location_bar_get_type	(void);
 GtkWidget *	fr_location_bar_new		(void);
 
 #endif /* FR_LOCATION_BAR_H */
