@@ -6514,6 +6514,7 @@ typedef struct {
 #define _FR_RESPONSE_OVERWRITE_YES_ALL 100
 #define _FR_RESPONSE_OVERWRITE_YES     101
 #define _FR_RESPONSE_OVERWRITE_NO      102
+#define _FR_RESPONSE_OVERWRITE_NO_ALL  103
 
 
 static void
@@ -6693,6 +6694,9 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 		odata->current_file = odata->current_file->next;
 		break;
 
+	case _FR_RESPONSE_OVERWRITE_NO_ALL:
+		odata->edata->overwrite = FR_OVERWRITE_NO;
+		/* fall-through */
 	case _FR_RESPONSE_OVERWRITE_NO:
 		overwrite_data_skip_current (odata);
 		break;
@@ -6754,6 +6758,7 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 					     details,
 					     _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Replace _All"), _FR_RESPONSE_OVERWRITE_YES_ALL,
+					     _("Skip _All _Existing"), _FR_RESPONSE_OVERWRITE_NO_ALL,
 					     _("_Skip"), _FR_RESPONSE_OVERWRITE_NO,
 					     _("_Replace"), _FR_RESPONSE_OVERWRITE_YES,
 					     NULL);
@@ -6822,7 +6827,7 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 			_g_string_list_free (odata->edata->file_list);
 			odata->edata->file_list = NULL;
 		}
-		odata->edata->overwrite = FR_OVERWRITE_YES;
+
 		_fr_window_archive_extract_from_edata (odata->window, odata->edata);
 	}
 	else {
