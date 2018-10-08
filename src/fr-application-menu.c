@@ -132,7 +132,7 @@ fr_application_activate_about (GSimpleAction *action,
 			       "authors", authors,
 			       "documenters", documenters,
 			       "translator-credits", _("translator-credits"),
-			       "logo-icon-name", "file-roller",
+			       "logo-icon-name", "org.gnome.ArchiveManager",
 			       "license-type", GTK_LICENSE_GPL_2_0,
 			       "wrap-license", TRUE,
 			       NULL);
