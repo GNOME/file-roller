@@ -115,5 +115,11 @@ void          _gtk_window_add_accelerators_from_menu
 						   (GtkWindow        *window,
 						    GMenuModel       *menu);
 gboolean      _gtk_settings_get_dialogs_use_header (void);
+void          _gtk_application_add_accelerator_for_action
+						   (GtkApplication   *app,
+						    const char       *action_name,
+						    const char       *accel);
+void	      _gtk_application_add_accelerators    (GtkApplication   *app,
+						    FrAccelerator    *accelerators);
 
 #endif
