@@ -5,15 +5,14 @@
 # Andraž Tori <andraz.tori1@guest.arnes.si>, 2002.
 # Matjaž Horvat <m@owca.info>, 2006.
 # Matic Žgur <mr.zgur@gmail.com>, 2007.
-# Matej Urbančič <mateju@svn.gnome.org>, 2007–2017.
+# Matej Urbančič <mateju@svn.gnome.org>, 2007–2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=file-"
-"roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-12-28 11:01+0000\n"
-"PO-Revision-Date: 2017-12-31 11:19+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
+"POT-Creation-Date: 2018-10-18 10:36+0000\n"
+"PO-Revision-Date: 2018-10-25 18:07+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -23,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: data/org.gnome.FileRoller.appdata.xml.in:9
 msgid "File Roller"
@@ -82,9 +81,9 @@ msgstr "zip;tar;ekstrakcija;razširjanje;odpakiranje;pakiranje;arhiv;"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.FileRoller.desktop.in.in:13
-#| msgid "File Roller"
-msgid "file-roller"
-msgstr "file-roller"
+#| msgid "Archive Manager"
+msgid "org.gnome.ArchiveManager"
+msgstr "org.gnome.ArchiveManager"
 
 #: data/org.gnome.FileRoller.gschema.xml:58
 msgid "How to sort files"
@@ -246,61 +245,61 @@ msgid "Extract the selected archive"
 msgstr "Odpakiraj vsebino izbranega arhiva"
 
 # G:0 K:1 O:0
-#: src/dlg-add.c:114
+#: src/dlg-add.c:96
 msgid "Could not add the files to the archive"
 msgstr "Ni mogoče dodati datotek v arhiv"
 
-#: src/dlg-add.c:115
+#: src/dlg-add.c:97
 #, c-format
 msgid "You don’t have the right permissions to read files from folder “%s”"
 msgstr "Ni ustreznih dovoljenj za branje datotek iz mape »%s«"
 
-#: src/dlg-add.c:182
+#: src/dlg-add.c:164
 msgctxt "Window title"
 msgid "Add Files"
 msgstr "Dodaj datoteke"
 
 # G:1 K:0 O:0
-#: src/dlg-add.c:195
+#: src/dlg-add.c:177
 msgid "_Options"
 msgstr "_Možnosti"
 
 #. load options
-#: src/dlg-add.c:204
+#: src/dlg-add.c:186
 msgctxt "Action"
 msgid "Load Options"
 msgstr "Možnosti nalaganja"
 
 #. save options
-#: src/dlg-add.c:211
+#: src/dlg-add.c:193
 msgctxt "Action"
 msgid "Save Options"
 msgstr "Možnosti shranjevanja"
 
 #. clear options
-#: src/dlg-add.c:218
+#: src/dlg-add.c:200
 msgid "Reset Options"
 msgstr "Počisti možnosti"
 
-#: src/dlg-add.c:764
+#: src/dlg-add.c:746
 msgctxt "Window title"
 msgid "Load Options"
 msgstr "Možnosti nalaganja"
 
-#: src/dlg-add.c:773
+#: src/dlg-add.c:755
 msgid "_Apply"
 msgstr "_Uveljavi"
 
-#: src/dlg-add.c:774 src/dlg-delete.c:136
+#: src/dlg-add.c:756 src/dlg-delete.c:136
 msgid "_Delete"
 msgstr "_Izbriši"
 
-#: src/dlg-add.c:856
+#: src/dlg-add.c:838
 msgctxt "Window title"
 msgid "Save Options"
 msgstr "Možnosti shranjevanja"
 
-#: src/dlg-add.c:857
+#: src/dlg-add.c:839
 msgid "_Options Name:"
 msgstr "_Ime možnosti:"
 
@@ -367,7 +366,7 @@ msgid "There was an internal error trying to search for applications:"
 msgstr "Prišlo je do napake med iskanjem programa:"
 
 #: src/dlg-package-installer.c:296 src/dlg-package-installer.c:305
-#: src/dlg-package-installer.c:332 src/fr-archive.c:751 src/fr-window.c:4087
+#: src/dlg-package-installer.c:332 src/fr-archive.c:748 src/fr-window.c:4087
 #: src/fr-window.c:7640 src/fr-window.c:7997 src/fr-window.c:9512
 msgid "Archive type not supported."
 msgstr "Vrsta arhiva ni podprta."
@@ -523,15 +522,15 @@ msgstr "Odpakiraj arhiv"
 msgid "— Create and modify an archive"
 msgstr "– Ustvari in spremeni arhiv"
 
-#: src/fr-archive.c:1852
+#: src/fr-archive.c:1849
 msgid "You don’t have the right permissions."
 msgstr "Ni ustreznih dovoljenj."
 
-#: src/fr-archive.c:1852
+#: src/fr-archive.c:1849
 msgid "This archive type cannot be modified"
 msgstr "Te vrste arhiva ni mogoče spreminjati."
 
-#: src/fr-archive.c:1866 src/fr-new-archive-dialog.c:475
+#: src/fr-archive.c:1863 src/fr-new-archive-dialog.c:480
 msgid "You can’t add an archive to itself."
 msgstr "Arhiva ni mogoče dodati samemu sebi."
 
@@ -580,32 +579,32 @@ msgid "Could not load the location"
 msgstr "Ni mogoče naložiti mesta"
 
 # G:1 K:0 O:0
-#: src/fr-new-archive-dialog.c:349 src/fr-new-archive-dialog.c:368
-#: src/fr-new-archive-dialog.c:384 src/fr-new-archive-dialog.c:433
-#: src/fr-new-archive-dialog.c:451 src/fr-new-archive-dialog.c:473
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
+#: src/fr-new-archive-dialog.c:389 src/fr-new-archive-dialog.c:438
+#: src/fr-new-archive-dialog.c:456 src/fr-new-archive-dialog.c:478
 #: src/fr-window.c:3032
 msgid "Could not create the archive"
 msgstr "Ni mogoče ustvariti arhiva"
 
-#: src/fr-new-archive-dialog.c:351 src/fr-new-archive-dialog.c:370
+#: src/fr-new-archive-dialog.c:356 src/fr-new-archive-dialog.c:375
 msgid "You have to specify an archive name."
 msgstr "Določiti je treba ime arhiva."
 
-#: src/fr-new-archive-dialog.c:435
+#: src/fr-new-archive-dialog.c:440
 msgid "You don’t have permission to create an archive in this folder"
 msgstr "Ni ustreznih dovoljenj za ustvarjanje arhiva v tej mapi"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: src/fr-new-archive-dialog.c:453 src/fr-window.c:8311
+#: src/fr-new-archive-dialog.c:458 src/fr-window.c:8311
 msgid "New name is the same as old one, please type other name."
 msgstr "Novo ime je enako staremu. Vtipkajte drugo ime."
 
-#: src/fr-new-archive-dialog.c:496
+#: src/fr-new-archive-dialog.c:501
 #, c-format
 msgid "A file named “%s” already exists.  Do you want to replace it?"
 msgstr "Datoteka z imenom »%s« že obstaja. Ali jo želite zamenjati?"
 
-#: src/fr-new-archive-dialog.c:497
+#: src/fr-new-archive-dialog.c:502
 #, c-format
 msgid ""
 "The file already exists in “%s”.  Replacing it will overwrite its contents."
@@ -613,12 +612,12 @@ msgstr ""
 "Datoteka že obstaja v mapi »%s«. S prepisom bo izgubljena vsebina ciljne "
 "datoteke."
 
-#: src/fr-new-archive-dialog.c:503 src/fr-window.c:6758
+#: src/fr-new-archive-dialog.c:508 src/fr-window.c:6758
 msgid "_Replace"
 msgstr "_Zamenjaj"
 
 # G:1 K:0 O:0
-#: src/fr-new-archive-dialog.c:518
+#: src/fr-new-archive-dialog.c:523
 msgid "Could not delete the old archive."
 msgstr "Ni mogoče izbrisati starega arhiva."
 
@@ -1040,7 +1039,7 @@ msgstr "_Prilepi"
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: src/glib-utils.c:769
+#: src/glib-utils.c:787
 msgid "%d %B %Y, %H:%M"
 msgstr "%d. %B %Y, %H:%M"
 
@@ -1119,43 +1118,19 @@ msgstr "_Dodaj le, če so novejše"
 msgid "_Follow symbolic links"
 msgstr "Sledi _simbolnim povezavam"
 
-#: src/ui/app-menu.ui:6 src/ui/app-menubar.ui:8
-msgid "_New Archive…"
-msgstr "_Nov arhiv ..."
-
-# G:10 K:6 O:0
-#: src/ui/app-menu.ui:11 src/ui/app-menubar.ui:13
-msgid "_Open…"
-msgstr "_Odpri ..."
-
-#: src/ui/app-menu.ui:17 src/ui/app-menubar.ui:116
-msgid "View All _Files"
-msgstr "Poglej vse _datoteke"
-
-#: src/ui/app-menu.ui:22 src/ui/app-menubar.ui:122
-msgid "View as a F_older"
-msgstr "Poglej kot _mapo"
-
-#: src/ui/app-menu.ui:30 src/ui/app-menubar.ui:110
-msgid "Sidebar"
-msgstr "Stranska vrstica"
-
-#: src/ui/app-menu.ui:36 src/ui/app-menubar.ui:130
-msgid "_Help"
-msgstr "Pomo_č"
-
-#: src/ui/app-menu.ui:41 src/ui/app-menubar.ui:138
-msgid "_About"
-msgstr "_O programu"
-
-#: src/ui/app-menu.ui:45
-msgid "_Quit"
-msgstr "_Končaj"
-
 # G:0 K:1 O:0
 #: src/ui/app-menubar.ui:4
 msgid "_File"
 msgstr "_Datoteka"
+
+#: src/ui/app-menubar.ui:8 src/ui/gears-menu.ui:8
+msgid "_New Archive…"
+msgstr "_Nov arhiv ..."
+
+# G:10 K:6 O:0
+#: src/ui/app-menubar.ui:13 src/ui/gears-menu.ui:13
+msgid "_Open…"
+msgstr "_Odpri ..."
 
 #: src/ui/app-menubar.ui:18
 msgid "_Extract Files…"
@@ -1165,12 +1140,12 @@ msgstr "_Odpakiraj datoteke ..."
 msgid "Save _As…"
 msgstr "Shrani _kot ..."
 
-#: src/ui/app-menubar.ui:30 src/ui/gears-menu.ui:15
+#: src/ui/app-menubar.ui:30 src/ui/gears-menu.ui:27
 msgid "_Test Integrity"
 msgstr "Preveri celovi_tost"
 
 # G:17 K:17 O:0
-#: src/ui/app-menubar.ui:34 src/ui/gears-menu.ui:21
+#: src/ui/app-menubar.ui:34 src/ui/gears-menu.ui:31
 msgid "Properties"
 msgstr "Lastnosti"
 
@@ -1224,10 +1199,30 @@ msgstr "Nastavi _geslo ..."
 msgid "_View"
 msgstr "_Pogled"
 
+#: src/ui/app-menubar.ui:110 src/ui/gears-menu.ui:49
+msgid "Sidebar"
+msgstr "Stranska vrstica"
+
+#: src/ui/app-menubar.ui:116 src/ui/gears-menu.ui:38
+msgid "View All _Files"
+msgstr "Poglej vse _datoteke"
+
+#: src/ui/app-menubar.ui:122 src/ui/gears-menu.ui:43
+msgid "View as a F_older"
+msgstr "Poglej kot _mapo"
+
+#: src/ui/app-menubar.ui:130 src/ui/gears-menu.ui:55
+msgid "_Help"
+msgstr "Pomo_č"
+
 # G:4 K:0 O:0
 #: src/ui/app-menubar.ui:133
 msgid "Contents"
 msgstr "Vsebina"
+
+#: src/ui/app-menubar.ui:138
+msgid "_About"
+msgstr "_O programu"
 
 # G:0 K:3 O:0
 #: src/ui/ask-password.ui:53 src/ui/new-archive-dialog.ui:160
@@ -1275,13 +1270,17 @@ msgstr "Pokaži skrite datoteke"
 msgid "Go up one level"
 msgstr "Pojdi raven višje"
 
-#: src/ui/gears-menu.ui:7
+#: src/ui/gears-menu.ui:19
 msgid "Save As…"
 msgstr "Shrani kot …"
 
-#: src/ui/gears-menu.ui:11
+#: src/ui/gears-menu.ui:23
 msgid "Pass_word…"
 msgstr "_Geslo ..."
+
+#: src/ui/gears-menu.ui:60
+msgid "_About Archive Manager"
+msgstr "_O programu"
 
 # G:1 K:0 O:0
 #: src/ui/menus.ui:11
@@ -1388,6 +1387,13 @@ msgstr "Število datotek:"
 #: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "_Izberite datoteke za posodobitev:"
+
+#~| msgid "File Roller"
+#~ msgid "file-roller"
+#~ msgstr "file-roller"
+
+#~ msgid "_Quit"
+#~ msgstr "_Končaj"
 
 #~ msgid "Extract To..."
 #~ msgstr "Odpakiraj vsebino v ..."
