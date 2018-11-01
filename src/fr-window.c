@@ -6695,8 +6695,10 @@ overwrite_dialog_response_cb (GtkDialog *dialog,
 		break;
 
 	case _FR_RESPONSE_OVERWRITE_NO_ALL:
+		overwrite_data_skip_current (odata);
 		odata->edata->overwrite = FR_OVERWRITE_NO;
-		/* fall-through */
+		break;
+
 	case _FR_RESPONSE_OVERWRITE_NO:
 		overwrite_data_skip_current (odata);
 		break;
@@ -6733,12 +6735,27 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 	GFileType      file_type;
 
 	info = g_file_query_info_finish (destination, result, NULL);
+
+	/* file does not exist -> keep in the files to extract. */
+
 	if (info == NULL) {
 		odata->current_file = odata->current_file->next;
 		_fr_window_ask_overwrite_dialog (odata);
 		g_object_unref (destination);
 		return;
 	}
+
+	/* file exists and user selected "Overwrite Nothing" -> automatically
+	 * skip the file. */
+
+	if (odata->edata->overwrite == FR_OVERWRITE_NO) {
+		overwrite_data_skip_current (odata);
+		_fr_window_ask_overwrite_dialog (odata);
+		g_object_unref (destination);
+		return;
+	}
+
+	/* file exists and odata->edata->overwrite == FR_OVERWRITE_ASK */
 
 	file_type = g_file_info_get_file_type (info);
 	if ((file_type != G_FILE_TYPE_UNKNOWN) && (file_type != G_FILE_TYPE_DIRECTORY)) {
@@ -6782,7 +6799,9 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 	g_object_unref (info);
 	g_object_unref (destination);
 
-	odata->current_file = odata->current_file->next;
+	/* file exists and it's a directory or unknown -> skip */
+
+	overwrite_data_skip_current (odata);
 	_fr_window_ask_overwrite_dialog (odata);
 }
 
@@ -6791,8 +6810,10 @@ static void
 _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 {
 	gboolean perform_extraction = TRUE;
+	gboolean check_file_existence;
 
-	if ((odata->edata->overwrite == FR_OVERWRITE_ASK) && (odata->current_file != NULL)) {
+	check_file_existence = (odata->edata->overwrite == FR_OVERWRITE_ASK) || (odata->edata->overwrite == FR_OVERWRITE_NO);
+	if (check_file_existence && (odata->current_file != NULL)) {
 		const char *base_name;
 		GFile      *destination;
 
@@ -6827,6 +6848,7 @@ _fr_window_ask_overwrite_dialog (OverwriteData *odata)
 			_g_string_list_free (odata->edata->file_list);
 			odata->edata->file_list = NULL;
 		}
+		odata->edata->overwrite = FR_OVERWRITE_YES;
 
 		_fr_window_archive_extract_from_edata (odata->window, odata->edata);
 	}
