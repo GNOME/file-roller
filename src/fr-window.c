@@ -6775,7 +6775,7 @@ query_info_ready_for_overwrite_dialog_cb (GObject      *source_object,
 					     details,
 					     _GTK_LABEL_CANCEL, GTK_RESPONSE_CANCEL,
 					     _("Replace _All"), _FR_RESPONSE_OVERWRITE_YES_ALL,
-					     _("Skip _All _Existing"), _FR_RESPONSE_OVERWRITE_NO_ALL,
+					     _("Replace _Nothing"), _FR_RESPONSE_OVERWRITE_NO_ALL,
 					     _("_Skip"), _FR_RESPONSE_OVERWRITE_NO,
 					     _("_Replace"), _FR_RESPONSE_OVERWRITE_YES,
 					     NULL);
