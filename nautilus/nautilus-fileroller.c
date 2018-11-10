@@ -115,6 +115,7 @@ static struct {
 		{ "application/x-ar", TRUE },
 		{ "application/x-arj", TRUE },
 		{ "application/x-brotli", TRUE },
+		{ "application/x-brotli-compressed-tar", TRUE },
 		{ "application/vnd.ms-cab-compressed", TRUE },
 		{ "application/x-cbr", TRUE },
 		{ "application/x-cbz", TRUE },
