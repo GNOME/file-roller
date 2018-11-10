@@ -105,6 +105,7 @@ extract_here_callback (NautilusMenuItem *item,
 	g_string_free (cmd, TRUE);
 }
 
+/** mime-types which aren't supported by nautilus itself */
 static struct {
 	char     *mime_type;
 	gboolean  is_compressed;
@@ -113,6 +114,7 @@ static struct {
 		{ "application/x-alz", TRUE },
 		{ "application/x-ar", TRUE },
 		{ "application/x-arj", TRUE },
+		{ "application/x-brotli", TRUE },
 		{ "application/vnd.ms-cab-compressed", TRUE },
 		{ "application/x-cbr", TRUE },
 		{ "application/x-cbz", TRUE },
