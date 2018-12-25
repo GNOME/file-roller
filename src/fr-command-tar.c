@@ -200,7 +200,12 @@ add_compress_arg (FrCommand *comm)
 	FrArchive *archive = FR_ARCHIVE (comm);
 
 	if (_g_mime_type_matches (archive->mime_type, "application/x-compressed-tar"))
+		if (_g_program_is_in_path ("pigz")) {
+			fr_process_add_arg (comm->process, "--use-compress-program=pigz");
+		}
+		else  {
 		fr_process_add_arg (comm->process, "-z");
+		}
 
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-bzip-compressed-tar"))
 		if (_g_program_is_in_path ("lbzip2")) {
@@ -214,7 +219,9 @@ add_compress_arg (FrCommand *comm)
 		}
 
 	else if (_g_mime_type_matches (archive->mime_type, "application/x-tarz")) {
-		if (_g_program_is_in_path ("pigz") || _g_program_is_in_path ("gzip"))
+		if (_g_program_is_in_path ("pigz"))
+		fr_process_add_arg (comm->process, "--use-compress-program=pigz");
+		else if (_g_program_is_in_path ("gzip"))
 			fr_process_add_arg (comm->process, "-z");
 		else
 			fr_process_add_arg (comm->process, "-Z");
