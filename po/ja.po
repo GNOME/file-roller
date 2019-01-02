@@ -8,15 +8,16 @@
 # Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2012, 2013, 2014, 2016.
 # Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2012.
 # Hajime Taira <htaira@redhat.com>, 2015.
+# sujiniku <sujinikusityuu@gmail.com>, 2016.
+# sicklylife.jp <translation@sicklylife.jp>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: file-roller master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=file-"
-"roller&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-22 18:47+0000\n"
-"PO-Revision-Date: 2016-10-05 03:33+0900\n"
-"Last-Translator: sujiniku <sujinikusityuu@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/file-roller/issues\n"
+"POT-Creation-Date: 2018-12-28 11:13+0000\n"
+"PO-Revision-Date: 2019-01-01 21:50+0900\n"
+"Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -24,12 +25,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: data/org.gnome.FileRoller.appdata.xml.in:9
+msgid "File Roller"
+msgstr "File Roller"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:1
+#: data/org.gnome.FileRoller.appdata.xml.in:10
 msgid "Open, modify and create compressed archive files"
 msgstr "圧縮ファイル、アーカイブファイルのオープン、修正、作成を行います"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:2
+#: data/org.gnome.FileRoller.appdata.xml.in:12
 msgid ""
 "Archive Manager (also known as File Roller) is the default GNOME application "
 "for opening, creating, and modifying archive and compressed archive files."
@@ -38,48 +42,53 @@ msgstr ""
 "ファイルや圧縮ファイルのオープン、作成、修正を行うための GNOME デフォルトのア"
 "プリケーションです。"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:3
+#: data/org.gnome.FileRoller.appdata.xml.in:16
 msgid ""
 "Archive Manager supports a wide range of different archive files, including:"
 msgstr ""
 "アーカイブマネージャーは様々なアーカイブ形式に対応しています。代表的な形式と"
 "しては次のものがあります。"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:4
+#: data/org.gnome.FileRoller.appdata.xml.in:20
 msgid "gzip archives (.tar.gz, .tgz)"
 msgstr "gzip アーカイブ (.tar.gz, .tgz)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:5
+#: data/org.gnome.FileRoller.appdata.xml.in:21
 msgid "bzip archives (.tar.bz, .tbz)"
 msgstr "bzip アーカイブ (.tar.bz, .tbz)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:6
+#: data/org.gnome.FileRoller.appdata.xml.in:22
 msgid "zip archives (.zip)"
 msgstr "zip アーカイブ (.zip)"
 
-#: ../data/org.gnome.FileRoller.appdata.xml.in.h:7
+#: data/org.gnome.FileRoller.appdata.xml.in:23
 msgid "xz archives (.tar.xz)"
 msgstr "xz アーカイブ (.tar.xz)"
 
-#. set the name and icon
-#: ../data/org.gnome.FileRoller.desktop.in.in.h:1 ../src/fr-application.c:718
-#: ../src/fr-window.c:1973 ../src/fr-window.c:5490
+#: data/org.gnome.FileRoller.desktop.in.in:3 src/fr-application.c:455
+#: src/fr-window.c:2017 src/fr-window.c:5546
 msgid "Archive Manager"
 msgstr "アーカイブマネージャー"
 
-#: ../data/org.gnome.FileRoller.desktop.in.in.h:2
+#: data/org.gnome.FileRoller.desktop.in.in:4
 msgid "Create and modify an archive"
 msgstr "アーカイブを作成したり修正します"
 
-#: ../data/org.gnome.FileRoller.desktop.in.in.h:3
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.FileRoller.desktop.in.in:6
 msgid "zip;tar;extract;unpack;"
 msgstr "zip;tar;extract;unpack;アーカイブ;圧縮;展開;伸長;解凍;アンパック;"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:1
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.FileRoller.desktop.in.in:13
+msgid "org.gnome.ArchiveManager"
+msgstr "org.gnome.ArchiveManager"
+
+#: data/org.gnome.FileRoller.gschema.xml:58
 msgid "How to sort files"
 msgstr "ファイルの並べ替え方"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:2
+#: data/org.gnome.FileRoller.gschema.xml:59
 msgid ""
 "What criteria must be used to arrange files. Possible values: name, size, "
 "type, time, path."
@@ -87,94 +96,94 @@ msgstr ""
 "ファイルを並べるのに、どの基準を使うか。利用可能な値: name, size, type, "
 "time, path"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:3
+#: data/org.gnome.FileRoller.gschema.xml:63
 msgid "Sort type"
 msgstr "拡張子で並べ替え"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:4
+#: data/org.gnome.FileRoller.gschema.xml:64
 msgid ""
 "Whether to sort in ascending or descending direction. Possible values: "
 "ascending, descending."
 msgstr ""
 "昇順／逆順のどちらで並び替えするかです。利用可能な値: ascending, descending"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:5
+#: data/org.gnome.FileRoller.gschema.xml:68
 msgid "List Mode"
 msgstr "一覧の形式"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:6
+#: data/org.gnome.FileRoller.gschema.xml:69
 msgid ""
-"Use 'all-files' to view all the files in the archive in a single list, use "
-"'as-folder' to navigate the archive as a folder."
+"Use “all-files” to view all the files in the archive in a single list, use "
+"“as-folder” to navigate the archive as a folder."
 msgstr ""
-"'all-files' は、アーカイブにあるすべてのファイルを一覧で表示するのに使いま"
-"す。'as-folder' は、アーカイブをフォルダーのように扱う場合に使います。"
+"“all-files”は、アーカイブにあるすべてのファイルを一覧で表示するのに使いま"
+"す。“as-folder”は、アーカイブをフォルダーのように扱う場合に使います。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:7
+#: data/org.gnome.FileRoller.gschema.xml:73
 msgid "Display type"
 msgstr "拡張子を表示する"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:8
+#: data/org.gnome.FileRoller.gschema.xml:74
 msgid "Display the type column in the main window."
 msgstr "メインウィンドウに拡張子の列を表示します。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:9
+#: data/org.gnome.FileRoller.gschema.xml:78
 msgid "Display size"
 msgstr "サイズを表示する"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:10
+#: data/org.gnome.FileRoller.gschema.xml:79
 msgid "Display the size column in the main window."
 msgstr "メインウィンドウにサイズの列を表示します。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:11
+#: data/org.gnome.FileRoller.gschema.xml:83
 msgid "Display time"
 msgstr "更新日時を表示する"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:12
+#: data/org.gnome.FileRoller.gschema.xml:84
 msgid "Display the time column in the main window."
 msgstr "メインウィンドウに更新日時の列を表示します。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:13
+#: data/org.gnome.FileRoller.gschema.xml:88
 msgid "Display path"
 msgstr "パスを表示する"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:14
+#: data/org.gnome.FileRoller.gschema.xml:89
 msgid "Display the path column in the main window."
 msgstr "メインウィンドウにパスの列を表示します。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:15
+#: data/org.gnome.FileRoller.gschema.xml:93
 msgid "Name column width"
 msgstr "名前の列幅"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:16
+#: data/org.gnome.FileRoller.gschema.xml:94
 msgid "The default width of the name column in the file list."
 msgstr "ファイル一覧の名前列のデフォルト幅"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:17
+#: data/org.gnome.FileRoller.gschema.xml:110
 msgid "View the sidebar"
 msgstr "サイドバーを表示する"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:18
+#: data/org.gnome.FileRoller.gschema.xml:111
 msgid "Whether to display the sidebar."
 msgstr "サイドバーを表示するかどうかの設定です。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:19
+#: data/org.gnome.FileRoller.gschema.xml:130
 msgid "Editors"
 msgstr "編集"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:20
+#: data/org.gnome.FileRoller.gschema.xml:131
 msgid ""
-"List of applications entered in the 'Open File' dialog and not associated "
+"List of applications entered in the “Open File” dialog and not associated "
 "with the file type."
 msgstr ""
-"ファイル形式に関連付けられていないが、\"ファイルを開く\" ダイアログで表示され"
-"るアプリケーションの一覧です。"
+"ファイル形式に関連付けられていないが、“ファイルを開く”ダイアログで表示される"
+"アプリケーションの一覧です。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:21
+#: data/org.gnome.FileRoller.gschema.xml:135
 msgid "Compression level"
 msgstr "圧縮レベル"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:22
+#: data/org.gnome.FileRoller.gschema.xml:136
 msgid ""
 "Compression level used when adding files to an archive. Possible values: "
 "very-fast, fast, normal, maximum."
@@ -182,11 +191,13 @@ msgstr ""
 "圧縮レベルはアーカイブへファイルを追加する際に使われます。利用可能な値: very-"
 "fast, fast, normal, maximum."
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:23
+#: data/org.gnome.FileRoller.gschema.xml:140
+#: data/org.gnome.FileRoller.gschema.xml:172
 msgid "Encrypt the archive header"
 msgstr "アーカイブのヘッダーを暗号化する"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:24
+#: data/org.gnome.FileRoller.gschema.xml:141
+#: data/org.gnome.FileRoller.gschema.xml:173
 msgid ""
 "Whether to encrypt the archive header. If the header is encrypted the "
 "password will be required to list the archive content as well."
@@ -195,157 +206,163 @@ msgstr ""
 "合、アーカイブの内容と同様にファイル一覧を表示するのにもパスワードが必要にな"
 "ります。"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:25
+#: data/org.gnome.FileRoller.gschema.xml:155
 msgid "Do not overwrite newer files"
 msgstr "より新しいファイルは上書きしない"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:26
+#: data/org.gnome.FileRoller.gschema.xml:159
 msgid "Recreate the folders stored in the archive"
 msgstr "アーカイブ中に保存されているフォルダーを再生成する"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:27
+#: data/org.gnome.FileRoller.gschema.xml:177
 msgid "Default volume size"
 msgstr "デフォルトのボリュームサイズ"
 
-#: ../data/org.gnome.FileRoller.gschema.xml.h:28
+#: data/org.gnome.FileRoller.gschema.xml:178
 msgid "The default size for volumes."
 msgstr "分割容量のデフォルトサイズです。"
 
-#: ../src/dlg-add.c:114
+#: nautilus/nautilus-fileroller.c:261
+msgid "Extract Here"
+msgstr "ここに展開する"
+
+#. Translators: the current position is the current folder
+#: nautilus/nautilus-fileroller.c:263
+msgid "Extract the selected archive to the current position"
+msgstr "指定したアーカイブを現在の場所に展開します"
+
+#: nautilus/nautilus-fileroller.c:280
+msgid "Extract To…"
+msgstr "展開…"
+
+#: nautilus/nautilus-fileroller.c:281
+msgid "Extract the selected archive"
+msgstr "指定したアーカイブを展開します"
+
+#: src/dlg-add.c:96
 msgid "Could not add the files to the archive"
 msgstr "アーカイブにファイルを追加できません"
 
-#: ../src/dlg-add.c:115
+#: src/dlg-add.c:97
 #, c-format
-msgid "You don't have the right permissions to read files from folder \"%s\""
-msgstr "フォルダー \"%s\" からファイルを読み取る権限がありません。"
+msgid "You don’t have the right permissions to read files from folder “%s”"
+msgstr "フォルダー“%s”からファイルを読み取る権限がありません。"
 
-#: ../src/dlg-add.c:182
-#, fuzzy
-#| msgid "Add Files"
+#: src/dlg-add.c:164
 msgctxt "Window title"
 msgid "Add Files"
 msgstr "ファイルの追加"
 
-#: ../src/dlg-add.c:195
+#: src/dlg-add.c:177
 msgid "_Options"
 msgstr "オプション(_O)"
 
 #. load options
-#: ../src/dlg-add.c:204
-#, fuzzy
-#| msgid "Load Options"
+#: src/dlg-add.c:186
 msgctxt "Action"
 msgid "Load Options"
 msgstr "オプションの読み込み"
 
 #. save options
-#: ../src/dlg-add.c:211
-#, fuzzy
-#| msgid "Save Options"
+#: src/dlg-add.c:193
 msgctxt "Action"
 msgid "Save Options"
 msgstr "オプションの保存"
 
 #. clear options
-#: ../src/dlg-add.c:218
+#: src/dlg-add.c:200
 msgid "Reset Options"
 msgstr "オプションのクリア"
 
-#: ../src/dlg-add.c:763
-#, fuzzy
-#| msgid "Load Options"
+#: src/dlg-add.c:746
 msgctxt "Window title"
 msgid "Load Options"
 msgstr "オプションの読み込み"
 
-#: ../src/dlg-add.c:772
+#: src/dlg-add.c:755
 msgid "_Apply"
 msgstr "適用(_A)"
 
-#: ../src/dlg-add.c:773 ../src/dlg-delete.c:136
+#: src/dlg-add.c:756 src/dlg-delete.c:136
 msgid "_Delete"
 msgstr "削除(_D)"
 
-#: ../src/dlg-add.c:855
-#, fuzzy
-#| msgid "Save Options"
+#: src/dlg-add.c:838
 msgctxt "Window title"
 msgid "Save Options"
 msgstr "オプションの保存"
 
-#: ../src/dlg-add.c:856
+#: src/dlg-add.c:839
 msgid "_Options Name:"
 msgstr "オプション名(_O):"
 
-#: ../src/dlg-ask-password.c:125
+#: src/dlg-ask-password.c:125
 msgid "_OK"
-msgstr "Ok(_O)"
+msgstr "OK(_O)"
 
 #. Translators: %s is a filename
-#: ../src/dlg-ask-password.c:148
+#: src/dlg-ask-password.c:148
 #, c-format
-msgid "Password required for \"%s\""
-msgstr "\"%s\" はパスワードを必要とします"
+msgid "Password required for “%s”"
+msgstr "“%s”はパスワードを必要とします"
 
-#: ../src/dlg-ask-password.c:157
+#: src/dlg-ask-password.c:157
 msgid "Wrong password."
 msgstr "パスワードが違います。"
 
-#: ../src/dlg-batch-add.c:88 ../src/fr-application.c:226
-#: ../src/fr-application.c:262 ../src/fr-application.c:574
+#: src/dlg-batch-add.c:88 src/fr-application.c:226 src/fr-application.c:262
+#: src/fr-application.c:583
 msgid "Compress"
 msgstr "圧縮"
 
-#: ../src/dlg-extract.c:95 ../src/fr-window.c:6837
+#: src/dlg-extract.c:95 src/fr-window.c:6936
 #, c-format
 msgid ""
-"Destination folder \"%s\" does not exist.\n"
+"Destination folder “%s” does not exist.\n"
 "\n"
 "Do you want to create it?"
 msgstr ""
-"展開先のフォルダー \"%s\" がありません。\n"
+"展開先のフォルダー“%s”がありません。\n"
 "\n"
 "作成してもよろしいですか?"
 
-#: ../src/dlg-extract.c:103 ../src/fr-window.c:6845
+#: src/dlg-extract.c:103 src/fr-window.c:6944
 msgid "Create _Folder"
 msgstr "フォルダーの作成(_F)"
 
-#: ../src/dlg-extract.c:122 ../src/dlg-extract.c:139 ../src/dlg-extract.c:166
-#: ../src/fr-window.c:4372 ../src/fr-window.c:6761 ../src/fr-window.c:6766
-#: ../src/fr-window.c:6866 ../src/fr-window.c:6885 ../src/fr-window.c:6890
+#: src/dlg-extract.c:122 src/dlg-extract.c:139 src/dlg-extract.c:166
+#: src/fr-window.c:4420 src/fr-window.c:6860 src/fr-window.c:6865
+#: src/fr-window.c:6965 src/fr-window.c:6984 src/fr-window.c:6989
 msgid "Extraction not performed"
 msgstr "アーカイブの展開を中止します"
 
-#: ../src/dlg-extract.c:123 ../src/fr-window.c:6862
+#: src/dlg-extract.c:123 src/fr-window.c:6961
 #, c-format
 msgid "Could not create the destination folder: %s."
 msgstr "展開先のフォルダーを生成できません: %s"
 
-#: ../src/dlg-extract.c:167 ../src/fr-window.c:4599 ../src/fr-window.c:4701
+#: src/dlg-extract.c:167 src/fr-window.c:4647 src/fr-window.c:4749
 #, c-format
 msgid ""
-"You don't have the right permissions to extract archives in the folder \"%s\""
-msgstr "フォルダー \"%s\" の中にアーカイブを展開する権限がありません。"
+"You don’t have the right permissions to extract archives in the folder “%s”"
+msgstr "フォルダー“%s”の中にアーカイブを展開する権限がありません。"
 
-#: ../src/dlg-extract.c:279
+#: src/dlg-extract.c:279
 msgctxt "Window title"
 msgid "Extract"
 msgstr "展開"
 
-#: ../src/dlg-package-installer.c:114 ../src/dlg-package-installer.c:227
+#: src/dlg-package-installer.c:114 src/dlg-package-installer.c:227
 msgid "There was an internal error trying to search for applications:"
 msgstr "アプリケーションの検索中に内部エラーが起こりました:"
 
-#: ../src/dlg-package-installer.c:296 ../src/dlg-package-installer.c:305
-#: ../src/dlg-package-installer.c:332 ../src/fr-archive.c:751
-#: ../src/fr-window.c:4039 ../src/fr-window.c:7569 ../src/fr-window.c:7926
-#: ../src/fr-window.c:9436
+#: src/dlg-package-installer.c:296 src/dlg-package-installer.c:305
+#: src/dlg-package-installer.c:332 src/fr-archive.c:748 src/fr-window.c:4087
+#: src/fr-window.c:7667 src/fr-window.c:8024 src/fr-window.c:9539
 msgid "Archive type not supported."
 msgstr "この種類のアーカイブはサポートしていません。"
 
-#: ../src/dlg-package-installer.c:315
+#: src/dlg-package-installer.c:315
 #, c-format
 msgid ""
 "There is no command installed for %s files.\n"
@@ -354,128 +371,64 @@ msgstr ""
 "%s ファイル用のコマンドはインストールされていません。\n"
 "このファイルを開くコマンドを検索しますか?"
 
-#: ../src/dlg-package-installer.c:319
+#: src/dlg-package-installer.c:319
 msgid "Could not open this file type"
 msgstr "この種類のファイルは開けませんでした"
 
-#: ../src/dlg-package-installer.c:322
+#: src/dlg-package-installer.c:322
 msgid "_Search Command"
 msgstr "コマンドの検索(_S)"
 
-#: ../src/dlg-password.c:109
+#: src/dlg-password.c:109
 #, c-format
-msgid "Enter a password for \"%s\""
-msgstr "\"%s\" のパスワードを入力してください。"
+msgid "Enter a password for “%s”"
+msgstr "“%s”のパスワードを入力してください"
 
-#: ../src/dlg-prop.c:107
+#: src/dlg-prop.c:107
 #, c-format
 msgid "%s Properties"
 msgstr "%s のプロパティ"
 
-#: ../src/dlg-update.c:162
+#: src/dlg-update.c:162
 #, c-format
-msgid "Update the file \"%s\" in the archive \"%s\"?"
-msgstr "\"%2$s\" というアーカイブの中にある \"%1$s\" を更新しますか?"
+msgid "Update the file “%s” in the archive “%s”?"
+msgstr "“%2$s”というアーカイブの中にある“%1$s”を更新しますか?"
 
 #. secondary text
-#: ../src/dlg-update.c:174 ../src/dlg-update.c:200
+#: src/dlg-update.c:174 src/dlg-update.c:200
 #, c-format
 msgid ""
-"The file has been modified with an external application. If you don't update "
+"The file has been modified with an external application. If you don’t update "
 "the file in the archive, all of your changes will be lost."
 msgid_plural ""
-"%d files have been modified with an external application. If you don't "
+"%d files have been modified with an external application. If you don’t "
 "update the files in the archive, all of your changes will be lost."
 msgstr[0] ""
 "別のアプリケーションがアーカイブにある %d 個のファイルを変更しました。これら"
 "のファイルを更新しないと変更内容がすべて破棄されます。"
 
-#: ../src/dlg-update.c:190
+#: src/dlg-update.c:190
 #, c-format
-msgid "Update the files in the archive \"%s\"?"
-msgstr "\"%s\" というアーカイブの中にあるファイルを更新しますか?"
+msgid "Update the files in the archive “%s”?"
+msgstr "“%s”というアーカイブの中にあるファイルを更新しますか?"
 
-#: ../src/dlg-update.c:319 ../src/dlg-update.c:332
+#: src/dlg-update.c:319 src/dlg-update.c:332
 msgid "_Update"
 msgstr "更新(_U)"
 
-#: ../src/dlg-update.c:323
+#: src/dlg-update.c:323
 msgid "Update Files"
 msgstr "ファイルの更新"
 
-#: ../src/fr-application.c:61
-msgid "Add files to the specified archive and quit the program"
-msgstr "ファイルを指定されたアーカイブに追加してプログラムを終了する"
-
-#: ../src/fr-application.c:62
-msgid "ARCHIVE"
-msgstr "ARCHIVE"
-
-#: ../src/fr-application.c:65
-msgid "Add files asking the name of the archive and quit the program"
-msgstr "指定されたアーカイブ名のファイルを追加してプログラムを終了する"
-
-#: ../src/fr-application.c:69
-msgid "Extract archives to the specified folder and quit the program"
-msgstr "アーカイブを指定したフォルダーに展開してプログラムを終了する"
-
-#: ../src/fr-application.c:70 ../src/fr-application.c:82
-msgid "FOLDER"
-msgstr "FOLDER"
-
-#: ../src/fr-application.c:73
-msgid "Extract archives asking the destination folder and quit the program"
-msgstr "展開先のフォルダー指定してアーカイブを展開してからプログラムを終了する"
-
-#: ../src/fr-application.c:77
-msgid ""
-"Extract the contents of the archives in the archive folder and quit the "
-"program"
-msgstr ""
-"アーカイブフォルダー中の内容を指定したフォルダーに展開してプログラムを終了す"
-"る"
-
-#: ../src/fr-application.c:81
-msgid "Default folder to use for the '--add' and '--extract' commands"
-msgstr "'--add' と '--extract' コマンドで使用するデフォルトのフォルダー"
-
-#: ../src/fr-application.c:85
-msgid "Create destination folder without asking confirmation"
-msgstr "展開先のフォルダーを作成するときに確認しない"
-
-#: ../src/fr-application.c:89
-msgid "Use the notification system to notify the operation completion"
-msgstr "通知システムを使用して操作の完了を通知する"
-
-#: ../src/fr-application.c:92
-msgid "Start as a service"
-msgstr "サービスとして起動する"
-
-#: ../src/fr-application.c:95
-msgid "Show version"
-msgstr "バージョンを表示する"
-
-#: ../src/fr-application.c:298 ../src/fr-application.c:324
-#: ../src/fr-application.c:597
-#, fuzzy
-#| msgid "Extract archive"
-msgctxt "Window title"
-msgid "Extract archive"
-msgstr "アーカイブからファイルを展開します"
-
-#: ../src/fr-application.c:477
-msgid "- Create and modify an archive"
-msgstr "- アーカイブを作成したり修正します"
-
-#: ../src/fr-application-menu.c:130
+#: src/fr-application-menu.c:130
 msgid "Copyright © 2001–2014 Free Software Foundation, Inc."
 msgstr "Copyright © 2001–2014 Free Software Foundation, Inc."
 
-#: ../src/fr-application-menu.c:131
+#: src/fr-application-menu.c:131
 msgid "An archive manager for GNOME."
 msgstr "GNOME 向けのアーカイブマネージャーです。"
 
-#: ../src/fr-application-menu.c:134
+#: src/fr-application-menu.c:134
 msgid "translator-credits"
 msgstr ""
 "相花 毅 <takeshi.aihana@gmail.com>\n"
@@ -484,839 +437,897 @@ msgstr ""
 "赤星 柔充 <yasumichi@vinelinux.org>\n"
 "松澤 二郎 <jmatsuzawa@gnome.org>\n"
 "平 初 <htaira@redhat.com>\n"
-"日本GNOMEユーザー会 http://www.gnome.gr.jp/"
+"日本GNOMEユーザー会 http://www.gnome.gr.jp/\n"
+"sicklylife.jp <translation@sicklylife.jp>"
 
-#: ../src/fr-archive.c:1852
-msgid "You don't have the right permissions."
+#: src/fr-application.c:61
+msgid "Add files to the specified archive and quit the program"
+msgstr "ファイルを指定されたアーカイブに追加してプログラムを終了する"
+
+#: src/fr-application.c:62
+msgid "ARCHIVE"
+msgstr "ARCHIVE"
+
+#: src/fr-application.c:65
+msgid "Add files asking the name of the archive and quit the program"
+msgstr "指定されたアーカイブ名のファイルを追加してプログラムを終了する"
+
+#: src/fr-application.c:69
+msgid "Extract archives to the specified folder and quit the program"
+msgstr "アーカイブを指定したフォルダーに展開してプログラムを終了する"
+
+#: src/fr-application.c:70 src/fr-application.c:82
+msgid "FOLDER"
+msgstr "FOLDER"
+
+#: src/fr-application.c:73
+msgid "Extract archives asking the destination folder and quit the program"
+msgstr "展開先のフォルダー指定してアーカイブを展開してからプログラムを終了する"
+
+#: src/fr-application.c:77
+msgid ""
+"Extract the contents of the archives in the archive folder and quit the "
+"program"
+msgstr ""
+"アーカイブフォルダー中の内容を指定したフォルダーに展開してプログラムを終了す"
+"る"
+
+#: src/fr-application.c:81
+msgid "Default folder to use for the “--add” and “--extract” commands"
+msgstr "“--add”と“--extract”コマンドで使用するデフォルトのフォルダー"
+
+#: src/fr-application.c:85
+msgid "Create destination folder without asking confirmation"
+msgstr "展開先のフォルダーを作成するときに確認しない"
+
+#: src/fr-application.c:89
+msgid "Use the notification system to notify the operation completion"
+msgstr "通知システムを使用して操作の完了を通知する"
+
+#: src/fr-application.c:92
+msgid "Start as a service"
+msgstr "サービスとして起動する"
+
+#: src/fr-application.c:95
+msgid "Show version"
+msgstr "バージョンを表示する"
+
+#: src/fr-application.c:298 src/fr-application.c:324 src/fr-application.c:606
+msgctxt "Window title"
+msgid "Extract archive"
+msgstr "アーカイブからファイルを展開します"
+
+#: src/fr-application.c:486
+msgid "— Create and modify an archive"
+msgstr "— アーカイブを作成したり修正します"
+
+#: src/fr-archive.c:1849
+msgid "You don’t have the right permissions."
 msgstr "適切な権限がありません。"
 
-#: ../src/fr-archive.c:1852
+#: src/fr-archive.c:1849
 msgid "This archive type cannot be modified"
 msgstr "この種類のアーカイブを変更することはできません。"
 
-#: ../src/fr-archive.c:1866 ../src/fr-new-archive-dialog.c:474
-msgid "You can't add an archive to itself."
+#: src/fr-archive.c:1863 src/fr-new-archive-dialog.c:478
+msgid "You can’t add an archive to itself."
 msgstr "アーカイブ自身を追加することはできません。"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:297 ../src/fr-command-rar.c:425
-#: ../src/fr-command-tar.c:307
+#: src/fr-command-7z.c:306 src/fr-command-rar.c:495 src/fr-command-tar.c:319
 #, c-format
-msgid "Adding \"%s\""
-msgstr "\"%s\" を追加中"
+msgid "Adding “%s”"
+msgstr "“%s”を追加中"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-7z.c:449 ../src/fr-command-rar.c:557
-#: ../src/fr-command-tar.c:428
+#: src/fr-command-7z.c:458 src/fr-command-rar.c:627 src/fr-command-tar.c:440
 #, c-format
-msgid "Extracting \"%s\""
-msgstr "\"%s\" を展開中"
-
-#: ../src/fr-command.c:597
-#, c-format
-msgid "Archive not found"
-msgstr "アーカイブが見つかりません。"
+msgid "Extracting “%s”"
+msgstr "“%s”を展開中"
 
 #. Translators: %s is a filename.
-#: ../src/fr-command-rar.c:506 ../src/fr-command-tar.c:373
+#: src/fr-command-rar.c:576 src/fr-command-tar.c:385
 #, c-format
-msgid "Removing \"%s\""
-msgstr "\"%s\" を削除中"
+msgid "Removing “%s”"
+msgstr "“%s”を削除中"
 
-#: ../src/fr-command-rar.c:688
+#: src/fr-command-rar.c:758
 #, c-format
 msgid "Could not find the volume: %s"
 msgstr "ボリュームが見つかりませんでした: %s"
 
-#: ../src/fr-command-tar.c:383
+#: src/fr-command-tar.c:395
 msgid "Deleting files from archive"
 msgstr "アーカイブからファイルを削除します"
 
-#: ../src/fr-command-tar.c:488
+#: src/fr-command-tar.c:500
 msgid "Recompressing archive"
 msgstr "アーカイブの再圧縮"
 
-#: ../src/fr-command-tar.c:767
+#: src/fr-command-tar.c:779
 msgid "Decompressing archive"
 msgstr "アーカイブの解凍"
 
-#: ../src/fr-file-selector-dialog.c:773 ../src/fr-file-selector-dialog.c:818
+#: src/fr-command.c:597
+#, c-format
+msgid "Archive not found"
+msgstr "アーカイブが見つかりません。"
+
+#: src/fr-file-selector-dialog.c:771 src/fr-file-selector-dialog.c:816
 msgid "Could not load the location"
 msgstr "開く場所を読み込めません"
 
-#: ../src/fr-new-archive-dialog.c:349 ../src/fr-new-archive-dialog.c:368
-#: ../src/fr-new-archive-dialog.c:384 ../src/fr-new-archive-dialog.c:432
-#: ../src/fr-new-archive-dialog.c:450 ../src/fr-new-archive-dialog.c:472
-#: ../src/fr-window.c:2988
+#: src/fr-new-archive-dialog.c:352 src/fr-new-archive-dialog.c:371
+#: src/fr-new-archive-dialog.c:387 src/fr-new-archive-dialog.c:436
+#: src/fr-new-archive-dialog.c:454 src/fr-new-archive-dialog.c:476
+#: src/fr-window.c:3032
 msgid "Could not create the archive"
 msgstr "アーカイブを生成できません"
 
-#: ../src/fr-new-archive-dialog.c:351 ../src/fr-new-archive-dialog.c:370
+#: src/fr-new-archive-dialog.c:354 src/fr-new-archive-dialog.c:373
 msgid "You have to specify an archive name."
 msgstr "アーカイブ名を指定してください。"
 
-#: ../src/fr-new-archive-dialog.c:434
-msgid "You don't have permission to create an archive in this folder"
-msgstr "このフォルダーの中にアーカイブを作成する権限がありません。"
+#: src/fr-new-archive-dialog.c:438
+msgid "You don’t have permission to create an archive in this folder"
+msgstr "このフォルダーの中にアーカイブを作成する権限がありません"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-new-archive-dialog.c:452 ../src/fr-window.c:8240
+#: src/fr-new-archive-dialog.c:456 src/fr-window.c:8338
 msgid "New name is the same as old one, please type other name."
 msgstr "新しい名前が古い名前と同じです。他の名前を入力してください。"
 
-#: ../src/fr-new-archive-dialog.c:495
+#: src/fr-new-archive-dialog.c:499
 #, c-format
-msgid "A file named \"%s\" already exists.  Do you want to replace it?"
-msgstr "ファイル \"%s\" はすでに存在します。置換してもよろしいですか?"
+msgid "A file named “%s” already exists.  Do you want to replace it?"
+msgstr "ファイル“%s”はすでに存在します。置換してもよろしいですか?"
 
-#: ../src/fr-new-archive-dialog.c:496
+#: src/fr-new-archive-dialog.c:500
 #, c-format
 msgid ""
-"The file already exists in \"%s\".  Replacing it will overwrite its contents."
+"The file already exists in “%s”.  Replacing it will overwrite its contents."
 msgstr ""
-"ファイルは \"%s\" 内にすでに存在します。ファイルを置換してその内容を上書きし"
-"ます。"
+"ファイルは“%s”内にすでに存在します。ファイルを置換してその内容を上書きしま"
+"す。"
 
-#: ../src/fr-new-archive-dialog.c:502 ../src/fr-window.c:6686
+#: src/fr-new-archive-dialog.c:506 src/fr-window.c:6780
 msgid "_Replace"
 msgstr "置換(_R)"
 
-#: ../src/fr-new-archive-dialog.c:517
+#: src/fr-new-archive-dialog.c:521
 msgid "Could not delete the old archive."
 msgstr "古いアーカイブを削除できません。"
 
-#: ../src/fr-window-actions-callbacks.c:289
+#: src/fr-window-actions-callbacks.c:289
 msgctxt "Window title"
 msgid "Open"
 msgstr "開く"
 
-#: ../src/fr-window-actions-callbacks.c:302
+#: src/fr-window-actions-callbacks.c:302
 msgid "All archives"
 msgstr "すべてのアーカイブ"
 
-#: ../src/fr-window-actions-callbacks.c:309
+#: src/fr-window-actions-callbacks.c:309
 msgid "All files"
 msgstr "すべてのファイル"
 
-#: ../src/fr-window.c:1207
+#: src/fr-window.c:1221
 msgid "Operation completed"
 msgstr "操作が完了しました"
 
-#: ../src/fr-window.c:1593
+#: src/fr-window.c:1634
 msgid "Folder"
 msgstr "フォルダー"
 
-#: ../src/fr-window.c:1980
+#: src/fr-window.c:2024
 msgid "[read only]"
 msgstr "[読み込み専用]"
 
-#: ../src/fr-window.c:2121
+#: src/fr-window.c:2165
 #, c-format
-msgid "Could not display the folder \"%s\""
-msgstr "フォルダー \"%s\" を表示できません"
+msgid "Could not display the folder “%s”"
+msgstr "フォルダー“%s”を表示できません"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2294 ../src/fr-window.c:2332
+#: src/fr-window.c:2338 src/fr-window.c:2376
 #, c-format
-msgid "Creating \"%s\""
-msgstr "\"%s\" を作成中"
+msgid "Creating “%s”"
+msgstr "“%s”を作成中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2298
+#: src/fr-window.c:2342
 #, c-format
-msgid "Loading \"%s\""
-msgstr "\"%s\" を読込中"
+msgid "Loading “%s”"
+msgstr "“%s”を読込中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2302
+#: src/fr-window.c:2346
 #, c-format
-msgid "Reading \"%s\""
-msgstr "\"%s\" を読込中"
+msgid "Reading “%s”"
+msgstr "“%s”を読込中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2306
+#: src/fr-window.c:2350
 #, c-format
-msgid "Deleting the files from \"%s\""
-msgstr "\"%s\" からファイルを削除中"
+msgid "Deleting the files from “%s”"
+msgstr "“%s”からファイルを削除中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2310
+#: src/fr-window.c:2354
 #, c-format
-msgid "Testing \"%s\""
-msgstr "\"%s\" を検査中"
+msgid "Testing “%s”"
+msgstr "“%s”を検査中"
 
-#: ../src/fr-window.c:2313
+#: src/fr-window.c:2357
 msgid "Getting the file list"
 msgstr "ファイルの一覧を取得します"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2317
+#: src/fr-window.c:2361
 #, c-format
-msgid "Copying the files to add to \"%s\""
-msgstr "\"%s\" に追加するためにファイルをコピー中"
+msgid "Copying the files to add to “%s”"
+msgstr "“%s”に追加するためにファイルをコピー中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2321
+#: src/fr-window.c:2365
 #, c-format
-msgid "Adding the files to \"%s\""
-msgstr "\"%s\" にファイルを追加中"
+msgid "Adding the files to “%s”"
+msgstr "“%s”にファイルを追加中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2325
+#: src/fr-window.c:2369
 #, c-format
-msgid "Extracting the files from \"%s\""
-msgstr "\"%s\" からファイルを展開中"
+msgid "Extracting the files from “%s”"
+msgstr "“%s”からファイルを展開中"
 
-#: ../src/fr-window.c:2328
+#: src/fr-window.c:2372
 msgid "Copying the extracted files to the destination"
 msgstr "取り出したファイルを展開先にコピー中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2337
+#: src/fr-window.c:2381
 #, c-format
-msgid "Saving \"%s\""
-msgstr "\"%s\" を保存中"
+msgid "Saving “%s”"
+msgstr "“%s”を保存中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2344
+#: src/fr-window.c:2388
 #, c-format
-msgid "Renaming the files in \"%s\""
-msgstr "\"%s\" 内のファイル名を変更中"
+msgid "Renaming the files in “%s”"
+msgstr "“%s”内のファイル名を変更中"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2348
+#: src/fr-window.c:2392
 #, c-format
-msgid "Updating the files in \"%s\""
-msgstr "\"%s\" 内のファイルを更新中"
+msgid "Updating the files in “%s”"
+msgstr "“%s”内のファイルを更新中"
 
-#: ../src/fr-window.c:2637
+#: src/fr-window.c:2681
 #, c-format
 msgid "%d file remaining"
 msgid_plural "%'d files remaining"
 msgstr[0] "残り %d 個のファイル"
 
-#: ../src/fr-window.c:2641 ../src/fr-window.c:3265
+#: src/fr-window.c:2685 src/fr-window.c:3309
 msgid "Please wait…"
 msgstr "お待ちください…"
 
-#: ../src/fr-window.c:2759
+#: src/fr-window.c:2803
 msgid "Extraction completed successfully"
 msgstr "アーカイブの展開が完了しました"
 
-#: ../src/fr-window.c:2762
+#: src/fr-window.c:2806
 msgid "_Show the Files"
 msgstr "ファイルを表示する(_S)"
 
 #. Translators: %s is a filename
-#: ../src/fr-window.c:2779 ../src/fr-window.c:6218
+#: src/fr-window.c:2823 src/fr-window.c:6266
 #, c-format
-msgid "\"%s\" created successfully"
-msgstr "\"%s\" の作成に成功しました"
+msgid "“%s” created successfully"
+msgstr "“%s”の作成に成功しました"
 
-#: ../src/fr-window.c:2786
+#: src/fr-window.c:2830
 msgid "_Open the Archive"
 msgstr "アーカイブを開く(_O)"
 
-#: ../src/fr-window.c:2874 ../src/fr-window.c:3044
+#: src/fr-window.c:2918 src/fr-window.c:3088
 msgid "Command exited abnormally."
 msgstr "コマンドが異常終了しました。"
 
-#: ../src/fr-window.c:2993
+#: src/fr-window.c:3037
 msgid "An error occurred while extracting files."
 msgstr "ファイルの展開中にエラーが発生しました。"
 
-#: ../src/fr-window.c:2999
+#: src/fr-window.c:3043
 #, c-format
-msgid "Could not open \"%s\""
-msgstr "\"%s\" を開けませんでした"
+msgid "Could not open “%s”"
+msgstr "“%s”を開けませんでした"
 
-#: ../src/fr-window.c:3004
+#: src/fr-window.c:3048
 msgid "An error occurred while loading the archive."
 msgstr "アーカイブの読み込み中にエラーが発生しました。"
 
-#: ../src/fr-window.c:3008
+#: src/fr-window.c:3052
 msgid "An error occurred while deleting files from the archive."
 msgstr "アーカイブからファイルの削除中にエラーが発生しました。"
 
-#: ../src/fr-window.c:3014
+#: src/fr-window.c:3058
 msgid "An error occurred while adding files to the archive."
 msgstr "ファイルをアーカイブへ追加中にエラーが発生しました。"
 
-#: ../src/fr-window.c:3018
+#: src/fr-window.c:3062
 msgid "An error occurred while testing archive."
 msgstr "アーカイブのテスト中にエラーが発生しました。"
 
-#: ../src/fr-window.c:3023
+#: src/fr-window.c:3067
 msgid "An error occurred while saving the archive."
 msgstr "アーカイブの保存中にエラーが発生しました。"
 
-#: ../src/fr-window.c:3027
+#: src/fr-window.c:3071
 msgid "An error occurred while renaming the files."
 msgstr "ファイル名の変更中にエラーが発生しました。"
 
-#: ../src/fr-window.c:3031
+#: src/fr-window.c:3075
 msgid "An error occurred while updating the files."
 msgstr "ファイルの更新中にエラーが発生しました。"
 
-#: ../src/fr-window.c:3035
+#: src/fr-window.c:3079
 msgid "An error occurred."
 msgstr "エラーが発生しました。"
 
-#: ../src/fr-window.c:3041
+#: src/fr-window.c:3085
 msgid "Command not found."
 msgstr "コマンドが見つかりません。"
 
-#: ../src/fr-window.c:3197
+#: src/fr-window.c:3241
 msgid "Test Result"
 msgstr "テスト結果"
 
-#: ../src/fr-window.c:4164 ../src/fr-window.c:8919 ../src/fr-window.c:8953
-#: ../src/fr-window.c:9233
+#: src/fr-window.c:4212 src/fr-window.c:9022 src/fr-window.c:9056
+#: src/fr-window.c:9336
 msgid "Could not perform the operation"
 msgstr "作業を実行できません"
 
-#: ../src/fr-window.c:4189
+#: src/fr-window.c:4237
 msgid ""
 "Do you want to add this file to the current archive or open it as a new "
 "archive?"
 msgstr "このファイルを現在のアーカイブまたは新規のアーカイブに追加しますか?"
 
-#: ../src/fr-window.c:4218
+#: src/fr-window.c:4266
 msgid "Do you want to create a new archive with these files?"
 msgstr "これらのファイルを含んだ新しいアーカイブを作成しますか?"
 
-#: ../src/fr-window.c:4221
+#: src/fr-window.c:4269
 msgid "Create _Archive"
 msgstr "新しいアーカイブの作成(_A)"
 
-#: ../src/fr-window.c:4250 ../src/fr-window.c:7377
+#: src/fr-window.c:4298 src/fr-window.c:7475
 msgid "New Archive"
 msgstr "新しいアーカイブ"
 
-#: ../src/fr-window.c:4961
+#: src/fr-window.c:5016
 msgid "Folders"
 msgstr "フォルダー"
 
-#: ../src/fr-window.c:4999 ../src/ui/file-selector.ui.h:7
+#: src/fr-window.c:5054 src/ui/file-selector.ui:221
 msgctxt "File"
 msgid "Size"
 msgstr "サイズ"
 
-#: ../src/fr-window.c:5000
+#: src/fr-window.c:5055
 msgctxt "File"
 msgid "Type"
 msgstr "種類"
 
 # http://mail.gnome.gr.jp/ml/gnome-translation/201202/msg00081.html に準拠
-#: ../src/fr-window.c:5001 ../src/ui/file-selector.ui.h:8
+#: src/fr-window.c:5056 src/ui/file-selector.ui:237
 msgctxt "File"
 msgid "Modified"
 msgstr "更新日時"
 
-#: ../src/fr-window.c:5002
+#: src/fr-window.c:5057
 msgctxt "File"
 msgid "Location"
 msgstr "場所"
 
-#: ../src/fr-window.c:5011 ../src/ui/file-selector.ui.h:6
+#: src/fr-window.c:5066 src/ui/file-selector.ui:190
 msgctxt "File"
 msgid "Name"
 msgstr "名前"
 
-#: ../src/fr-window.c:5765 ../src/ui/extract-dialog-options.ui.h:1
+#: src/fr-window.c:5820 src/ui/extract-dialog-options.ui:20
 msgctxt "Action"
 msgid "Extract"
 msgstr "展開"
 
-#: ../src/fr-window.c:5769
-#, fuzzy
-#| msgid "Add Files"
+#: src/fr-window.c:5824
 msgctxt "Action"
 msgid "Add Files"
 msgstr "ファイルの追加"
 
-#: ../src/fr-window.c:5774 ../src/fr-window.c:5804
+#: src/fr-window.c:5829 src/fr-window.c:5859
 msgid "Find files by name"
 msgstr "ファイルを名前で検索します"
 
-#: ../src/fr-window.c:5821
+#: src/fr-window.c:5876
 msgid "Go to the previous visited location"
 msgstr "前に表示した場所へ移動します"
 
-#: ../src/fr-window.c:5826
+#: src/fr-window.c:5881
 msgid "Go to the next visited location"
 msgstr "次に表示した場所へ移動します"
 
-#: ../src/fr-window.c:5836
+#: src/fr-window.c:5891
 msgid "Go to the home location"
 msgstr "アーカイブのルートへ移動します"
 
 #. Translators: after the colon there is a folder name.
-#: ../src/fr-window.c:5845 ../src/ui/file-selector.ui.h:4
-#: ../src/ui/new-archive-dialog.ui.h:2
+#: src/fr-window.c:5900 src/ui/file-selector.ui:98
+#: src/ui/new-archive-dialog.ui:93
 msgid "_Location:"
 msgstr "場所(_L):"
 
-#: ../src/fr-window.c:6232 ../src/ui/menus.ui.h:1
+#: src/fr-window.c:6280 src/ui/menus.ui:7 src/ui/menus.ui:47 src/ui/menus.ui:83
 msgctxt "Action"
 msgid "Open"
 msgstr "開く"
 
-#: ../src/fr-window.c:6675
+#: src/fr-window.c:6768
 #, c-format
-msgid "Replace file \"%s\"?"
-msgstr "ファイル \"%s\" を置き換えますか?"
+msgid "Replace file “%s”?"
+msgstr "ファイル“%s”を置き換えますか?"
 
-#: ../src/fr-window.c:6678
+#: src/fr-window.c:6771
 #, c-format
-msgid "Another file with the same name already exists in \"%s\"."
-msgstr "\"%s\" にすでに同じ名前の別のファイルがあります。"
+msgid "Another file with the same name already exists in “%s”."
+msgstr "“%s”にすでに同じ名前の別のファイルがあります。"
 
-#: ../src/fr-window.c:6684
+#: src/fr-window.c:6777
 msgid "Replace _All"
 msgstr "すべて置換(_A)"
 
-#: ../src/fr-window.c:6685
+#: src/fr-window.c:6778
+msgid "Replace _Nothing"
+msgstr "置換しない(_N)"
+
+#: src/fr-window.c:6779
 msgid "_Skip"
 msgstr "スキップ(_S)"
 
-#: ../src/fr-window.c:7561 ../src/fr-window.c:7918
+#: src/fr-window.c:7659 src/fr-window.c:8016
 #, c-format
-msgid "Could not save the archive \"%s\""
-msgstr "アーカイブ \"%s\" を保存できません"
+msgid "Could not save the archive “%s”"
+msgstr "アーカイブ“%s”を保存できません"
 
-#: ../src/fr-window.c:7688
+#: src/fr-window.c:7786
 msgid "Save"
 msgstr "保存"
 
-#: ../src/fr-window.c:8012
+#: src/fr-window.c:8110
 msgid "Last Output"
 msgstr "最後の出力"
 
 #. Translators: the name references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:8235
+#: src/fr-window.c:8333
 msgid "New name is void, please type a name."
 msgstr "名前が入力されていません。名前を入力してください。"
 
 #. Translators: the %s references to a filename.  This message can appear when renaming a file.
-#: ../src/fr-window.c:8245
+#: src/fr-window.c:8343
 #, c-format
 msgid ""
-"Name \"%s\" is not valid because it contains at least one of the following "
+"Name “%s” is not valid because it contains at least one of the following "
 "characters: %s, please type other name."
 msgstr ""
-"名前 \"%s\" には、以下の文字列のうちの少なくとも一つを含んでいるので無効で"
-"す: %s 。他の名前を入力してください。"
+"名前“%s”には、以下の文字列のうちの少なくとも一つを含んでいるので無効です: "
+"%s 。他の名前を入力してください。"
 
-#: ../src/fr-window.c:8281
+#: src/fr-window.c:8379
 #, c-format
 msgid ""
-"A folder named \"%s\" already exists.\n"
+"A folder named “%s” already exists.\n"
 "\n"
 "%s"
 msgstr ""
-"フォルダー \"%s\" はすでに存在します。\n"
+"フォルダー“%s”はすでに存在します。\n"
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8281 ../src/fr-window.c:8283
+#: src/fr-window.c:8379 src/fr-window.c:8381
 msgid "Please use a different name."
 msgstr "別の名前を指定してください。"
 
-#: ../src/fr-window.c:8283
+#: src/fr-window.c:8381
 #, c-format
 msgid ""
-"A file named \"%s\" already exists.\n"
+"A file named “%s” already exists.\n"
 "\n"
 "%s"
 msgstr ""
-"ファイル \"%s\" はすでに存在します。\n"
+"ファイル“%s”はすでに存在します。\n"
 "\n"
 "%s"
 
-#: ../src/fr-window.c:8353
+#: src/fr-window.c:8451
 msgid "Rename"
 msgstr "名前の変更"
 
-#: ../src/fr-window.c:8354
+#: src/fr-window.c:8452
 msgid "_New folder name:"
 msgstr "新しいフォルダー名(_N):"
 
-#: ../src/fr-window.c:8354
+#: src/fr-window.c:8452
 msgid "_New file name:"
 msgstr "新しいファイル名(_N):"
 
-#: ../src/fr-window.c:8358
+#: src/fr-window.c:8456
 msgid "_Rename"
 msgstr "名前の変更(_R)"
 
-#: ../src/fr-window.c:8375 ../src/fr-window.c:8393
+#: src/fr-window.c:8473 src/fr-window.c:8491
 msgid "Could not rename the folder"
 msgstr "フォルダー名を変更できません"
 
-#: ../src/fr-window.c:8375 ../src/fr-window.c:8393
+#: src/fr-window.c:8473 src/fr-window.c:8491
 msgid "Could not rename the file"
 msgstr "ファイル名を変更できません"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8826
+#: src/fr-window.c:8929
 #, c-format
-msgid "Moving the files from \"%s\" to \"%s\""
-msgstr "\"%s\" から \"%s\" へファイルを移動中"
+msgid "Moving the files from “%s” to “%s”"
+msgstr "“%s”から“%s”へファイルを移動中"
 
 #. Translators: %s are archive filenames
-#: ../src/fr-window.c:8829
+#: src/fr-window.c:8932
 #, c-format
-msgid "Copying the files from \"%s\" to \"%s\""
-msgstr "\"%s\" から \"%s\" へファイルをコピー中"
+msgid "Copying the files from “%s” to “%s”"
+msgstr "“%s”から“%s”へファイルをコピー中"
 
-#: ../src/fr-window.c:8880
+#: src/fr-window.c:8983
 msgid "Paste Selection"
 msgstr "選択部分の貼り付け"
 
-#: ../src/fr-window.c:8881
+#: src/fr-window.c:8984
 msgid "_Destination folder:"
 msgstr "操作先のフォルダー(_D):"
 
-#: ../src/fr-window.c:8885 ../src/ui/app-menubar.ui.h:12
+#: src/fr-window.c:8988 src/ui/app-menubar.ui:61
 msgid "_Paste"
 msgstr "貼り付け(_P)"
 
 #. This is the time format used in the "Date Modified" column and
 #. * in the Properties dialog.  See the man page of strftime for an
 #. * explanation of the values.
-#: ../src/glib-utils.c:769
+#: src/glib-utils.c:787
 msgid "%d %B %Y, %H:%M"
 msgstr "%Y年%B%e日 %H:%M"
 
-#: ../src/gtk-utils.c:235
+#: src/gtk-utils.c:235
 msgid "C_ommand Line Output:"
 msgstr "コマンドラインの出力(_O)"
 
-#: ../src/gtk-utils.c:510
+#: src/gtk-utils.c:510
 msgid "Could not display help"
 msgstr "ヘルプを表示できません"
 
-#: ../src/gtk-utils.c:605
+#: src/gtk-utils.c:605
 msgid "Change password visibility"
 msgstr "パスワードの可視状態を変更"
 
-#: ../src/gtk-utils.h:29
+#: src/gtk-utils.h:29
 msgid "_Add"
 msgstr "追加(_A)"
 
-#: ../src/gtk-utils.h:30
+#: src/gtk-utils.h:30
 msgid "_Cancel"
 msgstr "キャンセル(_C)"
 
-#: ../src/gtk-utils.h:31 ../src/ui/app-menubar.ui.h:8
+#: src/gtk-utils.h:31 src/ui/app-menubar.ui:41
 msgid "_Close"
 msgstr "閉じる(_C)"
 
-#: ../src/gtk-utils.h:32
+#: src/gtk-utils.h:32
 msgid "C_reate"
 msgstr "作成(_R)"
 
-#: ../src/gtk-utils.h:33
+#: src/gtk-utils.h:33
 msgid "_Extract"
 msgstr "展開(_E)"
 
-#: ../src/gtk-utils.h:34
+#: src/gtk-utils.h:34
 msgid "_Open"
 msgstr "開く(_O)"
 
-#: ../src/gtk-utils.h:35
+#: src/gtk-utils.h:35
 msgid "_Save"
 msgstr "保存(_S)"
 
-#: ../src/ui/add-dialog-options.ui.h:1
+#: src/ui/add-dialog-options.ui:19
 msgid "Add"
 msgstr "追加"
 
-#: ../src/ui/add-dialog-options.ui.h:2
+#: src/ui/add-dialog-options.ui:42
 msgid "Include _files:"
 msgstr "対象とするファイル(_F):"
 
-#: ../src/ui/add-dialog-options.ui.h:3
+#: src/ui/add-dialog-options.ui:58
 msgid "E_xclude files:"
 msgstr "除外するファイル(_X):"
 
-#: ../src/ui/add-dialog-options.ui.h:4
+#: src/ui/add-dialog-options.ui:74
 msgid "_Exclude folders:"
 msgstr "除外するフォルダー(_E):"
 
-#: ../src/ui/add-dialog-options.ui.h:5 ../src/ui/extract-dialog-options.ui.h:5
+#: src/ui/add-dialog-options.ui:89 src/ui/add-dialog-options.ui:104
+#: src/ui/add-dialog-options.ui:118 src/ui/extract-dialog-options.ui:104
 msgid "example: *.o; *.bak"
 msgstr "例: *.o; *.bak"
 
-#: ../src/ui/add-dialog-options.ui.h:6 ../src/ui/extract-dialog-options.ui.h:6
+#: src/ui/add-dialog-options.ui:153 src/ui/extract-dialog-options.ui:144
 msgid "Actions"
 msgstr "操作"
 
-#: ../src/ui/add-dialog-options.ui.h:7
+#: src/ui/add-dialog-options.ui:173
 msgid "Add only if _newer"
 msgstr "新しい場合にのみ追加する(_N)"
 
-#: ../src/ui/add-dialog-options.ui.h:8
+#: src/ui/add-dialog-options.ui:190
 msgid "_Follow symbolic links"
 msgstr "シンボリックリンクをたどる(_F)"
 
-#: ../src/ui/app-menubar.ui.h:1
+#: src/ui/app-menubar.ui:4
 msgid "_File"
 msgstr "ファイル(_F)"
 
-#: ../src/ui/app-menubar.ui.h:2 ../src/ui/app-menu.ui.h:1
+#: src/ui/app-menubar.ui:8 src/ui/gears-menu.ui:8
 msgid "_New Archive…"
 msgstr "新規アーカイブ(_N)…"
 
-#: ../src/ui/app-menubar.ui.h:3 ../src/ui/app-menu.ui.h:2
+#: src/ui/app-menubar.ui:13 src/ui/gears-menu.ui:13
 msgid "_Open…"
 msgstr "開く(_O)…"
 
-#: ../src/ui/app-menubar.ui.h:4
+#: src/ui/app-menubar.ui:18
 msgid "_Extract Files…"
 msgstr "ファイルを展開する(_E)…"
 
-#: ../src/ui/app-menubar.ui.h:5
+#: src/ui/app-menubar.ui:25
 msgid "Save _As…"
 msgstr "名前を付けて保存(_A)…"
 
-#: ../src/ui/app-menubar.ui.h:6 ../src/ui/gears-menu.ui.h:3
+#: src/ui/app-menubar.ui:30 src/ui/gears-menu.ui:27
 msgid "_Test Integrity"
 msgstr "整合性のテスト(_T)"
 
-#: ../src/ui/app-menubar.ui.h:7 ../src/ui/gears-menu.ui.h:4
+#: src/ui/app-menubar.ui:34 src/ui/gears-menu.ui:31
 msgid "Properties"
 msgstr "プロパティ"
 
-#: ../src/ui/app-menubar.ui.h:9
+#: src/ui/app-menubar.ui:47
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: ../src/ui/app-menubar.ui.h:10
+#: src/ui/app-menubar.ui:51
 msgid "Cu_t"
 msgstr "切り取り(_T)"
 
-#: ../src/ui/app-menubar.ui.h:11
+#: src/ui/app-menubar.ui:56
 msgid "_Copy"
 msgstr "コピー(_C)"
 
-#: ../src/ui/app-menubar.ui.h:13
+#: src/ui/app-menubar.ui:68
 msgid "_Add Files…"
 msgstr "ファイルの追加(_A)…"
 
-#: ../src/ui/app-menubar.ui.h:14 ../src/ui/menus.ui.h:7
+#: src/ui/app-menubar.ui:72 src/ui/menus.ui:35 src/ui/menus.ui:71
+#: src/ui/menus.ui:107
 msgid "_Rename…"
 msgstr "名前の変更(_R)…"
 
-#: ../src/ui/app-menubar.ui.h:15
+#: src/ui/app-menubar.ui:77
 msgid "_Delete Files…"
 msgstr "ファイルを削除(_D)…"
 
-#: ../src/ui/app-menubar.ui.h:16 ../src/ui/file-selector.ui.h:1
+#: src/ui/app-menubar.ui:84 src/ui/file-selector.ui:11
 msgid "_Select All"
 msgstr "すべて選択(_S)"
 
-#: ../src/ui/app-menubar.ui.h:17
+#: src/ui/app-menubar.ui:89
 msgid "D_eselect All"
 msgstr "すべて選択解除(_E)"
 
-#: ../src/ui/app-menubar.ui.h:18
+#: src/ui/app-menubar.ui:94
 msgid "_Find"
 msgstr "検索(_F)"
 
-#: ../src/ui/app-menubar.ui.h:19
+#: src/ui/app-menubar.ui:101
 msgid "Set Pass_word…"
 msgstr "パスワードを設定(_W)…"
 
-#: ../src/ui/app-menubar.ui.h:20
+#: src/ui/app-menubar.ui:106
 msgid "_View"
 msgstr "表示(_V)"
 
-#: ../src/ui/app-menubar.ui.h:21 ../src/ui/app-menu.ui.h:5
+#: src/ui/app-menubar.ui:110 src/ui/gears-menu.ui:49
 msgid "Sidebar"
 msgstr "サイドバー"
 
-#: ../src/ui/app-menubar.ui.h:22 ../src/ui/app-menu.ui.h:3
+#: src/ui/app-menubar.ui:116 src/ui/gears-menu.ui:38
 msgid "View All _Files"
 msgstr "全ファイルの一覧表示(_F)"
 
-#: ../src/ui/app-menubar.ui.h:23 ../src/ui/app-menu.ui.h:4
+#: src/ui/app-menubar.ui:122 src/ui/gears-menu.ui:43
 msgid "View as a F_older"
 msgstr "フォルダー形式で表示(_O)"
 
-#: ../src/ui/app-menubar.ui.h:24 ../src/ui/app-menu.ui.h:6
+#: src/ui/app-menubar.ui:130 src/ui/gears-menu.ui:55
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
-#: ../src/ui/app-menubar.ui.h:25
+#: src/ui/app-menubar.ui:133
 msgid "Contents"
 msgstr "目次"
 
-#: ../src/ui/app-menubar.ui.h:26 ../src/ui/app-menu.ui.h:7
+#: src/ui/app-menubar.ui:138
 msgid "_About"
 msgstr "このアプリケーションについて(_A)"
 
-#: ../src/ui/app-menu.ui.h:8
-msgid "_Quit"
-msgstr "終了(_Q)"
-
-#: ../src/ui/ask-password.ui.h:1 ../src/ui/new-archive-dialog.ui.h:4
+#: src/ui/ask-password.ui:53 src/ui/new-archive-dialog.ui:160
 msgid "_Password:"
 msgstr "パスワード(_P):"
 
-#: ../src/ui/delete.ui.h:1 ../src/ui/extract-dialog-options.ui.h:2
+#: src/ui/delete.ui:13 src/ui/extract-dialog-options.ui:41
 msgid "_All files"
 msgstr "すべてのファイル(_A)"
 
-#: ../src/ui/delete.ui.h:2 ../src/ui/extract-dialog-options.ui.h:3
+#: src/ui/delete.ui:31 src/ui/extract-dialog-options.ui:59
 msgid "_Selected files"
 msgstr "選択したファイル(_S)"
 
-#: ../src/ui/delete.ui.h:3 ../src/ui/extract-dialog-options.ui.h:4
+#: src/ui/delete.ui:54 src/ui/extract-dialog-options.ui:83
 msgid "_Files:"
 msgstr "ファイル(_F):"
 
-#: ../src/ui/delete.ui.h:4
+#: src/ui/delete.ui:74
 msgid "example: *.txt; *.doc"
 msgstr "例: *.txt; *.doc"
 
-#: ../src/ui/extract-dialog-options.ui.h:7
+#: src/ui/extract-dialog-options.ui:165
 msgid "_Keep directory structure"
 msgstr "フォルダー構造を維持する(_K)"
 
-#: ../src/ui/extract-dialog-options.ui.h:8
+#: src/ui/extract-dialog-options.ui:182
 msgid "Do not _overwrite newer files"
 msgstr "より新しいファイルは上書きしない(_O)"
 
-#: ../src/ui/file-selector.ui.h:2
+#: src/ui/file-selector.ui:19
 msgid "Dese_lect All"
 msgstr "すべて選択解除(_L)"
 
-#: ../src/ui/file-selector.ui.h:3
+#: src/ui/file-selector.ui:33
 msgid "Show Hidden Files"
 msgstr "隠しファイルを表示する"
 
-#: ../src/ui/file-selector.ui.h:5
+#: src/ui/file-selector.ui:127 src/ui/file-selector.ui:128
 msgid "Go up one level"
 msgstr "一つ上の階層へ移動します"
 
-#: ../src/ui/gears-menu.ui.h:1
+#: src/ui/gears-menu.ui:19
 msgid "Save As…"
 msgstr "名前を付けて保存…"
 
-#: ../src/ui/gears-menu.ui.h:2
+#: src/ui/gears-menu.ui:23
 msgid "Pass_word…"
 msgstr "パスワード(_W)…"
 
-#: ../src/ui/menus.ui.h:2
+#: src/ui/gears-menu.ui:60
+msgid "_About Archive Manager"
+msgstr "このアプリケーションについて(_A)"
+
+#: src/ui/menus.ui:11
 msgid "_Open With…"
 msgstr "別のアプリで開く(_O)…"
 
-#: ../src/ui/menus.ui.h:3
+#: src/ui/menus.ui:17 src/ui/menus.ui:53 src/ui/menus.ui:89
 msgid "_Extract…"
 msgstr "展開(_E)…"
 
-#: ../src/ui/menus.ui.h:4
+#: src/ui/menus.ui:23 src/ui/menus.ui:59 src/ui/menus.ui:95
 msgid "Cut"
 msgstr "切り取り"
 
-#: ../src/ui/menus.ui.h:5
+#: src/ui/menus.ui:27 src/ui/menus.ui:63 src/ui/menus.ui:99
 msgid "Copy"
 msgstr "コピー"
 
-#: ../src/ui/menus.ui.h:6
+#: src/ui/menus.ui:31 src/ui/menus.ui:67 src/ui/menus.ui:103
 msgid "Paste"
 msgstr "貼り付け"
 
-#: ../src/ui/menus.ui.h:8
+#: src/ui/menus.ui:39 src/ui/menus.ui:75 src/ui/menus.ui:111
 msgid "Delete"
 msgstr "削除"
 
-#: ../src/ui/new-archive-dialog.ui.h:1
+#: src/ui/new-archive-dialog.ui:27
 msgid "_Filename:"
 msgstr "ファイル名(_F):"
 
-#: ../src/ui/new-archive-dialog.ui.h:3
+#: src/ui/new-archive-dialog.ui:110
 msgid "Location"
 msgstr "場所"
 
-#: ../src/ui/new-archive-dialog.ui.h:5
+#: src/ui/new-archive-dialog.ui:193
 msgid "_Encrypt the file list too"
 msgstr "ファイルの一覧も暗号化する(_E)"
 
 #. this is part of a sentence, for example "split into volumes of 10.0 MB", where MB stands for megabyte.
-#: ../src/ui/new-archive-dialog.ui.h:7
+#: src/ui/new-archive-dialog.ui:215
 msgid "Split into _volumes of"
 msgstr "次の容量で分割する(_V): "
 
-#: ../src/ui/new-archive-dialog.ui.h:8
+#: src/ui/new-archive-dialog.ui:236
 msgid "10,0"
 msgstr "10.0"
 
 #. MB means megabytes
-#: ../src/ui/new-archive-dialog.ui.h:10
+#: src/ui/new-archive-dialog.ui:253
 msgid "MB"
 msgstr "MB"
 
-#: ../src/ui/new-archive-dialog.ui.h:11
+#: src/ui/new-archive-dialog.ui:276
 msgid "_Other Options"
 msgstr "その他のオプション(_O)"
 
-#: ../src/ui/password.ui.h:1
+#: src/ui/password.ui:51
 msgid "_Encrypt the file list"
 msgstr "ファイルの一覧を暗号化する(_E)"
 
-#: ../src/ui/properties.ui.h:1
+#: src/ui/properties.ui:15
 msgctxt "File"
 msgid "Name:"
 msgstr "ファイル名:"
 
 #. after the colon there is a folder name.
-#: ../src/ui/properties.ui.h:3
+#: src/ui/properties.ui:45
 msgid "Location:"
 msgstr "場所:"
 
 #. after the colon there is a file type.
-#: ../src/ui/properties.ui.h:5
+#: src/ui/properties.ui:74
 msgid "Type:"
 msgstr "種類:"
 
-#: ../src/ui/properties.ui.h:6
+#: src/ui/properties.ui:103
 msgid "Last modified:"
 msgstr "更新日時:"
 
-#: ../src/ui/properties.ui.h:7
+#: src/ui/properties.ui:131
 msgid "Archive size:"
 msgstr "アーカイブのサイズ:"
 
-#: ../src/ui/properties.ui.h:8
+#: src/ui/properties.ui:159
 msgid "Content size:"
 msgstr "展開後のサイズ:"
 
-#: ../src/ui/properties.ui.h:9
+#: src/ui/properties.ui:186
 msgid "Compression ratio:"
 msgstr "圧縮率:"
 
-#: ../src/ui/properties.ui.h:10
+#: src/ui/properties.ui:213
 msgid "Number of files:"
 msgstr "ファイル数:"
 
-#: ../src/ui/update.ui.h:1
+#: src/ui/update.ui:48
 msgid "S_elect the files you want to update:"
 msgstr "更新したいファイルの選択(_E):"
 
-#~ msgid "Extract Here"
-#~ msgstr "ここに展開する"
-
-#~ msgid "Extract the selected archive to the current position"
-#~ msgstr "指定したアーカイブを現在の場所に展開します"
+#~ msgid "_Quit"
+#~ msgstr "終了(_Q)"
 
 #~ msgid "Extract To..."
 #~ msgstr "展開..."
-
-#~ msgid "Extract the selected archive"
-#~ msgstr "指定したアーカイブを展開します"
 
 #~ msgid "Compress..."
 #~ msgstr "圧縮..."
@@ -1375,14 +1386,8 @@ msgstr "更新したいファイルの選択(_E):"
 #~ msgid "Show session management options"
 #~ msgstr "セッション管理のオプションを表示する"
 
-#~ msgid "File Roller"
-#~ msgstr "File Roller"
-
 #~ msgid "_Folders"
 #~ msgstr "フォルダー(_F)"
-
-#~ msgid "_About Archive Manager"
-#~ msgstr "このアプリケーションについて(_A)"
 
 #~ msgid "Max history length"
 #~ msgstr "履歴の最大数"
